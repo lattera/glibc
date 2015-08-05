@@ -1,3 +1,8 @@
+2015-08-09  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h [__USE_MISC]: Move all
+	MADV_*_PAGES defines behind this feature check.
+
 2015-08-09  John David Anglin  <danglin@gcc.gnu.org>
 
 	[BZ #18480]

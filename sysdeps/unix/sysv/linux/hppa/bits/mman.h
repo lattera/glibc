@@ -93,14 +93,17 @@
 #endif
 
 /* The range 12-64 is reserved for page size specification. */
-#define MADV_4K_PAGES   12              /* Use 4K pages  */
-#define MADV_16K_PAGES  14              /* Use 16K pages */
-#define MADV_64K_PAGES  16              /* Use 64K pages */
-#define MADV_256K_PAGES 18              /* Use 256K pages */
-#define MADV_1M_PAGES   20              /* Use 1 Megabyte pages */
-#define MADV_4M_PAGES   22              /* Use 4 Megabyte pages */
-#define MADV_16M_PAGES  24              /* Use 16 Megabyte pages */
-#define MADV_64M_PAGES  26              /* Use 64 Megabyte pages */
+/* These are Linux-specific.  */
+#ifdef __USE_MISC
+# define MADV_4K_PAGES		12	/* Use 4K pages.  */
+# define MADV_16K_PAGES		14	/* Use 16K pages.  */
+# define MADV_64K_PAGES		16	/* Use 64K pages.  */
+# define MADV_256K_PAGES	18	/* Use 256K pages.  */
+# define MADV_1M_PAGES		20	/* Use 1 Megabyte pages.  */
+# define MADV_4M_PAGES		22	/* Use 4 Megabyte pages.  */
+# define MADV_16M_PAGES		24	/* Use 16 Megabyte pages.  */
+# define MADV_64M_PAGES		26	/* Use 64 Megabyte pages.  */
+#endif
 
 /* The POSIX people had to invent similar names for the same things.  */
 #ifdef __USE_XOPEN2K
