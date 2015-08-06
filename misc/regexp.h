@@ -19,10 +19,11 @@
 #ifndef _REGEXP_H
 #define _REGEXP_H	1
 
-/* The contents of this header file were standardized in the
-   Single Unix Specification, Version 2 (1997) but marked as
-   LEGACY; new applications were already being encouraged to
-   use <regex.h> instead.  POSIX.1-2001 removed this header.
+/* The contents of this header file were originally standardized in
+   the Single Unix Specification, Issue 3 (1992).  In Issue 4 (1994)
+   the header was marked as TO BE WITHDRAWN, and new applications
+   were encouraged to use <regex.h> instead.  It was officially
+   withdrawn from the standard in Issue 6 (aka POSIX.1-2001).
 
    This header is provided only for backward compatibility.
    It will be removed in the next release of the GNU C Library.
