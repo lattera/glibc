@@ -41,6 +41,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <unistd.h>
 #ifndef errno
 extern int errno;
 #endif

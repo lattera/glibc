@@ -1,3 +1,7 @@
+2015-08-06  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* libio/oldfileops.c: Include unistd.h.
+
 2015-08-06  Mike Frysinger  <vapier@gentoo.org>
 
 	* stdlib/isomac.c: Include ctype.h.
