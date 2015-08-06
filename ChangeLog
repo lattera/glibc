@@ -1,3 +1,9 @@
+2015-08-08  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/microblaze/sysdep.h: Wrap the whole file
+	in _LINUX_MICROBLAZE_SYSDEP_H defines.  Include sysdeps/unix/sysdep.h
+	and delete sys/syscall.h include.
+
 2015-08-07  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16517]
