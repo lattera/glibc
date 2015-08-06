@@ -2528,6 +2528,10 @@ sinh 0x7.6e259d2436fc4p-4
 sinh 0x3.d6e088p-4
 sinh -0x7.688eap-4
 sinh -0xd.dce79p-4
+sinh min
+sinh -min
+sinh min_subnorm
+sinh -min_subnorm
 
 sqrt 0
 sqrt -0

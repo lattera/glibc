@@ -1,3 +1,25 @@
+2015-08-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16519]
+	* sysdeps/ieee754/dbl-64/e_sinh.c: Include <float.h>.
+	(__ieee754_sinh): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/flt-32/e_sinhf.c: Include <float.h>.
+	(__ieee754_sinhf): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128/e_sinhl.c: Include <float.h>.
+	(__ieee754_sinhl): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c: Include <float.h>.
+	(__ieee754_sinhl): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-96/e_sinhl.c: Include <float.h>.
+	(__ieee754_sinhl): Force underflow exception for arguments with
+	small absolute value.
+	* math/auto-libm-test-in: Add more tests of sinh.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 2015-08-06  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* libio/oldfileops.c: Include unistd.h.

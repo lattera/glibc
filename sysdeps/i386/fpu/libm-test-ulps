@@ -1864,6 +1864,10 @@ ildouble: 2
 ldouble: 2
 
 Function: "sinh_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 4
 ldouble: 5
 
@@ -1874,6 +1878,8 @@ ldouble: 4
 Function: "sinh_upward":
 double: 1
 float: 1
+idouble: 1
+ifloat: 1
 ildouble: 4
 ldouble: 5
 

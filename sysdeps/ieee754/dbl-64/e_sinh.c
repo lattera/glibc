@@ -32,6 +32,7 @@ static char rcsid[] = "$NetBSD: e_sinh.c,v 1.7 1995/05/10 20:46:13 jtc Exp $";
  *	only sinh(0)=0 is exact for finite x.
  */
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -58,10 +59,16 @@ __ieee754_sinh (double x)
   /* |x| in [0,22], return sign(x)*0.5*(E+E/(E+1))) */
   if (ix < 0x40360000)                  /* |x|<22 */
     {
-      if (__glibc_unlikely (ix < 0x3e300000))              /* |x|<2**-28 */
+      if (__glibc_unlikely (ix < 0x3e300000)) {            /* |x|<2**-28 */
+	if (fabs (x) < DBL_MIN)
+	  {
+	    double force_underflow = x * x;
+	    math_force_eval (force_underflow);
+	  }
 	if (shuge + x > one)
 	  return x;
-      /* sinh(tiny) = tiny with inexact */
+	/* sinh(tiny) = tiny with inexact */
+      }
       t = __expm1 (fabs (x));
       if (ix < 0x3ff00000)
 	return h * (2.0 * t - t * t / (t + one));

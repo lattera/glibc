@@ -28,6 +28,7 @@
  *	only sinh(0)=0 is exact for finite x.
  */
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -52,8 +53,14 @@ __ieee754_sinhl(long double x)
 	if (jx<0) h = -h;
     /* |x| in [0,40], return sign(x)*0.5*(E+E/(E+1))) */
 	if (ix < 0x4044000000000000LL) {	/* |x|<40 */
-	    if (ix<0x3e20000000000000LL)	/* |x|<2**-29 */
+	    if (ix<0x3e20000000000000LL) {	/* |x|<2**-29 */
+		if (fabsl (x) < LDBL_MIN)
+		  {
+		    long double force_underflow = x * x;
+		    math_force_eval (force_underflow);
+		  }
 		if(shuge+x>one) return x;/* sinhl(tiny) = tiny with inexact */
+	    }
 	    t = __expm1l(fabsl(x));
 	    if(ix<0x3ff0000000000000LL) return h*(2.0*t-t*t/(t+one));
 	    w = t/(t+one);
