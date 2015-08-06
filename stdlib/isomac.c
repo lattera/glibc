@@ -70,6 +70,7 @@
 # define _GNU_SOURCE 1
 #endif
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

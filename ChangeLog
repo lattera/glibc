@@ -1,3 +1,7 @@
+2015-08-06  Mike Frysinger  <vapier@gentoo.org>
+
+	* stdlib/isomac.c: Include ctype.h.
+
 2015-08-06  Arjun Shankar  <arjun.is@lostca.se>
 
 	* dirent/tst-seekdir.c (main): Converted to ...
