@@ -1,3 +1,19 @@
+2015-08-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	Fix gcrt0.o compilation
+
+	When static-start-installed-name is different from
+	start-installed-name, we must not use the shared objects.
+
+	* csu/Makefile
+	(extra-objs): Add gmon-start.o when building shared library and
+	$(static-start-installed-name) is different from
+	$(start-installed-name).
+	$(objpfx)g$(static-start-installed-name): When building shared
+	library and $(static-start-installed-name) is different from
+	$(static-start-installed-name), revert to non-shared rule,
+	i.e. using $(objpfx)% and gmon-start.o.
+
 2015-08-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16519]
