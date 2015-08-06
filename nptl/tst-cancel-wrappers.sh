@@ -74,7 +74,7 @@ C["__xpg_sigpause"]=1
   seen=""
   seen_enable=""
   seen_disable=""
-  object=gensub(/^.*\[(.*)\]:$/,"\\1","",$0)
+  object=gensub(/^.*\[(.*)\]:$/, "\\1", 1, $0)
   next
 }
 {

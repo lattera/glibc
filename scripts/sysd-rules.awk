@@ -53,7 +53,7 @@ BEGIN {
         if (target_pattern == "%") {
           command_suffix = "";
         } else {
-          prefix = gensub(/%/, "", "", target_pattern);
+          prefix = gensub(/%/, "", 1, target_pattern);
           command_suffix = " $(" prefix  "CPPFLAGS)";
         }
         target = "$(objpfx)" target_pattern o ":";
