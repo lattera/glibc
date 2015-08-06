@@ -31,7 +31,7 @@ all: $(patsubst %,$(VAR_DB)/%.db,$(notdir $(DATABASES)))
 
 
 $(VAR_DB)/passwd.db: /etc/passwd
-	@echo -n "$(patsubst %.db,%,$(@F))... "
+	@printf %s "$(patsubst %.db,%,$(@F))... "
 	@$(AWK) 'BEGIN { FS=":"; OFS=":" } \
 		 /^[ \t]*$$/ { next } \
 		 /^[ \t]*#/ { next } \
@@ -41,7 +41,7 @@ $(VAR_DB)/passwd.db: /etc/passwd
 	@echo "done."
 
 $(VAR_DB)/group.db: /etc/group
-	@echo -n "$(patsubst %.db,%,$(@F))... "
+	@printf %s "$(patsubst %.db,%,$(@F))... "
 	@$(AWK) 'BEGIN { FS=":"; OFS=":" } \
 		 /^[ \t]*$$/ { next } \
 		 /^[ \t]*#/ { next } \
@@ -63,7 +63,7 @@ $(VAR_DB)/group.db: /etc/group
 	@echo "done."
 
 $(VAR_DB)/ethers.db: /etc/ethers
-	@echo -n "$(patsubst %.db,%,$(@F))... "
+	@printf %s "$(patsubst %.db,%,$(@F))... "
 	@$(AWK) '/^[ \t]*$$/ { next } \
 		 /^[ \t]*#/ { next } \
 		 /^[^#]/ { printf ".%s ", $$1; print; \
@@ -72,7 +72,7 @@ $(VAR_DB)/ethers.db: /etc/ethers
 	@echo "done."
 
 $(VAR_DB)/protocols.db: /etc/protocols
-	@echo -n "$(patsubst %.db,%,$(@F))... "
+	@printf %s "$(patsubst %.db,%,$(@F))... "
 	@$(AWK) '/^[ \t]*$$/ { next } \
 		 /^[ \t]*#/ { next } \
 		 /^[^#]/ { printf ".%s ", $$1; print; \
@@ -83,7 +83,7 @@ $(VAR_DB)/protocols.db: /etc/protocols
 	@echo "done."
 
 $(VAR_DB)/rpc.db: /etc/rpc
-	@echo -n "$(patsubst %.db,%,$(@F))... "
+	@printf %s "$(patsubst %.db,%,$(@F))... "
 	@$(AWK) '/^[ \t]*$$/ { next } \
 		 /^[ \t]*#/ { next } \
 		 /^[^#]/ { printf ".%s ", $$1; print; \
@@ -94,7 +94,7 @@ $(VAR_DB)/rpc.db: /etc/rpc
 	@echo "done."
 
 $(VAR_DB)/services.db: /etc/services
-	@echo -n "$(patsubst %.db,%,$(@F))... "
+	@printf %s "$(patsubst %.db,%,$(@F))... "
 	@$(AWK) 'BEGIN { FS="[ \t/]+" } \
 		 /^[ \t]*$$/ { next } \
 		 /^[ \t]*#/ { next } \
@@ -110,7 +110,7 @@ $(VAR_DB)/services.db: /etc/services
 	@echo "done."
 
 $(VAR_DB)/shadow.db: /etc/shadow
-	@echo -n "$(patsubst %.db,%,$(@F))... "
+	@printf %s "$(patsubst %.db,%,$(@F))... "
 	@$(AWK) 'BEGIN { FS=":"; OFS=":" } \
 		 /^[ \t]*$$/ { next } \
 		 /^[ \t]*#/ { next } \
@@ -130,7 +130,7 @@ $(VAR_DB)/shadow.db: /etc/shadow
 	fi
 
 $(VAR_DB)/gshadow.db: /etc/gshadow
-	@echo -n "$(patsubst %.db,%,$(@F))... "
+	@printf %s "$(patsubst %.db,%,$(@F))... "
 	@$(AWK) 'BEGIN { FS=":"; OFS=":" } \
 		 /^[ \t]*$$/ { next } \
 		 /^[ \t]*#/ { next } \
@@ -150,7 +150,7 @@ $(VAR_DB)/gshadow.db: /etc/gshadow
 	fi
 
 $(VAR_DB)/netgroup.db: /etc/netgroup
-	@echo -n "$(patsubst %.db,%,$(@F))... "
+	@printf %s "$(patsubst %.db,%,$(@F))... "
 	@$(AWK) 'BEGIN { ini=1 } \
 		 /^[ \t]*$$/ { next } \
 		 /^[ \t]*#/ { next } \

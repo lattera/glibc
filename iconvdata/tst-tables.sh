@@ -261,7 +261,7 @@ EOF
 while read charset charmap; do
   if test "$charset" = GB18030; then echo "This might take a while" 1>&2; fi
   case ${charset} in \#*) continue;; esac
-  echo -n "Testing ${charset}" 1>&2
+  printf %s "Testing ${charset}" 1>&2
   if ./tst-table.sh ${common_objpfx} ${objpfx} "${test_program_prefix}" \
       ${charset} ${charmap} < /dev/null; then
     echo 1>&2

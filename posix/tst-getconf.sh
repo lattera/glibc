@@ -27,7 +27,7 @@ logfile=$common_objpfx/posix/tst-getconf.out
 rm -f $logfile
 result=0
 while read name; do
-  echo -n "getconf $name: " >> $logfile
+  printf %s "getconf $name: " >> $logfile
   ${run_getconf} "$name" < /dev/null 2>> $logfile >> $logfile
   if test $? -ne 0; then
     echo "*** $name FAILED" >> $logfile
@@ -205,7 +205,7 @@ XBS5_LPBIG_OFFBIG_LINTFLAGS
 EOF
 
 while read name; do
-  echo -n "getconf $name /: " >> $logfile
+  printf %s "getconf $name /: " >> $logfile
   ${run_getconf} "$name" / < /dev/null 2>> $logfile >> $logfile
   if test $? -ne 0; then
     echo "*** $name FAILED" >> $logfile

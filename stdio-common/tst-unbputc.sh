@@ -28,6 +28,6 @@ ${test_program_prefix} \
   ${common_objpfx}stdio-common/tst-unbputc \
     2> ${common_objpfx}stdio-common/tst-unbputc.out || status=1
 
-(echo -n 12 | cmp ${common_objpfx}stdio-common/tst-unbputc.out -) || status=1
+(printf 12 | cmp ${common_objpfx}stdio-common/tst-unbputc.out -) || status=1
 
 exit $status
