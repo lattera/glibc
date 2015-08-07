@@ -1,3 +1,12 @@
+2015-08-08  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ #18787]
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h (_LWS_CLOBBER): Revise
+	clobber registers.
+	(atomic_compare_and_exchange_val_acq): Use register asms to assign
+	operand registers.  Use register %r20 for EAGAIN and EDEADLOCK checks.
+	Cast return to __typeof (oldval).
+
 2015-08-08  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/microblaze/sysdep.h: Wrap the whole file

@@ -56,42 +56,41 @@ typedef uintmax_t uatomic_max_t;
 #define _LWS "0xb0"
 #define _LWS_CAS "0"
 /* Note r31 is the link register.  */
-#define _LWS_CLOBBER "r1", "r26", "r25", "r24", "r23", "r22", "r21", "r20", "r28", "r31", "memory"
+#define _LWS_CLOBBER "r1", "r23", "r22", "r20", "r31", "memory"
 /* String constant for -EAGAIN.  */
 #define _ASM_EAGAIN "-11"
 /* String constant for -EDEADLOCK.  */
 #define _ASM_EDEADLOCK "-45"
 
 #if __ASSUME_LWS_CAS
-/* The only basic operation needed is compare and exchange.  */
+/* The only basic operation needed is compare and exchange.  The mem
+   pointer must be word aligned.  */
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
   ({									\
-     volatile int lws_errno;						\
-     __typeof__ (*mem) lws_ret;						\
-     asm volatile(							\
+     register long lws_errno asm("r21");				\
+     register unsigned long lws_ret asm("r28");				\
+     register unsigned long lws_mem asm("r26") = (unsigned long)(mem);	\
+     register unsigned long lws_old asm("r25") = (unsigned long)(oldval);\
+     register unsigned long lws_new asm("r24") = (unsigned long)(newval);\
+     __asm__ __volatile__(						\
 	"0:					\n\t"			\
-	"copy	%2, %%r26			\n\t"			\
-	"copy	%3, %%r25			\n\t"			\
-	"copy	%4, %%r24			\n\t"			\
 	"ble	" _LWS "(%%sr2, %%r0)		\n\t"			\
 	"ldi	" _LWS_CAS ", %%r20		\n\t"			\
-	"ldi	" _ASM_EAGAIN ", %%r24		\n\t"			\
-	"cmpb,=,n %%r24, %%r21, 0b		\n\t"			\
+	"ldi	" _ASM_EAGAIN ", %%r20		\n\t"			\
+	"cmpb,=,n %%r20, %%r21, 0b		\n\t"			\
 	"nop					\n\t"			\
-	"ldi	" _ASM_EDEADLOCK ", %%r25	\n\t"			\
-	"cmpb,=,n %%r25, %%r21, 0b		\n\t"			\
+	"ldi	" _ASM_EDEADLOCK ", %%r20	\n\t"			\
+	"cmpb,=,n %%r20, %%r21, 0b		\n\t"			\
 	"nop					\n\t"			\
-	"stw	%%r28, %0			\n\t"			\
-	"stw	%%r21, %1			\n\t"			\
-	: "=m" (lws_ret), "=m" (lws_errno)				\
-        : "r" (mem), "r" (oldval), "r" (newval)				\
+	: "=r" (lws_ret), "=r" (lws_errno)				\
+	: "r" (lws_mem), "r" (lws_old), "r" (lws_new)			\
 	: _LWS_CLOBBER							\
      );									\
 									\
-     if(lws_errno == -EFAULT || lws_errno == -ENOSYS)			\
+     if (lws_errno == -EFAULT || lws_errno == -ENOSYS)			\
 	ABORT_INSTRUCTION;						\
 									\
-     lws_ret;								\
+     (__typeof (oldval)) lws_ret;					\
    })
 
 # define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)	\
