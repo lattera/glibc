@@ -400,9 +400,10 @@ L(pre_end):					ASM_LINE_SEP	\
 ({									\
 	long __sys_res;							\
 	{								\
+		LOAD_ARGS_##nr(args)					\
 		register unsigned long __res asm("r28");		\
 		PIC_REG_DEF						\
-		LOAD_ARGS_##nr(args)					\
+		LOAD_REGS_##nr						\
 		/* FIXME: HACK save/load r19 around syscall */		\
 		asm volatile(						\
 			SAVE_ASM_PIC					\
@@ -425,9 +426,10 @@ L(pre_end):					ASM_LINE_SEP	\
 ({									\
 	long __sys_res;							\
 	{								\
+		LOAD_ARGS_##nr(args)					\
 		register unsigned long __res asm("r28");		\
 		PIC_REG_DEF						\
-		LOAD_ARGS_##nr(args)					\
+		LOAD_REGS_##nr						\
 		/* FIXME: HACK save/load r19 around syscall */		\
 		asm volatile(						\
 			SAVE_ASM_PIC					\
@@ -443,27 +445,44 @@ L(pre_end):					ASM_LINE_SEP	\
 	__sys_res;							\
  })
 
-
-
 #define LOAD_ARGS_0()
-#define LOAD_ARGS_1(r26)						\
-  register unsigned long __r26 __asm__("r26") = (unsigned long)(r26);	\
+#define LOAD_REGS_0
+#define LOAD_ARGS_1(a1)							\
+  register unsigned long __x26 = (unsigned long)(a1);			\
   LOAD_ARGS_0()
-#define LOAD_ARGS_2(r26,r25)						\
-  register unsigned long __r25 __asm__("r25") = (unsigned long)(r25);	\
-  LOAD_ARGS_1(r26)
-#define LOAD_ARGS_3(r26,r25,r24)					\
-  register unsigned long __r24 __asm__("r24") = (unsigned long)(r24);	\
-  LOAD_ARGS_2(r26,r25)
-#define LOAD_ARGS_4(r26,r25,r24,r23)					\
-  register unsigned long __r23 __asm__("r23") = (unsigned long)(r23);	\
-  LOAD_ARGS_3(r26,r25,r24)
-#define LOAD_ARGS_5(r26,r25,r24,r23,r22)				\
-  register unsigned long __r22 __asm__("r22") = (unsigned long)(r22);	\
-  LOAD_ARGS_4(r26,r25,r24,r23)
-#define LOAD_ARGS_6(r26,r25,r24,r23,r22,r21)				\
-  register unsigned long __r21 __asm__("r21") = (unsigned long)(r21);	\
-  LOAD_ARGS_5(r26,r25,r24,r23,r22)
+#define LOAD_REGS_1							\
+  register unsigned long __r26 __asm__("r26") = __x26;			\
+  LOAD_REGS_0
+#define LOAD_ARGS_2(a1,a2)						\
+  register unsigned long __x25 = (unsigned long)(a2);			\
+  LOAD_ARGS_1(a1)
+#define LOAD_REGS_2							\
+  register unsigned long __r25 __asm__("r25") = __x25;			\
+  LOAD_REGS_1
+#define LOAD_ARGS_3(a1,a2,a3)						\
+  register unsigned long __x24 = (unsigned long)(a3);			\
+  LOAD_ARGS_2(a1,a2)
+#define LOAD_REGS_3							\
+  register unsigned long __r24 __asm__("r24") = __x24;			\
+  LOAD_REGS_2
+#define LOAD_ARGS_4(a1,a2,a3,a4)					\
+  register unsigned long __x23 = (unsigned long)(a4);			\
+  LOAD_ARGS_3(a1,a2,a3)
+#define LOAD_REGS_4							\
+  register unsigned long __r23 __asm__("r23") = __x23;			\
+  LOAD_REGS_3
+#define LOAD_ARGS_5(a1,a2,a3,a4,a5)					\
+  register unsigned long __x22 = (unsigned long)(a5);			\
+  LOAD_ARGS_4(a1,a2,a3,a4)
+#define LOAD_REGS_5							\
+  register unsigned long __r22 __asm__("r22") = __x22;			\
+  LOAD_REGS_4
+#define LOAD_ARGS_6(a1,a2,a3,a4,a5,a6)					\
+  register unsigned long __x21 = (unsigned long)(a6);			\
+  LOAD_ARGS_5(a1,a2,a3,a4,a5)
+#define LOAD_REGS_6							\
+  register unsigned long __r21 __asm__("r21") = __x21;			\
+  LOAD_REGS_5
 
 /* Even with zero args we use r20 for the syscall number */
 #define ASM_ARGS_0

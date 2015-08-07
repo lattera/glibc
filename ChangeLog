@@ -1,3 +1,15 @@
+2015-08-09  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ #18480]
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h (LOAD_ARGS_0, LOAD_ARGS_1,
+	LOAD_ARGS_2, LOAD_ARGS_3, LOAD_ARGS_4, LOAD_ARGS_5, LOAD_ARGS_6):
+	Define.
+	(LOAD_REGS_0, LOAD_REGS_1, LOAD_REGS_2, LOAD_REGS_3, LOAD_REGS_4,
+	LOAD_REGS_5, LOAD_REGS_6): Update.
+	(INTERNAL_SYSCALL): Update using new LOAD defines.
+	(INTERNAL_SYSCALL_NCS): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscall.c (syscall): Likewise.
+
 2015-08-08  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #16734]
