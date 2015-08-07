@@ -29,6 +29,8 @@ libc {
     # s*
     scalbln; scalblnf; scalblnl;
   }
+  GLIBC_2.22 {
+  }
 }
 
 libm {

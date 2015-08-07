@@ -1,3 +1,9 @@
+2015-08-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	Fix sysdeps/i386/fpu/s_scalbn.S build
+
+	* math/Versions (libc: GLIBC_2_22): New (empty) version set.
+
 2015-08-07  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/hppa/dl-symaddr.c (_dl_symbol_address): Add rtld_hidden_def.
