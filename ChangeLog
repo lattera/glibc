@@ -1,3 +1,7 @@
+2015-08-07  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/hppa/dl-symaddr.c (_dl_symbol_address): Add rtld_hidden_def.
+
 2015-08-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	Fix gcrt0.o compilation
