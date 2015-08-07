@@ -34,6 +34,7 @@
 /*********************************************************************/
 
 #include <errno.h>
+#include <float.h>
 #include "endian.h"
 #include <dla.h>
 #include "mpa.h"
@@ -91,6 +92,11 @@ tan (double x)
   /* (I) The case abs(x) <= 1.259e-8 */
   if (w <= g1.d)
     {
+      if (w < DBL_MIN)
+	{
+	  double force_underflow = x * x;
+	  math_force_eval (force_underflow);
+	}
       retval = x;
       goto ret;
     }

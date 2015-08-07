@@ -1,3 +1,24 @@
+2015-08-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16517]
+	* sysdeps/ieee754/dbl-64/s_tan.c: Include <float.h>.
+	(tan): Force underflow exception for arguments with small absolute
+	value.
+	* sysdeps/ieee754/flt-32/k_tanf.c: Include <float.h>.
+	(__kernel_tanf): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128/k_tanl.c: Include <float.h>.
+	(__kernel_tanl): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-128ibm/k_tanl.c: Include <float.h>.
+	(__kernel_tanl): Force underflow exception for arguments with
+	small absolute value.
+	* sysdeps/ieee754/ldbl-96/k_tanl.c: Include <float.h>.
+	(__kernel_tanl): Force underflow exception for arguments with
+	small absolute value.
+	* math/auto-libm-test-in: Add more tests of tan.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-08-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	Fix sysdeps/i386/fpu/s_scalbn.S build

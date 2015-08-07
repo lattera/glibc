@@ -56,6 +56,7 @@
  *		       = 1 - 2*(tan(y) - (tan(y)^2)/(1+tan(y)))
  */
 
+#include <float.h>
 #include <libc-internal.h>
 #include <math.h>
 #include <math_private.h>
@@ -98,8 +99,17 @@ __kernel_tanl (long double x, long double y, int iy)
 	{
 	  if ((ix | lx | (iy + 1)) == 0)
 	    return one / fabs (x);
+	  else if (iy == 1)
+	    {
+	      if (fabsl (x) < LDBL_MIN)
+		{
+		  long double force_underflow = x * x;
+		  math_force_eval (force_underflow);
+		}
+	      return x;
+	    }
 	  else
-	    return (iy == 1) ? x : -one / x;
+	    return -one / x;
 	}
     }
   if (ix >= 0x3fe59420) /* |x| >= 0.6743316650390625 */

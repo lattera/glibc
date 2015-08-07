@@ -17,6 +17,7 @@
 static char rcsid[] = "$NetBSD: k_tanf.c,v 1.4 1995/05/10 20:46:39 jtc Exp $";
 #endif
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 static const float
@@ -48,7 +49,17 @@ float __kernel_tanf(float x, float y, int iy)
 	if(ix<0x39000000)			/* x < 2**-13 */
 	    {if((int)x==0) {			/* generate inexact */
 		if((ix|(iy+1))==0) return one/fabsf(x);
-		else return (iy==1)? x: -one/x;
+		else if (iy == 1)
+		  {
+		    if (fabsf (x) < FLT_MIN)
+		      {
+			float force_underflow = x * x;
+			math_force_eval (force_underflow);
+		      }
+		    return x;
+		  }
+		else
+		  return -one / x;
 	    }
 	    }
 	if(ix>=0x3f2ca140) { 			/* |x|>=0.6744 */

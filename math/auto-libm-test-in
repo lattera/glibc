@@ -2659,6 +2659,10 @@ tan 9
 tan 10
 tan -0x1.062a48p+0
 tan -0x1.4f69cp+0
+tan min
+tan -min
+tan min_subnorm
+tan -min_subnorm
 
 tanh 0
 tanh -0
