@@ -30,7 +30,7 @@ do_bz17905 (void)
   rl.rlim_cur = sz;
   setrlimit (RLIMIT_STACK, &rl);
 
-  buf = malloc (sz + 1); 
+  buf = malloc (sz + 1);
   memset (buf, 'A', sz);
   buf[sz] = '\0';
   setenv ("NLSPATH", buf, 1);
