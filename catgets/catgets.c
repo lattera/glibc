@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <alloca.h>
 #include <errno.h>
 #include <locale.h>
 #include <nl_types.h>
@@ -35,6 +34,7 @@ catopen (const char *cat_name, int flag)
   __nl_catd result;
   const char *env_var = NULL;
   const char *nlspath = NULL;
+  char *tmp = NULL;
 
   if (strchr (cat_name, '/') == NULL)
     {
@@ -54,7 +54,10 @@ catopen (const char *cat_name, int flag)
 	{
 	  /* Append the system dependent directory.  */
 	  size_t len = strlen (nlspath) + 1 + sizeof NLSPATH;
-	  char *tmp = alloca (len);
+	  tmp = malloc (len);
+
+	  if (__glibc_unlikely (tmp == NULL))
+	    return (nl_catd) -1;
 
 	  __stpcpy (__stpcpy (__stpcpy (tmp, nlspath), ":"), NLSPATH);
 	  nlspath = tmp;
@@ -65,16 +68,18 @@ catopen (const char *cat_name, int flag)
 
   result = (__nl_catd) malloc (sizeof (*result));
   if (result == NULL)
-    /* We cannot get enough memory.  */
-    return (nl_catd) -1;
-
-  if (__open_catalog (cat_name, nlspath, env_var, result) != 0)
+    {
+      /* We cannot get enough memory.  */
+      result = (nl_catd) -1;
+    }
+  else if (__open_catalog (cat_name, nlspath, env_var, result) != 0)
     {
       /* Couldn't open the file.  */
       free ((void *) result);
-      return (nl_catd) -1;
+      result = (nl_catd) -1;
     }
 
+  free (tmp);
   return (nl_catd) result;
 }
 
