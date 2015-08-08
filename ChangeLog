@@ -1,5 +1,10 @@
 2015-08-08  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
+	[BZ #16734]
+	* libio/genops.c (_IO_unbuffer_all): Free wide buffer as well.
+
+2015-08-08  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
 	[BZ #17905]
 	* catgets/Makefile (tst-catgets-mem): New test.
 	* catgets/catgets.c (catopen): Don't use unbounded alloca.

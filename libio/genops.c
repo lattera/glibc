@@ -977,6 +977,9 @@ _IO_unbuffer_all (void)
 
 	  _IO_SETBUF (fp, NULL, 0);
 
+	  if (fp->_mode > 0)
+	    _IO_wsetb (fp, NULL, NULL, 0);
+
 #ifdef _IO_MTSAFE_IO
 	  if (cnt < MAXTRIES && fp->_lock != NULL)
 	    _IO_lock_unlock (*fp->_lock);
