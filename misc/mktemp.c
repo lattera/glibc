@@ -33,4 +33,5 @@ __mktemp (template)
 }
 weak_alias (__mktemp, mktemp)
 
-link_warning (mktemp, "the use of `mktemp' is dangerous, better use `mkstemp'")
+link_warning (mktemp, "the use of `mktemp' is dangerous, "
+		      "better use `mkstemp' or `mkdtemp'")

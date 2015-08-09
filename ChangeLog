@@ -1,3 +1,9 @@
+2015-08-27  Gleb Fotengauer-Malinovskiy  <glebfm@altlinux.org>
+
+	[BZ #2898]
+	* misc/mktemp.c: Add mkdtemp to the link_warning message.
+	Based on patch by Aurelien Jarno.
+
 2015-08-26  Stan Shebs  <stanshebs@google.com>
 
 	* sysdeps/ieee754/ldbl-96/k_tanl.c: Include <libc-internal.h>.
