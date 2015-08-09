@@ -27,15 +27,6 @@ extra-objs := scheck.o ialloc.o
 others	:= zdump zic
 tests	:= test-tz tst-timezone tst-tzset
 
-# pacificnew doesn't compile; if it is to be used, it should be included in
-# northamerica.
-tzbases := africa antarctica asia australasia europe northamerica \
-	   southamerica etcetera factory \
-	   solar87 solar88 solar89
-tzlinks := backward systemv
-tzfiles := $(tzbases) $(tzlinks)
-
-generated += $(addprefix z.,$(tzfiles))
 install-sbin := zic zdump
 
 generated-dirs += testdata

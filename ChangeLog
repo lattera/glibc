@@ -1,3 +1,8 @@
+2015-08-09  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* timezone/Makefile (tzbases, tzlinks, tzfiles): Don't define.
+	(generated): Don't add $(addprefix z.,$(tzfiles)).
+
 2015-08-09  Mike Frysinger  <vapier@gentoo.org>
 
 	* nptl/tst-cancel-wrappers.sh: Change 3rd arg to gensub to 1.
