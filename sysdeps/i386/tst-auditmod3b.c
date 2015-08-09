@@ -82,6 +82,7 @@ la_objsearch (const char *name, uintptr_t *cookie, unsigned int flag)
       break;
     case LA_SER_DEFAULT:
       flagstr = "LA_SER_DEFAULT";
+      break;
     case LA_SER_SECURE:
       flagstr = "LA_SER_SECURE";
       break;
