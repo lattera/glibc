@@ -1,3 +1,14 @@
+2016-02-19  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* nptl/allocatestack.c (allocate_stack): Declare new stackaddr,
+	assign attr->stackaddr to it, and adjust it down when
+	_STACK_GROWS_UP.  Change all attr->stackaddr to stackaddr.
+	[_STACK_GROWS_UP]: Delete assert.
+	* nptl/pthread_create.c (START_THREAD_DEFN) [!_STACK_GROWS_DOWN]:
+	Implement stack grows up logic.
+	* nptl/pthread_getattr_np.c (pthread_getattr_np): Implement
+	stack grows up logic.
+
 2016-02-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* NEWS: Update with 2.24 template.

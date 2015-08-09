@@ -372,6 +372,13 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
   if (__glibc_unlikely (attr->flags & ATTR_FLAG_STACKADDR))
     {
       uintptr_t adj;
+      char *stackaddr = (char *) attr->stackaddr;
+
+      /* Assume the same layout as the _STACK_GROWS_DOWN case, with struct
+	 pthread at the top of the stack block.  Later we adjust the guard
+	 location and stack address to match the _STACK_GROWS_UP case.  */
+      if (_STACK_GROWS_UP)
+	stackaddr += attr->stacksize;
 
       /* If the user also specified the size of the stack make sure it
 	 is large enough.  */
@@ -381,11 +388,11 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
       /* Adjust stack size for alignment of the TLS block.  */
 #if TLS_TCB_AT_TP
-      adj = ((uintptr_t) attr->stackaddr - TLS_TCB_SIZE)
+      adj = ((uintptr_t) stackaddr - TLS_TCB_SIZE)
 	    & __static_tls_align_m1;
       assert (size > adj + TLS_TCB_SIZE);
 #elif TLS_DTV_AT_TP
-      adj = ((uintptr_t) attr->stackaddr - __static_tls_size)
+      adj = ((uintptr_t) stackaddr - __static_tls_size)
 	    & __static_tls_align_m1;
       assert (size > adj);
 #endif
@@ -395,10 +402,10 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	 the stack.  It is the user's responsibility to do this if it
 	 is wanted.  */
 #if TLS_TCB_AT_TP
-      pd = (struct pthread *) ((uintptr_t) attr->stackaddr
+      pd = (struct pthread *) ((uintptr_t) stackaddr
 			       - TLS_TCB_SIZE - adj);
 #elif TLS_DTV_AT_TP
-      pd = (struct pthread *) (((uintptr_t) attr->stackaddr
+      pd = (struct pthread *) (((uintptr_t) stackaddr
 				- __static_tls_size - adj)
 			       - TLS_PRE_TCB_SIZE);
 #endif
@@ -410,7 +417,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       pd->specific[0] = pd->specific_1stblock;
 
       /* Remember the stack-related values.  */
-      pd->stackblock = (char *) attr->stackaddr - size;
+      pd->stackblock = (char *) stackaddr - size;
       pd->stackblock_size = size;
 
       /* This is a user-provided stack.  It will not be queued in the
@@ -634,7 +641,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  char *guard = mem + (((size - guardsize) / 2) & ~pagesize_m1);
 #elif _STACK_GROWS_DOWN
 	  char *guard = mem;
-# elif _STACK_GROWS_UP
+#elif _STACK_GROWS_UP
 	  char *guard = (char *) (((uintptr_t) pd - guardsize) & ~pagesize_m1);
 #endif
 	  if (mprotect (guard, guardsize, PROT_NONE) != 0)
@@ -734,7 +741,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 # endif
 #else
   *stack = pd->stackblock;
-  assert (*stack > 0);
 #endif
 
   return 0;
