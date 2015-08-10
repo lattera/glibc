@@ -29,9 +29,9 @@ static char rcsid[] = "$NetBSD: s_tanh.c,v 1.7 1995/05/10 20:48:22 jtc Exp $";
  *	    2**-57 <  x <=  1     : tanh(x) := -----; t = expm1(-2x)
  *					       t + 2
  *						     2
- *	    1      <= x <=  22.0  : tanh(x) := 1-  ----- ; t=expm1(2x)
+ *	    1      <= x <=  40.0  : tanh(x) := 1-  ----- ; t=expm1(2x)
  *						   t + 2
- *	    22.0   <  x <= INF    : tanh(x) := 1.
+ *	    40.0   <  x <= INF    : tanh(x) := 1.
  *
  * Special cases:
  *	tanh(NaN) is NaN;
@@ -61,8 +61,8 @@ long double __tanhl(long double x)
 	    else       return one/x-one;    /* tanh(NaN) = NaN */
 	}
 
-    /* |x| < 22 */
-	if (ix < 0x4036000000000000LL) {		/* |x|<22 */
+    /* |x| < 40 */
+	if (ix < 0x4044000000000000LL) {		/* |x|<40 */
 	    if (ix == 0)
 		return x;		/* x == +-0 */
 	    if (ix<0x3c60000000000000LL) 	/* |x|<2**-57 */
@@ -74,7 +74,7 @@ long double __tanhl(long double x)
 	        t = __expm1l(-two*fabsl(x));
 	        z= -t/(t+two);
 	    }
-    /* |x| > 22, return +-1 */
+    /* |x| > 40, return +-1 */
 	} else {
 	    z = one - tiny;		/* raised inexact flag */
 	}

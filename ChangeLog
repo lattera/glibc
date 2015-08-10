@@ -1,3 +1,12 @@
+2015-08-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18790]
+	* sysdeps/ieee754/ldbl-128ibm/s_tanhl.c (__tanhl): Increase
+	threshold for returning +/- 1.
+	* math/auto-libm-test-in: Add more tests of tanh.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 2015-08-10  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #18781]
