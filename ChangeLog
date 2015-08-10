@@ -1,3 +1,12 @@
+2015-08-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18789]
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c (__ieee754_sinhl): Use
+	smaller threshold for returning the argument.
+	* math/auto-libm-test-in: Add more tests of sinh.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 2015-08-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18674]

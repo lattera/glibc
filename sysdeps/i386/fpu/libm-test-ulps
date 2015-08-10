@@ -1872,6 +1872,8 @@ ildouble: 4
 ldouble: 5
 
 Function: "sinh_towardzero":
+idouble: 1
+ifloat: 1
 ildouble: 3
 ldouble: 4
 
