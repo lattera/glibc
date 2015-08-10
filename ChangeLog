@@ -1,3 +1,9 @@
+2015-08-11  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/openat.c (OPENAT_NOT_CANCEL): Don't define.
+	* sysdeps/unix/sysv/linux/wordsize-64/openat.c
+	(__openat64_nocancel): Likewise.
+
 2015-08-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of acosh, asin, asinh,
