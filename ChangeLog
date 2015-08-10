@@ -1,3 +1,17 @@
+2015-08-10  Maxim Ostapenko  <m.ostapenko@partner.samsung.com>
+
+	[BZ #18778]
+	* elf/Makefile (tests): Add Add tst-nodelete2.
+	(modules-names): Add tst-nodelete2mod.
+	(tst-nodelete2mod.so-no-z-defs): New.
+	($(objpfx)tst-nodelete2): Likewise.
+	($(objpfx)tst-nodelete2.out): Likewise.
+	(LDFLAGS-tst-nodelete2): Likewise.
+	* elf/dl-close.c (_dl_close_worker): Move DF_1_NODELETE clearing
+	out of loop through all loaded libraries.
+	* elf/tst-nodelete2.c: New file.
+	* elf/tst-nodelete2mod.c: Likewise.
+
 2015-08-11  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/openat.c (OPENAT_NOT_CANCEL): Don't define.

@@ -148,7 +148,8 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-unique1 tst-unique2 $(if $(CXX),tst-unique3 tst-unique4 \
 	 tst-nodelete) \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
-	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened
+	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
+	 tst-nodelete2
 #	 reldep9
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
@@ -218,7 +219,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-initorder2d \
 		tst-relsort1mod1 tst-relsort1mod2 tst-array2dep \
 		tst-array5dep tst-null-argv-lib \
-		tst-tlsalign-lib tst-nodelete-opened-lib
+		tst-tlsalign-lib tst-nodelete-opened-lib tst-nodelete2mod
 ifeq (yes,$(have-protected-data))
 modules-names += tst-protected1moda tst-protected1modb
 tests += tst-protected1a tst-protected1b
@@ -594,6 +595,7 @@ tst-auditmod9b.so-no-z-defs = yes
 tst-nodelete-uniquemod.so-no-z-defs = yes
 tst-nodelete-rtldmod.so-no-z-defs = yes
 tst-nodelete-zmod.so-no-z-defs = yes
+tst-nodelete2mod.so-no-z-defs = yes
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -1163,6 +1165,11 @@ $(objpfx)tst-nodelete.out: $(objpfx)tst-nodelete-uniquemod.so \
 
 LDFLAGS-tst-nodelete = -rdynamic
 LDFLAGS-tst-nodelete-zmod.so = -Wl,--enable-new-dtags,-z,nodelete
+
+$(objpfx)tst-nodelete2: $(libdl)
+$(objpfx)tst-nodelete2.out: $(objpfx)tst-nodelete2mod.so
+
+LDFLAGS-tst-nodelete2 = -rdynamic
 
 $(objpfx)tst-initorder-cmp.out: tst-initorder.exp $(objpfx)tst-initorder.out
 	cmp $^ > $@; \

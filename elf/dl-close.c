@@ -144,6 +144,14 @@ _dl_close_worker (struct link_map *map, bool force)
   char done[nloaded];
   struct link_map *maps[nloaded];
 
+  /* Clear DF_1_NODELETE to force object deletion.  We don't need to touch
+     l_tls_dtor_count because forced object deletion only happens when an
+     error occurs during object load.  Destructor registration for TLS
+     non-POD objects should not have happened till then for this
+     object.  */
+  if (force)
+    map->l_flags_1 &= ~DF_1_NODELETE;
+
   /* Run over the list and assign indexes to the link maps and enter
      them into the MAPS array.  */
   int idx = 0;
@@ -153,13 +161,6 @@ _dl_close_worker (struct link_map *map, bool force)
       maps[idx] = l;
       ++idx;
 
-      /* Clear DF_1_NODELETE to force object deletion.  We don't need to touch
-	 l_tls_dtor_count because forced object deletion only happens when an
-	 error occurs during object load.  Destructor registration for TLS
-	 non-POD objects should not have happened till then for this
-	 object.  */
-      if (force)
-	l->l_flags_1 &= ~DF_1_NODELETE;
     }
   assert (idx == nloaded);
 
