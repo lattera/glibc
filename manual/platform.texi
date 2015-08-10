@@ -97,3 +97,21 @@ Set the Program Priority Register to low value.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Set the Program Priority Register to medium low value.
 @end deftypefun
+
+Power ISA 2.07 extends the priorities that can be set to the Program Priority
+Register (PPR).  The following functions implement the new priority levels:
+very low and medium high.
+
+@deftypefun {void} __ppc_set_ppr_very_low (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Set the Program Priority Register to very low value.
+@end deftypefun
+
+@deftypefun {void} __ppc_set_ppr_med_high (void)
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Set the Program Priority Register to medium high value.  The medium high
+priority is privileged and may only be set during certain time intervals by
+problem-state programs.  If the program priority is medium high when the time
+interval expires or if an attempt is made to set the priority to medium high
+when it is not allowed, the priority is set to medium.
+@end deftypefun

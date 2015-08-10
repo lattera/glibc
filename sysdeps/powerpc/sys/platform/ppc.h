@@ -112,4 +112,35 @@ __ppc_set_ppr_low (void)
   __asm__ volatile ("or 1,1,1");
 }
 
+/* Power ISA 2.07 (Book II, Chapter 3) extends the priorities that can be set
+   to the Program Priority Register (PPR).  The form 'or Rx,Rx,Rx' is used to
+   modify the PRI field of the PPR, the same way as described above.
+   The new priority levels are:
+     Rx = 31 (very low)
+     Rx = 5 (medium high)
+   Any program can set the priority to very low, low, medium low, and medium,
+   as these are unprivileged.
+   The medium high priority, on the other hand, is privileged, and may only be
+   set during certain time intervals by problem-state programs.  If the program
+   priority is medium high when the time interval expires or if an attempt is
+   made to set the priority to medium high when it is not allowed, the PRI
+   field is set to medium.
+ */
+
+#ifdef _ARCH_PWR8
+
+static inline void
+__ppc_set_ppr_very_low (void)
+{
+  __asm__ volatile ("or 31,31,31");
+}
+
+static inline void
+__ppc_set_ppr_med_high (void)
+{
+  __asm__ volatile ("or 5,5,5");
+}
+
+#endif
+
 #endif  /* sys/platform/ppc.h */

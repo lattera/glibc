@@ -1,3 +1,10 @@
+2015-08-19  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/sys/platform/ppc.h (__ppc_set_ppr_med_high,
+	__ppc_set_ppr_very_low): New functions.
+	* manual/platform.texi: Add documentation about
+	__ppc_set_ppr_med_high and __ppc_set_ppr_very_low.
+
 2015-08-19  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* string/stpncpy.c (stpncpy): Improve performance using
