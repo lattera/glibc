@@ -144,7 +144,7 @@ test_ftello (void)
 int
 do_test (int argc, char *argv[])
 {
-  int ret;
+  int ret, fd2;
   struct stat64 statbuf;
 
   ret = lseek64 (fd, TWO_GB+100, SEEK_SET);
@@ -194,6 +194,25 @@ do_test (int argc, char *argv[])
   else if (statbuf.st_size != (TWO_GB + 100 + 5))
     error (EXIT_FAILURE, 0, "stat reported size %lld instead of %lld.",
 	   (long long int) statbuf.st_size, (TWO_GB + 100 + 5));
+
+  fd2 = openat64 (AT_FDCWD, name, O_RDWR);
+  if (fd2 == -1)
+    {
+      if (errno == ENOSYS)
+	{
+	  /* Silently ignore this test.  */
+	  error (0, 0, "openat64 is not supported");
+	}
+      else
+	error (EXIT_FAILURE, errno, "openat64 failed to open big file");
+    }
+  else
+    {
+      ret = close (fd2);
+
+      if (ret == -1)
+	error (EXIT_FAILURE, errno, "error closing file");
+    }
 
   test_ftello ();
 

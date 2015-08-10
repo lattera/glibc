@@ -1,3 +1,10 @@
+2015-08-10  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18781]
+	* sysdeps/unix/sysv/linux/openat.c (__OPENAT) [MORE_OFLAGS]: Add
+	MORE_OFLAGS to oflag.
+	* io/test-lfs.c (do_test): Test openat64.
+
 2015-08-10  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18789]

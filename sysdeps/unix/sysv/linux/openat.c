@@ -68,6 +68,11 @@ __OPENAT (int fd, const char *file, int oflag, ...)
       va_end (arg);
     }
 
+  /* We have to add the O_LARGEFILE flag for openat64.  */
+#ifdef MORE_OFLAGS
+  oflag |= MORE_OFLAGS;
+#endif
+
   return SYSCALL_CANCEL (openat, fd, file, oflag, mode);
 }
 libc_hidden_def (__OPENAT)
