@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc)
-# undef memcpy
+# undef memchr
 /* Redefine memchr so that the compiler won't make the weak_alias point
    to internal hidden definition (__GI_memchr), since PPC32 does not
    support local IFUNC calls.  */

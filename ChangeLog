@@ -1,5 +1,10 @@
 2015-08-21  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memchr.c: Replace
+	'#undef memcpy' by '#undef memchr'.
+
+2015-08-21  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/memchr-ppc64.c: Make
 	memchr not point to the internal __GI_memchr implementation.
 
