@@ -16,4 +16,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdeps/powerpc/powerpc32/power4/multiarch/memchr-ppc32.c>
+#include <string.h>
+
+#define MEMCHR  __memchr_ppc
+
+#undef weak_alias
+#define weak_alias(a, b)
+
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(name)
+
+extern __typeof (memchr) __memchr_ppc attribute_hidden;
+
+#include <string/memchr.c>

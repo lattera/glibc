@@ -1,3 +1,8 @@
+2015-08-21  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/memchr-ppc64.c: Make
+	memchr not point to the internal __GI_memchr implementation.
+
 2015-08-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* timezone/Makefile (CFLAGS-zdump.c): Remove
