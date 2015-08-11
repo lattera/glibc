@@ -116,6 +116,7 @@ acosh 0x1.0b9d3e9fc19fbp+0
 acosh 0x1.11eab6p+0
 acosh 0x1.0fffaap+0
 acosh 0x1.068e0eca105a6p+0
+acosh 0x2.8d4288p+0
 acosh max no-test-inline
 
 asin 0
@@ -138,6 +139,7 @@ asin -0x3.746774p-4
 asin -0x3.1c54d10e5c844p-4
 asin 0xf.c9675fa6fe69f12p-4
 asin -0xa.fc5afp-4
+asin 0xd.805e5p-4
 asin min
 asin -min
 asin min_subnorm
@@ -218,6 +220,7 @@ asinh 0x7.d8e5a8p-4
 asinh -0x7.63a06320c42e4p-4
 asinh 0x6.f4a93p-4
 asinh -0x7.88bcc8p-4
+asinh -0x3.11c35p-4
 asinh 0x1p-500
 asinh 0x1p-5000
 asinh min
@@ -386,6 +389,9 @@ atanh 0x3.91d9f3c80c72d7acp-4
 atanh -0x2.6c52c26567198p-4
 atanh 0x3.a274ecp-4
 atanh -0x3.f0f519a687b64p-8
+atanh 0x6.fd4ec8p-4
+atanh -0x2.6cb2a8p-4
+atanh -0xc.21df7c7f51508p-4
 atanh 0x1p-500
 atanh 0x1p-5000
 atanh min
@@ -417,6 +423,8 @@ cabs -0x1.0932cp-80 -0x2.51109p-24
 cabs -0x1.055fb2p+48 0x9.1ce86p+24
 cabs -0x1.26a566p+120 0x4.017b28p+92
 cabs -0x1.0eda54p+28 0xb.09476p+0
+cabs -0x1.133b84p+84 -0xa.7d925f57f60cp+768
+cabs -0 -0x3.4e5d7877324cp+0
 
 # carg (x + i 0) == 0 for x > 0.
 carg 2.0 0
@@ -446,6 +454,8 @@ carg -0xf.9c4c8p-4 -0xa.b4101p+20
 carg 0x7.40ac68p+0 0x4.251bb8p-4
 carg 0xa.3ac3cp+68 0x1.47239ep+68
 carg 0x3.8ff10cp+0 -0x6.b0794p-4
+carg -0x3.973cc4p+72 -0xf.fffffp+124
+carg 0x8p-152 0x4p-1076
 
 cbrt 0.0
 cbrt -0
@@ -461,6 +471,11 @@ cbrt 0x3.132634p+0
 cbrt -0xc.8d0442f2f0d1p-492
 cbrt -0xa.6b142p+40
 cbrt -0x1.f28ab85f3580ap-128
+cbrt -0x2.b5cd28p-36
+cbrt -0x1.d6a8bep-20
+cbrt -0x3.593ed8p-72
+cbrt 0x1.bd0098p-104
+cbrt -0x3.300d34p+0
 cbrt max
 cbrt -max
 cbrt min
@@ -925,6 +940,8 @@ cosh -1
 cosh 50
 cosh -0xb.60713p+0
 cosh -0x3.cee48p+0
+cosh 0x2.f5d128p+0
+cosh -0xd.0c03p+0
 # GCC bug 59666: results on directed rounding may be incorrect.
 cosh max no-test-inline xfail-rounding:ldbl-128ibm
 cosh -max no-test-inline xfail-rounding:ldbl-128ibm
@@ -1075,6 +1092,7 @@ csqrt 0x1.d60caep+0 0x7.a7d468p+0
 csqrt -0xb.e2bc1cd6eaa7p-180 0x8p-152
 csqrt 0xd.25d559ac5baap-168 0x8p-152
 csqrt -0x9.0a61a7b482d28p-168 -0x8p-152
+csqrt 0x3.f768f58949e3fe6cp-4 0x2.0c2e89a5cff98p+0
 
 csqrt 0x1.fffffep+127 0x1.fffffep+127
 csqrt 0x1.fffffep+127 1.0
@@ -1232,6 +1250,8 @@ erf -0x1.ddaea4p+0
 erf -0x1.2b1f68p+0
 erf 0x1.44e722p+0
 erf -0x1.3a0d48p+0
+erf -0x1.c975cap+0
+erf -0x1.e6a006p+0
 
 erfc 0.0
 erfc -0
@@ -1273,6 +1293,8 @@ erfc 0x1.5289fep+0
 erfc 0x4.b48498p+0
 erfc 0x2.f8646cp+0
 erfc 0x1.514548p+0
+erfc 0x2.36c504p+0
+erfc 0x1.65e31p+0
 
 exp 0
 exp -0
@@ -1317,6 +1339,8 @@ exp -min_subnorm
 
 exp -0x1.760cd14774bd9p+0
 exp 0x1.4bed28p+0
+exp -0x1.f1cf36p+8
+exp 0x3.248524p+0
 
 exp10 0
 exp10 -0
@@ -1364,6 +1388,7 @@ exp10 -min_subnorm
 exp10 0xd.f73d6p-4
 exp10 0x1.cc6776p+0
 exp10 0x5.b00bcd891ffe56fp+0
+exp10 0xe.8b349p+4
 
 exp2 0
 exp2 -0
@@ -1473,6 +1498,7 @@ expm1 0x6.289a78p-4
 expm1 0x6.1b4d318238d4a2a8p-4
 expm1 0x5.fb8dc64e91a74p-4
 expm1 0x3.735f497c4e67535cp-4
+expm1 -0x7.d6c50b469d404p+0
 expm1 0x4.0000000000000028p-16384
 expm1 min
 expm1 -min
@@ -1781,6 +1807,8 @@ hypot 0x0.ffffffp-16382 0x0.fp-16383 no-test-inline
 hypot 0x0.ffffffp-16382 0x0.fp-16386 no-test-inline
 hypot 0 min_subnorm no-test-inline
 
+hypot -0x1.fa7deap+0 0x1.a761bab383ac8p+0
+
 j0 -1.0
 j0 0.0
 j0 0.125
@@ -1966,6 +1994,8 @@ log 0xb.0d5dfp-4
 log 0x1.6c3f6p+0
 log 0xa.ae688p-4
 log 0x1.017f8ap+44
+log 0x1.0b5c1ep+36
+log 0x2.1b17c2887e938p+928
 
 log10 1
 log10 0.1
@@ -1984,6 +2014,7 @@ log10 0x1.251ec6p+0
 log10 0x1.022e82p+0
 log10 0x9.b3727e3feb538p-4
 log10 0xf.bf1b2p-4
+log10 0x1.6b5f7ap+96
 
 log1p 0
 log1p -0
@@ -2013,6 +2044,7 @@ log1p 0x9.81ccf8887c24a7bp-4
 log1p 0xa.5028608bd65f38dp-4
 log1p 0x5.bf78873e20a2d468p-4
 log1p 0x7.aa5198p-4
+log1p 0x2.564fap+0
 
 log2 1
 log2 e
@@ -2029,6 +2061,7 @@ log2 0xf.4dfb4p-48
 log2 0x1.0a588ep+0
 log2 0xb.e77c6p-4
 log2 0x1.4fe37ep+0
+log2 0x3.9b0754p+8
 log2 min
 log2 min_subnorm
 
@@ -2430,6 +2463,7 @@ pow 1.0625 1.125
 pow 1.5 1.03125
 pow 0x1.7d1a0a6f2p+681 1.5
 pow 0x1.ce78f2p+0 -0x2.7f1f78p+4
+pow 0xf.fffffp+124 -0x5.b5b648p+0
 
 sin 0
 sin -0
@@ -2550,6 +2584,8 @@ sinh 0x7.6e259d2436fc4p-4
 sinh 0x3.d6e088p-4
 sinh -0x7.688eap-4
 sinh -0xd.dce79p-4
+sinh 0x8.a3127p+4
+sinh 0x1.c0709p-12
 sinh min
 sinh -min
 sinh min_subnorm
@@ -2681,6 +2717,9 @@ tan 9
 tan 10
 tan -0x1.062a48p+0
 tan -0x1.4f69cp+0
+tan 0x1.6ca7e8p+0
+tan -0x1.b569cp+0
+tan -0x2.12bafcp+0
 tan min
 tan -min
 tan min_subnorm
@@ -3190,6 +3229,9 @@ tgamma -0x3.06644cp+0
 tgamma -0x6.fe4636e0c5064p+0
 tgamma -0x7.a13d7a2945cd5718p+0
 tgamma -0x1.4a5caap+4
+tgamma -0x9.2d3a5p+0
+tgamma -0xb.0f63ep+0
+tgamma -0x5.f0e02p+8
 
 y0 0.125
 y0 0.75
