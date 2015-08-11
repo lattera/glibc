@@ -776,6 +776,6 @@ country_car   "<U004C><U0041><U004F>"
 %country_isbn  ""
 lang_name     "<U0EA5><U0EB2><U0EA7>"
 lang_ab       "<U006C><U006F>"
-lang_term     "<U006c><U0061><U006F>"
+lang_term     "<U006C><U0061><U006F>"
 lang_lib      "<U006C><U0061><U006F>"
 END LC_ADDRESS

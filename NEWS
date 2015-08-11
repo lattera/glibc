@@ -9,9 +9,9 @@ Version 2.23
 
 * The following bugs are resolved with this release:
 
-  16517, 16519, 16520, 16734, 17905, 18084, 18086, 18265, 18421, 18480,
-  18525, 18618, 18647, 18661, 18681, 18674, 18778, 18781, 18787, 18789,
-  18790, 18795, 18820, 18823, 18824.
+  16517, 16519, 16520, 16734, 16973, 17905, 18084, 18086, 18265, 18421,
+  18480, 18525, 18618, 18647, 18661, 18681, 18674, 18778, 18781, 18787,
+  18789, 18790, 18795, 18820, 18823, 18824.
 
 * The obsolete header <regexp.h> has been removed.  Programs that require
   this header must be updated to use <regex.h> instead.

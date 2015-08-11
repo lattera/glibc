@@ -314,6 +314,8 @@ country_ab2     "<U004D><U004D>"
 country_car  "<U0042><U0041>"
 lang_ab         "<U006D><U0079>"
 lang_name       "<U1017><U1019><U102C>"
+% mya
 lang_term   "<U006D><U0079><U0061>"
-lang_lib    "<U006D><U0079><U0061>"
+% bur
+lang_lib    "<U0062><U0075><U0072>"
 END LC_ADDRESS

@@ -151,8 +151,10 @@ country_num   499
 country_car   "<U004D><U004E><U0045>"
 country_isbn  "<U0038><U0036>"
 lang_name     "<U0441><U0440><U043F><U0441><U043A><U0438>"
+% srp
 lang_term     "<U0073><U0072><U0070>"
-lang_lib      "<U0073><U0063><U0063>"
+% srp
+lang_lib      "<U0073><U0072><U0070>"
 lang_ab	      "<U0073><U0072>"
 END LC_ADDRESS
 

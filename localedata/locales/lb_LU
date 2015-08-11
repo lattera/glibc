@@ -179,8 +179,10 @@ country_isbn  2
 lang_name     "<U004C><U00EB><U0074><U007A><U0065><U0062><U0075><U0065>/
 <U0072><U0067><U0065><U0073><U0063><U0068>"
 lang_ab       "<U006C><U0062>"
+% ltz
 lang_term     "<U006C><U0074><U007A>"
-lang_lib      "<U006C><U0075><U0078>"
+% ltz
+lang_lib      "<U006C><U0074><U007A>"
 END LC_ADDRESS
 
 LC_TELEPHONE

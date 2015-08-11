@@ -160,8 +160,10 @@ country_num   688
 country_car   "<U0053><U0052><U0042>"
 country_isbn  "<U0038><U0036>"
 lang_name     "<U0073><U0072><U0070><U0073><U006B><U0069>"
+% srp
 lang_term     "<U0073><U0072><U0070>"
-lang_lib      "<U0073><U0063><U0063>"
+% srp
+lang_lib      "<U0073><U0072><U0070>"
 lang_ab	      "<U0073><U0072>"
 END LC_ADDRESS
 

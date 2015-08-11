@@ -1898,7 +1898,10 @@ country_car   "<U004C><U0041><U004F>"
 %country_isbn  ""
 % ភាសាខ្មែរ (Khmer)
 lang_name     "<U1797><U17B6><U179F><U17B6><U1781><U17D2><U1798><U17C2><U179A>"
-lang_ab       "<U006C><U006F>"
-lang_term     "<U006c><U0061><U006F>"
-lang_lib      "<U006C><U0061><U006F>"
+% km
+lang_ab       "<U006B><U006D>"
+% khm
+lang_term     "<U006B><U0068><U006D>"
+% khm
+lang_lib      "<U006B><U0068><U006D>"
 END LC_ADDRESS
