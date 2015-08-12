@@ -36,16 +36,16 @@ nice (int incr)
     {
       if (errno != 0)
 	return -1;
-      else
-	__set_errno (save);
     }
 
   result = __setpriority (PRIO_PROCESS, 0, prio + incr);
   if (result == -1)
     {
       if (errno == EACCES)
-	errno = EPERM;
+	__set_errno (EPERM);
       return -1;
     }
+
+  __set_errno (save);
   return __getpriority (PRIO_PROCESS, 0);
 }

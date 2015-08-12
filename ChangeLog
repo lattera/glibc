@@ -1,3 +1,9 @@
+2015-08-11  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #18086]
+	* sysdeps/posix/nice.c (nice): Restore old errno.
+	* posix/tst-nice.c (do_test): Add test for BZ #18086.
+
 2015-08-10  Ondrej Bilka  <neleai@seznam.cz>
 
 	* sysdeps/powerpc/powerpc64/multiarch/stpcpy.c: Fix ifunc.

@@ -56,8 +56,17 @@ do_test (void)
       return 1;
     }
 
-  printf ("PASS: nice(%d) from %d return: %d\n", incr, old, ret);
+  /* BZ #18086. Make sure we don't reset errno.  */
+  errno = EBADF;
+  nice (0);
+  if (errno != EBADF)
+    {
+      printf ("FAIL: errno = %i, but wanted EBADF (%i)\n", errno, EBADF);
+      return 1;
+    }
 
+
+  printf ("PASS: nice(%d) from %d return: %d\n", incr, old, ret);
   return 0;
 }
 
