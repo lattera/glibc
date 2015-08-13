@@ -1,5 +1,10 @@
 2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86/elision-conf.c (elision_init):
+	Replace HAS_RTM with HAS_CPU_FEATURE (RTM).
+
+2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* math/Makefile ($(addprefix $(objpfx), $(libm-vec-tests))):
 	Remove $(objpfx)init-arch.o.
 	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Remove

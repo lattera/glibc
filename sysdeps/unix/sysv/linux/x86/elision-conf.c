@@ -62,11 +62,11 @@ elision_init (int argc __attribute__ ((unused)),
 	      char **argv  __attribute__ ((unused)),
 	      char **environ)
 {
-  __elision_available = HAS_RTM;
+  __elision_available = HAS_CPU_FEATURE (RTM);
 #ifdef ENABLE_LOCK_ELISION
   __pthread_force_elision = __libc_enable_secure ? 0 : __elision_available;
 #endif
-  if (!HAS_RTM)
+  if (!HAS_CPU_FEATURE (RTM))
     __elision_aconf.retry_try_xbegin = 0; /* Disable elision on rwlocks */
 }
 
