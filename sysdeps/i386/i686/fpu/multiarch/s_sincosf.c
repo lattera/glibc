@@ -22,7 +22,8 @@ extern void __sincosf_sse2 (float, float *, float *);
 extern void __sincosf_ia32 (float, float *, float *);
 void __sincosf (float, float *, float *);
 
-libm_ifunc (__sincosf, HAS_SSE2 ? __sincosf_sse2 : __sincosf_ia32);
+libm_ifunc (__sincosf,
+	    HAS_CPU_FEATURE (SSE2) ? __sincosf_sse2 : __sincosf_ia32);
 weak_alias (__sincosf, sincosf);
 
 #define SINCOSF __sincosf_ia32

@@ -26,7 +26,8 @@
 extern double __fma_ia32 (double x, double y, double z) attribute_hidden;
 extern double __fma_fma (double x, double y, double z) attribute_hidden;
 
-libm_ifunc (__fma, HAS_FMA ? __fma_fma : __fma_ia32);
+libm_ifunc (__fma,
+	    HAS_ARCH_FEATURE (FMA_Usable) ? __fma_fma : __fma_ia32);
 weak_alias (__fma, fma)
 
 # define __fma __fma_ia32

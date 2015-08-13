@@ -25,24 +25,15 @@
 	.text
 ENTRY(strchr)
 	.type	strchr, @gnu_indirect_function
-	pushl	%ebx
-	cfi_adjust_cfa_offset (4)
-	cfi_rel_offset (ebx, 0)
-	LOAD_PIC_REG(bx)
-	cmpl	$0, KIND_OFFSET+__cpu_features@GOTOFF(%ebx)
-	jne	1f
-	call	__init_cpu_features
-1:	leal	__strchr_ia32@GOTOFF(%ebx), %eax
-	testl	$bit_SSE2, CPUID_OFFSET+index_SSE2+__cpu_features@GOTOFF(%ebx)
+	LOAD_GOT_AND_RTLD_GLOBAL_RO
+	LOAD_FUNC_GOT_EAX (__strchr_ia32)
+	HAS_CPU_FEATURE (SSE2)
 	jz	2f
-	leal	__strchr_sse2_bsf@GOTOFF(%ebx), %eax
-	testl	$bit_Slow_BSF, FEATURE_OFFSET+index_Slow_BSF+__cpu_features@GOTOFF(%ebx)
+	LOAD_FUNC_GOT_EAX (__strchr_sse2_bsf)
+	HAS_ARCH_FEATURE (Slow_BSF)
 	jz	2f
-	leal	__strchr_sse2@GOTOFF(%ebx), %eax
-2:	popl	%ebx
-	cfi_adjust_cfa_offset (-4);
-	cfi_restore (ebx)
-	ret
+	LOAD_FUNC_GOT_EAX (__strchr_sse2)
+2:	ret
 END(strchr)
 
 # undef ENTRY

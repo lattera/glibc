@@ -22,7 +22,7 @@ extern float __sinf_sse2 (float);
 extern float __sinf_ia32 (float);
 float __sinf (float);
 
-libm_ifunc (__sinf, HAS_SSE2 ? __sinf_sse2 : __sinf_ia32);
+libm_ifunc (__sinf, HAS_CPU_FEATURE (SSE2) ? __sinf_sse2 : __sinf_ia32);
 weak_alias (__sinf, sinf);
 #define SINF __sinf_ia32
 #include <sysdeps/ieee754/flt-32/s_sinf.c>

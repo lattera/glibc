@@ -1,5 +1,51 @@
 2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i686/fpu/multiarch/e_expf.c: Replace HAS_XXX
+	with HAS_CPU_FEATURE/HAS_ARCH_FEATURE (XXX).
+	* sysdeps/i386/i686/fpu/multiarch/s_cosf.c: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/s_cosf.c: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/s_sincosf.c: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/s_sinf.c: Likewise.
+	* sysdeps/i386/i686/multiarch/ifunc-impl-list.c: Likewise.
+	* sysdeps/i386/i686/multiarch/s_fma.c: Likewise.
+	* sysdeps/i386/i686/multiarch/s_fmaf.c: Likewise.
+	* sysdeps/i386/i686/multiarch/bcopy.S: Remove __init_cpu_features
+	call.  Merge SHARED and !SHARED.  Add LOAD_GOT_AND_RTLD_GLOBAL_RO.
+	Use LOAD_FUNC_GOT_EAX to load function address.  Replace HAS_XXX
+	with HAS_CPU_FEATURE/HAS_ARCH_FEATURE (XXX).
+	* sysdeps/i386/i686/multiarch/bzero.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memrchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memset.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memset_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/rawmemchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasecmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcat.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcspn.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strlen.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncase.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strnlen.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strrchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strspn.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcschr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcscmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcscpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcslen.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcsrchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wmemcmp.S: Likewise.
+
+2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/fpu/multiarch/e_asin.c: Replace HAS_XXX with
 	HAS_CPU_FEATURE/HAS_ARCH_FEATURE (XXX).
 	* sysdeps/x86_64/fpu/multiarch/e_atan2.c: Likewise.

@@ -26,20 +26,11 @@
 	.text
 ENTRY(wcscpy)
 	.type	wcscpy, @gnu_indirect_function
-	pushl	%ebx
-	cfi_adjust_cfa_offset (4)
-	cfi_rel_offset (ebx, 0)
-	LOAD_PIC_REG(bx)
-	cmpl	$0, KIND_OFFSET+__cpu_features@GOTOFF(%ebx)
-	jne	1f
-	call	__init_cpu_features
-1:	leal	__wcscpy_ia32@GOTOFF(%ebx), %eax
-	testl	$bit_SSSE3, CPUID_OFFSET+index_SSSE3+__cpu_features@GOTOFF(%ebx)
+	LOAD_GOT_AND_RTLD_GLOBAL_RO
+	LOAD_FUNC_GOT_EAX (__wcscpy_ia32)
+	HAS_CPU_FEATURE (SSSE3)
 	jz	2f
-	leal	__wcscpy_ssse3@GOTOFF(%ebx), %eax
-2:	popl	%ebx
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (ebx)
-	ret
+	LOAD_FUNC_GOT_EAX (__wcscpy_ssse3)
+2:	ret
 END(wcscpy)
 #endif
