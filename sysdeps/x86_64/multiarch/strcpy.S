@@ -61,14 +61,12 @@
 	.text
 ENTRY(STRCPY)
 	.type	STRCPY, @gnu_indirect_function
-	cmpl	$0, __cpu_features+KIND_OFFSET(%rip)
-	jne	1f
-	call	__init_cpu_features
-1:	leaq	STRCPY_SSE2_UNALIGNED(%rip), %rax
-	testl	$bit_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_Fast_Unaligned_Load(%rip)
+	LOAD_RTLD_GLOBAL_RO_RDX
+	leaq	STRCPY_SSE2_UNALIGNED(%rip), %rax
+	HAS_ARCH_FEATURE (Fast_Unaligned_Load)
 	jnz	2f
 	leaq	STRCPY_SSE2(%rip), %rax
-	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
+	HAS_CPU_FEATURE (SSSE3)
 	jz	2f
 	leaq	STRCPY_SSSE3(%rip), %rax
 2:	ret

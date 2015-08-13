@@ -75,12 +75,18 @@ do_test (int argc, char **argv)
   int fails;
 
   get_cpuinfo ();
-  fails = check_proc ("avx", HAS_AVX, "HAS_AVX");
-  fails += check_proc ("fma4", HAS_FMA4, "HAS_FMA4");
-  fails += check_proc ("sse4_2", HAS_SSE4_2, "HAS_SSE4_2");
-  fails += check_proc ("sse4_1", HAS_SSE4_1, "HAS_SSE4_1");
-  fails += check_proc ("ssse3", HAS_SSSE3, "HAS_SSSE3");
-  fails += check_proc ("popcnt", HAS_POPCOUNT, "HAS_POPCOUNT");
+  fails = check_proc ("avx", HAS_ARCH_FEATURE (AVX_Usable),
+		      "HAS_ARCH_FEATURE (AVX_Usable)");
+  fails += check_proc ("fma4", HAS_ARCH_FEATURE (FMA4_Usable),
+		       "HAS_ARCH_FEATURE (FMA4_Usable)");
+  fails += check_proc ("sse4_2", HAS_CPU_FEATURE (SSE4_2),
+		       "HAS_CPU_FEATURE (SSE4_2)");
+  fails += check_proc ("sse4_1", HAS_CPU_FEATURE (SSE4_1)
+		       , "HAS_CPU_FEATURE (SSE4_1)");
+  fails += check_proc ("ssse3", HAS_CPU_FEATURE (SSSE3),
+		       "HAS_CPU_FEATURE (SSSE3)");
+  fails += check_proc ("popcnt", HAS_CPU_FEATURE (POPCOUNT),
+		       "HAS_CPU_FEATURE (POPCOUNT)");
 
   printf ("%d differences between /proc/cpuinfo and glibc code.\n", fails);
 

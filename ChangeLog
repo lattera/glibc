@@ -1,5 +1,51 @@
 2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/fpu/multiarch/e_asin.c: Replace HAS_XXX with
+	HAS_CPU_FEATURE/HAS_ARCH_FEATURE (XXX).
+	* sysdeps/x86_64/fpu/multiarch/e_atan2.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_exp.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_log.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_pow.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_atan.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_fmaf.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_sin.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_tan.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_ceil.S: Use
+	LOAD_RTLD_GLOBAL_RO_RDX and HAS_CPU_FEATURE (SSE4_1).
+	* sysdeps/x86_64/fpu/multiarch/s_ceilf.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_floor.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_floorf.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyint.S : Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyintf.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_rintf.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_rintf.S : Likewise.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Likewise.
+	* sysdeps/x86_64/multiarch/sched_cpucount.c: Likewise.
+	* sysdeps/x86_64/multiarch/strstr.c: Likewise.
+	* sysdeps/x86_64/multiarch/memmove.c: Likewise.
+	* sysdeps/x86_64/multiarch/memmove_chk.c: Likewise.
+	* sysdeps/x86_64/multiarch/test-multiarch.c: Likewise.
+	* sysdeps/x86_64/multiarch/memcmp.S: Remove __init_cpu_features
+	call.  Add LOAD_RTLD_GLOBAL_RO_RDX.  Replace HAS_XXX with
+	HAS_CPU_FEATURE/HAS_ARCH_FEATURE (XXX).
+	* sysdeps/x86_64/multiarch/memcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcat.S: Likewise.
+	* sysdeps/x86_64/multiarch/strchr.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcmp.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcspn.S: Likewise.
+	* sysdeps/x86_64/multiarch/strspn.S: Likewise.
+	* sysdeps/x86_64/multiarch/wcscpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/wmemcmp.S: Likewise.
+
+2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/dl-machine.h: Include <cpu-features.c>.
 	(dl_platform_init): Call init_cpu_features.
 	* sysdeps/i386/dl-procinfo.c (_dl_x86_cpu_features): New.

@@ -45,11 +45,9 @@
 	.text
 ENTRY(STRCSPN)
 	.type	STRCSPN, @gnu_indirect_function
-	cmpl	$0, __cpu_features+KIND_OFFSET(%rip)
-	jne	1f
-	call	__init_cpu_features
-1:	leaq	STRCSPN_SSE2(%rip), %rax
-	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
+	LOAD_RTLD_GLOBAL_RO_RDX
+	leaq	STRCSPN_SSE2(%rip), %rax
+	HAS_CPU_FEATURE (SSE4_2)
 	jz	2f
 	leaq	STRCSPN_SSE42(%rip), %rax
 2:	ret

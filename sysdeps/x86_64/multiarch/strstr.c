@@ -41,7 +41,10 @@ extern __typeof (__redirect_strstr) __strstr_sse2 attribute_hidden;
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
 extern __typeof (__redirect_strstr) __libc_strstr;
-libc_ifunc (__libc_strstr, HAS_FAST_UNALIGNED_LOAD ? __strstr_sse2_unaligned : __strstr_sse2)
+libc_ifunc (__libc_strstr,
+	    HAS_ARCH_FEATURE (Fast_Unaligned_Load)
+	    ? __strstr_sse2_unaligned
+	    : __strstr_sse2)
 
 #undef strstr
 strong_alias (__libc_strstr, strstr)

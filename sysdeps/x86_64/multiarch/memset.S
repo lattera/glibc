@@ -26,11 +26,9 @@
 # if IS_IN (libc)
 ENTRY(memset)
 	.type	memset, @gnu_indirect_function
-	cmpl	$0, __cpu_features+KIND_OFFSET(%rip)
-	jne	1f
-	call	__init_cpu_features
-1:	leaq	__memset_sse2(%rip), %rax
-	testl	$bit_AVX2_Usable, __cpu_features+FEATURE_OFFSET+index_AVX2_Usable(%rip)
+	LOAD_RTLD_GLOBAL_RO_RDX
+	leaq	__memset_sse2(%rip), %rax
+	HAS_ARCH_FEATURE (AVX2_Usable)
 	jz	2f
 	leaq	__memset_avx2(%rip), %rax
 2:	ret

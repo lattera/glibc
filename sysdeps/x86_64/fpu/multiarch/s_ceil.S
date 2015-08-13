@@ -22,10 +22,9 @@
 
 ENTRY(__ceil)
 	.type	__ceil, @gnu_indirect_function
-	call	__get_cpu_features@plt
-	movq	%rax, %rdx
+	LOAD_RTLD_GLOBAL_RO_RDX
 	leaq	__ceil_sse41(%rip), %rax
-	testl	$bit_SSE4_1, CPUID_OFFSET+index_SSE4_1(%rdx)
+	HAS_CPU_FEATURE (SSE4_1)
 	jnz	2f
 	leaq	__ceil_c(%rip), %rax
 2:	ret

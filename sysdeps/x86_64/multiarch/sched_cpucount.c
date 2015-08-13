@@ -33,4 +33,4 @@
 #undef __sched_cpucount
 
 libc_ifunc (__sched_cpucount,
-	    HAS_POPCOUNT ? popcount_cpucount : generic_cpucount);
+	    HAS_CPU_FEATURE (POPCOUNT) ? popcount_cpucount : generic_cpucount);

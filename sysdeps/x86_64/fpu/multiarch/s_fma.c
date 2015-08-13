@@ -42,14 +42,15 @@ __fma_fma4 (double x, double y, double z)
   return x;
 }
 # else
-#  undef HAS_FMA4
-#  define HAS_FMA4 0
+#  undef HAS_ARCH_FEATURE
+#  define HAS_ARCH_FEATURE(feature) 0
 #  define __fma_fma4 ((void *) 0)
 # endif
 
 
-libm_ifunc (__fma, HAS_FMA
-	    ? __fma_fma3 : (HAS_FMA4 ? __fma_fma4 : __fma_sse2));
+libm_ifunc (__fma, HAS_ARCH_FEATURE (FMA_Usable)
+	    ? __fma_fma3 : (HAS_ARCH_FEATURE (FMA4_Usable)
+			    ? __fma_fma4 : __fma_sse2));
 weak_alias (__fma, fma)
 
 # define __fma __fma_sse2

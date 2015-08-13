@@ -29,19 +29,17 @@
 	.text
 ENTRY(__new_memcpy)
 	.type	__new_memcpy, @gnu_indirect_function
-	cmpl	$0, KIND_OFFSET+__cpu_features(%rip)
-	jne	1f
-	call	__init_cpu_features
-1:	leaq	__memcpy_avx_unaligned(%rip), %rax
-	testl	$bit_AVX_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_AVX_Fast_Unaligned_Load(%rip)
+	LOAD_RTLD_GLOBAL_RO_RDX
+	leaq	__memcpy_avx_unaligned(%rip), %rax
+	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
 	jz 1f
 	ret
 1:	leaq	__memcpy_sse2(%rip), %rax
-	testl	$bit_Slow_BSF, __cpu_features+FEATURE_OFFSET+index_Slow_BSF(%rip)
+	HAS_ARCH_FEATURE (Slow_BSF)
 	jnz	2f
 	leaq	__memcpy_sse2_unaligned(%rip), %rax
 	ret
-2:	testl   $bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
+2:	HAS_CPU_FEATURE (SSSE3)
 	jz 3f
 	leaq    __memcpy_ssse3(%rip), %rax
 3:	ret
