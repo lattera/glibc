@@ -1,5 +1,13 @@
 2015-08-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add more tests of acos, acosh, asin,
+	asinh, atan, atan2, atanh, cabs, cbrt, cosh, csqrt, erf, erfc,
+	exp, exp2, lgamma, log, log1p, log2, pow, sin, sincos, tan, tanh
+	and tgamma.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #16520]
 	* sysdeps/ieee754/dbl-64/s_tanh.c: Include <float.h>.
 	(__tanh): Force underflow exception for arguments with small
