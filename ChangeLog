@@ -1,3 +1,10 @@
+2015-08-18  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/dl-procinfo.c:
+	(_dl_powerpc_cap_flags): Added missing strings for some
+	hwcap features.
+	* sysdeps/powerpc/dl-procinfo.h: Updated hwcap bit count.
+
 2015-08-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Port the 0x7efe...feff pattern to GCC 6.

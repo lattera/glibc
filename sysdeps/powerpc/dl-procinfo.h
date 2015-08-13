@@ -22,8 +22,8 @@
 #include <ldsodefs.h>
 #include <sysdep.h>	/* This defines the PPC_FEATURE[2]_* macros.  */
 
-/* There are 25 bits used, but they are bits 7..31.  */
-#define _DL_HWCAP_FIRST		7
+/* There are 28 bits used, but they are bits 4..31.  */
+#define _DL_HWCAP_FIRST		4
 
 /* The total number of available bits (including those prior to
    _DL_HWCAP_FIRST).  Some of these bits might not be used.  */

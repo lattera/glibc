@@ -45,11 +45,11 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_powerpc_cap_flags
 #else
-PROCINFO_CLASS const char _dl_powerpc_cap_flags[57][10]
+PROCINFO_CLASS const char _dl_powerpc_cap_flags[60][10]
 #endif
 #ifndef PROCINFO_DECL
 = {
-    "vsx",
+    "ppcle", "true_le", "archpmu", "vsx",
     "arch_2_06", "power6x", "dfp", "pa6t",
     "arch_2_05", "ic_snoop", "smt", "booke",
     "cellbe", "power5+", "power5", "power4",
@@ -62,7 +62,7 @@ PROCINFO_CLASS const char _dl_powerpc_cap_flags[57][10]
     "", "", "", "",
     "", "", "", "",
     "", "", "", "",
-    "", "", "tar", "isel",
+    "", "vcrypto", "tar", "isel",
     "ebb", "dscr", "htm", "arch_2_07",
   }
 #endif
