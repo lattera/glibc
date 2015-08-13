@@ -15,7 +15,6 @@ sysdep_headers += sys/elf.h sys/perm.h sys/reg.h sys/vm86.h sys/debugreg.h sys/i
 endif
 
 ifeq ($(subdir),nptl)
-libpthread-sysdep_routines += init-arch
 libpthread-sysdep_routines += elision-lock elision-unlock elision-timed \
 			      elision-trylock
 endif

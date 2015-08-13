@@ -21,40 +21,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <cpuid.h>
+#include "multiarch/init-arch.h"
 
-#ifndef __cpuid_count
-/* FIXME: Provide __cpuid_count if it isn't defined.  Copied from gcc
-   4.4.0.  Remove this if gcc 4.4 is the minimum requirement.  */
-# if defined(__i386__) && defined(__PIC__)
-/* %ebx may be the PIC register.  */
-#  define __cpuid_count(level, count, a, b, c, d)		\
-  __asm__ ("xchg{l}\t{%%}ebx, %1\n\t"			\
-	   "cpuid\n\t"					\
-	   "xchg{l}\t{%%}ebx, %1\n\t"			\
-	   : "=a" (a), "=r" (b), "=c" (c), "=d" (d)	\
-	   : "0" (level), "2" (count))
-# else
-#  define __cpuid_count(level, count, a, b, c, d)		\
-  __asm__ ("cpuid\n\t"					\
-	   : "=a" (a), "=b" (b), "=c" (c), "=d" (d)	\
-	   : "0" (level), "2" (count))
-# endif
-#endif
-
-#ifdef USE_MULTIARCH
-# include "multiarch/init-arch.h"
-
-# define is_intel __cpu_features.kind == arch_kind_intel
-# define is_amd __cpu_features.kind == arch_kind_amd
-# define max_cpuid __cpu_features.max_cpuid
-#else
-  /* This spells out "GenuineIntel".  */
-# define is_intel \
-  ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69
-  /* This spells out "AuthenticAMD".  */
-# define is_amd \
-  ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65
-#endif
+#define is_intel GLRO(dl_x86_cpu_features).kind == arch_kind_intel
+#define is_amd GLRO(dl_x86_cpu_features).kind == arch_kind_amd
+#define max_cpuid GLRO(dl_x86_cpu_features).max_cpuid
 
 static const struct intel_02_cache_info
 {
@@ -235,21 +206,8 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 	      /* Intel reused this value.  For family 15, model 6 it
 		 specifies the 3rd level cache.  Otherwise the 2nd
 		 level cache.  */
-	      unsigned int family;
-	      unsigned int model;
-#ifdef USE_MULTIARCH
-	      family = __cpu_features.family;
-	      model = __cpu_features.model;
-#else
-	      unsigned int eax;
-	      unsigned int ebx;
-	      unsigned int ecx;
-	      unsigned int edx;
-	      __cpuid (1, eax, ebx, ecx, edx);
-
-	      family = ((eax >> 20) & 0xff) + ((eax >> 8) & 0xf);
-	      model = (((eax >>16) & 0xf) << 4) + ((eax >> 4) & 0xf);
-#endif
+	      unsigned int family = GLRO(dl_x86_cpu_features).family;
+	      unsigned int model = GLRO(dl_x86_cpu_features).model;
 
 	      if (family == 15 && model == 6)
 		{
@@ -476,18 +434,6 @@ long int
 attribute_hidden
 __cache_sysconf (int name)
 {
-#ifdef USE_MULTIARCH
-  if (__cpu_features.kind == arch_kind_unknown)
-    __init_cpu_features ();
-#else
-  /* Find out what brand of processor.  */
-  unsigned int max_cpuid;
-  unsigned int ebx;
-  unsigned int ecx;
-  unsigned int edx;
-  __cpuid (0, max_cpuid, ebx, ecx, edx);
-#endif
-
   if (is_intel)
     return handle_intel (name, max_cpuid);
 
@@ -523,18 +469,6 @@ long int __x86_raw_shared_cache_size attribute_hidden = 1024 * 1024;
 int __x86_prefetchw attribute_hidden;
 #endif
 
-#ifndef DISABLE_PREFERRED_MEMORY_INSTRUCTION
-/* Instructions preferred for memory and string routines.
-
-  0: Regular instructions
-  1: MMX instructions
-  2: SSE2 instructions
-  3: SSSE3 instructions
-
-  */
-int __x86_preferred_memory_instruction attribute_hidden;
-#endif
-
 
 static void
 __attribute__((constructor))
@@ -551,14 +485,6 @@ init_cacheinfo (void)
   unsigned int level;
   unsigned int threads = 0;
 
-#ifdef USE_MULTIARCH
-  if (__cpu_features.kind == arch_kind_unknown)
-    __init_cpu_features ();
-#else
-  int max_cpuid;
-  __cpuid (0, max_cpuid, ebx, ecx, edx);
-#endif
-
   if (is_intel)
     {
       data = handle_intel (_SC_LEVEL1_DCACHE_SIZE, max_cpuid);
@@ -574,34 +500,13 @@ init_cacheinfo (void)
 	  shared = handle_intel (_SC_LEVEL2_CACHE_SIZE, max_cpuid);
 	}
 
-      unsigned int ebx_1;
-
-#ifdef USE_MULTIARCH
-      eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
-      ebx_1 = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ebx;
-      ecx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx;
-      edx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx;
-#else
-      __cpuid (1, eax, ebx_1, ecx, edx);
-#endif
-
-      unsigned int family = (eax >> 8) & 0x0f;
-      unsigned int model = (eax >> 4) & 0x0f;
-      unsigned int extended_model = (eax >> 12) & 0xf0;
-
-#ifndef DISABLE_PREFERRED_MEMORY_INSTRUCTION
-      /* Intel prefers SSSE3 instructions for memory/string routines
-	 if they are available.  */
-      if ((ecx & 0x200))
-	__x86_preferred_memory_instruction = 3;
-      else
-	__x86_preferred_memory_instruction = 2;
-#endif
-
       /* Figure out the number of logical threads that share the
 	 highest cache level.  */
       if (max_cpuid >= 4)
 	{
+	  unsigned int family = GLRO(dl_x86_cpu_features).family;
+	  unsigned int model = GLRO(dl_x86_cpu_features).model;
+
 	  int i = 0;
 
 	  /* Query until desired cache level is enumerated.  */
@@ -653,7 +558,6 @@ init_cacheinfo (void)
 	  threads += 1;
 	  if (threads > 2 && level == 2 && family == 6)
 	    {
-	      model += extended_model;
 	      switch (model)
 		{
 		case 0x57:
@@ -676,7 +580,9 @@ init_cacheinfo (void)
 	intel_bug_no_cache_info:
 	  /* Assume that all logical threads share the highest cache level.  */
 
-	  threads = (ebx_1 >> 16) & 0xff;
+	  threads
+	    = ((GLRO(dl_x86_cpu_features).cpuid[COMMON_CPUID_INDEX_1].ebx
+		>> 16) & 0xff);
 	}
 
       /* Cap usage of highest cache level to the number of supported
@@ -690,25 +596,6 @@ init_cacheinfo (void)
       data   = handle_amd (_SC_LEVEL1_DCACHE_SIZE);
       long int core = handle_amd (_SC_LEVEL2_CACHE_SIZE);
       shared = handle_amd (_SC_LEVEL3_CACHE_SIZE);
-
-#ifndef DISABLE_PREFERRED_MEMORY_INSTRUCTION
-# ifdef USE_MULTIARCH
-      eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
-      ebx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ebx;
-      ecx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx;
-      edx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx;
-# else
-      __cpuid (1, eax, ebx, ecx, edx);
-# endif
-
-      /* AMD prefers SSSE3 instructions for memory/string routines
-	 if they are avaiable, otherwise it prefers integer
-	 instructions.  */
-      if ((ecx & 0x200))
-	__x86_preferred_memory_instruction = 3;
-      else
-	__x86_preferred_memory_instruction = 0;
-#endif
 
       /* Get maximum extended function. */
       __cpuid (0x80000000, max_cpuid_ex, ebx, ecx, edx);

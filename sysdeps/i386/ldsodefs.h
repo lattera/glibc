@@ -20,6 +20,7 @@
 #define	_I386_LDSODEFS_H	1
 
 #include <elf.h>
+#include <cpu-features.h>
 
 struct La_i86_regs;
 struct La_i86_retval;

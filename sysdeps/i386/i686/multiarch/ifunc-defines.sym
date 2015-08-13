@@ -4,7 +4,6 @@
 --
 
 CPU_FEATURES_SIZE	sizeof (struct cpu_features)
-KIND_OFFSET		offsetof (struct cpu_features, kind)
 CPUID_OFFSET		offsetof (struct cpu_features, cpuid)
 CPUID_SIZE		sizeof (struct cpuid_registers)
 CPUID_EAX_OFFSET	offsetof (struct cpuid_registers, eax)

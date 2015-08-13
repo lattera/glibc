@@ -1,5 +1,4 @@
 ifeq ($(subdir),csu)
-aux += init-arch
 tests += test-multiarch
 gen-as-const-headers += ifunc-defines.sym
 endif

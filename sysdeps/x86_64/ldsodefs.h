@@ -20,6 +20,7 @@
 #define	_X86_64_LDSODEFS_H	1
 
 #include <elf.h>
+#include <cpu-features.h>
 
 struct La_x86_64_regs;
 struct La_x86_64_retval;

@@ -1,3 +1,57 @@
+2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/dl-machine.h: Include <cpu-features.c>.
+	(dl_platform_init): Call init_cpu_features.
+	* sysdeps/i386/dl-procinfo.c (_dl_x86_cpu_features): New.
+	* sysdeps/i386/i686/cacheinfo.c
+	(DISABLE_PREFERRED_MEMORY_INSTRUCTION): Removed.
+	* sysdeps/i386/i686/multiarch/Makefile (aux): Remove init-arch.
+	* sysdeps/i386/i686/multiarch/Versions: Removed.
+	* sysdeps/i386/i686/multiarch/ifunc-defines.sym (KIND_OFFSET):
+	Removed.
+	* sysdeps/i386/ldsodefs.h: Include <cpu-features.h>.
+	* sysdeps/unix/sysv/linux/x86/Makefile
+	(libpthread-sysdep_routines): Remove init-arch.
+	* sysdeps/unix/sysv/linux/x86_64/dl-procinfo.c: Include
+	<sysdeps/x86_64/dl-procinfo.c> instead of
+	sysdeps/generic/dl-procinfo.c>.
+	* sysdeps/x86/Makefile [$(subdir) == csu] (gen-as-const-headers):
+	Add cpu-features-offsets.sym and rtld-global-offsets.sym.
+	[$(subdir) == elf] (sysdep-dl-routines): Add dl-get-cpu-features.
+	[$(subdir) == elf] (tests): Add tst-get-cpu-features.
+	[$(subdir) == elf] (tests-static): Add
+	tst-get-cpu-features-static.
+	* sysdeps/x86/Versions: New file.
+	* sysdeps/x86/cpu-features-offsets.sym: Likewise.
+	* sysdeps/x86/cpu-features.c: Likewise.
+	* sysdeps/x86/cpu-features.h: Likewise.
+	* sysdeps/x86/dl-get-cpu-features.c: Likewise.
+	* sysdeps/x86/libc-start.c: Likewise.
+	* sysdeps/x86/rtld-global-offsets.sym: Likewise.
+	* sysdeps/x86/tst-get-cpu-features-static.c: Likewise.
+	* sysdeps/x86/tst-get-cpu-features.c: Likewise.
+	* sysdeps/x86_64/dl-procinfo.c: Likewise.
+	* sysdeps/x86_64/cacheinfo.c (__cpuid_count): Removed.
+	Assume USE_MULTIARCH is defined and don't check it.
+	(is_intel): Replace __cpu_features with GLRO(dl_x86_cpu_features).
+	(is_amd): Likewise.
+	(max_cpuid): Likewise.
+	(intel_check_word): Likewise.
+	(__cache_sysconf): Don't call __init_cpu_features.
+	(__x86_preferred_memory_instruction): Removed.
+	(init_cacheinfo): Don't call __init_cpu_features. Replace
+	__cpu_features with GLRO(dl_x86_cpu_features).
+	* sysdeps/x86_64/dl-machine.h: <cpu-features.c>.
+	(dl_platform_init): Call init_cpu_features.
+	* sysdeps/x86_64/ldsodefs.h: Include <cpu-features.h>.
+	* sysdeps/x86_64/multiarch/Makefile (aux): Remove init-arch.
+	* sysdeps/x86_64/multiarch/Versions: Removed.
+	* sysdeps/x86_64/multiarch/cacheinfo.c: Likewise.
+	* sysdeps/x86_64/multiarch/init-arch.c: Likewise.
+	* sysdeps/x86_64/multiarch/ifunc-defines.sym (KIND_OFFSET):
+	Removed.
+	* sysdeps/x86_64/multiarch/init-arch.h: Rewrite.
+
 2015-08-12  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #18820]

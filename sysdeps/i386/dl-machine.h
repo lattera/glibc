@@ -25,6 +25,7 @@
 #include <sysdep.h>
 #include <tls.h>
 #include <dl-tlsdesc.h>
+#include <cpu-features.c>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
@@ -235,6 +236,8 @@ dl_platform_init (void)
   if (GLRO(dl_platform) != NULL && *GLRO(dl_platform) == '\0')
     /* Avoid an empty string which would disturb us.  */
     GLRO(dl_platform) = NULL;
+
+  init_cpu_features (&GLRO(dl_x86_cpu_features));
 }
 
 static inline Elf32_Addr

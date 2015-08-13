@@ -1,7 +1,6 @@
-/* Data for i386 version of processor capability information.
-   Copyright (C) 2001-2015 Free Software Foundation, Inc.
+/* Data for x86-64 version of processor capability information.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,10 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This information must be kept in sync with the _DL_HWCAP_COUNT and
-   _DL_PLATFORM_COUNT definitions in procinfo.h.
-
-   If anything should be added here check whether the size of each string
+/* If anything should be added here check whether the size of each string
    is still ok with the given array size.
 
    All the #ifdefs in the definitions are quite irritating but
@@ -43,50 +39,13 @@
 # define PROCINFO_CLASS
 #endif
 
-#if !IS_IN (ldconfig)
-# if !defined PROCINFO_DECL && defined SHARED
+#if !defined PROCINFO_DECL && defined SHARED
   ._dl_x86_cpu_features
-# else
+#else
 PROCINFO_CLASS struct cpu_features _dl_x86_cpu_features
-# endif
-# ifndef PROCINFO_DECL
+#endif
+#ifndef PROCINFO_DECL
 = { }
-# endif
-# if !defined SHARED || defined PROCINFO_DECL
-;
-# else
-,
-# endif
-#endif
-
-#if !defined PROCINFO_DECL && defined SHARED
-  ._dl_x86_cap_flags
-#else
-PROCINFO_CLASS const char _dl_x86_cap_flags[32][8]
-#endif
-#ifndef PROCINFO_DECL
-= {
-    "fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce",
-    "cx8", "apic", "10", "sep", "mtrr", "pge", "mca", "cmov",
-    "pat", "pse36", "pn", "clflush", "20", "dts", "acpi", "mmx",
-    "fxsr", "sse", "sse2", "ss", "ht", "tm", "ia64", "pbe"
-  }
-#endif
-#if !defined SHARED || defined PROCINFO_DECL
-;
-#else
-,
-#endif
-
-#if !defined PROCINFO_DECL && defined SHARED
-  ._dl_x86_platforms
-#else
-PROCINFO_CLASS const char _dl_x86_platforms[4][5]
-#endif
-#ifndef PROCINFO_DECL
-= {
-    "i386", "i486", "i586", "i686"
-  }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL
 ;

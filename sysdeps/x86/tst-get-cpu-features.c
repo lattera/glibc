@@ -1,5 +1,6 @@
-/* This file is part of the GNU C Library.
-   Copyright (C) 2008-2015 Free Software Foundation, Inc.
+/* Test case for x86 __get_cpu_features interface
+   Copyright (C) 2015 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -15,8 +16,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef  __ASSEMBLER__
-# include <cpu-features.h>
-#else
-# include <ldsodefs.h>
-#endif
+#include <stdlib.h>
+#include <cpu-features.h>
+
+static int
+do_test (void)
+{
+  if (__get_cpu_features ()->kind == arch_kind_unknown)
+    abort ();
+  return 0;
+}
+
+#define TEST_FUNCTION do_test ()
+#include "../../test-skeleton.c"
