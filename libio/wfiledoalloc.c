@@ -95,7 +95,9 @@ _IO_wfile_doallocate (fp)
   size = fp->_IO_buf_end - fp->_IO_buf_base;
   if ((fp->_flags & _IO_USER_BUF))
     size = (size + sizeof (wchar_t) - 1) / sizeof (wchar_t);
-  ALLOC_WBUF (p, size * sizeof (wchar_t), EOF);
+  p = malloc (size * sizeof (wchar_t));
+  if (__glibc_unlikely (p == NULL))
+    return EOF;
   _IO_wsetb (fp, p, p + size, 1);
   return 1;
 }

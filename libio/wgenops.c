@@ -111,7 +111,7 @@ _IO_wsetb (f, b, eb, a)
      int a;
 {
   if (f->_wide_data->_IO_buf_base && !(f->_flags2 & _IO_FLAGS2_USER_WBUF))
-    FREE_BUF (f->_wide_data->_IO_buf_base, _IO_wblen (f) * sizeof (wchar_t));
+    free (f->_wide_data->_IO_buf_base);
   f->_wide_data->_IO_buf_base = b;
   f->_wide_data->_IO_buf_end = eb;
   if (a)
@@ -195,8 +195,7 @@ _IO_wdefault_finish (fp, dummy)
   struct _IO_marker *mark;
   if (fp->_wide_data->_IO_buf_base && !(fp->_flags2 & _IO_FLAGS2_USER_WBUF))
     {
-      FREE_BUF (fp->_wide_data->_IO_buf_base,
-		_IO_wblen (fp) * sizeof (wchar_t));
+      free (fp->_wide_data->_IO_buf_base);
       fp->_wide_data->_IO_buf_base = fp->_wide_data->_IO_buf_end = NULL;
     }
 
@@ -426,7 +425,9 @@ _IO_wdefault_doallocate (fp)
 {
   wchar_t *buf;
 
-  ALLOC_WBUF (buf, _IO_BUFSIZ, EOF);
+  buf = malloc (_IO_BUFSIZ);
+  if (__glibc_unlikely (buf == NULL))
+    return EOF;
   _IO_wsetb (fp, buf, buf + _IO_BUFSIZ, 1);
   return 1;
 }

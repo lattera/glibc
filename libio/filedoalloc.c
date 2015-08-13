@@ -125,7 +125,9 @@ _IO_file_doallocate (fp)
 	size = st.st_blksize;
 #endif
     }
-  ALLOC_BUF (p, size, EOF);
+  p = malloc (size);
+  if (__glibc_unlikely (p == NULL))
+    return EOF;
   _IO_setb (fp, p, p + size, 1);
   return 1;
 }

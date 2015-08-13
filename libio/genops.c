@@ -398,7 +398,7 @@ _IO_setb (f, b, eb, a)
      int a;
 {
   if (f->_IO_buf_base && !(f->_flags & _IO_USER_BUF))
-    FREE_BUF (f->_IO_buf_base, _IO_blen (f));
+    free (f->_IO_buf_base);
   f->_IO_buf_base = b;
   f->_IO_buf_end = eb;
   if (a)
@@ -587,7 +587,10 @@ _IO_default_doallocate (fp)
 {
   char *buf;
 
-  ALLOC_BUF (buf, _IO_BUFSIZ, EOF);
+  buf = malloc(_IO_BUFSIZ);
+  if (__glibc_unlikely (buf == NULL))
+    return EOF;
+
   _IO_setb (fp, buf, buf+_IO_BUFSIZ, 1);
   return 1;
 }
@@ -687,7 +690,7 @@ _IO_default_finish (fp, dummy)
   struct _IO_marker *mark;
   if (fp->_IO_buf_base && !(fp->_flags & _IO_USER_BUF))
     {
-      FREE_BUF (fp->_IO_buf_base, _IO_blen (fp));
+      free (fp->_IO_buf_base);
       fp->_IO_buf_base = fp->_IO_buf_end = NULL;
     }
 
@@ -972,7 +975,6 @@ _IO_unbuffer_all (void)
 	      fp->_freeres_list = freeres_list;
 	      freeres_list = fp;
 	      fp->_freeres_buf = fp->_IO_buf_base;
-	      fp->_freeres_size = _IO_blen (fp);
 	    }
 
 	  _IO_SETBUF (fp, NULL, 0);
@@ -999,7 +1001,7 @@ libc_freeres_fn (buffer_free)
 
   while (freeres_list != NULL)
     {
-      FREE_BUF (freeres_list->_freeres_buf, freeres_list->_freeres_size);
+      free (freeres_list->_freeres_buf);
 
       freeres_list = freeres_list->_freeres_list;
     }

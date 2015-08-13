@@ -760,46 +760,6 @@ extern _IO_off64_t _IO_seekpos_unlocked (_IO_FILE *, _IO_off64_t, int)
 #  define munmap __munmap
 #  define ftruncate __ftruncate
 # endif
-
-# define ROUND_TO_PAGE(_S) \
-       (((_S) + EXEC_PAGESIZE - 1) & ~(EXEC_PAGESIZE - 1))
-
-# define FREE_BUF(_B, _S) \
-       munmap ((_B), ROUND_TO_PAGE (_S))
-# define ALLOC_BUF(_B, _S, _R) \
-       do {								      \
-	  (_B) = (char *) mmap (0, ROUND_TO_PAGE (_S),			      \
-				PROT_READ | PROT_WRITE,			      \
-				MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);	      \
-	  if ((_B) == (char *) MAP_FAILED)				      \
-	    return (_R);						      \
-       } while (0)
-# define ALLOC_WBUF(_B, _S, _R) \
-       do {								      \
-	  (_B) = (wchar_t *) mmap (0, ROUND_TO_PAGE (_S),		      \
-				   PROT_READ | PROT_WRITE,		      \
-				   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);	      \
-	  if ((_B) == (wchar_t *) MAP_FAILED)				      \
-	    return (_R);						      \
-       } while (0)
-
-#else /* _G_HAVE_MMAP */
-
-# define FREE_BUF(_B, _S) \
-       free(_B)
-# define ALLOC_BUF(_B, _S, _R) \
-       do {								      \
-	  (_B) = (char*)malloc(_S);					      \
-	  if ((_B) == NULL)						      \
-	    return (_R);						      \
-       } while (0)
-# define ALLOC_WBUF(_B, _S, _R) \
-       do {								      \
-	  (_B) = (wchar_t *)malloc(_S);					      \
-	  if ((_B) == NULL)						      \
-	    return (_R);						      \
-       } while (0)
-
 #endif /* _G_HAVE_MMAP */
 
 #ifndef OS_FSTAT

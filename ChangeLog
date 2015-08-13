@@ -1,3 +1,18 @@
+2015-08-12  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #16734]
+	* libio/libioP.h (ROUND_TO_PAGE, ALLOC_BUF, ALLOC_WBUF): Delete.
+	(FREE_BUF): Delete.
+	* libio/libio.h (_IO_FILE_complete): Delete unused _freeres_size.
+	* libio/genops.c (_IO_setb): Use malloc and free directly.
+	(_IO_default_doallocate, _IO_default_finish): Likewise.
+	( _IO_unbuffer_all): Likewise.
+	( libc_freeres_fn): Likewise.
+	* libio/filedoalloc.c (_IO_file_doallocate): Likewise.
+	* libio/wfiledoalloc.c (_IO_wfile_doallocate): Likewise.
+	* libio/wgenops.c (_IO_wsetb, _IO_wdefault_finish): Likewise.
+	(_IO_wdefault_doallocate): Likewise.
+
 2015-08-11  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #18086]
