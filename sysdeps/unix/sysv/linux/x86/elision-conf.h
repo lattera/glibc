@@ -19,7 +19,6 @@
 #define _ELISION_CONF_H 1
 
 #include <pthread.h>
-#include <cpuid.h>
 #include <time.h>
 
 /* Should make sure there is no false sharing on this.  */
