@@ -22,11 +22,9 @@
 	.text
 ENTRY (_ZGVbN4vv_powf)
         .type   _ZGVbN4vv_powf, @gnu_indirect_function
-        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
-        jne     1f
-        call    __init_cpu_features
-1:      leaq    _ZGVbN4vv_powf_sse4(%rip), %rax
-        testl   $bit_SSE4_1, __cpu_features+CPUID_OFFSET+index_SSE4_1(%rip)
+	LOAD_RTLD_GLOBAL_RO_RDX
+        leaq    _ZGVbN4vv_powf_sse4(%rip), %rax
+	HAS_CPU_FEATURE (SSE4_1)
         jz      2f
         ret
 2:      leaq    _ZGVbN4vv_powf_sse2(%rip), %rax

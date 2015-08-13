@@ -22,14 +22,12 @@
 	.text
 ENTRY (_ZGVeN8vvv_sincos)
         .type   _ZGVeN8vvv_sincos, @gnu_indirect_function
-        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
-        jne     1f
-        call    __init_cpu_features
-1:      leaq    _ZGVeN8vvv_sincos_skx(%rip), %rax
-        testl   $bit_AVX512DQ_Usable, __cpu_features+FEATURE_OFFSET+index_AVX512DQ_Usable(%rip)
+	LOAD_RTLD_GLOBAL_RO_RDX
+        leaq    _ZGVeN8vvv_sincos_skx(%rip), %rax
+	HAS_ARCH_FEATURE (AVX512DQ_Usable)
         jnz     2f
         leaq    _ZGVeN8vvv_sincos_knl(%rip), %rax
-        testl   $bit_AVX512F_Usable, __cpu_features+FEATURE_OFFSET+index_AVX512F_Usable(%rip)
+	HAS_ARCH_FEATURE (AVX512F_Usable)
         jnz     2f
         leaq    _ZGVeN8vvv_sincos_avx2_wrapper(%rip), %rax
 2:      ret

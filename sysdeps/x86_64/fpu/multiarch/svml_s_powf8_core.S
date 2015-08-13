@@ -22,11 +22,9 @@
 	.text
 ENTRY (_ZGVdN8vv_powf)
         .type   _ZGVdN8vv_powf, @gnu_indirect_function
-        cmpl    $0, KIND_OFFSET+__cpu_features(%rip)
-        jne     1f
-        call    __init_cpu_features
-1:      leaq    _ZGVdN8vv_powf_avx2(%rip), %rax
-        testl   $bit_AVX2_Usable, __cpu_features+FEATURE_OFFSET+index_AVX2_Usable(%rip)
+	LOAD_RTLD_GLOBAL_RO_RDX
+        leaq    _ZGVdN8vv_powf_avx2(%rip), %rax
+	HAS_ARCH_FEATURE (AVX2_Usable)
         jz      2f
         ret
 2:      leaq    _ZGVdN8vv_powf_sse_wrapper(%rip), %rax

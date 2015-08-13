@@ -19,66 +19,36 @@
 #if defined REQUIRE_AVX
 # include <init-arch.h>
 
-/* Set to 1 if AVX supported.  */
-static int avx_usable;
-
-# define INIT_ARCH_EXT                                         \
-  do                                                           \
-    {                                                          \
-      __init_cpu_features ();                                  \
-      avx_usable = __cpu_features.feature[index_AVX_Usable]    \
-                   & bit_AVX_Usable;                           \
-    }                                                          \
-  while (0)
+# define INIT_ARCH_EXT
 
 # define CHECK_ARCH_EXT                                        \
   do                                                           \
     {                                                          \
-      if (!avx_usable) return;                                 \
+      if (!HAS_ARCH_FEATURE (AVX_Usable)) return;              \
     }                                                          \
   while (0)
 
 #elif defined REQUIRE_AVX2
 # include <init-arch.h>
 
-  /* Set to 1 if AVX2 supported.  */
-  static int avx2_usable;
-
-# define INIT_ARCH_EXT                                         \
-  do                                                           \
-    {                                                          \
-      __init_cpu_features ();                                  \
-      avx2_usable = __cpu_features.feature[index_AVX2_Usable]  \
-                  & bit_AVX2_Usable;                           \
-    }                                                          \
-  while (0)
+# define INIT_ARCH_EXT
 
 # define CHECK_ARCH_EXT                                        \
   do                                                           \
     {                                                          \
-      if (!avx2_usable) return;                                \
+      if (!HAS_ARCH_FEATURE (AVX2_Usable)) return;             \
     }                                                          \
   while (0)
 
 #elif defined REQUIRE_AVX512F
 # include <init-arch.h>
 
-  /* Set to 1 if supported.  */
-  static int avx512f_usable;
-
-# define INIT_ARCH_EXT                                                \
-  do                                                                  \
-    {                                                                 \
-      __init_cpu_features ();                                         \
-      avx512f_usable = __cpu_features.feature[index_AVX512F_Usable]   \
-		       & bit_AVX512F_Usable;                          \
-    }                                                                 \
-  while (0)
+# define INIT_ARCH_EXT
 
 # define CHECK_ARCH_EXT                                        \
   do                                                           \
     {                                                          \
-      if (!avx512f_usable) return;                             \
+      if (!HAS_ARCH_FEATURE (AVX512F_Usable)) return;          \
     }                                                          \
   while (0)
 

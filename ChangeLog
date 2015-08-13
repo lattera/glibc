@@ -1,5 +1,53 @@
 2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* math/Makefile ($(addprefix $(objpfx), $(libm-vec-tests))):
+	Remove $(objpfx)init-arch.o.
+	* sysdeps/x86_64/fpu/Makefile (libmvec-support): Remove
+	init-arch.
+	* sysdeps/x86_64/fpu/math-tests-arch.h (avx_usable): Removed.
+	(INIT_ARCH_EXT): Defined as empty.
+	(CHECK_ARCH_EXT): Replace HAS_XXX with HAS_ARCH_FEATURE (XXX).
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos2_core.S: Remove
+	__init_cpu_features call.  Replace HAS_XXX with
+	HAS_CPU_FEATURE/HAS_ARCH_FEATURE (XXX).
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp2_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log2_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow2_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin2_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos2_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_logf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_logf4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_logf8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf8_core.S: Likewise.
+
+2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/i686/fpu/multiarch/e_expf.c: Replace HAS_XXX
 	with HAS_CPU_FEATURE/HAS_ARCH_FEATURE (XXX).
 	* sysdeps/i386/i686/fpu/multiarch/s_cosf.c: Likewise.
