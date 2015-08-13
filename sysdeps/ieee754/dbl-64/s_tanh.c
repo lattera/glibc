@@ -38,6 +38,7 @@ static char rcsid[] = "$NetBSD: s_tanh.c,v 1.7 1995/05/10 20:48:22 jtc Exp $";
  *	only tanh(0)=0 is exact for finite argument.
  */
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -68,7 +69,14 @@ __tanh (double x)
       if ((ix | lx) == 0)
 	return x;                       /* x == +-0 */
       if (ix < 0x3c800000)              /* |x|<2**-55 */
-	return x * (one + x);           /* tanh(small) = small */
+	{
+	  if (fabs (x) < DBL_MIN)
+	    {
+	      double force_underflow = x * x;
+	      math_force_eval (force_underflow);
+	    }
+	  return x * (one + x);           /* tanh(small) = small */
+	}
       if (ix >= 0x3ff00000)             /* |x|>=1  */
 	{
 	  t = __expm1 (two * fabs (x));

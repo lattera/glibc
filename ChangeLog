@@ -1,3 +1,25 @@
+2015-08-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16520]
+	* sysdeps/ieee754/dbl-64/s_tanh.c: Include <float.h>.
+	(__tanh): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/flt-32/s_tanhf.c: Include <float.h>.
+	(__tanhf): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/ldbl-128/s_tanhl.c: Include <float.h>.
+	(__tanhl): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanhl.c: Include <float.h>.
+	(__tanhl): Force underflow exception for arguments with small
+	absolute value.
+	* sysdeps/ieee754/ldbl-96/s_tanhl.c: Include <float.h>.
+	(__tanhl): Force underflow exception for arguments with small
+	absolute value.
+	* math/auto-libm-test-in: Add more tests of tanh.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.c (init_cpu_features): Call

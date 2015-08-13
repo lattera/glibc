@@ -2779,6 +2779,10 @@ tanh -0x2.6082fp-4
 tanh 0xe.05031p-16
 tanh 0x3.c80eaa7adaa3p-4
 tanh 0x2.00f9857616524p-4
+tanh min
+tanh -min
+tanh min_subnorm
+tanh -min_subnorm
 
 tgamma 0.5
 tgamma -0.5

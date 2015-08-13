@@ -41,6 +41,7 @@
  *      only tanhl(0)=0 is exact for finite argument.
  */
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -73,7 +74,14 @@ __tanhl (long double x)
       if (u.value == 0)
 	return x;		/* x == +- 0 */
       if (ix < 0x3fc60000)	/* |x| < 2^-57 */
-	return x * (one + tiny); /* tanh(small) = small */
+	{
+	  if (fabsl (x) < LDBL_MIN)
+	    {
+	      long double force_underflow = x * x;
+	      math_force_eval (force_underflow);
+	    }
+	  return x * (one + tiny); /* tanh(small) = small */
+	}
       u.parts32.w0 = ix;	/* Absolute value of x.  */
       if (ix >= 0x3fff0000)
 	{			/* |x| >= 1  */
