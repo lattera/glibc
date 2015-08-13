@@ -1,5 +1,10 @@
 2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Call
+	__get_cpuid_max if not compiling for i586, i686 nor x86-64.
+
+2015-08-13  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86/elision-conf.h: Don't include
 	<cpuid.h>.
 

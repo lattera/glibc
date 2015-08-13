@@ -40,6 +40,14 @@ init_cpu_features (struct cpu_features *cpu_features)
   unsigned int model = 0;
   enum cpu_features_kind kind;
 
+#if !defined __i586__ && !defined __i686__ && !defined __x86_64__
+  if (__get_cpuid_max (0, 0) == 0)
+    {
+      kind = arch_kind_other;
+      goto no_cpuid;
+    }
+#endif
+
   __cpuid (0, cpu_features->max_cpuid, ebx, ecx, edx);
 
   /* This spells out "GenuineIntel".  */
@@ -195,6 +203,10 @@ init_cpu_features (struct cpu_features *cpu_features)
 	    cpu_features->feature[index_FMA4_Usable] |= bit_FMA4_Usable;
 	}
     }
+
+#if !defined __i586__ && !defined __i686__ && !defined __x86_64__
+no_cpuid:
+#endif
 
   cpu_features->family = family;
   cpu_features->model = model;
