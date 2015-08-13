@@ -1,3 +1,9 @@
+2015-08-26  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c
+	(__arch_compare_and_exchange_val_32_acq): Remove and use common
+	definition.  ISA 2.07B no longer requires full sync.
+
 2015-08-26  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #18863]

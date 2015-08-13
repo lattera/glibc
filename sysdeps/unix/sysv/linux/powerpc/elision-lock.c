@@ -23,27 +23,6 @@
 #include <elision-conf.h>
 #include "htm.h"
 
-/* PowerISA 2.0.7 Section B.5.5 defines isync to be insufficient as a
-   barrier in acquire mechanism for HTM operations, a strong 'sync' is
-   required.  */
-#undef __arch_compare_and_exchange_val_32_acq
-#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval)           \
-  ({                                                                          \
-      __typeof (*(mem)) __tmp;                                                \
-      __typeof (mem)  __memp = (mem);                                         \
-      __asm __volatile (                                                      \
-                        "1:     lwarx   %0,0,%1" MUTEX_HINT_ACQ "\n"          \
-                        "       cmpw    %0,%2\n"                              \
-                        "       bne     2f\n"                                 \
-                        "       stwcx.  %3,0,%1\n"                            \
-                        "       bne-    1b\n"                                 \
-                        "2:     sync"                                         \
-                        : "=&r" (__tmp)                                       \
-                        : "b" (__memp), "r" (oldval), "r" (newval)            \
-                        : "cr0", "memory");                                   \
-      __tmp;                                                                  \
-  })
-
 #if !defined(LLL_LOCK) && !defined(EXTRAARG)
 /* Make sure the configuration code is always linked in for static
    libraries.  */
