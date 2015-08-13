@@ -148,8 +148,10 @@ CFLAGS-tst_putwc.c = -DOBJPFX=\"$(objpfx)\"
 
 tst_wprintf2-ARGS = "Some Text"
 
+test-fmemopen-ENV = MALLOC_TRACE=$(objpfx)test-fmemopen.mtrace
 tst-fopenloc-ENV = MALLOC_TRACE=$(objpfx)tst-fopenloc.mtrace
 
+generated += test-fmemopen.mtrace test-fmemopen.check
 generated += tst-fopenloc.mtrace tst-fopenloc.check
 
 aux	:= fileops genops stdfiles stdio strops
@@ -164,7 +166,7 @@ shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
 		       oldiofsetpos64
 
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)test-freopen.out
+tests-special += $(objpfx)test-freopen.out $(objpfx)test-fmemopen-mem.out
 ifeq (yes,$(build-shared))
 # Run tst-fopenloc-cmp.out and tst-openloc-mem.out only if shared
 # library is enabled since they depend on tst-fopenloc.out.
@@ -182,6 +184,10 @@ $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
 $(objpfx)tst-fopenloc-cmp.out: ../iconvdata/testdata/ISO-8859-1..UTF8 \
 			       $(objpfx)tst-fopenloc.out
 	cmp $^ > $@; \
+	$(evaluate-test)
+
+$(objpfx)test-fmemopen-mem.out: $(objpfx)test-fmemopen.out
+	$(common-objpfx)malloc/mtrace $(objpfx)test-fmemopen.mtrace > $@; \
 	$(evaluate-test)
 
 $(objpfx)tst-fopenloc-mem.out: $(objpfx)tst-fopenloc.out

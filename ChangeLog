@@ -1,5 +1,13 @@
 2015-08-12  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
+	[BZ #18820]
+	* libio/Makefile (test-fmemopen-mem): New test.
+	* libio/test-fmemopen.c (do_bz18820): New test.
+	* libio/fmemopen.c (__fmemopen): Fix memory leak.
+	* libio/oldfmemopen.c (__old_fmemopen): Likewise.
+
+2015-08-12  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
 	[BZ #16734]
 	* libio/libioP.h (ROUND_TO_PAGE, ALLOC_BUF, ALLOC_WBUF): Delete.
 	(FREE_BUF): Delete.

@@ -22,6 +22,32 @@ static char buffer[] = "foobar";
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <mcheck.h>
+
+static int
+do_bz18820 (void)
+{
+  char ch;
+  FILE *stream;
+
+  stream = fmemopen (&ch, 1, "?");
+  if (stream)
+    {
+      printf ("fmemopen: expected NULL, got %p\n", stream);
+      fclose (stream);
+      return 1;
+    }
+
+  stream = fmemopen (NULL, 42, "?");
+  if (stream)
+    {
+      printf ("fmemopen: expected NULL, got %p\n", stream);
+      fclose (stream);
+      return 2;
+    }
+
+  return 0;
+}
 
 static int
 do_test (void)
@@ -29,6 +55,8 @@ do_test (void)
   int ch;
   FILE *stream;
   int ret = 0;
+
+  mtrace ();
 
   stream = fmemopen (buffer, strlen (buffer), "r+");
 
@@ -44,7 +72,7 @@ do_test (void)
 
   fclose (stream);
 
-  return ret;
+  return ret + do_bz18820 ();
 }
 
 #define TEST_FUNCTION do_test ()
