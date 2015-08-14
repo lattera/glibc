@@ -136,7 +136,7 @@ __fortify_function char *
 __NTH (stpncpy (char *__dest, const char *__src, size_t __n))
 {
   if (__bos (__dest) != (size_t) -1
-      && (!__builtin_constant_p (__n) || __n <= __bos (__dest)))
+      && (!__builtin_constant_p (__n) || __n > __bos (__dest)))
     return __stpncpy_chk (__dest, __src, __n, __bos (__dest));
   return __stpncpy_alias (__dest, __src, __n);
 }

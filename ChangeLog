@@ -1,3 +1,13 @@
+2015-08-15  Zack Weinberg  <zackw@panix.com>
+
+	[BZ #18975]
+	* string/bits/string3.h (stpncpy): Call __stpncpy_chk if the
+	buffer length is known to be too large, not if it's known to be
+	small enough.
+	* debug/tst-chk1.c (do_test): Do all tests for catching a buffer
+	overflow at runtime, involving a length parameter, twice: once
+	with a compile-time constant length parameter, once without.
+
 2015-08-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18824]
