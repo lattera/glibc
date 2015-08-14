@@ -1,3 +1,13 @@
+2015-08-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18824]
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Increase threshold for
+	scaling x * y up instead of down.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c (__fmal): Likewise.
+	* math/auto-libm-test-in: Add more tests of fma.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-08-14  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.

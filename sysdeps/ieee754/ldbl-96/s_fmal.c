@@ -119,7 +119,7 @@ __fmal (long double x, long double y, long double z)
 	     very small, adjust them up to avoid spurious underflows,
 	     rather than down.  */
 	  if (u.ieee.exponent + v.ieee.exponent
-	      <= IEEE854_LONG_DOUBLE_BIAS + LDBL_MANT_DIG)
+	      <= IEEE854_LONG_DOUBLE_BIAS + 2 * LDBL_MANT_DIG)
 	    {
 	      if (u.ieee.exponent > v.ieee.exponent)
 		u.ieee.exponent += 2 * LDBL_MANT_DIG + 2;

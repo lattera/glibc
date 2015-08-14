@@ -1794,6 +1794,24 @@ fma 0x1.0000000000000000000000000001p-16382 -0x1.0000000000000000000000000001p-6
 fma 0x1.0000000000000000000000000001p-16382 0x1.0000000000000000000000000001p-66 -0x1p16319
 fma 0x1.0000000000000000000000000001p-16382 -0x1.0000000000000000000000000001p-66 -0x1p16319
 
+# Bug 6801: errno setting may be missing.
+fma 0x1.fffffep-126 0x1.fffffep25 0x1.fffffep127 missing-errno
+fma 0x1.fffffep-126 -0x1.fffffep25 0x1.fffffep127
+fma 0x1.fffffep-126 0x1.fffffep25 -0x1.fffffep127
+fma 0x1.fffffep-126 -0x1.fffffep25 -0x1.fffffep127 missing-errno
+fma 0x1.fffffffffffffp-1022 0x1.fffffffffffffp54 0x1.fffffffffffffp1023 missing-errno
+fma 0x1.fffffffffffffp-1022 -0x1.fffffffffffffp54 0x1.fffffffffffffp1023
+fma 0x1.fffffffffffffp-1022 0x1.fffffffffffffp54 -0x1.fffffffffffffp1023
+fma 0x1.fffffffffffffp-1022 -0x1.fffffffffffffp54 -0x1.fffffffffffffp1023 missing-errno
+fma 0x1.fffffffffffffffep-16382 0x1.fffffffffffffffep65 0x1.fffffffffffffffep16383 missing-errno
+fma 0x1.fffffffffffffffep-16382 -0x1.fffffffffffffffep65 0x1.fffffffffffffffep16383
+fma 0x1.fffffffffffffffep-16382 0x1.fffffffffffffffep65 -0x1.fffffffffffffffep16383
+fma 0x1.fffffffffffffffep-16382 -0x1.fffffffffffffffep65 -0x1.fffffffffffffffep16383 missing-errno
+fma 0x1.ffffffffffffffffffffffffffffp-16382 0x1.ffffffffffffffffffffffffffffp114 0x1.ffffffffffffffffffffffffffffp16383 missing-errno
+fma 0x1.ffffffffffffffffffffffffffffp-16382 -0x1.ffffffffffffffffffffffffffffp114 0x1.ffffffffffffffffffffffffffffp16383
+fma 0x1.ffffffffffffffffffffffffffffp-16382 0x1.ffffffffffffffffffffffffffffp114 -0x1.ffffffffffffffffffffffffffffp16383
+fma 0x1.ffffffffffffffffffffffffffffp-16382 -0x1.ffffffffffffffffffffffffffffp114 -0x1.ffffffffffffffffffffffffffffp16383 missing-errno
+
 hypot 0 0
 hypot 0 -0
 hypot -0 0
