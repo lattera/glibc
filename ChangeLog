@@ -1,3 +1,10 @@
+2015-08-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/x86_64/fpu/multiarch/s_floorf.S (__floorf): Remove
+	unnecessary movq.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyint.S (__nearbyint):
+	Likewise.
+
 2015-08-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of acos, acosh, asin,

@@ -23,7 +23,6 @@
 ENTRY(__nearbyint)
 	.type	__nearbyint, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
-	movq	%rax, %rdx
 	leaq	__nearbyint_sse41(%rip), %rax
 	HAS_CPU_FEATURE (SSE4_1)
 	jnz	2f
