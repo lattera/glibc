@@ -1,3 +1,7 @@
+2015-08-14  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
+
 2015-08-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/x86_64/fpu/multiarch/s_floorf.S (__floorf): Remove
