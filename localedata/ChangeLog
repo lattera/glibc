@@ -1,3 +1,8 @@
+2016-08-10  Martin Pitt  <martin.pitt@ubuntu.com>
+
+	[BZ #9842]
+	* locales/en_CA (d_fmt): Change to %Y-%m-%d.
+
 2016-08-10  Mike Frysinger  <vapier@gentoo.org>
 
 	* charmaps/CP10007: Change M$ to Microsoft.
