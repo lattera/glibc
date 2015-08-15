@@ -12,14 +12,12 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef	_SYS_TIMERFD_H
-#define	_SYS_TIMERFD_H	1
-
-#include <time.h>
-
+# error "Never use <bits/timerfd.h> directly; include <sys/timerfd.h> instead."
+#endif
 
 /* Bits to be set in the FLAGS parameter of `timerfd_create'.  */
 enum
@@ -29,31 +27,3 @@ enum
     TFD_NONBLOCK = 000200004 /* HPUX has separate NDELAY & NONBLOCK */
 #define TFD_NONBLOCK TFD_NONBLOCK
   };
-
-
-/* Bits to be set in the FLAGS parameter of `timerfd_settime'.  */
-enum
-  {
-    TFD_TIMER_ABSTIME = 1 << 0
-#define TFD_TIMER_ABSTIME TFD_TIMER_ABSTIME
-  };
-
-
-__BEGIN_DECLS
-
-/* Return file descriptor for new interval timer source.  */
-extern int timerfd_create (clockid_t __clock_id, int __flags) __THROW;
-
-/* Set next expiration time of interval timer source UFD to UTMR.  If
-   FLAGS has the TFD_TIMER_ABSTIME flag set the timeout value is
-   absolute.  Optionally return the old expiration time in OTMR.  */
-extern int timerfd_settime (int __ufd, int __flags,
-			    const struct itimerspec *__utmr,
-			    struct itimerspec *__otmr) __THROW;
-
-/* Return the next expiration time of UFD.  */
-extern int timerfd_gettime (int __ufd, struct itimerspec *__otmr) __THROW;
-
-__END_DECLS
-
-#endif /* sys/timerfd.h */
