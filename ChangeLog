@@ -1,5 +1,10 @@
 2015-08-18  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/hppa/bits/signalfd.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/sys/signalfd.h: Delete.
+
+2015-08-18  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/hppa/bits/inotify.h: New file.
 	* sysdeps/unix/sysv/linux/hppa/sys/inotify.h: Delete.
 
