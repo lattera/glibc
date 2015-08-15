@@ -1,5 +1,10 @@
 2015-08-18  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/hppa/bits/eventfd.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/sys/eventfd.h: Delete.
+
+2015-08-18  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/hppa/bits/epoll.h: New file.
 	* sysdeps/unix/sysv/linux/hppa/sys/epoll.h: Delete.
 
