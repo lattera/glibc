@@ -59,6 +59,8 @@ struct sigaction
 				     three arguments instead of one.  */
 #if defined __USE_UNIX98 || defined __USE_MISC
 # define SA_ONSTACK   0x00000001 /* Use signal stack by using `sa_restorer'. */
+#endif
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
 # define SA_RESETHAND 0x00000004 /* Reset to SIG_DFL on entry to handler.  */
 # define SA_NODEFER   0x00000020 /* Don't automatically block the signal
 				    when its handler is being executed.  */
