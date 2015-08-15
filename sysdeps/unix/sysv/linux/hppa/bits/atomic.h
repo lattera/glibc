@@ -18,7 +18,6 @@
 
 #include <stdint.h> /*  Required for type definitions e.g. uint8_t.  */
 #include <abort-instr.h> /*  Required for ABORT_INSTRUCTIUON.  */
-#include <kernel-features.h> /*  Required for __ASSUME_LWS_CAS.  */
 
 /* We need EFAULT, ENONSYS */
 #if !defined EFAULT && !defined ENOSYS
@@ -62,10 +61,9 @@ typedef uintmax_t uatomic_max_t;
 /* String constant for -EDEADLOCK.  */
 #define _ASM_EDEADLOCK "-45"
 
-#if __ASSUME_LWS_CAS
 /* The only basic operation needed is compare and exchange.  The mem
    pointer must be word aligned.  */
-# define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
+#define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
   ({									\
      register long lws_errno asm("r21");				\
      register unsigned long lws_ret asm("r28");				\
@@ -93,17 +91,13 @@ typedef uintmax_t uatomic_max_t;
      (__typeof (oldval)) lws_ret;					\
    })
 
-# define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)	\
+#define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)	\
   ({									\
      __typeof__ (*mem) ret;						\
      ret = atomic_compare_and_exchange_val_acq(mem, newval, oldval);	\
      /* Return 1 if it was already acquired.  */			\
      (ret != oldval);							\
    })
-#else
-# error __ASSUME_LWS_CAS is required to build glibc.
-#endif
-/* __ASSUME_LWS_CAS */
 
 #endif
 /* _BITS_ATOMIC_H */

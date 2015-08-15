@@ -1,5 +1,12 @@
 2015-08-18  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h: Delete
+	kernel-features.h include.  Delete __ASSUME_LWS_CAS checks.
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h
+	(__ASSUME_LWS_CAS): Delete.
+
+2015-08-18  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/hppa/configure.ac: Delete binutils tls checks.
 	* sysdeps/hppa/configure: Regenerated.
 	* sysdeps/hppa/dl-machine.h: Delete USE_TLS and USE___THREAD checks.
