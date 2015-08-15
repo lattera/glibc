@@ -465,7 +465,7 @@ asm (									\
    a TLS variable, so references should not be allowed to define the value.
    ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if !defined RTLD_BOOTSTRAP
 # define elf_machine_type_class(type)				\
   ((((type) == R_PARISC_IPLT					\
   || (type) == R_PARISC_EPLT					\
@@ -684,7 +684,7 @@ elf_machine_rela (struct link_map *map,
 	      MIN (sym->st_size, refsym->st_size));
       return;
 
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP)
+#if !defined RTLD_BOOTSTRAP
     case R_PARISC_TLS_DTPMOD32:
       value = sym_map->l_tls_modid;
       break;

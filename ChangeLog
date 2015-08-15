@@ -1,3 +1,11 @@
+2015-08-18  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/hppa/configure.ac: Delete binutils tls checks.
+	* sysdeps/hppa/configure: Regenerated.
+	* sysdeps/hppa/dl-machine.h: Delete USE_TLS and USE___THREAD checks.
+	* sysdeps/hppa/libc-tls.c: Delete USE_TLS checks.
+	* sysdeps/hppa/nptl/tls.h: Likewise.
+
 2015-08-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18823]
