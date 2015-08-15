@@ -108,7 +108,7 @@ __backtrace (void **array, int size)
   bool use_unwinder;
   int count;
 
-  if (!size)
+  if (size <= 0)
     return 0;
 
   use_unwinder = true;

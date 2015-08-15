@@ -111,6 +111,10 @@ int
 __backtrace (void **array, int size)
 {
   struct trace_arg arg = { .array = array, .size = size, .cnt = -1 };
+
+  if (size <= 0)
+    return 0;
+
 #ifdef SHARED
   __libc_once_define (static, once);
 
@@ -119,8 +123,7 @@ __backtrace (void **array, int size)
     return 0;
 #endif
 
-  if (size >= 1)
-    unwind_backtrace (backtrace_helper, &arg);
+  unwind_backtrace (backtrace_helper, &arg);
 
   if (arg.cnt > 1 && arg.array[arg.cnt - 1] == NULL)
     --arg.cnt;

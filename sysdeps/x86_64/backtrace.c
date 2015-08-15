@@ -97,6 +97,10 @@ __backtrace (array, size)
      int size;
 {
   struct trace_arg arg = { .array = array, .cfa = 0, .size = size, .cnt = -1 };
+
+  if (size <= 0)
+    return 0;
+
 #ifdef SHARED
   __libc_once_define (static, once);
 
@@ -105,8 +109,7 @@ __backtrace (array, size)
     return 0;
 #endif
 
-  if (size >= 1)
-    unwind_backtrace (backtrace_helper, &arg);
+  unwind_backtrace (backtrace_helper, &arg);
 
   /* _Unwind_Backtrace seems to put NULL address above
      _start.  Fix it up here.  */
