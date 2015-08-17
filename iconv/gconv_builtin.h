@@ -84,7 +84,7 @@ BUILTIN_ALIAS ("OSF00010020//", "ANSI_X3.4-1968//")
 
 BUILTIN_TRANSFORMATION ("ANSI_X3.4-1968//", "INTERNAL", 1, "=ascii->INTERNAL",
 			__gconv_transform_ascii_internal, __gconv_btwoc_ascii,
-			4, 4, 1, 1)
+			1, 1, 4, 4)
 
 BUILTIN_TRANSFORMATION ("INTERNAL", "ANSI_X3.4-1968//", 1, "=INTERNAL->ascii",
 			__gconv_transform_internal_ascii, NULL, 4, 4, 1, 1)

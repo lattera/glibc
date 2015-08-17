@@ -1,3 +1,8 @@
+2016-03-07  Andreas Schwab  <schwab@suse.de>
+
+	* iconv/gconv_builtin.h ("=ascii->INTERNAL"): Correct min/max
+	needed arguments.
+
 2016-03-07  Hongjiu Zhang  <noctuorare@gmail.com>
 
 	* elf/sln.c (makesymlink): Change struct stat to stat64, and lstat
