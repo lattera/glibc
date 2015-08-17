@@ -1,3 +1,17 @@
+2015-08-28  James Perkins  <james@loowit.net>
+
+	[BZ #16141]
+	* time/strptime_l.c (__strptime_internal): Fix %z minutes
+	calculation, removing incorrect decimal time rounding, so that
+	all minute values result in a valid seconds value.
+	* time/strptime_l.c (__strptime_internal): Extend %z time zone
+	offset range limits to UTC-99:59 through UTC+99:59 to parse
+	current and historical use cases.
+	* time/tst-strptime2.c (tests): Modify and add tests for the
+	strptime %z input field descriptor, specifically conversion of
+	minutes to seconds and validating an offset range of -9959 to
+	+9959.
+
 2015-08-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Dmitry V. Levin  <ldv@altlinux.org>
 
