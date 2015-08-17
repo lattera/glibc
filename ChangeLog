@@ -1,3 +1,13 @@
+2015-08-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18823]
+	* math/s_csqrt.c (__csqrt): Increase threshold and scale factor
+	for scaling up small arguments.
+	* math/s_csqrtf.c (__csqrtf): Likewise.
+	* math/s_csqrtl.c (__csqrtl): Likewise.
+	* math/auto-libm-test-in: Add more tests of csqrt.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-08-17  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/powerpc/Versions (libm): Add empty

@@ -104,10 +104,10 @@ __csqrtl (__complex__ long double x)
 		__real__ x = 0.0L;
 	      __imag__ x = __scalbnl (__imag__ x, -2 * scale);
 	    }
-	  else if (fabsl (__real__ x) < LDBL_MIN
-		   && fabsl (__imag__ x) < LDBL_MIN)
+	  else if (fabsl (__real__ x) < 2.0L * LDBL_MIN
+		   && fabsl (__imag__ x) < 2.0L * LDBL_MIN)
 	    {
-	      scale = -(LDBL_MANT_DIG / 2);
+	      scale = -((LDBL_MANT_DIG + 1) / 2);
 	      __real__ x = __scalbnl (__real__ x, -2 * scale);
 	      __imag__ x = __scalbnl (__imag__ x, -2 * scale);
 	    }

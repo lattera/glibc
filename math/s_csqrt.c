@@ -104,10 +104,10 @@ __csqrt (__complex__ double x)
 		__real__ x = 0.0;
 	      __imag__ x = __scalbn (__imag__ x, -2 * scale);
 	    }
-	  else if (fabs (__real__ x) < DBL_MIN
-		   && fabs (__imag__ x) < DBL_MIN)
+	  else if (fabs (__real__ x) < 2.0 * DBL_MIN
+		   && fabs (__imag__ x) < 2.0 * DBL_MIN)
 	    {
-	      scale = -(DBL_MANT_DIG / 2);
+	      scale = -((DBL_MANT_DIG + 1) / 2);
 	      __real__ x = __scalbn (__real__ x, -2 * scale);
 	      __imag__ x = __scalbn (__imag__ x, -2 * scale);
 	    }
