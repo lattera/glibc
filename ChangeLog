@@ -1,5 +1,12 @@
 2015-08-28  James Perkins  <james@loowit.net>
 
+	* time/tst-strptime2.c (tests): Replace short list of test
+	strings for strptime %z specifier with code which exhaustively
+	tests every combination of sign and 0 to 5 digits. Tests for
+	rejection of invalid strings.
+
+2015-08-28  James Perkins  <james@loowit.net>
+
 	[BZ #16141]
 	* time/strptime_l.c (__strptime_internal): Fix %z minutes
 	calculation, removing incorrect decimal time rounding, so that
