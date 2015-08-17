@@ -149,6 +149,9 @@ libc {
   GLIBC_2.16 {
     __getauxval; getauxval;
   }
+  GLIBC_2.23 {
+    # SHLIB_COMPAT(GLIBC_2_0, GLIBC_2_23) used in regexp.c
+  }
   GLIBC_PRIVATE {
     __madvise;
     __mktemp;
