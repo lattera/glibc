@@ -1,3 +1,8 @@
+2015-08-17  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/Versions (libm): Add empty
+	version set GLIBC_2.19.
+
 2015-08-16  Zack Weinberg  <zackw@panix.com>
 
 	[BZ #18681]

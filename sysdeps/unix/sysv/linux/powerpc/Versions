@@ -13,3 +13,7 @@ libc {
     __vdso_time;
   }
 }
+libm {
+  GLIBC_2.19 {
+  }
+}
