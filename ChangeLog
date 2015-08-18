@@ -1,3 +1,9 @@
+2015-08-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/dl-machine.h [__mips_isa_rev < 6]: Change
+	conditionals to [!defined __mips_isa_rev || __mips_isa_rev < 6].
+	* sysdeps/mips/machine-gmon.h [__mips_isa_rev < 6]: Likewise.
+
 2015-08-18  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/dl-procinfo.c:
