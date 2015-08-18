@@ -40,7 +40,7 @@ init_cpu_features (struct cpu_features *cpu_features)
   unsigned int model = 0;
   enum cpu_features_kind kind;
 
-#if !defined __i586__ && !defined __i686__ && !defined __x86_64__
+#if !HAS_CPUID
   if (__get_cpuid_max (0, 0) == 0)
     {
       kind = arch_kind_other;
@@ -204,7 +204,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 	}
     }
 
-#if !defined __i586__ && !defined __i686__ && !defined __x86_64__
+#if !HAS_CPUID
 no_cpuid:
 #endif
 
