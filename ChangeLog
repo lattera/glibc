@@ -1,3 +1,10 @@
+2015-09-17  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/alpha/Makefile (CFLAGS-fdatasync.c): Delete.
+	* sysdeps/unix/sysv/linux/alpha/fdatasync.c: Delete.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_FDATASYNC): Delete.
+
 2015-09-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/linknamespace.pl: Require weak undefined symbols to be

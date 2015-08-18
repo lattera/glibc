@@ -20,7 +20,6 @@ sysdep_routines += osf_select osf_gettimeofday osf_settimeofday \
 # Support old ipc control
 sysdep_routines += oldmsgctl oldsemctl oldshmctl
 
-CFLAGS-fdatasync.c = -fexceptions
 CFLAGS-ioperm.c = -Wa,-mev6
 endif
 
