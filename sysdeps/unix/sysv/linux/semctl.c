@@ -121,67 +121,8 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 
   va_end (ap);
 
-#if __ASSUME_IPC64 > 0
   return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd | __IPC_64,
 			 &arg);
-#else
-  switch (cmd)
-    {
-    case SEM_STAT:
-    case IPC_STAT:
-    case IPC_SET:
-      break;
-    default:
-      return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd,
-			     &arg);
-    }
-
-  {
-    int save_errno = errno, result;
-    struct __old_semid_ds old;
-    struct semid_ds *buf;
-
-    /* Unfortunately there is no way how to find out for sure whether
-       we should use old or new semctl.  */
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd | __IPC_64,
-			     &arg);
-    if (result != -1 || errno != EINVAL)
-      return result;
-
-    __set_errno(save_errno);
-    buf = arg.buf;
-    arg.__old_buf = &old;
-    if (cmd == IPC_SET)
-      {
-	old.sem_perm.uid = buf->sem_perm.uid;
-	old.sem_perm.gid = buf->sem_perm.gid;
-	old.sem_perm.mode = buf->sem_perm.mode;
-	if (old.sem_perm.uid != buf->sem_perm.uid ||
-	    old.sem_perm.gid != buf->sem_perm.gid)
-	  {
-	    __set_errno (EINVAL);
-	    return -1;
-	  }
-      }
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd,
-			     &arg);
-    if (result != -1 && cmd != IPC_SET)
-      {
-	memset(buf, 0, sizeof(*buf));
-	buf->sem_perm.__key = old.sem_perm.__key;
-	buf->sem_perm.uid = old.sem_perm.uid;
-	buf->sem_perm.gid = old.sem_perm.gid;
-	buf->sem_perm.cuid = old.sem_perm.cuid;
-	buf->sem_perm.cgid = old.sem_perm.cgid;
-	buf->sem_perm.mode = old.sem_perm.mode;
-	buf->sem_perm.__seq = old.sem_perm.__seq;
-	buf->sem_otime = old.sem_otime;
-	buf->sem_ctime = old.sem_ctime;
-	buf->sem_nsems = old.sem_nsems;
-      }
-    return result;
-  }
-#endif
 }
 
 versioned_symbol (libc, __new_semctl, semctl, GLIBC_2_2);

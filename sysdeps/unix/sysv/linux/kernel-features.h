@@ -44,11 +44,6 @@
    socket-related operations instead of separate syscalls.
    __ASSUME_SOCKETCALL is defined for such architectures.  */
 
-/* Linux 2.3.39 introduced IPC64.  Except for powerpc.  Linux 2.4.0 on
-   PPC introduced a correct IPC64.  But PowerPC64 does not support a
-   separate 64-bit syscall, already 64-bit.  */
-#define __ASSUME_IPC64		1
-
 /* The changed st_ino field appeared in 2.4.0-test6.  However, SH is lame,
    and still does not have a 64-bit inode field.  */
 #define __ASSUME_ST_INO_64_BIT		1

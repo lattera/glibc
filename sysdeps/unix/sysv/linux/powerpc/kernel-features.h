@@ -37,6 +37,3 @@
 #define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
 
 #include_next <kernel-features.h>
-
-/* PowerPC64 IPC is always 64-bit and does not use __IPC_64.  */
-#undef __ASSUME_IPC64

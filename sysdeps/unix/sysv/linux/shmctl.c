@@ -71,85 +71,8 @@ compat_symbol (libc, __old_shmctl, shmctl, GLIBC_2_0);
 int
 __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 {
-#if __ASSUME_IPC64 > 0
   return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0,
 			 buf);
-#else
-  switch (cmd) {
-    case SHM_STAT:
-    case IPC_STAT:
-    case IPC_SET:
-#if __WORDSIZE != 32
-    case IPC_INFO:
-#endif
-      break;
-    default:
-      return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, buf);
-  }
-
-  {
-    int save_errno = errno, result;
-    union
-      {
-	struct __old_shmid_ds ds;
-	struct __old_shminfo info;
-      } old;
-
-    /* Unfortunately there is no way how to find out for sure whether
-       we should use old or new shmctl.  */
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0,
-			     buf);
-    if (result != -1 || errno != EINVAL)
-      return result;
-
-    __set_errno(save_errno);
-    if (cmd == IPC_SET)
-      {
-	old.ds.shm_perm.uid = buf->shm_perm.uid;
-	old.ds.shm_perm.gid = buf->shm_perm.gid;
-	old.ds.shm_perm.mode = buf->shm_perm.mode;
-	if (old.ds.shm_perm.uid != buf->shm_perm.uid ||
-	    old.ds.shm_perm.gid != buf->shm_perm.gid)
-	  {
-	    __set_errno (EINVAL);
-	    return -1;
-	  }
-      }
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, &old.ds);
-    if (result != -1 && (cmd == SHM_STAT || cmd == IPC_STAT))
-      {
-	memset(buf, 0, sizeof(*buf));
-	buf->shm_perm.__key = old.ds.shm_perm.__key;
-	buf->shm_perm.uid = old.ds.shm_perm.uid;
-	buf->shm_perm.gid = old.ds.shm_perm.gid;
-	buf->shm_perm.cuid = old.ds.shm_perm.cuid;
-	buf->shm_perm.cgid = old.ds.shm_perm.cgid;
-	buf->shm_perm.mode = old.ds.shm_perm.mode;
-	buf->shm_perm.__seq = old.ds.shm_perm.__seq;
-	buf->shm_atime = old.ds.shm_atime;
-	buf->shm_dtime = old.ds.shm_dtime;
-	buf->shm_ctime = old.ds.shm_ctime;
-	buf->shm_segsz = old.ds.shm_segsz;
-	buf->shm_nattch = old.ds.shm_nattch;
-	buf->shm_cpid = old.ds.shm_cpid;
-	buf->shm_lpid = old.ds.shm_lpid;
-      }
-#if __WORDSIZE != 32
-    else if (result != -1 && cmd == IPC_INFO)
-      {
-	struct shminfo *i = (struct shminfo *)buf;
-
-	memset(i, 0, sizeof(*i));
-	i->shmmax = old.info.shmmax;
-	i->shmmin = old.info.shmmin;
-	i->shmmni = old.info.shmmni;
-	i->shmseg = old.info.shmseg;
-	i->shmall = old.info.shmall;
-      }
-#endif
-    return result;
-  }
-#endif
 }
 
 versioned_symbol (libc, __new_shmctl, shmctl, GLIBC_2_2);

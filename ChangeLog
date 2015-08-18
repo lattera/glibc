@@ -1,3 +1,31 @@
+2015-08-24  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_IPC64):
+	Don't define.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	(__ASSUME_IPC64): Don't undef.
+	* sysdeps/unix/sysv/linux/msgctl.c: Don't check for __ASSUME_IPC64.
+	* sysdeps/unix/sysv/linux/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/msgctl.c: Remove.
+	* sysdeps/unix/sysv/linux/i386/semctl.c: Remove.
+	* sysdeps/unix/sysv/linux/i386/shmctl.c: Remove.
+	* sysdeps/unix/sysv/linux/m68k/msgctl.c: Remove.
+	* sysdeps/unix/sysv/linux/m68k/semctl.c: Remove.
+	* sysdeps/unix/sysv/linux/m68k/shmctl.c: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-32/msgctl.c: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-32/semctl.c: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-32/shmctl.c: Remove.
+	* sysdeps/unix/sysv/linux/sh/msgctl.c: Remove.
+	* sysdeps/unix/sysv/linux/sh/semctl.c: Remove.
+	* sysdeps/unix/sysv/linux/sh/shmctl.c: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/msgctl.c: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/semctl.c: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/shmctl.c: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/msgctl.c: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/semctl.c: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/shmctl.c: Remove.
+
 2015-08-21  Mike Frysinger  <vapier@gentoo.org>
 
 	* manual/Makefile (install): Only build manual when perl is available.
