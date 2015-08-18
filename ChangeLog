@@ -1,3 +1,10 @@
+2015-09-12  Rasmus Villemoes  <rv@rasmusvillemoes.dk>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_phys_pages):
+	Use sysinfo system call instead of parsing /proc/meminfo.
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_avphys_pages):
+	Likewise.
+
 2015-09-11  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #16985]

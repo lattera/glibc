@@ -73,7 +73,7 @@ setpgid		-	setpgid		i:ii	__setpgid	setpgid
 sigaltstack	-	sigaltstack	i:PP	__sigaltstack	sigaltstack
 splice		EXTRA	splice		Ci:iPiPii	splice
 stime		-	stime		i:p	stime
-sysinfo		EXTRA	sysinfo		i:p	sysinfo
+sysinfo		EXTRA	sysinfo		i:p	__sysinfo	sysinfo
 swapon		-	swapon		i:si	__swapon	swapon
 swapoff		-	swapoff		i:s	__swapoff	swapoff
 tee		EXTRA	tee		Ci:iiii	tee
