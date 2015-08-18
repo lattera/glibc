@@ -1,3 +1,7 @@
+2015-08-25  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/strstr.S: Handle worst case.
+
 2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/strlen.S: Replace %xmm[8-12] with %xmm[0-4].
