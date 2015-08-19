@@ -1,6 +1,14 @@
 2015-08-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* sysdeps/unix/sysv/linux/xstatconv.h (__xstat_conv): Add
+	attribute_hidden.
+	(__xstat64_conv): Likewise.
+	(__xstat32_conv): Likewise.
+
+2015-08-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* sysdeps/unix/sysv/linux/i386/makecontext.S (__makecontext):
 	Don't load %ebx when calling __setcontext.  Call __setcontext
 	with HIDDEN_JUMPTARGET.
