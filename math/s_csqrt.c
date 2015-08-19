@@ -148,6 +148,17 @@ __csqrt (__complex__ double x)
 	      s = __scalbn (s, scale);
 	    }
 
+	  if (fabs (r) < DBL_MIN)
+	    {
+	      double force_underflow = r * r;
+	      math_force_eval (force_underflow);
+	    }
+	  if (fabs (s) < DBL_MIN)
+	    {
+	      double force_underflow = s * s;
+	      math_force_eval (force_underflow);
+	    }
+
 	  __real__ res = r;
 	  __imag__ res = __copysign (s, __imag__ x);
 	}
