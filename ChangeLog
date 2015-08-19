@@ -1,3 +1,9 @@
+2015-08-19  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	[BZ #18796]
+	* scripts/test-installation.pl: Don't add -lmvec to build options if
+	libmvec wasn't built.
+
 2015-08-19   Petar Jovanovic  <petar.jovanovic@rt-rk.com>
 
 	[BZ #14341]
