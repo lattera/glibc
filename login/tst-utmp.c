@@ -39,7 +39,7 @@
 #endif
 
 
-#if _HAVE_UT_TYPE || defined UTMPX
+#if defined UTMPX || _HAVE_UT_TYPE
 
 /* Prototype for our test function.  */
 static int do_test (int argc, char *argv[]);
@@ -75,7 +75,7 @@ do_prepare (int argc, char *argv[])
 
 struct utmp entry[] =
 {
-#if _HAVE_UT_TV || defined UTMPX
+#if defined UTMPX || _HAVE_UT_TV
 #define UT(a)  .ut_tv = { .tv_sec = (a)}
 #else
 #define UT(a)  .ut_time = (a)
@@ -167,7 +167,7 @@ simulate_login (const char *line, const char *user)
 	    entry[n].ut_pid = (entry_pid += 27);
 	  entry[n].ut_type = USER_PROCESS;
 	  strncpy (entry[n].ut_user, user, sizeof (entry[n].ut_user));
-#if _HAVE_UT_TV - 0 || defined UTMPX
+#if defined UTMPX || _HAVE_UT_TV - 0
 	  entry[n].ut_tv.tv_sec = (entry_time += 1000);
 #else
           entry[n].ut_time = (entry_time += 1000);
@@ -201,7 +201,7 @@ simulate_logout (const char *line)
 	{
 	  entry[n].ut_type = DEAD_PROCESS;
 	  strncpy (entry[n].ut_user, "", sizeof (entry[n].ut_user));
-#if _HAVE_UT_TV - 0 || defined UTMPX
+#if defined UTMPX || _HAVE_UT_TV - 0
           entry[n].ut_tv.tv_sec = (entry_time += 1000);
 #else
           entry[n].ut_time = (entry_time += 1000);
