@@ -1,5 +1,8 @@
 2015-08-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* elf/Makefile [$(have-z-execstack) = yes]
+	(CPPFLAGS-tst-execstack.c): New variable.
+
 	* login/tst-utmp.c [_HAVE_UT_TYPE || defined UTMPX]: Change
 	conditional to [defined UTMPX || _HAVE_UT_TYPE].
 	[_HAVE_UT_TV || defined UTMPX]: Change conditional to [defined
