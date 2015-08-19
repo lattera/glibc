@@ -1,3 +1,8 @@
+2015-08-19  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/stpncpy.c (stpncpy): Improve performance using
+	__strnlen/memcpy/memset.
+
 2015-08-19  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	[BZ #18796]
