@@ -1,10 +1,6 @@
 # So that we can test __m128's alignment
 stack-align-test-flags += -msse
 
-ifeq ($(subdir),string)
-sysdep_routines += cacheinfo
-endif
-
 ifeq (yes,$(config-asflags-i686))
 CFLAGS-.o += -Wa,-mtune=i686
 CFLAGS-.os += -Wa,-mtune=i686
