@@ -1,3 +1,9 @@
+2015-08-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.h (HAS_I586): Defined to 1 if
+	__i586__ is defined.
+	(HAS_I686): Defined to 1 if __i686__ is defined.
+
 2015-08-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/Makefile [$(have-z-execstack) = yes]

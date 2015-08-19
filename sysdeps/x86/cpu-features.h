@@ -239,17 +239,18 @@ extern const struct cpu_features *__get_cpu_features (void)
 
 #ifdef __x86_64__
 # define HAS_CPUID 1
-#elif defined __pentium__
+#elif defined __i586__ || defined __pentium__
 # define HAS_CPUID 1
 # define HAS_I586 1
 # define HAS_I686 0
-#elif (defined __pentiumpro__ || defined __pentium4__		\
-       || defined __nocona__ || defined __atom__		\
-       || defined __core2__ || defined __corei7__		\
-       || defined __corei7_avx__ || defined __core_avx2__	\
-       || defined __nehalem__ || defined __sandybridge__	\
-       || defined __haswell__  || defined __knl__		\
-       || defined __bonnell__ || defined __silvermont__ 	\
+#elif (defined __i686__ || defined __pentiumpro__		\
+       || defined __pentium4__ || defined __nocona__		\
+       || defined __atom__ || defined __core2__			\
+       || defined __corei7__ || defined __corei7_avx__		\
+       || defined __core_avx2__	|| defined __nehalem__		\
+       || defined __sandybridge__ || defined __haswell__	\
+       || defined __knl__ || defined __bonnell__		\
+       || defined __silvermont__				\
        || defined __k6__ || defined __k8__			\
        || defined __athlon__ || defined __amdfam10__		\
        || defined __bdver1__ || defined __bdver2__		\
