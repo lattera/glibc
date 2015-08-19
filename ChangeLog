@@ -106,19 +106,6 @@
 	(HAS_I586): Likewise.
 	(HAS_I686): Likewise.
 
-2015-08-18  Marko Myllynen  <myllynen@redhat.com>
-
-	[BZ #16973]
-	* locales/eu_ES: Fix lang_lib.
-	* locales/lb_LU: Likewise.
-	* locales/my_MM: Likewise.
-	* locales/sr_ME: Likewise.
-	* locales/sr_RS: Likewise.
-	* locales/sr_RS@latin: Likewise.
-	* locales/tr_TR: Likewise.
-	* locales/lo_LA: Fix lang_term.
-	* locales/km_KH: Fix lang_ab, lang_term, lang_lib.
-
 2015-08-18  Zack Weinberg  <zackw@panix.com>
 
 	* misc/Versions (libc): Add GLIBC_2.23.
