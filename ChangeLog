@@ -1,5 +1,14 @@
 2015-08-19  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #18822]
+	* sysdeps/unix/sysv/linux/i386/makecontext.S (__makecontext):
+	Don't load %ebx when calling __setcontext.  Call __setcontext
+	with HIDDEN_JUMPTARGET.
+	* sysdeps/unix/sysv/linux/i386/setcontext.S (__setcontext): Add
+	libc_hidden_def.
+
+2015-08-19  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/i686/Makefile
 	[$(subdir) == string] (sysdep_routines): Moved to ...
 	* sysdeps/i386/Makefile: Here.

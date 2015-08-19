@@ -102,15 +102,10 @@ L(exitcode):
 	   parameters (see above).  */
 	leal	(%esp,%ebx,4), %esp
 
-#ifdef	PIC
-	call	1f
-1:	popl	%ebx
-	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %ebx
-#endif
 	cmpl	$0, (%esp)		/* Check the next context.  */
 	je	2f			/* If it is zero exit.  */
 
-	call	JUMPTARGET(__setcontext)
+	call	HIDDEN_JUMPTARGET(__setcontext)
 	/* If this returns (which can happen if the syscall fails) we'll
 	   exit the program with the return error value (-1).  */
 

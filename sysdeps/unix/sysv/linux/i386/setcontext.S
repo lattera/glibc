@@ -91,5 +91,6 @@ ENTRY(__setcontext)
 
 	ret
 PSEUDO_END(__setcontext)
+libc_hidden_def (__setcontext)
 
 weak_alias (__setcontext, setcontext)
