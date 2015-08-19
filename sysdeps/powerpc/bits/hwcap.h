@@ -64,3 +64,5 @@
 #define PPC_FEATURE2_HAS_TAR       0x04000000 /* Target Address Register */
 #define PPC_FEATURE2_HAS_VEC_CRYPTO  0x02000000  /* Target supports vector
 						    instruction.  */
+#define PPC_FEATURE2_HTM_NOSC	   0x01000000 /* Kernel aborts transaction
+						 when a syscall is made.  */
