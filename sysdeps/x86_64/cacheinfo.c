@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <cpuid.h>
-#include "multiarch/init-arch.h"
+#include <init-arch.h>
 
 #define is_intel GLRO(dl_x86_cpu_features).kind == arch_kind_intel
 #define is_amd GLRO(dl_x86_cpu_features).kind == arch_kind_amd

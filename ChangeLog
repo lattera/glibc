@@ -1,5 +1,14 @@
 2015-08-20  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i686/multiarch/init-arch.h: Removed.
+	* sysdeps/unix/sysv/linux/x86/init-arch.h: Likewise.
+	* sysdeps/x86_64/cacheinfo.c: Include <init-arch.h> instead
+	of "multiarch/init-arch.h".
+	* sysdeps/x86_64/multiarch/init-arch.h: Renamed to ...
+	* sysdeps/x86/init-arch.h: This.
+
+2015-08-20  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/i686/multiarch/init-arch.c: Removed.
 	* sysdeps/unix/sysv/linux/x86/init-arch.c: Likewise.
 
