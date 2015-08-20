@@ -249,9 +249,6 @@ ifneq ($(long-double-fcts),yes)
 math-CPPFLAGS += -DNO_LONG_DOUBLE -D_Mlong_double_=double
 endif
 
-# The fdlibm code generates a lot of these warnings but is otherwise clean.
-override CFLAGS += -Wno-uninitialized
-
 # The -lieee library is actually an object file.
 # The module just defines the _LIB_VERSION_ variable.
 # It's not a library to make sure it is linked in instead of s_lib_version.o.

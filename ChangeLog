@@ -1,5 +1,7 @@
 2015-08-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/Makefile (CFLAGS): Don't add -Wno-uninitialized.
+
 	* sysdeps/ieee754/ldbl-128ibm/s_nearbyintl.c: Always initialize
 	variables for high and low parts before possibly modifying them.
 
