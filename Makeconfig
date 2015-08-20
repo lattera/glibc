@@ -750,7 +750,7 @@ else
 endif
 +gccwarn += -Wundef
 ifeq ($(enable-werror),yes)
-+gccwarn += -Werror -Wno-error=undef
++gccwarn += -Werror
 endif
 +gccwarn-c = -Wstrict-prototypes
 

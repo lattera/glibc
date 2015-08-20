@@ -1,3 +1,8 @@
+2015-08-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makeconfig [$(enable-werror) = yes] (+gccwarn): Do not add
+	-Wno-error=undef.
+
 2015-08-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* i386/i686/multiarch/strcasestr-c.c: Removed.
