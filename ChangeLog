@@ -1,5 +1,11 @@
 2015-08-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* timezone/Makefile (CFLAGS-zdump.c): Remove
+	-Wno-strict-prototypes.
+	(CFLAGS-zic.c): Likewise.
+	(CFLAGS-ialloc.c): Likewise.
+	(CFLAGS-scheck.c): Likewise.
+
 	* Makeconfig [$(enable-werror) = yes] (+gccwarn): Do not add
 	-Wno-error=undef.
 
