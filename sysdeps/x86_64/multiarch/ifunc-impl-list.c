@@ -129,10 +129,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcasecmp_l, 1,
 			      __strcasecmp_l_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strcasestr.c.  */
-  IFUNC_IMPL (i, name, strcasestr,
-	      IFUNC_IMPL_ADD (array, i, strcasestr, 1, __strcasestr_sse2))
-
   /* Support sysdeps/x86_64/multiarch/strcat.S.  */
   IFUNC_IMPL (i, name, strcat,
 	      IFUNC_IMPL_ADD (array, i, strcat, HAS_CPU_FEATURE (SSSE3),
