@@ -1,3 +1,10 @@
+2015-09-04  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18635]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/makecontext.S
+	(__makecontext): Terminate FDE before return label.
+	(__novec_makecontext): Likewise.
+
 2015-09-04  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/socketpair.c: Use the address of the

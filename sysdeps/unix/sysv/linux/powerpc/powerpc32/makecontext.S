@@ -94,6 +94,8 @@ ENTRY(__makecontext)
 
 	blr
 
+	cfi_endproc
+	nop
 /*
  * If the function returns, it comes here.  We put ucp->uc_link in
  * r31, which is a callee-saved register.  We have to continue with
@@ -106,6 +108,7 @@ L(exitcode):
 4:	bl	HIDDEN_JUMPTARGET(exit)
 	b	4b
 
+	cfi_startproc
 END(__makecontext)
 
 versioned_symbol (libc, __makecontext, makecontext, GLIBC_2_3_4)
@@ -185,6 +188,8 @@ ENTRY(__novec_makecontext)
 
 	blr
 
+	cfi_endproc
+	nop
 /*
  * If the function returns, it comes here.  We put ucp->uc_link in
  * r31, which is a callee-saved register.  We have to continue with
@@ -197,6 +202,7 @@ L(novec_exitcode):
 4:	bl	HIDDEN_JUMPTARGET(exit)
 	b	4b
 
+	cfi_startproc
 END(__novec_makecontext)
 	.previous
 
