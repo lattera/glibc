@@ -93,7 +93,9 @@ elision_adapt(signed char *adapt_count, unsigned int status)
     ret;						\
     })
 
-/* Returns true if lock defined by IS_LOCK_FREE was elided.  */
+/* Returns true if lock defined by IS_LOCK_FREE was elided.  The call
+   to _xend crashes if the application incorrectly tries to unlock a
+   lock which has not been locked.  */
 
 #define ELIDE_UNLOCK(is_lock_free)		\
   ({						\
