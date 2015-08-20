@@ -65,7 +65,7 @@ __nearbyintl (long double x)
     }
   else if (fabs (u.d[1].d) < TWO52 && u.d[1].d != 0.0)
     {
-      double high, low, tau;
+      double high = u.d[0].d, low = u.d[1].d, tau;
       /* In this case we have to round the low double and handle any
          adjustment to the high double that may be caused by rounding
          (up).  This is complicated by the fact that the high double
@@ -78,8 +78,6 @@ __nearbyintl (long double x)
 	    {
 	      /* If the high/low doubles are the same sign then simply
 	         round the low double.  */
-	      high = u.d[0].d;
-	      low = u.d[1].d;
 	    }
 	  else if (u.d[1].d < 0.0)
 	    {
@@ -88,8 +86,8 @@ __nearbyintl (long double x)
 
 	      tau = __nextafter (u.d[0].d, 0.0);
 	      tau = (u.d[0].d - tau) * 2.0;
-	      high = u.d[0].d - tau;
-	      low = u.d[1].d + tau;
+	      high -= tau;
+	      low += tau;
 	    }
 	  low += TWO52;
 	  low -= TWO52;
@@ -100,8 +98,6 @@ __nearbyintl (long double x)
 	    {
 	      /* If the high/low doubles are the same sign then simply
 	         round the low double.  */
-	      high = u.d[0].d;
-	      low = u.d[1].d;
 	    }
 	  else if (u.d[1].d > 0.0)
 	    {
@@ -109,8 +105,8 @@ __nearbyintl (long double x)
 	         adjust for that.  */
 	      tau = __nextafter (u.d[0].d, 0.0);
 	      tau = (u.d[0].d - tau) * 2.0;
-	      high = u.d[0].d - tau;
-	      low = u.d[1].d + tau;
+	      high -= tau;
+	      low += tau;
 	    }
 	  low = TWO52 - low;
 	  low = -(low - TWO52);
