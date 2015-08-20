@@ -1,3 +1,10 @@
+2015-08-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* i386/i686/multiarch/strcasestr-c.c: Removed.
+	* x86_64/multiarch/strcasestr.c: Likewise.
+	* x86_64/multiarch/ifunc-impl-list.c (__libc_ifunc_impl_list):
+	Remove strcasestr.
+
 2015-08-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/Makefile (CFLAGS): Don't add -Wno-uninitialized.
