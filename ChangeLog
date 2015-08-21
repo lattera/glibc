@@ -1,9 +1,5 @@
 2015-08-21  H.J. Lu  <hongjiu.lu@intel.com>
 
-	* sysdeps/unix/sysv/linux/lxstat.c (__lxstat): Fix a typo.
-
-2015-08-21  H.J. Lu  <hongjiu.lu@intel.com>
-
 	* sysdeps/unix/sysdep.h (INLINE_SYSCALL_RETURN): New.
 	(INLINE_SYSCALL_ERROR_RETURN): Likewise.
 	* sysdeps/unix/sysv/linux/adjtime.c (ADJTIME): Use
