@@ -34,17 +34,11 @@ fchmodat (fd, file, mode, flag)
      int flag;
 {
   if (flag & ~AT_SYMLINK_NOFOLLOW)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
 #ifndef __NR_lchmod		/* Linux so far has no lchmod syscall.  */
   if (flag & AT_SYMLINK_NOFOLLOW)
-    {
-      __set_errno (ENOTSUP);
-      return -1;
-    }
+    return INLINE_SYSCALL_ERROR_RETURN (-ENOTSUP, int, -1);
 #endif
 
-  return INLINE_SYSCALL (fchmodat, 3, fd, file, mode);
+  return INLINE_SYSCALL_RETURN (fchmodat, 3, int, fd, file, mode);
 }

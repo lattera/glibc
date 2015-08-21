@@ -25,5 +25,6 @@
 int
 reboot (int howto)
 {
-  return INLINE_SYSCALL (reboot, 3, (int) 0xfee1dead, 672274793, howto);
+  return INLINE_SYSCALL_RETURN (reboot, 3, int, (int) 0xfee1dead,
+				672274793, howto);
 }

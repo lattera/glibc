@@ -61,10 +61,7 @@ ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv)
       tmp.tv_sec = itv->tv_sec + itv->tv_usec / 1000000L;
       tmp.tv_usec = itv->tv_usec % 1000000L;
       if (tmp.tv_sec > MAX_SEC || tmp.tv_sec < MIN_SEC)
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
+	return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
       tntx.offset = tmp.tv_usec + tmp.tv_sec * 1000000L;
       tntx.modes = ADJ_OFFSET_SINGLESHOT;
     }

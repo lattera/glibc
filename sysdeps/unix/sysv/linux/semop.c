@@ -31,5 +31,6 @@ semop (semid, sops, nsops)
      struct sembuf *sops;
      size_t nsops;
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_semop, semid, (int) nsops, 0, sops);
+  return INLINE_SYSCALL_RETURN (ipc, 5, int, IPCOP_semop, semid,
+				(int) nsops, 0, sops);
 }

@@ -37,12 +37,18 @@ __statfs64 (const char *file, struct statfs64 *buf)
   if (! __no_statfs64)
 # endif
     {
-      int result = INLINE_SYSCALL (statfs64, 3, file, sizeof (*buf), buf);
-
 # if __ASSUME_STATFS64 == 0
-      if (result == 0 || errno != ENOSYS)
-# endif
+      INTERNAL_SYSCALL_DECL (err);
+      int result = INTERNAL_SYSCALL (statfs64, err, 3, file,
+				     sizeof (*buf), buf);
+
+      if (!__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err))
+	  || INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
 	return result;
+# else
+      return INLINE_SYSCALL_RETURN (statfs64, 3, int, file,
+				    sizeof (*buf), buf);
+# endif
 
 # if __ASSUME_STATFS64 == 0
       __no_statfs64 = 1;

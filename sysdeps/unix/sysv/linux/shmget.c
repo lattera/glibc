@@ -33,5 +33,6 @@ shmget (key, size, shmflg)
      size_t size;
      int shmflg;
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_shmget, key, size, shmflg, NULL);
+  return INLINE_SYSCALL_RETURN (ipc, 5, int, IPCOP_shmget, key, size,
+				shmflg, NULL);
 }

@@ -26,11 +26,17 @@ int
 signalfd (int fd, const sigset_t *mask, int flags)
 {
 #ifdef __NR_signalfd4
-  int res = INLINE_SYSCALL (signalfd4, 4, fd, mask, _NSIG / 8, flags);
 # ifndef __ASSUME_SIGNALFD4
-  if (res != -1 || errno != ENOSYS)
-# endif
+  INTERNAL_SYSCALL_DECL (err);
+  int res = INTERNAL_SYSCALL (signalfd4, err, 4, fd, mask, _NSIG / 8,
+			      flags);
+  if (!__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res, err))
+      || INTERNAL_SYSCALL_ERRNO (res, err) != ENOSYS)
     return res;
+# else
+  return INLINE_SYSCALL_RETURN (signalfd4, 4, int, fd, mask, _NSIG / 8,
+				flags);
+# endif
 #endif
 
 #ifndef __ASSUME_SIGNALFD4
@@ -39,16 +45,12 @@ signalfd (int fd, const sigset_t *mask, int flags)
      kernel (sys_indirect) before implementing setting flags like
      O_NONBLOCK etc.  */
   if (flags != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
 
 # ifdef __NR_signalfd
-  return INLINE_SYSCALL (signalfd, 3, fd, mask, _NSIG / 8);
+  return INLINE_SYSCALL_RETURN (signalfd, 3, int, fd, mask, _NSIG / 8);
 # else
-  __set_errno (ENOSYS);
-  return -1;
+  return INLINE_SYSCALL_ERROR_RETURN (-ENOSYS, int, -1);
 # endif
 #elif !defined __NR_signalfd4
 # error "__ASSUME_SIGNALFD4 defined but not __NR_signalfd4"

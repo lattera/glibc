@@ -35,20 +35,21 @@ int
 __lxstat (int vers, const char *name, struct stat *buf)
 {
   if (vers == _STAT_VER_KERNEL)
-    return INLINE_SYSCALL (lstat, 2, name, (struct kernel_stat *) buf);
+    return INLINE_SYSCALL_ERROR_RETURN (lstat, 2, int, name,
+					(struct kernel_stat *) buf);
 
 #ifdef STAT_IS_KERNEL_STAT
-  errno = EINVAL;
-  return -1;
+  return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1)
 #else
   struct kernel_stat kbuf;
-  int result;
-
-  result = INLINE_SYSCALL (lstat, 2, name, &kbuf);
-  if (result == 0)
-    result = __xstat_conv (vers, &kbuf, buf);
-
-  return result;
+  INTERNAL_SYSCALL_DECL (err);
+  int result = INTERNAL_SYSCALL (lstat, err, 2, name, &kbuf);
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
+    return INLINE_SYSCALL_ERROR_RETURN (-INTERNAL_SYSCALL_ERRNO (result,
+								 err),
+					int, -1)
+  else
+    return __xstat_conv (vers, &kbuf, buf);
 #endif
 }
 

@@ -96,8 +96,7 @@ __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
       break;
 
     default:
-      __set_errno (EINVAL);
-      return -1;
+      return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
     }
 
   return 0;
@@ -170,8 +169,7 @@ __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	 _STAT_VER_KERNEL does not make sense.  */
     case _STAT_VER_KERNEL:
     default:
-      __set_errno (EINVAL);
-      return -1;
+      return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
     }
 
   return 0;
@@ -201,19 +199,13 @@ __xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
 	    buf->st_ino = kbuf->st_ino;
 	    if (sizeof (buf->st_ino) != sizeof (kbuf->st_ino)
 		&& buf->st_ino != kbuf->st_ino)
-	      {
-		__set_errno (EOVERFLOW);
-		return -1;
-	      }
+	      return INLINE_SYSCALL_ERROR_RETURN (-EOVERFLOW, int, -1);
 	  }
 #else
 	buf->st_ino = kbuf->st_ino;
 	if (sizeof (buf->st_ino) != sizeof (kbuf->st_ino)
 	    && buf->st_ino != kbuf->st_ino)
-	  {
-	    __set_errno (EOVERFLOW);
-	    return -1;
-	  }
+	  return INLINE_SYSCALL_ERROR_RETURN (-EOVERFLOW, int, -1);
 #endif
 	buf->st_mode = kbuf->st_mode;
 	buf->st_nlink = kbuf->st_nlink;
@@ -227,19 +219,13 @@ __xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
 	/* Check for overflow.  */
 	if (sizeof (buf->st_size) != sizeof (kbuf->st_size)
 	    && buf->st_size != kbuf->st_size)
-	  {
-	    __set_errno (EOVERFLOW);
-	    return -1;
-	  }
+	  return INLINE_SYSCALL_ERROR_RETURN (-EOVERFLOW, int, -1);
 	buf->st_blksize = kbuf->st_blksize;
 	buf->st_blocks = kbuf->st_blocks;
 	/* Check for overflow.  */
 	if (sizeof (buf->st_blocks) != sizeof (kbuf->st_blocks)
 	    && buf->st_blocks != kbuf->st_blocks)
-	  {
-	    __set_errno (EOVERFLOW);
-	    return -1;
-	  }
+	  return INLINE_SYSCALL_ERROR_RETURN (-EOVERFLOW, int, -1);
 #ifdef _HAVE_STAT_NSEC
 	buf->st_atim.tv_sec = kbuf->st_atim.tv_sec;
 	buf->st_atim.tv_nsec = kbuf->st_atim.tv_nsec;
@@ -275,8 +261,7 @@ __xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
 	 _STAT_VER_KERNEL does not make sense.  */
     case _STAT_VER_KERNEL:
     default:
-      __set_errno (EINVAL);
-      return -1;
+      return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
     }
 
   return 0;

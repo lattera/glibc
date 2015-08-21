@@ -34,12 +34,14 @@
 int
 __getpriority (enum __priority_which which, id_t who)
 {
-  int res;
-
-  res = INLINE_SYSCALL (getpriority, 2, (int) which, who);
-  if (res >= 0)
-    res = PZERO - res;
-  return res;
+  INTERNAL_SYSCALL_DECL (err);
+  int res = INTERNAL_SYSCALL (getpriority, err, 2, (int) which, who);
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res, err)))
+    return INLINE_SYSCALL_ERROR_RETURN (-INTERNAL_SYSCALL_ERRNO (res,
+								 err),
+					int, -1);
+  else
+    return PZERO - res;
 }
 libc_hidden_def (__getpriority)
 weak_alias (__getpriority, getpriority)

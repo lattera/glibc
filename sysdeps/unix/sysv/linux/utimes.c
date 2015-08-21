@@ -30,7 +30,7 @@ int
 __utimes (const char *file, const struct timeval tvp[2])
 {
   /* Avoid implicit array coercion in syscall macros.  */
-  return INLINE_SYSCALL (utimes, 2, file, &tvp[0]);
+  return INLINE_SYSCALL_RETURN (utimes, 2, int, file, &tvp[0]);
 }
 
 weak_alias (__utimes, utimes)

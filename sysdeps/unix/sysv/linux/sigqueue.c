@@ -43,7 +43,7 @@ __sigqueue (pid, sig, val)
   info.si_uid = __getuid ();
   info.si_value = val;
 
-  return INLINE_SYSCALL (rt_sigqueueinfo, 3, pid, sig, &info);
+  return INLINE_SYSCALL_RETURN (rt_sigqueueinfo, 3, int, pid, sig, &info);
 }
 weak_alias (__sigqueue, sigqueue)
 #else

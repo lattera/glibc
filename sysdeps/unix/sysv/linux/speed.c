@@ -60,10 +60,7 @@ cfsetospeed  (termios_p, speed)
 {
   if ((speed & ~CBAUD) != 0
       && (speed < B57600 || speed > __MAX_BAUD))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
 
 #ifdef _HAVE_STRUCT_TERMIOS_C_OSPEED
   termios_p->c_ospeed = speed;
@@ -87,10 +84,7 @@ cfsetispeed (termios_p, speed)
 {
   if ((speed & ~CBAUD) != 0
       && (speed < B57600 || speed > __MAX_BAUD))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
 
 #ifdef _HAVE_STRUCT_TERMIOS_C_ISPEED
   termios_p->c_ispeed = speed;

@@ -33,15 +33,11 @@ futimens (int fd, const struct timespec tsp[2])
 {
 #ifdef __NR_utimensat
   if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
-    }
+    return INLINE_SYSCALL_ERROR_RETURN (-EBADF, int, -1);
   /* Avoid implicit array coercion in syscall macros.  */
-  return INLINE_SYSCALL (utimensat, 4, fd, NULL, &tsp[0], 0);
+  return INLINE_SYSCALL_RETURN (utimensat, 4, int, fd, NULL, &tsp[0], 0);
 #else
-  __set_errno (ENOSYS);
-  return -1;
+  return INLINE_SYSCALL_ERROR_RETURN (-ENOSYS, int, -1);
 #endif
 }
 #ifndef __NR_utimensat

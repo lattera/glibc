@@ -61,8 +61,7 @@ tcsetattr (fd, optional_actions, termios_p)
       cmd = TCSETSF;
       break;
     default:
-      __set_errno (EINVAL);
-      return -1;
+      return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
     }
 
   k_termios.c_iflag = termios_p->c_iflag & ~IBAUD0;
@@ -79,6 +78,6 @@ tcsetattr (fd, optional_actions, termios_p)
   memcpy (&k_termios.c_cc[0], &termios_p->c_cc[0],
 	  __KERNEL_NCCS * sizeof (cc_t));
 
-  return INLINE_SYSCALL (ioctl, 3, fd, cmd, &k_termios);
+  return INLINE_SYSCALL_RETURN (ioctl, 3, int, fd, cmd, &k_termios);
 }
 libc_hidden_def (tcsetattr)

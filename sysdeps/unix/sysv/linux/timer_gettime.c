@@ -37,7 +37,6 @@ timer_gettime (timerid, value)
   struct timer *kt = (struct timer *) timerid;
 
   /* Delete the kernel timer object.  */
-  int res = INLINE_SYSCALL (timer_gettime, 2, kt->ktimerid, value);
-
-  return res;
+  return INLINE_SYSCALL_RETURN (timer_gettime, 2, int, kt->ktimerid,
+				value);
 }

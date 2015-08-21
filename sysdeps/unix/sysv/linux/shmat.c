@@ -42,11 +42,10 @@ shmat (shmid, shmaddr, shmflg)
 				shmid, shmflg,
 				(long int) &raddr,
 				(void *) shmaddr);
-  if (INTERNAL_SYSCALL_ERROR_P (resultvar, err))
-    {
-      __set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, err));
-      return (void *) -1l;
-    }
-
-  return raddr;
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (resultvar, err)))
+    return INLINE_SYSCALL_ERROR_RETURN (-INTERNAL_SYSCALL_ERRNO (resultvar,
+								 err),
+					void *, -1l);
+  else
+    return raddr;
 }

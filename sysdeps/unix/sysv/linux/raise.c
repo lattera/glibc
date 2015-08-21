@@ -52,7 +52,7 @@ raise (sig)
     if (__glibc_unlikely (pid <= 0))
       pid = (pid & INT_MAX) == 0 ? selftid : -pid;
 
-  return INLINE_SYSCALL (tgkill, 3, pid, selftid, sig);
+  return INLINE_SYSCALL_RETURN (tgkill, 3, int, pid, selftid, sig);
 }
 libc_hidden_def (raise)
 weak_alias (raise, gsignal)
