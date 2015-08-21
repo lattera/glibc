@@ -26,7 +26,7 @@
 int
 mq_close (mqd_t mqdes)
 {
-  return INLINE_SYSCALL_RETURN (close, 1, int, mqdes);
+  return INLINE_SYSCALL (close, 1, mqdes);
 }
 
 #else

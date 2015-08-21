@@ -29,17 +29,10 @@ loff_t
 __llseek (int fd, loff_t offset, int whence)
 {
   loff_t retval;
-  INTERNAL_SYSCALL_DECL (err);
-  int result = INTERNAL_SYSCALL (_llseek, err, 5, fd,
-				 (off_t) (offset >> 32),
-				 (off_t) (offset & 0xffffffff),
-				 &retval, whence);
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-    return INLINE_SYSCALL_ERROR_RETURN (-INTERNAL_SYSCALL_ERRNO (result,
-								 err),
-					loff_t, -1);
-  else
-    return retval;
+
+  return (loff_t) (INLINE_SYSCALL (_llseek, 5, fd, (off_t) (offset >> 32),
+				   (off_t) (offset & 0xffffffff),
+				   &retval, whence) ?: retval);
 }
 weak_alias (__llseek, llseek)
 strong_alias (__llseek, __libc_lseek64)

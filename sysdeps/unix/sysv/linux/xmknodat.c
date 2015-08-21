@@ -34,15 +34,20 @@ int
 __xmknodat (int vers, int fd, const char *file, mode_t mode, dev_t *dev)
 {
   if (vers != _MKNOD_VER)
-    return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
   /* We must convert the value to dev_t type used by the kernel.  */
   unsigned long long int k_dev =  (*dev) & ((1ULL << 32) - 1);
   if (k_dev != *dev)
-    return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
-  return INLINE_SYSCALL_RETURN (mknodat, 4, int, fd, file, mode,
-				(unsigned int) k_dev);
+  return INLINE_SYSCALL (mknodat, 4, fd, file, mode, (unsigned int) k_dev);
 }
 
 libc_hidden_def (__xmknodat)

@@ -25,14 +25,11 @@ int
 eventfd (unsigned int count, int flags)
 {
 #ifdef __NR_eventfd2
+  int res = INLINE_SYSCALL (eventfd2, 2, count, flags);
 # ifndef __ASSUME_EVENTFD2
-  INTERNAL_SYSCALL_DECL (err);
-  int res = INTERNAL_SYSCALL (eventfd2, err, 2, count, flags);
-  if (!__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res, err))
-      || INTERNAL_SYSCALL_ERRNO (res, err) != ENOSYS)
-    return res;
+  if (res != -1 || errno != ENOSYS)
 # endif
-  return INLINE_SYSCALL_RETURN (eventfd2, 2, int, count, flags);
+    return res;
 #endif
 
 #ifndef __ASSUME_EVENTFD2
@@ -41,12 +38,16 @@ eventfd (unsigned int count, int flags)
      kernel (sys_indirect) before implementing setting flags like
      O_NONBLOCK etc.  */
   if (flags != 0)
-    return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
 # ifdef __NR_eventfd
-  return INLINE_SYSCALL_RETURN (eventfd, 1, int, count)
+  return INLINE_SYSCALL (eventfd, 1, count);
 # else
-  return INLINE_SYSCALL_ERROR_RETURN (-ENOSYS, int, -1)
+  __set_errno (ENOSYS);
+  return -1;
 # endif
 #elif !defined __NR_eventfd2
 # error "__ASSUME_EVENTFD2 defined but not __NR_eventfd2"

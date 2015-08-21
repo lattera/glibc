@@ -29,5 +29,5 @@ int
 sigpending (set)
      sigset_t *set;
 {
-  return INLINE_SYSCALL_RETURN (rt_sigpending, 2, int, set, _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigpending, 2, set, _NSIG / 8);
 }

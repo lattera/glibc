@@ -35,7 +35,10 @@ mqd_t
 __mq_open (const char *name, int oflag, ...)
 {
   if (name[0] != '/')
-    return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
   mode_t mode = 0;
   struct mq_attr *attr = NULL;
@@ -49,8 +52,7 @@ __mq_open (const char *name, int oflag, ...)
       va_end (ap);
     }
 
-  return INLINE_SYSCALL_RETURN (mq_open, 4, int, name + 1, oflag, mode,
-				attr);
+  return INLINE_SYSCALL (mq_open, 4, name + 1, oflag, mode, attr);
 }
 strong_alias (__mq_open, mq_open);
 

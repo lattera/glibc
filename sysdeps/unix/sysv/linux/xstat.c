@@ -35,22 +35,20 @@ int
 __xstat (int vers, const char *name, struct stat *buf)
 {
   if (vers == _STAT_VER_KERNEL)
-    return INLINE_SYSCALL_RETURN (stat, 2, int, name,
-				  (struct kernel_stat *) buf);
+    return INLINE_SYSCALL (stat, 2, name, (struct kernel_stat *) buf);
 
 #ifdef STAT_IS_KERNEL_STAT
   errno = EINVAL;
   return -1;
 #else
   struct kernel_stat kbuf;
-  INTERNAL_SYSCALL_DECL (err);
-  int result = INTERNAL_SYSCALL (stat, err, 2, name, &kbuf);
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-    return INLINE_SYSCALL_ERROR_RETURN (-INTERNAL_SYSCALL_ERRNO (result,
-								 err),
-					int, -1);
-  else
-    return __xstat_conv (vers, &kbuf, buf);
+  int result;
+
+  result = INLINE_SYSCALL (stat, 2, name, &kbuf);
+  if (result == 0)
+    result = __xstat_conv (vers, &kbuf, buf);
+
+  return result;
 #endif
 }
 hidden_def (__xstat)

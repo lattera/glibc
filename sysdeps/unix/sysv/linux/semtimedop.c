@@ -32,6 +32,7 @@ semtimedop (semid, sops, nsops, timeout)
      size_t nsops;
      const struct timespec *timeout;
 {
-  return INLINE_SYSCALL_RETURN (ipc, 6, int, IPCOP_semtimedop, semid,
-				(int) nsops, 0, sops, timeout);
+  return INLINE_SYSCALL (ipc, 6, IPCOP_semtimedop,
+			 semid, (int) nsops, 0, sops,
+			 timeout);
 }

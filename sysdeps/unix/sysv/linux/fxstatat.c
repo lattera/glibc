@@ -45,17 +45,18 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 #endif
 
   result = INTERNAL_SYSCALL (newfstatat, err, 4, fd, file, &kst, flag);
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-    return INLINE_SYSCALL_ERROR_RETURN (-INTERNAL_SYSCALL_ERRNO (result,
-								 err),
-					int, -1);
-  else
+  if (!__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     {
 #ifdef STAT_IS_KERNEL_STAT
       return 0;
 #else
       return __xstat_conv (vers, &kst, st);
 #endif
+    }
+  else
+    {
+      __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
+      return -1;
     }
 }
 libc_hidden_def (__fxstatat)

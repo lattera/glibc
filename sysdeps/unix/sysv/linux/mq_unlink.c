@@ -26,7 +26,10 @@ int
 mq_unlink (const char *name)
 {
   if (name[0] != '/')
-    return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
   INTERNAL_SYSCALL_DECL (err);
   int ret = INTERNAL_SYSCALL (mq_unlink, err, 1, name + 1);
@@ -38,7 +41,8 @@ mq_unlink (const char *name)
       ret = INTERNAL_SYSCALL_ERRNO (ret, err);
       if (ret == EPERM)
 	ret = EACCES;
-      return INLINE_SYSCALL_ERROR_RETURN (-ret, int, -1);
+      __set_errno (ret);
+      ret = -1;
     }
 
   return ret;

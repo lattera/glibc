@@ -29,6 +29,7 @@ truncate64 (const char *path, off64_t length)
 {
   unsigned int low = length & 0xffffffff;
   unsigned int high = length >> 32;
-  return INLINE_SYSCALL_RETURN (truncate64, 3, int, path,
-				__LONG_LONG_PAIR (high, low));
+  int result = INLINE_SYSCALL (truncate64, 3, path,
+			       __LONG_LONG_PAIR (high, low));
+  return result;
 }

@@ -31,12 +31,8 @@
 int
 ___xstat64 (int vers, const char *name, struct stat64 *buf)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  int result = INTERNAL_SYSCALL (stat64, err, 2, name, buf);
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-    return INLINE_SYSCALL_ERROR_RETURN (-INTERNAL_SYSCALL_ERRNO (result,
-								 err),
-					int, -1);
+  int result;
+  result = INLINE_SYSCALL (stat64, 2, name, buf);
 #if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
   if (__builtin_expect (!result, 1) && buf->__st_ino != (__ino_t) buf->st_ino)
     buf->st_ino = buf->__st_ino;

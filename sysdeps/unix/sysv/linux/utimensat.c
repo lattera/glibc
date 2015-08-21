@@ -30,13 +30,16 @@ utimensat (int fd, const char *file, const struct timespec tsp[2],
 	   int flags)
 {
   if (file == NULL)
-    return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1);
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 #ifdef __NR_utimensat
   /* Avoid implicit array coercion in syscall macros.  */
-  return INLINE_SYSCALL_RETURN (utimensat, 4, int, fd, file, &tsp[0],
-				flags);
+  return INLINE_SYSCALL (utimensat, 4, fd, file, &tsp[0], flags);
 #else
-  return INLINE_SYSCALL_ERROR_RETURN (-ENOSYS, int, -1);
+  __set_errno (ENOSYS);
+  return -1;
 #endif
 }
 #ifndef __NR_utimensat

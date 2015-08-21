@@ -73,22 +73,3 @@
 #ifndef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) __syscall_##name (args)
 #endif
-
-/* Similar to INLINE_SYSCALL, but with return type.  It should only be
-   used with function return.  */
-#ifndef INLINE_SYSCALL_RETURN
-#define INLINE_SYSCALL_RETURN(name, nr, type, args...) \
-  INLINE_SYSCALL (name, nr, args)
-#endif
-
-/* Set error number and return value.  It should only be used with
-   function return.  ERR is the negative error number returned from
-   the majority of Linux kernels for which -ERR is no-op
-   with INTERNAL_SYSCALL_ERRNO.   */
-#ifndef INLINE_SYSCALL_ERROR_RETURN
-#define INLINE_SYSCALL_ERROR_RETURN(err, type, value) \
-  ({								\
-    __set_errno (-err);						\
-    (type) (value);						\
-  })
-#endif

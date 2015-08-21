@@ -33,6 +33,6 @@ raise (sig)
   if (__glibc_unlikely (pid < 0))
     pid = -pid;
 
-  return INLINE_SYSCALL_RETURN (tgkill, 3, int, pid,
-				THREAD_GETMEM (THREAD_SELF, tid), sig);
+  return INLINE_SYSCALL (tgkill, 3, pid, THREAD_GETMEM (THREAD_SELF, tid),
+			 sig);
 }

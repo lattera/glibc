@@ -44,15 +44,10 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
       new_rlimit64 = &new_rlimit64_mem;
     }
 
-  INTERNAL_SYSCALL_DECL (err);
-  int res = INTERNAL_SYSCALL (prlimit64, err, 4, pid, resource,
-			      new_rlimit64, old_rlimit64);
+  int res = INLINE_SYSCALL (prlimit64, 4, pid, resource, new_rlimit64,
+			    old_rlimit64);
 
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res, err)))
-    return INLINE_SYSCALL_ERROR_RETURN (-INTERNAL_SYSCALL_ERRNO (res,
-								 err),
-					int, -1);
-  else if (old_rlimit != NULL)
+  if (res == 0 && old_rlimit != NULL)
     {
       /* The prlimit64 syscall is ill-designed for 32-bit machines.
 	 We have to provide a 32-bit variant since otherwise the LFS
@@ -64,14 +59,20 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
       if (old_rlimit->rlim_cur != old_rlimit64_mem.rlim_cur)
 	{
 	  if (new_rlimit == NULL)
-	    return INLINE_SYSCALL_ERROR_RETURN (-EOVERFLOW, int, -1);
+	    {
+	      __set_errno (EOVERFLOW);
+	      return -1;
+	    }
 	  old_rlimit->rlim_cur = RLIM_INFINITY;
 	}
       old_rlimit->rlim_max = old_rlimit64_mem.rlim_max;
       if (old_rlimit->rlim_max != old_rlimit64_mem.rlim_max)
 	{
 	  if (new_rlimit == NULL)
-	    return INLINE_SYSCALL_ERROR_RETURN (-EOVERFLOW, int, -1);
+	    {
+	      __set_errno (EOVERFLOW);
+	      return -1;
+	    }
 	  old_rlimit->rlim_max = RLIM_INFINITY;
 	}
     }
@@ -83,7 +84,8 @@ int
 prlimit (__pid_t pid, enum __rlimit_resource resource,
 	 const struct rlimit *new_rlimit, struct rlimit *old_rlimit)
 {
-  return INLINE_SYSCALL_ERROR_RETURN (-ENOSYS, int, -1);
+  __set_errno (ENOSYS);
+  return -1;
 }
 stub_warning (prlimit)
 #endif

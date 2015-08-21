@@ -30,6 +30,5 @@ int
 shmdt (shmaddr)
      const void *shmaddr;
 {
-  return INLINE_SYSCALL_RETURN (ipc, 5, int, IPCOP_shmdt, 0, 0, 0,
-				(void *) shmaddr);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_shmdt, 0, 0, 0, (void *) shmaddr);
 }

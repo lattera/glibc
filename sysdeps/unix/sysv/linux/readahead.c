@@ -29,16 +29,17 @@
 ssize_t
 __readahead (int fd, off64_t offset, size_t count)
 {
-  return INLINE_SYSCALL_RETURN (readahead, 4, int, fd,
-				__LONG_LONG_PAIR ((off_t) (offset >> 32),
-						  (off_t) (offset & 0xffffffff)),
-			      count);
+  return INLINE_SYSCALL (readahead, 4, fd,
+			 __LONG_LONG_PAIR ((off_t) (offset >> 32),
+					   (off_t) (offset & 0xffffffff)),
+			 count);
 }
 #else
 ssize_t
 __readahead (int fd, off64_t offset, size_t count)
 {
-  return INLINE_SYSCALL_ERROR_RETURN (-ENOSYS, int, -1);
+  __set_errno (ENOSYS);
+  return -1;
 }
 stub_warning (readahead)
 #endif

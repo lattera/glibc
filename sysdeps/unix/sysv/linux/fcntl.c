@@ -28,7 +28,7 @@ static int
 do_fcntl (int fd, int cmd, void *arg)
 {
   if (cmd != F_GETOWN)
-    return INLINE_SYSCALL_RETURN (fcntl, 3, int, fd, cmd, arg);
+    return INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);
 
   INTERNAL_SYSCALL_DECL (err);
   struct f_owner_ex fex;
@@ -36,8 +36,8 @@ do_fcntl (int fd, int cmd, void *arg)
   if (!INTERNAL_SYSCALL_ERROR_P (res, err))
     return fex.type == F_OWNER_GID ? -fex.pid : fex.pid;
 
-  return INLINE_SYSCALL_ERROR_RETURN (-INTERNAL_SYSCALL_ERRNO (res, err),
-				      int, -1);
+  __set_errno (INTERNAL_SYSCALL_ERRNO (res, err));
+  return -1;
 }
 
 
