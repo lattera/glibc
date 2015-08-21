@@ -95,8 +95,8 @@ GOT_LABEL:			;					      \
     lwz      0,TM_CAPABLE(2);	\
     cmpwi    0,0;		\
     beq	     1f;		\
-    li	     0,_ABORT_SYSCALL;	\
-    tabort.  0;			\
+    li       11,_ABORT_SYSCALL;	\
+    tabort.  11;		\
     .align 4;			\
 1:
 #else
