@@ -35,8 +35,8 @@ int
 __lxstat (int vers, const char *name, struct stat *buf)
 {
   if (vers == _STAT_VER_KERNEL)
-    return INLINE_SYSCALL_ERROR_RETURN (lstat, 2, int, name,
-					(struct kernel_stat *) buf);
+    return INLINE_SYSCALL_RETURN (lstat, 2, int, name,
+				  (struct kernel_stat *) buf);
 
 #ifdef STAT_IS_KERNEL_STAT
   return INLINE_SYSCALL_ERROR_RETURN (-EINVAL, int, -1)
