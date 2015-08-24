@@ -1,3 +1,17 @@
+2015-09-08  Andrew Bennett  <andrew.bennett@imgtec.com>
+
+	* sysdeps/mips/bits/atomic.h [_MIPS_SIM == _ABIO32] (MIPS_PUSH_MIPS2):
+	Only use .set mips2 if the current ISA is below mips2.
+	* sysdeps/mips/sys/tas.h [_MIPS_SIM == _ABIO32] (_test_and_set):
+	Likewise.
+	* sysdeps/mips/nptl/tls.h (READ_THREAD_POINTER): Only use .set
+	mips32r2 if the current ISA is below mips32r2.
+	* sysdeps/mips/tls-macros.h (TLS_RDHWR): New define.
+	(TLS_IE): Updated to use the TLD_RDHWR macro.
+	(TLS_LE): Likewise.
+	* sysdeps/unix/mips/sysdep.h (__mips_isa_rev): Moved out of #ifdef
+	__ASSEMBLER__ condition.
+
 2015-09-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	Fix parallel build of before-compile targets.

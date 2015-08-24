@@ -19,6 +19,10 @@
 #include <sgidefs.h>
 #include <sysdeps/unix/sysdep.h>
 
+#ifndef __mips_isa_rev
+# define __mips_isa_rev 0
+#endif
+
 #ifdef __ASSEMBLER__
 
 #include <regdef.h>
@@ -76,10 +80,6 @@
 # define L(label) $L ## label
 #else
 # define L(label) .L ## label
-#endif
-
-#ifndef __mips_isa_rev
-# define __mips_isa_rev 0
 #endif
 
 #endif

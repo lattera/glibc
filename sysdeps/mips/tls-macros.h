@@ -2,6 +2,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/asm.h>
+#include <sysdep.h>
 
 #define __STRING2(X) __STRING(X)
 #define ADDU __STRING2(PTR_ADDU)
@@ -38,6 +39,14 @@
 # define UNLOAD_GP
 #endif
 
+# if __mips_isa_rev >= 2
+#  define TLS_RDHWR "rdhwr\t%0,$29"
+# else
+#  define TLS_RDHWR 					\
+	  ".set push\n\t.set mips32r2\n\t"		\
+	  "rdhwr\t%0,$29\n\t.set pop"
+#endif
+
 #ifndef __mips16
 # define TLS_GD(x)					\
   ({ void *__result, *__tmp;				\
@@ -60,8 +69,7 @@
      __result; })
 # define TLS_IE(x)					\
   ({ void *__result, *__tmp;				\
-     asm (".set push\n\t.set mips32r2\n\t"		\
-	  "rdhwr\t%0,$29\n\t.set pop"			\
+     asm (TLS_RDHWR					\
 	  : "=v" (__result));				\
      asm (LOAD_GP LW " $3,%%gottprel(" #x ")($28)\n\t"	\
 	  ADDU " %0,%0,$3"				\
@@ -71,8 +79,7 @@
      __result; })
 # define TLS_LE(x)					\
   ({ void *__result;					\
-     asm (".set push\n\t.set mips32r2\n\t"		\
-	  "rdhwr\t%0,$29\n\t.set pop"			\
+     asm (TLS_RDHWR					\
 	  : "=v" (__result));				\
      asm ("lui $3,%%tprel_hi(" #x ")\n\t"		\
 	  "addiu $3,$3,%%tprel_lo(" #x ")\n\t"		\

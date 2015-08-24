@@ -41,7 +41,7 @@ __NTH (_test_and_set (int *__p, int __v))
   __asm__ __volatile__
     ("/* Inline test and set */\n"
      ".set	push\n\t"
-#if _MIPS_SIM == _ABIO32
+#if _MIPS_SIM == _ABIO32 && __mips < 2
      ".set	mips2\n\t"
 #endif
      "sync\n\t"

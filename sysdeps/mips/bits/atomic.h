@@ -38,7 +38,7 @@ typedef uintptr_t uatomicptr_t;
 typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
-#if _MIPS_SIM == _ABIO32
+#if _MIPS_SIM == _ABIO32 && __mips < 2
 #define MIPS_PUSH_MIPS2 ".set	mips2\n\t"
 #else
 #define MIPS_PUSH_MIPS2
