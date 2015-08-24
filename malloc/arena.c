@@ -102,7 +102,7 @@ int __malloc_initialized = -1;
       if (ptr && !arena_is_corrupt (ptr))				      \
         (void) mutex_lock (&ptr->mutex);				      \
       else								      \
-        ptr = arena_get2 (ptr, (size), NULL);				      \
+        ptr = arena_get2 ((size), NULL);				      \
   } while (0)
 
 /* find the heap and corresponding arena for a given ptr */
@@ -849,7 +849,7 @@ out:
 
 static mstate
 internal_function
-arena_get2 (mstate a_tsd, size_t size, mstate avoid_arena)
+arena_get2 (size_t size, mstate avoid_arena)
 {
   mstate a;
 
@@ -914,10 +914,8 @@ arena_get_retry (mstate ar_ptr, size_t bytes)
     }
   else
     {
-      /* Grab ar_ptr->next prior to releasing its lock.  */
-      mstate prev = ar_ptr->next ? ar_ptr : 0;
       (void) mutex_unlock (&ar_ptr->mutex);
-      ar_ptr = arena_get2 (prev, bytes, ar_ptr);
+      ar_ptr = arena_get2 (bytes, ar_ptr);
     }
 
   return ar_ptr;

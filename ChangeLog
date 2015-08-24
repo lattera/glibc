@@ -1,3 +1,9 @@
+2015-08-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* malloc/arena.c (arena_get2): Drop unused argument.
+	(arena_lock): Adjust.
+	(arena_get_retry): Likewise.
+
 2015-08-24  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_IPC64):
