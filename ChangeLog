@@ -49118,6 +49118,7 @@
 	* sysdeps/powerpc/powerpc64/dl-machine.h: Use _rtld_local instead
 	of _rtld_global, and rtld_progname instead of _dl_argv[0].
 
+	[BZ #10882]
 	* sysdeps/powerpc/powerpc32/dl-machine.c
 	(__elf_machine_runtime_setup) [PROF]: Don't reference
 	_dl_prof_resolve.
