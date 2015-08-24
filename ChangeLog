@@ -1,3 +1,9 @@
+2015-08-24  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/fpu/math_private.h (libc_feholdsetround_aarch64_ctx):
+	Unconditionally set __fpcr to avoid uninialized warning.
+	(libc_feholdsetround_noex_aarch64_ctx): Likewise.
+
 2015-08-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* malloc/arena.c (arena_get_retry): Don't use main_arena if it
