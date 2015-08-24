@@ -1,5 +1,8 @@
 2015-08-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* malloc/arena.c (arena_get_retry): Don't use main_arena if it
+	is corrupt.
+
 	* malloc/arena.c (arena_get2): Drop unused argument.
 	(arena_lock): Adjust.
 	(arena_get_retry): Likewise.

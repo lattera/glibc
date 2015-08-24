@@ -909,6 +909,10 @@ arena_get_retry (mstate ar_ptr, size_t bytes)
   if (ar_ptr != &main_arena)
     {
       (void) mutex_unlock (&ar_ptr->mutex);
+      /* Don't touch the main arena if it is corrupt.  */
+      if (arena_is_corrupt (&main_arena))
+	return NULL;
+
       ar_ptr = &main_arena;
       (void) mutex_lock (&ar_ptr->mutex);
     }
