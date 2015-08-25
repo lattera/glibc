@@ -1,3 +1,30 @@
+2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #15128]
+	* sysdeps/x86_64/Makefile [$(subdir) == elf] (tests): Add
+	ifuncmain8.
+	(modules-names): Add ifuncmod8.
+	($(objpfx)ifuncmain8): New rule.
+	* sysdeps/x86_64/dl-machine.h: Include <dl-procinfo.h> and
+	<cpuid.h>.
+	(elf_machine_runtime_setup): Use _dl_runtime_resolve_sse,
+	_dl_runtime_resolve_avx, or _dl_runtime_resolve_avx512,
+	_dl_runtime_profile_sse, _dl_runtime_profile_avx, or
+	_dl_runtime_profile_avx512, based on HAS_ARCH_FEATURE.
+	* sysdeps/x86_64/dl-trampoline.S: Rewrite.
+	* sysdeps/x86_64/dl-trampoline.h: Likewise.
+	* sysdeps/x86_64/ifuncmain8.c: New file.
+	* sysdeps/x86_64/ifuncmod8.c: Likewise.
+	* sysdeps/x86_64/nptl/tcb-offsets.sym (RTLD_SAVESPACE_SSE):
+	Removed.
+	* sysdeps/x86_64/nptl/tls.h (__128bits): Removed.
+	(tcbhead_t): Change rtld_must_xmm_save to __glibc_unused1.
+	Change rtld_savespace_sse to __glibc_unused2.
+	(RTLD_CHECK_FOREIGN_CALL): Removed.
+	(RTLD_ENABLE_FOREIGN_CALL): Likewise.
+	(RTLD_PREPARE_FOREIGN_CALL): Likewise.
+	(RTLD_FINALIZE_FOREIGN_CALL): Likewise.
+
 2015-08-24  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/bzero.S (__bzero): Remove.

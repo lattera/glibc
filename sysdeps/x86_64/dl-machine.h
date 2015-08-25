@@ -66,8 +66,12 @@ static inline int __attribute__ ((unused, always_inline))
 elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf64_Addr *got;
-  extern void _dl_runtime_resolve (ElfW(Word)) attribute_hidden;
-  extern void _dl_runtime_profile (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_resolve_sse (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_resolve_avx (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_resolve_avx512 (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_profile_sse (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_profile_avx (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_profile_avx512 (ElfW(Word)) attribute_hidden;
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
@@ -95,7 +99,12 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 end in this function.  */
       if (__glibc_unlikely (profile))
 	{
-	  *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile;
+	  if (HAS_ARCH_FEATURE (AVX512F_Usable))
+	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile_avx512;
+	  else if (HAS_ARCH_FEATURE (AVX_Usable))
+	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile_avx;
+	  else
+	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile_sse;
 
 	  if (GLRO(dl_profile) != NULL
 	      && _dl_name_match_p (GLRO(dl_profile), l))
@@ -104,9 +113,17 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	    GL(dl_profile_map) = l;
 	}
       else
-	/* This function will get called to fix up the GOT entry indicated by
-	   the offset on the stack, and then jump to the resolved address.  */
-	*(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_resolve;
+	{
+	  /* This function will get called to fix up the GOT entry
+	     indicated by the offset on the stack, and then jump to
+	     the resolved address.  */
+	  if (HAS_ARCH_FEATURE (AVX512F_Usable))
+	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_resolve_avx512;
+	  else if (HAS_ARCH_FEATURE (AVX_Usable))
+	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_resolve_avx;
+	  else
+	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_resolve_sse;
+	}
     }
 
   if (l->l_info[ADDRIDX (DT_TLSDESC_GOT)] && lazy)

@@ -21,6 +21,11 @@ endif
 ifeq ($(subdir),elf)
 sysdep-dl-routines += tlsdesc dl-tlsdesc
 
+tests += ifuncmain8
+modules-names += ifuncmod8
+
+$(objpfx)ifuncmain8: $(objpfx)ifuncmod8.so
+
 tests += tst-quad1 tst-quad2
 modules-names += tst-quadmod1 tst-quadmod2
 
