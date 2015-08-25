@@ -1,3 +1,8 @@
+2015-08-25  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/start.c (_start): Call __nacl_main instead of main
+	if the weak reference is not null.
+
 2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/strcmp.S: Remove "#if !IS_IN (libc)".
