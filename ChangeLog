@@ -1,3 +1,8 @@
+2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #11214]
+	* sysdeps/unix/sysv/linux/Makefile (tst-getpid2-ENV): Removed.
+
 2015-08-25  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h: Define new macros.
