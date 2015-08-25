@@ -24,21 +24,11 @@
 
 /* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
 char *
-__stpcpy_chk (dest, src, destlen)
-     char *dest;
-     const char *src;
-     size_t destlen;
+__stpcpy_chk (char *dest, const char *src, size_t destlen)
 {
-  char *d = dest;
-  const char *s = src;
+  size_t len = strlen (src);
+  if (len >= destlen)
+    __chk_fail ();
 
-  do
-    {
-      if (__glibc_unlikely (destlen-- == 0))
-	__chk_fail ();
-      *d++ = *s;
-    }
-  while (*s++ != '\0');
-
-  return d - 1;
+  return memcpy (dest, src, len + 1) + len;
 }
