@@ -20,10 +20,16 @@
 #include <sys/socket.h>
 
 #include <socketcall.h>
+#include <kernel-features.h>
+#include <sys/syscall.h>
 
 int
 __getsockopt (int fd, int level, int optname, void *optval, socklen_t *len)
 {
+#ifdef __ASSUME_GETSOCKOPT_SYSCALL
+  return INLINE_SYSCALL (getsockopt, 5, fd, level, optname, optval, len);
+#else
   return SOCKETCALL (getsockopt, fd, level, optname, optval, len);
+#endif
 }
 weak_alias (__getsockopt, getsockopt)

@@ -1,3 +1,24 @@
+2015-08-25  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h: Define new macros.
+	* sysdeps/unix/sysv/linux/accept.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/bind.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/connect.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/getpeername.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/getsockname.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/getsockopt.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/listen.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/recv.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/recvfrom.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/recvmsg.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/send.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/sendmsg.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/sendto.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/setsockopt.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/shutdown.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/socket.c: Call direct system call.
+	* sysdeps/unix/sysv/linux/socketpair.c: Call direct system call.
+
 2015-08-25  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/sysdep.h (ABORT_TRANSACTION): Use

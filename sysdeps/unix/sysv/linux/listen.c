@@ -20,10 +20,16 @@
 #include <sys/socket.h>
 
 #include <socketcall.h>
+#include <kernel-features.h>
+#include <sys/syscall.h>
 
 int
 listen (int fd, int backlog)
 {
+#ifdef __ASSUME_LISTEN_SYSCALL
+  return INLINE_SYSCALL (listen, 2, fd, backlog);
+#else
   return SOCKETCALL (listen, fd, backlog);
+#endif
 }
 weak_alias (listen, __listen);

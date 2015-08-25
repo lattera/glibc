@@ -21,11 +21,17 @@
 
 #include <sysdep-cancel.h>
 #include <socketcall.h>
+#include <kernel-features.h>
+#include <sys/syscall.h>
 
 ssize_t
 __libc_recv (int fd, void *buf, size_t len, int flags)
 {
+#ifdef __ASSUME_RECV_SYSCALL
+  return SYSCALL_CANCEL (recv, fd, buf, len, flags);
+#else
   return SOCKETCALL_CANCEL (recv, fd, buf, len, flags);
+#endif
 }
 weak_alias (__libc_recv, recv)
 weak_alias (__libc_recv, __recv)

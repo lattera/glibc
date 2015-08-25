@@ -21,11 +21,17 @@
 
 #include <sysdep-cancel.h>
 #include <socketcall.h>
+#include <sys/syscall.h>
+#include <kernel-features.h>
 
 int
 __libc_accept (int fd, __SOCKADDR_ARG addr, socklen_t *len)
 {
+#ifdef __ASSUME_ACCEPT_SYSCALL
+  return SYSCALL_CANCEL (accept, fd, addr.__sockaddr__, len);
+#else
   return SOCKETCALL_CANCEL (accept, fd, addr.__sockaddr__, len);
+#endif
 }
 weak_alias (__libc_accept, accept)
 libc_hidden_def (accept)

@@ -20,10 +20,16 @@
 #include <sys/socket.h>
 
 #include <socketcall.h>
+#include <kernel-features.h>
+#include <sys/syscall.h>
 
 int
 __shutdown (int fd, int how)
 {
+#ifdef __ASSUME_SHUTDOWN_SYSCALL
+  return INLINE_SYSCALL (shutdown, 2, fd, how);
+#else
   return SOCKETCALL (shutdown, fd, how);
+#endif
 }
 weak_alias (__shutdown, shutdown)
