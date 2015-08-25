@@ -1,5 +1,14 @@
 2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/rtld-memcmp.c: Removed.
+	* sysdeps/x86_64/rtld-memset.S: Likewise.
+	* sysdeps/x86_64/rtld-strchr.S: Likewise.
+	* sysdeps/x86_64/rtld-strlen.S: Likewise.
+	* sysdeps/x86_64/multiarch/rtld-memcmp.c: Likewise.
+	* sysdeps/x86_64/multiarch/rtld-memset.S: Likewise.
+
+2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/memset.S: Replace %xmm8 with %xmm0.
 
 2015-08-25  Ondřej Bílka  <neleai@seznam.cz>

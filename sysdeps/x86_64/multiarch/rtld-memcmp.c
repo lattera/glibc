@@ -1,1 +1,0 @@
-#include "../rtld-memcmp.c"
