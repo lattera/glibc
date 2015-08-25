@@ -24,7 +24,7 @@
 ENTRY(__bzero)
 	movq	%rdi, %rax /* Set return value.  */
 	movq	%rsi, %rdx /* Set n.  */
-	pxor	%xmm8, %xmm8
+	pxor	%xmm0, %xmm0
 	jmp	L(entry_from_bzero)
 END(__bzero)
 weak_alias (__bzero, bzero)
@@ -33,10 +33,10 @@ weak_alias (__bzero, bzero)
 ENTRY(__memset_tail)
 	movq	%rcx, %rax /* Set return value.  */
 
-	movd	%esi, %xmm8
-	punpcklbw	%xmm8, %xmm8
-	punpcklwd	%xmm8, %xmm8
-	pshufd	$0, %xmm8, %xmm8
+	movd	%esi, %xmm0
+	punpcklbw	%xmm0, %xmm0
+	punpcklwd	%xmm0, %xmm0
+	pshufd	$0, %xmm0, %xmm0
 
 	jmp	L(entry_from_bzero)
 END(__memset_tail)
@@ -50,57 +50,57 @@ END_CHK (__memset_chk)
 #endif
 
 ENTRY (memset)
-	movd	%esi, %xmm8
+	movd	%esi, %xmm0
 	movq	%rdi, %rax
-	punpcklbw	%xmm8, %xmm8
-	punpcklwd	%xmm8, %xmm8
-	pshufd	$0, %xmm8, %xmm8
+	punpcklbw	%xmm0, %xmm0
+	punpcklwd	%xmm0, %xmm0
+	pshufd	$0, %xmm0, %xmm0
 L(entry_from_bzero):
 	cmpq	$64, %rdx
 	ja	L(loop_start)
 	cmpq	$16, %rdx
 	jbe	L(less_16_bytes)
 	cmpq	$32, %rdx
-	movdqu	%xmm8, (%rdi)
-	movdqu	%xmm8, -16(%rdi,%rdx)
+	movdqu	%xmm0, (%rdi)
+	movdqu	%xmm0, -16(%rdi,%rdx)
 	ja	L(between_32_64_bytes)
 L(return):
 	rep
 	ret
 	.p2align 4
 L(between_32_64_bytes):
-	movdqu	%xmm8, 16(%rdi)
-	movdqu	%xmm8, -32(%rdi,%rdx)
+	movdqu	%xmm0, 16(%rdi)
+	movdqu	%xmm0, -32(%rdi,%rdx)
 	ret
 	.p2align 4
 L(loop_start):
 	leaq	64(%rdi), %rcx
-	movdqu	%xmm8, (%rdi)
+	movdqu	%xmm0, (%rdi)
 	andq	$-64, %rcx
-	movdqu	%xmm8, -16(%rdi,%rdx)
-	movdqu	%xmm8, 16(%rdi)
-	movdqu	%xmm8, -32(%rdi,%rdx)
-	movdqu	%xmm8, 32(%rdi)
-	movdqu	%xmm8, -48(%rdi,%rdx)
-	movdqu	%xmm8, 48(%rdi)
-	movdqu	%xmm8, -64(%rdi,%rdx)
+	movdqu	%xmm0, -16(%rdi,%rdx)
+	movdqu	%xmm0, 16(%rdi)
+	movdqu	%xmm0, -32(%rdi,%rdx)
+	movdqu	%xmm0, 32(%rdi)
+	movdqu	%xmm0, -48(%rdi,%rdx)
+	movdqu	%xmm0, 48(%rdi)
+	movdqu	%xmm0, -64(%rdi,%rdx)
 	addq	%rdi, %rdx
 	andq	$-64, %rdx
 	cmpq	%rdx, %rcx
 	je	L(return)
 	.p2align 4
 L(loop):
-	movdqa	%xmm8, (%rcx)
-	movdqa	%xmm8, 16(%rcx)
-	movdqa	%xmm8, 32(%rcx)
-	movdqa	%xmm8, 48(%rcx)
+	movdqa	%xmm0, (%rcx)
+	movdqa	%xmm0, 16(%rcx)
+	movdqa	%xmm0, 32(%rcx)
+	movdqa	%xmm0, 48(%rcx)
 	addq	$64, %rcx
 	cmpq	%rcx, %rdx
 	jne	L(loop)
 	rep
 	ret
 L(less_16_bytes):
-	movq %xmm8, %rcx
+	movq %xmm0, %rcx
 	testb	$24, %dl
 	jne	L(between8_16bytes)
 	testb	$4, %dl
