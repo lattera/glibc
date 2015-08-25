@@ -1,5 +1,9 @@
 2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/strlen.S: Replace %xmm[8-12] with %xmm[0-4].
+
+2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/rtld-memcmp.c: Removed.
 	* sysdeps/x86_64/rtld-memset.S: Likewise.
 	* sysdeps/x86_64/rtld-strchr.S: Likewise.

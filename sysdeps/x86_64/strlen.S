@@ -20,7 +20,7 @@
 
 /* Long lived register in strlen(s), strnlen(s, n) are:
 
-	%xmm11 - zero
+	%xmm3 - zero
 	%rdi   - s
 	%r10  (s+n) & (~(64-1))
 	%r11   s+n
@@ -32,14 +32,14 @@ ENTRY(strlen)
 
 /* Test 64 bytes from %rax for zero. Save result as bitmask in %rdx.  */
 #define FIND_ZERO	\
-	pcmpeqb	(%rax), %xmm8;	\
-	pcmpeqb	16(%rax), %xmm9;	\
-	pcmpeqb	32(%rax), %xmm10;	\
-	pcmpeqb	48(%rax), %xmm11;	\
-	pmovmskb	%xmm8, %esi;	\
-	pmovmskb	%xmm9, %edx;	\
-	pmovmskb	%xmm10, %r8d;	\
-	pmovmskb	%xmm11, %ecx;	\
+	pcmpeqb	(%rax), %xmm0;	\
+	pcmpeqb	16(%rax), %xmm1;	\
+	pcmpeqb	32(%rax), %xmm2;	\
+	pcmpeqb	48(%rax), %xmm3;	\
+	pmovmskb	%xmm0, %esi;	\
+	pmovmskb	%xmm1, %edx;	\
+	pmovmskb	%xmm2, %r8d;	\
+	pmovmskb	%xmm3, %ecx;	\
 	salq	$16, %rdx;	\
 	salq	$16, %rcx;	\
 	orq	%rsi, %rdx;	\
@@ -63,10 +63,10 @@ L(n_nonzero):
 	mov	%rsi, %r11
 #endif
 
-	pxor	%xmm8, %xmm8
-	pxor	%xmm9, %xmm9
-	pxor	%xmm10, %xmm10
-	pxor	%xmm11, %xmm11
+	pxor	%xmm0, %xmm0
+	pxor	%xmm1, %xmm1
+	pxor	%xmm2, %xmm2
+	pxor	%xmm3, %xmm3
 	movq	%rdi, %rax
 	movq	%rdi, %rcx
 	andq	$4095, %rcx
@@ -103,9 +103,9 @@ L(n_nonzero):
 	FIND_ZERO
 #else
 	/* Test first 16 bytes unaligned.  */
-	movdqu	(%rax), %xmm12
-	pcmpeqb	%xmm8, %xmm12
-	pmovmskb	%xmm12, %edx
+	movdqu	(%rax), %xmm4
+	pcmpeqb	%xmm0, %xmm4
+	pmovmskb	%xmm4, %edx
 	test	%edx, %edx
 	je 	L(next48_bytes)
 	bsf	%edx, %eax /* If eax is zeroed 16bit bsf can be used.  */
@@ -114,12 +114,12 @@ L(n_nonzero):
 L(next48_bytes):
 /* Same as FIND_ZERO except we do not check first 16 bytes.  */
 	andq	$-16, %rax
-	pcmpeqb 16(%rax), %xmm9
-	pcmpeqb 32(%rax), %xmm10
-	pcmpeqb 48(%rax), %xmm11
-	pmovmskb	%xmm9, %edx
-	pmovmskb	%xmm10, %r8d
-	pmovmskb	%xmm11, %ecx
+	pcmpeqb 16(%rax), %xmm1
+	pcmpeqb 32(%rax), %xmm2
+	pcmpeqb 48(%rax), %xmm3
+	pmovmskb	%xmm1, %edx
+	pmovmskb	%xmm2, %r8d
+	pmovmskb	%xmm3, %ecx
 	salq	$16, %rdx
 	salq	$16, %rcx
 	orq	%r8, %rcx
@@ -127,7 +127,7 @@ L(next48_bytes):
 	orq	%rcx, %rdx
 #endif
 
-	/* When no zero byte is found xmm9-11 are zero so we do not have to
+	/* When no zero byte is found xmm1-3 are zero so we do not have to
 	   zero them.  */
 	PROLOG(loop)
 
@@ -149,9 +149,9 @@ L(strnlen_ret):
 #endif
 	.p2align 4
 L(loop_init):
-	pxor	%xmm9, %xmm9
-	pxor	%xmm10, %xmm10
-	pxor	%xmm11, %xmm11
+	pxor	%xmm1, %xmm1
+	pxor	%xmm2, %xmm2
+	pxor	%xmm3, %xmm3
 #ifdef AS_STRNLEN
 	.p2align 4
 L(loop):
@@ -160,12 +160,12 @@ L(loop):
 	cmpq	%rax, %r10
 	je	L(exit_end)
 
-	movdqa	(%rax), %xmm8
-	pminub	16(%rax), %xmm8
-	pminub	32(%rax), %xmm8
-	pminub	48(%rax), %xmm8
-	pcmpeqb	%xmm11, %xmm8
-	pmovmskb	%xmm8, %edx
+	movdqa	(%rax), %xmm0
+	pminub	16(%rax), %xmm0
+	pminub	32(%rax), %xmm0
+	pminub	48(%rax), %xmm0
+	pcmpeqb	%xmm3, %xmm0
+	pmovmskb	%xmm0, %edx
 	testl	%edx, %edx
 	jne	L(exit)
 	jmp	L(loop)
@@ -174,7 +174,7 @@ L(loop):
 L(exit_end):
 	cmp	%rax, %r11
 	je	L(first) /* Do not read when end is at page boundary.  */
-	pxor	%xmm8, %xmm8
+	pxor	%xmm0, %xmm0
 	FIND_ZERO
 
 L(first):
@@ -186,7 +186,7 @@ L(first):
 
 	.p2align 4
 L(exit):
-	pxor	%xmm8, %xmm8
+	pxor	%xmm0, %xmm0
 	FIND_ZERO
 
 	bsfq	%rdx, %rdx
@@ -200,23 +200,23 @@ L(exit):
 	.p2align 4
 L(loop):
 
-	movdqa	64(%rax), %xmm8
-	pminub	80(%rax), %xmm8
-	pminub	96(%rax), %xmm8
-	pminub	112(%rax), %xmm8
-	pcmpeqb	%xmm11, %xmm8
-	pmovmskb	%xmm8, %edx
+	movdqa	64(%rax), %xmm0
+	pminub	80(%rax), %xmm0
+	pminub	96(%rax), %xmm0
+	pminub	112(%rax), %xmm0
+	pcmpeqb	%xmm3, %xmm0
+	pmovmskb	%xmm0, %edx
 	testl	%edx, %edx
 	jne	L(exit64)
 
 	subq	$-128, %rax
 
-	movdqa	(%rax), %xmm8
-	pminub	16(%rax), %xmm8
-	pminub	32(%rax), %xmm8
-	pminub	48(%rax), %xmm8
-	pcmpeqb	%xmm11, %xmm8
-	pmovmskb	%xmm8, %edx
+	movdqa	(%rax), %xmm0
+	pminub	16(%rax), %xmm0
+	pminub	32(%rax), %xmm0
+	pminub	48(%rax), %xmm0
+	pcmpeqb	%xmm3, %xmm0
+	pmovmskb	%xmm0, %edx
 	testl	%edx, %edx
 	jne	L(exit0)
 	jmp	L(loop)
@@ -225,7 +225,7 @@ L(loop):
 L(exit64):
 	addq	$64, %rax
 L(exit0):
-	pxor	%xmm8, %xmm8
+	pxor	%xmm0, %xmm0
 	FIND_ZERO
 
 	bsfq	%rdx, %rdx
