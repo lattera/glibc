@@ -1,5 +1,9 @@
 2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/strcmp.S: Remove "#if !IS_IN (libc)".
+
+2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #11214]
 	* sysdeps/unix/sysv/linux/Makefile (tst-getpid2-ENV): Removed.
 
