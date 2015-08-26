@@ -1,4 +1,5 @@
-/* Copyright (C) 1995-2015 Free Software Foundation, Inc.
+/* Multiple versions of wcschrnul.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,26 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <wchar.h>
+#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# include <wchar.h>
+# include <ifunc-resolve.h>
 
-#ifdef WCSCHRNUL
-# define __wcschrnul WCSCHRNUL
-#endif
-
-/* Find the first occurrence of WC in WCS.  */
-wchar_t *
-__wcschrnul (wcs, wc)
-     const wchar_t *wcs;
-     const wchar_t wc;
-{
-  while (*wcs != L'\0')
-    if (*wcs == wc)
-      break;
-    else
-      ++wcs;
-
-  return (wchar_t *) wcs;
-}
-#ifndef WCSCHRNUL
+s390_vx_libc_ifunc (__wcschrnul)
 weak_alias (__wcschrnul, wcschrnul)
-#endif
+
+#else
+# include <wcsmbs/wcschrnul.c>
+#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */

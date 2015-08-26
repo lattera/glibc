@@ -1,4 +1,5 @@
-/* Copyright (C) 1995-2015 Free Software Foundation, Inc.
+/* Measure wcschrnul functions.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,26 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <wchar.h>
-
-#ifdef WCSCHRNUL
-# define __wcschrnul WCSCHRNUL
-#endif
-
-/* Find the first occurrence of WC in WCS.  */
-wchar_t *
-__wcschrnul (wcs, wc)
-     const wchar_t *wcs;
-     const wchar_t wc;
-{
-  while (*wcs != L'\0')
-    if (*wcs == wc)
-      break;
-    else
-      ++wcs;
-
-  return (wchar_t *) wcs;
-}
-#ifndef WCSCHRNUL
-weak_alias (__wcschrnul, wcschrnul)
-#endif
+#define WIDE 1
+#include "bench-strchrnul.c"

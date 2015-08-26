@@ -1,4 +1,4 @@
-/* Test and measure STRCHR functions.
+/* Test STRCHR functions.
    Copyright (C) 1999-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -24,10 +24,14 @@
 #  define TEST_NAME "strchrnul"
 # else
 #  define TEST_NAME "strchr"
-# endif
+# endif /* !USE_FOR_STRCHRNUL */
 #else
-# define TEST_NAME "wcschr"
-#endif
+# ifdef USE_FOR_STRCHRNUL
+#  define TEST_NAME "wcschrnul"
+# else
+#  define TEST_NAME "wcschr"
+# endif /* !USE_FOR_STRCHRNUL */
+#endif /* WIDE */
 #include "test-string.h"
 
 #ifndef WIDE
@@ -37,7 +41,7 @@
 #  define simple_STRCHR simple_STRCHRNUL
 # else
 #  define STRCHR strchr
-# endif
+# endif /* !USE_FOR_STRCHRNUL */
 # define STRLEN strlen
 # define CHAR char
 # define BIG_CHAR CHAR_MAX
@@ -47,7 +51,13 @@
 # define L(s) s
 #else
 # include <wchar.h>
-# define STRCHR wcschr
+# ifdef USE_FOR_STRCHRNUL
+#  define STRCHR wcschrnul
+#  define stupid_STRCHR stupid_WCSCHRNUL
+#  define simple_STRCHR simple_WCSCHRNUL
+# else
+#  define STRCHR wcschr
+# endif /* !USE_FOR_STRCHRNUL */
 # define STRLEN wcslen
 # define CHAR wchar_t
 # define BIG_CHAR WCHAR_MAX
@@ -55,13 +65,13 @@
 # define SMALL_CHAR 851
 # define UCHAR wchar_t
 # define L(s) L ## s
-#endif
+#endif /* WIDE */
 
 #ifdef USE_FOR_STRCHRNUL
 # define NULLRET(endptr) endptr
 #else
 # define NULLRET(endptr) NULL
-#endif
+#endif /* !USE_FOR_STRCHRNUL */
 
 
 typedef CHAR *(*proto_t) (const CHAR *, int);

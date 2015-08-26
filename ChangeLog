@@ -1,5 +1,25 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/strchrnul-c.c: New File.
+	* sysdeps/s390/multiarch/strchrnul-vx.S: Likewise.
+	* sysdeps/s390/multiarch/strchrnul.c: Likewise.
+	* sysdeps/s390/multiarch/wcschrnul-c.c: Likewise.
+	* sysdeps/s390/multiarch/wcschrnul-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wcschrnul.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add strchrnul and
+	wcschrnul functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc test for strchrnul, wcschrnul.
+	* wcsmbs/wcschrnul.c: Use WCSCHRNUL if defined.
+	* string/test-strchr.c: Add wcschrnul support.
+	* wcsmbs/test-wcschrnul.c: New File.
+	* wcsmbs/Makefile (strop-tests): Add wcschrnul.
+	* benchtests/bench-strchr.c: Add wcschrnul support.
+	* benchtests/bench-wcschrnul.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wcschrnul.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/strchr-c.c: New File.
 	* sysdeps/s390/multiarch/strchr-vx.S: Likewise.
 	* sysdeps/s390/multiarch/strchr.c: Likewise.
