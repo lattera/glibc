@@ -1,6 +1,6 @@
-/* Copyright (C) 1996-2015 Free Software Foundation, Inc.
+/* Default stpcpy implementation for S/390.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,35 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <wchar.h>
+#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define STPCPY  __stpcpy_c
+# undef weak_alias
+# define weak_alias(a, b)
+# ifdef SHARED
+#  undef libc_hidden_def
+#  define libc_hidden_def(name)					\
+  __hidden_ver1 (__stpcpy_c, __GI___stpcpy, __stpcpy_c);
+#  undef libc_hidden_builtin_def
+#  define libc_hidden_builtin_def(name)				\
+  strong_alias (__stpcpy_c, __stpcpy_c_1);			\
+  __hidden_ver1 (__stpcpy_c_1, __GI_stpcpy, __stpcpy_c_1);
+# endif /* SHARED */
 
-#define __need_ptrdiff_t
-#include <stddef.h>
 
-#ifdef WCPCPY
-# define __wcpcpy WCPCPY
-#endif
-/* Copy SRC to DEST, returning the address of the terminating L'\0' in
-   DEST.  */
-wchar_t *
-__wcpcpy (dest, src)
-     wchar_t *dest;
-     const wchar_t *src;
-{
-  wchar_t *wcp = (wchar_t *) dest - 1;
-  wint_t c;
-  const ptrdiff_t off = src - dest + 1;
-
-  do
-    {
-      c = wcp[off];
-      *++wcp = c;
-    }
-  while (c != L'\0');
-
-  return wcp;
-}
-
-#ifndef WCPCPY
-weak_alias (__wcpcpy, wcpcpy)
-#endif
+# include <string/stpcpy.c>
+#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */

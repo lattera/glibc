@@ -18,19 +18,34 @@
 
 #define STRCPY_RESULT(dst, len) ((dst) + (len))
 #define TEST_MAIN
-#define TEST_NAME "stpcpy"
+#ifndef WIDE
+# define TEST_NAME "stpcpy"
+#else
+# define TEST_NAME "wcpcpy"
+#endif /* WIDE */
 #include "bench-string.h"
+#ifndef WIDE
+# define CHAR char
+# define SIMPLE_STPCPY simple_stpcpy
+# define STPCPY stpcpy
+#else
+# include <wchar.h>
+# define CHAR wchar_t
+# define SIMPLE_STPCPY simple_wcpcpy
+# define STPCPY wcpcpy
+#endif /* WIDE */
 
-char *simple_stpcpy (char *, const char *);
+CHAR *SIMPLE_STPCPY (CHAR *, const CHAR *);
 
-IMPL (simple_stpcpy, 0)
-IMPL (stpcpy, 1)
+IMPL (SIMPLE_STPCPY, 0)
+IMPL (STPCPY, 1)
 
-char *
-simple_stpcpy (char *dst, const char *src)
+CHAR *
+SIMPLE_STPCPY (CHAR *dst, const CHAR *src)
 {
   while ((*dst++ = *src++) != '\0');
   return dst - 1;
 }
 
+#undef CHAR
 #include "bench-strcpy.c"

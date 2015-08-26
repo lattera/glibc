@@ -1,6 +1,6 @@
-/* Copyright (C) 1996-2015 Free Software Foundation, Inc.
+/* Multiple versions of stpcpy.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,35 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <wchar.h>
+#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define NO_MEMPCPY_STPCPY_REDIRECT
+# include <string.h>
+# include <ifunc-resolve.h>
 
-#define __need_ptrdiff_t
-#include <stddef.h>
+s390_vx_libc_ifunc (__stpcpy)
+weak_alias (__stpcpy, stpcpy)
+libc_hidden_builtin_def (stpcpy)
 
-#ifdef WCPCPY
-# define __wcpcpy WCPCPY
-#endif
-/* Copy SRC to DEST, returning the address of the terminating L'\0' in
-   DEST.  */
-wchar_t *
-__wcpcpy (dest, src)
-     wchar_t *dest;
-     const wchar_t *src;
-{
-  wchar_t *wcp = (wchar_t *) dest - 1;
-  wint_t c;
-  const ptrdiff_t off = src - dest + 1;
-
-  do
-    {
-      c = wcp[off];
-      *++wcp = c;
-    }
-  while (c != L'\0');
-
-  return wcp;
-}
-
-#ifndef WCPCPY
-weak_alias (__wcpcpy, wcpcpy)
-#endif
+#else
+# include <string/stpcpy.c>
+#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
