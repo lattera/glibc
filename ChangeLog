@@ -1,5 +1,25 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/strnlen-c.c: New File.
+	* sysdeps/s390/multiarch/strnlen-vx.S: Likewise.
+	* sysdeps/s390/multiarch/strnlen.c: Likewise.
+	* sysdeps/s390/multiarch/wcsnlen-c.c: Likewise.
+	* sysdeps/s390/multiarch/wcsnlen-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wcsnlen.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add strnlen and
+	wcsnlen functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc test for strnlen, wcsnlen.
+	* wcsmbs/wcsnlen.c: Use WCSNLEN if defined.
+	* string/test-strnlen.c: Add wcsnlen support.
+	* wcsmbs/test-wcsnlen.c: New File.
+	* wcsmbs/Makefile (strop-tests): Add wcsnlen.
+	* benchtests/bench-strnlen.c: Add wcsnlen support.
+	* benchtests/bench-wcsnlen.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wcsnlen.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/Makefile: New File.
 	* sysdeps/s390/multiarch/strlen-c.c: Likewise.
 	* sysdeps/s390/multiarch/strlen-vx.S: Likewise.

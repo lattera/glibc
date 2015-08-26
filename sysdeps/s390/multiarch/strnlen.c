@@ -1,6 +1,6 @@
-/* Copyright (C) 1998-2015 Free Software Foundation, Inc.
+/* Multiple versions of strnlen.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,37 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <wchar.h>
+#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# include <string.h>
+# include <ifunc-resolve.h>
 
-#ifdef WCSNLEN
-# define __wcsnlen WCSNLEN
-#endif
+s390_vx_libc_ifunc (__strnlen)
+weak_alias (__strnlen, strnlen)
+libc_hidden_def (strnlen)
 
-/* Return length of string S at most maxlen.  */
-size_t
-__wcsnlen (s, maxlen)
-     const wchar_t *s;
-     size_t maxlen;
-{
-  size_t len = 0;
-
-  while (maxlen > 0 && s[len] != L'\0')
-    {
-      ++len;
-      if (--maxlen == 0 || s[len] == L'\0')
-	return len;
-      ++len;
-      if (--maxlen == 0 || s[len] == L'\0')
-	return len;
-      ++len;
-      if (--maxlen == 0 || s[len] == L'\0')
-	return len;
-      ++len;
-      --maxlen;
-    }
-
-  return len;
-}
-#ifndef WCSNLEN
-weak_alias (__wcsnlen, wcsnlen)
-#endif
+#else
+# include <string/strnlen.c>
+#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */

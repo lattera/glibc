@@ -1,6 +1,6 @@
-/* Copyright (C) 1998-2015 Free Software Foundation, Inc.
+/* Default wcsnlen implementation for S/390.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,37 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <wchar.h>
+#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define WCSNLEN  __wcsnlen_c
 
-#ifdef WCSNLEN
-# define __wcsnlen WCSNLEN
-#endif
-
-/* Return length of string S at most maxlen.  */
-size_t
-__wcsnlen (s, maxlen)
-     const wchar_t *s;
-     size_t maxlen;
-{
-  size_t len = 0;
-
-  while (maxlen > 0 && s[len] != L'\0')
-    {
-      ++len;
-      if (--maxlen == 0 || s[len] == L'\0')
-	return len;
-      ++len;
-      if (--maxlen == 0 || s[len] == L'\0')
-	return len;
-      ++len;
-      if (--maxlen == 0 || s[len] == L'\0')
-	return len;
-      ++len;
-      --maxlen;
-    }
-
-  return len;
-}
-#ifndef WCSNLEN
-weak_alias (__wcsnlen, wcsnlen)
+# include <wchar.h>
+extern __typeof (__wcsnlen) __wcsnlen_c;
+# include <wcsmbs/wcsnlen.c>
 #endif
