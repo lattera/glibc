@@ -1,5 +1,12 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/generic/unwind.h
+	(_Unwind_Word): Use __mode__(__unwind_word__)
+	instead of __mode__(__word__).
+	(_Unwind_Sword): Likewise.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/s390-64/utf8-utf16-z9.c
 	(MAX_NEEDED_INPUT): New define.
 	(MAX_NEEDED_OUTPUT): New define.
