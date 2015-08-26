@@ -1,5 +1,25 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/strspn-c.c: New File.
+	* sysdeps/s390/multiarch/strspn-vx.S: Likewise.
+	* sysdeps/s390/multiarch/strspn.c: Likewise.
+	* sysdeps/s390/multiarch/wcsspn-c.c: Likewise.
+	* sysdeps/s390/multiarch/wcsspn-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wcsspn.c: Likewise.
+	* wcsmbs/wcsspn.c: Use WCSSPN if defined.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add strspn and
+	wcsspn functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc test for strspn, wcsspn.
+	* string/test-strspn.c: Add wcsspn support.
+	* wcsmbs/test-wcsspn.c: New File.
+	* wcsmbs/Makefile (strop-tests): Add wcsspn.
+	* benchtests/bench-strspn.c: Add wcsspn support.
+	* benchtests/bench-wcsspn.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wcsspn.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/strrchr-c.c: New File.
 	* sysdeps/s390/multiarch/strrchr-vx.S: Likewise.
 	* sysdeps/s390/multiarch/strrchr.c: Likewise.

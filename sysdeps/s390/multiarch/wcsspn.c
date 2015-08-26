@@ -1,6 +1,6 @@
-/* Copyright (C) 1995-2015 Free Software Foundation, Inc.
+/* Multiple versions of wcsspn.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,34 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <wchar.h>
+#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# include <wchar.h>
+# include <ifunc-resolve.h>
 
-#ifdef WCSSPN
-# define wcsspn WCSSPN
-#endif
+s390_vx_libc_ifunc2 (__wcsspn, wcsspn)
 
-/* Return the length of the maximum initial segment
-   of WCS which contains only wide-characters in ACCEPT.  */
-size_t
-wcsspn (wcs, accept)
-     const wchar_t *wcs;
-     const wchar_t *accept;
-{
-  const wchar_t *p;
-  const wchar_t *a;
-  size_t count = 0;
-
-  for (p = wcs; *p != L'\0'; ++p)
-    {
-      for (a = accept; *a != L'\0'; ++a)
-	if (*p == *a)
-	  break;
-      if (*a == L'\0')
-	return count;
-      else
-	++count;
-    }
-
-  return count;
-}
-libc_hidden_def (wcsspn)
+#else
+# include <wcsmbs/wcsspn.c>
+#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
