@@ -1,3 +1,17 @@
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #18610]
+	* sysdeps/s390/fpu/bits/fenv.h (fenv_t): Rename
+	__ieee_instruction_pointer to __unused.
+	* sysdeps/s390/fpu/fesetenv.c (__fesetenv): Remove usage of
+	__ieee_instruction_pointer.
+	* sysdeps/s390/fpu/fclrexcpt.c (feclearexcept): Fix dxc-field handling.
+	* sysdeps/s390/fpu/fgetexcptflg.c (fegetexceptflag): Likewise.
+	* sysdeps/s390/fpu/fsetexcptflg.c (fesetexceptflag): Likewise.
+	* sysdeps/s390/fpu/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/s390/fpu/fpu_control.h (_FPU_RESERVED):
+	Mark dxc-field as reserved.
+
 2015-08-25  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/start.c (_start): Call __nacl_main instead of main

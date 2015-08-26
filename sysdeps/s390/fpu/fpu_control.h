@@ -19,12 +19,12 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef _FPU_CONTROL_H
-# define _FPU_CONTROL_H
+#define _FPU_CONTROL_H
 
-# include <features.h>
+#include <features.h>
 
 /* These bits are reserved are not changed.  */
-# define _FPU_RESERVED 0x070700FC
+#define _FPU_RESERVED 0x0707FFFC
 
 /* The fdlibm code requires no interrupts for exceptions.  Don't
    change the rounding mode, it would break long double I/O!  */

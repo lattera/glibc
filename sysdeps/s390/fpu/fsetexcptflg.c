@@ -24,16 +24,25 @@
 int
 fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
-  fexcept_t temp,newexcepts;
+  fexcept_t temp, newexcepts;
 
   /* Get the current environment.  We have to do this since we cannot
      separately set the status word.  */
   _FPU_GETCW (temp);
   /* Install the new exception bits in the Accrued Exception Byte.  */
   excepts = excepts & FE_ALL_EXCEPT;
-  newexcepts = (excepts << FPC_DXC_SHIFT) | (excepts << FPC_FLAGS_SHIFT);
+  newexcepts = excepts << FPC_FLAGS_SHIFT;
   temp &= ~newexcepts;
-  temp |= *flagp & newexcepts;
+  if ((temp & FPC_NOT_FPU_EXCEPTION) == 0)
+    /* Bits 6, 7 of dxc-byte are zero,
+       thus bits 0-5 of dxc-byte correspond to the flag-bits.
+       Clear given exceptions in dxc-field.  */
+    temp &= ~(excepts << FPC_DXC_SHIFT);
+
+  /* Integrate dxc-byte of flagp into flags. The dxc-byte of flagp contains
+     either an ieee-exception or 0 (see fegetexceptflag).  */
+  temp |= (*flagp | ((*flagp >> FPC_DXC_SHIFT) << FPC_FLAGS_SHIFT))
+    & newexcepts;
 
   /* Store the new status word (along with the rest of the environment.
      Possibly new exceptions are set but they won't get executed unless

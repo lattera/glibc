@@ -29,7 +29,12 @@ feclearexcept (int excepts)
 
   _FPU_GETCW (temp);
   /* Clear the relevant bits.  */
-  temp &= ~((excepts << FPC_DXC_SHIFT)|(excepts << FPC_FLAGS_SHIFT));
+  temp &= ~(excepts << FPC_FLAGS_SHIFT);
+  if ((temp & FPC_NOT_FPU_EXCEPTION) == 0)
+    /* Bits 6, 7 of dxc-byte are zero,
+       thus bits 0-5 of dxc-byte correspond to the flag-bits.
+       Clear the relevant bits in flags and dxc-field.  */
+    temp &= ~(excepts << FPC_DXC_SHIFT);
 
   /* Put the new data in effect.  */
   _FPU_SETCW (temp);
