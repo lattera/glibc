@@ -38,7 +38,7 @@ string-bench := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
 		strcoll
 wcsmbs-bench := wcslen wcsnlen wcscpy wcpcpy wcsncpy wcpncpy wcscat wcsncat \
 		wcscmp wcsncmp wcschr wcschrnul wcsrchr wcsspn wcspbrk wcscspn \
-		wmemchr
+		wmemchr wmemset
 string-bench-all := $(string-bench) ${wcsmbs-bench}
 
 # We have to generate locales

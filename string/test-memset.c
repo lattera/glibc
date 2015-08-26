@@ -1,4 +1,4 @@
-/* Test and measure memset functions.
+/* Test memset functions.
    Copyright (C) 1999-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -21,12 +21,33 @@
 #ifdef TEST_BZERO
 # define TEST_NAME "bzero"
 #else
-# define TEST_NAME "memset"
-#endif
+# ifndef WIDE
+#  define TEST_NAME "memset"
+# else
+#  define TEST_NAME "wmemset"
+# endif /* WIDE */
+#endif /* !TEST_BZERO */
 #define MIN_PAGE_SIZE 131072
 #include "test-string.h"
 
-char *simple_memset (char *, int, size_t);
+#ifndef WIDE
+# define MEMSET memset
+# define CHAR char
+# define UCHAR unsigned char
+# define SIMPLE_MEMSET simple_memset
+# define MEMCMP memcmp
+# define BIG_CHAR CHAR_MAX
+#else
+# include <wchar.h>
+# define MEMSET wmemset
+# define CHAR wchar_t
+# define UCHAR wchar_t
+# define SIMPLE_MEMSET simple_wmemset
+# define MEMCMP wmemcmp
+# define BIG_CHAR WCHAR_MAX
+#endif /* WIDE */
+
+CHAR *SIMPLE_MEMSET (CHAR *, int, size_t);
 
 #ifdef TEST_BZERO
 typedef void (*proto_t) (char *, size_t);
@@ -40,7 +61,7 @@ IMPL (bzero, 1)
 void
 simple_bzero (char *s, size_t n)
 {
-  simple_memset (s, 0, n);
+  SIMPLE_MEMSET (s, 0, n);
 }
 
 void
@@ -49,44 +70,48 @@ builtin_bzero (char *s, size_t n)
   __builtin_bzero (s, n);
 }
 #else
-typedef char *(*proto_t) (char *, int, size_t);
+typedef CHAR *(*proto_t) (CHAR *, int, size_t);
+
+IMPL (SIMPLE_MEMSET, 0)
+# ifndef WIDE
 char *builtin_memset (char *, int, size_t);
-
-IMPL (simple_memset, 0)
 IMPL (builtin_memset, 0)
-IMPL (memset, 1)
+# endif /* !WIDE */
+IMPL (MEMSET, 1)
 
+# ifndef WIDE
 char *
 builtin_memset (char *s, int c, size_t n)
 {
   return __builtin_memset (s, c, n);
 }
-#endif
+# endif /* !WIDE */
+#endif /* !TEST_BZERO */
 
-char *
+CHAR *
 inhibit_loop_to_libcall
-simple_memset (char *s, int c, size_t n)
+SIMPLE_MEMSET (CHAR *s, int c, size_t n)
 {
-  char *r = s, *end = s + n;
+  CHAR *r = s, *end = s + n;
   while (r < end)
     *r++ = c;
   return s;
 }
 
 static void
-do_one_test (impl_t *impl, char *s, int c __attribute ((unused)), size_t n)
+do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
 {
-  char tstbuf[n];
+  CHAR tstbuf[n];
 #ifdef TEST_BZERO
   simple_bzero (tstbuf, n);
   CALL (impl, s, n);
   if (memcmp (s, tstbuf, n) != 0)
 #else
-  char *res = CALL (impl, s, c, n);
+  CHAR *res = CALL (impl, s, c, n);
   if (res != s
-      || simple_memset (tstbuf, c, n) != tstbuf
-      || memcmp (s, tstbuf, n) != 0)
-#endif
+      || SIMPLE_MEMSET (tstbuf, c, n) != tstbuf
+      || MEMCMP (s, tstbuf, n) != 0)
+#endif /* !TEST_BZERO */
     {
       error (0, 0, "Wrong result in function %s", impl->name);
       ret = 1;
@@ -98,11 +123,11 @@ static void
 do_test (size_t align, int c, size_t len)
 {
   align &= 7;
-  if (align + len > page_size)
+  if ((align + len) * sizeof (CHAR) > page_size)
     return;
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (char *) buf1 + align, c, len);
+    do_one_test (impl, (CHAR *) (buf1) + align, c, len);
 }
 
 #ifndef TEST_BZERO
@@ -111,18 +136,19 @@ do_random_tests (void)
 {
   size_t i, j, k, n, align, len, size;
   int c, o;
-  unsigned char *p, *res;
+  UCHAR *p, *res;
+  UCHAR *p2 = (UCHAR *) buf2;
 
-  for (i = 0; i < 65536; ++i)
-    buf2[i] = random () & 255;
+  for (i = 0; i < 65536 / sizeof (CHAR); ++i)
+    p2[i] = random () & BIG_CHAR;
 
   for (n = 0; n < ITERATIONS; n++)
     {
       if ((random () & 31) == 0)
-	size = 65536;
+	size = 65536 / sizeof (CHAR);
       else
 	size = 512;
-      p = buf1 + page_size - size;
+      p = (UCHAR *) (buf1 + page_size) - size;
       len = random () & (size - 1);
       align = size - len - (random () & 31);
       if (align > size)
@@ -132,10 +158,10 @@ do_random_tests (void)
       if ((random () & 7) == 0)
 	c = 0;
       else
-	c = random () & 255;
-      o = random () & 255;
+	c = random () & BIG_CHAR;
+      o = random () & BIG_CHAR;
       if (o == c)
-        o = (c + 1) & 255;
+	o = (c + 1) & BIG_CHAR;
       j = len + align + 128;
       if (j > size)
 	j = size;
@@ -152,11 +178,11 @@ do_random_tests (void)
 	{
 	  for (i = 0; i < len; ++i)
 	    {
-	      p[i + align] = buf2[i];
+	      p[i + align] = p2[i];
 	      if (p[i + align] == c)
 		p[i + align] = o;
 	    }
-	  res = (unsigned char *) CALL (impl, (char *) p + align, c, len);
+	  res = (UCHAR *) CALL (impl, (CHAR *) p + align, c, len);
 	  if (res != p + align)
 	    {
 	      error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %d, %zd) %p != %p",
@@ -190,7 +216,7 @@ do_random_tests (void)
 	}
     }
 }
-#endif
+#endif /* !TEST_BZERO */
 
 int
 test_main (void)

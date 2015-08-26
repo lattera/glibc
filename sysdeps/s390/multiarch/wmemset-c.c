@@ -1,6 +1,6 @@
-/* Copyright (C) 1996-2015 Free Software Foundation, Inc.
+/* Default wmemset implementation for S/390.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,45 +16,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <wchar.h>
+#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define WMEMSET  __wmemset_c
 
-#ifdef WMEMSET
-# define __wmemset WMEMSET
-#endif
+# include <wchar.h>
+extern __typeof (__wmemset) __wmemset_c;
+# undef weak_alias
+# define weak_alias(name, alias)
+# ifdef SHARED
+#  undef libc_hidden_def
+#  define libc_hidden_def(name)					\
+  __hidden_ver1 (__wmemset_c, __GI___wmemset, __wmemset_c);
+#  undef libc_hidden_weak
+#  define libc_hidden_weak(name)					\
+  strong_alias (__wmemset_c, __wmemset_c_1);				\
+  __hidden_ver1 (__wmemset_c_1, __GI_wmemset, __wmemset_c_1);
+# endif /* SHARED */
 
-wchar_t *
-__wmemset (s, c, n)
-     wchar_t *s;
-     wchar_t c;
-     size_t n;
-{
-  wchar_t *wp = s;
-
-  while (n >= 4)
-    {
-      wp[0] = c;
-      wp[1] = c;
-      wp[2] = c;
-      wp[3] = c;
-      wp += 4;
-      n -= 4;
-    }
-
-  if (n > 0)
-    {
-      wp[0] = c;
-
-      if (n > 1)
-	{
-	  wp[1] = c;
-
-	  if (n > 2)
-	    wp[2] = c;
-	}
-    }
-
-  return s;
-}
-libc_hidden_def (__wmemset)
-weak_alias (__wmemset, wmemset)
-libc_hidden_weak (wmemset)
+# include <wcsmbs/wmemset.c>
+#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */

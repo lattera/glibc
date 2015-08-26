@@ -1,5 +1,22 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/wmemset-c.c: New File.
+	* sysdeps/s390/multiarch/wmemset-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wmemset.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Add wmemset functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list-common.c
+	(__libc_ifunc_impl_list_common): Add ifunc test for wmemset.
+	* wcsmbs/wmemset.c: Use WMEMSET if defined.
+	* string/test-memset.c: Add wmemset support.
+	* wcsmbs/test-wmemset.c: New File.
+	* wcsmbs/Makefile (strop-tests): Add wmemset.
+	* benchtests/bench-memset.c: Add wmemset support.
+	* benchtests/bench-wmemset.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wmemset.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/memccpy-c.c: New File.
 	* sysdeps/s390/multiarch/memccpy-vx.S: Likewise.
 	* sysdeps/s390/multiarch/memccpy.c: Likewise.

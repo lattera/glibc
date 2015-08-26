@@ -20,12 +20,29 @@
 #ifdef TEST_BZERO
 # define TEST_NAME "bzero"
 #else
-# define TEST_NAME "memset"
-#endif
+# ifndef WIDE
+#  define TEST_NAME "memset"
+# else
+#  define TEST_NAME "wmemset"
+# endif /* WIDE */
+#endif /* !TEST_BZERO */
 #define MIN_PAGE_SIZE 131072
 #include "bench-string.h"
 
-char *simple_memset (char *, int, size_t);
+#ifndef WIDE
+# define MEMSET memset
+# define CHAR char
+# define SIMPLE_MEMSET simple_memset
+# define MEMCMP memcmp
+#else
+# include <wchar.h>
+# define MEMSET wmemset
+# define CHAR wchar_t
+# define SIMPLE_MEMSET simple_wmemset
+# define MEMCMP wmemcmp
+#endif /* WIDE */
+
+CHAR *SIMPLE_MEMSET (CHAR *, int, size_t);
 
 #ifdef TEST_BZERO
 typedef void (*proto_t) (char *, size_t);
@@ -39,7 +56,7 @@ IMPL (bzero, 1)
 void
 simple_bzero (char *s, size_t n)
 {
-  simple_memset (s, 0, n);
+  SIMPLE_MEMSET (s, 0, n);
 }
 
 void
@@ -48,46 +65,50 @@ builtin_bzero (char *s, size_t n)
   __builtin_bzero (s, n);
 }
 #else
-typedef char *(*proto_t) (char *, int, size_t);
+typedef CHAR *(*proto_t) (CHAR *, int, size_t);
+
+IMPL (SIMPLE_MEMSET, 0)
+# ifndef WIDE
 char *builtin_memset (char *, int, size_t);
-
-IMPL (simple_memset, 0)
 IMPL (builtin_memset, 0)
-IMPL (memset, 1)
+# endif /* !WIDE */
+IMPL (MEMSET, 1)
 
+# ifndef WIDE
 char *
 builtin_memset (char *s, int c, size_t n)
 {
   return __builtin_memset (s, c, n);
 }
-#endif
+# endif /* !WIDE */
+#endif /* !TEST_BZERO */
 
-char *
+CHAR *
 inhibit_loop_to_libcall
-simple_memset (char *s, int c, size_t n)
+SIMPLE_MEMSET (CHAR *s, int c, size_t n)
 {
-  char *r = s, *end = s + n;
+  CHAR *r = s, *end = s + n;
   while (r < end)
     *r++ = c;
   return s;
 }
 
 static void
-do_one_test (impl_t *impl, char *s, int c __attribute ((unused)), size_t n)
+do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
 {
   size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
-  char tstbuf[n];
+  CHAR tstbuf[n];
 #ifdef TEST_BZERO
   simple_bzero (tstbuf, n);
   CALL (impl, s, n);
   if (memcmp (s, tstbuf, n) != 0)
 #else
-  char *res = CALL (impl, s, c, n);
+  CHAR *res = CALL (impl, s, c, n);
   if (res != s
-      || simple_memset (tstbuf, c, n) != tstbuf
-      || memcmp (s, tstbuf, n) != 0)
-#endif
+      || SIMPLE_MEMSET (tstbuf, c, n) != tstbuf
+      || MEMCMP (s, tstbuf, n) != 0)
+#endif /* !TEST_BZERO */
     {
       error (0, 0, "Wrong result in function %s", impl->name);
       ret = 1;
@@ -101,7 +122,7 @@ do_one_test (impl_t *impl, char *s, int c __attribute ((unused)), size_t n)
       CALL (impl, s, n);
 #else
       CALL (impl, s, c, n);
-#endif
+#endif /* !TEST_BZERO */
     }
   TIMING_NOW (stop);
 
@@ -114,13 +135,13 @@ static void
 do_test (size_t align, int c, size_t len)
 {
   align &= 7;
-  if (align + len > page_size)
+  if ((align + len) * sizeof (CHAR) > page_size)
     return;
 
   printf ("Length %4zd, alignment %2zd, c %2d:", len, align, c);
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (char *) buf1 + align, c, len);
+    do_one_test (impl, (CHAR *) (buf1) + align, c, len);
 
   putchar ('\n');
 }
