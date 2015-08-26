@@ -18,6 +18,9 @@
 
 #include <wchar.h>
 
+#ifdef WCSNCPY
+# define __wcsncpy WCSNCPY
+#endif
 
 /* Copy no more than N wide-characters of SRC to DEST.	*/
 wchar_t *
@@ -83,4 +86,6 @@ __wcsncpy (dest, src, n)
 
   return s;
 }
+#ifndef WCSNCPY
 weak_alias (__wcsncpy, wcsncpy)
+#endif

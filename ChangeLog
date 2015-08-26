@@ -1,5 +1,26 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/strncpy-vx.S: New File.
+	* sysdeps/s390/multiarch/strncpy.c: Likewise.
+	* sysdeps/s390/multiarch/wcsncpy-c.c: Likewise.
+	* sysdeps/s390/multiarch/wcsncpy-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wcsncpy.c: Likewise.
+	* sysdeps/s390/s390-32/multiarch/strncpy.c: Likewise.
+	* sysdeps/s390/s390-64/multiarch/strncpy.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add strncpy and
+	wcsncpy functions.
+	* wcsmbs/wcsncpy.c: Use WCSNCPY if defined.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc test for strncpy, wcsncpy.
+	* string/test-strncpy.c: Add wcsncpy support.
+	* wcsmbs/test-wcsncpy.c: New File.
+	* wcsmbs/Makefile (strop-tests): Add wcsncpy.
+	* benchtests/bench-strncpy.c: Add wcsncpy support.
+	* benchtests/bench-wcsncpy.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wcsncpy
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/stpcpy-c.c: New File.
 	* sysdeps/s390/multiarch/stpcpy-vx.S: Likewise.
 	* sysdeps/s390/multiarch/stpcpy.c: Likewise.
