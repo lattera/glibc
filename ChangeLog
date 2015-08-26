@@ -1,5 +1,9 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* NEWS: New item for IBM z13 string optimizations.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/memrchr-c.c: New File.
 	* sysdeps/s390/multiarch/memrchr-vx.S: Likewise.
 	* sysdeps/s390/multiarch/memrchr.c: Likewise.
