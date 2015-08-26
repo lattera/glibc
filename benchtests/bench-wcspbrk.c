@@ -1,6 +1,6 @@
-/* Copyright (C) 1995-2015 Free Software Foundation, Inc.
+/* Measure wcspbrk functions.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,24 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <wchar.h>
-
-#ifdef WCSPBRK
-# define wcspbrk WCSPBRK
-#endif
-
-/* Find the first occurrence in WCS of any wide-character in ACCEPT.  */
-wchar_t *
-wcspbrk (wcs, accept)
-     const wchar_t *wcs;
-     const wchar_t *accept;
-{
-  while (*wcs != L'\0')
-    if (wcschr (accept, *wcs) == NULL)
-      ++wcs;
-    else
-      return (wchar_t *) wcs;
-
-  return NULL;
-}
-libc_hidden_def (wcspbrk)
+#define WIDE 1
+#include "bench-strpbrk.c"

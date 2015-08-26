@@ -16,50 +16,80 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef WIDE
+# define CHAR char
+# define STRLEN strlen
+# define STRCHR strchr
+# define BIG_CHAR CHAR_MAX
+# define SMALL_CHAR 127
+#else
+# include <wchar.h>
+# define CHAR wchar_t
+# define STRLEN wcslen
+# define STRCHR wcschr
+# define BIG_CHAR WCHAR_MAX
+# define SMALL_CHAR 1273
+#endif /* WIDE */
+
 #ifndef STRPBRK_RESULT
 # define STRPBRK_RESULT(s, pos) ((s)[(pos)] ? (s) + (pos) : NULL)
-# define RES_TYPE char *
+# define RES_TYPE CHAR *
 # define TEST_MAIN
-# define TEST_NAME "strpbrk"
+# ifndef WIDE
+#  define TEST_NAME "strpbrk"
+# else
+#  define TEST_NAME "wcspbrk"
+# endif /* WIDE */
 # include "bench-string.h"
 
-typedef char *(*proto_t) (const char *, const char *);
-char *simple_strpbrk (const char *, const char *);
-char *stupid_strpbrk (const char *, const char *);
+# ifndef WIDE
+#  define STRPBRK strpbrk
+#  define SIMPLE_STRPBRK simple_strpbrk
+#  define STUPID_STRPBRK stupid_strpbrk
+# else
+#  include <wchar.h>
+#  define STRPBRK wcspbrk
+#  define SIMPLE_STRPBRK simple_wcspbrk
+#  define STUPID_STRPBRK stupid_wcspbrk
+# endif /* WIDE */
 
-IMPL (stupid_strpbrk, 0)
-IMPL (simple_strpbrk, 0)
-IMPL (strpbrk, 1)
+typedef CHAR *(*proto_t) (const CHAR *, const CHAR *);
+CHAR *SIMPLE_STRPBRK (const CHAR *, const CHAR *);
+CHAR *STUPID_STRPBRK (const CHAR *, const CHAR *);
 
-char *
-simple_strpbrk (const char *s, const char *rej)
+IMPL (STUPID_STRPBRK, 0)
+IMPL (SIMPLE_STRPBRK, 0)
+IMPL (STRPBRK, 1)
+
+CHAR *
+SIMPLE_STRPBRK (const CHAR *s, const CHAR *rej)
 {
-  const char *r;
-  char c;
+  const CHAR *r;
+  CHAR c;
 
   while ((c = *s++) != '\0')
     for (r = rej; *r != '\0'; ++r)
       if (*r == c)
-	return (char *) s - 1;
+	return (CHAR *) s - 1;
   return NULL;
 }
 
-char *
-stupid_strpbrk (const char *s, const char *rej)
+CHAR *
+STUPID_STRPBRK (const CHAR *s, const CHAR *rej)
 {
-  size_t ns = strlen (s), nrej = strlen (rej);
+  size_t ns = STRLEN (s), nrej = STRLEN (rej);
   size_t i, j;
 
   for (i = 0; i < ns; ++i)
     for (j = 0; j < nrej; ++j)
       if (s[i] == rej[j])
-	return (char *) s + i;
+	return (CHAR *) s + i;
   return NULL;
 }
-#endif
+#endif /* !STRPBRK_RESULT */
 
 static void
-do_one_test (impl_t *impl, const char *s, const char *rej, RES_TYPE exp_res)
+do_one_test (impl_t *impl, const CHAR *s, const CHAR *rej, RES_TYPE exp_res)
 {
   RES_TYPE res = CALL (impl, s, rej);
   size_t i, iters = INNER_LOOP_ITERS;
@@ -91,35 +121,35 @@ do_test (size_t align, size_t pos, size_t len)
   size_t i;
   int c;
   RES_TYPE result;
-  char *rej, *s;
+  CHAR *rej, *s;
 
   align &= 7;
-  if (align + pos + 10 >= page_size || len > 240)
+  if ((align + pos + 10) * sizeof (CHAR) >= page_size || len > 240)
     return;
 
-  rej = (char *) (buf2 + (random () & 255));
-  s = (char *) (buf1 + align);
+  rej = (CHAR *) (buf2) + (random () & 255);
+  s = (CHAR *) (buf1) + align;
 
   for (i = 0; i < len; ++i)
     {
-      rej[i] = random () & 255;
+      rej[i] = random () & BIG_CHAR;
       if (!rej[i])
-	rej[i] = random () & 255;
+	rej[i] = random () & BIG_CHAR;
       if (!rej[i])
-	rej[i] = 1 + (random () & 127);
+	rej[i] = 1 + (random () & SMALL_CHAR);
     }
   rej[len] = '\0';
-  for (c = 1; c <= 255; ++c)
-    if (strchr (rej, c) == NULL)
+  for (c = 1; c <= BIG_CHAR; ++c)
+    if (STRCHR (rej, c) == NULL)
       break;
 
   for (i = 0; i < pos; ++i)
     {
-      s[i] = random () & 255;
-      if (strchr (rej, s[i]))
+      s[i] = random () & BIG_CHAR;
+      if (STRCHR (rej, s[i]))
 	{
-	  s[i] = random () & 255;
-	  if (strchr (rej, s[i]))
+	  s[i] = random () & BIG_CHAR;
+	  if (STRCHR (rej, s[i]))
 	    s[i] = c;
 	}
     }
@@ -127,7 +157,7 @@ do_test (size_t align, size_t pos, size_t len)
   if (s[pos])
     {
       for (i = pos + 1; i < pos + 10; ++i)
-	s[i] = random () & 255;
+	s[i] = random () & BIG_CHAR;
       s[i] = '\0';
     }
   result = STRPBRK_RESULT (s, pos);
