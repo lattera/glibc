@@ -19,6 +19,10 @@ gen-as-const-headers += locale-defines.sym
 endif
 
 ifeq ($(subdir),elf)
+# There is no good reason to use MMX in x86-64 ld.so with GCC.
+CFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
+		   -mno-mmx)
+
 sysdep-dl-routines += tlsdesc dl-tlsdesc
 
 tests += ifuncmain8

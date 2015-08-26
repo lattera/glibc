@@ -1,3 +1,16 @@
+2015-08-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/Makefile [$(subdir) == elf] (CFLAGS-.os,
+	tests-special, $(objpfx)tst-ld-sse-use.out): Moved to ...
+	* sysdeps/i386/Makefile [$(subdir) == elf] (CFLAGS-.os,
+	tests-special, $(objpfx)tst-ld-sse-use.out): Here.  Update
+	comments.
+	* sysdeps/x86_64/Makefile [$(subdir) == elf] (CFLAGS-.os): Add
+	-mno-mmx for $(all-rtld-routines).
+	* sysdeps/x86/tst-ld-sse-use.sh: Moved to ...
+	* sysdeps/i386/tst-ld-sse-use.sh: Here.  Replace x86-64 with
+	i386.
+
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/generic/unwind.h

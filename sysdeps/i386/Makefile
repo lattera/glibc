@@ -83,3 +83,17 @@ endif
 ifeq ($(subdir),csu)
 gen-as-const-headers += tlsdesc.sym
 endif
+
+ifeq ($(subdir),elf)
+# Make sure no code in ld.so uses mm/xmm/ymm/zmm registers on i386 since
+# the first 3 mm/xmm/ymm/zmm registers are used to pass vector parameters
+# which must be preserved.
+CFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
+		   -mno-sse -mno-mmx)
+
+tests-special += $(objpfx)tst-ld-sse-use.out
+$(objpfx)tst-ld-sse-use.out: ../sysdeps/i386/tst-ld-sse-use.sh $(objpfx)ld.so
+	@echo "Checking ld.so for SSE register use.  This will take a few seconds..."
+	$(BASH) $< $(objpfx) '$(NM)' '$(OBJDUMP)' '$(READELF)' > $@; \
+	$(evaluate-test)
+endif
