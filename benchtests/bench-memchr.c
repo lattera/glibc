@@ -16,31 +16,52 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef WIDE
+# define CHAR char
+# define SMALL_CHAR 127
+#else
+# include <wchar.h>
+# define CHAR wchar_t
+# define SMALL_CHAR 1273
+#endif /* WIDE */
+
 #ifndef USE_AS_MEMRCHR
 # define TEST_MAIN
-# define TEST_NAME "memchr"
+# ifndef WIDE
+#  define TEST_NAME "memchr"
+# else
+#  define TEST_NAME "wmemchr"
+# endif /* WIDE */
 # include "bench-string.h"
 
-typedef char *(*proto_t) (const char *, int, size_t);
-char *simple_memchr (const char *, int, size_t);
+# ifndef WIDE
+#  define MEMCHR memchr
+#  define SIMPLE_MEMCHR simple_memchr
+# else
+#  define MEMCHR wmemchr
+#  define SIMPLE_MEMCHR simple_wmemchr
+# endif /* WIDE */
 
-IMPL (simple_memchr, 0)
-IMPL (memchr, 1)
+typedef CHAR *(*proto_t) (const CHAR *, int, size_t);
+CHAR *SIMPLE_MEMCHR (const CHAR *, int, size_t);
 
-char *
-simple_memchr (const char *s, int c, size_t n)
+IMPL (SIMPLE_MEMCHR, 0)
+IMPL (MEMCHR, 1)
+
+CHAR *
+SIMPLE_MEMCHR (const CHAR *s, int c, size_t n)
 {
   while (n--)
-    if (*s++ == (char) c)
-      return (char *) s - 1;
+    if (*s++ == (CHAR) c)
+      return (CHAR *) s - 1;
   return NULL;
 }
-#endif
+#endif /* !USE_AS_MEMRCHR */
 
 static void
-do_one_test (impl_t *impl, const char *s, int c, size_t n, char *exp_res)
+do_one_test (impl_t *impl, const CHAR *s, int c, size_t n, CHAR *exp_res)
 {
-  char *res = CALL (impl, s, c, n);
+  CHAR *res = CALL (impl, s, c, n);
   size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
 
@@ -68,36 +89,38 @@ static void
 do_test (size_t align, size_t pos, size_t len, int seek_char)
 {
   size_t i;
-  char *result;
+  CHAR *result;
 
   align &= 7;
-  if (align + len >= page_size)
+  if ((align + len) * sizeof (CHAR) >= page_size)
     return;
+
+  CHAR *buf = (CHAR *) (buf1);
 
   for (i = 0; i < len; ++i)
     {
-      buf1[align + i] = 1 + 23 * i % 127;
-      if (buf1[align + i] == seek_char)
-        buf1[align + i] = seek_char + 1;
+      buf[align + i] = 1 + 23 * i % SMALL_CHAR;
+      if (buf[align + i] == seek_char)
+	buf[align + i] = seek_char + 1;
     }
-  buf1[align + len] = 0;
+  buf[align + len] = 0;
 
   if (pos < len)
     {
-      buf1[align + pos] = seek_char;
-      buf1[align + len] = -seek_char;
-      result = (char *) (buf1 + align + pos);
+      buf[align + pos] = seek_char;
+      buf[align + len] = -seek_char;
+      result = (CHAR *) (buf + align + pos);
     }
   else
     {
       result = NULL;
-      buf1[align + len] = seek_char;
+      buf[align + len] = seek_char;
     }
 
   printf ("Length %4zd, alignment %2zd:", pos, align);
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (char *) (buf1 + align), seek_char, len, result);
+    do_one_test (impl, (CHAR *) (buf + align), seek_char, len, result);
 
   putchar ('\n');
 }

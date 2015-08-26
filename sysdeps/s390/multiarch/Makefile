@@ -14,7 +14,9 @@ sysdep_routines += strlen strlen-vx strlen-c \
 		   strrchr strrchr-vx strrchr-c \
 		   strspn strspn-vx strspn-c \
 		   strpbrk strpbrk-vx strpbrk-c \
-		   strcspn strcspn-vx strcspn-c
+		   strcspn strcspn-vx strcspn-c \
+		   memchr memchr-vx \
+		   rawmemchr rawmemchr-vx rawmemchr-c
 endif
 
 ifeq ($(subdir),wcsmbs)
@@ -33,5 +35,6 @@ sysdep_routines += wcslen wcslen-vx wcslen-c \
 		   wcsrchr wcsrchr-vx wcsrchr-c \
 		   wcsspn wcsspn-vx wcsspn-c \
 		   wcspbrk wcspbrk-vx wcspbrk-c \
-		   wcscspn wcscspn-vx wcscspn-c
+		   wcscspn wcscspn-vx wcscspn-c \
+		   wmemchr wmemchr-vx wmemchr-c
 endif

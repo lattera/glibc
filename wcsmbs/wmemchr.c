@@ -18,6 +18,10 @@
 
 #include <wchar.h>
 
+#ifdef WMEMCHR
+# define __wmemchr WMEMCHR
+#endif
+
 wchar_t *
 __wmemchr (s, c, n)
      const wchar_t *s;

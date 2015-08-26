@@ -1,4 +1,4 @@
-/* Test and measure memchr functions.
+/* Test memchr functions.
    Copyright (C) 1999-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -18,28 +18,49 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
-#define TEST_NAME "memchr"
+#ifndef WIDE
+# define TEST_NAME "memchr"
+#else
+# define TEST_NAME "wmemchr"
+#endif /* WIDE */
 #include "test-string.h"
 
-typedef char *(*proto_t) (const char *, int, size_t);
-char *simple_memchr (const char *, int, size_t);
+#ifndef WIDE
+# define MEMCHR memchr
+# define CHAR char
+# define UCHAR unsigned char
+# define SIMPLE_MEMCHR simple_memchr
+# define BIG_CHAR CHAR_MAX
+# define SMALL_CHAR 127
+#else
+# include <wchar.h>
+# define MEMCHR wmemchr
+# define CHAR wchar_t
+# define UCHAR wchar_t
+# define SIMPLE_MEMCHR simple_wmemchr
+# define BIG_CHAR WCHAR_MAX
+# define SMALL_CHAR 1273
+#endif /* WIDE */
 
-IMPL (simple_memchr, 0)
-IMPL (memchr, 1)
+typedef CHAR *(*proto_t) (const CHAR *, int, size_t);
+CHAR *SIMPLE_MEMCHR (const CHAR *, int, size_t);
 
-char *
-simple_memchr (const char *s, int c, size_t n)
+IMPL (SIMPLE_MEMCHR, 0)
+IMPL (MEMCHR, 1)
+
+CHAR *
+SIMPLE_MEMCHR (const CHAR *s, int c, size_t n)
 {
   while (n--)
-    if (*s++ == (char) c)
-      return (char *) s - 1;
+    if (*s++ == (CHAR) c)
+      return (CHAR *) s - 1;
   return NULL;
 }
 
 static void
-do_one_test (impl_t *impl, const char *s, int c, size_t n, char *exp_res)
+do_one_test (impl_t *impl, const CHAR *s, int c, size_t n, CHAR *exp_res)
 {
-  char *res = CALL (impl, s, c, n);
+  CHAR *res = CALL (impl, s, c, n);
   if (res != exp_res)
     {
       error (0, 0, "Wrong result in function %s %p %p", impl->name,
@@ -53,34 +74,36 @@ static void
 do_test (size_t align, size_t pos, size_t len, int seek_char)
 {
   size_t i;
-  char *result;
+  CHAR *result;
 
   align &= 7;
-  if (align + len >= page_size)
+  if ((align + len) * sizeof (CHAR) >= page_size)
     return;
+
+  CHAR *buf = (CHAR *) (buf1);
 
   for (i = 0; i < len; ++i)
     {
-      buf1[align + i] = 1 + 23 * i % 127;
-      if (buf1[align + i] == seek_char)
-        buf1[align + i] = seek_char + 1;
+      buf[align + i] = 1 + 23 * i % SMALL_CHAR;
+      if (buf[align + i] == seek_char)
+	buf[align + i] = seek_char + 1;
     }
-  buf1[align + len] = 0;
+  buf[align + len] = 0;
 
   if (pos < len)
     {
-      buf1[align + pos] = seek_char;
-      buf1[align + len] = -seek_char;
-      result = (char *) (buf1 + align + pos);
+      buf[align + pos] = seek_char;
+      buf[align + len] = -seek_char;
+      result = (CHAR *) (buf + align + pos);
     }
   else
     {
       result = NULL;
-      buf1[align + len] = seek_char;
+      buf[align + len] = seek_char;
     }
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (char *) (buf1 + align), seek_char, len, result);
+    do_one_test (impl, (CHAR *) (buf + align), seek_char, len, result);
 }
 
 static void
@@ -88,8 +111,8 @@ do_random_tests (void)
 {
   size_t i, j, n, align, pos, len;
   int seek_char;
-  char *result;
-  unsigned char *p = buf1 + page_size - 512;
+  CHAR *result;
+  UCHAR *p = (UCHAR *) (buf1 + page_size) - 512;
 
   for (n = 0; n < ITERATIONS; n++)
     {
@@ -101,11 +124,11 @@ do_random_tests (void)
       if (pos >= len)
 	len = pos + (random () & 7);
       if (len + align >= 512)
-        len = 512 - align - (random () & 7);
-      seek_char = random () & 255;
+	len = 512 - align - (random () & 7);
+      seek_char = random () & BIG_CHAR;
       j = len + align + 64;
       if (j > 512)
-        j = 512;
+	j = 512;
 
       for (i = 0; i < j; i++)
 	{
@@ -113,7 +136,7 @@ do_random_tests (void)
 	    p[i] = seek_char;
 	  else
 	    {
-	      p[i] = random () & 255;
+	      p[i] = random () & BIG_CHAR;
 	      if (i < pos + align && p[i] == seek_char)
 		p[i] = seek_char + 13;
 	    }
@@ -124,17 +147,17 @@ do_random_tests (void)
 	  size_t r = random ();
 	  if ((r & 31) == 0)
 	    len = ~(uintptr_t) (p + align) - ((r >> 5) & 31);
-	  result = (char *) (p + pos + align);
+	  result = (CHAR *) (p + pos + align);
 	}
       else
 	result = NULL;
 
       FOR_EACH_IMPL (impl, 1)
-	if (CALL (impl, (char *) (p + align), seek_char, len) != result)
+	if (CALL (impl, (CHAR *) (p + align), seek_char, len) != result)
 	  {
 	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %d, %zd, %zd) %p != %p, p %p",
 		   n, impl->name, align, seek_char, len, pos,
-		   CALL (impl, (char *) (p + align), seek_char, len),
+		   CALL (impl, (CHAR *) (p + align), seek_char, len),
 		   result, p);
 	    ret = 1;
 	  }
