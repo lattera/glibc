@@ -226,8 +226,8 @@ memchr (const void *__str, int __c, size_t __n)
 }
 #endif
 
-/* Search N bytes of S for C.  */
-#define _HAVE_STRING_ARCH_memchr 1
+/* Compare S1 and S2.  */
+#define _HAVE_STRING_ARCH_strcmp 1
 #ifndef _FORCE_INLINES
 __STRING_INLINE int
 strcmp (const char *__s1, const char *__s2)

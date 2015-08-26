@@ -1,5 +1,24 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/strcmp-vx.S: New File.
+	* sysdeps/s390/multiarch/strcmp.c: Likewise.
+	* sysdeps/s390/multiarch/wcscmp-c.c: Likewise.
+	* sysdeps/s390/multiarch/wcscmp-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wcscmp.c: Likewise.
+	* sysdeps/s390/s390-32/multiarch/strcmp.c: Likewise.
+	* sysdeps/s390/s390-64/multiarch/strcmp.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add strcmp and
+	wcscmp functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc test for strcmp, wcscmp.
+	* string/strcmp.c (STRCMP): Define and use macro.
+	* benchtests/bench-wcscmp.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wcscmp.
+	* sysdeps/s390/bits/string.h: Fix typo: _HAVE_STRING_ARCH_strcmp
+	instead of _HAVE_STRING_ARCH_memchr.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/strncat-c.c: New File.
 	* sysdeps/s390/multiarch/strncat-vx.S: Likewise.
 	* sysdeps/s390/multiarch/strncat.c: Likewise.

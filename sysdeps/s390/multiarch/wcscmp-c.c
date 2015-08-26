@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2015 Free Software Foundation, Inc.
+/* Default wcscmp implementation for S/390.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,33 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define WCSCMP  __wcscmp_c
 
-#undef strcmp
-
-#ifndef STRCMP
-# define STRCMP strcmp
-#endif
-
-/* Compare S1 and S2, returning less than, equal to or
-   greater than zero if S1 is lexicographically less than,
-   equal to or greater than S2.  */
-int
-STRCMP (const char *p1, const char *p2)
-{
-  const unsigned char *s1 = (const unsigned char *) p1;
-  const unsigned char *s2 = (const unsigned char *) p2;
-  unsigned char c1, c2;
-
-  do
-    {
-      c1 = (unsigned char) *s1++;
-      c2 = (unsigned char) *s2++;
-      if (c1 == '\0')
-	return c1 - c2;
-    }
-  while (c1 == c2);
-
-  return c1 - c2;
-}
-libc_hidden_builtin_def (strcmp)
+# include <wchar.h>
+extern __typeof (wcscmp) __wcscmp_c;
+# undef weak_alias
+# define weak_alias(name, alias)
+# ifdef SHARED
+#  undef libc_hidden_def
+#  define libc_hidden_def(name)				\
+  __hidden_ver1 (__wcscmp_c, __GI___wcscmp, __wcscmp_c);
+# endif /* SHARED */
+# include <wcsmbs/wcscmp.c>
+#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
