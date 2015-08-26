@@ -1,5 +1,10 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/ifunc-resolve.h (s390_vx_libc_ifunc,
+	s390_vx_libc_ifunc2): New macro function.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* config.h.in (HAVE_S390_VX_ASM_SUPPORT): New macro undefine.
 	* sysdeps/s390/configure.ac: Add test for S390 vector instruction
 	assembler support.

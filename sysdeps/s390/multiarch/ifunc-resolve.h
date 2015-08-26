@@ -73,3 +73,22 @@
     else								\
       return &__##FUNC##_default;					\
   }
+
+#define s390_vx_libc_ifunc(FUNC)		\
+  s390_vx_libc_ifunc2(FUNC, FUNC)
+
+#define s390_vx_libc_ifunc2(RESOLVERFUNC, FUNC)				\
+  /* Make the declarations of the optimized functions hidden in order
+     to prevent GOT slots being generated for them.  */			\
+  extern __typeof (FUNC) RESOLVERFUNC##_vx attribute_hidden;		\
+  extern __typeof (FUNC) RESOLVERFUNC##_c attribute_hidden;		\
+  extern void *__resolve_##RESOLVERFUNC (unsigned long int) __asm__ (#FUNC); \
+									\
+  void *__resolve_##RESOLVERFUNC (unsigned long int dl_hwcap)		\
+  {									\
+    if (dl_hwcap & HWCAP_S390_VX)					\
+      return &RESOLVERFUNC##_vx;					\
+    else								\
+      return &RESOLVERFUNC##_c;						\
+  }									\
+ __asm__ (".type " #FUNC ", %gnu_indirect_function");
