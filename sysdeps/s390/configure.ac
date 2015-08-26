@@ -36,5 +36,34 @@ if test "$enable_lock_elision" = yes && test "$libc_cv_gcc_builtin_tbegin" = no 
    critic_missing="$critic_missing The used GCC has no support for __builtin_tbegin, which is needed for lock-elision on target S390."
 fi
 
+
+AC_CACHE_CHECK(for S390 vector instruction support, libc_cv_asm_s390_vx, [dnl
+cat > conftest.c <<\EOF
+void testvecinsn ()
+{
+    __asm__ (".machine \"z13\" \n\t"
+	     ".machinemode \"zarch_nohighgprs\" \n\t"
+	     "vistrbs %%v16,%%v17 \n\t"
+	     "locghie %%r1,0" : :);
+}
+EOF
+dnl
+dnl test, if assembler supports S390 vector instructions
+if AC_TRY_COMMAND([${CC-cc} --shared conftest.c -o conftest.o &> /dev/null]) ;
+then
+  libc_cv_asm_s390_vx=yes
+else
+  libc_cv_asm_s390_vx=no
+fi
+rm -f conftest* ])
+
+if test "$libc_cv_asm_s390_vx" = yes ;
+then
+  AC_DEFINE(HAVE_S390_VX_ASM_SUPPORT)
+else
+  AC_MSG_WARN([Use binutils with vector-support in order to use optimized implementations.])
+fi
+
+
 test -n "$critic_missing" && AC_MSG_ERROR([
 *** $critic_missing])
