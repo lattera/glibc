@@ -137,6 +137,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   IFUNC_VX_IMPL (wmemcmp);
 
+  IFUNC_VX_IMPL (memrchr);
+
 #endif /* HAVE_S390_VX_ASM_SUPPORT */
 
   return i;

@@ -1,5 +1,15 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/memrchr-c.c: New File.
+	* sysdeps/s390/multiarch/memrchr-vx.S: Likewise.
+	* sysdeps/s390/multiarch/memrchr.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Add memrchr functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list-common.c
+	(__libc_ifunc_impl_list_common): Add ifunc test for memrchr.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/wmemcmp-c.c: New File.
 	* sysdeps/s390/multiarch/wmemcmp-vx.S: Likewise.
 	* sysdeps/s390/multiarch/wmemcmp.c: Likewise.
