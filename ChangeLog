@@ -1,5 +1,16 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/memccpy-c.c: New File.
+	* sysdeps/s390/multiarch/memccpy-vx.S: Likewise.
+	* sysdeps/s390/multiarch/memccpy.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Add memccpy functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list-common.c
+	(__libc_ifunc_impl_list_common): Add ifunc test for memccpy.
+	* string/memccpy.c: Use MEMCCPY if defined.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/memchr-vx.S: New File.
 	* sysdeps/s390/multiarch/memchr.c: Likewise.
 	* sysdeps/s390/multiarch/rawmemchr-c.c: Likewise.

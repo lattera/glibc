@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2015 Free Software Foundation, Inc.
+/* Multiple versions of memccpy.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,28 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# include <string.h>
+# include <ifunc-resolve.h>
 
-#undef __memccpy
-#undef memccpy
-
-#ifdef MEMCCPY
-# define __memccpy MEMCCPY
-#endif
-
-/* Copy no more than N bytes of SRC to DEST, stopping when C is found.
-   Return the position in DEST one byte past where C was copied, or
-   NULL if C was not found in the first N bytes of SRC.  */
-void *
-__memccpy (void *dest, const void *src, int c, size_t n)
-{
-  void *p = memchr (src, c, n);
-
-  if (p != NULL)
-    return __mempcpy (dest, src, p - src + 1);
-
-  memcpy (dest, src, n);
-  return NULL;
-}
-
+s390_vx_libc_ifunc (__memccpy)
 weak_alias (__memccpy, memccpy)
+
+#else
+# include <string/memccpy.c>
+#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
