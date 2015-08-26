@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2015 Free Software Foundation, Inc.
+/* Default wcscat implementation for S/390.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,19 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define WCSCAT  __wcscat_c
 
-#undef strcat
-
-#ifndef STRCAT
-# define STRCAT strcat
+# include <wchar.h>
+extern __typeof (__wcscat) __wcscat_c;
+# include <wcsmbs/wcscat.c>
 #endif
-
-/* Append SRC on the end of DEST.  */
-char *
-STRCAT (char *dest, const char *src)
-{
-  strcpy (dest + strlen (dest), src);
-  return dest;
-}
-libc_hidden_builtin_def (strcat)

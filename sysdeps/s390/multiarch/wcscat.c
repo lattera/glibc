@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2015 Free Software Foundation, Inc.
+/* Multiple versions of wcscat.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,19 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# include <wchar.h>
+# include <ifunc-resolve.h>
 
-#undef strcat
+s390_vx_libc_ifunc (__wcscat)
+weak_alias (__wcscat, wcscat)
 
-#ifndef STRCAT
-# define STRCAT strcat
-#endif
-
-/* Append SRC on the end of DEST.  */
-char *
-STRCAT (char *dest, const char *src)
-{
-  strcpy (dest + strlen (dest), src);
-  return dest;
-}
-libc_hidden_builtin_def (strcat)
+#else
+# include <wcsmbs/wcscat.c>
+#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */

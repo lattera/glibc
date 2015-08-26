@@ -1,5 +1,26 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/strcat-c.c: New File.
+	* sysdeps/s390/multiarch/strcat-vx.S: Likewise.
+	* sysdeps/s390/multiarch/strcat.c: Likewise.
+	* sysdeps/s390/multiarch/wcscat-c.c: Likewise.
+	* sysdeps/s390/multiarch/wcscat-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wcscat.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add strcat and
+	wcscat functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc test for strcat, wcscat.
+	* string/strcat.c (STRCAT): Define and use macro.
+	* wcsmbs/wcscat.c: Use WCSCAT if defined.
+	* string/test-strcat.c: Add wcscat support.
+	* wcsmbs/test-wcscat.c: New File.
+	* wcsmbs/Makefile (strop-tests): Add wcscat.
+	* benchtests/bench-strcat.c: Add wcscat support.
+	* benchtests/bench-wcscat.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wcscat.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/stpncpy-c.c: New File.
 	* sysdeps/s390/multiarch/stpncpy-vx.S: Likewise.
 	* sysdeps/s390/multiarch/stpncpy.c: Likewise.

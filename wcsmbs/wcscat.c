@@ -18,6 +18,9 @@
 
 #include <wchar.h>
 
+#ifdef WCSCAT
+# define __wcscat WCSCAT
+#endif
 
 /* Append SRC on the end of DEST.  */
 wchar_t *
@@ -47,4 +50,6 @@ __wcscat (dest, src)
 
   return dest;
 }
+#ifndef WCSCAT
 weak_alias (__wcscat, wcscat)
+#endif
