@@ -1,5 +1,17 @@
 2015-08-26  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i586/bzero.S (USE_AS_BZERO): New.
+	* sysdeps/i386/i686/bzero.S (USE_AS_BZERO): Likewise.
+	* sysdeps/i386/i586/memset.S (BZERO_P): Removed.
+	Check USE_AS_BZERO/SHARED instead of BZERO_P/PIC.
+	(__memset_zero_constant_len_parameter): New.
+	* sysdeps/i386/i686/memset.S (BZERO_P): Removed.
+	Check USE_AS_BZERO/SHARED instead of BZERO_P/PIC.
+	(__memset_zero_constant_len_parameter): Don't define if
+	__memset_chk or USE_AS_BZERO are defined.
+
+2015-08-26  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/i586/memcpy.S (MEMPCPY_P): Removed.
 	Check USE_AS_MEMPCPY/SHARED instead of MEMPCPY_P/PIC.
 	* sysdeps/i386/i586/mempcpy.S (USE_AS_MEMPCPY): New.

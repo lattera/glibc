@@ -21,13 +21,10 @@
 #include <sysdep.h>
 #include "asm-syntax.h"
 
-/* BEWARE: `#ifdef memset' means that memset is redefined as `bzero' */
-#define BZERO_P (defined memset)
-
 #define PARMS	4+4	/* space for 1 saved reg */
 #define RTN	PARMS
 #define DEST	RTN
-#if BZERO_P
+#ifdef USE_AS_BZERO
 # define LEN	DEST+4
 #else
 # define CHR	DEST+4
@@ -35,7 +32,7 @@
 #endif
 
         .text
-#if defined PIC && IS_IN (libc) && !BZERO_P
+#if defined SHARED && IS_IN (libc) && !defined USE_AS_BZERO
 ENTRY (__memset_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
@@ -50,7 +47,7 @@ ENTRY (memset)
 	movl	DEST(%esp), %edi
 	cfi_rel_offset (edi, 0)
 	movl	LEN(%esp), %edx
-#if BZERO_P
+#ifdef USE_AS_BZERO
 	xorl	%eax, %eax	/* we fill with 0 */
 #else
 	movb	CHR(%esp), %al
@@ -104,7 +101,7 @@ L(2):	shrl	$2, %ecx	/* convert byte count to longword count */
 	rep
 	stosb
 
-#if !BZERO_P
+#ifndef USE_AS_BZERO
 	/* Load result (only if used as memset).  */
 	movl DEST(%esp), %eax	/* start address of destination is result */
 #endif
@@ -112,10 +109,13 @@ L(2):	shrl	$2, %ecx	/* convert byte count to longword count */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-#if BZERO_P
 	ret
-#else
-	ret
-#endif
 END (memset)
 libc_hidden_builtin_def (memset)
+
+#if defined SHARED && IS_IN (libc) && !defined __memset_chk \
+    && !defined USE_AS_BZERO
+strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
+	.section .gnu.warning.__memset_zero_constant_len_parameter
+	.string "memset used with constant zero length parameter; this could be due to transposed parameters"
+#endif
