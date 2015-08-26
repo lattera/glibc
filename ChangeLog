@@ -1,5 +1,21 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/strcpy-vx.S: New File.
+	* sysdeps/s390/multiarch/strcpy.c: Likewise.
+	* sysdeps/s390/multiarch/wcscpy-c.c: Likewise.
+	* sysdeps/s390/multiarch/wcscpy-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wcscpy.c: Likewise.
+	* sysdeps/s390/s390-32/multiarch/strcpy.c: Likewise.
+	* sysdeps/s390/s390-64/multiarch/strcpy.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add strcpy and
+	wcscpy functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc test for strcpy, wcscpy.
+	* benchtests/bench-wcscpy.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wcscpy.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/strnlen-c.c: New File.
 	* sysdeps/s390/multiarch/strnlen-vx.S: Likewise.
 	* sysdeps/s390/multiarch/strnlen.c: Likewise.
