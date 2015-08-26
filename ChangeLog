@@ -1,3 +1,8 @@
+2015-08-26  Stan Shebs  <stanshebs@google.com>
+
+	* sysdeps/ieee754/ldbl-96/k_tanl.c: Include <libc-internal.h>.
+	(__kernel_tanl): Ignore uninitialized warnings around use of SIGN.
+
 2015-08-26  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/bits/hwcap.h: Add PPC_FEATURE2_HTM_NOSC.
