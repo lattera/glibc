@@ -38,5 +38,6 @@ sysdep_routines += wcslen wcslen-vx wcslen-c \
 		   wcspbrk wcspbrk-vx wcspbrk-c \
 		   wcscspn wcscspn-vx wcscspn-c \
 		   wmemchr wmemchr-vx wmemchr-c \
-		   wmemset wmemset-vx wmemset-c
+		   wmemset wmemset-vx wmemset-c \
+		   wmemcmp wmemcmp-vx wmemcmp-c
 endif

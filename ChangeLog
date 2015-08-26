@@ -1,5 +1,17 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/wmemcmp-c.c: New File.
+	* sysdeps/s390/multiarch/wmemcmp-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wmemcmp.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Add wmemcmp functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list-common.c
+	(__libc_ifunc_impl_list_common): Add ifunc test for wmemcmp.
+	* benchtests/bench-wmemcmp.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wmemcmp.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/wmemset-c.c: New File.
 	* sysdeps/s390/multiarch/wmemset-vx.S: Likewise.
 	* sysdeps/s390/multiarch/wmemset.c: Likewise.
