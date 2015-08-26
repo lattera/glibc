@@ -18,10 +18,13 @@
 
 #include <wchar.h>
 
+#ifndef WCSNCAT
+# define WCSNCAT wcsncat
+#endif
 
 /* Append no more than N wide-character of SRC onto DEST.  */
 wchar_t *
-wcsncat (dest, src, n)
+WCSNCAT (dest, src, n)
      wchar_t *dest;
      const wchar_t *src;
      size_t n;
