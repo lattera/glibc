@@ -1,5 +1,10 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): Add z13.
+	* sysdeps/s390/dl-procinfo.h (_DL_PLATFORMS_COUNT): Increased.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/dl-procinfo.c (_dl_s390_platforms): Add vector flag.
 	* sysdeps/s390/dl-procinfo.h: Add vector capability.
 	* sysdeps/unix/sysv/linux/s390/bits/hwcap.h (HWCAP_S390_VX): Define.
