@@ -18,6 +18,9 @@
 
 #include <wchar.h>
 
+#ifdef WCPNCPY
+# define __wcpncpy WCPNCPY
+#endif
 
 /* Copy no more than N wide-characters of SRC to DEST, returning the
    address of the last character written into DEST.  */
@@ -82,4 +85,6 @@ __wcpncpy (dest, src, n)
   return dest - 1;
 }
 
+#ifndef WCPNCPY
 weak_alias (__wcpncpy, wcpncpy)
+#endif

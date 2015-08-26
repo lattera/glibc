@@ -94,6 +94,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_VX_IMPL (strncpy);
   IFUNC_VX_IMPL (wcsncpy);
 
+  IFUNC_VX_IMPL (stpncpy);
+  IFUNC_VX_IMPL (wcpncpy);
+
 #endif /* HAVE_S390_VX_ASM_SUPPORT */
 
   return i;
