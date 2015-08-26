@@ -29,37 +29,37 @@
        .text
 
 #ifdef USE_MULTIARCH
-ENTRY(__memcpy_z900)
+ENTRY(__memcpy_default)
 #else
 ENTRY(memcpy)
 #endif
 	.machine "z900"
-        ltgr    %r4,%r4
-        je      .L_Z900_4
-        aghi    %r4,-1
-        srlg    %r5,%r4,8
-        ltgr    %r5,%r5
-        lgr     %r1,%r2
-        jne     .L_Z900_13
+	ltgr    %r4,%r4
+	je      .L_Z900_4
+	aghi    %r4,-1
+	srlg    %r5,%r4,8
+	ltgr    %r5,%r5
+	lgr     %r1,%r2
+	jne     .L_Z900_13
 .L_Z900_3:
-        larl    %r5,.L_Z900_15
-        ex      %r4,0(%r5)
+	larl    %r5,.L_Z900_15
+	ex      %r4,0(%r5)
 .L_Z900_4:
-        br      %r14
+	br      %r14
 .L_Z900_13:
-        chi	%r5,4096             # Switch to mvcle for copies >1MB
-        jh      __memcpy_mvcle
+	chi	%r5,4096             # Switch to mvcle for copies >1MB
+	jh      __memcpy_mvcle
 .L_Z900_12:
-        mvc     0(256,%r1),0(%r3)
-        la      %r1,256(%r1)
-        la      %r3,256(%r3)
-        brctg   %r5,.L_Z900_12
-        j       .L_Z900_3
+	mvc     0(256,%r1),0(%r3)
+	la      %r1,256(%r1)
+	la      %r3,256(%r3)
+	brctg   %r5,.L_Z900_12
+	j       .L_Z900_3
 .L_Z900_15:
-        mvc     0(1,%r1),0(%r3)
+	mvc     0(1,%r1),0(%r3)
 
 #ifdef USE_MULTIARCH
-END(__memcpy_z900)
+END(__memcpy_default)
 #else
 END(memcpy)
 libc_hidden_builtin_def (memcpy)

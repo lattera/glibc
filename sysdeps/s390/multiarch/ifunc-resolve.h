@@ -1,6 +1,6 @@
 /* IFUNC resolver function for CPU specific functions.
-   32 bit S/390 version.
-   Copyright (C) 2012-2015 Free Software Foundation, Inc.
+   32/64 bit S/390 version.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,12 +20,28 @@
 #include <unistd.h>
 #include <dl-procinfo.h>
 
-#define STFLE_BITS_Z10  34 /* General instructions extension */
-#define STFLE_BITS_Z196 45 /* Distinct operands, pop ... */
+#define S390_STFLE_BITS_Z10  34 /* General instructions extension */
+#define S390_STFLE_BITS_Z196 45 /* Distinct operands, pop ... */
 
-#if IS_IN (libc)
+#define S390_IS_Z196(STFLE_BITS)			\
+  ((STFLE_BITS & (1ULL << (63 - S390_STFLE_BITS_Z196))) != 0)
 
-#define IFUNC_RESOLVE(FUNC)						\
+#define S390_IS_Z10(STFLE_BITS)				\
+  ((STFLE_BITS & (1ULL << (63 - S390_STFLE_BITS_Z10))) != 0)
+
+#define S390_STORE_STFLE(STFLE_BITS)					\
+  /* We want just 1 double word to be returned.  */			\
+  register unsigned long reg0 asm("0") = 0;				\
+									\
+  asm volatile(".machine push"        "\n\t"				\
+	       ".machine \"z9-109\""  "\n\t"				\
+	       ".machinemode \"zarch_nohighgprs\"\n\t"			\
+	       "stfle %0"             "\n\t"				\
+	       ".machine pop"         "\n"				\
+	       : "=QS" (STFLE_BITS), "+d" (reg0)			\
+	       : : "cc");
+
+#define s390_libc_ifunc(FUNC)						\
   asm (".globl " #FUNC "\n\t"						\
        ".type  " #FUNC ",@gnu_indirect_function\n\t"			\
        ".set   " #FUNC ",__resolve_" #FUNC "\n\t"			\
@@ -36,7 +52,7 @@
      to prevent GOT slots being generated for them. */			\
   extern void *__##FUNC##_z196 attribute_hidden;			\
   extern void *__##FUNC##_z10 attribute_hidden;				\
-  extern void *__##FUNC##_g5 attribute_hidden;				\
+  extern void *__##FUNC##_default attribute_hidden;			\
 									\
   void *__resolve_##FUNC (unsigned long int dl_hwcap)			\
   {									\
@@ -44,29 +60,16 @@
 	&& (dl_hwcap & HWCAP_S390_ZARCH)				\
 	&& (dl_hwcap & HWCAP_S390_HIGH_GPRS))				\
       {									\
-	/* We want just 1 double word to be returned.  */		\
-	register unsigned long reg0 asm("0") = 0;			\
 	unsigned long long stfle_bits;					\
+	S390_STORE_STFLE (stfle_bits);					\
 									\
-	asm volatile(".insn s,0xb2b00000,%0" "\n\t"  /* stfle */	\
-		     : "=QS" (stfle_bits), "+d" (reg0)			\
-		     : : "cc");						\
-									\
-	if ((stfle_bits & (1ULL << (63 - STFLE_BITS_Z196))) != 0)	\
+	if (S390_IS_Z196 (stfle_bits))					\
 	  return &__##FUNC##_z196;					\
-	else if ((stfle_bits & (1ULL << (63 - STFLE_BITS_Z10))) != 0)	\
+	else if (S390_IS_Z10 (stfle_bits))				\
 	  return &__##FUNC##_z10;					\
+	else								\
+	  return &__##FUNC##_default;					\
       }									\
-    return &__##FUNC##_g5;						\
+    else								\
+      return &__##FUNC##_default;					\
   }
-
-IFUNC_RESOLVE(memset)
-IFUNC_RESOLVE(memcmp)
-asm(".weak bcmp ; bcmp = memcmp");
-
-/* In the static lib memcpy is needed before the reloc is resolved.  */
-#ifdef SHARED
-IFUNC_RESOLVE(memcpy)
-#endif
-
-#endif

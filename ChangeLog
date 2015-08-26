@@ -1,5 +1,52 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-32/multiarch/Makefile (sysdep_routines):
+	Remove ifunc-resolve, add memset-s390, memcpy-s390, memcmp-s390.
+	* sysdeps/s390/s390-32/multiarch/ifunc-resolve.c: Delete File.
+	* sysdeps/s390/s390-32/multiarch/memcmp.S: Move to ...
+	* sysdeps/s390/s390-32/multiarch/memcmp-s390.S: ... here.
+	(memcmp, bcmp): Use __memcmp_default as alias source.
+	* sysdeps/s390/s390-32/multiarch/memcmp.c: New File.
+	* sysdeps/s390/s390-32/memcmp.S (__memcmp_g5):
+	Rename to __memcmp_default.
+	* sysdeps/s390/s390-32/multiarch/memcpy.S: Move to ...
+	* sysdeps/s390/s390-32/multiarch/memcpy-s390.S: ... here.
+	(memcpy): Use __memcpy_default as alias source.
+	* sysdeps/s390/s390-32/multiarch/memcpy.c: New File.
+	* sysdeps/s390/s390-32/memcpy.S (__memcpy_g5):
+	Rename to __memcpy_default.
+	* sysdeps/s390/s390-32/multiarch/memset.S: Move to ...
+	* sysdeps/s390/s390-32/multiarch/memset-s390.S: ... here.
+	(memset): Use __memset_default as alias source.
+	* sysdeps/s390/s390-32/multiarch/memset.c: New File.
+	* sysdeps/s390/s390-32/memset.S (__memset_g5):
+	Rename to __memset_default.
+	* sysdeps/s390/s390-64/multiarch/Makefile (sysdep_routines):
+	Remove ifunc-resolve, add memset-s390x, memcpy-s390x, memcmp-s390x.
+	* sysdeps/s390/s390-64/multiarch/ifunc-resolve.c: Delete File.
+	* sysdeps/s390/s390-64/multiarch/memcmp.S: Move to ...
+	* sysdeps/s390/s390-64/multiarch/memcmp-s390x.S: ... here.
+	(memcmp, bcmp): Use __memcmp_default as alias source.
+	* sysdeps/s390/s390-64/multiarch/memcmp.c: New File.
+	* sysdeps/s390/s390-64/memcmp.S (__memcmp_z900):
+	Rename to __memcmp_default.
+	* sysdeps/s390/s390-64/multiarch/memcpy.S: Move to ...
+	* sysdeps/s390/s390-64/multiarch/memcpy-s390x.S: ... here.
+	(memcpy): Use __memcpy_default as alias source.
+	* sysdeps/s390/s390-64/multiarch/memcpy.c: New File.
+	* sysdeps/s390/s390-64/memcpy.S (__memcpy_z900):
+	Rename to __memcpy_default.
+	* sysdeps/s390/s390-64/multiarch/memset.S: Move to ...
+	* sysdeps/s390/s390-64/multiarch/memset-s390x.S: ... here.
+	(memset): Use __memset_default as alias source.
+	* sysdeps/s390/s390-64/multiarch/memset.c: New File.
+	* sysdeps/s390/s390-64/memset.S (__memset_z900):
+	Rename to __memset_default.
+	* sysdeps/s390/multiarch/ifunc-resolve.h: New File.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c: New File.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	[BZ #18610]
 	* sysdeps/s390/fpu/bits/fenv.h (fenv_t): Rename
 	__ieee_instruction_pointer to __unused.

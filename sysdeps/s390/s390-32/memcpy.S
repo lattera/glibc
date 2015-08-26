@@ -26,41 +26,41 @@
      %r4 = number of bytes to copy.  */
 
 #ifdef USE_MULTIARCH
-ENTRY(__memcpy_g5)
+ENTRY(__memcpy_default)
 #else
 ENTRY(memcpy)
 #endif
 	.machine "g5"
-        st      %r13,52(%r15)
-        .cfi_offset 13, -44
-        basr    %r13,0
+	st      %r13,52(%r15)
+	.cfi_offset 13, -44
+	basr    %r13,0
 .L_G5_16:
-        ltr     %r4,%r4
-        je      .L_G5_4
-        ahi     %r4,-1
-        lr      %r5,%r4
-        srl     %r5,8
-        ltr     %r5,%r5
-        lr      %r1,%r2
-        jne     .L_G5_12
-        ex      %r4,.L_G5_17-.L_G5_16(%r13)
+	ltr     %r4,%r4
+	je      .L_G5_4
+	ahi     %r4,-1
+	lr      %r5,%r4
+	srl     %r5,8
+	ltr     %r5,%r5
+	lr      %r1,%r2
+	jne     .L_G5_12
+	ex      %r4,.L_G5_17-.L_G5_16(%r13)
 .L_G5_4:
-        l       %r13,52(%r15)
-        br      %r14
+	l       %r13,52(%r15)
+	br      %r14
 .L_G5_13:
-        chi	%r5,4096             # Switch to mvcle for copies >1MB
-        jh	__memcpy_mvcle
+	chi	%r5,4096             # Switch to mvcle for copies >1MB
+	jh	__memcpy_mvcle
 .L_G5_12:
-        mvc     0(256,%r1),0(%r3)
-        la      %r1,256(%r1)
-        la      %r3,256(%r3)
-        brct    %r5,.L_G5_12
-        ex      %r4,.L_G5_17-.L_G5_16(%r13)
-        j       .L_G5_4
+	mvc     0(256,%r1),0(%r3)
+	la      %r1,256(%r1)
+	la      %r3,256(%r3)
+	brct    %r5,.L_G5_12
+	ex      %r4,.L_G5_17-.L_G5_16(%r13)
+	j       .L_G5_4
 .L_G5_17:
-        mvc     0(1,%r1),0(%r3)
+	mvc     0(1,%r1),0(%r3)
 #ifdef USE_MULTIARCH
-END(__memcpy_g5)
+END(__memcpy_default)
 #else
 END(memcpy)
 libc_hidden_builtin_def (memcpy)

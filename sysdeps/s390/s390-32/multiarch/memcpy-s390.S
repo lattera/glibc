@@ -1,4 +1,4 @@
-/* CPU specific memcpy implementations.  64 bit S/390 version.
+/* CPU specific memcpy implementations.  32 bit S/390 version.
    Copyright (C) 2012-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -30,65 +30,69 @@
 #if defined SHARED && IS_IN (libc)
 
 ENTRY(__memcpy_z196)
-        .machine "z196"
-        ltgr    %r4,%r4
-        je      .L_Z196_4
-        aghi    %r4,-1
-        lgr     %r1,%r2
-        srlg    %r5,%r4,8
-        ltgr    %r5,%r5
-        jne     .L_Z196_5
+	.machine "z196"
+	.machinemode "zarch_nohighgprs"
+	llgfr   %r4,%r4
+	ltgr    %r4,%r4
+	je      .L_Z196_4
+	aghi    %r4,-1
+	lr      %r1,%r2
+	srlg    %r5,%r4,8
+	ltgr    %r5,%r5
+	jne     .L_Z196_5
 .L_Z196_3:
-        exrl    %r4,.L_Z196_14
+	exrl    %r4,.L_Z196_14
 .L_Z196_4:
-        br      %r14
+	br      %r14
 .L_Z196_5:
-        cgfi    %r5,262144      # Switch to mvcle for copies >64MB
-        jh      __memcpy_mvcle
+	cgfi    %r5,262144      # Switch to mvcle for copies >64MB
+	jh      __memcpy_mvcle
 .L_Z196_2:
-        pfd     1,768(%r3)
-        pfd     2,768(%r1)
-        mvc     0(256,%r1),0(%r3)
-        aghi    %r5,-1
-        la      %r1,256(%r1)
-        la      %r3,256(%r3)
-        jne     .L_Z196_2
-        j       .L_Z196_3
+	pfd     1,768(%r3)
+	pfd     2,768(%r1)
+	mvc     0(256,%r1),0(%r3)
+	aghi    %r5,-1
+	la      %r1,256(%r1)
+	la      %r3,256(%r3)
+	jne     .L_Z196_2
+	j       .L_Z196_3
 .L_Z196_14:
-        mvc     0(1,%r1),0(%r3)
+	mvc     0(1,%r1),0(%r3)
 END(__memcpy_z196)
 
 ENTRY(__memcpy_z10)
 	.machine "z10"
-        cgije   %r4,0,.L_Z10_4
-        aghi    %r4,-1
-        lgr     %r1,%r2
-        srlg    %r5,%r4,8
-        cgijlh  %r5,0,.L_Z10_13
+	.machinemode "zarch_nohighgprs"
+	llgfr   %r4,%r4
+	cgije   %r4,0,.L_Z10_4
+	aghi    %r4,-1
+	lr      %r1,%r2
+	srlg    %r5,%r4,8
+	cgijlh  %r5,0,.L_Z10_13
 .L_Z10_3:
-        exrl    %r4,.L_Z10_15
+	exrl    %r4,.L_Z10_15
 .L_Z10_4:
-        br      %r14
+	br      %r14
 .L_Z10_13:
-        cgfi    %r5,65535	# Switch to mvcle for copies >16MB
-        jh      __memcpy_mvcle
+	cgfi    %r5,65535	# Switch to mvcle for copies >16MB
+	jh      __memcpy_mvcle
 .L_Z10_12:
-        pfd     1,768(%r3)
-        pfd     2,768(%r1)
-        mvc     0(256,%r1),0(%r3)
-        la      %r1,256(%r1)
-        la      %r3,256(%r3)
-        brctg   %r5,.L_Z10_12
-        j       .L_Z10_3
+	pfd     1,768(%r3)
+	pfd     2,768(%r1)
+	mvc     0(256,%r1),0(%r3)
+	la      %r1,256(%r1)
+	la      %r3,256(%r3)
+	brctg   %r5,.L_Z10_12
+	j       .L_Z10_3
 .L_Z10_15:
-        mvc     0(1,%r1),0(%r3)
+	mvc     0(1,%r1),0(%r3)
 END(__memcpy_z10)
 
-#endif
+#endif /* SHARED && IS_IN (libc) */
 
 #include "../memcpy.S"
 
 #if !defined SHARED || !IS_IN (libc)
 .globl   memcpy
-.set     memcpy,__memcpy_z900
+.set     memcpy,__memcpy_default
 #endif

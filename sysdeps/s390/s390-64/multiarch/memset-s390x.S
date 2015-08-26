@@ -31,58 +31,58 @@
 
 ENTRY(__memset_z196)
 	.machine "z196"
-        ltgr    %r4,%r4
-        je      .L_Z196_4
-        stc     %r3,0(%r2)
-        lgr     %r1,%r2
-        cghi    %r4,1
-        je      .L_Z196_4
-        aghi    %r4,-2
-        srlg    %r5,%r4,8
-        ltgr    %r5,%r5
-        jne     .L_Z196_1
+	ltgr    %r4,%r4
+	je      .L_Z196_4
+	stc     %r3,0(%r2)
+	lgr     %r1,%r2
+	cghi    %r4,1
+	je      .L_Z196_4
+	aghi    %r4,-2
+	srlg    %r5,%r4,8
+	ltgr    %r5,%r5
+	jne     .L_Z196_1
 .L_Z196_3:
-        exrl    %r4,.L_Z196_17
+	exrl    %r4,.L_Z196_17
 .L_Z196_4:
-        br      %r14
+	br      %r14
 .L_Z196_1:
 	cgfi	%r5,1048576
 	jh	__memset_mvcle	   # Switch to mvcle for >256MB
 .L_Z196_2:
-        pfd     2,1024(%r1)
-        mvc     1(256,%r1),0(%r1)
-        aghi    %r5,-1
-        la      %r1,256(%r1)
-        jne     .L_Z196_2
-        j       .L_Z196_3
+	pfd     2,1024(%r1)
+	mvc     1(256,%r1),0(%r1)
+	aghi    %r5,-1
+	la      %r1,256(%r1)
+	jne     .L_Z196_2
+	j       .L_Z196_3
 .L_Z196_17:
-        mvc     1(1,%r1),0(%r1)
+	mvc     1(1,%r1),0(%r1)
 END(__memset_z196)
 
 ENTRY(__memset_z10)
 	.machine "z10"
-        cgije   %r4,0,.L_Z10_4
-        stc     %r3,0(%r2)
-        lgr     %r1,%r2
-        cgije   %r4,1,.L_Z10_4
-        aghi    %r4,-2
-        srlg    %r5,%r4,8
-        cgijlh  %r5,0,.L_Z10_15
+	cgije   %r4,0,.L_Z10_4
+	stc     %r3,0(%r2)
+	lgr     %r1,%r2
+	cgije   %r4,1,.L_Z10_4
+	aghi    %r4,-2
+	srlg    %r5,%r4,8
+	cgijlh  %r5,0,.L_Z10_15
 .L_Z10_3:
-        exrl    %r4,.L_Z10_18
+	exrl    %r4,.L_Z10_18
 .L_Z10_4:
-        br      %r14
+	br      %r14
 .L_Z10_15:
 	cgfi	%r5,163840          # Switch to mvcle for >40MB
 	jh	__memset_mvcle
 .L_Z10_14:
-        pfd     2,1024(%r1)
-        mvc     1(256,%r1),0(%r1)
-        la      %r1,256(%r1)
-        brctg   %r5,.L_Z10_14
-        j       .L_Z10_3
+	pfd     2,1024(%r1)
+	mvc     1(256,%r1),0(%r1)
+	la      %r1,256(%r1)
+	brctg   %r5,.L_Z10_14
+	j       .L_Z10_3
 .L_Z10_18:
-        mvc     1(1,%r1),0(%r1)
+	mvc     1(1,%r1),0(%r1)
 END(__memset_z10)
 
 ENTRY(__memset_mvcle)
@@ -99,11 +99,11 @@ ENTRY(__memset_mvcle)
 	br	%r14
 END(__memset_mvcle)
 
-#endif
+#endif /* IS_IN (libc) */
 
 #include "../memset.S"
 
 #if !IS_IN (libc)
 .globl   memset
-.set     memset,__memset_z900
+.set     memset,__memset_default
 #endif

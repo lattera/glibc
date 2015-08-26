@@ -1,3 +1,4 @@
 ifeq ($(subdir),string)
-sysdep_routines += ifunc-resolve memset memcpy memcmp
+sysdep_routines += memset memset-s390 memcpy memcpy-s390 \
+		   memcmp memcmp-s390
 endif
