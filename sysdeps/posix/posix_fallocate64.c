@@ -37,7 +37,7 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
 
   /* Perform overflow check.  The outer cast relies on a GCC
      extension.  */
-  if ((__off64_t) ((uint64_t) offset) + ((uint64_t) len) < 0)
+  if ((__off64_t) ((uint64_t) offset + (uint64_t) len) < 0)
     return EFBIG;
 
   /* pwrite64 below will not do the right thing in O_APPEND mode.  */

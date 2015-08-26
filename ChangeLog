@@ -1,3 +1,11 @@
+2015-08-31  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #18873]
+	Fix broken overflow check in posix_fallocate
+	* sysdeps/posix/posix_fallocate.c (posix_fallocate):
+	* sysdeps/posix/posix_fallocate64.c (__posix_fallocate64_l64):
+	Fix parenthesization typo.
+
 2015-08-28  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #18887]
