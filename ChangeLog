@@ -1,5 +1,11 @@
 2015-08-26  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i586/memcpy.S (MEMPCPY_P): Removed.
+	Check USE_AS_MEMPCPY/SHARED instead of MEMPCPY_P/PIC.
+	* sysdeps/i386/i586/mempcpy.S (USE_AS_MEMPCPY): New.
+
+2015-08-26  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86/Makefile [$(subdir) == elf] (CFLAGS-.os,
 	tests-special, $(objpfx)tst-ld-sse-use.out): Moved to ...
 	* sysdeps/i386/Makefile [$(subdir) == elf] (CFLAGS-.os,
