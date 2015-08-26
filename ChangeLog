@@ -1,5 +1,25 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/strcspn-c.c: New File.
+	* sysdeps/s390/multiarch/strcspn-vx.S: Likewise.
+	* sysdeps/s390/multiarch/strcspn.c: Likewise.
+	* sysdeps/s390/multiarch/wcscspn-c.c: Likewise.
+	* sysdeps/s390/multiarch/wcscspn-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wcscspn.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add strcspn and
+	wcscspn functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc test for strcspn, wcscspn.
+	* wcsmbs/wcscspn.c: Use WCSCSPN if defined.
+	* string/test-strcspn.c: Add wcscspn support.
+	* wcsmbs/test-wcscspn.c: New File.
+	* wcsmbs/Makefile (strop-tests): Add wcscspn.
+	* benchtests/bench-strcspn.c: Add wcscspn support.
+	* benchtests/bench-wcscspn.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wcscspn.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/strpbrk-c.c: New File.
 	* sysdeps/s390/multiarch/strpbrk-vx.S: Likewise.
 	* sysdeps/s390/multiarch/strpbrk.c: Likewise.

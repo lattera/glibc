@@ -19,22 +19,41 @@
 #define STRPBRK_RESULT(s, pos) (pos)
 #define RES_TYPE size_t
 #define TEST_MAIN
-#define TEST_NAME "strcspn"
+#ifndef WIDE
+# define TEST_NAME "strcspn"
+#else
+# define TEST_NAME "wcscspn"
+#endif /* WIDE */
 #include "bench-string.h"
 
-typedef size_t (*proto_t) (const char *, const char *);
-size_t simple_strcspn (const char *, const char *);
-size_t stupid_strcspn (const char *, const char *);
+#ifndef WIDE
+# define STRCSPN strcspn
+# define CHAR char
+# define SIMPLE_STRCSPN simple_strcspn
+# define STUPID_STRCSPN stupid_strcspn
+# define STRLEN strlen
+#else
+# include <wchar.h>
+# define STRCSPN wcscspn
+# define CHAR wchar_t
+# define SIMPLE_STRCSPN simple_wcscspn
+# define STUPID_STRCSPN stupid_wcscspn
+# define STRLEN wcslen
+#endif /* WIDE */
 
-IMPL (stupid_strcspn, 0)
-IMPL (simple_strcspn, 0)
-IMPL (strcspn, 1)
+typedef size_t (*proto_t) (const CHAR *, const CHAR *);
+size_t SIMPLE_STRCSPN (const CHAR *, const CHAR *);
+size_t STUPID_STRCSPN (const CHAR *, const CHAR *);
+
+IMPL (STUPID_STRCSPN, 0)
+IMPL (SIMPLE_STRCSPN, 0)
+IMPL (STRCSPN, 1)
 
 size_t
-simple_strcspn (const char *s, const char *rej)
+SIMPLE_STRCSPN (const CHAR *s, const CHAR *rej)
 {
-  const char *r, *str = s;
-  char c;
+  const CHAR *r, *str = s;
+  CHAR c;
 
   while ((c = *s++) != '\0')
     for (r = rej; *r != '\0'; ++r)
@@ -44,9 +63,9 @@ simple_strcspn (const char *s, const char *rej)
 }
 
 size_t
-stupid_strcspn (const char *s, const char *rej)
+STUPID_STRCSPN (const CHAR *s, const CHAR *rej)
 {
-  size_t ns = strlen (s), nrej = strlen (rej);
+  size_t ns = STRLEN (s), nrej = STRLEN (rej);
   size_t i, j;
 
   for (i = 0; i < ns; ++i)
@@ -56,4 +75,6 @@ stupid_strcspn (const char *s, const char *rej)
   return i;
 }
 
+#undef CHAR
+#undef STRLEN
 #include "bench-strpbrk.c"

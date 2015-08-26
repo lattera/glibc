@@ -1,6 +1,6 @@
-/* Copyright (C) 1995-2015 Free Software Foundation, Inc.
+/* Measure wcscspn functions.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,26 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <wchar.h>
-
-#ifdef WCSCSPN
-# define wcscspn WCSCSPN
-#endif
-
-/* Return the length of the maximum initial segment
-   of WCS which contains only wide-characters not in REJECT.  */
-size_t
-wcscspn (wcs, reject)
-     const wchar_t *wcs;
-     const wchar_t *reject;
-{
-  size_t count = 0;
-
-  while (*wcs != L'\0')
-    if (wcschr (reject, *wcs++) == NULL)
-      ++count;
-    else
-      return count;
-
-  return count;
-}
+#define WIDE 1
+#include "bench-strcspn.c"
