@@ -1,5 +1,20 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/strrchr-c.c: New File.
+	* sysdeps/s390/multiarch/strrchr-vx.S: Likewise.
+	* sysdeps/s390/multiarch/strrchr.c: Likewise.
+	* sysdeps/s390/multiarch/wcsrchr-c.c: Likewise.
+	* sysdeps/s390/multiarch/wcsrchr-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wcsrchr.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add strrchr and
+	wcsrchr functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc test for strrchr, wcsrchr.
+	* benchtests/bench-wcsrchr.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wcsrchr.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/strchrnul-c.c: New File.
 	* sysdeps/s390/multiarch/strchrnul-vx.S: Likewise.
 	* sysdeps/s390/multiarch/strchrnul.c: Likewise.
