@@ -1,5 +1,11 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-64/utf8-utf16-z9.c
+	(MAX_NEEDED_INPUT): New define.
+	(MAX_NEEDED_OUTPUT): New define.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* NEWS: New item for IBM z13 string optimizations.
 
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>

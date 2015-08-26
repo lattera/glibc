@@ -183,6 +183,7 @@ gconv_end (struct __gconv_step *data)
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 /* The software implementation is based on the code in gconv_simple.c.  */
 #define BODY								\
@@ -340,6 +341,7 @@ gconv_end (struct __gconv_step *data)
 /* Conversion from UTF-16 to UTF-8.  */
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_TO
+#define MAX_NEEDED_INPUT	MAX_NEEDED_TO
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
 #define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
 #define LOOPFCT			TO_LOOP
