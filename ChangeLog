@@ -31,13 +31,9 @@
 	(__memset_zero_constant_len_parameter): Don't define if
 	__memset_chk or USE_AS_BZERO are defined.
 
-2015-08-26  H.J. Lu  <hongjiu.lu@intel.com>
-
 	* sysdeps/i386/i586/memcpy.S (MEMPCPY_P): Removed.
 	Check USE_AS_MEMPCPY/SHARED instead of MEMPCPY_P/PIC.
 	* sysdeps/i386/i586/mempcpy.S (USE_AS_MEMPCPY): New.
-
-2015-08-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/Makefile [$(subdir) == elf] (CFLAGS-.os,
 	tests-special, $(objpfx)tst-ld-sse-use.out): Moved to ...
@@ -57,17 +53,11 @@
 	instead of __mode__(__word__).
 	(_Unwind_Sword): Likewise.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/s390-64/utf8-utf16-z9.c
 	(MAX_NEEDED_INPUT): New define.
 	(MAX_NEEDED_OUTPUT): New define.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* NEWS: New item for IBM z13 string optimizations.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/memrchr-c.c: New File.
 	* sysdeps/s390/multiarch/memrchr-vx.S: Likewise.
@@ -76,8 +66,6 @@
 	(sysdep_routines): Add memrchr functions.
 	* sysdeps/s390/multiarch/ifunc-impl-list-common.c
 	(__libc_ifunc_impl_list_common): Add ifunc test for memrchr.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/wmemcmp-c.c: New File.
 	* sysdeps/s390/multiarch/wmemcmp-vx.S: Likewise.
@@ -88,8 +76,6 @@
 	(__libc_ifunc_impl_list_common): Add ifunc test for wmemcmp.
 	* benchtests/bench-wmemcmp.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wmemcmp.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/wmemset-c.c: New File.
 	* sysdeps/s390/multiarch/wmemset-vx.S: Likewise.
@@ -106,8 +92,6 @@
 	* benchtests/bench-wmemset.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wmemset.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/multiarch/memccpy-c.c: New File.
 	* sysdeps/s390/multiarch/memccpy-vx.S: Likewise.
 	* sysdeps/s390/multiarch/memccpy.c: Likewise.
@@ -116,8 +100,6 @@
 	* sysdeps/s390/multiarch/ifunc-impl-list-common.c
 	(__libc_ifunc_impl_list_common): Add ifunc test for memccpy.
 	* string/memccpy.c: Use MEMCCPY if defined.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/memchr-vx.S: New File.
 	* sysdeps/s390/multiarch/memchr.c: Likewise.
@@ -142,8 +124,6 @@
 	* benchtests/bench-wmemchr.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): wmemchr.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/multiarch/strcspn-c.c: New File.
 	* sysdeps/s390/multiarch/strcspn-vx.S: Likewise.
 	* sysdeps/s390/multiarch/strcspn.c: Likewise.
@@ -161,8 +141,6 @@
 	* benchtests/bench-strcspn.c: Add wcscspn support.
 	* benchtests/bench-wcscspn.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcscspn.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/strpbrk-c.c: New File.
 	* sysdeps/s390/multiarch/strpbrk-vx.S: Likewise.
@@ -182,8 +160,6 @@
 	* benchtests/bench-wcspbrk.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcspbrk.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/multiarch/strspn-c.c: New File.
 	* sysdeps/s390/multiarch/strspn-vx.S: Likewise.
 	* sysdeps/s390/multiarch/strspn.c: Likewise.
@@ -202,8 +178,6 @@
 	* benchtests/bench-wcsspn.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcsspn.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/multiarch/strrchr-c.c: New File.
 	* sysdeps/s390/multiarch/strrchr-vx.S: Likewise.
 	* sysdeps/s390/multiarch/strrchr.c: Likewise.
@@ -216,8 +190,6 @@
 	(__libc_ifunc_impl_list): Add ifunc test for strrchr, wcsrchr.
 	* benchtests/bench-wcsrchr.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcsrchr.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/strchrnul-c.c: New File.
 	* sysdeps/s390/multiarch/strchrnul-vx.S: Likewise.
@@ -237,8 +209,6 @@
 	* benchtests/bench-wcschrnul.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcschrnul.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/multiarch/strchr-c.c: New File.
 	* sysdeps/s390/multiarch/strchr-vx.S: Likewise.
 	* sysdeps/s390/multiarch/strchr.c: Likewise.
@@ -252,8 +222,6 @@
 	* string/strchr.c (STRCHR): Define and use macro.
 	* benchtests/bench-wcschr.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcschr.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/strncmp-c.c: New File.
 	* sysdeps/s390/multiarch/strncmp-vx.S: Likewise.
@@ -269,8 +237,6 @@
 	* benchtests/bench-strncmp.c: Add wcsncmp support.
 	* benchtests/bench-wcsncmp.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcsncmp.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/strcmp-vx.S: New File.
 	* sysdeps/s390/multiarch/strcmp.c: Likewise.
@@ -289,8 +255,6 @@
 	* sysdeps/s390/bits/string.h: Fix typo: _HAVE_STRING_ARCH_strcmp
 	instead of _HAVE_STRING_ARCH_memchr.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/multiarch/strncat-c.c: New File.
 	* sysdeps/s390/multiarch/strncat-vx.S: Likewise.
 	* sysdeps/s390/multiarch/strncat.c: Likewise.
@@ -308,8 +272,6 @@
 	* benchtests/bench-strncat.c: Add wcsncat support.
 	* benchtests/bench-wcsncat.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcsncat.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/strcat-c.c: New File.
 	* sysdeps/s390/multiarch/strcat-vx.S: Likewise.
@@ -330,8 +292,6 @@
 	* benchtests/bench-wcscat.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcscat.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/multiarch/stpncpy-c.c: New File.
 	* sysdeps/s390/multiarch/stpncpy-vx.S: Likewise.
 	* sysdeps/s390/multiarch/stpncpy.c: Likewise.
@@ -349,8 +309,6 @@
 	* benchtests/bench-stpncpy.c: Add wcpncpy support.
 	* benchtests/bench-wcpncpy.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcpncpy.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/strncpy-vx.S: New File.
 	* sysdeps/s390/multiarch/strncpy.c: Likewise.
@@ -371,8 +329,6 @@
 	* benchtests/bench-wcsncpy.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcsncpy
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/multiarch/stpcpy-c.c: New File.
 	* sysdeps/s390/multiarch/stpcpy-vx.S: Likewise.
 	* sysdeps/s390/multiarch/stpcpy.c: Likewise.
@@ -392,8 +348,6 @@
 	* benchtests/bench-wcpcpy.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcpcpy.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/multiarch/strcpy-vx.S: New File.
 	* sysdeps/s390/multiarch/strcpy.c: Likewise.
 	* sysdeps/s390/multiarch/wcscpy-c.c: Likewise.
@@ -407,8 +361,6 @@
 	(__libc_ifunc_impl_list): Add ifunc test for strcpy, wcscpy.
 	* benchtests/bench-wcscpy.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcscpy.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/strnlen-c.c: New File.
 	* sysdeps/s390/multiarch/strnlen-vx.S: Likewise.
@@ -428,8 +380,6 @@
 	* benchtests/bench-wcsnlen.c: New File.
 	* benchtests/Makefile (wcsmbs-bench): Add wcsnlen.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/multiarch/Makefile: New File.
 	* sysdeps/s390/multiarch/strlen-c.c: Likewise.
 	* sysdeps/s390/multiarch/strlen-vx.S: Likewise.
@@ -445,30 +395,20 @@
 	(string-bench-all): Added wcsmbs-bench.
 	* benchtests/bench-wcslen.c: New File.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/multiarch/ifunc-resolve.h (s390_vx_libc_ifunc,
 	s390_vx_libc_ifunc2): New macro function.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* config.h.in (HAVE_S390_VX_ASM_SUPPORT): New macro undefine.
 	* sysdeps/s390/configure.ac: Add test for S390 vector instruction
 	assembler support.
 	* sysdeps/s390/configure: Regenerated.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): Add z13.
 	* sysdeps/s390/dl-procinfo.h (_DL_PLATFORMS_COUNT): Increased.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/dl-procinfo.c (_dl_s390_platforms): Add vector flag.
 	* sysdeps/s390/dl-procinfo.h: Add vector capability.
 	* sysdeps/unix/sysv/linux/s390/bits/hwcap.h (HWCAP_S390_VX): Define.
-
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/s390-32/multiarch/Makefile (sysdep_routines):
 	Remove ifunc-resolve, add memset-s390, memcpy-s390, memcmp-s390.
@@ -515,8 +455,6 @@
 	* sysdeps/s390/multiarch/ifunc-resolve.h: New File.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c: New File.
 
-2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
-
 	[BZ #18610]
 	* sysdeps/s390/fpu/bits/fenv.h (fenv_t): Rename
 	__ieee_instruction_pointer to __unused.
@@ -537,8 +475,6 @@
 2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/strcmp.S: Remove "#if !IS_IN (libc)".
-
-2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #11214]
 	* sysdeps/unix/sysv/linux/Makefile (tst-getpid2-ENV): Removed.
@@ -580,16 +516,12 @@
 
 	* sysdeps/x86_64/strlen.S: Replace %xmm[8-12] with %xmm[0-4].
 
-2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
-
 	* sysdeps/x86_64/rtld-memcmp.c: Removed.
 	* sysdeps/x86_64/rtld-memset.S: Likewise.
 	* sysdeps/x86_64/rtld-strchr.S: Likewise.
 	* sysdeps/x86_64/rtld-strlen.S: Likewise.
 	* sysdeps/x86_64/multiarch/rtld-memcmp.c: Likewise.
 	* sysdeps/x86_64/multiarch/rtld-memset.S: Likewise.
-
-2015-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/memset.S: Replace %xmm8 with %xmm0.
 
