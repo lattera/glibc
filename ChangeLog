@@ -1,3 +1,12 @@
+2015-09-06  Manolis Ragkousis <manolis837@gmail.com>
+
+	Check sysheaders when looking for Mach and Hurd headers
+
+	* sysdeps/mach/configure.ac: Add sysheaders check.
+	* sysdeps/mach/configure: Regenerate.
+	* sysdeps/mach/hurd/configure.ac: Add sysheaders check.
+	* sysdeps/mach/hurd/configure: Regenerate.
+
 2015-09-04  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #18921]

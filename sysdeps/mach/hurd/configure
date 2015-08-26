@@ -3,6 +3,11 @@
 $as_echo "#define NO_HIDDEN 1" >>confdefs.h
 
 
+if test -n "$sysheaders"; then
+  OLD_CPPFLAGS=$CPPFLAGS
+  CPPFLAGS="$CPPFLAGS $SYSINCLUDES"
+fi
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking Hurd header version" >&5
 $as_echo_n "checking Hurd header version... " >&6; }
@@ -35,4 +40,8 @@ fi
 $as_echo "$libc_cv_hurd_version" >&6; }
 if test "x$libc_cv_hurd_version" != xok; then
   as_fn_error $? "Hurd headers not installed or too old" "$LINENO" 5
+fi
+
+if test -n "$sysheaders"; then
+  CPPFLAGS=$OLD_CPPFLAGS
 fi

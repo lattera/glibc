@@ -165,6 +165,11 @@ fi
 config_vars="$config_vars
 MIG = $MIG"
 
+if test -n "$sysheaders"; then
+  OLD_CPPFLAGS=$CPPFLAGS
+  CPPFLAGS="$CPPFLAGS $SYSINCLUDES"
+fi
+
 ### Sanity checks for Mach header installation
 
 
@@ -552,4 +557,8 @@ $as_echo "$hurd_cv_mig_retcode" >&6; }
 if test $hurd_cv_mig_retcode = yes; then
   $as_echo "#define HAVE_MIG_RETCODE 1" >>confdefs.h
 
+fi
+
+if test -n "$sysheaders"; then
+  CPPFLAGS=$OLD_CPPFLAGS
 fi

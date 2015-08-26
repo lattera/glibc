@@ -3,6 +3,11 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 dnl We need this setting because of the need for PLT calls in ld.so.
 AC_DEFINE([NO_HIDDEN])
 
+if test -n "$sysheaders"; then
+  OLD_CPPFLAGS=$CPPFLAGS
+  CPPFLAGS="$CPPFLAGS $SYSINCLUDES"
+fi
+
 AC_CACHE_CHECK(Hurd header version, libc_cv_hurd_version, [dnl
 AC_TRY_COMPILE(dnl
 [#include <hurd/version.h>], [
@@ -14,4 +19,8 @@ AC_TRY_COMPILE(dnl
 	       libc_cv_hurd_version=bad)])
 if test "x$libc_cv_hurd_version" != xok; then
   AC_MSG_ERROR(Hurd headers not installed or too old)
+fi
+
+if test -n "$sysheaders"; then
+  CPPFLAGS=$OLD_CPPFLAGS
 fi
