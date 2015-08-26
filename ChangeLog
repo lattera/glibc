@@ -1,3 +1,11 @@
+2015-08-26  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #18863]
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (siginfo_t): Add _sigsys.
+	(si_call_addr): Define.
+	(si_syscall): Define.
+	(si_arch): Define.
+
 2015-08-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i586/bzero.S (USE_AS_BZERO): New.
