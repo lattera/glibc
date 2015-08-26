@@ -18,6 +18,7 @@
 
 #include <assert.h>
 #include <string.h>
+#include <wchar.h>
 #include <ifunc-impl-list.h>
 #include <ifunc-resolve.h>
 
@@ -69,6 +70,19 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_default))
 
 #endif /* SHARED */
+
+#ifdef HAVE_S390_VX_ASM_SUPPORT
+
+# define IFUNC_VX_IMPL(FUNC)						\
+  IFUNC_IMPL (i, name, FUNC,						\
+	      IFUNC_IMPL_ADD (array, i, FUNC, dl_hwcap & HWCAP_S390_VX, \
+			      __##FUNC##_vx)				\
+	      IFUNC_IMPL_ADD (array, i, FUNC, 1, __##FUNC##_c))
+
+  IFUNC_VX_IMPL (strlen);
+  IFUNC_VX_IMPL (wcslen);
+
+#endif /* HAVE_S390_VX_ASM_SUPPORT */
 
   return i;
 }

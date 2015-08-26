@@ -36,7 +36,8 @@ string-bench := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
 		strncasecmp strncat strncmp strncpy strnlen strpbrk strrchr \
 		strspn strstr strcpy_chk stpcpy_chk memrchr strsep strtok \
 		strcoll
-string-bench-all := $(string-bench)
+wcsmbs-bench := wcslen
+string-bench-all := $(string-bench) ${wcsmbs-bench}
 
 # We have to generate locales
 LOCALES := en_US.UTF-8 tr_TR.UTF-8 cs_CZ.UTF-8 fa_IR.UTF-8 fr_FR.UTF-8 \

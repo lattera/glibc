@@ -1,5 +1,22 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/Makefile: New File.
+	* sysdeps/s390/multiarch/strlen-c.c: Likewise.
+	* sysdeps/s390/multiarch/strlen-vx.S: Likewise.
+	* sysdeps/s390/multiarch/strlen.c: Likewise.
+	* sysdeps/s390/multiarch/wcslen-c.c: Likewise.
+	* sysdeps/s390/multiarch/wcslen-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wcslen.c: Likewise.
+	* string/strlen.c (STRLEN): Define and use macro.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(IFUNC_VX_IMPL): New macro function.
+	(__libc_ifunc_impl_list): Add ifunc test for strlen, wcslen.
+	* benchtests/Makefile (wcsmbs-bench): New variable.
+	(string-bench-all): Added wcsmbs-bench.
+	* benchtests/bench-wcslen.c: New File.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/ifunc-resolve.h (s390_vx_libc_ifunc,
 	s390_vx_libc_ifunc2): New macro function.
 
