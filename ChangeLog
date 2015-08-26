@@ -1,5 +1,22 @@
 2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/strncmp-c.c: New File.
+	* sysdeps/s390/multiarch/strncmp-vx.S: Likewise.
+	* sysdeps/s390/multiarch/strncmp.c: Likewise.
+	* sysdeps/s390/multiarch/wcsncmp-c.c: Likewise.
+	* sysdeps/s390/multiarch/wcsncmp-vx.S: Likewise.
+	* sysdeps/s390/multiarch/wcsncmp.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add strncmp and
+	wcsncmp functions.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc test for strncmp, wcsncmp.
+	* wcsmbs/wcsncmp.c (WCSNCMP): Define and use macro.
+	* benchtests/bench-strncmp.c: Add wcsncmp support.
+	* benchtests/bench-wcsncmp.c: New File.
+	* benchtests/Makefile (wcsmbs-bench): Add wcsncmp.
+
+2015-08-26  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/strcmp-vx.S: New File.
 	* sysdeps/s390/multiarch/strcmp.c: Likewise.
 	* sysdeps/s390/multiarch/wcscmp-c.c: Likewise.

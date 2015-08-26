@@ -18,13 +18,16 @@
 
 #include <wchar.h>
 
+#ifndef WCSNCMP
+# define WCSNCMP wcsncmp
+#endif
 
 /* Compare no more than N characters of S1 and S2,
    returning less than, equal to or greater than zero
    if S1 is lexicographically less than, equal to or
    greater than S2.  */
 int
-wcsncmp (s1, s2, n)
+WCSNCMP (s1, s2, n)
      const wchar_t *s1;
      const wchar_t *s2;
      size_t n;
