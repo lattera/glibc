@@ -25,9 +25,13 @@
 
 #undef strchr
 
+#ifndef STRCHR
+# define STRCHR strchr
+#endif
+
 /* Find the first occurrence of C in S.  */
 char *
-strchr (const char *s, int c_in)
+STRCHR (const char *s, int c_in)
 {
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;
@@ -175,7 +179,7 @@ strchr (const char *s, int c_in)
 }
 
 #ifdef weak_alias
-#undef index
+# undef index
 weak_alias (strchr, index)
 #endif
 libc_hidden_builtin_def (strchr)

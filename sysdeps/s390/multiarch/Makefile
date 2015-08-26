@@ -8,7 +8,8 @@ sysdep_routines += strlen strlen-vx strlen-c \
 		   strcat strcat-vx strcat-c \
 		   strncat strncat-vx strncat-c \
 		   strcmp strcmp-vx \
-		   strncmp strncmp-vx strncmp-c
+		   strncmp strncmp-vx strncmp-c \
+		   strchr strchr-vx strchr-c
 endif
 
 ifeq ($(subdir),wcsmbs)
@@ -21,5 +22,6 @@ sysdep_routines += wcslen wcslen-vx wcslen-c \
 		   wcscat wcscat-vx wcscat-c \
 		   wcsncat wcsncat-vx wcsncat-c \
 		   wcscmp wcscmp-vx wcscmp-c \
-		   wcsncmp wcsncmp-vx wcsncmp-c
+		   wcsncmp wcsncmp-vx wcsncmp-c \
+		   wcschr wcschr-vx wcschr-c
 endif
