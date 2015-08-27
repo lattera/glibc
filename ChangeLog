@@ -1,3 +1,7 @@
+2015-08-27  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i486/Versions: Removed.
+
 2015-08-27  Gleb Fotengauer-Malinovskiy  <glebfm@altlinux.org>
 
 	[BZ #2898]
