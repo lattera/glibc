@@ -26,6 +26,19 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <libc-internal.h>
+#include <sys/cdefs.h>
+/* R_e is not set in cases where it is not used in packing, but the
+   compiler does not see that it is set in all cases where it is
+   used, resulting in warnings that it may be used uninitialized.
+   The location of the warning differs in different versions of GCC,
+   it may be where R is defined using a macro or it may be where the
+   macro is defined.  */
+DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (4, 7)
+DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wmaybe-uninitialized");
+#else
+DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wuninitialized");
+#endif
 #include <math.h>
 #include "soft-fp.h"
 #include "quad.h"
@@ -45,20 +58,11 @@ __fmal (long double a, long double b, long double c)
   FP_UNPACK_Q (B, b);
   FP_UNPACK_Q (C, c);
   FP_FMA_Q (R, A, B, C);
-  /* R_e is not set in cases where it is not used in packing, but the
-     compiler does not see that it is set in all cases where it is
-     used, resulting in warnings that it may be used
-     uninitialized.  */
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (4, 7)
-  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wmaybe-uninitialized");
-#else
-  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wuninitialized");
-#endif
   FP_PACK_Q (r, R);
-  DIAG_POP_NEEDS_COMMENT;
   FP_HANDLE_EXCEPTIONS;
 
   return r;
 }
+DIAG_POP_NEEDS_COMMENT;
+
 weak_alias (__fmal, fmal)
