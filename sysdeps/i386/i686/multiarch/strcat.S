@@ -88,5 +88,5 @@ END(STRCAT)
 #endif
 
 #ifndef USE_AS_STRNCAT
-# include "../../i486/strcat.S"
+# include "../../strcat.S"
 #endif
