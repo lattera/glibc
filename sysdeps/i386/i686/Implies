@@ -1,4 +1,0 @@
-# Due to the reordering and the other nifty extensions in the i686 it is
-# not really good to use heavily i586 optimized code on a i686.  It's
-# better to use i486/i386 code.
-i386/i486
