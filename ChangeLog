@@ -40331,6 +40331,7 @@
 
 2013-01-11  Roland McGrath  <roland@hack.frob.com>
 
+	[BZ #14941]
 	* configure.in (sysnames): Use $multi_arch_d in setting up $mach list,
 	not in the main loop.
 	* configure: Regenerated.
