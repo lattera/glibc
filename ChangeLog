@@ -1,3 +1,12 @@
+2015-08-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #18877]
+	* posix/Makefile (tests): Add tst-mmap-offset.
+	* posix/tst-mmap.c: New file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/mmap.c (__mmap): Fix
+	offset calculation for negative values.
+
 2015-08-27  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/init-arch.h: New file.
