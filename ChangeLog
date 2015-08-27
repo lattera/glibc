@@ -1,5 +1,10 @@
 2015-08-27  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i486/strlen.S: Moved to ...
+	* sysdeps/i386/strlen.S: Here.
+
+2015-08-27  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/i486/strcat.S: Moved to ...
 	* sysdeps/i386/strcat.S: Here.
 
