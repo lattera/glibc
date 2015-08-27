@@ -1,4 +1,4 @@
-/* Checking memcpy for i686.
+/* Checking memmove for i386
    Copyright (C) 2004-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,19 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include "asm-syntax.h"
+#ifndef SHARED
+# include <sysdep.h>
+# include "asm-syntax.h"
 
-#ifndef PIC
-	/* For libc.so this is defined in memcpy.S.
-	   For libc.a, this is a separate source to avoid
-	   memcpy bringing in __chk_fail and all routines
-	   it calls.  */
+/* For libc.so this is defined in memmove.S.  For libc.a, this is a
+   separate source to avoid memmove bringing in __chk_fail and all
+   routines it calls.  */
         .text
-ENTRY (__memcpy_chk)
+ENTRY (__memmove_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
 	jb	__chk_fail
-	jmp	memcpy
-END (__memcpy_chk)
+	jmp	memmove
+END (__memmove_chk)
 #endif

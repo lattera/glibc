@@ -1,3 +1,25 @@
+2015-08-27  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/bcopy.S: New file.
+	* sysdeps/i386/bzero.S: Likewise.
+	* sysdeps/i386/memcpy.S: Likewise.
+	* sysdeps/i386/memmove.S: Likewise.
+	* sysdeps/i386/mempcpy.S: Likewise.
+	* sysdeps/i386/memset.S: Likewise.
+	* sysdeps/i386/bzero.c: Removed.
+	* sysdeps/i386/memset.c: Likewise.
+	* sysdeps/i386/i586/memcpy_chk.S: Likewise.
+	* sysdeps/i386/i586/mempcpy_chk.S: Likewise.
+	* sysdeps/i386/i586/memset_chk.S: Likewise.
+	* sysdeps/i386/i686/memcpy_chk.S: Moved to ...
+	* sysdeps/i386/memcpy_chk.S: Here.
+	* sysdeps/i386/i686/memmove_chk.S: Moved to ...
+	* sysdeps/i386/memmove_chk.S: Here.
+	* sysdeps/i386/i686/mempcpy_chk.S: Moved to ...
+	* sysdeps/i386/mempcpy_chk.S: Likewise.
+	* sysdeps/i386/i686/memset_chk.S: Moved to ...
+	* sysdeps/i386/memset_chk.S: Likewise.
+
 2015-08-27  Steve Ellcey  <sellcey@imgtec.com>
 
 	* soft-fp/fmasf4.c: Add include of sys/cdefs.h.
