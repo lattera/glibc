@@ -25,6 +25,10 @@
 #define __STRING_INLINE /* empty */
 #define __NO_INLINE__
 
+/* This is to avoid PLT entries for the x86 version.  */
+#define __memcpy_g __memcpy_g_internal
+#define __strchr_g __strchr_g_internal
+
 #include <string.h>
 #undef index
 #undef rindex
@@ -33,156 +37,28 @@
 #include <bits/string.h>
 #include <bits/string2.h>
 
-/* Functions which are inlines in i486 but not i386.  */
 void *
-__memcpy_by2 (void *dest, const void *src, size_t n)
+(__memcpy_c) (void *d, const void *s, size_t n)
 {
-  return memcpy (dest, src, n);
+  return memcpy (d, s, n);
 }
-strong_alias (__memcpy_by2, __memcpy_by4)
-strong_alias (__memcpy_by2, __memcpy_g)
-strong_alias (__memcpy_by2, __memcpy_g_internal)
 
 void *
-__memset_ccn_by2 (void *s, unsigned int c, size_t n)
+__memset_cc (void *s, unsigned long int pattern, size_t n)
 {
-  return memset (s, c & 0xff, n);
+  return memset (s, pattern & 0xff, n);
 }
-strong_alias (__memset_ccn_by2, __memset_ccn_by4)
+strong_alias (__memset_cc, __memset_cg)
 
 void *
-__memset_gcn_by2 (void *s, int c, size_t n)
+__memset_gg (void *s, char c, size_t n)
 {
   return memset (s, c, n);
 }
-strong_alias (__memset_gcn_by2, __memset_gcn_by4)
 
-size_t
-__strlen_g (const char *s)
-{
-  return strlen (s);
-}
-
-char *
-__strcpy_g (char *d, const char *s)
-{
-  return strcpy (d, s);
-}
-
-char *
-__mempcpy_by2 (char *d, const char *s, size_t n)
-{
-  return mempcpy (d, s, n);
-}
-strong_alias (__mempcpy_by2, __mempcpy_by4)
-strong_alias (__mempcpy_by2, __mempcpy_byn)
-
-char *
-__stpcpy_g (char *d, const char *s)
-{
-  return stpcpy (d, s);
-}
-
-char *
-__strncpy_by2 (char *d, const char s[], size_t srclen, size_t n)
-{
-  return strncpy (d, s, n);
-}
-strong_alias (__strncpy_by2, __strncpy_by4)
-strong_alias (__strncpy_by2, __strncpy_byn)
-
-char *
-__strncpy_gg (char *d, const char *s, size_t n)
-{
-  return strncpy (d, s, n);
-}
-
-char *
-__strcat_c (char *d, const char s[], size_t srclen)
-{
-  return strcat (d, s);
-}
-
-char *
-__strcat_g (char *d, const char *s)
-{
-  return strcat (d, s);
-}
-
-char *
-__strncat_g (char *d, const char s[], size_t n)
-{
-  return strncat (d, s, n);
-}
-
-int
-__strcmp_gg (const char *s1, const char *s2)
-{
-  return strcmp (s1, s2);
-}
-
-int
-__strncmp_g (const char *s1, const char *s2, size_t n)
-{
-  return strncmp (s1, s2, n);
-}
-
-char *
-__strrchr_c (const char *s, int c)
-{
-  return strrchr (s, c >> 8);
-}
-
-char *
-__strrchr_g (const char *s, int c)
-{
-  return strrchr (s, c);
-}
-
-size_t
-__strcspn_cg (const char *s, const char reject[], size_t reject_len)
-{
-  return strcspn (s, reject);
-}
-
-size_t
-__strcspn_g (const char *s, const char *reject)
-{
-  return strcspn (s, reject);
-}
-
-size_t
-__strspn_cg (const char *s, const char accept[], size_t accept_len)
-{
-  return strspn (s, accept);
-}
-
-size_t
-__strspn_g (const char *s, const char *accept)
-{
-  return strspn (s, accept);
-}
-
-char *
-__strpbrk_cg (const char *s, const char accept[], size_t accept_len)
-{
-  return strpbrk (s, accept);
-}
-
-char *
-__strpbrk_g (const char *s, const char *accept)
-{
-  return strpbrk (s, accept);
-}
-
-char *
-__strstr_cg (const char *haystack, const char needle[], size_t needle_len)
-{
-  return strstr (haystack, needle);
-}
-
-char *
-__strstr_g (const char *haystack, const char needle[])
-{
-  return strstr (haystack, needle);
-}
+#ifdef __memcpy_c
+# undef __memcpy_g
+strong_alias (__memcpy_g_internal, __memcpy_g)
+# undef __strchr_g
+strong_alias (__strchr_g_internal, __strchr_g)
+#endif
