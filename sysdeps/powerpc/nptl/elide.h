@@ -27,7 +27,7 @@
    configurations.  Returns true if the system should retry again or false
    otherwise.  */
 static inline bool
-__get_new_count (uint8_t *adapt_count)
+__get_new_count (uint8_t *adapt_count, int attempt)
 {
   /* A persistent failure indicates that a retry will probably
      result in another failure.  Use normal locking now and
@@ -40,7 +40,7 @@ __get_new_count (uint8_t *adapt_count)
     }
   /* Same logic as above, but for a number of temporary failures in a
      a row.  */
-  else if (__elision_aconf.skip_lock_out_of_tbegin_retries > 0
+  else if (attempt <= 1 && __elision_aconf.skip_lock_out_of_tbegin_retries > 0
 	   && __elision_aconf.try_tbegin > 0)
     *adapt_count = __elision_aconf.skip_lock_out_of_tbegin_retries;
   return true;
@@ -78,7 +78,7 @@ __get_new_count (uint8_t *adapt_count)
 	      __builtin_tabort (_ABORT_LOCK_BUSY);			\
 	    }								\
 	  else								\
-	    if (!__get_new_count(&adapt_count))				\
+	    if (!__get_new_count (&adapt_count,i))			\
 	      break;							\
 	}								\
     ret;								\

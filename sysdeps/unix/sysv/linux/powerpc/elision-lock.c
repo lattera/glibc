@@ -50,8 +50,7 @@ __lll_lock_elision (int *lock, short *adapt_count, EXTRAARG int pshared)
       goto use_lock;
     }
 
-  int try_begin = aconf.try_tbegin;
-  while (1)
+  for (int i = aconf.try_tbegin; i > 0; i--)
     {
       if (__builtin_tbegin (0))
 	{
@@ -65,20 +64,18 @@ __lll_lock_elision (int *lock, short *adapt_count, EXTRAARG int pshared)
 	  /* A persistent failure indicates that a retry will probably
 	     result in another failure.  Use normal locking now and
 	     for the next couple of calls.  */
-	  if (try_begin-- <= 0
-	      || _TEXASRU_FAILURE_PERSISTENT (__builtin_get_texasru ()))
+	  if (_TEXASRU_FAILURE_PERSISTENT (__builtin_get_texasru ()))
 	    {
 	      if (aconf.skip_lock_internal_abort > 0)
 		*adapt_count = aconf.skip_lock_internal_abort;
 	      goto use_lock;
 	    }
-	  /* Same logic as above, but for for a number of temporary failures
-	     in a row.  */
-	  else if (aconf.skip_lock_out_of_tbegin_retries > 0
-                   && aconf.try_tbegin > 0)
-	    *adapt_count = aconf.skip_lock_out_of_tbegin_retries;
 	}
      }
+
+  /* Fall back to locks for a bit if retries have been exhausted */
+  if (aconf.try_tbegin > 0 && aconf.skip_lock_out_of_tbegin_retries > 0)
+    *adapt_count = aconf.skip_lock_out_of_tbegin_retries;
 
 use_lock:
   return LLL_LOCK ((*lock), pshared);

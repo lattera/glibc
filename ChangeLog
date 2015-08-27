@@ -1,3 +1,12 @@
+2015-10-27  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	[BZ #19174]
+	* sysdeps/powerpc/nptl/elide.h (__elide_lock): Fix usage of
+	.skip_lock_out_of_tbegin_retries.
+	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c
+	(__lll_lock_elision): Likewise, and respect a value of
+	try_tbegin <= 0.
+
 2015-10-27  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* elf/dl-support.c (_dl_aux_init): Added AT_PLATFORM to the case
