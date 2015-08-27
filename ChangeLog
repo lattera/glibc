@@ -1,5 +1,12 @@
 2015-08-27  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i486/pthread_spin_trylock.S: Moved to ...
+	* sysdeps/i386/pthread_spin_trylock.S: Here.
+	* sysdeps/i386/i586/pthread_spin_trylock.S: Removed.
+	* sysdeps/i386/i686/pthread_spin_trylock.S: Updated.
+
+2015-08-27  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/i486/string-inlines.c: Moved to ...
 	* sysdeps/i386/string-inlines.c: Here.
 
