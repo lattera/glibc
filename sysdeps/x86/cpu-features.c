@@ -150,6 +150,14 @@ init_cpu_features (struct cpu_features *cpu_features)
   else
     kind = arch_kind_other;
 
+  /* Support i586 if CX8 is available.  */
+  if (HAS_CPU_FEATURE (CX8))
+    cpu_features->feature[index_I586] |= bit_I586;
+
+  /* Support i686 if CMOV is available.  */
+  if (HAS_CPU_FEATURE (CMOV))
+    cpu_features->feature[index_I686] |= bit_I686;
+
   if (cpu_features->max_cpuid >= 7)
     __cpuid_count (7, 0,
 		   cpu_features->cpuid[COMMON_CPUID_INDEX_7].eax,

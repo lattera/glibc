@@ -31,10 +31,14 @@
 #define bit_AVX_Fast_Unaligned_Load	(1 << 11)
 #define bit_AVX512F_Usable		(1 << 12)
 #define bit_AVX512DQ_Usable		(1 << 13)
+#define bit_I586			(1 << 14)
+#define bit_I686			(1 << 15)
 
 /* CPUID Feature flags.  */
 
 /* COMMON_CPUID_INDEX_1.  */
+#define bit_CX8		(1 << 8)
+#define bit_CMOV	(1 << 15)
 #define bit_SSE2	(1 << 26)
 #define bit_SSSE3	(1 << 9)
 #define bit_SSE4_1	(1 << 19)
@@ -69,6 +73,8 @@
 # include <ifunc-defines.h>
 # include <rtld-global-offsets.h>
 
+# define index_CX8	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
+# define index_CMOV	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
 # define index_SSE2	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
 # define index_SSSE3	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
 # define index_SSE4_1	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
@@ -89,6 +95,8 @@
 # define index_AVX_Fast_Unaligned_Load	FEATURE_INDEX_1*FEATURE_SIZE
 # define index_AVX512F_Usable		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_AVX512DQ_Usable		FEATURE_INDEX_1*FEATURE_SIZE
+# define index_I586			FEATURE_INDEX_1*FEATURE_SIZE
+# define index_I686			FEATURE_INDEX_1*FEATURE_SIZE
 
 # if defined (_LIBC) && !IS_IN (nonlib)
 #  ifdef __x86_64__
@@ -193,6 +201,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define HAS_ARCH_FEATURE(name) \
   ((__get_cpu_features ()->feature[index_##name] & (bit_##name)) != 0)
 
+# define index_CX8		COMMON_CPUID_INDEX_1
+# define index_CMOV		COMMON_CPUID_INDEX_1
 # define index_SSE2		COMMON_CPUID_INDEX_1
 # define index_SSSE3		COMMON_CPUID_INDEX_1
 # define index_SSE4_1		COMMON_CPUID_INDEX_1
@@ -207,6 +217,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_POPCOUNT		COMMON_CPUID_INDEX_1
 # define index_OSXSAVE		COMMON_CPUID_INDEX_1
 
+# define reg_CX8		edx
+# define reg_CMOV		edx
 # define reg_SSE2		edx
 # define reg_SSSE3		ecx
 # define reg_SSE4_1		ecx
@@ -234,6 +246,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_AVX_Fast_Unaligned_Load	FEATURE_INDEX_1
 # define index_AVX512F_Usable		FEATURE_INDEX_1
 # define index_AVX512DQ_Usable		FEATURE_INDEX_1
+# define index_I586			FEATURE_INDEX_1
+# define index_I686			FEATURE_INDEX_1
 
 #endif	/* !__ASSEMBLER__ */
 
@@ -242,7 +256,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #elif defined __i586__ || defined __pentium__
 # define HAS_CPUID 1
 # define HAS_I586 1
-# define HAS_I686 0
+# define HAS_I686 HAS_ARCH_FEATURE (I686)
 #elif (defined __i686__ || defined __pentiumpro__		\
        || defined __pentium4__ || defined __nocona__		\
        || defined __atom__ || defined __core2__			\
@@ -261,8 +275,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define HAS_I686 1
 #else
 # define HAS_CPUID 0
-# define HAS_I586 0
-# define HAS_I686 0
+# define HAS_I586 HAS_ARCH_FEATURE (I586)
+# define HAS_I686 HAS_ARCH_FEATURE (I686)
 #endif
 
 #endif  /* cpu_features_h */

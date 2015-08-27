@@ -1,5 +1,29 @@
 2015-08-27  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/init-arch.h: New file.
+	* sysdeps/i386/i586/init-arch.h: Likewise.
+	* sysdeps/i386/i686/init-arch.h: Likewise.
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set bit_I586
+	bit if CX8 is available.  Set bit_I686 bit if CMOV is available.
+	* sysdeps/x86/cpu-features.h (bit_I586): New.
+	(bit_I686): Likewise.
+	(bit_CX8): Likewise.
+	(bit_CMOV): Likewise.
+	(index_CX8): Likewise.
+	(index_CMOV): Likewise.
+	(index_I586): Likewise.
+	(index_I686): Likewise.
+	(reg_CX8): Likewise.
+	(reg_CMOV): Likewise.
+	(HAS_I586): Defined as HAS_ARCH_FEATURE (I586) if i586 isn't
+	available at compile-time.
+	(HAS_I686): Defined as HAS_ARCH_FEATURE (I686) if i686 isn't
+	available at compile-time.
+	* sysdeps/x86/init-arch.h (USE_I586): New macro.
+	(USE_I686): Likewise.
+
+2015-08-27  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/bcopy.S: New file.
 	* sysdeps/i386/bzero.S: Likewise.
 	* sysdeps/i386/memcpy.S: Likewise.
