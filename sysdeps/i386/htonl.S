@@ -1,4 +1,4 @@
-/* Change byte order in word.  For Intel 80386.
+/* Change byte order in word.  For Intel 80x86, x >= 4.
    Copyright (C) 1997-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -27,9 +27,7 @@
 	.text
 ENTRY (htonl)
 	movl	4(%esp), %eax
-	rorw	$8, %ax
-	rorl	$16, %eax
-	rorw	$8, %ax
+	bswap	%eax
 	ret
 END (htonl)
 
