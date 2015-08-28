@@ -1,3 +1,13 @@
+2015-08-28  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #18887]
+	* misc/Makefile (tests): Add tst-mntent-blank-corrupt and
+	tst-mntent-blank-passno.
+	* misc/mntent_r.c (__getmntent_r): Do not read past buffer[0].
+	* misc/tst-mntent-blank-corrupt.c: New test.
+	* misc/tst-mntent-blank-passno.c: New test ripped from ...
+	* misc/tst-mntent.c (do_test): ... here.
+
 2015-08-29  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #4404]

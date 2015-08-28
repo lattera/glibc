@@ -136,7 +136,9 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
       end_ptr = strchr (buffer, '\n');
       if (end_ptr != NULL)	/* chop newline */
 	{
-	  while (end_ptr[-1] == ' ' || end_ptr[-1] == '\t')
+	  /* Do not walk past the start of buffer if it's all whitespace.  */
+	  while (end_ptr != buffer
+		 && (end_ptr[-1] == ' ' || end_ptr[-1] == '\t'))
             end_ptr--;
 	  *end_ptr = '\0';
 	}
