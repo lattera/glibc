@@ -1,3 +1,9 @@
+2015-09-11  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #16985]
+	* programs/localedef.c (main): Display argv[remaining] when
+	output_path is NULL.
+
 2015-09-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of acos, acosh, asin,

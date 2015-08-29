@@ -286,7 +286,7 @@ cannot open locale definition file `%s'"), runp->name));
     {
       if (cannot_write_why != 0)
 	WITH_CUR_LOCALE (error (4, cannot_write_why, _("\
-cannot write output files to `%s'"), output_path));
+cannot write output files to `%s'"), output_path ? : argv[remaining]));
       else
 	write_all_categories (locales, charmap, argv[remaining], output_path);
     }
