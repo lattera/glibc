@@ -5878,7 +5878,7 @@ msgstr "Datenübergabe unterbrochen (broken pipe)"
 
 #: sysdeps/generic/siglist.h:39
 msgid "Alarm clock"
-msgstr "Das Signal SIGNALRM empfangen (Der Wecker klingelt)"
+msgstr "Das Signal SIGALRM empfangen (Der Wecker klingelt)"
 
 #: sysdeps/generic/siglist.h:40
 msgid "Terminated"

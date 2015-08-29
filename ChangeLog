@@ -1,3 +1,8 @@
+2015-08-29  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #4404]
+	* po/de.po: Fix SIGALRM typo.
+
 2015-08-28  James Perkins  <james@loowit.net>
 
 	* time/tst-strptime2.c (tests): Replace short list of test
