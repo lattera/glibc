@@ -29,6 +29,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include "semaphoreP.h"
+#include <futex-internal.h>
 #include <shm-directory.h>
 
 

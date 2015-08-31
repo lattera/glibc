@@ -1,3 +1,8 @@
+2015-08-31  Brett Neumeier <brett@neumeier.us>
+
+	[BZ #18870]
+	* sysdeps/sparc/sparc32/sem_open.c: Add missing #include
+
 2015-08-31  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #18873]
