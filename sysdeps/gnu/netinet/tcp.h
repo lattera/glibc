@@ -61,6 +61,14 @@
 #define TCP_REPAIR_OPTIONS	 22 /* Repair TCP connection options */
 #define TCP_FASTOPEN		 23 /* Enable FastOpen on listeners */
 #define TCP_TIMESTAMP		 24 /* TCP time stamp */
+#define TCP_NOTSENT_LOWAT	 25 /* Limit number of unsent bytes in
+				       write queue.  */
+#define TCP_CC_INFO		 26 /* Get Congestion Control
+				       (optional) info.  */
+#define TCP_SAVE_SYN		 27 /* Record SYN headers for new
+				       connections.  */
+#define TCP_SAVED_SYN		 28 /* Get SYN headers recorded for
+				       connection.  */
 
 #ifdef __USE_MISC
 # include <sys/types.h>
