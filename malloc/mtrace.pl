@@ -167,7 +167,7 @@ while (<DATA>) {
 		printf ("+ %#0@XXX@x Alloc %d duplicate: %s %s\n",
 			hex($allocaddr), $nr, &location($addrwas{$allocaddr}),
 			$where);
-	    } else {
+	    } elsif ($allocaddr =~ /^0x/) {
 		$allocated{$allocaddr}=$howmuch;
 		$addrwas{$allocaddr}=$where;
 	    }

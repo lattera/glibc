@@ -1,3 +1,7 @@
+2015-09-01  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* malloc/mtrace.pl: Filter out NULL entries.
+
 2015-09-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* inet/netinet/in.h (IPPROTO_MPLS): New enum value and macro.
