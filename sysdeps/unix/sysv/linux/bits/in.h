@@ -92,6 +92,7 @@
 #define IP_MINTTL       21
 #define IP_NODEFRAG     22
 #define IP_CHECKSUM     23
+#define IP_BIND_ADDRESS_NO_PORT 24
 
 /* IP_MTU_DISCOVER arguments.  */
 #define IP_PMTUDISC_DONT   0	/* Never send DF frames.  */

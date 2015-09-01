@@ -1,5 +1,9 @@
 2015-09-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* inet/netinet/in.h (IPPROTO_MPLS): New enum value and macro.
+	* sysdeps/unix/sysv/linux/bits/in.h (IP_BIND_ADDRESS_NO_PORT): New
+	macro.
+
 	* sysdeps/gnu/netinet/tcp.h (TCP_NOTSENT_LOWAT): New macro.
 	(TCP_CC_INFO): Likewise.
 	(TCP_SAVE_SYN): Likewise.

@@ -85,6 +85,8 @@ enum
 #define IPPROTO_SCTP		IPPROTO_SCTP
     IPPROTO_UDPLITE = 136, /* UDP-Lite protocol.  */
 #define IPPROTO_UDPLITE		IPPROTO_UDPLITE
+    IPPROTO_MPLS = 137,    /* MPLS in IP.  */
+#define IPPROTO_MPLS		IPPROTO_MPLS
     IPPROTO_RAW = 255,	   /* Raw IP packets.  */
 #define IPPROTO_RAW		IPPROTO_RAW
     IPPROTO_MAX
