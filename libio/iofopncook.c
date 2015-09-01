@@ -189,6 +189,7 @@ _IO_fopencookie (cookie, mode, io_functions)
       read_write = _IO_NO_READS|_IO_IS_APPENDING;
       break;
     default:
+      __set_errno (EINVAL);
       return NULL;
   }
   if (mode[0] == '+' || (mode[0] == 'b' && mode[1] == '+'))
