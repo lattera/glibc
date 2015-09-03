@@ -1,5 +1,20 @@
 2015-09-03  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14912]
+	* bits/libc-tsd.h: Move to ...
+	* sysdeps/generic/libc-tsd.h: ...here.
+	(_GENERIC_BITS_LIBC_TSD_H): Rename macro to _GENERIC_LIBC_TSD_H.
+	* sysdeps/mach/hurd/bits/libc-tsd.h: Move to ...
+	* sysdeps/mach/hurd/libc-tsd.h: ...here.
+	(_BITS_LIBC_TSD_H): Rename macro to _LIBC_TSD_H.
+	* include/ctype.h: Include <libc-tsd.h> instead of
+	<bits/libc-tsd.h>.
+	* include/rpc/rpc.h: Likewise.
+	* locale/localeinfo.h: Likewise.
+	* sunrpc/rpc_thread.c: Likewise.
+	* sysdeps/mach/hurd/malloc-machine.h: Likewise.
+	* sysdeps/nptl/malloc-machine.h: Likewise.
+
 	* Makefile (headers): Remove bits/libc-lock.h.
 	* libio/Makefile (headers): Remove bits/stdio-lock.h.
 

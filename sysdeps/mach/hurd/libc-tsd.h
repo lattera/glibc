@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_LIBC_TSD_H
-#define _BITS_LIBC_TSD_H 1
+#ifndef _LIBC_TSD_H
+#define _LIBC_TSD_H 1
 
 #include <hurd/threadvar.h>
 
@@ -31,4 +31,4 @@
 #define __libc_tsd_set(TYPE, KEY, VALUE) \
   (*__libc_tsd_address (TYPE, KEY) = (VALUE))
 
-#endif	/* bits/libc-tsd.h */
+#endif	/* libc-tsd.h */

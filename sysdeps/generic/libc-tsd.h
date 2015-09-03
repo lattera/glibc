@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _GENERIC_BITS_LIBC_TSD_H
-#define _GENERIC_BITS_LIBC_TSD_H 1
+#ifndef _GENERIC_LIBC_TSD_H
+#define _GENERIC_LIBC_TSD_H 1
 
 /* This file defines the following macros for accessing a small fixed
    set of thread-specific `void *' data used only internally by libc.
@@ -57,4 +57,4 @@
 #define __libc_tsd_get(TYPE, KEY)		(__libc_tsd_##KEY)
 #define __libc_tsd_set(TYPE, KEY, VALUE)	(__libc_tsd_##KEY = (VALUE))
 
-#endif	/* bits/libc-tsd.h */
+#endif	/* libc-tsd.h */
