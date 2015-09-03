@@ -36,7 +36,6 @@ __lll_trylock_elision (int *futex, short *adapt_count)
   /* Only try a transaction if it's worth it.  */
   if (*adapt_count > 0)
     {
-      (*adapt_count)--;
       goto use_lock;
     }
 

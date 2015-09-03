@@ -1,5 +1,20 @@
 2015-10-15  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c
+	(__lll_lock_elision): Remove adapt_count decrement...
+	* sysdeps/unix/sysv/linux/powerpc/elision-trylock.c
+	(__lll_trylock_elision): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-unlock.c
+	(__lll_unlock_elision): ... to here. And utilize
+	new adapt_count parameter.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h
+	(__lll_unlock_elision): Update to include adapt_count
+	parameter.
+	(lll_unlock_elision): Pass pointer to adapt_count
+	variable.
+
+2015-10-15  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* nptl/pthread_mutex_unlock.c (lll_unlock_elision):
 	Add elision adapt_count parameter to list of arguments.
 	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h

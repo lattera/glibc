@@ -47,7 +47,6 @@ __lll_lock_elision (int *lock, short *adapt_count, EXTRAARG int pshared)
 {
   if (*adapt_count > 0)
     {
-      (*adapt_count)--;
       goto use_lock;
     }
 
