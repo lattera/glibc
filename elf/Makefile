@@ -226,6 +226,13 @@ tests += tst-protected1a tst-protected1b
 $(objpfx)tst-protected1a: $(addprefix $(objpfx),tst-protected1moda.so tst-protected1modb.so)
 $(objpfx)tst-protected1b: $(addprefix $(objpfx),tst-protected1modb.so tst-protected1moda.so)
 tst-protected1modb.so-no-z-defs = yes
+# These tests fail with GCC versions prior to 5.1 and with some versions
+# of binutils.  See https://sourceware.org/bugzilla/show_bug.cgi?id=17709
+# and https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65248 for details.
+# Perhaps in future we can make these XFAILs conditional on some detection
+# of compiler/linker behavior/version.
+test-xfail-tst-protected1a = yes
+test-xfail-tst-protected1b = yes
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1

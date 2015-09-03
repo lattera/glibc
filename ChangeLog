@@ -1,3 +1,8 @@
+2015-09-03  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/Makefile (test-xfail-tst-protected1a): New variable.
+	(test-xfail-tst-protected1b): New variable.
+
 2015-09-03  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14912]
