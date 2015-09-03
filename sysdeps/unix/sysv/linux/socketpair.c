@@ -27,7 +27,7 @@ int
 __socketpair (int domain, int type, int protocol, int sv[2])
 {
 #ifdef __ASSUME_SOCKETPAIR_SYSCALL
-  return INLINE_SYSCALL (socketpair, 4, domain, type, protocol, sv);
+  return INLINE_SYSCALL (socketpair, 4, domain, type, protocol, &sv[0]);
 #else
   return SOCKETCALL (socketpair, domain, type, protocol, sv);
 #endif
