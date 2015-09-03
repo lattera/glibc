@@ -22,7 +22,7 @@ subdir	:= libio
 
 include ../Makeconfig
 
-headers	:= stdio.h libio.h _G_config.h bits/stdio.h bits/stdio-lock.h \
+headers	:= stdio.h libio.h _G_config.h bits/stdio.h \
 	   bits/sys_errlist.h bits/stdio2.h bits/stdio-ldbl.h bits/libio-ldbl.h
 
 routines	:=							      \

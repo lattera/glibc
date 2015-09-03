@@ -58,7 +58,7 @@ endif # $(AUTOCONF) = no
 		   subdir_objs subdir_stubs subdir_testclean		\
 		   $(addprefix install-, no-libc.a bin lib data headers others)
 
-headers := limits.h values.h features.h gnu-versions.h bits/libc-lock.h \
+headers := limits.h values.h features.h gnu-versions.h \
 	   bits/xopen_lim.h gnu/libc-version.h stdc-predef.h
 
 echo-headers: subdir_echo-headers

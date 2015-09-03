@@ -1,5 +1,8 @@
 2015-09-03  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makefile (headers): Remove bits/libc-lock.h.
+	* libio/Makefile (headers): Remove bits/stdio-lock.h.
+
 	* libio/libio.h [_IO_MTSAFE_IO]: Remove include of
 	<bits/stdio-lock.h> and commented-out include of <comthread.h>.
 	* include/libio.h [!_ISOMAC && _IO_MTSAFE_IO]: Include
