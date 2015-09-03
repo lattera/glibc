@@ -41,7 +41,7 @@ extern int __lll_trylock_elision(int *futex, short *adapt_count)
 
 #  define lll_lock_elision(futex, adapt_count, private) \
   __lll_lock_elision (&(futex), &(adapt_count), private)
-#  define lll_unlock_elision(futex, private) \
+#  define lll_unlock_elision(futex, adapt_count, private) \
   __lll_unlock_elision (&(futex), private)
 #  define lll_trylock_elision(futex, adapt_count) \
   __lll_trylock_elision(&(futex), &(adapt_count))

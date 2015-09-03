@@ -24,7 +24,7 @@
 #include <stap-probe.h>
 
 #ifndef lll_unlock_elision
-#define lll_unlock_elision(a,b) ({ lll_unlock (a,b); 0; })
+#define lll_unlock_elision(a,b,c) ({ lll_unlock (a,c); 0; })
 #endif
 
 static int
@@ -63,7 +63,7 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
   else if (__glibc_likely (type == PTHREAD_MUTEX_TIMED_ELISION_NP))
     {
       /* Don't reset the owner/users fields for elision.  */
-      return lll_unlock_elision (mutex->__data.__lock,
+      return lll_unlock_elision (mutex->__data.__lock, mutex->__data.__elision,
 				      PTHREAD_MUTEX_PSHARED (mutex));
     }
   else if (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex)
