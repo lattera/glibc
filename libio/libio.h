@@ -145,11 +145,7 @@ struct _IO_jump_t;  struct _IO_FILE;
 
 /* Handle lock.  */
 #ifdef _IO_MTSAFE_IO
-# if defined __GLIBC__ && __GLIBC__ >= 2
-#  include <bits/stdio-lock.h>
-# else
-/*# include <comthread.h>*/
-# endif
+/* _IO_lock_t defined in internal headers during the glibc build.  */
 #else
 typedef void _IO_lock_t;
 #endif

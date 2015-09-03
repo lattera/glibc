@@ -1,3 +1,12 @@
+2015-09-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* libio/libio.h [_IO_MTSAFE_IO]: Remove include of
+	<bits/stdio-lock.h> and commented-out include of <comthread.h>.
+	* include/libio.h [!_ISOMAC && _IO_MTSAFE_IO]: Include
+	<bits/stdio-lock.h>.
+	* stdio-common/scanf15.c (_IO_MTSAFE_IO): Undefine.
+	* stdio-common/scanf17.c (_IO_MTSAFE_IO): Likewise.
+
 2015-09-01  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #18757]
