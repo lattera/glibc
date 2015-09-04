@@ -1,3 +1,11 @@
+2015-09-04  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #18921]
+	* sysdeps/posix/opendir.c (need_isdir_precheck) [O_DIRECTORY]:
+	Fix inverted sense of test of 'o_directory_works' value.
+	Reported by Pádraig Brady <P@draigBrady.com>, diagnosed by
+	Bernhard Voelker <mail@bernhard-voelker.de>.
+
 2015-09-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14912]
