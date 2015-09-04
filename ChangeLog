@@ -1,3 +1,14 @@
+2015-09-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14912]
+	* sysdeps/unix/sysv/linux/m68k/bits/m68k-vdso.h: Move to ...
+	* sysdeps/unix/sysv/linux/m68k/m68k-vdso.h: ...here.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/bits/atomic.h: Include
+	<m68k-vdso.h> instead of <bits/m68k-vdso.h>.
+	* sysdeps/unix/sysv/linux/m68k/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m68k-helpers.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m68k-vdso.c: Likewise.
+
 2015-09-03  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/Makefile (test-xfail-tst-protected1a): New variable.

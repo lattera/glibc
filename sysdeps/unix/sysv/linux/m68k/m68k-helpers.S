@@ -34,7 +34,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bits/m68k-vdso.h>
+#include <m68k-vdso.h>
 
 	.text
 

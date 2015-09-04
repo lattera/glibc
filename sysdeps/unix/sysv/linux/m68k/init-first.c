@@ -22,7 +22,7 @@
 #ifdef SHARED
 
 #include <dl-vdso.h>
-#include <bits/m68k-vdso.h>
+#include <m68k-vdso.h>
 
 static inline void
 _libc_vdso_platform_setup (void)

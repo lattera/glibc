@@ -21,7 +21,7 @@
 
 #include <stdint.h>
 #include <sysdep.h>
-#include <bits/m68k-vdso.h>
+#include <m68k-vdso.h>
 
 /* Coldfire has no atomic compare-and-exchange operation, but the
    kernel provides userspace atomicity operations.  Use them.  */

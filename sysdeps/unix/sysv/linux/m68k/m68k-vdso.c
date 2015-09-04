@@ -18,7 +18,7 @@
 
 #ifdef SHARED
 
-#include <bits/m68k-vdso.h>
+#include <m68k-vdso.h>
 
 /* Because these pointers are used from other libraries than libc,
    they are exported at GLIBC_PRIVATE version.
