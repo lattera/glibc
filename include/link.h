@@ -39,7 +39,7 @@ extern unsigned int la_objopen (struct link_map *__map, Lmid_t __lmid,
 
 #include <stdint.h>
 #include <stddef.h>
-#include <bits/linkmap.h>
+#include <linkmap.h>
 #include <dl-fileid.h>
 #include <dl-lookupcfg.h>
 #include <tls.h>
