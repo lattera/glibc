@@ -1462,6 +1462,7 @@
 	out of loop through all loaded libraries.
 	* elf/tst-nodelete2.c: New file.
 	* elf/tst-nodelete2mod.c: Likewise.
+	* elf/tst-znodelete-zlib.cc: Delete.
 
 2015-08-11  Andreas Schwab  <schwab@suse.de>
 
