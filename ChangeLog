@@ -1,6 +1,20 @@
 2015-09-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14912]
+	* bits/stdio-lock.h: Move to ...
+	* sysdeps/generic/stdio-lock.h: ...here.
+	(_BITS_STDIO_LOCK_H): Rename macro to _STDIO_LOCK_H.
+	* sysdeps/nptl/bits/stdio-lock.h: Move to ...
+	* sysdeps/nptl/stdio-lock.h: ...here.
+	(_BITS_STDIO_LOCK_H): Rename macro to _STDIO_LOCK_H.
+	* include/libio.h: Include <stdio-lock.h> instead of
+	<bits/stdio-lock.h>.
+	* sysdeps/nptl/fork.c: Likewise.
+	* sysdeps/pthread/flockfile.c: Likewise.
+	* sysdeps/pthread/ftrylockfile.c: Likewise.
+	* sysdeps/pthread/funlockfile.c: Likewise.
+
+	[BZ #14912]
 	* sysdeps/unix/sysv/linux/m68k/bits/m68k-vdso.h: Move to ...
 	* sysdeps/unix/sysv/linux/m68k/m68k-vdso.h: ...here.
 	* sysdeps/unix/sysv/linux/m68k/coldfire/bits/atomic.h: Include

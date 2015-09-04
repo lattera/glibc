@@ -19,7 +19,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <stdio.h>
-#include <bits/stdio-lock.h>
+#include <stdio-lock.h>
 
 
 int

@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_STDIO_LOCK_H
-#define _BITS_STDIO_LOCK_H 1
+#ifndef _STDIO_LOCK_H
+#define _STDIO_LOCK_H 1
 
 #include <bits/libc-lock.h>
 
@@ -54,4 +54,4 @@ __libc_lock_define_recursive (typedef, _IO_lock_t)
   _IO_cleanup_region_end (0)
 #endif
 
-#endif /* bits/stdio-lock.h */
+#endif /* stdio-lock.h */

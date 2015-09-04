@@ -25,7 +25,7 @@
 #include <tls.h>
 #include <hp-timing.h>
 #include <ldsodefs.h>
-#include <bits/stdio-lock.h>
+#include <stdio-lock.h>
 #include <atomic.h>
 #include <nptl/pthreadP.h>
 #include <fork.h>

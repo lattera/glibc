@@ -19,7 +19,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <libio.h>
-#include <bits/stdio-lock.h>
+#include <stdio-lock.h>
 
 
 void

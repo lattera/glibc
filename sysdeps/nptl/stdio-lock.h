@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_STDIO_LOCK_H
-#define _BITS_STDIO_LOCK_H 1
+#ifndef _STDIO_LOCK_H
+#define _STDIO_LOCK_H 1
 
 #include <bits/libc-lock.h>
 #include <lowlevellock.h>
@@ -107,4 +107,4 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
 
 #endif
 
-#endif /* bits/stdio-lock.h */
+#endif /* stdio-lock.h */
