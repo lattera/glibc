@@ -1,4 +1,17 @@
-2015-09-06  Manolis Ragkousis <manolis837@gmail.com>
+2015-09-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	Fix rules generating headers in hurd/ and mach/ when initial make call
+	has subdir= explicitly set.
+
+	* sysdeps/mach/Makefile ($(patsubst
+	mach%,m\%h%,$(mach-before-compile))): Force subdir to mach when
+	calling $(MAKE).
+	* sysdeps/mach/hurd/Makefile ($(patsubst %,$(hurd-objpfx)hurd/%.%,auth
+	io fs process)): Force subdir to hurd when calling $(MAKE).
+	($(common-objpfx)hurd/../mach/RPC_task_get_sampled_pcs.c): Force
+	subdir to mach when calling $(MAKE).
+
+2015-09-06  Manolis Ragkousis  <manolis837@gmail.com>
 
 	Check sysheaders when looking for Mach and Hurd headers
 

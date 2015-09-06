@@ -43,7 +43,7 @@ ifneq (mach,$(subdir))
 # This patsubst generates patterns like `m%h-shortcuts.h', which are damn
 # likely to match just the corresponding particular file we want.
 $(patsubst mach%,m\%h%,$(mach-before-compile)): # Run only if doesn't exist.
-	$(MAKE) -C $(..)mach mach-before-compile no_deps=t generating=t
+	$(MAKE) -C $(..)mach subdir=mach mach-before-compile no_deps=t generating=t
 
 before-compile += $(mach-before-compile)
 endif
