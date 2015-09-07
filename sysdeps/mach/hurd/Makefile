@@ -46,8 +46,9 @@ hurd-objpfx = $(common-objpfx)hurd/
 
 # These are all the generated headers that <hurd.h> includes.
 before-compile += $(patsubst %,$(hurd-objpfx)hurd/%.h,auth io fs process)
-$(patsubst %,$(hurd-objpfx)hurd/%.%,auth io fs process): \
-  $(common-objpfx)mach/mach-shortcuts.h
+$(patsubst %,$(hurd-objpfx)hurd/%.%,auth io fs process): hurd-before-compile \
+.PHONY: hurd-before-compile
+hurd-before-compile: $(common-objpfx)mach/mach-shortcuts.h
 	$(MAKE) -C $(..)hurd subdir=hurd before-compile no_deps=t
 endif
 

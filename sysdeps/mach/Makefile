@@ -42,7 +42,9 @@ mach-before-compile := $(mach-objpfx)mach-shortcuts.h \
 ifneq (mach,$(subdir))
 # This patsubst generates patterns like `m%h-shortcuts.h', which are damn
 # likely to match just the corresponding particular file we want.
-$(patsubst mach%,m\%h%,$(mach-before-compile)): # Run only if doesn't exist.
+$(patsubst mach%,m\%h%,$(mach-before-compile)): mach-before-compile # Run only if doesn't exist.
+.PHONY: mach-before-compile
+mach-before-compile:
 	$(MAKE) -C $(..)mach subdir=mach mach-before-compile no_deps=t generating=t
 
 before-compile += $(mach-before-compile)

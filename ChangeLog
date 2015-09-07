@@ -1,3 +1,13 @@
+2015-09-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	Fix parallel build of before-compile targets.
+
+	* sysdeps/mach/Makefile ($(patsubst
+	mach%,m\%h%,$(mach-before-compile))): Move rule to dedicated
+	mach-before-compile target.
+	* sysdeps/mach/hurd/Makefile ($(patsubst %,$(hurd-objpfx)hurd/%.%,auth
+	io fs process)): Move rule to dedicated hurd-before-compile target.
+
 2015-09-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	Fix rules generating headers in hurd/ and mach/ when initial make call
