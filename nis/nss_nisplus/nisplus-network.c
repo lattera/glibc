@@ -25,7 +25,7 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <rpcsvc/nis.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 #include "nss-nisplus.h"
 

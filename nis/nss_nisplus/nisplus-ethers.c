@@ -26,7 +26,7 @@
 #include <netinet/ether.h>
 #include <netinet/if_ether.h>
 #include <rpcsvc/nis.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 #include "nss-nisplus.h"
 

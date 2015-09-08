@@ -17,7 +17,7 @@
 
 #include <assert.h>
 #include <errno.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <stdlib.h>
 #include <resolv.h>
 

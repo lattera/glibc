@@ -21,7 +21,7 @@
 #include <grp.h>
 #include <nss.h>
 #include <string.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 

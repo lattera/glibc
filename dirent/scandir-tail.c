@@ -20,7 +20,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 #ifndef SCANDIR_TAIL
 # define SCANDIR_TAIL	__scandir_tail

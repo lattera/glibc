@@ -26,7 +26,7 @@
 #include <unistd.h>
 #include <sys/mman.h>		/* Check whether MAP_COPY is defined.  */
 #include <sys/param.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <ldsodefs.h>
 #include <caller.h>
 #include <sysdep-cancel.h>

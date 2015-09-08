@@ -23,7 +23,7 @@
 #include <stdlib.h>		/* For alloca used in macro below.  */
 #include <ctype.h>		/* For __toupper_l used in macro below.  */
 #include <string.h>		/* For strlen et al used in macro below.  */
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 __BEGIN_DECLS
 

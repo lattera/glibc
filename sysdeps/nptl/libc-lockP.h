@@ -16,8 +16,8 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_LIBC_LOCKP_H
-#define _BITS_LIBC_LOCKP_H 1
+#ifndef _LIBC_LOCKP_H
+#define _LIBC_LOCKP_H 1
 
 #include <pthread.h>
 #define __need_NULL
@@ -433,4 +433,4 @@ weak_extern (pthread_setcancelstate)
 # endif
 #endif
 
-#endif	/* bits/libc-lockP.h */
+#endif	/* libc-lockP.h */

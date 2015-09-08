@@ -24,7 +24,7 @@
 #include <wchar.h>
 #define flockfile(s) _IO_flockfile (s)
 #define funlockfile(s) _IO_funlockfile (s)
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 /* It is desirable to use this bit on systems that have it.
    The only bit of terminal state we want to twiddle is echoing, which is

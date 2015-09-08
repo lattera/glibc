@@ -18,7 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fcntl.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <shadow.h>
 #include <signal.h>
 #include <string.h>

@@ -27,7 +27,7 @@
 #ifdef _LIBC
 #include <stdlib.h>
 #include <string.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <dwarf2.h>
 #include <unwind.h>
 #define NO_BASE_OF_ENCODED_VALUE

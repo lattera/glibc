@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <ldsodefs.h>
 #include <dl-machine.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <dl-cache.h>
 #include <dl-librecon.h>
 #include <dl-procinfo.h>

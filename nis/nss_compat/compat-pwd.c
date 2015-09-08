@@ -27,7 +27,7 @@
 #include <string.h>
 #include <rpc/types.h>
 #include <rpcsvc/ypclnt.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <kernel-features.h>
 
 #include "netgroup.h"

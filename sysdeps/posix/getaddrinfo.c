@@ -58,7 +58,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sys/utsname.h>
 #include <unistd.h>
 #include <nsswitch.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <not-cancel.h>
 #include <nscd/nscd-client.h>
 #include <nscd/nscd_proto.h>

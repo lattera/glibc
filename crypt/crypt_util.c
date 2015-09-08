@@ -253,7 +253,7 @@ static const char b64t[64] =
 struct crypt_data _ufc_foobar;
 
 #ifdef __GNU_LIBRARY__
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 __libc_lock_define_initialized (static, _ufc_tables_lock)
 #endif

@@ -23,7 +23,7 @@
 #undef thread_atfork_static
 
 #include <atomic.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 /* Assume hurd, with cthreads */
 

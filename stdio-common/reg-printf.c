@@ -20,7 +20,7 @@
 #include <printf.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 
 /* Array of functions indexed by format character.  */

@@ -25,7 +25,7 @@
 #define _nss_nis_endspent _nss_nis_endspent_XXX
 #include <shadow.h>
 #undef _nss_nis_endspent
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 

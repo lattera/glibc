@@ -23,7 +23,7 @@
 #include <tls.h>
 #include <string.h>
 #include <pthreadP.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <sysdep.h>
 #include <ldsodefs.h>
 

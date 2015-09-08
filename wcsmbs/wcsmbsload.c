@@ -24,7 +24,7 @@
 
 #include <locale/localeinfo.h>
 #include <wcsmbsload.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 
 /* These are the descriptions for the default conversion functions.  */

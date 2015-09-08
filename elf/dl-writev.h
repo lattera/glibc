@@ -18,7 +18,7 @@
 
 #include <sys/uio.h>
 #include <ldsodefs.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 /* This is used from only one place: dl-misc.c:_dl_debug_vdprintf.
    Hence it's in a header with the expectation it will be inlined.

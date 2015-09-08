@@ -1,9 +1,9 @@
 #include <stdio.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <rpc/rpc.h>
 #include <assert.h>
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <libc-tsd.h>
 
 #ifdef _RPC_THREAD_SAFE_

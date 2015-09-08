@@ -1,3 +1,167 @@
+2015-09-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14912]
+	* bits/libc-lock.h: Move to ...
+	* sysdeps/generic/libc-lock.h: ...here.
+	(_BITS_LIBC_LOCK_H): Rename macro to _LIBC_LOCK_H.
+	* sysdeps/mach/hurd/bits/libc-lock.h: Move to ...
+	* sysdeps/mach/hurd/libc-lock.h: ...here.
+	(_BITS_LIBC_LOCK_H): Rename macro to _LIBC_LOCK_H.
+	[_LIBC]: Include <libc-lockP.h> instead of <bits/libc-lockP.h>.
+	* sysdeps/mach/bits/libc-lock.h: Move to ...
+	* sysdeps/mach/libc-lock.h: ...here.
+	(_BITS_LIBC_LOCK_H): Rename macro to _LIBC_LOCK_H.
+	* sysdeps/nptl/bits/libc-lock.h: Move to ...
+	* sysdeps/nptl/libc-lock.h: ...here.
+	(_BITS_LIBC_LOCK_H): Rename macro to _LIBC_LOCK_H.
+	* sysdeps/nptl/bits/libc-lockP.h: Move to ...
+	* sysdeps/nptl/libc-lockP.h: ...here.
+	(_BITS_LIBC_LOCKP_H): Rename macro to _LIBC_LOCKP_H.
+	* crypt/crypt_util.c: Include <libc-lock.h> instead of
+	<bits/libc-lock.h>.
+	* dirent/scandir-tail.c: Likewise.
+	* dlfcn/dlerror.c: Likewise.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-iteratephdr.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/dl-writev.h: Likewise.
+	* elf/rtld.c: Likewise.
+	* grp/fgetgrent.c: Likewise.
+	* gshadow/fgetsgent.c: Likewise.
+	* gshadow/sgetsgent.c: Likewise.
+	* iconv/gconv_conf.c: Likewise.
+	* iconv/gconv_db.c: Likewise.
+	* iconv/gconv_dl.c: Likewise.
+	* iconv/gconv_int.h: Likewise.
+	* iconv/gconv_trans.c: Likewise.
+	* include/link.h: Likewise.
+	* inet/getnameinfo.c: Likewise.
+	* inet/getnetgrent.c: Likewise.
+	* inet/getnetgrent_r.c: Likewise.
+	* intl/bindtextdom.c: Likewise.
+	* intl/dcigettext.c: Likewise.
+	* intl/finddomain.c: Likewise.
+	* intl/gettextP.h: Likewise.
+	* intl/loadmsgcat.c: Likewise.
+	* intl/localealias.c: Likewise.
+	* intl/textdomain.c: Likewise.
+	* libidn/idn-stub.c: Likewise.
+	* libio/libioP.h: Likewise.
+	* locale/duplocale.c: Likewise.
+	* locale/freelocale.c: Likewise.
+	* locale/newlocale.c: Likewise.
+	* locale/setlocale.c: Likewise.
+	* login/getutent_r.c: Likewise.
+	* login/getutid_r.c: Likewise.
+	* login/getutline_r.c: Likewise.
+	* login/utmp-private.h: Likewise.
+	* login/utmpname.c: Likewise.
+	* malloc/mtrace.c: Likewise.
+	* misc/efgcvt.c: Likewise.
+	* misc/error.c: Likewise.
+	* misc/fstab.c: Likewise.
+	* misc/getpass.c: Likewise.
+	* misc/mntent.c: Likewise.
+	* misc/syslog.c: Likewise.
+	* nis/nis_call.c: Likewise.
+	* nis/nis_callback.c: Likewise.
+	* nis/nss-default.c: Likewise.
+	* nis/nss_compat/compat-grp.c: Likewise.
+	* nis/nss_compat/compat-initgroups.c: Likewise.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nis/nis-alias.c: Likewise.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-alias.c: Likewise.
+	* nis/nss_nisplus/nisplus-ethers.c: Likewise.
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus/nisplus-initgroups.c: Likewise.
+	* nis/nss_nisplus/nisplus-network.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c: Likewise.
+	* nis/ypclnt.c: Likewise.
+	* nptl/libc_pthread_init.c: Likewise.
+	* nss/getXXbyYY.c: Likewise.
+	* nss/getXXent.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* nss/nss_db/db-XXX.c: Likewise.
+	* nss/nss_db/db-netgrp.c: Likewise.
+	* nss/nss_db/nss_db.h: Likewise.
+	* nss/nss_files/files-XXX.c: Likewise.
+	* nss/nss_files/files-alias.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+	* posix/regex_internal.h: Likewise.
+	* posix/wordexp.c: Likewise.
+	* pwd/fgetpwent.c: Likewise.
+	* resolv/res_hconf.c: Likewise.
+	* resolv/res_libc.c: Likewise.
+	* shadow/fgetspent.c: Likewise.
+	* shadow/lckpwdf.c: Likewise.
+	* shadow/sgetspent.c: Likewise.
+	* socket/opensock.c: Likewise.
+	* stdio-common/reg-modifier.c: Likewise.
+	* stdio-common/reg-printf.c: Likewise.
+	* stdio-common/reg-type.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+	* stdio-common/vfscanf.c: Likewise.
+	* stdlib/abort.c: Likewise.
+	* stdlib/cxa_atexit.c: Likewise.
+	* stdlib/fmtmsg.c: Likewise.
+	* stdlib/random.c: Likewise.
+	* stdlib/setenv.c: Likewise.
+	* string/strsignal.c: Likewise.
+	* sunrpc/auth_none.c: Likewise.
+	* sunrpc/bindrsvprt.c: Likewise.
+	* sunrpc/create_xid.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/rpc_thread.c: Likewise.
+	* sysdeps/arm/backtrace.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+	* sysdeps/generic/stdio-lock.h: Likewise.
+	* sysdeps/generic/unwind-dw2-fde.c: Likewise.
+	* sysdeps/i386/backtrace.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c: Likewise.
+	* sysdeps/m68k/backtrace.c: Likewise.
+	* sysdeps/mach/hurd/cthreads.c: Likewise.
+	* sysdeps/mach/hurd/dirstream.h: Likewise.
+	* sysdeps/mach/hurd/malloc-machine.h: Likewise.
+	* sysdeps/nptl/malloc-machine.h: Likewise.
+	* sysdeps/nptl/stdio-lock.h: Likewise.
+	* sysdeps/posix/dirstream.h: Likewise.
+	* sysdeps/posix/getaddrinfo.c: Likewise.
+	* sysdeps/posix/system.c: Likewise.
+	* sysdeps/pthread/aio_suspend.c: Likewise.
+	* sysdeps/s390/s390-32/backtrace.c: Likewise.
+	* sysdeps/s390/s390-64/backtrace.c: Likewise.
+	* sysdeps/unix/sysv/linux/check_pf.c: Likewise.
+	* sysdeps/unix/sysv/linux/if_index.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutent_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutid_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutline_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/shm-directory.c: Likewise.
+	* sysdeps/unix/sysv/linux/system.c: Likewise.
+	* sysdeps/x86_64/backtrace.c: Likewise.
+	* time/alt_digit.c: Likewise.
+	* time/era.c: Likewise.
+	* time/tzset.c: Likewise.
+	* wcsmbs/wcsmbsload.c: Likewise.
+	* nptl/tst-initializers1.c (do_test): Refer to <libc-lock.h>
+	instead of <bits/libc-lock.h> in comment.
+
 2015-09-08  Andrew Bennett  <andrew.bennett@imgtec.com>
 
 	* sysdeps/mips/bits/atomic.h [_MIPS_SIM == _ABIO32] (MIPS_PUSH_MIPS2):

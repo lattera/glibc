@@ -20,7 +20,7 @@
 #include <errno.h>
 #include <ldsodefs.h>
 #include <stddef.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 static void
 cancel_handler (void *arg __attribute__((unused)))

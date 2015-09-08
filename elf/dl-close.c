@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <ldsodefs.h>
 #include <sys/types.h>
 #include <sys/mman.h>

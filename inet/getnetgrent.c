@@ -18,7 +18,7 @@
 #include <errno.h>
 #include <netdb.h>
 #include <stdlib.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 /* Static buffer for return value.  We allocate it when needed.  */
 libc_freeres_ptr (static char *buffer);

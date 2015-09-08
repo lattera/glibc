@@ -83,7 +83,7 @@ char *alloca ();
 
 /* Handle multi-threaded applications.  */
 #ifdef _LIBC
-# include <bits/libc-lock.h>
+# include <libc-lock.h>
 #else
 # include "lock.h"
 #endif

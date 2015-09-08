@@ -18,7 +18,7 @@
 
 #include <mntent.h>
 #include <stdlib.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 /* We don't want to allocate the static buffer all the time since it
    is not always used (in fact, rather infrequently).  Accept the

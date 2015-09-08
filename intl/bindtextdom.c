@@ -31,7 +31,7 @@
 
 /* Handle multi-threaded applications.  */
 #ifdef _LIBC
-# include <bits/libc-lock.h>
+# include <libc-lock.h>
 # define gl_rwlock_define __libc_rwlock_define
 # define gl_rwlock_wrlock __libc_rwlock_wrlock
 # define gl_rwlock_unlock __libc_rwlock_unlock

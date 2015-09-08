@@ -31,7 +31,7 @@
 #include <unistd.h>
 #include <sys/param.h>
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <gconv_int.h>
 
 

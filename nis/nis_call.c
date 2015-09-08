@@ -28,7 +28,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 #include "nis_xdr.h"
 #include "nis_intern.h"

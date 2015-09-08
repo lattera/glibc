@@ -22,7 +22,7 @@
 #include <string.h>
 #include <dlfcn.h>
 #include <gnu/lib-names.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 /* Get specification for idna_to_ascii_lz. */
 #include "idna.h"

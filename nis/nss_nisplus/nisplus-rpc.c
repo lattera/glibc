@@ -23,7 +23,7 @@
 #include <string.h>
 #include <rpc/netdb.h>
 #include <rpcsvc/nis.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 #include "nss-nisplus.h"
 

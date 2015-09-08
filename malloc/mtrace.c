@@ -22,7 +22,7 @@
 # define _MALLOC_INTERNAL
 # include <malloc.h>
 # include <mcheck.h>
-# include <bits/libc-lock.h>
+# include <libc-lock.h>
 #endif
 
 #include <dlfcn.h>

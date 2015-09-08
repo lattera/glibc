@@ -21,7 +21,7 @@
 #include <netinet/in.h>
 #include <arpa/nameser.h>
 #include <resolv.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 
 /* The following bit is copied from res_data.c (where it is #ifdef'ed

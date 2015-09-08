@@ -22,7 +22,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <sysdep-cancel.h>
 
 

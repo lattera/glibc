@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 #define BUFFER_SIZE 0x1fc0
 

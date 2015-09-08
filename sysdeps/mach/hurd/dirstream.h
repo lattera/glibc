@@ -19,7 +19,7 @@
 
 #define	_DIRSTREAM_H	1
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 /* Directory stream type.
 

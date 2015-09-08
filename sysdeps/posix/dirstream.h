@@ -20,7 +20,7 @@
 
 #include <sys/types.h>
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 /* Directory stream type.
 

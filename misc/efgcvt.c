@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <sys/param.h>
 #include <float.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <math_ldbl_opt.h>
 
 #ifndef FLOAT_TYPE

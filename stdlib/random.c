@@ -50,7 +50,7 @@
    OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
    SUCH DAMAGE.*/
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdlib.h>

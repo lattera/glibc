@@ -24,7 +24,7 @@
 #include <netgroup.h>
 #include <string.h>
 #include <stdint.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <paths.h>
 #include <stdlib.h>
 

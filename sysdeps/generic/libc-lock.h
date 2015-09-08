@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_LIBC_LOCK_H
-#define _BITS_LIBC_LOCK_H 1
+#ifndef _LIBC_LOCK_H
+#define _LIBC_LOCK_H 1
 
 
 /* Define a lock variable NAME with storage class CLASS.  The lock must be
@@ -137,4 +137,4 @@ typedef int __libc_key_t;
 /* Get thread-specific data associated with KEY.  */
 #define __libc_getspecific(KEY)		((void) (KEY), (void *) 0)
 
-#endif	/* bits/libc-lock.h */
+#endif	/* libc-lock.h */

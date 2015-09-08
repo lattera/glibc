@@ -19,7 +19,7 @@
 #ifndef _STDIO_LOCK_H
 #define _STDIO_LOCK_H 1
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 __libc_lock_define_recursive (typedef, _IO_lock_t)
 

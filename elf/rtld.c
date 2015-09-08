@@ -31,7 +31,7 @@
 #include <entry.h>
 #include <fpu_control.h>
 #include <hp-timing.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include "dynamic-link.h"
 #include <dl-librecon.h>
 #include <unsecvars.h>

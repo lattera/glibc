@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <ldsodefs.h>
 
 #if !defined SHARED && IS_IN (libdl)

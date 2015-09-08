@@ -41,7 +41,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <netinet/in.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include "ifreq.h"
 #include "res_hconf.h"
 #include <wchar.h>

@@ -18,7 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <utmp.h>
 
 #include "utmp-private.h"

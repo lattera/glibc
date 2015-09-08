@@ -35,7 +35,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 /*
  * Locks the static variables in this file.

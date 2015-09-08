@@ -21,7 +21,7 @@
 
 #include <nss.h>
 #include <stdint.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 
 /* String table index type.  */

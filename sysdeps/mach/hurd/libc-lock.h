@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_LIBC_LOCK_H
-#define _BITS_LIBC_LOCK_H 1
+#ifndef _LIBC_LOCK_H
+#define _LIBC_LOCK_H 1
 
 #if (_LIBC - 0) || (_CTHREADS_ - 0)
 #include <cthreads.h>
@@ -206,7 +206,7 @@ void *__libc_getspecific (__libc_key_t key);
 /* Hide the definitions which are only supposed to be used inside libc in
    a separate file.  This file is not present in the installation!  */
 #ifdef _LIBC
-# include <bits/libc-lockP.h>
+# include <libc-lockP.h>
 #endif
 
-#endif	/* bits/libc-lock.h */
+#endif	/* libc-lock.h */

@@ -16,7 +16,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -42,7 +42,7 @@
 #include <wordexp.h>
 #include <kernel-features.h>
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <_itoa.h>
 
 /* Undefine the following line for the production version.  */

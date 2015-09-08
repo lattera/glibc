@@ -27,7 +27,7 @@
 #include <rpc/types.h>
 #include <sys/param.h>
 #include <nsswitch.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <kernel-features.h>
 #include <scratch_buffer.h>
 

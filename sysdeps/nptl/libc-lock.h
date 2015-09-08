@@ -16,8 +16,8 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_LIBC_LOCK_H
-#define _BITS_LIBC_LOCK_H 1
+#ifndef _LIBC_LOCK_H
+#define _LIBC_LOCK_H 1
 
 #include <pthread.h>
 #define __need_NULL
@@ -184,4 +184,4 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer
 # include "libc-lockP.h"
 #endif
 
-#endif	/* bits/libc-lock.h */
+#endif	/* libc-lock.h */

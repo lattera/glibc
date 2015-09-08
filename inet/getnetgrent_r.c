@@ -17,7 +17,7 @@
 
 #include <assert.h>
 #include <atomic.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <errno.h>
 #include <netdb.h>
 #include <stdbool.h>

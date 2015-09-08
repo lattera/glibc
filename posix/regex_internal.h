@@ -45,7 +45,7 @@
 # include <stdint.h>
 #endif /* HAVE_STDINT_H || _LIBC */
 #if defined _LIBC
-# include <bits/libc-lock.h>
+# include <libc-lock.h>
 #else
 # define __libc_lock_define(CLASS,NAME)
 # define __libc_lock_init(NAME) do { } while (0)

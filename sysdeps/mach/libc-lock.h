@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_LIBC_LOCK_H
-#define _BITS_LIBC_LOCK_H 1
+#ifndef _LIBC_LOCK_H
+#define _LIBC_LOCK_H 1
 
 #ifdef _LIBC
 #include <cthreads.h>
@@ -142,4 +142,4 @@ void *__libc_getspecific (__libc_key_t key);
 #define __rtld_lock_unlock_recursive __libc_lock_unlock
 #define __rtld_lock_lock_recursive __libc_lock_lock
 
-#endif	/* bits/libc-lock.h */
+#endif	/* libc-lock.h */

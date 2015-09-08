@@ -33,7 +33,7 @@
 #include <rpc/key_prot.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/nis_callback.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 #include "nis_xdr.h"
 #include "nis_intern.h"

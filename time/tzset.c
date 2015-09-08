@@ -17,7 +17,7 @@
 
 #include <ctype.h>
 #include <errno.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>

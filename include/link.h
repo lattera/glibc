@@ -43,7 +43,7 @@ extern unsigned int la_objopen (struct link_map *__map, Lmid_t __lmid,
 #include <dl-fileid.h>
 #include <dl-lookupcfg.h>
 #include <tls.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 
 /* Some internal data structures of the dynamic linker used in the

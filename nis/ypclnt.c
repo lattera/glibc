@@ -28,7 +28,7 @@
 #include <rpcsvc/ypupd.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 /* This should only be defined on systems with a BSD compatible ypbind */
 #ifndef BINDINGDIR

@@ -19,7 +19,7 @@
 
 #include <locale.h>
 #include <stdlib.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 #include "localeinfo.h"
 

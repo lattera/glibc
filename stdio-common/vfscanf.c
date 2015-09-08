@@ -27,7 +27,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <wctype.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <locale/localeinfo.h>
 
 #ifdef	__GNUC__

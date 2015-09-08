@@ -51,7 +51,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sys/types.h>
 #include <sys/un.h>
 #include <sys/utsname.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <scratch_buffer.h>
 
 #ifdef HAVE_LIBIDN

@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <utmp.h>

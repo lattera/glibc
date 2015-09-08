@@ -35,7 +35,7 @@
 #include <link.h>
 #include <dl-lookupcfg.h>
 #include <dl-sysdep.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <hp-timing.h>
 #include <tls.h>
 

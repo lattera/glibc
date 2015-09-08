@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fmtmsg.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>

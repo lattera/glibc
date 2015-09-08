@@ -18,7 +18,7 @@
 #include <errno.h>
 #include <printf.h>
 #include <stdlib.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 
 /* Array of functions indexed by format character.  */

@@ -25,7 +25,7 @@
 #include <stdio_ext.h>
 #include <string.h>
 #include <rpc/types.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <kernel-features.h>
 
 static service_user *ni;

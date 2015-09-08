@@ -18,7 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <argz.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <errno.h>
 #include <locale.h>
 #include <stdlib.h>

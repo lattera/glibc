@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include "exit.h"
 #include <atomic.h>
 #include <sysdep.h>

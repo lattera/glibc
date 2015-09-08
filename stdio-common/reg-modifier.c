@@ -20,7 +20,7 @@
 #include <printf.h>
 #include <stdlib.h>
 #include <wchar.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 
 struct printf_modifier_record

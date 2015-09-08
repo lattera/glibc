@@ -15,7 +15,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>

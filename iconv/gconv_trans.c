@@ -24,7 +24,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include "gconv_int.h"
 #include "../locale/localeinfo.h"
 

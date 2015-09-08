@@ -23,7 +23,7 @@
 #include <search.h>
 #include <stdlib.h>
 #include <string.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <sys/param.h>
 
 #include <gconv_int.h>

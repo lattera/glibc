@@ -25,7 +25,7 @@
 #include <monetary.h>
 #include <locale/localeinfo.h>
 #include <sys/syslog.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 #include "nldbl-compat.h"
 

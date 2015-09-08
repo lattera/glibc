@@ -22,7 +22,7 @@
 #define _UTMP_PRIVATE_H	1
 
 #include <utmp.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 /* The structure describing the functions in a backend.  */
 struct utfuncs

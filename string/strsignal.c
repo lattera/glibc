@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libintl.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 
 static __libc_key_t key;
 

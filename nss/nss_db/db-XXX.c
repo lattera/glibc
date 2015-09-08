@@ -20,7 +20,7 @@
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/mman.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include "nsswitch.h"
 #include "nss_db.h"
 

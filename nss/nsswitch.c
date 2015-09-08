@@ -20,7 +20,7 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <netdb.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <search.h>
 #include <stdio.h>
 #include <stdio_ext.h>

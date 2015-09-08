@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/statfs.h>
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include "linux_fsinfo.h"
 
 

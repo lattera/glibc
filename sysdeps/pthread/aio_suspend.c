@@ -34,7 +34,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 #include <aio_misc.h>
 
 
