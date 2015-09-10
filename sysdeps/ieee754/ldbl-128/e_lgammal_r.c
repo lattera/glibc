@@ -781,6 +781,8 @@ __ieee754_lgammal_r (long double x, int *signgamp)
 
   if (x < 0.0L)
     {
+      if (x < -2.0L && x > (LDBL_MANT_DIG == 106 ? -48.0L : -50.0L))
+	return __lgamma_negl (x, signgamp);
       q = -x;
       p = __floorl (q);
       if (p == q)

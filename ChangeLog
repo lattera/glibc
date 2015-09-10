@@ -1,3 +1,38 @@
+2015-09-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #2542]
+	[BZ #2543]
+	[BZ #2558]
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c (__ieee754_lgamma_r): Call
+	__lgamma_neg for arguments from -28.0 to -2.0.
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c (__ieee754_lgammaf_r): Call
+	__lgamma_negf for arguments from -15.0 to -2.0.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r):
+	Call __lgamma_negl for arguments from -48.0 or -50.0 to -2.0.
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c (__ieee754_lgammal_r):
+	Call __lgamma_negl for arguments from -33.0 to -2.0.
+	* sysdeps/ieee754/dbl-64/lgamma_neg.c: New file.
+	* sysdeps/ieee754/dbl-64/lgamma_product.c: Likewise.
+	* sysdeps/ieee754/flt-32/lgamma_negf.c: Likewise.
+	* sysdeps/ieee754/flt-32/lgamma_productf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/lgamma_negl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/lgamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/lgamma_negl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/lgamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/lgamma_negl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/lgamma_product.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/lgamma_productl.c: Likewise.
+	* sysdeps/generic/math_private.h (__lgamma_negf): New prototype.
+	(__lgamma_neg): Likewise.
+	(__lgamma_negl): Likewise.
+	(__lgamma_product): Likewise.
+	(__lgamma_productl): Likewise.
+	* math/Makefile (libm-calls): Add lgamma_neg and lgamma_product.
+	* math/auto-libm-test-in: Add more tests of lgamma.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2015-09-09  Justin Maggard  <jmaggard@netgear.com>
 
 	[BZ #18675]

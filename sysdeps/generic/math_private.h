@@ -382,6 +382,22 @@ extern double __gamma_product (double x, double x_eps, int n, double *eps);
 extern long double __gamma_productl (long double x, long double x_eps,
 				     int n, long double *eps);
 
+/* Compute lgamma of a negative argument X, if it is in a range
+   (depending on the floating-point format) for which expansion around
+   zeros is used, setting *SIGNGAMP accordingly.  */
+extern float __lgamma_negf (float x, int *signgamp);
+extern double __lgamma_neg (double x, int *signgamp);
+extern long double __lgamma_negl (long double x, int *signgamp);
+
+/* Compute the product of 1 + (T / (X + X_EPS)), 1 + (T / (X + X_EPS +
+   1)), ..., 1 + (T / (X + X_EPS + N - 1)), minus 1.  X is such that
+   all the values X + 1, ..., X + N - 1 are exactly representable, and
+   X_EPS / X is small enough that factors quadratic in it can be
+   neglected.  */
+extern double __lgamma_product (double t, double x, double x_eps, int n);
+extern long double __lgamma_productl (long double t, long double x,
+				      long double x_eps, int n);
+
 #ifndef math_opt_barrier
 # define math_opt_barrier(x) \
 ({ __typeof (x) __x = (x); __asm ("" : "+m" (__x)); __x; })

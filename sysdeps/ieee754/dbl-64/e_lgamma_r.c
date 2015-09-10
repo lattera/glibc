@@ -226,6 +226,8 @@ __ieee754_lgamma_r(double x, int *signgamp)
 	    if(__builtin_expect(ix>=0x43300000, 0))
 		/* |x|>=2**52, must be -integer */
 		return x/zero;
+	    if (x < -2.0 && x > -28.0)
+		return __lgamma_neg (x, signgamp);
 	    t = sin_pi(x);
 	    if(t==zero) return one/fabsf(t); /* -integer */
 	    nadj = __ieee754_log(pi/fabs(t*x));

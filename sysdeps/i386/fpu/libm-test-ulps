@@ -1558,36 +1558,36 @@ ildouble: 4
 ldouble: 4
 
 Function: "gamma":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 3
+ldouble: 3
 
 Function: "gamma_downward":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-ildouble: 6
-ldouble: 6
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 7
+ldouble: 7
 
 Function: "gamma_towardzero":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-ildouble: 6
-ldouble: 6
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 7
+ldouble: 7
 
 Function: "gamma_upward":
-double: 2
-float: 3
-idouble: 2
-ifloat: 3
-ildouble: 4
-ldouble: 4
+double: 3
+float: 4
+idouble: 3
+ifloat: 4
+ildouble: 5
+ldouble: 5
 
 Function: "hypot":
 double: 1
@@ -1710,36 +1710,36 @@ ildouble: 5
 ldouble: 5
 
 Function: "lgamma":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
+double: 3
+float: 3
+idouble: 3
+ifloat: 3
+ildouble: 3
+ldouble: 3
 
 Function: "lgamma_downward":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-ildouble: 6
-ldouble: 6
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 7
+ldouble: 7
 
 Function: "lgamma_towardzero":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-ildouble: 6
-ldouble: 6
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 7
+ldouble: 7
 
 Function: "lgamma_upward":
-double: 2
-float: 3
-idouble: 2
-ifloat: 3
-ildouble: 4
-ldouble: 4
+double: 3
+float: 4
+idouble: 3
+ifloat: 4
+ildouble: 5
+ldouble: 5
 
 Function: "log":
 double: 1

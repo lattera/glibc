@@ -161,6 +161,9 @@ __ieee754_lgammaf_r(float x, int *signgamp)
 	if(hx<0) {
 	    if(ix>=0x4b000000)	/* |x|>=2**23, must be -integer */
 		return x/zero;
+	    if (ix > 0x40000000 /* X < 2.0f.  */
+		&& ix < 0x41700000 /* X > -15.0f.  */)
+		return __lgamma_negf (x, signgamp);
 	    t = sin_pif(x);
 	    if(t==zero) return one/fabsf(t); /* -integer */
 	    nadj = __ieee754_logf(pi/fabsf(t*x));

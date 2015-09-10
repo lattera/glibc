@@ -306,6 +306,8 @@ __ieee754_lgammal_r (long double x, int *signgamp)
     }
   if (se & 0x8000)
     {
+      if (x < -2.0L && x > -33.0L)
+	return __lgamma_negl (x, signgamp);
       t = sin_pi (x);
       if (t == zero)
 	return one / fabsl (t);	/* -integer */
