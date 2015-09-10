@@ -1,3 +1,8 @@
+2015-09-09  Justin Maggard  <jmaggard@netgear.com>
+
+	[BZ #18675]
+	* sysdeps/posix/fpathconf.c (__fpathconf): Use __fstatvfs64.
+
 2015-09-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14912]
