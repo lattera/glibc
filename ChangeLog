@@ -1,3 +1,9 @@
+2015-09-11  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/Makefile [$(subdir) = misc] (sysdep_headers):
+	Use 'override' keyword to freeze the value here, preventing
+	the addition of sys/mtio.h by sysdeps/gnu/Makefile.
+
 2015-09-11  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14912]

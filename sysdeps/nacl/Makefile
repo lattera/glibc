@@ -132,4 +132,13 @@ ifeq ($(subdir),misc)
 # sysdeps/.../linux/ directories, but it's still a sysdeps decision to
 # install it.
 sysdep_headers += bits/mman-linux.h
+
+# This defeats sysdeps/gnu/Makefile's addition of sys/mtio.h, which
+# we do not want.  This is a total kludge, but it seems no worse for
+# now than making the sysdeps/gnu/Makefile code conditional on a
+# variable we set here.  If some sysdeps/.../Makefile that is later
+# in the list than sysdeps/gnu needed to add to sysdep_headers, this
+# would break it.  But sysdeps/gnu is close to last in the list and
+# this coming up seems unlikely.
+override sysdep_headers := $(sysdep_headers)
 endif
