@@ -44,7 +44,7 @@ void __arm_link_error (void);
 # define atomic_full_barrier() __arm_assisted_full_barrier ()
 #endif
 
-/* An OS-specific bits/atomic.h file will define this macro if
+/* An OS-specific atomic-machine.h file will define this macro if
    the OS can provide something.  If not, we'll fail to build
    with a compiler that doesn't supply the operation.  */
 #ifndef __arm_assisted_full_barrier
@@ -153,7 +153,7 @@ void __arm_link_error (void);
   ({ __arm_link_error (); oldval; })
 #endif
 
-/* An OS-specific bits/atomic.h file will define this macro if
+/* An OS-specific atomic-machine.h file will define this macro if
    the OS can provide something.  If not, we'll fail to build
    with a compiler that doesn't supply the operation.  */
 #ifndef __arm_assisted_compare_and_exchange_val_32_acq

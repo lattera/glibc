@@ -16,8 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_ATOMIC_H
-#define _BITS_ATOMIC_H	1
+#ifndef _ATOMIC_MACHINE_H
+#define _ATOMIC_MACHINE_H	1
 
 #include <arch/spr_def.h>
 
@@ -55,6 +55,6 @@
 #define atomic_decrement_if_positive(mem) \
   __atomic_update (mem, -1, fetchaddgez)
 
-#include <sysdeps/tile/bits/atomic.h>
+#include <sysdeps/tile/atomic-machine.h>
 
-#endif /* bits/atomic.h */
+#endif /* atomic-machine.h */

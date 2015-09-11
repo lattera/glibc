@@ -16,8 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_ATOMIC_H
-#define _BITS_ATOMIC_H	1
+#ifndef _ATOMIC_MACHINE_H
+#define _ATOMIC_MACHINE_H	1
 
 #include <stdint.h>
 #include <sysdep.h>

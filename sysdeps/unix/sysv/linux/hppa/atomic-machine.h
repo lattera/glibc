@@ -25,8 +25,8 @@
 #define ENOSYS	251
 #endif
 
-#ifndef _BITS_ATOMIC_H
-#define _BITS_ATOMIC_H	1
+#ifndef _ATOMIC_MACHINE_H
+#define _ATOMIC_MACHINE_H	1
 
 typedef int8_t atomic8_t;
 typedef uint8_t uatomic8_t;
@@ -100,4 +100,4 @@ typedef uintmax_t uatomic_max_t;
    })
 
 #endif
-/* _BITS_ATOMIC_H */
+/* _ATOMIC_MACHINE_H */

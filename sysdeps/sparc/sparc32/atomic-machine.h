@@ -17,8 +17,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_ATOMIC_H
-#define _BITS_ATOMIC_H	1
+#ifndef _ATOMIC_MACHINE_H
+#define _ATOMIC_MACHINE_H	1
 
 #include <stdint.h>
 
@@ -357,4 +357,4 @@ extern uint64_t _dl_hwcap __attribute__((weak));
 
 #include <sysdep.h>
 
-#endif	/* bits/atomic.h */
+#endif	/* atomic-machine.h */

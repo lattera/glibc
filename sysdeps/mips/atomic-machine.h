@@ -16,8 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MIPS_BITS_ATOMIC_H
-#define _MIPS_BITS_ATOMIC_H 1
+#ifndef _MIPS_ATOMIC_MACHINE_H
+#define _MIPS_ATOMIC_MACHINE_H 1
 
 #include <stdint.h>
 #include <inttypes.h>
@@ -500,4 +500,4 @@ typedef uintmax_t uatomic_max_t;
 			".set pop" : : : "memory")
 #endif /* !__mips16 */
 
-#endif /* bits/atomic.h */
+#endif /* atomic-machine.h */

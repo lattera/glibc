@@ -16,8 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_ATOMIC_H
-#define _BITS_ATOMIC_H	1
+#ifndef _ATOMIC_MACHINE_H
+#define _ATOMIC_MACHINE_H	1
 
 #include <asm/unistd.h>
 
@@ -83,6 +83,6 @@ int __atomic_update_32 (volatile int *mem, int mask, int addend)
   ({ __typeof (mask) __att1_v = (mask);                 \
     __atomic_update ((mem), ~__att1_v, __att1_v); })
 
-#include <sysdeps/tile/bits/atomic.h>
+#include <sysdeps/tile/atomic-machine.h>
 
-#endif /* bits/atomic.h */
+#endif /* atomic-machine.h */

@@ -47,7 +47,7 @@
 
 #include <stdlib.h>
 
-#include <bits/atomic.h>
+#include <atomic-machine.h>
 
 /* Wrapper macros to call pre_NN_post (mem, ...) where NN is the
    bit width of *MEM.  The calling macro puts parens around MEM

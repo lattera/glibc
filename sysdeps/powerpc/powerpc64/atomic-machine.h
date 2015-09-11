@@ -271,4 +271,4 @@
  * Include the rest of the atomic ops macros which are common to both
  * powerpc32 and powerpc64.
  */
-#include_next <bits/atomic.h>
+#include_next <atomic-machine.h>

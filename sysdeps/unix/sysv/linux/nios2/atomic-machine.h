@@ -16,8 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _NIOS2_BITS_ATOMIC_H
-#define _NIOS2_BITS_ATOMIC_H 1
+#ifndef _NIOS2_ATOMIC_MACHINE_H
+#define _NIOS2_ATOMIC_MACHINE_H 1
 
 #include <stdint.h>
 
@@ -89,4 +89,4 @@ typedef uintmax_t uatomic_max_t;
 
 #define atomic_full_barrier()  ({ asm volatile ("sync"); })
 
-#endif /* _NIOS2_BITS_ATOMIC_H */
+#endif /* _NIOS2_ATOMIC_MACHINE_H */

@@ -40,7 +40,7 @@
  * The 32-bit exchange_bool is different on powerpc64 because the subf
  * does signed 64-bit arithmetic while the lwarx is 32-bit unsigned
  * (a load word and zero (high 32) form).  So powerpc64 has a slightly
- * different version in sysdeps/powerpc/powerpc64/bits/atomic.h.
+ * different version in sysdeps/powerpc/powerpc64/atomic-machine.h.
  */
 #define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval)         \
 ({									      \
@@ -141,4 +141,4 @@
  * Include the rest of the atomic ops macros which are common to both
  * powerpc32 and powerpc64.
  */
-#include_next <bits/atomic.h>
+#include_next <atomic-machine.h>

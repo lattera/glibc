@@ -104,4 +104,4 @@
      (__typeof (oldval)) a_tmp; })
 #endif
 
-#include <sysdeps/arm/bits/atomic.h>
+#include <sysdeps/arm/atomic-machine.h>

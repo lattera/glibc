@@ -18,11 +18,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 /*
- * Never include sysdeps/powerpc/bits/atomic.h directly.
+ * Never include sysdeps/powerpc/atomic-machine.h directly.
  * Alway use include/atomic.h which will include either
- * sysdeps/powerpc/powerpc32/bits/atomic.h
+ * sysdeps/powerpc/powerpc32/atomic-machine.h
  * or
- * sysdeps/powerpc/powerpc64/bits/atomic.h
+ * sysdeps/powerpc/powerpc64/atomic-machine.h
  * as appropriate and which in turn include this file.
  */
 
