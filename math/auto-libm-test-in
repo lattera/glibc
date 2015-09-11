@@ -123,6 +123,9 @@ acosh 0x1.5d71a6p+36
 acosh 0x1.476a3c43d7edep+288
 acosh 0xc.84cb1dbbd1b1p+0
 acosh 0x1.0722362c26ba5p+0
+acosh 0x1.73515p+0
+acosh 0x1.1b836p+0
+acosh 0x1.07c956p+0
 acosh max no-test-inline
 
 asin 0
@@ -406,6 +409,8 @@ atanh -0x2.6cb2a8p-4
 atanh -0xc.21df7c7f51508p-4
 atanh 0x5.8be99p-40
 atanh 0x3.cbed35fe733d8p-4
+atanh -0x5.c18b6p-4
+atanh -0x7.c88a5p-8
 atanh 0x1p-500
 atanh 0x1p-5000
 atanh min
@@ -492,6 +497,7 @@ cbrt -0x3.593ed8p-72
 cbrt 0x1.bd0098p-104
 cbrt -0x3.300d34p+0
 cbrt 0x6.247f5p-4
+cbrt -0x3.48648028cb464p+0
 cbrt max
 cbrt -max
 cbrt min
@@ -959,6 +965,7 @@ cosh -0x3.cee48p+0
 cosh 0x2.f5d128p+0
 cosh -0xd.0c03p+0
 cosh -0x3.d04328728b72cp-4
+cosh 0x1.629188p+4
 # GCC bug 59666: results on directed rounding may be incorrect.
 cosh max no-test-inline xfail-rounding:ldbl-128ibm
 cosh -max no-test-inline xfail-rounding:ldbl-128ibm
@@ -1112,6 +1119,8 @@ csqrt -0x9.0a61a7b482d28p-168 -0x8p-152
 csqrt 0x3.f768f58949e3fe6cp-4 0x2.0c2e89a5cff98p+0
 csqrt 0x6.b1a2e79e9c9acp-164 0x8p-152
 csqrt -0x8.ec8932bf5603p-172 0x8p-152
+csqrt -0x1.9edb24c83e22cp-172 -0x8p-152
+csqrt -0x1.65c7ac7c97a25p-176 -0x8p-152
 
 csqrt 0x1.fffffep+127 0x1.fffffep+127
 csqrt 0x1.fffffep+127 1.0
@@ -1331,6 +1340,7 @@ erfc 0x2.36c504p+0
 erfc 0x1.65e31p+0
 erfc 0xd.44cd3p-4
 erfc 0xd.47425b3cafa48p-4
+erfc 0x1.2f644ep+0
 
 exp 0
 exp -0
@@ -1538,6 +1548,7 @@ expm1 0x6.1b4d318238d4a2a8p-4
 expm1 0x5.fb8dc64e91a74p-4
 expm1 0x3.735f497c4e67535cp-4
 expm1 -0x7.d6c50b469d404p+0
+expm1 0x4.857de8p+4
 expm1 0x4.0000000000000028p-16384
 expm1 min
 expm1 -min
@@ -2473,6 +2484,9 @@ lgamma -0x2.dea4ccp-4
 lgamma -0x2.dd306p-4
 lgamma -0x1.bdc8bp+0
 lgamma -0x4.0a82e8p-4
+lgamma -0x1.bca67ap+0
+lgamma -0x3.46446bb6a23aap+0
+lgamma -0x3.f3d2c40911814p+0
 
 log 1
 log e

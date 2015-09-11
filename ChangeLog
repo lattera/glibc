@@ -1,3 +1,11 @@
+2015-09-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add more tests of acosh, atanh, cbrt,
+	cosh, csqrt, erfc, expm1 and lgamma.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2015-09-10  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #2542]

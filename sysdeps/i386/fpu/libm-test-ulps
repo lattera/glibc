@@ -1216,8 +1216,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 4
-ldouble: 4
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "csqrt_downward":
 double: 1
@@ -1562,8 +1562,8 @@ double: 3
 float: 3
 idouble: 3
 ifloat: 3
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "gamma_downward":
 double: 4
@@ -1714,8 +1714,8 @@ double: 3
 float: 3
 idouble: 3
 ifloat: 3
-ildouble: 3
-ldouble: 3
+ildouble: 4
+ldouble: 4
 
 Function: "lgamma_downward":
 double: 4

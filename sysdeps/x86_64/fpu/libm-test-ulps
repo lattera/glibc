@@ -32,26 +32,26 @@ ildouble: 2
 ldouble: 2
 
 Function: "acosh":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 2
 ldouble: 2
 
 Function: "acosh_downward":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 4
 ldouble: 4
 
 Function: "acosh_towardzero":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 4
 ldouble: 4
 
@@ -195,9 +195,9 @@ ldouble: 3
 
 Function: "atanh_downward":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
+ifloat: 3
 ildouble: 5
 ldouble: 5
 
@@ -210,9 +210,9 @@ ildouble: 4
 ldouble: 4
 
 Function: "atanh_upward":
-double: 2
+double: 3
 float: 3
-idouble: 2
+idouble: 3
 ifloat: 3
 ildouble: 5
 ldouble: 5
@@ -668,9 +668,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "cbrt_upward":
-double: 4
+double: 5
 float: 1
-idouble: 4
+idouble: 5
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -1040,7 +1040,7 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
+ildouble: 2
 ldouble: 2
 
 Function: "cosh_downward":
@@ -1264,12 +1264,12 @@ ildouble: 2
 ldouble: 2
 
 Function: Real part of "csqrt_downward":
-double: 4
+double: 5
 float: 4
-idouble: 4
+idouble: 5
 ifloat: 4
-ildouble: 4
-ldouble: 4
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "csqrt_downward":
 double: 4
@@ -1472,9 +1472,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "erfc":
-double: 2
+double: 3
 float: 2
-idouble: 2
+idouble: 3
 ifloat: 2
 ildouble: 3
 ldouble: 3
@@ -1627,9 +1627,9 @@ ldouble: 4
 
 Function: "expm1_towardzero":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 4
 ldouble: 4
 
@@ -1642,12 +1642,12 @@ ildouble: 4
 ldouble: 4
 
 Function: "gamma":
-double: 3
-float: 3
-idouble: 3
-ifloat: 3
-ildouble: 3
-ldouble: 3
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 4
+ldouble: 4
 
 Function: "gamma_downward":
 double: 5
@@ -1794,12 +1794,12 @@ ildouble: 5
 ldouble: 5
 
 Function: "lgamma":
-double: 3
-float: 3
-idouble: 3
-ifloat: 3
-ildouble: 3
-ldouble: 3
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 4
+ldouble: 4
 
 Function: "lgamma_downward":
 double: 5
