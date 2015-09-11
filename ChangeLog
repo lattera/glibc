@@ -1,5 +1,12 @@
 2015-09-11  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18952]
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r): Do
+	not convert non-integer negative arguments to int to determine the
+	value of signgam.
+	* math/auto-libm-test-in: Add more tests of lgamma.
+	* math/auto-libm-test-out: Regenerated.
+
 	* math/auto-libm-test-in: Add more tests of acosh, atanh, cbrt,
 	cosh, csqrt, erfc, expm1 and lgamma.
 	* math/auto-libm-test-out: Regenerated.

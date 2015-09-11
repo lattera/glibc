@@ -2047,6 +2047,9 @@ lgamma -0xffffffffffffffffp-1
 lgamma -0x3ffffffffffffffffffffffffffp-1
 lgamma -0x1ffffffffffffffffffffffffffffp-1
 
+lgamma -0x100000000.8p0
+lgamma -0x100000001.8p0
+
 lgamma -0.25
 lgamma -0.5
 lgamma -0.75
