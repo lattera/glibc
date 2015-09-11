@@ -1,5 +1,8 @@
 2015-09-11  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/mips32/libm-test-ulps: Update.
+	* sysdeps/mips/mips64/libm-test-ulps: Likewise.
+
 	[BZ #18952]
 	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r): Do
 	not convert non-integer negative arguments to int to determine the
