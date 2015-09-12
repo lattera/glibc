@@ -1113,6 +1113,10 @@ float: 6
 idouble: 5
 ifloat: 6
 
+Function: "exp":
+float: 1
+ifloat: 1
+
 Function: "exp10":
 double: 2
 idouble: 2
@@ -1503,9 +1507,9 @@ ifloat: 1
 
 Function: "sincos_upward":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 
 Function: "sinh":
 double: 2
