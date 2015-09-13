@@ -1,3 +1,8 @@
+2015-09-13  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/Makefile ($(patsubst %,$(hurd-objpfx)hurd/%.%,auth
+	io fs process)): Drop spurious backslash.
+
 2015-09-12  Rasmus Villemoes  <rv@rasmusvillemoes.dk>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (__get_phys_pages):
