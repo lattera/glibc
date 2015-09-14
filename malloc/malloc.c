@@ -241,7 +241,7 @@
 /* For MIN, MAX, powerof2.  */
 #include <sys/param.h>
 
-/* For ALIGN_UP.  */
+/* For ALIGN_UP et. al.  */
 #include <libc-internal.h>
 
 
@@ -2767,8 +2767,8 @@ systrim (size_t pad, mstate av)
   if (top_area <= pad)
     return 0;
 
-  /* Release in pagesize units, keeping at least one page */
-  extra = (top_area - pad) & ~(pagesize - 1);
+  /* Release in pagesize units and round down to the nearest page.  */
+  extra = ALIGN_DOWN(top_area - pad, pagesize);
 
   if (extra == 0)
     return 0;

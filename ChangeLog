@@ -1,5 +1,7 @@
 2015-09-14  Carlos O'Donell  <carlos@redhat.com>
 
+	* malloc/malloc.c (systrim): Use ALIGN_DOWN.
+
 	* Makefile ($(objpfx)check-local-headers.out): Redirect stdin from
 	/dev/null.
 
