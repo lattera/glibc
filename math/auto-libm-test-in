@@ -1396,6 +1396,17 @@ exp -0x1.75f113c30b1c8p+9
 exp -max
 exp -11342.8125
 exp -0x2.c5b2319c4843acc0p12
+exp -0x2.c469d9p+8
+exp -0x2.c46d96p+8
+exp -0x2.c46727p+8
+exp -0x2.c469dep+8
+exp -0x2.c46c04p+8
+exp -0x2.c46adep+8
+exp -0x2.c471b3p+8
+exp -0x2.c46993p+8
+exp -0x2.c49fap+8
+exp -0x2.c4ac1p+8
+exp -0x2.c4d89p+8
 exp 0x1p-10
 exp -0x1p-10
 exp 0x1p-20

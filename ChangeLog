@@ -1,5 +1,20 @@
 2015-09-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18875]
+	[BZ #18961]
+	* sysdeps/i386/fpu/e_exp.S (dbl_min): New object.
+	(MO): New macro.
+	(__ieee754_exp): For small results, force underflow exception and
+	remove excess range and precision from return value.
+	(__exp_finite): Likewise.
+	* sysdeps/i386/fpu/e_expf.S (flt_min): New object.
+	(MO): New macro.
+	(__ieee754_expf): For small results, force underflow exception and
+	remove excess range and precision from return value.
+	(__expf_finite): Likewise.
+	* math/auto-libm-test-in: Add more tests of exp.
+	* math/auto-libm-test-out: Regenerated.
+
 	[BZ #16521]
 	[BZ #18875]
 	* math/e_exp2l.c (__ieee754_exp2l): Force underflow exception for
