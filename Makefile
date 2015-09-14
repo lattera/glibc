@@ -262,7 +262,7 @@ endif
 
 $(objpfx)check-local-headers.out: scripts/check-local-headers.sh
 	AWK='$(AWK)' scripts/check-local-headers.sh \
-	  "$(includedir)" "$(objpfx)" > $@; \
+	  "$(includedir)" "$(objpfx)" < /dev/null > $@; \
 	$(evaluate-test)
 
 ifneq ($(PERL),no)
