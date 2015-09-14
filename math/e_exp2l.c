@@ -38,9 +38,17 @@ __ieee754_exp2l (long double x)
 	{
 	  int intx = (int) x;
 	  long double fractx = x - intx;
+	  long double result;
 	  if (fabsl (fractx) < LDBL_EPSILON / 4.0L)
-	    return __scalbnl (1.0L + fractx, intx);
-	  return __scalbnl (__ieee754_expl (M_LN2l * fractx), intx);
+	    result = __scalbnl (1.0L + fractx, intx);
+	  else
+	    result = __scalbnl (__ieee754_expl (M_LN2l * fractx), intx);
+	  if (result < LDBL_MIN)
+	    {
+	      long double force_underflow = result * result;
+	      math_force_eval (force_underflow);
+	    }
+	  return result;
 	}
       else
 	{

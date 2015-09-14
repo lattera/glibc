@@ -120,7 +120,15 @@ __ieee754_exp2 (double x)
       if (!unsafe)
 	return result;
       else
-	return result * scale_u.d;
+	{
+	  result *= scale_u.d;
+	  if (result < DBL_MIN)
+	    {
+	      double force_underflow = result * result;
+	      math_force_eval (force_underflow);
+	    }
+	  return result;
+	}
     }
   else
     /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */

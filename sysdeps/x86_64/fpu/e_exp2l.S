@@ -7,6 +7,20 @@
 
 #include <machine/asm.h>
 
+	.section .rodata.cst16,"aM",@progbits,16
+	.p2align 4
+	.type ldbl_min,@object
+ldbl_min:	.byte 0, 0, 0, 0, 0, 0, 0, 0x80, 0x1, 0
+	.byte 0, 0, 0, 0, 0, 0
+	ASM_SIZE_DIRECTIVE(ldbl_min)
+
+#ifdef PIC
+# define MO(op) op##(%rip)
+#else
+# define MO(op) op
+#endif
+
+	.text
 ENTRY(__ieee754_exp2l)
 	fldt	8(%rsp)
 /* I added the following ugly construct because exp(+-Inf) resulted
@@ -36,7 +50,16 @@ ENTRY(__ieee754_exp2l)
 	faddp				/* 2^(fract(x)) */
 	fscale				/* e^x */
 	fstp	%st(1)
-	ret
+	/* Ensure underflow for tiny result.  */
+	fldt	MO(ldbl_min)
+	fld	%st(1)
+	fucomip	%st(1), %st
+	fstp	%st
+	jnc	4f
+	fld	%st
+	fmul	%st
+	fstp	%st
+4:	ret
 
 1:	testl	$0x200, %eax		/* Test sign.  */
 	jz	2f			/* If positive, jump.  */

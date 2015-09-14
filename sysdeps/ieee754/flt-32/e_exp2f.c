@@ -109,7 +109,15 @@ __ieee754_exp2f (float x)
       if (!unsafe)
 	return result;
       else
-	return result * scale_u.f;
+	{
+	  result *= scale_u.f;
+	  if (result < FLT_MIN)
+	    {
+	      float force_underflow = result * result;
+	      math_force_eval (force_underflow);
+	    }
+	  return result;
+	}
     }
   /* Exceptional cases:  */
   else if (isless (x, himark))

@@ -1,3 +1,28 @@
+2015-09-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16521]
+	[BZ #18875]
+	* math/e_exp2l.c (__ieee754_exp2l): Force underflow exception for
+	small results.
+	* sysdeps/i386/fpu/e_exp2.S (dbl_min): New object.
+	(MO): New macro.
+	(__ieee754_exp2): For small results, force underflow exception and
+	remove excess range and precision from return value.
+	* sysdeps/i386/fpu/e_exp2f.S (flt_min): New object.
+	(MO): New macro.
+	(__ieee754_exp2f): For small results, force underflow exception
+	and remove excess range and precision from return value.
+	* sysdeps/i386/fpu/e_exp2l.S (ldbl_min): New object.
+	(MO): New macro.
+	(__ieee754_exp2l): Force underflow exception for small results.
+	* sysdeps/ieee754/dbl-64/e_exp2.c (__ieee754_exp2): Likewise.
+	* sysdeps/ieee754/flt-32/e_exp2f.c (__ieee754_exp2f): Likewise.
+	* sysdeps/x86_64/fpu/e_exp2l.S (ldbl_min): New object.
+	(MO): New macro.
+	(__ieee754_exp2l): Force underflow exception for small results.
+	* math/auto-libm-test-in: Add more tests or exp2.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-09-14  Carlos O'Donell  <carlos@redhat.com>
 
 	* malloc/malloc.c (systrim): Use ALIGN_DOWN.
