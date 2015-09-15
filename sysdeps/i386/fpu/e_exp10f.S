@@ -4,8 +4,25 @@
 
 #include <machine/asm.h>
 
+	.section .rodata.cst4,"aM",@progbits,4
+
+	.p2align 2
+	.type flt_min,@object
+flt_min:	.byte 0, 0, 0x80, 0
+	ASM_SIZE_DIRECTIVE(flt_min)
+
+#ifdef PIC
+# define MO(op) op##@GOTOFF(%ecx)
+#else
+# define MO(op) op
+#endif
+
+	.text
 /* 10^x = 2^(x * log2(10)) */
 ENTRY(__ieee754_exp10f)
+#ifdef  PIC
+	LOAD_PIC_REG (cx)
+#endif
 	flds	4(%esp)
 /* I added the following ugly construct because exp(+-Inf) resulted
    in NaN.  The ugliness results from the bright minds at Intel.
@@ -28,7 +45,22 @@ ENTRY(__ieee754_exp10f)
 	faddp				/* 2^(fract(x * log2(10))) */
 	fscale				/* e^x */
 	fstp	%st(1)
-	ret
+	flds	MO(flt_min)
+	fld	%st(1)
+	fucompp
+	fnstsw
+	sahf
+	jnc 3f
+	subl	$4, %esp
+	cfi_adjust_cfa_offset (4)
+	fld	%st(0)
+	fmul	%st(0)
+	fstps	(%esp)
+	fstps	(%esp)
+	flds	(%esp)
+	addl	$4, %esp
+	cfi_adjust_cfa_offset (-4)
+3:	ret
 
 1:	testl	$0x200, %eax		/* Test sign.  */
 	jz	2f			/* If positive, jump.  */
