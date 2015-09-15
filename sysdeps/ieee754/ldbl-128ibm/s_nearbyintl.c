@@ -36,7 +36,9 @@ __nearbyintl (long double x)
   union ibm_extended_long_double u;
   u.ld = x;
 
-  if (fabs (u.d[0].d) < TWO52)
+  if (!isfinite (u.d[0].d))
+    return x;
+  else if (fabs (u.d[0].d) < TWO52)
     {
       double xh = u.d[0].d;
       double high = u.d[0].d;

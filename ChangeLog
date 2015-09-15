@@ -1,5 +1,10 @@
 2015-09-15  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18857]
+	* sysdeps/ieee754/ldbl-128ibm/s_nearbyintl.c (__nearbyintl): Just
+	return non-finite argument without doing ordered comparisons on
+	it.
+
 	[BZ #16296]
 	* math/fenv.h (fegetround): Use __attribute_pure__.
 	* include/fenv.h (__fegetround): Likewise.
