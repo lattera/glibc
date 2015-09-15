@@ -117,6 +117,16 @@ __ctanl (__complex__ long double x)
 	  __real__ res = sinrx * cosrx / den;
 	  __imag__ res = sinhix * coshix / den;
 	}
+      if (fabsl (__real__ res) < LDBL_MIN)
+	{
+	  long double force_underflow = __real__ res * __real__ res;
+	  math_force_eval (force_underflow);
+	}
+      if (fabsl (__imag__ res) < LDBL_MIN)
+	{
+	  long double force_underflow = __imag__ res * __imag__ res;
+	  math_force_eval (force_underflow);
+	}
     }
 
   return res;

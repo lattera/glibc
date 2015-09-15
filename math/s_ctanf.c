@@ -110,6 +110,16 @@ __ctanf (__complex__ float x)
 	  __real__ res = sinrx * cosrx / den;
 	  __imag__ res = sinhix * coshix / den;
 	}
+      if (fabsf (__real__ res) < FLT_MIN)
+	{
+	  float force_underflow = __real__ res * __real__ res;
+	  math_force_eval (force_underflow);
+	}
+      if (fabsf (__imag__ res) < FLT_MIN)
+	{
+	  float force_underflow = __imag__ res * __imag__ res;
+	  math_force_eval (force_underflow);
+	}
     }
 
   return res;

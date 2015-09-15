@@ -1245,11 +1245,14 @@ ctan 0x1.921fb6p+0 0x1p-149
 ctan 0x1.921fb54442d18p+0 0x1p-1074
 ctan 0x1.921fb54442d1846ap+0 0x1p-16445
 
-# Bug 18595: underflow exception may be missing
-ctan min 0 missing-underflow
-ctan -min 0 missing-underflow
-ctan min_subnorm 0 missing-underflow
-ctan -min_subnorm 0 missing-underflow
+ctan min 0
+ctan -min 0
+ctan min_subnorm 0
+ctan -min_subnorm 0
+ctan 0 min
+ctan 0 -min
+ctan 0 min_subnorm
+ctan 0 -min_subnorm
 
 ctanh 0 0
 ctanh 0 -0
@@ -1285,11 +1288,14 @@ ctanh 0x1p-149 0x1.921fb6p+0
 ctanh 0x1p-1074 0x1.921fb54442d18p+0
 ctanh 0x1p-16445 0x1.921fb54442d1846ap+0
 
-# Bug 18595: underflow exception may be missing
-ctanh 0 min missing-underflow
-ctanh 0 -min missing-underflow
-ctanh 0 min_subnorm missing-underflow
-ctanh 0 -min_subnorm missing-underflow
+ctanh 0 min
+ctanh 0 -min
+ctanh 0 min_subnorm
+ctanh 0 -min_subnorm
+ctanh min 0
+ctanh -min 0
+ctanh min_subnorm 0
+ctanh -min_subnorm 0
 
 erf 0
 erf -0

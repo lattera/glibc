@@ -1,5 +1,16 @@
 2015-09-15  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18595]
+	* math/s_ctan.c (__ctan): Force underflow exception for results
+	whose real or imaginary part has small absolute value.
+	* math/s_ctanf.c (__ctanf): Likewise.
+	* math/s_ctanh.c (__ctanh): Likewise.
+	* math/s_ctanhf.c (__ctanhf): Likewise.
+	* math/s_ctanhl.c (__ctanhl): Likewise.
+	* math/s_ctanl.c (__ctanl): Likewise.
+	* math/auto-libm-test-in: Do not allow missing underflow for ctan
+	and ctanh.  Add more tests of ctan and ctanh.
+
 	[BZ #15918]
 	* sysdeps/ieee754/flt-32/e_hypotf.c (__ieee754_hypotf): Simplify
 	handling of cases where one argument is an infinity.
