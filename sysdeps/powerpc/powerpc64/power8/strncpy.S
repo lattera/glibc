@@ -64,7 +64,7 @@ EALIGN (FUNC_NAME, 4, 0)
 	std	r28,-32(r1)
 	std	r29,-24(r1)
 
-	cmpld	r7,r9,r8
+	cmpld	cr7,r9,r8
 
 	std	r30,-16(r1)
 	std	r31,-8(r1)
@@ -107,7 +107,7 @@ L(short_path_loop):
 	cmpdi	cr5,r8,0
 	stb	r8,0(r9)
 	beq	cr5,L(zero_pad_start_1)
-	beq	r7,L(short_path_loop_end_0)
+	beq	cr7,L(short_path_loop_end_0)
 	lbz	r8,1(r4)
 	cmpdi	cr7,r8,0
 	stb	r8,1(r9)
@@ -234,7 +234,7 @@ L(unaligned_lt_16):
 	bne	cr7,L(short_path_prepare_2)
 	addi	r6,r5,-8
 	std	r7,0(r3)
-	addi	r9,r3,r8
+	addi	r9,r3,8
 	cmpldi	cr7,r6,7
 	addi	r7,r4,8
 	ble	cr7,L(short_path_prepare_1_1)
@@ -288,11 +288,11 @@ L(pagecross):
 	cmpdi	cr7,r9,0
 	bne	cr7,L(short_path_prepare_2)
 	addi	r8,r8,-16
-	cmpldi	r7,r8,8
+	cmpldi	cr7,r8,8
 	ble	cr7,L(short_path_prepare_2)
 	ld	r8,24(r11)
 	cmpb	r9,r8,r9
-	cmpdi	r7,r9,0
+	cmpdi	cr7,r9,0
 	bne	cr7,L(short_path_prepare_2)
 
 	/* No null byte found in the 32 bytes readed and length not reached,
@@ -367,7 +367,7 @@ L(loop_16b):
 	cmpb	r7,r0,r30
 	or.	r7,r8,r7
 	addi	r12,r12,-32
-	cmpldi	r7,r12,15
+	cmpldi	cr7,r12,15
 	addi	r11,r11,32
 	bne	cr0,L(short_path_2)
 	std	r10,16(r6)
