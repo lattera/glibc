@@ -1,3 +1,8 @@
+2015-09-15  Roland McGrath  <roland@hack.frob.com>
+
+	* misc/sys/param.h [!MAXHOSTNAMELEN && HOST_NAME_MAX]
+	(MAXHOSTNAMELEN): Define it to HOST_NAME_MAX.
+
 2015-09-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18967]

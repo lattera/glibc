@@ -50,6 +50,9 @@
 #if !defined NOFILE && defined OPEN_MAX
 # define NOFILE		OPEN_MAX
 #endif
+#if !defined MAXHOSTNAMELEN && defined HOST_NAME_MAX
+# define MAXHOSTNAMELEN	HOST_NAME_MAX
+#endif
 #ifndef NCARGS
 # ifdef ARG_MAX
 #  define NCARGS	ARG_MAX
