@@ -77,6 +77,7 @@ __BEGIN_DECLS
 
 #define _Mdouble_		double
 #define __MATH_PRECNAME(name,r)	__CONCAT(name,r)
+#define __MATH_DECLARING_DOUBLE  1
 #define _Mdouble_BEGIN_NAMESPACE __BEGIN_NAMESPACE_STD
 #define _Mdouble_END_NAMESPACE   __END_NAMESPACE_STD
 #include <bits/mathcalls.h>
@@ -84,6 +85,7 @@ __BEGIN_DECLS
 #undef _Mdouble_BEGIN_NAMESPACE
 #undef _Mdouble_END_NAMESPACE
 #undef	__MATH_PRECNAME
+#undef __MATH_DECLARING_DOUBLE
 
 #ifdef __USE_ISOC99
 
@@ -96,6 +98,7 @@ __BEGIN_DECLS
 # endif
 # define _Mdouble_		_Mfloat_
 # define __MATH_PRECNAME(name,r) name##f##r
+# define __MATH_DECLARING_DOUBLE  0
 # define _Mdouble_BEGIN_NAMESPACE __BEGIN_NAMESPACE_C99
 # define _Mdouble_END_NAMESPACE   __END_NAMESPACE_C99
 # include <bits/mathcalls.h>
@@ -103,6 +106,7 @@ __BEGIN_DECLS
 # undef _Mdouble_BEGIN_NAMESPACE
 # undef _Mdouble_END_NAMESPACE
 # undef	__MATH_PRECNAME
+# undef __MATH_DECLARING_DOUBLE
 
 # if !(defined __NO_LONG_DOUBLE_MATH && defined _LIBC) \
      || defined __LDBL_COMPAT \
@@ -140,6 +144,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #  endif
 #  define _Mdouble_		_Mlong_double_
 #  define __MATH_PRECNAME(name,r) name##l##r
+#  define __MATH_DECLARING_DOUBLE  0
 #  define _Mdouble_BEGIN_NAMESPACE __BEGIN_NAMESPACE_C99
 #  define _Mdouble_END_NAMESPACE   __END_NAMESPACE_C99
 #  define __MATH_DECLARE_LDOUBLE   1
@@ -148,6 +153,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #  undef _Mdouble_BEGIN_NAMESPACE
 #  undef _Mdouble_END_NAMESPACE
 #  undef __MATH_PRECNAME
+#  undef __MATH_DECLARING_DOUBLE
 
 # endif /* !(__NO_LONG_DOUBLE_MATH && _LIBC) || __LDBL_COMPAT */
 

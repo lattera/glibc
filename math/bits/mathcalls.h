@@ -229,10 +229,12 @@ __END_NAMESPACE_C99
 /* Return nonzero if VALUE is not a number.  */
 __MATHDECL_1 (int,__isnan,, (_Mdouble_ __value)) __attribute__ ((__const__));
 
-#if defined __USE_MISC || defined __USE_XOPEN
+#if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 /* Return nonzero if VALUE is not a number.  */
 __MATHDECL_1 (int,isnan,, (_Mdouble_ __value)) __attribute__ ((__const__));
+#endif
 
+#if defined __USE_MISC || defined __USE_XOPEN
 /* Bessel functions.  */
 __MATHCALL (j0,, (_Mdouble_));
 __MATHCALL (j1,, (_Mdouble_));
@@ -259,7 +261,7 @@ __MATHCALL (tgamma,, (_Mdouble_));
 __END_NAMESPACE_C99
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN
+#if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 /* Obsolete alias for `lgamma'.  */
 __MATHCALL (gamma,, (_Mdouble_));
 #endif
@@ -366,7 +368,9 @@ __MATHDECL_1 (int, __issignaling,, (_Mdouble_ __value))
      __attribute__ ((__const__));
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || (defined __USE_XOPEN_EXTENDED \
+			   && __MATH_DECLARING_DOUBLE	\
+			   && !defined __USE_XOPEN2K8)
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
 #endif

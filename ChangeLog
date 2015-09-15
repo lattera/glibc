@@ -1,5 +1,21 @@
 2015-09-15  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18967]
+	* math/math.h (__MATH_DECLARING_DOUBLE): New macro.  Define and
+	undefine around includes of <bits/mathcalls.h>.
+	* math/bits/mathcalls.h [!__USE_MISC && __USE_XOPEN2K] (isnan): Do
+	not declare function.
+	[!__USE_MISC && __USE_XOPEN2K] (gamma): Likewise.
+	[!__USE_MISC && (!__MATH_DECLARING_DOUBLE || __USE_XOPEN2K8)]
+	(scalb): Likewise.
+	* math/tgmath.h [!__USE_MISC && __USE_XOPEN_EXTENDED] (scalb): Do
+	not define macro.
+	* conform/Makefile (test-xfail-XOPEN2K/math.h/conform): Remove
+	variable.
+	(test-xfail-XOPEN2K/tgmath.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/math.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/tgmath.h/conform): Likewise.
+
 	[BZ #18857]
 	* sysdeps/ieee754/ldbl-128ibm/s_nearbyintl.c (__nearbyintl): Just
 	return non-finite argument without doing ordered comparisons on
