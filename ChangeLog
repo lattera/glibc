@@ -1,5 +1,9 @@
 2015-09-15  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15918]
+	* sysdeps/ieee754/flt-32/e_hypotf.c (__ieee754_hypotf): Simplify
+	handling of cases where one argument is an infinity.
+
 	[BZ #18875]
 	[BZ #18966]
 	* sysdeps/i386/fpu/e_exp10.S (dbl_min): New object.
