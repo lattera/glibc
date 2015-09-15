@@ -1,5 +1,9 @@
 2015-09-15  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16296]
+	* math/fenv.h (fegetround): Use __attribute_pure__.
+	* include/fenv.h (__fegetround): Likewise.
+
 	[BZ #18595]
 	* math/s_ctan.c (__ctan): Force underflow exception for results
 	whose real or imaginary part has small absolute value.

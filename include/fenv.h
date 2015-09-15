@@ -13,7 +13,7 @@ extern int __fesetexceptflag (const fexcept_t *__flagp, int __excepts);
 extern int __fegetenv (fenv_t *__envp);
 extern int __fesetenv (const fenv_t *__envp);
 extern int __feupdateenv (const fenv_t *__envp);
-extern __typeof (fegetround) __fegetround;
+extern __typeof (fegetround) __fegetround __attribute_pure__;
 extern __typeof (feholdexcept) __feholdexcept;
 extern __typeof (fesetround) __fesetround;
 

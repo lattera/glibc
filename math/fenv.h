@@ -82,7 +82,7 @@ extern int fetestexcept (int __excepts) __THROW;
 /* Rounding control.  */
 
 /* Get current rounding direction.  */
-extern int fegetround (void) __THROW;
+extern int fegetround (void) __THROW __attribute_pure__;
 
 /* Establish the rounding direction represented by ROUND.  */
 extern int fesetround (int __rounding_direction) __THROW;
