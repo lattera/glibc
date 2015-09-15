@@ -1,5 +1,10 @@
 2015-10-01  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Added comments to some
+	assembly instructions.
+
+2015-10-01  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Remove or add register
 	prefix from operands.
 

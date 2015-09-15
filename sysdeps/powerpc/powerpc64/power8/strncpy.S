@@ -82,44 +82,80 @@ EALIGN (FUNC_NAME, 4, 0)
 L(short_path):
 	mr	r9,r3
 L(short_path_1):
+	/* Return if there are no more bytes to be written.  */
 	cmpdi	cr7,r5,0
 	beq	cr7,L(short_path_loop_end_1)
 L(short_path_2):
+	/* Copy one char from src (r4) and write it to dest (r9).  If it is the
+	   end-of-string, start the null padding.  Continue, otherwise.  */
 	lbz	r10,0(r4)
 	cmpdi	cr7,r10,0
 	stb	r10,0(r9)
 	beq	cr7,L(zero_pad_start_1)
+	/* If there are no more bytes to be written, return.  */
 	cmpdi	cr0,r5,1
 	addi	r8,r9,1
 	addi	r6,r5,-1
 	beq	cr0,L(short_path_loop_end_0)
+	/* Copy another char from src (r4) to dest (r9).  Check again if it is
+	   the end-of-string.  If so, start the null padding.  */
 	lbz	r10,1(r4)
 	cmpdi	cr7,r10,0
 	stb	r10,1(r9)
 	beq	cr7,L(zero_pad_start_prepare_1)
+	/* Eagerly decrement r5 by 3, which is the number of bytes already
+	   written, plus one write that will be performed later on.  */
 	addi	r10,r5,-3
 	b	L(short_path_loop_1)
 
 	.align	4
 L(short_path_loop):
+	/* At this point, the induction variable, r5, as well as the pointers
+	   to dest and src (r9 and r4, respectivelly) have been updated.
+
+	   Note: The registers r7 and r10 are induction variables derived from
+	   r5.  They are used to determine if the total number of writes has
+	   been reached at every other write.
+
+	   Copy one char from src (r4) and write it to dest (r9).  If it is the
+	   end-of-string, start the null padding.  Continue, otherwise.  */
 	lbz	r8,0(r4)
 	addi	r7,r10,-2
 	cmpdi	cr5,r8,0
 	stb	r8,0(r9)
 	beq	cr5,L(zero_pad_start_1)
 	beq	cr7,L(short_path_loop_end_0)
+	/* Copy another char from src (r4) to dest (r9).  Check again if it is
+	   the end-of-string.  If so, start the null padding.  */
 	lbz	r8,1(r4)
 	cmpdi	cr7,r8,0
 	stb	r8,1(r9)
 	beq	cr7,L(zero_pad_start)
 	mr	r10,r7
 L(short_path_loop_1):
+	/* This block is reached after two chars have been already written to
+	   dest.  Nevertheless, r5 (the induction variable), r9 (the pointer to
+	   dest), and r4 (the pointer to src) have not yet been updated.
+
+	   At this point:
+	     r5 holds the count of bytes yet to be written plus 2.
+	     r9 points to the last two chars that were already written to dest.
+	     r4 points to the last two chars that were already copied from src.
+
+	   The algorithm continues by decrementing r5, the induction variable,
+	   so that it reflects the last two writes.  The pointers to dest (r9)
+	   and to src (r4) are increment by two, for the same reason.
+
+	   Note: Register r10 is another induction variable, derived from r5,
+	   which determines if the total number of writes has been reached.  */
 	addic.	r5,r5,-2
 	addi	r9,r9,2
-	cmpdi	cr7,r10,0
+	cmpdi	cr7,r10,0 /* Eagerly check if the next write is the last.  */
 	addi	r4,r4,2
 	addi	r6,r9,1
-	bne	cr0,L(short_path_loop)
+	bne	cr0,L(short_path_loop) /* Check if the total number of writes
+					  has been reached at every other
+					  write.  */
 #ifdef USE_AS_STPNCPY
 	mr	r3,r9
 	b	L(short_path_loop_end)
