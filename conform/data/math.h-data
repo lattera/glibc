@@ -192,18 +192,8 @@ function float tanhf (float)
 function float erff (float)
 function float erfcf (float)
 function float hypotf (float, float)
-#if !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
-function float j0f (float)
-function float j1f (float)
-function float jnf (int, float)
-#endif
 function float lgammaf (float)
 function float tgammaf (float)
-#if !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
-function float y0f (float)
-function float y1f (float)
-function float ynf (int, float)
-#endif
 function float acoshf (float)
 function float asinhf (float)
 function float atanhf (float)
@@ -260,18 +250,8 @@ function {long double} tanhl (long double)
 function {long double} erfl (long double)
 function {long double} erfcl (long double)
 function {long double} hypotl (long double, long double)
-#if !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
-function {long double} j0l (long double)
-function {long double} j1l (long double)
-function {long double} jnl (int, long double)
-#endif
 function {long double} lgammal (long double)
 function {long double} tgammal (long double)
-#if !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
-function {long double} y0l (long double)
-function {long double} y1l (long double)
-function {long double} ynl (int, long double)
-#endif
 function {long double} acoshl (long double)
 function {long double} asinhl (long double)
 function {long double} atanhl (long double)

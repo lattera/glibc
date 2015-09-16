@@ -1,5 +1,34 @@
 2015-09-16  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18977]
+	* math/bits/mathcalls.h
+	[!__USE_MISC && __USE_XOPEN && !__MATH_DECLARING_DOUBLE] (j0): Do
+	not declare.
+	[!__USE_MISC && __USE_XOPEN && !__MATH_DECLARING_DOUBLE] (j1):
+	Likewise.
+	[!__USE_MISC && __USE_XOPEN && !__MATH_DECLARING_DOUBLE] (jn):
+	Likewise.
+	[!__USE_MISC && __USE_XOPEN && !__MATH_DECLARING_DOUBLE] (y0):
+	Likewise.
+	[!__USE_MISC && __USE_XOPEN && !__MATH_DECLARING_DOUBLE] (y1):
+	Likewise.
+	[!__USE_MISC && __USE_XOPEN && !__MATH_DECLARING_DOUBLE] (yn):
+	Likewise.
+	* conform/data/math.h-data
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (j0f): Do not expect
+	function.
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (j1f): Likewise.
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (jnf): Likewise.
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (y0f): Likewise.
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (y1f): Likewise.
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (ynf): Likewise.
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (j0l): Likewise.
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (j1l): Likewise.
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (jnl): Likewise.
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (y0l): Likewise.
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (y1l): Likewise.
+	[!ISO99 && !ISO11 && !POSIX && !POSIX2008] (ynl): Likewise.
+
 	[BZ #6803]
 	* math/s_ldexp.c (scalbn): Define as weak alias of __ldexp.
 	[NO_LONG_DOUBLE] (scalbnl): Define as weak alias of __ldexp.

@@ -234,7 +234,7 @@ __MATHDECL_1 (int,__isnan,, (_Mdouble_ __value)) __attribute__ ((__const__));
 __MATHDECL_1 (int,isnan,, (_Mdouble_ __value)) __attribute__ ((__const__));
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN
+#if defined __USE_MISC || (defined __USE_XOPEN && __MATH_DECLARING_DOUBLE)
 /* Bessel functions.  */
 __MATHCALL (j0,, (_Mdouble_));
 __MATHCALL (j1,, (_Mdouble_));
