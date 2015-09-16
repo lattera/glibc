@@ -1,5 +1,8 @@
 2015-09-16  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #4404]
+	* po/de.po: Update from Translation Project.
+
 	[BZ #16415]
 	* sysdeps/ieee754/ldbl-128/s_expm1l.c (maxlog): Remove variable.
 	(__expm1l): Remove code to handle positive infinity and overflow.
