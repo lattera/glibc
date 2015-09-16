@@ -279,6 +279,7 @@ _dl_sysdep_start_cleanup (void)
      __mach_init.  We are done with them now, and the user will
      reacquire them for himself when he wants them.  */
   __mig_dealloc_reply_port (MACH_PORT_NULL);
+  __mach_port_deallocate (__mach_task_self (), __mach_host_self_);
   __mach_port_deallocate (__mach_task_self (), __mach_task_self_);
 }
 

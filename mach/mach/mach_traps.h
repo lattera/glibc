@@ -41,9 +41,10 @@ extern mach_port_t __mach_thread_self (void);
 extern mach_port_t (mach_task_self) (void);
 extern mach_port_t (__mach_task_self) (void);
 
-/* Return the host information port for the host of the calling task.  */
-extern mach_port_t mach_host_self (void);
-extern mach_port_t __mach_host_self (void);
+/* Return the host information port for the host of the calling task.
+   The parens are needed to protect against the macro in <mach_init.h>.  */
+extern mach_port_t (mach_host_self) (void);
+extern mach_port_t (__mach_host_self) (void);
 
 /* Attempt to context switch the current thread off the processor.  Returns
    true if there are other threads that can be run and false if not.  */

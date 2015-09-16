@@ -1,3 +1,19 @@
+2015-09-16  Justus Winter  <4winter@informatik.uni-hamburg.de>
+
+	Cache the host port like we cache the task port.  This way we do not
+	need to call the kernel just to get the port.  Furthermore, we no
+	longer increase the reference count on every invocation of
+	`mach_host_self'.
+
+	* mach/mach/mach_traps.h (__mach_host_self, mach_host_self):
+	Protect declarations against the macro expansion.
+	* mach/mach_init.c (__mach_host_self_): New variable.
+	(mach_init): Initialize `__mach_host_self_'.
+	* mach/mach_init.h (__mach_host_self_): New declaration.
+	(__mach_host_self, mach_host_self): New macros.
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start_cleanup):
+	Release reference.
+
 2015-09-16  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #4404]

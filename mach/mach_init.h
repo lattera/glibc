@@ -31,6 +31,11 @@ extern mach_port_t __mach_task_self_;
 #define __mach_task_self()	(__mach_task_self_ + 0)	/* Not an lvalue.  */
 #define mach_task_self()	(__mach_task_self ())
 
+/* This cache is initialized at startup.  */
+extern mach_port_t __mach_host_self_;
+#define __mach_host_self()	(__mach_host_self_ + 0)	/* Not an lvalue.  */
+#define mach_host_self()	(__mach_host_self ())
+
 /* Kernel page size.  */
 extern vm_size_t __vm_page_size;
 extern vm_size_t vm_page_size;
