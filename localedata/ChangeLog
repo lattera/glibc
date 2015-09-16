@@ -1,3 +1,8 @@
+2015-10-17  Gunnar Hjalmarsson  <gunnarhj@ubuntu.com>
+
+	[BZ #18953]
+	* locales/lt_LT: Change currency to the Euro.
+
 2015-10-17  Egmont Koblinger  <egmont@gmail.com>
 
 	[BZ #18918]

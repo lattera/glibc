@@ -2130,8 +2130,8 @@ translit_end
 END LC_CTYPE
 
 LC_MONETARY
-int_curr_symbol     "<U004C><U0054><U004C><U0020>"
-currency_symbol     "<U004C><U0074>"
+int_curr_symbol     "<U0045><U0055><U0052><U0020>"
+currency_symbol     "<U20AC>"
 mon_decimal_point   "<U002C>"
 mon_thousands_sep   "<U002E>"
 mon_grouping        3;3
