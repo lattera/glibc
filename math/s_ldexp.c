@@ -26,7 +26,9 @@ double __ldexp(double value, int exp)
 	return value;
 }
 weak_alias (__ldexp, ldexp)
+weak_alias (__ldexp, scalbn)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__ldexp, __ldexpl)
 weak_alias (__ldexp, ldexpl)
+weak_alias (__ldexp, scalbnl)
 #endif

@@ -50,5 +50,3 @@ long double __scalbnl(long double arg, int exp)
 
   return r;
 }
-
-weak_alias (__scalbnl, scalbnl)

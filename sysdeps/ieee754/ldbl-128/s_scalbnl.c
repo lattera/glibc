@@ -60,4 +60,3 @@ long double __scalbnl (long double x, int n)
 	SET_LDOUBLE_MSW64(x,(hx&0x8000ffffffffffffULL)|(k<<48));
         return x*twom114;
 }
-weak_alias (__scalbnl, scalbnl)

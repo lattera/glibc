@@ -14,7 +14,6 @@ ENTRY(__scalbn)
 	fstp	%st(1)
 	ret
 END (__scalbn)
-weak_alias (__scalbn, scalbn)
 strong_alias (__scalbn, __scalbln)
 
 #include <shlib-compat.h>

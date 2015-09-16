@@ -45,7 +45,6 @@ __CONCATX(__scalbn,suffix) (x, exp)
 {
   return __m81_u(__CONCATX(__scalbn,suffix))(x, exp);
 }
-weak_alias (__CONCATX(__scalbn,suffix), __CONCATX(scalbn,suffix))
 strong_alias (__CONCATX(__scalbn,suffix), __CONCATX(__scalbln,suffix))
 
 #include <shlib-compat.h>

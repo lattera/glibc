@@ -55,8 +55,6 @@ __scalbn (double x, int n)
 	INSERT_WORDS64(x,(ix&INT64_C(0x800fffffffffffff))|(k<<52));
 	return x*twom54;
 }
-weak_alias (__scalbn, scalbn)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__scalbn, __scalbnl)
-weak_alias (__scalbn, scalbnl)
 #endif

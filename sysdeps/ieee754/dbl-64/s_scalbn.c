@@ -58,8 +58,6 @@ __scalbn (double x, int n)
   SET_HIGH_WORD (x, (hx & 0x800fffff) | (k << 20));
   return x * twom54;
 }
-weak_alias (__scalbn, scalbn)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__scalbn, __scalbnl)
-weak_alias (__scalbn, scalbnl)
 #endif

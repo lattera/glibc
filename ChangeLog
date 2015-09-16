@@ -1,3 +1,33 @@
+2015-09-16  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #6803]
+	* math/s_ldexp.c (scalbn): Define as weak alias of __ldexp.
+	[NO_LONG_DOUBLE] (scalbnl): Define as weak alias of __ldexp.
+	* math/s_ldexpf.c (scalbnf): Define as weak alias of __ldexpf.
+	* math/s_ldexpl.c (scalbnl): Define as weak alias of __ldexpl.
+	* sysdeps/i386/fpu/s_scalbn.S (scalbn): Remove alias.
+	* sysdeps/i386/fpu/s_scalbnf.S (scalbnf): Likewise.
+	* sysdeps/i386/fpu/s_scalbnl.S (scalbnl): Likewise.
+	* sysdeps/ieee754/dbl-64/s_scalbn.c (scalbn): Likewise.
+	[NO_LONG_DOUBLE] (scalbnl): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbn.c (scalbn):
+	Likewise.
+	[NO_LONG_DOUBLE] (scalbnl): Likewise.
+	* sysdeps/ieee754/flt-32/s_scalbnf.c (scalbnf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalbnl.c (scalbnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalbnl.c (scalbnl): Remove
+	long_double_symbol calls.
+	* sysdeps/ieee754/ldbl-64-128/s_scalbnl.c (scalbnl): Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_ldexpl.c (__ldexpl_2): Define as
+	strong alias of __ldexpl.
+	(scalbnl): Define using long_double_symbol.
+	* sysdeps/m68k/m680x0/fpu/s_scalbn.c (__CONCATX(scalbn,suffix)):
+	Remove alias.
+	* sysdeps/sparc/sparc64/soft-fp/s_scalbnl.c (scalbnl): Likewise.
+	* sysdeps/x86_64/fpu/s_scalbnl.S (scalbnl): Likewise.
+	* math/libm-test.inc (scalbn_test_data): Add errno expectations.
+	(scalbln_test_data): Add more errno expectations.
+
 2015-09-16  Justus Winter  <4winter@informatik.uni-hamburg.de>
 
 	Cache the host port like we cache the task port.  This way we do not
