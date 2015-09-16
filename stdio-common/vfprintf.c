@@ -2091,6 +2091,10 @@ printf_positional (_IO_FILE *s, const CHAR_T *format, int readonly_format,
 		 - specs[nspecs_done].end_of_fmt);
     }
  all_done:
+  if (__glibc_unlikely (specs_malloced))
+    free (specs);
+  if (__glibc_unlikely (args_malloced != NULL))
+    free (args_malloced);
   if (__glibc_unlikely (workstart != NULL))
     free (workstart);
   return done;

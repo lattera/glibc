@@ -57,16 +57,22 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 bug19 bug19a tst-popen2 scanf13 scanf14 scanf15 bug20 bug21 bug22 \
 	 scanf16 scanf17 tst-setvbuf1 tst-grouping bug23 bug24 \
 	 bug-vfprintf-nargs tst-long-dbl-fphex tst-fphex-wide tst-sprintf3 \
-	 bug25 tst-printf-round bug23-2 bug23-3 bug23-4 bug26 tst-fmemopen3
+	 bug25 tst-printf-round bug23-2 bug23-3 bug23-4 bug26 tst-fmemopen3 \
+	 tst-printf-bz18872
 
 test-srcs = tst-unbputc tst-printf
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-unbputc.out $(objpfx)tst-printf.out \
+		 $(objpfx)tst-printf-bz18872-mem.out \
 		 $(objpfx)tst-setvbuf1-cmp.out
+generated += tst-printf-bz18872.c tst-printf-bz18872.mtrace \
+	     tst-printf-bz18872-mem.out
 endif
 
 include ../Rules
+
+tst-printf-bz18872-ENV = MALLOC_TRACE=$(objpfx)tst-printf-bz18872.mtrace
 
 ifeq ($(run-built-tests),yes)
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
@@ -75,6 +81,15 @@ $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
 
 $(objpfx)tst-printf.out: tst-printf.sh $(objpfx)tst-printf
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
+	$(evaluate-test)
+
+# We generate this source because it requires a printf invocation with
+# 10K arguments.
+$(objpfx)tst-printf-bz18872.c: tst-printf-bz18872.sh
+	rm -f $@ && $(BASH) $^ > $@.new && mv $@.new $@
+
+$(objpfx)tst-printf-bz18872-mem.out: $(objpfx)tst-printf-bz18872.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-printf-bz18872.mtrace > $@; \
 	$(evaluate-test)
 endif
 

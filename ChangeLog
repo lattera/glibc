@@ -1,3 +1,12 @@
+2015-09-16  Paul Eggert  <eggert@cs.ucla.edu>
+	    Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #18872]
+	* stdio-common/Makefile (tst-printf-bz18872): New test.
+	(tst-printf-bz18872-mem.out): Likewise.
+	* stdio-common/tst-printf-bz18872.sh: Generate new test.
+	* stdio-common/vfprintf.c: Fix memory leaks.
+
 2015-09-16  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17244]
