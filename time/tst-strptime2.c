@@ -31,7 +31,8 @@ static bool verbose;
      whitespace matching strptime " " format specifier, and
      timezone string matching strptime "%z" format specifier.
 
-   Note that a valid timezone string contains the following fields:
+   Note that a valid timezone string is either "Z" or contains the
+   following fields:
      Sign field consisting of a '+' or '-' sign,
      Hours field in two decimal digits, and
      optional Minutes field in two decimal digits.
@@ -153,6 +154,13 @@ do_test (void)
 
   sprintf (buf, "%s  1030", dummy_string);
   expect = LONG_MAX;
+  result |= compare (buf, expect, nresult);
+
+  /* Create and test input string with "Z" input (valid format).
+     Expect tm_gmtoff of 0.  */
+
+  sprintf (buf, "%s Z", dummy_string);
+  expect = 0;
   result |= compare (buf, expect, nresult);
 
   /* Create and test input strings with sign and digits:

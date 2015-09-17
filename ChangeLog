@@ -1,3 +1,9 @@
+2015-09-18  Vincent Bernat  <vincent@bernat.im>
+
+	[BZ #17886]
+	* time/strptime_l.c (__strptime_internal): Make %z accept Z as a
+	valid time zone.
+
 2015-09-17  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/alpha/Makefile (CFLAGS-fdatasync.c): Delete.

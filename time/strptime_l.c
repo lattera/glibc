@@ -749,13 +749,19 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 	    rp++;
 	  break;
 	case 'z':
-	  /* We recognize two formats: if two digits are given, these
+	  /* We recognize three formats: if two digits are given, these
 	     specify hours.  If fours digits are used, minutes are
-	     also specified.  */
+	     also specified.  'Z' is equivalent to +0000.  */
 	  {
 	    val = 0;
 	    while (ISSPACE (*rp))
 	      ++rp;
+	    if (*rp == 'Z')
+	      {
+		++rp;
+		tm->tm_gmtoff = 0;
+		break;
+	      }
 	    if (*rp != '+' && *rp != '-')
 	      return NULL;
 	    bool neg = *rp++ == '-';
