@@ -40,7 +40,14 @@ __ctanhl (__complex__ long double x)
       if (__isinf_nsl (__real__ x))
 	{
 	  __real__ res = __copysignl (1.0, __real__ x);
-	  __imag__ res = __copysignl (0.0, __imag__ x);
+	  if (isfinite (__imag__ x) && fabsl (__imag__ x) > 1.0L)
+	    {
+	      long double sinix, cosix;
+	      __sincosl (__imag__ x, &sinix, &cosix);
+	      __imag__ res = __copysignl (0.0L, sinix * cosix);
+	    }
+	  else
+	    __imag__ res = __copysignl (0.0, __imag__ x);
 	}
       else if (__imag__ x == 0.0)
 	{

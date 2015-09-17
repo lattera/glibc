@@ -39,7 +39,14 @@ __ctanl (__complex__ long double x)
     {
       if (__isinf_nsl (__imag__ x))
 	{
-	  __real__ res = __copysignl (0.0, __real__ x);
+	  if (isfinite (__real__ x) &&  fabsl (__real__ x) > 1.0L)
+	    {
+	      long double sinrx, cosrx;
+	      __sincosl (__real__ x, &sinrx, &cosrx);
+	      __real__ res = __copysignl (0.0L, sinrx * cosrx);
+	    }
+	  else
+	    __real__ res = __copysignl (0.0, __real__ x);
 	  __imag__ res = __copysignl (1.0, __imag__ x);
 	}
       else if (__real__ x == 0.0)

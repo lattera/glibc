@@ -33,7 +33,14 @@ __ctanh (__complex__ double x)
       if (__isinf_ns (__real__ x))
 	{
 	  __real__ res = __copysign (1.0, __real__ x);
-	  __imag__ res = __copysign (0.0, __imag__ x);
+	  if (isfinite (__imag__ x) && fabs (__imag__ x) > 1.0)
+	    {
+	      double sinix, cosix;
+	      __sincos (__imag__ x, &sinix, &cosix);
+	      __imag__ res = __copysign (0.0, sinix * cosix);
+	    }
+	  else
+	    __imag__ res = __copysign (0.0, __imag__ x);
 	}
       else if (__imag__ x == 0.0)
 	{

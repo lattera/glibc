@@ -1,4 +1,21 @@
 2015-09-17  Joseph Myers  <joseph@codesourcery.com>
+	    Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17118]
+	* math/s_ctan.c (__ctan): Determine sign of zero real part of
+	result when imaginary part of argument is infinite using sine and
+	cosine.
+	* math/s_ctanf.c (__ctanf): Likewise.
+	* math/s_ctanl.c (__ctanl): Likewise.
+	* math/s_ctanh.c (__ctanh): Determine sign of zero imaginary part
+	of result when real part of argument is infinite using sine and
+	cosine.
+	* math/s_ctanhf.c (__ctanhf): Likewise.
+	* math/s_ctanhl.c (__ctanhl): Likewise.
+	* math/libm-test.inc (ctan_test_data): Add more tests of ctan.
+	(ctanh_test_data): Add more tests of ctanh.
+
+2015-09-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15384]
 	* sysdeps/ieee754/dbl-64/s_finite.c (FINITE): Use same constant as

@@ -33,7 +33,14 @@ __ctanhf (__complex__ float x)
       if (__isinf_nsf (__real__ x))
 	{
 	  __real__ res = __copysignf (1.0, __real__ x);
-	  __imag__ res = __copysignf (0.0, __imag__ x);
+	  if (isfinite (__imag__ x) && fabsf (__imag__ x) > 1.0f)
+	    {
+	      float sinix, cosix;
+	      __sincosf (__imag__ x, &sinix, &cosix);
+	      __imag__ res = __copysignf (0.0f, sinix * cosix);
+	    }
+	  else
+	    __imag__ res = __copysignf (0.0, __imag__ x);
 	}
       else if (__imag__ x == 0.0)
 	{

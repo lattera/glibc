@@ -6551,13 +6551,73 @@ static const struct test_c_c_data ctan_test_data[] =
   {
     TEST_c_c (ctan, 0, plus_infty, 0.0, 1.0),
     TEST_c_c (ctan, 1, plus_infty, 0.0, 1.0),
+    TEST_c_c (ctan, 2, plus_infty, minus_zero, 1.0),
+    TEST_c_c (ctan, 3, plus_infty, minus_zero, 1.0),
+    TEST_c_c (ctan, 4, plus_infty, 0.0, 1.0),
+    TEST_c_c (ctan, min_value, plus_infty, 0.0, 1.0),
+    TEST_c_c (ctan, min_subnorm_value, plus_infty, 0.0, 1.0),
+    TEST_c_c (ctan, 0x1p127, plus_infty, 0.0, 1.0),
+    TEST_c_c (ctan, 0x1.11p127, plus_infty, minus_zero, 1.0),
+#ifndef TEST_FLOAT
+    TEST_c_c (ctan, 0x1p1023, plus_infty, minus_zero, 1.0),
+    TEST_c_c (ctan, 0x1.5p1023, plus_infty, 0.0, 1.0),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+    TEST_c_c (ctan, 0x1p16383L, plus_infty, 0.0, 1.0),
+    TEST_c_c (ctan, 0x1.2p16383L, plus_infty, minus_zero, 1.0),
+#endif
     TEST_c_c (ctan, minus_zero, plus_infty, minus_zero, 1.0),
     TEST_c_c (ctan, -1, plus_infty, minus_zero, 1.0),
+    TEST_c_c (ctan, -2, plus_infty, 0.0, 1.0),
+    TEST_c_c (ctan, -3, plus_infty, 0.0, 1.0),
+    TEST_c_c (ctan, -4, plus_infty, minus_zero, 1.0),
+    TEST_c_c (ctan, -min_value, plus_infty, minus_zero, 1.0),
+    TEST_c_c (ctan, -min_subnorm_value, plus_infty, minus_zero, 1.0),
+    TEST_c_c (ctan, -0x1p127, plus_infty, minus_zero, 1.0),
+    TEST_c_c (ctan, -0x1.11p127, plus_infty, 0.0, 1.0),
+#ifndef TEST_FLOAT
+    TEST_c_c (ctan, -0x1p1023, plus_infty, 0.0, 1.0),
+    TEST_c_c (ctan, -0x1.5p1023, plus_infty, minus_zero, 1.0),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+    TEST_c_c (ctan, -0x1p16383L, plus_infty, minus_zero, 1.0),
+    TEST_c_c (ctan, -0x1.2p16383L, plus_infty, 0.0, 1.0),
+#endif
 
     TEST_c_c (ctan, 0, minus_infty, 0.0, -1.0),
     TEST_c_c (ctan, 1, minus_infty, 0.0, -1.0),
+    TEST_c_c (ctan, 2, minus_infty, minus_zero, -1.0),
+    TEST_c_c (ctan, 3, minus_infty, minus_zero, -1.0),
+    TEST_c_c (ctan, 4, minus_infty, 0.0, -1.0),
+    TEST_c_c (ctan, min_value, minus_infty, 0.0, -1.0),
+    TEST_c_c (ctan, min_subnorm_value, minus_infty, 0.0, -1.0),
+    TEST_c_c (ctan, 0x1p127, minus_infty, 0.0, -1.0),
+    TEST_c_c (ctan, 0x1.11p127, minus_infty, minus_zero, -1.0),
+#ifndef TEST_FLOAT
+    TEST_c_c (ctan, 0x1p1023, minus_infty, minus_zero, -1.0),
+    TEST_c_c (ctan, 0x1.5p1023, minus_infty, 0.0, -1.0),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+    TEST_c_c (ctan, 0x1p16383L, minus_infty, 0.0, -1.0),
+    TEST_c_c (ctan, 0x1.2p16383L, minus_infty, minus_zero, -1.0),
+#endif
     TEST_c_c (ctan, minus_zero, minus_infty, minus_zero, -1.0),
     TEST_c_c (ctan, -1, minus_infty, minus_zero, -1.0),
+    TEST_c_c (ctan, -2, minus_infty, 0.0, -1.0),
+    TEST_c_c (ctan, -3, minus_infty, 0.0, -1.0),
+    TEST_c_c (ctan, -4, minus_infty, minus_zero, -1.0),
+    TEST_c_c (ctan, -min_value, minus_infty, minus_zero, -1.0),
+    TEST_c_c (ctan, -min_subnorm_value, minus_infty, minus_zero, -1.0),
+    TEST_c_c (ctan, -0x1p127, minus_infty, minus_zero, -1.0),
+    TEST_c_c (ctan, -0x1.11p127, minus_infty, 0.0, -1.0),
+#ifndef TEST_FLOAT
+    TEST_c_c (ctan, -0x1p1023, minus_infty, 0.0, -1.0),
+    TEST_c_c (ctan, -0x1.5p1023, minus_infty, minus_zero, -1.0),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+    TEST_c_c (ctan, -0x1p16383L, minus_infty, minus_zero, -1.0),
+    TEST_c_c (ctan, -0x1.2p16383L, minus_infty, 0.0, -1.0),
+#endif
 
     TEST_c_c (ctan, plus_infty, 0, qnan_value, qnan_value, INVALID_EXCEPTION),
     TEST_c_c (ctan, plus_infty, 2, qnan_value, qnan_value, INVALID_EXCEPTION),
@@ -6569,7 +6629,11 @@ static const struct test_c_c_data ctan_test_data[] =
     TEST_c_c (ctan, minus_infty, -2, qnan_value, qnan_value, INVALID_EXCEPTION),
 
     TEST_c_c (ctan, qnan_value, plus_infty, 0.0, 1.0, IGNORE_ZERO_INF_SIGN),
+    TEST_c_c (ctan, plus_infty, plus_infty, 0.0, 1.0, IGNORE_ZERO_INF_SIGN),
+    TEST_c_c (ctan, minus_infty, plus_infty, 0.0, 1.0, IGNORE_ZERO_INF_SIGN),
     TEST_c_c (ctan, qnan_value, minus_infty, 0.0, -1.0, IGNORE_ZERO_INF_SIGN),
+    TEST_c_c (ctan, plus_infty, minus_infty, 0.0, -1.0, IGNORE_ZERO_INF_SIGN),
+    TEST_c_c (ctan, minus_infty, minus_infty, 0.0, -1.0, IGNORE_ZERO_INF_SIGN),
 
     TEST_c_c (ctan, 0, qnan_value, 0.0, qnan_value),
     TEST_c_c (ctan, minus_zero, qnan_value, minus_zero, qnan_value),
@@ -6598,12 +6662,72 @@ static const struct test_c_c_data ctanh_test_data[] =
   {
     TEST_c_c (ctanh, plus_infty, 0, 1.0, 0.0),
     TEST_c_c (ctanh, plus_infty, 1, 1.0, 0.0),
+    TEST_c_c (ctanh, plus_infty, 2, 1.0, minus_zero),
+    TEST_c_c (ctanh, plus_infty, 3, 1.0, minus_zero),
+    TEST_c_c (ctanh, plus_infty, 4, 1.0, 0.0),
+    TEST_c_c (ctanh, plus_infty, min_value, 1.0, 0.0),
+    TEST_c_c (ctanh, plus_infty, min_subnorm_value, 1.0, 0.0),
+    TEST_c_c (ctanh, plus_infty, 0x1p127, 1.0, 0.0),
+    TEST_c_c (ctanh, plus_infty, 0x1.11p127, 1.0, minus_zero),
+#ifndef TEST_FLOAT
+    TEST_c_c (ctanh, plus_infty, 0x1p1023, 1.0, minus_zero),
+    TEST_c_c (ctanh, plus_infty, 0x1.5p1023, 1.0, 0.0),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+    TEST_c_c (ctanh, plus_infty, 0x1p16383L, 1.0, 0.0),
+    TEST_c_c (ctanh, plus_infty, 0x1.2p16383L, 1.0, minus_zero),
+#endif
     TEST_c_c (ctanh, plus_infty, minus_zero, 1.0, minus_zero),
     TEST_c_c (ctanh, plus_infty, -1, 1.0, minus_zero),
+    TEST_c_c (ctanh, plus_infty, -2, 1.0, 0.0),
+    TEST_c_c (ctanh, plus_infty, -3, 1.0, 0.0),
+    TEST_c_c (ctanh, plus_infty, -4, 1.0, minus_zero),
+    TEST_c_c (ctanh, plus_infty, -min_value, 1.0, minus_zero),
+    TEST_c_c (ctanh, plus_infty, -min_subnorm_value, 1.0, minus_zero),
+    TEST_c_c (ctanh, plus_infty, -0x1p127, 1.0, minus_zero),
+    TEST_c_c (ctanh, plus_infty, -0x1.11p127, 1.0, 0.0),
+#ifndef TEST_FLOAT
+    TEST_c_c (ctanh, plus_infty, -0x1p1023, 1.0, 0.0),
+    TEST_c_c (ctanh, plus_infty, -0x1.5p1023, 1.0, minus_zero),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+    TEST_c_c (ctanh, plus_infty, -0x1p16383L, 1.0, minus_zero),
+    TEST_c_c (ctanh, plus_infty, -0x1.2p16383L, 1.0, 0.0),
+#endif
     TEST_c_c (ctanh, minus_infty, 0, -1.0, 0.0),
     TEST_c_c (ctanh, minus_infty, 1, -1.0, 0.0),
+    TEST_c_c (ctanh, minus_infty, 2, -1.0, minus_zero),
+    TEST_c_c (ctanh, minus_infty, 3, -1.0, minus_zero),
+    TEST_c_c (ctanh, minus_infty, 4, -1.0, 0.0),
+    TEST_c_c (ctanh, minus_infty, min_value, -1.0, 0.0),
+    TEST_c_c (ctanh, minus_infty, min_subnorm_value, -1.0, 0.0),
+    TEST_c_c (ctanh, minus_infty, 0x1p127, -1.0, 0.0),
+    TEST_c_c (ctanh, minus_infty, 0x1.11p127, -1.0, minus_zero),
+#ifndef TEST_FLOAT
+    TEST_c_c (ctanh, minus_infty, 0x1p1023, -1.0, minus_zero),
+    TEST_c_c (ctanh, minus_infty, 0x1.5p1023, -1.0, 0.0),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+    TEST_c_c (ctanh, minus_infty, 0x1p16383L, -1.0, 0.0),
+    TEST_c_c (ctanh, minus_infty, 0x1.2p16383L, -1.0, minus_zero),
+#endif
     TEST_c_c (ctanh, minus_infty, minus_zero, -1.0, minus_zero),
     TEST_c_c (ctanh, minus_infty, -1, -1.0, minus_zero),
+    TEST_c_c (ctanh, minus_infty, -2, -1.0, 0.0),
+    TEST_c_c (ctanh, minus_infty, -3, -1.0, 0.0),
+    TEST_c_c (ctanh, minus_infty, -4, -1.0, minus_zero),
+    TEST_c_c (ctanh, minus_infty, -min_value, -1.0, minus_zero),
+    TEST_c_c (ctanh, minus_infty, -min_subnorm_value, -1.0, minus_zero),
+    TEST_c_c (ctanh, minus_infty, -0x1p127, -1.0, minus_zero),
+    TEST_c_c (ctanh, minus_infty, -0x1.11p127, -1.0, 0.0),
+#ifndef TEST_FLOAT
+    TEST_c_c (ctanh, minus_infty, -0x1p1023, -1.0, 0.0),
+    TEST_c_c (ctanh, minus_infty, -0x1.5p1023, -1.0, minus_zero),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+    TEST_c_c (ctanh, minus_infty, -0x1p16383L, -1.0, minus_zero),
+    TEST_c_c (ctanh, minus_infty, -0x1.2p16383L, -1.0, 0.0),
+#endif
 
     TEST_c_c (ctanh, 0, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION),
     TEST_c_c (ctanh, 2, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION),
@@ -6615,7 +6739,11 @@ static const struct test_c_c_data ctanh_test_data[] =
     TEST_c_c (ctanh, -2, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION),
 
     TEST_c_c (ctanh, plus_infty, qnan_value, 1.0, 0.0, IGNORE_ZERO_INF_SIGN),
+    TEST_c_c (ctanh, plus_infty, plus_infty, 1.0, 0.0, IGNORE_ZERO_INF_SIGN),
+    TEST_c_c (ctanh, plus_infty, minus_infty, 1.0, 0.0, IGNORE_ZERO_INF_SIGN),
     TEST_c_c (ctanh, minus_infty, qnan_value, -1.0, 0.0, IGNORE_ZERO_INF_SIGN),
+    TEST_c_c (ctanh, minus_infty, plus_infty, -1.0, 0.0, IGNORE_ZERO_INF_SIGN),
+    TEST_c_c (ctanh, minus_infty, minus_infty, -1.0, 0.0, IGNORE_ZERO_INF_SIGN),
 
     TEST_c_c (ctanh, qnan_value, 0, qnan_value, 0.0),
     TEST_c_c (ctanh, qnan_value, minus_zero, qnan_value, minus_zero),

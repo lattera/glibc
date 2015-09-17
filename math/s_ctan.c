@@ -32,7 +32,14 @@ __ctan (__complex__ double x)
     {
       if (__isinf_ns (__imag__ x))
 	{
-	  __real__ res = __copysign (0.0, __real__ x);
+	  if (isfinite (__real__ x) && fabs (__real__ x) > 1.0)
+	    {
+	      double sinrx, cosrx;
+	      __sincos (__real__ x, &sinrx, &cosrx);
+	      __real__ res = __copysign (0.0, sinrx * cosrx);
+	    }
+	  else
+	    __real__ res = __copysign (0.0, __real__ x);
 	  __imag__ res = __copysign (1.0, __imag__ x);
 	}
       else if (__real__ x == 0.0)
