@@ -34,7 +34,7 @@ ___finitel (long double x)
 
   xhi = ldbl_high (x);
   EXTRACT_WORDS64 (hx, xhi);
-  hx &= 0x7fffffffffffffffLL;
+  hx &= 0x7ff0000000000000LL;
   hx -= 0x7ff0000000000000LL;
   return hx >> 63;
 }

@@ -29,7 +29,7 @@ int __finitel(long double x)
 {
 	int64_t hx;
 	GET_LDOUBLE_MSW64(hx,x);
-	return (int)((u_int64_t)((hx&0x7fffffffffffffffLL)
+	return (int)((u_int64_t)((hx&0x7fff000000000000LL)
 				 -0x7fff000000000000LL)>>63);
 }
 hidden_def (__finitel)

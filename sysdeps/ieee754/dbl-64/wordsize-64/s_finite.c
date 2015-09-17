@@ -24,7 +24,7 @@ __finite(double x)
 {
   int64_t lx;
   EXTRACT_WORDS64(lx,x);
-  return (int)((uint64_t)((lx&INT64_C(0x7fffffffffffffff))-INT64_C(0x7ff0000000000000))>>63);
+  return (int)((uint64_t)((lx&INT64_C(0x7ff0000000000000))-INT64_C(0x7ff0000000000000))>>63);
 }
 hidden_def (__finite)
 weak_alias (__finite, finite)
