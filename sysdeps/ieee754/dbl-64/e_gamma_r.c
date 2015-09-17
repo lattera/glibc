@@ -194,6 +194,11 @@ __ieee754_gamma_r (double x, int *signgamp)
 	      double tret = M_PI / (-x * sinpix
 				    * gamma_positive (-x, &exp2_adj));
 	      ret = __scalbn (tret, -exp2_adj);
+	      if (ret < DBL_MIN)
+		{
+		  double force_underflow = ret * ret;
+		  math_force_eval (force_underflow);
+		}
 	    }
 	}
     }
