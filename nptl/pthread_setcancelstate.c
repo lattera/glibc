@@ -70,3 +70,4 @@ __pthread_setcancelstate (state, oldstate)
   return 0;
 }
 strong_alias (__pthread_setcancelstate, pthread_setcancelstate)
+hidden_def (__pthread_setcancelstate)

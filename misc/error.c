@@ -298,8 +298,8 @@ error (int status, int errnum, const char *message, ...)
   /* We do not want this call to be cut short by a thread
      cancellation.  Therefore disable cancellation for now.  */
   int state = PTHREAD_CANCEL_ENABLE;
-  __libc_ptf_call (pthread_setcancelstate, (PTHREAD_CANCEL_DISABLE, &state),
-		   0);
+  __libc_ptf_call (__pthread_setcancelstate,
+		   (PTHREAD_CANCEL_DISABLE, &state), 0);
 #endif
 
   flush_stdout ();
@@ -323,7 +323,7 @@ error (int status, int errnum, const char *message, ...)
 #ifdef _LIBC
   _IO_funlockfile (stderr);
 # ifdef __libc_ptf_call
-  __libc_ptf_call (pthread_setcancelstate, (state, NULL), 0);
+  __libc_ptf_call (__pthread_setcancelstate, (state, NULL), 0);
 # endif
 #endif
 }
@@ -360,7 +360,8 @@ error_at_line (int status, int errnum, const char *file_name,
   /* We do not want this call to be cut short by a thread
      cancellation.  Therefore disable cancellation for now.  */
   int state = PTHREAD_CANCEL_ENABLE;
-  __libc_ptf_call (pthread_setcancelstate, (PTHREAD_CANCEL_DISABLE, &state),
+  __libc_ptf_call (__pthread_setcancelstate,
+		   (PTHREAD_CANCEL_DISABLE, &state),
 		   0);
 #endif
 
@@ -393,7 +394,7 @@ error_at_line (int status, int errnum, const char *file_name,
 #ifdef _LIBC
   _IO_funlockfile (stderr);
 # ifdef __libc_ptf_call
-  __libc_ptf_call (pthread_setcancelstate, (state, NULL), 0);
+  __libc_ptf_call (__pthread_setcancelstate, (state, NULL), 0);
 # endif
 #endif
 }

@@ -19,19 +19,6 @@
 
 /* We have to completely disable cancellation.  assert() must not be a
    cancellation point but the implementation uses write() etc.  */
-#ifdef SHARED
-# include <pthread-functions.h>
-# define FATAL_PREPARE \
-  {									      \
-    if (__libc_pthread_functions_init)					      \
-      PTHFCT_CALL (ptr_pthread_setcancelstate, (PTHREAD_CANCEL_DISABLE,	      \
-						NULL));			      \
-  }
-#else
-# pragma weak pthread_setcancelstate
-# define FATAL_PREPARE \
-  {									      \
-    if (pthread_setcancelstate != NULL)					      \
-      pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, NULL);		      \
-  }
-#endif
+#define FATAL_PREPARE \
+  __libc_ptf_call (__pthread_setcancelstate, \
+		   (PTHREAD_CANCEL_DISABLE, NULL), 0)

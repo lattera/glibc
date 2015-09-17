@@ -376,6 +376,7 @@ extern int __pthread_atfork (void (*__prepare) (void),
 			     void (*__parent) (void),
 			     void (*__child) (void));
 
+extern int __pthread_setcancelstate (int state, int *oldstate);
 
 
 /* Make the pthread functions weak so that we can elide them from
@@ -403,9 +404,9 @@ weak_extern (__pthread_getspecific)
 weak_extern (__pthread_once)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
+weak_extern (__pthread_setcancelstate)
 weak_extern (_pthread_cleanup_push_defer)
 weak_extern (_pthread_cleanup_pop_restore)
-weak_extern (pthread_setcancelstate)
 # else
 #  pragma weak __pthread_mutex_init
 #  pragma weak __pthread_mutex_destroy
@@ -427,9 +428,9 @@ weak_extern (pthread_setcancelstate)
 #  pragma weak __pthread_once
 #  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
+#  pragma weak __pthread_setcancelstate
 #  pragma weak _pthread_cleanup_push_defer
 #  pragma weak _pthread_cleanup_pop_restore
-#  pragma weak pthread_setcancelstate
 # endif
 #endif
 

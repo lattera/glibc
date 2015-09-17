@@ -1186,7 +1186,7 @@ parse_comm (char **word, size_t *word_length, size_t *max_length,
 		  // XXX Ideally we do want the thread being cancelable.
 		  // XXX If demand is there we'll change it.
 		  int state = PTHREAD_CANCEL_ENABLE;
-		  __libc_ptf_call (pthread_setcancelstate,
+		  __libc_ptf_call (__pthread_setcancelstate,
 				   (PTHREAD_CANCEL_DISABLE, &state), 0);
 #endif
 
@@ -1194,7 +1194,8 @@ parse_comm (char **word, size_t *word_length, size_t *max_length,
 				     flags, pwordexp, ifs, ifs_white);
 
 #ifdef __libc_ptf_call
-		  __libc_ptf_call (pthread_setcancelstate, (state, NULL), 0);
+		  __libc_ptf_call (__pthread_setcancelstate,
+				   (state, NULL), 0);
 #endif
 
 		  free (comm);

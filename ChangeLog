@@ -1,3 +1,27 @@
+2015-09-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18970]
+	* misc/error.c (error): Replace pthread_setcancelstate with
+	__pthread_setcancelstate.
+	(error_at_line): Likewise.
+	* posix/wordexp.c (parse_comm): Likewise.
+	* stdlib/fmtmsg.c (fmtmsg): Likewise.
+	* nptl/forward.c (pthread_setcancelstate): Renamed to ...
+	(__pthread_setcancelstate): This.
+	(pthread_setcancelstate): Add an alias.
+	* nptl/nptl-init.c (pthread_functions): Replace
+	ptr_pthread_setcancelstate with ptr___pthread_setcancelstate.
+	* sysdeps/nptl/pthread-functions.h (pthread_functions): Likewise.
+	* nptl/pthreadP.h (__pthread_setcancelstate): Mark it with
+	hidden_proto.
+	* nptl/pthread_setcancelstate.c (__pthread_setcancelstate): Mark
+	it with hidden_def.
+	* sysdeps/nptl/libc-lockP.h (__pthread_setcancelstate): New.
+	(pthread_setcancelstate): Renamed to ...
+	(__pthread_setcancelstate): This.
+	* sysdeps/unix/sysv/linux/fatal-prepare.h (FATAL_PREPARE): Use
+	__libc_ptf_call with __pthread_setcancelstate.
+
 2015-09-17  Joseph Myers  <joseph@codesourcery.com>
 	    Andreas Schwab  <schwab@suse.de>
 
