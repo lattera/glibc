@@ -19,13 +19,8 @@
 
 #include <math.h>
 
-#include <math_private.h>
-
 int
 __signbit (double x)
 {
-  int32_t hx;
-
-  GET_HIGH_WORD (hx, x);
-  return hx & 0x80000000;
+  return __builtin_signbit (x);
 }

@@ -19,13 +19,8 @@
 
 #include <math.h>
 
-#include <math_private.h>
-
 int
 __signbitl (long double x)
 {
-  int64_t e;
-
-  GET_LDOUBLE_MSW64 (e, x);
-  return e < 0;
+  return __builtin_signbitl (x);
 }

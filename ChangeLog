@@ -1,5 +1,16 @@
 2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/ieee754/dbl-64/s_signbit.c (__signbit):
+	Use __builtin_signbit.
+	* sysdeps/ieee754/flt-32/s_signbitf.c (__signbitf):
+	Use __builtin_signbitf.
+	* sysdeps/ieee754/ldbl-128/s_signbitl.c (__signbitl):
+	Use __builtin_signbitl.
+	* sysdeps/ieee754/ldbl-128ibm/s_signbitl.c (___signbitl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_signbitl.c (__signbitl): Likewise.
+
+2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	[BZ #15367]
 	[BZ #17441]
 

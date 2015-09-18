@@ -19,13 +19,8 @@
 
 #include <math.h>
 
-#include <math_private.h>
-
 int
 __signbitl (long double x)
 {
-  int32_t e;
-
-  GET_LDOUBLE_EXP (e, x);
-  return e & 0x8000;
+  return __builtin_signbitl (x);
 }
