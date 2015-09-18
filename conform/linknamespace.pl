@@ -97,8 +97,8 @@ sub list_syms {
 
 # Load information about GLOBAL and WEAK symbols defined or used in
 # the standard libraries.
-# Strong symbols (defined or undefined) from a given object.
-%strong_syms = ();
+# Symbols from a given object, except for weak defined symbols.
+%seen_syms = ();
 # Strong undefined symbols from a given object.
 %strong_undef_syms = ();
 # Objects defining a given symbol (strongly or weakly).
@@ -112,17 +112,17 @@ foreach my $sym (@sym_data) {
     }
     push (@{$sym_objs{$name}}, $file);
   }
-  if ($bind eq "GLOBAL") {
-    if (!defined ($strong_syms{$file})) {
-      $strong_syms{$file} = [];
+  if ($bind eq "GLOBAL" || !$defined) {
+    if (!defined ($seen_syms{$file})) {
+      $seen_syms{$file} = [];
     }
-    push (@{$strong_syms{$file}}, $name);
-    if (!$defined) {
-      if (!defined ($strong_undef_syms{$file})) {
-	$strong_undef_syms{$file} = [];
-      }
-      push (@{$strong_undef_syms{$file}}, $name);
+    push (@{$seen_syms{$file}}, $name);
+  }
+  if ($bind eq "GLOBAL" && !$defined) {
+    if (!defined ($strong_undef_syms{$file})) {
+      $strong_undef_syms{$file} = [];
     }
+    push (@{$strong_undef_syms{$file}}, $name);
   }
 }
 
@@ -132,12 +132,7 @@ foreach my $sym (@sym_data) {
 # The rules followed are heuristic and so may produce false positives
 # and false negatives.
 #
-# * Weak undefined symbols are ignored; however, if a code path that
-# references one (even just to check if its address is 0) is executed,
-# that may conflict with a definition of that symbol in the user's
-# program.
-#
-# * Strong undefined symbols are considered of signficance, but it is
+# * All undefined symbols are considered of signficance, but it is
 # possible that (a) any standard library definition is weak, so can be
 # overridden by the user's definition, and (b) the symbol is only used
 # conditionally and not if the program is limited to standard
@@ -192,14 +187,14 @@ unlink ($cincfile) || die ("unlink $cincfile: $!\n");
 unlink ($cincfile_o) || die ("unlink $cincfile_o: $!\n");
 unlink ($cincfile_sym) || die ("unlink $cincfile_sym: $!\n");
 
-%strong_seen = ();
+%seen_where = ();
 %files_seen = ();
 %all_undef = ();
 %current_undef = ();
 foreach my $sym (@elf_syms) {
   my ($file, $name, $bind, $defined) = @$sym;
   if ($bind eq "GLOBAL" && !$defined) {
-    $strong_seen{$name} = "[initial] $name";
+    $seen_where{$name} = "[initial] $name";
     $all_undef{$name} = "[initial] $name";
     $current_undef{$name} = "[initial] $name";
   }
@@ -213,9 +208,9 @@ while (%current_undef) {
 	next;
       }
       $files_seen{$file} = 1;
-      foreach my $ssym (@{$strong_syms{$file}}) {
-	if (!defined ($strong_seen{$ssym})) {
-	  $strong_seen{$ssym} = "$current_undef{$sym} -> [$file] $ssym";
+      foreach my $ssym (@{$seen_syms{$file}}) {
+	if (!defined ($seen_where{$ssym})) {
+	  $seen_where{$ssym} = "$current_undef{$sym} -> [$file] $ssym";
 	}
       }
       foreach my $usym (@{$strong_undef_syms{$file}}) {
@@ -230,14 +225,14 @@ while (%current_undef) {
 }
 
 $ret = 0;
-foreach my $sym (sort keys %strong_seen) {
+foreach my $sym (sort keys %seen_where) {
   if ($sym =~ /^_/) {
     next;
   }
   if (defined ($stdsyms{$sym})) {
     next;
   }
-  print "$strong_seen{$sym}\n";
+  print "$seen_where{$sym}\n";
   $ret = 1;
 }
 

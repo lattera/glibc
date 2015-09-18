@@ -1,3 +1,10 @@
+2015-09-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/linknamespace.pl: Require weak undefined symbols to be
+	in the standard namespace.
+	(%strong_syms): Rename to %seen_syms.
+	(%strong_seen): Rename to %seen_where.
+
 2015-09-17  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18970]
