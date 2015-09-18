@@ -1,5 +1,7 @@
 2015-09-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* timezone/Makefile: Revert previous change.
+
 	[BZ #18980]
 	* sysdeps/i386/fpu/i386-math-asm.h (DEFINE_FLT_MIN): New macro.
 	(DEFINE_DBL_MIN): Likewise.

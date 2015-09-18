@@ -61,12 +61,10 @@ tz-cflags = -DTZDIR='"$(zonedir)"' \
 	    -DTZDEFRULES='"$(posixrules-file)"' \
 	    -DTM_GMTOFF=tm_gmtoff -DTM_ZONE=tm_zone
 
-CFLAGS-zdump.c = -fwrapv -DNOID $(tz-cflags) -DHAVE_GETTEXT \
-		 -Wno-error=unused-const-variable
-CFLAGS-zic.c = -DNOID $(tz-cflags) -DHAVE_GETTEXT \
-	       -Wno-error=unused-const-variable
-CFLAGS-ialloc.c = -DNOID -DHAVE_GETTEXT -Wno-error=unused-const-variable
-CFLAGS-scheck.c = -DNOID -DHAVE_GETTEXT -Wno-error=unused-const-variable
+CFLAGS-zdump.c = -fwrapv -DNOID $(tz-cflags) -DHAVE_GETTEXT
+CFLAGS-zic.c = -DNOID $(tz-cflags) -DHAVE_GETTEXT
+CFLAGS-ialloc.c = -DNOID -DHAVE_GETTEXT
+CFLAGS-scheck.c = -DNOID -DHAVE_GETTEXT
 
 # We have to make sure the data for testing the tz functions is available.
 # Don't add leapseconds here since test-tz made checks that work only without
