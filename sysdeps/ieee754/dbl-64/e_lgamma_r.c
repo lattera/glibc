@@ -296,7 +296,7 @@ __ieee754_lgamma_r(double x, int *signgamp)
 	    r = (x-half)*(t-one)+w;
 	} else
     /* 2**58 <= x <= inf */
-	    r =  x*(__ieee754_log(x)-one);
+	    r =  math_narrow_eval (x*(__ieee754_log(x)-one));
 	/* NADJ is set for negative arguments but not otherwise,
 	   resulting in warnings that it may be used uninitialized
 	   although in the cases where it is used it has always been

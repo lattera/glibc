@@ -1,3 +1,19 @@
+2015-09-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18980]
+	* sysdeps/generic/math_private.h: Include <float.h>.
+	(math_narrow_eval): New macro.
+	[FLT_EVAL_METHOD != 0] (excess_precision): Likewise.
+	* sysdeps/ieee754/dbl-64/e_cosh.c (__ieee754_cosh): Use
+	math_narrow_eval on overflowing return value.
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c (__ieee754_lgamma_r):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/e_sinh.c (__ieee754_sinh): Likewise.
+	* sysdeps/ieee754/flt-32/e_coshf.c (__ieee754_coshf): Likewise.
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c (__ieee754_lgammaf_r):
+	Likewise.
+	* sysdeps/ieee754/flt-32/e_sinhf.c (__ieee754_sinhf): Likewise.
+
 2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* include/math.h: Remove __isinf_ns, __isinf_nsf, __isinf_nsl.

@@ -89,6 +89,6 @@ __ieee754_sinh (double x)
     }
 
   /* |x| > overflowthresold, sinh(x) overflow */
-  return x * shuge;
+  return math_narrow_eval (x * shuge);
 }
 strong_alias (__ieee754_sinh, __sinh_finite)

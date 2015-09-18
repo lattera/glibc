@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include <fenv.h>
+#include <float.h>
 #include <get-rounding-mode.h>
 
 /* The original fdlibm code used statements like:
@@ -403,6 +404,29 @@ extern long double __lgamma_productl (long double t, long double x,
 ({ __typeof (x) __x = (x); __asm ("" : "+m" (__x)); __x; })
 # define math_force_eval(x) \
 ({ __typeof (x) __x = (x); __asm __volatile__ ("" : : "m" (__x)); })
+#endif
+
+/* math_narrow_eval reduces its floating-point argument to the range
+   and precision of its semantic type.  (The original evaluation may
+   still occur with excess range and precision, so the result may be
+   affected by double rounding.)  */
+#if FLT_EVAL_METHOD == 0
+# define math_narrow_eval(x) (x)
+#else
+# if FLT_EVAL_METHOD == 1
+#  define excess_precision(type) __builtin_types_compatible_p (type, float)
+# else
+#  define excess_precision(type) (__builtin_types_compatible_p (type, float) \
+				  || __builtin_types_compatible_p (type, \
+								   double))
+# endif
+# define math_narrow_eval(x)					\
+  ({								\
+    __typeof (x) math_narrow_eval_tmp = (x);			\
+    if (excess_precision (__typeof (math_narrow_eval_tmp)))	\
+      __asm__ ("" : "+m" (math_narrow_eval_tmp));		\
+    math_narrow_eval_tmp;					\
+   })
 #endif
 
 

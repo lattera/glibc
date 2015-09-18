@@ -83,6 +83,6 @@ __ieee754_cosh (double x)
     return x * x;
 
   /* |x| > overflowthresold, cosh(x) overflow */
-  return huge * huge;
+  return math_narrow_eval (huge * huge);
 }
 strong_alias (__ieee754_cosh, __cosh_finite)

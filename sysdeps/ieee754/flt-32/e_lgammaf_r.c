@@ -232,7 +232,7 @@ __ieee754_lgammaf_r(float x, int *signgamp)
 	    r = (x-half)*(t-one)+w;
 	} else
     /* 2**26 <= x <= inf */
-	    r =  x*(__ieee754_logf(x)-one);
+	    r =  math_narrow_eval (x*(__ieee754_logf(x)-one));
 	/* NADJ is set for negative arguments but not otherwise,
 	   resulting in warnings that it may be used uninitialized
 	   although in the cases where it is used it has always been

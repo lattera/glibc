@@ -58,6 +58,6 @@ __ieee754_coshf (float x)
 	if(ix>=0x7f800000) return x*x;
 
     /* |x| > overflowthresold, cosh(x) overflow */
-	return huge*huge;
+	return math_narrow_eval (huge*huge);
 }
 strong_alias (__ieee754_coshf, __coshf_finite)
