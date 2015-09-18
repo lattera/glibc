@@ -1,3 +1,10 @@
+2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* timezone/Makefile: Ignore unused variable errors due to private.h
+	(time_t_min) and (time_t_max).
+	* timezone/private.h (time_t_min): Revert removal.  (time_t_max):
+	Likewise.
+
 2015-09-18  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18981]
