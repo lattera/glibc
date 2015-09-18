@@ -676,6 +676,7 @@ force_install
 bindnow
 enable_lock_elision
 hardcoded_path_in_tests
+enable_timezone_tools
 use_default_link
 sysheaders
 with_fp
@@ -759,6 +760,7 @@ with_default_link
 enable_sanity_checks
 enable_shared
 enable_profile
+enable_timezone_tools
 enable_hardcoded_path_in_tests
 enable_stackguard_randomization
 enable_lock_elision
@@ -1411,6 +1413,9 @@ Optional Features:
                           in special situations) [default=yes]
   --enable-shared         build shared library [default=yes if GNU ld]
   --enable-profile        build profiled library [default=no]
+  --disable-timezone-tools
+                          do not install timezone tools (if using external
+                          ones) [default=install]
   --enable-hardcoded-path-in-tests
                           hardcode newly built glibc path in tests
                           [default=no]
@@ -3547,6 +3552,14 @@ if test "${enable_profile+set}" = set; then :
 else
   profile=no
 fi
+
+# Check whether --enable-timezone-tools was given.
+if test "${enable_timezone_tools+set}" = set; then :
+  enableval=$enable_timezone_tools; enable_timezone_tools=$enableval
+else
+  enable_timezone_tools=yes
+fi
+
 
 
 # Check whether --enable-hardcoded-path-in-tests was given.

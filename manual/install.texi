@@ -157,6 +157,16 @@ By default, dynamic tests are linked to run with the installed C library.
 This option hardcodes the newly built C library path in dynamic tests
 so that they can be invoked directly.
 
+@item --disable-timezone-tools
+By default, timezone related utilities (@command{zic}, @command{zdump},
+and @command{tzselect}) are installed with glibc.  If you are building
+these independently (e.g. by using the @samp{tzcode} package), then this
+option will allow disabling the install of these too.
+
+Note that you need to make sure the external tools are kept in sync with
+the versions that @theglibc{} expects as the data formats may change over
+time.  Consult the @file{timezone} subdirectory for more details.
+
 @item --enable-lock-elision=yes
 Enable lock elision for pthread mutexes by default.
 

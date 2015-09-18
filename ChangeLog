@@ -1,3 +1,14 @@
+2015-09-18  Mike Frysinger  <vapier@gentoo.org>
+
+	* config.make.in (enable-timezone-tools): New variable.
+	* configure.ac (AC_ARG_ENABLE(timezone-tools)): New configure flag.
+	(enable_timezone_tools): Export to generated files.
+	* configure: Regenerate.
+	* INSTALL: Regenerate.
+	* manual/install.texi (--disable-timezone-tools): Document new flag.
+	* timezone/Makefile (install-sbin, install-bin-script): Wrap in a
+	ifeq ($(enable-timezone-tools),yes) check.
+
 2015-09-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* timezone/Makefile: Revert previous change.

@@ -159,6 +159,12 @@ AC_ARG_ENABLE([profile],
 			     [build profiled library @<:@default=no@:>@]),
 	      [profile=$enableval],
 	      [profile=no])
+AC_ARG_ENABLE([timezone-tools],
+	      AC_HELP_STRING([--disable-timezone-tools],
+			     [do not install timezone tools (if using external ones) @<:@default=install@:>@]),
+	      [enable_timezone_tools=$enableval],
+	      [enable_timezone_tools=yes])
+AC_SUBST(enable_timezone_tools)
 
 AC_ARG_ENABLE([hardcoded-path-in-tests],
 	      AC_HELP_STRING([--enable-hardcoded-path-in-tests],
