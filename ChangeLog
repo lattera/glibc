@@ -1,3 +1,16 @@
+2015-09-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18981]
+	* sysdeps/i386/fpu/i386-math-asm.h: New file.
+	* sysdeps/i386/fpu/e_scalb.S: Include <i386-math-asm.h>.
+	(__ieee754_scalb): Use DBL_NARROW_EVAL.
+	* sysdeps/i386/fpu/e_scalbf.S: Include <i386-math-asm.h>.
+	(__ieee754_scalbf): Use FLT_NARROW_EVAL.
+	* sysdeps/i386/fpu/s_scalbn.S: Include <i386-math-asm.h>.
+	(__scalbn): Use DBL_NARROW_EVAL.
+	* sysdeps/i386/fpu/s_scalbnf.S: Include <i386-math-asm.h>.
+	(__scalbnf): Use FLT_NARROW_EVAL.
+
 2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* math/w_tgamma.c (__ieee754_gamma_r): Use explicit sign check.
