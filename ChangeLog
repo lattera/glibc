@@ -1,5 +1,8 @@
 2015-09-18  Carlos O'Donell  <carlos@redhat.com>
 
+	* elf/tst-dlmopen1.c: Define TEST_SO.
+	(do_test): Use TEST_SO.
+
 	* elf/dl-load.c: Include libc-internal.h.
 	(_dl_map_object_from_fd): Use ALIGN_UP and ALIGN_DOWN.
 

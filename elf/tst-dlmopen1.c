@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <gnu/lib-names.h>
 
+#define TEST_SO "$ORIGIN/tst-dlmopen1mod.so"
 
 static int
 do_test (void)
@@ -34,7 +35,7 @@ do_test (void)
       return 1;
     }
 
-  h = dlmopen (LM_ID_NEWLM, "$ORIGIN/tst-dlmopen1mod.so", RTLD_LAZY);
+  h = dlmopen (LM_ID_NEWLM, TEST_SO, RTLD_LAZY);
   if (h == NULL)
     {
       printf ("cannot get handle for %s: %s\n",
@@ -52,7 +53,7 @@ do_test (void)
 
   if (ns == LM_ID_BASE)
     {
-      printf ("namespace for %s is LM_ID_BASE\n", LIBC_SO);
+      printf ("namespace for %s is LM_ID_BASE\n", TEST_SO);
       return 1;
     }
 
@@ -69,7 +70,7 @@ do_test (void)
   if (dlclose (h) != 0)
     {
       printf ("dlclose for %s in %s failed: %s\n",
-	      LIBC_SO, __func__, dlerror ());
+	      TEST_SO, __func__, dlerror ());
       return 1;
     }
 
