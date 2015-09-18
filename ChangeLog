@@ -1,3 +1,18 @@
+2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* resolv/base64.c (rcsid): Remove unused static.
+	* sysdeps/ieee754/dbl-64/atnat2.h (qpi1): Remove unused
+	static.  (tqpi1): Likewise.
+	* sysdeps/ieee754/dbl-64/uexp.h (one): Likewise.
+	* sysdeps/ieee754/dbl-64/upow.h (sqrt_2): Likewise.
+	* sysdeps/ieee754/flt-32/e_log10f.c (one): Likewise.
+	* sysdeps/ieee754/flt-32/s_cosf.c (one): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (zero): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c (half): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c (maxlog): Likewise.
+	* timezone/private.h (time_t_min): Likewise.  (time_t_max):
+	Likewise.
+
 2015-09-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/nptl/jmp-unwind.c: Include <libc-lock.h> instead of

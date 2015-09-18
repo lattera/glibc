@@ -140,7 +140,6 @@ deval (long double x, const long double *p, int n)
 
 static const long double
 tiny = 1e-4931L,
-  half = 0.5L,
   one = 1.0L,
   two = 2.0L,
   /* 2/sqrt(pi) - 1 */

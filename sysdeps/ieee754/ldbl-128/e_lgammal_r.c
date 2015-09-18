@@ -82,7 +82,6 @@ DIAG_IGNORE_NEEDS_COMMENT (4.6, "-Woverflow");
 static const long double MAXLGM = 1.0485738685148938358098967157129705071571E4928L;
 DIAG_POP_NEEDS_COMMENT;
 static const long double one = 1.0L;
-static const long double zero = 0.0L;
 static const long double huge = LDBL_MAX;
 
 /* log gamma(x) = ( x - 0.5 ) * log(x) - x + LS2PI + 1/x P(1/x^2)

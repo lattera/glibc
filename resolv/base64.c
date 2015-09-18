@@ -40,10 +40,6 @@
  * IF IBM IS APPRISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-#if !defined(LINT) && !defined(CODECENTER)
-static const char rcsid[] = "$BINDId: base64.c,v 8.7 1999/10/13 16:39:33 vixie Exp $";
-#endif /* not lint */
-
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/socket.h>
