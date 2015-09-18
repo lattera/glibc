@@ -113,6 +113,7 @@ $(testdata)/Asia/Tokyo: asia $(zic-deps)
 	$(build-testdata)
 
 $(testdata)/XT%: testdata/XT%
+	$(make-target-directory)
 	cp $< $@
 
 $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
