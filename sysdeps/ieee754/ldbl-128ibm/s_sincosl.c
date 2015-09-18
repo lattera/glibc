@@ -42,7 +42,7 @@ __sincosl (long double x, long double *sinx, long double *cosx)
     {
       /* sin(Inf or NaN) is NaN */
       *sinx = *cosx = x - x;
-      if (__isinf_nsl (x))
+      if (isinf (x))
 	__set_errno (EDOM);
     }
   else

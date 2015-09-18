@@ -30,7 +30,7 @@ __ctanh (__complex__ double x)
 
   if (__glibc_unlikely (!isfinite (__real__ x) || !isfinite (__imag__ x)))
     {
-      if (__isinf_ns (__real__ x))
+      if (isinf (__real__ x))
 	{
 	  __real__ res = __copysign (1.0, __real__ x);
 	  if (isfinite (__imag__ x) && fabs (__imag__ x) > 1.0)
@@ -51,7 +51,7 @@ __ctanh (__complex__ double x)
 	  __real__ res = __nan ("");
 	  __imag__ res = __nan ("");
 
-	  if (__isinf_ns (__imag__ x))
+	  if (isinf (__imag__ x))
 	    feraiseexcept (FE_INVALID);
 	}
     }

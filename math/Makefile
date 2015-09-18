@@ -61,7 +61,7 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     s_catan s_casin s_ccos s_csin s_ctan s_ctanh s_cacos	\
 	     s_casinh s_cacosh s_catanh s_csqrt s_cpow s_cproj s_clog10 \
 	     s_fma s_lrint s_llrint s_lround s_llround e_exp10 w_log2	\
-	     s_isinf_ns s_issignaling $(calls:s_%=m_%) x2y2m1 k_casinh	\
+	     s_issignaling $(calls:s_%=m_%) x2y2m1 k_casinh	\
 	     gamma_product k_standard lgamma_neg lgamma_product
 
 dbl-only-routines := branred doasin dosincos halfulp mpa mpatan2	\

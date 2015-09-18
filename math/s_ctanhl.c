@@ -37,7 +37,7 @@ __ctanhl (__complex__ long double x)
 
   if (__glibc_unlikely (!isfinite (__real__ x) || !isfinite (__imag__ x)))
     {
-      if (__isinf_nsl (__real__ x))
+      if (isinf (__real__ x))
 	{
 	  __real__ res = __copysignl (1.0, __real__ x);
 	  if (isfinite (__imag__ x) && fabsl (__imag__ x) > 1.0L)
@@ -58,7 +58,7 @@ __ctanhl (__complex__ long double x)
 	  __real__ res = __nanl ("");
 	  __imag__ res = __nanl ("");
 
-	  if (__isinf_nsl (__imag__ x))
+	  if (isinf (__imag__ x))
 	    feraiseexcept (FE_INVALID);
 	}
     }

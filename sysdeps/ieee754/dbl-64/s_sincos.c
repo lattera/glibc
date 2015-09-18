@@ -37,7 +37,7 @@ __sincos (double x, double *sinx, double *cosx)
     {
       /* sin(Inf or NaN) is NaN */
       *sinx = *cosx = x - x;
-      if (__isinf_ns (x))
+      if (isinf (x))
 	__set_errno (EDOM);
     }
   else

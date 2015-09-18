@@ -25,7 +25,7 @@ float
 __remainderf (float x, float y)
 {
   if (((__builtin_expect (y == 0.0f, 0) && ! isnan (x))
-       || (__builtin_expect (__isinf_nsf (x), 0) && ! isnan (y)))
+       || (__builtin_expect (isinf (x), 0) && ! isnan (y)))
       && _LIB_VERSION != _IEEE_)
     return __kernel_standard_f (x, y, 128); /* remainder domain */
 

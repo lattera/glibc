@@ -25,7 +25,7 @@
 __complex__ double
 __cproj (__complex__ double x)
 {
-  if (__isinf_ns (__real__ x) || __isinf_ns (__imag__ x))
+  if (isinf (__real__ x) || isinf (__imag__ x))
     {
       __complex__ double res;
 

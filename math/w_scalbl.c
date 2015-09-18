@@ -58,15 +58,15 @@ __scalbl (long double x, long double fn)
 	      if (!isnan (x) && !isnan (fn))
 		__set_errno (EDOM);
 	    }
-	  else if (__isinf_nsl (z))
+	  else if (isinf (z))
 	    {
-	      if (!__isinf_nsl (x) && !__isinf_nsl (fn))
+	      if (!isinf (x) && !isinf (fn))
 		__set_errno (ERANGE);
 	    }
 	  else
 	    {
 	      /* z == 0.  */
-	      if (x != 0.0L && !__isinf_nsl (fn))
+	      if (x != 0.0L && !isinf (fn))
 		__set_errno (ERANGE);
 	    }
 	}

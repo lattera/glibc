@@ -33,7 +33,7 @@ __casinl (__complex__ long double x)
 	{
 	  res = x;
 	}
-      else if (__isinf_nsl (__real__ x) || __isinf_nsl (__imag__ x))
+      else if (isinf (__real__ x) || isinf (__imag__ x))
 	{
 	  __real__ res = __nanl ("");
 	  __imag__ res = __copysignl (HUGE_VALL, __imag__ x);

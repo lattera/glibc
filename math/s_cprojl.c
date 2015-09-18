@@ -25,7 +25,7 @@
 __complex__ long double
 __cprojl (__complex__ long double x)
 {
-  if (__isinf_nsl (__real__ x) || __isinf_nsl (__imag__ x))
+  if (isinf (__real__ x) || isinf (__imag__ x))
     {
       __complex__ long double res;
 

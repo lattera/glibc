@@ -33,7 +33,7 @@ __casinf (__complex__ float x)
 	{
 	  res = x;
 	}
-      else if (__isinf_nsf (__real__ x) || __isinf_nsf (__imag__ x))
+      else if (isinf (__real__ x) || isinf (__imag__ x))
 	{
 	  __real__ res = __nanf ("");
 	  __imag__ res = __copysignf (HUGE_VALF, __imag__ x);

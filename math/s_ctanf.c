@@ -30,7 +30,7 @@ __ctanf (__complex__ float x)
 
   if (__glibc_unlikely (!isfinite (__real__ x) || !isfinite (__imag__ x)))
     {
-      if (__isinf_nsf (__imag__ x))
+      if (isinf (__imag__ x))
 	{
 	  if (isfinite (__real__ x) && fabsf (__real__ x) > 1.0f)
 	    {
@@ -51,7 +51,7 @@ __ctanf (__complex__ float x)
 	  __real__ res = __nanf ("");
 	  __imag__ res = __nanf ("");
 
-	  if (__isinf_nsf (__real__ x))
+	  if (isinf (__real__ x))
 	    feraiseexcept (FE_INVALID);
 	}
     }

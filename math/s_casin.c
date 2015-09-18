@@ -33,7 +33,7 @@ __casin (__complex__ double x)
 	{
 	  res = x;
 	}
-      else if (__isinf_ns (__real__ x) || __isinf_ns (__imag__ x))
+      else if (isinf (__real__ x) || isinf (__imag__ x))
 	{
 	  __real__ res = __nan ("");
 	  __imag__ res = __copysign (HUGE_VAL, __imag__ x);

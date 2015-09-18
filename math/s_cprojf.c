@@ -25,7 +25,7 @@
 __complex__ float
 __cprojf (__complex__ float x)
 {
-  if (__isinf_nsf (__real__ x) || __isinf_nsf (__imag__ x))
+  if (isinf (__real__ x) || isinf (__imag__ x))
     {
       __complex__ float res;
 

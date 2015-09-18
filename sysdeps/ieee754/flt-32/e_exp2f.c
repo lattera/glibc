@@ -122,7 +122,7 @@ __ieee754_exp2f (float x)
   /* Exceptional cases:  */
   else if (isless (x, himark))
     {
-      if (__isinf_nsf (x))
+      if (isinf (x))
 	/* e^-inf == 0, with no error.  */
 	return 0;
       else

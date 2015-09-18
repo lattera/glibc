@@ -54,19 +54,19 @@ __divtc3 (long double a, long double b, long double c, long double d)
 	  x = __copysignl (INFINITY, c) * a;
 	  y = __copysignl (INFINITY, c) * b;
 	}
-      else if ((__isinf_nsl (a) || __isinf_nsl (b))
+      else if ((isinf (a) || isinf (b))
 	       && isfinite (c) && isfinite (d))
 	{
-	  a = __copysignl (__isinf_nsl (a) ? 1 : 0, a);
-	  b = __copysignl (__isinf_nsl (b) ? 1 : 0, b);
+	  a = __copysignl (isinf (a) ? 1 : 0, a);
+	  b = __copysignl (isinf (b) ? 1 : 0, b);
 	  x = INFINITY * (a * c + b * d);
 	  y = INFINITY * (b * c - a * d);
 	}
-      else if ((__isinf_nsl (c) || __isinf_nsl (d))
+      else if ((isinf (c) || isinf (d))
 	       && isfinite (a) && isfinite (b))
 	{
-	  c = __copysignl (__isinf_nsl (c) ? 1 : 0, c);
-	  d = __copysignl (__isinf_nsl (d) ? 1 : 0, d);
+	  c = __copysignl (isinf (c) ? 1 : 0, c);
+	  d = __copysignl (isinf (d) ? 1 : 0, d);
 	  x = 0.0 * (a * c + b * d);
 	  y = 0.0 * (b * c - a * d);
 	}

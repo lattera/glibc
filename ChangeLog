@@ -1,5 +1,55 @@
 2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* include/math.h: Remove __isinf_ns, __isinf_nsf, __isinf_nsl.
+	* math/Makefile: Remove isinf_ns.c.
+	* math/divtc3.c (__divtc3): Replace __isinf_nsl with isinf.
+	* math/multc3.c (__multc3): Likewise.
+	* math/s_casin.c (__casin): Likewise.
+	* math/s_casinf.c (__casinf): Likewise.
+	* math/s_casinl.c (__casinl): Likewise.
+	* math/s_cproj.c (__cproj): Likewise.
+	* math/s_cprojf.c (__cprojf): Likewise.
+	* math/s_cprojl.c (__cprofl): Likewise.
+	* math/s_ctan.c (__ctan): Likewise.
+	* math/s_ctanf.c (__ctanf): Likewise.
+	* math/s_ctanh.c (__ctanh): Likewise.
+	* math/s_ctanhf.c (__ctanhf): Likewise.
+	* math/s_ctanhl.c (__ctanhl): Likewise.
+	* math/s_ctanl.c (__ctanl): Likewise.
+	* math/w_fmod.c (__fmod): Likewise.
+	* math/w_fmodf.c (__fmodf): Likewise.
+	* math/w_fmodl.c (_fmodl): Likewise.
+	* math/w_remainder.c (__remainder): Likewise.
+	* math/w_remainderf.c (__remainderf): Likewise.
+	* math/w_remainderl.c (__remainderl): Likewise.
+	* math/w_scalb.c (__scalb): Likewise.
+	* math/w_scalbf.c (__scalbf): Likewise.
+	* math/w_scalbl.c (__scalbl): Likewise.
+	* sysdeps/ieee754/dbl-64/s_isinf_ns.c: Deleted file.
+	* sysdeps/ieee754/dbl-64/s_sincos.c (__sincos): Replace __isinf_ns
+	with isinf.
+	* sysdeps/ieee754/dbl-64/wordsize-64/math_private.h: Deleted file.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isinf_ns.c: Deleted file.
+	* sysdeps/ieee754/flt-32/e_exp2f.c (__ieee754_exp2f): Replace
+	__isinf_nsf with isinf.
+	* sysdeps/ieee754/flt-32/math_private.h: Deleted file.
+	* sysdeps/ieee754/flt-32/s_isinf_nsf.c: Deleted file.
+	* sysdeps/ieee754/ldbl-128/s_isinf_nsl.c: Deleted file.
+	* sysdeps/ieee754/ldbl-128/s_sincosl.c (__sincosl): Replace __isinf_nsl
+	with isinf.
+	* sysdeps/ieee754/ldbl-128ibm/s_cprojl.c(__cprojll): Replace
+	__isinf_nsl with isinf.
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanl.c(__ctanl): Replace __isinf_nsl
+	with isinf.
+	* sysdeps/ieee754/ldbl-128ibm/s_isinf_nsl.c: Deleted file.
+	* sysdeps/ieee754/ldbl-128ibm/s_sincosl.c (__sincosl): Replace
+	__isinf_nsl with isinf.
+	* sysdeps/ieee754/ldbl-96/s_isinf_nsl.c: Deleted file.
+	* sysdeps/ieee754/ldbl-96/s_sincosl.c (__sincosl): Replace __isinf_nsl
+	with isinf.
+
+2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* resolv/base64.c (rcsid): Remove unused static.
 	* sysdeps/ieee754/dbl-64/atnat2.h (qpi1): Remove unused
 	static.  (tqpi1): Likewise.

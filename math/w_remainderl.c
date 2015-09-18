@@ -25,7 +25,7 @@ long double
 __remainderl (long double x, long double y)
 {
   if (((__builtin_expect (y == 0.0L, 0) && ! isnan (x))
-       || (__builtin_expect (__isinf_nsl (x), 0) && ! isnan (y)))
+       || (__builtin_expect (isinf (x), 0) && ! isnan (y)))
       && _LIB_VERSION != _IEEE_)
     return __kernel_standard_l (x, y, 228); /* remainder domain */
 
