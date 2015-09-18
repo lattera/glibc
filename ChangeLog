@@ -1,3 +1,13 @@
+2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* math/w_tgamma.c (__ieee754_gamma_r): Use explicit sign check.
+	* math/w_tgammaf.c (__ieee754_gammaf_r): Likewise.
+	* math/w_tgammal.c (__ieee754_gammal_r): Likewise.
+	* stdio-common/printf_fp.c (___printf_fp):
+	Use signbit to get the sign. Use isinf macro to allow inlining.
+	* stdio-common/printf_fphex.c (__printf_fphex): Likewise.
+	* stdio-common/printf_size.c (__printf_size): Likewise.
+
 2015-09-18  Mike Frysinger  <vapier@gentoo.org>
 
 	* timezone/Makefile ($(testdata)/XT%): Call $(make-target-directory).

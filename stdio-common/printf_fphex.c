@@ -180,7 +180,7 @@ __printf_fphex (FILE *fp,
 	}
       else
 	{
-	  if (__isinfl (fpnum.ldbl))
+	  if (isinf (fpnum.ldbl))
 	    {
 	      if (isupper (info->spec))
 		{
@@ -204,7 +204,6 @@ __printf_fphex (FILE *fp,
       /* Check for special values: not a number or infinity.  */
       if (isnan (fpnum.dbl.d))
 	{
-	  negative = fpnum.dbl.ieee.negative != 0;
 	  if (isupper (info->spec))
 	    {
 	      special = "NAN";
@@ -218,8 +217,7 @@ __printf_fphex (FILE *fp,
 	}
       else
 	{
-	  int res = __isinf (fpnum.dbl.d);
-	  if (res)
+	  if (isinf (fpnum.dbl.d))
 	    {
 	      if (isupper (info->spec))
 		{
@@ -231,11 +229,9 @@ __printf_fphex (FILE *fp,
 		  special = "inf";
 		  wspecial = L"inf";
 		}
-	      negative = res < 0;
 	    }
-	  else
-	    negative = signbit (fpnum.dbl.d);
 	}
+      negative = signbit (fpnum.dbl.d);
     }
 
   if (special)
