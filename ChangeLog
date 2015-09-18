@@ -1,3 +1,10 @@
+2015-09-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/nptl/jmp-unwind.c: Include <libc-lock.h> instead of
+	<nptl/pthreadP.h>.
+	(_longjmp_unwind): Use __libc_ptf_call.
+	* sysdeps/unix/sysv/linux/s390/jmp-unwind.c: Likewise.
+
 2015-09-18  David Lamparter  <equinox-gentoo@diac24.net>
 
 	* sysdeps/arm/setjmp.S: Change PIC to SHARED.
