@@ -1,3 +1,11 @@
+2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/Makefile: Add bench-math-inlines, link with libm.
+	* benchtests/bench-math-inlines.c: New benchmark.
+	* benchtests/bench-util.h: New file.
+	* benchtests/bench-util.c: New file.
+	* benchtests/bench-skeleton.c: Add include of bench-util.c/h.
+
 2015-09-18  Carlos O'Donell  <carlos@redhat.com>
 
 	* elf/tst-dlmopen1.c: Define TEST_SO.

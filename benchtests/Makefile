@@ -53,7 +53,10 @@ stdlib-bench := strtod
 
 stdio-common-bench := sprintf
 
-benchset := $(string-bench-all) $(stdlib-bench) $(stdio-common-bench)
+math-benchset := math-inlines
+
+benchset := $(string-bench-all) $(stdlib-bench) $(stdio-common-bench) \
+	    $(math-benchset)
 
 CFLAGS-bench-ffs.c += -fno-builtin
 CFLAGS-bench-ffsll.c += -fno-builtin
@@ -61,6 +64,7 @@ CFLAGS-bench-ffsll.c += -fno-builtin
 bench-malloc := malloc-thread
 
 $(addprefix $(objpfx)bench-,$(bench-math)): $(libm)
+$(addprefix $(objpfx)bench-,$(math-benchset)): $(libm)
 $(addprefix $(objpfx)bench-,$(bench-pthread)): $(shared-thread-library)
 $(objpfx)bench-malloc-thread: $(shared-thread-library)
 

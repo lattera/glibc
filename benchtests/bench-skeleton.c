@@ -24,21 +24,9 @@
 #include <inttypes.h>
 #include "bench-timing.h"
 #include "json-lib.h"
+#include "bench-util.h"
 
-volatile unsigned int dontoptimize = 0;
-
-void
-startup (void)
-{
-  /* This loop should cause CPU to switch to maximal freqency.
-     This makes subsequent measurement more accurate.  We need a side effect
-     to prevent the loop being deleted by compiler.
-     This should be enough to cause CPU to speed up and it is simpler than
-     running loop for constant time. This is used when user does not have root
-     access to set a constant freqency.  */
-  for (int k = 0; k < 10000000; k++)
-    dontoptimize += 23 * dontoptimize + 2;
-}
+#include "bench-util.c"
 
 #define TIMESPEC_AFTER(a, b) \
   (((a).tv_sec == (b).tv_sec) ?						      \
@@ -56,7 +44,7 @@ main (int argc, char **argv)
   if (argc == 2 && !strcmp (argv[1], "-d"))
     detailed = true;
 
-  startup();
+  bench_start ();
 
   memset (&runtime, 0, sizeof (runtime));
 
