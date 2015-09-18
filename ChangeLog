@@ -1,3 +1,8 @@
+2015-09-18  Carlos O'Donell  <carlos@redhat.com>
+
+	* elf/dl-load.c: Include libc-internal.h.
+	(_dl_map_object_from_fd): Use ALIGN_UP and ALIGN_DOWN.
+
 2015-09-18  Vincent Bernat  <vincent@bernat.im>
 
 	[BZ #17887]

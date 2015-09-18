@@ -36,6 +36,7 @@
 #include <caller.h>
 #include <sysdep.h>
 #include <stap-probe.h>
+#include <libc-internal.h>
 
 #include <dl-dst.h>
 #include <dl-load.h>
@@ -1077,12 +1078,11 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	    }
 
 	  struct loadcmd *c = &loadcmds[nloadcmds++];
-	  c->mapstart = ph->p_vaddr & ~(GLRO(dl_pagesize) - 1);
-	  c->mapend = ((ph->p_vaddr + ph->p_filesz + GLRO(dl_pagesize) - 1)
-		       & ~(GLRO(dl_pagesize) - 1));
+	  c->mapstart = ALIGN_DOWN (ph->p_vaddr, GLRO(dl_pagesize));
+	  c->mapend = ALIGN_UP (ph->p_vaddr + ph->p_filesz, GLRO(dl_pagesize));
 	  c->dataend = ph->p_vaddr + ph->p_filesz;
 	  c->allocend = ph->p_vaddr + ph->p_memsz;
-	  c->mapoff = ph->p_offset & ~(GLRO(dl_pagesize) - 1);
+	  c->mapoff = ALIGN_DOWN (ph->p_offset, GLRO(dl_pagesize));
 
 	  /* Determine whether there is a gap between the last segment
 	     and this one.  */
