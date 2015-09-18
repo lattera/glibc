@@ -176,13 +176,14 @@ CFLAGS-test-tgmath.c = -fno-builtin
 CFLAGS-test-tgmath2.c = -fno-builtin
 CFLAGS-test-tgmath-ret.c = -fno-builtin
 CFLAGS-test-powl.c = -fno-builtin
+
+CFLAGS-test-snan.c = -fsignaling-nans
 CPPFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES \
 			 $(libm-test-fast-math-cflags)
 CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES \
 			  $(libm-test-fast-math-cflags)
 CPPFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES \
 			  $(libm-test-fast-math-cflags)
-
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
 # for error handling in the -lm functions.

@@ -225,8 +225,16 @@ enum
       FP_NORMAL
   };
 
+/* GCC bug 66462 means we cannot use the math builtins with -fsignaling-nan,
+   so disable builtins if this is enabled.  When fixed in a newer GCC,
+   the __SUPPORT_SNAN__ check may be skipped for those versions.  */
+
 /* Return number of classification appropriate for X.  */
-# ifdef __NO_LONG_DOUBLE_MATH
+# if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__			      \
+     && !defined __OPTIMIZE_SIZE__
+#  define fpclassify(x) __builtin_fpclassify (FP_NAN, FP_INFINITE,	      \
+     FP_NORMAL, FP_SUBNORMAL, FP_ZERO, x)
+# elif defined __NO_LONG_DOUBLE_MATH
 #  define fpclassify(x) \
      (sizeof (x) == sizeof (float) ? __fpclassifyf (x) : __fpclassify (x))
 # else
@@ -238,19 +246,29 @@ enum
 # endif
 
 /* Return nonzero value if sign of X is negative.  */
-# ifdef __NO_LONG_DOUBLE_MATH
+# if __GNUC_PREREQ (4,0)
 #  define signbit(x) \
-     (sizeof (x) == sizeof (float) ? __signbitf (x) : __signbit (x))
+     (sizeof (x) == sizeof (float)                                            \
+      ? __builtin_signbitf (x)                                                        \
+      : sizeof (x) == sizeof (double)                                         \
+      ? __builtin_signbit (x) : __builtin_signbitl (x))
 # else
-#  define signbit(x) \
+#  ifdef __NO_LONG_DOUBLE_MATH
+#   define signbit(x) \
+     (sizeof (x) == sizeof (float) ? __signbitf (x) : __signbit (x))
+#  else
+#   define signbit(x) \
      (sizeof (x) == sizeof (float)					      \
       ? __signbitf (x)							      \
       : sizeof (x) == sizeof (double)					      \
       ? __signbit (x) : __signbitl (x))
+#  endif
 # endif
 
 /* Return nonzero value if X is not +-Inf or NaN.  */
-# ifdef __NO_LONG_DOUBLE_MATH
+# if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__
+#  define isfinite(x) __builtin_isfinite (x)
+# elif defined __NO_LONG_DOUBLE_MATH
 #  define isfinite(x) \
      (sizeof (x) == sizeof (float) ? __finitef (x) : __finite (x))
 # else
@@ -262,11 +280,17 @@ enum
 # endif
 
 /* Return nonzero value if X is neither zero, subnormal, Inf, nor NaN.  */
-# define isnormal(x) (fpclassify (x) == FP_NORMAL)
+# if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__
+#  define isnormal(x) __builtin_isnormal (x)
+# else
+#  define isnormal(x) (fpclassify (x) == FP_NORMAL)
+# endif
 
 /* Return nonzero value if X is a NaN.  We could use `fpclassify' but
    we already have this functions `__isnan' and it is faster.  */
-# ifdef __NO_LONG_DOUBLE_MATH
+# if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__
+#  define isnan(x) __builtin_isnan (x)
+# elif defined __NO_LONG_DOUBLE_MATH
 #  define isnan(x) \
      (sizeof (x) == sizeof (float) ? __isnanf (x) : __isnan (x))
 # else
@@ -278,7 +302,9 @@ enum
 # endif
 
 /* Return nonzero value if X is positive or negative infinity.  */
-# ifdef __NO_LONG_DOUBLE_MATH
+# if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__
+#  define isinf(x) __builtin_isinf_sign (x)
+# elif defined __NO_LONG_DOUBLE_MATH
 #  define isinf(x) \
      (sizeof (x) == sizeof (float) ? __isinff (x) : __isinf (x))
 # else

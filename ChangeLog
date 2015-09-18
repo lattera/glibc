@@ -1,5 +1,17 @@
 2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	[BZ #15367]
+	[BZ #17441]
+
+	* math/Makefile: Build test-snan.c with -fsignaling-nans.
+	* math/math.h (fpclassify): Use __builtin_fpclassify when
+	available.  (signbit): Use __builtin_signbit(f/l).
+	(isfinite): Use__builtin_isfinite.  (isnormal): Use
+	__builtin_isnormal.  (isnan): Use __builtin_isnan.
+	(isinf): Use __builtin_isinf_sign.
+
+2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* benchtests/Makefile: Add bench-math-inlines, link with libm.
 	* benchtests/bench-math-inlines.c: New benchmark.
 	* benchtests/bench-util.h: New file.
