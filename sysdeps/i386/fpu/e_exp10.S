@@ -3,13 +3,9 @@
  */
 
 #include <machine/asm.h>
+#include <i386-math-asm.h>
 
-	.section .rodata.cst8,"aM",@progbits,8
-
-	.p2align 3
-	.type dbl_min,@object
-dbl_min:	.byte 0, 0, 0, 0, 0, 0, 0x10, 0
-	ASM_SIZE_DIRECTIVE(dbl_min)
+DEFINE_DBL_MIN
 
 #ifdef PIC
 # define MO(op) op##@GOTOFF(%ecx)
@@ -45,22 +41,8 @@ ENTRY(__ieee754_exp10)
 	faddp				/* 2^(fract(x * log2(10))) */
 	fscale				/* e^x */
 	fstp	%st(1)
-	fldl	MO(dbl_min)
-	fld	%st(1)
-	fucompp
-	fnstsw
-	sahf
-	jnc 3f
-	subl	$8, %esp
-	cfi_adjust_cfa_offset (8)
-	fld	%st(0)
-	fmul	%st(0)
-	fstpl	(%esp)
-	fstpl	(%esp)
-	fldl	(%esp)
-	addl	$8, %esp
-	cfi_adjust_cfa_offset (-8)
-3:	ret
+	DBL_NARROW_EVAL_UFLOW_NONNEG_NAN
+	ret
 
 1:	testl	$0x200, %eax		/* Test sign.  */
 	jz	2f			/* If positive, jump.  */

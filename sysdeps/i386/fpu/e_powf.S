@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <i386-math-asm.h>
 
 	.section .rodata.cst8,"aM",@progbits,8
 
@@ -148,6 +149,7 @@ ENTRY(__ieee754_powf)
 	testl	%edx, %edx
 	jnz	6b
 	fstp	%st(0)		// ST*x
+	FLT_NARROW_EVAL
 	ret
 
 	/* y is ±NAN */
@@ -196,6 +198,7 @@ ENTRY(__ieee754_powf)
 32:	addl	$4, %esp
 	cfi_adjust_cfa_offset (-4)
 	fstp	%st(1)		// 2^fract(y*log2(x))*2^int(y*log2(x))
+	FLT_NARROW_EVAL
 	ret
 
 

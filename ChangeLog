@@ -1,3 +1,45 @@
+2015-09-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18980]
+	* sysdeps/i386/fpu/i386-math-asm.h (DEFINE_FLT_MIN): New macro.
+	(DEFINE_DBL_MIN): Likewise.
+	(FLT_NARROW_EVAL_UFLOW_NONNEG_NAN): Likewise.
+	(DBL_NARROW_EVAL_UFLOW_NONNEG_NAN): Likewise.
+	(FLT_NARROW_EVAL_UFLOW_NONNEG): Likewise.
+	(DBL_NARROW_EVAL_UFLOW_NONNEG): Likewise.
+	* sysdeps/i386/fpu/e_exp.S: Include <i386-math-asm.h>.
+	(dbl_min): Replace with use of DEFINE_DBL_MIN.
+	(__ieee754_exp): Use DBL_NARROW_EVAL_UFLOW_NONNEG_NAN.
+	(__exp_finite): Use DBL_NARROW_EVAL_UFLOW_NONNEG.
+	* sysdeps/i386/fpu/e_exp10.S: Include <i386-math-asm.h>.
+	(dbl_min): Replace with use of DEFINE_DBL_MIN.
+	(__ieee754_exp10): Use DBL_NARROW_EVAL_UFLOW_NONNEG_NAN.
+	* sysdeps/i386/fpu/e_exp10f.S: Include <i386-math-asm.h>.
+	(flt_min): Replace with use of DEFINE_FLT_MIN.
+	(__ieee754_exp10f): Use FLT_NARROW_EVAL_UFLOW_NONNEG_NAN.
+	* sysdeps/i386/fpu/e_exp2.S: Include <i386-math-asm.h>.
+	(dbl_min): Replace with use of DEFINE_DBL_MIN.
+	(__ieee754_exp2): Use DBL_NARROW_EVAL_UFLOW_NONNEG_NAN.
+	* sysdeps/i386/fpu/e_exp2f.S: Include <i386-math-asm.h>.
+	(flt_min): Replace with use of DEFINE_FLT_MIN.
+	(__ieee754_exp2f): Use FLT_NARROW_EVAL_UFLOW_NONNEG_NAN.
+	* sysdeps/i386/fpu/e_expf.S: Include <i386-math-asm.h>.
+	(flt_min): Replace with use of DEFINE_FLT_MIN.
+	(__ieee754_expf): Use FLT_NARROW_EVAL_UFLOW_NONNEG_NAN.
+	(__expf_finite): Use FLT_NARROW_EVAL_UFLOW_NONNEG.
+	* sysdeps/i386/fpu/e_hypot.S: Include <i386-math-asm.h>.
+	(__ieee754_hypot): Use DBL_NARROW_EVAL.
+	* sysdeps/i386/fpu/e_hypotf.S: Include <i386-math-asm.h>.
+	(__ieee754_hypotf): Use FLT_NARROW_EVAL.
+	* sysdeps/i386/fpu/e_pow.S: Include <i386-math-asm.h>.
+	(__ieee754_pow): Use DBL_NARROW_EVAL.
+	* sysdeps/i386/fpu/e_powf.S: Include <i386-math-asm.h>.
+	(__ieee754_powf): Use FLT_NARROW_EVAL.
+	* sysdeps/i386/i686/fpu/multiarch/e_expf-sse2.S
+	(__ieee754_expf_sse2): Convert double-precision result to single
+	precision.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* timezone/Makefile: Ignore unused variable errors due to private.h

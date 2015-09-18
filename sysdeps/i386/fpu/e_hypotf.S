@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <i386-math-asm.h>
 
 	.text
 ENTRY(__ieee754_hypotf)
@@ -37,6 +38,7 @@ ENTRY(__ieee754_hypotf)
 	fmul	%st(0)		// x * x : y * y
 	faddp			// x * x + y * y
 	fsqrt
+	FLT_NARROW_EVAL
 2:	ret
 
 	// We have to test whether any of the parameters is Inf.

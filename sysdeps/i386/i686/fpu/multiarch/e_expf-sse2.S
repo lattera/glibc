@@ -113,11 +113,12 @@ ENTRY(__ieee754_expf_sse2)
 	mulsd	MO2(DP_T,%eax,8), %xmm0	/* DP P(y)*T[j] */
 	addsd	MO2(DP_T,%eax,8), %xmm0	/* DP T[j]*(P(y)+1) */
 	mulsd	%xmm1, %xmm0		/* DP result=2^n*(T[j]*(P(y)+1)) */
+	cvtsd2ss	%xmm0, %xmm1
 
-	lea	-8(%esp), %esp		/* Borrow 8 bytes of stack frame */
-	movsd	%xmm0, 0(%esp)		/* Move result from sse... */
-	fldl	0(%esp)			/* ...to FPU. */
-	lea	8(%esp), %esp		/* Return back 8 bytes of stack frame */
+	lea	-4(%esp), %esp		/* Borrow 4 bytes of stack frame */
+	movss	%xmm1, 0(%esp)		/* Move result from sse... */
+	flds	0(%esp)			/* ...to FPU. */
+	lea	4(%esp), %esp		/* Return back 4 bytes of stack frame */
 	ret
 
 	.p2align	4

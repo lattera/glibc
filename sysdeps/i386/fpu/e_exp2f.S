@@ -5,13 +5,9 @@
  */
 
 #include <machine/asm.h>
+#include <i386-math-asm.h>
 
-	.section .rodata.cst4,"aM",@progbits,4
-
-	.p2align 2
-	.type flt_min,@object
-flt_min:	.byte 0, 0, 0x80, 0
-	ASM_SIZE_DIRECTIVE(flt_min)
+DEFINE_FLT_MIN
 
 #ifdef PIC
 # define MO(op) op##@GOTOFF(%ecx)
@@ -44,22 +40,8 @@ ENTRY(__ieee754_exp2f)
 	faddp				/* 2^(fract(x)) */
 	fscale				/* e^x */
 	fstp	%st(1)
-	flds	MO(flt_min)
-	fld	%st(1)
-	fucompp
-	fnstsw
-	sahf
-	jnc 3f
-	subl	$4, %esp
-	cfi_adjust_cfa_offset (4)
-	fld	%st(0)
-	fmul	%st(0)
-	fstps	(%esp)
-	fstps	(%esp)
-	flds	(%esp)
-	addl	$4, %esp
-	cfi_adjust_cfa_offset (-4)
-3:	ret
+	FLT_NARROW_EVAL_UFLOW_NONNEG_NAN
+	ret
 
 1:	testl	$0x200, %eax		/* Test sign.  */
 	jz	2f			/* If positive, jump.  */
