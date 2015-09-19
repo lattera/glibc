@@ -1,3 +1,10 @@
+2015-09-19  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	Really fix sysdeps/i386/fpu/s_scalbn.S build
+
+	* math/Versions (libc: GLIBC_2_20): New (empty) version set.
+	(libc: GLIBC_2_22): Remove unused version set.
+
 2015-09-18  Mike Frysinger  <vapier@gentoo.org>
 
 	* config.make.in (enable-timezone-tools): New variable.

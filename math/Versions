@@ -29,7 +29,7 @@ libc {
     # s*
     scalbln; scalblnf; scalblnl;
   }
-  GLIBC_2.22 {
+  GLIBC_2.20 {
   }
 }
 
