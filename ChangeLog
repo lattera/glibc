@@ -1,3 +1,8 @@
+2015-09-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/mmap.c (__mmap): Use __vm_page_size instead of
+	vm_page_size.
+
 2015-09-19  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	Really fix sysdeps/i386/fpu/s_scalbn.S build

@@ -41,7 +41,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   mapaddr = (vm_address_t) addr;
 
   /* ADDR and OFFSET must be page-aligned.  */
-  if ((mapaddr & (vm_page_size - 1)) || (offset & (vm_page_size - 1)))
+  if ((mapaddr & (__vm_page_size - 1)) || (offset & (__vm_page_size - 1)))
     return (__ptr_t) (long int) __hurd_fail (EINVAL);
 
   if ((flags & (MAP_TYPE|MAP_INHERIT)) == MAP_ANON
