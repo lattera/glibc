@@ -1,3 +1,10 @@
+2015-10-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Phil Blundell <pb@pbcui.dot.net>
+
+	* nptl/Makefile (tests): Add tst-cancel26.c and tst-cancel27.c.
+	* nptl/tst-cancel26.c: New file.
+	* nptl/tst-cancel27.c: Likewise.
+
 2015-10-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/fpu/s_llrint.S (__lrint): Add alias only if
