@@ -90,10 +90,6 @@ libpthread {
     __pthread_once; __pthread_atfork;
     _IO_flockfile; _IO_ftrylockfile; _IO_funlockfile;
 
-    # Hidden entry point (through macros).
-    #_pthread_cleanup_pop; _pthread_cleanup_pop_restore; _pthread_cleanup_push;
-    #_pthread_cleanup_push_defer;
-
     # Semaphores.
     sem_destroy; sem_getvalue; sem_init; sem_post; sem_trywait; sem_wait;
 

@@ -1,3 +1,7 @@
+2015-09-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* nptl/Versions: Remove ignored symbols.
+
 2015-09-22  Florian Weimer  <fweimer@redhat.com>
 
 	* nss/bug17079.c: Renamed from nss/bug18287.c.  Add description.
