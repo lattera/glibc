@@ -1,5 +1,10 @@
 2015-09-22  Florian Weimer  <fweimer@redhat.com>
 
+	* nss/bug17079.c: Renamed from nss/bug18287.c.  Add description.
+	* nss/Makefile (tests): Update.
+
+2015-09-22  Florian Weimer  <fweimer@redhat.com>
+
 	* nss/bug18287.c: New file.
 	* nss/Makefile (tests): Add bug18287.
 

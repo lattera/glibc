@@ -48,7 +48,7 @@ makedb-modules = xmalloc hash-string
 extra-objs		+= $(makedb-modules:=.o)
 
 tests			= test-netdb tst-nss-test1 test-digits-dots \
-			  tst-nss-getpwent bug18287
+			  tst-nss-getpwent bug17079
 xtests			= bug-erange
 
 # Specify rules for the nss_* modules.  We have some services.
