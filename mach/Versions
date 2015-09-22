@@ -54,6 +54,9 @@ libc {
     # This was always there, but not exported as it should have been.
     mig_strncpy;
   }
+  GLIBC_2.23 {
+    __mach_host_self_;
+  }
 
   HURD_CTHREADS_0.3 {
     __mutex_init; __mutex_lock; __mutex_lock_solid; __mutex_trylock;

@@ -1,3 +1,7 @@
+2015-09-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* mach/Versions (__mach_host_self_): Add symbol.
+
 2015-09-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/mmap.c (__mmap): Use __vm_page_size instead of
