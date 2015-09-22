@@ -1,3 +1,8 @@
+2015-09-22  Florian Weimer  <fweimer@redhat.com>
+
+	* nss/bug18287.c: New file.
+	* nss/Makefile (tests): Add bug18287.
+
 2015-09-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* mach/Versions (__mach_host_self_): Add symbol.
