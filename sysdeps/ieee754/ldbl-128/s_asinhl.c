@@ -52,11 +52,7 @@ __asinhl (long double x)
     return x + x;		/* x is inf or NaN */
   if (ix < 0x3fc70000)
     {				/* |x| < 2^ -56 */
-      if (fabsl (x) < LDBL_MIN)
-	{
-	  long double force_underflow = x * x;
-	  math_force_eval (force_underflow);
-	}
+      math_check_force_underflow (x);
       if (huge + x > one)
 	return x;		/* return x inexact except 0 */
     }

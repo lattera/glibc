@@ -117,16 +117,7 @@ __ctan (__complex__ double x)
 	  __real__ res = sinrx * cosrx / den;
 	  __imag__ res = sinhix * coshix / den;
 	}
-      if (fabs (__real__ res) < DBL_MIN)
-	{
-	  double force_underflow = __real__ res * __real__ res;
-	  math_force_eval (force_underflow);
-	}
-      if (fabs (__imag__ res) < DBL_MIN)
-	{
-	  double force_underflow = __imag__ res * __imag__ res;
-	  math_force_eval (force_underflow);
-	}
+      math_check_force_underflow_complex (res);
     }
 
   return res;

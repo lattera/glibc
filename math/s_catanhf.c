@@ -127,16 +127,7 @@ __catanhf (__complex__ float x)
 	  __imag__ res = 0.5f * __ieee754_atan2f (2.0f * __imag__ x, den);
 	}
 
-      if (fabsf (__real__ res) < FLT_MIN)
-	{
-	  volatile float force_underflow = __real__ res * __real__ res;
-	  (void) force_underflow;
-	}
-      if (fabsf (__imag__ res) < FLT_MIN)
-	{
-	  volatile float force_underflow = __imag__ res * __imag__ res;
-	  (void) force_underflow;
-	}
+      math_check_force_underflow_complex (res);
     }
 
   return res;

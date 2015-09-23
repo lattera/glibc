@@ -189,11 +189,7 @@ __kernel_casinhl (__complex__ long double x, int adj)
 	  else
 	    __imag__ res = __ieee754_atan2l (ix, s);
 	}
-      if (__real__ res < LDBL_MIN)
-	{
-	  volatile long double force_underflow = __real__ res * __real__ res;
-	  (void) force_underflow;
-	}
+      math_check_force_underflow_nonneg (__real__ res);
     }
   else
     {

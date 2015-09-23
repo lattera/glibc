@@ -51,11 +51,7 @@ float __kernel_tanf(float x, float y, int iy)
 		if((ix|(iy+1))==0) return one/fabsf(x);
 		else if (iy == 1)
 		  {
-		    if (fabsf (x) < FLT_MIN)
-		      {
-			float force_underflow = x * x;
-			math_force_eval (force_underflow);
-		      }
+		    math_check_force_underflow (x);
 		    return x;
 		  }
 		else

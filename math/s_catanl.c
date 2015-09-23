@@ -139,16 +139,7 @@ __catanl (__complex__ long double x)
 	    }
 	}
 
-      if (fabsl (__real__ res) < LDBL_MIN)
-	{
-	  volatile long double force_underflow = __real__ res * __real__ res;
-	  (void) force_underflow;
-	}
-      if (fabsl (__imag__ res) < LDBL_MIN)
-	{
-	  volatile long double force_underflow = __imag__ res * __imag__ res;
-	  (void) force_underflow;
-	}
+      math_check_force_underflow_complex (res);
     }
 
   return res;

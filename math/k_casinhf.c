@@ -182,11 +182,7 @@ __kernel_casinhf (__complex__ float x, int adj)
 	  else
 	    __imag__ res = __ieee754_atan2f (ix, s);
 	}
-      if (__real__ res < FLT_MIN)
-	{
-	  volatile float force_underflow = __real__ res * __real__ res;
-	  (void) force_underflow;
-	}
+      math_check_force_underflow_nonneg (__real__ res);
     }
   else
     {

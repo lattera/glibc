@@ -71,11 +71,7 @@ __ieee754_asin(double x){
 
   if (k < 0x3e500000)
     {
-      if (fabs (x) < DBL_MIN)
-	{
-	  double force_underflow = x * x;
-	  math_force_eval (force_underflow);
-	}
+      math_check_force_underflow (x);
       return x;  /* for x->0 => sin(x)=x */
     }
   /*----------------------2^-26 <= |x| < 2^ -3    -----------------*/

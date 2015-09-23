@@ -98,11 +98,7 @@ __kernel_tanl (long double x, long double y, int iy)
 	    return one / fabsl (x);
 	  else if (iy == 1)
 	    {
-	      if (absx < LDBL_MIN)
-		{
-		  long double force_underflow = x * x;
-		  math_force_eval (force_underflow);
-		}
+	      math_check_force_underflow_nonneg (absx);
 	      return x;
 	    }
 	  else

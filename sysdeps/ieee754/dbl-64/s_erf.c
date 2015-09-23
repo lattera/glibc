@@ -213,11 +213,7 @@ __erf (double x)
 	    {
 	      /* Avoid spurious underflow.  */
 	      double ret = 0.0625 * (16.0 * x + (16.0 * efx) * x);
-	      if (fabs (ret) < DBL_MIN)
-		{
-		  double force_underflow = ret * ret;
-		  math_force_eval (force_underflow);
-		}
+	      math_check_force_underflow (ret);
 	      return ret;
 	    }
 	  return x + efx * x;

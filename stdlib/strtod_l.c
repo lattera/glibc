@@ -297,8 +297,8 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
 	      || (round_limb & ((((mp_limb_t) 1) << round_bit) - 1)) != 0))
 	{
 	  __set_errno (ERANGE);
-	  volatile FLOAT force_underflow_exception = MIN_VALUE * MIN_VALUE;
-	  (void) force_underflow_exception;
+	  FLOAT force_underflow = MIN_VALUE * MIN_VALUE;
+	  math_force_eval (force_underflow);
 	}
     }
 

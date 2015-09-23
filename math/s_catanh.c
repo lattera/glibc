@@ -125,16 +125,7 @@ __catanh (__complex__ double x)
 	  __imag__ res = 0.5 * __ieee754_atan2 (2.0 * __imag__ x, den);
 	}
 
-      if (fabs (__real__ res) < DBL_MIN)
-	{
-	  volatile double force_underflow = __real__ res * __real__ res;
-	  (void) force_underflow;
-	}
-      if (fabs (__imag__ res) < DBL_MIN)
-	{
-	  volatile double force_underflow = __imag__ res * __imag__ res;
-	  (void) force_underflow;
-	}
+      math_check_force_underflow_complex (res);
     }
 
   return res;

@@ -60,11 +60,7 @@ __ieee754_sinhl(long double x)
     /* |x| in [0,25], return sign(x)*0.5*(E+E/(E+1))) */
 	if (ix < 0x4003 || (ix == 0x4003 && i0 <= 0xc8000000)) { /* |x|<25 */
 	    if (ix<0x3fdf) {		/* |x|<2**-32 */
-		if (fabsl (x) < LDBL_MIN)
-		  {
-		    long double force_underflow = x * x;
-		    math_force_eval (force_underflow);
-		  }
+		math_check_force_underflow (x);
 		if(shuge+x>one) return x;/* sinh(tiny) = tiny with inexact */
 	    }
 	    t = __expm1l(fabsl(x));

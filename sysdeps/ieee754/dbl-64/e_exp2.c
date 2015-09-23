@@ -122,11 +122,7 @@ __ieee754_exp2 (double x)
       else
 	{
 	  result *= scale_u.d;
-	  if (result < DBL_MIN)
-	    {
-	      double force_underflow = result * result;
-	      math_force_eval (force_underflow);
-	    }
+	  math_check_force_underflow_nonneg (result);
 	  return result;
 	}
     }

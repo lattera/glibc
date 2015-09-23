@@ -186,11 +186,7 @@ __ieee754_gammal_r (long double x, int *signgamp)
 	      ret = M_PIl / (-x * sinpix
 			     * gammal_positive (-x, &exp2_adj));
 	      ret = __scalbnl (ret, -exp2_adj);
-	      if (ret < LDBL_MIN)
-		{
-		  long double force_underflow = ret * ret;
-		  math_force_eval (force_underflow);
-		}
+	      math_check_force_underflow_nonneg (ret);
 	    }
 	}
     }

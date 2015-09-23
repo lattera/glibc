@@ -72,15 +72,8 @@ __clogl (__complex__ long double x)
 
       if (absx == 1.0L && scale == 0)
 	{
-	  long double absy2 = absy * absy;
-	  if (absy2 <= LDBL_MIN * 2.0L)
-	    {
-	      long double force_underflow = absy2 * absy2;
-	      __real__ result = absy2 / 2.0L;
-	      math_force_eval (force_underflow);
-	    }
-	  else
-	    __real__ result = __log1pl (absy2) / 2.0L;
+	  __real__ result = __log1pl (absy * absy) / 2.0L;
+	  math_check_force_underflow_nonneg (__real__ result);
 	}
       else if (absx > 1.0L && absx < 2.0L && absy < 1.0L && scale == 0)
 	{

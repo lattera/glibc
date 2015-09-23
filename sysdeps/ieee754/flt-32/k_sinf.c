@@ -38,11 +38,7 @@ float __kernel_sinf(float x, float y, int iy)
 	ix &= 0x7fffffff;			/* high word of x */
 	if(ix<0x32000000)			/* |x| < 2**-27 */
 	  {
-	    if (fabsf (x) < FLT_MIN)
-	      {
-		float force_underflow = x * x;
-		math_force_eval (force_underflow);
-	      }
+	    math_check_force_underflow (x);
 	    if ((int) x == 0)
 	      return x;		/* generate inexact */
 	  }

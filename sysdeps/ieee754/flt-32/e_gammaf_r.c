@@ -179,11 +179,7 @@ __ieee754_gammaf_r (float x, int *signgamp)
 	      float tret = (float) M_PI / (-x * sinpix
 					   * gammaf_positive (-x, &exp2_adj));
 	      ret = __scalbnf (tret, -exp2_adj);
-	      if (ret < FLT_MIN)
-		{
-		  float force_underflow = ret * ret;
-		  math_force_eval (force_underflow);
-		}
+	      math_check_force_underflow_nonneg (ret);
 	    }
 	}
       ret = math_narrow_eval (ret);

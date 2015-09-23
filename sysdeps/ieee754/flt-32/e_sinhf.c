@@ -36,11 +36,7 @@ __ieee754_sinhf(float x)
     /* |x| in [0,22], return sign(x)*0.5*(E+E/(E+1))) */
 	if (ix < 0x41b00000) {		/* |x|<22 */
 	    if (__builtin_expect(ix<0x31800000, 0)) {	/* |x|<2**-28 */
-		if (fabsf (x) < FLT_MIN)
-		  {
-		    float force_underflow = x * x;
-		    math_force_eval (force_underflow);
-		  }
+		math_check_force_underflow (x);
 		if(shuge+x>one) return x;/* sinh(tiny) = tiny with inexact */
 	    }
 	    t = __expm1f(fabsf(x));

@@ -297,11 +297,7 @@ __sin (double x)
   k = 0x7fffffff & m;		/* no sign           */
   if (k < 0x3e500000)		/* if x->0 =>sin(x)=x */
     {
-      if (fabs (x) < DBL_MIN)
-	{
-	  double force_underflow = x * x;
-	  math_force_eval (force_underflow);
-	}
+      math_check_force_underflow (x);
       retval = x;
     }
  /*---------------------------- 2^-26 < |x|< 0.25 ----------------------*/

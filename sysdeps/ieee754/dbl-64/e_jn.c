@@ -246,11 +246,8 @@ __ieee754_jn (int n, double x)
   }
   if (ret == 0)
     ret = __copysign (DBL_MIN, ret) * DBL_MIN;
-  else if (fabs (ret) < DBL_MIN)
-    {
-      double force_underflow = ret * ret;
-      math_force_eval (force_underflow);
-    }
+  else
+    math_check_force_underflow (ret);
   return ret;
 }
 strong_alias (__ieee754_jn, __jn_finite)

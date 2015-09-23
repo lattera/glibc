@@ -39,11 +39,7 @@ __asinh (double x)
   ix = hx & 0x7fffffff;
   if (__glibc_unlikely (ix < 0x3e300000))                  /* |x|<2**-28 */
     {
-      if (fabs (x) < DBL_MIN)
-	{
-	  double force_underflow = x * x;
-	  math_force_eval (force_underflow);
-	}
+      math_check_force_underflow (x);
       if (huge + x > one)
 	return x;                       /* return x inexact except 0 */
     }

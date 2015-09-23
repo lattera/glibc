@@ -180,11 +180,7 @@ __kernel_casinh (__complex__ double x, int adj)
 	  else
 	    __imag__ res = __ieee754_atan2 (ix, s);
 	}
-      if (__real__ res < DBL_MIN)
-	{
-	  volatile double force_underflow = __real__ res * __real__ res;
-	  (void) force_underflow;
-	}
+      math_check_force_underflow_nonneg (__real__ res);
     }
   else
     {

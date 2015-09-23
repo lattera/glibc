@@ -114,11 +114,7 @@ __kernel_sincosl(long double x, long double y, long double *sinx, long double *c
 	 polynomial of degree 16(17).  */
       if (tix < 0x3c600000)		/* |x| < 2^-57 */
 	{
-	  if (fabsl (x) < LDBL_MIN)
-	    {
-	      long double force_underflow = x * x;
-	      math_force_eval (force_underflow);
-	    }
+	  math_check_force_underflow (x);
 	  if (!((int)x))			/* generate inexact */
 	    {
 	      *sinx = x;

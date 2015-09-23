@@ -71,15 +71,8 @@ __clog10 (__complex__ double x)
 
       if (absx == 1.0 && scale == 0)
 	{
-	  double absy2 = absy * absy;
-	  if (absy2 <= DBL_MIN * 2.0 * M_LN10)
-	    {
-	      double force_underflow = absy2 * absy2;
-	      __real__ result = absy2 * (M_LOG10E / 2.0);
-	      math_force_eval (force_underflow);
-	    }
-	  else
-	    __real__ result = __log1p (absy2) * (M_LOG10E / 2.0);
+	  __real__ result = __log1p (absy * absy) * (M_LOG10E / 2.0);
+	  math_check_force_underflow_nonneg (__real__ result);
 	}
       else if (absx > 1.0 && absx < 2.0 && absy < 1.0 && scale == 0)
 	{

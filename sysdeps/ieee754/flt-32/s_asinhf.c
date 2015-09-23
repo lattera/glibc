@@ -30,11 +30,7 @@ __asinhf(float x)
 	GET_FLOAT_WORD(hx,x);
 	ix = hx&0x7fffffff;
 	if(__builtin_expect(ix< 0x38000000, 0)) {	/* |x|<2**-14 */
-	    if (fabsf (x) < FLT_MIN)
-	      {
-		float force_underflow = x * x;
-		math_force_eval (force_underflow);
-	      }
+	    math_check_force_underflow (x);
 	    if(huge+x>one) return x;	/* return x inexact except 0 */
 	}
 	if(__builtin_expect(ix>0x47000000, 0)) {	/* |x| > 2**14 */

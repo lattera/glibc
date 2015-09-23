@@ -200,10 +200,7 @@ __ieee754_exp (double x)
       check_uflow_ret:
 	if (retval < DBL_MIN)
 	  {
-#if FLT_EVAL_METHOD != 0
-	    volatile
-#endif
-	      double force_underflow = tiny * tiny;
+	    double force_underflow = tiny * tiny;
 	    math_force_eval (force_underflow);
 	  }
 	if (retval == 0)

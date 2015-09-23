@@ -1,5 +1,158 @@
 2015-09-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/generic/math_private.h (fabs_tg): New macro.
+	(min_of_type): Likewise.
+	(math_check_force_underflow): Likewise.
+	(math_check_force_underflow_nonneg): Likewise.
+	(math_check_force_underflow_complex): Likewise.
+	* math/e_exp2l.c (__ieee754_exp2l): Use
+	math_check_force_underflow_nonneg.
+	* math/k_casinh.c (__kernel_casinh): Likewise.
+	* math/k_casinhf.c (__kernel_casinhf): Likewise.
+	* math/k_casinhl.c (__kernel_casinhl): Likewise.
+	* math/s_catan.c (__catan): Use
+	math_check_force_underflow_complex.
+	* math/s_catanf.c (__catanf): Likewise.
+	* math/s_catanh.c (__catanh): Likewise.
+	* math/s_catanhf.c (__catanhf): Likewise.
+	* math/s_catanhl.c (__catanhl): Likewise.
+	* math/s_catanl.c (__catanl): Likewise.
+	* math/s_ccosh.c (__ccosh): Likewise.
+	* math/s_ccoshf.c (__ccoshf): Likewise.
+	* math/s_ccoshl.c (__ccoshl): Likewise.
+	* math/s_cexp.c (__cexp): Likewise.
+	* math/s_cexpf.c (__cexpf): Likewise.
+	* math/s_cexpl.c (__cexpl): Likewise.
+	* math/s_clog.c (__clog): Use math_check_force_underflow_nonneg.
+	* math/s_clog10.c (__clog10): Likewise.
+	* math/s_clog10f.c (__clog10f): Likewise.
+	* math/s_clog10l.c (__clog10l): Likewise.
+	* math/s_clogf.c (__clogf): Likewise.
+	* math/s_clogl.c (__clogl): Likewise.
+	* math/s_csin.c (__csin): Use math_check_force_underflow_complex.
+	* math/s_csinf.c (__csinf): Likewise.
+	* math/s_csinh.c (__csinh): Likewise.
+	* math/s_csinhf.c (__csinhf): Likewise.
+	* math/s_csinhl.c (__csinhl): Likewise.
+	* math/s_csinl.c (__csinl): Likewise.
+	* math/s_csqrt.c (__csqrt): Use math_check_force_underflow.
+	* math/s_csqrtf.c (__csqrtf): Likewise.
+	* math/s_csqrtl.c (__csqrtl): Likewise.
+	* math/s_ctan.c (__ctan): Use math_check_force_underflow_complex.
+	* math/s_ctanf.c (__ctanf): Likewise.
+	* math/s_ctanh.c (__ctanh): Likewise.
+	* math/s_ctanhf.c (__ctanhf): Likewise.
+	* math/s_ctanhl.c (__ctanhl): Likewise.
+	* math/s_ctanl.c (__ctanl): Likewise.
+	* stdlib/strtod_l.c (round_and_return): Use math_force_eval
+	instead of volatile.
+	* sysdeps/ieee754/dbl-64/e_asin.c (__ieee754_asin): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/dbl-64/e_atanh.c (__ieee754_atanh): Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp.c (__ieee754_exp): Do not use
+	volatile when forcing underflow.
+	* sysdeps/ieee754/dbl-64/e_exp2.c (__ieee754_exp2): Use
+	math_check_force_underflow_nonneg.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c (__ieee754_gamma_r):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/e_j1.c (__ieee754_j1): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_jn): Likewise.
+	* sysdeps/ieee754/dbl-64/e_sinh.c (__ieee754_sinh): Likewise.
+	* sysdeps/ieee754/dbl-64/s_asinh.c (__asinh): Likewise.
+	* sysdeps/ieee754/dbl-64/s_atan.c (atan): Use
+	math_check_force_underflow_nonneg.
+	* sysdeps/ieee754/dbl-64/s_erf.c (__erf): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/dbl-64/s_expm1.c (__expm1): Likewise.
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Use math_force_eval
+	instead of volatile.
+	* sysdeps/ieee754/dbl-64/s_log1p.c (__log1p): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Likewise.
+	* sysdeps/ieee754/dbl-64/s_tan.c (tan): Use
+	math_check_force_underflow_nonneg.
+	* sysdeps/ieee754/dbl-64/s_tanh.c (__tanh): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/flt-32/e_asinf.c (__ieee754_asinf): Likewise.
+	* sysdeps/ieee754/flt-32/e_atanhf.c (__ieee754_atanhf): Likewise.
+	* sysdeps/ieee754/flt-32/e_exp2f.c (__ieee754_exp2f): Use
+	math_check_force_underflow_nonneg.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c (__ieee754_gammaf_r):
+	Likewise.
+	* sysdeps/ieee754/flt-32/e_j1f.c (__ieee754_j1f): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/flt-32/e_jnf.c (__ieee754_jnf): Likewise.
+	* sysdeps/ieee754/flt-32/e_sinhf.c (__ieee754_sinhf): Likewise.
+	* sysdeps/ieee754/flt-32/k_sinf.c (__kernel_sinf): Likewise.
+	* sysdeps/ieee754/flt-32/k_tanf.c (__kernel_tanf): Likewise.
+	* sysdeps/ieee754/flt-32/s_asinhf.c (__asinhf): Likewise.
+	* sysdeps/ieee754/flt-32/s_atanf.c (__atanf): Likewise.
+	* sysdeps/ieee754/flt-32/s_erff.c (__erff): Likewise.
+	* sysdeps/ieee754/flt-32/s_expm1f.c (__expm1f): Likewise.
+	* sysdeps/ieee754/flt-32/s_log1pf.c (__log1pf): Likewise.
+	* sysdeps/ieee754/flt-32/s_tanhf.c (__tanhf): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_asinl.c (__ieee754_asinl): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atanhl.c (__ieee754_atanhl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_expl.c (__ieee754_expl): Use
+	math_check_force_underflow_nonneg.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c (__ieee754_gammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_j1l): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c (__ieee754_jnl): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_sinhl.c (__ieee754_sinhl): Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sincosl.c (__kernel_sincosl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sinl.c (__kernel_sinl): Likewise.
+	* sysdeps/ieee754/ldbl-128/k_tanl.c (__kernel_tanl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_asinhl.c (__asinhl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_atanl.c (__atanl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c (__erfl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c (__expm1l): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Use math_force_eval
+	instead of volatile.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c (__log1pl): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/ldbl-128/s_tanhl.c (__tanhl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c (__ieee754_asinl): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/ldbl-128ibm/e_atanhl.c (__ieee754_atanhl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c (__ieee754_gammal_r):
+	Use math_check_force_underflow_nonneg.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c (__ieee754_jnl): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c (__ieee754_sinhl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_sincosl.c (__kernel_sincosl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_sinl.c (__kernel_sinl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_tanl.c (__kernel_tanl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_asinhl.c (__asinhl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c (__atanl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c (__erfl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanhl.c (__tanhl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_asinl.c (__ieee754_asinl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_atanhl.c (__ieee754_atanhl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c (__ieee754_gammal_r): Use
+	math_check_force_underflow_nonneg.
+	* sysdeps/ieee754/ldbl-96/e_j1l.c (__ieee754_j1l): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_jnl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_sinhl.c (__ieee754_sinhl): Likewise.
+	* sysdeps/ieee754/ldbl-96/k_sinl.c (__kernel_sinl): Likewise.
+	* sysdeps/ieee754/ldbl-96/k_tanl.c (__kernel_tanl): Use
+	math_check_force_underflow_nonneg.
+	* sysdeps/ieee754/ldbl-96/s_asinhl.c (__asinhl): Use
+	math_check_force_underflow.
+	* sysdeps/ieee754/ldbl-96/s_erfl.c (__erfl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c (__fmal): Use math_force_eval
+	instead of volatile.
+	* sysdeps/ieee754/ldbl-96/s_tanhl.c (__tanhl): Use
+	math_check_force_underflow.
+
 	* math/s_nexttowardf.c (__nexttowardf): Use math_narrow_eval.
 	* stdlib/strtod_l.c: Include <math_private.h>.
 	(overflow_value): Use math_narrow_eval.

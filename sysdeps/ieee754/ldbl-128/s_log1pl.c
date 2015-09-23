@@ -140,11 +140,7 @@ __log1pl (long double xm1)
 
   if ((hx & 0x7fffffff) < 0x3f8e0000)
     {
-      if (fabsl (xm1) < LDBL_MIN)
-	{
-	  long double force_underflow = xm1 * xm1;
-	  math_force_eval (force_underflow);
-	}
+      math_check_force_underflow (xm1);
       if ((int) xm1 == 0)
 	return xm1;
     }

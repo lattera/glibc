@@ -89,18 +89,7 @@ __csinf (__complex__ float x)
 	      __imag__ retval = __ieee754_sinhf (__imag__ x) * cosix;
 	    }
 
-	  if (fabsf (__real__ retval) < FLT_MIN)
-	    {
-	      volatile float force_underflow
-		= __real__ retval * __real__ retval;
-	      (void) force_underflow;
-	    }
-	  if (fabsf (__imag__ retval) < FLT_MIN)
-	    {
-	      volatile float force_underflow
-		= __imag__ retval * __imag__ retval;
-	      (void) force_underflow;
-	    }
+	  math_check_force_underflow_complex (retval);
 	}
       else
 	{

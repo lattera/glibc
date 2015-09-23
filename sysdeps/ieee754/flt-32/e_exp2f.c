@@ -111,11 +111,7 @@ __ieee754_exp2f (float x)
       else
 	{
 	  result *= scale_u.f;
-	  if (result < FLT_MIN)
-	    {
-	      float force_underflow = result * result;
-	      math_force_eval (force_underflow);
-	    }
+	  math_check_force_underflow_nonneg (result);
 	  return result;
 	}
     }

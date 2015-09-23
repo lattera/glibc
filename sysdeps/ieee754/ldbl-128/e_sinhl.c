@@ -88,11 +88,7 @@ __ieee754_sinhl (long double x)
     {
       if (ix < 0x3fc60000) /* |x| < 2^-57 */
 	{
-	  if (fabsl (x) < LDBL_MIN)
-	    {
-	      long double force_underflow = x * x;
-	      math_force_eval (force_underflow);
-	    }
+	  math_check_force_underflow (x);
 	  if (shuge + x > one)
 	    return x;		/* sinh(tiny) = tiny with inexact */
 	}

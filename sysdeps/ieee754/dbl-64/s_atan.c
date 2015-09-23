@@ -90,11 +90,7 @@ atan (double x)
 	{
 	  if (u < A)
 	    {
-	      if (u < DBL_MIN)
-		{
-		  double force_underflow = x * x;
-		  math_force_eval (force_underflow);
-		}
+	      math_check_force_underflow_nonneg (u);
 	      return x;
 	    }
 	  else

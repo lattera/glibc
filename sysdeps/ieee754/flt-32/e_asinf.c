@@ -73,11 +73,7 @@ float __ieee754_asinf(float x)
 	    return (x-x)/(x-x);		/* asin(|x|>1) is NaN */
 	} else if (ix<0x3f000000) {	/* |x|<0.5 */
 	    if(ix<0x32000000) {		/* if |x| < 2**-27 */
-		if (fabsf (x) < FLT_MIN)
-		  {
-		    float force_underflow = x * x;
-		    math_force_eval (force_underflow);
-		  }
+		math_check_force_underflow (x);
 		if(huge+x>one) return x;/* return x with inexact if x!=0*/
 	    } else {
 		t = x*x;

@@ -94,8 +94,8 @@ __fmal (long double x, long double y, long double z)
 		     && w.ieee.mantissa1 == 0
 		     && w.ieee.mantissa0 == 0)))
 	    {
-	      volatile long double force_underflow = x * y;
-	      (void) force_underflow;
+	      long double force_underflow = x * y;
+	      math_force_eval (force_underflow);
 	    }
 	  return v.d * 0x1p-114L;
 	}

@@ -43,11 +43,7 @@ float __tanhf(float x)
 		return x;		/* x == +-0 */
 	    if (ix<0x24000000) 		/* |x|<2**-55 */
 	      {
-		if (fabsf (x) < FLT_MIN)
-		  {
-		    float force_underflow = x * x;
-		    math_force_eval (force_underflow);
-		  }
+		math_check_force_underflow (x);
 		return x*(one+x);    	/* tanh(small) = small */
 	      }
 	    if (ix>=0x3f800000) {	/* |x|>=1  */

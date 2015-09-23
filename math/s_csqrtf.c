@@ -148,16 +148,8 @@ __csqrtf (__complex__ float x)
 	      s = __scalbnf (s, scale);
 	    }
 
-	  if (fabsf (r) < FLT_MIN)
-	    {
-	      float force_underflow = r * r;
-	      math_force_eval (force_underflow);
-	    }
-	  if (fabsf (s) < FLT_MIN)
-	    {
-	      float force_underflow = s * s;
-	      math_force_eval (force_underflow);
-	    }
+	  math_check_force_underflow (r);
+	  math_check_force_underflow (s);
 
 	  __real__ res = r;
 	  __imag__ res = __copysignf (s, __imag__ x);

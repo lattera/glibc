@@ -50,11 +50,7 @@ __log1pf(float x)
 		math_force_eval(two25+x);	/* raise inexact */
 		if (ax<0x24800000)		/* |x| < 2**-54 */
 		  {
-		    if (fabsf (x) < FLT_MIN)
-		      {
-			float force_underflow = x * x;
-			math_force_eval (force_underflow);
-		      }
+		    math_check_force_underflow (x);
 		    return x;
 		  }
 		else

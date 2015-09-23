@@ -75,11 +75,7 @@ __tanhl (long double x)
 	return x;		/* x == +- 0 */
       if (ix < 0x3fc60000)	/* |x| < 2^-57 */
 	{
-	  if (fabsl (x) < LDBL_MIN)
-	    {
-	      long double force_underflow = x * x;
-	      math_force_eval (force_underflow);
-	    }
+	  math_check_force_underflow (x);
 	  return x * (one + tiny); /* tanh(small) = small */
 	}
       u.parts32.w0 = ix;	/* Absolute value of x.  */

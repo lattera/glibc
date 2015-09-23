@@ -96,11 +96,7 @@ __kernel_sinl(long double x, long double y, int iy)
 	 polynomial of degree 17.  */
       if (absx < 0x1p-33L)
 	{
-	  if (fabsl (x) < LDBL_MIN)
-	    {
-	      long double force_underflow = x * x;
-	      math_force_eval (force_underflow);
-	    }
+	  math_check_force_underflow (x);
 	  if (!((int)x)) return x;	/* generate inexact */
 	}
       z = x * x;

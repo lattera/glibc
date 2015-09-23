@@ -232,11 +232,7 @@ __ieee754_expl (long double x)
       else
 	{
 	  result *= scale_u.d;
-	  if (result < LDBL_MIN)
-	    {
-	      long double force_underflow = result * result;
-	      math_force_eval (force_underflow);
-	    }
+	  math_check_force_underflow_nonneg (result);
 	  return result;
 	}
     }

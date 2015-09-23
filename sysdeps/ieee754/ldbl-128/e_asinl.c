@@ -153,11 +153,7 @@ __ieee754_asinl (long double x)
     {
       if (ix < 0x3fc60000) /* |x| < 2**-57 */
 	{
-	  if (fabsl (x) < LDBL_MIN)
-	    {
-	      long double force_underflow = x * x;
-	      math_force_eval (force_underflow);
-	    }
+	  math_check_force_underflow (x);
 	  long double force_inexact = huge + x;
 	  math_force_eval (force_inexact);
 	  return x;		/* return x with inexact if x!=0 */

@@ -68,11 +68,7 @@ long double __tanhl(long double x)
 		return x;		/* x == +-0 */
 	    if (ix<0x3c60000000000000LL) 	/* |x|<2**-57 */
 	      {
-		if (fabsl (x) < LDBL_MIN)
-		  {
-		    long double force_underflow = x * x;
-		    math_force_eval (force_underflow);
-		  }
+		math_check_force_underflow (x);
 		return x*(one+x);    	/* tanh(small) = small */
 	      }
 	    if (ix>=0x3ff0000000000000LL) {	/* |x|>=1  */

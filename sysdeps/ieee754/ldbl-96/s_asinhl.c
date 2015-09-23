@@ -45,11 +45,7 @@ long double __asinhl(long double x)
 	GET_LDOUBLE_EXP(hx,x);
 	ix = hx&0x7fff;
 	if(__builtin_expect(ix< 0x3fde, 0)) {	/* |x|<2**-34 */
-	    if (fabsl (x) < LDBL_MIN)
-	      {
-		long double force_underflow = x * x;
-		math_force_eval (force_underflow);
-	      }
+	    math_check_force_underflow (x);
 	    if(huge+x>one) return x;	/* return x inexact except 0 */
 	}
 	if(__builtin_expect(ix>0x4020,0)) {		/* |x| > 2**34 */

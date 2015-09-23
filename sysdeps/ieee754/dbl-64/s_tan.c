@@ -92,11 +92,7 @@ tan (double x)
   /* (I) The case abs(x) <= 1.259e-8 */
   if (w <= g1.d)
     {
-      if (w < DBL_MIN)
-	{
-	  double force_underflow = x * x;
-	  math_force_eval (force_underflow);
-	}
+      math_check_force_underflow_nonneg (w);
       retval = x;
       goto ret;
     }

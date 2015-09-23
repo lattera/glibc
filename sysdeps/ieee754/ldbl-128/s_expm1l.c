@@ -128,11 +128,7 @@ __expm1l (long double x)
      when the result does underflow.  */
   if (fabsl (x) < 0x1p-113L)
     {
-      if (fabsl (x) < LDBL_MIN)
-	{
-	  long double force_underflow = x * x;
-	  math_force_eval (force_underflow);
-	}
+      math_check_force_underflow (x);
       return x;
     }
 

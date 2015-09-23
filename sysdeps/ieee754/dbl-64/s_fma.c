@@ -90,8 +90,8 @@ __fma (double x, double y, double z)
 		     && w.ieee.mantissa1 == 0
 		     && w.ieee.mantissa0 == 0)))
 	    {
-	      volatile double force_underflow = x * y;
-	      (void) force_underflow;
+	      double force_underflow = x * y;
+	      math_force_eval (force_underflow);
 	    }
 	  return v.d * 0x1p-54;
 	}

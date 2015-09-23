@@ -113,11 +113,7 @@ float __erff(float x)
 		  {
 		    /* Avoid spurious underflow.  */
 		    float ret = 0.0625f * (16.0f * x + (16.0f * efx) * x);
-		    if (fabsf (ret) < FLT_MIN)
-		      {
-			float force_underflow = ret * ret;
-			math_force_eval (force_underflow);
-		      }
+		    math_check_force_underflow (ret);
 		    return ret;
 		  }
 		return x + efx*x;

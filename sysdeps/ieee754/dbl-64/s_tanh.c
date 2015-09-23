@@ -70,11 +70,7 @@ __tanh (double x)
 	return x;                       /* x == +-0 */
       if (ix < 0x3c800000)              /* |x|<2**-55 */
 	{
-	  if (fabs (x) < DBL_MIN)
-	    {
-	      double force_underflow = x * x;
-	      math_force_eval (force_underflow);
-	    }
+	  math_check_force_underflow (x);
 	  return x * (one + x);           /* tanh(small) = small */
 	}
       if (ix >= 0x3ff00000)             /* |x|>=1  */

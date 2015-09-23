@@ -202,11 +202,7 @@ __atanl (long double x)
 
   if (k <= 0x3fc50000) /* |x| < 2**-58 */
     {
-      if (fabsl (x) < LDBL_MIN)
-	{
-	  long double force_underflow = x * x;
-	  math_force_eval (force_underflow);
-	}
+      math_check_force_underflow (x);
       /* Raise inexact. */
       if (huge + x > 0.0)
 	return x;

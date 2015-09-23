@@ -429,6 +429,58 @@ extern long double __lgamma_productl (long double t, long double x,
    })
 #endif
 
+#define fabs_tg(x) __builtin_choose_expr			\
+  (__builtin_types_compatible_p (__typeof (x), float),		\
+   __builtin_fabsf (x),						\
+   __builtin_choose_expr					\
+   (__builtin_types_compatible_p (__typeof (x), double),	\
+    __builtin_fabs (x), __builtin_fabsl (x)))
+#define min_of_type(type) __builtin_choose_expr		\
+  (__builtin_types_compatible_p (type, float),		\
+   FLT_MIN,						\
+   __builtin_choose_expr				\
+   (__builtin_types_compatible_p (type, double),	\
+    DBL_MIN, LDBL_MIN))
+
+/* If X (which is not a NaN) is subnormal, force an underflow
+   exception.  */
+#define math_check_force_underflow(x)				\
+  do								\
+    {								\
+      __typeof (x) force_underflow_tmp = (x);			\
+      if (fabs_tg (force_underflow_tmp)				\
+	  < min_of_type (__typeof (force_underflow_tmp)))	\
+	{							\
+	  __typeof (force_underflow_tmp) force_underflow_tmp2	\
+	    = force_underflow_tmp * force_underflow_tmp;	\
+	  math_force_eval (force_underflow_tmp2);		\
+	}							\
+    }								\
+  while (0)
+/* Likewise, but X is also known to be nonnegative.  */
+#define math_check_force_underflow_nonneg(x)			\
+  do								\
+    {								\
+      __typeof (x) force_underflow_tmp = (x);			\
+      if (force_underflow_tmp					\
+	  < min_of_type (__typeof (force_underflow_tmp)))	\
+	{							\
+	  __typeof (force_underflow_tmp) force_underflow_tmp2	\
+	    = force_underflow_tmp * force_underflow_tmp;	\
+	  math_force_eval (force_underflow_tmp2);		\
+	}							\
+    }								\
+  while (0)
+/* Likewise, for both real and imaginary parts of a complex
+   result.  */
+#define math_check_force_underflow_complex(x)				\
+  do									\
+    {									\
+      __typeof (x) force_underflow_complex_tmp = (x);			\
+      math_check_force_underflow (__real__ force_underflow_complex_tmp); \
+      math_check_force_underflow (__imag__ force_underflow_complex_tmp); \
+    }									\
+  while (0)
 
 /* The standards only specify one variant of the fenv.h interfaces.
    But at least for some architectures we can be more efficient if we
