@@ -61,10 +61,7 @@ float __nexttowardf(float x, long double y)
 	}
 	hy = hx&0x7f800000;
 	if(hy>=0x7f800000) {
-	  x = x+x;	/* overflow  */
-	  if (FLT_EVAL_METHOD != 0)
-	    /* Force conversion to float.  */
-	    asm ("" : "+m"(x));
+	  x = math_narrow_eval (x+x);	/* overflow  */
 	  return x;
 	}
 	if(hy<0x00800000) {

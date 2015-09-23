@@ -34,7 +34,7 @@ __llrintl (long double x)
 {
   int32_t j0;
   u_int64_t i0,i1;
-  volatile long double w;
+  long double w;
   long double t;
   long long int result;
   int sx;

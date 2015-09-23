@@ -57,6 +57,7 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 #include "../locale/localeinfo.h"
 #include <locale.h>
 #include <math.h>
+#include <math_private.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
@@ -181,10 +182,8 @@ static FLOAT
 overflow_value (int negative)
 {
   __set_errno (ERANGE);
-#if FLT_EVAL_METHOD != 0
-  volatile
-#endif
-  FLOAT result = (negative ? -MAX_VALUE : MAX_VALUE) * MAX_VALUE;
+  FLOAT result = math_narrow_eval ((negative ? -MAX_VALUE : MAX_VALUE)
+				   * MAX_VALUE);
   return result;
 }
 
@@ -195,10 +194,8 @@ static FLOAT
 underflow_value (int negative)
 {
   __set_errno (ERANGE);
-#if FLT_EVAL_METHOD != 0
-  volatile
-#endif
-  FLOAT result = (negative ? -MIN_VALUE : MIN_VALUE) * MIN_VALUE;
+  FLOAT result = math_narrow_eval ((negative ? -MIN_VALUE : MIN_VALUE)
+				   * MIN_VALUE);
   return result;
 }
 

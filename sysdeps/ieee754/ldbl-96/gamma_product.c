@@ -36,10 +36,7 @@ __gamma_product (double x, double x_eps, int n, double *eps)
   for (int i = 1; i < n; i++)
     ret *= x_full + i;
 
-#if FLT_EVAL_METHOD != 0
-  volatile
-#endif
-  double fret = ret;
+  double fret = math_narrow_eval ((double) ret);
   *eps = (ret - fret) / fret;
 
   return fret;

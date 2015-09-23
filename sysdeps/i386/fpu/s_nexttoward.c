@@ -73,10 +73,7 @@ double __nexttoward(double x, long double y)
 	}
 	hy = hx&0x7ff00000;
 	if(hy>=0x7ff00000) {
-	  x = x+x;	/* overflow  */
-	  if (FLT_EVAL_METHOD != 0 && FLT_EVAL_METHOD != 1)
-	    /* Force conversion to double.  */
-	    asm ("" : "+m"(x));
+	  x = math_narrow_eval (x+x);	/* overflow  */
 	  return x;
 	}
 	if(hy<0x00100000) {

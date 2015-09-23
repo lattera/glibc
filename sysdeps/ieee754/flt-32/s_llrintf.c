@@ -34,7 +34,7 @@ __llrintf (float x)
 {
   int32_t j0;
   u_int32_t i0;
-  volatile float w;
+  float w;
   float t;
   long long int result;
   int sx;
@@ -52,7 +52,7 @@ __llrintf (float x)
 	result = (long long int) i0 << (j0 - 23);
       else
 	{
-	  w = two23[sx] + x;
+	  w = math_narrow_eval (two23[sx] + x);
 	  t = w - two23[sx];
 	  GET_FLOAT_WORD (i0, t);
 	  j0 = ((i0 >> 23) & 0xff) - 0x7f;

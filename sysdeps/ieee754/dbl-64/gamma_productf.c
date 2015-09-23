@@ -36,10 +36,7 @@ __gamma_productf (float x, float x_eps, int n, float *eps)
   for (int i = 1; i < n; i++)
     ret *= x_full + i;
 
-#if FLT_EVAL_METHOD != 0
-  volatile
-#endif
-  float fret = ret;
+  float fret = math_narrow_eval ((float) ret);
   *eps = (ret - fret) / fret;
 
   return fret;

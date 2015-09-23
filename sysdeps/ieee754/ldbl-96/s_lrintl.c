@@ -35,7 +35,7 @@ __lrintl (long double x)
   int32_t se,j0;
   u_int32_t i0, i1;
   long int result;
-  volatile long double w;
+  long double w;
   long double t;
   int sx;
 

@@ -402,10 +402,7 @@ __erfc (double x)
 	  __ieee754_exp ((z - x) * (z + x) + R / S);
       if (hx > 0)
 	{
-#if FLT_EVAL_METHOD != 0
-	  volatile
-#endif
-	  double ret = r / x;
+	  double ret = math_narrow_eval (r / x);
 	  if (ret == 0)
 	    __set_errno (ERANGE);
 	  return ret;

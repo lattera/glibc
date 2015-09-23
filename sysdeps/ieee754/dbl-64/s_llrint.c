@@ -35,7 +35,7 @@ __llrint (double x)
   int32_t j0;
   u_int32_t i1, i0;
   long long int result;
-  volatile double w;
+  double w;
   double t;
   int sx;
 
@@ -47,7 +47,7 @@ __llrint (double x)
 
   if (j0 < 20)
     {
-      w = two52[sx] + x;
+      w = math_narrow_eval (two52[sx] + x);
       t = w - two52[sx];
       EXTRACT_WORDS (i0, i1, t);
       j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
@@ -62,7 +62,7 @@ __llrint (double x)
 	result = (((long long int) i0 << 32) | i1) << (j0 - 52);
       else
 	{
-	  w = two52[sx] + x;
+	  w = math_narrow_eval (two52[sx] + x);
 	  t = w - two52[sx];
 	  EXTRACT_WORDS (i0, i1, t);
 	  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;

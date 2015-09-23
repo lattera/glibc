@@ -1,3 +1,50 @@
+2015-09-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/s_nexttowardf.c (__nexttowardf): Use math_narrow_eval.
+	* stdlib/strtod_l.c: Include <math_private.h>.
+	(overflow_value): Use math_narrow_eval.
+	(underflow_value): Likewise.
+	* sysdeps/i386/fpu/s_nexttoward.c (__nexttoward): Likewise.
+	* sysdeps/i386/fpu/s_nexttowardf.c (__nexttowardf): Likewise.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c (gamma_positive): Likewise.
+	(__ieee754_gamma_r): Likewise.
+	* sysdeps/ieee754/dbl-64/gamma_productf.c (__gamma_productf):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/k_rem_pio2.c (__kernel_rem_pio2):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/lgamma_neg.c (__lgamma_neg): Likewise.
+	* sysdeps/ieee754/dbl-64/s_erf.c (__erfc): Likewise.
+	* sysdeps/ieee754/dbl-64/s_llrint.c (__llrint): Likewise.
+	* sysdeps/ieee754/dbl-64/s_lrint.c (__lrint): Likewise.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c (gammaf_positive): Likewise.
+	(__ieee754_gammaf_r): Likewise.
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f):
+	Likewise.
+	* sysdeps/ieee754/flt-32/lgamma_negf.c (__lgamma_negf): Likewise.
+	* sysdeps/ieee754/flt-32/s_erff.c (__erfcf): Likewise.
+	* sysdeps/ieee754/flt-32/s_llrintf.c (__llrintf): Likewise.
+	* sysdeps/ieee754/flt-32/s_lrintf.c (__lrintf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c (__llrintl): Do not use
+	volatile.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c (__lrintl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttoward.c (__nexttoward): Use
+	math_narrow_eval.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c (__nexttoward):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c (__nexttowardf):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/gamma_product.c (__gamma_product):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/s_llrintl.c (__llrintl): Do not use
+	volatile.
+	* sysdeps/ieee754/ldbl-96/s_lrintl.c (__lrintl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c (__nexttoward): Use
+	math_narrow_eval.
+	* sysdeps/ieee754/ldbl-96/s_nexttowardf.c (__nexttowardf):
+	Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_nexttowardfd.c (__nldbl_nexttowardf):
+	Likewise.
+
 2015-09-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* nptl/Versions: Remove ignored symbols.

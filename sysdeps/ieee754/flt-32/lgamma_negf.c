@@ -245,17 +245,9 @@ __lgamma_negf (float x, int *signgamp)
     }
 
   float log_gamma_ratio;
-#if FLT_EVAL_METHOD != 0
-  volatile
-#endif
-  float y0_tmp = 1 - x0_hi;
-  float y0 = y0_tmp;
+  float y0 = math_narrow_eval (1 - x0_hi);
   float y0_eps = -x0_hi + (1 - y0) - x0_lo;
-#if FLT_EVAL_METHOD != 0
-  volatile
-#endif
-  float y_tmp = 1 - x;
-  float y = y_tmp;
+  float y = math_narrow_eval (1 - x);
   float y_eps = -x + (1 - y);
   /* We now wish to compute LOG_GAMMA_RATIO
      = log (gamma (Y0 + Y0_EPS) / gamma (Y + Y_EPS)).  XDIFF
