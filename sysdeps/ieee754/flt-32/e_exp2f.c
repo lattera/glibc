@@ -37,8 +37,8 @@
 
 #include "t_exp2f.h"
 
-static const volatile float TWOM100 = 7.88860905e-31;
-static const volatile float TWO127 = 1.7014118346e+38;
+static const float TWOM100 = 7.88860905e-31;
+static const float TWO127 = 1.7014118346e+38;
 
 float
 __ieee754_exp2f (float x)
