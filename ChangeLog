@@ -1,3 +1,9 @@
+2015-09-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19003]
+	* sysdeps/x86_64/fpu/multiarch/Makefile (CFLAGS-e_pow-fma4.c): Add
+	$(config-cflags-nofma).
+
 2015-09-24  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Regenerated.
