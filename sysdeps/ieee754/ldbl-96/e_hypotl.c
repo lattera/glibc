@@ -132,7 +132,9 @@ long double __ieee754_hypotl(long double x, long double y)
 	    t1 = 1.0;
 	    GET_LDOUBLE_EXP(exp,t1);
 	    SET_LDOUBLE_EXP(t1,exp+k);
-	    return t1*w;
+	    w *= t1;
+	    math_check_force_underflow_nonneg (w);
+	    return w;
 	} else return w;
 }
 strong_alias (__ieee754_hypotl, __hypotl_finite)

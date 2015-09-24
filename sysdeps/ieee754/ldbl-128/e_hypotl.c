@@ -130,7 +130,9 @@ __ieee754_hypotl(long double x, long double y)
 	    t1 = 1.0L;
 	    GET_LDOUBLE_MSW64(high,t1);
 	    SET_LDOUBLE_MSW64(t1,high+(k<<48));
-	    return t1*w;
+	    w *= t1;
+	    math_check_force_underflow_nonneg (w);
+	    return w;
 	} else return w;
 }
 strong_alias (__ieee754_hypotl, __hypotl_finite)

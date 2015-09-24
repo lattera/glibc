@@ -1955,6 +1955,13 @@ hypot 0x0.ffffffp-16382 0x0.fp-16383 no-test-inline
 hypot 0x0.ffffffp-16382 0x0.fp-16386 no-test-inline
 hypot 0 min_subnorm no-test-inline
 
+hypot 0x1p-127 0x1p-149
+hypot 0x1p-1023 0x1p-1074
+hypot 0x1p-970 0x1p-1074
+hypot 0x1p-16383 0x1p-16445 no-test-inline
+hypot 0x1p-16384 0x1p-16446 no-test-inline
+hypot 0x1p-16383 0x1p-16494 no-test-inline
+
 hypot -0x1.fa7deap+0 0x1.a761bab383ac8p+0
 
 j0 -1.0

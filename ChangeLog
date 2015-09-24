@@ -1,3 +1,23 @@
+2015-09-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18803]
+	* sysdeps/i386/fpu/e_hypot.S: Use DEFINE_DBL_MIN.
+	(MO): New macro.
+	(__ieee754_hypot) [PIC]: Load PIC register.
+	(__ieee754_hypot): Use DBL_NARROW_EVAL_UFLOW_NONNEG instead of
+	DBL_NARROW_EVAL.
+	* sysdeps/ieee754/dbl-64/e_hypot.c (__ieee754_hypot): Use
+	math_check_force_underflow_nonneg in case where result might be
+	tiny.
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c (__ieee754_hypotl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c (__ieee754_hypotl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/e_hypotl.c (__ieee754_hypotl): Likewise.
+	* sysdeps/powerpc/fpu/e_hypot.c (__ieee754_hypot): Likewise.
+	* math/auto-libm-test-in: Add more tests of hypot.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-09-24  Steve Ellcey  <sellcey@imgtec.com>
 
 	* sysdeps/mips/math_private.h (libc_fesetenv_mips): Mark cw as unused.

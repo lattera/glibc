@@ -116,7 +116,9 @@ __ieee754_hypot (double x, double y)
 	{
 	  x *= two1022;
 	  y *= two1022;
-	  return __ieee754_sqrt (x * x + y * y) / two1022;
+	  double ret = __ieee754_sqrt (x * x + y * y) / two1022;
+	  math_check_force_underflow_nonneg (ret);
+	  return ret;
 	}
       else
 	{
