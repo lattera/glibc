@@ -1,3 +1,7 @@
+2015-09-24  Steve Ellcey  <sellcey@imgtec.com>
+
+	* sysdeps/mips/math_private.h (libc_fesetenv_mips): Mark cw as unused.
+
 2015-09-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86_64/fpu/x86_64-math-asm.h: New file.
