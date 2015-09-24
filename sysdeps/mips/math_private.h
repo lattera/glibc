@@ -106,7 +106,7 @@ libc_feholdexcept_setround_mips (fenv_t *envp, int round)
 static __always_inline void
 libc_fesetenv_mips (fenv_t *envp)
 {
-  fpu_control_t cw;
+  fpu_control_t cw __attribute__ ((unused));
 
   /* Read current state to flush fpu pipeline.  */
   _FPU_GETCW (cw);
