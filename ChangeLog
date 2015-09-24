@@ -1,5 +1,13 @@
 2015-09-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/x86_64/fpu/x86_64-math-asm.h: New file.
+	* sysdeps/x86_64/fpu/e_exp2l.S: Include <x86_64-math-asm.h>.
+	(ldbl_min): Replace with use of DEFINE_LDBL_MIN.
+	(__ieee754_exp2l): Use LDBL_CHECK_FORCE_UFLOW_NONNEG_NAN.
+	* sysdeps/x86_64/fpu/e_expl.S: Include <x86_64-math-asm.h>.
+	[!USE_AS_EXPM1L] (cmin): Replace with use of DEFINE_LDBL_MIN.
+	(IEEE754_EXPL): Use LDBL_CHECK_FORCE_UFLOW_NONNEG.
+
 	* sysdeps/i386/fpu/e_atanh.S (__ieee754_atanh) [PIC]: Use
 	LOAD_PIC_REG.
 

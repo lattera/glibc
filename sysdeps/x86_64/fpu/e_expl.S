@@ -23,6 +23,7 @@
  */
 
 #include <machine/asm.h>
+#include <x86_64-math-asm.h>
 
 #ifdef USE_AS_EXP10L
 # define IEEE754_EXPL __ieee754_exp10l
@@ -65,10 +66,7 @@ c1:	.byte 0x20, 0xfa, 0xee, 0xc2, 0x5f, 0x70, 0xa5, 0xec, 0xed, 0x3f
 csat:	.byte 0, 0, 0, 0, 0, 0, 0, 0x80, 0x0e, 0x40
 	.byte 0, 0, 0, 0, 0, 0
 	ASM_SIZE_DIRECTIVE(csat)
-	.type cmin,@object
-cmin:	.byte 0, 0, 0, 0, 0, 0, 0, 0x80, 0x1, 0
-	.byte 0, 0, 0, 0, 0, 0
-	ASM_SIZE_DIRECTIVE(cmin)
+DEFINE_LDBL_MIN
 #endif
 
 #ifdef PIC
@@ -192,17 +190,9 @@ ENTRY(IEEE754_EXPL)
 	fstp	%st(1)		/* 2  */
 	fscale			/* 2 scale factor is st(1); base^x */
 	fstp	%st(1)		/* 1  */
-	/* Ensure underflow for tiny result.  */
-	fldt	MO(cmin)	/* 2 cmin  */
-	fld	%st(1)		/* 3  */
-	fcomip	%st(1), %st	/* 2  */
-	fstp	%st		/* 1  */
-	jnc	6f
-	fld	%st
-	fmul	%st
-	fstp	%st
+	LDBL_CHECK_FORCE_UFLOW_NONNEG
 #endif
-6:	fstp	%st(1)		/* 0  */
+	fstp	%st(1)		/* 0  */
 	jmp	2f
 1:
 #ifdef USE_AS_EXPM1L
