@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep-cancel.h>
+#include <sysdep.h>
 
 /* Return -1LL in a full 64 bits.  */
 #undef SYSCALL_ERROR_HANDLER
