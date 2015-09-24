@@ -1,3 +1,7 @@
+2015-09-24  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/libm-test-ulps: Regenerated.
+
 2015-09-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/flt-32/e_exp2f.c (TWOM100): Remove volatile.
