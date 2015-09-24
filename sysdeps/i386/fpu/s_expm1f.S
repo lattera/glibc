@@ -23,6 +23,7 @@
 
 #include <sysdep.h>
 #include <machine/asm.h>
+#include <i386-math-asm.h>
 
 	.section .rodata
 
@@ -37,12 +38,7 @@ one:	.double 1.0
 l2e:	.tfloat 1.442695040888963407359924681002
 	ASM_SIZE_DIRECTIVE(l2e)
 
-	.section .rodata.cst4,"aM",@progbits,4
-
-	.p2align 2
-	.type flt_min,@object
-flt_min:	.byte 0, 0, 0x80, 0
-	ASM_SIZE_DIRECTIVE(flt_min)
+DEFINE_FLT_MIN
 
 #ifdef PIC
 #define MO(op) op##@GOTOFF(%edx)
@@ -81,21 +77,6 @@ ENTRY(__expm1f)
 #ifdef	PIC
 	LOAD_PIC_REG (dx)
 #endif
-	fld	%st
-	fabs
-	fcoms	MO(flt_min)
-	fstp	%st
-	fnstsw
-	sahf
-	jae	5f
-	subl	$4, %esp
-	cfi_adjust_cfa_offset (4)
-	fld	%st(0)
-	fmul	%st(0)
-	fstps	(%esp)
-	addl	$4, %esp
-	cfi_adjust_cfa_offset (-4)
-	ret
 
 5:	fldt	MO(l2e)		// log2(e) : x
 	fmulp			// log2(e)*x
@@ -122,6 +103,7 @@ ENTRY(__expm1f)
 	fsubrl	MO(one)		// 1-2^int(log2(e)*x) : int(log2(e)*x) : 2^(log2(e)*x)-2^int(log2(e)*x)
 	fstp	%st(1)		// 1-2^int(log2(e)*x) : 2^(log2(e)*x)-2^int(log2(e)*x)
 	fsubrp	%st, %st(1)	// 2^(log2(e)*x)
+	FLT_CHECK_FORCE_UFLOW
 	ret
 
 2:	fstp	%st

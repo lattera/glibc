@@ -1,5 +1,65 @@
 2015-09-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/fpu/i386-math-asm.h (DEFINE_LDBL_MIN): New macro.
+	(FLT_CHECK_FORCE_UFLOW): Likewise.
+	(DBL_CHECK_FORCE_UFLOW): Likewise.
+	(FLT_CHECK_FORCE_UFLOW_NARROW): Likewise.
+	(DBL_CHECK_FORCE_UFLOW_NARROW): Likewise.
+	(LDBL_CHECK_FORCE_UFLOW_NONNEG_NAN): Likewise.
+	(FLT_CHECK_FORCE_UFLOW_NONNAN): Likewise.
+	(DBL_CHECK_FORCE_UFLOW_NONNAN): Likewise.
+	(FLT_CHECK_FORCE_UFLOW_NONNEG): Likewise.
+	(DBL_CHECK_FORCE_UFLOW_NONNEG): Likewise.
+	(LDBL_CHECK_FORCE_UFLOW_NONNEG): Likewise.
+	* sysdeps/i386/fpu/e_asin.S: Include <i386-math-asm.h>.
+	(dbl_min): Replace with use of DEFINE_DBL_MIN.
+	(__ieee754_asin): Use DBL_CHECK_FORCE_UFLOW.
+	* sysdeps/i386/fpu/e_asinf.S: Include <i386-math-asm.h>.
+	(flt_min): Replace with use of DEFINE_FLT_MIN.
+	(__ieee754_asinf): Use FLT_CHECK_FORCE_UFLOW.
+	* sysdeps/i386/fpu/e_atan2.S: Include <i386-math-asm.h>.
+	(dbl_min): Replace with use of DEFINE_DBL_MIN.
+	(__ieee754_atan2): Use DBL_CHECK_FORCE_UFLOW_NARROW.
+	* sysdeps/i386/fpu/e_atan2f.S: Include <i386-math-asm.h>.
+	(flt_min): Replace with use of DEFINE_FLT_MIN.
+	(__ieee754_atan2f): Use FLT_CHECK_FORCE_UFLOW_NARROW.
+	* sysdeps/i386/fpu/e_atanh.S: Include <i386-math-asm.h>.
+	(dbl_min): Replace with use of DEFINE_DBL_MIN.
+	(__ieee754_atanh): Use DBL_CHECK_FORCE_UFLOW_NONNEG.
+	* sysdeps/i386/fpu/e_atanhf.S: Include <i386-math-asm.h>.
+	(flt_min): Replace with use of DEFINE_FLT_MIN.
+	(__ieee754_atanhf): Use FLT_CHECK_FORCE_UFLOW_NONNEG.
+	* sysdeps/i386/fpu/e_exp2l.S: Include <i386-math-asm.h>.
+	(ldbl_min): Replace with use of DEFINE_LDBL_MIN.
+	(__ieee754_exp2l): Use LDBL_CHECK_FORCE_UFLOW_NONNEG_NAN.
+	* sysdeps/i386/fpu/e_expl.S: Include <i386-math-asm.h>.
+	[!USE_AS_EXPM1L] (cmin): Replace with use of DEFINE_LDBL_MIN.
+	(IEEE754_EXPL): Use LDBL_CHECK_FORCE_UFLOW_NONNEG.
+	* sysdeps/i386/fpu/s_atan.S: Include <i386-math-asm.h>.
+	(dbl_min): Replace with use of DEFINE_DBL_MIN.
+	(__atan): Use DBL_CHECK_FORCE_UFLOW.
+	* sysdeps/i386/fpu/s_atanf.S: Include <i386-math-asm.h>.
+	(flt_min): Replace with use of DEFINE_FLT_MIN.
+	(__atanf): Use FLT_CHECK_FORCE_UFLOW.
+	* sysdeps/i386/fpu/s_expm1.S: Include <i386-math-asm.h>.
+	(dbl_min): Replace with use of DEFINE_DBL_MIN.
+	(__expm1): Use DBL_CHECK_FORCE_UFLOW.  Move underflow check after
+	main computation.
+	* sysdeps/i386/fpu/s_expm1f.S: Include <i386-math-asm.h>.
+	(flt_min): Replace with use of DEFINE_FLT_MIN.
+	(__expm1f): Use FLT_CHECK_FORCE_UFLOW.  Move underflow check after
+	main computation.
+	* sysdeps/i386/fpu/s_log1p.S: Include <i386-math-asm.h>.
+	(dbl_min): Replace with use of DEFINE_DBL_MIN.
+	(MO): New macro.
+	(__log1p): Use MO.  Use DBL_CHECK_FORCE_UFLOW_NONNAN.
+	* sysdeps/i386/fpu/s_log1pf.S: Include <i386-math-asm.h>.
+	(flt_min): Replace with use of DEFINE_FLT_MIN.
+	(MO): New macro.
+	(__log1pf): Use MO.  Use FLT_CHECK_FORCE_UFLOW_NONNAN.
+	* sysdeps/i386/fpu/s_log1pl.S (MO): New macro.
+	(__log1pl): Use MO.
+
 	[BZ #19003]
 	* sysdeps/x86_64/fpu/multiarch/Makefile (CFLAGS-e_pow-fma4.c): Add
 	$(config-cflags-nofma).
