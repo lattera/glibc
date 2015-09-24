@@ -1,5 +1,8 @@
 2015-09-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/fpu/e_atanh.S (__ieee754_atanh) [PIC]: Use
+	LOAD_PIC_REG.
+
 	* sysdeps/i386/fpu/i386-math-asm.h (DEFINE_LDBL_MIN): New macro.
 	(FLT_CHECK_FORCE_UFLOW): Likewise.
 	(DBL_CHECK_FORCE_UFLOW): Likewise.

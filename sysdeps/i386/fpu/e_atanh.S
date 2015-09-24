@@ -55,11 +55,7 @@ ENTRY(__ieee754_atanh)
 7:
 
 #ifdef PIC
-	call	1f
-	cfi_adjust_cfa_offset (4)
-1:	popl	%edx
-	cfi_adjust_cfa_offset (-4)
-	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
+	LOAD_PIC_REG (dx)
 #endif
 
 	andl	$0x80000000, %ecx // ECX == 0 iff X >= 0
