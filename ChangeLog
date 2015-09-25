@@ -1,6 +1,11 @@
 2015-09-25  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13304]
+	* sysdeps/m68k/coldfire/nofpu/s_fma.c: New file.
+	* sysdeps/m68k/coldfire/nofpu/s_fmaf.c: Likewise.
+	* sysdeps/m68k/coldfire/nofpu/sfp-machine.h: Likewise.
+
+	[BZ #13304]
 	* sysdeps/microblaze/s_fma.c: New file.
 	* sysdeps/microblaze/s_fmaf.c: Likewise.
 	* sysdeps/microblaze/sfp-machine.h: Likewise.
