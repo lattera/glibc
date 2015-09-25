@@ -91,7 +91,6 @@ static struct link_map _dl_main_map =
     .l_scope = _dl_main_map.l_scope_mem,
     .l_local_scope = { &_dl_main_map.l_searchlist },
     .l_used = 1,
-    .l_flags_1 = DF_1_NODEFLIB,
     .l_tls_offset = NO_TLS_OFFSET,
     .l_serial = 1,
   };

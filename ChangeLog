@@ -1,3 +1,9 @@
+2015-09-25  Maciej W. Rozycki  <macro@imgtec.com>
+
+	[BZ #17250]
+	* elf/dl-support.c (_dl_main_map): Don't initialize l_flags_1
+	member.
+
 2015-09-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18803]
