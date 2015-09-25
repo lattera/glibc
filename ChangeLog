@@ -1,3 +1,10 @@
+2015-09-25  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13304]
+	* sysdeps/microblaze/s_fma.c: New file.
+	* sysdeps/microblaze/s_fmaf.c: Likewise.
+	* sysdeps/microblaze/sfp-machine.h: Likewise.
+
 2015-09-25  Maciej W. Rozycki  <macro@imgtec.com>
 
 	[BZ #17250]
