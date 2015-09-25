@@ -72,7 +72,11 @@ init_test_items (void)
       struct passwd *pwd2 = getpwuid (test_items[i].pw_uid);
       if (pwd1 == NULL || !equal (pwd1, test_items + i)
           || pwd2 == NULL || !equal (pwd2, test_items + i))
-        test_items[i].pw_name = NULL;
+        {
+          printf ("info: skipping user \"%s\", UID %ld due to inconsistency\n",
+                  test_items[i].pw_name, (long) test_items[i].pw_uid);
+          test_items[i].pw_name = NULL;
+        }
       else
         found = true;
     }
@@ -195,6 +199,10 @@ test_buffer_size (size_t buffer_size)
   for (int i = 0; i < test_count; ++i)
     for (size_t padding_size = 0; padding_size < 3; ++padding_size)
       {
+        /* Skip entries with inconsistent name/UID lookups.  */
+        if (test_items[i].pw_name == NULL)
+          continue;
+
         test_one (test_items + i, buffer_size, '\0', padding_size);
         if (padding_size > 0)
           {
