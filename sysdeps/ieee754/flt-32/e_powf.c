@@ -244,7 +244,12 @@ __ieee754_powf(float x, float y)
 	z  = one-(r-z);
 	GET_FLOAT_WORD(j,z);
 	j += (n<<23);
-	if((j>>23)<=0) z = __scalbnf(z,n);	/* subnormal output */
+	if((j>>23)<=0)	/* subnormal output */
+	  {
+	    z = __scalbnf (z, n);
+	    float force_underflow = z * z;
+	    math_force_eval (force_underflow);
+	  }
 	else SET_FLOAT_WORD(z,j);
 	return s*z;
 }

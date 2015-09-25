@@ -131,6 +131,40 @@ ldbl_min:						\
 	addl	$8, %esp;			\
 	cfi_adjust_cfa_offset (-8);
 
+/* Likewise, but the non-NaN argument may be negative.  */
+#define FLT_NARROW_EVAL_UFLOW_NONNAN		\
+	subl	$4, %esp;			\
+	cfi_adjust_cfa_offset (4);		\
+	fld	%st(0);				\
+	fabs;					\
+	fcomps	MO(flt_min);			\
+	fnstsw;					\
+	sahf;					\
+	jnc 6424f;				\
+	fld	%st(0);				\
+	fmul	%st(0);				\
+	fstps	(%esp);				\
+6424:	fstps	(%esp);				\
+	flds	(%esp);				\
+	addl	$4, %esp;			\
+	cfi_adjust_cfa_offset (-4);
+#define DBL_NARROW_EVAL_UFLOW_NONNAN		\
+	subl	$8, %esp;			\
+	cfi_adjust_cfa_offset (8);		\
+	fld	%st(0);				\
+	fabs;					\
+	fcompl	MO(dbl_min);			\
+	fnstsw;					\
+	sahf;					\
+	jnc 6453f;				\
+	fld	%st(0);				\
+	fmul	%st(0);				\
+	fstpl	(%esp);				\
+6453:	fstpl	(%esp);				\
+	fldl	(%esp);				\
+	addl	$8, %esp;			\
+	cfi_adjust_cfa_offset (-8);
+
 /* Force an underflow exception if the given value is subnormal.  The
    relevant constant for the minimum of the type must have been
    defined, the MO macro must have been defined for access to memory
@@ -251,6 +285,18 @@ ldbl_min:						\
 	addl	$8, %esp;			\
 	cfi_adjust_cfa_offset (-8);		\
 6453:
+#define LDBL_CHECK_FORCE_UFLOW_NONNAN		\
+	fldt	MO(ldbl_min);			\
+	fld	%st(1);				\
+	fabs;					\
+	fcompp;					\
+	fnstsw;					\
+	sahf;					\
+	jnc 6464f;				\
+	fld	%st(0);				\
+	fmul	%st(0);				\
+	fstp	%st(0);				\
+6464:
 
 /* Likewise, but the argument is nonnegative and not a NaN.  */
 #define FLT_CHECK_FORCE_UFLOW_NONNEG		\

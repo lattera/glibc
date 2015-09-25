@@ -54,6 +54,7 @@ minfinity:
 mzero:
 	.byte 0, 0, 0, 0, 0, 0, 0, 0x80
 	ASM_SIZE_DIRECTIVE(minf_mzero)
+DEFINE_DBL_MIN
 
 #ifdef PIC
 # define MO(op) op##@GOTOFF(%ecx)
@@ -166,7 +167,10 @@ ENTRY(__ieee754_pow)
 	orl	%edx, %ecx
 	jnz	6b
 	fstp	%st(0)		// ST*x
-	DBL_NARROW_EVAL
+#ifdef	PIC
+	LOAD_PIC_REG (cx)
+#endif
+	DBL_NARROW_EVAL_UFLOW_NONNAN
 	ret
 
 	/* y is ±NAN */
@@ -259,7 +263,7 @@ ENTRY(__ieee754_pow)
 	cfi_adjust_cfa_offset (-8)
 292:	fscale			// +/- 2^fract(y*log2(x))*2^int(y*log2(x)) : int(y*log2(x))
 	fstp	%st(1)		// +/- 2^fract(y*log2(x))*2^int(y*log2(x))
-	DBL_NARROW_EVAL
+	DBL_NARROW_EVAL_UFLOW_NONNAN
 	ret
 
 

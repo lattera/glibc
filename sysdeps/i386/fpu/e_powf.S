@@ -51,6 +51,7 @@ minfinity:
 mzero:
 	.byte 0, 0, 0, 0, 0, 0, 0, 0x80
 	ASM_SIZE_DIRECTIVE(minf_mzero)
+DEFINE_FLT_MIN
 
 #ifdef PIC
 # define MO(op) op##@GOTOFF(%ecx)
@@ -97,7 +98,7 @@ ENTRY(__ieee754_powf)
 	je	15f		// x is ±inf
 
 	cmpb	$0x01, %ah
-	je	32f		// x is NaN
+	je	33f		// x is NaN
 
 	fxch			// y : x
 
@@ -149,7 +150,7 @@ ENTRY(__ieee754_powf)
 	testl	%edx, %edx
 	jnz	6b
 	fstp	%st(0)		// ST*x
-	FLT_NARROW_EVAL
+	FLT_NARROW_EVAL_UFLOW_NONNAN
 	ret
 
 	/* y is ±NAN */
@@ -198,9 +199,15 @@ ENTRY(__ieee754_powf)
 32:	addl	$4, %esp
 	cfi_adjust_cfa_offset (-4)
 	fstp	%st(1)		// 2^fract(y*log2(x))*2^int(y*log2(x))
-	FLT_NARROW_EVAL
+	FLT_NARROW_EVAL_UFLOW_NONNAN
 	ret
 
+	/* x is NaN.  */
+	cfi_adjust_cfa_offset (4)
+33:	addl	$4, %esp
+	cfi_adjust_cfa_offset (-4)
+	fstp	%st(1)
+	ret
 
 	// pow(x,±0) = 1
 	.align ALIGNARG(4)

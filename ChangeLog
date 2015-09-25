@@ -1,3 +1,38 @@
+2015-09-25  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18825]
+	* sysdeps/i386/fpu/i386-math-asm.h (FLT_NARROW_EVAL_UFLOW_NONNAN):
+	New macro.
+	(DBL_NARROW_EVAL_UFLOW_NONNAN): Likewise.
+	(LDBL_CHECK_FORCE_UFLOW_NONNAN): Likewise.
+	* sysdeps/i386/fpu/e_pow.S: Use DEFINE_DBL_MIN.
+	(__ieee754_pow): Use DBL_NARROW_EVAL_UFLOW_NONNAN instead of
+	DBL_NARROW_EVAL, reloading the PIC register as needed.
+	* sysdeps/i386/fpu/e_powf.S: Use DEFINE_FLT_MIN.
+	(__ieee754_powf): Use FLT_NARROW_EVAL_UFLOW_NONNAN instead of
+	FLT_NARROW_EVAL.  Use separate return path for case when first
+	argument is NaN.
+	* sysdeps/i386/fpu/e_powl.S: Include <i386-math-asm.h>.  Use
+	DEFINE_LDBL_MIN.
+	(__ieee754_powl): Use LDBL_CHECK_FORCE_UFLOW_NONNAN, reloading the
+	PIC register.
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Use
+	math_check_force_underflow_nonneg.
+	* sysdeps/ieee754/flt-32/e_powf.c (__ieee754_powf): Force
+	underflow for subnormal result.
+	* sysdeps/ieee754/ldbl-128/e_powl.c (__ieee754_powl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c (__ieee754_powl): Use
+	math_check_force_underflow_nonneg.
+	* sysdeps/x86/fpu/powl_helper.c (__powl_helper): Use
+	math_check_force_underflow.
+	* sysdeps/x86_64/fpu/x86_64-math-asm.h
+	(LDBL_CHECK_FORCE_UFLOW_NONNAN): New macro.
+	* sysdeps/x86_64/fpu/e_powl.S: Include <x86_64-math-asm.h>.  Use
+	DEFINE_LDBL_MIN.
+	(__ieee754_powl): Use LDBL_CHECK_FORCE_UFLOW_NONNAN.
+	* math/auto-libm-test-in: Add more tests of pow.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-09-25  Florian Weimer  <fweimer@redhat.com>
 
 	* nss/bug17079.c (init_test_items): Add diagnostic for

@@ -229,6 +229,7 @@ __powl_helper (long double x, long double y)
   if (negate)
     res = -res;
   asm ("fscale" : "=t" (res) : "0" (res), "u" (log2_res_int));
+  math_check_force_underflow (res);
   return res;
 }
 

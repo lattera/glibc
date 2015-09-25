@@ -409,6 +409,7 @@ __ieee754_powl (long double x, long double y)
   r = (z * t1) / (t1 - two) - (w + z * w);
   z = one - (r - z);
   z = __scalbnl (z, n);
+  math_check_force_underflow_nonneg (z);
   return s * z;
 }
 strong_alias (__ieee754_powl, __powl_finite)

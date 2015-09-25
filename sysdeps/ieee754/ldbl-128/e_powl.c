@@ -435,7 +435,11 @@ __ieee754_powl (long double x, long double y)
   j = o.parts32.w0;
   j += (n << 16);
   if ((j >> 16) <= 0)
-    z = __scalbnl (z, n);	/* subnormal output */
+    {
+      z = __scalbnl (z, n);	/* subnormal output */
+      long double force_underflow = z * z;
+      math_force_eval (force_underflow);
+    }
   else
     {
       o.parts32.w0 = j;

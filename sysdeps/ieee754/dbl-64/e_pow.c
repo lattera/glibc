@@ -119,6 +119,8 @@ __ieee754_pow (double x, double y)
 	retval = huge * huge;
       else if (retval == 0)
 	retval = tiny * tiny;
+      else
+	math_check_force_underflow_nonneg (retval);
       return retval;
     }
 

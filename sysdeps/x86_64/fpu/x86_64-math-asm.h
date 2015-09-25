@@ -46,6 +46,19 @@ ldbl_min:						\
 	fstp	%st(0);				\
 6464:
 
+/* Likewise, but the argument is not a NaN.  */
+#define LDBL_CHECK_FORCE_UFLOW_NONNAN		\
+	fldt	MO(ldbl_min);			\
+	fld	%st(1);				\
+	fabs;					\
+	fcomip	%st(1), %st(0);			\
+	fstp	%st(0);				\
+	jnc 6464f;				\
+	fld	%st(0);				\
+	fmul	%st(0);				\
+	fstp	%st(0);				\
+6464:
+
 /* Likewise, but the argument is nonnegative and not a NaN.  */
 #define LDBL_CHECK_FORCE_UFLOW_NONNEG		\
 	fldt	MO(ldbl_min);			\

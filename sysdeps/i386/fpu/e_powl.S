@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <i386-math-asm.h>
 
 	.section .rodata.cst8,"aM",@progbits,8
 
@@ -59,6 +60,7 @@ minfinity:
 mzero:
 	.byte 0, 0, 0, 0, 0, 0, 0, 0x80
 	ASM_SIZE_DIRECTIVE(minf_mzero)
+DEFINE_LDBL_MIN
 
 #ifdef PIC
 # define MO(op) op##@GOTOFF(%ecx)
@@ -187,6 +189,10 @@ ENTRY(__ieee754_powl)
 	orl	%edx, %ecx
 	jnz	6b
 	fstp	%st(0)		// ST*x
+#ifdef	PIC
+	LOAD_PIC_REG (cx)
+#endif
+	LDBL_CHECK_FORCE_UFLOW_NONNAN
 	ret
 
 	/* y is ±NAN */
