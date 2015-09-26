@@ -510,13 +510,17 @@ __strftime_internal (s, maxsize, format, tp, tzset_called ut_argument
      only a few elements.  Dereference the pointers only if the format
      requires this.  Then it is ok to fail if the pointers are invalid.  */
 # define a_wkday \
-  ((const CHAR_T *) _NL_CURRENT (LC_TIME, NLW(ABDAY_1) + tp->tm_wday))
+  ((const CHAR_T *) (tp->tm_wday < 0 || tp->tm_wday > 6			     \
+		     ? "?" : _NL_CURRENT (LC_TIME, NLW(ABDAY_1) + tp->tm_wday)))
 # define f_wkday \
-  ((const CHAR_T *) _NL_CURRENT (LC_TIME, NLW(DAY_1) + tp->tm_wday))
+  ((const CHAR_T *) (tp->tm_wday < 0 || tp->tm_wday > 6			     \
+		     ? "?" : _NL_CURRENT (LC_TIME, NLW(DAY_1) + tp->tm_wday)))
 # define a_month \
-  ((const CHAR_T *) _NL_CURRENT (LC_TIME, NLW(ABMON_1) + tp->tm_mon))
+  ((const CHAR_T *) (tp->tm_mon < 0 || tp->tm_mon > 11			     \
+		     ? "?" : _NL_CURRENT (LC_TIME, NLW(ABMON_1) + tp->tm_mon)))
 # define f_month \
-  ((const CHAR_T *) _NL_CURRENT (LC_TIME, NLW(MON_1) + tp->tm_mon))
+  ((const CHAR_T *) (tp->tm_mon < 0 || tp->tm_mon > 11			     \
+		     ? "?" : _NL_CURRENT (LC_TIME, NLW(MON_1) + tp->tm_mon)))
 # define ampm \
   ((const CHAR_T *) _NL_CURRENT (LC_TIME, tp->tm_hour > 11		      \
 				 ? NLW(PM_STR) : NLW(AM_STR)))
@@ -526,8 +530,10 @@ __strftime_internal (s, maxsize, format, tp, tzset_called ut_argument
 # define ap_len STRLEN (ampm)
 #else
 # if !HAVE_STRFTIME
-#  define f_wkday (weekday_name[tp->tm_wday])
-#  define f_month (month_name[tp->tm_mon])
+#  define f_wkday (tp->tm_wday < 0 || tp->tm_wday > 6	\
+		   ? "?" : weekday_name[tp->tm_wday])
+#  define f_month (tp->tm_mon < 0 || tp->tm_mon > 11	\
+		   ? "?" : month_name[tp->tm_mon])
 #  define a_wkday f_wkday
 #  define a_month f_month
 #  define ampm (L_("AMPM") + 2 * (tp->tm_hour > 11))
@@ -1321,7 +1327,7 @@ __strftime_internal (s, maxsize, format, tp, tzset_called ut_argument
 		  *tzset_called = true;
 		}
 # endif
-	      zone = tzname[tp->tm_isdst];
+	      zone = tp->tm_isdst <= 1 ? tzname[tp->tm_isdst] : "?";
 	    }
 #endif
 	  if (! zone)

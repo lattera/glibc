@@ -1,3 +1,11 @@
+2015-09-26  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #18985]
+	* time/strftime_l.c (a_wkday, f_wkday, a_month, f_month): Range check.
+	(__strftime_internal): Likewise.
+	* time/tst-strftime.c (do_bz18985): New test.
+	(do_test): Call it.
+
 2015-09-26  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18956]

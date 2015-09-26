@@ -4,6 +4,56 @@
 #include <time.h>
 
 
+static int
+do_bz18985 (void)
+{
+  char buf[1000];
+  struct tm ttm;
+  int rc, ret = 0;
+
+  memset (&ttm, 1, sizeof (ttm));
+  ttm.tm_zone = NULL;  /* Dereferenced directly if non-NULL.  */
+  rc = strftime (buf, sizeof (buf), "%a %A %b %B %c %z %Z", &ttm);
+
+  if (rc == 66)
+    {
+      const char expected[]
+	= "? ? ? ? ? ? 16843009 16843009:16843009:16843009 16844909 +467836 ?";
+      if (0 != strcmp (buf, expected))
+	{
+	  printf ("expected:\n  %s\ngot:\n  %s\n", expected, buf);
+	  ret += 1;
+	}
+    }
+  else
+    {
+      printf ("expected 66, got %d\n", rc);
+      ret += 1;
+    }
+
+  /* Check negative values as well.  */
+  memset (&ttm, 0xFF, sizeof (ttm));
+  ttm.tm_zone = NULL;  /* Dereferenced directly if non-NULL.  */
+  rc = strftime (buf, sizeof (buf), "%a %A %b %B %c %z %Z", &ttm);
+
+  if (rc == 30)
+    {
+      const char expected[] = "? ? ? ? ? ? -1 -1:-1:-1 1899  ";
+      if (0 != strcmp (buf, expected))
+	{
+	  printf ("expected:\n  %s\ngot:\n  %s\n", expected, buf);
+	  ret += 1;
+	}
+    }
+  else
+    {
+      printf ("expected 30, got %d\n", rc);
+      ret += 1;
+    }
+
+  return ret;
+}
+
 static struct
 {
   const char *fmt;
@@ -104,7 +154,7 @@ do_test (void)
 	}
     }
 
-  return result;
+  return result + do_bz18985 ();
 }
 
 #define TEST_FUNCTION do_test ()
