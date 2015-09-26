@@ -1,3 +1,13 @@
+2015-09-26  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18956]
+	* sysdeps/ieee754/flt-32/e_powf.c (__ieee754_powf): Add 0x00400000
+	not 0x0040000 for high bit of mantissa.  Mask with 0xfffff000 when
+	extracting high part.
+	* math/auto-libm-test-in: Add another test of pow.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 2015-09-25  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18825]
