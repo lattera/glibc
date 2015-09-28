@@ -1,3 +1,13 @@
+2015-09-28  Martin Sebor  <msebor@redhat.com>
+
+	[BZ #18969]
+	* string/Makefile (LOCALES): Define.
+	(gen-locales.mk): Include.
+	(test-strcasecmp.out, test-strncasecmp.out, tst-strxfrm.out)
+	(tst-strxfrm2.out): Add deppendency on $(gen-locales).
+	* string/tst-strxfrm2.c (do_test): Print the name of the locale
+	on setlocale failure.
+
 2015-09-26  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #18985]

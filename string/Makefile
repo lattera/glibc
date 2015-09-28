@@ -75,4 +75,14 @@ ifeq ($(run-built-tests),yes)
 $(objpfx)tst-svc-cmp.out: tst-svc.expect $(objpfx)tst-svc.out
 	cmp $^ > $@; \
 	$(evaluate-test)
+
+LOCALES := de_DE.UTF-8 en_US.ISO-8859-1 en_US.UTF-8 \
+           tr_TR.ISO-8859-9 tr_TR.UTF-8
+include ../gen-locales.mk
+
+$(objpfx)test-strcasecmp.out: $(gen-locales)
+$(objpfx)test-strncasecmp.out: $(gen-locales)
+$(objpfx)tst-strxfrm.out: $(gen-locales)
+$(objpfx)tst-strxfrm2.out: $(gen-locales)
+
 endif

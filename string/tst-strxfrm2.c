@@ -5,6 +5,8 @@
 static int
 do_test (void)
 {
+  static const char test_locale[] = "de_DE.UTF-8";
+
   int res = 0;
 
   char buf[20];
@@ -38,9 +40,9 @@ do_test (void)
       res = 1;
     }
 
-  if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL)
+  if (setlocale (LC_ALL, test_locale) == NULL)
     {
-      puts ("setlocale failed");
+      printf ("cannot set locale \"%s\"\n", test_locale);
       res = 1;
     }
   else
