@@ -27,8 +27,8 @@
 #else
 
 /* Return X^2 + Y^2 - 1, computed without large cancellation error.
-   It is given that 1 > X >= Y >= epsilon / 2, and that either X >=
-   0.75 or Y >= 0.5.  */
+   It is given that 1 > X >= Y >= epsilon / 2, and that X^2 + Y^2 >=
+   0.5.  */
 
 double
 __x2y2m1 (double x, double y)

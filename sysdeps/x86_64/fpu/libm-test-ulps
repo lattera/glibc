@@ -869,11 +869,11 @@ ldouble: 3
 
 Function: Real part of "clog":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
-ildouble: 4
-ldouble: 4
+ifloat: 3
+ildouble: 3
+ldouble: 3
 
 Function: Imaginary part of "clog":
 float: 1
@@ -883,9 +883,9 @@ ldouble: 1
 
 Function: Real part of "clog10":
 double: 3
-float: 3
+float: 4
 idouble: 3
-ifloat: 3
+ifloat: 4
 ildouble: 4
 ldouble: 4
 
@@ -898,10 +898,10 @@ ildouble: 2
 ldouble: 2
 
 Function: Real part of "clog10_downward":
-double: 6
-float: 6
-idouble: 6
-ifloat: 6
+double: 5
+float: 4
+idouble: 5
+ifloat: 4
 ildouble: 8
 ldouble: 8
 
@@ -910,14 +910,14 @@ double: 2
 float: 4
 idouble: 2
 ifloat: 4
-ildouble: 2
-ldouble: 2
+ildouble: 3
+ldouble: 3
 
 Function: Real part of "clog10_towardzero":
 double: 5
-float: 4
+float: 5
 idouble: 5
-ifloat: 4
+ifloat: 5
 ildouble: 8
 ldouble: 8
 
@@ -930,28 +930,28 @@ ildouble: 3
 ldouble: 3
 
 Function: Real part of "clog10_upward":
-double: 8
+double: 6
 float: 5
-idouble: 8
+idouble: 6
 ifloat: 5
-ildouble: 6
-ldouble: 6
+ildouble: 7
+ldouble: 7
 
 Function: Imaginary part of "clog10_upward":
 double: 2
-float: 3
+float: 4
 idouble: 2
-ifloat: 3
+ifloat: 4
 ildouble: 3
 ldouble: 3
 
 Function: Real part of "clog_downward":
-double: 7
-float: 5
-idouble: 7
-ifloat: 5
-ildouble: 7
-ldouble: 7
+double: 4
+float: 3
+idouble: 4
+ifloat: 3
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "clog_downward":
 double: 1
@@ -962,28 +962,28 @@ ildouble: 1
 ldouble: 1
 
 Function: Real part of "clog_towardzero":
-double: 7
-float: 5
-idouble: 7
-ifloat: 5
-ildouble: 8
-ldouble: 8
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "clog_towardzero":
 double: 1
-float: 2
+float: 3
 idouble: 1
-ifloat: 2
+ifloat: 3
 ildouble: 1
 ldouble: 1
 
 Function: Real part of "clog_upward":
-double: 8
-float: 5
-idouble: 8
-ifloat: 5
-ildouble: 6
-ldouble: 6
+double: 4
+float: 3
+idouble: 4
+ifloat: 3
+ildouble: 4
+ldouble: 4
 
 Function: Imaginary part of "clog_upward":
 double: 1

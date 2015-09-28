@@ -365,8 +365,8 @@ extern double __slowpow (double __x, double __y, double __z);
 extern void __docos (double __x, double __dx, double __v[]);
 
 /* Return X^2 + Y^2 - 1, computed without large cancellation error.
-   It is given that 1 > X >= Y >= epsilon / 2, and that either X >=
-   0.75 or Y >= 0.5.  */
+   It is given that 1 > X >= Y >= epsilon / 2, and that X^2 + Y^2 >=
+   0.5.  */
 extern float __x2y2m1f (float x, float y);
 extern double __x2y2m1 (double x, double y);
 extern long double __x2y2m1l (long double x, long double y);

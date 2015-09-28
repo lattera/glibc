@@ -76,14 +76,17 @@ __clogf (__complex__ float x)
 	  __real__ result = __log1pf (d2m1) / 2.0f;
 	}
       else if (absx < 1.0f
-	       && absx >= 0.75f
+	       && absx >= 0.5f
 	       && absy < FLT_EPSILON / 2.0f
 	       && scale == 0)
 	{
 	  float d2m1 = (absx - 1.0f) * (absx + 1.0f);
 	  __real__ result = __log1pf (d2m1) / 2.0f;
 	}
-      else if (absx < 1.0f && (absx >= 0.75f || absy >= 0.5f) && scale == 0)
+      else if (absx < 1.0f
+	       && absx >= 0.5f
+	       && scale == 0
+	       && absx * absx + absy * absy >= 0.5f)
 	{
 	  float d2m1 = __x2y2m1f (absx, absy);
 	  __real__ result = __log1pf (d2m1) / 2.0f;

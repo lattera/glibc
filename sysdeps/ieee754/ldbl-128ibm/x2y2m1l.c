@@ -80,13 +80,13 @@ compare (const void *p, const void *q)
 }
 
 /* Return X^2 + Y^2 - 1, computed without large cancellation error.
-   It is given that 1 > X >= Y >= epsilon / 2, and that either X >=
-   0.75 or Y >= 0.5.  */
+   It is given that 1 > X >= Y >= epsilon / 2, and that X^2 + Y^2 >=
+   0.5.  */
 
 long double
 __x2y2m1l (long double x, long double y)
 {
-  double vals[12];
+  double vals[13];
   SET_RESTORE_ROUND (FE_TONEAREST);
   union ibm_extended_long_double xu, yu;
   xu.ld = x;
@@ -105,25 +105,19 @@ __x2y2m1l (long double x, long double y)
   vals[8] *= 2.0;
   vals[9] *= 2.0;
   mul_split (&vals[11], &vals[10], yu.d[1].d, yu.d[1].d);
-  if (xu.d[0].d >= 0.75)
-    vals[1] -= 1.0;
-  else
-    {
-      vals[1] -= 0.5;
-      vals[7] -= 0.5;
-    }
-  qsort (vals, 12, sizeof (double), compare);
+  vals[12] = -1.0;
+  qsort (vals, 13, sizeof (double), compare);
   /* Add up the values so that each element of VALS has absolute value
      at most equal to the last set bit of the next nonzero
      element.  */
-  for (size_t i = 0; i <= 10; i++)
+  for (size_t i = 0; i <= 11; i++)
     {
       add_split (&vals[i + 1], &vals[i], vals[i + 1], vals[i]);
-      qsort (vals + i + 1, 11 - i, sizeof (double), compare);
+      qsort (vals + i + 1, 12 - i, sizeof (double), compare);
     }
   /* Now any error from this addition will be small.  */
-  long double retval = (long double) vals[11];
-  for (size_t i = 10; i != (size_t) -1; i--)
+  long double retval = (long double) vals[12];
+  for (size_t i = 11; i != (size_t) -1; i--)
     retval += (long double) vals[i];
   return retval;
 }

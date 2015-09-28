@@ -1,3 +1,33 @@
+2015-09-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19016]
+	* sysdeps/generic/math_private.h (__x2y2m1f): Update comment to
+	allow more cases with X^2 + Y^2 >= 0.5.
+	* sysdeps/ieee754/dbl-64/x2y2m1.c (__x2y2m1): Likewise.  Add -1 as
+	normal element in sum instead of special-casing based on values of
+	arguments.
+	* sysdeps/ieee754/dbl-64/x2y2m1f.c (__x2y2m1f): Update comment.
+	* sysdeps/ieee754/ldbl-128/x2y2m1l.c (__x2y2m1l): Likewise.  Add
+	-1 as normal element in sum instead of special-casing based on
+	values of arguments.
+	* sysdeps/ieee754/ldbl-128ibm/x2y2m1l.c (__x2y2m1l): Likewise.
+	* sysdeps/ieee754/ldbl-96/x2y2m1.c [FLT_EVAL_METHOD != 0]
+	(__x2y2m1): Update comment.
+	* sysdeps/ieee754/ldbl-96/x2y2m1l.c (__x2y2m1l): Likewise.  Add -1
+	as normal element in sum instead of special-casing based on values
+	of arguments.
+	* math/s_clog.c (__clog): Handle more cases using log1p without
+	hypot.
+	* math/s_clog10.c (__clog10): Likewise.
+	* math/s_clog10f.c (__clog10f): Likewise.
+	* math/s_clog10l.c (__clog10l): Likewise.
+	* math/s_clogf.c (__clogf): Likewise.
+	* math/s_clogl.c (__clogl): Likewise.
+	* math/auto-libm-test-in: Add more tests of clog and clog10.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2015-09-28  Martin Sebor  <msebor@redhat.com>
 
 	[BZ #18969]

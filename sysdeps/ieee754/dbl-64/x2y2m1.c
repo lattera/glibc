@@ -80,32 +80,26 @@ compare (const void *p, const void *q)
 }
 
 /* Return X^2 + Y^2 - 1, computed without large cancellation error.
-   It is given that 1 > X >= Y >= epsilon / 2, and that either X >=
-   0.75 or Y >= 0.5.  */
+   It is given that 1 > X >= Y >= epsilon / 2, and that X^2 + Y^2 >=
+   0.5.  */
 
 double
 __x2y2m1 (double x, double y)
 {
-  double vals[4];
+  double vals[5];
   SET_RESTORE_ROUND (FE_TONEAREST);
   mul_split (&vals[1], &vals[0], x, x);
   mul_split (&vals[3], &vals[2], y, y);
-  if (x >= 0.75)
-    vals[1] -= 1.0;
-  else
-    {
-      vals[1] -= 0.5;
-      vals[3] -= 0.5;
-    }
-  qsort (vals, 4, sizeof (double), compare);
+  vals[4] = -1.0;
+  qsort (vals, 5, sizeof (double), compare);
   /* Add up the values so that each element of VALS has absolute value
      at most equal to the last set bit of the next nonzero
      element.  */
-  for (size_t i = 0; i <= 2; i++)
+  for (size_t i = 0; i <= 3; i++)
     {
       add_split (&vals[i + 1], &vals[i], vals[i + 1], vals[i]);
-      qsort (vals + i + 1, 3 - i, sizeof (double), compare);
+      qsort (vals + i + 1, 4 - i, sizeof (double), compare);
     }
   /* Now any error from this addition will be small.  */
-  return vals[3] + vals[2] + vals[1] + vals[0];
+  return vals[4] + vals[3] + vals[2] + vals[1] + vals[0];
 }

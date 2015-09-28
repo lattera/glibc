@@ -82,14 +82,17 @@ __clog10 (__complex__ double x)
 	  __real__ result = __log1p (d2m1) * (M_LOG10E / 2.0);
 	}
       else if (absx < 1.0
-	       && absx >= 0.75
+	       && absx >= 0.5
 	       && absy < DBL_EPSILON / 2.0
 	       && scale == 0)
 	{
 	  double d2m1 = (absx - 1.0) * (absx + 1.0);
 	  __real__ result = __log1p (d2m1) * (M_LOG10E / 2.0);
 	}
-      else if (absx < 1.0 && (absx >= 0.75 || absy >= 0.5) && scale == 0)
+      else if (absx < 1.0
+	       && absx >= 0.5
+	       && scale == 0
+	       && absx * absx + absy * absy >= 0.5)
 	{
 	  double d2m1 = __x2y2m1 (absx, absy);
 	  __real__ result = __log1p (d2m1) * (M_LOG10E / 2.0);

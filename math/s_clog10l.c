@@ -89,14 +89,17 @@ __clog10l (__complex__ long double x)
 	  __real__ result = __log1pl (d2m1) * (M_LOG10El / 2.0L);
 	}
       else if (absx < 1.0L
-	       && absx >= 0.75L
+	       && absx >= 0.5L
 	       && absy < LDBL_EPSILON / 2.0L
 	       && scale == 0)
 	{
 	  long double d2m1 = (absx - 1.0L) * (absx + 1.0L);
 	  __real__ result = __log1pl (d2m1) * (M_LOG10El / 2.0L);
 	}
-      else if (absx < 1.0L && (absx >= 0.75L || absy >= 0.5L) && scale == 0)
+      else if (absx < 1.0L
+	       && absx >= 0.5L
+	       && scale == 0
+	       && absx * absx + absy * absy >= 0.5L)
 	{
 	  long double d2m1 = __x2y2m1l (absx, absy);
 	  __real__ result = __log1pl (d2m1) * (M_LOG10El / 2.0L);
