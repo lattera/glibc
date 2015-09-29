@@ -3300,6 +3300,10 @@ underlying file in the to-be-allocated area.  Non-null bytes could be
 overwritten with null bytes.
 
 @item
+If @var{fd} has been opened with the @code{O_WRONLY} flag, the function
+will fail with an @code{errno} value of @code{EBADF}.
+
+@item
 If @var{fd} has been opened with the @code{O_APPEND} flag, the function
 will fail with an @code{errno} value of @code{EBADF}.
 

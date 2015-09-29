@@ -1,3 +1,8 @@
+2015-09-29  Carlos O'Donell  <carlos@redhat.com>
+
+	* manual/filesys.texi (Storage Allocation): Document that
+	posix_fallocate emulation fails when fd is open with O_WRONLY.
+
 2015-09-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19016]
