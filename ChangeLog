@@ -1,3 +1,75 @@
+2015-09-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19006]
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/i386/libc-lowlevellock.S: Here.
+	* sysdeps/unix/sysv/linux/i386/i486/lll_timedlock_wait.c: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/i386/lll_timedlock_wait.c: Here.
+	* sysdeps/unix/sysv/linux/i386/i486/lll_timedwait_tid.c: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/i386/lll_timedwait_tid.c: Here.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Moved to ...
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.S: Here.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelrobustlock.S: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/i386/lowlevelrobustlock.S: Here.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S:
+	Moved to ...
+	* sysdeps/unix/sysv/linux/i386/pthread_barrier_wait.S: Here.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S:
+	Moved to ...
+	* sysdeps/unix/sysv/linux/i386/pthread_cond_broadcast.S: Here.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/i386/pthread_cond_signal.S: Here.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S:
+	Moved to ...
+	* sysdeps/unix/sysv/linux/i386/pthread_cond_timedwait.S: Here.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/i386/pthread_cond_wait.S: Here.
+	* sysdeps/unix/sysv/linux/i386/i586/libc-lowlevellock.S:
+	Removed.
+	* sysdeps/unix/sysv/linux/i386/i586/lll_timedlock_wait.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/lll_timedwait_tid.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/lowlevelrobustlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_barrier_wait.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_cond_broadcast.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_cond_signal.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_cond_timedwait.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_cond_wait.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/libc-lowlevellock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/lll_timedlock_wait.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/lll_timedwait_tid.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/lowlevelrobustlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_barrier_wait.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_cond_broadcast.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_cond_signal.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_cond_wait.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_cond_timedwait.S:
+	Replace ../i486/pthread_cond_timedwait.S with
+	../pthread_cond_timedwait.S.
+
 2015-09-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (acos_test_data): Refine expectations for

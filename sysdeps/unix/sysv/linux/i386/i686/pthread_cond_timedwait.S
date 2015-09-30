@@ -17,4 +17,4 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define HAVE_CMOV 1
-#include "../i486/pthread_cond_timedwait.S"
+#include "../pthread_cond_timedwait.S"
