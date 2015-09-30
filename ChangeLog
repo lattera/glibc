@@ -1,5 +1,10 @@
 2015-09-30  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16620]
+	* sysdeps/ieee754/ldbl-128ibm/e_exp10l.c (log10_high): Use value
+	of log (10) rounded downward to 48 bits.
+	(log10_low): Use corresponding low part of log (10).
+
 	[BZ #19032]
 	* sysdeps/i386/fpu/e_acosh.S (__ieee754_acosh): For arguments < 1,
 	compute result as (x - x) / (x - x) not as 0 / 0.
