@@ -1790,6 +1790,7 @@ static const struct test_f_f_data acosh_test_data[] =
     TEST_f_f (acosh, plus_infty, plus_infty, ERRNO_UNCHANGED),
     TEST_f_f (acosh, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (acosh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (acosh, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* x < 1:  */
     TEST_f_f (acosh, 0.75L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),

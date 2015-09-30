@@ -91,9 +91,10 @@ ENTRY(__ieee754_acosh)
 	fyl2x				// log(2*x+1/(x+sqrt(x^2-1)))
 	ret
 
-	// x < 1 => NaN
+	// x < 1 (or -NaN) => NaN
 	.align ALIGNARG(4)
-5:	fldz
+5:	fldl	4(%esp)
+	fsub	%st
 	fdiv	%st, %st(0)
 	ret
 END(__ieee754_acosh)

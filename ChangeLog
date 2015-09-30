@@ -1,5 +1,11 @@
 2015-09-30  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19032]
+	* sysdeps/i386/fpu/e_acosh.S (__ieee754_acosh): For arguments < 1,
+	compute result as (x - x) / (x - x) not as 0 / 0.
+	* sysdeps/i386/fpu/e_acoshf.S (__ieee754_acoshf): Likewise.
+	* math/libm-test.inc (acosh_test_data): Add another test of acosh.
+
 	* math/auto-libm-test-in: Add more tests of acos, acosh, asin,
 	atan, atan2, atanh, cbrt, cos, cosh, erf, erfc, exp, exp10, exp2
 	and expm1.
