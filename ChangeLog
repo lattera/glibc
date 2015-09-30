@@ -1,3 +1,76 @@
+2015-09-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (acos_test_data): Refine expectations for
+	errno and "inexact" exceptions.
+	(acosh_test_data): Likewise.
+	(asin_test_data): Likewise.
+	(asinh_test_data): Likewise.
+	(atan_test_data): Likewise.
+	(atanh_test_data): Likewise.
+	(atan2_test_data): Likewise.
+	(cbrt_test_data): Likewise.
+	(ceil_test_data): Likewise.
+	(copysign_test_data): Likewise.
+	(cosh_test_data): Likewise.
+	(erf_test_data): Likewise.
+	(erfc_test_data): Likewise.
+	(exp_test_data): Likewise.
+	(exp10_test_data): Likewise.
+	(exp2_test_data): Likewise.
+	(expm1_test_data): Likewise.
+	(fabs_test_data): Likewise.
+	(floor_test_data): Likewise.
+	(fma_test_data): Likewise.
+	(fmax_test_data): Likewise.
+	(fmin_test_data): Likewise.
+	(fmod_test_data): Likewise.
+	(fpclassify_test_data): Likewise.
+	(frexp_test_data): Likewise.
+	(hypot_test_data): Likewise.
+	(ilogb_test_data): Likewise.
+	(isgreater_test_data): Likewise.
+	(isgreaterequal_test_data): Likewise.
+	(isinf_test_data): Likewise.
+	(isless_test_data): Likewise.
+	(islessequal_test_data): Likewise.
+	(islessgreater_test_data): Likewise.
+	(isnan_test_data): Likewise.
+	(isnormal_test_data): Likewise.
+	(issignaling_test_data): Likewise.
+	(isunordered_test_data): Likewise.
+	(j0_test_data): Likewise.
+	(j1_test_data): Likewise.
+	(jn_test_data): Likewise.
+	(lgamma_test_data): Likewise.
+	(lrint_test_data): Likewise.
+	(llrint_test_data): Likewise.
+	(log_test_data): Likewise.
+	(log10_test_data): Likewise.
+	(log1p_test_data): Likewise.
+	(log2_test_data): Likewise.
+	(logb_test_data): Likewise.
+	(lround_test_data): Likewise.
+	(llround_test_data): Likewise.
+	(modf_test_data): Likewise.
+	(nearbyint_test_data): Likewise.
+	(nextafter_test_data): Likewise.
+	(nexttoward_test_data): Likewise.
+	(pow_test_data): Likewise.
+	(remainder_test_data): Likewise.
+	(remquo_test_data): Likewise.
+	(rint_test_data): Likewise.
+	(round_test_data): Likewise.
+	(signbit_test_data): Likewise.
+	(sinh_test_data): Likewise.
+	(sqrt_test_data): Likewise.
+	(tanh_test_data): Likewise.
+	(tgamma_test_data): Likewise.
+	(trunc_test_data): Likewise.
+	(y0_test_data): Likewise.
+	(y1_test_data): Likewise.
+	(yn_test_data): Likewise.
+	(significand_test_data): Likewise.
+
 2015-09-29  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/filesys.texi (Storage Allocation): Document that
