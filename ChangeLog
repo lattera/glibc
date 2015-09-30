@@ -1,3 +1,28 @@
+2015-09-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add more tests of acos, acosh, asin,
+	atan, atan2, atanh, cbrt, cos, cosh, erf, erfc, exp, exp10, exp2
+	and expm1.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (acos_test_data): Add more tests.
+	(asin_test_data): Likewise.
+	(asinh_test_data): Likewise.
+	(atan_test_data): Likewise.
+	(atanh_test_data): Likewise.
+	(atan2_test_data): Likewise.
+	(cbrt_test_data): Likewise.
+	(ceil_test_data): Likewise.
+	(copysign_test_data): Likewise.
+	(cos_test_data): Likewise.
+	(cosh_test_data): Likewise.
+	(erf_test_data): Likewise.
+	(erfc_test_data): Likewise.
+	(exp_test_data): Likewise.
+	(exp10_test_data): Likewise.
+	(exp2_test_data): Likewise.
+	(expm1_test_data): Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 2015-09-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19006]

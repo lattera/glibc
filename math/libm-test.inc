@@ -1767,6 +1767,7 @@ static const struct test_f_f_data acos_test_data[] =
     TEST_f_f (acos, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (acos, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (acos, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (acos, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* |x| > 1: */
     TEST_f_f (acos, 1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
@@ -1815,6 +1816,7 @@ static const struct test_f_f_data asin_test_data[] =
     TEST_f_f (asin, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (asin, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (asin, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (asin, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* asin x == qNaN plus invalid exception for |x| > 1.  */
     TEST_f_f (asin, 1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
@@ -1837,6 +1839,7 @@ static const struct test_f_f_data asinh_test_data[] =
     TEST_f_f (asinh, plus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (asinh, minus_infty, minus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (asinh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (asinh, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     AUTO_TESTS_f_f (asinh),
   };
 
@@ -1851,6 +1854,7 @@ static const struct test_f_f_data atan_test_data[] =
     TEST_f_f (atan, plus_infty, M_PI_2l, ERRNO_UNCHANGED),
     TEST_f_f (atan, minus_infty, -M_PI_2l, ERRNO_UNCHANGED),
     TEST_f_f (atan, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (atan, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (atan),
   };
@@ -1868,6 +1872,7 @@ static const struct test_f_f_data atanh_test_data[] =
     TEST_f_f (atanh, 1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (atanh, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (atanh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (atanh, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* atanh (x) == qNaN plus invalid exception if |x| > 1.  */
     TEST_f_f (atanh, 1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
@@ -1888,29 +1893,112 @@ atanh_test (void)
 
 static const struct test_ff_f_data atan2_test_data[] =
   {
-    /* atan2 (y,inf) == +0 for finite y > 0.  */
+    /* atan2 (y,inf) == +0 for finite y > 0 or +0.  */
     TEST_ff_f (atan2, 1, plus_infty, 0, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_zero, plus_infty, 0, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, min_value, plus_infty, 0, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, min_subnorm_value, plus_infty, 0, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, max_value, plus_infty, 0, ERRNO_UNCHANGED),
 
-    /* atan2 (y,inf) == -0 for finite y < 0.  */
+    /* atan2 (y,inf) == -0 for finite y < 0 or -0.  */
     TEST_ff_f (atan2, -1, plus_infty, minus_zero, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_zero, plus_infty, minus_zero, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -min_value, plus_infty, minus_zero, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -min_subnorm_value, plus_infty, minus_zero, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -max_value, plus_infty, minus_zero, ERRNO_UNCHANGED),
 
     /* atan2(+inf, x) == pi/2 for finite x.  */
+    TEST_ff_f (atan2, plus_infty, 1, M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_infty, plus_zero, M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_infty, min_value, M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_infty, min_subnorm_value, M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_infty, max_value, M_PI_2l, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, plus_infty, -1, M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_infty, minus_zero, M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_infty, -min_value, M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_infty, -min_subnorm_value, M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_infty, -max_value, M_PI_2l, ERRNO_UNCHANGED),
 
     /* atan2(-inf, x) == -pi/2 for finite x.  */
     TEST_ff_f (atan2, minus_infty, 1, -M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, plus_zero, -M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, min_value, -M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, min_subnorm_value, -M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, max_value, -M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, -1, -M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, minus_zero, -M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, -min_value, -M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, -min_subnorm_value, -M_PI_2l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, -max_value, -M_PI_2l, ERRNO_UNCHANGED),
 
-    /* atan2 (y,-inf) == +pi for finite y > 0.  */
+    /* atan2 (y,-inf) == +pi for finite y > 0 or +0.  */
     TEST_ff_f (atan2, 1, minus_infty, M_PIl, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_zero, minus_infty, M_PIl, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, min_value, minus_infty, M_PIl, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, min_subnorm_value, minus_infty, M_PIl, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, max_value, minus_infty, M_PIl, ERRNO_UNCHANGED),
 
-    /* atan2 (y,-inf) == -pi for finite y < 0.  */
+    /* atan2 (y,-inf) == -pi for finite y < 0 or -0.  */
     TEST_ff_f (atan2, -1, minus_infty, -M_PIl, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_zero, minus_infty, -M_PIl, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -min_value, minus_infty, -M_PIl, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -min_subnorm_value, minus_infty, -M_PIl, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -max_value, minus_infty, -M_PIl, ERRNO_UNCHANGED),
 
     TEST_ff_f (atan2, plus_infty, plus_infty, M_PI_4l, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, minus_infty, plus_infty, -M_PI_4l, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, plus_infty, minus_infty, M_PI_34l, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, minus_infty, minus_infty, -M_PI_34l, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, plus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, plus_zero, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, -1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, min_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, -min_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, min_subnorm_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, -min_subnorm_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, max_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, qnan_value, -max_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, plus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, plus_zero, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, minus_zero, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, -1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, min_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, -min_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, min_subnorm_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, -min_subnorm_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, max_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -qnan_value, -max_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_infty, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_zero, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_zero, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, 1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, min_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -min_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, min_subnorm_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -min_subnorm_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, max_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -max_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_zero, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_zero, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, 1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, min_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -min_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, min_subnorm_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -min_subnorm_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, max_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -max_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_ff_f (atan2),
   };
@@ -5753,6 +5841,7 @@ static const struct test_f_f_data cbrt_test_data[] =
     TEST_f_f (cbrt, plus_infty, plus_infty, ERRNO_UNCHANGED),
     TEST_f_f (cbrt, minus_infty, minus_infty, ERRNO_UNCHANGED),
     TEST_f_f (cbrt, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (cbrt, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (cbrt),
   };
@@ -5885,6 +5974,7 @@ static const struct test_f_f_data ceil_test_data[] =
     TEST_f_f (ceil, plus_infty, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (ceil, minus_infty, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (ceil, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (ceil, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* Bug 15479: spurious "inexact" exception may occur.  */
     TEST_f_f (ceil, M_PIl, 4.0, ERRNO_UNCHANGED),
@@ -6201,10 +6291,20 @@ conj_test (void)
 
 static const struct test_ff_f_data copysign_test_data[] =
   {
+    TEST_ff_f (copysign, 0, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (copysign, 0, minus_zero, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (copysign, minus_zero, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (copysign, minus_zero, minus_zero, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
     TEST_ff_f (copysign, 0, 4, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (copysign, 0, -4, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (copysign, minus_zero, 4, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (copysign, minus_zero, -4, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
+    TEST_ff_f (copysign, 2, 0, 2, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (copysign, 2, minus_zero, -2, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (copysign, -2, 0, 2, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (copysign, -2, minus_zero, -2, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     TEST_ff_f (copysign, plus_infty, 0, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (copysign, plus_infty, minus_zero, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -6212,9 +6312,9 @@ static const struct test_ff_f_data copysign_test_data[] =
     TEST_ff_f (copysign, minus_infty, minus_zero, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     TEST_ff_f (copysign, 0, plus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (copysign, 0, minus_zero, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (copysign, 0, minus_infty, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (copysign, minus_zero, plus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (copysign, minus_zero, minus_zero, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (copysign, minus_zero, minus_infty, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     TEST_ff_f (copysign, 0, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (copysign, 0, -qnan_value, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -6225,6 +6325,11 @@ static const struct test_ff_f_data copysign_test_data[] =
     TEST_ff_f (copysign, qnan_value, minus_zero, -qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN),
     TEST_ff_f (copysign, -qnan_value, 0, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN),
     TEST_ff_f (copysign, -qnan_value, minus_zero, -qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN),
+
+    TEST_ff_f (copysign, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN),
+    TEST_ff_f (copysign, qnan_value, -qnan_value, -qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN),
+    TEST_ff_f (copysign, -qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN),
+    TEST_ff_f (copysign, -qnan_value, -qnan_value, -qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN),
 
     TEST_ff_f (copysign, min_value, min_subnorm_value, min_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (copysign, min_value, -min_subnorm_value, -min_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -6254,6 +6359,7 @@ static const struct test_f_f_data cos_test_data[] =
     TEST_f_f (cos, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (cos, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (cos, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (cos, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (cos),
   };
@@ -6270,6 +6376,7 @@ static const struct test_f_f_data cosh_test_data[] =
     TEST_f_f (cosh, plus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (cosh, minus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (cosh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (cosh, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (cosh),
   };
@@ -6773,6 +6880,7 @@ static const struct test_f_f_data erf_test_data[] =
     TEST_f_f (erf, plus_infty, 1, ERRNO_UNCHANGED),
     TEST_f_f (erf, minus_infty, -1, ERRNO_UNCHANGED),
     TEST_f_f (erf, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (erf, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (erf),
   };
@@ -6789,6 +6897,7 @@ static const struct test_f_f_data erfc_test_data[] =
     TEST_f_f (erfc, plus_infty, 0.0, ERRNO_UNCHANGED),
     TEST_f_f (erfc, minus_infty, 2.0, ERRNO_UNCHANGED),
     TEST_f_f (erfc, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (erfc, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (erfc),
   };
@@ -6805,6 +6914,7 @@ static const struct test_f_f_data exp_test_data[] =
     TEST_f_f (exp, plus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (exp, minus_infty, 0, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (exp, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (exp, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (exp),
   };
@@ -6821,6 +6931,7 @@ static const struct test_f_f_data exp10_test_data[] =
     TEST_f_f (exp10, plus_infty, plus_infty, ERRNO_UNCHANGED),
     TEST_f_f (exp10, minus_infty, 0, ERRNO_UNCHANGED),
     TEST_f_f (exp10, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (exp10, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (exp10),
   };
@@ -6844,6 +6955,7 @@ static const struct test_f_f_data exp2_test_data[] =
     TEST_f_f (exp2, plus_infty, plus_infty, ERRNO_UNCHANGED),
     TEST_f_f (exp2, minus_infty, 0, ERRNO_UNCHANGED),
     TEST_f_f (exp2, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (exp2, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (exp2),
   };
@@ -6860,6 +6972,7 @@ static const struct test_f_f_data expm1_test_data[] =
     TEST_f_f (expm1, plus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (expm1, minus_infty, -1, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (expm1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (expm1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (expm1),
   };

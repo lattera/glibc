@@ -31,8 +31,14 @@ acos 0x0.ffffffff8p0
 acos -0x0.ffffffff8p0
 acos 0x0.ffffffffffffp0
 acos -0x0.ffffffffffffp0
+acos 0x0.fffffffffffff8p0
+acos -0x0.fffffffffffff8p0
 acos 0x0.ffffffffffffffffp0
 acos -0x0.ffffffffffffffffp0
+acos 0x0.ffffffffffffffffffffffffffcp0
+acos -0x0.ffffffffffffffffffffffffffcp0
+acos 0x0.ffffffffffffffffffffffffffff8p0
+acos -0x0.ffffffffffffffffffffffffffff8p0
 acos 0x1p-5
 acos 0x1p-10
 acos 0x1p-15
@@ -79,6 +85,11 @@ acos min_subnorm
 acos -min_subnorm
 
 acosh 1
+acosh 0x1.000002p0
+acosh 0x1.0000000000001p0 no-test-inline
+acosh 0x1.0000000000000002p0 no-test-inline
+acosh 0x1.000000000000000000000000008p0 no-test-inline
+acosh 0x1.0000000000000000000000000001p0 no-test-inline
 acosh 1.625
 acosh 7
 acosh 100
@@ -144,8 +155,29 @@ asin 0x0.ffffffff8p0
 asin -0x0.ffffffff8p0
 asin 0x0.ffffffffffffp0
 asin -0x0.ffffffffffffp0
+asin 0x0.fffffffffffff8p0
+asin -0x0.fffffffffffff8p0
 asin 0x0.ffffffffffffffffp0
 asin -0x0.ffffffffffffffffp0
+asin 0x0.ffffffffffffffffffffffffffcp0
+asin -0x0.ffffffffffffffffffffffffffcp0
+asin 0x0.ffffffffffffffffffffffffffff8p0
+asin -0x0.ffffffffffffffffffffffffffff8p0
+asin 0x1p-5
+asin 0x1p-10
+asin 0x1p-15
+asin 0x1p-20
+asin 0x1p-25
+asin 0x1p-30
+asin 0x1p-35
+asin 0x1p-40
+asin 0x1p-45
+asin 0x1p-50
+asin 0x1p-55
+asin 0x1p-60
+asin 0x1p-100
+asin 0x1p-600
+asin 0x1p-10000
 asin -0x2.18915cp-4
 asin -0x3.746774p-4
 asin -0x3.1c54d10e5c844p-4
@@ -259,6 +291,17 @@ atan 1
 atan -1
 atan 0.75
 atan 0x1p-5
+atan 0x1p-10
+atan 0x1p-15
+atan 0x1p-20
+atan 0x1p-25
+atan 0x1p-30
+atan 0x1p-35
+atan 0x1p-40
+atan 0x1p-45
+atan 0x1p-50
+atan 0x1p-55
+atan 0x1p-60
 atan 2.5
 atan 10
 atan 1e6
@@ -338,6 +381,14 @@ atan2 min_subnorm min_subnorm
 atan2 min_subnorm -min_subnorm
 atan2 -min_subnorm min_subnorm
 atan2 -min_subnorm -min_subnorm
+atan2 min min_subnorm
+atan2 min -min_subnorm
+atan2 -min min_subnorm
+atan2 -min -min_subnorm
+atan2 min_subnorm min
+atan2 min_subnorm -min
+atan2 -min_subnorm min
+atan2 -min_subnorm -min
 atan2 1 -max
 atan2 -1 -max
 atan2 min -max
@@ -401,6 +452,20 @@ atanh 0x1p-600
 atanh -0x1p-600
 atanh 0x1p-10000
 atanh -0x1p-10000
+atanh 0x0.ffffffp0 no-test-inline
+atanh -0x0.ffffffp0 no-test-inline
+atanh 0x0.ffffffff8p0 no-test-inline
+atanh -0x0.ffffffff8p0 no-test-inline
+atanh 0x0.ffffffffffffp0 no-test-inline
+atanh -0x0.ffffffffffffp0 no-test-inline
+atanh 0x0.fffffffffffff8p0 no-test-inline
+atanh -0x0.fffffffffffff8p0 no-test-inline
+atanh 0x0.ffffffffffffffffp0 no-test-inline
+atanh -0x0.ffffffffffffffffp0 no-test-inline
+atanh 0x0.ffffffffffffffffffffffffffcp0 no-test-inline
+atanh -0x0.ffffffffffffffffffffffffffcp0 no-test-inline
+atanh 0x0.ffffffffffffffffffffffffffff8p0 no-test-inline
+atanh -0x0.ffffffffffffffffffffffffffff8p0 no-test-inline
 atanh -0x6.e6c77p-20
 atanh 0x3.2ca824p-4
 atanh -0x1.cc1d66p-4
@@ -501,7 +566,10 @@ carg 0x8p-152 0x4p-1076
 cbrt 0.0
 cbrt -0
 cbrt -0.001
+cbrt 2
+cbrt 4
 cbrt 8
+cbrt -10
 cbrt -27.0
 cbrt 0.9921875
 cbrt 0.75
@@ -1049,6 +1117,21 @@ cos 7
 cos 8
 cos 9
 cos 10
+cos 0x1p-5
+cos 0x1p-10
+cos 0x1p-15
+cos 0x1p-20
+cos 0x1p-25
+cos 0x1p-30
+cos 0x1p-35
+cos 0x1p-40
+cos 0x1p-45
+cos 0x1p-50
+cos 0x1p-55
+cos 0x1p-60
+cos 0x1p-100
+cos 0x1p-600
+cos 0x1p-10000
 cos max
 cos -max
 cos min
@@ -1071,7 +1154,18 @@ cosh 22
 cosh 23
 cosh 24
 cosh 0x1p-5
+cosh 0x1p-10
+cosh 0x1p-15
 cosh 0x1p-20
+cosh 0x1p-25
+cosh 0x1p-30
+cosh 0x1p-35
+cosh 0x1p-40
+cosh 0x1p-45
+cosh 0x1p-50
+cosh 0x1p-100
+cosh 0x1p-600
+cosh 0x1p-10000
 cosh -1
 cosh 50
 cosh -0xb.60713p+0
@@ -1391,9 +1485,23 @@ erf 0
 erf -0
 erf 0.125
 erf 0.75
+erf 1
+erf -1
 erf 1.25
 erf 2.0
+erf -2
+erf 3
+erf -3
+erf 4
+erf -4
 erf 4.125
+erf 5
+erf 6
+erf 7
+erf 8
+erf 9
+erf 10
+erf -10
 erf 27.0
 erf -27.0
 erf -0x1.fffffffffffff8p-2
@@ -1401,6 +1509,18 @@ erf 0x1.c5bf94p-127
 erf 0x3.8b7fa8p-128
 erf -0x3.8b7f12369ded8p-1024
 erf 0x3.8b7f12369ded5518p-16384
+erf 0x3.8b7ee8p-128
+erf 0x3.8b7f3cp-128
+erf 0x3.8b7f12369decp-1024
+erf 0x3.8b7f12369deeap-1024
+erf 0x7.16fe246d3bdaa9e70ec1483562p-972
+erf 0x7.16fe246d3bdaa9e70ec148358cp-972
+erf 0x3.8b7f12369ded54c8p-16384
+erf 0x3.8b7f12369ded551cp-16384
+erf 0x1.c5bf891b4ef6aa64p-16384
+erf 0x1.c5bf891b4ef6aa8ep-16384
+erf 0x3.8b7f12369ded54f38760a41abb5cp-16384
+erf 0x3.8b7f12369ded54f38760a41abb86p-16384
 erf 26.0
 erf 28.0
 erf 100
@@ -1410,7 +1530,28 @@ erf 106.625
 erf 107
 erf 108
 erf 1000
+erf 0x1p-5
+erf -0x1p-5
+erf 0x1p-10
+erf 0x1p-15
+erf 0x1p-20
+erf 0x1p-25
+erf 0x1p-30
+erf 0x1p-35
+erf 0x1p-40
+erf 0x1p-45
+erf 0x1p-50
+erf 0x1p-55
+erf 0x1p-60
+erf 0x1p-100
+erf 0x1p-600
+erf 0x1p-10000
+erf min
+erf -min
+erf min_subnorm
+erf -min_subnorm
 erf max
+erf -max
 
 erf -0x1.ddaea4p+0
 erf -0x1.2b1f68p+0
@@ -1426,10 +1567,29 @@ erfc 0x1p-55
 erfc -0x1p-55
 erfc 0.125
 erfc 0.75
+erfc 1
+erfc -1
 erfc 1.25
 erfc 2.0
+erfc -2
+erfc 3
+erfc -3
 erfc 0x1.f7303cp+1
+erfc 4
+erfc -4
 erfc 4.125
+erfc 5
+erfc -5
+erfc 6
+erfc -6
+erfc 7
+erfc -7
+erfc 8
+erfc -8
+erfc 9
+erfc -9
+erfc 10
+erfc -10
 erfc 0x1.ffa002p+2
 erfc 0x1.ffffc8p+2
 erfc -0x1.fffffffffffff8p-2
@@ -1444,7 +1604,39 @@ erfc 106.625
 erfc 107
 erfc 108
 erfc 1000
+erfc 0x1p-5
+erfc -0x1p-5
+erfc 0x1p-10
+erfc 0x1p-15
+erfc 0x1p-20
+erfc 0x1p-25
+erfc 0x1p-30
+erfc 0x1p-35
+erfc 0x1p-40
+erfc 0x1p-45
+erfc 0x1p-50
+erfc 0x1p-60
+erfc 0x1p-100
+erfc 0x1p-600
+erfc 0x1p-10000
+erfc 0x9.31cdfp+0
+erfc 0x9.31cep+0
+erfc 0x1.a8b12fc6e4891p+4
+erfc 0x1.a8b12fc6e4892p+4
+erfc 0x1.9d7adac608e8586300e6c8b99ep+4
+erfc 0x1.9d7adac608e8586300e6c8b99e8p+4
+erfc 0x6.a893032db905274p+4
+erfc 0x6.a893032db9052748p+4
+erfc 0x6.a8a0561d8bbe942p+4
+erfc 0x6.a8a0561d8bbe9428p+4
+erfc 0x6.a893032db905274042fb05c665dcp+4
+erfc 0x6.a893032db905274042fb05c665ep+4
+erfc min
+erfc -min
+erfc min_subnorm
+erfc -min_subnorm
 erfc max
+erfc -max
 
 erfc 0x1.8a0c64p+0
 erfc 0x1.8a0c62p+0
@@ -1517,6 +1709,32 @@ exp 0x1p-60
 exp -0x1p-60
 exp 0x1p-100
 exp -0x1p-100
+exp 0x1p-600
+exp -0x1p-600
+exp 0x1p-10000
+exp -0x1p-10000
+exp 0x5.8b90b8p+4
+exp 0x5.8b90cp+4
+exp -0x5.75628p+4
+exp -0x5.756278p+4
+exp 0x2.c5c85fdf473dep+8
+exp 0x2.c5c85fdf473ep+8
+exp -0x2.c4657baf579a6p+8
+exp -0x2.c4657baf579a4p+8
+exp 0x2.c5c85fdf473de6ab278ece600fp+8
+exp 0x2.c5c85fdf473de6ab278ece601p+8
+exp -0x2.9fa8dcb9092a538b3f2ee2ca67p+8
+exp -0x2.9fa8dcb9092a538b3f2ee2ca66p+8
+exp 0x2.c5c85fdf473de6acp+12
+exp 0x2.c5c85fdf473de6bp+12
+exp -0x2.c5b2319c4843accp+12
+exp -0x2.c5b2319c4843acbcp+12
+exp -0x2.c5bd48bdc7c0c9b8p+12
+exp -0x2.c5bd48bdc7c0c9b4p+12
+exp 0x2.c5c85fdf473de6af278ece600fcap+12
+exp 0x2.c5c85fdf473de6af278ece600fccp+12
+exp -0x2.c5b2319c4843acbff21591e99cccp+12
+exp -0x2.c5b2319c4843acbff21591e99ccap+12
 exp min
 exp -min
 exp min_subnorm
@@ -1571,6 +1789,32 @@ exp10 0x1p-60
 exp10 -0x1p-60
 exp10 0x1p-100
 exp10 -0x1p-100
+exp10 0x1p-600
+exp10 -0x1p-600
+exp10 0x1p-10000
+exp10 -0x1p-10000
+exp10 0x2.688268p+4
+exp10 0x2.68826cp+4
+exp10 -0x2.5ee064p+4
+exp10 -0x2.5ee06p+4
+exp10 0x1.34413509f79fep+8
+exp10 0x1.34413509f79ffp+8
+exp10 -0x1.33a7146f72a42p+8
+exp10 -0x1.33a7146f72a41p+8
+exp10 0x1.34413509f79fef2f625b0205a88p+8
+exp10 0x1.34413509f79fef2f625b0205a9p+8
+exp10 -0x1.23b2b470ae9318183ba772361cp+8
+exp10 -0x1.23b2b470ae9318183ba772361b8p+8
+exp10 0x1.34413509f79fef3p+12
+exp10 0x1.34413509f79fef32p+12
+exp10 -0x1.343793004f503232p+12
+exp10 -0x1.343793004f50323p+12
+exp10 -0x1.343c6405237810b2p+12
+exp10 -0x1.343c6405237810bp+12
+exp10 0x1.34413509f79fef311f12b35816f9p+12
+exp10 0x1.34413509f79fef311f12b35816fap+12
+exp10 -0x1.343793004f503231a589bac27c39p+12
+exp10 -0x1.343793004f503231a589bac27c38p+12
 exp10 min
 exp10 -min
 exp10 min_subnorm
@@ -1644,6 +1888,32 @@ exp2 0x1p-60
 exp2 -0x1p-60
 exp2 0x1p-100
 exp2 -0x1p-100
+exp2 0x1p-600
+exp2 -0x1p-600
+exp2 0x1p-10000
+exp2 -0x1p-10000
+exp2 0x7.fffff8p+4
+exp2 0x8.00001p+4
+exp2 -0x7.e00008p+4
+exp2 -0x7.dffff8p+4
+exp2 0x3.ffffffffffffep+8
+exp2 0x4.0000000000004p+8
+exp2 -0x3.fe00000000002p+8
+exp2 -0x3.fdffffffffffep+8
+exp2 0x3.fffffffffffffffa3aae26b51fp+8
+exp2 0x3.fffffffffffffffa3aae26b52p+8
+exp2 -0x3.c9000000000000000000000001p+8
+exp2 -0x3.c8ffffffffffffffffffffffffp+8
+exp2 0x3.fffffffffffffffcp+12
+exp2 0x4.0000000000000008p+12
+exp2 -0x3.ffe0000000000004p+12
+exp2 -0x3.ffdffffffffffffcp+12
+exp2 -0x3.fff0000000000004p+12
+exp2 -0x3.ffeffffffffffffcp+12
+exp2 0x3.fffffffffffffffffffffffffffep+12
+exp2 0x4.0000000000000000000000000004p+12
+exp2 -0x3.ffe0000000000000000000000002p+12
+exp2 -0x3.ffdffffffffffffffffffffffffep+12
 exp2 min
 exp2 -min
 exp2 min_subnorm
@@ -1665,7 +1935,23 @@ expm1 0
 expm1 -0
 expm1 1
 expm1 0.75
+expm1 2
+expm1 3
+expm1 4
+expm1 5
+expm1 10
+expm1 15
+expm1 20
+expm1 25
+expm1 30
+expm1 35
+expm1 40
 expm1 50.0
+expm1 60
+expm1 70
+expm1 80
+expm1 90
+expm1 100
 expm1 127.0
 expm1 500.0
 # GCC bug 59666: results on directed rounding may be incorrect.
@@ -1710,6 +1996,10 @@ expm1 0x1p-64
 expm1 -0x1p-64
 expm1 0x1p-100
 expm1 -0x1p-100
+expm1 0x1p-600
+expm1 -0x1p-600
+expm1 0x1p-10000
+expm1 -0x1p-10000
 expm1 0xe.4152ac57cd1ea7ap-60
 expm1 0x6.660247486aed8p-4
 expm1 0x6.289a78p-4
