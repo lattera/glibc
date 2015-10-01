@@ -1,5 +1,17 @@
 2015-10-01  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16347]
+	[BZ #19046]
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c: Do not include
+	<libc-internal.h>.
+	(MAXLGM): Do not use diagnostic control macros.
+	[LDBL_MANT_DIG == 106] (MAXLGM): Change value to overflow
+	threshold for ldbl-128ibm.
+	(__ieee754_lgammal_r): For large arguments, multiply by log - 1
+	instead of multiplying by log then subtracting.
+	* math/auto-libm-test-in: Add more tests of lgamma.
+	* math/auto-libm-test-out: Regenerated.
+
 	* math/libm-test.inc (TYPE_DECIMAL_DIG): New macro.
 	(TYPE_HEX_DIG): Likewise.
 	(print_float): Use TYPE_DECIMAL_DIG - 1 and TYPE_HEX_DIG - 1 as

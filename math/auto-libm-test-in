@@ -2505,6 +2505,24 @@ lgamma -0x1p-16445
 lgamma 0x1p-16494
 lgamma -0x1p-16494
 
+# Values +/- 10ulp from overflow threshold.  (Values very close to
+# overflow threshold produce results very close of that threshold,
+# where a result inaccurate by a few ulp could differ from the ideal
+# result in whether it overflows; +/- 10ulp is sufficient for overflow
+# or its absence to be unambiguous under glibc's accuracy standards).
+# This also means the ldbl-128ibm inputs are XFAILed for dbl-64 and
+# the ldbl-128 inputs for ldbl-96, as too close to the threshold.
+lgamma 0x3.12be0cp+120
+lgamma 0x3.12be6p+120
+lgamma 0x5.d53649e2d4674p+1012
+lgamma 0x5.d53649e2d46c8p+1012
+lgamma 0x5.d53649e2d469dbc1f01e99fd52p+1012 xfail:dbl-64
+lgamma 0x5.d53649e2d469dbc1f01e99fd7cp+1012 xfail:dbl-64
+lgamma 0x5.c6aa645fffef5f5p+16368
+lgamma 0x5.c6aa645fffef5ff8p+16368
+lgamma 0x5.c6aa645fffef5fa912b9b480f7acp+16368 xfail:ldbl-96-intel xfail:ldbl-96-m68k
+lgamma 0x5.c6aa645fffef5fa912b9b480f8p+16368 xfail:ldbl-96-intel xfail:ldbl-96-m68k
+
 lgamma -0x1.fa471547c2fe5p+1
 lgamma -0x1.9260dcp+1
 

@@ -70,17 +70,14 @@
 
 #include <math.h>
 #include <math_private.h>
-#include <libc-internal.h>
 #include <float.h>
 
-/* BZ#16347: ldbl-128ibm uses this file as is, however the MAXLGM
-   definition overflows for IBM long double.  This directive prevents the
-   overflow warnings until IBM long double version is fixed.  */
 static const long double PIL = 3.1415926535897932384626433832795028841972E0L;
-DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (4.6, "-Woverflow");
+#if LDBL_MANT_DIG == 106
+static const long double MAXLGM = 0x5.d53649e2d469dbc1f01e99fd66p+1012L;
+#else
 static const long double MAXLGM = 1.0485738685148938358098967157129705071571E4928L;
-DIAG_POP_NEEDS_COMMENT;
+#endif
 static const long double one = 1.0L;
 static const long double huge = LDBL_MAX;
 
@@ -1035,6 +1032,8 @@ __ieee754_lgammal_r (long double x, int *signgamp)
   if (x > MAXLGM)
     return (*signgamp * huge * huge);
 
+  if (x > 0x1p120L)
+    return x * (__logl (x) - 1.0L);
   q = ls2pi - x;
   q = (x - 0.5L) * __logl (x) + q;
   if (x > 1.0e18L)
