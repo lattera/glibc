@@ -338,6 +338,18 @@ static FLOAT max_valid_error;
 			 (LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1))
 #define MIN_EXP CHOOSE ((LDBL_MIN_EXP-1), (DBL_MIN_EXP-1), (FLT_MIN_EXP-1),	\
 			(LDBL_MIN_EXP-1), (DBL_MIN_EXP-1), (FLT_MIN_EXP-1))
+/* Sufficient numbers of digits to represent any floating-point value
+   unambiguously (for any choice of the number of bits in the first
+   hex digit, in the case of TYPE_HEX_DIG).  When used with printf
+   formats where the precision counts only digits after the point, 1
+   is subtracted from these values. */
+#define TYPE_DECIMAL_DIG CHOOSE (__DECIMAL_DIG__,	\
+				 __DBL_DECIMAL_DIG__,	\
+				 __FLT_DECIMAL_DIG__,	\
+				 __DECIMAL_DIG__,	\
+				 __DBL_DECIMAL_DIG__,	\
+				 __FLT_DECIMAL_DIG__)
+#define TYPE_HEX_DIG ((MANT_DIG + 7) / 4)
 
 /* Compare KEY (a string, with the name of a function) with ULP (a
    pointer to a struct ulp_data structure), returning a value less
@@ -419,7 +431,8 @@ print_float (FLOAT f)
   else if (isnan (f))
     printf ("qNaN\n");
   else
-    printf ("% .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n", f, f);
+    printf ("% .*" PRINTF_EXPR "  % .*" PRINTF_XEXPR "\n",
+	    TYPE_DECIMAL_DIG - 1, f, TYPE_HEX_DIG - 1, f);
 }
 
 /* Should the message print to screen?  This depends on the verbose flag,
@@ -837,8 +850,8 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
       print_float (expected);
       if (print_diff)
 	{
-	  printf (" difference: % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR
-		  "\n", diff, diff);
+	  printf (" difference: % .*" PRINTF_EXPR "  % .*" PRINTF_XEXPR
+		  "\n", TYPE_DECIMAL_DIG - 1, diff, TYPE_HEX_DIG - 1, diff);
 	  printf (" ulp       : % .4" PRINTF_NEXPR "\n", ulps);
 	  printf (" max.ulp   : % .4" PRINTF_NEXPR "\n", max_ulp);
 	}

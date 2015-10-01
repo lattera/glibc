@@ -1,3 +1,11 @@
+2015-10-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (TYPE_DECIMAL_DIG): New macro.
+	(TYPE_HEX_DIG): Likewise.
+	(print_float): Use TYPE_DECIMAL_DIG - 1 and TYPE_HEX_DIG - 1 as
+	precisions when printing floating-point numbers.
+	(check_float_internal): Likewise.
+
 2015-09-30  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16620]
