@@ -15,6 +15,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
+#include <nss.h>
 #include <stdio.h>
 #include <shadow.h>
 
@@ -30,6 +32,13 @@ int
 putspent (const struct spwd *p, FILE *stream)
 {
   int errors = 0;
+
+  if (p->sp_namp == NULL || !__nss_valid_field (p->sp_namp)
+      || !__nss_valid_field (p->sp_pwdp))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
   flockfile (stream);
 

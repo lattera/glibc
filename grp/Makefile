@@ -28,7 +28,7 @@ routines := fgetgrent initgroups setgroups \
 	    getgrent getgrgid getgrnam putgrent \
 	    getgrent_r getgrgid_r getgrnam_r fgetgrent_r
 
-tests := testgrp
+tests := testgrp tst-putgrent
 
 ifeq (yes,$(build-shared))
 test-srcs :=  tst_fgetgrent

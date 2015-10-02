@@ -28,7 +28,7 @@ routines := fgetpwent getpw putpwent \
 	    getpwent getpwnam getpwuid \
 	    getpwent_r getpwnam_r getpwuid_r fgetpwent_r
 
-tests := tst-getpw
+tests := tst-getpw tst-putpwent
 
 include ../Rules
 

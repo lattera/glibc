@@ -26,6 +26,7 @@ headers			:= nss.h
 
 # This is the trivial part which goes into libc itself.
 routines		= nsswitch getnssent getnssent_r digits_dots \
+			  valid_field valid_list_field rewrite_field \
 			  $(addsuffix -lookup,$(databases))
 
 # These are the databases that go through nss dispatch.
@@ -47,8 +48,10 @@ install-bin             := getent makedb
 makedb-modules = xmalloc hash-string
 extra-objs		+= $(makedb-modules:=.o)
 
+tests-static            = tst-field
 tests			= test-netdb tst-nss-test1 test-digits-dots \
-			  tst-nss-getpwent bug17079
+			  tst-nss-getpwent bug17079 \
+			  $(tests-static)
 xtests			= bug-erange
 
 # Specify rules for the nss_* modules.  We have some services.
@@ -83,8 +86,7 @@ libnss_db-inhibit-o	= $(filter-out .os,$(object-suffixes))
 ifeq ($(build-static-nss),yes)
 routines                += $(libnss_files-routines)
 static-only-routines    += $(libnss_files-routines)
-tests-static		= tst-nss-static
-tests			+= $(tests-static)
+tests-static		+= tst-nss-static
 endif
 
 include ../Rules

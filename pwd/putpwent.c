@@ -18,37 +18,47 @@
 #include <errno.h>
 #include <stdio.h>
 #include <pwd.h>
+#include <nss.h>
 
 #define _S(x)	x ?: ""
 
-/* Write an entry to the given stream.
-   This must know the format of the password file.  */
+/* Write an entry to the given stream.  This must know the format of
+   the password file.  If the input contains invalid characters,
+   return EINVAL, or replace them with spaces (if they are contained
+   in the GECOS field).  */
 int
-putpwent (p, stream)
-     const struct passwd *p;
-     FILE *stream;
+putpwent (const struct passwd *p, FILE *stream)
 {
-  if (p == NULL || stream == NULL)
+  if (p == NULL || stream == NULL
+      || p->pw_name == NULL || !__nss_valid_field (p->pw_name)
+      || !__nss_valid_field (p->pw_passwd)
+      || !__nss_valid_field (p->pw_dir)
+      || !__nss_valid_field (p->pw_shell))
     {
       __set_errno (EINVAL);
       return -1;
     }
 
+  int ret;
+  char *gecos_alloc;
+  const char *gecos = __nss_rewrite_field (p->pw_gecos, &gecos_alloc);
+
+  if (gecos == NULL)
+    return -1;
+
   if (p->pw_name[0] == '+' || p->pw_name[0] == '-')
-    {
-      if (fprintf (stream, "%s:%s:::%s:%s:%s\n",
-		   p->pw_name, _S (p->pw_passwd),
-		   _S (p->pw_gecos), _S (p->pw_dir), _S (p->pw_shell)) < 0)
-	return -1;
-    }
+      ret = fprintf (stream, "%s:%s:::%s:%s:%s\n",
+		     p->pw_name, _S (p->pw_passwd),
+		     gecos, _S (p->pw_dir), _S (p->pw_shell));
   else
-    {
-      if (fprintf (stream, "%s:%s:%lu:%lu:%s:%s:%s\n",
-		   p->pw_name, _S (p->pw_passwd),
-		   (unsigned long int) p->pw_uid,
-		   (unsigned long int) p->pw_gid,
-		   _S (p->pw_gecos), _S (p->pw_dir), _S (p->pw_shell)) < 0)
-	return -1;
-    }
-  return 0;
+      ret = fprintf (stream, "%s:%s:%lu:%lu:%s:%s:%s\n",
+		     p->pw_name, _S (p->pw_passwd),
+		     (unsigned long int) p->pw_uid,
+		     (unsigned long int) p->pw_gid,
+		     gecos, _S (p->pw_dir), _S (p->pw_shell));
+
+  free (gecos_alloc);
+  if (ret >= 0)
+    ret = 0;
+  return ret;
 }

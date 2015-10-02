@@ -15,9 +15,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <gshadow.h>
+#include <nss.h>
 
 #define _S(x)	x ? x : ""
 
@@ -28,6 +30,15 @@ int
 putsgent (const struct sgrp *g, FILE *stream)
 {
   int errors = 0;
+
+  if (g->sg_namp == NULL || !__nss_valid_field (g->sg_namp)
+      || !__nss_valid_field (g->sg_passwd)
+      || !__nss_valid_list_field (g->sg_adm)
+      || !__nss_valid_list_field (g->sg_mem))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
   _IO_flockfile (stream);
 

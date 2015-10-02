@@ -1,3 +1,41 @@
+2015-10-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18724]
+	* include/nss.h (NSS_INVALID_FIELD_CHARACTERS): Define.
+	(__nss_invalid_field_characters, __nss_valid_field)
+	(__nss_valid_list_field, __nss_rewrite_field): Declare.
+	* nss/valid_field.c, nss/valid_list_field, nss/rewrite_field.c,
+	tst-field.c: New file.
+	* nss/Makefile (routines): Add valid_field, rewrite_field.
+	(tests-static): Define unconditionally.
+	(tests): Include tests-static.
+	[build-static-nss] (tests-static): Use append.
+	[build-static-nss] (tests): Remove modification.
+	* nss/getent.c (print_group): Call putgrent.  Report error.
+	(print_gshadow): Call putsgent.  Report error.
+	(print_passwd): Call putpwent.  Report error.
+	(print_shadow): Call putspent.  Report error.
+	* include/pwd.h: Include <nss.h> instead of <nss/nss.h>.
+	* pwd/pwd.h (putpwent): Remove incorrect nonnull attribute.
+	* pwd/putpwent.c (putpwent): Use ISO function definition.  Check
+	name, password, directory, shell fields for valid syntax.  Rewrite
+	GECOS field to match syntax.
+	* pwd/Makefile (tests): Add tst-putpwent.
+	* pwd/tst-putpwent.c: New file.
+	* grp/putgrent.c (putgrent): Convert to ISO function definition.
+	Check grName, grpasswd, gr_mem fields for valid syntax.
+	Change loop variable i to size_t.
+	* grp/Makefile (tests): Add tst-putgrent.
+	* grp/tst-putgrent.c: New file.
+	* shadow/putspent.c (putspent): Check sp_namp, sp_pwdp fields for
+	valid syntax.
+	* shadow/Makefile (tests): Add tst-putspent.
+	* shadow/tst-putspent.c: New file.
+	* gshadow/putsgent.c (putsgent): Check sg_namp, sg_passwd, sg_adm,
+	sg_mem fields for valid syntax.
+	* gshadow/Makefile (tests): Add tst-putsgent.
+	* gshadow/tst-putsgent.c: New file.
+
 2015-10-01  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Added comments to some

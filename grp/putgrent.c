@@ -16,7 +16,9 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <nss.h>
 #include <stdio.h>
+#include <string.h>
 #include <grp.h>
 
 #define flockfile(s) _IO_flockfile (s)
@@ -27,13 +29,14 @@
 /* Write an entry to the given stream.
    This must know the format of the group file.  */
 int
-putgrent (gr, stream)
-     const struct group *gr;
-     FILE *stream;
+putgrent (const struct group *gr, FILE *stream)
 {
   int retval;
 
-  if (__glibc_unlikely (gr == NULL) || __glibc_unlikely (stream == NULL))
+  if (__glibc_unlikely (gr == NULL) || __glibc_unlikely (stream == NULL)
+      || gr->gr_name == NULL || !__nss_valid_field (gr->gr_name)
+      || !__nss_valid_field (gr->gr_passwd)
+      || !__nss_valid_list_field (gr->gr_mem))
     {
       __set_errno (EINVAL);
       return -1;
@@ -56,9 +59,7 @@ putgrent (gr, stream)
 
   if (gr->gr_mem != NULL)
     {
-      int i;
-
-      for (i = 0 ; gr->gr_mem[i] != NULL; i++)
+      for (size_t i = 0; gr->gr_mem[i] != NULL; i++)
 	if (fprintf (stream, i == 0 ? "%s" : ",%s", gr->gr_mem[i]) < 0)
 	  {
 	    /* What else can we do?  */

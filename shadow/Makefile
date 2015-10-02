@@ -27,7 +27,7 @@ routines	= getspent getspnam sgetspent fgetspent putspent \
 		  getspent_r getspnam_r sgetspent_r fgetspent_r \
 		  lckpwdf
 
-tests = tst-shadow
+tests = tst-shadow tst-putspent
 
 CFLAGS-getspent_r.c = -fexceptions
 CFLAGS-getspent.c = -fexceptions

@@ -24,7 +24,7 @@ extern int __fgetpwent_r (FILE * __stream, struct passwd *__resultbuf,
 			  char *__buffer, size_t __buflen,
 			  struct passwd **__result);
 
-#include <nss/nss.h>
+#include <nss.h>
 
 struct parser_data;
 extern int _nss_files_parse_pwent (char *line, struct passwd *result,
