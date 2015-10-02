@@ -74,8 +74,8 @@ double __nexttoward(double x, long double y)
 	}
 	hy = hx&0x7ff00000;
 	if(hy>=0x7ff00000) {
-	  x = math_narrow_eval (x+x);	/* overflow  */
-	  return x;
+	  double u = x+x;			/* overflow  */
+	  math_force_eval (u);
 	}
 	if(hy<0x00100000) {
 	    double u = x*x;			/* underflow */

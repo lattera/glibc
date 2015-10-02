@@ -1,5 +1,25 @@
 2015-10-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19059]
+	* math/s_nexttowardf.c (__nexttowardf): Do not return value from
+	overflowing computation.
+	* sysdeps/i386/fpu/s_nexttoward.c (__nexttoward): Likewise.
+	* sysdeps/i386/fpu/s_nexttowardf.c (__nexttowardf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttoward.c (__nexttoward):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttowardf.c (__nexttowardf):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c (__nexttoward):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c (__nexttowardf):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c (__nexttoward): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttowardf.c (__nexttowardf):
+	Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_nexttowardfd.c (__nldbl_nexttowardf):
+	Likewise.
+	* math/libm-test.inc (nexttoward_test_data): Add more tests.
+
 	* nss/rewrite_field.c (__nss_rewrite_field): Use
 	internal_function.
 	* nss/valid_field.c (__nss_valid_field): Likewise.

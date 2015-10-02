@@ -58,8 +58,8 @@ float __nexttowardf(float x, long double y)
 	}
 	hy = hx&0x7f800000;
 	if(hy>=0x7f800000) {
-	  x = math_narrow_eval (x+x);	/* overflow  */
-	  return x;
+	  float u = x+x;			/* overflow  */
+	  math_force_eval (u);
 	}
 	if(hy<0x00800000) {
 	    float u = x*x;			/* underflow */
