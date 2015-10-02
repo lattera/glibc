@@ -1,3 +1,10 @@
+2015-10-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* nss/rewrite_field.c (__nss_rewrite_field): Use
+	internal_function.
+	* nss/valid_field.c (__nss_valid_field): Likewise.
+	* nss/valid_list_field.c (__nss_valid_list_field): Likewise.
+
 2015-10-02  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18724]

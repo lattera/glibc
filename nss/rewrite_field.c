@@ -24,6 +24,7 @@
    overwritten with a pointer the caller has to free if the function
    returns successfully.  On failure, return NULL.  */
 const char *
+internal_function
 __nss_rewrite_field (const char *value, char **to_be_freed)
 {
   *to_be_freed = NULL;
