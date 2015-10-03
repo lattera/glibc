@@ -1026,7 +1026,7 @@ double: 2
 float: 1
 
 Function: "cos_vlen4_avx2":
-double: 1
+double: 2
 
 Function: "cos_vlen8":
 double: 1
