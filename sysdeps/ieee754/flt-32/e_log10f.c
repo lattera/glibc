@@ -15,6 +15,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <fix-int-fp-convert-zero.h>
 
 static const float
 two25      =  3.3554432000e+07, /* 0x4c000000 */
@@ -44,6 +45,8 @@ __ieee754_log10f(float x)
 	i  = ((u_int32_t)k&0x80000000)>>31;
 	hx = (hx&0x007fffff)|((0x7f-i)<<23);
 	y  = (float)(k+i);
+	if (FIX_INT_FP_CONVERT_ZERO && y == 0.0f)
+	  y = 0.0f;
 	SET_FLOAT_WORD(x,hx);
 	z  = y*log10_2lo + ivln10*__ieee754_logf(x);
 	return  z+y*log10_2hi;

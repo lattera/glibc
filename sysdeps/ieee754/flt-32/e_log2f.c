@@ -17,6 +17,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <fix-int-fp-convert-zero.h>
 
 static const float
 ln2 = 0.69314718055994530942,
@@ -57,7 +58,12 @@ __ieee754_log2f(float x)
 	dk = (float)k;
 	f = x-(float)1.0;
 	if((0x007fffff&(15+ix))<16) {	/* |f| < 2**-20 */
-	    if(f==zero) return dk;
+	    if(f==zero)
+	      {
+		if (FIX_INT_FP_CONVERT_ZERO && dk == 0.0f)
+		  dk = 0.0f;
+		return dk;
+	      }
 	    R = f*f*((float)0.5-(float)0.33333333333333333*f);
 	    return dk-(R-f)/ln2;
 	}

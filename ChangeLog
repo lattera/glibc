@@ -1,3 +1,45 @@
+2015-10-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #887]
+	[BZ #19049]
+	[BZ #19050]
+	* sysdeps/generic/fix-int-fp-convert-zero.h: New file.
+	* sysdeps/ieee754/dbl-64/e_log10.c: Include
+	<fix-int-fp-convert-zero.h>.
+	(__ieee754_log10): Adjust signs as needed if FIX_INT_FP_CONVERT_ZERO.
+	* sysdeps/ieee754/dbl-64/e_log2.c: Include
+	<fix-int-fp-convert-zero.h>.
+	(__ieee754_log2): Adjust signs as needed if FIX_INT_FP_CONVERT_ZERO.
+	* sysdeps/ieee754/dbl-64/s_erf.c: Include
+	<fix-int-fp-convert-zero.h>.
+	(__erfc): Adjust signs as needed if FIX_INT_FP_CONVERT_ZERO.
+	* sysdeps/ieee754/dbl-64/s_logb.c: Include
+	<fix-int-fp-convert-zero.h>.
+	(__logb): Adjust signs as needed if FIX_INT_FP_CONVERT_ZERO.
+	* sysdeps/ieee754/flt-32/e_log10f.c: Include
+	<fix-int-fp-convert-zero.h>.
+	(__ieee754_log10f): Adjust signs as needed if FIX_INT_FP_CONVERT_ZERO.
+	* sysdeps/ieee754/flt-32/e_log2f.c: Include
+	<fix-int-fp-convert-zero.h>.
+	(__ieee754_log2f): Adjust signs as needed if FIX_INT_FP_CONVERT_ZERO.
+	* sysdeps/ieee754/flt-32/s_erff.c: Include
+	<fix-int-fp-convert-zero.h>.
+	(__erfcf): Adjust signs as needed if FIX_INT_FP_CONVERT_ZERO.
+	* sysdeps/ieee754/flt-32/s_logbf.c: Include
+	<fix-int-fp-convert-zero.h>.
+	(__logbf): Adjust signs as needed if FIX_INT_FP_CONVERT_ZERO.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c: Include
+	<fix-int-fp-convert-zero.h>.
+	(__erfcl): Adjust signs as needed if FIX_INT_FP_CONVERT_ZERO.
+	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c: Include
+	<fix-int-fp-convert-zero.h>.
+	(__logbl): Adjust signs as needed if FIX_INT_FP_CONVERT_ZERO.
+	* sysdeps/powerpc/powerpc32/fpu/configure.ac: New file.
+	* sysdeps/powerpc/powerpc32/fpu/configure: New generated file.
+	* sysdeps/powerpc/powerpc32/fpu/fix-int-fp-convert-zero.h: New
+	file.
+	* config.h.in [_LIBC] (HAVE_PPC_FCFID): New macro.
+
 2015-10-03  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.

@@ -116,6 +116,7 @@ static char rcsid[] = "$NetBSD: s_erf.c,v 1.8 1995/05/10 20:47:05 jtc Exp $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <fix-int-fp-convert-zero.h>
 
 static const double
   tiny = 1e-300,
@@ -308,7 +309,10 @@ __erfc (double x)
   ix = hx & 0x7fffffff;
   if (ix >= 0x7ff00000)                         /* erfc(nan)=nan */
     {                                           /* erfc(+-inf)=0,2 */
-      return (double) (((u_int32_t) hx >> 31) << 1) + one / x;
+      double ret = (double) (((u_int32_t) hx >> 31) << 1) + one / x;
+      if (FIX_INT_FP_CONVERT_ZERO && ret == 0.0)
+	return 0.0;
+      return ret;
     }
 
   if (ix < 0x3feb0000)                  /* |x|<0.84375 */

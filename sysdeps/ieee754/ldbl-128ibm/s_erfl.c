@@ -106,6 +106,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
+#include <fix-int-fp-convert-zero.h>
 
 /* Evaluate P[n] x^n  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
@@ -839,7 +840,10 @@ __erfcl (long double x)
   if (ix >= 0x7ff00000)
     {				/* erfc(nan)=nan */
       /* erfc(+-inf)=0,2 */
-      return (long double) ((hx >> 31) << 1) + one / x;
+      long double ret = (long double) ((hx >> 31) << 1) + one / x;
+      if (FIX_INT_FP_CONVERT_ZERO && ret == 0.0L)
+	return 0.0L;
+      return ret;
     }
 
   if (ix < 0x3fd00000) /* |x| <1/4 */

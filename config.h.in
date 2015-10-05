@@ -260,4 +260,7 @@
 /* The PowerPC64 ELFv2 ABI is being used.  */
 #undef HAVE_ELFV2_ABI
 
+/* PowerPC32 uses fcfid for integer to floating point conversions.  */
+#define HAVE_PPC_FCFID 0
+
 #endif

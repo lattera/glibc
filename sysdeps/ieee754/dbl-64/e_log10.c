@@ -45,6 +45,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <fix-int-fp-convert-zero.h>
 
 static const double two54 = 1.80143985094819840000e+16;         /* 0x43500000, 0x00000000 */
 static const double ivln10 = 4.34294481903251816668e-01;        /* 0x3FDBCB7B, 0x1526E50E */
@@ -77,6 +78,8 @@ __ieee754_log10 (double x)
   i = ((u_int32_t) k & 0x80000000) >> 31;
   hx = (hx & 0x000fffff) | ((0x3ff - i) << 20);
   y = (double) (k + i);
+  if (FIX_INT_FP_CONVERT_ZERO && y == 0.0)
+    y = 0.0;
   SET_HIGH_WORD (x, hx);
   z = y * log10_2lo + ivln10 * __ieee754_log (x);
   return z + y * log10_2hi;

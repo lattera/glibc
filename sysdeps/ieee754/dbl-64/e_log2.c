@@ -56,6 +56,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <fix-int-fp-convert-zero.h>
 
 static const double ln2 = 0.69314718055994530942;
 static const double two54 = 1.80143985094819840000e+16; /* 43500000 00000000 */
@@ -101,7 +102,11 @@ __ieee754_log2 (double x)
   if ((0x000fffff & (2 + hx)) < 3)
     {                           /* |f| < 2**-20 */
       if (f == zero)
-	return dk;
+	{
+	  if (FIX_INT_FP_CONVERT_ZERO && dk == 0.0)
+	    dk = 0.0;
+	  return dk;
+	}
       R = f * f * (0.5 - 0.33333333333333333 * f);
       return dk - (R - f) / ln2;
     }
