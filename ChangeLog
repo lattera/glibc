@@ -1,5 +1,17 @@
 2015-10-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19071]
+	* sysdeps/ieee754/ldbl-96/s_lroundl.c (__lroundl): Use unsigned
+	long int variable to store possibly incremented high part of
+	mantissa.
+	* math/libm-test.inc (lround_test_data): Add tests used for
+	llround.  Use [LONG_MAX > 0x7fffffff] consistently as condition
+	for tests requiring 64-bit long.  Do not condition tests on
+	[TEST_FLOAT] unnecessarily.
+	(llround_test_data): Add tests used for lround.  Add another
+	expectation for the "inexact" exception.  Do not condition tests
+	on [TEST_FLOAT] unnecessarily.
+
 	[BZ #887]
 	[BZ #19049]
 	[BZ #19050]

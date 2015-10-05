@@ -58,13 +58,15 @@ __lroundl (long double x)
       else
 	{
 	  u_int32_t j = i1 + (0x80000000 >> (j0 - 31));
+	  unsigned long int ures = i0;
+
 	  if (j < i1)
-	    ++i0;
+	    ++ures;
 
 	  if (j0 == 31)
-	    result = (long int) i0;
+	    result = ures;
 	  else
-	    result = ((long int) i0 << (j0 - 31)) | (j >> (63 - j0));
+	    result = (ures << (j0 - 31)) | (j >> (63 - j0));
 	}
     }
   else
