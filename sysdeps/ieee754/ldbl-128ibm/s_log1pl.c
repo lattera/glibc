@@ -149,7 +149,7 @@ __log1pl (long double xm1)
   if (x <= 0.0L)
     {
       if (x == 0.0L)
-	return (-1.0L / (x - x));
+	return (-1.0L / 0.0L);
       else
 	return (zero / (x - x));
     }
