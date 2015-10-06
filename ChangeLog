@@ -1,5 +1,11 @@
 2015-10-06  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #10432]
+	* nis/nss_nis/nis-netgrp.c (_nss_nis_setnetgrent): Remove call to
+	malloc_usable_size.
+
+2015-10-06  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19018]
 	* stdlib/cxa_thread_atexit_impl.c (__cxa_thread_atexit_impl):
 	Mangle function pointer before storing it.

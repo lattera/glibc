@@ -70,7 +70,6 @@ _nss_nis_setnetgrent (const char *group, struct __netgrent *netgrp)
 	 and the last byte is filled with NUL.  So we can simply
 	 use that buffer.  */
       assert (len >= 0);
-      assert (malloc_usable_size (netgrp->data) >= len + 1);
       assert (netgrp->data[len] == '\0');
 
       netgrp->data_size = len;
