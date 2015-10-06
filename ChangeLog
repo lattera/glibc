@@ -1,3 +1,10 @@
+2015-10-06  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19018]
+	* stdlib/cxa_thread_atexit_impl.c (__cxa_thread_atexit_impl):
+	Mangle function pointer before storing it.
+	(__call_tls_dtors): Demangle function pointer before calling it.
+
 2015-10-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #19012]
