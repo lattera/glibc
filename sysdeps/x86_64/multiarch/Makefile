@@ -17,15 +17,12 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strcpy-sse2-unaligned strncpy-sse2-unaligned \
 		   stpcpy-sse2-unaligned stpncpy-sse2-unaligned \
 		   strcat-sse2-unaligned strncat-sse2-unaligned \
-		   strchr-sse2-no-bsf memcmp-ssse3 strstr-sse2-unaligned
-
-ifeq (yes,$(config-cflags-sse4))
-sysdep_routines += strcspn-c strpbrk-c strspn-c varshift
+		   strchr-sse2-no-bsf memcmp-ssse3 strstr-sse2-unaligned \
+		   strcspn-c strpbrk-c strspn-c varshift
 CFLAGS-varshift.c += -msse4
 CFLAGS-strcspn-c.c += -msse4
 CFLAGS-strpbrk-c.c += -msse4
 CFLAGS-strspn-c.c += -msse4
-endif
 
 ifeq (yes,$(config-cflags-avx2))
 sysdep_routines += memset-avx2

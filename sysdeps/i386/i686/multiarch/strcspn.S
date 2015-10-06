@@ -19,9 +19,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <config.h>
-
-#ifdef HAVE_SSE4_SUPPORT
-
 #include <sysdep.h>
 #include <init-arch.h>
 
@@ -70,8 +67,6 @@ END(STRCSPN)
 # define libc_hidden_builtin_def(name) \
 	.globl __GI_STRCSPN; __GI_STRCSPN = STRCSPN_IA32
 #endif
-
-#endif /* HAVE_SSE4_SUPPORT */
 
 #ifdef USE_AS_STRPBRK
 #include "../../strpbrk.S"

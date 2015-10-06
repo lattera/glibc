@@ -1,5 +1,24 @@
 2015-10-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/configure.ac (libc_cv_cc_sse4): Remove configure
+	test.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/i386/i686/multiarch/Makefile
+	[$(config-cflags-sse4) = yes]: Make code unconditional.
+	* sysdeps/i386/i686/multiarch/strcspn.S [HAVE_SSE4_SUPPORT]:
+	Likewise.
+	* sysdeps/i386/i686/multiarch/strspn.S [HAVE_SSE4_SUPPORT]:
+	Likewise.
+	* sysdeps/x86_64/configure.ac (libc_cv_cc_sse4): Remove configure
+	test.
+	* sysdeps/x86_64/configure: Regenerated.
+	* sysdeps/x86_64/multiarch/Makefile [$(config-cflags-sse4) = yes]:
+	Make code unconditional.
+	* sysdeps/x86_64/multiarch/strcspn.S [HAVE_SSE4_SUPPORT]:
+	Likewise.
+	* sysdeps/x86_64/multiarch/strspn.S [HAVE_SSE4_SUPPORT]: Likewise.
+	* config.h.in (HAVE_SSE4_SUPPORT): Remove #undef.
+
 	* scripts/rpm2dynsym.sh: Remove file.
 
 2015-10-06  Florian Weimer  <fweimer@redhat.com>

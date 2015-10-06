@@ -5,15 +5,6 @@ AC_CHECK_HEADER([cpuid.h], ,
   [AC_MSG_ERROR([gcc must provide the <cpuid.h> header])],
   [/* No default includes.  */])
 
-dnl Check if -msse4 works.
-AC_CACHE_CHECK(for SSE4 support, libc_cv_cc_sse4, [dnl
-LIBC_TRY_CC_OPTION([-msse4], [libc_cv_cc_sse4=yes], [libc_cv_cc_sse4=no])
-])
-if test $libc_cv_cc_sse4 = yes; then
-  AC_DEFINE(HAVE_SSE4_SUPPORT)
-fi
-LIBC_CONFIG_VAR([config-cflags-sse4], [$libc_cv_cc_sse4])
-
 dnl Check if -mavx works.
 AC_CACHE_CHECK(for AVX support, libc_cv_cc_avx, [dnl
 LIBC_TRY_CC_OPTION([-mavx], [libc_cv_cc_avx=yes], [libc_cv_cc_avx=no])

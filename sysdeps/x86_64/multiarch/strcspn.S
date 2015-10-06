@@ -19,9 +19,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <config.h>
-
-#ifdef HAVE_SSE4_SUPPORT
-
 #include <sysdep.h>
 #include <init-arch.h>
 
@@ -64,7 +61,6 @@ END(STRCSPN)
 # define END(name) \
 	cfi_endproc; .size STRCSPN_SSE2, .-STRCSPN_SSE2
 #endif
-#endif /* HAVE_SSE4_SUPPORT */
 
 #ifdef USE_AS_STRPBRK
 #include "../strpbrk.S"

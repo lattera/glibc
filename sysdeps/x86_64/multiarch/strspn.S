@@ -19,9 +19,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <config.h>
-
-#ifdef HAVE_SSE4_SUPPORT
-
 #include <sysdep.h>
 #include <init-arch.h>
 
@@ -49,7 +46,5 @@ END(strspn)
 # define END(name) \
 	cfi_endproc; .size __strspn_sse2, .-__strspn_sse2
 #endif
-
-#endif /* HAVE_SSE4_SUPPORT */
 
 #include "../strspn.S"

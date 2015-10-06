@@ -19,9 +19,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <config.h>
-
-#ifdef HAVE_SSE4_SUPPORT
-
 #include <sysdep.h>
 #include <init-arch.h>
 
@@ -55,7 +52,5 @@ __strspn_ia32: cfi_startproc; \
 # define libc_hidden_builtin_def(name) \
 	.globl __GI_strspn; __GI_strspn = __strspn_ia32
 #endif
-
-#endif /* HAVE_SSE4_SUPPORT */
 
 #include "../../strspn.S"
