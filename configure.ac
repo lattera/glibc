@@ -1982,6 +1982,39 @@ if test $libc_cv_builtin_trap = yes; then
   AC_DEFINE([HAVE_BUILTIN_TRAP])
 fi
 
+dnl C++ feature tests.
+AC_LANG_PUSH([C++])
+
+AC_CACHE_CHECK([whether the C++ compiler supports thread_local],
+	       libc_cv_cxx_thread_local, [
+old_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS -std=gnu++11"
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+#include <thread>
+
+// Compiler support.
+struct S
+{
+  S ();
+  ~S ();
+};
+thread_local S s;
+S * get () { return &s; }
+
+// libstdc++ support.
+#ifndef _GLIBCXX_HAVE___CXA_THREAD_ATEXIT_IMPL
+#error __cxa_thread_atexit_impl not supported
+#endif
+])],
+	       [libc_cv_cxx_thread_local=yes],
+	       [libc_cv_cxx_thread_local=no])
+CXXFLAGS="$old_CXXFLAGS"
+])
+AC_SUBST(libc_cv_cxx_thread_local)
+
+AC_LANG_POP([C++])
+dnl End of C++ feature tests.
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 

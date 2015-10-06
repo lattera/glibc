@@ -212,6 +212,8 @@ CFLAGS-recvfrom.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pt-system.c = -fexceptions
 
 LDLIBS-tst-once5 = -lstdc++
+CFLAGS-tst-thread_local1.o = -std=gnu++11
+LDLIBS-tst-thread_local1 = -lstdc++
 
 tests = tst-typesizes \
 	tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
@@ -283,7 +285,8 @@ tests = tst-typesizes \
 	tst-getpid3 \
 	tst-setuid3 \
 	tst-initializers1 $(addprefix tst-initializers1-,c89 gnu89 c99 gnu99) \
-	tst-bad-schedattr
+	tst-bad-schedattr \
+	tst-thread_local1
 xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
 	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10
 test-srcs = tst-oddstacklimit
@@ -402,6 +405,10 @@ endif
 ifeq (,$(CXX))
 # These tests require a C++ compiler and runtime.
 tests-unsupported += tst-cancel24 tst-cancel24-static tst-once5
+endif
+# These tests require a C++ compiler and runtime with thread_local support.
+ifneq ($(have-cxx-thread_local),yes)
+tests-unsupported += tst-thread_local1
 endif
 
 include ../Rules

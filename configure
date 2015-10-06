@@ -614,6 +614,7 @@ use_nscd
 libc_cv_gcc_unwind_find_fde
 libc_extra_cppflags
 libc_extra_cflags
+libc_cv_cxx_thread_local
 CPPUNDEFS
 sizeof_long_double
 have_selinux
@@ -7214,6 +7215,61 @@ if test $libc_cv_builtin_trap = yes; then
   $as_echo "#define HAVE_BUILTIN_TRAP 1" >>confdefs.h
 
 fi
+
+ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the C++ compiler supports thread_local" >&5
+$as_echo_n "checking whether the C++ compiler supports thread_local... " >&6; }
+if ${libc_cv_cxx_thread_local+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+old_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS -std=gnu++11"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#include <thread>
+
+// Compiler support.
+struct S
+{
+  S ();
+  ~S ();
+};
+thread_local S s;
+S * get () { return &s; }
+
+// libstdc++ support.
+#ifndef _GLIBCXX_HAVE___CXA_THREAD_ATEXIT_IMPL
+#error __cxa_thread_atexit_impl not supported
+#endif
+
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  libc_cv_cxx_thread_local=yes
+else
+  libc_cv_cxx_thread_local=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+CXXFLAGS="$old_CXXFLAGS"
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cxx_thread_local" >&5
+$as_echo "$libc_cv_cxx_thread_local" >&6; }
+
+
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
 
 ### End of automated tests.
 ### Now run sysdeps configure fragments.

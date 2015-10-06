@@ -1,3 +1,15 @@
+2015-10-06  Florian Weimer  <fweimer@redhat.com>
+
+	* configure.ac (libc_cv_cxx_thread_local): Define.
+	* configure: Regenerate.
+	* config.make.in (have-cxx-thread_local): Define.
+	* nptl/Makefile (CFLAGS-tst-thread_local1.o):
+	(LDLIBS-tst-thread_local1): Define.
+	(tests): Add tst-thread_local1.
+	[have-cxx-thread_local != yes] (tests-unsupported): Add
+	tst-thread_local1.
+	* nptl/tst-thread_local1.cc: New file.
+
 2015-10-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19078]
