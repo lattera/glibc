@@ -1,3 +1,9 @@
+2015-10-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #19012]
+	* iconv/gconv_db.c (gen_steps): Check for additional errors.
+	Clean up on failure.
+
 2015-10-05  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19071]

@@ -243,6 +243,8 @@ gen_steps (struct derivation_step *best, const char *toset,
   struct __gconv_step *result;
   struct derivation_step *current;
   int status = __GCONV_NOMEM;
+  char *from_name = NULL;
+  char *to_name = NULL;
 
   /* First determine number of steps.  */
   for (current = best; current->last != NULL; current = current->last)
@@ -259,12 +261,30 @@ gen_steps (struct derivation_step *best, const char *toset,
       current = best;
       while (step_cnt-- > 0)
 	{
-	  result[step_cnt].__from_name = (step_cnt == 0
-					  ? __strdup (fromset)
-					  : (char *)current->last->result_set);
-	  result[step_cnt].__to_name = (step_cnt + 1 == *nsteps
-					? __strdup (current->result_set)
-					: result[step_cnt + 1].__from_name);
+	  if (step_cnt == 0)
+	    {
+	      result[step_cnt].__from_name = from_name = __strdup (fromset);
+	      if (from_name == NULL)
+		{
+		  failed = 1;
+		  break;
+		}
+	    }
+	  else
+	    result[step_cnt].__from_name = (char *)current->last->result_set;
+
+	  if (step_cnt + 1 == *nsteps)
+	    {
+	      result[step_cnt].__to_name = to_name
+		= __strdup (current->result_set);
+	      if (to_name == NULL)
+		{
+		  failed = 1;
+		  break;
+		}
+	    }
+	  else
+	    result[step_cnt].__to_name = result[step_cnt + 1].__from_name;
 
 	  result[step_cnt].__counter = 1;
 	  result[step_cnt].__data = NULL;
@@ -332,6 +352,8 @@ gen_steps (struct derivation_step *best, const char *toset,
 	  while (++step_cnt < *nsteps)
 	    __gconv_release_step (&result[step_cnt]);
 	  free (result);
+	  free (from_name);
+	  free (to_name);
 	  *nsteps = 0;
 	  *handle = NULL;
 	  if (status == __GCONV_OK)
@@ -828,8 +850,9 @@ free_modules_db (struct gconv_module *node)
 /* Free all resources if necessary.  */
 libc_freeres_fn (free_mem)
 {
-  /* First free locale memory.  This needs to be done before freeing derivations,
-     as ctype cleanup functions dereference steps arrays which we free below.  */
+  /* First free locale memory.  This needs to be done before freeing
+     derivations, as ctype cleanup functions dereference steps arrays which we
+     free below.  */
   _nl_locale_subfreeres ();
 
   /* finddomain.c has similar problem.  */
