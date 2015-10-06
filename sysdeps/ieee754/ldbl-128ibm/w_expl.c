@@ -2,9 +2,6 @@
 #include <math_private.h>
 #include <math_ldbl_opt.h>
 
-static const long double o_thres = 709.78271289338399678773454114191496482L;
-static const long double u_thres = -744.44007192138126231410729844608163411L;
-
 long double __expl(long double x)	/* wrapper exp  */
 {
   long double z;
@@ -13,9 +10,9 @@ long double __expl(long double x)	/* wrapper exp  */
     return z;
   if (isfinite(x))
     {
-      if (x >= o_thres)
+      if (!isfinite (z))
 	return __kernel_standard_l(x,x,206); /* exp overflow  */
-      else if (x <= u_thres)
+      else if (z == 0.0L)
 	return __kernel_standard_l(x,x,207); /* exp underflow  */
     }
   return z;

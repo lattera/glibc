@@ -1,5 +1,11 @@
 2015-10-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19078]
+	* sysdeps/ieee754/ldbl-128ibm/w_expl.c (o_thres): Remove variable.
+	(u_thres): Likewise.
+	(__expl): Determine whether to call __kernel_standard_l based on
+	value of result, not argument.
+
 	* math/libm-test.inc (scalb_test_data): Add more expectations for
 	the "inexact" exception.
 
