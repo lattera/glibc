@@ -1,5 +1,8 @@
 2015-10-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (lrint_test_data): Add tests used for llrint.
+	(llrint_test_data): Add tests used for lrint.
+
 	* sysdeps/i386/configure.ac (libc_cv_cc_sse4): Remove configure
 	test.
 	* sysdeps/i386/configure: Regenerated.
