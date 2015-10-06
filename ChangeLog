@@ -1,5 +1,9 @@
 2015-10-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19077]
+	* sysdeps/ieee754/ldbl-128ibm/e_logl.c (__ieee754_logl): Return
+	0.0L for argument 1.0L.
+
 	[BZ #19076]
 	* sysdeps/ieee754/ldbl-128ibm/s_log1pl.c (__log1pl): Divide by
 	constant 0.0L when computing infinite result.
