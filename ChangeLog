@@ -1,3 +1,7 @@
+2015-10-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/rpm2dynsym.sh: Remove file.
+
 2015-10-06  Florian Weimer  <fweimer@redhat.com>
 
 	* configure.ac (libc_cv_cxx_thread_local): Define.
