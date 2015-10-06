@@ -1,5 +1,8 @@
 2015-10-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (scalb_test_data): Add more expectations for
+	the "inexact" exception.
+
 	[BZ #19077]
 	* sysdeps/ieee754/ldbl-128ibm/e_logl.c (__ieee754_logl): Return
 	0.0L for argument 1.0L.
