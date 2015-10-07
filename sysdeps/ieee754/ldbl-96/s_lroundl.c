@@ -17,6 +17,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <fenv.h>
+#include <limits.h>
 #include <math.h>
 
 #include <math_private.h>
@@ -49,6 +51,13 @@ __lroundl (long double x)
 	    }
 
 	  result = j >> (31 - j0);
+#ifdef FE_INVALID
+	  if (sizeof (long int) == 4
+	      && sign == 1
+	      && result == LONG_MIN)
+	    /* Rounding brought the value out of range.  */
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
     }
   else if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
@@ -66,13 +75,33 @@ __lroundl (long double x)
 	  if (j0 == 31)
 	    result = ures;
 	  else
-	    result = (ures << (j0 - 31)) | (j >> (63 - j0));
+	    {
+	      result = (ures << (j0 - 31)) | (j >> (63 - j0));
+#ifdef FE_INVALID
+	      if (sizeof (long int) == 8
+		  && sign == 1
+		  && result == LONG_MIN)
+		/* Rounding brought the value out of range.  */
+		feraiseexcept (FE_INVALID);
+#endif
+	    }
 	}
     }
   else
     {
-      /* The number is too large.  It is left implementation defined
-	 what happens.  */
+      /* The number is too large.  Unless it rounds to LONG_MIN,
+	 FE_INVALID must be raised and the return value is
+	 unspecified.  */
+#ifdef FE_INVALID
+      if (sizeof (long int) == 4
+	  && x <= (long double) LONG_MIN - 0.5L)
+	{
+	  /* If truncation produces LONG_MIN, the cast will not raise
+	     the exception, but may raise "inexact".  */
+	  feraiseexcept (FE_INVALID);
+	  return LONG_MIN;
+	}
+#endif
       return (long int) x;
     }
 

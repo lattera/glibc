@@ -1,3 +1,33 @@
+2015-10-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19088]
+	* sysdeps/ieee754/dbl-64/s_lround.c: Include <fenv.h> and
+	<limits.h>.
+	(__lround) [FE_INVALID]: Force FE_INVALID exception when result
+	overflows but exception would not result from cast.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: Include <fenv.h>
+	and <limits.h>.
+	(__lround) [FE_INVALID]: Force FE_INVALID exception when result
+	overflows but exception would not result from cast.
+	* sysdeps/ieee754/ldbl-128/s_llroundl.c: Include <fenv.h> and
+	<limits.h>.
+	(__llroundl) [FE_INVALID]: Force FE_INVALID exception when result
+	overflows but exception would not result from cast.
+	* sysdeps/ieee754/ldbl-128/s_lroundl.c: Include <fenv.h> and
+	<limits.h>.
+	(__lroundl) [FE_INVALID]: Force FE_INVALID exception when result
+	overflows but exception would not result from cast.
+	* sysdeps/ieee754/ldbl-96/s_llroundl.c: Include <fenv.h> and
+	<limits.h>.
+	(__llroundl) [FE_INVALID]: Force FE_INVALID exception when result
+	overflows but exception would not result from cast.
+	* sysdeps/ieee754/ldbl-96/s_lroundl.c: Include <fenv.h> and
+	<limits.h>.
+	(__lroundl) [FE_INVALID]: Force FE_INVALID exception when result
+	overflows but exception would not result from cast.
+	* math/libm-test.inc (lround_test_data): Add more tests.
+	(llround_test_data): Likewise.
+
 2015-10-07  Steve Ellcey  <sellcey@imgtec.com>
 
 	* timezone/Makefile (CFLAGS-zic.c): Add -Wno-unused-variable.

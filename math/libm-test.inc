@@ -8282,6 +8282,123 @@ static const struct test_f_l_data lround_test_data[] =
 #endif
     TEST_f_l (lround, -0x1p64, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
     TEST_f_l (lround, -0x1p65, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_f_l (lround, 0x7fffff80p0, 0x7fffff80LL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#ifndef TEST_FLOAT
+    TEST_f_l (lround, 0x7fffffffp0, 0x7fffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_l (lround, 0x7fffffff.4p0, 0x7fffffffLL, ERRNO_UNCHANGED),
+    TEST_f_l (lround, 0x7fffffff.7ffffcp0, 0x7fffffffLL, ERRNO_UNCHANGED),
+# if LONG_MAX > 0x7fffffff
+    TEST_f_l (lround, 0x7fffffff.8p0, 0x80000000LL, ERRNO_UNCHANGED),
+    TEST_f_l (lround, 0x7fffffff.cp0, 0x80000000LL, ERRNO_UNCHANGED),
+# else
+    TEST_f_l (lround, 0x7fffffff.8p0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_f_l (lround, 0x7fffffff.cp0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+# endif
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 64
+    TEST_f_l (lround, 0x7fffffff.7fffffff8p0L, 0x7fffffffLL, ERRNO_UNCHANGED),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 106
+    TEST_f_l (lround, 0x7fffffff.7fffffffffffffffffep0L, 0x7fffffffLL, ERRNO_UNCHANGED),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 113
+    TEST_f_l (lround, 0x7fffffff.7fffffffffffffffffffcp0L, 0x7fffffffLL, ERRNO_UNCHANGED),
+#endif
+#ifndef TEST_FLOAT
+    TEST_f_l (lround, -0x80000000.4p0, -0x80000000LL, ERRNO_UNCHANGED),
+    TEST_f_l (lround, -0x80000000.7ffff8p0, -0x80000000LL, ERRNO_UNCHANGED),
+# if LONG_MAX > 0x7fffffff
+    TEST_f_l (lround, -0x80000000.8p0, -0x80000001LL, ERRNO_UNCHANGED),
+    TEST_f_l (lround, -0x80000000.cp0, -0x80000001LL, ERRNO_UNCHANGED),
+    TEST_f_l (lround, -0x80000001p0, -0x80000001LL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+# else
+    TEST_f_l (lround, -0x80000000.8p0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_f_l (lround, -0x80000000.cp0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_f_l (lround, -0x80000001p0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+# endif
+#endif
+#if LONG_MAX > 0x7fffffff
+    TEST_f_l (lround, -0x80000100p0, -0x80000100LL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#else
+    TEST_f_l (lround, -0x80000100p0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 64
+    TEST_f_l (lround, -0x80000000.7fffffffp0L, -0x80000000LL, ERRNO_UNCHANGED),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 106
+    TEST_f_l (lround, -0x80000000.7fffffffffffffffffcp0L, -0x80000000LL, ERRNO_UNCHANGED),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 113
+    TEST_f_l (lround, -0x80000000.7fffffffffffffffffff8p0L, -0x80000000LL, ERRNO_UNCHANGED),
+#endif
+#if LONG_MAX > 0x7fffffff
+    TEST_f_l (lround, 0x7fffff8000000000p0, 0x7fffff8000000000LL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#else
+    TEST_f_l (lround, 0x7fffff8000000000p0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#endif
+#ifndef TEST_FLOAT
+# if LONG_MAX > 0x7fffffff
+    TEST_f_l (lround, 0x7ffffffffffffc00p0, 0x7ffffffffffffc00LL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+# else
+    TEST_f_l (lround, 0x7ffffffffffffc00p0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+# endif
+#endif
+#ifdef TEST_LDOUBLE
+# if LONG_MAX > 0x7fffffff
+    TEST_f_l (lround, 0x7fffffffffffffffp0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+# else
+    TEST_f_l (lround, 0x7fffffffffffffffp0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+# endif
+    TEST_f_l (lround, 0x7fffffffffffffff.8p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+# if LDBL_MANT_DIG > 64
+#  if LONG_MAX > 0x7fffffff
+    TEST_f_l (lround, 0x7fffffffffffffff.4p0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#  else
+    TEST_f_l (lround, 0x7fffffffffffffff.4p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#  endif
+    TEST_f_l (lround, 0x7fffffffffffffff.cp0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+# endif
+# if LONG_MAX > 0x7fffffff
+#  if LDBL_MANT_DIG >= 106
+    TEST_f_l (lround, 0x7fffffffffffffff.7fffffffffep0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#  endif
+#  if LDBL_MANT_DIG >= 113
+    TEST_f_l (lround, 0x7fffffffffffffff.7fffffffffffcp0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#  endif
+# else
+#  if LDBL_MANT_DIG >= 106
+    TEST_f_l (lround, 0x7fffffffffffffff.7fffffffffep0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#  endif
+#  if LDBL_MANT_DIG >= 113
+    TEST_f_l (lround, 0x7fffffffffffffff.7fffffffffffcp0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#  endif
+# endif
+#endif
+#ifdef TEST_LDOUBLE
+    TEST_f_l (lround, -0x8000000000000001p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 106
+# if LONG_MAX > 0x7fffffff
+    TEST_f_l (lround, -0x8000000000000000.4p0L, LLONG_MIN, ERRNO_UNCHANGED),
+    TEST_f_l (lround, -0x8000000000000000.7fffffffffcp0L, LLONG_MIN, ERRNO_UNCHANGED),
+# else
+    TEST_f_l (lround, -0x8000000000000000.4p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_f_l (lround, -0x8000000000000000.7fffffffffcp0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+# endif
+    TEST_f_l (lround, -0x8000000000000000.8p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_f_l (lround, -0x8000000000000000.cp0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#endif
+    TEST_f_l (lround, -0x8000010000000000p0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#ifndef TEST_FLOAT
+    TEST_f_l (lround, -0x8000000000000800p0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 113
+# if LONG_MAX > 0x7fffffff
+    TEST_f_l (lround, -0x8000000000000000.7fffffffffff8p0L, LLONG_MIN, ERRNO_UNCHANGED),
+# else
+    TEST_f_l (lround, -0x8000000000000000.7fffffffffff8p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+# endif
+#endif
     TEST_f_l (lround, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_l (lround, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_l (lround, min_value, 0.0, ERRNO_UNCHANGED),
@@ -8492,6 +8609,74 @@ static const struct test_f_L_data llround_test_data[] =
     TEST_f_L (llround, -0x1p63, LLONG_MIN, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_L (llround, -0x1p64, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
     TEST_f_L (llround, -0x1p65, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_f_L (llround, 0x7fffff80p0, 0x7fffff80LL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#ifndef TEST_FLOAT
+    TEST_f_L (llround, 0x7fffffffp0, 0x7fffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_L (llround, 0x7fffffff.4p0, 0x7fffffffLL, ERRNO_UNCHANGED),
+    TEST_f_L (llround, 0x7fffffff.7ffffcp0, 0x7fffffffLL, ERRNO_UNCHANGED),
+    TEST_f_L (llround, 0x7fffffff.8p0, 0x80000000LL, ERRNO_UNCHANGED),
+    TEST_f_L (llround, 0x7fffffff.cp0, 0x80000000LL, ERRNO_UNCHANGED),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 64
+    TEST_f_L (llround, 0x7fffffff.7fffffff8p0L, 0x7fffffffLL, ERRNO_UNCHANGED),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 106
+    TEST_f_L (llround, 0x7fffffff.7fffffffffffffffffep0L, 0x7fffffffLL, ERRNO_UNCHANGED),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 113
+    TEST_f_L (llround, 0x7fffffff.7fffffffffffffffffffcp0L, 0x7fffffffLL, ERRNO_UNCHANGED),
+#endif
+#ifndef TEST_FLOAT
+    TEST_f_L (llround, -0x80000000.4p0, -0x80000000LL, ERRNO_UNCHANGED),
+    TEST_f_L (llround, -0x80000000.7ffff8p0, -0x80000000LL, ERRNO_UNCHANGED),
+    TEST_f_L (llround, -0x80000000.8p0, -0x80000001LL, ERRNO_UNCHANGED),
+    TEST_f_L (llround, -0x80000000.cp0, -0x80000001LL, ERRNO_UNCHANGED),
+    TEST_f_L (llround, -0x80000001p0, -0x80000001LL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+    TEST_f_L (llround, -0x80000100p0, -0x80000100LL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 64
+    TEST_f_L (llround, -0x80000000.7fffffffp0L, -0x80000000LL, ERRNO_UNCHANGED),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 106
+    TEST_f_L (llround, -0x80000000.7fffffffffffffffffcp0L, -0x80000000LL, ERRNO_UNCHANGED),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 113
+    TEST_f_L (llround, -0x80000000.7fffffffffffffffffff8p0L, -0x80000000LL, ERRNO_UNCHANGED),
+#endif
+    TEST_f_L (llround, 0x7fffff8000000000p0, 0x7fffff8000000000LL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#ifndef TEST_FLOAT
+    TEST_f_L (llround, 0x7ffffffffffffc00p0, 0x7ffffffffffffc00LL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#ifdef TEST_LDOUBLE
+    TEST_f_L (llround, 0x7fffffffffffffffp0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_L (llround, 0x7fffffffffffffff.8p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+# if LDBL_MANT_DIG > 64
+    TEST_f_L (llround, 0x7fffffffffffffff.4p0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_L (llround, 0x7fffffffffffffff.cp0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+# endif
+# if LDBL_MANT_DIG >= 106
+    TEST_f_L (llround, 0x7fffffffffffffff.7fffffffffep0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+# endif
+# if LDBL_MANT_DIG >= 113
+    TEST_f_L (llround, 0x7fffffffffffffff.7fffffffffffcp0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+# endif
+#endif
+#ifdef TEST_LDOUBLE
+    TEST_f_L (llround, -0x8000000000000001p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 106
+    TEST_f_L (llround, -0x8000000000000000.4p0L, LLONG_MIN, ERRNO_UNCHANGED),
+    TEST_f_L (llround, -0x8000000000000000.7fffffffffcp0L, LLONG_MIN, ERRNO_UNCHANGED),
+    TEST_f_L (llround, -0x8000000000000000.8p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_f_L (llround, -0x8000000000000000.cp0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#endif
+    TEST_f_L (llround, -0x8000010000000000p0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#ifndef TEST_FLOAT
+    TEST_f_L (llround, -0x8000000000000800p0, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#endif
+#if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 113
+    TEST_f_L (llround, -0x8000000000000000.7fffffffffff8p0L, LLONG_MIN, ERRNO_UNCHANGED),
+#endif
     TEST_f_L (llround, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_L (llround, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_L (llround, min_value, 0.0, ERRNO_UNCHANGED),

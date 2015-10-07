@@ -18,6 +18,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <fenv.h>
+#include <limits.h>
 #include <math.h>
 
 #include <math_private.h>
@@ -60,13 +62,30 @@ __llroundl (long double x)
 	  if (j0 == 48)
 	    result = (long long int) i0;
 	  else
-	    result = ((long long int) i0 << (j0 - 48)) | (j >> (112 - j0));
+	    {
+	      result = ((long long int) i0 << (j0 - 48)) | (j >> (112 - j0));
+#ifdef FE_INVALID
+	      if (sign == 1 && result == LLONG_MIN)
+		/* Rounding brought the value out of range.  */
+		feraiseexcept (FE_INVALID);
+#endif
+	    }
 	}
     }
   else
     {
-      /* The number is too large.  It is left implementation defined
-	 what happens.  */
+      /* The number is too large.  Unless it rounds to LLONG_MIN,
+	 FE_INVALID must be raised and the return value is
+	 unspecified.  */
+#ifdef FE_INVALID
+      if (x <= (long double) LLONG_MIN - 0.5L)
+	{
+	  /* If truncation produces LLONG_MIN, the cast will not raise
+	     the exception, but may raise "inexact".  */
+	  feraiseexcept (FE_INVALID);
+	  return LLONG_MIN;
+	}
+#endif
       return (long long int) x;
     }
 
