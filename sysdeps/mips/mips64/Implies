@@ -1,4 +1,5 @@
 # MIPS uses IEEE 754 floating point.
 mips/ieee754
 ieee754/flt-32
+ieee754/dbl-64/wordsize-64
 ieee754/dbl-64

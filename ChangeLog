@@ -1,5 +1,9 @@
 2015-10-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/mips64/Implies: Use ieee754/dbl-64/wordsize-64.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_issignaling.c
+	(__issignaling) [HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Remove #error.
+
 	[BZ #19079]
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: Restore previous
 	file, conditioned on [!_LP64].

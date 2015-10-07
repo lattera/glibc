@@ -25,7 +25,6 @@ __issignaling (double x)
   u_int64_t xi;
   EXTRACT_WORDS64 (xi, x);
 #ifdef HIGH_ORDER_BIT_IS_SET_FOR_SNAN
-# error untested
   /* We only have to care about the high-order bit of x's significand, because
      having it set (sNaN) already makes the significand different from that
      used to designate infinity.  */
