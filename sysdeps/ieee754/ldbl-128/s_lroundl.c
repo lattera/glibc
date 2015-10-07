@@ -37,19 +37,19 @@ __lroundl (long double x)
   i0 &= 0x0000ffffffffffffLL;
   i0 |= 0x0001000000000000LL;
 
-  if (j0 < 48)
+  if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
     {
-      if (j0 < 0)
-	return j0 < -1 ? 0 : sign;
-      else
+      if (j0 < 48)
 	{
-	  i0 += 0x0000800000000000LL >> j0;
-	  result = i0 >> (48 - j0);
+	  if (j0 < 0)
+	    return j0 < -1 ? 0 : sign;
+	  else
+	    {
+	      i0 += 0x0000800000000000LL >> j0;
+	      result = i0 >> (48 - j0);
+	    }
 	}
-    }
-  else if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
-    {
-      if (j0 >= 112)
+      else if (j0 >= 112)
 	result = ((long int) i0 << (j0 - 48)) | (i1 << (j0 - 112));
       else
 	{

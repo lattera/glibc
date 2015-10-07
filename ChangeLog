@@ -1,3 +1,10 @@
+2015-10-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19085]
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c (__lrintl): Move test for
+	exponent below 48 inside case for non-overflowing exponent.
+	* sysdeps/ieee754/ldbl-128/s_lroundl.c (__lroundl): Likewise.
+
 2015-10-07  Florian Weimer  <fweimer@redhat.com>
 
 	* iconvdata/cp737.h (from_idx): Add const.
