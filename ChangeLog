@@ -1,3 +1,9 @@
+2015-10-07  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #19086]
+	* manual/filesys.texi (Storage Allocation): Fix argument order for
+	posix_fallocate64.
+
 2015-10-07  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19085]

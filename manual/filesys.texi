@@ -3323,7 +3323,7 @@ allocation.  Instead, an @code{EOPNOTSUPP} is returned to the caller.
 
 @end deftypefun
 
-@deftypefun int posix_fallocate64 (int @var{fd}, off64_t @var{length}, off64_t @var{offset})
+@deftypefun int posix_fallocate64 (int @var{fd}, off64_t @var{offset}, off64_t @var{length})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 This function is a variant of @code{posix_fallocate64} which accepts
