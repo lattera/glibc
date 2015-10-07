@@ -69,23 +69,10 @@ strong_alias (__llround, __llroundl)
 weak_alias (__llround, llroundl)
 #endif
 
-/* long has the same width as long long on LP64 machines, so use an alias.
-   If building for ILP32 on a machine with 64-bit registers, however,
-   use a cast if necessary.  */
+/* long has the same width as long long on LP64 machines, so use an alias.  */
 #undef lround
 #undef __lround
-#if !defined (_LP64) && REGISTER_CAST_INT32_TO_INT64
-long int
-__lround (double x)
-{
-  return __llround (x);
-}
-weak_alias (__lround, lround)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__lround, __lroundl)
-weak_alias (__lround, lroundl)
-# endif
-#else
+#ifdef _LP64
 strong_alias (__llround, __lround)
 weak_alias (__llround, lround)
 # ifdef NO_LONG_DOUBLE

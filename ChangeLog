@@ -1,3 +1,18 @@
+2015-10-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19079]
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: Restore previous
+	file, conditioned on [!_LP64].
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_llround.c
+	[!_LP64] (__lround): Do not define as function or alias.
+	[!_LP64] (lround): Likewise.
+	[!_LP64] (__lroundl): Likewise.
+	[!_LP64] (lroundl): Likewise.
+	* sysdeps/tile/sysdep.h (REGISTER_CAST_INT32_TO_INT64): Remove
+	macro.
+	* sysdeps/x86_64/x32/sysdep.h (REGISTER_CAST_INT32_TO_INT64):
+	Likewise.
+
 2015-10-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (lrint_test_data): Add more tests.
