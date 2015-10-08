@@ -74,7 +74,6 @@ include ../Rules
 
 tst-printf-bz18872-ENV = MALLOC_TRACE=$(objpfx)tst-printf-bz18872.mtrace
 
-ifeq ($(run-built-tests),yes)
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
 	$(evaluate-test)
@@ -91,7 +90,6 @@ $(objpfx)tst-printf-bz18872.c: tst-printf-bz18872.sh
 $(objpfx)tst-printf-bz18872-mem.out: $(objpfx)tst-printf-bz18872.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-printf-bz18872.mtrace > $@; \
 	$(evaluate-test)
-endif
 
 CFLAGS-vfprintf.c = -Wno-uninitialized
 CFLAGS-vfwprintf.c = -Wno-uninitialized
