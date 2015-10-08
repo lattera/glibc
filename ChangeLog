@@ -1,5 +1,9 @@
 2015-10-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (lround_test_data): Do not expect the absence
+	of "inexact" for some tests with non-integer arguments.
+	(llround_test_data): Likewise.
+
 	* sysdeps/i386/configure.ac (libc_cv_cc_avx): Remove configure
 	test.
 	(libc_cv_cc_sse2avx): Likewise.

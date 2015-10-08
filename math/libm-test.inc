@@ -8352,7 +8352,7 @@ static const struct test_f_l_data lround_test_data[] =
     TEST_f_l (lround, 0x7fffffffffffffff.8p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
 # if LDBL_MANT_DIG > 64
 #  if LONG_MAX > 0x7fffffff
-    TEST_f_l (lround, 0x7fffffffffffffff.4p0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_l (lround, 0x7fffffffffffffff.4p0L, 0x7fffffffffffffffLL, ERRNO_UNCHANGED),
 #  else
     TEST_f_l (lround, 0x7fffffffffffffff.4p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
 #  endif
@@ -8360,10 +8360,10 @@ static const struct test_f_l_data lround_test_data[] =
 # endif
 # if LONG_MAX > 0x7fffffff
 #  if LDBL_MANT_DIG >= 106
-    TEST_f_l (lround, 0x7fffffffffffffff.7fffffffffep0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_l (lround, 0x7fffffffffffffff.7fffffffffep0L, 0x7fffffffffffffffLL, ERRNO_UNCHANGED),
 #  endif
 #  if LDBL_MANT_DIG >= 113
-    TEST_f_l (lround, 0x7fffffffffffffff.7fffffffffffcp0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_l (lround, 0x7fffffffffffffff.7fffffffffffcp0L, 0x7fffffffffffffffLL, ERRNO_UNCHANGED),
 #  endif
 # else
 #  if LDBL_MANT_DIG >= 106
@@ -8651,14 +8651,14 @@ static const struct test_f_L_data llround_test_data[] =
     TEST_f_L (llround, 0x7fffffffffffffffp0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_L (llround, 0x7fffffffffffffff.8p0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
 # if LDBL_MANT_DIG > 64
-    TEST_f_L (llround, 0x7fffffffffffffff.4p0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_L (llround, 0x7fffffffffffffff.4p0L, 0x7fffffffffffffffLL, ERRNO_UNCHANGED),
     TEST_f_L (llround, 0x7fffffffffffffff.cp0L, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
 # endif
 # if LDBL_MANT_DIG >= 106
-    TEST_f_L (llround, 0x7fffffffffffffff.7fffffffffep0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_L (llround, 0x7fffffffffffffff.7fffffffffep0L, 0x7fffffffffffffffLL, ERRNO_UNCHANGED),
 # endif
 # if LDBL_MANT_DIG >= 113
-    TEST_f_L (llround, 0x7fffffffffffffff.7fffffffffffcp0L, 0x7fffffffffffffffLL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_L (llround, 0x7fffffffffffffff.7fffffffffffcp0L, 0x7fffffffffffffffLL, ERRNO_UNCHANGED),
 # endif
 #endif
 #ifdef TEST_LDOUBLE
