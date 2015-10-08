@@ -1,3 +1,7 @@
+2015-10-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/configure.ac (mach_interface_list): Add task_notify.
+
 2015-10-07  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19088]
