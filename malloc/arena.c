@@ -696,14 +696,20 @@ heap_trim (heap_info *heap, size_t pad)
     }
 
   /* Uses similar logic for per-thread arenas as the main arena with systrim
-     by preserving the top pad and at least a page.  */
+     and _int_free by preserving the top pad and rounding down to the nearest
+     page.  */
   top_size = chunksize (top_chunk);
+  if ((unsigned long)(top_size) <
+      (unsigned long)(mp_.trim_threshold))
+    return 0;
+
   top_area = top_size - MINSIZE - 1;
   if (top_area < 0 || (size_t) top_area <= pad)
     return 0;
 
+  /* Release in pagesize units and round down to the nearest page.  */
   extra = ALIGN_DOWN(top_area - pad, pagesz);
-  if ((unsigned long) extra < mp_.trim_threshold)
+  if (extra == 0)
     return 0;
 
   /* Try to shrink. */

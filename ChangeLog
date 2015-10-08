@@ -1,3 +1,9 @@
+2015-10-07  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #17195]
+	* malloc/arena.c (heap_trim): Apply trim_treshold to top_chunck size,
+	as is similarly done in systrim and _int_free already.
+
 2015-10-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/configure.ac (mach_interface_list): Add task_notify.
