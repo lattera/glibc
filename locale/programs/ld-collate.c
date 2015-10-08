@@ -32,7 +32,6 @@
 #include "linereader.h"
 #include "locfile.h"
 #include "elem-hash.h"
-#include "../localeinfo.h"
 
 /* Uncomment the following line in the production version.  */
 /* #define NDEBUG 1 */
@@ -2131,8 +2130,6 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	  /* The words have to be handled specially.  */
 	  if (idx == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_SIZEMB))
 	    add_locale_uint32 (&file, 0);
-	  else if (idx == _NL_ITEM_INDEX (_NL_COLLATE_ENCODING_TYPE))
-	    add_locale_uint32 (&file, __cet_other);
 	  else
 	    add_locale_empty (&file);
 	}
@@ -2496,12 +2493,6 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
   add_locale_raw_data (&file, collate->mbseqorder, 256);
   add_locale_collseq_table (&file, &collate->wcseqorder);
   add_locale_string (&file, charmap->code_set_name);
-  if (strcmp (charmap->code_set_name, "UTF-8") == 0)
-    add_locale_uint32 (&file, __cet_utf8);
-  else if (charmap->mb_cur_max == 1)
-    add_locale_uint32 (&file, __cet_8bit);
-  else
-    add_locale_uint32 (&file, __cet_other);
   write_locale_data (output_path, LC_COLLATE, "LC_COLLATE", &file);
 
   obstack_free (&weightpool, NULL);

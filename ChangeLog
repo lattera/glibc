@@ -1,3 +1,17 @@
+2015-10-08  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18589]
+	* string/bug-strcoll2.c: New file.
+	* locale/categories.def: Revert commit
+	f13c2a8dff2329c6692a80176262ceaaf8a6f74e.
+	* locale/langinfo.h: Likewise.
+	* locale/localeinfo.h: Likewise.
+	* locale/C-collate.c: Likewise.
+	* programs/ld-collate.c (collate_output): Likewise.
+	* string/strcoll_l.c (STRDIFF): Likewise.
+	(STRCOLL): Likewise.
+	* wcsmbs/wcscoll_l.c: Likewise.
+
 2015-10-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (lround_test_data): Do not expect the absence

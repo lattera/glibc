@@ -58,7 +58,6 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (_NL_COLLATE_COLLSEQMB,        "collate-collseqmb",        std, wstring)
   DEFINE_ELEMENT (_NL_COLLATE_COLLSEQWC,        "collate-collseqwc",        std, wstring)
   DEFINE_ELEMENT (_NL_COLLATE_CODESET,		"collate-codeset",	    std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_ENCODING_TYPE,   "collate-encoding-type",    std, word)
   ), NO_POSTLOAD)
 
 
