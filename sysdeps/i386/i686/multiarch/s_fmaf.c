@@ -19,7 +19,6 @@
 
 #include <config.h>
 
-#ifdef HAVE_AVX_SUPPORT
 #include <math.h>
 #include <init-arch.h>
 
@@ -30,7 +29,6 @@ libm_ifunc (__fmaf,
 	    HAS_ARCH_FEATURE (FMA_Usable) ? __fmaf_fma : __fmaf_ia32);
 weak_alias (__fmaf, fmaf)
 
-# define __fmaf __fmaf_ia32
-#endif
+#define __fmaf __fmaf_ia32
 
 #include <sysdeps/ieee754/dbl-64/s_fmaf.c>

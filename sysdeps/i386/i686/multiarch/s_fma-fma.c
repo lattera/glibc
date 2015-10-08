@@ -19,11 +19,9 @@
 
 #include <config.h>
 
-#ifdef HAVE_AVX_SUPPORT
 double
 __fma_fma (double x, double y, double z)
 {
   asm ("vfmadd213sd %3, %2, %0" : "=x" (x) : "0" (x), "x" (y), "xm" (z));
   return x;
 }
-#endif

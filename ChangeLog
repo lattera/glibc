@@ -1,3 +1,54 @@
+2015-10-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/i386/configure.ac (libc_cv_cc_avx): Remove configure
+	test.
+	(libc_cv_cc_sse2avx): Likewise.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/i386/i686/multiarch/Makefile
+	[$(subdir)$(config-cflags-avx) = mathyes]: Change conditional to
+	[$(subdir) = math].
+	* sysdeps/i386/i686/multiarch/s_fma-fma.c [HAVE_AVX_SUPPORT]: Make
+	code unconditional.
+	* sysdeps/i386/i686/multiarch/s_fma.c [HAVE_AVX_SUPPORT]:
+	Likewise.
+	* sysdeps/i386/i686/multiarch/s_fmaf-fma.c [HAVE_AVX_SUPPORT]:
+	Likewise.
+	* sysdeps/i386/i686/multiarch/s_fmaf.c [HAVE_AVX_SUPPORT]:
+	Likewise.
+	* sysdeps/x86_64/configure.ac (libc_cv_cc_avx): Remove configure
+	test.
+	(libc_cv_cc_sse2avx): Likewise.
+	* sysdeps/x86_64/configure: Regenerated.
+	* sysdeps/x86_64/Makefile [$(config-cflags-avx) = yes]: Make code
+	unconditional.
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_profile)
+	[HAVE_AVX_SUPPORT || HAVE_AVX512_ASM_SUPPORT]: Make code
+	unconditional.
+	(_dl_runtime_profile)
+	[!(HAVE_AVX_SUPPORT || HAVE_AVX512_ASM_SUPPORT)]: Remove
+	conditional code.
+	* sysdeps/x86_64/fpu/multiarch/Makefile
+	[$(config-cflags-sse2avx) = yes]: Make code unconditional.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2.c
+	[HAVE_FMA4_SUPPORT || HAVE_AVX_SUPPORT]: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_exp.c
+	[HAVE_FMA4_SUPPORT || HAVE_AVX_SUPPORT]: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_log.c
+	[HAVE_FMA4_SUPPORT || HAVE_AVX_SUPPORT]: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_atan.c
+	[HAVE_FMA4_SUPPORT || HAVE_AVX_SUPPORT]: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_fma.c [HAVE_AVX_SUPPORT]:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_fmaf.c [HAVE_AVX_SUPPORT]:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_sin.c
+	[HAVE_FMA4_SUPPORT || HAVE_AVX_SUPPORT]: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_tan.c
+	[HAVE_FMA4_SUPPORT || HAVE_AVX_SUPPORT]: Likewise.
+	* sysdeps/x86_64/multiarch/strcmp.S [HAVE_AVX_SUPPORT]: Likewise.
+	* config.h.in (HAVE_AVX_SUPPORT): Remove #undef.
+	(HAVE_SSE2AVX_SUPPORT): Likewise.
+
 2015-10-07  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* stdio-common/tst-printf-bz18872.sh: Use attribute optimize

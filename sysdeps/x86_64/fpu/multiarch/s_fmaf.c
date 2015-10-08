@@ -20,8 +20,6 @@
 #include <math.h>
 #include <init-arch.h>
 
-#ifdef HAVE_AVX_SUPPORT
-
 extern float __fmaf_sse2 (float x, float y, float z) attribute_hidden;
 
 
@@ -33,18 +31,18 @@ __fmaf_fma3 (float x, float y, float z)
 }
 
 
-# ifdef HAVE_FMA4_SUPPORT
+#ifdef HAVE_FMA4_SUPPORT
 static float
 __fmaf_fma4 (float x, float y, float z)
 {
   asm ("vfmaddss %3, %2, %1, %0" : "=x" (x) : "x" (x), "x" (y), "x" (z));
   return x;
 }
-# else
-#  undef HAS_ARCH_FEATURE
-#  define HAS_ARCH_FEATURE(feature) 0
-#  define __fmaf_fma4 ((void *) 0)
-# endif
+#else
+# undef HAS_ARCH_FEATURE
+# define HAS_ARCH_FEATURE(feature) 0
+# define __fmaf_fma4 ((void *) 0)
+#endif
 
 
 libm_ifunc (__fmaf, HAS_ARCH_FEATURE (FMA_Usable)
@@ -52,7 +50,6 @@ libm_ifunc (__fmaf, HAS_ARCH_FEATURE (FMA_Usable)
 			     ? __fmaf_fma4 : __fmaf_sse2));
 weak_alias (__fmaf, fmaf)
 
-# define __fmaf __fmaf_sse2
-#endif
+#define __fmaf __fmaf_sse2
 
 #include <sysdeps/ieee754/dbl-64/s_fmaf.c>

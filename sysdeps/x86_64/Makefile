@@ -43,10 +43,7 @@ tests-pie += $(quad-pie-test)
 $(objpfx)tst-quad1pie: $(objpfx)tst-quadmod1pie.o
 $(objpfx)tst-quad2pie: $(objpfx)tst-quadmod2pie.o
 
-tests += tst-audit3 tst-audit4 tst-audit5 tst-audit10
-ifeq (yes,$(config-cflags-avx))
-tests += tst-audit6 tst-audit7
-endif
+tests += tst-audit3 tst-audit4 tst-audit5 tst-audit6 tst-audit7 tst-audit10
 
 tests += tst-split-dynreloc
 LDFLAGS-tst-split-dynreloc = -Wl,-T,$(..)sysdeps/x86_64/tst-split-dynreloc.lds
@@ -84,7 +81,6 @@ $(objpfx)tst-audit10: $(objpfx)tst-auditmod10a.so
 $(objpfx)tst-audit10.out: $(objpfx)tst-auditmod10b.so
 tst-audit10-ENV = LD_AUDIT=$(objpfx)tst-auditmod10b.so
 
-ifeq (yes,$(config-cflags-avx))
 AVX-CFLAGS=-mavx
 ifeq (yes,$(config-cflags-novzeroupper))
 AVX-CFLAGS+=-mno-vzeroupper
@@ -95,7 +91,6 @@ CFLAGS-tst-auditmod4b.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod6b.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod6c.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod7b.c += $(AVX-CFLAGS)
-endif
 ifeq (yes,$(config-cflags-avx512))
 AVX512-CFLAGS = -mavx512f
 CFLAGS-tst-audit10.c += $(AVX512-CFLAGS)

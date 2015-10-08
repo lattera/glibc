@@ -107,11 +107,9 @@ END(STRCMP)
 ENTRY(__strcasecmp)
 	.type	__strcasecmp, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
-#  ifdef HAVE_AVX_SUPPORT
 	leaq	__strcasecmp_avx(%rip), %rax
 	HAS_ARCH_FEATURE (AVX_Usable)
 	jnz	3f
-#  endif
 	HAS_ARCH_FEATURE (Slow_SSE4_2)
 	jnz	2f
 	leaq	__strcasecmp_sse42(%rip), %rax
@@ -129,11 +127,9 @@ weak_alias (__strcasecmp, strcasecmp)
 ENTRY(__strncasecmp)
 	.type	__strncasecmp, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
-#  ifdef HAVE_AVX_SUPPORT
 	leaq	__strncasecmp_avx(%rip), %rax
 	HAS_ARCH_FEATURE (AVX_Usable)
 	jnz	3f
-#  endif
 	HAS_ARCH_FEATURE (Slow_SSE4_2)
 	jnz	2f
 	leaq	__strncasecmp_sse42(%rip), %rax
@@ -155,16 +151,14 @@ weak_alias (__strncasecmp, strncasecmp)
 # include "strcmp-sse42.S"
 
 
-# ifdef HAVE_AVX_SUPPORT
-#  if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
-#   define LABEL(l) .L##l##_avx
-#   define GLABEL(l) l##_avx
-#   define USE_AVX 1
-#   undef STRCMP_SSE42
-#   define STRCMP_SSE42 STRCMP_AVX
-#   define SECTION avx
-#   include "strcmp-sse42.S"
-#  endif
+# if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+#  define LABEL(l) .L##l##_avx
+#  define GLABEL(l) l##_avx
+#  define USE_AVX 1
+#  undef STRCMP_SSE42
+#  define STRCMP_SSE42 STRCMP_AVX
+#  define SECTION avx
+#  include "strcmp-sse42.S"
 # endif
 
 

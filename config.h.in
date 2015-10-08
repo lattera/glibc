@@ -76,12 +76,6 @@
 /* Define if _rtld_local structure should be forced into .sdata section.  */
 #undef	HAVE_SDATA_SECTION
 
-/* Define if gcc supports AVX.  */
-#undef	HAVE_AVX_SUPPORT
-
-/* Define if gcc supports VEX encoding.  */
-#undef	HAVE_SSE2AVX_SUPPORT
-
 /* Define if compiler supports AVX512.  */
 #undef  HAVE_AVX512_SUPPORT
 

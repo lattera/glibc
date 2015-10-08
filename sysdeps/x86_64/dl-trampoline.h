@@ -204,14 +204,10 @@ _dl_runtime_profile:
 
 	/* Actively align the La_x86_64_regs structure.  */
 	and $-VEC_SIZE, %RSP_LP
-# if defined HAVE_AVX_SUPPORT || defined HAVE_AVX512_ASM_SUPPORT
 	/* sizeof(La_x86_64_regs).  Need extra space for 8 SSE registers
 	   to detect if any xmm0-xmm7 registers are changed by audit
 	   module.  */
 	sub $(LR_SIZE + XMM_SIZE*8), %RSP_LP
-# else
-	sub $LR_SIZE, %RSP_LP		# sizeof(La_x86_64_regs)
-# endif
 	movq %rsp, 24(%rbx)
 
 	/* Fill the La_x86_64_regs structure.  */
