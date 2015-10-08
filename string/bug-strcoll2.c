@@ -47,7 +47,7 @@ test_cs_CZ (void)
     }
   else
     {
-      puts ("FAIL: Wrong sorting in cz_CZ.UTF-8.");
+      puts ("FAIL: Wrong sorting in cs_CZ.UTF-8.");
       return 1;
     }
 }
