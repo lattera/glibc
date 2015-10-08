@@ -19,6 +19,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <fenv.h>
+#include <limits.h>
 #include <math.h>
 
 #include <math_private.h>
@@ -47,8 +49,21 @@ __llrintl (long double x)
 
   if (j0 < (int32_t) (8 * sizeof (long long int)) - 1)
     {
-      w = two112[sx] + x;
-      t = w - two112[sx];
+#if defined FE_INVALID || defined FE_INEXACT
+      /* X < LLONG_MAX + 1 implied by J0 < 63.  */
+      if (x > (long double) LLONG_MAX)
+	{
+	  /* In the event of overflow we must raise the "invalid"
+	     exception, but not "inexact".  */
+	  t = __nearbyintl (x);
+	  feraiseexcept (t == LLONG_MAX ? FE_INEXACT : FE_INVALID);
+	}
+      else
+#endif
+	{
+	  w = two112[sx] + x;
+	  t = w - two112[sx];
+	}
       GET_LDOUBLE_WORDS64 (i0, i1, t);
       j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;
       i0 &= 0x0000ffffffffffffLL;
@@ -63,8 +78,20 @@ __llrintl (long double x)
     }
   else
     {
-      /* The number is too large.  It is left implementation defined
-	 what happens.  */
+      /* The number is too large.  Unless it rounds to LLONG_MIN,
+	 FE_INVALID must be raised and the return value is
+	 unspecified.  */
+#if defined FE_INVALID || defined FE_INEXACT
+      if (x < (long double) LLONG_MIN
+	  && x > (long double) LLONG_MIN - 1.0L)
+	{
+	  /* If truncation produces LLONG_MIN, the cast will not raise
+	     the exception, but may raise "inexact".  */
+	  t = __nearbyintl (x);
+	  feraiseexcept (t == LLONG_MIN ? FE_INEXACT : FE_INVALID);
+	  return LLONG_MIN;
+	}
+#endif
       return (long long int) x;
     }
 

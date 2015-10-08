@@ -1,3 +1,29 @@
+2015-10-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19094]
+	* sysdeps/ieee754/dbl-64/s_lrint.c: Include <fenv.h> and
+	<limits.h>.
+	(__lrint) [FE_INVALID || FE_INEXACT]: Force FE_INVALID exception
+	when result overflows but exception would not result from cast.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c: Include <fenv.h> and
+	<limits.h>.
+	(__llrintl) [FE_INVALID || FE_INEXACT]: Force FE_INVALID exception
+	when result overflows but exception would not result from cast.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c: Include <fenv.h> and
+	<limits.h>.
+	(__lrintl) [FE_INVALID || FE_INEXACT]: Force FE_INVALID exception
+	when result overflows but exception would not result from cast.
+	* sysdeps/ieee754/ldbl-96/s_llrintl.c: Include <fenv.h> and
+	<limits.h>.
+	(__llrintl) [FE_INVALID || FE_INEXACT]: Force FE_INVALID exception
+	when result overflows but exception would not result from cast.
+	* sysdeps/ieee754/ldbl-96/s_lrintl.c: Include <fenv.h> and
+	<limits.h>.
+	(__lrintl) [FE_INVALID || FE_INEXACT]: Force FE_INVALID exception
+	when result overflows but exception would not result from cast.
+	* math/libm-test.inc (lrint_test_data): Add more tests.
+	(llrint_test_data): Likewise.
+
 2015-10-08  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #18872]
