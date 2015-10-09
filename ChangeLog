@@ -1,5 +1,7 @@
 2015-10-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/libm-test-ulps: Regenerated.
+
 	[BZ #15470]
 	* sysdeps/arm/fix-fp-int-convert-overflow.h: New file.
 
