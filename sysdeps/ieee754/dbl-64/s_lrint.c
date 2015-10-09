@@ -61,7 +61,7 @@ __lrint (double x)
   else if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
     {
       if (j0 >= 52)
-	result = ((long int) i0 << (j0 - 20)) | (i1 << (j0 - 52));
+	result = ((long int) i0 << (j0 - 20)) | ((long int) i1 << (j0 - 52));
       else
 	{
 #if defined FE_INVALID || defined FE_INEXACT

@@ -1,3 +1,9 @@
+2015-10-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19095]
+	* sysdeps/ieee754/dbl-64/s_lrint.c (__lrint): Cast low part of
+	mantissa to long int before shifting left.
+
 2015-10-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19094]
