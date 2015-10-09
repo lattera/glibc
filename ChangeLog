@@ -1,3 +1,10 @@
+2015-10-09  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18589]
+	* string/bug-strcoll2.c: Adjust copyright, and remove contributed by.
+	* string/Makefile ($(objpfx)bug-strcoll2.out): Depend on
+	$(gen-locales).
+
 2015-10-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Phil Blundell <pb@pbcui.dot.net>
 
@@ -120,6 +127,7 @@
 	[BZ #18589]
 	* string/Makefile (tests): Add bug-strcoll2.
 	(LOCALES): Add cs_CZ.UTF-8.
+	* string/bug-strcoll2.c (test_cs_CZ): Fix typo in FAIL string.
 
 	[BZ #18589]
 	* string/bug-strcoll2.c: New file.

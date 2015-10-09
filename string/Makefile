@@ -85,5 +85,7 @@ $(objpfx)test-strcasecmp.out: $(gen-locales)
 $(objpfx)test-strncasecmp.out: $(gen-locales)
 $(objpfx)tst-strxfrm.out: $(gen-locales)
 $(objpfx)tst-strxfrm2.out: $(gen-locales)
+# bug-strcoll2 needs cs_CZ.UTF-8 and da_DK.ISO-8859-1.
+$(objpfx)bug-strcoll2.out: $(gen-locales)
 
 endif
