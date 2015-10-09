@@ -649,9 +649,9 @@ ifloat: 2
 
 Function: Real part of "clog":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
+ifloat: 3
 
 Function: Imaginary part of "clog":
 float: 1
@@ -659,9 +659,9 @@ ifloat: 1
 
 Function: Real part of "clog10":
 double: 3
-float: 3
+float: 4
 idouble: 3
-ifloat: 3
+ifloat: 4
 
 Function: Imaginary part of "clog10":
 double: 2
@@ -670,10 +670,10 @@ idouble: 2
 ifloat: 2
 
 Function: Real part of "clog10_downward":
-double: 6
-float: 6
-idouble: 6
-ifloat: 6
+double: 5
+float: 4
+idouble: 5
+ifloat: 4
 
 Function: Imaginary part of "clog10_downward":
 double: 2
@@ -683,9 +683,9 @@ ifloat: 4
 
 Function: Real part of "clog10_towardzero":
 double: 5
-float: 4
+float: 5
 idouble: 5
-ifloat: 4
+ifloat: 5
 
 Function: Imaginary part of "clog10_towardzero":
 double: 2
@@ -694,22 +694,22 @@ idouble: 2
 ifloat: 4
 
 Function: Real part of "clog10_upward":
-double: 8
+double: 6
 float: 5
-idouble: 8
+idouble: 6
 ifloat: 5
 
 Function: Imaginary part of "clog10_upward":
 double: 2
-float: 3
+float: 4
 idouble: 2
-ifloat: 3
+ifloat: 4
 
 Function: Real part of "clog_downward":
-double: 7
-float: 5
-idouble: 7
-ifloat: 5
+double: 4
+float: 3
+idouble: 4
+ifloat: 3
 
 Function: Imaginary part of "clog_downward":
 double: 1
@@ -718,22 +718,22 @@ idouble: 1
 ifloat: 2
 
 Function: Real part of "clog_towardzero":
-double: 7
-float: 5
-idouble: 7
-ifloat: 5
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
 
 Function: Imaginary part of "clog_towardzero":
 double: 1
-float: 2
+float: 3
 idouble: 1
-ifloat: 2
+ifloat: 3
 
 Function: Real part of "clog_upward":
-double: 8
-float: 5
-idouble: 8
-ifloat: 5
+double: 4
+float: 3
+idouble: 4
+ifloat: 3
 
 Function: Imaginary part of "clog_upward":
 double: 1
@@ -1424,8 +1424,8 @@ float: 2
 ifloat: 2
 
 Function: "pow":
-float: 3
-ifloat: 3
+float: 1
+ifloat: 1
 
 Function: "pow10":
 double: 2
@@ -1451,21 +1451,21 @@ ifloat: 1
 
 Function: "pow_downward":
 double: 1
-float: 4
+float: 1
 idouble: 1
-ifloat: 4
+ifloat: 1
 
 Function: "pow_towardzero":
 double: 1
-float: 8
+float: 1
 idouble: 1
-ifloat: 8
+ifloat: 1
 
 Function: "pow_upward":
 double: 1
-float: 8
+float: 1
 idouble: 1
-ifloat: 8
+ifloat: 1
 
 Function: "sin":
 float: 1
@@ -1583,9 +1583,9 @@ ifloat: 3
 
 Function: "tgamma":
 double: 5
-float: 5
+float: 4
 idouble: 5
-ifloat: 5
+ifloat: 4
 
 Function: "tgamma_downward":
 double: 5
@@ -1595,15 +1595,15 @@ ifloat: 5
 
 Function: "tgamma_towardzero":
 double: 5
-float: 5
+float: 4
 idouble: 5
-ifloat: 5
+ifloat: 4
 
 Function: "tgamma_upward":
 double: 4
-float: 5
+float: 4
 idouble: 4
-ifloat: 5
+ifloat: 4
 
 Function: "y0":
 double: 2
