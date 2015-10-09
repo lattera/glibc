@@ -23,6 +23,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <fix-fp-int-convert-overflow.h>
 
 static const double two52[2] =
 {
@@ -106,6 +107,11 @@ __lrint (double x)
 	  t = __nearbyint (x);
 	  feraiseexcept (t == LONG_MIN ? FE_INEXACT : FE_INVALID);
 	  return LONG_MIN;
+	}
+      else if (FIX_DBL_LONG_CONVERT_OVERFLOW && x != (double) LONG_MIN)
+	{
+	  feraiseexcept (FE_INVALID);
+	  return sx == 0 ? LONG_MAX : LONG_MIN;
 	}
 #endif
       return (long int) x;

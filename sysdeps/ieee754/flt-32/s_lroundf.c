@@ -17,9 +17,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <fenv.h>
+#include <limits.h>
 #include <math.h>
 
 #include <math_private.h>
+#include <fix-fp-int-convert-overflow.h>
 
 
 long int
@@ -51,8 +54,16 @@ __lroundf (float x)
     }
   else
     {
-      /* The number is too large.  It is left implementation defined
-	 what happens.  */
+#ifdef FE_INVALID
+      /* The number is too large.  Unless it rounds to LONG_MIN,
+	 FE_INVALID must be raised and the return value is
+	 unspecified.  */
+      if (FIX_FLT_LONG_CONVERT_OVERFLOW && x != (float) LONG_MIN)
+	{
+	  feraiseexcept (FE_INVALID);
+	  return sign == 1 ? LONG_MAX : LONG_MIN;
+	}
+#endif
       return (long int) x;
     }
 

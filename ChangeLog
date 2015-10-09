@@ -1,3 +1,41 @@
+2015-10-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16399]
+	* sysdeps/generic/fix-fp-int-convert-overflow.h: New file.
+	* sysdeps/ieee754/dbl-64/s_llrint.c: Include <fenv.h>, <limits.h>
+	and <fix-fp-int-convert-overflow.h>.
+	(__llrint) [FE_INVALID]: Force FE_INVALID exception as needed if
+	FIX_DBL_LLONG_CONVERT_OVERFLOW.
+	* sysdeps/ieee754/dbl-64/s_llround.c: Include <fenv.h>, <limits.h>
+	and <fix-fp-int-convert-overflow.h>.
+	(__llround) [FE_INVALID]: Force FE_INVALID exception as needed if
+	FIX_DBL_LLONG_CONVERT_OVERFLOW.
+	* sysdeps/ieee754/dbl-64/s_lrint.c: Include
+	<fix-fp-int-convert-overflow.h>.
+	(__lrint) [FE_INVALID]: Force FE_INVALID exception as needed if
+	FIX_DBL_LLONG_CONVERT_OVERFLOW.
+	* sysdeps/ieee754/dbl-64/s_lround.c: Include
+	<fix-fp-int-convert-overflow.h>.
+	(__lround) [FE_INVALID]: Force FE_INVALID exception as needed if
+	FIX_DBL_LLONG_CONVERT_OVERFLOW.
+	* sysdeps/ieee754/flt-32/s_llrintf.c: Include <fenv.h>, <limits.h>
+	and <fix-fp-int-convert-overflow.h>.
+	(__llrintf) [FE_INVALID]: Force FE_INVALID exception as needed if
+	FIX_DBL_LLONG_CONVERT_OVERFLOW.
+	* sysdeps/ieee754/flt-32/s_llroundf.c: Include <fenv.h>,
+	<limits.h> and <fix-fp-int-convert-overflow.h>.
+	(__llroundf) [FE_INVALID]: Force FE_INVALID exception as needed if
+	FIX_DBL_LLONG_CONVERT_OVERFLOW.
+	* sysdeps/ieee754/flt-32/s_lrintf.c: Include <fenv.h>, <limits.h>
+	and <fix-fp-int-convert-overflow.h>.
+	(__lrintf) [FE_INVALID]: Force FE_INVALID exception as needed if
+	FIX_DBL_LLONG_CONVERT_OVERFLOW.
+	* sysdeps/ieee754/flt-32/s_lroundf.c: Include <fenv.h>, <limits.h>
+	and <fix-fp-int-convert-overflow.h>.
+	(__lroundf) [FE_INVALID]: Force FE_INVALID exception as needed if
+	FIX_DBL_LLONG_CONVERT_OVERFLOW.
+	* sysdeps/mips/mips32/fpu/fix-fp-int-convert-overflow.h: New file.
+
 2015-10-09  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #18589]

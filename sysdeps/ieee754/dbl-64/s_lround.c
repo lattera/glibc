@@ -22,6 +22,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <fix-fp-int-convert-overflow.h>
 
 
 long int
@@ -80,8 +81,18 @@ __lround (double x)
 	 FE_INVALID must be raised and the return value is
 	 unspecified.  */
 #ifdef FE_INVALID
-      if (sizeof (long int) == 4
-	  && x <= (double) LONG_MIN - 0.5)
+      if (FIX_DBL_LONG_CONVERT_OVERFLOW
+	  && !(sign == -1
+	       && (sizeof (long int) == 4
+		   ? x > (double) LONG_MIN - 0.5
+		   : x >= (double) LONG_MIN)))
+	{
+	  feraiseexcept (FE_INVALID);
+	  return sign == 1 ? LONG_MAX : LONG_MIN;
+	}
+      else if (!FIX_DBL_LONG_CONVERT_OVERFLOW
+	       && sizeof (long int) == 4
+	       && x <= (double) LONG_MIN - 0.5)
 	{
 	  /* If truncation produces LONG_MIN, the cast will not raise
 	     the exception, but may raise "inexact".  */
