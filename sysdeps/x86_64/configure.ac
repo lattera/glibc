@@ -30,14 +30,6 @@ if test $libc_cv_cc_avx512 = yes; then
 fi
 LIBC_CONFIG_VAR([config-cflags-avx512], [$libc_cv_cc_avx512])
 
-dnl Check if -mno-vzeroupper works.
-AC_CACHE_CHECK(for -mno-vzeroupper support, libc_cv_cc_novzeroupper, [dnl
-LIBC_TRY_CC_OPTION([-mno-vzeroupper],
-		   [libc_cv_cc_novzeroupper=yes],
-		   [libc_cv_cc_novzeroupper=no])
-])
-LIBC_CONFIG_VAR([config-cflags-novzeroupper], [$libc_cv_cc_novzeroupper])
-
 dnl Check whether asm supports Intel MPX
 AC_CACHE_CHECK(for Intel MPX support, libc_cv_asm_mpx, [dnl
 cat > conftest.s <<\EOF

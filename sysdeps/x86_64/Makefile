@@ -81,10 +81,7 @@ $(objpfx)tst-audit10: $(objpfx)tst-auditmod10a.so
 $(objpfx)tst-audit10.out: $(objpfx)tst-auditmod10b.so
 tst-audit10-ENV = LD_AUDIT=$(objpfx)tst-auditmod10b.so
 
-AVX-CFLAGS=-mavx
-ifeq (yes,$(config-cflags-novzeroupper))
-AVX-CFLAGS+=-mno-vzeroupper
-endif
+AVX-CFLAGS=-mavx -mno-vzeroupper
 CFLAGS-tst-audit4.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod4a.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod4b.c += $(AVX-CFLAGS)

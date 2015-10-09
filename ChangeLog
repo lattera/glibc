@@ -1,5 +1,14 @@
 2015-10-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/configure.ac (libc_cv_cc_novzeroupper): Remove
+	configure test.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/x86_64/configure.ac (libc_cv_cc_novzeroupper): Remove
+	configure test.
+	* sysdeps/x86_64/configure: Regenerated.
+	* sysdeps/x86_64/Makefile [$(config-cflags-novzeroupper) = yes]:
+	Make code unconditional.
+
 	* sysdeps/i386/configure.ac (libc_cv_cc_fma4): Remove configure
 	test.
 	* sysdeps/i386/configure: Regenerated.

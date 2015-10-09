@@ -42,14 +42,6 @@ LIBC_TRY_CC_OPTION([-Wa,-mtune=i686],
 ])
 LIBC_CONFIG_VAR([config-asflags-i686], [$libc_cv_as_i686])
 
-dnl Check if -mno-vzeroupper works.
-AC_CACHE_CHECK(for -mno-vzeroupper support, libc_cv_cc_novzeroupper, [dnl
-LIBC_TRY_CC_OPTION([-mno-vzeroupper],
-		   [libc_cv_cc_novzeroupper=yes],
-		   [libc_cv_cc_novzeroupper=no])
-])
-LIBC_CONFIG_VAR([config-cflags-novzeroupper], [$libc_cv_cc_novzeroupper])
-
 dnl Check whether asm supports Intel MPX
 AC_CACHE_CHECK(for Intel MPX support, libc_cv_asm_mpx, [dnl
 cat > conftest.s <<\EOF
