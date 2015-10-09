@@ -28,6 +28,7 @@ ENTRY(__llrintl)
 	ret
 END(__llrintl)
 weak_alias (__llrintl, llrintl)
+#ifndef __ILP32__
 strong_alias (__llrintl, __lrintl)
 weak_alias (__llrintl, lrintl)
-
+#endif

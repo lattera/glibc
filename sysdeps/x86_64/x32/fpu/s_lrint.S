@@ -1,8 +1,7 @@
 /* Round argument to nearest integral value according to current rounding
    direction.
-   Copyright (C) 2002-2015 Free Software Foundation, Inc.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@suse.d>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -21,12 +20,8 @@
 #include <sysdep.h>
 
 	.text
-ENTRY(__llrint)
-	cvtsd2si %xmm0,%rax
+ENTRY(__lrint)
+	cvtsd2si %xmm0,%eax
 	ret
-END(__llrint)
-weak_alias (__llrint, llrint)
-#ifndef __ILP32__
-strong_alias (__llrint, __lrint)
-weak_alias (__llrint, lrint)
-#endif
+END(__lrint)
+weak_alias (__lrint, lrint)
