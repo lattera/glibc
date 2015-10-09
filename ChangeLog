@@ -1,3 +1,8 @@
+2015-10-27  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* elf/dl-support.c (_dl_aux_init): Added AT_PLATFORM to the case
+	statement.
+
 2015-10-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/Makefile (test-xfail-ISO11/complex.h/conform): Remove

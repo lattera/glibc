@@ -244,6 +244,9 @@ _dl_aux_init (ElfW(auxv_t) *av)
       case AT_PHNUM:
 	GL(dl_phnum) = av->a_un.a_val;
 	break;
+      case AT_PLATFORM:
+	GLRO(dl_platform) = (void *) av->a_un.a_val;
+	break;
       case AT_HWCAP:
 	GLRO(dl_hwcap) = (unsigned long int) av->a_un.a_val;
 	break;
