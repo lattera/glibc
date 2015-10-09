@@ -42,15 +42,6 @@ LIBC_TRY_CC_OPTION([-Wa,-mtune=i686],
 ])
 LIBC_CONFIG_VAR([config-asflags-i686], [$libc_cv_as_i686])
 
-dnl Check if -mfma4 works.
-AC_CACHE_CHECK(for FMA4 support, libc_cv_cc_fma4, [dnl
-LIBC_TRY_CC_OPTION([-mfma4], [libc_cv_cc_fma4=yes], [libc_cv_cc_fma4=no])
-])
-if test $libc_cv_cc_fma4 = yes; then
-  AC_DEFINE(HAVE_FMA4_SUPPORT)
-fi
-LIBC_CONFIG_VAR([have-mfma4], [$libc_cv_cc_fma4])
-
 dnl Check if -mno-vzeroupper works.
 AC_CACHE_CHECK(for -mno-vzeroupper support, libc_cv_cc_novzeroupper, [dnl
 LIBC_TRY_CC_OPTION([-mno-vzeroupper],

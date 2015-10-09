@@ -1,5 +1,43 @@
 2015-10-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/configure.ac (libc_cv_cc_fma4): Remove configure
+	test.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/x86_64/configure.ac (libc_cv_cc_fma4): Remove configure
+	test.
+	* sysdeps/x86_64/configure: Regenerated.
+	* sysdeps/x86_64/fpu/multiarch/Makefile [$(have-mfma4) = yes]:
+	Make code unconditional.
+	* sysdeps/x86_64/fpu/multiarch/e_asin.c [HAVE_FMA4_SUPPORT]:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2.c [HAVE_FMA4_SUPPORT]:
+	Likewise.
+	[!HAVE_FMA4_SUPPORT]: Remove conditional code.
+	* sysdeps/x86_64/fpu/multiarch/e_exp.c [HAVE_FMA4_SUPPORT]: Make
+	code unconditional.
+	[!HAVE_FMA4_SUPPORT]: Remove conditional code.
+	* sysdeps/x86_64/fpu/multiarch/e_log.c [HAVE_FMA4_SUPPORT]: Make
+	code unconditional.
+	[!HAVE_FMA4_SUPPORT]: Remove conditional code.
+	* sysdeps/x86_64/fpu/multiarch/e_pow.c [HAVE_FMA4_SUPPORT]: Make
+	code unconditional.
+	* sysdeps/x86_64/fpu/multiarch/s_atan.c [HAVE_FMA4_SUPPORT]: Make
+	code unconditional.
+	[!HAVE_FMA4_SUPPORT]: Remove conditional code.
+	* sysdeps/x86_64/fpu/multiarch/s_fma.c [HAVE_FMA4_SUPPORT]: Make
+	code unconditional.
+	[!HAVE_FMA4_SUPPORT]: Remove conditional code.
+	* sysdeps/x86_64/fpu/multiarch/s_fmaf.c [HAVE_FMA4_SUPPORT]: Make
+	code unconditional.
+	[!HAVE_FMA4_SUPPORT]: Remove conditional code.
+	* sysdeps/x86_64/fpu/multiarch/s_sin.c [HAVE_FMA4_SUPPORT]: Make
+	code unconditional.
+	[!HAVE_FMA4_SUPPORT]: Remove conditional code.
+	* sysdeps/x86_64/fpu/multiarch/s_tan.c [HAVE_FMA4_SUPPORT]: Make
+	code unconditional.
+	[!HAVE_FMA4_SUPPORT]: Remove conditional code.
+	* config.h.in (HAVE_FMA4_SUPPORT): Remove #undef.
+
 	[BZ #19095]
 	* sysdeps/ieee754/dbl-64/s_lrint.c (__lrint): Cast low part of
 	mantissa to long int before shifting left.

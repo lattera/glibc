@@ -1,7 +1,6 @@
-#ifdef HAVE_FMA4_SUPPORT
-# include <init-arch.h>
-# include <math.h>
-# include <math_private.h>
+#include <init-arch.h>
+#include <math.h>
+#include <math_private.h>
 
 extern double __ieee754_acos_sse2 (double);
 extern double __ieee754_asin_sse2 (double);
@@ -20,9 +19,8 @@ libm_ifunc (__ieee754_asin,
 	    : __ieee754_asin_sse2);
 strong_alias (__ieee754_asin, __asin_finite)
 
-# define __ieee754_acos __ieee754_acos_sse2
-# define __ieee754_asin __ieee754_asin_sse2
-#endif
+#define __ieee754_acos __ieee754_acos_sse2
+#define __ieee754_asin __ieee754_asin_sse2
 
 
 #include <sysdeps/ieee754/dbl-64/e_asin.c>

@@ -6,15 +6,8 @@ extern double __cos_sse2 (double);
 extern double __sin_sse2 (double);
 extern double __cos_avx (double);
 extern double __sin_avx (double);
-#ifdef HAVE_FMA4_SUPPORT
 extern double __cos_fma4 (double);
 extern double __sin_fma4 (double);
-#else
-# undef HAS_ARCH_FEATURE
-# define HAS_ARCH_FEATURE(feature) 0
-# define __cos_fma4 ((void *) 0)
-# define __sin_fma4 ((void *) 0)
-#endif
 
 libm_ifunc (__cos, (HAS_ARCH_FEATURE (FMA4_Usable) ? __cos_fma4 :
 		    HAS_ARCH_FEATURE (AVX_Usable)

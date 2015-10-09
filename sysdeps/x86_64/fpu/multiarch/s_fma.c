@@ -32,18 +32,12 @@ __fma_fma3 (double x, double y, double z)
 }
 
 
-#ifdef HAVE_FMA4_SUPPORT
 static double
 __fma_fma4 (double x, double y, double z)
 {
   asm ("vfmaddsd %3, %2, %1, %0" : "=x" (x) : "x" (x), "x" (y), "x" (z));
   return x;
 }
-#else
-# undef HAS_ARCH_FEATURE
-# define HAS_ARCH_FEATURE(feature) 0
-# define __fma_fma4 ((void *) 0)
-#endif
 
 
 libm_ifunc (__fma, HAS_ARCH_FEATURE (FMA_Usable)

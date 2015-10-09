@@ -2,7 +2,6 @@ ifeq ($(subdir),math)
 libm-sysdep_routines += s_floor-c s_ceil-c s_floorf-c s_ceilf-c \
 			s_rint-c s_rintf-c s_nearbyint-c s_nearbyintf-c
 
-ifeq ($(have-mfma4),yes)
 libm-sysdep_routines += e_exp-fma4 e_log-fma4 e_pow-fma4 s_atan-fma4 \
 			e_asin-fma4 e_atan2-fma4 s_sin-fma4 s_tan-fma4 \
 			mplog-fma4 mpa-fma4 slowexp-fma4 slowpow-fma4 \
@@ -31,7 +30,6 @@ CFLAGS-slowexp-fma4.c = -mfma4
 CFLAGS-slowpow-fma4.c = -mfma4
 CFLAGS-s_sin-fma4.c = -mfma4
 CFLAGS-s_tan-fma4.c = -mfma4
-endif
 
 libm-sysdep_routines += e_exp-avx e_log-avx s_atan-avx \
 			e_atan2-avx s_sin-avx s_tan-avx \
