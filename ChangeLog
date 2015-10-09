@@ -52,7 +52,7 @@
 	$(gen-locales).
 
 2015-10-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
-	    Phil Blundell <pb@pbcui.dot.net>
+	    Phil Blundell <pb@pbcl.net>
 
 	* nptl/Makefile (tests): Add tst-cancel26.c and tst-cancel27.c.
 	* nptl/tst-cancel26.c: New file.
