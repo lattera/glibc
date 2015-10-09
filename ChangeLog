@@ -1,5 +1,8 @@
 2015-10-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15470]
+	* sysdeps/arm/fix-fp-int-convert-overflow.h: New file.
+
 	[BZ #16399]
 	* sysdeps/generic/fix-fp-int-convert-overflow.h: New file.
 	* sysdeps/ieee754/dbl-64/s_llrint.c: Include <fenv.h>, <limits.h>
