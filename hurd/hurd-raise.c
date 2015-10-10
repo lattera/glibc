@@ -24,10 +24,12 @@
    If SS is not NULL it is the sigstate for the calling thread;
    SS->lock is held on entry and released before return.  */
 
-void
+int
 _hurd_raise_signal (struct hurd_sigstate *ss,
 		    int signo, const struct hurd_signal_detail *detail)
 {
+  error_t err;
+
   if (ss == NULL)
     {
       ss = _hurd_self_sigstate ();
@@ -46,5 +48,7 @@ _hurd_raise_signal (struct hurd_sigstate *ss,
      already marked the signal as pending for the particular thread we
      want.  Generating the signal with an RPC might deliver it to some
      other thread.  */
-  __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
+  err = __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
+
+  return __hurd_fail(err);
 }
