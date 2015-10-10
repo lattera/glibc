@@ -1,7 +1,7 @@
 2015-10-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-	* hurd/hurd-raise.c (_hurd_raise_signal): Set errno to error returned
-	by __msg_sig_post.
+	* hurd/hurd-raise.c (_hurd_raise_signal): Return error returned by
+	__msg_sig_post.
 	* hurd/hurd/signal.h (_hurd_raise_signal): Add int return type.
 
 2015-10-09  Joseph Myers  <joseph@codesourcery.com>
