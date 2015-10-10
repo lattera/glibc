@@ -28,8 +28,6 @@ int
 _hurd_raise_signal (struct hurd_sigstate *ss,
 		    int signo, const struct hurd_signal_detail *detail)
 {
-  error_t err;
-
   if (ss == NULL)
     {
       ss = _hurd_self_sigstate ();
