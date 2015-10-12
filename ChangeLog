@@ -1,5 +1,6 @@
 2015-10-12  Andreas Schwab  <schwab@suse.de>
 
+	[BZ #18969]
 	* debug/Makefile (LOCALES): Define.  Include gen-locales.mk.
 	($(objpfx)tst-chk1.out): Depend on $(gen-locales).
 	* iconvdata/Makefile (LOCALES): Define.  Include gen-locales.mk.
