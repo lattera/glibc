@@ -26,7 +26,7 @@ main (int argc, char *argv[])
 
   unlink (name);
 
-  setlocale (LC_ALL, "");
+  setlocale (LC_ALL, "en_US.UTF-8");
 
   fp = fdopen (dup (fd), "w");
   if (fp == NULL)

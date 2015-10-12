@@ -51,6 +51,19 @@ tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 
 include ../Rules
 
+ifeq ($(run-built-tests),yes)
+LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 hr_HR.ISO-8859-2 \
+	   ja_JP.EUC-JP zh_TW.EUC-TW
+include ../gen-locales.mk
+
+$(objpfx)tst-btowc.out: $(gen-locales)
+$(objpfx)tst-c16c32-1.out: $(gen-locales)
+$(objpfx)tst-mbrtowc.out: $(gen-locales)
+$(objpfx)tst-mbrtowc2.out: $(gen-locales)
+$(objpfx)tst-wcrtomb.out: $(gen-locales)
+$(objpfx)wcsmbs-tst1.out: $(gen-locales)
+endif
+
 CFLAGS-wcwidth.c = -I../wctype
 CFLAGS-wcswidth.c = -I../wctype
 

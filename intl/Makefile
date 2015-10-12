@@ -105,6 +105,19 @@ $(objpfx)tst-codeset.out: $(codeset_mo)
 $(objpfx)tst-gettext3.out: $(codeset_mo)
 $(objpfx)tst-gettext5.out: $(codeset_mo)
 endif
+
+LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 fr_FR.ISO-8859-1 \
+	   ja_JP.UTF-8
+include ../gen-locales.mk
+
+$(objpfx)tst-codeset.out: $(gen-locales)
+$(objpfx)tst-gettext.out: $(gen-locales)
+$(objpfx)tst-gettext2.out: $(gen-locales)
+$(objpfx)tst-gettext3.out: $(gen-locales)
+$(objpfx)tst-gettext4.out: $(gen-locales)
+$(objpfx)tst-gettext5.out: $(gen-locales)
+$(objpfx)tst-gettext6.out: $(gen-locales)
+$(objpfx)tst-translit.out: $(gen-locales)
 endif
 
 $(objpfx)msgs.h: po2test.awk ../po/de.po

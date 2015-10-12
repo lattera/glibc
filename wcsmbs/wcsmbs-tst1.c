@@ -18,7 +18,7 @@ main (void)
   char str[] = "Hello";
   int result = 0;
 
-  pchar = setlocale (LC_ALL, "");
+  pchar = setlocale (LC_ALL, "de_DE.UTF-8");
   printf ("locale : %s\n",pchar);
   printf ("MB_CUR_MAX %Zd\n", MB_CUR_MAX);
 

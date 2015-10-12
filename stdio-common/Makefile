@@ -72,6 +72,19 @@ endif
 
 include ../Rules
 
+ifeq ($(run-built-tests),yes)
+LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ISO-8859-1 ja_JP.EUC-JP
+include ../gen-locales.mk
+
+$(objpfx)bug14.out: $(gen-locales)
+$(objpfx)scanf13.out: $(gen-locales)
+$(objpfx)test-vfprintf.out: $(gen-locales)
+$(objpfx)tst-grouping.out: $(gen-locales)
+$(objpfx)tst-sprintf.out: $(gen-locales)
+$(objpfx)tst-sscanf.out: $(gen-locales)
+$(objpfx)tst-swprintf.out: $(gen-locales)
+endif
+
 tst-printf-bz18872-ENV = MALLOC_TRACE=$(objpfx)tst-printf-bz18872.mtrace
 
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc

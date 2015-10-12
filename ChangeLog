@@ -1,3 +1,62 @@
+2015-10-12  Andreas Schwab  <schwab@suse.de>
+
+	* debug/Makefile (LOCALES): Define.  Include gen-locales.mk.
+	($(objpfx)tst-chk1.out): Depend on $(gen-locales).
+	* iconvdata/Makefile (LOCALES): Define.  Include gen-locales.mk.
+	($(objpfx)bug-iconv6.out, $(objpfx)tst-iconv7.out): Depend on
+	$(gen-locales).
+	* intl/Makefile (LOCALES): Define.  Include gen-locales.mk.
+	($(objpfx)tst-codeset.out, $(objpfx)tst-gettext.out)
+	($(objpfx)tst-gettext2.out, $(objpfx)tst-gettext3.out)
+	($(objpfx)tst-gettext4.out, $(objpfx)tst-gettext5.out)
+	($(objpfx)tst-gettext6.out, $(objpfx)tst-translit.out): Depend on
+	$(gen-locales).
+	* libio/Makefile (LOCALES): Define.  Include gen-locales.mk.
+	($(objpfx)bug-ftell.out, $(objpfx)bug-ungetwc1.out)
+	($(objpfx)bug-ungetwc2.out, $(objpfx)tst-fgetwc.out)
+	($(objpfx)tst-fgetws.out, $(objpfx)tst-fopenloc.out)
+	($(objpfx)tst-fputws.out, $(objpfx)tst-fseek.out)
+	($(objpfx)tst-ftell-active-handler.out)
+	($(objpfx)tst-ftell-append.out)
+	($(objpfx)tst-ftell-partial-wide.out, $(objpfx)tst-setvbuf1.out)
+	($(objpfx)tst-swscanf.out, $(objpfx)tst-ungetwc1.out)
+	($(objpfx)tst-ungetwc2.out, $(objpfx)tst-widetext.out)
+	($(objpfx)tst_wprintf2.out): Depend on $(gen-locales).
+	* posix/Makefile (LOCALES): Define.  Include gen-locales.mk.
+	($(objpfx)bug-regex1.out, $(objpfx)bug-regex4.out)
+	($(objpfx)bug-regex5.out, $(objpfx)bug-regex6.out)
+	($(objpfx)bug-regex17.out, $(objpfx)bug-regex18.out)
+	($(objpfx)bug-regex19.out, $(objpfx)bug-regex20.out)
+	($(objpfx)bug-regex22.out, $(objpfx)bug-regex23.out)
+	($(objpfx)bug-regex25.out, $(objpfx)bug-regex26.out)
+	($(objpfx)bug-regex30.out, $(objpfx)bug-regex32.out)
+	($(objpfx)bug-regex33.out, $(objpfx)bug-regex34.out)
+	($(objpfx)bug-regex35.out, $(objpfx)tst-fnmatch.out)
+	($(objpfx)tst-fnmatch4.out, $(objpfx)tst-fnmatch5.out)
+	($(objpfx)tst-regex.out, $(objpfx)tst-regex2.out)
+	($(objpfx)tst-regexloc.out, $(objpfx)tst-rxspencer.out)
+	($(objpfx)tst-rxspencer-no-utf8.out): Depend on $(gen-locales).
+	* stdio-common/Makefile (LOCALES): Define.  Include gen-locales.mk.
+	($(objpfx)bug14.out, $(objpfx)scanf13.out)
+	($(objpfx)test-vfprintf.out, $(objpfx)tst-grouping.out)
+	($(objpfx)tst-sprintf.out, $(objpfx)tst-sscanf.out)
+	($(objpfx)tst-swprintf.out): Depend on $(gen-locales).
+	* stdlib/Makefile (LOCALES): Define.  Include gen-locales.mk.
+	($(objpfx)bug-strtod2.out, $(objpfx)testmb2.out)
+	($(objpfx)tst-strtod.out, $(objpfx)tst-strtod3.out)
+	($(objpfx)tst-strtod4.out, $(objpfx)tst-strtod5.out): Depend on
+	$(gen-locales).
+	* time/Makefile (LOCALES): Define.  Include gen-locales.mk.
+	($(objpfx)tst-ftime_l.out, $(objpfx)tst-strptime.out): Depend on
+	$(gen-locales).
+	* wcsmbs/Makefile (LOCALES): Define.  Include gen-locales.mk.
+	($(objpfx)tst-btowc.out, $(objpfx)tst-c16c32-1.out)
+	($(objpfx)tst-mbrtowc.out, $(objpfx)tst-mbrtowc2.out)
+	($(objpfx)tst-wcrtomb.out, $(objpfx)wcsmbs-tst1.out): Depend on
+	$(gen-locales).
+	* libio/tst_wprintf2.c (main): Use explicit locale.
+	* wcsmbs/wcsmbs-tst1.c (main): Likewise.
+
 2015-10-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurd-raise.c (_hurd_raise_signal): Return error returned by

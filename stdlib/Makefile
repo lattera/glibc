@@ -121,6 +121,18 @@ endif
 
 include ../Rules
 
+ifeq ($(run-built-tests),yes)
+LOCALES := cs_CZ.UTF-8 de_DE.UTF-8 en_US.ISO-8859-1 tr_TR.UTF-8
+include ../gen-locales.mk
+
+$(objpfx)bug-strtod2.out: $(gen-locales)
+$(objpfx)testmb2.out: $(gen-locales)
+$(objpfx)tst-strtod.out: $(gen-locales)
+$(objpfx)tst-strtod3.out: $(gen-locales)
+$(objpfx)tst-strtod4.out: $(gen-locales)
+$(objpfx)tst-strtod5.out: $(gen-locales)
+endif
+
 # Testdir has to be named stdlib and needs to be writable
 test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 

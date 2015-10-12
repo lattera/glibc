@@ -271,6 +271,14 @@ endif
 
 include ../Rules
 
+ifeq ($(run-built-tests),yes)
+LOCALES := de_DE.UTF-8
+include ../gen-locales.mk
+
+$(objpfx)bug-iconv6.out: $(gen-locales)
+$(objpfx)tst-iconv7.out: $(gen-locales)
+endif
+
 # Set libof-* for each routine.
 cpp-srcs-left := $(modules) $(generated-modules) $(libJIS-routines) \
 		 $(libKSC-routines) $(libGB-routines) $(libCNS-routines) \

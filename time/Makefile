@@ -41,6 +41,14 @@ tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
 
 include ../Rules
 
+ifeq ($(run-built-tests),yes)
+LOCALES := de_DE.ISO-8859-1 en_US.ISO-8859-1 ja_JP.EUC-JP
+include ../gen-locales.mk
+
+$(objpfx)tst-ftime_l.out: $(gen-locales)
+$(objpfx)tst-strptime.out: $(gen-locales)
+endif
+
 tz-cflags = -DTZDIR='"$(zonedir)"' \
 	    -DTZDEFAULT='"$(localtime-file)"' \
 	    -DTZDEFRULES='"$(posixrules-file)"'

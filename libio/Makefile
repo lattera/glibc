@@ -176,6 +176,30 @@ endif
 
 include ../Rules
 
+ifeq ($(run-built-tests),yes)
+LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ISO-8859-1 en_US.UTF-8 \
+	   ja_JP.EUC-JP ja_JP.UTF-8
+include ../gen-locales.mk
+
+$(objpfx)bug-ftell.out: $(gen-locales)
+$(objpfx)bug-ungetwc1.out: $(gen-locales)
+$(objpfx)bug-ungetwc2.out: $(gen-locales)
+$(objpfx)tst-fgetwc.out: $(gen-locales)
+$(objpfx)tst-fgetws.out: $(gen-locales)
+$(objpfx)tst-fopenloc.out: $(gen-locales)
+$(objpfx)tst-fputws.out: $(gen-locales)
+$(objpfx)tst-fseek.out: $(gen-locales)
+$(objpfx)tst-ftell-active-handler.out: $(gen-locales)
+$(objpfx)tst-ftell-append.out: $(gen-locales)
+$(objpfx)tst-ftell-partial-wide.out: $(gen-locales)
+$(objpfx)tst-setvbuf1.out: $(gen-locales)
+$(objpfx)tst-swscanf.out: $(gen-locales)
+$(objpfx)tst-ungetwc1.out: $(gen-locales)
+$(objpfx)tst-ungetwc2.out: $(gen-locales)
+$(objpfx)tst-widetext.out: $(gen-locales)
+$(objpfx)tst_wprintf2.out: $(gen-locales)
+endif
+
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'	\
 	$(common-objpfx)libio/; \

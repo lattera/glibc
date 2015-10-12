@@ -162,6 +162,13 @@ generated += catchsegv xtrace
 
 include ../Rules
 
+ifeq ($(run-built-tests),yes)
+LOCALES := de_DE.UTF-8
+include ../gen-locales.mk
+
+$(objpfx)tst-chk1.out: $(gen-locales)
+endif
+
 sLIBdir := $(shell echo $(slibdir) | sed 's,lib\(\|64\)$$,\\\\$$LIB,')
 
 $(objpfx)catchsegv: catchsegv.sh $(common-objpfx)soversions.mk \
