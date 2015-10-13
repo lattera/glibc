@@ -1,5 +1,10 @@
 2015-10-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/fpu/s_llround.c: Move to ....
+	* sysdeps/powerpc/powerpc32/fpu/s_llround.c: ...here.
+	* sysdeps/powerpc/fpu/s_llroundf.c: Move to ....
+	* sysdeps/powerpc/powerpc32/fpu/s_llroundf.c: ...here.
+
 	[BZ #16422]
 	* sysdeps/powerpc/powerpc32/fpu/configure.ac (libc_cv_ppc_fctidz):
 	New configure test.
