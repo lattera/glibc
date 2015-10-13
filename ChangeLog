@@ -1,3 +1,12 @@
+2015-10-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19124]
+	* sysdeps/x86_64/dl-trampoline.S [!HAVE_AVX512_ASM_SUPPORT]
+	(_dl_runtime_resolve_avx512): Make it a hidden alias of
+	_dl_runtime_resolve_avx.
+	(_dl_runtime_profile_avx512): Make it a hidden alias of
+	_dl_runtime_profile_avx.
+
 2015-10-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/fpu/s_llround.c: Move to ....

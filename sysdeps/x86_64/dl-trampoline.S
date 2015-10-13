@@ -71,24 +71,32 @@
 #define REGISTER_SAVE_R8	(REGISTER_SAVE_RDI + 8)
 #define REGISTER_SAVE_R9	(REGISTER_SAVE_R8 + 8)
 
-#define VEC_SIZE		64
-#define VMOVA			vmovdqa64
-#if DL_RUNIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
-# define VMOV			vmovdqa64
-#else
-# define VMOV			vmovdqu64
-#endif
-#define VEC(i)			zmm##i
-#define _dl_runtime_resolve	_dl_runtime_resolve_avx512
-#define _dl_runtime_profile	_dl_runtime_profile_avx512
 #define RESTORE_AVX
-#include "dl-trampoline.h"
-#undef _dl_runtime_resolve
-#undef _dl_runtime_profile
-#undef VEC
-#undef VMOV
-#undef VMOVA
-#undef VEC_SIZE
+
+#ifdef HAVE_AVX512_ASM_SUPPORT
+# define VEC_SIZE		64
+# define VMOVA			vmovdqa64
+# if DL_RUNIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
+#  define VMOV			vmovdqa64
+# else
+#  define VMOV			vmovdqu64
+# endif
+# define VEC(i)			zmm##i
+# define _dl_runtime_resolve	_dl_runtime_resolve_avx512
+# define _dl_runtime_profile	_dl_runtime_profile_avx512
+# include "dl-trampoline.h"
+# undef _dl_runtime_resolve
+# undef _dl_runtime_profile
+# undef VEC
+# undef VMOV
+# undef VMOVA
+# undef VEC_SIZE
+#else
+strong_alias (_dl_runtime_resolve_avx, _dl_runtime_resolve_avx512)
+	.hidden _dl_runtime_resolve_avx512
+strong_alias (_dl_runtime_profile_avx, _dl_runtime_profile_avx512)
+	.hidden _dl_runtime_profile_avx512
+#endif
 
 #define VEC_SIZE		32
 #define VMOVA			vmovdqa
