@@ -1,3 +1,19 @@
+2015-10-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16422]
+	* sysdeps/powerpc/powerpc32/fpu/configure.ac (libc_cv_ppc_fctidz):
+	New configure test.
+	* sysdeps/powerpc/powerpc32/fpu/configure: Regenerated.
+	* config.h.in [_LIBC] (HAVE_PPC_FCTIDZ): New macro.
+	* sysdeps/powerpc/powerpc32/fpu/s_llrint.c: Include <limits.h>,
+	<math_private.h> and <stdint.h>.
+	(__llrint): Avoid conversions to long long int where those might
+	raise spurious exceptions.
+	* sysdeps/powerpc/powerpc32/fpu/s_llrintf.c: Include
+	<math_private.h> and <stdint.h>.
+	(__llrintf): Avoid conversions to long long int where those might
+	raise spurious exceptions.
+
 2015-10-12  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #18969]

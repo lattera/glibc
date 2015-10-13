@@ -251,4 +251,7 @@
 /* PowerPC32 uses fcfid for integer to floating point conversions.  */
 #define HAVE_PPC_FCFID 0
 
+/* PowerPC32 uses fctidz for floating point to long long conversions.  */
+#define HAVE_PPC_FCTIDZ 0
+
 #endif
