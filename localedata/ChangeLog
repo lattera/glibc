@@ -1,3 +1,8 @@
+2015-10-17  Egmont Koblinger  <egmont@gmail.com>
+
+	[BZ #18918]
+	* locales/hu_HU: Change time separator to colon.
+
 2015-08-18  Marko Myllynen  <myllynen@redhat.com>
 
 	[BZ #16973]

@@ -15,7 +15,7 @@ escape_char  /
 % - made all days abbreviations same lenght by appending spaces
 % Email: srtxg@chanae.alphanet.ch
 %
-% Further changes by Egmont Koblinger, 2002/Jan/06, 2012/Jan/03
+% Further changes by Egmont Koblinger, 2002/Jan/06, 2012/Jan/03, 2015/Sep/03
 % - fixed tons of remaining bugs in alphabetical order
 % - turned month names and similar stuff to lowercase
 % - other small bugfixes
@@ -541,13 +541,13 @@ mon     "<U006A><U0061><U006E><U0075><U00E1><U0072>";/
         "<U006E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
         "<U0064><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
 d_t_fmt "<U0025><U0059><U002E><U0020><U0025><U0062><U002E><U0020><U0025><U0065><U002E><U002C>/
-<U0020><U0025><U0041><U002C><U0020><U0025><U0048><U002E><U0025><U004D><U002E><U0025><U0053><U0020><U0025><U005A>"
+<U0020><U0025><U0041><U002C><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
 d_fmt   "<U0025><U0059><U002D><U0025><U006D><U002D><U0025><U0064>"
-t_fmt   "<U0025><U0048><U002E><U0025><U004D><U002E><U0025><U0053>"
+t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
 am_pm   "";""
-t_fmt_ampm "<U0025><U0048><U002E><U0025><U004D><U002E><U0025><U0053>"
+t_fmt_ampm "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
 date_fmt "<U0025><U0059><U002E><U0020><U0025><U0062><U002E><U0020><U0025><U0065><U002E><U002C>/
-<U0020><U0025><U0041><U002C><U0020><U0025><U0048><U002E><U0025><U004D><U002E><U0025><U0053><U0020><U0025><U005A>"
+<U0020><U0025><U0041><U002C><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
 week     7;19971130;4
 first_weekday	2
 first_workday	2
