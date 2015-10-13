@@ -43,10 +43,8 @@ shmat (shmid, shmaddr, shmflg)
 				(long int) &raddr,
 				(void *) shmaddr);
   if (INTERNAL_SYSCALL_ERROR_P (resultvar, err))
-    {
-      __set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, err));
-      return (void *) -1l;
-    }
+    return (void *) INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (resultvar,
+									       err));
 
   return raddr;
 }

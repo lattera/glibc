@@ -61,8 +61,7 @@ tcsetattr (fd, optional_actions, termios_p)
       cmd = TCSETSF;
       break;
     default:
-      __set_errno (EINVAL);
-      return -1;
+      return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
     }
 
   k_termios.c_iflag = termios_p->c_iflag & ~IBAUD0;

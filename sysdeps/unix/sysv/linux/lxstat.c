@@ -38,8 +38,7 @@ __lxstat (int vers, const char *name, struct stat *buf)
     return INLINE_SYSCALL (lstat, 2, name, (struct kernel_stat *) buf);
 
 #ifdef STAT_IS_KERNEL_STAT
-  errno = EINVAL;
-  return -1;
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 #else
   struct kernel_stat kbuf;
   int result;

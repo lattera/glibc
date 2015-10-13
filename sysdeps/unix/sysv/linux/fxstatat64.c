@@ -32,10 +32,7 @@ int
 __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 {
   if (__glibc_unlikely (vers != _STAT_VER_LINUX))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
   int result;
   INTERNAL_SYSCALL_DECL (err);
@@ -44,9 +41,7 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
   if (!__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     return 0;
   else
-    {
-      __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
-      return -1;
-    }
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result,
+								      err));
 }
 libc_hidden_def (__fxstatat64)

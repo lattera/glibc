@@ -33,7 +33,6 @@ openat64 (dfd, file, oflag)
 #ifdef __NR_openat
   return INLINE_SYSCALL (openat, 3, dfd, file, oflag | O_LARGEFILE);
 #else
-  __set_errno (ENOSYS);
-  return -1;
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOSYS);
 #endif
 }

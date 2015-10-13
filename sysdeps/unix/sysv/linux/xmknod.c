@@ -33,18 +33,12 @@ __xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
   unsigned long long int k_dev;
 
   if (vers != _MKNOD_VER)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
   /* We must convert the value to dev_t type used by the kernel.  */
   k_dev =  (*dev) & ((1ULL << 32) - 1);
   if (k_dev != *dev)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
   return INLINE_SYSCALL (mknod, 3, path, mode, (unsigned int) k_dev);
 }

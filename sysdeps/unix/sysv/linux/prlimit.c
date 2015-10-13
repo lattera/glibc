@@ -59,20 +59,14 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
       if (old_rlimit->rlim_cur != old_rlimit64_mem.rlim_cur)
 	{
 	  if (new_rlimit == NULL)
-	    {
-	      __set_errno (EOVERFLOW);
-	      return -1;
-	    }
+	    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EOVERFLOW);
 	  old_rlimit->rlim_cur = RLIM_INFINITY;
 	}
       old_rlimit->rlim_max = old_rlimit64_mem.rlim_max;
       if (old_rlimit->rlim_max != old_rlimit64_mem.rlim_max)
 	{
 	  if (new_rlimit == NULL)
-	    {
-	      __set_errno (EOVERFLOW);
-	      return -1;
-	    }
+	    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EOVERFLOW);
 	  old_rlimit->rlim_max = RLIM_INFINITY;
 	}
     }
@@ -84,8 +78,7 @@ int
 prlimit (__pid_t pid, enum __rlimit_resource resource,
 	 const struct rlimit *new_rlimit, struct rlimit *old_rlimit)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOSYS);
 }
 stub_warning (prlimit)
 #endif

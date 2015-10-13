@@ -38,8 +38,7 @@ __readahead (int fd, off64_t offset, size_t count)
 ssize_t
 __readahead (int fd, off64_t offset, size_t count)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOSYS);
 }
 stub_warning (readahead)
 #endif

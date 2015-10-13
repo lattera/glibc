@@ -46,10 +46,7 @@ __mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
     }
 #endif
   if (offset & ((1 << page_shift) - 1))
-    {
-      __set_errno (EINVAL);
-      return MAP_FAILED;
-    }
+    return (void *) INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
   void *result;
   result = (void *)
     INLINE_SYSCALL (mmap2, 6, addr,

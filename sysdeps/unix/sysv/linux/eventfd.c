@@ -38,16 +38,12 @@ eventfd (unsigned int count, int flags)
      kernel (sys_indirect) before implementing setting flags like
      O_NONBLOCK etc.  */
   if (flags != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
 # ifdef __NR_eventfd
   return INLINE_SYSCALL (eventfd, 1, count);
 # else
-  __set_errno (ENOSYS);
-  return -1;
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOSYS);
 # endif
 #elif !defined __NR_eventfd2
 # error "__ASSUME_EVENTFD2 defined but not __NR_eventfd2"
