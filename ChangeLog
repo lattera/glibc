@@ -1,3 +1,15 @@
+2015-10-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19125]
+	* sysdeps/powerpc/powerpc32/fpu/s_llround.c: Include <limits.h>,
+	<math_private.h> and <stdint.h>.
+	(__llround): Avoid conversions to and from long long int, and
+	subtractions, where those might raise spurious exceptions.
+	* sysdeps/powerpc/powerpc32/fpu/s_llroundf.c: Include
+	<math_private.h> and <stdint.h>.
+	(__llroundf): Avoid conversions to and from long long int, and
+	subtractions, where those might raise spurious exceptions.
+
 2015-10-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/adjtime.c (ADJTIME): Use
