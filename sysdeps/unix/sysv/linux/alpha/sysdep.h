@@ -25,6 +25,7 @@
 #endif
 
 /* There is some commonality.  */
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/unix/alpha/sysdep.h>
 
 #include <tls.h>

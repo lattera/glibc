@@ -21,6 +21,7 @@
 #define _LINUX_SH_SYSDEP_H 1
 
 /* There is some commonality.  */
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/unix/sh/sysdep.h>
 #include <tls.h>
 

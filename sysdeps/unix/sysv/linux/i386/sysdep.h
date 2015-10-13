@@ -20,6 +20,7 @@
 #define _LINUX_I386_SYSDEP_H 1
 
 /* There is some commonality.  */
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/unix/i386/sysdep.h>
 /* Defines RTLD_PRIVATE_ERRNO and USE_DL_SYSINFO.  */
 #include <dl-sysdep.h>
@@ -55,11 +56,7 @@
 
 /* We don't want the label for the error handle to be global when we define
    it here.  */
-#ifdef PIC
-# define SYSCALL_ERROR_LABEL 0f
-#else
-# define SYSCALL_ERROR_LABEL syscall_error
-#endif
+#define SYSCALL_ERROR_LABEL __syscall_error
 
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
@@ -100,55 +97,7 @@
 
 #define ret_ERRVAL ret
 
-#ifndef PIC
-# define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
-#else
-
-# if RTLD_PRIVATE_ERRNO
-#  define SYSCALL_ERROR_HANDLER						      \
-0:SETUP_PIC_REG(cx);							      \
-  addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
-  negl %eax;								      \
-  movl %eax, rtld_errno@GOTOFF(%ecx);					      \
-  orl $-1, %eax;							      \
-  ret;
-
-# elif defined _LIBC_REENTRANT
-
-#  if IS_IN (libc)
-#   define SYSCALL_ERROR_ERRNO __libc_errno
-#  else
-#   define SYSCALL_ERROR_ERRNO errno
-#  endif
-#  define SYSCALL_ERROR_HANDLER					      \
-0:SETUP_PIC_REG (cx);							      \
-  addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
-  movl SYSCALL_ERROR_ERRNO@GOTNTPOFF(%ecx), %ecx;			      \
-  negl %eax;								      \
-  SYSCALL_ERROR_HANDLER_TLS_STORE (%eax, %ecx);				      \
-  orl $-1, %eax;							      \
-  ret;
-#  ifndef NO_TLS_DIRECT_SEG_REFS
-#   define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
-  movl src, %gs:(destoff)
-#  else
-#   define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
-  addl %gs:0, destoff;							      \
-  movl src, (destoff)
-#  endif
-# else
-/* Store (- %eax) into errno through the GOT.  */
-#  define SYSCALL_ERROR_HANDLER						      \
-0:SETUP_PIC_REG(cx);							      \
-  addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
-  negl %eax;								      \
-  movl errno@GOT(%ecx), %ecx;						      \
-  movl %eax, (%ecx);							      \
-  orl $-1, %eax;							      \
-  ret;
-# endif	/* _LIBC_REENTRANT */
-#endif	/* PIC */
-
+#define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.c is used.  */
 
 /* The original calling convention for system calls on Linux/i386 is
    to use int $0x80.  */
@@ -275,6 +224,9 @@
 
 #else	/* !__ASSEMBLER__ */
 
+extern int __syscall_error (int)
+  attribute_hidden __attribute__ ((__regparm__ (1)));
+
 /* We need some help from the assembler to generate optimal code.  We
    define some macros here which later will be used.  */
 asm (".L__X'%ebx = 1\n\t"
@@ -318,7 +270,15 @@ struct libc_do_syscall_args
 /* Define a macro which expands inline into the wrapper code for a system
    call.  */
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...) \
+#if IS_IN (libc)
+# define INLINE_SYSCALL(name, nr, args...) \
+  ({									      \
+    unsigned int resultvar = INTERNAL_SYSCALL (name, , nr, args);	      \
+    __glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (resultvar, ))		      \
+    ? __syscall_error (-INTERNAL_SYSCALL_ERRNO (resultvar, ))		      \
+    : (int) resultvar; })
+#else
+# define INLINE_SYSCALL(name, nr, args...) \
   ({									      \
     unsigned int resultvar = INTERNAL_SYSCALL (name, , nr, args);	      \
     if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (resultvar, )))	      \
@@ -327,6 +287,14 @@ struct libc_do_syscall_args
 	resultvar = 0xffffffff;						      \
       }									      \
     (int) resultvar; })
+#endif
+
+/* Set error number and return -1.  Return the internal function,
+   __syscall_error, which sets errno from the negative error number
+   and returns -1, to avoid PIC.  */
+#undef INLINE_SYSCALL_ERROR_RETURN_VALUE
+#define INLINE_SYSCALL_ERROR_RETURN_VALUE(resultvar) \
+  __syscall_error (-(resultvar))
 
 /* List of system calls which are supported as vsyscalls.  */
 # define HAVE_CLOCK_GETTIME_VSYSCALL    1

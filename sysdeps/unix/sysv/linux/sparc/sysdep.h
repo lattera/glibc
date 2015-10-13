@@ -20,6 +20,7 @@
 #define _LINUX_SPARC_SYSDEP_H 1
 
 #include <sysdeps/unix/sysdep.h>
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/sparc/sysdep.h>
 
 #ifdef __ASSEMBLER__

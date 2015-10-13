@@ -1,5 +1,44 @@
 2015-10-13  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/i386/sysdep.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h: Include
+	<sysdeps/unix/sysv/linux/sysdep.h>.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/generic/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Makefile [$(subdir) == csu]
+	(sysdep-dl-routines): Add sysdep.
+	[$(subdir) == nptl] (libpthread-routines): Likewise.
+	[$(subdir) == rt] (librt-routines): Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S (__clone): Don't check
+	PIC when branching to SYSCALL_ERROR_LABEL.
+	* sysdeps/unix/sysv/linux/i386/sysdep.S: Removed.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Include
+	<sysdeps/unix/sysv/linux/sysdep.h>.
+	(SYSCALL_ERROR_LABEL): Changed to __syscall_error.
+	(SYSCALL_ERROR_ERRNO): Removed.
+	(SYSCALL_ERROR_HANDLER): Changed to empty.
+	(SYSCALL_ERROR_HANDLER_TLS_STORE): Likewise.
+	(__syscall_error): New prototype.
+	[IS_IN (libc)] (INLINE_SYSCALL): New macro.
+	(INLINE_SYSCALL_ERROR_RETURN_VALUE): Likewise.
+
+2015-10-13  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #19124]
 	* sysdeps/x86_64/dl-trampoline.S [!HAVE_AVX512_ASM_SUPPORT]
 	(_dl_runtime_resolve_avx512): Make it a hidden alias of

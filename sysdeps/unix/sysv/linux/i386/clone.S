@@ -47,19 +47,11 @@ ENTRY (__clone)
 	/* Sanity check arguments.  */
 	movl	$-EINVAL,%eax
 	movl	FUNC(%esp),%ecx		/* no NULL function pointers */
-#ifdef PIC
-	jecxz	SYSCALL_ERROR_LABEL
-#else
 	testl	%ecx,%ecx
 	jz	SYSCALL_ERROR_LABEL
-#endif
 	movl	STACK(%esp),%ecx	/* no NULL stack pointers */
-#ifdef PIC
-	jecxz	SYSCALL_ERROR_LABEL
-#else
 	testl	%ecx,%ecx
 	jz	SYSCALL_ERROR_LABEL
-#endif
 
 	/* Insert the argument onto the new stack.  Make sure the new
 	   thread is started with an alignment of (mod 16).  */

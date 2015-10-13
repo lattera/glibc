@@ -17,6 +17,7 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <tls.h>
 
 /* Defines RTLD_PRIVATE_ERRNO.  */

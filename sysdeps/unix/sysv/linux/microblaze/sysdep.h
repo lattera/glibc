@@ -20,6 +20,7 @@
 #define _LINUX_MICROBLAZE_SYSDEP_H 1
 
 #include <sysdeps/unix/sysdep.h>
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/microblaze/sysdep.h>
 
 /* Defines RTLD_PRIVATE_ERRNO.  */

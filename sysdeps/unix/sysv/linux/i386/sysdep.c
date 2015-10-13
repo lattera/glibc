@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2015 Free Software Foundation, Inc.
+/* Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,26 +15,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <sysdep.h>
 
-/* The following code is only used in the shared library when we
-   compile the reentrant version.  Otherwise each system call defines
-   each own version.  */
-
-#ifndef PIC
-
-/* The syscall stubs jump here when they detect an error.
-   The code for Linux is almost identical to the canonical Unix/i386
-   code, except that the error number in %eax is negated.  */
-
-#undef CALL_MCOUNT
-#define CALL_MCOUNT /* Don't insert the profiling call, it clobbers %eax.  */
-
-	.text
-ENTRY (__syscall_error)
-	negl %eax
-
-#define __syscall_error __syscall_error_1
-#include <sysdeps/unix/i386/sysdep.S>
-
-#endif	/* !PIC */
+/* This routine is jumped to by all the syscall handlers, to stash
+   an error number into errno.  ERROR is the negative error number
+   returned from the x86 kernel.  */
+int
+__attribute__ ((__regparm__ (1)))
+__syscall_error (int error)
+{
+  __set_errno (-error);
+  return -1;
+}

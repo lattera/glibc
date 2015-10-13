@@ -22,6 +22,7 @@
 #define _LINUX_HPPA_SYSDEP_H 1
 
 #include <sysdeps/unix/sysdep.h>
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/hppa/sysdep.h>
 
 /* Defines RTLD_PRIVATE_ERRNO.  */

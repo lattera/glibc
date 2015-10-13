@@ -22,6 +22,7 @@
 
 #include <sysdeps/s390/s390-64/sysdep.h>
 #include <sysdeps/unix/sysdep.h>
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <dl-sysdep.h>	/* For RTLD_PRIVATE_ERRNO.  */
 #include <tls.h>
 

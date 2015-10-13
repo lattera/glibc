@@ -21,6 +21,7 @@
 #define _LINUX_IA64_SYSDEP_H 1
 
 #include <sysdeps/unix/sysdep.h>
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/ia64/sysdep.h>
 #include <dl-sysdep.h>
 #include <tls.h>
