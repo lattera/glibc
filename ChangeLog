@@ -1,3 +1,11 @@
+2015-10-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19134]
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S (.LC1): New object.
+	(.LC2): Likewise.
+	(.LC3): Likewise.
+	(__lround): Do not add 0.5 to integer or out-of-range arguments.
+
 2015-10-14  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	[BZ #19129]
