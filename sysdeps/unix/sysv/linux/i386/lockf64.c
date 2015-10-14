@@ -29,6 +29,7 @@ lockf64 (int fd, int cmd, off64_t len64)
 {
   struct flock64 fl64;
   int cmd64;
+  int result;
 
   memset ((char *) &fl64, '\0', sizeof (fl64));
   fl64.l_whence = SEEK_CUR;
@@ -41,12 +42,13 @@ lockf64 (int fd, int cmd, off64_t len64)
       /* Test the lock: return 0 if FD is unlocked or locked by this process;
 	 return -1, set errno to EACCES, if another process holds the lock.  */
       fl64.l_type = F_RDLCK;
-      if (INLINE_SYSCALL (fcntl64, 3, fd, F_GETLK64, &fl64) < 0)
-        return -1;
+      INTERNAL_SYSCALL_DECL (err);
+      result = INTERNAL_SYSCALL (fcntl64, err, 3, fd, F_GETLK64, &fl64);
+      if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
+	return INLINE_SYSCALL_ERROR_RETURN_VALUE (-result);
       if (fl64.l_type == F_UNLCK || fl64.l_pid == __getpid ())
         return 0;
-      __set_errno (EACCES);
-      return -1;
+      return INLINE_SYSCALL_ERROR_RETURN_VALUE (EACCES);
     case F_ULOCK:
       fl64.l_type = F_UNLCK;
       cmd64 = F_SETLK64;
@@ -61,8 +63,7 @@ lockf64 (int fd, int cmd, off64_t len64)
       break;
 
     default:
-      __set_errno (EINVAL);
-      return -1;
+      return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
     }
   return INLINE_SYSCALL (fcntl64, 3, fd, cmd64, &fl64);
 }

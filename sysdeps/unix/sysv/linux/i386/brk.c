@@ -31,19 +31,11 @@ weak_alias (__curbrk, ___brk_addr)
 int
 __brk (void *addr)
 {
-  void *newbrk;
-
   INTERNAL_SYSCALL_DECL (err);
-  newbrk = (void *) INTERNAL_SYSCALL (brk, err, 1, addr);
-
+  void *newbrk = (void *) INTERNAL_SYSCALL (brk, err, 1, addr);
   __curbrk = newbrk;
-
   if (newbrk < addr)
-    {
-      __set_errno (ENOMEM);
-      return -1;
-    }
-
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOMEM);
   return 0;
 }
 weak_alias (__brk, brk)

@@ -43,10 +43,12 @@ __xstat (int vers, const char *name, struct stat *buf)
   {
     struct stat64 buf64;
 
-    result = INLINE_SYSCALL (stat64, 2, name, &buf64);
-    if (result == 0)
-      result = __xstat32_conv (vers, &buf64, buf);
-    return result;
+    INTERNAL_SYSCALL_DECL (err);
+    result = INTERNAL_SYSCALL (stat64, err, 2, name, &buf64);
+    if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
+      return INLINE_SYSCALL_ERROR_RETURN_VALUE (-result);
+    else
+      return __xstat32_conv (vers, &buf64, buf);
   }
 }
 hidden_def (__xstat)
