@@ -1,3 +1,7 @@
+2015-10-14  Carlos O'Donell  <carlos@redhat.com>
+
+	* include/stap-probe.h: Fix macro definition formatting.
+
 2015-10-14  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19074]

@@ -57,13 +57,13 @@
 
 # ifndef __ASSEMBLER__
 /* Evaluate all the arguments and verify that N matches their number.  */
-#define LIBC_PROBE(name, n, ...) STAP_PROBE##n (__VA_ARGS__)
+#  define LIBC_PROBE(name, n, ...) STAP_PROBE##n (__VA_ARGS__)
 
-#define STAP_PROBE0()
-#define STAP_PROBE1(a1)
-#define STAP_PROBE2(a1, a2)
-#define STAP_PROBE3(a1, a2, a3)
-#define STAP_PROBE4(a1, a2, a3, a4)
+#  define STAP_PROBE0()
+#  define STAP_PROBE1(a1)
+#  define STAP_PROBE2(a1, a2)
+#  define STAP_PROBE3(a1, a2, a3)
+#  define STAP_PROBE4(a1, a2, a3, a4)
 
 # else
 #  define LIBC_PROBE(name, n, ...)		/* Nothing.  */
