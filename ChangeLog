@@ -1,3 +1,7 @@
+2015-10-14  Namhyung Kim  <namhyung@gmail.com>
+
+	* manaual/argp.texi (Specifying Argp Parsers): Fix typo.
+
 2015-10-14  Carlos O'Donell  <carlos@redhat.com>
 
 	* include/stap-probe.h: Fix macro definition formatting.

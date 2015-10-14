@@ -202,7 +202,7 @@ explaining what the program does.  Documentation printed after the
 options describe behavior in more detail.
 
 @item const struct argp_child *children
-A pointer to a vector of @code{argp_children} structures.  This pointer
+A pointer to a vector of @code{argp_child} structures.  This pointer
 specifies which additional argp parsers should be combined with this
 one.  @xref{Argp Children}.
 
