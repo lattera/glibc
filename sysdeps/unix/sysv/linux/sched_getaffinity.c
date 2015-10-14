@@ -25,6 +25,11 @@
 
 
 #ifdef __NR_sched_getaffinity
+# if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
+extern int __sched_getaffinity_new (pid_t, size_t, cpu_set_t *);
+libc_hidden_proto (__sched_getaffinity_new)
+# endif
+
 int
 __sched_getaffinity_new (pid_t pid, size_t cpusetsize, cpu_set_t *cpuset)
 {
@@ -44,6 +49,8 @@ versioned_symbol (libc, __sched_getaffinity_new, sched_getaffinity,
 
 
 # if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
+libc_hidden_def (__sched_getaffinity_new)
+
 int
 attribute_compat_text_section
 __sched_getaffinity_old (pid_t pid, cpu_set_t *cpuset)

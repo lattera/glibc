@@ -1,5 +1,12 @@
 2015-10-14  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #18822]
+	* sysdeps/unix/sysv/linux/sched_getaffinity.c
+	(__sched_getaffinity_new): Add libc_hidden_proto and
+	libc_hidden_def.
+
+2015-10-14  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #19007]
 	* scripts/localplt.awk: Also allow GOT references.
 	* sysdeps/unix/sysv/linux/i386/localplt.data: Mark
