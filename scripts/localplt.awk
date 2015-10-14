@@ -7,7 +7,7 @@
 BEGIN { result = 0 }
 
 FILENAME != lastfile {
-  if (lastfile && jmprel_offset == 0) {
+  if (lastfile && jmprel_offset == 0 && rela_offset == 0 && rel_offset == 0) {
     print FILENAME ": *** failed to find expected output (readelf -WSdr)";
     result = 2;
   }

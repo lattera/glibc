@@ -1,5 +1,15 @@
 2015-10-14  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #19007]
+	* scripts/localplt.awk: Also allow GOT references.
+	* sysdeps/unix/sysv/linux/i386/localplt.data: Mark
+	_Unwind_Find_FDE, calloc, memalign, realloc and __libc_memalign
+	with "+ REL R_386_GLOB_DAT".
+	* sysdeps/x86_64/localplt.data: Mark calloc, memalign, realloc
+	and __libc_memalign with "+ RELA R_X86_64_GLOB_DAT".
+
+2015-10-14  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/i386/brk.c (__brk): Use
 	INLINE_SYSCALL_ERROR_RETURN_VALUE.
 	* sysdeps/unix/sysv/linux/i386/fxstatat.c (__fxstatat):
