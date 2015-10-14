@@ -145,12 +145,6 @@ do_one_test (void)
       return 1;
     }
 
-  /* This will cause the read in the child to return.  */
-  close (fd[0]);
-  close (fd[1]);
-  close (fd[2]);
-  close (fd[3]);
-
   void *ret;
   if (pthread_join (th, &ret) != 0)
     {
@@ -169,6 +163,15 @@ do_one_test (void)
       printf ("called cleanups %lx\n", cleanups);
       return 1;
     }
+
+  /* The pipe closing must be issued after the cancellation handling to avoid
+     a race condition where the cancellation runs after both pipe ends are
+     closed.  In this case the read syscall returns EOF and the cancellation
+     must not act.  */
+  close (fd[0]);
+  close (fd[1]);
+  close (fd[2]);
+  close (fd[3]);
 
   return 0;
 }

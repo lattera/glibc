@@ -1,3 +1,9 @@
+2015-12-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/tst-cancel20.c (do_one_test): Move the pipe closing after
+	pthread_join.
+	* nptl/tst-cancel21.c (tf): Likewise.
+
 2015-12-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19313]
