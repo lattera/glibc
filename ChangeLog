@@ -1,3 +1,9 @@
+2015-10-14  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #19129]
+	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_resolve_hold): Save and restore
+	r0 and r1.
+
 2015-10-14  Namhyung Kim  <namhyung@gmail.com>
 
 	* manaual/argp.texi (Specifying Argp Parsers): Fix typo.

@@ -196,21 +196,30 @@ _dl_tlsdesc_lazy_resolver:
 	eabi_fnstart
 	.align 2
 _dl_tlsdesc_resolve_hold:
-	eabi_save ({r2,r3,ip,lr})
-	push	{r2, r3, ip, lr}
-	cfi_adjust_cfa_offset (16)
-	cfi_rel_offset (r2, 0)
-	cfi_rel_offset (r3, 4)
-	cfi_rel_offset (ip, 8)
-	cfi_rel_offset (lr, 12)
+	/* r0 is saved so its original value can be used after the call and
+	   r1 is saved only to keep the stack aligned.  (r0 points to the tls
+	   descriptor, it is passed to _dl_tlsdesc_resolve_hold_fixup which
+	   is a void function that may clobber r0, later r0 is used to load
+	   the new resolver.)  */
+	eabi_save ({r0,r1,r2,r3,ip,lr})
+	push	{r0, r1, r2, r3, ip, lr}
+	cfi_adjust_cfa_offset (24)
+	cfi_rel_offset (r0, 0)
+	cfi_rel_offset (r1, 4)
+	cfi_rel_offset (r2, 8)
+	cfi_rel_offset (r3, 12)
+	cfi_rel_offset (ip, 16)
+	cfi_rel_offset (lr, 20)
 	adr	r1, _dl_tlsdesc_resolve_hold
 	bl	_dl_tlsdesc_resolve_hold_fixup
-	pop	{r2, r3, ip, lr}
-	cfi_adjust_cfa_offset (-16)
+	pop	{r0, r1, r2, r3, ip, lr}
+	cfi_adjust_cfa_offset (-24)
 	cfi_restore (lr)
 	cfi_restore (ip)
 	cfi_restore (r3)
 	cfi_restore (r2)
+	cfi_restore (r1)
+	cfi_restore (r0)
 	sfi_breg r0, \
 	ldr     r1, [\B, #4]
 	BX      (r1)
