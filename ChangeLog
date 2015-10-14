@@ -1,3 +1,9 @@
+2015-10-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19074]
+	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Use atomics to
+	load and store num_ifs.
+
 2015-10-14  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]

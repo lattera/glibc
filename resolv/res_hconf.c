@@ -45,6 +45,7 @@
 #include "ifreq.h"
 #include "res_hconf.h"
 #include <wchar.h>
+#include <atomic.h>
 
 #if IS_IN (libc)
 # define fgets_unlocked __fgets_unlocked
@@ -391,9 +392,14 @@ _res_hconf_reorder_addrs (struct hostent *hp)
 {
 #if defined SIOCGIFCONF && defined SIOCGIFNETMASK
   int i, j;
-  /* Number of interfaces.  */
+  /* Number of interfaces.  Also serves as a flag for the
+     double-checked locking idiom.  */
   static int num_ifs = -1;
-  /* We need to protect the dynamic buffer handling.  */
+  /* Local copy of num_ifs, for non-atomic access.  */
+  int num_ifs_local;
+  /* We need to protect the dynamic buffer handling.  The lock is only
+     acquired during initialization.  Afterwards, a positive num_ifs
+     value indicates completed initialization.  */
   __libc_lock_define_initialized (static, lock);
 
   /* Only reorder if we're supposed to.  */
@@ -404,7 +410,10 @@ _res_hconf_reorder_addrs (struct hostent *hp)
   if (hp->h_addrtype != AF_INET)
     return;
 
-  if (num_ifs <= 0)
+  /* This load synchronizes with the release MO store in the
+     initialization block below.  */
+  num_ifs_local = atomic_load_acquire (&num_ifs);
+  if (num_ifs_local <= 0)
     {
       struct ifreq *ifr, *cur_ifr;
       int sd, num, i;
@@ -421,9 +430,19 @@ _res_hconf_reorder_addrs (struct hostent *hp)
       /* Get lock.  */
       __libc_lock_lock (lock);
 
-      /* Recheck, somebody else might have done the work by now.  */
-      if (num_ifs <= 0)
+      /* Recheck, somebody else might have done the work by now.  No
+	 ordering is required for the load because we have the lock,
+	 and num_ifs is only updated under the lock.  Also see (3) in
+	 the analysis below.  */
+      num_ifs_local = atomic_load_relaxed (&num_ifs);
+      if (num_ifs_local <= 0)
 	{
+	  /* This is the only block which writes to num_ifs.  It can
+	     be executed several times (sequentially) if
+	     initialization does not yield any interfaces, and num_ifs
+	     remains zero.  However, once we stored a positive value
+	     in num_ifs below, this block cannot be entered again due
+	     to the condition above.  */
 	  int new_num_ifs = 0;
 
 	  /* Get a list of interfaces.  */
@@ -472,7 +491,14 @@ _res_hconf_reorder_addrs (struct hostent *hp)
 	  /* Release lock, preserve error value, and close socket.  */
 	  errno = save;
 
-	  num_ifs = new_num_ifs;
+	  /* Advertise successful initialization if new_num_ifs is
+	     positive (and no updates to ifaddrs are permitted after
+	     that).  Otherwise, num_ifs remains unchanged, at zero.
+	     This store synchronizes with the initial acquire MO
+	     load.  */
+	  atomic_store_release (&num_ifs, new_num_ifs);
+	  /* Keep the local copy current, to save another load.  */
+	  num_ifs_local = new_num_ifs;
 	}
 
       __libc_lock_unlock (lock);
@@ -480,15 +506,43 @@ _res_hconf_reorder_addrs (struct hostent *hp)
       __close (sd);
     }
 
-  if (num_ifs == 0)
+  /* num_ifs_local cannot be negative because the if statement above
+     covered this case.  It can still be zero if we just performed
+     initialization, but could not find any interfaces.  */
+  if (num_ifs_local == 0)
     return;
+
+  /* The code below accesses ifaddrs, so we need to ensure that the
+     initialization happens-before this point.
+
+     The actual initialization is sequenced-before the release store
+     to num_ifs, and sequenced-before the end of the critical section.
+
+     This means there are three possible executions:
+
+     (1) The thread that initialized the data also uses it, so
+         sequenced-before is sufficient to ensure happens-before.
+
+     (2) The release MO store of num_ifs synchronizes-with the acquire
+         MO load, and the acquire MO load is sequenced before the use
+         of the initialized data below.
+
+     (3) We enter the critical section, and the relaxed MO load of
+         num_ifs yields a positive value.  The write to ifaddrs is
+         sequenced-before leaving the critical section.  Leaving the
+         critical section happens-before we entered the critical
+         section ourselves, which means that the write to ifaddrs
+         happens-before this point.
+
+     Consequently, all potential writes to ifaddrs (and the data it
+     points to) happens-before this point.  */
 
   /* Find an address for which we have a direct connection.  */
   for (i = 0; hp->h_addr_list[i]; ++i)
     {
       struct in_addr *haddr = (struct in_addr *) hp->h_addr_list[i];
 
-      for (j = 0; j < num_ifs; ++j)
+      for (j = 0; j < num_ifs_local; ++j)
 	{
 	  u_int32_t if_addr    = ifaddrs[j].u.ipv4.addr;
 	  u_int32_t if_netmask = ifaddrs[j].u.ipv4.mask;
