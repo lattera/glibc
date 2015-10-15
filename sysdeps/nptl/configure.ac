@@ -1,15 +1,6 @@
 dnl configure fragment for new libpthread implementation.
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
-if test "x$libc_cv_gcc___thread" != xyes; then
-  AC_MSG_ERROR(compiler support for __thread is required)
-fi
-
-if test "x${libc_cv_visibility_attribute}" != xyes ||
-   test "x${libc_cv_broken_visibility_attribute}" != xno; then
-  AC_MSG_ERROR(working compiler support for visibility attribute is required)
-fi
-
 dnl Iff <unwind.h> is available, make sure it is the right one and it
 dnl contains struct _Unwind_Exception.
 AC_CACHE_CHECK(dnl

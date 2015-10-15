@@ -1,14 +1,5 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
 
-if test "x$libc_cv_gcc___thread" != xyes; then
-  as_fn_error $? "compiler support for __thread is required" "$LINENO" 5
-fi
-
-if test "x${libc_cv_visibility_attribute}" != xyes ||
-   test "x${libc_cv_broken_visibility_attribute}" != xno; then
-  as_fn_error $? "working compiler support for visibility attribute is required" "$LINENO" 5
-fi
-
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for forced unwind support" >&5
 $as_echo_n "checking for forced unwind support... " >&6; }

@@ -1,5 +1,9 @@
 2015-10-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/nptl/configure.ac: Do not give errors based on the
+	results of top-level configure tests.
+	* sysdeps/nptl/configure: Regenerated.
+
 	* configure.ac (libc_cv_Bgroup): Remove configure test.
 	* configure: Regenerated.
 	* config.make.in (have-Bgroup): Remove variable.
