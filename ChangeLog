@@ -1,6 +1,12 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
+	* sysdeps/generic/memcopy.h (_wordcopy_fwd_aligned): Add
+	attribute_hidden.
+	(_wordcopy_fwd_dest_aligned): Likewise.
+	(_wordcopy_bwd_aligned): Likewise.
+	(_wordcopy_bwd_dest_aligned): Likewise.
+
 	* sysdeps/i386/dl-lookupcfg.h (_dl_unmap): Add attribute_hidden.
 	* sysdeps/i386/dl-tlsdesc.h (_dl_make_tlsdesc_dynamic):
 	Likewise.

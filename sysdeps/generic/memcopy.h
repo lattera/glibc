@@ -111,8 +111,10 @@ typedef unsigned char byte;
    the assumption that DST_BP is aligned on an OPSIZ multiple.  If
    not all bytes could be easily copied, store remaining number of bytes
    in NBYTES_LEFT, otherwise store 0.  */
-extern void _wordcopy_fwd_aligned (long int, long int, size_t) __THROW;
-extern void _wordcopy_fwd_dest_aligned (long int, long int, size_t) __THROW;
+extern void _wordcopy_fwd_aligned (long int, long int, size_t)
+  attribute_hidden __THROW;
+extern void _wordcopy_fwd_dest_aligned (long int, long int, size_t)
+  attribute_hidden __THROW;
 #define WORD_COPY_FWD(dst_bp, src_bp, nbytes_left, nbytes)		      \
   do									      \
     {									      \
@@ -131,8 +133,10 @@ extern void _wordcopy_fwd_dest_aligned (long int, long int, size_t) __THROW;
    DST_END_PTR is aligned on an OPSIZ multiple.  If not all bytes could be
    easily copied, store remaining number of bytes in NBYTES_REMAINING,
    otherwise store 0.  */
-extern void _wordcopy_bwd_aligned (long int, long int, size_t) __THROW;
-extern void _wordcopy_bwd_dest_aligned (long int, long int, size_t) __THROW;
+extern void _wordcopy_bwd_aligned (long int, long int, size_t)
+  attribute_hidden __THROW;
+extern void _wordcopy_bwd_dest_aligned (long int, long int, size_t)
+  attribute_hidden __THROW;
 #define WORD_COPY_BWD(dst_ep, src_ep, nbytes_left, nbytes)		      \
   do									      \
     {									      \
