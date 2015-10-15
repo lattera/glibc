@@ -1,6 +1,28 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
+	* elf/dl-runtime.c (_dl_fixup): Add attribute_hidden.
+	* elf/dynamic-link.h (_dl_try_allocate_static_tls): Likewise.
+	* sysdeps/generic/dl-cache.h (_dl_cache_libcmp): Likewise.
+	* sysdeps/generic/ldsodefs.h (_dl_name_match_p): Likewise.
+	(_dl_higher_prime_number): Likewise.
+	(_dl_debug_printf_c): Likewise.
+	(_dl_signal_cerror): Likewise.
+	(_dl_receive_error): Likewise.
+	(_dl_reloc_bad_type): Likewise.
+	(_dl_resolve_conflicts): Likewise.
+	(_dl_check_all_versions): Likewise.
+	(_dl_check_map_versions): Likewise.
+	(_dl_sort_fini): Likewise.
+	(_dl_debug_initialize): Likewise.
+	(_dl_init_paths): Likewise.
+	(_dl_show_auxv): Likewise.
+	(_dl_next_ld_env_entry): Likewise.
+	(_dl_important_hwcaps): Likewise.
+	(_dl_load_cache_lookup): Likewise.
+	(_dl_update_slotinfo): Likewise.
+	(_dl_show_scope): Likewise.
+
 	* sysdeps/generic/memcopy.h (_wordcopy_fwd_aligned): Add
 	attribute_hidden.
 	(_wordcopy_fwd_dest_aligned): Likewise.

@@ -57,7 +57,7 @@
    function.  */
 
 DL_FIXUP_VALUE_TYPE
-__attribute ((noinline)) ARCH_FIXUP_ATTRIBUTE
+attribute_hidden __attribute ((noinline)) ARCH_FIXUP_ATTRIBUTE
 _dl_fixup (
 # ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
 	   ELF_MACHINE_RUNTIME_FIXUP_ARGS,
