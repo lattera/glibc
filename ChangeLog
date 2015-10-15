@@ -1,6 +1,9 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
+	* include/sys/utsname.h [IS_IN (rtld)] (__uname): Add
+	attribute_hidden.
+
 	* include/string.h [IS_IN (rtld)] (__stpcpy): Add
 	attribute_hidden.
 	[IS_IN (rtld)] (__strdup): Likewise.
