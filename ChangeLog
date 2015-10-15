@@ -1,3 +1,14 @@
+2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/i386/Makefile (CFLAGS-mmap.c): Add
+	-fomit-frame-pointer.
+	(CFLAGS-mmap64.c): Likewise.
+	(CFLAGS-semtimedop.c): Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap.c: New file.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Remove file.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/semtimedop.S: Likewise.
+
 2015-10-15  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18928]
