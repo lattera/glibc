@@ -1,6 +1,10 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
+	* include/fcntl.h (__libc_fcntl): Add attribute_hidden.
+	[IS_IN (rtld)] (__open): Likewise.
+	[IS_IN (rtld)] (__fcntl): Likewise.
+
 	* include/dirent.h (__opendirat): Add attribute_hidden.
 	(__getdents): Likewise.
 	(__getdents64): Likewise.
