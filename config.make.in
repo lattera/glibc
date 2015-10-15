@@ -49,7 +49,6 @@ enable-werror = @enable_werror@
 
 have-z-combreloc = @libc_cv_z_combreloc@
 have-z-execstack = @libc_cv_z_execstack@
-have-Bgroup = @libc_cv_Bgroup@
 have-protected-data = @libc_cv_protected_data@
 with-fp = @with_fp@
 enable-timezone-tools = @enable_timezone_tools@

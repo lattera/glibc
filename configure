@@ -630,7 +630,6 @@ libc_cv_fpie
 libc_cv_z_execstack
 libc_cv_z_combreloc
 ASFLAGS_config
-libc_cv_Bgroup
 libc_cv_cc_with_libunwind
 libc_cv_protected_data
 BISON
@@ -5762,33 +5761,6 @@ else
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_linker_feature" >&5
 $as_echo "$libc_linker_feature" >&6; }
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -Bgroup option" >&5
-$as_echo_n "checking for -Bgroup option... " >&6; }
-if ${libc_cv_Bgroup+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<EOF
-int _start (void) { return 42; }
-EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			    -fPIC -shared -o conftest.so conftest.c
-			    -Wl,-Bgroup -nostdlib 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }
-then
-  libc_cv_Bgroup=yes
-else
-  libc_cv_Bgroup=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_Bgroup" >&5
-$as_echo "$libc_cv_Bgroup" >&6; }
-
 
 ASFLAGS_config=
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether --noexecstack is desirable for .S files" >&5

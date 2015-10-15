@@ -1336,22 +1336,6 @@ LIBC_LINKER_FEATURE([-z initfirst], [-Wl,--enable-new-dtags,-z,initfirst],
 		    [libc_cv_z_initfirst=yes],
 		    [AC_MSG_ERROR(linker with -z initfirst support required)])
 
-AC_CACHE_CHECK(for -Bgroup option,
-	       libc_cv_Bgroup, [dnl
-cat > conftest.c <<EOF
-int _start (void) { return 42; }
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			    -fPIC -shared -o conftest.so conftest.c
-			    -Wl,-Bgroup -nostdlib 1>&AS_MESSAGE_LOG_FD])
-then
-  libc_cv_Bgroup=yes
-else
-  libc_cv_Bgroup=no
-fi
-rm -f conftest*])
-AC_SUBST(libc_cv_Bgroup)
-
 ASFLAGS_config=
 AC_CACHE_CHECK(whether --noexecstack is desirable for .S files,
 	       libc_cv_as_noexecstack, [dnl
