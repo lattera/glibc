@@ -6,7 +6,7 @@
 
 /* Internal machine-dependent function to restore context sans signal mask.  */
 extern void __longjmp (__jmp_buf __env, int __val)
-     __attribute__ ((__noreturn__));
+     __attribute__ ((__noreturn__)) attribute_hidden;
 
 /* Internal function to possibly save the current mask of blocked signals
    in ENV, and always set the flag saying whether or not it was saved.
@@ -24,6 +24,10 @@ libc_hidden_proto (__libc_longjmp)
 
 libc_hidden_proto (_setjmp)
 libc_hidden_proto (__sigsetjmp)
+
+# if IS_IN (rtld)
+extern __typeof (__sigsetjmp) __sigsetjmp attribute_hidden;
+# endif
 #endif
 
 #endif

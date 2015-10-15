@@ -1,6 +1,9 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
+	* include/setjmp.h (__longjmp): Add attribute_hidden.
+	[IS_IN (rtld)] (__sigsetjmp): Likewise.
+
 	* include/libc-internal.h [IS_IN (rtld)] (__profile_frequency):
 	Add attribute_hidden.
 
