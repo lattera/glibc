@@ -1,5 +1,15 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #19122]
+	* sysdeps/i386/dl-lookupcfg.h (_dl_unmap): Add attribute_hidden.
+	* sysdeps/i386/dl-tlsdesc.h (_dl_make_tlsdesc_dynamic):
+	Likewise.
+	* sysdeps/x86_64/dl-tlsdesc.h (_dl_make_tlsdesc_dynamic):
+	Likewise.
+	* sysdeps/x86_64/dl-lookupcfg.h (_dl_unmap): Likewise.
+
+2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Add comments for
 	GCC 5 requirement.
 
