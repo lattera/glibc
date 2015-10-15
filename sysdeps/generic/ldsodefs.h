@@ -592,9 +592,6 @@ struct rtld_global_ro
   /* List of auditing interfaces.  */
   struct audit_ifaces *_dl_audit;
   unsigned int _dl_naudit;
-
-  /* 0 if internal pointer values should not be guarded, 1 if they should.  */
-  EXTERN int _dl_pointer_guard;
 };
 # define __rtld_global_attribute__
 # if IS_IN (rtld)

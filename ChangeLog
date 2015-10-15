@@ -1,3 +1,13 @@
+2015-10-15  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18928]
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Remove
+	_dl_pointer_guard member.
+	* elf/rtld.c (_rtld_global_ro): Remove _dl_pointer_guard
+	initializer.
+	(security_init): Always set up pointer guard.
+	(process_envvars): Do not process LD_POINTER_GUARD.
+
 2015-10-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19134]
