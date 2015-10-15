@@ -641,7 +641,6 @@ BISON
 INSTALL_INFO
 PERL
 BASH_SHELL
-libc_cv_gcc_static_libgcc
 CXX_SYSINCLUDES
 SYSINCLUDES
 AUTOCONF
@@ -5315,21 +5314,6 @@ as_fn_error $? "
 *** building glibc. Please change the environment variable
 *** and run configure again." "$LINENO" 5
 fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether GCC supports -static-libgcc" >&5
-$as_echo_n "checking whether GCC supports -static-libgcc... " >&6; }
-if ${libc_cv_gcc_static_libgcc+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if $CC -v -static-libgcc 2>&1 | grep 'unrecognized option.*static-libgcc' >/dev/null; then
-  libc_cv_gcc_static_libgcc=
-else
-  libc_cv_gcc_static_libgcc=-static-libgcc
-fi
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_static_libgcc" >&5
-$as_echo "$libc_cv_gcc_static_libgcc" >&6; }
-
 
 # Extract the first word of "bash", so it can be a program name with args.
 set dummy bash; ac_word=$2

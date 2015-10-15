@@ -1065,14 +1065,6 @@ AC_MSG_ERROR([
 *** and run configure again.])
 fi
 
-AC_CACHE_CHECK(whether GCC supports -static-libgcc, libc_cv_gcc_static_libgcc, [dnl
-if $CC -v -static-libgcc 2>&1 | grep 'unrecognized option.*static-libgcc' >/dev/null; then
-  libc_cv_gcc_static_libgcc=
-else
-  libc_cv_gcc_static_libgcc=-static-libgcc
-fi])
-AC_SUBST(libc_cv_gcc_static_libgcc)
-
 AC_PATH_PROG(BASH_SHELL, bash, no)
 
 AC_PATH_PROG(PERL, perl, no)
