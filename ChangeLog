@@ -1,6 +1,9 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
+	* sysdeps/generic/_itoa.h (_itoa): Add attribute_hidden.
+	(_itoa_word): Likewise.
+
 	* elf/dl-runtime.c (_dl_fixup): Add attribute_hidden.
 	* elf/dynamic-link.h (_dl_try_allocate_static_tls): Likewise.
 	* sysdeps/generic/dl-cache.h (_dl_cache_libcmp): Likewise.

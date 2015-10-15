@@ -42,7 +42,7 @@
    Use upper case letters iff UPPER_CASE is nonzero.  */
 
 extern char *_itoa (unsigned long long int value, char *buflim,
-		    unsigned int base, int upper_case);
+		    unsigned int base, int upper_case) attribute_hidden;
 
 extern const char _itoa_upper_digits[];
 extern const char _itoa_lower_digits[];
@@ -53,7 +53,8 @@ hidden_proto (_itoa_lower_digits)
 
 #if IS_IN (libc)
 extern char *_itoa_word (_ITOA_WORD_TYPE value, char *buflim,
-			 unsigned int base, int upper_case);
+			 unsigned int base,
+			 int upper_case) attribute_hidden;
 #else
 static inline char * __attribute__ ((unused, always_inline))
 _itoa_word (_ITOA_WORD_TYPE value, char *buflim,
