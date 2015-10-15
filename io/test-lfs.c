@@ -56,7 +56,6 @@ do_prepare (int argc, char *argv[])
   name = malloc (name_len + sizeof ("/lfsXXXXXX"));
   mempcpy (mempcpy (name, test_dir, name_len),
            "/lfsXXXXXX", sizeof ("/lfsXXXXXX"));
-  add_temp_file (name);
 
   /* Open our test file.   */
   fd = mkstemp64 (name);
@@ -71,6 +70,7 @@ do_prepare (int argc, char *argv[])
       else
 	error (EXIT_FAILURE, errno, "cannot create temporary file");
     }
+  add_temp_file (name);
 
   if (getrlimit64 (RLIMIT_FSIZE, &rlim) != 0)
     {

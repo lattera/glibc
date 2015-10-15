@@ -65,12 +65,12 @@ do_prepare (int argc, char *argv[])
   name = malloc (name_len + sizeof ("/utmpXXXXXX"));
   mempcpy (mempcpy (name, test_dir, name_len),
 	   "/utmpXXXXXX", sizeof ("/utmpXXXXXX"));
-  add_temp_file (name);
 
   /* Open our test file.  */
   fd = mkstemp (name);
   if (fd == -1)
     error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
+  add_temp_file (name);
 }
 
 struct utmp entry[] =
