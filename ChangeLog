@@ -1,6 +1,16 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
+	* include/dirent.h (__opendirat): Add attribute_hidden.
+	(__getdents): Likewise.
+	(__getdents64): Likewise.
+	(__alloc_dir): Likewise.
+	[IS_IN (rtld)] (__closedir): Likewise.
+	[IS_IN (rtld)] (__fdopendir): Likewise.
+	[IS_IN (rtld)] (__readdir): Likewise.
+	[IS_IN (rtld)] (__readdir64): Likewise.
+	[IS_IN (rtld)] (__rewinddir): Likewise.
+
 	* include/dlfcn.h (_dl_catch_error): Moved to ...
 	* sysdeps/generic/ldsodefs.h (_dl_catch_error): Add
 	attribute_hidden.
