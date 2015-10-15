@@ -43,14 +43,6 @@
 /* Define if _Unwind_Find_FDE should be exported from glibc.  */
 #undef  EXPORT_UNWIND_FIND_FDE
 
-/* Define if using ELF and the assembler supports the `.previous'
-   directive.  */
-#undef	HAVE_ASM_PREVIOUS_DIRECTIVE
-
-/* Define if using ELF and the assembler supports the `.popsection'
-   directive.  */
-#undef	HAVE_ASM_POPSECTION_DIRECTIVE
-
 /* Define if static NSS modules are wanted.  */
 #undef	DO_STATIC_NSS
 

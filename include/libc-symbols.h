@@ -175,15 +175,8 @@
 /* When a reference to SYMBOL is encountered, the linker will emit a
    warning message MSG.  */
 /* We want the .gnu.warning.SYMBOL section to be unallocated.  */
-#ifdef HAVE_ASM_PREVIOUS_DIRECTIVE
-# define __make_section_unallocated(section_string)	\
+#define __make_section_unallocated(section_string)	\
   asm (".section " section_string "\n\t.previous");
-#elif defined HAVE_ASM_POPSECTION_DIRECTIVE
-# define __make_section_unallocated(section_string)	\
-  asm (".pushsection " section_string "\n\t.popsection");
-#else
-# define __make_section_unallocated(section_string)
-#endif
 
 /* Tacking on "\n\t#" to the section name makes gcc put it's bogus
    section attributes on what looks like a comment to the assembler.  */

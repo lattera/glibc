@@ -1,5 +1,18 @@
 2015-10-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.ac (libc_cv_asm_previous_directive): Remove configure
+	test.
+	(libc_cv_asm_popsection_directive): Likewise.
+	* configure: Regenerated.
+	* config.h.in (HAVE_ASM_PREVIOUS_DIRECTIVE): Remove #undef.
+	(HAVE_ASM_POPSECTION_DIRECTIVE): Likewise.
+	* include/libc-symbols.h [HAVE_ASM_PREVIOUS_DIRECTIVE]
+	(__make_section_unallocated): Make definition unconditional.
+	[HAVE_ASM_POPSECTION_DIRECTIVE] (__make_section_unallocated):
+	Remove conditional definition.
+	[!HAVE_ASM_PREVIOUS_DIRECTIVE && !HAVE_ASM_POPSECTION_DIRECTIVE]
+	(__make_section_unallocated): Likewise.
+
 	* configure.ac (libc_cv_gcc_static_libgcc): Remove configure test.
 	* configure: Regenerated.
 	* config.make.in (static-libgcc): Remove variable.

@@ -1138,37 +1138,6 @@ if test $libc_cv_asm_unique_object = yes; then
   AC_DEFINE(HAVE_ASM_UNIQUE_OBJECT)
 fi
 
-AC_CACHE_CHECK(for .previous assembler directive,
-	       libc_cv_asm_previous_directive, [dnl
-cat > conftest.s <<EOF
-.section foo_section
-.previous
-EOF
-if AC_TRY_COMMAND(${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
-  libc_cv_asm_previous_directive=yes
-else
-  libc_cv_asm_previous_directive=no
-fi
-rm -f conftest*])
-if test $libc_cv_asm_previous_directive = yes; then
-  AC_DEFINE(HAVE_ASM_PREVIOUS_DIRECTIVE)
-else
-  AC_CACHE_CHECK(for .popsection assembler directive,
-		 libc_cv_asm_popsection_directive, [dnl
-  cat > conftest.s <<EOF
-.pushsection foo_section
-.popsection
-EOF
-  if AC_TRY_COMMAND(${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
-    libc_cv_asm_popsection_directive=yes
-  else
-    libc_cv_asm_popsection_directive=no
-  fi
-  rm -f conftest*])
-  if test $libc_cv_asm_popsection_directive = yes; then
-    AC_DEFINE(HAVE_ASM_POPSECTION_DIRECTIVE)
-  fi
-fi
 AC_CACHE_CHECK(for .protected and .hidden assembler directive,
 	       libc_cv_asm_protected_directive, [dnl
 cat > conftest.s <<EOF
