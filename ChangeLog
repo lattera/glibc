@@ -1,5 +1,29 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/i386/libc-do-syscall.S
+	(__libc_do_syscall): Defined only if !__GNUC_PREREQ (5,0).
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define assembler macros
+	only if !__GNUC_PREREQ (5,0).
+	(INTERNAL_SYSCALL_MAIN_6): Optimize for GCC 5.
+	(INTERNAL_SYSCALL_MAIN_INLINE): Likewise.
+	(INTERNAL_SYSCALL_NCS): Likewise.
+	(LOADREGS_0): New macro for GCC 5.
+	(ASMARGS_0): Likewise.
+	(LOADREGS_1): Likewise.
+	(ASMARGS_1): Likewise.
+	(LOADREGS_2): Likewise.
+	(ASMARGS_2): Likewise.
+	(LOADREGS_3): Likewise.
+	(ASMARGS_3): Likewise.
+	(LOADREGS_4): Likewise.
+	(ASMARGS_4): Likewise.
+	(LOADREGS_5): Likewise.
+	(ASMARGS_5): Likewise.
+	(LOADREGS_6): Likewise.
+	(ASMARGS_6): Likewise.
+
+2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/i386/Makefile (CFLAGS-mmap.c): Add
 	-fomit-frame-pointer.
 	(CFLAGS-mmap64.c): Likewise.

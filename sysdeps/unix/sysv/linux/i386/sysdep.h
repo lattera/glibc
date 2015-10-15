@@ -227,6 +227,7 @@
 extern int __syscall_error (int)
   attribute_hidden __attribute__ ((__regparm__ (1)));
 
+#if !__GNUC_PREREQ (5,0)
 /* We need some help from the assembler to generate optimal code.  We
    define some macros here which later will be used.  */
 asm (".L__X'%ebx = 1\n\t"
@@ -266,6 +267,7 @@ struct libc_do_syscall_args
 {
   int ebx, edi, ebp;
 };
+#endif
 
 /* Define a macro which expands inline into the wrapper code for a system
    call.  */
@@ -322,8 +324,12 @@ struct libc_do_syscall_args
     INTERNAL_SYSCALL_MAIN_INLINE(name, err, 5, args)
 /* Each object using 6-argument inline syscalls must include a
    definition of __libc_do_syscall.  */
-#define INTERNAL_SYSCALL_MAIN_6(name, err, arg1, arg2, arg3,		\
-				arg4, arg5, arg6)			\
+#if __GNUC_PREREQ (5,0)
+# define INTERNAL_SYSCALL_MAIN_6(name, err, args...) \
+    INTERNAL_SYSCALL_MAIN_INLINE(name, err, 6, args)
+#else /* GCC 5  */
+# define INTERNAL_SYSCALL_MAIN_6(name, err, arg1, arg2, arg3,		\
+				 arg4, arg5, arg6)			\
   struct libc_do_syscall_args _xv =					\
     {									\
       (int) (arg1),							\
@@ -336,14 +342,52 @@ struct libc_do_syscall_args
     : "=a" (resultvar)							\
     : "i" (__NR_##name), "c" (arg2), "d" (arg3), "S" (arg4), "D" (&_xv) \
     : "memory", "cc")
+#endif /* GCC 5  */
 #define INTERNAL_SYSCALL(name, err, nr, args...) \
   ({									      \
     register unsigned int resultvar;					      \
     INTERNAL_SYSCALL_MAIN_##nr (name, err, args);			      \
     (int) resultvar; })
 #ifdef I386_USE_SYSENTER
-# ifdef SHARED
-#  define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
+# if __GNUC_PREREQ (5,0)
+#  ifdef SHARED
+#   define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
+    LOADREGS_##nr(args)							\
+    asm volatile (							\
+    "call *%%gs:%P2"							\
+    : "=a" (resultvar)							\
+    : "a" (__NR_##name), "i" (offsetof (tcbhead_t, sysinfo))		\
+      ASMARGS_##nr(args) : "memory", "cc")
+#   define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+  ({									\
+    register unsigned int resultvar;					\
+    LOADREGS_##nr(args)							\
+    asm volatile (							\
+    "call *%%gs:%P2"							\
+    : "=a" (resultvar)							\
+    : "a" (name), "i" (offsetof (tcbhead_t, sysinfo))			\
+      ASMARGS_##nr(args) : "memory", "cc");				\
+    (int) resultvar; })
+#  else
+#   define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
+    LOADREGS_##nr(args)							\
+    asm volatile (							\
+    "call *_dl_sysinfo"							\
+    : "=a" (resultvar)							\
+    : "a" (__NR_##name) ASMARGS_##nr(args) : "memory", "cc")
+#   define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+  ({									\
+    register unsigned int resultvar;					\
+    LOADREGS_##nr(args)							\
+    asm volatile (							\
+    "call *_dl_sysinfo"							\
+    : "=a" (resultvar)							\
+    : "a" (name) ASMARGS_##nr(args) : "memory", "cc");			\
+    (int) resultvar; })
+#  endif
+# else /* GCC 5  */
+#  ifdef SHARED
+#   define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
     EXTRAVAR_##nr							      \
     asm volatile (							      \
     LOADARGS_##nr							      \
@@ -353,7 +397,7 @@ struct libc_do_syscall_args
     : "=a" (resultvar)							      \
     : "i" (__NR_##name), "i" (offsetof (tcbhead_t, sysinfo))		      \
       ASMFMT_##nr(args) : "memory", "cc")
-#  define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+#   define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
   ({									      \
     register unsigned int resultvar;					      \
     EXTRAVAR_##nr							      \
@@ -365,13 +409,53 @@ struct libc_do_syscall_args
     : "0" (name), "i" (offsetof (tcbhead_t, sysinfo))			      \
       ASMFMT_##nr(args) : "memory", "cc");				      \
     (int) resultvar; })
-# else
-#  define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
+#  else
+#   define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
     EXTRAVAR_##nr							      \
     asm volatile (							      \
     LOADARGS_##nr							      \
     "movl %1, %%eax\n\t"						      \
     "call *_dl_sysinfo\n\t"						      \
+    RESTOREARGS_##nr							      \
+    : "=a" (resultvar)							      \
+    : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc")
+#   define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+  ({									      \
+    register unsigned int resultvar;					      \
+    EXTRAVAR_##nr							      \
+    asm volatile (							      \
+    LOADARGS_##nr							      \
+    "call *_dl_sysinfo\n\t"						      \
+    RESTOREARGS_##nr							      \
+    : "=a" (resultvar)							      \
+    : "0" (name) ASMFMT_##nr(args) : "memory", "cc");			      \
+    (int) resultvar; })
+#  endif
+# endif /* GCC 5  */
+#else
+# if __GNUC_PREREQ (5,0)
+#  define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
+    LOADREGS_##nr(args)							\
+    asm volatile (							\
+    "int $0x80"								\
+    : "=a" (resultvar)							\
+    : "a" (__NR_##name) ASMARGS_##nr(args) : "memory", "cc")
+#  define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+  ({									\
+    register unsigned int resultvar;					\
+    LOADREGS_##nr(args)							\
+    asm volatile (							\
+    "int $0x80"								\
+    : "=a" (resultvar)							\
+    : "a" (name) ASMARGS_##nr(args) : "memory", "cc");			\
+    (int) resultvar; })
+# else /* GCC 5  */
+#  define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
+    EXTRAVAR_##nr							      \
+    asm volatile (							      \
+    LOADARGS_##nr							      \
+    "movl %1, %%eax\n\t"						      \
+    "int $0x80\n\t"							      \
     RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
     : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc")
@@ -381,33 +465,12 @@ struct libc_do_syscall_args
     EXTRAVAR_##nr							      \
     asm volatile (							      \
     LOADARGS_##nr							      \
-    "call *_dl_sysinfo\n\t"						      \
-    RESTOREARGS_##nr							      \
-    : "=a" (resultvar)							      \
-    : "0" (name) ASMFMT_##nr(args) : "memory", "cc");			      \
-    (int) resultvar; })
-# endif
-#else
-# define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
-    EXTRAVAR_##nr							      \
-    asm volatile (							      \
-    LOADARGS_##nr							      \
-    "movl %1, %%eax\n\t"						      \
-    "int $0x80\n\t"							      \
-    RESTOREARGS_##nr							      \
-    : "=a" (resultvar)							      \
-    : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc")
-# define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
-  ({									      \
-    register unsigned int resultvar;					      \
-    EXTRAVAR_##nr							      \
-    asm volatile (							      \
-    LOADARGS_##nr							      \
     "int $0x80\n\t"							      \
     RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
     : "0" (name) ASMFMT_##nr(args) : "memory", "cc");			      \
     (int) resultvar; })
+# endif /* GCC 5  */
 #endif
 
 #undef INTERNAL_SYSCALL_DECL
@@ -471,6 +534,36 @@ struct libc_do_syscall_args
 # define RESTOREARGS_4
 # define RESTOREARGS_5
 #endif
+
+#if __GNUC_PREREQ (5,0)
+# define LOADREGS_0()
+# define ASMARGS_0()
+# define LOADREGS_1(arg1) \
+	LOADREGS_0 ()
+# define ASMARGS_1(arg1) \
+	ASMARGS_0 (), "b" ((unsigned int) (arg1))
+# define LOADREGS_2(arg1, arg2) \
+	LOADREGS_1 (arg1)
+# define ASMARGS_2(arg1, arg2) \
+	ASMARGS_1 (arg1), "c" ((unsigned int) (arg2))
+# define LOADREGS_3(arg1, arg2, arg3) \
+	LOADREGS_2 (arg1, arg2)
+# define ASMARGS_3(arg1, arg2, arg3) \
+	ASMARGS_2 (arg1, arg2), "d" ((unsigned int) (arg3))
+# define LOADREGS_4(arg1, arg2, arg3, arg4) \
+	LOADREGS_3 (arg1, arg2, arg3)
+# define ASMARGS_4(arg1, arg2, arg3, arg4) \
+	ASMARGS_3 (arg1, arg2, arg3), "S" ((unsigned int) (arg4))
+# define LOADREGS_5(arg1, arg2, arg3, arg4, arg5) \
+	LOADREGS_4 (arg1, arg2, arg3, arg4)
+# define ASMARGS_5(arg1, arg2, arg3, arg4, arg5) \
+	ASMARGS_4 (arg1, arg2, arg3, arg4), "D" ((unsigned int) (arg5))
+# define LOADREGS_6(arg1, arg2, arg3, arg4, arg5, arg6) \
+	register unsigned int _a6 asm ("ebp") = (unsigned int) (arg6); \
+	LOADREGS_5 (arg1, arg2, arg3, arg4, arg5)
+# define ASMARGS_6(arg1, arg2, arg3, arg4, arg5, arg6) \
+	ASMARGS_5 (arg1, arg2, arg3, arg4, arg5), "r" (_a6)
+#endif /* GCC 5  */
 
 #define ASMFMT_0()
 #ifdef __PIC__
