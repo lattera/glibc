@@ -61,6 +61,11 @@ extern int __xpg_sigpause (int sig);
 
 /* Allocate real-time signal with highest/lowest available priority.  */
 extern int __libc_allocate_rtsig (int __high);
+
+#  if IS_IN (rtld)
+extern __typeof (__sigaction) __sigaction attribute_hidden;
+extern __typeof (__libc_sigaction) __libc_sigaction attribute_hidden;
+#  endif
 # endif
 #endif
 #endif

@@ -1,6 +1,10 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
+	* include/signal.h [IS_IN (rtld)] (__sigaction): Add
+	attribute_hidden.
+	[IS_IN (rtld)] (__libc_sigaction): Likewise.
+
 	* include/setjmp.h (__longjmp): Add attribute_hidden.
 	[IS_IN (rtld)] (__sigsetjmp): Likewise.
 
