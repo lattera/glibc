@@ -1,3 +1,13 @@
+2015-10-15  Florian Weimer  <fweimer@redhat.com>
+
+	* stdio-common/vfscanf.c (MEMCPY): Remove macro.
+	(struct char_buffer): New type.
+	(char_buffer_start, char_buffer_size, char_buffer_error)
+	(char_buffer_rewind, char_buffer_add): New functions.
+	(ADDW): Remove macro, replaced by the char_buffer_add function.
+	(_IO_vfscanf_internal): Rewrite using struct char_buffer instead
+	of extend_alloca.  Make control flow more explicit.
+
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19137]
