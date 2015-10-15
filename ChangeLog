@@ -1,5 +1,106 @@
 2015-10-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.ac (libc_cv_gcc_exceptions): Remove configure test.
+	* configure: Regenerated.
+	* sysdeps/arm/configure.ac (libc_cv_gcc_exceptions): Do not set
+	variable.
+	(exceptions): Likewise.
+	* sysdeps/arm/configure: Regenerated.
+	* config.make.in (exceptions): Remove variable.
+	* Makeconfig (uses-callbacks): Use -fexceptions instead of
+	$(exceptions).
+	* debug/Makefile (CFLAGS-dprintf_chk.c): Likewise.
+	(CFLAGS-vdprintf_chk.c): Likewise.
+	(CFLAGS-printf_chk.c): Likewise.
+	(CFLAGS-fprintf_chk.c): Likewise.
+	(CFLAGS-vprintf_chk.c): Likewise.
+	(CFLAGS-vfprintf_chk.c): Likewise.
+	(CFLAGS-gets_chk.c): Likewise.
+	(CFLAGS-fgets_chk.c): Likewise.
+	(CFLAGS-fgets_u_chk.c): Likewise.
+	(CFLAGS-fread_chk.c): Likewise.
+	(CFLAGS-fread_u_chk.c): Likewise.
+	(CFLAGS-wprintf_chk.c): Likewise.
+	(CFLAGS-fwprintf_chk.c): Likewise.
+	(CFLAGS-vwprintf_chk.c): Likewise.
+	(CFLAGS-vfwprintf_chk.c): Likewise.
+	(CFLAGS-fgetws_chk.c): Likewise.
+	(CFLAGS-fgetws_u_chk.c): Likewise.
+	* libio/Makefile (CFLAGS-fileops.c): Likewise.
+	(CFLAGS-fputc.c): Likewise.
+	(CFLAGS-fputwc.c): Likewise.
+	(CFLAGS-freopen64.c): Likewise.
+	(CFLAGS-freopen.c): Likewise.
+	(CFLAGS-fseek.c): Likewise.
+	(CFLAGS-fseeko64.c): Likewise.
+	(CFLAGS-fseeko.c): Likewise.
+	(CFLAGS-ftello64.c): Likewise.
+	(CFLAGS-ftello.c): Likewise.
+	(CFLAGS-fwide.c): Likewise.
+	(CFLAGS-genops.c): Likewise.
+	(CFLAGS-getc.c): Likewise.
+	(CFLAGS-getchar.c): Likewise.
+	(CFLAGS-getwc.c): Likewise.
+	(CFLAGS-getwchar.c): Likewise.
+	(CFLAGS-iofclose.c): Likewise.
+	(CFLAGS-iofflush.c): Likewise.
+	(CFLAGS-iofgetpos64.c): Likewise.
+	(CFLAGS-iofgetpos.c): Likewise.
+	(CFLAGS-iofgets.c): Likewise.
+	(CFLAGS-iofgetws.c): Likewise.
+	(CFLAGS-iofputs.c): Likewise.
+	(CFLAGS-iofputws.c): Likewise.
+	(CFLAGS-iofread.c): Likewise.
+	(CFLAGS-iofsetpos64.c): Likewise.
+	(CFLAGS-iofsetpos.c): Likewise.
+	(CFLAGS-ioftell.c): Likewise.
+	(CFLAGS-iofwrite.c): Likewise.
+	(CFLAGS-iogetdelim.c): Likewise.
+	(CFLAGS-iogetline.c): Likewise.
+	(CFLAGS-iogets.c): Likewise.
+	(CFLAGS-iogetwline.c): Likewise.
+	(CFLAGS-ioputs.c): Likewise.
+	(CFLAGS-ioseekoff.c): Likewise.
+	(CFLAGS-ioseekpos.c): Likewise.
+	(CFLAGS-iosetbuffer.c): Likewise.
+	(CFLAGS-iosetvbuf.c): Likewise.
+	(CFLAGS-ioungetc.c): Likewise.
+	(CFLAGS-ioungetwc.c): Likewise.
+	(CFLAGS-oldfileops.c): Likewise.
+	(CFLAGS-oldiofclose.c): Likewise.
+	(CFLAGS-oldiofgetpos64.c): Likewise.
+	(CFLAGS-oldiofgetpos.c): Likewise.
+	(CFLAGS-oldiofsetpos64.c): Likewise.
+	(CFLAGS-oldiofsetpos.c): Likewise.
+	(CFLAGS-peekc.c): Likewise.
+	(CFLAGS-putc.c): Likewise.
+	(CFLAGS-putchar.c): Likewise.
+	(CFLAGS-putwc.c): Likewise.
+	(CFLAGS-putwchar.c): Likewise.
+	(CFLAGS-rewind.c): Likewise.
+	(CFLAGS-wfileops.c): Likewise.
+	(CFLAGS-wgenops.c): Likewise.
+	(CFLAGS-oldiofopen.c): Likewise.
+	(CFLAGS-iofopen.c): Likewise.
+	(CFLAGS-iofopen64.c): Likewise.
+	(CFLAGS-oldtmpfile.c): Likewise.
+	* stdio-common/Makefile (CFLAGS-vfprintf.c): Likewise.
+	(CFLAGS-fprintf.c): Likewise.
+	(CFLAGS-printf.c): Likewise.
+	(CFLAGS-vfwprintf.c): Likewise.
+	(CFLAGS-vfscanf.c): Likewise.
+	(CFLAGS-vfwscanf.c): Likewise.
+	(CFLAGS-fscanf.c): Likewise.
+	(CFLAGS-scanf.c): Likewise.
+	(CFLAGS-isoc99_vfscanf.c): Likewise.
+	(CFLAGS-isoc99_vscanf.c): Likewise.
+	(CFLAGS-isoc99_fscanf.c): Likewise.
+	(CFLAGS-isoc99_scanf.c): Likewise.
+	* wcsmbs/Makefile (CFLAGS-isoc99_wscanf.c): Likewise.
+	(CFLAGS-isoc99_fwscanf.c): Likewise.
+	(CFLAGS-isoc99_vwscanf.c): Likewise.
+	(CFLAGS-isoc99_vfwscanf.c): Likewise.
+
 	* io/test-lfs.c (do_prepare): Do not call add_temp_file until
 	after mkstemp64.
 	* login/tst-utmp.c (do_prepare): Likewise.

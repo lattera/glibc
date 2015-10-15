@@ -84,10 +84,10 @@ CFLAGS-wcstold_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstof_l.c = $(strtox-CFLAGS)
 CPPFLAGS-tst-wchar-h.c = -D_FORTIFY_SOURCE=2
 
-CFLAGS-isoc99_wscanf.c += $(exceptions)
-CFLAGS-isoc99_fwscanf.c += $(exceptions)
-CFLAGS-isoc99_vwscanf.c += $(exceptions)
-CFLAGS-isoc99_vfwscanf.c += $(exceptions)
+CFLAGS-isoc99_wscanf.c += -fexceptions
+CFLAGS-isoc99_fwscanf.c += -fexceptions
+CFLAGS-isoc99_vwscanf.c += -fexceptions
+CFLAGS-isoc99_vfwscanf.c += -fexceptions
 
 CPPFLAGS += $(libio-mtsafe)
 

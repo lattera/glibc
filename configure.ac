@@ -1629,26 +1629,6 @@ if test $libc_cv_ld_no_whole_archive = no; then
   AC_MSG_ERROR([support for --no-whole-archive is needed])
 fi
 
-AC_CACHE_CHECK(for gcc -fexceptions, libc_cv_gcc_exceptions, [dnl
-cat > conftest.c <<\EOF
-_start () {}
-int __eh_pc;
-__throw () {}
-EOF
-dnl No \ in command here because it ends up inside ''.
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			    -nostdlib -nostartfiles -fexceptions
-			    -o conftest conftest.c 1>&AS_MESSAGE_LOG_FD]); then
-  libc_cv_gcc_exceptions=yes
-else
-  libc_cv_gcc_exceptions=no
-fi
-rm -f conftest*])
-if test $libc_cv_gcc_exceptions = yes; then
-  exceptions=-fexceptions
-fi
-AC_SUBST(exceptions)dnl
-
 AC_CACHE_CHECK(for __builtin_memset, libc_cv_gcc_builtin_memset, [dnl
 cat > conftest.c <<\EOF
 void zero (void *x)

@@ -624,7 +624,6 @@ LIBGD
 libc_cv_cc_loop_to_function
 libc_cv_cc_submachine
 libc_cv_cc_nofma
-exceptions
 gnu89_inline
 libc_cv_ssp
 fno_unit_at_a_time
@@ -6469,36 +6468,6 @@ fi
 $as_echo "$libc_cv_ld_no_whole_archive" >&6; }
 if test $libc_cv_ld_no_whole_archive = no; then
   as_fn_error $? "support for --no-whole-archive is needed" "$LINENO" 5
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for gcc -fexceptions" >&5
-$as_echo_n "checking for gcc -fexceptions... " >&6; }
-if ${libc_cv_gcc_exceptions+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<\EOF
-_start () {}
-int __eh_pc;
-__throw () {}
-EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			    -nostdlib -nostartfiles -fexceptions
-			    -o conftest conftest.c 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-  libc_cv_gcc_exceptions=yes
-else
-  libc_cv_gcc_exceptions=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_exceptions" >&5
-$as_echo "$libc_cv_gcc_exceptions" >&6; }
-if test $libc_cv_gcc_exceptions = yes; then
-  exceptions=-fexceptions
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __builtin_memset" >&5

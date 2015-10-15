@@ -50,7 +50,7 @@ export sysdep_dir := $(sysdep_dir)
 include $(common-objpfx)config.make
 
 # What flags to give to sources which call user provided callbacks
-uses-callbacks = $(exceptions)
+uses-callbacks = -fexceptions
 
 # What flags to give to tests which test stack alignment
 stack-align-test-flags =
