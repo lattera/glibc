@@ -1793,11 +1793,6 @@ if test "x$have_selinux" = xyes; then
 fi
 AC_SUBST(have_selinux)
 
-dnl check for the size of 'long double'.
-AC_CHECK_SIZEOF(long double, 0)
-sizeof_long_double=$ac_cv_sizeof_long_double
-AC_SUBST(sizeof_long_double)
-
 CPPUNDEFS=
 dnl Check for silly hacked compilers predefining _FORTIFY_SOURCE.
 dnl Since we are building the implementations of the fortified functions here,

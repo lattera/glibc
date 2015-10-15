@@ -74,8 +74,6 @@ multi-arch = @multi_arch@
 
 mach-interface-list = @mach_interface_list@
 
-sizeof-long-double = @sizeof_long_double@
-
 nss-crypt = @libc_cv_nss_crypt@
 
 # Configuration options.

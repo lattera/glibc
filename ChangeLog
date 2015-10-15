@@ -1,5 +1,9 @@
 2015-10-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.ac (sizeof_long_double): Remove configure test.
+	* configure: Regenerated.
+	* config.make.in (sizeof-long-double): Remove variable.
+
 	* configure.ac (libc_cv_gcc_exceptions): Remove configure test.
 	* configure: Regenerated.
 	* sysdeps/arm/configure.ac (libc_cv_gcc_exceptions): Do not set
