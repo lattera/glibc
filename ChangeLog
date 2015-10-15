@@ -1,6 +1,9 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
+	* include/libc-internal.h [IS_IN (rtld)] (__profile_frequency):
+	Add attribute_hidden.
+
 	* include/fcntl.h (__libc_fcntl): Add attribute_hidden.
 	[IS_IN (rtld)] (__open): Likewise.
 	[IS_IN (rtld)] (__fcntl): Likewise.

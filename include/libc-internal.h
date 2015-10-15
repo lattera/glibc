@@ -34,6 +34,10 @@ extern void __libc_thread_freeres (void);
 /* Define and initialize `__progname' et. al.  */
 extern void __init_misc (int, char **, char **);
 
+# if IS_IN (rtld)
+extern __typeof (__profile_frequency) __profile_frequency attribute_hidden;
+# endif
+
 /* 1 if 'type' is a pointer type, 0 otherwise.  */
 # define __pointer_type(type) (__builtin_classify_type ((type) 0) == 5)
 
