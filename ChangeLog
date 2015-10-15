@@ -1,3 +1,8 @@
+2015-10-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (libc_cv_friendly_stddef): Remove configure test.
+	* configure: Regenerated.
+
 2015-10-15  Florian Weimer  <fweimer@redhat.com>
 
 	* stdio-common/vfscanf.c (MEMCPY): Remove macro.

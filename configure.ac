@@ -1087,24 +1087,6 @@ AC_CHECK_PROG_VER(BISON, bison, --version,
 		  [2.7*|[3-9].*|[1-9][0-9]*],
 		  BISON=no)
 
-AC_CACHE_CHECK(for libc-friendly stddef.h, libc_cv_friendly_stddef, [dnl
-AC_TRY_COMPILE(dnl
-[#define __need_size_t
-#define __need_wchar_t
-#include <stddef.h>
-#define __need_NULL
-#include <stddef.h>], [size_t size; wchar_t wchar;
-#ifdef offsetof
-#error stddef.h ignored __need_*
-#endif
-if (&size == NULL || &wchar == NULL) abort ();],
-	       libc_cv_friendly_stddef=yes,
-	       libc_cv_friendly_stddef=no)])
-if test $libc_cv_friendly_stddef = yes; then
-  config_vars="$config_vars
-override stddef.h = # The installed <stddef.h> seems to be libc-friendly."
-fi
-
 AC_CACHE_CHECK(whether we need to use -P to assemble .S files,
 	       libc_cv_need_minus_P, [dnl
 cat > conftest.S <<EOF
