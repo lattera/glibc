@@ -1,3 +1,8 @@
+2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Add comments for
+	GCC 5 requirement.
+
 2015-10-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/i386/configure.ac (libc_cv_as_i686): Remove configure

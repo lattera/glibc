@@ -227,6 +227,10 @@
 extern int __syscall_error (int)
   attribute_hidden __attribute__ ((__regparm__ (1)));
 
+/* Since GCC 5 and above can properly spill %ebx with PIC when needed,
+   we can inline syscalls with 6 arguments if GCC 5 or above is used
+   to compile glibc.  */
+
 #if !__GNUC_PREREQ (5,0)
 /* We need some help from the assembler to generate optimal code.  We
    define some macros here which later will be used.  */
