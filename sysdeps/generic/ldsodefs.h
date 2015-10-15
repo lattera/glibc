@@ -738,6 +738,18 @@ extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
 			       void *args)
      internal_function attribute_hidden;
 
+/* Call OPERATE, catching errors from `dl_signal_error'.  If there is no
+   error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING is
+   set to a string constructed from the strings passed to _dl_signal_error,
+   and the error code passed is the return value and *OBJNAME is set to
+   the object name which experienced the problems.  ERRSTRING if nonzero
+   points to a malloc'ed string which the caller has to free after use.
+   ARGS is passed as argument to OPERATE.  MALLOCEDP is set to true only
+   if the returned string is allocated using the libc's malloc.  */
+extern int _dl_catch_error (const char **objname, const char **errstring,
+			    bool *mallocedp, void (*operate) (void *),
+			    void *args)
+     internal_function attribute_hidden;
 
 /* Open the shared object NAME and map in its segments.
    LOADER's DT_RPATH is used in searching for NAME.

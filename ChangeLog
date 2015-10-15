@@ -1,6 +1,10 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
+	* include/dlfcn.h (_dl_catch_error): Moved to ...
+	* sysdeps/generic/ldsodefs.h (_dl_catch_error): Add
+	attribute_hidden.
+
 	* sysdeps/generic/_itoa.h (_itoa): Add attribute_hidden.
 	(_itoa_word): Likewise.
 
