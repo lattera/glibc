@@ -1,6 +1,24 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
+	* include/string.h [IS_IN (rtld)] (__stpcpy): Add
+	attribute_hidden.
+	[IS_IN (rtld)] (__strdup): Likewise.
+	[IS_IN (rtld)] (__strerror_r): Likewise.
+	[IS_IN (rtld)] (__strsep_g): Likewise.
+	[IS_IN (rtld)] (memchr): Likewise.
+	[IS_IN (rtld)] (memcmp): Likewise.
+	[IS_IN (rtld)] (memcpy): Likewise.
+	[IS_IN (rtld)] (memmove): Likewise.
+	[IS_IN (rtld)] (memset): Likewise.
+	[IS_IN (rtld)] (rawmemchr): Likewise.
+	[IS_IN (rtld)] (stpcpy): Likewise.
+	[IS_IN (rtld)] (strchr): Likewise.
+	[IS_IN (rtld)] (strcmp): Likewise.
+	[IS_IN (rtld)] (strlen): Likewise.
+	[IS_IN (rtld)] (strnlen): Likewise.
+	[IS_IN (rtld)] (strsep): Likewise.
+
 	* include/stdlib.h [IS_IN (rtld)] (unsetenv): Add
 	attribute_hidden.
 	[IS_IN (rtld)] (__strtoul_internal): Likewise.
