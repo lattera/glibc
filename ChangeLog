@@ -1,5 +1,12 @@
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #19137]
+	* sysdeps/unix/sysv/linux/i386/Makefile (CFLAGS-epoll_pwait.c):
+	Add -fomit-frame-pointer.
+	* sysdeps/unix/sysv/linux/i386/epoll_pwait.S: Remove file.
+
+2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/i386/libc-do-syscall.S
 	(__libc_do_syscall): Defined only if !__GNUC_PREREQ (5,0).
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define assembler macros
