@@ -1,5 +1,11 @@
 2015-10-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/configure.ac (libc_cv_as_i686): Remove configure
+	test.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/i386/i686/Makefile [$(config-asflags-i686) = yes]: Make
+	code unconditional.
+
 	* configure.ac (libc_cv_asm_previous_directive): Remove configure
 	test.
 	(libc_cv_asm_popsection_directive): Likewise.

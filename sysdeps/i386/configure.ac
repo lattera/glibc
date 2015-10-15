@@ -34,14 +34,6 @@ AC_CHECK_HEADER([cpuid.h], ,
   [AC_MSG_ERROR([gcc must provide the <cpuid.h> header])],
   [/* No default includes.  */])
 
-dnl Check if -Wa,-mtune=i686 works.
-AC_CACHE_CHECK(for assembler -mtune=i686 support, libc_cv_as_i686, [dnl
-LIBC_TRY_CC_OPTION([-Wa,-mtune=i686],
-		   [libc_cv_as_i686=yes],
-		   [libc_cv_as_i686=no])
-])
-LIBC_CONFIG_VAR([config-asflags-i686], [$libc_cv_as_i686])
-
 dnl Check whether asm supports Intel MPX
 AC_CACHE_CHECK(for Intel MPX support, libc_cv_asm_mpx, [dnl
 cat > conftest.s <<\EOF
