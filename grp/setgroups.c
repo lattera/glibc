@@ -21,9 +21,7 @@
 
 /* Set the group set for the current user to GROUPS (N of them).  */
 int
-setgroups (n, groups)
-     size_t n;
-     const gid_t *groups;
+setgroups (size_t n, const gid_t *groups)
 {
   __set_errno (ENOSYS);
   return -1;

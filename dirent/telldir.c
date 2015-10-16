@@ -22,8 +22,7 @@
 
 /* Return the current position of DIRP.  */
 long int
-telldir (dirp)
-     DIR *dirp;
+telldir (DIR *dirp)
 {
   if (dirp == NULL)
     {

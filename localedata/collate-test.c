@@ -121,9 +121,7 @@ main (int argc, char *argv[])
 
 
 static int
-xstrcoll (ptr1, ptr2)
-     const void *ptr1;
-     const void *ptr2;
+xstrcoll (const void *ptr1, const void *ptr2)
 {
   const struct lines *l1 = (const struct lines *) ptr1;
   const struct lines *l2 = (const struct lines *) ptr2;

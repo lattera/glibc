@@ -21,8 +21,7 @@
 
 /* Change the current directory to PATH.  */
 int
-__chdir (path)
-     const char *path;
+__chdir (const char *path)
 {
   if (path == NULL)
     {

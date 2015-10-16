@@ -21,9 +21,7 @@
 #undef putc_unlocked
 
 int
-putc_unlocked (c, fp)
-     int c;
-     _IO_FILE *fp;
+putc_unlocked (int c, _IO_FILE *fp)
 {
   CHECK_FILE (fp, EOF);
   return _IO_putc_unlocked (c, fp);

@@ -38,9 +38,7 @@
 
 _IO_FILE *
 attribute_compat_text_section
-_IO_old_fdopen (fd, mode)
-     int fd;
-     const char *mode;
+_IO_old_fdopen (int fd, const char *mode)
 {
   int read_write;
   int posix_mode = 0;

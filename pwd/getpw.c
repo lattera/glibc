@@ -29,9 +29,7 @@
 int __getpw (__uid_t uid, char *buf);
 
 int
-__getpw (uid, buf)
-     __uid_t uid;
-     char *buf;
+__getpw (__uid_t uid, char *buf)
 {
   size_t buflen;
   char *tmpbuf;

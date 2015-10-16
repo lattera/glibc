@@ -20,8 +20,7 @@
 #include <stropts.h>
 
 int
-isastream (fildes)
-     int fildes;
+isastream (int fildes)
 {
   /* In general we do not have a STREAMS implementation and therefore
      return 0.  But for invalid file descriptors we have to return an

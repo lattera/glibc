@@ -22,9 +22,7 @@
 
 
 int
-pthread_mutexattr_setprotocol (attr, protocol)
-     pthread_mutexattr_t *attr;
-     int protocol;
+pthread_mutexattr_setprotocol (pthread_mutexattr_t *attr, int protocol)
 {
   if (protocol != PTHREAD_PRIO_NONE
       && protocol != PTHREAD_PRIO_INHERIT

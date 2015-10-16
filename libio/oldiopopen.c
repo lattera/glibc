@@ -115,10 +115,7 @@ unlock (void *not_used)
 
 _IO_FILE *
 attribute_compat_text_section
-_IO_old_proc_open (fp, command, mode)
-     _IO_FILE *fp;
-     const char *command;
-     const char *mode;
+_IO_old_proc_open (_IO_FILE *fp, const char *command, const char *mode)
 {
   volatile int read_or_write;
   volatile int parent_end, child_end;
@@ -194,9 +191,7 @@ _IO_old_proc_open (fp, command, mode)
 
 _IO_FILE *
 attribute_compat_text_section
-_IO_old_popen (command, mode)
-     const char *command;
-     const char *mode;
+_IO_old_popen (const char *command, const char *mode)
 {
   struct locked_FILE
   {
@@ -229,8 +224,7 @@ _IO_old_popen (command, mode)
 
 int
 attribute_compat_text_section
-_IO_old_proc_close (fp)
-     _IO_FILE *fp;
+_IO_old_proc_close (_IO_FILE *fp)
 {
   /* This is not name-space clean. FIXME! */
   int wstatus;

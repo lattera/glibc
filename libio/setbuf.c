@@ -28,9 +28,7 @@
 #include "stdio.h"
 
 void
-setbuf (fp, buf)
-     _IO_FILE *fp;
-     char *buf;
+setbuf (_IO_FILE *fp, char *buf)
 {
   _IO_setbuffer (fp, buf, _IO_BUFSIZ);
 }

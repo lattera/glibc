@@ -21,9 +21,7 @@
 
 /* Rename the file OLD to NEW.  */
 int
-rename (old, new)
-     const char *old;
-     const char *new;
+rename (const char *old, const char *new)
 {
   if (old == NULL || new == NULL)
     {

@@ -26,8 +26,7 @@
 libc_freeres_ptr (static char *buf);
 
 char *
-strerror (errnum)
-     int errnum;
+strerror (int errnum)
 {
   char *ret = __strerror_r (errnum, NULL, 0);
   int saved_errno;

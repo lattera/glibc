@@ -22,8 +22,7 @@
 #include <signal.h>
 
 int
-sighold (sig)
-     int sig;
+sighold (int sig)
 {
   sigset_t set;
 

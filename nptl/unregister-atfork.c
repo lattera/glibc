@@ -24,8 +24,7 @@
 
 
 void
-__unregister_atfork (dso_handle)
-     void *dso_handle;
+__unregister_atfork (void *dso_handle)
 {
   /* Check whether there is any entry in the list which we have to
      remove.  It is likely that this is not the case so don't bother

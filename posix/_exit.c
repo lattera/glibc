@@ -22,8 +22,7 @@
    terminate program execution, using the low-order 8 bits of the
    given integer as status.  */
 void
-_exit (status)
-     int status;
+_exit (int status)
 {
   status &= 0xff;
   abort ();

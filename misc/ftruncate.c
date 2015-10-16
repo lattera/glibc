@@ -21,9 +21,7 @@
 
 /* Truncate the file referenced by FD to LENGTH bytes.  */
 int
-__ftruncate (fd, length)
-     int fd;
-     off_t length;
+__ftruncate (int fd, off_t length)
 {
   __set_errno (ENOSYS);
   return -1;

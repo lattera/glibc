@@ -23,9 +23,7 @@
 
 /* Create a directory named PATH with protections MODE.  */
 int
-__mkdir (path, mode)
-     const char *path;
-     mode_t mode;
+__mkdir (const char *path, mode_t mode)
 {
   if (path == NULL)
     {

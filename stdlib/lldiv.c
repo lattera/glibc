@@ -21,9 +21,7 @@
 
 /* Return the `lldiv_t' representation of NUMER over DENOM.  */
 lldiv_t
-lldiv (numer, denom)
-     long long int numer;
-     long long int denom;
+lldiv (long long int numer, long long int denom)
 {
   lldiv_t result;
 

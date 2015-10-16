@@ -23,8 +23,7 @@
 
 
 int
-__pthread_mutex_destroy (mutex)
-     pthread_mutex_t *mutex;
+__pthread_mutex_destroy (pthread_mutex_t *mutex)
 {
   LIBC_PROBE (mutex_destroy, 1, mutex);
 

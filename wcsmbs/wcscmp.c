@@ -26,9 +26,7 @@
    greater than zero if S1 is lexicographically less than,
    equal to or greater than S2.	 */
 int
-WCSCMP (s1, s2)
-     const wchar_t *s1;
-     const wchar_t *s2;
+WCSCMP (const wchar_t *s1, const wchar_t *s2)
 {
   wchar_t c1, c2;
 

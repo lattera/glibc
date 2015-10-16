@@ -22,9 +22,7 @@
 
 /* Get file-specific information about PATH.  */
 long int
-__pathconf (path, name)
-     const char *path;
-     int name;
+__pathconf (const char *path, int name)
 {
   if (path == NULL)
     {

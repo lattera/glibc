@@ -24,10 +24,7 @@
 
 /* Create a directory named PATH relative to FD with protections MODE.  */
 int
-mkdirat (fd, path, mode)
-     int fd;
-     const char *path;
-     mode_t mode;
+mkdirat (int fd, const char *path, mode_t mode)
 {
   if (path == NULL)
     {

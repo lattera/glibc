@@ -27,10 +27,7 @@
    if S1 is lexicographically less than, equal to or
    greater than S2.  */
 int
-WCSNCMP (s1, s2, n)
-     const wchar_t *s1;
-     const wchar_t *s2;
-     size_t n;
+WCSNCMP (const wchar_t *s1, const wchar_t *s2, size_t n)
 {
   wchar_t c1 = L'\0';
   wchar_t c2 = L'\0';

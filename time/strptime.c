@@ -27,10 +27,7 @@
 
 
 char *
-strptime (buf, format, tm)
-     const char *buf;
-     const char *format;
-     struct tm *tm;
+strptime (const char *buf, const char *format, struct tm *tm)
 {
   return __strptime_internal (buf, format, tm, NULL, _NL_CURRENT_LOCALE);
 }

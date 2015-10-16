@@ -46,11 +46,7 @@ stub_warning (__path_search)
  */
 
 int
-__gen_tempname (tmpl, suffixlen, flags, kind)
-     char *tmpl;
-     int suffixlen;
-     int flags;
-     int kind;
+__gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
 {
   __set_errno (ENOSYS);
   return -1;

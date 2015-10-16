@@ -26,11 +26,7 @@
    'pread' (see <unistd.h>) except that data are put in VECTOR instead
    of a contiguous buffer.  */
 ssize_t
-preadv64 (fd, vector, count, offset)
-     int fd;
-     const struct iovec *vector;
-     int count;
-     off64_t offset;
+preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
 {
   __set_errno (ENOSYS);
   return -1;

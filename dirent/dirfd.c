@@ -21,8 +21,7 @@
 #include <errno.h>
 
 int
-dirfd (dirp)
-     DIR *dirp;
+dirfd (DIR *dirp)
 {
   __set_errno (ENOSYS);
   return -1;

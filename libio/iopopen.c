@@ -106,10 +106,7 @@ unlock (void *not_used)
 #endif
 
 _IO_FILE *
-_IO_new_proc_open (fp, command, mode)
-     _IO_FILE *fp;
-     const char *command;
-     const char *mode;
+_IO_new_proc_open (_IO_FILE *fp, const char *command, const char *mode)
 {
   int read_or_write;
   int parent_end, child_end;
@@ -272,9 +269,7 @@ _IO_new_proc_open (fp, command, mode)
 }
 
 _IO_FILE *
-_IO_new_popen (command, mode)
-     const char *command;
-     const char *mode;
+_IO_new_popen (const char *command, const char *mode)
 {
   struct locked_FILE
   {
@@ -306,8 +301,7 @@ _IO_new_popen (command, mode)
 }
 
 int
-_IO_new_proc_close (fp)
-     _IO_FILE *fp;
+_IO_new_proc_close (_IO_FILE *fp)
 {
   /* This is not name-space clean. FIXME! */
   int wstatus;

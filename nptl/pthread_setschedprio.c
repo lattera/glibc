@@ -25,9 +25,7 @@
 
 
 int
-pthread_setschedprio (threadid, prio)
-     pthread_t threadid;
-     int prio;
+pthread_setschedprio (pthread_t threadid, int prio)
 {
   struct pthread *pd = (struct pthread *) threadid;
 

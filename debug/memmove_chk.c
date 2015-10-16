@@ -26,11 +26,7 @@
 #endif
 
 void *
-MEMMOVE_CHK (dest, src, len, destlen)
-     void *dest;
-     const void *src;
-     size_t len;
-     size_t destlen;
+MEMMOVE_CHK (void *dest, const void *src, size_t len, size_t destlen)
 {
   if (__glibc_unlikely (destlen < len))
     __chk_fail ();

@@ -27,8 +27,7 @@
 
 
 int
-wctob (c)
-     wint_t c;
+wctob (wint_t c)
 {
   unsigned char buf[MB_LEN_MAX];
   struct __gconv_step_data data;

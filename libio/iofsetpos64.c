@@ -31,9 +31,7 @@
 #ifndef __OFF_T_MATCHES_OFF64_T
 
 int
-_IO_new_fsetpos64 (fp, posp)
-     _IO_FILE *fp;
-     const _IO_fpos64_t *posp;
+_IO_new_fsetpos64 (_IO_FILE *fp, const _IO_fpos64_t *posp)
 {
   int result;
   CHECK_FILE (fp, EOF);

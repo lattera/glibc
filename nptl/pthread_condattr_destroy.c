@@ -20,8 +20,7 @@
 
 
 int
-__pthread_condattr_destroy (attr)
-     pthread_condattr_t *attr;
+__pthread_condattr_destroy (pthread_condattr_t *attr)
 {
   /* Nothing to be done.  */
   return 0;

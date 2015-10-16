@@ -223,10 +223,7 @@ clntraw_geterr (CLIENT *cl, struct rpc_err *err)
 
 
 static bool_t
-clntraw_freeres (cl, xdr_res, res_ptr)
-     CLIENT *cl;
-     xdrproc_t xdr_res;
-     caddr_t res_ptr;
+clntraw_freeres (CLIENT *cl, xdrproc_t xdr_res, caddr_t res_ptr)
 {
   struct clntraw_private_s *clp = clntraw_private;
   XDR *xdrs = &clp->xdr_stream;

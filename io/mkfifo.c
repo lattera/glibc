@@ -23,9 +23,7 @@
 
 /* Create a named pipe (FIFO) named PATH with protections MODE.  */
 int
-mkfifo (path, mode)
-     const char *path;
-     mode_t mode;
+mkfifo (const char *path, mode_t mode)
 {
   if (path == NULL)
     {

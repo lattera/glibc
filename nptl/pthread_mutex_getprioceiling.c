@@ -22,9 +22,7 @@
 
 
 int
-pthread_mutex_getprioceiling (mutex, prioceiling)
-     const pthread_mutex_t *mutex;
-     int *prioceiling;
+pthread_mutex_getprioceiling (const pthread_mutex_t *mutex, int *prioceiling)
 {
   if (__builtin_expect ((mutex->__data.__kind
 			 & PTHREAD_MUTEX_PRIO_PROTECT_NP) == 0, 0))

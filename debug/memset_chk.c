@@ -19,11 +19,7 @@
 #include <memcopy.h>
 
 void *
-__memset_chk (dstpp, c, len, dstlen)
-     void *dstpp;
-     int c;
-     size_t len;
-     size_t dstlen;
+__memset_chk (void *dstpp, int c, size_t len, size_t dstlen)
 {
   if (__glibc_unlikely (dstlen < len))
     __chk_fail ();

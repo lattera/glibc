@@ -30,8 +30,7 @@
 /* ANSI explicily requires setting errno to a positive value on failure. */
 
 long int
-_IO_ftell (fp)
-     _IO_FILE *fp;
+_IO_ftell (_IO_FILE *fp)
 {
   _IO_off64_t pos;
   CHECK_FILE (fp, -1L);

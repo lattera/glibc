@@ -31,8 +31,7 @@
 
 
 off_t
-__ftello (fp)
-     _IO_FILE *fp;
+__ftello (_IO_FILE *fp)
 {
   _IO_off64_t pos;
   CHECK_FILE (fp, -1L);

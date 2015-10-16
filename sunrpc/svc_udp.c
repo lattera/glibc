@@ -205,8 +205,7 @@ libc_hidden_nolink_sunrpc (svcudp_bufcreate, GLIBC_2_0)
 #endif
 
 SVCXPRT *
-svcudp_create (sock)
-     int sock;
+svcudp_create (int sock)
 {
   return svcudp_bufcreate (sock, UDPMSGSIZE, UDPMSGSIZE);
 }
@@ -217,17 +216,14 @@ libc_hidden_nolink_sunrpc (svcudp_create, GLIBC_2_0)
 #endif
 
 static enum xprt_stat
-svcudp_stat (xprt)
-     SVCXPRT *xprt;
+svcudp_stat (SVCXPRT *xprt)
 {
 
   return XPRT_IDLE;
 }
 
 static bool_t
-svcudp_recv (xprt, msg)
-     SVCXPRT *xprt;
-     struct rpc_msg *msg;
+svcudp_recv (SVCXPRT *xprt, struct rpc_msg *msg)
 {
   struct svcudp_data *su = su_data (xprt);
   XDR *xdrs = &(su->su_xdrs);
@@ -329,9 +325,7 @@ again:
 }
 
 static bool_t
-svcudp_reply (xprt, msg)
-     SVCXPRT *xprt;
-     struct rpc_msg *msg;
+svcudp_reply (SVCXPRT *xprt, struct rpc_msg *msg)
 {
   struct svcudp_data *su = su_data (xprt);
   XDR *xdrs = &(su->su_xdrs);
@@ -375,20 +369,14 @@ svcudp_reply (xprt, msg)
 }
 
 static bool_t
-svcudp_getargs (xprt, xdr_args, args_ptr)
-     SVCXPRT *xprt;
-     xdrproc_t xdr_args;
-     caddr_t args_ptr;
+svcudp_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
 
   return (*xdr_args) (&(su_data (xprt)->su_xdrs), args_ptr);
 }
 
 static bool_t
-svcudp_freeargs (xprt, xdr_args, args_ptr)
-     SVCXPRT *xprt;
-     xdrproc_t xdr_args;
-     caddr_t args_ptr;
+svcudp_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
   XDR *xdrs = &(su_data (xprt)->su_xdrs);
 
@@ -397,8 +385,7 @@ svcudp_freeargs (xprt, xdr_args, args_ptr)
 }
 
 static void
-svcudp_destroy (xprt)
-     SVCXPRT *xprt;
+svcudp_destroy (SVCXPRT *xprt)
 {
   struct svcudp_data *su = su_data (xprt);
 

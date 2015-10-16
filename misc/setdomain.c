@@ -21,9 +21,7 @@
 /* Set the name of the current YP domain to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
 int
-setdomainname (name, len)
-     const char *name;
-     size_t len;
+setdomainname (const char *name, size_t len)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -20,9 +20,7 @@
 #include <sys/stat.h>
 
 key_t
-ftok (pathname, proj_id)
-     const char *pathname;
-     int proj_id;
+ftok (const char *pathname, int proj_id)
 {
   struct stat64 st;
   key_t key;

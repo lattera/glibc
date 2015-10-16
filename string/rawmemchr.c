@@ -53,9 +53,7 @@
 
 /* Find the first occurrence of C in S.  */
 __ptr_t
-RAWMEMCHR (s, c_in)
-     const __ptr_t s;
-     int c_in;
+RAWMEMCHR (const __ptr_t s, int c_in)
 {
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;

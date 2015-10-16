@@ -20,8 +20,7 @@
 
 /* Sleep USECONDS microseconds, or until a previously set timer goes off.  */
 int
-usleep (useconds)
-     useconds_t useconds;
+usleep (useconds_t useconds)
 {
   __set_errno (ENOSYS);
   return -1;

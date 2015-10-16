@@ -24,8 +24,7 @@
 
 /* Find the first bit set in I.  */
 int
-__ffs (i)
-     int i;
+__ffs (int i)
 {
   static const unsigned char table[] =
     {

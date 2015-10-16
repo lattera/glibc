@@ -22,10 +22,7 @@
 
 /* Change the owner and group of FILE.  */
 int
-__lchown (file, owner, group)
-     const char *file;
-     uid_t owner;
-     gid_t group;
+__lchown (const char *file, uid_t owner, gid_t group)
 {
   if (file == NULL)
     {

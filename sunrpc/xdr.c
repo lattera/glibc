@@ -590,11 +590,7 @@ libc_hidden_nolink_sunrpc (xdr_opaque, GLIBC_2_0)
  * If *cpp is NULL maxsize bytes are allocated
  */
 bool_t
-xdr_bytes (xdrs, cpp, sizep, maxsize)
-     XDR *xdrs;
-     char **cpp;
-     u_int *sizep;
-     u_int maxsize;
+xdr_bytes (XDR *xdrs, char **cpp, u_int *sizep, u_int maxsize)
 {
   char *sp = *cpp;	/* sp is the actual string pointer */
   u_int nodesize;
@@ -656,9 +652,7 @@ libc_hidden_nolink_sunrpc (xdr_bytes, GLIBC_2_0)
  * Implemented here due to commonality of the object.
  */
 bool_t
-xdr_netobj (xdrs, np)
-     XDR *xdrs;
-     struct netobj *np;
+xdr_netobj (XDR *xdrs, struct netobj *np)
 {
 
   return xdr_bytes (xdrs, &np->n_bytes, &np->n_len, MAX_NETOBJ_SZ);
@@ -733,10 +727,7 @@ libc_hidden_nolink_sunrpc (xdr_union, GLIBC_2_0)
  * of the string as specified by a protocol.
  */
 bool_t
-xdr_string (xdrs, cpp, maxsize)
-     XDR *xdrs;
-     char **cpp;
-     u_int maxsize;
+xdr_string (XDR *xdrs, char **cpp, u_int maxsize)
 {
   char *sp = *cpp;	/* sp is the actual string pointer */
   /* Initialize to silence the compiler.  It is not really needed because SIZE
@@ -817,9 +808,7 @@ libc_hidden_nolink_sunrpc (xdr_string, GLIBC_2_0)
  * routines like clnt_call
  */
 bool_t
-xdr_wrapstring (xdrs, cpp)
-     XDR *xdrs;
-     char **cpp;
+xdr_wrapstring (XDR *xdrs, char **cpp)
 {
   if (xdr_string (xdrs, cpp, LASTUNSIGNED))
     {

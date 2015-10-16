@@ -22,8 +22,7 @@
 
 
 int
-pthread_barrier_destroy (barrier)
-     pthread_barrier_t *barrier;
+pthread_barrier_destroy (pthread_barrier_t *barrier)
 {
   struct pthread_barrier *ibarrier;
   int result = EBUSY;

@@ -23,9 +23,7 @@
    If it cannot be determined or some other error occurred, return the error
    code.  Otherwise return 0.  */
 int
-__getlogin_r (name, name_len)
-     char *name;
-     size_t name_len;
+__getlogin_r (char *name, size_t name_len)
 {
   __set_errno (ENOSYS);
   return errno;

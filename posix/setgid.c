@@ -24,8 +24,7 @@
    and effective group IDs, and the saved set-group-ID to GID;
    if not, the effective group ID is set to GID.  */
 int
-__setgid (gid)
-     gid_t gid;
+__setgid (gid_t gid)
 {
   __set_errno (ENOSYS);
   return -1;

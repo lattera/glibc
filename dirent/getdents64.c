@@ -21,11 +21,7 @@
 #include <dirent.h>
 
 ssize_t
-getdirentries64 (fd, buf, nbytes, basep)
-     int fd;
-     char *buf;
-     size_t nbytes;
-     off64_t *basep;
+getdirentries64 (int fd, char *buf, size_t nbytes, off64_t *basep)
 {
   __set_errno (ENOSYS);
   return -1;

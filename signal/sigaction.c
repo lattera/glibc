@@ -22,10 +22,7 @@
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
 int
-__sigaction (sig, act, oact)
-     int sig;
-     const struct sigaction *act;
-     struct sigaction *oact;
+__sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 {
   if (sig <= 0 || sig >= NSIG)
     {

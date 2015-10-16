@@ -24,9 +24,7 @@
 
 /* Append SRC on the end of DEST.  */
 wchar_t *
-__wcscat (dest, src)
-     wchar_t *dest;
-     const wchar_t *src;
+__wcscat (wchar_t *dest, const wchar_t *src)
 {
   wchar_t *s1 = dest;
   const wchar_t *s2 = src;

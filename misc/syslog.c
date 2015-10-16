@@ -452,8 +452,7 @@ closelog (void)
 
 /* setlogmask -- set the log mask level */
 int
-setlogmask(pmask)
-	int pmask;
+setlogmask (int pmask)
 {
 	int omask;
 

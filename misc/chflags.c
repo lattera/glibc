@@ -24,9 +24,7 @@
 int chflags (const char *file, unsigned long int flags) __THROW;
 
 int
-chflags (file, flags)
-     const char *file;
-     unsigned long int flags;
+chflags (const char *file, unsigned long int flags)
 {
   if (file == NULL)
     {

@@ -22,9 +22,7 @@
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */
 __sighandler_t
-signal (sig, handler)
-     int sig;
-     __sighandler_t handler;
+signal (int sig, __sighandler_t handler)
 {
   __set_errno (ENOSYS);
   return SIG_ERR;

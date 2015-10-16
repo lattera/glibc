@@ -31,9 +31,7 @@
 static wint_t _IO_wstrn_overflow (_IO_FILE *fp, wint_t c) __THROW;
 
 static wint_t
-_IO_wstrn_overflow (fp, c)
-     _IO_FILE *fp;
-     wint_t c;
+_IO_wstrn_overflow (_IO_FILE *fp, wint_t c)
 {
   /* When we come to here this means the user supplied buffer is
      filled.  But since we must return the number of characters which

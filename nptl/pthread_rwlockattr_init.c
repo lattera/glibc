@@ -20,8 +20,7 @@
 
 
 int
-pthread_rwlockattr_init (attr)
-     pthread_rwlockattr_t *attr;
+pthread_rwlockattr_init (pthread_rwlockattr_t *attr)
 {
   struct pthread_rwlockattr *iattr;
 

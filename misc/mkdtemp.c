@@ -24,8 +24,7 @@
    The directory is created, mode 700, and its name is returned.
    (This function comes from OpenBSD.) */
 char *
-mkdtemp (template)
-     char *template;
+mkdtemp (char *template)
 {
   if (__gen_tempname (template, 0, 0, __GT_DIR))
     return NULL;

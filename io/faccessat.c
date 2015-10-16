@@ -23,11 +23,7 @@
 #include <sys/types.h>
 
 int
-faccessat (fd, file, type, flag)
-     int fd;
-     const char *file;
-     int type;
-     int flag;
+faccessat (int fd, const char *file, int type, int flag)
 {
   if (file == NULL || (flag & ~(AT_SYMLINK_NOFOLLOW | AT_EACCESS)) != 0
       || (type & ~(R_OK|W_OK|X_OK|F_OK)) != 0)

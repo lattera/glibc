@@ -39,10 +39,7 @@ static wchar_t const zeroes[PADSIZE] =
 };
 
 _IO_ssize_t
-_IO_wpadn (fp, pad, count)
-      _IO_FILE *fp;
-      wint_t pad;
-      _IO_ssize_t count;
+_IO_wpadn (_IO_FILE *fp, wint_t pad, _IO_ssize_t count)
 {
   wchar_t padbuf[PADSIZE];
   const wchar_t *padptr;

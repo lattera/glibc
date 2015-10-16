@@ -22,10 +22,7 @@
 
 /* Combine sets LEFT and RIGHT by logical AND and place result in DEST.  */
 int
-sigandset (dest, left, right)
-     sigset_t *dest;
-     const sigset_t *left;
-     const sigset_t *right;
+sigandset (sigset_t *dest, const sigset_t *left, const sigset_t *right)
 {
   if (dest == NULL || left == NULL || right == NULL)
     {

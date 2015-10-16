@@ -21,8 +21,7 @@
 
 /* Duplicate FD, returning a new file descriptor open on the same file.  */
 int
-__dup (fd)
-     int fd;
+__dup (int fd)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -26,11 +26,7 @@
    <unistd.h>) except that the data are taken from VECTOR instead of a
    contiguous buffer.  */
 ssize_t
-pwritev (fd, vector, count, offset)
-     int fd;
-     const struct iovec *vector;
-     int count;
-     off_t offset;
+pwritev (int fd, const struct iovec *vector, int count, off_t offset)
 {
   __set_errno (ENOSYS);
   return -1;

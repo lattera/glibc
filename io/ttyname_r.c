@@ -22,10 +22,7 @@
 /* Store at most BUFLEN characters the pathname of the terminal FD is
    open on in BUF.  Return 0 on success,  otherwise an error number.  */
 int
-__ttyname_r (fd, buf, buflen)
-     int fd;
-     char *buf;
-     size_t buflen;
+__ttyname_r (int fd, char *buf, size_t buflen)
 {
   __set_errno (ENOSYS);
   return ENOSYS;

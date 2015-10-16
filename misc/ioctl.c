@@ -21,9 +21,7 @@
 /* Perform the I/O control operation specified by REQUEST on FD.
    The actual type and use of ARG and the return value depend on REQUEST.  */
 int
-__ioctl (fd, request)
-     int fd;
-     unsigned long int request;
+__ioctl (int fd, unsigned long int request)
 {
   __set_errno (ENOSYS);
   return -1;

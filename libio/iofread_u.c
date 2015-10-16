@@ -30,11 +30,7 @@
 #undef fread_unlocked
 
 _IO_size_t
-__fread_unlocked (buf, size, count, fp)
-     void *buf;
-     _IO_size_t size;
-     _IO_size_t count;
-     _IO_FILE *fp;
+__fread_unlocked (void *buf, _IO_size_t size, _IO_size_t count, _IO_FILE *fp)
 {
   _IO_size_t bytes_requested = size * count;
   _IO_size_t bytes_read;

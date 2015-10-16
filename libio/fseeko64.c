@@ -32,10 +32,7 @@
 #ifndef __OFF_T_MATCHES_OFF64_T
 
 int
-fseeko64 (fp, offset, whence)
-     _IO_FILE* fp;
-     __off64_t offset;
-     int whence;
+fseeko64 (_IO_FILE *fp, __off64_t offset, int whence)
 {
   int result;
   CHECK_FILE (fp, -1);

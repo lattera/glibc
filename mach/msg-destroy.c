@@ -58,8 +58,7 @@ static void mach_msg_destroy_memory(vm_offset_t, vm_size_t);
  */
 
 void
-__mach_msg_destroy(msg)
-    mach_msg_header_t *msg;
+__mach_msg_destroy (mach_msg_header_t *msg)
 {
     mach_msg_bits_t mbits = msg->msgh_bits;
 
@@ -192,9 +191,7 @@ __mach_msg_destroy(msg)
 weak_alias (__mach_msg_destroy, mach_msg_destroy)
 
 static void
-mach_msg_destroy_port(port, type)
-    mach_port_t port;
-    mach_msg_type_name_t type;
+mach_msg_destroy_port (mach_port_t port, mach_msg_type_name_t type)
 {
     if (MACH_PORT_VALID(port)) switch (type) {
       case MACH_MSG_TYPE_MOVE_SEND:
@@ -227,9 +224,7 @@ mach_msg_destroy_port(port, type)
 }
 
 static void
-mach_msg_destroy_memory(addr, size)
-    vm_offset_t addr;
-    vm_size_t size;
+mach_msg_destroy_memory (vm_offset_t addr, vm_size_t size)
 {
     if (size > 0)
 	(void) __vm_deallocate(__mach_task_self(), addr, size);

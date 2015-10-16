@@ -22,9 +22,7 @@
 
 /* Make a link to FROM called TO.  */
 int
-__symlink (from, to)
-     const char *from;
-     const char *to;
+__symlink (const char *from, const char *to)
 {
   if (from == NULL || to == NULL)
     {

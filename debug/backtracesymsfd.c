@@ -33,10 +33,7 @@
 
 
 void
-__backtrace_symbols_fd (array, size, fd)
-     void *const *array;
-     int size;
-     int fd;
+__backtrace_symbols_fd (void *const *array, int size, int fd)
 {
   struct iovec iov[9];
   int cnt;

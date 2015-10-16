@@ -22,8 +22,7 @@
 
 
 int
-raise (sig)
-     int sig;
+raise (int sig)
 {
   /* This is what POSIX says must happen.  */
   return pthread_kill (pthread_self (), sig);

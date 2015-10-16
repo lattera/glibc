@@ -20,9 +20,7 @@
 
 
 int
-pthread_mutexattr_getrobust (attr, robustness)
-     const pthread_mutexattr_t *attr;
-     int *robustness;
+pthread_mutexattr_getrobust (const pthread_mutexattr_t *attr, int *robustness)
 {
   const struct pthread_mutexattr *iattr;
 

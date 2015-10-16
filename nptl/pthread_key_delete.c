@@ -22,8 +22,7 @@
 
 
 int
-pthread_key_delete (key)
-     pthread_key_t key;
+pthread_key_delete (pthread_key_t key)
 {
   int result = EINVAL;
 

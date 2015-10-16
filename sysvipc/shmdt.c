@@ -23,8 +23,7 @@
    from the caller's data segment.  */
 
 int
-shmdt (shmaddr)
-     const void *shmaddr;
+shmdt (const void *shmaddr)
 {
   __set_errno (ENOSYS);
   return -1;

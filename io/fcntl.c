@@ -20,9 +20,7 @@
 
 /* Perform file control operations on FD.  */
 int
-__fcntl (fd, cmd)
-     int fd;
-     int cmd;
+__fcntl (int fd, int cmd)
 {
   if (fd < 0)
     {

@@ -26,9 +26,7 @@
    the calling process is in.  Otherwise, fill in the group IDs
    of its supplementary groups in LIST and return the number written.  */
 int
-__getgroups (size, list)
-     int size;
-     gid_t *list;
+__getgroups (int size, gid_t *list)
 {
 #if defined (NGROUPS_MAX) && NGROUPS_MAX == 0
   /* The system has no supplementary groups.  */

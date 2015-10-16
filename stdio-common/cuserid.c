@@ -22,8 +22,7 @@
    If S is not NULL, it points to a buffer of at least L_cuserid bytes
    into which the name is copied; otherwise, a static buffer is used.  */
 char *
-cuserid (s)
-     char *s;
+cuserid (char *s)
 {
   __set_errno (ENOSYS);
   return NULL;

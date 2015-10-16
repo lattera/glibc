@@ -22,9 +22,7 @@
 /* Set the real group ID of the calling process to RGID,
    and the effective group ID of the calling process to EGID.  */
 int
-__setregid (effective_gid, real_gid)
-     gid_t effective_gid;
-     gid_t real_gid;
+__setregid (gid_t effective_gid, gid_t real_gid)
 {
   __set_errno (ENOSYS);
   return -1;

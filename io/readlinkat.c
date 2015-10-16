@@ -23,11 +23,7 @@
    more than LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
 ssize_t
-readlinkat (fd, path, buf, len)
-     int fd;
-     const char *path;
-     char *buf;
-     size_t len;
+readlinkat (int fd, const char *path, char *buf, size_t len)
 {
   if (path == NULL)
     {

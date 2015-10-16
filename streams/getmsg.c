@@ -19,11 +19,7 @@
 #include <stropts.h>
 
 int
-getmsg (fildes, ctlptr, dataptr, flagsp)
-     int fildes;
-     struct strbuf *ctlptr;
-     struct strbuf *dataptr;
-     int *flagsp;
+getmsg (int fildes, struct strbuf *ctlptr, struct strbuf *dataptr, int *flagsp)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -28,10 +28,7 @@
 #include <stdio.h>
 
 char *
-_IO_fgets (buf, n, fp)
-     char *buf;
-     int n;
-     _IO_FILE *fp;
+_IO_fgets (char *buf, int n, _IO_FILE *fp)
 {
   _IO_size_t count;
   char *result;

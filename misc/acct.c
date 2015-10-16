@@ -22,8 +22,7 @@
    a record for each process as it terminates, to this file.  If NAME is NULL,
    turn accounting off.  This call is restricted to the super-user.  */
 int
-acct (name)
-     const char *name;
+acct (const char *name)
 {
   __set_errno (ENOSYS);
   return -1;

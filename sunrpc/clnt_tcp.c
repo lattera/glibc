@@ -332,9 +332,7 @@ call_again:
 }
 
 static void
-clnttcp_geterr (h, errp)
-     CLIENT *h;
-     struct rpc_err *errp;
+clnttcp_geterr (CLIENT *h, struct rpc_err *errp)
 {
   struct ct_data *ct =
   (struct ct_data *) h->cl_private;
@@ -343,10 +341,7 @@ clnttcp_geterr (h, errp)
 }
 
 static bool_t
-clnttcp_freeres (cl, xdr_res, res_ptr)
-     CLIENT *cl;
-     xdrproc_t xdr_res;
-     caddr_t res_ptr;
+clnttcp_freeres (CLIENT *cl, xdrproc_t xdr_res, caddr_t res_ptr)
 {
   struct ct_data *ct = (struct ct_data *) cl->cl_private;
   XDR *xdrs = &(ct->ct_xdrs);

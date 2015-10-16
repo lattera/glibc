@@ -20,8 +20,7 @@
 #include <errno.h>
 
 int
-revoke (file)
-     const char *file;
+revoke (const char *file)
 {
   __set_errno (ENOSYS);
   return -1;

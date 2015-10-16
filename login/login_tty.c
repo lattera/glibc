@@ -39,8 +39,7 @@ static char sccsid[] = "@(#)login_tty.c	8.1 (Berkeley) 6/4/93";
 #include <utmp.h>
 
 int
-login_tty(fd)
-	int fd;
+login_tty (int fd)
 {
 	(void) setsid();
 #ifdef TIOCSCTTY

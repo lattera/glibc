@@ -23,12 +23,7 @@
 
 /* Make a link to FROM relative to FROMFD called TO relative to TOFD.  */
 int
-linkat (fromfd, from, tofd, to, flags)
-     int fromfd;
-     const char *from;
-     int tofd;
-     const char *to;
-     int flags;
+linkat (int fromfd, const char *from, int tofd, const char *to, int flags)
 {
   if (from == NULL || to == NULL)
     {

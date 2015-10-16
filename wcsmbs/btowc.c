@@ -29,8 +29,7 @@
 
 
 wint_t
-__btowc (c)
-     int c;
+__btowc (int c)
 {
   const struct gconv_fcts *fcts;
 

@@ -29,9 +29,7 @@
 #include <string.h>
 
 int
-__fputs_unlocked (str, fp)
-      const char *str;
-      _IO_FILE *fp;
+__fputs_unlocked (const char *str, _IO_FILE *fp)
 {
   _IO_size_t len = strlen (str);
   int result = EOF;

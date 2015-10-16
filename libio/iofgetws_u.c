@@ -28,10 +28,7 @@
 #include <wchar.h>
 
 wchar_t *
-fgetws_unlocked (buf, n, fp)
-     wchar_t *buf;
-     int n;
-     _IO_FILE *fp;
+fgetws_unlocked (wchar_t *buf, int n, _IO_FILE *fp)
 {
   _IO_size_t count;
   wchar_t *result;

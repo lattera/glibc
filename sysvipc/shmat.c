@@ -24,10 +24,7 @@
    and where the segment is attached.  */
 
 void *
-shmat (shmid, shmaddr, shmflg)
-     int shmid;
-     const void *shmaddr;
-     int shmflg;
+shmat (int shmid, const void *shmaddr, int shmflg)
 {
   __set_errno (ENOSYS);
   return (void *) -1;

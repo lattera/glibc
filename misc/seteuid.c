@@ -20,8 +20,7 @@
 
 /* Set the effective user ID of the calling process to UID.  */
 int
-seteuid (uid)
-     __uid_t uid;
+seteuid (__uid_t uid)
 {
   __set_errno (ENOSYS);
   return -1;

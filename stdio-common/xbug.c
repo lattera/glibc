@@ -14,18 +14,16 @@ void ReadFile (Buffer *buffer, FILE *input);
 
 #define INIT_BUFFER_SIZE 10000
 
-void InitBuffer(b)
-     Buffer *b;
+void
+InitBuffer (Buffer *b)
 {
   b->room = INIT_BUFFER_SIZE;
   b->used = 0;
   b->buff = (char *)malloc(INIT_BUFFER_SIZE*sizeof(char));
 }
 
-void AppendToBuffer(b, str, len)
-     Buffer *b;
-     const char *str;
-     int len;
+void
+AppendToBuffer (Buffer *b, const char *str, int len)
 {
   while (b->used + len > b->room) {
     b->buff = (char *)realloc(b->buff, 2*b->room*(sizeof(char)));
@@ -35,9 +33,8 @@ void AppendToBuffer(b, str, len)
   b->used += len;
 }
 
-void ReadFile(buffer, input)
-     Buffer *buffer;
-     FILE *input;
+void
+ReadFile (Buffer *buffer, FILE *input)
 {
   char       buf[BUFSIZ + 1];
   int        bytes;

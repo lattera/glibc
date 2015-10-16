@@ -24,10 +24,7 @@
    peer and *ADDR_LEN to the address's actual length, and return the
    new socket's descriptor, or -1 for errors.  */
 int
-accept (fd, addr, addr_len)
-     int fd;
-     __SOCKADDR_ARG addr;
-     socklen_t *addr_len;
+accept (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len)
 {
   __set_errno (ENOSYS);
   return -1;

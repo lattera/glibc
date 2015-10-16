@@ -23,8 +23,7 @@
 
 /* Duplicate S, returning an identical malloc'd string.	 */
 wchar_t *
-wcsdup (s)
-     const wchar_t *s;
+wcsdup (const wchar_t *s)
 {
   size_t len = (__wcslen (s) + 1) * sizeof (wchar_t);
   void *new = malloc (len);

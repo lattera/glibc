@@ -19,9 +19,7 @@
 #include <stdlib.h>
 
 int
-lrand48_r (buffer, result)
-     struct drand48_data *buffer;
-     long int *result;
+lrand48_r (struct drand48_data *buffer, long int *result)
 {
   /* Be generous for the arguments, detect some errors.  */
   if (buffer == NULL)

@@ -27,11 +27,7 @@
 #include "libioP.h"
 
 _IO_size_t
-_IO_fwrite (buf, size, count, fp)
-     const void *buf;
-     _IO_size_t size;
-     _IO_size_t count;
-     _IO_FILE *fp;
+_IO_fwrite (const void *buf, _IO_size_t size, _IO_size_t count, _IO_FILE *fp)
 {
   _IO_size_t request = size * count;
   _IO_size_t written = 0;

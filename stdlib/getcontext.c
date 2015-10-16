@@ -19,8 +19,7 @@
 #include <ucontext.h>
 
 int
-getcontext (ucp)
-     ucontext_t *ucp;
+getcontext (ucontext_t *ucp)
 {
   __set_errno (ENOSYS);
   return -1;

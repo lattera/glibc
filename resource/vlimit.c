@@ -26,9 +26,7 @@
 /* Set the soft limit for RESOURCE to be VALUE.
    Returns 0 for success, -1 for failure.  */
 int
-vlimit (resource, value)
-     enum __vlimit_resource resource;
-     int value;
+vlimit (enum __vlimit_resource resource, int value)
 {
   if (resource >= LIM_CPU && resource <= LIM_MAXRSS)
     {

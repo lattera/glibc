@@ -21,9 +21,7 @@
 
 
 int
-pthread_mutexattr_setrobust (attr, robustness)
-     pthread_mutexattr_t *attr;
-     int robustness;
+pthread_mutexattr_setrobust (pthread_mutexattr_t *attr, int robustness)
 {
   if (robustness != PTHREAD_MUTEX_STALLED_NP
       && __builtin_expect (robustness != PTHREAD_MUTEX_ROBUST_NP, 0))

@@ -30,8 +30,7 @@
    two characters which we can access.  By doing this we can avoid using the
    `strncmp' most of the time.  */
 char *
-getenv (name)
-     const char *name;
+getenv (const char *name)
 {
   size_t len = strlen (name);
   char **ep;

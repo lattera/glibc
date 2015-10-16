@@ -20,8 +20,7 @@
 
 /* Set the effective group ID of the calling process to GID.  */
 int
-setegid (gid)
-     __gid_t gid;
+setegid (__gid_t gid)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -317,10 +317,7 @@ clntunix_geterr (CLIENT *h, struct rpc_err *errp)
 }
 
 static bool_t
-clntunix_freeres (cl, xdr_res, res_ptr)
-     CLIENT *cl;
-     xdrproc_t xdr_res;
-     caddr_t res_ptr;
+clntunix_freeres (CLIENT *cl, xdrproc_t xdr_res, caddr_t res_ptr)
 {
   struct ct_data *ct = (struct ct_data *) cl->cl_private;
   XDR *xdrs = &(ct->ct_xdrs);

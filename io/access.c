@@ -21,9 +21,7 @@
 
 /* Test for access to FILE.  */
 int
-__access (file, type)
-     const char *file;
-     int type;
+__access (const char *file, int type)
 {
   if (file == NULL || (type & ~(R_OK|W_OK|X_OK|F_OK)) != 0)
     {

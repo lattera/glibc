@@ -21,9 +21,7 @@
 
 /* Put the state of FD into *TERMIOS_P.  */
 int
-__tcgetattr (fd, termios_p)
-     int fd;
-     struct termios *termios_p;
+__tcgetattr (int fd, struct termios *termios_p)
 {
   if (fd < 0)
     {

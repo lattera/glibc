@@ -22,9 +22,7 @@
 
 /* Seek to position POS in DIRP.  */
 void
-seekdir (dirp, pos)
-     DIR *dirp;
-     long int pos;
+seekdir (DIR *dirp, long int pos)
 {
   if (dirp == NULL)
     {

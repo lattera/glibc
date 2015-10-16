@@ -28,10 +28,7 @@
 #include <stdio.h>
 
 char *
-__fgets_unlocked (buf, n, fp)
-     char *buf;
-     int n;
-     _IO_FILE *fp;
+__fgets_unlocked (char *buf, int n, _IO_FILE *fp)
 {
   _IO_size_t count;
   char *result;

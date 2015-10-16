@@ -72,8 +72,7 @@ static void write_bb_counts (int fd) internal_function;
  *	all the data structures are ready.
  */
 void
-__moncontrol (mode)
-     int mode;
+__moncontrol (int mode)
 {
   struct gmonparam *p = &_gmonparam;
 
@@ -98,9 +97,7 @@ weak_alias (__moncontrol, moncontrol)
 
 
 void
-__monstartup (lowpc, highpc)
-     u_long lowpc;
-     u_long highpc;
+__monstartup (u_long lowpc, u_long highpc)
 {
   int o;
   char *cp;
@@ -175,8 +172,7 @@ weak_alias (__monstartup, monstartup)
 
 static void
 internal_function
-write_hist (fd)
-     int fd;
+write_hist (int fd)
 {
   u_char tag = GMON_TAG_TIME_HIST;
 
@@ -227,8 +223,7 @@ write_hist (fd)
 
 static void
 internal_function
-write_call_graph (fd)
-     int fd;
+write_call_graph (int fd)
 {
 #define NARCS_PER_WRITEV	32
   u_char tag = GMON_TAG_CG_ARC;
@@ -290,8 +285,7 @@ write_call_graph (fd)
 
 static void
 internal_function
-write_bb_counts (fd)
-     int fd;
+write_bb_counts (int fd)
 {
   struct __bb *grp;
   u_char tag = GMON_TAG_BB_COUNT;

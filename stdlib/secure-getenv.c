@@ -24,8 +24,7 @@
    what values to accept from the environment.  This special version
    checks for SUID or SGID first before doing any work.  */
 char *
-__libc_secure_getenv (name)
-     const char *name;
+__libc_secure_getenv (const char *name)
 {
   return __libc_enable_secure ? NULL : getenv (name);
 }

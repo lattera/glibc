@@ -28,8 +28,7 @@
 #include <stdio.h>
 
 int
-__fflush_unlocked (fp)
-     _IO_FILE *fp;
+__fflush_unlocked (_IO_FILE *fp)
 {
   if (fp == NULL)
     return _IO_flush_all ();

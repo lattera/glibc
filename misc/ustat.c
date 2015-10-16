@@ -21,9 +21,7 @@
 #include <sys/ustat.h>
 
 int
-ustat (dev, ust)
-     dev_t dev;
-     struct ustat * ust;
+ustat (dev_t dev, struct ustat *ust)
 {
   __set_errno (ENOSYS);
   return -1;

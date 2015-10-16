@@ -32,9 +32,7 @@
 
 int
 attribute_compat_text_section
-_IO_old_fgetpos64 (fp, posp)
-     _IO_FILE *fp;
-     _IO_fpos64_t *posp;
+_IO_old_fgetpos64 (_IO_FILE *fp, _IO_fpos64_t *posp)
 {
   _IO_off64_t pos;
   CHECK_FILE (fp, EOF);

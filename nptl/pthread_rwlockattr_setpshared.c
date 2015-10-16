@@ -22,9 +22,7 @@
 
 
 int
-pthread_rwlockattr_setpshared (attr, pshared)
-     pthread_rwlockattr_t *attr;
-     int pshared;
+pthread_rwlockattr_setpshared (pthread_rwlockattr_t *attr, int pshared)
 {
   struct pthread_rwlockattr *iattr;
 

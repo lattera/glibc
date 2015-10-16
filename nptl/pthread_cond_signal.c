@@ -29,8 +29,7 @@
 
 
 int
-__pthread_cond_signal (cond)
-     pthread_cond_t *cond;
+__pthread_cond_signal (pthread_cond_t *cond)
 {
   int pshared = (cond->__data.__mutex == (void *) ~0l)
 		? LLL_SHARED : LLL_PRIVATE;

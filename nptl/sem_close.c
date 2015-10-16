@@ -40,8 +40,7 @@ walker (const void *inodep, const VISIT which, const int depth)
 
 
 int
-sem_close (sem)
-     sem_t *sem;
+sem_close (sem_t *sem)
 {
   int result = 0;
 

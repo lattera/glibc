@@ -19,9 +19,7 @@
 
 /* Return 1 if SIGNO is in SET, 0 if not.  */
 int
-sigismember (set, signo)
-     const sigset_t *set;
-     int signo;
+sigismember (const sigset_t *set, int signo)
 {
   if (set == NULL || signo <= 0 || signo >= NSIG)
     {

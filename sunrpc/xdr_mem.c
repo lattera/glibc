@@ -172,9 +172,7 @@ xdrmem_getpos (const XDR *xdrs)
  * xdrs modified
  */
 static bool_t
-xdrmem_setpos (xdrs, pos)
-     XDR *xdrs;
-     u_int pos;
+xdrmem_setpos (XDR *xdrs, u_int pos)
 {
   caddr_t newaddr = xdrs->x_base + pos;
   caddr_t lastaddr = xdrs->x_private + xdrs->x_handy;

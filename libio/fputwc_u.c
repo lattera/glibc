@@ -30,9 +30,7 @@
 #undef fputwc_unlocked
 
 wint_t
-fputwc_unlocked (wc, fp)
-     wchar_t wc;
-     _IO_FILE *fp;
+fputwc_unlocked (wchar_t wc, _IO_FILE *fp)
 {
   CHECK_FILE (fp, WEOF);
   if (_IO_fwide (fp, 1) < 0)

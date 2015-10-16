@@ -370,9 +370,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 }
 
 int
-rresvport_af(alport, family)
-	int *alport;
-	sa_family_t family;
+rresvport_af (int *alport, sa_family_t family)
 {
 	union {
 		struct sockaddr generic;
@@ -431,8 +429,7 @@ rresvport_af(alport, family)
 libc_hidden_def (rresvport_af)
 
 int
-rresvport(alport)
-	int *alport;
+rresvport (int *alport)
 {
 	return rresvport_af(alport, AF_INET);
 }

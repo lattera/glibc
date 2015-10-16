@@ -202,9 +202,7 @@ mem1:	free(sp);
 
 static void
 internal_function
-fts_load(sp, p)
-	FTS *sp;
-	FTSENT *p;
+fts_load (FTS *sp, FTSENT *p)
 {
 	int len;
 	char *cp;
@@ -228,8 +226,7 @@ fts_load(sp, p)
 }
 
 int
-fts_close(sp)
-	FTS *sp;
+fts_close (FTS *sp)
 {
 	FTSENT *freep, *p;
 	int saved_errno;
@@ -282,8 +279,7 @@ fts_close(sp)
 	    ? p->fts_pathlen - 1 : p->fts_pathlen)
 
 FTSENT *
-fts_read(sp)
-	FTS *sp;
+fts_read (FTS *sp)
 {
 	FTSENT *p, *tmp;
 	int instr;
@@ -479,10 +475,7 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
  */
 /* ARGSUSED */
 int
-fts_set(sp, p, instr)
-	FTS *sp;
-	FTSENT *p;
-	int instr;
+fts_set (FTS *sp, FTSENT *p, int instr)
 {
 	if (instr != 0 && instr != FTS_AGAIN && instr != FTS_FOLLOW &&
 	    instr != FTS_NOINSTR && instr != FTS_SKIP) {
@@ -494,9 +487,7 @@ fts_set(sp, p, instr)
 }
 
 FTSENT *
-fts_children(sp, instr)
-	FTS *sp;
-	int instr;
+fts_children (FTS *sp, int instr)
 {
 	FTSENT *p;
 	int fd;
@@ -587,9 +578,7 @@ dirent_not_directory(const struct dirent *dp)
  */
 static FTSENT *
 internal_function
-fts_build(sp, type)
-	FTS *sp;
-	int type;
+fts_build (FTS *sp, int type)
 {
 	struct dirent *dp;
 	FTSENT *p, *head;
@@ -852,10 +841,7 @@ mem1:				saved_errno = errno;
 
 static u_short
 internal_function
-fts_stat(sp, p, follow)
-	FTS *sp;
-	FTSENT *p;
-	int follow;
+fts_stat (FTS *sp, FTSENT *p, int follow)
 {
 	FTSENT *t;
 	dev_t dev;
@@ -936,10 +922,7 @@ err:		memset(sbp, 0, sizeof(struct stat));
 
 static FTSENT *
 internal_function
-fts_sort(sp, head, nitems)
-	FTS *sp;
-	FTSENT *head;
-	int nitems;
+fts_sort (FTS *sp, FTSENT *head, int nitems)
 {
 	FTSENT **ap, *p;
 
@@ -974,10 +957,7 @@ fts_sort(sp, head, nitems)
 
 static FTSENT *
 internal_function
-fts_alloc(sp, name, namelen)
-	FTS *sp;
-	const char *name;
-	size_t namelen;
+fts_alloc (FTS *sp, const char *name, size_t namelen)
 {
 	FTSENT *p;
 	size_t len;
@@ -1014,8 +994,7 @@ fts_alloc(sp, name, namelen)
 
 static void
 internal_function
-fts_lfree(head)
-	FTSENT *head;
+fts_lfree (FTSENT *head)
 {
 	FTSENT *p;
 
@@ -1034,9 +1013,7 @@ fts_lfree(head)
  */
 static int
 internal_function
-fts_palloc(sp, more)
-	FTS *sp;
-	size_t more;
+fts_palloc (FTS *sp, size_t more)
 {
 	char *p;
 
@@ -1068,9 +1045,7 @@ fts_palloc(sp, more)
  */
 static void
 internal_function
-fts_padjust(sp, head)
-	FTS *sp;
-	FTSENT *head;
+fts_padjust (FTS *sp, FTSENT *head)
 {
 	FTSENT *p;
 	char *addr = sp->fts_path;
@@ -1095,8 +1070,7 @@ fts_padjust(sp, head)
 
 static size_t
 internal_function
-fts_maxarglen(argv)
-	char * const *argv;
+fts_maxarglen (char * const *argv)
 {
 	size_t len, max;
 
@@ -1113,11 +1087,7 @@ fts_maxarglen(argv)
  */
 static int
 internal_function
-fts_safe_changedir(sp, p, fd, path)
-	FTS *sp;
-	FTSENT *p;
-	int fd;
-	const char *path;
+fts_safe_changedir (FTS *sp, FTSENT *p, int fd, const char *path)
 {
 	int ret, oerrno, newfd;
 	struct stat64 sb;

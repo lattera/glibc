@@ -19,8 +19,7 @@
 #include <wchar.h>
 
 wint_t
-putwchar_unlocked (wc)
-     wchar_t wc;
+putwchar_unlocked (wchar_t wc)
 {
   CHECK_FILE (_IO_stdout, WEOF);
   return _IO_putwc_unlocked (wc, _IO_stdout);

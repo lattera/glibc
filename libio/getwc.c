@@ -31,8 +31,7 @@
 #undef _IO_getwc
 
 wint_t
-_IO_getwc (fp)
-     FILE *fp;
+_IO_getwc (FILE *fp)
 {
   wint_t result;
   CHECK_FILE (fp, WEOF);

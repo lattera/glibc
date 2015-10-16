@@ -19,8 +19,7 @@
 #include <stropts.h>
 
 int
-fdetach (path)
-     const char *path;
+fdetach (const char *path)
 {
   __set_errno (ENOSYS);
   return -1;

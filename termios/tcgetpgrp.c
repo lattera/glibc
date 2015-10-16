@@ -21,8 +21,7 @@
 
 /* Return the foreground process group ID of FD.  */
 pid_t
-tcgetpgrp (fd)
-     int fd;
+tcgetpgrp (int fd)
 {
   if (fd < 0)
     {

@@ -21,9 +21,7 @@
 
 
 int
-pthread_mutexattr_getprotocol (attr, protocol)
-     const pthread_mutexattr_t *attr;
-     int *protocol;
+pthread_mutexattr_getprotocol (const pthread_mutexattr_t *attr, int *protocol)
 {
   const struct pthread_mutexattr *iattr;
 

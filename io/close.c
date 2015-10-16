@@ -20,8 +20,7 @@
 
 /* Close the file descriptor FD.  */
 int
-__close (fd)
-     int fd;
+__close (int fd)
 {
   if (fd < 0)
     {

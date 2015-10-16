@@ -32,9 +32,7 @@
 
 int
 attribute_compat_text_section
-_IO_old_fsetpos64 (fp, posp)
-     _IO_FILE *fp;
-     const _IO_fpos64_t *posp;
+_IO_old_fsetpos64 (_IO_FILE *fp, const _IO_fpos64_t *posp)
 {
   int result;
   CHECK_FILE (fp, EOF);

@@ -20,8 +20,7 @@
 
 
 int
-pthread_barrierattr_init (attr)
-     pthread_barrierattr_t *attr;
+pthread_barrierattr_init (pthread_barrierattr_t *attr)
 {
   ((struct pthread_barrierattr *) attr)->pshared = PTHREAD_PROCESS_PRIVATE;
 

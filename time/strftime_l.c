@@ -366,9 +366,7 @@ memcpy_uppcase (dest, src, len LOCALE_PARAM)
 # define tm_diff ftime_tm_diff
 static int tm_diff (const struct tm *, const struct tm *) __THROW;
 static int
-tm_diff (a, b)
-     const struct tm *a;
-     const struct tm *b;
+tm_diff (const struct tm *a, const struct tm *b)
 {
   /* Compute intervening leap days correctly even if year is negative.
      Take care to avoid int overflow in leap day calculations,
@@ -403,9 +401,7 @@ static int iso_week_days (int, int) __THROW;
 __inline__
 #endif
 static int
-iso_week_days (yday, wday)
-     int yday;
-     int wday;
+iso_week_days (int yday, int wday)
 {
   /* Add enough to the first operand of % to make it nonnegative.  */
   int big_enough_multiple_of_7 = (-YDAY_MINIMUM / 7 + 2) * 7;

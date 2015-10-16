@@ -41,9 +41,7 @@
 #endif
 
 _IO_FILE *
-_IO_new_fdopen (fd, mode)
-     int fd;
-     const char *mode;
+_IO_new_fdopen (int fd, const char *mode)
 {
   int read_write;
   struct locked_FILE

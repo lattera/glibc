@@ -21,9 +21,7 @@
 #include <stdlib.h>
 
 int
-drand48_r (buffer, result)
-     struct drand48_data *buffer;
-     double *result;
+drand48_r (struct drand48_data *buffer, double *result)
 {
   return __erand48_r (buffer->__x, buffer, result);
 }

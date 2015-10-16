@@ -21,9 +21,7 @@
 #include <futex-internal.h>
 
 int
-pthread_condattr_setpshared (attr, pshared)
-     pthread_condattr_t *attr;
-     int pshared;
+pthread_condattr_setpshared (pthread_condattr_t *attr, int pshared)
 {
   int err = futex_supports_pshared (pshared);
   if (err != 0)

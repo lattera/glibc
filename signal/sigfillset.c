@@ -21,8 +21,7 @@
 
 /* Set all signals in SET.  */
 int
-sigfillset (set)
-     sigset_t *set;
+sigfillset (sigset_t *set)
 {
   if (set == NULL)
     {

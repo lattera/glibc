@@ -20,8 +20,7 @@
 
 /* Make all changes done to FD actually appear on disk.  */
 int
-fsync (fd)
-     int fd;
+fsync (int fd)
 {
   __set_errno (ENOSYS);
   return -1;

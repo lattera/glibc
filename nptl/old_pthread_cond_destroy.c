@@ -23,8 +23,7 @@
 
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
 int
-__pthread_cond_destroy_2_0 (cond)
-     pthread_cond_2_0_t *cond;
+__pthread_cond_destroy_2_0 (pthread_cond_2_0_t *cond)
 {
   /* Free the memory which was eventually allocated.  */
   free (cond->cond);

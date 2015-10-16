@@ -22,9 +22,7 @@
 
 /* Change the protections of FILE to MODE.  */
 int
-__chmod (file, mode)
-     const char *file;
-     mode_t mode;
+__chmod (const char *file, mode_t mode)
 {
   if (file == NULL)
     {

@@ -21,10 +21,7 @@
 /* Set the priority of all processes specified by WHICH and WHO
    to PRIO.  Returns 0 on success, -1 on errors.  */
 int
-__setpriority (which, who, prio)
-     enum __priority_which which;
-     id_t who;
-     int prio;
+__setpriority (enum __priority_which which, id_t who, int prio)
 {
   __set_errno (ENOSYS);
   return -1;

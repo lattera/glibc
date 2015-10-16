@@ -49,8 +49,7 @@ extern char *alloca ();
 
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.  */
 int
-putenv (string)
-     char *string;
+putenv (char *string)
 {
   const char *const name_end = strchr (string, '=');
 

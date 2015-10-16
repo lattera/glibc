@@ -21,10 +21,7 @@
 
 
 wchar_t *
-__wmemmove (s1, s2, n)
-     wchar_t *s1;
-     const wchar_t *s2;
-     size_t n;
+__wmemmove (wchar_t *s1, const wchar_t *s2, size_t n)
 {
   return (wchar_t *) memmove ((char *) s1, (char *) s2, n * sizeof (wchar_t));
 }

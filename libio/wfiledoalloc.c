@@ -78,8 +78,7 @@
  */
 
 int
-_IO_wfile_doallocate (fp)
-     _IO_FILE *fp;
+_IO_wfile_doallocate (_IO_FILE *fp)
 {
   _IO_size_t size;
   wchar_t *p;

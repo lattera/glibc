@@ -24,11 +24,7 @@
 static mbstate_t state;
 
 size_t
-__mbsrtowcs (dst, src, len, ps)
-     wchar_t *dst;
-     const char **src;
-     size_t len;
-     mbstate_t *ps;
+__mbsrtowcs (wchar_t *dst, const char **src, size_t len, mbstate_t *ps)
 {
   return __mbsrtowcs_l (dst, src, len, ps ?: &state, _NL_CURRENT_LOCALE);
 }

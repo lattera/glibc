@@ -26,9 +26,7 @@
 /* Open FILE with access OFLAG.  If O_CREAT or O_TMPFILE is in OFLAG,
    a third argument is the file protection.  */
 int
-__libc_open (file, oflag)
-     const char *file;
-     int oflag;
+__libc_open (const char *file, int oflag)
 {
   int mode;
 

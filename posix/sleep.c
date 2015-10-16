@@ -28,8 +28,7 @@
    signal afterwards is undefined.  There is no return value to indicate
    error, but if `sleep' returns SECONDS, it probably didn't work.  */
 unsigned int
-__sleep (seconds)
-     unsigned int seconds;
+__sleep (unsigned int seconds)
 {
   __set_errno (ENOSYS);
   return seconds;

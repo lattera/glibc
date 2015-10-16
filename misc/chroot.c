@@ -21,8 +21,7 @@
 /* Make PATH be the root directory (the starting point for absolute paths).
    This call is restricted to the super-user.  */
 int
-chroot (path)
-     const char *path;
+chroot (const char *path)
 {
   __set_errno (ENOSYS);
   return -1;

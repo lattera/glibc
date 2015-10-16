@@ -22,9 +22,7 @@
 
 
 int
-pthread_mutexattr_setpshared (attr, pshared)
-     pthread_mutexattr_t *attr;
-     int pshared;
+pthread_mutexattr_setpshared (pthread_mutexattr_t *attr, int pshared)
 {
   struct pthread_mutexattr *iattr;
 

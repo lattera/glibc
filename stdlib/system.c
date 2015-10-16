@@ -21,8 +21,7 @@
 
 /* Execute LINE as a shell command.  */
 int
-__libc_system (line)
-     const char *line;
+__libc_system (const char *line)
 {
   if (line == NULL)
     return 0;			/* This indicates no command processor.  */

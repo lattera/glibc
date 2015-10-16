@@ -21,11 +21,7 @@
 /* Read N bytes into BUF from socket FD.
    Returns the number read or -1 for errors.  */
 ssize_t
-__recv (fd, buf, n, flags)
-     int fd;
-     void *buf;
-     size_t n;
-     int flags;
+__recv (int fd, void *buf, size_t n, int flags)
 {
   __set_errno (ENOSYS);
   return -1;

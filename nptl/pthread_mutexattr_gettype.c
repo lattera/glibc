@@ -20,9 +20,7 @@
 
 
 int
-pthread_mutexattr_gettype (attr, kind)
-     const pthread_mutexattr_t *attr;
-     int *kind;
+pthread_mutexattr_gettype (const pthread_mutexattr_t *attr, int *kind)
 {
   const struct pthread_mutexattr *iattr;
 

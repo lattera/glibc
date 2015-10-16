@@ -21,10 +21,7 @@
 
 /* Append SRC on the end of DEST.  */
 char *
-__strcat_chk (dest, src, destlen)
-     char *dest;
-     const char *src;
-     size_t destlen;
+__strcat_chk (char *dest, const char *src, size_t destlen)
 {
   char *s1 = dest;
   const char *s2 = src;

@@ -25,10 +25,7 @@
 /* Copy no more than N wide-characters of SRC to DEST, returning the
    address of the last character written into DEST.  */
 wchar_t *
-__wcpncpy (dest, src, n)
-     wchar_t *dest;
-     const wchar_t *src;
-     size_t n;
+__wcpncpy (wchar_t *dest, const wchar_t *src, size_t n)
 {
   wint_t c;
   wchar_t *const s = dest;

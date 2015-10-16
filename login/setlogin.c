@@ -20,8 +20,7 @@
 
 /* Set the login name returned by `getlogin'.  */
 int
-setlogin (name)
-     const char *name;
+setlogin (const char *name)
 {
   __set_errno (ENOSYS);
   return -1;

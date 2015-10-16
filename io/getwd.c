@@ -23,8 +23,7 @@
 
 
 char *
-getwd (buf)
-     char *buf;
+getwd (char *buf)
 {
 #ifndef PATH_MAX
 #define PATH_MAX 1024

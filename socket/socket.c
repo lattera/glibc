@@ -22,10 +22,7 @@
    protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
    Returns a file descriptor for the new socket, or -1 for errors.  */
 int
-__socket (domain, type, protocol)
-     int domain;
-     int type;
-     int protocol;
+__socket (int domain, int type, int protocol)
 {
   __set_errno (ENOSYS);
   return -1;

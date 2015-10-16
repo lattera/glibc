@@ -22,9 +22,7 @@
 /* Set the real user ID of the calling process to RUID,
    and the effective user ID of the calling process to EUID.  */
 int
-__setreuid (effective_uid, real_uid)
-     uid_t effective_uid;
-     uid_t real_uid;
+__setreuid (uid_t effective_uid, uid_t real_uid)
 {
   __set_errno (ENOSYS);
   return -1;

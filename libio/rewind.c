@@ -28,8 +28,7 @@
 #include <stdio.h>
 
 void
-rewind (fp)
-     _IO_FILE *fp;
+rewind (_IO_FILE *fp)
 {
   CHECK_FILE (fp, );
   _IO_acquire_lock (fp);

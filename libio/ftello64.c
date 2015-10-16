@@ -32,8 +32,7 @@
 #ifndef __OFF_T_MATCHES_OFF64_T
 
 off64_t
-ftello64 (fp)
-     _IO_FILE *fp;
+ftello64 (_IO_FILE *fp)
 {
   _IO_off64_t pos;
   CHECK_FILE (fp, -1L);

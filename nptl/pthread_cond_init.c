@@ -22,9 +22,7 @@
 
 
 int
-__pthread_cond_init (cond, cond_attr)
-     pthread_cond_t *cond;
-     const pthread_condattr_t *cond_attr;
+__pthread_cond_init (pthread_cond_t *cond, const pthread_condattr_t *cond_attr)
 {
   struct pthread_condattr *icond_attr = (struct pthread_condattr *) cond_attr;
 

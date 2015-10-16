@@ -27,9 +27,8 @@
 #include "libioP.h"
 #include <limits.h>
 
-char*
-_IO_gets (buf)
-     char *buf;
+char *
+_IO_gets (char *buf)
 {
   _IO_size_t count;
   int ch;

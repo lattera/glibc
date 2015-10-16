@@ -19,8 +19,7 @@
 
 /* Set *T to indicate raw mode.  */
 void
-cfmakeraw (t)
-     struct termios *t;
+cfmakeraw (struct termios *t)
 {
   t->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
   t->c_oflag &= ~OPOST;

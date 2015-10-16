@@ -38,9 +38,7 @@ strong_alias (_pthread_cleanup_push, __pthread_cleanup_push)
 
 
 void
-_pthread_cleanup_pop (buffer, execute)
-     struct _pthread_cleanup_buffer *buffer;
-     int execute;
+_pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer, int execute)
 {
   struct pthread *self __attribute ((unused)) = THREAD_SELF;
 

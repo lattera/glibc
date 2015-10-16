@@ -20,9 +20,7 @@
 
 
 int
-pthread_condattr_getclock (attr, clock_id)
-     const pthread_condattr_t *attr;
-     clockid_t *clock_id;
+pthread_condattr_getclock (const pthread_condattr_t *attr, clockid_t *clock_id)
 {
   *clock_id = (((((const struct pthread_condattr *) attr)->value) >> 1)
 	       & ((1 << COND_NWAITERS_SHIFT) - 1));

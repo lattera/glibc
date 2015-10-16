@@ -21,10 +21,7 @@
 
 
 wchar_t *
-__wmempcpy (s1, s2, n)
-     wchar_t *s1;
-     const wchar_t *s2;
-     size_t n;
+__wmempcpy (wchar_t *s1, const wchar_t *s2, size_t n)
 {
   return (wchar_t *) __mempcpy ((char *) s1, (char *) s2,
 				n * sizeof (wchar_t));

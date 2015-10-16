@@ -25,9 +25,7 @@ struct tm _tmbuf;
 /* Return the `struct tm' representation of *T in local time,
    using *TP to store the result.  */
 struct tm *
-__localtime_r (t, tp)
-     const time_t *t;
-     struct tm *tp;
+__localtime_r (const time_t *t, struct tm *tp)
 {
   return __tz_convert (t, 1, tp);
 }
@@ -36,8 +34,7 @@ weak_alias (__localtime_r, localtime_r)
 
 /* Return the `struct tm' representation of *T in local time.  */
 struct tm *
-localtime (t)
-     const time_t *t;
+localtime (const time_t *t)
 {
   return __tz_convert (t, 1, &_tmbuf);
 }

@@ -19,9 +19,7 @@
 
 /* Add SIGNO to SET.  */
 int
-sigaddset (set, signo)
-     sigset_t *set;
-     int signo;
+sigaddset (sigset_t *set, int signo)
 {
   if (set == NULL || signo <= 0 || signo >= NSIG)
     {

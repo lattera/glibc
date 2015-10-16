@@ -27,10 +27,7 @@
 #include "libioP.h"
 
 void
-_IO_setbuffer (fp, buf, size)
-     _IO_FILE *fp;
-     char *buf;
-     _IO_size_t size;
+_IO_setbuffer (_IO_FILE *fp, char *buf, _IO_size_t size)
 {
   CHECK_FILE (fp, );
   _IO_acquire_lock (fp);

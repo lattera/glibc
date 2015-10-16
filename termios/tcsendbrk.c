@@ -20,9 +20,7 @@
 
 /* Send zero bits on FD.  */
 int
-tcsendbreak (fd, duration)
-     int fd;
-     int duration;
+tcsendbreak (int fd, int duration)
 {
   if (fd < 0)
     {

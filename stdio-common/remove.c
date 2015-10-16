@@ -20,8 +20,7 @@
 #include <stdio.h>
 
 int
-remove (file)
-     const char *file;
+remove (const char *file)
 {
   __set_errno (ENOSYS);
   return -1;

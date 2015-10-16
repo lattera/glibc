@@ -130,9 +130,7 @@ static const struct xdr_discrim reply_dscrm[3] =
  * XDR a reply message
  */
 bool_t
-xdr_replymsg (xdrs, rmsg)
-     XDR *xdrs;
-     struct rpc_msg *rmsg;
+xdr_replymsg (XDR *xdrs, struct rpc_msg *rmsg)
 {
   if (xdr_u_long (xdrs, &(rmsg->rm_xid)) &&
       xdr_enum (xdrs, (enum_t *) & (rmsg->rm_direction)) &&
@@ -151,9 +149,7 @@ libc_hidden_nolink_sunrpc (xdr_replymsg, GLIBC_2_0)
  * The rm_xid is not really static, but the user can easily munge on the fly.
  */
 bool_t
-xdr_callhdr (xdrs, cmsg)
-     XDR *xdrs;
-     struct rpc_msg *cmsg;
+xdr_callhdr (XDR *xdrs, struct rpc_msg *cmsg)
 {
 
   cmsg->rm_direction = CALL;

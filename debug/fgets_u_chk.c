@@ -29,11 +29,7 @@
 #include <sys/param.h>
 
 char *
-__fgets_unlocked_chk (buf, size, n, fp)
-     char *buf;
-     size_t size;
-     int n;
-     _IO_FILE *fp;
+__fgets_unlocked_chk (char *buf, size_t size, int n, _IO_FILE *fp)
 {
   _IO_size_t count;
   char *result;

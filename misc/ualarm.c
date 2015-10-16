@@ -24,9 +24,7 @@
 
    Returns the number of microseconds remaining before the alarm.  */
 useconds_t
-ualarm (value, interval)
-     useconds_t value;
-     useconds_t interval;
+ualarm (useconds_t value, useconds_t interval)
 {
   __set_errno (ENOSYS);
   return -1;

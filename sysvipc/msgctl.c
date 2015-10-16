@@ -23,10 +23,7 @@
    objects.  */
 
 int
-msgctl (msqid, cmd, buf)
-     int msqid;
-     int cmd;
-     struct msqid_ds *buf;
+msgctl (int msqid, int cmd, struct msqid_ds *buf)
 {
   __set_errno (ENOSYS);
   return -1;

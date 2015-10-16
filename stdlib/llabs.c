@@ -23,8 +23,7 @@
 
 /* Return the absolute value of I.  */
 long long int
-llabs (i)
-     long long int i;
+llabs (long long int i)
 {
   return i < 0 ? -i : i;
 }

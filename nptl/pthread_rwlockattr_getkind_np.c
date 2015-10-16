@@ -20,9 +20,7 @@
 
 
 int
-pthread_rwlockattr_getkind_np (attr, pref)
-     const pthread_rwlockattr_t *attr;
-     int *pref;
+pthread_rwlockattr_getkind_np (const pthread_rwlockattr_t *attr, int *pref)
 {
   *pref = ((const struct pthread_rwlockattr *) attr)->lockkind;
 

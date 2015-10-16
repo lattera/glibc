@@ -24,9 +24,7 @@
 int fchflags (int fd, unsigned long int flags) __THROW;
 
 int
-fchflags (fd, flags)
-     int fd;
-     unsigned long int flags;
+fchflags (int fd, unsigned long int flags)
 {
   if (fd < 0)
     {

@@ -20,11 +20,7 @@
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 ssize_t
-__send (fd, buf, n, flags)
-     int fd;
-     const __ptr_t buf;
-     size_t n;
-     int flags;
+__send (int fd, const __ptr_t buf, size_t n, int flags)
 {
   __set_errno (ENOSYS);
   return -1;

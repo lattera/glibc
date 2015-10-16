@@ -25,9 +25,7 @@
      2 = No more receptions or transmissions.
    Returns 0 on success, -1 for errors.  */
 int
-shutdown (fd, how)
-     int fd;
-     int how;
+shutdown (int fd, int how)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -21,9 +21,7 @@
 
 /* Truncate PATH to LENGTH bytes.  */
 int
-truncate64 (path, length)
-     const char *path;
-     off64_t length;
+truncate64 (const char *path, off64_t length)
 {
   if ((off_t) length != length)
     {

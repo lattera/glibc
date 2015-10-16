@@ -21,8 +21,7 @@
 
 
 int
-__pthread_condattr_init (attr)
-     pthread_condattr_t *attr;
+__pthread_condattr_init (pthread_condattr_t *attr)
 {
   memset (attr, '\0', sizeof (*attr));
 

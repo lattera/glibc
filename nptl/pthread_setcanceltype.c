@@ -22,9 +22,7 @@
 
 
 int
-__pthread_setcanceltype (type, oldtype)
-     int type;
-     int *oldtype;
+__pthread_setcanceltype (int type, int *oldtype)
 {
   if (type < PTHREAD_CANCEL_DEFERRED || type > PTHREAD_CANCEL_ASYNCHRONOUS)
     return EINVAL;

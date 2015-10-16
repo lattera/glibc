@@ -32,9 +32,7 @@
 #if !defined _LIBC || (defined O_LARGEFILE && O_LARGEFILE != 0)
 
 _IO_FILE *
-_IO_fopen64 (filename, mode)
-     const char *filename;
-     const char *mode;
+_IO_fopen64 (const char *filename, const char *mode)
 {
   return __fopen_internal (filename, mode, 0);
 }

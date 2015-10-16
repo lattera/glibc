@@ -19,8 +19,7 @@
 #include "stdio.h"
 
 void
-clearerr (fp)
-     FILE *fp;
+clearerr (FILE *fp)
 {
   CHECK_FILE (fp, /*nothing*/);
   _IO_flockfile (fp);

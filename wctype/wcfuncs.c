@@ -71,8 +71,7 @@ libc_hidden_weak (iswxdigit)
 
 #undef towlower
 wint_t
-__towlower (wc)
-     wint_t wc;
+__towlower (wint_t wc)
 {
   size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + __TOW_tolower;
   const char *desc = _NL_CURRENT (LC_CTYPE, i);
@@ -84,8 +83,7 @@ libc_hidden_weak (towlower)
 
 #undef towupper
 wint_t
-__towupper (wc)
-     wint_t wc;
+__towupper (wint_t wc)
 {
   size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + __TOW_toupper;
   const char *desc = _NL_CURRENT (LC_CTYPE, i);

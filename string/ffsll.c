@@ -24,8 +24,7 @@
 
 /* Find the first bit set in I.  */
 int
-ffsll (i)
-     long long int i;
+ffsll (long long int i)
 {
   unsigned long long int x = i & -i;
 

@@ -21,9 +21,7 @@
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.  */
 int
-sigstack (ss, oss)
-     struct sigstack *ss;
-     struct sigstack *oss;
+sigstack (struct sigstack *ss, struct sigstack *oss)
 {
   __set_errno (ENOSYS);
   return -1;

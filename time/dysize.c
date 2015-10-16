@@ -18,8 +18,7 @@
 #include <time.h>
 
 int
-dysize (year)
-     int year;
+dysize (int year)
 {
   return __isleap (year) ? 366 : 365;
 }

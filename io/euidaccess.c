@@ -21,9 +21,7 @@
 #include <unistd.h>
 
 int
-__euidaccess (file, type)
-     const char *file;
-     int type;
+__euidaccess (const char *file, int type)
 {
   if (file == NULL || (type & ~(R_OK|W_OK|X_OK|F_OK)) != 0)
     {

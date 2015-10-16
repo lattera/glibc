@@ -21,8 +21,7 @@
 
 
 int
-pthread_mutex_consistent (mutex)
-     pthread_mutex_t *mutex;
+pthread_mutex_consistent (pthread_mutex_t *mutex)
 {
   /* Test whether this is a robust mutex with a dead owner.  */
   if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) == 0

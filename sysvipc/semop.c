@@ -22,10 +22,7 @@
 /* Perform user-defined atomical operation of array of semaphores.  */
 
 int
-semop (semid, sops, nsops)
-     int semid;
-     struct sembuf *sops;
-     size_t nsops;
+semop (int semid, struct sembuf *sops, size_t nsops)
 {
   __set_errno (ENOSYS);
   return -1;

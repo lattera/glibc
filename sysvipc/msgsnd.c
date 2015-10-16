@@ -26,11 +26,7 @@
    when the limit of the message queue length is reached.  */
 
 int
-msgsnd (msqid, msgp, msgsz, msgflg)
-     int msqid;
-     const void *msgp;
-     size_t msgsz;
-     int msgflg;
+msgsnd (int msqid, const void *msgp, size_t msgsz, int msgflg)
 {
   __set_errno (ENOSYS);
   return -1;

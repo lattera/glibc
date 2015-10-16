@@ -32,10 +32,7 @@
 #include "strfile.h"
 
 int
-_IO_vasprintf (result_ptr, format, args)
-     char **result_ptr;
-     const char *format;
-     _IO_va_list args;
+_IO_vasprintf (char **result_ptr, const char *format, _IO_va_list args)
 {
   /* Initial size of the buffer to be used.  Will be doubled each time an
      overflow occurs.  */

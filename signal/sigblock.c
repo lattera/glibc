@@ -20,8 +20,7 @@
 
 /* Block signals in MASK, returning the old mask.  */
 int
-__sigblock (mask)
-     int mask;
+__sigblock (int mask)
 {
   __set_errno (ENOSYS);
   return -1;

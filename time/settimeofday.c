@@ -21,9 +21,7 @@
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
 int
-__settimeofday (tv, tz)
-     const struct timeval *tv;
-     const struct timezone *tz;
+__settimeofday (const struct timeval *tv, const struct timezone *tz)
 {
   __set_errno (ENOSYS);
   return -1;

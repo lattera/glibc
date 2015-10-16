@@ -255,10 +255,7 @@ __add_to_environ (name, value, combined, replace)
 }
 
 int
-setenv (name, value, replace)
-     const char *name;
-     const char *value;
-     int replace;
+setenv (const char *name, const char *value, int replace)
 {
   if (name == NULL || *name == '\0' || strchr (name, '=') != NULL)
     {
@@ -270,8 +267,7 @@ setenv (name, value, replace)
 }
 
 int
-unsetenv (name)
-     const char *name;
+unsetenv (const char *name)
 {
   size_t len;
   char **ep;

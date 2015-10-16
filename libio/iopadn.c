@@ -33,10 +33,7 @@ static char const zeroes[PADSIZE] =
 {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
 
 _IO_ssize_t
-_IO_padn (fp, pad, count)
-      _IO_FILE *fp;
-      int pad;
-      _IO_ssize_t count;
+_IO_padn (_IO_FILE *fp, int pad, _IO_ssize_t count)
 {
   char padbuf[PADSIZE];
   const char *padptr;

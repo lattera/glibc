@@ -27,8 +27,7 @@
    they are replaced with a string that makes the filename unique.
    Then open the file and return a fd. */
 int
-mkstemp64 (template)
-     char *template;
+mkstemp64 (char *template)
 {
   return __gen_tempname (template, 0, O_LARGEFILE, __GT_FILE);
 }

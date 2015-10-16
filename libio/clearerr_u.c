@@ -19,8 +19,7 @@
 #include "stdio.h"
 
 void
-clearerr_unlocked (fp)
-     FILE *fp;
+clearerr_unlocked (FILE *fp)
 {
   CHECK_FILE (fp, /*nothing*/);
   _IO_clearerr (fp);

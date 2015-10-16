@@ -53,9 +53,7 @@ vtimes_one (struct vtimes *vt, enum __rusage_who who)
    *CURRENT.  If CHILD is not NULL, write statistics for all terminated child
    processes into *CHILD.  Returns 0 for success, -1 for failure.  */
 int
-vtimes (current, child)
-     struct vtimes *current;
-     struct vtimes *child;
+vtimes (struct vtimes *current, struct vtimes *child)
 {
   if (vtimes_one (current, RUSAGE_SELF) < 0
       || vtimes_one (child, RUSAGE_CHILDREN) < 0)

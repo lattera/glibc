@@ -24,8 +24,7 @@
    and effective user IDs, and the saved set-user-ID to UID;
    if not, the effective user ID is set to UID.  */
 int
-__setuid (uid)
-     uid_t uid;
+__setuid (uid_t uid)
 {
   __set_errno (ENOSYS);
   return -1;

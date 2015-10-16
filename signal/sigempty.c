@@ -21,8 +21,7 @@
 
 /* Clear all signals from SET.  */
 int
-sigemptyset (set)
-     sigset_t *set;
+sigemptyset (sigset_t *set)
 {
   if (set == NULL)
     {

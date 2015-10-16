@@ -19,8 +19,7 @@
 
 /* Abort with an error message.  */
 void
-__libc_fatal (message)
-     const char *message;
+__libc_fatal (const char *message)
 {
   /* This function should write MESSAGE out in the most reliable way.
      It is called in situations like internal stdio lossage.  */

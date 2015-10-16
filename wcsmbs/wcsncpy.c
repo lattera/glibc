@@ -24,10 +24,7 @@
 
 /* Copy no more than N wide-characters of SRC to DEST.	*/
 wchar_t *
-__wcsncpy (dest, src, n)
-     wchar_t *dest;
-     const wchar_t *src;
-     size_t n;
+__wcsncpy (wchar_t *dest, const wchar_t *src, size_t n)
 {
   wint_t c;
   wchar_t *const s = dest;

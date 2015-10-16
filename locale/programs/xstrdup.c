@@ -30,8 +30,7 @@ char *xstrdup (char *string) __THROW;
 /* Return a newly allocated copy of STRING.  */
 
 char *
-xstrdup (string)
-     char *string;
+xstrdup (char *string)
 {
   return strcpy (xmalloc (strlen (string) + 1), string);
 }

@@ -1,5 +1,748 @@
 2015-10-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* crypt/cert.c (good_bye): Convert to prototype-style function
+	definition.
+	(get8): Likewise.
+	(put8): Likewise.
+	* crypt/crypt-entry.c (crypt): Likewise.
+	(__fcrypt): Likewise.
+	* crypt/crypt_util.c (_ufc_prbits): Likewise.
+	(_ufc_set_bits): Likewise.
+	(_ufc_clearmem): Likewise.
+	(__init_des_r): Likewise.
+	(shuffle_sb): Likewise.
+	(shuffle_sb): Likewise.
+	(_ufc_setup_salt_r): Likewise.
+	(_ufc_mk_keytab_r): Likewise.
+	(_ufc_dofinalperm_r): Likewise.
+	(encrypt): Likewise.
+	(__setkey_r): Likewise.
+	(setkey): Likewise.
+	* crypt/md5.c (md5_init_ctx): Likewise.
+	(md5_read_ctx): Likewise.
+	(md5_finish_ctx): Likewise.
+	(md5_stream): Likewise.
+	(md5_buffer): Likewise.
+	(md5_process_bytes): Likewise.
+	* crypt/sha256.c (__sha256_init_ctx): Likewise.
+	(__sha256_finish_ctx): Likewise.
+	(__sha256_process_bytes): Likewise.
+	* crypt/sha512.c (__sha512_init_ctx): Likewise.
+	(__sha512_finish_ctx): Likewise.
+	(__sha512_process_bytes): Likewise.
+	* ctype/isctype.c (__isctype): Likewise.
+	* debug/backtrace.c (__backtrace): Likewise.
+	* debug/backtracesymsfd.c (__backtrace_symbols_fd): Likewise.
+	* debug/fgets_chk.c (__fgets_chk): Likewise.
+	* debug/fgets_u_chk.c (__fgets_unlocked_chk): Likewise.
+	* debug/memcpy_chk.c (__memcpy_chk): Likewise.
+	* debug/memmove_chk.c (MEMMOVE_CHK): Likewise.
+	* debug/mempcpy_chk.c (__mempcpy_chk): Likewise.
+	* debug/memset_chk.c (__memset_chk): Likewise.
+	* debug/strcat_chk.c (__strcat_chk): Likewise.
+	* debug/strncat_chk.c (__strncat_chk): Likewise.
+	* debug/strncpy_chk.c (__strncpy_chk): Likewise.
+	* debug/vsprintf_chk.c (_IO_str_chk_overflow): Likewise.
+	* dirent/dirfd.c (dirfd): Likewise.
+	* dirent/getdents.c (__getdirentries): Likewise.
+	* dirent/getdents64.c (getdirentries64): Likewise.
+	* dirent/rewinddir.c (__rewinddir): Likewise.
+	* dirent/seekdir.c (seekdir): Likewise.
+	* dirent/telldir.c (telldir): Likewise.
+	* elf/sln.c (makesymlinks): Likewise.
+	(makesymlink): Likewise.
+	* gmon/gmon.c (__moncontrol): Likewise.
+	(__monstartup): Likewise.
+	(write_hist): Likewise.
+	(write_call_graph): Likewise.
+	(write_bb_counts): Likewise.
+	* grp/setgroups.c (setgroups): Likewise.
+	* inet/inet_lnaof.c (inet_lnaof): Likewise.
+	* inet/inet_net.c (inet_network): Likewise.
+	* inet/inet_netof.c (inet_netof): Likewise.
+	* inet/rcmd.c (rresvport_af): Likewise.
+	(rresvport): Likewise.
+	* io/access.c (__access): Likewise.
+	* io/chdir.c (__chdir): Likewise.
+	* io/chmod.c (__chmod): Likewise.
+	* io/chown.c (__chown): Likewise.
+	* io/close.c (__close): Likewise.
+	* io/creat.c (creat): Likewise.
+	* io/creat64.c (creat64): Likewise.
+	* io/dup.c (__dup): Likewise.
+	* io/dup2.c (__dup2): Likewise.
+	* io/dup3.c (__dup3): Likewise.
+	* io/euidaccess.c (__euidaccess): Likewise.
+	* io/faccessat.c (faccessat): Likewise.
+	* io/fchmod.c (__fchmod): Likewise.
+	* io/fchmodat.c (fchmodat): Likewise.
+	* io/fchown.c (__fchown): Likewise.
+	* io/fchownat.c (fchownat): Likewise.
+	* io/fcntl.c (__fcntl): Likewise.
+	* io/flock.c (__flock): Likewise.
+	* io/fts.c (fts_load): Likewise.
+	(fts_close): Likewise.
+	(fts_read): Likewise.
+	(fts_set): Likewise.
+	(fts_children): Likewise.
+	(fts_build): Likewise.
+	(fts_stat): Likewise.
+	(fts_sort): Likewise.
+	(fts_alloc): Likewise.
+	(fts_lfree): Likewise.
+	(fts_palloc): Likewise.
+	(fts_padjust): Likewise.
+	(fts_maxarglen): Likewise.
+	(fts_safe_changedir): Likewise.
+	* io/getwd.c (getwd): Likewise.
+	* io/isatty.c (__isatty): Likewise.
+	* io/lchown.c (__lchown): Likewise.
+	* io/link.c (__link): Likewise.
+	* io/linkat.c (linkat): Likewise.
+	* io/lseek.c (__libc_lseek): Likewise.
+	* io/mkdir.c (__mkdir): Likewise.
+	* io/mkdirat.c (mkdirat): Likewise.
+	* io/mkfifo.c (mkfifo): Likewise.
+	* io/mkfifoat.c (mkfifoat): Likewise.
+	* io/open.c (__libc_open): Likewise.
+	* io/open64.c (__libc_open64): Likewise.
+	* io/readlink.c (__readlink): Likewise.
+	* io/readlinkat.c (readlinkat): Likewise.
+	* io/rmdir.c (__rmdir): Likewise.
+	* io/symlink.c (__symlink): Likewise.
+	* io/symlinkat.c (symlinkat): Likewise.
+	* io/ttyname.c (ttyname): Likewise.
+	* io/ttyname_r.c (__ttyname_r): Likewise.
+	* io/umask.c (__umask): Likewise.
+	* io/unlink.c (__unlink): Likewise.
+	* io/unlinkat.c (unlinkat): Likewise.
+	* io/utime.c (utime): Likewise.
+	* libio/clearerr.c (clearerr): Likewise.
+	* libio/clearerr_u.c (clearerr_unlocked): Likewise.
+	* libio/feof.c (_IO_feof): Likewise.
+	* libio/feof_u.c (feof_unlocked): Likewise.
+	* libio/ferror.c (_IO_ferror): Likewise.
+	* libio/ferror_u.c (ferror_unlocked): Likewise.
+	* libio/filedoalloc.c (_IO_file_doallocate): Likewise.
+	* libio/fileno.c (__fileno): Likewise.
+	* libio/fputc.c (fputc): Likewise.
+	* libio/fputc_u.c (fputc_unlocked): Likewise.
+	* libio/fputwc.c (fputwc): Likewise.
+	* libio/fputwc_u.c (fputwc_unlocked): Likewise.
+	* libio/freopen.c (freopen): Likewise.
+	* libio/freopen64.c (freopen64): Likewise.
+	* libio/fseek.c (fseek): Likewise.
+	* libio/fseeko.c (fseeko): Likewise.
+	* libio/fseeko64.c (fseeko64): Likewise.
+	* libio/ftello.c (__ftello): Likewise.
+	* libio/ftello64.c (ftello64): Likewise.
+	* libio/fwide.c (fwide): Likewise.
+	* libio/genops.c (_IO_un_link): Likewise.
+	(_IO_link_in): Likewise.
+	(_IO_least_marker): Likewise.
+	(_IO_switch_to_main_get_area): Likewise.
+	(_IO_switch_to_backup_area): Likewise.
+	(_IO_switch_to_get_mode): Likewise.
+	(_IO_free_backup_area): Likewise.
+	(_IO_switch_to_put_mode): Likewise.
+	(__overflow): Likewise.
+	(__underflow): Likewise.
+	(__uflow): Likewise.
+	(_IO_setb): Likewise.
+	(_IO_doallocbuf): Likewise.
+	(_IO_default_underflow): Likewise.
+	(_IO_default_uflow): Likewise.
+	(_IO_default_xsputn): Likewise.
+	(_IO_sgetn): Likewise.
+	(_IO_default_xsgetn): Likewise.
+	(_IO_sync): Likewise.
+	(_IO_default_setbuf): Likewise.
+	(_IO_default_seekpos): Likewise.
+	(_IO_default_doallocate): Likewise.
+	(_IO_init): Likewise.
+	(_IO_old_init): Likewise.
+	(_IO_default_sync): Likewise.
+	(_IO_default_finish): Likewise.
+	(_IO_default_seekoff): Likewise.
+	(_IO_sputbackc): Likewise.
+	(_IO_sungetc): Likewise.
+	(_IO_set_column): Likewise.
+	(_IO_set_column): Likewise.
+	(_IO_adjust_column): Likewise.
+	(_IO_get_column): Likewise.
+	(_IO_init_marker): Likewise.
+	(_IO_remove_marker): Likewise.
+	(_IO_marker_difference): Likewise.
+	(_IO_marker_delta): Likewise.
+	(_IO_seekmark): Likewise.
+	(_IO_unsave_markers): Likewise.
+	(_IO_nobackup_pbackfail): Likewise.
+	(_IO_default_pbackfail): Likewise.
+	(_IO_default_seek): Likewise.
+	(_IO_default_stat): Likewise.
+	(_IO_default_read): Likewise.
+	(_IO_default_write): Likewise.
+	(_IO_default_showmanyc): Likewise.
+	(_IO_default_imbue): Likewise.
+	(_IO_iter_next): Likewise.
+	(_IO_iter_file): Likewise.
+	* libio/getc.c (_IO_getc): Likewise.
+	* libio/getwc.c (_IO_getwc): Likewise.
+	* libio/iofclose.c (_IO_new_fclose): Likewise.
+	* libio/iofdopen.c (_IO_new_fdopen): Likewise.
+	* libio/iofflush.c (_IO_fflush): Likewise.
+	* libio/iofflush_u.c (__fflush_unlocked): Likewise.
+	* libio/iofgetpos.c (_IO_new_fgetpos): Likewise.
+	* libio/iofgetpos64.c (_IO_new_fgetpos64): Likewise.
+	* libio/iofgets.c (_IO_fgets): Likewise.
+	* libio/iofgets_u.c (__fgets_unlocked): Likewise.
+	* libio/iofgetws.c (fgetws): Likewise.
+	* libio/iofgetws_u.c (fgetws_unlocked): Likewise.
+	* libio/iofopen64.c (_IO_fopen64): Likewise.
+	* libio/iofopncook.c (_IO_cookie_read): Likewise.
+	(_IO_cookie_write): Likewise.
+	(_IO_cookie_seek): Likewise.
+	(_IO_cookie_close): Likewise.
+	(_IO_cookie_seekoff): Likewise.
+	(_IO_old_cookie_seek): Likewise.
+	* libio/iofputs.c (_IO_fputs): Likewise.
+	* libio/iofputs_u.c (__fputs_unlocked): Likewise.
+	* libio/iofputws.c (fputws): Likewise.
+	* libio/iofputws_u.c (fputws_unlocked): Likewise.
+	* libio/iofread.c (_IO_fread): Likewise.
+	* libio/iofread_u.c (__fread_unlocked): Likewise.
+	* libio/iofsetpos.c (_IO_new_fsetpos): Likewise.
+	* libio/iofsetpos64.c (_IO_new_fsetpos64): Likewise.
+	* libio/ioftell.c (_IO_ftell): Likewise.
+	* libio/iofwrite.c (_IO_fwrite): Likewise.
+	* libio/iogetdelim.c (_IO_getdelim): Likewise.
+	* libio/iogets.c (_IO_gets): Likewise.
+	* libio/iopadn.c (_IO_padn): Likewise.
+	* libio/iopopen.c (_IO_new_proc_open): Likewise.
+	(_IO_new_popen): Likewise.
+	(_IO_new_proc_close): Likewise.
+	* libio/ioputs.c (_IO_puts): Likewise.
+	* libio/ioseekoff.c (_IO_seekoff_unlocked): Likewise.
+	(_IO_seekoff): Likewise.
+	* libio/ioseekpos.c (_IO_seekpos_unlocked): Likewise.
+	(_IO_seekpos): Likewise.
+	* libio/iosetbuffer.c (_IO_setbuffer): Likewise.
+	* libio/iosetvbuf.c (_IO_setvbuf): Likewise.
+	* libio/ioungetc.c (_IO_ungetc): Likewise.
+	* libio/ioungetwc.c (ungetwc): Likewise.
+	* libio/iovdprintf.c (_IO_vdprintf): Likewise.
+	* libio/iovsscanf.c (_IO_vsscanf): Likewise.
+	* libio/iowpadn.c (_IO_wpadn): Likewise.
+	* libio/libc_fatal.c (__libc_fatal): Likewise.
+	* libio/memstream.c (__open_memstream): Likewise.
+	(_IO_mem_sync): Likewise.
+	(_IO_mem_finish): Likewise.
+	* libio/oldfileops.c (_IO_old_file_init): Likewise.
+	(_IO_old_file_close_it): Likewise.
+	(_IO_old_file_finish): Likewise.
+	(_IO_old_file_fopen): Likewise.
+	(_IO_old_file_attach): Likewise.
+	(_IO_old_file_setbuf): Likewise.
+	(_IO_old_do_write): Likewise.
+	(old_do_write): Likewise.
+	(_IO_old_file_underflow): Likewise.
+	(_IO_old_file_overflow): Likewise.
+	(_IO_old_file_sync): Likewise.
+	(_IO_old_file_seekoff): Likewise.
+	(_IO_old_file_write): Likewise.
+	(_IO_old_file_xsputn): Likewise.
+	* libio/oldiofclose.c (_IO_old_fclose): Likewise.
+	* libio/oldiofdopen.c (_IO_old_fdopen): Likewise.
+	* libio/oldiofgetpos.c (_IO_old_fgetpos): Likewise.
+	* libio/oldiofgetpos64.c (_IO_old_fgetpos64): Likewise.
+	* libio/oldiofopen.c (_IO_old_fopen): Likewise.
+	* libio/oldiofsetpos.c (_IO_old_fsetpos): Likewise.
+	* libio/oldiofsetpos64.c (_IO_old_fsetpos64): Likewise.
+	* libio/oldiopopen.c (_IO_old_proc_open): Likewise.
+	(_IO_old_popen): Likewise.
+	(_IO_old_proc_close): Likewise.
+	* libio/oldpclose.c (__old_pclose): Likewise.
+	* libio/pclose.c (__new_pclose): Likewise.
+	* libio/peekc.c (_IO_peekc_locked): Likewise.
+	* libio/putc.c (_IO_putc): Likewise.
+	* libio/putc_u.c (putc_unlocked): Likewise.
+	* libio/putchar.c (putchar): Likewise.
+	* libio/putchar_u.c (putchar_unlocked): Likewise.
+	* libio/putwc.c (putwc): Likewise.
+	* libio/putwc_u.c (putwc_unlocked): Likewise.
+	* libio/putwchar.c (putwchar): Likewise.
+	* libio/putwchar_u.c (putwchar_unlocked): Likewise.
+	* libio/rewind.c (rewind): Likewise.
+	* libio/setbuf.c (setbuf): Likewise.
+	* libio/setlinebuf.c (setlinebuf): Likewise.
+	* libio/vasprintf.c (_IO_vasprintf): Likewise.
+	* libio/vscanf.c (_IO_vscanf): Likewise.
+	* libio/vsnprintf.c (_IO_strn_overflow): Likewise.
+	* libio/vswprintf.c (_IO_wstrn_overflow): Likewise.
+	* libio/wfiledoalloc.c (_IO_wfile_doallocate): Likewise.
+	* libio/wgenops.c (_IO_least_wmarker): Likewise.
+	(_IO_switch_to_main_wget_area): Likewise.
+	(_IO_switch_to_wbackup_area): Likewise.
+	(_IO_wsetb): Likewise.
+	(_IO_wdefault_pbackfail): Likewise.
+	(_IO_wdefault_finish): Likewise.
+	(_IO_wdefault_uflow): Likewise.
+	(__woverflow): Likewise.
+	(__wuflow): Likewise.
+	(__wunderflow): Likewise.
+	(_IO_wdefault_xsputn): Likewise.
+	(_IO_wdefault_xsgetn): Likewise.
+	(_IO_wdoallocbuf): Likewise.
+	(_IO_wdefault_doallocate): Likewise.
+	(_IO_switch_to_wget_mode): Likewise.
+	(_IO_free_wbackup_area): Likewise.
+	(_IO_switch_to_wput_mode): Likewise.
+	(_IO_sputbackwc): Likewise.
+	(_IO_sungetwc): Likewise.
+	(_IO_adjust_wcolumn): Likewise.
+	(_IO_init_wmarker): Likewise.
+	(_IO_wmarker_delta): Likewise.
+	(_IO_seekwmark): Likewise.
+	(_IO_unsave_wmarkers): Likewise.
+	* libio/wmemstream.c (open_wmemstream): Likewise.
+	(_IO_wmem_sync): Likewise.
+	(_IO_wmem_finish): Likewise.
+	* locale/nl_langinfo.c (nl_langinfo): Likewise.
+	* locale/nl_langinfo_l.c (__nl_langinfo_l): Likewise.
+	* locale/programs/simple-hash.c (init_hash): Likewise.
+	(delete_hash): Likewise.
+	(insert_entry): Likewise.
+	(set_entry): Likewise.
+	(next_prime): Likewise.
+	(is_prime): Likewise.
+	* locale/programs/xmalloc.c (fixup_null_alloc): Likewise.
+	(xmalloc): Likewise.
+	(xrealloc): Likewise.
+	* locale/programs/xstrdup.c (xstrdup): Likewise.
+	* localedata/collate-test.c (xstrcoll): Likewise.
+	* localedata/xfrm-test.c (xstrcmp): Likewise.
+	* login/getlogin_r.c (__getlogin_r): Likewise.
+	* login/getpt.c (__posix_openpt): Likewise.
+	* login/login_tty.c (login_tty): Likewise.
+	* login/setlogin.c (setlogin): Likewise.
+	* mach/msg-destroy.c (__mach_msg_destroy): Likewise.
+	(mach_msg_destroy_port): Likewise.
+	(mach_msg_destroy_memory): Likewise.
+	* malloc/mcheck.c (flood): Likewise.
+	* misc/acct.c (acct): Likewise.
+	* misc/brk.c (__brk): Likewise.
+	* misc/chflags.c (chflags): Likewise.
+	* misc/chroot.c (chroot): Likewise.
+	* misc/fchflags.c (fchflags): Likewise.
+	* misc/fstab.c (getfsspec): Likewise.
+	(getfsfile): Likewise.
+	* misc/fsync.c (fsync): Likewise.
+	* misc/ftruncate.c (__ftruncate): Likewise.
+	* misc/ftruncate64.c (__ftruncate64): Likewise.
+	* misc/getdomain.c (getdomainname): Likewise.
+	(getdomainname): Likewise.
+	* misc/gethostname.c (__gethostname): Likewise.
+	* misc/getpass.c (getpass): Likewise.
+	* misc/getttyent.c (skip): Likewise.
+	(value): Likewise.
+	* misc/gtty.c (gtty): Likewise.
+	* misc/hsearch.c (hsearch): Likewise.
+	(hcreate): Likewise.
+	* misc/hsearch_r.c (__hcreate_r): Likewise.
+	(__hdestroy_r): Likewise.
+	* misc/ioctl.c (__ioctl): Likewise.
+	* misc/mkdtemp.c (mkdtemp): Likewise.
+	* misc/mkostemp.c (mkostemp): Likewise.
+	* misc/mkostemp64.c (mkostemp64): Likewise.
+	* misc/mkostemps.c (mkostemps): Likewise.
+	* misc/mkostemps64.c (mkostemps64): Likewise.
+	* misc/mkstemp.c (mkstemp): Likewise.
+	* misc/mkstemp64.c (mkstemp64): Likewise.
+	* misc/mkstemps.c (mkstemps): Likewise.
+	* misc/mkstemps64.c (mkstemps64): Likewise.
+	* misc/mktemp.c (__mktemp): Likewise.
+	* misc/preadv.c (preadv): Likewise.
+	* misc/preadv64.c (preadv64): Likewise.
+	* misc/pwritev.c (pwritev): Likewise.
+	* misc/pwritev64.c (pwritev64): Likewise.
+	* misc/readv.c (__readv): Likewise.
+	* misc/revoke.c (revoke): Likewise.
+	* misc/setdomain.c (setdomainname): Likewise.
+	* misc/setegid.c (setegid): Likewise.
+	* misc/seteuid.c (seteuid): Likewise.
+	* misc/sethostid.c (sethostid): Likewise.
+	* misc/sethostname.c (sethostname): Likewise.
+	* misc/setregid.c (__setregid): Likewise.
+	* misc/setreuid.c (__setreuid): Likewise.
+	* misc/sstk.c (sstk): Likewise.
+	* misc/stty.c (stty): Likewise.
+	* misc/syscall.c (syscall): Likewise.
+	* misc/syslog.c (setlogmask): Likewise.
+	* misc/truncate.c (__truncate): Likewise.
+	* misc/truncate64.c (truncate64): Likewise.
+	* misc/ualarm.c (ualarm): Likewise.
+	* misc/usleep.c (usleep): Likewise.
+	* misc/ustat.c (ustat): Likewise.
+	* misc/writev.c (__writev): Likewise.
+	* nptl/cleanup_compat.c (_pthread_cleanup_pop): Likewise.
+	* nptl/old_pthread_cond_broadcast.c
+	(__pthread_cond_broadcast_2_0): Likewise.
+	* nptl/old_pthread_cond_destroy.c (__pthread_cond_destroy_2_0):
+	Likewise.
+	* nptl/old_pthread_cond_signal.c (__pthread_cond_signal_2_0):
+	Likewise.
+	* nptl/old_pthread_cond_wait.c (__pthread_cond_wait_2_0):
+	Likewise.
+	* nptl/pt-raise.c (raise): Likewise.
+	* nptl/pthread_barrier_destroy.c (pthread_barrier_destroy):
+	Likewise.
+	* nptl/pthread_barrier_wait.c (__pthread_barrier_wait): Likewise.
+	* nptl/pthread_barrierattr_destroy.c
+	(pthread_barrierattr_destroy): Likewise.
+	* nptl/pthread_barrierattr_init.c (pthread_barrierattr_init):
+	Likewise.
+	* nptl/pthread_barrierattr_setpshared.c
+	(pthread_barrierattr_setpshared): Likewise.
+	* nptl/pthread_cond_broadcast.c (__pthread_cond_broadcast):
+	Likewise.
+	* nptl/pthread_cond_destroy.c (__pthread_cond_destroy): Likewise.
+	* nptl/pthread_cond_init.c (__pthread_cond_init): Likewise.
+	* nptl/pthread_cond_signal.c (__pthread_cond_signal): Likewise.
+	* nptl/pthread_condattr_destroy.c (__pthread_condattr_destroy):
+	Likewise.
+	* nptl/pthread_condattr_getclock.c (pthread_condattr_getclock):
+	Likewise.
+	* nptl/pthread_condattr_getpshared.c
+	(pthread_condattr_getpshared): Likewise.
+	* nptl/pthread_condattr_init.c (__pthread_condattr_init):
+	Likewise.
+	* nptl/pthread_condattr_setpshared.c
+	(pthread_condattr_setpshared): Likewise.
+	* nptl/pthread_detach.c (pthread_detach): Likewise.
+	* nptl/pthread_equal.c (__pthread_equal): Likewise.
+	* nptl/pthread_getcpuclockid.c (pthread_getcpuclockid): Likewise.
+	* nptl/pthread_getspecific.c (__pthread_getspecific): Likewise.
+	* nptl/pthread_key_delete.c (pthread_key_delete): Likewise.
+	* nptl/pthread_mutex_consistent.c (pthread_mutex_consistent):
+	Likewise.
+	* nptl/pthread_mutex_destroy.c (__pthread_mutex_destroy):
+	Likewise.
+	* nptl/pthread_mutex_getprioceiling.c
+	(pthread_mutex_getprioceiling): Likewise.
+	* nptl/pthread_mutexattr_destroy.c (__pthread_mutexattr_destroy):
+	Likewise.
+	* nptl/pthread_mutexattr_getprotocol.c
+	(pthread_mutexattr_getprotocol): Likewise.
+	* nptl/pthread_mutexattr_getpshared.c
+	(pthread_mutexattr_getpshared): Likewise.
+	* nptl/pthread_mutexattr_getrobust.c
+	(pthread_mutexattr_getrobust): Likewise.
+	* nptl/pthread_mutexattr_gettype.c (pthread_mutexattr_gettype):
+	Likewise.
+	* nptl/pthread_mutexattr_init.c (__pthread_mutexattr_init):
+	Likewise.
+	* nptl/pthread_mutexattr_setprioceiling.c
+	(pthread_mutexattr_setprioceiling): Likewise.
+	* nptl/pthread_mutexattr_setprotocol.c
+	(pthread_mutexattr_setprotocol): Likewise.
+	* nptl/pthread_mutexattr_setpshared.c
+	(pthread_mutexattr_setpshared): Likewise.
+	* nptl/pthread_mutexattr_setrobust.c
+	(pthread_mutexattr_setrobust): Likewise.
+	* nptl/pthread_mutexattr_settype.c (__pthread_mutexattr_settype):
+	Likewise.
+	* nptl/pthread_rwlock_destroy.c (__pthread_rwlock_destroy):
+	Likewise.
+	* nptl/pthread_rwlockattr_destroy.c (pthread_rwlockattr_destroy):
+	Likewise.
+	* nptl/pthread_rwlockattr_getkind_np.c
+	(pthread_rwlockattr_getkind_np): Likewise.
+	* nptl/pthread_rwlockattr_getpshared.c
+	(pthread_rwlockattr_getpshared): Likewise.
+	* nptl/pthread_rwlockattr_init.c (pthread_rwlockattr_init):
+	Likewise.
+	* nptl/pthread_rwlockattr_setkind_np.c
+	(pthread_rwlockattr_setkind_np): Likewise.
+	* nptl/pthread_rwlockattr_setpshared.c
+	(pthread_rwlockattr_setpshared): Likewise.
+	* nptl/pthread_setcancelstate.c (__pthread_setcancelstate):
+	Likewise.
+	* nptl/pthread_setcanceltype.c (__pthread_setcanceltype):
+	Likewise.
+	* nptl/pthread_setconcurrency.c (pthread_setconcurrency):
+	Likewise.
+	* nptl/pthread_setschedprio.c (pthread_setschedprio): Likewise.
+	* nptl/pthread_setspecific.c (__pthread_setspecific): Likewise.
+	* nptl/pthread_spin_destroy.c (pthread_spin_destroy): Likewise.
+	* nptl/pthread_tryjoin.c (pthread_tryjoin_np): Likewise.
+	* nptl/sem_close.c (sem_close): Likewise.
+	* nptl/sem_destroy.c (__new_sem_destroy): Likewise.
+	* nptl/sem_init.c (__old_sem_init): Likewise.
+	* nptl/sigaction.c (__sigaction): Likewise.
+	* nptl/unregister-atfork.c (__unregister_atfork): Likewise.
+	* posix/_exit.c (_exit): Likewise.
+	* posix/alarm.c (alarm): Likewise.
+	* posix/confstr.c (confstr): Likewise.
+	* posix/fpathconf.c (__fpathconf): Likewise.
+	* posix/getgroups.c (__getgroups): Likewise.
+	* posix/getpgid.c (__getpgid): Likewise.
+	* posix/group_member.c (__group_member): Likewise.
+	* posix/pathconf.c (__pathconf): Likewise.
+	* posix/sched_getaffinity.c (sched_getaffinity): Likewise.
+	* posix/sched_setaffinity.c (sched_setaffinity): Likewise.
+	* posix/setgid.c (__setgid): Likewise.
+	* posix/setpgid.c (__setpgid): Likewise.
+	* posix/setuid.c (__setuid): Likewise.
+	* posix/sleep.c (__sleep): Likewise.
+	* posix/sysconf.c (__sysconf): Likewise.
+	* posix/times.c (__times): Likewise.
+	* posix/uname.c (__uname): Likewise.
+	* posix/waitid.c (__waitid): Likewise.
+	* pwd/getpw.c (__getpw): Likewise.
+	* resolv/base64.c (b64_pton): Likewise.
+	* resolv/gai_sigqueue.c (__gai_sigqueue): Likewise.
+	* resolv/gethnamaddr.c (Dprintf): Likewise.
+	(gethostbyname): Likewise.
+	(gethostbyname2): Likewise.
+	(gethostbyaddr): Likewise.
+	(_sethtent): Likewise.
+	(_gethtbyname): Likewise.
+	(_gethtbyname2): Likewise.
+	(_gethtbyaddr): Likewise.
+	(map_v4v6_address): Likewise.
+	(map_v4v6_hostent): Likewise.
+	(addrsort): Likewise.
+	(ht_sethostent): Likewise.
+	(ht_gethostbyname): Likewise.
+	(ht_gethostbyaddr): Likewise.
+	* resolv/inet_net_ntop.c (inet_net_ntop): Likewise.
+	(inet_net_ntop_ipv4): Likewise.
+	* resolv/inet_neta.c (inet_neta): Likewise.
+	* resolv/inet_ntop.c (inet_ntop): Likewise.
+	(inet_ntop4): Likewise.
+	(inet_ntop6): Likewise.
+	* resolv/inet_pton.c (__inet_pton): Likewise.
+	(inet_pton4): Likewise.
+	(inet_pton6): Likewise.
+	* resolv/res_debug.c (loc_aton): Likewise.
+	(loc_ntoa): Likewise.
+	* resource/getpriority.c (__getpriority): Likewise.
+	* resource/getrusage.c (__getrusage): Likewise.
+	* resource/nice.c (nice): Likewise.
+	* resource/setpriority.c (__setpriority): Likewise.
+	* resource/setrlimit64.c (setrlimit64): Likewise.
+	* resource/vlimit.c (vlimit): Likewise.
+	* resource/vtimes.c (vtimes): Likewise.
+	* rt/aio_error.c (aio_error): Likewise.
+	* rt/aio_return.c (aio_return): Likewise.
+	* rt/aio_sigqueue.c (__aio_sigqueue): Likewise.
+	* signal/kill.c (__kill): Likewise.
+	* signal/killpg.c (killpg): Likewise.
+	* signal/raise.c (raise): Likewise.
+	* signal/sigaction.c (__sigaction): Likewise.
+	* signal/sigaddset.c (sigaddset): Likewise.
+	* signal/sigaltstack.c (sigaltstack): Likewise.
+	* signal/sigandset.c (sigandset): Likewise.
+	* signal/sigblock.c (__sigblock): Likewise.
+	* signal/sigdelset.c (sigdelset): Likewise.
+	* signal/sigempty.c (sigemptyset): Likewise.
+	* signal/sigfillset.c (sigfillset): Likewise.
+	* signal/sighold.c (sighold): Likewise.
+	* signal/sigignore.c (sigignore): Likewise.
+	* signal/sigintr.c (siginterrupt): Likewise.
+	* signal/sigisempty.c (sigisemptyset): Likewise.
+	* signal/sigismem.c (sigismember): Likewise.
+	* signal/signal.c (signal): Likewise.
+	* signal/sigorset.c (sigorset): Likewise.
+	* signal/sigpause.c (__sigpause): Likewise.
+	* signal/sigpending.c (sigpending): Likewise.
+	* signal/sigprocmask.c (__sigprocmask): Likewise.
+	* signal/sigrelse.c (sigrelse): Likewise.
+	* signal/sigreturn.c (__sigreturn): Likewise.
+	* signal/sigset.c (sigset): Likewise.
+	* signal/sigsetmask.c (__sigsetmask): Likewise.
+	* signal/sigstack.c (sigstack): Likewise.
+	* signal/sigsuspend.c (__sigsuspend): Likewise.
+	* signal/sigvec.c (sigvec_wrapper_handler): Likewise.
+	* signal/sysv_signal.c (__sysv_signal): Likewise.
+	* socket/accept.c (accept): Likewise.
+	* socket/accept4.c (__libc_accept4): Likewise.
+	* socket/bind.c (__bind): Likewise.
+	* socket/connect.c (__connect): Likewise.
+	* socket/getpeername.c (getpeername): Likewise.
+	* socket/getsockname.c (__getsockname): Likewise.
+	* socket/getsockopt.c (getsockopt): Likewise.
+	* socket/listen.c (__listen): Likewise.
+	* socket/recv.c (__recv): Likewise.
+	* socket/recvmsg.c (__recvmsg): Likewise.
+	* socket/send.c (__send): Likewise.
+	* socket/sendmsg.c (__sendmsg): Likewise.
+	* socket/shutdown.c (shutdown): Likewise.
+	* socket/sockatmark.c (sockatmark): Likewise.
+	* socket/socket.c (__socket): Likewise.
+	* stdio-common/ctermid.c (ctermid): Likewise.
+	* stdio-common/cuserid.c (cuserid): Likewise.
+	* stdio-common/printf-prs.c (parse_printf_format): Likewise.
+	* stdio-common/remove.c (remove): Likewise.
+	* stdio-common/rename.c (rename): Likewise.
+	* stdio-common/renameat.c (renameat): Likewise.
+	* stdio-common/tempname.c (__gen_tempname): Likewise.
+	* stdio-common/xbug.c (InitBuffer): Likewise.
+	(AppendToBuffer): Likewise.
+	(ReadFile): Likewise.
+	* stdlib/a64l.c (a64l): Likewise.
+	* stdlib/drand48_r.c (drand48_r): Likewise.
+	* stdlib/getcontext.c (getcontext): Likewise.
+	* stdlib/getenv.c (getenv): Likewise.
+	* stdlib/l64a.c (l64a): Likewise.
+	* stdlib/llabs.c (llabs): Likewise.
+	* stdlib/lldiv.c (lldiv): Likewise.
+	* stdlib/lrand48_r.c (lrand48_r): Likewise.
+	* stdlib/mrand48_r.c (mrand48_r): Likewise.
+	* stdlib/putenv.c (putenv): Likewise.
+	* stdlib/random.c (__srandom): Likewise.
+	(__initstate): Likewise.
+	(__setstate): Likewise.
+	* stdlib/random_r.c (__srandom_r): Likewise.
+	(__setstate_r): Likewise.
+	(__random_r): Likewise.
+	* stdlib/secure-getenv.c (__libc_secure_getenv): Likewise.
+	* stdlib/setcontext.c (setcontext): Likewise.
+	* stdlib/setenv.c (setenv): Likewise.
+	(unsetenv): Likewise.
+	* stdlib/srand48.c (srand48): Likewise.
+	* stdlib/srand48_r.c (__srand48_r): Likewise.
+	* stdlib/swapcontext.c (swapcontext): Likewise.
+	* stdlib/system.c (__libc_system): Likewise.
+	* stdlib/tst-strtod.c (expand): Likewise.
+	* stdlib/tst-strtol.c (expand): Likewise.
+	* stdlib/tst-strtoll.c (expand): Likewise.
+	* streams/fattach.c (fattach): Likewise.
+	* streams/fdetach.c (fdetach): Likewise.
+	* streams/getmsg.c (getmsg): Likewise.
+	* streams/isastream.c (isastream): Likewise.
+	* string/ffs.c (__ffs): Likewise.
+	* string/ffsll.c (ffsll): Likewise.
+	* string/memcmp.c (memcmp_common_alignment): Likewise.
+	(memcmp_not_common_alignment): Likewise.
+	(MEMCMP): Likewise.
+	* string/memcpy.c (memcpy): Likewise.
+	* string/memmove.c (MEMMOVE): Likewise.
+	* string/memset.c (memset): Likewise.
+	* string/rawmemchr.c (RAWMEMCHR): Likewise.
+	* string/strchrnul.c (STRCHRNUL): Likewise.
+	* string/strerror.c (strerror): Likewise.
+	* string/strndup.c (__strndup): Likewise.
+	* string/strverscmp.c (__strverscmp): Likewise.
+	* sunrpc/clnt_raw.c (clntraw_freeres): Likewise.
+	* sunrpc/clnt_tcp.c (clnttcp_geterr): Likewise.
+	(clnttcp_freeres): Likewise.
+	* sunrpc/clnt_unix.c (clntunix_freeres): Likewise.
+	* sunrpc/pmap_prot.c (xdr_pmap): Likewise.
+	* sunrpc/pmap_prot2.c (xdr_pmaplist): Likewise.
+	* sunrpc/pmap_rmt.c (xdr_rmtcallres): Likewise.
+	* sunrpc/rpc_prot.c (xdr_replymsg): Likewise.
+	(xdr_callhdr): Likewise.
+	* sunrpc/rpcinfo.c (udpping): Likewise.
+	(tcpping): Likewise.
+	(pstatus): Likewise.
+	(pmapdump): Likewise.
+	(brdcst): Likewise.
+	(deletereg): Likewise.
+	(getprognum): Likewise.
+	(getvers): Likewise.
+	(get_inet_address): Likewise.
+	* sunrpc/svc_raw.c (svcraw_recv): Likewise.
+	* sunrpc/svc_udp.c (svcudp_create): Likewise.
+	(svcudp_stat): Likewise.
+	(svcudp_recv): Likewise.
+	(svcudp_reply): Likewise.
+	(svcudp_getargs): Likewise.
+	(svcudp_freeargs): Likewise.
+	(svcudp_destroy): Likewise.
+	* sunrpc/xdr.c (xdr_bytes): Likewise.
+	(xdr_netobj): Likewise.
+	(xdr_string): Likewise.
+	(xdr_wrapstring): Likewise.
+	* sunrpc/xdr_float.c (xdr_float): Likewise.
+	(xdr_double): Likewise.
+	* sunrpc/xdr_mem.c (xdrmem_setpos): Likewise.
+	* sunrpc/xdr_ref.c (xdr_pointer): Likewise.
+	* sysvipc/ftok.c (ftok): Likewise.
+	* sysvipc/msgctl.c (msgctl): Likewise.
+	* sysvipc/msgget.c (msgget): Likewise.
+	* sysvipc/msgrcv.c (msgrcv): Likewise.
+	* sysvipc/msgsnd.c (msgsnd): Likewise.
+	* sysvipc/semget.c (semget): Likewise.
+	* sysvipc/semop.c (semop): Likewise.
+	* sysvipc/shmat.c (shmat): Likewise.
+	* sysvipc/shmctl.c (shmctl): Likewise.
+	* sysvipc/shmdt.c (shmdt): Likewise.
+	* sysvipc/shmget.c (shmget): Likewise.
+	* termios/cfmakeraw.c (cfmakeraw): Likewise.
+	* termios/speed.c (cfgetospeed): Likewise.
+	(cfgetispeed): Likewise.
+	(cfsetospeed): Likewise.
+	(cfsetispeed): Likewise.
+	* termios/tcflow.c (tcflow): Likewise.
+	* termios/tcflush.c (tcflush): Likewise.
+	* termios/tcgetattr.c (__tcgetattr): Likewise.
+	* termios/tcgetpgrp.c (tcgetpgrp): Likewise.
+	* termios/tcgetsid.c (tcgetsid): Likewise.
+	* termios/tcsendbrk.c (tcsendbreak): Likewise.
+	* termios/tcsetpgrp.c (tcsetpgrp): Likewise.
+	* time/adjtime.c (__adjtime): Likewise.
+	* time/dysize.c (dysize): Likewise.
+	* time/ftime.c (ftime): Likewise.
+	* time/getitimer.c (__getitimer): Likewise.
+	* time/gettimeofday.c (__gettimeofday): Likewise.
+	* time/gmtime.c (__gmtime_r): Likewise.
+	(gmtime): Likewise.
+	* time/localtime.c (__localtime_r): Likewise.
+	(localtime): Likewise.
+	* time/offtime.c (__offtime): Likewise.
+	* time/settimeofday.c (__settimeofday): Likewise.
+	* time/stime.c (stime): Likewise.
+	* time/strftime_l.c (tm_diff): Likewise.
+	(iso_week_days): Likewise.
+	* time/strptime.c (strptime): Likewise.
+	* time/time.c (time): Likewise.
+	* time/timespec_get.c (timespec_get): Likewise.
+	* time/tzset.c (tzset_internal): Likewise.
+	(compute_change): Likewise.
+	(__tz_compute): Likewise.
+	* wcsmbs/btowc.c (__btowc): Likewise.
+	* wcsmbs/mbrlen.c (__mbrlen): Likewise.
+	* wcsmbs/mbsinit.c (__mbsinit): Likewise.
+	* wcsmbs/mbsrtowcs.c (__mbsrtowcs): Likewise.
+	* wcsmbs/wcpcpy.c (__wcpcpy): Likewise.
+	* wcsmbs/wcpncpy.c (__wcpncpy): Likewise.
+	* wcsmbs/wcscat.c (__wcscat): Likewise.
+	* wcsmbs/wcschrnul.c (__wcschrnul): Likewise.
+	* wcsmbs/wcscmp.c (WCSCMP): Likewise.
+	* wcsmbs/wcscpy.c (WCSCPY): Likewise.
+	* wcsmbs/wcscspn.c (wcscspn): Likewise.
+	* wcsmbs/wcsdup.c (wcsdup): Likewise.
+	* wcsmbs/wcslen.c (__wcslen): Likewise.
+	* wcsmbs/wcsncat.c (WCSNCAT): Likewise.
+	* wcsmbs/wcsncmp.c (WCSNCMP): Likewise.
+	* wcsmbs/wcsncpy.c (__wcsncpy): Likewise.
+	* wcsmbs/wcsnlen.c (__wcsnlen): Likewise.
+	* wcsmbs/wcspbrk.c (wcspbrk): Likewise.
+	* wcsmbs/wcsrchr.c (WCSRCHR): Likewise.
+	* wcsmbs/wcsspn.c (wcsspn): Likewise.
+	* wcsmbs/wcsstr.c (wcsstr): Likewise.
+	* wcsmbs/wcstok.c (wcstok): Likewise.
+	* wcsmbs/wctob.c (wctob): Likewise.
+	* wcsmbs/wmemchr.c (__wmemchr): Likewise.
+	* wcsmbs/wmemcmp.c (WMEMCMP): Likewise.
+	* wcsmbs/wmemcpy.c (__wmemcpy): Likewise.
+	* wcsmbs/wmemmove.c (__wmemmove): Likewise.
+	* wcsmbs/wmempcpy.c (__wmempcpy): Likewise.
+	* wcsmbs/wmemset.c (__wmemset): Likewise.
+	* wctype/wcfuncs.c (__towlower): Likewise.
+	(__towupper): Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h
 	(lll_unlock_elision): Add adapt_count parameter.
 

@@ -66,9 +66,7 @@ static int is_prime (unsigned long int candidate);
 
 
 int
-init_hash (htab, init_size)
-     hash_table *htab;
-     unsigned long int init_size;
+init_hash (hash_table *htab, unsigned long int init_size)
 {
   /* We need the size to be a prime.  */
   init_size = next_prime (init_size);
@@ -88,8 +86,7 @@ init_hash (htab, init_size)
 
 
 int
-delete_hash (htab)
-     hash_table *htab;
+delete_hash (hash_table *htab)
 {
   free (htab->table);
   obstack_free (&htab->mem_pool, NULL);
@@ -98,11 +95,7 @@ delete_hash (htab)
 
 
 int
-insert_entry (htab, key, keylen, data)
-     hash_table *htab;
-     const void *key;
-     size_t keylen;
-     void *data;
+insert_entry (hash_table *htab, const void *key, size_t keylen, void *data)
 {
   unsigned long int hval = compute_hashval (key, keylen);
   hash_entry *table = (hash_entry *) htab->table;
@@ -194,11 +187,7 @@ find_entry (htab, key, keylen, result)
 
 
 int
-set_entry (htab, key, keylen, newval)
-     hash_table *htab;
-     const void *key;
-     size_t keylen;
-     void *newval;
+set_entry (hash_table *htab, const void *key, size_t keylen, void *newval)
 {
   hash_entry *table = (hash_entry *) htab->table;
   size_t idx = lookup (htab, key, keylen, compute_hashval (key, keylen));
@@ -287,8 +276,7 @@ lookup (htab, key, keylen, hval)
 
 
 unsigned long int
-next_prime (seed)
-     unsigned long int seed;
+next_prime (unsigned long int seed)
 {
   /* Make it definitely odd.  */
   seed |= 1;
@@ -301,8 +289,7 @@ next_prime (seed)
 
 
 static int
-is_prime (candidate)
-     unsigned long int candidate;
+is_prime (unsigned long int candidate)
 {
   /* No even number and none less than 10 will be passed here.  */
   unsigned long int divn = 3;

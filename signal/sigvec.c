@@ -179,8 +179,7 @@ compat_symbol (libc, __sigvec, sigvec, GLIBC_2_0);
 
 # ifndef SA_RESETHAND
 static void
-sigvec_wrapper_handler (sig)
-     int sig;
+sigvec_wrapper_handler (int sig)
 {
   struct sigvec_wrapper_data *data;
   struct sigaction act;

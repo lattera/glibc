@@ -33,9 +33,7 @@
 
 /* Find the first occurrence of C in S or the final NUL byte.  */
 char *
-STRCHRNUL (s, c_in)
-     const char *s;
-     int c_in;
+STRCHRNUL (const char *s, int c_in)
 {
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;

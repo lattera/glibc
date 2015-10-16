@@ -790,9 +790,7 @@ latlon2ul (const char **latlonstrptr, int *which)
 /* converts a zone file representation in a string to an RDATA on-the-wire
  * representation. */
 int
-loc_aton(ascii, binary)
-	const char *ascii;
-	u_char *binary;
+loc_aton (const char *ascii, u_char *binary)
 {
 	const char *cp, *maxcp;
 	u_char *bcp;
@@ -901,9 +899,7 @@ loc_aton(ascii, binary)
 
 /* takes an on-the-wire LOC RR and formats it in a human readable format. */
 const char *
-loc_ntoa(binary, ascii)
-	const u_char *binary;
-	char *ascii;
+loc_ntoa (const u_char *binary, char *ascii)
 {
 	static const char error[] = "?";
 	static char tmpbuf[sizeof

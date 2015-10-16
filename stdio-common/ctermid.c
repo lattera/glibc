@@ -23,8 +23,7 @@
    If S is not NULL, the name is copied into it (it should be at
    least L_ctermid bytes long), otherwise a static buffer is used.  */
 char *
-ctermid (s)
-     char *s;
+ctermid (char *s)
 {
   __set_errno (ENOSYS);
   return NULL;

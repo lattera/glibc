@@ -28,8 +28,7 @@
 
 /* Get the value of the system variable NAME.  */
 long int
-__sysconf (name)
-     int name;
+__sysconf (int name)
 {
   switch (name)
     {

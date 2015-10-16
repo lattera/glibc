@@ -35,8 +35,7 @@
 #endif
 
 int
-_IO_new_fclose (fp)
-     _IO_FILE *fp;
+_IO_new_fclose (_IO_FILE *fp)
 {
   int status;
 

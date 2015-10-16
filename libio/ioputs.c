@@ -29,8 +29,7 @@
 #include <limits.h>
 
 int
-_IO_puts (str)
-     const char *str;
+_IO_puts (const char *str)
 {
   int result = EOF;
   _IO_size_t len = strlen (str);

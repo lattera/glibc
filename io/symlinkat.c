@@ -23,10 +23,7 @@
 
 /* Make a link to FROM called TO relative to FD.  */
 int
-symlinkat (from, fd, to)
-     const char *from;
-     int fd;
-     const char *to;
+symlinkat (const char *from, int fd, const char *to)
 {
   if (from == NULL || to == NULL)
     {

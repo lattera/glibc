@@ -22,10 +22,7 @@
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
 ssize_t
-__readlink (path, buf, len)
-     const char *path;
-     char *buf;
-     size_t len;
+__readlink (const char *path, char *buf, size_t len)
 {
   __set_errno (ENOSYS);
   return -1;

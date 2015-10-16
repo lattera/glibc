@@ -22,8 +22,7 @@
 
 /* Test whether SET is empty.  */
 int
-sigisemptyset (set)
-     const sigset_t *set;
+sigisemptyset (const sigset_t *set)
 {
   if (set == NULL)
     {

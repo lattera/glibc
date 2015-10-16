@@ -61,9 +61,7 @@ static const struct _IO_jump_t _IO_mem_jumps =
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
 _IO_FILE *
-__open_memstream (bufloc, sizeloc)
-     char **bufloc;
-     _IO_size_t *sizeloc;
+__open_memstream (char **bufloc, _IO_size_t *sizeloc)
 {
   struct locked_FILE
   {
@@ -105,8 +103,7 @@ weak_alias (__open_memstream, open_memstream)
 
 
 static int
-_IO_mem_sync (fp)
-     _IO_FILE* fp;
+_IO_mem_sync (_IO_FILE *fp)
 {
   struct _IO_FILE_memstream *mp = (struct _IO_FILE_memstream *) fp;
 
@@ -126,9 +123,7 @@ _IO_mem_sync (fp)
 
 
 static void
-_IO_mem_finish (fp, dummy)
-     _IO_FILE* fp;
-     int dummy;
+_IO_mem_finish (_IO_FILE *fp, int dummy)
 {
   struct _IO_FILE_memstream *mp = (struct _IO_FILE_memstream *) fp;
 

@@ -23,8 +23,7 @@
 void *sstk (int increment) __THROW;
 
 void *
-sstk (increment)
-     int increment;
+sstk (int increment)
 {
   __set_errno (ENOSYS);
   return (void *) -1;

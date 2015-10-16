@@ -87,8 +87,7 @@ usage (void)
 }
 
 static int
-makesymlinks (file)
-     const char *file;
+makesymlinks (const char *file)
 {
 #ifndef PATH_MAX
 #define PATH_MAX 4095
@@ -163,9 +162,7 @@ makesymlinks (file)
 }
 
 static int
-makesymlink (src, dest)
-     const char *src;
-     const char *dest;
+makesymlink (const char *src, const char *dest)
 {
   struct stat stats;
   const char *error;

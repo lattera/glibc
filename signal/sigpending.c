@@ -22,8 +22,7 @@
 
 /* Store in SET all signals that are blocked and pending.  */
 int
-sigpending (set)
-     sigset_t *set;
+sigpending (sigset_t *set)
 {
   if (set == NULL)
     {

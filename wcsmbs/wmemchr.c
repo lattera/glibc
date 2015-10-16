@@ -23,10 +23,7 @@
 #endif
 
 wchar_t *
-__wmemchr (s, c, n)
-     const wchar_t *s;
-     wchar_t c;
-     size_t n;
+__wmemchr (const wchar_t *s, wchar_t c, size_t n)
 {
   /* For performance reasons unfold the loop four times.  */
   while (n >= 4)

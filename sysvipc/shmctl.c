@@ -22,10 +22,7 @@
 /* Provide operations to control over shared memory segments.  */
 
 int
-shmctl (shmid, cmd, buf)
-     int shmid;
-     int cmd;
-     struct shmid_ds *buf;
+shmctl (int shmid, int cmd, struct shmid_ds *buf)
 {
   __set_errno (ENOSYS);
   return -1;

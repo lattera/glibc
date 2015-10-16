@@ -19,8 +19,7 @@
 #include <wchar.h>
 
 wint_t
-putwchar (wc)
-     wchar_t wc;
+putwchar (wchar_t wc)
 {
   wint_t result;
   _IO_acquire_lock (_IO_stdout);

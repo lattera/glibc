@@ -39,9 +39,7 @@
 #include <shlib-compat.h>
 
 int
-_IO_new_fsetpos (fp, posp)
-     _IO_FILE *fp;
-     const _IO_fpos_t *posp;
+_IO_new_fsetpos (_IO_FILE *fp, const _IO_fpos_t *posp)
 {
   int result;
   CHECK_FILE (fp, EOF);

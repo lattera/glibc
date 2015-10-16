@@ -19,8 +19,7 @@
 #include <errno.h>
 
 int
-__sigreturn (context)
-     struct sigcontext *context;
+__sigreturn (struct sigcontext *context)
 {
   __set_errno (ENOSYS);
   return -1;

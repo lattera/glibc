@@ -28,10 +28,7 @@
 #include <stdio_ext.h>
 
 int
-_IO_vdprintf (d, format, arg)
-     int d;
-     const char *format;
-     _IO_va_list arg;
+_IO_vdprintf (int d, const char *format, _IO_va_list arg)
 {
   struct _IO_FILE_plus tmpfil;
   struct _IO_wide_data wd;

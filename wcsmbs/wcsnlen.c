@@ -24,9 +24,7 @@
 
 /* Return length of string S at most maxlen.  */
 size_t
-__wcsnlen (s, maxlen)
-     const wchar_t *s;
-     size_t maxlen;
+__wcsnlen (const wchar_t *s, size_t maxlen)
 {
   size_t len = 0;
 

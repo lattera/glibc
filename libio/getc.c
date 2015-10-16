@@ -30,8 +30,7 @@
 #undef _IO_getc
 
 int
-_IO_getc (fp)
-     FILE *fp;
+_IO_getc (FILE *fp)
 {
   int result;
   CHECK_FILE (fp, EOF);

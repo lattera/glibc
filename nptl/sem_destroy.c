@@ -22,8 +22,7 @@
 
 
 int
-__new_sem_destroy (sem)
-     sem_t *sem;
+__new_sem_destroy (sem_t *sem)
 {
   /* XXX Check for valid parameter.  */
 

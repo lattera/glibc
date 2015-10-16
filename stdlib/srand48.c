@@ -20,8 +20,7 @@
 
 
 void
-srand48 (seedval)
-     long seedval;
+srand48 (long seedval)
 {
   (void) __srand48_r (seedval, &__libc_drand48_data);
 }

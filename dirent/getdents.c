@@ -21,11 +21,7 @@
 #include <dirent.h>
 
 ssize_t
-__getdirentries (fd, buf, nbytes, basep)
-     int fd;
-     char *buf;
-     size_t nbytes;
-     off_t *basep;
+__getdirentries (int fd, char *buf, size_t nbytes, off_t *basep)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -23,10 +23,7 @@
    and the only address from which to accept transmissions.
    Return 0 on success, -1 for errors.  */
 int
-__connect (fd, addr, len)
-     int fd;
-     __CONST_SOCKADDR_ARG addr;
-     socklen_t len;
+__connect (int fd, __CONST_SOCKADDR_ARG addr, socklen_t len)
 {
   __set_errno (ENOSYS);
   return -1;

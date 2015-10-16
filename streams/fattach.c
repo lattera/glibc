@@ -19,9 +19,7 @@
 #include <stropts.h>
 
 int
-fattach (fildes, path)
-     int fildes;
-     const char *path;
+fattach (int fildes, const char *path)
 {
   __set_errno (ENOSYS);
   return -1;

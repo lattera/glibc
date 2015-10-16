@@ -30,8 +30,7 @@
 #undef ferror_unlocked
 
 int
-ferror_unlocked (fp)
-     _IO_FILE* fp;
+ferror_unlocked (_IO_FILE *fp)
 {
   CHECK_FILE (fp, EOF);
   return _IO_ferror_unlocked (fp);

@@ -38,9 +38,7 @@
 
 
 bool_t
-xdr_pmap (xdrs, regs)
-     XDR *xdrs;
-     struct pmap *regs;
+xdr_pmap (XDR *xdrs, struct pmap *regs)
 {
 
   if (xdr_u_long (xdrs, &regs->pm_prog) &&

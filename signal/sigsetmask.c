@@ -19,8 +19,7 @@
 #include <signal.h>
 
 int
-__sigsetmask (mask)
-     int mask;
+__sigsetmask (int mask)
 {
   __set_errno (ENOSYS);
   return -1;

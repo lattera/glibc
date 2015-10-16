@@ -23,10 +23,7 @@
 /* Parse WCS into tokens separated by characters in DELIM.  If WCS is
    NULL, the last string wcstok() was called with is used.  */
 wchar_t *
-wcstok (wcs, delim, save_ptr)
-     wchar_t *wcs;
-     const wchar_t *delim;
-     wchar_t **save_ptr;
+wcstok (wchar_t *wcs, const wchar_t *delim, wchar_t **save_ptr)
 {
   wchar_t *result;
 

@@ -26,12 +26,7 @@
    in buffer overflow or queue underflow.  */
 
 ssize_t
-msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
-     int msqid;
-     void *msgp;
-     size_t msgsz;
-     long msgtyp;
-     int msgflg;
+msgrcv (int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg)
 {
   __set_errno (ENOSYS);
   return -1;

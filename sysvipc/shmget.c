@@ -23,10 +23,7 @@
    which is associated with KEY.  */
 
 int
-shmget (key, size, shmflg)
-     key_t key;
-     size_t size;
-     int shmflg;
+shmget (key_t key, size_t size, int shmflg)
 {
   __set_errno (ENOSYS);
   return -1;

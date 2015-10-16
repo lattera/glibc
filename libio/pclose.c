@@ -30,8 +30,7 @@
 #include <shlib-compat.h>
 
 int
-__new_pclose (fp)
-     FILE *fp;
+__new_pclose (FILE *fp)
 {
 #if 0
   /* Does not actually test that stream was created by popen(). Instead,

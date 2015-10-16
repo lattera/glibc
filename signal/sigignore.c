@@ -21,8 +21,7 @@
 
 /* Set the disposition for SIG to SIG_IGN.  */
 int
-sigignore (sig)
-     int sig;
+sigignore (int sig)
 {
   __set_errno (ENOSYS);
   return -1;

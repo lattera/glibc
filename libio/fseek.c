@@ -28,10 +28,7 @@
 #include <stdio.h>
 
 int
-fseek (fp, offset, whence)
-     _IO_FILE* fp;
-     long int offset;
-     int whence;
+fseek (_IO_FILE *fp, long int offset, int whence)
 {
   int result;
   CHECK_FILE (fp, -1);

@@ -24,8 +24,7 @@
 #endif
 
 size_t
-__wcslen (s)
-     const wchar_t *s;
+__wcslen (const wchar_t *s)
 {
   size_t len = 0;
 

@@ -21,9 +21,7 @@
 #undef _IO_putc
 
 int
-_IO_putc (c, fp)
-     int c;
-     _IO_FILE *fp;
+_IO_putc (int c, _IO_FILE *fp)
 {
   int result;
   CHECK_FILE (fp, EOF);

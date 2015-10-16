@@ -28,8 +28,7 @@
 #include "stdio.h"
 
 int
-_IO_feof (fp)
-     _IO_FILE* fp;
+_IO_feof (_IO_FILE *fp)
 {
   int result;
   CHECK_FILE (fp, EOF);

@@ -26,8 +26,7 @@
    to 0 and check its value after calling `alarm', and this might tell you.
    The signal may come late due to processor scheduling.  */
 unsigned int
-alarm (seconds)
-     unsigned int seconds;
+alarm (unsigned int seconds)
 {
   __set_errno (ENOSYS);
   return 0;

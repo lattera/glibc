@@ -21,8 +21,7 @@
 #undef putchar
 
 int
-putchar (c)
-     int c;
+putchar (int c)
 {
   int result;
   _IO_acquire_lock (_IO_stdout);

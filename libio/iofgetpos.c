@@ -40,9 +40,7 @@
 #include <shlib-compat.h>
 
 int
-_IO_new_fgetpos (fp, posp)
-     _IO_FILE *fp;
-     _IO_fpos_t *posp;
+_IO_new_fgetpos (_IO_FILE *fp, _IO_fpos_t *posp)
 {
   _IO_off64_t pos;
   int result = 0;

@@ -20,9 +20,7 @@
 
 
 int
-pthread_rwlockattr_getpshared (attr, pshared)
-     const pthread_rwlockattr_t *attr;
-     int *pshared;
+pthread_rwlockattr_getpshared (const pthread_rwlockattr_t *attr, int *pshared)
 {
   *pshared = ((const struct pthread_rwlockattr *) attr)->pshared;
 

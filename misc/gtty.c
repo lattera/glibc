@@ -21,9 +21,7 @@
 
 /* Fill in *PARAMS with terminal parameters associated with FD.  */
 int
-gtty (fd, params)
-     int fd;
-     struct sgttyb *params;
+gtty (int fd, struct sgttyb *params)
 {
   if (params == NULL)
     {

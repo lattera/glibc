@@ -30,8 +30,7 @@
 
 
 int
-aio_error (aiocbp)
-     const struct aiocb *aiocbp;
+aio_error (const struct aiocb *aiocbp)
 {
   return aiocbp->__error_code;
 }

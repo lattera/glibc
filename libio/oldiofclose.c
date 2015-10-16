@@ -33,8 +33,7 @@
 
 int
 attribute_compat_text_section
-_IO_old_fclose (fp)
-     _IO_FILE *fp;
+_IO_old_fclose (_IO_FILE *fp)
 {
   int status;
 

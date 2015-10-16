@@ -24,10 +24,7 @@
    open the same file as FD is which setting flags according to
    FLAGS.  Return FD2 or -1.  */
 int
-__dup3 (fd, fd2, flags)
-     int fd;
-     int fd2;
-     int flags;
+__dup3 (int fd, int fd2, int flags)
 {
   if (fd < 0 || fd2 < 0)
     {

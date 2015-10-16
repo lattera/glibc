@@ -61,8 +61,7 @@ getfsent (void)
 
 
 struct fstab *
-getfsspec (name)
-     const char *name;
+getfsspec (const char *name)
 {
   struct fstab_state *state;
   struct mntent *m;
@@ -78,8 +77,7 @@ getfsspec (name)
 
 
 struct fstab *
-getfsfile (name)
-     const char *name;
+getfsfile (const char *name)
 {
   struct fstab_state *state;
   struct mntent *m;

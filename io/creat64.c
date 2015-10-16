@@ -22,9 +22,7 @@
 
 /* Create FILE with protections MODE.  */
 int
-creat64 (file, mode)
-     const char *file;
-     mode_t mode;
+creat64 (const char *file, mode_t mode)
 {
   return __open64 (file, O_WRONLY|O_CREAT|O_TRUNC, mode);
 }

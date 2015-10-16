@@ -26,8 +26,7 @@
 
 /* Put information about the system in NAME.  */
 int
-__uname (name)
-     struct utsname *name;
+__uname (struct utsname *name)
 {
   int save;
 

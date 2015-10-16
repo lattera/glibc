@@ -20,8 +20,7 @@
 
 /* Raise the signal SIG.  */
 int
-raise (sig)
-     int sig;
+raise (int sig)
 {
   __set_errno (ENOSYS);
   return -1;

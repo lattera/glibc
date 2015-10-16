@@ -30,8 +30,7 @@
 
 
 ssize_t
-aio_return (aiocbp)
-     struct aiocb *aiocbp;
+aio_return (struct aiocb *aiocbp)
 {
   return aiocbp->__return_value;
 }

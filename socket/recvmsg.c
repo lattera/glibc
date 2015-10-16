@@ -21,10 +21,7 @@
 /* Receive a message as described by MESSAGE from socket FD.
    Returns the number of bytes read or -1 for errors.  */
 ssize_t
-__recvmsg (fd, message, flags)
-     int fd;
-     struct msghdr *message;
-     int flags;
+__recvmsg (int fd, struct msghdr *message, int flags)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -20,8 +20,7 @@
 
 /* Get the process group ID of process PID.  */
 pid_t
-__getpgid (pid)
-     pid_t pid;
+__getpgid (pid_t pid)
 {
   return pid;
 }

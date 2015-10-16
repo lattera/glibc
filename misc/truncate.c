@@ -20,9 +20,7 @@
 
 /* Truncate PATH to LENGTH bytes.  */
 int
-__truncate (path, length)
-     const char *path;
-     off_t length;
+__truncate (const char *path, off_t length)
 {
   __set_errno (ENOSYS);
   return -1;

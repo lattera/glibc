@@ -22,10 +22,7 @@
 
 void *
 inhibit_loop_to_libcall
-memset (dstpp, c, len)
-     void *dstpp;
-     int c;
-     size_t len;
+memset (void *dstpp, int c, size_t len)
 {
   long int dstp = (long int) dstpp;
 

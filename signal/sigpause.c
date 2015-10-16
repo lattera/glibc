@@ -21,9 +21,7 @@
 #undef sigpause
 
 int
-__sigpause (sig_or_mask, is_sig)
-     int sig_or_mask;
-     int is_sig;
+__sigpause (int sig_or_mask, int is_sig)
 {
   __set_errno (ENOSYS);
   return -1;

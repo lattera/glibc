@@ -20,9 +20,7 @@
 
 
 int
-pthread_condattr_getpshared (attr, pshared)
-     const pthread_condattr_t *attr;
-     int *pshared;
+pthread_condattr_getpshared (const pthread_condattr_t *attr, int *pshared)
 {
   *pshared = ((const struct pthread_condattr *) attr)->value & 1;
 

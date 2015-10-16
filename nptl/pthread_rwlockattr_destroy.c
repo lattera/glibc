@@ -20,8 +20,7 @@
 
 
 int
-pthread_rwlockattr_destroy (attr)
-     pthread_rwlockattr_t *attr;
+pthread_rwlockattr_destroy (pthread_rwlockattr_t *attr)
 {
   /* Nothing to do.  For now.  */
 

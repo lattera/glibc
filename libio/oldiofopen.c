@@ -34,9 +34,7 @@
 
 _IO_FILE *
 attribute_compat_text_section
-_IO_old_fopen (filename, mode)
-     const char *filename;
-     const char *mode;
+_IO_old_fopen (const char *filename, const char *mode)
 {
   struct locked_FILE
   {

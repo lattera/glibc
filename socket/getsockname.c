@@ -20,10 +20,7 @@
 
 /* Put the local address of FD into *ADDR and its length in *LEN.  */
 int
-__getsockname (fd, addr, len)
-     int fd;
-     __SOCKADDR_ARG addr;
-     socklen_t *len;
+__getsockname (int fd, __SOCKADDR_ARG addr, socklen_t *len)
 {
   __set_errno (ENOSYS);
   return -1;

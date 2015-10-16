@@ -31,8 +31,7 @@
    value collected so far.  Especially, we don't have different shift
    states.  */
 int
-__mbsinit (ps)
-     const mbstate_t *ps;
+__mbsinit (const mbstate_t *ps)
 {
   return ps == NULL || ps->__count == 0;
 }

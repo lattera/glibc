@@ -35,10 +35,7 @@
 #include <kernel-features.h>
 
 FILE *
-freopen64 (filename, mode, fp)
-     const char* filename;
-     const char* mode;
-     FILE *fp;
+freopen64 (const char *filename, const char *mode, FILE *fp)
 {
   FILE *result;
   CHECK_FILE (fp, NULL);

@@ -28,10 +28,7 @@
 #include "strfile.h"
 
 int
-_IO_vsscanf (string, format, args)
-     const char *string;
-     const char *format;
-     _IO_va_list args;
+_IO_vsscanf (const char *string, const char *format, _IO_va_list args)
 {
   int ret;
   _IO_strfile sf;

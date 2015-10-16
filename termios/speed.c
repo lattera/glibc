@@ -22,25 +22,21 @@
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
 speed_t
-cfgetospeed (termios_p)
-     const struct termios *termios_p;
+cfgetospeed (const struct termios *termios_p)
 {
   return termios_p->__ospeed;
 }
 
 /* Return the input baud rate stored in *TERMIOS_P.  */
 speed_t
-cfgetispeed (termios_p)
-     const struct termios *termios_p;
+cfgetispeed (const struct termios *termios_p)
 {
   return termios_p->__ispeed;
 }
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
 int
-cfsetospeed (termios_p, speed)
-     struct termios *termios_p;
-     speed_t speed;
+cfsetospeed (struct termios *termios_p, speed_t speed)
 {
   if (termios_p == NULL)
     {
@@ -55,9 +51,7 @@ libc_hidden_def (cfsetospeed)
 
 /* Set the input baud rate stored in *TERMIOS_P to SPEED.  */
 int
-cfsetispeed (termios_p, speed)
-     struct termios *termios_p;
-     speed_t speed;
+cfsetispeed (struct termios *termios_p, speed_t speed)
 {
   if (termios_p == NULL)
     {

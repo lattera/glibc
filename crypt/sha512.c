@@ -107,8 +107,7 @@ sha512_process_block (const void *buffer, size_t len, struct sha512_ctx *ctx);
 /* Initialize structure containing state of computation.
    (FIPS 180-2:5.3.3)  */
 void
-__sha512_init_ctx (ctx)
-     struct sha512_ctx *ctx;
+__sha512_init_ctx (struct sha512_ctx *ctx)
 {
   ctx->H[0] = UINT64_C (0x6a09e667f3bcc908);
   ctx->H[1] = UINT64_C (0xbb67ae8584caa73b);
@@ -130,9 +129,7 @@ __sha512_init_ctx (ctx)
    IMPORTANT: On some systems it is required that RESBUF is correctly
    aligned for a 32 bits value.  */
 void *
-__sha512_finish_ctx (ctx, resbuf)
-     struct sha512_ctx *ctx;
-     void *resbuf;
+__sha512_finish_ctx (struct sha512_ctx *ctx, void *resbuf)
 {
   /* Take yet unprocessed bytes into account.  */
   uint64_t bytes = ctx->buflen;
@@ -167,10 +164,7 @@ __sha512_finish_ctx (ctx, resbuf)
 
 
 void
-__sha512_process_bytes (buffer, len, ctx)
-     const void *buffer;
-     size_t len;
-     struct sha512_ctx *ctx;
+__sha512_process_bytes (const void *buffer, size_t len, struct sha512_ctx *ctx)
 {
   /* When we already have some bits in our internal buffer concatenate
      both inputs first.  */

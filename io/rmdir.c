@@ -22,8 +22,7 @@
 
 /* Remove the directory PATH.  */
 int
-__rmdir (path)
-     const char *path;
+__rmdir (const char *path)
 {
   if (path == NULL)
     {

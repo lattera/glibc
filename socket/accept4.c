@@ -25,11 +25,7 @@
    new socket's descriptor, or -1 for errors.  The operation can be influenced
    by the FLAGS parameter.  */
 int
-__libc_accept4 (fd, addr, addr_len, flags)
-     int fd;
-     __SOCKADDR_ARG addr;
-     socklen_t *addr_len;
-     int flags;
+__libc_accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
 {
   __set_errno (ENOSYS);
   return -1;

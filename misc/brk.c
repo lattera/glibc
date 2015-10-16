@@ -24,8 +24,7 @@ void *__curbrk;
 /* Set the end of the process's data space to ADDR.
    Return 0 if successful, -1 if not.  */
 int
-__brk (addr)
-     void *addr;
+__brk (void *addr)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -21,9 +21,7 @@
 
 
 int
-pthread_rwlockattr_setkind_np (attr, pref)
-     pthread_rwlockattr_t *attr;
-     int pref;
+pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *attr, int pref)
 {
   struct pthread_rwlockattr *iattr;
 

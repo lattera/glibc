@@ -26,8 +26,7 @@
 #endif
 
 int
-__group_member (gid)
-     gid_t gid;
+__group_member (gid_t gid)
 {
   int n, size;
   gid_t *groups;

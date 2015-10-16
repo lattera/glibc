@@ -24,10 +24,7 @@ static mbstate_t internal;
 
 
 size_t
-__mbrlen (s, n, ps)
-     const char *s;
-     size_t n;
-     mbstate_t *ps;
+__mbrlen (const char *s, size_t n, mbstate_t *ps)
 {
   return __mbrtowc (NULL, s, n, ps ?: &internal);
 }

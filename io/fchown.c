@@ -22,10 +22,7 @@
 
 /* Change the owner and group of the file referred to by FD.  */
 int
-__fchown (fd, owner, group)
-     int fd;
-     uid_t owner;
-     gid_t group;
+__fchown (int fd, uid_t owner, gid_t group)
 {
   if (fd < 0)
     {

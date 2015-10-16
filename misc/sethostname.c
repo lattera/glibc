@@ -21,9 +21,7 @@
 /* Set the name of the current host to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
 int
-sethostname (name, len)
-     const char *name;
-     size_t len;
+sethostname (const char *name, size_t len)
 {
   __set_errno (ENOSYS);
   return -1;

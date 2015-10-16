@@ -21,9 +21,7 @@
 
 /* Truncate the file referenced by FD to LENGTH bytes.  */
 int
-__ftruncate64 (fd, length)
-     int fd;
-     off64_t length;
+__ftruncate64 (int fd, off64_t length)
 {
   if ((off_t) length != length)
     {

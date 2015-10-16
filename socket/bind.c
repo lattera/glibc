@@ -20,10 +20,7 @@
 
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
 int
-__bind (fd, addr, len)
-     int fd;
-     __CONST_SOCKADDR_ARG addr;
-     socklen_t len;
+__bind (int fd, __CONST_SOCKADDR_ARG addr, socklen_t len)
 {
   __set_errno (ENOSYS);
   return -1;

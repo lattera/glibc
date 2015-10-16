@@ -25,9 +25,7 @@
 /* Return the length of the maximum initial segment
    of WCS which contains only wide-characters in ACCEPT.  */
 size_t
-wcsspn (wcs, accept)
-     const wchar_t *wcs;
-     const wchar_t *accept;
+wcsspn (const wchar_t *wcs, const wchar_t *accept)
 {
   const wchar_t *p;
   const wchar_t *a;

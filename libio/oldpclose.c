@@ -34,8 +34,7 @@
 
 int
 attribute_compat_text_section
-__old_pclose (fp)
-     FILE *fp;
+__old_pclose (FILE *fp)
 {
 #if 0
   /* Does not actually test that stream was created by popen(). Instead,

@@ -29,8 +29,7 @@
 
 
 int
-__pthread_cond_broadcast (cond)
-     pthread_cond_t *cond;
+__pthread_cond_broadcast (pthread_cond_t *cond)
 {
   LIBC_PROBE (cond_broadcast, 1, cond);
 

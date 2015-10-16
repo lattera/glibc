@@ -144,9 +144,7 @@ libc_hidden_nolink_sunrpc (xdr_rmtcall_args, GLIBC_2_0)
  * written for XDR_DECODE direction only
  */
 bool_t
-xdr_rmtcallres (xdrs, crp)
-     XDR *xdrs;
-     struct rmtcallres *crp;
+xdr_rmtcallres (XDR *xdrs, struct rmtcallres *crp)
 {
   caddr_t port_ptr;
 

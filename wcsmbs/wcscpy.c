@@ -26,9 +26,7 @@
 
 /* Copy SRC to DEST.  */
 wchar_t *
-WCSCPY (dest, src)
-     wchar_t *dest;
-     const wchar_t *src;
+WCSCPY (wchar_t *dest, const wchar_t *src)
 {
   wint_t c;
   wchar_t *wcp;

@@ -20,8 +20,7 @@
 
 /* Return the time now, and store it in *TIMER if not NULL.  */
 time_t
-time (timer)
-     time_t *timer;
+time (time_t *timer)
 {
   __set_errno (ENOSYS);
 

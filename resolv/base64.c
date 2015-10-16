@@ -191,10 +191,7 @@ libresolv_hidden_def (b64_ntop)
  */
 
 int
-b64_pton(src, target, targsize)
-	char const *src;
-	u_char *target;
-	size_t targsize;
+b64_pton (char const *src, u_char *target, size_t targsize)
 {
 	int tarindex, state, ch;
 	char *pos;

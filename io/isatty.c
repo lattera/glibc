@@ -20,8 +20,7 @@
 
 /* Return 1 if FD is a terminal, 0 if not.  */
 int
-__isatty (fd)
-     int fd;
+__isatty (int fd)
 {
   __set_errno (ENOSYS);
   return -1;

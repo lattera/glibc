@@ -32,9 +32,7 @@
 
 int
 attribute_compat_text_section
-_IO_old_fgetpos (fp, posp)
-     _IO_FILE *fp;
-     _IO_fpos_t *posp;
+_IO_old_fgetpos (_IO_FILE *fp, _IO_fpos_t *posp)
 {
   _IO_off_t pos;
   CHECK_FILE (fp, EOF);

@@ -22,9 +22,7 @@
 
 
 int
-pthread_barrierattr_setpshared (attr, pshared)
-     pthread_barrierattr_t *attr;
-     int pshared;
+pthread_barrierattr_setpshared (pthread_barrierattr_t *attr, int pshared)
 {
   struct pthread_barrierattr *iattr;
 

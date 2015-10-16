@@ -113,11 +113,7 @@ libc_hidden_nolink_sunrpc (xdr_reference, GLIBC_2_0)
  *
  */
 bool_t
-xdr_pointer (xdrs, objpp, obj_size, xdr_obj)
-     XDR *xdrs;
-     char **objpp;
-     u_int obj_size;
-     xdrproc_t xdr_obj;
+xdr_pointer (XDR *xdrs, char **objpp, u_int obj_size, xdrproc_t xdr_obj)
 {
 
   bool_t more_data;

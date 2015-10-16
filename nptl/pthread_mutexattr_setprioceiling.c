@@ -23,9 +23,7 @@
 
 
 int
-pthread_mutexattr_setprioceiling (attr, prioceiling)
-     pthread_mutexattr_t *attr;
-     int prioceiling;
+pthread_mutexattr_setprioceiling (pthread_mutexattr_t *attr, int prioceiling)
 {
   /* See __init_sched_fifo_prio.  */
   if (atomic_load_relaxed (&__sched_fifo_min_prio) == -1

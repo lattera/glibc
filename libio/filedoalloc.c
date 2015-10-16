@@ -91,8 +91,7 @@ local_isatty (int fd)
  */
 
 int
-_IO_file_doallocate (fp)
-     _IO_FILE *fp;
+_IO_file_doallocate (_IO_FILE *fp)
 {
   _IO_size_t size;
   char *p;

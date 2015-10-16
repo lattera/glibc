@@ -23,10 +23,7 @@
    KEY.  */
 
 int
-semget (key, nsems, semflg)
-     key_t key;
-     int nsems;
-     int semflg;
+semget (key_t key, int nsems, int semflg)
 {
   __set_errno (ENOSYS);
   return -1;

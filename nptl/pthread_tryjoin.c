@@ -24,9 +24,7 @@
 
 
 int
-pthread_tryjoin_np (threadid, thread_return)
-     pthread_t threadid;
-     void **thread_return;
+pthread_tryjoin_np (pthread_t threadid, void **thread_return)
 {
   struct pthread *self;
   struct pthread *pd = (struct pthread *) threadid;

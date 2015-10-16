@@ -58,9 +58,7 @@
 #endif
 
 int
-__backtrace (array, size)
-     void **array;
-     int size;
+__backtrace (void **array, int size)
 {
   struct layout *current;
   void *top_frame;

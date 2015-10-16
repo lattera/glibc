@@ -26,8 +26,7 @@
 /* Return a string with the data for locale-dependent parameter ITEM.  */
 
 char *
-nl_langinfo (item)
-     nl_item item;
+nl_langinfo (nl_item item)
 {
   return __nl_langinfo_l (item, _NL_CURRENT_LOCALE);
 }

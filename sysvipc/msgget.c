@@ -23,9 +23,7 @@
    parameter describes how to proceed with clashing of key values.  */
 
 int
-msgget (key, msgflg)
-     key_t key;
-     int msgflg;
+msgget (key_t key, int msgflg)
 {
   __set_errno (ENOSYS);
   return -1;
