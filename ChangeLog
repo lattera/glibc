@@ -1,3 +1,8 @@
+2015-10-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h
+	(lll_unlock_elision): Add adapt_count parameter.
+
 2015-10-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/nptl/configure.ac: Do not give errors based on the
