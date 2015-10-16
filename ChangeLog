@@ -1,3 +1,12 @@
+2015-10-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (fabs_test_data): Add more tests.
+	(fdim_test_data): Likewise.
+	(fma_test_data): Likewise.
+	(fmax_test_data): Likewise.
+	(fmin_test_data): Likewise.
+	(fmod_test_data): Likewise.
+
 2015-10-16  Steve Ellcey  <sellcey@imgtec.com>
 
 	* sysdeps/mips/memcpy.S (memcpy):  Add word copies for small aligned
