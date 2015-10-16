@@ -1,5 +1,11 @@
 2015-10-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (ceil_test_data): Add more tests and more
+	expectations for "inexact".
+	(floor_test_data): Add more tests.
+	(round_test_data): Likewise.
+	(trunc_test_data): Likewise.
+
 	* crypt/cert.c (good_bye): Convert to prototype-style function
 	definition.
 	(get8): Likewise.
