@@ -1,3 +1,8 @@
+2015-10-16  Steve Ellcey  <sellcey@imgtec.com>
+
+	* sysdeps/mips/memcpy.S (memcpy):  Add word copies for small aligned
+	data.
+
 2015-10-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (ceil_test_data): Add more tests and more
