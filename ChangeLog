@@ -1,5 +1,10 @@
 2015-10-17  Florian Weimer  <fweimer@redhat.com>
 
+	* stdio-common/vfprintf.c (printf_positional): Rewrite to use
+	struct scratch_buffer instead of extend_alloca.
+
+2015-10-17  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	(__ASSUME_SOCK_CLOEXEC): Remove.
 	* include/sys/socket.h (__have_sock_cloexec): Remove declaration.

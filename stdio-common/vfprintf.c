@@ -29,6 +29,7 @@
 #include <_itoa.h>
 #include <locale/localeinfo.h>
 #include <stdio.h>
+#include <scratch_buffer.h>
 
 /* This code is shared between the standard stdio implementation found
    in GNU C library and the libio implementation originally found in
@@ -1698,18 +1699,15 @@ printf_positional (_IO_FILE *s, const CHAR_T *format, int readonly_format,
   void *args_malloced = NULL;
 
   /* For positional argument handling.  */
-  struct printf_spec *specs;
-
-  /* Track if we malloced the SPECS array and thus must free it.  */
-  bool specs_malloced = false;
+  struct scratch_buffer specsbuf;
+  scratch_buffer_init (&specsbuf);
+  struct printf_spec *specs = specsbuf.data;
+  size_t specs_limit = specsbuf.length / sizeof (specs[0]);
 
   /* Array with information about the needed arguments.  This has to
      be dynamically extensible.  */
   size_t nspecs = 0;
-  /* A more or less arbitrary start value.  */
-  size_t nspecs_size = 32 * sizeof (struct printf_spec);
 
-  specs = alloca (nspecs_size);
   /* The number of arguments the format string requests.  This will
      determine the size of the array needed to store the argument
      attributes.  */
@@ -1746,42 +1744,15 @@ printf_positional (_IO_FILE *s, const CHAR_T *format, int readonly_format,
   for (const UCHAR_T *f = lead_str_end; *f != L_('\0');
        f = specs[nspecs++].next_fmt)
     {
-      if (nspecs * sizeof (*specs) >= nspecs_size)
+      if (nspecs == specs_limit)
 	{
-	  /* Extend the array of format specifiers.  */
-	  if (nspecs_size * 2 < nspecs_size)
+	  if (!scratch_buffer_grow_preserve (&specsbuf))
 	    {
-	      __set_errno (ENOMEM);
 	      done = -1;
 	      goto all_done;
 	    }
-	  struct printf_spec *old = specs;
-	  if (__libc_use_alloca (2 * nspecs_size))
-	    specs = extend_alloca (specs, nspecs_size, 2 * nspecs_size);
-	  else
-	    {
-	      nspecs_size *= 2;
-	      specs = malloc (nspecs_size);
-	      if (specs == NULL)
-		{
-		  __set_errno (ENOMEM);
-		  specs = old;
-		  done = -1;
-		  goto all_done;
-		}
-	    }
-
-	  /* Copy the old array's elements to the new space.  */
-	  memmove (specs, old, nspecs * sizeof (*specs));
-
-	  /* If we had previously malloc'd space for SPECS, then
-	     release it after the copy is complete.  */
-	  if (specs_malloced)
-	    free (old);
-
-	  /* Now set SPECS_MALLOCED if needed.  */
-	  if (!__libc_use_alloca (nspecs_size))
-	    specs_malloced = true;
+	  specs = specsbuf.data;
+	  specs_limit = specsbuf.length / sizeof (specs[0]);
 	}
 
       /* Parse the format specifier.  */
@@ -2091,12 +2062,11 @@ printf_positional (_IO_FILE *s, const CHAR_T *format, int readonly_format,
 		 - specs[nspecs_done].end_of_fmt);
     }
  all_done:
-  if (__glibc_unlikely (specs_malloced))
-    free (specs);
   if (__glibc_unlikely (args_malloced != NULL))
     free (args_malloced);
   if (__glibc_unlikely (workstart != NULL))
     free (workstart);
+  scratch_buffer_free (&specsbuf);
   return done;
 }
 
