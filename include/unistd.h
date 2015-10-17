@@ -170,7 +170,6 @@ extern int __libc_pause (void);
 /* Not cancelable variant.  */
 extern int __pause_nocancel (void) attribute_hidden;
 
-extern int __have_sock_cloexec attribute_hidden;
 extern int __have_pipe2 attribute_hidden;
 extern int __have_dup3 attribute_hidden;
 

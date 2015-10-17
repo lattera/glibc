@@ -154,13 +154,5 @@ libc_hidden_proto (__libc_sa_len)
 # define SA_LEN(_x)      __libc_sa_len((_x)->sa_family)
 #endif
 
-#ifdef SOCK_CLOEXEC
-extern int __have_sock_cloexec attribute_hidden;
-/* At lot of other functionality became available at the same time as
-   SOCK_CLOEXEC.  Avoid defining separate variables for all of them
-   unless it is really necessary.  */
-# define __have_paccept __have_sock_cloexec
-#endif
-
 #endif
 #endif

@@ -19,10 +19,6 @@
 #include <sys/socket.h>
 #include <kernel-features.h>
 
-#if defined SOCK_CLOEXEC && !defined __ASSUME_SOCK_CLOEXEC
-int __have_sock_cloexec;
-#endif
-
 #if defined O_CLOEXEC && !defined __ASSUME_PIPE2
 int __have_pipe2;
 #endif

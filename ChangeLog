@@ -1,5 +1,27 @@
 2015-10-17  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_SOCK_CLOEXEC): Remove.
+	* include/sys/socket.h (__have_sock_cloexec): Remove declaration.
+	(__have_paccept): Remove unused macro.
+	* include/unistd.h (__have_sock_cloexec): Remove declaration.
+	* misc/syslog.c (openlog_internal): Remove fallback code for
+	!__ASSUME_SOCK_CLOEXEC.
+	* nis/ypclnt.c (yp_bind_client_create): Remove fallback code for
+	missing SOCK_CLOEXEC.
+	* nscd/connections.c (have_sock_cloexec): Remove definition.
+	(nscd_init): Remove fallback code for !__ASSUME_SOCK_CLOEXEC.
+	* nscd/nscd_helper.c (open_socket): Remove fallback code for
+	!__ASSUME_SOCK_CLOEXEC.
+	* resolv/res_send.c (__have_o_nonblock): Remove definition.
+	(reopen): Remove fallback code for !__ASSUME_SOCK_CLOEXEC.
+	* socket/have_sock_cloexec.c (__have_sock_cloexec): Remove
+	definition.
+	* sunrpc/clnt_udp.c (__libc_clntudp_bufcreate): Remove fallback
+	code for !__ASSUME_SOCK_CLOEXEC.
+
+2015-10-17  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #18982]
 	* manual/stdio.texi (Variable Arguments Output): Add portability
 	note, explaining that vfprintf clobbers the va_list pointer.

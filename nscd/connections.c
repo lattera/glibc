@@ -257,11 +257,6 @@ int inotify_fd = -1;
 static int nl_status_fd = -1;
 #endif
 
-#ifndef __ASSUME_SOCK_CLOEXEC
-/* Negative if SOCK_CLOEXEC is not supported, positive if it is, zero
-   before be know the result.  */
-static int have_sock_cloexec;
-#endif
 #ifndef __ASSUME_ACCEPT4
 static int have_accept4;
 #endif
@@ -830,21 +825,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
       }
 
   /* Create the socket.  */
-#ifndef __ASSUME_SOCK_CLOEXEC
-  sock = -1;
-  if (have_sock_cloexec >= 0)
-#endif
-    {
-      sock = socket (AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0);
-#ifndef __ASSUME_SOCK_CLOEXEC
-      if (have_sock_cloexec == 0)
-	have_sock_cloexec = sock != -1 || errno != EINVAL ? 1 : -1;
-#endif
-    }
-#ifndef __ASSUME_SOCK_CLOEXEC
-  if (have_sock_cloexec < 0)
-    sock = socket (AF_UNIX, SOCK_STREAM, 0);
-#endif
+  sock = socket (AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0);
   if (sock < 0)
     {
       dbg_log (_("cannot open socket: %s"), strerror (errno));
@@ -859,28 +840,6 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
       dbg_log ("%s: %s", _PATH_NSCDSOCKET, strerror (errno));
       do_exit (errno == EACCES ? 4 : 1, 0, NULL);
     }
-
-#ifndef __ASSUME_SOCK_CLOEXEC
-  if (have_sock_cloexec < 0)
-    {
-      /* We don't want to get stuck on accept.  */
-      int fl = fcntl (sock, F_GETFL);
-      if (fl == -1 || fcntl (sock, F_SETFL, fl | O_NONBLOCK) == -1)
-	{
-	  dbg_log (_("cannot change socket to nonblocking mode: %s"),
-		   strerror (errno));
-	  do_exit (1, 0, NULL);
-	}
-
-      /* The descriptor needs to be closed on exec.  */
-      if (paranoia && fcntl (sock, F_SETFD, FD_CLOEXEC) == -1)
-	{
-	  dbg_log (_("cannot set socket to close on exec: %s"),
-		   strerror (errno));
-	  do_exit (1, 0, NULL);
-	}
-    }
-#endif
 
   /* Set permissions for the socket.  */
   chmod (_PATH_NSCDSOCKET, DEFFILEMODE);
@@ -922,31 +881,6 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 	      /* Start the timestamp process.  */
 	      dbs[hstdb].head->extra_data[NSCD_HST_IDX_CONF_TIMESTAMP]
 		= __bump_nl_timestamp ();
-
-# ifndef __ASSUME_SOCK_CLOEXEC
-	      if (have_sock_cloexec < 0)
-		{
-		  /* We don't want to get stuck on accept.  */
-		  int fl = fcntl (nl_status_fd, F_GETFL);
-		  if (fl == -1
-		      || fcntl (nl_status_fd, F_SETFL, fl | O_NONBLOCK) == -1)
-		    {
-		      dbg_log (_("\
-cannot change socket to nonblocking mode: %s"),
-			       strerror (errno));
-		      do_exit (1, 0, NULL);
-		    }
-
-		  /* The descriptor needs to be closed on exec.  */
-		  if (paranoia
-		      && fcntl (nl_status_fd, F_SETFD, FD_CLOEXEC) == -1)
-		    {
-		      dbg_log (_("cannot set socket to close on exec: %s"),
-			       strerror (errno));
-		      do_exit (1, 0, NULL);
-		    }
-		}
-# endif
 	    }
 	}
     }

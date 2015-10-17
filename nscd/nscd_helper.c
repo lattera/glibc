@@ -166,24 +166,7 @@ open_socket (request_type type, const char *key, size_t keylen)
 {
   int sock;
 
-#ifdef SOCK_CLOEXEC
-# ifndef __ASSUME_SOCK_CLOEXEC
-  if (__have_sock_cloexec >= 0)
-# endif
-    {
-      sock = __socket (PF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0);
-# ifndef __ASSUME_SOCK_CLOEXEC
-      if (__have_sock_cloexec == 0)
-	__have_sock_cloexec = sock != -1 || errno != EINVAL ? 1 : -1;
-# endif
-    }
-#endif
-#ifndef __ASSUME_SOCK_CLOEXEC
-# ifdef SOCK_CLOEXEC
-  if (__have_sock_cloexec < 0)
-# endif
-    sock = __socket (PF_UNIX, SOCK_STREAM, 0);
-#endif
+  sock = __socket (PF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0);
   if (sock < 0)
     return -1;
 
@@ -193,14 +176,6 @@ open_socket (request_type type, const char *key, size_t keylen)
     request_header req;
     char key[];
   } *reqdata = alloca (real_sizeof_reqdata);
-
-#ifndef __ASSUME_SOCK_CLOEXEC
-# ifdef SOCK_NONBLOCK
-  if (__have_sock_cloexec < 0)
-# endif
-    /* Make socket non-blocking.  */
-    __fcntl (sock, F_SETFL, O_RDWR | O_NONBLOCK);
-#endif
 
   struct sockaddr_un sun;
   sun.sun_family = AF_UNIX;

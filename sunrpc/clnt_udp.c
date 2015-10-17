@@ -171,31 +171,7 @@ __libc_clntudp_bufcreate (struct sockaddr_in *raddr, u_long program,
   cu->cu_xdrpos = XDR_GETPOS (&(cu->cu_outxdrs));
   if (*sockp < 0)
     {
-#ifdef SOCK_NONBLOCK
-# ifndef __ASSUME_SOCK_CLOEXEC
-      if (__have_sock_cloexec >= 0)
-# endif
-	{
-	  *sockp = __socket (AF_INET, SOCK_DGRAM|SOCK_NONBLOCK|flags,
-			     IPPROTO_UDP);
-# ifndef __ASSUME_SOCK_CLOEXEC
-	  if (__have_sock_cloexec == 0)
-	    __have_sock_cloexec = *sockp >= 0 || errno != EINVAL ? 1 : -1;
-# endif
-	}
-#endif
-#ifndef __ASSUME_SOCK_CLOEXEC
-# ifdef SOCK_CLOEXEC
-      if (__have_sock_cloexec < 0)
-# endif
-	{
-	  *sockp = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-# ifdef SOCK_CLOEXEC
-	  if (flags & SOCK_CLOEXEC)
-	    __fcntl (*sockp, F_SETFD, FD_CLOEXEC);
-# endif
-	}
-#endif
+      *sockp = __socket (AF_INET, SOCK_DGRAM|SOCK_NONBLOCK|flags, IPPROTO_UDP);
       if (__glibc_unlikely (*sockp < 0))
 	{
 	  struct rpc_createerr *ce = &get_rpc_createerr ();
@@ -205,16 +181,6 @@ __libc_clntudp_bufcreate (struct sockaddr_in *raddr, u_long program,
 	}
       /* attempt to bind to prov port */
       (void) bindresvport (*sockp, (struct sockaddr_in *) 0);
-#ifndef __ASSUME_SOCK_CLOEXEC
-# ifdef SOCK_CLOEXEC
-      if (__have_sock_cloexec < 0)
-# endif
-	{
-	  /* the sockets rpc controls are non-blocking */
-	  int dontblock = 1;
-	  (void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
-	}
-#endif
 #ifdef IP_RECVERR
       {
 	int on = 1;
