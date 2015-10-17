@@ -1,3 +1,9 @@
+2015-10-17  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18982]
+	* manual/stdio.texi (Variable Arguments Output): Add portability
+	note, explaining that vfprintf clobbers the va_list pointer.
+
 2015-10-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (fabs_test_data): Add more tests.

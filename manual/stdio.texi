@@ -2621,20 +2621,16 @@ choice, you are ready to call @code{vprintf}.  That argument and all
 subsequent arguments that were passed to your function are used by
 @code{vprintf} along with the template that you specified separately.
 
-In some other systems, the @code{va_list} pointer may become invalid
-after the call to @code{vprintf}, so you must not use @code{va_arg}
-after you call @code{vprintf}.  Instead, you should call @code{va_end}
-to retire the pointer from service.  However, you can safely call
-@code{va_start} on another pointer variable and begin fetching the
-arguments again through that pointer.  Calling @code{vprintf} does not
-destroy the argument list of your function, merely the particular
-pointer that you passed to it.
-
-GNU C does not have such restrictions.  You can safely continue to fetch
-arguments from a @code{va_list} pointer after passing it to
-@code{vprintf}, and @code{va_end} is a no-op.  (Note, however, that
-subsequent @code{va_arg} calls will fetch the same arguments which
-@code{vprintf} previously used.)
+@strong{Portability Note:} The value of the @code{va_list} pointer is
+undetermined after the call to @code{vprintf}, so you must not use
+@code{va_arg} after you call @code{vprintf}.  Instead, you should call
+@code{va_end} to retire the pointer from service.  You can call
+@code{va_start} again and begin fetching the arguments from the start of
+the variable argument list.  (Alternatively, you can use @code{va_copy}
+to make a copy of the @code{va_list} pointer before calling
+@code{vfprintf}.)  Calling @code{vprintf} does not destroy the argument
+list of your function, merely the particular pointer that you passed to
+it.
 
 Prototypes for these functions are declared in @file{stdio.h}.
 @pindex stdio.h
