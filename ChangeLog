@@ -1,5 +1,27 @@
 2015-10-17  Florian Weimer  <fweimer@redhat.com>
 
+	malloc: Rewrite with explicit TLS access using __thread.
+	* sysdeps/generic/malloc-machine.h (tsd_key_t, tsd_key_create)
+	(tsd_setspecific, tsd_getspecific): Remove.
+	* sysdeps/mach/hurd/malloc-machine.h (tsd_key_t, tsd_key_create)
+	(tsd_setspecific, tsd_getspecific): Likewise.
+	* sysdeps/nptl/malloc-machine.h (tsd_key_t, tsd_key_create)
+	(tsd_setspecific, tsd_getspecific): Likewise.
+	* malloc/arena.c (thread_arena): New TLS variable.
+	(arena_key): Remove variable.
+	(arena_get): Use thread_arena.
+	(arena_lookup): Remove macro.
+	(malloc_atfork, free_atfork, ptmalloc_lock_all)
+	(ptmalloc_unlock_all, ptmalloc_unlock_all2, ptmalloc_init)
+	(_int_new_arena, get_free_list, reused_arena)
+	(arena_thread_freeres): Use thread_arena.
+	* manual/memory.texi (Basic Allocation): Remove arena_lookup,
+	tsd_getspecific, tsd_setspecific from safety annotations.
+	(Allocating Cleared Space): Remove arena_lookup from safety
+	annotations.
+
+2015-10-17  Florian Weimer  <fweimer@redhat.com>
+
 	* stdio-common/vfprintf.c (printf_positional): Rewrite to use
 	struct scratch_buffer instead of extend_alloca.
 

@@ -58,16 +58,6 @@ extern void *__dso_handle __attribute__ ((__weak__));
   __linkin_atfork (&atfork_mem)
 #endif
 
-/* thread specific data for glibc */
-
-#include <libc-tsd.h>
-
-typedef int tsd_key_t[1];	/* no key data structure, libc magic does it */
-__libc_tsd_define (static, void *, MALLOC)	/* declaration/common definition */
-#define tsd_key_create(key, destr)	((void) (key))
-#define tsd_setspecific(key, data)	__libc_tsd_set (void *, MALLOC, (data))
-#define tsd_getspecific(key, vptr)	((vptr) = __libc_tsd_get (void *, MALLOC))
-
 #include <sysdeps/generic/malloc-machine.h>
 
 #endif /* !defined(_MALLOC_MACHINE_H) */

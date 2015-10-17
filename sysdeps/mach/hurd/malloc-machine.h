@@ -52,16 +52,6 @@
 /* No we're *not* using pthreads.  */
 #define __pthread_initialize ((void (*)(void))0)
 
-/* thread specific data for glibc */
-
-#include <libc-tsd.h>
-
-typedef int tsd_key_t[1];	/* no key data structure, libc magic does it */
-__libc_tsd_define (static, void *, MALLOC)	/* declaration/common definition */
-#define tsd_key_create(key, destr)	((void) (key))
-#define tsd_setspecific(key, data)	__libc_tsd_set (void *, MALLOC, (data))
-#define tsd_getspecific(key, vptr)	((vptr) = __libc_tsd_get (void *, MALLOC))
-
 /* madvise is a stub on Hurd, so don't bother calling it.  */
 
 #include <sys/mman.h>

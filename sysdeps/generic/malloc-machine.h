@@ -40,13 +40,6 @@ typedef int mutex_t;
 # define mutex_unlock(m)        (*(m) = 0)
 # define MUTEX_INITIALIZER      (0)
 
-typedef void *tsd_key_t;
-# define tsd_key_create(key, destr) do {} while(0)
-# define tsd_setspecific(key, data) ((key) = (data))
-# define tsd_getspecific(key, vptr) (vptr = (key))
-
-# define thread_atfork(prepare, parent, child) do {} while(0)
-
 #endif /* !defined mutex_init */
 
 #ifndef atomic_full_barrier

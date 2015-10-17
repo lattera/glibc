@@ -332,8 +332,6 @@ this function is in @file{stdlib.h}.
 @c __libc_malloc @asulock @aculock @acsfd @acsmem
 @c  force_reg ok
 @c  *malloc_hook unguarded
-@c  arena_lookup ok
-@c   tsd_getspecific ok, TLS
 @c  arena_lock @asulock @aculock @acsfd @acsmem
 @c   mutex_lock @asulock @aculock
 @c   arena_get2 @asulock @aculock @acsfd @acsmem
@@ -341,7 +339,6 @@ this function is in @file{stdlib.h}.
 @c     mutex_lock (list_lock) dup @asulock @aculock
 @c     mutex_unlock (list_lock) dup @aculock
 @c     mutex_lock (arena lock) dup @asulock @aculock [returns locked]
-@c     tsd_setspecific ok, TLS
 @c    __get_nprocs ext ok @acsfd
 @c    NARENAS_FROM_NCORES ok
 @c    catomic_compare_and_exchange_bool_acq ok
@@ -835,7 +832,6 @@ is declared in @file{stdlib.h}.
 @c  *__malloc_hook dup unguarded
 @c  memset dup ok
 @c  arena_get @asulock @aculock @acsfd @acsmem
-@c   arena_lookup dup ok
 @c   arena_lock dup @asulock @aculock @acsfd @acsmem
 @c  top dup ok
 @c  chunksize dup ok
