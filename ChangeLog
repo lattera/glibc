@@ -1,5 +1,14 @@
 2015-10-17  Florian Weimer  <fweimer@redhat.com>
 
+	sunrpc: Rewrite with explicit TLS access using __thread.
+	* sunrpc/rpc_thread.c (thread_rpc_vars): New TLS variable.
+	(__rpc_thread_destroy, rpc_thread_multi): Access thread_rpc_vars
+	directly.
+	(__rpc_thread_variables): Access thread_rpc_vars directly.
+	Eliminate redundant assignment of the tvp variable.
+
+2015-10-17  Florian Weimer  <fweimer@redhat.com>
+
 	malloc: Rewrite with explicit TLS access using __thread.
 	* sysdeps/generic/malloc-machine.h (tsd_key_t, tsd_key_create)
 	(tsd_setspecific, tsd_getspecific): Remove.
