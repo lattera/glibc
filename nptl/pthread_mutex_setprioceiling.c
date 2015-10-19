@@ -24,10 +24,8 @@
 
 
 int
-pthread_mutex_setprioceiling (mutex, prioceiling, old_ceiling)
-     pthread_mutex_t *mutex;
-     int prioceiling;
-     int *old_ceiling;
+pthread_mutex_setprioceiling (pthread_mutex_t *mutex, int prioceiling,
+			      int *old_ceiling)
 {
   /* The low bits of __kind aren't ever changed after pthread_mutex_init,
      so we don't need a lock yet.  */

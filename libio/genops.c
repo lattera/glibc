@@ -596,12 +596,8 @@ _IO_old_init (_IO_FILE *fp, int flags)
 }
 
 void
-_IO_no_init (fp, flags, orientation, wd, jmp)
-     _IO_FILE *fp;
-     int flags;
-     int orientation;
-     struct _IO_wide_data *wd;
-     const struct _IO_jump_t *jmp;
+_IO_no_init (_IO_FILE *fp, int flags, int orientation,
+	     struct _IO_wide_data *wd, const struct _IO_jump_t *jmp)
 {
   _IO_old_init (fp, flags);
   fp->_mode = orientation;

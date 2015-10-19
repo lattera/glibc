@@ -59,9 +59,8 @@ strong_alias (_pthread_cleanup_push_defer, __pthread_cleanup_push_defer)
 
 
 void
-_pthread_cleanup_pop_restore (buffer, execute)
-     struct _pthread_cleanup_buffer *buffer;
-     int execute;
+_pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
+			      int execute)
 {
   struct pthread *self = THREAD_SELF;
 

@@ -141,12 +141,8 @@ libc_hidden_nolink_sunrpc (xdr_array, GLIBC_2_0)
  * > xdr_elem: routine to XDR each element
  */
 bool_t
-xdr_vector (xdrs, basep, nelem, elemsize, xdr_elem)
-     XDR *xdrs;
-     char *basep;
-     u_int nelem;
-     u_int elemsize;
-     xdrproc_t xdr_elem;
+xdr_vector (XDR *xdrs, char *basep, u_int nelem, u_int elemsize,
+	    xdrproc_t xdr_elem)
 {
   u_int i;
   char *elptr;

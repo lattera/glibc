@@ -30,11 +30,8 @@
 #undef fwrite_unlocked
 
 _IO_size_t
-fwrite_unlocked (buf, size, count, fp)
-     const void *buf;
-     _IO_size_t size;
-     _IO_size_t count;
-     _IO_FILE *fp;
+fwrite_unlocked (const void *buf, _IO_size_t size, _IO_size_t count,
+		 _IO_FILE *fp)
 {
   _IO_size_t request = size * count;
   _IO_size_t written = 0;

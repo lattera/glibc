@@ -30,13 +30,8 @@
    SIGMASK for this call.  Returns the number of ready descriptors, or -1 for
    errors.  */
 int
-__pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask)
-     int nfds;
-     fd_set *readfds;
-     fd_set *writefds;
-     fd_set *exceptfds;
-     const struct timespec *timeout;
-     const sigset_t *sigmask;
+__pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+	   const struct timespec *timeout, const sigset_t *sigmask)
 {
   return _hurd_select (nfds, NULL,
 		       readfds, writefds, exceptfds, timeout, sigmask);

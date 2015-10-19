@@ -24,11 +24,8 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 #include "longlong.h"
 
 mp_limb_t
-mpn_mul_1 (res_ptr, s1_ptr, s1_size, s2_limb)
-     register mp_ptr res_ptr;
-     register mp_srcptr s1_ptr;
-     mp_size_t s1_size;
-     register mp_limb_t s2_limb;
+mpn_mul_1 (register mp_ptr res_ptr, register mp_srcptr s1_ptr,
+	   mp_size_t s1_size, register mp_limb_t s2_limb)
 {
   register mp_limb_t cy_limb;
   register mp_size_t j;

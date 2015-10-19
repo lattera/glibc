@@ -29,11 +29,8 @@
 
 
 int
-timer_settime (timerid, flags, value, ovalue)
-     timer_t timerid;
-     int flags;
-     const struct itimerspec *value;
-     struct itimerspec *ovalue;
+timer_settime (timer_t timerid, int flags, const struct itimerspec *value,
+	       struct itimerspec *ovalue)
 {
 #undef timer_settime
   struct timer *kt = (struct timer *) timerid;

@@ -227,11 +227,8 @@ weak_alias (__srandom_r, srandom_r)
    setstate so that it doesn't matter when initstate is called.
    Returns 0 on success, non-zero on failure.  */
 int
-__initstate_r (seed, arg_state, n, buf)
-     unsigned int seed;
-     char *arg_state;
-     size_t n;
-     struct random_data *buf;
+__initstate_r (unsigned int seed, char *arg_state, size_t n,
+	       struct random_data *buf)
 {
   if (buf == NULL)
     goto fail;

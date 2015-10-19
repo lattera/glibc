@@ -220,12 +220,8 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
 libc_hidden_nolink_sunrpc (clntudp_bufcreate, GLIBC_2_0)
 
 CLIENT *
-clntudp_create (raddr, program, version, wait, sockp)
-     struct sockaddr_in *raddr;
-     u_long program;
-     u_long version;
-     struct timeval wait;
-     int *sockp;
+clntudp_create (struct sockaddr_in *raddr, u_long program, u_long version,
+		struct timeval wait, int *sockp)
 {
   return __libc_clntudp_bufcreate (raddr, program, version, wait,
 				   sockp, UDPMSGSIZE, UDPMSGSIZE, 0);

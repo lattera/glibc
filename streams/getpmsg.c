@@ -19,12 +19,8 @@
 #include <stropts.h>
 
 int
-getpmsg (fildes, ctlptr, dataptr, bandp, flagsp)
-     int fildes;
-     struct strbuf *ctlptr;
-     struct strbuf *dataptr;
-     int *bandp;
-     int *flagsp;
+getpmsg (int fildes, struct strbuf *ctlptr, struct strbuf *dataptr, int *bandp,
+	 int *flagsp)
 {
   __set_errno (ENOSYS);
   return -1;

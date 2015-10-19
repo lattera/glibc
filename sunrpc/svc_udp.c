@@ -585,11 +585,8 @@ cache_set (SVCXPRT *xprt, u_long replylen)
  * return 1 if found, 0 if not found
  */
 static int
-cache_get (xprt, msg, replyp, replylenp)
-     SVCXPRT *xprt;
-     struct rpc_msg *msg;
-     char **replyp;
-     u_long *replylenp;
+cache_get (SVCXPRT *xprt, struct rpc_msg *msg, char **replyp,
+	   u_long *replylenp)
 {
   u_int loc;
   cache_ptr ent;

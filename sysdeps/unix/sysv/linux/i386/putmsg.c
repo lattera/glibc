@@ -24,11 +24,8 @@
 
 #ifdef __NR_putpmsg
 int
-putmsg (fildes, ctlptr, dataptr, flags)
-     int fildes;
-     const struct strbuf *ctlptr;
-     const struct strbuf *dataptr;
-     int flags;
+putmsg (int fildes, const struct strbuf *ctlptr, const struct strbuf *dataptr,
+	int flags)
 {
   return INLINE_SYSCALL (putpmsg, 5, fildes, ctlptr, dataptr, -1, flags);
 }

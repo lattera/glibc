@@ -87,11 +87,8 @@ extern const wchar_t _itowa_upper_digits[] attribute_hidden;
 
 #if _ITOA_NEEDED
 wchar_t *
-_itowa (value, buflim, base, upper_case)
-     unsigned long long int value;
-     wchar_t *buflim;
-     unsigned int base;
-     int upper_case;
+_itowa (unsigned long long int value, wchar_t *buflim, unsigned int base,
+	int upper_case)
 {
   const wchar_t *digits = (upper_case
 			   ? _itowa_upper_digits : _itowa_lower_digits);

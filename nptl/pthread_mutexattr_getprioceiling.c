@@ -22,9 +22,8 @@
 
 
 int
-pthread_mutexattr_getprioceiling (attr, prioceiling)
-     const pthread_mutexattr_t *attr;
-     int *prioceiling;
+pthread_mutexattr_getprioceiling (const pthread_mutexattr_t *attr,
+				  int *prioceiling)
 {
   const struct pthread_mutexattr *iattr;
   int ceiling;

@@ -25,12 +25,8 @@
    after waiting the interval specified therein.  Returns the number of ready
    descriptors, or -1 for errors.  */
 int
-__select (nfds, readfds, writefds, exceptfds, timeout)
-     int nfds;
-     fd_set *readfds;
-     fd_set *writefds;
-     fd_set *exceptfds;
-     struct timeval *timeout;
+__select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+	  struct timeval *timeout)
 {
   __set_errno (ENOSYS);
   return -1;

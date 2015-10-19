@@ -37,14 +37,8 @@ static int getttyname_r (int fd, char *buf, size_t buflen,
 
 static int
 internal_function
-getttyname_r (fd, buf, buflen, mydev, myino, save, dostat)
-     int fd;
-     char *buf;
-     size_t buflen;
-     dev_t mydev;
-     ino_t myino;
-     int save;
-     int *dostat;
+getttyname_r (int fd, char *buf, size_t buflen, dev_t mydev, ino_t myino,
+	      int save, int *dostat)
 {
   struct stat st;
   DIR *dirstream;

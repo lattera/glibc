@@ -203,14 +203,9 @@ fooy:
 libc_hidden_nolink_sunrpc (clntunix_create, GLIBC_2_1)
 
 static enum clnt_stat
-clntunix_call (h, proc, xdr_args, args_ptr, xdr_results, results_ptr, timeout)
-     CLIENT *h;
-     u_long proc;
-     xdrproc_t xdr_args;
-     caddr_t args_ptr;
-     xdrproc_t xdr_results;
-     caddr_t results_ptr;
-     struct timeval timeout;
+clntunix_call (CLIENT *h, u_long proc, xdrproc_t xdr_args, caddr_t args_ptr,
+	       xdrproc_t xdr_results, caddr_t results_ptr,
+	       struct timeval timeout)
 {
   struct ct_data *ct = (struct ct_data *) h->cl_private;
   XDR *xdrs = &(ct->ct_xdrs);

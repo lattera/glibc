@@ -29,10 +29,8 @@ static const struct pthread_barrierattr default_barrierattr =
 
 
 int
-__pthread_barrier_init (barrier, attr, count)
-     pthread_barrier_t *barrier;
-     const pthread_barrierattr_t *attr;
-     unsigned int count;
+__pthread_barrier_init (pthread_barrier_t *barrier,
+			const pthread_barrierattr_t *attr, unsigned int count)
 {
   struct pthread_barrier *ibarrier;
 

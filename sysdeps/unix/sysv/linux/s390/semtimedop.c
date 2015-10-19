@@ -26,11 +26,8 @@
 /* Perform user-defined atomical operation of array of semaphores.  */
 
 int
-semtimedop (semid, sops, nsops, timeout)
-     int semid;
-     struct sembuf *sops;
-     size_t nsops;
-     const struct timespec *timeout;
+semtimedop (int semid, struct sembuf *sops, size_t nsops,
+	    const struct timespec *timeout)
 {
   return INLINE_SYSCALL (ipc, 5, IPCOP_semtimedop,
 			 semid, (int) nsops, timeout, sops);

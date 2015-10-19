@@ -152,11 +152,8 @@ libc_hidden_nolink_sunrpc (__libc_rpc_getport, GLIBC_PRIVATE)
  * Returns 0 if no map exists.
  */
 u_short
-pmap_getport (address, program, version, protocol)
-     struct sockaddr_in *address;
-     u_long program;
-     u_long version;
-     u_int protocol;
+pmap_getport (struct sockaddr_in *address, u_long program, u_long version,
+	      u_int protocol)
 {
   return __libc_rpc_getport (address, program, version, protocol, 5, 60);
 }

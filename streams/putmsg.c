@@ -19,11 +19,8 @@
 #include <stropts.h>
 
 int
-putmsg (fildes, ctlptr, dataptr, flags)
-     int fildes;
-     const struct strbuf *ctlptr;
-     const struct strbuf *dataptr;
-     int flags;
+putmsg (int fildes, const struct strbuf *ctlptr, const struct strbuf *dataptr,
+	int flags)
 {
   __set_errno (ENOSYS);
   return -1;

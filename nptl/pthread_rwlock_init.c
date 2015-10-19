@@ -29,9 +29,8 @@ static const struct pthread_rwlockattr default_rwlockattr =
 
 
 int
-__pthread_rwlock_init (rwlock, attr)
-     pthread_rwlock_t *rwlock;
-     const pthread_rwlockattr_t *attr;
+__pthread_rwlock_init (pthread_rwlock_t *rwlock,
+		       const pthread_rwlockattr_t *attr)
 {
   const struct pthread_rwlockattr *iattr;
 

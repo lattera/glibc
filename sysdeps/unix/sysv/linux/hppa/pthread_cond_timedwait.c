@@ -25,10 +25,8 @@
 # include <internaltypes.h>
 # include <shlib-compat.h>
 int
-__pthread_cond_timedwait (cond, mutex, abstime)
-     pthread_cond_t *cond;
-     pthread_mutex_t *mutex;
-     const struct timespec *abstime;
+__pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
+			  const struct timespec *abstime)
 {
   cond_compat_check_and_clear (cond);
   return __pthread_cond_timedwait_internal (cond, mutex, abstime);

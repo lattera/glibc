@@ -89,11 +89,8 @@ const struct _IO_jump_t _IO_wstrn_jumps attribute_hidden =
 
 
 int
-_IO_vswprintf (string, maxlen, format, args)
-     wchar_t *string;
-     _IO_size_t maxlen;
-     const wchar_t *format;
-     _IO_va_list args;
+_IO_vswprintf (wchar_t *string, _IO_size_t maxlen, const wchar_t *format,
+	       _IO_va_list args)
 {
   _IO_wstrnfile sf;
   int ret;

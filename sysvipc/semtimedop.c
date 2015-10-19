@@ -22,11 +22,8 @@
 /* Perform user-defined atomical operation of array of semaphores.  */
 
 int
-semtimedop (semid, sops, nsops, timeout)
-     int semid;
-     struct sembuf *sops;
-     size_t nsops;
-     const struct timespec *timeout;
+semtimedop (int semid, struct sembuf *sops, size_t nsops,
+	    const struct timespec *timeout)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -114,13 +114,8 @@ insert_entry (hash_table *htab, const void *key, size_t keylen, void *data)
 }
 
 static void
-insert_entry_2 (htab, key, keylen, hval, idx, data)
-     hash_table *htab;
-     const void *key;
-     size_t keylen;
-     unsigned long int hval;
-     size_t idx;
-     void *data;
+insert_entry_2 (hash_table *htab, const void *key, size_t keylen,
+		unsigned long int hval, size_t idx, void *data)
 {
   hash_entry *table = (hash_entry *) htab->table;
 
@@ -169,11 +164,8 @@ insert_entry_2 (htab, key, keylen, hval, idx, data)
 
 
 int
-find_entry (htab, key, keylen, result)
-     const hash_table *htab;
-     const void *key;
-     size_t keylen;
-     void **result;
+find_entry (const hash_table *htab, const void *key, size_t keylen,
+	    void **result)
 {
   hash_entry *table = (hash_entry *) htab->table;
   size_t idx = lookup (htab, key, keylen, compute_hashval (key, keylen));
@@ -201,12 +193,8 @@ set_entry (hash_table *htab, const void *key, size_t keylen, void *newval)
 
 
 int
-iterate_table (htab, ptr, key, keylen, data)
-     const hash_table *htab;
-     void **ptr;
-     const void **key;
-     size_t *keylen;
-     void **data;
+iterate_table (const hash_table *htab, void **ptr, const void **key,
+	       size_t *keylen, void **data)
 {
   if (*ptr == NULL)
     {
@@ -233,11 +221,8 @@ iterate_table (htab, ptr, key, keylen, data)
    [Knuth]	      The Art of Computer Programming, part3 (6.4) */
 
 static size_t
-lookup (htab, key, keylen, hval)
-     const hash_table *htab;
-     const void *key;
-     size_t keylen;
-     unsigned long int hval;
+lookup (const hash_table *htab, const void *key, size_t keylen,
+	unsigned long int hval)
 {
   unsigned long int hash;
   size_t idx;

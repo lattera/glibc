@@ -19,12 +19,8 @@
 #include <stropts.h>
 
 int
-putpmsg (fildes, ctlptr, dataptr, band, flags)
-     int fildes;
-     const struct strbuf *ctlptr;
-     const struct strbuf *dataptr;
-     int band;
-     int flags;
+putpmsg (int fildes, const struct strbuf *ctlptr, const struct strbuf *dataptr,
+	 int band, int flags)
 {
   __set_errno (ENOSYS);
   return -1;

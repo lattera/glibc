@@ -191,11 +191,8 @@ _itoa_word (_ITOA_WORD_TYPE value, char *buflim,
 
 #if _ITOA_NEEDED
 char *
-_itoa (value, buflim, base, upper_case)
-     unsigned long long int value;
-     char *buflim;
-     unsigned int base;
-     int upper_case;
+_itoa (unsigned long long int value, char *buflim, unsigned int base,
+       int upper_case)
 {
   const char *digits = (upper_case
 			? _itoa_upper_digits

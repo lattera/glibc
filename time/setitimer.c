@@ -23,10 +23,8 @@
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
 int
-__setitimer (which, new, old)
-     enum __itimer_which which;
-     const struct itimerval *new;
-     struct itimerval *old;
+__setitimer (enum __itimer_which which, const struct itimerval *new,
+	     struct itimerval *old)
 {
   if (new == NULL)
     {

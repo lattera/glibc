@@ -25,11 +25,8 @@
 
 /* Set timer TIMERID to VALUE, returning old value in OVLAUE.  */
 int
-timer_settime (timerid, flags, value, ovalue)
-     timer_t timerid;
-     int flags;
-     const struct itimerspec *value;
-     struct itimerspec *ovalue;
+timer_settime (timer_t timerid, int flags, const struct itimerspec *value,
+	       struct itimerspec *ovalue)
 {
   struct timer_node *timer;
   struct thread_node *thread = NULL;

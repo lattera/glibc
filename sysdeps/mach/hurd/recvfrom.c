@@ -27,13 +27,8 @@
    the sender, and store the actual size of the address in *ADDR_LEN.
    Returns the number of bytes read or -1 for errors.  */
 ssize_t
-__recvfrom (fd, buf, n, flags, addrarg, addr_len)
-     int fd;
-     void *buf;
-     size_t n;
-     int flags;
-     __SOCKADDR_ARG addrarg;
-     socklen_t *addr_len;
+__recvfrom (int fd, void *buf, size_t n, int flags, __SOCKADDR_ARG addrarg,
+	    socklen_t *addr_len)
 {
   error_t err;
   mach_port_t addrport;

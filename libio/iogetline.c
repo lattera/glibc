@@ -28,12 +28,8 @@
 #include <string.h>
 
 _IO_size_t
-_IO_getline (fp, buf, n, delim, extract_delim)
-     _IO_FILE *fp;
-     char *buf;
-     _IO_size_t n;
-     int delim;
-     int extract_delim;
+_IO_getline (_IO_FILE *fp, char *buf, _IO_size_t n, int delim,
+	     int extract_delim)
 {
   return _IO_getline_info (fp, buf, n, delim, extract_delim, (int *) 0);
 }
@@ -48,13 +44,8 @@ libc_hidden_def (_IO_getline)
    If extract_delim > 0, insert delim in output. */
 
 _IO_size_t
-_IO_getline_info (fp, buf, n, delim, extract_delim, eof)
-     _IO_FILE *fp;
-     char *buf;
-     _IO_size_t n;
-     int delim;
-     int extract_delim;
-     int *eof;
+_IO_getline_info (_IO_FILE *fp, char *buf, _IO_size_t n, int delim,
+		  int extract_delim, int *eof)
 {
   char *ptr = buf;
   if (eof != NULL)

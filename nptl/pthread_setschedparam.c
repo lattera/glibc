@@ -24,10 +24,8 @@
 
 
 int
-__pthread_setschedparam (threadid, policy, param)
-     pthread_t threadid;
-     int policy;
-     const struct sched_param *param;
+__pthread_setschedparam (pthread_t threadid, int policy,
+			 const struct sched_param *param)
 {
   struct pthread *pd = (struct pthread *) threadid;
 

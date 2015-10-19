@@ -1,3 +1,92 @@
+2015-10-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* crypt/crypt-entry.c (__crypt_r): Convert to prototype-style
+	function definition.
+	* crypt/crypt_util.c (__encrypt_r): Likewise.
+	* libio/genops.c (_IO_no_init): Likewise.
+	* libio/iofopncook.c (_IO_fopencookie): Likewise.
+	(_IO_old_fopencookie): Likewise.
+	* libio/iofwrite_u.c (fwrite_unlocked): Likewise.
+	* libio/iogetline.c (_IO_getline): Likewise.
+	(_IO_getline_info): Likewise.
+	* libio/iogetwline.c (_IO_getwline): Likewise.
+	(_IO_getwline_info): Likewise.
+	* libio/vsnprintf.c (_IO_vsnprintf): Likewise.
+	* libio/vswprintf.c (_IO_vswprintf): Likewise.
+	* locale/programs/simple-hash.c (insert_entry_2): Likewise.
+	(find_entry): Likewise.
+	(iterate_table): Likewise.
+	(lookup): Likewise.
+	* login/forkpty.c (forkpty): Likewise.
+	* misc/hsearch_r.c (__hsearch_r): Likewise.
+	* misc/select.c (__select): Likewise.
+	* nptl/cleanup_defer_compat.c (_pthread_cleanup_pop_restore):
+	Likewise.
+	* nptl/old_pthread_cond_init.c (__pthread_cond_init_2_0):
+	Likewise.
+	* nptl/old_pthread_cond_timedwait.c
+	(__pthread_cond_timedwait_2_0): Likewise.
+	* nptl/pthread_barrier_init.c (__pthread_barrier_init): Likewise.
+	* nptl/pthread_barrierattr_getpshared.c
+	(pthread_barrierattr_getpshared): Likewise.
+	* nptl/pthread_getschedparam.c (__pthread_getschedparam):
+	Likewise.
+	* nptl/pthread_mutex_setprioceiling.c
+	(pthread_mutex_setprioceiling): Likewise.
+	* nptl/pthread_mutexattr_getprioceiling.c
+	(pthread_mutexattr_getprioceiling): Likewise.
+	* nptl/pthread_rwlock_init.c (__pthread_rwlock_init): Likewise.
+	* nptl/pthread_rwlock_timedrdlock.c (pthread_rwlock_timedrdlock):
+	Likewise.
+	* nptl/pthread_rwlock_timedwrlock.c (pthread_rwlock_timedwrlock):
+	Likewise.
+	* nptl/pthread_setschedparam.c (__pthread_setschedparam):
+	Likewise.
+	* socket/recvfrom.c (__recvfrom): Likewise.
+	* socket/sendto.c (__sendto): Likewise.
+	* socket/setsockopt.c (__setsockopt): Likewise.
+	* stdio-common/_itoa.c (_itoa): Likewise.
+	* stdio-common/_itowa.c (_itowa): Likewise.
+	* stdio-common/reg-printf.c (__register_printf_specifier):
+	Likewise.
+	(__register_printf_function): Likewise.
+	* stdio-common/tempname.c (__path_search): Likewise.
+	* stdlib/addmul_1.c (mpn_addmul_1): Likewise.
+	* stdlib/mul_1.c (mpn_mul_1): Likewise.
+	* stdlib/random_r.c (__initstate_r): Likewise.
+	* stdlib/setenv.c (__add_to_environ): Likewise.
+	* stdlib/submul_1.c (mpn_submul_1): Likewise.
+	* streams/getpmsg.c (getpmsg): Likewise.
+	* streams/putmsg.c (putmsg): Likewise.
+	* streams/putpmsg.c (putpmsg): Likewise.
+	* sunrpc/clnt_raw.c (clntraw_call): Likewise.
+	* sunrpc/clnt_tcp.c (clnttcp_call): Likewise.
+	* sunrpc/clnt_udp.c (clntudp_create): Likewise.
+	* sunrpc/clnt_unix.c (clntunix_call): Likewise.
+	* sunrpc/pm_getport.c (pmap_getport): Likewise.
+	* sunrpc/svc_udp.c (cache_get): Likewise.
+	* sunrpc/xdr_array.c (xdr_vector): Likewise.
+	* sysdeps/mach/hurd/getcwd.c
+	(__canonicalize_directory_name_internal): Likewise.
+	* sysdeps/mach/hurd/pselect.c (__pselect): Likewise.
+	* sysdeps/mach/hurd/recvfrom.c (__recvfrom): Likewise.
+	* sysdeps/mach/hurd/select.c (__select): Likewise.
+	* sysdeps/posix/ttyname_r.c (getttyname_r): Likewise.
+	* sysdeps/pthread/timer_settime.c (timer_settime): Likewise.
+	* sysdeps/sparc/nptl/pthread_barrier_init.c
+	(__pthread_barrier_init): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_timedwait.c
+	(__pthread_cond_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/i386/putmsg.c (putmsg): Likewise.
+	* sysdeps/unix/sysv/linux/s390/semtimedop.c (semtimedop):
+	Likewise.
+	* sysdeps/unix/sysv/linux/semtimedop.c (semtimedop): Likewise.
+	* sysdeps/unix/sysv/linux/timer_settime.c (timer_settime):
+	Likewise.
+	* sysvipc/semtimedop.c (semtimedop): Likewise.
+	* time/setitimer.c (__setitimer): Likewise.
+	* time/strftime_l.c (emacs_strftime): Likewise.
+
 2015-10-19  Mike Frysinger  <vapier@gentoo.org>
 
 	* config.make.in (have-ssp): Delete.

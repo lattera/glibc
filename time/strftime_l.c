@@ -1438,11 +1438,8 @@ __strftime_internal (s, maxsize, format, tp, tzset_called ut_argument
    strftime function and does not have the extra information whether the
    TP arguments comes from a `gmtime' call or not.  */
 size_t
-emacs_strftime (s, maxsize, format, tp)
-      char *s;
-      size_t maxsize;
-      const char *format;
-      const struct tm *tp;
+emacs_strftime (char *s, size_t maxsize, const char *format,
+		const struct tm *tp)
 {
   return my_strftime (s, maxsize, format, tp, 0);
 }

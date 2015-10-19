@@ -23,9 +23,8 @@
 
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
 int
-__pthread_cond_init_2_0 (cond, cond_attr)
-     pthread_cond_2_0_t *cond;
-     const pthread_condattr_t *cond_attr;
+__pthread_cond_init_2_0 (pthread_cond_2_0_t *cond,
+			 const pthread_condattr_t *cond_attr)
 {
   struct pthread_condattr *icond_attr = (struct pthread_condattr *) cond_attr;
 

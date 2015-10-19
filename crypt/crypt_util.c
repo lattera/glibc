@@ -797,10 +797,8 @@ _ufc_output_conversion_r(v1, v2, salt, __data)
  */
 
 void
-__encrypt_r(__block, __edflag, __data)
-     char *__block;
-     int __edflag;
-     struct crypt_data * __restrict __data;
+__encrypt_r (char *__block, int __edflag,
+	     struct crypt_data * __restrict __data)
 {
   ufc_long l1, l2, r1, r2, res[4];
   int i;

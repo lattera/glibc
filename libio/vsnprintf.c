@@ -90,11 +90,8 @@ const struct _IO_jump_t _IO_strn_jumps attribute_hidden =
 
 
 int
-_IO_vsnprintf (string, maxlen, format, args)
-     char *string;
-     _IO_size_t maxlen;
-     const char *format;
-     _IO_va_list args;
+_IO_vsnprintf (char *string, _IO_size_t maxlen, const char *format,
+	       _IO_va_list args)
 {
   _IO_strnfile sf;
   int ret;

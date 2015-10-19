@@ -23,10 +23,8 @@
 
 
 int
-__pthread_getschedparam (threadid, policy, param)
-     pthread_t threadid;
-     int *policy;
-     struct sched_param *param;
+__pthread_getschedparam (pthread_t threadid, int *policy,
+			 struct sched_param *param)
 {
   struct pthread *pd = (struct pthread *) threadid;
 

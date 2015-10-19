@@ -24,12 +24,8 @@
    template suitable for use in __gen_tempname into TMPL, bounded
    by TMPL_LEN. */
 int
-__path_search (tmpl, tmpl_len, dir, pfx, try_tmpdir)
-     char *tmpl;
-     size_t tmpl_len;
-     const char *dir;
-     const char *pfx;
-     int try_tmpdir;
+__path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
+	       int try_tmpdir)
 {
   __set_errno (ENOSYS);
   return -1;
