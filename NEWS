@@ -22,6 +22,11 @@ Version 2.23
   19050, 19059, 19071, 19074, 19076, 19077, 19078, 19079, 19085, 19086,
   19088, 19094, 19095, 19124, 19125, 19129, 19134, 19137.
 
+* There is now a --disable-timezone-tools configure option for disabling the
+  building and installing of the timezone related utilities (zic, zdump, and
+  tzselect).  This is useful for people who build the timezone data and code
+  independent of the GNU C Library.
+
 * The LD_POINTER_GUARD environment variable can no longer be used to
   disable the pointer guard feature.  It is always enabled.
 
