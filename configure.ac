@@ -1505,30 +1505,6 @@ LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector],
 ])
 AC_SUBST(libc_cv_ssp)
 
-AC_CACHE_CHECK(for -fgnu89-inline, libc_cv_gnu89_inline, [dnl
-cat > conftest.c <<EOF
-int foo;
-#ifdef __GNUC_GNU_INLINE__
-main () { return 0;}
-#else
-#error
-#endif
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -std=gnu99 -fgnu89-inline
-			    -o conftest.s conftest.c 1>&AS_MESSAGE_LOG_FD])
-then
-  libc_cv_gnu89_inline=yes
-else
-  libc_cv_gnu89_inline=no
-fi
-rm -f conftest*])
-if test $libc_cv_gnu89_inline = yes; then
-  gnu89_inline=-fgnu89-inline
-else
-  gnu89_inline=
-fi
-AC_SUBST(gnu89_inline)
-
 AC_CACHE_CHECK(whether cc puts quotes around section names,
 	       libc_cv_have_section_quotes,
 	       [cat > conftest.c <<EOF
