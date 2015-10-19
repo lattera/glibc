@@ -1,3 +1,9 @@
+2015-10-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19122]
+	* include/sys/stat.h [IS_IN (rtld)] (__fxstatat64): Add
+	attribute_hidden.
+
 2015-10-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #18743]

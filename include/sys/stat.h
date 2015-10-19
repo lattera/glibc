@@ -35,6 +35,9 @@ libc_hidden_proto (__xmknodat)
 libc_hidden_proto (__fxstatat)
 libc_hidden_proto (__fxstatat64)
 
+# if IS_IN (rtld)
+extern __typeof (__fxstatat64) __fxstatat64 attribute_hidden;
+# endif
 
 /* The `stat', `fstat', `lstat' functions have to be handled special since
    even while not compiling the library with optimization calls to these
