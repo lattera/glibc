@@ -1,3 +1,10 @@
+2015-10-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sync_file_range.c
+	(__NR_sync_file_range2): Assume it is always defined.
+	* sysdeps/unix/sysv/linux/mips/mips32/sync_file_range.c
+	(__NR_sync_file_range): Assume it is always defined.
+
 2015-10-22  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/fxstat.c (__fxstat): Use

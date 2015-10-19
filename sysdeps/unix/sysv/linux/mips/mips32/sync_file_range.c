@@ -23,8 +23,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-
-#ifdef __NR_sync_file_range
 int
 sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
 {
@@ -33,12 +31,3 @@ sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
 			 __LONG_LONG_PAIR ((long) (to >> 32), (long) to),
 			 flags);
 }
-#else
-int
-sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-stub_warning (sync_file_range)
-#endif

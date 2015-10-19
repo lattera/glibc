@@ -23,19 +23,8 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-
-#if defined __NR_sync_file_range2
 int
 sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
 {
   return SYSCALL_CANCEL (sync_file_range2, fd, flags, from, to);
 }
-#else
-int
-sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-stub_warning (sync_file_range)
-#endif
