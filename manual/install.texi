@@ -159,9 +159,9 @@ so that they can be invoked directly.
 
 @item --disable-timezone-tools
 By default, timezone related utilities (@command{zic}, @command{zdump},
-and @command{tzselect}) are installed with glibc.  If you are building
+and @command{tzselect}) are installed with @theglibc{}.  If you are building
 these independently (e.g. by using the @samp{tzcode} package), then this
-option will allow disabling the install of these too.
+option will allow disabling the install of these.
 
 Note that you need to make sure the external tools are kept in sync with
 the versions that @theglibc{} expects as the data formats may change over

@@ -1408,8 +1408,7 @@ Optional Features:
   --enable-shared         build shared library [default=yes if GNU ld]
   --enable-profile        build profiled library [default=no]
   --disable-timezone-tools
-                          do not install timezone tools (if using external
-                          ones) [default=install]
+                          do not install timezone tools [default=install]
   --enable-hardcoded-path-in-tests
                           hardcode newly built glibc path in tests
                           [default=no]

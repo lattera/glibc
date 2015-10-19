@@ -129,9 +129,9 @@ will be used, and CFLAGS sets optimization options for the compiler.
 
 '--disable-timezone-tools'
      By default, timezone related utilities ('zic', 'zdump', and
-     'tzselect') are installed with glibc.  If you are building these
-     independently (e.g.  by using the 'tzcode' package), then this
-     option will allow disabling the install of these too.
+     'tzselect') are installed with the GNU C Library.  If you are
+     building these independently (e.g.  by using the 'tzcode' package),
+     then this option will allow disabling the install of these.
 
      Note that you need to make sure the external tools are kept in sync
      with the versions that the GNU C Library expects as the data

@@ -1,3 +1,11 @@
+2015-10-19  Mike Frysinger  <vapier@gentoo.org>
+
+	* configure.ac (AC_ARG_ENABLE(timezone-tools)): Tweak help phrasing.
+	* configure: Regenerate.
+	* INSTALL: Regenerate.
+	* manual/install.texi (--disable-timezone-tools): Use @theglibc{}
+	and tweak grammar.
+
 2015-10-19  Geoffrey Thomas  <geofft@ldpreload.com>
 
 	* login/programs/pt_chown.c: Include signal.h

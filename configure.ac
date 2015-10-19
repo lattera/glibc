@@ -161,7 +161,7 @@ AC_ARG_ENABLE([profile],
 	      [profile=no])
 AC_ARG_ENABLE([timezone-tools],
 	      AC_HELP_STRING([--disable-timezone-tools],
-			     [do not install timezone tools (if using external ones) @<:@default=install@:>@]),
+			     [do not install timezone tools @<:@default=install@:>@]),
 	      [enable_timezone_tools=$enableval],
 	      [enable_timezone_tools=yes])
 AC_SUBST(enable_timezone_tools)
