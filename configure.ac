@@ -1550,50 +1550,6 @@ if test $libc_cv_have_section_quotes = yes; then
   AC_DEFINE(HAVE_SECTION_QUOTES)
 fi
 
-AC_CACHE_CHECK(for assembler .weak directive, libc_cv_asm_weak_directive,
-	       [dnl
-cat > conftest.s <<EOF
-${libc_cv_dot_text}
-.globl foo
-foo:
-.weak foo
-.weak bar; bar = foo
-EOF
-if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
-  libc_cv_asm_weak_directive=yes
-else
-  libc_cv_asm_weak_directive=no
-fi
-rm -f conftest*])
-
-if test $libc_cv_asm_weak_directive = no; then
-  AC_CACHE_CHECK(for assembler .weakext directive,
-		 libc_cv_asm_weakext_directive,
-		 [dnl
-cat > conftest.s <<EOF
-${libc_cv_dot_text}
-.globl foo
-foo:
-.weakext bar foo
-.weakext baz
-.globl baz
-baz:
-EOF
-  if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
-    libc_cv_asm_weakext_directive=yes
-  else
-    libc_cv_asm_weakext_directive=no
-  fi
-  rm -f conftest*])
-
-fi # no .weak
-
-if test $libc_cv_asm_weak_directive = yes; then
-  AC_DEFINE(HAVE_ASM_WEAK_DIRECTIVE)
-elif test $libc_cv_asm_weakext_directive = yes; then
-  AC_DEFINE(HAVE_ASM_WEAKEXT_DIRECTIVE)
-fi
-
 AC_CACHE_CHECK(for ld --no-whole-archive, libc_cv_ld_no_whole_archive, [dnl
 cat > conftest.c <<\EOF
 _start () {}

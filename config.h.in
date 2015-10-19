@@ -18,12 +18,6 @@
 /* Defined if building with SELinux support & libcap libs are detected.  */
 #undef  HAVE_LIBCAP
 
-/* Define if weak symbols are available via the `.weak' directive.  */
-#undef	HAVE_ASM_WEAK_DIRECTIVE
-
-/* Define if weak symbols are available via the `.weakext' directive.  */
-#undef	HAVE_ASM_WEAKEXT_DIRECTIVE
-
 /* Define to the assembler line separator character for multiple
    assembler instructions per line.  Default is `;'  */
 #undef ASM_LINE_SEP
