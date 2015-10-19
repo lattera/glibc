@@ -24,8 +24,7 @@
 
 /* Return the square root of X.  */
 double
-__ieee754_sqrt (x)
-     double x;
+__ieee754_sqrt (double x)
 {
   register double result;
   asm ("fsqrtd %1, %0" : "=f" (result) : "f" (x));

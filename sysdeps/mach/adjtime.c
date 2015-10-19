@@ -24,9 +24,7 @@
    of time adjustment remaining to be done from the last `__adjtime' call.
    This call is restricted to the super-user.  */
 int
-__adjtime (delta, olddelta)
-     const struct timeval *delta;
-     struct timeval *olddelta;
+__adjtime (const struct timeval *delta, struct timeval *olddelta)
 {
   error_t err;
   mach_port_t hostpriv;

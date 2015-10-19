@@ -23,9 +23,7 @@
 #include <hurd.h>
 
 int
-__euidaccess (file, type)
-     const char *file;
-     int type;
+__euidaccess (const char *file, int type)
 {
   error_t err;
   file_t port;

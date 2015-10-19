@@ -26,10 +26,7 @@
 
 /* Remove the link named NAME.  */
 int
-unlinkat (fd, name, flag)
-     int fd;
-     const char *name;
-     int flag;
+unlinkat (int fd, const char *name, int flag)
 {
   error_t err;
   file_t dir;

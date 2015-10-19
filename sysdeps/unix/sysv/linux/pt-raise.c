@@ -23,8 +23,7 @@
 
 
 int
-raise (sig)
-     int sig;
+raise (int sig)
 {
   /* raise is an async-safe function.  It could be called while the
      fork function temporarily invalidated the PID field.  Adjust for

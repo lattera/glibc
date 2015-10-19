@@ -25,9 +25,7 @@
 
 /* Get current value of timer TIMERID and store it in VLAUE.  */
 int
-timer_gettime (timerid, value)
-     timer_t timerid;
-     struct itimerspec *value;
+timer_gettime (timer_t timerid, struct itimerspec *value)
 {
   struct timer_node *timer;
   struct timespec now, expiry;

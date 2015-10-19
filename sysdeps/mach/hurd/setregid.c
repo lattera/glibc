@@ -23,9 +23,7 @@
 #include <string.h>
 
 int
-__setregid (rgid, egid)
-     gid_t rgid;
-     gid_t egid;
+__setregid (gid_t rgid, gid_t egid)
 {
   auth_t newauth;
   error_t err;

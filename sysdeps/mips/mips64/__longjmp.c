@@ -25,9 +25,7 @@
 #endif
 
 void
-__longjmp (env_arg, val_arg)
-     __jmp_buf env_arg;
-     int val_arg;
+__longjmp (__jmp_buf env_arg, int val_arg)
 {
   /* gcc 1.39.19 miscompiled the longjmp routine (as it did setjmp before
      the hack around it); force it to use $a1 for the longjmp value.

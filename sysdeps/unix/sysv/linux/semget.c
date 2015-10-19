@@ -28,10 +28,7 @@
    KEY.  */
 
 int
-semget (key, nsems, semflg)
-     key_t key;
-     int nsems;
-     int semflg;
+semget (key_t key, int nsems, int semflg)
 {
   return INLINE_SYSCALL (ipc, 5, IPCOP_semget, key, nsems, semflg, NULL);
 }

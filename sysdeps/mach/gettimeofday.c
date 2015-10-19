@@ -24,9 +24,7 @@
    putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
    Returns 0 on success, -1 on errors.  */
 int
-__gettimeofday (tv, tz)
-     struct timeval *tv;
-     struct timezone *tz;
+__gettimeofday (struct timeval *tv, struct timezone *tz)
 {
   kern_return_t err;
 

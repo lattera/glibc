@@ -27,8 +27,7 @@
 
 
 int
-remove (file)
-     const char *file;
+remove (const char *file)
 {
   /* First try to unlink since this is more frequently the necessary action. */
   if (__unlink (file) != 0

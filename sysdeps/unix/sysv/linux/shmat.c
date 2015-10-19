@@ -29,10 +29,7 @@
    and where the segment is attached.  */
 
 void *
-shmat (shmid, shmaddr, shmflg)
-     int shmid;
-     const void *shmaddr;
-     int shmflg;
+shmat (int shmid, const void *shmaddr, int shmflg)
 {
   INTERNAL_SYSCALL_DECL(err);
   unsigned long resultvar;

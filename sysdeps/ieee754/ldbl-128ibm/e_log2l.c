@@ -171,8 +171,7 @@ deval (long double x, const long double *p, int n)
 
 
 long double
-__ieee754_log2l (x)
-     long double x;
+__ieee754_log2l (long double x)
 {
   long double z;
   long double y;

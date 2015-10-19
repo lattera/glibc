@@ -22,8 +22,7 @@
 #include <hurd/id.h>
 
 int
-__group_member (gid)
-     gid_t gid;
+__group_member (gid_t gid)
 {
   int member = 0;
   error_t err;

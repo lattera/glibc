@@ -24,10 +24,7 @@
 
 /* Get and/or change the set of blocked signals.  */
 int
-__sigprocmask (how, set, oset)
-     int how;
-     const sigset_t *set;
-     sigset_t *oset;
+__sigprocmask (int how, const sigset_t *set, sigset_t *oset)
 {
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */

@@ -24,9 +24,7 @@
 
 /* Truncate the file referenced by FD to LENGTH bytes.  */
 int
-__ftruncate64 (fd, length)
-     int fd;
-     off64_t length;
+__ftruncate64 (int fd, off64_t length)
 {
   /* On PPC32 64bit values are aligned in odd/even register pairs.  */
   int result = INLINE_SYSCALL (ftruncate64, 4, fd, 0,

@@ -22,8 +22,7 @@
 /* Placeholder for key creation routine from Hurd cthreads library.  */
 int
 weak_function
-cthread_keycreate (key)
-     cthread_key_t *key;
+cthread_keycreate (cthread_key_t *key)
 {
   __set_errno (ENOSYS);
  *key = -1;
@@ -33,9 +32,7 @@ cthread_keycreate (key)
 /* Placeholder for key retrieval routine from Hurd cthreads library.  */
 int
 weak_function
-cthread_getspecific (key, pval)
-     cthread_key_t key;
-     void **pval;
+cthread_getspecific (cthread_key_t key, void **pval)
 {
   *pval = NULL;
   __set_errno (ENOSYS);
@@ -45,9 +42,7 @@ cthread_getspecific (key, pval)
 /* Placeholder for key setting routine from Hurd cthreads library.  */
 int
 weak_function
-cthread_setspecific (key, val)
-     cthread_key_t key;
-     void *val;
+cthread_setspecific (cthread_key_t key, void *val)
 {
   __set_errno (ENOSYS);
   return -1;
@@ -56,8 +51,7 @@ cthread_setspecific (key, val)
 /* Call cthread_getspecific which gets a pointer to the return value instead
    of just returning it.  */
 void *
-__libc_getspecific (key)
-     cthread_key_t key;
+__libc_getspecific (cthread_key_t key)
 {
   void *val;
   cthread_getspecific (key, &val);

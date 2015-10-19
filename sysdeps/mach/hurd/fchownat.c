@@ -26,12 +26,7 @@
 
 /* Change the owner and group of FILE.  */
 int
-fchownat (fd, file, owner, group, flag)
-     int fd;
-     const char *file;
-     uid_t owner;
-     gid_t group;
-     int flag;
+fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
 {
   error_t err;
   file_t port = __file_name_lookup_at (fd, flag, file, 0, 0);

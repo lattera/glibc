@@ -24,9 +24,7 @@
 
 /* Flush pending data on FD.  */
 int
-tcflush (fd, queue_selector)
-     int fd;
-     int queue_selector;
+tcflush (int fd, int queue_selector)
 {
   int arg;
 

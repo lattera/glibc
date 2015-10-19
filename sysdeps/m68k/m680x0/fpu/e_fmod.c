@@ -28,9 +28,7 @@
 #endif
 
 float_type
-FUNC (x, y)
-     float_type x;
-     float_type y;
+FUNC (float_type x, float_type y)
 {
   return __m81_u(FUNC)(x, y);
 }

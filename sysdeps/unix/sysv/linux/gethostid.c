@@ -26,8 +26,7 @@
 
 #ifdef SET_PROCEDURE
 int
-sethostid (id)
-     long int id;
+sethostid (long int id)
 {
   int fd;
   ssize_t written;

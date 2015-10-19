@@ -22,8 +22,7 @@
 #undef dirfd
 
 int
-dirfd (dirp)
-     DIR *dirp;
+dirfd (DIR *dirp)
 {
   return dirp->fd;
 }

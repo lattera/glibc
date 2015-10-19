@@ -26,10 +26,7 @@
 
 
 int
-pthread_sigqueue (threadid, signo, value)
-     pthread_t threadid;
-     int signo;
-     const union sigval value;
+pthread_sigqueue (pthread_t threadid, int signo, const union sigval value)
 {
 #ifdef __NR_rt_tgsigqueueinfo
   struct pthread *pd = (struct pthread *) threadid;

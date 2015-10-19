@@ -30,9 +30,7 @@
 
 /* Put the state of FD into *TERMIOS_P.  */
 int
-__tcgetattr (fd, termios_p)
-      int fd;
-      struct termios *termios_p;
+__tcgetattr (int fd, struct termios *termios_p)
 {
   struct __kernel_termios k_termios;
   int retval;

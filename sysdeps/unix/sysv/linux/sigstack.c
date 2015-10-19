@@ -24,9 +24,7 @@
 
 #ifdef __NR_sigaltstack
 int
-sigstack (ss, oss)
-     struct sigstack *ss;
-     struct sigstack *oss;
+sigstack (struct sigstack *ss, struct sigstack *oss)
 {
   stack_t sas;
   stack_t *sasp = NULL;

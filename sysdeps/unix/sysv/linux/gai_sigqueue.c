@@ -30,10 +30,8 @@
 
 /* Return any pending signal or wait for one for the given time.  */
 int
-__gai_sigqueue (sig, val, caller_pid)
-     int sig;
-     const union sigval val;
-     pid_t caller_pid;
+internal_function
+__gai_sigqueue (int sig, const union sigval val, pid_t caller_pid)
 {
   siginfo_t info;
 

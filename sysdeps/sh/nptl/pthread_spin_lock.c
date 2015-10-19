@@ -18,8 +18,7 @@
 #include "pthreadP.h"
 
 int
-pthread_spin_lock (lock)
-     pthread_spinlock_t *lock;
+pthread_spin_lock (pthread_spinlock_t *lock)
 {
   unsigned int val;
 

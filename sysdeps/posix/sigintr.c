@@ -23,9 +23,7 @@
    (causing them to fail with EINTR); if INTERRUPT is zero, make system
    calls be restarted after signal SIG.  */
 int
-siginterrupt (sig, interrupt)
-     int sig;
-     int interrupt;
+siginterrupt (int sig, int interrupt)
 {
 #ifdef	SA_RESTART
   extern sigset_t _sigintr attribute_hidden;	/* Defined in signal.c.  */

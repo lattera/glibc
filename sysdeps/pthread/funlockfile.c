@@ -23,8 +23,7 @@
 
 
 void
-__funlockfile (stream)
-     FILE *stream;
+__funlockfile (FILE *stream)
 {
   _IO_lock_unlock (*stream->_lock);
 }

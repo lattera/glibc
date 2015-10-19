@@ -87,9 +87,7 @@ backtrace_helper (struct _Unwind_Context *ctx, void *a)
 }
 
 int
-__backtrace (array, size)
-     void **array;
-     int size;
+__backtrace (void **array, int size)
 {
   struct trace_arg arg = { .array = array, .size = size, .cnt = -1 };
 

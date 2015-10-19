@@ -24,8 +24,7 @@
 /* Change the current directory to FD.  */
 
 int
-__fchdir (fd)
-     int fd;
+__fchdir (int fd)
 {
   return _hurd_change_directory_port_from_fd (&_hurd_ports[INIT_PORT_CWDIR],
 					      fd);

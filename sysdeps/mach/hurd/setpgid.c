@@ -24,9 +24,7 @@
    If PID is zero, the current process's process group ID is set.
    If PGID is zero, the process ID of the process is used.  */
 int
-__setpgid (pid, pgid)
-     pid_t pid;
-     pid_t pgid;
+__setpgid (pid_t pid, pid_t pgid)
 {
   error_t err;
   unsigned int stamp;

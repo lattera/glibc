@@ -28,10 +28,7 @@
    which is associated with KEY.  */
 
 int
-shmget (key, size, shmflg)
-     key_t key;
-     size_t size;
-     int shmflg;
+shmget (key_t key, size_t size, int shmflg)
 {
   return INLINE_SYSCALL (ipc, 5, IPCOP_shmget, key, size, shmflg, NULL);
 }

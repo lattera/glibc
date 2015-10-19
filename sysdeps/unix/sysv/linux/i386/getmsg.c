@@ -24,11 +24,7 @@
 
 #ifdef __NR_getpmsg
 int
-getmsg (fildes, ctlptr, dataptr, flagsp)
-     int fildes;
-     struct strbuf *ctlptr;
-     struct strbuf *dataptr;
-     int *flagsp;
+getmsg (int fildes, struct strbuf *ctlptr, struct strbuf *dataptr, int *flagsp)
 {
   return INLINE_SYSCALL (getpmsg, 5, fildes, ctlptr, dataptr, NULL, flagsp);
 }

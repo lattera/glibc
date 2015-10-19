@@ -20,9 +20,7 @@
 
 /* Set the terminal parameters associated with FD to *PARAMS.  */
 int
-stty (fd, params)
-     int fd;
-     const struct sgttyb *params;
+stty (int fd, const struct sgttyb *params)
 {
   return ioctl (fd, TIOCSETP, (void *) params);
 }

@@ -22,9 +22,7 @@
 
 /* Make a link to FROM called TO.  */
 int
-__link (from, to)
-     const char *from;
-     const char *to;
+__link (const char *from, const char *to)
 {
   error_t err;
   file_t oldfile, linknode, todir;

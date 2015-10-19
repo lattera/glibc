@@ -29,9 +29,7 @@
    Returns 0 on success, -1 for errors.  */
 /* XXX should be __shutdown ? */
 int
-shutdown (fd, how)
-     int fd;
-     int how;
+shutdown (int fd, int how)
 {
   error_t err = HURD_DPORT_USE (fd, __socket_shutdown (port, how));
   if (err)

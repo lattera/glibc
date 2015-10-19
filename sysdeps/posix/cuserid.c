@@ -25,8 +25,7 @@
    If S is not NULL, it points to a buffer of at least L_cuserid bytes
    into which the name is copied; otherwise, a static buffer is used.  */
 char *
-cuserid (s)
-     char *s;
+cuserid (char *s)
 {
   static char name[L_cuserid];
   char buf[NSS_BUFLEN_PASSWD];

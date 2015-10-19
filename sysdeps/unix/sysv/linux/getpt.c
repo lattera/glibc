@@ -35,8 +35,7 @@ int __bsd_getpt (void);
 
 /* Open a master pseudo terminal and return its file descriptor.  */
 int
-__posix_openpt (oflag)
-     int oflag;
+__posix_openpt (int oflag)
 {
   static int have_no_dev_ptmx;
   int fd;

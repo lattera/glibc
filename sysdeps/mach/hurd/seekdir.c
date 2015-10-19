@@ -24,9 +24,7 @@
 /* Seek to position POS in DIRP.  */
 /* XXX should be __seekdir ? */
 void
-seekdir (dirp, pos)
-     DIR *dirp;
-     long int pos;
+seekdir (DIR *dirp, long int pos)
 {
   __libc_lock_lock (dirp->__lock);
   /* Change our entry index pointer to POS and discard any data already

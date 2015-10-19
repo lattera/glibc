@@ -22,11 +22,7 @@
 
 /* Rename the file OLD relative to OLDFD to NEW relative to NEWFD.  */
 int
-renameat (oldfd, old, newfd, new)
-     int oldfd;
-     const char *old;
-     int newfd;
-     const char *new;
+renameat (int oldfd, const char *old, int newfd, const char *new)
 {
   error_t err;
   file_t olddir, newdir;

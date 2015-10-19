@@ -25,9 +25,7 @@
 # include <internaltypes.h>
 # include <shlib-compat.h>
 int
-__pthread_cond_wait (cond, mutex)
-     pthread_cond_t *cond;
-     pthread_mutex_t *mutex;
+__pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
   cond_compat_check_and_clear (cond);
   return __pthread_cond_wait_internal (cond, mutex);

@@ -22,10 +22,7 @@
 
 /* Change the owner and group of FILE.  */
 int
-__chown (file, owner, group)
-     const char *file;
-     uid_t owner;
-     gid_t group;
+__chown (const char *file, uid_t owner, gid_t group)
 {
   error_t err;
   file_t port = __file_name_lookup (file, 0, 0);

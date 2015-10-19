@@ -26,10 +26,7 @@
 #ifdef __NR_rt_sigqueueinfo
 /* Return any pending signal or wait for one for the given time.  */
 int
-__sigqueue (pid, sig, val)
-     pid_t pid;
-     int sig;
-     const union sigval val;
+__sigqueue (pid_t pid, int sig, const union sigval val)
 {
   siginfo_t info;
 

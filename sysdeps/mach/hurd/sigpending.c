@@ -24,8 +24,7 @@
 /* Store in SET all signals that are blocked and pending.  */
 /* XXX should be __sigpending ? */
 int
-sigpending (set)
-     sigset_t *set;
+sigpending (sigset_t *set)
 {
   struct hurd_sigstate *ss;
   sigset_t pending;

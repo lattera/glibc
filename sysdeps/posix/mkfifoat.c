@@ -21,10 +21,7 @@
 /* Create a new FIFO with permission bits MODE.  But interpret
    relative PATH names relative to the directory associated with FD.  */
 int
-mkfifoat (fd, file, mode)
-     int fd;
-     const char *file;
-     mode_t mode;
+mkfifoat (int fd, const char *file, mode_t mode)
 {
   dev_t dev = 0;
   return __xmknodat (_MKNOD_VER, fd, file, mode | S_IFIFO, &dev);

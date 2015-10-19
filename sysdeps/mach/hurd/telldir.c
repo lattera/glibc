@@ -25,8 +25,7 @@
 /* Return the current position of DIRP.  */
 /* XXX should be __telldir ? */
 long int
-telldir (dirp)
-     DIR *dirp;
+telldir (DIR *dirp)
 {
   return dirp->__entry_ptr;
 }

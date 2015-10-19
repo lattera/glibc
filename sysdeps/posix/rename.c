@@ -21,9 +21,7 @@
 
 /* Rename the file OLD to NEW.  */
 int
-rename (old, new)
-     const char *old;
-     const char *new;
+rename (const char *old, const char *new)
 {
   int save = errno;
   if (__link (old, new) < 0)

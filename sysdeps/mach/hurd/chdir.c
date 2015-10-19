@@ -22,8 +22,7 @@
 
 /* Change the current directory to FILE_NAME.  */
 int
-__chdir (file_name)
-     const char *file_name;
+__chdir (const char *file_name)
 {
   return _hurd_change_directory_port_from_name (&_hurd_ports[INIT_PORT_CWDIR],
 						file_name);

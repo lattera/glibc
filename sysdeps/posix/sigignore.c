@@ -25,8 +25,7 @@
 
 
 int
-sigignore (sig)
-     int sig;
+sigignore (int sig)
 {
   struct sigaction act;
 

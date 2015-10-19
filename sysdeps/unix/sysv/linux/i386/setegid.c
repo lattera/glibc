@@ -21,8 +21,7 @@
 
 
 int
-setegid (gid)
-     gid_t gid;
+setegid (gid_t gid)
 {
   int result;
 

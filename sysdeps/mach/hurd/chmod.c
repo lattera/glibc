@@ -22,9 +22,7 @@
 
 /* Change the protections of FILE to MODE.  */
 int
-__chmod (file, mode)
-     const char *file;
-     mode_t mode;
+__chmod (const char *file, mode_t mode)
 {
   error_t err;
   file_t port = __file_name_lookup (file, 0, 0);

@@ -26,8 +26,7 @@
 #if	defined (__GNUC__) && defined (__mc68020__)
 
 int
-__ffs (x)
-     int x;
+__ffs (int x)
 {
   int cnt;
 

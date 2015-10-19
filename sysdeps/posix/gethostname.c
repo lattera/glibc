@@ -24,9 +24,7 @@
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
 int
-__gethostname (name, len)
-     char *name;
-     size_t len;
+__gethostname (char *name, size_t len)
 {
   struct utsname buf;
   size_t node_len;

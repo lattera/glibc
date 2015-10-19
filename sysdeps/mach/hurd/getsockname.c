@@ -24,10 +24,7 @@
 
 /* Put the local address of FD into *ADDR and its length in *LEN.  */
 int
-__getsockname (fd, addrarg, len)
-     int fd;
-     __SOCKADDR_ARG addrarg;
-     socklen_t *len;
+__getsockname (int fd, __SOCKADDR_ARG addrarg, socklen_t *len)
 {
   error_t err;
   struct sockaddr *addr = addrarg.__sockaddr__;

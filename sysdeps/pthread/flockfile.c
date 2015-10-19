@@ -23,8 +23,7 @@
 
 
 void
-__flockfile (stream)
-     FILE *stream;
+__flockfile (FILE *stream)
 {
   _IO_lock_lock (*stream->_lock);
 }

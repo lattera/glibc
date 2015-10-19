@@ -36,8 +36,7 @@ hidden_proto (__isnanf)
 
 
 int
-__isnan (x)
-     double x;
+__isnan (double x)
 {
   fenv_t savedstate;
   int result;

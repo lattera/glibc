@@ -26,11 +26,7 @@
    Returns the number read or -1 for errors.  */
 
 ssize_t
-__recv (fd, buf, n, flags)
-     int fd;
-     void *buf;
-     size_t n;
-     int flags;
+__recv (int fd, void *buf, size_t n, int flags)
 {
   error_t err;
   mach_port_t addrport;

@@ -22,8 +22,7 @@
 #include <sparc-nptl.h>
 
 int
-pthread_barrier_destroy (barrier)
-     pthread_barrier_t *barrier;
+pthread_barrier_destroy (pthread_barrier_t *barrier)
 {
   union sparc_pthread_barrier *ibarrier;
   int result = EBUSY;

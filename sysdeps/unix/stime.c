@@ -23,8 +23,7 @@
 /* Set the system clock to *WHEN.  */
 
 int
-stime (when)
-     const time_t *when;
+stime (const time_t *when)
 {
   struct timeval tv;
 

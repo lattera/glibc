@@ -22,8 +22,7 @@
 
 /* Remove the directory FILE_NAME.  */
 int
-__rmdir (file_name)
-     const char *file_name;
+__rmdir (const char *file_name)
 {
   error_t err;
   const char *name;

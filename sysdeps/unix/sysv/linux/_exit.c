@@ -23,8 +23,7 @@
 
 
 void
-_exit (status)
-     int status;
+_exit (int status)
 {
   while (1)
     {

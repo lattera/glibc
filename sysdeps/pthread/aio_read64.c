@@ -23,8 +23,7 @@
 
 
 int
-aio_read64 (aiocbp)
-     struct aiocb64 *aiocbp;
+aio_read64 (struct aiocb64 *aiocbp)
 {
   return (__aio_enqueue_request ((aiocb_union *) aiocbp, LIO_READ64) == NULL
 	  ? -1 : 0);

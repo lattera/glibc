@@ -23,9 +23,7 @@
    If PGRP is zero, send SIG to all processes in
    the current process's process group.  */
 int
-killpg (pgrp, sig)
-     __pid_t pgrp;
-     int sig;
+killpg (__pid_t pgrp, int sig)
 {
   if (pgrp < 0)
     {

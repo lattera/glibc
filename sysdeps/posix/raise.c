@@ -20,8 +20,7 @@
 
 /* Raise the signal SIG.  */
 int
-raise (sig)
-     int sig;
+raise (int sig)
 {
   return __kill (__getpid (), sig);
 }

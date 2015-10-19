@@ -25,8 +25,7 @@
 # include <internaltypes.h>
 # include <shlib-compat.h>
 int
-__pthread_cond_signal (cond)
-     pthread_cond_t *cond;
+__pthread_cond_signal (pthread_cond_t *cond)
 {
   cond_compat_check_and_clear (cond);
   return __pthread_cond_signal_internal (cond);

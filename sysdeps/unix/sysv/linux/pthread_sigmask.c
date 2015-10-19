@@ -23,10 +23,7 @@
 
 
 int
-pthread_sigmask (how, newmask, oldmask)
-     int how;
-     const sigset_t *newmask;
-     sigset_t *oldmask;
+pthread_sigmask (int how, const sigset_t *newmask, sigset_t *oldmask)
 {
   sigset_t local_newmask;
 

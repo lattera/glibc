@@ -23,8 +23,7 @@
 
 
 int
-aio_read (aiocbp)
-     struct aiocb *aiocbp;
+aio_read (struct aiocb *aiocbp)
 {
   return (__aio_enqueue_request ((aiocb_union *) aiocbp, LIO_READ) == NULL
 	  ? -1 : 0);

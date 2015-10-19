@@ -101,10 +101,7 @@ getttyname_r (fd, buf, buflen, mydev, myino, save, dostat)
 /* Store at most BUFLEN character of the pathname of the terminal FD is
    open on in BUF.  Return 0 on success,  otherwise an error number.  */
 int
-__ttyname_r (fd, buf, buflen)
-     int fd;
-     char *buf;
-     size_t buflen;
+__ttyname_r (int fd, char *buf, size_t buflen)
 {
   struct stat st;
   int dostat = 0;

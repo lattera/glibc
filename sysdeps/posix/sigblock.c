@@ -22,8 +22,7 @@
 
 /* Block signals in MASK, returning the old mask.  */
 int
-__sigblock (mask)
-     int mask;
+__sigblock (int mask)
 {
   sigset_t set, oset;
 

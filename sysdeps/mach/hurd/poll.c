@@ -28,10 +28,7 @@
    or -1 for errors.  */
 
 int
-__poll (fds, nfds, timeout)
-     struct pollfd *fds;
-     nfds_t nfds;
-     int timeout;
+__poll (struct pollfd *fds, nfds_t nfds, int timeout)
 {
   struct timespec ts, *to;
 

@@ -25,10 +25,7 @@
    according to HOW, which may be SIG_BLOCK, SIG_UNBLOCK or SIG_SETMASK.
    If OSET is not NULL, store the old set of blocked signals in *OSET.  */
 int
-__sigprocmask (how, set, oset)
-     int how;
-     const sigset_t *set;
-     sigset_t *oset;
+__sigprocmask (int how, const sigset_t *set, sigset_t *oset)
 {
   struct hurd_sigstate *ss;
   sigset_t old, new;

@@ -25,10 +25,7 @@
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
 ssize_t
-__readlink (file_name, buf, len)
-     const char *file_name;
-     char *buf;
-     size_t len;
+__readlink (const char *file_name, char *buf, size_t len)
 {
   error_t err;
   file_t file;

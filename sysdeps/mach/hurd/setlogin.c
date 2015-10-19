@@ -21,8 +21,7 @@
 
 /* Set the login name returned by `getlogin'.  */
 int
-setlogin (name)
-     const char *name;
+setlogin (const char *name)
 {
   error_t err;
   if (err = __USEPORT (PROC, __proc_setlogin (port, name)))

@@ -25,8 +25,7 @@
 
 /* Get expiration overrun for timer TIMERID.  */
 int
-timer_getoverrun (timerid)
-     timer_t timerid;
+timer_getoverrun (timer_t timerid)
 {
   struct timer_node *timer;
   int retval = -1;

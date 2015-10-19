@@ -24,9 +24,7 @@
 
 /* Test for access to FILE by our real user and group IDs.  */
 int
-__access (file, type)
-     const char *file;
-     int type;
+__access (const char *file, int type)
 {
   error_t err;
   file_t rcrdir, rcwdir, io;

@@ -27,8 +27,7 @@
    from the caller's data segment.  */
 
 int
-shmdt (shmaddr)
-     const void *shmaddr;
+shmdt (const void *shmaddr)
 {
   return INLINE_SYSCALL (ipc, 5, IPCOP_shmdt, 0, 0, 0, (void *) shmaddr);
 }

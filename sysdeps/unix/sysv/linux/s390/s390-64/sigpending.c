@@ -28,8 +28,7 @@
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
 int
-sigpending (set)
-     sigset_t *set;
+sigpending (sigset_t *set)
 {
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */

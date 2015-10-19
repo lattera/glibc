@@ -20,8 +20,7 @@
 #include "pthreadP.h"
 
 int
-pthread_spin_trylock (lock)
-     pthread_spinlock_t *lock;
+pthread_spin_trylock (pthread_spinlock_t *lock)
 {
   int old;
 

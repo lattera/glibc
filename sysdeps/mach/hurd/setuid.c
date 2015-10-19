@@ -27,8 +27,7 @@
    and effective user IDs, and the saved set-user-ID to UID;
    if not, the effective user ID is set to UID.  */
 int
-__setuid (uid)
-     uid_t uid;
+__setuid (uid_t uid)
 {
   auth_t newauth;
   error_t err;

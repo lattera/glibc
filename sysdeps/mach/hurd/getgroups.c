@@ -22,9 +22,7 @@
 #include <string.h>
 
 int
-__getgroups (n, gidset)
-     int n;
-     gid_t *gidset;
+__getgroups (int n, gid_t *gidset)
 {
   error_t err;
   int ngids;

@@ -34,8 +34,7 @@
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
 speed_t
-cfgetospeed (termios_p)
-     const struct termios *termios_p;
+cfgetospeed (const struct termios *termios_p)
 {
   return termios_p->c_cflag & (CBAUD | CBAUDEX);
 }
@@ -45,8 +44,7 @@ cfgetospeed (termios_p)
    speed, the numerical 0 is a special case for the input baud rate. It
    should set the input baud rate to the output baud rate. */
 speed_t
-cfgetispeed (termios_p)
-     const struct termios *termios_p;
+cfgetispeed (const struct termios *termios_p)
 {
   return ((termios_p->c_iflag & IBAUD0)
 	  ? 0 : termios_p->c_cflag & (CBAUD | CBAUDEX));
@@ -54,9 +52,7 @@ cfgetispeed (termios_p)
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
 int
-cfsetospeed  (termios_p, speed)
-     struct termios *termios_p;
-     speed_t speed;
+cfsetospeed (struct termios *termios_p, speed_t speed)
 {
   if ((speed & ~CBAUD) != 0
       && (speed < B57600 || speed > __MAX_BAUD))
@@ -78,9 +74,7 @@ libc_hidden_def (cfsetospeed)
    speed, the numerical 0 is a special case for the input baud rate.  It
    should set the input baud rate to the output baud rate.  */
 int
-cfsetispeed (termios_p, speed)
-     struct termios *termios_p;
-     speed_t speed;
+cfsetispeed (struct termios *termios_p, speed_t speed)
 {
   if ((speed & ~CBAUD) != 0
       && (speed < B57600 || speed > __MAX_BAUD))

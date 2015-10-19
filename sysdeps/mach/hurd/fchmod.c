@@ -23,9 +23,7 @@
 
 /* Change the permissions of the file referenced by FD to MODE.  */
 int
-__fchmod (fd, mode)
-     int fd;
-     mode_t mode;
+__fchmod (int fd, mode_t mode)
 {
   error_t err;
 

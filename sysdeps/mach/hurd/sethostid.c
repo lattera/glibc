@@ -25,8 +25,7 @@
 /* XXX should be __sethostid?
        isn't hostid supposed to be hardwired and unchangeable? */
 int
-sethostid (id)
-     long int id;
+sethostid (long int id)
 {
   char buf[8], *bp;
   ssize_t n;

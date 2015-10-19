@@ -25,9 +25,7 @@
 # include <internaltypes.h>
 # include <shlib-compat.h>
 int
-__pthread_cond_init (cond, cond_attr)
-     pthread_cond_t *cond;
-     const pthread_condattr_t *cond_attr;
+__pthread_cond_init (pthread_cond_t *cond, const pthread_condattr_t *cond_attr)
 {
   cond_compat_clear (cond);
   return __pthread_cond_init_internal (cond, cond_attr);

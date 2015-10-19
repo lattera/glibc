@@ -178,8 +178,7 @@ __libc_message (int do_abort, const char *fmt, ...)
 
 
 void
-__libc_fatal (message)
-     const char *message;
+__libc_fatal (const char *message)
 {
   /* The loop is added only to keep gcc happy.  */
   while (1)

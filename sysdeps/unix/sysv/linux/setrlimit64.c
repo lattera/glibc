@@ -25,9 +25,7 @@
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
 int
-setrlimit64 (resource, rlimits)
-     enum __rlimit_resource resource;
-     const struct rlimit64 *rlimits;
+setrlimit64 (enum __rlimit_resource resource, const struct rlimit64 *rlimits)
 {
 #ifdef __ASSUME_PRLIMIT64
   return INLINE_SYSCALL (prlimit64, 4, 0, resource, rlimits, NULL);

@@ -23,8 +23,7 @@
 
 /* Rewind DIRP to the beginning of the directory.  */
 void
-__rewinddir (dirp)
-     DIR *dirp;
+__rewinddir (DIR *dirp)
 {
 #if IS_IN (libc)
   __libc_lock_lock (dirp->lock);

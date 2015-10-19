@@ -23,9 +23,7 @@
 
 /* Truncate FILE_NAME to LENGTH bytes.  */
 int
-__truncate (file_name, length)
-     const char *file_name;
-     off_t length;
+__truncate (const char *file_name, off_t length)
 {
   error_t err;
   file_t file = __file_name_lookup (file_name, O_WRITE, 0);

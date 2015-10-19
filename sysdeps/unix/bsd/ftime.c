@@ -19,8 +19,7 @@
 #include <sys/time.h>
 
 int
-ftime (timebuf)
-     struct timeb *timebuf;
+ftime (struct timeb *timebuf)
 {
   struct timeval tv;
   struct timezone tz;

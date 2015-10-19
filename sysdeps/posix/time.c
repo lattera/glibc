@@ -23,8 +23,7 @@
 /* Return the current time as a `time_t' and also put it in *T if T is
    not NULL.  Time is represented as seconds from Jan 1 00:00:00 1970.  */
 time_t
-time (t)
-     time_t *t;
+time (time_t *t)
 {
   struct timeval tv;
   time_t result;

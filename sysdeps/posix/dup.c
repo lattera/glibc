@@ -22,8 +22,7 @@
 
 /* Duplicate FD, returning a new file descriptor open on the same file.  */
 int
-__dup (fd)
-     int fd;
+__dup (int fd)
 {
   return fcntl (fd, F_DUPFD, 0);
 }

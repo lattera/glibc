@@ -26,9 +26,7 @@
 /* Set the access and modification times of FILE to those given in TIMES.
    If TIMES is NULL, set them to the current time.  */
 int
-utime (file, times)
-     const char *file;
-     const struct utimbuf *times;
+utime (const char *file, const struct utimbuf *times)
 {
   struct timeval timevals[2];
   struct timeval *tvp;

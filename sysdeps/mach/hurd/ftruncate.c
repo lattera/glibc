@@ -23,9 +23,7 @@
 
 /* Truncate the file referenced by FD to LENGTH bytes.  */
 int
-__ftruncate (fd, length)
-     int fd;
-     __off_t length;
+__ftruncate (int fd, __off_t length)
 {
   error_t err;
   if (err = HURD_DPORT_USE (fd, __file_set_size (port, length)))

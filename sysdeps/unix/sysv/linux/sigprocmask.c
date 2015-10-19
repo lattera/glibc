@@ -28,10 +28,7 @@
 
 /* Get and/or change the set of blocked signals.  */
 int
-__sigprocmask (how, set, oset)
-     int how;
-     const sigset_t *set;
-     sigset_t *oset;
+__sigprocmask (int how, const sigset_t *set, sigset_t *oset)
 {
 #ifdef SIGCANCEL
   sigset_t local_newmask;

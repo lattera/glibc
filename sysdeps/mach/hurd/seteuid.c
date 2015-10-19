@@ -24,8 +24,7 @@
 
 /* Set the effective user ID of the calling process to UID.  */
 int
-seteuid (uid)
-     uid_t uid;
+seteuid (uid_t uid)
 {
   auth_t newauth;
   error_t err;

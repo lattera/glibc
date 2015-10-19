@@ -25,11 +25,7 @@
 #include <hurd/fd.h>
 
 int
-fchmodat (fd, file, mode, flag)
-     int fd;
-     const char *file;
-     mode_t mode;
-     int flag;
+fchmodat (int fd, const char *file, mode_t mode, int flag)
 {
   error_t err;
   file_t port = __file_name_lookup_at (fd, flag, file, 0, 0);

@@ -22,9 +22,7 @@
    This call is restricted to the super-user.  */
 /* XXX should be __sethostname ? */
 int
-sethostname (name, len)
-     const char *name;
-     size_t len;
+sethostname (const char *name, size_t len)
 {
   /* The host name is just the contents of the file /etc/hostname.  */
   ssize_t n = _hurd_set_host_config ("/etc/hostname", name, len);

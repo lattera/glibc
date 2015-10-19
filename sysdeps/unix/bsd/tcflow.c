@@ -24,9 +24,7 @@
 
 /* Suspend or restart transmission on FD.  */
 int
-tcflow (fd, action)
-     int fd;
-     int action;
+tcflow (int fd, int action)
 {
   switch (action)
     {

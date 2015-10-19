@@ -24,8 +24,7 @@
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
 int
-__sigsuspend (set)
-     const sigset_t *set;
+__sigsuspend (const sigset_t *set)
 {
   sigset_t oset;
   int save;

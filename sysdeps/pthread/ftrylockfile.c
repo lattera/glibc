@@ -23,8 +23,7 @@
 
 
 int
-__ftrylockfile (stream)
-     FILE *stream;
+__ftrylockfile (FILE *stream)
 {
   return _IO_lock_trylock (*stream->_lock);
 }

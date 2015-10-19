@@ -26,8 +26,7 @@
 #ifdef	__GNUC__
 
 int
-__ffs (x)
-     int x;
+__ffs (int x)
 {
   int cnt;
   int tmp;

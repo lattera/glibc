@@ -22,8 +22,7 @@
 
 /* Return 1 if FD is a terminal, 0 if not.  */
 int
-__isatty (fd)
-     int fd;
+__isatty (int fd)
 {
   error_t err;
   mach_port_t id;

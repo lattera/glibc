@@ -27,9 +27,7 @@
 /* Apply or remove an advisory lock, according to OPERATION,
    on the file FD refers to.  */
 int
-__flock (fd, operation)
-     int fd;
-     int operation;
+__flock (int fd, int operation)
 {
   struct flock lbuf;
 

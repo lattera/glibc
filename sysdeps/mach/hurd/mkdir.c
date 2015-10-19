@@ -23,9 +23,7 @@
 
 /* Create a directory named FILE_NAME with protections MODE.  */
 int
-__mkdir (file_name, mode)
-     const char *file_name;
-     mode_t mode;
+__mkdir (const char *file_name, mode_t mode)
 {
   error_t err;
   const char *name;

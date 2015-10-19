@@ -28,10 +28,7 @@
 
 
 int
-pthread_getname_np (th, buf, len)
-     pthread_t th;
-     char *buf;
-     size_t len;
+pthread_getname_np (pthread_t th, char *buf, size_t len)
 {
   const struct pthread *pd = (const struct pthread *) th;
 

@@ -28,11 +28,7 @@
 
 
 int
-faccessat (fd, file, mode, flag)
-     int fd;
-     const char *file;
-     int mode;
-     int flag;
+faccessat (int fd, const char *file, int mode, int flag)
 {
   if (flag & ~(AT_SYMLINK_NOFOLLOW | AT_EACCESS))
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);

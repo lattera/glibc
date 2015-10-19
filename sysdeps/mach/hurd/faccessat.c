@@ -25,11 +25,7 @@
 #include <hurd/fd.h>
 
 int
-faccessat (fd, file, type, flag)
-     int fd;
-     const char *file;
-     int type;
-     int flag;
+faccessat (int fd, const char *file, int type, int flag)
 {
   error_t err;
   file_t port;

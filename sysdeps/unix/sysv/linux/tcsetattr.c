@@ -41,10 +41,7 @@
 
 /* Set the state of FD to *TERMIOS_P.  */
 int
-tcsetattr (fd, optional_actions, termios_p)
-     int fd;
-     int optional_actions;
-     const struct termios *termios_p;
+tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
 {
   struct __kernel_termios k_termios;
   unsigned long int cmd;

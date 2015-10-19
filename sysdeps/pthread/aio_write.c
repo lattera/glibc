@@ -23,8 +23,7 @@
 
 
 int
-aio_write (aiocbp)
-     struct aiocb *aiocbp;
+aio_write (struct aiocb *aiocbp)
 {
   return (__aio_enqueue_request ((aiocb_union *) aiocbp, LIO_WRITE) == NULL
 	  ? -1 : 0);

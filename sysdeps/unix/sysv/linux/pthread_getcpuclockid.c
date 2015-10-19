@@ -24,9 +24,7 @@
 
 
 int
-pthread_getcpuclockid (threadid, clockid)
-     pthread_t threadid;
-     clockid_t *clockid;
+pthread_getcpuclockid (pthread_t threadid, clockid_t *clockid)
 {
   struct pthread *pd = (struct pthread *) threadid;
 

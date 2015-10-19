@@ -22,8 +22,7 @@
 
 /* Get the process group ID of process PID.  */
 int
-__getpgid (pid)
-     pid_t pid;
+__getpgid (pid_t pid)
 {
   error_t err;
   pid_t pgrp;

@@ -23,11 +23,7 @@
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 ssize_t
-__send (fd, buf, n, flags)
-     int fd;
-     const void *buf;
-     size_t n;
-     int flags;
+__send (int fd, const void *buf, size_t n, int flags)
 {
   error_t err;
   size_t wrote;

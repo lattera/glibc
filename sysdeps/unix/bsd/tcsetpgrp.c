@@ -22,9 +22,7 @@
 
 /* Set the foreground process group ID of FD set PGRP_ID.  */
 int
-tcsetpgrp (fd, pgrp_id)
-     int fd;
-     pid_t pgrp_id;
+tcsetpgrp (int fd, pid_t pgrp_id)
 {
   return __ioctl (fd, TIOCSPGRP, &pgrp_id);
 }

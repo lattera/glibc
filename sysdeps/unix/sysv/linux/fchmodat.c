@@ -27,11 +27,7 @@
 #include <sysdep.h>
 
 int
-fchmodat (fd, file, mode, flag)
-     int fd;
-     const char *file;
-     mode_t mode;
-     int flag;
+fchmodat (int fd, const char *file, mode_t mode, int flag)
 {
   if (flag & ~AT_SYMLINK_NOFOLLOW)
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);

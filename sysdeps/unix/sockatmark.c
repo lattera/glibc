@@ -20,8 +20,7 @@
 
 /* Determine wheter socket is at a out-of-band mark.  */
 int
-sockatmark (fd)
-     int fd;
+sockatmark (int fd)
 {
   int answ;
 

@@ -26,9 +26,7 @@ sigset_t _sigintr attribute_hidden;		/* Set by siginterrupt.  */
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */
 __sighandler_t
-__bsd_signal (sig, handler)
-     int sig;
-     __sighandler_t handler;
+__bsd_signal (int sig, __sighandler_t handler)
 {
   struct sigaction act, oact;
 

@@ -29,8 +29,7 @@
    differs in spirit from the above ffz (man ffs).  */
 
 int
-__ffs (x)
-     int x;
+__ffs (int x)
 {
 	int r;
 

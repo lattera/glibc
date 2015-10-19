@@ -61,10 +61,7 @@ versioned_symbol (libpthread, __new_sem_init, sem_init, GLIBC_2_1);
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 int
 attribute_compat_text_section
-__old_sem_init (sem, pshared, value)
-     sem_t *sem;
-     int pshared;
-     unsigned int value;
+__old_sem_init (sem_t *sem, int pshared, unsigned int value)
 {
   /* Parameter sanity check.  */
   if (__glibc_unlikely (value > SEM_VALUE_MAX))

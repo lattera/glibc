@@ -24,9 +24,7 @@
 
 /* Set the disposition for SIG.  */
 __sighandler_t
-sigset (sig, disp)
-     int sig;
-     __sighandler_t disp;
+sigset (int sig, __sighandler_t disp)
 {
   struct sigaction act;
   struct sigaction oact;

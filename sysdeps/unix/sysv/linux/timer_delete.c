@@ -29,8 +29,7 @@
 
 
 int
-timer_delete (timerid)
-     timer_t timerid;
+timer_delete (timer_t timerid)
 {
 #undef timer_delete
   struct timer *kt = (struct timer *) timerid;

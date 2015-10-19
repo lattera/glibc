@@ -117,9 +117,7 @@ int group_member ();
    filesystem, text busy, etc. */
 
 int
-euidaccess (path, mode)
-     const char *path;
-     int mode;
+euidaccess (const char *path, int mode)
 {
   struct stat64 stats;
   int granted;
@@ -196,9 +194,7 @@ weak_alias (__euidaccess, eaccess)
 char *program_name;
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   char *file;
   int mode;

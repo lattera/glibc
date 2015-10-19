@@ -28,9 +28,7 @@
 
 
 int
-pthread_setname_np (th, name)
-     pthread_t th;
-     const char *name;
+pthread_setname_np (pthread_t th, const char *name)
 {
   const struct pthread *pd = (const struct pthread *) th;
 

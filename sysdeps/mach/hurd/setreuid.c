@@ -23,9 +23,7 @@
 #include <string.h>
 
 int
-__setreuid (ruid, euid)
-     uid_t ruid;
-     uid_t euid;
+__setreuid (uid_t ruid, uid_t euid)
 {
   auth_t newauth;
   error_t err;

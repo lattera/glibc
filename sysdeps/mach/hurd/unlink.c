@@ -23,8 +23,7 @@
 
 /* Remove the link named NAME.  */
 int
-__unlink (name)
-     const char *name;
+__unlink (const char *name)
 {
   error_t err;
   file_t dir;

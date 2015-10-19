@@ -24,8 +24,7 @@
 
 /* Set the effective user ID of the calling process to GID.  */
 int
-setegid (gid)
-     gid_t gid;
+setegid (gid_t gid)
 {
   auth_t newauth;
   error_t err;

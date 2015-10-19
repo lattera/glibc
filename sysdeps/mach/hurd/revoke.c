@@ -21,8 +21,7 @@
 #include <hurd.h>
 
 int
-revoke (file_name)
-     const char *file_name;
+revoke (const char *file_name)
 {
   error_t err;
   file_t file = __file_name_lookup (file_name, 0, 0);

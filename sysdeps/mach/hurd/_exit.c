@@ -46,8 +46,7 @@ _hurd_exit (int status)
 }
 
 void
-_exit (status)
-     int status;
+_exit (int status)
 {
   _hurd_exit (W_EXITCODE (status, 0));
 }

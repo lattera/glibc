@@ -22,8 +22,7 @@
 
 /* Make all changes done to FD actually appear on disk.  */
 int
-fsync (fd)
-     int fd;
+fsync (int fd)
 {
   error_t err = HURD_DPORT_USE (fd, __file_sync (port, 1, 0));
   if (err)

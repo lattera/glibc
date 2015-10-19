@@ -1,3 +1,280 @@
+2015-10-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/backtrace.c (__backtrace): Convert to
+	prototype-style function definition.
+	* sysdeps/i386/backtrace.c (__backtrace): Likewise.
+	* sysdeps/i386/ffs.c (__ffs): Likewise.
+	* sysdeps/i386/i686/ffs.c (__ffs): Likewise.
+	* sysdeps/ia64/nptl/pthread_spin_lock.c (pthread_spin_lock):
+	Likewise.
+	* sysdeps/ia64/nptl/pthread_spin_trylock.c (pthread_spin_trylock):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log2l.c (__ieee754_log2l): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_log2l.c (__ieee754_log2l):
+	Likewise.
+	* sysdeps/m68k/ffs.c (__ffs): Likewise.
+	* sysdeps/m68k/m680x0/fpu/e_acos.c (FUNC): Likewise.
+	* sysdeps/m68k/m680x0/fpu/e_fmod.c (FUNC): Likewise.
+	* sysdeps/mach/adjtime.c (__adjtime): Likewise.
+	* sysdeps/mach/gettimeofday.c (__gettimeofday): Likewise.
+	* sysdeps/mach/hurd/_exit.c (_exit): Likewise.
+	* sysdeps/mach/hurd/access.c (__access): Likewise.
+	* sysdeps/mach/hurd/adjtime.c (__adjtime): Likewise.
+	* sysdeps/mach/hurd/chdir.c (__chdir): Likewise.
+	* sysdeps/mach/hurd/chmod.c (__chmod): Likewise.
+	* sysdeps/mach/hurd/chown.c (__chown): Likewise.
+	* sysdeps/mach/hurd/cthreads.c (cthread_keycreate): Likewise.
+	(cthread_getspecific): Likewise.
+	(cthread_setspecific): Likewise.
+	(__libc_getspecific): Likewise.
+	* sysdeps/mach/hurd/euidaccess.c (__euidaccess): Likewise.
+	* sysdeps/mach/hurd/faccessat.c (faccessat): Likewise.
+	* sysdeps/mach/hurd/fchdir.c (__fchdir): Likewise.
+	* sysdeps/mach/hurd/fchmod.c (__fchmod): Likewise.
+	* sysdeps/mach/hurd/fchmodat.c (fchmodat): Likewise.
+	* sysdeps/mach/hurd/fchown.c (__fchown): Likewise.
+	* sysdeps/mach/hurd/fchownat.c (fchownat): Likewise.
+	* sysdeps/mach/hurd/flock.c (__flock): Likewise.
+	* sysdeps/mach/hurd/fsync.c (fsync): Likewise.
+	* sysdeps/mach/hurd/ftruncate.c (__ftruncate): Likewise.
+	* sysdeps/mach/hurd/getgroups.c (__getgroups): Likewise.
+	* sysdeps/mach/hurd/gethostname.c (__gethostname): Likewise.
+	* sysdeps/mach/hurd/getitimer.c (__getitimer): Likewise.
+	* sysdeps/mach/hurd/getlogin_r.c (__getlogin_r): Likewise.
+	* sysdeps/mach/hurd/getpgid.c (__getpgid): Likewise.
+	* sysdeps/mach/hurd/getrusage.c (__getrusage): Likewise.
+	* sysdeps/mach/hurd/getsockname.c (__getsockname): Likewise.
+	* sysdeps/mach/hurd/group_member.c (__group_member): Likewise.
+	* sysdeps/mach/hurd/isatty.c (__isatty): Likewise.
+	* sysdeps/mach/hurd/lchown.c (__lchown): Likewise.
+	* sysdeps/mach/hurd/link.c (__link): Likewise.
+	* sysdeps/mach/hurd/linkat.c (linkat): Likewise.
+	* sysdeps/mach/hurd/listen.c (__listen): Likewise.
+	* sysdeps/mach/hurd/mkdir.c (__mkdir): Likewise.
+	* sysdeps/mach/hurd/mkdirat.c (mkdirat): Likewise.
+	* sysdeps/mach/hurd/openat.c (__openat): Likewise.
+	* sysdeps/mach/hurd/poll.c (__poll): Likewise.
+	* sysdeps/mach/hurd/readlink.c (__readlink): Likewise.
+	* sysdeps/mach/hurd/readlinkat.c (readlinkat): Likewise.
+	* sysdeps/mach/hurd/recv.c (__recv): Likewise.
+	* sysdeps/mach/hurd/rename.c (rename): Likewise.
+	* sysdeps/mach/hurd/renameat.c (renameat): Likewise.
+	* sysdeps/mach/hurd/revoke.c (revoke): Likewise.
+	* sysdeps/mach/hurd/rewinddir.c (__rewinddir): Likewise.
+	* sysdeps/mach/hurd/rmdir.c (__rmdir): Likewise.
+	* sysdeps/mach/hurd/seekdir.c (seekdir): Likewise.
+	* sysdeps/mach/hurd/send.c (__send): Likewise.
+	* sysdeps/mach/hurd/setdomain.c (setdomainname): Likewise.
+	* sysdeps/mach/hurd/setegid.c (setegid): Likewise.
+	* sysdeps/mach/hurd/seteuid.c (seteuid): Likewise.
+	* sysdeps/mach/hurd/setgid.c (__setgid): Likewise.
+	* sysdeps/mach/hurd/setgroups.c (setgroups): Likewise.
+	* sysdeps/mach/hurd/sethostid.c (sethostid): Likewise.
+	* sysdeps/mach/hurd/sethostname.c (sethostname): Likewise.
+	* sysdeps/mach/hurd/setlogin.c (setlogin): Likewise.
+	* sysdeps/mach/hurd/setpgid.c (__setpgid): Likewise.
+	* sysdeps/mach/hurd/setregid.c (__setregid): Likewise.
+	* sysdeps/mach/hurd/setreuid.c (__setreuid): Likewise.
+	* sysdeps/mach/hurd/settimeofday.c (__settimeofday): Likewise.
+	* sysdeps/mach/hurd/setuid.c (__setuid): Likewise.
+	* sysdeps/mach/hurd/shutdown.c (shutdown): Likewise.
+	* sysdeps/mach/hurd/sigaction.c (__sigaction): Likewise.
+	* sysdeps/mach/hurd/sigaltstack.c (__sigaltstack): Likewise.
+	* sysdeps/mach/hurd/sigpending.c (sigpending): Likewise.
+	* sysdeps/mach/hurd/sigprocmask.c (__sigprocmask): Likewise.
+	* sysdeps/mach/hurd/sigsuspend.c (__sigsuspend): Likewise.
+	* sysdeps/mach/hurd/socket.c (__socket): Likewise.
+	* sysdeps/mach/hurd/symlink.c (__symlink): Likewise.
+	* sysdeps/mach/hurd/symlinkat.c (symlinkat): Likewise.
+	* sysdeps/mach/hurd/telldir.c (telldir): Likewise.
+	* sysdeps/mach/hurd/truncate.c (__truncate): Likewise.
+	* sysdeps/mach/hurd/umask.c (__umask): Likewise.
+	* sysdeps/mach/hurd/unlink.c (__unlink): Likewise.
+	* sysdeps/mach/hurd/unlinkat.c (unlinkat): Likewise.
+	* sysdeps/mips/mips64/__longjmp.c (__longjmp): Likewise.
+	* sysdeps/posix/alarm.c (alarm): Likewise.
+	* sysdeps/posix/cuserid.c (cuserid): Likewise.
+	* sysdeps/posix/dirfd.c (dirfd): Likewise.
+	* sysdeps/posix/dup.c (__dup): Likewise.
+	* sysdeps/posix/dup2.c (__dup2): Likewise.
+	* sysdeps/posix/euidaccess.c (euidaccess): Likewise.
+	(main): Likewise.
+	* sysdeps/posix/flock.c (__flock): Likewise.
+	* sysdeps/posix/fpathconf.c (__fpathconf): Likewise.
+	* sysdeps/posix/getcwd.c (__getcwd): Likewise.
+	* sysdeps/posix/gethostname.c (__gethostname): Likewise.
+	* sysdeps/posix/gettimeofday.c (__gettimeofday): Likewise.
+	* sysdeps/posix/isatty.c (__isatty): Likewise.
+	* sysdeps/posix/killpg.c (killpg): Likewise.
+	* sysdeps/posix/libc_fatal.c (__libc_fatal): Likewise.
+	* sysdeps/posix/mkfifoat.c (mkfifoat): Likewise.
+	* sysdeps/posix/raise.c (raise): Likewise.
+	* sysdeps/posix/remove.c (remove): Likewise.
+	* sysdeps/posix/rename.c (rename): Likewise.
+	* sysdeps/posix/rewinddir.c (__rewinddir): Likewise.
+	* sysdeps/posix/seekdir.c (seekdir): Likewise.
+	* sysdeps/posix/sigblock.c (__sigblock): Likewise.
+	* sysdeps/posix/sigignore.c (sigignore): Likewise.
+	* sysdeps/posix/sigintr.c (siginterrupt): Likewise.
+	* sysdeps/posix/signal.c (__bsd_signal): Likewise.
+	* sysdeps/posix/sigset.c (sigset): Likewise.
+	* sysdeps/posix/sigsuspend.c (__sigsuspend): Likewise.
+	* sysdeps/posix/sysconf.c (__sysconf): Likewise.
+	* sysdeps/posix/sysv_signal.c (__sysv_signal): Likewise.
+	* sysdeps/posix/time.c (time): Likewise.
+	* sysdeps/posix/ttyname.c (getttyname): Likewise.
+	(ttyname): Likewise.
+	* sysdeps/posix/ttyname_r.c (__ttyname_r): Likewise.
+	* sysdeps/posix/utime.c (utime): Likewise.
+	* sysdeps/powerpc/fpu/s_isnan.c (__isnan): Likewise.
+	* sysdeps/powerpc/nptl/pthread_spin_lock.c (pthread_spin_lock):
+	Likewise.
+	* sysdeps/powerpc/nptl/pthread_spin_trylock.c
+	(pthread_spin_trylock): Likewise.
+	* sysdeps/pthread/aio_error.c (aio_error): Likewise.
+	* sysdeps/pthread/aio_read.c (aio_read): Likewise.
+	* sysdeps/pthread/aio_read64.c (aio_read64): Likewise.
+	* sysdeps/pthread/aio_write.c (aio_write): Likewise.
+	* sysdeps/pthread/aio_write64.c (aio_write64): Likewise.
+	* sysdeps/pthread/flockfile.c (__flockfile): Likewise.
+	* sysdeps/pthread/ftrylockfile.c (__ftrylockfile): Likewise.
+	* sysdeps/pthread/funlockfile.c (__funlockfile): Likewise.
+	* sysdeps/pthread/timer_create.c (timer_create): Likewise.
+	* sysdeps/pthread/timer_getoverr.c (timer_getoverrun): Likewise.
+	* sysdeps/pthread/timer_gettime.c (timer_gettime): Likewise.
+	* sysdeps/s390/ffs.c (__ffs): Likewise.
+	* sysdeps/s390/nptl/pthread_spin_lock.c (pthread_spin_lock):
+	Likewise.
+	* sysdeps/s390/nptl/pthread_spin_trylock.c (pthread_spin_trylock):
+	Likewise.
+	* sysdeps/sh/nptl/pthread_spin_lock.c (pthread_spin_lock):
+	Likewise.
+	* sysdeps/sparc/nptl/pthread_barrier_destroy.c
+	(pthread_barrier_destroy): Likewise.
+	* sysdeps/sparc/nptl/pthread_barrier_wait.c
+	(__pthread_barrier_wait): Likewise.
+	* sysdeps/sparc/sparc32/e_sqrt.c (__ieee754_sqrt): Likewise.
+	* sysdeps/sparc/sparc32/pthread_barrier_wait.c
+	(__pthread_barrier_wait): Likewise.
+	* sysdeps/sparc/sparc32/sem_init.c (__old_sem_init): Likewise.
+	* sysdeps/tile/memcmp.c (memcmp_common_alignment): Likewise.
+	(memcmp_not_common_alignment): Likewise.
+	(MEMCMP): Likewise.
+	* sysdeps/tile/wordcopy.c (_wordcopy_fwd_aligned): Likewise.
+	(_wordcopy_fwd_dest_aligned): Likewise.
+	(_wordcopy_bwd_aligned): Likewise.
+	(_wordcopy_bwd_dest_aligned): Likewise.
+	* sysdeps/unix/bsd/ftime.c (ftime): Likewise.
+	* sysdeps/unix/bsd/gtty.c (gtty): Likewise.
+	* sysdeps/unix/bsd/stty.c (stty): Likewise.
+	* sysdeps/unix/bsd/tcflow.c (tcflow): Likewise.
+	* sysdeps/unix/bsd/tcflush.c (tcflush): Likewise.
+	* sysdeps/unix/bsd/tcgetattr.c (__tcgetattr): Likewise.
+	* sysdeps/unix/bsd/tcgetpgrp.c (tcgetpgrp): Likewise.
+	* sysdeps/unix/bsd/tcsendbrk.c (tcsendbreak): Likewise.
+	* sysdeps/unix/bsd/tcsetattr.c (tcsetattr): Likewise.
+	* sysdeps/unix/bsd/tcsetpgrp.c (tcsetpgrp): Likewise.
+	* sysdeps/unix/bsd/ualarm.c (ualarm): Likewise.
+	* sysdeps/unix/bsd/wait3.c (__wait3): Likewise.
+	* sysdeps/unix/getlogin_r.c (__getlogin_r): Likewise.
+	* sysdeps/unix/sockatmark.c (sockatmark): Likewise.
+	* sysdeps/unix/stime.c (stime): Likewise.
+	* sysdeps/unix/sysv/linux/_exit.c (_exit): Likewise.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c (__aio_sigqueue):
+	Likewise.  Use internal_function.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c (__libc_sigaction):
+	Convert to prototype-style function definition.
+	* sysdeps/unix/sysv/linux/faccessat.c (faccessat): Likewise.
+	* sysdeps/unix/sysv/linux/fchmodat.c (fchmodat): Likewise.
+	* sysdeps/unix/sysv/linux/fpathconf.c (__fpathconf): Likewise.
+	* sysdeps/unix/sysv/linux/gai_sigqueue.c (__gai_sigqueue):
+	Likewise.  Use internal_function.
+	* sysdeps/unix/sysv/linux/gethostid.c (sethostid): Convert to
+	prototype-style function definition
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):
+	Likewise.
+	(__getlogin_r): Likewise.
+	* sysdeps/unix/sysv/linux/getpt.c (__posix_openpt): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_broadcast.c
+	(__pthread_cond_broadcast): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_destroy.c
+	(__pthread_cond_destroy): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_init.c
+	(__pthread_cond_init): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_signal.c
+	(__pthread_cond_signal): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_wait.c
+	(__pthread_cond_wait): Likewise.
+	* sysdeps/unix/sysv/linux/i386/getmsg.c (getmsg): Likewise.
+	* sysdeps/unix/sysv/linux/i386/setegid.c (setegid): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c (__libc_sigaction):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigpending.c (sigpending):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigprocmask.c (__sigprocmask):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/sigaction.c (__libc_sigaction):
+	Likewise.
+	* sysdeps/unix/sysv/linux/msgget.c (msgget): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ftruncate64.c
+	(__ftruncate64): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/truncate64.c
+	(truncate64): Likewise.
+	* sysdeps/unix/sysv/linux/pt-raise.c (raise): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_getcpuclockid.c
+	(pthread_getcpuclockid): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_getname.c (pthread_getname_np):
+	Likewise.
+	* sysdeps/unix/sysv/linux/pthread_setname.c (pthread_setname_np):
+	Likewise.
+	* sysdeps/unix/sysv/linux/pthread_sigmask.c (pthread_sigmask):
+	Likewise.
+	* sysdeps/unix/sysv/linux/pthread_sigqueue.c (pthread_sigqueue):
+	Likewise.
+	* sysdeps/unix/sysv/linux/raise.c (raise): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigaction.c
+	(__libc_sigaction): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigpending.c (sigpending):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigprocmask.c
+	(__sigprocmask): Likewise.
+	* sysdeps/unix/sysv/linux/semget.c (semget): Likewise.
+	* sysdeps/unix/sysv/linux/semop.c (semop): Likewise.
+	* sysdeps/unix/sysv/linux/setrlimit64.c (setrlimit64): Likewise.
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): Likewise.
+	* sysdeps/unix/sysv/linux/shmdt.c (shmdt): Likewise.
+	* sysdeps/unix/sysv/linux/shmget.c (shmget): Likewise.
+	* sysdeps/unix/sysv/linux/sigaction.c (__libc_sigaction):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sigpending.c (sigpending): Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c (__sigprocmask): Likewise.
+	* sysdeps/unix/sysv/linux/sigqueue.c (__sigqueue): Likewise.
+	* sysdeps/unix/sysv/linux/sigstack.c (sigstack): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigpending.c (sigpending):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigprocmask.c
+	(__sigprocmask): Likewise.
+	* sysdeps/unix/sysv/linux/speed.c (cfgetospeed): Likewise.
+	(cfgetispeed): Likewise.
+	(cfsetospeed): Likewise.
+	(cfsetispeed): Likewise.
+	* sysdeps/unix/sysv/linux/tcflow.c (tcflow): Likewise.
+	* sysdeps/unix/sysv/linux/tcflush.c (tcflush): Likewise.
+	* sysdeps/unix/sysv/linux/tcgetattr.c (__tcgetattr): Likewise.
+	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Likewise.
+	* sysdeps/unix/sysv/linux/time.c (time): Likewise.
+	* sysdeps/unix/sysv/linux/timer_create.c (timer_create): Likewise.
+	* sysdeps/unix/sysv/linux/timer_delete.c (timer_delete): Likewise.
+	* sysdeps/unix/sysv/linux/timer_getoverr.c (timer_getoverrun):
+	Likewise.
+	* sysdeps/unix/sysv/linux/timer_gettime.c (timer_gettime):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigpending.c (sigpending):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigprocmask.c (__sigprocmask):
+	Likewise.
+	* sysdeps/x86_64/backtrace.c (__backtrace): Likewise.
+
 2015-10-17  Florian Weimer  <fweimer@redhat.com>
 
 	sunrpc: Rewrite with explicit TLS access using __thread.

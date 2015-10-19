@@ -24,10 +24,7 @@
 #include <string.h>
 
 int
-mkdirat (fd, path, mode)
-     int fd;
-     const char *path;
-     mode_t mode;
+mkdirat (int fd, const char *path, mode_t mode)
 {
   error_t err;
   const char *name;

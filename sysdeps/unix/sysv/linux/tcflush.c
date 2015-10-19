@@ -22,9 +22,7 @@
 
 /* Flush pending data on FD.  */
 int
-tcflush (fd, queue_selector)
-     int fd;
-     int queue_selector;
+tcflush (int fd, int queue_selector)
 {
   return __ioctl (fd, TCFLSH, queue_selector);
 }

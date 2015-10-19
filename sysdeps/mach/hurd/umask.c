@@ -20,8 +20,7 @@
 
 /* Set the file creation mask to MASK, returning the old mask.  */
 mode_t
-__umask (mask)
-     mode_t mask;
+__umask (mode_t mask)
 {
   mode_t omask;
   mask &= 0777;

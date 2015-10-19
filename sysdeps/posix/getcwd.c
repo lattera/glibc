@@ -222,9 +222,7 @@ static int __rtld_have_atfcts;
    unless SIZE == 0, in which case it is as big as necessary.  */
 
 GETCWD_RETURN_TYPE
-__getcwd (buf, size)
-     char *buf;
-     size_t size;
+__getcwd (char *buf, size_t size)
 {
 #ifndef __ASSUME_ATFCTS
   static const char dots[]

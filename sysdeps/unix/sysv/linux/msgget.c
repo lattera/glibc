@@ -28,9 +28,7 @@
    parameter describes how to proceed with clashing of key values.  */
 
 int
-msgget (key, msgflg)
-     key_t key;
-     int msgflg;
+msgget (key_t key, int msgflg)
 {
   return INLINE_SYSCALL (ipc, 5, IPCOP_msgget, key, msgflg, 0, NULL);
 }

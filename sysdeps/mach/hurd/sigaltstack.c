@@ -22,9 +22,7 @@
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.  */
 int
-__sigaltstack (argss, oss)
-     const struct sigaltstack *argss;
-     struct sigaltstack *oss;
+__sigaltstack (const struct sigaltstack *argss, struct sigaltstack *oss)
 {
   struct hurd_sigstate *s;
   struct sigaltstack ss, old;
