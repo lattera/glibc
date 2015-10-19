@@ -23,6 +23,7 @@
 #include <grp.h>
 #include <libintl.h>
 #include <locale.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -148,6 +149,11 @@ main (int argc, char *argv[])
   uid_t euid = geteuid ();
   uid_t uid = getuid ();
   int remaining;
+  sigset_t signalset;
+
+  /* Clear any signal mask from the parent process.  */
+  sigemptyset (&signalset);
+  sigprocmask (SIG_SETMASK, &signalset, NULL);
 
   if (argc == 1 && euid == 0)
     {
