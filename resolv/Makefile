@@ -94,7 +94,7 @@ CFLAGS-libresolv += $(stack-protector)
 CFLAGS-res_hconf.c = -fexceptions
 
 # The BIND code elicits some harmless warnings.
-+cflags += -Wno-strict-prototypes -Wno-write-strings
++cflags += -Wno-write-strings
 
 # The DNS NSS modules needs the resolver.
 $(objpfx)libnss_dns.so: $(objpfx)libresolv.so

@@ -189,7 +189,6 @@ $(objpfx)config-name.h: $(..)scripts/config-uname.sh $(common-objpfx)config.make
 	   '$(config-machine)-$(config-vendor)' > $@.new
 	mv -f $@.new $@
 
-CFLAGS-regex.c = -Wno-strict-prototypes
 CFLAGS-getaddrinfo.c = -DRESOLVER -fexceptions
 CFLAGS-pause.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread.c = -fexceptions -fasynchronous-unwind-tables
