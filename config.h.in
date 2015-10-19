@@ -28,9 +28,6 @@
 /* Define if the assembler supports the `.set' directive.  */
 #undef	HAVE_ASM_SET_DIRECTIVE
 
-/* Define if the assembler supports the gnu_unique_object symbol type.  */
-#undef	HAVE_ASM_UNIQUE_OBJECT
-
 /* On powerpc64, use overlapping .opd entries.  */
 #undef  USE_PPC64_OVERLAPPING_OPD
 

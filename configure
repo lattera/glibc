@@ -5337,30 +5337,6 @@ if test $libc_cv_asm_set_directive = yes; then
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler gnu_unique_object symbol type" >&5
-$as_echo_n "checking for assembler gnu_unique_object symbol type... " >&6; }
-if ${libc_cv_asm_unique_object+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.s <<EOF
-${libc_cv_dot_text}
-_sym:
-.type _sym, %gnu_unique_object
-EOF
-if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5; then
-  libc_cv_asm_unique_object=yes
-else
-  libc_cv_asm_unique_object=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_unique_object" >&5
-$as_echo "$libc_cv_asm_unique_object" >&6; }
-if test $libc_cv_asm_unique_object = yes; then
-  $as_echo "#define HAVE_ASM_UNIQUE_OBJECT 1" >>confdefs.h
-
-fi
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for .protected and .hidden assembler directive" >&5
 $as_echo_n "checking for .protected and .hidden assembler directive... " >&6; }
 if ${libc_cv_asm_protected_directive+:} false; then :

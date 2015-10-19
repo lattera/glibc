@@ -1121,23 +1121,6 @@ if test $libc_cv_asm_set_directive = yes; then
   AC_DEFINE(HAVE_ASM_SET_DIRECTIVE)
 fi
 
-AC_CACHE_CHECK(for assembler gnu_unique_object symbol type,
-	       libc_cv_asm_unique_object, [dnl
-cat > conftest.s <<EOF
-${libc_cv_dot_text}
-_sym:
-.type _sym, %gnu_unique_object
-EOF
-if ${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
-  libc_cv_asm_unique_object=yes
-else
-  libc_cv_asm_unique_object=no
-fi
-rm -f conftest*])
-if test $libc_cv_asm_unique_object = yes; then
-  AC_DEFINE(HAVE_ASM_UNIQUE_OBJECT)
-fi
-
 AC_CACHE_CHECK(for .protected and .hidden assembler directive,
 	       libc_cv_asm_protected_directive, [dnl
 cat > conftest.s <<EOF
