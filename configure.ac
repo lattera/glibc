@@ -1503,7 +1503,20 @@ LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector],
 		   [libc_cv_ssp=yes],
 		   [libc_cv_ssp=no])
 ])
-AC_SUBST(libc_cv_ssp)
+
+AC_CACHE_CHECK(for -fstack-protector-strong, libc_cv_ssp_strong, [dnl
+LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector-strong],
+		   [libc_cv_ssp_strong=yes],
+		   [libc_cv_ssp_strong=no])
+])
+
+stack_protector=
+if test "$libc_cv_ssp_strong" = "yes"; then
+  stack_protector="-fstack-protector-strong"
+elif test "$libc_cv_ssp" = "yes"; then
+  stack_protector="-fstack-protector"
+fi
+AC_SUBST(stack_protector)
 
 AC_CACHE_CHECK(whether cc puts quotes around section names,
 	       libc_cv_have_section_quotes,

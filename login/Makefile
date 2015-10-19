@@ -58,9 +58,7 @@ CFLAGS-getpt.c = -fexceptions
 ifeq (yesyes,$(have-fpie)$(build-shared))
 pt_chown-cflags += $(pie-ccflag)
 endif
-ifeq (yes,$(have-ssp))
-pt_chown-cflags += -fstack-protector
-endif
+pt_chown-cflags += $(stack-protector)
 ifeq (yes,$(have-libcap))
 libcap = -lcap
 endif

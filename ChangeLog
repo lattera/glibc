@@ -1,3 +1,15 @@
+2015-10-19  Mike Frysinger  <vapier@gentoo.org>
+
+	* config.make.in (have-ssp): Delete.
+	(stack-protector): New variable.
+	* configure.ac: Delete libc_cv_ssp export.  Add libc_cv_ssp_strong
+	cache test for -fstack-protector-strong.  Export stack_protector to
+	the best ssp flag.
+	* configure: Regenerated.
+	* login/Makefile (pt_chown-cflags): Always add $(stack-protector).
+	* nscd/Makefile (CFLAGS-nscd): Likewise.
+	* resolv/Makefile (CFLAGS-libresolv): Likewise.
+
 2015-10-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19122]
