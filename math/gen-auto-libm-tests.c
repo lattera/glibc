@@ -675,7 +675,7 @@ generic_value_copy (generic_value *dest, const generic_value *src)
 /* Initialize data for floating-point formats.  */
 
 static void
-init_fp_formats ()
+init_fp_formats (void)
 {
   int global_max_exp = 0, global_min_subnorm_exp = 0;
   for (fp_format f = fp_first_format; f < fp_num_formats; f++)

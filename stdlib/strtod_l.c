@@ -487,11 +487,8 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
    return 0.0.  If the number is too big to be represented, set `errno' to
    ERANGE and return HUGE_VAL with the appropriate sign.  */
 FLOAT
-____STRTOF_INTERNAL (nptr, endptr, group, loc)
-     const STRING_TYPE *nptr;
-     STRING_TYPE **endptr;
-     int group;
-     __locale_t loc;
+____STRTOF_INTERNAL (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group,
+		     __locale_t loc)
 {
   int negative;			/* The sign of the number.  */
   MPN_VAR (num);		/* MP representation of the number.  */

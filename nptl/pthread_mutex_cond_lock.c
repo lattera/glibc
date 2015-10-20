@@ -14,7 +14,7 @@
 #define LLL_ROBUST_MUTEX_LOCK(mutex, id) \
   lll_robust_cond_lock ((mutex)->__data.__lock, id, \
 			PTHREAD_ROBUST_MUTEX_PSHARED (mutex))
-#define __pthread_mutex_lock __pthread_mutex_cond_lock
+#define __pthread_mutex_lock internal_function __pthread_mutex_cond_lock
 #define __pthread_mutex_lock_full __pthread_mutex_cond_lock_full
 #define NO_INCR
 

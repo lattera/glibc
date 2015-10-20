@@ -35,11 +35,7 @@
 static mbstate_t state;
 
 size_t
-__wcsrtombs (dst, src, len, ps)
-     char *dst;
-     const wchar_t **src;
-     size_t len;
-     mbstate_t *ps;
+__wcsrtombs (char *dst, const wchar_t **src, size_t len, mbstate_t *ps)
 {
   struct __gconv_step_data data;
   int status;

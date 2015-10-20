@@ -1267,8 +1267,7 @@ libc_hidden_def (glob)
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 void
-globfree (pglob)
-     glob_t *pglob;
+globfree (glob_t *pglob)
 {
   if (pglob->gl_pathv != NULL)
     {
@@ -1363,9 +1362,7 @@ prefix_array (const char *dirname, char **array, size_t n)
 /* We must not compile this function twice.  */
 #if !defined _LIBC || !defined NO_GLOB_PATTERN_P
 int
-__glob_pattern_type (pattern, quote)
-     const char *pattern;
-     int quote;
+__glob_pattern_type (const char *pattern, int quote)
 {
   const char *p;
   int ret = 0;
@@ -1402,9 +1399,7 @@ __glob_pattern_type (pattern, quote)
 /* Return nonzero if PATTERN contains any metacharacters.
    Metacharacters can be quoted with backslashes if QUOTE is nonzero.  */
 int
-__glob_pattern_p (pattern, quote)
-     const char *pattern;
-     int quote;
+__glob_pattern_p (const char *pattern, int quote)
 {
   return __glob_pattern_type (pattern, quote) == 1;
 }

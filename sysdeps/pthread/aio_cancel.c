@@ -38,9 +38,7 @@
 
 
 int
-aio_cancel (fildes, aiocbp)
-     int fildes;
-     struct aiocb *aiocbp;
+aio_cancel (int fildes, struct aiocb *aiocbp)
 {
   struct requestlist *req = NULL;
   int result = AIO_ALLDONE;

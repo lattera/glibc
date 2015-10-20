@@ -88,8 +88,7 @@ static uint8_t *option_alloc (struct cmsghdr *cmsg, int datalen, int multx,
    beginning (the value y in the alignment term "xn + y"), the type
    byte, the length byte, and the option data.  */
 int
-inet6_option_space (nbytes)
-     int nbytes;
+inet6_option_space (int nbytes)
 {
   /* Add room for the extension header.  */
   nbytes += sizeof (struct ip6_ext);
@@ -106,10 +105,7 @@ link_warning (inet6_option_space,
    contain either Hop-by-Hop or Destination options.  It returns 0 on
    success or -1 on an error.  */
 int
-inet6_option_init (bp, cmsgp, type)
-     void *bp;
-     struct cmsghdr **cmsgp;
-     int type;
+inet6_option_init (void *bp, struct cmsghdr **cmsgp, int type)
 {
   /* Only Hop-by-Hop or Destination options allowed.  */
   if (type != IPV6_HOPOPTS && type != IPV6_DSTOPTS)
@@ -143,11 +139,8 @@ link_warning (inet6_option_init,
    inet6_option_init().  This function returns 0 if it succeeds or -1 on
    an error.  */
 int
-inet6_option_append (cmsg, typep, multx, plusy)
-     struct cmsghdr *cmsg;
-     const uint8_t *typep;
-     int multx;
-     int plusy;
+inet6_option_append (struct cmsghdr *cmsg, const uint8_t *typep, int multx,
+		     int plusy)
 {
   /* typep is a pointer to the 8-bit option type.  It is assumed that this
      field is immediately followed by the 8-bit option data length field,
@@ -223,11 +216,7 @@ option_alloc (struct cmsghdr *cmsg, int datalen, int multx, int plusy)
 
 
 uint8_t *
-inet6_option_alloc (cmsg, datalen, multx, plusy)
-     struct cmsghdr *cmsg;
-     int datalen;
-     int multx;
-     int plusy;
+inet6_option_alloc (struct cmsghdr *cmsg, int datalen, int multx, int plusy)
 {
   return option_alloc (cmsg, datalen, multx, plusy);
 }
@@ -245,9 +234,7 @@ link_warning (inet6_option_alloc,
    to be processed, the return value is -1 and *tptrp is NULL.  If an
    error occurs, the return value is -1 and *tptrp is not NULL.  */
 int
-inet6_option_next (cmsg, tptrp)
-     const struct cmsghdr *cmsg;
-     uint8_t **tptrp;
+inet6_option_next (const struct cmsghdr *cmsg, uint8_t **tptrp)
 {
   /* Make sure it is an option of the right type.  */
   if (cmsg->cmsg_level != IPPROTO_IPV6
@@ -303,10 +290,7 @@ link_warning (inet6_option_next,
    pointer to cmsghdr structure of which cmsg_level equals IPPROTO_IPV6
    and cmsg_type equals either IPV6_HOPOPTS or IPV6_DSTOPTS.  */
 int
-inet6_option_find (cmsg, tptrp, type)
-     const struct cmsghdr *cmsg;
-     uint8_t **tptrp;
-     int type;
+inet6_option_find (const struct cmsghdr *cmsg, uint8_t **tptrp, int type)
 {
   /* Make sure it is an option of the right type.  */
   if (cmsg->cmsg_level != IPPROTO_IPV6

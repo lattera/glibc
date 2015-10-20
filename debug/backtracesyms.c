@@ -34,9 +34,7 @@
 
 
 char **
-__backtrace_symbols (array, size)
-     void *const *array;
-     int size;
+__backtrace_symbols (void *const *array, int size)
 {
   Dl_info info[size];
   int status[size];

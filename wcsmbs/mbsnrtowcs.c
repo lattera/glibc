@@ -38,12 +38,8 @@ static mbstate_t state;
    implementation of stdio because we have to deal with unterminated
    buffers.  At most NMC bytes will be converted.  */
 size_t
-__mbsnrtowcs (dst, src, nmc, len, ps)
-     wchar_t *dst;
-     const char **src;
-     size_t nmc;
-     size_t len;
-     mbstate_t *ps;
+__mbsnrtowcs (wchar_t *dst, const char **src, size_t nmc, size_t len,
+	      mbstate_t *ps)
 {
   const unsigned char *srcend;
   struct __gconv_step_data data;

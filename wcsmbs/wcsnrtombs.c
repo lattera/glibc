@@ -37,12 +37,8 @@ static mbstate_t state;
    implementation of stdio because we have to deal with unterminated
    buffers.  At most NWC wide character will be converted.  */
 size_t
-__wcsnrtombs (dst, src, nwc, len, ps)
-     char *dst;
-     const wchar_t **src;
-     size_t nwc;
-     size_t len;
-     mbstate_t *ps;
+__wcsnrtombs (char *dst, const wchar_t **src, size_t nwc, size_t len,
+	      mbstate_t *ps)
 {
   struct __gconv_step_data data;
   const wchar_t *srcend;

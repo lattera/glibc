@@ -324,11 +324,8 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
    also has to be present and it is never about speed when these
    functions are used.  */
 char *
-_itoa (value, buflim, base, upper_case)
-     unsigned long long int value;
-     char *buflim;
-     unsigned int base;
-     int upper_case;
+_itoa (unsigned long long int value, char *buflim, unsigned int base,
+       int upper_case)
 {
   assert (! upper_case);
 

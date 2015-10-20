@@ -415,11 +415,7 @@ valstr_compare (const void *p1, const void *p2)
 
 
 static int
-process_input (input, inname, to_lowercase, be_quiet)
-     FILE *input;
-     const char *inname;
-     int to_lowercase;
-     int be_quiet;
+process_input (FILE *input, const char *inname, int to_lowercase, int be_quiet)
 {
   char *line;
   size_t linelen;

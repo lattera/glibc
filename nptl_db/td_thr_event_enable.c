@@ -21,9 +21,7 @@
 
 
 td_err_e
-td_thr_event_enable (th, onoff)
-     const td_thrhandle_t *th;
-     int onoff;
+td_thr_event_enable (const td_thrhandle_t *th, int onoff)
 {
   LOG ("td_thr_event_enable");
 

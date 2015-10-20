@@ -21,10 +21,8 @@
 
 
 int
-__pthread_attr_getstack (attr, stackaddr, stacksize)
-     const pthread_attr_t *attr;
-     void **stackaddr;
-     size_t *stacksize;
+__pthread_attr_getstack (const pthread_attr_t *attr, void **stackaddr,
+			 size_t *stacksize)
 {
   struct pthread_attr *iattr;
 

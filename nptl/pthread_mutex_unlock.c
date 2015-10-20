@@ -34,9 +34,7 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 
 int
 internal_function attribute_hidden
-__pthread_mutex_unlock_usercnt (mutex, decr)
-     pthread_mutex_t *mutex;
-     int decr;
+__pthread_mutex_unlock_usercnt (pthread_mutex_t *mutex, int decr)
 {
   int type = PTHREAD_MUTEX_TYPE_ELISION (mutex);
   if (__builtin_expect (type &
@@ -309,8 +307,7 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 
 
 int
-__pthread_mutex_unlock (mutex)
-     pthread_mutex_t *mutex;
+__pthread_mutex_unlock (pthread_mutex_t *mutex)
 {
   return __pthread_mutex_unlock_usercnt (mutex, 1);
 }

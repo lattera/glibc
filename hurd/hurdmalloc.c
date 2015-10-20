@@ -202,8 +202,7 @@ more_memory(int size, free_list_t fl)
 
 /* Declaration changed to standard one for GNU.  */
 void *
-malloc(size)
-	size_t size;
+malloc (size_t size)
 {
 	int i, n;
 	free_list_t fl;
@@ -269,8 +268,7 @@ malloc(size)
 
 /* Declaration changed to standard one for GNU.  */
 void
-free(base)
-	void *base;
+free (void *base)
 {
 	header_t h;
 	free_list_t fl;
@@ -318,9 +316,7 @@ free(base)
 
 /* Declaration changed to standard one for GNU.  */
 void *
-realloc(old_base, new_size)
-        void *old_base;
-        size_t new_size;
+realloc (void *old_base, size_t new_size)
 {
 	header_t h;
 	free_list_t fl;

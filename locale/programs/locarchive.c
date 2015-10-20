@@ -1127,11 +1127,8 @@ add_locale (struct locarhandle *ah,
    of the files if necessary.  Add all the names, possibly overwriting
    old files.  */
 int
-add_locale_to_archive (ah, name, data, replace)
-     struct locarhandle *ah;
-     const char *name;
-     locale_data_t data;
-     bool replace;
+add_locale_to_archive (struct locarhandle *ah, const char *name,
+		       locale_data_t data, bool replace)
 {
   char *normalized_name = NULL;
   uint32_t locrec_offset;
@@ -1329,10 +1326,7 @@ add_locale_to_archive (ah, name, data, replace)
 
 
 int
-add_locales_to_archive (nlist, list, replace)
-     size_t nlist;
-     char *list[];
-     bool replace;
+add_locales_to_archive (size_t nlist, char *list[], bool replace)
 {
   struct locarhandle ah;
   int result = 0;
@@ -1529,9 +1523,7 @@ add_locales_to_archive (nlist, list, replace)
 
 
 int
-delete_locales_from_archive (nlist, list)
-     size_t nlist;
-     char *list[];
+delete_locales_from_archive (size_t nlist, char *list[])
 {
   struct locarhandle ah;
   struct locarhead *head;

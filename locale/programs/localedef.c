@@ -504,9 +504,7 @@ construct_output_path (char *path)
    names.  Normalization allows the user to use any of the common
    names.  */
 static const char *
-normalize_codeset (codeset, name_len)
-     const char *codeset;
-     size_t name_len;
+normalize_codeset (const char *codeset, size_t name_len)
 {
   int len = 0;
   int only_digit = 1;

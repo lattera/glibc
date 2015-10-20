@@ -22,9 +22,7 @@
 
 
 int
-__pthread_attr_getstackaddr (attr, stackaddr)
-     const pthread_attr_t *attr;
-     void **stackaddr;
+__pthread_attr_getstackaddr (const pthread_attr_t *attr, void **stackaddr)
 {
   struct pthread_attr *iattr;
 

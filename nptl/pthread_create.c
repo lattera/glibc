@@ -80,8 +80,7 @@ static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
 
 struct pthread *
 internal_function
-__find_in_stack_list (pd)
-     struct pthread *pd;
+__find_in_stack_list (struct pthread *pd)
 {
   list_t *entry;
   struct pthread *result = NULL;

@@ -30,9 +30,7 @@
 
 
 int
-pthread_getattr_np (thread_id, attr)
-     pthread_t thread_id;
-     pthread_attr_t *attr;
+pthread_getattr_np (pthread_t thread_id, pthread_attr_t *attr)
 {
   struct pthread *thread = (struct pthread *) thread_id;
   struct pthread_attr *iattr = (struct pthread_attr *) attr;

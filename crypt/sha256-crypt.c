@@ -99,11 +99,7 @@ extern char *__sha256_crypt (const char *key, const char *salt);
 
 
 char *
-__sha256_crypt_r (key, salt, buffer, buflen)
-     const char *key;
-     const char *salt;
-     char *buffer;
-     int buflen;
+__sha256_crypt_r (const char *key, const char *salt, char *buffer, int buflen)
 {
   unsigned char alt_result[32]
     __attribute__ ((__aligned__ (__alignof__ (uint32_t))));

@@ -30,8 +30,7 @@ int __attr_list_lock = LLL_LOCK_INITIALIZER;
 
 
 int
-__pthread_attr_init_2_1 (attr)
-     pthread_attr_t *attr;
+__pthread_attr_init_2_1 (pthread_attr_t *attr)
 {
   struct pthread_attr *iattr;
 
@@ -54,8 +53,7 @@ versioned_symbol (libpthread, __pthread_attr_init_2_1, pthread_attr_init,
 
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 int
-__pthread_attr_init_2_0 (attr)
-     pthread_attr_t *attr;
+__pthread_attr_init_2_0 (pthread_attr_t *attr)
 {
   /* This code is specific to the old LinuxThread code which has a too
      small pthread_attr_t definition.  The struct looked like

@@ -23,10 +23,7 @@
 
 
 int
-openat64 (dfd, file, oflag)
-     int dfd;
-     const char *file;
-     int oflag;
+openat64 (int dfd, const char *file, int oflag, ...)
 {
   assert (!__OPEN_NEEDS_MODE (oflag));
 

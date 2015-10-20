@@ -28,10 +28,8 @@
 
 
 int
-__pthread_attr_setstack (attr, stackaddr, stacksize)
-     pthread_attr_t *attr;
-     void *stackaddr;
-     size_t stacksize;
+__pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
+			 size_t stacksize)
 {
   struct pthread_attr *iattr;
 

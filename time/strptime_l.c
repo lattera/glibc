@@ -41,9 +41,7 @@
 #  define localtime_r my_localtime_r
 static struct tm *localtime_r (const time_t *, struct tm *);
 static struct tm *
-localtime_r (t, tp)
-     const time_t *t;
-     struct tm *tp;
+localtime_r (const time_t *t, struct tm *tp)
 {
   struct tm *l = localtime (t);
   if (! l)

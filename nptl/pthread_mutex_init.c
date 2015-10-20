@@ -55,9 +55,8 @@ prio_inherit_missing (void)
 }
 
 int
-__pthread_mutex_init (mutex, mutexattr)
-     pthread_mutex_t *mutex;
-     const pthread_mutexattr_t *mutexattr;
+__pthread_mutex_init (pthread_mutex_t *mutex,
+		      const pthread_mutexattr_t *mutexattr)
 {
   const struct pthread_mutexattr *imutexattr;
 

@@ -38,14 +38,8 @@ static const CHAR *END (const CHAR *patternp) internal_function;
 
 static int
 internal_function
-FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
-     const CHAR *pattern;
-     const CHAR *string;
-     const CHAR *string_end;
-     int no_leading_period;
-     int flags;
-     struct STRUCT *ends;
-     size_t alloca_used;
+FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
+     int no_leading_period, int flags, struct STRUCT *ends, size_t alloca_used)
 {
   const CHAR *p = pattern, *n = string;
   UCHAR c;

@@ -21,9 +21,7 @@
 
 
 int
-pthread_attr_setguardsize (attr, guardsize)
-     pthread_attr_t *attr;
-     size_t guardsize;
+pthread_attr_setguardsize (pthread_attr_t *attr, size_t guardsize)
 {
   struct pthread_attr *iattr;
 

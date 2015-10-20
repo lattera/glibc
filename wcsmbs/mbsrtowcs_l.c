@@ -37,12 +37,8 @@
 
 size_t
 attribute_hidden
-__mbsrtowcs_l (dst, src, len, ps, l)
-     wchar_t *dst;
-     const char **src;
-     size_t len;
-     mbstate_t *ps;
-     __locale_t l;
+__mbsrtowcs_l (wchar_t *dst, const char **src, size_t len, mbstate_t *ps,
+	       __locale_t l)
 {
   struct __gconv_step_data data;
   size_t result;

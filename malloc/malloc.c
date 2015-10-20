@@ -4667,7 +4667,7 @@ int_mallinfo (mstate av, struct mallinfo *m)
 
 
 struct mallinfo
-__libc_mallinfo ()
+__libc_mallinfo (void)
 {
   struct mallinfo m;
   mstate ar_ptr;

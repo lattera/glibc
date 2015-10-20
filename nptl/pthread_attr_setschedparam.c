@@ -23,9 +23,8 @@
 
 
 int
-__pthread_attr_setschedparam (attr, param)
-     pthread_attr_t *attr;
-     const struct sched_param *param;
+__pthread_attr_setschedparam (pthread_attr_t *attr,
+			      const struct sched_param *param)
 {
   assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   struct pthread_attr *iattr = (struct pthread_attr *) attr;

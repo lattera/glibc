@@ -85,9 +85,7 @@ const struct _IO_codecvt __libio_codecvt =
    the orientation first.  */
 #undef _IO_fwide
 int
-_IO_fwide (fp, mode)
-     _IO_FILE *fp;
-     int mode;
+_IO_fwide (_IO_FILE *fp, int mode)
 {
   /* Normalize the value.  */
   mode = mode < 0 ? -1 : (mode == 0 ? 0 : 1);

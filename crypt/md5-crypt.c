@@ -89,11 +89,7 @@ extern char *__md5_crypt (const char *key, const char *salt);
 /* This entry point is equivalent to the `crypt' function in Unix
    libcs.  */
 char *
-__md5_crypt_r (key, salt, buffer, buflen)
-     const char *key;
-     const char *salt;
-     char *buffer;
-     int buflen;
+__md5_crypt_r (const char *key, const char *salt, char *buffer, int buflen)
 {
   unsigned char alt_result[16]
     __attribute__ ((__aligned__ (__alignof__ (md5_uint32))));
