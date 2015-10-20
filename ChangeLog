@@ -1,3 +1,8 @@
+2015-10-21  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* debug/tst-backtrace4.c (handle_signal): Fix a comment and
+	warning message.
+
 2015-10-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makeconfig (+gccwarn-c): Add -Wold-style-definition.

@@ -49,9 +49,9 @@ handle_signal (int signum)
 
   /* Get the backtrace addresses.  */
   n = backtrace (addresses, sizeof (addresses) / sizeof (addresses[0]));
-  printf ("Obtained backtrace with %d functions (but wanted at least %d)\n",
+  printf ("Obtained backtrace with %d functions (want at least %d)\n",
 	  n, NUM_FUNCTIONS);
-  /* Check that there are at least six functions.  */
+  /* Check that there are at least NUM_FUNCTIONS functions.  */
   if (n < NUM_FUNCTIONS)
     {
       FAIL ();
