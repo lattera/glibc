@@ -71,11 +71,8 @@
 
 
 int
-__APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
-     FLOAT_TYPE value;
-     int ndigit, *decpt, *sign;
-     char *buf;
-     size_t len;
+__APPEND (FUNC_PREFIX, fcvt_r) (FLOAT_TYPE value, int ndigit, int *decpt,
+				int *sign, char *buf, size_t len)
 {
   ssize_t n;
   ssize_t i;
@@ -169,11 +166,8 @@ __APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
 }
 
 int
-__APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
-     FLOAT_TYPE value;
-     int ndigit, *decpt, *sign;
-     char *buf;
-     size_t len;
+__APPEND (FUNC_PREFIX, ecvt_r) (FLOAT_TYPE value, int ndigit, int *decpt,
+				int *sign, char *buf, size_t len)
 {
   int exponent = 0;
 

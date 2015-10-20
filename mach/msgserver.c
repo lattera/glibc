@@ -187,10 +187,10 @@ __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
 weak_alias (__mach_msg_server_timeout, mach_msg_server_timeout)
 
 mach_msg_return_t
-__mach_msg_server (demux, max_size, rcv_name)
-     boolean_t (*demux) (mach_msg_header_t *in, mach_msg_header_t *out);
-     mach_msg_size_t max_size;
-     mach_port_t rcv_name;
+__mach_msg_server (boolean_t (*demux) (mach_msg_header_t *in,
+				       mach_msg_header_t *out),
+		   mach_msg_size_t max_size,
+		   mach_port_t rcv_name)
 {
   return __mach_msg_server_timeout (demux, max_size, rcv_name,
 				    MACH_MSG_OPTION_NONE,

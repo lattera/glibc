@@ -181,17 +181,13 @@ static const unsigned short int __mon_yday[2][13] =
 # undef _NL_CURRENT_WORD
 # define _NL_CURRENT_WORD(category, item) \
   (current->values[_NL_ITEM_INDEX (item)].word)
-# define LOCALE_PARAM , locale
+# define LOCALE_PARAM , __locale_t locale
 # define LOCALE_ARG , locale
-# define LOCALE_PARAM_PROTO , __locale_t locale
-# define LOCALE_PARAM_DECL __locale_t locale;
 # define HELPER_LOCALE_ARG , current
 # define ISSPACE(Ch) __isspace_l (Ch, locale)
 #else
 # define LOCALE_PARAM
 # define LOCALE_ARG
-# define LOCALE_PARAM_DECL
-# define LOCALE_PARAM_PROTO
 # define HELPER_LOCALE_ARG
 # define ISSPACE(Ch) isspace (Ch)
 #endif
@@ -239,12 +235,8 @@ internal_function
 #else
 static char *
 #endif
-__strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
-     const char *rp;
-     const char *fmt;
-     struct tm *tmp;
-     void *statep;
-     LOCALE_PARAM_DECL
+__strptime_internal (const char *rp, const char *fmt, struct tm *tmp,
+		     void *statep LOCALE_PARAM)
 {
 #ifdef _LIBC
   struct __locale_data *const current = locale->__locales[LC_TIME];
@@ -1209,11 +1201,7 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 
 
 char *
-strptime (buf, format, tm LOCALE_PARAM)
-     const char *buf;
-     const char *format;
-     struct tm *tm;
-     LOCALE_PARAM_DECL
+strptime (const char *buf, const char *format, struct tm *tm LOCALE_PARAM)
 {
   return __strptime_internal (buf, format, tm, NULL LOCALE_ARG);
 }

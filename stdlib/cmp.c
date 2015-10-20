@@ -27,14 +27,7 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
    Return 1 if OP1 > OP2, 0 if they are equal, and -1 if OP1 < OP2.  */
 
 int
-#if __STDC__
 mpn_cmp (mp_srcptr op1_ptr, mp_srcptr op2_ptr, mp_size_t size)
-#else
-mpn_cmp (op1_ptr, op2_ptr, size)
-     mp_srcptr op1_ptr;
-     mp_srcptr op2_ptr;
-     mp_size_t size;
-#endif
 {
   mp_size_t i;
   mp_limb_t op1_word, op2_word;

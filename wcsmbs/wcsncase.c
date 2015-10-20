@@ -37,11 +37,9 @@
 #endif
 
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
-# define LOCALE_PARAM , loc
-# define LOCALE_PARAM_DECL __locale_t loc;
+# define LOCALE_PARAM , __locale_t loc
 #else
 # define LOCALE_PARAM
-# define LOCALE_PARAM_DECL
 #endif
 
 /* Compare no more than N wide characters of S1 and S2,
@@ -49,11 +47,7 @@
    greater than zero if S1 is lexicographically less
    than, equal to or greater than S2.  */
 int
-__wcsncasecmp (s1, s2, n LOCALE_PARAM)
-     const wchar_t *s1;
-     const wchar_t *s2;
-     size_t n;
-     LOCALE_PARAM_DECL
+__wcsncasecmp (const wchar_t *s1, const wchar_t *s2, size_t n LOCALE_PARAM)
 {
   wint_t c1, c2;
 

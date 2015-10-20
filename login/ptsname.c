@@ -24,18 +24,16 @@
    of the associated slave. */
 
 char *
-ptsname (fd)
-     int fd __attribute__ ((unused));
+ptsname (int fd __attribute__ ((unused)))
 {
   __set_errno (ENOSYS);
   return NULL;
 }
 
 int
-__ptsname_r (fd, buf, len)
-     int fd __attribute__ ((unused));
-     char *buf __attribute__ ((unused));
-     size_t len __attribute__ ((unused));
+__ptsname_r (int fd __attribute__ ((unused)),
+	     char *buf __attribute__ ((unused)),
+	     size_t len __attribute__ ((unused)))
 {
   __set_errno (ENOSYS);
   return ENOSYS;

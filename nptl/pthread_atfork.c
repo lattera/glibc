@@ -48,10 +48,8 @@ int
 /* Don't mark the compatibility function as hidden.  */
 attribute_hidden
 #endif
-__pthread_atfork (prepare, parent, child)
-     void (*prepare) (void);
-     void (*parent) (void);
-     void (*child) (void);
+__pthread_atfork (void (*prepare) (void), void (*parent) (void),
+		  void (*child) (void))
 {
   return __register_atfork (prepare, parent, child,
 			    &__dso_handle == NULL ? NULL : __dso_handle);

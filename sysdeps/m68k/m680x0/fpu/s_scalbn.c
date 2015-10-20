@@ -39,9 +39,7 @@
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 float_type
-__CONCATX(__scalbn,suffix) (x, exp)
-     float_type x;
-     int exp;
+__CONCATX(__scalbn,suffix) (float_type x, int exp)
 {
   return __m81_u(__CONCATX(__scalbn,suffix))(x, exp);
 }

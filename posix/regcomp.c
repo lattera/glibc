@@ -662,8 +662,7 @@ char *
    regcomp/regexec above without link errors.  */
 weak_function
 # endif
-re_comp (s)
-     const char *s;
+re_comp (const char *s)
 {
   reg_errcode_t ret;
   char *fastmap;

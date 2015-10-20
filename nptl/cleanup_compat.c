@@ -21,10 +21,8 @@
 
 
 void
-_pthread_cleanup_push (buffer, routine, arg)
-     struct _pthread_cleanup_buffer *buffer;
-     void (*routine) (void *);
-     void *arg;
+_pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
+		       void (*routine) (void *), void *arg)
 {
   struct pthread *self = THREAD_SELF;
 

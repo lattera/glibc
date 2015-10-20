@@ -35,21 +35,16 @@
 #endif
 
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
-# define LOCALE_PARAM , loc
-# define LOCALE_PARAM_DECL __locale_t loc;
+# define LOCALE_PARAM , __locale_t loc
 #else
 # define LOCALE_PARAM
-# define LOCALE_PARAM_DECL
 #endif
 
 /* Compare S1 and S2, ignoring case, returning less than, equal to or
    greater than zero if S1 is lexicographically less than,
    equal to or greater than S2.  */
 int
-__wcscasecmp (s1, s2 LOCALE_PARAM)
-     const wchar_t *s1;
-     const wchar_t *s2;
-     LOCALE_PARAM_DECL
+__wcscasecmp (const wchar_t *s1, const wchar_t *s2 LOCALE_PARAM)
 {
   wint_t c1, c2;
 

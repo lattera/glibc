@@ -487,11 +487,8 @@ report_thread_creation (struct pthread *pd)
 
 
 int
-__pthread_create_2_1 (newthread, attr, start_routine, arg)
-     pthread_t *newthread;
-     const pthread_attr_t *attr;
-     void *(*start_routine) (void *);
-     void *arg;
+__pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
+		      void *(*start_routine) (void *), void *arg)
 {
   STACK_VARIABLES;
 
@@ -723,11 +720,8 @@ versioned_symbol (libpthread, __pthread_create_2_1, pthread_create, GLIBC_2_1);
 
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 int
-__pthread_create_2_0 (newthread, attr, start_routine, arg)
-     pthread_t *newthread;
-     const pthread_attr_t *attr;
-     void *(*start_routine) (void *);
-     void *arg;
+__pthread_create_2_0 (pthread_t *newthread, const pthread_attr_t *attr,
+		      void *(*start_routine) (void *), void *arg)
 {
   /* The ATTR attribute is not really of type `pthread_attr_t *'.  It has
      the old size and access to the new members might crash the program.

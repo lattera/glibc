@@ -37,12 +37,10 @@ versioned_symbol (libc, __scandir64, scandir64, GLIBC_2_2);
 # include "olddirent.h"
 
 int
-__old_scandir64 (dir, namelist, select, cmp)
-     const char *dir;
-     struct __old_dirent64 ***namelist;
-     int (*select) (const struct __old_dirent64 *);
-     int (*cmp) (const struct __old_dirent64 **,
-		 const struct __old_dirent64 **);
+__old_scandir64 (const char *dir, struct __old_dirent64 ***namelist,
+		 int (*select) (const struct __old_dirent64 *),
+		 int (*cmp) (const struct __old_dirent64 **,
+			     const struct __old_dirent64 **))
 {
   DIR *dp = __opendir (dir);
   struct __old_dirent64 **v = NULL;

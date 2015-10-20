@@ -23,8 +23,7 @@
    the slave can be opened.  This is to avoid a race between opening the
    master and calling grantpt() to take possession of the slave. */
 int
-unlockpt (fd)
-     int fd __attribute__ ((unused));
+unlockpt (int fd __attribute__ ((unused)))
 {
   __set_errno (ENOSYS);
   return -1;

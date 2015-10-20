@@ -53,13 +53,17 @@
  * xdr procedure to call to handle each element of the array.
  */
 bool_t
-xdr_array (xdrs, addrp, sizep, maxsize, elsize, elproc)
-     XDR *xdrs;
-     caddr_t *addrp;		/* array pointer */
-     u_int *sizep;		/* number of elements */
-     u_int maxsize;		/* max numberof elements */
-     u_int elsize;		/* size in bytes of each element */
-     xdrproc_t elproc;		/* xdr routine to handle each element */
+xdr_array (XDR *xdrs,
+	   /* array pointer */
+	   caddr_t *addrp,
+	   /* number of elements */
+	   u_int *sizep,
+	   /* max numberof elements */
+	   u_int maxsize,
+	   /* size in bytes of each element */
+	   u_int elsize,
+	   /* xdr routine to handle each element */
+	   xdrproc_t elproc)
 {
   u_int i;
   caddr_t target = *addrp;

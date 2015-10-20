@@ -1781,10 +1781,7 @@ FLOAT
 #ifdef weak_function
 weak_function
 #endif
-__STRTOF (nptr, endptr, loc)
-     const STRING_TYPE *nptr;
-     STRING_TYPE **endptr;
-     __locale_t loc;
+__STRTOF (const STRING_TYPE *nptr, STRING_TYPE **endptr, __locale_t loc)
 {
   return ____STRTOF_INTERNAL (nptr, endptr, 0, loc);
 }

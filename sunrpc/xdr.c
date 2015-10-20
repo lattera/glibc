@@ -675,12 +675,15 @@ libc_hidden_nolink_sunrpc (xdr_netobj, GLIBC_2_0)
  * If there is no specific or default routine an error is returned.
  */
 bool_t
-xdr_union (xdrs, dscmp, unp, choices, dfault)
-     XDR *xdrs;
-     enum_t *dscmp;		/* enum to decide which arm to work on */
-     char *unp;			/* the union itself */
-     const struct xdr_discrim *choices;	/* [value, xdr proc] for each arm */
-     xdrproc_t dfault;		/* default xdr routine */
+xdr_union (XDR *xdrs,
+	   /* enum to decide which arm to work on */
+	   enum_t *dscmp,
+	   /* the union itself */
+	   char *unp,
+	   /* [value, xdr proc] for each arm */
+	   const struct xdr_discrim *choices,
+	   /* default xdr routine */
+	   xdrproc_t dfault)
 {
   enum_t dscm;
 

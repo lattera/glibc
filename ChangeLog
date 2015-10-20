@@ -1,5 +1,110 @@
 2015-10-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* debug/fortify_fail.c (__fortify_fail): Convert to
+	prototype-style function definition.  Use internal_function.
+	* libio/genops.c (save_for_backup): Convert to prototype-style
+	function definition.
+	* libio/wgenops.c (save_for_wbackup): Likewise.
+	* login/grantpt.c (grantpt): Likewise.
+	* login/ptsname.c (ptsname): Likewise.
+	(__ptsname_r): Likewise.
+	* login/unlockpt.c (unlockpt): Likewise.
+	* mach/msgserver.c (__mach_msg_server): Likewise.
+	* misc/efgcvt.c (__APPEND (FUNC_PREFIX, fcvt)): Likewise.
+	(__APPEND (FUNC_PREFIX, ecvt)): Likewise.
+	(__APPEND (FUNC_PREFIX, gcvt)): Likewise.
+	* misc/efgcvt_r.c (__APPEND (FUNC_PREFIX, fcvt_r)): Likewise.
+	(__APPEND (FUNC_PREFIX, ecvt_r)): Likewise.
+	* nptl/cleanup_compat.c (_pthread_cleanup_push): Likewise.
+	* nptl/cleanup_defer_compat.c (_pthread_cleanup_push_defer):
+	Likewise.
+	* nptl/libc_pthread_init.c (__libc_pthread_init): Likewise.  Use
+	internal_function.
+	* nptl/pthread_atfork.c (__pthread_atfork): Convert to
+	prototype-style function definition.
+	* nptl/pthread_create.c (__pthread_create_2_1): Likewise.
+	[SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)]
+	(__pthread_create_2_0): Likewise.
+	* nptl/pthread_key_create.c (__pthread_key_create): Likewise.
+	* nptl/register-atfork.c (__register_atfork): Likewise.
+	* posix/glob.c (glob): Likewise.
+	* posix/regcomp.c (re_comp): Likewise.
+	* posix/regexec.c (re_exec): Likewise.
+	* stdlib/add_n.c [__STDC__]: Make code unconditional.
+	[!__STDC__]: Remove conditional code.
+	* stdlib/cmp.c [__STDC__]: Make code unconditional.
+	[!__STDC__]: Remove conditional code.
+	* stdlib/divmod_1.c [__STDC__]: Make code unconditional.
+	[!__STDC__]: Remove conditional code.
+	* stdlib/divrem.c [__STDC__]: Make code unconditional.
+	[!__STDC__]: Remove conditional code.
+	* stdlib/lshift.c [__STDC__]: Make code unconditional.
+	[!__STDC__]: Remove conditional code.
+	* stdlib/mod_1.c [__STDC__]: Make code unconditional.
+	[!__STDC__]: Remove conditional code.
+	* stdlib/mul.c [__STDC__]: Make code unconditional.
+	[!__STDC__]: Remove conditional code.
+	* stdlib/mul_n.c [__STDC__]: Make code unconditional.
+	[!__STDC__]: Remove conditional code.
+	* stdlib/rshift.c [__STDC__]: Make code unconditional.
+	[!__STDC__]: Remove conditional code.
+	* stdlib/strtod.c (INTERNAL (STRTOF)): Convert to prototype-style
+	function definition.
+	(STRTOF): Likewise.
+	* stdlib/strtod_l.c (__STRTOF): Likewise.
+	* stdlib/strtol.c (INTERNAL (strtol)): Likewise.
+	* stdlib/strtol_l.c (INTERNAL (__strtol_l)): Likewise.
+	(__strtol_l): Likewise.
+	* stdlib/sub_n.c [__STDC__]: Make code unconditional.
+	[!__STDC__]: Remove conditional code.
+	* string/memrchr.c (MEMRCHR): Convert to prototype-style function
+	definition.
+	* string/strcasecmp.c (LOCALE_PARAM_DECL): Remove macro.
+	[USE_IN_EXTENDED_LOCALE_MODEL] (LOCALE_PARAM): Include argument
+	type.
+	(__strcasecmp): Convert to prototype-style function definition.
+	* string/strncase.c (LOCALE_PARAM_DECL): Remove macro.
+	[USE_IN_EXTENDED_LOCALE_MODEL] (LOCALE_PARAM): Include argument
+	type.
+	(__strncasecmp): Convert to prototype-style function definition.
+	* sunrpc/pm_getport.c (__libc_rpc_getport): Likewise.
+	* sunrpc/xdr.c (xdr_union): Likewise.
+	* sunrpc/xdr_array.c (xdr_array): Likewise.
+	* sunrpc/xdr_ref.c (xdr_reference): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_atan.c (__CONCATX(__,FUNC)): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_isinf.c (__CONCATX(__,FUNC)):
+	Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_scalbn.c (__CONCATX(__scalbn,suffix):
+	Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_sincos.c (CONCATX(__,FUNC)): Likewise.
+	* sysdeps/unix/sysv/linux/i386/scandir64.c (__old_scandir64):
+	Likewise.
+	* time/strftime_l.c (LOCALE_PARAM_DECL): Remove macro.
+	(LOCALE_PARAM_PROTO): Likewise.
+	[_LIBC && USE_IN_EXTENDED_LOCALE_MODEL] (LOCALE_PARAM): Include
+	argument type.
+	(ut_argument_spec): Remove macro.
+	(ut_argument_spec_iso): Rename to ut_argument_spec.
+	(memcpy_lowcase): Use LOCALE_PARAM in declaration.  Convert to
+	prototype-style function definition.
+	(memcpy_uppcase): Likewise.
+	(__strftime_internal): Likewise.
+	(my_strftime): Likewise.
+	* time/strptime_l.c (LOCALE_PARAM_PROTO): Remove macro.
+	(LOCALE_PARAM_DECL): Likewise.
+	[_LIBC] (LOCALE_PARAM): Include argument type.
+	(__strptime_internal): Convert to prototype-style function
+	definition.
+	(strptime): Likewise.
+	* wcsmbs/wcscasecmp.c (LOCALE_PARAM_DECL): Remove macro.
+	[USE_IN_EXTENDED_LOCALE_MODEL] (LOCALE_PARAM): Include argument
+	type.
+	(__wcscasecmp): Convert to prototype-style function definition.
+	* wcsmbs/wcsncase.c (LOCALE_PARAM_DECL): Remove macro.
+	[USE_IN_EXTENDED_LOCALE_MODEL] (LOCALE_PARAM): Include argument
+	type.
+	(__wcsncasecmp): Convert to prototype-style function definition.
+
 	* crypt/md5-crypt.c (__md5_crypt_r): Convert to prototype-style
 	function definition.
 	* crypt/sha256-crypt.c (__sha256_crypt_r): Likewise.

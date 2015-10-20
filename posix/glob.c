@@ -250,11 +250,8 @@ int
 #ifdef GLOB_ATTRIBUTE
 GLOB_ATTRIBUTE
 #endif
-glob (pattern, flags, errfunc, pglob)
-     const char *pattern;
-     int flags;
-     int (*errfunc) (const char *, int);
-     glob_t *pglob;
+glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
+      glob_t *pglob)
 {
   const char *filename;
   char *dirname = NULL;

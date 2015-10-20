@@ -27,8 +27,7 @@
 #define CONCATX(a,b) __CONCAT(a,b)
 
 void
-CONCATX(__,FUNC) (x, sinx, cosx)
-     float_type x, *sinx, *cosx;
+CONCATX(__,FUNC) (float_type x, float_type *sinx, float_type *cosx)
 {
   __m81_u(CONCATX(__,FUNC))(x, sinx, cosx);
 }

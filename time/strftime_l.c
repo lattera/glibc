@@ -284,16 +284,12 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 # undef _NL_CURRENT
 # define _NL_CURRENT(category, item) \
   (current->values[_NL_ITEM_INDEX (item)].string)
-# define LOCALE_PARAM , loc
+# define LOCALE_PARAM , __locale_t loc
 # define LOCALE_ARG , loc
-# define LOCALE_PARAM_DECL  __locale_t loc;
-# define LOCALE_PARAM_PROTO , __locale_t loc
 # define HELPER_LOCALE_ARG  , current
 #else
 # define LOCALE_PARAM
-# define LOCALE_PARAM_PROTO
 # define LOCALE_ARG
-# define LOCALE_PARAM_DECL
 # ifdef _LIBC
 #  define HELPER_LOCALE_ARG , _NL_CURRENT_DATA (LC_TIME)
 # else
@@ -330,14 +326,10 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 #define ISDIGIT(Ch) ((unsigned int) (Ch) - L_('0') <= 9)
 
 static CHAR_T *memcpy_lowcase (CHAR_T *dest, const CHAR_T *src,
-			       size_t len LOCALE_PARAM_PROTO) __THROW;
+			       size_t len LOCALE_PARAM) __THROW;
 
 static CHAR_T *
-memcpy_lowcase (dest, src, len LOCALE_PARAM)
-     CHAR_T *dest;
-     const CHAR_T *src;
-     size_t len;
-     LOCALE_PARAM_DECL
+memcpy_lowcase (CHAR_T *dest, const CHAR_T *src, size_t len LOCALE_PARAM)
 {
   while (len-- > 0)
     dest[len] = TOLOWER ((UCHAR_T) src[len], loc);
@@ -345,14 +337,10 @@ memcpy_lowcase (dest, src, len LOCALE_PARAM)
 }
 
 static CHAR_T *memcpy_uppcase (CHAR_T *dest, const CHAR_T *src,
-			       size_t len LOCALE_PARAM_PROTO) __THROW;
+			       size_t len LOCALE_PARAM) __THROW;
 
 static CHAR_T *
-memcpy_uppcase (dest, src, len LOCALE_PARAM)
-     CHAR_T *dest;
-     const CHAR_T *src;
-     size_t len;
-     LOCALE_PARAM_DECL
+memcpy_uppcase (CHAR_T *dest, const CHAR_T *src, size_t len LOCALE_PARAM)
 {
   while (len-- > 0)
     dest[len] = TOUPPER ((UCHAR_T) src[len], loc);
@@ -429,8 +417,7 @@ static CHAR_T const month_name[][10] =
 #ifdef emacs
 # define my_strftime emacs_strftimeu
 # define ut_argument , ut
-# define ut_argument_spec int ut;
-# define ut_argument_spec_iso , int ut
+# define ut_argument_spec , int ut
 #else
 # ifdef COMPILE_WIDE
 #  define my_strftime wcsftime
@@ -441,15 +428,14 @@ static CHAR_T const month_name[][10] =
 # endif
 # define ut_argument
 # define ut_argument_spec
-# define ut_argument_spec_iso
 /* We don't have this information in general.  */
 # define ut 0
 #endif
 
 static size_t __strftime_internal (CHAR_T *, size_t, const CHAR_T *,
 				   const struct tm *, bool *
-				   ut_argument_spec_iso
-				   LOCALE_PARAM_PROTO) __THROW;
+				   ut_argument_spec
+				   LOCALE_PARAM) __THROW;
 
 /* Write information from TP into S according to the format
    string FORMAT, writing no more that MAXSIZE characters
@@ -459,13 +445,8 @@ static size_t __strftime_internal (CHAR_T *, size_t, const CHAR_T *,
    written, use NULL for S and (size_t) UINT_MAX for MAXSIZE.  */
 
 size_t
-my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
-     CHAR_T *s;
-     size_t maxsize;
-     const CHAR_T *format;
-     const struct tm *tp;
-     ut_argument_spec
-     LOCALE_PARAM_DECL
+my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
+	     const struct tm *tp ut_argument_spec LOCALE_PARAM)
 {
 #if !defined _LIBC && HAVE_TZNAME && HAVE_TZSET
   /* Solaris 2.5 tzset sometimes modifies the storage returned by localtime.
@@ -483,15 +464,9 @@ libc_hidden_def (my_strftime)
 #endif
 
 static size_t
-__strftime_internal (s, maxsize, format, tp, tzset_called ut_argument
-		     LOCALE_PARAM)
-      CHAR_T *s;
-      size_t maxsize;
-      const CHAR_T *format;
-      const struct tm *tp;
-      bool *tzset_called;
-      ut_argument_spec
-      LOCALE_PARAM_DECL
+__strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
+		     const struct tm *tp, bool *tzset_called
+		     ut_argument_spec LOCALE_PARAM)
 {
 #if defined _LIBC && defined USE_IN_EXTENDED_LOCALE_MODEL
   struct __locale_data *const current = loc->__locales[LC_TIME];

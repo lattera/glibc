@@ -61,10 +61,7 @@ __memrchr
 #else
 MEMRCHR
 #endif
-     (s, c_in, n)
-     const __ptr_t s;
-     int c_in;
-     size_t n;
+     (const __ptr_t s, int c_in, size_t n)
 {
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;

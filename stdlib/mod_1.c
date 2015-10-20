@@ -37,15 +37,8 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
    here (not udiv_qrnnd).  */
 
 mp_limb_t
-#if __STDC__
 mpn_mod_1 (mp_srcptr dividend_ptr, mp_size_t dividend_size,
 	   mp_limb_t divisor_limb)
-#else
-mpn_mod_1 (dividend_ptr, dividend_size, divisor_limb)
-     mp_srcptr dividend_ptr;
-     mp_size_t dividend_size;
-     mp_limb_t divisor_limb;
-#endif
 {
   mp_size_t i;
   mp_limb_t n1, n0, r;

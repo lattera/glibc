@@ -243,9 +243,7 @@ static int
 #ifdef _LIBC
 internal_function
 #endif
-save_for_backup (fp, end_p)
-     _IO_FILE *fp;
-     char *end_p;
+save_for_backup (_IO_FILE *fp, char *end_p)
 {
   /* Append [_IO_read_base..end_p] to backup area. */
   _IO_ssize_t least_mark = _IO_least_marker (fp, end_p);

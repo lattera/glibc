@@ -27,8 +27,7 @@
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 float_type
-__CONCATX(__,FUNC) (x)
-     float_type x;
+__CONCATX(__,FUNC) (float_type x)
 {
   return __m81_u(__CONCATX(__,FUNC))(x);
 }

@@ -80,11 +80,8 @@ fork_handler_alloc (void)
 
 
 int
-__register_atfork (prepare, parent, child, dso_handle)
-     void (*prepare) (void);
-     void (*parent) (void);
-     void (*child) (void);
-     void *dso_handle;
+__register_atfork (void (*prepare) (void), void (*parent) (void),
+		   void (*child) (void), void *dso_handle)
 {
   /* Get the lock to not conflict with other allocations.  */
   lll_lock (__fork_lock, LLL_PRIVATE);

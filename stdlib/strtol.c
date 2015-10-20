@@ -92,11 +92,8 @@ extern INT INTERNAL (__strtol_l) (const STRING_TYPE *, STRING_TYPE **, int,
 
 
 INT
-INTERNAL (strtol) (nptr, endptr, base, group)
-     const STRING_TYPE *nptr;
-     STRING_TYPE **endptr;
-     int base;
-     int group;
+INTERNAL (strtol) (const STRING_TYPE *nptr, STRING_TYPE **endptr,
+		   int base, int group)
 {
   return INTERNAL (__strtol_l) (nptr, endptr, base, group, _NL_CURRENT_LOCALE);
 }

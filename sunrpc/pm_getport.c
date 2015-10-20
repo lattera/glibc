@@ -82,14 +82,9 @@ __get_socket (struct sockaddr_in *saddr)
  */
 u_short
 internal_function
-__libc_rpc_getport (address, program, version, protocol, timeout_sec,
-		    tottimeout_sec)
-     struct sockaddr_in *address;
-     u_long program;
-     u_long version;
-     u_int protocol;
-     time_t timeout_sec;
-     time_t tottimeout_sec;
+__libc_rpc_getport (struct sockaddr_in *address, u_long program,
+		    u_long version, u_int protocol, time_t timeout_sec,
+		    time_t tottimeout_sec)
 {
   const struct timeval timeout = {timeout_sec, 0};
   const struct timeval tottimeout = {tottimeout_sec, 0};

@@ -23,8 +23,7 @@
    with the slave to the calling process, and set its group and
    mode appropriately.  Note that this is an unprivileged operation. */
 int
-grantpt (fd)
-     int fd __attribute__ ((unused));
+grantpt (int fd __attribute__ ((unused)))
 {
   __set_errno (ENOSYS);
   return -1;

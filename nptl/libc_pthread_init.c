@@ -38,10 +38,9 @@ extern int __libc_multiple_threads attribute_hidden;
 
 int *
 #endif
-__libc_pthread_init (ptr, reclaim, functions)
-     unsigned long int *ptr;
-     void (*reclaim) (void);
-     const struct pthread_functions *functions;
+internal_function
+__libc_pthread_init (unsigned long int *ptr, void (*reclaim) (void),
+		     const struct pthread_functions *functions)
 {
   /* Remember the pointer to the generation counter in libpthread.  */
   __fork_generation_pointer = ptr;
