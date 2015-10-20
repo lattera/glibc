@@ -22,9 +22,7 @@
 #include <limits.h>
 
 int
-__lcong48_r (param, buffer)
-     unsigned short int param[7];
-     struct drand48_data *buffer;
+__lcong48_r (unsigned short int param[7], struct drand48_data *buffer)
 {
   /* Store the given values.  */
   memcpy (buffer->__x, &param[0], sizeof (buffer->__x));

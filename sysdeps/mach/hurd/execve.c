@@ -22,10 +22,7 @@
 /* Replace the current process, executing FILE_NAME with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
 int
-__execve (file_name, argv, envp)
-     const char *file_name;
-     char *const argv[];
-     char *const envp[];
+__execve (const char *file_name, char *const argv[], char *const envp[])
 {
   error_t err;
   file_t file = __file_name_lookup (file_name, O_EXEC, 0);

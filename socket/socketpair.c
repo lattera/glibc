@@ -23,11 +23,7 @@
    descriptors for them in FDS[0] and FDS[1].  If PROTOCOL is zero,
    one will be chosen automatically.  Returns 0 on success, -1 for errors.  */
 int
-socketpair (domain, type, protocol, fds)
-     int domain;
-     int type;
-     int protocol;
-     int fds[2];
+socketpair (int domain, int type, int protocol, int fds[2])
 {
   __set_errno (ENOSYS);
   return -1;

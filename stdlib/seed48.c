@@ -20,8 +20,7 @@
 
 
 unsigned short int *
-seed48 (seed16v)
-     unsigned short int seed16v[3];
+seed48 (unsigned short int seed16v[3])
 {
   (void) __seed48_r (seed16v, &__libc_drand48_data);
 

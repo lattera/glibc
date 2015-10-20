@@ -23,10 +23,7 @@
 /* Execute the file FD refers to, overlaying the running program image.
    ARGV and ENVP are passed to the new program, as for `execve'.  */
 int
-fexecve (fd, argv, envp)
-     int fd;
-     char *const argv[];
-     char *const envp[];
+fexecve (int fd, char *const argv[], char *const envp[])
 {
   if (fd < 0 || argv == NULL || envp == NULL)
     {

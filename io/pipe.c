@@ -24,8 +24,7 @@
    bytes written on PIPEDES[1] can be read from PIPEDES[0].
    Returns 0 if successful, -1 if not.  */
 int
-__pipe (__pipedes)
-     int __pipedes[2];
+__pipe (int __pipedes[2])
 {
   if (__pipedes == NULL)
     {

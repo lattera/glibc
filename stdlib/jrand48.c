@@ -20,8 +20,7 @@
 
 
 long int
-jrand48 (xsubi)
-     unsigned short int xsubi[3];
+jrand48 (unsigned short int xsubi[3])
 {
   long int result;
 

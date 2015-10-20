@@ -30,9 +30,7 @@ good_bye (void)
 }
 
 int
-main(argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char *argv[])
 {
 	char key[64],plain[64],cipher[64],answer[64];
 	int i;

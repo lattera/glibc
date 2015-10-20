@@ -19,10 +19,8 @@
 #include <stdlib.h>
 
 int
-__jrand48_r (xsubi, buffer, result)
-     unsigned short int xsubi[3];
-     struct drand48_data *buffer;
-     long int *result;
+__jrand48_r (unsigned short int xsubi[3], struct drand48_data *buffer,
+	     long int *result)
 {
   /* Compute next state.  */
   if (__drand48_iterate (xsubi, buffer) < 0)

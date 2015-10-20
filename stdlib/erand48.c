@@ -20,8 +20,7 @@
 
 
 double
-erand48 (xsubi)
-     unsigned short int xsubi[3];
+erand48 (unsigned short int xsubi[3])
 {
   double result;
 

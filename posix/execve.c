@@ -23,10 +23,7 @@
 /* Replace the current process, executing PATH with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
 int
-__execve (path, argv, envp)
-     const char *path;
-     char *const argv[];
-     char *const envp[];
+__execve (const char *path, char *const argv[], char *const envp[])
 {
   if (path == NULL || argv == NULL || envp == NULL)
     {

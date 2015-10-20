@@ -24,10 +24,7 @@
 /* Change the access time of FILE relative to FD to TVP[0] and
    the modification time of FILE to TVP[1].  */
 int
-futimesat (fd, file, tvp)
-     int fd;
-     const char *file;
-     const struct timeval tvp[2];
+futimesat (int fd, const char *file, const struct timeval tvp[2])
 {
   if (fd < 0
       && (file == NULL
