@@ -1,5 +1,36 @@
 2015-10-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* crypt/crypt.c (_ufc_doit_r): Convert to prototype-style function
+	definition.
+	(_ufc_doit_r): Likewise.
+	* crypt/crypt_util.c (_ufc_copymem): Likewise.
+	(_ufc_output_conversion_r): Likewise.
+	* inet/inet_mkadr.c (__inet_makeaddr): Likewise.
+	* inet/rcmd.c (rcmd_af): Likewise.
+	(rcmd): Likewise.
+	(ruserok_af): Likewise.
+	(ruserok): Likewise.
+	(ruserok2_sa): Likewise.
+	(ruserok_sa): Likewise.
+	(iruserok_af): Likewise.
+	(iruserok): Likewise.
+	(__ivaliduser): Likewise.
+	(__validuser2_sa): Likewise.
+	* inet/rexec.c (rexec_af): Likewise.
+	(rexec): Likewise.
+	* inet/ruserpass.c (ruserpass): Likewise.
+	* locale/programs/xmalloc.c (xcalloc): Likewise.
+	* manual/examples/timeval_subtract.c (timeval_subtract): Likewise.
+	* math/w_drem.c (__drem): Likewise.
+	* math/w_dremf.c (__dremf): Likewise.
+	* math/w_dreml.c (__dreml): Likewise.
+	* misc/daemon.c (daemon): Likewise.
+	* resolv/res_debug.c (p_fqnname): Likewise.
+	* stdlib/div.c (div): Likewise.
+	* string/memcmp.c (memcmp_bytes): Likewise.
+	* sunrpc/pmap_rmt.c (pmap_rmtcall): Likewise.
+	* sunrpc/svc_udp.c (svcudp_bufcreate): Likewise.
+
 	* crypt/cert.c (main): Convert to prototype-style function
 	definition.
 	* io/pipe.c (__pipe): Likewise.

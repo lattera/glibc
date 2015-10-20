@@ -49,12 +49,8 @@ int	rexecoptions;
 libc_freeres_ptr (static char *ahostbuf);
 
 int
-rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
-	char **ahost;
-	int rport;
-	const char *name, *pass, *cmd;
-	int *fd2p;
-	sa_family_t af;
+rexec_af (char **ahost, int rport, const char *name, const char *pass,
+	  const char *cmd, int *fd2p, sa_family_t af)
 {
 	struct sockaddr_storage from;
 	struct addrinfo hints, *res0;
@@ -198,11 +194,8 @@ bad:
 libc_hidden_def (rexec_af)
 
 int
-rexec(ahost, rport, name, pass, cmd, fd2p)
-	char **ahost;
-	int rport;
-	const char *name, *pass, *cmd;
-	int *fd2p;
+rexec (char **ahost, int rport, const char *name, const char *pass,
+       const char *cmd, int *fd2p)
 {
 	return rexec_af(ahost, rport, name, pass, cmd, fd2p, AF_INET);
 }

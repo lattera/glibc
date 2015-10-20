@@ -51,8 +51,7 @@
 
 /* Return the `div_t' representation of NUMER over DENOM.  */
 div_t
-div (numer, denom)
-     int numer, denom;
+div (int numer, int denom)
 {
   div_t result;
 

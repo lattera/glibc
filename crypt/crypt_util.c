@@ -304,9 +304,7 @@ _ufc_clearmem (char *start, int cnt)
 }
 
 void
-_ufc_copymem(from, to, cnt)
-     char *from, *to;
-     int cnt;
+_ufc_copymem (char *from, char *to, int cnt)
 {
   while(cnt--)
     *to++ = *from++;
@@ -762,10 +760,8 @@ _ufc_dofinalperm_r (ufc_long *res, struct crypt_data * __restrict __data)
  */
 
 void
-_ufc_output_conversion_r(v1, v2, salt, __data)
-     ufc_long v1, v2;
-     const char *salt;
-     struct crypt_data * __restrict __data;
+_ufc_output_conversion_r (ufc_long v1, ufc_long v2, const char *salt,
+			  struct crypt_data * __restrict __data)
 {
   int i, s, shf;
 

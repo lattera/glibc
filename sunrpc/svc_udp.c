@@ -118,9 +118,7 @@ struct svcudp_data
  * The routines returns NULL if a problem occurred.
  */
 SVCXPRT *
-svcudp_bufcreate (sock, sendsz, recvsz)
-     int sock;
-     u_int sendsz, recvsz;
+svcudp_bufcreate (int sock, u_int sendsz, u_int recvsz)
 {
   bool_t madesock = FALSE;
   SVCXPRT *xprt;

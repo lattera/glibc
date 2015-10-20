@@ -10,8 +10,7 @@
 #include <math.h>
 
 long double
-__dreml(x, y)
-	long double x, y;
+__dreml (long double x, long double y)
 {
 	return __remainderl(x, y);
 }

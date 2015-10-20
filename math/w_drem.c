@@ -8,8 +8,7 @@
 #include <math.h>
 
 double
-__drem(x, y)
-	double x, y;
+__drem (double x, double y)
 {
 	return __remainder(x, y);
 }
