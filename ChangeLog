@@ -1,3 +1,9 @@
+2015-10-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19156]
+	* sysdeps/ieee754/ldbl-128/e_j0l.c (__ieee754_j0l): Return 1 for
+	arguments very close to 0.
+
 2015-10-21  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/unix/sysv/linux/tile/sysdep.h (PSEUDO_END)

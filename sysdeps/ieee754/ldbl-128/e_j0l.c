@@ -693,6 +693,8 @@ __ieee754_j0l (long double x)
   xx = fabsl (x);
   if (xx <= 2.0L)
     {
+      if (xx < 0x1p-57L)
+	return 1.0L;
       /* 0 <= x <= 2 */
       z = xx * xx;
       p = z * z * neval (z, J0_2N, NJ0_2N) / deval (z, J0_2D, NJ0_2D);
