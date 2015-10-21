@@ -1,3 +1,7 @@
+2015-10-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* io/ftwtest-sh: Also trap on exit to remove temporary files.
+
 2015-10-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/i386/libc-do-syscall.S: Replace
