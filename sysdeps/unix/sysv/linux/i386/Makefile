@@ -4,14 +4,18 @@ default-abi := 32
 ifeq ($(subdir),misc)
 sysdep_routines += ioperm iopl vm86
 # %ebp may be used to pass the 6th argument to syscall.
-CFLAGS-epoll_pwait.c += -fomit-frame-pointer
-CFLAGS-mmap.c += -fomit-frame-pointer
-CFLAGS-mmap64.c += -fomit-frame-pointer
+CFLAGS-epoll_pwait.o += -fomit-frame-pointer
+CFLAGS-epoll_pwait.os += -fomit-frame-pointer
+CFLAGS-mmap.o += -fomit-frame-pointer
+CFLAGS-mmap.os += -fomit-frame-pointer
+CFLAGS-mmap64.o += -fomit-frame-pointer
+CFLAGS-mmap64.os += -fomit-frame-pointer
 endif
 
 ifeq ($(subdir),sysvipc)
 # %ebp may be used to pass the 6th argument to syscall.
-CFLAGS-semtimedop.c += -fomit-frame-pointer
+CFLAGS-semtimedop.o += -fomit-frame-pointer
+CFLAGS-semtimedop.os += -fomit-frame-pointer
 endif
 
 ifeq ($(subdir),elf)

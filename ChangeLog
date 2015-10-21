@@ -1,3 +1,19 @@
+2015-10-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/i386/Makefile (CFLAGS-epoll_pwait.c):
+	Renamed to ...
+	(CFLAGS-epoll_pwait.o): This.
+	(CFLAGS-mmap.c): Renamed to ...
+	(CFLAGS-mmap.o): This.
+	(CFLAGS-mmap64.c): Renamed to ...
+	(CFLAGS-mmap64.o): This.
+	(CFLAGS-epoll_pwait.os): New.
+	(CFLAGS-mmap.os): Likewise.
+	(CFLAGS-mmap64.os): Likewise.
+	(CFLAGS-semtimedop.os): Likewise.
+	(CFLAGS-semtimedop.c): Renamed to ...
+	(CFLAGS-semtimedop.o): This.
+
 2015-10-21  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* debug/tst-backtrace4.c (handle_signal): Fix a comment and
