@@ -1,3 +1,8 @@
+2015-10-21  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/unix/sysv/linux/tile/sysdep.h (PSEUDO_END)
+	(PSEUDO_NOERRNO, PSEUDO_END_NOERRNO): Undef before defining.
+
 2015-10-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (OPTIMIZE_FOR_GCC_5):

@@ -53,17 +53,20 @@
 # define SYSCALL_ERROR_NAME plt(__syscall_error)
 #endif
 
+#undef PSEUDO_END
 #define	PSEUDO_END(name)				\
 0:							\
   j SYSCALL_ERROR_NAME;					\
   END (name)
 
+#undef PSEUDO_NOERRNO
 #define	PSEUDO_NOERRNO(name, syscall_name, args)	\
   ENTRY	(name);						\
   DO_CALL(syscall_name, args)
 
 #define ret_NOERRNO  jrp lr
 
+#undef PSEUDO_END_NOERRNO
 #define	PSEUDO_END_NOERRNO(name) \
   END (name)
 
