@@ -257,14 +257,20 @@ is_network_up (int sock)
 }
 
 static enum clnt_stat
-clntudp_call (cl, proc, xargs, argsp, xresults, resultsp, utimeout)
-     CLIENT *cl;	/* client handle */
-     u_long proc;		/* procedure number */
-     xdrproc_t xargs;		/* xdr routine for args */
-     caddr_t argsp;		/* pointer to args */
-     xdrproc_t xresults;	/* xdr routine for results */
-     caddr_t resultsp;		/* pointer to results */
-     struct timeval utimeout;	/* seconds to wait before giving up */
+clntudp_call (/* client handle */
+	      CLIENT *cl,
+	      /* procedure number */
+	      u_long proc,
+	      /* xdr routine for args */
+	      xdrproc_t xargs,
+	      /* pointer to args */
+	      caddr_t argsp,
+	      /* xdr routine for results */
+	      xdrproc_t xresults,
+	      /* pointer to results */
+	      caddr_t resultsp,
+	      /* seconds to wait before giving up */
+	      struct timeval utimeout)
 {
   struct cu_data *cu = (struct cu_data *) cl->cl_private;
   XDR *xdrs;

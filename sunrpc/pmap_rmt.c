@@ -196,15 +196,22 @@ getbroadcastnets (struct in_addr *addrs, int naddrs)
 
 
 enum clnt_stat
-clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
-     u_long prog;		/* program number */
-     u_long vers;		/* version number */
-     u_long proc;		/* procedure number */
-     xdrproc_t xargs;		/* xdr routine for args */
-     caddr_t argsp;		/* pointer to args */
-     xdrproc_t xresults;	/* xdr routine for results */
-     caddr_t resultsp;		/* pointer to results */
-     resultproc_t eachresult;	/* call with each result obtained */
+clnt_broadcast (/* program number */
+		u_long prog,
+		/* version number */
+		u_long vers,
+		/* procedure number */
+		u_long proc,
+		/* xdr routine for args */
+		xdrproc_t xargs,
+		/* pointer to args */
+		caddr_t argsp,
+		/* xdr routine for results */
+		xdrproc_t xresults,
+		/* pointer to results */
+		caddr_t resultsp,
+		/* call with each result obtained */
+		resultproc_t eachresult)
 {
   enum clnt_stat stat = RPC_FAILED;
   AUTH *unix_auth = authunix_create_default ();

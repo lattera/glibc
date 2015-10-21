@@ -345,12 +345,11 @@ weak_alias (__re_search_2, re_search_2)
 #endif
 
 static int
-re_search_2_stub (bufp, string1, length1, string2, length2, start, range, regs,
-		  stop, ret_len)
-    struct re_pattern_buffer *bufp;
-    const char *string1, *string2;
-    int length1, length2, start, range, stop, ret_len;
-    struct re_registers *regs;
+internal_function
+re_search_2_stub (struct re_pattern_buffer *bufp, const char *string1,
+		  int length1, const char *string2, int length2, int start,
+		  int range, struct re_registers *regs,
+		  int stop, int ret_len)
 {
   const char *str;
   int rval;
@@ -606,14 +605,10 @@ re_exec (const char *s)
    (START + RANGE >= 0 && START + RANGE <= LENGTH)  */
 
 static reg_errcode_t
-__attribute_warn_unused_result__
-re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
-		    eflags)
-    const regex_t *preg;
-    const char *string;
-    int length, start, range, stop, eflags;
-    size_t nmatch;
-    regmatch_t pmatch[];
+__attribute_warn_unused_result__ internal_function
+re_search_internal (const regex_t *preg, const char *string, int length,
+		    int start, int range, int stop, size_t nmatch,
+		    regmatch_t pmatch[], int eflags)
 {
   reg_errcode_t err;
   const re_dfa_t *dfa = (const re_dfa_t *) preg->buffer;

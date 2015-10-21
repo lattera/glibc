@@ -85,10 +85,8 @@ static int      fts_safe_changedir (FTS *, FTSENT *, int, const char *)
 #define	BREAD		3		/* fts_read */
 
 FTS *
-fts_open(argv, options, compar)
-	char * const *argv;
-	int options;
-	int (*compar) (const FTSENT **, const FTSENT **);
+fts_open (char * const *argv, int options,
+	  int (*compar) (const FTSENT **, const FTSENT **))
 {
 	FTS *sp;
 	FTSENT *p, *root;

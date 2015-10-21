@@ -554,9 +554,9 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 
 #ifdef RESOLVSORT
 /* XXX - should really support CIDR which means explicit masks always. */
+/* XXX - should really use system's version of this */
 static u_int32_t
-net_mask(in)		/* XXX - should really use system's version of this */
-	struct in_addr in;
+net_mask (struct in_addr in)
 {
 	u_int32_t i = ntohl(in.s_addr);
 

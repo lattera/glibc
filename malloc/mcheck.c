@@ -369,8 +369,8 @@ mabort (enum mcheck_status status)
 #define malloc_opt_barrier(x) \
   ({ __typeof (x) __x = x; __asm ("" : "+m" (__x)); __x; })
 
-int mcheck (func)
-void (*func)(enum mcheck_status);
+int
+mcheck (void (*func) (enum mcheck_status))
 {
   abortfunc = (func != NULL) ? func : &mabort;
 
@@ -400,8 +400,8 @@ void (*func)(enum mcheck_status);
 libc_hidden_def (mcheck)
 #endif
 
-int mcheck_pedantic (func)
-void (*func)(enum mcheck_status);
+int
+mcheck_pedantic (void (*func) (enum mcheck_status))
 {
   int res = mcheck (func);
   if (res == 0)

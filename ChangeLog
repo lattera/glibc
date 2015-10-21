@@ -1,5 +1,23 @@
 2015-10-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* io/fts.c (fts_open): Convert to prototype-style function
+	definition.
+	* malloc/mcheck.c (mcheck): Likewise.
+	(mcheck_pedantic): Likewise.
+	* posix/regexec.c (re_search_2_stub): Likewise.  Use
+	internal_function.
+	(re_search_internal): Likewise.
+	* resolv/res_init.c [RESOLVSORT] (net_mask): Convert to
+	prototype-style function definition.
+	* sunrpc/clnt_udp.c (clntudp_call): Likewise.
+	* sunrpc/pmap_rmt.c (clnt_broadcast): Likewise.
+	* sunrpc/rpcsvc/rusers.x (xdr_utmp): Likewise.
+	(xdr_utmpptr): Likewise.
+	(xdr_utmparr): Likewise.
+	(xdr_utmpidle): Likewise.
+	(xdr_utmpidleptr): Likewise.
+	(xdr_utmpidlearr): Likewise.
+
 	* math/auto-libm-test-in: Add more tests of hypot, j0, j1, jn,
 	log, log10 and log2.
 	* math/auto-libm-test-out: Regenerated.
