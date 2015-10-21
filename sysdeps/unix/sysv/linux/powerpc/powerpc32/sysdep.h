@@ -26,13 +26,6 @@
    Handle them here so they can be catched by both C and assembler stubs in
    glibc.  */
 
-#ifdef __NR_pread64
-# ifdef __NR_pread
-#  error "__NR_pread and __NR_pread64 both defined???"
-# endif
-# define __NR_pread __NR_pread64
-#endif
-
 #ifdef __NR_pwrite64
 # ifdef __NR_pwrite
 #  error "__NR_pwrite and __NR_pwrite64 both defined???"

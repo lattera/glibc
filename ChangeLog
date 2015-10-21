@@ -1,5 +1,30 @@
 2016-04-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/arm/pread.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread.c: Likewise,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list (pread): Remove
+	syscall generation.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	[__NR_pread64] (__NR_pread): Remove define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h:
+	[__NR_pread64] (__NR_pread): Likewise.
+	* sysdeps/unix/sysv/linux/pread.c [__NR_pread64] (__NR_pread): Remove
+	define.
+	(__libc_pread): Use SYSCALL_LL macro on offset argument.
+	* sysdeps/unix/sysv/linux/pread64.c [__NR_pread64] (__NR_pread):
+	Remove define.
+	(__libc_pread64): Use SYSCALL_LL64 macro on offset argument.
+	* sysdeps/unix/sysv/linux/sh/pread.c: Rewrite using default
+	Linux implementation as base.
+	* sysdeps/unix/sysv/linux/sh/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/generic/sysdep.h (__ALIGNMENT_ARG): Move
 	definition.
 	(__ALIGNMENT_COUNT): Likewise.

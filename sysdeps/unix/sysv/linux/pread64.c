@@ -16,28 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <endian.h>
 #include <unistd.h>
-
 #include <sysdep-cancel.h>
-#include <sys/syscall.h>
 
-#ifdef __NR_pread64		/* Newer kernels renamed but it's the same.  */
-# ifdef __NR_pread
-#  error "__NR_pread and __NR_pread64 both defined???"
-# endif
-# define __NR_pread __NR_pread64
+#ifndef __NR_pread64
+# define __NR_pread64 __NR_pread
 #endif
-
 
 ssize_t
 __libc_pread64 (int fd, void *buf, size_t count, off64_t offset)
 {
-  return SYSCALL_CANCEL (pread, fd, buf, count,
-			 __LONG_LONG_PAIR ((off_t) (offset >> 32),
-					   (off_t) (offset & 0xffffffff)));
+  return SYSCALL_CANCEL (pread64, fd, buf, count,
+			 __ALIGNMENT_ARG SYSCALL_LL64 (offset));
 }
 
 weak_alias (__libc_pread64, __pread64)
 weak_alias (__libc_pread64, pread64)
+
+#if __WORDSIZE == 64 && !defined (__ASSUME_OFF_DIFF_OFF64)
+strong_alias (__libc_pread64, __libc_pread)
+weak_alias (__libc_pread64, __pread)
+weak_alias (__libc_pread64, pread)
+#endif

@@ -16,28 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <unistd.h>
-#include <endian.h>
-
-#include <sysdep-cancel.h>
-#include <sys/syscall.h>
-
-#ifdef __NR_pread64             /* Newer kernels renamed but it's the same.  */
-# ifdef __NR_pread
-#  error "__NR_pread and __NR_pread64 both defined???"
-# endif
-# define __NR_pread __NR_pread64
-#endif
-
-
-ssize_t
-__libc_pread64 (int fd, void *buf, size_t count, off64_t offset)
-{
-  return SYSCALL_CANCEL (pread, fd, buf, count, 0,
-			 __LONG_LONG_PAIR ((off_t) (offset >> 32),
-					   (off_t) (offset & 0xffffffff)));
-}
-
-weak_alias (__libc_pread64, __pread64)
-weak_alias (__libc_pread64, pread64)
+/* SH4 ABI does not really require argument alignment for 64-bits, but
+   the kernel interface for pread adds a dummy long argument before the
+   offset.  */
+#define __ALIGNMENT_ARG
+#include <sysdeps/unix/sysv/linux/pread64.c>
