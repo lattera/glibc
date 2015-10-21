@@ -1,3 +1,10 @@
+2015-10-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/i386/libc-do-syscall.S: Replace
+	__GNUC_PREREQ (5,0) with OPTIMIZE_FOR_GCC_5.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (OPTIMIZE_FOR_GCC_5):
+	Moved before "#ifdef __ASSEMBLER__".
+
 2015-10-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19156]

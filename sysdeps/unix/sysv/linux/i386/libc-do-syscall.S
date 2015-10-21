@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 
-#if !__GNUC_PREREQ (5,0)
+#ifndef OPTIMIZE_FOR_GCC_5
 
 /* %eax, %ecx, %edx and %esi contain the values expected by the kernel.
    %edi points to a structure with the values of %ebx, %edi and %ebp.  */
