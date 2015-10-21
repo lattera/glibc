@@ -1,5 +1,10 @@
 2015-10-21  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (OPTIMIZE_FOR_GCC_5):
+	New.  Defined for GCC 5 and above when not compiling for
+	profiling.
+	Replace __GNUC_PREREQ (5,0) with OPTIMIZE_FOR_GCC_5.
+
 	* sysdeps/unix/sysv/linux/i386/Makefile (CFLAGS-epoll_pwait.c):
 	Renamed to ...
 	(CFLAGS-epoll_pwait.o): This.

@@ -229,9 +229,15 @@ extern int __syscall_error (int)
 
 /* Since GCC 5 and above can properly spill %ebx with PIC when needed,
    we can inline syscalls with 6 arguments if GCC 5 or above is used
-   to compile glibc.  */
+   to compile glibc.  Disable GCC 5 optimization when compiling for
+   profiling since asm ("ebp") can't be used to put the 6th argument
+   in %ebp for syscall.  */
 
-#if !__GNUC_PREREQ (5,0)
+#if __GNUC_PREREQ (5,0) && !defined PROF
+# define OPTIMIZE_FOR_GCC_5
+#endif
+
+#ifndef OPTIMIZE_FOR_GCC_5
 /* We need some help from the assembler to generate optimal code.  We
    define some macros here which later will be used.  */
 asm (".L__X'%ebx = 1\n\t"
@@ -328,7 +334,7 @@ struct libc_do_syscall_args
     INTERNAL_SYSCALL_MAIN_INLINE(name, err, 5, args)
 /* Each object using 6-argument inline syscalls must include a
    definition of __libc_do_syscall.  */
-#if __GNUC_PREREQ (5,0)
+#ifdef OPTIMIZE_FOR_GCC_5
 # define INTERNAL_SYSCALL_MAIN_6(name, err, args...) \
     INTERNAL_SYSCALL_MAIN_INLINE(name, err, 6, args)
 #else /* GCC 5  */
@@ -353,7 +359,7 @@ struct libc_do_syscall_args
     INTERNAL_SYSCALL_MAIN_##nr (name, err, args);			      \
     (int) resultvar; })
 #ifdef I386_USE_SYSENTER
-# if __GNUC_PREREQ (5,0)
+# ifdef OPTIMIZE_FOR_GCC_5
 #  ifdef SHARED
 #   define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
     LOADREGS_##nr(args)							\
@@ -437,7 +443,7 @@ struct libc_do_syscall_args
 #  endif
 # endif /* GCC 5  */
 #else
-# if __GNUC_PREREQ (5,0)
+# ifdef OPTIMIZE_FOR_GCC_5
 #  define INTERNAL_SYSCALL_MAIN_INLINE(name, err, nr, args...) \
     LOADREGS_##nr(args)							\
     asm volatile (							\
@@ -539,7 +545,7 @@ struct libc_do_syscall_args
 # define RESTOREARGS_5
 #endif
 
-#if __GNUC_PREREQ (5,0)
+#ifdef OPTIMIZE_FOR_GCC_5
 # define LOADREGS_0()
 # define ASMARGS_0()
 # define LOADREGS_1(arg1) \
@@ -606,7 +612,7 @@ struct libc_do_syscall_args
 #endif
 
 /* Consistency check for position-independent code.  */
-#if defined __PIC__ && !__GNUC_PREREQ (5,0)
+#if defined __PIC__ && !defined OPTIMIZE_FOR_GCC_5
 # define check_consistency()						      \
   ({ int __res;								      \
      __asm__ __volatile__						      \
