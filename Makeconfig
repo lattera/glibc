@@ -752,7 +752,7 @@ endif
 ifeq ($(enable-werror),yes)
 +gccwarn += -Werror
 endif
-+gccwarn-c = -Wstrict-prototypes
++gccwarn-c = -Wstrict-prototypes -Wold-style-definition
 
 # We do not depend on the address of constants in different files to be
 # actually different, so allow the compiler to merge them all.
