@@ -1,5 +1,9 @@
 2015-10-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* io/tst-fcntl.c (fd): New static variable.
+	(do_prepare): Open temporary file here....
+	(do_test): ...not here.
+
 	* io/ftwtest-sh: Also trap on exit to remove temporary files.
 
 2015-10-21  H.J. Lu  <hongjiu.lu@intel.com>
