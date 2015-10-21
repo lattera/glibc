@@ -1,3 +1,14 @@
+2015-10-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add more tests of hypot, j0, j1, jn,
+	log, log10 and log2.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (fmod_test_data): Add more tests.
+	(fpclassify_test_data): Likewise.
+	(frexp_test_data): Likewise.
+	(hypot_test_data): Likewise.
+	(ilogb_test_data): Likewise.
+
 2015-10-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* debug/fortify_fail.c (__fortify_fail): Convert to

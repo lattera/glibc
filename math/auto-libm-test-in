@@ -2333,7 +2333,20 @@ hypot 0x0.fffffffffffffp-1022 0x0.fp-1023
 hypot 0x0.fffffffffffffp-1022 0x0.fp-1026
 hypot 0x0.ffffffp-16382 0x0.fp-16383 no-test-inline
 hypot 0x0.ffffffp-16382 0x0.fp-16386 no-test-inline
+hypot 0 min no-test-inline
 hypot 0 min_subnorm no-test-inline
+hypot 0 -min no-test-inline
+hypot 0 -min_subnorm no-test-inline
+hypot min 0 no-test-inline
+hypot min_subnorm 0 no-test-inline
+hypot -min 0 no-test-inline
+hypot -min_subnorm 0 no-test-inline
+hypot min min no-test-inline
+hypot min_subnorm min_subnorm no-test-inline
+hypot min min_subnorm no-test-inline
+hypot 0x1.fp127 0x1.fp127
+hypot 0x1.fp1023 0x1.fp1023
+hypot 0x1.fp16383 0x1.fp16383 no-test-inline
 
 hypot 0x1p-127 0x1p-149
 hypot 0x1p-1023 0x1p-1074
@@ -2346,6 +2359,26 @@ hypot -0x1.fa7deap+0 0x1.a761bab383ac8p+0
 
 j0 -1.0
 j0 0.0
+j0 -0
+j0 min
+j0 -min
+j0 min_subnorm
+j0 -min_subnorm
+j0 0x1p-5
+j0 0x1p-10
+j0 0x1p-15
+j0 0x1p-20
+j0 0x1p-25
+j0 0x1p-30
+j0 0x1p-35
+j0 0x1p-40
+j0 0x1p-45
+j0 0x1p-50
+j0 0x1p-55
+j0 0x1p-60
+j0 0x1p-100
+j0 0x1p-600
+j0 0x1p-10000
 j0 0.125
 j0 0.75
 j0 1.0
@@ -2363,6 +2396,7 @@ j0 0x1p16383
 
 j1 -1.0
 j1 0.0
+j1 -0
 j1 0.125
 j1 0.75
 j1 1.0
@@ -2375,6 +2409,18 @@ j1 0x1.ff00000000002p+840
 j1 0x1p1023
 j1 0x1p16382
 j1 0x1p16383
+j1 0x1p-5
+j1 0x1p-10
+j1 0x1p-15
+j1 0x1p-20
+j1 0x1p-25
+j1 0x1p-30
+j1 0x1p-35
+j1 0x1p-40
+j1 0x1p-45
+j1 0x1p-50
+j1 0x1p-55
+j1 0x1p-60
 j1 0x1p-100
 j1 0x1p-600
 j1 0x1p-10000
@@ -2387,6 +2433,11 @@ j1 -min_subnorm missing-errno
 # jn (0, x) == j0 (x).
 jn 0 -1.0
 jn 0 0.0
+jn 0 -0
+jn 0 min
+jn 0 -min
+jn 0 min_subnorm
+jn 0 -min_subnorm
 jn 0 0.125
 jn 0 0.75
 jn 0 1.0
@@ -2399,6 +2450,7 @@ jn 0 -4.0
 
 # jn (1, x) == j1 (x).
 jn 1 -1.0
+jn 1 -0
 jn 1 0.0
 jn 1 0.125
 jn 1 0.75
@@ -2442,6 +2494,15 @@ jn 2 0x1.ffff62p+99
 jn 2 0x1p127
 jn 2 0x1p1023
 jn 2 0x1p16383
+
+jn -1 1
+jn -2 1
+jn -3 1
+jn -4 1
+jn -1 -1
+jn -2 -1
+jn -3 -1
+jn -4 -1
 
 # Bug 18611: errno setting may be missing.
 jn 10 min missing-errno
@@ -2984,6 +3045,7 @@ log 10
 log 0.75
 log min
 log min_subnorm
+log max
 
 log 0xb.0d5dfp-4
 log 0x1.6c3f6p+0
@@ -3003,6 +3065,7 @@ log10 e
 log10 0.75
 log10 min
 log10 min_subnorm
+log10 max
 
 log10 0x9.ad6e3p-4
 log10 0x1.7163aep+0
@@ -3070,6 +3133,7 @@ log2 0xb.7704dc9beb05p-4
 log2 0xb.56f63c18e93eecdp-4
 log2 min
 log2 min_subnorm
+log2 max
 
 pow 0 0
 pow 0 -0
