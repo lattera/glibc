@@ -34,3 +34,9 @@
 #if _MIPS_SIM == _ABIO32
 # define __ASSUME_ALIGNED_REGISTER_PAIRS	1
 #endif
+
+/* Define that mips64-n32 is a ILP32 ABI to set the correct interface to
+   pass 64-bits values through syscalls.  */
+#if _MIPS_SIM == _ABIN32
+# define __ASSUME_WORDSIZE64_ILP32	1
+#endif

@@ -1,5 +1,17 @@
 2016-04-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/generic/sysdep.h (__ALIGNMENT_ARG): Move
+	definition.
+	(__ALIGNMENT_COUNT): Likewise.
+	* sysdeps/unix/sysv/linux/sysdep.h (__ALIGNMENT_ARG): To here.
+	(__ALIGNMENT_COUNT): Likewise.
+	(SYSCALL_LL): New define.
+	(SYSCALL_LL64): Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h:
+	[_MIPS_SIM == _ABIO32] (__ASSUME_WORDSIZE64_ILP32): Define.
+	* sysdeps/unix/sysv/linux/x86_64/kernel-features.h:
+	[ILP32] (__ASUME_WORDSIZE64_ILP32): Likewise.
+
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h
 	(__ASSUME_ALIGNED_REGISTER_PAIRS): Define.
 	* sysdeps/unix/sysv/linux/mips/kernel-features.h

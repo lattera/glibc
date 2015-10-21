@@ -22,4 +22,10 @@
 # define __ASSUME_GETCPU_SYSCALL	1
 #endif
 
+/* Define that x32 is a ILP32 ABI to set the correct interface to pass
+   64-bits values through syscalls.  */
+#ifdef __ILP32__
+# define __ASSUME_WORDSIZE64_ILP32	1
+#endif
+
 #include_next <kernel-features.h>

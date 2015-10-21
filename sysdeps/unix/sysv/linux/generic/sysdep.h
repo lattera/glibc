@@ -31,13 +31,3 @@
 #define __NR_pread __NR_pread64
 #define __NR_pwrite __NR_pwrite64
 #endif
-
-/* Provide a dummy argument that can be used to force register
-   alignment for register pairs if required by the syscall ABI.  */
-#ifdef __ASSUME_ALIGNED_REGISTER_PAIRS
-#define __ALIGNMENT_ARG 0,
-#define __ALIGNMENT_COUNT(a,b) b
-#else
-#define __ALIGNMENT_ARG
-#define __ALIGNMENT_COUNT(a,b) a
-#endif
