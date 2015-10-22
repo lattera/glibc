@@ -45,7 +45,8 @@ lockf64 (int fd, int cmd, off64_t len64)
       INTERNAL_SYSCALL_DECL (err);
       result = INTERNAL_SYSCALL (fcntl64, err, 3, fd, F_GETLK64, &fl64);
       if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-	return INLINE_SYSCALL_ERROR_RETURN_VALUE (-result);
+	return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result,
+									  err));
       if (fl64.l_type == F_UNLCK || fl64.l_pid == __getpid ())
         return 0;
       return INLINE_SYSCALL_ERROR_RETURN_VALUE (EACCES);

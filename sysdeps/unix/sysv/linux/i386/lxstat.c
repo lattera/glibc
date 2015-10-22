@@ -46,7 +46,8 @@ __lxstat (int vers, const char *name, struct stat *buf)
     INTERNAL_SYSCALL_DECL (err);
     result = INTERNAL_SYSCALL (lstat64, err, 2, name, &buf64);
     if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-      return INLINE_SYSCALL_ERROR_RETURN_VALUE (-result);
+      return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result,
+									err));
     else
       return __xstat32_conv (vers, &buf64, buf);
   }

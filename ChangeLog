@@ -1,3 +1,14 @@
+2015-10-22  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/fxstat.c (__fxstat): Use
+	INTERNAL_SYSCALL_ERRNO.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c (__fxstatat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/lockf64.c (lockf64): Likewise.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c (__lxstat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__libc_sigaction):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/xstat.c (__xstat): Likewise.
+
 2015-10-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* io/tst-fcntl.c (fd): New static variable.

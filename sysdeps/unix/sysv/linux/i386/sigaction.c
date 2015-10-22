@@ -74,7 +74,8 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 			     sig, act ? &kact : NULL,
 			     oact ? &koact : NULL, _NSIG / 8);
   if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-     return INLINE_SYSCALL_ERROR_RETURN_VALUE (-result);
+     return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result,
+								       err));
   else if (oact && result >= 0)
     {
       oact->sa_handler = koact.k_sa_handler;
