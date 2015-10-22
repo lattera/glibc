@@ -1,5 +1,7 @@
 2015-10-22  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	* NEWS: Mention bug 18699 fixed by commit fe8c2b33aed0.
+
 	* sysdeps/tile/libm-test-ulps: Regenerated.
 
 2015-10-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
