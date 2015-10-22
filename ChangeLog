@@ -1,3 +1,15 @@
+2015-10-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15491]
+	* sysdeps/i386/fpu/s_nearbyint.S (__nearbyint): Save and restore
+	floating-point environment instead of clearing all exceptions.
+	* sysdeps/i386/fpu/s_nearbyintf.S (__nearbyintf): Likewise.
+	* sysdeps/i386/fpu/s_nearbyintl.S (__nearbyintl): Likewise,
+	merging in "invalid" exceptions from frndint.
+	* sysdeps/x86_64/fpu/s_nearbyintl.S (__nearbyintl): Likewise.
+	* math/test-nearbyint-except.c: New file.
+	* math/Makefile (tests): Add test-nearbyint-except.
+
 2015-10-22  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* NEWS: Mention bug 18699 fixed by commit fe8c2b33aed0.
