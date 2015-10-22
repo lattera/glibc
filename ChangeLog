@@ -1,3 +1,7 @@
+2015-10-22  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/tile/libm-test-ulps: Regenerated.
+
 2015-10-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sync_file_range.c
