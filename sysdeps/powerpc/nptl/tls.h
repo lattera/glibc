@@ -44,6 +44,8 @@ typedef union dtv
 
 #ifndef __ASSEMBLER__
 
+# include <hwcapinfo.h>
+
 /* Get system call information.  */
 # include <sysdep.h>
 
@@ -63,8 +65,24 @@ typedef union dtv
    are private.  */
 typedef struct
 {
+  /* Reservation for HWCAP data.  To be accessed by GCC in
+     __builtin_cpu_supports(), so it is a part of public ABI.  */
+  uint64_t hwcap;
+  /* Reservation for AT_PLATFORM data.  To be accessed by GCC in
+     __builtin_cpu_is(), so it is a part of public ABI.  Since there
+     are different ABIs for 32 and 64 bit, we put this field in a
+     previously empty padding space for powerpc64.  */
+#ifndef __powerpc64__
+  /* Padding to maintain alignment.  */
+  uint32_t padding;
+  uint32_t at_platform;
+#endif
   /* Indicate if HTM capable (ISA 2.07).  */
-  int tm_capable;
+  uint32_t tm_capable;
+  /* Reservation for AT_PLATFORM data - powerpc64.  */
+#ifdef __powerpc64__
+  uint32_t at_platform;
+#endif
   /* Reservation for Dynamic System Optimizer ABI.  */
   uintptr_t dso_slot2;
   uintptr_t dso_slot1;
@@ -134,7 +152,9 @@ register void *__thread_register __asm__ ("r13");
 # define TLS_INIT_TP(tcbp) \
   ({ 									      \
     __thread_register = (void *) (tcbp) + TLS_TCB_OFFSET;		      \
-    THREAD_SET_TM_CAPABLE (GLRO (dl_hwcap2) & PPC_FEATURE2_HAS_HTM ? 1 : 0);  \
+    THREAD_SET_TM_CAPABLE (__tcb_hwcap & PPC_FEATURE2_HAS_HTM ? 1 : 0);	      \
+    THREAD_SET_HWCAP (__tcb_hwcap);					      \
+    THREAD_SET_AT_PLATFORM (__tcb_platform);				      \
     NULL;								      \
   })
 
@@ -142,7 +162,11 @@ register void *__thread_register __asm__ ("r13");
 # define TLS_DEFINE_INIT_TP(tp, pd) \
     void *tp = (void *) (pd) + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE;	      \
     (((tcbhead_t *) ((char *) tp - TLS_TCB_OFFSET))[-1].tm_capable) =	      \
-      THREAD_GET_TM_CAPABLE ();
+      THREAD_GET_TM_CAPABLE ();						      \
+    (((tcbhead_t *) ((char *) tp - TLS_TCB_OFFSET))[-1].hwcap) =	      \
+      THREAD_GET_HWCAP ();						      \
+    (((tcbhead_t *) ((char *) tp - TLS_TCB_OFFSET))[-1].at_platform) =	      \
+      THREAD_GET_AT_PLATFORM ();
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
@@ -202,6 +226,20 @@ register void *__thread_register __asm__ ("r13");
 		     - TLS_TCB_OFFSET))[-1].tm_capable)
 # define THREAD_SET_TM_CAPABLE(value) \
     (THREAD_GET_TM_CAPABLE () = (value))
+
+/* hwcap field in TCB head.  */
+# define THREAD_GET_HWCAP() \
+    (((tcbhead_t *) ((char *) __thread_register				      \
+		     - TLS_TCB_OFFSET))[-1].hwcap)
+# define THREAD_SET_HWCAP(value) \
+    (THREAD_GET_HWCAP () = (value))
+
+/* at_platform field in TCB head.  */
+# define THREAD_GET_AT_PLATFORM() \
+    (((tcbhead_t *) ((char *) __thread_register				      \
+		     - TLS_TCB_OFFSET))[-1].at_platform)
+# define THREAD_SET_AT_PLATFORM(value) \
+    (THREAD_GET_AT_PLATFORM () = (value))
 
 /* l_tls_offset == 0 is perfectly valid on PPC, so we have to use some
    different value to mean unset l_tls_offset.  */

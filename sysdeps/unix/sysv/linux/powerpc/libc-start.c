@@ -20,6 +20,9 @@
 #include <ldsodefs.h>
 #include <sysdep.h>
 
+#ifndef SHARED
+#include <hwcapinfo.h>
+#endif
 
 int __cache_line_size attribute_hidden;
 /* The main work is done in the generic function.  */
@@ -68,14 +71,33 @@ __libc_start_main (int argc, char **argv,
       rtld_fini = NULL;
     }
 
-  /* Initialize the __cache_line_size variable from the aux vector.  */
+  /* Initialize the __cache_line_size variable from the aux vector.  For the
+     static case, we also need _dl_hwcap, _dl_hwcap2 and _dl_platform, so we
+     can call __tcb_parse_hwcap_and_convert_at_platform ().  */
   for (ElfW (auxv_t) * av = auxvec; av->a_type != AT_NULL; ++av)
     switch (av->a_type)
       {
       case AT_DCACHEBSIZE:
 	__cache_line_size = av->a_un.a_val;
 	break;
+#ifndef SHARED
+      case AT_HWCAP:
+	_dl_hwcap = (unsigned long int) av->a_un.a_val;
+	break;
+      case AT_HWCAP2:
+	_dl_hwcap2 = (unsigned long int) av->a_un.a_val;
+	break;
+      case AT_PLATFORM:
+	_dl_platform = (void *) av->a_un.a_val;
+	break;
+#endif
       }
+
+  /* Initialize hwcap/hwcap2 and platform data so it can be copied to
+     the TCB later in __libc_setup_tls (). (static case only).  */
+#ifndef SHARED
+  __tcb_parse_hwcap_and_convert_at_platform ();
+#endif
 
   return generic_start_main (stinfo->main, argc, argv, auxvec,
 			     stinfo->init, stinfo->fini, rtld_fini,

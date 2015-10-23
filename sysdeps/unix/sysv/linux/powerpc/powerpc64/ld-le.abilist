@@ -10,3 +10,5 @@ GLIBC_2.17 malloc F
 GLIBC_2.17 realloc F
 GLIBC_2.22 GLIBC_2.22 A
 GLIBC_2.22 __tls_get_addr_opt F
+GLIBC_2.23 GLIBC_2.23 A
+GLIBC_2.23 __parse_hwcap_and_convert_at_platform F

@@ -1,3 +1,48 @@
+2015-12-03  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/Makefile (sysdep-dl-routines): Add hwcapinfo.
+	(sysdep_routines): Likewise.
+	(sysdep-rtld-routines): Likewise.
+	[$(subdir) = nptl](tests): Add test-get_hwcap and test-get_hwcap-static
+	[$(subdir) = nptl](tests-static): test-get_hwcap-static
+	* sysdeps/powerpc/Versions: Added new
+	__parse_hwcap_and_convert_at_platform symbol to GLIBC-2.23.
+	* sysdeps/powerpc/hwcapinfo.c: New file.
+	(__tcb_parse_hwcap_and_convert_at_platform): New function to initialize
+	and parse hwcap, hwcap2 and platform number information.
+	* sysdeps/powerpc/hwcapinfo.h: New file.  Creates global variables
+	to store HWCAP+HWCAP2 and platform number.
+	* sysdeps/powerpc/nptl/tcb-offsets.sym: Added new offsets
+	for HWCAP+HWCAP2 and platform number in the TCB.
+	* sysdeps/powerpc/nptl/tls.h: New functionality.  Stores
+	the HWCAP, HWCAP2 and platform number in the TCB.
+	(dtv): Added new fields for HWCAP+HWCAP2 and platform number.
+	(TLS_INIT_TP): Included calls to add the hwcap and
+	at_platform values in the TCB in TP initialization.
+	(TLS_DEFINE_INIT_TP): Likewise.
+	(THREAD_GET_HWCAP): New macro.
+	(THREAD_SET_HWCAP): Likewise.
+	(THREAD_GET_AT_PLATFORM): Likewise.
+	(THREAD_SET_AT_PLATFORM): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.h:
+	(dl_platform_init): New function that calls
+	__parse_hwcap_and_convert_at_platform for the dymanic linking case for
+	powerpc32.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Likewise, for powerpc64.
+	* sysdeps/powerpc/test-get_hwcap-static.c: New file.  Testcase for
+	this functionality, static linking case.
+	* sysdeps/powerpc/test-get_hwcap.c: New file.  Likewise, dynamic
+	linking case.
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: Added call to
+	__parse_hwcap_and_convert_at_platform for the static linking case.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ld.abilist:
+	Included the new __parse_hwcap_and_convert_at_platform symbol in the
+	ABI list for GLIBC 2.23.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ld-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ld.abilist:
+	Likewise.
+
 2015-12-02  Ludovic Courtès  <ludo@gnu.org>
 
 	* configure.ac: Use 'pwd -P' instead of '/bin/pwd'.

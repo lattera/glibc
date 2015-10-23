@@ -20,4 +20,9 @@ ld {
   GLIBC_2.22 {
     __tls_get_addr_opt;
   }
+  GLIBC_2.23 {
+    # Symbol used to version control when the ABI started to specify that HWCAP
+    # and AT_PLATFORM data should be stored into the TCB.
+    __parse_hwcap_and_convert_at_platform;
+  }
 }
