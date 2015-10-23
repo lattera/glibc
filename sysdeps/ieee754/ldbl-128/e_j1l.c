@@ -701,6 +701,8 @@ __ieee754_j1l (long double x)
     {
       long double ret = x * 0.5L;
       math_check_force_underflow (ret);
+      if (ret == 0)
+	__set_errno (ERANGE);
       return ret;
     }
   if (xx <= 2.0L)

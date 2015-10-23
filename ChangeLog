@@ -1,3 +1,21 @@
+2015-10-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18611]
+	* sysdeps/ieee754/dbl-64/e_j1.c (__ieee754_j1): Set errno and
+	avoid excess range and precision on underflow.
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_jn): Likewise.
+	* sysdeps/ieee754/flt-32/e_j1f.c (__ieee754_j1f): Likewise.
+	* sysdeps/ieee754/flt-32/e_jnf.c (__ieee754_jnf): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_j1l): Set errno on
+	underflow.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c (__ieee754_jnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c (__ieee754_jnl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j1l.c (__ieee754_j1l): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_jnl): Likewise.
+	* math/auto-libm-test-in: Do not allow missing errno setting for
+	tests of j1 and jn.
+	* math/auto-libm-test-out: Regenerated.
+
 2015-10-22  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15491]

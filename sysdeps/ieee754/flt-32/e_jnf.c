@@ -167,9 +167,13 @@ __ieee754_jnf(int n, float x)
 	    }
 	}
 	if(sgn==1) ret = -b; else ret = b;
+	ret = math_narrow_eval (ret);
     }
     if (ret == 0)
-	ret = __copysignf (FLT_MIN, ret) * FLT_MIN;
+      {
+	ret = math_narrow_eval (__copysignf (FLT_MIN, ret) * FLT_MIN);
+	__set_errno (ERANGE);
+      }
     else
 	math_check_force_underflow (ret);
     return ret;

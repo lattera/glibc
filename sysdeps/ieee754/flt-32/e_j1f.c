@@ -71,8 +71,10 @@ __ieee754_j1f(float x)
 	}
 	if(__builtin_expect(ix<0x32000000, 0)) {	/* |x|<2**-27 */
 	    if(huge+x>one) {		/* inexact if x!=0 necessary */
-		float ret = (float) 0.5 * x;
+		float ret = math_narrow_eval ((float) 0.5 * x);
 		math_check_force_underflow (ret);
+		if (ret == 0 && x != 0)
+		  __set_errno (ERANGE);
 		return ret;
 	    }
 	}

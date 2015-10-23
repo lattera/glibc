@@ -155,6 +155,8 @@ __ieee754_j1l (long double x)
 	{
 	  long double ret = 0.5 * x;
 	  math_check_force_underflow (ret);
+	  if (ret == 0 && x != 0)
+	    __set_errno (ERANGE);
 	  return ret;
 	}
     }

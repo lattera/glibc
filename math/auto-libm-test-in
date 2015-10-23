@@ -2424,11 +2424,10 @@ j1 0x1p-60
 j1 0x1p-100
 j1 0x1p-600
 j1 0x1p-10000
-# Bug 18611: errno setting may be missing.
-j1 min missing-errno
-j1 -min missing-errno
-j1 min_subnorm missing-errno
-j1 -min_subnorm missing-errno
+j1 min
+j1 -min
+j1 min_subnorm
+j1 -min_subnorm
 
 # jn (0, x) == j0 (x).
 jn 0 -1.0
@@ -2459,11 +2458,10 @@ jn 1 1.5
 jn 1 2.0
 jn 1 8.0
 jn 1 10.0
-# Bug 18611: errno setting may be missing.
-jn 1 min missing-errno
-jn 1 -min missing-errno
-jn 1 min_subnorm missing-errno
-jn 1 -min_subnorm missing-errno
+jn 1 min
+jn 1 -min
+jn 1 min_subnorm
+jn 1 -min_subnorm
 
 jn 3 -1.0
 jn 3 0.0
@@ -2504,11 +2502,10 @@ jn -2 -1
 jn -3 -1
 jn -4 -1
 
-# Bug 18611: errno setting may be missing.
-jn 10 min missing-errno
-jn 10 -min missing-errno
-jn 10 min_subnorm missing-errno
-jn 10 -min_subnorm missing-errno
+jn 10 min
+jn 10 -min
+jn 10 min_subnorm
+jn 10 -min_subnorm
 
 lgamma max
 lgamma 1

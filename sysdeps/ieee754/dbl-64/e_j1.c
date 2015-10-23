@@ -127,8 +127,10 @@ __ieee754_j1 (double x)
     {
       if (huge + x > one)                 /* inexact if x!=0 necessary */
 	{
-	  double ret = 0.5 * x;
+	  double ret = math_narrow_eval (0.5 * x);
 	  math_check_force_underflow (ret);
+	  if (ret == 0 && x != 0)
+	    __set_errno (ERANGE);
 	  return ret;
 	}
     }

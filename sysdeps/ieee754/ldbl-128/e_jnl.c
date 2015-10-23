@@ -296,7 +296,10 @@ __ieee754_jnl (int n, long double x)
       ret = b;
   }
   if (ret == 0)
-    ret = __copysignl (LDBL_MIN, ret) * LDBL_MIN;
+    {
+      ret = __copysignl (LDBL_MIN, ret) * LDBL_MIN;
+      __set_errno (ERANGE);
+    }
   else
     math_check_force_underflow (ret);
   return ret;
