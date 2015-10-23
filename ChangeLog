@@ -1,5 +1,8 @@
 2015-10-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (check_float_internal): Do not special-case
+	errors up to 0.5 ulp.
+
 	* math/auto-libm-test-in: Add more tests of log, log10, log1p and
 	log2.
 	* math/auto-libm-test-out: Regenerated.

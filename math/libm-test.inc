@@ -834,8 +834,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 	  && computed == 0.0 && expected == 0.0
 	  && signbit(computed) != signbit (expected))
 	ok = 0;
-      else if ((ulps <= 0.5 && ulps <= max_valid_error)
-	       || (ulps <= max_ulp && !ignore_max_ulp))
+      else if (ulps <= max_ulp && !ignore_max_ulp)
 	ok = 1;
       else
 	ok = 0;
