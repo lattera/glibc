@@ -1,5 +1,32 @@
 2015-10-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add more tests of log, log10, log1p and
+	log2.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (MAX_EXP): New macro.
+	(ilogb_test_data): Add more tests.
+	(isfinite_test_data): Likewise.
+	(isgreater_test_data): Likewise.
+	(isgreaterequal_test_data): Likewise.
+	(isinf_test_data): Likewise.
+	(isless_test_data): Likewise.
+	(islessequal_test_data): Likewise.
+	(islessgreater_test_data): Likewise.
+	(isnan_test_data): Likewise.
+	(isnormal_test_data): Likewise.
+	(issignaling_test_data): Likewise.
+	(isunordered_test_data): Likewise.
+	(j0_test_data): Likewise.
+	(j1_test_data): Likewise.
+	(jn_test_data): Likewise.
+	(lgamma_test_data): Likewise.
+	(log_test_data): Likewise.
+	(log10_test_data): Likewise.
+	(log1p_test_data): Likewise.
+	(log2_test_data): Likewise.
+	(logb_test_data): Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 	[BZ #18611]
 	* sysdeps/ieee754/dbl-64/e_j1.c (__ieee754_j1): Set errno and
 	avoid excess range and precision on underflow.

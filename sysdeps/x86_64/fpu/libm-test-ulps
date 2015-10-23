@@ -1940,7 +1940,9 @@ ildouble: 2
 ldouble: 2
 
 Function: "log_upward":
+double: 1
 float: 2
+idouble: 1
 ifloat: 2
 ildouble: 1
 ldouble: 1

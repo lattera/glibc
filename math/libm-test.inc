@@ -338,6 +338,8 @@ static FLOAT max_valid_error;
 			 (LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1))
 #define MIN_EXP CHOOSE ((LDBL_MIN_EXP-1), (DBL_MIN_EXP-1), (FLT_MIN_EXP-1),	\
 			(LDBL_MIN_EXP-1), (DBL_MIN_EXP-1), (FLT_MIN_EXP-1))
+#define MAX_EXP CHOOSE (LDBL_MAX_EXP, DBL_MAX_EXP, FLT_MAX_EXP, \
+			LDBL_MAX_EXP, DBL_MAX_EXP, FLT_MAX_EXP)
 /* Sufficient numbers of digits to represent any floating-point value
    unambiguously (for any choice of the number of bits in the first
    hex digit, in the case of TYPE_HEX_DIG).  When used with printf
@@ -7884,11 +7886,20 @@ static const struct test_f_i_data ilogb_test_data[] =
     TEST_f_i (ilogb, M_El, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (ilogb, 1024, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (ilogb, -2000, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (ilogb, 0.5, -1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, -0.5, -1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
 
 #if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 57
     TEST_f_i (ilogb, 0x1.ffffffffffffffp1L, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (ilogb, -0x1.ffffffffffffffp1L, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
+
+    TEST_f_i (ilogb, min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, -min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, min_value, MIN_EXP, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, -min_value, MIN_EXP, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, -max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
 
     /* ilogb (0.0) == FP_ILOGB0 plus invalid exception  */
     TEST_f_i (ilogb, 0.0, FP_ILOGB0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
@@ -7914,9 +7925,15 @@ static const struct test_f_i_data isfinite_test_data[] =
     TEST_f_b (isfinite, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isfinite, 10, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isfinite, min_subnorm_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isfinite, -min_subnorm_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isfinite, min_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isfinite, -min_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isfinite, max_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isfinite, -max_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isfinite, plus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isfinite, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isfinite, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isfinite, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -7938,18 +7955,27 @@ static const struct test_ff_i_data isgreater_test_data[] =
     TEST_ff_i (isgreater, minus_zero, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, minus_zero, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, minus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreater, minus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, plus_zero, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, plus_zero, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, plus_zero, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, plus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreater, plus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, (FLOAT) 1, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, (FLOAT) 1, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, (FLOAT) 1, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, (FLOAT) 1, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreater, (FLOAT) 1, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreater, -qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreater, -qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreater, -qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreater, qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreater, qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreater, -qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreater, -qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -7964,18 +7990,27 @@ static const struct test_ff_i_data isgreaterequal_test_data[] =
     TEST_ff_i (isgreaterequal, minus_zero, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, minus_zero, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, minus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreaterequal, minus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, plus_zero, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, plus_zero, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, plus_zero, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, plus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreaterequal, plus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, (FLOAT) 1, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, (FLOAT) 1, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, (FLOAT) 1, (FLOAT) 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, (FLOAT) 1, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreaterequal, (FLOAT) 1, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreaterequal, -qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreaterequal, -qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreaterequal, -qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isgreaterequal, qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreaterequal, qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreaterequal, -qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isgreaterequal, -qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -7990,9 +8025,15 @@ static const struct test_f_i_data isinf_test_data[] =
     TEST_f_b (isinf, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isinf, 10, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isinf, min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isinf, -min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isinf, min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isinf, -min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isinf, max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isinf, -max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isinf, plus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isinf, minus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isinf, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isinf, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -8007,18 +8048,27 @@ static const struct test_ff_i_data isless_test_data[] =
     TEST_ff_i (isless, minus_zero, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, minus_zero, (FLOAT) 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, minus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isless, minus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, plus_zero, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, plus_zero, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, plus_zero, (FLOAT) 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, plus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isless, plus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, (FLOAT) 1, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, (FLOAT) 1, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, (FLOAT) 1, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, (FLOAT) 1, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isless, (FLOAT) 1, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isless, -qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isless, -qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isless, -qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isless, qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isless, qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isless, -qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isless, -qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -8033,18 +8083,27 @@ static const struct test_ff_i_data islessequal_test_data[] =
     TEST_ff_i (islessequal, minus_zero, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, minus_zero, (FLOAT) 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, minus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessequal, minus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, plus_zero, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, plus_zero, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, plus_zero, (FLOAT) 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, plus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessequal, plus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, (FLOAT) 1, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, (FLOAT) 1, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, (FLOAT) 1, (FLOAT) 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, (FLOAT) 1, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessequal, (FLOAT) 1, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessequal, -qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessequal, -qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessequal, -qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessequal, qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessequal, qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessequal, -qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessequal, -qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -8059,18 +8118,27 @@ static const struct test_ff_i_data islessgreater_test_data[] =
     TEST_ff_i (islessgreater, minus_zero, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, minus_zero, (FLOAT) 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, minus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessgreater, minus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, plus_zero, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, plus_zero, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, plus_zero, (FLOAT) 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, plus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessgreater, plus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, (FLOAT) 1, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, (FLOAT) 1, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, (FLOAT) 1, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, (FLOAT) 1, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessgreater, (FLOAT) 1, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessgreater, -qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessgreater, -qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessgreater, -qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (islessgreater, qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessgreater, qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessgreater, -qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (islessgreater, -qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -8085,9 +8153,15 @@ static const struct test_f_i_data isnan_test_data[] =
     TEST_f_b (isnan, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isnan, 10, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isnan, min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnan, -min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnan, min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnan, -min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnan, max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnan, -max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isnan, plus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isnan, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isnan, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnan, -qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -8102,9 +8176,15 @@ static const struct test_f_i_data isnormal_test_data[] =
     TEST_f_b (isnormal, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isnormal, 10, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isnormal, min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnormal, -min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnormal, min_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnormal, -min_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnormal, max_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnormal, -max_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isnormal, plus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isnormal, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isnormal, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (isnormal, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -8119,9 +8199,15 @@ static const struct test_f_i_data issignaling_test_data[] =
     TEST_f_b (issignaling, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (issignaling, 10, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (issignaling, min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issignaling, -min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issignaling, min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issignaling, -min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issignaling, max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issignaling, -max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (issignaling, plus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (issignaling, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (issignaling, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issignaling, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -8136,18 +8222,27 @@ static const struct test_ff_i_data isunordered_test_data[] =
     TEST_ff_i (isunordered, minus_zero, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, minus_zero, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, minus_zero, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isunordered, minus_zero, -qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, plus_zero, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, plus_zero, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, plus_zero, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, plus_zero, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isunordered, plus_zero, -qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, (FLOAT) 1, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, (FLOAT) 1, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, (FLOAT) 1, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, (FLOAT) 1, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isunordered, (FLOAT) 1, -qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, qnan_value, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isunordered, -qnan_value, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, qnan_value, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isunordered, -qnan_value, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, qnan_value, (FLOAT) 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isunordered, -qnan_value, (FLOAT) 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_i (isunordered, qnan_value, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isunordered, qnan_value, -qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isunordered, -qnan_value, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (isunordered, -qnan_value, -qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -8160,7 +8255,9 @@ static const struct test_f_f_data j0_test_data[] =
   {
     /* j0 is the Bessel function of the first kind of order 0 */
     TEST_f_f (j0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (j0, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (j0, plus_infty, 0, ERRNO_UNCHANGED),
+    TEST_f_f (j0, minus_infty, 0, ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (j0),
   };
@@ -8176,7 +8273,9 @@ static const struct test_f_f_data j1_test_data[] =
   {
     /* j1 is the Bessel function of the first kind of order 1 */
     TEST_f_f (j1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (j1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (j1, plus_infty, 0, ERRNO_UNCHANGED),
+    TEST_f_f (j1, minus_infty, minus_zero, ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (j1),
   };
@@ -8192,19 +8291,27 @@ static const struct test_if_f_data jn_test_data[] =
     /* jn is the Bessel function of the first kind of order n.  */
     /* jn (0, x) == j0 (x)  */
     TEST_if_f (jn, 0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_if_f (jn, 0, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_if_f (jn, 0, plus_infty, 0, ERRNO_UNCHANGED),
+    TEST_if_f (jn, 0, minus_infty, 0, ERRNO_UNCHANGED),
 
     /* jn (1, x) == j1 (x)  */
     TEST_if_f (jn, 1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_if_f (jn, 1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_if_f (jn, 1, plus_infty, 0, ERRNO_UNCHANGED),
+    TEST_if_f (jn, 1, minus_infty, minus_zero, ERRNO_UNCHANGED),
 
     /* jn (3, x)  */
     TEST_if_f (jn, 3, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_if_f (jn, 3, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_if_f (jn, 3, plus_infty, 0, ERRNO_UNCHANGED),
+    TEST_if_f (jn, 3, minus_infty, minus_zero, ERRNO_UNCHANGED),
 
     /*  jn (10, x)  */
     TEST_if_f (jn, 10, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_if_f (jn, 10, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_if_f (jn, 10, plus_infty, 0, ERRNO_UNCHANGED),
+    TEST_if_f (jn, 10, minus_infty, 0, ERRNO_UNCHANGED),
 
     AUTO_TESTS_if_f (jn),
   };
@@ -8222,6 +8329,7 @@ static const struct test_f_f1_data lgamma_test_data[] =
     TEST_f_f1 (lgamma, 0, plus_infty, 1, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f1 (lgamma, minus_zero, plus_infty, -1, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f1 (lgamma, qnan_value, qnan_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f1 (lgamma, -qnan_value, qnan_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* lgamma (x) == +inf plus divide by zero exception for integer x <= 0.  */
     TEST_f_f1 (lgamma, -3, plus_infty, IGNORE, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
@@ -8812,10 +8920,13 @@ static const struct test_f_f_data log_test_data[] =
     TEST_f_f (log, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
 
     TEST_f_f (log, -1, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (log, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (log, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (log, plus_infty, plus_infty, ERRNO_UNCHANGED),
     TEST_f_f (log, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (log, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (log),
   };
@@ -8834,11 +8945,14 @@ static const struct test_f_f_data log10_test_data[] =
 
     /* log10 (x) == qNaN plus invalid exception if x < 0.  */
     TEST_f_f (log10, -1, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log10, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log10, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (log10, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (log10, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_f_f (log10, plus_infty, plus_infty, ERRNO_UNCHANGED),
     TEST_f_f (log10, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (log10, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (log10),
   };
@@ -8859,6 +8973,7 @@ static const struct test_f_f_data log1p_test_data[] =
 
     TEST_f_f (log1p, plus_infty, plus_infty, ERRNO_UNCHANGED),
     TEST_f_f (log1p, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (log1p, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (log1p),
   };
@@ -8876,11 +8991,14 @@ static const struct test_f_f_data log2_test_data[] =
     TEST_f_f (log2, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
 
     TEST_f_f (log2, -1, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log2, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (log2, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (log2, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (log2, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_f_f (log2, plus_infty, plus_infty, ERRNO_UNCHANGED),
     TEST_f_f (log2, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (log2, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (log2),
   };
@@ -8902,11 +9020,19 @@ static const struct test_f_f_data logb_test_data[] =
 
     TEST_f_f (logb, minus_zero, minus_infty, NO_INEXACT_EXCEPTION|DIVIDE_BY_ZERO_EXCEPTION),
     TEST_f_f (logb, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (logb, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     TEST_f_f (logb, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (logb, M_El, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (logb, 1024, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (logb, -2000, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
+    TEST_f_f (logb, min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_f (logb, -min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_f (logb, min_value, MIN_EXP, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_f (logb, -min_value, MIN_EXP, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_f (logb, max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_f (logb, -max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
 
     TEST_f_f (logb, 0x0.1p-127, -131, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (logb, 0x0.01p-127, -135, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
