@@ -3,7 +3,6 @@
 # Whee! 64-bit systems naturally implement llseek.
 llseek		EXTRA	lseek		i:iii	__libc_lseek	__lseek lseek __libc_lseek64 __llseek llseek __lseek64 lseek64
 lseek		llseek	-
-pwrite		-	pwrite		Ci:ibni	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
 statfs		-	statfs		i:sp	__statfs	statfs statfs64
 mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64

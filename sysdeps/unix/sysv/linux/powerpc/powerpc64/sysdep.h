@@ -29,17 +29,6 @@
 #include <errno.h>
 #endif
 
-/* Some systen calls got renamed over time, but retained the same semantics.
-   Handle them here so they can be catched by both C and assembler stubs in
-   glibc.  */
-
-#ifdef __NR_pwrite64
-# ifdef __NR_pwrite
-#  error "__NR_pwrite and __NR_pwrite64 both defined???"
-# endif
-# define __NR_pwrite __NR_pwrite64
-#endif
-
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
    of the kernel.  But these symbols do not follow the SYS_* syntax

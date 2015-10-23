@@ -16,33 +16,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
-#include <errno.h>
-#include <endian.h>
 #include <unistd.h>
-
 #include <sysdep-cancel.h>
-#include <sys/syscall.h>
 
-#ifdef __NR_pwrite64		/* Newer kernels renamed but it's the same.  */
-# ifdef __NR_pwrite
-#  error "__NR_pwrite and __NR_pwrite64 both defined???"
+#if __WORDSIZE != 64 || defined (__ASSUME_OFF_DIFF_OFF64)
+
+# ifndef __NR_pwrite
+#  define __NR_pwrite __NR_pwrite64
 # endif
-# define __NR_pwrite __NR_pwrite64
-#endif
-
 
 ssize_t
 __libc_pwrite (int fd, const void *buf, size_t count, off_t offset)
 {
-  ssize_t result;
-
-  assert (sizeof (offset) == 4);
-  result = SYSCALL_CANCEL (pwrite, fd, buf, count,
-			   __LONG_LONG_PAIR (offset >> 31, offset));
-
-  return result;
+  return SYSCALL_CANCEL (pwrite, fd, buf, count,
+			 __ALIGNMENT_ARG SYSCALL_LL (offset));
 }
 
 strong_alias (__libc_pwrite, __pwrite)
 weak_alias (__libc_pwrite, pwrite)
+#endif

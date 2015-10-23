@@ -16,29 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <unistd.h>
-#include <endian.h>
-
-#include <sysdep-cancel.h>
-#include <sys/syscall.h>
-
-#ifdef __NR_pwrite64            /* Newer kernels renamed but it's the same.  */
-# ifdef __NR_pwrite
-#  error "__NR_pwrite and __NR_pwrite64 both defined???"
-# endif
-# define __NR_pwrite __NR_pwrite64
-#endif
-
-
-ssize_t
-__libc_pwrite64 (int fd, const void *buf, size_t count, off64_t offset)
-{
-  return SYSCALL_CANCEL (pwrite, fd, buf, count, 0,
-			 __LONG_LONG_PAIR ((off_t) (offset >> 32),
-					   (off_t) (offset & 0xffffffff)));
-}
-
-weak_alias (__libc_pwrite64, __pwrite64)
-libc_hidden_weak (__pwrite64)
-weak_alias (__libc_pwrite64, pwrite64)
+/* SH4 ABI does not really require argument alignment for 64-bits, but
+   the kernel interface for pread adds a dummy long argument before the
+   offset.  */
+#define __ALIGNMENT_ARG
+#include <sysdeps/unix/sysv/linux/pwrite64.c>
