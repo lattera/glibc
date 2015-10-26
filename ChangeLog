@@ -1,3 +1,10 @@
+2015-10-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (libc_cv_dot_text): Remove configure test.
+	(libc_cv_asm_set_directive): Use .text instead of
+	${libc_cv_dot_text} in configure test.
+	* configure: Regenerated.
+
 2015-10-26  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19168]

@@ -635,22 +635,6 @@ if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
 fi
 rm -f conftest*])
 
-AC_MSG_CHECKING(whether .text pseudo-op must be used)
-AC_CACHE_VAL(libc_cv_dot_text, [dnl
-cat > conftest.s <<EOF
-.text
-EOF
-libc_cv_dot_text=
-if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
-  libc_cv_dot_text=.text
-fi
-rm -f conftest*])
-if test -z "$libc_cv_dot_text"; then
-  AC_MSG_RESULT(no)
-else
-  AC_MSG_RESULT(yes)
-fi
-
 if test x"$libc_cv_ld_gnu_indirect_function" != xyes; then
   if test x"$multi_arch" = xyes; then
     AC_MSG_ERROR([--enable-multi-arch support requires assembler and linker support])
@@ -1115,7 +1099,7 @@ fi
 
 AC_CACHE_CHECK(for .set assembler directive, libc_cv_asm_set_directive, [dnl
 cat > conftest.s <<EOF
-${libc_cv_dot_text}
+.text
 foo:
 .set glibc_conftest_frobozz,foo
 .globl glibc_conftest_frobozz
