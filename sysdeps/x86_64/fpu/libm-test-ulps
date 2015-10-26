@@ -934,8 +934,8 @@ double: 6
 float: 5
 idouble: 6
 ifloat: 5
-ildouble: 7
-ldouble: 7
+ildouble: 8
+ldouble: 8
 
 Function: Imaginary part of "clog10_upward":
 double: 2
@@ -1670,8 +1670,8 @@ double: 5
 float: 5
 idouble: 5
 ifloat: 5
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "hypot":
 double: 1
@@ -1822,8 +1822,8 @@ double: 5
 float: 5
 idouble: 5
 ifloat: 5
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "log":
 float: 1
