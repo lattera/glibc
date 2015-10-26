@@ -57,9 +57,26 @@ AC_PROG_CXX
 # It's useless to us if it can't link programs (e.g. missing -lstdc++).
 AC_CACHE_CHECK([whether $CXX can link programs], libc_cv_cxx_link_ok, [dnl
 AC_LANG_PUSH([C++])
+# Default, dynamic case.
 AC_LINK_IFELSE([AC_LANG_PROGRAM([], [])],
 	       [libc_cv_cxx_link_ok=yes],
 	       [libc_cv_cxx_link_ok=no])
+# Static case.
+old_LDFLAGS="$LDFLAGS"
+LDFLAGS="$LDFLAGS -static"
+AC_LINK_IFELSE([AC_LANG_SOURCE([
+#include <iostream>
+
+int
+main()
+{
+  std::cout << "Hello, world!";
+  return 0;
+}
+])],
+	       [],
+	       [libc_cv_cxx_link_ok=no])
+LDFLAGS="$old_LDFLAGS"
 AC_LANG_POP([C++])])
 AS_IF([test $libc_cv_cxx_link_ok != yes], [CXX=])
 

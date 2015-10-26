@@ -1,3 +1,9 @@
+2015-10-26  Florian Weimer  <fweimer@redhat.com>
+
+	* configure.ac (CXX): Clear the variable if the C++ toolchain does
+	not support static linking.
+	* configure: Regenerate.
+
 2015-10-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (check_float_internal): Do not special-case
