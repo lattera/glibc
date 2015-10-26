@@ -607,7 +607,6 @@ libc_cv_sysconfdir
 libc_cv_localedir
 libc_cv_rtlddir
 libc_cv_slibdir
-old_glibc_headers
 use_nscd
 libc_cv_gcc_unwind_find_fde
 libc_extra_cppflags
@@ -6790,26 +6789,6 @@ fi
 if test "x$build_nscd" = xdefault; then
   build_nscd=$use_nscd
 fi
-
-# Test for old glibc 2.0.x headers so that they can be removed properly
-# Search only in includedir.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for old glibc 2.0.x headers" >&5
-$as_echo_n "checking for old glibc 2.0.x headers... " >&6; }
-if eval test -f "${includedir}/elfclass.h" -a -f "${includedir}/fcntlbits.h"
-then
-  old_glibc_headers=yes
-else
-  old_glibc_headers=no
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $old_glibc_headers" >&5
-$as_echo "$old_glibc_headers" >&6; }
-if test ${old_glibc_headers} = yes; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: *** During \"make install\" old headers from glibc 2.0.x will" >&5
-$as_echo "$as_me: WARNING: *** During \"make install\" old headers from glibc 2.0.x will" >&2;}
-  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: *** be removed." >&5
-$as_echo "$as_me: WARNING: *** be removed." >&2;}
-fi
-
 
 
 

@@ -1899,22 +1899,6 @@ if test "x$build_nscd" = xdefault; then
   build_nscd=$use_nscd
 fi
 
-# Test for old glibc 2.0.x headers so that they can be removed properly
-# Search only in includedir.
-AC_MSG_CHECKING(for old glibc 2.0.x headers)
-if eval test -f "${includedir}/elfclass.h" -a -f "${includedir}/fcntlbits.h"
-then
-  old_glibc_headers=yes
-else
-  old_glibc_headers=no
-fi
-AC_MSG_RESULT($old_glibc_headers)
-if test ${old_glibc_headers} = yes; then
-  AC_MSG_WARN(*** During \"make install\" old headers from glibc 2.0.x will)
-  AC_MSG_WARN(*** be removed.)
-fi
-AC_SUBST(old_glibc_headers)
-
 AC_SUBST(libc_cv_slibdir)
 AC_SUBST(libc_cv_rtlddir)
 AC_SUBST(libc_cv_localedir)
