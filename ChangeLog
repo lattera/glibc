@@ -1,3 +1,11 @@
+2016-01-07  Daniel Jacobowitz  <dan@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+	    Mark Shinwell  <shinwell@codesourcery.com>
+	    Andrew Stubbs  <ams@codesourcery.com>
+	    Rich Felker <dalias@libc.org>
+
+	* longlong.h (udiv_qrnnd): Add FDPIC compatible version for SH.
+
 2016-01-07  Richard Henderson  <rth@redhat.com>
 
 	* longlong.h [__alpha] (umul_ppmm): Disable for c++.
