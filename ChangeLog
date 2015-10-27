@@ -1,5 +1,11 @@
 2015-10-27  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17404]
+	* sysdeps/mips/atomic-machine.h
+	[__GNUC_PREREQ (4, 8) || (__mips16 && __GNUC_PREREQ (4, 7))]:
+	Change conditional to [__GNUC_PREREQ (4, 8) || __mips16].
+	[__mips16 && !__GNUC_PREREQ (4, 7)]: Remove conditional code.
+
 	* resolv/res_send.c (send_vc) [__GNUC_PREREQ (4, 7)]: Make code
 	unconditional.
 	* soft-fp/fmadf4.c [__GNUC_PREREQ (4, 7)]: Likewise.
