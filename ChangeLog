@@ -1,5 +1,9 @@
 2015-10-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.ac (libc_cv_gcc___thread): Remove configure test.
+	(libc_cv_gcc_tls_model_attr): Likewise.
+	* configure: Regenerated.
+
 	* configure.ac (libc_cv_need_minus_P): Remove configure test.
 	* configure: Regenerated.
 	* Makeconfig (asm-CPPFLAGS): Remove reference to -P in comment.

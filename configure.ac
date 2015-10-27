@@ -1564,36 +1564,6 @@ if test "$libc_cv_gcc_builtin_redirection" = no; then
   AC_MSG_ERROR([support for the symbol redirection needed])
 fi
 
-dnl Check whether the compiler supports the __thread keyword.
-AC_CACHE_CHECK([for __thread], libc_cv_gcc___thread,
-[cat > conftest.c <<\EOF
-__thread int a = 42;
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -c conftest.c >&AS_MESSAGE_LOG_FD]); then
-  libc_cv_gcc___thread=yes
-else
-  libc_cv_gcc___thread=no
-fi
-rm -f conftest*])
-if test "$libc_cv_gcc___thread" = no; then
-  AC_MSG_ERROR([support for the __thread keyword is required])
-fi
-
-dnl Check whether the compiler supports the tls_model attribute.
-AC_CACHE_CHECK([for tls_model attribute], libc_cv_gcc_tls_model_attr, [dnl
-cat > conftest.c <<\EOF
-extern __thread int a __attribute__((tls_model ("initial-exec")));
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -Werror conftest.c >&AS_MESSAGE_LOG_FD]); then
-  libc_cv_gcc_tls_model_attr=yes
-else
-  libc_cv_gcc_tls_model_attr=no
-fi
-rm -f conftest*])
-if test "$libc_cv_gcc_tls_model_attr" = no; then
-  AC_MSG_ERROR([support for the tls_model attribute is required])
-fi
-
 dnl Determine how to disable generation of FMA instructions.
 AC_CACHE_CHECK([for compiler option to disable generation of FMA instructions],
 	       libc_cv_cc_nofma, [dnl
