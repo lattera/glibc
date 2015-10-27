@@ -1,6 +1,11 @@
 gnulib-arch = $(elf-objpfx)libgcc-stubs.a
 static-gnulib-arch = $(elf-objpfx)libgcc-stubs.a
 
+# All supported build tools support TLS descriptors, but the OS may not.
+ifndef have-arm-tls-desc
+have-arm-tls-desc = yes
+endif
+
 ifeq ($(subdir),elf)
 sysdep-dl-routines += tlsdesc dl-tlsdesc
 sysdep_routines += aeabi_unwind_cpp_pr1 find_exidx

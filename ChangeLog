@@ -1,5 +1,11 @@
 2015-10-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/configure.ac (libc_cv_arm_tls_desc): Remove
+	configure test.
+	* sysdeps/arm/configure: Regenerated.
+	* sysdeps/arm/Makefile [!have-arm-tls-desc] (have-arm-tls-desc):
+	Define variable if not already defined.
+
 	[BZ #17404]
 	* sysdeps/mips/atomic-machine.h
 	[__GNUC_PREREQ (4, 8) || (__mips16 && __GNUC_PREREQ (4, 7))]:

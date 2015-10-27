@@ -176,42 +176,6 @@ else
 default-abi = soft"
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the build tools support the GNU descriptor TLS scheme" >&5
-$as_echo_n "checking whether the build tools support the GNU descriptor TLS scheme... " >&6; }
-if ${libc_cv_arm_tls_desc+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  old_CFLAGS="$CFLAGS"
-  CFLAGS="$CFLAGS -mtls-dialect=gnu2"
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-asm (".word\tfoo(tlsdesc)");
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  libc_cv_arm_tls_desc=yes
-else
-  libc_cv_arm_tls_desc=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-  CFLAGS="$old_CFLAGS"
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_arm_tls_desc" >&5
-$as_echo "$libc_cv_arm_tls_desc" >&6; }
-if test $libc_cv_arm_tls_desc = yes; then
-  config_vars="$config_vars
-have-arm-tls-desc = yes"
-else
-  config_vars="$config_vars
-have-arm-tls-desc = no"
-fi
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether PC-relative relocs in movw/movt work properly" >&5
 $as_echo_n "checking whether PC-relative relocs in movw/movt work properly... " >&6; }
 if ${libc_cv_arm_pcrel_movw+:} false; then :

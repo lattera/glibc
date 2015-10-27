@@ -26,19 +26,6 @@ else
   LIBC_CONFIG_VAR([default-abi], [soft])
 fi
 
-AC_CACHE_CHECK([whether the build tools support the GNU descriptor TLS scheme],
-  [libc_cv_arm_tls_desc],
-  [old_CFLAGS="$CFLAGS"
-  CFLAGS="$CFLAGS -mtls-dialect=gnu2"
-  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([asm (".word\tfoo(tlsdesc)");], [])],
-    [libc_cv_arm_tls_desc=yes], [libc_cv_arm_tls_desc=no])
-  CFLAGS="$old_CFLAGS"])
-if test $libc_cv_arm_tls_desc = yes; then
-  LIBC_CONFIG_VAR([have-arm-tls-desc], [yes])
-else
-  LIBC_CONFIG_VAR([have-arm-tls-desc], [no])
-fi
-
 AC_CACHE_CHECK([whether PC-relative relocs in movw/movt work properly],
 	       libc_cv_arm_pcrel_movw, [
 cat > conftest.s <<\EOF
