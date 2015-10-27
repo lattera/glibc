@@ -1,3 +1,11 @@
+2015-10-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (libc_cv_compiler_ok): Require GCC 4.7 or later.
+	* configure: Regenerated.
+	* manual/install.texi (Tools for Compilation): Document
+	requirement for GCC 4.7 or later.
+	* INSTALL: Regenerated.
+
 2015-10-27  Ludovic Courtès  <ludo@gnu.org>
 
 	* locale/loadlocale.c (_nl_intern_locale_data): Change assertion

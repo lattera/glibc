@@ -36,6 +36,10 @@ Version 2.23
 
 * Optimized string, wcsmbs and memory functions for IBM z13.
   Implemented by Stefan Liebler.
+
+* The minimum GCC version that can be used to build this version of the GNU
+  C Library is GCC 4.7.  Older GCC versions, and non-GNU compilers, can
+  still be used to compile programs using the GNU C Library.
 
 Version 2.22
 
