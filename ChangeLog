@@ -1,5 +1,8 @@
 2015-10-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/GlibcConform.pm ($CFLAGS{"ISO11"}): Use -std=c11 instead
+	of -std=c1x -D_ISOC11_SOURCE.
+
 	* configure.ac (libc_cv_compiler_ok): Require GCC 4.7 or later.
 	* configure: Regenerated.
 	* manual/install.texi (Tools for Compilation): Document
