@@ -1858,7 +1858,6 @@ AC_SUBST(libc_cv_localedir)
 AC_SUBST(libc_cv_sysconfdir)
 AC_SUBST(libc_cv_localstatedir)
 AC_SUBST(libc_cv_rootsbindir)
-AC_SUBST(libc_cv_forced_unwind)
 
 if test x$use_ldconfig = xyes; then
   AC_DEFINE(USE_LDCONFIG)

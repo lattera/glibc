@@ -27,9 +27,7 @@ static const char banner[] =
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n"
-#ifdef HAVE_FORCED_UNWIND
 "Forced unwind support included.\n"
-#endif
 ;
 
 

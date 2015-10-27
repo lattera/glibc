@@ -600,7 +600,6 @@ shared
 static
 ldd_rewrite_script
 use_ldconfig
-libc_cv_forced_unwind
 libc_cv_rootsbindir
 libc_cv_localstatedir
 libc_cv_sysconfdir
@@ -6709,7 +6708,6 @@ fi
 if test "x$build_nscd" = xdefault; then
   build_nscd=$use_nscd
 fi
-
 
 
 

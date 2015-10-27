@@ -24,10 +24,8 @@ ifeq ($(subdir),rt)
 librt-sysdep_routines += timer_routines librt-cancellation
 CFLAGS-librt-cancellation.c += -fexceptions -fasynchronous-unwind-tables
 
-ifeq ($(have-forced-unwind),yes)
 tests += tst-mqueue8x
 CFLAGS-tst-mqueue8x.c += -fexceptions
-endif
 endif
 
 ifeq ($(subdir),posix)

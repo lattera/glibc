@@ -1,3 +1,20 @@
+2015-10-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/nptl/configure.ac: Remove file.
+	* sysdeps/nptl/configure: Remove generated file.
+	* configure.ac (libc_cv_forced_unwind): Do not substitute.
+	* configure: Regenerated.
+	* config.h.in (HAVE_FORCED_UNWIND): Remove #undef.
+	* config.make.in (have-forced-unwind): Remove variable.
+	* nptl/Makefile [$(have-forced-unwind) = yes]: Make code
+	unconditional.
+	* nptl/descr.h [HAVE_FORCED_UNWIND]: Likewise.
+	* nptl/unwind.c [HAVE_FORCED_UNWIND]: Likewise.
+	(__pthread_unwind) [!HAVE_FORCED_UNWIND]: Remove conditional code.
+	* nptl/version.c [HAVE_FORCED_UNWIND]: Make code unconditional.
+	* sysdeps/nptl/Makefile [$(have-forced-unwind) = yes]: Make code
+	unconditional.
+
 2015-10-27  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	[BZ #19174]
