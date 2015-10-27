@@ -353,7 +353,7 @@ AC_ARG_ENABLE([systemtap],
 if test "x$systemtap" != xno; then
   AC_CACHE_CHECK([for systemtap static probe support], libc_cv_sdt, [dnl
   old_CFLAGS="$CFLAGS"
-  CFLAGS="-std=gnu99 $CFLAGS"
+  CFLAGS="-std=gnu11 $CFLAGS"
   AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#include <sys/sdt.h>
 void foo (int i, void *p)
 {

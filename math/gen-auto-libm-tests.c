@@ -18,7 +18,7 @@
 
 /* Compile this program as:
 
-   gcc -std=gnu99 -O2 -Wall -Wextra gen-auto-libm-tests.c -lmpc -lmpfr -lgmp \
+   gcc -std=gnu11 -O2 -Wall -Wextra gen-auto-libm-tests.c -lmpc -lmpfr -lgmp \
      -o gen-auto-libm-tests
 
    (use of current MPC and MPFR versions recommended) and run it as:

@@ -1,5 +1,14 @@
 2015-10-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makeconfig (CFLAGS): Use -std=gnu11 instead of -std=gnu99.
+	* Makefile ($(objpfx)c++-types-check.out): Filter out -std=gnu11
+	instead of -std=gnu99.
+	* configure.ac (systemtap): Test with -std=gnu11 instead of
+	-std=gnu99.
+	* configure: Regenerated.
+	* math/gen-auto-libm-tests.c: Use -std=gnu11 instead of -std=gnu99
+	in compilation command in comment.
+
 	* sysdeps/nptl/configure.ac: Remove file.
 	* sysdeps/nptl/configure: Remove generated file.
 	* configure.ac (libc_cv_forced_unwind): Do not substitute.
