@@ -285,7 +285,8 @@ tests = tst-typesizes \
 	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x \
 	tst-getpid3 \
 	tst-setuid3 \
-	tst-initializers1 $(addprefix tst-initializers1-,c89 gnu89 c99 gnu99) \
+	tst-initializers1 $(addprefix tst-initializers1-,\
+			    c89 gnu89 c99 gnu99 c11 gnu11) \
 	tst-bad-schedattr \
 	tst-thread_local1
 xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
@@ -483,8 +484,10 @@ CFLAGS-tst-initializers1-< = $(CFLAGS-tst-initializers1.c) \
 			     $(patsubst tst-initializers1-%.c,-std=%,$<)
 CFLAGS-tst-initializers1-c89.c = $(CFLAGS-tst-initializers1-<)
 CFLAGS-tst-initializers1-c99.c = $(CFLAGS-tst-initializers1-<)
+CFLAGS-tst-initializers1-c11.c = $(CFLAGS-tst-initializers1-<)
 CFLAGS-tst-initializers1-gnu89.c = $(CFLAGS-tst-initializers1-<)
 CFLAGS-tst-initializers1-gnu99.c = $(CFLAGS-tst-initializers1-<)
+CFLAGS-tst-initializers1-gnu11.c = $(CFLAGS-tst-initializers1-<)
 
 tst-cancel7-ARGS = --command "exec $(host-test-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)

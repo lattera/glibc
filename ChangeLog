@@ -1,5 +1,11 @@
 2015-10-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* nptl/tst-initializers1-c11.c: New file.
+	* nptl/tst-initializers1-gnu11.c: Likewise.
+	* nptl/Makefile (tests): Add these new tests.
+	(CFLAGS-tst-initializers1-c11.c): New variable.
+	(CFLAGS-tst-initializers1-gnu11.c): Likewise.
+
 	* Makeconfig (CFLAGS): Use -std=gnu11 instead of -std=gnu99.
 	* Makefile ($(objpfx)c++-types-check.out): Filter out -std=gnu11
 	instead of -std=gnu99.
