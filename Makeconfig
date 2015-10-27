@@ -345,9 +345,7 @@ endif
 endif
 
 # Flags to pass the C compiler when assembling preprocessed assembly code
-# (`.S' files).  On some systems the assembler doesn't understand the `#' line
-# directives the preprocessor produces.  If you have troubling compiling
-# assembly code, try using -P here to suppress these directives.
+# (`.S' files).
 ifndef asm-CPPFLAGS
 asm-CPPFLAGS =
 endif

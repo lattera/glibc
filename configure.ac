@@ -1080,23 +1080,6 @@ AC_CHECK_PROG_VER(BISON, bison, --version,
 		  [2.7*|[3-9].*|[1-9][0-9]*],
 		  BISON=no)
 
-AC_CACHE_CHECK(whether we need to use -P to assemble .S files,
-	       libc_cv_need_minus_P, [dnl
-cat > conftest.S <<EOF
-#include "confdefs.h"
-/* Nothing whatsoever.  */
-EOF
-if AC_TRY_COMMAND(${CC-cc} $CPPFLAGS $ASFLAGS -c conftest.S 1>&AS_MESSAGE_LOG_FD); then
-  libc_cv_need_minus_P=no
-else
-  libc_cv_need_minus_P=yes
-fi
-rm -f conftest*])
-if test $libc_cv_need_minus_P = yes; then
-  config_vars="$config_vars
-asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
-fi
-
 AC_CACHE_CHECK(for .set assembler directive, libc_cv_asm_set_directive, [dnl
 cat > conftest.s <<EOF
 .text

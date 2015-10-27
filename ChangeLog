@@ -1,3 +1,9 @@
+2015-10-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (libc_cv_need_minus_P): Remove configure test.
+	* configure: Regenerated.
+	* Makeconfig (asm-CPPFLAGS): Remove reference to -P in comment.
+
 2015-10-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.ac (old_glibc_headers): Remove configure test.
