@@ -150,11 +150,6 @@ $(conformtest-header-list-tests): $(objpfx)header-list-%.out: \
 		 "$(conformtest-headers-data)" > $@; \
 	$(evaluate-test)
 
-# GCC 4.6 and earlier lack features required by these tests.
-test-xfail-ISO11/complex.h/conform = yes
-test-xfail-ISO11/stdalign.h/conform = yes
-test-xfail-ISO11/stdnoreturn.h/conform = yes
-
 # Pre-standard C feature no longer supported by GCC (obsoleted in
 # newer POSIX standards).
 test-xfail-XPG3/varargs.h/conform = yes

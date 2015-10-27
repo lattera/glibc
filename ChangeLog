@@ -1,5 +1,10 @@
 2015-10-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/Makefile (test-xfail-ISO11/complex.h/conform): Remove
+	variable.
+	(test-xfail-ISO11/stdalign.h/conform): Likewise.
+	(test-xfail-ISO11/stdnoreturn.h/conform): Likewise.
+
 	* conform/GlibcConform.pm ($CFLAGS{"ISO11"}): Use -std=c11 instead
 	of -std=c1x -D_ISOC11_SOURCE.
 
