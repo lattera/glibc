@@ -1,5 +1,45 @@
 2015-10-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* resolv/res_send.c (send_vc) [__GNUC_PREREQ (4, 7)]: Make code
+	unconditional.
+	* soft-fp/fmadf4.c [__GNUC_PREREQ (4, 7)]: Likewise.
+	[!__GNUC_PREREQ (4, 7)]: Remove conditional code.
+	* soft-fp/fmasf4.c [__GNUC_PREREQ (4, 7)]: Make code
+	unconditional.
+	[!__GNUC_PREREQ (4, 7)]: Remove conditional code.
+	* soft-fp/fmatf4.c [__GNUC_PREREQ (4, 7)]: Make code
+	unconditional.
+	[!__GNUC_PREREQ (4, 7)]: Remove conditional code.
+	* stdlib/setenv.c
+	[((__GNUC__ << 16) + __GNUC_MINOR__) >= ((4 << 16) + 7)]: Make
+	code unconditional.
+	[!(((__GNUC__ << 16) + __GNUC_MINOR__) >= ((4 << 16) + 7))]:
+	Remove conditional code.
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c
+	(__ieee754_lgamma_r) [__GNUC_PREREQ (4, 7)]: Make code
+	unconditional.
+	(__ieee754_lgamma_r) [!__GNUC_PREREQ (4, 7)]: Remove conditional
+	code.
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c
+	(__ieee754_lgammaf_r) [__GNUC_PREREQ (4, 7)]: Make code
+	unconditional.
+	(__ieee754_lgammaf_r) [!__GNUC_PREREQ (4, 7)]: Remove conditional
+	code.
+	* sysdeps/ieee754/ldbl-128/k_tanl.c
+	(__kernel_tanl) [__GNUC_PREREQ (4, 7)]: Make code unconditional.
+	(__kernel_tanl) [!__GNUC_PREREQ (4, 7)]: Remove conditional code.
+	* sysdeps/ieee754/ldbl-128ibm/k_tanl.c
+	(__kernel_tanl) [__GNUC_PREREQ (4, 7)]: Make code unconditional.
+	(__kernel_tanl) [!__GNUC_PREREQ (4, 7)]: Remove conditional code.
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c
+	(__ieee754_lgammal_r) [__GNUC_PREREQ (4, 7)]: Make code
+	unconditional.
+	(__ieee754_lgammal_r) [!__GNUC_PREREQ (4, 7)]: Remove conditional
+	code.
+	* sysdeps/ieee754/ldbl-96/k_tanl.c
+	(__kernel_tanl) [__GNUC_PREREQ (4, 7)]: Make code unconditional.
+	(__kernel_tanl) [!__GNUC_PREREQ (4, 7)]: Remove conditional code.
+
 	* nptl/tst-initializers1-c11.c: New file.
 	* nptl/tst-initializers1-gnu11.c: Likewise.
 	* nptl/Makefile (tests): Add these new tests.

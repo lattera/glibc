@@ -655,14 +655,10 @@ send_vc(res_state statp,
 	   times round the loop resplen has been initialized.  So this is
 	   a false-positive.
 	 */
-#if __GNUC_PREREQ (4, 7)
 	DIAG_PUSH_NEEDS_COMMENT;
 	DIAG_IGNORE_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
-#endif
 	int resplen;
-#if __GNUC_PREREQ (4, 7)
 	DIAG_POP_NEEDS_COMMENT;
-#endif
 	struct iovec iov[4];
 	u_short len;
 	u_short len2;
@@ -780,10 +776,8 @@ send_vc(res_state statp,
 			/* No buffer allocated for the first
 			   reply.  We can try to use the rest
 			   of the user-provided buffer.  */
-#if __GNUC_PREREQ (4, 7)
 			DIAG_PUSH_NEEDS_COMMENT;
 			DIAG_IGNORE_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
-#endif
 #if _STRING_ARCH_unaligned
 			*anssizp2 = orig_anssizp - resplen;
 			*ansp2 = *ansp + resplen;
@@ -794,9 +788,7 @@ send_vc(res_state statp,
 			*anssizp2 = orig_anssizp - aligned_resplen;
 			*ansp2 = *ansp + aligned_resplen;
 #endif
-#if __GNUC_PREREQ (4, 7)
 			DIAG_POP_NEEDS_COMMENT;
-#endif
 		} else {
 			/* The first reply did not fit into the
 			   user-provided buffer.  Maybe the second

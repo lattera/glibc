@@ -238,11 +238,7 @@ __ieee754_lgammaf_r(float x, int *signgamp)
 	   although in the cases where it is used it has always been
 	   set.  */
 	DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (4, 7)
 	DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wmaybe-uninitialized");
-#else
-	DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wuninitialized");
-#endif
 	if(hx<0) r = nadj - r;
 	DIAG_POP_NEEDS_COMMENT;
 	return r;

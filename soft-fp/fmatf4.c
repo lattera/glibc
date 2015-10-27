@@ -34,11 +34,7 @@
    it may be where R is defined using a macro or it may be where the
    macro is defined.  */
 DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (4, 7)
 DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wmaybe-uninitialized");
-#else
-DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wuninitialized");
-#endif
 #include <math.h>
 #include "soft-fp.h"
 #include "quad.h"
