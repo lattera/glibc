@@ -24,6 +24,7 @@ static char rcsid[] = "$NetBSD: $";
  *   Special cases:
  */
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
@@ -76,7 +77,7 @@ long double __nextafterl(long double x, long double y)
 	    }
 	    if(ihx <= 0x0360000000000000LL) {  /* x <= LDBL_MIN */
 	      u = math_opt_barrier (x);
-	      x -= __LDBL_DENORM_MIN__;
+	      x -= LDBL_TRUE_MIN;
 	      if (ihx < 0x0360000000000000LL
 		  || (hx > 0 && lx <= 0)
 		  || (hx < 0 && lx > 1)) {
@@ -115,14 +116,14 @@ long double __nextafterl(long double x, long double y)
 	    }
 	    if(ihx <= 0x0360000000000000LL) {  /* x <= LDBL_MIN */
 	      u = math_opt_barrier (x);
-	      x += __LDBL_DENORM_MIN__;
+	      x += LDBL_TRUE_MIN;
 	      if (ihx < 0x0360000000000000LL
 		  || (hx > 0 && lx < 0 && lx != 0x8000000000000001LL)
 		  || (hx < 0 && lx >= 0)) {
 		u = u * u;
 		math_force_eval (u);		/* raise underflow flag */
 	      }
-	      if (x == 0.0L)	/* handle negative __LDBL_DENORM_MIN__ case */
+	      if (x == 0.0L)	/* handle negative LDBL_TRUE_MIN case */
 		x = -0.0L;
 	      return x;
 	    }

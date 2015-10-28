@@ -315,12 +315,12 @@ static int ignore_max_ulp;	/* Should we ignore max_ulp?  */
 				LDBL_MAX, DBL_MAX, FLT_MAX)
 #define min_value	CHOOSE (LDBL_MIN, DBL_MIN, FLT_MIN,	\
 				LDBL_MIN, DBL_MIN, FLT_MIN)
-#define min_subnorm_value	CHOOSE (__LDBL_DENORM_MIN__,	\
-					__DBL_DENORM_MIN__,	\
-					__FLT_DENORM_MIN__,	\
-					__LDBL_DENORM_MIN__,	\
-					__DBL_DENORM_MIN__,	\
-					__FLT_DENORM_MIN__)
+#define min_subnorm_value	CHOOSE (LDBL_TRUE_MIN,	\
+					DBL_TRUE_MIN,	\
+					FLT_TRUE_MIN,	\
+					LDBL_TRUE_MIN,	\
+					DBL_TRUE_MIN,	\
+					FLT_TRUE_MIN)
 
 static FLOAT max_error, real_max_error, imag_max_error;
 

@@ -68,7 +68,7 @@ __fmal (long double x, long double y, long double z)
       if (u.ieee.exponent + v.ieee.exponent
 	  > 0x7fff + IEEE854_LONG_DOUBLE_BIAS)
 	return x * y;
-      /* If x * y is less than 1/4 of LDBL_DENORM_MIN, neither the
+      /* If x * y is less than 1/4 of LDBL_TRUE_MIN, neither the
 	 result nor whether there is underflow depends on its exact
 	 value, only on its sign.  */
       if (u.ieee.exponent + v.ieee.exponent

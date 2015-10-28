@@ -1,3 +1,17 @@
+2015-10-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (min_subnorm_value): Use LDBL_TRUE_MIN,
+	DBL_TRUE_MIN and FLT_TRUE_MIN instead of __LDBL_DENORM_MIN__,
+	__DBL_DENORM_MIN__ and __FLT_DENORM_MIN__.
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Refer to DBL_TRUE_MIN
+	instead of DBL_DENORM_MIN in comment.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Refer to
+	LDBL_TRUE_MIN instead of LDBL_DENORM_MIN in comment.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c: Include <float.h>.
+	(__nextafterl): Use LDBL_TRUE_MIN instead of __LDBL_DENORM_MIN__.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c (__fmal): Refer to
+	LDBL_TRUE_MIN instead of LDBL_DENORM_MIN in comment.
+
 2015-10-28  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ# 19048]

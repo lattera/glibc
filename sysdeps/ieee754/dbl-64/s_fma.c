@@ -66,7 +66,7 @@ __fma (double x, double y, double z)
       /* If fma will certainly overflow, compute as x * y.  */
       if (u.ieee.exponent + v.ieee.exponent > 0x7ff + IEEE754_DOUBLE_BIAS)
 	return x * y;
-      /* If x * y is less than 1/4 of DBL_DENORM_MIN, neither the
+      /* If x * y is less than 1/4 of DBL_TRUE_MIN, neither the
 	 result nor whether there is underflow depends on its exact
 	 value, only on its sign.  */
       if (u.ieee.exponent + v.ieee.exponent
