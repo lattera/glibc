@@ -1,5 +1,15 @@
 2015-11-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/elision-trylock.c
+	(__lll_trylock_elision): Fix setting of adapt_count.
+	* sysdeps/unix/sysv/linux/powerpc/htm.h
+	(_ABORT_PERSISTENT): Define to clarify persistent aborts.
+	(_ABORT_NESTED_TRYLOCK): Renumber, and make persistent.
+	(_ABORT_SYSCALL): Renumber, and clarify definition.
+	(_ABORT_LOCK_BUSY): Renumber, make non-persistent.
+
+2015-11-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* sysdeps/ieee754/ldbl-128ibm/mpn2ldl.c: Include gmp headers
 	after system headers to prevent MIN/MAX redefinition.  Define
 	HAVE_ALLOCA to preserve builtin alloca usage.

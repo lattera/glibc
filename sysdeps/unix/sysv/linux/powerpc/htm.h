@@ -129,10 +129,12 @@
 
 #endif /* __ASSEMBLER__ */
 
-/* Definitions used for TEXASR Failure code (bits 0:6), they need to be even
-   because tabort. always sets the first bit.  */
-#define _ABORT_LOCK_BUSY       0x3f   /* Lock already used.  */
-#define _ABORT_NESTED_TRYLOCK  0x3e   /* Write operation in trylock.  */
-#define _ABORT_SYSCALL         0x3d   /* Syscall issued.  */
+/* Definitions used for TEXASR Failure code (bits 0:7).  If the failure
+   should be persistent, the abort code must be odd.  0xd0 through 0xff
+   are reserved for the kernel and potential hypervisor.  */
+#define _ABORT_PERSISTENT      0x01   /* An unspecified persistent abort.  */
+#define _ABORT_LOCK_BUSY       0x34   /* Busy lock, not persistent.  */
+#define _ABORT_NESTED_TRYLOCK  (0x32 | _ABORT_PERSISTENT)
+#define _ABORT_SYSCALL         (0x30 | _ABORT_PERSISTENT)
 
 #endif
