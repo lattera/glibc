@@ -22,3 +22,4 @@
 #define PRINTF_XEXPR "a"
 #define PRINTF_NEXPR "f"
 #define TEST_FLOAT 1
+#define BUILD_COMPLEX(real, imag) (CMPLXF ((real), (imag)))

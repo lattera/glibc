@@ -1,5 +1,10 @@
 2015-10-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (BUILD_COMPLEX): Remove macro.
+	* math/test-double.h (BUILD_COMPLEX): New macro.
+	* math/test-float.h (BUILD_COMPLEX): Likewise.
+	* math/test-ldouble.h (BUILD_COMPLEX): Likewise.
+
 	* math/libm-test.inc (min_subnorm_value): Use LDBL_TRUE_MIN,
 	DBL_TRUE_MIN and FLT_TRUE_MIN instead of __LDBL_DENORM_MIN__,
 	__DBL_DENORM_MIN__ and __FLT_DENORM_MIN__.

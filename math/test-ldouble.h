@@ -22,3 +22,4 @@
 #define PRINTF_XEXPR "La"
 #define PRINTF_NEXPR "Lf"
 #define TEST_LDOUBLE 1
+#define BUILD_COMPLEX(real, imag) (CMPLXL ((real), (imag)))

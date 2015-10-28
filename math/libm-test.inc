@@ -328,12 +328,6 @@ static FLOAT prev_max_error, prev_real_max_error, prev_imag_max_error;
 
 static FLOAT max_valid_error;
 
-#define BUILD_COMPLEX(real, imag) \
-  ({ __complex__ FLOAT __retval;					      \
-     __real__ __retval = (real);					      \
-     __imag__ __retval = (imag);					      \
-     __retval; })
-
 #define MANT_DIG CHOOSE ((LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1),  \
 			 (LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1))
 #define MIN_EXP CHOOSE ((LDBL_MIN_EXP-1), (DBL_MIN_EXP-1), (FLT_MIN_EXP-1),	\
