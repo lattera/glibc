@@ -17,7 +17,13 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <fpu_control.h>
 #include <assert.h>
+
+
+/* All exceptions, including the x86-specific "denormal operand"
+   exception.  */
+#define FE_ALL_EXCEPT_X86 (FE_ALL_EXCEPT | __FE_DENORM)
 
 
 int
@@ -34,47 +40,61 @@ __fesetenv (const fenv_t *envp)
 
   if (envp == FE_DFL_ENV)
     {
-      temp.__control_word |= FE_ALL_EXCEPT;
+      temp.__control_word |= FE_ALL_EXCEPT_X86;
       temp.__control_word &= ~FE_TOWARDZERO;
-      temp.__status_word &= ~FE_ALL_EXCEPT;
+      temp.__control_word |= _FPU_EXTENDED;
+      temp.__status_word &= ~FE_ALL_EXCEPT_X86;
       temp.__eip = 0;
       temp.__cs_selector = 0;
       temp.__opcode = 0;
       temp.__data_offset = 0;
       temp.__data_selector = 0;
       /* Clear SSE exceptions.  */
-      temp.__mxcsr &= ~FE_ALL_EXCEPT;
+      temp.__mxcsr &= ~FE_ALL_EXCEPT_X86;
       /* Set mask for SSE MXCSR.  */
-      temp.__mxcsr |= (FE_ALL_EXCEPT << 7);
+      temp.__mxcsr |= (FE_ALL_EXCEPT_X86 << 7);
       /* Set rounding to FE_TONEAREST.  */
       temp.__mxcsr &= ~ 0x6000;
       temp.__mxcsr |= (FE_TONEAREST << 3);
+      /* Clear the FZ and DAZ bits.  */
+      temp.__mxcsr &= ~0x8040;
     }
   else if (envp == FE_NOMASK_ENV)
     {
       temp.__control_word &= ~(FE_ALL_EXCEPT | FE_TOWARDZERO);
-      temp.__status_word &= ~FE_ALL_EXCEPT;
+      /* Keep the "denormal operand" exception masked.  */
+      temp.__control_word |= __FE_DENORM;
+      temp.__control_word |= _FPU_EXTENDED;
+      temp.__status_word &= ~FE_ALL_EXCEPT_X86;
       temp.__eip = 0;
       temp.__cs_selector = 0;
       temp.__opcode = 0;
       temp.__data_offset = 0;
       temp.__data_selector = 0;
       /* Clear SSE exceptions.  */
-      temp.__mxcsr &= ~FE_ALL_EXCEPT;
+      temp.__mxcsr &= ~FE_ALL_EXCEPT_X86;
       /* Set mask for SSE MXCSR.  */
       /* Set rounding to FE_TONEAREST.  */
       temp.__mxcsr &= ~ 0x6000;
       temp.__mxcsr |= (FE_TONEAREST << 3);
       /* Do not mask exceptions.  */
       temp.__mxcsr &= ~(FE_ALL_EXCEPT << 7);
+      /* Keep the "denormal operand" exception masked.  */
+      temp.__mxcsr |= (__FE_DENORM << 7);
+      /* Clear the FZ and DAZ bits.  */
+      temp.__mxcsr &= ~0x8040;
     }
   else
     {
-      temp.__control_word &= ~(FE_ALL_EXCEPT | FE_TOWARDZERO);
+      temp.__control_word &= ~(FE_ALL_EXCEPT_X86
+			       | FE_TOWARDZERO
+			       | _FPU_EXTENDED);
       temp.__control_word |= (envp->__control_word
-			      & (FE_ALL_EXCEPT | FE_TOWARDZERO));
-      temp.__status_word &= ~FE_ALL_EXCEPT;
-      temp.__status_word |= envp->__status_word & FE_ALL_EXCEPT;
+			      & (FE_ALL_EXCEPT_X86
+				 | FE_TOWARDZERO
+				 | _FPU_EXTENDED));
+      temp.__status_word &= ~FE_ALL_EXCEPT_X86;
+      temp.__status_word |= envp->__status_word & FE_ALL_EXCEPT_X86;
       temp.__eip = envp->__eip;
       temp.__cs_selector = envp->__cs_selector;
       temp.__opcode = envp->__opcode;

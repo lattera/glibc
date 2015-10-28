@@ -1,5 +1,24 @@
 2015-10-28  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16068]
+	* sysdeps/i386/fpu/fesetenv.c: Include <fpu_control.h>.
+	(FE_ALL_EXCEPT_X86): New macro.
+	(__fesetenv): Use FE_ALL_EXCEPT_X86 in most places instead of
+	FE_ALL_EXCEPT.  Ensure precision control is included in
+	floating-point state.  Ensure that FE_DFL_ENV and FE_NOMASK_ENV
+	handle "denormal operand exception" and clear FZ and DAZ bits.
+	* sysdeps/x86_64/fpu/fesetenv.c: Include <fpu_control.h>.
+	(FE_ALL_EXCEPT_X86): New macro.
+	(__fesetenv): Use FE_ALL_EXCEPT_X86 in most places instead of
+	FE_ALL_EXCEPT.  Ensure precision control is included in
+	floating-point state.  Ensure that FE_DFL_ENV and FE_NOMASK_ENV
+	handle "denormal operand exception" and clear FZ and DAZ bits.
+	* sysdeps/x86/fpu/test-fenv-sse-2.c: New file.
+	* sysdeps/x86/fpu/test-fenv-x87.c: Likewise.
+	* sysdeps/x86/fpu/Makefile [$(subdir) = math] (tests): Add
+	test-fenv-x87 and test-fenv-sse-2.
+	[$(subdir) = math] (CFLAGS-test-fenv-sse-2.c): New variable.
+
 	* math/libm-test.inc (BUILD_COMPLEX): Remove macro.
 	* math/test-double.h (BUILD_COMPLEX): New macro.
 	* math/test-float.h (BUILD_COMPLEX): Likewise.
