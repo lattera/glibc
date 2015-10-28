@@ -1,3 +1,20 @@
+2015-10-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ# 19048]
+	* malloc/malloc.c (struct malloc_state): Update comment.  Add
+	attached_threads member.
+	(main_arena): Initialize attached_threads.
+	* malloc/arena.c (list_lock): Update comment.
+	(ptmalloc_lock_all, ptmalloc_unlock_all): Likewise.
+	(ptmalloc_unlock_all2): Reinitialize arena reference counts.
+	(deattach_arena): New function.
+	(_int_new_arena): Initialize arena reference count and deattach
+	replaced arena.
+	(get_free_list, reused_arena): Update reference count and deattach
+	replaced arena.
+	(arena_thread_freeres): Update arena reference count and only put
+	unreferenced arenas on the free list.
+
 2015-10-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19181]

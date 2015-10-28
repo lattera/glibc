@@ -1709,8 +1709,14 @@ struct malloc_state
   /* Linked list */
   struct malloc_state *next;
 
-  /* Linked list for free arenas.  */
+  /* Linked list for free arenas.  Access to this field is serialized
+     by list_lock in arena.c.  */
   struct malloc_state *next_free;
+
+  /* Number of threads attached to this arena.  0 if the arena is on
+     the free list.  Access to this field is serialized by list_lock
+     in arena.c.  */
+  INTERNAL_SIZE_T attached_threads;
 
   /* Memory allocated from the system in this arena.  */
   INTERNAL_SIZE_T system_mem;
@@ -1755,7 +1761,8 @@ struct malloc_par
 static struct malloc_state main_arena =
 {
   .mutex = MUTEX_INITIALIZER,
-  .next = &main_arena
+  .next = &main_arena,
+  .attached_threads = 1
 };
 
 /* There is only one instance of the malloc parameters.  */
