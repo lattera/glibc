@@ -42,6 +42,8 @@ __fesetenv (const fenv_t *envp)
       temp.__opcode = 0;
       temp.__data_offset = 0;
       temp.__data_selector = 0;
+      /* Clear SSE exceptions.  */
+      temp.__mxcsr &= ~FE_ALL_EXCEPT;
       /* Set mask for SSE MXCSR.  */
       temp.__mxcsr |= (FE_ALL_EXCEPT << 7);
       /* Set rounding to FE_TONEAREST.  */
@@ -57,6 +59,8 @@ __fesetenv (const fenv_t *envp)
       temp.__opcode = 0;
       temp.__data_offset = 0;
       temp.__data_selector = 0;
+      /* Clear SSE exceptions.  */
+      temp.__mxcsr &= ~FE_ALL_EXCEPT;
       /* Set mask for SSE MXCSR.  */
       /* Set rounding to FE_TONEAREST.  */
       temp.__mxcsr &= ~ 0x6000;

@@ -1,5 +1,17 @@
 2015-10-28  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19181]
+	* sysdeps/i386/fpu/fesetenv.c (__fesetenv): Clear already-raised
+	SSE exceptions when argument is FE_DFL_ENV or FE_NOMASK_ENV.
+	* sysdeps/x86_64/fpu/fesetenv.c (__fesetenv): Likewise.
+	* math/test-fenv-clear-main.c: New file.
+	* math/test-fenv-clear.c: Likewise.
+	* math/Makefile (tests): Add test-fenv-clear.
+	* sysdeps/x86/fpu/test-fenv-clear-sse.c: New file.
+	* sysdeps/x86/fpu/Makefile [$(subdir) = math] (tests): Add
+	test-fenv-clear-sse.
+	[$(subdir) = math] (CFLAGS-test-fenv-clear-sse.c): New variable.
+
 	* math/libm-test.inc (TYPE_DECIMAL_DIG): Use LDBL_DECIMAL_DIG,
 	DBL_DECIMAL_DIG and FLT_DECIMAL_DIG instead of __DECIMAL_DIG__,
 	__DBL_DECIMAL_DIG__ and __FLT_DECIMAL_DIG__.

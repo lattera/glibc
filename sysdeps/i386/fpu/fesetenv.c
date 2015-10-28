@@ -72,6 +72,8 @@ __fesetenv (const fenv_t *envp)
 
       if (envp == FE_DFL_ENV)
 	{
+	  /* Clear SSE exceptions.  */
+	  mxcsr &= ~FE_ALL_EXCEPT;
 	  /* Set mask for SSE MXCSR.  */
 	  mxcsr |= (FE_ALL_EXCEPT << 7);
 	  /* Set rounding to FE_TONEAREST.  */
@@ -80,6 +82,8 @@ __fesetenv (const fenv_t *envp)
 	}
       else if (envp == FE_NOMASK_ENV)
 	{
+	  /* Clear SSE exceptions.  */
+	  mxcsr &= ~FE_ALL_EXCEPT;
 	  /* Do not mask exceptions.  */
 	  mxcsr &= ~(FE_ALL_EXCEPT << 7);
 	  /* Set rounding to FE_TONEAREST.  */
