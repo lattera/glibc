@@ -22,7 +22,7 @@
 
 /* Define multiple versions only for the definition in lib.  */
 #if IS_IN (libc)
-# if defined SHARED && defined HAVE_AVX2_SUPPORT
+# ifdef SHARED
 ENTRY(__memset_chk)
 	.type	__memset_chk, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX

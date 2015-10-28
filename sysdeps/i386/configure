@@ -119,32 +119,6 @@ if test $libc_cv_asm_mpx == yes; then
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for AVX2 support" >&5
-$as_echo_n "checking for AVX2 support... " >&6; }
-if ${libc_cv_cc_avx2+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if { ac_try='${CC-cc} -mavx2 -xc /dev/null -S -o /dev/null'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then :
-  libc_cv_cc_avx2=yes
-else
-  libc_cv_cc_avx2=no
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_avx2" >&5
-$as_echo "$libc_cv_cc_avx2" >&6; }
-if test $libc_cv_cc_avx2 = yes; then
-  $as_echo "#define HAVE_AVX2_SUPPORT 1" >>confdefs.h
-
-fi
-config_vars="$config_vars
-config-cflags-avx2 = $libc_cv_cc_avx2"
-
 $as_echo "#define USE_REGPARMS 1" >>confdefs.h
 
 

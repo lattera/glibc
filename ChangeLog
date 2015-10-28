@@ -1,3 +1,23 @@
+2015-10-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/i386/configure.ac (libc_cv_cc_avx2): Remove configure
+	test.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/x86_64/configure.ac (libc_cv_cc_avx2): Remove configure
+	test.
+	* sysdeps/x86_64/configure: Regenerated.
+	* config.h.in (HAVE_AVX2_SUPPORT): Remove #undef.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memset-avx2 unconditionally instead of conditionally on
+	[$(config-cflags-avx2) = yes].
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list) [HAVE_AVX2_SUPPORT]: Make code
+	unconditional.
+	* sysdeps/x86_64/multiarch/memset.S [HAVE_AVX2_SUPPORT]: Likewise.
+	* sysdeps/x86_64/multiarch/memset_chk.S
+	[IS_IN (libc) && SHARED && HAVE_AVX2_SUPPORT]: Change conditional
+	to [IS_IN (libc) && SHARED].
+
 2015-10-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/configure.ac (libc_cv_arm_tls_desc): Remove
