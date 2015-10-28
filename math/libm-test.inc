@@ -345,12 +345,12 @@ static FLOAT max_valid_error;
    hex digit, in the case of TYPE_HEX_DIG).  When used with printf
    formats where the precision counts only digits after the point, 1
    is subtracted from these values. */
-#define TYPE_DECIMAL_DIG CHOOSE (__DECIMAL_DIG__,	\
-				 __DBL_DECIMAL_DIG__,	\
-				 __FLT_DECIMAL_DIG__,	\
-				 __DECIMAL_DIG__,	\
-				 __DBL_DECIMAL_DIG__,	\
-				 __FLT_DECIMAL_DIG__)
+#define TYPE_DECIMAL_DIG CHOOSE (LDBL_DECIMAL_DIG,	\
+				 DBL_DECIMAL_DIG,	\
+				 FLT_DECIMAL_DIG,	\
+				 LDBL_DECIMAL_DIG,	\
+				 DBL_DECIMAL_DIG,	\
+				 FLT_DECIMAL_DIG)
 #define TYPE_HEX_DIG ((MANT_DIG + 7) / 4)
 
 /* Compare KEY (a string, with the name of a function) with ULP (a
