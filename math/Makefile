@@ -51,7 +51,7 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     s_floor s_log1p w_log1p s_logb				\
 	     s_nextafter s_nexttoward s_rint s_scalbln w_scalbln	\
 	     s_significand s_sin s_tan s_tanh w_acos w_acosh w_asin	\
-	     w_atan2 w_atanh w_cosh w_drem w_exp w_exp2 w_exp10 w_fmod	\
+	     w_atan2 w_atanh w_cosh w_exp w_exp2 w_exp10 w_fmod		\
 	     w_tgamma w_hypot w_j0 w_j1 w_jn w_lgamma w_lgamma_r	\
 	     w_log w_log10 w_pow w_remainder w_scalb w_sinh w_sqrt	\
 	     w_ilogb							\

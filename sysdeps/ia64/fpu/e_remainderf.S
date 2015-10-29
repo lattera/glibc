@@ -548,6 +548,7 @@ EXP_ERROR_RETURN:
 }
 
 GLOBAL_IEEE754_END(remainderf)
+weak_alias (__remainderf, dremf)
 
 
 

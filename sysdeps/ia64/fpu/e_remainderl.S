@@ -557,6 +557,7 @@ EXP_ERROR_RETURN:
 }
 
 GLOBAL_IEEE754_END(remainderl)
+weak_alias (__remainderl, dreml)
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

@@ -1,5 +1,38 @@
 2015-10-29  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16171]
+	* math/w_remainder.c (drem): Define as weak alias of __remainder.
+	[NO_LONG_DOUBLE] (dreml): Define as weak alias of __remainder.
+	* math/w_remainderf.c (dremf): Define as weak alias of
+	__remainderf.
+	* math/w_remainderl.c (dreml): Define as weak alias of
+	__remainderl.
+	* sysdeps/ia64/fpu/e_remainder.S (drem): Define as weak alias of
+	__remainder.
+	* sysdeps/ia64/fpu/e_remainderf.S (dremf): Define as weak alias of
+	__remainderf.
+	* sysdeps/ia64/fpu/e_remainderl.S (dreml): Define as weak alias of
+	__remainderl.
+	* sysdeps/ieee754/ldbl-opt/nldbl-remainder.c (dreml): Define as
+	weak alias of remainderl.
+	* sysdeps/ieee754/ldbl-opt/w_remainder.c
+	[LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)] (__drem): Define as strong
+	alias of __remainder.
+	[LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)] (dreml): Use compat_symbol.
+	* sysdeps/ieee754/ldbl-opt/w_remainderl.c (__dreml): Define as
+	strong alias of __remainderl.
+	(dreml): Use long_double_symbol.
+	* math/Makefile (libm-calls): Remove w_drem.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Remove drem.
+	(CFLAGS-nldbl-drem.c): Remove variable.
+	(CFLAGS-nldbl-remainder.c): Add -fno-builtin-dreml.
+	* math/w_drem.c: Remove file.
+	* math/w_dremf.c: Likewise.
+	* math/w_dreml.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-drem.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_drem.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_dreml.c: Likewise.
+
 	* sysdeps/i386/configure.ac (cpuid.h): Do not test for header.
 	* sysdeps/i386/configure: Regenerated.
 	* sysdeps/x86_64/configure.ac (cpuid.h): Do not test for header.

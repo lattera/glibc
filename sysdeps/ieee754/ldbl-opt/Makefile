@@ -31,7 +31,7 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 tanh acosh asinh atanh exp log log10 exp10 pow10 expm1 \
 		 log1p logb exp2 sqrt cbrt fabs floor j0 j1 y0 y1 erf erfc \
 		 lgamma tgamma gamma rint nearbyint round trunc \
-		 copysign fdim fmax fmin nextafter pow hypot fmod drem \
+		 copysign fdim fmax fmin nextafter pow hypot fmod \
 		 remainder ldexp scalbn frexp modf scalbln fma nan sincos \
 		 jn yn ilogb remquo lrint lround llrint llround nexttowardf \
 		 nexttoward conj cacos cacosh casin catan catanh ccos ccosh \
@@ -81,7 +81,6 @@ CFLAGS-nldbl-csinh.c = -fno-builtin-csinhl
 CFLAGS-nldbl-csqrt.c = -fno-builtin-csqrtl
 CFLAGS-nldbl-ctan.c = -fno-builtin-ctanl
 CFLAGS-nldbl-ctanh.c = -fno-builtin-ctanhl
-CFLAGS-nldbl-drem.c = -fno-builtin-dreml
 CFLAGS-nldbl-erf.c = -fno-builtin-erfl
 CFLAGS-nldbl-erfc.c = -fno-builtin-erfcl
 CFLAGS-nldbl-exp.c = -fno-builtin-expl
@@ -125,7 +124,7 @@ CFLAGS-nldbl-nexttoward.c = -fno-builtin-nexttoward -fno-builtin-nexttowardl
 CFLAGS-nldbl-nexttowardf.c = -fno-builtin-nexttowardf
 CFLAGS-nldbl-pow.c = -fno-builtin-powl
 CFLAGS-nldbl-pow10.c = -fno-builtin-pow10l
-CFLAGS-nldbl-remainder.c = -fno-builtin-remainderl
+CFLAGS-nldbl-remainder.c = -fno-builtin-remainderl -fno-builtin-dreml
 CFLAGS-nldbl-remquo.c = -fno-builtin-remquol
 CFLAGS-nldbl-rint.c = -fno-builtin-rintl
 CFLAGS-nldbl-round.c = -fno-builtin-roundl

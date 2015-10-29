@@ -32,3 +32,4 @@ __remainderl (long double x, long double y)
   return __ieee754_remainderl (x, y);
 }
 weak_alias (__remainderl, remainderl)
+weak_alias (__remainderl, dreml)

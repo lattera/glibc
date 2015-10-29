@@ -32,3 +32,4 @@ __remainderf (float x, float y)
   return __ieee754_remainderf (x, y);
 }
 weak_alias (__remainderf, remainderf)
+weak_alias (__remainderf, dremf)

@@ -32,7 +32,9 @@ __remainder (double x, double y)
   return __ieee754_remainder (x, y);
 }
 weak_alias (__remainder, remainder)
+weak_alias (__remainder, drem)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__remainder, __remainderl)
 weak_alias (__remainder, remainderl)
+weak_alias (__remainder, dreml)
 #endif
