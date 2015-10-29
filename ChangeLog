@@ -1,5 +1,9 @@
 2015-10-29  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19189]
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c (__log1pl): Make check for
+	non-finite argument handle arguments with negative sign.
+
 	* math/libm-test.inc (j0_test_data): Do not test sign of zero
 	result from infinite argument.
 	(j1_test_data): Likewise.

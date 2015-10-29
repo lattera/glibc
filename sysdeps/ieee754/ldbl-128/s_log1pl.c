@@ -130,8 +130,8 @@ __log1pl (long double xm1)
   /* Test for NaN or infinity input. */
   u.value = xm1;
   hx = u.parts32.w0;
-  if (hx >= 0x7fff0000)
-    return xm1;
+  if ((hx & 0x7fffffff) >= 0x7fff0000)
+    return xm1 + fabsl (xm1);
 
   /* log1p(+- 0) = +- 0.  */
   if (((hx & 0x7fffffff) == 0)
