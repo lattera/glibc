@@ -30,10 +30,6 @@ LIBC_COMPILER_BUILTIN_INLINED(
 *** Please use host i786, i686, i586, or i486.
 *** For example: /source/glibc/configure CFLAGS='-O2 -march=i686' ...])])
 
-AC_CHECK_HEADER([cpuid.h], ,
-  [AC_MSG_ERROR([gcc must provide the <cpuid.h> header])],
-  [/* No default includes.  */])
-
 dnl Check whether asm supports Intel MPX
 AC_CACHE_CHECK(for Intel MPX support, libc_cv_asm_mpx, [dnl
 cat > conftest.s <<\EOF

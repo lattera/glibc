@@ -1,5 +1,10 @@
 2015-10-29  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/configure.ac (cpuid.h): Do not test for header.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/x86_64/configure.ac (cpuid.h): Do not test for header.
+	* sysdeps/x86_64/configure: Regenerated.
+
 	* configure.ac (libc_cv_asm_protected_directive): Remove configure
 	test.
 	(libc_cv_visibility_attribute): Likewise.

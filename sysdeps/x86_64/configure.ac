@@ -1,10 +1,6 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/x86_64.
 
-AC_CHECK_HEADER([cpuid.h], ,
-  [AC_MSG_ERROR([gcc must provide the <cpuid.h> header])],
-  [/* No default includes.  */])
-
 dnl Check if asm supports AVX512.
 AC_CACHE_CHECK(for AVX512 support in assembler, libc_cv_asm_avx512, [dnl
 cat > conftest.s <<\EOF
