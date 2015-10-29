@@ -1,3 +1,11 @@
+2015-10-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/libc-internal.h (libc_max_align_t): Remove typedef.
+	* include/scratch_buffer.h: Include <stddef.h> instead of
+	<libc-internal.h>.
+	(struct scratch_buffer): Use max_align_t instead of
+	libc_max_align_t.
+
 2015-10-29  Florian Weimer  <fweimer@redhat.com>
 
 	* elf/dl-fini.c (_dl_fini): Rewrite to use variable-length array

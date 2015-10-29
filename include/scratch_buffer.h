@@ -58,9 +58,8 @@
 */
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdlib.h>
-
-#include <libc-internal.h>
 
 /* Scratch buffer.  Must be initialized with scratch_buffer_init
    before its use.  */
@@ -68,7 +67,7 @@ struct scratch_buffer {
   void *data;    /* Pointer to the beginning of the scratch area.  */
   size_t length; /* Allocated space at the data pointer, in bytes.  */
   char __space[1024]
-    __attribute__ ((aligned (__alignof__ (libc_max_align_t))));
+    __attribute__ ((aligned (__alignof__ (max_align_t))));
 };
 
 /* Initializes *BUFFER so that BUFFER->data points to BUFFER->__space
