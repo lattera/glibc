@@ -1,11 +1,10 @@
-GLIBC_2.21
- GLIBC_2.21 A
- dladdr F
- dladdr1 F
- dlclose F
- dlerror F
- dlinfo F
- dlmopen F
- dlopen F
- dlsym F
- dlvsym F
+GLIBC_2.21 GLIBC_2.21 A
+GLIBC_2.21 dladdr F
+GLIBC_2.21 dladdr1 F
+GLIBC_2.21 dlclose F
+GLIBC_2.21 dlerror F
+GLIBC_2.21 dlinfo F
+GLIBC_2.21 dlmopen F
+GLIBC_2.21 dlopen F
+GLIBC_2.21 dlsym F
+GLIBC_2.21 dlvsym F

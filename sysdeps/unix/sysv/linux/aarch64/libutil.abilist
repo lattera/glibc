@@ -1,8 +1,7 @@
-GLIBC_2.17
- GLIBC_2.17 A
- forkpty F
- login F
- login_tty F
- logout F
- logwtmp F
- openpty F
+GLIBC_2.17 GLIBC_2.17 A
+GLIBC_2.17 forkpty F
+GLIBC_2.17 login F
+GLIBC_2.17 login_tty F
+GLIBC_2.17 logout F
+GLIBC_2.17 logwtmp F
+GLIBC_2.17 openpty F

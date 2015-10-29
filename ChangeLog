@@ -1,3 +1,11 @@
+2015-11-06  Florian Weimer  <fweimer@redhat.com>
+
+	Simplify abilist format to be line-based.
+	* scripts/abilist.awk: Collect descriptors in the descs variable.
+	(emit): Write descs variable and sort it
+	externally, with sort.
+	* sysdeps/**/*.abilist: Convert to new format.
+
 2015-11-06  Mark Wielaard  <mjw@redhat.com>
 
 	[BZ #11460]

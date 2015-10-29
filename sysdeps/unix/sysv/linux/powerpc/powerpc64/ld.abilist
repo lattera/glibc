@@ -1,16 +1,13 @@
-GLIBC_2.22
- GLIBC_2.22 A
- __tls_get_addr_opt F
-GLIBC_2.3
- GLIBC_2.3 A
- __libc_memalign F
- __libc_stack_end D 0x8
- __tls_get_addr F
- _dl_mcount F
- _r_debug D 0x28
- calloc F
- free F
- malloc F
- realloc F
-GLIBC_2.4
- GLIBC_2.4 A
+GLIBC_2.22 GLIBC_2.22 A
+GLIBC_2.22 __tls_get_addr_opt F
+GLIBC_2.3 GLIBC_2.3 A
+GLIBC_2.3 __libc_memalign F
+GLIBC_2.3 __libc_stack_end D 0x8
+GLIBC_2.3 __tls_get_addr F
+GLIBC_2.3 _dl_mcount F
+GLIBC_2.3 _r_debug D 0x28
+GLIBC_2.3 calloc F
+GLIBC_2.3 free F
+GLIBC_2.3 malloc F
+GLIBC_2.3 realloc F
+GLIBC_2.4 GLIBC_2.4 A

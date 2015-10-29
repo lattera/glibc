@@ -1,3 +1,2 @@
-GLIBC_2.21
- GLIBC_2.21 A
- __ctype_get_mb_cur_max F
+GLIBC_2.21 GLIBC_2.21 A
+GLIBC_2.21 __ctype_get_mb_cur_max F

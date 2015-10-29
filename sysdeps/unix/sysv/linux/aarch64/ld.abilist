@@ -1,12 +1,11 @@
-GLIBC_2.17
- GLIBC_2.17 A
- __libc_memalign F
- __libc_stack_end D 0x8
- __stack_chk_guard D 0x8
- __tls_get_addr F
- _dl_mcount F
- _r_debug D 0x28
- calloc F
- free F
- malloc F
- realloc F
+GLIBC_2.17 GLIBC_2.17 A
+GLIBC_2.17 __libc_memalign F
+GLIBC_2.17 __libc_stack_end D 0x8
+GLIBC_2.17 __stack_chk_guard D 0x8
+GLIBC_2.17 __tls_get_addr F
+GLIBC_2.17 _dl_mcount F
+GLIBC_2.17 _r_debug D 0x28
+GLIBC_2.17 calloc F
+GLIBC_2.17 free F
+GLIBC_2.17 malloc F
+GLIBC_2.17 realloc F
