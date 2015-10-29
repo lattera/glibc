@@ -1,3 +1,14 @@
+2015-11-19  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+	    Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/nptl/pthread_spin_lock.c (pthread_spin_lock):
+	Add lwarx hint, and use macro for acquire instruction.
+	* sysdeps/powerpc/nptl/pthread_spin_trylock.c (pthread_spin_trylock):
+	Likewise.
+	* sysdep/unix/sysv/linux/powerpc/pthread_spin_unlock.c: Move to ...
+	* sysdeps/powerpc/nptl/pthread_spin_unlock.c: ... here, and
+	update to use new atomic macros.
+
 2015-11-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/elision-trylock.c
