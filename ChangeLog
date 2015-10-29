@@ -1,3 +1,9 @@
+2015-10-29  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/dl-fini.c (_dl_fini): Rewrite to use variable-length array
+	instead of extend_alloca.  Change control flow to avoid a goto.
+	Remove assert which is trivially always true.
+
 2015-10-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16068]
