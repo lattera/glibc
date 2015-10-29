@@ -1,5 +1,13 @@
 2015-10-29  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.ac (libc_cv_asm_protected_directive): Remove configure
+	test.
+	(libc_cv_visibility_attribute): Likewise.
+	(libc_cv_protected_data): Test unconditionally.
+	(libc_cv_broken_visibility_attribute): Remove configure test.
+	(libc_cv_have_sdata_section): Test unconditionally.
+	* configure: Regenerated.
+
 	* include/libc-internal.h (libc_max_align_t): Remove typedef.
 	* include/scratch_buffer.h: Include <stddef.h> instead of
 	<libc-internal.h>.

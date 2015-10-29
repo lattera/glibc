@@ -5304,135 +5304,40 @@ if test $libc_cv_asm_set_directive = yes; then
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for .protected and .hidden assembler directive" >&5
-$as_echo_n "checking for .protected and .hidden assembler directive... " >&6; }
-if ${libc_cv_asm_protected_directive+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.s <<EOF
-.protected foo
-foo:
-.hidden bar
-bar:
-EOF
-if { ac_try='${CC-cc} -c $ASFLAGS conftest.s 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-  libc_cv_asm_protected_directive=yes
-else
-  as_fn_error $? "assembler support for symbol visibility is required" "$LINENO" 5
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_protected_directive" >&5
-$as_echo "$libc_cv_asm_protected_directive" >&6; }
-
-if test $libc_cv_asm_protected_directive = yes; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether __attribute__((visibility())) is supported" >&5
-$as_echo_n "checking whether __attribute__((visibility())) is supported... " >&6; }
-if ${libc_cv_visibility_attribute+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<EOF
-		  int foo __attribute__ ((visibility ("hidden"))) = 1;
-		  int bar __attribute__ ((visibility ("protected"))) = 1;
-EOF
-		  libc_cv_visibility_attribute=no
-		  if { ac_try='${CC-cc} -Werror -S conftest.c -o conftest.s 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-		    if grep '\.hidden.*foo' conftest.s >/dev/null; then
-		      if grep '\.protected.*bar' conftest.s >/dev/null; then
-			libc_cv_visibility_attribute=yes
-		      fi
-		    fi
-		  fi
-		  rm -f conftest.{c,s}
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_visibility_attribute" >&5
-$as_echo "$libc_cv_visibility_attribute" >&6; }
-  if test $libc_cv_visibility_attribute != yes; then
-    as_fn_error $? "compiler support for visibility attribute is required" "$LINENO" 5
-  fi
-fi
-
-if test $libc_cv_visibility_attribute = yes; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking linker support for protected data symbol" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking linker support for protected data symbol" >&5
 $as_echo_n "checking linker support for protected data symbol... " >&6; }
 if ${libc_cv_protected_data+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat > conftest.c <<EOF
-		  int bar __attribute__ ((visibility ("protected"))) = 1;
+		int bar __attribute__ ((visibility ("protected"))) = 1;
 EOF
-		  libc_cv_protected_data=no
-		  if { ac_try='${CC-cc} -nostdlib -nostartfiles -fPIC -shared conftest.c -o conftest.so'
+		libc_cv_protected_data=no
+		if { ac_try='${CC-cc} -nostdlib -nostartfiles -fPIC -shared conftest.c -o conftest.so'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }; then
-		    cat > conftest.c <<EOF
-		    extern int bar;
-		    int main (void) { return bar; }
+		  cat > conftest.c <<EOF
+		  extern int bar;
+		  int main (void) { return bar; }
 EOF
-		    if { ac_try='${CC-cc} -nostdlib -nostartfiles conftest.c -o conftest conftest.so'
+		  if { ac_try='${CC-cc} -nostdlib -nostartfiles conftest.c -o conftest conftest.so'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }; then
-		      libc_cv_protected_data=yes
-		    fi
+		    libc_cv_protected_data=yes
 		  fi
-		  rm -f conftest.*
+		fi
+		rm -f conftest.*
 
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_protected_data" >&5
 $as_echo "$libc_cv_protected_data" >&6; }
-else
-  libc_cv_protected_data=no
-fi
 
-
-if test $libc_cv_visibility_attribute = yes; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for broken __attribute__((visibility()))" >&5
-$as_echo_n "checking for broken __attribute__((visibility()))... " >&6; }
-if ${libc_cv_broken_visibility_attribute+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<EOF
-		  int foo (int x);
-		  int bar (int x) __asm__ ("foo") __attribute__ ((visibility ("hidden")));
-		  int bar (int x) { return x; }
-EOF
-		  libc_cv_broken_visibility_attribute=yes
-		  if { ac_try='${CC-cc} -Werror -S conftest.c -o conftest.s 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-		    if grep '\.hidden[ 	_]foo' conftest.s >/dev/null; then
-		      libc_cv_broken_visibility_attribute=no
-		    fi
-		  fi
-		  rm -f conftest.c conftest.s
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_broken_visibility_attribute" >&5
-$as_echo "$libc_cv_broken_visibility_attribute" >&6; }
-  if test $libc_cv_broken_visibility_attribute = yes; then
-    as_fn_error $? "working compiler support for visibility attribute is required" "$LINENO" 5
-  fi
-fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for broken __attribute__((alias()))" >&5
 $as_echo_n "checking for broken __attribute__((alias()))... " >&6; }
@@ -5468,27 +5373,25 @@ if test $libc_cv_broken_alias_attribute = yes; then
   as_fn_error $? "working alias attribute support required" "$LINENO" 5
 fi
 
-if test $libc_cv_visibility_attribute = yes; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to put _rtld_local into .sdata section" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to put _rtld_local into .sdata section" >&5
 $as_echo_n "checking whether to put _rtld_local into .sdata section... " >&6; }
 if ${libc_cv_have_sdata_section+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   echo "int i;" > conftest.c
-		  libc_cv_have_sdata_section=no
-		  if ${CC-cc} $LDFLAGS -fPIC -shared -Wl,--verbose conftest.c -o conftest.so 2>&1 \
-		     | grep '\.sdata' >/dev/null; then
-		    libc_cv_have_sdata_section=yes
-		  fi
-		  rm -f conftest.c conftest.so
+		libc_cv_have_sdata_section=no
+		if ${CC-cc} $LDFLAGS -fPIC -shared -Wl,--verbose conftest.c -o conftest.so 2>&1 \
+		   | grep '\.sdata' >/dev/null; then
+		  libc_cv_have_sdata_section=yes
+		fi
+		rm -f conftest.c conftest.so
 
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_have_sdata_section" >&5
 $as_echo "$libc_cv_have_sdata_section" >&6; }
-  if test $libc_cv_have_sdata_section = yes; then
-    $as_echo "#define HAVE_SDATA_SECTION 1" >>confdefs.h
+if test $libc_cv_have_sdata_section = yes; then
+  $as_echo "#define HAVE_SDATA_SECTION 1" >>confdefs.h
 
-  fi
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for .preinit_array/.init_array/.fini_array support" >&5

@@ -1105,88 +1105,24 @@ if test $libc_cv_asm_set_directive = yes; then
   AC_DEFINE(HAVE_ASM_SET_DIRECTIVE)
 fi
 
-AC_CACHE_CHECK(for .protected and .hidden assembler directive,
-	       libc_cv_asm_protected_directive, [dnl
-cat > conftest.s <<EOF
-.protected foo
-foo:
-.hidden bar
-bar:
+AC_CACHE_CHECK(linker support for protected data symbol,
+	       libc_cv_protected_data,
+	       [cat > conftest.c <<EOF
+		int bar __attribute__ ((visibility ("protected"))) = 1;
 EOF
-if AC_TRY_COMMAND(${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
-  libc_cv_asm_protected_directive=yes
-else
-  AC_MSG_ERROR(assembler support for symbol visibility is required)
-fi
-rm -f conftest*])
-
-if test $libc_cv_asm_protected_directive = yes; then
-  AC_CACHE_CHECK(whether __attribute__((visibility())) is supported,
-		 libc_cv_visibility_attribute,
-		 [cat > conftest.c <<EOF
-		  int foo __attribute__ ((visibility ("hidden"))) = 1;
-		  int bar __attribute__ ((visibility ("protected"))) = 1;
+		libc_cv_protected_data=no
+		if AC_TRY_COMMAND(${CC-cc} -nostdlib -nostartfiles -fPIC -shared conftest.c -o conftest.so); then
+		  cat > conftest.c <<EOF
+		  extern int bar;
+		  int main (void) { return bar; }
 EOF
-		  libc_cv_visibility_attribute=no
-		  if AC_TRY_COMMAND(${CC-cc} -Werror -S conftest.c -o conftest.s 1>&AS_MESSAGE_LOG_FD); then
-		    if grep '\.hidden.*foo' conftest.s >/dev/null; then
-		      if grep '\.protected.*bar' conftest.s >/dev/null; then
-			libc_cv_visibility_attribute=yes
-		      fi
-		    fi
+		  if AC_TRY_COMMAND(${CC-cc} -nostdlib -nostartfiles conftest.c -o conftest conftest.so); then
+		    libc_cv_protected_data=yes
 		  fi
-		  rm -f conftest.{c,s}
-		 ])
-  if test $libc_cv_visibility_attribute != yes; then
-    AC_MSG_ERROR(compiler support for visibility attribute is required)
-  fi
-fi
-
-if test $libc_cv_visibility_attribute = yes; then
-  AC_CACHE_CHECK(linker support for protected data symbol,
-		 libc_cv_protected_data,
-		 [cat > conftest.c <<EOF
-		  int bar __attribute__ ((visibility ("protected"))) = 1;
-EOF
-		  libc_cv_protected_data=no
-		  if AC_TRY_COMMAND(${CC-cc} -nostdlib -nostartfiles -fPIC -shared conftest.c -o conftest.so); then
-		    cat > conftest.c <<EOF
-		    extern int bar;
-		    int main (void) { return bar; }
-EOF
-		    if AC_TRY_COMMAND(${CC-cc} -nostdlib -nostartfiles conftest.c -o conftest conftest.so); then
-		      libc_cv_protected_data=yes
-		    fi
-		  fi
-		  rm -f conftest.*
-		 ])
-else
-  libc_cv_protected_data=no
-fi
+		fi
+		rm -f conftest.*
+	       ])
 AC_SUBST(libc_cv_protected_data)
-
-if test $libc_cv_visibility_attribute = yes; then
-  AC_CACHE_CHECK(for broken __attribute__((visibility())),
-		 libc_cv_broken_visibility_attribute,
-		 [cat > conftest.c <<EOF
-		  int foo (int x);
-		  int bar (int x) __asm__ ("foo") __attribute__ ((visibility ("hidden")));
-		  int bar (int x) { return x; }
-EOF
-		  libc_cv_broken_visibility_attribute=yes
-		  if AC_TRY_COMMAND(${CC-cc} -Werror -S conftest.c -o conftest.s 1>&AS_MESSAGE_LOG_FD); then
-changequote(,)dnl
-		    if grep '\.hidden[ 	_]foo' conftest.s >/dev/null; then
-changequote([,])dnl
-		      libc_cv_broken_visibility_attribute=no
-		    fi
-		  fi
-		  rm -f conftest.c conftest.s
-		 ])
-  if test $libc_cv_broken_visibility_attribute = yes; then
-    AC_MSG_ERROR(working compiler support for visibility attribute is required)
-  fi
-fi
 
 AC_CACHE_CHECK(for broken __attribute__((alias())),
 	       libc_cv_broken_alias_attribute,
@@ -1211,20 +1147,18 @@ if test $libc_cv_broken_alias_attribute = yes; then
   AC_MSG_ERROR(working alias attribute support required)
 fi
 
-if test $libc_cv_visibility_attribute = yes; then
-  AC_CACHE_CHECK(whether to put _rtld_local into .sdata section,
-		 libc_cv_have_sdata_section,
-		 [echo "int i;" > conftest.c
-		  libc_cv_have_sdata_section=no
-		  if ${CC-cc} $LDFLAGS -fPIC -shared -Wl,--verbose conftest.c -o conftest.so 2>&1 \
-		     | grep '\.sdata' >/dev/null; then
-		    libc_cv_have_sdata_section=yes
-		  fi
-		  rm -f conftest.c conftest.so
-		 ])
-  if test $libc_cv_have_sdata_section = yes; then
-    AC_DEFINE(HAVE_SDATA_SECTION)
-  fi
+AC_CACHE_CHECK(whether to put _rtld_local into .sdata section,
+	       libc_cv_have_sdata_section,
+	       [echo "int i;" > conftest.c
+		libc_cv_have_sdata_section=no
+		if ${CC-cc} $LDFLAGS -fPIC -shared -Wl,--verbose conftest.c -o conftest.so 2>&1 \
+		   | grep '\.sdata' >/dev/null; then
+		  libc_cv_have_sdata_section=yes
+		fi
+		rm -f conftest.c conftest.so
+	       ])
+if test $libc_cv_have_sdata_section = yes; then
+  AC_DEFINE(HAVE_SDATA_SECTION)
 fi
 
 AC_CACHE_CHECK(for .preinit_array/.init_array/.fini_array support,
