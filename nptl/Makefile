@@ -213,6 +213,7 @@ CFLAGS-connect.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvmsg.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendmsg.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-close.c = -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-pt-system.c = -fexceptions
 

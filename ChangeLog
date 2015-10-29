@@ -1,3 +1,8 @@
+2016-05-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/Makefile (CFLAGS-close.c): New flag.
+	* sysdeps/unix/sysv/linux/close.c: New file.
+
 2017-05-11  DJ Delorie  <dj@redhat.com>
 
 	* MAINTAINERS: New.  Points to wiki.
