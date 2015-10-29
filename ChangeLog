@@ -1,5 +1,13 @@
 2015-10-29  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (j0_test_data): Do not test sign of zero
+	result from infinite argument.
+	(j1_test_data): Likewise.
+	(jn_test_data): Likewise.
+	(y0_test_data): Likewise.
+	(y1_test_data): Likewise.
+	(yn_test_data): Likewise.
+
 	[BZ #16171]
 	* math/w_remainder.c (drem): Define as weak alias of __remainder.
 	[NO_LONG_DOUBLE] (dreml): Define as weak alias of __remainder.
