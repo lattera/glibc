@@ -1,3 +1,7 @@
+2016-04-08  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/i18n: Fix typos in tel_int_fmt.
+
 2016-03-21  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #11213]
