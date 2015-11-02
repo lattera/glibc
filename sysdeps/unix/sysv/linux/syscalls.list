@@ -106,7 +106,6 @@ timerfd_gettime	EXTRA	timerfd_gettime	i:ip	timerfd_gettime
 fanotify_init	EXTRA	fanotify_init	i:ii	fanotify_init
 
 name_to_handle_at EXTRA	name_to_handle_at i:isppi name_to_handle_at
-open_by_handle_at EXTRA	open_by_handle_at Ci:ipi  open_by_handle_at
 
 setns		EXTRA	setns		i:ii	setns
 

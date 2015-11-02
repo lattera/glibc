@@ -1,5 +1,13 @@
 2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add
+	open_by_handle_at.
+	(CFLAGS-open_by_handle_at.c): New flag.
+	* sysdeps/unix/sysv/linux/open_by_handle_at.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list (open_by_handle_at): New
+	file.
+	* misc/Makefile (CFLAGS-open_by_handle_at.c): New rule.
+
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add splice.
 	(CFLAGS-splice.c): New flag.
 	* sysdeps/unix/sysv/linux/splice.c: New file.

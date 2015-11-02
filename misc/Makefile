@@ -113,6 +113,7 @@ CFLAGS-fdatasync.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fsync.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-vmsplice.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-splice.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-open_by_handle_at.c = -fexceptions -fasynchronous-unwind-tables
 
 # Called during static library initialization, so turn stack-protection
 # off for non-shared builds.
