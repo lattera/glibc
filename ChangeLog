@@ -1,5 +1,11 @@
 2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* misc/Makefile (CFLAGS-fdatasync.c): New rule.
+	* nptl/Makefile (CFLAGS-fdatasync.c): Likewise.
+	* sysdeps/unix/syscalls.list: Remove fdatasync from auto-generation
+	list.
+	* sysdeps/unix/sysv/linux/fdatasync.c: New file.
+
 	* misc/Makefile (CFLAGS-msync.c): New rule.
 	* nptl/Makefile (CFLAGS-msync.c): Likewise.
 	* sysdeps/unix/syscalls.list: Remove msync from auto-generation list.
