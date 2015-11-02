@@ -9850,9 +9850,13 @@ static const struct test_ff_f_data nextafter_test_data[] =
     TEST_ff_f (nextafter, 1.1L, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (nextafter, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
-    /* Bug 6799: errno setting may be missing.  */
-    TEST_ff_f (nextafter, max_value, plus_infty, plus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION),
-    TEST_ff_f (nextafter, -max_value, minus_infty, minus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION),
+    TEST_ff_f (nextafter, max_value, plus_infty, plus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (nextafter, -max_value, minus_infty, minus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+
+    TEST_ff_f (nextafter, min_subnorm_value, 0, 0, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (nextafter, min_subnorm_value, minus_zero, 0, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (nextafter, -min_subnorm_value, 0, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (nextafter, -min_subnorm_value, minus_zero, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
 
 #ifdef TEST_LDOUBLE
     // XXX Enable once gcc is fixed.
@@ -9894,9 +9898,13 @@ static const struct test_ff_f_data_nexttoward nexttoward_test_data[] =
     TEST_ff_f (nexttoward, 1.1L, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (nexttoward, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
-    /* Bug 6799: errno setting may be missing.  */
-    TEST_ff_f (nexttoward, max_value, plus_infty, plus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION),
-    TEST_ff_f (nexttoward, -max_value, minus_infty, minus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION),
+    TEST_ff_f (nexttoward, max_value, plus_infty, plus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (nexttoward, -max_value, minus_infty, minus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+
+    TEST_ff_f (nexttoward, min_subnorm_value, 0, 0, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (nexttoward, min_subnorm_value, minus_zero, 0, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (nexttoward, -min_subnorm_value, 0, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_ff_f (nexttoward, -min_subnorm_value, minus_zero, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
 
 #ifdef TEST_FLOAT
     TEST_ff_f (nexttoward, 1.0, 1.1L, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),

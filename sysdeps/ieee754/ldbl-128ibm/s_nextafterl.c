@@ -24,6 +24,7 @@ static char rcsid[] = "$NetBSD: $";
  *   Special cases:
  */
 
+#include <errno.h>
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
@@ -69,6 +70,7 @@ long double __nextafterl(long double x, long double y)
 	    if((hx==0xffefffffffffffffLL)&&(lx==0xfc8ffffffffffffeLL)) {
 	      u = x+x;	/* overflow, return -inf */
 	      math_force_eval (u);
+	      __set_errno (ERANGE);
 	      return y;
 	    }
 	    if (hx >= 0x7ff0000000000000LL) {
@@ -83,6 +85,7 @@ long double __nextafterl(long double x, long double y)
 		  || (hx < 0 && lx > 1)) {
 		u = u * u;
 		math_force_eval (u);		/* raise underflow flag */
+		__set_errno (ERANGE);
 	      }
 	      return x;
 	    }
@@ -108,6 +111,7 @@ long double __nextafterl(long double x, long double y)
 	    if((hx==0x7fefffffffffffffLL)&&(lx==0x7c8ffffffffffffeLL)) {
 	      u = x+x;	/* overflow, return +inf */
 	      math_force_eval (u);
+	      __set_errno (ERANGE);
 	      return y;
 	    }
 	    if ((uint64_t) hx >= 0xfff0000000000000ULL) {
@@ -122,6 +126,7 @@ long double __nextafterl(long double x, long double y)
 		  || (hx < 0 && lx >= 0)) {
 		u = u * u;
 		math_force_eval (u);		/* raise underflow flag */
+		__set_errno (ERANGE);
 	      }
 	      if (x == 0.0L)	/* handle negative LDBL_TRUE_MIN case */
 		x = -0.0L;

@@ -25,6 +25,7 @@ static char rcsid[] = "$NetBSD: s_nextafter.c,v 1.8 1995/05/10 20:47:58 jtc Exp 
 #define __nexttoward __internal___nexttoward
 #define nexttoward __internal_nexttoward
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 #include <float.h>
@@ -72,10 +73,12 @@ double __nextafter(double x, double y)
 	if(hy>=0x7ff00000) {
 	  double u = x+x;	/* overflow  */
 	  math_force_eval (u);
+	  __set_errno (ERANGE);
 	}
 	if(hy<0x00100000) {
 	    double u = x*x;			/* underflow */
 	    math_force_eval (u);		/* raise underflow flag */
+	  __set_errno (ERANGE);
 	}
 	INSERT_WORDS(x,hx,lx);
 	return x;

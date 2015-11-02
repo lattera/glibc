@@ -1,5 +1,42 @@
 2015-11-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #6799]
+	* math/s_nextafter.c: Include <errno.h>.
+	(__nextafter): Set errno on overflow and underflow.
+	* math/s_nexttowardf.c: Include <errno.h>.
+	(__nexttowardf): Set errno on overflow and underflow.
+	* sysdeps/i386/fpu/s_nextafterl.c: Include <errno.h>.
+	(__nextafterl): Set errno on overflow and underflow.
+	* sysdeps/i386/fpu/s_nexttoward.c: Include <errno.h>.
+	(__nexttoward): Set errno on overflow and underflow.
+	* sysdeps/i386/fpu/s_nexttowardf.c: Include <errno.h>.
+	(__nexttowardf): Set errno on overflow and underflow.
+	* sysdeps/ieee754/flt-32/s_nextafterf.c: Include <errno.h>.
+	(__nextafterf): Set errno on overflow and underflow.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c: Include <errno.h>.
+	(__nextafterl): Set errno on overflow and underflow.
+	* sysdeps/ieee754/ldbl-128/s_nexttoward.c: Include <errno.h>.
+	(__nexttoward): Set errno on overflow and underflow.
+	* sysdeps/ieee754/ldbl-128/s_nexttowardf.c: Include <errno.h>.
+	(__nexttowardf): Set errno on overflow and underflow.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c: Include <errno.h>.
+	(__nextafterl): Set errno on overflow and underflow.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c: Include <errno.h>.
+	(__nexttoward): Set errno on overflow and underflow.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c: Include <errno.h>.
+	(__nexttowardf): Set errno on overflow and underflow.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c: Include <errno.h>.
+	(__nexttoward): Set errno on overflow and underflow.
+	* sysdeps/ieee754/ldbl-96/s_nexttowardf.c: Include <errno.h>.
+	(__nexttowardf): Set errno on overflow and underflow.
+	* sysdeps/ieee754/ldbl-opt/s_nexttowardfd.c: Include <errno.h>.
+	(__nldbl_nexttowardf): Set errno on overflow and underflow.
+	* sysdeps/m68k/m680x0/fpu/s_nextafterl.c: Include <errno.h>.
+	(__nextafterl): Set errno on overflow and underflow.
+	* math/libm-test.inc (nextafter_test_data): Do not allow errno
+	setting to be missing on overflow.  Add more tests.
+	(nexttoward_test_data): Likewise.
+
 	* configure.ac (libc_cv_initfini_array): Remove configure test.
 	* configure: Regenerated.
 
