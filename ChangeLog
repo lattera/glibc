@@ -1,5 +1,11 @@
 2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-vmsplice.c): New flag.
+	* sysdeps/unix/sysv/linux/syscalls.list (vmsplice): Remove from
+	auto-generation syscall list.
+	* sysdeps/unix/sysv/linux/vmsplice.c: New file.
+	* misc/Makefile (CFLAGS-vmsplice.c): New rule.
+
 	* misc/Makefile (CFLAGS-fsync.c): New flag.
 	* nptl/Makefile (CFLAGS-fsync.c): Likewise.
 	* sysdeps/unix/syscalls.list (fsync): Remove from auto-generation
