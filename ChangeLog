@@ -1,5 +1,13 @@
 2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* misc/Makefile (CFLAGS-fsync.c): New flag.
+	* nptl/Makefile (CFLAGS-fsync.c): Likewise.
+	* sysdeps/unix/syscalls.list (fsync): Remove from auto-generation
+	syscall list.
+	* sysdeps/unix/sysv/linux/fsync.c: New file.
+	* sysdeps/unix/sysv/linux/arm/localplt.data [libpthread.so]
+	(__errno_location): Remove.
+
 	* misc/Makefile (CFLAGS-fdatasync.c): New rule.
 	* nptl/Makefile (CFLAGS-fdatasync.c): Likewise.
 	* sysdeps/unix/syscalls.list: Remove fdatasync from auto-generation

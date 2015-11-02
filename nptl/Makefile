@@ -220,6 +220,7 @@ CFLAGS-nanosleep.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sigsuspend.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-msync.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fdatasync.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-fsync.c = -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-pt-system.c = -fexceptions
 

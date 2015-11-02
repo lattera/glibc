@@ -19,7 +19,6 @@ fchmod		-	fchmod		i:ii	__fchmod	fchmod
 fchown		-	fchown		i:iii	__fchown	fchown
 fcntl		-	fcntl		Ci:iiF	__libc_fcntl	__fcntl fcntl
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
-fsync		-	fsync		Ci:i	__libc_fsync	fsync
 ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate
 getdomain	-	getdomainname	i:si	getdomainname
 getgid		-	getgid		Ei:	__getgid	getgid

@@ -5,7 +5,6 @@ libc.so: memalign
 libc.so: raise
 libc.so: realloc
 libm.so: matherr
-libpthread.so: __errno_location
 libpthread.so: raise
 # The dynamic loader needs __tls_get_addr for TLS.
 ld.so: __tls_get_addr
