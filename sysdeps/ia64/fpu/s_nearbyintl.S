@@ -99,7 +99,7 @@ fNormX     = f10
 // So input is an integer value already.
 
 .section .text
-GLOBAL_LIBM_ENTRY(nearbyintl)
+GLOBAL_LIBM_ENTRY(__nearbyintl)
 
 { .mfi
       getf.exp         rSignexp  = f8        // Get signexp, recompute if unorm
@@ -214,4 +214,5 @@ RINT_NOT_ROUND_NEAREST:
 }
 ;;
 
-GLOBAL_LIBM_END(nearbyintl)
+GLOBAL_LIBM_END(__nearbyintl)
+weak_alias (__nearbyintl, nearbyintl)

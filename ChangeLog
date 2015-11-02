@@ -1,3 +1,9 @@
+2015-11-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #19219]
+	* sysdeps/ia64/fpu/s_nearbyintl.S (__nearbyint): Define and
+	weak_alias to nearbyintl.
+
 2015-11-10  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/bits/string.h: New file.
