@@ -45,7 +45,6 @@ madvise		-	madvise		i:pii	__madvise	madvise
 mkdir		-	mkdir		i:si	__mkdir		mkdir
 mmap		-	mmap		b:aniiii __mmap		mmap
 mprotect	-	mprotect	i:aii	__mprotect	mprotect
-msync		-	msync		Ci:aii	__libc_msync	msync
 munmap		-	munmap		i:ai	__munmap	munmap
 open		-	open		Ci:siv	__libc_open __open open
 profil		-	profil		i:piii	__profil	profil

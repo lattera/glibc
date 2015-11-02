@@ -1,5 +1,10 @@
 2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* misc/Makefile (CFLAGS-msync.c): New rule.
+	* nptl/Makefile (CFLAGS-msync.c): Likewise.
+	* sysdeps/unix/syscalls.list: Remove msync from auto-generation list.
+	* sysdeps/unix/sysv/linux/msync.c: New file.
+
 	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S: Remove file.
 	* sysdeps/unix/sysv/linux/sigsuspend.c: Simplify include list.
 	* nptl/Makefile (CFLAGS-sigsuspend.c): New rule.
