@@ -1161,23 +1161,6 @@ if test $libc_cv_have_sdata_section = yes; then
   AC_DEFINE(HAVE_SDATA_SECTION)
 fi
 
-AC_CACHE_CHECK(for .preinit_array/.init_array/.fini_array support,
-	       libc_cv_initfini_array, [dnl
-LIBC_TRY_LINK_STATIC([
-int foo (void) { return 1; }
-int (*fp) (void) __attribute__ ((section (".init_array"))) = foo;
-],
-  [if $READELF -S conftest | fgrep INIT_ARRAY > /dev/null; then
-    libc_cv_initfini_array=yes
-  else
-    libc_cv_initfini_array=no
-  fi],
-  [libc_cv_initfini_array=no])
-])
-if test $libc_cv_initfini_array != yes; then
-  AC_MSG_ERROR([Need linker with .init_array/.fini_array support.])
-fi
-
 AC_CACHE_CHECK(whether to use .ctors/.dtors header and trailer,
 	       libc_cv_ctors_header, [dnl
   libc_cv_ctors_header=yes

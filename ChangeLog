@@ -1,3 +1,8 @@
+2015-11-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (libc_cv_initfini_array): Remove configure test.
+	* configure: Regenerated.
+
 2015-10-29  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19189]
