@@ -5914,36 +5914,6 @@ if test $libc_cv_have_section_quotes = yes; then
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ld --no-whole-archive" >&5
-$as_echo_n "checking for ld --no-whole-archive... " >&6; }
-if ${libc_cv_ld_no_whole_archive+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<\EOF
-_start () {}
-int __eh_pc;
-__throw () {}
-EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			    -nostdlib -nostartfiles -Wl,--no-whole-archive
-			    -o conftest conftest.c 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-  libc_cv_ld_no_whole_archive=yes
-else
-  libc_cv_ld_no_whole_archive=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ld_no_whole_archive" >&5
-$as_echo "$libc_cv_ld_no_whole_archive" >&6; }
-if test $libc_cv_ld_no_whole_archive = no; then
-  as_fn_error $? "support for --no-whole-archive is needed" "$LINENO" 5
-fi
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __builtin_memset" >&5
 $as_echo_n "checking for __builtin_memset... " >&6; }
 if ${libc_cv_gcc_builtin_memset+:} false; then :

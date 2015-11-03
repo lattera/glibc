@@ -1423,25 +1423,6 @@ if test $libc_cv_have_section_quotes = yes; then
   AC_DEFINE(HAVE_SECTION_QUOTES)
 fi
 
-AC_CACHE_CHECK(for ld --no-whole-archive, libc_cv_ld_no_whole_archive, [dnl
-cat > conftest.c <<\EOF
-_start () {}
-int __eh_pc;
-__throw () {}
-EOF
-dnl No \ in command here because it ends up inside ''.
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			    -nostdlib -nostartfiles -Wl,--no-whole-archive
-			    -o conftest conftest.c 1>&AS_MESSAGE_LOG_FD]); then
-  libc_cv_ld_no_whole_archive=yes
-else
-  libc_cv_ld_no_whole_archive=no
-fi
-rm -f conftest*])
-if test $libc_cv_ld_no_whole_archive = no; then
-  AC_MSG_ERROR([support for --no-whole-archive is needed])
-fi
-
 AC_CACHE_CHECK(for __builtin_memset, libc_cv_gcc_builtin_memset, [dnl
 cat > conftest.c <<\EOF
 void zero (void *x)
