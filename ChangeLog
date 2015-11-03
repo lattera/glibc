@@ -1,5 +1,11 @@
 2015-11-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19201]
+	* sysdeps/ieee754/dbl-64/e_remainder.c (__ieee754_remainder):
+	Check for zero remainder in case of large exponents and ensure
+	correct sign of result in that case.
+	* math/libm-test.inc (remainder_test_data): Add more tests.
+
 	[BZ #6799]
 	* math/s_nextafter.c: Include <errno.h>.
 	(__nextafter): Set errno on overflow and underflow.

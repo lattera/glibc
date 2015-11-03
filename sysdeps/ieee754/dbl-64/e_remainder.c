@@ -130,6 +130,8 @@ __ieee754_remainder (double x, double y)
 	      d = fabs (z);
 	      if (d <= fabs (d - y))
 		return z;
+	      else if (d == y)
+		return 0.0 * x;
 	      else
 		return (z > 0) ? z - y : z + y;
 	    }
