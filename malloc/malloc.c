@@ -283,7 +283,7 @@
 # define assert(expr) \
   ((expr)								      \
    ? ((void) 0)								      \
-   : __malloc_assert (__STRING (expr), __FILE__, __LINE__, __func__))
+   : __malloc_assert (#expr, __FILE__, __LINE__, __func__))
 
 extern const char *__progname;
 

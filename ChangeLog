@@ -1,3 +1,10 @@
+2015-11-03  David Kastrup  <dak@gnu.org>
+
+	[BZ #18604]
+	* assert/assert.h (assert): Don't macro-expand failed assertion
+	expression in error message.
+	* malloc/malloc.c (assert): Likewise.
+
 2015-11-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.ac (libc_cv_ld_no_whole_archive): Remove configure

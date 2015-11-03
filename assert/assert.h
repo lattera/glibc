@@ -85,7 +85,7 @@ __END_DECLS
 # define assert(expr)							\
   ((expr)								\
    ? __ASSERT_VOID_CAST (0)						\
-   : __assert_fail (__STRING(expr), __FILE__, __LINE__, __ASSERT_FUNCTION))
+   : __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION))
 
 # ifdef	__USE_GNU
 #  define assert_perror(errnum)						\
