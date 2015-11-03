@@ -1,5 +1,14 @@
 2015-11-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (modf_test_data): Add more tests.
+	(nearbyint_test_data): Likewise.
+	(nextafter_test_data): Likewise.
+	(nexttoward_test_data): Likewise.
+	(pow_test_data): Likewise.
+	(remainder_test_data): Likewise.
+	(remquo_test_data): Likewise.
+	(rint_test_data): Likewise.
+
 	[BZ #19201]
 	* sysdeps/ieee754/dbl-64/e_remainder.c (__ieee754_remainder):
 	Check for zero remainder in case of large exponents and ensure
