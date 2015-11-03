@@ -1,5 +1,11 @@
 2016-05-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #21428]
+	* include/unistd.h (read): Add hidden proto.
+	* io/Makefile (CFLAGS-read.c): New define.
+	* nptl/Makefile (CFLAGS-read.c): Likewise.
+	* sysdeps/unix/sysv/linux/read.c: New file.
+
 	* io/Makefile (CFLAGS-creat.c): New rule.
 	(CFLAGS-creat64.c): Likewise.
 	* sysdeps/unix/sysv/linux/alpha/creat.c: Remove file.
