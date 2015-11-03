@@ -56,6 +56,7 @@ libc_hidden_proto (__libc_read)
 libc_hidden_proto (read)
 extern ssize_t __libc_write (int __fd, const void *__buf, size_t __n);
 libc_hidden_proto (__libc_write)
+libc_hidden_proto (write)
 extern int __pipe (int __pipedes[2]);
 libc_hidden_proto (__pipe)
 extern int __pipe2 (int __pipedes[2], int __flags);
