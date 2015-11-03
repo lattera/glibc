@@ -1,5 +1,7 @@
 2016-05-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/readv.c: New file.
+
 	* include/unistd.h (write): Add hidden proto.
 	* io/Makefile (CFLAGS-write.c): New define.
 	* nptl/Makefile (CFLAGS-write.c): Likewise.
