@@ -216,6 +216,7 @@ CFLAGS-sendmsg.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-close.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-read.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-write.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-nanosleep.c = -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-pt-system.c = -fexceptions
 

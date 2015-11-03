@@ -1,5 +1,11 @@
 2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/Makefile (CFLAGS-nanosleep.c): New rule.
+	* posix/Makefile (CFLAGS-nanosleep.c): Likewise.
+	* sysdeps/unix/sysv/linux/nanosleep.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove nanosleep from
+	auto-generated list.
+
 	* sysdeps/unix/sysv/linux/sh/syscalls.list: Remove waitid from
 	auto-generated list.
 	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Likewise.

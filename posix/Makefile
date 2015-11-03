@@ -231,6 +231,7 @@ CFLAGS-execle.os = -fomit-frame-pointer
 CFLAGS-execl.os = -fomit-frame-pointer
 CFLAGS-execvp.os = -fomit-frame-pointer
 CFLAGS-execlp.os = -fomit-frame-pointer
+CFLAGS-nanosleep.c = -fexceptions -fasynchronous-unwind-tables
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
