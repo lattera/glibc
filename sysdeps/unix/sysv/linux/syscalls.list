@@ -95,7 +95,6 @@ removexattr	-	removexattr	i:ss	removexattr
 lremovexattr	-	lremovexattr	i:ss	lremovexattr
 fremovexattr	-	fremovexattr	i:is	fremovexattr
 
-mq_timedsend	-	mq_timedsend	Ci:ipiip	__mq_timedsend	mq_timedsend
 mq_setattr	-	mq_getsetattr	i:ipp	mq_setattr
 
 timerfd_create	EXTRA	timerfd_create	i:ii	timerfd_create

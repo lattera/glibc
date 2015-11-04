@@ -1,5 +1,10 @@
 2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* rt/Makefile (CFLAGS-mq_timedsend.c): New flag.
+	* sysdeps/unix/sysv/linux/mq_timedsend.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list (mq_timedsend): Remove from
+	auto-generation list.
+
 	* rt/Makefile (CFLAGS-mq_timedreceive.c): New flag.
 	* sysdeps/unix/sysv/linux/mq_timedreceive.c: New file.
 	* sysdeps/unix/sysv/linux/syscalls.list (mq_timedreceive): Remove
