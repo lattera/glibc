@@ -1,3 +1,16 @@
+2015-12-22  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_platforms): Added
+	platform and feature support for POWER9.
+	* sysdeps/powerpc/dl-procinfo.h: Likewise.
+	* sysdeps/powerpc/powerpc32/power9/Implies: New file.
+	* sysdeps/powerpc/powerpc32/power9/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power9/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power9/Implies: Likewise, for powerpc64.
+	* sysdeps/powerpc/powerpc64/power9/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power9/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power9/multiarch/Implies: Likewise.
+
 2015-12-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	Harmonize generic stdio-lock support with nptl
