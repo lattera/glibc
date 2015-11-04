@@ -10937,7 +10937,9 @@ static const struct test_ff_f_data scalb_test_data[] =
     TEST_ff_f (scalb, 3.0, -2.5, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_ff_f (scalb, 0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, 0, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, 1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, 1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     TEST_ff_f (scalb, 1, 0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, -1, 0, -1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -10973,16 +10975,29 @@ static const struct test_ff_f_data scalb_test_data[] =
     TEST_ff_f (scalb, minus_infty, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
 
     TEST_ff_f (scalb, qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, -qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, 1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, 1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, qnan_value, 0.5, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, -qnan_value, 0.5, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, 0.5, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, 0.5, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, qnan_value, 0, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, -qnan_value, 0, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, 0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, 0, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, qnan_value, plus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, -qnan_value, plus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, plus_infty, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, plus_infty, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, qnan_value, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, -qnan_value, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, minus_infty, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, minus_infty, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, qnan_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, -qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (scalb, -qnan_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     TEST_ff_f (scalb, max_value, max_value, plus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_PLUS_OFLOW),
     TEST_ff_f (scalb, max_value, -max_value, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
@@ -11020,6 +11035,7 @@ static const struct test_fi_f_data scalbn_test_data[] =
     TEST_fi_f (scalbn, plus_infty, 1, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fi_f (scalbn, minus_infty, 1, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fi_f (scalbn, qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fi_f (scalbn, -qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     TEST_fi_f (scalbn, 0.8L, 4, 12.8L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fi_f (scalbn, -0.854375L, 5, -27.34L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -11064,6 +11080,8 @@ static const struct test_fi_f_data scalbn_test_data[] =
     TEST_fi_f (scalbn, min_value, INT_MIN, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
     TEST_fi_f (scalbn, min_value / 4, INT_MAX, plus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_PLUS_OFLOW),
     TEST_fi_f (scalbn, min_value / 4, INT_MIN, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
+    TEST_fi_f (scalbn, min_subnorm_value, INT_MAX, plus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_PLUS_OFLOW),
+    TEST_fi_f (scalbn, min_subnorm_value, INT_MIN, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
 
     TEST_fi_f (scalbn, -1, INT_MAX, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
     TEST_fi_f (scalbn, -1, INT_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
@@ -11073,6 +11091,8 @@ static const struct test_fi_f_data scalbn_test_data[] =
     TEST_fi_f (scalbn, -min_value, INT_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
     TEST_fi_f (scalbn, -min_value / 4, INT_MAX, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
     TEST_fi_f (scalbn, -min_value / 4, INT_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
+    TEST_fi_f (scalbn, -min_subnorm_value, INT_MAX, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
+    TEST_fi_f (scalbn, -min_subnorm_value, INT_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
   };
 
 static void
@@ -11097,6 +11117,7 @@ static const struct test_fl_f_data scalbln_test_data[] =
     TEST_fl_f (scalbln, plus_infty, 1, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fl_f (scalbln, minus_infty, 1, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fl_f (scalbln, qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fl_f (scalbln, -qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     TEST_fl_f (scalbln, 0.8L, 4, 12.8L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fl_f (scalbln, -0.854375L, 5, -27.34L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -11141,6 +11162,8 @@ static const struct test_fl_f_data scalbln_test_data[] =
     TEST_fl_f (scalbln, min_value, INT_MIN, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
     TEST_fl_f (scalbln, min_value / 4, INT_MAX, plus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_PLUS_OFLOW),
     TEST_fl_f (scalbln, min_value / 4, INT_MIN, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
+    TEST_fl_f (scalbln, min_subnorm_value, INT_MAX, plus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_PLUS_OFLOW),
+    TEST_fl_f (scalbln, min_subnorm_value, INT_MIN, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
 
     TEST_fl_f (scalbln, -1, INT_MAX, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
     TEST_fl_f (scalbln, -1, INT_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
@@ -11150,6 +11173,8 @@ static const struct test_fl_f_data scalbln_test_data[] =
     TEST_fl_f (scalbln, -min_value, INT_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
     TEST_fl_f (scalbln, -min_value / 4, INT_MAX, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
     TEST_fl_f (scalbln, -min_value / 4, INT_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
+    TEST_fl_f (scalbln, -min_subnorm_value, INT_MAX, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
+    TEST_fl_f (scalbln, -min_subnorm_value, INT_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
 
     TEST_fl_f (scalbln, 1, LONG_MAX, plus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_PLUS_OFLOW),
     TEST_fl_f (scalbln, 1, LONG_MIN, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
@@ -11159,6 +11184,8 @@ static const struct test_fl_f_data scalbln_test_data[] =
     TEST_fl_f (scalbln, min_value, LONG_MIN, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
     TEST_fl_f (scalbln, min_value / 4, LONG_MAX, plus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_PLUS_OFLOW),
     TEST_fl_f (scalbln, min_value / 4, LONG_MIN, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
+    TEST_fl_f (scalbln, min_subnorm_value, LONG_MAX, plus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_PLUS_OFLOW),
+    TEST_fl_f (scalbln, min_subnorm_value, LONG_MIN, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
 
     TEST_fl_f (scalbln, -1, LONG_MAX, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
     TEST_fl_f (scalbln, -1, LONG_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
@@ -11168,6 +11195,8 @@ static const struct test_fl_f_data scalbln_test_data[] =
     TEST_fl_f (scalbln, -min_value, LONG_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
     TEST_fl_f (scalbln, -min_value / 4, LONG_MAX, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
     TEST_fl_f (scalbln, -min_value / 4, LONG_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
+    TEST_fl_f (scalbln, -min_subnorm_value, LONG_MAX, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
+    TEST_fl_f (scalbln, -min_subnorm_value, LONG_MIN, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
 
 #if LONG_MAX >= 0x100000000
     TEST_fl_f (scalbln, 1, 0x88000000L, plus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_PLUS_OFLOW),
@@ -11178,6 +11207,8 @@ static const struct test_fl_f_data scalbln_test_data[] =
     TEST_fl_f (scalbln, min_value, -0x88000000L, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
     TEST_fl_f (scalbln, min_value / 4, 0x88000000L, plus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_PLUS_OFLOW),
     TEST_fl_f (scalbln, min_value / 4, -0x88000000L, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
+    TEST_fl_f (scalbln, min_subnorm_value, 0x88000000L, plus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_PLUS_OFLOW),
+    TEST_fl_f (scalbln, min_subnorm_value, -0x88000000L, plus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_PLUS_UFLOW),
 
     TEST_fl_f (scalbln, -1, 0x88000000L, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
     TEST_fl_f (scalbln, -1, -0x88000000L, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
@@ -11187,6 +11218,8 @@ static const struct test_fl_f_data scalbln_test_data[] =
     TEST_fl_f (scalbln, -min_value, -0x88000000L, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
     TEST_fl_f (scalbln, -min_value / 4, 0x88000000L, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
     TEST_fl_f (scalbln, -min_value / 4, -0x88000000L, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
+    TEST_fl_f (scalbln, -min_subnorm_value, 0x88000000L, minus_oflow, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_MINUS_OFLOW),
+    TEST_fl_f (scalbln, -min_subnorm_value, -0x88000000L, minus_uflow, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_MINUS_UFLOW),
 #endif
   };
 
@@ -11208,8 +11241,14 @@ static const struct test_f_i_data signbit_test_data[] =
 
     /* signbit (x) != 0 for x < 0.  */
     TEST_f_b (signbit, -1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (signbit, -min_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (signbit, -min_subnorm_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (signbit, -max_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     /* signbit (x) == 0 for x >= 0.  */
     TEST_f_b (signbit, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (signbit, min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (signbit, min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (signbit, max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -11224,6 +11263,7 @@ static const struct test_f_f_data sin_test_data[] =
     TEST_f_f (sin, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (sin, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (sin, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (sin, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (sin),
   };
@@ -11240,6 +11280,7 @@ static const struct test_fFF_11_data sincos_test_data[] =
     TEST_fFF_11 (sincos, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_fFF_11 (sincos, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_fFF_11 (sincos, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fFF_11 (sincos, -qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_fFF_11 (sincos),
   };
@@ -11257,6 +11298,7 @@ static const struct test_f_f_data sinh_test_data[] =
     TEST_f_f (sinh, plus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (sinh, minus_infty, minus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (sinh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (sinh, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (sinh),
   };
@@ -11271,11 +11313,14 @@ sinh_test (void)
 static const struct test_f_f_data sqrt_test_data[] =
   {
     TEST_f_f (sqrt, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (sqrt, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (sqrt, plus_infty, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* sqrt (x) == qNaN plus invalid exception for x < 0.  */
     TEST_f_f (sqrt, -1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (sqrt, -1.1L, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, -min_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (sqrt, -min_subnorm_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (sqrt, -max_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (sqrt, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
 
@@ -11294,6 +11339,7 @@ static const struct test_f_f_data tan_test_data[] =
     TEST_f_f (tan, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (tan, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (tan, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (tan, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (tan),
   };
@@ -11310,6 +11356,7 @@ static const struct test_f_f_data tanh_test_data[] =
     TEST_f_f (tanh, plus_infty, 1, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (tanh, minus_infty, -1, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (tanh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (tanh, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (tanh),
   };
@@ -11330,6 +11377,7 @@ static const struct test_f_f_data tgamma_test_data[] =
     TEST_f_f (tgamma, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (tgamma, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (tgamma, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (tgamma, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (tgamma),
   };
@@ -11507,11 +11555,14 @@ static const struct test_f_f_data y0_test_data[] =
   {
     /* y0 is the Bessel function of the second kind of order 0 */
     TEST_f_f (y0, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y0, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y0, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (y0, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (y0, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (y0, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (y0, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (y0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (y0, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (y0, plus_infty, 0, ERRNO_UNCHANGED|IGNORE_ZERO_INF_SIGN),
 
     AUTO_TESTS_f_f (y0),
@@ -11528,12 +11579,15 @@ static const struct test_f_f_data y1_test_data[] =
   {
     /* y1 is the Bessel function of the second kind of order 1 */
     TEST_f_f (y1, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y1, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (y1, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (y1, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (y1, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (y1, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (y1, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_f_f (y1, plus_infty, 0, ERRNO_UNCHANGED|IGNORE_ZERO_INF_SIGN),
     TEST_f_f (y1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (y1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_f_f (y1),
   };
@@ -11550,61 +11604,80 @@ static const struct test_if_f_data yn_test_data[] =
     /* yn is the Bessel function of the second kind of order n */
     /* yn (0, x) == y0 (x)  */
     TEST_if_f (yn, 0, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 0, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 0, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 0, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 0, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 0, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, 0, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, 0, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_if_f (yn, 0, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_if_f (yn, 0, plus_infty, 0, ERRNO_UNCHANGED|IGNORE_ZERO_INF_SIGN),
 
     /* yn (1, x) == y1 (x)  */
     TEST_if_f (yn, 1, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 1, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 1, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 1, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 1, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 1, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, 1, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, 1, plus_infty, 0, ERRNO_UNCHANGED|IGNORE_ZERO_INF_SIGN),
     TEST_if_f (yn, 1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_if_f (yn, 1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* yn (-1, x) == -y1 (x).  */
     TEST_if_f (yn, -1, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, -1, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, -1, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, -1, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, -1, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, -1, 0.0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, -1, -0.0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, -1, plus_infty, minus_zero, ERRNO_UNCHANGED|IGNORE_ZERO_INF_SIGN),
     TEST_if_f (yn, -1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_if_f (yn, -1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* yn (2, x).  */
     TEST_if_f (yn, 2, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 2, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 2, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 2, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 2, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 2, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, 2, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, 2, plus_infty, 0, ERRNO_UNCHANGED|IGNORE_ZERO_INF_SIGN),
     TEST_if_f (yn, 2, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_if_f (yn, 2, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* yn (-2, x) == yn (2, x).  */
     TEST_if_f (yn, -2, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, -2, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, -2, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, -2, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, -2, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, -2, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, -2, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, -2, plus_infty, 0, ERRNO_UNCHANGED|IGNORE_ZERO_INF_SIGN),
     TEST_if_f (yn, -2, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_if_f (yn, -2, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* yn (3, x)  */
     TEST_if_f (yn, 3, -1.0, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 3, -min_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_if_f (yn, 3, -min_subnorm_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 3, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 3, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_if_f (yn, 3, 0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, 3, -0.0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_if_f (yn, 3, plus_infty, 0, ERRNO_UNCHANGED|IGNORE_ZERO_INF_SIGN),
     TEST_if_f (yn, 3, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_if_f (yn, 3, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* yn (10, x)  */
     TEST_if_f (yn, 10, plus_infty, 0, ERRNO_UNCHANGED|IGNORE_ZERO_INF_SIGN),
     TEST_if_f (yn, 10, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_if_f (yn, 10, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     AUTO_TESTS_if_f (yn),
   };
@@ -11618,11 +11691,29 @@ yn_test (void)
 
 static const struct test_f_f_data significand_test_data[] =
   {
-    /* significand returns the mantissa of the exponential representation.  */
-    /* TODO: missing +/-Inf as well as qNaN tests.  */
+    /* significand returns the mantissa of the exponential
+       representation.  Tests for infinities, zero and NaNs reflect
+       the implementation (including possibility of "inexact" and
+       variations between architectures) rather than any
+       specification.  */
+    TEST_f_f (significand, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
+    TEST_f_f (significand, -qnan_value, qnan_value, INVALID_EXCEPTION_OK),
+    TEST_f_f (significand, plus_infty, plus_infty, INVALID_EXCEPTION_OK),
+    TEST_f_f (significand, minus_infty, minus_infty, INVALID_EXCEPTION_OK),
+    TEST_f_f (significand, 0, 0, INVALID_EXCEPTION_OK|DIVIDE_BY_ZERO_EXCEPTION_OK),
+    TEST_f_f (significand, minus_zero, minus_zero, INVALID_EXCEPTION_OK|DIVIDE_BY_ZERO_EXCEPTION_OK),
+    TEST_f_f (significand, min_value, 1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (significand, -min_value, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (significand, min_subnorm_value, 1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (significand, -min_subnorm_value, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (significand, 1.0, 1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (significand, -1.0, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (significand, 4.0, 1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (significand, -4.0, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (significand, 6.0, 1.5, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (significand, -6.0, -1.5, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (significand, 8.0, 1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (significand, -8.0, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void

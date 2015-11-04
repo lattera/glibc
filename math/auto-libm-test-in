@@ -3731,6 +3731,8 @@ sin pi/6
 sin -pi/6
 sin pi/2
 sin -pi/2
+sin pi
+sin -pi
 sin 0.75
 sin 0x1p65
 sin -0x1p65
@@ -3771,6 +3773,8 @@ sin 0x6.287cc8749212e72p+0
 sin -0x1.02e34cp+0
 sin 0xf.f0274p+4
 sin 0x3.042d88p+0
+sin max
+sin -max
 sin min
 sin -min
 sin min_subnorm
@@ -3781,6 +3785,8 @@ sincos -0
 sincos pi/2
 sincos pi/6
 sincos pi/3
+sincos pi
+sincos -pi
 sincos 0.75
 sincos 0x1p65
 sincos -0x1p65
@@ -3801,6 +3807,8 @@ sincos 0x6.287cc8749212e72p+0
 sincos -0x1.02e34cp+0
 sincos 0xf.f0274p+4
 sincos 0x3.042d88p+0
+sincos max
+sincos -max
 sincos min
 sincos -min
 sincos min_subnorm
@@ -3859,10 +3867,23 @@ sinh -0x1.3dda8ap+0
 sinh -0x5.ee9218p-4
 sinh -0x1.bcfc98p+0
 sinh -0x6.9bbb6df7c5d08p-4
+sinh max no-test-inline
+sinh -max no-test-inline
 sinh min
 sinh -min
 sinh min_subnorm
 sinh -min_subnorm
+
+sinh 0x5.96a7ep+4
+sinh 0x5.96a7e8p+4
+sinh 0x2.c679d1f73f0fap+8
+sinh 0x2.c679d1f73f0fcp+8
+sinh 0x2.c679d1f73f0fb624d358b213a7p+8
+sinh 0x2.c679d1f73f0fb624d358b213a8p+8
+sinh 0x2.c5d37700c6bb03a4p+12 no-test-inline
+sinh 0x2.c5d37700c6bb03a8p+12 no-test-inline
+sinh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline
+sinh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline
 
 sqrt 0
 sqrt -0
@@ -3930,10 +3951,15 @@ sqrt 0x1.57103ea4p-1015
 sqrt 0x1.9b294f88p-1015
 sqrt 0x1.0000000000001p+0
 sqrt 0x1.fffffffffffffp-1
+sqrt max
+sqrt min
+sqrt min_subnorm
 
 tan 0
 tan -0
 tan pi/4
+tan pi/2
+tan -pi/2
 tan 0.75
 tan 0x1p65
 tan -0x1p65
@@ -3997,6 +4023,23 @@ tan 0x2.091d68p+0
 tan -0x5.302ab9b18593264p+0
 tan 0x1.1ad374p+0
 tan -0x1.0d55b8p+0
+tan 0x1p-5
+tan 0x1p-10
+tan 0x1p-15
+tan 0x1p-20
+tan 0x1p-25
+tan 0x1p-30
+tan 0x1p-35
+tan 0x1p-40
+tan 0x1p-45
+tan 0x1p-50
+tan 0x1p-55
+tan 0x1p-60
+tan 0x1p-100
+tan 0x1p-600
+tan 0x1p-10000
+tan max
+tan -max
 tan min
 tan -min
 tan min_subnorm
@@ -4062,6 +4105,23 @@ tanh -0x3.2f59p-4
 tanh 0x2.e6f54cp-4
 tanh 0x3.397f2f50241d031p-4
 tanh 0x8.4024a11b6610672b2982b852e8p-4
+tanh 0x1p-5
+tanh 0x1p-10
+tanh 0x1p-15
+tanh 0x1p-20
+tanh 0x1p-25
+tanh 0x1p-30
+tanh 0x1p-35
+tanh 0x1p-40
+tanh 0x1p-45
+tanh 0x1p-50
+tanh 0x1p-55
+tanh 0x1p-60
+tanh 0x1p-100
+tanh 0x1p-600
+tanh 0x1p-10000
+tanh max
+tanh -max
 tanh min
 tanh -min
 tanh min_subnorm
@@ -4592,6 +4652,8 @@ y0 0x1p-80
 y0 0x1p-90
 y0 0x1p-100
 y0 0x1p-110
+y0 0x1p-600
+y0 0x1p-10000
 y0 min
 y0 min_subnorm
 
@@ -4618,6 +4680,8 @@ y1 0x1p-80
 y1 0x1p-90
 y1 0x1p-100
 y1 0x1p-110
+y1 0x1p-600
+y1 0x1p-10000
 y1 min
 y1 min_subnorm
 
@@ -4648,6 +4712,10 @@ yn 3 0.75
 yn 3 1.0
 yn 3 2.0
 yn 3 10.0
+yn 3 0x1p-10
+yn 3 0x1p-100
+yn 3 0x1p-600
+yn 3 0x1p-10000
 
 # yn (10, x).
 yn 10 0.125
@@ -4664,6 +4732,10 @@ yn 2 0x1.ffff62p+99
 yn 2 0x1p127
 yn 2 0x1p1023
 yn 2 0x1p16383
+yn 2 0x1p-10
+yn 2 0x1p-100
+yn 2 0x1p-600
+yn 2 0x1p-10000
 
 yn 0 min
 yn 0 min_subnorm
