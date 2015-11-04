@@ -61,6 +61,7 @@ extra-libs-others := $(extra-libs)
 include ../Rules
 
 CFLAGS-aio_suspend.c = -fexceptions
+CFLAGS-mq_timedreceive.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-clock_nanosleep.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-librt-cancellation.c = -fasynchronous-unwind-tables
 
