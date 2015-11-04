@@ -30,17 +30,9 @@
 #endif
 
 #ifdef	__ASSEMBLER__
-# if __GNUC_PREREQ (4, 7)
-#  define GET_PC_THUNK(reg) __x86.get_pc_thunk.reg
-# else
-#  define GET_PC_THUNK(reg) __i686.get_pc_thunk.reg
-# endif
+# define GET_PC_THUNK(reg) __x86.get_pc_thunk.reg
 #else
-# if __GNUC_PREREQ (4, 7)
-#  define GET_PC_THUNK_STR(reg) "__x86.get_pc_thunk." #reg
-# else
-#  define GET_PC_THUNK_STR(reg) "__i686.get_pc_thunk." #reg
-# endif
+# define GET_PC_THUNK_STR(reg) "__x86.get_pc_thunk." #reg
 #endif
 
 #ifdef	__ASSEMBLER__

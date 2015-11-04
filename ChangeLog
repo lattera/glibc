@@ -1,5 +1,34 @@
 2015-11-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/atomic-machine.h
+	[__GNUC_PREREQ (4, 7) && __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4]:
+	Change conditional to [__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4].
+	[__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 && !__GNUC_PREREQ (4, 7)]:
+	Remove conditional code.
+	[!__GNUC_PREREQ (4, 7) || !__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4]:
+	Change conditional to [!__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4].
+	* sysdeps/i386/sysdep.h [__ASSEMBLER__ && __GNUC_PREREQ (4, 7)]:
+	Change conditional to [__ASSEMBLER__].
+	[__ASSEMBLER__ && !__GNUC_PREREQ (4, 7)]: Remove conditional code.
+	[!__ASSEMBLER__ && __GNUC_PREREQ (4, 7)]: Change conditional to
+	[!__ASSEMBLER__].
+	[!__ASSEMBLER__ && !__GNUC_PREREQ (4, 7)]: Remove conditional
+	code.
+	* sysdeps/unix/sysv/linux/sh/atomic-machine.h (rNOSP): Remove
+	conditional macro definitions.
+	(__arch_compare_and_exchange_val_8_acq): Use "u" instead of rNOSP.
+	(__arch_compare_and_exchange_val_16_acq): Likewise.
+	(__arch_compare_and_exchange_val_32_acq): Likewise.
+	(atomic_exchange_and_add): Likewise.
+	(atomic_add): Likewise.
+	(atomic_add_negative): Likewise.
+	(atomic_add_zero): Likewise.
+	(atomic_bit_set): Likewise.
+	(atomic_bit_test_set): Likewise.
+	* sysdeps/x86_64/atomic-machine.h [__GNUC_PREREQ (4, 7)]: Make
+	code unconditional.
+	[!__GNUC_PREREQ (4, 7)]: Remove conditional code.
+
 	* math/test-math-errno.h: New file.
 	* math/test-math-inline.h (TEST_INLINE): Define to 1 instead of
 	empty.

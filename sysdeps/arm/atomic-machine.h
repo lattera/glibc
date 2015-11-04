@@ -53,7 +53,7 @@ void __arm_link_error (void);
 
 /* Use the atomic builtins provided by GCC in case the backend provides
    a pattern to do this efficiently.  */
-#if __GNUC_PREREQ (4, 7) && defined __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+#ifdef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
 
 # define atomic_exchange_acq(mem, value)                                \
   __atomic_val_bysize (__arch_exchange, int, mem, value, __ATOMIC_ACQUIRE)
@@ -131,16 +131,12 @@ void __arm_link_error (void);
 # define __arch_compare_and_exchange_val_64_int(mem, newval, oldval, model) \
   ({__arm_link_error (); oldval; })
 
-#elif defined __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
-/* Atomic compare and exchange.  */
-# define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
-  __sync_val_compare_and_swap ((mem), (oldval), (newval))
 #else
 # define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
   __arm_assisted_compare_and_exchange_val_32_acq ((mem), (newval), (oldval))
 #endif
 
-#if !__GNUC_PREREQ (4, 7) || !defined (__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4)
+#ifndef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
 /* We don't support atomic operations on any non-word types.
    So make them link errors.  */
 # define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
