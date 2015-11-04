@@ -608,7 +608,6 @@ test_single_exception (const char *test_name,
 		       int fe_flag,
 		       const char *flag_name)
 {
-# ifndef TEST_INLINE
   int ok = 1;
   if (exception & exc_flag)
     {
@@ -643,8 +642,6 @@ test_single_exception (const char *test_name,
     }
   if (!ok)
     ++noErrors;
-
-# endif
 }
 #endif
 
@@ -654,7 +651,7 @@ test_single_exception (const char *test_name,
 static void
 test_exceptions (const char *test_name, int exception)
 {
-  if (EXCEPTION_TESTS (FLOAT))
+  if (TEST_EXCEPTIONS && EXCEPTION_TESTS (FLOAT))
     {
       ++noExcTests;
 #ifdef FE_DIVBYZERO
@@ -694,7 +691,6 @@ static void
 test_single_errno (const char *test_name, int errno_value,
 		   int expected_value, const char *expected_name)
 {
-#if !defined TEST_INLINE && !TEST_MATHVEC
   if (errno_value == expected_value)
     {
       if (print_screen (1))
@@ -708,7 +704,6 @@ test_single_errno (const char *test_name, int errno_value,
 	printf ("Failure: %s: errno set to %d, expected %d (%s)\n",
 		test_name, errno_value, expected_value, expected_name);
     }
-#endif
 }
 
 /* Test whether errno (value ERRNO_VALUE) has been for TEST_NAME set
@@ -716,13 +711,16 @@ test_single_errno (const char *test_name, int errno_value,
 static void
 test_errno (const char *test_name, int errno_value, int exceptions)
 {
-  ++noErrnoTests;
-  if (exceptions & ERRNO_UNCHANGED)
-    test_single_errno (test_name, errno_value, 0, "unchanged");
-  if (exceptions & ERRNO_EDOM)
-    test_single_errno (test_name, errno_value, EDOM, "EDOM");
-  if (exceptions & ERRNO_ERANGE)
-    test_single_errno (test_name, errno_value, ERANGE, "ERANGE");
+  if (TEST_ERRNO)
+    {
+      ++noErrnoTests;
+      if (exceptions & ERRNO_UNCHANGED)
+	test_single_errno (test_name, errno_value, 0, "unchanged");
+      if (exceptions & ERRNO_EDOM)
+	test_single_errno (test_name, errno_value, EDOM, "EDOM");
+      if (exceptions & ERRNO_ERANGE)
+	test_single_errno (test_name, errno_value, ERANGE, "ERANGE");
+    }
 }
 
 /* Returns the number of ulps that GIVEN is away from EXPECTED.  */
@@ -1041,10 +1039,8 @@ enable_test (int exceptions)
 {
   if (exceptions & XFAIL_TEST)
     return 0;
-#ifdef TEST_INLINE
-  if (exceptions & NO_TEST_INLINE)
+  if (TEST_INLINE && (exceptions & NO_TEST_INLINE))
     return 0;
-#endif
   return 1;
 }
 

@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_MATHVEC 1
+#define TEST_ERRNO 0
 
 #define CNCT(x, y) x ## y
 #define CONCAT(a, b) CNCT (a, b)

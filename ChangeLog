@@ -1,3 +1,24 @@
+2015-11-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/test-math-errno.h: New file.
+	* math/test-math-inline.h (TEST_INLINE): Define to 1 instead of
+	empty.
+	(TEST_ERRNO): New macro.
+	(TEST_EXCEPTIONS): Likewise.
+	* math/test-math-no-inline.h (TEST_INLINE): Likewise.
+	(TEST_EXCEPTIONS): Likewise.
+	* math/test-math-vector.h (TEST_ERRNO): Likewise.
+	* math/test-double.c: Include "test-math-errno.h".
+	* math/test-float.c: Likewise.
+	* math/test-ldouble.c: Likewise.
+	* math/libm-test.inc (test_single_exception) [!TEST_INLINE]: Make
+	code unconditional.
+	(test_exceptions): Only run code if TEST_EXCEPTIONS.
+	(test_single_errno) [!TEST_INLINE && !TEST_MATHVEC]: Make code
+	unconditional.
+	(test_errno): Only run code if TEST_ERRNO.
+	(enable_test): Use "if" conditional on TEST_INLINE, not #ifdef.
+
 2015-11-04  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/tst-once5.cc: Remove attribution.

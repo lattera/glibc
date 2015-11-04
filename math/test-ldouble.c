@@ -18,6 +18,7 @@
 
 #include "test-ldouble.h"
 #include "test-math-no-inline.h"
+#include "test-math-errno.h"
 #include "test-math-scalar.h"
 
 #define TEST_MSG "testing long double (without inline functions)\n"
