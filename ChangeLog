@@ -1,3 +1,7 @@
+2015-11-04  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/tst-once5.cc: Remove attribution.
+
 2015-11-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of sin, sincos, sinh,
