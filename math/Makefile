@@ -108,7 +108,8 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-tgmath-ret bug-nextafter bug-nexttoward bug-tgmath1 \
 	test-tgmath-int test-tgmath2 test-powl tst-CMPLX tst-CMPLX2 test-snan \
 	test-fenv-tls test-fenv-preserve test-fenv-return test-fenvinline \
-	test-nearbyint-except test-fenv-clear $(tests-static)
+	test-nearbyint-except test-fenv-clear test-signgam-finite \
+	test-signgam-finite-c99 test-signgam-finite-c11 $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
@@ -184,6 +185,10 @@ CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES \
 			  $(libm-test-fast-math-cflags)
 CPPFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES \
 			  $(libm-test-fast-math-cflags)
+
+CFLAGS-test-signgam-finite.c = -ffinite-math-only
+CFLAGS-test-signgam-finite-c99.c = -ffinite-math-only -std=c99
+CFLAGS-test-signgam-finite-c11.c = -ffinite-math-only -std=c11
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
 # for error handling in the -lm functions.

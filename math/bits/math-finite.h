@@ -307,32 +307,32 @@ extern long double __lgammal_r_finite (long double, int *);
 /* lgamma.  */
 __extern_always_inline double __NTH (lgamma (double __d))
 {
-# ifdef __USE_ISOC99
+# if defined __USE_MISC || defined __USE_XOPEN
+  return __lgamma_r_finite (__d, &signgam);
+# else
   int __local_signgam = 0;
   return __lgamma_r_finite (__d, &__local_signgam);
-# else
-  return __lgamma_r_finite (__d, &signgam);
 # endif
 }
 #endif
 #if defined __USE_ISOC99 && defined __extern_always_inline
 __extern_always_inline float __NTH (lgammaf (float __d))
 {
-# ifdef __USE_ISOC99
+# if defined __USE_MISC || defined __USE_XOPEN
+  return __lgammaf_r_finite (__d, &signgam);
+# else
   int __local_signgam = 0;
   return __lgammaf_r_finite (__d, &__local_signgam);
-# else
-  return __lgammaf_r_finite (__d, &signgam);
 # endif
 }
 # ifdef __MATH_DECLARE_LDOUBLE
 __extern_always_inline long double __NTH (lgammal (long double __d))
 {
-# ifdef __USE_ISOC99
+# if defined __USE_MISC || defined __USE_XOPEN
+  return __lgammal_r_finite (__d, &signgam);
+# else
   int __local_signgam = 0;
   return __lgammal_r_finite (__d, &__local_signgam);
-# else
-  return __lgammal_r_finite (__d, &signgam);
 # endif
 }
 # endif
@@ -343,32 +343,17 @@ __extern_always_inline long double __NTH (lgammal (long double __d))
 /* gamma.  */
 __extern_always_inline double __NTH (gamma (double __d))
 {
-# ifdef __USE_ISOC99
-  int __local_signgam = 0;
-  return __lgamma_r_finite (__d, &__local_signgam);
-# else
   return __lgamma_r_finite (__d, &signgam);
-# endif
 }
 # ifdef __USE_ISOC99
 __extern_always_inline float __NTH (gammaf (float __d))
 {
-#  ifdef __USE_ISOC99
-  int __local_signgam = 0;
-  return __lgammaf_r_finite (__d, &__local_signgam);
-#  else
   return __lgammaf_r_finite (__d, &signgam);
-#  endif
 }
 #  ifdef __MATH_DECLARE_LDOUBLE
 __extern_always_inline long double __NTH (gammal (long double __d))
 {
-#   ifdef __USE_ISOC99
-  int __local_signgam = 0;
-  return __lgammal_r_finite (__d, &__local_signgam);
-#   else
   return __lgammal_r_finite (__d, &signgam);
-#   endif
 }
 #  endif
 # endif

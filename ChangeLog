@@ -1,5 +1,22 @@
 2015-11-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19211]
+	* math/bits/math-finite.h (lgamma): Set signgam if [__USE_MISC ||
+	__USE_XOPEN], not if [!__USE_ISOC99].
+	(lgammaf): Likewise.
+	(lgammal): Likewise.
+	(gamma): Set signgam unconditionally, not if [!__USE_ISOC99].
+	(gammaf): Likewise.
+	(gammal): Likewise.
+	* math/test-signgam-finite-c11.c: New file.
+	* math/test-signgam-finite-c99.c: Likewise.
+	* math/test-signgam-finite.c: Likewise.
+	* math/Makefile (tests): Add test-signgam-finite,
+	test-signgam-finite-c99 and test-signgam-finite-c11.
+	(CFLAGS-test-signgam-finite.c): New variable.
+	(CFLAGS-test-signgam-finite-c99.c): Likewise.
+	(CFLAGS-test-signgam-finite-c11.c): Likewise.
+
 	[BZ #19212]
 	* include/features.h [(_XOPEN_SOURCE - 0) >= 500]: Change
 	conditional to [defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) >=
