@@ -1,3 +1,72 @@
+2015-11-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19205]
+	* math/bits/math-finite.h (acosf): Condition declaration on
+	[__USE_ISOC99].
+	(acosl): Likewise.
+	(acoshf): Likewise.
+	(acoshl): Likewise.
+	(asinf): Likewise.
+	(asinl): Likewise.
+	(atan2f): Likewise.
+	(atan2l): Likewise.
+	(atanhf): Likewise.
+	(atanhl): Likewise.
+	(coshf): Likewise.
+	(coshl): Likewise.
+	(expf): Likewise.
+	(expl): Likewise.
+	(fmodf): Likewise.
+	(fmodl): Likewise.
+	(hypot): Change condition to [__USE_XOPEN || __USE_ISOC99].
+	(j0f): Change condition to [__USE_MISC && __USE_ISOC99].
+	(j0l): Likewise.
+	(y0f): Likewise.
+	(y0l): Likewise.
+	(j1f): Likewise.
+	(j1l): Likewise.
+	(y1f): Likewise.
+	(y1l): Likewise.
+	(jnf): Likewise.
+	(jnl): Likewise.
+	(ynf): Likewise.
+	(ynl): Likewise.
+	(lgammaf_r): Condition declaration on [__USE_ISOC99].
+	(lgammal_r): Likewise.
+	(__lgamma_r_finite): New declaration.
+	(__lgammaf_r_finite): Likewise.
+	(__lgammal_r_finite): Likewise.
+	(lgamma): Use __lgamma_r_finite.
+	(lgammaf): Condition definition on [__USE_ISOC99].  Use
+	__lgammaf_r_finite.
+	(lgammal): Condition definition on [__USE_ISOC99].  Use
+	__lgammal_r_finite.
+	(gamma): Do not define for [!__USE_MISC && __USE_XOPEN2K].  Use
+	__lgamma_r_finite.
+	(gammaf): Condition definition on [__USE_ISOC99].  Use
+	__lgammaf_r_finite.
+	(gammal): Condition definition on [__USE_ISOC99].  Use
+	__lgammal_r_finite.
+	(logf): Condition declaration on [__USE_ISOC99].
+	(logl): Likewise.
+	(log10f): Likewise.
+	(log10l): Likewise.
+	(ldexpf): Likewise.
+	(ldexpl): Likewise.
+	(powf): Likewise.
+	(powl): Likewise.
+	(remainder): Condition declaration on [__USE_XOPEN_EXTENDED ||
+	__USE_ISOC99].
+	(remainderf): Condition declaration on [__USE_ISOC99].
+	(remainderl): Likewise.
+	(scalb): Do not declare for [!__USE_MISC && __USE_XOPEN2K8].
+	(scalbf): Change condition to [__USE_MISC && __USE_ISOC99].
+	(scalbl): Likewise.
+	(sinhf): Condition declaration on [__USE_ISOC99].
+	(sinhl): Likewise.
+	(sqrtf): Likewise.
+	(sqrtl): Likewise.
+
 2015-11-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/atomic-machine.h
