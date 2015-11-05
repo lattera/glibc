@@ -1,5 +1,10 @@
 2015-11-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19209]
+	* math/bits/math-finite.h (ldexp): Remove declaration.
+	(ldexpf): Likewise.
+	(ldexpl): Likewise.
+
 	[BZ #19205]
 	* math/bits/math-finite.h (acosf): Condition declaration on
 	[__USE_ISOC99].

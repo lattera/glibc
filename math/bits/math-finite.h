@@ -413,15 +413,6 @@ extern long double __REDIRECT_NTH (log2l, (long double), __log2l_finite);
 # endif
 #endif
 
-/* ldexp.  */
-extern double __REDIRECT_NTH (ldexp, (double, int), scalbn);
-#ifdef __USE_ISOC99
-extern float __REDIRECT_NTH (ldexpf, (float, int), scalbnf);
-# ifdef __MATH_DECLARE_LDOUBLE
-extern long double __REDIRECT_NTH (ldexpl, (long double, int), scalbnl);
-# endif
-#endif
-
 /* pow.  */
 extern double __REDIRECT_NTH (pow, (double, double), __pow_finite);
 #ifdef __USE_ISOC99
