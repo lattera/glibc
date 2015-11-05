@@ -1,5 +1,7 @@
 2015-11-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/list-fixed-bugs.py: New file.
+
 	[BZ #19213]
 	* sysdeps/i386/fpu/e_log.S (__log_finite): Ensure +0 is always
 	returned for argument 1.
