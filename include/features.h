@@ -224,8 +224,9 @@
 # undef  _POSIX_C_SOURCE
 # define _POSIX_C_SOURCE	200809L
 #endif
-#if ((!defined __STRICT_ANSI__ || (_XOPEN_SOURCE - 0) >= 500) && \
-     !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE)
+#if ((!defined __STRICT_ANSI__					\
+      || (defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) >= 500))	\
+     && !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE)
 # define _POSIX_SOURCE	1
 # if defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 500
 #  define _POSIX_C_SOURCE	2
@@ -239,7 +240,9 @@
 # define __USE_POSIX_IMPLICITLY	1
 #endif
 
-#if defined _POSIX_SOURCE || _POSIX_C_SOURCE >= 1 || defined _XOPEN_SOURCE
+#if (defined _POSIX_SOURCE					\
+     || (defined _POSIX_C_SOURCE && _POSIX_C_SOURCE >= 1)	\
+     || defined _XOPEN_SOURCE)
 # define __USE_POSIX	1
 #endif
 
@@ -247,15 +250,15 @@
 # define __USE_POSIX2	1
 #endif
 
-#if (_POSIX_C_SOURCE - 0) >= 199309L
+#if defined _POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 199309L
 # define __USE_POSIX199309	1
 #endif
 
-#if (_POSIX_C_SOURCE - 0) >= 199506L
+#if defined _POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 199506L
 # define __USE_POSIX199506	1
 #endif
 
-#if (_POSIX_C_SOURCE - 0) >= 200112L
+#if defined _POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 200112L
 # define __USE_XOPEN2K		1
 # undef __USE_ISOC95
 # define __USE_ISOC95		1
@@ -263,7 +266,7 @@
 # define __USE_ISOC99		1
 #endif
 
-#if (_POSIX_C_SOURCE - 0) >= 200809L
+#if defined _POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 200809L
 # define __USE_XOPEN2K8		1
 # undef  _ATFILE_SOURCE
 # define _ATFILE_SOURCE	1

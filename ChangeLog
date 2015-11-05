@@ -1,5 +1,20 @@
 2015-11-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19212]
+	* include/features.h [(_XOPEN_SOURCE - 0) >= 500]: Change
+	conditional to [defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) >=
+	500].
+	[_POSIX_C_SOURCE >= 1]: Change conditional to [defined
+	_POSIX_C_SOURCE && _POSIX_C_SOURCE >= 1].
+	[(_POSIX_C_SOURCE - 0) >= 199309L]: Change conditional to [defined
+	_POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 199309L].
+	[(_POSIX_C_SOURCE - 0) >= 199506L]: Change conditional to [defined
+	_POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 199506L].
+	[(_POSIX_C_SOURCE - 0) >= 200112L]: Change conditional to [defined
+	_POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 200112L].
+	[(_POSIX_C_SOURCE - 0) >= 200809L]: Change conditional to [defined
+	_POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 200809L].
+
 	[BZ #19209]
 	* math/bits/math-finite.h (ldexp): Remove declaration.
 	(ldexpf): Likewise.
