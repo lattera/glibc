@@ -1,5 +1,5 @@
-/* Common definitions for libm tests for inline functions.
-   Copyright (C) 1997-2015 Free Software Foundation, Inc.
+/* Common definitions for libm tests for finite-math-only.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,11 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define TEST_INLINE 1
-#define TEST_FINITE 0
+#define TEST_FINITE 1
 #define TEST_ERRNO 0
-#define TEST_EXCEPTIONS 0
-
-#ifdef __NO_MATH_INLINES
-# undef __NO_MATH_INLINES
-#endif

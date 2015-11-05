@@ -113,12 +113,13 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 tests-static = test-fpucw-static test-fpucw-ieee-static
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
-test-longdouble-yes = test-ldouble test-ildoubl
+test-longdouble-yes = test-ldouble test-ildoubl test-ldouble-finite
 
 ifneq (no,$(PERL))
 libm-vec-tests = $(addprefix test-,$(libmvec-tests))
 libm-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
-	test-ifloat test-idouble $(libm-vec-tests)
+	test-ifloat test-idouble test-float-finite test-double-finite \
+	$(libm-vec-tests)
 libm-tests.o = $(addsuffix .o,$(libm-tests))
 
 tests += $(libm-tests)
@@ -141,10 +142,13 @@ $(objpfx)libm-test.stmp: $(ulps-file) libm-test.inc gen-libm-test.pl \
 
 $(objpfx)test-float.o: $(objpfx)libm-test.stmp
 $(objpfx)test-ifloat.o: $(objpfx)libm-test.stmp
+$(objpfx)test-float-finite.o: $(objpfx)libm-test.stmp
 $(objpfx)test-double.o: $(objpfx)libm-test.stmp
 $(objpfx)test-idouble.o: $(objpfx)libm-test.stmp
+$(objpfx)test-double-finite.o: $(objpfx)libm-test.stmp
 $(objpfx)test-ldouble.o: $(objpfx)libm-test.stmp
 $(objpfx)test-ildoubl.o: $(objpfx)libm-test.stmp
+$(objpfx)test-ldouble-finite.o: $(objpfx)libm-test.stmp
 endif
 
 libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH
@@ -167,9 +171,15 @@ CFLAGS-test-float-vlen8-wrappers.c = $(float-vlen8-arch-ext-cflags)
 CFLAGS-test-float-vlen16.c = $(libm-test-vec-cflags)
 CFLAGS-test-float-vlen16-wrappers.c = $(float-vlen16-arch-ext-cflags)
 
-CFLAGS-test-float.c = -fno-inline -ffloat-store -fno-builtin
-CFLAGS-test-double.c = -fno-inline -ffloat-store -fno-builtin
-CFLAGS-test-ldouble.c = -fno-inline -ffloat-store -fno-builtin
+libm-test-no-inline-cflags = -fno-inline -ffloat-store -fno-builtin
+libm-test-finite-cflags = $(libm-test-no-inline-cflags) \
+			  -U__FINITE_MATH_ONLY__ -D__FINITE_MATH_ONLY__=1
+CFLAGS-test-float.c = $(libm-test-no-inline-cflags)
+CFLAGS-test-float-finite.c = $(libm-test-finite-cflags)
+CFLAGS-test-double.c = $(libm-test-no-inline-cflags)
+CFLAGS-test-double-finite.c = $(libm-test-finite-cflags)
+CFLAGS-test-ldouble.c = $(libm-test-no-inline-cflags)
+CFLAGS-test-ldouble-finite.c = $(libm-test-finite-cflags)
 CFLAGS-test-tgmath.c = -fno-builtin
 # The following testcase uses very long lines (>3 million), so it may take a
 # while to compile it. See: http://llvm.org/bugs/show_bug.cgi?id=14106 and

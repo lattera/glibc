@@ -141,12 +141,13 @@ sub build_complex_beautify {
 # Return the text to put in an initializer for a test's exception
 # information.
 sub show_exceptions {
-  my ($ignore_result, $exception) = @_;
+  my ($ignore_result, $non_finite, $exception) = @_;
   $ignore_result = ($ignore_result ? "IGNORE_RESULT|" : "");
+  $non_finite = ($non_finite ? "NON_FINITE|" : "");
   if (defined $exception) {
-    return ", ${ignore_result}$exception";
+    return ", ${ignore_result}${non_finite}$exception";
   } else {
-    return ", ${ignore_result}0";
+    return ", ${ignore_result}${non_finite}0";
   }
 }
 
@@ -162,6 +163,7 @@ sub parse_args {
   my (@plus_oflow, @minus_oflow, @plus_uflow, @minus_uflow);
   my (@errno_plus_oflow, @errno_minus_oflow);
   my (@errno_plus_uflow, @errno_minus_uflow);
+  my ($non_finite);
 
   ($descr_args, $descr_res) = split /_/,$descr, 2;
 
@@ -306,8 +308,12 @@ sub parse_args {
     if ($ignore_result_any && !$ignore_result_all) {
       die ("some but not all function results ignored\n");
     }
+    # Determine whether any arguments or results, for any rounding
+    # mode, are non-finite.
+    $non_finite = ($args =~ /qnan_value|plus_infty|minus_infty/);
     # Add exceptions.
     $cline_res .= show_exceptions ($ignore_result_any,
+				   $non_finite,
 				   ($current_arg <= $#args_res)
 				   ? $args_res[$current_arg]
 				   : undef);

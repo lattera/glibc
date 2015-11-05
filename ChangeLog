@@ -1,3 +1,35 @@
+2015-11-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (NON_FINITE): New macro.
+	(enable_test): Do not run tests flagged NON_FINITE if TEST_FINITE.
+	* math/gen-libm-test.pl (show_exceptions): Add argument
+	$non_finite.
+	(parse_args): Update call to show_exceptions.
+	* math/test-math-finite.h: New file.
+	* math/test-math-no-finite.h: Likewise.
+	* math/test-double-finite.c: Likewise.
+	* math/test-float-finite.c: Likewise.
+	* math/test-ldouble-finite.c: Likewise.
+	* math/test-double.c: Include "test-math-no-finite.h".
+	* math/test-float.c: Include "test-math-no-finite.h".
+	* math/test-ldouble.c: Include "test-math-no-finite.h".
+	* math/test-math-inline.h (TEST_FINITE): New macro.
+	* math/test-math-vector.h (TEST_FINITE): Likewise.
+	* math/Makefile (test-longdouble-yes): Add test-ldouble-finite.
+	(libm-tests): Add test-float-finite and test-double-finite.
+	($(objpfx)test-float-finite.o): New dependency on
+	$(objpfx)libm-test.stmp.
+	($(objpfx)test-double-finite.o): Likewise.
+	($(objpfx)test-ldouble-finite.o): Likewise.
+	(libm-test-no-inline-cflags): New variable.
+	(libm-test-finite-cflags): Likewise.
+	(CFLAGS-test-float-finite.c): Likewise.
+	(CFLAGS-test-double-finite.c): Likewise.
+	(CFLAGS-test-ldouble-finite.c): Likewise.
+	(CFLAGS-test-float.c): Use $(libm-test-no-inline-cflags).
+	(CFLAGS-test-double.c): Likewise.
+	(CFLAGS-test-ldouble.c): Likewise.
+
 2015-11-05  Roland McGrath  <roland@hack.frob.com>
 
 	* io/fcntl.c (__fcntl): Add ... to prototype.
