@@ -23,7 +23,7 @@
    This only makes sense in certain operating systems.  */
 
 long int
-syscall (long int callno)
+syscall (long int callno, ...)
 {
   __set_errno (ENOSYS);
   return -1;

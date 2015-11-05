@@ -1,3 +1,9 @@
+2015-11-05  Roland McGrath  <roland@hack.frob.com>
+
+	* io/fcntl.c (__fcntl): Add ... to prototype.
+	* misc/ioctl.c (__ioctl): Likewise.
+	* misc/syscall.c (syscall): Likewise.
+
 2015-11-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/list-fixed-bugs.py: New file.
