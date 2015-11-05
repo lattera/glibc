@@ -79,7 +79,13 @@ ENTRY(__log10l_finite)
 	fnstsw			// x-1 : x : log10(2)
 	andb	$0x45, %ah
 	jz	2b
-	fstp	%st(1)		// x-1 : log10(2)
+	fxam
+	fnstsw
+	andb	$0x45, %ah
+	cmpb	$0x40, %ah
+	jne	6f
+	fabs			// log10(1) is +0 in all rounding modes.
+6:	fstp	%st(1)		// x-1 : log10(2)
 	fyl2xp1			// log10(x)
 	ret
 END(__log10l_finite)

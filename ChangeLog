@@ -1,5 +1,15 @@
 2015-11-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19213]
+	* sysdeps/i386/fpu/e_log.S (__log_finite): Ensure +0 is always
+	returned for argument 1.
+	* sysdeps/i386/fpu/e_logf.S (__logf_finite): Likewise.
+	* sysdeps/i386/fpu/e_logl.S (__logl_finite): Likewise.
+	* sysdeps/i386/i686/fpu/e_logl.S (__logl_finite): Likewise.
+	* sysdeps/x86_64/fpu/e_log10l.S (__log10l_finite): Likewise.
+	* sysdeps/x86_64/fpu/e_log2l.S (__log2l_finite): Likewise.
+	* sysdeps/x86_64/fpu/e_logl.S (__logl_finite): Likewise.
+
 	[BZ #19211]
 	* math/bits/math-finite.h (lgamma): Set signgam if [__USE_MISC ||
 	__USE_XOPEN], not if [!__USE_ISOC99].
