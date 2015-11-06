@@ -1208,18 +1208,6 @@ if test $libc_cv_cc_with_libunwind = yes; then
   AC_DEFINE(HAVE_CC_WITH_LIBUNWIND)
 fi
 
-LIBC_LINKER_FEATURE([-z nodelete], [-Wl,--enable-new-dtags,-z,nodelete],
-		    [libc_cv_z_nodelete=yes],
-		    [AC_MSG_ERROR(linker with -z nodelete support required)])
-
-LIBC_LINKER_FEATURE([-z nodlopen], [-Wl,--enable-new-dtags,-z,nodlopen],
-		    [libc_cv_z_nodlopen=yes],
-		    [AC_MSG_ERROR(linker with -z nodlopen support required)])
-
-LIBC_LINKER_FEATURE([-z initfirst], [-Wl,--enable-new-dtags,-z,initfirst],
-		    [libc_cv_z_initfirst=yes],
-		    [AC_MSG_ERROR(linker with -z initfirst support required)])
-
 ASFLAGS_config=
 AC_CACHE_CHECK(whether --noexecstack is desirable for .S files,
 	       libc_cv_as_noexecstack, [dnl

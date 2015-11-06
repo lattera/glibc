@@ -1,3 +1,10 @@
+2015-11-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (libc_cv_z_nodelete): Remove configure test.
+	(libc_cv_z_nodlopen): Likewise.
+	(libc_cv_z_initfirst): Likewise.
+	* configure: Regenerated.
+
 2015-11-06  Florian Weimer  <fweimer@redhat.com>
 
 	Simplify abilist format to be line-based.
