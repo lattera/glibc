@@ -1,3 +1,63 @@
+2015-11-06  Mark Wielaard  <mjw@redhat.com>
+
+	[BZ #11460]
+	* io/Makefile (routines): Add fts64.
+	(tests): Add tst-fts and tst-fts-lfs.
+	(CFLAGS-fts64.c): New.
+	* io/Versions (GLIBC_2.23): New.
+	* io/fts.c: Replace FTS with FTSOBJ, FTSENT with FTSENTRY. Use
+	function defines FTS_OPEN, FTS_CLOSE, FTS_READ, FTS_SET and
+	FTS_CHILDREN. Define FTSOBJ, FTSENTRY, FTS_OPEN, FTS_CLOSE,
+	FTS_READ, FTS_SET, FTS_CHILDREN, INO_T, STAT and LSTAT if necessary.
+	* io/fts.h (FTS64): New if _USE_LARGEFILE64.
+	(FTSENT64): Likewise.
+	(fts64_children): Likewise.
+	(fts64_close): Likewise.
+	(fts64_open): Likewise.
+	(fts64_read): Likewise.
+	(fts64_set): Likewise.
+	* io/fts64.c: New file.
+	* io/tst-fts.c: New test.
+	* io/tst-fts-lfs.c: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist (GLIBC_2.23): Add
+	GLIBC_2.23, fts64_children, fts64_close, fts64_open, fts64_read and
+	fts64_set.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise.
+	* sysdeps/wordsize-64/fts.c: New file.
+	* sysdeps/wordsize-64/fts64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/fts.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/fts64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/fts.c: likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/fts64.c: likewise.
+
 2015-11-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (NON_FINITE): New macro.

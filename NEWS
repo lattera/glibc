@@ -7,6 +7,10 @@ using `glibc' in the "product" field.
 
 Version 2.23
 
+* The fts.h header can now be used with -D_FILE_OFFSET_BITS=64.  With LFS
+  the following new symbols are used: fts64_children, fts64_close,
+  fts64_open, fts64_read and fts64_set.
+
 * A defect in the malloc implementation, present since glibc 2.15 (2012) or
   glibc 2.10 via --enable-experimental-malloc (2009), could result in the
   unnecessary serialization of memory allocation requests across threads.

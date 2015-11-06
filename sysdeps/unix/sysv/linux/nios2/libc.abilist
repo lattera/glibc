@@ -2124,3 +2124,10 @@ GLIBC_2.21
 GLIBC_2.22
  GLIBC_2.22 A
  fmemopen F
+GLIBC_2.23
+ GLIBC_2.23 A
+ fts64_children F
+ fts64_close F
+ fts64_open F
+ fts64_read F
+ fts64_set F

@@ -122,4 +122,7 @@ libc {
   GLIBC_2.9 {
     dup3; pipe2;
   }
+  GLIBC_2.23 {
+    fts64_children; fts64_close; fts64_open; fts64_read; fts64_set;
+  }
 }

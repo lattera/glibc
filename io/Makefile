@@ -49,7 +49,7 @@ routines :=								\
 	ttyname ttyname_r isatty					\
 	link linkat symlink symlinkat readlink readlinkat		\
 	unlink unlinkat rmdir						\
-	ftw ftw64 fts poll ppoll					\
+	ftw ftw64 fts fts64 poll ppoll					\
 	posix_fadvise posix_fadvise64					\
 	posix_fallocate posix_fallocate64				\
 	sendfile sendfile64 \
@@ -71,7 +71,7 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-renameat tst-fchownat tst-fchmodat tst-faccessat \
 		   tst-symlinkat tst-linkat tst-readlinkat tst-mkdirat \
 		   tst-mknodat tst-mkfifoat tst-ttyname_r bug-ftw5 \
-		   tst-posix_fallocate
+		   tst-posix_fallocate tst-fts tst-fts-lfs
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)ftwtest.out
@@ -90,6 +90,7 @@ CFLAGS-fstatfs.c = -fexceptions
 CFLAGS-statvfs.c = -fexceptions
 CFLAGS-fstatvfs.c = -fexceptions
 CFLAGS-fts.c = -Wno-uninitialized $(uses-callbacks) -fexceptions
+CFLAGS-fts64.c = -Wno-uninitialized $(uses-callbacks) -fexceptions
 CFLAGS-ftw.c = $(uses-callbacks) -fexceptions
 CFLAGS-ftw64.c = $(uses-callbacks) -fexceptions
 CFLAGS-lockf.c = -fexceptions

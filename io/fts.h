@@ -1,3 +1,21 @@
+/* File tree traversal functions declarations.
+   Copyright (C) 1994-2015 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 /*
  * Copyright (c) 1989, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -35,12 +53,6 @@
 #include <features.h>
 #include <sys/types.h>
 
-/* The fts interface is incompatible with the LFS interface which
-   transparently uses the 64-bit file access functions.  */
-#ifdef __USE_FILE_OFFSET64
-# error "<fts.h> cannot be used with -D_FILE_OFFSET_BITS==64"
-#endif
-
 
 typedef struct {
 	struct _ftsent *fts_cur;	/* current node */
@@ -67,6 +79,21 @@ typedef struct {
 #define	FTS_STOP	0x0200		/* (private) unrecoverable error */
 	int fts_options;		/* fts_open options, global flags */
 } FTS;
+
+#ifdef __USE_LARGEFILE64
+typedef struct {
+	struct _ftsent64 *fts_cur;	/* current node */
+	struct _ftsent64 *fts_child;	/* linked list of children */
+	struct _ftsent64 **fts_array;	/* sort array */
+	dev_t fts_dev;			/* starting device # */
+	char *fts_path;			/* path for this descent */
+	int fts_rfd;			/* fd for root */
+	int fts_pathlen;		/* sizeof(path) */
+	int fts_nitems;			/* elements in the sort array */
+	int (*fts_compar) (const void *, const void *); /* compare fn */
+	int fts_options;		/* fts_open options, global flags */
+} FTS64;
+#endif
 
 typedef struct _ftsent {
 	struct _ftsent *fts_cycle;	/* cycle node */
@@ -119,13 +146,70 @@ typedef struct _ftsent {
 	char fts_name[1];		/* file name */
 } FTSENT;
 
+#ifdef __USE_LARGEFILE64
+typedef struct _ftsent64 {
+	struct _ftsent64 *fts_cycle;	/* cycle node */
+	struct _ftsent64 *fts_parent;	/* parent directory */
+	struct _ftsent64 *fts_link;	/* next file in directory */
+	long fts_number;	        /* local numeric value */
+	void *fts_pointer;	        /* local address value */
+	char *fts_accpath;		/* access path */
+	char *fts_path;			/* root path */
+	int fts_errno;			/* errno for this node */
+	int fts_symfd;			/* fd for symlink */
+	u_short fts_pathlen;		/* strlen(fts_path) */
+	u_short fts_namelen;		/* strlen(fts_name) */
+
+	ino64_t fts_ino;		/* inode */
+	dev_t fts_dev;			/* device */
+	nlink_t fts_nlink;		/* link count */
+
+	short fts_level;		/* depth (-1 to N) */
+
+	u_short fts_info;		/* user flags for FTSENT structure */
+
+	u_short fts_flags;		/* private flags for FTSENT structure */
+
+	u_short fts_instr;		/* fts_set() instructions */
+
+	struct stat64 *fts_statp;	/* stat(2) information */
+	char fts_name[1];		/* file name */
+} FTSENT64;
+#endif
+
 __BEGIN_DECLS
+#ifndef __USE_FILE_OFFSET64
 FTSENT	*fts_children (FTS *, int);
 int	 fts_close (FTS *);
 FTS	*fts_open (char * const *, int,
 		   int (*)(const FTSENT **, const FTSENT **));
 FTSENT	*fts_read (FTS *);
 int	 fts_set (FTS *, FTSENT *, int) __THROW;
+#else
+# ifdef __REDIRECT
+FTSENT	*__REDIRECT (fts_children, (FTS *, int), fts64_children);
+int	 __REDIRECT (fts_close, (FTS *), fts64_close);
+FTS	*__REDIRECT (fts_open, (char * const *, int,
+				int (*)(const FTSENT **, const FTSENT **)),
+		     fts64_open);
+FTSENT	*__REDIRECT (fts_read, (FTS *), fts64_read);
+int	 __REDIRECT (fts_set, (FTS *, FTSENT *, int), fts64_set) __THROW;
+# else
+#  define fts_children fts64_children
+#  define fts_close fts64_close
+#  define fts_open fts64_open
+#  define fts_read fts64_read
+#  define fts_set fts64_set
+# endif
+#endif
+#ifdef __USE_LARGEFILE64
+FTSENT64 *fts64_children (FTS64 *, int);
+int	  fts64_close (FTS64 *);
+FTS64	 *fts64_open (char * const *, int,
+		      int (*)(const FTSENT64 **, const FTSENT64 **));
+FTSENT64 *fts64_read (FTS64 *);
+int	 fts64_set (FTS64 *, FTSENT64 *, int) __THROW;
+#endif
 __END_DECLS
 
 #endif /* fts.h */
