@@ -37,10 +37,10 @@
       signgam = 123;						\
       c = FUNC (b);						\
       if (signgam == -1)					\
-	puts ("PASS: " #FUNC " (0.5) setting signgam");		\
+	puts ("PASS: " #FUNC " (-0.5) setting signgam");	\
       else							\
 	{							\
-	  puts ("FAIL: " #FUNC " (0.5) setting signgam");	\
+	  puts ("FAIL: " #FUNC " (-0.5) setting signgam");	\
 	  result = 1;						\
 	}							\
     }								\

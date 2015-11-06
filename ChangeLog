@@ -1,5 +1,9 @@
 2015-11-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/test-signgam-finite.c (RUN_TESTS): Correct messages about
+	calls with argument -0.5.
+	* math/test-signgam-finite-c99.c (RUN_TESTS): Likewise.
+
 	* configure.ac (libc_cv_z_nodelete): Remove configure test.
 	(libc_cv_z_nodlopen): Likewise.
 	(libc_cv_z_initfirst): Likewise.
