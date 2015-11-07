@@ -1016,6 +1016,18 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 #ifdef SHARED
   if (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
     {
+/* ELF_RTYPE_CLASS_XXX must match RTYPE_CLASS_XXX used by prelink with
+   LD_TRACE_PRELINKING.  */
+#define RTYPE_CLASS_VALID	8
+#define RTYPE_CLASS_PLT		(8|1)
+#define RTYPE_CLASS_COPY	(8|2)
+#define RTYPE_CLASS_TLS		(8|4)
+#if ELF_RTYPE_CLASS_PLT != 0 && ELF_RTYPE_CLASS_PLT != 1
+# error ELF_RTYPE_CLASS_PLT must be 0 or 1!
+#endif
+#if ELF_RTYPE_CLASS_COPY != 0 && ELF_RTYPE_CLASS_COPY != 2
+# error ELF_RTYPE_CLASS_COPY must be 0 or 2!
+#endif
       int conflict = 0;
       struct sym_val val = { NULL, NULL };
 
@@ -1071,12 +1083,17 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 
       if (value->s)
 	{
+	  /* Keep only ELF_RTYPE_CLASS_PLT and ELF_RTYPE_CLASS_COPY
+	     bits since since prelink only uses them.  */
+	  type_class &= ELF_RTYPE_CLASS_PLT | ELF_RTYPE_CLASS_COPY;
 	  if (__glibc_unlikely (ELFW(ST_TYPE) (value->s->st_info)
 				== STT_TLS))
-	    type_class = 4;
+	    /* Clear the RTYPE_CLASS_VALID bit in RTYPE_CLASS_TLS.  */
+	    type_class = RTYPE_CLASS_TLS & ~RTYPE_CLASS_VALID;
 	  else if (__glibc_unlikely (ELFW(ST_TYPE) (value->s->st_info)
 				     == STT_GNU_IFUNC))
-	    type_class |= 8;
+	    /* Set the RTYPE_CLASS_VALID bit.  */
+	    type_class |= RTYPE_CLASS_VALID;
 	}
 
       if (conflict

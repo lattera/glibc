@@ -1,3 +1,15 @@
+2015-11-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19178]
+	* elf/dl-lookup.c (RTYPE_CLASS_VALID): New.
+	(RTYPE_CLASS_PLT): Likewise.
+	(RTYPE_CLASS_COPY): Likewise.
+	(RTYPE_CLASS_TLS): Likewise.
+	(_dl_debug_bindings): Use RTYPE_CLASS_TLS and RTYPE_CLASS_VALID
+	to set relocation type class for DL_DEBUG_PRELINK.  Keep only
+	ELF_RTYPE_CLASS_PLT and ELF_RTYPE_CLASS_COPY bits for
+	DL_DEBUG_PRELINK.
+
 2015-11-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/test-signgam-finite.c (RUN_TESTS): Correct messages about
