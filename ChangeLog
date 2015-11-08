@@ -1,3 +1,9 @@
+2015-11-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #16364]
+	* sysdeps/unix/sysv/linux/sleep.c: Remove file.
+	* sysdeps/posix/sleep.c (__sleep): Simplify cancellation handling.
+
 2015-11-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/bits/mathinline.h:

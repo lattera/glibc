@@ -32,15 +32,6 @@
 unsigned int
 __sleep (unsigned int seconds)
 {
-  /* This is not necessary but some buggy programs depend on it.  */
-  if (__glibc_unlikely (seconds == 0))
-    {
-#ifdef CANCELLATION_P
-      CANCELLATION_P (THREAD_SELF);
-#endif
-      return 0;
-    }
-
   int save_errno = errno;
 
   const unsigned int max
