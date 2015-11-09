@@ -1,5 +1,18 @@
 2015-11-09  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/longjmp.c (longjmp, _longjmp, siglongjmp):
+	Don't create weak aliases,
+	because versioned symbols are created later.
+	* sysdeps/s390/s390-32/setjmp.S
+	(setjmp, _setjmp): Remove weak and rename to an unique name
+	in SHARED case due to existing versioned symbols.
+	* sysdeps/s390/s390-64/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S
+	(getcontext): Create weak alias only in non SHARED case.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext.S: Likewise.
+
+2015-11-09  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/unix/sysv/linux/s390/kernel-features.h:
 	(__ASSUME_*_SYSCALL) Define new macros.
 	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list:

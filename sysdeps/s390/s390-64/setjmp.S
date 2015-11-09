@@ -27,29 +27,31 @@
 #if !IS_IN (rtld)
 # if defined SHARED &&  SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
 	/* we need a unique name in case of symbol versioning.  */
+#  define setjmp __v1setjmp
+#  define _setjmp __v1_setjmp
 #  define __sigsetjmp __v1__sigsetjmp
+
+#  undef libc_hidden_def
+#  define libc_hidden_def(name) strong_alias(_setjmp, __GI__setjmp)
 # endif /* if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)  */
 #endif /* !IS_IN (rtld)  */
 
-	/* We include the BSD entry points here as well but we make
-	   them weak.  */
+	/* We include the BSD entry points here as well.  */
 ENTRY (setjmp)
-	.weak C_SYMBOL_NAME (setjmp)
-        lghi   %r3,1                /* Second argument of one.  */
-        j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
+	lghi   %r3,1                /* Second argument of one.  */
+	j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
 END (setjmp)
 
 	/* Binary compatibility entry point.  */
 ENTRY(_setjmp)
-        .weak  C_SYMBOL_NAME (_setjmp)
-        slgr   %r3,%r3              /* Second argument of zero.  */
-        j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
+	slgr   %r3,%r3              /* Second argument of zero.  */
+	j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
 END (_setjmp)
 libc_hidden_def (_setjmp)
 
 ENTRY(__setjmp)
-        slgr   %r3,%r3              /* Second argument of zero.  */
-        j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
+	slgr   %r3,%r3              /* Second argument of zero.  */
+	j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
 END (__setjmp)
 
 ENTRY(__sigsetjmp)
@@ -65,7 +67,7 @@ ENTRY(__sigsetjmp)
 	PTR_MANGLE2 (%r5, %r1)
 	stmg   %r4,%r5,64(%r2)
 #else
-        stmg   %r6,%r15,0(%r2)      /* Store registers in jmp_buf.  */
+	stmg   %r6,%r15,0(%r2)      /* Store registers in jmp_buf.  */
 #endif
 	std    %f8,80(%r2)
 	std    %f9,88(%r2)
@@ -80,7 +82,7 @@ ENTRY(__sigsetjmp)
 	lghi   %r2,0
 	br     %r14
 #elif defined PIC
-        jg     __sigjmp_save@PLT    /* Branch to PLT of __sigsetjmp.  */
+	jg     __sigjmp_save@PLT    /* Branch to PLT of __sigsetjmp.  */
 #else
 	jg     __sigjmp_save
 #endif
@@ -91,15 +93,15 @@ END (__sigsetjmp)
 /* In glibc release 2.19 new versions of setjmp-functions were introduced,
    but were reverted before 2.20. Thus both versions are the same function.  */
 
+#  undef setjmp
+#  undef _setjmp
 #  undef __sigsetjmp
 
-weak_alias (setjmp, __v1setjmp);
-weak_alias (setjmp, __v2setjmp);
+strong_alias (__v1setjmp, __v2setjmp);
 versioned_symbol (libc, __v1setjmp, setjmp, GLIBC_2_0);
 compat_symbol (libc, __v2setjmp, setjmp, GLIBC_2_19);
 
-weak_alias (_setjmp, __v1_setjmp);
-weak_alias (_setjmp, __v2_setjmp);
+strong_alias (__v1_setjmp, __v2_setjmp);
 versioned_symbol (libc, __v1_setjmp, _setjmp, GLIBC_2_0);
 compat_symbol (libc, __v2_setjmp, _setjmp, GLIBC_2_19);
 

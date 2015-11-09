@@ -20,11 +20,21 @@
 
 #include <shlib-compat.h>
 
+#if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
+/* We don't want the weak alias to longjmp, _longjmp, siglongjmp here,
+   because we create the default/versioned symbols later.  */
+# define __libc_siglongjmp __libc_siglongjmp
+#endif /* SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)  */
+
 #include <setjmp/longjmp.c>
 
 #if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
 /* In glibc release 2.19 new versions of longjmp-functions were introduced,
    but were reverted before 2.20. Thus both versions are the same function.  */
+
+strong_alias (__libc_siglongjmp, __libc_longjmp)
+libc_hidden_def (__libc_longjmp)
+
 weak_alias (__libc_siglongjmp, __v1_longjmp)
 weak_alias (__libc_siglongjmp, __v2_longjmp)
 versioned_symbol (libc, __v1_longjmp, _longjmp, GLIBC_2_0);
