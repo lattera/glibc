@@ -29,6 +29,8 @@ __libc_accept (int fd, __SOCKADDR_ARG addr, socklen_t *len)
 {
 #ifdef __ASSUME_ACCEPT_SYSCALL
   return SYSCALL_CANCEL (accept, fd, addr.__sockaddr__, len);
+#elif defined __ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL
+  return SYSCALL_CANCEL (accept4, fd, addr.__sockaddr__, len, 0);
 #else
   return SOCKETCALL_CANCEL (accept, fd, addr.__sockaddr__, len);
 #endif

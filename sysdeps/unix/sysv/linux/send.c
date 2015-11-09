@@ -29,6 +29,8 @@ __libc_send (int fd, const void *buf, size_t len, int flags)
 {
 #ifdef __ASSUME_SEND_SYSCALL
   return SYSCALL_CANCEL (send, fd, buf, len, flags);
+#elif defined __ASSUME_SENDTO_FOR_SEND_SYSCALL
+  return SYSCALL_CANCEL (sendto, fd, buf, len, flags, NULL, 0);
 #else
   return SOCKETCALL_CANCEL (send, fd, buf, len, flags);
 #endif

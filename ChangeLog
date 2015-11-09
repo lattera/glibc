@@ -1,3 +1,16 @@
+2015-11-09  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/kernel-features.h:
+	(__ASSUME_*_SYSCALL) Define new macros.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list:
+	Remove socketcall syscalls.
+	* sysdeps/unix/sysv/linux/accept.c (__libc_accept):
+	Use accept4 if defined __ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL.
+	* sysdeps/unix/sysv/linux/recv.c (__libc_recv):
+	Use recvfrom if defined __ASSUME_RECVFROM_FOR_RECV_SYSCALL.
+	* sysdeps/unix/sysv/linux/send.c (__libc_send):
+	Use sendto if defined __ASSUME_SENDTO_FOR_SEND_SYSCALL.
+
 2015-11-09  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #12926]
