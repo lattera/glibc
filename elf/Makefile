@@ -149,7 +149,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-nodelete) \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
 	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
-	 tst-nodelete2
+	 tst-nodelete2 tst-audit11 tst-audit12
 #	 reldep9
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
@@ -219,7 +219,9 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-initorder2d \
 		tst-relsort1mod1 tst-relsort1mod2 tst-array2dep \
 		tst-array5dep tst-null-argv-lib \
-		tst-tlsalign-lib tst-nodelete-opened-lib tst-nodelete2mod
+		tst-tlsalign-lib tst-nodelete-opened-lib tst-nodelete2mod \
+		tst-audit11mod1 tst-audit11mod2 tst-auditmod11 \
+		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12
 ifeq (yes,$(have-protected-data))
 modules-names += tst-protected1moda tst-protected1modb
 tests += tst-protected1a tst-protected1b
@@ -1220,3 +1222,15 @@ $(objpfx)tst-unused-dep.out: $(objpfx)testobj1.so
 $(objpfx)tst-unused-dep-cmp.out: $(objpfx)tst-unused-dep.out
 	cmp $< /dev/null > $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-audit11.out: $(objpfx)tst-auditmod11.so $(objpfx)tst-audit11mod1.so
+$(objpfx)tst-audit11: $(libdl)
+tst-audit11-ENV = LD_AUDIT=$(objpfx)tst-auditmod11.so
+$(objpfx)tst-audit11mod1.so: $(objpfx)tst-audit11mod2.so
+LDFLAGS-tst-audit11mod2.so = -Wl,--version-script=tst-audit11mod2.map,-soname,tst-audit11mod2.so
+
+$(objpfx)tst-audit12.out: $(objpfx)tst-auditmod12.so $(objpfx)tst-audit12mod1.so $(objpfx)tst-audit12mod3.so
+$(objpfx)tst-audit12: $(libdl)
+tst-audit12-ENV = LD_AUDIT=$(objpfx)tst-auditmod12.so
+$(objpfx)tst-audit12mod1.so: $(objpfx)tst-audit12mod2.so
+LDFLAGS-tst-audit12mod2.so = -Wl,--version-script=tst-audit12mod2.map

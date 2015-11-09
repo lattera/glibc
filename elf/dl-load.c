@@ -863,9 +863,10 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
 static
 #endif
 struct link_map *
-_dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
-			char *realname, struct link_map *loader, int l_type,
-			int mode, void **stack_endp, Lmid_t nsid)
+_dl_map_object_from_fd (const char *name, const char *origname, int fd,
+			struct filebuf *fbp, char *realname,
+			struct link_map *loader, int l_type, int mode,
+			void **stack_endp, Lmid_t nsid)
 {
   struct link_map *l = NULL;
   const ElfW(Ehdr) *header;
@@ -1391,6 +1392,17 @@ cannot enable executable stack as shared object requires");
   /* Finally the file information.  */
   l->l_file_id = id;
 
+#ifdef SHARED
+  /* When auditing is used the recorded names might not include the
+     name by which the DSO is actually known.  Add that as well.  */
+  if (__glibc_unlikely (origname != NULL))
+    add_name_to_object (l, origname);
+#else
+  /* Audit modules only exist when linking is dynamic so ORIGNAME
+     cannot be non-NULL.  */
+  assert (origname == NULL);
+#endif
+
   /* When we profile the SONAME might be needed for something else but
      loading.  Add it right away.  */
   if (__glibc_unlikely (GLRO(dl_profile) != NULL)
@@ -1904,6 +1916,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 		int type, int trace_mode, int mode, Lmid_t nsid)
 {
   int fd;
+  const char *origname = NULL;
   char *realname;
   char *name_copy;
   struct link_map *l;
@@ -1961,6 +1974,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	{
 	  if (afct->objsearch != NULL)
 	    {
+	      const char *before = name;
 	      name = afct->objsearch (name, &loader->l_audit[cnt].cookie,
 				      LA_SER_ORIG);
 	      if (name == NULL)
@@ -1968,6 +1982,15 @@ _dl_map_object (struct link_map *loader, const char *name,
 		  /* Do not try anything further.  */
 		  fd = -1;
 		  goto no_file;
+		}
+	      if (before != name && strcmp (before, name) != 0)
+		{
+		  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_FILES))
+		    _dl_debug_printf ("audit changed filename %s -> %s\n",
+				      before, name);
+
+		  if (origname == NULL)
+		    origname = before;
 		}
 	    }
 
@@ -2183,8 +2206,8 @@ _dl_map_object (struct link_map *loader, const char *name,
     }
 
   void *stack_end = __libc_stack_end;
-  return _dl_map_object_from_fd (name, fd, &fb, realname, loader, type, mode,
-				 &stack_end, nsid);
+  return _dl_map_object_from_fd (name, origname, fd, &fb, realname, loader,
+				 type, mode, &stack_end, nsid);
 }
 
 struct add_path_state

@@ -1,3 +1,27 @@
+2015-11-09  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Add additional parameter
+	for original name of the DSO.  Add it to the name list of the DSO
+	if it is actually given.
+	(_dl_map_object): Keep track of whether an audit module rewrote
+	the file name.  If yes, pass the original name to
+	_dl_map_object_from_fd in a new parameter, otherwise NULL.  When
+	debugging is enabled, log the change of the file name.
+	* sysdeps/mach/hur/dl-sysdep.c: Adjust commented-out call to
+	_dl_map_object_from_fd.
+	* elf/Makefile: Build and run tst-audit11 and tst-audit12.
+	* elf/tst-audit11.c: New file
+	* elf/tst-auditmod11.c: New file.
+	* elf/tst-audit11mod1.c: New file.
+	* elf/tst-audit11mod2.c: New file.
+	* elf/tst-audit11mod2.map: New file.
+	* elf/tst-audit12.c: New file
+	* elf/tst-auditmod12.c: New file.
+	* elf/tst-audit12mod1.c: New file.
+	* elf/tst-audit12mod2.c: New file.
+	* elf/tst-audit12mod2.map: New file.
+	* elf/tst-audit12mod3.c: New file.
+
 2015-11-09  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/longjmp.c (longjmp, _longjmp, siglongjmp):

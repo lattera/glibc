@@ -186,7 +186,7 @@ unfmh();			/* XXX */
 	    assert_perror (err);
 
 	    lastslash = strrchr (p, '/');
-	    l = _dl_map_object_from_fd (lastslash ? lastslash + 1 : p,
+	    l = _dl_map_object_from_fd (lastslash ? lastslash + 1 : p, NULL,
 					memobj, strdup (p), 0);
 
 	    /* Squirrel away the memory object port where it
