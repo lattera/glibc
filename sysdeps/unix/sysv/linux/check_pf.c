@@ -36,6 +36,7 @@
 #include <atomic.h>
 #include <nscd/nscd-client.h>
 
+#include "netlinkaccess.h"
 
 #ifndef IFA_F_HOMEADDRESS
 # define IFA_F_HOMEADDRESS 0
@@ -164,7 +165,8 @@ make_request (int fd, pid_t pid)
 	};
 
       ssize_t read_len = TEMP_FAILURE_RETRY (__recvmsg (fd, &msg, 0));
-      if (read_len <= 0)
+      __netlink_assert_response (fd, read_len);
+      if (read_len < 0)
 	goto out_fail;
 
       if (msg.msg_flags & MSG_TRUNC)

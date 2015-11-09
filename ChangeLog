@@ -1,3 +1,19 @@
+2015-11-09  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #12926]
+	Terminate process on invalid netlink response.
+	* sysdeps/unix/sysv/linux/netlinkaccess.h
+	(__netlink_assert_response): Declare.
+	* sysdeps/unix/sysv/linux/netlink_assert_response.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) == inet]
+	(sysdep_routines): Add netlink_assert_response.
+	* sysdeps/unix/sysv/linux/check_native.c (__check_native): Call
+	__netlink_assert_response.
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Likewise.
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_request): Likewise.
+	* sysdeps/unix/sysv/linux/Versions (GLIBC_PRIVATE): Add
+	__netlink_assert_response.
+
 2015-11-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19178]

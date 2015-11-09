@@ -35,6 +35,7 @@
 
 #include <not-cancel.h>
 
+#include "netlinkaccess.h"
 
 void
 __check_native (uint32_t a1_index, int *a1_native,
@@ -117,6 +118,7 @@ __check_native (uint32_t a1_index, int *a1_native,
 	};
 
       ssize_t read_len = TEMP_FAILURE_RETRY (__recvmsg (fd, &msg, 0));
+      __netlink_assert_response (fd, read_len);
       if (read_len < 0)
 	goto out_fail;
 

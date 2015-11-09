@@ -168,6 +168,7 @@ __netlink_request (struct netlink_handle *h, int type)
 	};
 
       read_len = TEMP_FAILURE_RETRY (__recvmsg (h->fd, &msg, 0));
+      __netlink_assert_response (h->fd, read_len);
       if (read_len < 0)
 	goto out_fail;
 

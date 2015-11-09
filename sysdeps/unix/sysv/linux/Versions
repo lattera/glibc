@@ -169,5 +169,7 @@ libc {
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;
+    # functions used by nscd
+    __netlink_assert_response;
   }
 }

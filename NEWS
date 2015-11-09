@@ -11,6 +11,14 @@ Version 2.23
   the following new symbols are used: fts64_children, fts64_close,
   fts64_open, fts64_read and fts64_set.
 
+* getaddrinfo now detects certain invalid responses on an internal netlink
+  socket.  If such responses are received, an affected process will
+  terminate with an error message of "Unexpected error <number> on netlink
+  descriptor <number>" or "Unexpected netlink response of size <number> on
+  descriptor <number>".  The most likely cause for these errors is a
+  multi-threaded application which erroneously closes and reuses the netlink
+  file descriptor while it is used by getaddrinfo.
+
 * A defect in the malloc implementation, present since glibc 2.15 (2012) or
   glibc 2.10 via --enable-experimental-malloc (2009), could result in the
   unnecessary serialization of memory allocation requests across threads.

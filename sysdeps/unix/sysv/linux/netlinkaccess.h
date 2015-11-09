@@ -19,6 +19,7 @@
 #define _NETLINKACCESS_H 1
 
 #include <stdint.h>
+#include <sys/types.h>
 #include <asm/types.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
@@ -48,5 +49,10 @@ extern void __netlink_close (struct netlink_handle *h);
 extern void __netlink_free_handle (struct netlink_handle *h);
 extern int __netlink_request (struct netlink_handle *h, int type);
 
+/* Terminate the process if RESULT is an invalid recvmsg result for
+   the netlink socket FD.  */
+void __netlink_assert_response (int fd, ssize_t result)
+  internal_function;
+libc_hidden_proto (__netlink_assert_response)
 
 #endif /* netlinkaccess.h */
