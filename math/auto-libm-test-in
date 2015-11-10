@@ -3254,6 +3254,7 @@ pow 0.0 max
 pow 0.0 min_subnorm
 
 # pow (-0, y) == +0 for y > 0 and not an odd integer.
+pow -0 0.5
 pow -0 4
 pow -0 0x1p24
 pow -0 0x1p127

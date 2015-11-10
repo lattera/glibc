@@ -1,3 +1,9 @@
+2015-11-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add another test of pow.
+	* math/auto-libm-test-out: Regenerated.
+	* math/libm-test.inc (pow_test_data): Add another test.
+
 2015-11-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #19219]

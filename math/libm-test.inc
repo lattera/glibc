@@ -10285,6 +10285,7 @@ static const struct test_ff_f_data pow_test_data[] =
 #endif
 
     /* pow (-inf, y) == +inf for y > 0 and not an odd integer.  */
+    TEST_ff_f (pow, minus_infty, 0.5, plus_infty, ERRNO_UNCHANGED),
     TEST_ff_f (pow, minus_infty, 28, plus_infty, ERRNO_UNCHANGED),
     TEST_ff_f (pow, minus_infty, 0x1p24, plus_infty, ERRNO_UNCHANGED),
     TEST_ff_f (pow, minus_infty, 0x1p127, plus_infty, ERRNO_UNCHANGED),
