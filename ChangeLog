@@ -1,3 +1,14 @@
+2015-11-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19178]
+	* sysdeps/x86/Makefile (tests): Add tst-prelink.
+	(tst-prelink-ENV): New.
+	($(objpfx)tst-prelink-conflict.out): Likewise.
+	($(objpfx)tst-prelink-cmp.out): Likewise.
+	(tests-special): Add $(objpfx)tst-prelink-cmp.out.
+	* sysdeps/x86/tst-prelink.c: New file.
+	* sysdeps/x86/tst-prelink.exp: Likewise.
+
 2015-11-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add another test of pow.
