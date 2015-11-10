@@ -1,4 +1,9 @@
-2015-11-10  Wilco Dijkstra  wdijkstr@arm.com
+2015-11-10  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/bits/string.h: New file.
+	(_STRING_ARCH_unaligned): Define.
+
+2015-11-10  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/localplt.data: Remove __signbit*.
 	* sysdeps/unix/sysv/linux/arm/localplt.data: Likewise.
