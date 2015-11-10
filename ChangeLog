@@ -1,3 +1,9 @@
+2015-12-29  Mike Frysinger  <vapier@gentoo.org>
+
+	* scripts/list-fixed-bugs.py: Import argparse.  Call main instead.
+	(get_parser): New function.
+	(main): New function.
+
 2015-12-29  Rob Wu  <rob@robwu.nl>
 
 	[BZ #19369]

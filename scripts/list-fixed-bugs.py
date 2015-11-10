@@ -23,10 +23,20 @@ bugs marked as FIXED with that milestone, to be added to the NEWS file
 just before release.  The output is in UTF-8.
 """
 
+import argparse
 import json
 import sys
 import textwrap
 import urllib.request
+
+
+def get_parser():
+    """Return an argument parser for this module."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('version',
+                        help='Release version to look up')
+    return parser
+
 
 def list_fixed_bugs(version):
     """List the bugs fixed in a given version."""
@@ -42,5 +52,13 @@ def list_fixed_bugs(version):
                              subsequent_indent='    ') + '\n'
         sys.stdout.buffer.write(desc.encode('utf-8'))
 
+
+def main(argv):
+    """The main entry point."""
+    parser = get_parser()
+    opts = parser.parse_args(argv)
+    list_fixed_bugs(opts.version)
+
+
 if __name__ == '__main__':
-    list_fixed_bugs(sys.argv[1])
+    main(sys.argv[1:])
