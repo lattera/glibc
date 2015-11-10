@@ -1,3 +1,7 @@
+2015-11-11  Mike Frysinger  <vapier@gentoo.org>
+
+	* scripts/pylintrc (reports): Set to no.
+
 2015-11-10  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/dl-load.c (open_verify): Take new argument FD.
