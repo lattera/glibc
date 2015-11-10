@@ -32,9 +32,6 @@ libc.so: free
 libc.so: malloc
 libc.so: memalign
 libc.so: realloc
-libm.so: __signbit
-libm.so: __signbitf
-libm.so: __signbitl
 libm.so: copysignl ?
 libm.so: fabsl
 libm.so: matherr

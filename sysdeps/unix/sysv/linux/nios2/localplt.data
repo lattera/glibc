@@ -13,7 +13,6 @@ libc.so: __fixsfsi
 libc.so: __subsf3
 libc.so: calloc
 libc.so: __muldf3
-libc.so: __signbit
 libc.so: free
 libc.so: __subdf3
 libc.so: __adddf3
@@ -22,8 +21,6 @@ libc.so: __floatsidf
 libc.so: __divsf3
 libc.so: __nedf2
 libc.so: __eqdf2
-libm.so: __signbitf
-libm.so: __signbit
 libm.so: matherr
 # The dynamic loader uses __libc_memalign internally to allocate aligned
 # TLS storage. The other malloc family of functions are expected to allow

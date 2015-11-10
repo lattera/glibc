@@ -1,3 +1,11 @@
+2015-11-10  Wilco Dijkstra  wdijkstr@arm.com
+
+	* sysdeps/unix/sysv/linux/aarch64/localplt.data: Remove __signbit*.
+	* sysdeps/unix/sysv/linux/arm/localplt.data: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/localplt.data: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/localplt.data: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/localplt.data: Likewise.
+
 2015-11-09  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Add additional parameter

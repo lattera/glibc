@@ -6,12 +6,7 @@ libc.so: free
 libc.so: malloc
 libc.so: memalign
 libc.so: realloc
-libc.so: __signbit
-libc.so: __signbitl
 libm.so: matherr
-libm.so: __signbit
-libm.so: __signbitf
-libm.so: __signbitl
 # The dynamic loader needs __tls_get_addr for TLS, and uses __libc_memalign
 # internally to allocate aligned TLS storage. The other malloc family of
 # functions are expected to allow user symbol interposition.
