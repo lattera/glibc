@@ -1,3 +1,16 @@
+2016-04-15  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
+	(sysdep_routines): Added __strlen_power8.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c: Added
+	__strlen_power8 entry.
+	* sysdeps/powerpc/powerpc64/multiarch/strlen-power8.S: New file.
+	Implementation for POWER8.
+	* sysdeps/powerpc/powerpc64/multiarch/strlen.c: Added IFUNC selector
+	for __strlen_power8.
+	* sysdeps/powerpc/powerpc64/power8/strlen.S: New file.
+	Implementation for POWER8.
+
 2016-04-15  Mike Frysinger  <vapier@gentoo.org>
 
 	* locale/iso-4217.def: Add SSP and change ZMK to ZMW.

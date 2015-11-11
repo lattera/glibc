@@ -29,11 +29,14 @@ extern __typeof (__redirect_strlen) __libc_strlen;
 
 extern __typeof (__redirect_strlen) __strlen_ppc attribute_hidden;
 extern __typeof (__redirect_strlen) __strlen_power7 attribute_hidden;
+extern __typeof (__redirect_strlen) __strlen_power8 attribute_hidden;
 
 libc_ifunc (__libc_strlen,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __strlen_power7
-            : __strlen_ppc);
+	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+	    ? __strlen_power8 :
+	      (hwcap & PPC_FEATURE_HAS_VSX)
+	      ? __strlen_power7
+	      : __strlen_ppc);
 
 #undef strlen
 strong_alias (__libc_strlen, strlen)
