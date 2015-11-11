@@ -1,3 +1,16 @@
+2015-11-10  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-load.c (open_verify): Take new argument FD.
+	Skip __open call if passed FD is not -1.
+	(_dl_map_object, open_path): Update callers.
+	* elf/dl-sysdep-open.h: New file.
+	* elf/dl-load.c: Include it.
+	(_dl_map_object): Try _dl_sysdep_open_object before ldconfig cache.
+	* sysdeps/nacl/dl-sysdep.c (_dl_sysdep_open_object): New function.
+	* sysdeps/nacl/dl-sysdep-open.h: New file.
+	* sysdeps/nacl/nacl-interface-list.h: Move nacl_irt_resource_open
+	from libc to rtld.
+
 2015-11-10  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19228]

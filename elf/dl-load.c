@@ -43,6 +43,7 @@
 #include <dl-map-segments.h>
 #include <dl-unmap-segments.h>
 #include <dl-machine-reject-phdr.h>
+#include <dl-sysdep-open.h>
 
 
 #include <endian.h>
@@ -1483,9 +1484,13 @@ print_search_path (struct r_search_path_elem **list,
    ignore only ELF files for other architectures.  Non-ELF files and
    ELF files with different header information cause fatal errors since
    this could mean there is something wrong in the installation and the
-   user might want to know about this.  */
+   user might want to know about this.
+
+   If FD is not -1, then the file is already open and FD refers to it.
+   In that case, FD is consumed for both successful and error returns.  */
 static int
-open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
+open_verify (const char *name, int fd,
+             struct filebuf *fbp, struct link_map *loader,
 	     int whatcode, int mode, bool *found_other_class, bool free_name)
 {
   /* This is the expected ELF header.  */
@@ -1526,6 +1531,7 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
   if (__glibc_unlikely (GLRO(dl_naudit) > 0) && whatcode != 0
       && loader->l_auditing == 0)
     {
+      const char *original_name = name;
       struct audit_ifaces *afct = GLRO(dl_audit);
       for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
 	{
@@ -1540,11 +1546,21 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 
 	  afct = afct->next;
 	}
+
+      if (fd != -1 && name != original_name && strcmp (name, original_name))
+        {
+          /* An audit library changed what we're supposed to open,
+             so FD no longer matches it.  */
+          __close (fd);
+          fd = -1;
+        }
     }
 #endif
 
-  /* Open the file.  We always open files read-only.  */
-  int fd = __open (name, O_RDONLY | O_CLOEXEC);
+  if (fd == -1)
+    /* Open the file.  We always open files read-only.  */
+    fd = __open (name, O_RDONLY | O_CLOEXEC);
+
   if (fd != -1)
     {
       ElfW(Ehdr) *ehdr;
@@ -1813,7 +1829,7 @@ open_path (const char *name, size_t namelen, int mode,
 	  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))
 	    _dl_debug_printf ("  trying file=%s\n", buf);
 
-	  fd = open_verify (buf, fbp, loader, whatcode, mode,
+	  fd = open_verify (buf, -1, fbp, loader, whatcode, mode,
 			    found_other_class, false);
 	  if (this_dir->status[cnt] == unknown)
 	    {
@@ -2064,6 +2080,20 @@ _dl_map_object (struct link_map *loader, const char *name,
 			&loader->l_runpath_dirs, &realname, &fb, loader,
 			LA_SER_RUNPATH, &found_other_class);
 
+      if (fd == -1)
+        {
+          realname = _dl_sysdep_open_object (name, namelen, &fd);
+          if (realname != NULL)
+            {
+              fd = open_verify (realname, fd,
+                                &fb, loader ?: GL(dl_ns)[nsid]._ns_loaded,
+                                LA_SER_CONFIG, mode, &found_other_class,
+                                false);
+              if (fd == -1)
+                free (realname);
+            }
+        }
+
 #ifdef USE_LDCONFIG
       if (fd == -1
 	  && (__glibc_likely ((mode & __RTLD_SECURE) == 0)
@@ -2109,7 +2139,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 
 	      if (cached != NULL)
 		{
-		  fd = open_verify (cached,
+		  fd = open_verify (cached, -1,
 				    &fb, loader ?: GL(dl_ns)[nsid]._ns_loaded,
 				    LA_SER_CONFIG, mode, &found_other_class,
 				    false);
@@ -2144,7 +2174,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	fd = -1;
       else
 	{
-	  fd = open_verify (realname, &fb,
+	  fd = open_verify (realname, -1, &fb,
 			    loader ?: GL(dl_ns)[nsid]._ns_loaded, 0, mode,
 			    &found_other_class, true);
 	  if (__glibc_unlikely (fd == -1))
