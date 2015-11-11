@@ -109,7 +109,8 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-tgmath-int test-tgmath2 test-powl tst-CMPLX tst-CMPLX2 test-snan \
 	test-fenv-tls test-fenv-preserve test-fenv-return test-fenvinline \
 	test-nearbyint-except test-fenv-clear test-signgam-finite \
-	test-signgam-finite-c99 test-signgam-finite-c11 $(tests-static)
+	test-signgam-finite-c99 test-signgam-finite-c11 \
+	test-nearbyint-except-2 $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.

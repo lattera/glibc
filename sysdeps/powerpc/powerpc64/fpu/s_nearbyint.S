@@ -40,19 +40,21 @@ EALIGN (__nearbyint, 4, 0)
 	fsub	fp12,fp13,fp13	/* generate 0.0 */
 	fcmpu	cr7,fp1,fp12	/* if (x > 0.0) */
 	ble	cr7, L(lessthanzero)
+	mffs	fp11
 	mtfsb0	4*cr7+lt	/* Disable FE_INEXACT exception */
 	fadd	fp1,fp1,fp13	/* x+= TWO52 */
 	fsub	fp1,fp1,fp13	/* x-= TWO52 */
 	fabs	fp1,fp1		/* if (x == 0.0) */
-	mtfsb0	4*cr1+eq	/* Clear any FE_INEXACT exception */
+	mtfsf	0xff,fp11	/* Restore FE_INEXACT state.  */
 	blr			/* x = 0.0; */
 L(lessthanzero):
 	bgelr	cr7		/* if (x < 0.0) */
+	mffs	fp11
 	mtfsb0	4*cr7+lt
 	fsub	fp1,fp1,fp13	/* x -= TWO52 */
 	fadd	fp1,fp1,fp13	/* x += TWO52 */
 	fnabs	fp1,fp1		/* if (x == 0.0) */
-	mtfsb0	4*cr1+eq
+	mtfsf	0xff,fp11	/* Restore FE_INEXACT state.  */
 	blr			/* x = -0.0; */
 END (__nearbyint)
 
