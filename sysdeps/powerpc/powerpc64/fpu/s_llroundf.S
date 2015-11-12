@@ -23,6 +23,8 @@
 	.tc FD_41600000_0[TC],0x4160000000000000
 .LC1:	/* 0.5 */
 	.tc FD_3fe00000_0[TC],0x3fe0000000000000
+.LC2:	/* 2^52 */
+	.tc FD_43300000_0[TC],0x4330000000000000
 	.section	".text"
 
 /* long long [r3] llroundf (float x [fp1])
@@ -47,6 +49,7 @@ ENTRY (__llroundf)
 	CALL_MCOUNT 0
 	lfd	fp9,.LC0@toc(2)	/* Load 2^23 into fpr9.  */
 	lfd	fp10,.LC1@toc(2)/* Load 0.5 into fpr10.  */
+	lfd	fp11,.LC2@toc(2)	/* Load 2^52 into fpr11.  */
 	fabs	fp2,fp1		/* Get the absolute value of x.  */
 	fsub	fp12,fp10,fp10	/* Compute 0.0 into fp12.  */
 	fcmpu	cr6,fp2,fp10	/* if |x| < 0.5  */
@@ -54,6 +57,11 @@ ENTRY (__llroundf)
 	fcmpu	cr1,fp1,fp12	/* x is negative? x < 0.0  */
 	blt-	cr6,.Lretzero	/* 0.5 > x < -0.5 so just return 0.  */
 	bge-	cr7,.Lnobias	/* 2^23 > x < -2^23 just convert with no bias.  */
+	/* Test whether an integer to avoid spurious "inexact".  */
+	fadd	fp3,fp2,fp11
+	fsub	fp3,fp3,fp11
+	fcmpu	cr5,fp2,fp3
+	beq	cr5,.Lnobias
 	fadd	fp3,fp2,fp10	/* |x|+=0.5 bias to prepare to round.  */
 	bge	cr1,.Lconvert	/* x is positive so don't negate x.  */
 	fnabs	fp3,fp3		/* -(|x|+=0.5)  */

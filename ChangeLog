@@ -1,3 +1,12 @@
+2015-11-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19235]
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S (__llround): Do not
+	add 0.5 to integer arguments.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S (__llroundf):
+	Likewise.
+	(.LC2): New object.
+
 2015-11-11  Mike Frysinger  <vapier@gentoo.org>
 
 	* scripts/pylintrc (reports): Set to no.
