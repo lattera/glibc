@@ -17,147 +17,23 @@
 
 #include <sysdep.h>
 #include <tls.h>
-#ifndef __ASSEMBLER__
-# include <nptl/pthreadP.h>
-#endif
+#include <nptl/pthreadP.h>
 
 #if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
 
-/* ??? Assumes that nothing comes between PSEUDO and PSEUDO_END
-   besides "ret".  */
-
-# undef PSEUDO
-# define PSEUDO(name, syscall_name, args)			\
-	.globl	__##syscall_name##_nocancel;			\
-	.type	__##syscall_name##_nocancel, @function;		\
-	.usepv	__##syscall_name##_nocancel, std;		\
-	.align 4;						\
-	cfi_startproc;						\
-__LABEL(__##syscall_name##_nocancel)				\
-	ldgp	gp, 0(pv);					\
-	PSEUDO_PROF;						\
-__LABEL($pseudo_nocancel)					\
-	PSEUDO_PREPARE_ARGS;					\
-	lda	v0, SYS_ify(syscall_name);			\
-	call_pal PAL_callsys;					\
-	bne	a3, SYSCALL_ERROR_LABEL;			\
-__LABEL($pseudo_ret)						\
-	.subsection 2;						\
-	.size __##syscall_name##_nocancel, .-__##syscall_name##_nocancel; \
-	.globl	name;						\
-	.type	name, @function;				\
-	.usepv	name, std;					\
-	.align 4;						\
-	cfi_startproc;						\
-__LABEL(name)							\
-	ldgp	gp, 0(pv);					\
-	PSEUDO_PROF;						\
-	SINGLE_THREAD_P(t0);					\
-	beq	t0, $pseudo_nocancel;				\
-	subq	sp, 64, sp;					\
-	cfi_def_cfa_offset(64);					\
-	stq	ra, 0(sp);					\
-	cfi_offset(ra, -64);					\
-	SAVE_ARGS_##args;					\
-	CENABLE;						\
-	LOAD_ARGS_##args;					\
-	/* Save the CENABLE return value in RA.  That register	\
-	   is preserved across syscall and the real return 	\
-	   address is saved on the stack.  */			\
-	mov	v0, ra;						\
-	lda	v0, SYS_ify(syscall_name);			\
-	call_pal PAL_callsys;					\
-	stq	v0, 8(sp);					\
-	mov	ra, a0;						\
-	bne	a3, $multi_error;				\
-	CDISABLE;						\
-	ldq	ra, 0(sp);					\
-	ldq	v0, 8(sp);					\
-	addq	sp, 64, sp;					\
-	cfi_remember_state;					\
-	cfi_restore(ra);					\
-	cfi_def_cfa_offset(0);					\
-	ret;							\
-	cfi_restore_state;					\
-__LABEL($multi_error)						\
-	CDISABLE;						\
-	ldq	ra, 0(sp);					\
-	ldq	v0, 8(sp);					\
-	addq	sp, 64, sp;					\
-	cfi_restore(ra);					\
-	cfi_def_cfa_offset(0);					\
-	SYSCALL_ERROR_FALLTHRU;					\
-	SYSCALL_ERROR_HANDLER;					\
-	cfi_endproc;						\
-	.previous
-
-# undef PSEUDO_END
-# define PSEUDO_END(sym)					\
-	cfi_endproc;						\
-	.subsection 2;						\
-	.size sym, .-sym
-
-# define SAVE_ARGS_0	/* Nothing.  */
-# define SAVE_ARGS_1	SAVE_ARGS_0; stq a0, 8(sp)
-# define SAVE_ARGS_2	SAVE_ARGS_1; stq a1, 16(sp)
-# define SAVE_ARGS_3	SAVE_ARGS_2; stq a2, 24(sp)
-# define SAVE_ARGS_4	SAVE_ARGS_3; stq a3, 32(sp)
-# define SAVE_ARGS_5	SAVE_ARGS_4; stq a4, 40(sp)
-# define SAVE_ARGS_6	SAVE_ARGS_5; stq a5, 48(sp)
-
-# define LOAD_ARGS_0	/* Nothing.  */
-# define LOAD_ARGS_1	LOAD_ARGS_0; ldq a0, 8(sp)
-# define LOAD_ARGS_2	LOAD_ARGS_1; ldq a1, 16(sp)
-# define LOAD_ARGS_3	LOAD_ARGS_2; ldq a2, 24(sp)
-# define LOAD_ARGS_4	LOAD_ARGS_3; ldq a3, 32(sp)
-# define LOAD_ARGS_5	LOAD_ARGS_4; ldq a4, 40(sp)
-# define LOAD_ARGS_6	LOAD_ARGS_5; ldq a5, 48(sp)
-
 # if IS_IN (libpthread)
-#  define __local_enable_asynccancel	__pthread_enable_asynccancel
-#  define __local_disable_asynccancel	__pthread_disable_asynccancel
 #  define __local_multiple_threads	__pthread_multiple_threads
 # elif IS_IN (libc)
-#  define __local_enable_asynccancel	__libc_enable_asynccancel
-#  define __local_disable_asynccancel	__libc_disable_asynccancel
 #  define __local_multiple_threads	__libc_multiple_threads
-# elif IS_IN (librt)
-#  define __local_enable_asynccancel	__librt_enable_asynccancel
-#  define __local_disable_asynccancel	__librt_disable_asynccancel
-# else
-#  error Unsupported library
-# endif
-
-# ifdef PIC
-#  define CENABLE	bsr ra, __local_enable_asynccancel !samegp
-#  define CDISABLE	bsr ra, __local_disable_asynccancel !samegp
-# else
-#  define CENABLE	jsr ra, __local_enable_asynccancel; ldgp ra, 0(gp)
-#  define CDISABLE	jsr ra, __local_disable_asynccancel; ldgp ra, 0(gp)
 # endif
 
 # if IS_IN (libpthread) || IS_IN (libc)
-#  ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
-#   define SINGLE_THREAD_P \
-	__builtin_expect (__local_multiple_threads == 0, 1)
-#  elif defined(PIC)
-#   define SINGLE_THREAD_P(reg)  ldl reg, __local_multiple_threads(gp) !gprel
-#  else
-#   define SINGLE_THREAD_P(reg)					\
-	ldah	reg, __local_multiple_threads(gp) !gprelhigh;	\
-	ldl	reg, __local_multiple_threads(reg) !gprellow
-#  endif
+#  define SINGLE_THREAD_P \
+  __glibc_likely (__local_multiple_threads == 0)
 # else
-#  ifndef __ASSEMBLER__
-#   define SINGLE_THREAD_P \
-	__builtin_expect (THREAD_GETMEM (THREAD_SELF, \
-				   header.multiple_threads) == 0, 1)
-#  else
-#   define SINGLE_THREAD_P(reg)					\
-	call_pal PAL_rduniq;					\
-	ldl reg, MULTIPLE_THREADS_OFFSET($0)
-#  endif
+#  define SINGLE_THREAD_P \
+  __glibc_likely (THREAD_GETMEM (THREAD_SELF, header.multiple_threads) == 0)
 # endif
 
 #else
@@ -167,8 +43,5 @@ extern int __local_multiple_threads attribute_hidden;
 
 #endif
 
-#ifndef __ASSEMBLER__
 # define RTLD_SINGLE_THREAD_P \
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
-				   header.multiple_threads) == 0, 1)
-#endif
+  __glibc_likely (THREAD_GETMEM (THREAD_SELF, header.multiple_threads) == 0)

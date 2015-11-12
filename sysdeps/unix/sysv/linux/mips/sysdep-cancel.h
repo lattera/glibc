@@ -18,173 +18,19 @@
 #include <sysdep.h>
 #include <sysdeps/generic/sysdep.h>
 #include <tls.h>
-#ifndef __ASSEMBLER__
-# include <nptl/pthreadP.h>
-#endif
+#include <nptl/pthreadP.h>
 
 #if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
 
-# ifdef __PIC__
-#  define PSEUDO_CPLOAD .cpload t9;
-#  define PSEUDO_ERRJMP la t9, __syscall_error; jr t9;
-#  define PSEUDO_SAVEGP sw gp, 32(sp); cfi_rel_offset (gp, 32);
-#  define PSEUDO_LOADGP lw gp, 32(sp);
-# else
-#  define PSEUDO_CPLOAD
-#  define PSEUDO_ERRJMP j __syscall_error;
-#  define PSEUDO_SAVEGP
-#  define PSEUDO_LOADGP
-# endif
+# define SINGLE_THREAD_P						\
+  __glibc_likely (THREAD_GETMEM (THREAD_SELF, header.multiple_threads) == 0)
 
-# undef PSEUDO
-# define PSEUDO(name, syscall_name, args)				      \
-      .align 2;								      \
-      .set nomips16;							      \
-  L(pseudo_start):							      \
-      cfi_startproc;							      \
-  99: PSEUDO_ERRJMP							      \
-  .type __##syscall_name##_nocancel, @function;				      \
-  .globl __##syscall_name##_nocancel;					      \
-  __##syscall_name##_nocancel:						      \
-    .set noreorder;							      \
-    PSEUDO_CPLOAD							      \
-    li v0, SYS_ify(syscall_name);					      \
-    syscall;								      \
-    .set reorder;							      \
-    bne a3, zero, 99b;					       		      \
-    ret;								      \
-    cfi_endproc;							      \
-  .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
-  ENTRY (name)								      \
-    .set noreorder;							      \
-    PSEUDO_CPLOAD							      \
-    .set reorder;							      \
-    SINGLE_THREAD_P(v1);						      \
-    bne zero, v1, L(pseudo_cancel);					      \
-    .set noreorder;							      \
-    li v0, SYS_ify(syscall_name);					      \
-    syscall;								      \
-    .set reorder;							      \
-    bne a3, zero, 99b;					       		      \
-    ret;								      \
-  L(pseudo_cancel):							      \
-    SAVESTK_##args;						              \
-    sw ra, 28(sp);							      \
-    cfi_rel_offset (ra, 28);						      \
-    PSEUDO_SAVEGP							      \
-    PUSHARGS_##args;			/* save syscall args */	      	      \
-    CENABLE;								      \
-    PSEUDO_LOADGP							      \
-    sw v0, 44(sp);			/* save mask */			      \
-    POPARGS_##args;			/* restore syscall args */	      \
-    .set noreorder;							      \
-    li v0, SYS_ify (syscall_name);				      	      \
-    syscall;								      \
-    .set reorder;							      \
-    sw v0, 36(sp);			/* save syscall result */             \
-    sw a3, 40(sp);			/* save syscall error flag */	      \
-    lw a0, 44(sp);			/* pass mask as arg1 */		      \
-    CDISABLE;								      \
-    PSEUDO_LOADGP							      \
-    lw v0, 36(sp);			/* restore syscall result */          \
-    lw a3, 40(sp);			/* restore syscall error flag */      \
-    lw ra, 28(sp);			/* restore return address */	      \
-    .set noreorder;							      \
-    bne a3, zero, 99b;							      \
-     RESTORESTK;						              \
-  L(pseudo_end):							      \
-    .set reorder;
-
-# undef PSEUDO_END
-# define PSEUDO_END(sym) cfi_endproc; .end sym; .size sym,.-sym
-
-# define PUSHARGS_0	/* nothing to do */
-# define PUSHARGS_1	PUSHARGS_0 sw a0, 0(sp); cfi_rel_offset (a0, 0);
-# define PUSHARGS_2	PUSHARGS_1 sw a1, 4(sp); cfi_rel_offset (a1, 4);
-# define PUSHARGS_3	PUSHARGS_2 sw a2, 8(sp); cfi_rel_offset (a2, 8);
-# define PUSHARGS_4	PUSHARGS_3 sw a3, 12(sp); cfi_rel_offset (a3, 12);
-# define PUSHARGS_5	PUSHARGS_4 /* handled by SAVESTK_## */
-# define PUSHARGS_6	PUSHARGS_5
-# define PUSHARGS_7	PUSHARGS_6
-
-# define POPARGS_0	/* nothing to do */
-# define POPARGS_1	POPARGS_0 lw a0, 0(sp);
-# define POPARGS_2	POPARGS_1 lw a1, 4(sp);
-# define POPARGS_3	POPARGS_2 lw a2, 8(sp);
-# define POPARGS_4	POPARGS_3 lw a3, 12(sp);
-# define POPARGS_5	POPARGS_4 /* args already in new stackframe */
-# define POPARGS_6	POPARGS_5
-# define POPARGS_7	POPARGS_6
-
-
-# define STKSPACE	48
-# define SAVESTK_0 	subu sp, STKSPACE; cfi_adjust_cfa_offset(STKSPACE)
-# define SAVESTK_1      SAVESTK_0
-# define SAVESTK_2      SAVESTK_1
-# define SAVESTK_3      SAVESTK_2
-# define SAVESTK_4      SAVESTK_3
-# define SAVESTK_5      lw t0, 16(sp);		\
-			SAVESTK_0;		\
-			sw t0, 16(sp)
-
-# define SAVESTK_6      lw t0, 16(sp);		\
-			lw t1, 20(sp);		\
-			SAVESTK_0;		\
-			sw t0, 16(sp);		\
-			sw t1, 20(sp)
-
-# define SAVESTK_7      lw t0, 16(sp);		\
-			lw t1, 20(sp);		\
-			lw t2, 24(sp);		\
-			SAVESTK_0;		\
-			sw t0, 16(sp);		\
-			sw t1, 20(sp);		\
-			sw t2, 24(sp)
-
-# define RESTORESTK 	addu sp, STKSPACE; cfi_adjust_cfa_offset(-STKSPACE)
-
-
-# ifdef __PIC__
-/* We use jalr rather than jal.  This means that the assembler will not
-   automatically restore $gp (in case libc has multiple GOTs) so we must
-   do it manually - which we have to do anyway since we don't use .cprestore.
-   It also shuts up the assembler warning about not using .cprestore.  */
-#  define PSEUDO_JMP(sym) la t9, sym; jalr t9;
-# else
-#  define PSEUDO_JMP(sym) jal sym;
-# endif
-
-# if IS_IN (libpthread)
-#  define CENABLE	PSEUDO_JMP (__pthread_enable_asynccancel)
-#  define CDISABLE	PSEUDO_JMP (__pthread_disable_asynccancel)
-# elif IS_IN (librt)
-#  define CENABLE	PSEUDO_JMP (__librt_enable_asynccancel)
-#  define CDISABLE	PSEUDO_JMP (__librt_disable_asynccancel)
-# else
-#  define CENABLE	PSEUDO_JMP (__libc_enable_asynccancel)
-#  define CDISABLE	PSEUDO_JMP (__libc_disable_asynccancel)
-# endif
-
-# ifndef __ASSEMBLER__
-#  define SINGLE_THREAD_P						\
-	__builtin_expect (THREAD_GETMEM (THREAD_SELF,			\
-					 header.multiple_threads)	\
-			  == 0, 1)
-# else
-#  define SINGLE_THREAD_P(reg)						\
-	READ_THREAD_POINTER(reg);					\
-	lw reg, MULTIPLE_THREADS_OFFSET(reg)
-#endif
-
-#elif !defined __ASSEMBLER__
+#else
 
 # define SINGLE_THREAD_P 1
 # define NO_CANCELLATION 1
 
 #endif
 
-#ifndef __ASSEMBLER__
-# define RTLD_SINGLE_THREAD_P \
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
-				   header.multiple_threads) == 0, 1)
-#endif
+#define RTLD_SINGLE_THREAD_P \
+  __glibc_likely (THREAD_GETMEM (THREAD_SELF, header.multiple_threads) == 0)

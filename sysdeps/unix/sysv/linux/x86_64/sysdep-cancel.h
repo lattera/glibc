@@ -18,92 +18,34 @@
 
 #include <sysdep.h>
 #include <tls.h>
-#ifndef __ASSEMBLER__
-# include <nptl/pthreadP.h>
-#endif
+#include <nptl/pthreadP.h>
 
 #if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
 
-/* The code to disable cancellation depends on the fact that the called
-   functions are special.  They don't modify registers other than %rax
-   and %r11 if they return.  Therefore we don't have to preserve other
-   registers around these calls.  */
-# undef PSEUDO
-# define PSEUDO(name, syscall_name, args)				      \
-  .text;								      \
-  ENTRY (name)								      \
-    SINGLE_THREAD_P;							      \
-    jne L(pseudo_cancel);						      \
-  .type __##syscall_name##_nocancel,@function;				      \
-  .globl __##syscall_name##_nocancel;					      \
-  __##syscall_name##_nocancel:						      \
-    DO_CALL (syscall_name, args);					      \
-    cmpq $-4095, %rax;							      \
-    jae SYSCALL_ERROR_LABEL;						      \
-    ret;								      \
-  .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
-  L(pseudo_cancel):							      \
-    /* We always have to align the stack before calling a function.  */	      \
-    subq $8, %rsp; cfi_adjust_cfa_offset (8);				      \
-    CENABLE								      \
-    /* The return value from CENABLE is argument for CDISABLE.  */	      \
-    movq %rax, (%rsp);							      \
-    DO_CALL (syscall_name, args);					      \
-    movq (%rsp), %rdi;							      \
-    /* Save %rax since it's the error code from the syscall.  */	      \
-    movq %rax, %rdx;							      \
-    CDISABLE								      \
-    movq %rdx, %rax;							      \
-    addq $8,%rsp; cfi_adjust_cfa_offset (-8);				      \
-    cmpq $-4095, %rax;							      \
-    jae SYSCALL_ERROR_LABEL
-
-
 # if IS_IN (libpthread)
-#  define CENABLE	call __pthread_enable_asynccancel;
-#  define CDISABLE	call __pthread_disable_asynccancel;
 #  define __local_multiple_threads __pthread_multiple_threads
 # elif IS_IN (libc)
-#  define CENABLE	call __libc_enable_asynccancel;
-#  define CDISABLE	call __libc_disable_asynccancel;
 #  define __local_multiple_threads __libc_multiple_threads
 # elif IS_IN (librt)
-#  define CENABLE	call __librt_enable_asynccancel;
-#  define CDISABLE	call __librt_disable_asynccancel;
 # else
 #  error Unsupported library
 # endif
 
 # if IS_IN (libpthread) || IS_IN (libc)
-#  ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
-#   define SINGLE_THREAD_P \
-  __builtin_expect (__local_multiple_threads == 0, 1)
-#  else
-#   define SINGLE_THREAD_P cmpl $0, __local_multiple_threads(%rip)
-#  endif
-
+#  define SINGLE_THREAD_P \
+  __glibc_likely (__local_multiple_threads == 0)
 # else
-
-#  ifndef __ASSEMBLER__
-#   define SINGLE_THREAD_P \
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
-				   header.multiple_threads) == 0, 1)
-#  else
-#   define SINGLE_THREAD_P cmpl $0, %fs:MULTIPLE_THREADS_OFFSET
-#  endif
-
+#  define SINGLE_THREAD_P \
+  __glibc_likely (THREAD_GETMEM (THREAD_SELF, header.multiple_threads) == 0)
 # endif
 
-#elif !defined __ASSEMBLER__
+#else
 
 # define SINGLE_THREAD_P (1)
 # define NO_CANCELLATION 1
 
 #endif
 
-#ifndef __ASSEMBLER__
-# define RTLD_SINGLE_THREAD_P \
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
-				   header.multiple_threads) == 0, 1)
-#endif
+#define RTLD_SINGLE_THREAD_P \
+  __glibc_likely (THREAD_GETMEM (THREAD_SELF, header.multiple_threads) == 0)

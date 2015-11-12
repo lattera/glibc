@@ -1,3 +1,179 @@
+2017-08-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/make-syscalls.sh: Remove cancellable tagging for
+	syscall definitions and replace __builtin_expect with __glibc_likely.
+	* sysdeps/unix/syscall-template.S: Update comment about cancellable
+	syscall.
+	 (SYSCALL_CANCELLABLE): Removedefinition
+	* sysdeps/unix/sysv/linux/aarch64/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (__local_enable_asynccancel): Likewise.
+	[IS_IN (libpthread)] (__local_disable_asynccancel): Likewise.
+	[IS_IN (libc)] (__local_enable_asynccancel): Likewise.
+	[IS_IN (libc)] (__local_enable_asynccancel): Likewise.
+	[IS_IN (librt)] (__local_disable_asynccancel): Likewise.
+	[IS_IN (librt)] (__local_disable_asynccancel): Likewise.
+	(CENABLE): Likewise.
+	(CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h (PSEUDO): Remove
+	defintion.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/sysdep-cancel.h (PSEUDO):
+	Remove definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/mips/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/sysv/linux/powerpc/powerpc32/sysdep-cancel.h: Remove file.
+	* sysdeps/sysv/linux/powerpc/powerpc64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h: Remove file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/tile/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h (PSEUDO): Remove
+	definition.
+	(PSEUDO_END): Likewise.
+	[IS_IN (libpthread)] (CENABLE): Likewise.
+	[IS_IN (libpthread)] (CDISABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (libc)] (CENABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[IS_IN (librt)] (CDISABLE): Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+
 2017-08-24  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/ieee754/dbl-64/Makefile: Don't override CFLAGS.

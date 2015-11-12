@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
+/* Cancellable system call stubs.  Linux/PowerPC version.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -13,7 +13,7 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
@@ -27,10 +27,10 @@
 
 #else
 
-# define SINGLE_THREAD_P 1
+# define SINGLE_THREAD_P (1)
 # define NO_CANCELLATION 1
 
 #endif
 
-#define RTLD_SINGLE_THREAD_P                                           \
+#define RTLD_SINGLE_THREAD_P \
   __glibc_likely (THREAD_GETMEM (THREAD_SELF, header.multiple_threads) == 0)
