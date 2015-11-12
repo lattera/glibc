@@ -38,11 +38,12 @@
 
 EALIGN (__round, 4, 0)
 	CALL_MCOUNT 0
-	mffs	fp11		/* Save current FPU rounding mode.  */
 	lfd	fp13,.LC0@toc(2)
 	fabs	fp0,fp1
 	fsub	fp12,fp13,fp13	/* generate 0.0  */
 	fcmpu	cr7,fp0,fp13	/* if (fabs(x) > TWO52)  */
+	mffs	fp11		/* Save current FPU rounding mode and
+				   "inexact" state.  */
 	fcmpu	cr6,fp1,fp12	/* if (x > 0.0)  */
 	bnllr-	cr7
 	mtfsfi	7,1		/* Set rounding mode toward 0.  */
@@ -53,7 +54,8 @@ EALIGN (__round, 4, 0)
 	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
 	fabs	fp1,fp1		/* if (x == 0.0)  */
 				/* x = 0.0; */
-	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
+	mtfsf	0xff,fp11	/* Restore previous rounding mode and
+				   "inexact" state.  */
 	blr
 .L4:
 	fsub	fp9,fp1,fp10	/* x+= 0.5;  */
@@ -63,7 +65,8 @@ EALIGN (__round, 4, 0)
 	fnabs	fp1,fp1		/* if (x == 0.0)  */
 				/* x = -0.0; */
 .L9:
-	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
+	mtfsf	0xff,fp11	/* Restore previous rounding mode and
+				   "inexact" state.  */
 	blr
 	END (__round)
 

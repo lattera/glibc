@@ -37,7 +37,6 @@
 
 	.section	".text"
 ENTRY (__roundf )
-	mffs	fp11		/* Save current FPU rounding mode.  */
 #ifdef SHARED
 	mflr	r11
 	cfi_register(lr,r11)
@@ -54,6 +53,8 @@ ENTRY (__roundf )
 	fabs	fp0,fp1
 	fsubs	fp12,fp13,fp13	/* generate 0.0  */
 	fcmpu	cr7,fp0,fp13	/* if (fabs(x) > TWO23)  */
+	mffs	fp11		/* Save current FPU rounding mode and
+				   "inexact" state.  */
 	fcmpu	cr6,fp1,fp12	/* if (x > 0.0)  */
 	bnllr-	cr7
 	mtfsfi	7,1		/* Set rounding mode toward 0.  */
@@ -68,7 +69,8 @@ ENTRY (__roundf )
 	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
 	fabs	fp1,fp1		/* if (x == 0.0)  */
 				/* x = 0.0; */
-	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
+	mtfsf	0xff,fp11	/* Restore previous rounding mode and
+				   "inexact" state.  */
 	blr
 .L4:
 	fsubs	fp9,fp1,fp10	/* x+= 0.5;  */
@@ -78,7 +80,8 @@ ENTRY (__roundf )
 	fnabs	fp1,fp1		/* if (x == 0.0)  */
 				/* x = -0.0; */
 .L9:
-	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
+	mtfsf	0xff,fp11	/* Restore previous rounding mode and
+				   "inexact" state.  */
 	blr
 	END (__roundf)
 

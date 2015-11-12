@@ -1,5 +1,14 @@
 2015-11-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15479]
+	[BZ #19238]
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S (__round): Save
+	floating-point state after first operation on input.  Restore full
+	state rather than just rounding mode.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S (__roundf): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_round.S (__round): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_roundf.S (__roundf): Likewise.
+
 	[BZ #19235]
 	* sysdeps/powerpc/powerpc64/fpu/s_llround.S (__llround): Do not
 	add 0.5 to integer arguments.
