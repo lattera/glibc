@@ -1,3 +1,15 @@
+2015-11-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14551]
+	* sysdeps/ieee754/ldbl-128ibm/mpn2ldbl.c: Include <errno.h>.
+	(__mpn_construct_long_double): If high part overflows to infinity,
+	set errno and recompute overflowed result of the correct sign.
+	* sysdeps/ieee754/ldbl-128ibm/Makefile
+	[$(subdir) = stdlib] (tests): Add tst-strtold-ldbl-128ibm.
+	[$(subdir) = stdlib] ($(objpfx)tst-strtold-ldbl-128ibm): Depend on
+	$(libm).
+	* sysdeps/ieee754/ldbl-128ibm/tst-strtold-ldbl-128ibm.c: New file.
+
 2015-11-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15479]

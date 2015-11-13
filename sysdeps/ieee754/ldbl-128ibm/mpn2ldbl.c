@@ -18,6 +18,7 @@
 #include "gmp.h"
 #include "gmp-impl.h"
 #include <ieee754.h>
+#include <errno.h>
 #include <float.h>
 #include <math.h>
 
@@ -111,6 +112,14 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
 	    {
 	      hi >>= 1;
 	      u.d[0].ieee.exponent++;
+	      if (u.d[0].ieee.exponent == IEEE754_DOUBLE_BIAS + DBL_MAX_EXP)
+		{
+		  /* Overflow.  The appropriate overflowed result must
+		     be produced (if an infinity, that means the low
+		     part must be zero).  */
+		  __set_errno (ERANGE);
+		  return (sign ? -LDBL_MAX : LDBL_MAX) * LDBL_MAX;
+		}
 	    }
 	  u.d[1].ieee.negative = !sign;
 	  lo = (1LL << 53) - lo;
