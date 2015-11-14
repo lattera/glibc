@@ -302,6 +302,13 @@ check-abi: $(objpfx)check-abi-ld.out
 tests-special += $(objpfx)check-abi-ld.out
 update-abi: update-abi-ld
 
+ifeq ($(have-glob-dat-reloc),yes)
+tests += tst-prelink
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-prelink-cmp.out
+endif
+endif
+
 include ../Rules
 
 ifeq (yes,$(build-shared))
@@ -1234,3 +1241,13 @@ $(objpfx)tst-audit12: $(libdl)
 tst-audit12-ENV = LD_AUDIT=$(objpfx)tst-auditmod12.so
 $(objpfx)tst-audit12mod1.so: $(objpfx)tst-audit12mod2.so
 LDFLAGS-tst-audit12mod2.so = -Wl,--version-script=tst-audit12mod2.map
+
+tst-prelink-ENV = LD_TRACE_PRELINKING=1
+
+$(objpfx)tst-prelink-conflict.out: $(objpfx)tst-prelink.out
+	grep stdout $< | grep conflict | $(AWK) '{ print $$10, $$11 }' > $@
+
+$(objpfx)tst-prelink-cmp.out: tst-prelink.exp \
+			      $(objpfx)tst-prelink-conflict.out
+	cmp $^ > $@; \
+	$(evaluate-test)

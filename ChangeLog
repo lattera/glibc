@@ -1,3 +1,24 @@
+2015-11-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.make.in (have-glob-dat-reloc): New.
+	* configure.ac (libc_cv_has_glob_dat): New.  Set to yes if
+	target supports GLOB_DAT relocaton. AC_SUBST.
+	* configure: Regenerated.
+	* elf/Makefile (tests): Add tst-prelink.
+	(tests-special): Add $(objpfx)tst-prelink-cmp.out.
+	(tst-prelink-ENV): New.
+	($(objpfx)tst-prelink-conflict.out): Likewise.
+	($(objpfx)tst-prelink-cmp.out): Likewise.
+	* sysdeps/x86/tst-prelink.c: Moved to ...
+	* elf/tst-prelink.c: Here.
+	* sysdeps/x86/tst-prelink.exp: Moved to ...
+	* elf/tst-prelink.exp: Here.
+	* sysdeps/x86/Makefile (tests): Don't add tst-prelink.
+	(tst-prelink-ENV): Removed.
+	($(objpfx)tst-prelink-conflict.out): Likewise.
+	($(objpfx)tst-prelink-cmp.out): Likewise.
+	(tests-special): Don't add $(objpfx)tst-prelink-cmp.out.
+
 2015-11-13  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14551]

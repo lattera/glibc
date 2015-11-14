@@ -1340,6 +1340,29 @@ $ac_try"
   use_default_link=$libc_cv_use_default_link
 fi
 
+AC_CACHE_CHECK(for GLOB_DAT reloc,
+	       libc_cv_has_glob_dat, [dnl
+cat > conftest.c <<EOF
+extern int mumble;
+int foo (void) { return mumble; }
+EOF
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+			-fPIC -shared -o conftest.so conftest.c
+			-nostdlib -nostartfiles
+			1>&AS_MESSAGE_LOG_FD])
+then
+dnl look for GLOB_DAT relocation.
+  if $READELF -rW conftest.so | grep '_GLOB_DAT' > /dev/null; then
+    libc_cv_has_glob_dat=yes
+  else
+    libc_cv_has_glob_dat=no
+  fi
+else
+  libc_cv_has_glob_dat=no
+fi
+rm -f conftest*])
+AC_SUBST(libc_cv_has_glob_dat)
+
 AC_CACHE_CHECK(linker output format, libc_cv_output_format, [dnl
 if libc_cv_output_format=`
 ${CC-cc} -nostartfiles -nostdlib -Wl,--print-output-format 2>&AS_MESSAGE_LOG_FD`

@@ -622,6 +622,7 @@ libc_cv_cc_nofma
 stack_protector
 fno_unit_at_a_time
 libc_cv_output_format
+libc_cv_has_glob_dat
 libc_cv_hashstyle
 libc_cv_fpie
 libc_cv_z_execstack
@@ -5692,6 +5693,39 @@ fi
 $as_echo "$libc_cv_use_default_link" >&6; }
   use_default_link=$libc_cv_use_default_link
 fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GLOB_DAT reloc" >&5
+$as_echo_n "checking for GLOB_DAT reloc... " >&6; }
+if ${libc_cv_has_glob_dat+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+extern int mumble;
+int foo (void) { return mumble; }
+EOF
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+			-fPIC -shared -o conftest.so conftest.c
+			-nostdlib -nostartfiles
+			1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then
+  if $READELF -rW conftest.so | grep '_GLOB_DAT' > /dev/null; then
+    libc_cv_has_glob_dat=yes
+  else
+    libc_cv_has_glob_dat=no
+  fi
+else
+  libc_cv_has_glob_dat=no
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_has_glob_dat" >&5
+$as_echo "$libc_cv_has_glob_dat" >&6; }
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking linker output format" >&5
 $as_echo_n "checking linker output format... " >&6; }
