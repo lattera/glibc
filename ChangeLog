@@ -1,3 +1,7 @@
+2015-11-16  Florian Weimer  <fweimer@redhat.com>
+
+	* math/test-signgam-finite-c99.c (_Mlong_double_): Undefine.
+
 2015-11-14  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* config.make.in (have-glob-dat-reloc): New.

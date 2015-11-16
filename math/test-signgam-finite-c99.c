@@ -18,6 +18,7 @@
 
 #undef _LIBC
 #undef _GNU_SOURCE
+#undef _Mlong_double_
 #define _ISOMAC
 
 #include <math.h>
