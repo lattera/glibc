@@ -1,5 +1,7 @@
 2015-11-17  Siddhesh Poyarekar  <siddhesh.poyarekar@linaro.org>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c: Remove redundant else clauses.
+
 	* benchtests/scripts/bench.py (_print_arg_data): Mark output variables
 	as used.
 
