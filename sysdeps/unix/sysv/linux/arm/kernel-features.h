@@ -27,3 +27,7 @@
 # undef __ASSUME_REQUEUE_PI
 # undef __ASSUME_SET_ROBUST_LIST
 #endif
+
+/* Define this if your 32-bit syscall API requires 64-bit register
+   pairs to start with an even-number register.  */
+#define __ASSUME_ALIGNED_REGISTER_PAIRS	1

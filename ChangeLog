@@ -1,3 +1,12 @@
+2016-04-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_ALIGNED_REGISTER_PAIRS): Define.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	[_MIPS_SIM == _ABIO32] (__ASSUME_ALIGNED_REGISTER_PAIRS): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	[!__powerpc64__] (__ASSUME_ALIGNED_REGISTER_PAIRS): Likewise.
+
 2016-04-11  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19865]
