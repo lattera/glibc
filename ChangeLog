@@ -1,3 +1,14 @@
+2016-01-11  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #19253]
+	* time/tzfile.c (__tzfile_default): Invalidate tzfile attribute
+	cache when TZDEFRULES was used.
+	* time/tst-tzname.c: New file.
+	* time/Makefile (test): Add tst-tzname.
+	(tst-tzname-ENV, CPPFLAGS-tst-tzname.c): Define.
+	* timezone/Makefile (test-zones): Add $(posixrules-file).
+	($(testdata)/$(posixrules-file)): New rule.
+
 2016-01-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix doc quoting problems with Texinfo 5

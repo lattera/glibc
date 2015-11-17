@@ -628,6 +628,12 @@ __tzfile_default (const char *std, const char *dst,
   __timezone = -types[0].offset;
 
   compute_tzname_max (stdlen + dstlen);
+
+  /* Invalidate the tzfile attribute cache to force rereading
+     TZDEFRULES the next time it is used.  */
+  tzfile_dev = 0;
+  tzfile_ino = 0;
+  tzfile_mtime = 0;
 }
 
 void
