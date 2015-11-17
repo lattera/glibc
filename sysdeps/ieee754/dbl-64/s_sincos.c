@@ -22,29 +22,18 @@
 
 #include <math_private.h>
 
+#define __sin __sin_local
+#define __cos __cos_local
+#define IN_SINCOS 1
+#include "s_sin.c"
 
 void
 __sincos (double x, double *sinx, double *cosx)
 {
-  int32_t ix;
+  SET_RESTORE_ROUND_53BIT (FE_TONEAREST);
 
-  /* High word of x. */
-  GET_HIGH_WORD (ix, x);
-
-  /* |x| ~< pi/4 */
-  ix &= 0x7fffffff;
-  if (ix >= 0x7ff00000)
-    {
-      /* sin(Inf or NaN) is NaN */
-      *sinx = *cosx = x - x;
-      if (isinf (x))
-	__set_errno (EDOM);
-    }
-  else
-    {
-      *sinx = __sin (x);
-      *cosx = __cos (x);
-    }
+  *sinx = __sin (x);
+  *cosx = __cos (x);
 }
 weak_alias (__sincos, sincos)
 #ifdef NO_LONG_DOUBLE

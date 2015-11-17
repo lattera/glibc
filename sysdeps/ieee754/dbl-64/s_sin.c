@@ -280,8 +280,12 @@ reduce_and_compute (double x, unsigned int k)
 /* An ultimate sin routine. Given an IEEE double machine number x   */
 /* it computes the correctly rounded (to nearest) value of sin(x)  */
 /*******************************************************************/
+#ifdef IN_SINCOS
+static double
+#else
 double
 SECTION
+#endif
 __sin (double x)
 {
   double xx, res, t, cor, y, s, c, sn, ssn, cs, ccs, xn, a, da, db, eps, xn1,
@@ -290,7 +294,9 @@ __sin (double x)
   int4 k, m, n;
   double retval = 0;
 
+#ifndef IN_SINCOS
   SET_RESTORE_ROUND_53BIT (FE_TONEAREST);
+#endif
 
   u.x = x;
   m = u.i[HIGH_HALF];
@@ -512,8 +518,12 @@ __sin (double x)
 /* it computes the correctly rounded (to nearest) value of cos(x)  */
 /*******************************************************************/
 
+#ifdef IN_SINCOS
+static double
+#else
 double
 SECTION
+#endif
 __cos (double x)
 {
   double y, xx, res, t, cor, xn, a, da, db, eps, xn1,
@@ -523,7 +533,9 @@ __cos (double x)
 
   double retval = 0;
 
+#ifndef IN_SINCOS
   SET_RESTORE_ROUND_53BIT (FE_TONEAREST);
+#endif
 
   u.x = x;
   m = u.i[HIGH_HALF];

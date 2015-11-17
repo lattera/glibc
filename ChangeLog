@@ -1,5 +1,12 @@
 2015-11-17  Siddhesh Poyarekar  <siddhesh.poyarekar@linaro.org>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin)[IN_SINCOS]: Mark function
+	static and don't set or restore rounding.
+	(__cos)[IN_SINCOS]: Likewise.
+	* sysdeps/ieee754/dbl-64/s_sincos.c: Include s_sin.c.
+	(__sincos): Set and restore rounding mode.  Remove check for infinite
+	or NaN input.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c: Remove redundant else clauses.
 
 	* benchtests/scripts/bench.py (_print_arg_data): Mark output variables
