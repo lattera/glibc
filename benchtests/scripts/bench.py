@@ -164,7 +164,7 @@ def _print_arg_data(func, directives, all_vals):
             if pos == -1:
                 die('Output argument must be a pointer type')
 
-            outargs.append('static %s out%d;' % (arg[1:pos], i))
+            outargs.append('static %s out%d __attribute__((used));' % (arg[1:pos], i))
             func_args.append(' &out%d' % i)
         else:
             arg_struct.append('  %s volatile arg%d;' % (arg, i))

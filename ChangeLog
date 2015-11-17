@@ -1,3 +1,8 @@
+2015-11-17  Siddhesh Poyarekar  <siddhesh.poyarekar@linaro.org>
+
+	* benchtests/scripts/bench.py (_print_arg_data): Mark output variables
+	as used.
+
 2015-11-16  Florian Weimer  <fweimer@redhat.com>
 
 	* math/test-signgam-finite-c99.c (_Mlong_double_): Undefine.
