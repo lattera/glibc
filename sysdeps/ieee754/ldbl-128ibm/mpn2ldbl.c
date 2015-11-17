@@ -15,12 +15,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "gmp.h"
-#include "gmp-impl.h"
 #include <ieee754.h>
 #include <errno.h>
 #include <float.h>
 #include <math.h>
+
+/* Need to set this when including gmp headers after system headers.  */
+#define HAVE_ALLOCA 1
+
+#include "gmp.h"
+#include "gmp-impl.h"
 
 /* Convert a multi-precision integer of the needed number of bits (106
    for long double) and an integral power of two to a `long double' in

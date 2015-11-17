@@ -1,3 +1,9 @@
+2015-11-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/mpn2ldl.c: Include gmp headers
+	after system headers to prevent MIN/MAX redefinition.  Define
+	HAVE_ALLOCA to preserve builtin alloca usage.
+
 2015-11-17  Siddhesh Poyarekar  <siddhesh.poyarekar@linaro.org>
 
 	* sysdeps/ieee754/dbl-64/s_sin.c (__sin)[IN_SINCOS]: Mark function
