@@ -1,3 +1,9 @@
+2016-03-15  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #19257]
+	* resolv/res_init.c (__res_iclose): Use statp->nscount instead of
+	statp->_u._ext.nscount as loop count.
+
 2016-03-14  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* math/test-signgam-finite-c99.c: Also #undef

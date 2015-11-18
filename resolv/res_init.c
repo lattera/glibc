@@ -580,7 +580,7 @@ __res_iclose(res_state statp, bool free_addr) {
 		statp->_vcsock = -1;
 		statp->_flags &= ~(RES_F_VC | RES_F_CONN);
 	}
-	for (ns = 0; ns < statp->_u._ext.nscount; ns++)
+	for (ns = 0; ns < statp->nscount; ns++)
 		if (statp->_u._ext.nsaddrs[ns]) {
 			if (statp->_u._ext.nssocks[ns] != -1) {
 				close_not_cancel_no_status(statp->_u._ext.nssocks[ns]);
