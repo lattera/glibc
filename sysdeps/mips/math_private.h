@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_PRIVATE_H
+#ifndef MIPS_MATH_PRIVATE_H
+#define MIPS_MATH_PRIVATE_H 1
 
 #ifdef __mips_nan2008
 /* MIPS aligned to IEEE 754-2008.  */

@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_PRIVATE_H
+#ifndef HPPA_MATH_PRIVATE_H
+#define HPPA_MATH_PRIVATE_H 1
 
 /* One of the few architectures where the meaning of the quiet/signaling bit is
    inverse to IEEE 754-2008 (as well as common practice for IEEE 754-1985).  */

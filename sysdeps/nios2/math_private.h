@@ -1,4 +1,5 @@
-#ifndef _MATH_PRIVATE_H
+#ifndef NIO2_MATH_PRIVATE_H
+#define NIO2_MATH_PRIVATE_H 1
 
 /* Suppress use of exceptions here to avoid build errors if the FE_*
    macros aren't defined. Only allow rounding modes implemented for Nios II.

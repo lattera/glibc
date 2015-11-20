@@ -1,4 +1,5 @@
-#ifndef _MATH_PRIVATE_H
+#ifndef M68K_MATH_PRIVATE_H
+#define M68K_MATH_PRIVATE_H 1
 
 #define math_opt_barrier(x) \
 ({ __typeof (x) __x;					\

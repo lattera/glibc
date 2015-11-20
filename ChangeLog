@@ -1,5 +1,31 @@
 2015-11-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/math_private.h [!_MATH_PRIVATE_H]: Change guard to
+	[!ARM_MATH_PRIVATE_H].
+	[!ARM_MATH_PRIVATE_H] (ARM_MATH_PRIVATE_H): Define macro.
+	* sysdeps/hppa/math_private.h [!_MATH_PRIVATE_H]: Change guard to
+	[!HPPA_MATH_PRIVATE_H].
+	[!HPPA_MATH_PRIVATE_H] (HPPA_MATH_PRIVATE_H): Define macro.
+	* sysdeps/i386/fpu/math_private.h [!_MATH_PRIVATE_H]: Change guard
+	to [!I386_MATH_PRIVATE_H].
+	[!I386_MATH_PRIVATE_H] (I386_MATH_PRIVATE_H): Define macro.
+	* sysdeps/m68k/m680x0/fpu/math_private.h [!_MATH_PRIVATE_H]:
+	Change guard to [!M68K_MATH_PRIVATE_H].
+	[!M68K_MATH_PRIVATE_H] (M68K_MATH_PRIVATE_H): Define macro.
+	* sysdeps/microblaze/math_private.h [!_MATH_PRIVATE_H]: Change
+	guard to [!MICROBLAZE_MATH_PRIVATE_H].
+	[!MICROBLAZE_MATH_PRIVATE_H] (MICROBLAZE_MATH_PRIVATE_H): Define
+	macro.
+	* sysdeps/mips/math_private.h [!_MATH_PRIVATE_H]: Change guard to
+	[!MIPS_MATH_PRIVATE_H].
+	[!MIPS_MATH_PRIVATE_H] (MIPS_MATH_PRIVATE_H): Define macro.
+	* sysdeps/nios2/math_private.h [!_MATH_PRIVATE_H]: Change guard to
+	[!NIO2_MATH_PRIVATE_H].
+	[!NIO2_MATH_PRIVATE_H] (NIO2_MATH_PRIVATE_H): Define macro.
+	* sysdeps/tile/math_private.h [!_MATH_PRIVATE_H]: Change guard to
+	[!TILE_MATH_PRIVATE_H].
+	[!TILE_MATH_PRIVATE_H] (TILE_MATH_PRIVATE_H): Define macro.
+
 	[BZ #15421]
 	* sysdeps/ieee754/s_signgam.c (signgam): Rename to __signgam,
 	initialize with 0 and define as weak alias of __signgam.
