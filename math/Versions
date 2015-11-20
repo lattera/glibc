@@ -203,4 +203,11 @@ libm {
   GLIBC_2.18 {
     __issignaling; __issignalingf; __issignalingl;
   }
+  GLIBC_2.23 {
+    # The __signgam name must be exported for the signgam weak alias
+    # to work.  New symbol versions of lgamma* that set __signgam are
+    # needed to preserve compatibility with old binaries that have a
+    # dynamic symbol for signgam but not __signgam.
+    lgamma; lgammaf; lgammal; __signgam;
+  }
 }

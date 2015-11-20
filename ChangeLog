@@ -1,3 +1,128 @@
+2015-11-20  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15421]
+	* sysdeps/ieee754/s_signgam.c (signgam): Rename to __signgam,
+	initialize with 0 and define as weak alias of __signgam.
+	* include/math.h [!_ISOMAC] (__signgam): Declare.
+	* math/Makefile (libm-calls): Add w_lgamma_compat.
+	(tests): Add test-signgam-uchar, test-signgam-uchar-init,
+	test-signgam-uint, test-signgam-uint-init, test-signgam-ullong and
+	test-signgam-ullong-init.
+	(tests-static): Add test-signgam-uchar-static,
+	test-signgam-uchar-init-static, test-signgam-uint-static,
+	test-signgam-uint-init-static, test-signgam-ullong-static and
+	test-signgam-ullong-init-static.
+	(CFLAGS-test-signgam-uchar.c): New variable.
+	(CFLAGS-test-signgam-uchar-init.c): Likewise.
+	(CFLAGS-test-signgam-uchar-static.c): Likewise.
+	(CFLAGS-test-signgam-uchar-init-static.c): Likewise.
+	(CFLAGS-test-signgam-uint.c): Likewise.
+	(CFLAGS-test-signgam-uint-init.c): Likewise.
+	(CFLAGS-test-signgam-uint-static.c): Likewise.
+	(CFLAGS-test-signgam-uint-init-static.c): Likewise.
+	(CFLAGS-test-signgam-ullong.c): Likewise.
+	(CFLAGS-test-signgam-ullong-init.c): Likewise.
+	(CFLAGS-test-signgam-ullong-static.c): Likewise.
+	(CFLAGS-test-signgam-ullong-init-static.c): Likewise.
+	* math/Versions (libm): Add GLIBC_2.23.
+	* math/lgamma-compat.h: New file.
+	* math/test-signgam-main.c: Likewise.
+	* math/test-signgam-uchar-init-static.c: Likewise.
+	* math/test-signgam-uchar-init.c: Likewise.
+	* math/test-signgam-uchar-static.c: Likewise.
+	* math/test-signgam-uchar.c: Likewise.
+	* math/test-signgam-uint-init-static.c: Likewise.
+	* math/test-signgam-uint-init.c: Likewise.
+	* math/test-signgam-uint-static.c: Likewise.
+	* math/test-signgam-uint.c: Likewise.
+	* math/test-signgam-ullong-init-static.c: Likewise.
+	* math/test-signgam-ullong-init.c: Likewise.
+	* math/test-signgam-ullong-static.c: Likewise.
+	* math/test-signgam-ullong.c: Likewise.
+	* math/w_lgamma.c: Rename to w_lgamma_main.c and replace by
+	wrapper of w_lgamma_main.c.
+	* math/w_lgamma_compat.c: New file.
+	* math/w_lgamma_compatf.c: Likewise.
+	* math/w_lgamma_compatl.c: Likewise.
+	* math/w_lgamma_main.c: New file.  Based on w_lgamma.c.  Include
+	<lgamma-compat.h>.  Condition contents on [BUILD_LGAMMA].  Support
+	defining compatibility symbols.
+	(__lgamma): Change to LGFUNC (__lgamma).  Use CALL_LGAMMA.
+	* math/w_lgammaf.c: Rename to w_lgammaf_main.c and replace by
+	wrapper of w_lgammaf_main.c.
+	* math/w_lgammaf_main.c: New file.  Based on w_lgammaf.c.  Include
+	<lgamma-compat.h>.  Condition contents on [BUILD_LGAMMA].  Support
+	defining compatibility symbols.
+	(__lgammaf): Change to LGFUNC (__lgammaf).  Use CALL_LGAMMA.
+	* math/w_lgammal.c: Rename to w_lgammal_main.c and replace by
+	wrapper of w_lgammal_main.c.
+	* math/w_lgammal_main.c: New file.  Based on w_lgammal.c.  Include
+	<lgamma-compat.h>.  Condition contents on [BUILD_LGAMMA].  Support
+	defining compatibility symbols.
+	(__lgammal): Change to LGFUNC (__lgammal).  Use CALL_LGAMMA.
+	* sysdeps/ia64/fpu/lgamma-compat.h: New file.
+	* sysdeps/ia64/fpu/w_lgamma.c: Move to ....
+	* sysdeps/ia64/fpu/w_lgamma_main.c: ...here.  Include
+	<lgamma-compat.h>.
+	(__ieee754_lgamma): Change to LGFUNC (lgamma).  Use CALL_LGAMMA.
+	(__ieee754_gamma): Define as alias.
+	* sysdeps/ia64/fpu/w_lgammaf.c: Move to ....
+	* sysdeps/ia64/fpu/w_lgammaf_main.c: ...here.  Include
+	<lgamma-compat.h>.
+	(__ieee754_lgammaf): Change to LGFUNC (lgammaf).  Use CALL_LGAMMA.
+	(__ieee754_gammaf): Define as alias.
+	* sysdeps/ia64/fpu/w_lgammal.c: Move to ....
+	* sysdeps/ia64/fpu/w_lgammal_main.c: ...here.  Include
+	<lgamma-compat.h>.
+	(__ieee754_lgammal): Change to LGFUNC (lgammal).  Use CALL_LGAMMA.
+	(__ieee754_gammal): Define as alias.
+	* sysdeps/ieee754/ldbl-opt/w_lgamma.c: Move to ....
+	* sysdeps/ieee754/ldbl-opt/w_lgamma_compat.c: ...here.  Include
+	<math/w_lgamma_compat.c>.
+	[LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)] (__lgammal_dbl_compat):
+	Define as alias of __lgamma_compat and use in defining lgammal.
+	* sysdeps/ieee754/ldbl-opt/w_lgammal.c: Move to ....
+	* sysdeps/ieee754/ldbl-opt/w_lgamma_compatl.c: ...here.  Include
+	<math/lgamma-compat.h> and <math/w_lgamma_compatl.c>.
+	(USE_AS_COMPAT): New macro.
+	(LGAMMA_OLD_VER): Undefine and redefine.
+	(lgammal): Do not define here.
+	(gammal): Only define here if [GAMMA_ALIAS].
+	* conform/linknamespace.pl (@whitelist): Remove signgam.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2015-11-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #16364]

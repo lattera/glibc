@@ -6,6 +6,8 @@
 /* Now define the internal interfaces.  */
 extern int __matherr (struct exception *__exc);
 
+extern int __signgam;
+
 # if IS_IN (libc) || IS_IN (libm)
 hidden_proto (__finite)
 hidden_proto (__isinf)

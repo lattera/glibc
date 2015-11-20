@@ -40,8 +40,6 @@ close (STDSYMS) || die ("close $stdsyms_file: $!\n");
 
 # The following whitelisted symbols are also allowed for now.
 #
-# * Bug 15421: lgamma wrongly sets signgam for ISO C.
-#
 # * Bug 17576: stdin, stdout, stderr only reserved with external
 # linkage when stdio.h included (and possibly not then), not
 # generally.
@@ -52,7 +50,7 @@ close (STDSYMS) || die ("close $stdsyms_file: $!\n");
 # * False positive: matherr only used conditionally.  matherrf/matherrl are used
 # by IA64 too for the same reason.
 #
-@whitelist = qw(signgam stdin stdout stderr re_syntax_options matherr matherrf
+@whitelist = qw(stdin stdout stderr re_syntax_options matherr matherrf
 		matherrl);
 foreach my $sym (@whitelist) {
   $stdsyms{$sym} = 1;

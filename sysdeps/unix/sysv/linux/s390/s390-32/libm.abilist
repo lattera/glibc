@@ -398,6 +398,11 @@ GLIBC_2.2 GLIBC_2.2 A
 GLIBC_2.2 fedisableexcept F
 GLIBC_2.2 feenableexcept F
 GLIBC_2.2 fegetexcept F
+GLIBC_2.23 GLIBC_2.23 A
+GLIBC_2.23 __signgam D 0x4
+GLIBC_2.23 lgamma F
+GLIBC_2.23 lgammaf F
+GLIBC_2.23 lgammal F
 GLIBC_2.4 GLIBC_2.4 A
 GLIBC_2.4 __clog10l F
 GLIBC_2.4 __finitel F

@@ -1,4 +1,4 @@
-/* file: lgammal.c */
+/* file: lgammaf.c */
 
 
 // Copyright (c) 2002 Intel Corporation
@@ -42,38 +42,32 @@
 
 // History
 //==============================================================
-// 08/15/02: Initial version
+// 02/04/02: Initial version
+// 02/22/02: Removed lgamma/gamma
 //
 /*
-//   FUNCTIONS:    long double  lgammal(long double x)
-//                 long double  gammal(long double x)
+//   FUNCTIONS:    float   lgammaf(float x)
+//                 float   gammaf(float x)
 //                 Natural logarithm of GAMMA function
 */
 
 #include "libm_support.h"
 
+#include <lgamma-compat.h>
 
-extern double __libm_lgammal(long double /*x*/, int* /*signgam*/, int /*signgamsz*/);
+extern float  __libm_lgammaf(float /*x*/, int* /*signgam*/, int /*signgamsz*/);
 
 
-long double __ieee754_lgammal(long double x)
+float LGFUNC (lgammaf) (float x)
 {
-#ifdef __POSIX__
-    extern int    signgam;
-#else
-    int    signgam;
-#endif
-    return __libm_lgammal(x, &signgam, sizeof(signgam));
+    return CALL_LGAMMA (float, __libm_lgammaf, x);
 }
-weak_alias (__ieee754_lgammal, lgammal)
-
-long double __ieee754_gammal(long double x)
-{
-#ifdef __POSIX__
-    extern int    signgam;
+#if USE_AS_COMPAT
+compat_symbol (libm, __lgammaf_compat, lgammaf, LGAMMA_OLD_VER);
 #else
-    int    signgam;
+versioned_symbol (libm, __ieee754_lgammaf, lgammaf, LGAMMA_NEW_VER);
 #endif
-    return __libm_lgammal(x, &signgam, sizeof(signgam));
-}
-weak_alias (__ieee754_gammal, gammal)
+#if GAMMA_ALIAS
+strong_alias (LGFUNC (lgammaf), __ieee754_gammaf)
+weak_alias (__ieee754_gammaf, gammaf)
+#endif

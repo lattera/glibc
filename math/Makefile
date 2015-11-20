@@ -62,7 +62,8 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     s_casinh s_cacosh s_catanh s_csqrt s_cpow s_cproj s_clog10 \
 	     s_fma s_lrint s_llrint s_lround s_llround e_exp10 w_log2	\
 	     s_issignaling $(calls:s_%=m_%) x2y2m1 k_casinh	\
-	     gamma_product k_standard lgamma_neg lgamma_product
+	     gamma_product k_standard lgamma_neg lgamma_product		\
+	     w_lgamma_compat
 
 dbl-only-routines := branred doasin dosincos halfulp mpa mpatan2	\
 		     mpatan mpexp mplog mpsqrt mptan sincos32 slowexp	\
@@ -110,8 +111,13 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-fenv-tls test-fenv-preserve test-fenv-return test-fenvinline \
 	test-nearbyint-except test-fenv-clear test-signgam-finite \
 	test-signgam-finite-c99 test-signgam-finite-c11 \
-	test-nearbyint-except-2 $(tests-static)
-tests-static = test-fpucw-static test-fpucw-ieee-static
+	test-nearbyint-except-2 test-signgam-uchar test-signgam-uchar-init \
+	test-signgam-uint test-signgam-uint-init test-signgam-ullong \
+	test-signgam-ullong-init $(tests-static)
+tests-static = test-fpucw-static test-fpucw-ieee-static \
+	       test-signgam-uchar-static test-signgam-uchar-init-static \
+	       test-signgam-uint-static test-signgam-uint-init-static \
+	       test-signgam-ullong-static test-signgam-ullong-init-static
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl test-ldouble-finite
@@ -200,6 +206,18 @@ CPPFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES \
 CFLAGS-test-signgam-finite.c = -ffinite-math-only
 CFLAGS-test-signgam-finite-c99.c = -ffinite-math-only -std=c99
 CFLAGS-test-signgam-finite-c11.c = -ffinite-math-only -std=c11
+CFLAGS-test-signgam-uchar.c = -std=c99
+CFLAGS-test-signgam-uchar-init.c = -std=c99
+CFLAGS-test-signgam-uchar-static.c = -std=c99
+CFLAGS-test-signgam-uchar-init-static.c = -std=c99
+CFLAGS-test-signgam-uint.c = -std=c99
+CFLAGS-test-signgam-uint-init.c = -std=c99
+CFLAGS-test-signgam-uint-static.c = -std=c99
+CFLAGS-test-signgam-uint-init-static.c = -std=c99
+CFLAGS-test-signgam-ullong.c = -std=c99
+CFLAGS-test-signgam-ullong-init.c = -std=c99
+CFLAGS-test-signgam-ullong-static.c = -std=c99
+CFLAGS-test-signgam-ullong-init-static.c = -std=c99
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
 # for error handling in the -lm functions.
