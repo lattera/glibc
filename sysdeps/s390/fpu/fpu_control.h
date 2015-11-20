@@ -34,8 +34,8 @@
 typedef unsigned int fpu_control_t;
 
 /* Macros for accessing the hardware control word.  */
-#define _FPU_GETCW(cw)  __asm__ volatile ("efpc %0,0" : "=d" (cw))
-#define _FPU_SETCW(cw)  __asm__ volatile ("sfpc  %0,0" : : "d" (cw))
+#define _FPU_GETCW(cw)  __asm__ __volatile__ ("efpc %0,0" : "=d" (cw))
+#define _FPU_SETCW(cw)  __asm__ __volatile__ ("sfpc  %0,0" : : "d" (cw))
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;

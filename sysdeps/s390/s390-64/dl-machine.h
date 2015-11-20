@@ -50,8 +50,8 @@ elf_machine_dynamic (void)
 {
   register Elf64_Addr *got;
 
-  asm( "	larl   %0,_GLOBAL_OFFSET_TABLE_\n"
-       : "=&a" (got) : : "0" );
+  __asm__ ( "	larl   %0,_GLOBAL_OFFSET_TABLE_\n"
+	    : "=&a" (got) : : "0" );
 
   return *got;
 }
@@ -62,11 +62,11 @@ elf_machine_load_address (void)
 {
   Elf64_Addr addr;
 
-  asm( "   larl	 %0,_dl_start\n"
-       "   larl	 1,_GLOBAL_OFFSET_TABLE_\n"
-       "   lghi	 2,_dl_start@GOT\n"
-       "   slg	 %0,0(2,1)"
-       : "=&d" (addr) : : "1", "2" );
+  __asm__( "   larl	 %0,_dl_start\n"
+	   "   larl	 1,_GLOBAL_OFFSET_TABLE_\n"
+	   "   lghi	 2,_dl_start@GOT\n"
+	   "   slg	 %0,0(2,1)"
+	   : "=&d" (addr) : : "1", "2" );
   return addr;
 }
 
@@ -126,7 +126,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.	*/
 
-#define RTLD_START asm ("\n\
+#define RTLD_START __asm__ ("\n\
 .text\n\
 .align 4\n\
 .globl _start\n\

@@ -1,3 +1,48 @@
+2015-11-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/fpu/bits/mathinline.h:
+	Use __asm__ [__volatile__] instead of asm [volatile].
+	* sysdeps/s390/abort-instr.h: Likewise.
+	* sysdeps/s390/atomic-machine.h: Likewise.
+	* sysdeps/s390/bits/string.h: Likewise.
+	* sysdeps/s390/dl-tls.h: Likewise.
+	* sysdeps/s390/fpu/e_sqrt.c: Likewise.
+	* sysdeps/s390/fpu/e_sqrtf.c: Likewise.
+	* sysdeps/s390/fpu/e_sqrtl.c: Likewise.
+	* sysdeps/s390/fpu/fesetround.c: Likewise.
+	* sysdeps/s390/fpu/fpu_control.h: Likewise.
+	* sysdeps/s390/fpu/s_fma.c: Likewise.
+	* sysdeps/s390/fpu/s_fmaf.c: Likewise.
+	* sysdeps/s390/memusage.h: Likewise.
+	* sysdeps/s390/multiarch/ifunc-resolve.h: Likewise.
+	* sysdeps/s390/nptl/pthread_spin_lock.c: Likewise.
+	* sysdeps/s390/nptl/pthread_spin_trylock.c: Likewise.
+	* sysdeps/s390/nptl/pthread_spin_unlock.c: Likewise.
+	* sysdeps/s390/nptl/tls.h: Likewise.
+	* sysdeps/s390/s390-32/__longjmp.c: Likewise.
+	* sysdeps/s390/s390-32/backtrace.c: Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-32/multiarch/memcmp.c: Likewise.
+	* sysdeps/s390/s390-32/stackguard-macros.h: Likewise.
+	* sysdeps/s390/s390-32/tls-macros.h: Likewise.
+	* sysdeps/s390/s390-64/__longjmp.c: Likewise.
+	* sysdeps/s390/s390-64/backtrace.c: Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-64/iso-8859-1_cp037_z900.c: Likewise.
+	* sysdeps/s390/s390-64/multiarch/memcmp.c: Likewise.
+	* sysdeps/s390/s390-64/stackguard-macros.h: Likewise.
+	* sysdeps/s390/s390-64/tls-macros.h: Likewise.
+	* sysdeps/s390/s390-64/utf16-utf32-z9.c: Likewise.
+	* sysdeps/s390/s390-64/utf8-utf16-z9.c: Likewise.
+	* sysdeps/s390/s390-64/utf8-utf32-z9.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/brk.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/elision-trylock.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/____longjmp_chk.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/____longjmp_chk.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sysconf.c: Likewise.
+
 2015-11-19  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 	    Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 

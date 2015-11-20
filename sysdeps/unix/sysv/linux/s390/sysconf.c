@@ -55,7 +55,7 @@ get_cache_info (int level, int attr, int type)
     {
       /* stfle (or zarch, high-gprs on s390-32) is not available.
 	 We are on an old machine. Return 256byte for LINESIZE for L1 d/i-cache,
-         otherwise 0.  */
+	 otherwise 0.  */
       if (level == 1 && attr == CACHE_ATTR_LINESIZE)
 	return 256L;
       else
@@ -64,7 +64,7 @@ get_cache_info (int level, int attr, int type)
 
   /* Store facility list and check for z10.
      (see ifunc-resolver for details)  */
-  register unsigned long reg0 asm("0") = 0;
+  register unsigned long reg0 __asm__("0") = 0;
 #ifdef __s390x__
   unsigned long stfle_bits;
 # define STFLE_Z10_MASK (1UL << (63 - 34))
@@ -72,19 +72,19 @@ get_cache_info (int level, int attr, int type)
   unsigned long long stfle_bits;
 # define STFLE_Z10_MASK (1ULL << (63 - 34))
 #endif /* !__s390x__ */
-  asm volatile(".machine push"        "\n\t"
-	       ".machinemode \"zarch_nohighgprs\"\n\t"
-	       ".machine \"z9-109\""  "\n\t"
-	       "stfle %0"             "\n\t"
-	       ".machine pop"         "\n"
-	       : "=QS" (stfle_bits), "+d" (reg0)
-	       : : "cc");
+  __asm__ __volatile__(".machine push"        "\n\t"
+		       ".machinemode \"zarch_nohighgprs\"\n\t"
+		       ".machine \"z9-109\""  "\n\t"
+		       "stfle %0"             "\n\t"
+		       ".machine pop"         "\n"
+		       : "=QS" (stfle_bits), "+d" (reg0)
+		       : : "cc");
 
   if (!(stfle_bits & STFLE_Z10_MASK))
     {
       /* We are at least on a z9 machine.
 	 Return 256byte for LINESIZE for L1 d/i-cache,
-         otherwise 0.  */
+	 otherwise 0.  */
       if (level == 1 && attr == CACHE_ATTR_LINESIZE)
 	return 256L;
       else
@@ -93,15 +93,15 @@ get_cache_info (int level, int attr, int type)
 
   /* Check cache topology, if cache is available at this level.  */
   arg = (CACHE_LEVEL_MAX - level) * 8;
-  asm volatile (".machine push\n\t"
-		".machine \"z10\"\n\t"
-		".machinemode \"zarch_nohighgprs\"\n\t"
-		"ecag %0,%%r0,0\n\t"   /* returns 64bit unsigned integer.  */
-		"srlg %0,%0,0(%1)\n\t" /* right align 8bit cache info field.  */
-		".machine pop"
-		: "=&d" (val)
-		: "a" (arg)
-		);
+  __asm__ __volatile__ (".machine push\n\t"
+			".machine \"z10\"\n\t"
+			".machinemode \"zarch_nohighgprs\"\n\t"
+			"ecag %0,%%r0,0\n\t"   /* returns 64bit unsigned integer.  */
+			"srlg %0,%0,0(%1)\n\t" /* right align 8bit cache info field.  */
+			".machine pop"
+			: "=&d" (val)
+			: "a" (arg)
+			);
   val &= 0xCUL; /* Extract cache scope information from cache topology summary.
 		   (bits 4-5 of 8bit-field; 00 means cache does not exist).  */
   if (val == 0)
@@ -109,14 +109,14 @@ get_cache_info (int level, int attr, int type)
 
   /* Get cache information for level, attribute and type.  */
   cmd = (attr << 4) | ((level - 1) << 1) | type;
-  asm volatile (".machine push\n\t"
-		".machine \"z10\"\n\t"
-		".machinemode \"zarch_nohighgprs\"\n\t"
-		"ecag %0,%%r0,0(%1)\n\t"
-		".machine pop"
-		: "=d" (val)
-		: "a" (cmd)
-		);
+  __asm__ __volatile__ (".machine push\n\t"
+			".machine \"z10\"\n\t"
+			".machinemode \"zarch_nohighgprs\"\n\t"
+			"ecag %0,%%r0,0(%1)\n\t"
+			".machine pop"
+			: "=d" (val)
+			: "a" (cmd)
+			);
   return val;
 }
 

@@ -159,9 +159,9 @@ typedef struct
 
 /* Set the stack guard field in TCB head.  */
 #define THREAD_SET_STACK_GUARD(value) \
-  do 									      \
+  do									      \
    {									      \
-     __asm __volatile ("" : : : "a0", "a1");				      \
+     __asm__ __volatile__ ("" : : : "a0", "a1");			      \
      THREAD_SETMEM (THREAD_SELF, header.stack_guard, value);		      \
    }									      \
   while (0)

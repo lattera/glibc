@@ -55,9 +55,9 @@ typedef uintmax_t uatomic_max_t;
 #define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
   ({ __typeof (mem) __archmem = (mem);					      \
      __typeof (*mem) __archold = (oldval);				      \
-     __asm __volatile ("cs %0,%2,%1"					      \
-		       : "+d" (__archold), "=Q" (*__archmem)		      \
-		       : "d" (newval), "m" (*__archmem) : "cc", "memory" );	      \
+     __asm__ __volatile__ ("cs %0,%2,%1"				      \
+			   : "+d" (__archold), "=Q" (*__archmem)	      \
+			   : "d" (newval), "m" (*__archmem) : "cc", "memory" );	\
      __archold; })
 
 #ifdef __s390x__
@@ -65,9 +65,9 @@ typedef uintmax_t uatomic_max_t;
 # define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   ({ __typeof (mem) __archmem = (mem);					      \
      __typeof (*mem) __archold = (oldval);				      \
-     __asm __volatile ("csg %0,%2,%1"					      \
-		       : "+d" (__archold), "=Q" (*__archmem)		      \
-		       : "d" ((long) (newval)), "m" (*__archmem) : "cc", "memory" );    \
+     __asm__ __volatile__ ("csg %0,%2,%1"				      \
+			   : "+d" (__archold), "=Q" (*__archmem)	      \
+			   : "d" ((long) (newval)), "m" (*__archmem) : "cc", "memory" ); \
      __archold; })
 #else
 # define __HAVE_64B_ATOMICS 0
@@ -89,17 +89,17 @@ typedef uintmax_t uatomic_max_t;
     __typeof (*(mem)) __atg5_oldval = *__atg5_memp;			\
     __typeof (*(mem)) __atg5_value = (newvalue);			\
     if (sizeof (*mem) == 4)						\
-      __asm __volatile ("0: cs %0,%2,%1\n"				\
-			"   jl 0b"					\
-			: "+d" (__atg5_oldval), "=Q" (*__atg5_memp)	\
-			: "d" (__atg5_value), "m" (*__atg5_memp)	\
-			: "cc", "memory" );				\
+      __asm__ __volatile__ ("0: cs %0,%2,%1\n"				\
+			    "   jl 0b"					\
+			    : "+d" (__atg5_oldval), "=Q" (*__atg5_memp)	\
+			    : "d" (__atg5_value), "m" (*__atg5_memp)	\
+			    : "cc", "memory" );				\
      else if (sizeof (*mem) == 8)					\
-       __asm __volatile ("0: csg %0,%2,%1\n"				\
-			 "   jl 0b"					\
-			 : "+d" ( __atg5_oldval), "=Q" (*__atg5_memp)	\
-			 : "d" ((long) __atg5_value), "m" (*__atg5_memp) \
-			 : "cc", "memory" );				\
+       __asm__ __volatile__ ("0: csg %0,%2,%1\n"			\
+			     "   jl 0b"					\
+			     : "+d" ( __atg5_oldval), "=Q" (*__atg5_memp) \
+			     : "d" ((long) __atg5_value), "m" (*__atg5_memp) \
+			     : "cc", "memory" );			\
      else								\
        abort ();							\
      __atg5_oldval; })
@@ -109,11 +109,11 @@ typedef uintmax_t uatomic_max_t;
     __typeof (*(mem)) __atg5_oldval = *__atg5_memp;			\
     __typeof (*(mem)) __atg5_value = (newvalue);			\
     if (sizeof (*mem) == 4)						\
-      __asm __volatile ("0: cs %0,%2,%1\n"				\
-			"   jl 0b"					\
-			: "+d" (__atg5_oldval), "=Q" (*__atg5_memp)	\
-			: "d" (__atg5_value), "m" (*__atg5_memp)	\
-			: "cc", "memory" );				\
+      __asm__ __volatile__ ("0: cs %0,%2,%1\n"				\
+			    "   jl 0b"					\
+			    : "+d" (__atg5_oldval), "=Q" (*__atg5_memp)	\
+			    : "d" (__atg5_value), "m" (*__atg5_memp)	\
+			    : "cc", "memory" );				\
     else								\
       abort ();								\
     __atg5_oldval; })

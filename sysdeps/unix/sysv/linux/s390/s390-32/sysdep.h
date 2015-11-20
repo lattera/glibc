@@ -197,38 +197,38 @@
 #define INTERNAL_SYSCALL_DIRECT(name, err, nr, args...)			      \
   ({									      \
     DECLARGS_##nr(args)							      \
-    register int _ret asm("2");						      \
-    asm volatile (							      \
-    "svc    %b1\n\t"							      \
-    : "=d" (_ret)							      \
-    : "i" (__NR_##name) ASMFMT_##nr					      \
-    : "memory" );							      \
+    register int _ret __asm__("2");					      \
+    __asm__ __volatile__ (						      \
+			  "svc    %b1\n\t"				      \
+			  : "=d" (_ret)					      \
+			  : "i" (__NR_##name) ASMFMT_##nr		      \
+			  : "memory" );					      \
     _ret; })
 
 #undef INTERNAL_SYSCALL_SVC0
 #define INTERNAL_SYSCALL_SVC0(name, err, nr, args...)			      \
   ({									      \
     DECLARGS_##nr(args)							      \
-    register unsigned long _nr asm("1") = (unsigned long)(__NR_##name);	      \
-    register int _ret asm("2");						      \
-    asm volatile (							      \
-    "svc    0\n\t"							      \
-    : "=d" (_ret)							      \
-    : "d" (_nr) ASMFMT_##nr						      \
-    : "memory" );							      \
+    register unsigned long _nr __asm__("1") = (unsigned long)(__NR_##name);   \
+    register int _ret __asm__("2");					      \
+    __asm__ __volatile__ (						      \
+			  "svc    0\n\t"				      \
+			  : "=d" (_ret)					      \
+			  : "d" (_nr) ASMFMT_##nr			      \
+			  : "memory" );					      \
     _ret; })
 
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(no, err, nr, args...)			      \
   ({									      \
     DECLARGS_##nr(args)							      \
-    register unsigned long _nr asm("1") = (unsigned long)(no);		      \
-    register int _ret asm("2");						      \
-    asm volatile (							      \
-    "svc    0\n\t"							      \
-    : "=d" (_ret)							      \
-    : "d" (_nr) ASMFMT_##nr						      \
-    : "memory" );							      \
+    register unsigned long _nr __asm__("1") = (unsigned long)(no);	      \
+    register int _ret __asm__("2");					      \
+    __asm__ __volatile__ (						      \
+			  "svc    0\n\t"				      \
+			  : "=d" (_ret)					      \
+			  : "d" (_nr) ASMFMT_##nr			      \
+			  : "memory" );					      \
     _ret; })
 
 #undef INTERNAL_SYSCALL
@@ -246,22 +246,22 @@
 
 #define DECLARGS_0()
 #define DECLARGS_1(arg1) \
-	register unsigned long gpr2 asm ("2") = (unsigned long)(arg1);
+	register unsigned long gpr2 __asm__ ("2") = (unsigned long)(arg1);
 #define DECLARGS_2(arg1, arg2) \
 	DECLARGS_1(arg1) \
-	register unsigned long gpr3 asm ("3") = (unsigned long)(arg2);
+	register unsigned long gpr3 __asm__ ("3") = (unsigned long)(arg2);
 #define DECLARGS_3(arg1, arg2, arg3) \
 	DECLARGS_2(arg1, arg2) \
-	register unsigned long gpr4 asm ("4") = (unsigned long)(arg3);
+	register unsigned long gpr4 __asm__ ("4") = (unsigned long)(arg3);
 #define DECLARGS_4(arg1, arg2, arg3, arg4) \
 	DECLARGS_3(arg1, arg2, arg3) \
-	register unsigned long gpr5 asm ("5") = (unsigned long)(arg4);
+	register unsigned long gpr5 __asm__ ("5") = (unsigned long)(arg4);
 #define DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
 	DECLARGS_4(arg1, arg2, arg3, arg4) \
-	register unsigned long gpr6 asm ("6") = (unsigned long)(arg5);
+	register unsigned long gpr6 __asm__ ("6") = (unsigned long)(arg5);
 #define DECLARGS_6(arg1, arg2, arg3, arg4, arg5, arg6) \
 	DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
-	register unsigned long gpr7 asm ("7") = (unsigned long)(arg6);
+	register unsigned long gpr7 __asm__ ("7") = (unsigned long)(arg6);
 
 #define ASMFMT_0
 #define ASMFMT_1 , "0" (gpr2)
@@ -302,14 +302,14 @@
 #define INTERNAL_VSYSCALL_CALL(fn, err, nr, args...)			      \
   ({									      \
     DECLARGS_##nr(args)							      \
-    register long _ret asm("2");						      \
-    asm volatile (							      \
-    "lr 10,14\n\t"                                                           \
-    "basr 14,%1\n\t"							      \
-    "lr 14,10\n\t"                                                           \
-    : "=d" (_ret)							      \
-    : "d" (fn) ASMFMT_##nr						      \
-    : "cc", "memory", "0", "1", "10" CLOBBER_##nr);                          \
+    register long _ret __asm__("2");					      \
+    __asm__ __volatile__ (						      \
+			  "lr 10,14\n\t"				      \
+			  "basr 14,%1\n\t"				      \
+			  "lr 14,10\n\t"				      \
+			  : "=d" (_ret)					      \
+			  : "d" (fn) ASMFMT_##nr			      \
+			  : "cc", "memory", "0", "1", "10" CLOBBER_##nr);     \
     _ret; })
 
 /* Pointer mangling support.  */

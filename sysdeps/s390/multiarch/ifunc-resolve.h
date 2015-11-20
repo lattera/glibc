@@ -31,22 +31,22 @@
 
 #define S390_STORE_STFLE(STFLE_BITS)					\
   /* We want just 1 double word to be returned.  */			\
-  register unsigned long reg0 asm("0") = 0;				\
+  register unsigned long reg0 __asm__("0") = 0;				\
 									\
-  asm volatile(".machine push"        "\n\t"				\
-	       ".machine \"z9-109\""  "\n\t"				\
-	       ".machinemode \"zarch_nohighgprs\"\n\t"			\
-	       "stfle %0"             "\n\t"				\
-	       ".machine pop"         "\n"				\
-	       : "=QS" (STFLE_BITS), "+d" (reg0)			\
-	       : : "cc");
+  __asm__ __volatile__(".machine push"        "\n\t"			\
+		       ".machine \"z9-109\""  "\n\t"			\
+		       ".machinemode \"zarch_nohighgprs\"\n\t"		\
+		       "stfle %0"             "\n\t"			\
+		       ".machine pop"         "\n"			\
+		       : "=QS" (STFLE_BITS), "+d" (reg0)		\
+		       : : "cc");
 
 #define s390_libc_ifunc(FUNC)						\
-  asm (".globl " #FUNC "\n\t"						\
-       ".type  " #FUNC ",@gnu_indirect_function\n\t"			\
-       ".set   " #FUNC ",__resolve_" #FUNC "\n\t"			\
-       ".globl __GI_" #FUNC "\n\t"					\
-       ".set   __GI_" #FUNC "," #FUNC "\n");				\
+  __asm__ (".globl " #FUNC "\n\t"					\
+	   ".type  " #FUNC ",@gnu_indirect_function\n\t"		\
+	   ".set   " #FUNC ",__resolve_" #FUNC "\n\t"			\
+	   ".globl __GI_" #FUNC "\n\t"					\
+	   ".set   __GI_" #FUNC "," #FUNC "\n");			\
 									\
   /* Make the declarations of the optimized functions hidden in order
      to prevent GOT slots being generated for them. */			\

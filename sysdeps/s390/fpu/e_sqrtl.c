@@ -24,7 +24,7 @@ __ieee754_sqrtl (long double x)
 {
   long double res;
 
-  asm ( "sqxbr %0,%1" : "=f" (res) : "f" (x) );
+  __asm__ ( "sqxbr %0,%1" : "=f" (res) : "f" (x) );
   return res;
 }
 strong_alias (__ieee754_sqrtl, __sqrtl_finite)

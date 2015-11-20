@@ -23,7 +23,7 @@ __ieee754_sqrt (double x)
 {
   double res;
 
-  asm ( "sqdbr %0,%1" : "=f" (res) : "f" (x) );
+  __asm__ ( "sqdbr %0,%1" : "=f" (res) : "f" (x) );
   return res;
 }
 strong_alias (__ieee754_sqrt, __sqrt_finite)

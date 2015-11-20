@@ -184,28 +184,28 @@ __attribute__ ((aligned (8))) =
 
 #define TROO_LOOP(TABLE)						\
   {									\
-    register const unsigned char test asm ("0") = 0;			\
-    register const unsigned char *pTable asm ("1") = TABLE;		\
-    register unsigned char *pOutput asm ("2") = outptr;			\
-    register uint64_t length asm ("3");					\
+    register const unsigned char test __asm__ ("0") = 0;		\
+    register const unsigned char *pTable __asm__ ("1") = TABLE;		\
+    register unsigned char *pOutput __asm__ ("2") = outptr;		\
+    register uint64_t length __asm__ ("3");				\
     const unsigned char* pInput = inptr;				\
     uint64_t tmp;							\
 									\
     length = (inend - inptr < outend - outptr				\
 	      ? inend - inptr : outend - outptr);			\
 									\
-    asm volatile ("0:                        \n\t"			\
-                  "  troo    %0,%1           \n\t"			\
-                  "  jz      1f              \n\t"			\
-                  "  jo      0b              \n\t"			\
-                  "  llgc    %3,0(%1)        \n\t"			\
-                  "  la      %3,0(%3,%4)     \n\t"			\
-                  "  mvc     0(1,%0),0(%3)   \n\t"			\
-                  "  aghi    %1,1            \n\t"			\
-                  "  aghi    %0,1            \n\t"			\
-                  "  aghi    %2,-1           \n\t"			\
-                  "  j       0b              \n\t"			\
-                  "1:                        \n"			\
+    __asm__ volatile ("0:                        \n\t"			\
+		      "  troo    %0,%1           \n\t"			\
+		      "  jz      1f              \n\t"			\
+		      "  jo      0b              \n\t"			\
+		      "  llgc    %3,0(%1)        \n\t"			\
+		      "  la      %3,0(%3,%4)     \n\t"			\
+		      "  mvc     0(1,%0),0(%3)   \n\t"			\
+		      "  aghi    %1,1            \n\t"			\
+		      "  aghi    %0,1            \n\t"			\
+		      "  aghi    %2,-1           \n\t"			\
+		      "  j       0b              \n\t"			\
+		      "1:                        \n"			\
 									\
      : "+a" (pOutput), "+a" (pInput), "+d" (length), "=&a" (tmp)        \
      : "a" (pTable), "d" (test)						\

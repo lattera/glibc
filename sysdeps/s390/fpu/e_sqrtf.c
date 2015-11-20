@@ -23,7 +23,7 @@ __ieee754_sqrtf (float x)
 {
   float res;
 
-  asm ( "sqebr %0,%1" : "=f" (res) : "f" (x) );
+  __asm__ ( "sqebr %0,%1" : "=f" (res) : "f" (x) );
   return res;
 }
 strong_alias (__ieee754_sqrtf, __sqrtf_finite)

@@ -20,5 +20,5 @@
 # include <ifunc-resolve.h>
 
 s390_libc_ifunc (memcmp)
-asm(".weak bcmp ; bcmp = memcmp");
+__asm__(".weak bcmp ; bcmp = memcmp");
 #endif

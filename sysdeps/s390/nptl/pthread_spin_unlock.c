@@ -24,9 +24,9 @@
 int
 pthread_spin_unlock (pthread_spinlock_t *lock)
 {
-  __asm __volatile ("   xc  %O0(4,%R0),%0\n"
-		    "   bcr 15,0"
-		    : "=Q" (*lock) : "m" (*lock) : "cc" );
+  __asm__ __volatile__ ("   xc  %O0(4,%R0),%0\n"
+			"   bcr 15,0"
+			: "=Q" (*lock) : "m" (*lock) : "cc" );
   return 0;
 }
 strong_alias (pthread_spin_unlock, pthread_spin_init)

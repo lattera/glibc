@@ -34,12 +34,12 @@ __brk (void *addr)
   void *newbrk;
 
   {
-    register void *__addr asm("2") = addr;
+    register void *__addr __asm__("2") = addr;
 
-    asm ("svc  %b1\n\t"		/* call sys_brk */
-	 : "=d" (__addr)
-	 : "I" (SYS_ify(brk)), "r" (__addr)
-	 : "cc", "memory" );
+    __asm__ ("svc  %b1\n\t"		/* call sys_brk */
+	     : "=d" (__addr)
+	     : "I" (SYS_ify(brk)), "r" (__addr)
+	     : "cc", "memory" );
     newbrk = __addr;
   }
   __curbrk = newbrk;

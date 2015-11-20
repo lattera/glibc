@@ -84,7 +84,7 @@ __backchain_backtrace (void **array, int size)
   struct layout *stack;
   int cnt = 0;
 
-  asm ("LGR  %0,%%r15" : "=d" (stack) );
+  __asm__ ("LGR  %0,%%r15" : "=d" (stack) );
   /* We skip the call to this function, it makes no sense to record it.  */
   stack = (struct layout *) stack->back_chain;
   while (cnt < size)

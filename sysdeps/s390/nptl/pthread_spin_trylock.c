@@ -24,9 +24,9 @@ pthread_spin_trylock (pthread_spinlock_t *lock)
 {
   int old;
 
-  __asm __volatile ("cs %0,%3,%1"
-		    : "=d" (old), "=Q" (*lock)
-		    : "0" (0), "d" (1), "m" (*lock) : "cc" );
+  __asm__ __volatile__ ("cs %0,%3,%1"
+			: "=d" (old), "=Q" (*lock)
+			: "0" (0), "d" (1), "m" (*lock) : "cc" );
 
   return old != 0 ? EBUSY : 0;
 }

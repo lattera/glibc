@@ -62,7 +62,7 @@ versioned_symbol (ld, __tls_get_addr_internal_tmp,
       the thread descriptor instead of a pointer to the variable.
  */
 #  ifdef __s390x__
-asm("\n\
+__asm__("\n\
 	.text\n\
 	.globl __tls_get_offset\n\
 	.type __tls_get_offset, @function\n\
@@ -72,7 +72,7 @@ __tls_get_offset:\n\
 	jg	__tls_get_addr\n\
 ");
 #  elif defined __s390__
-asm("\n\
+__asm__("\n\
 	.text\n\
 	.globl __tls_get_offset\n\
 	.type __tls_get_offset, @function\n\

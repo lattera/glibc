@@ -28,9 +28,9 @@ __fesetround (int round)
       /* ROUND is not a valid rounding mode.  */
       return 1;
     }
-  __asm__ volatile ("srnm 0(%0)"
-		    :
-		    : "a" (round));
+  __asm__ __volatile__ ("srnm 0(%0)"
+			:
+			: "a" (round));
 
   return 0;
 }

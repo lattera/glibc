@@ -30,9 +30,9 @@
 int
 __lll_trylock_elision (int *futex, short *adapt_count)
 {
-  __asm__ volatile (".machinemode \"zarch_nohighgprs\"\n\t"
-		    ".machine \"all\""
-		    : : : "memory");
+  __asm__ __volatile__ (".machinemode \"zarch_nohighgprs\"\n\t"
+			".machine \"all\""
+			: : : "memory");
 
   /* Implement POSIX semantics by forbiding nesting elided trylocks.
      Sorry.  After the abort the code is re-executed

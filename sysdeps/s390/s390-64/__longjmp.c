@@ -37,52 +37,52 @@ __longjmp (__jmp_buf env, int val)
 #elif defined CHECK_SP
   CHECK_SP (env, 0);
 #endif
-  register long int r2 __asm ("%r2") = val == 0 ? 1 : val;
+  register long int r2 __asm__ ("%r2") = val == 0 ? 1 : val;
 #ifdef PTR_DEMANGLE
-  register uintptr_t r3 __asm ("%r3") = guard;
-  register void *r1 __asm ("%r1") = (void *) env;
+  register uintptr_t r3 __asm__ ("%r3") = guard;
+  register void *r1 __asm__ ("%r1") = (void *) env;
 #endif
   /* Restore registers and jump back.  */
-  asm volatile (
-		/* longjmp probe expects longjmp first argument, second
-		   argument and target address.  */
+  __asm__ __volatile__ (
+			/* longjmp probe expects longjmp first argument, second
+			   argument and target address.  */
 #ifdef PTR_DEMANGLE
-		"lmg  %%r4,%%r5,64(%1)\n\t"
-		"xgr  %%r4,%2\n\t"
-		"xgr  %%r5,%2\n\t"
-		LIBC_PROBE_ASM (longjmp, 8@%1 -4@%0 8@%%r4)
+			"lmg  %%r4,%%r5,64(%1)\n\t"
+			"xgr  %%r4,%2\n\t"
+			"xgr  %%r5,%2\n\t"
+			LIBC_PROBE_ASM (longjmp, 8@%1 -4@%0 8@%%r4)
 #else
-		LIBC_PROBE_ASM (longjmp, 8@%1 -4@%0 8@%%r14)
+			LIBC_PROBE_ASM (longjmp, 8@%1 -4@%0 8@%%r14)
 #endif
 
-		/* restore fpregs  */
-		"ld    %%f8,80(%1)\n\t"
-		"ld    %%f9,88(%1)\n\t"
-		"ld    %%f10,96(%1)\n\t"
-		"ld    %%f11,104(%1)\n\t"
-		"ld    %%f12,112(%1)\n\t"
-		"ld    %%f13,120(%1)\n\t"
-		"ld    %%f14,128(%1)\n\t"
-		"ld    %%f15,136(%1)\n\t"
+			/* restore fpregs  */
+			"ld    %%f8,80(%1)\n\t"
+			"ld    %%f9,88(%1)\n\t"
+			"ld    %%f10,96(%1)\n\t"
+			"ld    %%f11,104(%1)\n\t"
+			"ld    %%f12,112(%1)\n\t"
+			"ld    %%f13,120(%1)\n\t"
+			"ld    %%f14,128(%1)\n\t"
+			"ld    %%f15,136(%1)\n\t"
 
-		/* restore gregs and return to jmp_buf target  */
+			/* restore gregs and return to jmp_buf target  */
 #ifdef PTR_DEMANGLE
-		"lmg  %%r6,%%r13,0(%1)\n\t"
-		"lgr  %%r15,%%r5\n\t"
-		LIBC_PROBE_ASM (longjmp_target, 8@%1 -4@%0 8@%%r4)
-		"br   %%r4"
+			"lmg  %%r6,%%r13,0(%1)\n\t"
+			"lgr  %%r15,%%r5\n\t"
+			LIBC_PROBE_ASM (longjmp_target, 8@%1 -4@%0 8@%%r4)
+			"br   %%r4"
 #else
-		"lmg  %%r6,%%r15,0(%1)\n\t"
-		LIBC_PROBE_ASM (longjmp_target, 8@%1 -4@%0 8@%%r14)
-		"br   %%r14"
+			"lmg  %%r6,%%r15,0(%1)\n\t"
+			LIBC_PROBE_ASM (longjmp_target, 8@%1 -4@%0 8@%%r14)
+			"br   %%r14"
 #endif
-		: : "r" (r2),
+			: : "r" (r2),
 #ifdef PTR_DEMANGLE
-		    "r" (r1), "r" (r3)
+			  "r" (r1), "r" (r3)
 #else
-		    "a" (env)
+			  "a" (env)
 #endif
-		);
+			);
 
   /* Avoid `volatile function does return' warnings.  */
   for (;;);

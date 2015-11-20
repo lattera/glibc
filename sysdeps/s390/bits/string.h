@@ -64,7 +64,7 @@ __strlen_g (const char *__str)
 #ifndef _FORCE_INLINES
 #define strcpy(dest, src) __strcpy_g ((dest), (src))
 
-__STRING_INLINE char *__strcpy_g (char *, const char *) __asm ("strcpy");
+__STRING_INLINE char *__strcpy_g (char *, const char *) __asm__ ("strcpy");
 
 __STRING_INLINE char *
 __strcpy_g (char *__dest, const char *__src)
