@@ -1,3 +1,10 @@
+2015-11-20  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/dl-map-segments.h (_dl_map_segments): Use
+	__glibc_likely instead of __builtin_expect.  After falling back to
+	dyncode_create in a non-ET_DYN case, use the allocate_code_data
+	system interface to register the code pages as occupied.
+
 2015-11-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/math_private.h [!_MATH_PRIVATE_H]: Change guard to

@@ -53,7 +53,7 @@ _dl_map_segments (struct link_map *l, int fd,
 		  const size_t maplength, bool has_holes,
 		  struct link_map *loader)
 {
-  if (__builtin_expect (type, ET_DYN) == ET_DYN)
+  if (__glibc_likely (type == ET_DYN))
     {
       /* This is a position-independent shared object.  Let the system
 	 choose where to place it.
@@ -165,6 +165,32 @@ _dl_map_segments (struct link_map *l, int fd,
 		    errno = error;
 		    return DL_MAP_SEGMENTS_ERROR_MAP_SEGMENT;
 		  }
+                if (__glibc_unlikely (type != ET_DYN))
+                  {
+                    /* A successful PROT_EXEC mmap would have implicitly
+                       updated the bookkeeping so that a future
+                       allocate_code_data call would know that this range
+                       of the address space is already occupied.  That
+                       doesn't happen implicitly with dyncode_create, so
+                       it's necessary to do an explicit call to update the
+                       bookkeeping.  */
+                    uintptr_t allocated_address;
+                    error = __nacl_irt_code_data_alloc.allocate_code_data
+                      (l->l_addr + c->mapstart, len, 0, 0, &allocated_address);
+                    if (__glibc_unlikely (error))
+                      {
+                        errno = error;
+                        return DL_MAP_SEGMENTS_ERROR_MAP_SEGMENT;
+                      }
+                    if (__glibc_unlikely
+                        (allocated_address != l->l_addr + c->mapstart))
+                      {
+                        /* This is not a very helpful error for this case,
+                           but there isn't really anything better to use.  */
+                        errno = ENOMEM;
+                        return DL_MAP_SEGMENTS_ERROR_MAP_SEGMENT;
+                      }
+                  }
 	      }
 	    else
 	      {
