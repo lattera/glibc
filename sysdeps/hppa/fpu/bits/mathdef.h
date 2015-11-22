@@ -34,5 +34,10 @@ typedef double double_t;	/* `double' expressions are evaluated as
 
 #endif	/* ISO C99 */
 
-/* On hppa `long double' is 64-bits. */
-#undef __NO_LONG_DOUBLE_MATH
+#ifndef __NO_LONG_DOUBLE_MATH
+/* On hppa `long double' and `double' are 64-bits.  So, libm is built
+   with NO_LONG_DOUBLE defined.  The following define ensures the library
+   and headers are consistent.  This disables the declaration of all the
+   `long double' function variants.  */
+# define __NO_LONG_DOUBLE_MATH	1
+#endif
