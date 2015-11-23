@@ -47,13 +47,14 @@ strop-tests :=  wcscmp wcsncmp wmemcmp wcslen wcschr wcsrchr wcscpy wcsnlen \
 		wcscspn wmemchr wmemset
 tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs tst-wchar-h tst-mbrtowc2 \
-	 tst-c16c32-1 wcsatcliff $(addprefix test-,$(strop-tests))
+	 tst-c16c32-1 wcsatcliff tst-wcstol-locale \
+	 $(addprefix test-,$(strop-tests))
 
 include ../Rules
 
 ifeq ($(run-built-tests),yes)
 LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 hr_HR.ISO-8859-2 \
-	   ja_JP.EUC-JP zh_TW.EUC-TW
+	   ja_JP.EUC-JP zh_TW.EUC-TW tr_TR.UTF-8 tr_TR.ISO-8859-9
 include ../gen-locales.mk
 
 $(objpfx)tst-btowc.out: $(gen-locales)
@@ -62,6 +63,7 @@ $(objpfx)tst-mbrtowc.out: $(gen-locales)
 $(objpfx)tst-mbrtowc2.out: $(gen-locales)
 $(objpfx)tst-wcrtomb.out: $(gen-locales)
 $(objpfx)wcsmbs-tst1.out: $(gen-locales)
+$(objpfx)tst-wcstol-locale.out: $(gen-locales)
 endif
 
 CFLAGS-wcwidth.c = -I../wctype

@@ -137,8 +137,8 @@
 # define UCHAR_TYPE wint_t
 # define STRING_TYPE wchar_t
 # define ISSPACE(Ch) __iswspace_l ((Ch), loc)
-# define ISALPHA(Ch) __iswalpha_l ((Ch), loc)
-# define TOUPPER(Ch) __towupper_l ((Ch), loc)
+# define ISALPHA(Ch) __iswalpha_l ((Ch), _nl_C_locobj_ptr)
+# define TOUPPER(Ch) __towupper_l ((Ch), _nl_C_locobj_ptr)
 #else
 # if defined _LIBC \
    || defined STDC_HEADERS || (!defined isascii && !defined HAVE_ISASCII)
@@ -150,8 +150,8 @@
 # define UCHAR_TYPE unsigned char
 # define STRING_TYPE char
 # define ISSPACE(Ch) __isspace_l ((Ch), loc)
-# define ISALPHA(Ch) __isalpha_l ((Ch), loc)
-# define TOUPPER(Ch) __toupper_l ((Ch), loc)
+# define ISALPHA(Ch) __isalpha_l ((Ch), _nl_C_locobj_ptr)
+# define TOUPPER(Ch) __toupper_l ((Ch), _nl_C_locobj_ptr)
 #endif
 
 #define INTERNAL(X) INTERNAL1(X)

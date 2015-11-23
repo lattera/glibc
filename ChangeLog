@@ -1,3 +1,21 @@
+2015-11-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19242]
+	* stdlib/strtol_l.c (ISALPHA): Use _nl_C_locobj_ptr for locale.
+	(TOUPPER): Likewise.
+	* stdlib/tst-strtol-locale-main.c: New file.
+	* stdlib/tst-strtol-locale.c: Likewise.
+	* stdlib/Makefile (tests): Add tst-strtol-locale.
+	[$(run-built-tests) = yes] (LOCALES): Add tr_TR.ISO-8859-9.
+	[$(run-built-tests) = yes] ($(objpfx)tst-strtol-locale.out):
+	Depend on $(gen-locales).
+	* wcsmbs/tst-wcstol-locale.c: New file.
+	* wcsmbs/Makefile (tests): Add tst-wcstol-locale.
+	[$(run-built-tests) = yes] (LOCALES): Add tr_TR.UTF-8 and
+	tr_TR.ISO-8859-9.
+	[$(run-built-tests) = yes] ($(objpfx)tst-wcstol-locale.out):
+	Depend on $(gen-locales).
+
 2015-11-20  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/dl-map-segments.h (_dl_map_segments): Use
