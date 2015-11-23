@@ -1,5 +1,30 @@
 2015-11-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/aarch64/sys/ptrace.h
+	(PTRACE_O_EXITKILL): New value in enum __ptrace_setoptions.
+	(PTRACE_O_SUSPEND_SECCOMP): Likewise.
+	(PTRACE_O_MASK): Update value.
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h (PTRACE_O_EXITKILL):
+	New value in enum __ptrace_setoptions.
+	(PTRACE_O_SUSPEND_SECCOMP): Likewise.
+	(PTRACE_O_MASK): Update value.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h
+	(PTRACE_O_SUSPEND_SECCOMP): New value in enum __ptrace_setoptions.
+	(PTRACE_O_MASK): Update value.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h
+	(PTRACE_O_SUSPEND_SECCOMP): New value in enum __ptrace_setoptions.
+	(PTRACE_O_MASK): Update value.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h
+	(PTRACE_O_SUSPEND_SECCOMP): New value in enum __ptrace_setoptions.
+	(PTRACE_O_MASK): Update value.
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PTRACE_O_SUSPEND_SECCOMP):
+	New value in enum __ptrace_setoptions.
+	(PTRACE_O_MASK): Update value.
+	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h (PTRACE_O_EXITKILL):
+	New value in enum __ptrace_setoptions.
+	(PTRACE_O_SUSPEND_SECCOMP): Likewise.
+	(PTRACE_O_MASK): Update value.
+
 	* sysdeps/unix/sysv/linux/netpacket/packet.h (PACKET_COPY_THRESH):
 	New macro.
 	(PACKET_AUXDATA): Likewise.

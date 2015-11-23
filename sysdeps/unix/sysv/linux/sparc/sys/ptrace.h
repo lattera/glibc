@@ -224,7 +224,8 @@ enum __ptrace_setoptions
   PTRACE_O_TRACEEXIT	= 0x00000040,
   PTRACE_O_TRACESECCOMP = 0x00000080,
   PTRACE_O_EXITKILL	= 0x00100000,
-  PTRACE_O_MASK		= 0x001000ff
+  PTRACE_O_SUSPEND_SECCOMP	= 0x00200000,
+  PTRACE_O_MASK		= 0x003000ff
 };
 
 /* Wait extended result codes for the above trace options.  */
