@@ -1,5 +1,24 @@
 2015-11-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/netpacket/packet.h (PACKET_COPY_THRESH):
+	New macro.
+	(PACKET_AUXDATA): Likewise.
+	(PACKET_ORIGDEV): Likewise.
+	(PACKET_VERSION): Likewise.
+	(PACKET_HDRLEN): Likewise.
+	(PACKET_RESERVE): Likewise.
+	(PACKET_TX_RING): Likewise.
+	(PACKET_LOSS): Likewise.
+	(PACKET_VNET_HDR): Likewise.
+	(PACKET_TX_TIMESTAMP): Likewise.
+	(PACKET_TIMESTAMP): Likewise.
+	(PACKET_FANOUT): Likewise.
+	(PACKET_TX_HAS_OFF): Likewise.
+	(PACKET_QDISC_BYPASS): Likewise.
+	(PACKET_ROLLOVER_STATS): Likewise.
+	(PACKET_FANOUT_DATA): Likewise.
+	(PACKET_MR_UNICAST): Likewise.
+
 	[BZ #19242]
 	* stdlib/strtol_l.c (ISALPHA): Use _nl_C_locobj_ptr for locale.
 	(TOUPPER): Likewise.
