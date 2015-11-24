@@ -53,6 +53,7 @@ endif # $(AUTOCONF) = no
 		   subdir_clean subdir_distclean subdir_realclean	\
 		   tests xtests						\
 		   subdir_update-abi subdir_check-abi			\
+		   subdir_update-all-abi				\
 		   subdir_echo-headers					\
 		   subdir_install					\
 		   subdir_objs subdir_stubs subdir_testclean		\

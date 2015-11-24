@@ -301,6 +301,7 @@ endif
 check-abi: $(objpfx)check-abi-ld.out
 tests-special += $(objpfx)check-abi-ld.out
 update-abi: update-abi-ld
+update-all-abi: update-all-abi-ld
 
 ifeq ($(have-glob-dat-reloc),yes)
 tests += tst-prelink

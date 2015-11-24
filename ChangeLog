@@ -1,5 +1,13 @@
 2015-11-24  Florian Weimer  <fweimer@redhat.com>
 
+	* scripts/update-abilist.sh: New file.
+	* Makefile (+subdir_targets): Add subdir_update-all-abi.
+	* Makerules (update-all-abi-%, update-all-abi)
+	(subdir_update-all-abi): New targets.
+	* elf/Makefile (update-all-abi): New target.
+
+2015-11-24  Florian Weimer  <fweimer@redhat.com>
+
 	Replace MUTEX_INITIALIZER with _LIBC_LOCK_INITIALIZER in generic code.
 	* sysdeps/mach/hurd/libc-lock.h (_LIBC_LOCK_INITIALIZER): Define.
 	(__libc_lock_define_initialized): Use it.

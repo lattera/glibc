@@ -1347,25 +1347,54 @@ define update-abi
  fi
 endef
 
-.PHONY: update-abi check-abi
+# Patch all .abilist files for one DSO.  The find command locates
+# abilist files for all architectures.  The regular expression in the
+# find invocation is needed to separate libc.abilist and
+# libcrypt.abilist, for example.  It assumes that abilist-pattern, if
+# set, is of the form "%-SUFFIX", and not "%SUFFIX", that is, there is
+# a non-alphanumeric seperator between the pattern and the suffix
+# added.  The abilist files in /generic/ are filtered out because
+# these are expected to remain empty.
+define update-all-abi
+$(SHELL) $(..)scripts/update-abilist.sh $^ \
+  $$(find $(..)sysdeps \
+    -regextype posix-egrep -regex '.*/$*([^a-z0-9].*)?\.abilist$$' \
+    \! -regex '.*/generic/.*')
+endef
+ifdef abilist-pattern
+update-all-abi-%: $(abilist-pattern) $(objpfx)%.symlist
+	$(update-all-abi)
+update-all-abi-%: $(abilist-pattern) $(common-objpfx)%.symlist
+	$(update-all-abi)
+endif
+update-all-abi-%: %.abilist $(objpfx)%.symlist
+	$(update-all-abi)
+update-all-abi-%: %.abilist $(common-objpfx)%.symlist
+	$(update-all-abi)
+
+.PHONY: update-abi update-all-abi check-abi
 update-abi: $(patsubst %.so,update-abi-%,$(install-lib.so-versioned))
+update-all-abi: $(patsubst %.so,update-all-abi-%,$(install-lib.so-versioned))
 check-abi-list = $(patsubst %.so,$(objpfx)check-abi-%.out, \
 				 $(install-lib.so-versioned))
 check-abi: $(check-abi-list)
 ifdef subdir
 subdir_check-abi: check-abi
 subdir_update-abi: update-abi
+subdir_update-all-abi: update-all-abi
 else
 check-abi: subdir_check-abi
 	if grep -q '^FAIL:' $(objpfx)*/check-abi*.test-result; then \
 		cat $(objpfx)*/check-abi*.out && exit 1; fi
 update-abi: subdir_update-abi
+update-all-abi: subdir_update-all-abi
 endif
 
 ifeq ($(subdir),elf)
 check-abi: $(objpfx)check-abi-libc.out
 tests-special += $(objpfx)check-abi-libc.out
 update-abi: update-abi-libc
+update-all-abi: update-all-abi-libc
 common-generated += libc.symlist
 endif
 
