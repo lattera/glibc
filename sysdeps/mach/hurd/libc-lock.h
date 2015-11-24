@@ -50,8 +50,9 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
   CLASS __libc_lock_t NAME;
 
 /* Define an initialized lock variable NAME with storage class CLASS.  */
+#define _LIBC_LOCK_INITIALIZER MUTEX_INITIALIZER
 #define __libc_lock_define_initialized(CLASS,NAME) \
-  CLASS __libc_lock_t NAME = MUTEX_INITIALIZER;
+  CLASS __libc_lock_t NAME = _LIBC_LOCK_INITIALIZER;
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */

@@ -1,3 +1,14 @@
+2015-11-24  Florian Weimer  <fweimer@redhat.com>
+
+	Replace MUTEX_INITIALIZER with _LIBC_LOCK_INITIALIZER in generic code.
+	* sysdeps/mach/hurd/libc-lock.h (_LIBC_LOCK_INITIALIZER): Define.
+	(__libc_lock_define_initialized): Use it.
+	* sysdeps/nptl/libc-lockP.h (_LIBC_LOCK_INITIALIZER): Define.
+	* malloc/arena.c (list_lock): Use _LIBC_LOCK_INITIALIZER.
+	* malloc/malloc.c (main_arena): Likewise.
+	* sysdeps/generic/malloc-machine.h (MUTEX_INITIALIZER): Remove.
+	* sysdeps/nptl/malloc-machine.h (MUTEX_INITIALIZER): Remove.
+
 2015-11-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/sys/ptrace.h

@@ -75,6 +75,7 @@ typedef pthread_key_t __libc_key_t;
    initialized locks must be set to one due to the lack of normal
    atomic operations.) */
 
+#define _LIBC_LOCK_INITIALIZER LLL_LOCK_INITIALIZER
 #if IS_IN (libc) || IS_IN (libpthread)
 # if LLL_LOCK_INITIALIZER == 0
 #  define __libc_lock_define_initialized(CLASS,NAME) \

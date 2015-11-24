@@ -73,7 +73,7 @@ static __thread mstate thread_arena attribute_tls_model_ie;
    objects.  No other (malloc) locks must be taken while list_lock is
    active, otherwise deadlocks may occur.  */
 
-static mutex_t list_lock = MUTEX_INITIALIZER;
+static mutex_t list_lock = _LIBC_LOCK_INITIALIZER;
 static size_t narenas = 1;
 static mstate free_list;
 

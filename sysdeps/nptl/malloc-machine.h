@@ -31,7 +31,6 @@ __libc_lock_define (typedef, mutex_t)
 #define mutex_lock(m)		__libc_lock_lock (*(m))
 #define mutex_trylock(m)	__libc_lock_trylock (*(m))
 #define mutex_unlock(m)		__libc_lock_unlock (*(m))
-#define MUTEX_INITIALIZER	LLL_LOCK_INITIALIZER
 
 /* This is defined by newer gcc version unique for each module.  */
 extern void *__dso_handle __attribute__ ((__weak__));
