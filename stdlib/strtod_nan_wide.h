@@ -1,4 +1,5 @@
-/* Copyright (C) 1999-2015 Free Software Foundation, Inc.
+/* Convert string for NaN payload to corresponding NaN.  Wide strings.
+   Copyright (C) 1997-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,23 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-
-/* The actual implementation for all floating point sizes is in strtod.c.
-   These macros tell it to produce the `long double' version, `strtold'.  */
-
-#define FLOAT		long double
-#define FLT		LDBL
-#ifdef USE_WIDE_CHAR
-# define STRTOF		wcstold_l
-# define __STRTOF	__wcstold_l
-# define STRTOF_NAN	__wcstold_nan
-#else
-# define STRTOF		strtold_l
-# define __STRTOF	__strtold_l
-# define STRTOF_NAN	__strtold_nan
-#endif
-#define MPN2FLOAT	__mpn_construct_long_double
-#define FLOAT_HUGE_VAL	HUGE_VALL
-
-#include <strtod_l.c>
+#define STRING_TYPE wchar_t
+#define L_(Ch) L##Ch
+#define STRTOULL(S, E, B) ____wcstoull_l_internal ((S), (E), (B), 0,	\
+						   _nl_C_locobj_ptr)

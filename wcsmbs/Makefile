@@ -33,6 +33,7 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcstol wcstoul wcstoll wcstoull wcstod wcstold wcstof \
 	    wcstol_l wcstoul_l wcstoll_l wcstoull_l \
 	    wcstod_l wcstold_l wcstof_l \
+	    wcstod_nan wcstold_nan wcstof_nan \
 	    wcscoll wcsxfrm \
 	    wcwidth wcswidth \
 	    wcscoll_l wcsxfrm_l \

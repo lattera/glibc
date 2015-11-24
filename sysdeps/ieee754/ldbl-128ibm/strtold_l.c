@@ -30,25 +30,19 @@ extern long double ____new_wcstold_l (const wchar_t *, wchar_t **, __locale_t);
 # define STRTOF		__new_wcstold_l
 # define __STRTOF	____new_wcstold_l
 # define ____STRTOF_INTERNAL ____wcstold_l_internal
+# define STRTOF_NAN	__wcstold_nan
 #else
 extern long double ____new_strtold_l (const char *, char **, __locale_t);
 # define STRTOF		__new_strtold_l
 # define __STRTOF	____new_strtold_l
 # define ____STRTOF_INTERNAL ____strtold_l_internal
+# define STRTOF_NAN	__strtold_nan
 #endif
 extern __typeof (__STRTOF) STRTOF;
 libc_hidden_proto (__STRTOF)
 libc_hidden_proto (STRTOF)
 #define MPN2FLOAT	__mpn_construct_long_double
 #define FLOAT_HUGE_VAL	HUGE_VALL
-# define SET_MANTISSA(flt, mant) \
-  do { union ibm_extended_long_double u;				      \
-       u.ld = (flt);							      \
-       u.d[0].ieee_nan.mantissa0 = (mant) >> 32;			      \
-       u.d[0].ieee_nan.mantissa1 = (mant);				      \
-       if ((u.d[0].ieee.mantissa0 | u.d[0].ieee.mantissa1) != 0)	      \
-	 (flt) = u.ld;							      \
-  } while (0)
 
 #include <strtod_l.c>
 

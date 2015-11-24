@@ -23,9 +23,6 @@
 
 extern double ____wcstod_l_internal (const wchar_t *, wchar_t **, int,
 				     __locale_t);
-extern unsigned long long int ____wcstoull_l_internal (const wchar_t *,
-						       wchar_t **, int, int,
-						       __locale_t);
 
 #define	USE_WIDE_CHAR	1
 

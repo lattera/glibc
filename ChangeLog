@@ -1,5 +1,54 @@
 2015-11-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdlib/strtod_nan.c: New file.
+	* stdlib/strtod_nan_double.h: Likewise.
+	* stdlib/strtod_nan_float.h: Likewise.
+	* stdlib/strtod_nan_main.c: Likewise.
+	* stdlib/strtod_nan_narrow.h: Likewise.
+	* stdlib/strtod_nan_wide.h: Likewise.
+	* stdlib/strtof_nan.c: Likewise.
+	* stdlib/strtold_nan.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/strtod_nan_ldouble.h: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/strtod_nan_ldouble.h: Likewise.
+	* sysdeps/ieee754/ldbl-96/strtod_nan_ldouble.h: Likewise.
+	* wcsmbs/wcstod_nan.c: Likewise.
+	* wcsmbs/wcstof_nan.c: Likewise.
+	* wcsmbs/wcstold_nan.c: Likewise.
+	* stdlib/Makefile (routines): Add strtof_nan, strtod_nan and
+	strtold_nan.
+	* wcsmbs/Makefile (routines): Add wcstod_nan, wcstold_nan and
+	wcstof_nan.
+	* include/stdlib.h (__strtof_nan): Declare and use
+	libc_hidden_proto.
+	(__strtod_nan): Likewise.
+	(__strtold_nan): Likewise.
+	(__wcstof_nan): Likewise.
+	(__wcstod_nan): Likewise.
+	(__wcstold_nan): Likewise.
+	* include/wchar.h (____wcstoull_l_internal): Declare.
+	* stdlib/strtod_l.c: Do not include <ieee754.h>.
+	(____strtoull_l_internal): Remove declaration.
+	(STRTOF_NAN): Define macro.
+	(SET_MANTISSA): Remove macro.
+	(STRTOULL): Likewise.
+	(____STRTOF_INTERNAL): Use STRTOF_NAN to parse NaN payload.
+	* stdlib/strtof_l.c (____strtoull_l_internal): Remove declaration.
+	(STRTOF_NAN): Define macro.
+	(SET_MANTISSA): Remove macro.
+	* sysdeps/ieee754/ldbl-128/strtold_l.c (STRTOF_NAN): Define macro.
+	(SET_MANTISSA): Remove macro.
+	* sysdeps/ieee754/ldbl-128ibm/strtold_l.c (STRTOF_NAN): Define
+	macro.
+	(SET_MANTISSA): Remove macro.
+	* sysdeps/ieee754/ldbl-64-128/strtold_l.c (STRTOF_NAN): Define
+	macro.
+	(SET_MANTISSA): Remove macro.
+	* sysdeps/ieee754/ldbl-96/strtold_l.c (STRTOF_NAN): Define macro.
+	(SET_MANTISSA): Remove macro.
+	* wcsmbs/wcstod_l.c (____wcstoull_l_internal): Remove declaration.
+	* wcsmbs/wcstof_l.c (____wcstoull_l_internal): Likewise.
+	* wcsmbs/wcstold_l.c (____wcstoull_l_internal): Likewise.
+
 	[BZ #19266]
 	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Check directly for
 	upper case and lower case letters inside NAN(), not using TOLOWER.

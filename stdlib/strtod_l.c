@@ -20,8 +20,6 @@
 #include <xlocale.h>
 
 extern double ____strtod_l_internal (const char *, char **, int, __locale_t);
-extern unsigned long long int ____strtoull_l_internal (const char *, char **,
-						       int, int, __locale_t);
 
 /* Configuration part.  These macros are defined by `strtold.c',
    `strtof.c', `wcstod.c', `wcstold.c', and `wcstof.c' to produce the
@@ -33,27 +31,20 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 # ifdef USE_WIDE_CHAR
 #  define STRTOF	wcstod_l
 #  define __STRTOF	__wcstod_l
+#  define STRTOF_NAN	__wcstod_nan
 # else
 #  define STRTOF	strtod_l
 #  define __STRTOF	__strtod_l
+#  define STRTOF_NAN	__strtod_nan
 # endif
 # define MPN2FLOAT	__mpn_construct_double
 # define FLOAT_HUGE_VAL	HUGE_VAL
-# define SET_MANTISSA(flt, mant) \
-  do { union ieee754_double u;						      \
-       u.d = (flt);							      \
-       u.ieee_nan.mantissa0 = (mant) >> 32;				      \
-       u.ieee_nan.mantissa1 = (mant);					      \
-       if ((u.ieee.mantissa0 | u.ieee.mantissa1) != 0)			      \
-	 (flt) = u.d;							      \
-  } while (0)
 #endif
 /* End of configuration part.  */
 
 #include <ctype.h>
 #include <errno.h>
 #include <float.h>
-#include <ieee754.h>
 #include "../locale/localeinfo.h"
 #include <locale.h>
 #include <math.h>
@@ -105,7 +96,6 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 # define TOLOWER_C(Ch) __towlower_l ((Ch), _nl_C_locobj_ptr)
 # define STRNCASECMP(S1, S2, N) \
   __wcsncasecmp_l ((S1), (S2), (N), _nl_C_locobj_ptr)
-# define STRTOULL(S, E, B) ____wcstoull_l_internal ((S), (E), (B), 0, loc)
 #else
 # define STRING_TYPE char
 # define CHAR_TYPE char
@@ -117,7 +107,6 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 # define TOLOWER_C(Ch) __tolower_l ((Ch), _nl_C_locobj_ptr)
 # define STRNCASECMP(S1, S2, N) \
   __strncasecmp_l ((S1), (S2), (N), _nl_C_locobj_ptr)
-# define STRTOULL(S, E, B) ____strtoull_l_internal ((S), (E), (B), 0, loc)
 #endif
 
 
@@ -649,33 +638,14 @@ ____STRTOF_INTERNAL (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group,
 	  if (*cp == L_('('))
 	    {
 	      const STRING_TYPE *startp = cp;
-	      do
-		++cp;
-	      while ((*cp >= L_('0') && *cp <= L_('9'))
-		     || (*cp >= L_('A') && *cp <= L_('Z'))
-		     || (*cp >= L_('a') && *cp <= L_('z'))
-		     || *cp == L_('_'));
-
-	      if (*cp != L_(')'))
-		/* The closing brace is missing.  Only match the NAN
-		   part.  */
-		cp = startp;
+	      STRING_TYPE *endp;
+	      retval = STRTOF_NAN (cp + 1, &endp, L_(')'));
+	      if (*endp == L_(')'))
+		/* Consume the closing parenthesis.  */
+		cp = endp + 1;
 	      else
-		{
-		  /* This is a system-dependent way to specify the
-		     bitmask used for the NaN.  We expect it to be
-		     a number which is put in the mantissa of the
-		     number.  */
-		  STRING_TYPE *endp;
-		  unsigned long long int mant;
-
-		  mant = STRTOULL (startp + 1, &endp, 0);
-		  if (endp == cp)
-		    SET_MANTISSA (retval, mant);
-
-		  /* Consume the closing brace.  */
-		  ++cp;
-		}
+		/* Only match the NAN part.  */
+		cp = startp;
 	    }
 
 	  if (endptr != NULL)

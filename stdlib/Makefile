@@ -50,6 +50,7 @@ routines	:=							      \
 	strtol_l strtoul_l strtoll_l strtoull_l				      \
 	strtof strtod strtold						      \
 	strtof_l strtod_l strtold_l					      \
+	strtof_nan strtod_nan strtold_nan				      \
 	system canonicalize						      \
 	a64l l64a							      \
 	rpmatch strfmon strfmon_l getsubopt xpg_basename fmtmsg		      \

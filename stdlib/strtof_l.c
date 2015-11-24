@@ -20,26 +20,19 @@
 #include <xlocale.h>
 
 extern float ____strtof_l_internal (const char *, char **, int, __locale_t);
-extern unsigned long long int ____strtoull_l_internal (const char *, char **,
-						       int, int, __locale_t);
 
 #define	FLOAT		float
 #define	FLT		FLT
 #ifdef USE_WIDE_CHAR
 # define STRTOF		wcstof_l
 # define __STRTOF	__wcstof_l
+# define STRTOF_NAN	__wcstof_nan
 #else
 # define STRTOF		strtof_l
 # define __STRTOF	__strtof_l
+# define STRTOF_NAN	__strtof_nan
 #endif
 #define	MPN2FLOAT	__mpn_construct_float
 #define	FLOAT_HUGE_VAL	HUGE_VALF
-#define SET_MANTISSA(flt, mant) \
-  do { union ieee754_float u;						      \
-       u.f = (flt);							      \
-       u.ieee_nan.mantissa = (mant);					      \
-       if (u.ieee.mantissa != 0)					      \
-	 (flt) = u.f;							      \
-  } while (0)
 
 #include "strtod_l.c"

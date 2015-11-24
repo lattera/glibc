@@ -24,8 +24,5 @@
 
 extern long double ____wcstold_l_internal (const wchar_t *, wchar_t **, int,
 					   __locale_t);
-extern unsigned long long int ____wcstoull_l_internal (const wchar_t *,
-						       wchar_t **, int, int,
-						       __locale_t);
 
 #include <strtold_l.c>

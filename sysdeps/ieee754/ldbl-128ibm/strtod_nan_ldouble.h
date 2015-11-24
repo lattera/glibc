@@ -1,4 +1,5 @@
-/* Copyright (C) 1999-2015 Free Software Foundation, Inc.
+/* Convert string for NaN payload to corresponding NaN.  For ldbl-128ibm.
+   Copyright (C) 1997-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,23 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-
-/* The actual implementation for all floating point sizes is in strtod.c.
-   These macros tell it to produce the `long double' version, `strtold'.  */
-
 #define FLOAT		long double
-#define FLT		LDBL
-#ifdef USE_WIDE_CHAR
-# define STRTOF		wcstold_l
-# define __STRTOF	__wcstold_l
-# define STRTOF_NAN	__wcstold_nan
-#else
-# define STRTOF		strtold_l
-# define __STRTOF	__strtold_l
-# define STRTOF_NAN	__strtold_nan
-#endif
-#define MPN2FLOAT	__mpn_construct_long_double
-#define FLOAT_HUGE_VAL	HUGE_VALL
-
-#include <strtod_l.c>
+#define SET_MANTISSA(flt, mant)					\
+  do								\
+    {								\
+      union ibm_extended_long_double u;				\
+      u.ld = (flt);						\
+      u.d[0].ieee_nan.mantissa0 = (mant) >> 32;			\
+      u.d[0].ieee_nan.mantissa1 = (mant);			\
+      if ((u.d[0].ieee.mantissa0 | u.d[0].ieee.mantissa1) != 0)	\
+	(flt) = u.ld;						\
+    }								\
+  while (0)

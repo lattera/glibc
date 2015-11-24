@@ -52,6 +52,9 @@ extern unsigned long long int __wcstoull_internal (const wchar_t *
 						   __restrict __endptr,
 						   int __base,
 						   int __group) __THROW;
+extern unsigned long long int ____wcstoull_l_internal (const wchar_t *,
+						       wchar_t **, int, int,
+						       __locale_t);
 libc_hidden_proto (__wcstof_internal)
 libc_hidden_proto (__wcstod_internal)
 libc_hidden_proto (__wcstold_internal)
