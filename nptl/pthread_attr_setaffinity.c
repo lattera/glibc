@@ -23,7 +23,6 @@
 #include <string.h>
 #include <pthreadP.h>
 #include <shlib-compat.h>
-#include <check-cpuset.h>
 
 
 int
@@ -43,11 +42,6 @@ __pthread_attr_setaffinity_new (pthread_attr_t *attr, size_t cpusetsize,
     }
   else
     {
-      int ret = check_cpuset_attr (cpuset, cpusetsize);
-
-      if (ret)
-        return ret;
-
       if (iattr->cpusetsize != cpusetsize)
 	{
 	  void *newp = (cpu_set_t *) realloc (iattr->cpuset, cpusetsize);

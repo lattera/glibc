@@ -139,7 +139,7 @@ sysdep_headers += bits/initspin.h
 
 sysdep_routines += sched_getcpu
 
-tests += tst-getcpu
+tests += tst-affinity tst-affinity-pid
 
 CFLAGS-fork.c = $(libio-mtsafe)
 CFLAGS-getpid.o = -fomit-frame-pointer
@@ -193,5 +193,7 @@ CFLAGS-gai.c += -DNEED_NETLINK
 endif
 
 ifeq ($(subdir),nptl)
-tests += tst-setgetname tst-align-clone tst-getpid1 tst-getpid2
+tests += tst-setgetname tst-align-clone tst-getpid1 tst-getpid2 \
+	tst-thread-affinity-pthread tst-thread-affinity-pthread2 \
+	tst-thread-affinity-sched
 endif

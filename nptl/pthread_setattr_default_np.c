@@ -21,7 +21,6 @@
 #include <pthreadP.h>
 #include <assert.h>
 #include <string.h>
-#include <check-cpuset.h>
 
 
 int
@@ -47,10 +46,6 @@ pthread_setattr_default_np (const pthread_attr_t *in)
       if (ret)
 	return ret;
     }
-
-  ret = check_cpuset_attr (real_in->cpuset, real_in->cpusetsize);
-  if (ret)
-    return ret;
 
   /* stacksize == 0 is fine.  It means that we don't change the current
      value.  */

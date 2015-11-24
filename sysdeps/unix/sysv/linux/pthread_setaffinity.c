@@ -23,61 +23,13 @@
 #include <shlib-compat.h>
 
 
-size_t __kernel_cpumask_size attribute_hidden;
-
-
-/* Determine the size of cpumask_t in the kernel.  */
-int
-__determine_cpumask_size (pid_t tid)
-{
-  size_t psize;
-  int res;
-
-  for (psize = 128; ; psize *= 2)
-    {
-      char buf[psize];
-      INTERNAL_SYSCALL_DECL (err);
-
-      res = INTERNAL_SYSCALL (sched_getaffinity, err, 3, tid, psize, buf);
-      if (INTERNAL_SYSCALL_ERROR_P (res, err))
-	{
-	  if (INTERNAL_SYSCALL_ERRNO (res, err) != EINVAL)
-	    return INTERNAL_SYSCALL_ERRNO (res, err);
-	}
-      else
-	break;
-    }
-
-  if (res != 0)
-    __kernel_cpumask_size = res;
-
-  return 0;
-}
-
-
 int
 __pthread_setaffinity_new (pthread_t th, size_t cpusetsize,
 			   const cpu_set_t *cpuset)
 {
   const struct pthread *pd = (const struct pthread *) th;
-
   INTERNAL_SYSCALL_DECL (err);
   int res;
-
-  if (__glibc_unlikely (__kernel_cpumask_size == 0))
-    {
-      res = __determine_cpumask_size (pd->tid);
-      if (res != 0)
-	return res;
-    }
-
-  /* We now know the size of the kernel cpumask_t.  Make sure the user
-     does not request to set a bit beyond that.  */
-  for (size_t cnt = __kernel_cpumask_size; cnt < cpusetsize; ++cnt)
-    if (((char *) cpuset)[cnt] != '\0')
-      /* Found a nonzero byte.  This means the user request cannot be
-	 fulfilled.  */
-      return EINVAL;
 
   res = INTERNAL_SYSCALL (sched_setaffinity, err, 3, pd->tid, cpusetsize,
 			  cpuset);

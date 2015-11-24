@@ -1,4 +1,4 @@
-/* Validate cpu_set_t values for NPTL.  Stub version.
+/* Multi-threaded test for sched_getaffinity_np, sched_setaffinity_np.
    Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,17 +16,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
+#include <sched.h>
 
-/* Returns 0 if CS and SZ are valid values for the cpuset and cpuset size
-   respectively.  Otherwise it returns an error number.  */
-static inline int
-check_cpuset_attr (const cpu_set_t *cs, const size_t sz)
+/* Defined for the benefit of tst-skeleton-thread-affinity.c, included
+   below.  */
+
+static int
+getaffinity (size_t size, cpu_set_t *set)
 {
-  if (sz == 0)
-    return 0;
-
-  /* This means pthread_attr_setaffinity will return ENOSYS, which
-     is the right thing when the cpu_set_t features are not available.  */
-  return ENOSYS;
+  return sched_getaffinity (0, size, set);
 }
+
+static int
+setaffinity (size_t size, const cpu_set_t *set)
+{
+  return sched_setaffinity (0, size, set);
+}
+
+#include "tst-skeleton-thread-affinity.c"

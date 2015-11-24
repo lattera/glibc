@@ -1,3 +1,36 @@
+2015-10-24  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19143]
+	[BZ #19164]
+	* nptl/check-cpuset.h: Remove.
+	* nptl/pthread_attr_setaffinity.c (__pthread_attr_setaffinity_new):
+	Remove CPU set size check.
+	* nptl/pthread_setattr_default_np.c (pthread_setattr_default_np):
+	Likewise.
+	* sysdeps/unix/sysv/linux/check-cpuset.h: Remove.
+	* sysdeps/unix/sysv/linux/pthread_setaffinity.c
+	(__kernel_cpumask_size, __determine_cpumask_size): Remove.
+	(__pthread_setaffinity_new): Remove CPU set size check.
+	* sysdeps/unix/sysv/linux/sched_setaffinity.c
+	(__kernel_cpumask_size): Remove.
+	(__sched_setaffinity_new): Remove CPU set size check.
+	* manual/threads.texi (Default Thread Attributes): Remove stale
+	reference to check_cpuset_attr, determine_cpumask_size in comment.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) == posix] (tests):
+	Remove tst-getcpu.  Add tst-affinity, tst-affinity-pid.
+	[$(subdir) == nptl] (tests): Add tst-thread-affinity-pthread,
+	tst-thread-affinity-pthread2, tst-thread-affinity-sched.
+	* sysdeps/unix/sysv/linux/tst-affinity.c: New file.
+	* sysdeps/unix/sysv/linux/tst-affinity-pid.c: New file.
+	* sysdeps/unix/sysv/linux/tst-skeleton-affinity.c: New skeleton test file.
+	* sysdeps/unix/sysv/linux/tst-thread-affinity-sched.c: New file.
+	* sysdeps/unix/sysv/linux/tst-thread-affinity-pthread.c: New file.
+	* sysdeps/unix/sysv/linux/tst-thread-affinity-pthread2.c: New file.
+	* sysdeps/unix/sysv/linux/tst-thread-skeleton-affinity.c: New
+	skeleton test file.
+	* sysdeps/unix/sysv/linux/tst-getcpu.c: Remove.  Superseded by
+	tst-affinity-pid.
+
 2015-11-24  Florian Weimer  <fweimer@redhat.com>
 
 	* scripts/update-abilist.sh: New file.

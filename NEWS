@@ -7,6 +7,14 @@ using `glibc' in the "product" field.
 
 Version 2.23
 
+* sched_setaffinity, pthread_setaffinity_np no longer attempt to guess the
+  kernel-internal CPU set size.  This means that requests that change the
+  CPU affinity which failed before (for example, an all-ones CPU mask) will
+  now succeed.  Applications that need to determine the effective CPU
+  affinities need to call sched_getaffinity or pthread_getaffinity_np after
+  setting it because the kernel can adjust it (and the previous size check
+  would not detect this in the majority of cases).
+
 * The fts.h header can now be used with -D_FILE_OFFSET_BITS=64.  With LFS
   the following new symbols are used: fts64_children, fts64_close,
   fts64_open, fts64_read and fts64_set.

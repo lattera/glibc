@@ -111,8 +111,6 @@ failure.
 @c  check_sched_priority_attr ok
 @c   sched_get_priority_min dup ok
 @c   sched_get_priority_max dup ok
-@c  check_cpuset_attr ok
-@c   determine_cpumask_size ok
 @c  check_stacksize_attr ok
 @c  lll_lock @asulock @aculock
 @c  free dup @ascuheap @acsmem
