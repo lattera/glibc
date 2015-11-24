@@ -1,3 +1,7 @@
+2015-11-24  Gleb Fotengauer-Malinovskiy  <glebfm@altlinux.org>
+
+	* malloc/memusage.c (me): Remove redundant getenv call.
+
 2015-10-24  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19143]

@@ -276,9 +276,10 @@ me (void)
               /* Determine the buffer size.  We use the default if the
                  environment variable is not present.  */
               buffer_size = DEFAULT_BUFFER_SIZE;
-              if (getenv ("MEMUSAGE_BUFFER_SIZE") != NULL)
+              const char *str_buffer_size = getenv ("MEMUSAGE_BUFFER_SIZE");
+              if (str_buffer_size != NULL)
                 {
-                  buffer_size = atoi (getenv ("MEMUSAGE_BUFFER_SIZE"));
+                  buffer_size = atoi (str_buffer_size);
                   if (buffer_size == 0 || buffer_size > DEFAULT_BUFFER_SIZE)
                     buffer_size = DEFAULT_BUFFER_SIZE;
                 }
