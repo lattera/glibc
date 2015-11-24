@@ -47,7 +47,7 @@ strop-tests :=  wcscmp wcsncmp wmemcmp wcslen wcschr wcsrchr wcscpy wcsnlen \
 		wcscspn wmemchr wmemset
 tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs tst-wchar-h tst-mbrtowc2 \
-	 tst-c16c32-1 wcsatcliff tst-wcstol-locale \
+	 tst-c16c32-1 wcsatcliff tst-wcstol-locale tst-wcstod-nan-locale \
 	 $(addprefix test-,$(strop-tests))
 
 include ../Rules
@@ -64,6 +64,7 @@ $(objpfx)tst-mbrtowc2.out: $(gen-locales)
 $(objpfx)tst-wcrtomb.out: $(gen-locales)
 $(objpfx)wcsmbs-tst1.out: $(gen-locales)
 $(objpfx)tst-wcstol-locale.out: $(gen-locales)
+$(objpfx)tst-wcstod-nan-locale.out: $(gen-locales)
 endif
 
 CFLAGS-wcwidth.c = -I../wctype
@@ -95,3 +96,5 @@ CPPFLAGS += $(libio-mtsafe)
 
 # We need to find the default version of strtold_l in stdlib.
 CPPFLAGS-wcstold_l.c = -I../stdlib
+
+$(objpfx)tst-wcstod-nan-locale: $(libm)

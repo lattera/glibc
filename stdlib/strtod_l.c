@@ -652,8 +652,8 @@ ____STRTOF_INTERNAL (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group,
 	      do
 		++cp;
 	      while ((*cp >= L_('0') && *cp <= L_('9'))
-		     || ({ CHAR_TYPE lo = TOLOWER (*cp);
-			   lo >= L_('a') && lo <= L_('z'); })
+		     || (*cp >= L_('A') && *cp <= L_('Z'))
+		     || (*cp >= L_('a') && *cp <= L_('z'))
 		     || *cp == L_('_'));
 
 	      if (*cp != L_(')'))

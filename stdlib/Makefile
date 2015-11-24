@@ -75,7 +75,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-secure-getenv tst-strtod-overflow tst-strtod-round   \
 		   tst-tininess tst-strtod-underflow tst-tls-atexit	    \
 		   tst-setcontext3 tst-tls-atexit-nodelete		    \
-		   tst-strtol-locale
+		   tst-strtol-locale tst-strtod-nan-locale
 tests-static	:= tst-secure-getenv
 
 modules-names	= tst-tls-atexit-lib
@@ -134,6 +134,7 @@ $(objpfx)tst-strtod3.out: $(gen-locales)
 $(objpfx)tst-strtod4.out: $(gen-locales)
 $(objpfx)tst-strtod5.out: $(gen-locales)
 $(objpfx)tst-strtol-locale.out: $(gen-locales)
+$(objpfx)tst-strtod-nan-locale.out: $(gen-locales)
 endif
 
 # Testdir has to be named stdlib and needs to be writable
@@ -168,6 +169,7 @@ $(objpfx)tst-strtod-round: $(libm)
 $(objpfx)tst-tininess: $(libm)
 $(objpfx)tst-strtod-underflow: $(libm)
 $(objpfx)tst-strtod6: $(libm)
+$(objpfx)tst-strtod-nan-locale: $(libm)
 
 tst-tls-atexit-lib.so-no-z-defs = yes
 

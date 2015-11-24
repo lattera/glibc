@@ -1,3 +1,20 @@
+2015-11-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19266]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Check directly for
+	upper case and lower case letters inside NAN(), not using TOLOWER.
+	* stdlib/tst-strtod-nan-locale-main.c: New file.
+	* stdlib/tst-strtod-nan-locale.c: Likewise.
+	* stdlib/Makefile (tests): Add tst-strtod-nan-locale.
+	[$(run-built-tests) = yes] ($(objpfx)tst-strtod-nan-locale.out):
+	Depend on $(gen-locales).
+	($(objpfx)tst-strtod-nan-locale): Depend on $(libm).
+	* wcsmbs/tst-wcstod-nan-locale.c: New file.
+	* wcsmbs/Makefile (tests): Add tst-wcstod-nan-locale.
+	[$(run-built-tests) = yes] ($(objpfx)tst-wcstod-nan-locale.out):
+	Depend on $(gen-locales).
+	($(objpfx)tst-wcstod-nan-locale): Depend on $(libm).
+
 2015-11-24  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* misc/tst-tsearch.c (TIMEOUT): Set to 10.
