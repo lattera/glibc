@@ -1,5 +1,7 @@
 2015-11-24  Chris Metcalf  <cmetcalf@ezchip.com>
 
+	* misc/tst-tsearch.c (TIMEOUT): Set to 10.
+
 	* sysdeps/tile/bits/mathdef.h (__NO_LONG_DOUBLE_MATH): Define.
 	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist: Add
 	__finitel, __isinfl, and __isnanl.
