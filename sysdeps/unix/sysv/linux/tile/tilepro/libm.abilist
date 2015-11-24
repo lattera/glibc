@@ -5,6 +5,7 @@ GLIBC_2.12 __clog10f F
 GLIBC_2.12 __clog10l F
 GLIBC_2.12 __finite F
 GLIBC_2.12 __finitef F
+GLIBC_2.12 __finitel F
 GLIBC_2.12 __fpclassify F
 GLIBC_2.12 __fpclassifyf F
 GLIBC_2.12 __signbit F

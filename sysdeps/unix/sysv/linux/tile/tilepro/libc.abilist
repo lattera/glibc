@@ -182,6 +182,7 @@ GLIBC_2.12 __fgetws_chk F
 GLIBC_2.12 __fgetws_unlocked_chk F
 GLIBC_2.12 __finite F
 GLIBC_2.12 __finitef F
+GLIBC_2.12 __finitel F
 GLIBC_2.12 __flbf F
 GLIBC_2.12 __fork F
 GLIBC_2.12 __fpending F
@@ -227,9 +228,11 @@ GLIBC_2.12 __isdigit_l F
 GLIBC_2.12 __isgraph_l F
 GLIBC_2.12 __isinf F
 GLIBC_2.12 __isinff F
+GLIBC_2.12 __isinfl F
 GLIBC_2.12 __islower_l F
 GLIBC_2.12 __isnan F
 GLIBC_2.12 __isnanf F
+GLIBC_2.12 __isnanl F
 GLIBC_2.12 __isoc99_fscanf F
 GLIBC_2.12 __isoc99_fwscanf F
 GLIBC_2.12 __isoc99_scanf F
