@@ -1,3 +1,8 @@
+2015-11-25  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/sigunwind.c (_hurdsig_longjmp_from_handler): Destroy reply port
+	of interrupted RPC instead of restoring it.
+
 2015-11-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/strtod_nan.c: New file.
