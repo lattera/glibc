@@ -6,8 +6,8 @@
 	* sysdeps/i386/setjmp.S (__sigsetjmp): Add hidden_def.
 	* sysdeps/mach/hurd/accept4.c (__libc_accept4): Remove
 	libc_hidden_def.
-	* sysdeps/mach/hurd/dl-sysdep.c (__libc_stack_end): Add relro
-	attribute, define rtld_hidden_data_def.
+	* sysdeps/mach/hurd/dl-sysdep.c (__libc_stack_end): Define
+	rtld_hidden_data_def.
 	* sysdeps/mach/hurd/fxstatat64.c (__fxstatat64): Add libc_hidden_def.
 	* sysdeps/mach/hurd/if_index.c (__if_freenameindex): Add
 	libc_hidden_def.
