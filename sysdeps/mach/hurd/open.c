@@ -56,5 +56,5 @@ weak_alias (__libc_open, open)
 /* open64 is just the same as open for us.  */
 weak_alias (__libc_open, __libc_open64)
 weak_alias (__libc_open, __open64)
-libc_hidden_weak (_open64)
+libc_hidden_weak (__open64)
 weak_alias (__libc_open, open64)

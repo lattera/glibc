@@ -43,3 +43,4 @@ __fxstatat64 (int vers, int fd, const char *filename, struct stat64 *buf,
 
   return __hurd_fail (err);
 }
+libc_hidden_def (__fxstatat64)

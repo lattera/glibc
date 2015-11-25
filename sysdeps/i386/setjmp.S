@@ -55,3 +55,4 @@ ENTRY (__sigsetjmp)
 	jmp __sigjmp_save
 #endif
 END (__sigsetjmp)
+hidden_def (__sigsetjmp)

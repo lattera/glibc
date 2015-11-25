@@ -3,6 +3,27 @@
 	* hurd/sigunwind.c (_hurdsig_longjmp_from_handler): Destroy reply port
 	of interrupted RPC instead of restoring it.
 
+	* sysdeps/i386/setjmp.S (__sigsetjmp): Add hidden_def.
+	* sysdeps/mach/hurd/accept4.c (__libc_accept4): Remove
+	libc_hidden_def.
+	* sysdeps/mach/hurd/dl-sysdep.c (__libc_stack_end): Add relro
+	attribute, define rtld_hidden_data_def.
+	* sysdeps/mach/hurd/fxstatat64.c (__fxstatat64): Add libc_hidden_def.
+	* sysdeps/mach/hurd/if_index.c (__if_freenameindex): Add
+	libc_hidden_def.
+	(if_freenameindex): Add libc_hidden_weak.
+	(if_nameindex): Add libc_hidden_weak.
+	* sysdeps/mach/hurd/open.c (_open64): Rename libc_hidden_weak into
+	__open64.
+	* sysdeps/mach/hurd/sigwait.c (__sigwait): Add libc_hidden_def.
+	* sysdeps/mach/hurd/xmknodat.c (__xmknodat): Add libc_hidden_def.
+	* sysdeps/mach/nanosleep.c: Include <time.h>
+	(__nanosleep): Rename to __libc_nanosleep.
+	(__nanosleep): Add weak_alias.
+	(nanosleep): Update alias.
+	* sysdeps/mach/hurd/configure.ac (NO_HIDDEN): Do not define.
+	* sysdeps/mach/hurd/configure: Regenerate.
+
 2015-11-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/strtod_nan.c: New file.

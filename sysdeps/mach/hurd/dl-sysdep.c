@@ -55,7 +55,8 @@ rtld_hidden_data_def (__libc_enable_secure)
 int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 				   of init-first.  */
 /* This variable contains the lowest stack address ever used.  */
-void *__libc_stack_end;
+void *__libc_stack_end attribute_relro = NULL;
+rtld_hidden_data_def(__libc_stack_end)
 
 #if HP_TIMING_AVAIL
 hp_timing_t _dl_cpuclock_offset;

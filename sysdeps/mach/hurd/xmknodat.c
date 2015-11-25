@@ -115,3 +115,5 @@ __xmknodat (int vers, int fd, const char *path, mode_t mode, dev_t *dev)
     return __hurd_fail (err);
   return 0;
 }
+
+libc_hidden_def (__xmknodat)

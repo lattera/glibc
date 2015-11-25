@@ -19,10 +19,11 @@
 #include <errno.h>
 #include <mach.h>
 #include <sys/time.h>
+#include <time.h>
 #include <unistd.h>
 
 int
-__nanosleep (const struct timespec *requested_time,
+__libc_nanosleep (const struct timespec *requested_time,
 	     struct timespec *remaining)
 {
   mach_port_t recv;
@@ -64,5 +65,6 @@ __nanosleep (const struct timespec *requested_time,
 
   return 0;
 }
+weak_alias(__libc_nanosleep, __nanosleep)
 libc_hidden_def (__nanosleep)
-weak_alias (__nanosleep, nanosleep)
+weak_alias (__libc_nanosleep, nanosleep)

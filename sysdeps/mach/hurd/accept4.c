@@ -95,5 +95,4 @@ __libc_accept4 (int fd, __SOCKADDR_ARG addrarg, socklen_t *addr_len, int flags)
 
   return _hurd_intern_fd (new, O_IGNORE_CTTY | flags, 1);
 }
-libc_hidden_def (__libc_accept4)
 weak_alias (__libc_accept4, accept4)

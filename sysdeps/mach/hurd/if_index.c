@@ -65,7 +65,9 @@ __if_freenameindex (struct if_nameindex *ifn)
     }
   free (ifn);
 }
+libc_hidden_def (__if_freenameindex)
 weak_alias (__if_freenameindex, if_freenameindex)
+libc_hidden_weak (if_freenameindex)
 
 /* Return an array of if_nameindex structures, one for each network
    interface present, plus one indicating the end of the array.  On
@@ -152,6 +154,7 @@ __if_nameindex (void)
   return idx;
 }
 weak_alias (__if_nameindex, if_nameindex)
+libc_hidden_weak (if_nameindex)
 
 /* Store the name of the interface corresponding to index IFINDEX in
    IFNAME (which has space for at least IFNAMSIZ characters).  Return
