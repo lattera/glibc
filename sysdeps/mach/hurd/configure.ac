@@ -1,5 +1,8 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
+dnl We need this setting because of the need for PLT calls in ld.so.
+AC_DEFINE([NO_HIDDEN])
+
 if test -n "$sysheaders"; then
   OLD_CPPFLAGS=$CPPFLAGS
   CPPFLAGS="$CPPFLAGS $SYSINCLUDES"

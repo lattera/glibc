@@ -21,8 +21,6 @@
 	(__nanosleep): Rename to __libc_nanosleep.
 	(__nanosleep): Add weak_alias.
 	(nanosleep): Update alias.
-	* sysdeps/mach/hurd/configure.ac (NO_HIDDEN): Do not define.
-	* sysdeps/mach/hurd/configure: Regenerate.
 
 2015-11-24  Joseph Myers  <joseph@codesourcery.com>
 
