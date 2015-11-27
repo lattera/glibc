@@ -45,7 +45,7 @@
 #include "../locarchive.h"
 #include <programs/xmalloc.h>
 
-#define ARCHIVE_NAME LOCALEDIR "/locale-archive"
+#define ARCHIVE_NAME COMPLOCALEDIR "/locale-archive"
 
 /* If set print the name of the category.  */
 static int show_category_name;
@@ -325,9 +325,11 @@ select_dirs (const struct dirent *dirent)
 #endif
 	{
 	  struct stat64 st;
-	  char buf[sizeof (LOCALEDIR) + strlen (dirent->d_name) + 1];
+	  char buf[sizeof (COMPLOCALEDIR)
+		   + strlen (dirent->d_name) + 1];
 
-	  stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"), dirent->d_name);
+	  stpcpy (stpcpy (stpcpy (buf, COMPLOCALEDIR), "/"),
+		  dirent->d_name);
 
 	  if (stat64 (buf, &st) == 0)
 	    mode = st.st_mode;
@@ -444,17 +446,21 @@ write_locales (void)
     first_locale = 0;
 
   /* Now we can look for all files in the directory.  */
-  ndirents = scandir (LOCALEDIR, &dirents, select_dirs, alphasort);
+  ndirents = scandir (COMPLOCALEDIR, &dirents, select_dirs,
+		      alphasort);
   for (cnt = 0; cnt < ndirents; ++cnt)
     {
       /* Test whether at least the LC_CTYPE data is there.  Some
 	 directories only contain translations.  */
-      char buf[sizeof (LOCALEDIR) + strlen (dirents[cnt]->d_name)
-	      + sizeof "/LC_IDENTIFICATION"];
+      char buf[sizeof (COMPLOCALEDIR)
+	       + strlen (dirents[cnt]->d_name)
+	       + sizeof "/LC_IDENTIFICATION"];
       char *enddir;
       struct stat64 st;
 
-      stpcpy (enddir = stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"),
+      stpcpy (enddir = stpcpy (stpcpy (stpcpy (buf,
+					       COMPLOCALEDIR),
+					       "/"),
 			       dirents[cnt]->d_name),
 	      "/LC_IDENTIFICATION");
 

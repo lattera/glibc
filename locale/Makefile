@@ -76,12 +76,15 @@ C-translit.h: C-translit.h.in gen-translit.pl
 	$(PERL) gen-translit.pl < $< > $@.tmp
 	mv -f $@.tmp $@
 
-localepath = "$(localedir):$(i18ndir)"
+# The path to the compiled binary locale archive or compiled locales,
+# along with the parent path to the source locales and source
+# charmaps.
+localepath = "$(complocaledir):$(i18ndir)"
 
 # -Iprograms doesn't really belong here, but this gets it at the head
 # of the list instead of the tail, where CPPFLAGS-$(lib) gets added.
 # We need it before the standard -I's to see programs/config.h first.
-locale-CPPFLAGS = -DLOCALEDIR='"$(localedir)"' \
+locale-CPPFLAGS = -DCOMPLOCALEDIR='"$(complocaledir)"' \
 		  -DLOCALE_ALIAS_PATH='"$(msgcatdir)"' \
 		  -Iprograms
 

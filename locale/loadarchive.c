@@ -42,7 +42,7 @@
 
 
 /* Name of the locale archive file.  */
-static const char archfname[] = LOCALEDIR "/locale-archive";
+static const char archfname[] = COMPLOCALEDIR "/locale-archive";
 
 /* Size of initial mapping window, optimal if large enough to
    cover the header plus the initial locale.  */

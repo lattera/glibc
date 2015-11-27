@@ -190,11 +190,12 @@ zonedir = $(datadir)/zoneinfo
 endif
 inst_zonedir = $(install_root)$(zonedir)
 
-# Where to install the locale files.
-ifndef localedir
-localedir = $(libdir)/locale
+# Where to install the compiled binary locale archive and compiled
+# binary locale files.
+ifndef complocaledir
+complocaledir = $(libdir)/locale
 endif
-inst_localedir = $(install_root)$(localedir)
+inst_complocaledir = $(install_root)$(complocaledir)
 
 # Where to install the message catalog data files (which are
 # machine-independent).

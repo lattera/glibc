@@ -1,3 +1,30 @@
+2015-11-27  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #14259]
+	* Makeconfig: Rename localedir to complocaledir.
+	Rename inst_localedir to inst_complocaledir.
+	* aclocal.m4: Rename libc_cv_localedir to libc_cv_complocaledir.
+	* config.make.in: Use complocaledir and libc_cv_complocaledir.
+	* configure.ac: Use libc_cv_complocaledir.
+	* configure: Regenerate.
+	* locale/Makefile: Use complocaledir. Rename define -DLOCALEDIR to
+	-DCOMPLOCALEDIR.
+	* locale/findlocale.c: Use COMPLOCALEDIR.
+	* locale/loadarchive.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* locale/programs/locarchive.c: Likewise.
+	* localedata/Makefile: Use inst_complocaledir.
+	* sysdeps/gnu/configure: Regenerate.
+	* sysdeps/hppa/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/aarch64/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/s390/s390-64/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/x86_64/64/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/x86_64/x32/configure: Regenerate.
+
 2015-11-27  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	[BZ #19058]

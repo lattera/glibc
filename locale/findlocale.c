@@ -56,7 +56,7 @@ struct __locale_data *const _nl_C[] attribute_hidden =
    which are somehow addressed.  */
 struct loaded_l10nfile *_nl_locale_file_list[__LC_LAST];
 
-const char _nl_default_locale_path[] attribute_hidden = LOCALEDIR;
+const char _nl_default_locale_path[] attribute_hidden = COMPLOCALEDIR;
 
 /* Checks if the name is actually present, that is, not NULL and not
    empty.  */

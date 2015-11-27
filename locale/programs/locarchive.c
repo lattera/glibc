@@ -57,7 +57,7 @@
 
 extern const char *output_prefix;
 
-#define ARCHIVE_NAME LOCALEDIR "/locale-archive"
+#define ARCHIVE_NAME COMPLOCALEDIR "/locale-archive"
 
 static const char *locnames[] =
   {

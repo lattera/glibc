@@ -199,7 +199,7 @@ $(rtld-prefix) $(common-objpfx)locale/localedef
 install-locales: $(INSTALL-SUPPORTED-LOCALES)
 
 install-locales-dir:
-	$(..)./scripts/mkinstalldirs $(inst_localedir)
+	$(..)./scripts/mkinstalldirs $(inst_complocaledir)
 
 $(INSTALL-SUPPORTED-LOCALES): install-locales-dir
 	@locale=`echo $@ | sed -e 's/^install-//'`; \

@@ -296,7 +296,7 @@ case "$prefix" in
   if test "$libdir" = '${exec_prefix}/lib'; then
     libdir='${exec_prefix}/$1';
     # Locale data can be shared between 32-bit and 64-bit libraries.
-    libc_cv_localedir='${exec_prefix}/lib/locale'
+    libc_cv_complocaledir='${exec_prefix}/lib/locale'
   fi
   ;;
 esac])

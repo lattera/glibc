@@ -457,11 +457,11 @@ construct_output_path (char *path)
 	 '/'.  */
       ssize_t n;
       if (normal == NULL)
-	n = asprintf (&result, "%s%s/%s%c",
-		      output_prefix ?: "", LOCALEDIR, path, '\0');
+	n = asprintf (&result, "%s%s/%s%c", output_prefix ?: "",
+		      COMPLOCALEDIR, path, '\0');
       else
 	n = asprintf (&result, "%s%s/%.*s%s%s%c",
-		      output_prefix ?: "", LOCALEDIR,
+		      output_prefix ?: "", COMPLOCALEDIR,
 		      (int) (startp - path), path, normal, endp, '\0');
 
       if (n < 0)

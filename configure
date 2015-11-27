@@ -603,7 +603,7 @@ use_ldconfig
 libc_cv_rootsbindir
 libc_cv_localstatedir
 libc_cv_sysconfdir
-libc_cv_localedir
+libc_cv_complocaledir
 libc_cv_rtlddir
 libc_cv_slibdir
 use_nscd

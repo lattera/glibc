@@ -1763,7 +1763,7 @@ fi
 
 AC_SUBST(libc_cv_slibdir)
 AC_SUBST(libc_cv_rtlddir)
-AC_SUBST(libc_cv_localedir)
+AC_SUBST(libc_cv_complocaledir)
 AC_SUBST(libc_cv_sysconfdir)
 AC_SUBST(libc_cv_localstatedir)
 AC_SUBST(libc_cv_rootsbindir)
