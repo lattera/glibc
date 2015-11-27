@@ -20,7 +20,9 @@ libmvec-support += svml_d_cos2_core svml_d_cos4_core_avx \
 		   svml_d_pow_data svml_s_powf4_core svml_s_powf8_core_avx \
 		   svml_s_powf8_core svml_s_powf16_core svml_s_powf_data \
 		   svml_s_sincosf4_core svml_s_sincosf8_core_avx \
-		   svml_s_sincosf8_core svml_s_sincosf16_core
+		   svml_s_sincosf8_core svml_s_sincosf16_core svml_finite_alias
+
+libmvec-static-only-routines = svml_finite_alias
 endif
 
 # Variables for libmvec tests.

@@ -53,34 +53,5 @@
 #  undef __DECL_SIMD_powf
 #  define __DECL_SIMD_powf __DECL_SIMD_x86_64
 
-/* Workaround to exclude unnecessary symbol aliases in libmvec
-   while GCC creates the vector names based on scalar asm name.
-   Corresponding discussion started at
-   <https://gcc.gnu.org/ml/gcc/2015-06/msg00173.html>.  */
-__asm__ ("_ZGVbN2v___log_finite = _ZGVbN2v_log");
-__asm__ ("_ZGVcN4v___log_finite = _ZGVcN4v_log");
-__asm__ ("_ZGVdN4v___log_finite = _ZGVdN4v_log");
-__asm__ ("_ZGVeN8v___log_finite = _ZGVeN8v_log");
-__asm__ ("_ZGVbN4v___logf_finite = _ZGVbN4v_logf");
-__asm__ ("_ZGVcN8v___logf_finite = _ZGVcN8v_logf");
-__asm__ ("_ZGVdN8v___logf_finite = _ZGVdN8v_logf");
-__asm__ ("_ZGVeN16v___logf_finite = _ZGVeN16v_logf");
-__asm__ ("_ZGVbN2v___exp_finite = _ZGVbN2v_exp");
-__asm__ ("_ZGVcN4v___exp_finite = _ZGVcN4v_exp");
-__asm__ ("_ZGVdN4v___exp_finite = _ZGVdN4v_exp");
-__asm__ ("_ZGVeN8v___exp_finite = _ZGVeN8v_exp");
-__asm__ ("_ZGVbN4v___expf_finite = _ZGVbN4v_expf");
-__asm__ ("_ZGVcN8v___expf_finite = _ZGVcN8v_expf");
-__asm__ ("_ZGVdN8v___expf_finite = _ZGVdN8v_expf");
-__asm__ ("_ZGVeN16v___expf_finite = _ZGVeN16v_expf");
-__asm__ ("_ZGVbN2vv___pow_finite = _ZGVbN2vv_pow");
-__asm__ ("_ZGVcN4vv___pow_finite = _ZGVcN4vv_pow");
-__asm__ ("_ZGVdN4vv___pow_finite = _ZGVdN4vv_pow");
-__asm__ ("_ZGVeN8vv___pow_finite = _ZGVeN8vv_pow");
-__asm__ ("_ZGVbN4vv___powf_finite = _ZGVbN4vv_powf");
-__asm__ ("_ZGVcN8vv___powf_finite = _ZGVcN8vv_powf");
-__asm__ ("_ZGVdN8vv___powf_finite = _ZGVdN8vv_powf");
-__asm__ ("_ZGVeN16vv___powf_finite = _ZGVeN16vv_powf");
-
 # endif
 #endif

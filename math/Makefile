@@ -99,7 +99,7 @@ $(inst_libdir)/libm.so: $(common-objpfx)format.lds \
 	(echo '/* GNU ld script'; echo '*/';\
 	 cat $<; \
 	 echo 'GROUP ( $(slibdir)/libm.so$(libm.so-version) ' \
-	      'AS_NEEDED ( $(slibdir)/libmvec.so$(libmvec.so-version) ) )' \
+	      'AS_NEEDED ( $(slibdir)/libmvec_nonshared.a $(slibdir)/libmvec.so$(libmvec.so-version) ) )' \
 	) > $@
 endif
 
