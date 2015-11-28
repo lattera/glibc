@@ -1,3 +1,8 @@
+2015-11-28  Maciej W. Rozycki  <macro@imgtec.com>
+
+	* sysdeps/mips/fpu_control.h (_FPU_RESERVED): Include ABS2008.
+	(_FPU_DEFAULT, _FPU_IEEE) [__mips_nan2008]: Set ABS2008.
+
 2015-11-27  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #14259]
