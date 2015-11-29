@@ -464,14 +464,10 @@ __fork (void)
 	  (err = __mach_port_insert_right (newtask, ss->thread,
 					   thread, MACH_MSG_TYPE_COPY_SEND)))
 	LOSE;
-      /* We have one extra user reference created at the beginning of this
-	 function, accounted for by mach_port_names (and which will thus be
-	 accounted for in the child below).  This extra right gets consumed
-	 in the child by the store into _hurd_sigthread in the child fork.  */
       if (thread_refs > 1 &&
 	  (err = __mach_port_mod_refs (newtask, ss->thread,
 				       MACH_PORT_RIGHT_SEND,
-				       thread_refs)))
+				       thread_refs - 1)))
 	LOSE;
       if ((_hurd_msgport_thread != MACH_PORT_NULL) /* Let user have none.  */
 	  && ((err = __mach_port_deallocate (newtask, _hurd_msgport_thread)) ||

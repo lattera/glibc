@@ -1,3 +1,8 @@
+2015-11-29  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/mach/hurd/fork.c (__fork): Install correct number of send
+	rights for its main user thread in NEWTASK.
+
 2015-11-28  Maciej W. Rozycki  <macro@imgtec.com>
 
 	* sysdeps/mips/fpu_control.h (_FPU_RESERVED): Include ABS2008.
