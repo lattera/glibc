@@ -21,7 +21,8 @@
 
 static inline void
 get_common_indeces (struct cpu_features *cpu_features,
-		    unsigned int *family, unsigned int *model)
+		    unsigned int *family, unsigned int *model,
+		    unsigned int *extended_model)
 {
   unsigned int eax;
   __cpuid (1, eax, cpu_features->cpuid[COMMON_CPUID_INDEX_1].ebx,
@@ -30,6 +31,12 @@ get_common_indeces (struct cpu_features *cpu_features,
   GLRO(dl_x86_cpu_features).cpuid[COMMON_CPUID_INDEX_1].eax = eax;
   *family = (eax >> 8) & 0x0f;
   *model = (eax >> 4) & 0x0f;
+  *extended_model = (eax >> 12) & 0xf0;
+  if (*family == 0x0f)
+    {
+      *family += (eax >> 20) & 0xff;
+      *model += *extended_model;
+    }
 }
 
 static inline void
@@ -53,19 +60,13 @@ init_cpu_features (struct cpu_features *cpu_features)
   /* This spells out "GenuineIntel".  */
   if (ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69)
     {
+      unsigned int extended_model;
+
       kind = arch_kind_intel;
 
-      get_common_indeces (cpu_features, &family, &model);
+      get_common_indeces (cpu_features, &family, &model, &extended_model);
 
-      unsigned int eax = cpu_features->cpuid[COMMON_CPUID_INDEX_1].eax;
-      unsigned int extended_family = (eax >> 20) & 0xff;
-      unsigned int extended_model = (eax >> 12) & 0xf0;
-      if (family == 0x0f)
-	{
-	  family += extended_family;
-	  model += extended_model;
-	}
-      else if (family == 0x06)
+      if (family == 0x06)
 	{
 	  ecx = cpu_features->cpuid[COMMON_CPUID_INDEX_1].ecx;
 	  model += extended_model;
@@ -132,9 +133,11 @@ init_cpu_features (struct cpu_features *cpu_features)
   /* This spells out "AuthenticAMD".  */
   else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
     {
+      unsigned int extended_model;
+
       kind = arch_kind_amd;
 
-      get_common_indeces (cpu_features, &family, &model);
+      get_common_indeces (cpu_features, &family, &model, &extended_model);
 
       ecx = cpu_features->cpuid[COMMON_CPUID_INDEX_1].ecx;
 

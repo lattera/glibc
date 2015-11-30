@@ -1,3 +1,11 @@
+2015-11-30  Amit Pawar  <amit.pawar@amd.com>
+
+	[BZ #19214]
+	* sysdeps/x86/cpu-features.c (get_common_indeces): Add an
+	argument to return extended model.  Update family and model
+	with extended family and model when family == 0x0f.
+	(init_cpu_features): Updated.
+
 2015-11-29  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	The RPC interface used by mmap uses the unsigned vm_offset_t, not the
