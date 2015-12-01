@@ -1,3 +1,10 @@
+2015-12-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/e_sqrt.c: Do not include uroot.h.
+	(__ieee754_sqrt): Use hex float constants instead of tm256.x and
+	t512.x.
+	* sysdeps/ieee754/dbl-64/uroot.h: Remove file.
+
 2015-11-30  Amit Pawar  <amit.pawar@amd.com>
 
 	[BZ #19214]
