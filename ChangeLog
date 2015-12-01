@@ -1,3 +1,21 @@
+2015-12-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19313]
+	* bits/typesizes.h (__CPU_MASK_TYPE): New.
+	* sysdeps/mach/hurd/bits/typesizes.h (__CPU_MASK_TYPE): Likewise.
+	* sysdeps/nacl/bits/typesizes.h (__CPU_MASK_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/typesizes.h (__CPU_MASK_TYPE):
+	Likewise.
+	* sysdeps/unix/sysv/linux/generic/bits/typesizes.h (__CPU_MASK_TYPE):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h (__CPU_MASK_TYPE):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h (__CPU_MASK_TYPE):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/typesizes.h (__CPU_MASK_TYPE):
+	* sysdeps/unix/sysv/linux/bits/sched.h (__cpu_mask): Replace
+	unsigned long int with __CPU_MASK_TYPE.
+
 2015-12-01  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Regenerated.

@@ -71,6 +71,7 @@
 #define __BLKSIZE_T_TYPE	__SYSCALL_SLONG_TYPE
 #define __FSID_T_TYPE		struct { int __val[2]; }
 #define __SSIZE_T_TYPE		__SWORD_TYPE
+#define __CPU_MASK_TYPE 	__SYSCALL_ULONG_TYPE
 
 #ifdef __x86_64__
 /* Tell the libc code that off_t and off64_t are actually the same type

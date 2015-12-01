@@ -115,7 +115,7 @@ struct __sched_param
 # define __NCPUBITS	(8 * sizeof (__cpu_mask))
 
 /* Type for array elements in 'cpu_set_t'.  */
-typedef unsigned long int __cpu_mask;
+typedef __CPU_MASK_TYPE __cpu_mask;
 
 /* Basic access functions.  */
 # define __CPUELT(cpu)	((cpu) / __NCPUBITS)
