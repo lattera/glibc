@@ -1,3 +1,31 @@
+2015-12-03  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* sysdeps/arm/math_private.h (LDBL_CLASSIFY_COMPAT): New symbol.
+	* sysdeps/microblaze/math_private.h (LDBL_CLASSIFY_COMPAT):
+	Likewise.
+	* sysdeps/mips/math_private.h (LDBL_CLASSIFY_COMPAT): Likewise.
+	* sysdeps/nios2/math_private.h (LDBL_CLASSIFY_COMPAT): Likewise.
+	* sysdeps/sh/math_private.h: New file.
+	* sysdeps/m68k/coldfire/fpu/math_private.h: Likewise.
+	* sysdeps/ieee754/dbl-64/s_finite.c [defined NO_LONG_DOUBLE &&
+	defined LDBL_CLASSIFY_COMPAT]: Create compat symbol for internal
+	long double function name.
+	* sysdeps/ieee754/dbl-64/s_isinf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_isnan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_finite.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isinf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isnan.c: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist:
+	Remove __finitel, __isinfl, and __isnanl.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Remove __finitel.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+
 2015-12-03  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* math/Makefile ($(inst_libdir)/libm.so): Corrected path to

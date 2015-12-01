@@ -21,6 +21,7 @@ static char rcsid[] = "$NetBSD: s_finite.c,v 1.8 1995/05/10 20:47:17 jtc Exp $";
 
 #include <math.h>
 #include <math_private.h>
+#include <shlib-compat.h>
 
 #undef __finite
 
@@ -37,6 +38,13 @@ int FINITE(double x)
 hidden_def (__finite)
 weak_alias (__finite, finite)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__finite, __finitel)
+# ifdef LDBL_CLASSIFY_COMPAT
+#  if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_23)
+compat_symbol (libc, __finite, __finitel, GLIBC_2_0);
+#  endif
+#  if SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_23)
+compat_symbol (libm, __finite, __finitel, GLIBC_2_0);
+#  endif
+# endif
 weak_alias (__finite, finitel)
 #endif

@@ -21,6 +21,7 @@ static char rcsid[] = "$NetBSD: s_isnan.c,v 1.8 1995/05/10 20:47:36 jtc Exp $";
 
 #include <math.h>
 #include <math_private.h>
+#include <shlib-compat.h>
 
 #undef __isnan
 int
@@ -36,6 +37,8 @@ __isnan (double x)
 hidden_def (__isnan)
 weak_alias (__isnan, isnan)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__isnan, __isnanl)
+# if defined LDBL_CLASSIFY_COMPAT && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_23)
+compat_symbol (libc, __isnan, __isnanl, GLIBC_2_0);
+# endif
 weak_alias (__isnan, isnanl)
 #endif
