@@ -1,3 +1,11 @@
+2015-12-02  Carlos O'Donell  <carlos@redhat.com>
+
+	* iconvdata/ibm930.c: Add comment explaining encoding uses.
+	* iconvdata/ibm933.c: Likewise.
+	* iconvdata/ibm935.c: Likewise.
+	* iconvdata/ibm937.c: Likewise.
+	* iconvdata/ibm939.c: Likewise.
+
 2015-12-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/tst-cancel20.c (do_one_test): Move the pipe closing after

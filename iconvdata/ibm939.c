@@ -17,6 +17,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* IBM939 is designed for the representation of Japanese Latin/Kanji
+   using a stateful EBCDIC encoding scheme.  It is also known as
+   CCSID 939 or CP939. See:
+   https://www-01.ibm.com/software/globalization/ccsid/ccsid939.html */
+
 #include <dlfcn.h>
 #include <stdint.h>
 #include <wchar.h>

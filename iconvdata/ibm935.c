@@ -17,6 +17,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* IBM935 is designed for the representation of Simplified Chinese
+   using a stateful EBCDIC encoding scheme.  It is also known as
+   CCSID 935 or CP935. See:
+   https://www-01.ibm.com/software/globalization/ccsid/ccsid935.html  */
+
 #include <dlfcn.h>
 #include <stdint.h>
 #include <wchar.h>

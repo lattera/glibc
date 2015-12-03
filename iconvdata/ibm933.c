@@ -17,6 +17,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* IBM933 is designed for the representation of Korean using a stateful
+   EBCDIC encoding scheme.  It is also known as CCSID 933 or CP933. See:
+   https://www-01.ibm.com/software/globalization/ccsid/ccsid933.html */
+
 #include <dlfcn.h>
 #include <stdint.h>
 #include <wchar.h>

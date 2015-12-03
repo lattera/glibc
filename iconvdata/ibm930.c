@@ -17,6 +17,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* IBM930 is designed for the representation of Japanese Katakana/Kanji
+   using a stateful EBCDIC encoding scheme.  It is also known as
+   CCSID 930 or CP930. See:
+   https://www-01.ibm.com/software/globalization/ccsid/ccsid930.html */
+
 #include <dlfcn.h>
 #include <stdint.h>
 #include <wchar.h>
