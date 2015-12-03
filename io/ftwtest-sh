@@ -135,7 +135,7 @@ $testprogram --chdir $tmpdir |
     sort > $testout
 
 # perhaps $tmp involves some symlinks...
-tmpreal=`cd $tmp; /bin/pwd 2>/dev/null || /usr/bin/pwd`
+tmpreal=`cd $tmp; pwd -P 2>/dev/null`
 
 cat <<EOF | cmp $testout - || exit 1
 base = "$tmp/", file = "ftwtest.d", flag = FTW_D, cwd = $tmpreal, level = 0
@@ -153,7 +153,7 @@ base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd 
 EOF
 rm $testout
 
-curwd=`/bin/pwd 2>/dev/null || /usr/bin/pwd`
+curwd=`pwd -P 2>/dev/null`
 cd "$tmp"
 $testprogram --chdir ftwtest.d |
     sort > $testout
@@ -175,7 +175,7 @@ base = "ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $tm
 EOF
 rm $testout
 
-curwd=`/bin/pwd 2>/dev/null || /usr/bin/pwd`
+curwd=`pwd -P`
 cd "$tmp"
 $testprogram --chdir ftwtest.d/. |
     sort > $testout
@@ -197,7 +197,7 @@ base = "ftwtest.d/./foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $
 EOF
 rm $testout
 
-curwd=`/bin/pwd 2>/dev/null || /usr/bin/pwd`
+curwd=`pwd -P 2>/dev/null`
 cd "$tmp"
 $testprogram --chdir ftwtest.d/foo/lvl1/link@1 |
     sort > $testout

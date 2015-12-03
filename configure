@@ -3228,7 +3228,7 @@ if test $libc_cv_cxx_link_ok != yes; then :
   CXX=
 fi
 
-if test "`cd $srcdir; /bin/pwd`" = "`/bin/pwd`"; then
+if test "`cd $srcdir; pwd -P`" = "`pwd -P`"; then
   as_fn_error $? "you must configure in a separate build directory" "$LINENO" 5
 fi
 

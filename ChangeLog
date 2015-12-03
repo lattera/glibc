@@ -1,3 +1,10 @@
+2015-12-02  Ludovic Courtès  <ludo@gnu.org>
+
+	* configure.ac: Use 'pwd -P' instead of '/bin/pwd'.
+	* configure: Regenerate.
+	* io/ftwtest-sh: Use 'pwd -P' instead of '/bin/pwd'.
+	* scripts/rellns-sh: Likewise.  Remove 'pwd' variable.
+
 2015-12-02  Carlos O'Donell  <carlos@redhat.com>
 
 	* iconvdata/ibm930.c: Add comment explaining encoding uses.

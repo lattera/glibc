@@ -80,7 +80,7 @@ LDFLAGS="$old_LDFLAGS"
 AC_LANG_POP([C++])])
 AS_IF([test $libc_cv_cxx_link_ok != yes], [CXX=])
 
-if test "`cd $srcdir; /bin/pwd`" = "`/bin/pwd`"; then
+if test "`cd $srcdir; pwd -P`" = "`pwd -P`"; then
   AC_MSG_ERROR([you must configure in a separate build directory])
 fi
 
