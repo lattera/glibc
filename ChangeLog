@@ -1,3 +1,8 @@
+2015-12-03  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* math/Makefile ($(inst_libdir)/libm.so): Corrected path to
+	installed libmvec_nonshared.a.
+
 2015-12-03  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/Makefile (sysdep-dl-routines): Add hwcapinfo.
