@@ -1,3 +1,15 @@
+2015-12-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Consistency about byte vs character in string.texi
+	* manual/string.texi (String and Array Utilities):
+	Distinguish more carefully among bytes, multibyte characters,
+	and wide characters.  Use "byte" when talking about C 'char',
+	to distinguish it more clearly from multibyte characters.
+	Say "wide character" or "multibyte character" instead of
+	"character", when a wide or multibyte character is intended.
+	Similarly for "multibyte string" versus "string".
+	Define these terms more carefully.
+
 2015-12-03  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* sysdeps/arm/math_private.h (LDBL_CLASSIFY_COMPAT): New symbol.
