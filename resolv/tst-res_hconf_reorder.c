@@ -71,6 +71,9 @@ do_test (void)
   unsigned int i;
   int result = 0;
 
+  /* Enabled code to be tested.  */
+  setenv ("RESOLV_REORDER", "on", 1);
+
   /* turn on realloc slowdown */
   ts.tv_nsec = 100000000;
 
