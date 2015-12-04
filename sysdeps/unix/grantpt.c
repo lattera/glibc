@@ -195,7 +195,7 @@ grantpt (int fd)
       CLOSE_ALL_FDS ();
 # endif
 
-      execle (_PATH_PT_CHOWN, basename (_PATH_PT_CHOWN), NULL, NULL);
+      execle (_PATH_PT_CHOWN, __basename (_PATH_PT_CHOWN), NULL, NULL);
       _exit (FAIL_EXEC);
     }
   else

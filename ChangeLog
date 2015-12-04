@@ -1,3 +1,8 @@
+2015-12-09  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/grantpt.c (grantpt): Call__basename instead of
+	basename.
+
 2015-12-08  Siddhesh Poyarekar  <sid@reserved-bit.com>
 
 	* benchtests/Makefile (bench-math): Move ffs and ffsll...
