@@ -1,3 +1,10 @@
+2015-12-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix typo in strncat, wcsncat manual entries
+	* manual/string.texi (Copying and Concatenation): Fix typos in
+	sample implementations of strncat and wcsncat, by having them use
+	the old value of the destination length, not the new one.
+
 2015-12-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16961]
