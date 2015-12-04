@@ -118,5 +118,6 @@ libc {
     # Used from other libraries
     __libc_secure_getenv;
     __call_tls_dtors;
+    __strtof_nan; __strtod_nan; __strtold_nan;
   }
 }

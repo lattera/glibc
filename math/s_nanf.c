@@ -28,13 +28,6 @@
 float
 __nanf (const char *tagp)
 {
-  if (tagp[0] != '\0')
-    {
-      char buf[6 + strlen (tagp)];
-      sprintf (buf, "NAN(%s)", tagp);
-      return strtof (buf, NULL);
-    }
-
-  return NAN;
+  return __strtof_nan (tagp, NULL, 0);
 }
 weak_alias (__nanf, nanf)

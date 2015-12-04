@@ -28,13 +28,6 @@
 long double
 __nanl (const char *tagp)
 {
-  if (tagp[0] != '\0')
-    {
-      char buf[6 + strlen (tagp)];
-      sprintf (buf, "NAN(%s)", tagp);
-      return strtold (buf, NULL);
-    }
-
-  return NAN;
+  return __strtold_nan (tagp, NULL, 0);
 }
 weak_alias (__nanl, nanl)

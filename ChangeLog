@@ -1,3 +1,20 @@
+2015-12-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16961]
+	[BZ #16962]
+	* math/s_nan.c (__nan): Use __strtod_nan instead of constructing a
+	string on the stack for strtod.
+	* math/s_nanf.c (__nanf): Use __strtof_nan instead of constructing
+	a string on the stack for strtof.
+	* math/s_nanl.c (__nanl): Use __strtold_nan instead of
+	constructing a string on the stack for strtold.
+	* stdlib/Versions (libc): Add __strtof_nan, __strtod_nan and
+	__strtold_nan to GLIBC_PRIVATE.
+	* math/test-nan-overflow.c: New file.
+	* math/test-nan-payload.c: Likewise.
+	* math/Makefile (tests): Add test-nan-overflow and
+	test-nan-payload.
+
 2015-12-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Consistency about byte vs character in string.texi
