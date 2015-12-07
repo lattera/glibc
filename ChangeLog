@@ -1,5 +1,19 @@
 2015-12-09  Aurelien Jarno  <aurelien@aurel32.net>
 
+	* sysdeps/unix/sysv/linux/mips/configure.ac (has-mpf64): Define to
+	record the current if the current ABI and CPU support the FP64
+	extension.
+	(has-modd-spreg): Define to record the current if the current ABI and
+	CPU support 32-bit floating point values in odd FPU registers.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+	* sysdeps/mips/Makefile (tst-abi-fpxxomod): Only build when
+	$(has-modd-spreg) equals yes.
+	(tst-abi-fp64amod): Only build when $(has-mpf64) equals yes.
+	(tst-abi-fp64mod): Only build when both $(has-mpf64) and
+	$(has-modd-spreg) equal yes.
+
+2015-12-09  Aurelien Jarno  <aurelien@aurel32.net>
+
 	* sysdeps/unix/grantpt.c (grantpt): Call__basename instead of
 	basename.
 

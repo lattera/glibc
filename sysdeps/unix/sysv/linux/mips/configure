@@ -106,6 +106,8 @@ if test -z "$libc_mips_float"; then
 fi
 
 libc_mips_o32_fp=
+libc_cv_mips_fp64=
+libc_cv_mips_modd_spreg=
 
 if test x"$libc_mips_abi" = xo32 -a x"$libc_mips_float" = xhard; then
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -219,9 +221,34 @@ fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+  if { ac_try='${CC-cc} -mfp64 -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  libc_cv_mips_fp64=yes
+else
+  libc_cv_mips_fp64=no
+fi
+  if { ac_try='${CC-cc} -Werror -modd-spreg -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  libc_cv_mips_modd_spreg=yes
+else
+  libc_cv_mips_modd_spreg=no
+fi
 fi
 config_vars="$config_vars
 o32-fpabi = ${libc_mips_o32_fp}"
+config_vars="$config_vars
+has-mpf64 = ${libc_cv_mips_fp64}"
+config_vars="$config_vars
+has-modd-spreg = ${libc_cv_mips_modd_spreg}"
 
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */

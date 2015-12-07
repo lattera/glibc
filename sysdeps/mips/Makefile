@@ -42,16 +42,22 @@ fpabi-modules-names += tst-abi-fpxxmod
 CFLAGS-tst-abi-fpxxmod.c += -mfpxx -mno-odd-spreg
 endif
 ifneq (,$(filter $(o32-fpabi),xx xxo))
+ifeq ($(has-modd-spreg),yes)
 fpabi-modules-names += tst-abi-fpxxomod
 CFLAGS-tst-abi-fpxxomod.c += -mfpxx -modd-spreg
 endif
+endif
 ifneq (,$(filter $(o32-fpabi),xx 64a))
+ifeq ($(has-mpf64),yes)
 fpabi-modules-names += tst-abi-fp64amod
 CFLAGS-tst-abi-fp64amod.c += -mfp64 -mno-odd-spreg
 endif
+endif
 ifneq (,$(filter $(o32-fpabi),xx xxo 64a 64))
+ifeq ($(has-mpf64)-$(has-modd-spreg),yes-yes)
 fpabi-modules-names += tst-abi-fp64mod
 CFLAGS-tst-abi-fp64mod.c += -mfp64 -modd-spreg
+endif
 endif
 modules-names += $(fpabi-modules-names)
 
