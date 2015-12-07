@@ -28,6 +28,12 @@
 # if defined _OPENMP && _OPENMP >= 201307
 /* OpenMP case.  */
 #  define __DECL_SIMD_x86_64 _Pragma ("omp declare simd notinbranch")
+# elif __GNUC_PREREQ (6,0)
+/* W/o OpenMP use GCC 6.* __attribute__ ((__simd__)).  */
+#  define __DECL_SIMD_x86_64 __attribute__ ((__simd__ ("notinbranch")))
+# endif
+
+# ifdef __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_cos
 #  define __DECL_SIMD_cos __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_cosf
