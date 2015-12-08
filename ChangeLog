@@ -1,3 +1,8 @@
+2015-12-08  Siddhesh Poyarekar  <sid@reserved-bit.com>
+
+	* benchtests/sincos-inputs: Add inputs from sin-inputs and
+	cos-inputs.
+
 2015-12-07  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* sysdeps/x86/fpu/bits/math-vector.h: W/o -fopenmp use GCC 6.*
