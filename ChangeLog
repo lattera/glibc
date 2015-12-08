@@ -1,5 +1,12 @@
 2015-12-08  Siddhesh Poyarekar  <sid@reserved-bit.com>
 
+	* benchtests/Makefile (bench-math): Move ffs and ffsll...
+	(bench-string): ... here.
+	(bench): Add bench-string.
+	(string-bench, wcsmbs-bench, stdlib-bench, stdio-common-bench): Rename
+	to *-benchset to reflect what they are.
+	(benchset): Adjust.
+
 	* benchtests/sincos-inputs: Add inputs from sin-inputs and
 	cos-inputs.
 
