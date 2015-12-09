@@ -69,7 +69,7 @@ long double __tanhl(long double x)
 	    if (ix<0x3c60000000000000LL) 	/* |x|<2**-57 */
 	      {
 		math_check_force_underflow (x);
-		return x*(one+x);    	/* tanh(small) = small */
+		return x;		/* tanh(small) = small */
 	      }
 	    if (ix>=0x3ff0000000000000LL) {	/* |x|>=1  */
 		t = __expm1l(two*fabsl(x));
