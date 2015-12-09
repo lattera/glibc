@@ -32,4 +32,26 @@
 #endif
 #define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
 
+/* Direct socketcalls available with kernel 4.3.  */
+#if __LINUX_KERNEL_VERSION >= 0x040300
+# define __ASSUME_SOCKET_SYSCALL             1
+# define __ASSUME_SOCKETPAIR_SYSCALL         1
+# define __ASSUME_BIND_SYSCALL               1
+# define __ASSUME_CONNECT_SYSCALL            1
+# define __ASSUME_LISTEN_SYSCALL             1
+# define __ASSUME_ACCEPT4_SYSCALL            1
+# define __ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL 1
+# define __ASSUME_GETSOCKOPT_SYSCALL         1
+# define __ASSUME_SETSOCKOPT_SYSCALL         1
+# define __ASSUME_GETSOCKNAME_SYSCALL        1
+# define __ASSUME_GETPEERNAME_SYSCALL        1
+# define __ASSUME_SENDTO_SYSCALL             1
+# define __ASSUME_SENDTO_FOR_SEND_SYSCALL    1
+# define __ASSUME_SENDMSG_SYSCALL            1
+# define __ASSUME_RECVFROM_SYSCALL           1
+# define __ASSUME_RECVFROM_FOR_RECV_SYSCALL  1
+# define __ASSUME_RECVMSG_SYSCALL            1
+# define __ASSUME_SHUTDOWN_SYSCALL           1
+#endif
+
 #include_next <kernel-features.h>
