@@ -270,7 +270,7 @@ __ieee754_logl(long double x)
   /* Series expansion of log(1+z).  */
   w = z * z;
   /* Avoid spurious underflows.  */
-  if (__glibc_unlikely(w <= ldbl_epsilon))
+  if (__glibc_unlikely (fabsl (z) <= ldbl_epsilon))
     y = 0.0L;
   else
     {

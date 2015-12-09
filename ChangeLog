@@ -1,5 +1,10 @@
 2015-12-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19351]
+	* sysdeps/ieee754/ldbl-128ibm/e_logl.c (__ieee754_logl): When
+	expanding log(1+z), compare z rather than its square with epsilon
+	to determine when to avoid evaluating the expansion.
+
 	[BZ #19350]
 	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c (__ieee754_sinhl):
 	Increase overflow threshold.
