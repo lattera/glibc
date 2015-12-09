@@ -1,5 +1,9 @@
 2015-12-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19350]
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c (__ieee754_sinhl):
+	Increase overflow threshold.
+
 	[BZ #19349]
 	* sysdeps/ieee754/ldbl-128ibm/s_tanhl.c (__tanhl): Return argument
 	when small.

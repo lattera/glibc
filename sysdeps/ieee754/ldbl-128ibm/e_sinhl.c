@@ -67,7 +67,7 @@ __ieee754_sinhl(long double x)
 	if (ix < 0x40862e42fefa39efLL)  return h*__ieee754_expl(fabsl(x));
 
     /* |x| in [log(maxdouble), overflowthresold] */
-	if (ix <= 0x408633ce8fb9f87dLL) {
+	if (ix <= 0x408633ce8fb9f87eLL) {
 	    w = __ieee754_expl(0.5*fabsl(x));
 	    t = h*w;
 	    return t*w;
