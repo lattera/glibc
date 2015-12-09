@@ -74,3 +74,11 @@ __tcb_parse_hwcap_and_convert_at_platform (void)
 versioned_symbol (ld, __tcb_parse_hwcap_and_convert_at_platform, \
 		  __parse_hwcap_and_convert_at_platform, GLIBC_2_23);
 #endif
+
+/* Export __parse_hwcap_and_convert_at_platform in libc.a.  This is used by
+   GCC to make sure that the HWCAP/Platform bits are stored in the TCB when
+   using __builtin_cpu_is()/__builtin_cpu_supports() in the static case.  */
+#ifndef SHARED
+weak_alias (__tcb_parse_hwcap_and_convert_at_platform, \
+	    __parse_hwcap_and_convert_at_platform);
+#endif

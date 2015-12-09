@@ -1,5 +1,10 @@
 2015-12-22  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/hwcapinfo.c: Export symbol
+	__parse_hwcap_and_convert_at_platform to libc.a.
+
+2015-12-22  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_platforms): Added
 	platform and feature support for POWER9.
 	* sysdeps/powerpc/dl-procinfo.h: Likewise.
