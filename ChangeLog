@@ -1,3 +1,7 @@
+2015-12-09  Carlos O'Donell  <carlos@redhat.com>
+
+	* locale/C-translit.h: Regenerate.
+
 2015-12-09  Mike FABIAN  <mfabian@redhat.com>
 
 	* locale/C-translit.h.in: Remove duplicate transliterations for U+0152
