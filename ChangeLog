@@ -1,3 +1,8 @@
+2015-12-10  Carlos O'Donell  <carlos@redhat.com>
+
+	* manual/nss.texi (NSS Modules Interface): Document
+	NSS_STATUS_NOTFOUND and SUCCESS.
+
 2015-12-09  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ 18568]

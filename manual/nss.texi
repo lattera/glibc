@@ -448,6 +448,13 @@ The function should be called again with a larger buffer.
 @item
 @code{NSS_STATUS_NOTFOUND} @tab
         @code{ENOENT} @tab The requested entry is not available.
+
+@item
+@code{NSS_STATUS_NOTFOUND} @tab
+	@code{SUCCESS} @tab There are no entries.
+Use this to avoid returning errors for inactive services which may
+be enabled at a later time. This is not the same as the service
+being temporarily unavailable.
 @end multitable
 
 These are proposed values.  There can be other error codes and the
