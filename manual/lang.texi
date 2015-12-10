@@ -582,7 +582,7 @@ type that exists only for this purpose.
 This is an unsigned integer type used to represent the sizes of objects.
 The result of the @code{sizeof} operator is of this type, and functions
 such as @code{malloc} (@pxref{Unconstrained Allocation}) and
-@code{memcpy} (@pxref{Copying and Concatenation}) accept arguments of
+@code{memcpy} (@pxref{Copying Strings and Arrays}) accept arguments of
 this type to specify object sizes.  On systems using @theglibc{}, this
 will be @w{@code{unsigned int}} or @w{@code{unsigned long int}}.
 

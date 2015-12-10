@@ -374,8 +374,8 @@ a null pointer as the @var{locale} argument.  In this case,
 currently selected for category @var{category}.
 
 The string returned by @code{setlocale} can be overwritten by subsequent
-calls, so you should make a copy of the string (@pxref{Copying and
-Concatenation}) if you want to save it past any further calls to
+calls, so you should make a copy of the string (@pxref{Copying Strings
+and Arrays}) if you want to save it past any further calls to
 @code{setlocale}.  (The standard library is guaranteed never to call
 @code{setlocale} itself.)
 

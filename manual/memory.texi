@@ -547,7 +547,7 @@ The contents of the block are undefined; you must initialize it yourself
 Normally you would cast the value as a pointer to the kind of object
 that you want to store in the block.  Here we show an example of doing
 so, and of initializing the space with zeros using the library function
-@code{memset} (@pxref{Copying and Concatenation}):
+@code{memset} (@pxref{Copying Strings and Arrays}):
 
 @smallexample
 struct foo *ptr;

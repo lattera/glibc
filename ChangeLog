@@ -1,3 +1,16 @@
+2015-12-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Split large string section; add truncation advice
+	* manual/examples/strncat.c: Remove.
+	This example was misleading, as the code would have undefined
+	behavior if "hello" was longer than SIZE.  Anyway, the manual
+	shouldn't encourage strncpy+strncat for this sort of thing.
+	* manual/string.texi (Copying Strings and Arrays): Split into
+	three sections Copying Strings and Arrays, Concatenating Strings,
+	and Truncating Strings, as this section was way too long.  All
+	cross-referenced changed.  Add advice about string-truncation
+	functions.  Remove misleading strncat example.
+
 2015-12-10  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/nss.texi (NSS Modules Interface): Document

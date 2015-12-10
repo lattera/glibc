@@ -2428,7 +2428,7 @@ the array @var{s}, not including the terminating null character.
 The behavior of this function is undefined if copying takes place
 between objects that overlap---for example, if @var{s} is also given
 as an argument to be printed under control of the @samp{%s} conversion.
-@xref{Copying and Concatenation}.
+@xref{Copying Strings and Arrays}.
 
 @strong{Warning:} The @code{sprintf} function can be @strong{dangerous}
 because it can potentially output more characters than can fit in the

@@ -25,8 +25,9 @@ too.
 * String/Array Conventions::    Whether to use a string function or an
 				 arbitrary array function.
 * String Length::               Determining the length of a string.
-* Copying and Concatenation::   Functions to copy the contents of strings
-				 and arrays.
+* Copying Strings and Arrays::  Functions to copy strings and arrays.
+* Concatenating Strings::       Functions to concatenate strings while copying.
+* Truncating Strings::          Functions to truncate strings while copying.
 * String/Array Comparison::     Functions for byte-wise and character-wise
 				 comparison.
 * Collation Functions::         Functions for collating strings.
@@ -341,14 +342,13 @@ This function is a GNU extension and is declared in @file{string.h}.
 This function is a GNU extension and is declared in @file{wchar.h}.
 @end deftypefun
 
-@node Copying and Concatenation
-@section Copying and Concatenation
+@node Copying Strings and Arrays
+@section Copying Strings and Arrays
 
 You can use the functions described in this section to copy the contents
-of strings and arrays, or to append the contents of one string to
-another.  The @samp{str} and @samp{mem} functions are declared in the
-header file @file{string.h} while the @samp{wstr} and @samp{wmem}
-functions are declared in the file @file{wchar.h}.
+of strings, wide strings, and arrays.  The @samp{str} and @samp{mem}
+functions are declared in @file{string.h} while the @samp{w} functions
+are declared in @file{wchar.h}.
 @pindex string.h
 @pindex wchar.h
 @cindex copying strings and arrays
@@ -359,8 +359,10 @@ functions are declared in the file @file{wchar.h}.
 
 A helpful way to remember the ordering of the arguments to the functions
 in this section is that it corresponds to an assignment expression, with
-the destination array specified to the left of the source array.  All
-of these functions return the address of the destination array.
+the destination array specified to the left of the source array.  Most
+of these functions return the address of the destination array; a few
+return the address of the destination's terminating null, or of just
+past the destination.
 
 Most of these functions do not work properly if the source and
 destination arrays overlap.  For example, if the beginning of the
@@ -572,63 +574,6 @@ including the terminating null wide character) into the string
 the strings overlap.  The return value is the value of @var{wto}.
 @end deftypefun
 
-@comment string.h
-@comment ISO
-@deftypefun {char *} strncpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function is similar to @code{strcpy} but always copies exactly
-@var{size} bytes into @var{to}.
-
-If @var{from} does not contain a null byte in its first @var{size}
-bytes, @code{strncpy} copies just the first @var{size} bytes.  In this
-case no null terminator is written into @var{to}.
-
-Otherwise @var{from} must be a string with length less than
-@var{size}.  In this case @code{strncpy} copies all of @var{from},
-followed by enough null bytes to add up to @var{size} bytes in all.
-This behavior is rarely useful, but it
-is specified by the @w{ISO C} standard.
-
-The behavior of @code{strncpy} is undefined if the strings overlap.
-
-Using @code{strncpy} as opposed to @code{strcpy} is a way to avoid bugs
-relating to writing past the end of the allocated space for @var{to}.
-However, it can also make your program much slower in one common case:
-copying a string which is probably small into a potentially large buffer.
-In this case, @var{size} may be large, and when it is, @code{strncpy} will
-waste a considerable amount of time copying null bytes.
-@end deftypefun
-
-@comment wchar.h
-@comment ISO
-@deftypefun {wchar_t *} wcsncpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function is similar to @code{wcscpy} but always copies exactly
-@var{size} wide characters into @var{wto}.
-
-If @var{wfrom} does not contain a null wide character in its first
-@var{size} wide characters, then @code{wcsncpy} copies just the first
-@var{size} wide characters.  In this case no null terminator is
-written into @var{wto}.
-
-Otherwise @var{wfrom} must be a wide string with length less than
-@var{size}.  In this case @code{wcsncpy} copies all of @var{wfrom},
-followed by enough null wide
-characters to add up to @var{size} wide characters in all.  This
-behavior is rarely useful, but it is specified by the @w{ISO C}
-standard.
-
-The behavior of @code{wcsncpy} is undefined if the strings overlap.
-
-Using @code{wcsncpy} as opposed to @code{wcscpy} is a way to avoid bugs
-relating to writing past the end of the allocated space for @var{wto}.
-However, it can also make your program much slower in one common case:
-copying a string which is probably small into a potentially large buffer.
-In this case, @var{size} may be large, and when it is, @code{wcsncpy} will
-waste a considerable amount of time copying null wide characters.
-@end deftypefun
-
-@comment string.h
 @comment SVID
 @deftypefun {char *} strdup (const char *@var{s})
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
@@ -650,24 +595,6 @@ cannot allocate space for the new string, @code{wcsdup} returns a null
 pointer.  Otherwise it returns a pointer to the new wide string.
 
 This function is a GNU extension.
-@end deftypefun
-
-@comment string.h
-@comment GNU
-@deftypefun {char *} strndup (const char *@var{s}, size_t @var{size})
-@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
-This function is similar to @code{strdup} but always copies at most
-@var{size} bytes into the newly allocated string.
-
-If the length of @var{s} is more than @var{size}, then @code{strndup}
-copies just the first @var{size} bytes and adds a closing null
-byte.  Otherwise all bytes are copied and the string is
-terminated.
-
-This function is different to @code{strncpy} in that it always
-terminates the destination string.
-
-@code{strndup} is a GNU extension.
 @end deftypefun
 
 @comment string.h
@@ -711,60 +638,6 @@ The behavior of @code{wcpcpy} is undefined if the strings overlap.
 
 @comment string.h
 @comment GNU
-@deftypefun {char *} stpncpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function is similar to @code{stpcpy} but copies always exactly
-@var{size} bytes into @var{to}.
-
-If the length of @var{from} is more than @var{size}, then @code{stpncpy}
-copies just the first @var{size} bytes and returns a pointer to the
-byte directly following the one which was copied last.  Note that in
-this case there is no null terminator written into @var{to}.
-
-If the length of @var{from} is less than @var{size}, then @code{stpncpy}
-copies all of @var{from}, followed by enough null bytes to add up
-to @var{size} bytes in all.  This behavior is rarely useful, but it
-is implemented to be useful in contexts where this behavior of the
-@code{strncpy} is used.  @code{stpncpy} returns a pointer to the
-@emph{first} written null byte.
-
-This function is not part of ISO or POSIX but was found useful while
-developing @theglibc{} itself.
-
-Its behavior is undefined if the strings overlap.  The function is
-declared in @file{string.h}.
-@end deftypefun
-
-@comment wchar.h
-@comment GNU
-@deftypefun {wchar_t *} wcpncpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function is similar to @code{wcpcpy} but copies always exactly
-@var{wsize} wide characters into @var{wto}.
-
-If the length of @var{wfrom} is more than @var{size}, then
-@code{wcpncpy} copies just the first @var{size} wide characters and
-returns a pointer to the wide character directly following the last
-non-null wide character which was copied last.  Note that in this case
-there is no null terminator written into @var{wto}.
-
-If the length of @var{wfrom} is less than @var{size}, then @code{wcpncpy}
-copies all of @var{wfrom}, followed by enough null wide characters to add up
-to @var{size} wide characters in all.  This behavior is rarely useful, but it
-is implemented to be useful in contexts where this behavior of the
-@code{wcsncpy} is used.  @code{wcpncpy} returns a pointer to the
-@emph{first} written null wide character.
-
-This function is not part of ISO or POSIX but was found useful while
-developing @theglibc{} itself.
-
-Its behavior is undefined if the strings overlap.
-
-@code{wcpncpy} is a GNU extension and is declared in @file{wchar.h}.
-@end deftypefun
-
-@comment string.h
-@comment GNU
 @deftypefn {Macro} {char *} strdupa (const char *@var{s})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro is similar to @code{strdup} but allocates the new string
@@ -791,20 +664,35 @@ This function is only available if GNU CC is used.
 @end deftypefn
 
 @comment string.h
-@comment GNU
-@deftypefn {Macro} {char *} strndupa (const char *@var{s}, size_t @var{size})
+@comment BSD
+@deftypefun void bcopy (const void *@var{from}, void *@var{to}, size_t @var{size})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function is similar to @code{strndup} but like @code{strdupa} it
-allocates the new string using @code{alloca}
-@pxref{Variable Size Automatic}.  The same advantages and limitations
-of @code{strdupa} are valid for @code{strndupa}, too.
+This is a partially obsolete alternative for @code{memmove}, derived from
+BSD.  Note that it is not quite equivalent to @code{memmove}, because the
+arguments are not in the same order and there is no return value.
+@end deftypefun
 
-This function is implemented only as a macro, just like @code{strdupa}.
-Just as @code{strdupa} this macro also must not be used inside the
-parameter list in a function call.
+@comment string.h
+@comment BSD
+@deftypefun void bzero (void *@var{block}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This is a partially obsolete alternative for @code{memset}, derived from
+BSD.  Note that it is not as general as @code{memset}, because the only
+value it can store is zero.
+@end deftypefun
 
-@code{strndupa} is only available if GNU CC is used.
-@end deftypefn
+@node Concatenating Strings
+@section Concatenating Strings
+@pindex string.h
+@pindex wchar.h
+@cindex concatenating strings
+@cindex string concatenation functions
+
+The functions described in this section concatenate the contents of a
+string or wide string to another.  They follow the string-copying
+functions in their conventions.  @xref{Copying Strings and Arrays}.
+@samp{strcat} is declared in the header file @file{string.h} while
+@samp{wcscat} is declared in @file{wchar.h}.
 
 @comment string.h
 @comment ISO
@@ -827,6 +715,8 @@ strcat (char *restrict to, const char *restrict from)
 @end smallexample
 
 This function has undefined results if the strings overlap.
+
+As noted below, this function has significant performance issues.
 @end deftypefun
 
 @comment wchar.h
@@ -850,10 +740,13 @@ wcscat (wchar_t *wto, const wchar_t *wfrom)
 @end smallexample
 
 This function has undefined results if the strings overlap.
+
+As noted below, this function has significant performance issues.
 @end deftypefun
 
 Programmers using the @code{strcat} or @code{wcscat} function (or the
-following @code{strncat} or @code{wcsncat} functions for that matter)
+@code{strncat} or @code{wcsncat} functions defined in
+a later section, for that matter)
 can easily be recognized as lazy and reckless.  In almost all situations
 the lengths of the participating strings are known (it better should be
 since how can one otherwise ensure the allocated size of the buffer is
@@ -978,6 +871,165 @@ should think twice and look through the program whether the code cannot
 be rewritten to take advantage of already calculated results.  Again: it
 is almost always unnecessary to use @code{strcat}.
 
+@node Truncating Strings
+@section Truncating Strings while Copying
+@cindex truncating strings
+@cindex string truncation
+
+The functions described in this section copy or concatenate the
+possibly-truncated contents of a string or array to another, and
+similarly for wide strings.  They follow the string-copying functions
+in their header conventions.  @xref{Copying Strings and Arrays}.  The
+@samp{str} functions are declared in the header file @file{string.h}
+and the @samp{wc} functions are declared in the file @file{wchar.h}.
+
+@comment string.h
+@deftypefun {char *} strncpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function is similar to @code{strcpy} but always copies exactly
+@var{size} bytes into @var{to}.
+
+If @var{from} does not contain a null byte in its first @var{size}
+bytes, @code{strncpy} copies just the first @var{size} bytes.  In this
+case no null terminator is written into @var{to}.
+
+Otherwise @var{from} must be a string with length less than
+@var{size}.  In this case @code{strncpy} copies all of @var{from},
+followed by enough null bytes to add up to @var{size} bytes in all.
+
+The behavior of @code{strncpy} is undefined if the strings overlap.
+
+This function was designed for now-rarely-used arrays consisting of
+non-null bytes followed by zero or more null bytes.  It needs to set
+all @var{size} bytes of the destination, even when @var{size} is much
+greater than the length of @var{from}.  As noted below, this function
+is generally a poor choice for processing text.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wcsncpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function is similar to @code{wcscpy} but always copies exactly
+@var{size} wide characters into @var{wto}.
+
+If @var{wfrom} does not contain a null wide character in its first
+@var{size} wide characters, then @code{wcsncpy} copies just the first
+@var{size} wide characters.  In this case no null terminator is
+written into @var{wto}.
+
+Otherwise @var{wfrom} must be a wide string with length less than
+@var{size}.  In this case @code{wcsncpy} copies all of @var{wfrom},
+followed by enough null wide characters to add up to @var{size} wide
+characters in all.
+
+The behavior of @code{wcsncpy} is undefined if the strings overlap.
+
+This function is the wide-character counterpart of @code{strncpy} and
+suffers from most of the problems that @code{strncpy} does.  For
+example, as noted below, this function is generally a poor choice for
+processing text.
+@end deftypefun
+
+@comment string.h
+@comment GNU
+@deftypefun {char *} strndup (const char *@var{s}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+This function is similar to @code{strdup} but always copies at most
+@var{size} bytes into the newly allocated string.
+
+If the length of @var{s} is more than @var{size}, then @code{strndup}
+copies just the first @var{size} bytes and adds a closing null byte.
+Otherwise all bytes are copied and the string is terminated.
+
+This function differs from @code{strncpy} in that it always terminates
+the destination string.
+
+As noted below, this function is generally a poor choice for
+processing text.
+
+@code{strndup} is a GNU extension.
+@end deftypefun
+
+@comment string.h
+@comment GNU
+@deftypefn {Macro} {char *} strndupa (const char *@var{s}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function is similar to @code{strndup} but like @code{strdupa} it
+allocates the new string using @code{alloca} @pxref{Variable Size
+Automatic}.  The same advantages and limitations of @code{strdupa} are
+valid for @code{strndupa}, too.
+
+This function is implemented only as a macro, just like @code{strdupa}.
+Just as @code{strdupa} this macro also must not be used inside the
+parameter list in a function call.
+
+As noted below, this function is generally a poor choice for
+processing text.
+
+@code{strndupa} is only available if GNU CC is used.
+@end deftypefn
+
+@comment string.h
+@comment GNU
+@deftypefun {char *} stpncpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function is similar to @code{stpcpy} but copies always exactly
+@var{size} bytes into @var{to}.
+
+If the length of @var{from} is more than @var{size}, then @code{stpncpy}
+copies just the first @var{size} bytes and returns a pointer to the
+byte directly following the one which was copied last.  Note that in
+this case there is no null terminator written into @var{to}.
+
+If the length of @var{from} is less than @var{size}, then @code{stpncpy}
+copies all of @var{from}, followed by enough null bytes to add up
+to @var{size} bytes in all.  This behavior is rarely useful, but it
+is implemented to be useful in contexts where this behavior of the
+@code{strncpy} is used.  @code{stpncpy} returns a pointer to the
+@emph{first} written null byte.
+
+This function is not part of ISO or POSIX but was found useful while
+developing @theglibc{} itself.
+
+Its behavior is undefined if the strings overlap.  The function is
+declared in @file{string.h}.
+
+As noted below, this function is generally a poor choice for
+processing text.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun {wchar_t *} wcpncpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function is similar to @code{wcpcpy} but copies always exactly
+@var{wsize} wide characters into @var{wto}.
+
+If the length of @var{wfrom} is more than @var{size}, then
+@code{wcpncpy} copies just the first @var{size} wide characters and
+returns a pointer to the wide character directly following the last
+non-null wide character which was copied last.  Note that in this case
+there is no null terminator written into @var{wto}.
+
+If the length of @var{wfrom} is less than @var{size}, then @code{wcpncpy}
+copies all of @var{wfrom}, followed by enough null wide characters to add up
+to @var{size} wide characters in all.  This behavior is rarely useful, but it
+is implemented to be useful in contexts where this behavior of the
+@code{wcsncpy} is used.  @code{wcpncpy} returns a pointer to the
+@emph{first} written null wide character.
+
+This function is not part of ISO or POSIX but was found useful while
+developing @theglibc{} itself.
+
+Its behavior is undefined if the strings overlap.
+
+As noted below, this function is generally a poor choice for
+processing text.
+
+@code{wcpncpy} is a GNU extension.
+@end deftypefun
+
 @comment string.h
 @comment ISO
 @deftypefun {char *} strncat (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
@@ -1005,6 +1057,12 @@ strncat (char *to, const char *from, size_t size)
 @end smallexample
 
 The behavior of @code{strncat} is undefined if the strings overlap.
+
+As a companion to @code{strncpy}, @code{strncat} was designed for
+now-rarely-used arrays consisting of non-null bytes followed by zero
+or more null bytes.  As noted below, this function is generally a poor
+choice for processing text.  Also, this function has significant
+performance issues.  @xref{Concatenating Strings}.
 @end deftypefun
 
 @comment wchar.h
@@ -1035,42 +1093,39 @@ wcsncat (wchar_t *restrict wto, const wchar_t *restrict wfrom,
 @end smallexample
 
 The behavior of @code{wcsncat} is undefined if the strings overlap.
+
+As noted below, this function is generally a poor choice for
+processing text.  Also, this function has significant performance
+issues.  @xref{Concatenating Strings}.
 @end deftypefun
 
-Here is an example showing the use of @code{strncpy} and @code{strncat}
-(the wide character version is equivalent).  Notice how, in the call to
-@code{strncat}, the @var{size} parameter is computed to avoid
-overflowing the array @code{buffer}.
+Because these functions can abruptly truncate strings or wide strings,
+they are generally poor choices for processing text.  When coping or
+concatening multibyte strings, they can truncate within a multibyte
+character so that the result is not a valid multibyte string.  When
+combining or concatenating multibyte or wide strings, they may
+truncate the output after a combining character, resulting in a
+corrupted grapheme.  They can cause bugs even when processing
+single-byte strings: for example, when calculating an ASCII-only user
+name, a truncated name can identify the wrong user.
 
-@smallexample
-@include strncat.c.texi
-@end smallexample
+Although some buffer overruns can be prevented by manually replacing
+calls to copying functions with calls to truncation functions, there
+are often easier and safer automatic techniques that cause buffer
+overruns to reliably terminate a program, such as GCC's
+@option{-fcheck-pointer-bounds} and @option{-fsanitize=address}
+options.  @xref{Debugging Options,, Options for Debugging Your Program
+or GCC, gcc.info, Using GCC}.  Because truncation functions can mask
+application bugs that would otherwise be caught by the automatic
+techniques, these functions should be used only when the application's
+underlying logic requires truncation.
 
-@noindent
-The output produced by this program looks like:
-
-@smallexample
-hello
-hello, wo
-@end smallexample
-
-@comment string.h
-@comment BSD
-@deftypefun void bcopy (const void *@var{from}, void *@var{to}, size_t @var{size})
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This is a partially obsolete alternative for @code{memmove}, derived from
-BSD.  Note that it is not quite equivalent to @code{memmove}, because the
-arguments are not in the same order and there is no return value.
-@end deftypefun
-
-@comment string.h
-@comment BSD
-@deftypefun void bzero (void *@var{block}, size_t @var{size})
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This is a partially obsolete alternative for @code{memset}, derived from
-BSD.  Note that it is not as general as @code{memset}, because the only
-value it can store is zero.
-@end deftypefun
+@strong{Note:} GNU programs should not truncate strings or wide
+strings to fit arbitrary size limits.  @xref{Semantics, , Writing
+Robust Programs, standards, The GNU Coding Standards}.  Instead of
+string-truncation functions, it is usually better to use dynamic
+memory allocation (@pxref{Unconstrained Allocation}) and functions
+such as @code{strdup} or @code{asprintf} to construct strings.
 
 @node String/Array Comparison
 @section String/Array Comparison
@@ -1475,7 +1530,7 @@ to @var{size} bytes (including a terminating null byte) are
 stored.
 
 The behavior is undefined if the strings @var{to} and @var{from}
-overlap; see @ref{Copying and Concatenation}.
+overlap; see @ref{Copying Strings and Arrays}.
 
 The return value is the length of the entire transformed string.  This
 value is not affected by the value of @var{size}, but if it is greater
@@ -1505,7 +1560,7 @@ selected for collation, and stores the transformed string in the array
 wide character) are stored.
 
 The behavior is undefined if the strings @var{wto} and @var{wfrom}
-overlap; see @ref{Copying and Concatenation}.
+overlap; see @ref{Copying Strings and Arrays}.
 
 The return value is the length of the entire transformed wide
 string.  This value is not affected by the value of @var{size}, but if
@@ -2115,8 +2170,8 @@ if the remainder of string consists only of delimiter wide characters,
 
 @strong{Warning:} Since @code{strtok} and @code{wcstok} alter the string
 they is parsing, you should always copy the string to a temporary buffer
-before parsing it with @code{strtok}/@code{wcstok} (@pxref{Copying and
-Concatenation}).  If you allow @code{strtok} or @code{wcstok} to modify
+before parsing it with @code{strtok}/@code{wcstok} (@pxref{Copying Strings
+and Arrays}).  If you allow @code{strtok} or @code{wcstok} to modify
 a string that came from another part of your program, you are asking for
 trouble; that string might be used for other purposes after
 @code{strtok} or @code{wcstok} has modified it, and it would not have
