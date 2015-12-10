@@ -1,5 +1,10 @@
 2015-12-09  Mike FABIAN  <mfabian@redhat.com>
 
+	[BZ #89]
+	* locales/da_DK: Add more transliteration rules.
+	* locales/nb_NO: Likewise.
+	* locales/sv_SE: Likewise.
+
 	[BZ #16061]
 	* unicode-gen/unicode_utils.py: New file.
 	* unicode-gen/gen_translit_circle.py: New file.
