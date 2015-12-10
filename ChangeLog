@@ -1,3 +1,10 @@
+2015-12-10  Aurelien Jarno  <aurelien@aurel32.net>
+	    Jakub Wilk  <jwilk@debian.org>
+
+	[BZ #19347]
+	* sysdeps/unix/grantpt.c [!HAVE_PT_CHOWN] (grantpt): Do not try
+	to change the group of the device to the tty group.
+
 2015-12-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Split large string section; add truncation advice

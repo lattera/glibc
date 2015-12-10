@@ -155,6 +155,7 @@ grantpt (int fd)
     }
   gid_t gid = tty_gid == -1 ? __getgid () : tty_gid;
 
+#if HAVE_PT_CHOWN
   /* Make sure the group of the device is that special group.  */
   if (st.st_gid != gid)
     {
@@ -164,9 +165,26 @@ grantpt (int fd)
 
   /* Make sure the permission mode is set to readable and writable by
      the owner, and writable by the group.  */
-  if ((st.st_mode & ACCESSPERMS) != (S_IRUSR|S_IWUSR|S_IWGRP))
+  mode_t mode = S_IRUSR|S_IWUSR|S_IWGRP;
+#else
+  /* When built without pt_chown, we have delegated the creation of the
+     pty node with the right group and permission mode to the kernel, and
+     non-root users are unlikely to be able to change it. Therefore let's
+     consider that POSIX enforcement is the responsibility of the whole
+     system and not only the GNU libc. Thus accept different group or
+     permission mode.  */
+
+  /* Make sure the permission is set to readable and writable by the
+     owner.  For security reasons, make it writable by the group only
+     when originally writable and when the group of the device is that
+     special group.  */
+  mode_t mode = S_IRUSR|S_IWUSR|
+	        ((st.st_gid == gid) ? (st.st_mode & S_IWGRP) : 0);
+#endif
+
+  if ((st.st_mode & ACCESSPERMS) != mode)
     {
-      if (__chmod (buf, S_IRUSR|S_IWUSR|S_IWGRP) < 0)
+      if (__chmod (buf, mode) < 0)
 	goto helper;
     }
 
