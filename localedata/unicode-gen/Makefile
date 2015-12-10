@@ -41,7 +41,7 @@ PYTHON3 = python3
 WGET = wget
 
 DOWNLOADS = UnicodeData.txt DerivedCoreProperties.txt EastAsianWidth.txt
-GENERATED = i18n UTF-8
+GENERATED = i18n UTF-8 translit_combining translit_compat translit_circle translit_cjk_compat translit_font translit_fraction
 REPORTS = i18n-report UTF-8-report
 
 all: $(GENERATED)
@@ -51,6 +51,12 @@ check: check-i18n check-UTF-8
 install:
 	cp -p i18n ../locales/i18n
 	cp -p UTF-8 ../charmaps/UTF-8
+	cp -p translit_combining ../locales/translit_combining
+	cp -p translit_compat ../locales/translit_compat
+	cp -p translit_circle ../locales/translit_circle
+	cp -p translit_cjk_compat ../locales/translit_cjk_compat
+	cp -p translit_font ../locales/translit_font
+	cp -p translit_fraction ../locales/translit_fraction
 
 clean: mostlyclean
 	-rm -rf __pycache__
@@ -82,13 +88,43 @@ UTF-8: utf8_gen.py
 
 UTF-8-report: UTF-8 ../charmaps/UTF-8
 UTF-8-report: utf8_compatibility.py
-	$(PYTHON3) ./utf8_compatibility.py -o ../charmaps/UTF-8 \
-	  -n UTF-8 -a -m > $@
+	$(PYTHON3) ./utf8_compatibility.py -u UnicodeData.txt \
+	-e EastAsianWidth.txt -o ../charmaps/UTF-8 \
+	-n UTF-8 -a -m -c > $@
 
 check-UTF-8: UTF-8-report
 	@if grep '^Total.*: [^0]' UTF-8-report; \
 	then echo manual verification required; false; else true; fi
 
+translit_combining: UnicodeData.txt
+translit_combining: gen_translit_combining.py
+	$(PYTHON3) ./gen_translit_combining.py -u UnicodeData.txt \
+	-o $@ --unicode_version $(UNICODE_VERSION)
+
+translit_compat: UnicodeData.txt
+translit_compat: gen_translit_compat.py
+	$(PYTHON3) ./gen_translit_compat.py -u UnicodeData.txt \
+	-o $@ --unicode_version $(UNICODE_VERSION)
+
+translit_circle: UnicodeData.txt
+translit_circle: gen_translit_circle.py
+	$(PYTHON3) ./gen_translit_circle.py -u UnicodeData.txt \
+	-o $@ --unicode_version $(UNICODE_VERSION)
+
+translit_cjk_compat: UnicodeData.txt
+translit_cjk_compat: gen_translit_cjk_compat.py
+	$(PYTHON3) ./gen_translit_cjk_compat.py -u UnicodeData.txt \
+	-o $@ --unicode_version $(UNICODE_VERSION)
+
+translit_font: UnicodeData.txt
+translit_font: gen_translit_font.py
+	$(PYTHON3) ./gen_translit_font.py -u UnicodeData.txt \
+	-o $@ --unicode_version $(UNICODE_VERSION)
+
+translit_fraction: UnicodeData.txt
+translit_fraction: gen_translit_fraction.py
+	$(PYTHON3) ./gen_translit_fraction.py -u UnicodeData.txt \
+	-o $@ --unicode_version $(UNICODE_VERSION)
 
 .PHONY: downloads clean-downloads
 downloads: $(DOWNLOADS)

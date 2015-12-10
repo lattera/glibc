@@ -29,6 +29,7 @@ It will output UTF-8 file
 
 import sys
 import re
+import unicode_utils
 
 # Auxiliary tables for Hangul syllable names, see the Unicode 3.0 book,
 # sections 3.11 and 4.4.
@@ -48,13 +49,6 @@ JAMO_FINAL_SHORT_NAME = (
     'LT', 'LP', 'LH', 'M', 'B', 'BS', 'S', 'SS', 'NG', 'J', 'C', 'K', 'T',
     'P', 'H'
 )
-
-def ucs_symbol(code_point):
-    '''Return the UCS symbol string for a Unicode character.'''
-    if code_point < 0x10000:
-        return '<U{:04X}>'.format(code_point)
-    else:
-        return '<U{:08X}>'.format(code_point)
 
 def process_range(start, end, outfile, name):
     '''Writes a range of code points into the CHARMAP section of the
@@ -78,7 +72,7 @@ def process_range(start, end, outfile, name):
                                    + JAMO_MEDIAL_SHORT_NAME[index2] \
                                    + JAMO_FINAL_SHORT_NAME[index3]
             outfile.write('{:<11s} {:<12s} {:s}\n'.format(
-                ucs_symbol(i), convert_to_hex(i),
+                unicode_utils.ucs_symbol(i), convert_to_hex(i),
                 hangul_syllable_name))
         return
     # UnicodeData.txt file has contains code point ranges like this:
@@ -95,14 +89,14 @@ def process_range(start, end, outfile, name):
     for i in range(int(start, 16), int(end, 16), 64 ):
         if i > (int(end, 16)-64):
             outfile.write('{:s}..{:s} {:<12s} {:s}\n'.format(
-                    ucs_symbol(i),
-                    ucs_symbol(int(end,16)),
+                    unicode_utils.ucs_symbol(i),
+                    unicode_utils.ucs_symbol(int(end,16)),
                     convert_to_hex(i),
                     name))
             break
         outfile.write('{:s}..{:s} {:<12s} {:s}\n'.format(
-                ucs_symbol(i),
-                ucs_symbol(i+63),
+                unicode_utils.ucs_symbol(i),
+                unicode_utils.ucs_symbol(i+63),
                 convert_to_hex(i),
                 name))
 
@@ -168,7 +162,7 @@ def process_charmap(flines, outfile):
             # comments, so we keep these comment lines.
             outfile.write('%')
         outfile.write('{:<11s} {:<12s} {:s}\n'.format(
-                ucs_symbol(int(fields[0], 16)),
+                unicode_utils.ucs_symbol(int(fields[0], 16)),
                 convert_to_hex(int(fields[0], 16)),
                 fields[1]))
 
@@ -230,7 +224,7 @@ def process_width(outfile, ulines, elines):
     for line in ulines:
         fields = line.split(";")
         if fields[4] == "NSM" or fields[2] == "Cf":
-            width_dict[int(fields[0], 16)] = ucs_symbol(
+            width_dict[int(fields[0], 16)] = unicode_utils.ucs_symbol(
                 int(fields[0], 16)) + '\t0'
 
     for line in elines:
@@ -238,7 +232,7 @@ def process_width(outfile, ulines, elines):
         # UnicodeData.txt:
         fields = line.split(";")
         if not '..' in fields[0]:
-            width_dict[int(fields[0], 16)] = ucs_symbol(
+            width_dict[int(fields[0], 16)] = unicode_utils.ucs_symbol(
                 int(fields[0], 16)) + '\t2'
         else:
             code_points = fields[0].split("..")
@@ -247,8 +241,8 @@ def process_width(outfile, ulines, elines):
                 if  key in width_dict:
                     del width_dict[key]
             width_dict[int(code_points[0], 16)] = '{:s}...{:s}\t2'.format(
-                ucs_symbol(int(code_points[0], 16)),
-                ucs_symbol(int(code_points[1], 16)))
+                unicode_utils.ucs_symbol(int(code_points[0], 16)),
+                unicode_utils.ucs_symbol(int(code_points[1], 16)))
 
     for key in sorted(width_dict):
         outfile.write(width_dict[key]+'\n')

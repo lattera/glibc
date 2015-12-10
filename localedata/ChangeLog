@@ -1,4 +1,36 @@
 2015-12-09  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #16061]
+	* unicode-gen/unicode_utils.py: New file.
+	* unicode-gen/gen_translit_circle.py: New file.
+	* unicode-gen/gen_translit_cjk_compat.py: New file.
+	* unicode-gen/gen_translit_combining.py: New file.
+	* unicode-gen/gen_translit_compat.py: New file
+	* unicode-gen/gen_translit_font.py: New file.
+	* unicode-gen/gen_translit_fraction.py: New file.
+	* unicode-gen/gen_unicode_ctype.py: Use unicode_utils.py.
+	* unicode-gen/utf8_compatibility.py: Likewise.
+	* unicode-gen/utf8_gen.py: Likewise.
+	* unicode-gen/Makefile (GENERATED): Add translit_combining
+	translit_compat translit_circle translit_cjk_compat translit_font
+	translit_fraction.
+	(install): Install translit_combining translit_compat translit_circle
+	translit_cjk_compat translit_font translit_fraction.
+	(UTF-8-report): Reference UnicodeData.txt and EastAsianWidth.txt.
+	(translit_combining): New target.
+	(translit_compat): New target.
+	(translit_circle): New target.
+	(translit_cjk_compat): New target.
+	(translit_font): New target.
+	(translit_fraction): New target.
+	* locales/translit_circle: Regenerate.
+	* locales/translit_cjk_compat: Regenerate.
+	* locales/translit_combining: Regenerate.
+	* locales/translit_compat: Regenerate.
+	* locales/translit_font: Regenerate.
+	* locales/translit_fraction: Regenerate.
+
+2015-12-09  Mike FABIAN  <mfabian@redhat.com>
 	    Marko Myllynen  <myllynen@redhat.com>
 
 	* locales/translit_neutral: Change Ö U+00D6 LATIN CAPITAL LETTER O WITH
