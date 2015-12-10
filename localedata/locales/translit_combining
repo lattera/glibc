@@ -3,7 +3,7 @@ comment_char %
 
 % Transliterations that remove all combining characters (accents,
 % pronounciation marks, etc.).
-% Generated automatically from UnicodeData.txt by gen_translit_combining.py on 2015-12-09 for Unicode 7.0.0.
+% Generated automatically from UnicodeData.txt by gen_translit_combining.py on 2015-12-09 for Unicode 8.0.0.
 
 LC_CTYPE
 
@@ -439,6 +439,8 @@ translit_start
 <U06EC> ""
 % ARABIC SMALL LOW MEEM
 <U06ED> ""
+% ARABIC TURNED DAMMA BELOW
+<U08E3> ""
 % ARABIC CURLY FATHA
 <U08E4> ""
 % ARABIC CURLY DAMMA

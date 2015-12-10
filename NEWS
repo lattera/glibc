@@ -7,6 +7,12 @@ using `glibc' in the "product" field.
 
 Version 2.23
 
+* Unicode 8.0.0 Support: Character encoding, character type info, and
+  transliteration tables are all updated to Unicode 8.0.0, using new
+  and/or improved generator scripts contributed by Mike FABIAN (Red Hat).
+  These updates cause user visible changes, such as the fixes for bugs
+  89, 16061, and 18568.
+
 * sched_setaffinity, pthread_setaffinity_np no longer attempt to guess the
   kernel-internal CPU set size.  This means that requests that change the
   CPU affinity which failed before (for example, an all-ones CPU mask) will

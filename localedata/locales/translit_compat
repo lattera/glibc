@@ -2,7 +2,7 @@ escape_char /
 comment_char %
 
 % Transliterations of compatibility characters and ligatures.
-% Generated automatically from UnicodeData.txt by gen_translit_compat.py on 2015-12-09 for Unicode 7.0.0.
+% Generated automatically from UnicodeData.txt by gen_translit_compat.py on 2015-12-09 for Unicode 8.0.0.
 
 LC_CTYPE
 

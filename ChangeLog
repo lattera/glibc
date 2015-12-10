@@ -1,3 +1,9 @@
+2015-12-09  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ 18568]
+	* include/stdc-predef.h (__STDC_ISO_10646__): Update to
+	201505L, for Unicode 8.
+
 2015-12-09  Carlos O'Donell  <carlos@redhat.com>
 
 	* locale/C-translit.h: Regenerate.
