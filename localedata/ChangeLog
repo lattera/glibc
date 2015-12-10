@@ -1,3 +1,12 @@
+2015-12-09  Mike FABIAN  <mfabian@redhat.com>
+	    Marko Myllynen  <myllynen@redhat.com>
+
+	* locales/translit_neutral: Change Ö U+00D6 LATIN CAPITAL LETTER O WITH
+	STROKE → O (instead of → OE).  Change ö U+00F6 LATIN SMALL LETTER O WITH
+	STROKE → o (instead of → oe).  Add ₹ U+20B9 INDIAN RUPEE SIGN → INR.
+	Add ₫ U+20AB DONG SIGN → Dong (in addition to "₫ → Đồng").
+	Synchronize with CLDR Latin-ASCII.xml, and community suggestions.
+
 2015-10-17  Gunnar Hjalmarsson  <gunnarhj@ubuntu.com>
 
 	[BZ #18953]

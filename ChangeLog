@@ -1,3 +1,8 @@
+2015-12-09  Mike FABIAN  <mfabian@redhat.com>
+
+	* locale/C-translit.h.in: Remove duplicate transliterations for U+0152
+	and U+0153.
+
 2015-12-09  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19351]
