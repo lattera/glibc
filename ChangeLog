@@ -1,3 +1,7 @@
+2015-12-11  Steve Ellcey  <sellcey@imgtec.com>
+
+	* stdlib/strtol_l.c (__strtol_l): Fix indentation.
+
 2015-12-10  Aurelien Jarno  <aurelien@aurel32.net>
 	    Jakub Wilk  <jwilk@debian.org>
 

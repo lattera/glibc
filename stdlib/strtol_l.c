@@ -351,8 +351,8 @@ INTERNAL (__strtol_l) (const STRING_TYPE *nptr, STRING_TYPE **endptr,
 		&& (wchar_t) c != thousands
 # else
 		&& ({ for (cnt = 0; cnt < thousands_len; ++cnt)
-		      if (thousands[cnt] != end[cnt])
-			break;
+			if (thousands[cnt] != end[cnt])
+			  break;
 		      cnt < thousands_len; })
 # endif
 		&& (!ISALPHA (c)
