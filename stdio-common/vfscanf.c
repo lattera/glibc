@@ -1711,7 +1711,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 		      /* The last thousands character will be added back by
 			 the char_buffer_add below.  */
-			--charbuf.current;
+		      --charbuf.current;
 #endif
 		    }
 		  else
