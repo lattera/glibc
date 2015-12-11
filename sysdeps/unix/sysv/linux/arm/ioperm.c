@@ -43,7 +43,6 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 
-#include <linux/version.h>
 #include <sys/sysctl.h>
 
 #define PATH_ARM_SYSTYPE	"/etc/arm_systype"
@@ -94,19 +93,13 @@ static struct platform {
  *    values.
  */
 
-/* The Linux kernel headers renamed this constant between 2.5.26 and
-   2.5.27.  It was backported to 2.4 between 2.4.22 and 2.4.23.  */
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,23)
-# define BUS_ISA CTL_BUS_ISA
-#endif
-
 static int
 init_iosys (void)
 {
   char systype[256];
   int i, n;
-  static int iobase_name[] = { CTL_BUS, BUS_ISA, BUS_ISA_PORT_BASE };
-  static int ioshift_name[] = { CTL_BUS, BUS_ISA, BUS_ISA_PORT_SHIFT };
+  static int iobase_name[] = { CTL_BUS, CTL_BUS_ISA, BUS_ISA_PORT_BASE };
+  static int ioshift_name[] = { CTL_BUS, CTL_BUS_ISA, BUS_ISA_PORT_SHIFT };
   size_t len = sizeof(io.base);
 
   if (! __sysctl (iobase_name, 3, &io.io_base, &len, NULL, 0)

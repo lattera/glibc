@@ -1,3 +1,12 @@
+2015-12-11  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/arm/ioperm.c: Do not include
+	<linux/version.h>.
+	[LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,23)]: Remove
+	conditional code.
+	(init_iosys): Use CTL_BUS_ISA instead of BUS_ISA in iobase_name
+	and ioshift_name initialization.
+
 2015-12-11  Steve Ellcey  <sellcey@imgtec.com>
 
 	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f):
