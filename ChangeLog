@@ -1,5 +1,10 @@
 2015-12-11  Steve Ellcey  <sellcey@imgtec.com>
 
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f):
+	Fix indentation.
+
+2015-12-11  Steve Ellcey  <sellcey@imgtec.com>
+
 	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Fix indentation.
 
 2015-12-11  Steve Ellcey  <sellcey@imgtec.com>
