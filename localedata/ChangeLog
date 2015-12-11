@@ -1,3 +1,15 @@
+2015-12-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18491]
+	* unicode-gen/unicode_utils.py (to_upper_turkish): New function.
+	(to_lower_turkish): Likewise.
+	* unicode-gen/gen_unicode_ctype.py (output_tables): Support
+	producing output with Turkish case conversions.
+	(--turkish): New command-line option.
+	* unicode-gen/Makefile (GENERATED): Add tr_TR.
+	(tr_TR): New rule.
+	* locales/tr_TR: Regenerate LC_CTYPE.
+
 2015-12-09  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ 18568]

@@ -41,7 +41,7 @@ PYTHON3 = python3
 WGET = wget
 
 DOWNLOADS = UnicodeData.txt DerivedCoreProperties.txt EastAsianWidth.txt
-GENERATED = i18n UTF-8 translit_combining translit_compat translit_circle translit_cjk_compat translit_font translit_fraction
+GENERATED = i18n tr_TR UTF-8 translit_combining translit_compat translit_circle translit_cjk_compat translit_font translit_fraction
 REPORTS = i18n-report UTF-8-report
 
 all: $(GENERATED)
@@ -50,6 +50,7 @@ check: check-i18n check-UTF-8
 
 install:
 	cp -p i18n ../locales/i18n
+	cp -p tr_TR ../locales/tr_TR
 	cp -p UTF-8 ../charmaps/UTF-8
 	cp -p translit_combining ../locales/translit_combining
 	cp -p translit_compat ../locales/translit_compat
@@ -81,6 +82,13 @@ check-i18n: i18n-report
 	@if grep '\(Missing\|Added\) [^0]\|^Number of errors[^=]* = [^0]' \
 		i18n-report; \
 	then echo manual verification required; false; else true; fi
+
+tr_TR: UnicodeData.txt DerivedCoreProperties.txt
+tr_TR: ../locales/tr_TR # Preserve non-ctype information.
+tr_TR: gen_unicode_ctype.py
+	$(PYTHON3) gen_unicode_ctype.py -u UnicodeData.txt \
+	  -d DerivedCoreProperties.txt -i ../locales/tr_TR -o $@ \
+	  --unicode_version $(UNICODE_VERSION) --turkish
 
 UTF-8: UnicodeData.txt EastAsianWidth.txt
 UTF-8: utf8_gen.py

@@ -196,7 +196,7 @@ def output_tail(i18n_file, tail=''):
     else:
         i18n_file.write('END LC_CTYPE\n')
 
-def output_tables(i18n_file, unicode_version):
+def output_tables(i18n_file, unicode_version, turkish):
     '''Write the new LC_CTYPE character classes to the output file'''
     i18n_file.write('% The following is the 14652 i18n fdcc-set '
                     + 'LC_CTYPE category.\n')
@@ -240,8 +240,14 @@ def output_tables(i18n_file, unicode_version):
                     + '(sections 7.25.2.1.12 and 6.4.4.1).\n')
     output_charclass(i18n_file, 'xdigit', unicode_utils.is_xdigit)
     output_charclass(i18n_file, 'blank', unicode_utils.is_blank)
-    output_charmap(i18n_file, 'toupper', unicode_utils.to_upper)
-    output_charmap(i18n_file, 'tolower', unicode_utils.to_lower)
+    if turkish:
+        i18n_file.write('% The case conversions reflect '
+                        + 'Turkish conventions.\n')
+        output_charmap(i18n_file, 'toupper', unicode_utils.to_upper_turkish)
+        output_charmap(i18n_file, 'tolower', unicode_utils.to_lower_turkish)
+    else:
+        output_charmap(i18n_file, 'toupper', unicode_utils.to_upper)
+        output_charmap(i18n_file, 'tolower', unicode_utils.to_lower)
     output_charmap(i18n_file, 'map "totitle";', unicode_utils.to_title)
     i18n_file.write('% The "combining" class reflects ISO/IEC 10646-1 '
                     + 'annex B.1\n')
@@ -298,6 +304,10 @@ if __name__ == "__main__":
         required=True,
         type=str,
         help='The Unicode version of the input files used.')
+    PARSER.add_argument(
+        '--turkish',
+        action='store_true',
+        help='Use Turkish case conversions.')
     ARGS = PARSER.parse_args()
 
     unicode_utils.fill_attributes(
@@ -310,5 +320,5 @@ if __name__ == "__main__":
         (HEAD, TAIL) = read_input_file(ARGS.input_file)
     with open(ARGS.output_file, mode='w') as I18N_FILE:
         output_head(I18N_FILE, ARGS.unicode_version, head=HEAD)
-        output_tables(I18N_FILE, ARGS.unicode_version)
+        output_tables(I18N_FILE, ARGS.unicode_version, ARGS.turkish)
         output_tail(I18N_FILE, tail=TAIL)
