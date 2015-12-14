@@ -2,12 +2,12 @@
 
 adjtimex	adjtime	adjtimex	i:p	__adjtimex	adjtimex ntp_adjtime
 alarm		-	alarm		i:i	alarm
-bdflush		EXTRA	bdflush		i:ii	bdflush
+bdflush		EXTRA	bdflush		i:ii	__compat_bdflush	bdflush@GLIBC_2.0:GLIBC_2.23
 capget		EXTRA	capget		i:pp	capget
 capset		EXTRA	capset		i:pp	capset
 clock_adjtime	EXTRA	clock_adjtime	i:ip	clock_adjtime
 creat		-	creat		Ci:si	creat
-create_module	EXTRA	create_module	3	create_module
+create_module	EXTRA	create_module	3	__compat_create_module	create_module@GLIBC_2.0:GLIBC_2.23
 delete_module	EXTRA	delete_module	3	delete_module
 epoll_create	EXTRA	epoll_create	i:i	epoll_create
 epoll_create1	EXTRA	epoll_create1	i:i	epoll_create1
@@ -16,7 +16,7 @@ epoll_wait	EXTRA	epoll_wait	Ci:ipii	epoll_wait
 execve		-	execve		i:spp	__execve	execve
 fdatasync	-	fdatasync	Ci:i	fdatasync
 flock		-	flock		i:ii	__flock		flock
-get_kernel_syms	EXTRA	get_kernel_syms	i:p	get_kernel_syms
+get_kernel_syms	EXTRA	get_kernel_syms	i:p	__compat_get_kernel_syms	get_kernel_syms@GLIBC_2.0:GLIBC_2.23
 getegid		-	getegid		Ei:	__getegid	getegid
 geteuid		-	geteuid		Ei:	__geteuid	geteuid
 getpgid		-	getpgid		i:i	__getpgid	getpgid
@@ -53,7 +53,7 @@ pivot_root	EXTRA	pivot_root	i:ss	pivot_root
 poll		-	poll		Ci:pii	__libc_poll	__poll poll
 prctl		EXTRA	prctl		i:iiiii	__prctl		prctl
 putpmsg		-	putpmsg		i:ippii	putpmsg
-query_module	EXTRA	query_module	i:sipip	query_module
+query_module	EXTRA	query_module	i:sipip	__compat_query_module	query_module@GLIBC_2.0:GLIBC_2.23
 quotactl	EXTRA	quotactl	i:isip	quotactl
 remap_file_pages -	remap_file_pages i:piiii	__remap_file_pages remap_file_pages
 sched_getp	-	sched_getparam	i:ip	__sched_getparam	sched_getparam
@@ -78,7 +78,7 @@ swapon		-	swapon		i:si	__swapon	swapon
 swapoff		-	swapoff		i:s	__swapoff	swapoff
 tee		EXTRA	tee		Ci:iiii	tee
 unshare		EXTRA	unshare		i:i	unshare
-uselib		EXTRA	uselib		i:s	uselib
+uselib		EXTRA	uselib		i:s	__compat_uselib	uselib@GLIBC_2.0:GLIBC_2.23
 utime		-	utime		i:sP	utime
 vmsplice	EXTRA	vmsplice	Ci:iPii	vmsplice
 wait4		-	wait4		i:iWiP	__wait4		wait4

@@ -29,7 +29,7 @@ CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=0x80000000-__getpagesize()"
 # here and in any non-Linux configuration that uses it; other
 # configurations will not install the file.
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
-		  sys/klog.h sys/kdaemon.h \
+		  sys/klog.h \
 		  sys/user.h sys/prctl.h \
 		  sys/kd.h sys/soundcard.h sys/vt.h \
 		  sys/quota.h sys/fsuid.h \

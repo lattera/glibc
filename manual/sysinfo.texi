@@ -1286,6 +1286,4 @@ parameters are:
 @code{gethostname}, @code{sethostname} (@xref{Host Identification}.)
 @item
 @code{uname} (@xref{Platform Type}.)
-@item
-@code{bdflush}
 @end itemize

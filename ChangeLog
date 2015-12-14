@@ -1,3 +1,21 @@
+2015-12-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18472]
+	* sysdeps/unix/Makefile ($(objpfx)stub-syscalls.c): Handle entries
+	for the form NAME@VERSION:OBSOLETED and generate SHLIB_COMPAT
+	conditionals for them.
+	* sysdeps/unix/make-syscalls.sh (emit_weak_aliases): Likewise.
+	* sysdeps/unix/sysv/linux/sys/kdaemon.h: Remove file.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Remove
+	sys/kdaemon.h.
+	* sysdeps/unix/sysv/linux/syscalls.list (bdflush): Make into
+	compat-only syscall, obsoleted in glibc 2.23.
+	(create_module): Likewise.
+	(get_kernel_syms): Likewise.
+	(query_module): Likewise.
+	(uselib): Likewise.
+	* manual/sysinfo.texi (System Parameters): Do not mention bdflush.
+
 2015-12-11  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/arm/ioperm.c: Do not include

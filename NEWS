@@ -53,6 +53,13 @@ Version 2.23
 * The obsolete header <regexp.h> has been removed.  Programs that require
   this header must be updated to use <regex.h> instead.
 
+* The obsolete functions bdflush, create_module, get_kernel_syms,
+  query_module and uselib are no longer available to newly linked binaries;
+  the header <sys/kdaemon.h> has been removed.  These functions and header
+  were specific to systems using the Linux kernel and could not usefully be
+  used with the GNU C Library on systems with version 2.6 or later of the
+  Linux kernel.
+
 * Optimized string, wcsmbs and memory functions for IBM z13.
   Implemented by Stefan Liebler.
 
