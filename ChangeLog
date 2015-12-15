@@ -1,5 +1,14 @@
 2015-12-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #19367]
+	* sysdeps/unix/sysv/linux/wordsize-64/mmap.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/64/dl-librecon.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/mmap.c: Likewise.
+	* sysdeps/x86/cpu-features.h (bit_Prefer_MAP_32BIT_EXEC): New.
+	(index_Prefer_MAP_32BIT_EXEC): Likewise.
+
+2015-12-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86/cpu-features.c (init_cpu_features): Enable
 	Silvermont optimizations for Knights Landing.
 
