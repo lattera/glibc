@@ -57,7 +57,7 @@ call_func (const char *dso_name, const char *func_name)
   dlerror ();
 
   /* Lookup func.  */
-  *(void **) (&func) = dlsym (dso, func_name);
+  func = (int (*) (void)) dlsym (dso, func_name);
   if (func == NULL)
     {
       err = dlerror ();

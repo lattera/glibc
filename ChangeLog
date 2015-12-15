@@ -1,3 +1,8 @@
+2015-12-15  Florian Weimer  <fweimer@redhat.com>
+
+	* dlfcn/tst-rec-dlopen.c (call_func): Cast dlsym result, fixing an
+	aliasing violation.
+
 2015-12-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18472]
