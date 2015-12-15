@@ -1,3 +1,8 @@
+2015-12-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Enable
+	Silvermont optimizations for Knights Landing.
+
 2015-12-15  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17197]

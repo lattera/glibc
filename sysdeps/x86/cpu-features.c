@@ -78,6 +78,9 @@ init_cpu_features (struct cpu_features *cpu_features)
 	      cpu_features->feature[index_Slow_BSF] |= bit_Slow_BSF;
 	      break;
 
+	    case 0x57:
+	      /* Knights Landing.  Enable Silvermont optimizations.  */
+
 	    case 0x37:
 	    case 0x4a:
 	    case 0x4d:
