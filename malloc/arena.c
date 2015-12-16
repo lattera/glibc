@@ -805,6 +805,8 @@ _int_new_arena (size_t size)
 }
 
 
+/* Remove an arena from free_list.  The arena may be in use because it
+   was attached concurrently to a thread by reused_arena below.  */
 static mstate
 get_free_list (void)
 {
@@ -818,10 +820,8 @@ get_free_list (void)
 	{
 	  free_list = result->next_free;
 
-	  /* Arenas on the free list are not attached to any thread.  */
-	  assert (result->attached_threads == 0);
-	  /* But the arena will now be attached to this thread.  */
-	  result->attached_threads = 1;
+	  /* The arena will be attached to this thread.  */
+	  ++result->attached_threads;
 
 	  detach_arena (replaced_arena);
 	}
@@ -849,6 +849,8 @@ reused_arena (mstate avoid_arena)
   if (next_to_use == NULL)
     next_to_use = &main_arena;
 
+  /* Iterate over all arenas (including those linked from
+     free_list).  */
   result = next_to_use;
   do
     {
@@ -883,6 +885,8 @@ reused_arena (mstate avoid_arena)
   (void) mutex_lock (&result->mutex);
 
 out:
+  /* Attach the arena to the current thread.  Note that we may have
+     selected an arena which was on free_list.  */
   {
     mstate replaced_arena = thread_arena;
     (void) mutex_lock (&list_lock);

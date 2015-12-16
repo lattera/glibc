@@ -1,3 +1,14 @@
+2015-12-16  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19243]
+	* malloc/arena.c (get_free_list): Remove assert and adjust
+	reference count handling.  Add comment about reused_arena
+	interaction.
+	(reused_arena): Add comments abount get_free_list interaction.
+	* malloc/tst-malloc-thread-exit.c: New file.
+	* malloc/Makefile (tests): Add tst-malloc-thread-exit.
+	(tst-malloc-thread-exit): Link against libpthread.
+
 2015-12-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19367]
