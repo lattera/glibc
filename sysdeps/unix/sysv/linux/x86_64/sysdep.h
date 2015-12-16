@@ -218,6 +218,9 @@
 # undef INTERNAL_SYSCALL_DECL
 # define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
+/* Registers clobbered by syscall.  */
+# define REGISTERS_CLOBBERED_BY_SYSCALL "cc", "r11", "cx"
+
 # define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
   ({									      \
     unsigned long int resultvar;					      \
@@ -226,7 +229,7 @@
     asm volatile (							      \
     "syscall\n\t"							      \
     : "=a" (resultvar)							      \
-    : "0" (name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");		      \
+    : "0" (name) ASM_ARGS_##nr : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);   \
     (long int) resultvar; })
 # undef INTERNAL_SYSCALL
 # define INTERNAL_SYSCALL(name, err, nr, args...) \
@@ -240,7 +243,7 @@
     asm volatile (							      \
     "syscall\n\t"							      \
     : "=a" (resultvar)							      \
-    : "0" (name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");		      \
+    : "0" (name) ASM_ARGS_##nr : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);   \
     (long int) resultvar; })
 # undef INTERNAL_SYSCALL_TYPES
 # define INTERNAL_SYSCALL_TYPES(name, err, nr, args...) \

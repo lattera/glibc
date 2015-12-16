@@ -1,3 +1,10 @@
+2015-12-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h
+	(REGISTERS_CLOBBERED_BY_SYSCALL): New.
+	(INTERNAL_SYSCALL_NCS): Use it.
+	(INTERNAL_SYSCALL_NCS_TYPES): Likewise.
+
 2015-12-16  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19243]
