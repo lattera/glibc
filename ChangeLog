@@ -1,3 +1,8 @@
+2015-12-29  Rob Wu  <rob@robwu.nl>
+
+	[BZ #19369]
+	* resolv/res_init.c (__res_vinit): Reset defdname before use.
+
 2015-12-29  John David Anglin  <danglin@gcc.gnu.org>
 
 	[BZ #19270]

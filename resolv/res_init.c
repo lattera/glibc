@@ -176,6 +176,7 @@ __res_vinit(res_state statp, int preinit) {
 	}
 
 	statp->nscount = 0;
+	statp->defdname[0] = '\0';
 	statp->ndots = 1;
 	statp->pfcode = 0;
 	statp->_vcsock = -1;
