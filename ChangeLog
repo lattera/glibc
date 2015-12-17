@@ -1,3 +1,8 @@
+2015-12-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/power7/fpu/s_logb.c (__logb): Fix return for
+	negative subnormals.
+
 2015-12-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h
