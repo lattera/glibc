@@ -1,3 +1,8 @@
+2015-12-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19363]
+	* sysdeps/unix/sysv/linux/x86_64/x32/times.c: New file.
+
 2015-12-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/power7/fpu/s_logb.c (__logb): Fix return for
