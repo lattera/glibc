@@ -53,11 +53,6 @@ static const mp1 mp_exp1 = {
            a784d904, 5190cfef, 324e7738, 926cfbe5, f4bf8d8d, 8c31d763)
 };
 
-static const mp1 mp_exp_m1 = {
-  CONSTSZ (0, 5e2d58d8, b3bcdf1a, badec782, 9054f90d, da9805aa, b56c7733,
-           3024b9d0, a507daed, b16400bf, 472b4215, b8245b66, 9d90d27a)
-};
-
 static const mp1 mp_log2 = {
   CONSTSZ (0, b17217f7, d1cf79ab, c9e3b398, 03f2f6af, 40f34326, 7298b62d,
            8a0d175b, 8baafa2b, e7b87620, 6debac98, 559552fb, 4afa1b10)
