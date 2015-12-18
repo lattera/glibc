@@ -80,6 +80,8 @@ init_cpu_features (struct cpu_features *cpu_features)
 
 	    case 0x57:
 	      /* Knights Landing.  Enable Silvermont optimizations.  */
+	      cpu_features->feature[index_Prefer_No_VZEROUPPER]
+		|= bit_Prefer_No_VZEROUPPER;
 
 	    case 0x37:
 	    case 0x4a:

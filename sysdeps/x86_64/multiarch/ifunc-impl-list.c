@@ -20,6 +20,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <ifunc-impl-list.h>
+#include <sysdep.h>
 #include "init-arch.h"
 
 /* Maximum number of IFUNC implementations.  */
@@ -76,14 +77,26 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memset_chk_sse2)
 	      IFUNC_IMPL_ADD (array, i, __memset_chk,
 			      HAS_ARCH_FEATURE (AVX2_Usable),
-			      __memset_chk_avx2))
+			      __memset_chk_avx2)
+#ifdef HAVE_AVX512_ASM_SUPPORT
+	      IFUNC_IMPL_ADD (array, i, __memset_chk,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memset_chk_avx512_no_vzeroupper)
+#endif
+	      )
 
   /* Support sysdeps/x86_64/multiarch/memset.S.  */
   IFUNC_IMPL (i, name, memset,
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_sse2)
 	      IFUNC_IMPL_ADD (array, i, memset,
 			      HAS_ARCH_FEATURE (AVX2_Usable),
-			      __memset_avx2))
+			      __memset_avx2)
+#ifdef HAVE_AVX512_ASM_SUPPORT
+	      IFUNC_IMPL_ADD (array, i, memset,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memset_avx512_no_vzeroupper)
+#endif
+	     )
 
   /* Support sysdeps/x86_64/multiarch/stpncpy.S.  */
   IFUNC_IMPL (i, name, stpncpy,

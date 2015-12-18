@@ -1,4 +1,16 @@
-2015-12-18  Torvald Riegel  <triegel@redhat.com>
+2015-12-19  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* sysdeps/x86_64/multiarch/memset-avx512-no-vzeroupper.S: New file.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Added new file.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Added new tests.
+	* sysdeps/x86_64/multiarch/memset.S: Added new IFUNC branch.
+	* sysdeps/x86_64/multiarch/memset_chk.S: Likewise.
+	* sysdeps/x86/cpu-features.h (bit_Prefer_No_VZEROUPPER,
+	index_Prefer_No_VZEROUPPER): New feature.
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set the
+	Prefer_No_VZEROUPPER for Knights Landing.
+
+015-12-18  Torvald Riegel  <triegel@redhat.com>
 
 	* math/atest-exp2.c (mp_exp_m1): Remove.
 
