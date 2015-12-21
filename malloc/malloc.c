@@ -1710,12 +1710,12 @@ struct malloc_state
   struct malloc_state *next;
 
   /* Linked list for free arenas.  Access to this field is serialized
-     by list_lock in arena.c.  */
+     by free_list_lock in arena.c.  */
   struct malloc_state *next_free;
 
   /* Number of threads attached to this arena.  0 if the arena is on
-     the free list.  Access to this field is serialized by list_lock
-     in arena.c.  */
+     the free list.  Access to this field is serialized by
+     free_list_lock in arena.c.  */
   INTERNAL_SIZE_T attached_threads;
 
   /* Memory allocated from the system in this arena.  */
