@@ -276,6 +276,104 @@ reduce_and_compute (double x, unsigned int k)
   return retval;
 }
 
+static inline int4
+__always_inline
+reduce_sincos_2 (double x, double *a, double *da)
+{
+  mynumber v;
+
+  double t = (x * hpinv + toint);
+  double xn = t - toint;
+  v.x = t;
+  double xn1 = (xn + 8.0e22) - 8.0e22;
+  double xn2 = xn - xn1;
+  double y = ((((x - xn1 * mp1) - xn1 * mp2) - xn2 * mp1) - xn2 * mp2);
+  int4 n = v.i[LOW_HALF] & 3;
+  double db = xn1 * pp3;
+  t = y - db;
+  db = (y - t) - db;
+  db = (db - xn2 * pp3) - xn * pp4;
+  double b = t + db;
+  db = (t - b) + db;
+
+  *a = b;
+  *da = db;
+
+  return n;
+}
+
+/* Compute sin (A + DA).  cos can be computed by shifting the quadrant N
+   clockwise.  */
+static double
+__always_inline
+do_sincos_2 (double a, double da, double x, int4 n, int4 k)
+{
+  double res, retval, cor, xx;
+  mynumber u;
+
+  double eps = 1.0e-24;
+
+  k = (n + k) & 3;
+
+  switch (k)
+    {
+    case 2:
+      a = -a;
+      da = -da;
+      /* Fall through.  */
+    case 0:
+      xx = a * a;
+      if (xx < 0.01588)
+	{
+	  /* Taylor series.  */
+	  res = TAYLOR_SIN (xx, a, da, cor);
+	  cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
+	  retval = (res == res + cor) ? res : bsloww (a, da, x, n);
+	}
+      else
+	{
+	  double t, db, y;
+	  int m;
+	  if (a > 0)
+	    {
+	      m = 1;
+	      t = a;
+	      db = da;
+	    }
+	  else
+	    {
+	      m = 0;
+	      t = -a;
+	      db = -da;
+	    }
+	  u.x = big + t;
+	  y = t - (u.x - big);
+	  res = do_sin (u, y, db, &cor);
+	  cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
+	  retval = ((res == res + cor) ? ((m) ? res : -res)
+		    : bsloww1 (a, da, x, n));
+	}
+      break;
+
+    case 1:
+    case 3:
+      if (a < 0)
+	{
+	  a = -a;
+	  da = -da;
+	}
+      u.x = big + a;
+      double y = a - (u.x - big) + da;
+      res = do_cos (u, y, &cor);
+      cor = (cor > 0) ? 1.025 * cor + eps : 1.025 * cor - eps;
+      retval = ((res == res + cor) ? ((n & 2) ? -res : res)
+		: bsloww2 (a, da, x, n));
+      break;
+    }
+
+  return retval;
+}
+
 /*******************************************************************/
 /* An ultimate sin routine. Given an IEEE double machine number x   */
 /* it computes the correctly rounded (to nearest) value of sin(x)  */
@@ -288,8 +386,7 @@ SECTION
 #endif
 __sin (double x)
 {
-  double xx, res, t, cor, y, s, c, sn, ssn, cs, ccs, xn, a, da, db, eps, xn1,
-    xn2;
+  double xx, res, t, cor, y, s, c, sn, ssn, cs, ccs, xn, a, da, eps;
   mynumber u, v;
   int4 k, m, n;
   double retval = 0;
@@ -421,83 +518,16 @@ __sin (double x)
 	}
     }				/*   else  if (k <  0x419921FB )    */
 
+#ifndef IN_SINCOS
 /*---------------------105414350 <|x|< 281474976710656 --------------------*/
   else if (k < 0x42F00000)
     {
-      t = (x * hpinv + toint);
-      xn = t - toint;
-      v.x = t;
-      xn1 = (xn + 8.0e22) - 8.0e22;
-      xn2 = xn - xn1;
-      y = ((((x - xn1 * mp1) - xn1 * mp2) - xn2 * mp1) - xn2 * mp2);
-      n = v.i[LOW_HALF] & 3;
-      da = xn1 * pp3;
-      t = y - da;
-      da = (y - t) - da;
-      da = (da - xn2 * pp3) - xn * pp4;
-      a = t + da;
-      da = (t - a) + da;
-      eps = 1.0e-24;
+      double a, da;
 
-      switch (n)
-	{
-	case 0:
-	case 2:
-	  xx = a * a;
-	  if (n)
-	    {
-	      a = -a;
-	      da = -da;
-	    }
-	  if (xx < 0.01588)
-	    {
-	      /* Taylor series.  */
-	      res = TAYLOR_SIN (xx, a, da, cor);
-	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
-	      retval = (res == res + cor) ? res : bsloww (a, da, x, n);
-	    }
-	  else
-	    {
-	      double t;
-	      if (a > 0)
-		{
-		  m = 1;
-		  t = a;
-		  db = da;
-		}
-	      else
-		{
-		  m = 0;
-		  t = -a;
-		  db = -da;
-		}
-	      u.x = big + t;
-	      y = t - (u.x - big);
-	      res = do_sin (u, y, db, &cor);
-	      cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
-	      retval = ((res == res + cor) ? ((m) ? res : -res)
-			: bsloww1 (a, da, x, n));
-	    }
-	  break;
-
-	case 1:
-	case 3:
-	  if (a < 0)
-	    {
-	      a = -a;
-	      da = -da;
-	    }
-	  u.x = big + a;
-	  y = a - (u.x - big) + da;
-	  res = do_cos (u, y, &cor);
-	  cor = (cor > 0) ? 1.025 * cor + eps : 1.025 * cor - eps;
-	  retval = ((res == res + cor) ? ((n & 2) ? -res : res)
-		    : bsloww2 (a, da, x, n));
-	  break;
-	}
+      int4 n = reduce_sincos_2 (x, &a, &da);
+      retval = do_sincos_2 (a, da, x, n, 0);
     }				/*   else  if (k <  0x42F00000 )   */
 
-#ifndef IN_SINCOS
 /* -----------------281474976710656 <|x| <2^1024----------------------------*/
   else if (k < 0x7ff00000)
     retval = reduce_and_compute (x, 0);
@@ -528,8 +558,7 @@ SECTION
 #endif
 __cos (double x)
 {
-  double y, xx, res, t, cor, xn, a, da, db, eps, xn1,
-    xn2;
+  double y, xx, res, t, cor, xn, a, da, eps;
   mynumber u, v;
   int4 k, m, n;
 
@@ -657,81 +686,15 @@ __cos (double x)
 	}
     }				/*   else  if (k <  0x419921FB )    */
 
+#ifndef IN_SINCOS
   else if (k < 0x42F00000)
     {
-      t = (x * hpinv + toint);
-      xn = t - toint;
-      v.x = t;
-      xn1 = (xn + 8.0e22) - 8.0e22;
-      xn2 = xn - xn1;
-      y = ((((x - xn1 * mp1) - xn1 * mp2) - xn2 * mp1) - xn2 * mp2);
-      n = v.i[LOW_HALF] & 3;
-      da = xn1 * pp3;
-      t = y - da;
-      da = (y - t) - da;
-      da = (da - xn2 * pp3) - xn * pp4;
-      a = t + da;
-      da = (t - a) + da;
-      eps = 1.0e-24;
+      double a, da;
 
-      switch (n)
-	{
-	case 1:
-	case 3:
-	  xx = a * a;
-	  if (n == 1)
-	    {
-	      a = -a;
-	      da = -da;
-	    }
-	  if (xx < 0.01588)
-	    {
-	      res = TAYLOR_SIN (xx, a, da, cor);
-	      cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
-	      retval = (res == res + cor) ? res : bsloww (a, da, x, n);
-	    }
-	  else
-	    {
-	      double t;
-	      if (a > 0)
-		{
-		  m = 1;
-		  t = a;
-		  db = da;
-		}
-	      else
-		{
-		  m = 0;
-		  t = -a;
-		  db = -da;
-		}
-	      u.x = big + t;
-	      y = t - (u.x - big);
-	      res = do_sin (u, y, db, &cor);
-	      cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
-	      retval = ((res == res + cor) ? ((m) ? res : -res)
-			: bsloww1 (a, da, x, n));
-	    }
-	  break;
-
-	case 0:
-	case 2:
-	  if (a < 0)
-	    {
-	      a = -a;
-	      da = -da;
-	    }
-	  u.x = big + a;
-	  y = a - (u.x - big) + da;
-	  res = do_cos (u, y, &cor);
-	  cor = (cor > 0) ? 1.025 * cor + eps : 1.025 * cor - eps;
-	  retval = ((res == res + cor) ? ((n) ? -res : res)
-		    : bsloww2 (a, da, x, n));
-	  break;
-	}
+      int4 n = reduce_sincos_2 (x, &a, &da);
+      retval = do_sincos_2 (a, da, x, n, 1);
     }				/*   else  if (k <  0x42F00000 )    */
 
-#ifndef IN_SINCOS
   /* 281474976710656 <|x| <2^1024 */
   else if (k < 0x7ff00000)
     retval = reduce_and_compute (x, 1);

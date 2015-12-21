@@ -1,5 +1,10 @@
 2015-12-21  Siddhesh Poyarekar  <siddhesh.poyarekar@linaro.org>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin, __cos): Move common
+	code to new functions.
+	(reduce_sincos_2, do_sincos_2): New functions.
+	* sysdeps/ieee754/dbl-64/s_sincos.c (__sincos): Use them.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (__sin) [!IN_SINCOS]: Skip
 	common code for sincos.
 	(__cos) [!IN_SINCOS]: Likewise.
