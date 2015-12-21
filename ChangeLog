@@ -1,5 +1,14 @@
 2015-12-21  Siddhesh Poyarekar  <siddhesh.poyarekar@linaro.org>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (csloww, csloww1, csloww2):
+	Remove functions.
+	(sloww, sloww1): Accept argument to offset quadrant.
+	(sloww, sloww1, sloww2): Call __mpsin or __mpcos based on
+	quadrant.
+	(__sin, __cos): Consolidate common code into new functions.
+	(reduce_sincos_1, do_sincos_1): New functions.
+	* sysdeps/ieee754/dbl-64/s_sincos.c (__sincos): Use them.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (__sin, __cos): Move common
 	code to new functions.
 	(reduce_sincos_2, do_sincos_2): New functions.

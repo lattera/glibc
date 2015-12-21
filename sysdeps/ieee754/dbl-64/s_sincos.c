@@ -69,10 +69,20 @@ __sincos (double x, double *sinx, double *cosx)
   u.x = x;
   k = 0x7fffffff & u.i[HIGH_HALF];
 
-  if (k < 0x419921FB)
+  if (k < 0x400368fd)
     {
       *sinx = __sin_local (x);
       *cosx = __cos_local (x);
+      return;
+    }
+  if (k < 0x419921FB)
+    {
+      double a, da;
+      int4 n = reduce_sincos_1 (x, &a, &da);
+
+      *sinx = do_sincos_1 (a, da, x, n, 0);
+      *cosx = do_sincos_1 (a, da, x, n, 1);
+
       return;
     }
   if (k < 0x42F00000)
