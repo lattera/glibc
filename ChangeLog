@@ -1,8 +1,8 @@
 2015-12-20  Aurelien Jarno  <aurelien@aurel32.net>
 
-       * sysdeps/i386/fpu/libm-test-ulps: Move to ....
-       * sysdeps/i386/i686/multiarch/fpu/libm-test-ulps: ...here.
-       * sysdeps/i386/fpu/libm-test-ulps: Regenerate.
+	* sysdeps/i386/fpu/libm-test-ulps: Move to ....
+	* sysdeps/i386/i686/multiarch/fpu/libm-test-ulps: ...here.
+	* sysdeps/i386/fpu/libm-test-ulps: Regenerate.
 
 2015-12-19  Andrew Senkevich  <andrew.senkevich@intel.com>
 
