@@ -27,13 +27,64 @@
 #define IN_SINCOS 1
 #include "s_sin.c"
 
+/* Consolidated version of reduce_and_compute in s_sin.c that does range
+   reduction only once and computes sin and cos together.  */
+static inline void
+__always_inline
+reduce_and_compute_sincos (double x, double *sinx, double *cosx)
+{
+  double a, da;
+  unsigned int n = __branred (x, &a, &da);
+
+  n = n & 3;
+
+  if (n == 1 || n == 2)
+    {
+      a = -a;
+      da = -da;
+    }
+
+  if (n & 1)
+    {
+      double *temp = cosx;
+      cosx = sinx;
+      sinx = temp;
+    }
+
+  if (a * a < 0.01588)
+    *sinx = bsloww (a, da, x, n);
+  else
+    *sinx = bsloww1 (a, da, x, n);
+  *cosx = bsloww2 (a, da, x, n);
+}
+
 void
 __sincos (double x, double *sinx, double *cosx)
 {
+  mynumber u;
+  int k;
+
   SET_RESTORE_ROUND_53BIT (FE_TONEAREST);
 
-  *sinx = __sin (x);
-  *cosx = __cos (x);
+  u.x = x;
+  k = 0x7fffffff & u.i[HIGH_HALF];
+
+  if (k < 0x42F00000)
+    {
+      *sinx = __sin_local (x);
+      *cosx = __cos_local (x);
+      return;
+    }
+  if (k < 0x7ff00000)
+    {
+      reduce_and_compute_sincos (x, sinx, cosx);
+      return;
+    }
+
+  if (isinf (x))
+    __set_errno (EDOM);
+
+  *sinx = *cosx = x / x;
 }
 weak_alias (__sincos, sincos)
 #ifdef NO_LONG_DOUBLE

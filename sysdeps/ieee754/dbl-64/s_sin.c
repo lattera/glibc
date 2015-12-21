@@ -497,6 +497,7 @@ __sin (double x)
 	}
     }				/*   else  if (k <  0x42F00000 )   */
 
+#ifndef IN_SINCOS
 /* -----------------281474976710656 <|x| <2^1024----------------------------*/
   else if (k < 0x7ff00000)
     retval = reduce_and_compute (x, 0);
@@ -508,6 +509,7 @@ __sin (double x)
 	__set_errno (EDOM);
       retval = x / x;
     }
+#endif
 
   return retval;
 }
@@ -729,6 +731,7 @@ __cos (double x)
 	}
     }				/*   else  if (k <  0x42F00000 )    */
 
+#ifndef IN_SINCOS
   /* 281474976710656 <|x| <2^1024 */
   else if (k < 0x7ff00000)
     retval = reduce_and_compute (x, 1);
@@ -739,6 +742,7 @@ __cos (double x)
 	__set_errno (EDOM);
       retval = x / x;		/* |x| > 2^1024 */
     }
+#endif
 
   return retval;
 }

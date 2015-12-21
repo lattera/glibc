@@ -1,3 +1,12 @@
+2015-12-21  Siddhesh Poyarekar  <siddhesh.poyarekar@linaro.org>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin) [!IN_SINCOS]: Skip
+	common code for sincos.
+	(__cos) [!IN_SINCOS]: Likewise.
+	* sysdeps/ieee754/dbl-64/s_sincos.c (reduce_and_compute_sincos):
+	New function.
+	(__sincos): Use it.
+
 2015-12-20  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Move to ....
