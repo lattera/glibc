@@ -1,3 +1,19 @@
+2015-12-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	Harmonize generic stdio-lock support with nptl
+
+	This fixes build when _IO_funlockfile is a macro, fixes build where
+	_IO_acquire_lock_clear_flags2 is used, and fixes unlocking on unexpected
+	stack unwind.
+
+	* sysdeps/generic/stdio-lock.h [__EXCEPTIONS] (_IO_acquire_lock,
+	_IO_release_lock ): Use cleanup attribute on new
+	_IO_acquire_lock_file variable instead of assuming that
+	_IO_release_lock will be called.
+	[!__EXCEPTIONS] (_IO_acquire_lock): Define to non-existing
+	_IO_acquire_lock_needs_exceptions_enabled.
+	(_IO_acquire_lock_clear_flags2): New macro.
+
 2015-12-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Regenerated.
