@@ -85,9 +85,10 @@ static mstate free_list;
    _int_new_arena.  This suffers from data races; see the FIXME
    comments in _int_new_arena and reused_arena.
 
-   list_lock also prevents concurrent forks.  When list_lock is
-   acquired, no arena lock must be acquired, but it is permitted to
-   acquire arena locks after list_lock.  */
+   list_lock also prevents concurrent forks.  At the time list_lock is
+   acquired, no arena lock must have been acquired, but it is
+   permitted to acquire arena locks subsequently, while list_lock is
+   acquired.  */
 static mutex_t list_lock = _LIBC_LOCK_INITIALIZER;
 
 /* Mapped memory in non-main arenas (reliable only for NO_THREADS). */

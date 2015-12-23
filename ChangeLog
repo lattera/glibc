@@ -1,3 +1,7 @@
+2015-12-23  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/arena.c (list_lock): Update comment.
+
 2015-12-22  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/hwcapinfo.c: Export symbol
