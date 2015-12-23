@@ -68592,7 +68592,7 @@
 
 2011-05-20  Ulrich Drepper  <drepper@gmail.com>
 
-	[BZ #11869]
+	[BZ #11884]
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't unconditionally use
 	alloca.
 	* include/alloca.h (extend_alloca_account): Define.
