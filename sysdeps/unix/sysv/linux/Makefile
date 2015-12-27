@@ -16,7 +16,8 @@ include $(firstword $(wildcard $(sysdirs:=/sysctl.mk)))
 
 sysdep_routines += clone llseek umount umount2 readahead \
 		   setfsuid setfsgid makedev epoll_pwait signalfd \
-		   eventfd eventfd_read eventfd_write prlimit
+		   eventfd eventfd_read eventfd_write prlimit \
+		   personality
 
 CFLAGS-gethostid.c = -fexceptions
 CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=0x80000000-__getpagesize()"
@@ -41,7 +42,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/socket_type.h bits/syscall.h bits/sysctl.h \
 		  bits/mman-linux.h
 
-tests += tst-clone tst-fanotify
+tests += tst-clone tst-fanotify tst-personality
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 

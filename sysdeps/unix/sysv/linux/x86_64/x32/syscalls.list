@@ -2,6 +2,7 @@
 
 fallocate	-	fallocate	Ci:iiii	fallocate	fallocate64
 gettimeofday	-	gettimeofday:__vdso_gettimeofday@LINUX_2.6	i:pP	__gettimeofday	gettimeofday
+personality	EXTRA	personality	Ei:i	__personality	personality
 posix_fadvise	-	fadvise64	Vi:iiii	posix_fadvise	posix_fadvise64
 preadv		-	preadv		Ci:ipii	preadv		preadv64
 pwritev		-	pwritev		Ci:ipii	pwritev		pwritev64

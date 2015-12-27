@@ -20,3 +20,4 @@ setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit@GLIBC_2.0 setrlimit@@GLIBC_2.2
 
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
 fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	fanotify_mark
+personality	EXTRA	personality	Ei:i	__personality	personality

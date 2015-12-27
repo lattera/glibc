@@ -46,7 +46,6 @@ munlockall	-	munlockall	i:	munlockall
 nanosleep	-	nanosleep	Ci:pp	__nanosleep	nanosleep
 nfsservctl	EXTRA	nfsservctl	i:ipp	nfsservctl
 pause		-	pause		Ci:	__libc_pause	pause
-personality	EXTRA	personality	i:i	__personality	personality
 pipe		-	pipe		i:f	__pipe		pipe
 pipe2		-	pipe2		i:fi	__pipe2		pipe2
 pivot_root	EXTRA	pivot_root	i:ss	pivot_root

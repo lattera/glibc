@@ -1,3 +1,28 @@
+2015-12-30  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #19408]
+	* sysdeps/unix/sysv/linux/personality.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/personality.c: Likewise.
+	* sysdeps/unix/sysv/linux/tst-personality.c: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) == misc]
+	(sysdep_routines): Add personality.
+	(tests): Add tst-personality.
+	* sysdeps/unix/sysv/linux/syscalls.list (personality): Move ...
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: ... here.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (personality): New entry.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (personality): Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list (personality): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list (personality): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/syscalls.list (personality):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list (personality):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list (personality):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/syscalls.list (personality): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/syscalls.list (personality):
+	Likewise.
+
 2015-12-30  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/arm/ioperm.c: Do not include <string.h>.
