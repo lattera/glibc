@@ -1,3 +1,10 @@
+2016-03-08  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags): Updated
+	to reflect the entire 32-bit HWCAP.
+	* sysdeps/powerpc/dl-procinfo.h: Code cleanup.
+	(_DL_HWCAP_FIRST): Removed.  Replaced by 0 accordingly.
+
 2016-03-08  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19783]
