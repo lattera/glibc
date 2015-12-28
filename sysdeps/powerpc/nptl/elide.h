@@ -68,14 +68,14 @@ __get_new_count (uint8_t *adapt_count, int attempt)
     else								\
       for (int i = __elision_aconf.try_tbegin; i > 0; i--)		\
 	{								\
-	  if (__builtin_tbegin (0))					\
+	  if (__libc_tbegin (0))					\
 	    {								\
 	      if (is_lock_free)						\
 		{							\
 		  ret = 1;						\
 		  break;						\
 		}							\
-	      __builtin_tabort (_ABORT_LOCK_BUSY);			\
+	      __libc_tabort (_ABORT_LOCK_BUSY);				\
 	    }								\
 	  else								\
 	    if (!__get_new_count (&adapt_count,i))			\
@@ -90,7 +90,7 @@ __get_new_count (uint8_t *adapt_count, int attempt)
     if (__elision_aconf.try_tbegin > 0)				\
       {								\
 	if (write)						\
-	  __builtin_tabort (_ABORT_NESTED_TRYLOCK);		\
+	  __libc_tabort (_ABORT_NESTED_TRYLOCK);		\
 	ret = ELIDE_LOCK (adapt_count, is_lock_free);		\
       }								\
     ret;							\
@@ -102,7 +102,7 @@ __elide_unlock (int is_lock_free)
 {
   if (is_lock_free)
     {
-      __builtin_tend (0);
+      __libc_tend (0);
       return true;
     }
   return false;

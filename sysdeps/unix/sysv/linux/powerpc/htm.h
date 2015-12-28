@@ -118,13 +118,44 @@
      __ret;				\
   })
 
-#define __builtin_tbegin(tdb)       _tbegin ()
-#define __builtin_tend(nested)      _tend ()
-#define __builtin_tabort(abortcode) _tabort (abortcode)
-#define __builtin_get_texasru()     _texasru ()
+#define __libc_tbegin(tdb)       _tbegin ()
+#define __libc_tend(nested)      _tend ()
+#define __libc_tabort(abortcode) _tabort (abortcode)
+#define __builtin_get_texasru()  _texasru ()
 
 #else
 # include <htmintrin.h>
+
+# ifdef __TM_FENCE__
+   /* New GCC behavior.  */
+#  define __libc_tbegin(R)  __builtin_tbegin (R);
+#  define __libc_tend(R)    __builtin_tend (R);
+#  define __libc_tabort(R)  __builtin_tabort (R);
+# else
+   /* Workaround an old GCC behavior. Earlier releases of GCC 4.9 and 5.0,
+      didn't use to treat __builtin_tbegin, __builtin_tend and
+      __builtin_tabort as compiler barriers, moving instructions into and
+      out the transaction.
+      Remove this when glibc drops support for GCC 5.0.  */
+#  define __libc_tbegin(R)			\
+   ({ __asm__ volatile("" ::: "memory");	\
+     unsigned int __ret = __builtin_tbegin (R);	\
+     __asm__ volatile("" ::: "memory");		\
+     __ret;					\
+   })
+#  define __libc_tabort(R)			\
+  ({ __asm__ volatile("" ::: "memory");		\
+    unsigned int __ret = __builtin_tabort (R);	\
+    __asm__ volatile("" ::: "memory");		\
+    __ret;					\
+  })
+#  define __libc_tend(R)			\
+   ({ __asm__ volatile("" ::: "memory");	\
+     unsigned int __ret = __builtin_tend (R);	\
+     __asm__ volatile("" ::: "memory");		\
+     __ret;					\
+   })
+# endif /* __TM_FENCE__  */
 #endif /* __HTM__  */
 
 #endif /* __ASSEMBLER__ */

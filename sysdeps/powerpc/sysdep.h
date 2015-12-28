@@ -180,7 +180,7 @@
 # define ABORT_TRANSACTION \
   ({ 						\
     if (THREAD_GET_TM_CAPABLE ())		\
-      __builtin_tabort (_ABORT_SYSCALL);	\
+      __libc_tabort (_ABORT_SYSCALL);	\
   })
 #else
 # define ABORT_TRANSACTION

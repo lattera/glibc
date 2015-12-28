@@ -52,12 +52,12 @@ __lll_lock_elision (int *lock, short *adapt_count, EXTRAARG int pshared)
 
   for (int i = aconf.try_tbegin; i > 0; i--)
     {
-      if (__builtin_tbegin (0))
+      if (__libc_tbegin (0))
 	{
 	  if (*lock == 0)
 	    return 0;
 	  /* Lock was busy.  Fall back to normal locking.  */
-	  __builtin_tabort (_ABORT_LOCK_BUSY);
+	  __libc_tabort (_ABORT_LOCK_BUSY);
 	}
       else
 	{

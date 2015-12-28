@@ -1,3 +1,15 @@
+2016-01-08  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/htm.h (__libc_tbegin,
+	__libc_tabort, __libc_tend): New wrappers that enforce compiler
+	barriers to their respective compiler built-ins.
+	* sysdeps/powerpc/nptl/elide.h (__get_new_count, ELIDE_LOCK,
+	ELIDE_TRYLOCK, __elide_unlock): Use the new wrappers.
+	* sysdeps/powerpc/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-trylock.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-unlock.c: Likewise.
+
 2016-01-08  Marko Myllynen  <myllynen@redhat.com>
 
 	* scripts/config.guess: Revert previous shebang change.
