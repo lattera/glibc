@@ -1,3 +1,14 @@
+2015-12-30  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/arm/ioperm.c: Do not include <string.h>.
+	(PATH_ARM_SYSTYPE): Remove.
+	(PATH_CPUINFO): Likewise.
+	(IO_BASE_FOOTBRIDGE): Likewise.
+	(IO_SHIFT_FOOTBRIDGE): Likewise.
+	(struct platform): Likewise.
+	(init_iosys): Remove compatibility code for 2.4 kernels.
+	* sysdeps/unix/sysv/linux/arm/localplt.data: Remove fscanf.
+
 2015-12-29  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/tst-malloc-thread-fail.c: New file.
