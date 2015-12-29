@@ -1,3 +1,9 @@
+2015-12-29  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/tst-malloc-thread-fail.c: New file.
+	* malloc/Makefile (tests): Add tst-malloc-thread-fail.
+	(tst-malloc-thread-fail): Link against libpthread.
+
 2015-12-29  Mike Frysinger  <vapier@gentoo.org>
 
 	* scripts/list-fixed-bugs.py: Import argparse.  Call main instead.
