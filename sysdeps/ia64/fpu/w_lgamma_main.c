@@ -63,11 +63,11 @@ double LGFUNC (lgamma) (double x)
     return CALL_LGAMMA (double, __libm_lgamma, x);
 }
 #if USE_AS_COMPAT
-compat_symbol (libm, __lgammaf_compat, lgammaf, LGAMMA_OLD_VER);
+compat_symbol (libm, __lgamma_compat, lgamma, LGAMMA_OLD_VER);
 #else
-versioned_symbol (libm, __ieee754_lgammaf, lgammaf, LGAMMA_NEW_VER);
+versioned_symbol (libm, __ieee754_lgamma, lgamma, LGAMMA_NEW_VER);
 #endif
 #if GAMMA_ALIAS
-strong_alias (LGFUNC (lgammaf), __ieee754_gammaf)
-weak_alias (__ieee754_gammaf, gammaf)
+strong_alias (LGFUNC (lgamma), __ieee754_gamma)
+weak_alias (__ieee754_gamma, gamma)
 #endif
