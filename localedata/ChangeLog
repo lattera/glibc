@@ -1,3 +1,9 @@
+2015-12-29  Damyan Ivanov  <dam+gnu@ktnx.net>
+
+	[BZ #19385]
+	* locales/bg_BG (t_fmt): Change U002C (comma) to U003A (colon).
+	(t_fmt_ampm): Likewise.
+
 2015-12-11  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #18491]
