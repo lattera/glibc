@@ -53,21 +53,25 @@
 
 #include "libm_support.h"
 
+#include <math.h>
+#include <math_private.h>
+
 #include <lgamma-compat.h>
 
 extern float  __libm_lgammaf(float /*x*/, int* /*signgam*/, int /*signgamsz*/);
 
-
+#if BUILD_LGAMMA
 float LGFUNC (lgammaf) (float x)
 {
     return CALL_LGAMMA (float, __libm_lgammaf, x);
 }
-#if USE_AS_COMPAT
+# if USE_AS_COMPAT
 compat_symbol (libm, __lgammaf_compat, lgammaf, LGAMMA_OLD_VER);
-#else
+# else
 versioned_symbol (libm, __ieee754_lgammaf, lgammaf, LGAMMA_NEW_VER);
-#endif
-#if GAMMA_ALIAS
+# endif
+# if GAMMA_ALIAS
 strong_alias (LGFUNC (lgammaf), __ieee754_gammaf)
 weak_alias (__ieee754_gammaf, gammaf)
+# endif
 #endif

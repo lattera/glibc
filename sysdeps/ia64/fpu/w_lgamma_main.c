@@ -53,21 +53,25 @@
 
 #include "libm_support.h"
 
+#include <math.h>
+#include <math_private.h>
+
 #include <lgamma-compat.h>
 
 extern double __libm_lgamma(double /*x*/, int* /*signgam*/, int /*signgamsz*/);
 
-
+#if BUILD_LGAMMA
 double LGFUNC (lgamma) (double x)
 {
     return CALL_LGAMMA (double, __libm_lgamma, x);
 }
-#if USE_AS_COMPAT
+# if USE_AS_COMPAT
 compat_symbol (libm, __lgamma_compat, lgamma, LGAMMA_OLD_VER);
-#else
+# else
 versioned_symbol (libm, __ieee754_lgamma, lgamma, LGAMMA_NEW_VER);
-#endif
-#if GAMMA_ALIAS
+# endif
+# if GAMMA_ALIAS
 strong_alias (LGFUNC (lgamma), __ieee754_gamma)
 weak_alias (__ieee754_gamma, gamma)
+# endif
 #endif

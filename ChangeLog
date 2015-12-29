@@ -1,3 +1,11 @@
+2016-01-01  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #15421]
+	* sysdeps/ia64/fpu/w_lgamma_main.c: Include math.h & math_private.h.
+	[BUILD_LGAMMA]: Wrap all code by define.  Re-indent sub-preprocessor.
+	* sysdeps/ia64/fpu/w_lgammaf_main.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgammal_main.c: Likewise.
+
 2015-12-30  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #19408]
