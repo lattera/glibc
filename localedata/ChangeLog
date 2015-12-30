@@ -1,3 +1,8 @@
+2015-12-29  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #19198]
+	* locales/nl_NL@euro (LC_MEASUREMENT): Copy from nl_NL.
+
 2015-12-29  Damyan Ivanov  <dam+gnu@ktnx.net>
 
 	[BZ #19385]
