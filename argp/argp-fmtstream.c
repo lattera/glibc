@@ -100,7 +100,11 @@ __argp_fmtstream_free (argp_fmtstream_t fs)
   __argp_fmtstream_update (fs);
   if (fs->p > fs->buf)
     {
+#ifdef _LIBC
       __fxprintf (fs->stream, "%.*s", (int) (fs->p - fs->buf), fs->buf);
+#else
+      fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
+#endif
     }
   free (fs->buf);
   free (fs);

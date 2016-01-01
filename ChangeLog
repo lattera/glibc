@@ -1,3 +1,8 @@
+2016-01-07  Khem Raj  <raj.khem@gmail.com>
+
+	* argp/argp-fmtstream.c (__argp_fmtstream_free): Use fwrite_unlocked
+	instead of __fxprintf when _LIBC is undefined.
+
 2016-01-07  Marko Myllynen  <myllynen@redhat.com>
 
 	* catgets/test-gencat.sh: Remove space after shebang.
