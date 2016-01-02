@@ -1,3 +1,11 @@
+2016-01-02  Helge Deller  <deller@gmx.de>
+
+	[BZ #19285]
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h (MAP_STACK): Define.
+	(MAP_HUGETLB, MCL_ONFAULT): Likewise.
+	(MADV_HUGEPAGE, MADV_NOHUGEPAGE, MADV_DONTDUMP, MADV_DODUMP): Likewise.
+	(MADV_xxK_PAGES): Remove.
+
 2016-01-01  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #15421]
