@@ -315,23 +315,54 @@ _dl_unmap (struct link_map *map)
   map->l_mach.fptr_table = NULL;
 }
 
+extern ElfW(Addr) _dl_fixup (struct link_map *, ElfW(Word)) attribute_hidden;
+
+static inline Elf32_Addr
+elf_machine_resolve (void)
+{
+  Elf32_Addr addr;
+
+  asm ("b,l     1f,%0\n"
+"	depi	0,31,2,%0\n"
+"1:	addil	L'_dl_runtime_resolve - ($PIC_pcrel$0 - 8),%0\n"
+"	ldo	R'_dl_runtime_resolve - ($PIC_pcrel$0 - 12)(%%r1),%0\n"
+       : "=r" (addr) : : "r1");
+
+  return addr;
+}
 
 ElfW(Addr)
 _dl_lookup_address (const void *address)
 {
   ElfW(Addr) addr = (ElfW(Addr)) address;
-  struct fdesc_table *t;
-  unsigned long int i;
+  unsigned int *desc, *gptr;
 
-  for (t = local.root; t != NULL; t = t->next)
-    {
-      i = (struct fdesc *) addr - &t->fdesc[0];
-      if (i < t->first_unused && addr == (ElfW(Addr)) &t->fdesc[i])
-	{
-	  addr = t->fdesc[i].ip;
-	  break;
-	}
-    }
+  /* Check for special cases.  */
+  if ((int) addr == -1
+      || (unsigned int) addr < 4096
+      || !((unsigned int) addr & 2))
+    return addr;
 
-  return addr;
+  /* Clear least-significant two bits from descriptor address.  */
+  desc = (unsigned int *) ((unsigned int) addr & ~3);
+
+  /* Check if descriptor requires resolution.  The following trampoline is
+     used in each global offset table for function resolution:
+
+		ldw 0(r20),r22
+		bv r0(r22)
+		ldw 4(r20),r21
+     tramp:	b,l .-12,r20
+		depwi 0,31,2,r20
+		.word _dl_runtime_resolve
+		.word "_dl_runtime_resolve ltp"
+     got:	.word _DYNAMIC
+		.word "struct link map address" */
+  gptr = (unsigned int *) desc[0];
+  if (gptr[0] == 0xea9f1fdd			/* b,l .-12,r20     */
+      && gptr[1] == 0xd6801c1e			/* depwi 0,31,2,r20 */
+      && (ElfW(Addr)) gptr[2] == elf_machine_resolve ())
+    _dl_fixup ((struct link_map *) gptr[5], (ElfW(Word)) desc[1]);
+
+  return (ElfW(Addr)) desc[0];
 }

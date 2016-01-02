@@ -1,3 +1,12 @@
+2016-01-08  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ #19415]
+	* sysdeps/hppa/dl-fptr.c (_dl_fixup): Declare.
+	(elf_machine_resolve): New.  Return address of _dl_runtime_resolve.
+	(_dl_lookup_address): Rewrite using function resolver trampoline.
+	* sysdeps/hppa/dl-lookupcfg.h (DL_LOOKUP_ADDRESS): Don't clear bottom
+	two bits in address.
+
 2016-01-07  Mike Frysinger  <vapier@gentoo.org>
 
 	* longlong.h: Change !__SHMEDIA__ to
