@@ -1,3 +1,8 @@
+2016-01-08  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #16495]
+	* locales/nl_NL (date_fmt): Rewrite.
+
 2016-01-07  Marko Myllynen  <myllynen@redhat.com>
 
 	* gen-locale.sh: Remove space after shebang.
