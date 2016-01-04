@@ -2,7 +2,7 @@
    SRC to DEST, returning the address of the terminating '\0' in
    DEST, if any, or else DEST + N.
    For SPARC v9.
-   Copyright (C) 1998-2015 Free Software Foundation, Inc.
+   Copyright (C) 1998-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz> and
 		  Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz>.

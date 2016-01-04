@@ -1,5 +1,5 @@
 /* Test RE_HAT_LISTS_NOT_NEWLINE and RE_DOT_NEWLINE.
-   Copyright (C) 2007-2015 Free Software Foundation, Inc.
+   Copyright (C) 2007-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2007.
 

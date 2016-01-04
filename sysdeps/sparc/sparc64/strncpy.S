@@ -2,7 +2,7 @@
    null-terminated string from SRC to DST.  If SRC does not cover all of
    COUNT, the balance is zeroed.
    For SPARC v9.
-   Copyright (C) 1998-2015 Free Software Foundation, Inc.
+   Copyright (C) 1998-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz> and
                   Jakub Jelinek <jj@ultra.linux.cz>.

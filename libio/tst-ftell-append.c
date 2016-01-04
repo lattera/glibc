@@ -1,6 +1,6 @@
 /* Verify that ftell returns the correct value after a read and a write on a
    file opened in a+ mode.
-   Copyright (C) 2014-2015 Free Software Foundation, Inc.
+   Copyright (C) 2014-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

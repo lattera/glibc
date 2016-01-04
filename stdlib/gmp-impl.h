@@ -1,6 +1,6 @@
 /* Include file for internal GNU MP types and definitions.
 
-Copyright (C) 1991-2015 Free Software Foundation, Inc.
+Copyright (C) 1991-2016 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 

@@ -1,6 +1,6 @@
 /* __mpn_mul_1 -- Multiply a limb vector with a limb and store
    the result in a second limb vector.
-   Copyright (C) 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 2000-2016 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU MP Library.
 

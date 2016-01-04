@@ -1,7 +1,7 @@
 /* Make sure that pthread_attr_getaffinity_np does not crash when the input
    cpuset size is smaller than that in the attribute structure.
 
-   Copyright (C) 2013-2015 Free Software Foundation, Inc.
+   Copyright (C) 2013-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

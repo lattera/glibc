@@ -1,6 +1,6 @@
 /* Macros to check if a POSIX configuration variable is defined or set.
 
-   Copyright (C) 1991-2015 Free Software Foundation, Inc.
+   Copyright (C) 1991-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

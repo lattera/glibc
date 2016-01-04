@@ -1,6 +1,6 @@
 /* Test to strtod etc for numbers like x000...0000.000e-nn.
    This file is part of the GNU C Library.
-   Copyright (C) 2001-2015 Free Software Foundation, Inc.
+   Copyright (C) 2001-2016 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
    The GNU C Library is free software; you can redistribute it and/or

@@ -1,7 +1,7 @@
 #  Software floating-point emulation.
 #  Makefile for SPARC v9 ABI mandated long double utility
 #  functions (_Qp_*).
-#  Copyright (C) 1999-2015 Free Software Foundation, Inc.
+#  Copyright (C) 1999-2016 Free Software Foundation, Inc.
 #  This file is part of the GNU C Library.
 #  Contributed by Jakub Jelinek (jj@ultra.linux.cz).
 #

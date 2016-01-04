@@ -1,5 +1,5 @@
 /* Optimized bzero implementation for PowerPC32/POWER7.
-   Copyright (C) 2010-2015 Free Software Foundation, Inc.
+   Copyright (C) 2010-2016 Free Software Foundation, Inc.
    Contributed by Luis Machado <luisgpm@br.ibm.com>.
    This file is part of the GNU C Library.
 

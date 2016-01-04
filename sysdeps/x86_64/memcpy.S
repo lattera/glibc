@@ -1,7 +1,7 @@
 /*
    Optimized memcpy for x86-64.
 
-   Copyright (C) 2007-2015 Free Software Foundation, Inc.
+   Copyright (C) 2007-2016 Free Software Foundation, Inc.
    Contributed by Evandro Menezes <evandro.menezes@amd.com>, 2007.
 
    This file is part of the GNU C Library.

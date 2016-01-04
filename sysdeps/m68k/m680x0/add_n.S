@@ -1,7 +1,7 @@
 /* mc68020 __mpn_add_n -- Add two limb vectors of the same length > 0 and store
    sum in a third limb vector.
 
-Copyright (C) 1992-2015 Free Software Foundation, Inc.
+Copyright (C) 1992-2016 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 

@@ -1,5 +1,5 @@
 /* Tables for conversion from and to IBM856.
-   Copyright (C) 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 2000-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@yamato.ibm.co.jp>, 2000.
 

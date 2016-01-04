@@ -1,5 +1,5 @@
 /* Data for Alpha version of processor capability information.
-   Copyright (C) 2008-2015 Free Software Foundation, Inc.
+   Copyright (C) 2008-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Aurelien Jarno <aurelien@aurel32.net>, 2008.
 

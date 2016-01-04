@@ -1,7 +1,7 @@
 /* Test that gettext() in multithreaded applications works correctly if
    different threads operate in different locales referring to the same
    catalog file but with different encodings.
-   Copyright (C) 2005-2015 Free Software Foundation, Inc.
+   Copyright (C) 2005-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <bruno@clisp.org>, 2005.
 

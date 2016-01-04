@@ -1,3 +1,8 @@
+2016-01-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* All files with FSF copyright notices: Update copyright dates
+	using ../scripts/update-copyrights.
+
 2015-12-29  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #19198]

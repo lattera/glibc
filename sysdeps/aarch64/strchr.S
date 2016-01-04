@@ -1,6 +1,6 @@
 /* strchr - find a character in a string
 
-   Copyright (C) 2014-2015 Free Software Foundation, Inc.
+   Copyright (C) 2014-2016 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

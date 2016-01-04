@@ -1,5 +1,5 @@
 /* _memcopy.c -- subroutines for memory copy functions.
-   Copyright (C) 1991-2015 Free Software Foundation, Inc.
+   Copyright (C) 1991-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
    Updated for POWER6 by Steven Munroe (sjmunroe@us.ibm.com).

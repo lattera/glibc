@@ -1,5 +1,5 @@
 /* Test program for returning the canonical absolute name of a given file.
-   Copyright (C) 1996-2015 Free Software Foundation, Inc.
+   Copyright (C) 1996-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@azstarnet.com>.
 

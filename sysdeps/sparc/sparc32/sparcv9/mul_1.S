@@ -1,7 +1,7 @@
 ! SPARC v9 32-bit __mpn_mul_1 -- Multiply a limb vector with a single
 ! limb and store the product in a second limb vector.
 !
-! Copyright (C) 2013-2015 Free Software Foundation, Inc.
+! Copyright (C) 2013-2016 Free Software Foundation, Inc.
 ! This file is part of the GNU C Library.
 ! Contributed by David S. Miller <davem@davemloft.net>
 !

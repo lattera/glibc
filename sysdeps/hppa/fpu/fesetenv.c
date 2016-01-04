@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 1997-2015 Free Software Foundation, Inc.
+   Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Huggins-Daines <dhd@debian.org>, 2000
    Based on the m68k version by

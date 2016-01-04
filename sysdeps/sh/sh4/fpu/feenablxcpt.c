@@ -1,5 +1,5 @@
 /* Enable floating-point exceptions.
-   Copyright (C) 2012-2015 Free Software Foundation, Inc.
+   Copyright (C) 2012-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, 2012.
 

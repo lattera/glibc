@@ -1,4 +1,4 @@
-/* Copyright (C) 2000-2015 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2016 Free Software Foundation, Inc.
    Contributed by Maciej W. Rozycki <macro@ds2.pg.gda.pl>, 2000.
    This file is part of the GNU C Library.
 

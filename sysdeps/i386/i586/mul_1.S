@@ -1,6 +1,6 @@
 /* Pentium __mpn_mul_1 -- Multiply a limb vector with a limb and store
    the result in a second limb vector.
-   Copyright (C) 1992-2015 Free Software Foundation, Inc.
+   Copyright (C) 1992-2016 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify

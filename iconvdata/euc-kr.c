@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-KR handling.
-   Copyright (C) 1998-2015 Free Software Foundation, Inc.
+   Copyright (C) 1998-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>
    and Ulrich Drepper <drepper@cygnus.com>, 1998.

@@ -1,5 +1,5 @@
 /* Test for SEM_VALUE_MAX overflow detection: BZ #18434.
-   Copyright (C) 2015 Free Software Foundation, Inc.
+   Copyright (C) 2015-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

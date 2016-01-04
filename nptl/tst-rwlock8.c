@@ -1,5 +1,5 @@
 /* Test program for timedout read/write lock functions.
-   Copyright (C) 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 2000-2016 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or

@@ -1,5 +1,5 @@
 /* Set current context.
-   Copyright (C) 2009-2015 Free Software Foundation, Inc.
+   Copyright (C) 2009-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maciej W. Rozycki <macro@codesourcery.com>.
 

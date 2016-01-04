@@ -1,6 +1,6 @@
 /* BZ #17977 _res_hconf_reorder_addrs test.
 
-   Copyright (C) 2015 Free Software Foundation, Inc.
+   Copyright (C) 2015-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

@@ -1,6 +1,6 @@
 /* strcmp - compare two string.  64 bit S/390 version.
    This file is part of the GNU C Library.
-   Copyright (C) 2001-2015 Free Software Foundation, Inc.
+   Copyright (C) 2001-2016 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
    The GNU C Library is free software; you can redistribute it and/or

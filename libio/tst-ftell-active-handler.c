@@ -1,6 +1,6 @@
 /* Verify that ftell returns the correct value at various points before and
    after the handler on which it is called becomes active.
-   Copyright (C) 2014-2015 Free Software Foundation, Inc.
+   Copyright (C) 2014-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
