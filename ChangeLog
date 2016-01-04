@@ -1,3 +1,9 @@
+2016-01-04  Anton Blanchard  <anton@samba.org>
+
+	* sysdeps/ieee754/dbl-64/e_pow.c (log1): Use unsigned int
+	for array indices.
+	* sysdeps/ieee754/dbl-64/e_pow.c (my_log2): Likewise.
+
 2016-01-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* NEWS: Update copyright dates.

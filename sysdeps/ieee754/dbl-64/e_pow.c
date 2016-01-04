@@ -245,7 +245,8 @@ static double
 SECTION
 log1 (double x, double *delta, double *error)
 {
-  int i, j, m;
+  unsigned int i, j;
+  int m;
   double uu, vv, eps, nx, e, e1, e2, t, t1, t2, res, add = 0;
   mynumber u, v;
 #ifdef BIG_ENDI
@@ -344,7 +345,8 @@ static double
 SECTION
 my_log2 (double x, double *delta, double *error)
 {
-  int i, j, m;
+  unsigned int i, j;
+  int m;
   double uu, vv, eps, nx, e, e1, e2, t, t1, t2, res, add = 0;
   double ou1, ou2, lu1, lu2, ov, lv1, lv2, a, a1, a2;
   double y, yy, z, zz, j1, j2, j7, j8;
