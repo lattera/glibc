@@ -1,5 +1,33 @@
 2016-01-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* NEWS: Update copyright dates.
+	* catgets/gencat.c (print_version): Likewise.
+	* csu/version.c (banner): Likewise.
+	* debug/catchsegv.sh: Likewise.
+	* debug/pcprofiledump.c (print_version): Likewise.
+	* debug/xtrace.sh (do_version): Likewise.
+	* elf/ldconfig.c (print_version): Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/pldd.c (print_version): Likewise.
+	* elf/sotruss.sh: Likewise.
+	* elf/sprof.c (print_version): Likewise.
+	* iconv/iconv_prog.c (print_version): Likewise.
+	* iconv/iconvconfig.c (print_version): Likewise.
+	* locale/programs/locale.c (print_version): Likewise.
+	* locale/programs/localedef.c (print_version): Likewise.
+	* login/programs/pt_chown.c (print_version): Likewise.
+	* malloc/memusage.sh (do_version): Likewise.
+	* malloc/memusagestat.c (print_version): Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* manual/libc.texinfo: Likewise.
+	* nptl/version.c (banner): Likewise.
+	* nscd/nscd.c (print_version): Likewise.
+	* nss/getent.c (print_version): Likewise.
+	* nss/makedb.c (print_version): Likewise.
+	* posix/getconf.c (main): Likewise.
+	* scripts/test-installation.pl: Likewise.
+	* sysdeps/unix/sysv/linux/lddlibc4.c (main): Likewise.
+
 	* All files with FSF copyright notices: Update copyright dates
 	using scripts/update-copyrights.
 	* intl/plural.c: Regenerated.

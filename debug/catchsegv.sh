@@ -40,7 +40,7 @@ EOF
       ;;
     --v | --ve | --ver | --vers | --versi | --versio | --version)
       echo 'catchsegv @PKGVERSION@@VERSION@'
-      echo 'Copyright (C) 2015 Free Software Foundation, Inc.
+      echo 'Copyright (C) 2016 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Written by Ulrich Drepper.'
