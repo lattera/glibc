@@ -842,8 +842,8 @@ abmon /
         "<U043B><U0438><U0441>"; %lys  /
         "<U0433><U0440><U0443>"  %hru
 
-% A list of month names in proper form for calendar, see alt_digits. (%B)
-mon /
+% A list of month names in proper form for calendar (%OB).  See also mon.
+alt_mon /
         "<U0441><U0456><U0447><U0435><U043D><U044C>";   %sichen`  /
         "<U043B><U044E><U0442><U0438><U0439>";    %lyutyj   /
         "<U0431><U0435><U0440><U0435><U0437><U0435><U043D><U044C>"; %berezen` /
@@ -857,16 +857,8 @@ mon /
         "<U043B><U0438><U0441><U0442><U043E><U043F><U0430><U0434>"; %lystopad /
         "<U0433><U0440><U0443><U0434><U0435><U043D><U044C>"   %hruden`
 
-% Initially alt_digits was supposed to hold alternative symbols for _digits_,
-% corresponding to %O modified conversion specification.
-% Although in Ukrainian language alternate _names_ are used instead of digits.
-% We'll use this keyword to present a list of month names in proper form for
-% date, see mon.  (%Om)
-%
-% This hack is dedicated for months it won't work for other %O* modifiers
-% (weeks, days etc).
-%
-alt_digits "0";	     % digits are starting from zero /
+% A list of month names in genitive form, for full date format, with day (%B).
+mon /
         "<U0441><U0456><U0447><U043D><U044F>";     % sichnya   /
         "<U043B><U044E><U0442><U043E><U0433><U043E>";    % lyutoho   /
         "<U0431><U0435><U0440><U0435><U0437><U043D><U044F>";   % bereznya  /
@@ -881,7 +873,7 @@ alt_digits "0";	     % digits are starting from zero /
         "<U0433><U0440><U0443><U0434><U043D><U044F>"     % hrudnya
 
 % Appropriate date representation for date(1).
-date_fmt       "%A, %-d %Om %Y %X %z"
+date_fmt       "%A, %-d %B %Y %X %z"
 
 % The appropriate date and time format. (%c)
 d_t_fmt  "%a, %d-%b-%Y %X %z"
