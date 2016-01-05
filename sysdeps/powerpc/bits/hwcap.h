@@ -66,3 +66,6 @@
 						    instruction.  */
 #define PPC_FEATURE2_HTM_NOSC	   0x01000000 /* Kernel aborts transaction
 						 when a syscall is made.  */
+#define PPC_FEATURE2_ARCH_3_00	   0x00800000 /* ISA 3.0 */
+#define PPC_FEATURE2_HAS_IEEE128   0x00400000 /* VSX IEEE Binary Float
+						 128-bit */
