@@ -60,8 +60,7 @@ static const struct
   /* Some languages do need the declension of the month names.  */
   { "pl_PL.UTF-8", "21 lis 2017", "%d %b %Y", 2, 324, 10, 21 },
   { "pl_PL.UTF-8", "22 LIS 2017", "%d %B %Y", 3, 325, 10, 22 },
-  /* TODO: Use the genitive case here as soon as it is added to localedata.  */
-  { "pl_PL.UTF-8", "23 listopad 2017", "%d %B %Y", 4, 326, 10, 23 },
+  { "pl_PL.UTF-8", "23 listopada 2017", "%d %B %Y", 4, 326, 10, 23 },
   /* The nominative case is incorrect here but it is parseable.  */
   { "pl_PL.UTF-8", "24 listopad 2017", "%d %OB %Y", 5, 327, 10, 24 },
   { "pl_PL.UTF-8", "25 lis 2017", "%d %Ob %Y", 6, 328, 10, 25 },

@@ -175,7 +175,7 @@ abmon   "sty";"lut";/
         "lip";"sie";/
         "wrz";"pa<U017A>";/
         "lis";"gru"
-mon     "stycze<U0144>";/
+alt_mon "stycze<U0144>";/
         "luty";/
         "marzec";/
         "kwiecie<U0144>";/
@@ -187,6 +187,18 @@ mon     "stycze<U0144>";/
         "pa<U017A>dziernik";/
         "listopad";/
         "grudzie<U0144>"
+mon     "stycznia";/
+        "lutego";/
+        "marca";/
+        "kwietnia";/
+        "maja";/
+        "czerwca";/
+        "lipca";/
+        "sierpnia";/
+        "wrze<U015B>nia";/
+        "pa<U017A>dziernika";/
+        "listopada";/
+        "grudnia"
 d_t_fmt "%a, %-d %b %Y, %T"
 d_fmt   "%d.%m.%Y"
 t_fmt   "%T"
