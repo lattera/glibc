@@ -66,11 +66,13 @@ static const struct
   { "pl_PL.UTF-8", "25 lis 2017", "%d %Ob %Y", 6, 328, 10, 25 },
   /* ноя - pronounce: 'noya' - "Nov" (abbreviated "November") in Russian.  */
   { "ru_RU.UTF-8", "26 ноя 2017", "%d %b %Y", 0, 329, 10, 26 },
-  /* TODO: Add an example of "may"/"maya" (5th month, May) using %Ob in
-     Russian when the localedata is updated.  Without the genitive forms
-     in localedata the word "maya" is ambiguous and may be mistaken for
-     "mart" (March).
-   */
+  /* мая - pronounce: 'maya' - "of May" (the genitive case, both full and
+     abbreviated) in Russian.  */
+  { "ru_RU.UTF-8", "19 мая 2018", "%d %b %Y", 6, 138, 4, 19 },
+  /* май - pronounce: 'may' - "May" (the nominative case, both full and
+     abbreviated) in Russian.
+     The nominative case is incorrect here but it is parseable.  */
+  { "ru_RU.UTF-8", "20 май 2018", "%d %Ob %Y", 0, 139, 4, 20 },
 };
 
 
