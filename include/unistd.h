@@ -158,7 +158,7 @@ rtld_hidden_proto (__libc_enable_secure)
 
 
 /* Various internal function.  */
-extern void __libc_check_standard_fds (void);
+extern void __libc_check_standard_fds (void) attribute_hidden;
 
 
 /* Internal name for fork function.  */
@@ -175,6 +175,10 @@ extern int __have_dup3 attribute_hidden;
 
 extern int __getlogin_r_loginuid (char *name, size_t namesize)
      attribute_hidden;
+
+#  if IS_IN (rtld)
+#   include <dl-unistd.h>
+#  endif
 
 __END_DECLS
 # endif

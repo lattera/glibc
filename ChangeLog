@@ -1,5 +1,12 @@
 2016-01-05  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #19122]
+	* include/unistd.h [IS_IN (rtld)]: Include <dl-unistd.h>.
+	* sysdeps/generic/dl-unistd.h: New file.
+	* sysdeps/mach/hurd/dl-unistd.h: Likewise.
+
+2016-01-05  H.J. Lu  <hongjiu.lu@intel.com>
+
 	 [BZ #19122]
 	 * include/sys/mman.h [IS_IN (rtld)]: Include <dl-mman.h>.
 	 * sysdeps/generic/dl-mman.h: New file.
