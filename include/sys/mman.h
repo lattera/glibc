@@ -16,6 +16,10 @@ libc_hidden_proto (__madvise)
 /* This one is Linux specific.  */
 extern void *__mremap (void *__addr, size_t __old_len,
 		       size_t __new_len, int __flags, ...);
+
+# if IS_IN (rtld)
+#  include <dl-mman.h>
+# endif
 #endif
 
 #endif
