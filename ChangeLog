@@ -1,4 +1,12 @@
-2016-01-06  Paul Eggert  <eggert@cs.ucla.edu>
+2016-01-07  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/fxstat64.c (___fxstat64): Change
+	__ASSUME_ST_INO_64_BIT == 0 to !defined __ASSUME_ST_INO_64_BIT.
+	* sysdeps/unix/sysv/linux/lxstat64.c (___lxstat64): Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c (___xstat64): Likewise.
+	* sysdeps/unix/sysv/linux/xstatconv.c (__xstat32_conv): Likewise.
+
+2016-01-07  Paul Eggert  <eggert@cs.ucla.edu>
 	    Joseph Myers  <joseph@codesourcery.com>
 
 	* timezone/private.h: Update from tzcode 2015g.
