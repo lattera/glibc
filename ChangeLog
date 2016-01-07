@@ -1,3 +1,9 @@
+2016-01-07  Mike Frysinger  <vapier@gentoo.org>
+
+	* longlong.h: Change !__SHMEDIA__ to
+	(!defined (__SHMEDIA__) || !__SHMEDIA__).
+	Change __SHMEDIA__ to defined (__SHMEDIA__) && __SHMEDIA__.
+
 2016-01-07  Daniel Jacobowitz  <dan@codesourcery.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 	    Mark Shinwell  <shinwell@codesourcery.com>
