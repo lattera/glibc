@@ -22,8 +22,6 @@ subdir	:= timezone
 
 include ../Makeconfig
 
-extra-objs := scheck.o ialloc.o
-
 others	:= zdump zic
 tests	:= test-tz tst-timezone tst-tzset
 
@@ -49,8 +47,6 @@ endif
 include ../Rules
 
 
-$(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o
-
 $(objpfx)zic.o $(objpfx)zdump.o: $(objpfx)version.h
 
 $(objpfx)version.h: $(common-objpfx)config.make
@@ -61,15 +57,14 @@ $(objpfx)version.h: $(common-objpfx)config.make
 tz-cflags = -DTZDIR='"$(zonedir)"' \
 	    -DTZDEFAULT='"$(localtime-file)"' \
 	    -DTZDEFRULES='"$(posixrules-file)"' \
-	    -DTM_GMTOFF=tm_gmtoff -DTM_ZONE=tm_zone
+	    -DTM_GMTOFF=tm_gmtoff -DTM_ZONE=tm_zone \
+	    -DHAVE_GETTEXT -DUSE_LTZ=0 -Wno-maybe-uninitialized
 
 # The -Wno-unused-variable flag is used to prevent GCC 6
 # from warning about time_t_min and time_t_max which are
 # defined in private.h but not used.
-CFLAGS-zdump.c = -fwrapv -DNOID $(tz-cflags) -DHAVE_GETTEXT
-CFLAGS-zic.c = -DNOID $(tz-cflags) -DHAVE_GETTEXT -Wno-unused-variable
-CFLAGS-ialloc.c = -DNOID -DHAVE_GETTEXT -Wno-unused-variable
-CFLAGS-scheck.c = -DNOID -DHAVE_GETTEXT -Wno-unused-variable
+CFLAGS-zdump.c = $(tz-cflags)
+CFLAGS-zic.c = $(tz-cflags) -Wno-unused-variable
 
 # We have to make sure the data for testing the tz functions is available.
 # Don't add leapseconds here since test-tz made checks that work only without

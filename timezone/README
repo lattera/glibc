@@ -1,5 +1,5 @@
 The files
-	zic.c zdump.c ialloc.c scheck.c tzfile.h
+	zic.c zdump.c tzfile.h
 	private.h tzselect.ksh checktab.awk
 come from the tzcode package by Arthur David Olson et.al.
 

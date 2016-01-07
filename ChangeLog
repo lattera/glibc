@@ -1,3 +1,23 @@
+2016-01-06  Paul Eggert  <eggert@cs.ucla.edu>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	* timezone/private.h: Update from tzcode 2015g.
+	* timezone/tzfile.h: Likewise.
+	* timezone/tzselect.ksh: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+	* timezone/ialloc.c: Remove file.
+	* timezone/scheck.c: Likewise.
+	* timezone/Makefile (extra-objs): Remove variable.
+	($(objpfx)zic): Do not depend on scheck.o and ialloc.o.
+	(tz-cflags): Add -DHAVE_GETTEXT -DUSE_LTZ=0
+	-Wno-maybe-uninitialized.
+	(CFLAGS-zdump.c): Remove -fwrapv -DNOID -DHAVE_GETTEXT.
+	(CFLAGS-zic.c): Remove -DNOID -DHAVE_GETTEXT.
+	(CFLAGS-ialloc.c): Remove variable.
+	(CFLAGS-scheck.c): Likewise.
+	* timezone/README: Update list of files from tzcode.
+
 2016-01-07  Khem Raj  <raj.khem@gmail.com>
 
 	* argp/argp-fmtstream.c (__argp_fmtstream_free): Use fwrite_unlocked
