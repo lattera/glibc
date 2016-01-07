@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 # Make sure no code in ld.so uses xmm/ymm/zmm registers on i386.
 # Copyright (C) 2009-2016 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.

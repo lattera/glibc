@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Testing the implementation of strfmon(3).
 # Copyright (C) 1996-2016 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.

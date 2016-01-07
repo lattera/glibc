@@ -1,4 +1,4 @@
-#! /usr/bin/perl
+#!/usr/bin/perl
 
 # Print a list of symbols exported by some headers that would
 # otherwise be in the user's namespace.

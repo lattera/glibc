@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Testing the stdio implementation
 # Copyright (C) 2000-2016 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.

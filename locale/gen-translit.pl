@@ -1,4 +1,4 @@
-#! /usr/bin/perl -w
+#!/usr/bin/perl -w
 open F, "cat C-translit.h.in | gcc -E - |" || die "Cannot preprocess input file";
 
 

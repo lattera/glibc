@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Bug 18125: Test the exit functionality of setcontext().
 # Copyright (C) 2015-2016 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.

@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 # Run a testcase on a remote system, via ssh.
 # Copyright (C) 2012-2016 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.

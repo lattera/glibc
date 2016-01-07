@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Testing the implementation of localedata.
 # Copyright (C) 1998-2016 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.

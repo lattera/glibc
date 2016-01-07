@@ -1,4 +1,4 @@
-#! /usr/bin/awk -f
+#!/usr/bin/awk -f
 # Generate sorted list of directories.  The sorting is stable but with
 # dependencies between directories resolved by moving dependees in front.
 # Copyright (C) 1998-2016 Free Software Foundation, Inc.

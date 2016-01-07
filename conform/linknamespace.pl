@@ -1,4 +1,4 @@
-#! /usr/bin/perl
+#!/usr/bin/perl
 
 # Check that use of symbols declared in a given header does not result
 # in any symbols being brought in that are not reserved with external

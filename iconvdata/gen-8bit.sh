@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 echo "static const uint32_t to_ucs4[256] = {"
 sed -ne '/^[^[:space:]]*[[:space:]]*.x00/d;/^END/q' \
     -e 's/^<U\(....\)>[[:space:]]*.x\(..\).*/  [0x\2] = 0x\1,/p' \

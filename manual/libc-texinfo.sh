@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 OUTDIR=$1
 shift

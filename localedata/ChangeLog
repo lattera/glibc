@@ -1,3 +1,15 @@
+2016-01-07  Marko Myllynen  <myllynen@redhat.com>
+
+	* gen-locale.sh: Remove space after shebang.
+	* sort-test.sh: Likewise.
+	* tst-ctype.sh: Likewise.
+	* tst-fmon.sh: Likewise.
+	* tst-langinfo.sh: Likewise.
+	* tst-locale.sh: Likewise.
+	* tst-numeric.sh: Likewise.
+	* tst-rpmatch.sh: Likewise.
+	* tst-trans.sh: Likewise.
+
 2016-01-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* All files with FSF copyright notices: Update copyright dates

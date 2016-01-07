@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Copyright (C) 1999-2016 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1999.

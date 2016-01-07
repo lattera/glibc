@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Test lookup path optimization.
 # Copyright (C) 2000-2016 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
