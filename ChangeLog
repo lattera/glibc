@@ -1,3 +1,9 @@
+2016-01-08  Marko Myllynen  <myllynen@redhat.com>
+
+	* scripts/config.guess: Revert previous shebang change.
+	* scripts/config.sub: Likewise.
+	* scripts/mkinstalldirs: Likewise.
+
 2016-01-08  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/bits/hwcap.h: Add PPC_FEATURE2_ARCH_3_00 and
