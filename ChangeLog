@@ -1,3 +1,19 @@
+2016-01-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix doc quoting problems with Texinfo 5
+	Without this change, in the info file output, Texinfo 5 quotes code
+	in text with undirected single quotes 'like this' and generates
+	code examples that with many PDF readers cannot be cut out of PDFs
+	and pasted into code.
+	* manual/libc.texinfo: Configure the libc manual like the GNU
+	Emacs manual, by using @documentencoding and setting
+	txicodequoteundirected and txicodequotebacktick.  This way,
+	Texinfo 5 quotes code in text with directed single quotes ‘like
+	this’ and produces examples that can be cut out of PDFs.  This
+	change causes Texinfo 5 to generate info files that contain UTF-8
+	characters in the set {'‘', '’', '“', '”', 'Ä', 'ä', 'ö', '−',
+	'–', '—', '©', '⇒', '•', '…'}, which is OK nowadays.
+
 2016-01-08  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/htm.h (__libc_tbegin,

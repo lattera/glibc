@@ -2,6 +2,13 @@
 @comment %**start of header (This is for running Texinfo on a region.)
 @setfilename libc.info
 @settitle The GNU C Library
+@documentencoding UTF-8
+@c '@codequotebacktick on' and '@codequoteundirected on' require
+@c Texinfo 5.0 or later, so use the older equivalent @set variables
+@c supported in Texinfo 4.11 and later.
+@set txicodequoteundirected
+@set txicodequotebacktick
+
 @c setchapternewpage odd
 
 @include macros.texi
