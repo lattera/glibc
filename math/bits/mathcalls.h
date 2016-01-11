@@ -196,9 +196,11 @@ __MATHDECL_1 (int,__finite,, (_Mdouble_ __value)) __attribute__ ((__const__));
 _Mdouble_END_NAMESPACE
 
 #ifdef __USE_MISC
+# if !defined __cplusplus || __cplusplus < 201103L /* Conflicts with C++11.  */
 /* Return 0 if VALUE is finite or NaN, +1 if it
    is +Infinity, -1 if it is -Infinity.  */
 __MATHDECL_1 (int,isinf,, (_Mdouble_ __value)) __attribute__ ((__const__));
+# endif
 
 /* Return nonzero if VALUE is finite and not NaN.  */
 __MATHDECL_1 (int,finite,, (_Mdouble_ __value)) __attribute__ ((__const__));
@@ -230,8 +232,10 @@ __END_NAMESPACE_C99
 __MATHDECL_1 (int,__isnan,, (_Mdouble_ __value)) __attribute__ ((__const__));
 
 #if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
+# if !defined __cplusplus || __cplusplus < 201103L /* Conflicts with C++11.  */
 /* Return nonzero if VALUE is not a number.  */
 __MATHDECL_1 (int,isnan,, (_Mdouble_ __value)) __attribute__ ((__const__));
+# endif
 #endif
 
 #if defined __USE_MISC || (defined __USE_XOPEN && __MATH_DECLARING_DOUBLE)

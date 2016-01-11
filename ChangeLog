@@ -1,3 +1,12 @@
+2016-01-11  Jonathan Wakely  <jwakely.gcc@gmail.com>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #19439]
+	* math/bits/mathcalls.h
+	[!__cplusplus || __cplusplus < 201103L] (isinf): Do not declare
+	prototype.
+	[!__cplusplus || __cplusplus < 201103L] (isnan): Likewise.
+
 2016-01-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #19253]
