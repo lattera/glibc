@@ -42,6 +42,8 @@
 #define MCL_CURRENT	0x2000		/* Lock all currently mapped pages.  */
 #define MCL_FUTURE	0x4000		/* Lock all additions to address
 					   space.  */
+#define MCL_ONFAULT	0x8000		/* Lock all pages that are
+					   faulted in.  */
 
 /* Include generic Linux declarations.  */
 #include <bits/mman-linux.h>

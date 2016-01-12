@@ -108,4 +108,6 @@
 # define MCL_CURRENT	1		/* Lock all currently mapped pages.  */
 # define MCL_FUTURE	2		/* Lock all additions to address
 					   space.  */
+# define MCL_ONFAULT	4		/* Lock all pages that are
+					   faulted in.  */
 #endif

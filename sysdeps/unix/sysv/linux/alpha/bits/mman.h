@@ -41,6 +41,7 @@
 /* Flags for `mlockall'.  */
 #define MCL_CURRENT	  8192
 #define MCL_FUTURE	  16384
+#define MCL_ONFAULT	  32768
 
 #include <bits/mman-linux.h>
 

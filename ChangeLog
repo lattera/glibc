@@ -1,3 +1,41 @@
+2016-01-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* bits/mman-linux.h [!MCL_CURRENT] (MCL_ONFAULT): New macro.
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h (MCL_ONFAULT):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h (MCL_ONFAULT):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h (MCL_ONFAULT):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PTRACE_GETSIGMASK): New
+	enum constant and macro.
+	(PTRACE_SETSIGMASK): Likewise.
+	(PTRACE_SECCOMP_GET_FILTER): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sys/ptrace.h
+	(PTRACE_GETSIGMASK): Likewise.
+	(PTRACE_SETSIGMASK): Likewise.
+	(PTRACE_SECCOMP_GET_FILTER): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h (PTRACE_GETSIGMASK):
+	Likewise.
+	(PTRACE_SETSIGMASK): Likewise.
+	(PTRACE_SECCOMP_GET_FILTER): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h
+	(PTRACE_GETSIGMASK): Likewise.
+	(PTRACE_SETSIGMASK): Likewise.
+	(PTRACE_SECCOMP_GET_FILTER): Likewise.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h (PTRACE_GETSIGMASK):
+	Likewise.
+	(PTRACE_SETSIGMASK): Likewise.
+	(PTRACE_SECCOMP_GET_FILTER): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h (PTRACE_GETSIGMASK):
+	Likewise.
+	(PTRACE_SETSIGMASK): Likewise.
+	(PTRACE_SECCOMP_GET_FILTER): Likewise.
+	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h (PTRACE_GETSIGMASK):
+	Likewise.
+	(PTRACE_SETSIGMASK): Likewise.
+	(PTRACE_SECCOMP_GET_FILTER): Likewise.
+
 2016-01-11  Jonathan Wakely  <jwakely.gcc@gmail.com>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
