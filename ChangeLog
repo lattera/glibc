@@ -1,3 +1,8 @@
+2016-01-13  Flavio Cruz  <flaviocruz@gmail.com>
+
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Do not remove
+	leading slash when `file_name' is "/".
+
 2016-01-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/mman-linux.h [!MCL_CURRENT] (MCL_ONFAULT): New macro.

@@ -62,8 +62,15 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 
   error_t lookup_op (file_t startdir)
     {
-      while (file_name[0] == '/')
-	file_name++;
+      if (file_name[0] == '/' && file_name[1] != '\0')
+	{
+	  while (file_name[1] == '/')
+	    /* Remove double leading slash.  */
+	    file_name++;
+	  if (file_name[1] != '\0')
+	    /* Remove leading slash when we have more than the slash.  */
+	    file_name++;
+	}
 
       return lookup_error ((*lookup) (startdir, file_name, flags, mode,
 				      &doretry, retryname, result));
