@@ -1,3 +1,9 @@
+2016-01-13  Carlos O'Donell  <carlos@redhat.com>
+
+	* benchtests/Makefile (PYTHON): Define.
+	(bench-func): Use $(PYTHON) to run python scripts.
+	($(objpfx)bench-%.c): Likewise.
+
 2016-01-13  Flavio Cruz  <flaviocruz@gmail.com>
 
 	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Do not remove

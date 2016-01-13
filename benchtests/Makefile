@@ -15,9 +15,10 @@
 # License along with the GNU C Library; if not, see
 # <http://www.gnu.org/licenses/>.
 
-
 # Makefile for benchmark tests.  The only useful target here is `bench`.
 # Add benchmark functions in alphabetical order.
+
+PYTHON := python
 
 subdir := benchtests
 
@@ -164,7 +165,7 @@ bench-func: $(binaries-bench)
 	  mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \
 	fi; \
 	mv -f $(objpfx)bench.out-tmp $(objpfx)bench.out
-	scripts/validate_benchout.py $(objpfx)bench.out \
+	$(PYTHON) scripts/validate_benchout.py $(objpfx)bench.out \
 		scripts/benchout.schema.json
 
 $(timing-type) $(binaries-bench) $(binaries-benchset) \
@@ -177,5 +178,5 @@ $(objpfx)bench-%.c: %-inputs $(bench-deps)
 	{ if [ -n "$($*-INCLUDE)" ]; then \
 	  cat $($*-INCLUDE); \
 	fi; \
-	scripts/bench.py $(patsubst %-inputs,%,$<); } > $@-tmp
+	$(PYTHON) scripts/bench.py $(patsubst %-inputs,%,$<); } > $@-tmp
 	mv -f $@-tmp $@
