@@ -1,3 +1,11 @@
+2016-01-25  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17514]
+	* nptl/pthread_mutex_timedlock.c (pthread_mutex_timedlock)
+	<case PTHREAD_MUTEX_ERRORCHECK_NP>: Don't do lock elision.
+	* nptl/Makefile (tests): Add tst-mutex-errorcheck.
+	* nptl/tst-mutex-errorcheck.c: New file.
+
 2016-01-25  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	[BZ #18560]
@@ -24,8 +32,10 @@
 2016-01-24  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/fpu/e_sqrtl.c: New file.
-	* sysdeps/sparc/sparc32/soft-fp/q_sqrt.c (__ieee754_sqrtl): Remove alias.
-	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Add __sqrtl_finite.
+	* sysdeps/sparc/sparc32/soft-fp/q_sqrt.c (__ieee754_sqrtl): Remove
+	alias.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Add
+	__sqrtl_finite.
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
 

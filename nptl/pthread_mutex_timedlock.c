@@ -89,7 +89,8 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
       if (__glibc_unlikely (mutex->__data.__owner == id))
 	return EDEADLK;
 
-      /* FALLTHROUGH */
+      /* Don't do lock elision on an error checking mutex.  */
+      goto simple;
 
     case PTHREAD_MUTEX_TIMED_NP:
       FORCE_ELISION (mutex, goto elision);
