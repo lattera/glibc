@@ -1,3 +1,9 @@
+2016-01-14  Amit Pawar  <amit.pawar@amd.com>
+
+	[BZ #19467]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set
+	index_Fast_Unaligned_Load flag for Excavator family CPUs.
+
 2016-01-02  Marcin Kościelnicki  <koriakin@0x04.net>
 
 	* sysdeps/s390/nptl/tls.h (struct tcbhead_t): Add __private_ss field.

@@ -154,6 +154,14 @@ init_cpu_features (struct cpu_features *cpu_features)
 		 cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].ebx,
 		 cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].ecx,
 		 cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].edx);
+
+      if (family == 0x15)
+	{
+	  /* "Excavator"   */
+	  if (model >= 0x60 && model <= 0x7f)
+	    cpu_features->feature[index_Fast_Unaligned_Load]
+	      |= bit_Fast_Unaligned_Load;
+	}
     }
   else
     kind = arch_kind_other;
