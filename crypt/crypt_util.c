@@ -271,12 +271,12 @@ _ufc_prbits (ufc_long *a, int n)
       t=8*i+j;
       tmp|=(a[t/24] & BITMASK[t % 24])?bytemask[j]:0;
     }
-    (void)printf("%02x ",tmp);
+    (void)printf("%02lx ", tmp);
   }
   printf(" ");
 }
 
-static void
+static void __attribute__ ((unused))
 _ufc_set_bits (ufc_long v, ufc_long *b)
 {
   ufc_long i;

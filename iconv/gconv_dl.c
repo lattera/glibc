@@ -219,6 +219,9 @@ libc_freeres_fn (free_mem)
 
 
 #ifdef DEBUG
+
+#include <stdio.h>
+
 static void
 do_print (const void *nodep, VISIT value, int level)
 {
@@ -231,7 +234,7 @@ do_print (const void *nodep, VISIT value, int level)
 	  obj->name, obj->counter);
 }
 
-static void
+static void __attribute__ ((used))
 print_all (void)
 {
   __twalk (loaded, do_print);

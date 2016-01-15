@@ -1,5 +1,18 @@
 2016-01-15  Martin Sebor  <msebor@redhat.com>
 
+	[BZ #19443]
+	* crypt/crypt_util.c [DEBUG] (_ufc_prbits): Correct format string.
+	[DEBUG] (_ufc_set_bits): Declare used.
+	* iconv/gconv_dl.c [DEBUG]: Add a missing include directive.
+	[DEBUG] (print_all): Declare used.
+	* resolv/res_send.c [DEBUG] (__libc_res_nsend): Explicitly convert
+	operands of the ternary ?: expression to target type.
+	* stdlib/rshift.c [DEBUG] (mpn_rshift): Use assert() instead of
+	calling the undeclared abort.
+	* time/mktime.c [DEBUG] (DEBUG): Rename to DEBUG_MKTIME.
+
+2016-01-15  Martin Sebor  <msebor@redhat.com>
+
 	[BZ #18755]
 	* iconv/skeleton.c (FUNCTION_NAME): Suppress -Wunused-but-set-variable
 	warnings.

@@ -499,8 +499,8 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		       (stdout, ";; Querying server (# %d) address = %s\n",
 			ns + 1, inet_ntop(nsap->sa_family,
 					  (nsap->sa_family == AF_INET6
-					   ? &((struct sockaddr_in6 *) nsap)->sin6_addr
-					   : &((struct sockaddr_in *) nsap)->sin_addr),
+					   ? (void *) &((struct sockaddr_in6 *) nsap)->sin6_addr
+					   : (void *) &((struct sockaddr_in *) nsap)->sin_addr),
 					  tmpbuf, sizeof (tmpbuf))));
 
 		if (__glibc_unlikely (v_circuit))       {

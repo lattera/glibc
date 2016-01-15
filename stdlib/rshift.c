@@ -21,6 +21,8 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 #include <gmp.h>
 #include "gmp-impl.h"
 
+#include <assert.h>
+
 /* Shift U (pointed to by UP and USIZE limbs long) CNT bits to the right
    and store the USIZE least significant limbs of the result at WP.
    The bits shifted out to the right are returned.
@@ -40,10 +42,7 @@ mpn_rshift (register mp_ptr wp,
   register mp_size_t i;
   mp_limb_t retval;
 
-#ifdef DEBUG
-  if (usize == 0 || cnt == 0)
-    abort ();
-#endif
+  assert (usize != 0 && cnt != 0);
 
   sh_1 = cnt;
 
