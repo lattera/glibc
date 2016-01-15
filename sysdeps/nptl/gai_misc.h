@@ -81,7 +81,8 @@ __gai_start_notify_thread (void)
 {
   sigset_t ss;
   sigemptyset (&ss);
-  int sigerr = pthread_sigmask (SIG_SETMASK, &ss, NULL);
+  int sigerr __attribute__ ((unused));
+  sigerr = pthread_sigmask (SIG_SETMASK, &ss, NULL);
   assert_perror (sigerr);
 }
 
@@ -105,7 +106,8 @@ __gai_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   sigset_t ss;
   sigset_t oss;
   sigfillset (&ss);
-  int sigerr = pthread_sigmask (SIG_SETMASK, &ss, &oss);
+  int sigerr __attribute__ ((unused));
+  sigerr = pthread_sigmask (SIG_SETMASK, &ss, &oss);
   assert_perror (sigerr);
 
   int ret = pthread_create (threadp, &attr, tf, arg);

@@ -1,3 +1,14 @@
+2016-01-15  Martin Sebor  <msebor@redhat.com>
+
+	[BZ #18755]
+	* iconv/skeleton.c (FUNCTION_NAME): Suppress -Wunused-but-set-variable
+	warnings.
+	* sysdeps/nptl/gai_misc.h (__gai_start_notify_thread): Same.
+	(__gai_create_helper_thread): Same.
+	* nscd/nscd.c (do_exit): Suppress -Wunused-variable.
+	* iconvdata/iso-2022-cn-ext.c (BODY): Initialize local variable
+	to suppress -Wmaybe-uninitialized warnings.
+
 2016-01-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19465]

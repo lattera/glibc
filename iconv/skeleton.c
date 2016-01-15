@@ -675,7 +675,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #else
 		      /* We have a problem in one of the functions below.
 			 Undo the conversion upto the error point.  */
-		      size_t nstatus;
+		      size_t nstatus __attribute__ ((unused));
 
 		      /* Reload the pointers.  */
 		      *inptrp = inptr;

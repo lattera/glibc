@@ -426,7 +426,7 @@ enum
       }									      \
     else								      \
       {									      \
-	unsigned char buf[2];						      \
+	unsigned char buf[2] = { 0, 0 };				      \
 	int used;							      \
 									      \
 	if (set == GB2312_set || ((ann & SO_ann) != CNS11643_1_ann	      \

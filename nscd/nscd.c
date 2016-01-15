@@ -659,7 +659,8 @@ do_exit (int child_ret, int errnum, const char *format, ...)
 {
   if (parent_fd != -1)
     {
-      int ret = write (parent_fd, &child_ret, sizeof (child_ret));
+      int ret __attribute__ ((unused));
+      ret = write (parent_fd, &child_ret, sizeof (child_ret));
       assert (ret == sizeof (child_ret));
       close (parent_fd);
     }
@@ -691,7 +692,8 @@ notify_parent (int child_ret)
   if (parent_fd == -1)
     return;
 
-  int ret = write (parent_fd, &child_ret, sizeof (child_ret));
+  int ret __attribute__ ((unused));
+  ret = write (parent_fd, &child_ret, sizeof (child_ret));
   assert (ret == sizeof (child_ret));
   close (parent_fd);
   parent_fd = -1;
