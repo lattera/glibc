@@ -1,5 +1,13 @@
 2016-01-15  Torvald Riegel  <triegel@redhat.com>
 
+	* nptl/tst-barrier1.c: Add description on first line.
+	* nptl/tst-barrier2.c: Likewise.
+	* nptl/tst-barrier3.c: Likewise.
+	* nptl/tst-barrier4.c: Likewise.
+	* nptl/tst-barrier5.c: Likewise.
+
+2016-01-15  Torvald Riegel  <triegel@redhat.com>
+
 	[BZ #18868]
 	* nptl/pthread_barrier_init.c (__pthread_barrier_init): Apply fix.
 
