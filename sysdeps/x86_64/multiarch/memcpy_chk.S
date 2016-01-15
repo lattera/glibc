@@ -30,7 +30,15 @@
 ENTRY(__memcpy_chk)
 	.type	__memcpy_chk, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
-	leaq	__memcpy_chk_sse2(%rip), %rax
+#ifdef HAVE_AVX512_ASM_SUPPORT
+	HAS_ARCH_FEATURE (AVX512F_Usable)
+	jz      1f
+#	HAS_ARCH_FEATURE (Prefer_No_VZEROUPPER)
+#	jz      1f
+	leaq    __memcpy_avx512_no_vzeroupper(%rip), %rax
+	ret
+#endif
+1:	leaq	__memcpy_chk_sse2(%rip), %rax
 	HAS_CPU_FEATURE (SSSE3)
 	jz	2f
 	leaq	__memcpy_chk_ssse3(%rip), %rax

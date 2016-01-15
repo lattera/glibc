@@ -1,3 +1,17 @@
+2016-01-16  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Added new files.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Added new tests.
+	* sysdeps/x86_64/multiarch/memcpy-avx512-no-vzeroupper.S: New file.
+	* sysdeps/x86_64/multiarch/mempcpy-avx512-no-vzeroupper.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove-avx512-no-vzeroupper.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy.S: Added new IFUNC branch.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove.c: Likewise.
+	* sysdeps/x86_64/multiarch/memmove_chk.c: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S: Likewise.
+
 2016-01-15  Torvald Riegel  <triegel@redhat.com>
 
 	[BZ #13065]

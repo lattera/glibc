@@ -30,19 +30,27 @@
 ENTRY(__new_memcpy)
 	.type	__new_memcpy, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
-	leaq	__memcpy_avx_unaligned(%rip), %rax
-	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
-	jz 1f
+#ifdef HAVE_AVX512_ASM_SUPPORT
+	HAS_ARCH_FEATURE (AVX512F_Usable)
+	jz	1f
+	HAS_ARCH_FEATURE (Prefer_No_VZEROUPPER)
+	jz	1f
+	leaq    __memcpy_avx512_no_vzeroupper(%rip), %rax
 	ret
-1:	leaq	__memcpy_sse2(%rip), %rax
+#endif
+1:	leaq	__memcpy_avx_unaligned(%rip), %rax
+	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
+	jz 2f
+	ret
+2:	leaq	__memcpy_sse2(%rip), %rax
 	HAS_ARCH_FEATURE (Slow_BSF)
-	jnz	2f
+	jnz	3f
 	leaq	__memcpy_sse2_unaligned(%rip), %rax
 	ret
-2:	HAS_CPU_FEATURE (SSSE3)
-	jz 3f
+3:	HAS_CPU_FEATURE (SSSE3)
+	jz 4f
 	leaq    __memcpy_ssse3(%rip), %rax
-3:	ret
+4:	ret
 END(__new_memcpy)
 
 # undef ENTRY

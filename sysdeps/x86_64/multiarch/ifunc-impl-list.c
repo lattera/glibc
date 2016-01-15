@@ -24,7 +24,7 @@
 #include "init-arch.h"
 
 /* Maximum number of IFUNC implementations.  */
-#define MAX_IFUNC	4
+#define MAX_IFUNC	5
 
 /* Fill ARRAY of MAX elements with IFUNC implementations for function
    NAME supported on target machine and return the number of valid
@@ -46,8 +46,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/memmove_chk.S.  */
+  /* Support sysdeps/x86_64/multiarch/memmove_chk.c.  */
   IFUNC_IMPL (i, name, __memmove_chk,
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memmove_chk_avx512_no_vzeroupper)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
 			      HAS_ARCH_FEATURE (AVX_Usable),
 			      __memmove_chk_avx_unaligned)
@@ -65,6 +68,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memmove,
 			      HAS_ARCH_FEATURE (AVX_Usable),
 			      __memmove_avx_unaligned)
+	      IFUNC_IMPL_ADD (array, i, memmove,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memmove_avx512_no_vzeroupper)
 	      IFUNC_IMPL_ADD (array, i, memmove, HAS_CPU_FEATURE (SSSE3),
 			      __memmove_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, memmove, HAS_CPU_FEATURE (SSSE3),
@@ -254,6 +260,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/memcpy_chk.S.  */
   IFUNC_IMPL (i, name, __memcpy_chk,
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memcpy_chk_avx512_no_vzeroupper)
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
 			      HAS_ARCH_FEATURE (AVX_Usable),
 			      __memcpy_chk_avx_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
@@ -274,11 +283,17 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcpy_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_CPU_FEATURE (SSSE3),
 			      __memcpy_ssse3)
+	      IFUNC_IMPL_ADD (array, i, memcpy,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memcpy_avx512_no_vzeroupper)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_sse2))
 
   /* Support sysdeps/x86_64/multiarch/mempcpy_chk.S.  */
   IFUNC_IMPL (i, name, __mempcpy_chk,
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __mempcpy_chk_avx512_no_vzeroupper)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
 			      HAS_ARCH_FEATURE (AVX_Usable),
 			      __mempcpy_chk_avx_unaligned)
@@ -293,6 +308,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/mempcpy.S.  */
   IFUNC_IMPL (i, name, mempcpy,
+	      IFUNC_IMPL_ADD (array, i, mempcpy,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __mempcpy_avx512_no_vzeroupper)
 	      IFUNC_IMPL_ADD (array, i, mempcpy,
 			      HAS_ARCH_FEATURE (AVX_Usable),
 			      __mempcpy_avx_unaligned)
