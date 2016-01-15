@@ -1,5 +1,16 @@
 2016-01-15  Martin Sebor  <msebor@redhat.com>
 
+	[BZ #19432]
+	* iconvdata/Makefile: Add bug-iconv11.
+	* iconvdata/bug-iconv11.c: New test.
+	* iconvdata/ibm930.c: Do not reject redundant shift sequences.
+	* iconvdata/ibm933.c: Same.
+	* iconvdata/ibm935.c: Same.
+	* iconvdata/ibm937.c: Same.
+	* iconvdata/ibm939.c: Same.
+
+2016-01-15  Martin Sebor  <msebor@redhat.com>
+
 	[BZ #19443]
 	* crypt/crypt_util.c [DEBUG] (_ufc_prbits): Correct format string.
 	[DEBUG] (_ufc_set_bits): Declare used.
