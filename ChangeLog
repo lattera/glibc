@@ -1,3 +1,8 @@
+2016-01-15  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #18868]
+	* nptl/pthread_barrier_init.c (__pthread_barrier_init): Apply fix.
+
 2016-01-16  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Added new files.

@@ -42,7 +42,7 @@ __pthread_barrier_init (pthread_barrier_t *barrier,
 
   const struct pthread_barrierattr *iattr
     = (attr != NULL
-       ? iattr = (struct pthread_barrierattr *) attr
+       ? (struct pthread_barrierattr *) attr
        : &default_barrierattr);
 
   ibarrier = (struct pthread_barrier *) barrier;
