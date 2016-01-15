@@ -175,7 +175,10 @@ __fma (double x, double y, double z)
 
   /* Ensure correct sign of exact 0 + 0.  */
   if (__glibc_unlikely ((x == 0 || y == 0) && z == 0))
-    return x * y + z;
+    {
+      x = math_opt_barrier (x);
+      return x * y + z;
+    }
 
   fenv_t env;
   libc_feholdexcept_setround (&env, FE_TONEAREST);
