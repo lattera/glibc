@@ -1,3 +1,17 @@
+2016-01-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19466]
+	* time/tst-mktime2.c (time_t_max): Removed.
+	(time_t_min): Likewise.
+	(TYPE_SIGNED): New.
+	(TYPE_MINIMUM): Likewise.
+	(TYPE_MAXIMUM): Likewise.
+	(TIME_T_MIN): Likewise.
+	(TIME_T_MAX): Likewise.
+	(mktime_test): Replace time_t_max and time_t_min with TIME_T_MAX
+	and TIME_T_MIN.
+	(do_test): Likewise.
+
 2016-01-14  Amit Pawar  <amit.pawar@amd.com>
 
 	[BZ #19467]

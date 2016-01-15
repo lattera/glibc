@@ -5,8 +5,28 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-static time_t time_t_max;
-static time_t time_t_min;
+/* True if the arithmetic type T is signed.  */
+#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
+
+/* The maximum and minimum values for the integer type T.  These
+   macros have undefined behavior if T is signed and has padding bits.
+   If this is a problem for you, please let us know how to fix it for
+   your host.  */
+#define TYPE_MINIMUM(t) \
+  ((t) (! TYPE_SIGNED (t) \
+	? (t) 0 \
+	: ~ TYPE_MAXIMUM (t)))
+#define TYPE_MAXIMUM(t) \
+  ((t) (! TYPE_SIGNED (t) \
+	? (t) -1 \
+	: ((((t) 1 << (sizeof (t) * CHAR_BIT - 2)) - 1) * 2 + 1)))
+
+#ifndef TIME_T_MIN
+# define TIME_T_MIN TYPE_MINIMUM (time_t)
+#endif
+#ifndef TIME_T_MAX
+# define TIME_T_MAX TYPE_MAXIMUM (time_t)
+#endif
 
 /* Values we'll use to set the TZ environment variable.  */
 static const char *tz_strings[] =
@@ -53,8 +73,8 @@ static void
 mktime_test (time_t now)
 {
   mktime_test1 (now);
-  mktime_test1 ((time_t) (time_t_max - now));
-  mktime_test1 ((time_t) (time_t_min + now));
+  mktime_test1 ((time_t) (TIME_T_MAX - now));
+  mktime_test1 ((time_t) (TIME_T_MIN + now));
 }
 
 static void
@@ -113,19 +133,13 @@ do_test (void)
      isn't worth using anyway.  */
   alarm (60);
 
-  for (time_t_max = 1; 0 < time_t_max; time_t_max *= 2)
-    continue;
-  time_t_max--;
-  if ((time_t) -1 < 0)
-    for (time_t_min = -1; (time_t) (time_t_min * 2) < 0; time_t_min *= 2)
-      continue;
-  delta = time_t_max / 997; /* a suitable prime number */
+  delta = TIME_T_MAX / 997; /* a suitable prime number */
   for (i = 0; i < N_STRINGS; i++)
     {
       if (tz_strings[i])
 	setenv ("TZ", tz_strings[i], 1);
 
-      for (t = 0; t <= time_t_max - delta; t += delta)
+      for (t = 0; t <= TIME_T_MAX - delta; t += delta)
 	mktime_test (t);
       mktime_test ((time_t) 1);
       mktime_test ((time_t) (60 * 60));
