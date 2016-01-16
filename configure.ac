@@ -579,9 +579,6 @@ AC_SUBST(add_on_subdirs)
 
 
 ###
-### I put this here to prevent those annoying emails from people who cannot
-### read and try to compile glibc on unsupported platforms.  --drepper
-###
 ### By using the undocumented --enable-hacker-mode option for configure
 ### one can skip this test to make the configuration not fail for unsupported
 ### platforms.
@@ -591,13 +588,12 @@ if test -z "$enable_hacker_mode" && test x"$libc_config_ok" != xyes; then
   *-linux* | *-gnu*)
     ;;
   *)
-    echo "*** The GNU C library is currently not available for this platform."
-    echo "*** So far nobody cared to port it and if there is no volunteer it"
-    echo "*** might never happen.  So, if you have interest to see glibc on"
-    echo "*** this platform visit"
-    echo "***	http://www.gnu.org/software/libc/porting.html"
-    echo "*** and join the group of porters"
-    exit 1
+    AC_MSG_ERROR([
+*** The GNU C library is currently unavailable for this platform.
+*** If you are interested in seeing glibc on this platform visit
+*** the "How to submit a new port" in the wiki:
+***   https://sourceware.org/glibc/wiki/#Development
+*** and join the community!])
     ;;
   esac
 fi
