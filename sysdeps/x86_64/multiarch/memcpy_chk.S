@@ -33,9 +33,9 @@ ENTRY(__memcpy_chk)
 #ifdef HAVE_AVX512_ASM_SUPPORT
 	HAS_ARCH_FEATURE (AVX512F_Usable)
 	jz      1f
-#	HAS_ARCH_FEATURE (Prefer_No_VZEROUPPER)
-#	jz      1f
-	leaq    __memcpy_avx512_no_vzeroupper(%rip), %rax
+	HAS_ARCH_FEATURE (Prefer_No_VZEROUPPER)
+	jz      1f
+	leaq    __memcpy_chk_avx512_no_vzeroupper(%rip), %rax
 	ret
 #endif
 1:	leaq	__memcpy_chk_sse2(%rip), %rax
