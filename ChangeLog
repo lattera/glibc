@@ -1,3 +1,8 @@
+2016-01-18  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #19451]
+	* math/Makefile (libm-vec-tests): Move libraries after wrappers.o
+
 2016-01-15  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	[BZ #19486]

@@ -295,8 +295,8 @@ $(objpfx)libieee.a: $(objpfx)ieee-math.o
 
 $(addprefix $(objpfx),$(filter-out $(tests-static) $(libm-vec-tests),$(tests))): $(libm)
 $(addprefix $(objpfx),$(tests-static)): $(objpfx)libm.a
-$(addprefix $(objpfx), $(libm-vec-tests)): $(objpfx)%: $(libm) $(libmvec) \
-					   $(objpfx)%-wrappers.o
+$(addprefix $(objpfx), $(libm-vec-tests)): $(objpfx)%: $(objpfx)%-wrappers.o $(libm) \
+					   $(libmvec)
 
 gmp-objs = $(patsubst %,$(common-objpfx)stdlib/%.o,\
 		      add_n sub_n cmp addmul_1 mul_1 mul_n divmod_1 \
