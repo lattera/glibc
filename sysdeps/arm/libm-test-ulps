@@ -115,7 +115,7 @@ ifloat: 2
 
 Function: "atan2_upward":
 double: 1
-float: 2
+float: 1
 idouble: 1
 ifloat: 2
 
@@ -291,7 +291,7 @@ ifloat: 2
 
 Function: "carg_upward":
 double: 1
-float: 2
+float: 1
 idouble: 1
 ifloat: 2
 
@@ -1420,7 +1420,9 @@ float: 2
 ifloat: 2
 
 Function: "log_upward":
+double: 1
 float: 2
+idouble: 1
 ifloat: 2
 
 Function: "pow":
