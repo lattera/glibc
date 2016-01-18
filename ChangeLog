@@ -1,5 +1,7 @@
 2016-01-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/nofpu/libm-test-ulps: Regenerated.
+
 	* sysdeps/arm/libm-test-ulps: Regenerated.
 
 2016-01-18  Paul Pluzhnikov  <ppluzhnikov@google.com>
