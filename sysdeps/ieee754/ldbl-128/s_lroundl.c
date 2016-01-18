@@ -23,7 +23,7 @@
 #include <math.h>
 
 #include <math_private.h>
-
+#include <fix-fp-int-convert-overflow.h>
 
 long int
 __lroundl (long double x)
@@ -87,7 +87,14 @@ __lroundl (long double x)
 	 FE_INVALID must be raised and the return value is
 	 unspecified.  */
 #ifdef FE_INVALID
-      if (x <= (long double) LONG_MIN - 0.5L)
+      if (FIX_LDBL_LONG_CONVERT_OVERFLOW
+	  && !(sign == -1 && x > (long double) LONG_MIN - 0.5L))
+	{
+	  feraiseexcept (FE_INVALID);
+	  return sign == 1 ? LONG_MAX : LONG_MIN;
+	}
+      else if (!FIX_LDBL_LONG_CONVERT_OVERFLOW
+	       && x <= (long double) LONG_MIN - 0.5L)
 	{
 	  /* If truncation produces LONG_MIN, the cast will not raise
 	     the exception, but may raise "inexact".  */

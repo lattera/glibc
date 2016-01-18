@@ -25,8 +25,10 @@
    see <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=59412>).  */
 #define FIX_FLT_LLONG_CONVERT_OVERFLOW 1
 #define FIX_DBL_LLONG_CONVERT_OVERFLOW 1
+#define FIX_LDBL_LLONG_CONVERT_OVERFLOW 0
 
 #define FIX_FLT_LONG_CONVERT_OVERFLOW 0
 #define FIX_DBL_LONG_CONVERT_OVERFLOW 0
+#define FIX_LDBL_LONG_CONVERT_OVERFLOW 0
 
 #endif /* fix-fp-int-convert-overflow.h */

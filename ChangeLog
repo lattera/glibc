@@ -1,3 +1,24 @@
+2016-01-15  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #19486]
+	* sysdeps/s390/fix-fp-int-convert-overflow.h: New File.
+	* sysdeps/generic/fix-fp-int-convert-overflow.h
+	(FIX_LDBL_LONG_CONVERT_OVERFLOW,
+	FIX_LDBL_LLONG_CONVERT_OVERFLOW): New define.
+	* sysdeps/arm/fix-fp-int-convert-overflow.h: Likewise.
+	* sysdeps/mips/mips32/fpu/fix-fp-int-convert-overflow.h:
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c (__lrintl):
+	Avoid conversions to long int where inexact exceptions
+	could be raised.
+	* sysdeps/ieee754/ldbl-128/s_lroundl.c (__lroundl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c (__llrintl):
+	Avoid conversions to long long int where inexact exceptions
+	could be raised.
+	* sysdeps/ieee754/ldbl-128/s_llroundl.c (__llroundl):
+	Likewise.
+
 2016-01-17  Mike Frysinger  <vapier@gentoo.org>
 
 	* configure.ac: Rewrite error comment and use AC_MSG_ERROR.

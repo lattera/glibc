@@ -24,6 +24,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <fix-fp-int-convert-overflow.h>
 
 static const long double two112[2] =
 {
@@ -91,6 +92,12 @@ __llrintl (long double x)
 	  feraiseexcept (t == LLONG_MIN ? FE_INEXACT : FE_INVALID);
 	  return LLONG_MIN;
 	}
+      else if (FIX_LDBL_LLONG_CONVERT_OVERFLOW && x != (long double) LLONG_MIN)
+	{
+	  feraiseexcept (FE_INVALID);
+	  return sx == 0 ? LLONG_MAX : LLONG_MIN;
+	}
+
 #endif
       return (long long int) x;
     }
