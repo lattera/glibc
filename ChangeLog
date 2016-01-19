@@ -1,3 +1,19 @@
+2016-01-25  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	[BZ #18560]
+	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h (__ipc): Remove.
+	(IPCOP_semop): Likewise.
+	(IPCOP_semget): Likewise.
+	(IPCOP_semctl): Likewise.
+	(IPCOP_msgsnd): Likewise.
+	(IPCOP_msgrcv): Likewise.
+	(IPCOP_msgget): Likewise.
+	(IPCOP_msgctl): Likewise.
+	(IPCOP_shmat): Likewise.
+	(IPCOP_shmdt): Likewise.
+	(IPCOP_shmget): Likewise.
+	(IPCOP_shmctl): Likewise.
+
 2016-01-22  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* string/tst-endian.c: Include <libc-internal.h>.
