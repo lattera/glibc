@@ -1,5 +1,12 @@
 2016-01-22  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* nptl/tst-setuid3.c (is_invalid_barrier_ret): New function.
+	(thread_func): Use new function to simplify barrier check.
+	(do_test): Use new function to simplify checking barrier exit
+	code, and actually join the child thread.
+
+2016-01-22  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* sysdeps/unix/sysv/linux/powerpc/htm.h	(__libc_tbegin): Remove
 	semicolon.
 	(__libc_tend): Likewise.

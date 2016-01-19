@@ -33,14 +33,21 @@ static pthread_barrier_t barrier2;
 #define FAIL_ERR(fmt, ...) \
   do { printf ("FAIL: " fmt ": %m\n", __VA_ARGS__); _exit (1); } while (0)
 
+/* True if x is not a successful return code from pthread_barrier_wait.  */
+static inline bool
+is_invalid_barrier_ret (int x)
+{
+  return x != 0 && x != PTHREAD_BARRIER_SERIAL_THREAD;
+}
+
 static void *
 thread_func (void *ctx __attribute__ ((unused)))
 {
   int ret = pthread_barrier_wait (&barrier1);
-  if (ret != PTHREAD_BARRIER_SERIAL_THREAD && ret != 0)
+  if (is_invalid_barrier_ret (ret))
     FAIL ("pthread_barrier_wait (barrier1) (on thread): %d", ret);
   ret = pthread_barrier_wait (&barrier2);
-  if (ret != PTHREAD_BARRIER_SERIAL_THREAD && ret != 0)
+  if (is_invalid_barrier_ret (ret))
     FAIL ("pthread_barrier_wait (barrier2) (on thread): %d", ret);
   return NULL;
 }
@@ -86,7 +93,7 @@ do_test (void)
 
   /* Ensure that the thread is running properly.  */
   ret = pthread_barrier_wait (&barrier1);
-  if (ret != 0)
+  if (is_invalid_barrier_ret (ret))
     FAIL ("pthread_barrier_wait (barrier1): %d", ret);
 
   setuid_failure (2);
@@ -97,10 +104,11 @@ do_test (void)
 
   /* Shutdown.  */
   ret = pthread_barrier_wait (&barrier2);
-  if (ret != PTHREAD_BARRIER_SERIAL_THREAD && ret != 0)
+  if (is_invalid_barrier_ret (ret))
     FAIL ("pthread_barrier_wait (barrier2): %d", ret);
 
-  if (ret != PTHREAD_BARRIER_SERIAL_THREAD && ret != 0)
+  ret = pthread_join (thread, NULL);
+  if (ret != 0)
     FAIL ("pthread_join: %d", ret);
 
   return 0;
