@@ -1,3 +1,7 @@
+2016-02-19  Mike Frysinger  <vapier@gentoo.org>
+
+	* test-skeleton.c (TIMEOUT): Change to 20 and adjust comment.
+
 2016-02-19  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* nptl/allocatestack.c (allocate_stack): Declare new stackaddr,
