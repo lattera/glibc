@@ -583,8 +583,11 @@ sub parse_ulps {
 	# ignore
 	next;
       } else {
-	$results{$test}{$type}{'ulp'}{$float} = $eps;
-	$results{$test}{'has_ulps'} = 1;
+	if (!defined ($results{$test}{$type}{'ulp'}{$float})
+	    || $results{$test}{$type}{'ulp'}{$float} < $eps) {
+	  $results{$test}{$type}{'ulp'}{$float} = $eps;
+	  $results{$test}{'has_ulps'} = 1;
+	}
       }
       if ($type =~ /^real|imag$/) {
 	$results{$test}{'type'} = 'complex';
