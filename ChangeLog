@@ -1,3 +1,9 @@
+2016-01-19  Andrew Senkevich  <andrew.senkevich@intel.com>
+	    Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Fixed build with
+	assembler not supporting AVX-512.
+
 2016-01-18  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
