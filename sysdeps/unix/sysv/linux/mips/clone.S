@@ -166,4 +166,5 @@ L(gotpid):
 
 	END(__thread_start)
 
+libc_hidden_def (__clone)
 weak_alias (__clone, clone)

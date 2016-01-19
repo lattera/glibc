@@ -93,4 +93,5 @@ PSEUDO_END (__clone)
 
 	.fnend
 
+libc_hidden_def (__clone)
 weak_alias (__clone, clone)

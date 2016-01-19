@@ -123,4 +123,5 @@ ENTRY(__clone)
 	.word	TID - TLS_PRE_TCB_SIZE
 PSEUDO_END (__clone)
 
+libc_hidden_def (__clone)
 weak_alias (__clone, clone)

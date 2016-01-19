@@ -175,4 +175,5 @@ ENTRY(__clone)
 
 PSEUDO_END(__clone)
 
+libc_hidden_def (__clone)
 weak_alias (__clone, clone)

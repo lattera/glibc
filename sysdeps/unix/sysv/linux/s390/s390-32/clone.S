@@ -70,4 +70,6 @@ thread_start:
 	xc	0(4,%r15),0(%r15)
 	basr    %r14,%r1        /* jump to fn */
 	DO_CALL (exit, 1)
+
+libc_hidden_def (__clone)
 weak_alias (__clone, clone)

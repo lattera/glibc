@@ -93,4 +93,5 @@ thread_start:
 	cfi_endproc
 	.size thread_start, .-thread_start
 
+libc_hidden_def (__clone)
 weak_alias (__clone, clone)

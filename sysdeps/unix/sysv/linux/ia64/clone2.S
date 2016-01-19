@@ -96,6 +96,8 @@ ENTRY(__clone2)
 	ret			/* Not reached.		*/
 PSEUDO_END(__clone2)
 
+libc_hidden_def (__clone2)
+
 /* For now we leave __clone undefined.  This is unlikely to be a	*/
 /* problem, since at least the i386 __clone in glibc always failed	*/
 /* with a 0 sp (eventhough the kernel explicitly handled it).		*/

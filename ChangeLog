@@ -1,5 +1,39 @@
 2016-03-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #14750]
+	[BZ #10354]
+	[BZ #18433]
+	* include/sched.h (__clone): Add hidden prototype.
+	(__clone2): Likewise.
+	* include/unistd.h (__dup): Likewise.
+	* posix/Makefile (tests): Add tst-spawn2.
+	* posix/tst-spawn2.c: New file.
+	* sysdeps/posix/dup.c (__dup): Add hidden definition.
+	* sysdeps/unix/sysv/linux/aarch64/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S (__clone):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/sh/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/tile/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/nptl-signals.h
+	(____nptl_is_internal_signal): New function.
+	* sysdeps/unix/sysv/linux/spawni.c: New file.
+
 	* posix/execvpe.c (__execvpe): Remove dynamic allocation.
 	* posix/Makefile (tests): Add tst-execvpe{1,2,3,4,5,6}.
 	* posix/tst-execvp1.c (do_test): Use a macro to call execvp.

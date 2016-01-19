@@ -94,7 +94,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
-tests           += wordexp-test tst-exec tst-spawn
+tests           += wordexp-test tst-exec tst-spawn tst-spawn2
 endif
 tests-static	= tst-exec-static tst-spawn-static
 tests		+= $(tests-static)

@@ -26,5 +26,5 @@ __dup (int fd)
 {
   return fcntl (fd, F_DUPFD, 0);
 }
-
+libc_hidden_def (__dup)
 weak_alias (__dup, dup)

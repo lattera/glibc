@@ -81,6 +81,7 @@ char *__canonicalize_directory_name_internal (const char *__thisdir,
 					      size_t __size) attribute_hidden;
 
 extern int __dup (int __fd);
+libc_hidden_proto (__dup)
 extern int __dup2 (int __fd, int __fd2);
 libc_hidden_proto (__dup2)
 extern int __dup3 (int __fd, int __fd2, int flags);
