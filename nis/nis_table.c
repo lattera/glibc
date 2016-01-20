@@ -19,6 +19,7 @@
 #include <assert.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
+#include <libc-internal.h>
 
 #include "nis_xdr.h"
 #include "nis_intern.h"
@@ -175,12 +176,20 @@ __follow_path (char **tablepath, char **tableptr, struct ib_request *ibreq,
 
       *tableptr = *tablepath;
     }
+
+  /* Since tableptr is only set here, and it's set when tablepath is NULL,
+     which it is initially defined as, we know it will always be set here.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.7, "-Wmaybe-uninitialized");
+
   if (*tableptr == NULL)
     return NIS_NOTFOUND;
 
   char *newname = strsep (tableptr, ":");
   if (newname[0] == '\0')
     return NIS_NOTFOUND;
+
+  DIAG_POP_NEEDS_COMMENT;
 
   newname = strdup (newname);
   if (newname == NULL)

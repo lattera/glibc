@@ -27,6 +27,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <wctype.h>
+#include <libc-internal.h>
 #include <libc-lock.h>
 #include <locale/localeinfo.h>
 #include <scratch_buffer.h>
@@ -1535,12 +1536,21 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    {
 		      /* Get the string for the digits with value N.  */
 #ifdef COMPILE_WSCANF
+
+		      /* wcdigits_extended[] is fully set in the loop
+			 above, but the test for "map != NULL" is done
+			 inside the loop here and outside the loop there.  */
+		      DIAG_PUSH_NEEDS_COMMENT;
+		      DIAG_IGNORE_NEEDS_COMMENT (4.7, "-Wmaybe-uninitialized");
+
 		      if (__glibc_unlikely (map != NULL))
 			wcdigits[n] = wcdigits_extended[n];
 		      else
 			wcdigits[n] = (const wchar_t *)
 			  _NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_WC + n);
 		      wcdigits[n] += from_level;
+
+		      DIAG_POP_NEEDS_COMMENT;
 
 		      if (c == (wint_t) *wcdigits[n])
 			{

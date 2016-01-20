@@ -1,3 +1,9 @@
+2016-01-20  Chris Metcalf  <cmetcalf@ezchip.com>
+
+	* nis/nis_table.c (__follow_path): Disable diagnostic for
+	uninitialized variable that is a false positive for gcc 4.7.
+	* stdio-common/vfscanf.c (_IO_vfwscanf): Likewise.
+
 2016-01-20  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/lowlevellock-futex.h
