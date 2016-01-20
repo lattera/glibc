@@ -1,5 +1,12 @@
 2016-01-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/dbl-64/s_finite.c
+	[NO_LONG_DOUBLE && LDBL_CLASSIFY_COMPAT] (__finitel): Define
+	compat symbol at version GLIBC_2_1 and use GLIBC_2_1 in
+	SHLIB_COMPAT condition for libm, not GLIBC_2_0.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_finite.c
+	[NO_LONG_DOUBLE && LDBL_CLASSIFY_COMPAT] (__finitel): Likewise.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/localplt.data
 	(__gtsf2): Add as optional for libc.so.
 	(__unordsf2): Likewise.

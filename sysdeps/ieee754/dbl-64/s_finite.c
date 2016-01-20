@@ -42,8 +42,8 @@ weak_alias (__finite, finite)
 #  if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_23)
 compat_symbol (libc, __finite, __finitel, GLIBC_2_0);
 #  endif
-#  if SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_23)
-compat_symbol (libm, __finite, __finitel, GLIBC_2_0);
+#  if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_23)
+compat_symbol (libm, __finite, __finitel, GLIBC_2_1);
 #  endif
 # endif
 weak_alias (__finite, finitel)
