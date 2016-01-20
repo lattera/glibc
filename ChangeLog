@@ -1,3 +1,10 @@
+2016-01-22  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/htm.h	(__libc_tbegin): Remove
+	semicolon.
+	(__libc_tend): Likewise.
+	(__libc_tabort): Likewise.
+
 2016-01-22  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/nios2/libm-test-ulps: Update.

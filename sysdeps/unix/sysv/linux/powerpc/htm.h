@@ -128,9 +128,9 @@
 
 # ifdef __TM_FENCE__
    /* New GCC behavior.  */
-#  define __libc_tbegin(R)  __builtin_tbegin (R);
-#  define __libc_tend(R)    __builtin_tend (R);
-#  define __libc_tabort(R)  __builtin_tabort (R);
+#  define __libc_tbegin(R)  __builtin_tbegin (R)
+#  define __libc_tend(R)    __builtin_tend (R)
+#  define __libc_tabort(R)  __builtin_tabort (R)
 # else
    /* Workaround an old GCC behavior. Earlier releases of GCC 4.9 and 5.0,
       didn't use to treat __builtin_tbegin, __builtin_tend and
