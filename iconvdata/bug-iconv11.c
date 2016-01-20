@@ -56,7 +56,7 @@ test_ibm93x (const char *from_set, const char *input, size_t inbytesleft)
 
   errno = 0;
   size_t ret = iconv (cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
-  printf ("  ==> %td: %s\n"
+  printf ("  ==> %zu: %s\n"
           "  inbuf%+td, inbytesleft=%zu, outbuf%+td, outbytesleft=%zu\n",
           ret, strerror (errno),
           inbuf - input, inbytesleft, outbuf - output, outbytesleft);
