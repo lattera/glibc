@@ -1,3 +1,9 @@
+2016-01-20  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/lowlevellock-futex.h
+	(lll_futex_wait, lll_futex_timed_wait, lll_futex_wake):
+	Always evaluate	PRIVATE argument.
+
 2016-01-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #19490]

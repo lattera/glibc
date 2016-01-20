@@ -35,7 +35,8 @@
 
 /* Wait while *FUTEXP == VAL for an lll_futex_wake call on FUTEXP.  */
 #define lll_futex_wait(futexp, val, private) \
-  (- __nacl_irt_futex.futex_wait_abs ((volatile int *) (futexp), val, NULL))
+  ((void) (private), \
+   - __nacl_irt_futex.futex_wait_abs ((volatile int *) (futexp), val, NULL))
 
 /* Wait until a lll_futex_wake call on FUTEXP, or TIMEOUT elapses.  */
 #define lll_futex_timed_wait(futexp, val, timeout, private)             \
@@ -60,13 +61,15 @@
     if (_err == 0)                                                      \
       _err = __nacl_irt_futex.futex_wait_abs				\
 	((volatile int *) (futexp), val, _to);                          \
-    -_err;                                                              \
+    (void) (private);							\
+    -_err;								\
   })
 
 /* Wake up up to NR waiters on FUTEXP.  */
 #define lll_futex_wake(futexp, nr, private)                     \
   ({                                                            \
     int _woken;                                                 \
+    (void) (private);						\
     - __nacl_irt_futex.futex_wake ((volatile int *) (futexp), nr, &_woken); \
   })
 
