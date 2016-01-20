@@ -28,11 +28,7 @@
 
 	.text
 
-	/* int pthread_cond_signal (pthread_cond_t *cond) */
-	.globl	__pthread_cond_signal
-	.type	__pthread_cond_signal, @function
-	.align	16
-__pthread_cond_signal:
+ENTRY(__pthread_cond_signal)
 
 	LIBC_PROBE (cond_signal, 1, %rdi)
 
@@ -159,6 +155,7 @@ __pthread_cond_signal:
 	cmovne	%eax, %esi
 	callq	__lll_unlock_wake
 	jmp	6b
-	.size	__pthread_cond_signal, .-__pthread_cond_signal
+END(__pthread_cond_signal)
+
 versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,
 		  GLIBC_2_3_2)

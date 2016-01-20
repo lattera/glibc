@@ -16,11 +16,9 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <lowlevellock.h>
+#include <sysdep.h>
 
-	.globl	pthread_spin_lock
-	.type	pthread_spin_lock,@function
-	.align	16
-pthread_spin_lock:
+ENTRY(pthread_spin_lock)
 1:	LOCK
 	decl	0(%rdi)
 	jne	2f
@@ -33,4 +31,4 @@ pthread_spin_lock:
 	cmpl	$0, 0(%rdi)
 	jg	1b
 	jmp	2b
-	.size	pthread_spin_lock,.-pthread_spin_lock
+END(pthread_spin_lock)

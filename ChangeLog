@@ -1,3 +1,17 @@
+2016-01-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #19490]
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S
+	(pthread_cond_broadcast): Use ENTRY/END
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S
+	(pthread_cond_signal): Likewise
+	* sysdeps/x86_64/nptl/pthread_spin_lock.S (pthread_spin_lock):
+	Likewise
+	* sysdeps/x86_64/nptl/pthread_spin_trylock.S (pthread_spin_trylock):
+	Likewise
+	* sysdeps/x86_64/nptl/pthread_spin_unlock.S (pthread_spin_unlock):
+	Likewise
+
 2016-01-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/dbl-64/s_finite.c
