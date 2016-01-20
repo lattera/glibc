@@ -1,3 +1,11 @@
+2016-01-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/localplt.data
+	(__gtsf2): Add as optional for libc.so.
+	(__unordsf2): Likewise.
+	(__signbit): Remove for libc.so.
+	(__signbitl): Likewise.
+
 2016-01-19  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* iconvdata/bug-iconv11.c (test_ibm93x):
