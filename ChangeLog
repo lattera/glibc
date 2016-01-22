@@ -1,3 +1,9 @@
+2016-03-08  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/bits/fenvinline.h (feraiseexcept): Remove use of %s
+	operand modifier.
+	(feclearexcept): Likewise.
+
 2016-03-08  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags): Updated
