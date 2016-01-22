@@ -1,3 +1,12 @@
+2016-01-22  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* sysdeps/nios2/libm-test-ulps: Update.
+	* sysdeps/unix/sysv/linux/nios2/localplt.data (__gtdf2): Add.
+	(__gtsf2): Likewise.
+	(__unorddf2): Likewise.
+	(__unordsf2): Likewise.
+	(__ledf2): Likewise.
+
 2016-01-20  Chris Metcalf  <cmetcalf@ezchip.com>
 
 	* nis/nis_table.c (__follow_path): Disable diagnostic for

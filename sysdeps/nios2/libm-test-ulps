@@ -6,9 +6,9 @@ float: 1
 ifloat: 1
 
 Function: "acosh":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 
 Function: "asin":
@@ -30,9 +30,9 @@ float: 1
 ifloat: 1
 
 Function: "atanh":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 
 Function: "cabs":
@@ -155,9 +155,9 @@ ifloat: 2
 
 Function: Real part of "clog":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
+ifloat: 3
 
 Function: Imaginary part of "clog":
 float: 1
@@ -165,9 +165,9 @@ ifloat: 1
 
 Function: Real part of "clog10":
 double: 3
-float: 3
+float: 4
 idouble: 3
-ifloat: 3
+ifloat: 4
 
 Function: Imaginary part of "clog10":
 double: 2
@@ -254,10 +254,14 @@ idouble: 1
 ifloat: 1
 
 Function: "erfc":
-double: 2
+double: 3
 float: 2
-idouble: 2
+idouble: 3
 ifloat: 2
+
+Function: "exp":
+float: 1
+ifloat: 1
 
 Function: "exp10":
 double: 2
@@ -276,10 +280,10 @@ idouble: 1
 ifloat: 1
 
 Function: "gamma":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
 
 Function: "hypot":
 double: 1
@@ -304,10 +308,10 @@ idouble: 4
 ifloat: 4
 
 Function: "lgamma":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
+double: 4
+float: 4
+idouble: 4
+ifloat: 4
 
 Function: "log":
 float: 1
@@ -364,9 +368,9 @@ idouble: 2
 ifloat: 2
 
 Function: "tgamma":
-double: 4
+double: 5
 float: 5
-idouble: 4
+idouble: 5
 ifloat: 5
 
 Function: "y0":
