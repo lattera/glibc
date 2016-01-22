@@ -1,5 +1,18 @@
 2016-03-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* posix/execvpe.c (__execvpe): Remove dynamic allocation.
+	* posix/Makefile (tests): Add tst-execvpe{1,2,3,4,5,6}.
+	* posix/tst-execvp1.c (do_test): Use a macro to call execvp.
+	* posix/tst-execvp2.c (do_test): Likewise.
+	* posix/tst-execvp3.c (do_test): Likewise.
+	* posix/tst-execvp4.c (do_test): Likewise.
+	* posix/tst-execvpe1.c: New file.
+	* posix/tst-execvpe2.c: Likewise.
+	* posix/tst-execvpe3.c: Likewise.
+	* posix/tst-execvpe4.c: Likewise.
+	* posix/tst-execvpe5.c: Likewise.
+	* posix/tst-execvpe6.c: Likewise.
+
 	[BZ #19534]
 	* posix/execl.c (execl): Remove dynamic memory allocation.
 	* posix/execle.c (execle): Likewise.

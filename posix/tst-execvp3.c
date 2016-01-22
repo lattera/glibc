@@ -12,6 +12,9 @@ static int do_test (void);
 
 #include "../test-skeleton.c"
 
+#ifndef EXECVP
+# define EXECVP(file, argv)  execvp (file, argv)
+#endif
 
 static char *fname;
 
@@ -35,7 +38,7 @@ do_test (void)
     }
 
   char *argv[] = { fname, NULL };
-  execvp (basename (fname), argv);
+  EXECVP (basename (fname), argv);
 
   /* If we come here, the execvp call failed.  */
   return 1;

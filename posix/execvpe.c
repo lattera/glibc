@@ -15,7 +15,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <alloca.h>
 #include <unistd.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -23,22 +22,43 @@
 #include <string.h>
 #include <errno.h>
 #include <paths.h>
+#include <confstr.h>
+#include <sys/param.h>
 
+#ifndef PATH_MAX
+# ifdef MAXPATHLEN
+#  define PATH_MAX MAXPATHLEN
+# else
+#  define PATH_MAX 1024
+# endif
+#endif
 
 /* The file is accessible but it is not an executable file.  Invoke
    the shell to interpret it as a script.  */
 static void
-internal_function
-scripts_argv (const char *file, char *const argv[], int argc, char **new_argv)
+maybe_script_execute (const char *file, char *const argv[], char *const envp[])
 {
+  ptrdiff_t argc = 0;
+  while (argv[argc++] != NULL)
+    {
+      if (argc == INT_MAX - 1)
+	{
+	  errno = E2BIG;
+	  return;
+	}
+    }
+
   /* Construct an argument list for the shell.  */
+  char *new_argv[argc + 1];
   new_argv[0] = (char *) _PATH_BSHELL;
   new_argv[1] = (char *) file;
-  while (argc > 1)
-    {
-      new_argv[argc] = argv[argc - 1];
-      --argc;
-    }
+  if (argc > 1)
+    memcpy (new_argv + 2, argv + 1, argc * sizeof(char *));
+  else
+    new_argv[2] = NULL;
+
+  /* Execute the shell.  */
+  __execve (new_argv[0], new_argv, envp);
 }
 
 
@@ -47,170 +67,111 @@ scripts_argv (const char *file, char *const argv[], int argc, char **new_argv)
 int
 __execvpe (const char *file, char *const argv[], char *const envp[])
 {
+  /* We check the simple case first. */
   if (*file == '\0')
     {
-      /* We check the simple case first. */
       __set_errno (ENOENT);
       return -1;
     }
 
+  /* Don't search when it contains a slash.  */
   if (strchr (file, '/') != NULL)
     {
-      /* Don't search when it contains a slash.  */
       __execve (file, argv, envp);
 
       if (errno == ENOEXEC)
-	{
-	  /* Count the arguments.  */
-	  int argc = 0;
-	  while (argv[argc++])
-	    ;
-	  size_t len = (argc + 1) * sizeof (char *);
-	  char **script_argv;
-	  void *ptr = NULL;
-	  if (__libc_use_alloca (len))
-	    script_argv = alloca (len);
-	  else
-	    script_argv = ptr = malloc (len);
+        maybe_script_execute (file, argv, envp);
 
-	  if (script_argv != NULL)
-	    {
-	      scripts_argv (file, argv, argc, script_argv);
-	      __execve (script_argv[0], script_argv, envp);
-
-	      free (ptr);
-	    }
-	}
+      return -1;
     }
-  else
+
+  const char *path = getenv ("PATH");
+  if (!path)
+    path = CS_PATH;
+  /* Although GLIBC does not enforce NAME_MAX, we set it as the maximum
+     size to avoid unbounded stack allocation.  Same applies for
+     PATH_MAX.  */
+  size_t file_len = __strnlen (file, NAME_MAX + 1);
+  size_t path_len = __strnlen (path, PATH_MAX - 1) + 1;
+
+  if ((file_len > NAME_MAX)
+      || !__libc_alloca_cutoff (path_len + file_len + 1))
     {
-      size_t pathlen;
-      size_t alloclen = 0;
-      char *path = getenv ("PATH");
-      if (path == NULL)
+      errno = ENAMETOOLONG;
+      return -1;
+    }
+
+  const char *subp;
+  bool got_eacces = false;
+  char buffer[path_len + file_len + 1];
+  for (const char *p = path; ; p = subp)
+    {
+      subp = __strchrnul (p, ':');
+
+      /* PATH is larger than PATH_MAX and thus potentially larger than
+	 the stack allocation.  */
+      if (subp - p >= path_len)
 	{
-	  pathlen = confstr (_CS_PATH, (char *) NULL, 0);
-	  alloclen = pathlen + 1;
+          /* If there is only one path, bail out.  */
+	  if (*subp == '\0')
+	    break;
+	  /* Otherwise skip to next one.  */
+	  continue;
 	}
-      else
-	pathlen = strlen (path);
 
-      size_t len = strlen (file) + 1;
-      alloclen += pathlen + len + 1;
+      /* Use the current path entry, plus a '/' if nonempty, plus the file to
+         execute.  */
+      char *pend = mempcpy (buffer, p, subp - p);
+      *pend = '/';
+      memcpy (pend + (p < subp), file, file_len + 1);
 
-      char *name;
-      char *path_malloc = NULL;
-      if (__libc_use_alloca (alloclen))
-	name = alloca (alloclen);
-      else
+      __execve (buffer, argv, envp);
+
+      if (errno == ENOEXEC)
+        /* This has O(P*C) behavior, where P is the length of the path and C
+           is the argument count.  A better strategy would be allocate the
+           substitute argv and reuse it each time through the loop (so it
+           behaves as O(P+C) instead.  */
+        maybe_script_execute (buffer, argv, envp);
+
+      switch (errno)
 	{
-	  path_malloc = name = malloc (alloclen);
-	  if (name == NULL)
+	  case EACCES:
+	  /* Record that we got a 'Permission denied' error.  If we end
+	     up finding no executable we can use, we want to diagnose
+	     that we did find one but were denied access.  */
+	    got_eacces = true;
+	  case ENOENT:
+	  case ESTALE:
+	  case ENOTDIR:
+	  /* Those errors indicate the file is missing or not executable
+	     by us, in which case we want to just try the next path
+	     directory.  */
+	  case ENODEV:
+	  case ETIMEDOUT:
+	  /* Some strange filesystems like AFS return even
+	     stranger error numbers.  They cannot reasonably mean
+	     anything else so ignore those, too.  */
+	    break;
+
+          default:
+	  /* Some other error means we found an executable file, but
+	     something went wrong executing it; return the error to our
+	     caller.  */
 	    return -1;
 	}
 
-      if (path == NULL)
-	{
-	  /* There is no `PATH' in the environment.
-	     The default search path is the current directory
-	     followed by the path `confstr' returns for `_CS_PATH'.  */
-	  path = name + pathlen + len + 1;
-	  path[0] = ':';
-	  (void) confstr (_CS_PATH, path + 1, pathlen);
-	}
-
-      /* Copy the file name at the top.  */
-      name = (char *) memcpy (name + pathlen + 1, file, len);
-      /* And add the slash.  */
-      *--name = '/';
-
-      char **script_argv = NULL;
-      void *script_argv_malloc = NULL;
-      bool got_eacces = false;
-      char *p = path;
-      do
-	{
-	  char *startp;
-
-	  path = p;
-	  p = __strchrnul (path, ':');
-
-	  if (p == path)
-	    /* Two adjacent colons, or a colon at the beginning or the end
-	       of `PATH' means to search the current directory.  */
-	    startp = name + 1;
-	  else
-	    startp = (char *) memcpy (name - (p - path), path, p - path);
-
-	  /* Try to execute this name.  If it works, execve will not return. */
-	  __execve (startp, argv, envp);
-
-	  if (errno == ENOEXEC)
-	    {
-	      if (script_argv == NULL)
-		{
-		  /* Count the arguments.  */
-		  int argc = 0;
-		  while (argv[argc++])
-		    ;
-		  size_t arglen = (argc + 1) * sizeof (char *);
-		  if (__libc_use_alloca (alloclen + arglen))
-		    script_argv = alloca (arglen);
-		  else
-		    script_argv = script_argv_malloc = malloc (arglen);
-		  if (script_argv == NULL)
-		    {
-		      /* A possible EACCES error is not as important as
-			 the ENOMEM.  */
-		      got_eacces = false;
-		      break;
-		    }
-		  scripts_argv (startp, argv, argc, script_argv);
-		}
-
-	      __execve (script_argv[0], script_argv, envp);
-	    }
-
-	  switch (errno)
-	    {
-	    case EACCES:
-	      /* Record the we got a `Permission denied' error.  If we end
-		 up finding no executable we can use, we want to diagnose
-		 that we did find one but were denied access.  */
-	      got_eacces = true;
-	    case ENOENT:
-	    case ESTALE:
-	    case ENOTDIR:
-	      /* Those errors indicate the file is missing or not executable
-		 by us, in which case we want to just try the next path
-		 directory.  */
-	    case ENODEV:
-	    case ETIMEDOUT:
-	      /* Some strange filesystems like AFS return even
-		 stranger error numbers.  They cannot reasonably mean
-		 anything else so ignore those, too.  */
-	      break;
-
-	    default:
-	      /* Some other error means we found an executable file, but
-		 something went wrong executing it; return the error to our
-		 caller.  */
-	      return -1;
-	    }
-	}
-      while (*p++ != '\0');
-
-      /* We tried every element and none of them worked.  */
-      if (got_eacces)
-	/* At least one failure was due to permissions, so report that
-	   error.  */
-	__set_errno (EACCES);
-
-      free (script_argv_malloc);
-      free (path_malloc);
+      if (*subp++ == '\0')
+	break;
     }
 
-  /* Return the error from the last attempt (probably ENOENT).  */
+  /* We tried every element and none of them worked.  */
+  if (got_eacces)
+    /* At least one failure was due to permissions, so report that
+       error.  */
+    __set_errno (EACCES);
+
   return -1;
 }
+
 weak_alias (__execvpe, execvpe)

@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#ifndef EXECVP
+# define EXECVP(file, argv) execvp (file, argv)
+#endif
+
 static int
 do_test (void)
 {
@@ -19,7 +23,7 @@ do_test (void)
 
   char *argv[] = { (char *) "does-not-exist", NULL };
   errno = 0;
-  execvp (argv[0], argv);
+  EXECVP (argv[0], argv);
 
   if (errno != ENOENT)
     {

@@ -82,6 +82,8 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-execv1 tst-execv2 tst-execl1 tst-execl2 \
 		   tst-execve1 tst-execve2 tst-execle1 tst-execle2 \
 		   tst-execvp3 tst-execvp4 tst-rfc3484 tst-rfc3484-2 \
+		   tst-execvpe1 tst-execvpe2 tst-execvpe3 tst-execvpe4 \
+		   tst-execvpe5 tst-execvpe6 \
 		   tst-rfc3484-3 \
 		   tst-getaddrinfo3 tst-fnmatch2 tst-cpucount tst-cpuset \
 		   bug-getopt1 bug-getopt2 bug-getopt3 bug-getopt4 \
@@ -229,6 +231,7 @@ tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 
 tst-exec-ARGS = -- $(host-test-program-cmd)
 tst-exec-static-ARGS = $(tst-exec-ARGS)
+tst-execvpe5-ARGS = -- $(host-test-program-cmd)
 tst-spawn-ARGS = -- $(host-test-program-cmd)
 tst-spawn-static-ARGS = $(tst-spawn-ARGS)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir

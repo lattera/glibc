@@ -14,6 +14,9 @@ static int do_test (void);
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
 
+#ifndef EXECVP
+# define EXECVP(file, argv)  execvp (file, argv)
+#endif
 
 static char *copy;
 
@@ -70,7 +73,7 @@ do_test (void)
 
   char *argv[] = { basename (copy), NULL };
   errno = 0;
-  execvp (argv[0], argv);
+  EXECVP (argv[0], argv);
 
   if (errno != EACCES)
     {
