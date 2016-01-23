@@ -1,3 +1,8 @@
+2016-02-22  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #19512]
+	* config.h.in (HAVE_BUILTIN_EXPECT): New macro.
+
 2016-02-22  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* posix/tst-dir.c: Include libc-internal.h.

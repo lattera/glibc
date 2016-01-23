@@ -37,6 +37,11 @@
 /* Define if static NSS modules are wanted.  */
 #undef	DO_STATIC_NSS
 
+/* Assume that the compiler supports __builtin_expect.
+   This macro is necessary for proper compilation of code
+   shared between GNU libc and GNU gettext projects.  */
+#define HAVE_BUILTIN_EXPECT 1
+
 /* Define if the compiler supports __builtin_memset.  */
 #undef	HAVE_BUILTIN_MEMSET
 
