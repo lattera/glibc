@@ -3,6 +3,20 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <libc-internal.h>
+
+#if __GNUC_PREREQ (6, 0)
+/* GCC 6.0 warns on big endian systems about:
+   htobeXX (beXXtoh (i)) != i
+   warning: self-comparison always evaluates to false [-Wtautological-compare]
+   because htobeXX(x) and beXXtoh(x) is defined to (x)
+   in string/endian.h on big endian systems.
+   The same applies to htoleXX/leXXtoh on little endian systems.  */
+# define DIAG_IGNORE_NEEDS_COMMENT_TAUTOLOGICAL_COMPARE() \
+  DIAG_IGNORE_NEEDS_COMMENT (6, "-Wtautological-compare")
+#else
+# define DIAG_IGNORE_NEEDS_COMMENT_TAUTOLOGICAL_COMPARE()
+#endif
 
 static int
 do_test (void)
@@ -13,6 +27,8 @@ do_test (void)
     {
       if (i < UINT64_C (65536))
 	{
+	  DIAG_PUSH_NEEDS_COMMENT;
+	  DIAG_IGNORE_NEEDS_COMMENT_TAUTOLOGICAL_COMPARE ();
 	  if (htobe16 (be16toh (i)) != i)
 	    {
 	      printf ("htobe16 (be16toh (%" PRIx64 ")) == %" PRIx16 "\n",
@@ -25,6 +41,7 @@ do_test (void)
 		      i, (uint16_t) htole16 (le16toh (i)));
 	      result = 1;
 	    }
+	  DIAG_POP_NEEDS_COMMENT;
 
 	  uint16_t n[2];
 	  n[__BYTE_ORDER == __LITTLE_ENDIAN] = bswap_16 (i);
@@ -45,6 +62,8 @@ do_test (void)
 
       if (i < UINT64_C (4294967296))
 	{
+	  DIAG_PUSH_NEEDS_COMMENT;
+	  DIAG_IGNORE_NEEDS_COMMENT_TAUTOLOGICAL_COMPARE ();
 	  if (htobe32 (be32toh (i)) != i)
 	    {
 	      printf ("htobe32 (be32toh (%" PRIx64 ")) == %" PRIx32 "\n",
@@ -57,6 +76,7 @@ do_test (void)
 		      i, (uint32_t) htole32 (le32toh (i)));
 	      result = 1;
 	    }
+	  DIAG_POP_NEEDS_COMMENT;
 
 	  uint32_t n[2];
 	  n[__BYTE_ORDER == __LITTLE_ENDIAN] = bswap_32 (i);
@@ -75,6 +95,8 @@ do_test (void)
 	    }
 	}
 
+      DIAG_PUSH_NEEDS_COMMENT;
+      DIAG_IGNORE_NEEDS_COMMENT_TAUTOLOGICAL_COMPARE ();
       if (htobe64 (be64toh (i)) != i)
 	{
 	  printf ("htobe64 (be64toh (%" PRIx64 ")) == %" PRIx64 "\n",
@@ -87,6 +109,7 @@ do_test (void)
 		  i, htole64 (le64toh (i)));
 	  result = 1;
 	}
+      DIAG_POP_NEEDS_COMMENT;
 
       uint64_t n[2];
       n[__BYTE_ORDER == __LITTLE_ENDIAN] = bswap_64 (i);

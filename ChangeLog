@@ -1,3 +1,10 @@
+2016-01-22  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* string/tst-endian.c: Include <libc-internal.h>.
+	(do_test): Ignore tautological-compare warnings around
+	"htobeXX (beXXtoh (i)) != i" and
+	"htoleXX (leXXtoh (i)) != i" if-statements.
+
 2016-01-24  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/fpu/e_sqrtl.c: New file.
