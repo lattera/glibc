@@ -35,4 +35,3 @@ long double _Q_sqrt(const long double a)
   FP_HANDLE_EXCEPTIONS;
   return c;
 }
-strong_alias (_Q_sqrt, __ieee754_sqrtl);

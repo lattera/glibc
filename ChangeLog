@@ -1,5 +1,9 @@
 2016-01-24  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/fpu/e_sqrtl.c: New file.
+	* sysdeps/sparc/sparc32/soft-fp/q_sqrt.c (__ieee754_sqrtl): Remove alias.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Add __sqrtl_finite.
+
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
 
 2016-01-25  Maciej W. Rozycki  <macro@imgtec.com>
