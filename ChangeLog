@@ -1,3 +1,9 @@
+2016-01-25  Maciej W. Rozycki  <macro@imgtec.com>
+
+	* sysdeps/unix/sysv/linux/mips/configure.ac: Set
+	`arch_minimum_kernel' to 4.5.0 if 2008 NaN encoding is used.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+
 2016-01-22  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* nptl/tst-setuid3.c (is_invalid_barrier_ret): New function.
