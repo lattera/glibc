@@ -21,8 +21,6 @@
 #include <math_private.h>
 #include <stdint.h>
 
-static const float two30  = 1.0737418e09;
-
 /* __ieee754_hypotf(x,y)
 
    This a FP only version without any FP->INT conversion.

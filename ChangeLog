@@ -1,13 +1,22 @@
+2016-01-27  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c (half): Remove.
+	* sysdeps/ieee754/ldbl-128ibm/s_log1pl.c (maxlog, big): Remove.
+	* sysdeps/powerpc/fpu/s_cosf.c (one): Remove.
+	* sysdeps/powerpc/fpu/e_hypotf.c (two30): Remove.
+
 2016-01-26  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/localplt.data: Add _Q_cmp.
 
 2016-01-25  David S. Miller  <davem@davemloft.net>
 
-	* sysdeps/sparc/sparc32/Versions (GLIBC_2.23): Add entry for __sqrtl_finite.
-	* sysdeps/sparc/sparc32/fpu/e_sqrtl.c (__sqrtl_finite): Define instead using
-	versioned_symbol.
-	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Fix ordering of entries.
+	* sysdeps/sparc/sparc32/Versions (GLIBC_2.23): Add entry for
+	__sqrtl_finite.
+	* sysdeps/sparc/sparc32/fpu/e_sqrtl.c (__sqrtl_finite): Define
+	instead using versioned_symbol.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Fix ordering
+	of entries.
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Move
 	__sqrtl_finite to GLIBC_2.23

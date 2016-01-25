@@ -21,7 +21,6 @@
 #include <math.h>
 #include <math_private.h>
 
-static const float one  = 1.0;
 static const float pio4 = 7.8539801e-1;
 
 float
