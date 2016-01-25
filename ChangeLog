@@ -1,3 +1,7 @@
+2016-01-25  Ricchard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Update.
+
 2016-01-25  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17514]
