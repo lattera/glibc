@@ -1,3 +1,7 @@
+2016-01-24  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 2016-01-25  Maciej W. Rozycki  <macro@imgtec.com>
 
 	* sysdeps/unix/sysv/linux/mips/configure.ac: Set
