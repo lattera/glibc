@@ -376,7 +376,6 @@ GLIBC_2.15 __sinhf_finite F
 GLIBC_2.15 __sinhl_finite F
 GLIBC_2.15 __sqrt_finite F
 GLIBC_2.15 __sqrtf_finite F
-GLIBC_2.15 __sqrtl_finite F
 GLIBC_2.15 __y0_finite F
 GLIBC_2.15 __y0f_finite F
 GLIBC_2.15 __y0l_finite F
@@ -390,6 +389,7 @@ GLIBC_2.18 GLIBC_2.18 A
 GLIBC_2.18 __issignaling F
 GLIBC_2.18 __issignalingf F
 GLIBC_2.18 __issignalingl F
+GLIBC_2.23 __sqrtl_finite F
 GLIBC_2.2 GLIBC_2.2 A
 GLIBC_2.2 feclearexcept F
 GLIBC_2.2 fedisableexcept F
