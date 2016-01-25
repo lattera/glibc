@@ -24,6 +24,8 @@
 # define FUNC_NAME strncpy
 #endif
 
+#define FRAMESIZE (FRAME_MIN_SIZE+48)
+
 /* Implements the function
 
    char * [r3] strncpy (char *dest [r3], const char *src [r4], size_t n [r5])
@@ -54,8 +56,7 @@ EALIGN (FUNC_NAME, 4, 0)
 	addi	r10,r4,16
 	rlwinm	r9,r4,0,19,19
 
-	/* Since it is a leaf function, save some non-volatile registers on the
-	   protected/red zone.  */
+	/* Save some non-volatile registers on the stack.  */
 	std	r26,-48(r1)
 	std	r27,-40(r1)
 
@@ -68,6 +69,14 @@ EALIGN (FUNC_NAME, 4, 0)
 
 	std	r30,-16(r1)
 	std	r31,-8(r1)
+
+	/* Update CFI.  */
+	cfi_offset(r26, -48)
+	cfi_offset(r27, -40)
+	cfi_offset(r28, -32)
+	cfi_offset(r29, -24)
+	cfi_offset(r30, -16)
+	cfi_offset(r31, -8)
 
 	beq	cr7,L(unaligned_lt_16)
 	rldicl	r9,r4,0,61
@@ -180,74 +189,58 @@ L(short_path_loop_end):
 	ld	r31,-8(r1)
 	blr
 
-	/* This code pads the remainder dest with NULL bytes.  The algorithm
-	   calculate the remanining size and issues a doubleword unrolled
-	   loops followed by a byte a byte set.  */
+	/* This code pads the remainder of dest with NULL bytes.  The algorithm
+	   calculates the remaining size and calls memset.  */
 	.align	4
 L(zero_pad_start):
 	mr	r5,r10
 	mr	r9,r6
 L(zero_pad_start_1):
-	srdi.	r8,r5,r3
-	mr	r10,r9
-#ifdef USE_AS_STPNCPY
-	mr	r3,r9
+	/* At this point:
+	     - r5 holds the number of bytes that still have to be written to
+	       dest.
+	     - r9 points to the position, in dest, where the first null byte
+	       will be written.
+	   The above statements are true both when control reaches this label
+	   from a branch or when falling through the previous lines.  */
+#ifndef USE_AS_STPNCPY
+	mr	r30,r3       /* Save the return value of strncpy.  */
 #endif
-	beq-	cr0,L(zero_pad_loop_b_start)
-	cmpldi	cr7,r8,1
-	li	cr7,0
-	std	r7,0(r9)
-	beq	cr7,L(zero_pad_loop_b_prepare)
-	addic.	r8,r8,-2
-	addi	r10,r9,r16
-	std	r7,8(r9)
-	beq	cr0,L(zero_pad_loop_dw_2)
-	std	r7,16(r9)
-	li	r9,0
-	b	L(zero_pad_loop_dw_1)
+	/* Prepare the call to memset.  */
+	mr	r3,r9        /* Pointer to the area to be zero-filled.  */
+	li	r4,0         /* Byte to be written (zero).  */
 
-	.align	4
-L(zero_pad_loop_dw):
-	addi	r10,r10,16
-	std	r9,-8(r10)
-	beq	cr0,L(zero_pad_loop_dw_2)
-	std	r9,0(r10)
-L(zero_pad_loop_dw_1):
-	cmpldi	cr7,r8,1
-	std	r9,0(r10)
-	addic.	r8,r8,-2
-	bne	cr7,L(zero_pad_loop_dw)
-	addi	r10,r10,8
-L(zero_pad_loop_dw_2):
-	rldicl	r5,r5,0,61
-L(zero_pad_loop_b_start):
-	cmpdi	cr7,r5,0
-	addi	r5,r5,-1
-	addi	r9,r10,-1
-	add	r10,r10,5
-	subf	r10,r9,r10
-	li	r8,0
-	beq-	cr7,L(short_path_loop_end)
+	/* We delayed the creation of the stack frame, as well as the saving of
+	   the link register, because only at this point, we are sure that
+	   doing so is actually needed.  */
 
-	/* Write remaining 1-8 bytes.  */
-        .align  4
-	addi	r9,r9,1
-	mtocrf	0x1,r10
-	bf	29,4f
-        stw     r8,0(r9)
-        addi	r9,r9,4
+	/* Save the link register.  */
+	mflr	r0
+	std	r0,16(r1)
+	cfi_offset(lr, 16)
 
-        .align  4
-4:      bf      30,2f
-        sth     r8,0(r9)
-        addi	r9,r9,2
+	/* Create the stack frame.  */
+	stdu	r1,-FRAMESIZE(r1)
+	cfi_adjust_cfa_offset(FRAMESIZE)
 
-        .align  4
-2:      bf	31,1f
-        stb	r8,0(r9)
+	bl	__memset_power8
+	nop
 
-	/* Restore non-volatile registers.  */
-1:	ld	r26,-48(r1)
+	/* Restore the stack frame.  */
+	addi	r1,r1,FRAMESIZE
+	cfi_adjust_cfa_offset(-FRAMESIZE)
+	/* Restore the link register.  */
+	ld	r0,16(r1)
+	mtlr	r0
+
+#ifndef USE_AS_STPNCPY
+	mr	r3,r30       /* Restore the return value of strncpy, i.e.:
+				dest.  For stpncpy, the return value is the
+				same as return value of memset.  */
+#endif
+
+	/* Restore non-volatile registers and return.  */
+	ld	r26,-48(r1)
 	ld	r27,-40(r1)
 	ld	r28,-32(r1)
 	ld	r29,-24(r1)
@@ -443,10 +436,6 @@ L(short_path_prepare_2_3):
 	mr	r4,r28
 	mr	r9,r29
 	b	L(short_path_2)
-L(zero_pad_loop_b_prepare):
-	addi	r10,r9,8
-	rldicl	r5,r5,0,61
-	b	L(zero_pad_loop_b_start)
 L(zero_pad_start_prepare_1):
 	mr	r5,r6
 	mr	r9,r8
