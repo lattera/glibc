@@ -25,4 +25,6 @@ __ieee754_sqrtl (long double x)
 {
   return _Q_sqrt (x);
 }
-strong_alias (__ieee754_sqrtl, __sqrtl_finite)
+
+#include <shlib-compat.h>
+versioned_symbol (libm, __ieee754_sqrtl, __sqrtl_finite, GLIBC_2_23);

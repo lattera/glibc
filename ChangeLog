@@ -1,5 +1,10 @@
 2016-01-25  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/Versions (GLIBC_2.23): Add entry for __sqrtl_finite.
+	* sysdeps/sparc/sparc32/fpu/e_sqrtl.c (__sqrtl_finite): Define instead using
+	versioned_symbol.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Fix ordering of entries.
+
 	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Move
 	__sqrtl_finite to GLIBC_2.23
 

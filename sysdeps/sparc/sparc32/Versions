@@ -3,3 +3,8 @@ libc {
     .div; .mul; .rem; .udiv; .umul; .urem;
   }
 }
+libm {
+  GLIBC_2.23 {
+    __sqrtl_finite;
+  }
+}
