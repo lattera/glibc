@@ -1,3 +1,7 @@
+2016-01-26  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/localplt.data: Add _Q_cmp.
+
 2016-01-25  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/Versions (GLIBC_2.23): Add entry for __sqrtl_finite.
