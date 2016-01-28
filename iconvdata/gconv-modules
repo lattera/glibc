@@ -1563,6 +1563,7 @@ module	MAC-SAMI//		INTERNAL		MAC-SAMI	1
 module	INTERNAL		MAC-SAMI//		MAC-SAMI	1
 
 #	from			to			module		cost
+alias	ARMSCII8//		ARMSCII-8//
 module	ARMSCII-8//		INTERNAL		ARMSCII-8	1
 module	INTERNAL		ARMSCII-8//		ARMSCII-8	1
 
@@ -1578,6 +1579,7 @@ module	EUC-JISX0213//		INTERNAL		EUC-JISX0213	1
 module	INTERNAL		EUC-JISX0213//		EUC-JISX0213	1
 
 #	from			to			module		cost
+alias	ShiftJISX0213//		Shift_JISX0213//
 module	Shift_JISX0213//	INTERNAL		SHIFT_JISX0213	1
 module	INTERNAL		Shift_JISX0213//	SHIFT_JISX0213	1
 

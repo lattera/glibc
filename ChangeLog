@@ -1,3 +1,8 @@
+2018-04-16  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #19527]
+	* iconvdata/gconv-modules (ARMSCII8//, ShiftJISX0213//): New aliases.
+
 2018-04-15  Patrick McGehearty <patrick.mcgehearty@oracle.com>
 
 	* sysdeps/ieee754/dbl-64/e_exp.c: faster __ieee754_exp()
