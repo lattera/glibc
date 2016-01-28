@@ -1,3 +1,15 @@
+2016-01-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #18240]
+	* misc/hsearch_r.c (isprime, __hcreate_r): Protect against
+	unsigned int wraparound.
+
+2016-01-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18240]
+	* misc/bug18240.c: New test.
+	* misc/Makefile (tests): Add it.
+
 2016-01-28  Steve Ellcey  <sellcey@imgtec.com>
             Joseph Myers  <joseph@codesourcery.com>
 

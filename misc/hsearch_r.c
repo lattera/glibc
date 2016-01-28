@@ -46,14 +46,11 @@ static int
 isprime (unsigned int number)
 {
   /* no even number will be passed */
-  unsigned int div = 3;
-
-  while (div * div < number && number % div != 0)
-    div += 2;
-
-  return number % div != 0;
+  for (unsigned int div = 3; div <= number / div; div += 2)
+    if (number % div == 0)
+      return 0;
+  return 1;
 }
-
 
 /* Before using the hash table we must allocate memory for it.
    Test for an existing table are done. We allocate one element
@@ -71,13 +68,6 @@ __hcreate_r (size_t nel, struct hsearch_data *htab)
       return 0;
     }
 
-  if (nel >= SIZE_MAX / sizeof (_ENTRY))
-    {
-      __set_errno (ENOMEM);
-      return 0;
-    }
-
-
   /* There is still another table active. Return with error. */
   if (htab->table != NULL)
     return 0;
@@ -86,10 +76,19 @@ __hcreate_r (size_t nel, struct hsearch_data *htab)
      use will not work.  */
   if (nel < 3)
     nel = 3;
-  /* Change nel to the first prime number not smaller as nel. */
-  nel |= 1;      /* make odd */
-  while (!isprime (nel))
-    nel += 2;
+
+  /* Change nel to the first prime number in the range [nel, UINT_MAX - 2],
+     The '- 2' means 'nel += 2' cannot overflow.  */
+  for (nel |= 1; ; nel += 2)
+    {
+      if (UINT_MAX - 2 < nel)
+	{
+	  __set_errno (ENOMEM);
+	  return 0;
+	}
+      if (isprime (nel))
+	break;
+    }
 
   htab->size = nel;
   htab->filled = 0;
