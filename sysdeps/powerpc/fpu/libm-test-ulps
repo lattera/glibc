@@ -1506,7 +1506,9 @@ ildouble: 7
 ldouble: 7
 
 Function: "exp":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -1958,6 +1960,14 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "nextafter_downward":
+ildouble: 1
+ldouble: 1
+
+Function: "nextafter_upward":
 ildouble: 1
 ldouble: 1
 
