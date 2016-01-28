@@ -565,11 +565,11 @@ L(lastw):
 #ifdef USE_DOUBLE
 	andi    t8,a2,3		/* a2 is the remainder past 4 byte chunks.  */
 	beq	t8,a2,L(lastb)
+	move	a2,t8
 	lw	REG3,0(a1)
 	sw	REG3,0(a0)
 	PTR_ADDIU a0,a0,4
 	PTR_ADDIU a1,a1,4
-	move	a2,t8
 #endif
 
 /* Copy the last 8 (or 16) bytes */

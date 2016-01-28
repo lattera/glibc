@@ -1,3 +1,9 @@
+2016-01-28  Steve Ellcey  <sellcey@imgtec.com>
+            Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/memcpy.S (MEMCPY_NAME) [USE_DOUBLE]: Avoid word
+	load in branch delay slot when less than a word of input left.
+
 2016-01-27  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c (half): Remove.
