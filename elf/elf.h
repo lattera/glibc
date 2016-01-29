@@ -1269,8 +1269,10 @@ typedef struct
 					   argument, returning the TLS
 					   offset for the symbol.  */
 #define R_386_IRELATIVE	   42		/* Adjust indirectly by program base */
+#define R_386_GOT32X	   43		/* Load from 32 bit GOT entry,
+					   relaxable. */
 /* Keep this the last entry.  */
-#define R_386_NUM	   43
+#define R_386_NUM	   44
 
 /* SUN SPARC specific definitions.  */
 
@@ -3144,8 +3146,15 @@ enum
 #define R_X86_64_TLSDESC        36	/* TLS descriptor.  */
 #define R_X86_64_IRELATIVE	37	/* Adjust indirectly by program base */
 #define R_X86_64_RELATIVE64	38	/* 64-bit adjust by program base */
-
-#define R_X86_64_NUM		39
+					/* 39 Reserved was R_X86_64_PC32_BND */
+					/* 40 Reserved was R_X86_64_PLT32_BND */
+#define R_X86_64_GOTPCRELX	41	/* Load from 32 bit signed pc relative
+					   offset to GOT entry without REX
+					   prefix, relaxable.  */
+#define R_X86_64_REX_GOTPCRELX	42	/* Load from 32 bit signed pc relative
+					   offset to GOT entry with REX prefix,
+					   relaxable.  */
+#define R_X86_64_NUM		43
 
 
 /* AM33 relocations.  */

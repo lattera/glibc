@@ -1,3 +1,11 @@
+2016-02-19  Mark Wielaard  <mjw@redhat.com>
+
+	* elf/elf.h (R_386_GOT32X): New.
+	(R_386_NUM): Update.
+	(R_X86_64_GOTPCRELX: New.
+	(R_X86_64_REX_GOTPCRELX): New.
+	(R_X86_64_NUM): Update.
+
 2016-02-19  Mike Frysinger  <vapier@gentoo.org>
 
 	* test-skeleton.c (TIMEOUT): Change to 20 and adjust comment.
