@@ -17,57 +17,43 @@
 
 #include <unistd.h>
 #include <stdarg.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <stackinfo.h>
+#include <errno.h>
+#include <sys/param.h>
 
 /* Execute PATH with all arguments after PATH until a NULL pointer,
    and the argument after that for environment.  */
 int
 execle (const char *path, const char *arg, ...)
 {
-#define INITIAL_ARGV_MAX 1024
-  size_t argv_max = INITIAL_ARGV_MAX;
-  const char *initial_argv[INITIAL_ARGV_MAX];
-  const char **argv = initial_argv;
-  va_list args;
-  argv[0] = arg;
-
-  va_start (args, arg);
-  unsigned int i = 0;
-  while (argv[i++] != NULL)
+  ptrdiff_t argc;
+  va_list ap;
+  va_start (ap, arg);
+  for (argc = 1; va_arg (ap, const char *); argc++)
     {
-      if (i == argv_max)
+      if (argc == INT_MAX)
 	{
-	  argv_max *= 2;
-	  const char **nptr = realloc (argv == initial_argv ? NULL : argv,
-				       argv_max * sizeof (const char *));
-	  if (nptr == NULL)
-	    {
-	      if (argv != initial_argv)
-		free (argv);
-	      va_end (args);
-	      return -1;
-	    }
-	  if (argv == initial_argv)
-	    /* We have to copy the already filled-in data ourselves.  */
-	    memcpy (nptr, argv, i * sizeof (const char *));
-
-	  argv = nptr;
+	  va_end (ap);
+	  errno = E2BIG;
+	  return -1;
 	}
-
-      argv[i] = va_arg (args, const char *);
     }
+  va_end (ap);
 
-  const char *const *envp = va_arg (args, const char *const *);
-  va_end (args);
+  /* Avoid dynamic memory allocation due two main issues:
+     1. The function should be async-signal-safe and a running on a signal
+        handler with a fail outcome might lead to malloc bad state.
+     2. It might be used in a vfork/clone(VFORK) scenario where using
+        malloc also might lead to internal bad state.  */
+  ptrdiff_t i;
+  char *argv[argc + 1];
+  char **envp;
+  va_start (ap, arg);
+  argv[0] = (char *) arg;
+  for (i = 1; i <= argc; i++)
+    argv[i] = va_arg (ap, char *);
+  envp = va_arg (ap, char **);
+  va_end (ap);
 
-  int ret = __execve (path, (char *const *) argv, (char *const *) envp);
-  if (argv != initial_argv)
-    free (argv);
-
-  return ret;
+  return __execve (path, argv, envp);
 }
 libc_hidden_def (execle)

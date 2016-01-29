@@ -17,11 +17,8 @@
 
 #include <unistd.h>
 #include <stdarg.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <stackinfo.h>
+#include <errno.h>
+#include <sys/param.h>
 
 /* Execute FILE, searching in the `PATH' environment variable if
    it contains no slashes, with all arguments after FILE until a
@@ -29,45 +26,32 @@
 int
 execlp (const char *file, const char *arg, ...)
 {
-#define INITIAL_ARGV_MAX 1024
-  size_t argv_max = INITIAL_ARGV_MAX;
-  const char *initial_argv[INITIAL_ARGV_MAX];
-  const char **argv = initial_argv;
-  va_list args;
-
-  argv[0] = arg;
-
-  va_start (args, arg);
-  unsigned int i = 0;
-  while (argv[i++] != NULL)
+  ptrdiff_t argc;
+  va_list ap;
+  va_start (ap, arg);
+  for (argc = 1; va_arg (ap, const char *); argc++)
     {
-      if (i == argv_max)
+      if (argc == INT_MAX)
 	{
-	  argv_max *= 2;
-	  const char **nptr = realloc (argv == initial_argv ? NULL : argv,
-				       argv_max * sizeof (const char *));
-	  if (nptr == NULL)
-	    {
-	      if (argv != initial_argv)
-		free (argv);
-	      va_end (args);
-	      return -1;
-	    }
-	  if (argv == initial_argv)
-	    /* We have to copy the already filled-in data ourselves.  */
-	    memcpy (nptr, argv, i * sizeof (const char *));
-
-	  argv = nptr;
+	  va_end (ap);
+	  errno = E2BIG;
+	  return -1;
 	}
-
-      argv[i] = va_arg (args, const char *);
     }
-  va_end (args);
+  va_end (ap);
 
-  int ret = execvp (file, (char *const *) argv);
-  if (argv != initial_argv)
-    free (argv);
+  /* Although posix does not state execlp as an async-safe function
+     it can not use malloc to allocate the arguments since it might
+     be used in a vfork scenario and it may lead to malloc internal
+     bad state.  */
+  ptrdiff_t i;
+  char *argv[argc + 1];
+  va_start (ap, arg);
+  argv[0] = (char *) arg;
+  for (i = 1; i <= argc; i++)
+    argv[i] = va_arg (ap, char *);
+  va_end (ap);
 
-  return ret;
+  return __execvpe (file, argv, __environ);
 }
 libc_hidden_def (execlp)

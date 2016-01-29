@@ -1,3 +1,10 @@
+2016-03-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #19534]
+	* posix/execl.c (execl): Remove dynamic memory allocation.
+	* posix/execle.c (execle): Likewise.
+	* posix/execlp.c (execlp): Likewise.
+
 2016-03-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/memcpy-avx512-no-vzeroupper.S:
