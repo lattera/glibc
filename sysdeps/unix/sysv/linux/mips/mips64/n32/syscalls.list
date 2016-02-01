@@ -1,5 +1,7 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
+mmap64		-	mmap		b:aniiii __mmap64	mmap64
+
 readahead	-	readahead	i:iii	__readahead	readahead
 sync_file_range	-	sync_file_range	Ci:iiii	sync_file_range
 

@@ -1,3 +1,17 @@
+2016-02-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19550]
+	* sysdeps/unix/sysv/linux/mips/mips32/mmap.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/mmap64.c: Move to ....
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/mmap64.c: ... here.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/mmap.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list (mmap64):
+	New syscall entry.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list (mmap):
+	New syscall entry.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (mmap): Remove
+	syscall entry.
+
 2016-01-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #18240]
