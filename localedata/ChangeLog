@@ -1,3 +1,20 @@
+2016-02-08  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/an_ES: Convert to UTF-8 encodings.
+	* locales/cs_CZ: Likewise.
+	* locales/gl_ES: Likewise.
+	* locales/gv_GB: Likewise.
+	* locales/ku_TR: Likewise.
+	* locales/kw_GB: Likewise.
+	* locales/sk_SK: Likewise.
+	* locales/so_DJ: Likewise.
+	* locales/so_ET: Likewise.
+	* locales/so_KE: Likewise.
+	* locales/so_SO: Likewise.
+	* locales/sv_SE: Likewise.
+	* locales/wo_SN: Likewise.
+	* locales/zh_HK: Likewise.
+
 2016-01-08  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #16495]

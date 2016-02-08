@@ -61,7 +61,7 @@ collating-symbol <ae>
 collating-symbol <oumlaut>
 collating-symbol <oslash>
 
-% æ is sorted after ä and å etc.
+% Ã¦ is sorted after Ã¤ and Ã¥ etc.
 reorder-after <REU>
 <LIG>
 
@@ -83,26 +83,26 @@ reorder-after <U0076>
 <U0077> <v>;<BAS>;<MIN>;<w> % w
 
 reorder-after <U00E3>
-<U00E4> <ae>;<REU>;<MIN>;IGNORE % ä
-<U00E5> <aring>;<RNE>;<MIN>;IGNORE % å
-<U00E6> <ae>;<LIG>;<MIN>;IGNORE % æ
+<U00E4> <ae>;<REU>;<MIN>;IGNORE % Ã¤
+<U00E5> <aring>;<RNE>;<MIN>;IGNORE % Ã¥
+<U00E6> <ae>;<LIG>;<MIN>;IGNORE % Ã¦
 reorder-after <U00F5>
-<U00F6> <oumlaut>;<REU>;<MIN>;IGNORE % ö
-<U00F8> <oslash>;<OBL>;<MIN>;IGNORE % ø
+<U00F6> <oumlaut>;<REU>;<MIN>;IGNORE % Ã¶
+<U00F8> <oslash>;<OBL>;<MIN>;IGNORE % Ã¸
 
 reorder-after <U00C3>
-<U00C4> <ae>;<REU>;<CAP>;IGNORE % Ä
-<U00C5> <aring>;<RNE>;<CAP>;IGNORE % Å
-<U00C6> <ae>;<LIG>;<CAP>;IGNORE % Æ
+<U00C4> <ae>;<REU>;<CAP>;IGNORE % Ã„
+<U00C5> <aring>;<RNE>;<CAP>;IGNORE % Ã…
+<U00C6> <ae>;<LIG>;<CAP>;IGNORE % Ã†
 reorder-after <U00D5>
-<U00D6> <oumlaut>;<REU>;<CAP>;IGNORE % Ö
-<U00D8> <oslash>;<OBL>;<CAP>;IGNORE % Ø
+<U00D6> <oumlaut>;<REU>;<CAP>;IGNORE % Ã–
+<U00D8> <oslash>;<OBL>;<CAP>;IGNORE % Ã˜
 
-% ü/Ü is treated like y/Y but is sorted after the latter
+% Ã¼/Ãœ is treated like y/Y but is sorted after the latter
 reorder-after <U00FB>
-<U00FC> <y>;<REU>;<MIN>;IGNORE % ü
+<U00FC> <y>;<REU>;<MIN>;IGNORE % Ã¼
 reorder-after <U00DB>
-<U00DC> <y>;<REU>;<CAP>;IGNORE % Ü
+<U00DC> <y>;<REU>;<CAP>;IGNORE % Ãœ
 reorder-end
 
 END LC_COLLATE

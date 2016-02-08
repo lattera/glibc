@@ -17,18 +17,18 @@ comment_char %
 % Charset: ISO-8859-2
 % Distribution and use is free, also for commercial purposes.
 
-% 1997-05-14: OdvodenÈ z cs_CZ locale VladimÌra Michla.
-%             Collate algoritmy prevzatÈ bezo zmien (norma bola rovnak·),
+% 1997-05-14: Odvoden√© z cs_CZ locale Vladim√≠ra Michla.
+%             Collate algoritmy prevzat√© bezo zmien (norma bola rovnak√°),
 %             vysvetlenie pozri cs_CZ
 
 % spracovanie:
 %%    localedef -i <tento-soubor> -f ISO-8859-2 sk_SK
 
-%% Do s˙boru /usr/share/locale/locale.alias je vhodnÈ dopÌsaª nasledovnÈ aliasy:
+%% Do s√∫boru /usr/share/locale/locale.alias je vhodn√© dop√≠sa≈• nasledovn√© aliasy:
 %% sk	  sk_SK.ISO-8859-2
 %% slovak sk_SK.ISO-8859-2
 
-% DefinÌcia typov znakov
+% Defin√≠cia typov znakov
 
 LC_IDENTIFICATION
 title      "Slovak locale for Slovak"
@@ -108,7 +108,7 @@ n_sign_posn		1
 
 END LC_MONETARY
 
-%% »Ìsla
+%% ƒå√≠sla
 %% --------------
 
 LC_NUMERIC
@@ -119,7 +119,7 @@ grouping		3;3
 
 END LC_NUMERIC
 
-%% »as
+%% ƒåas
 
 LC_TIME
 
@@ -153,7 +153,7 @@ mon		"<U006A><U0061><U006E><U0075><U00E1><U0072>";/
 		"<U006E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
 		"<U0064><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
 
-% Hm - m·me zauæÌvanÈ skratky pre mesiace ?
+% Hm - m√°me zau≈æ√≠van√© skratky pre mesiace ?
 
 abmon		"<U006A><U0061><U006E>";/
 		"<U0066><U0065><U0062>";/
@@ -189,7 +189,7 @@ first_workday	2
 END LC_TIME
 
 %% END OF LOCALIZATION FILE for sk_SK.ISO-8859-2
-%% Koniec lokalizaËnÈho s˙boru pre slovenskÈ prostredie
+%% Koniec lokalizaƒçn√©ho s√∫boru pre slovensk√© prostredie
 
 LC_PAPER
 % FIXME

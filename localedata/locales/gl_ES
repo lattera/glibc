@@ -3,7 +3,7 @@ escape_char  /
 %
 % Galician Language Locale for Spain
 % Source: GPUL
-% Address: Facultade de Inform·tica
+% Address: Facultade de Inform√°tica
 %          Campus de Elvin~a, s/n
 %          15071 A Corun~a, Spain
 % Contact: Jacobo Tarrio
@@ -22,7 +22,7 @@ escape_char  /
 LC_IDENTIFICATION
 title      "Galician locale for Spain"
 source     "GPUL"
-address    "Facultade de Inform·tica, Campus de Elvin~a, s/n, 15071 A Corun~a, Spain"
+address    "Facultade de Inform√°tica, Campus de Elvin~a, s/n, 15071 A Corun~a, Spain"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""

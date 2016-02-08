@@ -4,7 +4,7 @@ escape_char  /
 % Aragonese Language Locale for Spain
 % Source:
 % Address:
-% Contact: Jordi Mallach Pérez
+% Contact: Jordi Mallach PÃ©rez
 % Email: jordi@gnu.org
 % Language: an
 % Territory: ES
@@ -22,7 +22,7 @@ LC_IDENTIFICATION
 title      "Aragonese locale for Spain"
 source     ""
 address    ""
-contact    "Jordi Mallach Pérez"
+contact    "Jordi Mallach PÃ©rez"
 email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
@@ -136,6 +136,6 @@ country_ab3   "<U0045><U0053><U0050>"
 country_num   724
 % E
 country_car    "<U0045>"
-% aragonés
+% aragonÃ©s
 lang_name    "<U0061><U0072><U0061><U0067><U006F><U006E><U00E9><U0073>"
 END LC_ADDRESS

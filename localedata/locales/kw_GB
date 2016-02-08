@@ -7,7 +7,7 @@ comment_char  %
 
 % Cornish language locale for Britain
 % Source: Alastair McKinstry
-% Address: Croí Lár, Ballinahalla, Maigh Cuilinn,
+% Address: CroÃ­ LÃ¡r, Ballinahalla, Maigh Cuilinn,
 %    Co. Gaillimh, Ireland
 % Contact: Alastair McKinstry
 % Email: mckinstry@computer.org
@@ -24,7 +24,7 @@ comment_char  %
 LC_IDENTIFICATION
 title      "Cornish locale for Britain"
 source     "Alastair McKinstry"
-address    "Croí Lár, Ballinahalla, Maigh Cuilinn,, Co. Gaillimh, Ireland"
+address    "CroÃ­ LÃ¡r, Ballinahalla, Maigh Cuilinn,, Co. Gaillimh, Ireland"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""

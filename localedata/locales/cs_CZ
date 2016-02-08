@@ -3,8 +3,8 @@ comment_char %
 %
 % Czech Language Locale for Czech
 % Source:
-% Address: 	U ¹koly 292		Without diactitical chars:	U skoly 292
-%		783 72 Velkı Tınec					782 72 Velky Tynec
+% Address: 	U Å¡koly 292		Without diactitical chars:	U skoly 292
+%		783 72 VelkÃ½ TÃ½nec					782 72 Velky Tynec
 % Contact: Vladimir Michl
 % Email: Vladimir.Michl@upol.cz
 % Tel: +420/68/5391545
@@ -19,8 +19,8 @@ comment_char %
 % Distribution and use is free, also for commercial purposes.
 
 % !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-% Soubor cs_CZ je primárním souborem, cs_CZ@-ch je vytvoøen z nìj odebráním
-% definic ch a jeho øazení.
+% Soubor cs_CZ je primÃ¡rnÃ­m souborem, cs_CZ@-ch je vytvoÅ™en z nÄ›j odebrÃ¡nÃ­m
+% definic ch a jeho Å™azenÃ­.
 %
 % File cs_CZ is primary file. File cs_CZ@-ch is created from cs_CZ by script.
 % File cs_CZ@-ch is without definition of character Ch and its collation.
@@ -29,78 +29,78 @@ comment_char %
 %Changes:
 % 2000-06-28: Jakub Jelinek <jakub@redhat.com>
 %	Adapted to new glibc 2.2 style locale format
-% 1997-08-20: Michael Mráka <michael@fi.muni.cz>
-%	Zmìny zejména v sekci LC_TIME. (Changes especially in LC_TIME section.)
-% 1997-10-16: Michael Mráka <michael@fi.muni.cz>
-%	Zmìny v abecedním øazení (sekce LC_COLLATE).
+% 1997-08-20: Michael MrÃ¡ka <michael@fi.muni.cz>
+%	ZmÄ›ny zejmÃ©na v sekci LC_TIME. (Changes especially in LC_TIME section.)
+% 1997-10-16: Michael MrÃ¡ka <michael@fi.muni.cz>
+%	ZmÄ›ny v abecednÃ­m Å™azenÃ­ (sekce LC_COLLATE).
 %	(Alphabetical order changes (LC_LC_COLLATE section).)
-% xx: Doplnìno na unicode. Snaha o co nejvìt¹í soulad s ÈSN 97 6030
+% xx: DoplnÄ›no na unicode. Snaha o co nejvÄ›tÅ¡Ã­ soulad s ÄŒSN 97 6030
 %	Added Unicode. Czech collation acording to czech standard CSN 97 6030.
 % 1999-02-07: Vladimir Michl
 %	Changed abbreviations of months
 %	Changed collation of characters
 
-% Zdroje informací:
-%	ÈSN 97 6030
-%	Nádvorník a kol.: Pravidla jmeného katalogu (èl. 201 - 210)
+% Zdroje informacÃ­:
+%	ÄŒSN 97 6030
+%	NÃ¡dvornÃ­k a kol.: Pravidla jmenÃ©ho katalogu (Äl. 201 - 210)
 
-% Odli¹nosti od normy:
+% OdliÅ¡nosti od normy:
 % 3.1:
-% Porovnávané vırazy jsou porovnány celé, jako jeden celek. Pøi porovnávání
-% jsou vynechány v¹echny speciální znaky, které nejsou písmena, nebo èíslice
-% (kromì nerozdìlitelné mezery).
-% K tìmto znakùm se pøihlí¾í pouze pøi jinak zcela shodnıch vırazech.
-% V cs_CZ je spojení písmen c a h následujících po sobì je v¾dy pova¾ováno
-% jako písmeno ch.
-% V cs_CZ@-ch je spojení písmen c a h pova¾ováno jako dvì písmena c a h, tj.
-% písmeno ch je zaøazeno pod písmeno c.
+% PorovnÃ¡vanÃ© vÃ½razy jsou porovnÃ¡ny celÃ©, jako jeden celek. PÅ™i porovnÃ¡vÃ¡nÃ­
+% jsou vynechÃ¡ny vÅ¡echny speciÃ¡lnÃ­ znaky, kterÃ© nejsou pÃ­smena, nebo ÄÃ­slice
+% (kromÄ› nerozdÄ›litelnÃ© mezery).
+% K tÄ›mto znakÅ¯m se pÅ™ihlÃ­Å¾Ã­ pouze pÅ™i jinak zcela shodnÃ½ch vÃ½razech.
+% V cs_CZ je spojenÃ­ pÃ­smen c a h nÃ¡sledujÃ­cÃ­ch po sobÄ› je vÅ¾dy povaÅ¾ovÃ¡no
+% jako pÃ­smeno ch.
+% V cs_CZ@-ch je spojenÃ­ pÃ­smen c a h povaÅ¾ovÃ¡no jako dvÄ› pÃ­smena c a h, tj.
+% pÃ­smeno ch je zaÅ™azeno pod pÃ­smeno c.
 % 3.2:
-% Mezera se øadí pøed první písmeno abecedy, ale ka¾dı znak mezery je
-% uva¾ován samostatnì. Toto pravidlo je uplatnìno na hesla, která jsou si
-% jinak rovna (v prvních tøech prùchodech).
+% Mezera se Å™adÃ­ pÅ™ed prvnÃ­ pÃ­smeno abecedy, ale kaÅ¾dÃ½ znak mezery je
+% uvaÅ¾ovÃ¡n samostatnÄ›. Toto pravidlo je uplatnÄ›no na hesla, kterÃ¡ jsou si
+% jinak rovna (v prvnÃ­ch tÅ™ech prÅ¯chodech).
 % 3.6:
-% Není dodr¾en celı.
+% NenÃ­ dodrÅ¾en celÃ½.
 % 3.7:
-% Pokud jsou hesla stejná pøi primárním øazení (podle std. èes. abecedy)
-% a zároveò stejná i pøi sekundárním øazení (porovnávání diakritickıch
-% znamének), pak mají velká písmena pøednost pøed malımi.
+% Pokud jsou hesla stejnÃ¡ pÅ™i primÃ¡rnÃ­m Å™azenÃ­ (podle std. Äes. abecedy)
+% a zÃ¡roveÅˆ stejnÃ¡ i pÅ™i sekundÃ¡rnÃ­m Å™azenÃ­ (porovnÃ¡vÃ¡nÃ­ diakritickÃ½ch
+% znamÃ©nek), pak majÃ­ velkÃ¡ pÃ­smena pÅ™ednost pÅ™ed malÃ½mi.
 % 3.8:
-% Tento bod je dodr¾en pouze pro nìkolik písmen (nìmecké ostré Beta (ss))
-% Zde pøedpokládám splnìní podmínek bodu 3.9 (tj. pøi vìt¹ím vıskytu
-% písmen z cicích abeced je povoleno je nerozepisovat a øadit a¾ za lat.
-% abecedu a èíslice)
+% Tento bod je dodrÅ¾en pouze pro nÄ›kolik pÃ­smen (nÄ›meckÃ© ostrÃ© Beta (ss))
+% Zde pÅ™edpoklÃ¡dÃ¡m splnÄ›nÃ­ podmÃ­nek bodu 3.9 (tj. pÅ™i vÄ›tÅ¡Ã­m vÃ½skytu
+% pÃ­smen z cicÃ­ch abeced je povoleno je nerozepisovat a Å™adit aÅ¾ za lat.
+% abecedu a ÄÃ­slice)
 % 3.10:
-% Èísla nejsou øazena podle èíselné hodnoty, ale podle hodnoty jednotlivıch
-% èíslic.
+% ÄŒÃ­sla nejsou Å™azena podle ÄÃ­selnÃ© hodnoty, ale podle hodnoty jednotlivÃ½ch
+% ÄÃ­slic.
 % 3.12:
-% Pokud jsou hesla shodná v prvních tøech prùchodech, pak jsou srovnána tak
-% jak jsou, i s nepísmenımi a neèíselnımi znaèkami. Algoritmus jakım je
-% seøazen pøíklad uvedenı v normì mi není zcela jasnı a podle mì odporuje
-% døíve popsanım pravidlùm øazení.
-% Pøíklad seøazení:
-%   Dle normy			Dle mé definice
+% Pokud jsou hesla shodnÃ¡ v prvnÃ­ch tÅ™ech prÅ¯chodech, pak jsou srovnÃ¡na tak
+% jak jsou, i s nepÃ­smenÃ½mi a neÄÃ­selnÃ½mi znaÄkami. Algoritmus jakÃ½m je
+% seÅ™azen pÅ™Ã­klad uvedenÃ½ v normÄ› mi nenÃ­ zcela jasnÃ½ a podle mÄ› odporuje
+% dÅ™Ã­ve popsanÃ½m pravidlÅ¯m Å™azenÃ­.
+% PÅ™Ã­klad seÅ™azenÃ­:
+%   Dle normy			Dle mÃ© definice
 %	a				a
 %	a-				a-
-%	a-b				á
-%	a-b-				â
+%	a-b				Ã¡
+%	a-b-				Ã¢
 %	a-c				a-b
-%	á				a-b-
-%	â				a-c
+%	Ã¡				a-b-
+%	Ã¢				a-c
 % 3.13:
-% Tento bod jsem se sna¾il dodr¾et, bohu¾el seøadit znaménka je dost nároèné.
+% Tento bod jsem se snaÅ¾il dodrÅ¾et, bohuÅ¾el seÅ™adit znamÃ©nka je dost nÃ¡roÄnÃ©.
 
-% zpracování (compilation):
+% zpracovÃ¡nÃ­ (compilation):
 %%    localedef -i cs_CZ -f "ISO-8859-2" 'cs_CZ.ISO-8859-2'
 % or
 %%    localedef -i cs_CZ@-ch -f "ISO-8859-2" 'cs_CZ.ISO-8859-2'
 
-%% pro úspì¹né pøelo¾ení je tøeba mít kolekci národních prostøedí WG15collection
-%% nebo nainstalovánu knihovnu glibc-2.* s lokalizaèními soubory.
-%% Tyto soubory musí bıt v adresáøi /usr/share/i18n/locales a
+%% pro ÃºspÄ›Å¡nÃ© pÅ™eloÅ¾enÃ­ je tÅ™eba mÃ­t kolekci nÃ¡rodnÃ­ch prostÅ™edÃ­ WG15collection
+%% nebo nainstalovÃ¡nu knihovnu glibc-2.* s lokalizaÄnÃ­mi soubory.
+%% Tyto soubory musÃ­ bÃ½t v adresÃ¡Å™i /usr/share/i18n/locales a
 %% /usr/share/i18n/charmaps.
-%% Definice národních prostøedí se pak budou tvoøit v adresáøi /usr/share/locale
+%% Definice nÃ¡rodnÃ­ch prostÅ™edÃ­ se pak budou tvoÅ™it v adresÃ¡Å™i /usr/share/locale
 
-%% V souboru /usr/share/locale/locale.alias je tøeba mít øádek
+%% V souboru /usr/share/locale/locale.alias je tÅ™eba mÃ­t Å™Ã¡dek
 %% czech cs_CZ.ISO88592
 
 LC_IDENTIFICATION
@@ -130,7 +130,7 @@ category  "cs_CZ:2000";LC_TELEPHONE
 category  "cs_CZ:2000";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
-%% Poøadí znakù
+%% PoÅ™adÃ­ znakÅ¯
 %% ----------------------------------------------------------
 
 LC_COLLATE
@@ -286,7 +286,7 @@ collating-symbol <KATAKANA>
 collating-symbol <SPECIAL>
 
 
-% Definice písmene ch
+% Definice pÃ­smene ch
 
 collating-element <c-h> from "<U0063><U0068>"
 collating-element <C-h> from "<U0043><U0068>"
@@ -306,28 +306,28 @@ order_start forward;forward;forward;forward
 <CAPITAL-SMALL>
 
 % Accents:
-% Poøadí akcentù: nahoøe, dole, vzadu, vpøedu, uvnitø nebo pøes písmeno
-% pokud toto nerozhodne zále¾í na poètu a tvaru
+% PoÅ™adÃ­ akcentÅ¯: nahoÅ™e, dole, vzadu, vpÅ™edu, uvnitÅ™ nebo pÅ™es pÃ­smeno
+% pokud toto nerozhodne zÃ¡leÅ¾Ã­ na poÄtu a tvaru
 
 <NONE>
-% nahoøe
-<DOT>		% Teèka
-<MACRON>	% Vodorovná èárka nahoøe
-<ACUTE>		% Èárka ' (napø: á)
-<GRAVE>		% Zpìtná èárka `
-<CIRCUMFLEX>	% Støí¹ka ^ (napø: â)
-<CARON>		% Háèek
+% nahoÅ™e
+<DOT>		% TeÄka
+<MACRON>	% VodorovnÃ¡ ÄÃ¡rka nahoÅ™e
+<ACUTE>		% ÄŒÃ¡rka ' (napÅ™: Ã¡)
+<GRAVE>		% ZpÄ›tnÃ¡ ÄÃ¡rka `
+<CIRCUMFLEX>	% StÅ™Ã­Å¡ka ^ (napÅ™: Ã¢)
+<CARON>		% HÃ¡Äek
 <TILDE>		% Tilda (~)
-<BREVE>		% Dolní pùlkrou¾ek (vypadá jako sjednocení)
-<INVERTED-BREVE>% Horní pùlkrou¾ek (vypadá jako prùnik)
-<RING>		% Krou¾ek
-<HOOK>		% netu¹ím jaké diakritické znaménko to je, pøedpokládám je nahoøe
-<HORN>		% netu¹ím jaké diakritické znaménko to je, pøedpokládám je nahoøe
+<BREVE>		% DolnÃ­ pÅ¯lkrouÅ¾ek (vypadÃ¡ jako sjednocenÃ­)
+<INVERTED-BREVE>% HornÃ­ pÅ¯lkrouÅ¾ek (vypadÃ¡ jako prÅ¯nik)
+<RING>		% KrouÅ¾ek
+<HOOK>		% netuÅ¡Ã­m jakÃ© diakritickÃ© znamÃ©nko to je, pÅ™edpoklÃ¡dÃ¡m je nahoÅ™e
+<HORN>		% netuÅ¡Ã­m jakÃ© diakritickÃ© znamÃ©nko to je, pÅ™edpoklÃ¡dÃ¡m je nahoÅ™e
 
-<DIAERESIS>	% Dvì teèky
+<DIAERESIS>	% DvÄ› teÄky
 <ACUTE+DOT>
-<DOUBLE-ACUTE>	% Dvì èárky
-<DOUBLE-GRAVE>	% Dvì zpìtné èárky
+<DOUBLE-ACUTE>	% DvÄ› ÄÃ¡rky
+<DOUBLE-GRAVE>	% DvÄ› zpÄ›tnÃ© ÄÃ¡rky
 <TILDE+ACUTE>
 <BREVE+MACRON>
 <BREVE+ACUTE>
@@ -356,9 +356,9 @@ order_start forward;forward;forward;forward
 <TILDE+DIAERESIS>
 <CARON+DIAERESIS>
 
-% nahoøe a dole
-<DOT+DOT-BELOW>		% Zde si nejsem jist jak je to mínìno, zda obì pod
-<MACRON+DOT-BELOW>	% nebo pouze to druhé
+% nahoÅ™e a dole
+<DOT+DOT-BELOW>		% Zde si nejsem jist jak je to mÃ­nÄ›no, zda obÄ› pod
+<MACRON+DOT-BELOW>	% nebo pouze to druhÃ©
 <BREVE+DOT-BELOW>
 <CIRCUMFLEX+DOT-BELOW>
 <CEDILLA+ACUTE>
@@ -367,7 +367,7 @@ order_start forward;forward;forward;forward
 <OGONEK+MACRON>
 <HORN+DOT-BELOW>
 <MACRON+DIAERESIS-BELOW>
-% nahoøe a uprostøed
+% nahoÅ™e a uprostÅ™ed
 <STROKE+ACUTE>
 
 % dole
@@ -375,14 +375,14 @@ order_start forward;forward;forward;forward
 <LINE-BELOW>
 <TILDE-BELOW>
 <BREVE-BELOW>
-<CEDILLA>	% Zobáèek pod písmenem vypadá skoro jako s (º)
-<OGONEK>	% Zobáèek pod písmenem obrácenı k pøedchozímu (jako c)(ê)
+<CEDILLA>	% ZobÃ¡Äek pod pÃ­smenem vypadÃ¡ skoro jako s (ÅŸ)
+<OGONEK>	% ZobÃ¡Äek pod pÃ­smenem obrÃ¡cenÃ½ k pÅ™edchozÃ­mu (jako c)(Ä™)
 <RING-BELOW>
 % za
-% pøed
+% pÅ™ed
 <PRECEDED-BY-APOSTROPHE>
-% uprostøed
-<STROKE>	% ©krtnutí písmene v prostøedku (polské ³)
+% uprostÅ™ed
+<STROKE>	% Å krtnutÃ­ pÃ­smene v prostÅ™edku (polskÃ© Å‚)
 
 <GREEK>
 <TONOS>
@@ -404,7 +404,7 @@ order_start forward;forward;forward;forward
 <U200A>	IGNORE;IGNORE;IGNORE;<U200A>
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Zde jsou v¹echna latinská písmena s diakritikou
+% Zde jsou vÅ¡echna latinskÃ¡ pÃ­smena s diakritikou
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 <U0041>	<U0041>;<NONE>;<CAPITAL>;<U0041>
@@ -1042,7 +1042,7 @@ order_start forward;forward;forward;forward
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Èíslice
+% ÄŒÃ­slice
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 <U0030>	<U0030>;<U0030>;IGNORE;<U0030>
@@ -1074,8 +1074,8 @@ order_start forward;forward;forward;forward
 <U2079>	<U0039>;<U2079>;IGNORE;<U0039>
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% V¹echny speciální znaky (sna¾il jsem se to seøadit podle normy, ale moc se
-% mi nedaøilo)
+% VÅ¡echny speciÃ¡lnÃ­ znaky (snaÅ¾il jsem se to seÅ™adit podle normy, ale moc se
+% mi nedaÅ™ilo)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 <U0009>	IGNORE;IGNORE;IGNORE;<U0009>
@@ -1084,7 +1084,7 @@ order_start forward;forward;forward;forward
 <U000A>	IGNORE;IGNORE;IGNORE;<U000A>
 <U000C>	IGNORE;IGNORE;IGNORE;<U000C>
 
-% znaménka
+% znamÃ©nka
 <U002E>	IGNORE;IGNORE;IGNORE;<U002E>
 <U002C>	IGNORE;IGNORE;IGNORE;<U002C>
 <U003B>	IGNORE;IGNORE;IGNORE;<U003B>
@@ -1131,7 +1131,7 @@ order_start forward;forward;forward;forward
 <U007B>	IGNORE;IGNORE;IGNORE;<U007B>
 <U007D>	IGNORE;IGNORE;IGNORE;<U007D>
 
-% ustálené znaèky
+% ustÃ¡lenÃ© znaÄky
 <U0026>	IGNORE;IGNORE;IGNORE;<U0026>
 <U00A3>	IGNORE;IGNORE;IGNORE;<U00A3>
 <U00A7>	IGNORE;IGNORE;IGNORE;<U00A7>
@@ -1155,7 +1155,7 @@ order_start forward;forward;forward;forward
 <U2126>	IGNORE;IGNORE;IGNORE;<U2126>
 <U212B>	IGNORE;IGNORE;IGNORE;<U212B>
 
-% grafické znaèky a obrazce lineární
+% grafickÃ© znaÄky a obrazce lineÃ¡rnÃ­
 <U005F>	IGNORE;IGNORE;IGNORE;<U005F>
 <U003D>	IGNORE;IGNORE;IGNORE;<U003D>
 <U005E>  IGNORE;IGNORE;IGNORE;<U005E>
@@ -1187,19 +1187,19 @@ order_start forward;forward;forward;forward
 <U2245>	IGNORE;IGNORE;IGNORE;<U2245>
 <U2248>	IGNORE;IGNORE;IGNORE;<U2248>
 
-% grafické znaèky a obrazce plo¹né
+% grafickÃ© znaÄky a obrazce ploÅ¡nÃ©
 <U00B0>	IGNORE;IGNORE;IGNORE;<U00B0>
 <U2103>	IGNORE;IGNORE;IGNORE;<U2103>
 <U2109>	IGNORE;IGNORE;IGNORE;<U2109>
 <U00A4>	IGNORE;IGNORE;IGNORE;<U00A4>
 
-% Akcenty, nevím kam je zaøadit (nìkteré jsou brány jako uvozovky)
+% Akcenty, nevÃ­m kam je zaÅ™adit (nÄ›kterÃ© jsou brÃ¡ny jako uvozovky)
 <U02D9>	IGNORE;IGNORE;IGNORE;<U02D9>
 <U00AF>	IGNORE;IGNORE;IGNORE;<U203E>
 <U203E>	IGNORE;IGNORE;IGNORE;<U203E>
 <U00B4>	IGNORE;IGNORE;IGNORE;<U00B4>
-%<U0060>	IGNORE;IGNORE;IGNORE;<U0060> % pøemístìn do uvozovek
-%<U005E> IGNORE;IGNORE;IGNORE;<U005E> % pøemístìn do obrazcù lineárních
+%<U0060>	IGNORE;IGNORE;IGNORE;<U0060> % pÅ™emÃ­stÄ›n do uvozovek
+%<U005E> IGNORE;IGNORE;IGNORE;<U005E> % pÅ™emÃ­stÄ›n do obrazcÅ¯ lineÃ¡rnÃ­ch
 <U02C7>	IGNORE;IGNORE;IGNORE;<U02C7>
 % tilda
 <U02D8>	IGNORE;IGNORE;IGNORE;<U02D8>
@@ -1210,7 +1210,7 @@ order_start forward;forward;forward;forward
 <U02DD>	IGNORE;IGNORE;IGNORE;<U02DD>
 <U00B7>	IGNORE;IGNORE;IGNORE;<U00B7>
 
-% Neseøazeno
+% NeseÅ™azeno
 <U0374>	IGNORE;IGNORE;IGNORE;<U0374>
 <U0375>	IGNORE;IGNORE;IGNORE;<U0375>
 <U037A>	IGNORE;IGNORE;IGNORE;<U037A>
@@ -1729,7 +1729,7 @@ order_start forward;forward;forward;forward
 UNDEFINED	IGNORE;IGNORE;IGNORE;IGNORE
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Zbytek vìcí z unikodu
+% Zbytek vÄ›cÃ­ z unikodu
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 <U0391>	<U0391>;<CAPITAL>;<GREEK>;<U0391>
@@ -2298,7 +2298,7 @@ order_end
 
 END LC_COLLATE
 
-% Definice typù znakù
+% Definice typÅ¯ znakÅ¯
 
 LC_CTYPE
 copy "i18n"
@@ -2321,7 +2321,7 @@ nostr		"<U006E><U0065>"
 
 END LC_MESSAGES
 
-%% LC_MONETARY -- jde jen o peníze
+%% LC_MONETARY -- jde jen o penÃ­ze
 %% -------------------------------------------------
 
 LC_MONETARY
@@ -2344,7 +2344,7 @@ n_sign_posn		1
 
 END LC_MONETARY
 
-%% O èíslech
+%% O ÄÃ­slech
 %% --------------
 
 LC_NUMERIC
@@ -2355,7 +2355,7 @@ grouping		3;3
 
 END LC_NUMERIC
 
-%% Èas
+%% ÄŒas
 
 LC_TIME
 
@@ -2388,8 +2388,8 @@ mon		"<U006C><U0065><U0064><U0065><U006E>";/
 		"<U006C><U0069><U0073><U0074><U006F><U0070><U0061><U0064>";/
 		"<U0070><U0072><U006F><U0073><U0069><U006E><U0065><U0063>"
 
-% Obávám se, ¾e èe¹tina ¾ádné zkratky pro mìsíce nezná :-)
-% Zkratky vytvoøené podle pravidel zkracování, docela neobvyklé
+% ObÃ¡vÃ¡m se, Å¾e ÄeÅ¡tina Å¾Ã¡dnÃ© zkratky pro mÄ›sÃ­ce neznÃ¡ :-)
+% Zkratky vytvoÅ™enÃ© podle pravidel zkracovÃ¡nÃ­, docela neobvyklÃ©
 %abmon		"<U006C><U0065><U006E>";/
 %		"<U00FA><U006F><U0072>";/
 %		"<U0062><U0065><U006E>";/
@@ -2403,10 +2403,10 @@ mon		"<U006C><U0065><U0064><U0065><U006E>";/
 %		"<U006C><U0061><U0064>";/
 %		"<U0070><U0065><U0063>"
 
-% Asi trochu srozumitelnìj¹í. Algoritmus je jednoduchı.
-% v¾dy první tøi písmena z názvu mìsíce. Vıjimka èerven a èervenec, kdy
-% se vezmou první dvì písmena a poslední (nebo také první písmeno
-% a dvì koncová).
+% Asi trochu srozumitelnÄ›jÅ¡Ã­. Algoritmus je jednoduchÃ½.
+% vÅ¾dy prvnÃ­ tÅ™i pÃ­smena z nÃ¡zvu mÄ›sÃ­ce. VÃ½jimka Äerven a Äervenec, kdy
+% se vezmou prvnÃ­ dvÄ› pÃ­smena a poslednÃ­ (nebo takÃ© prvnÃ­ pÃ­smeno
+% a dvÄ› koncovÃ¡).
 abmon		"<U006C><U0065><U0064>";/
 		"<U00FA><U006E><U006F>";/
 		"<U0062><U0159><U0065>";/
@@ -2420,10 +2420,10 @@ abmon		"<U006C><U0065><U0064>";/
 		"<U006C><U0069><U0073>";/
 		"<U0070><U0072><U006F>"
 
-% Zde jsou zkratky doporuèené poradnou Ústavu pro Jazyk Èeskı.
-% Ano, vidíte správnì, jsou to anglické zkratky. Myslím si, ¾e nejsou
-% a¾ tak za¾ité, aby se pou¾ívaly. Pokud èlovìk nezná celé názvy mìsícù,
-% tì¾ko tyto zkratky odvozuje.
+% Zde jsou zkratky doporuÄenÃ© poradnou Ãšstavu pro Jazyk ÄŒeskÃ½.
+% Ano, vidÃ­te sprÃ¡vnÄ›, jsou to anglickÃ© zkratky. MyslÃ­m si, Å¾e nejsou
+% aÅ¾ tak zaÅ¾itÃ©, aby se pouÅ¾Ã­valy. Pokud ÄlovÄ›k neznÃ¡ celÃ© nÃ¡zvy mÄ›sÃ­cÅ¯,
+% tÄ›Å¾ko tyto zkratky odvozuje.
 %abmon		"<U004A><U0061><U006E>";/
 %		"<U0046><U0065><U0062>";/
 %		"<U004D><U0061><U0072>";/
@@ -2504,4 +2504,4 @@ lang_lib      "<U0063><U007A><U0065>"
 END LC_ADDRESS
 
 %% END OF LOCALIZATION FILE for cs_CZ.ISO-8859-2
-%% Konec lokalizaèního souboru pro èeské prostøedí
+%% Konec lokalizaÄnÃ­ho souboru pro ÄeskÃ© prostÅ™edÃ­
