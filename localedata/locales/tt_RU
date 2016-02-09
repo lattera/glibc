@@ -320,6 +320,7 @@ END LC_NAME
 LC_ADDRESS
 % FIXME
 postal_fmt "???"
+country_num 643
 % RUS
 country_car    "<U0052><U0055><U0053>"
 % tt

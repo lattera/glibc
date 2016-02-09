@@ -1,5 +1,37 @@
 2016-04-15  Mike Frysinger  <vapier@gentoo.org>
 
+	* locales/as_IN (country_num): Define.
+	* locales/ber_DZ (country_num): Add leading 0 prefix.
+	* locales/ca_AD (country_num): Likewise.
+	* locales/dv_MV (country_num): Define.
+	* locales/dz_BT (country_num): Change to an integer.
+	(country_ab3): Change to BTN.
+	* locales/en_AG (country_num): Add leading 0 prefix.
+	* locales/en_PH (country_num): Change to 608.
+	(country_ab2): Change to PH.
+	(country_ab3): Change to PHL.
+	* locales/hy_AM (country_num): Add leading 0 prefix.
+	* locales/kk_KZ (country_num): Define.
+	* locales/km_KH (country_num): Change to 116.
+	(country_ab2): Change to KH.
+	(country_ab3): Change to KHM.
+	* locales/ky_KG (country_num): Change to 417.
+	(country_ab2): Change to KG.
+	(country_ab3): Change to KGZ.
+	* locales/li_BE (country_num): Add leading 0 prefix.
+	* locales/my_MM (country_num): Define.
+	* locales/rw_RW (country_num): Define.
+	* locales/tr_CY (country_num): Change to 196.
+	(country_ab2): Change to CY.
+	(country_ab3): Change to CYP.
+	* locales/tt_RU (country_num): Define.
+	* locales/wa_BE (country_num): Add leading 0 prefix.
+	* locales/wo_SN (country_num): Change to 686.
+	(country_ab2): Change to SN.
+	(country_ab3): Change to SEN.
+
+2016-04-15  Mike Frysinger  <vapier@gentoo.org>
+
 	* locales/aa_DJ (LC_PAPER): Replace content with a copy directive.
 	* locales/ak_GH: Likewise.
 	* locales/ar_AE: Likewise.

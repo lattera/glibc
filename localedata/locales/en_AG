@@ -92,7 +92,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U004E><U0025><U0063><U0025><U004E>"
 country_ab2   "<U0041><U0047>"
 country_ab3   "<U0041><U0054><U0047>"
-country_num   28
+country_num 028
 % English
 lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
 % en

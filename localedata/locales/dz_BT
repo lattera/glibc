@@ -661,9 +661,9 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_name "<U0F60><U0F56><U0FB2><U0F74><U0F42><U0F0D>"
 %FIXME
 %country_post  ""
-country_ab2   "<U0042><U0054>"
-country_ab3   "<U0042><U0048><U0055>"
-%country_num   "<U0042><U0048><U0055>"
+country_ab2 "<U0042><U0054>"
+country_ab3 "<U0042><U0054><U004E>"
+country_num 064
 %FIXME
 %country_isbn  ""
 % རྫོང་ཁ

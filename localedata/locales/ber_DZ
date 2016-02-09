@@ -291,7 +291,7 @@ postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 %country_post ""
 country_ab2 "<U0044><U005A>"
 country_ab3 "<U0044><U005A><U0041>"
-country_num 12
+country_num 012
 %country_isbn ""
 % DZ
 country_car  "<U0044><U005A>"
