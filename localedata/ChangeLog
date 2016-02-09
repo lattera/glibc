@@ -1,3 +1,24 @@
+2016-02-19  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/ar_SS: Set int_prefix based on public data in CLDR.
+	* locales/bn_BD: Likewise.
+	* locales/dz_BT: Likewise.
+	* locales/en_HK: Likewise.
+	* locales/en_PH: Likewise.
+	* locales/en_SG: Likewise.
+	* locales/es_DO: Likewise.
+	* locales/es_PA: Likewise.
+	* locales/es_PR: Likewise.
+	* locales/km_KH: Likewise.
+	* locales/mt_MT: Likewise.
+	* locales/ne_NP: Likewise.
+	* locales/pap_AW: Likewise.
+	* locales/the_NP: Likewise.
+	* locales/tk_TM: Likewise.
+	* locales/uz_UZ: Likewise.
+	* locales/uz_UZ@cyrillic: Likewise.
+	* locales/zh_SG: Likewise.
+
 2016-02-19  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19581]
