@@ -219,8 +219,5 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% This is the ISO_IEC TR14652 Locale definition for the
-%
-measurement 1
-
+copy "ne_NP"
 END LC_MEASUREMENT

@@ -195,6 +195,5 @@ lang_lib	"<U0063><U0068><U0069>"
 END LC_ADDRESS
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT

@@ -163,8 +163,7 @@ copy "ur_PK"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "ur_PK"
 END LC_MEASUREMENT
 
 LC_NAME

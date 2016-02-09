@@ -76,8 +76,7 @@ copy "fr_BE"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "fr_BE"
 END LC_MEASUREMENT
 
 LC_NAME

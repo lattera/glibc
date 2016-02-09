@@ -159,8 +159,7 @@ copy "ru_RU"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "ru_RU"
 END LC_MEASUREMENT
 
 LC_NAME

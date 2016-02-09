@@ -77,8 +77,7 @@ END LC_CTYPE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "om_KE"
 END LC_MEASUREMENT
 
 LC_MONETARY

@@ -163,8 +163,7 @@ width       210
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "tt_RU"
 END LC_MEASUREMENT
 
 LC_ADDRESS

@@ -110,8 +110,7 @@ nostr   "<U004E><U006F>"
 END LC_MESSAGES
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "fr_FR"
 END LC_MEASUREMENT
 
 LC_PAPER

@@ -152,8 +152,7 @@ nostr       "<U09A8><U09BE>"
 END LC_MESSAGES
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 % Default paper: A4

@@ -103,8 +103,7 @@ copy "fr_BE"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "fr_BE"
 END LC_MEASUREMENT
 
 % COMINTAIRE: doet esse li minme ki po fr_BE.

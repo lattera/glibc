@@ -280,9 +280,7 @@ END LC_MESSAGES
 
 
 LC_MEASUREMENT
-% http://en.wikipedia.org/wiki/Burmese_units_of_measurement
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 % Default paper: A4

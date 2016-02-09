@@ -294,8 +294,7 @@ END LC_TELEPHONE
 
 % Romania uses the metric system
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 

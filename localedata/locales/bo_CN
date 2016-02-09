@@ -146,8 +146,7 @@ copy "zh_CN"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "zh_CN"
 END LC_MEASUREMENT
 
 LC_NAME

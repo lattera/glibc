@@ -222,6 +222,5 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "tl_PH"
 END LC_MEASUREMENT

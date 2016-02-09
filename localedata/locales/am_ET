@@ -1409,8 +1409,7 @@ END LC_CTYPE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "ti_ET"
 END LC_MEASUREMENT
 
 

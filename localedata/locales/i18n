@@ -2508,7 +2508,6 @@ END LC_TELEPHONE
 
 LC_MEASUREMENT
 % This is the ISO/IEC 14652 "i18n" definition for
-% the LC_MEASUREMENT category.
-%
-measurement    1
+% the LC_MEASUREMENT category.  It indicates metric.
+measurement 1
 END LC_MEASUREMENT

@@ -143,8 +143,7 @@ grouping                  0;0
 END LC_NUMERIC
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "en_DK"
 END LC_MEASUREMENT
 
 % Default paper: A4

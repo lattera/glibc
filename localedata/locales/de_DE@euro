@@ -83,6 +83,5 @@ copy "de_DE"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "de_DE"
 END LC_MEASUREMENT

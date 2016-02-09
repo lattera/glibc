@@ -212,6 +212,5 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "sd_IN"
 END LC_MEASUREMENT

@@ -161,8 +161,7 @@ int_prefix     "<U0033><U0038><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME

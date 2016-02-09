@@ -121,8 +121,7 @@ END LC_CTYPE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "gez_ER"
 END LC_MEASUREMENT
 
 LC_MONETARY

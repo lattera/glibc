@@ -162,6 +162,5 @@ copy "be_BY"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "be_BY"
 END LC_MEASUREMENT

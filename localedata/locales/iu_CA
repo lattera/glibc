@@ -140,6 +140,5 @@ copy "en_CA"
 END LC_NAME
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "en_CA"
 END LC_MEASUREMENT

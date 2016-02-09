@@ -163,8 +163,7 @@ int_select     "<U0038><U007E><U0031><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME

@@ -66,8 +66,7 @@ copy "bem_ZM"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "bem_ZM"
 END LC_MEASUREMENT
 
 LC_MESSAGES

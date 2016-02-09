@@ -153,8 +153,7 @@ noexpr   "<U005E><U005B><U0030><U006E><U004E><U0061><U0041><U10D0><U005D><U002E>
 END LC_MESSAGES
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 % Default paper: A4

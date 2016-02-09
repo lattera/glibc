@@ -172,6 +172,5 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "zh_HK"
 END LC_MEASUREMENT

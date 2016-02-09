@@ -186,6 +186,5 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "nb_NO"
 END LC_MEASUREMENT

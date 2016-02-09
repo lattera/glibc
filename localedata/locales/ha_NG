@@ -232,8 +232,7 @@ copy "en_NG"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "en_NG"
 END LC_MEASUREMENT
 
 LC_NAME
