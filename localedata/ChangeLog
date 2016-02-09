@@ -1,3 +1,8 @@
+2016-02-19  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/dz_BT: Delete leading whitespace.
+	* locales/ps_AF: Likewise.
+
 2016-02-18  Mike Frysinger  <vapier@gentoo.org>
 
 	* locales/aa_DJ: Delete trailing whitespace & comments.
