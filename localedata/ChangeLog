@@ -1,3 +1,39 @@
+2016-02-18  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/aa_DJ: Delete trailing whitespace & comments.
+	* locales/aa_ER: Likewise.
+	* locales/aa_ER@saaho: Likewise.
+	* locales/aa_ET: Likewise.
+	* locales/am_ET: Likewise.
+	* locales/ber_DZ: Likewise.
+	* locales/byn_ER: Likewise.
+	* locales/cs_CZ: Likewise.
+	* locales/fil_PH: Likewise.
+	* locales/gez_ER: Likewise.
+	* locales/gez_ER@abegede: Likewise.
+	* locales/gez_ET: Likewise.
+	* locales/gez_ET@abegede: Likewise.
+	* locales/ha_NG: Likewise.
+	* locales/ig_NG: Likewise.
+	* locales/ik_CA: Likewise.
+	* locales/iu_CA: Likewise.
+	* locales/nso_ZA: Likewise.
+	* locales/om_ET: Likewise.
+	* locales/om_KE: Likewise.
+	* locales/ps_AF: Likewise.
+	* locales/ro_RO: Likewise.
+	* locales/sid_ET: Likewise.
+	* locales/so_DJ: Likewise.
+	* locales/so_ET: Likewise.
+	* locales/so_KE: Likewise.
+	* locales/so_SO: Likewise.
+	* locales/ti_ER: Likewise.
+	* locales/ti_ET: Likewise.
+	* locales/tig_ER: Likewise.
+	* locales/wal_ET: Likewise.
+	* locales/wo_SN: Likewise.
+	* locales/yo_NG: Likewise.
+
 2016-02-08  Mike Frysinger  <vapier@gentoo.org>
 
 	* locales/an_ES: Convert to UTF-8 encodings.

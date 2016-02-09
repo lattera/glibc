@@ -278,5 +278,3 @@ LC_TELEPHONE
 	int_select	"<U0030><U0030>"
 	int_prefix	"<U0039><U0033>"
 END LC_TELEPHONE
-
-%%%%%%%%%%%%%%%%%%%% locale definition file "ps_AF" ends %%%%%%%%%%%%%%%%%%%%%

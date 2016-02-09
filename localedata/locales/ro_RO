@@ -388,4 +388,3 @@ lang_term "<U0072><U006F><U006E>"
 % set the bibliographic code to "rum" as defined in iso639-2
 lang_lib "<U0072><U0075><U006D>"
 END LC_ADDRESS
-
