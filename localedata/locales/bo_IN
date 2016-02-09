@@ -90,7 +90,7 @@ LC_ADDRESS
 
 % %z%c%T%s%b%e%r
 postal_fmt "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073><U0025><U0062><U0025><U0065><U0025><U0072>"
-country_name "<U0F62><U0F92><U0FB1><U0F0B><U0F42><U0F62>"
+country_name "<U0F62><U0F92><U0FB1><U0F0B><U0F42><U0F62><U0F0B>"
 country_ab2 "<U0049><U004E>"
 country_ab3 "<U0049><U004E><U0044>"
 country_num 356

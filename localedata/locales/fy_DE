@@ -56,7 +56,7 @@ country_ab3   "<U0044><U0045><U0055>"
 country_car   "<U0044>"
 country_num 276
 country_isbn "3"
-% FIXME country_name in Low Saxon ?
+country_name "<U0044><U00FA><U0074><U0073><U006C><U00E2><U006E>"
 % Frysk
 lang_name    "<U0046><U0072><U0079><U0073><U006B>"
 % fy

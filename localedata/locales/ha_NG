@@ -273,8 +273,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
 
-% Country name in Hausa - "Nigeria"
-country_name  "<U004E><U0069><U0067><U0065><U0072><U0069><U0061>"
+country_name "<U004E><U0061><U006A><U0065><U0072><U0069><U0079><U0061>"
 
 % Language name in Hausa - "Hausa"
 lang_name     "<U0048><U0061><U0075><U0073><U0061>"

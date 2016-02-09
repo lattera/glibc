@@ -209,8 +209,7 @@ name_ms     "<U0046><U0072><U00F6><U0069><U0077>"
 END LC_NAME
 
 LC_ADDRESS
-country_name "<U0053><U0077><U0069><U0074><U007A><U0065><U0072><U006C>/
-<U0061><U006E><U0064>"
+country_name "<U0053><U0063><U0068><U0077><U0069><U007A>"
 % Country name "Switzerland"
 %
 country_post "<U0044><U0048>"

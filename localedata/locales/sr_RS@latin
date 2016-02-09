@@ -158,8 +158,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_ab2   "<U0052><U0053>"
 country_ab3   "<U0053><U0052><U0042>"
 country_post  "<U0053><U0052><U0042>"
-country_name  "<U0053><U0072><U0062><U0069><U006A><U0061><U0020><U0069>/
-<U0020><U0043><U0072><U006E><U0061><U0020><U0047><U006F><U0072><U0061>"
+country_name "<U0053><U0072><U0062><U0069><U006A><U0061>"
 country_num   688
 country_car   "<U0053><U0052><U0042>"
 country_isbn  "<U0038><U0036>"

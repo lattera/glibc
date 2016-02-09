@@ -293,6 +293,7 @@ END LC_MEASUREMENT
 LC_ADDRESS
 % FIXME
 postal_fmt "???"
+country_name "<U0041><U007A><U0259><U0072><U0062><U0061><U0079><U0063><U0061><U006E>"
 country_ab2 "<U0041><U005A>"
 country_ab3 "<U0041><U005A><U0045>"
 country_num 031
