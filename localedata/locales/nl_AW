@@ -77,7 +77,7 @@ copy "nl_NL"
 END LC_MESSAGES
 
 LC_PAPER
-copy "en_US"
+copy "nl_NL"
 END LC_PAPER
 
 LC_NAME

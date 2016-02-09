@@ -1,3 +1,8 @@
+2016-04-09  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/en_AG (LC_PAPER): Copy en_GB instead.
+	* locales/nl_AW (LC_PAPER): Copy nl_NL instead.
+
 2016-04-08  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #16137]
