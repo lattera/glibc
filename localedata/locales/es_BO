@@ -65,7 +65,7 @@ END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol      "<U0042><U004F><U0042><U0020>"
-currency_symbol      "<U0024><U0062>"
+currency_symbol      "<U0042><U0073>"
 mon_decimal_point    "<U002C>"
 mon_thousands_sep    "<U002E>"
 mon_grouping         3;3

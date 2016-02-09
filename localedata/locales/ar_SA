@@ -272,7 +272,7 @@ END LC_COLLATE
 
 LC_MONETARY
 int_curr_symbol	"<U0053><U0041><U0052><U0020>"
-currency_symbol	"<U0631><U064A><U0627><U0644>"
+currency_symbol	"<U0631><U002E><U0633>"
 mon_decimal_point	"<U002E>"
 mon_thousands_sep	""
 mon_grouping	-1

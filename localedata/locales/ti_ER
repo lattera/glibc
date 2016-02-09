@@ -82,7 +82,7 @@ END LC_MEASUREMENT
 LC_MONETARY
 %
 int_curr_symbol       "<U0045><U0052><U004E><U0020>"
-currency_symbol       "<U0024>"
+currency_symbol       "<U004E><U0066><U006B>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U002C>"
 mon_grouping          3;3

@@ -138,6 +138,7 @@ DEFINE_INT_CURR("SHP")		/* St. Helena Pound  */
 DEFINE_INT_CURR("SLL")		/* Sierra Leone Leone  */
 DEFINE_INT_CURR("SOS")		/* Somalia Schilling  */
 DEFINE_INT_CURR("SRD")		/* Suriname Dollar  */
+DEFINE_INT_CURR("SSP")		/* South Sudanese Pound  */
 DEFINE_INT_CURR("STD")		/* Sao Tome and Principe Dobra  */
 DEFINE_INT_CURR("SVC")		/* El Salvador Colon  */
 DEFINE_INT_CURR("SYP")		/* Syrian Arab Republic Pound  */
@@ -167,5 +168,5 @@ DEFINE_INT_CURR("XOF")		/* West African Franc (Benin, Ivory Coast, Niger, Senega
 DEFINE_INT_CURR("XPF")		/* French polynesia, New Caledonia, Wallis and Futuna Islands  */
 DEFINE_INT_CURR("YER")		/* Yemeni Rial  */
 DEFINE_INT_CURR("ZAR")		/* South Africa Rand (Lesotho, Namibia)  */
-DEFINE_INT_CURR("ZMK")		/* Zambian Kwacha  */
+DEFINE_INT_CURR("ZMW")		/* Zambian Kwacha  */
 DEFINE_INT_CURR("ZWD")		/* Zimbabwe Dollar  */

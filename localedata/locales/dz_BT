@@ -519,8 +519,8 @@ END LC_COLLATE
 
 LC_MONETARY
 
-int_curr_symbol         "<U0042><U0054><U004E> "
-currency_symbol    "<U0F51><U0F44><U0F74><U0F63><U0F0B><U0F40><U0FB2><U0F58><U0F0B>"
+int_curr_symbol         "<U0042><U0054><U004E><U0020>"
+currency_symbol    "<U004E><U0075><U002E>"
 mon_decimal_point       "<U002E>"
 mon_thousands_sep       "<U002C>"
 mon_grouping            3;2;

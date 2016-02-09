@@ -60,7 +60,7 @@ LC_MONETARY
 % This is the POSIX Locale definition the LC_MONETARY category
 %
 int_curr_symbol       "<U004C><U004B><U0052><U0020>"
-currency_symbol       "<U20A8>"
+currency_symbol       "<U0DBB><U0DD4>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U002C>"
 mon_grouping          3

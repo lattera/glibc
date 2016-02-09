@@ -1,5 +1,63 @@
 2016-04-15  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #16374]
+	[BZ #18896]
+	* locales/aa_DJ (int_curr_symbol, currency_symbol): Update values to
+	match CLDRv29.
+	* locales/ar_SA: Likewise.
+	* locales/ar_SS: Likewise.
+	* locales/az_AZ: Likewise.
+	* locales/bem_ZM: Likewise.
+	* locales/bg_BG: Likewise.
+	* locales/ce_RU: Likewise.
+	* locales/crh_UA: Likewise.
+	* locales/cv_RU: Likewise.
+	* locales/de_CH: Likewise.
+	* locales/dz_BT: Likewise.
+	* locales/en_BW: Likewise.
+	* locales/en_DK: Likewise.
+	* locales/en_PH: Likewise.
+	* locales/en_ZW: Likewise.
+	* locales/es_BO: Likewise.
+	* locales/es_DO: Likewise.
+	* locales/es_HN: Likewise.
+	* locales/es_PA: Likewise.
+	* locales/es_SV: Likewise.
+	* locales/fil_PH: Likewise.
+	* locales/he_IL: Likewise.
+	* locales/hy_AM: Likewise.
+	* locales/ka_GE: Likewise.
+	* locales/kk_KZ: Likewise.
+	* locales/ko_KR: Likewise.
+	* locales/lg_UG: Likewise.
+	* locales/lv_LV: Likewise.
+	* locales/mg_MG: Likewise.
+	* locales/mhr_RU: Likewise.
+	* locales/my_MM: Likewise.
+	* locales/ne_NP: Likewise.
+	* locales/os_RU: Likewise.
+	* locales/pap_AW: Likewise.
+	* locales/pap_CW: Likewise.
+	* locales/ps_AF: Likewise.
+	* locales/ru_RU: Likewise.
+	* locales/ru_UA: Likewise.
+	* locales/rw_RW: Likewise.
+	* locales/sd_IN@devanagari: Likewise.
+	* locales/se_NO: Likewise.
+	* locales/si_LK: Likewise.
+	* locales/so_SO: Likewise.
+	* locales/sq_AL: Likewise.
+	* locales/the_NP: Likewise.
+	* locales/ti_ER: Likewise.
+	* locales/ti_ET: Likewise.
+	* locales/tl_PH: Likewise.
+	* locales/tr_TR: Likewise.
+	* locales/tt_RU: Likewise.
+	* locales/tt_RU@iqtelif: Likewise.
+	* locales/uz_UZ: Likewise.
+
+2016-04-15  Mike Frysinger  <vapier@gentoo.org>
+
 	* locale/programs/ld-identification.c (identification_finish): Check
 	that the values in identification->category are only known.
 

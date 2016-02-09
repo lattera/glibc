@@ -212,7 +212,7 @@ END LC_NUMERIC
 
 LC_MONETARY
 int_curr_symbol	"<U0041><U0046><U004E><U0020>"
-currency_symbol	"<U0627><U0641><U063A><U0627><U0646><U06CD>"
+currency_symbol	"<U060B>"
 mon_decimal_point	"<U066B>"
 mon_thousands_sep	"<U066C>"
 mon_grouping	3

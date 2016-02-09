@@ -123,7 +123,7 @@ LC_MONETARY
 int_curr_symbol           "<U0052><U0055><U0042><U0020>"
 
 % "t." - short for tenke(, Chuvash name for rouble
-currency_symbol "<U0074>"
+currency_symbol "<U20BD>"
 
 mon_decimal_point         "<U002E>"
 mon_thousands_sep         "<U00A0>"

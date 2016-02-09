@@ -88,7 +88,7 @@ END LC_MEASUREMENT
 LC_MONETARY
 %
 int_curr_symbol       "<U0044><U004A><U0046><U0020>"
-currency_symbol       "<U0024>"
+currency_symbol       "<U0046><U0064><U006A>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U0020>"
 mon_grouping          3;3

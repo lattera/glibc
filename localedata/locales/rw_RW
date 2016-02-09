@@ -56,7 +56,7 @@ END LC_COLLATE
 
 LC_MONETARY
 int_curr_symbol           "<U0052><U0057><U0046><U0020>"
-currency_symbol           "<U0046><U0072><U0077>"
+currency_symbol           "<U0046><U0052><U0077>"
 mon_decimal_point         "<U002C>"
 mon_thousands_sep         "<U002E>"
 mon_grouping              3;3

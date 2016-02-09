@@ -73,7 +73,7 @@ int_curr_symbol     "<U004D><U004D><U004B><U0020>"
 % Kyat in Burmese - it would be better to use this if Myanmar digits are used
 % currency_symbol         "<U1000><U103B><U1015><U103A>"
 % Ks
-currency_symbol "<U004B><U0073>"
+currency_symbol "<U004B>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U002C>"
 mon_grouping          3;3

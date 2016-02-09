@@ -120,8 +120,8 @@ END LC_NUMERIC
 LC_MONETARY
 % K
 currency_symbol  "<U004B>"
-% ZMK
-int_curr_symbol  "<U005A><U004D><U004B><U0020>"
+% ZMW
+int_curr_symbol  "<U005A><U004D><U0057><U0020>"
 % .
 mon_decimal_point  "<U002E>"
 % ,

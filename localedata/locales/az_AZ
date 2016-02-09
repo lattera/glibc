@@ -213,7 +213,7 @@ END LC_MESSAGES
 LC_MONETARY
 % AZN
 int_curr_symbol           "<U0041><U005A><U004E><U0020>"
-currency_symbol           "<U006D><U0061><U006E><U002E>"
+currency_symbol           "<U20BC>"
 mon_decimal_point         "<U002E>"
 mon_thousands_sep         "<U0020>"
 mon_grouping              3;3

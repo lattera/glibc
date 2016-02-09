@@ -71,7 +71,7 @@ LC_MONETARY
 int_curr_symbol         "<U0055><U0047><U0058><U0020>"
 % International currency symbol "UGX"
 %
-currency_symbol         "<U002F><U002D>"
+currency_symbol         "<U0055><U0053><U0068>"
 % Local currency symbol "/-"
 %
 mon_decimal_point       "<U002E>"
