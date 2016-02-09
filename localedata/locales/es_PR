@@ -126,8 +126,8 @@ int_prefix     "<U0031>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% US customary units
-measurement    2
+% metric
+measurement 1
 END LC_MEASUREMENT
 
 LC_NAME

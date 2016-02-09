@@ -1,4 +1,8 @@
-2016-02-19  Mike Frysinger  <vapier@gentoo.org>
+2016-02-29  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/es_PR (LC_MEASUREMENT): Change measurement to 1.
+
+2016-02-29  Mike Frysinger  <vapier@gentoo.org>
 
 	* locales/an_ES (lang_ab): Define.
 
