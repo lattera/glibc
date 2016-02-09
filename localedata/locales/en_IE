@@ -125,10 +125,7 @@ copy   "en_GB"
 END LC_MESSAGES
 
 LC_PAPER
-% FIXME
-height   297
-% FIXME
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE

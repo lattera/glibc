@@ -160,7 +160,6 @@ copy "bn_BD"
 END LC_MESSAGES
 
 
-% Default paper: A4
 LC_PAPER
 copy "hi_IN"
 END LC_PAPER

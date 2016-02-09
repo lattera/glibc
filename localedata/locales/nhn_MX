@@ -126,8 +126,7 @@ t_fmt_ampm ""
 END LC_TIME
 
 LC_PAPER
-height   279
-width    216
+copy "es_MX"
 END LC_PAPER
 
 LC_TELEPHONE

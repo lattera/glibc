@@ -176,8 +176,7 @@ END LC_MESSAGES
 %Draft Finished: 17:00 09/07/2000
 
 LC_PAPER
-height      297
-width       210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT

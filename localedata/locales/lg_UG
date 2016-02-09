@@ -221,10 +221,7 @@ noexpr      "<U005E><U005B><U006E><U004E><U005D>"
 END LC_MESSAGES
 
 LC_PAPER
-height   297
-width    210
-% Default paper size - A4
-%
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE

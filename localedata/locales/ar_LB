@@ -174,11 +174,7 @@ END LC_MESSAGES
 
 
 LC_PAPER
-% This is the ISO_IEC TR14652 Locale definition for the
-% LC_PAPER category
-height      297
-width       210
-
+copy "i18n"
 END LC_PAPER
 
 

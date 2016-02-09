@@ -301,10 +301,8 @@ yesstr  "<U0059><U0065><U0073>"
 nostr   "<U004E><U006F>"
 END LC_MESSAGES
 
-% Default paper: A4
 LC_PAPER
-height 297
-width  210
+copy "zh_CN"
 END LC_PAPER
 
 LC_MEASUREMENT

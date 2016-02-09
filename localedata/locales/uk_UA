@@ -991,9 +991,7 @@ END LC_TIME
 
 
 LC_PAPER
-% Default paper: A4
-height   297 % in millimeters
-width    210 % in millimeters
+copy "i18n"
 END LC_PAPER
 
 

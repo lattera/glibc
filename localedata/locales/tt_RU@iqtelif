@@ -158,8 +158,7 @@ t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>/
 END LC_TIME
 
 LC_PAPER
-height      297
-width       210
+copy "tt_RU"
 END LC_PAPER
 
 LC_MEASUREMENT

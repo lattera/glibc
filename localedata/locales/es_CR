@@ -124,8 +124,7 @@ first_workday 2
 END LC_TIME
 
 LC_PAPER
-height   279
-width    216
+copy "en_US"
 END LC_PAPER
 
 LC_TELEPHONE

@@ -167,8 +167,7 @@ lang_lib "<U006d><U0061><U0063>"
 END LC_ADDRESS
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT

@@ -222,8 +222,7 @@ nostr    "<U0045><U0069>"
 END LC_MESSAGES
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE

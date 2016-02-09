@@ -278,10 +278,8 @@ first_workday 2
 END LC_TIME
 
 
-% Romania uses A4 paper format
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 
@@ -292,7 +290,6 @@ int_prefix     "<U0034><U0030>"
 END LC_TELEPHONE
 
 
-% Romania uses the metric system
 LC_MEASUREMENT
 copy "i18n"
 END LC_MEASUREMENT

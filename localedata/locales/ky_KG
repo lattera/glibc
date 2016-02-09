@@ -184,8 +184,7 @@ date_fmt       "<U0025><U0061><U002C><U0020><U0025><U0065><U002D><U0025><U0062><
 END LC_TIME
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE

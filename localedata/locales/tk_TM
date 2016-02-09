@@ -412,9 +412,7 @@ noexpr  "<U005E><U005B><U00FD><U00DD>/
 END LC_MESSAGES
 
 LC_PAPER
-% A4 Paper
-height 297
-width  210
+copy "i18n"
 END LC_PAPER
 
 LC_NAME

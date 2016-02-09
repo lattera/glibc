@@ -237,8 +237,7 @@ t_fmt_ampm ""
 END LC_TIME
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE

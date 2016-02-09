@@ -145,9 +145,7 @@ noexpr  "<U005E><U005B><U006E><U004E><U4E0D><U5426><U005D>"
 END LC_MESSAGES
 
 LC_PAPER
-% I assume A4, FIXME
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE

@@ -74,7 +74,7 @@ copy "tr_TR"
 END LC_TIME
 
 LC_PAPER
-copy "tr_TR"
+copy "el_CY"
 END LC_PAPER
 
 LC_TELEPHONE

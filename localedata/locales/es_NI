@@ -118,10 +118,7 @@ am_pm	"<U0041><U004D>";"<U0050><U004D>"
 END LC_TIME
 
 LC_PAPER
-% FIXME
-height   279
-% FIXME
-width    216
+copy "en_US"
 END LC_PAPER
 
 LC_TELEPHONE

@@ -138,8 +138,7 @@ n_sign_posn     1
 END LC_MONETARY
 
 LC_PAPER
-height  297
-width   210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT

@@ -6214,10 +6214,7 @@ nostr   "<UC544><UB2C8><UC624>"
 END LC_MESSAGES
 
 LC_PAPER
-% FIXME
-height   297
-% FIXME
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE

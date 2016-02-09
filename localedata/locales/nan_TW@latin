@@ -161,8 +161,7 @@ nostr "<U004D><U0304><U002D><U0053><U012B>"
 END LC_MESSAGES
 
 LC_PAPER
-height      297
-width       210
+copy "nan_TW"
 END LC_PAPER
 
 LC_MEASUREMENT

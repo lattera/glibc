@@ -148,8 +148,7 @@ copy "en_US"
 END LC_MESSAGES
 
 LC_PAPER
-height   279
-width    216
+copy "en_US"
 END LC_PAPER
 
 LC_MEASUREMENT

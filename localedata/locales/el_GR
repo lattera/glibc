@@ -149,10 +149,7 @@ first_weekday 2
 END LC_TIME
 
 LC_PAPER
-% FIXME
-height   297
-% FIXME
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE

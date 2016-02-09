@@ -156,10 +156,8 @@ LC_MEASUREMENT
 copy "i18n"
 END LC_MEASUREMENT
 
-% Default paper: A4
 LC_PAPER
-height 297
-width 210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE

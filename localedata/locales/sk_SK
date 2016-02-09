@@ -194,10 +194,7 @@ END LC_TIME
 %% Koniec lokalizačného súboru pre slovenské prostredie
 
 LC_PAPER
-% FIXME
-height   297
-% FIXME
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE

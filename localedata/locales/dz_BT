@@ -634,8 +634,7 @@ int_prefix     "<U0039><U0037><U0035>"
 END LC_TELEPHONE
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT
