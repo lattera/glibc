@@ -1,3 +1,28 @@
+2016-03-05  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/af_ZA (LC_IDENTIFICATION): Set tel & fax to "".
+	* locales/en_ZA: Likewise.
+	* locales/fa_IR: Likewise.
+	* locales/gd_GB: Likewise.
+	* locales/mhr_RU: Likewise.
+	* locales/ne_NP: Likewise.
+	* locales/niu_NU: Likewise.
+	* locales/niu_NZ: Likewise.
+	* locales/nr_ZA: Likewise.
+	* locales/nso_ZA: Likewise.
+	* locales/oc_FR: Likewise.
+	* locales/ps_AF: Likewise.
+	* locales/rw_RW: Likewise.
+	* locales/ss_ZA: Likewise.
+	* locales/st_ZA: Likewise.
+	* locales/ta_LK: Likewise.
+	* locales/the_NP: Likewise.
+	* locales/tn_ZA: Likewise.
+	* locales/ts_ZA: Likewise.
+	* locales/ve_ZA: Likewise.
+	* locales/xh_ZA: Likewise.
+	* locales/zu_ZA: Likewise.
+
 2016-02-29  Mike Frysinger  <vapier@gentoo.org>
 
 	* locales/es_PR (LC_MEASUREMENT): Change measurement to 1.
