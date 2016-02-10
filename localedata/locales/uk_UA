@@ -53,10 +53,10 @@ tel        ""
 fax        ""
 
 % Code of language, to which this document applies.
-language   "uk"
+language   "Ukrainian"
 
 % Code of country/geographic extent (ISO 3166), to which this document applies.
-territory  "UA"
+territory  "Ukraine"
 
 % Intended user audience.
 audience   "general"

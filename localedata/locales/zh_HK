@@ -21,7 +21,7 @@ email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
 language   "Chinese"
-territory  "Hong Kong"
+territory  "Hong Kong SAR China"
 revision   "1.0"
 date       "2000-07-20"
 %

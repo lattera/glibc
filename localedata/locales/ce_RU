@@ -16,7 +16,7 @@ title      "Chechen locale for RUSSIAN FEDERATION"
 source       "ANCHR"
 address      "364024, ChR, Grozny, pr-kt of M. Esambayev, 13"
 language  "Chechen"
-territory "RUSSIAN FEDERATION"
+territory "Russia"
 revision  "1.0"
 date      "2014-08-25"
 %
