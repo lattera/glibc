@@ -112,6 +112,7 @@ CFLAGS-strfmon_l.c = $(libio-mtsafe)
 
 CFLAGS-tst-bsearch.c = $(stack-align-test-flags)
 CFLAGS-tst-qsort.c = $(stack-align-test-flags)
+CFLAGS-tst-makecontext.c += -funwind-tables
 CFLAGS-tst-makecontext2.c = $(stack-align-test-flags)
 
 # Run a test on the header files we use.
