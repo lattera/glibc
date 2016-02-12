@@ -1,5 +1,9 @@
 2016-02-19  Mark Wielaard  <mjw@redhat.com>
 
+	* elf/elf.h: Add NT_ARM_SYSTEM_CALL.
+
+2016-02-19  Mark Wielaard  <mjw@redhat.com>
+
 	* elf/elf.h (R_386_GOT32X): New.
 	(R_386_NUM): Update.
 	(R_X86_64_GOTPCRELX: New.
