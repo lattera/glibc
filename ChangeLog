@@ -1,3 +1,7 @@
+2016-02-12  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/bug18240.c (do_test): Set RLIMIT_AS.
+
 2016-02-11  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	[BZ #19529]

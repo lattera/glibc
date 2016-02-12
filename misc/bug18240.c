@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/resource.h>
 
 static void
 test_size (size_t size)
@@ -58,6 +59,27 @@ test_size (size_t size)
 static int
 do_test (void)
 {
+  /* Limit the size of the process, so that memory allocation will
+     fail without impacting the entire system.  */
+  {
+    struct rlimit limit;
+    if (getrlimit (RLIMIT_AS, &limit) != 0)
+      {
+        printf ("getrlimit (RLIMIT_AS) failed: %m\n");
+        return 1;
+      }
+    long target = 100 * 1024 * 1024;
+    if (limit.rlim_cur == RLIM_INFINITY || limit.rlim_cur > target)
+      {
+        limit.rlim_cur = target;
+        if (setrlimit (RLIMIT_AS, &limit) != 0)
+          {
+            printf ("setrlimit (RLIMIT_AS) failed: %m\n");
+            return 1;
+          }
+      }
+  }
+
   test_size (500);
   test_size (-1);
   test_size (-3);
