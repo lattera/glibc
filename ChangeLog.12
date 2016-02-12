@@ -9884,7 +9884,7 @@
 
 	* manual/startup.texi (Program Arguments): Fix type of main's envp
 	parameter.
-	Reported by RaÃºl NÃºÃ±ez de Arenas Coronado <dervishd@linuxfreak.com>.
+	Reported by Raúl Núñez de Arenas Coronado <dervishd@linuxfreak.com>.
 
 	* iconvdata/gconv-modules: Add CP950 alias.
 

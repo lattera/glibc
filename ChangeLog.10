@@ -1482,7 +1482,7 @@
 
 	* manual/getopt.texi (Using the getopt function): Fix description of
 	return value for format string starting with '-' (PR libc/1551).
-	Patch by RaÃºl NÃºÃ±ez de Arenas Coronado <dervishd@jazzfree.com>
+	Patch by Raúl Núñez de Arenas Coronado <dervishd@jazzfree.com>
 
 	* sunrpc/clnt_perr.c (rpc_errlist): Fix index for RPC_PROGVERSMISMATCH.
 	Patch by jens.moeller@westgeo.com (PR libc/1550).
@@ -7316,7 +7316,7 @@
 
 1999-07-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* localedata/tst-rpmatch.sh: Use "&" instead of "Â§" to avoid a bug
+	* localedata/tst-rpmatch.sh: Use "&" instead of "§" to avoid a bug
 	in bash 2.03.
 
 1999-07-25  Ulrich Drepper  <drepper@cygnus.com>
