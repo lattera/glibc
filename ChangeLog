@@ -1,3 +1,16 @@
+2016-02-14  Jakub Jelinek  <jakub@redhat.com>
+	    Jonathan Wakely  <jwakely@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ 19439]
+	* math/Makefile (tests): Add test-math-isinff.
+	(CFLAGS-test-math-isinff.cc): Use -std=gnu++11.
+	* math/bits/mathcalls.h [__USE_MISC]: Use
+	'|| __MATH_DECLARING_DOUBLE == 0' to relax definition of
+	functions not in C++11 and which don't conflict e.g. isinff,
+	isinfl etc.
+	* math/test-math-isinff.cc: New file.
+
 2016-02-12  Florian Weimer  <fweimer@redhat.com>
 
 	* misc/bug18240.c (do_test): Set RLIMIT_AS.
@@ -38,7 +51,7 @@
 	* misc/Makefile (tests): Add it.
 
 2016-01-28  Steve Ellcey  <sellcey@imgtec.com>
-            Joseph Myers  <joseph@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/memcpy.S (MEMCPY_NAME) [USE_DOUBLE]: Avoid word
 	load in branch delay slot when less than a word of input left.

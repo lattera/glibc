@@ -114,6 +114,7 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-nearbyint-except-2 test-signgam-uchar test-signgam-uchar-init \
 	test-signgam-uint test-signgam-uint-init test-signgam-ullong \
 	test-signgam-ullong-init test-nan-overflow test-nan-payload \
+	test-math-isinff \
 	$(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
@@ -219,6 +220,8 @@ CFLAGS-test-signgam-ullong.c = -std=c99
 CFLAGS-test-signgam-ullong-init.c = -std=c99
 CFLAGS-test-signgam-ullong-static.c = -std=c99
 CFLAGS-test-signgam-ullong-init-static.c = -std=c99
+
+CFLAGS-test-math-isinff.cc = -std=gnu++11
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
 # for error handling in the -lm functions.
