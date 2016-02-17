@@ -1,4 +1,19 @@
-2016-02-14  Carlos O'Donelll  <carlos@redhat.com>
+2016-02-15  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18665]
+	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): Always set
+	*herrno_p.
+	(gaih_getanswer): Document functional behviour. Return tryagain
+	if any result is tryagain.
+	* resolv/res_query.c (__libc_res_nsearch): Set buffer size to zero
+	when freed.
+	* resolv/res_send.c: Add copyright text.
+	(__libc_res_nsend): Document that MAXPACKET is expected.
+	(send_vc): Document. Remove buffer reuse.
+	(send_dg): Document. Remove buffer reuse. Set *thisanssizp to set the
+	size of the buffer. Add Dprint for truncated UDP buffer.
+
+2016-02-14  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/install.texi: Latest tested is GCC 5.3, texinfo 6.0, gawk
 	4.1.3, and sed 4.2.2. Remove po2test.sed comments.

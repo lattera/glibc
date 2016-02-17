@@ -396,6 +396,7 @@ __libc_res_nsearch(res_state statp,
 		  {
 		    free (*answerp2);
 		    *answerp2 = NULL;
+		    *nanswerp2 = 0;
 		    *answerp2_malloced = 0;
 		  }
 	}
@@ -447,6 +448,7 @@ __libc_res_nsearch(res_state statp,
 			  {
 			    free (*answerp2);
 			    *answerp2 = NULL;
+			    *nanswerp2 = 0;
 			    *answerp2_malloced = 0;
 			  }
 
@@ -521,6 +523,7 @@ __libc_res_nsearch(res_state statp,
 	  {
 	    free (*answerp2);
 	    *answerp2 = NULL;
+	    *nanswerp2 = 0;
 	    *answerp2_malloced = 0;
 	  }
 	if (saved_herrno != -1)

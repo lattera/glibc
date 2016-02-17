@@ -1031,7 +1031,10 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
   int h_namelen = 0;
 
   if (ancount == 0)
-    return NSS_STATUS_NOTFOUND;
+    {
+      *h_errnop = HOST_NOT_FOUND;
+      return NSS_STATUS_NOTFOUND;
+    }
 
   while (ancount-- > 0 && cp < end_of_message && had_error == 0)
     {
@@ -1208,7 +1211,14 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
   /* Special case here: if the resolver sent a result but it only
      contains a CNAME while we are looking for a T_A or T_AAAA record,
      we fail with NOTFOUND instead of TRYAGAIN.  */
-  return canon == NULL ? NSS_STATUS_TRYAGAIN : NSS_STATUS_NOTFOUND;
+  if (canon != NULL)
+    {
+      *h_errnop = HOST_NOT_FOUND;
+      return NSS_STATUS_NOTFOUND;
+    }
+
+  *h_errnop = NETDB_INTERNAL;
+  return NSS_STATUS_TRYAGAIN;
 }
 
 
@@ -1222,11 +1232,101 @@ gaih_getanswer (const querybuf *answer1, int anslen1, const querybuf *answer2,
 
   enum nss_status status = NSS_STATUS_NOTFOUND;
 
+  /* Combining the NSS status of two distinct queries requires some
+     compromise and attention to symmetry (A or AAAA queries can be
+     returned in any order).  What follows is a breakdown of how this
+     code is expected to work and why. We discuss only SUCCESS,
+     TRYAGAIN, NOTFOUND and UNAVAIL, since they are the only returns
+     that apply (though RETURN and MERGE exist).  We make a distinction
+     between TRYAGAIN (recoverable) and TRYAGAIN' (not-recoverable).
+     A recoverable TRYAGAIN is almost always due to buffer size issues
+     and returns ERANGE in errno and the caller is expected to retry
+     with a larger buffer.
+
+     Lastly, you may be tempted to make significant changes to the
+     conditions in this code to bring about symmetry between responses.
+     Please don't change anything without due consideration for
+     expected application behaviour.  Some of the synthesized responses
+     aren't very well thought out and sometimes appear to imply that
+     IPv4 responses are always answer 1, and IPv6 responses are always
+     answer 2, but that's not true (see the implementation of send_dg
+     and send_vc to see response can arrive in any order, particularly
+     for UDP). However, we expect it holds roughly enough of the time
+     that this code works, but certainly needs to be fixed to make this
+     a more robust implementation.
+
+     ----------------------------------------------
+     | Answer 1 Status /   | Synthesized | Reason |
+     | Answer 2 Status     | Status      |        |
+     |--------------------------------------------|
+     | SUCCESS/SUCCESS     | SUCCESS     | [1]    |
+     | SUCCESS/TRYAGAIN    | TRYAGAIN    | [5]    |
+     | SUCCESS/TRYAGAIN'   | SUCCESS     | [1]    |
+     | SUCCESS/NOTFOUND    | SUCCESS     | [1]    |
+     | SUCCESS/UNAVAIL     | SUCCESS     | [1]    |
+     | TRYAGAIN/SUCCESS    | TRYAGAIN    | [2]    |
+     | TRYAGAIN/TRYAGAIN   | TRYAGAIN    | [2]    |
+     | TRYAGAIN/TRYAGAIN'  | TRYAGAIN    | [2]    |
+     | TRYAGAIN/NOTFOUND   | TRYAGAIN    | [2]    |
+     | TRYAGAIN/UNAVAIL    | TRYAGAIN    | [2]    |
+     | TRYAGAIN'/SUCCESS   | SUCCESS     | [3]    |
+     | TRYAGAIN'/TRYAGAIN  | TRYAGAIN    | [3]    |
+     | TRYAGAIN'/TRYAGAIN' | TRYAGAIN'   | [3]    |
+     | TRYAGAIN'/NOTFOUND  | TRYAGAIN'   | [3]    |
+     | TRYAGAIN'/UNAVAIL   | UNAVAIL     | [3]    |
+     | NOTFOUND/SUCCESS    | SUCCESS     | [3]    |
+     | NOTFOUND/TRYAGAIN   | TRYAGAIN    | [3]    |
+     | NOTFOUND/TRYAGAIN'  | TRYAGAIN'   | [3]    |
+     | NOTFOUND/NOTFOUND   | NOTFOUND    | [3]    |
+     | NOTFOUND/UNAVAIL    | UNAVAIL     | [3]    |
+     | UNAVAIL/SUCCESS     | UNAVAIL     | [4]    |
+     | UNAVAIL/TRYAGAIN    | UNAVAIL     | [4]    |
+     | UNAVAIL/TRYAGAIN'   | UNAVAIL     | [4]    |
+     | UNAVAIL/NOTFOUND    | UNAVAIL     | [4]    |
+     | UNAVAIL/UNAVAIL     | UNAVAIL     | [4]    |
+     ----------------------------------------------
+
+     [1] If the first response is a success we return success.
+	 This ignores the state of the second answer and in fact
+	 incorrectly sets errno and h_errno to that of the second
+	 answer.  However because the response is a success we ignore
+	 *errnop and *h_errnop (though that means you touched errno on
+	 success).  We are being conservative here and returning the
+	 likely IPv4 response in the first answer as a success.
+
+     [2] If the first response is a recoverable TRYAGAIN we return
+	 that instead of looking at the second response.  The
+	 expectation here is that we have failed to get an IPv4 response
+	 and should retry both queries.
+
+     [3] If the first response was not a SUCCESS and the second
+	 response is not NOTFOUND (had a SUCCESS, need to TRYAGAIN,
+	 or failed entirely e.g. TRYAGAIN' and UNAVAIL) then use the
+	 result from the second response, otherwise the first responses
+	 status is used.  Again we have some odd side-effects when the
+	 second response is NOTFOUND because we overwrite *errnop and
+	 *h_errnop that means that a first answer of NOTFOUND might see
+	 its *errnop and *h_errnop values altered.  Whether it matters
+	 in practice that a first response NOTFOUND has the wrong
+	 *errnop and *h_errnop is undecided.
+
+     [4] If the first response is UNAVAIL we return that instead of
+	 looking at the second response.  The expectation here is that
+	 it will have failed similarly e.g. configuration failure.
+
+     [5] Testing this code is complicated by the fact that truncated
+	 second response buffers might be returned as SUCCESS if the
+	 first answer is a SUCCESS.  To fix this we add symmetry to
+	 TRYAGAIN with the second response.  If the second response
+	 is a recoverable error we now return TRYAGIN even if the first
+	 response was SUCCESS.  */
+
   if (anslen1 > 0)
     status = gaih_getanswer_slice(answer1, anslen1, qname,
 				  &pat, &buffer, &buflen,
 				  errnop, h_errnop, ttlp,
 				  &first);
+
   if ((status == NSS_STATUS_SUCCESS || status == NSS_STATUS_NOTFOUND
        || (status == NSS_STATUS_TRYAGAIN
 	   /* We want to look at the second answer in case of an
@@ -1242,8 +1342,15 @@ gaih_getanswer (const querybuf *answer1, int anslen1, const querybuf *answer2,
 						     &pat, &buffer, &buflen,
 						     errnop, h_errnop, ttlp,
 						     &first);
+      /* Use the second response status in some cases.  */
       if (status != NSS_STATUS_SUCCESS && status2 != NSS_STATUS_NOTFOUND)
 	status = status2;
+      /* Do not return a truncated second response (unless it was
+	 unavoidable e.g. unrecoverable TRYAGAIN).  */
+      if (status == NSS_STATUS_SUCCESS
+	  && (status2 == NSS_STATUS_TRYAGAIN
+	      && *errnop == ERANGE && *h_errnop != NO_RECOVERY))
+	status = NSS_STATUS_TRYAGAIN;
     }
 
   return status;
