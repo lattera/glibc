@@ -35,35 +35,22 @@ __floorl (long double x)
 			&& __builtin_isless (__builtin_fabs (xh),
 					     __builtin_inf ()), 1))
     {
-      /* Long double arithmetic, including the canonicalisation below,
-	 only works in round-to-nearest mode.  */
-
-      /* Convert the high double to integer.  */
-      hi = ldbl_nearbyint (xh);
-
-      /* Subtract integral high part from the value.  */
-      xh -= hi;
-      ldbl_canonicalize (&xh, &xl);
-
-      /* Now convert the low double, adjusted for any remainder from the
-         high double.  */
-      lo = ldbl_nearbyint (xh);
-
-      /* Adjust the result when the remainder is non-zero.  nearbyint
-         rounds values to the nearest integer, and values halfway
-         between integers to the nearest even integer.  floorl must
-         round towards -Inf.  */
-      xh -= lo;
-      ldbl_canonicalize (&xh, &xl);
-
-      if (xh < 0.0 || (xh == 0.0 && xl < 0.0))
-	lo += -1.0;
-
-      /* Ensure the final value is canonical.  In certain cases,
-         rounding causes hi,lo calculated so far to be non-canonical.  */
-      xh = hi;
-      xl = lo;
-      ldbl_canonicalize (&xh, &xl);
+      hi = __floor (xh);
+      if (hi != xh)
+	{
+	  /* The high part is not an integer; the low part does not
+	     affect the result.  */
+	  xh = hi;
+	  xl = 0;
+	}
+      else
+	{
+	  /* The high part is a nonzero integer.  */
+	  lo = __floor (xl);
+	  xh = hi;
+	  xl = lo;
+	  ldbl_canonicalize_int (&xh, &xl);
+	}
     }
 
   return ldbl_pack (xh, xl);
