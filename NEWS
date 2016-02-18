@@ -47,9 +47,6 @@ Version 2.23
   tzselect).  This is useful for people who build the timezone data and code
   independent of the GNU C Library.
 
-* The LD_POINTER_GUARD environment variable can no longer be used to
-  disable the pointer guard feature.  It is always enabled.
-
 * The obsolete header <regexp.h> has been removed.  Programs that require
   this header must be updated to use <regex.h> instead.
 
@@ -75,9 +72,24 @@ Version 2.23
 
 Security related changes:
 
+* An out-of-bounds value in a broken-out struct tm argument to strftime no
+  longer causes a crash.  Reported by Adam Nielsen.  (CVE-2015-8776)
+
+* The LD_POINTER_GUARD environment variable can no longer be used to disable
+  the pointer guard feature.  It is always enabled.  Previously,
+  LD_POINTER_GUARD could be used to disable security hardening in binaries
+  running in privileged AT_SECURE mode.  Reported by Hector Marco-Gisbert.
+  (CVE-2015-8777)
+
+* An integer overflow in hcreate and hcreate_r could lead to an
+  out-of-bounds memory access.  Reported by Szabolcs Nagy.  (CVE-2015-8778)
+
+* The catopen function no longer has unbounded stack usage.  Reported by
+  Max.  (CVE-2015-8779)
+
 * The nan, nanf and nanl functions no longer have unbounded stack usage
   depending on the length of the string passed as an argument to the
-  functions.  Reported by Joseph Myers.
+  functions.  Reported by Joseph Myers.  (CVE-2014-9761)
 
 * A stack-based buffer overflow was found in libresolv when invoked from
   libnss_dns, allowing specially crafted DNS responses to seize control
