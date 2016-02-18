@@ -1,5 +1,12 @@
 2016-02-18  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19602]
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl): Handle
+	equal high parts and both low parts zero specially.
+	* sysdeps/ieee754/ldbl-128ibm/test-fmodl-ldbl-128ibm.c: New test.
+	* sysdeps/ieee754/ldbl-128ibm/Makefile [$(subdir) = math] (tests):
+	Add test-fmodl-ldbl-128ibm.
+
 	[BZ #19595]
 	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl): Use
 	common logic for all cases of shifting subnormal results.  Do not

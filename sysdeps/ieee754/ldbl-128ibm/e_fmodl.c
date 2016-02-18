@@ -55,6 +55,13 @@ __ieee754_fmodl (long double x, long double y)
 	      return x;
 	    /* At this point the absolute value of the high doubles of
 	       x and y must be equal.  */
+	    if ((lx & 0x7fffffffffffffffLL) == 0
+		&& (ly & 0x7fffffffffffffffLL) == 0)
+	      /* Both low parts are zero.  The result should be an
+		 appropriately signed zero, but the subsequent logic
+		 could treat them as unequal, depending on the signs
+		 of the low parts.  */
+	      return Zero[(uint64_t) sx >> 63];
 	    /* If the low double of y is the same sign as the high
 	       double of y (ie. the low double increases |y|)...  */
 	    if (((ly ^ sy) & 0x8000000000000000LL) == 0
