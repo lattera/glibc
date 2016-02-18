@@ -1,7 +1,7 @@
 # Catalan messages for GNU libc.
-# Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2009, 2011, 2012, 2013 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2009, 2011, 2012, 2013, 2015 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
-# Ivan Vilata i Balaguer <ivan@selidor.net>, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2009, 2011, 2012, 2013, 2014.
+# Ivan Vilata i Balaguer <ivan@selidor.net>, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2009, 2011, 2012, 2013, 2014, 2015.
 #
 # Sóc Ivan, aquestes són les convencions que adopte per a la 2.18.90.20140105:
 #
@@ -42,11 +42,14 @@
 # - Els missatges marcats com a multilínia només arriben fins a la columna 70.
 #   A sovint contenen marques de format; en aquest cas s’hi inserta una nova
 #   línia perquè no hi ha forma de saber com serà de llarga la línia.
+#
+# He aplicat algunes de les recomanacions de
+# <https://www.softcatala.org/recursos/quality/gnutools.html>.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.19.90\n"
-"POT-Creation-Date: 2015-01-20 22:14-0500\n"
-"PO-Revision-Date: 2014-08-28 23:47+0200\n"
+"Project-Id-Version: libc 2.22-pre1\n"
+"POT-Creation-Date: 2015-07-31 00:10-0400\n"
+"PO-Revision-Date: 2015-12-29 22:56+0100\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
 "Language: ca\n"
@@ -158,7 +161,7 @@ msgstr ""
 # Més ajudes.  ivb
 #: catgets/gencat.c:110
 msgid "Create C header file NAME containing symbol definitions"
-msgstr "Crea el fitxer capçalera C NOM que contindrà les definicions de símbols."
+msgstr "Crea el fitxer de capçalera C NOM que contindrà les definicions de símbols."
 
 #: catgets/gencat.c:112
 msgid "Do not use existing catalog, force new output file"
@@ -189,10 +192,10 @@ msgstr ""
 
 # L’adreça es veu millor així.  ivb
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:307
-#: elf/pldd.c:244 elf/sln.c:85 elf/sprof.c:372 iconv/iconv_prog.c:408
+#: elf/pldd.c:252 elf/sln.c:85 elf/sprof.c:372 iconv/iconv_prog.c:408
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:277
 #: locale/programs/localedef.c:376 login/programs/pt_chown.c:88
-#: malloc/memusagestat.c:563 nss/getent.c:969 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:973 nss/makedb.c:369
 #: posix/getconf.c:486 sunrpc/rpcinfo.c:691
 #: sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
@@ -204,7 +207,7 @@ msgstr ""
 "<%s>.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:323 elf/ldd.bash.in:38 elf/pldd.c:260 elf/sotruss.sh:75
+#: elf/ldconfig.c:323 elf/ldd.bash.in:38 elf/pldd.c:268 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:425 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:294 locale/programs/localedef.c:402
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:71
@@ -222,7 +225,7 @@ msgstr ""
 "ADEQUACIÓ PER A UN PROPÒSIT PARTICULAR.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:328 elf/pldd.c:265 elf/sprof.c:395 iconv/iconv_prog.c:430
+#: elf/ldconfig.c:328 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:430
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:299
 #: locale/programs/localedef.c:407 malloc/memusage.sh:75
 #: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:91 nss/makedb.c:390
@@ -496,11 +499,11 @@ msgstr "no s’ha pogut canviar els drets d’accés de «%s» a %#o"
 msgid "Renaming of %s to %s failed"
 msgstr "no s’ha pogut reanomenar «%s» a «%s»"
 
-#: elf/dl-close.c:385 elf/dl-open.c:470
+#: elf/dl-close.c:396 elf/dl-open.c:478
 msgid "cannot create scope list"
 msgstr "no s’ha pogut crear la llista d’àmbits"
 
-#: elf/dl-close.c:770
+#: elf/dl-close.c:816
 msgid "shared object not open"
 msgstr "l’objecte compartit no és obert"
 
@@ -553,7 +556,7 @@ msgstr "no s’han pogut mapar pàgines per a la taula «fptr»"
 
 #: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:236
 msgid "internal error: symidx out of range of fptr table"
-msgstr "error intern: «symidx» és fora de rang respecte la taula «fptr»"
+msgstr "error intern: «symidx» és fora de rang respecte a la taula «fptr»"
 
 #: elf/dl-hwcaps.c:184 elf/dl-hwcaps.c:196
 msgid "cannot create capability list"
@@ -581,134 +584,134 @@ msgstr "ha fallat stat() sobre l’objecte compartit"
 
 # ivb (2001/10/28)
 # ivb  Es refereix a /dev/zero .
-#: elf/dl-load.c:963
+#: elf/dl-load.c:962
 msgid "cannot open zero fill device"
 msgstr "no s’ha pogut obrir el dispositiu de zeros"
 
-#: elf/dl-load.c:1010 elf/dl-load.c:2165
+#: elf/dl-load.c:1009 elf/dl-load.c:2159
 msgid "cannot create shared object descriptor"
 msgstr "no s’ha pogut crear el descriptor d’objecte compartit"
 
-#: elf/dl-load.c:1029 elf/dl-load.c:1570 elf/dl-load.c:1682
+#: elf/dl-load.c:1028 elf/dl-load.c:1568 elf/dl-load.c:1680
 msgid "cannot read file data"
 msgstr "no s’han pogut llegir les dades del fitxer"
 
-#: elf/dl-load.c:1069
+#: elf/dl-load.c:1068
 msgid "ELF load command alignment not page-aligned"
 msgstr "l’alineament de l’ordre ELF de càrrega no està alineada amb la pàgina"
 
-#: elf/dl-load.c:1076
+#: elf/dl-load.c:1075
 msgid "ELF load command address/offset not properly aligned"
 msgstr "l’adreça o desplaçament de l’ordre ELF de càrrega no està correctament alineada"
 
-#: elf/dl-load.c:1160
+#: elf/dl-load.c:1159
 msgid "cannot allocate TLS data structures for initial thread"
 msgstr "no s’han pogut reservar les estructures de dades TLS per al fil inicial"
 
-#: elf/dl-load.c:1183
+#: elf/dl-load.c:1182
 msgid "cannot handle TLS data"
 msgstr "no es pot tractar amb dades TLS"
 
-#: elf/dl-load.c:1202
+#: elf/dl-load.c:1201
 msgid "object file has no loadable segments"
-msgstr "el fitxer objecte no té segments carregables"
+msgstr "el fitxer d’objecte no té segments carregables"
 
-#: elf/dl-load.c:1211 elf/dl-load.c:1662
+#: elf/dl-load.c:1210 elf/dl-load.c:1660
 msgid "cannot dynamically load executable"
 msgstr "no s’ha pogut carregar dinàmicament l’executable"
 
-#: elf/dl-load.c:1232
+#: elf/dl-load.c:1231
 msgid "object file has no dynamic section"
-msgstr "el fitxer objecte no té secció dinàmica"
+msgstr "el fitxer d’objecte no té secció dinàmica"
 
-#: elf/dl-load.c:1255
+#: elf/dl-load.c:1254
 msgid "shared object cannot be dlopen()ed"
 msgstr "ha fallat dlopen() sobre l’objecte compartit"
 
-#: elf/dl-load.c:1268
+#: elf/dl-load.c:1267
 msgid "cannot allocate memory for program header"
 msgstr "no s’ha pogut reservar memòria per a la capçalera del programa"
 
-#: elf/dl-load.c:1284 elf/dl-open.c:195
+#: elf/dl-load.c:1283 elf/dl-open.c:195
 msgid "invalid caller"
 msgstr "la biblioteca que ha fet la crida no és vàlida"
 
-#: elf/dl-load.c:1307 elf/dl-load.h:130
+#: elf/dl-load.c:1306 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "no s’han pogut canviar les proteccions de memòria"
 
-#: elf/dl-load.c:1327
+#: elf/dl-load.c:1326
 msgid "cannot enable executable stack as shared object requires"
 msgstr "no s’ha pogut habilitar la pila executable a requeriment de l’objecte compartit"
 
-#: elf/dl-load.c:1340
+#: elf/dl-load.c:1339
 msgid "cannot close file descriptor"
 msgstr "no s’ha pogut tancar un descriptor de fitxer"
 
-#: elf/dl-load.c:1570
+#: elf/dl-load.c:1568
 msgid "file too short"
 msgstr "el fitxer és massa curt"
 
-#: elf/dl-load.c:1605
+#: elf/dl-load.c:1603
 msgid "invalid ELF header"
 msgstr "la capçalera ELF no és vàlida"
 
-#: elf/dl-load.c:1617
+#: elf/dl-load.c:1615
 msgid "ELF file data encoding not big-endian"
 msgstr "la codificació de les dades del fitxer ELF no és big‐endian"
 
-#: elf/dl-load.c:1619
+#: elf/dl-load.c:1617
 msgid "ELF file data encoding not little-endian"
 msgstr "la codificació de les dades del fitxer ELF no és little‐endian"
 
-#: elf/dl-load.c:1623
+#: elf/dl-load.c:1621
 msgid "ELF file version ident does not match current one"
 msgstr "la identificació de la versió del fitxer ELF no concorda amb l’actual"
 
 # ivb (2001/11(06)
 # ivb  ABI = Application Binary Interface (interfície binària d'aplicació)
-#: elf/dl-load.c:1627
+#: elf/dl-load.c:1625
 msgid "ELF file OS ABI invalid"
 msgstr "l’ABI de sistema operatiu del fitxer ELF no és vàlida"
 
-#: elf/dl-load.c:1630
+#: elf/dl-load.c:1628
 msgid "ELF file ABI version invalid"
 msgstr "la versió de l’ABI del fitxer ELF no és vàlida"
 
-#: elf/dl-load.c:1633
+#: elf/dl-load.c:1631
 msgid "nonzero padding in e_ident"
-msgstr "el replè d’«e_ident» no conté només zeros"
+msgstr "el replè de «e_ident» no conté només zeros"
 
-#: elf/dl-load.c:1636
+#: elf/dl-load.c:1634
 msgid "internal error"
 msgstr "error intern"
 
-#: elf/dl-load.c:1643
+#: elf/dl-load.c:1641
 msgid "ELF file version does not match current one"
 msgstr "la versió del fitxer ELF no concorda amb l’actual"
 
-#: elf/dl-load.c:1651
+#: elf/dl-load.c:1649
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "només es poden carregar els tipus ET_DYN i ET_EXEC"
 
 # ivb (2001/11/01)
 # ivb  La traducció completa de «phentsize» vindria a ser: mida d'entrada
 # ivb  de taula de la capçalera de programa.
-#: elf/dl-load.c:1667
+#: elf/dl-load.c:1665
 msgid "ELF file's phentsize not the expected size"
 msgstr "el valor de «phentsize» del fitxer ELF no és l’esperat"
 
-#: elf/dl-load.c:2184
+#: elf/dl-load.c:2178
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "la classe ELF no és vàlida: ELFCLASS64"
 
-#: elf/dl-load.c:2185
+#: elf/dl-load.c:2179
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "la classe ELF no és vàlida: ELFCLASS32"
 
-#: elf/dl-load.c:2188
+#: elf/dl-load.c:2182
 msgid "cannot open shared object file"
-msgstr "no s’ha pogut obrir el fitxer objecte compartit"
+msgstr "no s’ha pogut obrir el fitxer d’objecte compartit"
 
 #: elf/dl-load.h:128
 msgid "failed to map segment from shared object"
@@ -718,11 +721,11 @@ msgstr "no s’ha pogut mapar un segment de l’objecte compartit"
 msgid "cannot map zero-fill pages"
 msgstr "no s’han pogut mapar les pàgines plenes de zeros"
 
-#: elf/dl-lookup.c:791
+#: elf/dl-lookup.c:845
 msgid "relocation error"
 msgstr "error de reubicació"
 
-#: elf/dl-lookup.c:818
+#: elf/dl-lookup.c:872
 msgid "symbol lookup error"
 msgstr "error en cercar el símbol"
 
@@ -732,53 +735,40 @@ msgstr "no s’ha pogut estendre l’àmbit global"
 
 # ivb (2002/10/29)
 # ivb  TLS = Thread Local Storage
-#: elf/dl-open.c:520
+#: elf/dl-open.c:528
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "El comptador de generació de TLS s’ha esgotat!  Per favor, informeu d’açò."
 
-# Cas general.  ivb
-#: elf/dl-open.c:542
-msgid "cannot load any more object with static TLS"
-msgstr "no es poden carregar més objectes amb el TLS estàtic"
-
-#: elf/dl-open.c:599
+#: elf/dl-open.c:592
 msgid "invalid mode for dlopen()"
 msgstr "el mode de dlopen() no és vàlid"
 
-#: elf/dl-open.c:616
+#: elf/dl-open.c:609
 msgid "no more namespaces available for dlmopen()"
 msgstr "no resten espais de noms disponibles per a dlmopen()"
 
-#: elf/dl-open.c:634
+#: elf/dl-open.c:633
 msgid "invalid target namespace in dlmopen()"
 msgstr "l’espai de noms destí de dlmopen() no és vàlid"
 
-#: elf/dl-reloc.c:120
+#: elf/dl-reloc.c:121
 msgid "cannot allocate memory in static TLS block"
 msgstr "no s’ha pogut reservar memòria al bloc TLS estàtic"
 
-#: elf/dl-reloc.c:212
+#: elf/dl-reloc.c:206
 msgid "cannot make segment writable for relocation"
 msgstr "no s’ha pogut fer escrivible el segment per a reubicar‐lo"
 
-# ivb (2002/10/21)
-# ivb  PLT = Procedure Linkage Table, Taula d'Enllaçat de Procediments
-# ivb  PLTREL = tipus de reubicació usada per la PLT
-#: elf/dl-reloc.c:275
-#, c-format
-msgid "%s: no PLTREL found in object %s\n"
-msgstr "%s: no s’ha trobat el PLTREL de l’objecte «%s»\n"
-
-#: elf/dl-reloc.c:290
+#: elf/dl-reloc.c:276
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: no resta memòria per a guardar els resultats de reubicar «%s»\n"
 
-#: elf/dl-reloc.c:306
+#: elf/dl-reloc.c:292
 msgid "cannot restore segment prot after reloc"
 msgstr "no s’ha pogut restaurar la protecció del segment després de reubicar‐lo"
 
-#: elf/dl-reloc.c:335
+#: elf/dl-reloc.c:323
 msgid "cannot apply additional memory protection after relocation"
 msgstr "no s’ha pogut protegir la memòria després de reubicar"
 
@@ -786,7 +776,7 @@ msgstr "no s’ha pogut protegir la memòria després de reubicar"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "s’ha emprat RTLD_NEXT en un codi no carregat dinàmicament"
 
-#: elf/dl-tls.c:933
+#: elf/dl-tls.c:934
 msgid "cannot create TLS data structures"
 msgstr "no s’han pogut crear les estructures de dades TLS"
 
@@ -857,7 +847,7 @@ msgstr "FORMAT a emprar: «new» (nou), «old» (antic) o «compat» (compatible
 
 #: elf/ldconfig.c:151
 msgid "Ignore auxiliary cache file"
-msgstr "No té en compte el fitxer de memòria cau auxilar."
+msgstr "No té en compte el fitxer de memòria cau auxiliar."
 
 #: elf/ldconfig.c:159
 msgid "Configure Dynamic Linker Run Time Bindings."
@@ -935,7 +925,7 @@ msgstr "no s’ha creat l’enllaç perquè no s’ha trobat el nom d’objecte 
 msgid "Can't open directory %s"
 msgstr "no s’ha pogut obrir el directori «%s»"
 
-#: elf/ldconfig.c:793 elf/ldconfig.c:855 elf/readlib.c:90
+#: elf/ldconfig.c:793 elf/ldconfig.c:855 elf/readlib.c:97
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "no s’ha trobat el fitxer d’entrada «%s»\n"
@@ -1048,7 +1038,7 @@ msgstr ""
 
 #: elf/ldd.bash.in:80
 msgid "ldd: option \\`$1' is ambiguous"
-msgstr "ldd: l’opció «$1» és ambígua"
+msgstr "ldd: l’opció «$1» és ambigua"
 
 #: elf/ldd.bash.in:87
 msgid "unrecognized option"
@@ -1071,7 +1061,7 @@ msgstr "El fitxer o directori no existeix"
 
 # ivb (2001/10/31)
 # ivb  Cal tenir en compte que «ordinary» a l'anglés és cosa pler diferent ;)
-#: elf/ldd.bash.in:150 inet/rcmd.c:488
+#: elf/ldd.bash.in:150 inet/rcmd.c:492
 msgid "not regular file"
 msgstr "no és un fitxer ordinari"
 
@@ -1119,70 +1109,76 @@ msgstr "no s’ha pogut llegir «r_debug»"
 msgid "cannot read program interpreter"
 msgstr "no s’ha pogut llegir l’intèrpret del programa"
 
-#: elf/pldd-xx.c:196
+#: elf/pldd-xx.c:197
 #, c-format
 msgid "cannot read link map"
 msgstr "no s’ha pogut llegir el mapa d’enllaçat"
 
-#: elf/pldd-xx.c:207
+#: elf/pldd-xx.c:209
 #, c-format
 msgid "cannot read object name"
 msgstr "no s’ha pogut llegir el nom de l’objecte"
 
+# Condició d’error.  ivb
+#: elf/pldd-xx.c:219
+#, c-format
+msgid "cannot allocate buffer for object name"
+msgstr "no s’ha pogut reservar memòria intermèdia per al nom de l’objecte"
+
 # Descripció del programa.  ivb
-#: elf/pldd.c:63
+#: elf/pldd.c:64
 msgid "List dynamic shared objects loaded into process."
 msgstr "Llista els objectes compatits dinàmics carregats en un procés."
 
 # Crec que el terme és suficient conegut.  ivb
-#: elf/pldd.c:67
+#: elf/pldd.c:68
 msgid "PID"
 msgstr "PID"
 
-#: elf/pldd.c:99
+#: elf/pldd.c:100
 #, c-format
 msgid "Exactly one parameter with process ID required.\n"
 msgstr "cal exactament un paràmetre amb l’identificador de procés\n"
 
-#: elf/pldd.c:111
+#: elf/pldd.c:112
 #, c-format
 msgid "invalid process ID '%s'"
 msgstr "l’identificador de procés «%s» no és vàlid"
 
 # No usa quote().  ivb
-#: elf/pldd.c:119
+#: elf/pldd.c:120
 #, c-format
 msgid "cannot open %s"
 msgstr "no s’ha pogut obrir «%s»"
 
 # No usa quote.  ivb
-#: elf/pldd.c:144
+#: elf/pldd.c:152
 #, c-format
 msgid "cannot open %s/task"
 msgstr "no s’ha pogut obrir «%s/task»"
 
 # No usa quote().  ivb
-#: elf/pldd.c:147
+#: elf/pldd.c:155
 #, c-format
 msgid "cannot prepare reading %s/task"
 msgstr "no s’ha pogut preparar la lectura de «%s/task»"
 
-#: elf/pldd.c:160
+#: elf/pldd.c:168
 #, c-format
 msgid "invalid thread ID '%s'"
 msgstr "l’identificador de fil «%s» no és vàlid"
 
-#: elf/pldd.c:171
+#: elf/pldd.c:179
 #, c-format
 msgid "cannot attach to process %lu"
 msgstr "no s’ha pogut associar al procés %lu"
 
-#: elf/pldd.c:286
+#: elf/pldd.c:294
 #, c-format
 msgid "cannot get information about process %lu"
 msgstr "no s’ha pogut obtenir informació sobre el procés %lu"
 
-#: elf/pldd.c:299
+#: elf/pldd.c:307
 #, c-format
 msgid "process %lu is no ELF program"
 msgstr "el procés %lu no pertany a un programa ELF"
@@ -1210,34 +1206,34 @@ msgstr "la classe ELF del fitxer «%s» no és coneguda\n"
 #: elf/readelflib.c:77
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
-msgstr "«%s» no és un fitxer objecte compartit (tipus: %d)\n"
+msgstr "«%s» no és un fitxer d’objecte compartit (tipus: %d)\n"
 
 #: elf/readelflib.c:108
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "hi ha més d’un segment dinàmic\n"
 
-#: elf/readlib.c:96
+#: elf/readlib.c:103
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "ha fallat fstat() sobre el fitxer «%s»\n"
 
-#: elf/readlib.c:107
+#: elf/readlib.c:114
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "el fitxer «%s» és buit, no es comprova"
 
-#: elf/readlib.c:113
+#: elf/readlib.c:120
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "el fitxer «%s» és massa menut, no es comprova"
 
-#: elf/readlib.c:123
+#: elf/readlib.c:130
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "ha fallat mmap() sobre el fitxer «%s»\n"
 
-#: elf/readlib.c:161
+#: elf/readlib.c:169
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "«%s» no és un fitxer ELF: els octets màgics del començament no són correctes\n"
@@ -1321,7 +1317,7 @@ msgstr "%s: l’opció «%c» necessita un argument\\n"
 
 #: elf/sotruss.sh:61
 msgid "%s: option is ambiguous; possibilities:"
-msgstr "%s: l’opció és ambígua; possibilitats:"
+msgstr "%s: l’opció és ambigua; possibilitats:"
 
 #: elf/sotruss.sh:79
 msgid "Written by %s.\\n"
@@ -1374,10 +1370,10 @@ msgstr "OBJECTE_COMPARTIT [DADES_PERFILAT]"
 msgid "failed to load shared object `%s'"
 msgstr "no s’ha pogut carregar l’objecte compartit «%s»"
 
-#: elf/sprof.c:442
+#: elf/sprof.c:442 elf/sprof.c:825 elf/sprof.c:923
 #, c-format
-msgid "cannot create internal descriptors"
-msgstr "no s’han pogut crear els descriptors interns"
+msgid "cannot create internal descriptor"
+msgstr "no s’ha pogut crear un descriptor intern"
 
 #: elf/sprof.c:554
 #, c-format
@@ -1443,11 +1439,6 @@ msgstr "ha fallat mmap() sobre el fitxer de dades de perfilat"
 #, c-format
 msgid "error while closing the profiling data file"
 msgstr "error en tancar el fitxer de dades de perfilat"
-
-#: elf/sprof.c:825 elf/sprof.c:923
-#, c-format
-msgid "cannot create internal descriptor"
-msgstr "no s’ha pogut crear un descriptor intern"
 
 #: elf/sprof.c:899
 #, c-format
@@ -1642,7 +1633,7 @@ msgstr "No cerca en els directoris estàndard, només en els indicats a la líni
 #: iconv/iconvconfig.c:299
 #, c-format
 msgid "Directory arguments required when using --nostdlib"
-msgstr "Cal proporcionar arguments directori en emprar «--nostdlib»."
+msgstr "Cal proporcionar arguments de directori en emprar «--nostdlib»."
 
 #: iconv/iconvconfig.c:341 locale/programs/localedef.c:294
 #, c-format
@@ -1700,27 +1691,27 @@ msgstr "socket: fallada del protocol en configurar el circuit\n"
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: lectura incompleta"
 
-#: inet/rcmd.c:486
+#: inet/rcmd.c:490
 msgid "lstat failed"
 msgstr "ha fallat lstat()"
 
-#: inet/rcmd.c:493
+#: inet/rcmd.c:497
 msgid "cannot open"
 msgstr "no s’ha pogut obrir"
 
-#: inet/rcmd.c:495
+#: inet/rcmd.c:499
 msgid "fstat failed"
 msgstr "ha fallat fstat()"
 
-#: inet/rcmd.c:497
+#: inet/rcmd.c:501
 msgid "bad owner"
 msgstr "el propietari no és vàlid"
 
-#: inet/rcmd.c:499
+#: inet/rcmd.c:503
 msgid "writeable by other than owner"
 msgstr "és modificable per altres que no en són el propietari"
 
-#: inet/rcmd.c:501
+#: inet/rcmd.c:505
 msgid "hard linked somewhere"
 msgstr "té un enllaç fort en altre lloc"
 
@@ -1743,7 +1734,7 @@ msgstr "la paraula clau «%s» de «.netrc» no és coneguda"
 
 #: libidn/nfkc.c:463
 msgid "Character out of range for UTF-8"
-msgstr "el caràcter és fora de rang respecte UTF-8"
+msgstr "el caràcter és fora de rang respecte a UTF-8"
 
 #: locale/programs/charmap-dir.c:57
 #, c-format
@@ -1843,8 +1834,8 @@ msgid "no symbolic name given for end of range"
 msgstr "no s’ha indicat un nom simbòlic per a la fi del rang"
 
 #: locale/programs/charmap.c:610 locale/programs/ld-address.c:528
-#: locale/programs/ld-collate.c:2626 locale/programs/ld-collate.c:3784
-#: locale/programs/ld-ctype.c:2162 locale/programs/ld-ctype.c:2913
+#: locale/programs/ld-collate.c:2635 locale/programs/ld-collate.c:3793
+#: locale/programs/ld-ctype.c:2128 locale/programs/ld-ctype.c:2840
 #: locale/programs/ld-identification.c:368
 #: locale/programs/ld-measurement.c:215 locale/programs/ld-messages.c:298
 #: locale/programs/ld-monetary.c:740 locale/programs/ld-name.c:264
@@ -1871,8 +1862,8 @@ msgid "%s: error in state machine"
 msgstr "%s: error a la màquina d’estats"
 
 #: locale/programs/charmap.c:850 locale/programs/ld-address.c:544
-#: locale/programs/ld-collate.c:2623 locale/programs/ld-collate.c:3977
-#: locale/programs/ld-ctype.c:2159 locale/programs/ld-ctype.c:2930
+#: locale/programs/ld-collate.c:2632 locale/programs/ld-collate.c:3986
+#: locale/programs/ld-ctype.c:2125 locale/programs/ld-ctype.c:2857
 #: locale/programs/ld-identification.c:384
 #: locale/programs/ld-measurement.c:231 locale/programs/ld-messages.c:314
 #: locale/programs/ld-monetary.c:756 locale/programs/ld-name.c:280
@@ -1893,7 +1884,7 @@ msgstr "el caràcter «%s» no és conegut"
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr "el nombre d’octets de les seqüències d’inici i final del rang no són iguals: %d i %d"
 
-#: locale/programs/charmap.c:993 locale/programs/ld-collate.c:2903
+#: locale/programs/charmap.c:993 locale/programs/ld-collate.c:2912
 #: locale/programs/repertoire.c:419
 msgid "invalid names for character range"
 msgstr "els noms del rang de caràcters no són vàlids"
@@ -1918,8 +1909,8 @@ msgstr "el límit superior del rang és menor que l’inferior"
 msgid "resulting bytes for range not representable."
 msgstr "els octets resultants del rang no són representables"
 
-#: locale/programs/ld-address.c:135 locale/programs/ld-collate.c:1565
-#: locale/programs/ld-ctype.c:465 locale/programs/ld-identification.c:133
+#: locale/programs/ld-address.c:135 locale/programs/ld-collate.c:1566
+#: locale/programs/ld-ctype.c:431 locale/programs/ld-identification.c:133
 #: locale/programs/ld-measurement.c:94 locale/programs/ld-messages.c:97
 #: locale/programs/ld-monetary.c:193 locale/programs/ld-name.c:94
 #: locale/programs/ld-numeric.c:98 locale/programs/ld-paper.c:91
@@ -1987,7 +1978,7 @@ msgid "%s: numeric country code `%d' not valid"
 msgstr "%s: el codi numèric de país «%d» no és vàlid"
 
 #: locale/programs/ld-address.c:436 locale/programs/ld-address.c:473
-#: locale/programs/ld-address.c:511 locale/programs/ld-ctype.c:2537
+#: locale/programs/ld-address.c:511 locale/programs/ld-ctype.c:2489
 #: locale/programs/ld-identification.c:280
 #: locale/programs/ld-measurement.c:198 locale/programs/ld-messages.c:267
 #: locale/programs/ld-monetary.c:495 locale/programs/ld-monetary.c:530
@@ -2009,8 +2000,8 @@ msgstr "%s: el camp «%s» ha estat declarat més d’una volta"
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: el camp «%s» conté un caràcter desconegut"
 
-#: locale/programs/ld-address.c:525 locale/programs/ld-collate.c:3782
-#: locale/programs/ld-ctype.c:2910 locale/programs/ld-identification.c:365
+#: locale/programs/ld-address.c:525 locale/programs/ld-collate.c:3791
+#: locale/programs/ld-ctype.c:2837 locale/programs/ld-identification.c:365
 #: locale/programs/ld-measurement.c:212 locale/programs/ld-messages.c:296
 #: locale/programs/ld-monetary.c:738 locale/programs/ld-name.c:262
 #: locale/programs/ld-numeric.c:324 locale/programs/ld-paper.c:212
@@ -2019,12 +2010,12 @@ msgstr "%s: el camp «%s» conté un caràcter desconegut"
 msgid "%s: incomplete `END' line"
 msgstr "%s: la línia «END» és incompleta"
 
-#: locale/programs/ld-address.c:535 locale/programs/ld-collate.c:551
-#: locale/programs/ld-collate.c:603 locale/programs/ld-collate.c:899
-#: locale/programs/ld-collate.c:912 locale/programs/ld-collate.c:2592
-#: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
-#: locale/programs/ld-ctype.c:1891 locale/programs/ld-ctype.c:2149
-#: locale/programs/ld-ctype.c:2735 locale/programs/ld-ctype.c:2921
+#: locale/programs/ld-address.c:535 locale/programs/ld-collate.c:552
+#: locale/programs/ld-collate.c:604 locale/programs/ld-collate.c:900
+#: locale/programs/ld-collate.c:913 locale/programs/ld-collate.c:2601
+#: locale/programs/ld-collate.c:2622 locale/programs/ld-collate.c:3976
+#: locale/programs/ld-ctype.c:1857 locale/programs/ld-ctype.c:2115
+#: locale/programs/ld-ctype.c:2687 locale/programs/ld-ctype.c:2848
 #: locale/programs/ld-identification.c:375
 #: locale/programs/ld-measurement.c:222 locale/programs/ld-messages.c:305
 #: locale/programs/ld-monetary.c:747 locale/programs/ld-name.c:271
@@ -2034,476 +2025,476 @@ msgstr "%s: la línia «END» és incompleta"
 msgid "%s: syntax error"
 msgstr "%s: error de sintaxi"
 
-#: locale/programs/ld-collate.c:426
+#: locale/programs/ld-collate.c:427
 #, c-format
 msgid "`%.*s' already defined in charmap"
 msgstr "«%.*s» ja ha estat definit al mapa de caràcters"
 
-#: locale/programs/ld-collate.c:435
+#: locale/programs/ld-collate.c:436
 #, c-format
 msgid "`%.*s' already defined in repertoire"
 msgstr "«%.*s» ja ha estat definit al repertori"
 
-#: locale/programs/ld-collate.c:442
+#: locale/programs/ld-collate.c:443
 #, c-format
 msgid "`%.*s' already defined as collating symbol"
 msgstr "«%.*s» ja ha estat definit com a símbol d’ordenació"
 
-#: locale/programs/ld-collate.c:449
+#: locale/programs/ld-collate.c:450
 #, c-format
 msgid "`%.*s' already defined as collating element"
 msgstr "«%.*s» ja ha estat definit com a element d’ordenació"
 
-#: locale/programs/ld-collate.c:480 locale/programs/ld-collate.c:506
+#: locale/programs/ld-collate.c:481 locale/programs/ld-collate.c:507
 #, c-format
 msgid "%s: `forward' and `backward' are mutually excluding each other"
 msgstr "%s: «forward» i «backward» són mútuament excloents"
 
-#: locale/programs/ld-collate.c:490 locale/programs/ld-collate.c:516
-#: locale/programs/ld-collate.c:532
+#: locale/programs/ld-collate.c:491 locale/programs/ld-collate.c:517
+#: locale/programs/ld-collate.c:533
 #, c-format
 msgid "%s: `%s' mentioned more than once in definition of weight %d"
 msgstr "%s: s’ha mencionat «%s» més d’una volta a la definició de pes %d"
 
-#: locale/programs/ld-collate.c:588
+#: locale/programs/ld-collate.c:589
 #, c-format
 msgid "%s: too many rules; first entry only had %d"
 msgstr "%s: sobren regles; la primera entrada només en tenia %d"
 
-#: locale/programs/ld-collate.c:624
+#: locale/programs/ld-collate.c:625
 #, c-format
 msgid "%s: not enough sorting rules"
 msgstr "%s: no hi ha suficients regles d’ordenació"
 
-#: locale/programs/ld-collate.c:789
+#: locale/programs/ld-collate.c:790
 #, c-format
 msgid "%s: empty weight string not allowed"
 msgstr "%s: no es permet la cadena buida com a nom de pes"
 
-#: locale/programs/ld-collate.c:884
+#: locale/programs/ld-collate.c:885
 #, c-format
 msgid "%s: weights must use the same ellipsis symbol as the name"
 msgstr "%s: els pesos han d’emprar el mateix símbol d’el·lipsi que el nom"
 
-#: locale/programs/ld-collate.c:940
+#: locale/programs/ld-collate.c:941
 #, c-format
 msgid "%s: too many values"
 msgstr "%s: sobren valors"
 
-#: locale/programs/ld-collate.c:1060 locale/programs/ld-collate.c:1235
+#: locale/programs/ld-collate.c:1061 locale/programs/ld-collate.c:1236
 #, c-format
 msgid "order for `%.*s' already defined at %s:%Zu"
 msgstr "l’ordre de «%.*s» ja ha estat definit a %s:%Zu"
 
-#: locale/programs/ld-collate.c:1110
+#: locale/programs/ld-collate.c:1111
 #, c-format
 msgid "%s: the start and the end symbol of a range must stand for characters"
 msgstr "%s: els símbols inicial i final d’un rang han de representar caràcters"
 
-#: locale/programs/ld-collate.c:1137
+#: locale/programs/ld-collate.c:1138
 #, c-format
 msgid "%s: byte sequences of first and last character must have the same length"
 msgstr "%s: les seqüències d’octets del primer i darrer caràcter han de tenir la mateixa longitud"
 
-#: locale/programs/ld-collate.c:1179
+#: locale/programs/ld-collate.c:1180
 #, c-format
 msgid "%s: byte sequence of first character of range is not lower than that of the last character"
 msgstr "%s: la seqüència d’octets del primer caràcter del rang no és menor que la del darrer caràcter"
 
-#: locale/programs/ld-collate.c:1304
+#: locale/programs/ld-collate.c:1305
 #, c-format
 msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
-msgstr "%s: un rang simbòlic amb el·lipsi no pot anar just darrere d’«order_start»"
+msgstr "%s: un rang simbòlic amb el·lipsi no pot anar just darrere de «order_start»"
 
-#: locale/programs/ld-collate.c:1308
+#: locale/programs/ld-collate.c:1309
 #, c-format
 msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
-msgstr "%s: un rang simbòlic amb el·lipsi no pot anar just davant d’«order_end»"
+msgstr "%s: un rang simbòlic amb el·lipsi no pot anar just davant de «order_end»"
 
-#: locale/programs/ld-collate.c:1328 locale/programs/ld-ctype.c:1408
+#: locale/programs/ld-collate.c:1329 locale/programs/ld-ctype.c:1374
 #, c-format
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "«%s» i «%.*s» no són noms vàlids de rangs simbòlics"
 
-#: locale/programs/ld-collate.c:1378 locale/programs/ld-collate.c:3718
+#: locale/programs/ld-collate.c:1379 locale/programs/ld-collate.c:3727
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr "%s: l’ordre de «%.*s» ja ha estat definit a %s:%Zu"
 
-#: locale/programs/ld-collate.c:1387
+#: locale/programs/ld-collate.c:1388
 #, c-format
 msgid "%s: `%s' must be a character"
 msgstr "%s: «%s» ha de ser un caràcter"
 
-#: locale/programs/ld-collate.c:1582
+#: locale/programs/ld-collate.c:1583
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr "%s: cal emprar «position» per a un nivell específic a totes les seccions o a cap"
 
-#: locale/programs/ld-collate.c:1607
+#: locale/programs/ld-collate.c:1608
 #, c-format
 msgid "symbol `%s' not defined"
 msgstr "el símbol «%s» no ha estat definit"
 
-#: locale/programs/ld-collate.c:1683 locale/programs/ld-collate.c:1789
+#: locale/programs/ld-collate.c:1684 locale/programs/ld-collate.c:1790
 #, c-format
 msgid "symbol `%s' has the same encoding as"
 msgstr "el símbol «%s» té la mateixa codificació que"
 
-#: locale/programs/ld-collate.c:1687 locale/programs/ld-collate.c:1793
+#: locale/programs/ld-collate.c:1688 locale/programs/ld-collate.c:1794
 #, c-format
 msgid "symbol `%s'"
 msgstr "el símbol «%s»"
 
-#: locale/programs/ld-collate.c:1833
+#: locale/programs/ld-collate.c:1834
 #, c-format
 msgid "no definition of `UNDEFINED'"
 msgstr "no s’ha definit «UNDEFINED»"
 
-#: locale/programs/ld-collate.c:1862
+#: locale/programs/ld-collate.c:1863
 #, c-format
 msgid "too many errors; giving up"
 msgstr "hi ha massa errors: s’abandona"
 
-#: locale/programs/ld-collate.c:2518 locale/programs/ld-collate.c:3906
+#: locale/programs/ld-collate.c:2527 locale/programs/ld-collate.c:3915
 #, c-format
 msgid "%s: nested conditionals not supported"
 msgstr "%s: no es permeten els condicionals niats"
 
-#: locale/programs/ld-collate.c:2536
+#: locale/programs/ld-collate.c:2545
 #, c-format
 msgid "%s: more than one 'else'"
 msgstr "%s: hi ha més d’una clàusula «else»"
 
-#: locale/programs/ld-collate.c:2711
+#: locale/programs/ld-collate.c:2720
 #, c-format
 msgid "%s: duplicate definition of `%s'"
 msgstr "%s: la definició de «%s» és duplicada"
 
-#: locale/programs/ld-collate.c:2747
+#: locale/programs/ld-collate.c:2756
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
 msgstr "%s: la declaració de la secció «%s» és duplicada"
 
-#: locale/programs/ld-collate.c:2883
+#: locale/programs/ld-collate.c:2892
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr "%s: el nom del símbol d’ordenació conté un caràcter desconegut"
 
-#: locale/programs/ld-collate.c:3012
+#: locale/programs/ld-collate.c:3021
 #, c-format
 msgid "%s: unknown character in equivalent definition name"
 msgstr "%s: el nom de la definició equivalent conté un caràcter desconegut"
 
-#: locale/programs/ld-collate.c:3023
+#: locale/programs/ld-collate.c:3032
 #, c-format
 msgid "%s: unknown character in equivalent definition value"
 msgstr "%s: el valor de la definició equivalent conté un caràcter desconegut"
 
-#: locale/programs/ld-collate.c:3033
+#: locale/programs/ld-collate.c:3042
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: la definició equivalent conté el símbol desconegut «%s»"
 
-#: locale/programs/ld-collate.c:3042
+#: locale/programs/ld-collate.c:3051
 msgid "error while adding equivalent collating symbol"
 msgstr "error en afegir un símbol d’ordenació equivalent"
 
-#: locale/programs/ld-collate.c:3080
+#: locale/programs/ld-collate.c:3089
 #, c-format
 msgid "duplicate definition of script `%s'"
 msgstr "la definició de l’escriptura «%s» és duplicada"
 
-#: locale/programs/ld-collate.c:3128
+#: locale/programs/ld-collate.c:3137
 #, c-format
 msgid "%s: unknown section name `%.*s'"
 msgstr "%s: el nom de secció «%.*s» no és conegut"
 
-#: locale/programs/ld-collate.c:3157
+#: locale/programs/ld-collate.c:3166
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr "%s: hi ha múltiples definicions d’ordre de la secció «%s»"
 
-#: locale/programs/ld-collate.c:3185
+#: locale/programs/ld-collate.c:3194
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: el nombre de regles d’ordenació no és vàlid"
 
-#: locale/programs/ld-collate.c:3212
+#: locale/programs/ld-collate.c:3221
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr "%s: hi ha múltiples definicions d’ordre a la secció sense nom"
 
-#: locale/programs/ld-collate.c:3267 locale/programs/ld-collate.c:3397
-#: locale/programs/ld-collate.c:3760
+#: locale/programs/ld-collate.c:3276 locale/programs/ld-collate.c:3406
+#: locale/programs/ld-collate.c:3769
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr "%s: manca la paraula clau «order_end»"
 
-#: locale/programs/ld-collate.c:3330
+#: locale/programs/ld-collate.c:3339
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr "%s: l’ordre del símbol d’ordenació «%.*s» encara no ha estat definit"
 
-#: locale/programs/ld-collate.c:3348
+#: locale/programs/ld-collate.c:3357
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr "%s: l’ordre de l’element d’ordenació «%.*s» encara no ha estat definit"
 
-#: locale/programs/ld-collate.c:3359
+#: locale/programs/ld-collate.c:3368
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr "%s: no s’ha pogut reordenar després de «%.*s»: el símbol no és conegut"
 
-#: locale/programs/ld-collate.c:3411 locale/programs/ld-collate.c:3772
+#: locale/programs/ld-collate.c:3420 locale/programs/ld-collate.c:3781
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr "%s: manca la paraula clau «reorder-end»"
 
-#: locale/programs/ld-collate.c:3445 locale/programs/ld-collate.c:3643
+#: locale/programs/ld-collate.c:3454 locale/programs/ld-collate.c:3652
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr "%s: la secció «%.*s» no és coneguda"
 
-#: locale/programs/ld-collate.c:3510
+#: locale/programs/ld-collate.c:3519
 #, c-format
 msgid "%s: bad symbol <%.*s>"
 msgstr "%s: el símbol <%.*s> no és vàlid"
 
-#: locale/programs/ld-collate.c:3706
+#: locale/programs/ld-collate.c:3715
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr "%s: «%s» no es pot trobar al final d’un rang amb el·lipsi"
 
-#: locale/programs/ld-collate.c:3756
+#: locale/programs/ld-collate.c:3765
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr "%s: no es permet una descripció buida de la categoria"
 
-#: locale/programs/ld-collate.c:3775
+#: locale/programs/ld-collate.c:3784
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr "%s: manca la paraula clau «reorder-sections-end»"
 
-#: locale/programs/ld-collate.c:3939
+#: locale/programs/ld-collate.c:3948
 #, c-format
 msgid "%s: '%s' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: s’ha trobat un «%s» sense el corresponent «ifdef» o «ifndef»"
 
-#: locale/programs/ld-collate.c:3957
+#: locale/programs/ld-collate.c:3966
 #, c-format
 msgid "%s: 'endif' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: s’ha trobat un «endif» sense el corresponent «ifdef» o «ifndef»"
 
-#: locale/programs/ld-ctype.c:484
+#: locale/programs/ld-ctype.c:450
 #, c-format
 msgid "No character set name specified in charmap"
 msgstr "no s’ha indicat cap nom de joc de caràcters al mapa de caràcters"
 
-#: locale/programs/ld-ctype.c:513
+#: locale/programs/ld-ctype.c:479
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must be in class `%s'"
 msgstr "el caràcter L«\\u%0*x» de la classe «%s» ha de ser a la classe «%s»"
 
-#: locale/programs/ld-ctype.c:528
+#: locale/programs/ld-ctype.c:494
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must not be in class `%s'"
 msgstr "el caràcter L«\\u%0*x» de la classe «%s» no ha de ser a la classe «%s»"
 
-#: locale/programs/ld-ctype.c:542 locale/programs/ld-ctype.c:600
+#: locale/programs/ld-ctype.c:508 locale/programs/ld-ctype.c:566
 #, c-format
 msgid "internal error in %s, line %u"
 msgstr "error intern a «%s», línia %u"
 
-#: locale/programs/ld-ctype.c:571
+#: locale/programs/ld-ctype.c:537
 #, c-format
 msgid "character '%s' in class `%s' must be in class `%s'"
 msgstr "el caràcter «%s» de la classe «%s» ha de ser a la classe «%s»"
 
-#: locale/programs/ld-ctype.c:587
+#: locale/programs/ld-ctype.c:553
 #, c-format
 msgid "character '%s' in class `%s' must not be in class `%s'"
 msgstr "el caràcter «%s» de la classe «%s» no ha de ser a la classe «%s»"
 
-#: locale/programs/ld-ctype.c:617 locale/programs/ld-ctype.c:655
+#: locale/programs/ld-ctype.c:583 locale/programs/ld-ctype.c:621
 #, c-format
 msgid "<SP> character not in class `%s'"
 msgstr "el caràcter <SP> no és a la classe «%s»"
 
-#: locale/programs/ld-ctype.c:629 locale/programs/ld-ctype.c:666
+#: locale/programs/ld-ctype.c:595 locale/programs/ld-ctype.c:632
 #, c-format
 msgid "<SP> character must not be in class `%s'"
 msgstr "el caràcter <SP> no ha de ser a la classe «%s»"
 
-#: locale/programs/ld-ctype.c:644
+#: locale/programs/ld-ctype.c:610
 #, c-format
 msgid "character <SP> not defined in character map"
 msgstr "el caràcter <SP> no ha estat definit a la taula de caràcters"
 
-#: locale/programs/ld-ctype.c:780
+#: locale/programs/ld-ctype.c:746
 #, c-format
 msgid "`digit' category has not entries in groups of ten"
 msgstr "les entrades de la categoria «digit» no estan agrupades de deu en deu"
 
-#: locale/programs/ld-ctype.c:829
+#: locale/programs/ld-ctype.c:795
 #, c-format
 msgid "no input digits defined and none of the standard names in the charmap"
 msgstr "no s’han definit dígits d’entrada i cap dels noms estàndard es troba al mapa de caràcters"
 
-#: locale/programs/ld-ctype.c:894
+#: locale/programs/ld-ctype.c:860
 #, c-format
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr "no tots els caràcters emprats a «outdigit» es troben al mapa de caràcters"
 
-#: locale/programs/ld-ctype.c:911
+#: locale/programs/ld-ctype.c:877
 #, c-format
 msgid "not all characters used in `outdigit' are available in the repertoire"
 msgstr "no tots els caràcters emprats a «outdigit» es troben al repertori"
 
-#: locale/programs/ld-ctype.c:1176
+#: locale/programs/ld-ctype.c:1142
 #, c-format
 msgid "character class `%s' already defined"
 msgstr "la classe de caràcters «%s» ja ha estat definida"
 
-#: locale/programs/ld-ctype.c:1182
+#: locale/programs/ld-ctype.c:1148
 #, c-format
 msgid "implementation limit: no more than %Zd character classes allowed"
 msgstr "límit d’implementació: no es permeten més de %Zd classes de caràcters"
 
-#: locale/programs/ld-ctype.c:1208
+#: locale/programs/ld-ctype.c:1174
 #, c-format
 msgid "character map `%s' already defined"
 msgstr "el mapa de caràcters «%s» ja ha estat definit"
 
-#: locale/programs/ld-ctype.c:1214
+#: locale/programs/ld-ctype.c:1180
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr "límit d’implementació: no es permeten més de %d taules de caràcters"
 
-#: locale/programs/ld-ctype.c:1479 locale/programs/ld-ctype.c:1604
-#: locale/programs/ld-ctype.c:1710 locale/programs/ld-ctype.c:2400
-#: locale/programs/ld-ctype.c:3397
+#: locale/programs/ld-ctype.c:1445 locale/programs/ld-ctype.c:1570
+#: locale/programs/ld-ctype.c:1676 locale/programs/ld-ctype.c:2352
+#: locale/programs/ld-ctype.c:3324
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
 msgstr "%s: el camp «%s» no conté deu entrades exactament"
 
-#: locale/programs/ld-ctype.c:1507 locale/programs/ld-ctype.c:2081
+#: locale/programs/ld-ctype.c:1473 locale/programs/ld-ctype.c:2047
 #, c-format
 msgid "to-value <U%0*X> of range is smaller than from-value <U%0*X>"
 msgstr "el valor final <U%0*X> del rang és menor que l’inicial <U%0*X>"
 
-#: locale/programs/ld-ctype.c:1634
+#: locale/programs/ld-ctype.c:1600
 msgid "start and end character sequence of range must have the same length"
 msgstr "les seqüències de caràcters inicial i final del rang han de tenir la mateixa longitud"
 
-#: locale/programs/ld-ctype.c:1641
+#: locale/programs/ld-ctype.c:1607
 msgid "to-value character sequence is smaller than from-value sequence"
 msgstr "la seqüència de caràcters final és menor que la seqüència inicial"
 
-#: locale/programs/ld-ctype.c:2001 locale/programs/ld-ctype.c:2052
+#: locale/programs/ld-ctype.c:1967 locale/programs/ld-ctype.c:2018
 msgid "premature end of `translit_ignore' definition"
 msgstr "fi prematura de la definició «translit_ignore»"
 
-#: locale/programs/ld-ctype.c:2007 locale/programs/ld-ctype.c:2058
-#: locale/programs/ld-ctype.c:2100
+#: locale/programs/ld-ctype.c:1973 locale/programs/ld-ctype.c:2024
+#: locale/programs/ld-ctype.c:2066
 msgid "syntax error"
 msgstr "error de sintaxi"
 
-#: locale/programs/ld-ctype.c:2233
+#: locale/programs/ld-ctype.c:2199
 #, c-format
 msgid "%s: syntax error in definition of new character class"
 msgstr "%s: error de sintaxi a la definició de nova classe de caràcters"
 
-#: locale/programs/ld-ctype.c:2248
+#: locale/programs/ld-ctype.c:2214
 #, c-format
 msgid "%s: syntax error in definition of new character map"
 msgstr "%s: error de sintaxi a la definició de nou mapa de caràcters"
 
-#: locale/programs/ld-ctype.c:2422
+#: locale/programs/ld-ctype.c:2374
 msgid "ellipsis range must be marked by two operands of same type"
 msgstr "el rang amb el·lipsi ha d’estar marcat per dos operands del mateix tipus"
 
-#: locale/programs/ld-ctype.c:2431
+#: locale/programs/ld-ctype.c:2383
 msgid "with symbolic name range values the absolute ellipsis `...' must not be used"
 msgstr "no s’ha d’emprar l’el·lipsi absoluta «...» amb els valors de rang de noms simbòlics"
 
-#: locale/programs/ld-ctype.c:2446
+#: locale/programs/ld-ctype.c:2398
 msgid "with UCS range values one must use the hexadecimal symbolic ellipsis `..'"
 msgstr "cal emprar l’el·lipsi simbòlica hexadecimal «..» amb els valors de rang UCS"
 
-#: locale/programs/ld-ctype.c:2460
+#: locale/programs/ld-ctype.c:2412
 msgid "with character code range values one must use the absolute ellipsis `...'"
-msgstr "cal emprar l’el·lispi absoluta «...» amb els valors de rang de codis de caràcters"
+msgstr "cal emprar l’el·lipsi absoluta «...» amb els valors de rang de codis de caràcters"
 
-#: locale/programs/ld-ctype.c:2611
+#: locale/programs/ld-ctype.c:2563
 #, c-format
 msgid "duplicated definition for mapping `%s'"
 msgstr "la definició del mapa «%s» és duplicada"
 
-#: locale/programs/ld-ctype.c:2697 locale/programs/ld-ctype.c:2841
+#: locale/programs/ld-ctype.c:2649 locale/programs/ld-ctype.c:2793
 #, c-format
 msgid "%s: `translit_start' section does not end with `translit_end'"
 msgstr "%s: la secció «translit_start» no acaba amb «translit_end»"
 
-#: locale/programs/ld-ctype.c:2792
+#: locale/programs/ld-ctype.c:2744
 #, c-format
 msgid "%s: duplicate `default_missing' definition"
 msgstr "%s: la definició de «default_missing» és duplicada"
 
-#: locale/programs/ld-ctype.c:2797
+#: locale/programs/ld-ctype.c:2749
 msgid "previous definition was here"
 msgstr "la definició prèvia es troba ací"
 
-#: locale/programs/ld-ctype.c:2819
+#: locale/programs/ld-ctype.c:2771
 #, c-format
 msgid "%s: no representable `default_missing' definition found"
 msgstr "%s: no s’ha trobat cap definició representable de «default_missing»"
 
-#: locale/programs/ld-ctype.c:2962 locale/programs/ld-ctype.c:3059
-#: locale/programs/ld-ctype.c:3079 locale/programs/ld-ctype.c:3100
-#: locale/programs/ld-ctype.c:3121 locale/programs/ld-ctype.c:3142
-#: locale/programs/ld-ctype.c:3163 locale/programs/ld-ctype.c:3203
-#: locale/programs/ld-ctype.c:3224 locale/programs/ld-ctype.c:3289
-#: locale/programs/ld-ctype.c:3331 locale/programs/ld-ctype.c:3356
+#: locale/programs/ld-ctype.c:2889 locale/programs/ld-ctype.c:2986
+#: locale/programs/ld-ctype.c:3006 locale/programs/ld-ctype.c:3027
+#: locale/programs/ld-ctype.c:3048 locale/programs/ld-ctype.c:3069
+#: locale/programs/ld-ctype.c:3090 locale/programs/ld-ctype.c:3130
+#: locale/programs/ld-ctype.c:3151 locale/programs/ld-ctype.c:3216
+#: locale/programs/ld-ctype.c:3258 locale/programs/ld-ctype.c:3283
 #, c-format
 msgid "%s: character `%s' not defined while needed as default value"
 msgstr "%s: el caràcter «%s», necessari com a valor per defecte, no ha estat definit"
 
-#: locale/programs/ld-ctype.c:2967 locale/programs/ld-ctype.c:3064
-#: locale/programs/ld-ctype.c:3084 locale/programs/ld-ctype.c:3105
-#: locale/programs/ld-ctype.c:3126 locale/programs/ld-ctype.c:3147
-#: locale/programs/ld-ctype.c:3168 locale/programs/ld-ctype.c:3208
-#: locale/programs/ld-ctype.c:3229 locale/programs/ld-ctype.c:3294
+#: locale/programs/ld-ctype.c:2894 locale/programs/ld-ctype.c:2991
+#: locale/programs/ld-ctype.c:3011 locale/programs/ld-ctype.c:3032
+#: locale/programs/ld-ctype.c:3053 locale/programs/ld-ctype.c:3074
+#: locale/programs/ld-ctype.c:3095 locale/programs/ld-ctype.c:3135
+#: locale/programs/ld-ctype.c:3156 locale/programs/ld-ctype.c:3221
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
 msgstr "%s: el caràcter «%s» del mapa de caràcters no es pot representar amb un sol octet"
 
-#: locale/programs/ld-ctype.c:3338 locale/programs/ld-ctype.c:3363
+#: locale/programs/ld-ctype.c:3265 locale/programs/ld-ctype.c:3290
 #, c-format
 msgid "%s: character `%s' needed as default value not representable with one byte"
 msgstr "%s: el caràcter «%s», necessari com a valor per defecte, no es pot representar amb un sol octet"
 
-#: locale/programs/ld-ctype.c:3419
+#: locale/programs/ld-ctype.c:3346
 #, c-format
 msgid "no output digits defined and none of the standard names in the charmap"
-msgstr "no s’han definit dígits d’eixida i cap del noms estàndard es troba al mapa de caràcters"
+msgstr "no s’han definit dígits d’eixida i cap dels noms estàndard es troba al mapa de caràcters"
 
-#: locale/programs/ld-ctype.c:3668
+#: locale/programs/ld-ctype.c:3595
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: les dades de transliteració del locale «%s» no es troben disponibles"
 
-#: locale/programs/ld-ctype.c:3768
+#: locale/programs/ld-ctype.c:3695
 #, c-format
 msgid "%s: table for class \"%s\": %lu bytes\n"
 msgstr "%s: taula de la classe «%s»: %lu octets\n"
 
-#: locale/programs/ld-ctype.c:3833
+#: locale/programs/ld-ctype.c:3760
 #, c-format
 msgid "%s: table for map \"%s\": %lu bytes\n"
 msgstr "%s: taula del mapa «%s»: %lu octets\n"
 
-#: locale/programs/ld-ctype.c:3958
+#: locale/programs/ld-ctype.c:3885
 #, c-format
 msgid "%s: table for width: %lu bytes\n"
 msgstr "%s: taula d’amplada: %lu bytes\n"
@@ -2855,7 +2846,7 @@ msgstr "Genera eixida big‐endian."
 # ivb  Pose el punt final pq és la descripció curta de l'ordre.
 #: locale/programs/localedef.c:157
 msgid "Compile locale specification"
-msgstr "Compil·la una especificació de locale."
+msgstr "Compila una especificació de locale."
 
 #: locale/programs/localedef.c:160
 msgid ""
@@ -2919,12 +2910,12 @@ msgstr "no s’ha pogut crear un fitxer temporal: %s"
 #: locale/programs/locarchive.c:167 locale/programs/locarchive.c:430
 #, c-format
 msgid "cannot initialize archive file"
-msgstr "no s’ha pogut iniciar el fitxer arxiu"
+msgstr "no s’ha pogut iniciar el fitxer d’arxiu"
 
 #: locale/programs/locarchive.c:174 locale/programs/locarchive.c:437
 #, c-format
 msgid "cannot resize archive file"
-msgstr "no s’ha pogut redimensionar el fitxer arxiu"
+msgstr "no s’ha pogut redimensionar el fitxer d’arxiu"
 
 #: locale/programs/locarchive.c:189 locale/programs/locarchive.c:452
 #: locale/programs/locarchive.c:674
@@ -2952,7 +2943,7 @@ msgstr "no s’han pogut llegir les dades de l’arxiu de locales"
 #: locale/programs/locarchive.c:355
 #, c-format
 msgid "cannot map locale archive file"
-msgstr "no s’ha pogut mapar el fitxer arxiu de locales"
+msgstr "no s’ha pogut mapar el fitxer d’arxiu de locales"
 
 #: locale/programs/locarchive.c:460
 #, c-format
@@ -2962,7 +2953,7 @@ msgstr "no s’ha pogut blocar el nou arxiu"
 #: locale/programs/locarchive.c:529
 #, c-format
 msgid "cannot extend locale archive file"
-msgstr "no s’ha pogut estendre el fitxer arxiu de locales"
+msgstr "no s’ha pogut estendre el fitxer d’arxiu de locales"
 
 #: locale/programs/locarchive.c:538
 #, c-format
@@ -3116,7 +3107,7 @@ msgstr "no s’ha trobat el fitxer «%s» de mapa de repertori"
 #: login/programs/pt_chown.c:78
 #, c-format
 msgid "Set the owner, group and access permission of the slave pseudo terminal corresponding to the master pseudo terminal passed on file descriptor `%d'.  This is the helper program for the `grantpt' function.  It is not intended to be run directly from the command line.\n"
-msgstr "Estableix el propietari, grup i permissos d’accés del pseudo‐terminal esclau corresponent al pseudo‐terminal mestre passat en el descriptor de fitxer %d.  Aquest és el programa auxiliar per a la funció grantpt(), i no està pensat per a ser executat directament des de la línia d’ordres.\n"
+msgstr "Estableix el propietari, grup i permisos d’accés del pseudo‐terminal esclau corresponent al pseudo‐terminal mestre passat en el descriptor de fitxer %d.  Aquest és el programa auxiliar per a la funció grantpt(), i no està pensat per a ser executat directament des de la línia d’ordres.\n"
 
 #: login/programs/pt_chown.c:92
 #, c-format
@@ -3125,7 +3116,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"S’estableix el propietari a l’usuari actual, el grup a «%s» i els permissos d’accés a %o.\n"
+"S’estableix el propietari a l’usuari actual, el grup a «%s» i els permisos d’accés a %o.\n"
 "\n"
 "%s"
 
@@ -3157,7 +3148,7 @@ msgstr "s’ha alliberat el bloc dues voltes\n"
 
 #: malloc/mcheck.c:358
 msgid "bogus mcheck_status, library is buggy\n"
-msgstr "el valor d’«mcheck_status» és estrany; la biblioteca té errors\n"
+msgstr "el valor de «mcheck_status» és estrany; la biblioteca té errors\n"
 
 #: malloc/memusage.sh:32
 msgid "%s: option '%s' requires an argument\\n"
@@ -3232,7 +3223,7 @@ msgstr ""
 
 #: malloc/memusage.sh:191
 msgid "memusage: option \\`${1##*=}' is ambiguous"
-msgstr "memusage: l’opció «${1##*=}» és ambígua"
+msgstr "memusage: l’opció «${1##*=}» és ambigua"
 
 #: malloc/memusage.sh:200
 msgid "memusage: unrecognized option \\`$1'"
@@ -3257,7 +3248,7 @@ msgstr "Cadena amb el títol a emprar al gràfic d’eixida."
 
 #: malloc/memusagestat.c:58
 msgid "Generate output linear to time (default is linear to number of function calls)"
-msgstr "Genera una eixida lineal respecte el temps (per defecte és lineal respecte el nombre de crides a funció)."
+msgstr "Genera una eixida lineal respecte al temps (per defecte és lineal respecte al nombre de crides a funció)."
 
 #: malloc/memusagestat.c:62
 msgid "Also draw graph for total memory consumption"
@@ -3919,7 +3910,7 @@ msgstr "Codi d’error desconegut de NIS"
 
 #: nis/ypclnt.c:922
 msgid "Internal ypbind error"
-msgstr "Error intern d’«ypbind»"
+msgstr "Error intern de «ypbind»"
 
 #: nis/ypclnt.c:925
 msgid "Domain not bound"
@@ -3931,7 +3922,7 @@ msgstr "No s’han pogut assignar recursos del sistema"
 
 #: nis/ypclnt.c:931
 msgid "Unknown ypbind error"
-msgstr "Error desconegut d’«ypbind»"
+msgstr "Error desconegut de «ypbind»"
 
 #: nis/ypclnt.c:972
 msgid "yp_update: cannot convert host to netname\n"
@@ -3966,18 +3957,26 @@ msgstr "s’afegeix una nova entrada «%s» de tipus %s a la memòria cau de «%
 msgid " (first)"
 msgstr " (primer)"
 
-#: nscd/cache.c:285 nscd/connections.c:1000
+# Missatge de depuració amb error.  ivb
+# No usa quote().  ivb
+#: nscd/cache.c:288
 #, c-format
-msgid "cannot stat() file `%s': %s"
-msgstr "ha fallat stat() sobre el fitxer «%s»: %s"
+msgid "checking for monitored file `%s': %s"
+msgstr "en comprovar el fitxer vigilat «%s»: %s"
 
-#: nscd/cache.c:331
+# No usa quote().  ivb
+#: nscd/cache.c:298
+#, c-format
+msgid "monitored file `%s` changed (mtime)"
+msgstr "el fitxer vigilat «%s» ha canviat (segons la data de modificació)"
+
+#: nscd/cache.c:341
 #, c-format
 msgid "pruning %s cache; time %ld"
 msgstr "neteja de la memòria cau de «%s», hora %ld"
 
 # La 2a. és de l’estil de «GETPWBYNAME».  ivb
-#: nscd/cache.c:360
+#: nscd/cache.c:370
 #, c-format
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "es considera l’entrada %s «%s», expiració %<PRIu64>"
@@ -4063,39 +4062,69 @@ msgstr "no s’ha pogut indicar que el connector es tanque en fer exec(): %s"
 msgid "cannot enable socket to accept connections: %s"
 msgstr "no s’ha pogut habilitar el connector per a acceptar connexions: %s"
 
+# Cap de les 2 usa quote().  ivb
+#: nscd/connections.c:973
+#, c-format
+msgid "disabled inotify-based monitoring for file `%s': %s"
+msgstr "s’inhabilita la vigilància «inotify» per al fitxer «%s»: %s"
+
+# No usa quote().  ivb
+#: nscd/connections.c:977
+#, c-format
+msgid "monitoring file `%s` (%d)"
+msgstr "s’està vigilant el fitxer «%s» (%d)"
+
+# Cap de les 2 usa quote().  ivb
+#: nscd/connections.c:990
+#, c-format
+msgid "disabled inotify-based monitoring for directory `%s': %s"
+msgstr "s’inhabilita la vigilància «inotify» per al directori «%s»: %s"
+
+# Missatge de depuració.  ivb
+# No usa quote().  ivb
+#: nscd/connections.c:994
+#, c-format
+msgid "monitoring directory `%s` (%d)"
+msgstr "s’està vigilant el directori «%s» (%d)"
+
 # Cap usa quote().  ivb
 # Missatge de depuració.  ivb
-# Allò traçat és el fitxer, segons el codi.  ivb
-#: nscd/connections.c:984
+#: nscd/connections.c:1022
 #, c-format
-msgid "register trace file %s for database %s"
-msgstr "es registra el fitxer traçat «%s» per a la base de dades «%s»"
+msgid "monitoring file %s for database %s"
+msgstr "s’està vigilant el fitxer «%s» per a la base de dades «%s»"
 
-#: nscd/connections.c:1114
+# Cap usa quote().  ivb
+#: nscd/connections.c:1032
+#, c-format
+msgid "stat failed for file `%s'; will try again later: %s"
+msgstr "ha fallat stat() sobre el fitxer «%s», es tornarà a provar: %s"
+
+#: nscd/connections.c:1151
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "es proporciona accés al descriptor de fitxer %d, per a «%s»"
 
-#: nscd/connections.c:1126
+#: nscd/connections.c:1163
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "no s’ha pogut atendre la petició amb versió antiga %d; la versió actual és %d"
 
-#: nscd/connections.c:1148
+#: nscd/connections.c:1185
 #, c-format
 msgid "request from %ld not handled due to missing permission"
-msgstr "no s’atén la petició de %ld per manca de permissos"
+msgstr "no s’atén la petició de %ld per manca de permisos"
 
-#: nscd/connections.c:1153
+#: nscd/connections.c:1190
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
-msgstr "no s’atén la petició de «%s» (%ld) per manca de permissos"
+msgstr "no s’atén la petició de «%s» (%ld) per manca de permisos"
 
-#: nscd/connections.c:1158
+#: nscd/connections.c:1195
 msgid "request not handled due to missing permission"
-msgstr "no s’atén la petició per manca de permissos"
+msgstr "no s’atén la petició per manca de permisos"
 
-#: nscd/connections.c:1196 nscd/connections.c:1249
+#: nscd/connections.c:1233 nscd/connections.c:1286
 #, c-format
 msgid "cannot write result: %s"
 msgstr "no s’ha pogut escriure el resultat: %s"
@@ -4105,121 +4134,166 @@ msgstr "no s’ha pogut escriure el resultat: %s"
 # ivb  dimoni «nscd» per consultar la memòria cau o invalidar-la.  Per
 # ivb  això faig servir «programa de control» (com «ndc» amb «named» o
 # ivb  «chronyc» amb «chronyd»).
-#: nscd/connections.c:1340
+#: nscd/connections.c:1377
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "error en obtenir l’identificador del programa de control: %s"
 
-#: nscd/connections.c:1400
+#: nscd/connections.c:1437
 #, c-format
 msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr "no s’ha pogut obrir «/proc/self/cmdline»: %s; s’inhabilita el mode paranoic"
 
-#: nscd/connections.c:1414
+#: nscd/connections.c:1451
 #, c-format
 msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr "no s’ha pogut llegir «/proc/self/cmdline»: %s; s’inhabilita el mode paranoic"
 
-#: nscd/connections.c:1454
+#: nscd/connections.c:1491
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "no s’ha pogut tornar a l’UID vell: %s; s’inhabilita el mode paranoic"
 
-#: nscd/connections.c:1464
+#: nscd/connections.c:1501
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "no s’ha pogut tornar al GID vell: %s; s’inhabilita el mode paranoic"
 
-#: nscd/connections.c:1477
+#: nscd/connections.c:1514
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "no s’ha pogut tornar al directori vell de treball: %s; s’inhabilita el mode paranoic"
 
-#: nscd/connections.c:1523
+#: nscd/connections.c:1560
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "ha fallat la reexecució: %s; s’inhabilita el mode paranoic"
 
-#: nscd/connections.c:1532
+#: nscd/connections.c:1569
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "no s’ha pogut canviar el directori de treball a «/»: %s"
 
-#: nscd/connections.c:1725
+#: nscd/connections.c:1762
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "lectura incompleta en llegir la petició: %s"
 
-#: nscd/connections.c:1758
+#: nscd/connections.c:1795
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "la longitud de la clau de la petició és massa gran: %d"
 
-#: nscd/connections.c:1771
+#: nscd/connections.c:1808
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "lectura incompleta en llegir la clau de la petició: %s"
 
-#: nscd/connections.c:1781
+#: nscd/connections.c:1818
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: s’ha rebut una petició (amb versió %d) del PID %ld"
 
-#: nscd/connections.c:1786
+#: nscd/connections.c:1823
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: s’ha rebut una petició (amb versió %d)"
 
-#: nscd/connections.c:2050 nscd/connections.c:2252
+# No usa quote().  ivb
+#: nscd/connections.c:1963
 #, c-format
-msgid "disabled inotify after read error %d"
-msgstr "s’inhabilita «inotify» per l’error de lectura amb codi %d"
+msgid "ignored inotify event for `%s` (file exists)"
+msgstr "s’ha descartat l’esdeveniment d’«inotify» per a «%s» (el fitxer existeix)"
 
-#: nscd/connections.c:2375
+# No usa quote(), el segon és «moved» o «deleted».  ivb
+# FIXME: Inner verb cannot be translated!  ivb
+#: nscd/connections.c:1968
+#, c-format
+msgid "monitored file `%s` was %s, removing watch"
+msgstr "el fitxer vigilat «%s» ha estat %s, se n’elimina el monitor"
+
+# Cap usa quote().  ivb
+#: nscd/connections.c:1976 nscd/connections.c:2018
+#, c-format
+msgid "failed to remove file watch `%s`: %s"
+msgstr "no s’ha pogut eliminar el monitor del fitxer «%s»: %s"
+
+# No usa quote().  ivb
+#: nscd/connections.c:1991
+#, c-format
+msgid "monitored file `%s` was written to"
+msgstr "el fitxer vigilat «%s» ha rebut una escriptura"
+
+# No usa quote(), el segon és «moved» o «deleted».  ivb
+# FIXME: Inner verb cannot be translated!  ivb
+#: nscd/connections.c:2015
+#, c-format
+msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
+msgstr "el directori pare vigilat «%s» ha estat %s, s’elimina el monitor per a «%s»"
+
+# No usa quote(), el segon és «created» o «moved into place».  ivb
+# FIXME: Inner verb cannot be translated!  ivb
+#: nscd/connections.c:2041
+#, c-format
+msgid "monitored file `%s` was %s, adding watch"
+msgstr "el fitxer vigilat «%s» ha estat %s, se n’afegeix el monitor"
+
+# Cap dels 2 usa quote().  ivb
+#: nscd/connections.c:2053
+#, c-format
+msgid "failed to add file watch `%s`: %s"
+msgstr "no s’ha pogut afegir un monitor per al fitxer «%s»: %s"
+
+#: nscd/connections.c:2247 nscd/connections.c:2428
+#, c-format
+msgid "disabled inotify-based monitoring after read error %d"
+msgstr "s’inhabilita la vigilància «inotify» per l’error de lectura amb codi %d"
+
+#: nscd/connections.c:2543
 msgid "could not initialize conditional variable"
 msgstr "no s’ha pogut iniciar la variable condicional"
 
-#: nscd/connections.c:2383
+#: nscd/connections.c:2551
 msgid "could not start clean-up thread; terminating"
 msgstr "no s’ha pogut iniciar el fil d’execució de neteja; s’està finalitzant"
 
-#: nscd/connections.c:2397
+#: nscd/connections.c:2565
 msgid "could not start any worker thread; terminating"
 msgstr "no s’ha pogut iniciar cap fil d’execució treballador; s’està finalitzant"
 
-#: nscd/connections.c:2452 nscd/connections.c:2454 nscd/connections.c:2470
-#: nscd/connections.c:2480 nscd/connections.c:2498 nscd/connections.c:2509
-#: nscd/connections.c:2519
+#: nscd/connections.c:2620 nscd/connections.c:2622 nscd/connections.c:2638
+#: nscd/connections.c:2648 nscd/connections.c:2666 nscd/connections.c:2677
+#: nscd/connections.c:2687
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "no s’ha pogut executar «nscd» com a l’usuari «%s»"
 
-#: nscd/connections.c:2472
+#: nscd/connections.c:2640
 msgid "initial getgrouplist failed"
 msgstr "ha fallat getgrouplist() inicial"
 
-#: nscd/connections.c:2481
+#: nscd/connections.c:2649
 msgid "getgrouplist failed"
 msgstr "ha fallat getgrouplist()"
 
-#: nscd/connections.c:2499
+#: nscd/connections.c:2667
 msgid "setgroups failed"
 msgstr "ha fallat setgroups()"
 
-#: nscd/grpcache.c:405 nscd/hstcache.c:432 nscd/initgrcache.c:410
+#: nscd/grpcache.c:405 nscd/hstcache.c:432 nscd/initgrcache.c:411
 #: nscd/pwdcache.c:383 nscd/servicescache.c:338
 #, c-format
 msgid "short write in %s: %s"
 msgstr "escriptura incompleta a «%s»: %s"
 
 # El nom de la base de dades s’usa més a sovint que la descripció.  ivb
-#: nscd/grpcache.c:450 nscd/initgrcache.c:77
+#: nscd/grpcache.c:450 nscd/initgrcache.c:78
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "no s’ha trobat «%s» a la memòria cau de «group»"
 
 # El nom de la base de dades s’usa més a sovint que la descripció.  ivb
-#: nscd/grpcache.c:452 nscd/initgrcache.c:79
+#: nscd/grpcache.c:452 nscd/initgrcache.c:80
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr "es torna a carregar «%s» a la memòria cau de «group»"
@@ -4284,7 +4358,7 @@ msgstr "NOMBRE"
 
 #: nscd/nscd.c:111
 msgid "Start NUMBER threads"
-msgstr "Llança NOMBRE fils d’exeució."
+msgstr "Llança NOMBRE fils d’execució."
 
 #: nscd/nscd.c:112
 msgid "Shut the server down"
@@ -4314,7 +4388,7 @@ msgstr "Empra una memòria cau diferent per a cada usuari."
 msgid "Name Service Cache Daemon."
 msgstr "Dimoni de memòria cau del servei de noms."
 
-#: nscd/nscd.c:155 nss/getent.c:1003 nss/makedb.c:206
+#: nscd/nscd.c:155 nss/getent.c:1007 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "el nombre d’arguments és incorrecte"
@@ -4347,7 +4421,7 @@ msgstr "no s’ha pogut canviar el directori de treball a «/»"
 msgid "Could not create log file"
 msgstr "no s’ha pogut crear el fitxer de registre"
 
-#: nscd/nscd.c:355 nscd/nscd_stat.c:192
+#: nscd/nscd.c:355 nscd/nscd_stat.c:194
 #, c-format
 msgid "write incomplete"
 msgstr "escriptura incompleta"
@@ -4362,7 +4436,7 @@ msgstr "no s’ha pogut llegir l’ACK d’invalidació"
 msgid "invalidation failed"
 msgstr "la invalidació ha fallat"
 
-#: nscd/nscd.c:417 nscd/nscd.c:442 nscd/nscd_stat.c:173
+#: nscd/nscd.c:417 nscd/nscd.c:442 nscd/nscd_stat.c:175
 #, c-format
 msgid "Only root is allowed to use this option!"
 msgstr "només root pot emprar aquesta opció"
@@ -4447,67 +4521,67 @@ msgstr "no s’ha pogut obtenir el directori de treball actual: %s; s’inhabili
 msgid "maximum file size for %s database too small"
 msgstr "la mida màxima de fitxer per a la base de dades «%s» és massa menuda"
 
-#: nscd/nscd_stat.c:142
+#: nscd/nscd_stat.c:144
 #, c-format
 msgid "cannot write statistics: %s"
 msgstr "no s’han pogut escriure les estadístiques: %s"
 
-#: nscd/nscd_stat.c:157
+#: nscd/nscd_stat.c:159
 msgid "yes"
 msgstr "sí"
 
-#: nscd/nscd_stat.c:158
+#: nscd/nscd_stat.c:160
 msgid "no"
 msgstr "no"
 
-#: nscd/nscd_stat.c:169
+#: nscd/nscd_stat.c:171
 #, c-format
 msgid "Only root or %s is allowed to use this option!"
 msgstr "només root o %s pot emprar aquesta opció"
 
-#: nscd/nscd_stat.c:180
+#: nscd/nscd_stat.c:182
 #, c-format
 msgid "nscd not running!\n"
 msgstr "nscd no està en marxa\n"
 
-#: nscd/nscd_stat.c:204
+#: nscd/nscd_stat.c:206
 #, c-format
 msgid "cannot read statistics data"
 msgstr "no s’han pogut llegir les dades estadístiques"
 
-#: nscd/nscd_stat.c:207
+#: nscd/nscd_stat.c:209
 #, c-format
 msgid ""
 "nscd configuration:\n"
 "\n"
 "%15d  server debug level\n"
 msgstr ""
-"Configuració d’nscd:\n"
+"Configuració de nscd:\n"
 "\n"
 "%15d  nivell de depuració del servidor\n"
 
-#: nscd/nscd_stat.c:231
+#: nscd/nscd_stat.c:233
 #, c-format
 msgid "%3ud %2uh %2um %2lus  server runtime\n"
 msgstr "%3ud %2uh %2um %2lus  de funcionament del servidor\n"
 
-#: nscd/nscd_stat.c:234
+#: nscd/nscd_stat.c:236
 #, c-format
 msgid "    %2uh %2um %2lus  server runtime\n"
 msgstr "    %2uh %2um %2lus  de funcionament del servidor\n"
 
-#: nscd/nscd_stat.c:236
+#: nscd/nscd_stat.c:238
 #, c-format
 msgid "        %2um %2lus  server runtime\n"
 msgstr "        %2um %2lus  de funcionament del servidor\n"
 
-#: nscd/nscd_stat.c:238
+#: nscd/nscd_stat.c:240
 #, c-format
 msgid "            %2lus  server runtime\n"
 msgstr "            %2lus  de funcionament del servidor\n"
 
 # FIXME: interval, not internal.  ivb
-#: nscd/nscd_stat.c:240
+#: nscd/nscd_stat.c:242
 #, c-format
 msgid ""
 "%15d  current number of threads\n"
@@ -4525,7 +4599,7 @@ msgstr ""
 "%15u  nombre de recàrregues\n"
 
 # El primer camp és passwd, group, shadow...  ivb
-#: nscd/nscd_stat.c:275
+#: nscd/nscd_stat.c:277
 #, c-format
 msgid ""
 "\n"
@@ -4593,85 +4667,85 @@ msgstr "es torna a carregar «%s» a la memòria cau de «passwd»"
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "«%s» no és un identificador numèric d’usuari vàlid"
 
-#: nscd/selinux.c:155
+#: nscd/selinux.c:154
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
-msgstr "no s’ha pogut obrir una connexió amb el sub‐sistema d’auditoria: %m"
+msgstr "no s’ha pogut obrir una connexió amb el subsistema d’auditoria: %m"
 
-#: nscd/selinux.c:176
+#: nscd/selinux.c:175
 msgid "Failed to set keep-capabilities"
 msgstr "no s’han pogut establir les capacitats a mantenir"
 
-#: nscd/selinux.c:177 nscd/selinux.c:240
+#: nscd/selinux.c:176 nscd/selinux.c:239
 msgid "prctl(KEEPCAPS) failed"
 msgstr "ha fallat prctl(KEEPCAPS)"
 
-#: nscd/selinux.c:191
+#: nscd/selinux.c:190
 msgid "Failed to initialize drop of capabilities"
 msgstr "no s’ha pogut començar a renunciar a capacitats"
 
-#: nscd/selinux.c:192
+#: nscd/selinux.c:191
 msgid "cap_init failed"
 msgstr "ha fallat cap_init()"
 
-#: nscd/selinux.c:213 nscd/selinux.c:230
+#: nscd/selinux.c:212 nscd/selinux.c:229
 msgid "Failed to drop capabilities"
-msgstr "no s’ha pogunt renunciar a les capacitats"
+msgstr "no s’ha pogut renunciar a les capacitats"
 
-#: nscd/selinux.c:214 nscd/selinux.c:231
+#: nscd/selinux.c:213 nscd/selinux.c:230
 msgid "cap_set_proc failed"
 msgstr "ha fallat cap_set_proc()"
 
-#: nscd/selinux.c:239
+#: nscd/selinux.c:238
 msgid "Failed to unset keep-capabilities"
-msgstr "no s’han pogut desestablir les capacitats a mantenir"
+msgstr "no s’han pogut treure les capacitats a mantenir"
 
-#: nscd/selinux.c:255
+#: nscd/selinux.c:254
 msgid "Failed to determine if kernel supports SELinux"
 msgstr "no s’ha pogut determinar si el nucli accepta SELinux"
 
-#: nscd/selinux.c:270
+#: nscd/selinux.c:269
 msgid "Failed to start AVC thread"
 msgstr "no s’ha pogut iniciar el fil d’execució de l’AVC"
 
-#: nscd/selinux.c:292
+#: nscd/selinux.c:291
 msgid "Failed to create AVC lock"
 msgstr "no s’ha pogut crear el blocatge de l’AVC"
 
-#: nscd/selinux.c:332
+#: nscd/selinux.c:331
 msgid "Failed to start AVC"
 msgstr "no s’ha pogut iniciar l’AVC"
 
-#: nscd/selinux.c:334
+#: nscd/selinux.c:333
 msgid "Access Vector Cache (AVC) started"
 msgstr "s’ha iniciat la memòria cau de vectors d’accés (AVC)"
 
-#: nscd/selinux.c:369
+#: nscd/selinux.c:368
 msgid "Error querying policy for undefined object classes or permissions."
-msgstr "error en consultar la política per a classes d’objectes i permissos desconeguts"
+msgstr "error en consultar la política per a classes d’objectes i permisos desconeguts"
 
-#: nscd/selinux.c:376
+#: nscd/selinux.c:375
 msgid "Error getting security class for nscd."
-msgstr "error en obtenir la classe de seguretat d’«nscd»"
+msgstr "error en obtenir la classe de seguretat de «nscd»"
 
-#: nscd/selinux.c:381
+#: nscd/selinux.c:380
 #, c-format
 msgid "Error translating permission name \"%s\" to access vector bit."
 msgstr "error en traduir el nom de permís «%s» a un vector de bits d’accés"
 
-#: nscd/selinux.c:391
+#: nscd/selinux.c:390
 msgid "Error getting context of socket peer"
 msgstr "error en obtenir el context de l’extrem remot del connector"
 
-#: nscd/selinux.c:396
+#: nscd/selinux.c:395
 msgid "Error getting context of nscd"
-msgstr "error en obtenir el context d’«nscd»"
+msgstr "error en obtenir el context de «nscd»"
 
-#: nscd/selinux.c:402
+#: nscd/selinux.c:401
 msgid "Error getting sid from context"
 msgstr "error en obtenir el SID del context"
 
-#: nscd/selinux.c:440
+#: nscd/selinux.c:439
 #, c-format
 msgid ""
 "\n"
@@ -4736,16 +4810,16 @@ msgstr "Obté entrades de les bases de dades d’administració."
 msgid "Enumeration not supported on %s\n"
 msgstr "no es permet l’enumeració sobre «%s»\n"
 
-#: nss/getent.c:917
+#: nss/getent.c:921
 #, c-format
 msgid "Unknown database name"
 msgstr "el nom de la base de dades no és conegut"
 
-#: nss/getent.c:947
+#: nss/getent.c:951
 msgid "Supported databases:\n"
 msgstr "Bases de dades acceptades:\n"
 
-#: nss/getent.c:1013
+#: nss/getent.c:1017
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "la base de dades no és coneguda: %s\n"
@@ -4793,7 +4867,7 @@ msgstr "no s’ha pogut obrir el fitxer de base de dades «%s»"
 #: nss/makedb.c:272
 #, c-format
 msgid "no entries to be processed"
-msgstr "no hi ha cap entrada que processar"
+msgstr "no hi ha cap entrada a processar"
 
 #: nss/makedb.c:282
 #, c-format
@@ -4881,7 +4955,7 @@ msgstr ""
 "\n"
 "Obté el valor de configuració per a la VARIABLE, o per a la VARIABLE_DE_CAMÍ\n"
 "donat un CAMÍ.  Si s’indica una ESPECIFICACIÓ, mostra els valors per a l’entorn\n"
-"de compil·lació indicat.\n"
+"de compilació indicat.\n"
 "\n"
 
 #: posix/getconf.c:537
@@ -4908,7 +4982,7 @@ msgstr "la variable «%s» no és reconeguda"
 #: posix/getopt.c:592 posix/getopt.c:621
 #, c-format
 msgid "%s: option '%s' is ambiguous; possibilities:"
-msgstr "%s: l’opció «%s» és ambígua; possibilitats:"
+msgstr "%s: l’opció «%s» és ambigua; possibilitats:"
 
 #: posix/getopt.c:662 posix/getopt.c:666
 #, c-format
@@ -4949,7 +5023,7 @@ msgstr "%s: l’opció «%c» necessita un argument\n"
 #: posix/getopt.c:972 posix/getopt.c:988
 #, c-format
 msgid "%s: option '-W %s' is ambiguous\n"
-msgstr "%s: l’opció «-W %s» és ambígua\n"
+msgstr "%s: l’opció «-W %s» és ambigua\n"
 
 #: posix/getopt.c:1012 posix/getopt.c:1030
 #, c-format
@@ -5029,7 +5103,7 @@ msgstr "«)» o «\\)» desaparellat"
 msgid "No previous regular expression"
 msgstr "No hi ha expressió regular prèvia"
 
-#: posix/wordexp.c:1844
+#: posix/wordexp.c:1851
 msgid "parameter null or not set"
 msgstr "el paràmetre és nul o no s’ha establert"
 
@@ -5159,7 +5233,7 @@ msgstr "L’adreça no es troba mapada a un objecte"
 
 #: stdio-common/psiginfo-data.h:23
 msgid "Invalid permissions for mapped object"
-msgstr "Els permissos no són vàlids per a l’objecte mapat"
+msgstr "Els permisos no són vàlids per a l’objecte mapat"
 
 #: stdio-common/psiginfo-data.h:26
 msgid "Invalid address alignment"
@@ -5187,11 +5261,11 @@ msgstr "Un fill ha eixit"
 
 #: stdio-common/psiginfo-data.h:36
 msgid "Child has terminated abnormally and did not create a core file"
-msgstr "Un fill ha eixit abnormalment i no ha creat un fitxer de bolcat"
+msgstr "Un fill ha eixit anormalment i no ha creat un fitxer de bolcat"
 
 #: stdio-common/psiginfo-data.h:37
 msgid "Child has terminated abnormally and created a core file"
-msgstr "Un fill ha eixit abnormalment i ha creat un fitxer de bolcat"
+msgstr "Un fill ha eixit anormalment i ha creat un fitxer de bolcat"
 
 #: stdio-common/psiginfo-data.h:38
 msgid "Traced child has trapped"
@@ -5309,7 +5383,7 @@ msgstr "no resta memòria\n"
 # ivb  D'acord amb un comentari del propi fitxer.
 #: sunrpc/auth_unix.c:349
 msgid "auth_unix.c: Fatal marshalling problem"
-msgstr "auth_none.c: error fatal de preserialització"
+msgstr "auth_none.c: error fatal de serialització"
 
 #: sunrpc/clnt_perr.c:95 sunrpc/clnt_perr.c:111
 #, c-format
@@ -5364,7 +5438,7 @@ msgstr "RPC: El programa no es troba disponible"
 
 #: sunrpc/clnt_perr.c:188
 msgid "RPC: Program/version mismatch"
-msgstr "RPC: No hi ha coincidència programa/versió"
+msgstr "RPC: No hi ha coincidència de programa/versió"
 
 #: sunrpc/clnt_perr.c:192
 msgid "RPC: Procedure unavailable"
@@ -5596,7 +5670,7 @@ msgstr ""
 #: sunrpc/rpc_main.c:1422
 #, c-format
 msgid "-a\t\tgenerate all files, including samples\n"
-msgstr "  -a                   Genera tots els fitxers, incloent els exemples.\n"
+msgstr "  -a                   Genera tots els fitxers, incloent‐hi els exemples.\n"
 
 #: sunrpc/rpc_main.c:1423
 #, c-format
@@ -6442,7 +6516,7 @@ msgstr "La xarxa ha tallat la connexió per un reinici"
 #. TRANS A network connection was aborted locally.
 #: sysdeps/gnu/errlist.c:604
 msgid "Software caused connection abort"
-msgstr "El programari ha tallat la conexió"
+msgstr "El programari ha tallat la connexió"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
@@ -6810,7 +6884,7 @@ msgstr "Interbloqueig pel blocatge d’un fitxer"
 
 #: sysdeps/gnu/errlist.c:1231
 msgid "Bad font file format"
-msgstr "El fitxer de font no té un format vàlid"
+msgstr "El fitxer de tipus de lletra no té un format vàlid"
 
 #: sysdeps/gnu/errlist.c:1239
 msgid "Machine is not on the network"
@@ -6863,7 +6937,7 @@ msgstr "Accés una biblioteca compartida corrupta"
 
 #: sysdeps/gnu/errlist.c:1327
 msgid ".lib section in a.out corrupted"
-msgstr "La secció «.lib» de l’a.out és corrupta"
+msgstr "La secció «.lib» del «a.out» és corrupta"
 
 #: sysdeps/gnu/errlist.c:1335
 msgid "Attempting to link in too many shared libraries"
@@ -6932,7 +7006,7 @@ msgstr "L’estat no és recuperable"
 # RFKill és el nom d’un subsistema de Linux.  ivb
 #: sysdeps/gnu/errlist.c:1463
 msgid "Operation not possible due to RF-kill"
-msgstr "L’operació no és possible degut a RFKill"
+msgstr "L’operació no és possible a causa de RFKill"
 
 #: sysdeps/gnu/errlist.c:1471
 msgid "Memory page has hardware error"
@@ -6955,7 +7029,7 @@ msgstr "Fallada temporal a la resolució de noms"
 
 #: sysdeps/posix/gai_strerror-strs.h:3
 msgid "Bad value for ai_flags"
-msgstr "El valor d’«ai_flags» no és vàlid"
+msgstr "El valor de «ai_flags» no és vàlid"
 
 #: sysdeps/posix/gai_strerror-strs.h:4
 msgid "Non-recoverable failure in name resolution"
@@ -6963,7 +7037,7 @@ msgstr "Fallada irrecuperable a la resolució de noms"
 
 #: sysdeps/posix/gai_strerror-strs.h:5
 msgid "ai_family not supported"
-msgstr "No es permet l’ús d’aquest valor d’«ai_family»"
+msgstr "No es permet l’ús d’aquest valor de «ai_family»"
 
 #: sysdeps/posix/gai_strerror-strs.h:6
 msgid "Memory allocation failure"
@@ -6979,11 +7053,11 @@ msgstr "El nom o servei no és conegut"
 
 #: sysdeps/posix/gai_strerror-strs.h:9
 msgid "Servname not supported for ai_socktype"
-msgstr "El valor d’«ai_socktype» no permet l’ús d’aquest servei"
+msgstr "El valor de «ai_socktype» no permet l’ús d’aquest servei"
 
 #: sysdeps/posix/gai_strerror-strs.h:10
 msgid "ai_socktype not supported"
-msgstr "El valor d’«ai_socktype» no està permés"
+msgstr "El valor de «ai_socktype» no està permès"
 
 #: sysdeps/posix/gai_strerror-strs.h:11
 msgid "System error"
@@ -7131,7 +7205,7 @@ msgstr ""
 
 #: timezone/zic.c:505
 msgid "wild compilation-time specification of zic_t"
-msgstr "l’especificació de «zic_t» en temps de compil·lació no és vàlida"
+msgstr "l’especificació de «zic_t» en temps de compilació no és vàlida"
 
 #: timezone/zic.c:524
 #, c-format
