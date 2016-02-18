@@ -1,5 +1,7 @@
 2016-02-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* po/libc.pot: Regenerated.
+
 	* po/be.po: Updated translation.
 	* po/bg.po: Likewise.
 	* po/ca.po: Likewise.
