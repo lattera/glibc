@@ -1,5 +1,9 @@
 2016-02-18  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19592]
+	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c (__ceill): Use __ceil on
+	high and low parts then use ldbl_canonicalize_int if needed.
+
 	[BZ #17899]
 	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h (ldbl_canonicalize_int):
 	New function.
