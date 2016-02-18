@@ -3864,7 +3864,7 @@ if test -z "$enable_hacker_mode" && test x"$libc_config_ok" != xyes; then
 *** The GNU C library is currently unavailable for this platform.
 *** If you are interested in seeing glibc on this platform visit
 *** the \"How to submit a new port\" in the wiki:
-***   https://sourceware.org/glibc/wiki/HomePage#Development
+***   https://sourceware.org/glibc/wiki/#Development
 *** and join the community!" "$LINENO" 5
     ;;
   esac
