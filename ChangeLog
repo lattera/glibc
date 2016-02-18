@@ -1,5 +1,9 @@
 2016-02-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* version.h (RELEASE): Set to "stable".
+	(VERSION): Set to 2.23.
+	* include/feature.h (__GLIBC_MINOR__): Set to 23.
+
 	* NEWS: Updated fixed bugs.
 
 2016-02-18  H.J. Lu  <hongjiu.lu@intel.com>
