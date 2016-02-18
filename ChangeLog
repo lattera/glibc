@@ -1,5 +1,11 @@
 2016-02-18  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19595]
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl): Use
+	common logic for all cases of shifting subnormal results.  Do not
+	insert sign bit in shifted mantissa.  Always pass -1023 as biased
+	exponent to ldbl_insert_mantissa in subnormal case.
+
 	[BZ #19594]
 	* sysdeps/ieee754/ldbl-128ibm/s_roundl.c (__roundl): Use __round
 	on high and low parts then adjust result and use

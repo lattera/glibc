@@ -130,15 +130,11 @@ __ieee754_fmodl (long double x, long double y)
 	    x = ldbl_insert_mantissa((sx>>63), iy, hx, lx);
 	} else {		/* subnormal output */
 	    n = -1022 - iy;
-	    if(n<=48) {
-		lx = (lx>>n)|((u_int64_t)hx<<(64-n));
-		hx >>= n;
-	    } else if (n<=63) {
-		lx = (hx<<(64-n))|(lx>>n); hx = sx;
-	    } else {
-		lx = hx>>(n-64); hx = sx;
-	    }
-	    x = ldbl_insert_mantissa((sx>>63), iy, hx, lx);
+	    /* We know 1 <= N <= 52, and that there are no nonzero
+	       bits in places below 2^-1074.  */
+	    lx = (lx >> n) | ((u_int64_t) hx << (64 - n));
+	    hx >>= n;
+	    x = ldbl_insert_mantissa((sx>>63), -1023, hx, lx);
 	    x *= one;		/* create necessary signal */
 	}
 	return x;		/* exact output */
