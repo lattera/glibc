@@ -1,5 +1,10 @@
 2016-02-18  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19594]
+	* sysdeps/ieee754/ldbl-128ibm/s_roundl.c (__roundl): Use __round
+	on high and low parts then adjust result and use
+	ldbl_canonicalize_int if needed.
+
 	[BZ #19593]
 	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c (__truncl): Use __trunc
 	on high part and __floor or __ceil on low part then use
