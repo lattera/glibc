@@ -20,8 +20,8 @@
 # error "Never use <bits/string.h> directly; include <string.h> instead."
 #endif
 
-/* Define if architecture can access unaligned multi-byte variables.  */
-#define _STRING_ARCH_unaligned   0
+/* sparc uses the aligned string inline ABI.  */
+#define _STRING_INLINE_unaligned 0
 
 /* sparc32 and sparc64 strchr(x, '\0') perform better than
    __rawmemchr(x, '\0').  */

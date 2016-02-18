@@ -46,7 +46,7 @@
 # endif
 #endif
 
-#if _STRING_ARCH_unaligned
+#if _STRING_INLINE_unaligned
 /* If we can do unaligned memory accesses we must know the endianess.  */
 # include <endian.h>
 # include <bits/types.h>
@@ -95,7 +95,7 @@ __STRING2_COPY_TYPE (8);
 /* Set N bytes of S to C.  */
 #if !defined _HAVE_STRING_ARCH_memset
 # if !__GNUC_PREREQ (3, 0)
-#  if _STRING_ARCH_unaligned
+#  if _STRING_INLINE_unaligned
 #   define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
 		  ? ((n) == 1						      \
@@ -223,7 +223,7 @@ __STRING2_COPY_TYPE (8);
 #  endif
 
 #  if !__GNUC_PREREQ (3, 0) || defined _FORCE_INLINES
-#   if _STRING_ARCH_unaligned
+#   if _STRING_INLINE_unaligned
 #    ifndef _FORCE_INLINES
 #     define __mempcpy_args(src) \
      ((const char *) (src))[0], ((const char *) (src))[2],		      \
@@ -419,7 +419,7 @@ extern void *__rawmemchr (const void *__s, int __c);
 		  : strcpy (dest, src)))
 # endif
 
-# if _STRING_ARCH_unaligned
+# if _STRING_INLINE_unaligned
 #  ifndef _FORCE_INLINES
 #   define __strcpy_args(src) \
      __extension__ __STRING2_SMALL_GET16 (src, 0),			      \
@@ -598,7 +598,7 @@ __strcpy_small (char *__dest,
 #  endif
 
 #  if !__GNUC_PREREQ (3, 0) || defined _FORCE_INLINES
-#   if _STRING_ARCH_unaligned
+#   if _STRING_INLINE_unaligned
 #    ifndef _FORCE_INLINES
 #     define __stpcpy_args(src) \
      __extension__ __STRING2_SMALL_GET16 (src, 0),			      \

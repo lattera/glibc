@@ -20,8 +20,8 @@
 # error "Never use <bits/string.h> directly; include <string.h> instead."
 #endif
 
-/* The ix86 processors can access unaligned multi-byte variables.  */
-#define _STRING_ARCH_unaligned	1
+/* Use the unaligned string inline ABI.  */
+#define _STRING_INLINE_unaligned 1
 
 /* Enable inline functions only for i486 or better when compiling for
    ia32.  */

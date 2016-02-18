@@ -8,7 +8,11 @@
 #ifndef _BITS_STRING_H
 #define _BITS_STRING_H	1
 
-/* Define if architecture can access unaligned multi-byte variables.  */
-#define _STRING_ARCH_unaligned   0
+/* Define whether to use the unaligned string inline ABI.
+   The string inline functions are an external ABI, thus cannot be changed
+   after the first release of a new target (unlike _STRING_ARCH_unaligned
+   which may be changed from release to release).  Targets must support
+   unaligned accesses in hardware if either define is set to true.  */
+#define _STRING_INLINE_unaligned   0
 
 #endif /* bits/string.h */

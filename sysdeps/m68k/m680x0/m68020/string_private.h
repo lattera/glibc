@@ -1,5 +1,5 @@
-/* Optimized, inlined string functions.  AArch64 version.
-   Copyright (C) 2015-2016 Free Software Foundation, Inc.
+/* Define _STRING_ARCH_unaligned.  m680x0 version, x >= 2.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,9 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _STRING_H
-# error "Never use <bits/string.h> directly; include <string.h> instead."
-#endif
-
-/* AArch64 uses the aligned string inline ABI.  */
-#define _STRING_INLINE_unaligned 0
+/* Tell the generic inline macros that unaligned memory access is
+   possible.  */
+#define _STRING_ARCH_unaligned   1

@@ -21,8 +21,8 @@
 # error "Never use <bits/string.h> directly; include <string.h> instead."
 #endif
 
-/* The s390 processors can access unaligned multi-byte variables.  */
-#define _STRING_ARCH_unaligned	1
+/* Use the unaligned string inline ABI.  */
+#define _STRING_INLINE_unaligned 1
 
 /* We only provide optimizations if the user selects them and if
    GNU CC is used.  */

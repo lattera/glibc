@@ -46,6 +46,9 @@ extern int __ffs (int __i) __attribute__ ((const));
 extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
 #endif
 
+/* Get _STRING_ARCH_unaligned.  */
+#include <string_private.h>
+
 /* Now the real definitions.  We do this here since some of the functions
    above are defined as macros in the headers.  */
 #include <string/string.h>

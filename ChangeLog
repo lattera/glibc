@@ -1,3 +1,32 @@
+2016-02-18  H.J. Lu  <hongjiu.lu@intel.com>
+	    Wilco Dijkstra  <wdijkstr@arm.com>
+
+	[BZ #19462]
+	* bits/string.h (_STRING_ARCH_unaligned): Renamed to ...
+	(_STRING_INLINE_unaligned): This.
+	* include/string.h: Include <string_private.h>.
+	* string/bits/string2.h: Replace _STRING_ARCH_unaligned with
+	_STRING_INLINE_unaligned.
+	* sysdeps/aarch64/bits/string.h (_STRING_ARCH_unaligned): Removed.
+	(_STRING_INLINE_unaligned): New.
+	* sysdeps/aarch64/string_private.h: New file.
+	* sysdeps/generic/string_private.h: Likewise.
+	* sysdeps/m68k/m680x0/m68020/string_private.h: Likewise.
+	* sysdeps/s390/string_private.h: Likewise.
+	* sysdeps/x86/string_private.h: Likewise.
+	* sysdeps/m68k/m680x0/m68020/bits/string.h
+	(_STRING_ARCH_unaligned): Renamed to ...
+	(_STRING_INLINE_unaligned): This.
+	* sysdeps/s390/bits/string.h (_STRING_ARCH_unaligned): Renamed
+	to ...
+	(_STRING_INLINE_unaligned): This.
+	* sysdeps/sparc/bits/string.h (_STRING_ARCH_unaligned): Renamed
+	to ...
+	(_STRING_INLINE_unaligned): This.
+	* sysdeps/x86/bits/string.h (_STRING_ARCH_unaligned): Renamed
+	to ...
+	(_STRING_INLINE_unaligned): This.
+
 2016-02-17  Andrew Senkevich  <andrew.senkevich@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 
