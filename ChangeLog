@@ -1,5 +1,8 @@
 2016-02-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* version.h (RELEAES): Set to "development".
+	(VERSION): Set to 2.23.90.
+
 	* version.h (RELEASE): Set to "stable".
 	(VERSION): Set to 2.23.
 	* include/feature.h (__GLIBC_MINOR__): Set to 23.
