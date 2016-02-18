@@ -1,5 +1,10 @@
 2016-02-18  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19593]
+	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c (__truncl): Use __trunc
+	on high part and __floor or __ceil on low part then use
+	ldbl_canonicalize_int if needed.
+
 	[BZ #19592]
 	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c (__ceill): Use __ceil on
 	high and low parts then use ldbl_canonicalize_int if needed.
