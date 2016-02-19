@@ -1,3 +1,10 @@
+2016-02-19  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19581]
+	* locales/sr_ME (date_fmt): Remove newline.
+	* locales/sr_RS (date_fmt): Likewise.
+	* locales/sr_RS@latin (date_fmt): Likewise.
+
 2016-02-19  Mike Frysinger  <vapier@gentoo.org>
 
 	* locales/dz_BT: Delete leading whitespace.
