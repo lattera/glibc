@@ -1,5 +1,9 @@
 2016-02-19  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_init.c (res_ninit): Update comment.
+
+2016-02-19  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19505]
 	* posix/spawn_int.h: Add headers and include guard.
 	(__spawn_valid_fd): New function.

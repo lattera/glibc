@@ -118,21 +118,7 @@ unsigned long long int __res_initstamp attribute_hidden;
 /*
  * Set up default settings.  If the configuration file exist, the values
  * there will have precedence.  Otherwise, the server address is set to
- * INADDR_ANY and the default domain name comes from the gethostname().
- *
- * An interrim version of this code (BIND 4.9, pre-4.4BSD) used 127.0.0.1
- * rather than INADDR_ANY ("0.0.0.0") as the default name server address
- * since it was noted that INADDR_ANY actually meant ``the first interface
- * you "ifconfig"'d at boot time'' and if this was a SLIP or PPP interface,
- * it had to be "up" in order for you to reach your own name server.  It
- * was later decided that since the recommended practice is to always
- * install local static routes through 127.0.0.1 for all your network
- * interfaces, that we could solve this problem without a code change.
- *
- * The configuration file should always be used, since it is the only way
- * to specify a default domain.  If you are running a server on your local
- * machine, you should say "nameserver 0.0.0.0" or "nameserver 127.0.0.1"
- * in the configuration file.
+ * INADDR_LOOPBACK and the default domain name comes from gethostname.
  *
  * Return 0 if completes successfully, -1 on error
  */
