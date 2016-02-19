@@ -1,5 +1,11 @@
 2016-02-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19674]
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c (__ieee754_powl): Include
+	sign in overflowing and underflowing results when overflow or
+	underflow is detected early.  Include sign in result before rather
+	than after scaling.
+
 	[BZ #19603]
 	* sysdeps/ieee754/ldbl-128ibm/e_remainderl.c
 	(__ieee754_remainderl): Adjust sign of integer version of low part
