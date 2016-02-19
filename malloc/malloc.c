@@ -2410,7 +2410,6 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
           && grow_heap (old_heap, MINSIZE + nb - old_size) == 0)
         {
           av->system_mem += old_heap->size - old_heap_size;
-          arena_mem += old_heap->size - old_heap_size;
           set_head (old_top, (((char *) old_heap + old_heap->size) - (char *) old_top)
                     | PREV_INUSE);
         }
@@ -2420,7 +2419,6 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
           heap->ar_ptr = av;
           heap->prev = old_heap;
           av->system_mem += heap->size;
-          arena_mem += heap->size;
           /* Set up the new top.  */
           top (av) = chunk_at_offset (heap, sizeof (*heap));
           set_head (top (av), (heap->size - sizeof (*heap)) | PREV_INUSE);
