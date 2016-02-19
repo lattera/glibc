@@ -1,3 +1,12 @@
+2016-04-08  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #16137]
+	* benchtests/Makefile (LOCALES): Change iw_IL to he_IL.
+	* benchtests/bench-strcoll.c (input_files): Likewise.
+	* benchtests/strcoll-inputs/filelist#en_US.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#iw_IL.UTF-8: Rename to ...
+	* benchtests/strcoll-inputs/lorem_ipsum#he_IL.UTF-8: ... here.
+
 2016-04-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19929]

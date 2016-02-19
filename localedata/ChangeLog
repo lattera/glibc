@@ -1,3 +1,9 @@
+2016-04-08  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #16137]
+	* locales/iw_IL: Deleted.
+	* SUPPORTED: Delete iw_IL lines.
+
 2016-04-08  Mike FABIAN  <mfabian@redhat.com>
 
 	* locales/i18n: Fix typos in tel_int_fmt.

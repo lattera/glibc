@@ -44,7 +44,7 @@ static const char *const input_files[] = {
   "lorem_ipsum#pt_PT.UTF-8",
   "lorem_ipsum#el_GR.UTF-8",
   "lorem_ipsum#ru_RU.UTF-8",
-  "lorem_ipsum#iw_IL.UTF-8",
+  "lorem_ipsum#he_IL.UTF-8",
   "lorem_ipsum#es_ES.UTF-8",
   "lorem_ipsum#hi_IN.UTF-8",
   "lorem_ipsum#sv_SE.UTF-8",
