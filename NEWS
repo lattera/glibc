@@ -7,7 +7,9 @@ using `glibc' in the "product" field.
 
 Version 2.24
 
-  [Add important changes here]
+* The pap_AN locale has been deleted.  This has been deprecated for a long
+  time.  It has been replaced by pap_AW & pap_CW, both of which have long
+  been included in previous releases.
 
 Security related changes:
 

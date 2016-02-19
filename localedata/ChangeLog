@@ -1,5 +1,11 @@
 2016-02-19  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #16003]
+	* SUPPORTED: Delete pap_AN/UTF-8.
+	* locales/pap_AN: Delete file.
+
+2016-02-19  Mike Frysinger  <vapier@gentoo.org>
+
 	* locales/ar_SS: Set int_prefix based on public data in CLDR.
 	* locales/bn_BD: Likewise.
 	* locales/dz_BT: Likewise.
