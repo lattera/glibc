@@ -1,3 +1,17 @@
+2016-02-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19679]
+	* sysdeps/x86_64/dl-trampoline.S (DL_RUNIME_UNALIGNED_VEC_SIZE):
+	Renamed to ...
+	(DL_RUNTIME_UNALIGNED_VEC_SIZE): This.  Set to 8.
+	(DL_RUNIME_RESOLVE_REALIGN_STACK): Renamed to ...
+	(DL_RUNTIME_RESOLVE_REALIGN_STACK): This.  Updated.
+	(DL_RUNIME_RESOLVE_REALIGN_STACK): Renamed to ...
+	(DL_RUNTIME_RESOLVE_REALIGN_STACK): This.
+	* sysdeps/x86_64/dl-trampoline.h
+	(DL_RUNIME_RESOLVE_REALIGN_STACK): Renamed to ...
+	(DL_RUNTIME_RESOLVE_REALIGN_STACK): This.
+
 2016-02-19  Mark Wielaard  <mjw@redhat.com>
 
 	* elf/elf.h: Add NT_ARM_SYSTEM_CALL.

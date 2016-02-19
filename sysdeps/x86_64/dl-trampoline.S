@@ -33,15 +33,19 @@
 # define DL_STACK_ALIGNMENT 8
 #endif
 
-#ifndef DL_RUNIME_UNALIGNED_VEC_SIZE
-/* The maximum size of unaligned vector load and store.  */
-# define DL_RUNIME_UNALIGNED_VEC_SIZE 16
+#ifndef DL_RUNTIME_UNALIGNED_VEC_SIZE
+/* The maximum size in bytes of unaligned vector load and store in the
+   dynamic linker.  Since SSE optimized memory/string functions with
+   aligned SSE register load and store are used in the dynamic linker,
+   we must set this to 8 so that _dl_runtime_resolve_sse will align the
+   stack before calling _dl_fixup.  */
+# define DL_RUNTIME_UNALIGNED_VEC_SIZE 8
 #endif
 
 /* True if _dl_runtime_resolve should align stack to VEC_SIZE bytes.  */
-#define DL_RUNIME_RESOLVE_REALIGN_STACK \
+#define DL_RUNTIME_RESOLVE_REALIGN_STACK \
   (VEC_SIZE > DL_STACK_ALIGNMENT \
-   && VEC_SIZE > DL_RUNIME_UNALIGNED_VEC_SIZE)
+   && VEC_SIZE > DL_RUNTIME_UNALIGNED_VEC_SIZE)
 
 /* Align vector register save area to 16 bytes.  */
 #define REGISTER_SAVE_VEC_OFF	0
@@ -76,7 +80,7 @@
 #ifdef HAVE_AVX512_ASM_SUPPORT
 # define VEC_SIZE		64
 # define VMOVA			vmovdqa64
-# if DL_RUNIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
+# if DL_RUNTIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
 #  define VMOV			vmovdqa64
 # else
 #  define VMOV			vmovdqu64
@@ -100,7 +104,7 @@ strong_alias (_dl_runtime_profile_avx, _dl_runtime_profile_avx512)
 
 #define VEC_SIZE		32
 #define VMOVA			vmovdqa
-#if DL_RUNIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
+#if DL_RUNTIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
 # define VMOV			vmovdqa
 #else
 # define VMOV			vmovdqu
@@ -119,7 +123,7 @@ strong_alias (_dl_runtime_profile_avx, _dl_runtime_profile_avx512)
 /* movaps/movups is 1-byte shorter.  */
 #define VEC_SIZE		16
 #define VMOVA			movaps
-#if DL_RUNIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
+#if DL_RUNTIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
 # define VMOV			movaps
 #else
 # define VMOV			movups

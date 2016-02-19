@@ -30,7 +30,7 @@
 #undef REGISTER_SAVE_AREA
 #undef LOCAL_STORAGE_AREA
 #undef BASE
-#if DL_RUNIME_RESOLVE_REALIGN_STACK
+#if DL_RUNTIME_RESOLVE_REALIGN_STACK
 # define REGISTER_SAVE_AREA	(REGISTER_SAVE_AREA_RAW + 8)
 /* Local stack area before jumping to function address: RBX.  */
 # define LOCAL_STORAGE_AREA	8
@@ -57,7 +57,7 @@
 	cfi_startproc
 _dl_runtime_resolve:
 	cfi_adjust_cfa_offset(16) # Incorporate PLT
-#if DL_RUNIME_RESOLVE_REALIGN_STACK
+#if DL_RUNTIME_RESOLVE_REALIGN_STACK
 # if LOCAL_STORAGE_AREA != 8
 #  error LOCAL_STORAGE_AREA must be 8
 # endif
@@ -146,7 +146,7 @@ _dl_runtime_resolve:
 	VMOV (REGISTER_SAVE_VEC_OFF + VEC_SIZE * 5)(%rsp), %VEC(5)
 	VMOV (REGISTER_SAVE_VEC_OFF + VEC_SIZE * 6)(%rsp), %VEC(6)
 	VMOV (REGISTER_SAVE_VEC_OFF + VEC_SIZE * 7)(%rsp), %VEC(7)
-#if DL_RUNIME_RESOLVE_REALIGN_STACK
+#if DL_RUNTIME_RESOLVE_REALIGN_STACK
 	mov %RBX_LP, %RSP_LP
 	cfi_def_cfa_register(%rsp)
 	movq (%rsp), %rbx
