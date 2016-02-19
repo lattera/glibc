@@ -26,13 +26,17 @@
    particularly related to the arena free list.  */
 
 #include <errno.h>
+#include <malloc.h>
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-#define TIMEOUT 7
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 static bool termination_requested;
 static int inner_thread_count = 4;
@@ -156,20 +160,20 @@ outer_thread (void *closure)
 static int
 do_test (void)
 {
-  /* The number of top-level threads should be equal to the number of
-     arenas.  See arena_get2.  */
-  long outer_thread_count = sysconf (_SC_NPROCESSORS_ONLN);
-  if (outer_thread_count >= 1)
+  /* The number of threads should be smaller than the number of
+     arenas, so that there will be some free arenas to add to the
+     arena free list.  */
+  enum { outer_thread_count = 2 };
+  if (mallopt (M_ARENA_MAX, 8) == 0)
     {
-      /* See NARENAS_FROM_NCORES in malloc.c.  */
-      if (sizeof (long) == 4)
-        outer_thread_count *= 2;
-      else
-        outer_thread_count *= 8;
+      printf ("error: mallopt (M_ARENA_MAX) failed\n");
+      return 1;
     }
 
   /* Leave some room for shutting down all threads gracefully.  */
-  int timeout = TIMEOUT - 2;
+  int timeout = 3;
+  if (timeout > TIMEOUT)
+    timeout = TIMEOUT - 1;
 
   pthread_t *threads = calloc (sizeof (*threads), outer_thread_count);
   if (threads == NULL)
@@ -212,6 +216,3 @@ do_test (void)
 
   return 0;
 }
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
