@@ -480,7 +480,7 @@ struct malloc_save_state
   unsigned long mmap_threshold;
   int check_action;
   unsigned long max_sbrked_mem;
-  unsigned long max_total_mem;
+  unsigned long max_total_mem;	/* Always 0, for backwards compatibility.  */
   unsigned int n_mmaps;
   unsigned int max_n_mmaps;
   unsigned long mmapped_mem;

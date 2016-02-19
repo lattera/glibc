@@ -1520,7 +1520,7 @@ This is the total number of chunks allocated with @code{mmap}.
 This is the total size of memory allocated with @code{mmap}, in bytes.
 
 @item int usmblks
-This field is unused.
+This field is unused and always 0.
 
 @item int fsmblks
 This field is unused.

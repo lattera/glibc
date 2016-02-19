@@ -649,8 +649,7 @@ libc_hidden_proto (__libc_mallopt)
 	       have been freed but not use resused or consolidated)
   hblks:     current number of mmapped regions
   hblkhd:    total bytes held in mmapped regions
-  usmblks:   the maximum total allocated space. This will be greater
-		than current total if trimming has occurred.
+  usmblks:   always 0
   fsmblks:   total bytes held in fastbin blocks
   uordblks:  current total allocated space (normal or mmapped)
   fordblks:  total free space
@@ -1743,10 +1742,7 @@ struct malloc_par
 
   /* Statistics */
   INTERNAL_SIZE_T mmapped_mem;
-  /*INTERNAL_SIZE_T  sbrked_mem;*/
-  /*INTERNAL_SIZE_T  max_sbrked_mem;*/
   INTERNAL_SIZE_T max_mmapped_mem;
-  INTERNAL_SIZE_T max_total_mem;  /* only kept for NO_THREADS */
 
   /* First address handed out by MORECORE/sbrk.  */
   char *sbrk_base;
@@ -4665,7 +4661,7 @@ int_mallinfo (mstate av, struct mallinfo *m)
     {
       m->hblks = mp_.n_mmaps;
       m->hblkhd = mp_.mmapped_mem;
-      m->usmblks = mp_.max_total_mem;
+      m->usmblks = 0;
       m->keepcost = chunksize (av->top);
     }
 }

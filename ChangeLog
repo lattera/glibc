@@ -1,5 +1,16 @@
 2016-02-19  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/malloc.c (__libc_mallinfo): Update comment.
+	(struct malloc_par): Remove max_total_mem member, it was always 0.
+	(int_mallinfo): Store 0 into usmblks (no functional change).
+	* malloc/hooks.c (struct malloc_state): Document that
+	max_total_mem is always 0.
+	* malloc/malloc.h (struct mallinfo): Dcoument that usmblks is
+	always 0.
+	* manual/memory.texi (Statistics of Malloc): Likewise.
+
+2016-02-19  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/malloc.c (sysmalloc): Do not update arena_max.
 	* malloc/arena.c (arena_max): Remove.
 	(heap_trim, _int_new_arena): Do not update arena_max.

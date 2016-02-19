@@ -83,7 +83,7 @@ struct mallinfo
   int smblks;   /* number of fastbin blocks */
   int hblks;    /* number of mmapped regions */
   int hblkhd;   /* space in mmapped regions */
-  int usmblks;  /* maximum total allocated space */
+  int usmblks;  /* always 0, preserved for backwards compatibility */
   int fsmblks;  /* space available in freed fastbin blocks */
   int uordblks; /* total allocated space */
   int fordblks; /* total free space */
