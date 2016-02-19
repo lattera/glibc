@@ -27,11 +27,9 @@ int
 posix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *file_actions,
 				  int fd, int newfd)
 {
-  int maxfd = __sysconf (_SC_OPEN_MAX);
   struct __spawn_action *rec;
 
-  /* Test for the validity of the file descriptor.  */
-  if (fd < 0 || newfd < 0 || fd >= maxfd || newfd >= maxfd)
+  if (!__spawn_valid_fd (fd) || !__spawn_valid_fd (newfd))
     return EBADF;
 
   /* Allocate more memory if needed.  */

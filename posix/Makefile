@@ -51,7 +51,7 @@ routines :=								      \
 	getaddrinfo gai_strerror wordexp				      \
 	pread pwrite pread64 pwrite64					      \
 	spawn_faction_init spawn_faction_destroy spawn_faction_addclose	      \
-	spawn_faction_addopen spawn_faction_adddup2			      \
+	spawn_faction_addopen spawn_faction_adddup2 spawn_valid_fd	      \
 	spawnattr_init spawnattr_destroy				      \
 	spawnattr_getdefault spawnattr_setdefault			      \
 	spawnattr_getflags spawnattr_setflags				      \
@@ -87,7 +87,8 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-getopt1 bug-getopt2 bug-getopt3 bug-getopt4 \
 		   bug-getopt5 tst-getopt_long1 bug-regex34 bug-regex35 \
 		   tst-pathconf tst-getaddrinfo4 tst-rxspencer-no-utf8 \
-		   tst-fnmatch3 bug-regex36 tst-getaddrinfo5
+		   tst-fnmatch3 bug-regex36 tst-getaddrinfo5 \
+		   tst-posix_spawn-fd
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest

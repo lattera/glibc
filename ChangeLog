@@ -1,5 +1,22 @@
 2016-02-19  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19505]
+	* posix/spawn_int.h: Add headers and include guard.
+	(__spawn_valid_fd): New function.
+	* posix/spawn_faction_addopen.c
+	(posix_spawn_file_actions_addopen): Use __spawn_valid_fd.
+	* posix/spawn_faction_addclose.c
+	(posix_spawn_file_actions_addclose): Likewise.
+	* posix/spawn_faction_adddup2.c
+	(posix_spawn_file_actions_adddup2): Likewise.  Add check for
+	second file descriptor.
+	* posix/spawn_valid_fd.c: New file.
+	* posix/tst-posix_spawn-fd.c: New file.
+	* posix/Makefile (routines): Add spawn_valid_fd.
+	(tests): Add tst-posix_spawn-fd.
+
+2016-02-19  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/tst-malloc-thread-exit.c: Include test-skeleton.c early.
 	(do_test): Limit the number of arenas, so that we can use fewer
 	outer threads.  Limit timeout to 3 seconds, in preparation for a

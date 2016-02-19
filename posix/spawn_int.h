@@ -1,3 +1,27 @@
+/* Internal definitions for posix_spawn functionality.
+   Copyright (C) 2000-2016 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+#ifndef _SPAWN_INT_H
+#define _SPAWN_INT_H
+
+#include <spawn.h>
+#include <stdbool.h>
+
 /* Data structure to contain the action information.  */
 struct __spawn_action
 {
@@ -39,3 +63,9 @@ extern int __spawni (pid_t *pid, const char *path,
 		     const posix_spawn_file_actions_t *file_actions,
 		     const posix_spawnattr_t *attrp, char *const argv[],
 		     char *const envp[], int xflags);
+
+/* Return true if FD falls into the range valid for file descriptors.
+   The check in this form is mandated by POSIX.  */
+bool __spawn_valid_fd (int fd) internal_function attribute_hidden;
+
+#endif /* _SPAWN_INT_H */

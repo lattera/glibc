@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <spawn.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,11 +29,9 @@ posix_spawn_file_actions_addopen (posix_spawn_file_actions_t *file_actions,
 				  int fd, const char *path, int oflag,
 				  mode_t mode)
 {
-  int maxfd = __sysconf (_SC_OPEN_MAX);
   struct __spawn_action *rec;
 
-  /* Test for the validity of the file descriptor.  */
-  if (fd < 0 || fd >= maxfd)
+  if (!__spawn_valid_fd (fd))
     return EBADF;
 
   char *path_copy = strdup (path);
