@@ -43,7 +43,9 @@ __remquol (long double x, long double y, int *quo)
   EXTRACT_WORDS64 (ly, ylo);
   sx = hx & 0x8000000000000000ULL;
   qs = sx ^ (hy & 0x8000000000000000ULL);
+  ly ^= hy & 0x8000000000000000ULL;
   hy &= 0x7fffffffffffffffLL;
+  lx ^= sx;
   hx &= 0x7fffffffffffffffLL;
 
   /* Purge off exception values.  */

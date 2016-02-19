@@ -10392,6 +10392,7 @@ static const struct test_ff_f_data remainder_test_data[] =
     TEST_ff_f (remainder, 3.0, 2.0, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 56
     TEST_ff_f (remainder, -0x1.80000000000002p1L, 2.0, 0x1.fffffffffffff8p-1L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (remainder, 0x0.ffffffffffffffp0L, -0x1.00000000000001p0L, -0x1p-55L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
 
     TEST_ff_f (remainder, 3419, 360, 179, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -10530,6 +10531,7 @@ static const struct test_ffI_f1_data remquo_test_data[] =
     TEST_ffI_f1 (remquo, 3, 2, -1, 2, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #if defined TEST_LDOUBLE && LDBL_MANT_DIG >= 56
     TEST_ffI_f1 (remquo, -0x1.80000000000002p1L, 2.0, 0x1.fffffffffffff8p-1L, -2, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ffI_f1 (remquo, 0x0.ffffffffffffffp0L, -0x1.00000000000001p0L, -0x1p-55L, -1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
 
     TEST_ffI_f1 (remquo, 3419, 360, 179, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
