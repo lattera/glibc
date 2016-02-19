@@ -127,8 +127,6 @@ int __malloc_initialized = -1;
 
 /**************************************************************************/
 
-#ifndef NO_THREADS
-
 /* atfork support.  */
 
 static void *(*save_malloc_hook)(size_t __size, const void *);
@@ -327,7 +325,6 @@ ptmalloc_unlock_all2 (void)
 
 #  define ptmalloc_unlock_all2 ptmalloc_unlock_all
 # endif
-#endif  /* !NO_THREADS */
 
 /* Initialization routine. */
 #include <string.h>

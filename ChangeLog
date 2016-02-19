@@ -1,5 +1,12 @@
 2016-02-19  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/generic/malloc-machine.h: Assume mutex_init is always
+	available.  Do not define NO_THREADS.
+	* malloc/malloc.c: Do not check NO_THREADS.
+	* malloc/arena.c: Likewise.
+
+2016-02-19  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/malloc.c (__libc_mallinfo): Update comment.
 	(struct malloc_par): Remove max_total_mem member, it was always 0.
 	(int_mallinfo): Store 0 into usmblks (no functional change).

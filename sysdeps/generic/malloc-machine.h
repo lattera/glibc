@@ -22,25 +22,6 @@
 
 #include <atomic.h>
 
-#ifndef mutex_init /* No threads, provide dummy macros */
-
-# define NO_THREADS
-
-/* The mutex functions used to do absolutely nothing, i.e. lock,
-   trylock and unlock would always just return 0.  However, even
-   without any concurrently active threads, a mutex can be used
-   legitimately as an `in use' flag.  To make the code that is
-   protected by a mutex async-signal safe, these macros would have to
-   be based on atomic test-and-set operations, for example. */
-typedef int mutex_t;
-
-# define mutex_init(m)          (*(m) = 0)
-# define mutex_lock(m)          ({ *(m) = 1; 0; })
-# define mutex_trylock(m)       (*(m) ? 1 : ((*(m) = 1), 0))
-# define mutex_unlock(m)        (*(m) = 0)
-
-#endif /* !defined mutex_init */
-
 #ifndef atomic_full_barrier
 # define atomic_full_barrier() __asm ("" ::: "memory")
 #endif

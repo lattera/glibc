@@ -1073,10 +1073,8 @@ static void*   realloc_check(void* oldmem, size_t bytes,
 			       const void *caller);
 static void*   memalign_check(size_t alignment, size_t bytes,
 				const void *caller);
-#ifndef NO_THREADS
 static void*   malloc_atfork(size_t sz, const void *caller);
 static void      free_atfork(void* mem, const void *caller);
-#endif
 
 /* ------------------ MMAP support ------------------  */
 
