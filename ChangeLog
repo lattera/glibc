@@ -1,3 +1,10 @@
+2016-02-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19678]
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (__nextafterl):
+	Ensure +0.0 is returned when taking the next value below the least
+	positive value.
+
 2016-02-19  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/generic/malloc-machine.h: Assume mutex_init is always

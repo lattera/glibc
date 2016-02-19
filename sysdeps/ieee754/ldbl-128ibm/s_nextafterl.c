@@ -87,6 +87,9 @@ long double __nextafterl(long double x, long double y)
 		math_force_eval (u);		/* raise underflow flag */
 		__set_errno (ERANGE);
 	      }
+	      /* Avoid returning -0 in FE_DOWNWARD mode.  */
+	      if (x == 0.0L)
+		return 0.0L;
 	      return x;
 	    }
 	    /* If the high double is an exact power of two and the low
