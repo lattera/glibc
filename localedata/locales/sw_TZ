@@ -1,12 +1,17 @@
 comment_char %
 escape_char /
 
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Charset: UTF-8
 % Authors:
 % 2011-03-07, locales@kamusi.org
 % 2011-03-07, info@2xlibre.net
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Swahili locale for Tanzania"

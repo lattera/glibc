@@ -1,6 +1,13 @@
 comment_char %
 escape_char /
 
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Czech Language Locale for Czech
 % Source:
 % Address: 	U školy 292		Without diactitical chars:	U skoly 292
@@ -16,7 +23,6 @@ escape_char /
 % Application: general
 % Users: general
 % Charset: ISO_8859-2:1987
-% Distribution and use is free, also for commercial purposes.
 
 % !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 % Soubor cs_CZ je primárním souborem, cs_CZ@-ch je vytvořen z něj odebráním

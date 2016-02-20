@@ -1,6 +1,13 @@
 comment_char %
 escape_char /
 
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Tagalog Language Locale for Philippines
 % Source:
 % Contact:
@@ -11,8 +18,6 @@ escape_char /
 % Date: 2001-01-28
 % Users: general
 % Charset: ISO-8859-1
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title "Tagalog language locale for Philippines"

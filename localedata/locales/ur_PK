@@ -1,6 +1,13 @@
 comment_char %
 escape_char /
 
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Urdu Language Locale for Pakistan
 % Source:
 % Contact: Shehzad Ashiq Ali, Pablo Saratxaga
@@ -11,8 +18,6 @@ escape_char /
 % Date: 2000-07-11
 % Users: general
 % Charset: CP1256
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Urdu Language Locale for Pakistan"

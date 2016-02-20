@@ -1,9 +1,13 @@
 comment_char %
 escape_char /
 
-% Copyright (C) 2003-2006 Volodymyr M. Lisivka <v_lisivka@sourceforge.net>
-% Copyright (C) 2006 Max Kutny <mkutny@gmail.com>
-%
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Ukrainian Language Locale for Ukraine
 % Source:
 % Contact: Volodymyr M. Lisivka
@@ -17,8 +21,6 @@ escape_char /
 % Application: general
 % Users: general
 % Charset: UTF-8
-%
-% Distribution and use is free, also for commercial purposes.
 %
 % Keywords in this file are treated according to ISO/IEC 14652
 % http://anubis.dkuug.dk/jtc1/sc22/wg20/docs/14652fcd.txt
