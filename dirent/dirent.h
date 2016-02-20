@@ -183,14 +183,15 @@ extern struct dirent64 *readdir64 (DIR *__dirp) __nonnull ((1));
 extern int readdir_r (DIR *__restrict __dirp,
 		      struct dirent *__restrict __entry,
 		      struct dirent **__restrict __result)
-     __nonnull ((1, 2, 3));
+     __nonnull ((1, 2, 3)) __attribute_deprecated__;
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (readdir_r,
 		       (DIR *__restrict __dirp,
 			struct dirent *__restrict __entry,
 			struct dirent **__restrict __result),
-		       readdir64_r) __nonnull ((1, 2, 3));
+		       readdir64_r)
+  __nonnull ((1, 2, 3)) __attribute_deprecated__;
 #  else
 #   define readdir_r readdir64_r
 #  endif
@@ -200,7 +201,7 @@ extern int __REDIRECT (readdir_r,
 extern int readdir64_r (DIR *__restrict __dirp,
 			struct dirent64 *__restrict __entry,
 			struct dirent64 **__restrict __result)
-     __nonnull ((1, 2, 3));
+  __nonnull ((1, 2, 3)) __attribute_deprecated__;
 # endif
 #endif	/* POSIX or misc */
 

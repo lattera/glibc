@@ -11,6 +11,9 @@ Version 2.24
   time.  It has been replaced by pap_AW & pap_CW, both of which have long
   been included in previous releases.
 
+* The readdir_r and readdir64_r functions have been deprecated.  It is
+  recommended to use readdir and readdir64 instead.
+
 Security related changes:
 
   [Add security related changes here]

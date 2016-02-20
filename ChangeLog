@@ -1,3 +1,11 @@
+2016-02-20  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19056]
+	* dirent/dirent.h (readdir_r, readdir64_r): Mark as deprecated.
+	* manual/filesys.texi (Reading/Closing Directory): Mention
+	deprecaion.
+	* posix/tst-dir.c (main): Disable deprecation warning in test.
+
 2016-02-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19679]
