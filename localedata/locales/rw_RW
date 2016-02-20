@@ -1,5 +1,6 @@
-escape_char /
 comment_char %
+escape_char /
+
 % Locale for Kinyarwanda locale in Rwanda
 % Contributed by Steve Murphy <murf@e-tools.com>, 2004
 % with help from:

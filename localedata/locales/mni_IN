@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Manipuri language locale for India.
 % Contributed by Mr. Pravin Satpute <psatpute AT redhat DOT com> and Ms. Rebika Devi < rebika_srd AT rediffmail DOT com>
 

@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Chinese language locale for the Peoples Republic of China
 %
 % This work is based on ISO PDTR 14652, Unicode 3.0, locale definition

@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Belarusian Language Latin-Script Locale for Belarus
 % Contact: Ihar Hrachyshka
 % Email: boox.svaboda2006@gmail.com

@@ -1,5 +1,5 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
 
 % Last Update by Runa Bhattacharjee <runab@redhat.com>
 

@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Kannada language locale for India.
 % Copied fron hi_IN one, G Karunakar <karunakar@freedomink.org> . Kannada Translations by Arun Sharma <arun@sharma-home.net>
 

@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Catalan Language Locale for Spain
 % Source: RAP
 % Contact: Jordi Mallach

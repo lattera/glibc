@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Maori language locale for New Zealand
 % Source: James Gasson
 % Contact: James Gasson, Pablo Saratxaga

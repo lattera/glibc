@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Tulu (kannada) language locale for India.
 
 % *** Below just modify to suit your language. I have modified for Kannada

@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Catalan Language Locale for Spain with Euro
 % Language: ca
 % Territory: ES

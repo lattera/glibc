@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Nynorsk language locale for Norway.
 % Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
 % Tetsuji Orita <orita@jp.ibm.com>.

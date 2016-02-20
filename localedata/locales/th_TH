@@ -1,7 +1,6 @@
-escape_char /
 comment_char %
+escape_char /
 
-%
 % Thailand (Thai) locale
 %
 % Name:       th_TH

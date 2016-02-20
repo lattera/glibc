@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Central Nahuatl locale for Mexico
 % Source: RAP
 % Address: Texcoco/Estado de Mexico, Mexico

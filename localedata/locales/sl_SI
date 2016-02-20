@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Slovenian language locale for Slovenia
 % Source: USM/MZT
 % Address: Kotnikova 6,

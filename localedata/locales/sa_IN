@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Sanskrit language locale for India.
 % Contributed by Vidya Ayer <svaksha@gmail.com>
 % and Christian Perrier <bubulle@debian.org>

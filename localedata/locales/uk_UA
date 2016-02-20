@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Copyright (C) 2003-2006 Volodymyr M. Lisivka <v_lisivka@sourceforge.net>
 % Copyright (C) 2006 Max Kutny <mkutny@gmail.com>
 %

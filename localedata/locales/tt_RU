@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Tatar Language Locale for Russia
 % Source:
 % Contact: Pablo Saratxaga, Rinat Norkin

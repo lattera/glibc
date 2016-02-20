@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Bhojpuri language locale for India.
 % Contributed by Alok Ranjan <ranjan_aalok@yahoo.com>,
 % Dr.Chandra Mohan <cmkumar1@rediffmail.com>,

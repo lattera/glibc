@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Swedish Language Locale for Finland with Euro
 % Language: sv
 % Territory: FI

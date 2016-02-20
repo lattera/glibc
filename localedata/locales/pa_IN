@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Punjabi language locale for Indian Punjabi(Gurmukhi)
 % Last update by A Alam <amanlinux@netscape.net>
 

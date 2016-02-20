@@ -1,5 +1,6 @@
-escape_char /
 comment_char %
+escape_char /
+
 % English language locale for Antigua and Barbuda.
 % Contributed by Ulrich Drepper <drepper@redhat.com>, 2008
 

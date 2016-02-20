@@ -1,6 +1,6 @@
-escape_char /
 comment_char %
-%
+escape_char /
+
 % Igbo language locale for Nigeria
 % Source:
 % Contact: Pablo Saratxaga

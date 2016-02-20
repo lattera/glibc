@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Malayalam language locale for India.
 % Contributed by Free Software Foundation of India http://gnu.org.in
 % E-Mail : gnu@gnu.org.in

@@ -1,5 +1,5 @@
-escape_char     /
-comment_char    %
+comment_char %
+escape_char /
 
 % Finnish language locale for Finland
 % sorting according to SFS 4600 (1986-06-09)

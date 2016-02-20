@@ -1,5 +1,6 @@
-escape_char /
 comment_char %
+escape_char /
+
 % Mongolian language (cyrillic) locale for Mongolia
 % Sanlig Badral <badral@chinggis.com>
 % Revision: 1.0 (2005-5-21)

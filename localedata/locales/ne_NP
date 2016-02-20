@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Nepali language locale for Nepal.
 % Contributed by Pawan Chitrakar <pc@info.com.np>
 

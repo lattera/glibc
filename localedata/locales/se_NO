@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Northern Saami Language Locale for Norway
 % Source: http://www.hum.uit.no/a/trond/loc.html
 % Contact: Børre Gaup

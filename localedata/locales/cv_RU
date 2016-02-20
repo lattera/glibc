@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Chuvash Language Locale for Russia
 % Language: cv
 % Territory: RU

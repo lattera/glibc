@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Serbian Language Locale for Serbia
 % Source: sr_YU, sr_CS locales
 % Address:

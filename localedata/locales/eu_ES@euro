@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Basque Language Locale for Spain with Euro
 % Language: eu
 % Territory: ES

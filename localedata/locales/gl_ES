@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Galician Language Locale for Spain
 % Source: GPUL
 % Address: Facultade de Informática

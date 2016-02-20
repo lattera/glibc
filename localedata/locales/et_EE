@@ -1,5 +1,5 @@
-escape_char  /
 comment_char %
+escape_char /
 
 % Estonian language locale for Estonia
 % according to EVS 8:1993

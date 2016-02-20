@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Tajik Language Locale for Tajikistan
 % Source:
 % Contact: Pablo Saratxaga, Roger Kovacs

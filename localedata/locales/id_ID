@@ -1,5 +1,5 @@
-escape_char  /
-comment_char  %
+comment_char %
+escape_char /
 
 % Indonesian language locale for Indonesia
 % Source:

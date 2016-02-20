@@ -1,7 +1,6 @@
-escape_char /
 comment_char %
+escape_char /
 
-%
 % Khmer Language Locale for Cambodia
 %
 % Name:         km_KH

@@ -1,6 +1,6 @@
-escape_char /
 comment_char %
-%
+escape_char /
+
 % Vietnamese language locale for Vietnam
 % Source: glibc locale and info from vietnamese native speakers
 % Address:

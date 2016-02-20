@@ -1,5 +1,5 @@
-escape_char /
 comment_char %
+escape_char /
 
 % Greenlandic language locale for Greenland
 % Source: Danish Standards Association

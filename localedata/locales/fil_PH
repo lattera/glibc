@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Filipino Language Locale for Philippines
 % Source:
 % Contact: Rene Torres, Pablo Saratxaga

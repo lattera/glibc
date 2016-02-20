@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % French Language Locale for Belgium with Euro
 % Language: fr
 % Territory: BE

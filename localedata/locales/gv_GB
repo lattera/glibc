@@ -1,5 +1,5 @@
-escape_char  /
-comment_char  %
+comment_char %
+escape_char /
 
 % WARNING: UNOFFICIAL; EXPERIMENTAL. CHECK WITH Keld Simonsen
 % to see if there is an offical release for Manx Gaelic.

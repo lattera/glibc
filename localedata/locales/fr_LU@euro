@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % French Language Locale for Luxemburg with Euro
 % Language: fr
 % Territory: LU

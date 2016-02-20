@@ -1,5 +1,5 @@
-escape_char  /
-comment_char  %
+comment_char %
+escape_char /
 
 % Name:    localedef for ja_JP
 % Version: 0.7

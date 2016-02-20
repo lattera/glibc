@@ -1,5 +1,6 @@
-escape_char /
 comment_char %
+escape_char /
+
 % Dutch language locale for Aruba.
 % Contributed by Ulrich Drepper <drepper@redhat.com>, 2008
 

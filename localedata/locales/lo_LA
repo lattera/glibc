@@ -1,7 +1,6 @@
-escape_char /
 comment_char %
+escape_char /
 
-%
 % Lao Lanuage Locale for Laos
 %
 % Name:         lo_LA

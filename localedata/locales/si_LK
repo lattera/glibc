@@ -1,5 +1,6 @@
-escape_char  /
 comment_char %
+escape_char /
+
 % Sinhala language locale for Sri Lanka.
 % Charset: UTF-8
 % Contributed by Anuradha Ratnaweera <anuradha at gnu org>

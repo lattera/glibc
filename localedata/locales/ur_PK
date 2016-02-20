@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Urdu Language Locale for Pakistan
 % Source:
 % Contact: Shehzad Ashiq Ali, Pablo Saratxaga

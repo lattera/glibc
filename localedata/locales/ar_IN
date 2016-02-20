@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Contributed by Kentaro Noji   (knoji@jp.ibm.com)
 % Tetsuji Oriata (Oriata@jp.ibm.com) and Others, 2000
 

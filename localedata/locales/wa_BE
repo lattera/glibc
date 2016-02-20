@@ -1,5 +1,6 @@
 comment_char %
-escape_char  /
+escape_char /
+
 % charset "UTF-8"
 % Distribution and use is free, also for commercial purposes.
 

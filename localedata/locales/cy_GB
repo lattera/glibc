@@ -1,5 +1,6 @@
-escape_char  /
-comment_char  %
+comment_char %
+escape_char /
+
 % charset "ISO-8859-14"
 % Distribution and use is free, also  for commercial purposes.
 

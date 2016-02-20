@@ -1,5 +1,5 @@
-escape_char  /
-comment_char  %
+comment_char %
+escape_char /
 
 % English language locale for Canada
 % sorting according to CAN/CSA-Z243.4.1-1992

@@ -1,5 +1,6 @@
-escape_char  /
-comment_char  %
+comment_char %
+escape_char /
+
 % Irish language locale for Ireland with Euro
 % Language: ga
 % Territory: IE

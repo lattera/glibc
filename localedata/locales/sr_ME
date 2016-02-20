@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Serbian Language locale for Montenegro
 % Source: sr_YU, sr_CS locale
 % Address:

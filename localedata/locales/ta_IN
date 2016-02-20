@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Tamil language locale for India.
 % Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
 % Tetsuji Orita <orita@jp.ibm.com>.

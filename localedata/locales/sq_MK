@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Albanian language locale for Macedonia.
 % Contributed by Agron Selimaj <linuxmaster@verizon.net>
 

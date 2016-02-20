@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Bhili(devanagari) language locale for India.
 % Contributed by Alexey Merzliakov <alexey.merzlyakov@samsung.com>
 

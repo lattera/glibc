@@ -1,5 +1,5 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
 
 % English language locale for Singapore.
 % Contributed by Kentaroh Noji <knoji@jp.ibm.com> and

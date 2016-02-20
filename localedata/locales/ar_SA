@@ -1,5 +1,5 @@
 comment_char %
-escape_char  /
+escape_char /
 
 % Arabic Locale
 % Charset: ISO-8859-6

@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Azeri Language Locale for Azerbaijan (latin)
 % Source:
 % Contact: Pablo Saratxaga

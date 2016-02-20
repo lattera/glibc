@@ -1,5 +1,5 @@
-escape_char /
 comment_char %
+escape_char /
 
 % Faroese language locale for Faroe Islands
 % Source: Danish Standards Association

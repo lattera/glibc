@@ -1,5 +1,5 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
 
 % Malay language locale for Malaysia.
 % Contributed by Kentaroh Noji <knoji@jp.ibm.com> and

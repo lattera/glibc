@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Greek Language Locale for Cyprus
 % Based on locale el_GR by Keld Simonsen.
 

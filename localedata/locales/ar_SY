@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Arabic language locale for Syrian Arab Republic.
 % Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
 % Tetsuji Orita <orita@jp.ibm.com>.

@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Italian Language Locale for Italy with Euro
 % Language: it
 % Territory: IT

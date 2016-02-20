@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Spanish language locale for Panama
 % Source: RAP
 % Address: Sankt Jo//rgens Alle 8

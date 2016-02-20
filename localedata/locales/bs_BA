@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Bosnian Language Locale for Bosnia
 % Source: adapted from Croatian locale
 % Contact: Tomislav Vujec

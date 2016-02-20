@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Santali language locale for India.
 % Contributed by Mr. Pravin Satpute <psatpute AT redhat DOT com>  and Mr. Thakur Prasad Murmu <tp_murmu AT yahoo DOT com>
 

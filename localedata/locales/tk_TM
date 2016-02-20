@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Turkmen Language Locale for Turkmenistan (latin)
 % Source: Ghorban M. Tavakoly
 % Contact: Pablo Saratxaga & Ghorban M. Tavakoly

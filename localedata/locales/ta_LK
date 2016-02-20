@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Tamil language locale for Sri Lanka
 % Language: ta
 % Territory: LK

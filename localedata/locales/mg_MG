@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Malagasy Language Locale for Madagascar
 % Source: The Debian Project modified by http://linuxmg.org
 % Contact: Christian Perrier

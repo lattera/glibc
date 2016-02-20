@@ -1,6 +1,6 @@
-escape_char /
 comment_char %
-%
+escape_char /
+
 % Uyghur language locale for China
 % Source:
 % Contact:   Eagle Burkut

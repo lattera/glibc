@@ -1,5 +1,5 @@
-escape_char	/
-comment_char    %
+comment_char %
+escape_char /
 
 % Norwegian language locale for Norway
 % Source: Norsk Standardiseringsforbund

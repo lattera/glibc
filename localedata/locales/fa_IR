@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Persian Language Locale for Iran with UTF-8 character set
 % Source: Sharif FarsiWeb, Inc.
 % Address: 5, Shahid Ghasemi Habibollah, Azadi Ave, Tehran, Iran

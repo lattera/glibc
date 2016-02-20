@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Yue Chinese (Cantonese) language locale for Hong Kong.
 % Maintained by Chunshek Chan <chunshek@gmail.com>
 % Based on Chinese locale by Kentaroh Noji <knoji@jp.ibm.com> and

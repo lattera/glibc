@@ -1,5 +1,5 @@
-escape_char /
 comment_char %
+escape_char /
 
 % Lithuanian language locale for Lithuania
 % Created on January 30, 1992

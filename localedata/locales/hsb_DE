@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Upper Sorbian Language Locale for Germany
 % by Andrzej Krzysztofowicz <ankry at mif pg gda pl>
 % Source: information from Michael Wolf <milupo at sorbzilla de>

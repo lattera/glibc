@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Gurajati Language Locale For India.
 % Copied from hi_IN one, G Karunakar <karunakar@freedomink.org>
 % Gujarati stuff from Tapan Parikh <tap2k@yahoo.com>

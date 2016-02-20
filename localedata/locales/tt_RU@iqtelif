@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Tatar Language Locale using IQTElif alphabet; for Tatarstan, Russian Federation
 % Source:	Reshat Sabiq
 % Contact:	Reshat Sabiq

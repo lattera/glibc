@@ -1,5 +1,5 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
 
 % English locale for India.
 % Contributed by Kentaroh Noji <knoji@jp.ibm.com> and

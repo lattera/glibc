@@ -1,5 +1,6 @@
-escape_char /
 comment_char %
+escape_char /
+
 % charset "GEORGIAN-PS"
 % Distribution and use is free, also for commercial purposes.
 

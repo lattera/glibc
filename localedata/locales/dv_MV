@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Dhivehi Language Locale for Maldives
 % Source:
 % Contact: Sofwathuallah Mohamed

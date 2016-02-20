@@ -1,5 +1,6 @@
 comment_char %
 escape_char /
+
 % Charset: UTF-8
 % Authors:
 % 2011-04-18, Anthony Musaluke <goof2092@gmail.com>

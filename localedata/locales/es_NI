@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Spanish language locale for Nicaragua
 % Language: es
 % Territory: NI

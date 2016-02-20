@@ -1,5 +1,6 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
 % Rajasthani language locale for India.
 % Contributed by Meghraj Suthar <meghrajsuthar03@gmail.com>
 % Rajesh Ranjan <rajeshkajha@yahoo.com>, Chandan Kumar <chandankumar.093047@gmail.com>

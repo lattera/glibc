@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Frisian Language Locale for the Netherlands
 % Language: fy
 % Territory: NL

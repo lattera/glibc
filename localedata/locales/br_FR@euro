@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Breton Language Locale for France with Euro
 % Language: br
 % Territory: FR

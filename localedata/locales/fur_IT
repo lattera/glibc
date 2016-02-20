@@ -1,6 +1,6 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
 % Furlan Language Locale for Italy
 % Language: fur
 % Territory: IT

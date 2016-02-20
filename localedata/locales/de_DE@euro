@@ -1,5 +1,6 @@
-escape_char /
 comment_char %
+escape_char /
+
 % Locale for German locale in Germany
 % Contributed by Ulrich Drepper <drepper@redhat.com>, 2000
 
