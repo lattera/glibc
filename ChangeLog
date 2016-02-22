@@ -1,3 +1,8 @@
+2016-02-22  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/nacl/libc.abilist (GLIBC_2.23): Add GLIBC_2.23,
+	fts64_children, fts64_close, fts64_open, fts64_read and fts64_set.
+
 2016-02-22  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #19512]
