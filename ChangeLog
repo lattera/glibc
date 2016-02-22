@@ -1,3 +1,7 @@
+2016-02-22  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* posix/tst-dir.c: Include libc-internal.h.
+
 2016-02-20  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19056]

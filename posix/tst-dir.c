@@ -26,7 +26,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
-
+#include <libc-internal.h>
 
 /* We expect four arguments:
    - source directory name
