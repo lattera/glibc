@@ -82,17 +82,17 @@ EALIGN (memcmp, 4, 0)
    byte loop.  */
 	blt	cr1, L(bytealigned)
 	std	rWORD8, rWORD8SAVE(r1)
-	cfi_offset(rWORD8, rWORD8SAVE)
 	std	rWORD7, rWORD7SAVE(r1)
-	cfi_offset(rWORD7, rWORD7SAVE)
 	std	rOFF8, rOFF8SAVE(r1)
-	cfi_offset(rWORD7, rOFF8SAVE)
 	std	rOFF16, rOFF16SAVE(r1)
-	cfi_offset(rWORD7, rOFF16SAVE)
 	std	rOFF24, rOFF24SAVE(r1)
-	cfi_offset(rWORD7, rOFF24SAVE)
 	std	rOFF32, rOFF32SAVE(r1)
-	cfi_offset(rWORD7, rOFF32SAVE)
+	cfi_offset(rWORD8, rWORD8SAVE)
+	cfi_offset(rWORD7, rWORD7SAVE)
+	cfi_offset(rOFF8, rOFF8SAVE)
+	cfi_offset(rOFF16, rOFF16SAVE)
+	cfi_offset(rOFF24, rOFF24SAVE)
+	cfi_offset(rOFF32, rOFF32SAVE)
 
 	li	rOFF8,8
 	li	rOFF16,16
@@ -601,18 +601,18 @@ L(unaligned):
    the actual start of rSTR2.  */
 	clrrdi	rSTR2, rSTR2, 3
 	std	rWORD2_SHIFT, rWORD2SHIFTSAVE(r1)
-	cfi_offset(rWORD2_SHIFT, rWORD2SHIFTSAVE)
 /* Compute the left/right shift counts for the unaligned rSTR2,
    compensating for the logical (DW aligned) start of rSTR1.  */
 	clrldi	rSHL, rWORD8_SHIFT, 61
 	clrrdi	rSTR1, rSTR1, 3
 	std	rWORD4_SHIFT, rWORD4SHIFTSAVE(r1)
-	cfi_offset(rWORD4_SHIFT, rWORD4SHIFTSAVE)
 	sldi	rSHL, rSHL, 3
 	cmpld	cr5, rWORD8_SHIFT, rSTR2
 	add	rN, rN, r12
 	sldi	rWORD6, r12, 3
 	std	rWORD6_SHIFT, rWORD6SHIFTSAVE(r1)
+	cfi_offset(rWORD2_SHIFT, rWORD2SHIFTSAVE)
+	cfi_offset(rWORD4_SHIFT, rWORD4SHIFTSAVE)
 	cfi_offset(rWORD6_SHIFT, rWORD6SHIFTSAVE)
 	subfic	rSHR, rSHL, 64
 	srdi	r0, rN, 5	/* Divide by 32 */
@@ -689,15 +689,15 @@ L(duPs4):
 	.align	4
 L(DWunaligned):
 	std	rWORD8_SHIFT, rWORD8SHIFTSAVE(r1)
-	cfi_offset(rWORD8_SHIFT, rWORD8SHIFTSAVE)
 	clrrdi	rSTR2, rSTR2, 3
 	std	rWORD2_SHIFT, rWORD2SHIFTSAVE(r1)
-	cfi_offset(rWORD2_SHIFT, rWORD2SHIFTSAVE)
 	srdi	r0, rN, 5	/* Divide by 32 */
 	std	rWORD4_SHIFT, rWORD4SHIFTSAVE(r1)
-	cfi_offset(rWORD4_SHIFT, rWORD4SHIFTSAVE)
 	andi.	r12, rN, 24	/* Get the DW remainder */
 	std	rWORD6_SHIFT, rWORD6SHIFTSAVE(r1)
+	cfi_offset(rWORD8_SHIFT, rWORD8SHIFTSAVE)
+	cfi_offset(rWORD2_SHIFT, rWORD2SHIFTSAVE)
+	cfi_offset(rWORD4_SHIFT, rWORD4SHIFTSAVE)
 	cfi_offset(rWORD6_SHIFT, rWORD6SHIFTSAVE)
 	sldi	rSHL, rSHL, 3
 	LD	rWORD6, 0, rSTR2

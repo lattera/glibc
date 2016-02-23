@@ -54,8 +54,8 @@ EALIGN (memcmp, 4, 0)
 	stwu	1, -64(r1)
 	cfi_adjust_cfa_offset(64)
 	stw	rWORD8, 48(r1)
-	cfi_offset(rWORD8, (48-64))
 	stw	rWORD7, 44(r1)
+	cfi_offset(rWORD8, (48-64))
 	cfi_offset(rWORD7, (44-64))
 	bne	L(unaligned)
 /* At this point we know both strings have the same alignment and the
@@ -747,18 +747,18 @@ L(unaligned):
    the actual start of rSTR2.  */
 	clrrwi	rSTR2, rSTR2, 2
 	stw	rWORD2_SHIFT, 28(r1)
-	cfi_offset(rWORD2_SHIFT, (28-64))
 /* Compute the left/right shift counts for the unaligned rSTR2,
    compensating for the logical (W aligned) start of rSTR1.  */
 	clrlwi	rSHL, rWORD8_SHIFT, 30
 	clrrwi	rSTR1, rSTR1, 2
 	stw	rWORD4_SHIFT, 24(r1)
-	cfi_offset(rWORD4_SHIFT, (24-64))
 	slwi	rSHL, rSHL, 3
 	cmplw	cr5, rWORD8_SHIFT, rSTR2
 	add	rN, rN, r12
 	slwi	rWORD6, r12, 3
 	stw	rWORD6_SHIFT, 20(r1)
+	cfi_offset(rWORD2_SHIFT, (28-64))
+	cfi_offset(rWORD4_SHIFT, (24-64))
 	cfi_offset(rWORD6_SHIFT, (20-64))
 	subfic	rSHR, rSHL, 32
 	srwi	r0, rN, 4	/* Divide by 16 */
@@ -852,15 +852,15 @@ L(duPs4):
 	.align	4
 L(Wunaligned):
 	stw	rWORD8_SHIFT, 32(r1)
-	cfi_offset(rWORD8_SHIFT, (32-64))
 	clrrwi	rSTR2, rSTR2, 2
 	stw	rWORD2_SHIFT, 28(r1)
-	cfi_offset(rWORD2_SHIFT, (28-64))
 	srwi	r0, rN, 4	/* Divide by 16 */
 	stw	rWORD4_SHIFT, 24(r1)
-	cfi_offset(rWORD4_SHIFT, (24-64))
 	andi.	r12, rN, 12	/* Get the W remainder */
 	stw	rWORD6_SHIFT, 20(r1)
+	cfi_offset(rWORD8_SHIFT, (32-64))
+	cfi_offset(rWORD2_SHIFT, (28-64))
+	cfi_offset(rWORD4_SHIFT, (24-64))
 	cfi_offset(rWORD6_SHIFT, (20-64))
 	slwi	rSHL, rSHL, 3
 #ifdef __LITTLE_ENDIAN__

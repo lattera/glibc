@@ -59,14 +59,14 @@ EALIGN (strstr, 4, 0)
 	CALL_MCOUNT 2
 	mflr	r0			/* Load link register LR to r0.  */
 	std	r31, -8(r1)		/* Save callers register r31.  */
-	cfi_offset(r31, -8)
 	std	r30, -16(r1)		/* Save callers register r30.  */
-	cfi_offset(r30, -16)
 	std	r29, -24(r1)		/* Save callers register r29.  */
-	cfi_offset(r29, -24)
 	std	r28, -32(r1)		/* Save callers register r28.  */
-	cfi_offset(r28, -32)
 	std	r0, 16(r1)		/* Store the link register.  */
+	cfi_offset(r31, -8)
+	cfi_offset(r30, -16)
+	cfi_offset(r28, -32)
+	cfi_offset(r29, -24)
 	cfi_offset(lr, 16)
 	stdu	r1, -FRAMESIZE(r1)	/* Create the stack frame.  */
 	cfi_adjust_cfa_offset(FRAMESIZE)

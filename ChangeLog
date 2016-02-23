@@ -1,3 +1,13 @@
+2016-03-11  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/memcmp.S (memcmp): Rearrange
+	cfi_offset calls.
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S (memcpy): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/memcmp.S (memcmp): Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memcmp.S (memcmp): Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memcmp.S (memcmp): Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strstr.S (strstr): Likewise.
+
 2016-03-10  Carlos O'Donell  <carlos@redhat.com>
 
 	* timezone/checktab.awk: Removed.
