@@ -30,12 +30,17 @@ do_test (void)
      header fix this test will not compile.  */
   if (isinff (1.0f)
       || !isinff (INFINITY)
+#ifndef NO_LONG_DOUBLE
       || isinfl (1.0L)
       || !isinfl (INFINITY)
+#endif
       || isnanf (2.0f)
       || !isnanf (NAN)
+#ifndef NO_LONG_DOUBLE
       || isnanl (2.0L)
-      || !isnanl (NAN))
+      || !isnanl (NAN)
+#endif
+      )
     {
       printf ("FAIL: Failed to call is* functions.\n");
       exit (1);

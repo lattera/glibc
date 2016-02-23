@@ -1,3 +1,8 @@
+2016-02-24  Andreas Schwab  <schwab@suse.de>
+
+	* math/test-math-isinff.cc (do_test): Only call isinfl and isnanl
+	if !NO_LONG_DOUBLE.
+
 2016-02-22  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/nacl/libc.abilist (GLIBC_2.23): Add GLIBC_2.23,
