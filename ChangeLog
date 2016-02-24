@@ -1,3 +1,9 @@
+2016-02-24  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #19575]
+	* localedata/charmaps/GB18030: Update comments regarding PAU to
+	non-PUA mappings.
+
 2016-02-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/configure.ac (linux/fanotify.h): Do not

@@ -57234,6 +57234,22 @@ CHARMAP
 <UE78A>     /xa6/xbe         <Private Use>
 <UE78B>     /xa6/xbf         <Private Use>
 <UE78C>     /xa6/xc0         <Private Use>
+% The newest GB 18030-2005 standard still uses some private use area
+% code points.  Any implementation which has Unicode 4.1 or newer
+% support should not use these PUA code points, and instead should
+% map these entries to their equivalent non-PUA code points. There
+% are 24 idiograms in GB 18030-2005 which have non-PUA equivalents.
+% In glibc we only support roundtrip code points, and so must choose
+% between supporting the old PUA code points, or using the newer
+% non-PUA code points. We choose to use the non-PUA code points to
+% be compatible with ICU's similar choice. In choosing the non-PUA
+% code points we can no longer convert the old PUA code points back
+% to GB-18030-2005 (technically only fixable if we added support
+% for non-roundtrip code points e.g. ICU's "fallback mapping").
+% The recommendation to use the non-PUA code points, where available,
+% is based on "CJKV Information Processing" 2nd Ed. by Dr. Ken Lunde.
+%
+% These 10 PUA mappings use equivalents from <UFE10> to <UFE19>.
 % <UE78D>     /xa6/xd9         <Private Use>
 % <UE78E>     /xa6/xda         <Private Use>
 % <UE78F>     /xa6/xdb         <Private Use>
@@ -57371,6 +57387,7 @@ CHARMAP
 <UE813>     /xd7/xfd         <Private Use>
 <UE814>     /xd7/xfe         <Private Use>
 <UE815>     /x83/x36/xc9/x34 <Private Use>
+% These 3 PUA mappings use equivalents <U20087>, <U20089> and <U200CC>.
 % <UE816>     /xfe/x51         <Private Use>
 % <UE817>     /xfe/x52         <Private Use>
 % <UE818>     /xfe/x53         <Private Use>
@@ -57379,6 +57396,7 @@ CHARMAP
 <UE81B>     /x83/x36/xc9/x37 <Private Use>
 <UE81C>     /x83/x36/xc9/x38 <Private Use>
 <UE81D>     /x83/x36/xc9/x39 <Private Use>
+% This 1 PUA mapping uses the equivalent <U9FB4>.
 % <UE81E>     /xfe/x59         <Private Use>
 <UE81F>     /x83/x36/xca/x30 <Private Use>
 <UE820>     /x83/x36/xca/x31 <Private Use>
@@ -57387,17 +57405,20 @@ CHARMAP
 <UE823>     /x83/x36/xca/x34 <Private Use>
 <UE824>     /x83/x36/xca/x35 <Private Use>
 <UE825>     /x83/x36/xca/x36 <Private Use>
+% This 1 PUA mapping uses the equivalent <U9FB5>.
 % <UE826>     /xfe/x61         <Private Use>
 <UE827>     /x83/x36/xca/x37 <Private Use>
 <UE828>     /x83/x36/xca/x38 <Private Use>
 <UE829>     /x83/x36/xca/x39 <Private Use>
 <UE82A>     /x83/x36/xcb/x30 <Private Use>
+% These 2 PUA mappings use the equivalents <U9FB6> and <U9FB7>.
 % <UE82B>     /xfe/x66         <Private Use>
 % <UE82C>     /xfe/x67         <Private Use>
 <UE82D>     /x83/x36/xcb/x31 <Private Use>
 <UE82E>     /x83/x36/xcb/x32 <Private Use>
 <UE82F>     /x83/x36/xcb/x33 <Private Use>
 <UE830>     /x83/x36/xcb/x34 <Private Use>
+% These 2 PUA mappings use the equivalents <U215D7> and <U9FB8>.
 % <UE831>     /xfe/x6c         <Private Use>
 % <UE832>     /xfe/x6d         <Private Use>
 <UE833>     /x83/x36/xcb/x35 <Private Use>
@@ -57408,6 +57429,7 @@ CHARMAP
 <UE838>     /x83/x36/xcc/x30 <Private Use>
 <UE839>     /x83/x36/xcc/x31 <Private Use>
 <UE83A>     /x83/x36/xcc/x32 <Private Use>
+% This 1 PUA mapping uses the equivalent <U2298F>.
 % <UE83B>     /xfe/x76         <Private Use>
 <UE83C>     /x83/x36/xcc/x33 <Private Use>
 <UE83D>     /x83/x36/xcc/x34 <Private Use>
@@ -57416,6 +57438,7 @@ CHARMAP
 <UE840>     /x83/x36/xcc/x37 <Private Use>
 <UE841>     /x83/x36/xcc/x38 <Private Use>
 <UE842>     /x83/x36/xcc/x39 <Private Use>
+% This 1 PUA mapping uses the equivalent <U9FB9>.
 % <UE843>     /xfe/x7e         <Private Use>
 <UE844>     /x83/x36/xcd/x30 <Private Use>
 <UE845>     /x83/x36/xcd/x31 <Private Use>
@@ -57433,6 +57456,7 @@ CHARMAP
 <UE851>     /x83/x36/xce/x33 <Private Use>
 <UE852>     /x83/x36/xce/x34 <Private Use>
 <UE853>     /x83/x36/xce/x35 <Private Use>
+% These 2 PUA mappings use the equivalents <U9FBA> and <U241FE>.
 % <UE854>     /xfe/x90         <Private Use>
 % <UE855>     /xfe/x91         <Private Use>
 <UE856>     /x83/x36/xce/x36 <Private Use>
@@ -57449,6 +57473,7 @@ CHARMAP
 <UE861>     /x83/x36/xcf/x37 <Private Use>
 <UE862>     /x83/x36/xcf/x38 <Private Use>
 <UE863>     /x83/x36/xcf/x39 <Private Use>
+% This 1 PUA mapping uses the equivalent <U9FBB>.
 % <UE864>     /xfe/xa0         <Private Use>
 <UE865>     /x83/x36/xd0/x30 <Private Use>
 <UE866>     /x83/x36/xd0/x31 <Private Use>
