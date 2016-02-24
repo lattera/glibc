@@ -17,7 +17,9 @@ GNU/Hurd support requires out-of-tree patches that will eventually be
 incorporated into an official GNU C Library release.
 
 When working with Linux kernels, this version of the GNU C Library
-requires Linux kernel version 2.6.32 or later.
+requires Linux kernel version 3.2 or later on all architectures except
+i[4567]86 and x86_64, where Linux kernel version 2.6.32 or later
+suffices.
 
 Also note that the shared version of the libgcc_s library must be
 installed for the pthread library to work correctly.

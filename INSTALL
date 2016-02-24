@@ -426,7 +426,7 @@ Specific advice for GNU/Linux systems
 =====================================
 
 If you are installing the GNU C Library on GNU/Linux systems, you need
-to have the header files from a 2.6.32 or newer kernel around for
+to have the header files from a 3.2 or newer kernel around for
 reference.  These headers must be installed using 'make
 headers_install'; the headers present in the kernel source directory are
 not suitable for direct use by the GNU C Library.  You do not need to

@@ -39,13 +39,13 @@ fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking installed Linux kernel header files" >&5
 $as_echo_n "checking installed Linux kernel header files... " >&6; }
-if ${libc_cv_linux2632+:} false; then :
+if ${libc_cv_linux320+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <linux/version.h>
-#if !defined LINUX_VERSION_CODE || LINUX_VERSION_CODE <  (2 *65536+ 6 *256+ 32) /* 2.6.32 */
+#if !defined LINUX_VERSION_CODE || LINUX_VERSION_CODE <  (3 *65536+ 2 *256+ 0) /* 3.2.0 */
 # error kernel headers missing or too old
 #endif
 int
@@ -57,20 +57,20 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  libc_cv_linux2632='2.6.32 or later'
+  libc_cv_linux320='3.2.0 or later'
 else
-  libc_cv_linux2632='missing or too old!'
+  libc_cv_linux320='missing or too old!'
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_linux2632" >&5
-$as_echo "$libc_cv_linux2632" >&6; }
-if test "$libc_cv_linux2632" != '2.6.32 or later'; then
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_linux320" >&5
+$as_echo "$libc_cv_linux320" >&6; }
+if test "$libc_cv_linux320" != '3.2.0 or later'; then
   as_fn_error $? "GNU libc requires kernel header files from
-Linux 2.6.32 or later to be installed before configuring.
+Linux 3.2.0 or later to be installed before configuring.
 The kernel header files are found usually in /usr/include/asm and
 /usr/include/linux; make sure these directories use files from
-Linux 2.6.32 or later.  This check uses <linux/version.h>, so
+Linux 3.2.0 or later.  This check uses <linux/version.h>, so
 make sure that file was built correctly when installing the kernel header
 files.  To use kernel headers not from /usr/include/linux, use the
 configure option --with-headers." "$LINENO" 5
@@ -82,7 +82,7 @@ fi
 # set arch_minimum_kernel already, let that override our defaults here.
 # Note that we presume such a fragment has set libc_cv_gcc_unwind_find_fde
 # if appropriate too.
-test -n "$arch_minimum_kernel" || arch_minimum_kernel=2.6.32
+test -n "$arch_minimum_kernel" || arch_minimum_kernel=3.2.0
 if test -n "$minimum_kernel"; then
 
   user_version=$((`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1 \* 65536 + \2 \* 256 + \3/'`))

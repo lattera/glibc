@@ -1,3 +1,20 @@
+2016-02-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/configure.ac (LIBC_LINUX_VERSION):
+	Define to 3.2.0.
+	(arch_minimum_kernel): Likewise.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/i386/configure.ac (arch_minimum_kernel):
+	Define to 2.6.32.
+	* sysdeps/unix/sysv/linux/i386/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/x86_64/64/configure.ac
+	(arch_minimum_kernel): Define to 2.6.32.
+	* sysdeps/unix/sysv/linux/x86_64/64/configure: Regenerated.
+	* README: Document Linux 3.2 requirement.
+	* manual/install.texi (Linux): Document Linux 3.2 headers
+	requirement.
+	* INSTALL: Regenerated.
+
 2016-02-24  Andreas Schwab  <schwab@suse.de>
 
 	* math/test-math-isinff.cc (do_test): Only call isinfl and isnanl

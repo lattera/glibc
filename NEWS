@@ -7,6 +7,13 @@ using `glibc' in the "product" field.
 
 Version 2.24
 
+* The minimum Linux kernel version that this version of the GNU C Library
+  can be used with is 3.2, except on i[4567]86 and x86_64, where Linux
+  kernel version 2.6.32 or later suffices (on architectures that already
+  required kernel versions more recent than 3.2, those requirements remain
+  unchanged).  Linux 3.2 or later kernel headers are required on all
+  architectures.
+
 * The pap_AN locale has been deleted.  This has been deprecated for a long
   time.  It has been replaced by pap_AW & pap_CW, both of which have long
   been included in previous releases.
