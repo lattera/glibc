@@ -20,18 +20,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
-
-#ifndef HAVE_LINUX_FANOTIFY_H
-
-static int
-do_test (void)
-{
-  puts ("SKIP: missing support for fanotify due to old kernel headers");
-  return 0;
-}
-
-#else
-
 #include <sys/fanotify.h>
 
 static int
@@ -68,8 +56,6 @@ do_test (void)
   puts ("All OK");
   return 0;
 }
-
-#endif
 
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

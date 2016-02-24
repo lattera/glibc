@@ -1,5 +1,13 @@
 2016-02-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/configure.ac (linux/fanotify.h): Do not
+	test for header.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* config.h.in (HAVE_LINUX_FANOTIFY_H): Remove #undef.
+	* sysdeps/unix/sysv/linux/tst-fanotify.c [!HAVE_LINUX_FANOTIFY_H]:
+	Remove conditional code.
+	[HAVE_LINUX_FANOTIFY_H]: Make code unconditional.
+
 	* sysdeps/unix/sysv/linux/configure.ac (LIBC_LINUX_VERSION):
 	Define to 3.2.0.
 	(arch_minimum_kernel): Likewise.

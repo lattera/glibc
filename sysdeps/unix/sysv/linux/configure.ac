@@ -65,12 +65,6 @@ else
 *** compatible kernel version])
 fi
 
-# Until we start requiring 2.6.37+ headers, we need to check for the
-# availability of linux/fanotify.h for testing purposes.
-AC_CHECK_HEADER(linux/fanotify.h,
-  [AC_DEFINE(HAVE_LINUX_FANOTIFY_H)], ,
-  [/* No default includes.  */])
-
 if test -n "$sysheaders"; then
   CPPFLAGS=$OLD_CPPFLAGS
 fi
