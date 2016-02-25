@@ -20,6 +20,7 @@ infodir = @infodir@
 includedir = @includedir@
 datarootdir = @datarootdir@
 localstatedir = @libc_cv_localstatedir@
+localedir = @localedir@
 
 # Should we use and build ldconfig?
 use-ldconfig = @use_ldconfig@

@@ -85,7 +85,7 @@ localepath = "$(complocaledir):$(i18ndir)"
 # of the list instead of the tail, where CPPFLAGS-$(lib) gets added.
 # We need it before the standard -I's to see programs/config.h first.
 locale-CPPFLAGS = -DCOMPLOCALEDIR='"$(complocaledir)"' \
-		  -DLOCALE_ALIAS_PATH='"$(msgcatdir)"' \
+		  -DLOCALE_ALIAS_PATH='"$(localedir)"' \
 		  -Iprograms
 
 CPPFLAGS-locale-programs = -DLOCALE_PATH='$(localepath)' \

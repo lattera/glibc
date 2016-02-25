@@ -1,5 +1,18 @@
 2016-02-24  Carlos O'Donell  <carlos@redhat.com>
 
+	[BZ #14259]
+	* Makeconfig: Rename msgcatdir to localedir.
+	Rename inst_msgcatdir to inst_localedir.
+	* catgets/Makefile (catgets-CPPFLAGS): Use localedir.
+	* config.make.in: Add localedir.
+	* elf/Makefile ($(objpfx)sotruss): Use localedir.
+	(ldd-rewrite): Likewise.
+	* intl/Makefile: Rename inst_msgcatdir to inst_localedir.
+	(install-others): Use inst_localedir.
+	(CPPFLAGS): Use localedir.
+	* locale/Makefile (locale-CPPFLAGS): Likewise.
+	* po/Makefile (mo-installed): Use inst_localedir.
+
 	[BZ #19575]
 	* localedata/charmaps/GB18030: Update comments regarding PAU to
 	non-PUA mappings.

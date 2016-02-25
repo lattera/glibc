@@ -199,10 +199,10 @@ inst_complocaledir = $(install_root)$(complocaledir)
 
 # Where to install the message catalog data files (which are
 # machine-independent).
-ifndef msgcatdir
-msgcatdir = $(datadir)/locale
+ifndef localedir
+localedir = $(datadir)/locale
 endif
-inst_msgcatdir = $(install_root)$(msgcatdir)
+inst_localedir = $(install_root)$(localedir)
 
 # Where to install the locale charmap source files.
 ifndef i18ndir

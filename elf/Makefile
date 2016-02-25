@@ -105,7 +105,7 @@ $(objpfx)sotruss-lib.so: $(common-objpfx)libc.so $(objpfx)ld.so \
 $(objpfx)sotruss: sotruss.sh $(common-objpfx)config.make
 	sed -e 's%@BASH@%$(BASH)%g' \
 	    -e 's%@VERSION@%$(version)%g' \
-	    -e 's%@TEXTDOMAINDIR@%$(msgcatdir)%g' \
+	    -e 's%@TEXTDOMAINDIR@%$(localedir)%g' \
 	    -e 's%@PREFIX@%$(prefix)%g' \
 	    -e 's|@PKGVERSION@|$(PKGVERSION)|g' \
 	    -e 's|@REPORT_BUGS_TO@|$(REPORT_BUGS_TO)|g' \
@@ -436,7 +436,7 @@ ldd-rewrite = -e 's%@RTLD@%$(rtlddir)/$(rtld-installed-name)%g' \
 	      -e 's|@PKGVERSION@|$(PKGVERSION)|g' \
 	      -e 's|@REPORT_BUGS_TO@|$(REPORT_BUGS_TO)|g' \
 	      -e 's%@BASH@%$(BASH)%g' \
-	      -e 's%@TEXTDOMAINDIR@%$(msgcatdir)%g'
+	      -e 's%@TEXTDOMAINDIR@%$(localedir)%g'
 
 ifeq ($(ldd-rewrite-script),no)
 define gen-ldd

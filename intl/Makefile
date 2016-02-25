@@ -36,7 +36,7 @@ tests = tst-ngettext
 
 before-compile += $(objpfx)msgs.h
 
-install-others = $(inst_msgcatdir)/locale.alias
+install-others = $(inst_localedir)/locale.alias
 
 generated += msgs.h mtrace-tst-gettext.out tst-gettext.mtrace
 generated-dirs += domaindir localedir
@@ -149,9 +149,9 @@ $(objpfx)tst-gettext4.out: $(objpfx)tst-gettext.out
 $(objpfx)tst-gettext5.out: $(objpfx)tst-gettext.out
 $(objpfx)tst-gettext6.out: $(objpfx)tst-gettext.out
 
-CPPFLAGS += -D'LOCALEDIR="$(msgcatdir)"' \
-	    -D'LOCALE_ALIAS_PATH="$(msgcatdir)"'
+CPPFLAGS += -D'LOCALEDIR="$(localedir)"' \
+	    -D'LOCALE_ALIAS_PATH="$(localedir)"'
 BISONFLAGS = --yacc --name-prefix=__gettext --output
 
-$(inst_msgcatdir)/locale.alias: locale.alias $(+force)
+$(inst_localedir)/locale.alias: locale.alias $(+force)
 	$(do-install)
