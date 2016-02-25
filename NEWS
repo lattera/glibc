@@ -63,7 +63,7 @@ Version 2.23
   unnecessary serialization of memory allocation requests across threads.
   The defect is now corrected.  Users should see a substantial increase in
   the concurent throughput of allocation requests for applications which
-  trigger this bug.  Affected applications typically create create and
+  trigger this bug.  Affected applications typically create and
   destroy threads frequently.  (Bug 19048 was reported and analyzed by
   Ericsson.)
 

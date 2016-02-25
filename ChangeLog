@@ -1,3 +1,7 @@
+2016-02-24  Marko Myllynen  <myllynen@redhat.com>
+
+	* NEWS (2.23): Fix typo in bug 19048 text.
+
 2016-02-24  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #14259]
