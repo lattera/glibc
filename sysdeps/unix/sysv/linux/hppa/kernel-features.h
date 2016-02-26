@@ -19,15 +19,11 @@
 
 
 /* Support for the accept4 and recvmmsg syscalls was added in 2.6.34.  */
-#if __LINUX_KERNEL_VERSION >= 0x020622
-# define __ASSUME_ACCEPT4_SYSCALL	1
-# define __ASSUME_RECVMMSG_SYSCALL	1
-#endif
+#define __ASSUME_ACCEPT4_SYSCALL	1
+#define __ASSUME_RECVMMSG_SYSCALL	1
 
 /* Support for the sendmmsg syscall was added in 3.1.  */
-#if __LINUX_KERNEL_VERSION >= 0x030100
-# define __ASSUME_SENDMMSG_SYSCALL	1
-#endif
+#define __ASSUME_SENDMMSG_SYSCALL	1
 
 /* Support for the utimes syscall was added in 3.14.  */
 #if __LINUX_KERNEL_VERSION >= 0x030e00
@@ -35,8 +31,3 @@
 #endif
 
 #include_next <kernel-features.h>
-
-/* The prlimit64 syscall was added for PA in 2.6.37.  */
-#if __LINUX_KERNEL_VERSION < 0x020625
-# undef __ASSUME_PRLIMIT64
-#endif

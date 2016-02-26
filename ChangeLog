@@ -1,3 +1,44 @@
+2016-02-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020621]: Make code unconditional.
+	[__LINUX_KERNEL_VERSION >= 0x030200]: Likewise.
+	[__LINUX_KERNEL_VERSION < 0x020621]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020621]: Make code unconditional.
+	[__LINUX_KERNEL_VERSION >= 0x020624]: Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x030000]: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020622]: Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x030100]: Likewise.
+	[__LINUX_KERNEL_VERSION < 0x020625]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020621]: Make code unconditional.
+	[__LINUX_KERNEL_VERSION >= 0x030000]: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x030000]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020621]: Make code unconditional.
+	[__LINUX_KERNEL_VERSION < 0x020621]: Remove conditional code.
+	[__LINUX_KERNEL_VERSION < 0x020625]: Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020621]: Make code unconditional.
+	[__LINUX_KERNEL_VERSION >= 0x030100]: Likewise.
+	[_MIPS_SIM == _ABIN32 && __LINUX_KERNEL_VERSION < 0x020623]:
+	Remove conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020625]: Make code unconditional.
+	[__LINUX_KERNEL_VERSION >= 0x030000]: Likewise.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020625]: Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x030000]: Likewise.
+	[__LINUX_KERNEL_VERSION < 0x020625]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020621]: Make code unconditional.
+	[__LINUX_KERNEL_VERSION >= 0x030000]: Likewise.
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x030000]: Likewise.
+
 2016-02-24  Marko Myllynen  <myllynen@redhat.com>
 
 	* NEWS (2.23): Fix typo in bug 19048 text.

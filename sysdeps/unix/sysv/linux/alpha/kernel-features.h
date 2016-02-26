@@ -21,38 +21,18 @@
 #define _KERNEL_FEATURES_H 1
 
 /* Support for recvmmsg was added for alpha in 2.6.33.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
-# define __ASSUME_RECVMMSG_SYSCALL       1
-#endif
+#define __ASSUME_RECVMMSG_SYSCALL       1
 
 /* Support for accept4 and sendmmsg was added for alpha in 3.2.  */
-#if __LINUX_KERNEL_VERSION >= 0x030200
-# define __ASSUME_ACCEPT4_SYSCALL      1
-# define __ASSUME_SENDMMSG_SYSCALL     1
-#endif
+#define __ASSUME_ACCEPT4_SYSCALL      1
+#define __ASSUME_SENDMMSG_SYSCALL     1
 
 #include_next <kernel-features.h>
 
 #undef __ASSUME_ST_INO_64_BIT
 
-/* Support for fallocate was added for alpha after 2.6.33-rc1.  */
-#if __LINUX_KERNEL_VERSION < 0x020621
-# undef __ASSUME_FALLOCATE
-#endif
-
 /* There never has been support for fstat64.  */
 #undef __ASSUME_STATFS64
 #define __ASSUME_STATFS64 0
-
-/* Support for various syscalls was added for alpha in 2.6.33.  */
-#if __LINUX_KERNEL_VERSION < 0x020621
-# undef __ASSUME_PREADV
-# undef __ASSUME_PWRITEV
-# undef __ASSUME_IN_NONBLOCK
-# undef __ASSUME_PIPE2
-# undef __ASSUME_EVENTFD2
-# undef __ASSUME_SIGNALFD4
-# undef __ASSUME_DUP3
-#endif
 
 #endif /* _KERNEL_FEATURES_H */

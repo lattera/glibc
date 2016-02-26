@@ -22,9 +22,7 @@
 #define __ASSUME_RECVMMSG_SYSCALL	1
 
 /* Support for the sendmmsg syscall was added in 3.0.  */
-#if __LINUX_KERNEL_VERSION >= 0x030000
-# define __ASSUME_SENDMMSG_SYSCALL	1
-#endif
+#define __ASSUME_SENDMMSG_SYSCALL	1
 
 #include_next <kernel-features.h>
 

@@ -21,14 +21,10 @@
 #define _KERNEL_FEATURES_H 1
 
 /* Support for the recvmmsg syscall was added in 2.6.33.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
-# define __ASSUME_RECVMMSG_SYSCALL	1
-#endif
+#define __ASSUME_RECVMMSG_SYSCALL	1
 
 /* Support for the sendmmsg syscall was added in 3.0.  */
-#if __LINUX_KERNEL_VERSION >= 0x030000
-# define __ASSUME_SENDMMSG_SYSCALL	1
-#endif
+#define __ASSUME_SENDMMSG_SYSCALL	1
 
 /* Support for the accept4 syscall was added in 3.3.  */
 #if __LINUX_KERNEL_VERSION >= 0x030300

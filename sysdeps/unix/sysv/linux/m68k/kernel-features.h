@@ -46,12 +46,6 @@
 
 #include_next <kernel-features.h>
 
-/* These syscalls were added only in 3.0 for m68k.  */
-#if __LINUX_KERNEL_VERSION < 0x030000
-# undef __ASSUME_PSELECT
-# undef __ASSUME_PPOLL
-#endif
-
 /* No support for PI futexes or robust mutexes before 3.10 for m68k.  */
 #if __LINUX_KERNEL_VERSION < 0x030a00
 # undef __ASSUME_FUTEX_LOCK_PI
