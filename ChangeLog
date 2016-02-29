@@ -1,3 +1,17 @@
+2016-03-31  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	[BZ #19853]
+	* stdio-common/tst-sprintf3.c [TEST_N]: Refactor
+	TEST to take significant digits as second parameter.
+	[TEST]: Redefine in terms of TEST_N taking 30
+	significant digits.
+	(do_test): Add test case to demonstrate precision
+	failure in the ldbl-128ibm printf.
+	* sysdeps/ieee754/ldbl-128ibm/ldbl2pm.c:
+	(__mpn_extract_long_double): Carry 7 extra intermediate
+	bits of precision to aide computing difference when
+	signs differ.
+
 2016-03-31   H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19881]

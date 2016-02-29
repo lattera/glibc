@@ -28,6 +28,12 @@
    bits (106 for long double) and an integral power of two (MPN
    frexpl). */
 
+
+/* When signs differ, the actual value is the difference between the
+   significant double and the less significant double.  Sometimes a
+   bit can be lost when we borrow from the significant mantissa.  */
+#define EXTRA_INTERNAL_PRECISION (7)
+
 mp_size_t
 __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 			   int *expt, int *is_neg,
@@ -45,10 +51,15 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
   lo = ((long long) u.d[1].ieee.mantissa0 << 32) | u.d[1].ieee.mantissa1;
   hi = ((long long) u.d[0].ieee.mantissa0 << 32) | u.d[0].ieee.mantissa1;
 
+  /* Hold 7 extra bits of precision in the mantissa.  This allows
+     the normalizing shifts below to prevent losing precision when
+     the signs differ and the exponents are sufficiently far apart.  */
+  lo <<= EXTRA_INTERNAL_PRECISION;
+
   /* If the lower double is not a denormal or zero then set the hidden
      53rd bit.  */
   if (u.d[1].ieee.exponent != 0)
-    lo |= 1ULL << 52;
+    lo |= 1ULL << (52 + EXTRA_INTERNAL_PRECISION);
   else
     lo = lo << 1;
 
@@ -72,12 +83,12 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
   if (u.d[0].ieee.negative != u.d[1].ieee.negative
       && lo != 0)
     {
-      lo = (1ULL << 53) - lo;
+      lo = (1ULL << (53 + EXTRA_INTERNAL_PRECISION)) - lo;
       if (hi == 0)
 	{
 	  /* we have a borrow from the hidden bit, so shift left 1.  */
-	  hi = 0x0ffffffffffffeLL | (lo >> 51);
-	  lo = 0x1fffffffffffffLL & (lo << 1);
+	  hi = 0x000ffffffffffffeLL | (lo >> (52 + EXTRA_INTERNAL_PRECISION));
+	  lo = 0x0fffffffffffffffLL & (lo << 1);
 	  (*expt)--;
 	}
       else
@@ -85,14 +96,14 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
     }
 #if BITS_PER_MP_LIMB == 32
   /* Combine the mantissas to be contiguous.  */
-  res_ptr[0] = lo;
-  res_ptr[1] = (hi << (53 - 32)) | (lo >> 32);
+  res_ptr[0] = lo >> EXTRA_INTERNAL_PRECISION;
+  res_ptr[1] = (hi << (53 - 32)) | (lo >> (32 + EXTRA_INTERNAL_PRECISION));
   res_ptr[2] = hi >> 11;
   res_ptr[3] = hi >> (32 + 11);
   #define N 4
 #elif BITS_PER_MP_LIMB == 64
   /* Combine the two mantissas to be contiguous.  */
-  res_ptr[0] = (hi << 53) | lo;
+  res_ptr[0] = (hi << 53) | (lo >> EXTRA_INTERNAL_PRECISION);
   res_ptr[1] = hi >> 11;
   #define N 2
 #else

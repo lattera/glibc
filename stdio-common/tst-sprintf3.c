@@ -38,11 +38,11 @@ do_test (void)
 # define COMPARE_LDBL(u, v) ((u).l == (v).l)
 #endif
 
-#define TEST(val) \
+#define TEST_N(val, n) \
   do									   \
     {									   \
       u.l = (val);							   \
-      snprintf (buf, sizeof buf, "%.30LgL", u.l);			   \
+      snprintf (buf, sizeof buf, "%." #n "LgL", u.l);			   \
       if (strcmp (buf, #val) != 0)					   \
 	{								   \
 	  printf ("Error on line %d: %s != %s\n", __LINE__, buf, #val);	   \
@@ -50,19 +50,25 @@ do_test (void)
 	}								   \
       if (sscanf (#val, "%Lg", &v.l) != 1 || !COMPARE_LDBL (u, v))	   \
 	{								   \
-	  printf ("Error sscanf on line %d: %.30Lg != %.30Lg\n", __LINE__, \
-		  u.l, v.l);						   \
+	  printf ("Error sscanf on line %d: %." #n "Lg != %." #n "Lg\n",   \
+		  __LINE__, u.l, v.l);					   \
 	  result = 1;							   \
 	}								   \
       /* printf ("%s %Lg %016Lx %016Lx\n", #val, u.l, u.x[0], u.x[1]); */  \
     }									   \
   while (0)
 
+#define TEST(val) TEST_N (val,30)
+
 #if LDBL_MANT_DIG >= 106
 # if LDBL_MANT_DIG == 106
   TEST (2.22507385850719347803989925739e-308L);
   TEST (2.22507385850719397210554509863e-308L);
   TEST (2.22507385850720088902458687609e-308L);
+
+  /* Verify precision is not lost for long doubles
+     of the form +1.pN,-1.pM.  */
+  TEST_N (3.32306998946228968225951765070082e+35L, 34);
 # endif
   TEST (2.22507385850720138309023271733e-308L);
   TEST (2.22507385850720187715587855858e-308L);
