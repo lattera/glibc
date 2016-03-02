@@ -43,11 +43,7 @@ C_LABEL(_mcount)
 	movq	56(%rsp),%rsi
 	/* Get frompc via the frame pointer.  */
 	movq	8(%rbp),%rdi
-#ifdef PIC
-	call C_SYMBOL_NAME(__mcount_internal)@PLT
-#else
 	call C_SYMBOL_NAME(__mcount_internal)
-#endif
 	/* Pop the saved registers.  Please note that `mcount' has no
 	   return value.  */
 	movq	48(%rsp),%r9
@@ -84,11 +80,7 @@ C_LABEL(__fentry__)
 	movq	64(%rsp),%rsi
 	/* caller is the return address above it */
 	movq	72(%rsp),%rdi
-#ifdef PIC
-	call C_SYMBOL_NAME(__mcount_internal)@PLT
-#else
 	call C_SYMBOL_NAME(__mcount_internal)
-#endif
 	/* Pop the saved registers.  Please note that `__fentry__' has no
 	   return value.  */
 	movq	48(%rsp),%r9

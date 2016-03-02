@@ -60,11 +60,7 @@ ENTRY (__sigsetjmp)
 	retq
 #else
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
-# ifdef	PIC
-	jmp C_SYMBOL_NAME (__sigjmp_save)@PLT
-# else
 	jmp __sigjmp_save
-# endif
 #endif
 END (__sigsetjmp)
 hidden_def (__sigsetjmp)

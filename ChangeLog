@@ -1,5 +1,13 @@
 2016-03-01  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/_mcount.S (C_LABEL(_mcount)): Call
+	__mcount_internal directly.
+	(C_LABEL(__fentry__)): Likewise.
+	* sysdeps/x86_64/setjmp.S __sigsetjmp): Call __sigjmp_save
+	directly.
+
+2016-03-01  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/__start_context.S
 	(__start_context): Call __setcontext directly.
 
