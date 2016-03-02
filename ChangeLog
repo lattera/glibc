@@ -1,3 +1,10 @@
+2016-06-09  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #19755]
+	* nscd/pwdcache.c (cache_addpw): Lock prune_run_lock while adding
+	new entries in auto-propagate mode.
+	* nscd/grpcache.c (cache_addgr): Likewise.
+
 2016-06-09  Paul Pluzhnikov  <ppluzhnikov@gmail.com>
 
 	* test-skeleton.c (oom_error, xmalloc, xcalloc, xrealloc):

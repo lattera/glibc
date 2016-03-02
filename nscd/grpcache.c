@@ -205,10 +205,19 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
       dataset = NULL;
 
       if (he == NULL)
-	dataset = (struct dataset *) mempool_alloc (db, total + n, 1);
+	{
+	  /* Prevent an INVALIDATE request from pruning the data between
+	     the two calls to cache_add.  */
+	  if (db->propagate)
+	    pthread_mutex_lock (&db->prune_run_lock);
+	  dataset = (struct dataset *) mempool_alloc (db, total + n, 1);
+	}
 
       if (dataset == NULL)
 	{
+	  if (he == NULL && db->propagate)
+	    pthread_mutex_unlock (&db->prune_run_lock);
+
 	  /* We cannot permanently add the result in the moment.  But
 	     we can provide the result as is.  Store the data in some
 	     temporary memory.  */
@@ -396,6 +405,8 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 
 	out:
 	  pthread_rwlock_unlock (&db->lock);
+	  if (he == NULL && db->propagate)
+	    pthread_mutex_unlock (&db->prune_run_lock);
 	}
     }
 
