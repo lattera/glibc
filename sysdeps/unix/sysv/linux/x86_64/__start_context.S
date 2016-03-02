@@ -36,7 +36,7 @@ ENTRY(__start_context)
 	testq	%rdi, %rdi
 	je	2f			/* If it is zero exit.  */
 
-	call	JUMPTARGET(__setcontext)
+	call	__setcontext
 	/* If this returns (which can happen if the syscall fails) we'll
 	   exit the program with the return error value (-1).  */
 	movq	%rax,%rdi
