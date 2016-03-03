@@ -7,6 +7,7 @@ endif
 
 ifeq ($(subdir),gmon)
 sysdep_routines += _mcount
+sysdep_noprof += _mcount
 endif
 
 ifeq ($(subdir),malloc)

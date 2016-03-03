@@ -1,3 +1,8 @@
+2016-03-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* gmon/Makefile (noprof): Add $(sysdep_noprof).
+	* sysdeps/x86_64/Makefile (sysdep_noprof): Add _mcount.
+
 2016-03-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/_mcount.S (C_LABEL(_mcount)): Call
