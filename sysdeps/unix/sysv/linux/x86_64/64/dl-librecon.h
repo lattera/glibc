@@ -33,7 +33,7 @@
   case 21:							      \
     if (memcmp (envline, "PREFER_MAP_32BIT_EXEC", 21) == 0)	      \
       GLRO(dl_x86_cpu_features).feature[index_Prefer_MAP_32BIT_EXEC]  \
-	= bit_Prefer_MAP_32BIT_EXEC;				      \
+	|= bit_Prefer_MAP_32BIT_EXEC;				      \
     break;
 
 /* Extra unsecure variables.  The names are all stuffed in a single
