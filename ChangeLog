@@ -1,3 +1,9 @@
+2016-03-03  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #19490]
+	* sysdeps/x86_64/_mcount.S (_mcount): Add unwind descriptor.
+	(__fentry__): Likewise
+
 2016-03-03  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* gmon/Makefile (noprof): Add $(sysdep_noprof).
