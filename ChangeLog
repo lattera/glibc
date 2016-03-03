@@ -2,7 +2,7 @@
 
 	[BZ #19490]
 	* sysdeps/x86_64/_mcount.S (_mcount): Add unwind descriptor.
-	(__fentry__): Likewise
+	(__fentry__): Likewise.
 
 2016-03-03  H.J. Lu  <hongjiu.lu@intel.com>
 
@@ -567,13 +567,13 @@
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S
 	(pthread_cond_broadcast): Use ENTRY/END
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S
-	(pthread_cond_signal): Likewise
+	(pthread_cond_signal): Likewise.
 	* sysdeps/x86_64/nptl/pthread_spin_lock.S (pthread_spin_lock):
-	Likewise
+	Likewise.
 	* sysdeps/x86_64/nptl/pthread_spin_trylock.S (pthread_spin_trylock):
-	Likewise
+	Likewise.
 	* sysdeps/x86_64/nptl/pthread_spin_unlock.S (pthread_spin_unlock):
-	Likewise
+	Likewise.
 
 2016-01-20  Joseph Myers  <joseph@codesourcery.com>
 
@@ -5129,9 +5129,9 @@
 	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h
 	(lll_unlock_elision): Update with new parameter list
 	* sysdeps/unix/sysv/linux/s390/lowlevellock.h
-	(lll_unlock_elision): Likewise
+	(lll_unlock_elision): Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
-	(lll_unlock_elision): Likewise
+	(lll_unlock_elision): Likewise.
 
 2015-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
@@ -6956,7 +6956,7 @@
 2015-09-18  David Lamparter  <equinox-gentoo@diac24.net>
 
 	* sysdeps/arm/setjmp.S: Change PIC to SHARED.
-	* sysdeps/arm/__longjmp.S: Likewise
+	* sysdeps/arm/__longjmp.S: Likewise.
 
 2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
 
@@ -8478,7 +8478,7 @@
 
 	* sysdeps/powerpc/powerpc32/sysdep.h (ABORT_TRANSACTION): Use
 	register other than r0 for tabort, it has special meaning.
-	* sysdeps/powerpc/powerpc64/sysdep.h (ABORT_TRANSACTION): Likewise
+	* sysdeps/powerpc/powerpc64/sysdep.h (ABORT_TRANSACTION): Likewise.
 	* sysdeps/unix.sysv/linux/powerpc/syscall.S (syscall): Abort
 	transaction before starting syscall.
 
@@ -10715,7 +10715,7 @@
 	* sysdeps/ieee754/flt-32/e_jnf.c (__ieee754_jnf): Likewise.
 	* sysdeps/ieee754/ldbl-128/e_jnl.c (__ieee754_jnl): Likewise.
 	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c (__ieee754_jnl): Likewise.
-	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_jnl): Likewise
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_jnl): Likewise.
 	* math/libm-test.inc (jn_test): Use ALL_RM_TEST.
 	* sysdeps/i386/fpu/libm-test-ulps: Update.
 	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
@@ -18429,7 +18429,7 @@
 	(CFLAGS-tst-mbswcs3.c): Likewise.
 	(CFLAGS-tst-mbswcs4.c): Likewise.
 	(CFLAGS-tst-mbswcs5.c): Likewise.
-	(CFLAGS-tst-trans.c): Likewise
+	(CFLAGS-tst-trans.c): Likewise.
 
 2014-12-11  Roland McGrath  <roland@hack.frob.com>
 
@@ -22066,7 +22066,7 @@
 2014-09-20  Ondřej Bílka  <neleai@seznam.cz>
 
 	* socket/recvmmsg.c (recvmmsg): Drop const argument.
-	* socket/sys/socket.h: Likewise
+	* socket/sys/socket.h: Likewise.
 	* sysdeps/unix/sysv/linux/recvmmsg.c: Likewise.
 
 2014-09-19  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
@@ -23408,37 +23408,37 @@
 	* localedata/tests-mbwc/dat_iswalnum.c [SHOJI_IS_RIGHT]:
 	Remove code.
 	* localedata/tests-mbwc/dat_iswalpha.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_iswctype.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_iswgraph.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_iswprint.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_iswpunct.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_mbrlen.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_mbstowcs.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_mbtowc.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_strcoll.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_swscanf.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_towctrans.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_wcscoll.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_wcswidth.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_wctob.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/dat_wcwidth.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 	* localedata/tests-mbwc/tst_towctrans.c [SHOJI_IS_RIGHT]:
-	Likewise
+	Likewise.
 
 2014-07-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
@@ -36251,7 +36251,7 @@
 	* sysdeps/powerpc/powerpc32/setjmp-common.S: Likewise.
 	* sysdeps/powerpc/powerpc32/fpu/setjmp.S: Define __sigsetjmp_symbol
 	and __sigjmp_save_symbol based on which sigsetjmp to generated.
-	* sysdeps/powerpc/powerpc32/setjmp.S: Likewise
+	* sysdeps/powerpc/powerpc32/setjmp.S: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/____longjmp_chk.S: Define
 	__longjmp_symbol based on which __longjmp to generate.
 	* sysdeps/powerpc/powerpc64/setjmp-common.S: Add "setjmp" static
@@ -36294,7 +36294,7 @@
 	* math/w_j0l.c (__y0l): Likewise.
 	* math/w_j1.c (y1): Likewise.
 	* math/w_j1f.c (y1f): Likewise.
-	* math/w_j1l.c (__y1l): Likewise
+	* math/w_j1l.c (__y1l): Likewise.
 	* math/w_jn.c (yn): Likewise.
 	* math/w_jnf.c (ynf): Likewise.
 	* sysdeps/ieee754/k_standard.c (__kernel_standard): Use ERANGE for
@@ -49728,7 +49728,7 @@
 	[!ISO && !ISO99 && !ISO11] (BC_STRING_MAX): Likewise.
 	[!ISO && !ISO99 && !ISO11] (COLL_WEIGHTS_MAX): Likewise.
 	[!ISO && !ISO99 && !ISO11] (EXPR_NEST_MAX): Likewise.
-	[!ISO && !ISO99 && !ISO11] (RE_DUP_MAX): Likewise
+	[!ISO && !ISO99 && !ISO11] (RE_DUP_MAX): Likewise.
 	[POSIX || XPG3 || XPG4] (CHARCLASS_NAME_MAX): Do not allow.
 	[!ISO && !ISO99 && !ISO11] (_POSIX_CLOCKRES_MIN): Specify exact
 	value.
@@ -51746,7 +51746,7 @@
 	[$(run-built-tests) = no].
 	* catgets/Makefile [$(cross-compiling) != yes]: Change condition
 	to [$(run-built-tests) = yes].
-	* elf/Makefile [$(cross-compiling) = no]: Likewise
+	* elf/Makefile [$(cross-compiling) = no]: Likewise.
 	* grp/Makefile [$(cross-compiling) = no]: Likewise.
 	* iconv/Makefile [$(cross-compiling) != yes]: Likewise.
 	* iconvdata/Makefile [$(cross-compiling) = no]: Likewise.
@@ -52540,7 +52540,7 @@
 	macro.
 	(bit_FMA4_Usable): Updated.
 	(index_FMA_Usable): New macro.
-	(CPUID_FMA): Likewise
+	(CPUID_FMA): Likewise.
 	(HAS_FMA): Defined with bit_FMA_Usable.
 
 2012-10-01  Roland McGrath  <roland@hack.frob.com>
@@ -52589,7 +52589,7 @@
 	* math/libm-test.inc (min_subnorm_value): New variable.
 	(fma_test): Add more tests.
 	(fma_test_towardzero): Likewise.
-	(fma_test_downward): Likewise
+	(fma_test_downward): Likewise.
 	(fma_test_upward): Likewise.
 	(initialize): Set min_subnorm_value.
 
@@ -55699,7 +55699,7 @@
 	* sysdeps/sh/____longjmp_chk.S (CALL_FAIL): Preserve r12 and pr
 	registers for frame unwinding purposes, add CFI directives.
 	* sysdeps/unix/sysv/linux/sh/____longjmp_chk.S (CALL_FAIL): Likewise.
-	* sysdeps/unix/sysv/linux/sh/makecontext.S (.Lexitcode): Likewise
+	* sysdeps/unix/sysv/linux/sh/makecontext.S (.Lexitcode): Likewise.
 	* sysdeps/unix/sysv/linux/sh/sysdep.h (SYSCALL_ERROR_HANDLER):
 	Likewise.
 
@@ -68983,7 +68983,7 @@
 	res_init, go through the list of registered files.
 	(main_loop_poll): The inotify descriptors are now stored in the
 	structures for the traced files.
-	(main_loop_epoll): Likewise
+	(main_loop_epoll): Likewise.
 	* nscd/nscd.c (main): Create inotify socket here.  Pass extra argument
 	to __nss_disable_nscd.
 	* nscd/cache.c (prune_cache): There is no single inotify descriptor
@@ -69173,7 +69173,7 @@
 	* nscd/initgrcache.c (addinitgroupsX): Likewise.
 	* nscd/hstcache.c (cache_addhst): Likewise.
 	* nscd/grpcache.c (cache_addgr): Likewise.
-	* nscd/aicache.c (addhstaiX): Likewise
+	* nscd/aicache.c (addhstaiX): Likewise.
 	* nscd/servicescache.c (cache_addserv): Handle zero negtimeout.
 
 2011-07-01  Thorsten Kukuk  <kukuk@suse.de>
@@ -69182,7 +69182,7 @@
 	* nscd/initgrcache.c (addinitgroupsX): Likewise.
 	* nscd/hstcache.c (cache_addhst): Likewise.
 	* nscd/grpcache.c (cache_addgr): Likewise.
-	* nscd/aicache.c (addhstaiX): Likewise
+	* nscd/aicache.c (addhstaiX): Likewise.
 
 2011-07-01  Andreas Schwab  <schwab@redhat.com>
 
@@ -72276,7 +72276,7 @@
 	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
 	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
-	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
 
 2010-06-14  Roland McGrath  <roland@redhat.com>
 
