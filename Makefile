@@ -252,8 +252,8 @@ tests-clean:
 	@$(MAKE) subdir_testclean no_deps=t
 
 tests-special += $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
-ifneq ($(CXX),no)
 
+ifneq (,$(CXX))
 vpath c++-types.data $(+sysdep_dirs)
 
 $(objpfx)c++-types-check.out: c++-types.data scripts/check-c++-types.sh

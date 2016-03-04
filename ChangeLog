@@ -1,3 +1,8 @@
+2016-03-04  Roland McGrath  <roland@hack.frob.com>
+
+	* Makefile ($(objpfx)c++-types-check.out): Fix conditionalization
+	to test for empty $(CXX) rather than $(CXX) of "no".
+
 2016-03-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/Makefile (sysdep_noprof): Add comments.
