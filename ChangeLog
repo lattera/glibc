@@ -1,3 +1,11 @@
+2016-03-04  Amit Pawar  <Amit.Pawar@amd.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18880]
+	* sysdeps/x86_64/multiarch/memcpy.S: Check Fast_Unaligned_Load,
+	instead of Slow_BSF, and also check for Fast_Copy_Backward to
+	enable __memcpy_ssse3_back.
+
 2016-03-03  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19758]

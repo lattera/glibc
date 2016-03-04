@@ -35,22 +35,23 @@ ENTRY(__new_memcpy)
 	jz	1f
 	HAS_ARCH_FEATURE (Prefer_No_VZEROUPPER)
 	jz	1f
-	leaq    __memcpy_avx512_no_vzeroupper(%rip), %rax
+	lea    __memcpy_avx512_no_vzeroupper(%rip), %RAX_LP
 	ret
 #endif
-1:	leaq	__memcpy_avx_unaligned(%rip), %rax
+1:	lea	__memcpy_avx_unaligned(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
-	jz 2f
-	ret
-2:	leaq	__memcpy_sse2(%rip), %rax
-	HAS_ARCH_FEATURE (Slow_BSF)
-	jnz	3f
-	leaq	__memcpy_sse2_unaligned(%rip), %rax
-	ret
-3:	HAS_CPU_FEATURE (SSSE3)
-	jz 4f
-	leaq    __memcpy_ssse3(%rip), %rax
-4:	ret
+	jnz	2f
+	lea	__memcpy_sse2_unaligned(%rip), %RAX_LP
+	HAS_ARCH_FEATURE (Fast_Unaligned_Load)
+	jnz	2f
+	lea	__memcpy_sse2(%rip), %RAX_LP
+	HAS_CPU_FEATURE (SSSE3)
+	jz	2f
+	lea    __memcpy_ssse3_back(%rip), %RAX_LP
+	HAS_ARCH_FEATURE (Fast_Copy_Backward)
+	jnz	2f
+	lea	__memcpy_ssse3(%rip), %RAX_LP
+2:	ret
 END(__new_memcpy)
 
 # undef ENTRY
