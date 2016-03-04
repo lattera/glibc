@@ -1,5 +1,8 @@
 2016-03-04  Roland McGrath  <roland@hack.frob.com>
 
+	* math/Makefile (tests): Add test-math-isinff only if $(CXX) is
+	nonempty.
+
 	* Makefile ($(objpfx)c++-types-check.out): Fix conditionalization
 	to test for empty $(CXX) rather than $(CXX) of "no".
 
