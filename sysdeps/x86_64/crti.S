@@ -66,7 +66,7 @@ _init:
 	movq PREINIT_FUNCTION@GOTPCREL(%rip), %rax
 	testq %rax, %rax
 	je .Lno_weak_fn
-	call PREINIT_FUNCTION@PLT
+	call *%rax
 .Lno_weak_fn:
 #else
 	call PREINIT_FUNCTION

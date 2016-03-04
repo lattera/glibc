@@ -1,6 +1,12 @@
 2016-03-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19745]
+	* sysdeps/x86_64/crti.S (_init): Replace PREINIT_FUNCTION@PLT
+	with *%rax in call.
+
+2016-03-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19745]
 	* sysdeps/x86_64/start.S (_start): Replace __libc_start_main@PLT
 	with *__libc_start_main@GOTPCREL(%rip) in call.
 
