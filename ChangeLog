@@ -1,5 +1,8 @@
 2016-03-04  Roland McGrath  <roland@hack.frob.com>
 
+	* Makefile (tests-special): Add $(objpfx)c++-types-check.out only
+	inside conditional for nonempty $(CXX).
+
 	* math/Makefile (tests): Add test-math-isinff only if $(CXX) is
 	nonempty.
 

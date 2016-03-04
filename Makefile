@@ -251,16 +251,16 @@ mostlyclean: parent-mostlyclean
 tests-clean:
 	@$(MAKE) subdir_testclean no_deps=t
 
-tests-special += $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
-
 ifneq (,$(CXX))
 vpath c++-types.data $(+sysdep_dirs)
 
+tests-special += $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
 $(objpfx)c++-types-check.out: c++-types.data scripts/check-c++-types.sh
 	scripts/check-c++-types.sh $< $(CXX) $(filter-out -std=gnu11 $(+gccwarn-c),$(CFLAGS)) $(CPPFLAGS) > $@; \
 	$(evaluate-test)
 endif
 
+tests-special += $(objpfx)check-local-headers.out
 $(objpfx)check-local-headers.out: scripts/check-local-headers.sh
 	AWK='$(AWK)' scripts/check-local-headers.sh \
 	  "$(includedir)" "$(objpfx)" < /dev/null > $@; \
