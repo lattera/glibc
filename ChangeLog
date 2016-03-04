@@ -1,3 +1,9 @@
+2016-03-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19745]
+	* sysdeps/x86_64/start.S (_start): Replace __libc_start_main@PLT
+	with *__libc_start_main@GOTPCREL(%rip) in call.
+
 2016-03-04  Roland McGrath  <roland@hack.frob.com>
 
 	* Makefile (tests-special): Add $(objpfx)c++-types-check.out only

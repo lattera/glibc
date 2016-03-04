@@ -104,8 +104,10 @@ ENTRY (_start)
 	mov main@GOTPCREL(%rip), %RDI_LP
 
 	/* Call the user's main function, and exit with its value.
-	   But let the libc call main.	  */
-	call __libc_start_main@PLT
+	   But let the libc call main.  Since __libc_start_main is
+	   called very early, lazy binding isn't relevant here.  Use
+	   indirect branch via GOT to avoid extra branch to PLT slot.  */
+	call *__libc_start_main@GOTPCREL(%rip)
 #else
 	/* Pass address of our own entry points to .fini and .init.  */
 	mov $__libc_csu_fini, %R8_LP
