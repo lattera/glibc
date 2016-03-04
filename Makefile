@@ -254,7 +254,7 @@ tests-clean:
 ifneq (,$(CXX))
 vpath c++-types.data $(+sysdep_dirs)
 
-tests-special += $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
+tests-special += $(objpfx)c++-types-check.out
 $(objpfx)c++-types-check.out: c++-types.data scripts/check-c++-types.sh
 	scripts/check-c++-types.sh $< $(CXX) $(filter-out -std=gnu11 $(+gccwarn-c),$(CFLAGS)) $(CPPFLAGS) > $@; \
 	$(evaluate-test)
