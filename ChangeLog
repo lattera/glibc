@@ -2,7 +2,7 @@
 
 	[BZ #19758]
 	* sysdeps/unix/sysv/linux/x86_64/64/dl-librecon.h
-	(EXTRA_LD_ENVVARS): Or bit_Prefer_MAP_32BIT_EXEC.
+	(EXTRA_LD_ENVVARS): Or in bit_Prefer_MAP_32BIT_EXEC.
 
 2016-03-03  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
