@@ -7,6 +7,9 @@ endif
 
 ifeq ($(subdir),gmon)
 sysdep_routines += _mcount
+# We cannot compile _mcount.S with -pg because that would create
+# recursive calls when ENTRY is used.  Just copy the normal static
+# object.
 sysdep_noprof += _mcount
 endif
 
