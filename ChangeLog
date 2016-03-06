@@ -1,3 +1,8 @@
+2016-03-07  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/generic/libnsl.abilist: New file.
+	* sysdeps/generic/libutil.abilist: New file.
+
 2016-03-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19762]
