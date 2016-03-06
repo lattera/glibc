@@ -36,7 +36,7 @@ ENTRY(bcopy)
 	HAS_CPU_FEATURE (SSSE3)
 	jz	2f
 	LOAD_FUNC_GOT_EAX (__bcopy_ssse3)
-	HAS_CPU_FEATURE (Fast_Rep_String)
+	HAS_ARCH_FEATURE (Fast_Rep_String)
 	jz	2f
 	LOAD_FUNC_GOT_EAX (__bcopy_ssse3_rep)
 2:	ret

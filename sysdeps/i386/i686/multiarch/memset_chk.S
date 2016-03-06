@@ -31,7 +31,7 @@ ENTRY(__memset_chk)
 	HAS_CPU_FEATURE (SSE2)
 	jz	2f
 	LOAD_FUNC_GOT_EAX (__memset_chk_sse2)
-	HAS_CPU_FEATURE (Fast_Rep_String)
+	HAS_ARCH_FEATURE (Fast_Rep_String)
 	jz	2f
 	LOAD_FUNC_GOT_EAX (__memset_chk_sse2_rep)
 2:	ret
