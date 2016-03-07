@@ -55,56 +55,30 @@
 
 /* Modified for GNU iostream by Per Bothner 1991, 1992. */
 
-#ifndef _POSIX_SOURCE
-# define _POSIX_SOURCE
-#endif
 #include "libioP.h"
-#include <sys/types.h>
+#include <device-nrs.h>
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-#ifdef _LIBC
-# undef isatty
-# define isatty(Fd) __isatty (Fd)
-
-# include <device-nrs.h>
-#endif
-
-
+/* Return the result of isatty, without changing errno.  */
 static int
 local_isatty (int fd)
 {
   int save_errno = errno;
-  int res = isatty (fd);
+  int res = __isatty (fd);
   __set_errno (save_errno);
   return res;
 }
 
-
-/*
- * Allocate a file buffer, or switch to unbuffered I/O.
- * Per the ANSI C standard, ALL tty devices default to line buffered.
- *
- * As a side effect, we set __SOPT or __SNPT (en/dis-able fseek
- * optimisation) right after the _fstat() that finds the buffer size.
- */
-
+/* Allocate a file buffer, or switch to unbuffered I/O.  Streams for
+   TTY devices default to line buffered.  */
 int
 _IO_file_doallocate (_IO_FILE *fp)
 {
   _IO_size_t size;
   char *p;
   struct stat64 st;
-
-#ifndef _LIBC
-  /* If _IO_cleanup_registration_needed is non-zero, we should call the
-     function it points to.  This is to make sure _IO_cleanup gets called
-     on exit.  We call it from _IO_file_doallocate, since that is likely
-     to get called by any program that does buffered I/O. */
-  if (__glibc_unlikely (_IO_cleanup_registration_needed != NULL))
-    (*_IO_cleanup_registration_needed) ();
-#endif
 
   size = _IO_BUFSIZ;
   if (fp->_fileno >= 0 && __builtin_expect (_IO_SYSSTAT (fp, &st), 0) >= 0)

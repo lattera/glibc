@@ -1,5 +1,13 @@
 2016-03-07  Florian Weimer  <fweimer@redhat.com>
 
+	* libio/filedoalloc.c (isatty): Remove.
+	(local_isatty): Add comment.  Call __isatty directly.
+	(_IO_file_doallocate): Update comment.  Assume _LIBC.
+	* libio/wfiledoalloc.c (isatty): Remove.
+	(_IO_wfile_doallocate): Update comment.
+
+2016-03-07  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19269]
 	* sysdeps/x86_64/Makefile (tst-audit4): Depend on
 	tst-audit4-aux.o.

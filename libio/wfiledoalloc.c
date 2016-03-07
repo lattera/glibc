@@ -55,28 +55,10 @@
 
 /* Modified for GNU iostream by Per Bothner 1991, 1992. */
 
-#ifndef _POSIX_SOURCE
-# define _POSIX_SOURCE
-#endif
 #include "libioP.h"
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <stdlib.h>
-#include <unistd.h>
 
-#ifdef _LIBC
-# undef isatty
-# define isatty(Fd) __isatty (Fd)
-#endif
-
-/*
- * Allocate a file buffer, or switch to unbuffered I/O.
- * Per the ANSI C standard, ALL tty devices default to line buffered.
- *
- * As a side effect, we set __SOPT or __SNPT (en/dis-able fseek
- * optimisation) right after the _fstat() that finds the buffer size.
- */
-
+/* Allocate a file buffer, or switch to unbuffered I/O.  */
 int
 _IO_wfile_doallocate (_IO_FILE *fp)
 {
