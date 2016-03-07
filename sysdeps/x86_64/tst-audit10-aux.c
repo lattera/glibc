@@ -1,4 +1,4 @@
-/* Test case for preserved AVX512 registers in dynamic linker.
+/* Test case for preserved AVX512 registers in dynamic linker, -mavx512f part.
    Copyright (C) 2012-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,38 +16,26 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <cpuid.h>
+#include <immintrin.h>
+#include <stdlib.h>
+#include <string.h>
 
-int tst_audit10_aux (void);
+extern __m512i audit_test (__m512i, __m512i, __m512i, __m512i,
+			   __m512i, __m512i, __m512i, __m512i);
 
-static int
-avx512_enabled (void)
+int
+tst_audit10_aux (void)
 {
-  unsigned int eax, ebx, ecx, edx;
+#ifdef __AVX512F__
+  __m512i zmm = _mm512_setzero_si512 ();
+  __m512i ret = audit_test (zmm, zmm, zmm, zmm, zmm, zmm, zmm, zmm);
 
-  if (__get_cpuid (1, &eax, &ebx, &ecx, &edx) == 0
-      || (ecx & (bit_AVX | bit_OSXSAVE)) != (bit_AVX | bit_OSXSAVE))
-    return 0;
+  zmm = _mm512_set1_epi64 (0x12349876);
 
-  __cpuid_count (7, 0, eax, ebx, ecx, edx);
-  if (!(ebx & bit_AVX512F))
-    return 0;
-
-  asm ("xgetbv" : "=a" (eax), "=d" (edx) : "c" (0));
-
-  /* Verify that ZMM, YMM and XMM states are enabled.  */
-  return (eax & 0xe6) == 0xe6;
+  if (memcmp (&zmm, &ret, sizeof (ret)))
+    abort ();
+  return 0;
+#else /* __AVX512F__ */
+  return 77;
+#endif /* __AVX512F__ */
 }
-
-static int
-do_test (void)
-{
-  /* Run AVX512 test only if AVX512 is supported.  */
-  if (avx512_enabled ())
-    return tst_audit10_aux ();
-  else
-    return 77;
-}
-
-#define TEST_FUNCTION do_test ()
-#include "../../test-skeleton.c"

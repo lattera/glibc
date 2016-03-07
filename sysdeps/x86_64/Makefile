@@ -64,7 +64,7 @@ $(objpfx)tst-audit3: $(objpfx)tst-auditmod3a.so
 $(objpfx)tst-audit3.out: $(objpfx)tst-auditmod3b.so
 tst-audit3-ENV = LD_AUDIT=$(objpfx)tst-auditmod3b.so
 
-$(objpfx)tst-audit4: $(objpfx)tst-auditmod4a.so
+$(objpfx)tst-audit4: $(objpfx)tst-audit4-aux.o $(objpfx)tst-auditmod4a.so
 $(objpfx)tst-audit4.out: $(objpfx)tst-auditmod4b.so
 tst-audit4-ENV = LD_AUDIT=$(objpfx)tst-auditmod4b.so
 
@@ -81,12 +81,12 @@ $(objpfx)tst-audit7: $(objpfx)tst-auditmod7a.so
 $(objpfx)tst-audit7.out: $(objpfx)tst-auditmod7b.so
 tst-audit7-ENV = LD_AUDIT=$(objpfx)tst-auditmod7b.so
 
-$(objpfx)tst-audit10: $(objpfx)tst-auditmod10a.so
+$(objpfx)tst-audit10: $(objpfx)tst-audit10-aux.o $(objpfx)tst-auditmod10a.so
 $(objpfx)tst-audit10.out: $(objpfx)tst-auditmod10b.so
 tst-audit10-ENV = LD_AUDIT=$(objpfx)tst-auditmod10b.so
 
 AVX-CFLAGS=-mavx -mno-vzeroupper
-CFLAGS-tst-audit4.c += $(AVX-CFLAGS)
+CFLAGS-tst-audit4-aux.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod4a.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod4b.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod6b.c += $(AVX-CFLAGS)
@@ -94,7 +94,7 @@ CFLAGS-tst-auditmod6c.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod7b.c += $(AVX-CFLAGS)
 ifeq (yes,$(config-cflags-avx512))
 AVX512-CFLAGS = -mavx512f
-CFLAGS-tst-audit10.c += $(AVX512-CFLAGS)
+CFLAGS-tst-audit10-aux.c += $(AVX512-CFLAGS)
 CFLAGS-tst-auditmod10a.c += $(AVX512-CFLAGS)
 CFLAGS-tst-auditmod10b.c += $(AVX512-CFLAGS)
 endif

@@ -1,5 +1,18 @@
 2016-03-07  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19269]
+	* sysdeps/x86_64/Makefile (tst-audit4): Depend on
+	tst-audit4-aux.o.
+	(tst-audit10): Depend on tst-audit10-aux.o.
+	(CFLAGS-tst-audit4-aux.c): Compile with AVX enabled.
+	(CFLAGS-tst-audit10-aux.c): Compile with AVX512 enabled.
+	* sysdeps/x86_64/tst-audit4.c (do_test): Call tst_audit4_aux
+	instead of inline AVX code.
+	* sysdeps/x86_64/tst-audit10.c (do_test): Call tst_audit10_aux
+	instead of inline AVX512 code.
+	* sysdeps/x86_64/tst-audit4-aux.c: New file
+	* sysdeps/x86_64/tst-audit10-aux.c: New file
+
 	[BZ #19648]
 	* test-skeleton.c (main): Do not set RLIMIT_DATA.
 
