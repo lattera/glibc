@@ -1,3 +1,10 @@
+2016-03-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memcpy-avx512-no-vzeroupper.S:
+	Replace .text with .text.avx512.
+	* sysdeps/x86_64/multiarch/memset-avx512-no-vzeroupper.S:
+	Likewise.
+
 2016-03-07  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/generic/libnsl.abilist: New file.

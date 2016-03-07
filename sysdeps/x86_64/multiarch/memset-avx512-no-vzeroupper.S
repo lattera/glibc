@@ -26,7 +26,7 @@
 # define MEMSET_CHK __memset_chk_avx512_no_vzeroupper
 #endif
 
-	.section .text,"ax",@progbits
+	.section .text.avx512,"ax",@progbits
 #if defined PIC
 ENTRY (MEMSET_CHK)
 	cmpq	%rdx, %rcx

@@ -29,7 +29,7 @@
 # define MEMCPY_CHK	__memcpy_chk_avx512_no_vzeroupper
 #endif
 
-	.section .text,"ax",@progbits
+	.section .text.avx512,"ax",@progbits
 #if !defined USE_AS_BCOPY
 ENTRY (MEMCPY_CHK)
 	cmpq	%rdx, %rcx
