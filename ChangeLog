@@ -5,6 +5,7 @@
 
 2016-03-07  Hongjiu Zhang  <noctuorare@gmail.com>
 
+	[BZ #15333]
 	* elf/sln.c (makesymlink): Change struct stat to stat64, and lstat
 	to lstat64.
 
