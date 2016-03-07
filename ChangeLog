@@ -1,3 +1,14 @@
+2016-03-07  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19610]
+	* elf/ldconfig.c (opt_link): Update comment.
+	(options): Update help string for option -X.
+	(search_dir): Unlink stale symbolic link only if updating symbolic
+	links.
+	* elf/tst-ldconfig-X.sh: New file.
+	* elf/Makefile (tests-special): Add tst-ldconfig-X.out.
+	(tst-ldconfig-X.out): New rule to run tst-ldconfig-X.sh.
+
 2016-03-07  Andreas Schwab  <schwab@suse.de>
 
 	* iconv/gconv_builtin.h ("=ascii->INTERNAL"): Correct min/max
