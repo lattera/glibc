@@ -1,3 +1,8 @@
+2016-03-07  Hongjiu Zhang  <noctuorare@gmail.com>
+
+	* elf/sln.c (makesymlink): Change struct stat to stat64, and lstat
+	to lstat64.
+
 2016-03-07  Florian Weimer  <fweimer@redhat.com>
 
 	* libio/filedoalloc.c (isatty): Remove.
