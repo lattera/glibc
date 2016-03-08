@@ -1,3 +1,8 @@
+2016-03-08  Florian Weimer  <fweimer@redhat.com>
+
+	* sunrpc/key_call.c (key_call_keyenvoy): Use int status instead of
+	union wait.  Report any non-zero exit status as error.
+
 2016-03-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* posix/tst-execvpe5.c (do_test): Fix fix test invocation when
