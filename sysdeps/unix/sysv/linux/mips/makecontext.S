@@ -153,6 +153,11 @@ NESTED (__makecontext, FRAMESZ, ra)
 #endif
 	jr	ra
 
+	/* We need to terminate the FDE to stop unwinding if backtrace was
+	   called within a context created by makecontext.  */
+	cfi_endproc
+	nop
+
 99:
 #ifdef __PIC__
 	move	gp, s1
@@ -186,6 +191,8 @@ NESTED (__makecontext, FRAMESZ, ra)
 1:
 	lb	zero, (zero)
 	b	1b
+
+	cfi_startproc
 PSEUDO_END (__makecontext)
 
 weak_alias (__makecontext, makecontext)
