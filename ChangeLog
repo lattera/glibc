@@ -1,3 +1,8 @@
+2016-03-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* posix/tst-execvpe5.c (do_test): Fix fix test invocation when
+	configured with --enable-hardcoded-path-in-tests.
+
 2016-03-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19677]

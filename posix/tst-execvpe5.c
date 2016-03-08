@@ -88,13 +88,16 @@ do_test (int argc, char *argv[])
        + "--library-path"	optional
        + the library path	optional
        + the application name
+
+    if --enable-hardcoded-path-in-tests is used, just
+      + the application name
   */
 
   if (restart)
     {
       if (argc != 1)
 	{
-	  printf ("Wrong number of arguments (%d)\n", argc);
+	  printf ("Wrong number of arguments (%d) in restart\n", argc);
 	  exit (EXIT_FAILURE);
 	}
 
@@ -125,7 +128,7 @@ do_test (int argc, char *argv[])
 	}
       else
 	{
-	  char *args[] = { argv[1], argv[1],
+	  char *args[] = { argv[0],
 			   (char *) "--direct", (char *) "--restart", NULL };
 	  execvpe (args[0], args, envs);
 	}
