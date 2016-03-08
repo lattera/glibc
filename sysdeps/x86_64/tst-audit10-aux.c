@@ -20,13 +20,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern __m512i audit_test (__m512i, __m512i, __m512i, __m512i,
-			   __m512i, __m512i, __m512i, __m512i);
-
 int
 tst_audit10_aux (void)
 {
 #ifdef __AVX512F__
+  extern __m512i audit_test (__m512i, __m512i, __m512i, __m512i,
+                             __m512i, __m512i, __m512i, __m512i);
+
   __m512i zmm = _mm512_setzero_si512 ();
   __m512i ret = audit_test (zmm, zmm, zmm, zmm, zmm, zmm, zmm, zmm);
 

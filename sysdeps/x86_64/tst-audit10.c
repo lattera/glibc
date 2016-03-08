@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <cpuid.h>
+#include <cpu-features.h>
 
 int tst_audit10_aux (void);
 

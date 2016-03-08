@@ -1,3 +1,9 @@
+2016-03-08  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/x86_64/tst-audit10.c: #include <cpu-features.h>.
+	* sysdeps/x86_64/tst-audit10-aux.c: Move audit_test extern decl ...
+	(tst_audit10_aux) [__AVX512F__]: ... here.
+
 2016-03-08  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* include/sys/auxv.h: New file.
