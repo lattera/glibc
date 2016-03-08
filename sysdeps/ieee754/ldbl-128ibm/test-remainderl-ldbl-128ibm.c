@@ -1,4 +1,4 @@
-/* Test for ldbl-128ibm fmodl handling of equal values (bug 19602).
+/* Test for ldbl-128ibm remainderl handling of equal values (bug 19677).
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,6 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC fmodl
-#define SETUP
+#define FUNC remainderl
+#define SETUP fesetround (FE_DOWNWARD)
 #include "test-fmodrem-ldbl-128ibm.c"

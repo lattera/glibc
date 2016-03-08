@@ -1,3 +1,20 @@
+2016-03-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19677]
+	* sysdeps/ieee754/ldbl-128ibm/e_remainderl.c
+	(__ieee754_remainderl): Put zero low parts in canonical form.
+	* sysdeps/ieee754/ldbl-128ibm/test-fmodrem-ldbl-128ibm.c: New
+	file.  Based on
+	sysdeps/ieee754/ldbl-128ibm/test-fmodl-ldbl-128ibm.c.
+	* sysdeps/ieee754/ldbl-128ibm/test-fmodl-ldbl-128ibm.c: Replace
+	with wrapper round test-fmodrem-ldbl-128ibm.c.
+	* sysdeps/ieee754/ldbl-128ibm/test-remainderl-ldbl-128ibm.c: New
+	file.
+	* sysdeps/ieee754/ldbl-128ibm/test-remquol-ldbl-128ibm.c:
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/Makefile (tests): Add
+	test-remainderl-ldbl-128ibm and test-remquol-ldbl-128ibm.
+
 2016-03-07  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19610]

@@ -46,6 +46,10 @@ __ieee754_remainderl(long double x, long double p)
 	hp &= 0x7fffffffffffffffLL;
 	lx ^= sx;
 	hx &= 0x7fffffffffffffffLL;
+	if (lp == 0x8000000000000000ULL)
+	  lp = 0;
+	if (lx == 0x8000000000000000ULL)
+	  lx = 0;
 
     /* purge off exception values */
 	if(hp==0) return (x*p)/(x*p);	/* p = 0 */

@@ -1,4 +1,4 @@
-/* Test for ldbl-128ibm fmodl handling of equal values (bug 19602).
+/* Test for ldbl-128ibm remquol handling of equal values (bug 19677).
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,6 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC fmodl
-#define SETUP
+#include <math.h>
+
+static long double
+wrap_remquol (long double x, long double y)
+{
+  int quo;
+  return remquol (x, y, &quo);
+}
+
+#define FUNC wrap_remquol
+#define SETUP fesetround (FE_DOWNWARD)
 #include "test-fmodrem-ldbl-128ibm.c"
