@@ -1,3 +1,10 @@
+2016-03-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19783]
+	* benchtests/Makefile (run-bench): Replace $(rtld-prefix) with
+	$(test-via-rtld-prefix).
+	($(binaries-bench)): Replace $(+link) with $(+link-tests).
+
 2016-03-08  Florian Weimer  <fweimer@redhat.com>
 
 	* sunrpc/key_call.c (key_call_keyenvoy): Use int status instead of

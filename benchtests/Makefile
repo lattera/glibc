@@ -118,7 +118,7 @@ bench-deps := bench-skeleton.c bench-timing.h Makefile
 
 run-bench = $(test-wrapper-env) \
 	    $(run-program-env) \
-	    $($*-ENV) $(rtld-prefix) $${run}
+	    $($*-ENV) $(test-via-rtld-prefix) $${run}
 
 timing-type := $(objpfx)bench-timing-type
 
@@ -172,7 +172,7 @@ $(timing-type) $(binaries-bench) $(binaries-benchset) \
 	$(binaries-bench-malloc): %: %.o $(objpfx)json-lib.o \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
-	$(+link)
+	$(+link-tests)
 
 $(objpfx)bench-%.c: %-inputs $(bench-deps)
 	{ if [ -n "$($*-INCLUDE)" ]; then \
