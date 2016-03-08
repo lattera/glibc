@@ -23,6 +23,9 @@
 /* Use the unaligned string inline ABI.  */
 #define _STRING_INLINE_unaligned 1
 
+/* Don't inline mempcpy into memcpy as x86 has an optimized mempcpy.  */
+#define _HAVE_STRING_ARCH_mempcpy 1
+
 /* Enable inline functions only for i486 or better when compiling for
    ia32.  */
 #if !defined __x86_64__ && (defined __i486__ || defined __pentium__	      \
