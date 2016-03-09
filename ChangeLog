@@ -1,3 +1,17 @@
+2016-03-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19790]
+	* sysdeps/ieee754/ldbl-128ibm/s_rintl.c [USE_AS_NEARBYINTL]
+	(rintl): Define as macro.
+	[USE_AS_NEARBYINTL] (__rintl): Likewise.
+	(__rintl) [USE_AS_NEARBYINTL]: Use SET_RESTORE_ROUND_NOEX instead
+	of fesetround.  Ensure results are evaluated before end of scope.
+	* sysdeps/ieee754/ldbl-128ibm/s_nearbyintl.c: Define
+	USE_AS_NEARBYINTL and include s_rintl.c.
+	* sysdeps/powerpc/fpu/fenv_private.h (libc_feholdsetround_ppc):
+	Disable exception traps in new environment.
+	(libc_feholdsetround_ppc_ctx): Likewise.
+
 2016-03-08  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/x86_64/tst-audit10.c: #include <cpu-features.h>.

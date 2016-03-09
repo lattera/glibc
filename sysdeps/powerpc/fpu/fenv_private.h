@@ -146,7 +146,7 @@ libc_feholdsetround_ppc (fenv_t *e, int r)
 
   old.fenv = fegetenv_register ();
   /* Clear current precision and set newer one.  */
-  new.l = (old.l & ~0x3) | r;
+  new.l = (old.l & ~0x3 & ~_FPU_MASK_ALL) | r;
   *e = old.fenv;
 
   if ((old.l & _FPU_MASK_ALL) != 0)
@@ -240,7 +240,7 @@ libc_feholdsetround_ppc_ctx (struct rm_ctx *ctx, int r)
   fenv_union_t old, new;
 
   old.fenv = fegetenv_register ();
-  new.l = (old.l & ~0x3) | r;
+  new.l = (old.l & ~0x3 & ~_FPU_MASK_ALL) | r;
   ctx->env = old.fenv;
   if (__glibc_unlikely (new.l != old.l))
     {
