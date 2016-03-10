@@ -1327,6 +1327,16 @@ necessarily the exact value actually passed with discontiguous
 mantissa bits.
 
 @item
+For the IBM @code{long double} format, functions whose results are
+fully specified by reference to corresponding IEEE 754 floating-point
+operations have the same accuracy goals as other functions, but with
+the error bound being the same as that for division (3ulp).
+Furthermore, ``inexact'' and ``underflow'' exceptions may be raised
+for all functions for any inputs, even where such exceptions are
+inconsistent with the returned value, since the underlying
+floating-point arithmetic has that property.
+
+@item
 Functions behave as if the infinite-precision result computed is zero,
 infinity or NaN if and only if that is the mathematically correct
 infinite-precision result.  They behave as if the infinite-precision

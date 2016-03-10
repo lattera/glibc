@@ -672,13 +672,20 @@ test_exceptions (const char *test_name, int exception)
 	test_single_exception (test_name, exception, OVERFLOW_EXCEPTION,
 			       FE_OVERFLOW, "Overflow");
 #endif
+      /* Spurious "underflow" and "inexact" exceptions are always
+	 allowed for IBM long double, in line with the underlying
+	 arithmetic.  */
 #ifdef FE_UNDERFLOW
-      if ((exception & UNDERFLOW_EXCEPTION_OK) == 0)
+      if ((exception & UNDERFLOW_EXCEPTION_OK) == 0
+	  && !(TEST_COND_ldbl_128ibm
+	       && (exception & UNDERFLOW_EXCEPTION) == 0))
 	test_single_exception (test_name, exception, UNDERFLOW_EXCEPTION,
 			       FE_UNDERFLOW, "Underflow");
 #endif
 #ifdef FE_INEXACT
-      if ((exception & (INEXACT_EXCEPTION | NO_INEXACT_EXCEPTION)) != 0)
+      if ((exception & (INEXACT_EXCEPTION | NO_INEXACT_EXCEPTION)) != 0
+	  && !(TEST_COND_ldbl_128ibm
+	       && (exception & NO_INEXACT_EXCEPTION) != 0))
 	test_single_exception (test_name, exception, INEXACT_EXCEPTION,
 			       FE_INEXACT, "Inexact");
 #endif
