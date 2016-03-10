@@ -1,3 +1,25 @@
+2016-03-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19762]
+	* sysdeps/unix/sysv/linux/x86_64/64/dl-librecon.h
+	(EXTRA_LD_ENVVARS): Add _arch_ to index_*/bit_*.
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Likewise.
+	* sysdeps/x86/cpu-features.h (bit_*): Renamed to ...
+	(bit_arch_*): This for feature array.
+	(bit_*): Renamed to ...
+	(bit_cpu_*): This for cpu array.
+	(index_*): Renamed to ...
+	(index_arch_*): This for feature array.
+	(index_*): Renamed to ...
+	(index_cpu_*): This for cpu array.
+	[__ASSEMBLER__] (HAS_FEATURE): Add and use field.
+	[__ASSEMBLER__] (HAS_CPU_FEATURE)): Pass cpu to HAS_FEATURE.
+	[__ASSEMBLER__] (HAS_ARCH_FEATURE)): Pass arch to HAS_FEATURE.
+	[!__ASSEMBLER__] (HAS_CPU_FEATURE): Replace index_##name and
+	bit_##name with index_cpu_##name and bit_cpu_##name.
+	[!__ASSEMBLER__] (HAS_ARCH_FEATURE): Replace index_##name and
+	bit_##name with index_arch_##name and bit_arch_##name.
+
 2016-03-09  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #19792]
