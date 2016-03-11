@@ -1,3 +1,8 @@
+2016-03-11  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* malloc/malloc.c (malloc_consolidate): Replace 0 by NULL in
+	order to match the type of p when calling atomic_exchange_acq().
+
 2016-03-11  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power4/memcmp.S (memcmp): Rearrange
