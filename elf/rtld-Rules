@@ -90,7 +90,7 @@ else
 
 rtld-compile-command.S = $(compile-command.S) $(rtld-CPPFLAGS)
 rtld-compile-command.s = $(compile-command.s) $(rtld-CPPFLAGS)
-rtld-compile-command.c = $(compile-command.c) $(rtld-CPPFLAGS)
+rtld-compile-command.c = $(compile-command.c) $(rtld-CPPFLAGS) $(rtld-CFLAGS)
 
 # These are the basic compilation rules corresponding to the Makerules ones.
 # The sysd-rules generated makefile already defines pattern rules for rtld-%

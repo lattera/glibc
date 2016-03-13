@@ -1,3 +1,9 @@
+2016-04-09  Nick Alcock  <nick.alcock@oracle.com>
+
+	* elf/rtld-Rules (rtld-compile-command.c): Add $(rtld-CFLAGS).
+	* scripts/sysd-rules.awk: Substitute in $(CFLAGS) as well as
+	$(CPPFLAGS).
+
 2016-04-09  Khem Raj  <raj.khem@gmail.com>
 
 	[BZ #17950]
