@@ -80,7 +80,7 @@ OUR_WAITID (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 #endif
 #ifdef WEXITED
       || ((options & (WEXITED|WSTOPPED|WCONTINUED))
-	  != (WEXITED | (options & WUNTRACED)))
+	  != (WEXITED | (options & WSTOPPED)))
 #endif
       )
     {

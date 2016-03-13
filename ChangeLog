@@ -1,3 +1,8 @@
+2016-03-13  Samuel Thibault  <samuel.thibault@ens-lyon.org
+
+	* sysdeps/posix/waitid.c (OUR_WAITID): Test against WSTOPPED instead of
+	WUNTRACED.
+
 2016-03-11  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* malloc/malloc.c (malloc_consolidate): Replace 0 by NULL in
