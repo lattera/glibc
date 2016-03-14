@@ -1,3 +1,9 @@
+2016-03-14  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* math/test-signgam-finite-c99.c: Also #undef
+	__LIBC_INTERNAL_MATH_INLINES.
+	* math/test-signgam-main.c: Likewise.
+
 2016-03-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/mman-linux.h [__USE_MISC] (MADV_FREE): New macro.

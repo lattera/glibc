@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #undef _LIBC
+#undef __LIBC_INTERNAL_MATH_INLINES
 #undef _GNU_SOURCE
 #undef _Mlong_double_
 #define _ISOMAC
