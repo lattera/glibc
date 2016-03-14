@@ -81,6 +81,7 @@
 # define MADV_SEQUENTIAL  2	/* Expect sequential page references.  */
 # define MADV_WILLNEED	  3	/* Will need these pages.  */
 # define MADV_DONTNEED	  4	/* Don't need these pages.  */
+# define MADV_FREE	  8	/* Free pages only if memory pressure.  */
 # define MADV_REMOVE	  9	/* Remove these pages and resources.  */
 # define MADV_DONTFORK	  10	/* Do not inherit across fork.  */
 # define MADV_DOFORK	  11	/* Do inherit across fork.  */

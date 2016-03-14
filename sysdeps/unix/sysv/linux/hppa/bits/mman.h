@@ -88,6 +88,7 @@
 # define MADV_SPACEAVAIL  5	/* Insure that resources are reserved */
 # define MADV_VPS_PURGE	  6	/* Purge pages from VM page cache */
 # define MADV_VPS_INHERIT 7	/* Inherit parents page size */
+# define MADV_FREE	  8	/* Free pages only if memory pressure.  */
 # define MADV_REMOVE	  9	/* Remove these pages and resources.  */
 # define MADV_DONTFORK	 10	/* Do not inherit across fork.  */
 # define MADV_DOFORK	 11	/* Do inherit across fork.  */
