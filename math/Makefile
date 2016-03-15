@@ -100,7 +100,8 @@ $(inst_libdir)/libm.so: $(common-objpfx)format.lds \
 	 cat $<; \
 	 echo 'GROUP ( $(slibdir)/libm.so$(libm.so-version) ' \
 	      'AS_NEEDED ( $(libdir)/libmvec_nonshared.a $(slibdir)/libmvec.so$(libmvec.so-version) ) )' \
-	) > $@
+	) > $@.new
+	mv -f $@.new $@
 endif
 
 # Rules for the test suite.

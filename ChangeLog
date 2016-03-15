@@ -1,3 +1,9 @@
+2016-03-21  Dylan Alex Simon  <dylan-sourceware@dylex.net>
+
+	[BZ #19822]
+	* math/Makefile ($(inst_libdir)/libm.so): Write output to $@.tmp and
+	move it to the final $@ location.
+
 2016-03-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Fix invalid memory
