@@ -1,5 +1,12 @@
 2016-03-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PPOLL):
+	Remove macro.
+	* sysdeps/unix/sysv/linux/ppoll.c: Do not include
+	<kernel-features.h>.
+	[__NR_ppoll]: Make code unconditional.
+	[!__ASSUME_PPOLL]: Remove conditional code.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	(__ASSUME_ACCEPT4_SYSCALL): Define unconditionally.
 	(__ASSUME_ACCEPT4): Likewise.

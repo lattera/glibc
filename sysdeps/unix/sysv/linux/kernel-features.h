@@ -58,7 +58,6 @@
 /* pselect/ppoll were introduced just after 2.6.16-rc1.  On x86_64 and
    SH this appeared first in 2.6.19-rc1, on ia64 in 2.6.22-rc1.  */
 #define __ASSUME_PSELECT	1
-#define __ASSUME_PPOLL		1
 
 /* The *at syscalls were introduced just after 2.6.16-rc1.  On PPC
    they were introduced in 2.6.17-rc1, on SH in 2.6.19-rc1.  */
