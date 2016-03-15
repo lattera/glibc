@@ -17,19 +17,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* The accept4 syscall was added for x86-64 in 2.6.28.  */
-#define __ASSUME_ACCEPT4_SYSCALL	1
-
-/* The recvmmsg syscall was added for x86-64 in 2.6.33.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
-# define __ASSUME_RECVMMSG_SYSCALL	1
-#endif
-
-/* The sendmmsg syscall was added for x86-64 in 3.0.  */
-#if __LINUX_KERNEL_VERSION >= 0x030000
-# define __ASSUME_SENDMMSG_SYSCALL	1
-#endif
-
 /* getcpu is a syscall for x86-64 since 3.1.  */
 #if __LINUX_KERNEL_VERSION >= 0x030100
 # define __ASSUME_GETCPU_SYSCALL	1

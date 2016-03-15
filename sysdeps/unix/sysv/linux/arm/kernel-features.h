@@ -17,15 +17,6 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Support for the recvmmsg syscall was added in 2.6.33.  */
-#define __ASSUME_RECVMMSG_SYSCALL	1
-
-/* Support for the accept4 syscall was added in 2.6.36.  */
-#define __ASSUME_ACCEPT4_SYSCALL	1
-
-/* Support for the sendmmsg syscall was added in 3.0.  */
-#define __ASSUME_SENDMMSG_SYSCALL	1
-
 #include_next <kernel-features.h>
 
 /* The ARM kernel before 3.14.3 may or may not support

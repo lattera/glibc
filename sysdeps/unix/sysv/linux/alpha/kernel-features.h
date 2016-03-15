@@ -20,13 +20,6 @@
 #ifndef _KERNEL_FEATURES_H
 #define _KERNEL_FEATURES_H 1
 
-/* Support for recvmmsg was added for alpha in 2.6.33.  */
-#define __ASSUME_RECVMMSG_SYSCALL       1
-
-/* Support for accept4 and sendmmsg was added for alpha in 3.2.  */
-#define __ASSUME_ACCEPT4_SYSCALL      1
-#define __ASSUME_SENDMMSG_SYSCALL     1
-
 #include_next <kernel-features.h>
 
 #undef __ASSUME_ST_INO_64_BIT

@@ -22,14 +22,11 @@
 
 /* Direct socketcalls available with kernel 4.3.  */
 #if __LINUX_KERNEL_VERSION >= 0x040300
-# define __ASSUME_RECVMMSG_SYSCALL           1
-# define __ASSUME_SENDMMSG_SYSCALL           1
 # define __ASSUME_SOCKET_SYSCALL             1
 # define __ASSUME_SOCKETPAIR_SYSCALL         1
 # define __ASSUME_BIND_SYSCALL               1
 # define __ASSUME_CONNECT_SYSCALL            1
 # define __ASSUME_LISTEN_SYSCALL             1
-# define __ASSUME_ACCEPT4_SYSCALL            1
 # define __ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL 1
 # define __ASSUME_GETSOCKOPT_SYSCALL         1
 # define __ASSUME_SETSOCKOPT_SYSCALL         1
@@ -45,6 +42,12 @@
 #endif
 
 #include_next <kernel-features.h>
+
+#if __LINUX_KERNEL_VERSION < 0x040300
+# undef __ASSUME_ACCEPT4_SYSCALL
+# undef __ASSUME_RECVMMSG_SYSCALL
+# undef __ASSUME_SENDMMSG_SYSCALL
+#endif
 
 /* No support for PI futexes or robust mutexes before 3.10 for m68k.  */
 #if __LINUX_KERNEL_VERSION < 0x030a00

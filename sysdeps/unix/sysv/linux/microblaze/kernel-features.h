@@ -39,14 +39,7 @@
 #define __ASSUME_RECVMSG_SYSCALL	1
 
 /* Support for the accept4 and recvmmsg syscalls was added in 2.6.33.  */
-#define __ASSUME_ACCEPT4_SYSCALL        1
-#define __ASSUME_RECVMMSG_SYSCALL       1
 #define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL      1
-
-/* Support for the sendmmsg syscall was added in 3.3.  */
-#if __LINUX_KERNEL_VERSION >= 0x030300
-# define __ASSUME_SENDMMSG_SYSCALL       1
-#endif
 
 /* Support for the futimesat syscall was added in 2.6.33.  */
 #define __ASSUME_FUTIMESAT              1
@@ -59,4 +52,9 @@
 # undef __ASSUME_PSELECT
 # undef __ASSUME_PREADV
 # undef __ASSUME_PWRITEV
+#endif
+
+/* Support for the sendmmsg syscall was added in 3.3.  */
+#if __LINUX_KERNEL_VERSION < 0x030300
+# undef __ASSUME_SENDMMSG_SYSCALL
 #endif

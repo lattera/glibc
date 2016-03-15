@@ -106,10 +106,8 @@
 #ifdef __ASSUME_SOCKETCALL
 # define __ASSUME_ACCEPT4_SOCKETCALL	1
 #endif
-
-#if defined __ASSUME_ACCEPT4_SOCKETCALL || defined __ASSUME_ACCEPT4_SYSCALL
-# define __ASSUME_ACCEPT4	1
-#endif
+#define __ASSUME_ACCEPT4_SYSCALL	1
+#define __ASSUME_ACCEPT4	1
 
 /* Support for the FUTEX_CLOCK_REALTIME flag was added in 2.6.29.  */
 #define __ASSUME_FUTEX_CLOCK_REALTIME	1
@@ -125,11 +123,11 @@
 
 /* Support for recvmmsg functionality was added in 2.6.33.  The macros
    defined correspond to those for accept4.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621 && defined __ASSUME_SOCKETCALL
-# define __ASSUME_RECVMMSG_SOCKETCALL	1
-#endif
-
-#if defined __ASSUME_RECVMMSG_SOCKETCALL || defined __ASSUME_RECVMMSG_SYSCALL
+#if __LINUX_KERNEL_VERSION >= 0x020621
+# ifdef __ASSUME_SOCKETCALL
+#  define __ASSUME_RECVMMSG_SOCKETCALL	1
+# endif
+# define __ASSUME_RECVMMSG_SYSCALL	1
 # define __ASSUME_RECVMMSG	1
 #endif
 
@@ -151,10 +149,10 @@
 
 /* Support for sendmmsg functionality was added in 3.0.  The macros
    defined correspond to those for accept4 and recvmmsg.  */
-#if __LINUX_KERNEL_VERSION >= 0x030000 && defined __ASSUME_SOCKETCALL
-# define __ASSUME_SENDMMSG_SOCKETCALL	1
-#endif
-
-#if defined __ASSUME_SENDMMSG_SOCKETCALL || defined __ASSUME_SENDMMSG_SYSCALL
+#if __LINUX_KERNEL_VERSION >= 0x030000
+# ifdef __ASSUME_SOCKETCALL
+#  define __ASSUME_SENDMMSG_SOCKETCALL	1
+# endif
+# define __ASSUME_SENDMMSG_SYSCALL	1
 # define __ASSUME_SENDMMSG	1
 #endif

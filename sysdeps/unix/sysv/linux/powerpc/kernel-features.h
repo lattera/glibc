@@ -20,12 +20,6 @@
 /* PowerPC uses socketcall.  */
 #define __ASSUME_SOCKETCALL		1
 
-/* The accept4 syscall was added for PowerPC in 2.6.37.  */
-#define __ASSUME_ACCEPT4_SYSCALL	1
-
-/* The recvmmsg syscall was added for PowerPC in 2.6.37.  */
-#define __ASSUME_RECVMMSG_SYSCALL	1
-
 /* New syscalls added for PowerPC in 2.6.37.  */
 #define __ASSUME_SOCKET_SYSCALL	1
 #define __ASSUME_BIND_SYSCALL		1
@@ -46,7 +40,6 @@
 #define __ASSUME_RECVMSG_SYSCALL	1
 
 /* The sendmmsg syscall was added for PowerPC in 3.0.  */
-#define __ASSUME_SENDMMSG_SYSCALL	1
 #define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
 
 #include_next <kernel-features.h>

@@ -21,15 +21,9 @@
 #define __ASSUME_SOCKETCALL		1
 
 /* The recvmmsg syscall was added for i386 in 2.6.33.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
-# define __ASSUME_RECVMMSG_SYSCALL	1
-#endif
 #define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL	1
 
 /* The sendmmsg syscall was added for i386 in 3.0.  */
-#if __LINUX_KERNEL_VERSION >= 0x030000
-# define __ASSUME_SENDMMSG_SYSCALL	1
-#endif
 #define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
 
 /* Direct socketcalls available with kernel 4.3.  */
@@ -39,7 +33,6 @@
 # define __ASSUME_BIND_SYSCALL               1
 # define __ASSUME_CONNECT_SYSCALL            1
 # define __ASSUME_LISTEN_SYSCALL             1
-# define __ASSUME_ACCEPT4_SYSCALL            1
 # define __ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL 1
 # define __ASSUME_GETSOCKOPT_SYSCALL         1
 # define __ASSUME_SETSOCKOPT_SYSCALL         1
@@ -55,3 +48,7 @@
 #endif
 
 #include_next <kernel-features.h>
+
+#if __LINUX_KERNEL_VERSION < 0x040300
+# undef __ASSUME_ACCEPT4_SYSCALL
+#endif

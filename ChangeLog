@@ -1,3 +1,90 @@
+2016-03-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Define unconditionally.
+	(__ASSUME_ACCEPT4): Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x020621] (__ASSUME_RECVMMSG_SYSCALL):
+	Define.
+	[__LINUX_KERNEL_VERSION >= 0x020621] (__ASSUME_RECVMMSG):
+	Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x030000] (__ASSUME_SENDMMSG_SYSCALL):
+	Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x030000] (__ASSUME_SENDMMSG):
+	Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/kernel-features.h: Remove file.
+	* sysdeps/unix/sysv/linux/nios2/kernel-features.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_RECVMMSG_SYSCALL): Do not define.
+	(__ASSUME_ACCEPT4_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	(__ASSUME_ACCEPT4_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Likewise.
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/i386/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x020621] (__ASSUME_RECVMMSG_SYSCALL):
+	Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x030000] (__ASSUME_SENDMMSG_SYSCALL):
+	Likewise.
+	(__ASSUME_ACCEPT4_SYSCALL): Undefine if [__LINUX_KERNEL_VERSION <
+	0x040300] instead of defining if [__LINUX_KERNEL_VERSION >=
+	0x040300].
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h
+	(__ASSUME_RECVMMSG_SYSCALL): Do not define.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	(__ASSUME_ACCEPT4_SYSCALL): Undefine if [__LINUX_KERNEL_VERSION <
+	0x030300] instead of defining if [__LINUX_KERNEL_VERSION >=
+	0x030300].
+	[__LINUX_KERNEL_VERSION < 0x030300] (__ASSUME_ACCEPT4): Undefine.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Undefine if [__LINUX_KERNEL_VERSION <
+	0x040300] instead of defining if [__LINUX_KERNEL_VERSION >=
+	0x040300].
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Do not define.
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Undefine if [__LINUX_KERNEL_VERSION <
+	0x030300] instead of defining if [__LINUX_KERNEL_VERSION >=
+	0x030300].
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Do not define.
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Likewise.
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/s390/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Undefine if [__LINUX_KERNEL_VERSION <
+	0x040300] instead of defining if [__LINUX_KERNEL_VERSION >=
+	0x040300].
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Do not define.
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Likewise.
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Likewise.
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x020621] (__ASSUME_RECVMMSG_SYSCALL):
+	Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x030000] (__ASSUME_SENDMMSG_SYSCALL):
+	Likewise.
+
 2016-03-15  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #19257]
