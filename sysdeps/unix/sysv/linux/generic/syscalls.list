@@ -28,5 +28,3 @@ recvfrom	-	recvfrom	Ci:ibniBN	__libc_recvfrom	__recvfrom recvfrom
 setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
 shutdown	-	shutdown	i:ii	__shutdown	shutdown
-sendmsg		-	sendmsg		Ci:ipi	__libc_sendmsg	__sendmsg sendmsg
-recvmsg		-	recvmsg		Ci:ipi	__libc_recvmsg	__recvmsg recvmsg

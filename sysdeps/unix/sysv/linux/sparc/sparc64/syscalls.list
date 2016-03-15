@@ -11,9 +11,7 @@ getsockopt	-	getsockopt	5	__getsockopt	getsockopt
 listen		-	listen		2	__listen	listen
 recv		-	recv		C:4	__libc_recv	__recv recv
 recvfrom	-	recvfrom	C:6	__libc_recvfrom	__recvfrom recvfrom
-recvmsg		-	recvmsg		C:3	__libc_recvmsg	__recvmsg recvmsg
 send		-	send		C:4	__libc_send	__send send
-sendmsg		-	sendmsg		C:3	__libc_sendmsg	__sendmsg sendmsg
 sendto		-	sendto		C:6	__libc_sendto	__sendto sendto
 setsockopt	-	setsockopt	5	__setsockopt	setsockopt
 shutdown	-	shutdown	2	__shutdown	shutdown

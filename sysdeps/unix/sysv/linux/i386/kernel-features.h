@@ -40,10 +40,8 @@
 # define __ASSUME_GETPEERNAME_SYSCALL        1
 # define __ASSUME_SENDTO_SYSCALL             1
 # define __ASSUME_SENDTO_FOR_SEND_SYSCALL    1
-# define __ASSUME_SENDMSG_SYSCALL            1
 # define __ASSUME_RECVFROM_SYSCALL           1
 # define __ASSUME_RECVFROM_FOR_RECV_SYSCALL  1
-# define __ASSUME_RECVMSG_SYSCALL            1
 # define __ASSUME_SHUTDOWN_SYSCALL           1
 #endif
 
@@ -51,4 +49,6 @@
 
 #if __LINUX_KERNEL_VERSION < 0x040300
 # undef __ASSUME_ACCEPT4_SYSCALL
+# undef __ASSUME_SENDMSG_SYSCALL
+# undef __ASSUME_RECVMSG_SYSCALL
 #endif

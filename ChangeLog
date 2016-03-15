@@ -1,3 +1,63 @@
+2016-05-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (recvmsg): Remove
+	from auto-generation.
+	(sendmsg): Likewise.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (recvmsg): Likewise.
+	(sendmsg): Likewise.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list (recvmsg): Likewise.
+	(sendmsg): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (recvmsg): Likewise.
+	(sendmsg): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (recvmsg): Likewise.
+	(sendmsg): Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list (recvmsg): Likewise.
+	(sendmsg): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list (recvmsg):
+	Likewise.
+	(sendmsg): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (recvmsg): Likewise.
+	(sendmsg): Likewise.
+	* sysdeps/unix/sysv/linux/i386/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x040300] (__ASSUME_SENDMSG_SYSCALL):
+	Remove.
+	[__LINUX_KERNEL_VERSION >= 0x040300] (__ASSUME_RECVMSG_SYSCALL):
+	Likewise.
+	[__LINUX_KERNEL_VERSION < 0x040300] (__ASSUME_SENDMSG_SYSCALL):
+	Undefine.
+	[__LINUX_KERNEL_VERSION < 0x040300] (__ASSUME_RECVMSG_SYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_SENDMSG_SYSCALL): Define.
+	(__ASSUME_RECVMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x040300] (__ASSUME_SENDMSG_SYSCALL):
+	Remove.
+	[__LINUX_KERNEL_VERSION >= 0x040300] (__ASSUME_RECVMSG_SYSCALL):
+	Likewise.
+	[__LINUX_KERNEL_VERSION < 0x040300] (__ASSUME_SENDMSG_SYSCALL):
+	Undefine.
+	[__LINUX_KERNEL_VERSION < 0x040300] (__ASSUME_RECVMSG_SYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x040300] (__ASSUME_SENDMSG_SYSCALL):
+	Remove.
+	[__LINUX_KERNEL_VERSION >= 0x040300] (__ASSUME_RECVMSG_SYSCALL):
+	Likewise.
+	[__LINUX_KERNEL_VERSION < 0x040300] (__ASSUME_SENDMSG_SYSCALL):
+	Undefine.
+	[__LINUX_KERNEL_VERSION < 0x040300] (__ASSUME_RECVMSG_SYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_SENDMSG_SYSCALL): Undefine.
+	(__ASSUME_RECVMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	(__ASSUME_SENDMSG_SYSCALL): Likewise.
+	(__ASSUME_RECVMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	(__ASSUME_SENDMSG_SYSCALL): Likewise.
+	(__ASSUME_RECVMSG_SYSCALL): Likewise.
+
 2016-05-25  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* stdlib/gen-tst-strtod-round.c: Add backslash to

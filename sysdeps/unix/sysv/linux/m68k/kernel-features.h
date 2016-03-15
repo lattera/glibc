@@ -34,10 +34,8 @@
 # define __ASSUME_GETPEERNAME_SYSCALL        1
 # define __ASSUME_SENDTO_SYSCALL             1
 # define __ASSUME_SENDTO_FOR_SEND_SYSCALL    1
-# define __ASSUME_SENDMSG_SYSCALL            1
 # define __ASSUME_RECVFROM_SYSCALL           1
 # define __ASSUME_RECVFROM_FOR_RECV_SYSCALL  1
-# define __ASSUME_RECVMSG_SYSCALL            1
 # define __ASSUME_SHUTDOWN_SYSCALL           1
 #endif
 
@@ -47,6 +45,8 @@
 # undef __ASSUME_ACCEPT4_SYSCALL
 # undef __ASSUME_RECVMMSG_SYSCALL
 # undef __ASSUME_SENDMMSG_SYSCALL
+# undef __ASSUME_SENDMSG_SYSCALL
+# undef __ASSUME_RECVMSG_SYSCALL
 #endif
 
 /* No support for PI futexes or robust mutexes before 3.10 for m68k.  */

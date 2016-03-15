@@ -35,8 +35,6 @@
 #define __ASSUME_SHUTDOWN_SYSCALL	1
 #define __ASSUME_GETSOCKOPT_SYSCALL	1
 #define __ASSUME_SETSOCKOPT_SYSCALL	1
-#define __ASSUME_SENDMSG_SYSCALL	1
-#define __ASSUME_RECVMSG_SYSCALL	1
 
 /* Support for the accept4 and recvmmsg syscalls was added in 2.6.33.  */
 #define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL      1
