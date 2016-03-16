@@ -1,3 +1,12 @@
+2016-03-15  Carlos O'Donell <carlos@redhat.com>
+
+	* catgets/tst-catgets.c (do_bz17905): Mark result unused.
+	* dlfcn/bug-dl-leaf-lib.c (check_val_fini): Mark ret unused.
+	* math/atest-exp.c (exp_mpn): Mark chk unused.
+	* math/atest-exp2.c (exp_mpn): Likwise.
+	* sysdeps/arm/dl-machine.h (elf_machine_rela): Mark td unused.
+	* sysdeps/i386/i686/dl-hash.h: Mark _dl_elf_hash unused.
+
 2016-03-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PPOLL):

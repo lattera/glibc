@@ -61,7 +61,7 @@ exp_mpn (mp1 ex, mp1 x)
    unsigned n;
    mp1 xp;
    mp2 tmp;
-   mp_limb_t chk;
+   mp_limb_t chk __attribute__ ((unused));
    mp1 tol;
 
    memset (xp, 0, sizeof (mp1));

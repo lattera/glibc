@@ -50,7 +50,7 @@ void check_val_fini (void)
 
 int lib_main (void)
 {
-  int ret;
+  int ret __attribute__ ((unused));
   void *hdl;
 
   /* Make sure the constructor sees the updated val.  */

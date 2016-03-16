@@ -26,6 +26,7 @@
    would be much slower than the generic C implementation.  So don't
    use it.  */
 static unsigned int
+__attribute__ ((unused))
 _dl_elf_hash (const char *name)
 {
   unsigned int result;

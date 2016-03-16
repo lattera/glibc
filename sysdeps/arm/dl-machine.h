@@ -581,7 +581,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #  ifdef RESOLVE_CONFLICT_FIND_MAP
 	case R_ARM_TLS_DESC:
 	  {
-	    struct tlsdesc volatile *td =
+	    struct tlsdesc volatile *td __attribute__ ((unused)) =
 	      (struct tlsdesc volatile *) reloc_addr;
 
 	    RESOLVE_CONFLICT_FIND_MAP (map, reloc_addr);
