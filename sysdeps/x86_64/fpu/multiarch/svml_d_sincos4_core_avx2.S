@@ -248,12 +248,12 @@ ENTRY (_ZGVdN4vvv_sincos_avx2)
         vmovsd    264(%rsp,%r15), %xmm0
         vzeroupper
 
-        call      sin@PLT
+        call      JUMPTARGET(sin)
 
         vmovsd    %xmm0, 328(%rsp,%r15)
         vmovsd    264(%rsp,%r15), %xmm0
 
-        call      cos@PLT
+        call      JUMPTARGET(cos)
 
         vmovsd    %xmm0, 392(%rsp,%r15)
         jmp       .LBL_1_8
@@ -264,12 +264,12 @@ ENTRY (_ZGVdN4vvv_sincos_avx2)
         vmovsd    256(%rsp,%r15), %xmm0
         vzeroupper
 
-        call      sin@PLT
+        call      JUMPTARGET(sin)
 
         vmovsd    %xmm0, 320(%rsp,%r15)
         vmovsd    256(%rsp,%r15), %xmm0
 
-        call      cos@PLT
+        call      JUMPTARGET(cos)
 
         vmovsd    %xmm0, 384(%rsp,%r15)
         jmp       .LBL_1_7

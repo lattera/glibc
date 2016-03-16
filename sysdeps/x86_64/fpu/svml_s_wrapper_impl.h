@@ -21,16 +21,16 @@
         subq      $40, %rsp
         cfi_adjust_cfa_offset(40)
         movaps    %xmm0, (%rsp)
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movss     %xmm0, 16(%rsp)
         movss     4(%rsp), %xmm0
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movss     %xmm0, 20(%rsp)
         movss     8(%rsp), %xmm0
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movss     %xmm0, 24(%rsp)
         movss     12(%rsp), %xmm0
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movss     16(%rsp), %xmm3
         movss     20(%rsp), %xmm2
         movss     24(%rsp), %xmm1
@@ -50,19 +50,19 @@
         cfi_adjust_cfa_offset(56)
         movaps    %xmm0, (%rsp)
         movaps    %xmm1, 16(%rsp)
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movss     %xmm0, 32(%rsp)
         movss     4(%rsp), %xmm0
         movss     20(%rsp), %xmm1
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movss     %xmm0, 36(%rsp)
         movss     8(%rsp), %xmm0
         movss     24(%rsp), %xmm1
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movss     %xmm0, 40(%rsp)
         movss     12(%rsp), %xmm0
         movss     28(%rsp), %xmm1
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movss     32(%rsp), %xmm3
         movss     36(%rsp), %xmm2
         movss     40(%rsp), %xmm1
@@ -91,7 +91,7 @@
         leaq    24(%rsp), %rsi
         leaq    28(%rsp), %rdi
         movaps  %xmm0, (%rsp)
-        call    \callee@PLT
+        call    JUMPTARGET(\callee)
         leaq    24(%rsp), %rsi
         leaq    28(%rsp), %rdi
         movss   28(%rsp), %xmm0
@@ -101,7 +101,7 @@
         movss   %xmm0, (%rbx)
         movaps  %xmm1, %xmm0
         shufps  $85, %xmm1, %xmm0
-        call    \callee@PLT
+        call    JUMPTARGET(\callee)
         movss   28(%rsp), %xmm0
         leaq    24(%rsp), %rsi
         movss   %xmm0, 4(%rbp)
@@ -111,7 +111,7 @@
         movss   %xmm0, 4(%rbx)
         movaps  %xmm1, %xmm0
         unpckhps        %xmm1, %xmm0
-        call    \callee@PLT
+        call    JUMPTARGET(\callee)
         movaps  (%rsp), %xmm1
         leaq    24(%rsp), %rsi
         leaq    28(%rsp), %rdi
@@ -121,7 +121,7 @@
         movss   24(%rsp), %xmm0
         movss   %xmm0, 8(%rbx)
         movaps  %xmm1, %xmm0
-        call    \callee@PLT
+        call    JUMPTARGET(\callee)
         movss   28(%rsp), %xmm0
         movss   %xmm0, 12(%rbp)
         movss   24(%rsp), %xmm0

@@ -356,7 +356,7 @@ ENTRY (_ZGVbN4vv_powf_sse4)
         movss     68(%rsp,%r15,8), %xmm0
         movss     132(%rsp,%r15,8), %xmm1
 
-        call      powf@PLT
+        call      JUMPTARGET(powf)
 
         movss     %xmm0, 196(%rsp,%r15,8)
         jmp       .LBL_1_8
@@ -366,7 +366,7 @@ ENTRY (_ZGVbN4vv_powf_sse4)
         movss     64(%rsp,%r15,8), %xmm0
         movss     128(%rsp,%r15,8), %xmm1
 
-        call      powf@PLT
+        call      JUMPTARGET(powf)
 
         movss     %xmm0, 192(%rsp,%r15,8)
         jmp       .LBL_1_7

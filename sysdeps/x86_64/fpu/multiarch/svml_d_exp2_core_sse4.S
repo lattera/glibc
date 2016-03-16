@@ -207,7 +207,7 @@ ENTRY (_ZGVbN2v_exp_sse4)
         shlq      $4, %r15
         movsd     200(%rsp,%r15), %xmm0
 
-        call      exp@PLT
+        call      JUMPTARGET(exp)
 
         movsd     %xmm0, 264(%rsp,%r15)
         jmp       .LBL_1_8
@@ -217,7 +217,7 @@ ENTRY (_ZGVbN2v_exp_sse4)
         shlq      $4, %r15
         movsd     192(%rsp,%r15), %xmm0
 
-        call      exp@PLT
+        call      JUMPTARGET(exp)
 
         movsd     %xmm0, 256(%rsp,%r15)
         jmp       .LBL_1_7

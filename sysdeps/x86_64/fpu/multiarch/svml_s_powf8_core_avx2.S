@@ -317,7 +317,7 @@ ENTRY(_ZGVdN8vv_powf_avx2)
         vmovss    132(%rsp,%r15,8), %xmm1
         vzeroupper
 
-        call      powf@PLT
+        call      JUMPTARGET(powf)
 
         vmovss    %xmm0, 196(%rsp,%r15,8)
         jmp       .LBL_1_8
@@ -328,7 +328,7 @@ ENTRY(_ZGVdN8vv_powf_avx2)
         vmovss    128(%rsp,%r15,8), %xmm1
         vzeroupper
 
-        call      powf@PLT
+        call      JUMPTARGET(powf)
 
         vmovss    %xmm0, 192(%rsp,%r15,8)
         jmp       .LBL_1_7

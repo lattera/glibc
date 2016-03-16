@@ -213,12 +213,12 @@ ENTRY(_ZGVdN8vvv_sincosf_avx2)
         vmovss    260(%rsp,%r15,8), %xmm0
         vzeroupper
 
-        call      sinf@PLT
+        call      JUMPTARGET(sinf)
 
         vmovss    %xmm0, 324(%rsp,%r15,8)
         vmovss    260(%rsp,%r15,8), %xmm0
 
-        call      cosf@PLT
+        call      JUMPTARGET(cosf)
 
         vmovss    %xmm0, 388(%rsp,%r15,8)
         jmp       .LBL_1_8
@@ -228,12 +228,12 @@ ENTRY(_ZGVdN8vvv_sincosf_avx2)
         vmovss    256(%rsp,%r15,8), %xmm0
         vzeroupper
 
-        call      sinf@PLT
+        call      JUMPTARGET(sinf)
 
         vmovss    %xmm0, 320(%rsp,%r15,8)
         vmovss    256(%rsp,%r15,8), %xmm0
 
-        call      cosf@PLT
+        call      JUMPTARGET(cosf)
 
         vmovss    %xmm0, 384(%rsp,%r15,8)
         jmp       .LBL_1_7

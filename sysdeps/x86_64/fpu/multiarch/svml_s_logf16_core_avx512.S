@@ -197,14 +197,14 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_logf
         cfi_restore_state
         movzbl    %r12b, %r15d
         vmovss    1156(%rsp,%r15,8), %xmm0
-        call      logf@PLT
+        call      JUMPTARGET(logf)
         vmovss    %xmm0, 1220(%rsp,%r15,8)
         jmp       .LBL_1_8
 
 .LBL_1_12:
         movzbl    %r12b, %r15d
         vmovss    1152(%rsp,%r15,8), %xmm0
-        call      logf@PLT
+        call      JUMPTARGET(logf)
         vmovss    %xmm0, 1216(%rsp,%r15,8)
         jmp       .LBL_1_7
 #endif
@@ -391,7 +391,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_logf
         vzeroupper
         vmovss    1156(%rsp,%r15,8), %xmm0
 
-        call      logf@PLT
+        call      JUMPTARGET(logf)
 
         vmovss    %xmm0, 1220(%rsp,%r15,8)
         jmp       .LBL_2_8
@@ -402,7 +402,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_logf
         vzeroupper
         vmovss    1152(%rsp,%r15,8), %xmm0
 
-        call      logf@PLT
+        call      JUMPTARGET(logf)
 
         vmovss    %xmm0, 1216(%rsp,%r15,8)
         jmp       .LBL_2_7

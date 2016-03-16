@@ -21,10 +21,10 @@
         subq      $40, %rsp
         cfi_adjust_cfa_offset(40)
         movaps    %xmm0, (%rsp)
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movsd     %xmm0, 16(%rsp)
         movsd     8(%rsp), %xmm0
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movsd     16(%rsp), %xmm1
         movsd     %xmm0, 24(%rsp)
         unpcklpd  %xmm0, %xmm1
@@ -40,11 +40,11 @@
         cfi_adjust_cfa_offset(56)
         movaps    %xmm0, (%rsp)
         movaps    %xmm1, 16(%rsp)
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movsd     %xmm0, 32(%rsp)
         movsd     8(%rsp), %xmm0
         movsd     24(%rsp), %xmm1
-        call      \callee@PLT
+        call      JUMPTARGET(\callee)
         movsd     32(%rsp), %xmm1
         movsd     %xmm0, 40(%rsp)
         unpcklpd  %xmm0, %xmm1
@@ -69,7 +69,7 @@
         leaq    16(%rsp), %rsi
         leaq    24(%rsp), %rdi
         movaps  %xmm0, (%rsp)
-        call    \callee@PLT
+        call    JUMPTARGET(\callee)
         leaq    16(%rsp), %rsi
         leaq    24(%rsp), %rdi
         movsd   24(%rsp), %xmm0
@@ -79,7 +79,7 @@
         movsd   16(%rsp), %xmm0
         movsd   %xmm0, (%rbx)
         movapd  %xmm1, %xmm0
-        call    \callee@PLT
+        call    JUMPTARGET(\callee)
         movsd   24(%rsp), %xmm0
         movsd   %xmm0, 8(%rbp)
         movsd   16(%rsp), %xmm0

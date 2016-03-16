@@ -243,12 +243,12 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN8vvv_sincosf
         movzbl    %r12b, %r15d
         vmovss    1156(%rsp,%r15,8), %xmm0
 
-        call      sinf@PLT
+        call      JUMPTARGET(sinf)
 
         vmovss    %xmm0, 1220(%rsp,%r15,8)
         vmovss    1156(%rsp,%r15,8), %xmm0
 
-        call      cosf@PLT
+        call      JUMPTARGET(cosf)
 
         vmovss    %xmm0, 1284(%rsp,%r15,8)
         jmp       .LBL_1_8
@@ -257,12 +257,12 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN8vvv_sincosf
         movzbl    %r12b, %r15d
         vmovss    1152(%rsp,%r15,8), %xmm0
 
-        call      sinf@PLT
+        call      JUMPTARGET(sinf)
 
         vmovss    %xmm0, 1216(%rsp,%r15,8)
         vmovss    1152(%rsp,%r15,8), %xmm0
 
-        call      cosf@PLT
+        call      JUMPTARGET(cosf)
 
         vmovss    %xmm0, 1280(%rsp,%r15,8)
         jmp       .LBL_1_7
@@ -470,12 +470,12 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN8vvv_sincosf
         vzeroupper
         vmovss    1156(%rsp,%r15,8), %xmm0
 
-        call      sinf@PLT
+        call      JUMPTARGET(sinf)
 
         vmovss    %xmm0, 1220(%rsp,%r15,8)
         vmovss    1156(%rsp,%r15,8), %xmm0
 
-        call      cosf@PLT
+        call      JUMPTARGET(cosf)
 
         vmovss    %xmm0, 1284(%rsp,%r15,8)
         jmp       .LBL_2_8
@@ -486,12 +486,12 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN8vvv_sincosf
         vzeroupper
         vmovss    1152(%rsp,%r15,8), %xmm0
 
-        call      sinf@PLT
+        call      JUMPTARGET(sinf)
 
         vmovss    %xmm0, 1216(%rsp,%r15,8)
         vmovss    1152(%rsp,%r15,8), %xmm0
 
-        call      cosf@PLT
+        call      JUMPTARGET(cosf)
 
         vmovss    %xmm0, 1280(%rsp,%r15,8)
         jmp       .LBL_2_7

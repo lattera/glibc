@@ -278,12 +278,12 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN4vvv_sincos
         shlq      $4, %r15
         vmovsd    1160(%rsp,%r15), %xmm0
 
-        call      sin@PLT
+        call      JUMPTARGET(sin)
 
         vmovsd    %xmm0, 1224(%rsp,%r15)
         vmovsd    1160(%rsp,%r15), %xmm0
 
-        call      cos@PLT
+        call      JUMPTARGET(cos)
 
         vmovsd    %xmm0, 1288(%rsp,%r15)
         jmp       .LBL_1_8
@@ -293,12 +293,12 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN4vvv_sincos
         shlq      $4, %r15
         vmovsd    1152(%rsp,%r15), %xmm0
 
-        call      sin@PLT
+        call      JUMPTARGET(sin)
 
         vmovsd    %xmm0, 1216(%rsp,%r15)
         vmovsd    1152(%rsp,%r15), %xmm0
 
-        call      cos@PLT
+        call      JUMPTARGET(cos)
 
         vmovsd    %xmm0, 1280(%rsp,%r15)
         jmp       .LBL_1_7
@@ -557,12 +557,12 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN4vvv_sincos
         vzeroupper
         vmovsd    1160(%rsp,%r15), %xmm0
 
-        call      sin@PLT
+        call      JUMPTARGET(sin)
 
         vmovsd    %xmm0, 1224(%rsp,%r15)
         vmovsd    1160(%rsp,%r15), %xmm0
 
-        call      cos@PLT
+        call      JUMPTARGET(cos)
 
         vmovsd    %xmm0, 1288(%rsp,%r15)
         jmp       .LBL_2_8
@@ -574,12 +574,12 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN4vvv_sincos
         vzeroupper
         vmovsd    1152(%rsp,%r15), %xmm0
 
-        call      sin@PLT
+        call      JUMPTARGET(sin)
 
         vmovsd    %xmm0, 1216(%rsp,%r15)
         vmovsd    1152(%rsp,%r15), %xmm0
 
-        call      cos@PLT
+        call      JUMPTARGET(cos)
 
         vmovsd    %xmm0, 1280(%rsp,%r15)
         jmp       .LBL_2_7

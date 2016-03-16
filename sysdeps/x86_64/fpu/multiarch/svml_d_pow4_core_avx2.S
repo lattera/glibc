@@ -367,7 +367,7 @@ ENTRY (_ZGVdN4vv_pow_avx2)
         vmovsd    264(%rsp,%r15), %xmm1
         vzeroupper
 
-        call      pow@PLT
+        call      JUMPTARGET(pow)
 
         vmovsd    %xmm0, 328(%rsp,%r15)
         jmp       .LBL_1_8
@@ -379,7 +379,7 @@ ENTRY (_ZGVdN4vv_pow_avx2)
         vmovsd    256(%rsp,%r15), %xmm1
         vzeroupper
 
-        call      pow@PLT
+        call      JUMPTARGET(pow)
 
         vmovsd    %xmm0, 320(%rsp,%r15)
         jmp       .LBL_1_7

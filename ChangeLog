@@ -1,3 +1,97 @@
+2016-03-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos2_core_sse4.S
+	(_ZGVbN2v_cos_sse4): Use JUMPTARGET to call cos.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos4_core_avx2.S
+	(_ZGVdN4v_cos_avx2): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos8_core_avx512.S
+	(_ZGVdN4v_cos): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp2_core_sse4.S
+	(_ZGVbN2v_exp_sse4): Use JUMPTARGET to call exp.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp4_core_avx2.S
+	(_ZGVdN4v_exp_avx2): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp8_core_avx512.S
+	(_ZGVdN4v_exp): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log2_core_sse4.S
+	(_ZGVbN2v_log_sse4): Use JUMPTARGET to call log.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log4_core_avx2.S
+	(_ZGVdN4v_log_avx2): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log8_core_avx512.S
+	(_ZGVdN4v_log): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow2_core_sse4.S
+	(_ZGVbN2vv_pow_sse4): Use JUMPTARGET to call pow.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow4_core_avx2.S
+	(_ZGVdN4vv_pow_avx2): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow8_core_avx512.S
+	(_ZGVdN4vv_pow): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin2_core_sse4.S
+	(_ZGVbN2v_sin_sse4): Use JUMPTARGET to call sin.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin4_core_avx2.S
+	(_ZGVdN4v_sin_avx2): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin8_core_avx512.S
+	(_ZGVdN4v_sin): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos2_core_sse4.S
+	(_ZGVbN2vvv_sincos_sse4): Use JUMPTARGET to call sin and cos.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos4_core_avx2.S
+	(_ZGVdN4vvv_sincos_avx2): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos8_core_avx512.S
+	(_ZGVdN4vvv_sincos): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf16_core_avx512.S
+	(_ZGVdN8v_cosf): Use JUMPTARGET to call cosf.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf4_core_sse4.S
+	(_ZGVbN4v_cosf_sse4): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf8_core_avx2.S
+	(_ZGVdN8v_cosf_avx2): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf16_core_avx512.S
+	(_ZGVdN8v_expf): Use JUMPTARGET to call expf.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf4_core_sse4.S
+	(_ZGVbN4v_expf_sse4): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf8_core_avx2.S
+	(_ZGVdN8v_expf_avx2): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_logf16_core_avx512.S
+	(_ZGVdN8v_logf): Use JUMPTARGET to call logf.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_logf4_core_sse4.S
+	(_ZGVbN4v_logf_sse4): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_logf8_core_avx2.S
+	(_ZGVdN8v_logf_avx2): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf16_core_avx512.S
+	(_ZGVdN8vv_powf): Use JUMPTARGET to call powf.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf4_core_sse4.S
+	(_ZGVbN4vv_powf_sse4): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf8_core_avx2.S
+	(_ZGVdN8vv_powf_avx2): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf16_core_avx512.S
+	(_ZGVdN8vv_powf): Use JUMPTARGET to call sinf and cosf.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf4_core_sse4.S
+	(_ZGVbN4vvv_sincosf_sse4): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf8_core_avx2.S
+	(_ZGVdN8vvv_sincosf_avx2): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf16_core_avx512.S
+	(_ZGVdN8v_sinf): Use JUMPTARGET to call sinf.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf4_core_sse4.S
+	(_ZGVbN4v_sinf_sse4): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf8_core_avx2.S
+	(_ZGVdN8v_sinf_avx2): Likewise.
+	* sysdeps/x86_64/fpu/svml_d_wrapper_impl.h (WRAPPER_IMPL_SSE2):
+	Use JUMPTARGET to call callee.
+	(WRAPPER_IMPL_SSE2_ff): Likewise.
+	(WRAPPER_IMPL_SSE2_fFF): Likewise.
+	(WRAPPER_IMPL_AVX): Likewise.
+	(WRAPPER_IMPL_AVX_ff): Likewise.
+	(WRAPPER_IMPL_AVX_fFF): Likewise.
+	(WRAPPER_IMPL_AVX512): Likewise.
+	(WRAPPER_IMPL_AVX512_ff): Likewise.
+	* sysdeps/x86_64/fpu/svml_s_wrapper_impl.h (WRAPPER_IMPL_SSE2):
+	Likewise.
+	(WRAPPER_IMPL_SSE2_ff): Likewise.
+	(WRAPPER_IMPL_SSE2_fFF): Likewise.
+	(WRAPPER_IMPL_AVX): Likewise.
+	(WRAPPER_IMPL_AVX_ff): Likewise.
+	(WRAPPER_IMPL_AVX_fFF): Likewise.
+	(WRAPPER_IMPL_AVX512): Likewise.
+	(WRAPPER_IMPL_AVX512_ff): Likewise.
+	(WRAPPER_IMPL_AVX512_fFF): Likewise.
+
 2016-03-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/openat.c (__openat): Add missing ellipsis.

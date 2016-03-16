@@ -287,12 +287,12 @@ ENTRY (_ZGVbN2vvv_sincos_sse4)
         shlq      $4, %r15
         movsd     136(%rsp,%r15), %xmm0
 
-        call      sin@PLT
+        call      JUMPTARGET(sin)
 
         movsd     %xmm0, 200(%rsp,%r15)
         movsd     136(%rsp,%r15), %xmm0
 
-        call      cos@PLT
+        call      JUMPTARGET(cos)
 
         movsd     %xmm0, 264(%rsp,%r15)
         jmp       .LBL_1_8
@@ -302,12 +302,12 @@ ENTRY (_ZGVbN2vvv_sincos_sse4)
         shlq      $4, %r15
         movsd     128(%rsp,%r15), %xmm0
 
-        call      sin@PLT
+        call      JUMPTARGET(sin)
 
         movsd     %xmm0, 192(%rsp,%r15)
         movsd     128(%rsp,%r15), %xmm0
 
-        call      cos@PLT
+        call      JUMPTARGET(cos)
 
         movsd     %xmm0, 256(%rsp,%r15)
         jmp       .LBL_1_7

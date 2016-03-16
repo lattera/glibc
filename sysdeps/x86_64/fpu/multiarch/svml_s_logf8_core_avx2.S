@@ -166,7 +166,7 @@ ENTRY(_ZGVdN8v_logf_avx2)
         vmovss    324(%rsp,%r15,8), %xmm0
         vzeroupper
 
-        call      logf@PLT
+        call      JUMPTARGET(logf)
 
         vmovss    %xmm0, 388(%rsp,%r15,8)
         jmp       .LBL_1_8
@@ -176,7 +176,7 @@ ENTRY(_ZGVdN8v_logf_avx2)
         vmovss    320(%rsp,%r15,8), %xmm0
         vzeroupper
 
-        call      logf@PLT
+        call      JUMPTARGET(logf)
 
         vmovss    %xmm0, 384(%rsp,%r15,8)
         jmp       .LBL_1_7
