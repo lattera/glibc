@@ -1,3 +1,8 @@
+2016-03-16  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/POSIX: Change comment_char to % and escape_char to /.
+	* locales/iso14651_t1: Likewise.
+
 2016-03-16  Carlos O'Donell  <carlos@redhat.com>
 
 	* locales/an_ES (lang_ab): Use lowercase.
