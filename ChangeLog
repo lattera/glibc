@@ -1,3 +1,11 @@
+2016-03-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/openat.c (__openat): Add missing ellipsis.
+	* resolv/gai_sigqueue.c (__gai_sigqueue): Add missing internal_function
+	qualifier.
+	* /rt/aio_sigqueue.c (__aio_sigqueue): Add missing attribute_hidden
+	internal_function qualifiers.
+
 2016-03-15  Carlos O'Donell <carlos@redhat.com>
 
 	* catgets/tst-catgets.c (do_bz17905): Mark result unused.

@@ -29,7 +29,7 @@
    the directory associated with FD.  If O_CREAT or O_TMPFILE is in OFLAG, a
    third argument is the file protection.  */
 int
-__openat (int fd, const char *file, int oflag)
+__openat (int fd, const char *file, int oflag, ...)
 {
   mode_t mode;
   io_t port;

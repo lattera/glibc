@@ -22,6 +22,7 @@
 #include <gai_misc.h>
 
 int
+internal_function
 __gai_sigqueue (int sig, const union sigval val, pid_t caller_pid)
 {
   __set_errno (ENOSYS);
