@@ -1,5 +1,11 @@
 2016-03-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_EVENTFD2):
+	Remove macro.
+	* sysdeps/unix/sysv/linux/eventfd.c: Remove file.
+	* sysdeps/unix/sysv/linux/syscalls.list (eventfd): New syscall
+	entry.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_FALLOCATE):
 	Remove macro.
 	* sysdeps/unix/sysv/linux/wordsize-64/posix_fallocate.c: Do not

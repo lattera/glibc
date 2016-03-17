@@ -83,7 +83,6 @@
    2.6.27.  */
 #define __ASSUME_IN_NONBLOCK	1
 #define __ASSUME_PIPE2		1
-#define __ASSUME_EVENTFD2	1
 #define __ASSUME_SIGNALFD4	1
 #define __ASSUME_DUP3		1
 

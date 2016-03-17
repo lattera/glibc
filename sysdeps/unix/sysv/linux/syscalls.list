@@ -13,6 +13,7 @@ epoll_create	EXTRA	epoll_create	i:i	epoll_create
 epoll_create1	EXTRA	epoll_create1	i:i	epoll_create1
 epoll_ctl	EXTRA	epoll_ctl	i:iiip	epoll_ctl
 epoll_wait	EXTRA	epoll_wait	Ci:ipii	epoll_wait
+eventfd		EXTRA	eventfd2	i:ii	eventfd
 execve		-	execve		i:spp	__execve	execve
 fdatasync	-	fdatasync	Ci:i	fdatasync
 flock		-	flock		i:ii	__flock		flock
