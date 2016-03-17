@@ -1,5 +1,26 @@
 2016-05-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/Makefile
+	[$(subdir) = socket] (sysdep_routines): Add oldrecvmmsg and
+	oldsendmmsg.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist: Add recvmmsg and
+	sendmmsg.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/sysv/linux/powerpc/powerpc64/libc-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/oldrecvmmsg.c: New file.
+	* sysdeps/unix/sysv/linux/oldsendmmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/recvmmsg.c (__recvmmsg): Adjust msghdr
+	iovlen and controllen fields to adjust to POSIX specification.
+	* sysdeps/unix/sysv/linux/sendmmsg.c (__sendmmsg): Likewise.
+
 	* conform/data/sys/socket.h-data (msghdr.msg_iovlen): Remove xfail-
 	and change to correct expected type.
 	(msghdr.msg_controllen): Likewise.

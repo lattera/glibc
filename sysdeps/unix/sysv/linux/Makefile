@@ -124,7 +124,8 @@ ifeq ($(subdir),socket)
 sysdep_headers += net/if_ppp.h net/ppp-comp.h \
 		  net/ppp_defs.h net/if_arp.h net/route.h net/ethernet.h \
 		  net/if_slip.h net/if_packet.h net/if_shaper.h
-sysdep_routines += cmsg_nxthdr oldrecvmsg oldsendmsg
+sysdep_routines += cmsg_nxthdr oldrecvmsg oldsendmsg \
+		   oldrecvmmsg oldsendmmsg
 CFLAGS-recvmsg.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendmsg.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-oldrecvmsg.c = -fexceptions -fasynchronous-unwind-tables
