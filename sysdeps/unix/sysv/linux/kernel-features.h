@@ -75,10 +75,6 @@
 /* Support for private futexes was added in 2.6.22.  */
 #define __ASSUME_PRIVATE_FUTEX	1
 
-/* Support for fallocate was added in 2.6.23, on s390
-   only after 2.6.23-rc1.  */
-#define __ASSUME_FALLOCATE	1
-
 /* Support for various CLOEXEC and NONBLOCK flags was added in
    2.6.23.  */
 #define __ASSUME_O_CLOEXEC	1

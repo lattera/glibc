@@ -16,50 +16,30 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fcntl.h>
-#include <kernel-features.h>
 #include <sysdep.h>
 
 #define posix_fallocate static internal_fallocate
 #include <sysdeps/posix/posix_fallocate.c>
 #undef posix_fallocate
 
-/* The alpha architecture introduced the fallocate system call in
-   2.6.33-rc1, so we still need the fallback code.  */
-#if !defined __ASSUME_FALLOCATE && defined __NR_fallocate
-static int __have_fallocate;
-#endif
-
-
 /* Reserve storage for the data of the file associated with FD.  */
 int
 posix_fallocate (int fd, __off_t offset, __off_t len)
 {
-#ifdef __NR_fallocate
-# ifndef __ASSUME_FALLOCATE
-  if (__glibc_likely (__have_fallocate >= 0))
-# endif
-    {
-      INTERNAL_SYSCALL_DECL (err);
-# ifdef INTERNAL_SYSCALL_TYPES
-      int res = INTERNAL_SYSCALL_TYPES (fallocate, err, 4, int, fd,
-					int, 0, off_t, offset,
-					off_t, len);
-# else
-      int res = INTERNAL_SYSCALL (fallocate, err, 4, fd, 0, offset, len);
-# endif
-
-      if (! INTERNAL_SYSCALL_ERROR_P (res, err))
-	return 0;
-
-# ifndef __ASSUME_FALLOCATE
-      if (__glibc_unlikely (INTERNAL_SYSCALL_ERRNO (res, err) == ENOSYS))
-	__have_fallocate = -1;
-      else
-# endif
-	if (INTERNAL_SYSCALL_ERRNO (res, err) != EOPNOTSUPP)
-	  return INTERNAL_SYSCALL_ERRNO (res, err);
-    }
+  INTERNAL_SYSCALL_DECL (err);
+#ifdef INTERNAL_SYSCALL_TYPES
+  int res = INTERNAL_SYSCALL_TYPES (fallocate, err, 4, int, fd,
+				    int, 0, off_t, offset,
+				    off_t, len);
+#else
+  int res = INTERNAL_SYSCALL (fallocate, err, 4, fd, 0, offset, len);
 #endif
+
+  if (! INTERNAL_SYSCALL_ERROR_P (res, err))
+    return 0;
+
+  if (INTERNAL_SYSCALL_ERRNO (res, err) != EOPNOTSUPP)
+    return INTERNAL_SYSCALL_ERRNO (res, err);
 
   return internal_fallocate (fd, offset, len);
 }

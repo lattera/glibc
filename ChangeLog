@@ -1,3 +1,12 @@
+2016-03-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_FALLOCATE):
+	Remove macro.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fallocate.c: Do not
+	include <kernel-features.h>.
+	[!__ASSUME_FALLOCATE]: Remove conditional code.
+	(posix_fallocate) [__NR_fallocate]: Make code unconditional.
+
 2016-03-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/fpu/multiarch/svml_d_cos2_core_sse4.S
