@@ -30,4 +30,7 @@ libc {
   GLIBC_2.16 {
     fanotify_mark;
   }
+  GLIBC_2.24 {
+    recvmsg; sendmsg;
+  }
 }

@@ -3,4 +3,7 @@ libc {
     _flush_cache;
     cacheflush;
   }
+  GLIBC_2.24 {
+    recvmsg; sendmsg;
+  }
 }

@@ -22,6 +22,9 @@ libc {
   GLIBC_2.2.6 {
     getunwind;
   }
+  GLIBC_2.24 {
+    recvmsg; sendmsg;
+  }
 }
 libpthread {
   GLIBC_2.3.3 {

@@ -7,6 +7,9 @@ libc {
   GLIBC_2.11 {
     fallocate64;
   }
+  GLIBC_2.24 {
+    recvmsg; sendmsg;
+  }
   GLIBC_PRIVATE {
     # A copy of sigaction lives in libpthread, and needs these.
     __default_sa_restorer; __default_rt_sa_restorer;

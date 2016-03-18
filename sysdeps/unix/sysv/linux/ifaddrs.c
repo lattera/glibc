@@ -161,10 +161,13 @@ __netlink_request (struct netlink_handle *h, int type)
     {
       struct msghdr msg =
 	{
-	  (void *) &nladdr, sizeof (nladdr),
-	  &iov, 1,
-	  NULL, 0,
-	  0
+	  .msg_name = (void *) &nladdr,
+	  .msg_namelen =  sizeof (nladdr),
+	  .msg_iov = &iov,
+	  .msg_iovlen = 1,
+	  .msg_control = NULL,
+	  .msg_controllen = 0,
+	  .msg_flags = 0
 	};
 
       read_len = TEMP_FAILURE_RETRY (__recvmsg (h->fd, &msg, 0));

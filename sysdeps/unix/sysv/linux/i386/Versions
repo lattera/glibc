@@ -45,6 +45,9 @@ libc {
     # f*
     fallocate64;
   }
+  GLIBC_2.24 {
+    recvms; sendmsg;
+  }
   GLIBC_PRIVATE {
     __modify_ldt;
   }

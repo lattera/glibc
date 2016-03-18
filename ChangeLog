@@ -1,5 +1,111 @@
 2016-05-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* conform/data/sys/socket.h-data (msghdr.msg_iovlen): Remove xfail-
+	and change to correct expected type.
+	(msghdr.msg_controllen): Likewise.
+	(cmsghdr.cmsg_len): Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h (msghdr.msg_iovlen): Fix
+	expected POSIX assumption about the size.
+	(msghdr.msg_controllen): Likewise.
+	(msghdr.__glibc_reserved1): Likewise.
+	(msghdr.__glibc_reserved2): Likewise.
+	(cmsghdr.cmsg_len): Likewise.
+	(cmsghdr.__glibc_reserved1): Likewise.
+	* nptl/Makefile (libpthread-routines): Remove ptw-recvmsg and ptw-sendmsg.
+	Add ptw-oldrecvmsg and ptw-oldsendmsg.
+	(CFLAGS-sendmsg.c): Remove rule.
+	(CFLAGS-recvmsg.c): Likewise.
+	(CFLAGS-oldsendmsg.c): Add rule.
+	(CFLAGS-oldrecvmsg.c): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/Versions [libc] (GLIBC_2.24): Add
+	recvmsg and sendmsg.
+	* sysdeps/unix/sysv/linux/aarch64/Version [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/Versions [libc] (GLIBC_2.24): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/Versions [libc] (GLIBC_2.24): Likewise.
+	* sysdeps/unix/sysv/linux/i386/Versions [libc] (GLIBC_2.24): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/Versions [libc] (GLIBC_2.24): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/Versions [libc] (GLIBC_2.24): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/nios2/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions [libc]
+	(GLIBC_2.24): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/Versions [libc] (GLIBC_2.24): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	( sysdeps/unix/sysv/linux/tile/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/Versions [libc]
+	(GLIBC_2.24): Likewise.
+	( sysdeps/unix/sysv/linux/x86_64/64/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x84_64/Versions [libc] (GLIBC_2.24):
+	Likewise.
+	* sysdeps/unix/sysv/linux/Makefile
+	[$(subdir) = socket)] (sysdep_headers): Add oldrecvmsg and oldsendmsg.
+	(CFLAGS-sendmsg.c): Add rule.
+	(CFLAGS-recvmsg.c): Likewise.
+	(CFLAGS-oldsendmsg.c): Likewise.
+	(CFLAGS-oldrecvmsg.c): Likewise.
+	* sysdeps/unix/sysv/linux/check_native.c (__check_native): Fix msghdr
+	initialization.
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Likewise.
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_request): Likewise.
+	* sysdeps/unix/sysv/linux/oldrecvmsg.c: New file.
+	* sysdeps/unix/sysv/linux/oldsendmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/recvmsg.c (__libc_recvmsg): Adjust msghdr
+	iovlen and controllen fields to adjust to POSIX specification.
+	* sysdeps/unix/sysv/linux/sendmsg.c (__libc_sendmsg): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist: New version and
+	added recvmsg and sendmsg.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/linux/powerpc/powerpc32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist: Likewise.
+	* sysdepe/unix/sysv/linux/powerpc/powerpc64/libc.abilist: Likewise.
+	Likewise.
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist: Likewise.
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise.
+
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (recvmsg): Remove
 	from auto-generation.
 	(sendmsg): Likewise.

@@ -1,4 +1,5 @@
-/* Copyright (C) 2015-2016 Free Software Foundation, Inc.
+/* Compatibility implementation of sendmsg.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,29 +21,20 @@
 #include <socketcall.h>
 #include <shlib-compat.h>
 
-ssize_t
-__libc_sendmsg (int fd, const struct msghdr *msg, int flags)
-{
-  /* POSIX specifies that both msghdr::msg_iovlen and msghdr::msg_controllen
-     to be int and socklen_t respectively.  However Linux defines it as
-     both size_t.  So for 64-bit it requires some adjustments by copying to
-     temporary header and zeroing the pad fields.  */
-#if __WORDSIZE == 64
-  struct msghdr hdr;
-  if (msg != NULL)
-    {
-      hdr = *msg;
-      hdr.__glibc_reserved1 = 0;
-      hdr.__glibc_reserved2 = 0;
-      msg = &hdr;
-    }
-#endif
+/* Both libc.so and libpthread.so provides sendmsg, so we need to
+   provide the compat symbol for both libraries.  */
+#if SHLIB_COMPAT (MODULE_NAME, GLIBC_2_0, GLIBC_2_24)
 
-#ifdef __ASSUME_SENDMSG_SYSCALL
+/* We can use the same struct layout for old symbol version since
+   size is the same.  */
+ssize_t
+__old_sendmsg (int fd, const struct msghdr *msg, int flags)
+{
+# ifdef __ASSUME_SENDMSG_SYSCALL
   return SYSCALL_CANCEL (sendmsg, fd, msg, flags);
-#else
+# else
   return SOCKETCALL_CANCEL (sendmsg, fd, msg, flags);
-#endif
+# endif
 }
-weak_alias (__libc_sendmsg, __sendmsg)
-versioned_symbol (libc, __libc_sendmsg, sendmsg, GLIBC_2_24);
+compat_symbol (MODULE_NAME, __old_sendmsg, sendmsg, GLIBC_2_0);
+#endif

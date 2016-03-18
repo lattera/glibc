@@ -111,10 +111,13 @@ __check_native (uint32_t a1_index, int *a1_native,
     {
       struct msghdr msg =
 	{
-	  (void *) &nladdr, sizeof (nladdr),
-	  &iov, 1,
-	  NULL, 0,
-	  0
+	  .msg_name = (void *) &nladdr,
+	  .msg_namelen =  sizeof (nladdr),
+	  .msg_iov = &iov,
+	  .msg_iovlen = 1,
+	  .msg_control = NULL,
+	  .msg_controllen = 0,
+	  .msg_flags = 0
 	};
 
       ssize_t read_len = TEMP_FAILURE_RETRY (__recvmsg (fd, &msg, 0));

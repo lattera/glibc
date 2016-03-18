@@ -109,12 +109,13 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      lll_timedlock_wait lll_timedwait_tid \
 		      pt-fork pt-vfork \
 		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
-		      ptw-connect ptw-recv ptw-recvfrom ptw-recvmsg ptw-send \
-		      ptw-sendmsg ptw-sendto ptw-fsync ptw-lseek ptw-llseek \
+		      ptw-connect ptw-recv ptw-recvfrom ptw-send \
+		      ptw-sendto ptw-fsync ptw-lseek ptw-llseek \
 		      ptw-msync ptw-nanosleep ptw-open ptw-open64 ptw-pause \
 		      ptw-pread ptw-pread64 ptw-pwrite ptw-pwrite64 \
 		      ptw-tcdrain ptw-wait ptw-waitpid ptw-msgrcv ptw-msgsnd \
 		      ptw-sigwait ptw-sigsuspend \
+		      ptw-oldrecvmsg ptw-oldsendmsg \
 		      pt-raise pt-system \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \
@@ -204,10 +205,10 @@ CFLAGS-recv.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-send.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-accept.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendto.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sendmsg.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-connect.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-recvmsg.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-oldrecvmsg.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-oldrecvfrom.c = -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-pt-system.c = -fexceptions
 

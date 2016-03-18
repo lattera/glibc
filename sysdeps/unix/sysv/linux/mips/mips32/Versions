@@ -3,4 +3,7 @@ libc {
     getrlimit64;
     setrlimit64;
   }
+  GLIBC_2.24 {
+    recvmsg; sendmsg;
+  }
 }

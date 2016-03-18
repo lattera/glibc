@@ -5,6 +5,10 @@ ld {
   }
 }
 libc {
+  GLIBC_2.24 {
+    recvmsg; sendmsg;
+  }
+
   GLIBC_PRIVATE {
     __vdso_clock_gettime;
     __vdso_clock_getres;
