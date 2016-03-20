@@ -61,7 +61,7 @@ mach-machine = $(patsubst powerpc,ppc,$(base-machine))
 ifndef inhibit_mach_syscalls
 -include $(objpfx)mach-syscalls.mk
 endif
-$(objpfx)mach-syscalls.mk: syscalls.awk Makefile
+$(objpfx)mach-syscalls.mk: syscalls.awk Makefile libc-modules.h
 # Go kludges!!!
 	$(make-target-directory)
 # We must use $(CFLAGS) to get -O flags that affect #if's in header files.
