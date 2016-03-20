@@ -1,3 +1,10 @@
+2016-03-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Fix invalid memory
+	access where posix_spawn success and pid argument is null.
+	* posix/tst-spawn.c (do_test): Add posix_spawn null pid argument for
+	success case.
+
 2016-03-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>:
 
 	* sysdeps/mach/hurd/i386/c++-types.data: New file.

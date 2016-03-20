@@ -257,6 +257,10 @@ do_test (int argc, char *argv[])
    if (posix_spawn (&pid, argv[1], &actions, NULL, spargv, environ) != 0)
      error (EXIT_FAILURE, errno, "posix_spawn");
 
+   /* Same test but with a NULL pid argument.  */
+   if (posix_spawn (NULL, argv[1], &actions, NULL, spargv, environ) != 0)
+     error (EXIT_FAILURE, errno, "posix_spawn");
+
    /* Cleanup.  */
    if (posix_spawn_file_actions_destroy (&actions) != 0)
      error (EXIT_FAILURE, errno, "posix_spawn_file_actions_destroy");
