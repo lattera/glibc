@@ -1,3 +1,12 @@
+2016-03-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>:
+
+	* sysdeps/generic/dl-fcntl.h: New file, adds attribute_hidden to __open
+	and __fcntl.
+	* sysdeps/mach/hurd/dl-fcntl.h: New file, adds attribute_hidden to
+	__fcntl only.
+	* include/fcntl.h [IS_IN (rtld)]: Include <dl-fcntl.h> instead of
+	adding attribute_hidden to __open and __fcntl.
+
 2016-03-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/Makefile ($(common-objpfx)errnos.d): Strip

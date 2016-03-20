@@ -31,8 +31,7 @@ extern int __openat64_2 (int __fd, const char *__path, int __oflag);
 
 
 #if IS_IN (rtld)
-extern __typeof (__open) __open attribute_hidden;
-extern __typeof (__fcntl) __fcntl attribute_hidden;
+#  include <dl-fcntl.h>
 #endif
 
 /* Flag determining whether the *at system calls are available.  */
