@@ -1,3 +1,9 @@
+2016-03-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/Makefile ($(common-objpfx)errnos.d): Strip
+	"-include $(common-objpfx)libc-modules.h" from CPPFLAGS, and do not
+	depend on libc-modules.h,
+
 2016-03-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_EVENTFD2):
