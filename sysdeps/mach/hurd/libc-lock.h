@@ -23,6 +23,9 @@
 #include <cthreads.h>
 #include <hurd/threadvar.h>
 
+/* The locking here is very inexpensive, even for inlining.  */
+#define _IO_lock_inexpensive  1
+
 typedef struct mutex __libc_lock_t;
 typedef struct
 {
