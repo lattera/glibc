@@ -586,7 +586,7 @@ __condvar_cleanup2:
 	movq	FRAME_SIZE+16(%rsp), %r13
 	movq	FRAME_SIZE+24(%rsp), %r12
 .LcallUR:
-	call	_Unwind_Resume@PLT
+	call	JUMPTARGET(_Unwind_Resume)
 	hlt
 .LENDCODE:
 	cfi_endproc

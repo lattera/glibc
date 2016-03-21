@@ -518,7 +518,7 @@ __condvar_cleanup1:
 
 8:	movq	24(%rsp), %rdi
 .LcallUR:
-	call	_Unwind_Resume@PLT
+	call	JUMPTARGET(_Unwind_Resume)
 	hlt
 .LENDCODE:
 	cfi_endproc

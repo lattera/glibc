@@ -1,3 +1,13 @@
+2016-03-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S
+	(__pthread_enable_asynccancel): Use JUMPTARGET to call
+	__pthread_unwind.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__condvar_cleanup2): Use JUMPTARGET to call _Unwind_Resume.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
+	(__condvar_cleanup1): Likewise.
+
 2016-03-21  Dylan Alex Simon  <dylan-sourceware@dylex.net>
 
 	[BZ #19822]
