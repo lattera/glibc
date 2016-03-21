@@ -381,7 +381,7 @@ __spawnix (pid_t * pid, const char *file,
 
   close_not_cancel (args.pipe[0]);
 
-  if (!ec && pid)
+  if ((ec == 0) && (pid != NULL))
     *pid = new_pid;
 
   __sigprocmask (SIG_SETMASK, &args.oldmask, 0);
