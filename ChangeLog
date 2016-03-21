@@ -1,3 +1,12 @@
+2016-03-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_SIGNALFD4):
+	Remove macro.
+	* sysdeps/unix/sysv/linux/signalfd.c: Do not include
+	<kernel-features.h>.
+	(signalfd) [__NR_signalfd4]: Make code unconditional.
+	(signalfd) [!__ASSUME_SIGNALFD4]: Remove conditional code.
+
 2016-03-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Fix implict checks
