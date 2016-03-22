@@ -48,10 +48,6 @@
    and still does not have a 64-bit inode field.  */
 #define __ASSUME_ST_INO_64_BIT		1
 
-/* The getdents64 syscall was introduced in 2.4.0-test7 (but later for
-   MIPS n32).  */
-#define __ASSUME_GETDENTS64_SYSCALL	1
-
 /* The statfs64 syscalls are available in 2.5.74 (but not for alpha).  */
 #define __ASSUME_STATFS64	1
 

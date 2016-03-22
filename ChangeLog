@@ -1,3 +1,12 @@
+2016-03-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_GETDENTS64_SYSCALL): Remove macro.
+	* sysdeps/unix/sysv/linux/getdents.c
+	[!__ASSUME_GETDENTS64_SYSCALL]: Remove conditional code.
+	[!have_no_getdents64_defined]: Likewise.
+	(__GETDENTS): Remove __have_no_getdents64 conditional.
+
 2016-03-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_SIGNALFD4):
