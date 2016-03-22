@@ -204,11 +204,17 @@ extern const struct cpu_features *__get_cpu_features (void)
 # endif
 
 
+/* Only used directly in cpu-features.c.  */
+# define CPU_FEATURES_CPU_P(ptr, name) \
+  ((ptr->cpuid[index_cpu_##name].reg_##name & (bit_cpu_##name)) != 0)
+# define CPU_FEATURES_ARCH_P(ptr, name) \
+  ((ptr->feature[index_arch_##name] & (bit_arch_##name)) != 0)
+
 /* HAS_* evaluates to true if we may use the feature at runtime.  */
 # define HAS_CPU_FEATURE(name) \
-  ((__get_cpu_features ()->cpuid[index_cpu_##name].reg_##name & (bit_cpu_##name)) != 0)
+   CPU_FEATURES_CPU_P (__get_cpu_features (), name)
 # define HAS_ARCH_FEATURE(name) \
-  ((__get_cpu_features ()->feature[index_arch_##name] & (bit_arch_##name)) != 0)
+   CPU_FEATURES_ARCH_P (__get_cpu_features (), name)
 
 # define index_cpu_CX8		COMMON_CPUID_INDEX_1
 # define index_cpu_CMOV		COMMON_CPUID_INDEX_1

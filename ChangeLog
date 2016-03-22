@@ -1,3 +1,20 @@
+2016-03-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19583]
+	* sysdeps/x86/cpu-features.c (get_common_indeces): Remove
+	inline.  Check family before setting family, model and
+	extended_model.  Set AVX, AVX2, AVX512, FMA and FMA4 usable
+	bits here.
+	(init_cpu_features): Replace HAS_CPU_FEATURE and
+	HAS_ARCH_FEATURE with CPU_FEATURES_CPU_P and
+	CPU_FEATURES_ARCH_P.  Set index_arch_AVX_Fast_Unaligned_Load
+	for Intel processors with usable AVX2.  Call get_common_indeces
+	for other processors with family == NULL.
+	* sysdeps/x86/cpu-features.h (CPU_FEATURES_CPU_P): New macro.
+	(CPU_FEATURES_ARCH_P): Likewise.
+	(HAS_CPU_FEATURE): Use CPU_FEATURES_CPU_P.
+	(HAS_ARCH_FEATURE): Use CPU_FEATURES_ARCH_P.
+
 2016-03-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* malloc/Makefile ($(objpfx)tst-malloc-backtrace,
