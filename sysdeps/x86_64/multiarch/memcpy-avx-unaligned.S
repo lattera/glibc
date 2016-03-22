@@ -234,7 +234,6 @@ L(gobble_data_movsb):
 	cmp	%rcx, %rdx
 	jae	L(gobble_big_data_fwd)
 	mov	%rdx, %rcx
-	mov	%rdx, %rcx
 	rep	movsb
 	ret
 
