@@ -46,12 +46,9 @@ extra-libs-others = $(extra-libs)
 libmemusage-routines = memusage
 libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
 
-$(objpfx)tst-malloc-backtrace: $(common-objpfx)nptl/libpthread.so \
-			       $(common-objpfx)nptl/libpthread_nonshared.a
-$(objpfx)tst-malloc-thread-exit: $(common-objpfx)nptl/libpthread.so \
-			       $(common-objpfx)nptl/libpthread_nonshared.a
-$(objpfx)tst-malloc-thread-fail: $(common-objpfx)nptl/libpthread.so \
-			       $(common-objpfx)nptl/libpthread_nonshared.a
+$(objpfx)tst-malloc-backtrace: $(shared-thread-library)
+$(objpfx)tst-malloc-thread-exit: $(shared-thread-library)
+$(objpfx)tst-malloc-thread-fail: $(shared-thread-library)
 
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a

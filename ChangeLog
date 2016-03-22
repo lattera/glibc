@@ -1,3 +1,9 @@
+2016-03-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* malloc/Makefile ($(objpfx)tst-malloc-backtrace,
+	$(objpfx)tst-malloc-thread-exit, $(objpfx)tst-malloc-thread-fail): Use
+	$(shared-thread-library) instead of hardcoding the path to libpthread.
+
 2016-03-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
