@@ -297,6 +297,7 @@ __pthread_cond_timedwait:
 	   correctly.  */
 	movl	dep_mutex(%ebx), %eax
 	call	__pthread_mutex_cond_lock_adjust
+	movl	dep_mutex(%ebx), %eax
 	xorl	%edx, %edx
 	call	__pthread_mutex_unlock_usercnt
 	jmp	8b
