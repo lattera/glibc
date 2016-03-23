@@ -27,7 +27,6 @@
 int
 lutimes (const char *file, const struct timeval tvp[2])
 {
-#ifdef __NR_utimensat
   /* The system call espects timespec, not timeval.  */
   struct timespec ts[2];
   if (tvp != NULL)
@@ -42,11 +41,4 @@ lutimes (const char *file, const struct timeval tvp[2])
 
   return INLINE_SYSCALL (utimensat, 4, AT_FDCWD, file, tvp ? ts : NULL,
 			 AT_SYMLINK_NOFOLLOW);
-#else
-  return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOSYS);
-#endif
 }
-
-#ifndef __NR_utimensat
-stub_warning (lutimes)
-#endif

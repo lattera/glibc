@@ -1,5 +1,17 @@
 2016-03-23  Aurelien Jarno  <aurelien@aurel32.net>
 
+	* sysdeps/unix/sysv/linux/futimens.c (futimens) [__NR_utimensat]:
+	Make code unconditional.
+	[!__NR_utimensat]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/lutimes.c (lutimes) [__NR_utimensat]:
+	Make code unconditional.
+	[!__NR_utimensat]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/utimensat.c (utimensat) [__NR_utimensat]:
+	Make code unconditional.
+	[!__NR_utimensat]: Remove conditional code.
+
+2016-03-23  Aurelien Jarno  <aurelien@aurel32.net>
+
 	* sysdeps/unix/sysv/linux/dl-openat64.c (openat64) [__NR_openat]:
 	Make code unconditional.
 
