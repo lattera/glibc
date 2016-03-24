@@ -1,3 +1,17 @@
+2016-03-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19848]
+	* sysdeps/i386/fpu/e_powl.S (p3): Rename to p2 and change value
+	from 8 to 4.
+	(__ieee754_powl): Compare integer exponent against 4 not 8.
+	* sysdeps/x86_64/fpu/e_powl.S (p3): Rename to p2 and change value
+	from 8 to 4.
+	(__ieee754_powl): Compare integer exponent against 4 not 8.
+	* math/auto-libm-test-in: Add more tests of pow.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2016-03-23  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/futimens.c (futimens) [__NR_utimensat]:

@@ -26,9 +26,9 @@
 	.type one,@object
 one:	.double 1.0
 	ASM_SIZE_DIRECTIVE(one)
-	.type p3,@object
-p3:	.byte 0, 0, 0, 0, 0, 0, 0x20, 0x40
-	ASM_SIZE_DIRECTIVE(p3)
+	.type p2,@object
+p2:	.byte 0, 0, 0, 0, 0, 0, 0x10, 0x40
+	ASM_SIZE_DIRECTIVE(p2)
 	.type p63,@object
 p63:	.byte 0, 0, 0, 0, 0, 0, 0xe0, 0x43
 	ASM_SIZE_DIRECTIVE(p63)
@@ -136,12 +136,12 @@ ENTRY(__ieee754_powl)
 	jmp	3f
 
 9:	/* OK, we have an integer value for y.  Unless very small
-	   (we use < 8), use the algorithm for real exponent to avoid
+	   (we use < 4), use the algorithm for real exponent to avoid
 	   accumulation of errors.  */
-	fldl	MO(p3)		// 8 : y : x
-	fld	%st(1)		// y : 8 : y : x
-	fabs			// |y| : 8 : y : x
-	fcomip	%st(1), %st	// 8 : y : x
+	fldl	MO(p2)		// 4 : y : x
+	fld	%st(1)		// y : 4 : y : x
+	fabs			// |y| : 4 : y : x
+	fcomip	%st(1), %st	// 4 : y : x
 	fstp	%st(0)		// y : x
 	jnc	3f
 	mov	-8(%rsp),%eax
