@@ -1,5 +1,14 @@
 2016-03-25  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19791]
+	* resolv/res_send.c (close_and_return_error): New function.
+	(send_dg): Initialize *resplen2 after reopen failure.  Call
+	close_and_return_error for error returns.  On error paths without
+	__res_iclose, initialze *resplen2 explicitly.  Update comment for
+	successful return.
+
+2016-03-25  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ# 19860]
 	* sysdeps/x86_64/tst-audit10.c (avx512_enabled): Always return
 	zero if the compiler does not provide the AVX512F bit.
