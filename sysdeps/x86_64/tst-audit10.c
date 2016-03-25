@@ -17,13 +17,13 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <cpuid.h>
-#include <cpu-features.h>
 
 int tst_audit10_aux (void);
 
 static int
 avx512_enabled (void)
 {
+#ifdef bit_AVX512F
   unsigned int eax, ebx, ecx, edx;
 
   if (__get_cpuid (1, &eax, &ebx, &ecx, &edx) == 0
@@ -38,6 +38,9 @@ avx512_enabled (void)
 
   /* Verify that ZMM, YMM and XMM states are enabled.  */
   return (eax & 0xe6) == 0xe6;
+#else
+  return 0;
+#endif
 }
 
 static int
