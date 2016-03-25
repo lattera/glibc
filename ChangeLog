@@ -1,3 +1,21 @@
+2016-04-01  Wilco Dijkstra  <wdijkstr@arm.com>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* string/Version (libc): Add GLIBC_2.24.
+	* string/strcspn.c (strcspn): Rewrite function.
+	* string/bits/string2.h (strcspn): Use __builtin_strcspn.
+	(__strcspn_c1): Remove inline function.
+	(__strcspn_c2): Likewise.
+	(__strcspn_c3): Likewise.
+	* string/string-inline.c
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strcspn_c1): Add
+	compatibility symbol.
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strcspn_c2):
+	Likewise.
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strcspn_c3):
+	Likewise.
+	* sysdeps/i386/string-inlines.c: Include generic string-inlines.c.
+
 2016-04-01  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/s390-32/dl-trampoline.h (_dl_runtime_resolve):

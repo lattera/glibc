@@ -905,77 +905,10 @@ __stpcpy_small (char *__dest,
 
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
-#if !defined _HAVE_STRING_ARCH_strcspn || defined _FORCE_INLINES
-# ifndef _HAVE_STRING_ARCH_strcspn
-#  if __GNUC_PREREQ (3, 2)
-#   define strcspn(s, reject) \
-  __extension__								      \
-  ({ char __r0, __r1, __r2;						      \
-     (__builtin_constant_p (reject) && __string2_1bptr_p (reject)	      \
-      ? ((__builtin_constant_p (s) && __string2_1bptr_p (s))		      \
-	 ? __builtin_strcspn (s, reject)				      \
-	 : ((__r0 = ((const char *) (reject))[0], __r0 == '\0')		      \
-	    ? strlen (s)						      \
-	    : ((__r1 = ((const char *) (reject))[1], __r1 == '\0')	      \
-	       ? __strcspn_c1 (s, __r0)					      \
-	       : ((__r2 = ((const char *) (reject))[2], __r2 == '\0')	      \
-		  ? __strcspn_c2 (s, __r0, __r1)			      \
-		  : (((const char *) (reject))[3] == '\0'		      \
-		     ? __strcspn_c3 (s, __r0, __r1, __r2)		      \
-		     : __builtin_strcspn (s, reject))))))		      \
-      : __builtin_strcspn (s, reject)); })
-#  else
-#   define strcspn(s, reject) \
-  __extension__								      \
-  ({ char __r0, __r1, __r2;						      \
-     (__builtin_constant_p (reject) && __string2_1bptr_p (reject)	      \
-      ? ((__r0 = ((const char *) (reject))[0], __r0 == '\0')		      \
-	 ? strlen (s)							      \
-	 : ((__r1 = ((const char *) (reject))[1], __r1 == '\0')		      \
-	    ? __strcspn_c1 (s, __r0)					      \
-	    : ((__r2 = ((const char *) (reject))[2], __r2 == '\0')	      \
-	       ? __strcspn_c2 (s, __r0, __r1)				      \
-	       : (((const char *) (reject))[3] == '\0'			      \
-		  ? __strcspn_c3 (s, __r0, __r1, __r2)			      \
-		  : strcspn (s, reject)))))				      \
-      : strcspn (s, reject)); })
-#  endif
+#ifndef _HAVE_STRING_ARCH_strcspn
+# if __GNUC_PREREQ (3, 2)
+#  define strcspn(s, reject) __builtin_strcspn (s, reject)
 # endif
-
-__STRING_INLINE size_t __strcspn_c1 (const char *__s, int __reject);
-__STRING_INLINE size_t
-__strcspn_c1 (const char *__s, int __reject)
-{
-  size_t __result = 0;
-  while (__s[__result] != '\0' && __s[__result] != __reject)
-    ++__result;
-  return __result;
-}
-
-__STRING_INLINE size_t __strcspn_c2 (const char *__s, int __reject1,
-				     int __reject2);
-__STRING_INLINE size_t
-__strcspn_c2 (const char *__s, int __reject1, int __reject2)
-{
-  size_t __result = 0;
-  while (__s[__result] != '\0' && __s[__result] != __reject1
-	 && __s[__result] != __reject2)
-    ++__result;
-  return __result;
-}
-
-__STRING_INLINE size_t __strcspn_c3 (const char *__s, int __reject1,
-				     int __reject2, int __reject3);
-__STRING_INLINE size_t
-__strcspn_c3 (const char *__s, int __reject1, int __reject2,
-	      int __reject3)
-{
-  size_t __result = 0;
-  while (__s[__result] != '\0' && __s[__result] != __reject1
-	 && __s[__result] != __reject2 && __s[__result] != __reject3)
-    ++__result;
-  return __result;
-}
 #endif
 
 

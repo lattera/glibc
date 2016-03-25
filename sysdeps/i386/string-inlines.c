@@ -15,27 +15,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/*  <bits/string.h> and <bits/string2.h> declare some extern inline
-    functions.  These functions are declared additionally here if
-    inlining is not possible.  */
-
-#undef __USE_STRING_INLINES
-#define __USE_STRING_INLINES
-#define _FORCE_INLINES
-#define __STRING_INLINE /* empty */
-#define __NO_INLINE__
-
 /* This is to avoid PLT entries for the x86 version.  */
 #define __memcpy_g __memcpy_g_internal
 #define __strchr_g __strchr_g_internal
-
-#include <string.h>
-#undef index
-#undef rindex
-
-#undef __NO_INLINE__
-#include <bits/string.h>
-#include <bits/string2.h>
+#include <string/string-inlines.c>
 
 void *
 (__memcpy_c) (void *d, const void *s, size_t n)

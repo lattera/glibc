@@ -80,4 +80,6 @@ libc {
   GLIBC_2.6 {
     strerror_l;
   }
+  GLIBC_2.24 {
+  }
 }
