@@ -71,4 +71,40 @@ __old_strcspn_c3 (const char *__s, int __reject1, int __reject2,
   return __result;
 }
 compat_symbol (libc, __old_strcspn_c3, __strcspn_c3, GLIBC_2_1_1);
+
+size_t
+__old_strspn_c1 (const char *__s, int __accept)
+{
+  size_t __result = 0;
+  /* Please note that __accept never can be '\0'.  */
+  while (__s[__result] == __accept)
+    ++__result;
+  return __result;
+}
+compat_symbol (libc, __old_strspn_c1, __strspn_c1, GLIBC_2_1_1);
+
+size_t
+__old_strspn_c2 (const char *__s, int __accept1, int __accept2)
+{
+  size_t __result = 0;
+  /* Please note that __accept1 and __accept2 never can be '\0'.  */
+  while (__s[__result] == __accept1 || __s[__result] == __accept2)
+    ++__result;
+  return __result;
+}
+compat_symbol (libc, __old_strspn_c2, __strspn_c2, GLIBC_2_1_1);
+
+size_t
+__old_strspn_c3 (const char *__s, int __accept1, int __accept2,
+		 int __accept3)
+{
+  size_t __result = 0;
+  /* Please note that __accept1 to __accept3 never can be '\0'.  */
+  while (__s[__result] == __accept1 || __s[__result] == __accept2
+	 || __s[__result] == __accept3)
+    ++__result;
+  return __result;
+}
+compat_symbol (libc, __old_strspn_c3, __strspn_c3, GLIBC_2_1_1);
+
 #endif

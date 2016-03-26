@@ -914,78 +914,10 @@ __stpcpy_small (char *__dest,
 
 /* Return the length of the initial segment of S which
    consists entirely of characters in ACCEPT.  */
-#if !defined _HAVE_STRING_ARCH_strspn || defined _FORCE_INLINES
-# ifndef _HAVE_STRING_ARCH_strspn
-#  if __GNUC_PREREQ (3, 2)
-#   define strspn(s, accept) \
-  __extension__								      \
-  ({ char __a0, __a1, __a2;						      \
-     (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
-      ? ((__builtin_constant_p (s) && __string2_1bptr_p (s))		      \
-	 ? __builtin_strspn (s, accept)					      \
-	 : ((__a0 = ((const char *) (accept))[0], __a0 == '\0')		      \
-	    ? ((void) (s), (size_t) 0)					      \
-	    : ((__a1 = ((const char *) (accept))[1], __a1 == '\0')	      \
-	       ? __strspn_c1 (s, __a0)					      \
-	       : ((__a2 = ((const char *) (accept))[2], __a2 == '\0')	      \
-		  ? __strspn_c2 (s, __a0, __a1)				      \
-		  : (((const char *) (accept))[3] == '\0'		      \
-		     ? __strspn_c3 (s, __a0, __a1, __a2)		      \
-		     : __builtin_strspn (s, accept))))))		      \
-      : __builtin_strspn (s, accept)); })
-#  else
-#   define strspn(s, accept) \
-  __extension__								      \
-  ({ char __a0, __a1, __a2;						      \
-     (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
-      ? ((__a0 = ((const char *) (accept))[0], __a0 == '\0')		      \
-	 ? ((void) (s), (size_t) 0)					      \
-	 : ((__a1 = ((const char *) (accept))[1], __a1 == '\0')		      \
-	    ? __strspn_c1 (s, __a0)					      \
-	    : ((__a2 = ((const char *) (accept))[2], __a2 == '\0')	      \
-	       ? __strspn_c2 (s, __a0, __a1)				      \
-	       : (((const char *) (accept))[3] == '\0'			      \
-		  ? __strspn_c3 (s, __a0, __a1, __a2)			      \
-		  : strspn (s, accept)))))				      \
-      : strspn (s, accept)); })
-#  endif
+#ifndef _HAVE_STRING_ARCH_strspn
+# if __GNUC_PREREQ (3, 2)
+#  define strspn(s, accept) __builtin_strspn (s, accept)
 # endif
-
-__STRING_INLINE size_t __strspn_c1 (const char *__s, int __accept);
-__STRING_INLINE size_t
-__strspn_c1 (const char *__s, int __accept)
-{
-  size_t __result = 0;
-  /* Please note that __accept never can be '\0'.  */
-  while (__s[__result] == __accept)
-    ++__result;
-  return __result;
-}
-
-__STRING_INLINE size_t __strspn_c2 (const char *__s, int __accept1,
-				    int __accept2);
-__STRING_INLINE size_t
-__strspn_c2 (const char *__s, int __accept1, int __accept2)
-{
-  size_t __result = 0;
-  /* Please note that __accept1 and __accept2 never can be '\0'.  */
-  while (__s[__result] == __accept1 || __s[__result] == __accept2)
-    ++__result;
-  return __result;
-}
-
-__STRING_INLINE size_t __strspn_c3 (const char *__s, int __accept1,
-				    int __accept2, int __accept3);
-__STRING_INLINE size_t
-__strspn_c3 (const char *__s, int __accept1, int __accept2, int __accept3)
-{
-  size_t __result = 0;
-  /* Please note that __accept1 to __accept3 never can be '\0'.  */
-  while (__s[__result] == __accept1 || __s[__result] == __accept2
-	 || __s[__result] == __accept3)
-    ++__result;
-  return __result;
-}
 #endif
 
 

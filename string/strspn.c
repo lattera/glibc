@@ -16,32 +16,59 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
+#include <stdint.h>
 
 #undef strspn
 #ifndef STRSPN
-#define STRSPN strspn
+# define STRSPN strspn
 #endif
 
 /* Return the length of the maximum initial segment
    of S which contains only characters in ACCEPT.  */
 size_t
-STRSPN (const char *s, const char *accept)
+STRSPN (const char *str, const char *accept)
 {
-  const char *p;
-  const char *a;
-  size_t count = 0;
-
-  for (p = s; *p != '\0'; ++p)
+  if (accept[0] == '\0')
+    return 0;
+  if (__glibc_unlikely (accept[1] == '\0'))
     {
-      for (a = accept; *a != '\0'; ++a)
-	if (*p == *a)
-	  break;
-      if (*a == '\0')
-	return count;
-      else
-	++count;
+      const char *a = str;
+      for (; *str == *accept; str++);
+      return str - a;
     }
 
-  return count;
+  /* Use multiple small memsets to enable inlining on most targets.  */
+  unsigned char table[256];
+  unsigned char *p = memset (table, 0, 64);
+  memset (p + 64, 0, 64);
+  memset (p + 128, 0, 64);
+  memset (p + 192, 0, 64);
+
+  unsigned char *s = (unsigned char*) accept;
+  /* Different from strcspn it does not add the NULL on the table
+     so can avoid check if str[i] is NULL, since table['\0'] will
+     be 0 and thus stopping the loop check.  */
+  do
+    p[*s++] = 1;
+  while (*s);
+
+  s = (unsigned char*) str;
+  if (!p[s[0]]) return 0;
+  if (!p[s[1]]) return 1;
+  if (!p[s[2]]) return 2;
+  if (!p[s[3]]) return 3;
+
+  s = (unsigned char *) ((uintptr_t)(s) & ~3);
+  unsigned int c0, c1, c2, c3;
+  do {
+      s += 4;
+      c0 = p[s[0]];
+      c1 = p[s[1]];
+      c2 = p[s[2]];
+      c3 = p[s[3]];
+  } while ((c0 & c1 & c2 & c3) != 0);
+
+  size_t count = s - (unsigned char *) str;
+  return (c0 & c1) == 0 ? count + c0 : count + c2 + 2;
 }
 libc_hidden_builtin_def (strspn)

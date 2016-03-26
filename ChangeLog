@@ -1,3 +1,19 @@
+2016-04-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* string/strspn.c (strcspn): Rewrite function.
+	* string/bits/string2.h (strspn): Use __builtin_strcspn.
+	(__strspn_c1): Remove inline function.
+	(__strspn_c2): Likewise.
+	(__strspn_c3): Likewise.
+	* string/string-inlines.c
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strspn_c1): Add
+	compatibility symbol.
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strspn_c2):
+	Likewise.
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strspn_c3):
+	Likewise.
+	* string/string-inlines.c: Include generic version.
+
 2016-04-01  Wilco Dijkstra  <wdijkstr@arm.com>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
