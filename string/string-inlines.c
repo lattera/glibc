@@ -107,4 +107,25 @@ __old_strspn_c3 (const char *__s, int __accept1, int __accept2,
 }
 compat_symbol (libc, __old_strspn_c3, __strspn_c3, GLIBC_2_1_1);
 
+char *
+__strpbrk_c2 (const char *__s, int __accept1, int __accept2)
+{
+  /* Please note that __accept1 and __accept2 never can be '\0'.  */
+  while (*__s != '\0' && *__s != __accept1 && *__s != __accept2)
+    ++__s;
+  return *__s == '\0' ? NULL : (char *) (size_t) __s;
+}
+compat_symbol (libc, __old_strpbrk_c2, __strpbrk_c2, GLIBC_2_1_1);
+
+char *
+__strpbrk_c3 (const char *__s, int __accept1, int __accept2, int __accept3)
+{
+  /* Please note that __accept1 to __accept3 never can be '\0'.  */
+  while (*__s != '\0' && *__s != __accept1 && *__s != __accept2
+	 && *__s != __accept3)
+    ++__s;
+  return *__s == '\0' ? NULL : (char *) (size_t) __s;
+}
+compat_symbol (libc, __old_strpbrk_c3, __strpbrk_c3, GLIBC_2_1_1);
+
 #endif

@@ -1,5 +1,15 @@
 2016-04-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* string/strpbrk.c (strpbrk): Rewrite function.
+	* string/bits/string2.h (strpbrk): Use __builtin_strpbrk.
+	(__strpbrk_c2): Likewise.
+	(__strpbrk_c3): Likewise.
+	* string/string-inlines.c
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strpbrk_c2):
+	Likewise.
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strpbrk_c3):
+	Likewise.
+
 	* string/strspn.c (strcspn): Rewrite function.
 	* string/bits/string2.h (strspn): Use __builtin_strcspn.
 	(__strspn_c1): Remove inline function.

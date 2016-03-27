@@ -27,15 +27,7 @@
 char *
 STRPBRK (const char *s, const char *accept)
 {
-  while (*s != '\0')
-    {
-      const char *a = accept;
-      while (*a != '\0')
-	if (*a++ == *s)
-	  return (char *) s;
-      ++s;
-    }
-
-  return NULL;
+  s += strcspn (s, accept);
+  return *s ? (char *)s : NULL;
 }
 libc_hidden_builtin_def (strpbrk)

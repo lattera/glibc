@@ -922,65 +922,10 @@ __stpcpy_small (char *__dest,
 
 
 /* Find the first occurrence in S of any character in ACCEPT.  */
-#if !defined _HAVE_STRING_ARCH_strpbrk || defined _FORCE_INLINES
-# ifndef _HAVE_STRING_ARCH_strpbrk
-#  if __GNUC_PREREQ (3, 2)
-#   define strpbrk(s, accept) \
-  __extension__								      \
-  ({ char __a0, __a1, __a2;						      \
-     (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
-      ? ((__builtin_constant_p (s) && __string2_1bptr_p (s))		      \
-	 ? __builtin_strpbrk (s, accept)				      \
-	 : ((__a0 = ((const char  *) (accept))[0], __a0 == '\0')	      \
-	    ? ((void) (s), (char *) NULL)				      \
-	    : ((__a1 = ((const char *) (accept))[1], __a1 == '\0')	      \
-	       ? __builtin_strchr (s, __a0)				      \
-	       : ((__a2 = ((const char *) (accept))[2], __a2 == '\0')	      \
-		  ? __strpbrk_c2 (s, __a0, __a1)			      \
-		  : (((const char *) (accept))[3] == '\0'		      \
-		     ? __strpbrk_c3 (s, __a0, __a1, __a2)		      \
-		     : __builtin_strpbrk (s, accept))))))		      \
-      : __builtin_strpbrk (s, accept)); })
-#  else
-#   define strpbrk(s, accept) \
-  __extension__								      \
-  ({ char __a0, __a1, __a2;						      \
-     (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
-      ? ((__a0 = ((const char  *) (accept))[0], __a0 == '\0')		      \
-	 ? ((void) (s), (char *) NULL)					      \
-	 : ((__a1 = ((const char *) (accept))[1], __a1 == '\0')		      \
-	    ? strchr (s, __a0)						      \
-	    : ((__a2 = ((const char *) (accept))[2], __a2 == '\0')	      \
-	       ? __strpbrk_c2 (s, __a0, __a1)				      \
-	       : (((const char *) (accept))[3] == '\0'			      \
-		  ? __strpbrk_c3 (s, __a0, __a1, __a2)			      \
-		  : strpbrk (s, accept)))))				      \
-      : strpbrk (s, accept)); })
-#  endif
+#ifndef _HAVE_STRING_ARCH_strpbrk
+# if __GNUC_PREREQ (3, 2)
+#  define strpbrk(s, accept) __builtin_strpbrk (s, accept)
 # endif
-
-__STRING_INLINE char *__strpbrk_c2 (const char *__s, int __accept1,
-				    int __accept2);
-__STRING_INLINE char *
-__strpbrk_c2 (const char *__s, int __accept1, int __accept2)
-{
-  /* Please note that __accept1 and __accept2 never can be '\0'.  */
-  while (*__s != '\0' && *__s != __accept1 && *__s != __accept2)
-    ++__s;
-  return *__s == '\0' ? NULL : (char *) (size_t) __s;
-}
-
-__STRING_INLINE char *__strpbrk_c3 (const char *__s, int __accept1,
-				    int __accept2, int __accept3);
-__STRING_INLINE char *
-__strpbrk_c3 (const char *__s, int __accept1, int __accept2, int __accept3)
-{
-  /* Please note that __accept1 to __accept3 never can be '\0'.  */
-  while (*__s != '\0' && *__s != __accept1 && *__s != __accept2
-	 && *__s != __accept3)
-    ++__s;
-  return *__s == '\0' ? NULL : (char *) (size_t) __s;
-}
 #endif
 
 
