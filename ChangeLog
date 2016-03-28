@@ -1,3 +1,8 @@
+2016-03-28  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/sys/personality.h (UNAME26, FDPIC_FUNCPTRS,
+	PER_LINUX_FDPIC): Add.
+
 2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Remove
