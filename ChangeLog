@@ -1,5 +1,9 @@
 2016-04-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/powerpc64/strcspn.S: Remove file.
+	* sysdeps/powerpc/powerpc64/strpbrk.S: Remove file.
+	* sysdeps/powerpc/powerpc64/strspn.S: Remove file.
+
 	* string/strpbrk.c (strpbrk): Rewrite function.
 	* string/bits/string2.h (strpbrk): Use __builtin_strpbrk.
 	(__strpbrk_c2): Likewise.
