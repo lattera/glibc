@@ -35,6 +35,7 @@
 #define bit_arch_I686				(1 << 15)
 #define bit_arch_Prefer_MAP_32BIT_EXEC		(1 << 16)
 #define bit_arch_Prefer_No_VZEROUPPER		(1 << 17)
+#define bit_arch_Fast_Unaligned_Copy		(1 << 18)
 
 /* CPUID Feature flags.  */
 
@@ -101,6 +102,7 @@
 # define index_arch_I686		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_arch_Prefer_MAP_32BIT_EXEC FEATURE_INDEX_1*FEATURE_SIZE
 # define index_arch_Prefer_No_VZEROUPPER FEATURE_INDEX_1*FEATURE_SIZE
+# define index_arch_Fast_Unaligned_Copy	FEATURE_INDEX_1*FEATURE_SIZE
 
 
 # if defined (_LIBC) && !IS_IN (nonlib)
@@ -265,6 +267,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_arch_I686		FEATURE_INDEX_1
 # define index_arch_Prefer_MAP_32BIT_EXEC FEATURE_INDEX_1
 # define index_arch_Prefer_No_VZEROUPPER FEATURE_INDEX_1
+# define index_arch_Fast_Unaligned_Copy	FEATURE_INDEX_1
 
 #endif	/* !__ASSEMBLER__ */
 

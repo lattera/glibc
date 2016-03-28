@@ -42,7 +42,7 @@ ENTRY(__new_memcpy)
 	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
 	jnz	2f
 	lea	__memcpy_sse2_unaligned(%rip), %RAX_LP
-	HAS_ARCH_FEATURE (Fast_Unaligned_Load)
+	HAS_ARCH_FEATURE (Fast_Unaligned_Copy)
 	jnz	2f
 	lea	__memcpy_sse2(%rip), %RAX_LP
 	HAS_CPU_FEATURE (SSSE3)

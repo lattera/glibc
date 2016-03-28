@@ -1,3 +1,17 @@
+2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
+	     Amit Pawar  <Amit.Pawar@amd.com>
+
+	[BZ #19583]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set
+	Fast_Unaligned_Copy with Fast_Unaligned_Load for Intel
+	processors.  Set Fast_Copy_Backward for AMD Excavator
+	processors.
+	* sysdeps/x86/cpu-features.h (bit_arch_Fast_Unaligned_Copy):
+	New.
+	(index_arch_Fast_Unaligned_Copy): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy.S (__new_memcpy): Check
+	Fast_Unaligned_Copy instead of Fast_Unaligned_Load.
+
 2016-03-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19791]

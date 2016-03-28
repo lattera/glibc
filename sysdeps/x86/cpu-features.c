@@ -153,8 +153,12 @@ init_cpu_features (struct cpu_features *cpu_features)
 #if index_arch_Fast_Unaligned_Load != index_arch_Slow_SSE4_2
 # error index_arch_Fast_Unaligned_Load != index_arch_Slow_SSE4_2
 #endif
+#if index_arch_Fast_Unaligned_Load != index_arch_Fast_Unaligned_Copy
+# error index_arch_Fast_Unaligned_Load != index_arch_Fast_Unaligned_Copy
+#endif
 	      cpu_features->feature[index_arch_Fast_Unaligned_Load]
 		|= (bit_arch_Fast_Unaligned_Load
+		    | bit_arch_Fast_Unaligned_Copy
 		    | bit_arch_Prefer_PMINUB_for_stringop
 		    | bit_arch_Slow_SSE4_2);
 	      break;
@@ -183,10 +187,14 @@ init_cpu_features (struct cpu_features *cpu_features)
 #if index_arch_Fast_Rep_String != index_arch_Prefer_PMINUB_for_stringop
 # error index_arch_Fast_Rep_String != index_arch_Prefer_PMINUB_for_stringop
 #endif
+#if index_arch_Fast_Rep_String != index_arch_Fast_Unaligned_Copy
+# error index_arch_Fast_Rep_String != index_arch_Fast_Unaligned_Copy
+#endif
 	      cpu_features->feature[index_arch_Fast_Rep_String]
 		|= (bit_arch_Fast_Rep_String
 		    | bit_arch_Fast_Copy_Backward
 		    | bit_arch_Fast_Unaligned_Load
+		    | bit_arch_Fast_Unaligned_Copy
 		    | bit_arch_Prefer_PMINUB_for_stringop);
 	      break;
 	    }
@@ -220,10 +228,14 @@ init_cpu_features (struct cpu_features *cpu_features)
 
       if (family == 0x15)
 	{
+#if index_arch_Fast_Unaligned_Load != index_arch_Fast_Copy_Backward
+# error index_arch_Fast_Unaligned_Load != index_arch_Fast_Copy_Backward
+#endif
 	  /* "Excavator"   */
 	  if (model >= 0x60 && model <= 0x7f)
 	    cpu_features->feature[index_arch_Fast_Unaligned_Load]
-	      |= bit_arch_Fast_Unaligned_Load;
+	      |= (bit_arch_Fast_Unaligned_Load
+		  | bit_arch_Fast_Copy_Backward);
 	}
     }
   else
