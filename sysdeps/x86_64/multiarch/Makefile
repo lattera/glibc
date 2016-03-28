@@ -8,7 +8,7 @@ ifeq ($(subdir),string)
 sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strcmp-sse2-unaligned strncmp-ssse3 \
 		   memcmp-sse4 memcpy-ssse3 memcpy-sse2-unaligned \
-		   memcpy-avx512-no-vzeroupper memmove-ssse3 \
+		   memmove-ssse3 \
 		   memcpy-ssse3-back memmove-avx-unaligned \
 		   memcpy-avx-unaligned \
 		   memmove-ssse3-back \

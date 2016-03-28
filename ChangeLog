@@ -1,5 +1,27 @@
 2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Remove
+	memcpy-avx512-no-vzeroupper.
+	* sysdeps/x86_64/multiarch/memcpy-avx512-no-vzeroupper.S: Renamed
+	to ...
+	* sysdeps/x86_64/multiarch/memmove-avx512-no-vzeroupper.S: This.
+	(MEMCPY): Don't define.
+	(MEMCPY_CHK): Likewise.
+	(MEMPCPY): Likewise.
+	(MEMPCPY_CHK): Likewise.
+	(MEMPCPY_CHK): Renamed to ...
+	(__mempcpy_chk_avx512_no_vzeroupper): This.
+	(MEMPCPY_CHK): Renamed to ...
+	(__mempcpy_chk_avx512_no_vzeroupper): This.
+	(MEMCPY_CHK): Renamed to ...
+	(__memmove_chk_avx512_no_vzeroupper): This.
+	(MEMCPY): Renamed to ...
+	(__memmove_avx512_no_vzeroupper): This.
+	(__memcpy_avx512_no_vzeroupper): New alias.
+	(__memcpy_chk_avx512_no_vzeroupper): Likewise.
+
+2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #18858]
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Remove
 	mempcpy-ssse3, mempcpy-ssse3-back, mempcpy-avx-unaligned
