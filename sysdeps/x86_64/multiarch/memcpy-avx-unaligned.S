@@ -25,11 +25,26 @@
 
 #include "asm-syntax.h"
 #ifndef MEMCPY
-# define MEMCPY	__memcpy_avx_unaligned
+# define MEMCPY		__memcpy_avx_unaligned
 # define MEMCPY_CHK	__memcpy_chk_avx_unaligned
+# define MEMPCPY	__mempcpy_avx_unaligned
+# define MEMPCPY_CHK	__mempcpy_chk_avx_unaligned
 #endif
 
 	.section .text.avx,"ax",@progbits
+#if !defined USE_AS_MEMPCPY && !defined USE_AS_MEMMOVE
+ENTRY (MEMPCPY_CHK)
+	cmpq	%rdx, %rcx
+	jb	HIDDEN_JUMPTARGET (__chk_fail)
+END (MEMPCPY_CHK)
+
+ENTRY (MEMPCPY)
+	movq	%rdi, %rax
+	addq	%rdx, %rax
+	jmp	L(start)
+END (MEMPCPY)
+#endif
+
 #if !defined USE_AS_BCOPY
 ENTRY (MEMCPY_CHK)
 	cmpq	%rdx, %rcx
@@ -42,6 +57,7 @@ ENTRY (MEMCPY)
 #ifdef USE_AS_MEMPCPY
 	add	%rdx, %rax
 #endif
+L(start):
 	cmp	$256, %rdx
 	jae	L(256bytesormore)
 	cmp	$16, %dl

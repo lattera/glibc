@@ -1,4 +1,26 @@
 2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18858]
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Remove
+	mempcpy-ssse3, mempcpy-ssse3-back, mempcpy-avx-unaligned
+	and mempcpy-avx512-no-vzeroupper.
+	* sysdeps/x86_64/multiarch/memcpy-avx-unaligned.S (MEMPCPY_CHK):
+	New.
+	(MEMPCPY): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-avx512-no-vzeroupper.S
+	(MEMPCPY_CHK): New.
+	(MEMPCPY): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S (MEMPCPY_CHK): New.
+	(MEMPCPY): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S (MEMPCPY_CHK): New.
+	(MEMPCPY): Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy-avx-unaligned.S: Removed.
+	* sysdeps/x86_64/multiarch/mempcpy-avx512-no-vzeroupper.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy-ssse3-back.S: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy-ssse3.S: Likewise.
+
+2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
 	     Amit Pawar  <Amit.Pawar@amd.com>
 
 	[BZ #19583]

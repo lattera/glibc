@@ -29,6 +29,8 @@
 #ifndef MEMCPY
 # define MEMCPY		__memcpy_ssse3_back
 # define MEMCPY_CHK	__memcpy_chk_ssse3_back
+# define MEMPCPY	__mempcpy_ssse3_back
+# define MEMPCPY_CHK	__mempcpy_chk_ssse3_back
 #endif
 
 #define JMPTBL(I, B)	I - B
@@ -44,6 +46,19 @@
   ud2
 
 	.section .text.ssse3,"ax",@progbits
+#if !defined USE_AS_MEMPCPY && !defined USE_AS_MEMMOVE
+ENTRY (MEMPCPY_CHK)
+	cmpq	%rdx, %rcx
+	jb	HIDDEN_JUMPTARGET (__chk_fail)
+END (MEMPCPY_CHK)
+
+ENTRY (MEMPCPY)
+	movq	%rdi, %rax
+	addq	%rdx, %rax
+	jmp	L(start)
+END (MEMPCPY)
+#endif
+
 #if !defined USE_AS_BCOPY
 ENTRY (MEMCPY_CHK)
 	cmpq	%rdx, %rcx
@@ -66,6 +81,7 @@ ENTRY (MEMCPY)
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
 L(copy_forward):
 #endif
+L(start):
 	cmp	$144, %rdx
 	jae	L(144bytesormore)
 
