@@ -1,3 +1,9 @@
+2016-03-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_FUTIMESAT): Remove macro.
+	* sysdeps/unix/sysv/linux/microblaze/futimesat.c: Remove file.
+
 2016-03-29  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19879]

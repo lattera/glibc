@@ -41,9 +41,6 @@
 /* Support for the accept4 and recvmmsg syscalls was added in 2.6.33.  */
 #define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL      1
 
-/* Support for the futimesat syscall was added in 2.6.33.  */
-#define __ASSUME_FUTIMESAT              1
-
 #include_next <kernel-features.h>
 
 /* Support for the pselect6, preadv and pwritev syscalls was added in
