@@ -1,3 +1,9 @@
+2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.h (bit_cpu_ERMS): New.
+	(index_cpu_ERMS): Likewise.
+	(reg_ERMS): Likewise.
+
 2016-03-28  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/sys/personality.h (UNAME26, FDPIC_FUNCPTRS,
