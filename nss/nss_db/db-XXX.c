@@ -288,8 +288,8 @@ CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
 	    }
 	  if (err < 0)
 	    {
-	      H_ERRNO_SET (HOST_NOT_FOUND);
-	      status = NSS_STATUS_NOTFOUND;
+	      H_ERRNO_SET (NETDB_INTERNAL);
+	      status = NSS_STATUS_TRYAGAIN;
 	      break;
 	    }
 

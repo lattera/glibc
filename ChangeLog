@@ -1,3 +1,9 @@
+2016-03-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19837]
+	* nss/nss_db/db-XXX.c (_nss_db_getENTNAME_r): Propagate ERANGE
+	error if parse_line fails.
+
 2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.h (bit_cpu_ERMS): New.
