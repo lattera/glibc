@@ -1,5 +1,12 @@
 2016-03-29  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19879]
+	CVE-2016-3075
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r): Do not
+	copy name.
+
+2016-03-29  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19837]
 	* nss/nss_db/db-XXX.c (_nss_db_getENTNAME_r): Propagate ERANGE
 	error if parse_line fails.

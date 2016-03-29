@@ -118,17 +118,14 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
   } net_buffer;
   querybuf *orig_net_buffer;
   int anslen;
-  char *qbuf;
   enum nss_status status;
 
   if (__res_maybe_init (&_res, 0) == -1)
     return NSS_STATUS_UNAVAIL;
 
-  qbuf = strdupa (name);
-
   net_buffer.buf = orig_net_buffer = (querybuf *) alloca (1024);
 
-  anslen = __libc_res_nsearch (&_res, qbuf, C_IN, T_PTR, net_buffer.buf->buf,
+  anslen = __libc_res_nsearch (&_res, name, C_IN, T_PTR, net_buffer.buf->buf,
 			       1024, &net_buffer.ptr, NULL, NULL, NULL, NULL);
   if (anslen < 0)
     {
