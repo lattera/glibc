@@ -1,5 +1,28 @@
 2016-03-31   H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #19881]
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memset-sse2-unaligned-erms, memset-avx2-unaligned-erms and
+	memset-avx512-unaligned-erms.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Test __memset_chk_sse2_unaligned,
+	__memset_chk_sse2_unaligned_erms, __memset_chk_avx2_unaligned,
+	__memset_chk_avx2_unaligned_erms, __memset_chk_avx512_unaligned,
+	__memset_chk_avx512_unaligned_erms, __memset_sse2_unaligned,
+	__memset_sse2_unaligned_erms, __memset_erms,
+	__memset_avx2_unaligned, __memset_avx2_unaligned_erms,
+	__memset_avx512_unaligned_erms and __memset_avx512_unaligned.
+	* sysdeps/x86_64/multiarch/memset-avx2-unaligned-erms.S: New
+	file.
+	* sysdeps/x86_64/multiarch/memset-avx512-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset-sse2-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S:
+	Likewise.
+
+2016-03-31   H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #19776]
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
 	memmove-sse2-unaligned-erms, memmove-avx-unaligned-erms and
