@@ -1,3 +1,43 @@
+2016-03-31   H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19776]
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memmove-sse2-unaligned-erms, memmove-avx-unaligned-erms and
+	memmove-avx512-unaligned-erms.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Test
+	__memmove_chk_avx512_unaligned_2,
+	__memmove_chk_avx512_unaligned_erms,
+	__memmove_chk_avx_unaligned_2, __memmove_chk_avx_unaligned_erms,
+	__memmove_chk_sse2_unaligned_2,
+	__memmove_chk_sse2_unaligned_erms, __memmove_avx_unaligned_2,
+	__memmove_avx_unaligned_erms, __memmove_avx512_unaligned_2,
+	__memmove_avx512_unaligned_erms, __memmove_erms,
+	__memmove_sse2_unaligned_2, __memmove_sse2_unaligned_erms,
+	__memcpy_chk_avx512_unaligned_2,
+	__memcpy_chk_avx512_unaligned_erms,
+	__memcpy_chk_avx_unaligned_2, __memcpy_chk_avx_unaligned_erms,
+	__memcpy_chk_sse2_unaligned_2, __memcpy_chk_sse2_unaligned_erms,
+	__memcpy_avx_unaligned_2, __memcpy_avx_unaligned_erms,
+	__memcpy_avx512_unaligned_2, __memcpy_avx512_unaligned_erms,
+	__memcpy_sse2_unaligned_2, __memcpy_sse2_unaligned_erms,
+	__memcpy_erms, __mempcpy_chk_avx512_unaligned_2,
+	__mempcpy_chk_avx512_unaligned_erms,
+	__mempcpy_chk_avx_unaligned_2, __mempcpy_chk_avx_unaligned_erms,
+	__mempcpy_chk_sse2_unaligned_2, __mempcpy_chk_sse2_unaligned_erms,
+	__mempcpy_avx512_unaligned_2, __mempcpy_avx512_unaligned_erms,
+	__mempcpy_avx_unaligned_2, __mempcpy_avx_unaligned_erms,
+	__mempcpy_sse2_unaligned_2, __mempcpy_sse2_unaligned_erms and
+	__mempcpy_erms.
+	* sysdeps/x86_64/multiarch/memmove-avx-unaligned-erms.S: New
+	file.
+	* sysdeps/x86_64/multiarch/memmove-avx512-unaligned-erms.S:
+	Likwise.
+	* sysdeps/x86_64/multiarch/memmove-sse2-unaligned-erms.S:
+	Likwise.
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:
+	Likwise.
+
 2016-03-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/bits/link.h: (La_s390_vr) New typedef.
