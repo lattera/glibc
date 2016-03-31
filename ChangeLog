@@ -1,3 +1,7 @@
+2016-03-31  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* elf/tst-dlsym-error.c: Include <string.h> for strchrnul.
+
 2016-03-31  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19509]

@@ -20,6 +20,7 @@
 #include <gnu/lib-names.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* Used to disambiguate symbol names.  */
 static int counter;
