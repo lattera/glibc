@@ -26,6 +26,7 @@
 #include <sys/param.h>
 #include <string.h>
 #include <link.h>
+#include <sysdeps/s390/dl-procinfo.h>
 #include <dl-irel.h>
 
 #define ELF_MACHINE_IRELATIVE       R_390_IRELATIVE
@@ -78,6 +79,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   extern void _dl_runtime_resolve (Elf64_Word);
   extern void _dl_runtime_profile (Elf64_Word);
+#if defined HAVE_S390_VX_ASM_SUPPORT
+  extern void _dl_runtime_resolve_vx (Elf64_Word);
+  extern void _dl_runtime_profile_vx (Elf64_Word);
+#endif
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
@@ -105,7 +110,14 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 end in this function.	*/
       if (__glibc_unlikely (profile))
 	{
+#if defined HAVE_S390_VX_ASM_SUPPORT
+	  if (GLRO(dl_hwcap) & HWCAP_S390_VX)
+	    got[2] = (Elf64_Addr) &_dl_runtime_profile_vx;
+	  else
+	    got[2] = (Elf64_Addr) &_dl_runtime_profile;
+#else
 	  got[2] = (Elf64_Addr) &_dl_runtime_profile;
+#endif
 
 	  if (GLRO(dl_profile) != NULL
 	      && _dl_name_match_p (GLRO(dl_profile), l))
@@ -114,9 +126,18 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	    GL(dl_profile_map) = l;
 	}
       else
-	/* This function will get called to fix up the GOT entry indicated by
-	   the offset on the stack, and then jump to the resolved address.  */
-	got[2] = (Elf64_Addr) &_dl_runtime_resolve;
+	{
+	  /* This function will get called to fix up the GOT entry indicated by
+	     the offset on the stack, and then jump to the resolved address.  */
+#if defined HAVE_S390_VX_ASM_SUPPORT
+	  if (GLRO(dl_hwcap) & HWCAP_S390_VX)
+	    got[2] = (Elf64_Addr) &_dl_runtime_resolve_vx;
+	  else
+	    got[2] = (Elf64_Addr) &_dl_runtime_resolve;
+#else
+	  got[2] = (Elf64_Addr) &_dl_runtime_resolve;
+#endif
+	}
     }
 
   return lazy;
