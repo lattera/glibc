@@ -109,31 +109,34 @@ _dl_runtime_resolve:
 	cfi_startproc
 	.align 16
 _dl_runtime_profile:
-	stmg   %r2,%r6,64(%r15)		# save call-clobbered arg regs
-	cfi_offset (r2, -96)		# + r6 needed as arg for
-	cfi_offset (r3, -88)		#  _dl_profile_fixup
-	cfi_offset (r4, -80)
-	cfi_offset (r5, -72)
-	cfi_offset (r6, -64)
-	std    %f0,104(%r15)
-	cfi_offset (f0, -56)
-	std    %f2,112(%r15)
-	cfi_offset (f2, -48)
-	std    %f4,120(%r15)
-	cfi_offset (f4, -40)
-	std    %f6,128(%r15)
-	cfi_offset (f6, -32)
 	stg    %r12,24(%r15)		# r12 is used as backup of r15
 	cfi_offset (r12, -136)
 	stg    %r14,32(%r15)
 	cfi_offset (r14, -128)
 	lgr    %r12,%r15		# backup stack pointer
 	cfi_def_cfa_register (12)
+	aghi   %r15,-360		# create stack frame:
+					# 160 + sizeof(La_s390_64_regs)
+	stg    %r12,0(%r15)		# save backchain
+
+	stmg   %r2,%r6,160(%r15)	# save call-clobbered arg regs
+	cfi_offset (r2, -360)		# + r6 needed as arg for
+	cfi_offset (r3, -352)		#  _dl_profile_fixup
+	cfi_offset (r4, -344)
+	cfi_offset (r5, -336)
+	cfi_offset (r6, -328)
+	std    %f0,200(%r15)
+	cfi_offset (f0, -320)
+	std    %f2,208(%r15)
+	cfi_offset (f2, -312)
+	std    %f4,216(%r15)
+	cfi_offset (f4, -304)
+	std    %f6,224(%r15)
+	cfi_offset (f6, -296)
 #ifdef RESTORE_VRS
-	aghi   %r15,-288		# create stack frame
 	.machine push
 	.machine "z13"
-	vstm   %v24,%v31,160(%r15)# store call-clobbered vector argument registers
+	vstm   %v24,%v31,232(%r15)      # store call-clobbered vector arguments
 	cfi_offset (v24, -288)
 	cfi_offset (v25, -272)
 	cfi_offset (v26, -256)
@@ -143,31 +146,28 @@ _dl_runtime_profile:
 	cfi_offset (v30, -192)
 	cfi_offset (v31, -176)
 	.machine pop
-#else
-	aghi   %r15,-160		# create stack frame
 #endif
-	stg    %r12,0(%r15)		# save backchain
 	lmg    %r2,%r3,48(%r12)		# load arguments saved by PLT
 	lgr    %r4,%r14			# return address as third parameter
-	la     %r5,64(%r12)		# pointer to struct La_s390_64_regs
+	la     %r5,160(%r15)		# pointer to struct La_s390_64_regs
 	la     %r6,40(%r12)		# long int * framesize
 	brasl  %r14,_dl_profile_fixup	# call resolver
 	lgr    %r1,%r2			# function addr returned in r2
-	ld     %f0,104(%r12)		# restore call-clobbered arg fprs
-	ld     %f2,112(%r12)
-	ld     %f4,120(%r12)
-	ld     %f6,128(%r12)
+	ld     %f0,200(%r15)		# restore call-clobbered arg fprs
+	ld     %f2,208(%r15)
+	ld     %f4,216(%r15)
+	ld     %f6,224(%r15)
 #ifdef RESTORE_VRS
 	.machine push
 	.machine "z13"
-	vlm    %v24,%v31,160(%r15)	# restore call-clobbered arg vrs
+	vlm    %v24,%v31,232(%r15)	# restore call-clobbered arg vrs
 	.machine pop
 #endif
 	lg     %r0,40(%r12)		# load framesize
 	ltgr   %r0,%r0
 	jnm    1f
 
-	lmg    %r2,%r6,64(%r12)		# framesize < 0 means no pltexit call
+	lmg    %r2,%r6,160(%r15)	# framesize < 0 means no pltexit call
 					# so we can do a tail call without
 					# copying the arg overflow area
 	lgr    %r15,%r12		# remove stack frame
@@ -177,7 +177,9 @@ _dl_runtime_profile:
 	br     %r1			# tail-call to resolved function
 
 	cfi_def_cfa_register (12)
-1:	jz     4f			# framesize == 0 ?
+1:	la     %r4,160(%r15)		# pointer to struct La_s390_64_regs
+	stg    %r4,64(%r12)
+	jz     4f			# framesize == 0 ?
 	aghi   %r0,7			# align framesize to 8
 	nill   %r0,0xfff8
 	slgr   %r15,%r0			# make room for framesize bytes
@@ -189,21 +191,33 @@ _dl_runtime_profile:
 	la     %r2,8(%r2)		# depending on framesize
 	la     %r3,8(%r3)
 	brctg  %r0,3b
-4:	lmg    %r2,%r6,64(%r12)		# restore call-clobbered arg gprs
+4:	lmg    %r2,%r6,0(%r4)		# restore call-clobbered arg gprs
 	basr   %r14,%r1			# call resolved function
-	stg    %r2,136(%r12)		# store return values r2, f0
-	std    %f0,144(%r12)		# to struct La_s390_64_retval
-	lmg    %r2,%r3,48(%r12)		# load arguments saved by PLT
-	la     %r4,64(%r12)		# pointer to struct La_s390_64_regs
-	la     %r5,136(%r12)		# pointer to struct La_s390_64_retval
+	stg    %r2,72(%r12)		# store return values r2, f0
+	std    %f0,80(%r12)		# to struct La_s390_64_retval
+#ifdef RESTORE_VRS
+	.machine push
+	.machine "z13"
+	vst    %v24,88(%r12)		# store return value v24
+	.machine pop
+#endif
+	lmg    %r2,%r4,48(%r12)		# r2, r3: load arguments saved by PLT
+					# r4: pointer to struct La_s390_64_regs
+	la     %r5,72(%r12)		# pointer to struct La_s390_64_retval
 	brasl  %r14,_dl_call_pltexit
 
 	lgr    %r15,%r12		# remove stack frame
 	cfi_def_cfa_register (15)
 	lg     %r14,32(%r15)		# restore registers
 	lg     %r12,24(%r15)
-	lg     %r2,136(%r15)		# restore return values
-	ld     %f0,144(%r15)
+	lg     %r2,72(%r15)		# restore return values
+	ld     %f0,80(%r15)
+#ifdef RESTORE_VRS
+	.machine push
+	.machine "z13"
+	vl    %v24,88(%r15)		# restore return value v24
+	.machine pop
+#endif
 	br     %r14			# Jump back to caller
 
 	cfi_endproc

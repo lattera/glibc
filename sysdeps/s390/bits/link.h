@@ -19,6 +19,9 @@
 # error "Never include <bits/link.h> directly; use <link.h> instead."
 #endif
 
+#if defined HAVE_S390_VX_ASM_SUPPORT
+typedef char La_s390_vr[16];
+#endif
 
 #if __ELF_NATIVE_CLASS == 32
 
@@ -32,6 +35,16 @@ typedef struct La_s390_32_regs
   uint32_t lr_r6;
   double lr_fp0;
   double lr_fp2;
+# if defined HAVE_S390_VX_ASM_SUPPORT
+  La_s390_vr lr_v24;
+  La_s390_vr lr_v25;
+  La_s390_vr lr_v26;
+  La_s390_vr lr_v27;
+  La_s390_vr lr_v28;
+  La_s390_vr lr_v29;
+  La_s390_vr lr_v30;
+  La_s390_vr lr_v31;
+# endif
 } La_s390_32_regs;
 
 /* Return values for calls from PLT on s390-32.  */
@@ -40,6 +53,9 @@ typedef struct La_s390_32_retval
   uint32_t lrv_r2;
   uint32_t lrv_r3;
   double lrv_fp0;
+# if defined HAVE_S390_VX_ASM_SUPPORT
+  La_s390_vr lrv_v24;
+# endif
 } La_s390_32_retval;
 
 
@@ -77,6 +93,16 @@ typedef struct La_s390_64_regs
   double lr_fp2;
   double lr_fp4;
   double lr_fp6;
+# if defined HAVE_S390_VX_ASM_SUPPORT
+  La_s390_vr lr_v24;
+  La_s390_vr lr_v25;
+  La_s390_vr lr_v26;
+  La_s390_vr lr_v27;
+  La_s390_vr lr_v28;
+  La_s390_vr lr_v29;
+  La_s390_vr lr_v30;
+  La_s390_vr lr_v31;
+# endif
 } La_s390_64_regs;
 
 /* Return values for calls from PLT on s390-64.  */
@@ -84,6 +110,9 @@ typedef struct La_s390_64_retval
 {
   uint64_t lrv_r2;
   double lrv_fp0;
+# if defined HAVE_S390_VX_ASM_SUPPORT
+  La_s390_vr lrv_v24;
+# endif
 } La_s390_64_retval;
 
 

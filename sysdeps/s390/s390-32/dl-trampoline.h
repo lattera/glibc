@@ -112,28 +112,31 @@ _dl_runtime_resolve:
 	cfi_startproc
 	.align 16
 _dl_runtime_profile:
-	stm    %r2,%r6,32(%r15)		# save registers
-	cfi_offset (r2, -64)		# + r6 needed as arg for
-	cfi_offset (r3, -60)		#  _dl_profile_fixup
-	cfi_offset (r4, -56)
-	cfi_offset (r5, -52)
-	cfi_offset (r6, -48)
-	std    %f0,56(%r15)
-	cfi_offset (f0, -40)
-	std    %f2,64(%r15)
-	cfi_offset (f2, -32)
 	st     %r12,12(%r15)		# r12 is used as backup of r15
 	cfi_offset (r12, -84)
 	st     %r14,16(%r15)
 	cfi_offset (r14, -80)
 	lr     %r12,%r15		# backup stack pointer
 	cfi_def_cfa_register (12)
+	ahi    %r15,-264		# create stack frame:
+					# 96 + sizeof(La_s390_32_regs)
+	st     %r12,0(%r15)		# save backchain
+
+	stm    %r2,%r6,96(%r15)		# save registers
+	cfi_offset (r2, -264)		# + r6 needed as arg for
+	cfi_offset (r3, -260)		#  _dl_profile_fixup
+	cfi_offset (r4, -256)
+	cfi_offset (r5, -252)
+	cfi_offset (r6, -248)
+	std    %f0,120(%r15)
+	cfi_offset (f0, -240)
+	std    %f2,128(%r15)
+	cfi_offset (f2, -232)
 #ifdef RESTORE_VRS
-	ahi    %r15,-224		# create stack frame
 	.machine push
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
-	vstm   %v24,%v31,96(%r15)	# store call-clobbered vr arguments
+	vstm   %v24,%v31,136(%r15)	# store call-clobbered vr arguments
 	cfi_offset (v24, -224)
 	cfi_offset (v25, -208)
 	cfi_offset (v26, -192)
@@ -143,31 +146,31 @@ _dl_runtime_profile:
 	cfi_offset (v30, -128)
 	cfi_offset (v31, -112)
 	.machine pop
-#else
-	ahi    %r15,-96			# create stack frame
 #endif
-	st     %r12,0(%r15)		# save backchain
+
 	lm     %r2,%r3,24(%r12)		# load arguments saved by PLT
 	lr     %r4,%r14			# return address as third parameter
 	basr   %r1,0
 0:	l      %r14,6f-0b(%r1)
-	la     %r5,32(%r12)		# pointer to struct La_s390_32_regs
+	la     %r5,96(%r15)		# pointer to struct La_s390_32_regs
 	la     %r6,20(%r12)		# long int * framesize
 	bas    %r14,0(%r14,%r1)		# call resolver
 	lr     %r1,%r2			# function addr returned in r2
-	ld     %f0,56(%r12)		# restore call-clobbered arg fprs
-	ld     %f2,64(%r12)
+	ld     %f0,120(%r15)		# restore call-clobbered arg fprs
+	ld     %f2,128(%r15)
 #ifdef RESTORE_VRS
 	.machine push
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
-	vlm    %v24,%v31,96(%r15)	# restore call-clobbered arg vrs
+	vlm    %v24,%v31,136(%r15)	# restore call-clobbered arg vrs
 	.machine pop
 #endif
 	icm    %r0,15,20(%r12)		# load & test framesize
 	jnm    2f
 
-	lm     %r2,%r6,32(%r12)
+	lm     %r2,%r6,96(%r15)		# framesize < 0 means no pltexit call
+					# so we can do a tail call without
+					# copying the arg overflow area
 	lr     %r15,%r12		# remove stack frame
 	cfi_def_cfa_register (15)
 	l      %r14,16(%r15)		# restore registers
@@ -175,7 +178,9 @@ _dl_runtime_profile:
 	br     %r1			# tail-call to the resolved function
 
 	cfi_def_cfa_register (12)
-2:	jz     4f			# framesize == 0 ?
+2:	la     %r4,96(%r15)		# pointer to struct La_s390_32_regs
+	st     %r4,32(%r12)
+	jz     4f			# framesize == 0 ?
 	ahi    %r0,7			# align framesize to 8
 	lhi    %r2,-8
 	nr     %r0,%r2
@@ -188,24 +193,35 @@ _dl_runtime_profile:
 	la     %r2,8(%r2)
 	la     %r3,8(%r3)
 	brct   %r0,3b
-4:	lm     %r2,%r6,32(%r12)		# load register parameters
+4:	lm     %r2,%r6,0(%r4)		# load register parameters
 	basr   %r14,%r1			# call resolved function
-	stm    %r2,%r3,72(%r12)		# store return values r2, r3, f0
-	std    %f0,80(%r12)		# to struct La_s390_32_retval
-	lm     %r2,%r3,24(%r12)		# load arguments saved by PLT
+	stm    %r2,%r3,40(%r12)		# store return values r2, r3, f0
+	std    %f0,48(%r12)		# to struct La_s390_32_retval
+#ifdef RESTORE_VRS
+	.machine push
+	.machine "z13"
+	vst    %v24,56(%r12)		# store return value v24
+	.machine pop
+#endif
+	lm     %r2,%r4,24(%r12)		# r2, r3: load arguments saved by PLT
+					# r4: pointer to struct La_s390_32_regs
 	basr   %r1,0
 5:	l      %r14,7f-5b(%r1)
-	la     %r4,32(%r12)		# pointer to struct La_s390_32_regs
-	la     %r5,72(%r12)		# pointer to struct La_s390_32_retval
+	la     %r5,40(%r12)		# pointer to struct La_s390_32_retval
 	bas    %r14,0(%r14,%r1)		# call _dl_call_pltexit
 
 	lr     %r15,%r12		# remove stack frame
 	cfi_def_cfa_register (15)
 	l      %r14,16(%r15)		# restore registers
 	l      %r12,12(%r15)
-	l      %r2,72(%r15)		# restore return values
-	l      %r3,76(%r15)
-	ld     %f0,80(%r15)
+	lm     %r2,%r3,40(%r15)		# restore return values
+	ld     %f0,48(%r15)
+#ifdef RESTORE_VRS
+	.machine push
+	.machine "z13"
+	vl    %v24,56(%r15)		# restore return value v24
+	.machine pop
+#endif
 	br     %r14
 
 6:	.long  _dl_profile_fixup - 0b

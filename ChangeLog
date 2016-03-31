@@ -1,5 +1,17 @@
 2016-03-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/bits/link.h: (La_s390_vr) New typedef.
+	(La_s390_32_regs): Append vector register lr_v24-lr_v31.
+	(La_s390_64_regs): Likewise.
+	(La_s390_32_retval): Append vector register lrv_v24.
+	(La_s390_64_retval): Likeweise.
+	* sysdeps/s390/s390-32/dl-trampoline.h (_dl_runtime_profile):
+	Handle extended structs La_s390_32_regs and La_s390_32_retval.
+	* sysdeps/s390/s390-64/dl-trampoline.h (_dl_runtime_profile):
+	Handle extended structs La_s390_64_regs and La_s390_64_retval.
+
+2016-03-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/s390-32/dl-trampoline.S: Include dl-trampoline.h twice
 	to create a non-vector/vector version for _dl_runtime_resolve and
 	_dl_runtime_profile. Move implementation to ...
