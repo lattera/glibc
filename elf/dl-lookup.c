@@ -858,7 +858,6 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
   if (__glibc_unlikely (current_value.s == NULL))
     {
       if ((*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
-	  && skip_map == NULL
 	  && !(GLRO(dl_debug_mask) & DL_DEBUG_UNUSED))
 	{
 	  /* We could find no value for a strong reference.  */
