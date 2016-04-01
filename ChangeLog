@@ -1,5 +1,11 @@
 2016-04-01   H.J. Lu  <hongjiu.lu@intel.com>
 
+	* benchtests/bench-memset.c (do_test): Support 64-byte
+	alignment.
+	(test_main): Test 64-byte alignment.
+
+2016-04-01   H.J. Lu  <hongjiu.lu@intel.com>
+
 	* benchtests/bench-memmove.c (test_main): Test 64-byte
 	alignment.
 

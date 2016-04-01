@@ -134,7 +134,7 @@ do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
 static void
 do_test (size_t align, int c, size_t len)
 {
-  align &= 7;
+  align &= 63;
   if ((align + len) * sizeof (CHAR) > page_size)
     return;
 
@@ -180,6 +180,11 @@ test_main (void)
       do_test (3, c, 1024);
       do_test (4, c, 64);
       do_test (2, c, 25);
+    }
+  for (i = 33; i <= 256; i += 4)
+    {
+      do_test (0, c, 32 * i);
+      do_test (i, c, 32 * i);
     }
 
   return ret;
