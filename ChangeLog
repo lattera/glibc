@@ -1,3 +1,8 @@
+2016-04-01  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/s390-32/dl-trampoline.h (_dl_runtime_resolve):
+	Use ahi instead of aghi to adjust stack pointer.
+
 2016-03-31  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	[BZ #19853]

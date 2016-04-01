@@ -90,7 +90,7 @@ _dl_runtime_resolve:
 	.machinemode "zarch_nohighgprs"
 	vlm    %v24,%v31,96(%r15)	# restore vector registers
 	.machine pop
-	aghi   %r15,224			# remove stack frame
+	ahi   %r15,224			# remove stack frame
 	cfi_adjust_cfa_offset (-224)
 #else
 	ahi    %r15,96			# remove stack frame
