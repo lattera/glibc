@@ -149,6 +149,14 @@ test_main (void)
       do_test (i, i, 16 * i);
     }
 
+  for (i = 32; i < 64; ++i)
+    {
+      do_test (0, 0, 32 * i);
+      do_test (i, 0, 32 * i);
+      do_test (0, i, 32 * i);
+      do_test (i, i, 32 * i);
+    }
+
   do_test (0, 0, getpagesize ());
 
   return ret;

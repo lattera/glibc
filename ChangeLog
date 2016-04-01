@@ -1,3 +1,7 @@
+2016-04-01   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* benchtests/bench-memcpy.c (test_main): Test 64-byte alignment.
+
 2016-04-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/powerpc64/strcspn.S: Remove file.
