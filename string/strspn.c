@@ -17,6 +17,7 @@
 
 #include <string.h>
 #include <stdint.h>
+#include <libc-internal.h>
 
 #undef strspn
 #ifndef STRSPN
@@ -58,7 +59,8 @@ STRSPN (const char *str, const char *accept)
   if (!p[s[2]]) return 2;
   if (!p[s[3]]) return 3;
 
-  s = (unsigned char *) ((uintptr_t)(s) & ~3);
+  s = (unsigned char *) PTR_ALIGN_DOWN (s, 4);
+
   unsigned int c0, c1, c2, c3;
   do {
       s += 4;

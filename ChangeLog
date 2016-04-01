@@ -1,3 +1,8 @@
+2016-04-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* string/strcspn.c (strcspn): Use PTR_ALIGN_DOWN.
+	* string/strspn.c (strspn): Likewise.
+
 2016-04-01   H.J. Lu  <hongjiu.lu@intel.com>
 
 	* benchtests/bench-memset.c (do_test): Support 64-byte
