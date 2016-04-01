@@ -1,3 +1,8 @@
+2016-04-01   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Don't set
+	bit_arch_Fast_Copy_Backward for Intel Core proessors.
+
 2016-04-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* string/strcspn.c (strcspn): Use PTR_ALIGN_DOWN.
