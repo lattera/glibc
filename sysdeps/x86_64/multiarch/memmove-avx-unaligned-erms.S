@@ -1,9 +1,11 @@
-#define VEC_SIZE	32
-#define VEC(i)		ymm##i
-#define VMOVU		vmovdqu
-#define VMOVA		vmovdqa
+#if IS_IN (libc)
+# define VEC_SIZE	32
+# define VEC(i)		ymm##i
+# define VMOVU		vmovdqu
+# define VMOVA		vmovdqa
 
-#define SECTION(p)		p##.avx
-#define MEMMOVE_SYMBOL(p,s)	p##_avx_##s
+# define SECTION(p)		p##.avx
+# define MEMMOVE_SYMBOL(p,s)	p##_avx_##s
 
-#include "memmove-vec-unaligned-erms.S"
+# include "memmove-vec-unaligned-erms.S"
+#endif

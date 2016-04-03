@@ -1,5 +1,16 @@
 2016-04-03   H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/multiarch/memmove-avx-unaligned-erms.S: Skip
+	if not in libc.
+	* sysdeps/x86_64/multiarch/memmove-avx512-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset-avx2-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset-avx512-unaligned-erms.S:
+	Likewise.
+
+2016-04-03   H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:
 	(__mempcpy_erms, __memmove_erms): Moved before __mempcpy_chk
 	with unaligned_erms.
