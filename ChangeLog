@@ -1,3 +1,12 @@
+2016-04-03   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:
+	(__mempcpy_erms, __memmove_erms): Moved before __mempcpy_chk
+	with unaligned_erms.
+	(__memmove_erms): Skip if source == destination.
+	(__memmove_unaligned_erms): Don't check source == destination
+	first.
+
 2016-04-01   H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.c (init_cpu_features): Don't set

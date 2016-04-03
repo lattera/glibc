@@ -95,6 +95,42 @@ L(start):
 	ret
 END (MEMMOVE_SYMBOL (__memmove, unaligned_2))
 
+# if VEC_SIZE == 16
+/* Only used to measure performance of REP MOVSB.  */
+#  ifdef SHARED
+ENTRY (__mempcpy_erms)
+	movq	%rdi, %rax
+	addq	%rdx, %rax
+	jmp	L(start_movsb)
+END (__mempcpy_erms)
+#  endif
+
+ENTRY (__memmove_erms)
+	movq	%rdi, %rax
+L(start_movsb):
+	movq	%rdx, %rcx
+	cmpq	%rsi, %rdi
+	jb	1f
+	/* Source == destination is less common.  */
+	je	2f
+	leaq	(%rsi,%rcx), %rdx
+	cmpq	%rdx, %rdi
+	jb	L(movsb_backward)
+1:
+	rep movsb
+2:
+	ret
+L(movsb_backward):
+	leaq	-1(%rdi,%rcx), %rdi
+	leaq	-1(%rsi,%rcx), %rsi
+	std
+	rep movsb
+	cld
+	ret
+END (__memmove_erms)
+strong_alias (__memmove_erms, __memcpy_erms)
+# endif
+
 # ifdef SHARED
 ENTRY (MEMMOVE_SYMBOL (__mempcpy_chk, unaligned_erms))
 	cmpq	%rdx, %rcx
@@ -113,38 +149,6 @@ ENTRY (MEMMOVE_SYMBOL (__memmove_chk, unaligned_erms))
 	cmpq	%rdx, %rcx
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (MEMMOVE_SYMBOL (__memmove_chk, unaligned_erms))
-# endif
-
-# if VEC_SIZE == 16
-/* Only used to measure performance of REP MOVSB.  */
-#  ifdef SHARED
-ENTRY (__mempcpy_erms)
-	movq	%rdi, %rax
-	addq	%rdx, %rax
-	jmp	L(movsb)
-END (__mempcpy_erms)
-#  endif
-
-ENTRY (__memmove_erms)
-	movq	%rdi, %rax
-	movq	%rdx, %rcx
-	cmpq	%rsi, %rdi
-	jbe	1f
-	leaq	(%rsi,%rcx), %rdx
-	cmpq	%rdx, %rdi
-	jb	L(movsb_backward)
-1:
-	rep movsb
-	ret
-L(movsb_backward):
-	leaq	-1(%rdi,%rcx), %rdi
-	leaq	-1(%rsi,%rcx), %rsi
-	std
-	rep movsb
-	cld
-	ret
-END (__memmove_erms)
-strong_alias (__memmove_erms, __memcpy_erms)
 # endif
 
 ENTRY (MEMMOVE_SYMBOL (__memmove, unaligned_erms))
@@ -166,8 +170,9 @@ L(return):
 
 L(movsb):
 	cmpq	%rsi, %rdi
-	je	L(nop)
 	jb	1f
+	/* Source == destination is less common.  */
+	je	L(nop)
 	leaq	(%rsi,%rdx), %r9
 	cmpq	%r9, %rdi
 	/* Avoid slow backward REP MOVSB.  */
@@ -191,8 +196,9 @@ L(movsb_more_2x_vec):
 L(more_2x_vec):
 	/* More than 2 * VEC.  */
 	cmpq	%rsi, %rdi
-	je	L(nop)
 	jb	L(copy_forward)
+	/* Source == destination is less common.  */
+	je	L(nop)
 	leaq	(%rsi,%rdx), %rcx
 	cmpq	%rcx, %rdi
 	jb	L(more_2x_vec_overlap)
