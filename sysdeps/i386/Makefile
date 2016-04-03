@@ -88,8 +88,9 @@ ifeq ($(subdir),elf)
 # Make sure no code in ld.so uses mm/xmm/ymm/zmm registers on i386 since
 # the first 3 mm/xmm/ymm/zmm registers are used to pass vector parameters
 # which must be preserved.
+# With SSE disabled, ensure -fpmath is not set to use sse either.
 CFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
-		   -mno-sse -mno-mmx)
+		   -mno-sse -mno-mmx -mfpmath=387)
 
 tests-special += $(objpfx)tst-ld-sse-use.out
 $(objpfx)tst-ld-sse-use.out: ../sysdeps/i386/tst-ld-sse-use.sh $(objpfx)ld.so
