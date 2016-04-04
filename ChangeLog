@@ -1,3 +1,21 @@
+2016-04-04  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19633]
+	Use specified locale for number formatting in strfmon_l.
+	* locale/localeinfo.h (__nl_lookup, _nl_lookup_wstr)
+	(__nl_lookup_word): New inline functions.
+	* include/printf.h (__print_fp_l): Declare.
+	* stdio-common/printf_fp.c (___printf_fp_l): Renamed from
+	___printf_fp.  Add locale argument.  Replace _NL_CURRENT with
+	_nl_lookup and _NL_CURRENT_WORD with _nl_lookup_word.
+	(___printf_fp): New function.
+	* stdlib/strfmon_l.c (__printf_fp): Remove declaration.
+	(__vstrfmon_l): Call __printf_fp_l instead of printf_fp.
+	* stdlib/tst-strfmon_l.c (do_test): New test.
+	* stdlib/Makefile (tests): Add kt.
+	(LOCALES): Build additional locales.
+	(tst-strfmon_l.out): Require locales.
+
 2016-04-03   H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/memmove-avx-unaligned-erms.S: Skip

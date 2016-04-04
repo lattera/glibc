@@ -76,7 +76,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-secure-getenv tst-strtod-overflow tst-strtod-round   \
 		   tst-tininess tst-strtod-underflow tst-tls-atexit	    \
 		   tst-setcontext3 tst-tls-atexit-nodelete		    \
-		   tst-strtol-locale tst-strtod-nan-locale
+		   tst-strtol-locale tst-strtod-nan-locale tst-strfmon_l
 tests-static	:= tst-secure-getenv
 
 modules-names	= tst-tls-atexit-lib
@@ -126,7 +126,8 @@ include ../Rules
 
 ifeq ($(run-built-tests),yes)
 LOCALES := cs_CZ.UTF-8 de_DE.UTF-8 en_US.ISO-8859-1 tr_TR.UTF-8 \
-	   tr_TR.ISO-8859-9
+	   tr_TR.ISO-8859-9 tg_TJ.UTF-8 te_IN.UTF-8 bn_IN.UTF-8 \
+	   el_GR.UTF-8
 include ../gen-locales.mk
 
 $(objpfx)bug-strtod2.out: $(gen-locales)
@@ -137,6 +138,7 @@ $(objpfx)tst-strtod4.out: $(gen-locales)
 $(objpfx)tst-strtod5.out: $(gen-locales)
 $(objpfx)tst-strtol-locale.out: $(gen-locales)
 $(objpfx)tst-strtod-nan-locale.out: $(gen-locales)
+$(objpfx)tst-strfmon_l.out: $(gen-locales)
 endif
 
 # Testdir has to be named stdlib and needs to be writable

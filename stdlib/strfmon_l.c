@@ -68,9 +68,6 @@
 #define _NL_CURRENT(category, item) \
   (current->values[_NL_ITEM_INDEX (item)].string)
 
-extern int __printf_fp (FILE *, const struct printf_info *,
-			const void *const *);
-libc_hidden_proto (__printf_fp)
 /* This function determines the number of digit groups in the output.
    The definition is in printf_fp.c.  */
 extern unsigned int __guess_grouping (unsigned int intdig_max,
@@ -532,7 +529,7 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
       info.extra = 1;		/* This means use values from LC_MONETARY.  */
 
       ptr = &fpnum;
-      done = __printf_fp (&f._sbf._f, &info, &ptr);
+      done = __printf_fp_l (&f._sbf._f, loc, &info, &ptr);
       if (done < 0)
 	return -1;
 

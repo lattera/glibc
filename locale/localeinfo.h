@@ -299,6 +299,27 @@ extern __thread struct __locale_data *const *_nl_current_##category \
 
 #endif
 
+/* Extract CATEGORY locale's string for ITEM.  */
+static inline const char *
+_nl_lookup (locale_t l, int category, int item)
+{
+  return l->__locales[category]->values[_NL_ITEM_INDEX (item)].string;
+}
+
+/* Extract CATEGORY locale's wide string for ITEM.  */
+static inline const wchar_t *
+_nl_lookup_wstr (locale_t l, int category, int item)
+{
+  return (wchar_t *) l->__locales[category]
+    ->values[_NL_ITEM_INDEX (item)].wstr;
+}
+
+/* Extract the CATEGORY locale's word for ITEM.  */
+static inline uint32_t
+_nl_lookup_word (locale_t l, int category, int item)
+{
+  return l->__locales[category]->values[_NL_ITEM_INDEX (item)].word;
+}
 
 /* Default search path if no LOCPATH environment variable.  */
 extern const char _nl_default_locale_path[] attribute_hidden;

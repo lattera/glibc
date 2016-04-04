@@ -209,9 +209,9 @@ hack_digit (struct hack_digit_param *p)
 }
 
 int
-___printf_fp (FILE *fp,
-	      const struct printf_info *info,
-	      const void *const *args)
+___printf_fp_l (FILE *fp, locale_t loc,
+		const struct printf_info *info,
+		const void *const *args)
 {
   /* The floating-point value to output.  */
   union
@@ -263,18 +263,19 @@ ___printf_fp (FILE *fp,
   /* Figure out the decimal point character.  */
   if (info->extra == 0)
     {
-      decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
-      decimalwc = _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_DECIMAL_POINT_WC);
+      decimal = _nl_lookup (loc, LC_NUMERIC, DECIMAL_POINT);
+      decimalwc = _nl_lookup_word
+	(loc, LC_NUMERIC, _NL_NUMERIC_DECIMAL_POINT_WC);
     }
   else
     {
-      decimal = _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
+      decimal = _nl_lookup (loc, LC_MONETARY, MON_DECIMAL_POINT);
       if (*decimal == '\0')
-	decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
-      decimalwc = _NL_CURRENT_WORD (LC_MONETARY,
+	decimal = _nl_lookup (loc, LC_NUMERIC, DECIMAL_POINT);
+      decimalwc = _nl_lookup_word (loc, LC_MONETARY,
 				    _NL_MONETARY_DECIMAL_POINT_WC);
       if (decimalwc == L'\0')
-	decimalwc = _NL_CURRENT_WORD (LC_NUMERIC,
+	decimalwc = _nl_lookup_word (loc, LC_NUMERIC,
 				      _NL_NUMERIC_DECIMAL_POINT_WC);
     }
   /* The decimal point character must not be zero.  */
@@ -284,9 +285,9 @@ ___printf_fp (FILE *fp,
   if (info->group)
     {
       if (info->extra == 0)
-	grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
+	grouping = _nl_lookup (loc, LC_NUMERIC, GROUPING);
       else
-	grouping = _NL_CURRENT (LC_MONETARY, MON_GROUPING);
+	grouping = _nl_lookup (loc, LC_MONETARY, MON_GROUPING);
 
       if (*grouping <= 0 || *grouping == CHAR_MAX)
 	grouping = NULL;
@@ -296,19 +297,20 @@ ___printf_fp (FILE *fp,
 	  if (wide)
 	    {
 	      if (info->extra == 0)
-		thousands_sepwc =
-		  _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_THOUSANDS_SEP_WC);
+		thousands_sepwc = _nl_lookup_word
+		  (loc, LC_NUMERIC, _NL_NUMERIC_THOUSANDS_SEP_WC);
 	      else
 		thousands_sepwc =
-		  _NL_CURRENT_WORD (LC_MONETARY,
+		  _nl_lookup_word (loc, LC_MONETARY,
 				    _NL_MONETARY_THOUSANDS_SEP_WC);
 	    }
 	  else
 	    {
 	      if (info->extra == 0)
-		thousands_sep = _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+		thousands_sep = _nl_lookup (loc, LC_NUMERIC, THOUSANDS_SEP);
 	      else
-		thousands_sep = _NL_CURRENT (LC_MONETARY, MON_THOUSANDS_SEP);
+		thousands_sep = _nl_lookup
+		  (loc, LC_MONETARY, MON_THOUSANDS_SEP);
 	    }
 
 	  if ((wide && thousands_sepwc == L'\0')
@@ -1171,9 +1173,11 @@ ___printf_fp (FILE *fp,
 	  size_t decimal_len;
 	  size_t thousands_sep_len;
 	  wchar_t *copywc;
-	  size_t factor = (info->i18n
-			   ? _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX)
-			   : 1);
+	  size_t factor;
+	  if (info->i18n)
+	    factor = _nl_lookup_word (loc, LC_CTYPE, _NL_CTYPE_MB_CUR_MAX);
+	  else
+	    factor = 1;
 
 	  decimal_len = strlen (decimal);
 
@@ -1244,8 +1248,18 @@ ___printf_fp (FILE *fp,
   }
   return done;
 }
+ldbl_hidden_def (___printf_fp_l, __printf_fp_l)
+ldbl_strong_alias (___printf_fp_l, __printf_fp_l)
+
+int
+___printf_fp (FILE *fp, const struct printf_info *info,
+	      const void *const *args)
+{
+  return ___printf_fp_l (fp, _NL_CURRENT_LOCALE, info, args);
+}
 ldbl_hidden_def (___printf_fp, __printf_fp)
 ldbl_strong_alias (___printf_fp, __printf_fp)
+
 
 /* Return the number of extra grouping characters that will be inserted
    into a number with INTDIG_MAX integer digits.  */
