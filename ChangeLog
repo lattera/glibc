@@ -1,3 +1,8 @@
+2016-04-05   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memset-sse2-unaligned-erms.S: Add
+	a comment on VMOVU and VMOVA.
+
 2016-04-04  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19633]

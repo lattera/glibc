@@ -1,6 +1,8 @@
 #if IS_IN (libc)
 # define VEC_SIZE	16
 # define VEC(i)		xmm##i
+/* Don't use movups and movaps since it will get larger nop paddings
+   for alignment.  */
 # define VMOVU		movdqu
 # define VMOVA		movdqa
 
