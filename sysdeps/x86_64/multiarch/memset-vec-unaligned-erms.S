@@ -159,10 +159,23 @@ L(return):
 	.p2align 4
 L(loop_start):
 	leaq	(VEC_SIZE * 4)(%rdi), %rcx
+# if VEC_SIZE == 32 || VEC_SIZE == 64
+	/* Force 32-bit displacement to avoid long nop between
+	   instructions.  */
+	VMOVU.d32 %VEC(0), (%rdi)
+# else
 	VMOVU	%VEC(0), (%rdi)
+# endif
 	andq	$-(VEC_SIZE * 4), %rcx
+# if VEC_SIZE == 32
+	/* Force 32-bit displacement to avoid long nop between
+	   instructions.  */
+	VMOVU.d32 %VEC(0), -VEC_SIZE(%rdi,%rdx)
+	VMOVU.d32 %VEC(0), VEC_SIZE(%rdi)
+# else
 	VMOVU	%VEC(0), -VEC_SIZE(%rdi,%rdx)
 	VMOVU	%VEC(0), VEC_SIZE(%rdi)
+# endif
 	VMOVU	%VEC(0), -(VEC_SIZE * 2)(%rdi,%rdx)
 	VMOVU	%VEC(0), (VEC_SIZE * 2)(%rdi)
 	VMOVU	%VEC(0), -(VEC_SIZE * 3)(%rdi,%rdx)
