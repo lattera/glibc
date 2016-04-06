@@ -215,6 +215,7 @@
 
 2016-03-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	[BZ #19916]
 	* sysdeps/s390/s390-32/dl-trampoline.S: Include dl-trampoline.h twice
 	to create a non-vector/vector version for _dl_runtime_resolve and
 	_dl_runtime_profile. Move implementation to ...
