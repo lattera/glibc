@@ -28,6 +28,10 @@
 
 #include <sysdep.h>
 
+#ifndef MEMSET_CHK_SYMBOL
+# define MEMSET_CHK_SYMBOL(p,s)		MEMSET_SYMBOL(p, s)
+#endif
+
 #ifndef VZEROUPPER
 # if VEC_SIZE > 16
 #  define VZEROUPPER			vzeroupper
@@ -66,8 +70,8 @@
 # error SECTION is not defined!
 #endif
 
-#if !defined USE_MULTIARCH && IS_IN (libc)
 	.section SECTION(.text),"ax",@progbits
+#if VEC_SIZE == 16 && IS_IN (libc) && 0
 ENTRY (__bzero)
 	movq	%rdi, %rax /* Set return value.  */
 	movq	%rsi, %rdx /* Set n.  */
@@ -78,10 +82,10 @@ weak_alias (__bzero, bzero)
 #endif
 
 #if defined SHARED && IS_IN (libc)
-ENTRY_CHK (MEMSET_SYMBOL (__memset_chk, unaligned))
+ENTRY_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned))
 	cmpq	%rdx, %rcx
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
-END_CHK (MEMSET_SYMBOL (__memset_chk, unaligned))
+END_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned))
 #endif
 
 ENTRY (MEMSET_SYMBOL (__memset, unaligned))
@@ -97,15 +101,16 @@ L(entry_from_bzero):
 	VMOVU	%VEC(0), (%rdi)
 	VZEROUPPER
 	ret
+#if defined USE_MULTIARCH && IS_IN (libc)
 END (MEMSET_SYMBOL (__memset, unaligned))
 
-#if VEC_SIZE == 16
+# if VEC_SIZE == 16
 /* Only used to measure performance of REP STOSB.  */
 ENTRY (__memset_erms)
-#else
+# else
 /* Provide a symbol to debugger.  */
 ENTRY (MEMSET_SYMBOL (__memset, erms))
-#endif
+# endif
 L(stosb):
 	movq	%rdx, %rcx
 	movzbl	%sil, %eax
@@ -113,18 +118,18 @@ L(stosb):
 	rep stosb
 	movq	%rdx, %rax
 	ret
-#if VEC_SIZE == 16
+# if VEC_SIZE == 16
 END (__memset_erms)
-#else
+# else
 END (MEMSET_SYMBOL (__memset, erms))
-#endif
+# endif
 
-#if defined SHARED && IS_IN (libc)
-ENTRY_CHK (MEMSET_SYMBOL (__memset_chk, unaligned_erms))
+# if defined SHARED && IS_IN (libc)
+ENTRY_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned_erms))
 	cmpq	%rdx, %rcx
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
-END_CHK (MEMSET_SYMBOL (__memset_chk, unaligned_erms))
-#endif
+END_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned_erms))
+# endif
 
 ENTRY (MEMSET_SYMBOL (__memset, unaligned_erms))
 	VDUP_TO_VEC0_AND_SET_RETURN (%esi, %rdi)
@@ -144,6 +149,7 @@ L(stosb_more_2x_vec):
 	/* Force 32-bit displacement to avoid long nop between
 	   instructions.  */
 	ja.d32	L(stosb)
+#endif
 	.p2align 4
 L(more_2x_vec):
 	cmpq  $(VEC_SIZE * 4), %rdx
