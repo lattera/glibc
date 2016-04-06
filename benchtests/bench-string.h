@@ -56,7 +56,9 @@ extern impl_t __start_impls[], __stop_impls[];
 
 
 # define TEST_FUNCTION test_main ()
-# define TIMEOUT (4 * 60)
+# ifndef TIMEOUT
+#  define TIMEOUT (4 * 60)
+# endif
 # define OPT_ITERATIONS 10000
 # define OPT_RANDOM 10001
 # define OPT_SEED 10002

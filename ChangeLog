@@ -1,3 +1,12 @@
+2016-04-06   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* benchtests/Makefile (string-benchset): Add memcpy-large,
+	memmove-large and memset-large.
+	* benchtests/bench-memcpy-large.c: New file.
+	* benchtests/bench-memmove-large.c: Likewise.
+	* benchtests/bench-memmove-large.c: Likewise.
+	* benchtests/bench-string.h (TIMEOUT): Don't redefine.
+
 2016-04-05   H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S: Force
