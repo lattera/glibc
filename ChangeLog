@@ -1,5 +1,16 @@
 2016-04-06   H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+	(MEMCPY_SYMBOL): New.
+	(MEMPCPY_SYMBOL): Likewise.
+	(MEMMOVE_CHK_SYMBOL): Likewise.
+	Replace MEMMOVE_SYMBOL with MEMMOVE_CHK_SYMBOL on __mempcpy_chk
+	symbols.  Replace MEMMOVE_SYMBOL with MEMPCPY_SYMBOL on
+	__mempcpy symbols.  Provide alias for __memcpy_chk in libc.a.
+	Provide alias for memcpy in libc.a and ld.so.
+
+2016-04-06   H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
 	(MEMSET_CHK_SYMBOL): New.  Define if not defined.
 	(__bzero): Check VEC_SIZE == 16 instead of USE_MULTIARCH.
