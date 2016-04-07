@@ -18,6 +18,7 @@
 
 #include <scratch_buffer.h>
 #include <errno.h>
+#include <limits.h>
 
 bool
 __libc_scratch_buffer_set_array_size (struct scratch_buffer *buffer,
