@@ -1,5 +1,9 @@
 2016-04-07  Florian Weimer  <fweimer@redhat.com>
 
+	* misc/hsearch_r.c: Include <limits.h>.
+
+2016-04-07  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/scratch_buffer_set_array_size.c: Include <limits.h>.
 
 2016-04-06   H.J. Lu  <hongjiu.lu@intel.com>

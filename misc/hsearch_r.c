@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <search.h>
+#include <limits.h>
 
 /* [Aho,Sethi,Ullman] Compilers: Principles, Techniques and Tools, 1986
    [Knuth]            The Art of Computer Programming, part 3 (6.4)  */
