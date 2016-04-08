@@ -225,7 +225,6 @@ test-xfail-POSIX2008/netinet/in.h/conform = yes
 test-xfail-POSIX2008/signal.h/conform = yes
 test-xfail-POSIX2008/sys/socket.h/conform = yes
 test-xfail-POSIX2008/sys/wait.h/conform = yes
-test-xfail-XOPEN2K8/limits.h/conform = yes
 test-xfail-XOPEN2K8/signal.h/conform = yes
 test-xfail-XOPEN2K8/stdio.h/conform = yes
 test-xfail-XOPEN2K8/sys/wait.h/conform = yes

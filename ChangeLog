@@ -1,5 +1,11 @@
 2016-04-08  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19929]
+	* include/bits/xopen_lim.h (NL_NMAX): Do not define if
+	[__USE_XOPEN2K8 && !__USE_GNU].
+	* conform/Makefile (test-xfail-XOPEN2K8/limits.h/conform): Remove
+	variable.
+
 	[BZ #19925]
 	* sysdeps/unix/sysv/linux/alpha/bits/termios.h (XCASE): Do not
 	define if [!__USE_MISC && __USE_XOPEN2K].
