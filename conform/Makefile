@@ -218,7 +218,6 @@ test-xfail-XOPEN2K/signal.h/conform = yes
 test-xfail-XOPEN2K/stdarg.h/conform = yes
 test-xfail-XOPEN2K/stdio.h/conform = yes
 test-xfail-XOPEN2K/sys/wait.h/conform = yes
-test-xfail-XOPEN2K/termios.h/conform = yes
 test-xfail-XOPEN2K/ucontext.h/conform = yes
 test-xfail-POSIX2008/arpa/inet.h/conform = yes
 test-xfail-POSIX2008/netdb.h/conform = yes
@@ -230,7 +229,6 @@ test-xfail-XOPEN2K8/limits.h/conform = yes
 test-xfail-XOPEN2K8/signal.h/conform = yes
 test-xfail-XOPEN2K8/stdio.h/conform = yes
 test-xfail-XOPEN2K8/sys/wait.h/conform = yes
-test-xfail-XOPEN2K8/termios.h/conform = yes
 
 conformtest-cc-flags = -I../include $(+sysdep-includes) $(sysincludes) -I..
 $(conformtest-header-tests): $(objpfx)%/conform.out: \

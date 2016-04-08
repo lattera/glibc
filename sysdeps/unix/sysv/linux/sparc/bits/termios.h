@@ -181,7 +181,7 @@ struct termios
 /* c_lflag bits */
 #define ISIG	0x00000001
 #define ICANON	0x00000002
-#if defined __USE_MISC || defined __USE_XOPEN
+#if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 # define XCASE	0x00000004
 #endif
 #define ECHO	0x00000008

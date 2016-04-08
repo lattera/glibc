@@ -1,3 +1,17 @@
+2016-04-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19925]
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h (XCASE): Do not
+	define if [!__USE_MISC && __USE_XOPEN2K].
+	* sysdeps/unix/sysv/linux/bits/termios.h (XCASE): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h (XCASE): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h (XCASE):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h (XCASE): Likewise.
+	* conform/Makefile (test-xfail-XOPEN2K/termios.h/conform): Remove
+	variable.
+	(test-xfail-XOPEN2K8/termios.h/conform): Likewise.
+
 2016-04-07  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
