@@ -509,8 +509,10 @@ struct rtld_global_ro
   /* Mask for important hardware capabilities we honour. */
   EXTERN uint64_t _dl_hwcap_mask;
 
+#ifdef HAVE_AUX_VECTOR
   /* Pointer to the auxv list supplied to the program at startup.  */
   EXTERN ElfW(auxv_t) *_dl_auxv;
+#endif
 
   /* Get architecture specific definitions.  */
 #define PROCINFO_DECL
