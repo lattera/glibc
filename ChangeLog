@@ -1,3 +1,10 @@
+2016-04-09  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/i386/configure.ac: Change == to = when calling test.
+	* sysdeps/x86_64/configure.ac: Likewise.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/x86_64/configure: Likewise.
+
 2016-04-08  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #16137]

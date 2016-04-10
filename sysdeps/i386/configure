@@ -72,7 +72,7 @@ rm -f conftest*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_mpx" >&5
 $as_echo "$libc_cv_asm_mpx" >&6; }
-if test $libc_cv_asm_mpx == yes; then
+if test $libc_cv_asm_mpx = yes; then
   $as_echo "#define HAVE_MPX_SUPPORT 1" >>confdefs.h
 
 fi

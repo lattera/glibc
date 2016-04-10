@@ -13,7 +13,7 @@ else
   libc_cv_asm_avx512=no
 fi
 rm -f conftest*])
-if test $libc_cv_asm_avx512 == yes; then
+if test $libc_cv_asm_avx512 = yes; then
   AC_DEFINE(HAVE_AVX512_ASM_SUPPORT)
 fi
 
@@ -37,7 +37,7 @@ else
   libc_cv_asm_mpx=no
 fi
 rm -f conftest*])
-if test $libc_cv_asm_mpx == yes; then
+if test $libc_cv_asm_mpx = yes; then
   AC_DEFINE(HAVE_MPX_SUPPORT)
 fi
 

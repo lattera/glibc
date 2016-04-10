@@ -41,7 +41,7 @@ else
   libc_cv_asm_mpx=no
 fi
 rm -f conftest*])
-if test $libc_cv_asm_mpx == yes; then
+if test $libc_cv_asm_mpx = yes; then
   AC_DEFINE(HAVE_MPX_SUPPORT)
 fi
 
