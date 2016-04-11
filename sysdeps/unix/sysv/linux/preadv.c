@@ -15,67 +15,40 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stddef.h>
-#include <sys/param.h>
-#include <stdint.h>
-#if __WORDSIZE == 64
-/* Hide the preadv64 declaration.  */
-# define preadv64 __redirect_preadv64
-#endif
 #include <sys/uio.h>
-
 #include <sysdep-cancel.h>
-#include <sys/syscall.h>
-#include <kernel-features.h>
 
-
-#ifndef PREADV
-# define PREADV preadv
-# define PREADV_REPLACEMENT __atomic_preadv_replacement
-# define PREAD __pread
-# define OFF_T off_t
-#endif
-
-#define LO_HI_LONG(val) \
-  (off_t) val,								\
-  (off_t) ((((uint64_t) (val)) >> (sizeof (long) * 4)) >> (sizeof (long) * 4))
-
-#ifndef __ASSUME_PREADV
-static ssize_t PREADV_REPLACEMENT (int, const struct iovec *,
-				   int, OFF_T) internal_function;
-#endif
-
-
-ssize_t
-PREADV (int fd, const struct iovec *vector, int count, OFF_T offset)
-{
-#ifdef __NR_preadv
-  ssize_t result;
-
-  result = SYSCALL_CANCEL (preadv, fd, vector, count, LO_HI_LONG (offset));
+#if __WORDSIZE != 64 || defined (__ASSUME_OFF_DIFF_OFF64)
 
 # ifdef __ASSUME_PREADV
-  return result;
-# endif
-#endif
 
-#ifndef __ASSUME_PREADV
-# ifdef __NR_preadv
+#  ifndef __NR_preadv
+#   define __NR_preadv __NR_preadv64
+#  endif
+
+ssize_t
+preadv (int fd, const struct iovec *vector, int count, off_t offset)
+{
+  return SYSCALL_CANCEL (preadv, fd, vector, count,
+			 __ALIGNMENT_ARG SYSCALL_LL (offset));
+}
+# else
+static ssize_t __atomic_preadv_replacement (int, const struct iovec *,
+					    int, off_t) internal_function;
+ssize_t
+preadv (int fd, const struct iovec *vector, int count, off_t offset)
+{
+#  ifdef __NR_preadv
+  ssize_t result = SYSCALL_CANCEL (preadv, fd, vector, count,
+				   __ALIGNMENT_ARG SYSCALL_LL (offset));
   if (result >= 0 || errno != ENOSYS)
     return result;
-# endif
-
-  return PREADV_REPLACEMENT (fd, vector, count, offset);
-#endif
+#  endif
+  return __atomic_preadv_replacement (fd, vector, count, offset);
 }
-#if __WORDSIZE == 64
-# undef preadv64
-strong_alias (preadv, preadv64)
-#endif
-
-#ifndef __ASSUME_PREADV
-# undef PREADV
-# define PREADV static internal_function PREADV_REPLACEMENT
-# include <sysdeps/posix/preadv.c>
+#  define PREADV static internal_function __atomic_preadv_replacement
+#  define PREAD __pread
+#  define OFF_T off_t
+#  include <sysdeps/posix/preadv.c>
+# endif /* __ASSUME_PREADV  */
 #endif

@@ -1,3 +1,32 @@
+2016-06-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* misc/Makefile (CFLAGS-preadv.c): New variable: add cancellation
+	required flags.
+	(CFLAGS-preadv64.c): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/preadv.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/preadv64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/preadv64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/preadv.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/preadv64.: Likwise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/syscalls.list (preadv): Remove
+	syscall from auto-generation.
+	* sysdeps/unix/sysv/linux/preadv.c: Rewrite implementation.
+	[WORDSIZE == 64] (preadv64): Remove macro.
+	[!PREADV] (PREADV): Likewise.
+	[!PREADV] (PREADV_REPLACEMENT): Likewise.
+	[!PREADV] (PREAD): Likewise.
+	[!PREADV] (OFF_T): Likewise.
+	[!__ASSUME_PREADV] (PREADV_REPLACEMENT): Likewise.
+	(LO_HI_LONG): Remove macro.
+	[__WORDSIZE != 64 || __ASSUME_OFF_DIFF_OFF64] (preadv): Add function.
+	* sysdeps/unix/sysv/linux/preadv64.c: Rewrite implementation.
+	(PREADV): Remove macro.
+	(PREADV_REPLACEMENTE): Likewise.
+	(PREAD): Likewise.
+	(OFF_T): Likewise.
+	(preadv64): New function.
+	* nptl/tst-cancel4.c (tf_preadv): Add test.
+
 2016-06-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20212]
