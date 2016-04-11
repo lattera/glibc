@@ -1,3 +1,25 @@
+2016-10-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/Makefile (test): Add tst-fallocate and
+	tst-fallocate64.
+	* sysdeps/unix/sysv/linux/tst-fallocate.c: New file.
+	* sysdeps/unix/sysv/linux/tst-fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/tst-fallocate-common.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/fallocate.c (fallocate): Use SYSCALL_LL
+	macro on offset argument.
+	* sysdeps/unix/sysv/linux/fallocate64.c (fallocate64): Use
+	SYSCALL_LL64 on offset argument.
+	* test-skeleton.c (FAIL_RET): Add macro.
+	(FAIL_EXIT): Likewise.
+	(FAIL_EXIT1): Likewise.
+	(_FAIL): Likewise.
+
 2016-10-07  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20629]

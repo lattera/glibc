@@ -70,6 +70,25 @@ static pid_t pid;
 /* Directory to place temporary files in.  */
 static const char *test_dir;
 
+#define _FAIL(...) \
+  printf ("error: %s:%d: ", __FILE__, __LINE__); \
+  printf (__VA_ARGS__); \
+  printf ("\n"); \
+
+#define FAIL_RET(...) \
+  ({ \
+     _FAIL (__VA_ARGS__); \
+     return 1; \
+  })
+
+#define FAIL_EXIT(value, ...) \
+  ({ \
+     _FAIL (__VA_ARGS__); \
+     exit (value); \
+  })
+
+#define FAIL_EXIT1(...) FAIL_EXIT(1, __VA_ARGS__)
+
 static void
 oom_error (const char *fn, size_t size)
 {

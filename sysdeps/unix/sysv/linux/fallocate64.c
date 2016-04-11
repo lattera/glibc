@@ -24,14 +24,10 @@
 int
 fallocate64 (int fd, int mode, __off64_t offset, __off64_t len)
 {
-#ifdef __NR_fallocate
   return SYSCALL_CANCEL (fallocate, fd, mode,
-			 __LONG_LONG_PAIR ((long int) (offset >> 32),
-					   (long int) offset),
-			 __LONG_LONG_PAIR ((long int) (len >> 32),
-					   (long int) len));
-#else
-  __set_errno (ENOSYS);
-  return -1;
-#endif
+			 SYSCALL_LL64 (offset), SYSCALL_LL64 (len));
 }
+
+#ifdef __OFF_T_MATCHES_OFF64_T
+weak_alias (fallocate64, fallocate)
+#endif

@@ -19,17 +19,12 @@
 #include <fcntl.h>
 #include <sysdep-cancel.h>
 
-
+#ifndef __OFF_T_MATCHES_OFF64_T
 /* Reserve storage for the data of the file associated with FD.  */
 int
 fallocate (int fd, int mode, __off_t offset, __off_t len)
 {
-#ifdef __NR_fallocate
   return SYSCALL_CANCEL (fallocate, fd, mode,
-			 __LONG_LONG_PAIR (offset >> 31, offset),
-			 __LONG_LONG_PAIR (len >> 31, len));
-#else
-  __set_errno (ENOSYS);
-  return -1;
-#endif
+			 SYSCALL_LL (offset), SYSCALL_LL (len));
 }
+#endif

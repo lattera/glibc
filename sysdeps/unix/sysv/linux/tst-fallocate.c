@@ -1,4 +1,5 @@
-/* Copyright (C) 2007-2016 Free Software Foundation, Inc.
+/* Basic fallocate test (no specific flags is checked).
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -12,22 +13,13 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <fcntl.h>
-#include <sysdep-cancel.h>
+#include "tst-fallocate-common.c"
 
-
-/* Reserve storage for the data of the file associated with FD.  */
-int
-fallocate (int fd, int mode, __off_t offset, __off_t len)
+static int
+do_test (void)
 {
-#ifdef __NR_fallocate
-  return SYSCALL_CANCEL (fallocate, fd, mode, offset, len);
-#else
-  __set_errno (ENOSYS);
-  return -1;
-#endif
+  return do_test_with_offset (0);
 }
