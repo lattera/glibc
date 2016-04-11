@@ -15,67 +15,40 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <sys/param.h>
-#if __WORDSIZE == 64 && !defined PWRITEV
-/* Hide the pwritev64 declaration.  */
-# define pwritev64 __redirect_pwritev64
-#endif
 #include <sys/uio.h>
-
 #include <sysdep-cancel.h>
-#include <sys/syscall.h>
-#include <kernel-features.h>
 
+#if __WORDSIZE != 64 || defined (__ASSUME_OFF_DIFF_OFF64)
 
-#ifndef PWRITEV
-# define PWRITEV pwritev
-# define PWRITEV_REPLACEMENT __atomic_pwritev_replacement
-# define PWRITE __pwrite
-# define OFF_T off_t
-#endif
+# ifdef __ASSUME_PREADV
 
-#define LO_HI_LONG(val) \
-  (off_t) val,								\
-  (off_t) ((((uint64_t) (val)) >> (sizeof (long) * 4)) >> (sizeof (long) * 4))
-
-#ifndef __ASSUME_PWRITEV
-static ssize_t PWRITEV_REPLACEMENT (int, const struct iovec *,
-				    int, OFF_T) internal_function;
-#endif
-
+#  ifndef __NR_pwritev
+#   define __NR_pwritev __NR_pwritev64
+#  endif
 
 ssize_t
-PWRITEV (int fd, const struct iovec *vector, int count, OFF_T offset)
+pwritev (int fd, const struct iovec *vector, int count, off_t offset)
 {
-#ifdef __NR_pwritev
-  ssize_t result;
-
-  result = SYSCALL_CANCEL (pwritev, fd, vector, count, LO_HI_LONG (offset));
-
-# ifdef __ASSUME_PWRITEV
-  return result;
-# endif
-#endif
-
-#ifndef __ASSUME_PWRITEV
-# ifdef __NR_pwritev
+  return SYSCALL_CANCEL (pwritev, fd, vector, count,
+			 __ALIGNMENT_ARG SYSCALL_LL (offset));
+}
+# else
+static ssize_t __atomic_pwritev_replacement (int, const struct iovec *,
+					     int, off_t) internal_function;
+ssize_t
+pwritev (int fd, const struct iovec *vector, int count, off_t offset)
+{
+#  ifdef __NR_pwritev
+  ssize_t result = SYSCALL_CANCEL (pwritev, fd, vector, count,
+				   __ALIGNMENT_ARG SYSCALL_LL (offset));
   if (result >= 0 || errno != ENOSYS)
     return result;
-# endif
-
-  return PWRITEV_REPLACEMENT (fd, vector, count, offset);
-#endif
+#  endif
+  return __atomic_pwritev_replacement (fd, vector, count, offset);
 }
-#if __WORDSIZE == 64 && defined pwritev64
-# undef pwritev64
-strong_alias (pwritev, pwritev64)
-#endif
-
-#ifndef __ASSUME_PWRITEV
-# undef PWRITEV
-# define PWRITEV static internal_function PWRITEV_REPLACEMENT
-# include <sysdeps/posix/pwritev.c>
+#  define PWRITEV static internal_function __atomic_pwritev_replacement
+#  define PWRITE __pwrite
+#  define OFF_T off_t
+#  include <sysdeps/posix/pwritev.c>
+# endif /* __ASSUME_PREADV  */
 #endif

@@ -1,5 +1,32 @@
 2016-06-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* misc/Makefile (CFLAGS-pwritev.c): New variable: add cancellation
+	required flags.
+	(CFLAGS-pwritev64.c): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pwritev.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pwritev64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/pwritev64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/pwritev.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/pwritev64.: Likwise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/syscalls.list (pwritev): Remove
+	syscall from auto-generation.
+	* sysdeps/unix/sysv/linux/pwritev.c: Rewrite implementation.
+	[WORDSIZE == 64] (pwritev64): Remove macro.
+	[!PWRITEV] (PWRITEV): Likewise.
+	[!PWRITEV] (PWRITEV_REPLACEMENT): Likewise.
+	[!PWRITEV] (PWRITE): Likewise.
+	[!PWRITEV] (OFF_T): Likewise.
+	[!__ASSUME_PWRITEV] (PWRITEV_REPLACEMENT): Likewise.
+	(LO_HI_LONG): Remove macro.
+	[__WORDSIZE != 64 || __ASSUME_OFF_DIFF_OFF64] (pwritev): Add function.
+	* sysdeps/unix/sysv/linux/pwritev64.c: Rewrite implementation.
+	(PWRITEV): Remove macro.
+	(PWRITEV_REPLACEMENTE): Likewise.
+	(PWRITE): Likewise.
+	(OFF_T): Likewise.
+	(pwritev64): New function.
+	* nptl/tst-cancel4.c (tf_writev): Add test.
+
 	* misc/Makefile (CFLAGS-preadv.c): New variable: add cancellation
 	required flags.
 	(CFLAGS-preadv64.c): Likewise.
