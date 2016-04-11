@@ -23210,6 +23210,7 @@
 
 2014-09-20  Ondřej Bílka  <neleai@seznam.cz>
 
+	[BZ #16852]
 	* socket/recvmmsg.c (recvmmsg): Drop const argument.
 	* socket/sys/socket.h: Likewise.
 	* sysdeps/unix/sysv/linux/recvmmsg.c: Likewise.
