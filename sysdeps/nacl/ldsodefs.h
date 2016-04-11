@@ -18,13 +18,13 @@
 
 #ifndef	_LDSODEFS_H
 
+/* We have the auxiliary vector.  */
+#define HAVE_AUX_VECTOR	1
+
 /* Get the real definitions.  */
 #include_next <ldsodefs.h>
 
 /* Now define our stuff.  */
-
-/* We have the auxiliary vector.  */
-#define HAVE_AUX_VECTOR	1
 
 /* Used by static binaries to check the auxiliary vector.  */
 extern void _dl_aux_init (ElfW(auxv_t) *av) internal_function;

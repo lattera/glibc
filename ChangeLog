@@ -4,6 +4,9 @@
 	[!HAVE_AUX_VECTOR]: Do not define _dl_auxv field.
 	* misc/getauxval.c (__getauxval) [!HAVE_AUX_VECTOR]: Do not go through
 	GLRO(dl_auxv) list.
+	* sysdeps/unix/sysv/linux/ldsodefs.h (HAVE_AUX_VECTOR): Define before
+	including <ldsodefs.h>.
+	* sysdeps/nacl/ldsodefs.h (HAVE_AUX_VECTOR): Likewise.
 
 2016-04-09  Nick Alcock  <nick.alcock@oracle.com>
 

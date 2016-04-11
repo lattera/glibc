@@ -18,11 +18,11 @@
 
 #ifndef	_LDSODEFS_H
 
-/* Get the real definitions.  */
-#include_next <ldsodefs.h>
-
 /* We have the auxiliary vector.  */
 #define HAVE_AUX_VECTOR
+
+/* Get the real definitions.  */
+#include_next <ldsodefs.h>
 
 /* We can assume that the kernel always provides the AT_UID, AT_EUID,
    AT_GID, and AT_EGID values in the auxiliary vector from 2.4.0 or so on.  */
