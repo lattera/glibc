@@ -1,3 +1,9 @@
+2016-04-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19865]
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Restore
+	original buffer before retry.
+
 2016-04-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro)

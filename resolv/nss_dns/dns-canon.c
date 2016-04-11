@@ -144,6 +144,13 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
 	      ptr += sizeof (uint16_t) + __ns_get16 (ptr);
 	    }
 	}
+
+      /* Restore original buffer before retry.  */
+      if (ansp.ptr != buf)
+	{
+	  free (ansp.ptr);
+	  ansp.ptr = buf;
+	}
     }
 
  out:
