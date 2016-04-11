@@ -207,20 +207,6 @@ t_fmt_ampm  ""
 % field descriptor -
 % The "" means that this format is not supported.
 %
-date_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
-% Date representation not described in ISO/IEC 14652. Comes out as -
-% "%a %b %e %H:%M:%S %Z %Y" which is
-% abbreviated weekday name,
-% day of month as a decimal number (01 to 31),
-% day of month as a decimal number with leading space (1 to 31),
-% hour (24-hour clock) as a decimal number (00 to 23),
-% minute as a decimal number (00 to 59),
-% seconds as a decimal number (00 to 59),
-% time-zone name,
-% year with century as a decimal number,e.g. 2001.
-%
 END LC_TIME
 
 LC_MESSAGES
