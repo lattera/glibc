@@ -169,7 +169,7 @@ country_name "<U0F40><U0FB2><U0F74><U0F44><U0F0B><U0F67><U0FAD><U0F0B><U0F58><U0
 country_ab2	"<U0043><U004E>"
 country_ab3	"<U0043><U0048><U004E>"
 country_num	156
-%country_car	"FIXME"
+country_car "<U0043><U0048><U004E>"
 country_isbn	"<U0037>"
 lang_name     "<U0F54><U0F7C><U0F51><U0F0B><U0F66><U0F90><U0F51><U0F0B>"
 % bo

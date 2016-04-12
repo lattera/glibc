@@ -140,8 +140,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_ab2 "<U0047><U004C>"
 country_ab3 "<U0047><U0052><U004C>"
 country_num 304
-% GRO
-country_car  "<U0047><U0052><U004F>"
+country_car "<U004B><U004E>"
 % Kalaallisut
 lang_name    "<U004B><U0061><U006C><U0061><U0061><U006C><U006C><U0069><U0073><U0075><U0074>"
 % kl

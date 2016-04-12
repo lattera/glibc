@@ -184,7 +184,7 @@ country_name	"<U4E2D><U534E><U4EBA><U6C11><U5171><U548C><U56FD>"
 country_ab2	"<U0043><U004E>"
 country_ab3	"<U0043><U0048><U004E>"
 country_num	156
-%country_car	"FIXME"
+country_car "<U0043><U0048><U004E>"
 country_isbn	"<U0037>"
 lang_name	"<U4E2D><U6587>"
 lang_ab		"<U007A><U0068>"

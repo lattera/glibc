@@ -193,7 +193,7 @@ country_name	"<U4E2D><U83EF><U6C11><U570B>"
 country_ab2	"<U0054><U0057>"
 country_ab3	"<U0054><U0057><U004E>"
 country_num	158
-%country_car    "FIXME"
+country_car "<U0052><U0043>"
 country_isbn	"<U0039><U0035><U0037>"
 
 % Reference:	http://lcweb.loc.gov/standards/iso639-2/langhome.html

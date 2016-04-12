@@ -1,5 +1,40 @@
 2016-04-15  Mike Frysinger  <vapier@gentoo.org>
 
+	* locales/aa_DJ (country_car): Define.
+	* locales/ak_GH: Likewise.
+	* locales/ar_OM: Likewise.
+	* locales/ar_SS: Likewise.
+	* locales/ar_YE: Likewise.
+	* locales/bo_CN: Likewise.
+	* locales/cmn_TW: Likewise.
+	* locales/dv_MV: Likewise.
+	* locales/dz_BT: Likewise.
+	* locales/en_AG: Likewise.
+	* locales/en_BW (country_car): Change to BW.
+	* locales/es_HN (country_car): Define.
+	* locales/es_PR: Likewise.
+	* locales/hak_TW: Likewise.
+	* locales/kl_GL (country_car): Change to KN.
+	* locales/km_KH (country_car): Change to KH.
+	* locales/lzh_TW (country_car): Define.
+	* locales/my_MM (country_car): Change to MYA.
+	* locales/nan_TW (country_car): Define.
+	* locales/nan_TW@latin: Likewise.
+	* locales/nl_AW: Likewise.
+	* locales/oc_FR (country_car): Change encoding.
+	* locales/pap_AW (country_car): Define.
+	* locales/so_DJ: Likewise.
+	* locales/the_NP: Likewise.
+	* locales/tr_CY (country_car): Change to CY.
+	* locales/ug_CN (country_car): Define.
+	* locales/wae_CH (country_car): Change to CH.
+	* locales/yue_HK (country_car): Define.
+	* locales/zh_CN: Likewise.
+	* locales/zh_HK: Likewise.
+	* locales/zh_TW: Likewise.
+
+2016-04-15  Mike Frysinger  <vapier@gentoo.org>
+
 	* locales/as_IN (country_num): Define.
 	* locales/ber_DZ (country_num): Add leading 0 prefix.
 	* locales/ca_AD (country_num): Likewise.

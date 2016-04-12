@@ -221,7 +221,7 @@ lang_name "<U0057><U0061><U006C><U0073><U0065><U0072>"
 
 % UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
 % "CH"
-country_car   "<U0044><U0048>"
+country_car "<U0043><U0048>"
 
 % ISO 639 two and three letter language names
 % see http://www.loc.gov/standards/iso639-2/englangn.html

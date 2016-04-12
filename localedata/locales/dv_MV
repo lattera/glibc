@@ -182,6 +182,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
 country_num 462
+country_car "<U004D><U0056>"
 % lang_name FIXME
 % Cannot represent Dhivehi in Thaana script
 % http://en.wikipedia.org/wiki/Maldivian_language

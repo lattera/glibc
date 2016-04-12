@@ -100,8 +100,7 @@ country_name	"<U004E><U006F><U0072><U0074><U0068><U0065><U0072><U006E>/
 <U0020><U0043><U0079><U0070><U0072><U0075><U0073>"
 % TR
 country_post	"<U0054><U0052>"
-% TR
-country_car	"<U0054><U0052>"
+country_car "<U0043><U0059>"
 country_isbn	975
 country_num 196
 country_ab2 "<U0043><U0059>"

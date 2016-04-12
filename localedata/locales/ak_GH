@@ -191,6 +191,7 @@ country_ab2  "<U0047><U0048>"
 % GHA
 country_ab3  "<U0047><U0048><U0041>"
 country_num  288
+country_car "<U0047><U0048>"
 country_isbn 9964
 % Akan
 lang_name    "<U0041><U006B><U0061><U006E>"

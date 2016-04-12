@@ -233,6 +233,7 @@ country_ab2  "<U0054><U0057>"
 % TWN
 country_ab3  "<U0054><U0057><U004E>"
 country_num  158
+country_car "<U0052><U0043>"
 country_isbn 957
 % 漢語文言
 lang_name    "<U6F22><U8A9E><U6587><U8A00>"
