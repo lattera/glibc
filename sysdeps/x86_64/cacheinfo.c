@@ -464,6 +464,9 @@ long int __x86_raw_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
 /* Similar to __x86_shared_cache_size, but not rounded.  */
 long int __x86_raw_shared_cache_size attribute_hidden = 1024 * 1024;
 
+/* Threshold to use non temporal store.  */
+long int __x86_shared_non_temporal_threshold attribute_hidden;
+
 #ifndef DISABLE_PREFETCHW
 /* PREFETCHW support flag for use in memory and string routines.  */
 int __x86_prefetchw attribute_hidden;
@@ -662,4 +665,9 @@ init_cacheinfo (void)
       __x86_shared_cache_size_half = shared / 2;
       __x86_shared_cache_size = shared;
     }
+
+  /* The large memcpy micro benchmark in glibc shows that 6 times of
+     shared cache size is the approximate value above which non-temporal
+     store becomes faster.  */
+  __x86_shared_non_temporal_threshold = __x86_shared_cache_size * 6;
 }

@@ -1,6 +1,7 @@
 #if IS_IN (libc)
 # define VEC_SIZE	32
 # define VEC(i)		ymm##i
+# define VMOVNT		vmovntdq
 # define VMOVU		vmovdqu
 # define VMOVA		vmovdqa
 

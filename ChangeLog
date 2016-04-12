@@ -1,3 +1,29 @@
+2016-04-12   H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19928]
+	* sysdeps/x86_64/cacheinfo.c (__x86_shared_non_temporal_threshold):
+	New.
+	(init_cacheinfo): Set __x86_shared_non_temporal_threshold to 6
+	times of shared cache size.
+	* sysdeps/x86_64/multiarch/memmove-avx-unaligned-erms.S
+	(VMOVNT): New.
+	* sysdeps/x86_64/multiarch/memmove-avx512-unaligned-erms.S
+	(VMOVNT): Likewise.
+	* sysdeps/x86_64/multiarch/memmove-sse2-unaligned-erms.S
+	(VMOVNT): Likewise.
+	(VMOVU): Changed to movups for smaller code sizes.
+	(VMOVA): Changed to movaps for smaller code sizes.
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S: Update
+	comments.
+	(PREFETCH): New.
+	(PREFETCH_SIZE): Likewise.
+	(PREFETCHED_LOAD_SIZE): Likewise.
+	(PREFETCH_ONE_SET): Likewise.
+	Rewrite to use forward and backward loops, which move 4 vector
+	registers at a time, to support overlapping addresses and use
+	non temporal store if size is above the threshold and there is
+	no overlap between destination and source.
+
 2016-04-12  Alex Smith  <alex.smith@imgtec.com>
 
 	* sysdeps/unix/sysv/linux/mips/Makefile (sysdep_routines):
