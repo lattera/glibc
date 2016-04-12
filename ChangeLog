@@ -1,3 +1,9 @@
+2016-05-04  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Fix use of condition
+	registers specifiers where general purpose registers specifiers should
+	have been used.
+
 2016-05-04  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19779]

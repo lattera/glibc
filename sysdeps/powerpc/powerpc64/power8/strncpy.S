@@ -294,7 +294,7 @@ L(pagecross):
 #endif
 	orc	r9,r7,r9	/* Mask bits that are not part of the
 				   string.  */
-	li	cr7,0
+	li	r7,0
 	cmpb	r9,r9,r7	/* Check for null bytes in DWORD1.  */
 	cmpdi	cr7,r9,0
 	bne	cr7,L(short_path_prepare_2)
@@ -305,14 +305,14 @@ L(pagecross):
 	/* For next checks we have aligned address, so we check for more
 	   three doublewords to make sure we can read 16 unaligned bytes
 	   to start the bulk copy with 16 aligned addresses.  */
-	ld	cr7,8(r11)
+	ld	r7,8(r11)
 	cmpb	r9,r7,r9
 	cmpdi	cr7,r9,0
 	bne	cr7,L(short_path_prepare_2)
-	addi	cr7,r8,-8
+	addi	r7,r8,-8
 	cmpldi	cr7,r7,8
 	ble	cr7,L(short_path_prepare_2)
-	ld	cr7,16(r11)
+	ld	r7,16(r11)
 	cmpb	r9,r7,r9
 	cmpdi	cr7,r9,0
 	bne	cr7,L(short_path_prepare_2)
