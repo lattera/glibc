@@ -96,6 +96,8 @@ ifeq ($(subdir),elf)
 ifeq ($(build-shared),yes)
 # This is needed for DSO loading from static binaries.
 sysdep-dl-routines += dl-static
+
+sysdep_routines += dl-vdso
 endif
 endif
 

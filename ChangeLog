@@ -1,3 +1,19 @@
+2016-04-12  Alex Smith  <alex.smith@imgtec.com>
+
+	* sysdeps/unix/sysv/linux/mips/Makefile (sysdep_routines):
+	Include dl-vdso.
+	* sysdeps/unix/sysv/linux/mips/Versions: Add
+	__vdso_clock_gettime.
+	* sysdeps/unix/sysv/linux/mips/init-first.c: New file.
+	* sysdeps/unix/sysv/linux/mips/libc-vdso.h: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h:
+	(INTERNAL_VSYSCALL_CALL): Define to be compatible with MIPS
+	definitions of INTERNAL_SYSCALL_{ERROR_P,ERRNO}.
+	(HAVE_CLOCK_GETTIME_VSYSCALL): Define.
+	(HAVE_GETTIMEOFDAY_VSYSCALL): Define.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Likewise.
+
 2016-04-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/arm/pwrite.c: Remove file.
