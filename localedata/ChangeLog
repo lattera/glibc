@@ -1,5 +1,10 @@
 2016-04-15  Mike Frysinger  <vapier@gentoo.org>
 
+	* locale/programs/ld-identification.c (identification_finish): Check
+	that the values in identification->category are only known.
+
+2016-04-15  Mike Frysinger  <vapier@gentoo.org>
+
 	* locales/aa_DJ (LC_IDENTIFICATION): Change all category fields to
 	use i18n:2012.
 	* locales/aa_ER: Likewise.

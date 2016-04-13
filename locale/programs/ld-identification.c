@@ -164,14 +164,45 @@ No definition for %s category found"), "LC_IDENTIFICATION"));
   TEST_ELEM (date);
 
   for (num = 0; num < __LC_LAST; ++num)
-    if (num != LC_ALL && identification->category[num] == NULL)
-      {
-	if (verbose && ! nothing)
-	  WITH_CUR_LOCALE (error (0, 0, _("\
+    {
+      /* We don't accept/parse this category, so skip it early.  */
+      if (num == LC_ALL)
+	continue;
+
+      if (identification->category[num] == NULL)
+	{
+	  if (verbose && ! nothing)
+	    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: no identification for category `%s'"),
-				  "LC_IDENTIFICATION", category_name[num]));
-	identification->category[num] = "";
-      }
+				    "LC_IDENTIFICATION", category_name[num]));
+	  identification->category[num] = "";
+	}
+      else
+	{
+	  /* Only list the standards we care about.  This is based on the
+	     ISO 30112 WD10 [2014] standard which supersedes all previous
+	     revisions of the ISO 14652 standard.  */
+	  static const char * const standards[] =
+	    {
+	      "posix:1993",
+	      "i18n:2004",
+	      "i18n:2012",
+	    };
+	  size_t i;
+	  bool matched = false;
+
+	  for (i = 0; i < sizeof (standards) / sizeof (standards[0]); ++i)
+	    if (strcmp (identification->category[num], standards[i]) == 0)
+	      matched = true;
+
+	  if (matched != true)
+	    WITH_CUR_LOCALE (error (0, 0, _("\
+%s: unknown standard `%s' for category `%s'"),
+				    "LC_IDENTIFICATION",
+				    identification->category[num],
+				    category_name[num]));
+	}
+    }
 }
 
 
