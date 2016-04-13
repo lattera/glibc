@@ -179,6 +179,5 @@ lang_lib    "<U0074><U0067><U006C>"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% FIXME
-copy "en_US"
+copy "en_PH"
 END LC_TELEPHONE

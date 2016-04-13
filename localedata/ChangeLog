@@ -1,5 +1,17 @@
 2016-04-16  Mike Frysinger  <vapier@gentoo.org>
 
+	* locales/fil_PH (LC_TELEPHONE): Change copy to en_PH.
+	* locales/pa_PK (LC_TELEPHONE): Delete content and change to copying
+	from ur_PK.
+	* locales/tg_TJ (LC_TELEPHONE): Delete copy and define tel_int_fmt,
+	int_prefix, and int_select.
+	* locales/tl_PH (LC_TELEPHONE): Change copy to en_PH.
+	* locales/tr_CY (LC_TELEPHONE): Change copy to el_CY.
+	* locales/ur_PK (LC_TELEPHONE): Delete copy and move content from
+	pa_PK.
+
+2016-04-16  Mike Frysinger  <vapier@gentoo.org>
+
 	* locales/csb_PL (audience, application, abbreviation): Delete.
 	* locales/mn_MN: Likewise.
 	* locales/sr_ME: Likewise.

@@ -194,8 +194,5 @@ lang_lib    "<U0070><U0061><U006E>"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% Changed from ur_PK as that Locale just copy from en_DK, which is not suitable to Punjabi (Shahmukhi) ISD 92
-tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020><U003B><U0025><U006C>"
-int_prefix "<U0039><U0032>"
-int_select "<U0030><U0030>"
+copy "ur_PK"
 END LC_TELEPHONE
