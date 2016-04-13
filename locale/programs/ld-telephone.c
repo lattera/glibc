@@ -105,7 +105,7 @@ No definition for %s category found"), "LC_TELEPHONE"));
 	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
 				"LC_TELEPHONE", "tel_int_fmt"));
       /* Use as the default value the value of the i18n locale.  */
-      telephone->tel_int_fmt = "+%c %a %l";
+      telephone->tel_int_fmt = "+%c %a%t%l";
     }
   else
     {
@@ -121,7 +121,7 @@ No definition for %s category found"), "LC_TELEPHONE"));
 	  {
 	    if (*cp == '%')
 	      {
-		if (strchr ("aAlc", *++cp) == NULL)
+		if (strchr ("aAcCelt", *++cp) == NULL)
 		  {
 		    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: invalid escape sequence in field `%s'"), "LC_TELEPHONE", "tel_int_fmt"));
@@ -144,7 +144,7 @@ No definition for %s category found"), "LC_TELEPHONE"));
 	{
 	  if (*cp == '%')
 	    {
-	      if (strchr ("aAlc", *++cp) == NULL)
+	      if (strchr ("aAcCelt", *++cp) == NULL)
 		{
 		  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: invalid escape sequence in field `%s'"), "LC_TELEPHONE", "tel_dom_fmt"));

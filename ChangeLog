@@ -1,3 +1,9 @@
+2016-04-16  Mike Frysinger  <vapier@gentoo.org>
+
+	* locale/programs/ld-telephone.c (telephone_finish): Add %t to the
+	default tel_int_fmt.  Add "Cet" to strchr check on tel_int_fmt and
+	tel_dom_fmt.
+
 2016-04-15  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
