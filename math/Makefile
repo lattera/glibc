@@ -136,6 +136,9 @@ libm-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
 libm-tests.o = $(addsuffix .o,$(libm-tests))
 
 tests += $(libm-tests)
+libm-vec-test-wrappers = $(addsuffix -wrappers, $(libm-vec-tests))
+test-extras += $(libm-vec-test-wrappers)
+extra-test-objs += $(addsuffix .o, $(libm-vec-test-wrappers))
 libm-tests-generated = libm-test-ulps.h libm-have-vector-test.h libm-test.c
 generated += $(libm-tests-generated) libm-test.stmp
 
@@ -300,10 +303,11 @@ $(objpfx)libieee.a: $(objpfx)ieee-math.o
 	$(patsubst %/,cd % &&,$(objpfx)) \
 	$(LN_S) $(<F) $(@F)
 
-$(addprefix $(objpfx),$(filter-out $(tests-static) $(libm-vec-tests),$(tests))): $(libm)
+$(addprefix $(objpfx),\
+	    $(filter-out $(tests-static) $(libm-vec-tests),$(tests))): $(libm)
 $(addprefix $(objpfx),$(tests-static)): $(objpfx)libm.a
-$(addprefix $(objpfx), $(libm-vec-tests)): $(objpfx)%: $(objpfx)%-wrappers.o $(libm) \
-					   $(libmvec)
+$(addprefix $(objpfx), $(libm-vec-tests)): $(objpfx)%: $(objpfx)%-wrappers.o \
+						       $(libm) $(libmvec)
 
 gmp-objs = $(patsubst %,$(common-objpfx)stdlib/%.o,\
 		      add_n sub_n cmp addmul_1 mul_1 mul_n divmod_1 \

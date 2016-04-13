@@ -80,6 +80,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 tests-static	:= tst-secure-getenv
 
 modules-names	= tst-tls-atexit-lib
+extra-test-objs += $(addsuffix .os, $(modules-names))
 
 ifeq ($(build-shared),yes)
 tests		+= tst-putenv

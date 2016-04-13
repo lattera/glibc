@@ -1,3 +1,17 @@
+2016-04-13  Andreas Schwab  <schwab@suse.de>
+
+	* elf/Makefile (extra-test-objs): Add tst-tlsalign-vars.o.
+	(test-extras): Add tst-tlsalign-vars.
+	* math/Makefile: Wrap long lines.
+	(libm-vec-test-wrappers): Define.
+	(test-extras): Add $(libm-vec-test-wrappers).
+	(extra-test-objs): Add $(libm-vec-test-wrappers) objects.
+	* nss/Makefile (extra-test-objs): Add nss_test1.os.
+	* stdlib/Makefile (extra-test-objs): Add $(modules-names) objects.
+	* sysdeps/x86_64/Makefile (test-extras): Add tst-quadmod1pie
+	tst-quadmod2pie tst-audit4-aux tst-audit10-aux.
+	(extra-test-objs): Add corresponding objects.
+
 2016-04-12   H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19928]

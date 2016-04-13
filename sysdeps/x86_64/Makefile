@@ -43,11 +43,15 @@ $(objpfx)tst-quad2: $(objpfx)tst-quadmod2.so
 quad-pie-test += tst-quad1pie tst-quad2pie
 tests += $(quad-pie-test)
 tests-pie += $(quad-pie-test)
+test-extras += tst-quadmod1pie tst-quadmod2pie
+extra-test-objs += tst-quadmod1pie.o tst-quadmod2pie.o
 
 $(objpfx)tst-quad1pie: $(objpfx)tst-quadmod1pie.o
 $(objpfx)tst-quad2pie: $(objpfx)tst-quadmod2pie.o
 
 tests += tst-audit3 tst-audit4 tst-audit5 tst-audit6 tst-audit7 tst-audit10
+test-extras += tst-audit4-aux tst-audit10-aux
+extra-test-objs += tst-audit4-aux.o tst-audit10-aux.o
 
 tests += tst-split-dynreloc
 LDFLAGS-tst-split-dynreloc = -Wl,-T,$(..)sysdeps/x86_64/tst-split-dynreloc.lds
