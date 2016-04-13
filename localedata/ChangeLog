@@ -1,3 +1,9 @@
+2016-04-13  Matthias Wallnoefer  <matthias.wallnoefer@lugbz.org>
+
+	* locales/de_AT (LC_MESSAGES): Change to copy de_DE.
+	(LC_NAME): Likewise.
+	* locales/de_CH (LC_NAME): Likewise.
+
 2016-04-12  Mike Frysinger  <vapier@gentoo.org>
 
 	* locales/aa_DJ (LC_MEASUREMENT): Replace content with a copy directive.
