@@ -1,5 +1,11 @@
 2016-04-13  Matthias Wallnoefer  <matthias.wallnoefer@lugbz.org>
 
+	* locales/de_IT: New locale.
+	* localedata/SUPPORTED (SUPPORTED-LOCALES): Add de_IT.UTF-8/UTF-8
+	and de_IT/ISO-8859-1.
+
+2016-04-13  Matthias Wallnoefer  <matthias.wallnoefer@lugbz.org>
+
 	* locales/de_AT (LC_MESSAGES): Change to copy de_DE.
 	(LC_NAME): Likewise.
 	* locales/de_CH (LC_NAME): Likewise.
