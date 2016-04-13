@@ -34,9 +34,6 @@ language   "Kashubian"
 territory  "Poland"
 revision   "1.0"
 date       "2006-07-25"
-audience   "general"
-application   "GNU locale"
-abbreviation  ""
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_CTYPE

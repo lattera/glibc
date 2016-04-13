@@ -1,3 +1,15 @@
+2016-04-16  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/csb_PL (audience, application, abbreviation): Delete.
+	* locales/mn_MN: Likewise.
+	* locales/sr_ME: Likewise.
+	* locales/sr_RS: Likewise.
+	* locales/sr_RS@latin: Likewise.
+	* locales/szl_PL: Likewise.
+	* locales/tr_CY: Likewise.
+	* locales/tr_TR: Likewise.
+	* locales/uk_UA: Likewise.  Also trim old/redundant comments.
+
 2016-04-15  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #16374]

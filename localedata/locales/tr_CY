@@ -30,9 +30,6 @@ language   "Turkish"
 territory  "Cyprus"
 revision   "1.0"
 date       "2004-10-23"
-audience   ""
-application ""
-abbreviation ""
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_CTYPE

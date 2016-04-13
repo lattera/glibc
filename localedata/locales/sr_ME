@@ -36,9 +36,6 @@ language   "Serbian"
 territory  "Montenegro"
 revision   "1.2"
 date       "2006-10-11"
-audience   "general"
-application   "GNU locale"
-abbreviation  ""
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_CTYPE

@@ -30,47 +30,16 @@ escape_char /
 
 
 LC_IDENTIFICATION
-
-% Title of document: Ukrainian Language Locale for Ukraine
 title      "Ukrainian Language Locale for Ukraine"
-
-% Organization name.
 source     ""
-
-% Organization postal address.
 address    ""
-
-% Name of contact person.
 contact    "GNU libc maintainers"
-
-% Electronic address of organization or contact person.
 email      "bug-glibc-locales@gnu.org"
-
-% Telephone number of organization in international format.
 tel        ""
-
-% Fax number of organization in international format.
 fax        ""
-
-% Code of language, to which this document applies.
 language   "Ukrainian"
-
-% Code of country/geographic extent (ISO 3166), to which this document applies.
 territory  "Ukraine"
-
-% Intended user audience.
-audience   "general"
-
-% If for use with special application, a description of this application.
-application "general"
-
-% Short name.
-abbreviation "ULU-2.1.12"
-
-% Revision (numbers and dots).
 revision   "2.1.12"
-
-% Revision date
 date       "2006-05-20"
 
 category "i18n:2012";LC_IDENTIFICATION

@@ -34,9 +34,6 @@ language   "Silesian"
 territory  "Poland"
 revision   "1.0"
 date       "2012-07-17"
-audience   "general"
-application   "GNU locale"
-abbreviation  ""
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_CTYPE
