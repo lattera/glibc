@@ -23,19 +23,19 @@ language   "Dogri"
 territory  "India"
 revision   "1.0"
 date       "2012-02-16"
-%
-category  "doi_IN:2012";LC_IDENTIFICATION
-category  "doi_IN:2012";LC_CTYPE
-category  "doi_IN:2012";LC_COLLATE
-category  "doi_IN:2012";LC_TIME
-category  "doi_IN:2012";LC_NUMERIC
-category  "doi_IN:2012";LC_MONETARY
-category  "doi_IN:2012";LC_MESSAGES
-category  "doi_IN:2012";LC_PAPER
-category  "doi_IN:2012";LC_NAME
-category  "doi_IN:2012";LC_ADDRESS
-category  "doi_IN:2012";LC_TELEPHONE
-category  "doi_IN:2012";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

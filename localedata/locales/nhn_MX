@@ -35,20 +35,19 @@ language   "Central Nahuatl"
 territory  "Mexico"
 revision   "1.0"
 date       "2012-08-19"
-%
-category   "nhn_MX:2012";LC_IDENTIFICATION
-category   "nhn_MX:2012";LC_CTYPE
-category   "nhn_MX:2012";LC_COLLATE
-category   "nhn_MX:2012";LC_TIME
-category   "nhn_MX:2012";LC_NUMERIC
-category   "nhn_MX:2012";LC_MONETARY
-category   "nhn_MX:2012";LC_MEASUREMENT
-category   "nhn_MX:2012";LC_MESSAGES
-category   "nhn_MX:2012";LC_PAPER
-category   "nhn_MX:2012";LC_NAME
-category   "nhn_MX:2012";LC_ADDRESS
-category   "nhn_MX:2012";LC_TELEPHONE
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_COLLATE

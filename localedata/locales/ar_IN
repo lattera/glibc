@@ -24,20 +24,19 @@ language    "Arabic"
 territory   "India"
 revision    "1.0"
 date        "2000,October,27 (XML source:2000,July,20)"
-%
-category  "ar_IN:2000";LC_IDENTIFICATION
-category  "ar_IN:2000";LC_CTYPE
-category  "ar_IN:2000";LC_COLLATE
-category  "ar_IN:2000";LC_TIME
-category  "ar_IN:2000";LC_NUMERIC
-category  "ar_IN:2000";LC_MONETARY
-category  "ar_IN:2000";LC_MESSAGES
-category  "ar_IN:2000";LC_PAPER
-category  "ar_IN:2000";LC_NAME
-category  "ar_IN:2000";LC_ADDRESS
-category  "ar_IN:2000";LC_TELEPHONE
-category  "ar_IN:2000";LC_MEASUREMENT
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 

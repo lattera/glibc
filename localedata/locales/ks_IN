@@ -25,19 +25,19 @@ language    "Kashmiri"
 territory   "India"
 revision    "1.0"
 date        "2009,April,06"
-%
-category  "ks_IN:2009";LC_IDENTIFICATION
-category  "ks_IN:2009";LC_CTYPE
-category  "ks_IN:2009";LC_COLLATE
-category  "ks_IN:2009";LC_TIME
-category  "ks_IN:2009";LC_NUMERIC
-category  "ks_IN:2009";LC_MONETARY
-category  "ks_IN:2009";LC_MESSAGES
-category  "ks_IN:2009";LC_PAPER
-category  "ks_IN:2009";LC_NAME
-category  "ks_IN:2009";LC_ADDRESS
-category  "ks_IN:2009";LC_TELEPHONE
-category  "ks_IN:2009";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 

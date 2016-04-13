@@ -29,19 +29,19 @@ language   "Basque"
 territory  "Spain"
 revision   "1.0"
 date       "2000-08-21"
-%
-category  "eu_ES@euro:2000";LC_IDENTIFICATION
-category  "eu_ES@euro:2000";LC_CTYPE
-category  "eu_ES@euro:2000";LC_COLLATE
-category  "eu_ES@euro:2000";LC_TIME
-category  "eu_ES@euro:2000";LC_NUMERIC
-category  "eu_ES@euro:2000";LC_MONETARY
-category  "eu_ES@euro:2000";LC_MESSAGES
-category  "eu_ES@euro:2000";LC_PAPER
-category  "eu_ES@euro:2000";LC_NAME
-category  "eu_ES@euro:2000";LC_ADDRESS
-category  "eu_ES@euro:2000";LC_TELEPHONE
-category  "eu_ES@euro:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE

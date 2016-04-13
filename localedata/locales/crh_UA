@@ -33,19 +33,18 @@ territory	"Ukraine"
 revision	"0.4"
 date		"2009-08-16"
 
-category crh_UA:2000;LC_IDENTIFICATION
-category crh_UA:2000;LC_CTYPE
-category crh_UA:2000;LC_COLLATE
-category crh_UA:2000;LC_TIME
-category crh_UA:2000;LC_NUMERIC
-category crh_UA:2000;LC_PAPER
-category crh_UA:2000;LC_TELEPHONE
-category crh_UA:2000;LC_MEASUREMENT
-category crh_UA:2000;LC_ADDRESS
-category crh_UA:2000;LC_MONETARY
-category crh_UA:2000;LC_MESSAGES
-category crh_UA:2000;LC_NAME
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
 END LC_IDENTIFICATION
 
 %

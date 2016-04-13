@@ -38,19 +38,19 @@ language     "Quechua (Cusco-Collao)"
 territory    "Peru"
 revision     "1.0"
 date         "2013-08-24"
-%
-category  "quz_PE:2013";LC_IDENTIFICATION
-category  "quz_PE:2013";LC_CTYPE
-category  "quz_PE:2013";LC_COLLATE
-category  "quz_PE:2013";LC_TIME
-category  "quz_PE:2013";LC_NUMERIC
-category  "quz_PE:2013";LC_MONETARY
-category  "quz_PE:2013";LC_PAPER
-category  "quz_PE:2013";LC_MEASUREMENT
-category  "quz_PE:2013";LC_MESSAGES
-category  "quz_PE:2013";LC_NAME
-category  "quz_PE:2013";LC_ADDRESS
-category  "quz_PE:2013";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE

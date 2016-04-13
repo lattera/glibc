@@ -24,19 +24,19 @@ language   "Rajasthani"
 territory  "India"
 revision   "1.0"
 date       "2014-06-13"
-%
-category  "raj_IN:2014";LC_IDENTIFICATION
-category  "raj_IN:2014";LC_CTYPE
-category  "raj_IN:2014";LC_COLLATE
-category  "raj_IN:2014";LC_TIME
-category  "raj_IN:2014";LC_NUMERIC
-category  "raj_IN:2014";LC_MONETARY
-category  "raj_IN:2014";LC_MESSAGES
-category  "raj_IN:2014";LC_PAPER
-category  "raj_IN:2014";LC_NAME
-category  "raj_IN:2014";LC_ADDRESS
-category  "raj_IN:2014";LC_TELEPHONE
-category  "raj_IN:2014";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

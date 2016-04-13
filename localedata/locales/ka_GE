@@ -23,23 +23,18 @@ territory "Georgia"
 revision "0.6"
 date "2001-01-26"
 
-category ka_GE:2000;LC_IDENTIFICATION
-category ka_GE:2000;LC_CTYPE
-category ka_GE:2000;LC_COLLATE
-category ka_GE:2000;LC_TIME
-category ka_GE:2000;LC_NUMERIC
-category ka_GE:2000;LC_PAPER
-category ka_GE:2000;LC_NAME
-category ka_GE:2000;LC_ADDRESS
-category ka_GE:2000;LC_TELEPHONE
-category ka_GE:2000;LC_MEASUREMENT
-category ka_GE:2000;LC_MESSAGES
-category ka_GE:2000;LC_MONETARY
-
-% ISO/IEC 14652: Converted comments to LC_IDENTIFICATION
-%  added LC_PAPER, LC_MEASUREMENT, LC_TELEPHONE, LC_ADDRESS
-% -- mckinstry@computer.org, 2000-06-20
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
 END LC_IDENTIFICATION
 
 LC_ADDRESS

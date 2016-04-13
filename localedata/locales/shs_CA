@@ -36,19 +36,19 @@ language   "Secwepemctsin"
 territory  "Canada"
 revision   "1.0"
 date       "2008-01-15"
-%
-category  "shs_CA:2000";LC_IDENTIFICATION
-category  "shs_CA:2000";LC_CTYPE
-category  "shs_CA:2000";LC_COLLATE
-category  "shs_CA:2000";LC_TIME
-category  "shs_CA:2000";LC_NUMERIC
-category  "shs_CA:2000";LC_MONETARY
-category  "shs_CA:2000";LC_MESSAGES
-category  "shs_CA:2000";LC_PAPER
-category  "shs_CA:2000";LC_NAME
-category  "shs_CA:2000";LC_ADDRESS
-category  "shs_CA:2000";LC_TELEPHONE
-category  "shs_CA:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE

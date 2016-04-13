@@ -35,19 +35,19 @@ language   "Chuvash"
 territory  "Russia"
 revision   "1.0"
 date       "2000-06-29"
-%
-category  "cv_RU:2000";LC_IDENTIFICATION
-category  "cv_RU:2000";LC_CTYPE
-category  "cv_RU:2000";LC_COLLATE
-category  "cv_RU:2000";LC_TIME
-category  "cv_RU:2000";LC_NUMERIC
-category  "cv_RU:2000";LC_MONETARY
-category  "cv_RU:2000";LC_MESSAGES
-category  "cv_RU:2000";LC_PAPER
-category  "cv_RU:2000";LC_NAME
-category  "cv_RU:2000";LC_ADDRESS
-category  "cv_RU:2000";LC_TELEPHONE
-category  "cv_RU:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE

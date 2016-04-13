@@ -23,19 +23,18 @@ territory  "Bangladesh"
 revision   "0.5"
 date       "2007-01-10"
 
-category "bn_BD:2001";LC_IDENTIFICATION
-category "bn_BD:2001";LC_COLLATE
-category "bn_BD:2001";LC_CTYPE
-category "bn_BD:2001";LC_MESSAGES
-category "bn_BD:2001";LC_MONETARY
-category "bn_BD:2001";LC_NUMERIC
-category "bn_BD:2001";LC_TIME
-category "bn_BD:2001";LC_PAPER
-category "bn_BD:2001";LC_MEASUREMENT
-category "bn_BD:2001";LC_TELEPHONE
-category "bn_BD:2001";LC_ADDRESS
-category "bn_BD:2001";LC_NAME
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_NAME
 END LC_IDENTIFICATION
 
 LC_COLLATE

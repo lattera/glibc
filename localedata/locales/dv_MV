@@ -31,19 +31,19 @@ language   "Divehi"
 territory  "Maldives"
 revision   "0.1"
 date       "2006-05-13"
-%
-category  "dv_MV:2006";LC_IDENTIFICATION
-category  "dv_MV:2006";LC_CTYPE
-category  "dv_MV:2006";LC_COLLATE
-category  "dv_MV:2006";LC_TIME
-category  "dv_MV:2006";LC_NUMERIC
-category  "dv_MV:2006";LC_MONETARY
-category  "dv_MV:2006";LC_MESSAGES
-category  "dv_MV:2006";LC_PAPER
-category  "dv_MV:2006";LC_NAME
-category  "dv_MV:2006";LC_ADDRESS
-category  "dv_MV:2006";LC_TELEPHONE
-category  "dv_MV:2006";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

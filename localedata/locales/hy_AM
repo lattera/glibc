@@ -25,22 +25,17 @@ territory "Armenia"
 revision "0.4"
 date "2001-01-26"
 
-category "hy_AM:2000";LC_IDENTIFICATION
-category "hy_AM:2000";LC_COLLATE
-category "hy_AM:2000";LC_CTYPE
-category "hy_AM:2000";LC_MESSAGES
-category "hy_AM:2000";LC_MONETARY
-category "hy_AM:2000";LC_NUMERIC
-category "hy_AM:2000";LC_TIME
-category "hy_AM:2000";LC_PAPER
-category "hy_AM:2000";LC_MEASUREMENT
-category "hy_AM:2000";LC_TELEPHONE
-category "hy_AM:2000";LC_ADDRESS
-
-% ISO/IEC 14652: Converted comments to LC_IDENTIFICATION
-%  added LC_PAPER, LC_MEASUREMENT, LC_TELEPHONE
-% -- mckinstry@computer.org, 2000-06-20
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_ADDRESS
 END LC_IDENTIFICATION
 
 

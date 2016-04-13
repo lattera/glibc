@@ -41,20 +41,19 @@ language   "Northern Sotho"
 territory  "South Africa"
 revision   "0.3"
 date       "2005-10-13"
-%
-category  "nso_ZA:2004";LC_IDENTIFICATION
-category  "nso_ZA:2004";LC_CTYPE
-category  "nso_ZA:2004";LC_COLLATE
-category  "nso_ZA:2004";LC_TIME
-category  "nso_ZA:2004";LC_NUMERIC
-category  "nso_ZA:2004";LC_MONETARY
-category  "nso_ZA:2004";LC_MESSAGES
-category  "nso_ZA:2004";LC_PAPER
-category  "nso_ZA:2004";LC_NAME
-category  "nso_ZA:2004";LC_ADDRESS
-category  "nso_ZA:2004";LC_TELEPHONE
-category  "nso_ZA:2004";LC_MEASUREMENT
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

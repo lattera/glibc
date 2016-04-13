@@ -24,19 +24,19 @@ language   "Swahili"
 territory  "Kenya"
 revision   "1.0"
 date       "2011-03-07"
-%
-category  "sw_KE:2000";LC_IDENTIFICATION
-category  "sw_KE:2000";LC_CTYPE
-category  "sw_KE:2000";LC_COLLATE
-category  "sw_KE:2000";LC_TIME
-category  "sw_KE:2000";LC_NUMERIC
-category  "sw_KE:2000";LC_MONETARY
-category  "sw_KE:2000";LC_PAPER
-category  "sw_KE:2000";LC_MEASUREMENT
-category  "sw_KE:2000";LC_MESSAGES
-category  "sw_KE:2000";LC_NAME
-category  "sw_KE:2000";LC_ADDRESS
-category  "sw_KE:2000";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE

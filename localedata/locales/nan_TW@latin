@@ -32,18 +32,17 @@ territory "Taiwan"
 revision "0.1"
 date "2008-06-16"
 
-category "nan_TW@latin:2000";LC_IDENTIFICATION
-category "nan_TW@latin:2000";LC_CTYPE
-category "nan_TW@latin:2000";LC_COLLATE
-category "nan_TW@latin:2000";LC_TIME
-category "nan_TW@latin:2000";LC_NUMERIC
-category "nan_TW@latin:2000";LC_PAPER
-category "nan_TW@latin:2000";LC_TELEPHONE
-category "nan_TW@latin:2000";LC_MEASUREMENT
-category "nan_TW@latin:2000";LC_ADDRESS
-category "nan_TW@latin:2000";LC_MESSAGES
-category "nan_TW@latin:2000";LC_MONETARY
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
 END LC_IDENTIFICATION
 
 LC_CTYPE

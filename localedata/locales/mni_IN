@@ -23,19 +23,19 @@ language   "Manipuri"
 territory  "India"
 revision   "1.0"
 date       "2012-01-17"
-%
-category  "mni_IN:2012";LC_IDENTIFICATION
-category  "mni_IN:2012";LC_CTYPE
-category  "mni_IN:2012";LC_COLLATE
-category  "mni_IN:2012";LC_TIME
-category  "mni_IN:2012";LC_NUMERIC
-category  "mni_IN:2012";LC_MONETARY
-category  "mni_IN:2012";LC_MESSAGES
-category  "mni_IN:2012";LC_PAPER
-category  "mni_IN:2012";LC_NAME
-category  "mni_IN:2012";LC_ADDRESS
-category  "mni_IN:2012";LC_TELEPHONE
-category  "mni_IN:2012";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

@@ -35,19 +35,19 @@ language   "Ganda"
 territory  "Uganda"
 revision   "1.0"
 date       "2001-11-04"
-%
-category  "lg_UG:2001";LC_IDENTIFICATION
-category  "lg_UG:2001";LC_CTYPE
-category  "lg_UG:2001";LC_COLLATE
-category  "lg_UG:2001";LC_TIME
-category  "lg_UG:2001";LC_NUMERIC
-category  "lg_UG:2001";LC_MONETARY
-category  "lg_UG:2001";LC_MESSAGES
-category  "lg_UG:2001";LC_PAPER
-category  "lg_UG:2001";LC_NAME
-category  "lg_UG:2001";LC_ADDRESS
-category  "lg_UG:2001";LC_TELEPHONE
-category  "lg_UG:2001";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

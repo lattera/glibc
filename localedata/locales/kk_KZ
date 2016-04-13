@@ -35,19 +35,19 @@ language   "Kazakh"
 territory  "Kazakhstan"
 revision   "1.0"
 date       "2003-06-06"
-%
-category  "kk_KZ:2000";LC_IDENTIFICATION
-category  "kk_KZ:2000";LC_CTYPE
-category  "kk_KZ:2000";LC_COLLATE
-category  "kk_KZ:2000";LC_TIME
-category  "kk_KZ:2000";LC_NUMERIC
-category  "kk_KZ:2000";LC_MONETARY
-category  "kk_KZ:2000";LC_MESSAGES
-category  "kk_KZ:2000";LC_PAPER
-category  "kk_KZ:2000";LC_NAME
-category  "kk_KZ:2000";LC_ADDRESS
-category  "kk_KZ:2000";LC_TELEPHONE
-category  "kk_KZ:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE

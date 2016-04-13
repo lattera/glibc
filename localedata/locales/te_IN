@@ -26,19 +26,19 @@ language    "Telugu"
 territory   "India"
 revision    "0.95"
 date        "2004-10-05"
-%
-category  "i18n:2003";LC_IDENTIFICATION
-category  "i18n:2003";LC_CTYPE
-category  "i18n:2003";LC_COLLATE
-category  "i18n:2003";LC_TIME
-category  "posix:1993";LC_NUMERIC
-category  "i18n:2003";LC_MONETARY
-category  "i18n:2003";LC_MESSAGES
-category  "i18n:2003";LC_PAPER
-category  "i18n:2003";LC_NAME
-category  "i18n:2003";LC_ADDRESS
-category  "i18n:2003";LC_TELEPHONE
-category  "i18n:2003";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

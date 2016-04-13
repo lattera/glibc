@@ -24,19 +24,19 @@ language   "Upper Sorbian"
 territory  "Germany"
 revision   "0.1"
 date       "2004-09-09"
-%
-category  "i18n:1997";LC_IDENTIFICATION
-category  "i18n:1997";LC_CTYPE
-category  "i18n:1997";LC_COLLATE
-category  "i18n:1997";LC_TIME
-category  "i18n:1997";LC_NUMERIC
-category  "i18n:1997";LC_MONETARY
-category  "i18n:1997";LC_MESSAGES
-category  "i18n:1997";LC_PAPER
-category  "i18n:1997";LC_NAME
-category  "i18n:1997";LC_ADDRESS
-category  "i18n:1997";LC_TELEPHONE
-category  "i18n:1997";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE

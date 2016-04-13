@@ -23,19 +23,19 @@ language   "Santali"
 territory  "India"
 revision   "1.0"
 date       "2012-01-17"
-%
-category  "sat_IN:2012";LC_IDENTIFICATION
-category  "sat_IN:2012";LC_CTYPE
-category  "sat_IN:2012";LC_COLLATE
-category  "sat_IN:2012";LC_TIME
-category  "sat_IN:2012";LC_NUMERIC
-category  "sat_IN:2012";LC_MONETARY
-category  "sat_IN:2012";LC_MESSAGES
-category  "sat_IN:2012";LC_PAPER
-category  "sat_IN:2012";LC_NAME
-category  "sat_IN:2012";LC_ADDRESS
-category  "sat_IN:2012";LC_TELEPHONE
-category  "sat_IN:2012";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

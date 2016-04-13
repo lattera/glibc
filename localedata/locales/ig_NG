@@ -31,19 +31,19 @@ language   "Igbo"
 territory  "Nigeria"
 revision   "0.2"
 date       "2005-12-14"
-%
-category  "ig_NG:2000";LC_IDENTIFICATION
-category  "ig_NG:2000";LC_CTYPE
-category  "ig_NG:2000";LC_COLLATE
-category  "ig_NG:2000";LC_TIME
-category  "ig_NG:2000";LC_NUMERIC
-category  "ig_NG:2000";LC_MONETARY
-category  "ig_NG:2000";LC_MESSAGES
-category  "ig_NG:2000";LC_PAPER
-category  "ig_NG:2000";LC_NAME
-category  "ig_NG:2000";LC_ADDRESS
-category  "ig_NG:2000";LC_TELEPHONE
-category  "ig_NG:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE

@@ -73,19 +73,18 @@ revision   "2.1.12"
 % Revision date
 date       "2006-05-20"
 
-category  "i18n:2002";LC_IDENTIFICATION
-category  "i18n:2002";LC_CTYPE
-category  "i18n:2002";LC_COLLATE
-category  "i18n:2000";LC_TIME
-category  "posix:1993";LC_NUMERIC
-category  "i18n:2002";LC_MONETARY
-category  "i18n:2002";LC_MESSAGES
-category  "i18n:2002";LC_PAPER
-category  "i18n:2002";LC_NAME
-category  "i18n:2000";LC_ADDRESS
-category  "i18n:2002";LC_TELEPHONE
-category  "posix:1993";LC_MEASUREMENT
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 

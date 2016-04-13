@@ -33,19 +33,18 @@ territory	"Russia"
 revision	"0.1"
 date		"2006-10-12"
 
-category "tt_RU@iqtelif:2000";LC_IDENTIFICATION
-category "tt_RU@iqtelif:2000";LC_CTYPE
-category "tt_RU@iqtelif:2000";LC_COLLATE
-category "tt_RU@iqtelif:2000";LC_TIME
-category "tt_RU@iqtelif:2000";LC_NUMERIC
-category "tt_RU@iqtelif:2000";LC_PAPER
-category "tt_RU@iqtelif:2000";LC_TELEPHONE
-category "tt_RU@iqtelif:2000";LC_MEASUREMENT
-category "tt_RU@iqtelif:2000";LC_ADDRESS
-category "tt_RU@iqtelif:2000";LC_MONETARY
-category "tt_RU@iqtelif:2000";LC_MESSAGES
-category "tt_RU@iqtelif:2000";LC_NAME
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
 END LC_IDENTIFICATION
 
 % TODO: further test LC_COLLATE

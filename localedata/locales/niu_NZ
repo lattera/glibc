@@ -8,21 +8,6 @@ escape_char /
 % exempt you from the conditions of the license if your use would
 % otherwise be governed by that license.
 
-% Charset: UTF-8
-LC_IDENTIFICATION
-title        "Niuean (Vagahau Niue) locale for New Zealand"
-source       "RockET Systems"
-address      "PO Box 229, Fatalupe, Alofi, Niue"
-contact      "Emani Fakaotimanava-Lui"
-email        "emani@niue.nu"
-tel          ""
-fax          ""
-language     "Niuean"
-territory    "New Zealand"
-revision     "1.0"
-date         "2012-07-18"
-% This file is distributed under the same license as the glibc package.
-%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % Niuean, Vagahau Niue language locale for New Zealand
@@ -42,19 +27,32 @@ date         "2012-07-18"
 % http://pacific.scoop.co.nz/2012/06/internet-society-funds-niue-language-lifeline/
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-category  "niu_NZ:2012";LC_IDENTIFICATION
-category  "niu_NZ:2012";LC_CTYPE
-category  "niu_NZ:2012";LC_COLLATE
-category  "niu_NZ:2012";LC_TIME
-category  "niu_NZ:2012";LC_NUMERIC
-category  "niu_NZ:2012";LC_MONETARY
-category  "niu_NZ:2012";LC_PAPER
-category  "niu_NZ:2012";LC_MEASUREMENT
-category  "niu_NZ:2012";LC_MESSAGES
-category  "niu_NZ:2012";LC_NAME
-category  "niu_NZ:2012";LC_ADDRESS
-category  "niu_NZ:2012";LC_TELEPHONE
+
+LC_IDENTIFICATION
+title        "Niuean (Vagahau Niue) locale for New Zealand"
+source       "RockET Systems"
+address      "PO Box 229, Fatalupe, Alofi, Niue"
+contact      "Emani Fakaotimanava-Lui"
+email        "emani@niue.nu"
+tel          ""
+fax          ""
+language     "Niuean"
+territory    "New Zealand"
+revision     "1.0"
+date         "2012-07-18"
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE

@@ -24,18 +24,18 @@ language   "Tibetan"
 territory  "China"
 revision   "0.1"
 date       "2007-11-06"
-%
-category  "bo_CN:2007";LC_IDENTIFICATION
-category  "bo_CN:2007";LC_CTYPE
-category  "bo_CN:2007";LC_COLLATE
-category  "bo_CN:2007";LC_NUMERIC
-category  "bo_CN:2007";LC_MONETARY
-category  "bo_CN:2007";LC_MESSAGES
-category  "bo_CN:2007";LC_PAPER
-category  "bo_CN:2007";LC_NAME
-category  "bo_CN:2007";LC_ADDRESS
-category  "bo_CN:2007";LC_TELEPHONE
-category  "bo_CN:2007";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

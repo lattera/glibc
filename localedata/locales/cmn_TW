@@ -32,19 +32,19 @@ language     "Mandarin Chinese"
 territory    "Taiwan"
 revision     "0.1"
 date         "2013-06-02"
-%
-category  "cmn_TW:2000";LC_IDENTIFICATION
-category  "cmn_TW:2000";LC_CTYPE
-category  "cmn_TW:2000";LC_COLLATE
-category  "cmn_TW:2000";LC_TIME
-category  "cmn_TW:2000";LC_NUMERIC
-category  "cmn_TW:2000";LC_MONETARY
-category  "cmn_TW:2000";LC_PAPER
-category  "cmn_TW:2000";LC_MEASUREMENT
-category  "cmn_TW:2000";LC_MESSAGES
-category  "cmn_TW:2000";LC_NAME
-category  "cmn_TW:2000";LC_ADDRESS
-category  "cmn_TW:2000";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE

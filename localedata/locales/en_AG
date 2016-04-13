@@ -23,19 +23,19 @@ language   "English"
 territory  "Antigua & Barbuda"
 revision   "1.0"
 date       "2008-09-16"
-%
-category  "en_AG:2008";LC_IDENTIFICATION
-category  "en_AG:2008";LC_CTYPE
-category  "en_AG:2008";LC_COLLATE
-category  "en_AG:2008";LC_TIME
-category  "en_AG:2008";LC_NUMERIC
-category  "en_AG:2008";LC_MONETARY
-category  "en_AG:2008";LC_MESSAGES
-category  "en_AG:2008";LC_PAPER
-category  "en_AG:2008";LC_NAME
-category  "en_AG:2008";LC_ADDRESS
-category  "en_AG:2008";LC_TELEPHONE
-category  "en_AG:2008";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

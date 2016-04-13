@@ -31,19 +31,19 @@ language   "Inupiaq"
 territory  "Canada"
 revision   "0.2"
 date       "2004-08-01"
-%
-category  "ik_CA:2000";LC_IDENTIFICATION
-category  "ik_CA:2000";LC_CTYPE
-category  "ik_CA:2000";LC_COLLATE
-category  "ik_CA:2000";LC_TIME
-category  "ik_CA:2000";LC_NUMERIC
-category  "ik_CA:2000";LC_MONETARY
-category  "ik_CA:2000";LC_MESSAGES
-category  "ik_CA:2000";LC_PAPER
-category  "ik_CA:2000";LC_NAME
-category  "ik_CA:2000";LC_ADDRESS
-category  "ik_CA:2000";LC_TELEPHONE
-category  "ik_CA:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE

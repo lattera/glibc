@@ -27,18 +27,18 @@ territory  "Myanmar (Burma)"
 revision "1.3"
 date       "2009-10-02"
 
-category "my_MM:2006";LC_IDENTIFICATION
-category "my_MM:2006";LC_COLLATE
-category "my_MM:2006";LC_CTYPE
-category "my_MM:2006";LC_MESSAGES
-category "my_MM:2006";LC_MONETARY
-category "my_MM:2006";LC_NUMERIC
-category "my_MM:2006";LC_TIME
-category "my_MM:2006";LC_PAPER
-category "my_MM:2006";LC_MEASUREMENT
-category "my_MM:2006";LC_TELEPHONE
-category "my_MM:2006";LC_ADDRESS
-category "my_MM:2006";LC_NAME
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_NAME
 END LC_IDENTIFICATION
 
 

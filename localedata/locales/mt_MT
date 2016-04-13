@@ -27,19 +27,19 @@ language   "Maltese"
 territory  "malta"
 revision   "1.0"
 date       "2000-07-20"
-%
-category  "mt_MT:2000";LC_IDENTIFICATION
-category  "mt_MT:2000";LC_CTYPE
-category  "mt_MT:2000";LC_COLLATE
-category  "mt_MT:2000";LC_TIME
-category  "mt_MT:2000";LC_NUMERIC
-category  "mt_MT:2000";LC_MONETARY
-category  "mt_MT:2000";LC_MESSAGES
-category  "mt_MT:2000";LC_PAPER
-category  "mt_MT:2000";LC_NAME
-category  "mt_MT:2000";LC_ADDRESS
-category  "mt_MT:2000";LC_TELEPHONE
-category  "mt_MT:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

@@ -39,18 +39,17 @@ territory "Tajikistan"
 revision "0.4"
 date "2004-01-09"
 
-category "tg_TJ:2000";LC_IDENTIFICATION
-category "tg_TJ:2000";LC_CTYPE
-category "tg_TJ:2000";LC_COLLATE
-category "tg_TJ:2000";LC_TIME
-category "tg_TJ:2000";LC_NUMERIC
-category "tg_TJ:2000";LC_PAPER
-category "tg_TJ:2000";LC_TELEPHONE
-category "tg_TJ:2000";LC_MEASUREMENT
-category "tg_TJ:2000";LC_ADDRESS
-category "tg_TJ:2000";LC_MONETARY
-category "tg_TJ:2000";LC_MESSAGES
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
 END LC_IDENTIFICATION
 
 LC_CTYPE

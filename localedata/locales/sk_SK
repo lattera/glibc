@@ -48,19 +48,19 @@ language   "Slovak"
 territory  "Slovakia"
 revision   "1.0"
 date       "2000-06-29"
-%
-category  "sk_SK:2000";LC_IDENTIFICATION
-category  "sk_SK:2000";LC_CTYPE
-category  "sk_SK:2000";LC_COLLATE
-category  "sk_SK:2000";LC_TIME
-category  "sk_SK:2000";LC_NUMERIC
-category  "sk_SK:2000";LC_MONETARY
-category  "sk_SK:2000";LC_MESSAGES
-category  "sk_SK:2000";LC_PAPER
-category  "sk_SK:2000";LC_NAME
-category  "sk_SK:2000";LC_ADDRESS
-category  "sk_SK:2000";LC_TELEPHONE
-category  "sk_SK:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

@@ -28,19 +28,19 @@ language     "Scottish Gaelic"
 territory    "United Kingdom"
 revision     "1.2"
 date         "2013-04-25"
-%
-category  "gd_GB:2000";LC_IDENTIFICATION
-category  "gd_GB:2000";LC_CTYPE
-category  "gd_GB:2000";LC_COLLATE
-category  "gd_GB:2000";LC_TIME
-category  "gd_GB:2000";LC_NUMERIC
-category  "gd_GB:2000";LC_MONETARY
-category  "gd_GB:2000";LC_PAPER
-category  "gd_GB:2000";LC_MEASUREMENT
-category  "gd_GB:2000";LC_MESSAGES
-category  "gd_GB:2000";LC_NAME
-category  "gd_GB:2000";LC_ADDRESS
-category  "gd_GB:2000";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE

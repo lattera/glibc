@@ -24,19 +24,19 @@ language   "Konkani"
 territory  "India"
 revision   "1.0"
 date       "2009,December,08"
-%
-category  "kok_IN:2009";LC_IDENTIFICATION
-category  "kok_IN:2009";LC_CTYPE
-category  "kok_IN:2009";LC_COLLATE
-category  "kok_IN:2009";LC_TIME
-category  "kok_IN:2009";LC_NUMERIC
-category  "kok_IN:2009";LC_MONETARY
-category  "kok_IN:2009";LC_MESSAGES
-category  "kok_IN:2009";LC_PAPER
-category  "kok_IN:2009";LC_NAME
-category  "kok_IN:2009";LC_ADDRESS
-category  "kok_IN:2009";LC_TELEPHONE
-category  "kok_IN:2009";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

@@ -33,18 +33,17 @@ territory "Norway"
 revision "0.1"
 date "2001-11-09"
 
-category se_NO:2000;LC_IDENTIFICATION
-category se_NO:2000;LC_CTYPE
-category se_NO:2000;LC_COLLATE
-category se_NO:2000;LC_TIME
-category se_NO:2000;LC_NUMERIC
-category se_NO:2000;LC_PAPER
-category se_NO:2000;LC_TELEPHONE
-category se_NO:2000;LC_MEASUREMENT
-category se_NO:2000;LC_ADDRESS
-category se_NO:2000;LC_MONETARY
-category se_NO:2000;LC_MESSAGES
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
 END LC_IDENTIFICATION
 
 

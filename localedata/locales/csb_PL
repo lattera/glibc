@@ -37,19 +37,19 @@ date       "2006-07-25"
 audience   "general"
 application   "GNU locale"
 abbreviation  ""
-%
-category  "csb_PL:2000";LC_IDENTIFICATION
-category  "csb_PL:2000";LC_CTYPE
-category  "csb_PL:2000";LC_COLLATE
-category  "csb_PL:2000";LC_TIME
-category  "csb_PL:2000";LC_NUMERIC
-category  "csb_PL:2000";LC_MONETARY
-category  "csb_PL:2000";LC_MESSAGES
-category  "csb_PL:2000";LC_PAPER
-category  "csb_PL:2000";LC_NAME
-category  "csb_PL:2000";LC_ADDRESS
-category  "csb_PL:2000";LC_TELEPHONE
-category  "csb_PL:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

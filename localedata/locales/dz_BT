@@ -35,19 +35,19 @@ language   "Dzongkha"
 territory  "Bhutan"
 revision   "0.3"
 date       "2004-09-03"
-%
-category  "dz_BT:2004";LC_IDENTIFICATION
-category  "dz_BT:2004";LC_CTYPE
-category  "dz_BT:2004";LC_TIME
-category  "dz_BT:2004";LC_COLLATE
-category  "dz_BT:2004";LC_NUMERIC
-category  "dz_BT:2004";LC_MONETARY
-category  "dz_BT:2004";LC_MESSAGES
-category  "dz_BT:2004";LC_PAPER
-category  "dz_BT:2004";LC_NAME
-category  "dz_BT:2004";LC_ADDRESS
-category  "dz_BT:2004";LC_TELEPHONE
-category  "dz_BT:2004";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 %%%%%%%%%%%%%%%%

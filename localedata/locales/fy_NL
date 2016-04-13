@@ -27,19 +27,19 @@ language   "Western Frisian"
 territory  "Netherlands"
 revision   "1.0"
 date       "2006-08-13"
-%
-category  "fy_NL:2000";LC_IDENTIFICATION
-category  "fy_NL:2000";LC_CTYPE
-category  "fy_NL:2000";LC_COLLATE
-category  "fy_NL:2000";LC_TIME
-category  "fy_NL:2000";LC_NUMERIC
-category  "fy_NL:2000";LC_MONETARY
-category  "fy_NL:2000";LC_MEASUREMENT
-category  "fy_NL:2000";LC_MESSAGES
-category  "fy_NL:2000";LC_PAPER
-category  "fy_NL:2000";LC_NAME
-category  "fy_NL:2000";LC_ADDRESS
-category  "fy_NL:2000";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE

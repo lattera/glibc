@@ -23,20 +23,19 @@ language   "Chitwania Tharu"
 territory  "Nepal"
 revision   "1.1"
 date       "2013-11-15"
-%
-category  "the_NP:2013";LC_IDENTIFICATION
-category  "the_NP:2013";LC_CTYPE
-category  "the_NP:2013";LC_COLLATE
-category  "the_NP:2013";LC_TIME
-category  "the_NP:2013";LC_NUMERIC
-category  "the_NP:2013";LC_MONETARY
-category  "the_NP:2013";LC_MESSAGES
-category  "the_NP:2013";LC_PAPER
-category  "the_NP:2013";LC_NAME
-category  "the_NP:2013";LC_ADDRESS
-category  "the_NP:2013";LC_TELEPHONE
-category  "the_NP:2013";LC_MEASUREMENT
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

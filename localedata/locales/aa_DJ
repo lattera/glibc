@@ -39,20 +39,19 @@ language   "Afar"
 territory  "Djibouti"
 revision   "0.20"
 date       "2003-07-05"
-%
-category  "i18n:2000";LC_IDENTIFICATION
-category  "i18n:2000";LC_COLLATE
-category  "i18n:2000";LC_CTYPE
-category  "i18n:2000";LC_MEASUREMENT
-category  "i18n:2000";LC_MONETARY
-category  "posix:1993";LC_NUMERIC
-category  "i18n:2000";LC_PAPER
-category  "i18n:2000";LC_TELEPHONE
-category  "i18n:2000";LC_ADDRESS
-category  "i18n:2000";LC_MESSAGES
-category  "i18n:2000";LC_NAME
-category  "i18n:2000";LC_TIME
-%
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_TIME
 END LC_IDENTIFICATION
 
 

@@ -35,19 +35,19 @@ language   "Chinese"
 territory  "Taiwan"
 revision   "0.2"
 date       "2000-08-02"
-%
-category  "zh_TW:2000";LC_IDENTIFICATION
-category  "zh_TW:2000";LC_CTYPE
-category  "zh_TW:2000";LC_COLLATE
-category  "zh_TW:2000";LC_TIME
-category  "zh_TW:2000";LC_NUMERIC
-category  "zh_TW:2000";LC_MONETARY
-category  "zh_TW:2000";LC_MESSAGES
-category  "zh_TW:2000";LC_PAPER
-category  "zh_TW:2000";LC_NAME
-category  "zh_TW:2000";LC_ADDRESS
-category  "zh_TW:2000";LC_TELEPHONE
-category  "zh_TW:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

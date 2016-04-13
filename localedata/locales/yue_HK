@@ -25,19 +25,19 @@ language   "Cantonese"
 territory  "Hong Kong SAR China"
 revision   "1.0"
 date       "2010-11-07"
-%
-category  "yue_HK:2010";LC_IDENTIFICATION
-category  "yue_HK:2010";LC_CTYPE
-category  "yue_HK:2010";LC_COLLATE
-category  "yue_HK:2010";LC_TIME
-category  "yue_HK:2010";LC_NUMERIC
-category  "yue_HK:2010";LC_MONETARY
-category  "yue_HK:2010";LC_MESSAGES
-category  "yue_HK:2010";LC_PAPER
-category  "yue_HK:2010";LC_NAME
-category  "yue_HK:2010";LC_ADDRESS
-category  "yue_HK:2010";LC_TELEPHONE
-category  "yue_HK:2010";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 

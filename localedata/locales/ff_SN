@@ -22,19 +22,19 @@ language   "Fulah"
 territory  "Senegal"
 revision   "1.0"
 date       "2011-03-28"
-%
-category  "ff_SN:2000";LC_IDENTIFICATION
-category  "ff_SN:2000";LC_CTYPE
-category  "ff_SN:2000";LC_COLLATE
-category  "ff_SN:2000";LC_TIME
-category  "ff_SN:2000";LC_NUMERIC
-category  "ff_SN:2000";LC_MONETARY
-category  "ff_SN:2000";LC_PAPER
-category  "ff_SN:2000";LC_MEASUREMENT
-category  "ff_SN:2000";LC_MESSAGES
-category  "ff_SN:2000";LC_NAME
-category  "ff_SN:2000";LC_ADDRESS
-category  "ff_SN:2000";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE

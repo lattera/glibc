@@ -37,19 +37,19 @@ language     "Akan"
 territory    "Ghana"
 revision     "1.0"
 date         "2013-08-24"
-%
-category  "ak_GH:2013";LC_IDENTIFICATION
-category  "ak_GH:2013";LC_CTYPE
-category  "ak_GH:2013";LC_COLLATE
-category  "ak_GH:2013";LC_TIME
-category  "ak_GH:2013";LC_NUMERIC
-category  "ak_GH:2013";LC_MONETARY
-category  "ak_GH:2013";LC_PAPER
-category  "ak_GH:2013";LC_MEASUREMENT
-category  "ak_GH:2013";LC_MESSAGES
-category  "ak_GH:2013";LC_NAME
-category  "ak_GH:2013";LC_ADDRESS
-category  "ak_GH:2013";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE

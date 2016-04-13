@@ -24,19 +24,19 @@ language    "Oriya"
 territory   "India"
 revision    "1.0"
 date        "2006-05-25"
-%
-category  "or_IN:2004";LC_IDENTIFICATION
-category  "or_IN:2004";LC_CTYPE
-category  "or_IN:2004";LC_COLLATE
-category  "or_IN:2004";LC_TIME
-category  "or_IN:2004";LC_NUMERIC
-category  "or_IN:2004";LC_MONETARY
-category  "or_IN:2004";LC_MESSAGES
-category  "or_IN:2004";LC_PAPER
-category  "or_IN:2004";LC_NAME
-category  "or_IN:2004";LC_ADDRESS
-category  "or_IN:2004";LC_TELEPHONE
-category  "or_IN:2004";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 %%%%%%%%%%%%%

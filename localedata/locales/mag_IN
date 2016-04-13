@@ -25,19 +25,19 @@ language   "Magahi"
 territory  "India"
 revision   "0.1"
 date       "2012-04-11"
-%
-category  "mag_IN:2012";LC_IDENTIFICATION
-category  "mag_IN:2012";LC_CTYPE
-category  "mag_IN:2012";LC_COLLATE
-category  "mag_IN:2012";LC_TIME
-category  "mag_IN:2012";LC_NUMERIC
-category  "mag_IN:2012";LC_MONETARY
-category  "mag_IN:2012";LC_MESSAGES
-category  "mag_IN:2012";LC_PAPER
-category  "mag_IN:2012";LC_NAME
-category  "mag_IN:2012";LC_ADDRESS
-category  "mag_IN:2012";LC_TELEPHONE
-category  "mag_IN:2012";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

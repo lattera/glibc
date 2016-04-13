@@ -45,20 +45,19 @@ language   "Xhosa"
 territory  "South Africa"
 revision   "0.3"
 date       "2005-10-13"
-%
-category  "xh_ZA:2003";LC_IDENTIFICATION
-category  "xh_ZA:2003";LC_CTYPE
-category  "xh_ZA:2003";LC_COLLATE
-category  "xh_ZA:2003";LC_TIME
-category  "xh_ZA:2003";LC_NUMERIC
-category  "xh_ZA:2003";LC_MONETARY
-category  "xh_ZA:2003";LC_MESSAGES
-category  "xh_ZA:2003";LC_PAPER
-category  "xh_ZA:2003";LC_NAME
-category  "xh_ZA:2003";LC_ADDRESS
-category  "xh_ZA:2003";LC_TELEPHONE
-category  "xh_ZA:2003";LC_MEASUREMENT
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

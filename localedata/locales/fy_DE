@@ -23,24 +23,18 @@ territory "Germany"
 revision "0.1"
 date "2003-11-30"
 
-category i18n:2000;LC_IDENTIFICATION
-category i18n:2000;LC_COLLATE
-category i18n:2000;LC_CTYPE
-category i18n:2000;LC_MESSAGES
-category i18n:2000;LC_MONETARY
-category i18n:2000;LC_NUMERIC
-category i18n:2000;LC_TIME
-category i18n:2000;LC_PAPER
-category i18n:2000;LC_NAME
-category i18n:2000;LC_MEASUREMENT
-category i18n:2000;LC_TELEPHONE
-category i18n:2000;LC_ADDRESS
-
-% ISO/IEC 14652: Converted comments to LC_IDENTIFICATION
-%  added LC_PAPER, LC_MEASUREMENT, LC_TELEPHONE, LC_ADDRESS
-%  copied LC_MONETARY, LC_NUMERIC from de_DE for simplicity
-% -- mckinstry@computer.org, 2000-07-03
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_ADDRESS
 END LC_IDENTIFICATION
 
 LC_ADDRESS

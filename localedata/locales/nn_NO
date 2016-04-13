@@ -24,19 +24,19 @@ language   "Norwegian Nynorsk"
 territory  "Norway"
 revision   "1.0"
 date       "2000-08-31"
-%
-category  "nn_NO:2000";LC_IDENTIFICATION
-category  "nn_NO:2000";LC_CTYPE
-category  "nn_NO:2000";LC_COLLATE
-category  "nn_NO:2000";LC_TIME
-category  "nn_NO:2000";LC_NUMERIC
-category  "nn_NO:2000";LC_MONETARY
-category  "nn_NO:2000";LC_MESSAGES
-category  "nn_NO:2000";LC_PAPER
-category  "nn_NO:2000";LC_NAME
-category  "nn_NO:2000";LC_ADDRESS
-category  "nn_NO:2000";LC_TELEPHONE
-category  "nn_NO:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

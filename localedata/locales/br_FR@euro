@@ -27,19 +27,19 @@ language   "Breton"
 territory  "France"
 revision   "1.0"
 date       "2002-02-28"
-%
-category  "br_FR@euro:2000";LC_IDENTIFICATION
-category  "br_FR@euro:2000";LC_CTYPE
-category  "br_FR@euro:2000";LC_COLLATE
-category  "br_FR@euro:2000";LC_TIME
-category  "br_FR@euro:2000";LC_NUMERIC
-category  "br_FR@euro:2000";LC_MONETARY
-category  "br_FR@euro:2000";LC_MESSAGES
-category  "br_FR@euro:2000";LC_PAPER
-category  "br_FR@euro:2000";LC_NAME
-category  "br_FR@euro:2000";LC_ADDRESS
-category  "br_FR@euro:2000";LC_TELEPHONE
-category  "br_FR@euro:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

@@ -32,18 +32,17 @@ territory "New Zealand"
 revision "0.3"
 date "2001-01-28"
 
-category mi_NZ:2000;LC_IDENTIFICATION
-category mi_NZ:2000;LC_CTYPE
-category mi_NZ:2000;LC_COLLATE
-category mi_NZ:2000;LC_TIME
-category mi_NZ:2000;LC_NUMERIC
-category mi_NZ:2000;LC_PAPER
-category mi_NZ:2000;LC_TELEPHONE
-category mi_NZ:2000;LC_MEASUREMENT
-category mi_NZ:2000;LC_ADDRESS
-category mi_NZ:2000;LC_MESSAGES
-category mi_NZ:2000;LC_MONETARY
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
 END LC_IDENTIFICATION
 
 LC_CTYPE

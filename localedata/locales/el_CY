@@ -23,19 +23,19 @@ language   "Greek"
 territory  "Cyprus"
 revision   "1.0"
 date       "2004-10-20"
-%
-category  "el_CY:2000";LC_IDENTIFICATION
-category  "el_CY:2000";LC_CTYPE
-category  "el_CY:2000";LC_COLLATE
-category  "el_CY:2000";LC_TIME
-category  "el_CY:2000";LC_NUMERIC
-category  "el_CY:2000";LC_MONETARY
-category  "el_CY:2000";LC_MESSAGES
-category  "el_CY:2000";LC_PAPER
-category  "el_CY:2000";LC_NAME
-category  "el_CY:2000";LC_ADDRESS
-category  "el_CY:2000";LC_TELEPHONE
-category  "el_CY:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE

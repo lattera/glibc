@@ -34,20 +34,19 @@ language   "Kurdish"
 territory  "Turkey"
 revision   "0.1"
 date       "2003-07-27"
-%
-category  "ku_TR:2000";LC_IDENTIFICATION
-category  "ku_TR:2000";LC_CTYPE
-category  "ku_TR:2000";LC_COLLATE
-category  "ku_TR:2000";LC_TIME
-category  "ku_TR:2000";LC_NUMERIC
-category  "ku_TR:2000";LC_MONETARY
-category  "ku_TR:2000";LC_MESSAGES
-category  "ku_TR:2000";LC_PAPER
-category  "ku_TR:2000";LC_NAME
-category  "ku_TR:2000";LC_ADDRESS
-category  "ku_TR:2000";LC_TELEPHONE
-category  "ku_TR:2000";LC_MEASUREMENT
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE

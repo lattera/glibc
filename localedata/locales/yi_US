@@ -26,22 +26,17 @@ territory "United States"
 revision "0.4"
 date "2003-08-16"
 
-category "yi_US:2000";LC_IDENTIFICATION
-category "yi_US:2000";LC_COLLATE
-category "yi_US:2000";LC_CTYPE
-category "yi_US:2000";LC_MESSAGES
-category "yi_US:2000";LC_MONETARY
-category "yi_US:2000";LC_NUMERIC
-category "yi_US:2000";LC_TIME
-category "yi_US:2000";LC_PAPER
-category "yi_US:2000";LC_MEASUREMENT
-category "yi_US:2000";LC_TELEPHONE
-category "yi_US:2000";LC_ADDRESS
-
-% ISO/IEC 14652: Converted comments to LC_IDENTIFICATION
-%  added LC_PAPER, LC_MEASUREMENT, LC_IDENTIFICATION, LC_ADDRESS
-% -- mckinstry@computer.org, 2000-07-03
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_ADDRESS
 END LC_IDENTIFICATION
 
 
