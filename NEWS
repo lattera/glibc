@@ -21,6 +21,10 @@ Version 2.24
 * The readdir_r and readdir64_r functions have been deprecated.  It is
   recommended to use readdir and readdir64 instead.
 
+* The type “union wait” has been removed.  It was deprecated in the early
+  1990s and never part of POSIX.  Application code should use the int type
+  instead of “union wait”.
+
 Security related changes:
 
   [Add security related changes here]

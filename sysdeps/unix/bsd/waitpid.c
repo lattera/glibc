@@ -35,7 +35,7 @@
 pid_t
 __waitpid (pid_t pid, int *stat_loc, int options)
 {
-  return __wait4 (pid, (union wait *) stat_loc, options, NULL);
+  return __wait4 (pid, stat_loc, options, NULL);
 }
 
 libc_hidden_def (__waitpid)

@@ -1,3 +1,34 @@
+2016-04-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19613]
+	Remove union wait.
+	* bits/waitstatus.h (union wait, w_termsig, w_coredump, w_retcode)
+	(w_stopsig, w_stopval): Remove.
+	* include/sys/wait.h (__wait, __wait3, __wait4): Use int * for the
+	stat_loc argument.
+	* posix/sys/wait.h (__WAIT_INT, __WAIT_STATUS)
+	(__WAIT_STATUS_DEFN): Remove.
+	(WEXITSTATUS, WTERMSIG, WSTOPSIG, WIFEXITED, WIFSIGNALED)
+	(WIFSTOPPED, WIFCONTINUED, WCOREDUMP): Remove __WAIT_INT.
+	(wait, wait3, wait4): Use int * for the stat_loc argument.
+	* posix/wait.c (__wait): Likewise.
+	* posix/wait3.c (__wait3): Likewise.
+	* posix/wait4.c (__wait4): Likewise.
+	* stdlib/stdlib.h (__WAIT_INT, __WAIT_STATUS)
+	(__WAIT_STATUS_DEFN): Remove.
+	(WEXITSTATUS, WTERMSIG, WSTOPSIG, WIFEXITED, WIFSIGNALED)
+	(WIFSTOPPED, WIFCONTINUED): Remove __WAIT_INT.
+	* sysdeps/mach/hurd/wait4.c (__wait4): Use int * for the stat_loc
+	argument.
+	* sysdeps/posix/wait.c (__libc_wait): Likewise.
+	* sysdeps/posix/wait3.c (__wait3): Likewise.
+	* sysdeps/unix/bsd/wait.c (__libc_wait): Likewise.
+	* sysdeps/unix/bsd/wait3.c (__wait3): Likewise.
+	* sysdeps/unix/bsd/waitpid.c (__waitpid): Remove cast.
+	* sysdeps/unix/sysv/linux/wait.c (__libc_wait): Use int * for the
+	stat_loc argument.
+	* manual/process.texi (BSD Wait Functions): Remove union wait.
+
 2016-04-13  Andreas Schwab  <schwab@suse.de>
 
 	* elf/Makefile (extra-test-objs): Add tst-tlsalign-vars.o.

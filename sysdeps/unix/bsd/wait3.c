@@ -25,7 +25,7 @@
    there.  If the WUNTRACED bit is set in OPTIONS, return status for stopped
    children; otherwise don't.  */
 pid_t
-__wait3 (__WAIT_STATUS stat_loc, int options, struct rusage *usage)
+__wait3 (int *stat_loc, int options, struct rusage *usage)
 {
   return __wait4 (WAIT_ANY, stat_loc, options, usage);
 }

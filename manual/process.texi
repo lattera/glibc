@@ -763,53 +763,17 @@ signal number of the signal that caused the child process to stop.
 
 
 @node BSD Wait Functions
-@section BSD Process Wait Functions
+@section BSD Process Wait Function
 
-@Theglibc{} also provides these related facilities for compatibility
-with BSD Unix.  BSD uses the @code{union wait} data type to represent
-status values rather than an @code{int}.  The two representations are
-actually interchangeable; they describe the same bit patterns.  @Theglibc{}
-defines macros such as @code{WEXITSTATUS} so that they will
-work on either kind of object, and the @code{wait} function is defined
-to accept either type of pointer as its @var{status-ptr} argument.
-
-These functions are declared in @file{sys/wait.h}.
+@Theglibc{} also provides the @code{wait3} function for compatibility
+with BSD.  This function is declared in @file{sys/wait.h}.  It is the
+predecessor to @code{wait4}, which is more flexible.  @code{wait3} is
+now obsolete.
 @pindex sys/wait.h
 
 @comment sys/wait.h
 @comment BSD
-@deftp {Data Type} {union wait}
-This data type represents program termination status values.  It has
-the following members:
-
-@table @code
-@item int w_termsig
-The value of this member is the same as that of the
-@code{WTERMSIG} macro.
-
-@item int w_coredump
-The value of this member is the same as that of the
-@code{WCOREDUMP} macro.
-
-@item int w_retcode
-The value of this member is the same as that of the
-@code{WEXITSTATUS} macro.
-
-@item int w_stopsig
-The value of this member is the same as that of the
-@code{WSTOPSIG} macro.
-@end table
-
-Instead of accessing these members directly, you should use the
-equivalent macros.
-@end deftp
-
-The @code{wait3} function is the predecessor to @code{wait4}, which is
-more flexible.  @code{wait3} is now obsolete.
-
-@comment sys/wait.h
-@comment BSD
-@deftypefun pid_t wait3 (union wait *@var{status-ptr}, int @var{options}, struct rusage *@var{usage})
+@deftypefun pid_t wait3 (int *@var{status-ptr}, int @var{options}, struct rusage *@var{usage})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 If @var{usage} is a null pointer, @code{wait3} is equivalent to
 @code{waitpid (-1, @var{status-ptr}, @var{options})}.

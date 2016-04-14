@@ -34,62 +34,23 @@ __BEGIN_DECLS
    bits to `waitpid', `wait3', and `wait4'.  */
 # include <bits/waitflags.h>
 
-# ifdef	__USE_MISC
-
-/* Lots of hair to allow traditional BSD use of `union wait'
-   as well as POSIX.1 use of `int' for the status word.  */
-
-#  if defined __GNUC__ && !defined __cplusplus
-#   define __WAIT_INT(status) \
-  (__extension__ (((union { __typeof(status) __in; int __i; }) \
-		   { .__in = (status) }).__i))
-#  else
-#   define __WAIT_INT(status)	(*(const int *) &(status))
-#  endif
-
-/* This is the type of the argument to `wait'.  The funky union
-   causes redeclarations with either `int *' or `union wait *' to be
-   allowed without complaint.  __WAIT_STATUS_DEFN is the type used in
-   the actual function definitions.  */
-
-#  if !defined __GNUC__ || __GNUC__ < 2 || defined __cplusplus
-#   define __WAIT_STATUS	void *
-#   define __WAIT_STATUS_DEFN	void *
-#  else
-/* This works in GCC 2.6.1 and later.  */
-typedef union
-  {
-    union wait *__uptr;
-    int *__iptr;
-  } __WAIT_STATUS __attribute__ ((__transparent_union__));
-#   define __WAIT_STATUS_DEFN	int *
-#  endif
-
-# else /* Don't use misc.  */
-
-#  define __WAIT_INT(status)	(status)
-#  define __WAIT_STATUS		int *
-#  define __WAIT_STATUS_DEFN	int *
-
-# endif /* Use misc.  */
-
 /* This will define all the `__W*' macros.  */
 # include <bits/waitstatus.h>
 
-# define WEXITSTATUS(status)	__WEXITSTATUS (__WAIT_INT (status))
-# define WTERMSIG(status)	__WTERMSIG (__WAIT_INT (status))
-# define WSTOPSIG(status)	__WSTOPSIG (__WAIT_INT (status))
-# define WIFEXITED(status)	__WIFEXITED (__WAIT_INT (status))
-# define WIFSIGNALED(status)	__WIFSIGNALED (__WAIT_INT (status))
-# define WIFSTOPPED(status)	__WIFSTOPPED (__WAIT_INT (status))
+# define WEXITSTATUS(status)	__WEXITSTATUS (status)
+# define WTERMSIG(status)	__WTERMSIG (status)
+# define WSTOPSIG(status)	__WSTOPSIG (status)
+# define WIFEXITED(status)	__WIFEXITED (status)
+# define WIFSIGNALED(status)	__WIFSIGNALED (status)
+# define WIFSTOPPED(status)	__WIFSTOPPED (status)
 # ifdef __WIFCONTINUED
-#  define WIFCONTINUED(status)	__WIFCONTINUED (__WAIT_INT (status))
+#  define WIFCONTINUED(status)	__WIFCONTINUED (status)
 # endif
 #endif	/* <stdlib.h> not included.  */
 
 #ifdef	__USE_MISC
 # define WCOREFLAG		__WCOREFLAG
-# define WCOREDUMP(status)	__WCOREDUMP (__WAIT_INT (status))
+# define WCOREDUMP(status)	__WCOREDUMP (status)
 # define W_EXITCODE(ret, sig)	__W_EXITCODE (ret, sig)
 # define W_STOPCODE(sig)	__W_STOPCODE (sig)
 #endif
@@ -110,7 +71,7 @@ typedef enum
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern __pid_t wait (__WAIT_STATUS __stat_loc);
+extern __pid_t wait (int *__stat_loc);
 
 #ifdef	__USE_MISC
 /* Special values for the PID argument to `waitpid' and `wait4'.  */
@@ -170,13 +131,13 @@ struct rusage;
    nil, store information about the child's resource usage there.  If the
    WUNTRACED bit is set in OPTIONS, return status for stopped children;
    otherwise don't.  */
-extern __pid_t wait3 (__WAIT_STATUS __stat_loc, int __options,
+extern __pid_t wait3 (int *__stat_loc, int __options,
 		      struct rusage * __usage) __THROWNL;
 #endif
 
 #ifdef __USE_MISC
 /* PID is like waitpid.  Other args are like wait3.  */
-extern __pid_t wait4 (__pid_t __pid, __WAIT_STATUS __stat_loc, int __options,
+extern __pid_t wait4 (__pid_t __pid, int *__stat_loc, int __options,
 		      struct rusage *__usage) __THROWNL;
 #endif /* Use misc.  */
 

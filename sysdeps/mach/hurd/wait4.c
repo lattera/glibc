@@ -22,8 +22,7 @@
 #include <hurd/port.h>
 
 pid_t
-__wait4 (pid_t pid, __WAIT_STATUS_DEFN stat_loc, int options,
-	 struct rusage *usage)
+__wait4 (pid_t pid, int *stat_loc, int options, struct rusage *usage)
 {
   pid_t dead;
   error_t err;
