@@ -1,3 +1,9 @@
+2016-04-14  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/arena.c (__malloc_fork_lock_parent)
+	(__malloc_fork_unlock_parent, __malloc_fork_unlock_child): Add
+	internal_function attribute.
+
 2016-04-14  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* stdio-common/printf_fp.c (__printf_fp_l):
