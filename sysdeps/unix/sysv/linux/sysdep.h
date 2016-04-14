@@ -16,6 +16,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <bits/wordsize.h>
+#include <kernel-features.h>
 
 /* Set error number and return -1.  A target may choose to return the
    internal function, __syscall_error, which sets errno and returns -1.
