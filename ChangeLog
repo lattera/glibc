@@ -1,5 +1,22 @@
 2016-04-14  Florian Weimer  <fweimer@redhat.com>
 
+	Remove malloc hooks from fork handler.  They are no longer needed
+	because malloc runs right before fork, and no malloc calls from
+	other fork handlers are not possible anymore.
+	* malloc/malloc.c (malloc_atfork, free_atfork): Remove
+	declarations.
+	* malloc/arena.c (save_malloc_hook, save_free_hook, save_arena)
+	(ATFORK_ARENA_PTR, malloc_atfork, free_atfork)
+	(atfork_recursive_cntr): Remove.
+	(__malloc_fork_lock_parent): Do not override malloc hooks and
+	thread_arena.
+	(__malloc_fork_unlock_parent): Do not restore malloc hooks and
+	thread_arena.
+	(__malloc_fork_unlock_child): Do not restore malloc hooks.  Use
+	thread_arena instead of save_arena.
+
+2016-04-14  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/nptl/malloc-machine.h (ATFORK_MEM, __dso_handle)
 	(thread_atfork, thread_atfork_static): Remove.
 	* sysdeps/mach/hurd/malloc-machine.h:
