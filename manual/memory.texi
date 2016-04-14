@@ -1051,14 +1051,6 @@ systems that do not support @w{ISO C11}.
 @c     _dl_addr_inside_object ok
 @c    determine_info ok
 @c    __rtld_lock_unlock_recursive (dl_load_lock) @aculock
-@c   thread_atfork @asulock @aculock @acsfd @acsmem
-@c    __register_atfork @asulock @aculock @acsfd @acsmem
-@c     lll_lock (__fork_lock) @asulock @aculock
-@c     fork_handler_alloc @asulock @aculock @acsfd @acsmem
-@c      calloc dup @asulock @aculock @acsfd @acsmem
-@c     __linkin_atfork ok
-@c      catomic_compare_and_exchange_bool_acq ok
-@c     lll_unlock (__fork_lock) @aculock
 @c   *_environ @mtsenv
 @c   next_env_entry ok
 @c   strcspn dup ok

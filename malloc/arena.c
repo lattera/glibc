@@ -133,10 +133,6 @@ static void *(*save_malloc_hook)(size_t __size, const void *);
 static void (*save_free_hook) (void *__ptr, const void *);
 static void *save_arena;
 
-# ifdef ATFORK_MEM
-ATFORK_MEM;
-# endif
-
 /* Magic value for the thread-specific arena pointer when
    malloc_atfork() is in use.  */
 
@@ -202,14 +198,14 @@ free_atfork (void *mem, const void *caller)
 /* Counter for number of times the list is locked by the same thread.  */
 static unsigned int atfork_recursive_cntr;
 
-/* The following two functions are registered via thread_atfork() to
-   make sure that the mutexes remain in a consistent state in the
-   fork()ed version of a thread.  Also adapt the malloc and free hooks
-   temporarily, because the `atfork' handler mechanism may use
-   malloc/free internally (e.g. in LinuxThreads). */
+/* The following three functions are called around fork from a
+   multi-threaded process.  We do not use the general fork handler
+   mechanism to make sure that our handlers are the last ones being
+   called, so that other fork handlers can use the malloc
+   subsystem.  */
 
-static void
-ptmalloc_lock_all (void)
+void
+__malloc_fork_lock_parent (void)
 {
   mstate ar_ptr;
 
@@ -217,7 +213,7 @@ ptmalloc_lock_all (void)
     return;
 
   /* We do not acquire free_list_lock here because we completely
-     reconstruct free_list in ptmalloc_unlock_all2.  */
+     reconstruct free_list in __malloc_fork_unlock_child.  */
 
   if (mutex_trylock (&list_lock))
     {
@@ -242,7 +238,7 @@ ptmalloc_lock_all (void)
   __free_hook = free_atfork;
   /* Only the current thread may perform malloc/free calls now.
      save_arena will be reattached to the current thread, in
-     ptmalloc_lock_all, so save_arena->attached_threads is not
+     __malloc_fork_lock_parent, so save_arena->attached_threads is not
      updated.  */
   save_arena = thread_arena;
   thread_arena = ATFORK_ARENA_PTR;
@@ -250,8 +246,8 @@ out:
   ++atfork_recursive_cntr;
 }
 
-static void
-ptmalloc_unlock_all (void)
+void
+__malloc_fork_unlock_parent (void)
 {
   mstate ar_ptr;
 
@@ -262,8 +258,8 @@ ptmalloc_unlock_all (void)
     return;
 
   /* Replace ATFORK_ARENA_PTR with save_arena.
-     save_arena->attached_threads was not changed in ptmalloc_lock_all
-     and is still correct.  */
+     save_arena->attached_threads was not changed in
+     __malloc_fork_lock_parent and is still correct.  */
   thread_arena = save_arena;
   __malloc_hook = save_malloc_hook;
   __free_hook = save_free_hook;
@@ -277,15 +273,8 @@ ptmalloc_unlock_all (void)
   (void) mutex_unlock (&list_lock);
 }
 
-# ifdef __linux__
-
-/* In NPTL, unlocking a mutex in the child process after a
-   fork() is currently unsafe, whereas re-initializing it is safe and
-   does not leak resources.  Therefore, a special atfork handler is
-   installed for the child. */
-
-static void
-ptmalloc_unlock_all2 (void)
+void
+__malloc_fork_unlock_child (void)
 {
   mstate ar_ptr;
 
@@ -320,11 +309,6 @@ ptmalloc_unlock_all2 (void)
   mutex_init (&list_lock);
   atfork_recursive_cntr = 0;
 }
-
-# else
-
-#  define ptmalloc_unlock_all2 ptmalloc_unlock_all
-# endif
 
 /* Initialization routine. */
 #include <string.h>
@@ -394,7 +378,6 @@ ptmalloc_init (void)
 #endif
 
   thread_arena = &main_arena;
-  thread_atfork (ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all2);
   const char *s = NULL;
   if (__glibc_likely (_environ != NULL))
     {
@@ -468,14 +451,6 @@ ptmalloc_init (void)
     (*hook)();
   __malloc_initialized = 1;
 }
-
-/* There are platforms (e.g. Hurd) with a link-time hook mechanism. */
-#ifdef thread_atfork_static
-thread_atfork_static (ptmalloc_lock_all, ptmalloc_unlock_all,		      \
-                      ptmalloc_unlock_all2)
-#endif
-
-
 
 /* Managing heaps and arenas (for concurrent threads) */
 
@@ -822,7 +797,8 @@ _int_new_arena (size_t size)
      limit is reached).  At this point, some arena has to be attached
      to two threads.  We could acquire the arena lock before list_lock
      to make it less likely that reused_arena picks this new arena,
-     but this could result in a deadlock with ptmalloc_lock_all.  */
+     but this could result in a deadlock with
+     __malloc_fork_lock_parent.  */
 
   (void) mutex_lock (&a->mutex);
 

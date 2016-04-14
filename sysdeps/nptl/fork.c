@@ -31,7 +31,7 @@
 #include <fork.h>
 #include <arch-fork.h>
 #include <futex-internal.h>
-
+#include <malloc/malloc-internal.h>
 
 static void
 fresetlockfiles (void)
@@ -111,6 +111,11 @@ __libc_fork (void)
 
   _IO_list_lock ();
 
+  /* Acquire malloc locks.  This needs to come last because fork
+     handlers may use malloc, and the libio list lock has an indirect
+     malloc dependency as well (via the getdelim function).  */
+  __malloc_fork_lock_parent ();
+
 #ifndef NDEBUG
   pid_t ppid = THREAD_GETMEM (THREAD_SELF, tid);
 #endif
@@ -168,6 +173,9 @@ __libc_fork (void)
 # endif
 #endif
 
+      /* Release malloc locks.  */
+      __malloc_fork_unlock_child ();
+
       /* Reset the file list.  These are recursive mutexes.  */
       fresetlockfiles ();
 
@@ -208,6 +216,9 @@ __libc_fork (void)
 
       /* Restore the PID value.  */
       THREAD_SETMEM (THREAD_SELF, pid, parentpid);
+
+      /* Release malloc locks, parent process variant.  */
+      __malloc_fork_unlock_parent ();
 
       /* We execute this even if the 'fork' call failed.  */
       _IO_list_unlock ();

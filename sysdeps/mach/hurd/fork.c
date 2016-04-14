@@ -26,6 +26,7 @@
 #include <assert.h>
 #include "hurdmalloc.h"		/* XXX */
 #include <tls.h>
+#include <malloc/malloc-internal.h>
 
 #undef __fork
 
@@ -106,6 +107,12 @@ __fork (void)
 
       /* Run things that prepare for forking before we create the task.  */
       RUN_HOOK (_hurd_fork_prepare_hook, ());
+
+      /* Acquire malloc locks.  This needs to come last because fork
+	 handlers may use malloc, and the libio list lock has an
+	 indirect malloc dependency as well (via the getdelim
+	 function).  */
+      __malloc_fork_lock_parent ();
 
       /* Lock things that want to be locked before we fork.  */
       {
@@ -604,6 +611,9 @@ __fork (void)
 			   nthreads * sizeof (*threads));
 	}
 
+      /* Release malloc locks.  */
+      __malloc_fork_unlock_parent ();
+
       /* Run things that want to run in the parent to restore it to
 	 normality.  Usually prepare hooks and parent hooks are
 	 symmetrical: the prepare hook arrests state in some way for the
@@ -654,6 +664,9 @@ __fork (void)
 
       /* Forking clears the trace flag.  */
       __sigemptyset (&_hurdsig_traced);
+
+      /* Release malloc locks.  */
+      __malloc_fork_unlock_child ();
 
       /* Run things that want to run in the child task to set up.  */
       RUN_HOOK (_hurd_fork_child_hook, ());

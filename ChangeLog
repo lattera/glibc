@@ -1,5 +1,29 @@
 2016-04-14  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19431]
+	Run the malloc fork handler as late as possible to avoid deadlocks.
+	* malloc/malloc-internal.h: New file.
+	* malloc/malloc.c: Include it.
+	* malloc/arena.c (ATFORK_MEM): Remove.
+	(__malloc_fork_lock_parent): Rename from ptmalloc_lock_all.
+	Update comment.
+	(__malloc_fork_unlock_parent): Rename from ptmalloc_unlock_all.
+	(__malloc_fork_unlock_child): Rename from ptmalloc_unlock_all2.
+	Remove outdated comment.
+	(ptmalloc_init): Do not call thread_atfork.  Remove
+	thread_atfork_static.
+	* malloc/tst-malloc-fork-deadlock.c: New file.
+	* Makefile (tests): Add tst-malloc-fork-deadlock.
+	(tst-malloc-fork-deadlock): Link against libpthread.
+	* manual/memory.texi (Aligned Memory Blocks): Update safety
+	annotation comments.
+	* sysdeps/nptl/fork.c (__libc_fork): Call
+	__malloc_fork_lock_parent, __malloc_fork_unlock_parent,
+	__malloc_fork_unlock_child.
+	* sysdeps/mach/hurd/fork.c (__fork): Likewise.
+
+2016-04-14  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19613]
 	Remove union wait.
 	* bits/waitstatus.h (union wait, w_termsig, w_coredump, w_retcode)
