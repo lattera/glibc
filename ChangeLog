@@ -1,3 +1,10 @@
+2016-04-14  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* stdio-common/printf_fp.c (__printf_fp_l):
+	Rename ___printf_fp_l to __printf_fp_l and
+	remove strong alias. Use libc_hidden_def instead
+	of ldbl_hidden_def macro.
+
 2016-04-14  Florian Weimer  <fweimer@redhat.com>
 
 	Remove malloc hooks from fork handler.  They are no longer needed

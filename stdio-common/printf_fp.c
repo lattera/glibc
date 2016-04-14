@@ -209,9 +209,9 @@ hack_digit (struct hack_digit_param *p)
 }
 
 int
-___printf_fp_l (FILE *fp, locale_t loc,
-		const struct printf_info *info,
-		const void *const *args)
+__printf_fp_l (FILE *fp, locale_t loc,
+	       const struct printf_info *info,
+	       const void *const *args)
 {
   /* The floating-point value to output.  */
   union
@@ -1248,14 +1248,13 @@ ___printf_fp_l (FILE *fp, locale_t loc,
   }
   return done;
 }
-ldbl_hidden_def (___printf_fp_l, __printf_fp_l)
-ldbl_strong_alias (___printf_fp_l, __printf_fp_l)
+libc_hidden_def (__printf_fp_l)
 
 int
 ___printf_fp (FILE *fp, const struct printf_info *info,
 	      const void *const *args)
 {
-  return ___printf_fp_l (fp, _NL_CURRENT_LOCALE, info, args);
+  return __printf_fp_l (fp, _NL_CURRENT_LOCALE, info, args);
 }
 ldbl_hidden_def (___printf_fp, __printf_fp)
 ldbl_strong_alias (___printf_fp, __printf_fp)
