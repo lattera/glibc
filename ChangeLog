@@ -1,5 +1,12 @@
 2016-04-14  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/nptl/malloc-machine.h (ATFORK_MEM, __dso_handle)
+	(thread_atfork, thread_atfork_static): Remove.
+	* sysdeps/mach/hurd/malloc-machine.h:
+	(thread_atfork, thread_atfork_static): Remove.
+
+2016-04-14  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19431]
 	Run the malloc fork handler as late as possible to avoid deadlocks.
 	* malloc/malloc-internal.h: New file.

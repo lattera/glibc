@@ -20,8 +20,6 @@
 #ifndef _MALLOC_MACHINE_H
 #define _MALLOC_MACHINE_H
 
-#undef thread_atfork_static
-
 #include <atomic.h>
 #include <libc-lock.h>
 
@@ -42,12 +40,6 @@
 #define mutex_unlock(m) ({ __mutex_unlock(m); 0; })
 
 #define mutex_trylock(m) (!__mutex_trylock(m))
-
-#define thread_atfork(prepare, parent, child) do {} while(0)
-#define thread_atfork_static(prepare, parent, child) \
- text_set_element(_hurd_fork_prepare_hook, prepare); \
- text_set_element(_hurd_fork_parent_hook, parent); \
- text_set_element(_hurd_fork_child_hook, child);
 
 /* No we're *not* using pthreads.  */
 #define __pthread_initialize ((void (*)(void))0)

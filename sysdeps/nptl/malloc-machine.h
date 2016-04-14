@@ -20,8 +20,6 @@
 #ifndef _MALLOC_MACHINE_H
 #define _MALLOC_MACHINE_H
 
-#undef thread_atfork_static
-
 #include <atomic.h>
 #include <libc-lock.h>
 
@@ -31,31 +29,6 @@ __libc_lock_define (typedef, mutex_t)
 #define mutex_lock(m)		__libc_lock_lock (*(m))
 #define mutex_trylock(m)	__libc_lock_trylock (*(m))
 #define mutex_unlock(m)		__libc_lock_unlock (*(m))
-
-/* This is defined by newer gcc version unique for each module.  */
-extern void *__dso_handle __attribute__ ((__weak__));
-
-#include <fork.h>
-
-#define ATFORK_MEM static struct fork_handler atfork_mem
-
-#ifdef SHARED
-# define thread_atfork(prepare, parent, child) \
-  atfork_mem.prepare_handler = prepare;					      \
-  atfork_mem.parent_handler = parent;					      \
-  atfork_mem.child_handler = child;					      \
-  atfork_mem.dso_handle = __dso_handle;					      \
-  atfork_mem.refcntr = 1;						      \
-  __linkin_atfork (&atfork_mem)
-#else
-# define thread_atfork(prepare, parent, child) \
-  atfork_mem.prepare_handler = prepare;					      \
-  atfork_mem.parent_handler = parent;					      \
-  atfork_mem.child_handler = child;					      \
-  atfork_mem.dso_handle = &__dso_handle == NULL ? NULL : __dso_handle;	      \
-  atfork_mem.refcntr = 1;						      \
-  __linkin_atfork (&atfork_mem)
-#endif
 
 #include <sysdeps/generic/malloc-machine.h>
 
