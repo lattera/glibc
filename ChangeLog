@@ -1,5 +1,11 @@
 2016-04-16  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #16983]
+	* locale/programs/ld-address.c (address_finish): Update postal_fmt
+	comment.  Add "ln" to strchr check on postal_fmt.
+
+2016-04-16  Mike Frysinger  <vapier@gentoo.org>
+
 	* locale/programs/ld-telephone.c (telephone_finish): Add %t to the
 	default tel_int_fmt.  Add "Cet" to strchr check on tel_int_fmt and
 	tel_dom_fmt.

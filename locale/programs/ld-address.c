@@ -150,8 +150,8 @@ No definition for %s category found"), "LC_ADDRESS"));
     }
   else
     {
-      /* We must check whether the format string contains only the
-	 allowed escape sequences.  */
+      /* We must check whether the format string contains only the allowed
+	 escape sequences.  Last checked against ISO 30112 WD10 [2014]. */
       const char *cp = address->postal_fmt;
 
       if (*cp == '\0')
@@ -165,7 +165,7 @@ No definition for %s category found"), "LC_ADDRESS"));
 		if (*++cp == 'R')
 		  /* Romanize-flag.  */
 		  ++cp;
-		if (strchr ("afdbshNtreCzTSc%", *cp) == NULL)
+		if (strchr ("nafdbshNtreClzTSc%", *cp) == NULL)
 		  {
 		    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: invalid escape `%%%c' sequence in field `%s'"),
