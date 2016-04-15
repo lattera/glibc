@@ -1,3 +1,22 @@
+2016-04-15  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/string.h: Use __GNUC_PREREQ(3,4) for bits/string2.h.
+	* string/bits/string2.h (__STRING2_SMALL_GET16): Remove.
+	(__STRING2_SMALL_GET32): Remove.
+	(memset): Remove.
+	(__memset_1): Remove.
+	(__memset_gc): Remove.
+	(__mempcpy): Remove.
+	(mempcpy): Remove.
+	(__mempcpy_args): Remove.
+	(strchr): Remove.
+	(strcpy): Remove.
+	(strcpy_args): Remove.
+	(__stpcpy_args): Remove.
+	(__strcmp_cc): Remove.
+	(__strcmp_gc): Remove.
+	(strstr): Remove.
+
 2016-04-15  Yvan Roux  <yvan.roux@linaro.org>
 
 	* stdlib/setenv.c (unsetenv): Fix ambiguous 'else'.

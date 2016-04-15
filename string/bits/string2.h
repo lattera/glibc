@@ -47,29 +47,7 @@
 #endif
 
 #if _STRING_INLINE_unaligned
-/* If we can do unaligned memory accesses we must know the endianess.  */
-# include <endian.h>
 # include <bits/types.h>
-
-# if __BYTE_ORDER == __LITTLE_ENDIAN
-#  define __STRING2_SMALL_GET16(src, idx) \
-     (((const unsigned char *) (const char *) (src))[idx + 1] << 8	      \
-      | ((const unsigned char *) (const char *) (src))[idx])
-#  define __STRING2_SMALL_GET32(src, idx) \
-     (((((const unsigned char *) (const char *) (src))[idx + 3] << 8	      \
-	| ((const unsigned char *) (const char *) (src))[idx + 2]) << 8	      \
-       | ((const unsigned char *) (const char *) (src))[idx + 1]) << 8	      \
-      | ((const unsigned char *) (const char *) (src))[idx])
-# else
-#  define __STRING2_SMALL_GET16(src, idx) \
-     (((const unsigned char *) (const char *) (src))[idx] << 8		      \
-      | ((const unsigned char *) (const char *) (src))[idx + 1])
-#  define __STRING2_SMALL_GET32(src, idx) \
-     (((((const unsigned char *) (const char *) (src))[idx] << 8	      \
-	| ((const unsigned char *) (const char *) (src))[idx + 1]) << 8	      \
-       | ((const unsigned char *) (const char *) (src))[idx + 2]) << 8	      \
-      | ((const unsigned char *) (const char *) (src))[idx + 3])
-# endif
 #else
 /* These are a few types we need for the optimizations if we cannot
    use unaligned memory accesses.  */
@@ -94,148 +72,11 @@ __STRING2_COPY_TYPE (8);
 
 /* Set N bytes of S to C.  */
 #if !defined _HAVE_STRING_ARCH_memset
-# if !__GNUC_PREREQ (3, 0)
-#  if _STRING_INLINE_unaligned
-#   define memset(s, c, n) \
-  (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
-		  ? ((n) == 1						      \
-		     ? __memset_1 (s, c)				      \
-		     : __memset_gc (s, c, n))				      \
-		  : (__builtin_constant_p (c) && (c) == '\0'		      \
-		     ? ({ void *__s = (s); __bzero (__s, n); __s; })	      \
-		     : memset (s, c, n))))
-
-#   define __memset_1(s, c) ({ void *__s = (s);				      \
-			    *((__uint8_t *) __s) = (__uint8_t) c; __s; })
-
-#   define __memset_gc(s, c, n) \
-  ({ void *__s = (s);							      \
-     union {								      \
-       unsigned int __ui;						      \
-       unsigned short int __usi;					      \
-       unsigned char __uc;						      \
-     } *__u = __s;							      \
-     __uint8_t __c = (__uint8_t) (c);					      \
-									      \
-     /* This `switch' statement will be removed at compile-time.  */	      \
-     switch ((unsigned int) (n))					      \
-       {								      \
-       case 15:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 11:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 7:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 3:								      \
-	 __u->__usi = (unsigned short int) __c * 0x0101;		      \
-	 __u = __extension__ ((void *) __u + 2);			      \
-	 __u->__uc = (unsigned char) __c;				      \
-	 break;								      \
-									      \
-       case 14:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 10:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 6:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 2:								      \
-	 __u->__usi = (unsigned short int) __c * 0x0101;		      \
-	 break;								      \
-									      \
-       case 13:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 9:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 5:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 1:								      \
-	 __u->__uc = (unsigned char) __c;				      \
-	 break;								      \
-									      \
-       case 16:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 12:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 8:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-	 __u = __extension__ ((void *) __u + 4);			      \
-       case 4:								      \
-	 __u->__ui = __c * 0x01010101;					      \
-       case 0:								      \
-	 break;								      \
-       }								      \
-									      \
-     __s; })
-#  else
-#   define memset(s, c, n) \
-  (__extension__ (__builtin_constant_p (c) && (c) == '\0'		      \
-		  ? ({ void *__s = (s); __bzero (__s, n); __s; })	      \
-		  : memset (s, c, n)))
-#  endif
-# endif
-
-/* GCC < 3.0 optimizes memset(s, 0, n) but not bzero(s, n).
-   The optimization is broken before EGCS 1.1.
-   GCC 3.0+ has __builtin_bzero as well, but at least till GCC 3.4
-   if it decides to call the library function, it calls memset
-   and not bzero.  */
-# if __GNUC_PREREQ (2, 91)
-#  define __bzero(s, n) __builtin_memset (s, '\0', n)
-# endif
-
+# define __bzero(s, n) __builtin_memset (s, '\0', n)
 #endif
 
-
-/* Copy N bytes from SRC to DEST, returning pointer to byte following the
-   last copied.  */
-#ifdef __USE_GNU
-# if !defined _HAVE_STRING_ARCH_mempcpy || defined _FORCE_INLINES
-#  ifndef _HAVE_STRING_ARCH_mempcpy
-#   if __GNUC_PREREQ (3, 4)
-#    define __mempcpy(dest, src, n) __builtin_mempcpy (dest, src, n)
-#   elif __GNUC_PREREQ (3, 0)
-#    define __mempcpy(dest, src, n) \
-  (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
-		  && __string2_1bptr_p (src) && n <= 8			      \
-		  ? __builtin_memcpy (dest, src, n) + (n)		      \
-		  : __mempcpy (dest, src, n)))
-#   else
-#    define __mempcpy(dest, src, n) \
-  (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
-		  && __string2_1bptr_p (src) && n <= 8			      \
-		  ? __mempcpy_small (dest, __mempcpy_args (src), n)	      \
-		  : __mempcpy (dest, src, n)))
-#   endif
-/* In glibc we use this function frequently but for namespace reasons
-   we have to use the name `__mempcpy'.  */
-#   define mempcpy(dest, src, n) __mempcpy (dest, src, n)
-#  endif
-
-#  if !__GNUC_PREREQ (3, 0) || defined _FORCE_INLINES
-#   if _STRING_INLINE_unaligned
-#    ifndef _FORCE_INLINES
-#     define __mempcpy_args(src) \
-     ((const char *) (src))[0], ((const char *) (src))[2],		      \
-     ((const char *) (src))[4], ((const char *) (src))[6],		      \
-     __extension__ __STRING2_SMALL_GET16 (src, 0),			      \
-     __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
-     __extension__ __STRING2_SMALL_GET32 (src, 0),			      \
-     __extension__ __STRING2_SMALL_GET32 (src, 4)
-#    endif
-__STRING_INLINE void *__mempcpy_small (void *, char, char, char, char,
-				       __uint16_t, __uint16_t, __uint32_t,
-				       __uint32_t, size_t);
+# if defined _FORCE_INLINES
+#  if _STRING_INLINE_unaligned
 __STRING_INLINE void *
 __mempcpy_small (void *__dest1,
 		 char __src0_1, char __src2_1, char __src4_1, char __src6_1,
@@ -298,44 +139,7 @@ __mempcpy_small (void *__dest1,
     }
   return (void *) __u;
 }
-#   else
-#    ifndef _FORCE_INLINES
-#     define __mempcpy_args(src) \
-     ((const char *) (src))[0],						      \
-     __extension__ ((__STRING2_COPY_ARR2)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1] } }),	      \
-     __extension__ ((__STRING2_COPY_ARR3)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2] } }),				      \
-     __extension__ ((__STRING2_COPY_ARR4)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3] } }),	      \
-     __extension__ ((__STRING2_COPY_ARR5)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  ((const char *) (src))[4] } }),				      \
-     __extension__ ((__STRING2_COPY_ARR6)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  ((const char *) (src))[4], ((const char *) (src))[5] } }),	      \
-     __extension__ ((__STRING2_COPY_ARR7)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  ((const char *) (src))[4], ((const char *) (src))[5],		      \
-	  ((const char *) (src))[6] } }),				      \
-     __extension__ ((__STRING2_COPY_ARR8)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  ((const char *) (src))[4], ((const char *) (src))[5],		      \
-	  ((const char *) (src))[6], ((const char *) (src))[7] } })
-#    endif
-__STRING_INLINE void *__mempcpy_small (void *, char, __STRING2_COPY_ARR2,
-				       __STRING2_COPY_ARR3,
-				       __STRING2_COPY_ARR4,
-				       __STRING2_COPY_ARR5,
-				       __STRING2_COPY_ARR6,
-				       __STRING2_COPY_ARR7,
-				       __STRING2_COPY_ARR8, size_t);
+#  else
 __STRING_INLINE void *
 __mempcpy_small (void *__dest, char __src1,
 		 __STRING2_COPY_ARR2 __src2, __STRING2_COPY_ARR3 __src3,
@@ -382,8 +186,6 @@ __mempcpy_small (void *__dest, char __src1,
     }
   return __extension__ ((void *) __u + __srclen);
 }
-#   endif
-#  endif
 # endif
 #endif
 
@@ -391,44 +193,17 @@ __mempcpy_small (void *__dest, char __src1,
 /* Return pointer to C in S.  */
 #ifndef _HAVE_STRING_ARCH_strchr
 extern void *__rawmemchr (const void *__s, int __c);
-# if __GNUC_PREREQ (3, 2)
 #  define strchr(s, c) \
   (__extension__ (__builtin_constant_p (c) && !__builtin_constant_p (s)	      \
 		  && (c) == '\0'					      \
 		  ? (char *) __rawmemchr (s, c)				      \
 		  : __builtin_strchr (s, c)))
-# else
-#  define strchr(s, c) \
-  (__extension__ (__builtin_constant_p (c) && (c) == '\0'		      \
-		  ? (char *) __rawmemchr (s, c)				      \
-		  : strchr (s, c)))
-# endif
 #endif
 
 
 /* Copy SRC to DEST.  */
-#if (!defined _HAVE_STRING_ARCH_strcpy && !__GNUC_PREREQ (3, 0)) \
-    || defined _FORCE_INLINES
-# if !defined _HAVE_STRING_ARCH_strcpy && !__GNUC_PREREQ (3, 0)
-#  define strcpy(dest, src) \
-  (__extension__ (__builtin_constant_p (src)				      \
-		  ? (__string2_1bptr_p (src) && strlen (src) + 1 <= 8	      \
-		     ? __strcpy_small (dest, __strcpy_args (src),	      \
-				       strlen (src) + 1)		      \
-		     : (char *) memcpy (dest, src, strlen (src) + 1))	      \
-		  : strcpy (dest, src)))
-# endif
-
+#if defined _FORCE_INLINES
 # if _STRING_INLINE_unaligned
-#  ifndef _FORCE_INLINES
-#   define __strcpy_args(src) \
-     __extension__ __STRING2_SMALL_GET16 (src, 0),			      \
-     __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
-     __extension__ __STRING2_SMALL_GET32 (src, 0),			      \
-     __extension__ __STRING2_SMALL_GET32 (src, 4)
-#  endif
-__STRING_INLINE char *__strcpy_small (char *, __uint16_t, __uint16_t,
-				      __uint32_t, __uint32_t, size_t);
 __STRING_INLINE char *
 __strcpy_small (char *__dest,
 		__uint16_t __src0_2, __uint16_t __src4_2,
@@ -482,42 +257,6 @@ __strcpy_small (char *__dest,
   return __dest;
 }
 # else
-#  ifndef _FORCE_INLINES
-#   define __strcpy_args(src) \
-     __extension__ ((__STRING2_COPY_ARR2)				      \
-      { { ((const char *) (src))[0], '\0' } }),				      \
-     __extension__ ((__STRING2_COPY_ARR3)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  '\0' } }),							      \
-     __extension__ ((__STRING2_COPY_ARR4)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], '\0' } }),				      \
-     __extension__ ((__STRING2_COPY_ARR5)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  '\0' } }),							      \
-     __extension__ ((__STRING2_COPY_ARR6)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  ((const char *) (src))[4], '\0' } }),				      \
-     __extension__ ((__STRING2_COPY_ARR7)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  ((const char *) (src))[4], ((const char *) (src))[5],		      \
-	  '\0' } }),							      \
-     __extension__ ((__STRING2_COPY_ARR8)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  ((const char *) (src))[4], ((const char *) (src))[5],		      \
-	  ((const char *) (src))[6], '\0' } })
-#  endif
-__STRING_INLINE char *__strcpy_small (char *, __STRING2_COPY_ARR2,
-				      __STRING2_COPY_ARR3,
-				      __STRING2_COPY_ARR4,
-				      __STRING2_COPY_ARR5,
-				      __STRING2_COPY_ARR6,
-				      __STRING2_COPY_ARR7,
-				      __STRING2_COPY_ARR8, size_t);
 __STRING_INLINE char *
 __strcpy_small (char *__dest,
 		__STRING2_COPY_ARR2 __src2, __STRING2_COPY_ARR3 __src3,
@@ -570,44 +309,15 @@ __strcpy_small (char *__dest,
 
 /* Copy SRC to DEST, returning pointer to final NUL byte.  */
 #ifdef __USE_GNU
-# if !defined _HAVE_STRING_ARCH_stpcpy || defined _FORCE_INLINES
-#  ifndef _HAVE_STRING_ARCH_stpcpy
-#   if __GNUC_PREREQ (3, 4)
-#    define __stpcpy(dest, src) __builtin_stpcpy (dest, src)
-#   elif __GNUC_PREREQ (3, 0)
-#    define __stpcpy(dest, src) \
-  (__extension__ (__builtin_constant_p (src)				      \
-		  ? (__string2_1bptr_p (src) && strlen (src) + 1 <= 8	      \
-		     ? __builtin_strcpy (dest, src) + strlen (src)	      \
-		     : ((char *) (__mempcpy) (dest, src, strlen (src) + 1)    \
-			- 1))						      \
-		  : __stpcpy (dest, src)))
-#   else
-#    define __stpcpy(dest, src) \
-  (__extension__ (__builtin_constant_p (src)				      \
-		  ? (__string2_1bptr_p (src) && strlen (src) + 1 <= 8	      \
-		     ? __stpcpy_small (dest, __stpcpy_args (src),	      \
-				       strlen (src) + 1)		      \
-		     : ((char *) (__mempcpy) (dest, src, strlen (src) + 1)    \
-			- 1))						      \
-		  : __stpcpy (dest, src)))
-#   endif
+# ifndef _HAVE_STRING_ARCH_stpcpy
+#  define __stpcpy(dest, src) __builtin_stpcpy (dest, src)
 /* In glibc we use this function frequently but for namespace reasons
    we have to use the name `__stpcpy'.  */
-#   define stpcpy(dest, src) __stpcpy (dest, src)
-#  endif
+#  define stpcpy(dest, src) __stpcpy (dest, src)
+# endif
 
-#  if !__GNUC_PREREQ (3, 0) || defined _FORCE_INLINES
-#   if _STRING_INLINE_unaligned
-#    ifndef _FORCE_INLINES
-#     define __stpcpy_args(src) \
-     __extension__ __STRING2_SMALL_GET16 (src, 0),			      \
-     __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
-     __extension__ __STRING2_SMALL_GET32 (src, 0),			      \
-     __extension__ __STRING2_SMALL_GET32 (src, 4)
-#    endif
-__STRING_INLINE char *__stpcpy_small (char *, __uint16_t, __uint16_t,
-				      __uint32_t, __uint32_t, size_t);
+# if defined _FORCE_INLINES
+#  if _STRING_INLINE_unaligned
 __STRING_INLINE char *
 __stpcpy_small (char *__dest,
 		__uint16_t __src0_2, __uint16_t __src4_2,
@@ -665,43 +375,7 @@ __stpcpy_small (char *__dest,
     }
   return &__u->__c;
 }
-#   else
-#    ifndef _FORCE_INLINES
-#     define __stpcpy_args(src) \
-     __extension__ ((__STRING2_COPY_ARR2)				      \
-      { { ((const char *) (src))[0], '\0' } }),				      \
-     __extension__ ((__STRING2_COPY_ARR3)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  '\0' } }),							      \
-     __extension__ ((__STRING2_COPY_ARR4)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], '\0' } }),				      \
-     __extension__ ((__STRING2_COPY_ARR5)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  '\0' } }),							      \
-     __extension__ ((__STRING2_COPY_ARR6)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  ((const char *) (src))[4], '\0' } }),				      \
-     __extension__ ((__STRING2_COPY_ARR7)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  ((const char *) (src))[4], ((const char *) (src))[5],		      \
-	  '\0' } }),							      \
-     __extension__ ((__STRING2_COPY_ARR8)				      \
-      { { ((const char *) (src))[0], ((const char *) (src))[1],		      \
-	  ((const char *) (src))[2], ((const char *) (src))[3],		      \
-	  ((const char *) (src))[4], ((const char *) (src))[5],		      \
-	  ((const char *) (src))[6], '\0' } })
-#    endif
-__STRING_INLINE char *__stpcpy_small (char *, __STRING2_COPY_ARR2,
-				      __STRING2_COPY_ARR3,
-				      __STRING2_COPY_ARR4,
-				      __STRING2_COPY_ARR5,
-				      __STRING2_COPY_ARR6,
-				      __STRING2_COPY_ARR7,
-				      __STRING2_COPY_ARR8, size_t);
+#  else
 __STRING_INLINE char *
 __stpcpy_small (char *__dest,
 		__STRING2_COPY_ARR2 __src2, __STRING2_COPY_ARR3 __src3,
@@ -748,7 +422,6 @@ __stpcpy_small (char *__dest,
   }
   return __dest + __srclen - 1;
 }
-#   endif
 #  endif
 # endif
 #endif
@@ -756,16 +429,7 @@ __stpcpy_small (char *__dest,
 
 /* Copy no more than N characters of SRC to DEST.  */
 #ifndef _HAVE_STRING_ARCH_strncpy
-# if __GNUC_PREREQ (3, 2)
-#  define strncpy(dest, src, n) __builtin_strncpy (dest, src, n)
-# else
-#  define strncpy(dest, src, n) \
-  (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
-		  ? (strlen (src) + 1 >= ((size_t) (n))			      \
-		     ? (char *) memcpy (dest, src, n)			      \
-		     : strncpy (dest, src, n))				      \
-		  : strncpy (dest, src, n)))
-# endif
+# define strncpy(dest, src, n) __builtin_strncpy (dest, src, n)
 #endif
 
 
@@ -780,23 +444,15 @@ __stpcpy_small (char *__dest,
 		       : (*((char *) __mempcpy (strchr (__dest, '\0'),	      \
 						src, n)) = '\0', __dest))     \
 		    : strncat (dest, src, n); }))
-# elif __GNUC_PREREQ (3, 2)
-#  define strncat(dest, src, n) __builtin_strncat (dest, src, n)
 # else
-#  define strncat(dest, src, n) \
-  (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
-		  ? (strlen (src) < ((size_t) (n))			      \
-		     ? strcat (dest, src)				      \
-		     : strncat (dest, src, n))				      \
-		  : strncat (dest, src, n)))
+#  define strncat(dest, src, n) __builtin_strncat (dest, src, n)
 # endif
 #endif
 
 
 /* Compare characters of S1 and S2.  */
 #ifndef _HAVE_STRING_ARCH_strcmp
-# if __GNUC_PREREQ (3, 2)
-#  define strcmp(s1, s2) \
+# define strcmp(s1, s2) \
   __extension__								      \
   ({ size_t __s1_len, __s2_len;						      \
      (__builtin_constant_p (s1) && __builtin_constant_p (s2)		      \
@@ -813,57 +469,8 @@ __stpcpy_small (char *__dest,
 	    && (__s2_len = strlen (s2), __s2_len < 4)			      \
 	    ? (__builtin_constant_p (s1) && __string2_1bptr_p (s1)	      \
 	       ? __builtin_strcmp (s1, s2)				      \
-	       : __strcmp_gc (s1, s2, __s2_len))			      \
-	    : __builtin_strcmp (s1, s2)))); })
-# else
-#  define strcmp(s1, s2) \
-  __extension__								      \
-  ({ size_t __s1_len, __s2_len;						      \
-     (__builtin_constant_p (s1) && __builtin_constant_p (s2)		      \
-      && (__s1_len = strlen (s1), __s2_len = strlen (s2),		      \
-	  (!__string2_1bptr_p (s1) || __s1_len >= 4)			      \
-	  && (!__string2_1bptr_p (s2) || __s2_len >= 4))		      \
-      ? memcmp ((const char *) (s1), (const char *) (s2),		      \
-		(__s1_len < __s2_len ? __s1_len : __s2_len) + 1)	      \
-      : (__builtin_constant_p (s1) && __string2_1bptr_p (s1)		      \
-	 && (__s1_len = strlen (s1), __s1_len < 4)			      \
-	 ? (__builtin_constant_p (s2) && __string2_1bptr_p (s2)		      \
-	    ? __strcmp_cc (s1, s2, __s1_len)				      \
-	    : __strcmp_cg (s1, s2, __s1_len))				      \
-	 : (__builtin_constant_p (s2) && __string2_1bptr_p (s2)		      \
-	    && (__s2_len = strlen (s2), __s2_len < 4)			      \
-	    ? (__builtin_constant_p (s1) && __string2_1bptr_p (s1)	      \
-	       ? __strcmp_cc (s1, s2, __s2_len)				      \
-	       : __strcmp_gc (s1, s2, __s2_len))			      \
-	    : strcmp (s1, s2)))); })
-# endif
-
-# define __strcmp_cc(s1, s2, l) \
-  (__extension__ ({ int __result =					      \
-		      (((const unsigned char *) (const char *) (s1))[0]	      \
-		       - ((const unsigned char *) (const char *)(s2))[0]);    \
-		    if (l > 0 && __result == 0)				      \
-		      {							      \
-			__result = (((const unsigned char *)		      \
-				     (const char *) (s1))[1]		      \
-				    - ((const unsigned char *)		      \
-				       (const char *) (s2))[1]);	      \
-			if (l > 1 && __result == 0)			      \
-			  {						      \
-			    __result =					      \
-			      (((const unsigned char *)			      \
-				(const char *) (s1))[2]			      \
-			       - ((const unsigned char *)		      \
-				  (const char *) (s2))[2]);		      \
-			    if (l > 2 && __result == 0)			      \
-			      __result =				      \
-				(((const unsigned char *)		      \
-				  (const char *) (s1))[3]		      \
-				 - ((const unsigned char *)		      \
-				    (const char *) (s2))[3]);		      \
-			  }						      \
-		      }							      \
-		    __result; }))
+	       : -__strcmp_cg (s2, s1, __s2_len))			      \
+            : __builtin_strcmp (s1, s2)))); })
 
 # define __strcmp_cg(s1, s2, l1) \
   (__extension__ ({ const unsigned char *__s2 =				      \
@@ -886,8 +493,6 @@ __stpcpy_small (char *__dest,
 			  }						      \
 		      }							      \
 		    __result; }))
-
-# define __strcmp_gc(s1, s2, l2) (- __strcmp_cg (s2, s1, l2))
 #endif
 
 
@@ -906,41 +511,20 @@ __stpcpy_small (char *__dest,
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
 #ifndef _HAVE_STRING_ARCH_strcspn
-# if __GNUC_PREREQ (3, 2)
-#  define strcspn(s, reject) __builtin_strcspn (s, reject)
-# endif
+# define strcspn(s, reject) __builtin_strcspn (s, reject)
 #endif
 
 
 /* Return the length of the initial segment of S which
    consists entirely of characters in ACCEPT.  */
 #ifndef _HAVE_STRING_ARCH_strspn
-# if __GNUC_PREREQ (3, 2)
-#  define strspn(s, accept) __builtin_strspn (s, accept)
-# endif
+# define strspn(s, accept) __builtin_strspn (s, accept)
 #endif
 
 
 /* Find the first occurrence in S of any character in ACCEPT.  */
 #ifndef _HAVE_STRING_ARCH_strpbrk
-# if __GNUC_PREREQ (3, 2)
-#  define strpbrk(s, accept) __builtin_strpbrk (s, accept)
-# endif
-#endif
-
-
-/* Find the first occurrence of NEEDLE in HAYSTACK.  Newer gcc versions
-   do this itself.  */
-#if !defined _HAVE_STRING_ARCH_strstr && !__GNUC_PREREQ (2, 97)
-# define strstr(haystack, needle) \
-  (__extension__ (__builtin_constant_p (needle) && __string2_1bptr_p (needle) \
-		  ? (((const char *) (needle))[0] == '\0'		      \
-		     ? (char *) (size_t) (haystack)			      \
-		     : (((const char *) (needle))[1] == '\0'		      \
-			? strchr (haystack,				      \
-				  ((const char *) (needle))[0]) 	      \
-			: strstr (haystack, needle)))			      \
-		  : strstr (haystack, needle)))
+# define strpbrk(s, accept) __builtin_strpbrk (s, accept)
 #endif
 
 

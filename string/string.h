@@ -602,7 +602,7 @@ extern char *basename (const char *__filename) __THROW __nonnull ((1));
 #endif
 
 
-#if defined __GNUC__ && __GNUC__ >= 2
+#if __GNUC_PREREQ (3,4)
 # if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
      && !defined __NO_INLINE__ && !defined __cplusplus
 /* When using GNU CC we provide some optimized versions of selected
@@ -640,8 +640,6 @@ extern char *basename (const char *__filename) __THROW __nonnull ((1));
     && defined __extern_always_inline && __GNUC_PREREQ (3,2)
 # if !defined _FORCE_INLINES && !defined _HAVE_STRING_ARCH_mempcpy
 
-#undef mempcpy
-#undef __mempcpy
 #define mempcpy(dest, src, n) __mempcpy_inline (dest, src, n)
 #define __mempcpy(dest, src, n) __mempcpy_inline (dest, src, n)
 
