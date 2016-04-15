@@ -140,6 +140,14 @@ init_cpu_features (struct cpu_features *cpu_features)
 	      cpu_features->feature[index_arch_Prefer_No_VZEROUPPER]
 		|= bit_arch_Prefer_No_VZEROUPPER;
 
+	    case 0x5c:
+	    case 0x5f:
+	      /* Unaligned load versions are faster than SSSE3
+		 on Goldmont.  */
+
+	    case 0x4c:
+	      /* Airmont is a die shrink of Silvermont.  */
+
 	    case 0x37:
 	    case 0x4a:
 	    case 0x4d:
