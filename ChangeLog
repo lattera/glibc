@@ -1,3 +1,8 @@
+2016-04-15  Yvan Roux  <yvan.roux@linaro.org>
+
+	* stdlib/setenv.c (unsetenv): Fix ambiguous 'else'.
+	* nis/nis_call.c (nis_server_cache_add): Likewise.
+
 2016-04-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/sysdep.h: Include kernel-features.h.
