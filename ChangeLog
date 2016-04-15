@@ -1,3 +1,33 @@
+2016-04-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #19957]
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) == nptl] (test): Remove
+	tst-getpid2.
+	(test): Add tst-clone2.
+	* sysdeps/unix/sysv/linux/tst-clone2.c: New file.
+	* sysdeps/unix/sysv/linux/aarch64/clone.S (__clone): Do not change
+	pid/tid fields for CLONE_VM.
+	* sysdeps/unix/sysv/linux/alpha/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S (__clone): Likewise,
+	* sysdeps/unix/sysv/linux/i386/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S (__clone):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/sh/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/tile/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/tst-getpid2.c: Remove file.
+
 2016-04-29  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19642]

@@ -67,15 +67,11 @@ ENTRY(__clone)
 	/* terminate the stack frame */
 	mov	#0, r14
 	mov	r4, r0
-	shlr16	r0
-	tst	#1, r0			// CLONE_THREAD = (1 << 16)
+	shlr8	r0
+	tst	#1, r0			// CLONE_VM = (1 << 8)
 	bf/s	4f
 	 mov	r4, r0
 	/* new pid */
-	shlr8	r0
-	tst	#1, r0			// CLONE_VM = (1 << 8)
-	bf/s	3f
-	 mov	#-1, r0
 	mov	#+SYS_ify(getpid), r3
 	trapa	#0x15
 3:

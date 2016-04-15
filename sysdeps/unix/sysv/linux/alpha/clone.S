@@ -24,7 +24,6 @@
 #include <bits/errno.h>
 
 #define CLONE_VM	0x00000100
-#define CLONE_THREAD	0x00010000
 
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags,
 	     void *arg, pid_t *ptid, void *tls, pid_t *ctid);
@@ -94,7 +93,7 @@ thread_start:
 
 	/* Check and see if we need to reset the PID.  */
 	ldq	t0, 16(sp)
-	lda	t1, CLONE_THREAD
+	lda	t1, CLONE_VM
 	and	t0, t1, t2
 	beq	t2, 2f
 1:
@@ -123,11 +122,7 @@ thread_start:
 	.align	4
 2:
 	rduniq
-	lda	t1, CLONE_VM
 	mov	v0, s0
-	lda	v0, -1
-	and	t0, t1, t2
-	bne	t2, 3f
 	lda	v0, __NR_getxpid
 	callsys
 3:

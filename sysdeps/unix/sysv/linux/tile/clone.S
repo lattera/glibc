@@ -164,43 +164,14 @@ ENTRY (__clone)
 	cfi_def_cfa_offset (FRAME_SIZE)
 	cfi_undefined (lr)
 	/* Check and see if we need to reset the PID, which we do if
-	   CLONE_THREAD isn't set, i.e. we're not staying in the thread group.
-	   If CLONE_VM is set, we're doing some kind of thread-like clone,
-	   so we set the tid/pid to -1 to disable using the cached values
-	   in getpid().  Otherwise (if CLONE_VM isn't set), it's a
-	   fork-like clone, and we go ahead and write the cached values
+	   CLONE_VM isn't set, i.e. it's a fork-like clone with a new
+	   address space.  In that case we update the cached values
 	   from the true system pid (retrieved via __NR_getpid syscall).  */
-#ifdef __tilegx__
-	{
-	 moveli r0, hw1_last(CLONE_VM)
-	 moveli r1, hw1_last(CLONE_THREAD)
-	}
-	{
-	 shl16insli r0, r0, hw0(CLONE_VM)
-	 shl16insli r1, r1, hw0(CLONE_THREAD)
-	}
-#else
-	{
-	 moveli r0, lo16(CLONE_VM)
-	 moveli r1, lo16(CLONE_THREAD)
-	}
-	{
-	 auli r0, r0, ha16(CLONE_VM)
-	 auli r1, r1, ha16(CLONE_THREAD)
-	}
-#endif
-	{
-	 and r0, r30, r0
-	 and r1, r30, r1
-	}
-	BNEZ r1, .Lno_reset_pid   /* CLONE_THREAD is set */
-	{
-	 movei r0, -1
-	 BNEZ r0, .Lgotpid         /* CLONE_VM is set */
-	}
+	moveli r0, CLONE_VM
+	and r0, r30, r0
+	BNEZ r0, .Lno_reset_pid   /* CLONE_VM is set */
 	moveli TREG_SYSCALL_NR_NAME, __NR_getpid
 	swint1
-.Lgotpid:
 	ADDLI_PTR r2, tp, PID_OFFSET
 	{
 	 ST4 r2, r0

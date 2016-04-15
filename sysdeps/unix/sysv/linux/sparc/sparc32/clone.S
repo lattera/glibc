@@ -25,7 +25,6 @@
 #include <sysdep.h>
 
 #define CLONE_VM	0x00000100
-#define CLONE_THREAD	0x00010000
 
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
 	     pid_t *ptid, void *tls, pid_t *ctid); */
@@ -80,15 +79,10 @@ END(__clone)
 
 	.type	__thread_start,@function
 __thread_start:
-	sethi	%hi(CLONE_THREAD), %l0
-	andcc	%g4, %l0, %g0
+	andcc	%g4, CLONE_VM, %g0
 	bne	1f
-	 andcc	%g4, CLONE_VM, %g0
-	bne,a	2f
-	 mov	-1,%o0
 	set	__NR_getpid,%g1
 	ta	0x10
-2:
 	st	%o0,[%g7 + PID]
 	st	%o0,[%g7 + TID]
 1:

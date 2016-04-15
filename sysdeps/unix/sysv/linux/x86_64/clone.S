@@ -24,7 +24,6 @@
 #include <asm-syntax.h>
 
 #define CLONE_VM	0x00000100
-#define CLONE_THREAD	0x00010000
 
 /* The userland implementation is:
    int clone (int (*fn)(void *arg), void *child_stack, int flags, void *arg),
@@ -92,14 +91,11 @@ L(thread_start):
 	   the outermost frame obviously.  */
 	xorl	%ebp, %ebp
 
-	testq	$CLONE_THREAD, %rdi
+	andq	$CLONE_VM, %rdi
 	jne	1f
-	testq	$CLONE_VM, %rdi
-	movl	$-1, %eax
-	jne	2f
 	movl	$SYS_ify(getpid), %eax
 	syscall
-2:	movl	%eax, %fs:PID
+	movl	%eax, %fs:PID
 	movl	%eax, %fs:TID
 1:
 

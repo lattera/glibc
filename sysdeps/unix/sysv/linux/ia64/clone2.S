@@ -67,12 +67,10 @@ ENTRY(__clone2)
 (CHILD)	mov loc0=gp
 (PARENT) ret
 	;;
-	tbit.nz p6,p0=in3,16	/* CLONE_THREAD */
-	tbit.z p7,p10=in3,8	/* CLONE_VM */
+	tbit.nz p6,p0=in3,8	/* CLONE_VM */
 (p6)	br.cond.dptk 1f
 	;;
 	mov r15=SYS_ify (getpid)
-(p10)	addl r8=-1,r0
 (p7)	break __BREAK_SYSCALL
 	;;
 	add r9=PID,r13

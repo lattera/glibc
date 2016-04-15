@@ -42,7 +42,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/socket_type.h bits/syscall.h bits/sysctl.h \
 		  bits/mman-linux.h
 
-tests += tst-clone tst-fanotify tst-personality
+tests += tst-clone tst-clone2 tst-fanotify tst-personality
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 
@@ -194,7 +194,7 @@ CFLAGS-gai.c += -DNEED_NETLINK
 endif
 
 ifeq ($(subdir),nptl)
-tests += tst-setgetname tst-align-clone tst-getpid1 tst-getpid2 \
+tests += tst-setgetname tst-align-clone tst-getpid1 \
 	tst-thread-affinity-pthread tst-thread-affinity-pthread2 \
 	tst-thread-affinity-sched
 endif

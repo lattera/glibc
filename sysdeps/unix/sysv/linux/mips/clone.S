@@ -131,9 +131,8 @@ L(thread_start):
 	/* The stackframe has been created on entry of clone().  */
 
 	/* Check and see if we need to reset the PID.  */
-	LONG_L		a0,(PTRSIZE*2)(sp)
-	and		a1,a0,CLONE_THREAD
-	beqz		a1,L(restore_pid)
+	and	a1,a0,CLONE_VM
+	beqz	a1,L(restore_pid)
 L(donepid):
 
 	/* Restore the arg for user's function.  */
@@ -153,12 +152,8 @@ L(donepid):
 #endif
 
 L(restore_pid):
-	and		a1,a0,CLONE_VM
-	li		v0,-1
-	bnez		a1,L(gotpid)
 	li		v0,__NR_getpid
 	syscall
-L(gotpid):
 	READ_THREAD_POINTER(v1)
 	INT_S		v0,PID_OFFSET(v1)
 	INT_S		v0,TID_OFFSET(v1)

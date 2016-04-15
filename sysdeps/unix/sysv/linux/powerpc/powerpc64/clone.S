@@ -78,13 +78,11 @@ ENTRY (__clone)
 	crandc	cr1*4+eq,cr1*4+eq,cr0*4+so
 	bne-	cr1,L(parent)		/* The '-' is to minimise the race.  */
 
-	andis.	r0,r29,CLONE_THREAD>>16
+	/* If CLONE_VM is set do not update the pid/tid field.  */
+	rldicl.	r0,r29,56,63		/* flags & CLONE_VM.  */
 	bne+	cr0,L(oldpid)
-	andi.	r0,r29,CLONE_VM
-	li	r3,-1
-	bne-	cr0,L(nomoregetpid)
+
 	DO_CALL(SYS_ify(getpid))
-L(nomoregetpid):
 	stw	r3,TID(r13)
 	stw	r3,PID(r13)
 L(oldpid):
