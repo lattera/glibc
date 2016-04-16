@@ -1,3 +1,8 @@
+2016-04-23  Mike Frysinger  <vapier@gentoo.org>
+
+	* locale/programs/ld-time.c (time_finish): Set week_1stweek to 7
+	when it is the default of 0.
+
 2016-04-22  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/locale-defines.sym:  Add new macros.
