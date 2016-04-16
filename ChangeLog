@@ -1,3 +1,8 @@
+2016-04-16  Robin van der Vliet <info@robinvandervliet.com>
+
+	[BZ #19400]
+	* locale/iso-639.def: Add the Talossan/tzl language.
+
 2016-04-16  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #16983]
