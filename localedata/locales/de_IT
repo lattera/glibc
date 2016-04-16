@@ -107,7 +107,6 @@ date_fmt "<U0025><U0061><U0020><U0025><U002D><U0064><U002E><U0020>/
 <U0020><U0025><U005A><U0020><U0025><U0059>"
 week    7;19971130;4
 first_weekday 2
-first_workday 2
 END LC_TIME
 
 LC_PAPER

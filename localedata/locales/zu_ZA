@@ -160,6 +160,7 @@ am_pm       "";""
 % field descriptor -
 % The "" means that this format is not supported.
 t_fmt_ampm  ""
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES

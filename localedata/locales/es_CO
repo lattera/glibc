@@ -122,7 +122,7 @@ am_pm   "<U0041><U004D>";"<U0050><U004D>"
 t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>/
 <U0020><U0025><U0070>"
 %  FIXME: found in CLDR
-first_weekday 2
+week 7;19971130;1
 END LC_TIME
 
 LC_PAPER

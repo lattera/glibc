@@ -806,24 +806,9 @@ LC_TIME
 % 00:00:00 +0200
 % 00:00
 
-% Week description, consists of three fields:
-% 1. Number of days in a week.
-% 2. Gregorian date that is a first weekday (19971130 for Sunday, 19971201 for Monday).
-% 3. The weekday number to be contained in the first week of the year.
-%
-% ISO 8601 conforming applications should use the values 7, 19971201 (a
-% Monday), and 4 (Thursday), respectively.
-% week 7;19971201;4
-% But see BUG below.
-week 7;19971130;4
+week 7;19971130;1
 
 % A list of abbreviated weekday names. (%a)
-%
-% BUG: glibc-2.3.6
-%   Violation of ISO/IEC TR14652:2002 - weekday list must correlate with value
-%   of <week> keyword (e.g. start from Monday in our case) but glibc assumes that
-%   it always starts from Sunday. Stick to Sunday too until the bug is fixed.
-
 % Note:
 % Never use three letters for day abbreviations because of conflict between
 % SEReda (day name) and
@@ -838,12 +823,6 @@ abday /
         "<U0441><U0431>"  %sb
 
 % A list of weekday names starting with first day of week as defined by <week> keyword. (%A)
-%
-% BUG: glibc-2.3.6
-%   Violation of ISO/IEC TR14652:2002 - weekday list must correlate with value
-%   of <week> keyword (e.g. start from Monday in our case) but glibc assumes that
-%   it always starts from Sunday. Stick to Sunday too until the bug is fixed.
-
 day /
         "<U043D><U0435><U0434><U0456><U043B><U044F>";    %nedilya   /
 	"<U043F><U043E><U043D><U0435><U0434><U0456><U043B><U043E><U043A>"; %ponedilok /
@@ -930,9 +909,6 @@ am_pm     "";""
 % Define the first day of the week to be displayed in a calendar.
 % This weekday is relative to the date defined in the <week> keyword.
 first_weekday 2
-
-% Define the first workday relative to the <week> keyword
-first_workday 2
 
 % Example:
 %

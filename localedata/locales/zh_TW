@@ -131,6 +131,7 @@ am_pm	"<U4E0A><U5348>";"<U4E0B><U5348>"
 % t_fmt_ampm: "%p %I<h>%M<m>%S<s>"
 t_fmt_ampm  "<U0025><U0070><U0020><U0025><U0049><U6642>/
 <U0025><U004D><U5206><U0025><U0053><U79D2>"
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES

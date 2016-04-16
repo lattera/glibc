@@ -152,6 +152,7 @@ alt_digits    "<U3007>";/
             "<U5345>";/
             "<U5345><U4E00>"
 %
+week 7;19971130;1
 END LC_TIME
 
 LC_NUMERIC

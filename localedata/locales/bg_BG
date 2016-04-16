@@ -193,8 +193,8 @@ t_fmt      "<U0025><U006B><U003A><U0025><U004D><U003A><U0025><U0053>"
 am_pm      "";""
 t_fmt_ampm "<U0025><U006C><U003A><U0025><U004D><U003A><U0025><U0053>"
 %
+week 7;19971130;4
 first_weekday 2
-first_workday 2
 abday "<U043D><U0434>";/
       "<U043F><U043D>";/
       "<U0432><U0442>";/

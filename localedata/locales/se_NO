@@ -280,6 +280,8 @@ date_fmt       "<U0025><U0041><U002C><U0020><U0025><U0042><U0020><U0025><U0064><
 <U0020><U0025><U005A>"
 
 % %a %b-%e %H:%M:%S %Z %Y søn jan-31 21:15:11 CET 2001
+week 7;19971130;4
+first_weekday 2
 END LC_TIME
 
 LC_MESSAGES

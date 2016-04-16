@@ -119,6 +119,7 @@ d_fmt   "<U0025><U0059><U002D><U0025><U006D><U002D><U0025><U0064>"
 t_fmt   "<U0025><U0054>"
 am_pm   "";""
 t_fmt_ampm ""
+week 7;19971130;1
 END LC_TIME
 
 LC_PAPER

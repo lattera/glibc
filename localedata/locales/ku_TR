@@ -158,6 +158,8 @@ am_pm       "";""
 t_fmt_ampm  ""
 % format: %A %d %B %Y
 date_fmt  "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0042><U0020><U0025><U0059>"
+week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_MESSAGES

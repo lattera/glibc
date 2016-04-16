@@ -105,7 +105,7 @@ d_fmt   "<U0025><U0064><U002D><U0025><U006D><U002D><U0025><U0079>"
 t_fmt   "<U0025><U0054>"
 am_pm   "";""
 t_fmt_ampm ""
-first_workday 2
+week 7;19971130;4
 first_weekday 2
 END LC_TIME
 

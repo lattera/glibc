@@ -107,6 +107,8 @@ t_fmt         "<U0025><U0072>"
 am_pm         "<U006D>";/
        "<U0066>"
 t_fmt_ampm    ""
+week 7;19971130;4
+first_weekday 2
 END LC_TIME
 
 LC_NUMERIC

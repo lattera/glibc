@@ -138,6 +138,7 @@ t_fmt       "<U0025><U0048><U65F6><U0025><U004D><U5206><U0025><U0053><U79D2><U00
 % Appropriate 12 h time representation (%r)
 t_fmt_ampm  ""
 %
+week 7;19971130;1
 END LC_TIME
 
 

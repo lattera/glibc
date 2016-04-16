@@ -2224,6 +2224,8 @@ d_fmt   "<U0025><U0061><U0020><U0025><U0065><U002E><U0025><U0062><U0020><U0025><
 t_fmt   "<U0025><U0054>"
 am_pm   "<U0066><U0068>";"<U0065><U0068>"
 t_fmt_ampm ""
+week 7;19971130;4
+first_weekday 2
 END LC_TIME
 
 LC_MESSAGES

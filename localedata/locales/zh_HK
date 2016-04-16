@@ -144,6 +144,7 @@ t_fmt       "<U0025><U0049><U6642><U0025><U004D><U5206><U0025><U0053>/
 % Update by Roger So <roger.so@sw-linux.com>
 t_fmt_ampm  "<U0025><U0070><U0020><U0025><U0049><U003A><U0025><U004D>/
 <U003A><U0025><U0053>"
+week 7;19971130;1
 END LC_TIME
 
 

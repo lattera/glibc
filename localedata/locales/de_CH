@@ -124,7 +124,6 @@ t_fmt_ampm ""
 
 week    7;19971130;4
 first_weekday 2
-first_workday 2
 END LC_TIME
 
 LC_PAPER

@@ -349,6 +349,8 @@ abmon	"<U004A><U0061><U006E>"; /
 	"<U0044><U0065><U0063>"
 am_pm	"";""
 era_d_fmt	""
+week 7;19971130;1
+first_workday 1
 END LC_TIME
 
 

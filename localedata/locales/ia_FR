@@ -89,7 +89,6 @@ t_fmt   "<U0025><U0054>"
 am_pm   "<U0041><U004D>";"<U0050><U004D>"
 t_fmt_ampm ""
 week    7;19971130;4
-first_workday 2
 first_weekday 2
 END LC_TIME
 
