@@ -1,0 +1,141 @@
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
+% Locale for Cherokee locale in the USA
+% Contributed by Joseph Erb <josepherb7@gmail.com>, 2010
+
+LC_IDENTIFICATION
+title      "Cherokee language locale for United States"
+source     "Cherokee Nation"
+address    "http:////cldr.unicode.org//index//process"
+contact    "Joseph Erb"
+email      "josepherb7@gmail.com"
+tel        ""
+fax        ""
+language   "Cherokee"
+territory  "United States"
+revision   "1.0"
+date       "2010-10-20"
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "en_US"
+END LC_CTYPE
+
+LC_COLLATE
+copy "en_US"
+END LC_COLLATE
+
+LC_MONETARY
+copy "en_US"
+END LC_MONETARY
+
+LC_NUMERIC
+copy "en_US"
+END LC_NUMERIC
+
+LC_TIME
+abday	"<U13C6><U13CD><U13AC>";/
+	"<U13C9><U13C5><U13AF>";/
+	"<U13D4><U13B5><U13C1>";/
+	"<U13E6><U13A2><U13C1>";/
+	"<U13C5><U13A9><U13C1>";/
+	"<U13E7><U13BE><U13A9>";/
+	"<U13C8><U13D5><U13BE>"
+day	"<U13A4><U13BE><U13D9><U13D3><U13C6><U13CD><U13AC>";/
+	"<U13A4><U13BE><U13D9><U13D3><U13C9><U13C5><U13AF>";/
+	"<U13D4><U13B5><U13C1><U13A2><U13A6>";/
+	"<U13E6><U13A2><U13C1><U13A2><U13A6>";/
+	"<U13C5><U13A9><U13C1><U13A2><U13A6>";/
+	"<U13E7><U13BE><U13A9><U13B6><U13CD><U13D7>";/
+	"<U13A4><U13BE><U13D9><U13D3><U13C8><U13D5><U13BE>"
+abmon	"<U13A4><U13C3>"; "<U13A7><U13A6>";/
+	"<U13A0><U13C5>"; "<U13A7><U13EC>";/
+	"<U13A0><U13C2>"; "<U13D5><U13AD>";/
+	"<U13AB><U13F0>"; "<U13A6><U13B6>";/
+	"<U13DA><U13B5>"; "<U13DA><U13C2>";/
+	"<U13C5><U13D3>"; "<U13A5><U13CD>"
+mon	"<U13A4><U13C3><U13B8><U13D4><U13C5>";/
+	"<U13A7><U13A6><U13B5>";/
+	"<U13A0><U13C5><U13F1>";/
+	"<U13A7><U13EC><U13C2>";/
+	"<U13A0><U13C2><U13CD><U13AC><U13D8>";/
+	"<U13D5><U13AD><U13B7><U13F1>";/
+	"<U13AB><U13F0><U13C9><U13C2>";/
+	"<U13A6><U13B6><U13C2>";/
+	"<U13DA><U13B5><U13CD><U13D7>";/
+	"<U13DA><U13C2><U13C5><U13D7>";/
+	"<U13C5><U13D3><U13D5><U13C6>";/
+	"<U13A5><U13CD><U13A9><U13F1>"
+d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020>/
+<U0025><U0059><U0020><U0025><U0072><U0020><U0025><U005A>"
+d_fmt   "<U0025><U006D><U002F><U0025><U0064><U002F><U0025><U0059>"
+t_fmt   "<U0025><U0072>"
+t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
+<U0025><U0070>"
+am_pm   "<U13CC><U13BE><U13B4>";"<U13D2><U13AF><U13F1><U13A2><U13D7><U13E2>"
+week 7;19971130;1
+END LC_TIME
+
+LC_MESSAGES
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
+yesstr  "<U13A5><U13A5>"
+nostr   "<U13A5><U13DD>"
+END LC_MESSAGES
+
+LC_PAPER
+copy "en_US"
+END LC_PAPER
+
+LC_NAME
+% FIXME
+copy "en_US"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0068>/
+<U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U0054><U002C><U0020><U0025><U0053><U0020><U0025><U007A><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+country_name "<U13A0><U13B9><U13F0><U13DF>"
+country_post "<U0055><U0053><U0041>"
+country_ab2  "<U0055><U0053>"
+country_ab3  "<U0055><U0053><U0041>"
+country_num  840
+country_car  "<U0055><U0053><U0041>"
+country_isbn 0
+lang_name    "<U13E3><U13B3><U13A9>"
+lang_ab      ""
+lang_term    "<U0063><U0068><U0072>"
+lang_lib     "<U0063><U0068><U0072>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+copy "en_US"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+copy "en_US"
+END LC_MEASUREMENT

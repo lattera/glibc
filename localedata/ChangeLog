@@ -1,3 +1,9 @@
+2016-05-07  Neskie Manuel  <neskiem@gmail.com>
+
+	[BZ #12143]
+	* locales/chr_US: New locale.
+	* SUPPORTED (SUPPORTED-LOCALES): Add chr_US/UTF-8.
+
 2016-05-07  Dimitris Pappas  <dvpappas@msn.com>
 
 	[BZ #18453]
