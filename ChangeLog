@@ -1,3 +1,17 @@
+2016-04-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	[BZ #18712]
+	* string/string-inlines.c (__STRING2_COPY_TYPE): Add, moved from string2.h.
+	(__old_mempcpy_small): Likewise.
+	(__old_strcpy_small): Likewise.
+	(__old_stpcpy_small): Likewise.
+	(__old_strpbrk_c2): Fix compat symbol name.
+	(__old_strpbrk_c3): Likewise.
+	* string/bits/string2.h (__STRING2_COPY_TYPE): Remove.
+	(__mempcpy_small): Remove.
+	(__strcpy_small): Remove.
+	(__stpcpy_small): Remove.
+
 2016-04-16  Robin van der Vliet <info@robinvandervliet.com>
 
 	[BZ #19400]
