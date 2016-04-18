@@ -40,7 +40,7 @@ static mach_msg_timeout_t collector_timeout; /* ms between collections.  */
 static int profile_tick;
 
 /* Reply port used by profiler thread */
-static mach_port_t profil_reply_port;
+static mach_port_t profil_reply_port = MACH_PORT_NULL;
 
 /* Forwards */
 static kern_return_t profil_task_get_sampled_pcs (mach_port_t,
@@ -63,6 +63,8 @@ update_waiter (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 
   if (profile_thread == MACH_PORT_NULL)
     {
+      if (profil_reply_port == MACH_PORT_NULL)
+	profil_reply_port = __mach_reply_port ();
       /* Set up the profiling collector thread.  */
       err = __thread_create (__mach_task_self (), &profile_thread);
       if (! err)
@@ -182,7 +184,6 @@ profile_waiter (void)
   mach_msg_header_t msg;
   mach_port_t timeout_reply_port;
 
-  profil_reply_port = __mach_reply_port ();
   timeout_reply_port = __mach_reply_port ();
 
   while (1)

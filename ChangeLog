@@ -1,3 +1,9 @@
+2016-04-19  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/profil.c (update_waiter): Initialize
+	profil_reply_port.
+	(profile_waiter): Do not initialize profil_reply_port.
+
 2016-04-18  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	[BZ #18712]
