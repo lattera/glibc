@@ -1,0 +1,201 @@
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
+LC_IDENTIFICATION
+title      "Lingala locale for Democratic Republic of the Congo"
+source     "Ubuntu"
+address    "Ubuntu DR Congo Team"
+contact    "René Manassé GALEKWA"
+email      "renemanasse@gmail.com"
+tel        ""
+fax        ""
+language   "Lingala"
+territory  "Democratic Republic of the Congo"
+revision   "1.1"
+date       "2016-03-03"
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+% Copy the template from ISO/IEC 14651 i.e.
+% use the rules there when making ordered lists of words.
+% add special characters for Lingala
+% a b c d e ɛ f g h i j k l m o ɔ  p (q) (r) s t u v w (x) y z
+% mb mp nd ng nk ns nt nz are not ordered as digraph, use ln_CD@morph
+% should mf, mv, kp, kw, gb, gw, ngb, ngw be included?
+copy "iso14651_t1"
+
+collating-symbol <opene>
+collating-symbol <openo>
+
+reorder-after <e>
+<opene>
+reorder-after <o>
+<openo>
+
+reorder-after <U0065>
+<U025B> <opene>;<BAS>;<MIN>;IGNORE % ɛ
+reorder-after <U0045>
+<U0190> <opene>;<BAS>;<CAP>;IGNORE % Ɛ
+reorder-after <U006F>
+<U0254> <openo>;<BAS>;<MIN>;IGNORE % ɔ
+reorder-after <U004F>
+<U0186> <openo>;<BAS>;<CAP>;IGNORE % Ɔ
+
+reorder-end
+END LC_COLLATE
+
+LC_TIME
+abday   "<U006D><U0031><U002E>";/
+        "<U006D><U0032><U002E>";/
+        "<U006D><U0033><U002E>";/
+        "<U006D><U0034><U002E>";/
+        "<U006D><U0035><U002E>";/
+        "<U006D><U0036><U002E>";/
+        "<U006D><U0037><U002E>"
+day     "<U004C><U006F><U006D><U00ED><U006E><U0067><U006F>";/
+        "<U004D><U006F><U0073><U00E1><U006C><U00E1><U0020><U006D><U0254><U030C><U006B><U0254><U0301>";/
+        "<U004D><U0069><U0073><U00E1><U006C><U00E1><U0020><U006D><U00ED><U0062><U0061><U006C><U00E9>";/
+        "<U004D><U0069><U0073><U00E1><U006C><U00E1><U0020><U006D><U00ED><U0073><U00E1><U0074><U006F>";/
+        "<U004D><U0069><U0073><U00E1><U006C><U00E1><U0020><U006D><U00ED><U006E><U0065><U0069>";/
+        "<U004D><U0069><U0073><U00E1><U006C><U00E1><U0020><U006D><U00ED><U0074><U00E1><U006E><U006F>";/
+        "<U004D><U0070><U0254><U0301><U0073><U0254>"
+abmon   "<U0073><U00E1><U006E><U007A><U00E1><U0031><U002E>";/
+        "<U0073><U00E1><U006E><U007A><U00E1><U0032><U002E>";/
+        "<U0073><U00E1><U006E><U007A><U00E1><U0033><U002E>";/
+        "<U0073><U00E1><U006E><U007A><U00E1><U0034><U002E>";/
+        "<U0073><U00E1><U006E><U007A><U00E1><U0035><U002E>";/
+        "<U0073><U00E1><U006E><U007A><U00E1><U0036><U002E>";/
+        "<U0073><U00E1><U006E><U007A><U00E1><U0037><U002E>";/
+        "<U0073><U00E1><U006E><U007A><U00E1><U0038><U002E>";/
+        "<U0073><U00E1><U006E><U007A><U00E1><U0039><U002E>";/
+        "<U0073><U00E1><U006E><U007A><U0031><U0030><U002E>";/
+        "<U0073><U00E1><U006E><U007A><U00E1><U0031><U0031><U002E>";/
+        "<U0073><U00E1><U006E><U007A><U00E1><U0031><U0032><U002E>"
+mon     "<U0059><U0061><U006E><U0077><U00E1><U006C><U0069>";/
+        "<U0046><U0065><U0062><U0077><U00E1><U006C><U0069>";/
+        "<U004D><U00E1><U0072><U0073><U0069>";/
+        "<U0041><U0070><U0072><U00ED><U006C><U0069>";/
+        "<U004D><U00E1><U0079><U00ED>";/
+        "<U0059><U00FA><U006E><U0069>";/
+        "<U0059><U00FA><U006C><U0069>";/
+        "<U0041><U0075><U0067><U00FA><U0073><U0074><U006F>";/
+        "<U0053><U025B><U0074><U025B><U0301><U006D><U0062><U025B>";/
+        "<U0254><U006B><U0254><U0074><U0254><U0301><U0062><U025B>";/
+        "<U004E><U006F><U0076><U025B><U0301><U006D><U0062><U025B>";/
+        "<U0044><U025B><U0073><U025B><U0301><U006D><U0062><U025B>"
+d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020>/
+<U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+t_fmt   "<U0025><U0054>"
+am_pm   "";""
+t_fmt_ampm ""
+date_fmt "<U0025><U0041><U0020><U0025><U002D><U0065><U0020><U0025><U0042>/
+<U0020><U0025><U0059><U002C><U0020><U0025><U0048><U003A><U0025><U004D><U003A>/
+<U0025><U0053><U0020><U0028><U0055><U0054><U0043><U0025><U007A><U0029>"
+week 7;19971130;1
+first_weekday 2
+END LC_TIME
+
+LC_NUMERIC
+decimal_point "<U002C>"
+thousands_sep ""
+grouping      3
+END LC_NUMERIC
+
+LC_MONETARY
+currency_symbol    "<U0046><U0043>"
+int_curr_symbol    "<U0043><U0044><U0046><U0020>"
+mon_decimal_point  "<U002C>"
+mon_thousands_sep  "<U002E>"
+mon_grouping       3
+positive_sign      ""
+negative_sign      "<U002D>"
+frac_digits        2
+int_frac_digits    2
+p_cs_precedes      0
+p_sep_by_space     1
+n_cs_precedes      0
+n_sep_by_space     1
+p_sign_posn        1
+n_sign_posn        1
+END LC_MONETARY
+
+LC_PAPER
+copy "i18n"
+END LC_PAPER
+
+LC_MEASUREMENT
+copy "i18n"
+END LC_MEASUREMENT
+
+LC_MESSAGES
+yesexpr "<U005E><U005B><U0079><U0059><U0069><U0049><U025B><U0190><U005D>"
+noexpr  "<U005E><U005B><U006E><U004E><U0074><U0054><U005D>"
+yesstr  "<U00CD><U0079><U006F>"
+nostr   "<U0054><U025B><U0302>"
+END LC_MESSAGES
+
+LC_NAME
+name_fmt  "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074><U0025>/
+<U006D><U0025><U0074><U0025><U0066><U0025><U006D>"
+name_gen  "<U004D><U0062><U0254><U0301><U0074><U025B>"
+name_miss "<U004D><U0061><U006D><U00E1>"
+name_mr   "<U0054><U0061><U0074><U00E1>"
+name_mrs  "<U004D><U0061><U006D><U00E1>"
+name_ms   "<U004D><U0061><U006D><U00E1><U0020>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt   "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E><U0025>/
+<U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073><U0020><U0025>/
+<U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025><U004E><U0025><U007A>/
+<U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
+country_name "<U0052><U0065><U0070><U0069><U0062><U0069><U006B><U0069><U0020>/
+<U0064><U0065><U006D><U006F><U006B><U0072><U0061><U0074><U0069><U006B><U0069>/
+<U0020><U0079><U0061><U0020><U004B><U006F><U006E><U0067><U00F3>"
+country_post "<U0043><U0044>"
+country_ab2  "<U0043><U0044>"
+country_ab3  "<U0043><U004F><U0044>"
+country_num  180
+country_car  "<U0043><U0047><U004F>"
+country_isbn 2
+lang_name    "<U006C><U0069><U006E><U0067><U00E1><U006C><U0061>"
+lang_ab      "<U006C><U006E>"
+lang_term    "<U006C><U0069><U006E>"
+lang_lib     "<U006C><U0069><U006E>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0025><U0074><U0025>/
+<U006C>"
+tel_dom_fmt "<U0025><U0061><U0020><U0025><U006C>"
+int_select  "<U0030><U0030>"
+int_prefix  "<U0032><U0034><U0033>"
+END LC_TELEPHONE

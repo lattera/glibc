@@ -1,3 +1,8 @@
+2016-04-21  Claude Paroz <claude@2xlibre.net>
+
+	* locales/ln_CD: New locale.
+	* SUPPORTED (SUPPORTED-LOCALES): Add ln_CD/UTF-8.
+
 2016-04-16  Mike Frysinger  <vapier@gentoo.org>
 
 	* locales/fil_PH (LC_TELEPHONE): Change copy to en_PH.
