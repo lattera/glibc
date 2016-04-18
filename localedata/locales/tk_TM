@@ -400,16 +400,10 @@ LC_MESSAGES
 % (used for "yes" in English, but corresponding to "no" in Turkmen (well,
 %  ý actually)
 %%%%%%%%
-% hawa
+yesexpr "<U005E><U005B><U0068><U0048><U005D>"
+noexpr  "<U005E><U005B><U00FD><U00DD><U006E><U004E><U005D>"
 yesstr  "<U0068><U0061><U0077><U0061>"
-% ýok
 nostr   "<U00FD><U006F><U006B>"
-% [hH]
-yesexpr "<U005E><U005B><U0068><U0048>/
-<U005D><U002E><U002A>"
-% [ýÝnN]
-noexpr  "<U005E><U005B><U00FD><U00DD>/
-<U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_PAPER

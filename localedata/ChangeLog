@@ -1,3 +1,161 @@
+2016-04-23  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/aa_DJ (LC_MESSAGES): Copy aa_ET.
+	* locales/aa_ET (LC_MESSAGES): Delete trailing .* from yesexpr/noexpr.
+	* locales/ak_GH: Likewise.
+	* locales/am_ET: Likewise.
+	* locales/an_ES: Likewise.
+	* locales/ar_EG: Likewise.
+	* locales/as_IN: Likewise.
+	* locales/ast_ES: Likewise.
+	* locales/ayc_PE: Likewise.
+	* locales/az_AZ: Likewise.
+	* locales/be_BY: Likewise.
+	* locales/be_BY@latin: Likewise.
+	* locales/bem_ZM: Likewise.
+	* locales/ber_DZ: Likewise.
+	* locales/ber_MA: Likewise.
+	* locales/bg_BG: Likewise.
+	* locales/bhb_IN: Likewise.
+	* locales/bo_CN: Likewise.
+	* locales/br_FR: Likewise.
+	* locales/ca_ES: Likewise.
+	* locales/ce_RU: Likewise.
+	* locales/cs_CZ: Likewise.
+	* locales/csb_PL: Likewise.
+	* locales/cv_RU: Likewise.
+	* locales/cy_GB: Likewise.
+	* locales/da_DK: Likewise.
+	* locales/de_DE: Likewise.
+	* locales/dv_MV: Likewise.
+	* locales/dz_BT: Likewise.
+	* locales/el_GR: Likewise.
+	* locales/en_AU (LC_MESSAGES): Copy en_US.
+	* locales/en_CA (LC_MESSAGES): Delete trailing .* from yesexpr/noexpr.
+	* locales/en_DK: Likewise.
+	* locales/en_GB (LC_MESSAGES): Copy en_US.
+	* locales/en_HK: Likewise.
+	* locales/en_IN: Likewise.
+	* locales/en_NG: Likewise.
+	* locales/en_NZ: Likewise.
+	* locales/en_PH: Likewise.
+	* locales/en_SG: Likewise.
+	* locales/en_US: Likewise.
+	* locales/en_ZA: Likewise.
+	* locales/es_ES (LC_MESSAGES): Delete trailing .* from yesexpr/noexpr.
+	* locales/es_US (LC_MESSAGES): Copy es_ES.
+	* locales/et_EE (LC_MESSAGES): Delete trailing .* from yesexpr/noexpr.
+	* locales/eu_ES: Likewise.
+	* locales/fa_IR: Likewise.
+	* locales/ff_SN: Likewise.
+	* locales/fi_FI: Likewise.
+	* locales/fil_PH (LC_MESSAGES): Add ^ to yesexpr/noexpr and drop .*.
+	* locales/fo_FO (LC_MESSAGES): Delete trailing .* from yesexpr/noexpr.
+	* locales/fr_BE: Likewise.
+	* locales/fr_CH: Likewise.
+	* locales/fr_FR: Likewise.
+	* locales/fr_LU: Likewise.
+	* locales/fur_IT: Likewise.
+	* locales/fy_DE: Likewise.
+	* locales/ga_IE: Likewise.
+	* locales/gd_GB: Likewise.
+	* locales/gl_ES: Likewise.
+	* locales/gv_GB: Likewise.
+	* locales/ha_NG: Likewise.
+	* locales/he_IL: Likewise.
+	* locales/hi_IN: Likewise.
+	* locales/hr_HR: Likewise.
+	* locales/hsb_DE: Likewise.
+	* locales/ht_HT: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/ia_FR: Likewise.
+	* locales/id_ID: Likewise.
+	* locales/ig_NG: Likewise.
+	* locales/ik_CA (LC_MESSAGES): Add ^ to yesexpr/noexpr and drop .*.
+	* locales/is_IS (LC_MESSAGES): Delete trailing .* from yesexpr/noexpr.
+	* locales/it_CH: Likewise.
+	* locales/it_IT: Likewise.
+	* locales/iu_CA (LC_MESSAGES): Add ^ to yesexpr/noexpr and drop .*.
+	* locales/ka_GE (LC_MESSAGES): Delete trailing .* from yesexpr/noexpr.
+	* locales/kk_KZ: Likewise.
+	* locales/kl_GL: Likewise.
+	* locales/kn_IN: Likewise.
+	* locales/ks_IN: Likewise.
+	* locales/ks_IN@devanagari: Likewise.
+	* locales/ku_TR: Likewise.
+	* locales/kw_GB: Likewise.
+	* locales/ky_KG: Likewise.
+	* locales/li_BE (LC_MESSAGES): Copy nl_BE.
+	* locales/li_NL (LC_MESSAGES): Delete trailing .* from yesexpr/noexpr.
+	* locales/lij_IT: Likewise.
+	* locales/lt_LT: Likewise.
+	* locales/lv_LV: Likewise.
+	* locales/mg_MG: Likewise.
+	* locales/mhr_RU: Likewise.
+	* locales/mi_NZ: Likewise.
+	* locales/mk_MK: Likewise.
+	* locales/mn_MN: Likewise.
+	* locales/my_MM: Likewise.
+	* locales/nan_TW@latin: Likewise.
+	* locales/nb_NO: Likewise.
+	* locales/nds_DE: Likewise.
+	* locales/nds_NL: Likewise.
+	* locales/ne_NP: Likewise.
+	* locales/nhn_MX: Likewise.
+	* locales/niu_NU: Likewise.
+	* locales/niu_NZ: Likewise.
+	* locales/nl_NL: Likewise.
+	* locales/nn_NO: Likewise.
+	* locales/oc_FR: Likewise.
+	* locales/or_IN: Likewise.
+	* locales/os_RU: Likewise.
+	* locales/pa_IN: Likewise.
+	* locales/pa_PK: Likewise.
+	* locales/pap_AW: Likewise.
+	* locales/pap_CW: Likewise.
+	* locales/pl_PL: Likewise.
+	* locales/ps_AF: Likewise.
+	* locales/pt_BR: Likewise.
+	* locales/pt_PT: Likewise.
+	* locales/quz_PE: Likewise.
+	* locales/raj_IN: Likewise.
+	* locales/ro_RO: Likewise.
+	* locales/ru_RU: Likewise.
+	* locales/ru_UA: Likewise.
+	* locales/sa_IN: Likewise.
+	* locales/sc_IT: Likewise.
+	* locales/sd_IN@devanagari: Likewise.
+	* locales/se_NO: Likewise.
+	* locales/sk_SK: Likewise.
+	* locales/sl_SI: Likewise.
+	* locales/so_DJ: Likewise.
+	* locales/so_SO: Likewise.
+	* locales/sq_AL: Likewise.
+	* locales/sv_SE: Likewise.
+	* locales/sw_KE: Likewise.
+	* locales/szl_PL: Likewise.
+	* locales/tcy_IN: Likewise.
+	* locales/te_IN: Likewise.
+	* locales/tg_TJ: Likewise.
+	* locales/the_NP: Likewise.
+	* locales/ti_ER: Likewise.
+	* locales/ti_ET: Likewise.
+	* locales/tk_TM: Likewise.
+	* locales/tt_RU: Likewise.
+	* locales/tt_RU@iqtelif: Likewise.
+	* locales/ug_CN: Likewise.
+	* locales/unm_US: Likewise.
+	* locales/ur_IN: Likewise.
+	* locales/ur_PK: Likewise.
+	* locales/uz_UZ: Likewise.
+	* locales/uz_UZ@cyrillic: Likewise.
+	* locales/vi_VN: Likewise.
+	* locales/wa_BE: Likewise.
+	* locales/wae_CH: Likewise.
+	* locales/wo_SN: Likewise.
+	* locales/yi_US: Likewise.
+	* locales/yo_NG: Likewise.
+
 2016-04-23  Timur Birsh  <taem@linukz.org>
 
 	[BZ #15578]

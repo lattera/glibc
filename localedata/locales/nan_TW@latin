@@ -145,19 +145,10 @@ week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-
-% "^[sS].*" for "Yes"
-yesexpr "<U005E><U005B><U0073><U0053><U005D><U002E><U002A>"
-
-% "^[mM].*" for "No"
-noexpr "<U005E><U005B><U006D><U004D><U005D><U002E><U002A>"
-
-% "Sī" for "Yes"
-yesstr "<U0053><U012B>"
-
-% "M̄-sī" for "No"
-nostr "<U004D><U0304><U002D><U0053><U012B>"
-
+yesexpr "<U005E><U005B><U0073><U0053><U005D>"
+noexpr  "<U005E><U005B><U006D><U004D><U005D>"
+yesstr  "<U0053><U012B>"
+nostr   "<U004D><U0304><U002D><U0053><U012B>"
 END LC_MESSAGES
 
 LC_PAPER

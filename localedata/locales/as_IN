@@ -135,10 +135,10 @@ END LC_TIME
 
 %%%%%%%%%%%%%
 LC_MESSAGES
-yesstr   "<U09B9><U09DF>"
-nostr    "<U09A8><U09B9><U09DF>"
-yesexpr  "<U005E><U005B><U0079><U0059><U09B9><U005D><U002E><U002A>"
-noexpr   "<U005E><U005B><U006E><U004E><U09A8><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U0079><U0059><U09B9><U005D>"
+noexpr  "<U005E><U005B><U006E><U004E><U09A8><U005D>"
+yesstr  "<U09B9><U09DF>"
+nostr   "<U09A8><U09B9><U09DF>"
 END LC_MESSAGES
 
 %%%%%%%%%%%%%

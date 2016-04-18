@@ -76,14 +76,11 @@ LC_COLLATE
 copy "fr_BE"
 END LC_COLLATE
 
-% COMINTAIRE : dj' a radjouté on "a" et on "w" po les yesexpr
-% pace ki "oyi" si pout dire ossi "awè" (Lîdje), ayi (Årdene)
-% et "way" (Nivele).
 LC_MESSAGES
+yesexpr "<U005E><U005B><U006F><U004F><U0079><U0059><U0061><U0041><U0077><U0057><U005D>"
+noexpr  "<U005E><U005B><U006E><U004E><U005D>"
 yesstr  "<U004F><U0079><U0069>"
 nostr   "<U004E><U0065><U006E><U0069>"
-yesexpr "<U005E><U005B><U006F><U004F><U0079><U0059><U0061><U0041><U0077><U0057><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 % COMINTAIRE: doet esse li minme ki po fr_BE.
