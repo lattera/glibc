@@ -158,7 +158,7 @@ country_car "<U004d><U004b>"
 country_num 807
 country_isbn "9989"
 % македонски јазик
-lang_name    "<U043C><U0430><U043A><U0435><U0434><U043E><U043D><U0441><U043A>/<U0438><U0020><U0458><U0430><U0437><U0438><U043A>"
+lang_name    "<U043C><U0430><U043A><U0435><U0434><U043E><U043D><U0441><U043A><U0438>"
 lang_ab "<U006d><U006b>"
 lang_term "<U006d><U006b><U0064>"
 lang_lib "<U006d><U0061><U0063>"

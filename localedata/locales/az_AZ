@@ -301,7 +301,7 @@ country_num 031
 % AZ
 country_car    "<U0041><U005A>"
 % Azərbaycanca
-lang_name    "<U0041><U007A><U0259><U0072><U0062><U0061><U0079><U0063><U0061><U006E><U0063><U0061>"
+lang_name    "<U0061><U007A><U0259><U0072><U0062><U0061><U0079><U0063><U0061><U006E><U0020><U0064><U0069><U006C><U0069>"
 
 % az
 lang_ab      "<U0061><U007A>"

@@ -476,7 +476,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_name "<U004F><U0072><U00ED><U006C><U1EB9><U0301><U00E8><U0064><U0065><U0020><U004E><U00E0><U00EC><U006A><U00ED><U0072><U00ED><U00E0>"
 
 % Language name in Yoruba - "Yorùbá"
-lang_name     "<U0059><U006F><U0072><U00F9><U0062><U00E1>"
+lang_name     "<U00C8><U0064><U00E8><U0020><U0059><U006F><U0072><U00F9><U0062><U00E1>"
 
 % CEPT MAILCODES are suggested
 % Alternatively use the code found on your countries postal item tracking number

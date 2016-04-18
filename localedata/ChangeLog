@@ -1,3 +1,9 @@
+2017-06-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* CLDRv29: update LC_ADDRESS.lang_name translations. This
+	updates the language endonym in a bunch of locales based
+	on CLDR v 31.0.1 data
+
 2017-06-16  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #21217]
