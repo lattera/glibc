@@ -3,6 +3,8 @@
 	* sysdeps/mach/hurd/profil.c (update_waiter): Initialize
 	profil_reply_port.
 	(profile_waiter): Do not initialize profil_reply_port.
+	* sysdeps/mach/hurd/profil.c (__profile_frequency): Return tick
+	frequency instead of tick length in us.
 
 2016-04-18  Wilco Dijkstra  <wdijkstr@arm.com>
 

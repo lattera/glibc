@@ -102,7 +102,7 @@ update_waiter (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 int
 __profile_frequency (void)
 {
-  return profile_tick;
+  return 1000000 / profile_tick;
 }
 libc_hidden_def (__profile_frequency)
 
