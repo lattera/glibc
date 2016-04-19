@@ -138,9 +138,9 @@ END LC_TIME
 
 LC_MESSAGES
 % Accept both English "Yes" and French "Oui" as Canada is bilingual.
-yesexpr "<U005E><U005B><U0079><U0059><U006F><U004F><U005D>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U006F><U004F><U005D>"
 % Accept both Engish "No" and French "Non" as Canada is bilingual.
-noexpr  "<U005E><U005B><U006E><U004E><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
 % Yes - Display only the English "Yes." While Canada is bilingual it would be
 %       difficult to display two words e.g. Yes|Oui, where one word is expected.
 %       Thus given that the majority of the population is Anglophone we use only

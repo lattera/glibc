@@ -163,18 +163,10 @@ END LC_TIME
 
 
 LC_MESSAGES
-% This is the POSIX Locale definition for the LC_MESSAGES category
-%
-% ^[\u0d94\u0059\u0079]
-yesexpr     "<U005E><U005B><U0D94><U0059><U0079><U005D>"
-%
-% ^[\u0db1\u004e\u006e]
-noexpr      "<U005E><U005B><U0DB1><U004E><U006E><U005D>"
-%
-yesstr      "<U0D94><U0DC0><U0DCA>"
-%
-nostr       "<U0DB1><U0DD0><U0DAD>"
-%
+yesexpr "<U005E><U005B><U002B><U0031><U0D94><U0059><U0079><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U0DB1><U004E><U006E><U005D>"
+yesstr  "<U0D94><U0DC0><U0DCA>"
+nostr   "<U0DB1><U0DD0><U0DAD>"
 END LC_MESSAGES
 
 

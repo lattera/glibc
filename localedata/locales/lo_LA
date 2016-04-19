@@ -704,8 +704,8 @@ LC_MESSAGES
 % yesstr = "men" = Sala ae + Mo + MAI EK + No
 % nostr = "Bo Men" = Letter Bo +salo Or+ MAI EK + mo+ Ma Ek+ No
 
-yesexpr "<U005E><U005B><U0079><U0059><U0EA1><U005D>"
-noexpr  "<U005E><U005B><U006E><U004E><U0E9A><U005D>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0EA1><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U0E9A><U005D>"
 yesstr  "<U0EC1><U0EA1><U0EC8><U0E99>"
 nostr   "<U0E9A><U0ECD><U0EC8><U0EC1><U0EA1><U0EC8><U0E99>"
 

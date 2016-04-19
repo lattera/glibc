@@ -1824,15 +1824,10 @@ week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-
-yesstr   "yes:YES:y:Y"
-
-nostr    "no:NO:n:N"
-
-yesexpr  "^[yY]([eE][sS])?"
-
-noexpr   "^[nN][oO]?"
-
+yesexpr "^[+1yY]([eE][sS])?"
+noexpr  "^[-0nN][oO]?"
+yesstr  "yes:YES:y:Y"
+nostr   "no:NO:n:N"
 END LC_MESSAGES
 
 LC_PAPER

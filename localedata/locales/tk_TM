@@ -400,8 +400,8 @@ LC_MESSAGES
 % (used for "yes" in English, but corresponding to "no" in Turkmen (well,
 %  ý actually)
 %%%%%%%%
-yesexpr "<U005E><U005B><U0068><U0048><U005D>"
-noexpr  "<U005E><U005B><U00FD><U00DD><U006E><U004E><U005D>"
+yesexpr "<U005E><U005B><U002B><U0031><U0068><U0048><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U00FD><U00DD><U006E><U004E><U005D>"
 yesstr  "<U0068><U0061><U0077><U0061>"
 nostr   "<U00FD><U006F><U006B>"
 END LC_MESSAGES

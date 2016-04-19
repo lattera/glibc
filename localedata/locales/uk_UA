@@ -554,7 +554,7 @@ LC_MESSAGES
 
 % A regular expression that describes possible yes-responses
 % "<U0079>", "<U0059>", "<U002B>", "<U0074><U0061>" or "<U0074><U0061><U006B>" in Cyrillic
-yesexpr "<U005E><U0028><U005B><U0059><U0079><U002B><U005D><U007C><U005B><U0422><U0442><U005D><U005B><U0410><U0430><U005D><U005B><U041A><U043A><U005D><U003F><U0029><U0024>"
+yesexpr "<U005E><U0028><U005B><U002B><U0031><U0059><U0079><U005D><U007C><U005B><U0422><U0442><U005D><U005B><U0410><U0430><U005D><U005B><U041A><U043A><U005D><U003F><U0029><U0024>"
 
 % WARNING: symbols "<U004E>" and "<U0043><U0079><U0072><U0069><U006C><U006C><U0069><U0063><U005F><U0054>" are placed at one key in Ukrainian
 % keyboard layout although the meaning is semantically opposite ("<U004E>" stands for
@@ -565,7 +565,7 @@ yesexpr "<U005E><U0028><U005B><U0059><U0079><U002B><U005D><U007C><U005B><U0422><
 
 % A regular expression that describes possible no-responses.
 % "<U006E>", "<U004E>", "<U002D>" or word "<U006E><U0069>" in Cyrillic
-noexpr  "<U005E><U0028><U005B><U004E><U006E><U002D><U005D><U007C><U005B><U041D><U043D><U005D><U005B><U0406><U0456><U005D><U0029><U0024>"
+noexpr  "<U005E><U0028><U005B><U002D><U0030><U004E><U006E><U005D><U007C><U005B><U041D><U043D><U005D><U005B><U0406><U0456><U005D><U0029><U0024>"
 % "<U006E>" "<U004E>" "<U002D>" or word "<U006E><U0069>" in Cyrillic
 
 
