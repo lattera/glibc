@@ -1,5 +1,18 @@
 2016-04-23  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #15262]
+	* locales/ms_MY (LC_MESSAGES): Add nN to noexpr.
+	* locales/nan_TW@latin (LC_MESSAGES): Add nN to noexpr and yY to
+	yesexpr.
+	* locales/se_NO (LC_MESSAGES): Add nN to noexpr.
+	* locales/uz_UZ (LC_MESSAGES): Remove Yy from yesexpr and add Ҳҳ.
+	* locales/uz_UZ@cyrillic (LC_MESSAGES): Remove Yy from yesexpr and
+	add Hh.  Add YyJj to noexpr.
+	* locales/yo_NG (LC_MESSAGES): Remove nN from noexpr and add nN to
+	yesexpr.
+
+2016-04-23  Mike Frysinger  <vapier@gentoo.org>
+
 	[BZ #15263]
 	* locales/aa_ET (LC_MESSAGES): Add +1 to yesexpr and -0 to noexpr.
 	* locales/af_ZA: Likewise.
