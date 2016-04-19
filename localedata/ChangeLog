@@ -1,3 +1,8 @@
+2016-04-21  Guy Rutenberg <guyrutenberg@gmail.com>
+
+	* locales/en_IL: New locale.
+	* SUPPORTED (SUPPORTED-LOCALES): Add en_IL/UTF-8.
+
 2016-04-21  Claude Paroz <claude@2xlibre.net>
 
 	* locales/ln_CD: New locale.
