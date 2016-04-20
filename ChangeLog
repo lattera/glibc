@@ -1,3 +1,10 @@
+2016-04-20  Siddhesh Poyarekar  <sid@reserved-bit.com>
+
+	Makefile.in (bench-build): New target.
+	Rules (PHONY): Add bench-build target.
+	benchtests/Makefile (bench): Depend on bench-build.
+	(bench-build): New target.
+
 2016-04-19  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/profil.c (update_waiter): Initialize

@@ -83,7 +83,7 @@ common-generated += dummy.o dummy.c
 
 # This makes all the auxiliary and test programs.
 
-.PHONY: others tests bench
+.PHONY: others tests bench bench-build
 
 ifeq ($(build-programs),yes)
 others: $(addprefix $(objpfx),$(others) $(sysdep-others) $(extra-objs))

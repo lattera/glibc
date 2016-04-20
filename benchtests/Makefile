@@ -128,7 +128,10 @@ bench-clean:
 	rm -f $(binaries-bench-malloc) $(addsuffix .o,$(binaries-bench-malloc))
 	rm -f $(timing-type) $(addsuffix .o,$(timing-type))
 
-bench: $(timing-type) $(gen-locales) bench-set bench-func bench-malloc
+bench: $(timing-type) $(gen-locales) bench-build bench-set bench-func \
+	bench-malloc
+# Target to only build the benchmark without running it.
+bench-build: $(binaries-bench) $(binaries-benchset) $(binaries-bench-malloc)
 
 bench-set: $(binaries-benchset)
 	for run in $^; do \
