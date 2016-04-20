@@ -9,32 +9,33 @@ escape_char /
 % otherwise be governed by that license.
 
 % Kazakh Language Locale for Kazakhstan
-% Source: NIPI, Kazakhstan Copper Corporation
-% Address: 6, Gagarin, 477000, Zhezkazgan, Kazakhstan
+% Source: linukz.org
+% Address:
 % Contact: Timur Birsh
-% Email: birsh@mail.kz
-% Tel: +7 (310-2) 74-80-12
+% Email: taem@linukz.org
+% Tel:
 % Fax:
 % Language: kk
 % Territory: KZ
-% Revision: 1.0
-% Date: 2003-06-06
+% Revision: 1.1
+% Date: 2016-03-22
 % Application: general
 % Users: general
-% Charset: PT154
+% Charset: UTF-8
+% License: Public Domain
 
 LC_IDENTIFICATION
 title      "Kazakh locale for Kazakhstan"
-source     "NIPI, Kazakhstan Copper Corporation"
+source     "linukz.org"
 address    ""
-contact    ""
+contact    "Timur Birsh"
 email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
 language   "Kazakh"
 territory  "Kazakhstan"
-revision   "1.0"
-date       "2003-06-06"
+revision   "1.1"
+date       "2016-03-22"
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_CTYPE
@@ -120,16 +121,16 @@ reorder-after <U041E>
 <U04E8> <CYR-BARRED-O>;<BAS>;<CAP>;IGNORE
 
 reorder-after <CYR-OU>
-<CYR-STRAIGHT-U>
 <CYR-STRAIGHT-U-WITH-STROKE>
+<CYR-STRAIGHT-U>
 
 reorder-after <U0443>
-<U04AF> <CYR-STRAIGHT-U>;<BAS>;<MIN>;IGNORE
 <U04B1> <CYR-STRAIGHT-U-WITH-STROKE>;<BAS>;<MIN>;IGNORE
+<U04AF> <CYR-STRAIGHT-U>;<BAS>;<MIN>;IGNORE
 
 reorder-after <U0423>
-<U04AE> <CYR-STRAIGHT-U>;<BAS>;<CAP>;IGNORE
 <U04B0> <CYR-STRAIGHT-U-WITH-STROKE>;<BAS>;<CAP>;IGNORE
+<U04AE> <CYR-STRAIGHT-U>;<BAS>;<CAP>;IGNORE
 
 reorder-after <CYR-HA>
 <CYR-SHHA>
@@ -140,13 +141,13 @@ reorder-after <U0445>
 reorder-after <U0425>
 <U04BA> <CYR-SHHA>;<BAS>;<CAP>;IGNORE
 
-reorder-after <CYR-I>
+reorder-after <CYR-YEROU>
 <CYR-BEL-UKR-I>
 
-reorder-after <U0438>
+reorder-after <U044B>
 <U0456> <CYR-BEL-UKR-I>;<BAS>;<MIN>;IGNORE
 
-reorder-after <U0418>
+reorder-after <U042B>
 <U0406> <CYR-BEL-UKR-I>;<BAS>;<CAP>;IGNORE
 
 reorder-end
@@ -163,29 +164,37 @@ END LC_CTYPE
 LC_MESSAGES
 yesexpr "<U005E><U005B><U0418><U0438><U0059><U0079><U005D><U002E><U002A>"
 noexpr  "<U005E><U005B><U0416><U0436><U004E><U006E><U005D><U002E><U002A>"
+yesstr  "<U0438><U04D9>"
+nostr   "<U0436><U043E><U049B>"
 END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "<U004B><U005A><U0054><U0020>"
 currency_symbol           "<U20B8>"
-mon_decimal_point         "<U002E>"
-mon_thousands_sep         "<U0020>"
+mon_decimal_point         "<U002C>"
+mon_thousands_sep         "<U00A0>"
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "<U002D>"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             0
-p_sep_by_space            1
+p_sep_by_space            2
 n_cs_precedes             0
 n_sep_by_space            1
 p_sign_posn               1
 n_sign_posn               1
+int_p_cs_precedes         1
+int_p_sep_by_space        2
+int_n_cs_precedes         1
+int_n_sep_by_space        1
+int_p_sign_posn           4
+int_n_sign_posn           4
 END LC_MONETARY
 
 LC_NUMERIC
 decimal_point             "<U002C>"
-thousands_sep             "<U002E>"
+thousands_sep             "<U00A0>"
 grouping                  3;3
 END LC_NUMERIC
 
@@ -203,7 +212,7 @@ abday   "<U0416><U043A>";/
         "<U0421><U0440>";/
         "<U0411><U0441>";/
         "<U0416><U043C>";/
-        "<U0421><U043D>"
+        "<U0421><U0431>"
 mon     "<U049A><U0430><U04A3><U0442><U0430><U0440>";/
         "<U0410><U049B><U043F><U0430><U043D>";/
         "<U041D><U0430><U0443><U0440><U044B><U0437>";/
@@ -243,9 +252,11 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
+tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
 <U006C>"
-int_prefix     "<U0037>"
+tel_dom_fmt "<U0028><U0025><U0041><U0029><U0020><U0025><U006C>"
+int_prefix  "<U0037>"
+int_select  "<U0038><U007E><U0031><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -258,19 +269,20 @@ name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+postal_fmt   "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
 country_name "<U049A><U0430><U0437><U0430><U049B><U0441><U0442><U0430><U043D>"
-country_num 398
-% KZ
-country_car    "<U004B><U005A>"
-% kk
+country_post "<U004B><U0041><U005A>"
+country_ab2  "<U004B><U005A>"
+country_ab3  "<U004B><U0041><U005A>"
+country_num  398
+country_car  "<U004B><U005A>"
+country_isbn "<U0039><U0037><U0038><U002D><U0036><U0030><U0031>"
+lang_name    "<U049B><U0430><U0437><U0430><U049B><U0020><U0442><U0456><U043B><U0456>"
 lang_ab      "<U006B><U006B>"
-% kaz
 lang_term    "<U006B><U0061><U007A>"
-% kaz
-lang_lib    "<U006B><U0061><U007A>"
+lang_lib     "<U006B><U0061><U007A>"
 END LC_ADDRESS
