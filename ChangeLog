@@ -1,5 +1,7 @@
 2016-04-20  Siddhesh Poyarekar  <sid@reserved-bit.com>
 
+	* benchtests/Makefile (bench-clean): Clean up extra-objs.
+
 	* benchtests/README: Update README to include instructions on
 	using bench-build.
 

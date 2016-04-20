@@ -112,7 +112,9 @@ cpp-srcs-left := $(binaries-benchset:=.c) $(binaries-bench:=.c) \
 lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
-extra-objs += json-lib.o
+bench-extra-objs = json-lib.o
+
+extra-objs += $(bench-extra-objs)
 
 bench-deps := bench-skeleton.c bench-timing.h Makefile
 
@@ -127,6 +129,7 @@ bench-clean:
 	rm -f $(binaries-benchset) $(addsuffix .o,$(binaries-benchset))
 	rm -f $(binaries-bench-malloc) $(addsuffix .o,$(binaries-bench-malloc))
 	rm -f $(timing-type) $(addsuffix .o,$(timing-type))
+	rm -f $(addprefix $(objpfx),$(bench-extra-objs))
 
 bench: $(timing-type) $(gen-locales) bench-build bench-set bench-func \
 	bench-malloc
