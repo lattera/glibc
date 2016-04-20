@@ -49,7 +49,9 @@ benchmarks from the build directory as usual:
   $ make bench
 
 make sure the copy preserves timestamps by using either rsync or scp -p
-otherwise the above command may try to build the benchmark again.
+otherwise the above command may try to build the benchmark again.  Benchmarks
+that require generated code to be executed during the build are skipped when
+cross-building.
 
 Adding a function to benchtests:
 ===============================

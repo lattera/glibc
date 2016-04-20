@@ -1,5 +1,12 @@
 2016-04-20  Siddhesh Poyarekar  <sid@reserved-bit.com>
 
+	* benchtests/Makefile (wcsmbs-benchset): Include only for
+	native builds and runs.
+	(LOCALES): Likewise.
+	(bench-build): Build timing-type here instead of the bench
+	target.  Generate locale only for native builds.
+	* benchtests/README: Add note for cross-building.
+
 	* benchtests/Makefile (bench-clean): Clean up extra-objs.
 
 	* benchtests/README: Update README to include instructions on
