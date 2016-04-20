@@ -34,6 +34,23 @@ the benchmark to use clock_gettime by invoking make as follows:
 
 Again, one must run `make bench-clean' before changing the measurement method.
 
+Running benchmarks on another target:
+====================================
+
+If the target where you want to run benchmarks is not capable of building the
+code or you're cross-building, you could build and execute the benchmark in
+separate steps.  On the build system run:
+
+  $ make bench-build
+
+and then copy the source and build directories to the target and run the
+benchmarks from the build directory as usual:
+
+  $ make bench
+
+make sure the copy preserves timestamps by using either rsync or scp -p
+otherwise the above command may try to build the benchmark again.
+
 Adding a function to benchtests:
 ===============================
 
