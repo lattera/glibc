@@ -1,3 +1,18 @@
+2016-04-22  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/locale-defines.sym:  Add new macros.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
+	(sysdep_routines): Add new strcasestr targets.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasestr-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasestr-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasestr.c: New file.
+	* sysdeps/powerpc/powerpc64/power8/Makefile:
+	New file to add strcasestr-ppc64 to sysdep_routines.
+	* sysdeps/powerpc/powerpc64/power8/strcasestr-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/power8/strcasestr.S: New file.
+
 2016-04-20  Siddhesh Poyarekar  <sid@reserved-bit.com>
 
 	* benchtests/Makefile (wcsmbs-benchset): Include only for
