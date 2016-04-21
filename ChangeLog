@@ -1,3 +1,8 @@
+2016-05-01  Arnas Udovičius  <arnas.udovicius@gmail.com>
+
+	[BZ #12450]
+	* locale/iso-639.def: Add Samogitian/sgs.
+
 2016-04-30  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/Makefile (CFLAGS-gmon-start.c): Define.
@@ -423,7 +428,7 @@
 	IPV6_RTHDR, IPV6_RECVDSTOPTS, IPV6_DSTOPTS, IPV6_RECVPATHMTU,
 	IPV6_PATHMTU, IPV6_DONTFRAG): New macros.
 
-2016-04-23   H.J. Lu  <hongjiu.lu@intel.com>
+2016-04-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/dl-minimal.c (__libc_memalign): Mmap one extra page.
 

@@ -1,3 +1,9 @@
+2016-05-01  Arnas Udovičius <arnas.udovicius@gmail.com>
+
+	[BZ #12450]
+	* locales/sgs_LT: New locale.
+	* SUPPORTED (SUPPORTED-LOCALES): Add sgs_LT/UTF-8.
+
 2016-04-26  Mike Frysinger  <vapier@gentoo.org>
 
 	* locales/tr_TR (LC_CTYPE): Translit U20BA to "TL".

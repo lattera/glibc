@@ -1,0 +1,154 @@
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
+% Samogitian language locale for Lithuania
+% Created on January 28, 2011
+%  by Arnas Udovičius
+% Source:
+% Address:
+% Contact: Arnas Udovičius
+% Email: arnas.udovicius@gmail.com
+% Language: sgs
+% Territory: LT
+% Revision: 1.1
+% Date: 2016-04-21
+% Application: general
+% Users: general
+% Repertoiremap: mnemonic.ds
+% Charset: UTF-8
+% Distribution and use is free, also
+% for commercial purposes.
+
+% <CAPITAL> before <SMALL> letters
+
+LC_IDENTIFICATION
+title      "Samogitian language locale for Lithuania"
+source     ""
+address    ""
+contact    "Arnas Udovičius"
+email      "bug-glibc-locales@gnu.org"
+tel        ""
+fax        ""
+language   "Samogitian"
+territory  "Lithuania"
+revision   "1.1"
+date       "2016-04-21"
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_MONETARY
+copy "lt_LT"
+END LC_MONETARY
+
+LC_NUMERIC
+copy "lt_LT"
+END LC_NUMERIC
+
+LC_TIME
+abday   "<U004E><U0064>";"<U0050><U006E>";"<U004F><U0074>";/
+        "<U0053><U0072>";"<U010C><U0074>";"<U0050><U0074>";/
+        "<U0053><U0062>"
+day     "<U006E><U0065><U0064><U0069><U0065><U006C><U0117><U0073><U0020><U0064><U00EB><U006E><U0061>";/
+        "<U0070><U0061><U006E><U0065><U0064><U0069><U0065><U006C><U0069><U0073>";/
+        "<U006F><U0074><U0065><U0072><U006E><U0069><U006E><U006B><U0073>";/
+        "<U0073><U0065><U0072><U0065><U0064><U0061>";/
+        "<U010D><U0065><U0074><U0076><U0065><U0072><U0067><U0073>";/
+        "<U0070><U0065><U0074><U006E><U0069><U0304><U010D><U0117>";/
+        "<U0073><U006F><U0062><U0061><U0074><U0061>"
+abmon   "<U0053><U0061><U0075>";"<U0056><U0061><U0073>";/
+        "<U004B><U0075><U006F>";"<U0042><U0061><U006C>";/
+        "<U0047><U0065><U0067>";"<U0042><U0117><U0072>";/
+        "<U004C><U00EB><U0070>";"<U0052><U0067><U0070>";/
+        "<U0053><U0069><U0065>";"<U0053><U0070><U0061>";/
+        "<U004C><U0061><U0070>";"<U0047><U0072><U0064>"
+mon     "<U0073><U0061><U0075><U0073><U0117>";/
+        "<U0076><U0061><U0073><U0061><U0072><U0117>";/
+        "<U006B><U0075><U006F><U0076><U0061>";/
+        "<U0062><U0061><U006C><U006F><U006E><U0064><U0117>";/
+        "<U0067><U0065><U0067><U006F><U017E><U0117><U0073>";/
+        "<U0062><U0117><U0072><U017E><U0065><U006C><U0117>";/
+        "<U006C><U00EB><U0070><U0061><U0073>";/
+        "<U0072><U006F><U0067><U0070><U006A><U016B><U0074><U0117>";/
+        "<U0073><U0069><U0065><U006A><U0117><U0073>";/
+        "<U0073><U0070><U0061><U006C><U0117>";/
+        "<U006C><U0061><U0070><U006B><U0072><U0117><U0073><U0074><U0117>";/
+        "<U0067><U0072><U016F><U0064><U0117>"
+d_t_fmt "<U0025><U0059><U0020><U006D><U002E><U0020><U0025><U0042><U0020><U0025><U0064><U0020><U0064><U002E><U0020><U0025><U0054>"
+d_fmt   "<U0025><U0059><U002E><U0025><U006D><U002E><U0025><U0064>"
+t_fmt   "<U0025><U0054>"
+am_pm   "";""
+t_fmt_ampm ""
+week 7;19971130;4
+first_weekday 2
+END LC_TIME
+
+LC_MESSAGES
+yesexpr "<U005E><U005B><U002B><U0031><U0054><U0074><U0059><U0079><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U004E><U006E><U005D>"
+yesstr  "<U0074><U0227><U0304><U0070>"
+nostr   "<U006E><U0065><U0304>"
+END LC_MESSAGES
+
+LC_PAPER
+copy "lt_LT"
+END LC_PAPER
+
+LC_TELEPHONE
+copy "lt_LT"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+copy "lt_LT"
+END LC_MEASUREMENT
+
+LC_NAME
+name_fmt "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt  "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+country_name "<U004C><U0069><U0065><U0074><U006F><U0076><U0061>"
+country_post "<U004C><U0054>"
+country_ab2  "<U004C><U0054>"
+country_ab3  "<U004C><U0054><U0055>"
+country_num  440
+country_car  "<U004C><U0054>"
+lang_name    "<U017D><U0065><U006D><U0061><U0069><U0074><U0117><U0161><U006B><U0101>"
+lang_term    "<U0073><U0067><U0073>"
+lang_lib     "<U0073><U0067><U0073>"
+END LC_ADDRESS
