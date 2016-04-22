@@ -1,3 +1,8 @@
+2016-05-07  Dimitris Pappas  <dvpappas@msn.com>
+
+	[BZ #18453]
+	* charmaps/IBM875: Swap ΐ/ϊ and ΰ/ϋ places.
+
 2016-05-01  Arnas Udovičius <arnas.udovicius@gmail.com>
 
 	[BZ #12450]
