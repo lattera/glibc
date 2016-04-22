@@ -40,7 +40,7 @@
 int
 main (int argc, char *argv[])
 {
-  char *s = malloc (201);
+  char s[200];
 
   if (setlocale (LC_MONETARY, argv[1]) == NULL)
     {
@@ -48,7 +48,7 @@ main (int argc, char *argv[])
       exit (EXIT_SETLOCALE);
     }
 
-  if (strfmon (s, 200, argv[2], (double) atof (argv[3])) == -1)
+  if (strfmon (s, sizeof (s), argv[2], (double) atof (argv[3])) == -1)
     {
       perror ("strfmon");
       exit (EXIT_STRFMON);

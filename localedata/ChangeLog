@@ -1,5 +1,12 @@
 2016-04-23  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #19671]
+	* tst-fmon.c (main): Change s from malloc to s[200].  Change 2nd
+	arg to strfmon from 200 to sizeof (s).
+	* tst-numeric.c (main): Likewise.
+
+2016-04-23  Mike Frysinger  <vapier@gentoo.org>
+
 	* tst-langinfo.sh: Update YESEXPR & NOEXPR baselines to match
 	current locales.
 
