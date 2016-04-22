@@ -90,17 +90,17 @@ ENTRY (__clone)
 
 	tstl	%d0
 	jmi	SYSCALL_ERROR_LABEL
-	jeq	thread_start
+	jeq	1f
 
 	rts
 
-thread_start:
+1:
 	cfi_startproc
 	cfi_undefined (pc)	/* Mark end of stack */
 	subl	%fp, %fp	/* terminate the stack frame */
 	/* Check and see if we need to reset the PID.  */
 	andl	#CLONE_VM, %d1
-	jne	donepid
+	jne	1f
 	movel	#SYS_ify (getpid), %d0
 	trap	#0
 	movel	%a0, -(%sp)
@@ -110,7 +110,7 @@ thread_start:
 	movel	%d0, PID_OFFSET(%a0)
 	movel	%d0, TID_OFFSET(%a0)
 	movel	(%sp)+, %a0
-donepid:
+1:
 	jsr	(%a0)
 	movel	%d0, %d1
 	movel	#SYS_ify (exit), %d0
