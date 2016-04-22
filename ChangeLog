@@ -1,3 +1,16 @@
+2016-07-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #15368]
+	* sysdeps/unix/sysv/linux/nptl-signals.h
+	(__nptl_clear_internal_signals): New function.
+	(__libc_signal_block_all): Likewise.
+	(__libc_signal_block_app): Likewise.
+	(__libc_signal_restore_set): Likewise.
+	* sysdeps/unix/sysv/linux/pt-raise.c (raise): Use Linux raise.c
+	implementation.
+	* sysdeps/unix/sysv/linux/raise.c (raise): Reimplement to not use
+	the cached pid/tid value in pthread structure.
+
 2016-07-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #20347]

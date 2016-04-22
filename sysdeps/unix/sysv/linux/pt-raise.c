@@ -1,4 +1,5 @@
-/* Copyright (C) 2002-2016 Free Software Foundation, Inc.
+/* ISO C raise function for libpthread.
+   Copyright (C) 2002-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -16,22 +17,4 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <signal.h>
-#include <sysdep.h>
-#include <tls.h>
-
-
-int
-raise (int sig)
-{
-  /* raise is an async-safe function.  It could be called while the
-     fork function temporarily invalidated the PID field.  Adjust for
-     that.  */
-  pid_t pid = THREAD_GETMEM (THREAD_SELF, pid);
-  if (__glibc_unlikely (pid < 0))
-    pid = -pid;
-
-  return INLINE_SYSCALL (tgkill, 3, pid, THREAD_GETMEM (THREAD_SELF, tid),
-			 sig);
-}
+#include <sysdeps/unix/sysv/linux/raise.c>
