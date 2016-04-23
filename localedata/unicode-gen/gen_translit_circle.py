@@ -62,6 +62,7 @@ def output_head(translit_file, unicode_version, head=''):
     else:
         translit_file.write('escape_char /\n')
         translit_file.write('comment_char %\n')
+        translit_file.write(unicode_utils.COMMENT_HEADER)
         translit_file.write('\n')
         translit_file.write('% Transliterations of encircled characters.\n')
         translit_file.write('% Generated automatically from UnicodeData.txt '

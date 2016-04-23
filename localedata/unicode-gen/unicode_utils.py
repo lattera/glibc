@@ -25,6 +25,17 @@ Unicode data for glibc from upstream Unicode data files.
 import sys
 import re
 
+
+# Common locale header.
+COMMENT_HEADER = """
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+"""
+
 # Dictionary holding the entire contents of the UnicodeData.txt file
 #
 # Contents of this dictionary look like this:

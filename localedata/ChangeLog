@@ -1,5 +1,16 @@
 2016-06-11  Mike Frysinger  <vapier@gentoo.org>
 
+	* unicode-gen/gen_translit_circle.py (output_head): Add write of
+	unicode_utils.COMMENT_HEADER.
+	* unicode-gen/gen_translit_cjk_compat.py (output_head): Likewise.
+	* unicode-gen/gen_translit_combining.py (output_head): Likewise.
+	* unicode-gen/gen_translit_compat.py (output_head): Likewise.
+	* unicode-gen/gen_translit_font.py (output_head): Likewise.
+	* unicode-gen/gen_translit_fraction.py (output_head): Likewise.
+	* unicode-gen/unicode_utils.py (COMMENT_HEADER): Define.
+
+2016-06-11  Mike Frysinger  <vapier@gentoo.org>
+
 	[BZ #19133]
 	* locales/pt_BR (abday): Make first letter lowercase in each element.
 	(abmon): Likewise.
