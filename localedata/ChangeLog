@@ -1,5 +1,10 @@
 2016-04-23  Mike Frysinger  <vapier@gentoo.org>
 
+	* tst-langinfo.sh: Update YESEXPR & NOEXPR baselines to match
+	current locales.
+
+2016-04-23  Mike Frysinger  <vapier@gentoo.org>
+
 	[BZ #15264]
 	[BZ #16975]
 	* locales/af_ZA (LC_MESSAGES): Update values to match CLDRv29.
