@@ -66,15 +66,13 @@ __libc_memalign (size_t align, size_t n)
 
   if (alloc_ptr + n >= alloc_end || n >= -(uintptr_t) alloc_ptr)
     {
-      /* Insufficient space left; allocate another page.  */
+      /* Insufficient space left; allocate another page plus one extra
+	 page to reduce number of mmap calls.  */
       caddr_t page;
       size_t nup = (n + GLRO(dl_pagesize) - 1) & ~(GLRO(dl_pagesize) - 1);
-      if (__glibc_unlikely (nup == 0))
-	{
-	  if (n)
-	    return NULL;
-	  nup = GLRO(dl_pagesize);
-	}
+      if (__glibc_unlikely (nup == 0 && n != 0))
+	return NULL;
+      nup += GLRO(dl_pagesize);
       page = __mmap (0, nup, PROT_READ|PROT_WRITE,
 		     MAP_ANON|MAP_PRIVATE, -1, 0);
       if (page == MAP_FAILED)
