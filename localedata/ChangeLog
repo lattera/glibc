@@ -1,3 +1,10 @@
+2016-04-26  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/tr_TR (LC_CTYPE): Translit U20BA to "TL".
+	* locales/translit_neutral (LC_CTYPE): Translit U058F to "AMD", U20AA
+	to "ILS", U20B1 to "PHP", U20B8 to "KZT", and U20BE to "GEL".
+	* locales/uz_UZ (LC_CTYPE): Translit U02BB to "'".
+
 2016-04-23  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #19671]

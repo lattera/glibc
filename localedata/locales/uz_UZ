@@ -147,6 +147,9 @@ include "translit_combining";""
 <U049A> "<U0051>"        % k,= -> q
 <U0492> "<U0047><U0027>" % g-= -> g'
 <U04B2> "<U0048>"        % h,= -> h
+
+% various punctuation
+<U02BB> "<U0027>" % ‘ -> '
 translit_end
 END LC_CTYPE
 
