@@ -86,6 +86,18 @@ struct ip_opts
 /* Advanced API (RFC3542) (1).  */
 #define IPV6_RECVPKTINFO	49
 #define IPV6_PKTINFO		50
+#define IPV6_RECVHOPLIMIT	51
+#define IPV6_HOPLIMIT		52
+#define IPV6_RECVHOPOPTS	53
+#define IPV6_HOPOPTS		54
+#define IPV6_RTHDRDSTOPTS	55
+#define IPV6_RECVRTHDR		56
+#define IPV6_RTHDR		57
+#define IPV6_RECVDSTOPTS	58
+#define IPV6_DSTOPTS		59
+#define IPV6_RECVPATHMTU	60
+#define IPV6_PATHMTU		61
+#define IPV6_DONTFRAG		62
 
 /* Obsolete synonyms for the above.  */
 #define IPV6_ADD_MEMBERSHIP	IPV6_JOIN_GROUP
