@@ -1,3 +1,18 @@
+2016-04-25  Samuel thibault  <samuel.thibault@ens-lyon.org>
+
+	RFC2292 macros were obsoleted by RFC3542, and should not be exposed
+	any more. Notably since IPV6_PKTINFO has been reintroduced with a
+	completely different API.
+
+	* bits/in.h (IPV6_PKTINFO): Rename to IPV6_2292PKTINFO.
+	(IPV6_HOPOPTS): Rename to IPV6_2292HOPOPTS.
+	(IPV6_DSTOPTS): Rename to IPV6_2292DSTOPTS.
+	(IPV6_RTHDR): Rename to IPV6_2292RTHDR.
+	(IPV6_PKTOPTIONS): Rename to IPV6_2292PKTOPTIONS.
+	(IPV6_HOPLIMIT): Rename to IPV6_2292HOPLIMIT.
+	(IPV6_RECVPKTINFO): New macro.
+	(IPV6_PKTINFO): New macro.
+
 2016-04-23   H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/dl-minimal.c (__libc_memalign): Mmap one extra page.

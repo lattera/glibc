@@ -56,17 +56,17 @@ struct ip_opts
 
 /* IPV6 socket options.  */
 #define IPV6_ADDRFORM		1
-#define IPV6_PKTINFO		2
-#define IPV6_HOPOPTS		3
-#define IPV6_DSTOPTS		4
-#define IPV6_RTHDR		5
-#define IPV6_PKTOPTIONS		6
+#define IPV6_2292PKTINFO	2
+#define IPV6_2292HOPOPTS	3
+#define IPV6_2292DSTOPTS	4
+#define IPV6_2292RTHDR		5
+#define IPV6_2292PKTOPTIONS	6
 #define IPV6_CHECKSUM		7
-#define IPV6_HOPLIMIT		8
+#define IPV6_2292HOPLIMIT	8
 
-#define IPV6_RXINFO		IPV6_PKTINFO
-#define IPV6_TXINFO		IPV6_PKTINFO
-#define SCM_SRCINFO		IPV6_PKTINFO
+#define IPV6_RXINFO		IPV6_2292PKTINFO
+#define IPV6_TXINFO		IPV6_RXINFO
+#define SCM_SRCINFO		IPV6_TXINFO
 #define SCM_SRCRT		IPV6_RXSRCRT
 
 #define IPV6_UNICAST_HOPS	16
@@ -83,11 +83,15 @@ struct ip_opts
 #define IPV6_JOIN_ANYCAST      27
 #define IPV6_LEAVE_ANYCAST     28
 
+/* Advanced API (RFC3542) (1).  */
+#define IPV6_RECVPKTINFO	49
+#define IPV6_PKTINFO		50
+
 /* Obsolete synonyms for the above.  */
 #define IPV6_ADD_MEMBERSHIP	IPV6_JOIN_GROUP
 #define IPV6_DROP_MEMBERSHIP	IPV6_LEAVE_GROUP
-#define IPV6_RXHOPOPTS		IPV6_HOPOPTS
-#define IPV6_RXDSTOPTS		IPV6_DSTOPTS
+#define IPV6_RXHOPOPTS		IPV6_2292HOPOPTS
+#define IPV6_RXDSTOPTS		IPV6_2292DSTOPTS
 
 /* Routing header options for IPv6.  */
 #define IPV6_RTHDR_LOOSE	0	/* Hop doesn't need to be neighbour. */
