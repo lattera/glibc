@@ -1,4 +1,4 @@
-/* Optimized strspn implementation for POWER8.
+/* Optimized strcspn implementation for PowerPC64/POWER8.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,10 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
-#define STRSPN __strspn_power8
-#undef libc_hidden_builtin_def
-#define libc_hidden_builtin_def(name)
-
+#define USE_AS_STRCSPN 1
 #include <sysdeps/powerpc/powerpc64/power8/strspn.S>

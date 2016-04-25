@@ -1,3 +1,28 @@
+2016-04-25  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
+	(sysdep_routines): Add P8 and PPC64 strcspn targets.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Add entries for P8 and PPC64
+	ifunc'ed strcspn.
+	* sysdeps/powerpc/powerpc64/multiarch/strspn-power8.S:
+	[EALIGN]: Removed.
+	[END]: Likewise
+	[STRSPN]: Define instead of the above to control symbol name.
+	* sysdeps/powerpc/powerpc64/multiarch/strcspn-power8.S:
+	New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strcspn-ppc64.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcspn.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strcspn.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strspn.S:
+	[INITIAL_MASK]: New macro.
+	[STRCSPN]: Likewise.
+	[UPDATE_MASK]: Likewise.
+	[USE_AS_STRCSPN]: Lisewise.
+
 2016-04-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19931]

@@ -33,6 +33,21 @@
 
 #include "sysdep.h"
 
+#ifndef USE_AS_STRCSPN
+#  define USE_AS_STRCSPN 0
+#  ifndef STRSPN
+#    define STRSPN strspn
+#  endif
+#  define INITIAL_MASK 0
+#  define UPDATE_MASK(RA, RS, RB) or	RA, RS, RB
+#else
+#  ifndef STRSPN
+#    define STRSPN strcspn
+#  endif
+#  define INITIAL_MASK -1
+#  define UPDATE_MASK(RA, RS, RB) andc	RA, RS, RB
+#endif
+
 /* Simple macro to use VSX instructions in overlapping VR's.  */
 #define XXVR(insn, vrt, vra, vrb) \
 	insn 32+vrt, 32+vra, 32+vrb
@@ -53,7 +68,7 @@
 	/* This can be updated to power8 once the minimum version of
 	   binutils supports power8 and the above instructions.  */
 	.machine power7
-EALIGN(strspn, 4, 0)
+EALIGN(STRSPN, 4, 0)
 	CALL_MCOUNT 2
 
 	/* Generate useful constants for later on.  */
@@ -66,10 +81,18 @@ EALIGN(strspn, 4, 0)
 
 	/* Prepare to compute 256b mask.  */
 	addi	r4, r4, -1
-	li	r5, 0
-	li	r6, 0
-	li	r7, 0
-	li	r8, 0
+	li	r5, INITIAL_MASK
+	li	r6, INITIAL_MASK
+	li	r7, INITIAL_MASK
+	li	r8, INITIAL_MASK
+
+#if USE_AS_STRCSPN
+	/* Ensure the null character never matches by clearing ISA bit 0 in
+	   in r5 which is the bit which will check for it in the later usage
+	   of vbpermq.  */
+	srdi	r5, r5, 1
+#endif
+
 	li	r11, 1
 	sldi	r11, r11, 63
 
@@ -97,14 +120,14 @@ L(next_needle):
 
 	/* Now, or the value into the correct GPR.  */
 	bge cr1,L(needle_gt128)
-	or	r5, r5, r10	/* 0 - 63.  */
-	or	r6, r6, r12	/* 64 - 127.  */
+	UPDATE_MASK (r5, r5, r10)	/* 0 - 63.  */
+	UPDATE_MASK (r6, r6, r12)	/* 64 - 127.  */
 	b L(next_needle)
 
 	.align 4
 L(needle_gt128):
-	or	r7, r7, r10	/* 128 - 191.  */
-	or	r8, r8, r12	/* 192 - 255.  */
+	UPDATE_MASK (r7, r7, r10)	/* 128 - 191.  */
+	UPDATE_MASK (r8, r8, r12)	/* 192 - 255.  */
 	b L(next_needle)
 
 
@@ -175,5 +198,5 @@ L(done):
 	add	r3, r3, r10
 	blr
 
-END(strspn)
-libc_hidden_builtin_def (strspn)
+END(STRSPN)
+libc_hidden_builtin_def (STRSPN)
