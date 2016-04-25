@@ -1,3 +1,11 @@
+2016-04-25  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19989]
+	* libio/stdio.h (cuserid): Do not declare if
+	[__USE_XOPEN2K && !__USE_GNU].
+	* conform/Makefile (test-xfail-XOPEN2K8/stdio.h/conform): Remove
+	variable.
+
 2016-04-25  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
