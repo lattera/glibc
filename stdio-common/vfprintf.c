@@ -1564,6 +1564,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	prec = 0;
       if (prec > width && prec > WORK_BUFFER_SIZE - 32)
 	{
+	  /* Deallocate any previously allocated buffer because it is
+	     too small.  */
+	  if (__glibc_unlikely (workstart != NULL))
+	    free (workstart);
+	  workstart = NULL;
 	  if (__glibc_unlikely (prec >= INT_MAX / sizeof (CHAR_T) - 32))
 	    {
 	      __set_errno (EOVERFLOW);

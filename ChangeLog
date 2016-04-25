@@ -1,3 +1,16 @@
+2016-04-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19931]
+	* stdio-common/tst-vfprintf-width-prec.c: New file.
+	* stdio-common/Makefile (tests): Add tst-vfprintf-width-prec.
+	(tests-special): Add tst-vfprintf-width-prec-mem.out.
+	(generated): Add mtrace-related files.
+	(tst-vfprintf-width-prec-ENV): Set MALLOC_TRACE.
+	(tst-%-mem.out): New pattern rule, replaces
+	tst-printf-bz18872-mem.out.
+	* stdio-common/vfprintf.c (vfprintf): When handling a precision
+	specifier, deallocate any previously allocated work buffer.
+
 2016-04-25  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/nios2/setcontext.S (__startcontext):
