@@ -1,5 +1,11 @@
 2016-04-26  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19996]
+	* locale/langinfo.h (nl_langinfo_l): Declare if [__USE_XOPEN2K8],
+	not [__USE_XOPEN2K].
+	* conform/Makefile (test-xfail-XOPEN2K/langinfo.h/conform): Remove
+	variable.
+
 	* conform/data/stdarg.h-data [XOPEN2K] (va_copy): Require macro.
 	* conform/Makefile (test-xfail-XOPEN2K/stdarg.h/conform): Remove
 	variable.

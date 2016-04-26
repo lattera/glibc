@@ -211,7 +211,6 @@ test-xfail-UNIX98/unistd.h/conform = yes
 test-xfail-UNIX98/utmpx.h/conform = yes
 test-xfail-XOPEN2K/aio.h/conform = yes
 test-xfail-XOPEN2K/fcntl.h/conform = yes
-test-xfail-XOPEN2K/langinfo.h/conform = yes
 test-xfail-XOPEN2K/mqueue.h/conform = yes
 test-xfail-XOPEN2K/semaphore.h/conform = yes
 test-xfail-XOPEN2K/signal.h/conform = yes

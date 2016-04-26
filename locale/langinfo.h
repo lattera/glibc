@@ -583,7 +583,7 @@ enum
 extern char *nl_langinfo (nl_item __item) __THROW;
 
 
-#ifdef	__USE_XOPEN2K
+#ifdef __USE_XOPEN2K8
 /* This interface is for the extended locale model.  See <locale.h> for
    more information.  */
 
