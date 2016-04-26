@@ -86,10 +86,10 @@ fmemopen_write (void *cookie, const char *b, size_t s)
 
   memcpy (&(c->buffer[pos]), b, s);
 
-  pos += s;
-  if ((size_t) pos > c->maxpos)
+  c->pos += s;
+  if ((size_t) c->pos > c->maxpos)
     {
-      c->maxpos = pos;
+      c->maxpos = c->pos;
       if (addnullc)
 	c->buffer[c->maxpos] = '\0';
     }

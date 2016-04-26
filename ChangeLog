@@ -1,3 +1,11 @@
+2016-04-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #20005]
+	* libio/fmemopen.c (fmemopen_write): Update internal position after
+	write.
+	* stdio-common/Makefile (tests): Add tst-fmemopen4.c.
+	* stdio-common/tst-fmemopen4.c: New file..
+
 2016-04-26  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19996]
