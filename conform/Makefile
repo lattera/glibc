@@ -215,7 +215,6 @@ test-xfail-XOPEN2K/langinfo.h/conform = yes
 test-xfail-XOPEN2K/mqueue.h/conform = yes
 test-xfail-XOPEN2K/semaphore.h/conform = yes
 test-xfail-XOPEN2K/signal.h/conform = yes
-test-xfail-XOPEN2K/stdarg.h/conform = yes
 test-xfail-XOPEN2K/sys/wait.h/conform = yes
 test-xfail-XOPEN2K/ucontext.h/conform = yes
 test-xfail-POSIX2008/arpa/inet.h/conform = yes

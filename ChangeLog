@@ -1,5 +1,9 @@
 2016-04-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/stdarg.h-data [XOPEN2K] (va_copy): Require macro.
+	* conform/Makefile (test-xfail-XOPEN2K/stdarg.h/conform): Remove
+	variable.
+
 	* libio/stdio.h (off_t): Define if [__USE_XOPEN2K], not
 	[__USE_XOPEN2K8].
 	[__USE_LARGEFILE64] (off64_t): Likewise.
