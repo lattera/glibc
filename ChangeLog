@@ -1,3 +1,11 @@
+2016-04-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* libio/stdio.h (off_t): Define if [__USE_XOPEN2K], not
+	[__USE_XOPEN2K8].
+	[__USE_LARGEFILE64] (off64_t): Likewise.
+	* conform/Makefile (test-xfail-XOPEN2K/stdio.h/conform): Remove
+	variable.
+
 2016-04-25  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19989]
