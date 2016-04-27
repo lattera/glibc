@@ -1,5 +1,8 @@
 2016-04-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/stdio.h-data (fdopen): Expect also for
+	[XPG3 || XPG4].
+
 	* conform/data/stdio.h-data (flockfile): Also expect for [UNIX98].
 	(fseeko): Likewise.
 	(ftello): Likewise.

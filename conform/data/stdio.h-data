@@ -60,7 +60,7 @@ function {char*} cuserid (char*)
 function int dprintf (int, const char*, ...)
 #endif
 function int fclose (FILE*)
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined XPG3 && !defined XPG4
+#if !defined ISO && !defined ISO99 && !defined ISO11
 function {FILE*} fdopen (int, const char*)
 #endif
 function int feof (FILE*)
