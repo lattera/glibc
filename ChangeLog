@@ -1,3 +1,10 @@
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19825]
+	* resolv/res_send.c (send_vc): Remove early *resplen2
+	initialization.  Set *resplen2 on socket error.  Call
+	close_and_return_error for other errors.
+
 2016-04-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/netiucv/iucv.h

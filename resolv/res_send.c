@@ -762,8 +762,6 @@ send_vc(res_state statp,
 	u_short len2;
 	u_char *cp;
 
-	if (resplen2 != NULL)
-	  *resplen2 = 0;
 	connreset = 0;
  same_ns:
 	truncating = 0;
@@ -789,6 +787,8 @@ send_vc(res_state statp,
 		if (statp->_vcsock < 0) {
 			*terrno = errno;
 			Perror(statp, stderr, "socket(vc)", errno);
+			if (resplen2 != NULL)
+			  *resplen2 = 0;
 			return (-1);
 		}
 		__set_errno (0);
@@ -798,8 +798,7 @@ send_vc(res_state statp,
 			    : sizeof (struct sockaddr_in6)) < 0) {
 			*terrno = errno;
 			Aerror(statp, stderr, "connect/vc", errno, nsap);
-			__res_iclose(statp, false);
-			return (0);
+			return close_and_return_error (statp, resplen2);
 		}
 		statp->_flags |= RES_F_VC;
 	}
@@ -822,8 +821,7 @@ send_vc(res_state statp,
 	if (TEMP_FAILURE_RETRY (writev(statp->_vcsock, iov, niov)) != explen) {
 		*terrno = errno;
 		Perror(statp, stderr, "write failed", errno);
-		__res_iclose(statp, false);
-		return (0);
+		return close_and_return_error (statp, resplen2);
 	}
 	/*
 	 * Receive length & response
@@ -845,7 +843,6 @@ send_vc(res_state statp,
 	if (n <= 0) {
 		*terrno = errno;
 		Perror(statp, stderr, "read failed", errno);
-		__res_iclose(statp, false);
 		/*
 		 * A long running process might get its TCP
 		 * connection reset if the remote server was
@@ -855,11 +852,13 @@ send_vc(res_state statp,
 		 * instead of failing.  We only allow one reset
 		 * per query to prevent looping.
 		 */
-		if (*terrno == ECONNRESET && !connreset) {
-			connreset = 1;
-			goto same_ns;
-		}
-		return (0);
+		if (*terrno == ECONNRESET && !connreset)
+		  {
+		    __res_iclose (statp, false);
+		    connreset = 1;
+		    goto same_ns;
+		  }
+		return close_and_return_error (statp, resplen2);
 	}
 	int rlen = ntohs (rlen16);
 
@@ -891,11 +890,11 @@ send_vc(res_state statp,
 			/* Always allocate MAXPACKET, callers expect
 			   this specific size.  */
 			u_char *newp = malloc (MAXPACKET);
-			if (newp == NULL) {
-				*terrno = ENOMEM;
-				__res_iclose(statp, false);
-				return (0);
-			}
+			if (newp == NULL)
+			  {
+			    *terrno = ENOMEM;
+			    return close_and_return_error (statp, resplen2);
+			  }
 			*thisanssizp = MAXPACKET;
 			*thisansp = newp;
 			if (thisansp == ansp2)
@@ -922,8 +921,7 @@ send_vc(res_state statp,
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; undersized: %d\n", len));
 		*terrno = EMSGSIZE;
-		__res_iclose(statp, false);
-		return (0);
+		return close_and_return_error (statp, resplen2);
 	}
 
 	cp = *thisansp;
@@ -934,8 +932,7 @@ send_vc(res_state statp,
 	if (__glibc_unlikely (n <= 0))       {
 		*terrno = errno;
 		Perror(statp, stderr, "read(vc)", errno);
-		__res_iclose(statp, false);
-		return (0);
+		return close_and_return_error (statp, resplen2);
 	}
 	if (__glibc_unlikely (truncating))       {
 		/*
