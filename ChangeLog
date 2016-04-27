@@ -1,3 +1,9 @@
+2016-04-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/netiucv/iucv.h
+	(SOL_IUCV, SO_IPRMDATA_MSG, SO_MSGLIMIT, SO_MSGSIZE)
+	(SCM_IUCV_TRGCLS): New define.
+
 2016-04-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #20005]
