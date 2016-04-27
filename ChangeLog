@@ -1,3 +1,13 @@
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19862]
+	* resolv/nss_dns/dns-host.c (AskedForGot): Remove.
+	(getanswer_r): Do not call syslog.
+	(gaih_getanswer_slice): Likewise.
+	* resolv/gethnamaddr.c (AskedForGot): Remove.
+	(getanswer): Do not call syslog.
+	(gethostbyaddr): Likewise.
+
 2016-04-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/signal.h-data (union sigval): Expect also if

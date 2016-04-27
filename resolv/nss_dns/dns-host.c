@@ -78,7 +78,6 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
-#include <sys/syslog.h>
 
 #include "nsswitch.h"
 
@@ -98,10 +97,6 @@
 # undef MAXHOSTNAMELEN
 #endif
 #define MAXHOSTNAMELEN 256
-
-static const char AskedForGot[] = "\
-gethostby*.getanswer: asked for \"%s\", got \"%s\"";
-
 
 /* We need this time later.  */
 typedef union querybuf
@@ -838,14 +833,6 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	have_to_map = 1;
       else if (__glibc_unlikely (type != qtype))
 	{
-	  /* Log a low priority message if we get an unexpected record, but
-	     skip it if we are using DNSSEC since it uses many different types
-	     in responses that do not match QTYPE.  */
-	  if ((_res.options & RES_USE_DNSSEC) == 0)
-	    syslog (LOG_NOTICE | LOG_AUTH,
-		    "gethostby*.getanswer: asked for \"%s %s %s\", "
-		    "got type \"%s\"",
-		    qname, p_class (C_IN), p_type (qtype), p_type (type));
 	  cp += n;
 	  continue;			/* XXX - had_error++ ? */
 	}
@@ -855,7 +842,6 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	case T_PTR:
 	  if (__glibc_unlikely (strcasecmp (tname, bp) != 0))
 	    {
-	      syslog (LOG_NOTICE | LOG_AUTH, AskedForGot, qname, bp);
 	      cp += n;
 	      continue;			/* XXX - had_error++ ? */
 	    }
@@ -899,7 +885,6 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	case T_AAAA:
 	  if (__builtin_expect (strcasecmp (result->h_name, bp), 0) != 0)
 	    {
-	      syslog (LOG_NOTICE | LOG_AUTH, AskedForGot, result->h_name, bp);
 	      cp += n;
 	      continue;			/* XXX - had_error++ ? */
 	    }
@@ -1152,13 +1137,6 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	  || __builtin_expect (type == T_DNAME, 0))
 #endif
 	{
-	  /* We don't support DNSSEC yet.  For now, ignore the record
-	     and send a low priority message to syslog.
-
-	     We also don't expect T_PTR or T_DNAME messages.  */
-	  syslog (LOG_DEBUG | LOG_AUTH,
-		  "getaddrinfo*.gaih_getanswer: got type \"%s\"",
-		  p_type (type));
 	  cp += n;
 	  continue;
 	}

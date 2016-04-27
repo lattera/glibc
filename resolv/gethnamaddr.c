@@ -70,7 +70,6 @@ static char sccsid[] = "@(#)gethostnamadr.c	8.1 (Berkeley) 6/4/93";
 #include <resolv.h>
 #include <ctype.h>
 #include <errno.h>
-#include <syslog.h>
 
 #define RESOLVSORT
 
@@ -99,9 +98,6 @@ static char sccsid[] = "@(#)gethostnamadr.c	8.1 (Berkeley) 6/4/93";
 
 #define	MAXALIASES	35
 #define	MAXADDRS	35
-
-static const char AskedForGot[] =
-			  "gethostby*.getanswer: asked for \"%s\", got \"%s\"";
 
 static char *h_addr_ptrs[MAXADDRS + 1];
 
@@ -335,20 +331,12 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 			 * uses many different types in responses that do not
 			 * match QTYPE.
 			 */
-			if ((_res.options & RES_USE_DNSSEC) == 0) {
-				syslog(LOG_NOTICE|LOG_AUTH,
-	       "gethostby*.getanswer: asked for \"%s %s %s\", got type \"%s\"",
-					qname, p_class(C_IN), p_type(qtype),
-					p_type(type));
-			}
 			cp += n;
 			continue;		/* XXX - had_error++ ? */
 		}
 		switch (type) {
 		case T_PTR:
 			if (strcasecmp(tname, bp) != 0) {
-				syslog(LOG_NOTICE|LOG_AUTH,
-				       AskedForGot, qname, bp);
 				cp += n;
 				continue;	/* XXX - had_error++ ? */
 			}
@@ -397,8 +385,6 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 		case T_A:
 		case T_AAAA:
 			if (strcasecmp(host.h_name, bp) != 0) {
-				syslog(LOG_NOTICE|LOG_AUTH,
-				       AskedForGot, host.h_name, bp);
 				cp += n;
 				continue;	/* XXX - had_error++ ? */
 			}
@@ -740,9 +726,6 @@ gethostbyaddr (const void *addr, socklen_t len, int af)
 	    _res.options &= ~RES_DNSRCH;
 	    _res.options |= RES_DEFNAMES;
 	    if (!(rhp = gethostbyname(hname2))) {
-		syslog(LOG_NOTICE|LOG_AUTH,
-		       "gethostbyaddr: No A record for %s (verifying [%s])",
-		       hname2, inet_ntoa(*((struct in_addr *)addr)));
 		_res.options = old_options;
 		__set_h_errno (HOST_NOT_FOUND);
 		return (NULL);
@@ -752,9 +735,6 @@ gethostbyaddr (const void *addr, socklen_t len, int af)
 		if (!memcmp(*haddr, addr, INADDRSZ))
 			break;
 	    if (!*haddr) {
-		syslog(LOG_NOTICE|LOG_AUTH,
-		       "gethostbyaddr: A record of %s != PTR record [%s]",
-		       hname2, inet_ntoa(*((struct in_addr *)addr)));
 		__set_h_errno (HOST_NOT_FOUND);
 		return (NULL);
 	    }
