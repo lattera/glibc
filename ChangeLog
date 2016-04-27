@@ -1,5 +1,7 @@
 2016-04-30  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/Makefile (CFLAGS-gmon-start.c): Define.
+
 	* sysdeps/unix/sysv/linux/m68k/clone.S: Localize labels.
 
 2016-04-29  Stephen Gallagher  <sgallagh@redhat.com>
