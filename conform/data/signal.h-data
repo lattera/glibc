@@ -33,7 +33,7 @@ element {struct timespec} __time_t tv_sec
 element {struct timespec} long tv_nsec
 #endif
 
-#if defined POSIX || defined UNIX98 || defined XOPEN2K8 || defined POSIX2008
+#if defined POSIX || defined UNIX98 || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 element {union sigval} int sival_int
 element {union sigval} {void*} sival_ptr
 

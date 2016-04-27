@@ -1,3 +1,17 @@
+2016-04-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/signal.h-data (union sigval): Expect also if
+	[XOPEN2K].
+	(struct sigevent): Likewise.
+	(SIGEV_NONE): Likewise.
+	(SIGEV_SIGNAL): Likewise.
+	(SIGEV_THREAD): Likewise.
+	(SIGRTMIN): Likewise.
+	(SIGRTMAX): Likewise.
+	* conform/Makefile (test-xfail-XOPEN2K/aio.h/conform): Remove
+	variable.
+	(test-xfail-XOPEN2K/mqueue.h/conform): Likewise.
+
 2016-04-27  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19830]
