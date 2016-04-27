@@ -103,6 +103,11 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
 
 	      ptr += s;
 
+	      /* Check that there are enough bytes for the RR
+		 metadata.  */
+	      if (endptr - ptr < 10)
+		goto unavail;
+
 	      /* Check whether type and class match.  */
 	      uint_fast16_t type;
 	      NS_GET16 (type, ptr);
@@ -137,11 +142,16 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
 	      if (__ns_get16 (ptr) != ns_c_in)
 		goto unavail;
 
-	      /* Also skip over the TTL.  */
+	      /* Also skip over class and TTL.  */
 	      ptr += sizeof (uint16_t) + sizeof (uint32_t);
 
-	      /* Skip over the data length and data.  */
-	      ptr += sizeof (uint16_t) + __ns_get16 (ptr);
+	      /* Skip over RDATA length and RDATA itself.  */
+	      uint16_t rdatalen = __ns_get16 (ptr);
+	      ptr += sizeof (uint16_t);
+	      /* Not enough room for RDATA.  */
+	      if (endptr - ptr < rdatalen)
+		goto unavail;
+	      ptr += rdatalen;
 	    }
 	}
 

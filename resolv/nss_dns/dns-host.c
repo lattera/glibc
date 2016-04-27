@@ -751,6 +751,14 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       cp += INT32SZ;			/* TTL */
       n = __ns_get16 (cp);
       cp += INT16SZ;			/* len */
+
+      if (end_of_message - cp < n)
+	{
+	  /* RDATA extends beyond the end of the packet.  */
+	  ++had_error;
+	  continue;
+	}
+
       if (__glibc_unlikely (class != C_IN))
 	{
 	  /* XXX - debug? syslog? */
@@ -1076,6 +1084,13 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
       cp += INT32SZ;			/* TTL */
       n = __ns_get16 (cp);
       cp += INT16SZ;			/* len */
+
+      if (end_of_message - cp < n)
+	{
+	  /* RDATA extends beyond the end of the packet.  */
+	  ++had_error;
+	  continue;
+	}
 
       if (class != C_IN)
 	{

@@ -1,5 +1,13 @@
 2016-04-27  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19830]
+	* resolv/nss_dns/dns-host.c (getanswer_r): Check RDATA length.
+	(gaih_getanswer_slice): Likewise.
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Likewise.
+	Also check for availability of RR metadata.
+
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19825]
 	* resolv/res_send.c (send_vc): Remove early *resplen2
 	initialization.  Set *resplen2 on socket error.  Call
