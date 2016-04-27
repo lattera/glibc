@@ -1,3 +1,10 @@
+2016-03-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19868]
+	* resolv/nss_dns/dns-network.c (getanswer_r): Implement additional
+	DNS packet syntax checks (which were not needed before).  Skip
+	over non-PTR records.
+
 2016-04-27  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/nss_dns/dns-network.c (offsetof): Remove macro
