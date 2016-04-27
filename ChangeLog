@@ -1,3 +1,15 @@
+2016-04-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/stdio.h-data (flockfile): Also expect for [UNIX98].
+	(fseeko): Likewise.
+	(ftello): Likewise.
+	(ftrylockfile): Likewise.
+	(funlockfile): Likewise.
+	(getc_unlocked): Likewise.
+	(getchar_unlocked): Likewise.
+	(putc_unlocked): Likewise.
+	(putchar_unlocked): Likewise.
+
 2016-03-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19868]

@@ -72,7 +72,7 @@ function {char*} fgets (char*, int, FILE*)
 #if !defined ISO && !defined ISO99 && !defined ISO11
 function int fileno (FILE*)
 #endif
-#if defined POSIX || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined POSIX || defined UNIX98 || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function void flockfile (FILE*)
 #endif
 #if defined XOPEN2K8 || defined POSIX2008
@@ -86,22 +86,22 @@ function size_t fread (void*, size_t, size_t, FILE*)
 function {FILE*} freopen (const char*, const char*, FILE*)
 function int fscanf (FILE*, const char*, ...)
 function int fseek (FILE*, long int, int)
-#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined UNIX98 || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int fseeko (FILE*, off_t, int)
 #endif
 function int fsetpos (FILE*, const fpos_t*)
 function {long int} ftell (FILE*)
-#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined UNIX98 || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function off_t ftello (FILE*)
 #endif
-#if defined POSIX || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined POSIX || defined UNIX98 || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int ftrylockfile (FILE*)
 function void funlockfile (FILE*)
 #endif
 function size_t fwrite (const void*, size_t, size_t, FILE*)
 function int getc (FILE*)
 function int getchar (void)
-#if defined POSIX || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined POSIX || defined UNIX98 || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int getc_unlocked (FILE*)
 function int getchar_unlocked (void)
 #endif
@@ -131,7 +131,7 @@ function {FILE*} popen (const char*, const char*)
 function int printf (const char*, ...)
 function int putc (int, FILE*)
 function int putchar (int)
-#if defined POSIX || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined POSIX || defined UNIX98 || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int putc_unlocked (int, FILE*)
 function int putchar_unlocked (int)
 #endif
