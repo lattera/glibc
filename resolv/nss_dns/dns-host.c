@@ -134,6 +134,22 @@ extern enum nss_status _nss_dns_gethostbyname3_r (const char *name, int af,
 						  char **canonp);
 hidden_proto (_nss_dns_gethostbyname3_r)
 
+/* Return the expected RDATA length for an address record type (A or
+   AAAA).  */
+static int
+rrtype_to_rdata_length (int type)
+{
+  switch (type)
+    {
+    case T_A:
+      return INADDRSZ;
+    case T_AAAA:
+      return IN6ADDRSZ;
+    default:
+      return -1;
+    }
+}
+
 enum nss_status
 _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
 			   char *buffer, size_t buflen, int *errnop,
@@ -888,6 +904,15 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      cp += n;
 	      continue;			/* XXX - had_error++ ? */
 	    }
+
+	  /* Stop parsing at a record whose length is incorrect.  */
+	  if (n != rrtype_to_rdata_length (type))
+	    {
+	      ++had_error;
+	      break;
+	    }
+
+	  /* Skip records of the wrong type.  */
 	  if (n != result->h_length)
 	    {
 	      cp += n;
@@ -1124,25 +1149,25 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	    }
 	  continue;
 	}
-#if 1
-      // We should not see any types other than those explicitly listed
-      // below.  Some types sent by server seem missing, though.  Just
-      // collect the data for now.
-      if (__glibc_unlikely (type != T_A && type != T_AAAA))
-#else
-      if (__builtin_expect (type == T_SIG, 0)
-	  || __builtin_expect (type == T_KEY, 0)
-	  || __builtin_expect (type == T_NXT, 0)
-	  || __builtin_expect (type == T_PTR, 0)
-	  || __builtin_expect (type == T_DNAME, 0))
-#endif
+
+      /* Stop parsing if we encounter a record with incorrect RDATA
+	 length.  */
+      if (type == T_A || type == T_AAAA)
 	{
+	  if (n != rrtype_to_rdata_length (type))
+	    {
+	      ++had_error;
+	      continue;
+	    }
+	}
+      else
+	{
+	  /* Skip unknown records.  */
 	  cp += n;
 	  continue;
 	}
-      if (type != T_A && type != T_AAAA)
-	abort ();
 
+      assert (type == T_A || type == T_AAAA);
       if (*pat == NULL)
 	{
 	  uintptr_t pad = (-(uintptr_t) buffer
@@ -1176,12 +1201,6 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	}
 
       (*pat)->family = type == T_A ? AF_INET : AF_INET6;
-      if (__builtin_expect ((type == T_A && n != INADDRSZ)
-			    || (type == T_AAAA && n != IN6ADDRSZ), 0))
-	{
-	  ++had_error;
-	  continue;
-	}
       memcpy ((*pat)->addr, cp, n);
       cp += n;
       (*pat)->scopeid = 0;

@@ -1,5 +1,13 @@
 2016-04-27  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19831]
+	* resolv/nss_dns/dns-host.c (rrtype_to_rdata_length): New
+	function.
+	(getanswer_r): Check RDATA length against RRTYPE and QTYPE.
+	(gaih_getanswer_slice): Check RDATA length against RRTYPE.
+
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19862]
 	* resolv/nss_dns/dns-host.c (AskedForGot): Remove.
 	(getanswer_r): Do not call syslog.
