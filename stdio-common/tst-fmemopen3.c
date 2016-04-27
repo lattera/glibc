@@ -25,8 +25,13 @@ static void
 print_buffer (const char *s, size_t n)
 {
   size_t i;
+  printf ("{");
   for (i=0; i<n; ++i)
-    printf ("0x%02X (%c), ", s[i], s[i]);
+    {
+      printf ("0x%02X (%c)", s[i], s[i]);
+      if (i != n)
+	printf (", ");
+    }
 }
 
 /* This test check append mode initial position (a/a+) based on POSIX defition
@@ -186,6 +191,112 @@ do_test_read_seek_negative (void)
 }
 
 static int
+do_test_write_append_2 (const char *str)
+{
+  char buf[10];
+  size_t strn = strlen (str);
+  strcpy (buf, str);
+
+  FILE *fp = fmemopen (buf, sizeof (buf), "a+");
+  size_t r = ftell (fp);
+  size_t e = strlen (buf);
+  if (r != e)
+    {
+      printf ("%s: ftell returned %zu, expected %zu\n", __FUNCTION__, r, e);
+      return 1;
+    }
+
+  if (fseek (fp, 0, SEEK_SET) == -1)
+    {
+      printf ("%s: fseek returned -1\n", __FUNCTION__);
+      return 1;
+    }
+
+  int gr;
+  for (int i=0; i<strn; ++i)
+    {
+      if ((gr = getc (fp)) != str[i])
+	{
+	  printf ("%s: getc failed returned %d, expected %d\n", __FUNCTION__,
+		  gr, str[i]);
+	  return 1;
+        }
+    }
+  if ((gr = getc (fp)) != EOF)
+    {
+      printf ("%s: getc failed returned %d, expected EOF\n", __FUNCTION__,
+	      gr);
+      return 1;
+    }
+
+  if (fseek (fp, e+1, SEEK_SET) == -1)
+    {
+      printf ("%s: fseek returned -1\n", __FUNCTION__);
+      return 1;
+    }
+
+  if ((r = ftell (fp)) != e+1)
+    {
+      printf ("%s: ftell returned %zu, expected %zu\n", __FUNCTION__, r, e+1);
+      return 1;
+    }
+
+  if ((gr = getc (fp)) != EOF)
+    {
+      printf ("%s: getc failed returned %i\n", __FUNCTION__, gr);
+      return 1;
+    }
+
+  /* Check if internal position is not changed with a getc returning EOF.  */
+  if ((r = ftell (fp)) != e+1)
+    {
+      printf ("%s: ftell returned %zu, expected %zu\n", __FUNCTION__, r, e+1);
+      return 1;
+    }
+
+  if (fseek (fp, 0, SEEK_CUR) == -1)
+    {
+      printf ("%s: fseek returned -1\n", __FUNCTION__);
+      return 1;
+    }
+
+  /* This should be overwritten by fprintf + fflush.  */
+  buf[e+2] = 'X';
+
+  if ((r = fprintf (fp, "%d", 101)) != 3)
+    {
+      printf ("%s: fprintf returned %zu, expected %d\n", __FUNCTION__, r, 3);
+      return 1;
+    }
+
+  fflush (fp);
+
+  /* Check if internal position is changed by 3 (strlen of '101').  */
+  if ((r = ftell (fp)) != e+3)
+    {
+      printf ("%s: ftell returned %zu, expected %zu\n", __FUNCTION__, r, e+3);
+      return 1;
+    }
+
+  char exp[20];
+  sprintf (exp, "%s%d", str,  101);
+  if (memcmp (buf, exp, strlen (exp)) != 0)
+    {
+      printf ("%s: check failed:", __FUNCTION__);
+      printf ("\nexpected: ");
+      print_buffer (buf, sizeof (buf));
+      printf ("\nbuffer:   ");
+      print_buffer (exp, sizeof (exp));
+      printf ("\n");
+      return 1;
+    }
+
+  fclose(fp);
+
+  return 0;
+}
+
+static int
 do_test (void)
 {
   int ret = 0;
@@ -198,6 +309,11 @@ do_test (void)
   ret += do_test_read_append ();
 
   ret += do_test_read_seek_negative ();
+
+  /* First test plus addend will fit in the define buffer of size 10.  */
+  ret += do_test_write_append_2 ("test");
+  /* The second test will also fit, but not the final '\0'.  */
+  ret += do_test_write_append_2 ("testing");
 
   return ret;
 }

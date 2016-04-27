@@ -50,16 +50,14 @@ fmemopen_read (void *cookie, char *b, size_t s)
 
   if (c->pos + s > c->maxpos)
     {
-      if ((size_t) c->pos == c->maxpos)
-	return 0;
-      s = c->size - c->pos;
+      s = c->maxpos - c->pos;
+      if ((size_t) c->pos > c->maxpos)
+	s = 0;
     }
 
   memcpy (b, &(c->buffer[c->pos]), s);
 
   c->pos += s;
-  if ((size_t) c->pos > c->maxpos)
-    c->maxpos = c->pos;
 
   return s;
 }
@@ -70,28 +68,29 @@ fmemopen_write (void *cookie, const char *b, size_t s)
 {
   fmemopen_cookie_t *c = (fmemopen_cookie_t *) cookie;;
   _IO_off64_t pos = c->append ? c->maxpos : c->pos;
-  int addnullc;
+  int addnullc = (s == 0 || b[s - 1] != '\0');
 
-  addnullc = (s == 0 || b[s - 1] != '\0');
-
-  if (pos + s + addnullc > c->size)
+  if (pos + s > c->size)
     {
       if ((size_t) (c->pos + addnullc) >= c->size)
 	{
 	  __set_errno (ENOSPC);
 	  return 0;
 	}
-      s = c->size - pos - addnullc;
+      s = c->size - pos;
     }
 
   memcpy (&(c->buffer[pos]), b, s);
 
-  c->pos += s;
+  c->pos = pos + s;
   if ((size_t) c->pos > c->maxpos)
     {
       c->maxpos = c->pos;
-      if (addnullc)
+      if (c->maxpos < c->size && addnullc)
 	c->buffer[c->maxpos] = '\0';
+      /* A null byte is written in a stream open for update iff it fits.  */
+      else if (c->append == 0 && addnullc != 0)
+	c->buffer[c->size-1] = '\0';
     }
 
   return s;
@@ -123,7 +122,10 @@ fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
     }
 
   if (np < 0 || (size_t) np > c->size)
-    return -1;
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
   *p = c->pos = np;
 

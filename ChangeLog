@@ -1,5 +1,11 @@
 2016-04-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #20012]
+	* libio/fmemopen.c (fmemopen_read): Use buffer maximum position, not
+	length to calculate the buffer to read.
+	(fmemopen_write): Set the buffer position based on bytes written.
+	(fmemopen_seek): Return EINVAL for invalid whence modes.
+
 	[BZ #19957]
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir) == nptl] (test): Remove
 	tst-getpid2.
