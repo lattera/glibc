@@ -1,5 +1,10 @@
 2016-04-27  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/nss_dns/dns-network.c (offsetof): Remove macro
+	definition.  Include <stddef.h> instead.
+
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19831]
 	* resolv/nss_dns/dns-host.c (rrtype_to_rdata_length): New
 	function.

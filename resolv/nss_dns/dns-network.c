@@ -62,6 +62,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <stddef.h>
 
 #include "nsswitch.h"
 #include <arpa/inet.h>
@@ -233,9 +234,6 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
   return status;
 }
 
-
-#undef offsetof
-#define offsetof(Type, Member) ((size_t) &((Type *) NULL)->Member)
 
 static enum nss_status
 getanswer_r (const querybuf *answer, int anslen, struct netent *result,
