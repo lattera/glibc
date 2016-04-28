@@ -1,5 +1,15 @@
 2016-04-28  Florian Weimer  <fweimer@redhat.com>
 
+	* inet/inet_lnaof.c: Remove SCSS keyword.
+	* inet/inet_mkadr.c: Likewise.
+	* inet/inet_net.c: Likewise.
+	* inet/inet_netof.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* inet/rexec.c: Likewise.
+	* inet/ruserpass.c: Likewise.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/inet_addr.c: Remove _LIBC conditionals.
 	* resolv/res_data.c: Likewise.
 	* resolv/res_init.c: Likewise.

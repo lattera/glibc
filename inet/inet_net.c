@@ -44,11 +44,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)inet_network.c	8.1 (Berkeley) 6/4/93";
-#endif /* LIBC_SCCS and not lint */
-
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
