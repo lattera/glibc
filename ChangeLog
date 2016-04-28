@@ -1,5 +1,10 @@
 2016-04-28  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_data.c: Remove code conditional on BIND_UPDATE.  It
+	is never defined.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
 	* inet/inet_lnaof.c: Remove SCSS keyword.
 	* inet/inet_mkadr.c: Likewise.
 	* inet/inet_net.c: Likewise.

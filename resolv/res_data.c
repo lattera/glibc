@@ -27,9 +27,6 @@
 #include <ctype.h>
 #include <netdb.h>
 #include <resolv.h>
-#ifdef BIND_UPDATE
-#include <res_update.h>
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,15 +51,6 @@ const char *_res_opcodes[] = {
 	"ZONEREF",
 };
 libresolv_hidden_data_def (_res_opcodes)
-
-#ifdef BIND_UPDATE
-const char *_res_sectioncodes[] attribute_hidden = {
-	"ZONE",
-	"PREREQUISITES",
-	"UPDATE",
-	"ADDITIONAL",
-};
-#endif
 
 #ifndef __BIND_NOSTATIC
 void
@@ -103,18 +91,6 @@ res_mkquery(int op,			/* opcode of query */
 			     data, datalen,
 			     newrr_in, buf, buflen));
 }
-
-#ifdef BIND_UPDATE
-int
-res_mkupdate(ns_updrec *rrecp_in, u_char *buf, int buflen) {
-	if (__res_maybe_init (&_res, 1) == -1) {
-		RES_SET_H_ERRNO(&_res, NETDB_INTERNAL);
-		return (-1);
-	}
-
-	return (res_nmkupdate(&_res, rrecp_in, buf, buflen));
-}
-#endif
 
 int
 res_query(const char *name,	/* domain name */
@@ -170,18 +146,6 @@ res_close(void) {
 	   did it and it would be done implicitly on shutdown.  */
 	__res_iclose(&_res, false);
 }
-
-#ifdef BIND_UPDATE
-int
-res_update(ns_updrec *rrecp_in) {
-	if (__res_maybe_init (&_res, 1) == -1) {
-		RES_SET_H_ERRNO(&_res, NETDB_INTERNAL);
-		return (-1);
-	}
-
-	return (res_nupdate(&_res, rrecp_in, NULL));
-}
-#endif
 
 int
 res_search(const char *name,	/* domain name */
