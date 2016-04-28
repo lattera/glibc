@@ -138,18 +138,29 @@
 # define __KERNEL_STRICT_NAMES
 #endif
 
-/* Convenience macros to test the versions of glibc and gcc.
-   Use them like this:
+/* Convenience macro to test the version of gcc.
+   Use like this:
    #if __GNUC_PREREQ (2,8)
    ... code requiring gcc 2.8 or later ...
    #endif
-   Note - they won't work for gcc1 or glibc1, since the _MINOR macros
-   were not defined then.  */
+   Note: only works for GCC 2.0 and later, because __GNUC_MINOR__ was
+   added in 2.0.  */
 #if defined __GNUC__ && defined __GNUC_MINOR__
 # define __GNUC_PREREQ(maj, min) \
 	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
 #else
 # define __GNUC_PREREQ(maj, min) 0
+#endif
+
+/* Similarly for clang.  Features added to GCC after version 4.2 may
+   or may not also be available in clang, and clang's definitions of
+   __GNUC(_MINOR)__ are fixed at 4 and 2 respectively.  Not all such
+   features can be queried via __has_extension/__has_feature.  */
+#if defined __clang_major__ && defined __clang_minor__
+# define __glibc_clang_prereq(maj, min) \
+  ((__clang_major__ << 16) + __clang_minor__ >= ((maj) << 16) + (min))
+#else
+# define __glibc_clang_prereq(maj, min) 0
 #endif
 
 /* Whether to use feature set F.  */
