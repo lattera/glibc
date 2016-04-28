@@ -94,10 +94,6 @@ static const char sort_mask_chars[] = "/&";
 #define ISSORTMASK(ch) (strchr(sort_mask_chars, ch) != NULL)
 static u_int32_t net_mask (struct in_addr) __THROW;
 
-#if !defined(isascii)	/* XXX - could be a function */
-# define isascii(c) (!(c & 0200))
-#endif
-
 unsigned long long int __res_initstamp attribute_hidden;
 
 /*

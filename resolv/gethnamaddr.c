@@ -69,22 +69,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef LOG_AUTH
-# define LOG_AUTH 0
-#endif
-
-#define MULTI_PTRS_ARE_ALIASES 1	/* XXX - experimental */
-
-#if defined(USE_OPTIONS_H)
-# include <../conf/options.h>
-#endif
-
-#ifdef SPRINTF_CHAR
-# define SPRINTF(x) strlen(sprintf/**/x)
-#else
-# define SPRINTF(x) ((size_t)sprintf x)
-#endif
-
 #define	MAXALIASES	35
 #define	MAXADDRS	35
 
@@ -332,7 +316,6 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 				had_error++;
 				break;
 			}
-#if MULTI_PTRS_ARE_ALIASES
 			cp += n;
 			if (cp != erdata) {
 				__set_h_errno (NO_RECOVERY);
@@ -354,21 +337,6 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 				buflen -= n;
 			}
 			break;
-#else
-			host.h_name = bp;
-			if (_res.options & RES_USE_INET6) {
-				n = strlen(bp) + 1;	/* for the \0 */
-				if (n >= MAXHOSTNAMELEN) {
-					had_error++;
-					break;
-				}
-				bp += n;
-				buflen -= n;
-				map_v4v6_hostent(&host, &bp, &buflen);
-			}
-			__set_h_errno (NETDB_SUCCESS);
-			return (&host);
-#endif
 		case T_A:
 		case T_AAAA:
 			if (strcasecmp(host.h_name, bp) != 0) {
@@ -660,9 +628,9 @@ gethostbyaddr (const void *addr, socklen_t len, int af)
 	case AF_INET6:
 		qp = qbuf;
 		for (n = IN6ADDRSZ - 1; n >= 0; n--) {
-			qp += SPRINTF((qp, "%x.%x.",
-				       uaddr[n] & 0xf,
-				       (uaddr[n] >> 4) & 0xf));
+			qp += sprintf(qp, "%x.%x.",
+				      uaddr[n] & 0xf,
+				      (uaddr[n] >> 4) & 0xf);
 		}
 		strcpy(qp, "ip6.arpa");
 		break;
