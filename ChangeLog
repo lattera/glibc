@@ -1,5 +1,18 @@
 2016-04-28  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20014]
+	* libio/stdio.h (getc_unlocked): Declare if [__USE_POSIX199506],
+	not [__USE_POSIX].
+	(getchar_unlocked): Likewise.
+	(putc_unlocked): Likewise.
+	(putchar_unlocked): Likewise.
+	(flockfile): Likewise.
+	(ftrylockfile): Likewise.
+	(funlockfile): Likewise.
+	* conform/Makefile (test-xfail-XPG3/stdio.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/stdio.h/conform): Likewise.
+
 	* conform/data/langinfo.h-data [XPG3 || XPG4 || UNIX98] (YESSTR):
 	Expect constant.
 	[XPG3 || XPG4 || UNIX98] (NOSTR): Likewise.
