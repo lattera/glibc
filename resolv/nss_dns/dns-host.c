@@ -520,11 +520,6 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
-#ifdef SUNSECURITY
-  This is not implemented because it is not possible to use the current
-  source from bind in a multi-threaded program.
-#endif
-
   result->h_addrtype = af;
   result->h_length = len;
   memcpy (host_data->host_addr, addr, len);

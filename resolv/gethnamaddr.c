@@ -618,12 +618,6 @@ gethostbyaddr (const void *addr, socklen_t len, int af)
 	querybuf *orig_buf;
 	struct hostent *hp;
 	char qbuf[MAXDNAME+1], *qp = NULL;
-#ifdef SUNSECURITY
-	struct hostent *rhp;
-	char **haddr;
-	u_long old_options;
-	char hname2[MAXDNAME+1];
-#endif /*SUNSECURITY*/
 
 	if (__res_maybe_init (&_res, 0) == -1) {
 		__set_h_errno (NETDB_INTERNAL);
@@ -699,32 +693,6 @@ gethostbyaddr (const void *addr, socklen_t len, int af)
 		free (buf.buf);
 	if (!hp)
 		return (NULL);	/* h_errno was set by getanswer() */
-#ifdef SUNSECURITY
-	if (af == AF_INET) {
-	    /*
-	     * turn off search as the name should be absolute,
-	     * 'localhost' should be matched by defnames
-	     */
-	    strncpy(hname2, hp->h_name, MAXDNAME);
-	    hname2[MAXDNAME] = '\0';
-	    old_options = _res.options;
-	    _res.options &= ~RES_DNSRCH;
-	    _res.options |= RES_DEFNAMES;
-	    if (!(rhp = gethostbyname(hname2))) {
-		_res.options = old_options;
-		__set_h_errno (HOST_NOT_FOUND);
-		return (NULL);
-	    }
-	    _res.options = old_options;
-	    for (haddr = rhp->h_addr_list; *haddr; haddr++)
-		if (!memcmp(*haddr, addr, INADDRSZ))
-			break;
-	    if (!*haddr) {
-		__set_h_errno (HOST_NOT_FOUND);
-		return (NULL);
-	    }
-	}
-#endif /*SUNSECURITY*/
 	hp->h_addrtype = af;
 	hp->h_length = len;
 	memmove(host_addr, addr, len);
