@@ -77,13 +77,11 @@
 /* Options.  Leave them on. */
 /* #define DEBUG */
 
-#ifdef _LIBC
 # include <hp-timing.h>
 # include <stdint.h>
 # if HP_TIMING_AVAIL
 #  define RANDOM_BITS(Var) { uint64_t v64; HP_TIMING_NOW (v64); Var = v64; }
 # endif
-#endif
 
 /*
  * Form all types of queries.

@@ -149,8 +149,7 @@ src/lib/isc/
   base64.c
 
 Some of these files have been optimised a bit, and adaptations have
-been made to make them fit in with the rest of glibc.  The more
-non-obvious changes are wrapped in something like `#ifdef _LIBC'.
+been made to make them fit in with the rest of glibc.
 
 res_libc.c is home-brewn, although parts of it are taken from res_data.c.
 

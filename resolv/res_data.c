@@ -65,67 +65,6 @@ const char *_res_sectioncodes[] attribute_hidden = {
 #endif
 
 #ifndef __BIND_NOSTATIC
-#ifdef _LIBC
-/* The definition has been moved to res_libc.c.  */
-#else
-#undef _res
-struct __res_state _res
-# if defined(__BIND_RES_TEXT)
-	= { RES_TIMEOUT, }	/* Motorola, et al. */
-# endif
-        ;
-#endif
-
-/* Proto. */
-#ifndef _LIBC
-int  res_ourserver_p(const res_state, const struct sockaddr_in *);
-void res_pquery(const res_state, const u_char *, int, FILE *);
-#endif
-
-#ifndef _LIBC
-/* Moved to res_libc.c since res_init() should go into libc.so but the
-   rest of this file not.  */
-int
-res_init(void) {
-	extern int __res_vinit(res_state, int);
-
-	/*
-	 * These three fields used to be statically initialized.  This made
-	 * it hard to use this code in a shared library.  It is necessary,
-	 * now that we're doing dynamic initialization here, that we preserve
-	 * the old semantics: if an application modifies one of these three
-	 * fields of _res before res_init() is called, res_init() will not
-	 * alter them.  Of course, if an application is setting them to
-	 * _zero_ before calling res_init(), hoping to override what used
-	 * to be the static default, we can't detect it and unexpected results
-	 * will follow.  Zero for any of these fields would make no sense,
-	 * so one can safely assume that the applications were already getting
-	 * unexpected results.
-	 *
-	 * _res.options is tricky since some apps were known to diddle the bits
-	 * before res_init() was first called. We can't replicate that semantic
-	 * with dynamic initialization (they may have turned bits off that are
-	 * set in RES_DEFAULT).  Our solution is to declare such applications
-	 * "broken".  They could fool us by setting RES_INIT but none do (yet).
-	 */
-	if (!_res.retrans)
-		_res.retrans = RES_TIMEOUT;
-	if (!_res.retry)
-		_res.retry = 4;
-	if (!(_res.options & RES_INIT))
-		_res.options = RES_DEFAULT;
-
-	/*
-	 * This one used to initialize implicitly to zero, so unless the app
-	 * has set it to something in particular, we can randomize it now.
-	 */
-	if (!_res.id)
-		_res.id = res_randomid();
-
-	return (__res_vinit(&_res, 1));
-}
-#endif
-
 void
 p_query(const u_char *msg) {
 	fp_query(msg, stdout);
@@ -215,23 +154,9 @@ res_send(const u_char *buf, int buflen, u_char *ans, int anssiz) {
 	return (res_nsend(&_res, buf, buflen, ans, anssiz));
 }
 
-#ifndef _LIBC
-int
-res_sendsigned(const u_char *buf, int buflen, ns_tsig_key *key,
-	       u_char *ans, int anssiz)
-{
-	if (__res_maybe_init (&_res, 1) == -1) {
-		/* errno should have been set by res_init() in this case. */
-		return (-1);
-	}
-
-	return (res_nsendsigned(&_res, buf, buflen, key, ans, anssiz));
-}
-#endif
 
 void
 res_close(void) {
-#ifdef _LIBC
 	/*
 	 * Some stupid programs out there call res_close() before res_init().
 	 * Since _res._vcsock isn't explicitly initialized, these means that
@@ -241,7 +166,6 @@ res_close(void) {
 	 * early.  */
 	if ((_res.options & RES_INIT) == 0)
 	  return;
-#endif
 	/* We don't free the name server addresses because we never
 	   did it and it would be done implicitly on shutdown.  */
 	__res_iclose(&_res, false);

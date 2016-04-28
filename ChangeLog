@@ -1,5 +1,14 @@
 2016-04-28  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/inet_addr.c: Remove _LIBC conditionals.
+	* resolv/res_data.c: Likewise.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_libc.c: Update comment.
+	* resolv/README: Update.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/gethnamaddr.c: Remove SCSS keyword.
 	* resolv/herror.c: Likewise.
 	* resolv/inet_addr.c: Likewise.

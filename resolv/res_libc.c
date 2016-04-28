@@ -15,6 +15,9 @@
  * SOFTWARE.
  */
 
+/* This file contains the definitions related to res_init which are
+   linked into libc instead of libresolv.  */
+
 #include <atomic.h>
 #include <limits.h>
 #include <sys/types.h>
@@ -22,11 +25,6 @@
 #include <arpa/nameser.h>
 #include <resolv.h>
 #include <libc-lock.h>
-
-
-/* The following bit is copied from res_data.c (where it is #ifdef'ed
-   out) since res_init() should go into libc.so but the rest of that
-   file should not.  */
 
 extern unsigned long long int __res_initstamp attribute_hidden;
 /* We have atomic increment operations on 64-bit platforms.  */

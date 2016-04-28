@@ -102,9 +102,7 @@ static u_int32_t net_mask (struct in_addr) __THROW;
 # define isascii(c) (!(c & 0200))
 #endif
 
-#ifdef _LIBC
 unsigned long long int __res_initstamp attribute_hidden;
-#endif
 
 /*
  * Resolver state default settings.
@@ -123,9 +121,7 @@ res_ninit(res_state statp) {
 
 	return (__res_vinit(statp, 0));
 }
-#ifdef _LIBC
 libc_hidden_def (__res_ninit)
-#endif
 
 /* This function has to be reachable by res_data.c but not publically. */
 int
@@ -145,9 +141,7 @@ __res_vinit(res_state statp, int preinit) {
 #ifndef RFC1535
 	int dots;
 #endif
-#ifdef _LIBC
 	statp->_u._ext.initstamp = __res_initstamp;
-#endif
 
 	if (!preinit) {
 		statp->retrans = RES_TIMEOUT;
@@ -283,7 +277,6 @@ __res_vinit(res_state statp, int preinit) {
 			statp->nsaddr_list[nserv].sin_port =
 				htons(NAMESERVER_PORT);
 			nserv++;
-#ifdef _LIBC
 		    } else {
 			struct in6_addr a6;
 			char *el;
@@ -332,7 +325,6 @@ __res_vinit(res_state statp, int preinit) {
 				nserv++;
 			    }
 			}
-#endif
 		    }
 		    continue;
 		}
@@ -385,12 +377,10 @@ __res_vinit(res_state statp, int preinit) {
 		}
 	    }
 	    statp->nscount = nserv;
-#ifdef _LIBC
 	    if (have_serv6) {
 		/* We try IPv6 servers again.  */
 		statp->ipv6_unavail = false;
 	    }
-#endif
 #ifdef RESOLVSORT
 	    statp->nsort = nsort;
 #endif
@@ -554,9 +544,7 @@ u_int
 res_randomid(void) {
 	return 0xffff & __getpid();
 }
-#ifdef _LIBC
 libc_hidden_def (__res_randomid)
-#endif
 
 
 /*
@@ -594,11 +582,8 @@ res_nclose(res_state statp)
 {
   __res_iclose (statp, true);
 }
-#ifdef _LIBC
 libc_hidden_def (__res_nclose)
-#endif
 
-#ifdef _LIBC
 # ifdef _LIBC_REENTRANT
 /* This is called when a thread is exiting to free resources held in _res.  */
 static void __attribute__ ((section ("__libc_thread_freeres_fn")))
@@ -616,4 +601,3 @@ res_thread_freeres (void)
 text_set_element (__libc_thread_subfreeres, res_thread_freeres);
 text_set_element (__libc_subfreeres, res_thread_freeres);
 # endif
-#endif

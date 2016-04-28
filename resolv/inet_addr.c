@@ -72,13 +72,11 @@
 
 #include <ctype.h>
 
-#ifdef _LIBC
 # include <endian.h>
 # include <stdint.h>
 # include <stdlib.h>
 # include <limits.h>
 # include <errno.h>
-#endif
 
 /*
  * Ascii internet address interpretation routine.
@@ -106,9 +104,6 @@ __inet_aton(const char *cp, struct in_addr *addr)
 {
 	static const in_addr_t max[4] = { 0xffffffff, 0xffffff, 0xffff, 0xff };
 	in_addr_t val;
-#ifndef _LIBC
-	int base;
-#endif
 	char c;
 	union iaddr {
 	  uint8_t bytes[4];
@@ -117,10 +112,8 @@ __inet_aton(const char *cp, struct in_addr *addr)
 	uint8_t *pp = res.bytes;
 	int digit;
 
-#ifdef _LIBC
 	int saved_errno = errno;
 	__set_errno (0);
-#endif
 
 	res.word = 0;
 
@@ -133,7 +126,6 @@ __inet_aton(const char *cp, struct in_addr *addr)
 		 */
 		if (!isdigit(c))
 			goto ret_0;
-#ifdef _LIBC
 		{
 			char *endp;
 			unsigned long ul = strtoul (cp, (char **) &endp, 0);
@@ -146,33 +138,6 @@ __inet_aton(const char *cp, struct in_addr *addr)
 			cp = endp;
 		}
 		c = *cp;
-#else
-		val = 0; base = 10; digit = 0;
-		if (c == '0') {
-			c = *++cp;
-			if (c == 'x' || c == 'X')
-				base = 16, c = *++cp;
-			else {
-				base = 8;
-				digit = 1 ;
-			}
-		}
-		for (;;) {
-			if (isascii(c) && isdigit(c)) {
-				if (base == 8 && (c == '8' || c == '9'))
-					return (0);
-				val = (val * base) + (c - '0');
-				c = *++cp;
-				digit = 1;
-			} else if (base == 16 && isascii(c) && isxdigit(c)) {
-				val = (val << 4) |
-					(c + 10 - (islower(c) ? 'a' : 'A'));
-				c = *++cp;
-				digit = 1;
-			} else
-				break;
-		}
-#endif
 		if (c == '.') {
 			/*
 			 * Internet format:
@@ -206,15 +171,11 @@ __inet_aton(const char *cp, struct in_addr *addr)
 	if (addr != NULL)
 		addr->s_addr = res.word | htonl (val);
 
-#ifdef _LIBC
 	__set_errno (saved_errno);
-#endif
 	return (1);
 
 ret_0:
-#ifdef _LIBC
 	__set_errno (saved_errno);
-#endif
 	return (0);
 }
 weak_alias (__inet_aton, inet_aton)
