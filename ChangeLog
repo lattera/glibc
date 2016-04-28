@@ -13,7 +13,7 @@
 	(putc_unlocked): Likewise.
 	(putchar_unlocked): Likewise.
 
-2016-03-25  Florian Weimer  <fweimer@redhat.com>
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19868]
 	* resolv/nss_dns/dns-network.c (getanswer_r): Implement additional
