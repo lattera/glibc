@@ -1,5 +1,13 @@
 2016-04-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/langinfo.h-data [XPG3 || XPG4 || UNIX98] (YESSTR):
+	Expect constant.
+	[XPG3 || XPG4 || UNIX98] (NOSTR): Likewise.
+	* conform/Makefile (test-xfail-XPG3/langinfo.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/langinfo.h/conform): Likewise.
+	(test-xfail-UNIX98/langinfo.h/conform): Likewise.
+
 	* libio/stdio.h (off_t): Also define if [__USE_UNIX98].
 	[__USE_LARGEFILE64] (off64_t): Likewise.
 	* conform/Makefile (test-xfail-UNIX98/stdio.h/conform): Remove
