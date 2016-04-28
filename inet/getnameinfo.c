@@ -175,7 +175,6 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	     socklen_t hostlen, char *serv, socklen_t servlen,
 	     int flags)
 {
-  int serrno = errno;
   int herrno;
   struct hostent th;
   int ok = 0;
@@ -326,10 +325,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	if (!ok)
 	  {
 	    if (flags & NI_NAMEREQD)
-	      {
-		__set_errno (serrno);
-		return EAI_NONAME;
-	      }
+	      return EAI_NONAME;
 	    else
 	      {
 		const char *c;
@@ -406,10 +402,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	  };
 
 	if (flags & NI_NAMEREQD)
-	   {
-	    __set_errno (serrno);
-	    return EAI_NONAME;
-	  }
+	  return EAI_NONAME;
 
 	strncpy (host, "localhost", hostlen);
 	break;
@@ -463,7 +456,6 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
     host[hostlen-1] = 0;
   if (serv && (servlen > 0))
     serv[servlen-1] = 0;
-  errno = serrno;
   return 0;
 }
 libc_hidden_def (getnameinfo)
