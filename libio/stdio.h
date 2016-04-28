@@ -84,7 +84,7 @@ typedef _G_va_list va_list;
 # endif
 #endif
 
-#ifdef __USE_XOPEN2K
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K
 # ifndef __off_t_defined
 # ifndef __USE_FILE_OFFSET64
 typedef __off_t off_t;

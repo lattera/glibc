@@ -202,7 +202,6 @@ test-xfail-UNIX98/langinfo.h/conform = yes
 test-xfail-UNIX98/netdb.h/conform = yes
 test-xfail-UNIX98/netinet/in.h/conform = yes
 test-xfail-UNIX98/signal.h/conform = yes
-test-xfail-UNIX98/stdio.h/conform = yes
 test-xfail-UNIX98/stdlib.h/conform = yes
 test-xfail-UNIX98/sys/time.h/conform = yes
 test-xfail-UNIX98/sys/wait.h/conform = yes

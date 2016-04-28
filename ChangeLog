@@ -1,3 +1,10 @@
+2016-04-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* libio/stdio.h (off_t): Also define if [__USE_UNIX98].
+	[__USE_LARGEFILE64] (off64_t): Likewise.
+	* conform/Makefile (test-xfail-UNIX98/stdio.h/conform): Remove
+	variable.
+
 2016-04-28  Florian Weimer  <fweimer@redhat.com>
 
 	* inet/getnameinfo.c (getnameinfo): Do not preserve errno.
