@@ -15,10 +15,6 @@
  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#if !defined(_LIBC) && !defined(lint)
-static const char rcsid[] = "$BINDId: ns_parse.c,v 8.13 1999/10/13 16:39:35 vixie Exp $";
-#endif
-
 /* Import. */
 
 #include <sys/types.h>

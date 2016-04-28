@@ -15,10 +15,6 @@
  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#if !defined(_LIBC) && !defined(lint)
-static const char rcsid[] = "$BINDId: ns_netint.c,v 8.4 1999/10/13 16:39:35 vixie Exp $";
-#endif
-
 /* Import. */
 
 #include <arpa/nameser.h>

@@ -16,10 +16,6 @@
  * SOFTWARE.
  */
 
-#if !defined(_LIBC) && !defined(lint)
-static const char rcsid[] = "$BINDId: ns_print.c,v 8.18 2000/02/29 05:48:12 vixie Exp $";
-#endif
-
 /* Import. */
 
 #include <sys/types.h>

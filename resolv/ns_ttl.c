@@ -16,10 +16,6 @@
  * SOFTWARE.
  */
 
-#if !defined(_LIBC) && !defined(lint)
-static const char rcsid[] = "$BINDId: ns_ttl.c,v 8.8 1999/10/13 16:39:36 vixie Exp $";
-#endif
-
 /* Import. */
 
 #include <arpa/nameser.h>

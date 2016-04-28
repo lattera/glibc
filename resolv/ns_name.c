@@ -15,10 +15,6 @@
  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#if !defined(_LIBC) && !defined(lint)
-static const char rcsid[] = "$BINDId: ns_name.c,v 8.15 2000/03/30 22:53:46 vixie Exp $";
-#endif
-
 #include <sys/types.h>
 
 #include <netinet/in.h>

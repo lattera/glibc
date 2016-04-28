@@ -1,3 +1,29 @@
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/gethnamaddr.c: Remove SCSS keyword.
+	* resolv/herror.c: Likewise.
+	* resolv/inet_addr.c: Likewise.
+	* resolv/inet_net_ntop.c: Likewise.
+	* resolv/inet_net_pton.c: Likewise.
+	* resolv/inet_neta.c: Likewise.
+	* resolv/inet_ntop.c: Likewise.
+	* resolv/inet_pton.c: Likewise.
+	* resolv/ns_date.c: Remove RCS keyword.
+	* resolv/ns_name.c: Likewise.
+	* resolv/ns_netint.c: Likewise.
+	* resolv/ns_parse.c: Likewise.
+	* resolv/ns_print.c: Likewise.
+	* resolv/ns_samedomain.c: Likewise.
+	* resolv/ns_ttl.c: Likewise.
+	* resolv/nsap_addr.c: Likewise.
+	* resolv/res_comp.c: Remove SCSS and RCS keyword.
+	* resolv/res_data.c: Remove RCS keyword.
+	* resolv/res_debug.c: Remove SCSS and RCS keyword.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_query.c: Likewise.
+	* resolv/res_send.c: Likewise.
+
 2016-04-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/stdio.h-data (fdopen): Expect also for

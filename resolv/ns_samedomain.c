@@ -16,10 +16,6 @@
  * SOFTWARE.
  */
 
-#if !defined(_LIBC) && !defined(lint)
-static const char rcsid[] = "$BINDId: ns_samedomain.c,v 8.9 1999/10/15 21:06:51 vixie Exp $";
-#endif
-
 #include <sys/types.h>
 #include <arpa/nameser.h>
 #include <errno.h>
