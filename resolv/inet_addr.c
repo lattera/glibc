@@ -72,11 +72,11 @@
 
 #include <ctype.h>
 
-# include <endian.h>
-# include <stdint.h>
-# include <stdlib.h>
-# include <limits.h>
-# include <errno.h>
+#include <endian.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <errno.h>
 
 /*
  * Ascii internet address interpretation routine.

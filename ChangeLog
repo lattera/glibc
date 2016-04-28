@@ -1,5 +1,11 @@
 2016-04-28  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/inet_addr.c: Reindent preprocessor conditionals.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_init.c (isascii): Do not define.  Use definition in
 	<ctype.h>.
 	* resolv/gethnamaddr.c: Remove USE_OPTIONS_H conditional.
