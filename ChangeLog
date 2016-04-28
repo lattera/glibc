@@ -1,5 +1,12 @@
 2016-04-28  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/gethnamaddr.c (RESOLVSORT): Do not define.  Remove
+	RESOLVSORT preprocessor conditionals.
+	* resolv/nss_dns/dns-host.c: Likewise.
+	* resolv/res_init.c: Likewise.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_data.c: Remove code conditional on BIND_UPDATE.  It
 	is never defined.
 

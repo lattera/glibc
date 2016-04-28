@@ -556,7 +556,6 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
 				    errnop, h_errnop, NULL);
 }
 
-#ifdef RESOLVSORT
 static void addrsort (char **ap, int num);
 
 static void
@@ -600,7 +599,6 @@ addrsort (char **ap, int num)
       else
 	break;
 }
-#endif
 
 static enum nss_status
 getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
@@ -955,7 +953,6 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
     {
       *ap = NULL;
       *hap = NULL;
-#if defined RESOLVSORT
       /*
        * Note: we sort even if host can take only one address
        * in its return structures - should give it the "best"
@@ -963,7 +960,6 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
        */
       if (_res.nsort && haveanswer > 1 && qtype == T_A)
 	addrsort (host_data->h_addr_ptrs, haveanswer);
-#endif /*RESOLVSORT*/
 
       if (result->h_name == NULL)
 	{

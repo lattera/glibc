@@ -67,8 +67,6 @@
 #include <ctype.h>
 #include <errno.h>
 
-#define RESOLVSORT
-
 #ifndef LOG_AUTH
 # define LOG_AUTH 0
 #endif
@@ -107,9 +105,7 @@ static int stayopen = 0;
 static void map_v4v6_address (const char *src, char *dst) __THROW;
 static void map_v4v6_hostent (struct hostent *hp, char **bp, int *len) __THROW;
 
-#ifdef RESOLVSORT
 extern void addrsort (char **, int) __THROW;
-#endif
 
 #if PACKETSZ > 65536
 #define	MAXPACKET	PACKETSZ
@@ -434,7 +430,6 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 	if (haveanswer) {
 		*ap = NULL;
 		*hap = NULL;
-# if defined(RESOLVSORT)
 		/*
 		 * Note: we sort even if host can take only one address
 		 * in its return structures - should give it the "best"
@@ -442,7 +437,6 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 		 */
 		if (_res.nsort && haveanswer > 1 && qtype == T_A)
 			addrsort(h_addr_ptrs, haveanswer);
-# endif /*RESOLVSORT*/
 		if (!host.h_name) {
 			n = strlen(qname) + 1;	/* for the \0 */
 			if (n > buflen || n >= MAXHOSTNAMELEN)
@@ -929,7 +923,6 @@ map_v4v6_hostent (struct hostent *hp, char **bpp, int *lenp)
 	}
 }
 
-#ifdef RESOLVSORT
 extern void
 addrsort (char **ap, int num)
 {
@@ -970,7 +963,6 @@ addrsort (char **ap, int num)
 	    needsort++;
 	}
 }
-#endif
 
 #if defined(BSD43_BSD43_NFS) || defined(sun)
 /* some libc's out there are bound internally to these names (UMIPS) */

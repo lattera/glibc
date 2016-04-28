@@ -85,18 +85,15 @@
 #include <not-cancel.h>
 
 /* Options.  Should all be left alone. */
-#define RESOLVSORT
 #define RFC1535
 /* #undef DEBUG */
 
 static void res_setoptions (res_state, const char *, const char *)
      internal_function;
 
-#ifdef RESOLVSORT
 static const char sort_mask_chars[] = "/&";
 #define ISSORTMASK(ch) (strchr(sort_mask_chars, ch) != NULL)
 static u_int32_t net_mask (struct in_addr) __THROW;
-#endif
 
 #if !defined(isascii)	/* XXX - could be a function */
 # define isascii(c) (!(c & 0200))
@@ -134,10 +131,8 @@ __res_vinit(res_state statp, int preinit) {
 	int have_serv6 = 0;
 	int haveenv = 0;
 	int havesearch = 0;
-#ifdef RESOLVSORT
 	int nsort = 0;
 	char *net;
-#endif
 #ifndef RFC1535
 	int dots;
 #endif
@@ -328,7 +323,6 @@ __res_vinit(res_state statp, int preinit) {
 		    }
 		    continue;
 		}
-#ifdef RESOLVSORT
 		if (MATCH(buf, "sortlist")) {
 		    struct in_addr a;
 
@@ -370,7 +364,6 @@ __res_vinit(res_state statp, int preinit) {
 		    }
 		    continue;
 		}
-#endif
 		if (MATCH(buf, "options")) {
 		    res_setoptions(statp, buf + sizeof("options") - 1, "conf");
 		    continue;
@@ -381,9 +374,7 @@ __res_vinit(res_state statp, int preinit) {
 		/* We try IPv6 servers again.  */
 		statp->ipv6_unavail = false;
 	    }
-#ifdef RESOLVSORT
 	    statp->nsort = nsort;
-#endif
 	    (void) fclose(fp);
 	}
 	if (__builtin_expect(statp->nscount == 0, 0)) {
@@ -524,7 +515,6 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 	}
 }
 
-#ifdef RESOLVSORT
 /* XXX - should really support CIDR which means explicit masks always. */
 /* XXX - should really use system's version of this */
 static u_int32_t
@@ -538,7 +528,6 @@ net_mask (struct in_addr in)
 		return (htonl(IN_CLASSB_NET));
 	return (htonl(IN_CLASSC_NET));
 }
-#endif
 
 u_int
 res_randomid(void) {
