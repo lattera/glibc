@@ -241,10 +241,8 @@ void __putlong(u_int32_t src, u_char *dst) { ns_put32(src, dst); }
 libresolv_hidden_def (__putlong)
 void __putshort(u_int16_t src, u_char *dst) { ns_put16(src, dst); }
 libresolv_hidden_def (__putshort)
-#ifndef __ultrix__
 u_int32_t _getlong(const u_char *src) { return (ns_get32(src)); }
 u_int16_t _getshort(const u_char *src) { return (ns_get16(src)); }
-#endif /*__ultrix__*/
 #endif /*BIND_4_COMPAT*/
 
 

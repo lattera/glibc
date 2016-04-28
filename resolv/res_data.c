@@ -186,23 +186,6 @@ hostalias(const char *name) {
 }
 libresolv_hidden_def (hostalias)
 
-#ifdef ultrix
-int
-local_hostname_length(const char *hostname) {
-	int len_host, len_domain;
-
-	if (!*_res.defdname)
-		res_init();
-	len_host = strlen(hostname);
-	len_domain = strlen(_res.defdname);
-	if (len_host > len_domain &&
-	    !strcasecmp(hostname + len_host - len_domain, _res.defdname) &&
-	    hostname[len_host - len_domain - 1] == '.')
-		return (len_host - len_domain - 1);
-	return (0);
-}
-#endif /*ultrix*/
-
 #endif
 
 
