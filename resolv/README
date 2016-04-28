@@ -18,10 +18,6 @@ Differences
 The resolver in the GNU C Library still differs from what's in BIND
 8.2.3-T5B:
 
-* The resolver in glibc strictly adheres to the recommendations in RFC
-  1535.  BIND 8.2.3-T5B seems to relax those rules a bit (see the code
-  that's wrapped in `#ifndef RFC1535').
-
 * The RES_DEBUG option (`options debug' in /etc/resolv.conf) has been
   disabled.
 

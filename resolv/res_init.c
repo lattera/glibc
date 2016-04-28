@@ -85,7 +85,6 @@
 #include <not-cancel.h>
 
 /* Options.  Should all be left alone. */
-#define RFC1535
 /* #undef DEBUG */
 
 static void res_setoptions (res_state, const char *, const char *)
@@ -133,9 +132,6 @@ __res_vinit(res_state statp, int preinit) {
 	int havesearch = 0;
 	int nsort = 0;
 	char *net;
-#ifndef RFC1535
-	int dots;
-#endif
 	statp->_u._ext.initstamp = __res_initstamp;
 
 	if (!preinit) {
@@ -394,29 +390,6 @@ __res_vinit(res_state statp, int preinit) {
 		*pp++ = statp->defdname;
 		*pp = NULL;
 
-#ifndef RFC1535
-		dots = 0;
-		for (cp = statp->defdname; *cp; cp++)
-			dots += (*cp == '.');
-
-		cp = statp->defdname;
-		while (pp < statp->dnsrch + MAXDFLSRCH) {
-			if (dots < LOCALDOMAINPARTS)
-				break;
-			cp = __rawmemchr(cp, '.') + 1;    /* we know there is one */
-			*pp++ = cp;
-			dots--;
-		}
-		*pp = NULL;
-#ifdef DEBUG
-		if (statp->options & RES_DEBUG) {
-			printf(";; res_init()... default dnsrch list:\n");
-			for (pp = statp->dnsrch; *pp; pp++)
-				printf(";;\t%s\n", *pp);
-			printf(";;\t..END..\n");
-		}
-#endif
-#endif /* !RFC1535 */
 	}
 
 	if ((cp = getenv("RES_OPTIONS")) != NULL)
