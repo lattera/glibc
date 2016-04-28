@@ -1,5 +1,10 @@
 2016-04-28  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/resolv.h: Remove __BIND_NOSTATIC conditional.
+	* resolv/res_data.c: Likewise.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_comp.c: Remove code conditional on __ultrix__.
 	* resolv/res_data.c: Remove code conditional on ultrix.
 

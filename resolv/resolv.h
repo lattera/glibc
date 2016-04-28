@@ -250,7 +250,6 @@ extern struct __res_state *__res_state(void) __attribute__ ((__const__));
 __END_DECLS
 #define _res (*__res_state())
 
-#ifndef __BIND_NOSTATIC
 #define fp_nquery		__fp_nquery
 #define fp_query		__fp_query
 #define hostalias		__hostalias
@@ -280,7 +279,6 @@ int		res_querydomain (const char *, const char *, int, int,
 int		res_search (const char *, int, int, u_char *, int) __THROW;
 int		res_send (const u_char *, int, u_char *, int) __THROW;
 __END_DECLS
-#endif
 
 #define b64_ntop		__b64_ntop
 #define b64_pton		__b64_pton

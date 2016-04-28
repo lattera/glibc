@@ -52,7 +52,6 @@ const char *_res_opcodes[] = {
 };
 libresolv_hidden_data_def (_res_opcodes)
 
-#ifndef __BIND_NOSTATIC
 void
 p_query(const u_char *msg) {
 	fp_query(msg, stdout);
@@ -186,7 +185,6 @@ hostalias(const char *name) {
 }
 libresolv_hidden_def (hostalias)
 
-#endif
 
 
 #include <shlib-compat.h>
