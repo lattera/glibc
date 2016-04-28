@@ -1,5 +1,12 @@
 2016-04-28  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/arpa/nameser.h: Include <sys/types.h> unconditionally.
+	* resolv/gethnamaddr.c: Use include files from conf/portability.h.
+	Remove BSD-related preprocessor conditionals.
+	* conf/portability.h: Remove.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/resolv.h: Remove __BIND_NOSTATIC conditional.
 	* resolv/res_data.c: Likewise.
 

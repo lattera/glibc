@@ -57,11 +57,7 @@
 #define BIND_4_COMPAT
 
 #include <sys/param.h>
-#if (!defined(BSD)) || (BSD < 199306)
-# include <sys/bitypes.h>
-#else
-# include <sys/types.h>
-#endif
+#include <sys/types.h>
 #include <sys/cdefs.h>
 
 /*%

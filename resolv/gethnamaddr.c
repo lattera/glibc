@@ -66,19 +66,14 @@
 #include <resolv.h>
 #include <ctype.h>
 #include <errno.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifndef LOG_AUTH
 # define LOG_AUTH 0
 #endif
 
 #define MULTI_PTRS_ARE_ALIASES 1	/* XXX - experimental */
-
-#if defined(BSD) && (BSD >= 199103) && defined(AF_INET6)
-# include <stdlib.h>
-# include <string.h>
-#else
-# include "../conf/portability.h"
-#endif
 
 #if defined(USE_OPTIONS_H)
 # include <../conf/options.h>
@@ -963,49 +958,3 @@ addrsort (char **ap, int num)
 	    needsort++;
 	}
 }
-
-#if defined(BSD43_BSD43_NFS) || defined(sun)
-/* some libc's out there are bound internally to these names (UMIPS) */
-void
-ht_sethostent (int stayopen)
-{
-	_sethtent(stayopen);
-}
-
-void
-ht_endhostent (void)
-{
-	_endhtent();
-}
-
-struct hostent *
-ht_gethostbyname (char *name)
-{
-	return (_gethtbyname(name));
-}
-
-struct hostent *
-ht_gethostbyaddr (const char *addr, size_t len, int af)
-{
-	return (_gethtbyaddr(addr, len, af));
-}
-
-struct hostent *
-gethostent (void)
-{
-	return (_gethtent());
-}
-
-void
-dns_service (void)
-{
-	return;
-}
-
-#undef dn_skipname
-dn_skipname(comp_dn, eom)
-	const u_char *comp_dn, *eom;
-{
-	return (__dn_skipname(comp_dn, eom));
-}
-#endif /*old-style libc with yp junk in it*/
