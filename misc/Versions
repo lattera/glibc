@@ -152,6 +152,9 @@ libc {
   GLIBC_2.23 {
     # SHLIB_COMPAT(GLIBC_2_0, GLIBC_2_23) used in regexp.c
   }
+  GLIBC_2.25 {
+    gnu_dev_major; gnu_dev_minor; gnu_dev_makedev;
+  }
   GLIBC_PRIVATE {
     __madvise;
     __mktemp;

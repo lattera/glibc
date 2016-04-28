@@ -1,5 +1,5 @@
-/* Definitions of macros to access `dev_t' values.
-   Copyright (C) 1996-2016 Free Software Foundation, Inc.
+/* Definitions of functions to access `dev_t' values.
+   Copyright (C) 2003-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_SYSMACROS_H
-#define _SYS_SYSMACROS_H	1
+#include <features.h>
 
-/* For compatibility we provide alternative names.
+#undef __USE_EXTERN_INLINES
+#define __SYSMACROS_NEED_IMPLEMENTATION
+#include <sys/sysmacros.h>
 
-   The problem here is that compilers other than GCC probably don't
-   have the `long long' type and so `dev_t' is actually an array.  */
-#define major(dev) ((int)(((unsigned int) (dev) >> 8) & 0xff))
-#define minor(dev) ((int)((dev) & 0xff))
-#define makedev(major, minor) (((major) << 8) | (minor))
+#define OUT_OF_LINE_IMPL_TEMPL(rtype, name, proto) \
+  rtype gnu_dev_##name proto
 
-#endif /* sys/sysmacros.h */
+__SYSMACROS_DEFINE_MAJOR(OUT_OF_LINE_IMPL_TEMPL)
+__SYSMACROS_DEFINE_MINOR(OUT_OF_LINE_IMPL_TEMPL)
+__SYSMACROS_DEFINE_MAKEDEV(OUT_OF_LINE_IMPL_TEMPL)

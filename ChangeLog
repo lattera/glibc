@@ -1,5 +1,60 @@
 2016-08-03  Zack Weinberg  <zackw@panix.com>
 
+	* sysdeps/generic/sys/sysmacros.h: Delete file.
+	* sysdeps/unix/sysv/linux/makedev.c: Delete file.
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Move file ...
+	* bits/sysmacros.h: ... here; this encoding is now the generic
+	encoding.  Now defines only the following macros:
+	__SYSMACROS_DECLARE_MAJOR, __SYSMACROS_DEFINE_MAJOR,
+	__SYSMACROS_DECLARE_MINOR, __SYSMACROS_DEFINE_MINOR,
+	__SYSMACROS_DECLARE_MAKEDEV, __SYSMACROS_DEFINE_MAKEDEV.
+
+	* misc/sys/sysmacros.h, misc/makedev.c: New files that use
+	bits/sysmacros.h and the above new macros to generate the
+	public implementations of major, minor, and makedev.
+	* misc/tst-makedev.c: New test.
+	* include/sys/sysmacros.h: New wrapper.
+
+	* misc/Makefile (headers): Add sys/sysmacros.h, bits/sysmacros.h.
+	(routines): Add makedev.
+	(tests): Add tst-makedev.
+	* misc/Versions [GLIBC_2.25]: Add gnu_dev_major, gnu_dev_minor,
+	gnu_dev_makedev.
+	* posix/Makefile (headers): Remove sys/sysmacros.h.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Remove makedev.
+
+	* sysdeps/arm/nacl/libc.abilist: Add GLIBC_2.25,
+	gnu_dev_major, gnu_dev_makedev, gnu_dev_minor.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist
+	* sysdeps/unix/sysv/linux/arm/libc.abilist
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist
+	* sysdeps/unix/sysv/linux/i386/libc.abilist
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
+	* sysdeps/unix/sysv/linux/sh/libc.abilist
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist:
+	Add GLIBC_2.25.
+
 	* include/features.h (__glibc_clang_prereq): New macro.
 	* misc/sys/cdefs.h (__glibc_clang_has_extension)
 	(__attribute_deprecated_msg__): New macros.

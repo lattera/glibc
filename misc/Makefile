@@ -34,7 +34,8 @@ headers	:= sys/uio.h bits/uio.h sys/ioctl.h bits/ioctls.h bits/ioctl-types.h \
 	   regexp.h bits/select.h bits/mman.h sys/xattr.h \
 	   syslog.h sys/syslog.h \
 	   bits/syslog.h bits/syslog-ldbl.h bits/syslog-path.h bits/error.h \
-	   bits/select2.h bits/hwcap.h sys/auxv.h
+	   bits/select2.h bits/hwcap.h sys/auxv.h \
+	   sys/sysmacros.h bits/sysmacros.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev preadv preadv64 pwritev pwritev64 \
@@ -67,7 +68,7 @@ routines := brk sbrk sstk ioctl \
 	    getloadavg getclktck \
 	    fgetxattr flistxattr fremovexattr fsetxattr getxattr \
 	    listxattr lgetxattr llistxattr lremovexattr lsetxattr \
-	    removexattr setxattr getauxval ifunc-impl-list
+	    removexattr setxattr getauxval ifunc-impl-list makedev
 
 generated += tst-error1.mtrace tst-error1-mem.out
 
@@ -78,7 +79,7 @@ gpl2lgpl := error.c error.h
 tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
 	 tst-error1 tst-pselect tst-insremque tst-mntent2 bug-hsearch1 \
 	 tst-mntent-blank-corrupt tst-mntent-blank-passno bug18240 \
-	 tst-preadvwritev tst-preadvwritev64
+	 tst-preadvwritev tst-preadvwritev64 tst-makedev
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-error1-mem.out
 endif
