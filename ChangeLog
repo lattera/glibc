@@ -1,3 +1,18 @@
+2016-04-29  Florian Weimer  <fweimer@redhat.com>
+
+	glob: Simplify and document the interface for the GLOB_ALTDIRFUNC
+	callback function gl_readdir.
+	* posix/glob.c (NAMELEN, CONVERT_D_NAMLEN): Remove.
+	(CONVERT_DIRENT_DIRENT64): Use strcpy instead of memcpy.
+	(glob_in_dir): Remove len.  Use strdup instead of malloc and
+	memcpy to copy the name.
+	* manual/pattern.texi (Calling Glob): Document requirements for
+	implementations of the gl_readdir callback function.
+	* manual/examples/mkdirent.c: New example.
+	* posix/bug-glob2.c (my_readdir): Set d_ino to 1 unconditionally,
+	per the manual guidance.
+	* posix/tst-gnuglob.c (my_readdir): Likewise.
+
 2016-04-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20014]

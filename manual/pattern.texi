@@ -237,7 +237,44 @@ function used to read the contents of a directory.  It is used if the
 @code{GLOB_ALTDIRFUNC} bit is set in the flag parameter.  The type of
 this field is @w{@code{struct dirent *(*) (void *)}}.
 
-This is a GNU extension.
+An implementation of @code{gl_readdir} needs to initialize the following
+members of the @code{struct dirent} object:
+
+@table @code
+@item d_type
+This member should be set to the file type of the entry if it is known.
+Otherwise, the value @code{DT_UNKNOWN} can be used.  The @code{glob}
+function may use the specified file type to avoid callbacks in cases
+where the file type indicates that the data is not required.
+
+@item d_ino
+This member needs to be non-zero, otherwise @code{glob} may skip the
+current entry and call the @code{gl_readdir} callback function again to
+retrieve another entry.
+
+@item d_name
+This member must be set to the name of the entry.  It must be
+null-terminated.
+@end table
+
+The example below shows how to allocate a @code{struct dirent} object
+containing a given name.
+
+@smallexample
+@include mkdirent.c.texi
+@end smallexample
+
+The @code{glob} function reads the @code{struct dirent} members listed
+above and makes a copy of the file name in the @code{d_name} member
+immediately after the @code{gl_readdir} callback function returns.
+Future invocations of any of the callback functions may dealloacte or
+reuse the buffer.  It is the responsibility of the caller of the
+@code{glob} function to allocate and deallocate the buffer, around the
+call to @code{glob} or using the callback functions.  For example, an
+application could allocate the buffer in the @code{gl_readdir} callback
+function, and deallocate it in the @code{gl_closedir} callback function.
+
+The @code{gl_readdir} member is a GNU extension.
 
 @item gl_opendir
 The address of an alternative implementation of the @code{opendir}

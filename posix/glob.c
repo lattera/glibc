@@ -57,10 +57,8 @@
 
 #if defined HAVE_DIRENT_H || defined __GNU_LIBRARY__
 # include <dirent.h>
-# define NAMLEN(dirent) strlen((dirent)->d_name)
 #else
 # define dirent direct
-# define NAMLEN(dirent) (dirent)->d_namlen
 # ifdef HAVE_SYS_NDIR_H
 #  include <sys/ndir.h>
 # endif
@@ -75,12 +73,6 @@
 # endif /* HAVE_VMSDIR_H */
 #endif
 
-
-/* In GNU systems, <dirent.h> defines this macro for us.  */
-#ifdef _D_NAMLEN
-# undef NAMLEN
-# define NAMLEN(d) _D_NAMLEN(d)
-#endif
 
 /* When used in the GNU libc the symbol _DIRENT_HAVE_D_TYPE is available
    if the `d_type' member for `struct dirent' is available.
@@ -105,12 +97,6 @@
 
 /* If the system has the `struct dirent64' type we use it internally.  */
 #if defined _LIBC && !defined COMPILE_GLOB64
-# if defined HAVE_DIRENT_H || defined __GNU_LIBRARY__
-#  define CONVERT_D_NAMLEN(d64, d32)
-# else
-#  define CONVERT_D_NAMLEN(d64, d32) \
-  (d64)->d_namlen = (d32)->d_namlen;
-# endif
 
 # if (defined POSIX || defined WINDOWS32) && !defined __GNU_LIBRARY__
 #  define CONVERT_D_INO(d64, d32)
@@ -127,8 +113,7 @@
 # endif
 
 # define CONVERT_DIRENT_DIRENT64(d64, d32) \
-  memcpy ((d64)->d_name, (d32)->d_name, NAMLEN (d32) + 1);		      \
-  CONVERT_D_NAMLEN (d64, d32)						      \
+  strcpy ((d64)->d_name, (d32)->d_name);				      \
   CONVERT_D_INO (d64, d32)						      \
   CONVERT_D_TYPE (d64, d32)
 #endif
@@ -1554,7 +1539,6 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	  while (1)
 	    {
 	      const char *name;
-	      size_t len;
 #if defined _LIBC && !defined COMPILE_GLOB64
 	      struct dirent64 *d;
 	      union
@@ -1622,12 +1606,10 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 			  names = newnames;
 			  cur = 0;
 			}
-		      len = NAMLEN (d);
-		      names->name[cur] = (char *) malloc (len + 1);
+		      names->name[cur] = strdup (d->d_name);
 		      if (names->name[cur] == NULL)
 			goto memory_error;
-		      *((char *) mempcpy (names->name[cur++], name, len))
-			= '\0';
+		      ++cur;
 		      ++nfound;
 		    }
 		}
