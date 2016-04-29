@@ -27,7 +27,10 @@ Version 2.24
 
 Security related changes:
 
-  [Add security related changes here]
+* Previously, getaddrinfo copied large amounts of address data to the stack,
+  even after the fix for CVE-2013-4458 has been applied, potentially
+  resulting in a stack overflow.  getaddrinfo now uses a heap allocation
+  instead.  Reported by Michael Petlan.  (CVE-2016-3706)
 
 The following bugs are resolved with this release:
 
