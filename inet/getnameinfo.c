@@ -1,3 +1,21 @@
+/* Convert socket address to string using Name Service Switch modules.
+   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 /* The Inner Net License, Version 2.00
 
   The author(s) grant permission for redistribution and use in source and
@@ -169,19 +187,323 @@ nrl_domainname (void)
   return domain;
 };
 
+/* Convert host name, AF_INET/AF_INET6 case, name only.  */
+static int
+gni_host_inet_name (struct scratch_buffer *tmpbuf,
+		    const struct sockaddr *sa, socklen_t addrlen,
+		    char *host, socklen_t hostlen, int flags)
+{
+  int herrno;
+  struct hostent th;
+  struct hostent *h = NULL;
+  if (sa->sa_family == AF_INET6)
+    {
+      while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in6 *) sa)->sin6_addr),
+				sizeof(struct in6_addr),
+				AF_INET6, &th,
+				tmpbuf->data, tmpbuf->length,
+				&h, &herrno))
+	if (herrno == NETDB_INTERNAL && errno == ERANGE)
+	  {
+	    if (!scratch_buffer_grow (tmpbuf))
+	      {
+		__set_h_errno (herrno);
+		return EAI_MEMORY;
+	      }
+	  }
+	else
+	  break;
+    }
+  else
+    {
+      while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in *)sa)->sin_addr),
+				sizeof(struct in_addr),
+				AF_INET, &th,
+				tmpbuf->data, tmpbuf->length,
+				&h, &herrno))
+	if (herrno == NETDB_INTERNAL && errno == ERANGE)
+	    {
+	      if (!scratch_buffer_grow (tmpbuf))
+		{
+		  __set_h_errno (herrno);
+		  return EAI_MEMORY;
+		}
+	    }
+	else
+	  break;
+    }
+
+  if (h == NULL)
+    {
+      if (herrno == NETDB_INTERNAL)
+	{
+	  __set_h_errno (herrno);
+	  return EAI_SYSTEM;
+	}
+      if (herrno == TRY_AGAIN)
+	{
+	  __set_h_errno (herrno);
+	  return EAI_AGAIN;
+	}
+    }
+
+  if (h)
+    {
+      char *c;
+      if ((flags & NI_NOFQDN)
+	  && (c = nrl_domainname ())
+	  && (c = strstr (h->h_name, c))
+	  && (c != h->h_name) && (*(--c) == '.'))
+	/* Terminate the string after the prefix.  */
+	*c = '\0';
+
+#ifdef HAVE_LIBIDN
+      /* If requested, convert from the IDN format.  */
+      if (flags & NI_IDN)
+	{
+	  int idn_flags = 0;
+	  if  (flags & NI_IDN_ALLOW_UNASSIGNED)
+	    idn_flags |= IDNA_ALLOW_UNASSIGNED;
+	  if (flags & NI_IDN_USE_STD3_ASCII_RULES)
+	    idn_flags |= IDNA_USE_STD3_ASCII_RULES;
+
+	  char *out;
+	  int rc = __idna_to_unicode_lzlz (h->h_name, &out,
+					   idn_flags);
+	  if (rc != IDNA_SUCCESS)
+	    {
+	      if (rc == IDNA_MALLOC_ERROR)
+		return EAI_MEMORY;
+	      if (rc == IDNA_DLOPEN_ERROR)
+		return EAI_SYSTEM;
+	      return EAI_IDN_ENCODE;
+	    }
+
+	  if (out != h->h_name)
+	    {
+	      h->h_name = strdupa (out);
+	      free (out);
+	    }
+	}
+#endif
+
+      size_t len = strlen (h->h_name) + 1;
+      if (len > hostlen)
+	return EAI_OVERFLOW;
+
+      memcpy (host, h->h_name, len);
+
+      return 0;
+    }
+
+  return EAI_NONAME;
+}
+
+/* Convert host name, AF_INET/AF_INET6 case, numeric conversion.  */
+static int
+gni_host_inet_numeric (struct scratch_buffer *tmpbuf,
+		       const struct sockaddr *sa, socklen_t addrlen,
+		       char *host, socklen_t hostlen, int flags)
+{
+  const char *c;
+  if (sa->sa_family == AF_INET6)
+    {
+      const struct sockaddr_in6 *sin6p;
+      uint32_t scopeid;
+
+      sin6p = (const struct sockaddr_in6 *) sa;
+
+      c = inet_ntop (AF_INET6,
+		     (const void *) &sin6p->sin6_addr, host, hostlen);
+      scopeid = sin6p->sin6_scope_id;
+      if (scopeid != 0)
+	{
+	  /* Buffer is >= IFNAMSIZ+1.  */
+	  char scopebuf[IFNAMSIZ + 1];
+	  char *scopeptr;
+	  int ni_numericscope = 0;
+	  size_t real_hostlen = __strnlen (host, hostlen);
+	  size_t scopelen = 0;
+
+	  scopebuf[0] = SCOPE_DELIMITER;
+	  scopebuf[1] = '\0';
+	  scopeptr = &scopebuf[1];
+
+	  if (IN6_IS_ADDR_LINKLOCAL (&sin6p->sin6_addr)
+	      || IN6_IS_ADDR_MC_LINKLOCAL (&sin6p->sin6_addr))
+	    {
+	      if (if_indextoname (scopeid, scopeptr) == NULL)
+		++ni_numericscope;
+	      else
+		scopelen = strlen (scopebuf);
+	    }
+	  else
+	    ++ni_numericscope;
+
+	  if (ni_numericscope)
+	    scopelen = 1 + __snprintf (scopeptr,
+				       (scopebuf
+					+ sizeof scopebuf
+					- scopeptr),
+				       "%u", scopeid);
+
+	  if (real_hostlen + scopelen + 1 > hostlen)
+	    /* Signal the buffer is too small.  This is
+	       what inet_ntop does.  */
+	    c = NULL;
+	  else
+	    memcpy (host + real_hostlen, scopebuf, scopelen + 1);
+	}
+    }
+  else
+    c = inet_ntop (AF_INET,
+		   (const void *) &(((const struct sockaddr_in *) sa)->sin_addr),
+		   host, hostlen);
+  if (c == NULL)
+    return EAI_OVERFLOW;
+  return 0;
+}
+
+static int
+gni_host_inet (struct scratch_buffer *tmpbuf,
+	       const struct sockaddr *sa, socklen_t addrlen,
+	       char *host, socklen_t hostlen, int flags)
+{
+  if (!(flags & NI_NUMERICHOST))
+    {
+      int result = gni_host_inet_name
+	(tmpbuf, sa, addrlen, host, hostlen, flags);
+      if (result != EAI_NONAME)
+	return result;
+    }
+
+  if (flags & NI_NAMEREQD)
+    return EAI_NONAME;
+  else
+    return gni_host_inet_numeric
+      (tmpbuf, sa, addrlen, host, hostlen, flags);
+}
+
+static int
+gni_host_local (struct scratch_buffer *tmpbuf,
+		const struct sockaddr *sa, socklen_t addrlen,
+		char *host, socklen_t hostlen, int flags)
+{
+
+  if (!(flags & NI_NUMERICHOST))
+    {
+      struct utsname utsname;
+
+      if (!uname (&utsname))
+	{
+	  strncpy (host, utsname.nodename, hostlen);
+	  return 0;
+	}
+    }
+
+  if (flags & NI_NAMEREQD)
+    return EAI_NONAME;
+
+  strncpy (host, "localhost", hostlen);
+  return 0;
+}
+
+static int
+gni_host (struct scratch_buffer *tmpbuf,
+	  const struct sockaddr *sa, socklen_t addrlen,
+	  char *host, socklen_t hostlen, int flags)
+{
+  switch (sa->sa_family)
+    {
+    case AF_INET:
+    case AF_INET6:
+      return gni_host_inet (tmpbuf, sa, addrlen, host, hostlen, flags);
+
+    case AF_LOCAL:
+      return gni_host_local (tmpbuf, sa, addrlen, host, hostlen, flags);
+
+    default:
+      return EAI_FAMILY;
+    }
+}
+
+/* Convert service to string, AF_INET and AF_INET6 variant.  */
+static int
+gni_serv_inet (struct scratch_buffer *tmpbuf,
+	       const struct sockaddr *sa, socklen_t addrlen,
+	       char *serv, socklen_t servlen, int flags)
+{
+  _Static_assert
+    (offsetof (struct sockaddr_in, sin_port)
+     == offsetof (struct sockaddr_in6, sin6_port)
+     && sizeof (((struct sockaddr_in) {}).sin_port) == sizeof (in_port_t)
+     && sizeof (((struct sockaddr_in6) {}).sin6_port) == sizeof (in_port_t),
+     "AF_INET and AF_INET6 port consistency");
+  if (!(flags & NI_NUMERICSERV))
+    {
+      struct servent *s, ts;
+      int e;
+      while ((e = __getservbyport_r (((const struct sockaddr_in *) sa)->sin_port,
+				     ((flags & NI_DGRAM)
+				      ? "udp" : "tcp"), &ts,
+				     tmpbuf->data, tmpbuf->length, &s)))
+	{
+	  if (e == ERANGE)
+	    {
+	      if (!scratch_buffer_grow (tmpbuf))
+		return EAI_MEMORY;
+	    }
+	  else
+	    break;
+	}
+      if (s)
+	{
+	  strncpy (serv, s->s_name, servlen);
+	  return 0;
+	}
+      /* Fall through to numeric conversion.  */
+    }
+  if (__snprintf (serv, servlen, "%d",
+		  ntohs (((const struct sockaddr_in *) sa)->sin_port))
+      + 1 > servlen)
+      return EAI_OVERFLOW;
+  return 0;
+}
+
+/* Convert service to string, AF_LOCAL variant.  */
+static int
+gni_serv_local (struct scratch_buffer *tmpbuf,
+	       const struct sockaddr *sa, socklen_t addrlen,
+	       char *serv, socklen_t servlen, int flags)
+{
+  strncpy (serv, ((const struct sockaddr_un *) sa)->sun_path, servlen);
+  return 0;
+}
+
+/* Convert service to string, dispatching to the implementations
+   above.  */
+static int
+gni_serv (struct scratch_buffer *tmpbuf,
+	  const struct sockaddr *sa, socklen_t addrlen,
+	  char *serv, socklen_t servlen, int flags)
+{
+  switch (sa->sa_family)
+    {
+    case AF_INET:
+    case AF_INET6:
+      return gni_serv_inet (tmpbuf, sa, addrlen, serv, servlen, flags);
+    case AF_LOCAL:
+      return gni_serv_local (tmpbuf, sa, addrlen, serv, servlen, flags);
+    default:
+      return EAI_FAMILY;
+    }
+}
 
 int
 getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	     socklen_t hostlen, char *serv, socklen_t servlen,
 	     int flags)
 {
-  int herrno;
-  struct hostent th;
-  int ok = 0;
-  struct scratch_buffer tmpbuf;
-
-  scratch_buffer_init (&tmpbuf);
-
   if (flags & ~(NI_NUMERICHOST|NI_NUMERICSERV|NI_NOFQDN|NI_NAMEREQD|NI_DGRAM
 #ifdef HAVE_LIBIDN
 		|NI_IDN|NI_IDN_ALLOW_UNASSIGNED|NI_IDN_USE_STD3_ASCII_RULES
@@ -213,249 +535,34 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
       return EAI_FAMILY;
     }
 
+  struct scratch_buffer tmpbuf;
+  scratch_buffer_init (&tmpbuf);
+
   if (host != NULL && hostlen > 0)
-    switch (sa->sa_family)
-      {
-      case AF_INET:
-      case AF_INET6:
-	if (!(flags & NI_NUMERICHOST))
-	  {
-	    struct hostent *h = NULL;
-	    if (sa->sa_family == AF_INET6)
-	      {
-		while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in6 *) sa)->sin6_addr),
-					  sizeof(struct in6_addr),
-					  AF_INET6, &th,
-					  tmpbuf.data, tmpbuf.length,
-					  &h, &herrno))
-		  if (herrno == NETDB_INTERNAL && errno == ERANGE)
-		    {
-		      if (!scratch_buffer_grow (&tmpbuf))
-			{
-			  __set_h_errno (herrno);
-			  return EAI_MEMORY;
-			}
-		    }
-		  else
-		    break;
-	      }
-	    else
-	      {
-		while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in *)sa)->sin_addr),
-					  sizeof(struct in_addr),
-					  AF_INET, &th,
-					  tmpbuf.data, tmpbuf.length,
-					  &h, &herrno))
-		  if (herrno == NETDB_INTERNAL && errno == ERANGE)
-		    {
-		      if (!scratch_buffer_grow (&tmpbuf))
-			{
-			  __set_h_errno (herrno);
-			  return EAI_MEMORY;
-			}
-		    }
-		  else
-		    break;
-	      }
-
-	    if (h == NULL)
-	      {
-		if (herrno == NETDB_INTERNAL)
-		  {
-		    __set_h_errno (herrno);
-		    return EAI_SYSTEM;
-		  }
-		if (herrno == TRY_AGAIN)
-		  {
-		    __set_h_errno (herrno);
-		    return EAI_AGAIN;
-		  }
-	      }
-
-	    if (h)
-	      {
-		char *c;
-		if ((flags & NI_NOFQDN)
-		    && (c = nrl_domainname ())
-		    && (c = strstr (h->h_name, c))
-		    && (c != h->h_name) && (*(--c) == '.'))
-		  /* Terminate the string after the prefix.  */
-		  *c = '\0';
-
-#ifdef HAVE_LIBIDN
-		/* If requested, convert from the IDN format.  */
-		if (flags & NI_IDN)
-		  {
-		    int idn_flags = 0;
-		    if  (flags & NI_IDN_ALLOW_UNASSIGNED)
-		      idn_flags |= IDNA_ALLOW_UNASSIGNED;
-		    if (flags & NI_IDN_USE_STD3_ASCII_RULES)
-		      idn_flags |= IDNA_USE_STD3_ASCII_RULES;
-
-		    char *out;
-		    int rc = __idna_to_unicode_lzlz (h->h_name, &out,
-						     idn_flags);
-		    if (rc != IDNA_SUCCESS)
-		      {
-			if (rc == IDNA_MALLOC_ERROR)
-			  return EAI_MEMORY;
-			if (rc == IDNA_DLOPEN_ERROR)
-			  return EAI_SYSTEM;
-			return EAI_IDN_ENCODE;
-		      }
-
-		    if (out != h->h_name)
-		      {
-			h->h_name = strdupa (out);
-			free (out);
-		      }
-		  }
-#endif
-
-		size_t len = strlen (h->h_name) + 1;
-		if (len > hostlen)
-		  return EAI_OVERFLOW;
-
-		memcpy (host, h->h_name, len);
-
-		ok = 1;
-	      }
-	  }
-
-	if (!ok)
-	  {
-	    if (flags & NI_NAMEREQD)
-	      return EAI_NONAME;
-	    else
-	      {
-		const char *c;
-		if (sa->sa_family == AF_INET6)
-		  {
-		    const struct sockaddr_in6 *sin6p;
-		    uint32_t scopeid;
-
-		    sin6p = (const struct sockaddr_in6 *) sa;
-
-		    c = inet_ntop (AF_INET6,
-				   (const void *) &sin6p->sin6_addr, host, hostlen);
-		    scopeid = sin6p->sin6_scope_id;
-		    if (scopeid != 0)
-		      {
-			/* Buffer is >= IFNAMSIZ+1.  */
-			char scopebuf[IFNAMSIZ + 1];
-			char *scopeptr;
-			int ni_numericscope = 0;
-			size_t real_hostlen = __strnlen (host, hostlen);
-			size_t scopelen = 0;
-
-			scopebuf[0] = SCOPE_DELIMITER;
-			scopebuf[1] = '\0';
-			scopeptr = &scopebuf[1];
-
-			if (IN6_IS_ADDR_LINKLOCAL (&sin6p->sin6_addr)
-			    || IN6_IS_ADDR_MC_LINKLOCAL (&sin6p->sin6_addr))
-			  {
-			    if (if_indextoname (scopeid, scopeptr) == NULL)
-			      ++ni_numericscope;
-			    else
-			      scopelen = strlen (scopebuf);
-			  }
-			else
-			  ++ni_numericscope;
-
-			if (ni_numericscope)
-			  scopelen = 1 + __snprintf (scopeptr,
-						     (scopebuf
-						      + sizeof scopebuf
-						      - scopeptr),
-						     "%u", scopeid);
-
-			if (real_hostlen + scopelen + 1 > hostlen)
-			  /* Signal the buffer is too small.  This is
-			     what inet_ntop does.  */
-			  c = NULL;
-			else
-			  memcpy (host + real_hostlen, scopebuf, scopelen + 1);
-		      }
-		  }
-		else
-		  c = inet_ntop (AF_INET,
-				 (const void *) &(((const struct sockaddr_in *) sa)->sin_addr),
-				 host, hostlen);
-		if (c == NULL)
-		  return EAI_OVERFLOW;
-	      }
-	    ok = 1;
-	  }
-	break;
-
-      case AF_LOCAL:
-	if (!(flags & NI_NUMERICHOST))
-	  {
-	    struct utsname utsname;
-
-	    if (!uname (&utsname))
-	      {
-		strncpy (host, utsname.nodename, hostlen);
-		break;
-	      };
-	  };
-
-	if (flags & NI_NAMEREQD)
-	  return EAI_NONAME;
-
-	strncpy (host, "localhost", hostlen);
-	break;
-
-      default:
-	return EAI_FAMILY;
+    {
+      int result = gni_host (&tmpbuf, sa, addrlen, host, hostlen, flags);
+      if (result != 0)
+	{
+	  scratch_buffer_free (&tmpbuf);
+	  return result;
+	}
     }
 
   if (serv && (servlen > 0))
-    switch (sa->sa_family)
-      {
-      case AF_INET:
-      case AF_INET6:
-	if (!(flags & NI_NUMERICSERV))
-	  {
-	    struct servent *s, ts;
-	    int e;
-	    while ((e = __getservbyport_r (((const struct sockaddr_in *) sa)->sin_port,
-					   ((flags & NI_DGRAM)
-					    ? "udp" : "tcp"), &ts,
-					   tmpbuf.data, tmpbuf.length, &s)))
-	      {
-		if (e == ERANGE)
-		  {
-		    if (!scratch_buffer_grow (&tmpbuf))
-		      return EAI_MEMORY;
-		  }
-		else
-		  break;
-	      }
-	    if (s)
-	      {
-		strncpy (serv, s->s_name, servlen);
-		break;
-	      }
-	  }
-
-	if (__snprintf (serv, servlen, "%d",
-			ntohs (((const struct sockaddr_in *) sa)->sin_port))
-	    + 1 > servlen)
-	  return EAI_OVERFLOW;
-
-	break;
-
-      case AF_LOCAL:
-	strncpy (serv, ((const struct sockaddr_un *) sa)->sun_path, servlen);
-	break;
+    {
+      int result = gni_serv (&tmpbuf, sa, addrlen, serv, servlen, flags);
+      if (result != 0)
+	{
+	  scratch_buffer_free (&tmpbuf);
+	  return result;
+	}
     }
 
   if (host && (hostlen > 0))
     host[hostlen-1] = 0;
   if (serv && (servlen > 0))
     serv[servlen-1] = 0;
+  scratch_buffer_free (&tmpbuf);
   return 0;
 }
 libc_hidden_def (getnameinfo)

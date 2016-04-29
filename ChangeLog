@@ -1,3 +1,13 @@
+2016-04-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19642]
+	* inet/getnameinfo.c (gni_host_inet_name, gni_host_inet_numeric)
+	(gni_host_inet, gni_host_local, gni_host, gni_serv_inet)
+	(gni_serv_local, gni_serv): New functions extracted from
+	getnameinfo.
+	(getnameinfo): Call gni_host and gni_serv to perform the
+	processing.  Always free scratch buffer.
+
 2016-04-29  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Call memset to pad the
