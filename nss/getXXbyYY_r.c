@@ -131,6 +131,52 @@
 # define AF_VAL AF_INET
 #endif
 
+
+/* Set defaults for merge functions that haven't been defined.  */
+#ifndef DEEPCOPY_FN
+static inline int
+__copy_einval (LOOKUP_TYPE a,
+	       const size_t b,
+	       LOOKUP_TYPE *c,
+	       char *d,
+	       char **e)
+{
+  return EINVAL;
+}
+# define DEEPCOPY_FN __copy_einval
+#endif
+
+#ifndef MERGE_FN
+static inline int
+__merge_einval (LOOKUP_TYPE *a,
+		char *b,
+		char *c,
+		size_t d,
+		LOOKUP_TYPE *e,
+		char *f)
+{
+  return EINVAL;
+}
+# define MERGE_FN __merge_einval
+#endif
+
+#define CHECK_MERGE(err, status)		\
+  ({						\
+    do						\
+      {						\
+	if (err)				\
+	  {					\
+	    __set_errno (err);			\
+	    if (err == ERANGE)			\
+	      status = NSS_STATUS_TRYAGAIN;	\
+	    else				\
+	      status = NSS_STATUS_UNAVAIL;	\
+	    break;				\
+	  }					\
+      }						\
+    while (0);					\
+  })
+
 /* Type of the lookup function we need here.  */
 typedef enum nss_status (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *,
 					    size_t, int * H_ERRNO_PARM
@@ -152,13 +198,16 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   static service_user *startp;
   static lookup_function start_fct;
   service_user *nip;
+  int do_merge = 0;
+  LOOKUP_TYPE mergegrp;
+  char *mergebuf = NULL;
+  char *endptr = NULL;
   union
   {
     lookup_function l;
     void *ptr;
   } fct;
-
-  int no_more;
+  int no_more, err;
   enum nss_status status = NSS_STATUS_UNAVAIL;
 #ifdef USE_NSCD
   int nscd_status;
@@ -278,9 +327,66 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	  && errno == ERANGE)
 	break;
 
+      if (do_merge)
+	{
+
+	  if (status == NSS_STATUS_SUCCESS)
+	    {
+	      /* The previous loop saved a buffer for merging.
+		 Perform the merge now.  */
+	      err = MERGE_FN (&mergegrp, mergebuf, endptr, buflen, resbuf,
+			      buffer);
+	      CHECK_MERGE (err,status);
+	      do_merge = 0;
+	    }
+	  else
+	    {
+	      /* If the result wasn't SUCCESS, copy the saved buffer back
+	         into the result buffer and set the status back to
+	         NSS_STATUS_SUCCESS to match the previous pass through the
+	         loop.
+	          * If the next action is CONTINUE, it will overwrite the value
+	            currently in the buffer and return the new value.
+	          * If the next action is RETURN, we'll return the previously-
+	            acquired values.
+	          * If the next action is MERGE, then it will be added to the
+	            buffer saved from the previous source.  */
+	      err = DEEPCOPY_FN (mergegrp, buflen, resbuf, buffer, NULL);
+	      CHECK_MERGE (err, status);
+	      status = NSS_STATUS_SUCCESS;
+	    }
+	}
+
+      /* If we were are configured to merge this value with the next one,
+         save the current value of the group struct.  */
+      if (nss_next_action (nip, status) == NSS_ACTION_MERGE
+	  && status == NSS_STATUS_SUCCESS)
+	{
+	  /* Copy the current values into a buffer to be merged with the next
+	     set of retrieved values.  */
+	  if (mergebuf == NULL)
+	    {
+	      /* Only allocate once and reuse it for as many merges as we need
+	         to perform.  */
+	      mergebuf = malloc (buflen);
+	      if (mergebuf == NULL)
+		{
+		  __set_errno (ENOMEM);
+		  status = NSS_STATUS_UNAVAIL;
+		  break;
+		}
+	    }
+
+	  err = DEEPCOPY_FN (*resbuf, buflen, &mergegrp, mergebuf, &endptr);
+	  CHECK_MERGE (err, status);
+	  do_merge = 1;
+	}
+
       no_more = __nss_next2 (&nip, REENTRANT_NAME_STRING,
 			     REENTRANT2_NAME_STRING, &fct.ptr, status, 0);
     }
+  free (mergebuf);
+  mergebuf = NULL;
 
 #ifdef HANDLE_DIGITS_DOTS
 done:

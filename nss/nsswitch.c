@@ -712,6 +712,9 @@ nss_parse_service_list (const char *line)
 	      else if (line - name == 8
 		       && __strncasecmp (name, "CONTINUE", 8) == 0)
 		action = NSS_ACTION_CONTINUE;
+	      else if (line - name == 5
+		       && __strncasecmp (name, "MERGE", 5) == 0)
+		action = NSS_ACTION_MERGE;
 	      else
 		goto finish;
 

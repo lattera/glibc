@@ -28,4 +28,7 @@ libc {
     # g*
     getgrouplist;
   }
+  GLIBC_PRIVATE {
+    __merge_grp; __copy_grp;
+  }
 }

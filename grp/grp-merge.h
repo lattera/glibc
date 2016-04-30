@@ -1,6 +1,6 @@
-/* Copyright (C) 1996-2016 Free Software Foundation, Inc.
+/* Group merging implementation.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,17 +16,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _GRP_MERGE_H
+#define _GRP_MERGE_H 1
+
 #include <grp.h>
 
-#include <grp-merge.h>
+/* Duplicate a grp struct (and its members). When no longer needed, the
+   calling function must free(newbuf).  */
+int
+__copy_grp (const struct group srcgrp, const size_t buflen,
+	    struct group *destgrp, char *destbuf, char **endptr)
+	    internal_function;
 
-#define LOOKUP_TYPE	struct group
-#define FUNCTION_NAME	getgrgid
-#define DATABASE_NAME	group
-#define ADD_PARAMS	gid_t gid
-#define ADD_VARIABLES	gid
-#define BUFLEN		NSS_BUFLEN_GROUP
-#define DEEPCOPY_FN	__copy_grp
-#define MERGE_FN	__merge_grp
+/* Merge the member lists of two grp structs together.  */
+int
+__merge_grp (struct group *savedgrp, char *savedbuf, char *savedend,
+	     size_t buflen, struct group *mergegrp, char *mergebuf)
+	     internal_function;
 
-#include <nss/getXXbyYY_r.c>
+#endif /* _GRP_MERGE_H */

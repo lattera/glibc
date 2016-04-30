@@ -18,11 +18,15 @@
 
 #include <grp.h>
 
+#include <grp-merge.h>
 
 #define LOOKUP_TYPE	struct group
 #define FUNCTION_NAME	getgrnam
 #define DATABASE_NAME	group
 #define ADD_PARAMS	const char *name
 #define ADD_VARIABLES	name
+
+#define DEEPCOPY_FN	__copy_grp
+#define MERGE_FN	__merge_grp
 
 #include <nss/getXXbyYY_r.c>

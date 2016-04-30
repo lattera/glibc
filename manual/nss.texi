@@ -180,7 +180,7 @@ where
 
 The case of the keywords is insignificant.  The @var{status}
 values are the results of a call to a lookup function of a specific
-service.  They mean
+service.  They mean:
 
 @ftable @samp
 @item success
@@ -201,6 +201,50 @@ not allow queries.  The default action is @code{continue}.
 The service is temporarily unavailable.  This could mean a file is
 locked or a server currently cannot accept more connections.  The
 default action is @code{continue}.
+@end ftable
+
+@noindent
+The @var{action} values mean:
+
+@ftable @samp
+@item return
+
+If the status matches, stop the lookup process at this service
+specification.  If an entry is available, provide it to the application.
+If an error occurred, report it to the application.  In case of a prior
+@samp{merge} action, the data is combined with previous lookup results,
+as explained below.
+
+@item continue
+
+If the status matches, proceed with the lookup process at the next
+entry, discarding the result of the current lookup (and any merged
+data).  An exception is the @samp{initgroups} database and the
+@samp{success} status, where @samp{continue} acts like @code{merge}
+below.
+
+@item merge
+
+Proceed with the lookup process, retaining the current lookup result.
+This action is useful only with the @samp{success} status.  If a
+subsequent service lookup succeeds and has a matching @samp{return}
+specification, the results are merged, the lookup process ends, and the
+merged results are returned to the application.  If the following service
+has a matching @samp{merge} action, the lookup process continues,
+retaining the combined data from this and any previous lookups.
+
+After a @code{merge} action, errors from subsequent lookups are ignored,
+and the data gathered so far will be returned.
+
+The @samp{merge} only applies to the @samp{success} status.  It is
+currently implemented for the @samp{group} database and its group
+members field, @samp{gr_mem}.  If specified for other databases, it
+causes the lookup to fail (if the @var{status} matches).
+
+When processing @samp{merge} for @samp{group} membership, the group GID
+and name must be identical for both entries.  If only one or the other is
+a match, the behavior is undefined.
+
 @end ftable
 
 @noindent

@@ -79,7 +79,18 @@ __nss_setent (const char *func_name, db_lookup_function lookup_fct,
       else
 	status = DL_CALL_FCT (fct.f, (0));
 
-      no_more = __nss_next2 (nip, func_name, NULL, &fct.ptr, status, 0);
+
+      /* This is a special-case.  When [SUCCESS=merge] is in play,
+         _nss_next2() will skip to the next database.  Due to the
+         implementation of that function, we can't know whether we're
+         in an enumeration or an individual lookup, which behaves
+         differently with regards to merging.  We'll treat SUCCESS as
+         an indication to start the enumeration at this database. */
+      if (nss_next_action (*nip, status) == NSS_ACTION_MERGE)
+	no_more = 1;
+      else
+	no_more = __nss_next2 (nip, func_name, NULL, &fct.ptr, status, 0);
+
       if (is_last_nip)
 	*last_nip = *nip;
     }
@@ -175,8 +186,18 @@ __nss_getent_r (const char *getent_func_name,
 
       do
 	{
-	  no_more = __nss_next2 (nip, getent_func_name, NULL, &fct.ptr,
-				 status, 0);
+        /* This is a special-case.  When [SUCCESS=merge] is in play,
+           _nss_next2() will skip to the next database.  Due to the
+           implementation of that function, we can't know whether we're
+           in an enumeration or an individual lookup, which behaves
+           differently with regards to merging.  We'll treat SUCCESS as
+           an indication to return the results here. */
+	  if (status == NSS_STATUS_SUCCESS
+	      && nss_next_action (*nip, status) == NSS_ACTION_MERGE)
+	    no_more = 1;
+	  else
+	    no_more = __nss_next2 (nip, getent_func_name, NULL, &fct.ptr,
+				   status, 0);
 
 	  if (is_last_nip)
 	    *last_nip = *nip;

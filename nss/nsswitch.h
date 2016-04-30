@@ -32,7 +32,8 @@
 typedef enum
 {
   NSS_ACTION_CONTINUE,
-  NSS_ACTION_RETURN
+  NSS_ACTION_RETURN,
+  NSS_ACTION_MERGE
 } lookup_actions;
 
 

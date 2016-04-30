@@ -1,3 +1,37 @@
+2016-04-29  Stephen Gallagher  <sgallagh@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #19072]
+	* grp/Makefile (headers): Add grp-merge.h
+	(routines): Add grp-merge.
+	* grp/getgrgid_r.c: Include grp-merge.h.
+	(DEEPCOPY_FN): Define.
+	(MERGE_FN): Define.
+	* grp/getgrname_r.c: Include grp-merge.h.
+	(DEEPCOPY_FN): Define.
+	(MERGE_FN): Define.
+	* grp/grp-merge.c: New file.
+	* grp/grp-merge.h: New file.
+	* include/grp-merge.h: New file.
+	* grp/Versions: Define __merge_grp@GLIBC_PRIVATE, and
+	__copy_grp@GLIBC_PRIVATE.
+	* manual/nss.texi (Actions in the NSS configuration): Describe
+	return, continue, and merge.
+	* nscd/getgrgid_r.c: Include grp/grp-merge.h.
+	(DEEPCOPY_FN): Define.
+	(MERGE_FN): Define.
+	* nscd/getgrnam_r.c: Include grp/grp-merge.h.
+	(DEEPCOPY_FN): Define.
+	(MERGE_FN): Define.
+	* nss/getXXbyYY_r.c [!DEEPCOPY_FN]: Define __copy_einval.
+	[!MERGE_FN]: Define __merge_einval.
+	(CHECK_MERGE): Define.
+	(REENTRANT_NAME): Process merge if do_merge is true.
+	* nss/getnssent_r.c (__nss_setent): Process NSS_ACTION_MERGE.
+	(__nss_getent_r): Likewise.
+	* nss/nsswitch.c (nss_parse_service_list): Likewise.
+	* nss/nsswitch.h (lookup_actions): Define NSS_ACTION_MERGE.
+
 2016-04-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #20012]
