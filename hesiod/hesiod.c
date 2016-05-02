@@ -1,3 +1,20 @@
+/* Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 /*
  * Copyright (c) 1996,1999 by Internet Software Consortium.
  *
@@ -47,18 +64,9 @@
 
 /* Forward */
 
-int		hesiod_init(void **context);
-void		hesiod_end(void *context);
-char *		hesiod_to_bind(void *context, const char *name,
-			       const char *type);
-char **		hesiod_resolve(void *context, const char *name,
-			       const char *type);
-void		hesiod_free_list(void *context, char **list);
-
 static int	parse_config_file(struct hesiod_p *ctx, const char *filename);
 static char **	get_txt_records(struct hesiod_p *ctx, int class,
 				const char *name);
-static int	init(struct hesiod_p *ctx);
 
 /* Public */
 
@@ -77,7 +85,6 @@ hesiod_init(void **context) {
 
 	ctx->LHS = NULL;
 	ctx->RHS = NULL;
-	ctx->res = NULL;
 	/* Set default query classes. */
 	ctx->classes[0] = C_IN;
 	ctx->classes[1] = C_HS;
@@ -114,11 +121,6 @@ hesiod_init(void **context) {
 		goto cleanup;
 	}
 
-#if 0
-	if (res_ninit(ctx->res) < 0)
-		goto cleanup;
-#endif
-
 	*context = ctx;
 	return (0);
 
@@ -135,12 +137,8 @@ hesiod_end(void *context) {
 	struct hesiod_p *ctx = (struct hesiod_p *) context;
 	int save_errno = errno;
 
-	if (ctx->res)
-		res_nclose(ctx->res);
 	free(ctx->RHS);
 	free(ctx->LHS);
-	if (ctx->res && ctx->free_res)
-		(*ctx->free_res)(ctx->res);
 	free(ctx);
 	__set_errno(save_errno);
 }
@@ -215,10 +213,6 @@ hesiod_resolve(void *context, const char *name, const char *type) {
 
 	if (bindname == NULL)
 		return (NULL);
-	if (init(ctx) == -1) {
-		free(bindname);
-		return (NULL);
-	}
 
 	retvec = get_txt_records(ctx, ctx->classes[0], bindname);
 
@@ -348,13 +342,13 @@ get_txt_records(struct hesiod_p *ctx, int class, const char *name) {
 	/*
 	 * Construct the query and send it.
 	 */
-	n = res_nmkquery(ctx->res, QUERY, name, class, T_TXT, NULL, 0,
+	n = res_mkquery(QUERY, name, class, T_TXT, NULL, 0,
 			 NULL, qbuf, MAX_HESRESP);
 	if (n < 0) {
 		__set_errno(EMSGSIZE);
 		return (NULL);
 	}
-	n = res_nsend(ctx->res, qbuf, n, abuf, MAX_HESRESP);
+	n = res_send(qbuf, n, abuf, MAX_HESRESP);
 	if (n < 0) {
 		__set_errno(ECONNREFUSED);
 		return (NULL);
@@ -446,45 +440,4 @@ get_txt_records(struct hesiod_p *ctx, int class, const char *name) {
 		free(list[i]);
 	free(list);
 	return (NULL);
-}
-
-struct __res_state *
-__hesiod_res_get(void *context) {
-	struct hesiod_p *ctx = context;
-
-	if (!ctx->res) {
-		struct __res_state *res;
-		res = (struct __res_state *)calloc(1, sizeof *res);
-		if (res == NULL)
-			return (NULL);
-		__hesiod_res_set(ctx, res, free);
-	}
-
-	return (ctx->res);
-}
-
-void
-__hesiod_res_set(void *context, struct __res_state *res,
-		 void (*free_res)(void *)) {
-	struct hesiod_p *ctx = context;
-
-	if (ctx->res && ctx->free_res) {
-		res_nclose(ctx->res);
-		(*ctx->free_res)(ctx->res);
-	}
-
-	ctx->res = res;
-	ctx->free_res = free_res;
-}
-
-static int
-init(struct hesiod_p *ctx) {
-
-	if (!ctx->res && !__hesiod_res_get(ctx))
-		return (-1);
-
-	if (__res_maybe_init (ctx->res, 0) == -1)
-		return (-1);
-
-	return (0);
 }

@@ -25,8 +25,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "nss_hesiod.h"
-
 /* Declare a parser for Hesiod protocol entries.  Although the format
    of the entries is identical to those in /etc/protocols, here is no
    predefined parser for us to use.  */
@@ -68,8 +66,7 @@ lookup (const char *name, const char *type, struct protoent *proto,
   int found;
   int olderr = errno;
 
-  context = _nss_hesiod_init ();
-  if (context == NULL)
+  if (hesiod_init (&context) < 0)
     return NSS_STATUS_UNAVAIL;
 
   list = hesiod_resolve (context, name, type);

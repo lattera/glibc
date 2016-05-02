@@ -28,7 +28,7 @@ extra-libs-others = $(extra-libs)
 subdir-dirs = nss_hesiod
 vpath %.c nss_hesiod
 
-libnss_hesiod-routines	:= hesiod hesiod-grp hesiod-init hesiod-proto \
+libnss_hesiod-routines	:= hesiod hesiod-grp hesiod-proto \
 			   hesiod-pwd hesiod-service
 # Build only shared library
 libnss_hesiod-inhibit-o	= $(filter-out .os,$(object-suffixes))

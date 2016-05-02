@@ -26,8 +26,6 @@
 #include <string.h>
 #include <sys/param.h>
 
-#include "nss_hesiod.h"
-
 /* Get the declaration of the parser function.  */
 #define ENTNAME grent
 #define STRUCTURE group
@@ -58,8 +56,7 @@ lookup (const char *name, const char *type, struct group *grp,
   size_t len;
   int olderr = errno;
 
-  context = _nss_hesiod_init ();
-  if (context == NULL)
+  if (hesiod_init (&context) < 0)
     return NSS_STATUS_UNAVAIL;
 
   list = hesiod_resolve (context, name, type);
@@ -179,8 +176,7 @@ _nss_hesiod_initgroups_dyn (const char *user, gid_t group, long int *start,
   gid_t *groups = *groupsp;
   int save_errno;
 
-  context = _nss_hesiod_init ();
-  if (context == NULL)
+  if (hesiod_init (&context) < 0)
     return NSS_STATUS_UNAVAIL;
 
   list = hesiod_resolve (context, user, "grplist");
