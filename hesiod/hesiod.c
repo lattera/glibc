@@ -1,7 +1,3 @@
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char rcsid[] = "$BINDId: hesiod.c,v 1.21 2000/02/28 14:51:08 vixie Exp $";
-#endif
-
 /*
  * Copyright (c) 1996,1999 by Internet Software Consortium.
  *

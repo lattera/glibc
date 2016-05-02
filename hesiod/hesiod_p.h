@@ -20,10 +20,6 @@
  */
 
 /*
- * $BINDId: hesiod_p.h,v 1.9 1999/01/08 19:24:39 vixie Exp $
- */
-
-/*
  * hesiod_p.h -- private definitions for the hesiod library
  */
 

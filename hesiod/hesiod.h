@@ -19,10 +19,6 @@
  * This file is primarily maintained by <tytso@mit.edu> and <ghudson@mit.edu>.
  */
 
-/*
- * $BINDId: hesiod.h,v 1.7 1999/01/08 19:22:45 vixie Exp $
- */
-
 #ifndef _HESIOD_H_INCLUDED
 #define _HESIOD_H_INCLUDED
 
