@@ -1,3 +1,12 @@
+2016-05-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20023]
+	* io/fcntl.h [__USE_XOPEN && !__USE_XOPEN2K8]: Do not include
+	<time.h>.
+	* conform/Makefile (test-xfail-UNIX98/fcntl.h/conform): Remove
+	variable.
+	(test-xfail-XOPEN2K/fcntl.h/conform): Likewise.
+
 2016-05-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S (__clone): Fix

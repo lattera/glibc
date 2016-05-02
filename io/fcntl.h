@@ -71,9 +71,11 @@ typedef __pid_t pid_t;
 #endif
 
 /* For XPG all symbols from <sys/stat.h> should also be available.  */
-#if defined __USE_XOPEN || defined __USE_XOPEN2K8
+#ifdef __USE_XOPEN2K8
 # define __need_timespec
 # include <time.h>
+#endif
+#if defined __USE_XOPEN || defined __USE_XOPEN2K8
 # include <bits/stat.h>
 
 # define S_IFMT		__S_IFMT
