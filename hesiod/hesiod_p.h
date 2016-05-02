@@ -26,7 +26,6 @@
 #ifndef _HESIOD_P_H_INCLUDED
 #define _HESIOD_P_H_INCLUDED
 
-#define DEF_RHS		".Athena.MIT.EDU"	/* Defaults if HESIOD_CONF */
 #define DEF_LHS		".ns"			/*    file is not */
 						/*    present. */
 struct hesiod_p {

@@ -1,7 +1,13 @@
 2016-05-02  Florian Weimer  <fweimer@redhat.com>
 
+	* hesiod/hesiod_p.h (DEF_RHS): Remove.
+	* hesiod/hesiod.c (hesiod_init): Remove code for handling DEF_RHS.
+
+2016-05-02  Florian Weimer  <fweimer@redhat.com>
+
 	* hesiod/hesiod.h: Remove RCS keyword.
 	* hesiod/hesiod_p.h: Likewise.
+
 	* hesiod/hesiod.c: Likewise.
 
 2016-05-01  Arnas Udovičius  <arnas.udovicius@gmail.com>

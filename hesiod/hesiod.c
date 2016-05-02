@@ -42,7 +42,6 @@
 
 #include "hesiod.h"
 #include "hesiod_p.h"
-#undef DEF_RHS
 
 #define _PATH_HESIOD_CONF "/etc/hesiod.conf"
 
@@ -87,19 +86,7 @@ hesiod_init(void **context) {
 	if (!configname)
 	  configname = _PATH_HESIOD_CONF;
 	if (parse_config_file(ctx, configname) < 0) {
-#ifdef DEF_RHS
-		/*
-		 * Use compiled in defaults.
-		 */
-		ctx->LHS = malloc(strlen(DEF_LHS)+1);
-		ctx->RHS = malloc(strlen(DEF_RHS)+1);
-		if (ctx->LHS == 0 || ctx->RHS == 0)
-			goto cleanup;
-		strcpy(ctx->LHS, DEF_LHS);
-		strcpy(ctx->RHS, DEF_RHS);
-#else
 		goto cleanup;
-#endif
 	}
 	/*
 	 * The default RHS can be overridden by an environment
