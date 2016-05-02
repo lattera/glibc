@@ -1,5 +1,11 @@
 2016-05-02  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20031]
+	* hesiod/hesiod.c (get_txt_records): Return error if TXT record is
+	completely empty.
+
+2016-05-02  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19573]
 	* hesiod/Makefile (libnss_hesiod-routines): Remove hesiod-init.
 	* hesiod/nss_hesiod/hesiod-init.c: Remove file.

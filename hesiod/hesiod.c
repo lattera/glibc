@@ -398,7 +398,7 @@ get_txt_records(struct hesiod_p *ctx, int class, const char *name) {
 		cp += INT16SZ + INT32SZ;	/* skip the ttl, too */
 		rr.dlen = ns_get16(cp);
 		cp += INT16SZ;
-		if (cp + rr.dlen > eom) {
+		if (rr.dlen == 0 || cp + rr.dlen > eom) {
 			__set_errno(EMSGSIZE);
 			goto cleanup;
 		}
