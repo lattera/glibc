@@ -77,7 +77,7 @@ ENTRY (__clone)
 	bne-	cr1,L(parent)		/* The '-' is to minimise the race.  */
 
 	/* If CLONE_VM is set do not update the pid/tid field.  */
-	andi.	r0,r29,CLONE_VM
+	andi.	r0,r28,CLONE_VM
 	bne+	cr0,L(oldpid)
 
 	DO_CALL(SYS_ify(getpid))

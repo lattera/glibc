@@ -1,3 +1,8 @@
+2016-05-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S (__clone): Fix
+	flags CLONE_VM compare.
+
 2016-05-02  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20031]
