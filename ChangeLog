@@ -1,3 +1,10 @@
+2016-05-03  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+	    Segher Boessenkool  <segher@gcc.gnu.org>
+
+	[BZ #20004]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S:
+	(__novec_swapcontext): Add missing load.
+
 2016-05-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20023]

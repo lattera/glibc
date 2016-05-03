@@ -163,6 +163,7 @@ ENTRY(__novec_swapcontext)
   cmpdi r0,0
   bne	  L(nv_do_sigret)
 
+  ld	r8,.LC__dl_hwcap@toc(r2)
 # ifdef SHARED
 /* Load _rtld-global._dl_hwcap.  */
   ld    r8,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r8)
