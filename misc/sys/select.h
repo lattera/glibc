@@ -39,7 +39,9 @@ typedef __sigset_t sigset_t;
 
 /* Get definition of timer specification structures.  */
 #define __need_time_t
-#define __need_timespec
+#ifdef __USE_XOPEN2K
+# define __need_timespec
+#endif
 #include <time.h>
 #define __need_timeval
 #include <bits/time.h>

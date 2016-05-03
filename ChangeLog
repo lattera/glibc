@@ -1,3 +1,14 @@
+2016-05-03  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20041]
+	* misc/sys/select.h (__need_timespec): Only define if
+	[__USE_XOPEN2K].
+	* conform/Makefile (test-xfail-XPG4/sys/time.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/utmpx.h/conform): Likewise.
+	(test-xfail-UNIX98/sys/time.h/conform): Likewise.
+	(test-xfail-UNIX98/utmpx.h/conform): Likewise.
+
 2016-05-03  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 	    Segher Boessenkool  <segher@gcc.gnu.org>
 
