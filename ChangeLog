@@ -1,3 +1,12 @@
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
+	* inet/getnameinfo.c (gni_host_inet_name): Use temporaries to
+	avoid long lines.
+	(gni_host_inet_numeric): Likewise.  Reduce scope of local
+	variables.
+	(gni_host_inet, gni_host_local): Add comment.
+	(gni_host): Add comment.  Use temporary to avoid long lines.
+
 2016-05-04  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Fix use of condition

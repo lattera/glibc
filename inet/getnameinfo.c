@@ -198,10 +198,9 @@ gni_host_inet_name (struct scratch_buffer *tmpbuf,
   struct hostent *h = NULL;
   if (sa->sa_family == AF_INET6)
     {
-      while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in6 *) sa)->sin6_addr),
-				sizeof(struct in6_addr),
-				AF_INET6, &th,
-				tmpbuf->data, tmpbuf->length,
+      const struct sockaddr_in6 *sin6p = (const struct sockaddr_in6 *) sa;
+      while (__gethostbyaddr_r (&sin6p->sin6_addr, sizeof(struct in6_addr),
+				AF_INET6, &th, tmpbuf->data, tmpbuf->length,
 				&h, &herrno))
 	if (herrno == NETDB_INTERNAL && errno == ERANGE)
 	  {
@@ -216,10 +215,9 @@ gni_host_inet_name (struct scratch_buffer *tmpbuf,
     }
   else
     {
-      while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in *)sa)->sin_addr),
-				sizeof(struct in_addr),
-				AF_INET, &th,
-				tmpbuf->data, tmpbuf->length,
+      const struct sockaddr_in *sinp = (const struct sockaddr_in *) sa;
+      while (__gethostbyaddr_r (&sinp->sin_addr, sizeof(struct in_addr),
+				AF_INET, &th, tmpbuf->data, tmpbuf->length,
 				&h, &herrno))
 	if (herrno == NETDB_INTERNAL && errno == ERANGE)
 	    {
@@ -308,14 +306,10 @@ gni_host_inet_numeric (struct scratch_buffer *tmpbuf,
   const char *c;
   if (sa->sa_family == AF_INET6)
     {
-      const struct sockaddr_in6 *sin6p;
-      uint32_t scopeid;
-
-      sin6p = (const struct sockaddr_in6 *) sa;
-
+      const struct sockaddr_in6 *sin6p = (const struct sockaddr_in6 *) sa;
       c = inet_ntop (AF_INET6,
 		     (const void *) &sin6p->sin6_addr, host, hostlen);
-      scopeid = sin6p->sin6_scope_id;
+      uint32_t scopeid = sin6p->sin6_scope_id;
       if (scopeid != 0)
 	{
 	  /* Buffer is >= IFNAMSIZ+1.  */
@@ -356,14 +350,16 @@ gni_host_inet_numeric (struct scratch_buffer *tmpbuf,
 	}
     }
   else
-    c = inet_ntop (AF_INET,
-		   (const void *) &(((const struct sockaddr_in *) sa)->sin_addr),
-		   host, hostlen);
+    {
+      const struct sockaddr_in *sinp = (const struct sockaddr_in *) sa;
+      c = inet_ntop (AF_INET, &sinp->sin_addr, host, hostlen);
+    }
   if (c == NULL)
     return EAI_OVERFLOW;
   return 0;
 }
 
+/* Convert AF_INET or AF_INET6 socket address, host part.  */
 static int
 gni_host_inet (struct scratch_buffer *tmpbuf,
 	       const struct sockaddr *sa, socklen_t addrlen,
@@ -384,6 +380,7 @@ gni_host_inet (struct scratch_buffer *tmpbuf,
       (tmpbuf, sa, addrlen, host, hostlen, flags);
 }
 
+/* Convert AF_LOCAL socket address, host part.   */
 static int
 gni_host_local (struct scratch_buffer *tmpbuf,
 		const struct sockaddr *sa, socklen_t addrlen,
@@ -408,6 +405,7 @@ gni_host_local (struct scratch_buffer *tmpbuf,
   return 0;
 }
 
+/* Convert the host part of an AF_LOCAK socket address.   */
 static int
 gni_host (struct scratch_buffer *tmpbuf,
 	  const struct sockaddr *sa, socklen_t addrlen,
@@ -439,11 +437,12 @@ gni_serv_inet (struct scratch_buffer *tmpbuf,
      && sizeof (((struct sockaddr_in) {}).sin_port) == sizeof (in_port_t)
      && sizeof (((struct sockaddr_in6) {}).sin6_port) == sizeof (in_port_t),
      "AF_INET and AF_INET6 port consistency");
+  const struct sockaddr_in *sinp = (const struct sockaddr_in *) sa;
   if (!(flags & NI_NUMERICSERV))
     {
       struct servent *s, ts;
       int e;
-      while ((e = __getservbyport_r (((const struct sockaddr_in *) sa)->sin_port,
+      while ((e = __getservbyport_r (sinp->sin_port,
 				     ((flags & NI_DGRAM)
 				      ? "udp" : "tcp"), &ts,
 				     tmpbuf->data, tmpbuf->length, &s)))
@@ -463,9 +462,7 @@ gni_serv_inet (struct scratch_buffer *tmpbuf,
 	}
       /* Fall through to numeric conversion.  */
     }
-  if (__snprintf (serv, servlen, "%d",
-		  ntohs (((const struct sockaddr_in *) sa)->sin_port))
-      + 1 > servlen)
+  if (__snprintf (serv, servlen, "%d", ntohs (sinp->sin_port)) + 1 > servlen)
       return EAI_OVERFLOW;
   return 0;
 }
