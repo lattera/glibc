@@ -1,5 +1,10 @@
 2016-05-04  Florian Weimer  <fweimer@redhat.com>
 
+	* inet/getnameinfo.c (gni_host_inet_numeric): Return EAI_OVERFLOW
+	in case of inet_ntop failure.
+
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
 	* inet/getnameinfo.c (gni_host_inet_name): Use temporaries to
 	avoid long lines.
 	(gni_host_inet_numeric): Likewise.  Reduce scope of local

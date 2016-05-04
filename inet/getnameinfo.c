@@ -303,12 +303,12 @@ gni_host_inet_numeric (struct scratch_buffer *tmpbuf,
 		       const struct sockaddr *sa, socklen_t addrlen,
 		       char *host, socklen_t hostlen, int flags)
 {
-  const char *c;
   if (sa->sa_family == AF_INET6)
     {
       const struct sockaddr_in6 *sin6p = (const struct sockaddr_in6 *) sa;
-      c = inet_ntop (AF_INET6,
-		     (const void *) &sin6p->sin6_addr, host, hostlen);
+      if (inet_ntop (AF_INET6, &sin6p->sin6_addr, host, hostlen) == NULL)
+	return EAI_OVERFLOW;
+
       uint32_t scopeid = sin6p->sin6_scope_id;
       if (scopeid != 0)
 	{
@@ -344,7 +344,7 @@ gni_host_inet_numeric (struct scratch_buffer *tmpbuf,
 	  if (real_hostlen + scopelen + 1 > hostlen)
 	    /* Signal the buffer is too small.  This is
 	       what inet_ntop does.  */
-	    c = NULL;
+	    return EAI_OVERFLOW;
 	  else
 	    memcpy (host + real_hostlen, scopebuf, scopelen + 1);
 	}
@@ -352,10 +352,9 @@ gni_host_inet_numeric (struct scratch_buffer *tmpbuf,
   else
     {
       const struct sockaddr_in *sinp = (const struct sockaddr_in *) sa;
-      c = inet_ntop (AF_INET, &sinp->sin_addr, host, hostlen);
+      if (inet_ntop (AF_INET, &sinp->sin_addr, host, hostlen) == NULL)
+	return EAI_OVERFLOW;
     }
-  if (c == NULL)
-    return EAI_OVERFLOW;
   return 0;
 }
 
