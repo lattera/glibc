@@ -40,6 +40,17 @@
 # define PRINTF(fmt, args...)
 #endif
 
+#define LONG_NAME \
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 static struct
 {
@@ -58,6 +69,7 @@ static struct
       { ".", 3, DT_DIR, 0755 },
       { "..", 3, DT_DIR, 0755 },
       { "a", 3, DT_REG, 0644 },
+      { LONG_NAME, 3, DT_REG, 0644 },
     { "unreadable", 2, DT_DIR, 0111 },
       { ".", 3, DT_DIR, 0111 },
       { "..", 3, DT_DIR, 0755 },
@@ -75,7 +87,7 @@ typedef struct
   int level;
   int idx;
   struct dirent d;
-  char room_for_dirent[NAME_MAX];
+  char room_for_dirent[sizeof (LONG_NAME)];
 } my_DIR;
 
 

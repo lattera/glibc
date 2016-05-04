@@ -24,7 +24,9 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 /* Outcomment the following line for production quality code.  */
 /* #define NDEBUG 1 */
@@ -73,69 +75,8 @@
 # endif /* HAVE_VMSDIR_H */
 #endif
 
-
-/* When used in the GNU libc the symbol _DIRENT_HAVE_D_TYPE is available
-   if the `d_type' member for `struct dirent' is available.
-   HAVE_STRUCT_DIRENT_D_TYPE plays the same role in GNULIB.  */
-#if defined _DIRENT_HAVE_D_TYPE || defined HAVE_STRUCT_DIRENT_D_TYPE
-/* True if the directory entry D must be of type T.  */
-# define DIRENT_MUST_BE(d, t)	((d)->d_type == (t))
-
-/* True if the directory entry D might be a symbolic link.  */
-# define DIRENT_MIGHT_BE_SYMLINK(d) \
-    ((d)->d_type == DT_UNKNOWN || (d)->d_type == DT_LNK)
-
-/* True if the directory entry D might be a directory.  */
-# define DIRENT_MIGHT_BE_DIR(d)	 \
-    ((d)->d_type == DT_DIR || DIRENT_MIGHT_BE_SYMLINK (d))
-
-#else /* !HAVE_D_TYPE */
-# define DIRENT_MUST_BE(d, t)		false
-# define DIRENT_MIGHT_BE_SYMLINK(d)	true
-# define DIRENT_MIGHT_BE_DIR(d)		true
-#endif /* HAVE_D_TYPE */
-
-/* If the system has the `struct dirent64' type we use it internally.  */
-#if defined _LIBC && !defined COMPILE_GLOB64
-
-# if (defined POSIX || defined WINDOWS32) && !defined __GNU_LIBRARY__
-#  define CONVERT_D_INO(d64, d32)
-# else
-#  define CONVERT_D_INO(d64, d32) \
-  (d64)->d_ino = (d32)->d_ino;
-# endif
-
-# ifdef _DIRENT_HAVE_D_TYPE
-#  define CONVERT_D_TYPE(d64, d32) \
-  (d64)->d_type = (d32)->d_type;
-# else
-#  define CONVERT_D_TYPE(d64, d32)
-# endif
-
-# define CONVERT_DIRENT_DIRENT64(d64, d32) \
-  strcpy ((d64)->d_name, (d32)->d_name);				      \
-  CONVERT_D_INO (d64, d32)						      \
-  CONVERT_D_TYPE (d64, d32)
-#endif
-
-
-#if (defined POSIX || defined WINDOWS32) && !defined __GNU_LIBRARY__
-/* Posix does not require that the d_ino field be present, and some
-   systems do not provide it. */
-# define REAL_DIR_ENTRY(dp) 1
-#else
-# define REAL_DIR_ENTRY(dp) (dp->d_ino != 0)
-#endif /* POSIX */
-
 #include <stdlib.h>
 #include <string.h>
-
-/* NAME_MAX is usually defined in <dirent.h> or <limits.h>.  */
-#include <limits.h>
-#ifndef NAME_MAX
-# define NAME_MAX (sizeof (((struct dirent *) 0)->d_name))
-#endif
-
 #include <alloca.h>
 
 #ifdef _LIBC
@@ -180,7 +121,110 @@
 
 static const char *next_brace_sub (const char *begin, int flags) __THROWNL;
 
+/* A representation of a directory entry which does not depend on the
+   layout of struct dirent, or the size of ino_t.  */
+struct readdir_result
+{
+  const char *name;
+# if defined _DIRENT_HAVE_D_TYPE || defined HAVE_STRUCT_DIRENT_D_TYPE
+  uint8_t type;
+# endif
+  bool skip_entry;
+};
+
+# if defined _DIRENT_HAVE_D_TYPE || defined HAVE_STRUCT_DIRENT_D_TYPE
+/* Initializer based on the d_type member of struct dirent.  */
+#  define D_TYPE_TO_RESULT(source) (source)->d_type,
+
+/* True if the directory entry D might be a symbolic link.  */
+static bool
+readdir_result_might_be_symlink (struct readdir_result d)
+{
+  return d.type == DT_UNKNOWN || d.type == DT_LNK;
+}
+
+/* True if the directory entry D might be a directory.  */
+static bool
+readdir_result_might_be_dir (struct readdir_result d)
+{
+  return d.type == DT_DIR || readdir_result_might_be_symlink (d);
+}
+# else /* defined _DIRENT_HAVE_D_TYPE || defined HAVE_STRUCT_DIRENT_D_TYPE */
+#  define D_TYPE_TO_RESULT(source)
+
+/* If we do not have type information, symbolic links and directories
+   are always a possibility.  */
+
+static bool
+readdir_result_might_be_symlink (struct readdir_result d)
+{
+  return true;
+}
+
+static bool
+readdir_result_might_be_dir (struct readdir_result d)
+{
+  return true;
+}
+
+# endif /* defined _DIRENT_HAVE_D_TYPE || defined HAVE_STRUCT_DIRENT_D_TYPE */
+
+# if (defined POSIX || defined WINDOWS32) && !defined __GNU_LIBRARY__
+/* Initializer for skip_entry.  POSIX does not require that the d_ino
+   field be present, and some systems do not provide it. */
+#  define D_INO_TO_RESULT(source) false,
+# else
+#  define D_INO_TO_RESULT(source) (source)->d_ino == 0,
+# endif
+
+/* Construct an initializer for a struct readdir_result object from a
+   struct dirent *.  No copy of the name is made.  */
+#define READDIR_RESULT_INITIALIZER(source) \
+  {					   \
+    source->d_name,			   \
+    D_TYPE_TO_RESULT (source)		   \
+    D_INO_TO_RESULT (source)		   \
+  }
+
 #endif /* !defined _LIBC || !defined GLOB_ONLY_P */
+
+/* Call gl_readdir on STREAM.  This macro can be overridden to reduce
+   type safety if an old interface version needs to be supported.  */
+#ifndef GL_READDIR
+# define GL_READDIR(pglob, stream) ((pglob)->gl_readdir (stream))
+#endif
+
+/* Extract name and type from directory entry.  No copy of the name is
+   made.  If SOURCE is NULL, result name is NULL.  Keep in sync with
+   convert_dirent64 below.  */
+static struct readdir_result
+convert_dirent (const struct dirent *source)
+{
+  if (source == NULL)
+    {
+      struct readdir_result result = { NULL, };
+      return result;
+    }
+  struct readdir_result result = READDIR_RESULT_INITIALIZER (source);
+  return result;
+}
+
+#ifndef COMPILE_GLOB64
+/* Like convert_dirent, but works on struct dirent64 instead.  Keep in
+   sync with convert_dirent above.  */
+static struct readdir_result
+convert_dirent64 (const struct dirent64 *source)
+{
+  if (source == NULL)
+    {
+      struct readdir_result result = { NULL, };
+      return result;
+    }
+  struct readdir_result result = READDIR_RESULT_INITIALIZER (source);
+  return result;
+}
+#endif
+
 
 #ifndef attribute_hidden
 # define attribute_hidden
@@ -1538,55 +1582,36 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 
 	  while (1)
 	    {
-	      const char *name;
-#if defined _LIBC && !defined COMPILE_GLOB64
-	      struct dirent64 *d;
-	      union
-		{
-		  struct dirent64 d64;
-		  char room [offsetof (struct dirent64, d_name[0])
-			     + NAME_MAX + 1];
-		}
-	      d64buf;
-
-	      if (__glibc_unlikely (flags & GLOB_ALTDIRFUNC))
-		{
-		  struct dirent *d32 = (*pglob->gl_readdir) (stream);
-		  if (d32 != NULL)
-		    {
-		      CONVERT_DIRENT_DIRENT64 (&d64buf.d64, d32);
-		      d = &d64buf.d64;
-		    }
-		  else
-		    d = NULL;
-		}
-	      else
-		d = __readdir64 (stream);
+	      struct readdir_result d;
+	      {
+		if (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0))
+		  d = convert_dirent (GL_READDIR (pglob, stream));
+		else
+		  {
+#ifdef COMPILE_GLOB64
+		    d = convert_dirent (__readdir (stream));
 #else
-	      struct dirent *d = (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
-				  ? ((struct dirent *)
-				     (*pglob->gl_readdir) (stream))
-				  : __readdir (stream));
+		    d = convert_dirent64 (__readdir64 (stream));
 #endif
-	      if (d == NULL)
+		  }
+	      }
+	      if (d.name == NULL)
 		break;
-	      if (! REAL_DIR_ENTRY (d))
+	      if (d.skip_entry)
 		continue;
 
 	      /* If we shall match only directories use the information
 		 provided by the dirent call if possible.  */
-	      if ((flags & GLOB_ONLYDIR) && !DIRENT_MIGHT_BE_DIR (d))
+	      if ((flags & GLOB_ONLYDIR) && !readdir_result_might_be_dir (d))
 		continue;
 
-	      name = d->d_name;
-
-	      if (fnmatch (pattern, name, fnm_flags) == 0)
+	      if (fnmatch (pattern, d.name, fnm_flags) == 0)
 		{
 		  /* If the file we found is a symlink we have to
 		     make sure the target file exists.  */
-		  if (!DIRENT_MIGHT_BE_SYMLINK (d)
-		      || link_exists_p (dfd, directory, dirlen, name, pglob,
-					flags))
+		  if (!readdir_result_might_be_symlink (d)
+		      || link_exists_p (dfd, directory, dirlen, d.name,
+					pglob, flags))
 		    {
 		      if (cur == names->count)
 			{
@@ -1606,7 +1631,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 			  names = newnames;
 			  cur = 0;
 			}
-		      names->name[cur] = strdup (d->d_name);
+		      names->name[cur] = strdup (d.name);
 		      if (names->name[cur] == NULL)
 			goto memory_error;
 		      ++cur;

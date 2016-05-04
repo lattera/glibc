@@ -1,3 +1,24 @@
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19779]
+	CVE-2016-1234
+	Avoid copying names of directory entries.
+	* posix/glob.c (DIRENT_MUST_BE, DIRENT_MIGHT_BE_SYMLINK)
+	(DIRENT_MIGHT_BE_DIR, CONVERT_D_INO, CONVERT_D_TYPE)
+	(CONVERT_DIRENT_DIRENT64, REAL_DIR_ENTRY): Remove macros.
+	(struct readdir_result): New type.
+	(D_TYPE_TO_RESULT, D_INO_TO_RESULT, READDIR_RESULT_INITIALIZER)
+	(GL_READDIR): New macros.
+	(readdir_result_might_be_symlink, readdir_result_might_be_dir)
+	(convert_dirent, convert_dirent64): New functions.
+	(glob_in_dir): Use struct readdir_result.  Call convert_dirent or
+	convert_dirent64.  Adjust references to the readdir result.
+	* sysdeps/unix/sysv/linux/i386/glob64.c:
+	(convert_dirent, GL_READDIR): Redefine for second file inclusion.
+	* posix/bug-glob2.c (LONG_NAME): Define.
+	(filesystem): Add LONG_NAME.
+	(my_DIR): Increase the size of room_for_dirent.
+
 2016-05-03  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20041]
