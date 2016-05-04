@@ -187,6 +187,39 @@ nrl_domainname (void)
   return domain;
 };
 
+/* Copy a string to a destination buffer with length checking.  Return
+   EAI_OVERFLOW if the buffer is not large enough, and 0 on
+   success.  */
+static int
+checked_copy (char *dest, size_t destlen, const char *source)
+{
+  size_t source_length = strlen (source);
+  if (source_length + 1 > destlen)
+    return EAI_OVERFLOW;
+  memcpy (dest, source, source_length + 1);
+  return 0;
+}
+
+/* Helper function for CHECKED_SNPRINTF below.  */
+static int
+check_sprintf_result (int result, size_t destlen)
+{
+  if (result < 0)
+    return EAI_SYSTEM;
+  if ((size_t) result >= destlen)
+    /* If ret == destlen, there was no room for the terminating NUL
+       character.  */
+    return EAI_OVERFLOW;
+  return 0;
+}
+
+/* Format a string in the destination buffer.  Return 0 on success,
+   EAI_OVERFLOW in case the buffer is too small, or EAI_SYSTEM on any
+   other error.  */
+#define CHECKED_SNPRINTF(dest, destlen, format, ...)			\
+  check_sprintf_result							\
+    (__snprintf (dest, destlen, format, __VA_ARGS__), destlen)
+
 /* Convert host name, AF_INET/AF_INET6 case, name only.  */
 static int
 gni_host_inet_name (struct scratch_buffer *tmpbuf,
@@ -312,41 +345,22 @@ gni_host_inet_numeric (struct scratch_buffer *tmpbuf,
       uint32_t scopeid = sin6p->sin6_scope_id;
       if (scopeid != 0)
 	{
-	  /* Buffer is >= IFNAMSIZ+1.  */
-	  char scopebuf[IFNAMSIZ + 1];
-	  char *scopeptr;
-	  int ni_numericscope = 0;
-	  size_t real_hostlen = __strnlen (host, hostlen);
-	  size_t scopelen = 0;
-
-	  scopebuf[0] = SCOPE_DELIMITER;
-	  scopebuf[1] = '\0';
-	  scopeptr = &scopebuf[1];
+	  size_t used_hostlen = __strnlen (host, hostlen);
+	  /* Location of the scope string in the host buffer.  */
+	  char *scope_start = host + used_hostlen;
+	  size_t scope_length = hostlen - used_hostlen;
 
 	  if (IN6_IS_ADDR_LINKLOCAL (&sin6p->sin6_addr)
 	      || IN6_IS_ADDR_MC_LINKLOCAL (&sin6p->sin6_addr))
 	    {
-	      if (if_indextoname (scopeid, scopeptr) == NULL)
-		++ni_numericscope;
-	      else
-		scopelen = strlen (scopebuf);
+	      char scopebuf[IFNAMSIZ];
+	      if (if_indextoname (scopeid, scopebuf) != NULL)
+		return CHECKED_SNPRINTF
+		  (scope_start, scope_length,
+		   "%c%s", SCOPE_DELIMITER, scopebuf);
 	    }
-	  else
-	    ++ni_numericscope;
-
-	  if (ni_numericscope)
-	    scopelen = 1 + __snprintf (scopeptr,
-				       (scopebuf
-					+ sizeof scopebuf
-					- scopeptr),
-				       "%u", scopeid);
-
-	  if (real_hostlen + scopelen + 1 > hostlen)
-	    /* Signal the buffer is too small.  This is
-	       what inet_ntop does.  */
-	    return EAI_OVERFLOW;
-	  else
-	    memcpy (host + real_hostlen, scopebuf, scopelen + 1);
+	  return CHECKED_SNPRINTF
+	    (scope_start, scope_length, "%c%u", SCOPE_DELIMITER, scopeid);
 	}
     }
   else
@@ -385,23 +399,17 @@ gni_host_local (struct scratch_buffer *tmpbuf,
 		const struct sockaddr *sa, socklen_t addrlen,
 		char *host, socklen_t hostlen, int flags)
 {
-
   if (!(flags & NI_NUMERICHOST))
     {
       struct utsname utsname;
-
-      if (!uname (&utsname))
-	{
-	  strncpy (host, utsname.nodename, hostlen);
-	  return 0;
-	}
+      if (uname (&utsname) == 0)
+	return checked_copy (host, hostlen, utsname.nodename);
     }
 
   if (flags & NI_NAMEREQD)
     return EAI_NONAME;
 
-  strncpy (host, "localhost", hostlen);
-  return 0;
+  return checked_copy (host, hostlen, "localhost");
 }
 
 /* Convert the host part of an AF_LOCAK socket address.   */
@@ -455,15 +463,10 @@ gni_serv_inet (struct scratch_buffer *tmpbuf,
 	    break;
 	}
       if (s)
-	{
-	  strncpy (serv, s->s_name, servlen);
-	  return 0;
-	}
+	return checked_copy (serv, servlen, s->s_name);
       /* Fall through to numeric conversion.  */
     }
-  if (__snprintf (serv, servlen, "%d", ntohs (sinp->sin_port)) + 1 > servlen)
-      return EAI_OVERFLOW;
-  return 0;
+  return CHECKED_SNPRINTF (serv, servlen, "%d", ntohs (sinp->sin_port));
 }
 
 /* Convert service to string, AF_LOCAL variant.  */
@@ -472,8 +475,8 @@ gni_serv_local (struct scratch_buffer *tmpbuf,
 	       const struct sockaddr *sa, socklen_t addrlen,
 	       char *serv, socklen_t servlen, int flags)
 {
-  strncpy (serv, ((const struct sockaddr_un *) sa)->sun_path, servlen);
-  return 0;
+  return checked_copy
+    (serv, servlen, ((const struct sockaddr_un *) sa)->sun_path);
 }
 
 /* Convert service to string, dispatching to the implementations
@@ -554,10 +557,6 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	}
     }
 
-  if (host && (hostlen > 0))
-    host[hostlen-1] = 0;
-  if (serv && (servlen > 0))
-    serv[servlen-1] = 0;
   scratch_buffer_free (&tmpbuf);
   return 0;
 }

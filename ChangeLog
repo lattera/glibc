@@ -1,5 +1,17 @@
 2016-05-04  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19787]
+	* inet/getnameinfo.c (check_sprintf_result): New function.
+	(CHECKED_SNPRINTF): New macro.
+	(gni_host_inet_numeric): Use CHECKED_SNPRINTF to write the scope
+	to the host buffer.
+	(gni_host_local): Use checked_copy to copy the host name.
+	(gni_serv_inet): Use CHECKED_SNPRINTF to write the service name.
+	(gni_serv_local): Use checked_copy to copy the service name.
+	(getnameinfo): Remove unnecessary truncation of result buffers.
+
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
 	* inet/getnameinfo.c (gni_host_inet_numeric): Return EAI_OVERFLOW
 	in case of inet_ntop failure.
 
