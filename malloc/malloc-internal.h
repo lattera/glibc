@@ -16,8 +16,8 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MALLOC_PRIVATE_H
-#define _MALLOC_PRIVATE_H
+#ifndef _MALLOC_INTERNAL_H
+#define _MALLOC_INTERNAL_H
 
 /* Called in the parent process before a fork.  */
 void __malloc_fork_lock_parent (void) internal_function attribute_hidden;
@@ -29,4 +29,4 @@ void __malloc_fork_unlock_parent (void) internal_function attribute_hidden;
 void __malloc_fork_unlock_child (void) internal_function attribute_hidden;
 
 
-#endif /* _MALLOC_PRIVATE_H */
+#endif /* _MALLOC_INTERNAL_H */

@@ -1,3 +1,7 @@
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc-internal.h: Adjust header file guard.
+
 2016-05-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/pthread/aio_misc.c (__aio_enqueue_request): Do not write
