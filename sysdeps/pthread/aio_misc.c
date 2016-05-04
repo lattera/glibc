@@ -453,11 +453,7 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 		result = 0;
 	    }
 	}
-      else
-	newp->running = running;
     }
-  else
-    newp->running = running;
 
   /* Enqueue the request in the run queue if it is not yet running.  */
   if (running == yes && result == 0)
@@ -470,7 +466,9 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 	pthread_cond_signal (&__aio_new_request_notification);
     }
 
-  if (result != 0)
+  if (result == 0)
+    newp->running = running;
+  else
     {
       /* Something went wrong.  */
       __aio_free_request (newp);

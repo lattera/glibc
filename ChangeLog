@@ -2,13 +2,6 @@
 
 	* malloc/malloc-internal.h: Adjust header file guard.
 
-2016-05-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
-
-	* sysdeps/pthread/aio_misc.c (__aio_enqueue_request): Do not write
-	`running` field of `newp` when a thread was started to process it,
-	since that thread will not take `__aio_requests_mutex`, and the field
-	already has the proper value actually.
-
 2016-05-04  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19787]
