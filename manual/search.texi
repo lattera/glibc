@@ -76,7 +76,7 @@ two functions can be found in @file{search.h}.
 The @code{lfind} function searches in the array with @code{*@var{nmemb}}
 elements of @var{size} bytes pointed to by @var{base} for an element
 which matches the one pointed to by @var{key}.  The function pointed to
-by @var{compar} is used decide whether two elements match.
+by @var{compar} is used to decide whether two elements match.
 
 The return value is a pointer to the matching element in the array
 starting at @var{base} if it is found.  If no matching element is
@@ -293,15 +293,15 @@ The weakest aspect of this function is that there can be at most one
 hashing table used through the whole program.  The table is allocated
 in local memory out of control of the programmer.  As an extension @theglibc{}
 provides an additional set of functions with a reentrant
-interface which provide a similar interface but which allow to keep
+interface which provides a similar interface but which allows keeping
 arbitrarily many hashing tables.
 
 It is possible to use more than one hashing table in the program run if
 the former table is first destroyed by a call to @code{hdestroy}.
 
-The function returns a non-zero value if successful.  If it return zero
+The function returns a non-zero value if successful.  If it returns zero,
 something went wrong.  This could either mean there is already a hashing
-table in use or the program runs out of memory.
+table in use or the program ran out of memory.
 @end deftypefun
 
 @comment search.h
@@ -325,7 +325,7 @@ If it is really necessary to free a table and all elements the
 programmer has to keep a list of all table elements and before calling
 @code{hdestroy} s/he has to free all element's data using this list.
 This is a very unpleasant mechanism and it also shows that this kind of
-hashing tables is mainly meant for tables which are created once and
+hashing table is mainly meant for tables which are created once and
 used until the end of the program run.
 @end deftypefun
 
@@ -357,8 +357,8 @@ this element might stay undefined since it is not used.
 @c hsearch @mtasurace:hsearch @acucorrupt/action==ENTER
 @c  hsearch_r dup @mtsrace:htab @acucorrupt/action==ENTER
 To search in a hashing table created using @code{hcreate} the
-@code{hsearch} function must be used.  This function can perform simple
-search for an element (if @var{action} has the @code{FIND}) or it can
+@code{hsearch} function must be used.  This function can perform a simple
+search for an element (if @var{action} has the value @code{FIND}) or it can
 alternatively insert the key element into the hashing table.  Entries
 are never replaced.
 
@@ -366,7 +366,7 @@ The key is denoted by a pointer to an object of type @code{ENTRY}.  For
 locating the corresponding position in the hashing table only the
 @code{key} element of the structure is used.
 
-If an entry with matching key is found the @var{action} parameter is
+If an entry with a matching key is found the @var{action} parameter is
 irrelevant.  The found entry is returned.  If no matching entry is found
 and the @var{action} parameter has the value @code{FIND} the function
 returns a @code{NULL} pointer.  If no entry is found and the
@@ -375,7 +375,7 @@ to the hashing table which is initialized with the parameter @var{item}.
 A pointer to the newly added entry is returned.
 @end deftypefun
 
-As mentioned before the hashing table used by the functions described so
+As mentioned before, the hashing table used by the functions described so
 far is global and there can be at any time at most one hashing table in
 the program.  A solution is to use the following functions which are a
 GNU extension.  All have in common that they operate on a hashing table
@@ -416,7 +416,7 @@ function.
 
 The return value is non-zero if the operation was successful.  If the
 return value is zero, something went wrong, which probably means the
-programs ran out of memory.
+program ran out of memory.
 @end deftypefun
 
 @comment search.h
@@ -434,7 +434,7 @@ programs ran out of memory.
 @c  free dup @ascuheap @acsmem
 The @code{hdestroy_r} function frees all resources allocated by the
 @code{hcreate_r} function for this very same object @var{htab}.  As for
-@code{hdestroy} it is the programs responsibility to free the strings
+@code{hdestroy} it is the program's responsibility to free the strings
 for the elements of the table.
 @end deftypefun
 
@@ -455,8 +455,8 @@ table described by the object pointed to by @var{htab} (which is
 initialized by a call to @code{hcreate_r}).
 
 Another difference to @code{hcreate} is that the pointer to the found
-entry in the table is not the return value of the functions.  It is
-returned by storing it in a pointer variables pointed to by the
+entry in the table is not the return value of the function.  It is
+returned by storing it in a pointer variable pointed to by the
 @var{retval} parameter.  The return value of the function is an integer
 value indicating success if it is non-zero and failure if it is zero.
 In the latter case the global variable @var{errno} signals the reason for
@@ -542,7 +542,7 @@ new element is entered (note that the @var{rootp} parameter points to a
 constant pointer).  Instead the function returns @code{NULL}.
 @end deftypefun
 
-Another advantage of the @code{tsearch} function in contrast to the
+Another advantage of the @code{tsearch} functions in contrast to the
 @code{hsearch} functions is that there is an easy way to remove
 elements.
 
@@ -566,7 +566,7 @@ is deleted @code{tdelete} returns some unspecified value not equal to
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 If the complete search tree has to be removed one can use
 @code{tdestroy}.  It frees all resources allocated by the @code{tsearch}
-function to generate the tree pointed to by @var{vroot}.
+functions to generate the tree pointed to by @var{vroot}.
 
 For the data in each tree node the function @var{freefct} is called.
 The pointer to the data is passed as the argument to the function.  If
@@ -577,7 +577,7 @@ This function is a GNU extension and not covered by the @w{System V} or
 X/Open specifications.
 @end deftypefun
 
-In addition to the function to create and destroy the tree data
+In addition to the functions to create and destroy the tree data
 structure, there is another function which allows you to apply a
 function to all elements of the tree.  The function must have this type:
 
@@ -625,8 +625,8 @@ For each node in the tree with a node pointed to by @var{root}, the
 @var{value} set to @code{leaf}.  For internal nodes the function is
 called three times, setting the @var{value} parameter or @var{action} to
 the appropriate value.  The @var{level} argument for the @var{action}
-function is computed while descending the tree with increasing the value
-by one for the descend to a child, starting with the value @math{0} for
+function is computed while descending the tree by increasing the value
+by one for each descent to a child, starting with the value @math{0} for
 the root node.
 
 Since the functions used for the @var{action} parameter to @code{twalk}
