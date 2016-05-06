@@ -1,3 +1,10 @@
+2016-05-23  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* stdlib/tst-strtod6.c (do_test): Use new type generic
+	invocation of the test function.
+	(test): Refactor into ...
+	(TEST_STRTOD): New macro base function.
+
 2016-05-23  Florian Weimer  <fweimer@redhat.com>
 
 	CVE-2016-4429
