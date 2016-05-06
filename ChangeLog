@@ -1,5 +1,9 @@
 2016-06-16  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/ctype.texi: Fix typos.
+
+2016-06-16  Rical Jasan  <ricaljasan@pacific.net>
+
 	* manual/memory.texi: Fix various typos & grammar errors.
 
 2016-06-14  Joseph Myers  <joseph@codesourcery.com>

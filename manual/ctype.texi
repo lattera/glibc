@@ -345,8 +345,8 @@ This type is defined in @file{wctype.h}.
 @c compiler optimizations, but given the decision that setlocale is
 @c MT-Unsafe, all this would afford us would be the ability to not mark
 @c this function with @mtslocale.
-The @code{wctype} returns a value representing a class of wide
-characters which is identified by the string @var{property}.  Beside
+@code{wctype} returns a value representing a class of wide
+characters which is identified by the string @var{property}.  Besides
 some standard properties each locale can define its own ones.  In case
 no property with the given name is known for the current locale
 selected for the @code{LC_CTYPE} category, the function returns zero.
