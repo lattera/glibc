@@ -1,3 +1,7 @@
+2016-05-19  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/intro.texi: Fix duplicated typo.
+
 2016-05-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13304]
