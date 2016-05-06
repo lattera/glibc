@@ -365,7 +365,7 @@ The function @code{setlocale} sets the current locale for category
 @var{category} to @var{locale}.
 
 If @var{category} is @code{LC_ALL}, this specifies the locale for all
-purposes.  The other possible values of @var{category} specify an
+purposes.  The other possible values of @var{category} specify a
 single purpose (@pxref{Locale Categories}).
 
 You can also use this function to find out the current locale by passing
@@ -407,7 +407,7 @@ name is used if possible.
 
 The effective locale name (either the second argument to
 @code{setlocale}, or if the argument is an empty string, the name
-obtained from the process environment) must be valid locale name.
+obtained from the process environment) must be a valid locale name.
 @xref{Locale Names}.
 
 If you specify an invalid locale name, @code{setlocale} returns a null
@@ -815,7 +815,7 @@ The members with the @code{int_} prefix apply to the
 @code{int_curr_symbol} while the other two apply to
 @code{currency_symbol}.  There is one specialty with the
 @code{int_curr_symbol}, though.  Since all legal values contain a space
-at the end the string one either printf this space (if the currency
+at the end of the string one either prints this space (if the currency
 symbol must appear in front and must be separated) or one has to avoid
 printing this character at all (especially when at the end of the
 string).
@@ -849,7 +849,7 @@ unreasonable.)
 @itemx char int_n_sign_posn
 These members are small integers that indicate how to
 position the sign for nonnegative and negative monetary quantities,
-respectively.  (The string used by the sign is what was specified with
+respectively.  (The string used for the sign is what was specified with
 @code{positive_sign} or @code{negative_sign}.)  The possible values are
 as follows:
 
@@ -1133,11 +1133,11 @@ should be used.
 @end vtable
 
 The file @file{langinfo.h} defines a lot more symbols but none of them
-is official.  Using them is not portable, and the format of the
+are official.  Using them is not portable, and the format of the
 return values might change.  Therefore we recommended you not use
 them.
 
-Note that the return value for any valid argument can be used for
+Note that the return value for any valid argument can be used
 in all situations (with the possible exception of the am/pm time formatting
 codes).  If the user has not selected any locale for the
 appropriate category, @code{nl_langinfo} returns the information from the
@@ -1240,7 +1240,7 @@ it does not fill the entire field width.
 @end table
 @end itemize
 
-The next part of a specification is an optional field width.  If no
+The next part of the specification is an optional field width.  If no
 width is specified @math{0} is taken.  During output, the function first
 determines how much space is required.  If it requires at least as many
 characters as given by the field width, it is output using as much space
@@ -1413,7 +1413,7 @@ access to the corresponding locale definitions.
 @c Calls nl_langinfo with YESEXPR and NOEXPR, triggering @mtslocale but
 @c it's regcomp and regexec that bring in all of the safety issues.
 @c regfree is also called, but it doesn't introduce any further issues.
-The function @code{rpmatch} checks the string in @var{response} whether
+The function @code{rpmatch} checks the string in @var{response} for whether
 or not it is a correct yes-or-no answer and if yes, which one.  The
 check uses the @code{YESEXPR} and @code{NOEXPR} data in the
 @code{LC_MESSAGES} category of the currently selected locale.  The
