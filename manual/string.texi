@@ -503,7 +503,7 @@ The value returned by @code{memmove} is the value of @var{to}.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{wmemmove} copies the @var{size} wide characters at @var{wfrom}
 into the @var{size} wide characters at @var{wto}, even if those two
-blocks of space overlap.  In the case of overlap, @code{memmove} is
+blocks of space overlap.  In the case of overlap, @code{wmemmove} is
 careful to copy the original values of the wide characters in the block
 at @var{wfrom}, including those wide characters which also belong to the
 block at @var{wto}.
@@ -801,7 +801,7 @@ bytes for the end of the string so that we can append the next string.
 For all strings in total the comparisons necessary to find the end of
 the intermediate results sums up to 5500!  If we combine the copying
 with the search for the allocation we can write this function more
-efficient:
+efficiently:
 
 @smallexample
 char *
@@ -859,15 +859,15 @@ concat (const char *str, @dots{})
 With a bit more knowledge about the input strings one could fine-tune
 the memory allocation.  The difference we are pointing to here is that
 we don't use @code{strcat} anymore.  We always keep track of the length
-of the current intermediate result so we can safe us the search for the
+of the current intermediate result so we can save ourselves the search for the
 end of the string and use @code{mempcpy}.  Please note that we also
-don't use @code{stpcpy} which might seem more natural since we handle
-with strings.  But this is not necessary since we already know the
+don't use @code{stpcpy} which might seem more natural since we are handling
+strings.  But this is not necessary since we already know the
 length of the string and therefore can use the faster memory copying
 function.  The example would work for wide characters the same way.
 
 Whenever a programmer feels the need to use @code{strcat} she or he
-should think twice and look through the program whether the code cannot
+should think twice and look through the program to see whether the code cannot
 be rewritten to take advantage of already calculated results.  Again: it
 is almost always unnecessary to use @code{strcat}.
 
@@ -1311,7 +1311,7 @@ return value is zero.
 @comment ISO
 @deftypefun int wcsncmp (const wchar_t *@var{ws1}, const wchar_t *@var{ws2}, size_t @var{size})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function is the similar to @code{wcscmp}, except that no more than
+This function is similar to @code{wcscmp}, except that no more than
 @var{size} wide characters are compared.  In other words, if the two
 strings are the same in their first @var{size} wide characters, the
 return value is zero.
@@ -2604,7 +2604,7 @@ functions accept either a pointer and a size argument, or pointers to
 them, if they will be modified.
 
 The argz functions use @code{malloc}/@code{realloc} to allocate/grow
-argz vectors, and so any argz vector creating using these functions may
+argz vectors, and so any argz vector created using these functions may
 be freed by using @code{free}; conversely, any argz function that may
 grow a string expects that string to have been allocated using
 @code{malloc} (those argz functions that only examine their arguments or
@@ -2640,7 +2640,7 @@ byte @var{sep}.
 
 @comment argz.h
 @comment GNU
-@deftypefun {size_t} argz_count (const char *@var{argz}, size_t @var{arg_len})
+@deftypefun {size_t} argz_count (const char *@var{argz}, size_t @var{argz_len})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Returns the number of elements in the argz vector @var{argz} and
 @var{argz_len}.
@@ -2775,7 +2775,7 @@ invariant is maintained for argz vectors created by the functions here.
 Replace any occurrences of the string @var{str} in @var{argz} with
 @var{with}, reallocating @var{argz} as necessary.  If
 @var{replace_count} is non-zero, @code{*@var{replace_count}} will be
-incremented by number of replacements performed.
+incremented by the number of replacements performed.
 @end deftypefun
 
 @node Envz Functions, , Argz Functions, Argz and Envz Vectors
@@ -2795,7 +2795,7 @@ considered the name of a ``null'' entry, as distinct from an entry with an
 empty value: @code{envz_get} will return @code{0} if given the name of null
 entry, whereas an entry with an empty value would result in a value of
 @code{""}; @code{envz_entry} will still find such entries, however.  Null
-entries can be removed with @code{envz_strip} function.
+entries can be removed with the @code{envz_strip} function.
 
 As with argz functions, envz functions that may allocate memory (and thus
 fail) have a return type of @code{error_t}, and return either @code{0} or
@@ -2834,7 +2834,7 @@ The @code{envz_add} function adds an entry to @code{*@var{envz}}
 (updating @code{*@var{envz}} and @code{*@var{envz_len}}) with the name
 @var{name}, and value @var{value}.  If an entry with the same name
 already exists in @var{envz}, it is removed first.  If @var{value} is
-@code{0}, then the new entry will the special null type of entry
+@code{0}, then the new entry will be the special null type of entry
 (mentioned above).
 @end deftypefun
 
