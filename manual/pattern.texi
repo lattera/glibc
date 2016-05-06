@@ -134,7 +134,7 @@ Ignore case in comparing @var{string} to @var{pattern}.
 @item FNM_EXTMATCH
 @cindex Korn Shell
 @pindex ksh
-Recognize beside the normal patterns also the extended patterns
+Besides the normal patterns, also recognize the extended patterns
 introduced in @file{ksh}.  The patterns are written in the form
 explained in the following table where @var{pattern-list} is a @code{|}
 separated list of patterns.
@@ -514,8 +514,8 @@ In the event of an error, @code{glob} stores information in
 It is important to notice that the @code{glob} function will not fail if
 it encounters directories or files which cannot be handled without the
 LFS interfaces.  The implementation of @code{glob} is supposed to use
-these functions internally.  This at least is the assumptions made by
-the Unix standard.  The GNU extension of allowing the user to provide
+these functions internally.  This at least is the assumption made by
+the Unix standard.  The GNU extension of allowing the user to provide their
 own directory handling and @code{stat} functions complicates things a
 bit.  If these callback functions are used and a large file or directory
 is encountered @code{glob} @emph{can} fail.
@@ -530,13 +530,13 @@ The @code{glob64} function was added as part of the Large File Summit
 extensions but is not part of the original LFS proposal.  The reason for
 this is simple: it is not necessary.  The necessity for a @code{glob64}
 function is added by the extensions of the GNU @code{glob}
-implementation which allows the user to provide own directory handling
+implementation which allows the user to provide their own directory handling
 and @code{stat} functions.  The @code{readdir} and @code{stat} functions
 do depend on the choice of @code{_FILE_OFFSET_BITS} since the definition
 of the types @code{struct dirent} and @code{struct stat} will change
 depending on the choice.
 
-Beside this difference the @code{glob64} works just like @code{glob} in
+Besides this difference, @code{glob64} works just like @code{glob} in
 all aspects.
 
 This function is a GNU extension.
@@ -667,7 +667,7 @@ result if the pattern used for matching contains any wildcard character.
 @comment glob.h
 @comment GNU
 @item GLOB_ALTDIRFUNC
-Instead of the using the using the normal functions for accessing the
+Instead of using the normal functions for accessing the
 filesystem the @code{glob} implementation uses the user-supplied
 functions specified in the structure pointed to by @var{pglob}
 parameter.  For more information about the functions refer to the
@@ -677,7 +677,7 @@ sections about directory handling see @ref{Accessing Directories}, and
 @comment glob.h
 @comment GNU
 @item GLOB_BRACE
-If this flag is given the handling of braces in the pattern is changed.
+If this flag is given, the handling of braces in the pattern is changed.
 It is now required that braces appear correctly grouped.  I.e., for each
 opening brace there must be a closing one.  Braces can be used
 recursively.  So it is possible to define one brace expression in
@@ -719,7 +719,7 @@ return it as the sole ``matching'' word, even if no file exists by that name.
 @comment glob.h
 @comment GNU
 @item GLOB_TILDE
-If this flag is used the character @code{~} (tilde) is handled special
+If this flag is used the character @code{~} (tilde) is handled specially
 if it appears at the beginning of the pattern.  Instead of being taken
 verbatim it is used to represent the home directory of a known user.
 
@@ -756,14 +756,14 @@ This functionality is equivalent to what is available in C-shells if the
 @comment glob.h
 @comment GNU
 @item GLOB_TILDE_CHECK
-If this flag is used @code{glob} behaves like as if @code{GLOB_TILDE} is
+If this flag is used @code{glob} behaves as if @code{GLOB_TILDE} is
 given.  The only difference is that if the user name is not available or
 the home directory cannot be determined for other reasons this leads to
 an error.  @code{glob} will return @code{GLOB_NOMATCH} instead of using
 the pattern itself as the name.
 
 This functionality is equivalent to what is available in C-shells if
-@code{nonomatch} flag is not set.
+the @code{nonomatch} flag is not set.
 
 @comment glob.h
 @comment GNU
@@ -1233,7 +1233,7 @@ Ignore case when matching letters.
 @comment regex.h
 @comment POSIX.2
 @item REG_NOSUB
-Don't bother storing the contents of the @var{matches-ptr} array.
+Don't bother storing the contents of the @var{matchptr} array.
 
 @comment regex.h
 @comment POSIX.2
@@ -1568,7 +1568,7 @@ subexpression.
 @comment regex.h
 @comment POSIX.2
 @deftp {Data Type} regmatch_t
-This is the data type of the @var{matcharray} array that you pass to
+This is the data type of the @var{matchptr} array that you pass to
 @code{regexec}.  It contains two structure fields, as follows:
 
 @table @code
