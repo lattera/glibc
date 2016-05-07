@@ -233,7 +233,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
     /* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
 #define RESOLVE_MAP(ref, version, r_type) \
-    (ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
+    ((ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
+      && __glibc_likely (!dl_symbol_visibility_binds_local_p (*ref)))	      \
      ? ((__builtin_expect ((*ref) == l->l_lookup_cache.sym, 0)		      \
 	 && elf_machine_type_class (r_type) == l->l_lookup_cache.type_class)  \
 	? (bump_num_cache_relocations (),				      \

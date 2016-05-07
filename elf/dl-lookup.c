@@ -516,6 +516,10 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 #endif
 	    }
 
+	  /* Hidden and internal symbols are local, ignore them.  */
+	  if (__glibc_unlikely (dl_symbol_visibility_binds_local_p (sym)))
+	    goto skip;
+
 	  switch (ELFW(ST_BIND) (sym->st_info))
 	    {
 	    case STB_WEAK:

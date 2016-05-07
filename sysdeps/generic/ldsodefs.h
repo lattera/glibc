@@ -88,6 +88,19 @@ typedef struct link_map *lookup_t;
        || (ADDR) < (L)->l_addr + (SYM)->st_value + (SYM)->st_size)	\
    && ((MATCHSYM) == NULL || (MATCHSYM)->st_value < (SYM)->st_value))
 
+/* According to the ELF gABI no STV_HIDDEN or STV_INTERNAL symbols are
+   expected to be present in dynamic symbol tables as they should have
+   been either removed or converted to STB_LOCAL binding by the static
+   linker.  However some GNU binutils versions produce such symbols in
+   some cases.  To prevent such symbols present in a buggy binary from
+   preempting global symbols we filter them out with this predicate.  */
+static __always_inline bool
+dl_symbol_visibility_binds_local_p (const ElfW(Sym) *sym)
+{
+  return (ELFW(ST_VISIBILITY) (sym->st_other) == STV_HIDDEN
+	  || ELFW(ST_VISIBILITY) (sym->st_other) == STV_INTERNAL);
+}
+
 /* Unmap a loaded object, called by _dl_close (). */
 #ifndef DL_UNMAP_IS_SPECIAL
 # define DL_UNMAP(map)	_dl_unmap_segments (map)
