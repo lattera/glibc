@@ -1,3 +1,3 @@
 #define DISABLE_PREFETCHW
 
-#include <sysdeps/x86_64/cacheinfo.c>
+#include <sysdeps/x86/cacheinfo.c>

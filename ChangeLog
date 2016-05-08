@@ -1,3 +1,10 @@
+2016-05-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/cacheinfo.c: Include <sysdeps/x86/cacheinfo.c>
+	instead of <sysdeps/x86_64/cacheinfo.c>.
+	* sysdeps/x86_64/cacheinfo.c: Moved to ...
+	* sysdeps/x86/cacheinfo.c: Here.
+
 2016-05-04  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/malloc-internal.h: Adjust header file guard.
