@@ -31,6 +31,8 @@ extern long int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *);
 
 extern long int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *);
 
+extern long int (*VDSO_SYMBOL(getcpu)) (unsigned *, unsigned *, void *)
+   attribute_hidden;
 #endif
 
 #endif /* _LIBC_VDSO_H */

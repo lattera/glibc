@@ -29,6 +29,8 @@ long int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *)
 long int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *)
   __attribute__ ((nocommon));
 
+long int (*VDSO_SYMBOL(getcpu)) (unsigned *, unsigned *, void *)
+   attribute_hidden;
 
 static inline void
 _libc_vdso_platform_setup (void)
@@ -46,6 +48,10 @@ _libc_vdso_platform_setup (void)
   p = _dl_vdso_vsym ("__kernel_clock_getres", &linux2629);
   PTR_MANGLE (p);
   VDSO_SYMBOL (clock_getres) = p;
+
+  p = _dl_vdso_vsym ("__kernel_getcpu", &linux2629);
+  PTR_MANGLE (p);
+  VDSO_SYMBOL (getcpu) = p;
 }
 
 # define VDSO_SETUP _libc_vdso_platform_setup

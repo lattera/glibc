@@ -1,3 +1,14 @@
+2016-05-09  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/init-first.c:
+	Add VDSO_SYMBOL(getcpu).
+	(_libc_vdso_platform_setup): Initialize VDSO_SYMBOL(getcpu).
+	* sysdeps/unix/sysv/linux/s390/libc-vdso.h:
+	Add VDSO_SYMBOL(getcpu).
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h:
+	New define HAVE_GETCPU_VSYSCALL.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+
 2016-05-08  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/cacheinfo.c: Include <sysdeps/x86/cacheinfo.c>

@@ -283,6 +283,7 @@
 #define HAVE_CLOCK_GETRES_VSYSCALL	1
 #define HAVE_CLOCK_GETTIME_VSYSCALL	1
 #define HAVE_GETTIMEOFDAY_VSYSCALL	1
+#define HAVE_GETCPU_VSYSCALL		1
 
 /* This version is for internal uses when there is no desire
    to set errno */
