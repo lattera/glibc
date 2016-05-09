@@ -1,3 +1,13 @@
+2016-05-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/sys/types.h-data (blkcnt_t): Do not expect for
+	[XPG3 || XPG4].
+	(blksize_t): Likewise.
+	(clockid_t): Likewise.
+	* conform/Makefile (test-xfail-XPG3/sys/types.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/sys/types.h/conform): Likewise.
+
 2016-05-09  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/init-first.c:
