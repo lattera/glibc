@@ -29,151 +29,164 @@
 #include <string.h>
 #include <math-tests.h>
 
-struct exactness
-{
-  bool f;
-  bool d;
-  bool ld;
-};
+#include "tst-strtod.h"
 
-struct test_results {
-  float f;
-  double d;
-  long double ld;
-};
+#define _CONCAT(a, b) a ## b
+#define CONCAT(a, b) _CONCAT (a, b)
 
-struct test {
-  const char *s;
-  struct exactness exact;
-  struct test_results rd, rn, rz, ru;
-};
+#if LDBL_MANT_DIG == 106 && LDBL_MAX_EXP == 1024
+/* This is a stupid hack for IBM long double.  This test ignores
+   inexact values for long double due to the limitations of the
+   format.  This ensures rounding tests are ignored.  */
+# undef ROUNDING_TESTS_long_double
+# define ROUNDING_TESTS_long_double(x) 0
+#endif
 
+/* Generator to create an FTYPE member variabled named FSUF
+   used to populate struct member variables.  */
+#define FTYPE_MEMBER(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF)  \
+       FTYPE FSUF;
+
+/* Likewise, but each member is of type bool.  */
+#define BOOL_MEMBER(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF)  \
+       bool FSUF;
+
+#define STRUCT_FOREACH_FLOAT_FTYPE GEN_TEST_STRTOD_FOREACH (FTYPE_MEMBER)
+#define STRUCT_FOREACH_FLOAT_BOOL GEN_TEST_STRTOD_FOREACH (BOOL_MEMBER)
+
+/* Define the long double choose (CHOOSE_ld) macro
+   to select the appropriate generated long double
+   value from the generated test data.  */
 #if LDBL_MANT_DIG == 53 && LDBL_MAX_EXP == 1024
-# define TEST(s, fexact, fd, fn, fz, fu, dexact, dd, dn, dz, du,	\
-	      ld53exact, ld53d, ld53n, ld53z, ld53u,			\
-	      ld64iexact, ld64id, ld64in, ld64iz, ld64iu,		\
-	      ld64mexact, ld64md, ld64mn, ld64mz, ld64mu,		\
-	      ld106exact, ld106d, ld106n, ld106z, ld106u,		\
-	      ld113exact, ld113d, ld113n, ld113z, ld113u)		\
-  {									\
-    s,									\
-    { fexact, dexact, ld53exact },					\
-    { fd, dd, ld53d },							\
-    { fn, dn, ld53n },							\
-    { fz, dz, ld53z },							\
-    { fu, du, ld53u }							\
-  }
+/* This is for the long double == double format.  */
+# define CHOOSE_ld(f,d,...) d
 #elif LDBL_MANT_DIG == 64 && LDBL_MAX_EXP == 16384 && LDBL_MIN_EXP == -16381
 /* This is for the Intel extended float format.  */
-# define TEST(s, fexact, fd, fn, fz, fu, dexact, dd, dn, dz, du,	\
-	      ld53exact, ld53d, ld53n, ld53z, ld53u,			\
-	      ld64iexact, ld64id, ld64in, ld64iz, ld64iu,		\
-	      ld64mexact, ld64md, ld64mn, ld64mz, ld64mu,		\
-	      ld106exact, ld106d, ld106n, ld106z, ld106u,		\
-	      ld113exact, ld113d, ld113n, ld113z, ld113u)		\
-  {									\
-    s,									\
-    { fexact, dexact, ld64iexact },					\
-    { fd, dd, ld64id },							\
-    { fn, dn, ld64in },							\
-    { fz, dz, ld64iz },							\
-    { fu, du, ld64iu }							\
-  }
+# define CHOOSE_ld(f,d,ld64i,...) ld64i
 #elif LDBL_MANT_DIG == 64 && LDBL_MAX_EXP == 16384 && LDBL_MIN_EXP == -16382
 /* This is for the Motorola extended float format.  */
-# define TEST(s, fexact, fd, fn, fz, fu, dexact, dd, dn, dz, du,	\
-	      ld53exact, ld53d, ld53n, ld53z, ld53u,			\
-	      ld64iexact, ld64id, ld64in, ld64iz, ld64iu,		\
-	      ld64mexact, ld64md, ld64mn, ld64mz, ld64mu,		\
-	      ld106exact, ld106d, ld106n, ld106z, ld106u,		\
-	      ld113exact, ld113d, ld113n, ld113z, ld113u)		\
-  {									\
-    s,									\
-    { fexact, dexact, ld64mexact },					\
-    { fd, dd, ld64md },							\
-    { fn, dn, ld64mn },							\
-    { fz, dz, ld64mz },							\
-    { fu, du, ld64mu }							\
-  }
+# define CHOOSE_ld(f,d,ld64i,ld64m,...) ld64m
 #elif LDBL_MANT_DIG == 106 && LDBL_MAX_EXP == 1024
-# define TEST(s, fexact, fd, fn, fz, fu, dexact, dd, dn, dz, du,	\
-	      ld53exact, ld53d, ld53n, ld53z, ld53u,			\
-	      ld64iexact, ld64id, ld64in, ld64iz, ld64iu,		\
-	      ld64mexact, ld64md, ld64mn, ld64mz, ld64mu,		\
-	      ld106exact, ld106d, ld106n, ld106z, ld106u,		\
-	      ld113exact, ld113d, ld113n, ld113z, ld113u)		\
-  {									\
-    s,									\
-    { fexact, dexact, ld106exact },					\
-    { fd, dd, ld106d },							\
-    { fn, dn, ld106n },							\
-    { fz, dz, ld106z },							\
-    { fu, du, ld106u }							\
-  }
+/* This is for the IBM extended double format.  */
+# define CHOOSE_ld(f,d,ld64i,ld64m,ld106,...) ld106
 #elif LDBL_MANT_DIG == 113 && LDBL_MAX_EXP == 16384
-# define TEST(s, fexact, fd, fn, fz, fu, dexact, dd, dn, dz, du,	\
-	      ld53exact, ld53d, ld53n, ld53z, ld53u,			\
-	      ld64iexact, ld64id, ld64in, ld64iz, ld64iu,		\
-	      ld64mexact, ld64md, ld64mn, ld64mz, ld64mu,		\
-	      ld106exact, ld106d, ld106n, ld106z, ld106u,		\
-	      ld113exact, ld113d, ld113n, ld113z, ld113u)		\
-  {									\
-    s,									\
-    { fexact, dexact, ld113exact },					\
-    { fd, dd, ld113d },							\
-    { fn, dn, ld113n },							\
-    { fz, dz, ld113z },							\
-    { fu, du, ld113u }							\
-  }
+/* This is for the IEEE binary128 format.  */
+# define CHOOSE_ld(f,d,ld64i,ld64m,ld106,ld113,...) ld113
 #else
 # error "unknown long double format"
 #endif
 
+/* Add type specific choosing macros below.  */
+#define CHOOSE_f(f,...) f
+#define CHOOSE_d(f,d,...) d
+/* long double is special, and handled above.  */
+
+/* Selector for expected result field of a given type.  */
+#define _ENTRY(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF, ...)  \
+  CONCAT (CHOOSE_ ## FSUF (__VA_ARGS__), LSUF),
+#define ENTRY(...) \
+  GEN_TEST_STRTOD_FOREACH (_ENTRY, __VA_ARGS__)
+
+/* Selector for boolean exact tag of expected results.  */
+#define _XNTRY(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF, ...)  \
+  CHOOSE_ ## FSUF (__VA_ARGS__),
+#define XNTRY(...) \
+  GEN_TEST_STRTOD_FOREACH (_XNTRY, __VA_ARGS__)
+
+/* This is hacky way around the seemingly unavoidable macro
+   expansion of the INFINITY or HUGE_VAL like macros in the
+   above.  It is assumed the compiler will implicitly convert
+   the infinity correctly.  */
+#define INF INFINITY + 0.0
+
+/* This macro is used in conjunction with the output from the
+   gen-tst-strtod-round utility to select the appropriately
+   rounded long double value for a given format.  */
+#define TEST(s,						\
+	     fx, fd, fn, fz, fu,			\
+	     dx, dd, dn, dz, du,			\
+	     ld64ix, ld64id, ld64in, ld64iz, ld64iu,	\
+	     ld64mx, ld64md, ld64mn, ld64mz, ld64mu,	\
+	     ld106x, ld106d, ld106n, ld106z, ld106u,	\
+	     ld113x, ld113d, ld113n, ld113z, ld113u)	\
+  {							\
+    s,							\
+    { XNTRY (fx, dx, ld64ix, ld64mx, ld106x, ld113x) },	\
+    {							\
+    { ENTRY (fn, dn, ld64in, ld64mn, ld106n, ld113n) },	\
+    { ENTRY (fd, dd, ld64id, ld64md, ld106d, ld113d) },	\
+    { ENTRY (fz, dz, ld64iz, ld64mz, ld106z, ld113z) },	\
+    { ENTRY (fu, du, ld64iu, ld64mu, ld106u, ld113u) }	\
+    }							\
+  }
+
+struct test_exactness
+  {
+  STRUCT_FOREACH_FLOAT_BOOL
+  };
+
+struct test_results
+  {
+  STRUCT_FOREACH_FLOAT_FTYPE
+  };
+
+struct test {
+  const char *s;
+  struct test_exactness exact;
+  struct test_results r[4];
+};
+
 /* Include the generated test data.  */
 #include "tst-strtod-round-data.h"
 
+#define GEN_ONE_TEST(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF)	\
+{								\
+  FTYPE f = strto ## FSUF (s, NULL);				\
+  if (f != expected->FSUF					\
+      || (copysign ## CSUF) (1.0 ## LSUF, f)			\
+	 != (copysign ## CSUF) (1.0 ## LSUF, expected->FSUF))	\
+    {								\
+      char efstr[FSTRLENMAX];					\
+      char fstr[FSTRLENMAX];					\
+      FTOSTR (efstr, FSTRLENMAX, "%" FTOSTRM "a", expected->FSUF); \
+      FTOSTR (fstr, FSTRLENMAX, "%" FTOSTRM "a", f);		\
+      printf ("strto" #FSUF " (%s) returned %s not %s"		\
+	      " (%s)\n", s, fstr, efstr, mode_name);		\
+      if (ROUNDING_TESTS (FTYPE, rnd_mode) || exact->FSUF)	\
+	result = 1;						\
+      else							\
+	printf ("ignoring this inexact result\n");		\
+    }								\
+}
+
 static int
 test_in_one_mode (const char *s, const struct test_results *expected,
-		  const struct exactness *exact, const char *mode_name,
-		  bool float_round_ok, bool double_round_ok,
-		  bool long_double_round_ok)
+		  const struct test_exactness *exact, const char *mode_name,
+		  int rnd_mode)
 {
   int result = 0;
-  float f = strtof (s, NULL);
-  double d = strtod (s, NULL);
-  long double ld = strtold (s, NULL);
-  if (f != expected->f
-      || copysignf (1.0f, f) != copysignf (1.0f, expected->f))
-    {
-      printf ("strtof (%s) returned %a not %a (%s)\n", s, f,
-	      expected->f, mode_name);
-      if (float_round_ok || exact->f)
-	result = 1;
-      else
-	printf ("ignoring this inexact result\n");
-    }
-  if (d != expected->d
-      || copysign (1.0, d) != copysign (1.0, expected->d))
-    {
-      printf ("strtod (%s) returned %a not %a (%s)\n", s, d,
-	      expected->d, mode_name);
-      if (double_round_ok || exact->d)
-	result = 1;
-      else
-	printf ("ignoring this inexact result\n");
-    }
-  if (ld != expected->ld
-      || copysignl (1.0L, ld) != copysignl (1.0L, expected->ld))
-    {
-      printf ("strtold (%s) returned %La not %La (%s)\n", s, ld,
-	      expected->ld, mode_name);
-      if ((long_double_round_ok && LDBL_MANT_DIG != 106) || exact->ld)
-	result = 1;
-      else
-	printf ("ignoring this inexact result\n");
-    }
+  GEN_TEST_STRTOD_FOREACH (GEN_ONE_TEST)
   return result;
 }
+
+static const struct fetestmodes
+  {
+  const char *mode_name;
+  int rnd_mode;
+  int rnd_i; /* Corresponding index into r array of struct test.  */
+  } modes[] = {
+    { "default rounding mode", FE_TONEAREST, 0 },
+#ifdef FE_DOWNWARD
+    { "FE_DOWNWARD", FE_DOWNWARD, 1 },
+#endif
+#ifdef FE_TOWARDZERO
+    { "FE_TOWARDZERO", FE_TOWARDZERO, 2 },
+#endif
+#ifdef FE_UPWARD
+    { "FE_UPWARD", FE_UPWARD, 3 },
+#endif
+    {}
+};
 
 static int
 do_test (void)
@@ -182,44 +195,19 @@ do_test (void)
   int result = 0;
   for (size_t i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)
     {
-      result |= test_in_one_mode (tests[i].s, &tests[i].rn, &tests[i].exact,
-				  "default rounding mode",
-				  true, true, true);
-#ifdef FE_DOWNWARD
-      if (!fesetround (FE_DOWNWARD))
+      result |= test_in_one_mode (tests[i].s, &tests[i].r[modes[0].rnd_i],
+				  &tests[i].exact, modes[0].mode_name,
+				  modes[0].rnd_mode);
+      for (const struct fetestmodes *m = &modes[1]; m->mode_name != NULL; m++)
 	{
-	  result |= test_in_one_mode (tests[i].s, &tests[i].rd,
-				      &tests[i].exact, "FE_DOWNWARD",
-				      ROUNDING_TESTS (float, FE_DOWNWARD),
-				      ROUNDING_TESTS (double, FE_DOWNWARD),
-				      ROUNDING_TESTS (long double,
-						      FE_DOWNWARD));
-	  fesetround (save_round_mode);
+	  if (!fesetround (m->rnd_mode))
+	    {
+	      result |= test_in_one_mode (tests[i].s, &tests[i].r[m->rnd_i],
+					  &tests[i].exact, m->mode_name,
+					  m->rnd_mode);
+	      fesetround (save_round_mode);
+	    }
 	}
-#endif
-#ifdef FE_TOWARDZERO
-      if (!fesetround (FE_TOWARDZERO))
-	{
-	  result |= test_in_one_mode (tests[i].s, &tests[i].rz,
-				      &tests[i].exact, "FE_TOWARDZERO",
-				      ROUNDING_TESTS (float, FE_TOWARDZERO),
-				      ROUNDING_TESTS (double, FE_TOWARDZERO),
-				      ROUNDING_TESTS (long double,
-						      FE_TOWARDZERO));
-	  fesetround (save_round_mode);
-	}
-#endif
-#ifdef FE_UPWARD
-      if (!fesetround (FE_UPWARD))
-	{
-	  result |= test_in_one_mode (tests[i].s, &tests[i].ru,
-				      &tests[i].exact, "FE_UPWARD",
-				      ROUNDING_TESTS (float, FE_UPWARD),
-				      ROUNDING_TESTS (double, FE_UPWARD),
-				      ROUNDING_TESTS (long double, FE_UPWARD));
-	  fesetround (save_round_mode);
-	}
-#endif
     }
   return result;
 }

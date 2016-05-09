@@ -1,3 +1,45 @@
+2016-05-25  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* stdlib/gen-tst-strtod-round.c: Add backslash to
+	compile command in comment.
+	(printfp): Remove the literal suffix, and define an infinite
+	value as INF to avoid expansion clash with INFINITY.
+	(round_str): Remove the literal suffix.
+	(round_for_all): Likewise, remove the now duplicate ldbl-64
+	entry, and remove some magic constants.
+
+	* stdlib/tst-strtod-round.c: (TEST): Redefine to reduce
+	duplication.  Remove duplicate dbl-64 and ldbl-64 entries.
+	(ROUNDING_TESTS_long_double): Define as 0 for ibm128.
+	(_CONCAT): New macro.
+	(CONCAT): Likewise.
+	(CHOOSE_ld): Likewise.
+	(CHOOSE_f): Likewise.
+	(CHOOSE_d): Likewise.
+	(FTYPE_MEMBER): Likewise.
+	(BOOL_MEMBER): Likewise.
+	(STRUCT_FOREACH_FLOAT_FTYPE): Likewise.
+	(STRUCT_FOREACH_FLOAT_BOOL): Likewise.
+	(_XNTRY): Likewise.
+	(XNTRY): Likewise.
+	(_ENTRY): Likewise.
+	(ENTRY): Likewise.
+	(test_exactness): Generate members via macro.
+	(test_results): Likewise.
+	(test): Update members.
+	(TEST): Redefine using new macros.
+	(INF): New macro.
+	(fetestmodes): New structure.
+	(do_test): Refactor to be type generic.
+	(test_in_one_mode): Refactor duplicate code into
+	(GEN_ONE_TEST): New macro.
+
+	* stdlib/tst-strtod-round-data.h: Regenerate.
+
+	* stdlib/tst-strtod.h (GEN_TEST_STRTOD_FOREACH):
+	Extend to pass additional arbitrary parameters to
+	generators.
+
 2016-05-25  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15479]

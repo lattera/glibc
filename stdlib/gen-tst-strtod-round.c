@@ -19,7 +19,7 @@
 
 /* Compile this program as:
 
-   gcc -std=gnu11 -O2 -Wall -Wextra gen-tst-strtod-round.c -lmpfr
+   gcc -std=gnu11 -O2 -Wall -Wextra gen-tst-strtod-round.c -lmpfr \
      -o gen-tst-strtod-round
 
    (use of current MPFR version recommended) and run it as:
@@ -60,19 +60,18 @@ string_to_fp (mpfr_t f, const char *s, mpfr_rnd_t rnd)
 #endif
 }
 
-static void
-print_fp (FILE *fout, mpfr_t f, const char *suffix, const char *suffix2)
+void
+print_fp (FILE *fout, mpfr_t f, const char *suffix)
 {
   if (mpfr_inf_p (f))
-    mpfr_fprintf (fout, "\t%sINFINITY%s", mpfr_signbit (f) ? "-" : "",
-		  suffix2);
+    mpfr_fprintf (fout, "\t%sINF%s", mpfr_signbit (f) ? "-" : "", suffix);
   else
-    mpfr_fprintf (fout, "\t%Ra%s%s", f, suffix, suffix2);
+    mpfr_fprintf (fout, "\t%Ra%s", f, suffix);
 }
 
 static void
-round_str (FILE *fout, const char *s, const char *suffix,
-	   int prec, int emin, int emax, bool ibm_ld)
+round_str (FILE *fout, const char *s, int prec, int emin, int emax,
+	   bool ibm_ld)
 {
   mpfr_t f;
   mpfr_set_default_prec (prec);
@@ -94,13 +93,13 @@ round_str (FILE *fout, const char *s, const char *suffix,
       mpfr_clear (max_value);
     }
   mpfr_fprintf (fout, "\t%s,\n", r ? "false" : "true");
-  print_fp (fout, f, suffix, ",\n");
+  print_fp (fout, f, ",\n");
   string_to_fp (f, s, MPFR_RNDN);
-  print_fp (fout, f, suffix, ",\n");
+  print_fp (fout, f, ",\n");
   string_to_fp (f, s, MPFR_RNDZ);
-  print_fp (fout, f, suffix, ",\n");
+  print_fp (fout, f, ",\n");
   string_to_fp (f, s, MPFR_RNDU);
-  print_fp (fout, f, suffix, "");
+  print_fp (fout, f, "");
   mpfr_clear (f);
 }
 
@@ -108,21 +107,19 @@ static void
 round_for_all (FILE *fout, const char *s)
 {
   static const struct fmt {
-    const char *suffix;
     int prec;
     int emin;
     int emax;
     bool ibm_ld;
-  } formats[7] = {
-    { "f", 24, -148, 128, false },
-    { "", 53, -1073, 1024, false },
-    { "L", 53, -1073, 1024, false },
+  } formats[] = {
+    { 24, -148, 128, false },
+    { 53, -1073, 1024, false },
     /* This is the Intel extended float format.  */
-    { "L", 64, -16444, 16384, false },
+    { 64, -16444, 16384, false },
     /* This is the Motorola extended float format.  */
-    { "L", 64, -16445, 16384, false },
-    { "L", 106, -1073, 1024, true },
-    { "L", 113, -16493, 16384, false },
+    { 64, -16445, 16384, false },
+    { 106, -1073, 1024, true },
+    { 113, -16493, 16384, false },
   };
   mpfr_fprintf (fout, "  TEST (\"");
   const char *p;
@@ -134,11 +131,12 @@ round_for_all (FILE *fout, const char *s)
     }
   mpfr_fprintf (fout, "\",\n");
   int i;
-  for (i = 0; i < 7; i++)
+  int n_formats = sizeof (formats) / sizeof (formats[0]);
+  for (i = 0; i < n_formats; i++)
     {
-      round_str (fout, s, formats[i].suffix, formats[i].prec,
-		 formats[i].emin, formats[i].emax, formats[i].ibm_ld);
-      if (i < 6)
+      round_str (fout, s, formats[i].prec, formats[i].emin,
+		 formats[i].emax, formats[i].ibm_ld);
+      if (i < n_formats - 1)
 	mpfr_fprintf (fout, ",\n");
     }
   mpfr_fprintf (fout, "),\n");
