@@ -1,3 +1,16 @@
+2016-05-24  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* stdlib/gen-tst-strtod-round.c (main):
+	  Change usage to more closely match the generated
+	  output.  Add usage and compilation instructions.
+	  (string_to_fp): Add and use FILE* parameter as
+	  output target.
+	  (print_fp): Likewise.
+	  (round_str): Likewise.
+	  (round_for_all): Likewise.
+	* stdlib/tst-strtod-round.c (tests): Move into
+	* stdlib/tst-strtod-round-data.h: New file.
+
 2016-05-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15479]
