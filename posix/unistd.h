@@ -1138,11 +1138,15 @@ extern void swab (const void *__restrict __from, void *__restrict __to,
 #endif
 
 
-/* The Single Unix specification demands this prototype to be here.
-   It is also found in <stdio.h>.  */
+/* Prior to Issue 6, the Single Unix Specification required these
+   prototypes to appear in this header.  They are also found in
+   <stdio.h>.  */
 #if defined __USE_XOPEN && !defined __USE_XOPEN2K
 /* Return the name of the controlling terminal.  */
 extern char *ctermid (char *__s) __THROW;
+
+/* Return the name of the current user.  */
+extern char *cuserid (char *__s);
 #endif
 
 

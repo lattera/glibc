@@ -1,3 +1,9 @@
+2016-05-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20043]
+	* posix/unistd.h [__USE_XOPEN && !__USE_XOPEN2K] (cuserid): New
+	prototype.
+
 2016-05-10  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20017]
