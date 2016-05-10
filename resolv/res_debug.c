@@ -1035,13 +1035,8 @@ p_secstodate (u_long secs) {
 	time_t clock = secs;
 	struct tm *time;
 
-#ifdef HAVE_TIME_R
 	struct tm timebuf;
-
-	time = gmtime_r(&clock, &timebuf);
-#else
-	time = gmtime(&clock);
-#endif
+	time = __gmtime_r(&clock, &timebuf);
 	time->tm_year += 1900;
 	time->tm_mon += 1;
 	sprintf(output, "%04d%02d%02d%02d%02d%02d",

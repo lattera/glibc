@@ -1,5 +1,11 @@
 2016-05-10  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20017]
+	* resolv/res_debug.c (p_secstodate): Call __gmtime_r instead of
+	gmtime.
+
+2016-05-10  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19994]
 	* sysdeps/posix/getaddrinfo.c (gethosts): Restore RES_USE_INET6
 	flag in _res.options.
