@@ -240,6 +240,7 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 			      2 * tmpbuflen);				      \
 	if (newp == NULL)						      \
 	  {								      \
+	    _res.options |= old_res_options & RES_USE_INET6;		      \
 	    result = -EAI_MEMORY;					      \
 	    goto free_and_return;					      \
 	  }								      \

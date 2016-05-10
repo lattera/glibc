@@ -1,3 +1,9 @@
+2016-05-10  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19994]
+	* sysdeps/posix/getaddrinfo.c (gethosts): Restore RES_USE_INET6
+	flag in _res.options.
+
 2016-05-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/sys/types.h-data (blkcnt_t): Do not expect for
