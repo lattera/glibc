@@ -1,5 +1,11 @@
 2016-05-10  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20073]
+	* io/sys/stat.h (fchmod): Declare for
+	[__USE_POSIX199309 || __USE_XOPEN_EXTENDED], not [__USE_POSIX].
+	* conform/Makefile (test-xfail-XPG3/sys/stat.h/conform): Remove
+	variable.
+
 	* conform/data/sys/stat.h-data [XPG3] (S_IFLNK): Do not expect.
 	[XPG3] (S_IFSOCK): Likewise.
 	[XPG3] (S_ISVTX): Likewise.

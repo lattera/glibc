@@ -171,7 +171,6 @@ test-xfail-XPG3/search.h/conform = yes
 test-xfail-XPG3/signal.h/conform = yes
 test-xfail-XPG3/stdlib.h/conform = yes
 test-xfail-XPG3/string.h/conform = yes
-test-xfail-XPG3/sys/stat.h/conform = yes
 test-xfail-XPG3/sys/wait.h/conform = yes
 test-xfail-XPG3/termios.h/conform = yes
 test-xfail-XPG3/time.h/conform = yes
