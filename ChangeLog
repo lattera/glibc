@@ -1,5 +1,14 @@
 2016-05-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/sys/stat.h-data [XPG3] (S_IFLNK): Do not expect.
+	[XPG3] (S_IFSOCK): Likewise.
+	[XPG3] (S_ISVTX): Likewise.
+	[XPG3] (S_ISLNK): Likewise.
+	[XPG3] (S_ISSOCK): Likewise.
+	[XPG3] (fchmod): Likewise.
+	[XPG3] (lstat): Likewise.
+	[XPG3] (mknod): Likewise.
+
 	* conform/data/sys/stat.h-data (st_blksize): Do not expect for
 	[XPG3].  Expect type long and XFAIL for [XPG4].
 	(st_blocks): Likewise.

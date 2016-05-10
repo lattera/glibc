@@ -70,8 +70,10 @@ constant S_IFCHR
 constant S_IFIFO
 constant S_IFREG
 constant S_IFDIR
+# ifndef XPG3
 constant S_IFLNK
 constant S_IFSOCK
+# endif
 #endif
 
 constant S_IRWXU
@@ -88,7 +90,7 @@ constant S_IWOTH
 constant S_IXOTH
 constant S_ISUID
 constant S_ISGID
-#if !defined POSIX && !defined POSIX2008
+#if !defined XPG3 && !defined POSIX && !defined POSIX2008
 constant S_ISVTX
 #endif
 
@@ -97,7 +99,7 @@ macro S_ISCHR
 macro S_ISDIR
 macro S_ISFIFO
 macro S_ISREG
-#if !defined POSIX
+#if !defined XPG3 && !defined POSIX
 macro S_ISLNK
 macro S_ISSOCK
 #endif
@@ -116,7 +118,9 @@ constant UTIME_OMIT
 # endif
 
 function int chmod (const char*, mode_t)
+# ifndef XPG3
 function int fchmod (int, mode_t)
+# endif
 # if defined XOPEN2K8 || defined POSIX2008
 function int fchmodat (int, const char*, mode_t, int)
 # endif
@@ -125,7 +129,7 @@ function int fstat (int, struct stat*)
 function int fstatat (int, const char*, struct stat*, int)
 function int futimens (int, const struct timespec[2])
 # endif
-#if !defined POSIX
+#if !defined XPG3 && !defined POSIX
 function int lstat (const char*, struct stat*)
 #endif
 function int mkdir (const char*, mode_t)
@@ -136,7 +140,7 @@ function int mkfifo (const char*, mode_t)
 # if defined XOPEN2K8 || defined POSIX2008
 function int mkfifoat (int, const char*, mode_t)
 # endif
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG3 && !defined POSIX && !defined POSIX2008
 function int mknod (const char*, mode_t, dev_t)
 # endif
 # ifdef XOPEN2K8
