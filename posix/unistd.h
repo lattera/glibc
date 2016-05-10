@@ -1150,6 +1150,15 @@ extern char *cuserid (char *__s);
 #endif
 
 
+/* Unix98 requires this function to be declared here.  In other
+   standards it is in <pthread.h>.  */
+#if defined __USE_UNIX98 && !defined __USE_XOPEN2K
+extern int pthread_atfork (void (*__prepare) (void),
+			   void (*__parent) (void),
+			   void (*__child) (void)) __THROW;
+#endif
+
+
 /* Define some macros helping to catch buffer overflows.  */
 #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
 # include <bits/unistd.h>

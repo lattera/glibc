@@ -1,5 +1,11 @@
 2016-05-10  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20044]
+	* posix/unistd.h [__USE_UNIX98 && !__USE_XOPEN2K]
+	(pthread_atfork): New prototype.
+	* conform/Makefile (test-xfail-UNIX98/unistd.h/conform): Remove
+	variable.
+
 	[BZ #20043]
 	* posix/unistd.h [__USE_XOPEN && !__USE_XOPEN2K] (cuserid): New
 	prototype.

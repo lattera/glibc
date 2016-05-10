@@ -195,7 +195,6 @@ test-xfail-UNIX98/signal.h/conform = yes
 test-xfail-UNIX98/stdlib.h/conform = yes
 test-xfail-UNIX98/sys/wait.h/conform = yes
 test-xfail-UNIX98/ucontext.h/conform = yes
-test-xfail-UNIX98/unistd.h/conform = yes
 test-xfail-XOPEN2K/semaphore.h/conform = yes
 test-xfail-XOPEN2K/signal.h/conform = yes
 test-xfail-XOPEN2K/sys/wait.h/conform = yes
