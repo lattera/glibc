@@ -218,8 +218,14 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 /* It also defines `fd_set' and the FD_* macros for `select'.  */
 # include <sys/select.h>
 
-/* BSD defines these symbols, so we follow.  */
+/* BSD defines `major', `minor', and `makedev' in this header.
+   However, these symbols are likely to collide with user code, so we are
+   going to stop defining them here in an upcoming release.  Code that needs
+   these macros should include <sys/sysmacros.h> directly.  Code that does
+   not need these macros should #undef them after including this header.  */
+# define __SYSMACROS_DEPRECATED_INCLUSION
 # include <sys/sysmacros.h>
+# undef __SYSMACROS_DEPRECATED_INCLUSION
 #endif /* Use misc.  */
 
 

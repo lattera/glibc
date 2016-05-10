@@ -1,5 +1,17 @@
 2016-08-03  Zack Weinberg  <zackw@panix.com>
 
+	[BZ #19239]
+	* NEWS: Inclusion of <sys/sysmacros.h> by <sys/types.h> is deprecated.
+	* misc/sys/sysmacros.h: If __SYSMACROS_DEPRECATED_INCLUSION is defined,
+	define major, minor, and makedev to issue deprecation warnings on use.
+	If __SYSMACROS_DEPRECATED_INCLUSION is *not* defined, suppress
+	previously-activated deprecation warnings for these macros and prevent
+	subsequent inclusions of this header from having any effect.
+	* posix/sys/types.h: Define __SYSMACROS_DEPRECATED_INCLUSION before
+	including <sys/sysmacros.h>, and undefine it again afterward.
+
+2016-08-03  Zack Weinberg  <zackw@panix.com>
+
 	* sysdeps/generic/sys/sysmacros.h: Delete file.
 	* sysdeps/unix/sysv/linux/makedev.c: Delete file.
 	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Move file ...

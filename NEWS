@@ -17,6 +17,16 @@ Version 2.25
   from that TS.  Note that most features from that TS are not supported by
   the GNU C Library.
 
+* The inclusion of <sys/sysmacros.h> by <sys/types.h> is deprecated.  This
+  means that in a future release, the macros “major”, “minor”, and “makedev”
+  will only be available from <sys/sysmacros.h>.
+
+  These macros are not part of POSIX nor XSI, and their names frequently
+  collide with user code; see for instance glibc bug 19239 and Red Hat bug
+  130601.  <stdlib.h> includes <sys/types.h> under _GNU_SOURCE, and C++ code
+  presently cannot avoid being compiled under _GNU_SOURCE, exacerbating the
+  problem.
+
 Security related changes:
 
   [Add security related changes here]
