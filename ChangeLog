@@ -1,5 +1,9 @@
 2016-05-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/sys/stat.h-data (st_blksize): Do not expect for
+	[XPG3].  Expect type long and XFAIL for [XPG4].
+	(st_blocks): Likewise.
+
 	[BZ #20044]
 	* posix/unistd.h [__USE_UNIX98 && !__USE_XOPEN2K]
 	(pthread_atfork): New prototype.
