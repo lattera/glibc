@@ -23,7 +23,7 @@
 #define	_TERMIOS_H	1
 
 #include <features.h>
-#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 /* We need `pid_t'.  */
 # include <bits/types.h>
 # ifndef __pid_t_defined
@@ -94,7 +94,7 @@ extern int tcflush (int __fd, int __queue_selector) __THROW;
 extern int tcflow (int __fd, int __action) __THROW;
 
 
-#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 /* Get process group ID for session leader for controlling terminal FD.  */
 extern __pid_t tcgetsid (int __fd) __THROW;
 #endif

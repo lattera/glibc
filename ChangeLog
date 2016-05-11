@@ -1,3 +1,16 @@
+2016-05-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20055]
+	* termios/termios.h (pid_t): Define for [__USE_XOPEN_EXTENDED]
+	instead of [__USE_UNIX98].
+	(tcgetsid): Declare for [__USE_XOPEN_EXTENDED] instead of
+	[__USE_UNIX98].
+	* conform/data/termios.h-data (tcgetsid): Do not expect for
+	[XPG3].
+	* conform/Makefile (test-xfail-XPG3/termios.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/termios.h/conform): Likewise.
+
 2016-05-11  Florian Weimer  <fweimer@redhat.com>
 
 	Do not use mcheck in localedef.

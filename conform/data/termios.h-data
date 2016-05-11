@@ -144,7 +144,7 @@ function int tcdrain (int)
 function int tcflow (int, int)
 function int tcflush (int, int)
 function int tcgetattr (int, struct termios*)
-#ifndef POSIX
+#if !defined POSIX && !defined XPG3
 function pid_t tcgetsid (int)
 #endif
 function int tcsendbreak (int, int)
