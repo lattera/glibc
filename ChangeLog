@@ -1,3 +1,8 @@
+2016-05-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/s390-32/Makefile (pic-ccflag): Remove.
+	* sysdeps/s390/s390-64/Makefile: Likewise.
+
 2016-05-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/Makefile (gen-as-const-headers):
