@@ -24,7 +24,6 @@
 #include <fcntl.h>
 #include <libintl.h>
 #include <locale.h>
-#include <mcheck.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -634,14 +633,3 @@ cannot open locale definition file `%s'"), result->name));
 
   return result;
 }
-
-static void
-turn_on_mcheck (void)
-{
-  /* Enable `malloc' debugging.  */
-  mcheck (NULL);
-  /* Use the following line for a more thorough but much slower testing.  */
-  /* mcheck_pedantic (NULL); */
-}
-
-void (*__malloc_initialize_hook) (void) = turn_on_mcheck;

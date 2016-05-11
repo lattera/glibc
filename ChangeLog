@@ -1,3 +1,9 @@
+2016-05-11  Florian Weimer  <fweimer@redhat.com>
+
+	Do not use mcheck in localedef.
+	* locale/programs/localedef.c (turn_on_mcheck)
+	(__malloc_initialize_hook): Remove.
+
 2016-05-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/s390-32/Makefile (pic-ccflag): Remove.
