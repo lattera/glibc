@@ -74,8 +74,7 @@
 
 #ifdef	__ASSEMBLER__
 
-# include <ifunc-defines.h>
-# include <rtld-global-offsets.h>
+# include <cpu-features-offsets.h>
 
 # define index_cpu_CX8	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
 # define index_cpu_CMOV	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET

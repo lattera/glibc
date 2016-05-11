@@ -1,3 +1,19 @@
+2016-05-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (gen-as-const-headers):
+	Remove ifunc-defines.sym.
+	* sysdeps/x86_64/multiarch/Makefile (gen-as-const-headers):
+	Likewise.
+	* sysdeps/i386/i686/multiarch/ifunc-defines.sym: Removed.
+	* sysdeps/x86/rtld-global-offsets.sym: Likewise.
+	* sysdeps/x86_64/multiarch/ifunc-defines.sym: Likewise.
+	* sysdeps/x86/Makefile (gen-as-const-headers): Remove
+	rtld-global-offsets.sym.
+	* sysdeps/x86_64/multiarch/ifunc-defines.sym: Merged with ...
+	* sysdeps/x86/cpu-features-offsets.sym: This.
+	* sysdeps/x86/cpu-features.h: Include <cpu-features-offsets.h>
+	instead of <ifunc-defines.h> and <rtld-global-offsets.h>.
+
 2016-05-10  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20073]

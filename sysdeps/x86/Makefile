@@ -1,5 +1,5 @@
 ifeq ($(subdir),csu)
-gen-as-const-headers += cpu-features-offsets.sym rtld-global-offsets.sym
+gen-as-const-headers += cpu-features-offsets.sym
 endif
 
 ifeq ($(subdir),elf)
