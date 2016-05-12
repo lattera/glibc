@@ -1,5 +1,37 @@
 2016-05-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/unistd.h-data (F_LOCK): Do not expect for [XPG3].
+	(F_ULOCK): Likewise.
+	(F_TEST): Likewise.
+	(F_TLOCK): Likewise.
+	(useconds_t): Likewise.
+	(intptr_t): Do not expect for [XPG3] or [XPG4].
+	(brk): Do not expect for [XPG3]
+	(fchown): Likewise.
+	(fchdir): Likewise.
+	(ftruncate): Likewise.
+	(getdtablesize): Likewise.
+	(gethostid): Likewise.
+	(getpagesize): Likewise.
+	(getpgid): Likewise.
+	(getsid): Likewise.
+	(getwd): Likewise.
+	(lchown): Likewise.
+	(lockf): Likewise.
+	(readlink): Likewise.
+	(sbrk): Likewise.
+	(setpgrp): Likewise.
+	(setregid): Likewise.
+	(setreuid): Likewise.
+	(symlink): Likewise.
+	(sync): Likewise.
+	(truncate): Likewise.
+	(ualarm): Likewise.
+	(usleep): Likewise.
+	(vfork): Likewise.
+	* conform/Makefile (test-xfail-XPG3/unistd.h/conform): Remove
+	variable.
+
 	[BZ #20054]
 	* posix/unistd.h (gethostname): Declare if [__USE_XOPEN_EXTENDED],
 	not [__USE_UNIX98].

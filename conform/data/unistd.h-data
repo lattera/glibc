@@ -375,7 +375,7 @@ constant _SC_THREAD_ROBUST_PRIO_INHERIT
 constant _SC_THREAD_ROBUST_PRIO_PROTECT
 #endif
 
-#if !defined POSIX && !defined POSIX2008
+#if !defined XPG3 && !defined POSIX && !defined POSIX2008
 constant F_LOCK
 constant F_ULOCK
 constant F_TEST
@@ -417,15 +417,17 @@ type off_t
 type pid_t
 #endif
 
-#if !defined POSIX
+#if !defined POSIX && !defined XPG3
 type useconds_t
 
+# ifndef XPG4
 type intptr_t
+# endif
 #endif
 
 function int access (const char*, int)
 function {unsigned int} alarm (unsigned int)
-#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined XPG3 && !defined POSIX && !defined POSIX2008
 function int brk (void*)
 #endif
 function int chdir (const char*)
@@ -460,13 +462,13 @@ function void _exit (int)
 # if defined XOPEN2K8 || defined POSIX2008
 function int faccessat (int, const char*, int, int)
 # endif
-#if !defined POSIX
+#if !defined XPG3 && !defined POSIX
 function int fchown (int, uid_t, gid_t)
 #endif
 # if defined XOPEN2K8 || defined POSIX2008
 function int fchownat (int, const char*, uid_t, gid_t, int)
 # endif
-#ifndef POSIX
+#if !defined XPG3 && !defined POSIX
 function int fchdir (int)
 #endif
 #if !defined XPG3 && !defined XPG4
@@ -478,16 +480,18 @@ function int fexecve (int, char *const[], char *const[])
 function pid_t fork (void)
 function {long int} fpathconf (int, int)
 function int fsync (int)
+#ifndef XPG3
 function int ftruncate (int, off_t)
+#endif
 function {char*} getcwd (char*, size_t)
-#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined XPG3 && !defined POSIX && !defined POSIX2008
 function int getdtablesize (void)
 #endif
 function gid_t getegid (void)
 function uid_t geteuid (void)
 function gid_t getgid (void)
 function int getgroups (int, gid_t[])
-#if !defined POSIX && !defined POSIX2008
+#if !defined XPG3 && !defined POSIX && !defined POSIX2008
 function long gethostid (void)
 #endif
 #if !defined POSIX && !defined XPG3
@@ -498,32 +502,34 @@ function {char*} getlogin (void)
 function int getlogin_r (char*, size_t)
 #endif
 function int getopt (int, char*const[], const char*)
-#if defined XPG3 || defined XPG4 || defined UNIX98
+#if defined XPG4 || defined UNIX98
 function int getpagesize (void)
+#endif
+#if defined XPG3 || defined XPG4 || defined UNIX98
 function {char*} getpass (const char*)
 #endif
-#ifndef POSIX
+#if !defined XPG3 && !defined POSIX
 function pid_t getpgid (pid_t)
 #endif
 function pid_t getpgrp (void)
 function pid_t getpid (void)
 function pid_t getppid (void)
-#ifndef POSIX
+#if !defined XPG3 && !defined POSIX
 function pid_t getsid (pid_t)
 #endif
 function uid_t getuid (void)
-#if defined XPG3 || defined XPG4 || defined UNIX98 || defined XOPEN2K
+#if defined XPG4 || defined UNIX98 || defined XOPEN2K
 function {char*} getwd (char*)
 #endif
 function int isatty (int)
-#ifndef POSIX
+#if !defined XPG3 && !defined POSIX
 function int lchown (const char*, uid_t, gid_t)
 #endif
 function int link (const char*, const char*)
 # if defined XOPEN2K8 || defined POSIX2008
 function int linkat (int, const char*, int, const char*, int)
 # endif
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG3 && !defined POSIX && !defined POSIX2008
 function int lockf (int, int, off_t)
 # endif
 function off_t lseek (int, off_t, int)
@@ -543,14 +549,14 @@ function int pthread_atfork (void(*)(void), void(*)(void), void(*)(void))
 function ssize_t pwrite (int, const void*, size_t, off_t)
 #endif
 function ssize_t read (int, void*, size_t)
-#ifndef POSIX
+#if !defined XPG3 && !defined POSIX
 function ssize_t readlink (const char*, char*, size_t)
 #endif
 # if defined XOPEN2K8 || defined POSIX2008
 function ssize_t readlinkat (int, const char*, char*, size_t)
 # endif
 function int rmdir (const char*)
-#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined XPG3 && !defined POSIX && !defined POSIX2008
 function {void*} sbrk (intptr_t)
 #endif
 #if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
@@ -559,7 +565,7 @@ function int seteuid (uid_t)
 #endif
 function int setgid (gid_t)
 function int setpgid (pid_t, pid_t)
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG3 && !defined POSIX && !defined POSIX2008
 function pid_t setpgrp (void)
 function int setregid (gid_t, gid_t)
 function int setreuid (uid_t, uid_t)
@@ -570,31 +576,31 @@ function {unsigned int} sleep (unsigned int)
 # if !defined POSIX && !defined POSIX2008
 function void swab (const void*, void*, ssize_t)
 # endif
-#ifndef POSIX
+#if !defined XPG3 && !defined POSIX
 function int symlink (const char*, const char*)
 # endif
 # if defined XOPEN2K8 || defined POSIX2008
 function int symlinkat (const char*, int, const char*)
 # endif
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG3 && !defined POSIX && !defined POSIX2008
 function void sync (void)
 # endif
 function {long int} sysconf (int)
 function pid_t tcgetpgrp (int)
 function int tcsetpgrp (int, pid_t)
-#ifndef POSIX
+#if !defined XPG3 && !defined POSIX
 function int truncate (const char*, off_t)
 #endif
 function {char*} ttyname (int)
 function int ttyname_r (int, char*, size_t)
-#if defined XPG3 || defined XPG4 || defined UNIX98 || defined XOPEN2K
+#if defined XPG4 || defined UNIX98 || defined XOPEN2K
 function useconds_t ualarm (useconds_t, useconds_t)
 #endif
 function int unlink (const char*)
 # if defined XOPEN2K8 || defined POSIX2008
 function int unlinkat (int, const char*, int)
 # endif
-#if defined XPG3 || defined XPG4 || defined UNIX98 || defined XOPEN2K
+#if defined XPG4 || defined UNIX98 || defined XOPEN2K
 function int usleep (useconds_t)
 function pid_t vfork (void)
 #endif
