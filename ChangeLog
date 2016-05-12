@@ -1,3 +1,17 @@
+2016-05-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/fcntl.h-data [!POSIX] (S_IFMT): Do not expect.
+	[!POSIX] (S_IFBLK): Likewise.
+	[!POSIX] (S_IFCHR): Likewise.
+	[!POSIX] (S_IFIFO): Likewise.
+	[!POSIX] (S_IFREG): Likewise.
+	[!POSIX] (S_IFDIR): Likewise.
+	[!POSIX] (S_IFLNK): Likewise.
+	[!POSIX] (S_IFSOCK): Likewise.
+	* conform/Makefile (test-xfail-XPG3/fcntl.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/fcntl.h/conform): Likewise.
+
 2016-05-12  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/memset.S (__memset):

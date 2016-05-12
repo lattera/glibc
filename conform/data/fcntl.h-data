@@ -48,15 +48,6 @@ constant O_RDWR
 constant O_WRONLY
 
 #if !defined POSIX
-constant S_IFMT
-constant S_IFBLK
-constant S_IFCHR
-constant S_IFIFO
-constant S_IFREG
-constant S_IFDIR
-constant S_IFLNK
-constant S_IFSOCK
-
 constant S_IRWXU
 constant S_IRUSR
 constant S_IWUSR
