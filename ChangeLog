@@ -1,6 +1,18 @@
 2016-05-27  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* math/libm-test.inc:
+	(TEST_FLOAT): Change usage to TEST_COND_binary32.
+	(TEST_DOUBLE): Change usage to TEST_COND_binary64.
+	(TEST_LDOUBLE): Update usage to evaluate as true if
+	the guarded tests match the property being tested.
+	(LDBL_MAX_EXP): Change to MAX_EXP.
+	(LDBL_MIN_EXP): Change to MIN_EXP.
+	(LDBL_MANT_DIG): Change to MANT_DIG, except for
+	nexttoward tests.
+
+2016-05-27  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/libm-test.inc:
 	(TYPE_DECIMAL_DIG): Redefine using type supplied PREFIX macro.
 	(TYPE_MIN): Likewise.
 	(TYPE_TRUE_MIN): Likewise.
