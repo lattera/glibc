@@ -72,7 +72,7 @@ type locale_t
 tag {struct sigevent}
 # endif
 
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG3 && !defined POSIX && !defined POSIX2008
 variable int getdate_err
 # endif
 
@@ -91,7 +91,7 @@ function int clock_nanosleep (clockid_t, int, const struct timespec*, struct tim
 function int clock_settime (clockid_t, const struct timespec*)
 #endif
 function {char*} ctime_r (const time_t*, char*)
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG3 && !defined POSIX && !defined POSIX2008
 function {struct tm*} getdate (const char*)
 # endif
 function {struct tm*} gmtime_r (const time_t*, struct tm*)

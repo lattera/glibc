@@ -171,7 +171,6 @@ test-xfail-XPG3/signal.h/conform = yes
 test-xfail-XPG3/stdlib.h/conform = yes
 test-xfail-XPG3/string.h/conform = yes
 test-xfail-XPG3/sys/wait.h/conform = yes
-test-xfail-XPG3/time.h/conform = yes
 test-xfail-XPG4/arpa/inet.h/conform = yes
 test-xfail-XPG4/netdb.h/conform = yes
 test-xfail-XPG4/netinet/in.h/conform = yes

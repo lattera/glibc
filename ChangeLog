@@ -1,5 +1,11 @@
 2016-05-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/time.h-data (getdate_err): Do not expect for
+	[XPG3].
+	(getdate): Likewise.
+	* conform/Makefile (test-xfail-XPG3/time.h/conform): Remove
+	variable.
+
 	* conform/data/unistd.h-data (F_LOCK): Do not expect for [XPG3].
 	(F_ULOCK): Likewise.
 	(F_TEST): Likewise.
