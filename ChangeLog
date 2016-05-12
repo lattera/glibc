@@ -1,5 +1,11 @@
 2016-05-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20054]
+	* posix/unistd.h (gethostname): Declare if [__USE_XOPEN_EXTENDED],
+	not [__USE_UNIX98].
+	* conform/data/unistd.h-data (gethostname): Do not expect for
+	[XPG3].
+
 	* conform/data/fcntl.h-data [!POSIX] (S_IFMT): Do not expect.
 	[!POSIX] (S_IFBLK): Likewise.
 	[!POSIX] (S_IFCHR): Likewise.

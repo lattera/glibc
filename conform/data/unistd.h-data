@@ -490,7 +490,7 @@ function int getgroups (int, gid_t[])
 #if !defined POSIX && !defined POSIX2008
 function long gethostid (void)
 #endif
-#if !defined POSIX
+#if !defined POSIX && !defined XPG3
 function int gethostname (char*, size_t)
 #endif
 function {char*} getlogin (void)
