@@ -29,7 +29,8 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-malloc-usable tst-realloc tst-posix_memalign \
 	 tst-pvalloc tst-memalign tst-mallopt tst-scratch_buffer \
 	 tst-malloc-backtrace tst-malloc-thread-exit \
-	 tst-malloc-thread-fail tst-malloc-fork-deadlock
+	 tst-malloc-thread-fail tst-malloc-fork-deadlock \
+	 tst-mallocfork2
 test-srcs = tst-mtrace
 
 routines = malloc morecore mcheck mtrace obstack \
