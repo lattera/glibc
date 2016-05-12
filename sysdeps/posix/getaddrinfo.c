@@ -1,3 +1,21 @@
+/* Host and service name lookups using Name Service Switch modules.
+   Copyright (C) 1996-2016 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 /* The Inner Net License, Version 2.00
 
   The author(s) grant permission for redistribution and use in source and
@@ -63,6 +81,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nscd/nscd-client.h>
 #include <nscd/nscd_proto.h>
 #include <resolv/res_hconf.h>
+#include <scratch_buffer.h>
 
 #ifdef HAVE_LIBIDN
 extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
@@ -135,24 +154,24 @@ static const struct addrinfo default_hints =
 
 static int
 gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
-		const struct addrinfo *req, struct gaih_servtuple *st)
+		const struct addrinfo *req, struct gaih_servtuple *st,
+		struct scratch_buffer *tmpbuf)
 {
   struct servent *s;
-  size_t tmpbuflen = 1024;
   struct servent ts;
-  char *tmpbuf;
   int r;
 
   do
     {
-      tmpbuf = __alloca (tmpbuflen);
-
-      r = __getservbyname_r (servicename, tp->name, &ts, tmpbuf, tmpbuflen,
-			     &s);
+      r = __getservbyname_r (servicename, tp->name, &ts,
+			     tmpbuf->data, tmpbuf->length, &s);
       if (r != 0 || s == NULL)
 	{
 	  if (r == ERANGE)
-	    tmpbuflen *= 2;
+	    {
+	      if (!scratch_buffer_grow (tmpbuf))
+		return -EAI_MEMORY;
+	    }
 	  else
 	    return -EAI_SERVICE;
 	}
@@ -227,26 +246,15 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
   no_data = 0;								      \
   while (1) {								      \
     rc = 0;								      \
-    status = DL_CALL_FCT (fct, (name, _family, &th, tmpbuf, tmpbuflen,	      \
+    status = DL_CALL_FCT (fct, (name, _family, &th,			      \
+				tmpbuf->data, tmpbuf->length,		      \
 				&rc, &herrno, NULL, &localcanon));	      \
     if (rc != ERANGE || herrno != NETDB_INTERNAL)			      \
       break;								      \
-    if (!malloc_tmpbuf && __libc_use_alloca (alloca_used + 2 * tmpbuflen))    \
-      tmpbuf = extend_alloca_account (tmpbuf, tmpbuflen, 2 * tmpbuflen,	      \
-				      alloca_used);			      \
-    else								      \
+    if (!scratch_buffer_grow (tmpbuf))					      \
       {									      \
-	char *newp = realloc (malloc_tmpbuf ? tmpbuf : NULL,		      \
-			      2 * tmpbuflen);				      \
-	if (newp == NULL)						      \
-	  {								      \
-	    _res.options |= old_res_options & RES_USE_INET6;		      \
-	    result = -EAI_MEMORY;					      \
-	    goto free_and_return;					      \
-	  }								      \
-	tmpbuf = newp;							      \
-	malloc_tmpbuf = true;						      \
-	tmpbuflen = 2 * tmpbuflen;					      \
+	result = -EAI_MEMORY;						      \
+	goto free_and_return;						      \
       }									      \
   }									      \
   if (status == NSS_STATUS_SUCCESS && rc == 0)				      \
@@ -308,7 +316,7 @@ extern service_user *__nss_hosts_database attribute_hidden;
 static int
 gaih_inet (const char *name, const struct gaih_service *service,
 	   const struct addrinfo *req, struct addrinfo **pai,
-	   unsigned int *naddrs)
+	   unsigned int *naddrs, struct scratch_buffer *tmpbuf)
 {
   const struct gaih_typeproto *tp = gaih_inet_typeproto;
   struct gaih_servtuple *st = (struct gaih_servtuple *) &nullserv;
@@ -317,7 +325,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
   bool got_ipv6 = false;
   const char *canon = NULL;
   const char *orig_name = name;
-  size_t alloca_used = 0;
+
+  /* Reserve stack memory for the scratch buffer in the getaddrinfo
+     function.  */
+  size_t alloca_used = sizeof (struct scratch_buffer);
 
   if (req->ai_protocol || req->ai_socktype)
     {
@@ -352,7 +363,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      st = (struct gaih_servtuple *)
 		alloca_account (sizeof (struct gaih_servtuple), alloca_used);
 
-	      if ((rc = gaih_inet_serv (service->name, tp, req, st)))
+	      if ((rc = gaih_inet_serv (service->name, tp, req, st, tmpbuf)))
 		return rc;
 	    }
 	  else
@@ -377,7 +388,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    alloca_account (sizeof (struct gaih_servtuple),
 				    alloca_used);
 
-		  if ((rc = gaih_inet_serv (service->name, tp, req, newp)))
+		  if ((rc = gaih_inet_serv (service->name,
+					    tp, req, newp, tmpbuf)))
 		    {
 		      if (rc)
 			continue;
@@ -438,9 +450,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
   struct gaih_addrtuple *addrmem = NULL;
   bool malloc_canonbuf = false;
   char *canonbuf = NULL;
-  bool malloc_tmpbuf = false;
-  char *tmpbuf = NULL;
   int result = 0;
+
   if (name != NULL)
     {
       at = alloca_account (sizeof (struct gaih_addrtuple), alloca_used);
@@ -608,11 +619,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  if (req->ai_family == AF_INET
 	      && (req->ai_flags & AI_CANONNAME) == 0)
 	    {
-	      /* Allocate additional room for struct host_data.  */
-	      size_t tmpbuflen = (512 + MAX_NR_ALIASES * sizeof(char*)
-				  + 16 * sizeof(char));
-	      assert (tmpbuf == NULL);
-	      tmpbuf = alloca_account (tmpbuflen, alloca_used);
 	      int rc;
 	      struct hostent th;
 	      struct hostent *h;
@@ -620,28 +626,15 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	      while (1)
 		{
-		  rc = __gethostbyname2_r (name, AF_INET, &th, tmpbuf,
-					   tmpbuflen, &h, &herrno);
+		  rc = __gethostbyname2_r (name, AF_INET, &th,
+					   tmpbuf->data, tmpbuf->length,
+					   &h, &herrno);
 		  if (rc != ERANGE || herrno != NETDB_INTERNAL)
 		    break;
-
-		  if (!malloc_tmpbuf
-		      && __libc_use_alloca (alloca_used + 2 * tmpbuflen))
-		    tmpbuf = extend_alloca_account (tmpbuf, tmpbuflen,
-						    2 * tmpbuflen,
-						    alloca_used);
-		  else
+		  if (!scratch_buffer_grow (tmpbuf))
 		    {
-		      char *newp = realloc (malloc_tmpbuf ? tmpbuf : NULL,
-					    2 * tmpbuflen);
-		      if (newp == NULL)
-			{
-			  result = -EAI_MEMORY;
-			  goto free_and_return;
-			}
-		      tmpbuf = newp;
-		      malloc_tmpbuf = true;
-		      tmpbuflen = 2 * tmpbuflen;
+		      result = -EAI_MEMORY;
+		      goto free_and_return;
 		    }
 		}
 
@@ -835,22 +828,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  old_res_options = _res.options;
 	  _res.options &= ~RES_USE_INET6;
 
-	  size_t tmpbuflen = 1024 + sizeof(struct gaih_addrtuple);
-	  malloc_tmpbuf = !__libc_use_alloca (alloca_used + tmpbuflen);
-	  assert (tmpbuf == NULL);
-	  if (!malloc_tmpbuf)
-	    tmpbuf = alloca_account (tmpbuflen, alloca_used);
-	  else
-	    {
-	      tmpbuf = malloc (tmpbuflen);
-	      if (tmpbuf == NULL)
-		{
-		  _res.options |= old_res_options & RES_USE_INET6;
-		  result = -EAI_MEMORY;
-		  goto free_and_return;
-		}
-	    }
-
 	  while (!no_more)
 	    {
 	      no_data = 0;
@@ -868,8 +845,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  while (1)
 		    {
 		      rc = 0;
-		      status = DL_CALL_FCT (fct4, (name, pat, tmpbuf,
-						   tmpbuflen, &rc, &herrno,
+		      status = DL_CALL_FCT (fct4, (name, pat,
+						   tmpbuf->data, tmpbuf->length,
+						   &rc, &herrno,
 						   NULL));
 		      if (status == NSS_STATUS_SUCCESS)
 			break;
@@ -883,24 +861,11 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			  break;
 			}
 
-		      if (!malloc_tmpbuf
-			  && __libc_use_alloca (alloca_used + 2 * tmpbuflen))
-			tmpbuf = extend_alloca_account (tmpbuf, tmpbuflen,
-							2 * tmpbuflen,
-							alloca_used);
-		      else
+		      if (!scratch_buffer_grow (tmpbuf))
 			{
-			  char *newp = realloc (malloc_tmpbuf ? tmpbuf : NULL,
-						2 * tmpbuflen);
-			  if (newp == NULL)
-			    {
-			      _res.options |= old_res_options & RES_USE_INET6;
-			      result = -EAI_MEMORY;
-			      goto free_and_return;
-			    }
-			  tmpbuf = newp;
-			  malloc_tmpbuf = true;
-			  tmpbuflen = 2 * tmpbuflen;
+			  _res.options |= old_res_options & RES_USE_INET6;
+			  result = -EAI_MEMORY;
+			  goto free_and_return;
 			}
 		    }
 
@@ -1287,8 +1252,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
     free (addrmem);
   if (malloc_canonbuf)
     free (canonbuf);
-  if (malloc_tmpbuf)
-    free (tmpbuf);
 
   return result;
 }
@@ -2423,7 +2386,11 @@ getaddrinfo (const char *name, const char *service,
   if (hints->ai_family == AF_UNSPEC || hints->ai_family == AF_INET
       || hints->ai_family == AF_INET6)
     {
-      last_i = gaih_inet (name, pservice, hints, end, &naddrs);
+      struct scratch_buffer tmpbuf;
+      scratch_buffer_init (&tmpbuf);
+      last_i = gaih_inet (name, pservice, hints, end, &naddrs, &tmpbuf);
+      scratch_buffer_free (&tmpbuf);
+
       if (last_i != 0)
 	{
 	  freeaddrinfo (p);

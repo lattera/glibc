@@ -1,3 +1,12 @@
+2016-05-12  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet_serv): Add tmpbuf
+	argument.  Use scratch buffer instead of extend_alloca.
+	(gethosts): Use scratch buffer instead of extend_alloca.
+	(gaih_inet): Add tmpbuf argument.  Use scratch buffer instead of
+	extend_alloca.
+	(getaddrinfo): Allocate scratch buffer and pass it to gaih_inet.
+
 2016-05-11  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20055]
