@@ -1,3 +1,9 @@
+2016-05-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/string.h-data (strdup): Do not expect for [XPG3].
+	* conform/Makefile (test-xfail-XPG3/string.h/conform): Remove
+	variable.
+
 2016-05-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #20072]
