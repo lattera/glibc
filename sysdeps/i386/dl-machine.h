@@ -237,7 +237,11 @@ dl_platform_init (void)
     /* Avoid an empty string which would disturb us.  */
     GLRO(dl_platform) = NULL;
 
+#ifdef SHARED
+  /* init_cpu_features has been called early from __libc_start_main in
+     static executable.  */
   init_cpu_features (&GLRO(dl_x86_cpu_features));
+#endif
 }
 
 static inline Elf32_Addr

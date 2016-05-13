@@ -1,5 +1,12 @@
 2016-05-13  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #20072]
+	* sysdeps/i386/dl-machine.h (dl_platform_init): Call
+	init_cpu_features only if SHARED is defined.
+	* sysdeps/x86_64/dl-machine.h (dl_platform_init): Likewise.
+
+2016-05-13  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86/cacheinfo.c (init_cacheinfo): Check and support
 	non-inclusive caches on Intel processors.
 
