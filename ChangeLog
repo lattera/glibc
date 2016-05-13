@@ -1,5 +1,24 @@
 2016-05-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/stdlib.h-data (a64l): Do not expect for [XPG3].
+	(ecvt): Likewise.
+	(fcvt): Likewise.
+	(gcvt): Likewise.
+	(getsubopt): Likewise.
+	(grantpt): Likewise.
+	(initstate): Likewise.
+	(l64a): Likewise.
+	(mktemp): Likewise.
+	(mkstemp): Likewise.
+	(ptsname): Likewise.
+	(random): Likewise.
+	(realpath): Likewise.
+	(setstate): Likewise.
+	(srandom): Likewise.
+	(ttyslot): Likewise.
+	(unlockpt): Likewise.
+	(valloc): Likewise.
+
 	* conform/data/string.h-data (strdup): Do not expect for [XPG3].
 	* conform/Makefile (test-xfail-XPG3/string.h/conform): Remove
 	variable.
