@@ -1,3 +1,8 @@
+2016-05-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cacheinfo.c (init_cacheinfo): Check and support
+	non-inclusive caches on Intel processors.
+
 2016-05-13  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/malloc.c (dumped_main_arena_start)

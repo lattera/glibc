@@ -492,6 +492,9 @@ init_cacheinfo (void)
     {
       data = handle_intel (_SC_LEVEL1_DCACHE_SIZE, max_cpuid);
 
+      long int core = handle_intel (_SC_LEVEL2_CACHE_SIZE, max_cpuid);
+      bool inclusive_cache = true;
+
       /* Try L3 first.  */
       level  = 3;
       shared = handle_intel (_SC_LEVEL3_CACHE_SIZE, max_cpuid);
@@ -500,7 +503,7 @@ init_cacheinfo (void)
 	{
 	  /* Try L2 otherwise.  */
 	  level  = 2;
-	  shared = handle_intel (_SC_LEVEL2_CACHE_SIZE, max_cpuid);
+	  shared = core;
 	}
 
       /* Figure out the number of logical threads that share the
@@ -525,6 +528,9 @@ init_cacheinfo (void)
 		goto intel_bug_no_cache_info;
 	    }
 	  while (((eax >> 5) & 0x7) != level);
+
+	  /* Check if cache is inclusive of lower cache levels.  */
+	  inclusive_cache = (edx & 0x2) != 0;
 
 	  threads = (eax >> 14) & 0x3ff;
 
@@ -592,6 +598,10 @@ init_cacheinfo (void)
 	 threads.  */
       if (shared > 0 && threads > 0)
 	shared /= threads;
+
+      /* Account for non-inclusive L2 and L3 caches.  */
+      if (level == 3 && !inclusive_cache)
+	shared += core;
     }
   /* This spells out "AuthenticAMD".  */
   else if (is_amd)
