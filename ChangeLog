@@ -1,3 +1,10 @@
+2016-05-13  Florian Weimer  <fweimer@redhat.com>
+
+	Fix race condition in tst-mallocfork2, use fewer resources.
+	* malloc/tst-mallocfork2.c (sigusr1_handler): Do not send SIGSTOP
+	to current process group.
+	(signal_sender): Yield in the non-sleeping case.
+
 2016-05-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/stdlib.h-data (a64l): Do not expect for [XPG3].

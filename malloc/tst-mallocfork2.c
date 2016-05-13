@@ -25,6 +25,7 @@
    still make fork unsafe, even in single-threaded processes.  */
 
 #include <errno.h>
+#include <sched.h>
 #include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -70,7 +71,9 @@ sigusr1_handler (int signo)
      signals from the subprocess.  */
   if (sigusr1_received)
     return;
-  if (kill (sigusr1_sender_pid, SIGSTOP) != 0)
+  /* sigusr1_sender_pid might not be initialized in the parent when
+     the first SIGUSR1 signal arrives.  */
+  if (sigusr1_sender_pid > 0 && kill (sigusr1_sender_pid, SIGSTOP) != 0)
     {
       write_message ("error: kill (SIGSTOP)\n");
       abort ();
@@ -123,6 +126,9 @@ signal_sender (int signo, bool sleep)
         }
       if (sleep)
         usleep (1 * 1000 * 1000);
+      else
+        /* Reduce the rate at which we send signals.  */
+        sched_yield ();
     }
 }
 
