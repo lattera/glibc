@@ -1,3 +1,17 @@
+2016-05-13  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (dumped_main_arena_start)
+	(dumped_main_arena_end): New variables.
+	(DUMPED_MAIN_ARENA_CHUNK): New macro.
+	(do_check_chunk): Skip dumped fake mmapped chunks.
+	(munmap_chunk): Likewise.
+	(__libc_free): Do not adjust statistics for fake mmapped chunks.
+	(__libc_realloc): Adjust hardening check.  Always copy dumped fake
+	mmapped chunks.
+	* malloc/hooks.c (__malloc_set_state): Do not update main_arena.
+	Mark dumped chunks as using mmap.  Update dumped_main_arena_start
+	and dumped_main_arena_end to cover the dumped heap.
+
 2016-05-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/time.h-data (getdate_err): Do not expect for
