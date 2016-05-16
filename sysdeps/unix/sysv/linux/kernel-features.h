@@ -64,10 +64,6 @@
    configurations).  */
 #define __ASSUME_SET_ROBUST_LIST	1
 
-/* Support for PI futexes was added in 2.6.18 (but some architectures
-   lack futex_atomic_cmpxchg_inatomic in some configurations).  */
-#define __ASSUME_FUTEX_LOCK_PI	1
-
 /* Support for private futexes was added in 2.6.22.  */
 #define __ASSUME_PRIVATE_FUTEX	1
 

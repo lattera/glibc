@@ -1,3 +1,18 @@
+2016-06-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/pthread_mutex_init.c [__ASSUME_FUTEX_LOCK_PI]
+	(prio_inherit_missing): Remove define.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_FUTEX_LOCK_PI): Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_FUTEX_LOCK_PI):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_FUTEX_LOCK_PI): Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	(__ASSUME_FUTEX_LOCK_PI): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h
+	(__ASSUME_FUTEX_LOCK_PI): Likewise.
+
 2016-06-11  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #19670]

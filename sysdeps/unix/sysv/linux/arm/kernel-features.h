@@ -23,7 +23,6 @@
    futex_atomic_cmpxchg_inatomic, depending on kernel
    configuration.  */
 #if __LINUX_KERNEL_VERSION < 0x030E03
-# undef __ASSUME_FUTEX_LOCK_PI
 # undef __ASSUME_REQUEUE_PI
 # undef __ASSUME_SET_ROBUST_LIST
 #endif

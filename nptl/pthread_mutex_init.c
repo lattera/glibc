@@ -37,7 +37,6 @@ static bool
 prio_inherit_missing (void)
 {
 #ifdef __NR_futex
-# ifndef __ASSUME_FUTEX_LOCK_PI
   static int tpi_supported;
   if (__glibc_unlikely (tpi_supported == 0))
     {
@@ -48,8 +47,6 @@ prio_inherit_missing (void)
       tpi_supported = INTERNAL_SYSCALL_ERRNO (ret, err) == ENOSYS ? -1 : 1;
     }
   return __glibc_unlikely (tpi_supported < 0);
-# endif
-  return false;
 #endif
   return true;
 }

@@ -34,7 +34,6 @@
 /* 32-bit SPARC kernels do not support
    futex_atomic_cmpxchg_inatomic.  */
 #if !defined __arch64__ && !defined __sparc_v9__
-# undef __ASSUME_FUTEX_LOCK_PI
 # undef __ASSUME_REQUEUE_PI
 # undef __ASSUME_SET_ROBUST_LIST
 #endif
