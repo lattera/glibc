@@ -1,5 +1,12 @@
 2016-05-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20076]
+	* io/sys/stat.h (S_IFSOCK): Define for [__USE_XOPEN_EXTENDED]
+	instead of [__USE_UNIX98].
+	(S_ISSOCK): Likewise.
+	* conform/Makefile (test-xfail-XPG4/sys/stat.h/conform): Remove
+	variable.
+
 	[BZ #20074]
 	* stdlib/stdlib.h (rand_r): Declare if [__USE_POSIX199506], not if
 	[__USE_POSIX].
