@@ -781,8 +781,7 @@ extern int ttyname_r (int __fd, char *__buf, size_t __buflen)
    with a terminal, zero if not.  */
 extern int isatty (int __fd) __THROW;
 
-#if defined __USE_MISC \
-    || (defined __USE_XOPEN_EXTENDED && !defined __USE_UNIX98)
+#ifdef __USE_MISC
 /* Return the index into the active-logins file (utmp) for
    the controlling terminal.  */
 extern int ttyslot (void) __THROW;

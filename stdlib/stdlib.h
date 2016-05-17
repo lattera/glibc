@@ -912,6 +912,12 @@ extern int getloadavg (double __loadavg[], int __nelem)
      __THROW __nonnull ((1));
 #endif
 
+#if defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K
+/* Return the index into the active-logins file (utmp) for
+   the controlling terminal.  */
+extern int ttyslot (void) __THROW;
+#endif
+
 #include <bits/stdlib-float.h>
 
 /* Define some macros helping to catch buffer overflows.  */

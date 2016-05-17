@@ -1,3 +1,14 @@
+2016-05-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20051]
+	* posix/unistd.h [__USE_XOPEN_EXTENDED && !__USE_UNIX98]
+	(ttyslot): Do not declare.
+	* stdlib/stdlib.h [__USE_XOPEN_EXTENDED && !__USE_XOPEN2K]
+	(ttyslot): New prototype.
+	* conform/Makefile (test-xfail-XPG4/unistd.h/conform): Remove
+	variable.
+	(test-xfail-UNIX98/stdlib.h/conform): Likewise.
+
 2016-05-17  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* nptl/tst-cancel17.c (do_test): Wait for finishing aio_read(&a).
