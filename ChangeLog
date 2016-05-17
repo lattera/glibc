@@ -1,3 +1,7 @@
+2016-05-17  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* nptl/tst-cancel17.c (do_test): Wait for finishing aio_read(&a).
+
 2016-05-13  Florian Weimer  <fweimer@redhat.com>
 
 	Fix race condition in tst-mallocfork2, use fewer resources.
