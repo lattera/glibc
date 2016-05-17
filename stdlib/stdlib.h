@@ -876,7 +876,7 @@ extern void setkey (const char *__key) __THROW __nonnull ((1));
 extern int posix_openpt (int __oflag) __wur;
 #endif
 
-#ifdef __USE_XOPEN
+#ifdef __USE_XOPEN_EXTENDED
 /* The next four functions all take a master pseudo-tty fd and
    perform an operation on the associated slave:  */
 

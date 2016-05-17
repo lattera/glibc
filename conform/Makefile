@@ -168,7 +168,6 @@ test-xfail-XPG3/limits.h/conform = yes
 test-xfail-XPG3/pwd.h/conform = yes
 test-xfail-XPG3/search.h/conform = yes
 test-xfail-XPG3/signal.h/conform = yes
-test-xfail-XPG3/stdlib.h/conform = yes
 test-xfail-XPG3/sys/wait.h/conform = yes
 test-xfail-XPG4/arpa/inet.h/conform = yes
 test-xfail-XPG4/netdb.h/conform = yes
