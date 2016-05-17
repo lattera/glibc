@@ -1,5 +1,11 @@
 2016-05-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20074]
+	* stdlib/stdlib.h (rand_r): Declare if [__USE_POSIX199506], not if
+	[__USE_POSIX].
+	* conform/Makefile (test-xfail-XPG4/stdlib.h/conform): Remove
+	variable.
+
 	[BZ #20051]
 	* posix/unistd.h [__USE_XOPEN_EXTENDED && !__USE_UNIX98]
 	(ttyslot): Do not declare.

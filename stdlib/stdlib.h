@@ -337,7 +337,7 @@ extern int rand (void) __THROW;
 extern void srand (unsigned int __seed) __THROW;
 __END_NAMESPACE_STD
 
-#ifdef __USE_POSIX
+#ifdef __USE_POSIX199506
 /* Reentrant interface according to POSIX.1.  */
 extern int rand_r (unsigned int *__seed) __THROW;
 #endif
