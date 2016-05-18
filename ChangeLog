@@ -1,3 +1,8 @@
+2016-05-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sys/quota.h [_LINUX_QUOTA_VERSION >= 2]
+	(Q_GETNEXTQUOTA): New macro.
+
 2016-05-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19907]

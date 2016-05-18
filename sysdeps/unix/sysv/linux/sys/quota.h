@@ -119,6 +119,7 @@
 # define Q_SETINFO  0x800006	/* set information about quota files */
 # define Q_GETQUOTA 0x800007	/* get user quota structure */
 # define Q_SETQUOTA 0x800008	/* set user quota structure */
+# define Q_GETNEXTQUOTA 0x800009	/* get disk limits and usage >= ID */
 #endif
 
 /*
