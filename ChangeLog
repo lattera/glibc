@@ -1,5 +1,8 @@
 2016-05-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/bits/sched.h [__USE_GNU]
+	(CLONE_NEWCGROUP): New macro.
+
 	* sysdeps/unix/sysv/linux/sys/quota.h [_LINUX_QUOTA_VERSION >= 2]
 	(Q_GETNEXTQUOTA): New macro.
 
