@@ -80,8 +80,7 @@
    specified in ISO C99.
 
    NaN values: There exist signalling and quiet NaNs.  This implementation
-   only uses quiet NaN as parameter.  Where the sign of a NaN is
-   significant, this is not tested.  The payload of NaNs is not examined.
+   only uses quiet NaN as parameter.  The payload of NaNs is not examined.
 
    Inline functions: Inlining functions should give an improvement in
    speed - but not in precission.  The inlined functions return

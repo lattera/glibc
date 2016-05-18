@@ -1,3 +1,8 @@
+2016-05-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc: Update comment not to refer to signs of NaNs
+	not being tested.
+
 2016-05-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
