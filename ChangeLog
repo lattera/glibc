@@ -1,5 +1,13 @@
 2016-05-18  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__condvar_cleanup2): Remove JUMPTARGET from  _Unwind_Resume
+	call.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
+	(__condvar_cleanup1): Likewise.
+
+2016-05-18  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/cancellation.S (PTHREAD_UNWIND):
 	New
 	(__pthread_unwind): Renamed to ...
