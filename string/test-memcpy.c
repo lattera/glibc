@@ -53,6 +53,12 @@ static void
 do_one_test (impl_t *impl, char *dst, const char *src,
 	     size_t len)
 {
+  size_t i;
+
+  /* Must clear the destination buffer set by the previous run.  */
+  for (i = 0; i < len; i++)
+    dst[i] = 0;
+
   if (CALL (impl, dst, src, len) != MEMCPY_RESULT (dst, len))
     {
       error (0, 0, "Wrong result in function %s %p %p", impl->name,

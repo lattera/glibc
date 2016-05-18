@@ -68,6 +68,7 @@ static void
 do_one_test (impl_t *impl, char *dst, char *src, const char *orig_src,
 	     size_t len)
 {
+  /* This also clears the destination buffer set by the previous run.  */
   memcpy (src, orig_src, len);
 #ifdef TEST_BCOPY
   CALL (impl, src, dst, len);

@@ -70,6 +70,7 @@ do_one_test (impl_t *impl, char *dst, char *src, const char *orig_src,
   size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
 
+  /* This also clears the destination buffer set by the previous run.  */
   memcpy (src, orig_src, len);
 #ifdef TEST_BCOPY
   CALL (impl, src, dst, len);

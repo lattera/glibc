@@ -1,3 +1,12 @@
+2016-05-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19907]
+	* benchtests/bench-memcpy.c (do_one_test): Clear the destination
+	buffer updated by the previous run.
+	* string/test-memcpy.c (do_one_test): Likewise.
+	* benchtests/bench-memmove.c (do_one_test): Add a comment.
+	* string/test-memmove.c (do_one_test): Likewise.
+
 2016-05-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20094]
