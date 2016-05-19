@@ -1,5 +1,10 @@
 2016-05-24  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/libm-test.inc (MANT_DIG): Directly define as
+	(DBL|LDBL|FLT)_MANT_DIG and fixup usage.
+
+2016-05-24  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* stdlib/gen-tst-strtod-round.c (main):
 	  Change usage to more closely match the generated
 	  output.  Add usage and compilation instructions.
