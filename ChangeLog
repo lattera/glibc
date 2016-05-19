@@ -1,3 +1,10 @@
+2016-05-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/search.h-data (insque): Do not expect for [XPG3].
+	(remque): Likewise.
+	* conform/Makefile (test-xfail-XPG3/search.h/conform): Remove
+	variable.
+
 2016-05-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc: Update comment not to refer to signs of NaNs

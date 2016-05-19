@@ -166,7 +166,6 @@ test-xfail-XOPEN2K8/ndbm.h/conform = yes
 test-xfail-XPG3/ftw.h/conform = yes
 test-xfail-XPG3/limits.h/conform = yes
 test-xfail-XPG3/pwd.h/conform = yes
-test-xfail-XPG3/search.h/conform = yes
 test-xfail-XPG3/signal.h/conform = yes
 test-xfail-XPG3/sys/wait.h/conform = yes
 test-xfail-XPG4/arpa/inet.h/conform = yes
