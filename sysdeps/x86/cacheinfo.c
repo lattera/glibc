@@ -506,98 +506,104 @@ init_cacheinfo (void)
 	  shared = core;
 	}
 
-      /* Figure out the number of logical threads that share the
-	 highest cache level.  */
-      if (max_cpuid >= 4)
+      /* A value of 0 for the HTT bit indicates there is only a single
+	 logical processor.  */
+      if (HAS_CPU_FEATURE (HTT))
 	{
-	  unsigned int family = GLRO(dl_x86_cpu_features).family;
-	  unsigned int model = GLRO(dl_x86_cpu_features).model;
-
-	  int i = 0;
-
-	  /* Query until desired cache level is enumerated.  */
-	  do
+	  /* Figure out the number of logical threads that share the
+	     highest cache level.  */
+	  if (max_cpuid >= 4)
 	    {
-	      __cpuid_count (4, i++, eax, ebx, ecx, edx);
+	      unsigned int family = GLRO(dl_x86_cpu_features).family;
+	      unsigned int model = GLRO(dl_x86_cpu_features).model;
 
-	      /* There seems to be a bug in at least some Pentium Ds
-		 which sometimes fail to iterate all cache parameters.
-		 Do not loop indefinitely here, stop in this case and
-		 assume there is no such information.  */
-	      if ((eax & 0x1f) == 0)
-		goto intel_bug_no_cache_info;
-	    }
-	  while (((eax >> 5) & 0x7) != level);
+	      int i = 0;
 
-	  /* Check if cache is inclusive of lower cache levels.  */
-	  inclusive_cache = (edx & 0x2) != 0;
-
-	  threads = (eax >> 14) & 0x3ff;
-
-	  /* If max_cpuid >= 11, THREADS is the maximum number of
-	      addressable IDs for logical processors sharing the
-	      cache, instead of the maximum number of threads
-	      sharing the cache.  */
-	  if (threads && max_cpuid >= 11)
-	    {
-	      /* Find the number of logical processors shipped in
-		 one core and apply count mask.  */
-	      i = 0;
-	      while (1)
+	      /* Query until desired cache level is enumerated.  */
+	      do
 		{
-		  __cpuid_count (11, i++, eax, ebx, ecx, edx);
+		  __cpuid_count (4, i++, eax, ebx, ecx, edx);
 
-		  int shipped = ebx & 0xff;
-		  int type = ecx & 0xff0;
-		  if (shipped == 0 || type == 0)
-		    break;
-		  else if (type == 0x200)
+		  /* There seems to be a bug in at least some Pentium Ds
+		     which sometimes fail to iterate all cache parameters.
+		     Do not loop indefinitely here, stop in this case and
+		     assume there is no such information.  */
+		  if ((eax & 0x1f) == 0)
+		    goto intel_bug_no_cache_info;
+		}
+	      while (((eax >> 5) & 0x7) != level);
+
+	      /* Check if cache is inclusive of lower cache levels.  */
+	      inclusive_cache = (edx & 0x2) != 0;
+
+	      threads = (eax >> 14) & 0x3ff;
+
+	      /* If max_cpuid >= 11, THREADS is the maximum number of
+		 addressable IDs for logical processors sharing the
+		 cache, instead of the maximum number of threads
+		 sharing the cache.  */
+	      if (threads && max_cpuid >= 11)
+		{
+		  /* Find the number of logical processors shipped in
+		     one core and apply count mask.  */
+		  i = 0;
+		  while (1)
 		    {
-		      int count_mask;
+		      __cpuid_count (11, i++, eax, ebx, ecx, edx);
 
-		      /* Compute count mask.  */
-		      asm ("bsr %1, %0"
-			   : "=r" (count_mask) : "g" (threads));
-		      count_mask = ~(-1 << (count_mask + 1));
-		      threads = (shipped - 1) & count_mask;
+		      int shipped = ebx & 0xff;
+		      int type = ecx & 0xff0;
+		      if (shipped == 0 || type == 0)
+			break;
+		      else if (type == 0x200)
+			{
+			  int count_mask;
+
+			  /* Compute count mask.  */
+			  asm ("bsr %1, %0"
+			       : "=r" (count_mask) : "g" (threads));
+			  count_mask = ~(-1 << (count_mask + 1));
+			  threads = (shipped - 1) & count_mask;
+			  break;
+			}
+		    }
+		}
+	      threads += 1;
+	      if (threads > 2 && level == 2 && family == 6)
+		{
+		  switch (model)
+		    {
+		    case 0x57:
+		      /* Knights Landing has L2 cache shared by 2 cores.  */
+		    case 0x37:
+		    case 0x4a:
+		    case 0x4d:
+		    case 0x5a:
+		    case 0x5d:
+		      /* Silvermont has L2 cache shared by 2 cores.  */
+		      threads = 2;
+		      break;
+		    default:
 		      break;
 		    }
 		}
 	    }
-	  threads += 1;
-	  if (threads > 2 && level == 2 && family == 6)
+	  else
 	    {
-	      switch (model)
-		{
-		case 0x57:
-		  /* Knights Landing has L2 cache shared by 2 cores.  */
-		case 0x37:
-		case 0x4a:
-		case 0x4d:
-		case 0x5a:
-		case 0x5d:
-		  /* Silvermont has L2 cache shared by 2 cores.  */
-		  threads = 2;
-		  break;
-		default:
-		  break;
-		}
+intel_bug_no_cache_info:
+	      /* Assume that all logical threads share the highest cache
+		 level.  */
+
+	      threads
+		= ((GLRO(dl_x86_cpu_features).cpuid[COMMON_CPUID_INDEX_1].ebx
+		    >> 16) & 0xff);
 	    }
-	}
-      else
-	{
-	intel_bug_no_cache_info:
-	  /* Assume that all logical threads share the highest cache level.  */
 
-	  threads
-	    = ((GLRO(dl_x86_cpu_features).cpuid[COMMON_CPUID_INDEX_1].ebx
-		>> 16) & 0xff);
+	  /* Cap usage of highest cache level to the number of supported
+	     threads.  */
+	  if (shared > 0 && threads > 0)
+	    shared /= threads;
 	}
-
-      /* Cap usage of highest cache level to the number of supported
-	 threads.  */
-      if (shared > 0 && threads > 0)
-	shared /= threads;
 
       /* Account for non-inclusive L2 and L3 caches.  */
       if (level == 3 && !inclusive_cache)

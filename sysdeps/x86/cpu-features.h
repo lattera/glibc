@@ -51,6 +51,7 @@
 #define bit_cpu_POPCOUNT	(1 << 23)
 #define bit_cpu_FMA		(1 << 12)
 #define bit_cpu_FMA4		(1 << 16)
+#define bit_cpu_HTT		(1 << 28)
 
 /* COMMON_CPUID_INDEX_7.  */
 #define bit_cpu_ERMS		(1 << 9)
@@ -235,6 +236,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_cpu_FMA4		COMMON_CPUID_INDEX_80000001
 # define index_cpu_POPCOUNT	COMMON_CPUID_INDEX_1
 # define index_cpu_OSXSAVE	COMMON_CPUID_INDEX_1
+# define index_cpu_HTT		COMMON_CPUID_INDEX_1
 
 # define reg_CX8		edx
 # define reg_CMOV		edx
@@ -252,6 +254,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define reg_FMA4		ecx
 # define reg_POPCOUNT		ecx
 # define reg_OSXSAVE		ecx
+# define reg_HTT		edx
 
 # define index_arch_Fast_Rep_String	FEATURE_INDEX_1
 # define index_arch_Fast_Copy_Backward	FEATURE_INDEX_1

@@ -1,5 +1,13 @@
 2016-05-19  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86/cacheinfo.c (init_cacheinfo): Skip counting
+	logical threads if the HTT bit is 0.
+	* sysdeps/x86/cpu-features.h (bit_cpu_HTT): New.
+	(index_cpu_HTT): Likewise.
+	(reg_HTT): Likewise.
+
+2016-05-19  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #20115]
 	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S (__memset):
 	Remove alignments on jump targets.
