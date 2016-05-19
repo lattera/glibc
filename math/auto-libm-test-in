@@ -2069,15 +2069,14 @@ fma -min -min 0 missing-errno
 fma -min -min -0 missing-errno
 
 # Bug 6801: errno setting may be missing.
-# Bug 13304: results on directed rounding may be incorrect.
-fma max max min missing-errno xfail-rounding:ldbl-128ibm
-fma max max -min missing-errno xfail-rounding:ldbl-128ibm
-fma max -max min missing-errno xfail-rounding:ldbl-128ibm
-fma max -max -min missing-errno xfail-rounding:ldbl-128ibm
-fma -max max min missing-errno xfail-rounding:ldbl-128ibm
-fma -max max -min missing-errno xfail-rounding:ldbl-128ibm
-fma -max -max min missing-errno xfail-rounding:ldbl-128ibm
-fma -max -max -min missing-errno xfail-rounding:ldbl-128ibm
+fma max max min missing-errno
+fma max max -min missing-errno
+fma max -max min missing-errno
+fma max -max -min missing-errno
+fma -max max min missing-errno
+fma -max max -min missing-errno
+fma -max -max min missing-errno
+fma -max -max -min missing-errno
 
 fma 0x1.7ff8p+13 0x1.000002p+0 0x1.ffffp-24
 fma 0x1.fffp+0 0x1.00001p+0 -0x1.fffp+0

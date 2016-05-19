@@ -1,3 +1,22 @@
+2016-05-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13304]
+	* sysdeps/ieee754/ldbl-128ibm/s_fmal.c: Include <fenv.h>,
+	<float.h>, <math_private.h> and <stdlib.h>.
+	(add_split): New function.
+	(mul_split): Likewise.
+	(ext_val): New typedef.
+	(store_ext_val): New function.
+	(mul_ext_val): New function.
+	(compare): New function.
+	(add_split_ext): New function.
+	(__fmal): After checking for Inf, NaN and zero, compute result as
+	an exact sum of scaled double values in round-to-nearest before
+	adding those up and adjusting for other rounding modes.
+	* math/auto-libm-test-in: Remove xfail-rounding:ldbl-128ibm from
+	tests of fma.
+	* math/auto-libm-test-out: Regenerated.
+
 2016-05-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #20119]
