@@ -1,3 +1,9 @@
+2016-05-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20115]
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S (__memset):
+	Remove alignments on jump targets.
+
 2016-05-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/pwd.h-data (endpwent): Do not expect for [XPG3].

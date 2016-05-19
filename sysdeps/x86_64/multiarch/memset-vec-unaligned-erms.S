@@ -18,12 +18,10 @@
 
 /* memset is implemented as:
    1. Use overlapping store to avoid branch.
-   2. Force 32-bit displacement for branches to avoid long nop between
-      instructions.
-   3. If size is less than VEC, use integer register stores.
-   4. If size is from VEC_SIZE to 2 * VEC_SIZE, use 2 VEC stores.
-   5. If size is from 2 * VEC_SIZE to 4 * VEC_SIZE, use 4 VEC stores.
-   6. If size is more to 4 * VEC_SIZE, align to 4 * VEC_SIZE with
+   2. If size is less than VEC, use integer register stores.
+   3. If size is from VEC_SIZE to 2 * VEC_SIZE, use 2 VEC stores.
+   4. If size is from 2 * VEC_SIZE to 4 * VEC_SIZE, use 4 VEC stores.
+   5. If size is more to 4 * VEC_SIZE, align to 4 * VEC_SIZE with
       4 VEC stores and store 4 * VEC at a time until done.  */
 
 #include <sysdep.h>
@@ -143,14 +141,10 @@ ENTRY (MEMSET_SYMBOL (__memset, unaligned_erms))
 	VZEROUPPER
 	ret
 
-	.p2align 4
 L(stosb_more_2x_vec):
 	cmpq	$REP_STOSB_THRESHOLD, %rdx
-	/* Force 32-bit displacement to avoid long nop between
-	   instructions.  */
-	ja.d32	L(stosb)
+	ja	L(stosb)
 #endif
-	.p2align 4
 L(more_2x_vec):
 	cmpq  $(VEC_SIZE * 4), %rdx
 	ja	L(loop_start)
@@ -162,26 +156,12 @@ L(return):
 	VZEROUPPER
 	ret
 
-	.p2align 4
 L(loop_start):
 	leaq	(VEC_SIZE * 4)(%rdi), %rcx
-# if VEC_SIZE == 32 || VEC_SIZE == 64
-	/* Force 32-bit displacement to avoid long nop between
-	   instructions.  */
-	VMOVU.d32 %VEC(0), (%rdi)
-# else
 	VMOVU	%VEC(0), (%rdi)
-# endif
 	andq	$-(VEC_SIZE * 4), %rcx
-# if VEC_SIZE == 32
-	/* Force 32-bit displacement to avoid long nop between
-	   instructions.  */
-	VMOVU.d32 %VEC(0), -VEC_SIZE(%rdi,%rdx)
-	VMOVU.d32 %VEC(0), VEC_SIZE(%rdi)
-# else
 	VMOVU	%VEC(0), -VEC_SIZE(%rdi,%rdx)
 	VMOVU	%VEC(0), VEC_SIZE(%rdi)
-# endif
 	VMOVU	%VEC(0), -(VEC_SIZE * 2)(%rdi,%rdx)
 	VMOVU	%VEC(0), (VEC_SIZE * 2)(%rdi)
 	VMOVU	%VEC(0), -(VEC_SIZE * 3)(%rdi,%rdx)
@@ -190,14 +170,7 @@ L(loop_start):
 	addq	%rdi, %rdx
 	andq	$-(VEC_SIZE * 4), %rdx
 	cmpq	%rdx, %rcx
-# if VEC_SIZE == 32 || VEC_SIZE == 64
-	/* Force 32-bit displacement to avoid long nop between
-	   instructions.  */
-	je.d32	L(return)
-# else
 	je	L(return)
-# endif
-	.p2align 4
 L(loop):
 	VMOVA	%VEC(0), (%rcx)
 	VMOVA	%VEC(0), VEC_SIZE(%rcx)
