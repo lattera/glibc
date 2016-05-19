@@ -1,3 +1,8 @@
+2016-06-11  Paras pradhan  <pradhanparas@gmail.com>
+
+	[BZ #1170]
+	* locales/ne_NP: Update many fields.
+
 2016-06-11  Mike Frysinger  <vapier@gentoo.org>
 
 	* unicode-gen/gen_translit_circle.py (output_head): Add write of
