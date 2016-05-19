@@ -330,8 +330,8 @@ static FLOAT max_valid_error;
 
 #define MANT_DIG CHOOSE (LDBL_MANT_DIG, DBL_MANT_DIG, FLT_MANT_DIG,  \
 			 LDBL_MANT_DIG, DBL_MANT_DIG, FLT_MANT_DIG)
-#define MIN_EXP CHOOSE ((LDBL_MIN_EXP-1), (DBL_MIN_EXP-1), (FLT_MIN_EXP-1),	\
-			(LDBL_MIN_EXP-1), (DBL_MIN_EXP-1), (FLT_MIN_EXP-1))
+#define MIN_EXP CHOOSE (LDBL_MIN_EXP, DBL_MIN_EXP, FLT_MIN_EXP,	\
+			LDBL_MIN_EXP, DBL_MIN_EXP, FLT_MIN_EXP)
 #define MAX_EXP CHOOSE (LDBL_MAX_EXP, DBL_MAX_EXP, FLT_MAX_EXP, \
 			LDBL_MAX_EXP, DBL_MAX_EXP, FLT_MAX_EXP)
 /* Sufficient numbers of digits to represent any floating-point value
@@ -753,7 +753,7 @@ ulp (FLOAT value)
 	/* Fall through...  */
       case FP_SUBNORMAL:
         /* The next closest subnormal value is a constant distance away.  */
-	ulp = FUNC(ldexp) (1.0, MIN_EXP - MANT_DIG + 1);
+	ulp = FUNC(ldexp) (1.0, MIN_EXP - MANT_DIG);
 	break;
 
       case FP_NORMAL:
@@ -7892,10 +7892,10 @@ static const struct test_f_i_data ilogb_test_data[] =
     TEST_f_i (ilogb, -0x1.ffffffffffffffp1L, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
 
-    TEST_f_i (ilogb, min_subnorm_value, MIN_EXP-MANT_DIG+1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_i (ilogb, -min_subnorm_value, MIN_EXP-MANT_DIG+1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_i (ilogb, min_value, MIN_EXP, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_i (ilogb, -min_value, MIN_EXP, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, -min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, min_value, MIN_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, -min_value, MIN_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
     TEST_f_i (ilogb, max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
     TEST_f_i (ilogb, -max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
 
@@ -9025,10 +9025,10 @@ static const struct test_f_f_data logb_test_data[] =
     TEST_f_f (logb, 1024, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (logb, -2000, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
-    TEST_f_f (logb, min_subnorm_value, MIN_EXP-MANT_DIG+1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_f (logb, -min_subnorm_value, MIN_EXP-MANT_DIG+1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_f (logb, min_value, MIN_EXP, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_f (logb, -min_value, MIN_EXP, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_f (logb, min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_f (logb, -min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_f (logb, min_value, MIN_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_f (logb, -min_value, MIN_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
     TEST_f_f (logb, max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
     TEST_f_f (logb, -max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
 
