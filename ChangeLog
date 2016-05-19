@@ -1,5 +1,11 @@
 2016-05-19  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #20119]
+	* sysdeps/x86/cacheinfo.c (init_cacheinfo): Correct Intel
+	processor level type mask for CPUID with EAX == 11.
+
+2016-05-19  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86/cacheinfo.c (init_cacheinfo): Skip counting
 	logical threads if the HTT bit is 0.
 	* sysdeps/x86/cpu-features.h (bit_cpu_HTT): New.

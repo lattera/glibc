@@ -552,7 +552,7 @@ init_cacheinfo (void)
 		      __cpuid_count (11, i++, eax, ebx, ecx, edx);
 
 		      int shipped = ebx & 0xff;
-		      int type = ecx & 0xff0;
+		      int type = ecx & 0xff00;
 		      if (shipped == 0 || type == 0)
 			break;
 		      else if (type == 0x200)
