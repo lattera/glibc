@@ -1,3 +1,17 @@
+2016-05-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/ftw.h-data (struct FTW): Do not expect for [XPG3].
+	(FTW_DP): Do not expect for [XPG3 || XPG4].
+	(FTW_SL): Do not expect for [XPG3].
+	(FTW_SLN): Likewise.
+	(FTW_PHYS): Likewise.
+	(FTW_MOUNT): Likewise.
+	(FTW_DEPTH): Likewise.
+	(FTW_CHDIR): Likewise.
+	(nftw): Likewise.
+	* conform/Makefile (test-xfail-XPG3/ftw.h/conform): Remove
+	variable.
+
 2016-05-19  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/errno.texi: Fix various typos & grammar errors.
