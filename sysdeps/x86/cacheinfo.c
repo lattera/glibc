@@ -573,8 +573,6 @@ init_cacheinfo (void)
 		{
 		  switch (model)
 		    {
-		    case 0x57:
-		      /* Knights Landing has L2 cache shared by 2 cores.  */
 		    case 0x37:
 		    case 0x4a:
 		    case 0x4d:
