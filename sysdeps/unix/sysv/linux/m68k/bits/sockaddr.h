@@ -1,4 +1,4 @@
-/* Definition of struct sockaddr_* common members and sizes, generic version.
+/* Definition of struct sockaddr_* members and sizes, Linux/m68k version.
    Copyright (C) 1995-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -37,6 +37,6 @@ typedef unsigned short int sa_family_t;
 #define __SOCKADDR_COMMON_SIZE	(sizeof (unsigned short int))
 
 /* Size of struct sockaddr_storage.  */
-#define _SS_SIZE 128
+#define _SS_SIZE 126
 
 #endif	/* bits/sockaddr.h */

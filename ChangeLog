@@ -1,3 +1,26 @@
+2016-05-23  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20111]
+	* bits/sockaddr.h (_SS_SIZE): Define.
+	* bits/socket.h (_SS_SIZE): Remove.
+	(_SS_PADSIZE): Adjust to account for all padding.
+	(struct sockaddr_storage): Update comment.  Avoid implicit
+	padding.
+	* sysdeps/mach/hurd/bits/socket.h (_SS_SIZE): Remove.
+	(_SS_PADSIZE): Adjust to account for all padding.
+	(struct sockaddr_storage): Update comment.  Avoid implicit
+	padding.
+	* sysdeps/unix/bsd/bits/sockaddr.h (_SS_SIZE): Define.
+	* sysdeps/unix/sysv/linux/bits/socket.h (_SS_SIZE): Remove.
+	(_SS_PADSIZE): Adjust to account for all padding.
+	(struct sockaddr_storage): Update comment.  Avoid implicit
+	padding.
+	* sysdeps/unix/sysv/linux/m68k/bits/sockaddr.h: New file.
+	__SS_SIZE is 126 in this version.
+	* inet/tst-sockaddr.c: New file.
+	* inet/Makefile (tests): Add tst-sockaddr.c
+	(tst-sockaddr.c): Compile with non-strict aliasing.
+
 2016-05-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/limits.h-data (CHARCLASS_NAME_MAX): Also expect for
