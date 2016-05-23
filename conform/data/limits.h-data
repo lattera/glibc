@@ -170,10 +170,10 @@ constant LONG_BIT >= 32
 #endif
 constant SSIZE_MAX
 
-#if !defined POSIX && !defined XPG3 && !defined XPG4
+#if !defined POSIX
 optional-constant CHARCLASS_NAME_MAX >= 14
 #endif
-#if !defined POSIX && !defined XPG3
+#if !defined POSIX
 optional-constant NL_ARGMAX >= 9
 # if !defined POSIX2008
 optional-constant NL_LANGMAX >= 14
@@ -188,7 +188,7 @@ optional-constant NL_TEXTMAX
 optional-constant NZERO >= 20
 # endif
 #endif
-#if defined XPG4 || defined UNIX98
+#if defined XPG3 || defined XPG4 || defined UNIX98
 optional-constant TMP_MAX >= 10000
 #endif
 

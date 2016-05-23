@@ -1,5 +1,18 @@
 2016-05-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/limits.h-data (CHARCLASS_NAME_MAX): Also expect for
+	[XPG3 || XPG4].
+	(NL_ARGMAX): Also expect for [XPG3].
+	(NL_LANGMAX): Likewise.
+	(NL_MSGMAX): Likewise.
+	(NL_NMAX): Likewise.
+	(NL_SETMAX): Likewise.
+	(NL_TEXTMAX): Likewise.
+	(NZERO): Likewise.
+	(TMP_MAX): Likewise.
+	* conform/Makefile (test-xfail-XPG3/limits.h/conform): Remove
+	variable.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h (PF_KCM): New macro.
 	(PF_MAX): Update value.
 	(AF_KCM): New macro.

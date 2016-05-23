@@ -163,7 +163,6 @@ test-xfail-XOPEN2K/ndbm.h/conform = yes
 test-xfail-XOPEN2K8/ndbm.h/conform = yes
 
 # Unsorted expected failures.
-test-xfail-XPG3/limits.h/conform = yes
 test-xfail-XPG3/signal.h/conform = yes
 test-xfail-XPG3/sys/wait.h/conform = yes
 test-xfail-XPG4/arpa/inet.h/conform = yes
