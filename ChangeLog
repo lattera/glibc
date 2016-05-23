@@ -1,5 +1,12 @@
 2016-05-23  Florian Weimer  <fweimer@redhat.com>
 
+	CVE-2016-4429
+	[BZ #20112]
+	* sunrpc/clnt_udp.c (clntudp_call): Use malloc/free for the error
+	payload.
+
+2016-05-23  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #20111]
 	* bits/sockaddr.h (_SS_SIZE): Define.
 	* bits/socket.h (_SS_SIZE): Remove.
