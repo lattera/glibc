@@ -1,3 +1,25 @@
+2016-05-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (PF_KCM): New macro.
+	(PF_MAX): Update value.
+	(AF_KCM): New macro.
+	(SOL_NETBEUI): Likewise.
+	(SOL_LLC): Likewise.
+	(SOL_DCCP): Likewise.
+	(SOL_NETLINK): Likewise.
+	(SOL_TIPC): Likewise.
+	(SOL_RXRPC): Likewise.
+	(SOL_PPPOL2TP): Likewise.
+	(SOL_BLUETOOTH): Likewise.
+	(SOL_PNPIPE): Likewise.
+	(SOL_RDS): Likewise.
+	(SOL_IUCV): Likewise.
+	(SOL_CAIF): Likewise.
+	(SOL_ALG): Likewise.
+	(SOL_NFC): Likewise.
+	(SOL_KCM): Likewise.
+	(MSG_BATCH): New enum value and macro.
+
 2016-05-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18185]
