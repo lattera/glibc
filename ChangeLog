@@ -1,5 +1,23 @@
 2016-05-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	[BZ #19765]
+	* sysdeps/s390/mempcpy.S: New File.
+	* sysdeps/s390/multiarch/mempcpy.c: Likewise.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add mempcpy.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c (__libc_ifunc_impl_list):
+	Add mempcpy variants.
+	* sysdeps/s390/s390-32/memcpy.S: Add mempcpy entry point.
+	(memcpy): Adjust to be usable from mempcpy entry point.
+	(__memcpy_mvcle): Likewise.
+	* sysdeps/s390/s390-64/memcpy.S: Likewise.
+	* sysdeps/s390/s390-32/multiarch/memcpy-s390.S: Add entry points
+	____mempcpy_z196, ____mempcpy_z10 and add __GI_ symbols for mempcpy.
+	(__memcpy_z196): Adjust to be usable from mempcpy entry point.
+	(__memcpy_z10): Likewise.
+	* sysdeps/s390/s390-64/multiarch/memcpy-s390x.S: Likewise.
+
+2016-05-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/ifunc-resolve.h (s390_libc_ifunc):
 	Remove __GI_ symbol.
 	* sysdeps/s390/s390-32/multiarch/memcmp-s390.S: Add __GI_memcmp symbol.

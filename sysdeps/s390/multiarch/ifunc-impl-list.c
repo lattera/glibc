@@ -69,6 +69,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      S390_IS_Z10 (stfle_bits), __memcpy_z10)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_default))
 
+  IFUNC_IMPL (i, name, mempcpy,
+	      IFUNC_IMPL_ADD (array, i, mempcpy,
+			      S390_IS_Z196 (stfle_bits), ____mempcpy_z196)
+	      IFUNC_IMPL_ADD (array, i, mempcpy,
+			      S390_IS_Z10 (stfle_bits), ____mempcpy_z10)
+	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, ____mempcpy_default))
+
 #endif /* SHARED */
 
 #ifdef HAVE_S390_VX_ASM_SUPPORT

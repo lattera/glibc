@@ -27,19 +27,27 @@
 
 
        .text
-
-#ifdef USE_MULTIARCH
-ENTRY(__memcpy_default)
-#else
-ENTRY(memcpy)
-#endif
+ENTRY(__mempcpy)
 	.machine "z900"
+	lgr     %r1,%r2             # Use as dest
+	la      %r2,0(%r4,%r2)      # Return dest + n
+	j	.L_Z900_start
+END(__mempcpy)
+#ifndef USE_MULTIARCH
+libc_hidden_def (__mempcpy)
+weak_alias (__mempcpy, mempcpy)
+libc_hidden_builtin_def (mempcpy)
+#endif
+
+ENTRY(memcpy)
+	.machine "z900"
+	lgr     %r1,%r2             # r1: Use as dest ; r2: Return dest
+.L_Z900_start:
 	ltgr    %r4,%r4
 	je      .L_Z900_4
 	aghi    %r4,-1
 	srlg    %r5,%r4,8
 	ltgr    %r5,%r5
-	lgr     %r1,%r2
 	jne     .L_Z900_13
 .L_Z900_3:
 	larl    %r5,.L_Z900_15
@@ -57,25 +65,24 @@ ENTRY(memcpy)
 	j       .L_Z900_3
 .L_Z900_15:
 	mvc     0(1,%r1),0(%r3)
-
-#ifdef USE_MULTIARCH
-END(__memcpy_default)
-#else
 END(memcpy)
+#ifndef USE_MULTIARCH
 libc_hidden_builtin_def (memcpy)
 #endif
 
 ENTRY(__memcpy_mvcle)
-       # Using as standalone function will result in unexpected
-       # results since the length field is incremented by 1 in order to
-       # compensate the changes already done in the functions above.
-       aghi    %r4,1               # length + 1
-       lgr     %r5,%r4             # source length
-       lgr     %r4,%r3             # source address
-       lgr     %r3,%r5             # destination length = source length
+	# Using as standalone function will result in unexpected
+	# results since the length field is incremented by 1 in order to
+	# compensate the changes already done in the functions above.
+	lgr     %r0,%r2             # backup return dest [ + n ]
+	aghi    %r4,1               # length + 1
+	lgr     %r5,%r4             # source length
+	lgr     %r4,%r3             # source address
+	lgr     %r2,%r1             # destination address
+	lgr     %r3,%r5             # destination length = source length
 .L_MVCLE_1:
-       mvcle   %r2,%r4,0           # thats it, MVCLE is your friend
-       jo      .L_MVCLE_1
-       lgr     %r2,%r1             # return destination address
-       br      %r14
+	mvcle   %r2,%r4,0           # thats it, MVCLE is your friend
+	jo      .L_MVCLE_1
+	lgr     %r2,%r0             # return destination address
+	br      %r14
 END(__memcpy_mvcle)

@@ -29,14 +29,23 @@
 
 #if defined SHARED && IS_IN (libc)
 
+ENTRY(____mempcpy_z196)
+	.machine "z196"
+	.machinemode "zarch_nohighgprs"
+	lr      %r1,%r2         # Use as dest
+	la      %r2,0(%r4,%r2)  # Return dest + n
+	j	.L_Z196_start
+END(____mempcpy_z196)
+
 ENTRY(__memcpy_z196)
 	.machine "z196"
 	.machinemode "zarch_nohighgprs"
+	lr      %r1,%r2         # r1: Use as dest ; r2: Return dest
+.L_Z196_start:
 	llgfr   %r4,%r4
 	ltgr    %r4,%r4
 	je      .L_Z196_4
 	aghi    %r4,-1
-	lr      %r1,%r2
 	srlg    %r5,%r4,8
 	ltgr    %r5,%r5
 	jne     .L_Z196_5
@@ -60,13 +69,22 @@ ENTRY(__memcpy_z196)
 	mvc     0(1,%r1),0(%r3)
 END(__memcpy_z196)
 
+ENTRY(____mempcpy_z10)
+	.machine "z10"
+	.machinemode "zarch_nohighgprs"
+	lr      %r1,%r2         # Use as dest
+	la      %r2,0(%r4,%r2)  # Return dest + n
+	j	.L_Z10_start
+END(____mempcpy_z10)
+
 ENTRY(__memcpy_z10)
 	.machine "z10"
 	.machinemode "zarch_nohighgprs"
+	lr      %r1,%r2         # r1: Use as dest ; r2: Return dest
+.L_Z10_start:
 	llgfr   %r4,%r4
 	cgije   %r4,0,.L_Z10_4
 	aghi    %r4,-1
-	lr      %r1,%r2
 	srlg    %r5,%r4,8
 	cgijlh  %r5,0,.L_Z10_13
 .L_Z10_3:
@@ -88,14 +106,23 @@ ENTRY(__memcpy_z10)
 	mvc     0(1,%r1),0(%r3)
 END(__memcpy_z10)
 
+# define __mempcpy ____mempcpy_default
 #endif /* SHARED && IS_IN (libc) */
 
+#define memcpy __memcpy_default
 #include "../memcpy.S"
+#undef memcpy
 
 #if defined SHARED && IS_IN (libc)
 .globl   __GI_memcpy
 .set     __GI_memcpy,__memcpy_default
+.globl   __GI_mempcpy
+.set     __GI_mempcpy,____mempcpy_default
+.globl   __GI___mempcpy
+.set     __GI___mempcpy,____mempcpy_default
 #else
 .globl   memcpy
 .set     memcpy,__memcpy_default
+.weak    mempcpy
+.set     mempcpy,__mempcpy
 #endif
