@@ -1,3 +1,21 @@
+2016-05-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15479]
+	* sysdeps/ieee754/dbl-64/s_ceil.c: Do not mention "inexact"
+	exception in comment.
+	(huge): Remove variable.
+	(__ceil): Do not force "inexact" exception.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_ceil.c: Do not mention
+	"inexact" exception in comment.
+	(huge): Remove variable.
+	(__ceil): Do not force "inexact" exception.
+	* sysdeps/ieee754/flt-32/s_ceilf.c (huge): Remove variable.
+	(__ceilf): Do not force "inexact" exception.
+	* sysdeps/ieee754/ldbl-128/s_ceill.c: Do not mention "inexact"
+	exception in comment.
+	(huge): Remove variable.
+	(__ceill): Do not force "inexact" exception.
+
 2016-05-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* config.h.in (BIND_NOW): New.

@@ -15,14 +15,10 @@
  * Return x rounded toward -inf to integral value
  * Method:
  *	Bit twiddling.
- * Exception:
- *	Inexact flag raised if x not equal to ceil(x).
  */
 
 #include <math.h>
 #include <math_private.h>
-
-static const double huge = 1.0e300;
 
 double
 __ceil (double x)
@@ -33,9 +29,8 @@ __ceil (double x)
   j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
   if (j0 < 20)
     {
-      if (j0 < 0)       /* raise inexact if x != 0 */
+      if (j0 < 0)
 	{
-	  math_force_eval (huge + x);
 	  /* return 0*sign(x) if |x|<1 */
 	  if (i0 < 0)
 	    {
@@ -51,7 +46,6 @@ __ceil (double x)
 	  i = (0x000fffff) >> j0;
 	  if (((i0 & i) | i1) == 0)
 	    return x;                        /* x is integral */
-	  math_force_eval (huge + x);           /* raise inexact flag */
 	  if (i0 > 0)
 	    i0 += (0x00100000) >> j0;
 	  i0 &= (~i); i1 = 0;
@@ -69,7 +63,6 @@ __ceil (double x)
       i = ((u_int32_t) (0xffffffff)) >> (j0 - 20);
       if ((i1 & i) == 0)
 	return x;                       /* x is integral */
-      math_force_eval (huge + x);               /* raise inexact flag */
       if (i0 > 0)
 	{
 	  if (j0 == 20)
