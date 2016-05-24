@@ -1,5 +1,10 @@
 2016-05-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-64/memcpy.S (memcpy):
+	Use cghi instead of chi to compare 64bit value.
+
+2016-05-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/s390-32/memcpy.S (memcpy):
 	Jump to 1MB check before executing mvc-loop.
 

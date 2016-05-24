@@ -47,7 +47,7 @@ ENTRY(memcpy)
 .L_Z900_4:
 	br      %r14
 .L_Z900_13:
-	chi	%r5,4096             # Switch to mvcle for copies >1MB
+	cghi	%r5,4096            # Switch to mvcle for copies >1MB
 	jh      __memcpy_mvcle
 .L_Z900_12:
 	mvc     0(256,%r1),0(%r3)
