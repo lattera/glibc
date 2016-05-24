@@ -465,7 +465,7 @@ memalign_check (size_t alignment, size_t bytes, const void *caller)
    then the hooks are reset to 0.  */
 
 #define MALLOC_STATE_MAGIC   0x444c4541l
-#define MALLOC_STATE_VERSION (0 * 0x100l + 4l) /* major*0x100 + minor */
+#define MALLOC_STATE_VERSION (0 * 0x100l + 5l) /* major*0x100 + minor */
 
 struct malloc_save_state
 {

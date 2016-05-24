@@ -1,3 +1,10 @@
+2016-05-24  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #6527]
+	* malloc/malloc.c (MALLOC_ALIGNMENT): Use correct alignment
+	unconditionally.
+	* malloc/hooks.c (MALLOC_STATE_VERSION): Increase state version.
+
 2016-05-23  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* stdlib/tst-strtod6.c (do_test): Use new type generic

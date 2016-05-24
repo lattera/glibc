@@ -352,20 +352,8 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 
 
 #ifndef MALLOC_ALIGNMENT
-# if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_16)
-/* This is the correct definition when there is no past ABI to constrain it.
-
-   Among configurations with a past ABI constraint, it differs from
-   2*SIZE_SZ only on powerpc32.  For the time being, changing this is
-   causing more compatibility problems due to malloc_get_state and
-   malloc_set_state than will returning blocks not adequately aligned for
-   long double objects under -mlong-double-128.  */
-
-#  define MALLOC_ALIGNMENT       (2 *SIZE_SZ < __alignof__ (long double)      \
-                                  ? __alignof__ (long double) : 2 *SIZE_SZ)
-# else
-#  define MALLOC_ALIGNMENT       (2 *SIZE_SZ)
-# endif
+# define MALLOC_ALIGNMENT       (2 * SIZE_SZ < __alignof__ (long double) \
+				 ? __alignof__ (long double) : 2 * SIZE_SZ)
 #endif
 
 /* The corresponding bit mask value */
