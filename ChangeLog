@@ -1,3 +1,11 @@
+2016-05-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.h.in (BIND_NOW): New.
+	* configure.ac (BIND_NOW): New.  Defined for --enable-bind-now.
+	* configure: Regenerated.
+	* sysdeps/x86_64/sysdep.h (JUMPTARGET)[BIND_NOW]: Defined to
+	indirect branch via the GOT slot.
+
 2016-05-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	[BZ #19765]

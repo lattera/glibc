@@ -3416,6 +3416,10 @@ else
 fi
 
 
+if test "x$bindnow" = xyes; then
+  $as_echo "#define BIND_NOW 1" >>confdefs.h
+
+fi
 
 # Check whether --enable-static-nss was given.
 if test "${enable_static_nss+set}" = set; then :

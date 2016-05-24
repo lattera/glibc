@@ -231,6 +231,9 @@ AC_ARG_ENABLE([bind-now],
 	      [bindnow=$enableval],
 	      [bindnow=no])
 AC_SUBST(bindnow)
+if test "x$bindnow" = xyes; then
+  AC_DEFINE(BIND_NOW)
+fi
 
 dnl On some platforms we cannot use dynamic loading.  We must provide
 dnl static NSS modules.
