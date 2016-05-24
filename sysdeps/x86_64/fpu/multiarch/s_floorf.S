@@ -33,6 +33,6 @@ weak_alias (__floorf, floorf)
 
 
 ENTRY(__floorf_sse41)
-	roundss	$1, %xmm0, %xmm0
+	roundss	$9, %xmm0, %xmm0
 	ret
 END(__floorf_sse41)

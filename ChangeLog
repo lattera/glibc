@@ -1,3 +1,15 @@
+2016-05-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15479]
+	* sysdeps/x86_64/fpu/multiarch/s_ceil.S (__ceil_sse41): Set bit 3
+	of immediate operand to rounding instruction.
+	* sysdeps/x86_64/fpu/multiarch/s_ceilf.S (__ceilf_sse41):
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_floor.S (__floor_sse41):
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_floorf.S (__floorf_sse41):
+	Likewise.
+
 2016-05-24  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* math/libm-test.inc (MIN_EXP): Directly define as

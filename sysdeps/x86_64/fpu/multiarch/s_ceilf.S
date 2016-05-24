@@ -33,6 +33,6 @@ weak_alias (__ceilf, ceilf)
 
 
 ENTRY(__ceilf_sse41)
-	roundss	$2, %xmm0, %xmm0
+	roundss	$10, %xmm0, %xmm0
 	ret
 END(__ceilf_sse41)

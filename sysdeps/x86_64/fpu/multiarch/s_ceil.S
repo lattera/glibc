@@ -33,6 +33,6 @@ weak_alias (__ceil, ceil)
 
 
 ENTRY(__ceil_sse41)
-	roundsd	$2, %xmm0, %xmm0
+	roundsd	$10, %xmm0, %xmm0
 	ret
 END(__ceil_sse41)
