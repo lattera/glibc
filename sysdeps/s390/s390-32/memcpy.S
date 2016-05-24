@@ -42,7 +42,7 @@ ENTRY(memcpy)
 	srl     %r5,8
 	ltr     %r5,%r5
 	lr      %r1,%r2
-	jne     .L_G5_12
+	jne     .L_G5_13
 	ex      %r4,.L_G5_17-.L_G5_16(%r13)
 .L_G5_4:
 	l       %r13,52(%r15)

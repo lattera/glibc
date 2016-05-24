@@ -1,3 +1,8 @@
+2016-05-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/s390-32/memcpy.S (memcpy):
+	Jump to 1MB check before executing mvc-loop.
+
 2016-05-24  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #6527]
