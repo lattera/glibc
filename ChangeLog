@@ -1,6 +1,21 @@
 2016-05-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15479]
+	* sysdeps/ieee754/dbl-64/s_round.c (huge): Remove variable.
+	(__round): Do not force "inexact" exception.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_round.c (huge): Remove
+	variable.
+	(__round): Do not force "inexact" exception.
+	* sysdeps/ieee754/flt-32/s_roundf.c (huge): Remove variable.
+	(__roundf): Do not force "inexact" exception.
+	* sysdeps/ieee754/ldbl-128/s_roundl.c (huge): Remove variable.
+	(__roundl): Do not force "inexact" exception.
+	* sysdeps/ieee754/ldbl-96/s_roundl.c (huge): Remove variable.
+	(__roundl): Do not force "inexact" exception.
+	* math/libm-test.inc (round_test_data): Do not allow spurious
+	"inexact" exceptions.
+
+	[BZ #15479]
 	* sysdeps/ieee754/dbl-64/s_floor.c: Do not mention "inexact"
 	exception in comment.
 	(huge): Remove variable.
