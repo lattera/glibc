@@ -1,6 +1,24 @@
 2016-05-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15479]
+	* sysdeps/ieee754/dbl-64/s_floor.c: Do not mention "inexact"
+	exception in comment.
+	(huge): Remove variable.
+	(__floor): Do not force "inexact" exception.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_floor.c: Do not mention
+	"inexact" exception in comment.
+	(huge): Remove variable.
+	(__floor): Do not force "inexact" exception.
+	* sysdeps/ieee754/flt-32/s_floorf.c: Do not mention "inexact"
+	exception in comment.
+	(huge): Remove variable.
+	(__floorf): Do not force "inexact" exception.
+	* sysdeps/ieee754/ldbl-128/s_floorl.c: Do not mention "inexact"
+	exception in comment.
+	(huge): Remove variable.
+	(__floorl): Do not force "inexact" exception.
+
+	[BZ #15479]
 	* sysdeps/ieee754/dbl-64/s_ceil.c: Do not mention "inexact"
 	exception in comment.
 	(huge): Remove variable.

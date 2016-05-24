@@ -39,11 +39,7 @@
  * Return x rounded toward -inf to integral value
  * Method:
  *	Bit twiddling.
- * Exception:
- *	Inexact flag raised if x not equal to floor(x).
  */
-
-static const double huge = 1.0e300;
 
 
 double
@@ -53,15 +49,14 @@ __floor (double x)
 	EXTRACT_WORDS64(i0,x);
 	int32_t j0 = ((i0>>52)&0x7ff)-0x3ff;
 	if(__builtin_expect(j0<52, 1)) {
-	    if(j0<0) {	/* raise inexact if x != 0 */
-		math_force_eval(huge+x);/* return 0*sign(x) if |x|<1 */
+	    if(j0<0) {
+		/* return 0*sign(x) if |x|<1 */
 		if(i0>=0) {i0=0;}
 		else if((i0&0x7fffffffffffffffl)!=0)
 		  { i0=0xbff0000000000000l;}
 	    } else {
 		uint64_t i = (0x000fffffffffffffl)>>j0;
 		if((i0&i)==0) return x; /* x is integral */
-		math_force_eval(huge+x);	/* raise inexact flag */
 		if(i0<0) i0 += (0x0010000000000000l)>>j0;
 		i0 &= (~i);
 	    }
