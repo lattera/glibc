@@ -1,5 +1,16 @@
 2016-05-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/ifunc-resolve.h (s390_libc_ifunc):
+	Remove __GI_ symbol.
+	* sysdeps/s390/s390-32/multiarch/memcmp-s390.S: Add __GI_memcmp symbol.
+	* sysdeps/s390/s390-64/multiarch/memcmp-s390x.S: Likewise.
+	* sysdeps/s390/s390-32/multiarch/memcpy-s390.S: Add __GI_memcpy symbol.
+	* sysdeps/s390/s390-64/multiarch/memcpy-s390x.S: Likewise.
+	* sysdeps/s390/s390-32/multiarch/memset-s390.S: Add __GI_memset symbol.
+	* sysdeps/s390/s390-64/multiarch/memset-s390x.S: Likewise.
+
+2016-05-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/s390-64/memcpy.S (memcpy):
 	Use cghi instead of chi to compare 64bit value.
 

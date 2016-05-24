@@ -110,4 +110,7 @@ END(__memset_mvcle)
 #if !IS_IN (libc)
 .globl   memset
 .set     memset,__memset_default
+#elif defined SHARED && IS_IN (libc)
+.globl   __GI_memset
+.set     __GI_memset,__memset_default
 #endif

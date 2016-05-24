@@ -44,9 +44,7 @@
 #define s390_libc_ifunc(FUNC)						\
   __asm__ (".globl " #FUNC "\n\t"					\
 	   ".type  " #FUNC ",@gnu_indirect_function\n\t"		\
-	   ".set   " #FUNC ",__resolve_" #FUNC "\n\t"			\
-	   ".globl __GI_" #FUNC "\n\t"					\
-	   ".set   __GI_" #FUNC "," #FUNC "\n");			\
+	   ".set   " #FUNC ",__resolve_" #FUNC "\n\t");			\
 									\
   /* Make the declarations of the optimized functions hidden in order
      to prevent GOT slots being generated for them. */			\

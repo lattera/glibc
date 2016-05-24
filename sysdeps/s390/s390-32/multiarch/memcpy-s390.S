@@ -92,7 +92,10 @@ END(__memcpy_z10)
 
 #include "../memcpy.S"
 
-#if !defined SHARED || !IS_IN (libc)
+#if defined SHARED && IS_IN (libc)
+.globl   __GI_memcpy
+.set     __GI_memcpy,__memcpy_default
+#else
 .globl   memcpy
 .set     memcpy,__memcpy_default
 #endif
