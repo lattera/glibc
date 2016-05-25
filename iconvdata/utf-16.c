@@ -295,6 +295,12 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    uint16_t u2;						      \
 									      \
+	    if (__glibc_unlikely (u1 >= 0xdc00))			      \
+	      {								      \
+		/* This is no valid first word for a surrogate.  */	      \
+		STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
+	      }								      \
+									      \
 	    /* It's a surrogate character.  At least the first word says      \
 	       it is.  */						      \
 	    if (__glibc_unlikely (inptr + 4 > inend))			      \
@@ -329,6 +335,12 @@ gconv_end (struct __gconv_step *data)
 	  }								      \
 	else								      \
 	  {								      \
+	    if (__glibc_unlikely (u1 >= 0xdc00))			      \
+	      {								      \
+		/* This is no valid first word for a surrogate.  */	      \
+		STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
+	      }								      \
+									      \
 	    /* It's a surrogate character.  At least the first word says      \
 	       it is.  */						      \
 	    if (__glibc_unlikely (inptr + 4 > inend))			      \

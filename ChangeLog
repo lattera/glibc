@@ -1,5 +1,16 @@
 2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	[BZ #19727]
+	* iconvdata/utf-16.c (BODY): Report an error if first word is not a
+	valid high surrogate.
+	* iconvdata/utf-32.c (BODY): Report an error if the value is in range
+	of an utf16 surrogate.
+	* iconv/gconv_simple.c (BODY): Likewise.
+	* iconvdata/bug-iconv12.c: New file.
+	* iconvdata/Makefile (tests): Add bug-iconv12.
+
+2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	[BZ #19726]
 	* iconv/gconv_simple.c (ucs4le_internal_loop): Update inptrp and
 	outptrp in case of an illegal input.

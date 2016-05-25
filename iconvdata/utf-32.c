@@ -239,7 +239,7 @@ gconv_end (struct __gconv_step *data)
     if (swap)								      \
       u1 = bswap_32 (u1);						      \
 									      \
-    if (__glibc_unlikely (u1 >= 0x110000))				      \
+    if (__glibc_unlikely (u1 >= 0x110000 || (u1 >= 0xd800 && u1 < 0xe000)))   \
       {									      \
 	/* This is illegal.  */						      \
 	STANDARD_FROM_LOOP_ERR_HANDLER (4);				      \

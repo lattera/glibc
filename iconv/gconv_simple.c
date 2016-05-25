@@ -892,7 +892,8 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
     if (__glibc_likely (wc < 0x80))					      \
       /* It's an one byte sequence.  */					      \
       *outptr++ = (unsigned char) wc;					      \
-    else if (__glibc_likely (wc <= 0x7fffffff))				      \
+    else if (__glibc_likely (wc <= 0x7fffffff				      \
+			     && (wc < 0xd800 || wc > 0xdfff)))		      \
       {									      \
 	size_t step;							      \
 	unsigned char *start;						      \
