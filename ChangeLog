@@ -1,5 +1,10 @@
 2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-64/iso-8859-1_cp037_z900.c (TROO_LOOP):
+	Rename to TR_LOOP and usage of tr instead of troo instruction.
+
+2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/multiarch/gconv_simple.c: New File.
 	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add gconv_simple.
 
