@@ -1,3 +1,9 @@
+2016-08-09  Torvald Riegel  <triegel@redhat.com>
+
+	* include/atomic.h (atomic_fetch_and_relaxed,
+	atomic_fetch_and_release, atomic_fetch_or_release,
+	atomic_fetch_xor_release): New.
+
 2016-08-06  Christian Seiler  <christian@iwakd.de>
 
 	[BZ #20444]
