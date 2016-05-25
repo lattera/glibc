@@ -638,6 +638,8 @@ ucs4le_internal_loop (struct __gconv_step *step,
 	      continue;
 	    }
 
+	  *inptrp = inptr;
+	  *outptrp = outptr;
 	  return __GCONV_ILLEGAL_INPUT;
 	}
 

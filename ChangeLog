@@ -1,5 +1,13 @@
 2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	[BZ #19726]
+	* iconv/gconv_simple.c (ucs4le_internal_loop): Update inptrp and
+	outptrp in case of an illegal input.
+	* iconv/tst-iconv6.c: New file.
+	* iconv/Makefile (tests): Add tst-iconv6.
+
+2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/utf16-utf32-z9.c: Disable cu42 instruction and report
 	an error in case of a value in range of an utf16 low surrogate.
 
