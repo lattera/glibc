@@ -145,42 +145,6 @@ gconv_end (struct __gconv_step *data)
   free (data->__data);
 }
 
-/* The macro for the hardware loop.  This is used for both
-   directions.  */
-#define HARDWARE_CONVERT(INSTRUCTION)					\
-  {									\
-    register const unsigned char* pInput __asm__ ("8") = inptr;		\
-    register size_t inlen __asm__ ("9") = inend - inptr;		\
-    register unsigned char* pOutput __asm__ ("10") = outptr;		\
-    register size_t outlen __asm__("11") = outend - outptr;		\
-    unsigned long cc = 0;						\
-									\
-    __asm__ __volatile__ (".machine push       \n\t"			\
-			  ".machine \"z9-109\" \n\t"			\
-			  ".machinemode \"zarch_nohighgprs\"\n\t"	\
-			  "0: " INSTRUCTION "  \n\t"			\
-			  ".machine pop        \n\t"			\
-			  "   jo     0b        \n\t"			\
-			  "   ipm    %2        \n"			\
-			  : "+a" (pOutput), "+a" (pInput), "+d" (cc),	\
-			    "+d" (outlen), "+d" (inlen)			\
-			  :						\
-			  : "cc", "memory");				\
-									\
-    inptr = pInput;							\
-    outptr = pOutput;							\
-    cc >>= 28;								\
-									\
-    if (cc == 1)							\
-      {									\
-	result = __GCONV_FULL_OUTPUT;					\
-      }									\
-    else if (cc == 2)							\
-      {									\
-	result = __GCONV_ILLEGAL_INPUT;					\
-      }									\
-  }
-
 #define PREPARE_LOOP							\
   enum direction dir = ((struct utf16_data *) step->__data)->dir;	\
   int emit_bom = ((struct utf16_data *) step->__data)->emit_bom;	\
@@ -310,7 +274,7 @@ gconv_end (struct __gconv_step *data)
 		  "    slgr %[R_OUTLEN],%[R_TMP3]\n\t"			\
 		  /* Calculate remaining uint16_t values in loaded vrs.  */ \
 		  "12: lghi %[R_TMP2],16\n\t"				\
-		  "    sgr %[R_TMP2],%[R_TMP]\n\t"			\
+		  "    slgr %[R_TMP2],%[R_TMP]\n\t"			\
 		  "    srl %[R_TMP2],1\n\t"				\
 		  "    llh %[R_TMP],0(%[R_IN])\n\t"			\
 		  "    aghi %[R_OUTLEN],-4\n\t"				\
@@ -437,7 +401,7 @@ strong_alias (__from_utf16_loop_c_single, __from_utf16_loop_single)
     uint32_t c = get32 (inptr);						\
 									\
     if (__builtin_expect (c <= 0xd7ff, 1)				\
-	|| (c >=0xdc00 && c <= 0xffff))					\
+	|| (c > 0xdfff && c <= 0xffff))					\
       {									\
 	/* Two UTF-16 chars.  */					\
 	put16 (outptr, c);						\
@@ -475,29 +439,10 @@ strong_alias (__from_utf16_loop_c_single, __from_utf16_loop_single)
     inptr += 4;								\
   }
 
-#define BODY_TO_ETF3EH							\
-  {									\
-    HARDWARE_CONVERT ("cu42 %0, %1");					\
-									\
-    if (__glibc_likely (inptr == inend)					\
-	|| result == __GCONV_FULL_OUTPUT)				\
-      break;								\
-									\
-    if (inptr + 4 > inend)						\
-      {									\
-	result = __GCONV_INCOMPLETE_INPUT;				\
-	break;								\
-      }									\
-									\
-    STANDARD_TO_LOOP_ERR_HANDLER (4);					\
-  }
-
 #define BODY_TO_VX							\
   {									\
-    register const unsigned char* pInput asm ("8") = inptr;		\
-    register size_t inlen asm ("9") = inend - inptr;			\
-    register unsigned char* pOutput asm ("10") = outptr;		\
-    register size_t outlen asm("11") = outend - outptr;			\
+    size_t inlen = inend - inptr;					\
+    size_t outlen = outend - outptr;					\
     unsigned long tmp, tmp2, tmp3;					\
     asm volatile (".machine push\n\t"					\
 		  ".machine \"z13\"\n\t"				\
@@ -509,8 +454,8 @@ strong_alias (__from_utf16_loop_c_single, __from_utf16_loop_single)
 		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-16 chars			\
 		     ch < 0xd800 || (ch > 0xdfff && ch < 0x10000).  */	\
-		  "0:  clgijl %[R_INLEN],32,20f\n\t"			\
-		  "    clgijl %[R_OUTLEN],16,20f\n\t"			\
+		  "0:  clgijl %[R_INLEN],32,2f\n\t"			\
+		  "    clgijl %[R_OUTLEN],16,2f\n\t"			\
 		  "1:  vlm %%v16,%%v17,0(%[R_IN])\n\t"			\
 		  "    lghi %[R_TMP2],0\n\t"				\
 		  /* Shorten to UTF-16.  */				\
@@ -526,9 +471,15 @@ strong_alias (__from_utf16_loop_c_single, __from_utf16_loop_single)
 		  "    aghi %[R_INLEN],-32\n\t"				\
 		  "    aghi %[R_OUTLEN],-16\n\t"			\
 		  "    la %[R_OUT],16(%[R_OUT])\n\t"			\
-		  "    clgijl %[R_INLEN],32,20f\n\t"			\
-		  "    clgijl %[R_OUTLEN],16,20f\n\t"			\
+		  "    clgijl %[R_INLEN],32,2f\n\t"			\
+		  "    clgijl %[R_OUTLEN],16,2f\n\t"			\
 		  "    j 1b\n\t"					\
+		  /* Calculate remaining uint32_t values in inptr.  */	\
+		  "2:  \n\t"						\
+		  "    clgije %[R_INLEN],0,99f\n\t"			\
+		  "    clgijl %[R_INLEN],4,92f\n\t"			\
+		  "    srlg %[R_TMP2],%[R_INLEN],2\n\t"			\
+		  "    j 20f\n\t"					\
 		  /* Setup to check for ch >= 0xd800 && ch <= 0xdfff	\
 		     and check for ch >= 0x10000. (v30, v31)  */	\
 		  "9:  .long 0xd800,0xdfff,0x10000,0x10000\n\t"		\
@@ -540,21 +491,59 @@ strong_alias (__from_utf16_loop_c_single, __from_utf16_loop_single)
 		  "    agr %[R_TMP],%[R_TMP2]\n\t"			\
 		  "    srlg %[R_TMP3],%[R_TMP],1\n\t" /* Number of out bytes.  */ \
 		  "    ahik %[R_TMP2],%[R_TMP3],-1\n\t" /* Highest index to store.  */ \
-		  "    jl 20f\n\t"					\
+		  "    jl 12f\n\t"					\
 		  "    vstl %%v18,%[R_TMP2],0(%[R_OUT])\n\t"		\
 		  /* Update pointers.  */				\
 		  "    la %[R_IN],0(%[R_TMP],%[R_IN])\n\t"		\
 		  "    slgr %[R_INLEN],%[R_TMP]\n\t"			\
 		  "    la %[R_OUT],0(%[R_TMP3],%[R_OUT])\n\t"		\
 		  "    slgr %[R_OUTLEN],%[R_TMP3]\n\t"			\
-		  /* Handles UTF16 surrogates with convert instruction.  */ \
-		  "20: cu42 %[R_OUT],%[R_IN]\n\t"			\
-		  "    jo 0b\n\t" /* Try vector implemenation again.  */ \
-		  "    lochil %[R_RES],%[RES_OUT_FULL]\n\t" /* cc == 1.  */ \
-		  "    lochih %[R_RES],%[RES_IN_ILL]\n\t" /* cc == 2.  */ \
+		  /* Calculate remaining uint32_t values in vrs.  */	\
+		  "12: lghi %[R_TMP2],8\n\t"				\
+		  "    srlg %[R_TMP3],%[R_TMP3],1\n\t"			\
+		  "    slgr %[R_TMP2],%[R_TMP3]\n\t"			\
+		  /* Handle remaining UTF-32 characters.  */		\
+		  "20: l %[R_TMP],0(%[R_IN])\n\t"			\
+		  "    aghi %[R_INLEN],-4\n\t"				\
+		  /* Test if ch is 2byte UTF-16 char. */		\
+		  "    clfi %[R_TMP],0xffff\n\t"			\
+		  "    jh 21f\n\t"					\
+		  /* Handle 2 byte UTF16 char.  */			\
+		  "    lgr %[R_TMP3],%[R_TMP]\n\t"			\
+		  "    nilf %[R_TMP],0xf800\n\t"			\
+		  "    clfi %[R_TMP],0xd800\n\t"			\
+		  "    je 91f\n\t" /* Do not accept UTF-16 surrogates.  */ \
+		  "    slgfi %[R_OUTLEN],2\n\t"				\
+		  "    jl 90f \n\t"					\
+		  "    sth %[R_TMP3],0(%[R_OUT])\n\t"			\
+		  "    la %[R_IN],4(%[R_IN])\n\t"			\
+		  "    la %[R_OUT],2(%[R_OUT])\n\t"			\
+		  "    brctg %[R_TMP2],20b\n\t"				\
+		  "    j 0b\n\t" /* Switch to vx-loop.  */		\
+		  /* Test if ch is 4byte UTF-16 char. */		\
+		  "21: clfi %[R_TMP],0x10ffff\n\t"			\
+		  "    jh 91f\n\t" /* ch > 0x10ffff is not allowed!  */	\
+		  /* Handle 4 byte UTF16 char.  */			\
+		  "    slgfi %[R_OUTLEN],4\n\t"				\
+		  "    jl 90f \n\t"					\
+		  "    slfi %[R_TMP],0x10000\n\t" /* zabcd = uvwxy - 1.  */ \
+		  "    llilf %[R_TMP3],0xd800dc00\n\t"			\
+		  "    la %[R_IN],4(%[R_IN])\n\t"			\
+		  "    risbgn %[R_TMP3],%[R_TMP],38,47,6\n\t" /* High surrogate.  */ \
+		  "    risbgn %[R_TMP3],%[R_TMP],54,63,0\n\t" /* Low surrogate.  */ \
+		  "    st %[R_TMP3],0(%[R_OUT])\n\t"			\
+		  "    la %[R_OUT],4(%[R_OUT])\n\t"			\
+		  "    brctg %[R_TMP2],20b\n\t"				\
+		  "    j 0b\n\t" /* Switch to vx-loop.  */		\
+		  "92: lghi %[R_RES],%[RES_IN_FULL]\n\t"		\
+		  "    j 99f\n\t"					\
+		  "91: lghi %[R_RES],%[RES_IN_ILL]\n\t"			\
+		  "    j 99f\n\t"					\
+		  "90: lghi %[R_RES],%[RES_OUT_FULL]\n\t"		\
+		  "99: \n\t"						\
 		  ".machine pop"					\
-		  : /* outputs */ [R_IN] "+a" (pInput)			\
-		    , [R_INLEN] "+d" (inlen), [R_OUT] "+a" (pOutput)	\
+		  : /* outputs */ [R_IN] "+a" (inptr)			\
+		    , [R_INLEN] "+d" (inlen), [R_OUT] "+a" (outptr)	\
 		    , [R_OUTLEN] "+d" (outlen), [R_TMP] "=a" (tmp)	\
 		    , [R_TMP2] "=d" (tmp2), [R_TMP3] "=a" (tmp3)	\
 		    , [R_RES] "+d" (result)				\
@@ -567,17 +556,10 @@ strong_alias (__from_utf16_loop_c_single, __from_utf16_loop_single)
 		    ASM_CLOBBER_VR ("v18") ASM_CLOBBER_VR ("v19")	\
 		    ASM_CLOBBER_VR ("v30") ASM_CLOBBER_VR ("v31")	\
 		  );							\
-    inptr = pInput;							\
-    outptr = pOutput;							\
-									\
     if (__glibc_likely (inptr == inend)					\
-	|| result == __GCONV_FULL_OUTPUT)				\
+	|| result != __GCONV_ILLEGAL_INPUT)				\
       break;								\
-    if (inptr + 4 > inend)						\
-      {									\
-	result = __GCONV_INCOMPLETE_INPUT;				\
-	break;								\
-      }									\
+									\
     STANDARD_TO_LOOP_ERR_HANDLER (4);					\
   }
 
@@ -588,15 +570,6 @@ strong_alias (__from_utf16_loop_c_single, __from_utf16_loop_single)
 #define LOOPFCT			__to_utf16_loop_c
 #define LOOP_NEED_FLAGS
 #define BODY			BODY_TO_C
-#include <iconv/loop.c>
-
-/* Generate loop-function with hardware utf-convert instruction.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
-#define LOOPFCT			__to_utf16_loop_etf3eh
-#define LOOP_NEED_FLAGS
-#define BODY			BODY_TO_ETF3EH
 #include <iconv/loop.c>
 
 #if defined HAVE_S390_VX_ASM_SUPPORT
@@ -623,10 +596,6 @@ __to_utf16_loop_resolver (unsigned long int dl_hwcap)
     return __to_utf16_loop_vx;
   else
 #endif
-  if (dl_hwcap & HWCAP_S390_ZARCH && dl_hwcap & HWCAP_S390_HIGH_GPRS
-      && dl_hwcap & HWCAP_S390_ETF3EH)
-    return __to_utf16_loop_etf3eh;
-  else
     return __to_utf16_loop_c;
 }
 
