@@ -36,6 +36,12 @@
 # define ASM_CLOBBER_VR(NR)
 #endif
 
+#if defined __s390x__
+# define CONVERT_32BIT_SIZE_T(REG)
+#else
+# define CONVERT_32BIT_SIZE_T(REG) "llgfr %" #REG ",%" #REG "\n\t"
+#endif
+
 /* Defines for skeleton.c.  */
 #define DEFINE_INIT		0
 #define DEFINE_FINI		0
@@ -140,13 +146,14 @@ gconv_end (struct __gconv_step *data)
 #define HARDWARE_CONVERT(INSTRUCTION)					\
   {									\
     register const unsigned char* pInput __asm__ ("8") = inptr;		\
-    register unsigned long long inlen __asm__ ("9") = inend - inptr;	\
+    register size_t inlen __asm__ ("9") = inend - inptr;		\
     register unsigned char* pOutput __asm__ ("10") = outptr;		\
-    register unsigned long long outlen __asm__("11") = outend - outptr;	\
-    uint64_t cc = 0;							\
+    register size_t outlen __asm__("11") = outend - outptr;		\
+    unsigned long cc = 0;						\
 									\
     __asm__ __volatile__ (".machine push       \n\t"			\
 			  ".machine \"z9-109\" \n\t"			\
+			  ".machinemode \"zarch_nohighgprs\"\n\t"	\
 			  "0: " INSTRUCTION "  \n\t"			\
 			  ".machine pop        \n\t"			\
 			  "   jo     0b        \n\t"			\
@@ -413,6 +420,8 @@ gconv_end (struct __gconv_step *data)
 		  ".machinemode \"zarch_nohighgprs\"\n\t"		\
 		  "    vrepib %%v30,0x7f\n\t" /* For compare > 0x7f.  */ \
 		  "    vrepib %%v31,0x20\n\t"				\
+		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
+		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-8 chars <=0x7f.  */		\
 		  "0:  clgijl %[R_INLEN],16,20f\n\t"			\
 		  "    clgijl %[R_OUTLEN],64,20f\n\t"			\
@@ -554,7 +563,8 @@ __from_utf8_loop_resolver (unsigned long int dl_hwcap)
     return __from_utf8_loop_vx;
   else
 #endif
-  if (dl_hwcap & HWCAP_S390_ETF3EH)
+  if (dl_hwcap & HWCAP_S390_ZARCH && dl_hwcap & HWCAP_S390_HIGH_GPRS
+      && dl_hwcap & HWCAP_S390_ETF3EH)
     return __from_utf8_loop_etf3eh;
   else
     return __from_utf8_loop_c;
@@ -683,6 +693,8 @@ strong_alias (__from_utf8_loop_c_single, __from_utf8_loop_single)
 		  "    vzero %%v21\n\t"					\
 		  "    vleih %%v21,8192,0\n\t"  /* element 0:   >  */	\
 		  "    vleih %%v21,-8192,2\n\t" /* element 1: =<>  */	\
+		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
+		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-32 chars <=0x7f.  */	\
 		  "0:  clgijl %[R_INLEN],64,20f\n\t"			\
 		  "    clgijl %[R_OUTLEN],16,20f\n\t"			\
@@ -795,7 +807,8 @@ __to_utf8_loop_resolver (unsigned long int dl_hwcap)
     return __to_utf8_loop_vx;
   else
 #endif
-  if (dl_hwcap & HWCAP_S390_ETF3EH)
+  if (dl_hwcap & HWCAP_S390_ZARCH && dl_hwcap & HWCAP_S390_HIGH_GPRS
+      && dl_hwcap & HWCAP_S390_ETF3EH)
     return __to_utf8_loop_etf3eh;
   else
     return __to_utf8_loop_c;

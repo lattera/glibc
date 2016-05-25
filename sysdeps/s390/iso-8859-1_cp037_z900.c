@@ -175,6 +175,12 @@ __attribute__ ((aligned (8))) =
 #define MIN_NEEDED_FROM		1
 #define MIN_NEEDED_TO		1
 
+# if defined __s390x__
+#  define BRANCH_ON_COUNT(REG,LBL) "brctg %" #REG "," #LBL "\n\t"
+# else
+#  define BRANCH_ON_COUNT(REG,LBL) "brct %" #REG "," #LBL "\n\t"
+# endif
+
 #define TR_LOOP(TABLE)							\
   {									\
     size_t length = (inend - inptr < outend - outptr			\
@@ -188,7 +194,7 @@ __attribute__ ((aligned (8))) =
 			     "   tr 0(256,%[R_OUT]),0(%[R_TBL])\n\t"	\
 			     "   la %[R_IN],256(%[R_IN])\n\t"		\
 			     "   la %[R_OUT],256(%[R_OUT])\n\t"		\
-			     "   brctg %[R_LI],0b\n\t"			\
+			     BRANCH_ON_COUNT ([R_LI], 0b)		\
 			     : /* outputs */ [R_IN] "+a" (inptr)	\
 			       , [R_OUT] "+a" (outptr), [R_LI] "+d" (blocks) \
 			     : /* inputs */ [R_TBL] "a" (TABLE)		\

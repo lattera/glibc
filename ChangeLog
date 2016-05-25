@@ -1,5 +1,24 @@
 2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-64/Makefile (iconvdata-subdirectory):
+	Move to ...
+	* sysdeps/s390/Makefile: ... here.
+	* sysdeps/s390/s390-64/iso-8859-1_cp037_z900.c: Move to ...
+	* sysdeps/s390/iso-8859-1_cp037_z900.c: ... here.
+	(BRANCH_ON_COUNT): New define.
+	(TR_LOOP): Use BRANCH_ON_COUNT instead of brctg.
+	* sysdeps/s390/s390-64/utf16-utf32-z9.c: Move to ...
+	* sysdeps/s390/utf16-utf32-z9.c: ... here and adjust to
+	run on s390-32, too.
+	* sysdeps/s390/s390-64/utf8-utf16-z9.c: Move to ...
+	* sysdeps/s390/utf8-utf16-z9.c: ... here and adjust to
+	run on s390-32, too.
+	* sysdeps/s390/s390-64/utf8-utf32-z9.c: Move to ...
+	* sysdeps/s390/utf8-utf32-z9.c: ... here and adjust to
+	run on s390-32, too.
+
+2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/s390-64/utf16-utf32-z9.c: Use ifunc to select c,
 	etf3eh or new vector loop-variant.
 

@@ -36,6 +36,12 @@
 # define ASM_CLOBBER_VR(NR)
 #endif
 
+#if defined __s390x__
+# define CONVERT_32BIT_SIZE_T(REG)
+#else
+# define CONVERT_32BIT_SIZE_T(REG) "llgfr %" #REG ",%" #REG "\n\t"
+#endif
+
 /* UTF-32 big endian byte order mark.  */
 #define BOM_UTF32               0x0000feffu
 
@@ -144,13 +150,14 @@ gconv_end (struct __gconv_step *data)
 #define HARDWARE_CONVERT(INSTRUCTION)					\
   {									\
     register const unsigned char* pInput __asm__ ("8") = inptr;		\
-    register unsigned long long inlen __asm__ ("9") = inend - inptr;	\
+    register size_t inlen __asm__ ("9") = inend - inptr;		\
     register unsigned char* pOutput __asm__ ("10") = outptr;		\
-    register unsigned long long outlen __asm__("11") = outend - outptr;	\
-    uint64_t cc = 0;							\
+    register size_t outlen __asm__("11") = outend - outptr;		\
+    unsigned long cc = 0;						\
 									\
     __asm__ __volatile__ (".machine push       \n\t"			\
 			  ".machine \"z9-109\" \n\t"			\
+			  ".machinemode \"zarch_nohighgprs\"\n\t"	\
 			  "0: " INSTRUCTION "  \n\t"			\
 			  ".machine pop        \n\t"			\
 			  "   jo     0b        \n\t"			\
@@ -260,6 +267,8 @@ gconv_end (struct __gconv_step *data)
 		  /* Setup to check for surrogates.  */			\
 		  "    larl %[R_TMP],9f\n\t"				\
 		  "    vlm %%v30,%%v31,0(%[R_TMP])\n\t"			\
+		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
+		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-16 chars <0xd800, >0xdfff.  */ \
 		  "0:  clgijl %[R_INLEN],16,2f\n\t"			\
 		  "    clgijl %[R_OUTLEN],32,2f\n\t"			\
@@ -496,6 +505,8 @@ strong_alias (__from_utf16_loop_c_single, __from_utf16_loop_single)
 		  /* Setup to check for surrogates.  */			\
 		  "    larl %[R_TMP],9f\n\t"				\
 		  "    vlm %%v30,%%v31,0(%[R_TMP])\n\t"			\
+		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
+		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-16 chars			\
 		     ch < 0xd800 || (ch > 0xdfff && ch < 0x10000).  */	\
 		  "0:  clgijl %[R_INLEN],32,20f\n\t"			\
@@ -612,7 +623,8 @@ __to_utf16_loop_resolver (unsigned long int dl_hwcap)
     return __to_utf16_loop_vx;
   else
 #endif
-  if (dl_hwcap & HWCAP_S390_ETF3EH)
+  if (dl_hwcap & HWCAP_S390_ZARCH && dl_hwcap & HWCAP_S390_HIGH_GPRS
+      && dl_hwcap & HWCAP_S390_ETF3EH)
     return __to_utf16_loop_etf3eh;
   else
     return __to_utf16_loop_c;
