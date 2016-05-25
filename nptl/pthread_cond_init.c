@@ -19,25 +19,29 @@
 #include <shlib-compat.h>
 #include "pthreadP.h"
 #include <stap-probe.h>
+#include <string.h>
 
 
+/* See __pthread_cond_wait for details.  */
 int
 __pthread_cond_init (pthread_cond_t *cond, const pthread_condattr_t *cond_attr)
 {
   struct pthread_condattr *icond_attr = (struct pthread_condattr *) cond_attr;
 
-  cond->__data.__lock = LLL_LOCK_INITIALIZER;
-  cond->__data.__futex = 0;
-  cond->__data.__nwaiters = (icond_attr != NULL
-			     ? ((icond_attr->value >> 1)
-				& ((1 << COND_NWAITERS_SHIFT) - 1))
-			     : CLOCK_REALTIME);
-  cond->__data.__total_seq = 0;
-  cond->__data.__wakeup_seq = 0;
-  cond->__data.__woken_seq = 0;
-  cond->__data.__mutex = (icond_attr == NULL || (icond_attr->value & 1) == 0
-			  ? NULL : (void *) ~0l);
-  cond->__data.__broadcast_seq = 0;
+  memset (cond, 0, sizeof (pthread_cond_t));
+
+  /* Update the pretty printers if the internal representation of icond_attr
+     is changed.  */
+
+  /* Iff not equal to ~0l, this is a PTHREAD_PROCESS_PRIVATE condvar.  */
+  if (icond_attr != NULL && (icond_attr->value & 1) != 0)
+    cond->__data.__wrefs |= __PTHREAD_COND_SHARED_MASK;
+  int clockid = (icond_attr != NULL
+		 ? ((icond_attr->value >> 1) & ((1 << COND_CLOCK_BITS) - 1))
+		 : CLOCK_REALTIME);
+  /* If 0, CLOCK_REALTIME is used; CLOCK_MONOTONIC otherwise.  */
+  if (clockid != CLOCK_REALTIME)
+    cond->__data.__wrefs |= __PTHREAD_COND_CLOCK_MONOTONIC_MASK;
 
   LIBC_PROBE (cond_init, 2, cond, cond_attr);
 

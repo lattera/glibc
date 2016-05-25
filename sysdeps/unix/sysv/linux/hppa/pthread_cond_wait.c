@@ -32,9 +32,22 @@ __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)
 }
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
                   GLIBC_2_3_2);
+int
+__pthread_cond_timedwait (cond, mutex, abstime)
+     pthread_cond_t *cond;
+     pthread_mutex_t *mutex;
+     const struct timespec *abstime;
+{
+  cond_compat_check_and_clear (cond);
+  return __pthread_cond_timedwait_internal (cond, mutex, abstime);
+}
+versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
+                  GLIBC_2_3_2);
 # undef versioned_symbol
 # define versioned_symbol(lib, local, symbol, version)
 # undef __pthread_cond_wait
 # define __pthread_cond_wait __pthread_cond_wait_internal
+# undef __pthread_cond_timedwait
+# define __pthread_cond_timedwait __pthread_cond_timedwait_internal
 # include_next <pthread_cond_wait.c>
 #endif

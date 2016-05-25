@@ -167,6 +167,13 @@ enum
 #define __PTHREAD_ONCE_FORK_GEN_INCR	4
 
 
+/* Condition variable definitions.  See __pthread_cond_wait_common.
+   Need to be defined here so there is one place from which
+   nptl_lock_constants can grab them.  */
+#define __PTHREAD_COND_CLOCK_MONOTONIC_MASK 2
+#define __PTHREAD_COND_SHARED_MASK 1
+
+
 /* Internal variables.  */
 
 

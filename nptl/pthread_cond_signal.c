@@ -19,62 +19,79 @@
 #include <endian.h>
 #include <errno.h>
 #include <sysdep.h>
-#include <lowlevellock.h>
+#include <futex-internal.h>
 #include <pthread.h>
 #include <pthreadP.h>
+#include <atomic.h>
+#include <stdint.h>
 
 #include <shlib-compat.h>
-#include <kernel-features.h>
 #include <stap-probe.h>
 
+#include "pthread_cond_common.c"
 
+/* See __pthread_cond_wait for a high-level description of the algorithm.  */
 int
 __pthread_cond_signal (pthread_cond_t *cond)
 {
-  int pshared = (cond->__data.__mutex == (void *) ~0l)
-		? LLL_SHARED : LLL_PRIVATE;
-
   LIBC_PROBE (cond_signal, 1, cond);
 
-  /* Make sure we are alone.  */
-  lll_lock (cond->__data.__lock, pshared);
+  /* First check whether there are waiters.  Relaxed MO is fine for that for
+     the same reasons that relaxed MO is fine when observing __wseq (see
+     below).  */
+  unsigned int wrefs = atomic_load_relaxed (&cond->__data.__wrefs);
+  if (wrefs >> 3 == 0)
+    return 0;
+  int private = __condvar_get_private (wrefs);
 
-  /* Are there any waiters to be woken?  */
-  if (cond->__data.__total_seq > cond->__data.__wakeup_seq)
+  __condvar_acquire_lock (cond, private);
+
+  /* Load the waiter sequence number, which represents our relative ordering
+     to any waiters.  Relaxed MO is sufficient for that because:
+     1) We can pick any position that is allowed by external happens-before
+        constraints.  In particular, if another __pthread_cond_wait call
+        happened before us, this waiter must be eligible for being woken by
+        us.  The only way do establish such a happens-before is by signaling
+        while having acquired the mutex associated with the condvar and
+        ensuring that the signal's critical section happens after the waiter.
+        Thus, the mutex ensures that we see that waiter's __wseq increase.
+     2) Once we pick a position, we do not need to communicate this to the
+        program via a happens-before that we set up: First, any wake-up could
+        be a spurious wake-up, so the program must not interpret a wake-up as
+        an indication that the waiter happened before a particular signal;
+        second, a program cannot detect whether a waiter has not yet been
+        woken (i.e., it cannot distinguish between a non-woken waiter and one
+        that has been woken but hasn't resumed execution yet), and thus it
+        cannot try to deduce that a signal happened before a particular
+        waiter.  */
+  unsigned long long int wseq = __condvar_load_wseq_relaxed (cond);
+  unsigned int g1 = (wseq & 1) ^ 1;
+  wseq >>= 1;
+  bool do_futex_wake = false;
+
+  /* If G1 is still receiving signals, we put the signal there.  If not, we
+     check if G2 has waiters, and if so, quiesce and switch G1 to the former
+     G2; if this results in a new G1 with waiters (G2 might have cancellations
+     already, see __condvar_quiesce_and_switch_g1), we put the signal in the
+     new G1.  */
+  if ((cond->__data.__g_size[g1] != 0)
+      || __condvar_quiesce_and_switch_g1 (cond, wseq, &g1, private))
     {
-      /* Yes.  Mark one of them as woken.  */
-      ++cond->__data.__wakeup_seq;
-      ++cond->__data.__futex;
-
-#if (defined lll_futex_cmp_requeue_pi \
-     && defined __ASSUME_REQUEUE_PI)
-      pthread_mutex_t *mut = cond->__data.__mutex;
-
-      if (USE_REQUEUE_PI (mut)
-	/* This can only really fail with a ENOSYS, since nobody can modify
-	   futex while we have the cond_lock.  */
-	  && lll_futex_cmp_requeue_pi (&cond->__data.__futex, 1, 0,
-				       &mut->__data.__lock,
-				       cond->__data.__futex, pshared) == 0)
-	{
-	  lll_unlock (cond->__data.__lock, pshared);
-	  return 0;
-	}
-      else
-#endif
-	/* Wake one.  */
-	if (! __builtin_expect (lll_futex_wake_unlock (&cond->__data.__futex,
-						       1, 1,
-						       &cond->__data.__lock,
-						       pshared), 0))
-	  return 0;
-
-      /* Fallback if neither of them work.  */
-      lll_futex_wake (&cond->__data.__futex, 1, pshared);
+      /* Add a signal.  Relaxed MO is fine because signaling does not need to
+	 establish a happens-before relation (see above).  We do not mask the
+	 release-MO store when initializing a group in
+	 __condvar_quiesce_and_switch_g1 because we use an atomic
+	 read-modify-write and thus extend that store's release sequence.  */
+      atomic_fetch_add_relaxed (cond->__data.__g_signals + g1, 2);
+      cond->__data.__g_size[g1]--;
+      /* TODO Only set it if there are indeed futex waiters.  */
+      do_futex_wake = true;
     }
 
-  /* We are done.  */
-  lll_unlock (cond->__data.__lock, pshared);
+  __condvar_release_lock (cond, private);
+
+  if (do_futex_wake)
+    futex_wake (cond->__data.__g_signals + g1, 1, private);
 
   return 0;
 }

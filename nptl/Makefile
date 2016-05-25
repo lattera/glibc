@@ -83,7 +83,7 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      pthread_rwlockattr_getkind_np \
 		      pthread_rwlockattr_setkind_np \
 		      pthread_cond_init pthread_cond_destroy \
-		      pthread_cond_wait pthread_cond_timedwait \
+		      pthread_cond_wait \
 		      pthread_cond_signal pthread_cond_broadcast \
 		      old_pthread_cond_init old_pthread_cond_destroy \
 		      old_pthread_cond_wait old_pthread_cond_timedwait \
@@ -186,7 +186,6 @@ CFLAGS-pthread_timedjoin.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_once.c = $(uses-callbacks) -fexceptions \
 			-fasynchronous-unwind-tables
 CFLAGS-pthread_cond_wait.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pthread_cond_timedwait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_wait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_timedwait.c = -fexceptions -fasynchronous-unwind-tables
 
@@ -307,8 +306,7 @@ test-xfail-tst-once5 = yes
 # Files which must not be linked with libpthread.
 tests-nolibpthread = tst-unload
 
-gen-as-const-headers = pthread-errnos.sym \
-		       lowlevelcond.sym lowlevelrwlock.sym \
+gen-as-const-headers = pthread-errnos.sym lowlevelrwlock.sym \
 		       unwindbuf.sym \
 		       lowlevelrobustlock.sym pthread-pi-defines.sym
 

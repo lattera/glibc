@@ -35,7 +35,7 @@ try:
 
     break_at(test_source, 'Test status (destroyed)')
     continue_cmd() # Go to test_status_destroyed
-    test_printer(var, to_string, {'Status': 'Destroyed'})
+    test_printer(var, to_string, {'Threads known to still execute a wait function': '0'})
 
     continue_cmd() # Exit
 

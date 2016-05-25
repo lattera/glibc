@@ -44,26 +44,13 @@ PTHREAD_PRIO_NONE
 PTHREAD_PRIO_INHERIT
 PTHREAD_PRIO_PROTECT
 
--- These values are hardcoded as well:
--- Value of __mutex for shared condvars.
-PTHREAD_COND_SHARED             (void *)~0l
-
--- Value of __total_seq for destroyed condvars.
-PTHREAD_COND_DESTROYED          -1ull
-
--- __nwaiters encodes the number of threads waiting on a condvar
--- and the clock ID.
--- __nwaiters >> COND_NWAITERS_SHIFT gives us the number of waiters.
-COND_NWAITERS_SHIFT
-
--- Condvar clock IDs
-CLOCK_REALTIME
-CLOCK_MONOTONIC
-CLOCK_PROCESS_CPUTIME_ID
-CLOCK_THREAD_CPUTIME_ID
-CLOCK_MONOTONIC_RAW
-CLOCK_REALTIME_COARSE
-CLOCK_MONOTONIC_COARSE
+-- Condition variable
+-- FIXME Why do macros prefixed with __ cannot be used directly?
+PTHREAD_COND_SHARED_MASK          __PTHREAD_COND_SHARED_MASK
+PTHREAD_COND_CLOCK_MONOTONIC_MASK __PTHREAD_COND_CLOCK_MONOTONIC_MASK
+COND_CLOCK_BITS
+-- These values are hardcoded:
+PTHREAD_COND_WREFS_SHIFT          3
 
 -- Rwlock attributes
 PTHREAD_RWLOCK_PREFER_READER_NP

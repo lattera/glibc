@@ -19,72 +19,71 @@
 #include <endian.h>
 #include <errno.h>
 #include <sysdep.h>
-#include <lowlevellock.h>
+#include <futex-internal.h>
 #include <pthread.h>
 #include <pthreadP.h>
 #include <stap-probe.h>
+#include <atomic.h>
 
 #include <shlib-compat.h>
-#include <kernel-features.h>
+
+#include "pthread_cond_common.c"
 
 
+/* We do the following steps from __pthread_cond_signal in one critical
+   section: (1) signal all waiters in G1, (2) close G1 so that it can become
+   the new G2 and make G2 the new G1, and (3) signal all waiters in the new
+   G1.  We don't need to do all these steps if there are no waiters in G1
+   and/or G2.  See __pthread_cond_signal for further details.  */
 int
 __pthread_cond_broadcast (pthread_cond_t *cond)
 {
   LIBC_PROBE (cond_broadcast, 1, cond);
 
-  int pshared = (cond->__data.__mutex == (void *) ~0l)
-		? LLL_SHARED : LLL_PRIVATE;
-  /* Make sure we are alone.  */
-  lll_lock (cond->__data.__lock, pshared);
+  unsigned int wrefs = atomic_load_relaxed (&cond->__data.__wrefs);
+  if (wrefs >> 3 == 0)
+    return 0;
+  int private = __condvar_get_private (wrefs);
 
-  /* Are there any waiters to be woken?  */
-  if (cond->__data.__total_seq > cond->__data.__wakeup_seq)
+  __condvar_acquire_lock (cond, private);
+
+  unsigned long long int wseq = __condvar_load_wseq_relaxed (cond);
+  unsigned int g2 = wseq & 1;
+  unsigned int g1 = g2 ^ 1;
+  wseq >>= 1;
+  bool do_futex_wake = false;
+
+  /* Step (1): signal all waiters remaining in G1.  */
+  if (cond->__data.__g_size[g1] != 0)
     {
-      /* Yes.  Mark them all as woken.  */
-      cond->__data.__wakeup_seq = cond->__data.__total_seq;
-      cond->__data.__woken_seq = cond->__data.__total_seq;
-      cond->__data.__futex = (unsigned int) cond->__data.__total_seq * 2;
-      int futex_val = cond->__data.__futex;
-      /* Signal that a broadcast happened.  */
-      ++cond->__data.__broadcast_seq;
+      /* Add as many signals as the remaining size of the group.  */
+      atomic_fetch_add_relaxed (cond->__data.__g_signals + g1,
+				cond->__data.__g_size[g1] << 1);
+      cond->__data.__g_size[g1] = 0;
 
-      /* We are done.  */
-      lll_unlock (cond->__data.__lock, pshared);
-
-      /* Wake everybody.  */
-      pthread_mutex_t *mut = (pthread_mutex_t *) cond->__data.__mutex;
-
-      /* Do not use requeue for pshared condvars.  */
-      if (mut == (void *) ~0l
-	  || PTHREAD_MUTEX_PSHARED (mut) & PTHREAD_MUTEX_PSHARED_BIT)
-	goto wake_all;
-
-#if (defined lll_futex_cmp_requeue_pi \
-     && defined __ASSUME_REQUEUE_PI)
-      if (USE_REQUEUE_PI (mut))
-	{
-	  if (lll_futex_cmp_requeue_pi (&cond->__data.__futex, 1, INT_MAX,
-					&mut->__data.__lock, futex_val,
-					LLL_PRIVATE) == 0)
-	    return 0;
-	}
-      else
-#endif
-	/* lll_futex_requeue returns 0 for success and non-zero
-	   for errors.  */
-	if (!__builtin_expect (lll_futex_requeue (&cond->__data.__futex, 1,
-						  INT_MAX, &mut->__data.__lock,
-						  futex_val, LLL_PRIVATE), 0))
-	  return 0;
-
-wake_all:
-      lll_futex_wake (&cond->__data.__futex, INT_MAX, pshared);
-      return 0;
+      /* We need to wake G1 waiters before we quiesce G1 below.  */
+      /* TODO Only set it if there are indeed futex waiters.  We could
+	 also try to move this out of the critical section in cases when
+	 G2 is empty (and we don't need to quiesce).  */
+      futex_wake (cond->__data.__g_signals + g1, INT_MAX, private);
     }
 
-  /* We are done.  */
-  lll_unlock (cond->__data.__lock, pshared);
+  /* G1 is complete.  Step (2) is next unless there are no waiters in G2, in
+     which case we can stop.  */
+  if (__condvar_quiesce_and_switch_g1 (cond, wseq, &g1, private))
+    {
+      /* Step (3): Send signals to all waiters in the old G2 / new G1.  */
+      atomic_fetch_add_relaxed (cond->__data.__g_signals + g1,
+				cond->__data.__g_size[g1] << 1);
+      cond->__data.__g_size[g1] = 0;
+      /* TODO Only set it if there are indeed futex waiters.  */
+      do_futex_wake = true;
+    }
+
+  __condvar_release_lock (cond, private);
+
+  if (do_futex_wake)
+    futex_wake (cond->__data.__g_signals + g1, INT_MAX, private);
 
   return 0;
 }

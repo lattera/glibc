@@ -106,10 +106,11 @@ do_test (void)
       status = 1;
     }
 
-  printf ("cond = { %d, %x, %lld, %lld, %lld, %p, %u, %u }\n",
-	  c.__data.__lock, c.__data.__futex, c.__data.__total_seq,
-	  c.__data.__wakeup_seq, c.__data.__woken_seq, c.__data.__mutex,
-	  c.__data.__nwaiters, c.__data.__broadcast_seq);
+  printf ("cond = { %llu, %llu, %u/%u/%u, %u/%u/%u, %u, %u }\n",
+	  c.__data.__wseq, c.__data.__g1_start,
+	  c.__data.__g_signals[0], c.__data.__g_refs[0], c.__data.__g_size[0],
+	  c.__data.__g_signals[1], c.__data.__g_refs[1], c.__data.__g_size[1],
+	  c.__data.__g1_orig_size, c.__data.__wrefs);
 
   if (pthread_create (&th, NULL, tf, (void *) 1l) != 0)
     {
@@ -148,10 +149,11 @@ do_test (void)
       status = 1;
     }
 
-  printf ("cond = { %d, %x, %lld, %lld, %lld, %p, %u, %u }\n",
-	  c.__data.__lock, c.__data.__futex, c.__data.__total_seq,
-	  c.__data.__wakeup_seq, c.__data.__woken_seq, c.__data.__mutex,
-	  c.__data.__nwaiters, c.__data.__broadcast_seq);
+  printf ("cond = { %llu, %llu, %u/%u/%u, %u/%u/%u, %u, %u }\n",
+	  c.__data.__wseq, c.__data.__g1_start,
+	  c.__data.__g_signals[0], c.__data.__g_refs[0], c.__data.__g_size[0],
+	  c.__data.__g_signals[1], c.__data.__g_refs[1], c.__data.__g_size[1],
+	  c.__data.__g1_orig_size, c.__data.__wrefs);
 
   return status;
 }

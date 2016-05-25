@@ -293,16 +293,6 @@ class MutexAttributesPrinter(object):
         elif protocol == PTHREAD_PRIO_PROTECT:
             self.values.append(('Protocol', 'Priority protect'))
 
-CLOCK_IDS = {
-    CLOCK_REALTIME: 'CLOCK_REALTIME',
-    CLOCK_MONOTONIC: 'CLOCK_MONOTONIC',
-    CLOCK_PROCESS_CPUTIME_ID: 'CLOCK_PROCESS_CPUTIME_ID',
-    CLOCK_THREAD_CPUTIME_ID: 'CLOCK_THREAD_CPUTIME_ID',
-    CLOCK_MONOTONIC_RAW: 'CLOCK_MONOTONIC_RAW',
-    CLOCK_REALTIME_COARSE: 'CLOCK_REALTIME_COARSE',
-    CLOCK_MONOTONIC_COARSE: 'CLOCK_MONOTONIC_COARSE'
-}
-
 class ConditionVariablePrinter(object):
     """Pretty printer for pthread_cond_t."""
 
@@ -313,24 +303,8 @@ class ConditionVariablePrinter(object):
             cond: A gdb.value representing a pthread_cond_t.
         """
 
-        # Since PTHREAD_COND_SHARED is an integer, we need to cast it to void *
-        # to be able to compare it to the condvar's __data.__mutex member.
-        #
-        # While it looks like self.shared_value should be a class variable,
-        # that would result in it having an incorrect size if we're loading
-        # these printers through .gdbinit for a 64-bit objfile in AMD64.
-        # This is because gdb initially assumes the pointer size to be 4 bytes,
-        # and only sets it to 8 after loading the 64-bit objfiles.  Since
-        # .gdbinit runs before any objfiles are loaded, this would effectively
-        # make self.shared_value have a size of 4, thus breaking later
-        # comparisons with pointers whose types are looked up at runtime.
-        void_ptr_type = gdb.lookup_type('void').pointer()
-        self.shared_value = gdb.Value(PTHREAD_COND_SHARED).cast(void_ptr_type)
-
         data = cond['__data']
-        self.total_seq = data['__total_seq']
-        self.mutex = data['__mutex']
-        self.nwaiters = data['__nwaiters']
+        self.wrefs = data['__wrefs']
         self.values = []
 
         self.read_values()
@@ -360,7 +334,6 @@ class ConditionVariablePrinter(object):
 
         self.read_status()
         self.read_attributes()
-        self.read_mutex_info()
 
     def read_status(self):
         """Read the status of the condvar.
@@ -369,40 +342,21 @@ class ConditionVariablePrinter(object):
         are waiting for it.
         """
 
-        if self.total_seq == PTHREAD_COND_DESTROYED:
-            self.values.append(('Status', 'Destroyed'))
-
-        self.values.append(('Threads waiting for this condvar',
-                            self.nwaiters >> COND_NWAITERS_SHIFT))
+        self.values.append(('Threads known to still execute a wait function',
+                            self.wrefs >> PTHREAD_COND_WREFS_SHIFT))
 
     def read_attributes(self):
         """Read the condvar's attributes."""
 
-        clock_id = self.nwaiters & ((1 << COND_NWAITERS_SHIFT) - 1)
+	if (self.wrefs & PTHREAD_COND_CLOCK_MONOTONIC_MASK) != 0:
+		self.values.append(('Clock ID', 'CLOCK_MONOTONIC'))
+	else:
+		self.values.append(('Clock ID', 'CLOCK_REALTIME'))
 
-        # clock_id must be casted to int because it's a gdb.Value
-        self.values.append(('Clock ID', CLOCK_IDS[int(clock_id)]))
-
-        shared = (self.mutex == self.shared_value)
-
-        if shared:
+        if (self.wrefs & PTHREAD_COND_SHARED_MASK) != 0:
             self.values.append(('Shared', 'Yes'))
         else:
             self.values.append(('Shared', 'No'))
-
-    def read_mutex_info(self):
-        """Read the data of the mutex this condvar is bound to.
-
-        A pthread_cond_t's __data.__mutex member is a void * which
-        must be casted to pthread_mutex_t *.  For shared condvars, this
-        member isn't recorded and has a special value instead.
-        """
-
-        if self.mutex and self.mutex != self.shared_value:
-            mutex_type = gdb.lookup_type('pthread_mutex_t')
-            mutex = self.mutex.cast(mutex_type.pointer()).dereference()
-
-            self.values.append(('Mutex', mutex))
 
 class ConditionVariableAttributesPrinter(object):
     """Pretty printer for pthread_condattr_t.
@@ -453,10 +407,12 @@ class ConditionVariableAttributesPrinter(object):
         created in self.children.
         """
 
-        clock_id = self.condattr & ((1 << COND_NWAITERS_SHIFT) - 1)
+        clock_id = (self.condattr >> 1) & ((1 << COND_CLOCK_BITS) - 1)
 
-        # clock_id must be casted to int because it's a gdb.Value
-        self.values.append(('Clock ID', CLOCK_IDS[int(clock_id)]))
+	if clock_id != 0:
+		self.values.append(('Clock ID', 'CLOCK_MONOTONIC'))
+	else:
+		self.values.append(('Clock ID', 'CLOCK_REALTIME'))
 
         if self.condattr & 1:
             self.values.append(('Shared', 'Yes'))

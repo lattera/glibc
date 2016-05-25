@@ -1,3 +1,77 @@
+2016-12-31  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #13165]
+	* nptl/pthread_cond_broadcast.c (__pthread_cond_broadcast): Rewrite to
+	use new algorithm.
+	* nptl/pthread_cond_destroy.c (__pthread_cond_destroy): Likewise.
+	* nptl/pthread_cond_init.c (__pthread_cond_init): Likewise.
+	* nptl/pthread_cond_signal.c (__pthread_cond_signal): Likewise.
+	* nptl/pthread_cond_wait.c (__pthread_cond_wait): Likewise.
+	(__pthread_cond_timedwait): Move here from pthread_cond_timedwait.c.
+	(__condvar_confirm_wakeup, __condvar_cancel_waiting,
+	__condvar_cleanup_waiting, __condvar_dec_grefs,
+	__pthread_cond_wait_common): New.
+	(__condvar_cleanup): Remove.
+	* npt/pthread_condattr_getclock.c (pthread_condattr_getclock): Adapt.
+	* npt/pthread_condattr_setclock.c (pthread_condattr_setclock):
+	Likewise.
+	* npt/pthread_condattr_getpshared.c (pthread_condattr_getpshared):
+	Likewise.
+	* npt/pthread_condattr_init.c (pthread_condattr_init): Likewise.
+	* nptl/tst-cond1.c: Add comment.
+	* nptl/tst-cond20.c (do_test): Adapt.
+	* nptl/tst-cond22.c (do_test): Likewise.
+	* sysdeps/aarch64/nptl/bits/pthreadtypes.h (pthread_cond_t): Adapt
+	structure.
+	* sysdeps/arm/nptl/bits/pthreadtypes.h (pthread_cond_t): Likewise.
+	* sysdeps/ia64/nptl/bits/pthreadtypes.h (pthread_cond_t): Likewise.
+	* sysdeps/m68k/nptl/bits/pthreadtypes.h (pthread_cond_t): Likewise.
+	* sysdeps/microblaze/nptl/bits/pthreadtypes.h (pthread_cond_t):
+	Likewise.
+	* sysdeps/mips/nptl/bits/pthreadtypes.h (pthread_cond_t): Likewise.
+	* sysdeps/nios2/nptl/bits/pthreadtypes.h (pthread_cond_t): Likewise.
+	* sysdeps/s390/nptl/bits/pthreadtypes.h (pthread_cond_t): Likewise.
+	* sysdeps/sh/nptl/bits/pthreadtypes.h (pthread_cond_t): Likewise.
+	* sysdeps/tile/nptl/bits/pthreadtypes.h (pthread_cond_t): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h (pthread_cond_t):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h (pthread_cond_t):
+	Likewise.
+	* sysdeps/x86/bits/pthreadtypes.h (pthread_cond_t): Likewise.
+	* sysdeps/nptl/internaltypes.h (COND_NWAITERS_SHIFT): Remove.
+	(COND_CLOCK_BITS): Adapt.
+	* sysdeps/nptl/pthread.h (PTHREAD_COND_INITIALIZER): Adapt.
+	* nptl/pthreadP.h (__PTHREAD_COND_CLOCK_MONOTONIC_MASK,
+	__PTHREAD_COND_SHARED_MASK): New.
+	* nptl/nptl-printers.py (CLOCK_IDS): Remove.
+	(ConditionVariablePrinter, ConditionVariableAttributesPrinter): Adapt.
+	* nptl/nptl_lock_constants.pysym: Adapt.
+	* nptl/test-cond-printers.py: Adapt.
+	* sysdeps/unix/sysv/linux/hppa/internaltypes.h (cond_compat_clear,
+	cond_compat_check_and_clear): Adapt.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_timedwait.c: Remove file ...
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_wait.c
+	(__pthread_cond_timedwait): ... and move here.
+	* nptl/DESIGN-condvar.txt: Remove file.
+	* nptl/lowlevelcond.sym: Likewise.
+	* nptl/pthread_cond_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i586/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+
 2016-12-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]

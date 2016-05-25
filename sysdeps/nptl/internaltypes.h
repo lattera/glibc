@@ -68,20 +68,13 @@ struct pthread_condattr
 {
   /* Combination of values:
 
-     Bit 0  : flag whether conditional variable will be sharable between
-	      processes.
-
-     Bit 1-7: clock ID.  */
+     Bit 0                : flag whether conditional variable will be
+                            sharable between processes.
+     Bit 1-COND_CLOCK_BITS: Clock ID.  COND_CLOCK_BITS is the number of bits
+                            needed to represent the ID of the clock.  */
   int value;
 };
-
-
-/* The __NWAITERS field is used as a counter and to house the number
-   of bits for other purposes.  COND_CLOCK_BITS is the number
-   of bits needed to represent the ID of the clock.  COND_NWAITERS_SHIFT
-   is the number of bits reserved for other purposes like the clock.  */
-#define COND_CLOCK_BITS		1
-#define COND_NWAITERS_SHIFT	1
+#define COND_CLOCK_BITS	1
 
 
 /* Read-write lock variable attribute data structure.  */

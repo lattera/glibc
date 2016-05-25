@@ -73,6 +73,9 @@ do_test (void)
 
   puts ("parent: wait for condition");
 
+  /* This test will fail on spurious wake-ups, which are allowed; however,
+     the current implementation shouldn't produce spurious wake-ups in the
+     scenario we are testing here.  */
   err = pthread_cond_wait (&cond, &mut);
   if (err != 0)
     error (EXIT_FAILURE, err, "parent: cannot wait fir signal");

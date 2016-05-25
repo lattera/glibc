@@ -46,32 +46,38 @@ fails because __initializer is zero, and the structure will be used as
 is correctly.  */
 
 #define cond_compat_clear(var) \
-({											\
-  int tmp = 0;										\
-  var->__data.__lock = 0;								\
-  var->__data.__futex = 0;								\
-  var->__data.__mutex = NULL;								\
-  /* Clear __initializer last, to indicate initialization is done.  */			\
-  __asm__ __volatile__ ("stw,ma %1,0(%0)"						\
-			: : "r" (&var->__data.__initializer), "r" (tmp) : "memory");	\
+({									\
+  int tmp = 0;								\
+  var->__data.__wseq = 0;						\
+  var->__data.__signals_sent = 0;					\
+  var->__data.__confirmed = 0;						\
+  var->__data.__generation = 0;						\
+  var->__data.__mutex = NULL;						\
+  var->__data.__quiescence_waiters = 0;					\
+  var->__data.__clockid = 0;						\
+  /* Clear __initializer last, to indicate initialization is done.  */	\
+  /* This synchronizes-with the acquire load below.  */			\
+  atomic_store_release (&var->__data.__initializer, 0);			\
 })
 
 #define cond_compat_check_and_clear(var) \
 ({								\
-  int ret;							\
-  volatile int *value = &var->__data.__initializer;		\
-  if ((ret = atomic_compare_and_exchange_val_acq(value, 2, 1)))	\
+  int v;							\
+  int *value = &var->__data.__initializer;			\
+  /* This synchronizes-with the release store above.  */	\
+  while ((v = atomic_load_acquire (value)) != 0)		\
     {								\
-      if (ret == 1)						\
+      if (v == 1						\
+	  /* Relaxed MO is fine; it only matters who's first.  */        \
+	  && atomic_compare_exchange_acquire_weak_relaxed (value, 1, 2)) \
 	{							\
-	  /* Initialize structure.  */				\
+	  /* We're first; initialize structure.  */		\
 	  cond_compat_clear (var);				\
+	  break;						\
 	}							\
       else							\
-        {							\
-	  /* Yield until structure is initialized.  */		\
-	  while (*value == 2) sched_yield ();			\
-        }							\
+	/* Yield before we re-check initialization status.  */	\
+	sched_yield ();						\
     }								\
 })
 

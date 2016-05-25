@@ -18,7 +18,7 @@
 
 #include <assert.h>
 #include <errno.h>
-#include <stdbool.h>
+#include <futex-internal.h>
 #include <time.h>
 #include <sysdep.h>
 #include "pthreadP.h"
@@ -33,12 +33,17 @@ pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock_id)
        in the pthread_cond_t structure needs to be adjusted.  */
     return EINVAL;
 
+  /* If we do not support waiting using CLOCK_MONOTONIC, return an error.  */
+  if (clock_id == CLOCK_MONOTONIC
+      && !futex_supports_exact_relative_timeouts())
+    return ENOTSUP;
+
   /* Make sure the value fits in the bits we reserved.  */
-  assert (clock_id < (1 << COND_NWAITERS_SHIFT));
+  assert (clock_id < (1 << COND_CLOCK_BITS));
 
   int *valuep = &((struct pthread_condattr *) attr)->value;
 
-  *valuep = ((*valuep & ~(((1 << COND_NWAITERS_SHIFT) - 1) << 1))
+  *valuep = ((*valuep & ~(((1 << COND_CLOCK_BITS) - 1) << 1))
 	     | (clock_id << 1));
 
   return 0;

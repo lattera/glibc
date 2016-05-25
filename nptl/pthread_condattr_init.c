@@ -23,7 +23,9 @@
 int
 __pthread_condattr_init (pthread_condattr_t *attr)
 {
-  memset (attr, '\0', sizeof (*attr));
+  struct pthread_condattr *iattr = (struct pthread_condattr *) attr;
+  /* Default is not pshared and CLOCK_REALTIME.  */
+  iattr-> value = CLOCK_REALTIME << 1;
 
   return 0;
 }
