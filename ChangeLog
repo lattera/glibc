@@ -1,3 +1,16 @@
+2016-05-25  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15479]
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S (__ceil): Move save of
+	floating-point state after first floating-point operation on
+	input.  Restore full floating-point state instead of just rounding
+	mode.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S (__ceilf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S (__floor): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S (__floorf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S (__trunc): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S (__truncf): Likewise.
+
 2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	[BZ #19727]
