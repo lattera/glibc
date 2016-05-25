@@ -1,5 +1,10 @@
 2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-64/utf16-utf32-z9.c: Use ifunc to select c,
+	etf3eh or new vector loop-variant.
+
+2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/s390-64/utf8-utf16-z9.c: Use ifunc to select c,
 	etf3eh or new vector loop-variant.
 
