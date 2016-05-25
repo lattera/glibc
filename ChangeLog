@@ -1,5 +1,13 @@
 2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/multiarch/8bit-generic.c: New File.
+	* sysdeps/s390/multiarch/gen-8bit.sh: New File.
+	* sysdeps/s390/multiarch/Makefile (generate-8bit-table):
+	New override define.
+	* sysdeps/s390/multiarch/iconv/skeleton.c: Likewise.
+
+2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* config.h.in (HAVE_S390_VX_GCC_SUPPORT): New macro undefine.
 	* sysdeps/s390/configure.ac: Add test for S390 vector register
 	support in gcc.
