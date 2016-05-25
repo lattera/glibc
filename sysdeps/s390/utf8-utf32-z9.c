@@ -572,28 +572,6 @@ __from_utf8_loop_resolver (unsigned long int dl_hwcap)
 
 strong_alias (__from_utf8_loop_c_single, __from_utf8_loop_single)
 
-
-/* Conversion from UTF-32 internal/BE to UTF-8.  */
-#define BODY_TO_HW(ASM)							\
-  {									\
-    ASM;								\
-    if (__glibc_likely (inptr == inend)					\
-	|| result == __GCONV_FULL_OUTPUT)				\
-      break;								\
-    if (inptr + 4 > inend)						\
-      {									\
-	result = __GCONV_INCOMPLETE_INPUT;				\
-	break;								\
-      }									\
-    STANDARD_TO_LOOP_ERR_HANDLER (4);					\
-  }
-
-/* The hardware routine uses the S/390 cu41 instruction.  */
-#define BODY_TO_ETF3EH BODY_TO_HW (HARDWARE_CONVERT ("cu41 %0, %1"))
-
-/* The hardware routine uses the S/390 vector and cu41 instructions.  */
-#define BODY_TO_VX BODY_TO_HW (HW_TO_VX)
-
 /* The software routine mimics the S/390 cu41 instruction.  */
 #define BODY_TO_C						\
   {								\
@@ -632,7 +610,7 @@ strong_alias (__from_utf8_loop_c_single, __from_utf8_loop_single)
 	    result = __GCONV_FULL_OUTPUT;			\
 	    break;						\
 	  }							\
-	if (wc >= 0xd800 && wc < 0xdc00)			\
+	if (wc >= 0xd800 && wc <= 0xdfff)			\
 	  {							\
 	    /* Do not accept UTF-16 surrogates.   */		\
 	    result = __GCONV_ILLEGAL_INPUT;			\
@@ -679,13 +657,12 @@ strong_alias (__from_utf8_loop_c_single, __from_utf8_loop_single)
     inptr += 4;							\
   }
 
-#define HW_TO_VX							\
+/* The hardware routine uses the S/390 vector instructions.  */
+#define BODY_TO_VX							\
   {									\
-    register const unsigned char* pInput asm ("8") = inptr;		\
-    register size_t inlen asm ("9") = inend - inptr;			\
-    register unsigned char* pOutput asm ("10") = outptr;		\
-    register size_t outlen asm("11") = outend - outptr;			\
-    unsigned long tmp, tmp2;						\
+    size_t inlen = inend - inptr;					\
+    size_t outlen = outend - outptr;					\
+    unsigned long tmp, tmp2, tmp3;					\
     asm volatile (".machine push\n\t"					\
 		  ".machine \"z13\"\n\t"				\
 		  ".machinemode \"zarch_nohighgprs\"\n\t"		\
@@ -696,10 +673,10 @@ strong_alias (__from_utf8_loop_c_single, __from_utf8_loop_single)
 		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
 		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-32 chars <=0x7f.  */	\
-		  "0:  clgijl %[R_INLEN],64,20f\n\t"			\
-		  "    clgijl %[R_OUTLEN],16,20f\n\t"			\
+		  "0:  clgijl %[R_INLEN],64,2f\n\t"			\
+		  "    clgijl %[R_OUTLEN],16,2f\n\t"			\
 		  "1:  vlm %%v16,%%v19,0(%[R_IN])\n\t"			\
-		  "    lghi %[R_TMP],0\n\t"				\
+		  "    lghi %[R_TMP2],0\n\t"				\
 		  /* Shorten to byte values.  */			\
 		  "    vpkf %%v23,%%v16,%%v17\n\t"			\
 		  "    vpkf %%v24,%%v18,%%v19\n\t"			\
@@ -719,41 +696,116 @@ strong_alias (__from_utf8_loop_c_single, __from_utf8_loop_single)
 		  "    aghi %[R_OUTLEN],-16\n\t"			\
 		  "    la %[R_IN],64(%[R_IN])\n\t"			\
 		  "    la %[R_OUT],16(%[R_OUT])\n\t"			\
-		  "    clgijl %[R_INLEN],64,20f\n\t"			\
-		  "    clgijl %[R_OUTLEN],16,20f\n\t"			\
+		  "    clgijl %[R_INLEN],64,2f\n\t"			\
+		  "    clgijl %[R_OUTLEN],16,2f\n\t"			\
 		  "    j 1b\n\t"					\
 		  /* Found a value > 0x7f.  */				\
-		  "13: ahi %[R_TMP],4\n\t"				\
-		  "12: ahi %[R_TMP],4\n\t"				\
-		  "11: ahi %[R_TMP],4\n\t"				\
-		  "10: vlgvb %[R_I],%%v22,7\n\t"			\
-		  "    srlg %[R_I],%[R_I],2\n\t"			\
-		  "    agr %[R_I],%[R_TMP]\n\t"				\
-		  "    je 20f\n\t"					\
+		  "13: ahi %[R_TMP2],4\n\t"				\
+		  "12: ahi %[R_TMP2],4\n\t"				\
+		  "11: ahi %[R_TMP2],4\n\t"				\
+		  "10: vlgvb %[R_TMP],%%v22,7\n\t"			\
+		  "    srlg %[R_TMP],%[R_TMP],2\n\t"			\
+		  "    agr %[R_TMP],%[R_TMP2]\n\t"			\
+		  "    je 16f\n\t"					\
 		  /* Store characters before invalid one...  */		\
-		  "    slgr %[R_OUTLEN],%[R_I]\n\t"			\
-		  "15: aghi %[R_I],-1\n\t"				\
-		  "    vstl %%v23,%[R_I],0(%[R_OUT])\n\t"		\
+		  "    slgr %[R_OUTLEN],%[R_TMP]\n\t"			\
+		  "15: aghi %[R_TMP],-1\n\t"				\
+		  "    vstl %%v23,%[R_TMP],0(%[R_OUT])\n\t"		\
 		  /* ... and update pointers.  */			\
-		  "    aghi %[R_I],1\n\t"				\
-		  "    la %[R_OUT],0(%[R_I],%[R_OUT])\n\t"		\
-		  "    sllg %[R_I],%[R_I],2\n\t"			\
-		  "    la %[R_IN],0(%[R_I],%[R_IN])\n\t"		\
-		  "    slgr %[R_INLEN],%[R_I]\n\t"			\
-		  /* Handle multibyte utf8-char with convert instruction. */ \
-		  "20: cu41 %[R_OUT],%[R_IN]\n\t"			\
-		  "    jo 0b\n\t" /* Try vector implemenation again.  */ \
-		  "    lochil %[R_RES],%[RES_OUT_FULL]\n\t" /* cc == 1.  */ \
-		  "    lochih %[R_RES],%[RES_IN_ILL]\n\t" /* cc == 2.  */ \
+		  "    aghi %[R_TMP],1\n\t"				\
+		  "    la %[R_OUT],0(%[R_TMP],%[R_OUT])\n\t"		\
+		  "    sllg %[R_TMP2],%[R_TMP],2\n\t"			\
+		  "    la %[R_IN],0(%[R_TMP2],%[R_IN])\n\t"		\
+		  "    slgr %[R_INLEN],%[R_TMP2]\n\t"			\
+		  /* Calculate remaining uint32_t values in loaded vrs.  */ \
+		  "16: lghi %[R_TMP2],16\n\t"				\
+		  "    sgr %[R_TMP2],%[R_TMP]\n\t"			\
+		  "    l %[R_TMP],0(%[R_IN])\n\t"			\
+		  "    aghi %[R_INLEN],-4\n\t"				\
+		  "    j 22f\n\t"					\
+		  /* Handle remaining bytes.  */			\
+		  "2:  clgije %[R_INLEN],0,99f\n\t"			\
+		  "    clgijl %[R_INLEN],4,92f\n\t"			\
+		  /* Calculate remaining uint32_t values in inptr.  */	\
+		  "    srlg %[R_TMP2],%[R_INLEN],2\n\t"			\
+		  /* Handle multibyte utf8-char. */			\
+		  "20: l %[R_TMP],0(%[R_IN])\n\t"			\
+		  "    aghi %[R_INLEN],-4\n\t"				\
+		  /* Test if ch is 1byte UTF-8 char. */			\
+		  "21: clijh %[R_TMP],0x7f,22f\n\t"			\
+		  /* Handle 1-byte UTF-8 char.  */			\
+		  "31: slgfi %[R_OUTLEN],1\n\t"				\
+		  "    jl 90f \n\t"					\
+		  "    stc %[R_TMP],0(%[R_OUT])\n\t"			\
+		  "    la %[R_IN],4(%[R_IN])\n\t"			\
+		  "    la %[R_OUT],1(%[R_OUT])\n\t"			\
+		  "    brctg %[R_TMP2],20b\n\t"				\
+		  "    j 0b\n\t" /* Switch to vx-loop.  */		\
+		  /* Test if ch is 2byte UTF-8 char. */			\
+		  "22: clfi %[R_TMP],0x7ff\n\t"				\
+		  "    jh 23f\n\t"					\
+		  /* Handle 2-byte UTF-8 char.  */			\
+		  "32: slgfi %[R_OUTLEN],2\n\t"				\
+		  "    jl 90f \n\t"					\
+		  "    llill %[R_TMP3],0xc080\n\t"			\
+		  "    risbgn %[R_TMP3],%[R_TMP],51,55,2\n\t" /* 1. byte.   */ \
+		  "    risbgn %[R_TMP3],%[R_TMP],58,63,0\n\t" /* 2. byte.   */ \
+		  "    sth %[R_TMP3],0(%[R_OUT])\n\t"			\
+		  "    la %[R_IN],4(%[R_IN])\n\t"			\
+		  "    la %[R_OUT],2(%[R_OUT])\n\t"			\
+		  "    brctg %[R_TMP2],20b\n\t"				\
+		  "    j 0b\n\t" /* Switch to vx-loop.  */		\
+		  /* Test if ch is 3-byte UTF-8 char.  */		\
+		  "23: clfi %[R_TMP],0xffff\n\t"			\
+		  "    jh 24f\n\t"					\
+		  /* Handle 3-byte UTF-8 char.  */			\
+		  "33: slgfi %[R_OUTLEN],3\n\t"				\
+		  "    jl 90f \n\t"					\
+		  "    llilf %[R_TMP3],0xe08080\n\t"			\
+		  "    risbgn %[R_TMP3],%[R_TMP],44,47,4\n\t" /* 1. byte.  */ \
+		  "    risbgn %[R_TMP3],%[R_TMP],50,55,2\n\t" /* 2. byte.  */ \
+		  "    risbgn %[R_TMP3],%[R_TMP],58,63,0\n\t" /* 3. byte.  */ \
+		  /* Test if ch is a UTF-16 surrogate: ch & 0xf800 == 0xd800  */ \
+		  "    nilf %[R_TMP],0xf800\n\t"			\
+		  "    clfi %[R_TMP],0xd800\n\t"			\
+		  "    je 91f\n\t" /* Do not accept UTF-16 surrogates.  */ \
+		  "    stcm %[R_TMP3],7,0(%[R_OUT])\n\t"		\
+		  "    la %[R_IN],4(%[R_IN])\n\t"			\
+		  "    la %[R_OUT],3(%[R_OUT])\n\t"			\
+		  "    brctg %[R_TMP2],20b\n\t"				\
+		  "    j 0b\n\t" /* Switch to vx-loop.  */		\
+		  /* Test if ch is 4-byte UTF-8 char.  */		\
+		  "24: clfi %[R_TMP],0x10ffff\n\t"			\
+		  "    jh 91f\n\t" /* ch > 0x10ffff is not allowed!  */	\
+		  /* Handle 4-byte UTF-8 char.  */			\
+		  "34: slgfi %[R_OUTLEN],4\n\t"				\
+		  "    jl 90f \n\t"					\
+		  "    llilf %[R_TMP3],0xf0808080\n\t"			\
+		  "    risbgn %[R_TMP3],%[R_TMP],37,39,6\n\t" /* 1. byte.  */ \
+		  "    risbgn %[R_TMP3],%[R_TMP],42,47,4\n\t" /* 2. byte.  */ \
+		  "    risbgn %[R_TMP3],%[R_TMP],50,55,2\n\t" /* 3. byte.  */ \
+		  "    risbgn %[R_TMP3],%[R_TMP],58,63,0\n\t" /* 4. byte.  */ \
+		  "    st %[R_TMP3],0(%[R_OUT])\n\t"			\
+		  "    la %[R_IN],4(%[R_IN])\n\t"			\
+		  "    la %[R_OUT],4(%[R_OUT])\n\t"			\
+		  "    brctg %[R_TMP2],20b\n\t"				\
+		  "    j 0b\n\t" /* Switch to vx-loop.  */		\
+		  "92: lghi %[R_RES],%[RES_IN_FULL]\n\t"		\
+		  "    j 99f\n\t"					\
+		  "91: lghi %[R_RES],%[RES_IN_ILL]\n\t"			\
+		  "    j 99f\n\t"					\
+		  "90: lghi %[R_RES],%[RES_OUT_FULL]\n\t"		\
+		  "99: \n\t"						\
 		  ".machine pop"					\
-		  : /* outputs */ [R_IN] "+a" (pInput)			\
-		    , [R_INLEN] "+d" (inlen), [R_OUT] "+a" (pOutput)	\
-		    , [R_OUTLEN] "+d" (outlen), [R_TMP] "=d" (tmp)	\
-		    , [R_I] "=a" (tmp2)					\
+		  : /* outputs */ [R_IN] "+a" (inptr)			\
+		    , [R_INLEN] "+d" (inlen), [R_OUT] "+a" (outptr)	\
+		    , [R_OUTLEN] "+d" (outlen), [R_TMP] "=a" (tmp)	\
+		    , [R_TMP2] "=a" (tmp2), [R_TMP3] "=d" (tmp3)	\
 		    , [R_RES] "+d" (result)				\
 		  : /* inputs */					\
 		    [RES_OUT_FULL] "i" (__GCONV_FULL_OUTPUT)		\
 		    , [RES_IN_ILL] "i" (__GCONV_ILLEGAL_INPUT)		\
+		    , [RES_IN_FULL] "i" (__GCONV_INCOMPLETE_INPUT)	\
 		  : /* clobber list */ "memory", "cc"			\
 		    ASM_CLOBBER_VR ("v16") ASM_CLOBBER_VR ("v17")	\
 		    ASM_CLOBBER_VR ("v18") ASM_CLOBBER_VR ("v19")	\
@@ -761,8 +813,11 @@ strong_alias (__from_utf8_loop_c_single, __from_utf8_loop_single)
 		    ASM_CLOBBER_VR ("v22") ASM_CLOBBER_VR ("v23")	\
 		    ASM_CLOBBER_VR ("v24")				\
 		  );							\
-    inptr = pInput;							\
-    outptr = pOutput;							\
+    if (__glibc_likely (inptr == inend)					\
+	|| result != __GCONV_ILLEGAL_INPUT)				\
+      break;								\
+									\
+    STANDARD_TO_LOOP_ERR_HANDLER (4);					\
   }
 
 /* Generate loop-function with software routing.  */
@@ -772,15 +827,6 @@ strong_alias (__from_utf8_loop_c_single, __from_utf8_loop_single)
 #define LOOPFCT			__to_utf8_loop_c
 #define BODY			BODY_TO_C
 #define LOOP_NEED_FLAGS
-#include <iconv/loop.c>
-
-/* Generate loop-function with hardware utf-convert instruction.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
-#define LOOPFCT			__to_utf8_loop_etf3eh
-#define LOOP_NEED_FLAGS
-#define BODY			BODY_TO_ETF3EH
 #include <iconv/loop.c>
 
 #if defined HAVE_S390_VX_ASM_SUPPORT
@@ -807,10 +853,6 @@ __to_utf8_loop_resolver (unsigned long int dl_hwcap)
     return __to_utf8_loop_vx;
   else
 #endif
-  if (dl_hwcap & HWCAP_S390_ZARCH && dl_hwcap & HWCAP_S390_HIGH_GPRS
-      && dl_hwcap & HWCAP_S390_ETF3EH)
-    return __to_utf8_loop_etf3eh;
-  else
     return __to_utf8_loop_c;
 }
 

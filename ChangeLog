@@ -1,5 +1,10 @@
 2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/utf8-utf32-z9.c: Disable cu41 instruction and report
+	an error in case of a value in range of an utf16 low surrogate.
+
+2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/s390-64/Makefile (iconvdata-subdirectory):
 	Move to ...
 	* sysdeps/s390/Makefile: ... here.
