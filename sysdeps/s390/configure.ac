@@ -64,6 +64,27 @@ else
   AC_MSG_WARN([Use binutils with vector-support in order to use optimized implementations.])
 fi
 
+AC_CACHE_CHECK(for S390 vector support in gcc, libc_cv_gcc_s390_vx, [dnl
+cat > conftest.c <<\EOF
+void testvecclobber ()
+{
+  __asm__ ("" : : : "v16");
+}
+EOF
+dnl
+dnl test, if gcc supports S390 vector registers as clobber in inline assembly
+if AC_TRY_COMMAND([${CC-cc} --shared conftest.c -o conftest.o &> /dev/null]) ;
+then
+  libc_cv_gcc_s390_vx=yes
+else
+  libc_cv_gcc_s390_vx=no
+fi
+rm -f conftest* ])
+
+if test "$libc_cv_gcc_s390_vx" = yes ;
+then
+  AC_DEFINE(HAVE_S390_VX_GCC_SUPPORT)
+fi
 
 test -n "$critic_missing" && AC_MSG_ERROR([
 *** $critic_missing])

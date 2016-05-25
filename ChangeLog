@@ -1,5 +1,12 @@
 2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* config.h.in (HAVE_S390_VX_GCC_SUPPORT): New macro undefine.
+	* sysdeps/s390/configure.ac: Add test for S390 vector register
+	support in gcc.
+	* sysdeps/s390/configure: Regenerated.
+
+2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* iconvdata/Makefile ($(inst_gconvdir)/gconv-modules):
 	Install file from $(objpfx)gconv-modules.
 	($(objpfx)gconv-modules): Concatenate architecture specific file

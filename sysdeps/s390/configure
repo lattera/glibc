@@ -144,6 +144,38 @@ else
 $as_echo "$as_me: WARNING: Use binutils with vector-support in order to use optimized implementations." >&2;}
 fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for S390 vector support in gcc" >&5
+$as_echo_n "checking for S390 vector support in gcc... " >&6; }
+if ${libc_cv_gcc_s390_vx+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<\EOF
+void testvecclobber ()
+{
+  __asm__ ("" : : : "v16");
+}
+EOF
+if { ac_try='${CC-cc} --shared conftest.c -o conftest.o &> /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } ;
+then
+  libc_cv_gcc_s390_vx=yes
+else
+  libc_cv_gcc_s390_vx=no
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_s390_vx" >&5
+$as_echo "$libc_cv_gcc_s390_vx" >&6; }
+
+if test "$libc_cv_gcc_s390_vx" = yes ;
+then
+  $as_echo "#define HAVE_S390_VX_GCC_SUPPORT 1" >>confdefs.h
+
+fi
 
 test -n "$critic_missing" && as_fn_error $? "
 *** $critic_missing" "$LINENO" 5

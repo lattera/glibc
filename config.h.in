@@ -73,6 +73,10 @@
 /* Define if assembler supports vector instructions on S390.  */
 #undef  HAVE_S390_VX_ASM_SUPPORT
 
+/* Define if gcc supports vector registers as clobbers in inline assembly
+   on S390.  */
+#undef  HAVE_S390_VX_GCC_SUPPORT
+
 /* Define if assembler supports Intel MPX.  */
 #undef  HAVE_MPX_SUPPORT
 
