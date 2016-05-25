@@ -244,7 +244,7 @@ headers: $(addprefix $(objpfx), $(generated-modules:=.h))
 $(addprefix $(inst_gconvdir)/, $(modules.so)): \
     $(inst_gconvdir)/%: $(objpfx)% $(+force)
 	$(do-install-program)
-$(inst_gconvdir)/gconv-modules: gconv-modules $(+force)
+$(inst_gconvdir)/gconv-modules: $(objpfx)gconv-modules $(+force)
 	$(do-install)
 ifeq (no,$(cross-compiling))
 # Update the $(prefix)/lib/gconv/gconv-modules.cache file. This is necessary
@@ -331,7 +331,5 @@ do-tests-clean common-mostlyclean: tst-tables-clean
 tst-tables-clean:
 	-rm -f $(objpfx)tst-*.table $(objpfx)tst-EUC-TW.irreversible
 
-ifdef objpfx
 $(objpfx)gconv-modules: gconv-modules
-	cp $^ $@
-endif
+	cat $(sysdeps-gconv-modules) $^ > $@

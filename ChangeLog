@@ -1,3 +1,15 @@
+2016-05-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* iconvdata/Makefile ($(inst_gconvdir)/gconv-modules):
+	Install file from $(objpfx)gconv-modules.
+	($(objpfx)gconv-modules): Concatenate architecture specific file
+	in variable sysdeps-gconv-modules and gconv-modules in src dir.
+	* sysdeps/s390/gconv-modules: New file.
+	* sysdeps/s390/s390-64/Makefile: ($(inst_gconvdir)/gconv-modules):
+	Deleted.
+	($(objpfx)gconv-modules-s390): Deleted.
+	(sysdeps-gconv-modules): New variable.
+
 2016-05-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15479]
