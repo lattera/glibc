@@ -1,5 +1,39 @@
 2016-05-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (acosh_test_data): Add sNaN tests.
+	(atan_test_data): Likewise.
+	(ceil_test_data): Likewise.
+	(cos_test_data): Likewise.
+	(cosh_test_data): Likewise.
+	(erf_test_data): Likewise.
+	(exp2_test_data): Likewise.
+	(fabs_test_data): Likewise.
+	(floor_test_data): Likewise.
+	(ilogb_test_data): Likewise.
+	(j0_test_data): Likewise.
+	(j1_test_data): Likewise.
+	(jn_test_data): Likewise.
+	(lgamma_test_data): Likewise.
+	(lrint_test_data): Likewise.
+	(llrint_test_data): Likewise.
+	(logb_test_data): Likewise.
+	(lround_test_data): Likewise.
+	(llround_test_data): Likewise.
+	(nearbyint_test_data): Likewise.
+	(rint_test_data): Likewise.
+	(round_test_data): Likewise.
+	(sin_test_data): Likewise.
+	(sincos_test_data): Likewise.
+	(sinh_test_data): Likewise.
+	(sqrt_test_data): Likewise.
+	(tan_test_data): Likewise.
+	(tanh_test_data): Likewise.
+	(tgamma_test_data): Likewise.
+	(trunc_test_data): Likewise.
+	(y0_test_data): Likewise.
+	(y1_test_data): Likewise.
+	(yn_test_data): Likewise.
+
 	* math/libm-test.inc: Update comment about NaN testing.
 	(TEST_SNAN): New macro.
 	(snan_value): Likewise.
