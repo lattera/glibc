@@ -46,7 +46,7 @@ libc {
     fallocate64;
   }
   GLIBC_2.24 {
-    recvms; sendmsg;
+    recvmsg; sendmsg;
   }
   GLIBC_PRIVATE {
     __modify_ldt;

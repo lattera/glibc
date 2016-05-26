@@ -208,7 +208,7 @@ CFLAGS-sendto.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-connect.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-oldrecvmsg.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-oldrecvfrom.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-oldsendmsg.c = -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-pt-system.c = -fexceptions
 
