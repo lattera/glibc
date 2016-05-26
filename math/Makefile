@@ -187,7 +187,14 @@ CFLAGS-test-float-vlen8-wrappers.c = $(float-vlen8-arch-ext-cflags)
 CFLAGS-test-float-vlen16.c = $(libm-test-vec-cflags)
 CFLAGS-test-float-vlen16-wrappers.c = $(float-vlen16-arch-ext-cflags)
 
-libm-test-no-inline-cflags = -fno-inline -ffloat-store -fno-builtin
+# The no-inline tests use -fsignaling-nans, and thereby use the
+# versions of classification macros that support sNaNs.  The inline
+# function tests use the versions of classification macros that may
+# raise spurious exceptions for sNaNs, but also do not test for
+# exceptions.  Thus both versions of the classification macros are
+# validated.
+libm-test-no-inline-cflags = -fno-inline -ffloat-store -fno-builtin \
+			     -fsignaling-nans
 libm-test-finite-cflags = $(libm-test-no-inline-cflags) \
 			  -U__FINITE_MATH_ONLY__ -D__FINITE_MATH_ONLY__=1
 CFLAGS-test-float.c = $(libm-test-no-inline-cflags)

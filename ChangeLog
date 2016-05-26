@@ -1,3 +1,23 @@
+2016-05-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc: Update comment about NaN testing.
+	(TEST_SNAN): New macro.
+	(snan_value): Likewise.
+	(enable_test): Disable tests of sNaNs when SNAN_TESTS fails.
+	(fpclassify_test_data): Add sNaN tests.
+	(isfinite_test_data): Likewise.
+	(isinf_test_data): Likewise.
+	(isnan_test_data): Likewise.
+	(isnormal_test_data): Likewise.
+	(issignaling_test_data): Likewise.
+	(signbit_test_data): Likewise.
+	* math/gen-libm-test.pl (%beautify): Add snan_value.
+	(show_exceptions): Add argument $test_snan.
+	(parse_args): Handle snan_value as non-finite.  Update call to
+	show_exceptions.
+	* math/Makefile (libm-test-no-inline-cflags): Add
+	-fsignaling-nans.
+
 2016-05-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/Makefile (CFLAGS-oldrecvfrom.c): Remove rule.

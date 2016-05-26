@@ -59,6 +59,7 @@ use vars qw (%auto_tests);
     "minus_infty" => "-inf",
     "plus_infty" => "inf",
     "qnan_value" => "qNaN",
+    "snan_value" => "sNaN",
   );
 
 
@@ -141,13 +142,14 @@ sub build_complex_beautify {
 # Return the text to put in an initializer for a test's exception
 # information.
 sub show_exceptions {
-  my ($ignore_result, $non_finite, $exception) = @_;
+  my ($ignore_result, $non_finite, $test_snan, $exception) = @_;
   $ignore_result = ($ignore_result ? "IGNORE_RESULT|" : "");
   $non_finite = ($non_finite ? "NON_FINITE|" : "");
+  $test_snan = ($test_snan ? "TEST_SNAN|" : "");
   if (defined $exception) {
-    return ", ${ignore_result}${non_finite}$exception";
+    return ", ${ignore_result}${non_finite}${test_snan}$exception";
   } else {
-    return ", ${ignore_result}${non_finite}0";
+    return ", ${ignore_result}${non_finite}${test_snan}0";
   }
 }
 
@@ -163,7 +165,7 @@ sub parse_args {
   my (@plus_oflow, @minus_oflow, @plus_uflow, @minus_uflow);
   my (@errno_plus_oflow, @errno_minus_oflow);
   my (@errno_plus_uflow, @errno_minus_uflow);
-  my ($non_finite);
+  my ($non_finite, $test_snan);
 
   ($descr_args, $descr_res) = split /_/,$descr, 2;
 
@@ -310,10 +312,12 @@ sub parse_args {
     }
     # Determine whether any arguments or results, for any rounding
     # mode, are non-finite.
-    $non_finite = ($args =~ /qnan_value|plus_infty|minus_infty/);
+    $non_finite = ($args =~ /qnan_value|snan_value|plus_infty|minus_infty/);
+    $test_snan = ($args =~ /snan_value/);
     # Add exceptions.
     $cline_res .= show_exceptions ($ignore_result_any,
 				   $non_finite,
+				   $test_snan,
 				   ($current_arg <= $#args_res)
 				   ? $args_res[$current_arg]
 				   : undef);
