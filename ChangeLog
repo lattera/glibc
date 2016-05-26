@@ -1,5 +1,9 @@
 2016-05-26  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20153]
+	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c (__ieee754_sqrtl): Return
+	x * x + x for infinities and NaNs.
+
 	[BZ #20151]
 	* sysdeps/ieee754/ldbl-128/e_j0l.c (__ieee754_j0l): Add NaN
 	argument to itself before returning result.
