@@ -690,7 +690,7 @@ __ieee754_j1l (long double x)
   if (! isfinite (x))
     {
       if (x != x)
-	return x;
+	return x + x;
       else
 	return 0.0L;
     }
@@ -849,7 +849,7 @@ __ieee754_y1l (long double x)
   if (! isfinite (x))
     {
       if (x != x)
-	return x;
+	return x + x;
       else
 	return 0.0L;
     }
