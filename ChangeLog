@@ -1,3 +1,16 @@
+2016-05-27  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* libm-test.inc (M_PI_34l): Rename to
+	(lit_pi_3_m_4_d): New Macro.
+	(M_PI_34_LOG10El): Rename to
+	(lit_pi_3_m_4_ln10_m_d): New Macro.
+	(M_PI2_LOG10El): Rename to
+	(lit_pi_2_ln10_m_d):  New Macro.
+	(M_PI4_LOG10El): Rename to
+	(lit_pi_4_ln10_m_d):  New Macro.
+	(M_PI_LOG10El): Rename to
+	(lit_pi_ln10_d):  New Macro.
+
 2016-05-27  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20157]

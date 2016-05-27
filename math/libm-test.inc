@@ -281,12 +281,20 @@ struct ulp_data
 #define TEST_COND_before_rounding	(!TININESS_AFTER_ROUNDING)
 #define TEST_COND_after_rounding	TININESS_AFTER_ROUNDING
 
-/* Various constants (we must supply them precalculated for accuracy).  */
-#define M_PI_34l		2.356194490192344928846982537459627163L	/* 3*pi/4 */
-#define M_PI_34_LOG10El		1.023282265381381010614337719073516828L
-#define M_PI2_LOG10El		0.682188176920920673742891812715677885L
-#define M_PI4_LOG10El		0.341094088460460336871445906357838943L
-#define M_PI_LOG10El		1.364376353841841347485783625431355770L
+/* Various constants derived from pi.  We must supply them precalculated for
+   accuracy.  They are written as a series of postfix operations to keep
+   them concise yet somewhat readable.  */
+
+/* (pi * 3) / 4 */
+#define lit_pi_3_m_4_d		LIT (2.356194490192344928846982537459627163)
+/* pi * 3 / (4 * ln(10)) */
+#define lit_pi_3_m_4_ln10_m_d	LIT (1.023282265381381010614337719073516828)
+/* pi / (2 * ln(10)) */
+#define lit_pi_2_ln10_m_d	LIT (0.682188176920920673742891812715677885)
+/* pi / (4 * ln(10)) */
+#define lit_pi_4_ln10_m_d	LIT (0.341094088460460336871445906357838943)
+/* pi / ln(10) */
+#define lit_pi_ln10_d		LIT (1.364376353841841347485783625431355770)
 
 #define ulps_file_name "ULPs"	/* Name of the ULPs file.  */
 static FILE *ulps_file;		/* File to document difference.  */
@@ -1964,8 +1972,8 @@ static const struct test_ff_f_data atan2_test_data[] =
 
     TEST_ff_f (atan2, plus_infty, plus_infty, M_PI_4l, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, minus_infty, plus_infty, -M_PI_4l, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_infty, minus_infty, M_PI_34l, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, minus_infty, -M_PI_34l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_infty, minus_infty, lit_pi_3_m_4_d, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, minus_infty, -lit_pi_3_m_4_d, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (atan2, qnan_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (atan2, -qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -2057,8 +2065,8 @@ static const struct test_c_c_data cacos_test_data[] =
     TEST_c_c (cacos, minus_zero, minus_zero, M_PI_2l, 0.0),
     TEST_c_c (cacos, 0, minus_zero, M_PI_2l, 0.0),
 
-    TEST_c_c (cacos, minus_infty, plus_infty, M_PI_34l, minus_infty),
-    TEST_c_c (cacos, minus_infty, minus_infty, M_PI_34l, plus_infty),
+    TEST_c_c (cacos, minus_infty, plus_infty, lit_pi_3_m_4_d, minus_infty),
+    TEST_c_c (cacos, minus_infty, minus_infty, lit_pi_3_m_4_d, plus_infty),
 
     TEST_c_c (cacos, plus_infty, plus_infty, M_PI_4l, minus_infty),
     TEST_c_c (cacos, plus_infty, minus_infty, M_PI_4l, plus_infty),
@@ -2744,8 +2752,8 @@ static const struct test_c_c_data cacosh_test_data[] =
     TEST_c_c (cacosh, minus_zero, 0, 0.0, M_PI_2l),
     TEST_c_c (cacosh, 0, minus_zero, 0.0, -M_PI_2l),
     TEST_c_c (cacosh, minus_zero, minus_zero, 0.0, -M_PI_2l),
-    TEST_c_c (cacosh, minus_infty, plus_infty, plus_infty, M_PI_34l),
-    TEST_c_c (cacosh, minus_infty, minus_infty, plus_infty, -M_PI_34l),
+    TEST_c_c (cacosh, minus_infty, plus_infty, plus_infty, lit_pi_3_m_4_d),
+    TEST_c_c (cacosh, minus_infty, minus_infty, plus_infty, -lit_pi_3_m_4_d),
 
     TEST_c_c (cacosh, plus_infty, plus_infty, plus_infty, M_PI_4l),
     TEST_c_c (cacosh, plus_infty, minus_infty, plus_infty, -M_PI_4l),
@@ -3447,9 +3455,9 @@ static const struct test_c_f_data carg_test_data[] =
 
     TEST_c_f (carg, plus_infty, minus_infty, -M_PI_4l),
 
-    TEST_c_f (carg, minus_infty, plus_infty, M_PI_34l),
+    TEST_c_f (carg, minus_infty, plus_infty, lit_pi_3_m_4_d),
 
-    TEST_c_f (carg, minus_infty, minus_infty, -M_PI_34l),
+    TEST_c_f (carg, minus_infty, minus_infty, -lit_pi_3_m_4_d),
 
     TEST_c_f (carg, qnan_value, qnan_value, qnan_value),
 
@@ -6211,8 +6219,8 @@ static const struct test_c_c_data clog_test_data[] =
     TEST_c_c (clog, 0, 0, minus_infty, 0.0, DIVIDE_BY_ZERO_EXCEPTION),
     TEST_c_c (clog, 0, minus_zero, minus_infty, minus_zero, DIVIDE_BY_ZERO_EXCEPTION),
 
-    TEST_c_c (clog, minus_infty, plus_infty, plus_infty, M_PI_34l),
-    TEST_c_c (clog, minus_infty, minus_infty, plus_infty, -M_PI_34l),
+    TEST_c_c (clog, minus_infty, plus_infty, plus_infty, lit_pi_3_m_4_d),
+    TEST_c_c (clog, minus_infty, minus_infty, plus_infty, -lit_pi_3_m_4_d),
 
     TEST_c_c (clog, plus_infty, plus_infty, plus_infty, M_PI_4l),
     TEST_c_c (clog, plus_infty, minus_infty, plus_infty, -M_PI_4l),
@@ -6266,30 +6274,30 @@ clog_test (void)
 
 static const struct test_c_c_data clog10_test_data[] =
   {
-    TEST_c_c (clog10, minus_zero, 0, minus_infty, M_PI_LOG10El, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_c_c (clog10, minus_zero, minus_zero, minus_infty, -M_PI_LOG10El, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_c_c (clog10, minus_zero, 0, minus_infty, lit_pi_ln10_d, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_c_c (clog10, minus_zero, minus_zero, minus_infty, -lit_pi_ln10_d, DIVIDE_BY_ZERO_EXCEPTION),
 
     TEST_c_c (clog10, 0, 0, minus_infty, 0.0, DIVIDE_BY_ZERO_EXCEPTION),
     TEST_c_c (clog10, 0, minus_zero, minus_infty, minus_zero, DIVIDE_BY_ZERO_EXCEPTION),
 
-    TEST_c_c (clog10, minus_infty, plus_infty, plus_infty, M_PI_34_LOG10El),
+    TEST_c_c (clog10, minus_infty, plus_infty, plus_infty, lit_pi_3_m_4_ln10_m_d),
 
-    TEST_c_c (clog10, plus_infty, plus_infty, plus_infty, M_PI4_LOG10El),
-    TEST_c_c (clog10, plus_infty, minus_infty, plus_infty, -M_PI4_LOG10El),
+    TEST_c_c (clog10, plus_infty, plus_infty, plus_infty, lit_pi_4_ln10_m_d),
+    TEST_c_c (clog10, plus_infty, minus_infty, plus_infty, -lit_pi_4_ln10_m_d),
 
-    TEST_c_c (clog10, 0, plus_infty, plus_infty, M_PI2_LOG10El),
-    TEST_c_c (clog10, 3, plus_infty, plus_infty, M_PI2_LOG10El),
-    TEST_c_c (clog10, minus_zero, plus_infty, plus_infty, M_PI2_LOG10El),
-    TEST_c_c (clog10, -3, plus_infty, plus_infty, M_PI2_LOG10El),
-    TEST_c_c (clog10, 0, minus_infty, plus_infty, -M_PI2_LOG10El),
-    TEST_c_c (clog10, 3, minus_infty, plus_infty, -M_PI2_LOG10El),
-    TEST_c_c (clog10, minus_zero, minus_infty, plus_infty, -M_PI2_LOG10El),
-    TEST_c_c (clog10, -3, minus_infty, plus_infty, -M_PI2_LOG10El),
+    TEST_c_c (clog10, 0, plus_infty, plus_infty, lit_pi_2_ln10_m_d),
+    TEST_c_c (clog10, 3, plus_infty, plus_infty, lit_pi_2_ln10_m_d),
+    TEST_c_c (clog10, minus_zero, plus_infty, plus_infty, lit_pi_2_ln10_m_d),
+    TEST_c_c (clog10, -3, plus_infty, plus_infty, lit_pi_2_ln10_m_d),
+    TEST_c_c (clog10, 0, minus_infty, plus_infty, -lit_pi_2_ln10_m_d),
+    TEST_c_c (clog10, 3, minus_infty, plus_infty, -lit_pi_2_ln10_m_d),
+    TEST_c_c (clog10, minus_zero, minus_infty, plus_infty, -lit_pi_2_ln10_m_d),
+    TEST_c_c (clog10, -3, minus_infty, plus_infty, -lit_pi_2_ln10_m_d),
 
-    TEST_c_c (clog10, minus_infty, 0, plus_infty, M_PI_LOG10El),
-    TEST_c_c (clog10, minus_infty, 1, plus_infty, M_PI_LOG10El),
-    TEST_c_c (clog10, minus_infty, minus_zero, plus_infty, -M_PI_LOG10El),
-    TEST_c_c (clog10, minus_infty, -1, plus_infty, -M_PI_LOG10El),
+    TEST_c_c (clog10, minus_infty, 0, plus_infty, lit_pi_ln10_d),
+    TEST_c_c (clog10, minus_infty, 1, plus_infty, lit_pi_ln10_d),
+    TEST_c_c (clog10, minus_infty, minus_zero, plus_infty, -lit_pi_ln10_d),
+    TEST_c_c (clog10, minus_infty, -1, plus_infty, -lit_pi_ln10_d),
 
     TEST_c_c (clog10, plus_infty, 0, plus_infty, 0.0),
     TEST_c_c (clog10, plus_infty, 1, plus_infty, 0.0),
