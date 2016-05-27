@@ -26,4 +26,5 @@
 #define PREFIX LDBL
 #define TYPE_STR "ldouble"
 #define LIT(x) (x ## L)
+#define LITM(x) x ## l
 #define FTOSTR snprintf

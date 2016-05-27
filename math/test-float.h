@@ -26,4 +26,6 @@
 #define PREFIX FLT
 #define TYPE_STR "float"
 #define LIT(x) (x ## f)
+/* Use the double variants of macro constants.  */
+#define LITM(x) x
 #define FTOSTR snprintf
