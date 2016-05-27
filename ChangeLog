@@ -1,3 +1,63 @@
+2016-05-27  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/libm-test.inc:
+	(TYPE_DECIMAL_DIG): Redefine using type supplied PREFIX macro.
+	(TYPE_MIN): Likewise.
+	(TYPE_TRUE_MIN): Likewise.
+	(TYPE_MAX): Likewise.
+	(MIN_EXP): Likewise.
+	(MAX_EXP): Likewise.
+	(MANT_DIG): Likewise.
+
+	(FSTR_MAX): New macro.
+	(__CONCATX): Likewise.
+	(QTYPE_STR): Likewise.
+	(TEST_COND_binary32): Likewise.
+	(TEST_COND_binary64): Likewise.
+	(TEST_COND_binary128): Likewise.
+	(TEST_COND_ibm128): Likewise.
+	(TEST_COND_intel96): Likewise.
+	(TEST_COND_m68k96): Likewise.
+
+	(TEST_COND_flt_32): Redefine as equivalent format test macro.
+	(TEST_COND_dbl_64): Likewise.
+	(TEST_COND_ldbl_96_intel): Likewise.
+	(TEST_COND_ldbl_96_m68k): Likewise.
+	(TEST_COND_ldbl_128): Likewise.
+	(TEST_COND_ldbl_128ibm): Likewise.
+
+	(plus_zero): Redefine using LIT macro.
+	(minus_zero): Likewise.
+	(plus_infty): Redefine as (INF).
+	(minux_infty): Redefine as (-INF).
+	(max_value): Redefine as TYPE_MAX.
+	(min_value): Redefine as TYPE_MIN.
+	(min_subnorm_value): Redefine as TYPE_TRUE_MIN.
+
+	(print_float): Refactor to use snprintf to convert FLOAT values
+	to string. This brings it closer to dropin replacement of strtof
+	for the TS 18661 defined types.
+	(update_stats): Likewise.
+	(print_complex_function_ulps): Likewise.
+	(print_max_error): Likewise.
+	(print_complex_max_error): Likewise.
+	(check_float_internal): Likewise.
+
+	* math/test-float.h (PREFIX): New macro.
+	(LIT): Likewise.
+	(TYPE_STR): Likewise.
+	(FTOSTR): Likewise.
+
+	* math/test-double.h (PREFIX): New macro.
+	(LIT): Likewise.
+	(TYPE_STR): Likewise.
+	(FTOSTR): Likewise.
+
+	* math/test-ldouble.h (PREFIX): New macro.
+	(LIT): Likewise.
+	(TYPE_STR): Likewise.
+	(FTOSTR): Likewise.
+
 2016-05-27  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20156]

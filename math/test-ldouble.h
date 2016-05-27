@@ -23,3 +23,7 @@
 #define PRINTF_NEXPR "Lf"
 #define TEST_LDOUBLE 1
 #define BUILD_COMPLEX(real, imag) (CMPLXL ((real), (imag)))
+#define PREFIX LDBL
+#define TYPE_STR "ldouble"
+#define LIT(x) (x ## L)
+#define FTOSTR snprintf
