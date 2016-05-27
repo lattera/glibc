@@ -302,6 +302,11 @@ struct ulp_data
 /* pi */
 #define lit_pi			LITM (M_PI)
 
+/* Other useful constants.  */
+
+/* e */
+#define lit_e			LITM (M_E)
+
 #define ulps_file_name "ULPs"	/* Name of the ULPs file.  */
 static FILE *ulps_file;		/* File to document difference.  */
 static int output_ulps;		/* Should ulps printed?  */
@@ -7078,7 +7083,7 @@ static const struct test_f_f_data fabs_test_data[] =
     TEST_f_f (fabs, -min_value, min_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (fabs, -max_value, max_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (fabs, 38.0, 38.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_f_f (fabs, -M_El, M_El, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (fabs, -lit_e, lit_e, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void
@@ -7914,7 +7919,7 @@ hypot_test (void)
 static const struct test_f_i_data ilogb_test_data[] =
   {
     TEST_f_i (ilogb, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_f_i (ilogb, M_El, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (ilogb, lit_e, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (ilogb, 1024, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (ilogb, -2000, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (ilogb, 0.5, -1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
@@ -9086,7 +9091,7 @@ static const struct test_f_f_data logb_test_data[] =
     TEST_f_f (logb, -snan_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
 
     TEST_f_f (logb, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_f_f (logb, M_El, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (logb, lit_e, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (logb, 1024, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (logb, -2000, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
