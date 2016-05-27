@@ -1,3 +1,22 @@
+2016-05-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20160]
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S (__ceil): Add NaN
+	argument to itself before returning the result.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S (__ceilf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S (__floor): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S (__floorf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyint.S (__nearbyint):
+	Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyintf.S (__nearbyintf):
+	Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S (__rint): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S (__rintf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S (__round): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S (__roundf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S (__trunc): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S (__truncf): Likewise.
+
 2016-05-27  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* libm-test.inc: Replace usage of M_El with

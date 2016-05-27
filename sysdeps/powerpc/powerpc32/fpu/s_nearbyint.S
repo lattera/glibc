@@ -49,7 +49,7 @@ ENTRY (__nearbyint)
 	fabs	fp0,fp1
 	fsub    fp12,fp13,fp13	/* generate 0.0  */
 	fcmpu	cr7,fp0,fp13	/* if (fabs(x) > TWO52 */
-	bgelr	cr7
+	bge	cr7,.L10
 	fcmpu	cr7,fp1,fp12	/* if (x > 0.0 */
 	ble	cr7,L(lessthanzero)
 	mffs	fp11
@@ -67,6 +67,12 @@ L(lessthanzero):
 	fadd	fp1,fp1,fp13	/* x += TWO52 */
 	fnabs	fp1,fp1		/* if (x == 0.0) */
 	mtfsf	0xff,fp11	/* Restore FE_INEXACT state.  */
+	blr
+.L10:
+	/* Ensure sNaN input is converted to qNaN.  */
+	fcmpu	cr7,fp1,fp1
+	beqlr	cr7
+	fadd	fp1,fp1,fp1
 	blr
 END (__nearbyint)
 

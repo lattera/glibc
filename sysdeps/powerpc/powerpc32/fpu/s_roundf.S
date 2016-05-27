@@ -56,7 +56,7 @@ ENTRY (__roundf )
 	mffs	fp11		/* Save current FPU rounding mode and
 				   "inexact" state.  */
 	fcmpu	cr6,fp1,fp12	/* if (x > 0.0)  */
-	bnllr-	cr7
+	bnl-	cr7,.L10
 	mtfsfi	7,1		/* Set rounding mode toward 0.  */
 #ifdef SHARED
 	lfs	fp10,.LC1-.LC0(r9)
@@ -82,6 +82,12 @@ ENTRY (__roundf )
 .L9:
 	mtfsf	0xff,fp11	/* Restore previous rounding mode and
 				   "inexact" state.  */
+	blr
+.L10:
+	/* Ensure sNaN input is converted to qNaN.  */
+	fcmpu	cr7,fp1,fp1
+	beqlr	cr7
+	fadds	fp1,fp1,fp1
 	blr
 	END (__roundf)
 
