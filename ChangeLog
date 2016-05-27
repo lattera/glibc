@@ -1,3 +1,13 @@
+2016-05-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20156]
+	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c (__ceill): Add high part
+	to itself when zero or not finite.
+	* sysdeps/ieee754/ldbl-128ibm/s_floorl.c (__floorl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_rintl.c (__rintl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_roundl.c (__roundl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c (__truncl): Likewise.
+
 2016-05-26  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20153]

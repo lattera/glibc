@@ -119,6 +119,9 @@ __rintl (long double x)
       fesetround (save_round);
 #endif
     }
+  else
+    /* Quiet signaling NaN arguments.  */
+    xh += xh;
 
   return ldbl_pack (xh, xl);
 }

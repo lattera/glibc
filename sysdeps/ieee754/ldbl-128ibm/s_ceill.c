@@ -52,6 +52,9 @@ __ceill (long double x)
 	  ldbl_canonicalize_int (&xh, &xl);
 	}
     }
+  else
+    /* Quiet signaling NaN arguments.  */
+    xh += xh;
 
   return ldbl_pack (xh, xl);
 }
