@@ -297,6 +297,8 @@ struct ulp_data
 #define lit_pi_ln10_d		LIT (1.364376353841841347485783625431355770)
 /* pi / 2 */
 #define lit_pi_2_d		LITM (M_PI_2)
+/* pi / 4 */
+#define lit_pi_4_d		LITM (M_PI_4)
 /* pi */
 #define lit_pi			LITM (M_PI)
 
@@ -1974,8 +1976,8 @@ static const struct test_ff_f_data atan2_test_data[] =
     TEST_ff_f (atan2, -min_subnorm_value, minus_infty, -lit_pi, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, -max_value, minus_infty, -lit_pi, ERRNO_UNCHANGED),
 
-    TEST_ff_f (atan2, plus_infty, plus_infty, M_PI_4l, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, plus_infty, -M_PI_4l, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_infty, plus_infty, lit_pi_4_d, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_infty, plus_infty, -lit_pi_4_d, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, plus_infty, minus_infty, lit_pi_3_m_4_d, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, minus_infty, minus_infty, -lit_pi_3_m_4_d, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -2072,8 +2074,8 @@ static const struct test_c_c_data cacos_test_data[] =
     TEST_c_c (cacos, minus_infty, plus_infty, lit_pi_3_m_4_d, minus_infty),
     TEST_c_c (cacos, minus_infty, minus_infty, lit_pi_3_m_4_d, plus_infty),
 
-    TEST_c_c (cacos, plus_infty, plus_infty, M_PI_4l, minus_infty),
-    TEST_c_c (cacos, plus_infty, minus_infty, M_PI_4l, plus_infty),
+    TEST_c_c (cacos, plus_infty, plus_infty, lit_pi_4_d, minus_infty),
+    TEST_c_c (cacos, plus_infty, minus_infty, lit_pi_4_d, plus_infty),
 
     TEST_c_c (cacos, -10.0, plus_infty, lit_pi_2_d, minus_infty),
     TEST_c_c (cacos, -10.0, minus_infty, lit_pi_2_d, plus_infty),
@@ -2759,8 +2761,8 @@ static const struct test_c_c_data cacosh_test_data[] =
     TEST_c_c (cacosh, minus_infty, plus_infty, plus_infty, lit_pi_3_m_4_d),
     TEST_c_c (cacosh, minus_infty, minus_infty, plus_infty, -lit_pi_3_m_4_d),
 
-    TEST_c_c (cacosh, plus_infty, plus_infty, plus_infty, M_PI_4l),
-    TEST_c_c (cacosh, plus_infty, minus_infty, plus_infty, -M_PI_4l),
+    TEST_c_c (cacosh, plus_infty, plus_infty, plus_infty, lit_pi_4_d),
+    TEST_c_c (cacosh, plus_infty, minus_infty, plus_infty, -lit_pi_4_d),
 
     TEST_c_c (cacosh, -10.0, plus_infty, plus_infty, lit_pi_2_d),
     TEST_c_c (cacosh, -10.0, minus_infty, plus_infty, -lit_pi_2_d),
@@ -3455,9 +3457,9 @@ static const struct test_c_f_data carg_test_data[] =
     /* carg (-inf + i y) == -pi for finite y < 0.  */
     TEST_c_f (carg, minus_infty, -10.0, -lit_pi),
 
-    TEST_c_f (carg, plus_infty, plus_infty, M_PI_4l),
+    TEST_c_f (carg, plus_infty, plus_infty, lit_pi_4_d),
 
-    TEST_c_f (carg, plus_infty, minus_infty, -M_PI_4l),
+    TEST_c_f (carg, plus_infty, minus_infty, -lit_pi_4_d),
 
     TEST_c_f (carg, minus_infty, plus_infty, lit_pi_3_m_4_d),
 
@@ -3481,10 +3483,10 @@ static const struct test_c_c_data casin_test_data[] =
     TEST_c_c (casin, 0, minus_zero, 0.0, minus_zero),
     TEST_c_c (casin, minus_zero, minus_zero, minus_zero, minus_zero),
 
-    TEST_c_c (casin, plus_infty, plus_infty, M_PI_4l, plus_infty),
-    TEST_c_c (casin, plus_infty, minus_infty, M_PI_4l, minus_infty),
-    TEST_c_c (casin, minus_infty, plus_infty, -M_PI_4l, plus_infty),
-    TEST_c_c (casin, minus_infty, minus_infty, -M_PI_4l, minus_infty),
+    TEST_c_c (casin, plus_infty, plus_infty, lit_pi_4_d, plus_infty),
+    TEST_c_c (casin, plus_infty, minus_infty, lit_pi_4_d, minus_infty),
+    TEST_c_c (casin, minus_infty, plus_infty, -lit_pi_4_d, plus_infty),
+    TEST_c_c (casin, minus_infty, minus_infty, -lit_pi_4_d, minus_infty),
 
     TEST_c_c (casin, -10.0, plus_infty, minus_zero, plus_infty),
     TEST_c_c (casin, -10.0, minus_infty, minus_zero, minus_infty),
@@ -4171,10 +4173,10 @@ static const struct test_c_c_data casinh_test_data[] =
     TEST_c_c (casinh, 0, minus_zero, 0.0, minus_zero),
     TEST_c_c (casinh, minus_zero, minus_zero, minus_zero, minus_zero),
 
-    TEST_c_c (casinh, plus_infty, plus_infty, plus_infty, M_PI_4l),
-    TEST_c_c (casinh, plus_infty, minus_infty, plus_infty, -M_PI_4l),
-    TEST_c_c (casinh, minus_infty, plus_infty, minus_infty, M_PI_4l),
-    TEST_c_c (casinh, minus_infty, minus_infty, minus_infty, -M_PI_4l),
+    TEST_c_c (casinh, plus_infty, plus_infty, plus_infty, lit_pi_4_d),
+    TEST_c_c (casinh, plus_infty, minus_infty, plus_infty, -lit_pi_4_d),
+    TEST_c_c (casinh, minus_infty, plus_infty, minus_infty, lit_pi_4_d),
+    TEST_c_c (casinh, minus_infty, minus_infty, minus_infty, -lit_pi_4_d),
 
     TEST_c_c (casinh, -10.0, plus_infty, minus_infty, lit_pi_2_d),
     TEST_c_c (casinh, -10.0, minus_infty, minus_infty, -lit_pi_2_d),
@@ -4861,10 +4863,10 @@ static const struct test_c_c_data catan_test_data[] =
     TEST_c_c (catan, 0, minus_zero, 0, minus_zero),
     TEST_c_c (catan, minus_zero, minus_zero, minus_zero, minus_zero),
 
-    TEST_c_c (catan, 1.0L, plus_zero, M_PI_4l, plus_zero),
-    TEST_c_c (catan, 1.0L, minus_zero, M_PI_4l, minus_zero),
-    TEST_c_c (catan, -1.0L, plus_zero, -M_PI_4l, plus_zero),
-    TEST_c_c (catan, -1.0L, minus_zero, -M_PI_4l, minus_zero),
+    TEST_c_c (catan, 1.0L, plus_zero, lit_pi_4_d, plus_zero),
+    TEST_c_c (catan, 1.0L, minus_zero, lit_pi_4_d, minus_zero),
+    TEST_c_c (catan, -1.0L, plus_zero, -lit_pi_4_d, plus_zero),
+    TEST_c_c (catan, -1.0L, minus_zero, -lit_pi_4_d, minus_zero),
     TEST_c_c (catan, plus_zero, 1.0L, plus_zero, plus_infty, DIVIDE_BY_ZERO_EXCEPTION),
     TEST_c_c (catan, minus_zero, 1.0L, minus_zero, plus_infty, DIVIDE_BY_ZERO_EXCEPTION),
     TEST_c_c (catan, plus_zero, -1.0L, plus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION),
@@ -5371,10 +5373,10 @@ static const struct test_c_c_data catanh_test_data[] =
     TEST_c_c (catanh, 1.0L, minus_zero, plus_infty, minus_zero, DIVIDE_BY_ZERO_EXCEPTION),
     TEST_c_c (catanh, -1.0L, plus_zero, minus_infty, plus_zero, DIVIDE_BY_ZERO_EXCEPTION),
     TEST_c_c (catanh, -1.0L, minus_zero, minus_infty, minus_zero, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_c_c (catanh, plus_zero, 1.0L, plus_zero, M_PI_4l),
-    TEST_c_c (catanh, minus_zero, 1.0L, minus_zero, M_PI_4l),
-    TEST_c_c (catanh, plus_zero, -1.0L, plus_zero, -M_PI_4l),
-    TEST_c_c (catanh, minus_zero, -1.0L, minus_zero, -M_PI_4l),
+    TEST_c_c (catanh, plus_zero, 1.0L, plus_zero, lit_pi_4_d),
+    TEST_c_c (catanh, minus_zero, 1.0L, minus_zero, lit_pi_4_d),
+    TEST_c_c (catanh, plus_zero, -1.0L, plus_zero, -lit_pi_4_d),
+    TEST_c_c (catanh, minus_zero, -1.0L, minus_zero, -lit_pi_4_d),
 
     TEST_c_c (catanh, plus_infty, plus_infty, 0.0, lit_pi_2_d),
     TEST_c_c (catanh, plus_infty, minus_infty, 0.0, -lit_pi_2_d),
@@ -6226,8 +6228,8 @@ static const struct test_c_c_data clog_test_data[] =
     TEST_c_c (clog, minus_infty, plus_infty, plus_infty, lit_pi_3_m_4_d),
     TEST_c_c (clog, minus_infty, minus_infty, plus_infty, -lit_pi_3_m_4_d),
 
-    TEST_c_c (clog, plus_infty, plus_infty, plus_infty, M_PI_4l),
-    TEST_c_c (clog, plus_infty, minus_infty, plus_infty, -M_PI_4l),
+    TEST_c_c (clog, plus_infty, plus_infty, plus_infty, lit_pi_4_d),
+    TEST_c_c (clog, plus_infty, minus_infty, plus_infty, -lit_pi_4_d),
 
     TEST_c_c (clog, 0, plus_infty, plus_infty, lit_pi_2_d),
     TEST_c_c (clog, 3, plus_infty, plus_infty, lit_pi_2_d),

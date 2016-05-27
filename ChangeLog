@@ -1,5 +1,10 @@
 2016-05-27  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* libm-test.inc: Replace usage of M_PI_4l with
+	(lit_pi_4_d): New macro.
+
+2016-05-27  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* libm-test.inc: Replace usage of M_PIl with
 	(lit_pi): New macro.
 
