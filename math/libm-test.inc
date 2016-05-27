@@ -297,6 +297,8 @@ struct ulp_data
 #define lit_pi_ln10_d		LIT (1.364376353841841347485783625431355770)
 /* pi / 2 */
 #define lit_pi_2_d		LITM (M_PI_2)
+/* pi */
+#define lit_pi			LITM (M_PI)
 
 #define ulps_file_name "ULPs"	/* Name of the ULPs file.  */
 static FILE *ulps_file;		/* File to document difference.  */
@@ -1959,18 +1961,18 @@ static const struct test_ff_f_data atan2_test_data[] =
     TEST_ff_f (atan2, minus_infty, -max_value, -lit_pi_2_d, ERRNO_UNCHANGED),
 
     /* atan2 (y,-inf) == +pi for finite y > 0 or +0.  */
-    TEST_ff_f (atan2, 1, minus_infty, M_PIl, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_zero, minus_infty, M_PIl, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, min_value, minus_infty, M_PIl, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, min_subnorm_value, minus_infty, M_PIl, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, max_value, minus_infty, M_PIl, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, 1, minus_infty, lit_pi, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, plus_zero, minus_infty, lit_pi, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, min_value, minus_infty, lit_pi, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, min_subnorm_value, minus_infty, lit_pi, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, max_value, minus_infty, lit_pi, ERRNO_UNCHANGED),
 
     /* atan2 (y,-inf) == -pi for finite y < 0 or -0.  */
-    TEST_ff_f (atan2, -1, minus_infty, -M_PIl, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_zero, minus_infty, -M_PIl, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, -min_value, minus_infty, -M_PIl, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, -min_subnorm_value, minus_infty, -M_PIl, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, -max_value, minus_infty, -M_PIl, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -1, minus_infty, -lit_pi, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, minus_zero, minus_infty, -lit_pi, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -min_value, minus_infty, -lit_pi, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -min_subnorm_value, minus_infty, -lit_pi, ERRNO_UNCHANGED),
+    TEST_ff_f (atan2, -max_value, minus_infty, -lit_pi, ERRNO_UNCHANGED),
 
     TEST_ff_f (atan2, plus_infty, plus_infty, M_PI_4l, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, minus_infty, plus_infty, -M_PI_4l, ERRNO_UNCHANGED),
@@ -2080,10 +2082,10 @@ static const struct test_c_c_data cacos_test_data[] =
     TEST_c_c (cacos, 0.1L, plus_infty, lit_pi_2_d, minus_infty),
     TEST_c_c (cacos, 0.1L, minus_infty, lit_pi_2_d, plus_infty),
 
-    TEST_c_c (cacos, minus_infty, 0, M_PIl, minus_infty),
-    TEST_c_c (cacos, minus_infty, minus_zero, M_PIl, plus_infty),
-    TEST_c_c (cacos, minus_infty, 100, M_PIl, minus_infty),
-    TEST_c_c (cacos, minus_infty, -100, M_PIl, plus_infty),
+    TEST_c_c (cacos, minus_infty, 0, lit_pi, minus_infty),
+    TEST_c_c (cacos, minus_infty, minus_zero, lit_pi, plus_infty),
+    TEST_c_c (cacos, minus_infty, 100, lit_pi, minus_infty),
+    TEST_c_c (cacos, minus_infty, -100, lit_pi, plus_infty),
 
     TEST_c_c (cacos, plus_infty, 0, 0.0, minus_infty),
     TEST_c_c (cacos, plus_infty, minus_zero, 0.0, plus_infty),
@@ -2120,10 +2122,10 @@ static const struct test_c_c_data cacos_test_data[] =
     TEST_c_c (cacos, plus_zero, 1.5L, lit_pi_2_d, -1.194763217287109304111930828519090523536L),
     TEST_c_c (cacos, minus_zero, 1.5L, lit_pi_2_d, -1.194763217287109304111930828519090523536L),
 
-    TEST_c_c (cacos, -1.5L, plus_zero, M_PIl, -0.9624236501192068949955178268487368462704L),
-    TEST_c_c (cacos, -1.5L, minus_zero, M_PIl, 0.9624236501192068949955178268487368462704L),
-    TEST_c_c (cacos, -1.0L, plus_zero, M_PIl, minus_zero),
-    TEST_c_c (cacos, -1.0L, minus_zero, M_PIl, plus_zero),
+    TEST_c_c (cacos, -1.5L, plus_zero, lit_pi, -0.9624236501192068949955178268487368462704L),
+    TEST_c_c (cacos, -1.5L, minus_zero, lit_pi, 0.9624236501192068949955178268487368462704L),
+    TEST_c_c (cacos, -1.0L, plus_zero, lit_pi, minus_zero),
+    TEST_c_c (cacos, -1.0L, minus_zero, lit_pi, plus_zero),
     TEST_c_c (cacos, -0.5L, plus_zero, 2.094395102393195492308428922186335256131L, minus_zero),
     TEST_c_c (cacos, -0.5L, minus_zero, 2.094395102393195492308428922186335256131L, plus_zero),
     TEST_c_c (cacos, 0.5L, plus_zero, 1.047197551196597746154214461093167628066L, minus_zero),
@@ -2767,10 +2769,10 @@ static const struct test_c_c_data cacosh_test_data[] =
     TEST_c_c (cacosh, 0.1L, plus_infty, plus_infty, lit_pi_2_d),
     TEST_c_c (cacosh, 0.1L, minus_infty, plus_infty, -lit_pi_2_d),
 
-    TEST_c_c (cacosh, minus_infty, 0, plus_infty, M_PIl),
-    TEST_c_c (cacosh, minus_infty, minus_zero, plus_infty, -M_PIl),
-    TEST_c_c (cacosh, minus_infty, 100, plus_infty, M_PIl),
-    TEST_c_c (cacosh, minus_infty, -100, plus_infty, -M_PIl),
+    TEST_c_c (cacosh, minus_infty, 0, plus_infty, lit_pi),
+    TEST_c_c (cacosh, minus_infty, minus_zero, plus_infty, -lit_pi),
+    TEST_c_c (cacosh, minus_infty, 100, plus_infty, lit_pi),
+    TEST_c_c (cacosh, minus_infty, -100, plus_infty, -lit_pi),
 
     TEST_c_c (cacosh, plus_infty, 0, plus_infty, 0.0),
     TEST_c_c (cacosh, plus_infty, minus_zero, plus_infty, minus_zero),
@@ -2807,10 +2809,10 @@ static const struct test_c_c_data cacosh_test_data[] =
     TEST_c_c (cacosh, plus_zero, 1.5L, 1.194763217287109304111930828519090523536L, lit_pi_2_d),
     TEST_c_c (cacosh, minus_zero, 1.5L, 1.194763217287109304111930828519090523536L, lit_pi_2_d),
 
-    TEST_c_c (cacosh, -1.5L, plus_zero, 0.9624236501192068949955178268487368462704L, M_PIl),
-    TEST_c_c (cacosh, -1.5L, minus_zero, 0.9624236501192068949955178268487368462704L, -M_PIl),
-    TEST_c_c (cacosh, -1.0L, plus_zero, plus_zero, M_PIl),
-    TEST_c_c (cacosh, -1.0L, minus_zero, plus_zero, -M_PIl),
+    TEST_c_c (cacosh, -1.5L, plus_zero, 0.9624236501192068949955178268487368462704L, lit_pi),
+    TEST_c_c (cacosh, -1.5L, minus_zero, 0.9624236501192068949955178268487368462704L, -lit_pi),
+    TEST_c_c (cacosh, -1.0L, plus_zero, plus_zero, lit_pi),
+    TEST_c_c (cacosh, -1.0L, minus_zero, plus_zero, -lit_pi),
     TEST_c_c (cacosh, -0.5L, plus_zero, plus_zero, 2.094395102393195492308428922186335256131L),
     TEST_c_c (cacosh, -0.5L, minus_zero, plus_zero, -2.094395102393195492308428922186335256131L),
     TEST_c_c (cacosh, 0.5L, plus_zero, plus_zero, 1.047197551196597746154214461093167628066L),
@@ -3448,10 +3450,10 @@ static const struct test_c_f_data carg_test_data[] =
     TEST_c_f (carg, 10.0, minus_infty, -lit_pi_2_d),
 
     /* carg (-inf + i y) == +pi for finite y > 0.  */
-    TEST_c_f (carg, minus_infty, 10.0, M_PIl),
+    TEST_c_f (carg, minus_infty, 10.0, lit_pi),
 
     /* carg (-inf + i y) == -pi for finite y < 0.  */
-    TEST_c_f (carg, minus_infty, -10.0, -M_PIl),
+    TEST_c_f (carg, minus_infty, -10.0, -lit_pi),
 
     TEST_c_f (carg, plus_infty, plus_infty, M_PI_4l),
 
@@ -6006,8 +6008,8 @@ static const struct test_f_f_data ceil_test_data[] =
     TEST_f_f (ceil, -snan_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
 
     /* Bug 15479: spurious "inexact" exception may occur.  */
-    TEST_f_f (ceil, M_PIl, 4.0, ERRNO_UNCHANGED),
-    TEST_f_f (ceil, -M_PIl, -3.0, ERRNO_UNCHANGED),
+    TEST_f_f (ceil, lit_pi, 4.0, ERRNO_UNCHANGED),
+    TEST_f_f (ceil, -lit_pi, -3.0, ERRNO_UNCHANGED),
     TEST_f_f (ceil, min_subnorm_value, 1.0, ERRNO_UNCHANGED),
     TEST_f_f (ceil, min_value, 1.0, ERRNO_UNCHANGED),
     TEST_f_f (ceil, 0.1, 1.0, ERRNO_UNCHANGED),
@@ -6215,8 +6217,8 @@ cimag_test (void)
 
 static const struct test_c_c_data clog_test_data[] =
   {
-    TEST_c_c (clog, minus_zero, 0, minus_infty, M_PIl, DIVIDE_BY_ZERO_EXCEPTION),
-    TEST_c_c (clog, minus_zero, minus_zero, minus_infty, -M_PIl, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_c_c (clog, minus_zero, 0, minus_infty, lit_pi, DIVIDE_BY_ZERO_EXCEPTION),
+    TEST_c_c (clog, minus_zero, minus_zero, minus_infty, -lit_pi, DIVIDE_BY_ZERO_EXCEPTION),
 
     TEST_c_c (clog, 0, 0, minus_infty, 0.0, DIVIDE_BY_ZERO_EXCEPTION),
     TEST_c_c (clog, 0, minus_zero, minus_infty, minus_zero, DIVIDE_BY_ZERO_EXCEPTION),
@@ -6236,10 +6238,10 @@ static const struct test_c_c_data clog_test_data[] =
     TEST_c_c (clog, minus_zero, minus_infty, plus_infty, -lit_pi_2_d),
     TEST_c_c (clog, -3, minus_infty, plus_infty, -lit_pi_2_d),
 
-    TEST_c_c (clog, minus_infty, 0, plus_infty, M_PIl),
-    TEST_c_c (clog, minus_infty, 1, plus_infty, M_PIl),
-    TEST_c_c (clog, minus_infty, minus_zero, plus_infty, -M_PIl),
-    TEST_c_c (clog, minus_infty, -1, plus_infty, -M_PIl),
+    TEST_c_c (clog, minus_infty, 0, plus_infty, lit_pi),
+    TEST_c_c (clog, minus_infty, 1, plus_infty, lit_pi),
+    TEST_c_c (clog, minus_infty, minus_zero, plus_infty, -lit_pi),
+    TEST_c_c (clog, minus_infty, -1, plus_infty, -lit_pi),
 
     TEST_c_c (clog, plus_infty, 0, plus_infty, 0.0),
     TEST_c_c (clog, plus_infty, 1, plus_infty, 0.0),
@@ -7161,8 +7163,8 @@ static const struct test_f_f_data floor_test_data[] =
     TEST_f_f (floor, -snan_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
 
     /* Bug 15479: spurious "inexact" exception may occur.  */
-    TEST_f_f (floor, M_PIl, 3.0, ERRNO_UNCHANGED),
-    TEST_f_f (floor, -M_PIl, -4.0, ERRNO_UNCHANGED),
+    TEST_f_f (floor, lit_pi, 3.0, ERRNO_UNCHANGED),
+    TEST_f_f (floor, -lit_pi, -4.0, ERRNO_UNCHANGED),
     TEST_f_f (floor, min_subnorm_value, 0.0, ERRNO_UNCHANGED),
     TEST_f_f (floor, min_value, 0.0, ERRNO_UNCHANGED),
     TEST_f_f (floor, 0.1, 0.0, ERRNO_UNCHANGED),
