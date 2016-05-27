@@ -1,3 +1,11 @@
+2016-05-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (NO_TEST_INLINE_FLOAT): Remove macro.
+	(NO_TEST_INLINE_DOUBLE): Likewise.
+	(TEST_COND_x86_64): Likewise.
+	(TEST_COND_x86): Likewise.
+	(M_PI_6l): Likewise.
+
 2016-05-27  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* math/libm-test.inc:
