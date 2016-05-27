@@ -1,5 +1,12 @@
 2016-05-27  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20157]
+	* sysdeps/powerpc/powerpc32/fpu/s_fabsl.S (__fabsl): Use fsel to
+	determine whether to negate low half if [_ARCH_PPCGR], and integer
+	comparison otherwise.
+	* sysdeps/powerpc/powerpc64/fpu/s_fabsl.S (__fabsl): Use fsel to
+	determine whether to negate low half.
+
 	* math/libm-test.inc (NO_TEST_INLINE_FLOAT): Remove macro.
 	(NO_TEST_INLINE_DOUBLE): Likewise.
 	(TEST_COND_x86_64): Likewise.

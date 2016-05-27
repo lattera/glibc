@@ -26,9 +26,8 @@ ENTRY(__fabsl)
    with the sign bit of y.  */
 	fmr	fp0,fp1
 	fabs	fp1,fp1
-	fcmpu	cr1,fp0,fp1
-	beqlr	cr1
-	fneg	fp2,fp2
+	fneg	fp3,fp2
+	fsel	fp2,fp0,fp2,fp3
 	blr
 END (__fabsl)
 

@@ -24,11 +24,28 @@ ENTRY(__fabsl)
 /* long double [f1,f2] fabs (long double [f1,f2] x);
    fabs(x,y) returns a value with the magnitude of x and
    with the sign bit of y.  */
+#ifdef _ARCH_PPCGR
+	/* fsel available.  */
 	fmr	fp0,fp1
+#else
+	/* Use integer operations to test sign of high part to avoid
+	   exceptions on sNaNs.  */
+	stwu	r1,-16(r1)
+	cfi_adjust_cfa_offset (16)
+	stfd	fp1,8(r1)
+#endif
 	fabs	fp1,fp1
-	fcmpu	cr1,fp0,fp1
-	beqlr	cr1
+#ifdef _ARCH_PPCGR
+	fneg	fp3,fp2
+	fsel	fp2,fp0,fp2,fp3
+#else
+	lwz	r3,8+HIWORD(r1)
+	cmpwi	cr6,r3,0
+	addi	r1,r1,16
+	cfi_adjust_cfa_offset (-16)
+	bgelr	cr6
 	fneg	fp2,fp2
+#endif
 	blr
 END (__fabsl)
 
