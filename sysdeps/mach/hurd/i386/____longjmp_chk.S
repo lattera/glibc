@@ -66,7 +66,12 @@ ENTRY (____longjmp_chk)
 
 	/* TODO: need locking?  */
 	/* struct hurd_sigstate * _hurd_self_sigstate (void) */
-	call	_hurd_self_sigstate
+#ifdef PIC
+	call    1f
+1:	popl    %ebx
+	addl    $_GLOBAL_OFFSET_TABLE_+[.-1b], %ebx
+#endif
+	call	JUMPTARGET(_hurd_self_sigstate)
 	/* TODO: %eax and %eax->sigaltstack are always valid?  */
 
 	testl	$SS_ONSTACK, (HURD_SIGSTATE__SIGALTSTACK__OFFSET + SIGALTSTACK__SS_FLAGS__OFFSET)(%eax)
