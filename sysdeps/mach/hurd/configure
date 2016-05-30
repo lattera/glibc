@@ -45,3 +45,5 @@ fi
 if test -n "$sysheaders"; then
   CPPFLAGS=$OLD_CPPFLAGS
 fi
+
+libc_cv_ld_gnu_indirect_function=no

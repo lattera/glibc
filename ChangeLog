@@ -4,6 +4,15 @@
 	* inet/if_index.c (__protocol_available): Delete #if 0'd code.
 	* inet/ruserpass.c (ruserpass): Delete #if 0'd code.
 
+2016-05-30  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* scripts/check-local-headers.sh (exclude): Add hurd/ihash.h, and
+	include .*-.*/ in addition to .*-.*-.*/ (i.e. i386-gnu in addition to
+	i386-linux-gnu).
+	* sysdeps/mach/hurd/configure.ac (libc_cv_ld_gnu_indirect_function):
+	Set to no.
+	* sysdeps/mach/hurd/configure: Refresh.
+
 2016-05-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #20178]
