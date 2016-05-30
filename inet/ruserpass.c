@@ -192,81 +192,8 @@ next:
 			}
 			break;
 		case ACCOUNT:
-#if 0
-			if (fstat64(fileno(cfile), &stb) >= 0
-			    && (stb.st_mode & 077) != 0) {
-	warnx("Error: .netrc file is readable by others.");
-	warnx("Remove account or make file unreadable by others.");
-				goto bad;
-			}
-			if (token() && *aacct == 0) {
-				*aacct = malloc((unsigned) strlen(tokval) + 1);
-				(void) strcpy(*aacct, tokval);
-			}
-#endif
 			break;
 		case MACDEF:
-#if 0
-			if (proxy) {
-				(void) fclose(cfile);
-				return (0);
-			}
-			while ((c=getc_unlocked(cfile)) != EOF && c == ' '
-			       || c == '\t');
-			if (c == EOF || c == '\n') {
-				printf("Missing macdef name argument.\n");
-				goto bad;
-			}
-			if (macnum == 16) {
-				printf("Limit of 16 macros have already been defined\n");
-				goto bad;
-			}
-			tmp = macros[macnum].mac_name;
-			*tmp++ = c;
-			for (i=0; i < 8 && (c=getc_unlocked(cfile)) != EOF &&
-			    !isspace(c); ++i) {
-				*tmp++ = c;
-			}
-			if (c == EOF) {
-				printf("Macro definition missing null line terminator.\n");
-				goto bad;
-			}
-			*tmp = '\0';
-			if (c != '\n') {
-				while ((c=getc_unlocked(cfile)) != EOF
-				       && c != '\n');
-			}
-			if (c == EOF) {
-				printf("Macro definition missing null line terminator.\n");
-				goto bad;
-			}
-			if (macnum == 0) {
-				macros[macnum].mac_start = macbuf;
-			}
-			else {
-				macros[macnum].mac_start = macros[macnum-1].mac_end + 1;
-			}
-			tmp = macros[macnum].mac_start;
-			while (tmp != macbuf + 4096) {
-				if ((c=getc_unlocked(cfile)) == EOF) {
-				printf("Macro definition missing null line terminator.\n");
-					goto bad;
-				}
-				*tmp = c;
-				if (*tmp == '\n') {
-					if (*(tmp-1) == '\0') {
-					   macros[macnum++].mac_end = tmp - 1;
-					   break;
-					}
-					*tmp = '\0';
-				}
-				tmp++;
-			}
-			if (tmp == macbuf + 4096) {
-				printf("4K macro buffer exceeded\n");
-				goto bad;
-			}
-#endif
 			break;
 		default:
 			warnx(_("Unknown .netrc keyword %s"), tokval);

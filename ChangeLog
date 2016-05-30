@@ -1,3 +1,9 @@
+2016-05-30  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ 19653]
+	* inet/if_index.c (__protocol_available): Delete #if 0'd code.
+	* inet/ruserpass.c (ruserpass): Delete #if 0'd code.
+
 2016-05-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #20178]

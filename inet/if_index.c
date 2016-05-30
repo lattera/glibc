@@ -58,14 +58,3 @@ __if_nameindex (void)
 weak_alias (__if_nameindex, if_nameindex)
 libc_hidden_weak (if_nameindex)
 stub_warning (if_nameindex)
-
-#if 0
-void
-internal_function
-__protocol_available (int *have_inet, int *have_inet6)
-{
-  /* By default we assume that IPv4 is available, IPv6 not.  */
-  *have_inet = 1;
-  *have_inet6 = 0;
-}
-#endif
