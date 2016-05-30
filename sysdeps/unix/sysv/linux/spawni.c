@@ -288,7 +288,7 @@ fail:
   if (ret)
     while (write_not_cancel (p, &ret, sizeof ret) < 0)
       continue;
-  exit (SPAWN_ERROR);
+  _exit (SPAWN_ERROR);
 }
 
 /* Spawn a new process executing PATH with the attributes describes in *ATTRP.
