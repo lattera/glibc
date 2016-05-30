@@ -1,3 +1,9 @@
+2016-05-30  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* scripts/check-local-headers.sh (exclude): Add hurd/ihash.h, and
+	include .*-.*/ in addition to .*-.*-.*/ (i.e. i386-gnu in addition to
+	i386-linux-gnu).
+
 2016-05-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #20178]
