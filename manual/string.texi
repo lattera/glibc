@@ -612,9 +612,9 @@ and @samp{bar} to produce @samp{foobar}, which it then prints.
 @include stpcpy.c.texi
 @end smallexample
 
-This function is not part of the ISO or POSIX standards, and is not
-customary on Unix systems, but we did not invent it either.  Perhaps it
-comes from MS-DOG.
+This function is part of POSIX.1-2008 and later editions, but was
+available in @theglibc{} and other systems as an extension long before
+it was standardized.
 
 Its behavior is undefined if the strings overlap.  The function is
 declared in @file{string.h}.

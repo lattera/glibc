@@ -1,3 +1,9 @@
+2016-05-30  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #3629]
+	* manual/string.texi (Copying Strings and Arrays): stpcpy is part
+	of POSIX.1-2008.
+
 2016-05-30  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/i386/____longjmp_chk.S (____longjmp_chk) [PIC]:
