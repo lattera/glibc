@@ -18,3 +18,7 @@
 
 #define USE_AS_STPNCPY
 #include <sysdeps/powerpc/powerpc64/power8/strncpy.S>
+
+weak_alias (__stpncpy, stpncpy)
+libc_hidden_def (__stpncpy)
+libc_hidden_builtin_def (stpncpy)

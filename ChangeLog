@@ -1,3 +1,18 @@
+2016-06-06  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/strcasestr.S (__strcasestr):
+	New symbol defined as libc_hidden_def.
+	(strcasestr): Became a weak alias to __strcasestr.
+	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Handle memset calls
+	according to multi-arch support.  Move __stpncpy hidden
+	definition from here to...
+	* sysdeps/powerpc/powerpc64/power8/stpncpy.S: ...here.  Add
+	symbol stpncpy.
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy-power8.S: Undefine
+	libc_hidden_builtin_def.
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy-power8.S: Specify which
+	memset symbol to use when multi-arch support is available.
+
 2016-06-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* dlfcn/tst-rec-dlopen.c: Include string.h.

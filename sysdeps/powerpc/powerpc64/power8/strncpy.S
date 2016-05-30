@@ -24,6 +24,16 @@
 # define FUNC_NAME strncpy
 #endif
 
+#ifndef MEMSET
+/* For builds without IFUNC support, local calls should be made to internal
+   GLIBC symbol (created by libc_hidden_builtin_def).  */
+# ifdef SHARED
+#  define MEMSET   __GI_memset
+# else
+#  define MEMSET   memset
+# endif
+#endif
+
 #define FRAMESIZE (FRAME_MIN_SIZE+48)
 
 /* Implements the function
@@ -223,7 +233,7 @@ L(zero_pad_start_1):
 	stdu	r1,-FRAMESIZE(r1)
 	cfi_adjust_cfa_offset(FRAMESIZE)
 
-	bl	__memset_power8
+	bl	MEMSET
 	nop
 
 	/* Restore the stack frame.  */
@@ -442,8 +452,6 @@ L(zero_pad_start_prepare_1):
 	b	L(zero_pad_start_1)
 END (FUNC_NAME)
 
-#ifdef USE_AS_STPNCPY
-libc_hidden_def (__stpncpy)
-#else
+#ifndef USE_AS_STPNCPY
 libc_hidden_builtin_def (strncpy)
 #endif

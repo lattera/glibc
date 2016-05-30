@@ -36,4 +36,7 @@
   TRACEBACK(__stpncpy_power8)					\
   END_2(__stpncpy_power8)
 
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(name)
+
 #include <sysdeps/powerpc/powerpc64/power8/stpncpy.S>

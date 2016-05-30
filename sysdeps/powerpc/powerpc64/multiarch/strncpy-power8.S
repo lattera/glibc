@@ -37,4 +37,7 @@
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 
+/* memset is used to pad the end of the string.  */
+#define MEMSET __memset_power8
+
 #include <sysdeps/powerpc/powerpc64/power8/strncpy.S>
