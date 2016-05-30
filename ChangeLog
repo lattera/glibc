@@ -1,3 +1,8 @@
+2016-06-11  Marko Myllynen  <myllynen@redhat.com>
+
+	* locale/programs/localedef.c (oldstyle_tables): Remove.
+	* locale/programs/localedef.h (oldstyle_tables): Likewise.
+
 2016-06-10  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20240]
