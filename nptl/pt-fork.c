@@ -25,33 +25,14 @@
    the historical ABI requires it.  For static linking, there is no need to
    provide anything here--the libc version will be linked in.  For shared
    library ABI compatibility, there must be __fork and fork symbols in
-   libpthread.so; so we define them using IFUNC to redirect to the libc
-   function.  */
+   libpthread.so.
+
+   With an IFUNC resolver, it would be possible to avoid the
+   indirection, but the IFUNC resolver might run before the
+   __libc_fork symbol has been relocated, in which case the IFUNC
+   resolver would not be able to provide the correct address.  */
 
 #if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_22)
-
-# if HAVE_IFUNC
-
-static __typeof (fork) *
-__attribute__ ((used))
-fork_resolve (void)
-{
-  return &__libc_fork;
-}
-
-#  ifdef HAVE_ASM_SET_DIRECTIVE
-#   define DEFINE_FORK(name) \
-  asm (".set " #name ", fork_resolve\n" \
-       ".globl " #name "\n" \
-       ".type " #name ", %gnu_indirect_function");
-#  else
-#   define DEFINE_FORK(name) \
-  asm (#name " = fork_resolve\n" \
-       ".globl " #name "\n" \
-       ".type " #name ", %gnu_indirect_function");
-#  endif
-
-# else  /* !HAVE_IFUNC */
 
 static pid_t __attribute__ ((used))
 fork_compat (void)
@@ -59,14 +40,10 @@ fork_compat (void)
   return __libc_fork ();
 }
 
-# define DEFINE_FORK(name) strong_alias (fork_compat, name)
+strong_alias (fork_compat, fork_alias)
+compat_symbol (libpthread, fork_alias, fork, GLIBC_2_0);
 
-# endif  /* HAVE_IFUNC */
-
-DEFINE_FORK (fork_ifunc)
-compat_symbol (libpthread, fork_ifunc, fork, GLIBC_2_0);
-
-DEFINE_FORK (__fork_ifunc)
-compat_symbol (libpthread, __fork_ifunc, __fork, GLIBC_2_0);
+strong_alias (fork_compat, __fork_alias)
+compat_symbol (libpthread, __fork_alias, __fork, GLIBC_2_0);
 
 #endif

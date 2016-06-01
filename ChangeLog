@@ -1,3 +1,12 @@
+2016-06-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19861]
+	Do not use IFUNC resolver with potentially unrelocated symbol.
+	* nptl/pt-fork.c [HAVE_IFUNC]: Remove.
+	(DEFINE_FORK): Remove macro and inline definition.
+	(fork_alias): Renamed from fork_ifunc.
+	(__fork_alias): Renamed from __fork_ifunc.
+
 2016-05-30  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ 19653]
