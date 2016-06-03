@@ -42,50 +42,81 @@ libm-support = s_lib_version s_matherr s_signgam			\
 	       ftestexcept fegetround fesetround fegetenv feholdexcpt	\
 	       fesetenv feupdateenv t_exp fedisblxcpt feenablxcpt	\
 	       fegetexcept
-libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
-	     e_hypot e_j0 e_j1 e_jn e_lgamma_r e_log e_log10 e_pow	\
-	     e_rem_pio2 e_remainder e_scalb e_sinh e_sqrt e_gamma_r	\
-	     e_ilogb							\
-	     k_cos k_rem_pio2 k_sin k_tan s_asinh s_atan s_cbrt		\
-	     s_ceil s_cos s_erf s_expm1 s_fabs				\
-	     s_floor s_log1p w_log1p s_logb				\
-	     s_nextafter s_nexttoward s_rint s_scalbln w_scalbln	\
-	     s_significand s_sin s_tan s_tanh w_acos w_acosh w_asin	\
-	     w_atan2 w_atanh w_cosh w_exp w_exp2 w_exp10 w_fmod		\
-	     w_tgamma w_hypot w_j0 w_j1 w_jn w_lgamma w_lgamma_r	\
-	     w_log w_log10 w_pow w_remainder w_scalb w_sinh w_sqrt	\
-	     w_ilogb							\
-	     s_fpclassify s_fmax s_fmin s_fdim s_nan s_trunc		\
-	     s_remquo e_log2 e_exp2 s_round s_nearbyint s_sincos	\
-	     conj cimag creal cabs carg s_cexp s_csinh s_ccosh s_clog	\
-	     s_catan s_casin s_ccos s_csin s_ctan s_ctanh s_cacos	\
-	     s_casinh s_cacosh s_catanh s_csqrt s_cpow s_cproj s_clog10 \
-	     s_fma s_lrint s_llrint s_lround s_llround e_exp10 w_log2	\
-	     s_issignaling $(calls:s_%=m_%) x2y2m1 k_casinh	\
-	     gamma_product k_standard lgamma_neg lgamma_product		\
-	     w_lgamma_compat s_nextup s_nextdown
 
-dbl-only-routines := branred doasin dosincos halfulp mpa mpatan2	\
-		     mpatan mpexp mplog mpsqrt mptan sincos32 slowexp	\
-		     slowpow sincostab
-libm-routines = $(strip $(libm-support) $(libm-calls) \
-			$(patsubst %_rf,%f_r,$(libm-calls:=f))	\
-			$(long-m-$(long-double-fcts))) \
-		$(dbl-only-routines)
-long-m-routines = $(patsubst %_rl,%l_r,$(libm-calls:=l))
-long-m-support = t_sincosl k_sincosl
-long-m-yes = $(long-m-routines) $(long-m-support)
+libm-calls =								  \
+	e_acosF e_acoshF e_asinF e_atan2F e_atanhF e_coshF e_expF e_fmodF \
+	e_hypotF e_j0F e_j1F e_jnF e_lgammaF_r e_logF e_log10F e_powF	  \
+	e_rem_pio2F e_remainderF e_scalbF e_sinhF e_sqrtF e_gammaF_r	  \
+	e_ilogbF							  \
+	k_cosF k_rem_pio2F k_sinF k_tanF s_asinhF s_atanF s_cbrtF	  \
+	s_ceilF s_cosF s_erfF s_expm1F s_fabsF				  \
+	s_floorF s_log1pF w_log1pF s_logbF				  \
+	s_nextafterF s_nexttowardF s_rintF s_scalblnF w_scalblnF	  \
+	s_significandF s_sinF s_tanF s_tanhF w_acosF w_acoshF w_asinF	  \
+	w_atan2F w_atanhF w_coshF w_expF w_exp2F w_exp10F w_fmodF	  \
+	w_tgammaF w_hypotF w_j0F w_j1F w_jnF w_lgammaF w_lgammaF_r	  \
+	w_logF w_log10F w_powF w_remainderF w_scalbF w_sinhF w_sqrtF	  \
+	w_ilogbF							  \
+	s_fpclassifyF s_fmaxF s_fminF s_fdimF s_nanF s_truncF		  \
+	s_remquoF e_log2F e_exp2F s_roundF s_nearbyintF s_sincosF	  \
+	conjF cimagF crealF cabsF cargF s_cexpF s_csinhF s_ccoshF s_clogF \
+	s_catanF s_casinF s_ccosF s_csinF s_ctanF s_ctanhF s_cacosF	  \
+	s_casinhF s_cacoshF s_catanhF s_csqrtF s_cpowF s_cprojF s_clog10F \
+	s_fmaF s_lrintF s_llrintF s_lroundF s_llroundF e_exp10F w_log2F	  \
+	s_issignalingF $(calls:s_%=m_%) x2y2m1F k_casinhF		  \
+	gamma_productF lgamma_negF lgamma_productF			  \
+	s_nextupF s_nextdownF
+
+libm-compat-calls-ldouble-yes = w_lgamma_compatl k_standardl
+libm-compat-calls = w_lgamma_compatf w_lgamma_compat k_standard k_standardf \
+		    $(libm-compat-calls-ldouble-$(long-double-fcts))
+
+
+# Type specific routine support.
+#
+# The following three variables control what is included for each type:
+#
+# type-floatN-suffix = The suffix of the type
+# type-floatN-routines = Type specific support objects
+# type-floatN-yes = If the type is supported, evaluates to floatN
+#
+# Finally, note that types is an intentionally recursive variable.
+# We only know the full set of supported types for the target machine
+# after the Rules makefile has been parsed.
+types = $(type-ldouble-$(long-double-fcts)) double float
+
+# long double support
+type-ldouble-suffix := l
+type-ldouble-routines := t_sincosl k_sincosl
+type-ldouble-yes := ldouble
+
+# double support
+type-double-suffix :=
+type-double-routines := branred doasin dosincos halfulp mpa mpatan2	\
+		       mpatan mpexp mplog mpsqrt mptan sincos32 slowexp	\
+		       slowpow sincostab
+
+# float support
+type-float-suffix := f
+type-float-routines :=
+
+
+# Apply suffix to each type in arg 1
+type-foreach = $(foreach t,$(types),$(subst F,$(type-$(t)-suffix),$(1)))
+
+libm-routines = $(strip $(libm-support) $(libm-compat-calls)		\
+			$(call type-foreach, $(libm-calls))		\
+			$(foreach t, $(types), $(type-$(t)-routines))) 	\
 
 # These functions are in libc instead of libm because __printf_fp
 # calls them, so any program using printf will need them linked in,
 # and we don't want to have to link every program with -lm.
 # In libm-calls (above), list m_foo in place of s_foo for any
 # routine that should be compiled separately for its libc and libm versions.
-calls = s_isinf s_isnan s_finite s_copysign s_modf s_scalbn s_frexp s_ldexp \
-	s_signbit
-generated += $(foreach s,.c .S l.c l.S f.c f.S,$(calls:s_%=m_%$s))
-routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts))
-long-c-yes = $(calls:=l)
+calls = s_isinfF s_isnanF s_finiteF s_copysignF s_modfF s_scalbnF s_frexpF \
+	s_ldexpF s_signbitF
+generated += $(foreach s,.c .S,$(call type-foreach, $(calls:s_%=m_%$(s))))
+routines = $(call type-foreach, $(calls))
 
 ifeq ($(build-mathvec),yes)
 # We need to install libm.so as linker script
@@ -120,9 +151,6 @@ tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
 	       test-signgam-ullong-static test-signgam-ullong-init-static
-# We do the `long double' tests only if this data type is available and
-# distinct from `double'.
-test-longdouble-yes = test-ldouble test-ildoubl test-ldouble-finite
 
 ifneq (,$(CXX))
 tests += test-math-isinff
@@ -130,9 +158,10 @@ endif
 
 ifneq (no,$(PERL))
 libm-vec-tests = $(addprefix test-,$(libmvec-tests))
-libm-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
-	test-ifloat test-idouble test-float-finite test-double-finite \
-	$(libm-vec-tests)
+
+libm-tests = $(foreach t,$(types),test-$(t) test-$(t)-finite test-i$(t)) \
+	     $(libm-vec-tests)
+
 libm-tests.o = $(addsuffix .o,$(libm-tests))
 
 tests += $(libm-tests)
@@ -155,16 +184,6 @@ $(objpfx)libm-test.stmp: $(ulps-file) libm-test.inc gen-libm-test.pl \
 	$(PERL) gen-libm-test.pl -u $< -o "$(objpfx)"
 	$(SHELL) gen-libm-have-vector-test.sh > $(objpfx)libm-have-vector-test.h
 	@echo > $@
-
-$(objpfx)test-float.o: $(objpfx)libm-test.stmp
-$(objpfx)test-ifloat.o: $(objpfx)libm-test.stmp
-$(objpfx)test-float-finite.o: $(objpfx)libm-test.stmp
-$(objpfx)test-double.o: $(objpfx)libm-test.stmp
-$(objpfx)test-idouble.o: $(objpfx)libm-test.stmp
-$(objpfx)test-double-finite.o: $(objpfx)libm-test.stmp
-$(objpfx)test-ldouble.o: $(objpfx)libm-test.stmp
-$(objpfx)test-ildoubl.o: $(objpfx)libm-test.stmp
-$(objpfx)test-ldouble-finite.o: $(objpfx)libm-test.stmp
 endif
 
 libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH
@@ -216,7 +235,7 @@ CPPFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES \
 			 $(libm-test-fast-math-cflags)
 CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES \
 			  $(libm-test-fast-math-cflags)
-CPPFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES \
+CPPFLAGS-test-ildouble.c = -U__LIBC_INTERNAL_MATH_INLINES \
 			  $(libm-test-fast-math-cflags)
 
 CFLAGS-test-signgam-finite.c = -ffinite-math-only
@@ -247,7 +266,7 @@ include ../Rules
 
 ifneq (no,$(PERL))
 # This must come after the inclusion of sysdeps Makefiles via Rules.
-$(addprefix $(objpfx), $(addsuffix .o, $(libm-vec-tests))): $(objpfx)libm-test.stmp
+$(addprefix $(objpfx), $(libm-tests.o)): $(objpfx)libm-test.stmp
 
 # Run the math programs to automatically generate ULPs files.
 .PHONY: regen-ulps

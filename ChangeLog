@@ -1,5 +1,56 @@
 2016-08-03  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/Makefile (libm-calls): Insert F placeholder into
+	object names.  Move w_lgamma_compat* routines into
+	(libm-compat-calls): New variable.
+	(libm-compat-calls-ldouble-yes): New variable.
+	(calls): Insert F placeholder.
+	(generated): Redefine using new type-foreach macro call.
+	(routines): Likewise.
+
+	(types): New variable to hold a list of symbolic names
+	for each type supported by the target machine.
+	(libm-routines): Redefine using new types variable.
+	(type-foreach): macro to replace fooF with the
+	appropriately suffixed foo for each types.
+
+	(type-ldouble-suffix): New variable.
+	(type-ldouble-routines): Likewise.
+	(type-ldouble-yes): Likewise.
+	(type-double-suffix): Likewise.
+	(type-double-routines): Likewise.
+	(type-float-suffix): Likewise.
+	(type-float-routines): Likewise.
+
+	(dbl-only-routines): Remove.
+	(long-c-yes): Likewise.
+	(long-m-routines): Likewise.
+	(long-m-support): Likewise.
+	(long-m-yes): Likewise.
+	(test-longdouble-yes): Likewise.
+
+	(test-float.o): Simplify by increasing the scope of the
+	recipe which adds libm-test.stmp to the vector types.
+	(test-ifloat.o): Likewise.
+	(test-float-finite.o): Likewise.
+	(test-double.o): Likewise
+	(test-idouble.o): Likewise.
+	(test-double-finite.o): Likewise.
+	(test-ldouble.o): Likewise
+	(test-ildoubl.o): Likewise.
+	(test-ldouble-finite.o): Likewise.
+
+	(libm-tests): Redefine type tests using foreach and the
+	list of types in types.
+
+	(CPPFLAGS-test-ildoubl.c): Rename to
+	(CPPFLAGS-test-ildouble.c): New variable
+
+	* math/test-ildoubl.c: Rename to
+	* math/test-ildouble.c: New file.
+
+2016-08-03  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* sysdeps/ieee754/ldbl-128/k_tanl.c (__kernal_tanl):
 	Use fabsl instead of fabs.
 	* sysdeps/ieee754/ldbl-128/s_logbl.c (__logbl):
