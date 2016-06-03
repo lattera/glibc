@@ -169,7 +169,7 @@ while (<LDD>) {
       $ok = 0;
     }
   }
-  if (/$ld_so_name/) {
+  if (/\Q$ld_so_name\E/) {
     ($version1) = /$ld_so_name\.so\.([0-9\.]*)/;
     if ($version1 ne $ld_so_version) {
       print "The dynamic linker $ld_so_name.so is not correctly installed.\n";
