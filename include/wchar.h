@@ -102,7 +102,7 @@ extern int __wcscoll (const wchar_t *__s1, const wchar_t *__s2) __THROW;
 libc_hidden_proto (__wcscoll)
 libc_hidden_proto (wcspbrk)
 
-extern typeof (wmemset) __wmemset;
+extern wchar_t *__wmemset (wchar_t *__s, wchar_t __c, size_t __n) __THROW;
 extern wchar_t *__wmemchr (const wchar_t *__s, wchar_t __c, size_t __n)
      __THROW __attribute_pure__;
 libc_hidden_proto (wmemchr)
