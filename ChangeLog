@@ -1,3 +1,12 @@
+2016-06-03  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20205]
+	* sysdeps/i386/fpu/s_nextafterl.c (__nextafterl): Do not adjust
+	exponent when incrementing negative subnormal with low mantissa
+	word zero.
+	* math/libm-test.inc (nextafter_test_data) [TEST_COND_intel96]:
+	Add another test.
+
 2016-06-03  Florian Weimer  <fweimer@redhat.com>
 
 	* libio/wstrops.c (_IO_wstr_overflow, enlarge_userbuf): Use

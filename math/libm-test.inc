@@ -9965,6 +9965,10 @@ static const struct test_ff_f_data nextafter_test_data[] =
     TEST_ff_f (nextafter, -min_subnorm_value, 0, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_ff_f (nextafter, -min_subnorm_value, minus_zero, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
 
+#if TEST_COND_intel96
+    TEST_ff_f (nextafter, -0x0.fffffffep-16382L, 0.0L, -0x0.fffffffdfffffffep-16382L, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+#endif
+
 #if MANT_DIG >= 64
     // XXX Enable once gcc is fixed.
     //TEST_ff_f (nextafter, 0x0.00000040000000000000p-16385L, -0.1L, 0x0.0000003ffffffff00000p-16385L),

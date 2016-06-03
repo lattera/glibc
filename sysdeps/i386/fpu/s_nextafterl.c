@@ -86,7 +86,7 @@ long double __nextafterl(long double x, long double y)
 	    if(esy>=0||(esx>esy||((esx==esy)&&(hx>hy||((hx==hy)&&(lx>ly)))))){
 	      /* x < y, x -= ulp */
 		if(lx==0) {
-		    if (hx <= 0x80000000) {
+		    if (hx <= 0x80000000 && esx != 0xffff8000) {
 			esx -= 1;
 			hx = hx - 1;
 			if ((esx&0x7fff) > 0)
