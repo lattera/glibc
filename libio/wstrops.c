@@ -111,7 +111,7 @@ _IO_wstr_overflow (_IO_FILE *fp, _IO_wint_t c)
 	      fp->_wide_data->_IO_buf_base = NULL;
 	    }
 
-	  wmemset (new_buf + old_wblen, L'\0', new_size - old_wblen);
+	  __wmemset (new_buf + old_wblen, L'\0', new_size - old_wblen);
 
 	  _IO_wsetb (fp, new_buf, new_buf + new_size, 1);
 	  fp->_wide_data->_IO_read_base =
@@ -228,9 +228,9 @@ enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
      new position.  */
   assert (offset >= oldend);
   if (reading)
-    wmemset (wd->_IO_read_base + oldend, L'\0', offset - oldend);
+    __wmemset (wd->_IO_read_base + oldend, L'\0', offset - oldend);
   else
-    wmemset (wd->_IO_write_base + oldend, L'\0', offset - oldend);
+    __wmemset (wd->_IO_write_base + oldend, L'\0', offset - oldend);
 
   return 0;
 }

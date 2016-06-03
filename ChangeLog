@@ -1,3 +1,8 @@
+2016-06-03  Florian Weimer  <fweimer@redhat.com>
+
+	* libio/wstrops.c (_IO_wstr_overflow, enlarge_userbuf): Use
+	__wmemset instead of wmemset.
+
 2016-06-02  Carlos O'Donell  <carlos@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/in.h [defined _UAPI_LINUX_IN6_H ||
