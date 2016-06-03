@@ -92,10 +92,10 @@ enum
     IPPROTO_MAX
   };
 
-/* If __USE_KERNEL_IPV6_DEFS is defined then the user has included the kernel
+/* If __USE_KERNEL_IPV6_DEFS is 1 then the user has included the kernel
    network headers first and we should use those ABI-identical definitions
-   instead of our own.  */
-#ifndef __USE_KERNEL_IPV6_DEFS
+   instead of our own, otherwise 0.  */
+#if !__USE_KERNEL_IPV6_DEFS
 enum
   {
     IPPROTO_HOPOPTS = 0,   /* IPv6 Hop-by-Hop options.  */
@@ -206,7 +206,7 @@ enum
 #define INADDR_ALLRTRS_GROUP    ((in_addr_t) 0xe0000002) /* 224.0.0.2 */
 #define INADDR_MAX_LOCAL_GROUP  ((in_addr_t) 0xe00000ff) /* 224.0.0.255 */
 
-#ifndef __USE_KERNEL_IPV6_DEFS
+#if !__USE_KERNEL_IPV6_DEFS
 /* IPv6 address */
 struct in6_addr
   {
@@ -249,7 +249,7 @@ struct sockaddr_in
 			   sizeof (struct in_addr)];
   };
 
-#ifndef __USE_KERNEL_IPV6_DEFS
+#if !__USE_KERNEL_IPV6_DEFS
 /* Ditto, for IPv6.  */
 struct sockaddr_in6
   {
@@ -285,7 +285,7 @@ struct ip_mreq_source
   };
 #endif
 
-#ifndef __USE_KERNEL_IPV6_DEFS
+#if !__USE_KERNEL_IPV6_DEFS
 /* Likewise, for IPv6.  */
 struct ipv6_mreq
   {
@@ -532,7 +532,7 @@ extern int bindresvport6 (int __sockfd, struct sockaddr_in6 *__sock_in)
 #ifdef __USE_GNU
 struct cmsghdr;			/* Forward declaration.  */
 
-#ifndef __USE_KERNEL_IPV6_DEFS
+#if !__USE_KERNEL_IPV6_DEFS
 /* IPv6 packet information.  */
 struct in6_pktinfo
   {

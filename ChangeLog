@@ -1,3 +1,12 @@
+2016-06-02  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/in.h [defined _UAPI_LINUX_IN6_H ||
+	defined _UAPI_IPV6_H]: Define __USE_KERNEL_IPV6_DEFS to 1.
+	[!(defined _UAPI_LINUX_IN6_H || defined _UAPI_IPV6_H)]: Define
+	__USE_KERNEL_IPV6_DEFS to 0.
+	* inet/netinet/in.h: Use '#if !__USE_KERNEL_IPV6_DEFS'.
+	Update comment.
+
 2016-06-01  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19861]

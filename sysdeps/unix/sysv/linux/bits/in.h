@@ -30,7 +30,9 @@
 /* This is not quite the same API since the kernel always defines s6_addr16 and
    s6_addr32. This is not a violation of POSIX since POSIX says "at least the
    following member" and that holds true.  */
-# define __USE_KERNEL_IPV6_DEFS
+# define __USE_KERNEL_IPV6_DEFS 1
+#else
+# define __USE_KERNEL_IPV6_DEFS 0
 #endif
 
 /* Options for use with `getsockopt' and `setsockopt' at the IP level.
