@@ -146,12 +146,6 @@ This is not recommended because it defeats the purpose of NSS; a program
 linked statically with the NSS libraries cannot be dynamically
 reconfigured to use a different name database.
 
-@item --without-tls
-By default the C library is built with support for thread-local storage
-if the used tools support it.  By using @samp{--without-tls} this can be
-prevented though there generally is no reason since it creates
-compatibility problems.
-
 @item --enable-hardcoded-path-in-tests
 By default, dynamic tests are linked to run with the installed C library.
 This option hardcodes the newly built C library path in dynamic tests
