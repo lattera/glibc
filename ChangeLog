@@ -1,3 +1,12 @@
+2016-06-05  Florian Weimer  <fweimer@redhat.com>
+
+	* dlfcn/tst-rec-dlopen.c (custom_malloc_hook, old_malloc_hook):
+	Remove.
+	(call_function, interposed_malloc_called): New variables.
+	(malloc): New function.
+	(do_test): Do not change malloc hooks.  Initialize malloc.  Set
+	and clear call_function as needed.
+
 2016-06-04  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* include/wchar.h (__wmemset): Use __typeof.
