@@ -19,7 +19,7 @@
 /* memmove/memcpy/mempcpy is implemented as:
    1. Use overlapping load and store to avoid branch.
    2. Load all sources into registers and store them together to avoid
-      possible address overflap between source and destination.
+      possible address overlap between source and destination.
    3. If size is 8 * VEC_SIZE or less, load all sources into registers
       and store them together.
    4. If address of destination > address of source, backward copy
