@@ -1799,6 +1799,8 @@ static const struct test_f_f_data acos_test_data[] =
     TEST_f_f (acos, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (acos, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (acos, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (acos, snan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (acos, -snan_value, qnan_value, INVALID_EXCEPTION),
 
     /* |x| > 1: */
     TEST_f_f (acos, 1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),

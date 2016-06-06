@@ -1,3 +1,10 @@
+2016-06-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20212]
+	* sysdeps/ieee754/dbl-64/e_asin.c (__ieee754_acos): Add NaN
+	argument to itself.
+	* math/libm-test.inc (acos_test_data): Add sNaN tests.
+
 2016-06-06  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power8/strcasestr.S (__strcasestr):
