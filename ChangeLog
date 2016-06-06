@@ -1,3 +1,7 @@
+2016-06-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* dlfcn/tst-rec-dlopen.c: Include string.h.
+
 2016-06-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* manual/install.texi: Remove mention of --without-tls

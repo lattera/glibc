@@ -23,6 +23,7 @@
 #include <stdalign.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <string.h>
 
 #define DSO "moddummy1.so"
 #define FUNC "dummy1"
