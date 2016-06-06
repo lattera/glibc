@@ -109,6 +109,9 @@ libc {
   GLIBC_2.18 {
     __cxa_thread_atexit_impl;
   }
+  GLIBC_2.24 {
+    quick_exit;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.

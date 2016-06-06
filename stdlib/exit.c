@@ -31,13 +31,14 @@ DEFINE_HOOK (__libc_atexit, (void))
 void
 attribute_hidden
 __run_exit_handlers (int status, struct exit_function_list **listp,
-		     bool run_list_atexit)
+		     bool run_list_atexit, bool run_dtors)
 {
   /* First, call the TLS destructors.  */
 #ifndef SHARED
   if (&__call_tls_dtors != NULL)
 #endif
-    __call_tls_dtors ();
+    if (run_dtors)
+      __call_tls_dtors ();
 
   /* We do it this way to handle recursive calls to exit () made by
      the functions registered with `atexit' and `on_exit'. We call
@@ -101,6 +102,6 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 void
 exit (int status)
 {
-  __run_exit_handlers (status, &__exit_funcs, true);
+  __run_exit_handlers (status, &__exit_funcs, true, true);
 }
 libc_hidden_def (exit)

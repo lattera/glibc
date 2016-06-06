@@ -1840,3 +1840,4 @@ GLIBC_2.23 fts64_close F
 GLIBC_2.23 fts64_open F
 GLIBC_2.23 fts64_read F
 GLIBC_2.23 fts64_set F
+GLIBC_2.24 quick_exit F

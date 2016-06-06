@@ -1,3 +1,57 @@
+2016-06-03  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #20198]
+	* stdlib/Makefile (tests): Add tst-quick_exit, and
+	tst-thread-quick_exit.
+	[ifeq ($(have-cxx-thread_local),yes)]
+	(CFLAGS-tst-quick_exit.o): Use -stdc=c++11.
+	(CFLAGS-tst-thread-quick_exit.o): Likewise.
+	(LDLIBS-tst-quick_exit): Use -lstdc++ for C++ program.
+	(LDLIBS-tst-thread-quick_exit): Likewise.
+	[ifneq ($(have-cxx-thread_local),yes)]
+	(tests-unsupported): Add tst-quick_exit, and tst-thread-quick_exit.
+	* stdlib/exit.c (__run_exit_handlers): Add run_dtors argument.
+	If run_dtors is true call __call_tls_dtors.
+	(exit): Call __run_exit_handlers with run_dtors set to true.
+	* stdlib/exit.h: Add run_dtors argument to __run_exit_handlers
+	definition.
+	* stdlib/quick_exit.c (quick_exit): Remove function.
+	(__new_quick_exit): New function.
+	[SHLIB_COMPAT(libc, GLIBC_2_10, GLIBC_2_24)] (__old_quick_exit): New
+	function.
+	* stdlib/tst-quick_exit.cc: New file.
+	* stdlib/tst-thread-quick_exit.cc: New file.
+	* stdlib/Versions: Add quick_exit@GLIBC_2.24.
+	* sysdeps/arm/nacl/libc.abilist: Add 'GLIBC_2.24 quick_exit F'.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/arm/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/i386/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist: Likewise
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/sh/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise
+
 2016-06-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S: Fix

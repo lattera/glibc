@@ -76,8 +76,18 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-secure-getenv tst-strtod-overflow tst-strtod-round   \
 		   tst-tininess tst-strtod-underflow tst-tls-atexit	    \
 		   tst-setcontext3 tst-tls-atexit-nodelete		    \
-		   tst-strtol-locale tst-strtod-nan-locale tst-strfmon_l
+		   tst-strtol-locale tst-strtod-nan-locale tst-strfmon_l    \
+		   tst-quick_exit tst-thread-quick_exit
 tests-static	:= tst-secure-getenv
+ifeq ($(have-cxx-thread_local),yes)
+CFLAGS-tst-quick_exit.o = -std=c++11
+LDLIBS-tst-quick_exit = -lstdc++
+CFLAGS-tst-thread-quick_exit.o = -std=c++11
+LDLIBS-tst-thread-quick_exit = -lstdc++
+$(objpfx)tst-thread-quick_exit: $(shared-thread-library)
+else
+tests-unsupported += tst-quick_exit tst-thread-quick_exit
+endif
 
 modules-names	= tst-tls-atexit-lib
 extra-test-objs += $(addsuffix .os, $(modules-names))
