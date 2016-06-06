@@ -1853,6 +1853,8 @@ static const struct test_f_f_data asin_test_data[] =
     TEST_f_f (asin, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (asin, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (asin, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (asin, snan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (asin, -snan_value, qnan_value, INVALID_EXCEPTION),
 
     /* asin x == qNaN plus invalid exception for |x| > 1.  */
     TEST_f_f (asin, 1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),

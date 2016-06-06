@@ -323,7 +323,7 @@ __ieee754_asin(double x){
   /*---------------------------- |x|>=1 -------------------------------*/
   else if (k==0x3ff00000 && u.i[LOW_HALF]==0) return (m>0)?hp0.x:-hp0.x;
   else
-  if (k>0x7ff00000 || (k == 0x7ff00000 && u.i[LOW_HALF] != 0)) return x;
+  if (k>0x7ff00000 || (k == 0x7ff00000 && u.i[LOW_HALF] != 0)) return x + x;
   else {
     u.i[HIGH_HALF]=0x7ff00000;
     v.i[HIGH_HALF]=0x7ff00000;
