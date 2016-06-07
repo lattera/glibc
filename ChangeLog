@@ -1,4 +1,17 @@
-2016-06-03  Carlos O'Donell  <carlos@redhat.com>
+2016-06-07  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #20214]
+	* sysdeps/unix/sysv/linux/bits/in.h
+	[defined _UAPI_LINUX_IN6_H || defined _UAPI_IPV6_H
+	 || defined _LINUX_IN6_H || defined _IPV6_H] (__USE_KERNEL_IPV6_DEFS):
+	Define to 1.
+	[!(defined _UAPI_LINUX_IN6_H || defined _UAPI_IPV6_H
+	 || defined _LINUX_IN6_H || defined _IPV6_H)] (__USE_KERNEL_IPV6_DEFS):
+	Define to 0.
+	[!__USE_KERNEL_IPV6_DEFS] (IPV6_ADD_MEMBERSHIP): Define.
+	[!__USE_KERNEL_IPV6_DEFS] (IPV6_DROP_MEMBERSHIP): Define.
+
+2016-06-06  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #20198]
 	* stdlib/Makefile (tests): Add tst-quick_exit, and
