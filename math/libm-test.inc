@@ -1878,6 +1878,8 @@ static const struct test_f_f_data asinh_test_data[] =
     TEST_f_f (asinh, minus_infty, minus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (asinh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (asinh, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (asinh, snan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (asinh, -snan_value, qnan_value, INVALID_EXCEPTION),
     AUTO_TESTS_f_f (asinh),
   };
 

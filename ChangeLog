@@ -1,3 +1,10 @@
+2016-06-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20218]
+	* sysdeps/i386/fpu/s_asinhl.S (__asinhl): Add non-finite argument
+	to itself.
+	* math/libm-test.inc (asinh_test_data): Add sNaN tests.
+
 2016-06-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #20195]
