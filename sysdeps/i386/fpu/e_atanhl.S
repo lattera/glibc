@@ -121,6 +121,7 @@ ENTRY(__ieee754_atanhl)
 	cmpl	$0, 4(%esp)
 	je	7b
 6:	fldt	4(%esp)
+	fadd	%st(0)
 	ret
 END(__ieee754_atanhl)
 strong_alias (__ieee754_atanhl, __atanhl_finite)

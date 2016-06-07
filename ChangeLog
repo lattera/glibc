@@ -1,5 +1,10 @@
 2016-06-07  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20219]
+	* sysdeps/i386/fpu/e_atanhl.S (__ieee754_atanhl): Add NaN argument
+	to itself.
+	* math/libm-test.inc (atanh_test_data): Add sNaN tests.
+
 	[BZ #20218]
 	* sysdeps/i386/fpu/s_asinhl.S (__asinhl): Add non-finite argument
 	to itself.
