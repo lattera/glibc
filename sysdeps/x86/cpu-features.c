@@ -87,10 +87,6 @@ get_common_indeces (struct cpu_features *cpu_features,
 	  if (CPU_FEATURES_CPU_P (cpu_features, FMA))
 	    cpu_features->feature[index_arch_FMA_Usable]
 	      |= bit_arch_FMA_Usable;
-	  /* Determine if FMA4 is usable.  */
-	  if (CPU_FEATURES_CPU_P (cpu_features, FMA4))
-	    cpu_features->feature[index_arch_FMA4_Usable]
-	      |= bit_arch_FMA4_Usable;
 	}
     }
 }
@@ -229,6 +225,15 @@ init_cpu_features (struct cpu_features *cpu_features)
 		 cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].ebx,
 		 cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].ecx,
 		 cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].edx);
+
+      if (HAS_ARCH_FEATURE (AVX_Usable))
+	{
+	  /* Since the FMA4 bit is in COMMON_CPUID_INDEX_80000001 and
+	     FMA4 requires AVX, determine if FMA4 is usable here.  */
+	  if (CPU_FEATURES_CPU_P (cpu_features, FMA4))
+	    cpu_features->feature[index_arch_FMA4_Usable]
+	      |= bit_arch_FMA4_Usable;
+	}
 
       if (family == 0x15)
 	{
