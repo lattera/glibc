@@ -1,3 +1,10 @@
+2016-06-08  Florian Weimer  <fweimer@redhat.com>
+
+	Emacs bug 23726.
+	* malloc/malloc.c (dumped_main_arena_start): Update comment.
+	(__libc_realloc): Correct size computation for dumped fake mmapped
+	chunks.
+
 2016-06-07  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20219]

@@ -1748,7 +1748,9 @@ static struct malloc_state main_arena =
 
 /* These variables are used for undumping support.  Chunked are marked
    as using mmap, but we leave them alone if they fall into this
-   range.  */
+   range.  NB: The chunk size for these chunks only includes the
+   initial size field (of SIZE_SZ bytes), there is no trailing size
+   field (unlike with regular mmapped chunks).  */
 static mchunkptr dumped_main_arena_start; /* Inclusive.  */
 static mchunkptr dumped_main_arena_end;   /* Exclusive.  */
 
@@ -3029,9 +3031,11 @@ __libc_realloc (void *oldmem, size_t bytes)
 	  if (newmem == 0)
 	    return NULL;
 	  /* Copy as many bytes as are available from the old chunk
-	     and fit into the new size.  */
-	  if (bytes > oldsize - 2 * SIZE_SZ)
-	    bytes = oldsize - 2 * SIZE_SZ;
+	     and fit into the new size.  NB: The overhead for faked
+	     mmapped chunks is only SIZE_SZ, not 2 * SIZE_SZ as for
+	     regular mmapped chunks.  */
+	  if (bytes > oldsize - SIZE_SZ)
+	    bytes = oldsize - SIZE_SZ;
 	  memcpy (newmem, oldmem, bytes);
 	  return newmem;
 	}
