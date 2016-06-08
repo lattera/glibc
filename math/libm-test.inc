@@ -11117,6 +11117,8 @@ static const struct test_fi_f_data scalbn_test_data[] =
     TEST_fi_f (scalbn, minus_infty, 1, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fi_f (scalbn, qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fi_f (scalbn, -qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fi_f (scalbn, snan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_fi_f (scalbn, -snan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
 
     TEST_fi_f (scalbn, 0.8L, 4, 12.8L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fi_f (scalbn, -0.854375L, 5, -27.34L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -11199,6 +11201,8 @@ static const struct test_fl_f_data scalbln_test_data[] =
     TEST_fl_f (scalbln, minus_infty, 1, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fl_f (scalbln, qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fl_f (scalbln, -qnan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fl_f (scalbln, snan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_fl_f (scalbln, -snan_value, 1, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
 
     TEST_fl_f (scalbln, 0.8L, 4, 12.8L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fl_f (scalbln, -0.854375L, 5, -27.34L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),

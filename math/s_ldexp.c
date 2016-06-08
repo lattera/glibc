@@ -20,7 +20,7 @@ static char rcsid[] = "$NetBSD: s_ldexp.c,v 1.6 1995/05/10 20:47:40 jtc Exp $";
 
 double __ldexp(double value, int exp)
 {
-	if(!isfinite(value)||value==0.0) return value;
+	if(!isfinite(value)||value==0.0) return value + value;
 	value = __scalbn(value,exp);
 	if(!isfinite(value)||value==0.0) __set_errno (ERANGE);
 	return value;

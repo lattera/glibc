@@ -1,5 +1,16 @@
 2016-06-08  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20225]
+	* math/s_ldexp.c (__ldexp): Add non-finite or zero argument to
+	itself.
+	* math/s_ldexpf.c (__ldexpf): Likewise.
+	* math/s_ldexpl.c (__ldexpl): Likewise.
+	* math/w_scalbln.c (__w_scalbln): Likewise.
+	* math/w_scalblnf.c (__w_scalblnf): Likewise.
+	* math/w_scalblnl.c (__w_scalblnl): Likewise.
+	* math/libm-test.inc (scalbn_test_data): Add sNaN tests.
+	(scalbln_test_data): Likewise.
+
 	[BZ #20224]
 	* sysdeps/i386/fpu/s_cbrtl.S (__cbrtl): Add non-finite or zero
 	argument to itself.

@@ -24,7 +24,7 @@ double
 __w_scalbln (double x, long int n)
 {
   if (!isfinite (x) || x == 0.0)
-    return x;
+    return x + x;
 
   x = __scalbln (x, n);
 

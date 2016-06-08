@@ -24,7 +24,7 @@ float
 __w_scalblnf (float x, long int n)
 {
   if (!isfinite (x) || x == 0.0f)
-    return x;
+    return x + x;
 
   x = __scalblnf (x, n);
 
