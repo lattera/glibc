@@ -18,12 +18,11 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   stpcpy-sse2-unaligned stpncpy-sse2-unaligned \
 		   strcat-sse2-unaligned strncat-sse2-unaligned \
 		   strchr-sse2-no-bsf memcmp-ssse3 strstr-sse2-unaligned \
-		   strcspn-c strpbrk-c strspn-c varshift memset-avx2 \
+		   strcspn-c strpbrk-c strspn-c varshift \
 		   memset-avx512-no-vzeroupper \
 		   memmove-sse2-unaligned-erms \
 		   memmove-avx-unaligned-erms \
 		   memmove-avx512-unaligned-erms \
-		   memset-sse2-unaligned-erms \
 		   memset-avx2-unaligned-erms \
 		   memset-avx512-unaligned-erms
 CFLAGS-varshift.c += -msse4

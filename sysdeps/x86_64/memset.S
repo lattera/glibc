@@ -19,113 +19,32 @@
 
 #include <sysdep.h>
 
-	.text
-#if IS_IN (libc)
-ENTRY(__bzero)
-	movq	%rdi, %rax /* Set return value.  */
-	movq	%rsi, %rdx /* Set n.  */
-	pxor	%xmm0, %xmm0
-	jmp	L(entry_from_bzero)
-END(__bzero)
-weak_alias (__bzero, bzero)
+#define VEC_SIZE	16
+#define VEC(i)		xmm##i
+/* Don't use movups and movaps since it will get larger nop paddings for
+   alignment.  */
+#define VMOVU		movdqu
+#define VMOVA		movdqa
 
-/* Like memset but takes additional parameter with return value.  */
-ENTRY(__memset_tail)
-	movq	%rcx, %rax /* Set return value.  */
+#define VDUP_TO_VEC0_AND_SET_RETURN(d, r) \
+  movd d, %xmm0; \
+  movq r, %rax; \
+  punpcklbw %xmm0, %xmm0; \
+  punpcklwd %xmm0, %xmm0; \
+  pshufd $0, %xmm0, %xmm0
 
-	movd	%esi, %xmm0
-	punpcklbw	%xmm0, %xmm0
-	punpcklwd	%xmm0, %xmm0
-	pshufd	$0, %xmm0, %xmm0
+#define SECTION(p)		p
 
-	jmp	L(entry_from_bzero)
-END(__memset_tail)
+#ifndef MEMSET_SYMBOL
+# define MEMSET_CHK_SYMBOL(p,s)	p
+# define MEMSET_SYMBOL(p,s)	memset
 #endif
 
-#if defined PIC && IS_IN (libc)
-ENTRY_CHK (__memset_chk)
-	cmpq	%rdx, %rcx
-	jb	HIDDEN_JUMPTARGET (__chk_fail)
-END_CHK (__memset_chk)
-#endif
+#include "multiarch/memset-vec-unaligned-erms.S"
 
-ENTRY (memset)
-	movd	%esi, %xmm0
-	movq	%rdi, %rax
-	punpcklbw	%xmm0, %xmm0
-	punpcklwd	%xmm0, %xmm0
-	pshufd	$0, %xmm0, %xmm0
-L(entry_from_bzero):
-	cmpq	$64, %rdx
-	ja	L(loop_start)
-	cmpq	$16, %rdx
-	jbe	L(less_16_bytes)
-	cmpq	$32, %rdx
-	movdqu	%xmm0, (%rdi)
-	movdqu	%xmm0, -16(%rdi,%rdx)
-	ja	L(between_32_64_bytes)
-L(return):
-	rep
-	ret
-	.p2align 4
-L(between_32_64_bytes):
-	movdqu	%xmm0, 16(%rdi)
-	movdqu	%xmm0, -32(%rdi,%rdx)
-	ret
-	.p2align 4
-L(loop_start):
-	leaq	64(%rdi), %rcx
-	movdqu	%xmm0, (%rdi)
-	andq	$-64, %rcx
-	movdqu	%xmm0, -16(%rdi,%rdx)
-	movdqu	%xmm0, 16(%rdi)
-	movdqu	%xmm0, -32(%rdi,%rdx)
-	movdqu	%xmm0, 32(%rdi)
-	movdqu	%xmm0, -48(%rdi,%rdx)
-	movdqu	%xmm0, 48(%rdi)
-	movdqu	%xmm0, -64(%rdi,%rdx)
-	addq	%rdi, %rdx
-	andq	$-64, %rdx
-	cmpq	%rdx, %rcx
-	je	L(return)
-	.p2align 4
-L(loop):
-	movdqa	%xmm0, (%rcx)
-	movdqa	%xmm0, 16(%rcx)
-	movdqa	%xmm0, 32(%rcx)
-	movdqa	%xmm0, 48(%rcx)
-	addq	$64, %rcx
-	cmpq	%rcx, %rdx
-	jne	L(loop)
-	rep
-	ret
-L(less_16_bytes):
-	movq %xmm0, %rcx
-	testb	$24, %dl
-	jne	L(between8_16bytes)
-	testb	$4, %dl
-	jne	L(between4_7bytes)
-	testb	$1, %dl
-	je	L(odd_byte)
-	movb	%cl, (%rdi)
-L(odd_byte):
-	testb	$2, %dl
-	je	L(return)
-	movw	%cx, -2(%rax,%rdx)
-	ret
-L(between4_7bytes):
-	movl	%ecx, (%rdi)
-	movl	%ecx, -4(%rdi,%rdx)
-	ret
-L(between8_16bytes):
-	movq	%rcx, (%rdi)
-	movq	%rcx, -8(%rdi,%rdx)
-	ret
-
-END (memset)
 libc_hidden_builtin_def (memset)
 
-#if defined PIC && IS_IN (libc) && !defined USE_MULTIARCH
+#if defined SHARED && IS_IN (libc) && !defined USE_MULTIARCH
 strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
 	.section .gnu.warning.__memset_zero_constant_len_parameter
 	.string "memset used with constant zero length parameter; this could be due to transposed parameters"

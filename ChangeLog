@@ -1,3 +1,44 @@
+2016-06-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19881]
+	* sysdeps/x86_64/multiarch/memset-sse2-unaligned-erms.S: Folded
+	into ...
+	* sysdeps/x86_64/memset.S: This.
+	(__bzero): Removed.
+	(__memset_tail): Likewise.
+	(__memset_chk): Likewise.
+	(memset): Likewise.
+	(MEMSET_CHK_SYMBOL): New. Define only if MEMSET_SYMBOL isn't
+	defined.
+	(MEMSET_SYMBOL): Define only if MEMSET_SYMBOL isn't defined.
+	* sysdeps/x86_64/multiarch/memset-avx2.S: Removed.
+	(__memset_zero_constant_len_parameter): Check SHARED instead of
+	PIC.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Remove
+	memset-avx2 and memset-sse2-unaligned-erms.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Remove __memset_chk_sse2,
+	__memset_chk_avx2, __memset_sse2 and __memset_avx2_unaligned.
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
+	(__bzero): Enabled.
+	* sysdeps/x86_64/multiarch/memset.S (memset): Replace
+	__memset_sse2 and __memset_avx2 with __memset_sse2_unaligned
+	and __memset_avx2_unaligned.  Use __memset_sse2_unaligned_erms
+	or __memset_avx2_unaligned_erms if processor has ERMS.  Support
+	__memset_avx512_unaligned_erms and __memset_avx512_unaligned.
+	(memset): Removed.
+	(__memset_chk): Likewise.
+	(MEMSET_SYMBOL): New.
+	(libc_hidden_builtin_def): Replace __memset_sse2 with
+	__memset_sse2_unaligned.
+	* sysdeps/x86_64/multiarch/memset_chk.S (__memset_chk): Replace
+	__memset_chk_sse2 and __memset_chk_avx2 with
+	__memset_chk_sse2_unaligned and __memset_chk_avx2_unaligned_erms.
+	Use __memset_chk_sse2_unaligned_erms or
+	__memset_chk_avx2_unaligned_erms if processor has ERMS.  Support
+	__memset_chk_avx512_unaligned_erms and
+	__memset_chk_avx512_unaligned.
+
 2016-06-08  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* math/gen-auto-libm-test.c (fp_format_desc): remove

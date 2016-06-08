@@ -69,7 +69,7 @@
 #endif
 
 	.section SECTION(.text),"ax",@progbits
-#if VEC_SIZE == 16 && IS_IN (libc) && 0
+#if VEC_SIZE == 16 && IS_IN (libc)
 ENTRY (__bzero)
 	movq	%rdi, %rax /* Set return value.  */
 	movq	%rsi, %rdx /* Set n.  */
