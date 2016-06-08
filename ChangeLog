@@ -1,3 +1,10 @@
+2016-06-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20224]
+	* sysdeps/i386/fpu/s_cbrtl.S (__cbrtl): Add non-finite or zero
+	argument to itself.
+	* math/libm-test.inc (cbrt_test_data): Add sNaN tests.
+
 2016-06-08  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19776]

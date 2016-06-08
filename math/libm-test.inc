@@ -5875,6 +5875,8 @@ static const struct test_f_f_data cbrt_test_data[] =
     TEST_f_f (cbrt, minus_infty, minus_infty, ERRNO_UNCHANGED),
     TEST_f_f (cbrt, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (cbrt, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (cbrt, snan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (cbrt, -snan_value, qnan_value, INVALID_EXCEPTION),
 
     AUTO_TESTS_f_f (cbrt),
   };
