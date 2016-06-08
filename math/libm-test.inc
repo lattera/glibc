@@ -9049,6 +9049,8 @@ static const struct test_f_f_data log1p_test_data[] =
     TEST_f_f (log1p, plus_infty, plus_infty, ERRNO_UNCHANGED),
     TEST_f_f (log1p, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (log1p, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (log1p, snan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (log1p, -snan_value, qnan_value, INVALID_EXCEPTION),
 
     AUTO_TESTS_f_f (log1p),
   };
