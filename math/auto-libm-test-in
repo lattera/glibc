@@ -1175,8 +1175,8 @@ cosh -0xd.0c03p+0
 cosh -0x3.d04328728b72cp-4
 cosh 0x1.629188p+4
 # GCC bug 59666: results on directed rounding may be incorrect.
-cosh max no-test-inline xfail-rounding:ldbl-128ibm
-cosh -max no-test-inline xfail-rounding:ldbl-128ibm
+cosh max no-test-inline xfail-rounding:ibm128
+cosh -max no-test-inline xfail-rounding:ibm128
 cosh min
 cosh -min
 cosh min_subnorm
@@ -1191,22 +1191,22 @@ cosh 0x5.96a7e8p+4
 cosh -0x5.96a7ep+4
 cosh -0x5.96a7e8p+4
 # GCC bug 59666: results on directed rounding may be incorrect.
-cosh 0x2.c679d1f73f0fap+8 xfail-rounding:ldbl-128ibm
-cosh 0x2.c679d1f73f0fcp+8 xfail-rounding:ldbl-128ibm
-cosh -0x2.c679d1f73f0fap+8 xfail-rounding:ldbl-128ibm
-cosh -0x2.c679d1f73f0fcp+8 xfail-rounding:ldbl-128ibm
-cosh 0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ldbl-128ibm
-cosh 0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ldbl-128ibm
-cosh -0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ldbl-128ibm
-cosh -0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ldbl-128ibm
-cosh 0x2.c5d37700c6bb03a4p+12 no-test-inline xfail-rounding:ldbl-128ibm
-cosh 0x2.c5d37700c6bb03a8p+12 no-test-inline xfail-rounding:ldbl-128ibm
-cosh -0x2.c5d37700c6bb03a4p+12 no-test-inline xfail-rounding:ldbl-128ibm
-cosh -0x2.c5d37700c6bb03a8p+12 no-test-inline xfail-rounding:ldbl-128ibm
-cosh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline xfail-rounding:ldbl-128ibm
-cosh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline xfail-rounding:ldbl-128ibm
-cosh -0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline xfail-rounding:ldbl-128ibm
-cosh -0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline xfail-rounding:ldbl-128ibm
+cosh 0x2.c679d1f73f0fap+8 xfail-rounding:ibm128
+cosh 0x2.c679d1f73f0fcp+8 xfail-rounding:ibm128
+cosh -0x2.c679d1f73f0fap+8 xfail-rounding:ibm128
+cosh -0x2.c679d1f73f0fcp+8 xfail-rounding:ibm128
+cosh 0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ibm128
+cosh 0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ibm128
+cosh -0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ibm128
+cosh -0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ibm128
+cosh 0x2.c5d37700c6bb03a4p+12 no-test-inline xfail-rounding:ibm128
+cosh 0x2.c5d37700c6bb03a8p+12 no-test-inline xfail-rounding:ibm128
+cosh -0x2.c5d37700c6bb03a4p+12 no-test-inline xfail-rounding:ibm128
+cosh -0x2.c5d37700c6bb03a8p+12 no-test-inline xfail-rounding:ibm128
+cosh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline xfail-rounding:ibm128
+cosh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline xfail-rounding:ibm128
+cosh -0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline xfail-rounding:ibm128
+cosh -0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline xfail-rounding:ibm128
 
 cpow 1 0 0 0 ignore-zero-inf-sign
 cpow 2 0 10 0 ignore-zero-inf-sign
@@ -1410,8 +1410,8 @@ ctan 1 47
 ctan 1 355
 ctan 1 365
 # GCC bug 59666: results on directed rounding may be incorrect.
-ctan 1 5680 xfail-rounding:ldbl-128ibm
-ctan 1 5690 xfail-rounding:ldbl-128ibm
+ctan 1 5680 xfail-rounding:ibm128
+ctan 1 5690 xfail-rounding:ibm128
 
 ctan 0x3.243f6cp-1 0
 
@@ -1420,10 +1420,10 @@ ctan 0x1p1023 1
 ctan 0x1p16383 1
 
 # GCC bug 59666: results on directed rounding may be incorrect.
-ctan 50000 50000 xfail-rounding:ldbl-128ibm
-ctan 50000 -50000 xfail-rounding:ldbl-128ibm
-ctan -50000 50000 xfail-rounding:ldbl-128ibm
-ctan -50000 -50000 xfail-rounding:ldbl-128ibm
+ctan 50000 50000 xfail-rounding:ibm128
+ctan 50000 -50000 xfail-rounding:ibm128
+ctan -50000 50000 xfail-rounding:ibm128
+ctan -50000 -50000 xfail-rounding:ibm128
 
 ctan 0x1.921fb6p+0 0x1p-149
 ctan 0x1.921fb54442d18p+0 0x1p-1074
@@ -1453,8 +1453,8 @@ ctanh 47 1
 ctanh 355 1
 ctanh 365 1
 # GCC bug 59666: results on directed rounding may be incorrect.
-ctanh 5680 1 xfail-rounding:ldbl-128ibm
-ctanh 5690 1 xfail-rounding:ldbl-128ibm
+ctanh 5680 1 xfail-rounding:ibm128
+ctanh 5690 1 xfail-rounding:ibm128
 
 ctanh 0 0x3.243f6cp-1
 
@@ -1463,10 +1463,10 @@ ctanh 1 0x1p1023
 ctanh 1 0x1p16383
 
 # GCC bug 59666: results on directed rounding may be incorrect.
-ctanh 50000 50000 xfail-rounding:ldbl-128ibm
-ctanh 50000 -50000 xfail-rounding:ldbl-128ibm
-ctanh -50000 50000 xfail-rounding:ldbl-128ibm
-ctanh -50000 -50000 xfail-rounding:ldbl-128ibm
+ctanh 50000 50000 xfail-rounding:ibm128
+ctanh 50000 -50000 xfail-rounding:ibm128
+ctanh -50000 50000 xfail-rounding:ibm128
+ctanh -50000 -50000 xfail-rounding:ibm128
 
 ctanh 0x1p-149 0x1.921fb6p+0
 ctanh 0x1p-1074 0x1.921fb54442d18p+0
@@ -1672,13 +1672,13 @@ exp 50.0
 exp 88.72269439697265625
 exp 709.75
 # GCC bug 59666: results on directed rounding may be incorrect.
-exp 1000.0 xfail-rounding:ldbl-128ibm
-exp 710 xfail-rounding:ldbl-128ibm
+exp 1000.0 xfail-rounding:ibm128
+exp 710 xfail-rounding:ibm128
 exp -1234
 # GCC bug 59666: results on directed rounding may be incorrect.
-exp 0x2.c679d1f73f0fb628p+8 xfail-rounding:ldbl-128ibm
-exp 1e5 xfail-rounding:ldbl-128ibm
-exp max xfail-rounding:ldbl-128ibm
+exp 0x2.c679d1f73f0fb628p+8 xfail-rounding:ibm128
+exp 1e5 xfail-rounding:ibm128
+exp max xfail-rounding:ibm128
 exp -7.4444006192138124e+02
 exp -0x1.75f113c30b1c8p+9
 exp -max
@@ -1757,21 +1757,21 @@ exp10 -36
 exp10 305
 exp10 -305
 # GCC bug 59666: results on directed rounding may be incorrect.
-exp10 4932 xfail-rounding:ldbl-128ibm
+exp10 4932 xfail-rounding:ibm128
 exp10 -4932
 exp10 -0x1.343793004f503232p12
 # GCC bug 59666: results on directed rounding may be incorrect.
-exp10 1e5 xfail-rounding:ldbl-128ibm
+exp10 1e5 xfail-rounding:ibm128
 exp10 -1e5
 # GCC bug 59666: results on directed rounding may be incorrect.
-exp10 1e6 xfail-rounding:ldbl-128ibm
+exp10 1e6 xfail-rounding:ibm128
 exp10 -1e6
 # GCC bug 59666: results on directed rounding may be incorrect.
-exp10 max xfail-rounding:ldbl-128ibm
+exp10 max xfail-rounding:ibm128
 exp10 -max
 exp10 0.75
 # GCC bug 59666: results on directed rounding may be incorrect.
-exp10 0x1.348e45573a1dd72cp+8 xfail-rounding:ldbl-128ibm
+exp10 0x1.348e45573a1dd72cp+8 xfail-rounding:ibm128
 exp10 -0x1.33aa03p+8
 exp10 -0x1.33ad17p+8
 exp10 -0x1.33afcap+8
@@ -1955,7 +1955,7 @@ expm1 100
 expm1 127.0
 expm1 500.0
 # GCC bug 59666: results on directed rounding may be incorrect.
-expm1 11356.25 xfail-rounding:ldbl-128ibm
+expm1 11356.25 xfail-rounding:ibm128
 expm1 -10.0
 expm1 -16.0
 expm1 -17.0
@@ -1977,8 +1977,8 @@ expm1 -1000.0
 expm1 -10000.0
 expm1 -100000.0
 # GCC bug 59666: results on directed rounding may be incorrect.
-expm1 100000.0 xfail-rounding:ldbl-128ibm
-expm1 max xfail-rounding:ldbl-128ibm
+expm1 100000.0 xfail-rounding:ibm128
+expm1 max xfail-rounding:ibm128
 expm1 -max
 expm1 0x1p-2
 expm1 -0x1p-2
@@ -2317,10 +2317,10 @@ hypot 0.75 1.25
 hypot 1.0 0x1p-61
 hypot 0x1p+0 0x1.fp-129
 hypot 0x1.23456789abcdef0123456789ab8p-500 0x1.23456789abcdef0123456789ab8p-500
-hypot 0x3p125 0x4p125 no-test-inline:flt-32
-hypot 0x1.234566p-126 0x1.234566p-126 no-test-inline:flt-32
-hypot 0x3p1021 0x4p1021 no-test-inline:dbl-64
-hypot 0x1p+0 0x0.3ep-1022 no-test-inline:dbl-64
+hypot 0x3p125 0x4p125 no-test-inline:binary32
+hypot 0x1.234566p-126 0x1.234566p-126 no-test-inline:binary32
+hypot 0x3p1021 0x4p1021 no-test-inline:binary64
+hypot 0x1p+0 0x0.3ep-1022 no-test-inline:binary64
 hypot 0x3p16381 0x4p16381 no-test-inline
 hypot 0x1p-149 0x1p-149
 hypot 0x1p-1074 0x1p-1074
@@ -2567,18 +2567,19 @@ lgamma -0x1p-16494
 # where a result inaccurate by a few ulp could differ from the ideal
 # result in whether it overflows; +/- 10ulp is sufficient for overflow
 # or its absence to be unambiguous under glibc's accuracy standards).
-# This also means the ldbl-128ibm inputs are XFAILed for dbl-64 and
-# the ldbl-128 inputs for ldbl-96, as too close to the threshold.
+# This also means the ibm128 inputs are XFAILed for binary64 and
+# the binary128 inputs for intel96 and m68k96, as too close to the
+# threshold.
 lgamma 0x3.12be0cp+120
 lgamma 0x3.12be6p+120
 lgamma 0x5.d53649e2d4674p+1012
 lgamma 0x5.d53649e2d46c8p+1012
-lgamma 0x5.d53649e2d469dbc1f01e99fd52p+1012 xfail:dbl-64
-lgamma 0x5.d53649e2d469dbc1f01e99fd7cp+1012 xfail:dbl-64
+lgamma 0x5.d53649e2d469dbc1f01e99fd52p+1012 xfail:binary64
+lgamma 0x5.d53649e2d469dbc1f01e99fd7cp+1012 xfail:binary64
 lgamma 0x5.c6aa645fffef5f5p+16368
 lgamma 0x5.c6aa645fffef5ff8p+16368
-lgamma 0x5.c6aa645fffef5fa912b9b480f7acp+16368 xfail:ldbl-96-intel xfail:ldbl-96-m68k
-lgamma 0x5.c6aa645fffef5fa912b9b480f8p+16368 xfail:ldbl-96-intel xfail:ldbl-96-m68k
+lgamma 0x5.c6aa645fffef5fa912b9b480f7acp+16368 xfail:intel96 xfail:m68k96
+lgamma 0x5.c6aa645fffef5fa912b9b480f8p+16368 xfail:intel96 xfail:m68k96
 
 lgamma -0x1.fa471547c2fe5p+1
 lgamma -0x1.9260dcp+1
@@ -2832,7 +2833,7 @@ lgamma -60.25
 lgamma -60.5
 lgamma -60.75
 
-# Integers +/- 1ulp for ldbl-128 (gen-auto-libm-tests will round these
+# Integers +/- 1ulp for binary128 (gen-auto-libm-tests will round these
 # to produce integers +/- 1ulp for other formats).
 lgamma -0xf.fffffffffffffffffffffffffff8p-4
 lgamma -0x1.0000000000000000000000000001p+0
@@ -4215,19 +4216,19 @@ tgamma -0x1p-127
 # IEEE semantics mean overflow very close to the threshold depends on
 # the rounding mode; gen-auto-libm-tests does not reflect that glibc
 # does not try to achieve this.
-tgamma 0x1p-128 spurious-overflow:flt-32
+tgamma 0x1p-128 spurious-overflow:binary32
 tgamma -0x1p-128
 tgamma 0x1p-149
 tgamma -0x1p-149
 tgamma 0x1p-1023
 tgamma -0x1p-1023
-tgamma 0x1p-1024 spurious-overflow:dbl-64 spurious-overflow:ldbl-128ibm
+tgamma 0x1p-1024 spurious-overflow:binary64 spurious-overflow:ibm128
 tgamma -0x1p-1024
 tgamma 0x1p-1074
 tgamma -0x1p-1074
 tgamma 0x1p-16383
 tgamma -0x1p-16383
-tgamma 0x1p-16384 spurious-overflow:ldbl-96-intel spurious-overflow:ldbl-96-m68k spurious-overflow:ldbl-128
+tgamma 0x1p-16384 spurious-overflow:intel96 spurious-overflow:m68k96 spurious-overflow:binary128
 tgamma -0x1p-16384
 tgamma 0x1p-16445
 tgamma -0x1p-16445

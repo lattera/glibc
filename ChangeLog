@@ -1,5 +1,17 @@
 2016-06-08  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* auto-libm-test-in:
+	Replace flt-32 usage with binary32.
+	Replace dbl-64 usage with binary64.
+	Replace ldbl-intel-96 usage with intel96.
+	Replace ldbl-m68k-96 usage with m68k96.
+	Replace ldbl-128ibm usage with ibm128.
+	Replace ldbl-128 usage with binary128.
+
+	* auto-libm-test-out: Regenerate.
+
+2016-06-08  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* math/gen-libm-test.pl (all_floats_pfx): New lookup table.
 	(parse_ulps): Dynamically generate type name matching
 	string from all_floats.
