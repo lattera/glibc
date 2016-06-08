@@ -75,5 +75,10 @@ kern_return_t __thread_switch (mach_port_t new_thread,
 kern_return_t evc_wait (unsigned int event);
 kern_return_t __evc_wait (unsigned int event);
 
+/* Display a null-terminated character string on the Mach console. This
+   system call is meant as a debugging tool useful to circumvent messaging
+   altogether.  */
+
+extern void mach_print(const char *s);
 
 #endif	/* mach/mach_traps.h */

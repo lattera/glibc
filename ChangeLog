@@ -1,3 +1,7 @@
+2016-06-09  Samuel Thibault  <samuel.thibault@ens-lyon.org
+
+	* mach/mach/mach_traps.h (mach_print): Add syscall declaration.
+
 2016-06-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20229]
