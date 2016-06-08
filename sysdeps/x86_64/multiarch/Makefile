@@ -6,10 +6,9 @@ ifeq ($(subdir),string)
 
 sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strcmp-sse2-unaligned strncmp-ssse3 \
-		   memcmp-sse4 memcpy-ssse3 memcpy-sse2-unaligned \
+		   memcmp-sse4 memcpy-ssse3 \
 		   memmove-ssse3 \
-		   memcpy-ssse3-back memmove-avx-unaligned \
-		   memcpy-avx-unaligned \
+		   memcpy-ssse3-back \
 		   memmove-ssse3-back \
 		   memmove-avx512-no-vzeroupper strcasecmp_l-ssse3 \
 		   strncase_l-ssse3 strcat-ssse3 strncat-ssse3\
@@ -20,7 +19,6 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strchr-sse2-no-bsf memcmp-ssse3 strstr-sse2-unaligned \
 		   strcspn-c strpbrk-c strspn-c varshift \
 		   memset-avx512-no-vzeroupper \
-		   memmove-sse2-unaligned-erms \
 		   memmove-avx-unaligned-erms \
 		   memmove-avx512-unaligned-erms \
 		   memset-avx2-unaligned-erms \

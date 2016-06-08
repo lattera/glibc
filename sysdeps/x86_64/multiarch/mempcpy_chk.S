@@ -30,24 +30,40 @@
 ENTRY(__mempcpy_chk)
 	.type	__mempcpy_chk, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
-#ifdef HAVE_AVX512_ASM_SUPPORT
+# ifdef HAVE_AVX512_ASM_SUPPORT
 	HAS_ARCH_FEATURE (AVX512F_Usable)
 	jz	1f
+	lea	__mempcpy_chk_avx512_no_vzeroupper(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (Prefer_No_VZEROUPPER)
-	jz	1f
-	leaq    __mempcpy_chk_avx512_no_vzeroupper(%rip), %rax
+	jnz	2f
+	lea	__mempcpy_chk_avx512_unaligned_erms(%rip), %RAX_LP
+	HAS_CPU_FEATURE (ERMS)
+	jnz	2f
+	lea	__mempcpy_chk_avx512_unaligned(%rip), %RAX_LP
 	ret
-#endif
-1:	leaq	__mempcpy_chk_sse2(%rip), %rax
+# endif
+1:	lea	__mempcpy_chk_avx_unaligned(%rip), %RAX_LP
+	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
+	jz	L(Fast_Unaligned_Load)
+	HAS_CPU_FEATURE (ERMS)
+	jz	2f
+	lea	__mempcpy_chk_avx_unaligned_erms(%rip), %RAX_LP
+	ret
+L(Fast_Unaligned_Load):
+	lea	__mempcpy_chk_sse2_unaligned(%rip), %RAX_LP
+	HAS_ARCH_FEATURE (Fast_Unaligned_Copy)
+	jz	L(SSSE3)
+	HAS_CPU_FEATURE (ERMS)
+	jz	2f
+	lea	__mempcpy_chk_sse2_unaligned_erms(%rip), %RAX_LP
+	ret
+L(SSSE3):
 	HAS_CPU_FEATURE (SSSE3)
 	jz	2f
-	leaq	__mempcpy_chk_ssse3(%rip), %rax
+	lea    __mempcpy_chk_ssse3_back(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (Fast_Copy_Backward)
-	jz	2f
-	leaq	__mempcpy_chk_ssse3_back(%rip), %rax
-	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
-	jz	2f
-	leaq	__mempcpy_chk_avx_unaligned(%rip), %rax
+	jnz	2f
+	lea	__mempcpy_chk_ssse3(%rip), %RAX_LP
 2:	ret
 END(__mempcpy_chk)
 # else

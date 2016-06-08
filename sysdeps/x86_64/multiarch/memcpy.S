@@ -19,7 +19,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <shlib-compat.h>
 #include <init-arch.h>
 
 /* Define multiple versions only for the definition in lib and for
@@ -30,21 +29,34 @@
 ENTRY(__new_memcpy)
 	.type	__new_memcpy, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
-#ifdef HAVE_AVX512_ASM_SUPPORT
+# ifdef HAVE_AVX512_ASM_SUPPORT
 	HAS_ARCH_FEATURE (AVX512F_Usable)
 	jz	1f
+	lea	__memcpy_avx512_no_vzeroupper(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (Prefer_No_VZEROUPPER)
-	jz	1f
-	lea    __memcpy_avx512_no_vzeroupper(%rip), %RAX_LP
+	jnz	2f
+	lea	__memcpy_avx512_unaligned_erms(%rip), %RAX_LP
+	HAS_CPU_FEATURE (ERMS)
+	jnz	2f
+	lea	__memcpy_avx512_unaligned(%rip), %RAX_LP
 	ret
-#endif
+# endif
 1:	lea	__memcpy_avx_unaligned(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
-	jnz	2f
+	jz	L(Fast_Unaligned_Load)
+	HAS_CPU_FEATURE (ERMS)
+	jz	2f
+	lea	__memcpy_avx_unaligned_erms(%rip), %RAX_LP
+	ret
+L(Fast_Unaligned_Load):
 	lea	__memcpy_sse2_unaligned(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (Fast_Unaligned_Copy)
-	jnz	2f
-	lea	__memcpy_sse2(%rip), %RAX_LP
+	jz	L(SSSE3)
+	HAS_CPU_FEATURE (ERMS)
+	jz	2f
+	lea	__memcpy_sse2_unaligned_erms(%rip), %RAX_LP
+	ret
+L(SSSE3):
 	HAS_CPU_FEATURE (SSSE3)
 	jz	2f
 	lea    __memcpy_ssse3_back(%rip), %RAX_LP
@@ -54,37 +66,7 @@ ENTRY(__new_memcpy)
 2:	ret
 END(__new_memcpy)
 
-# undef ENTRY
-# define ENTRY(name) \
-	.type __memcpy_sse2, @function; \
-	.globl __memcpy_sse2; \
-	.hidden __memcpy_sse2; \
-	.p2align 4; \
-	__memcpy_sse2: cfi_startproc; \
-	CALL_MCOUNT
-# undef END
-# define END(name) \
-	cfi_endproc; .size __memcpy_sse2, .-__memcpy_sse2
-
-# undef ENTRY_CHK
-# define ENTRY_CHK(name) \
-	.type __memcpy_chk_sse2, @function; \
-	.globl __memcpy_chk_sse2; \
-	.p2align 4; \
-	__memcpy_chk_sse2: cfi_startproc; \
-	CALL_MCOUNT
-# undef END_CHK
-# define END_CHK(name) \
-	cfi_endproc; .size __memcpy_chk_sse2, .-__memcpy_chk_sse2
-
-# undef libc_hidden_builtin_def
-/* It doesn't make sense to send libc-internal memcpy calls through a PLT.
-   The speedup we get from using SSSE3 instruction is likely eaten away
-   by the indirect call in the PLT.  */
-# define libc_hidden_builtin_def(name) \
-	.globl __GI_memcpy; __GI_memcpy = __memcpy_sse2
-
+# undef memcpy
+# include <shlib-compat.h>
 versioned_symbol (libc, __new_memcpy, memcpy, GLIBC_2_14);
 #endif
-
-#include "../memcpy.S"

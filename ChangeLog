@@ -1,5 +1,85 @@
 2016-06-08  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #19776]
+	* sysdeps/x86_64/memcpy.S: Make it dummy.
+	* sysdeps/x86_64/mempcpy.S: Likewise.
+	* sysdeps/x86_64/memmove.S: New file.
+	* sysdeps/x86_64/memmove_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove_chk.S: Likewise.
+	* sysdeps/x86_64/memmove.c: Removed.
+	* sysdeps/x86_64/multiarch/memcpy-avx-unaligned.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-sse2-unaligned.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove-avx-unaligned.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove-sse2-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memmove.c: Likewise.
+	* sysdeps/x86_64/multiarch/memmove_chk.c: Likewise.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Remove
+	memcpy-sse2-unaligned, memmove-avx-unaligned,
+	memcpy-avx-unaligned and memmove-sse2-unaligned-erms.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Replace
+	__memmove_chk_avx512_unaligned_2 with
+	__memmove_chk_avx512_unaligned.  Remove
+	__memmove_chk_avx_unaligned_2.  Replace
+	__memmove_chk_sse2_unaligned_2 with
+	__memmove_chk_sse2_unaligned.  Remove __memmove_chk_sse2 and
+	__memmove_avx_unaligned_2.  Replace __memmove_avx512_unaligned_2
+	with __memmove_avx512_unaligned.  Replace
+	__memmove_sse2_unaligned_2 with __memmove_sse2_unaligned.
+	Remove __memmove_sse2.  Replace __memcpy_chk_avx512_unaligned_2
+	with __memcpy_chk_avx512_unaligned.  Remove
+	__memcpy_chk_avx_unaligned_2.  Replace
+	__memcpy_chk_sse2_unaligned_2 with __memcpy_chk_sse2_unaligned.
+	Remove __memcpy_chk_sse2.  Remove __memcpy_avx_unaligned_2.
+	Replace __memcpy_avx512_unaligned_2 with
+	__memcpy_avx512_unaligned.  Remove __memcpy_sse2_unaligned_2
+	and __memcpy_sse2.  Replace __mempcpy_chk_avx512_unaligned_2
+	with __mempcpy_chk_avx512_unaligned.  Remove
+	__mempcpy_chk_avx_unaligned_2.  Replace
+	__mempcpy_chk_sse2_unaligned_2 with
+	__mempcpy_chk_sse2_unaligned.  Remove __mempcpy_chk_sse2.
+	Replace __mempcpy_avx512_unaligned_2 with
+	__mempcpy_avx512_unaligned.  Remove __mempcpy_avx_unaligned_2.
+	Replace __mempcpy_sse2_unaligned_2 with
+	__mempcpy_sse2_unaligned.  Remove __mempcpy_sse2.
+	* sysdeps/x86_64/multiarch/memcpy.S (__new_memcpy): Support
+	__memcpy_avx512_unaligned_erms and __memcpy_avx512_unaligned.
+	Use __memcpy_avx_unaligned_erms and __memcpy_sse2_unaligned_erms
+	if processor has ERMS.  Default to __memcpy_sse2_unaligned.
+	(ENTRY): Removed.
+	(END): Likewise.
+	(ENTRY_CHK): Likewise.
+	(libc_hidden_builtin_def): Likewise.
+	Don't include ../memcpy.S.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S (__memcpy_chk): Support
+	__memcpy_chk_avx512_unaligned_erms and
+	__memcpy_chk_avx512_unaligned.  Use
+	__memcpy_chk_avx_unaligned_erms and
+	__memcpy_chk_sse2_unaligned_erms if if processor has ERMS.
+	Default to __memcpy_chk_sse2_unaligned.
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+	Change function suffix from unaligned_2 to unaligned.
+	* sysdeps/x86_64/multiarch/mempcpy.S (__mempcpy): Support
+	__mempcpy_avx512_unaligned_erms and __mempcpy_avx512_unaligned.
+	Use __mempcpy_avx_unaligned_erms and __mempcpy_sse2_unaligned_erms
+	if processor has ERMS.  Default to __mempcpy_sse2_unaligned.
+	(ENTRY): Removed.
+	(END): Likewise.
+	(ENTRY_CHK): Likewise.
+	(libc_hidden_builtin_def): Likewise.
+	Don't include ../mempcpy.S.
+	(mempcpy): New.  Add a weak alias.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S (__mempcpy_chk): Support
+	__mempcpy_chk_avx512_unaligned_erms and
+	__mempcpy_chk_avx512_unaligned.  Use
+	__mempcpy_chk_avx_unaligned_erms and
+	__mempcpy_chk_sse2_unaligned_erms if if processor has ERMS.
+	Default to __mempcpy_chk_sse2_unaligned.
+
+2016-06-08  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #19881]
 	* sysdeps/x86_64/multiarch/memset-sse2-unaligned-erms.S: Folded
 	into ...

@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2016 Free Software Foundation, Inc.
+/* Checking memmove for x86-64.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,12 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "string/memmove.c"
+#include <sysdep.h>
+#include "asm-syntax.h"
 
-#if !defined memmove && IS_IN (libc)
-#include <shlib-compat.h>
-
-#if SHLIB_COMPAT (libc, GLIBC_2_2_5, GLIBC_2_14)
-compat_symbol (libc, memmove, memcpy, GLIBC_2_2_5);
-#endif
+#ifndef SHARED
+	/* For libc.so this is defined in memmove.S.
+	   For libc.a, this is a separate source to avoid
+	   memmove bringing in __chk_fail and all routines
+	   it calls.  */
+        .text
+ENTRY (__memmove_chk)
+	cmpq	%rdx, %rcx
+	jb	__chk_fail
+	jmp	memmove
+END (__memmove_chk)
 #endif

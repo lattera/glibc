@@ -106,28 +106,28 @@
 
 	.section SECTION(.text),"ax",@progbits
 #if defined SHARED && IS_IN (libc)
-ENTRY (MEMMOVE_CHK_SYMBOL (__mempcpy_chk, unaligned_2))
+ENTRY (MEMMOVE_CHK_SYMBOL (__mempcpy_chk, unaligned))
 	cmpq	%rdx, %rcx
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
-END (MEMMOVE_CHK_SYMBOL (__mempcpy_chk, unaligned_2))
+END (MEMMOVE_CHK_SYMBOL (__mempcpy_chk, unaligned))
 #endif
 
 #if VEC_SIZE == 16 || defined SHARED
-ENTRY (MEMPCPY_SYMBOL (__mempcpy, unaligned_2))
+ENTRY (MEMPCPY_SYMBOL (__mempcpy, unaligned))
 	movq	%rdi, %rax
 	addq	%rdx, %rax
 	jmp	L(start)
-END (MEMPCPY_SYMBOL (__mempcpy, unaligned_2))
+END (MEMPCPY_SYMBOL (__mempcpy, unaligned))
 #endif
 
 #if defined SHARED && IS_IN (libc)
-ENTRY (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned_2))
+ENTRY (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned))
 	cmpq	%rdx, %rcx
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
-END (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned_2))
+END (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned))
 #endif
 
-ENTRY (MEMMOVE_SYMBOL (__memmove, unaligned_2))
+ENTRY (MEMMOVE_SYMBOL (__memmove, unaligned))
 	movq	%rdi, %rax
 L(start):
 	cmpq	$VEC_SIZE, %rdx
@@ -148,7 +148,7 @@ L(nop):
 #endif
 	ret
 #if defined USE_MULTIARCH && IS_IN (libc)
-END (MEMMOVE_SYMBOL (__memmove, unaligned_2))
+END (MEMMOVE_SYMBOL (__memmove, unaligned))
 
 # if VEC_SIZE == 16 && defined SHARED
 /* Only used to measure performance of REP MOVSB.  */
@@ -539,11 +539,11 @@ strong_alias (MEMMOVE_SYMBOL (__memmove, unaligned_erms),
 strong_alias (MEMMOVE_SYMBOL (__memmove_chk, unaligned_erms),
 	      MEMMOVE_SYMBOL (__memcpy_chk, unaligned_erms))
 #  endif
-strong_alias (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned_2),
-	      MEMMOVE_CHK_SYMBOL (__memcpy_chk, unaligned_2))
+strong_alias (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned),
+	      MEMMOVE_CHK_SYMBOL (__memcpy_chk, unaligned))
 # endif
 #endif
 #if VEC_SIZE == 16 || defined SHARED
-strong_alias (MEMMOVE_SYMBOL (__memmove, unaligned_2),
-	      MEMCPY_SYMBOL (__memcpy, unaligned_2))
+strong_alias (MEMMOVE_SYMBOL (__memmove, unaligned),
+	      MEMCPY_SYMBOL (__memcpy, unaligned))
 #endif
