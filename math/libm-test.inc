@@ -6992,6 +6992,8 @@ static const struct test_f_f_data exp_test_data[] =
     TEST_f_f (exp, minus_infty, 0, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (exp, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (exp, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (exp, snan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (exp, -snan_value, qnan_value, INVALID_EXCEPTION),
 
     AUTO_TESTS_f_f (exp),
   };
@@ -7009,6 +7011,8 @@ static const struct test_f_f_data exp10_test_data[] =
     TEST_f_f (exp10, minus_infty, 0, ERRNO_UNCHANGED),
     TEST_f_f (exp10, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (exp10, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (exp10, snan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (exp10, -snan_value, qnan_value, INVALID_EXCEPTION),
 
     AUTO_TESTS_f_f (exp10),
   };
@@ -7052,6 +7056,8 @@ static const struct test_f_f_data expm1_test_data[] =
     TEST_f_f (expm1, minus_infty, -1, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_f_f (expm1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (expm1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (expm1, snan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_f_f (expm1, -snan_value, qnan_value, INVALID_EXCEPTION),
 
     AUTO_TESTS_f_f (expm1),
   };

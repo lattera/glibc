@@ -99,7 +99,7 @@ ENTRY(IEEE754_EXPL)
 	/* Below -64.0 (may be -NaN or -Inf). */
 	andb	%ah, %dh
 	cmpb	$0x01, %dh
-	je	2f		/* Is +-NaN, jump.  */
+	je	6f		/* Is +-NaN, jump.  */
 	jmp	1f		/* -large, possibly -Inf.  */
 
 4:	/* In range -64.0 to 64.0 (may be +-0 but not NaN or +-Inf).  */
@@ -141,7 +141,7 @@ ENTRY(IEEE754_EXPL)
 	cmpb	$0x05, %dh
 	je	1f		/* Is +-Inf, jump.    */
 	cmpb	$0x01, %dh
-	je	2f		/* Is +-NaN, jump.    */
+	je	6f		/* Is +-NaN, jump.    */
 	/* Overflow or underflow; saturate.  */
 	fstp	%st
 	fldt	MO(csat)
@@ -207,6 +207,9 @@ ENTRY(IEEE754_EXPL)
 	fldz			/* Set result to 0.  */
 #endif
 2:	ret
+6:	/* NaN argument.  */
+	fadd	%st
+	ret
 END(IEEE754_EXPL)
 #ifdef USE_AS_EXPM1L
 libm_hidden_def (__expm1l)

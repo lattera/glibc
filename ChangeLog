@@ -1,5 +1,13 @@
 2016-06-08  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20226]
+	* sysdeps/i386/fpu/e_expl.S (IEEE754_EXPL): Add NaN argument to
+	itself.
+	* sysdeps/x86_64/fpu/e_expl.S (IEEE754_EXPL): Likewise.
+	* math/libm-test.inc (exp_test_data): Add sNaN tests.
+	(exp10_test_data): Likewise.
+	(expm1_test_data): Likewise.
+
 	[BZ #20225]
 	* math/s_ldexp.c (__ldexp): Add non-finite or zero argument to
 	itself.
