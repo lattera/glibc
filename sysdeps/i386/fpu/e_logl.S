@@ -67,6 +67,7 @@ ENTRY(__ieee754_logl)
 3:	jp	4b		// in case x is +-Inf
 	fstp	%st(1)
 	fstp	%st(1)
+	fadd	%st(0)
 	ret
 END (__ieee754_logl)
 
