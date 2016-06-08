@@ -158,9 +158,6 @@ typedef struct
 {
   /* The name of the format.  */
   const char *name;
-  /* The suffix to use on floating-point constants with this
-     format.  */
-  const char *suffix;
   /* A string for the largest normal value, or NULL for IEEE formats
      where this can be determined automatically.  */
   const char *max_string;
@@ -186,12 +183,12 @@ typedef struct
    enumeration.  */
 static fp_format_desc fp_formats[fp_num_formats] =
   {
-    { "flt-32", "f", NULL, 24, 128, -125, {}, {}, {}, {}, {} },
-    { "dbl-64", "", NULL, 53, 1024, -1021, {}, {}, {}, {}, {} },
-    { "ldbl-96-intel", "L", NULL, 64, 16384, -16381, {}, {}, {}, {}, {} },
-    { "ldbl-96-m68k", "L", NULL, 64, 16384, -16382, {}, {}, {}, {}, {} },
-    { "ldbl-128", "L", NULL, 113, 16384, -16381, {}, {}, {}, {}, {} },
-    { "ldbl-128ibm", "L", "0x1.fffffffffffff7ffffffffffff8p+1023",
+    { "binary32", NULL, 24, 128, -125, {}, {}, {}, {}, {} },
+    { "binary64", NULL, 53, 1024, -1021, {}, {}, {}, {}, {} },
+    { "intel96", NULL, 64, 16384, -16381, {}, {}, {}, {}, {} },
+    { "m68k96", NULL, 64, 16384, -16382, {}, {}, {}, {}, {} },
+    { "binary128", NULL, 113, 16384, -16381, {}, {}, {}, {}, {} },
+    { "ibm128", "0x1.fffffffffffff7ffffffffffff8p+1023",
       106, 1024, -968, {}, {}, {}, {}, {} },
   };
 
@@ -1643,13 +1640,12 @@ int_fits_type (mpz_t z, arg_ret_type type, int long_bits)
 }
 
 /* Print a generic value V to FP (name FILENAME), preceded by a space,
-   for type TYPE, floating-point format FORMAT, LONG_BITS bits per
-   long, printing " IGNORE" instead if IGNORE.  */
+   for type TYPE, LONG_BITS bits per long, printing " IGNORE" instead
+   if IGNORE.  */
 
 static void
 output_generic_value (FILE *fp, const char *filename, const generic_value *v,
-		      bool ignore, arg_ret_type type, fp_format format,
-		      int long_bits)
+		      bool ignore, arg_ret_type type, int long_bits)
 {
   if (ignore)
     {
@@ -1662,7 +1658,7 @@ output_generic_value (FILE *fp, const char *filename, const generic_value *v,
   switch (type)
     {
     case type_fp:
-      suffix = fp_formats[format].suffix;
+      suffix = "";
       break;
 
     case type_int:
@@ -1906,7 +1902,7 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 	      /* Print inputs.  */
 	      for (size_t i = 0; i < tf->num_args; i++)
 		output_generic_value (fp, filename, &inputs[i], false,
-				      tf->arg_types[i], f, long_bits);
+				      tf->arg_types[i], long_bits);
 	      if (fputs (" :", fp) < 0)
 		error (EXIT_FAILURE, errno, "write to '%s'", filename);
 	      /* Print outputs.  */
@@ -1942,7 +1938,7 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 		      abort ();
 		    }
 		  output_generic_value (fp, filename, &g, ignore_output[i],
-					tf->ret_types[i], f, long_bits);
+					tf->ret_types[i], long_bits);
 		  generic_value_free (&g);
 		}
 	      if (fputs (" :", fp) < 0)

@@ -1,5 +1,24 @@
 2016-06-08  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/gen-auto-libm-test.c (fp_format_desc): remove
+	suffix member.
+	(output_generic_value): Remove usage of suffix member,
+	and the resulting unuse of the fp_format argument.
+	(output_for_one_input_case): Remove unused fp_format
+	parameter.
+
+	* math/auto-libm-test-out: Regenerate.
+
+	* math/libm-test.inc (TEST_COND_ldbl_128ibm): replace
+	usage with TEST_COND_ibm128.
+	(TEST_COND_flt_32): Remove.
+	(TEST_COND_dbl_64): Remove.
+	(TEST_COND_ldbl_96_intel): Remove.
+	(TEST_COND_ldbl_96_m68k): Remove.
+	(TEST_COND_ldbl_128): Remove.
+
+2016-06-08  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* auto-libm-test-in:
 	Replace flt-32 usage with binary32.
 	Replace dbl-64 usage with binary64.
