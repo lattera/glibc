@@ -1,5 +1,11 @@
 2016-06-08  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20228]
+	* sysdeps/i386/fpu/e_log10l.S (__ieee754_log10l): Add NaN input to
+	itself.
+	* sysdeps/x86_64/fpu/e_log10l.S (__ieee754_log10l): Likewise.
+	* math/libm-test.inc (log10_test_data): Add sNaN tests.
+
 	[BZ #20227]
 	* sysdeps/i386/fpu/e_logl.S (__ieee754_logl): Add NaN input to
 	itself.

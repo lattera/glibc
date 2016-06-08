@@ -65,6 +65,7 @@ ENTRY(__ieee754_log10l)
 3:	jp	4b		// in case x is ±Inf
 	fstp	%st(1)
 	fstp	%st(1)
+	fadd	%st(0)
 	ret
 END(__ieee754_log10l)
 strong_alias (__ieee754_log10l, __log10l_finite)
