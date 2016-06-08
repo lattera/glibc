@@ -1,3 +1,15 @@
+2016-06-08  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/gen-libm-test.pl: (apply_lit): New subroutine.
+	(parse_args): Strip C suffix from floating point literals
+	typed with 'f' and wrap them with LIT().
+
+	* math/libm-tests.inc (RUN_TEST_LOOP_fj_f): New macro.
+	(test_ff_f_data_nexttoward): Rename to
+	(test_fj_f_data): New struct.
+	(nexttoward_test_data): Relabel tests as
+	TEST_fj_f instead of TEST_ff_f.
+
 2016-06-08  Florian Weimer  <fweimer@redhat.com>
 
 	Emacs bug 23726.

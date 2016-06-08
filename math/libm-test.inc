@@ -1092,7 +1092,10 @@ struct test_ff_f_data
     int exceptions;
   } rd, rn, rz, ru;
 };
-struct test_ff_f_data_nexttoward
+/* Strictly speaking, a j type argument is one gen-libm-test.pl will not
+   attempt to muck with.  For now, it is only used to prevent it from
+   mucking up an explicitly long double argument.  */
+struct test_fj_f_data
 {
   const char *arg_str;
   FLOAT arg1;
@@ -1366,6 +1369,7 @@ struct test_fFF_11_data
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_ff_f RUN_TEST_LOOP_2_f
+#define RUN_TEST_LOOP_fj_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_fi_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_fi_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_fl_f RUN_TEST_2_f
@@ -10001,110 +10005,113 @@ nextafter_test (void)
 }
 
 
-static const struct test_ff_f_data_nexttoward nexttoward_test_data[] =
+/* Note, the second argument is always typed as long double.  The j type
+   argument to TEST_ indicates the literal should not be post-processed by
+   gen-libm-test.pl.  */
+static const struct test_fj_f_data nexttoward_test_data[] =
   {
-    TEST_ff_f (nexttoward, 0, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, minus_zero, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 0, minus_zero, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, minus_zero, minus_zero, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 0, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, minus_zero, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 0, minus_zero, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, minus_zero, minus_zero, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
-    TEST_ff_f (nexttoward, 9, 9, 9, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -9, -9, -9, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, plus_infty, plus_infty, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, minus_infty, minus_infty, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, plus_infty, minus_infty, max_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, minus_infty, plus_infty, -max_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 9, 9, 9, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -9, -9, -9, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, plus_infty, plus_infty, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, minus_infty, minus_infty, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, plus_infty, minus_infty, max_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, minus_infty, plus_infty, -max_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
-    TEST_ff_f (nexttoward, qnan_value, 1.1L, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -qnan_value, 1.1L, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, qnan_value, plus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -qnan_value, plus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, qnan_value, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -qnan_value, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.1L, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.1L, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, plus_infty, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, plus_infty, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, minus_infty, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, minus_infty, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, qnan_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -qnan_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, qnan_value, 1.1L, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -qnan_value, 1.1L, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, qnan_value, plus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -qnan_value, plus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, qnan_value, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -qnan_value, minus_infty, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.1L, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.1L, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, plus_infty, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, plus_infty, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, minus_infty, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, minus_infty, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, qnan_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -qnan_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
-    TEST_ff_f (nexttoward, max_value, plus_infty, plus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_ff_f (nexttoward, -max_value, minus_infty, minus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_fj_f (nexttoward, max_value, plus_infty, plus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_fj_f (nexttoward, -max_value, minus_infty, minus_infty, INEXACT_EXCEPTION|OVERFLOW_EXCEPTION|ERRNO_ERANGE),
 
-    TEST_ff_f (nexttoward, min_subnorm_value, 0, 0, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_ff_f (nexttoward, min_subnorm_value, minus_zero, 0, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_ff_f (nexttoward, -min_subnorm_value, 0, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
-    TEST_ff_f (nexttoward, -min_subnorm_value, minus_zero, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_fj_f (nexttoward, min_subnorm_value, 0, 0, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_fj_f (nexttoward, min_subnorm_value, minus_zero, 0, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_fj_f (nexttoward, -min_subnorm_value, 0, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+    TEST_fj_f (nexttoward, -min_subnorm_value, minus_zero, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
 
 #if TEST_COND_binary32
-    TEST_ff_f (nexttoward, 1.0, 1.1L, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, LDBL_MAX, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0x1.0000000000001p0, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0.9L, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, -LDBL_MAX, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0x0.fffffffffffff8p0, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -1.1L, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -LDBL_MAX, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x1.0000000000001p0, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0.9L, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, LDBL_MAX, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x0.fffffffffffff8p0, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -0x1.3p-145, -0xap-148L, -0x1.4p-145, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION),
+    TEST_fj_f (nexttoward, 1.0, 1.1L, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, LDBL_MAX, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x1.0000000000001p0, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0.9L, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, -LDBL_MAX, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x0.fffffffffffff8p0, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -1.1L, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -LDBL_MAX, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x1.0000000000001p0, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0.9L, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, LDBL_MAX, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x0.fffffffffffff8p0, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -0x1.3p-145, -0xap-148L, -0x1.4p-145, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION),
 # if LDBL_MANT_DIG >= 64
-    TEST_ff_f (nexttoward, 1.0, 0x1.000000000000002p0L, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffp0L, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x1.000000000000002p0L, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffp0L, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x1.000000000000002p0L, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x0.ffffffffffffffffp0L, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x1.000000000000002p0L, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x0.ffffffffffffffffp0L, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 # endif
 # if LDBL_MANT_DIG >= 106
-    TEST_ff_f (nexttoward, 1.0, 0x1.000000000000000000000000008p0L, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffcp0L, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x1.000000000000000000000000008p0L, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffcp0L, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x1.000000000000000000000000008p0L, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffcp0L, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x1.000000000000000000000000008p0L, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffcp0L, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 # endif
 # if LDBL_MANT_DIG >= 113
-    TEST_ff_f (nexttoward, 1.0, 0x1.0000000000000000000000000001p0L, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x1.0000000000000000000000000001p0L, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x1.0000000000000000000000000001p0L, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x1.0000000000000000000000000001p0L, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 # endif
 #endif
 #if TEST_COND_binary64
-    TEST_ff_f (nexttoward, 1.0, 1.1L, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, LDBL_MAX, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0x1.0000000000001p0, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0.9L, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, -LDBL_MAX, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -1.1L, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -LDBL_MAX, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x1.0000000000001p0, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0.9L, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, LDBL_MAX, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x8.00346dc5d6388p-3L, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 0x1p-1074, 0x1p-1073L, 0x1p-1073, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION),
+    TEST_fj_f (nexttoward, 1.0, 1.1L, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, LDBL_MAX, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x1.0000000000001p0, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0.9L, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, -LDBL_MAX, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -1.1L, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -LDBL_MAX, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x1.0000000000001p0, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0.9L, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, LDBL_MAX, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x8.00346dc5d6388p-3L, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 0x1p-1074, 0x1p-1073L, 0x1p-1073, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION),
 # if LDBL_MANT_DIG >= 64
-    TEST_ff_f (nexttoward, 1.0, 0x1.000000000000002p0L, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x1.000000000000002p0L, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x1.000000000000002p0L, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x1.000000000000002p0L, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 # endif
 # if LDBL_MANT_DIG >= 106
-    TEST_ff_f (nexttoward, 1.0, 0x1.000000000000000000000000008p0L, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffcp0L, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x1.000000000000000000000000008p0L, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffcp0L, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x1.000000000000000000000000008p0L, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffcp0L, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x1.000000000000000000000000008p0L, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffcp0L, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 # endif
 # if LDBL_MANT_DIG >= 113
-    TEST_ff_f (nexttoward, 1.0, 0x1.0000000000000000000000000001p0L, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x1.0000000000000000000000000001p0L, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x1.0000000000000000000000000001p0L, 0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x1.0000000000000000000000000001p0L, -0x1.0000000000001p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fj_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.fffffffffffff8p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 # endif
 #endif
   };
@@ -10112,7 +10119,7 @@ static const struct test_ff_f_data_nexttoward nexttoward_test_data[] =
 static void
 nexttoward_test (void)
 {
-  ALL_RM_TEST (nexttoward, 1, nexttoward_test_data, RUN_TEST_LOOP_ff_f, END);
+  ALL_RM_TEST (nexttoward, 1, nexttoward_test_data, RUN_TEST_LOOP_fj_f, END);
 }
 
 

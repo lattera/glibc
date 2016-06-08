@@ -153,6 +153,25 @@ sub show_exceptions {
   }
 }
 
+# Apply the LIT(x) macro to a literal floating point constant
+# and strip any existing suffix.
+sub apply_lit {
+  my ($lit) = @_;
+  my $exp_re = "([+-])?[[:digit:]]+";
+  # Don't wrap something that does not look like a:
+  #  * Hexadecimal FP value
+  #  * Decimal FP value without a decimal point
+  #  * Decimal value with a fraction
+  return $lit if $lit !~ /([+-])?0x[[:xdigit:]\.]+[pP]$exp_re/
+		 and $lit !~ /[[:digit:]]+[eE]$exp_re/
+		 and $lit !~ /[[:digit:]]*\.[[:digit:]]*([eE]$exp_re)?/;
+
+  # Strip any existing literal suffix.
+  $lit =~ s/[lLfF]$//;
+
+  return "LIT (${lit})";
+}
+
 # Parse the arguments to TEST_x_y
 sub parse_args {
   my ($file, $descr, $args) = @_;
@@ -182,7 +201,7 @@ sub parse_args {
       $comma = ', ';
     }
     # FLOAT, int, long int, long long int
-    if ($descr[$i] =~ /f|i|l|L/) {
+    if ($descr[$i] =~ /f|j|i|l|L/) {
       $call_args .= $comma . &beautify ($args[$current_arg]);
       ++$current_arg;
       next;
@@ -242,8 +261,12 @@ sub parse_args {
   @descr = split //,$descr_args;
   for ($i=0; $i <= $#descr; $i++) {
     # FLOAT, int, long int, long long int
-    if ($descr[$i] =~ /f|i|l|L/) {
-      $cline .= ", $args[$current_arg]";
+    if ($descr[$i] =~ /f|j|i|l|L/) {
+      if ($descr[$i] eq "f") {
+        $cline .= ", " . &apply_lit ($args[$current_arg]);
+      } else {
+        $cline .= ", $args[$current_arg]";
+      }
       $current_arg++;
       next;
     }
@@ -253,7 +276,8 @@ sub parse_args {
     }
     # complex
     if ($descr[$i] eq 'c') {
-      $cline .= ", $args[$current_arg], $args[$current_arg+1]";
+      $cline .= ", " . &apply_lit ($args[$current_arg]);
+      $cline .= ", " . &apply_lit ($args[$current_arg+1]);
       $current_arg += 2;
       next;
     }
@@ -275,13 +299,16 @@ sub parse_args {
     $cline_res = "";
     @special = ();
     foreach (@descr) {
-      if ($_ =~ /b|f|i|l|L/ ) {
+      if ($_ =~ /b|f|j|i|l|L/ ) {
 	my ($result) = $args_res[$current_arg];
 	if ($result eq "IGNORE") {
 	  $ignore_result_any = 1;
 	  $result = "0";
 	} else {
 	  $ignore_result_all = 0;
+	}
+	if ($_ eq "f") {
+	  $result = apply_lit ($result);
 	}
 	$cline_res .= ", $result";
 	$current_arg++;
@@ -300,6 +327,8 @@ sub parse_args {
 	} else {
 	  $ignore_result_all = 0;
 	}
+	$result1 = apply_lit ($result1);
+	$result2 = apply_lit ($result2);
 	$cline_res .= ", $result1, $result2";
 	$current_arg += 2;
       } elsif ($_ eq '1') {
@@ -330,6 +359,8 @@ sub parse_args {
       my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
       if (!$run_extra) {
 	$extra_expected = "0";
+      } else {
+	$extra_expected = apply_lit ($extra_expected);
       }
       $cline_res .= ", $run_extra, $extra_expected";
     }
