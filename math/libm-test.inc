@@ -26,7 +26,6 @@
    name with correct suffix (e.g. cosl or cosf)
    FLOAT:	   floating point type to test
    - TEST_MSG:	   informal message to be displayed
-   CHOOSE(Clongdouble,Cdouble,Cfloat,Cinlinelongdouble,Cinlinedouble,Cinlinefloat):
    chooses one of the parameters as delta for testing
    equality
    PRINTF_EXPR	   Floating point conversion specification to print a variable
@@ -131,14 +130,6 @@
 #include <math-tests.h>
 #include <math-tests-arch.h>
 
-/* Structure for ulp data for a function, or the real or imaginary
-   part of a function.  */
-struct ulp_data
-{
-  const char *name;
-  FLOAT max_ulp;
-};
-
 /* This header defines func_ulps, func_real_ulps and func_imag_ulps
    arrays.  */
 #include "libm-test-ulps.h"
@@ -202,8 +193,10 @@ struct ulp_data
 #define FSTR_MAX (128)
 
 #if TEST_INLINE
+# define ULP_IDX __CONCATX (ULP_I_, PREFIX)
 # define QTYPE_STR "i" TYPE_STR
 #else
+# define ULP_IDX __CONCATX (ULP_, PREFIX)
 # define QTYPE_STR TYPE_STR
 #endif
 
@@ -369,7 +362,7 @@ find_ulps (const char *name, const struct ulp_data *data, size_t nmemb)
   if (entry == NULL)
     return 0;
   else
-    return entry->max_ulp;
+    return entry->max_ulp[ULP_IDX];
 }
 
 static void

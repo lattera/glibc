@@ -21,6 +21,5 @@
 #include "test-math-scalar.h"
 
 #define TEST_MSG "testing double (inline functions)\n"
-#define CHOOSE(Clongdouble,Cdouble,Cfloat,Cinlinelongdouble,Cinlinedouble,Cinlinefloat) Cinlinedouble
 
 #include "libm-test.c"

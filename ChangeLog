@@ -1,5 +1,37 @@
 2016-06-08  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/gen-libm-test.pl (all_floats_pfx): New lookup table.
+	(parse_ulps): Dynamically generate type name matching
+	string from all_floats.
+	(get_ulps): Generate the ulps as an array instead.
+	(output_ulps): Dynamically compose the type based
+	on the number of supported formats, and print
+	the indices as type specific helper macros.
+
+	* math/libm-test.inc: Remove comment about CHOOSE.
+	(ulp_data): Generate the type in libm-test-ulps.h.
+	(ULP_IDX): New macro.
+	(find_ulps): Update usage of max_ulp.
+
+	* math/test-double-vlen2.h (CHOOSE): Remove.
+	* math/test-double-vlen4.h (CHOOSE): Likewise.
+	* math/test-double-vlen8.h (CHOOSE): Likewise.
+	* math/test-float.c (CHOOSE): Likewise.
+	* math/test-float-finite.c (CHOOSE): Likewise.
+	* math/test-double.c (CHOOSE): Likewise.
+	* math/test-double-finite.c (CHOOSE): Likewise.
+	* math/test-idouble.c (CHOOSE): Likewise.
+	* math/test-ifloat.c (CHOOSE): Likewise.
+	* math/test-ildoubl.c (CHOOSE): Likewise.
+	* math/test-ldouble-finite.c (CHOOSE): Likewise.
+	* math/test-ldouble.c (CHOOSE): Likewise.
+
+	* math/test-float.h (TEST_FLOAT): Remove.
+	* math/test-double.h (TEST_DOUBLE): Likewise.
+	* math/test-ldouble.h (TEST_LDOUBLE): Likewise.
+
+2016-06-08  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* math/gen-libm-test.pl: (apply_lit): New subroutine.
 	(parse_args): Strip C suffix from floating point literals
 	typed with 'f' and wrap them with LIT().

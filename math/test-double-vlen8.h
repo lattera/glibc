@@ -21,7 +21,6 @@
 #include "test-math-vector.h"
 
 #define TEST_MSG "testing double vector math (without inline functions)\n"
-#define CHOOSE(Clongdouble,Cdouble,Cfloat,Cinlinelongdouble,Cinlinedouble,Cinlinefloat) Cdouble
 
 #define EXCEPTION_TESTS_double 0
 #define ROUNDING_TESTS_double(MODE) ((MODE) == FE_TONEAREST)
