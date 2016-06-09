@@ -70,6 +70,51 @@ static pid_t pid;
 /* Directory to place temporary files in.  */
 static const char *test_dir;
 
+static void
+oom_error (const char *fn, size_t size)
+{
+  printf ("%s: unable to allocate %zu bytes: %m\n", fn, size);
+  exit (1);
+}
+
+/* Allocate N bytes of memory dynamically, with error checking.  */
+static void *
+__attribute__ ((used))
+xmalloc (size_t n)
+{
+  void *p;
+
+  p = malloc (n);
+  if (p == NULL)
+    oom_error ("malloc", n);
+  return p;
+}
+
+/* Allocate memory for N elements of S bytes, with error checking.  */
+static void *
+__attribute__ ((used))
+xcalloc (size_t n, size_t s)
+{
+  void *p;
+
+  p = calloc (n, s);
+  if (p == NULL)
+    oom_error ("calloc", n * s);
+  return p;
+}
+
+/* Change the size of an allocated block of memory P to N bytes,
+   with error checking.  */
+static void *
+__attribute__ ((used))
+xrealloc (void *p, size_t n)
+{
+  p = realloc (p, n);
+  if (p == NULL)
+    oom_error ("realloc", n);
+  return p;
+}
+
 /* List of temporary files.  */
 struct temp_name_list
 {
@@ -83,9 +128,9 @@ __attribute__ ((unused))
 add_temp_file (const char *name)
 {
   struct temp_name_list *newp
-    = (struct temp_name_list *) calloc (sizeof (*newp), 1);
+    = (struct temp_name_list *) xcalloc (sizeof (*newp), 1);
   char *newname = strdup (name);
-  if (newp != NULL && newname != NULL)
+  if (newname != NULL)
     {
       newp->name = newname;
       if (temp_name_list == NULL)
@@ -124,13 +169,8 @@ create_temp_file (const char *base, char **filename)
   char *fname;
   int fd;
 
-  fname = (char *) malloc (strlen (test_dir) + 1 + strlen (base)
-			   + sizeof ("XXXXXX"));
-  if (fname == NULL)
-    {
-      puts ("out of memory");
-      return -1;
-    }
+  fname = (char *) xmalloc (strlen (test_dir) + 1 + strlen (base)
+			    + sizeof ("XXXXXX"));
   strcpy (stpcpy (stpcpy (stpcpy (fname, test_dir), "/"), base), "XXXXXX");
 
   fd = mkstemp (fname);
