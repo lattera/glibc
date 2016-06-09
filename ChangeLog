@@ -1,3 +1,9 @@
+2016-06-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20232]
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c (__expm1l): Add NaN input to
+	itself.
+
 2016-06-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/start.S (_start): Always indirect branch to

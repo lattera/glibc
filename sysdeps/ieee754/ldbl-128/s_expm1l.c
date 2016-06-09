@@ -111,8 +111,8 @@ __expm1l (long double x)
       /* Infinity (which must be negative infinity). */
       if (((ix & 0xffff) | u.parts32.w1 | u.parts32.w2 | u.parts32.w3) == 0)
 	return -1.0L;
-      /* NaN. No invalid exception. */
-      return x;
+      /* NaN.  Invalid exception if signaling.  */
+      return x + x;
     }
 
   /* expm1(+- 0) = +- 0.  */
