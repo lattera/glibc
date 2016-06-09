@@ -1,5 +1,11 @@
 2016-06-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20235]
+	* sysdeps/i386/fpu/e_log2l.S (__ieee754_log2l): Add NaN input to
+	itself.
+	* sysdeps/x86_64/fpu/e_log2l.S (__ieee754_log2l): Likewise.
+	* math/libm-test.inc (log2_test_data): Add sNaN tests.
+
 	[BZ #20234]
 	* sysdeps/ieee754/ldbl-128ibm/s_log1pl.c (__log1pl): Add positive
 	infinity or NaN input to itself.
