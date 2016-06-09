@@ -1,5 +1,10 @@
 2016-06-09  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/start.S (_start): Always indirect branch to
+	__libc_start_main via GOT.
+
+2016-06-09  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/memcopy.h: New file.
 	* sysdeps/x86_64/wordcopy.c: Likewise.
 
