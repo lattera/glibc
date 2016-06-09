@@ -1,5 +1,9 @@
 2016-06-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20234]
+	* sysdeps/ieee754/ldbl-128ibm/s_log1pl.c (__log1pl): Add positive
+	infinity or NaN input to itself.
+
 	[BZ #20233]
 	* sysdeps/ieee754/ldbl-128ibm/s_expm1l.c (__expm1l): Add NaN input
 	to itself.
