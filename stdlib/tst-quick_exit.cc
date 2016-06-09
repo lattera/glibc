@@ -15,24 +15,31 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
-#include <cstdlib>
+
+#include <stdlib.h>
 
 struct A
 {
-  ~A() { abort(); }
+  ~A () { abort (); }
 };
 
 thread_local A a;
 
-static int
-do_test()
+void
+__attribute__ ((noinline, noclone))
+optimization_barrier (A &)
 {
-  (void)a;
+}
+
+static int
+do_test ()
+{
+  optimization_barrier (a);
   /* The C++11 standard in 18.5.12 says:
      "Objects shall not be destroyed as a result of calling
       quick_exit."
      If quick_exit calls the destructors the test aborts.  */
-  std::quick_exit(0);
+  quick_exit (0);
   return 0;
 }
 

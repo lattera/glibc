@@ -1,3 +1,18 @@
+2016-06-09  Florian Weimer  <fweimer@redhat.com>
+
+	Prevent GCC 6 <cstdlib> from including /usr/include/stdlib.h.
+	* stdlib/tst-quick_exit.cc: Include <stdlib.h> instead of
+	<cstdlib>.
+	(optimization_barrier): New.
+	(do_test): Use it.  Call quick_exit in the global namespace.
+	* stdlib/tst-thread-quick_exit.cc: Include <stdlib.h>, <pthread.h>
+	instead of <cstdlib>, <thread>.
+	(optimization_barrier): New.
+	(non_main_thread): Adjust declaration.  Call optimization_barrier.
+	Call quick_exit in the global namespace.
+	(do_test): Call optimization_barrier.  Use pthread_create,
+	pthread_join instead of std::thread.
+
 2016-06-09  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #19755]

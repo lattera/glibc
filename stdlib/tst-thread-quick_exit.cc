@@ -15,35 +15,51 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
-#include <cstdlib>
-#include <thread>
+
+#include <errno.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 struct A
 {
-  ~A() { abort(); }
+  ~A () { abort (); }
 };
 
 thread_local A a1;
 thread_local A a2;
 
-/* Call std::quick_exit from a non-main thread.  */
-void non_main_thread (void)
+void
+__attribute__ ((noinline, noclone))
+optimization_barrier (A &)
 {
-  (void)a1;
+}
+
+/* Call std::quick_exit from a non-main thread.  */
+void *
+non_main_thread (void *)
+{
+  optimization_barrier (a1);
   /* The C++11 standard in 18.5.12 says:
      "Objects shall not be destroyed as a result of calling
       quick_exit."
      If quick_exit calls the destructors the test aborts.  */
-  std::quick_exit (0);
+  quick_exit (0);
 }
 
 static int
 do_test()
 {
-  (void)a2;
-  std::thread th (non_main_thread);
-  th.join ();
-  return 0;
+  optimization_barrier (a2);
+  pthread_t thr;
+  int ret = pthread_create (&thr, NULL, non_main_thread, NULL);
+  if (ret != 0)
+    {
+      errno = ret;
+      printf ("error: pthread_create: %m\n");
+    }
+  pthread_join (thr, NULL);
+  return 1;
 }
 
 #define TEST_FUNCTION do_test ()
