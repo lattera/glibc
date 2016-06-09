@@ -1,3 +1,8 @@
+2016-06-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/memcopy.h: New file.
+	* sysdeps/x86_64/wordcopy.c: Likewise.
+
 2016-06-09  Florian Weimer  <fweimer@redhat.com>
 
 	Prevent GCC 6 <cstdlib> from including /usr/include/stdlib.h.
