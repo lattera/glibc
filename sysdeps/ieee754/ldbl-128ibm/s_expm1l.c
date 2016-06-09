@@ -106,8 +106,8 @@ __expm1l (long double x)
       /* Infinity (which must be negative infinity). */
       if (((ix - 0x7ff00000) | lx) == 0)
 	return -1.0L;
-      /* NaN. No invalid exception. */
-      return x;
+      /* NaN.  Invalid exception if signaling.  */
+      return x + x;
     }
 
   /* expm1(+- 0) = +- 0.  */
