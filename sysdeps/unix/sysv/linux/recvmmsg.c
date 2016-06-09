@@ -16,10 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <sys/socket.h>
-#include <socketcall.h>
+
 #include <sysdep-cancel.h>
-#include <shlib-compat.h>
+#include <sys/syscall.h>
+#include <kernel-features.h>
 
 /* Do not use the recvmmsg syscall on socketcall architectures unless
    it was added at the same time as the socketcall support or can be
@@ -30,39 +32,31 @@
 # undef __NR_recvmmsg
 #endif
 
-static inline void
-adjust_mmsghdr (struct mmsghdr *vmessages, unsigned int vlen)
+#ifdef __NR_recvmmsg
+int
+recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
+	  struct timespec *tmo)
 {
-#if __WORDSIZE == 64
-  /* POSIX specifies that both msghdr::msg_iovlen and msghdr::msg_controllen
-     to be int and socklen_t respectively.  However Linux defines it as
-     both size_t.  So for 64-bit it requires some adjustments by zeroing
-     the pad fields.  */
-  struct mmsghdr *vmhdr = vmessages;
-  for (unsigned int i = 0; i != 0; i--, vmhdr++)
-    {
-      vmhdr->msg_hdr.__glibc_reserved1 = 0;
-      vmhdr->msg_hdr.__glibc_reserved2 = 0;
-    }
-#endif
+  return SYSCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
 }
+#elif defined __NR_socketcall
+# include <socketcall.h>
+# ifdef __ASSUME_RECVMMSG_SOCKETCALL
+int
+recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
+	  struct timespec *tmo)
+{
+  return SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
+}
+# else
+static int have_recvmmsg;
 
 int
-__recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen,
-		 int flags, struct timespec *tmo)
+recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
+	  struct timespec *tmo)
 {
-#ifdef __NR_recvmmsg
-  adjust_mmsghdr (vmessages, vlen);
-  return SYSCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
-#elif defined __NR_socketcall
-# ifdef __ASSUME_RECVMMSG_SOCKETCALL
-  adjust_mmsghdr (vmessages, vlen);
-  return SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
-# else
-  static int have_recvmmsg;
   if (__glibc_likely (have_recvmmsg >= 0))
     {
-      adjust_mmsghdr (vmessages, vlen);
       int ret = SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags,
 				   tmo);
       /* The kernel returns -EINVAL for unknown socket operations.
@@ -92,19 +86,8 @@ __recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen,
     }
   __set_errno (ENOSYS);
   return -1;
+}
 # endif /* __ASSUME_RECVMMSG_SOCKETCALL  */
 #else
-# define STUB 1
-  __set_errno (ENOSYS);
-  return -1;
-#endif
-}
-#ifdef STUB
-stub_warning (recvmmsg)
-#endif
-
-#if __WORDSIZE == 64
-versioned_symbol (libc, __recvmmsg, recvmmsg, GLIBC_2_24);
-#else
-weak_alias (__recvmmsg, recvmmsg)
+# include <socket/recvmmsg.c>
 #endif

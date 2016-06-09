@@ -90,8 +90,6 @@ GLIBC_2.23 fts64_read F
 GLIBC_2.23 fts64_set F
 GLIBC_2.24 GLIBC_2.24 A
 GLIBC_2.24 quick_exit F
-GLIBC_2.24 recvmsg F
-GLIBC_2.24 sendmsg F
 GLIBC_2.4 GLIBC_2.4 A
 GLIBC_2.4 _Exit F
 GLIBC_2.4 _IO_2_1_stderr_ D 0xa0

@@ -85,9 +85,6 @@ libc {
     #errlist-compat	140
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
-  GLIBC_2.24 {
-    recvmsg; sendmsg;
-  }
   GLIBC_PRIVATE {
     __libc_alpha_cache_shape;
   }

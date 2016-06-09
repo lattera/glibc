@@ -27,8 +27,6 @@
 #include <stddef.h>
 
 #include <sys/types.h>
-#include <endian.h>
-#include <bits/wordsize.h>
 
 /* Type for length arguments in socket calls.  */
 #ifndef __socklen_t_defined
@@ -252,32 +250,13 @@ struct msghdr
     socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
-#if __WORDSIZE == 64
-# if __BYTE_ORDER == __BIG_ENDIAN
-    int __glibc_reserved1;	/* Pad to adjust Linux size to POSIX defined
-				   size for msg_iovlen.  */
-    int msg_iovlen;		/* Number of elements in the vector.  */
-# else
-    int msg_iovlen;
-    int __glibc_reserved1;
-# endif
-#else
-    int msg_iovlen;
-#endif
+    size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     void *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
-#if __WORDSIZE == 64
-# if __BYTE_ORDER == __BIG_ENDIAN
-    int __glibc_reserved2;	/* Pad to adjust Linux size to POSIX defined
-				   size for msg_controllen.  */
-    socklen_t msg_controllen;	/* Ancillary data buffer length.  */
-# else
-    socklen_t msg_controllen;
-    int __glibc_reserved2;
-# endif
-#else
-    socklen_t msg_controllen;
-#endif
+    size_t msg_controllen;	/* Ancillary data buffer length.
+				   !! The type should be socklen_t but the
+				   definition of the kernel is incompatible
+				   with this.  */
 
     int msg_flags;		/* Flags on received message.  */
   };
@@ -285,19 +264,11 @@ struct msghdr
 /* Structure used for storage of ancillary data object information.  */
 struct cmsghdr
   {
-#if __WORDSIZE == 64
-# if __BYTE_ORDER == __BIG_ENDIAN
-    int __glibc_reserved1;	/* Pad toadjust Linux size to POSIX defined
-				   size for cmsg_len.  */
-    socklen_t cmsg_len;		/* Length of data in cmsg_data plus length
-				   of cmsghdr structure.  */
-# else
-    socklen_t cmsg_len;
-    int __glibc_reserved1;
-# endif
-#else
-    socklen_t cmsg_len;
-#endif
+    size_t cmsg_len;		/* Length of data in cmsg_data plus length
+				   of cmsghdr structure.
+				   !! The type should be socklen_t but the
+				   definition of the kernel is incompatible
+				   with this.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
 #if (!defined __STRICT_ANSI__ && __GNUC__ >= 2) || __STDC_VERSION__ >= 199901L

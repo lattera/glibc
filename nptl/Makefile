@@ -115,7 +115,7 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      ptw-pread ptw-pread64 ptw-pwrite ptw-pwrite64 \
 		      ptw-tcdrain ptw-wait ptw-waitpid ptw-msgrcv ptw-msgsnd \
 		      ptw-sigwait ptw-sigsuspend \
-		      ptw-oldrecvmsg ptw-oldsendmsg \
+		      ptw-recvmsg ptw-sendmsg \
 		      pt-raise pt-system \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \
@@ -207,8 +207,8 @@ CFLAGS-accept.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendto.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-connect.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-oldrecvmsg.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-oldsendmsg.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recvmsg.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sendmsg.c = -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-pt-system.c = -fexceptions
 

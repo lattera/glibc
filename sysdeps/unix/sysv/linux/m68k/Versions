@@ -40,9 +40,6 @@ libc {
   GLIBC_2.12 {
     __m68k_read_tp;
   }
-  GLIBC_2.24 {
-    recvmsg; sendmsg;
-  }
   GLIBC_PRIVATE {
     __vdso_atomic_cmpxchg_32; __vdso_atomic_barrier;
   }

@@ -2,7 +2,4 @@ libc {
   GLIBC_2.18 {
     fallocate64;
   }
-  GLIBC_2.24 {
-    recvmsg; sendmsg;
-  }
 }

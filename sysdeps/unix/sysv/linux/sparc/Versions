@@ -29,9 +29,6 @@ libc {
 
     __getshmlba;
   }
-  GLIBC_2.24 {
-    recvmsg; sendmsg;
-  }
 }
 
 libpthread {

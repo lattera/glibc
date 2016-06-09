@@ -8,9 +8,6 @@ libc {
     # w*
     wordexp;
   }
-  GLIBC_2.24 {
-    recvmsg; sendmsg;
-  }
 }
 
 librt {

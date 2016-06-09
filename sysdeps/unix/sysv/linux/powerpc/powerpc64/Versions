@@ -22,9 +22,6 @@ libc {
   GLIBC_2.17 {
     __ppc_get_timebase_freq;
   }
-  GLIBC_2.24 {
-    recvmsg; sendmsg;
-  }
 }
 
 librt {

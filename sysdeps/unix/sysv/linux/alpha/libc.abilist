@@ -2000,10 +2000,6 @@ GLIBC_2.23 fts64_read F
 GLIBC_2.23 fts64_set F
 GLIBC_2.24 GLIBC_2.24 A
 GLIBC_2.24 quick_exit F
-GLIBC_2.24 recvmmsg F
-GLIBC_2.24 recvmsg F
-GLIBC_2.24 sendmmsg F
-GLIBC_2.24 sendmsg F
 GLIBC_2.3 GLIBC_2.3 A
 GLIBC_2.3 __ctype_b_loc F
 GLIBC_2.3 __ctype_tolower_loc F

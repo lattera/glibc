@@ -49,9 +49,6 @@ libc {
   GLIBC_2.11 {
     fallocate64;
   }
-  GLIBC_2.24 {
-    recvmsg; sendmsg;
-  }
 }
 
 libutil {

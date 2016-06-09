@@ -6,9 +6,6 @@ libc {
 
     modify_ldt;
   }
-  GLIBC_2.24 {
-    recvmsg; sendmsg;
-  }
 }
 
 librt {
