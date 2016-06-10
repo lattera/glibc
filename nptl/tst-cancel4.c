@@ -19,23 +19,21 @@
 /* NOTE: this tests functionality beyond POSIX.  POSIX does not allow
    exit to be called more than once.  */
 
-#include <errno.h>
-#include <fcntl.h>
-#include <limits.h>
-#include <pthread.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <termios.h>
-#include <unistd.h>
-#include <sys/mman.h>
-#include <sys/msg.h>
-#include <sys/poll.h>
-#include <sys/select.h>
+#include <sys/types.h>
 #include <sys/socket.h>
-#include <sys/uio.h>
 #include <sys/un.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <unistd.h>
+#include <errno.h>
+#include <pthread.h>
+#include <fcntl.h>
+#include <termios.h>
+#include <sys/mman.h>
+#include <sys/poll.h>
 #include <sys/wait.h>
 
 #include "pthreadP.h"
@@ -62,61 +60,16 @@
    aio_suspend() is tested in tst-cancel17.
 
    clock_nanosleep() is tested in tst-cancel18.
+
+   Linux sendmmsg and recvmmsg are checked in tst-cancel4_1.c and
+   tst-cancel4_2.c respectively.
 */
 
-/* Pipe descriptors.  */
-static int fds[2];
-
-/* Temporary file descriptor, to be closed after each round.  */
-static int tempfd = -1;
-static int tempfd2 = -1;
-/* Name of temporary file to be removed after each round.  */
-static char *tempfname;
-/* Temporary message queue.  */
-static int tempmsg = -1;
-
-/* Often used barrier for two threads.  */
-static pthread_barrier_t b2;
-
+#include "tst-cancel4-common.h"
 
 #ifndef IPC_ADDVAL
 # define IPC_ADDVAL 0
 #endif
-
-/* The WRITE_BUFFER_SIZE value needs to be chosen such that if we set
-   the socket send buffer size to '1', a write of this size on that
-   socket will block.
-
-   The Linux kernel imposes a minimum send socket buffer size which
-   has changed over the years.  As of Linux 3.10 the value is:
-
-     2 * (2048 + SKB_DATA_ALIGN(sizeof(struct sk_buff)))
-
-   which is attempting to make sure that with standard MTUs,
-   TCP can always queue up at least 2 full sized packets.
-
-   Furthermore, there is logic in the socket send paths that
-   will allow one more packet (of any size) to be queued up as
-   long as some socket buffer space remains.   Blocking only
-   occurs when we try to queue up a new packet and the send
-   buffer space has already been fully consumed.
-
-   Therefore we must set this value to the largest possible value of
-   the formula above (and since it depends upon the size of "struct
-   sk_buff", it is dependent upon machine word size etc.) plus some
-   slack space.  */
-
-#define WRITE_BUFFER_SIZE 16384
-
-/* Cleanup handling test.  */
-static int cl_called;
-
-static void
-cl (void *arg)
-{
-  ++cl_called;
-}
-
 
 
 static void *
@@ -1391,7 +1344,6 @@ tf_recvmsg (void *arg)
   exit (1);
 }
 
-
 static void *
 tf_open (void *arg)
 {
@@ -2196,15 +2148,8 @@ tf_msgsnd (void *arg)
 }
 
 
-static struct
+struct cancel_tests tests[] =
 {
-  const char *name;
-  void *(*tf) (void *);
-  int nb;
-  int only_early;
-} tests[] =
-{
-#define ADD_TEST(name, nbar, early) { #name, tf_##name, nbar, early }
   ADD_TEST (read, 2, 0),
   ADD_TEST (readv, 2, 0),
   ADD_TEST (select, 2, 0),
@@ -2249,242 +2194,4 @@ static struct
 };
 #define ntest_tf (sizeof (tests) / sizeof (tests[0]))
 
-
-static int
-do_test (void)
-{
-  int val;
-  socklen_t len;
-
-  if (socketpair (AF_UNIX, SOCK_STREAM, PF_UNIX, fds) != 0)
-    {
-      perror ("socketpair");
-      exit (1);
-    }
-
-  val = 1;
-  len = sizeof(val);
-  setsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, sizeof(val));
-  if (getsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, &len) < 0)
-    {
-      perror ("getsockopt");
-      exit (1);
-    }
-  if (val >= WRITE_BUFFER_SIZE)
-    {
-      puts ("minimum write buffer size too large");
-      exit (1);
-    }
-  setsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, sizeof(val));
-
-  int result = 0;
-  size_t cnt;
-  for (cnt = 0; cnt < ntest_tf; ++cnt)
-    {
-      if (tests[cnt].only_early)
-	continue;
-
-      if (pthread_barrier_init (&b2, NULL, tests[cnt].nb) != 0)
-	{
-	  puts ("b2 init failed");
-	  exit (1);
-	}
-
-      /* Reset the counter for the cleanup handler.  */
-      cl_called = 0;
-
-      pthread_t th;
-      if (pthread_create (&th, NULL, tests[cnt].tf, NULL) != 0)
-	{
-	  printf ("create for '%s' test failed\n", tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-
-      int r = pthread_barrier_wait (&b2);
-      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-	{
-	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
-	  result = 1;
-	  continue;
-	}
-
-      struct timespec  ts = { .tv_sec = 0, .tv_nsec = 100000000 };
-      while (nanosleep (&ts, &ts) != 0)
-	continue;
-
-      if (pthread_cancel (th) != 0)
-	{
-	  printf ("cancel for '%s' failed\n", tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-
-      void *status;
-      if (pthread_join (th, &status) != 0)
-	{
-	  printf ("join for '%s' failed\n", tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-      if (status != PTHREAD_CANCELED)
-	{
-	  printf ("thread for '%s' not canceled\n", tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-
-      if (pthread_barrier_destroy (&b2) != 0)
-	{
-	  puts ("barrier_destroy failed");
-	  result = 1;
-	  continue;
-	}
-
-      if (cl_called == 0)
-	{
-	  printf ("cleanup handler not called for '%s'\n", tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-      if (cl_called > 1)
-	{
-	  printf ("cleanup handler called more than once for '%s'\n",
-		  tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-
-      printf ("in-time cancel test of '%s' successful\n", tests[cnt].name);
-
-      if (tempfd != -1)
-	{
-	  close (tempfd);
-	  tempfd = -1;
-	}
-      if (tempfd2 != -1)
-	{
-	  close (tempfd2);
-	  tempfd2 = -1;
-	}
-      if (tempfname != NULL)
-	{
-	  unlink (tempfname);
-	  free (tempfname);
-	  tempfname = NULL;
-	}
-      if (tempmsg != -1)
-	{
-	  msgctl (tempmsg, IPC_RMID, NULL);
-	  tempmsg = -1;
-	}
-    }
-
-  for (cnt = 0; cnt < ntest_tf; ++cnt)
-    {
-      if (pthread_barrier_init (&b2, NULL, tests[cnt].nb) != 0)
-	{
-	  puts ("b2 init failed");
-	  exit (1);
-	}
-
-      /* Reset the counter for the cleanup handler.  */
-      cl_called = 0;
-
-      pthread_t th;
-      if (pthread_create (&th, NULL, tests[cnt].tf, (void *) 1l) != 0)
-	{
-	  printf ("create for '%s' test failed\n", tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-
-      int r = pthread_barrier_wait (&b2);
-      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-	{
-	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
-	  result = 1;
-	  continue;
-	}
-
-      if (pthread_cancel (th) != 0)
-	{
-	  printf ("cancel for '%s' failed\n", tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-
-      r = pthread_barrier_wait (&b2);
-      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-	{
-	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
-	  result = 1;
-	  continue;
-	}
-
-      void *status;
-      if (pthread_join (th, &status) != 0)
-	{
-	  printf ("join for '%s' failed\n", tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-      if (status != PTHREAD_CANCELED)
-	{
-	  printf ("thread for '%s' not canceled\n", tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-
-      if (pthread_barrier_destroy (&b2) != 0)
-	{
-	  puts ("barrier_destroy failed");
-	  result = 1;
-	  continue;
-	}
-
-      if (cl_called == 0)
-	{
-	  printf ("cleanup handler not called for '%s'\n", tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-      if (cl_called > 1)
-	{
-	  printf ("cleanup handler called more than once for '%s'\n",
-		  tests[cnt].name);
-	  result = 1;
-	  continue;
-	}
-
-      printf ("early cancel test of '%s' successful\n", tests[cnt].name);
-
-      if (tempfd != -1)
-	{
-	  close (tempfd);
-	  tempfd = -1;
-	}
-      if (tempfd2 != -1)
-	{
-	  close (tempfd2);
-	  tempfd2 = -1;
-	}
-      if (tempfname != NULL)
-	{
-	  unlink (tempfname);
-	  free (tempfname);
-	  tempfname = NULL;
-	}
-      if (tempmsg != -1)
-	{
-	  msgctl (tempmsg, IPC_RMID, NULL);
-	  tempmsg = -1;
-	}
-    }
-
-  return result;
-}
-
-#define TIMEOUT 60
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include "tst-cancel4-common.c"

@@ -1,3 +1,13 @@
+2016-06-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/Makefile (test): Add tst-cancel4_1 and tst-cancel4_2.
+	* nptl/tst-cancel4-common.c: New file.
+	* nptl/tst-cancel4-common.h: Likewise.
+	* nptl/tst-cancel4.c: Move common definitions to
+	tst-cancel4-common.{c,h} file.
+	* nptl/tst-cancel4_1.c: New test.
+	* nptl/tst-cancel4_2.c: New test.
+
 2016-06-13  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20248]
