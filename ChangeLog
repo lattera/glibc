@@ -1,3 +1,45 @@
+2016-10-21  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/fenv_private.h:
+	(_FPU_MASK_ALL): Rename to...
+	(_FPU_ALL_TRAPS): New macro representing ISA VE OE UE ZE and
+	XE FPSCR bits.
+
+	(_FPU_MASK_RN): New macro to mask out ISA RN bits in FPSCR.
+
+	(_FPU_MASK_ROUNDING): Rename to...
+	(_FPU_MASK_NOT_RN_NI): New macro to mask out all but ISA RN and
+	NI bits.
+
+	(_FPU_MASK_EXCEPT_ROUND): Rename to...
+	(_FPU_MASK_TRAPS_RN): New macro to mask out exception enable
+	bits and rounding bits.
+
+	(__libc_feholdbits_ppc): New inline function to mask, set,
+	and pontentially clear FSPCR bits, and change MSR[FE] bits.
+	(libc_feholdexcept_ppc): Redefine using __libc_feholdbits_ppc.
+	(libc_feholdexcept_setround_ppc): Likewise.
+
+	(__libc_femergeenv_ppc): New function to dynamically mask both
+	old and new FP environments and merge.
+	(libc_fesetenv_ppc): Redefine in terms of __libc_femergeenv_ppc.
+	(libc_feresetround_ppc): Likewise.
+	(libc_feupdateenv_test_ppc): Likewise.
+	(libc_feupdateenv_ppc): Likewise.
+
+	(libc_feholdsetround_ppc_ctx): Fix usage to include masking
+	of ISA RN bits, and update macro names.
+	(libc_feholdexcept_setround_ppc_ctx): Remove as it is
+	effectively the same as the previously mentioned function.
+
+	(libc_feupdateenv_ppc_ctx): Replace libc_feupdatedenv_test_ppc
+	usage with fe_resetround_ppc.
+
+	(libc_feholdexcept_setround_ctx): Remove, this doesn't appear
+	to be used.
+	(libc_feholdexcept_setround_ctxf): Likewise.
+	(libc_feholdexcept_setround_ctxl): Likewise.
+
 2016-10-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20715]
