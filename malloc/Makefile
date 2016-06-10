@@ -115,6 +115,20 @@ endif
 
 include ../Rules
 
+# Support references to removed APIs.  We use #pragma GCC poison in
+# <stdc-predef.h> to make it difficult to reference them.  For select
+# source files, we work around this poisoning by defining a macro on
+# the command line (which is processed before <stdc-predef.h> and can
+# therefore use tokens poisoned later).
+poisoned_apis = \
+  __malloc_initialize_hook \
+
+unpoisoned_api_defines := \
+  $(foreach sym,$(poisoned_apis), \
+    $(patsubst %,-Dold%, $(sym))=$(sym))
+CPPFLAGS-malloc.c = $(unpoisoned_api_defines)
+CPPFLAGS-mcheck-init.c = $(unpoisoned_api_defines)
+
 CFLAGS-mcheck-init.c = $(PIC-ccflag)
 CFLAGS-obstack.c = $(uses-callbacks)
 

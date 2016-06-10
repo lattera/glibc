@@ -1,3 +1,23 @@
+2016-06-10  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19564]
+	Remove __malloc_initialize_hook from the API.
+	* malloc/malloc.h (__malloc_initialize_hook): Remove.
+	* include/stdc-predef.h (__malloc_initialize_hook): Poison with
+	#pragma GCC poison.
+	* malloc/malloc-hooks.h: New file.
+	* malloc/arena.c (ptmalloc_init): Use old__malloc_initialize_hook.
+	* malloc/malloc.c (HAVE_MALLOC_INIT_HOOK): New.
+	(old__malloc_initialize_hook): Rename from
+	__malloc_initialize_hook to evade poisoning.  Turn into compat
+	symbol.
+        * malloc/mcheck-init.c (old__malloc_initialize_hook): Rename from
+	__malloc_initialize_hook.
+	* malloc/Makefile (poisoned_apis, unpoisoned_api_defines): New.
+	(mallo.c, mcheck-init.c): Compile with unpoisoned symbol.
+	* manual/memory.texi (Hooks for Malloc): Remove
+	__malloc_initialize_hook.  Adjust hook example.
+
 2016-06-09  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20235]

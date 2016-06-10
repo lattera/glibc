@@ -1370,19 +1370,6 @@ should make sure to restore all the hooks to their previous value.  When
 coming back from the recursive call, all the hooks should be resaved
 since a hook might modify itself.
 
-@comment malloc.h
-@comment GNU
-@defvar __malloc_initialize_hook
-The value of this variable is a pointer to a function that is called
-once when the malloc implementation is initialized.  This is a weak
-variable, so it can be overridden in the application with a definition
-like the following:
-
-@smallexample
-void (*@var{__malloc_initialize_hook}) (void) = my_init_hook;
-@end smallexample
-@end defvar
-
 An issue to look out for is the time at which the malloc hook functions
 can be safely installed.  If the hook functions call the malloc-related
 functions recursively, it is necessary that malloc has already properly
@@ -1392,11 +1379,6 @@ complete malloc implementation of their own, it is vital that the hooks
 are assigned to @emph{before} the very first @code{malloc} call has
 completed, because otherwise a chunk obtained from the ordinary,
 un-hooked malloc may later be handed to @code{__free_hook}, for example.
-
-In both cases, the problem can be solved by setting up the hooks from
-within a user-defined function pointed to by
-@code{__malloc_initialize_hook}---then the hooks will be set up safely
-at the right time.
 
 Here is an example showing how to use @code{__malloc_hook} and
 @code{__free_hook} properly.  It installs a function that prints out
@@ -1413,11 +1395,8 @@ static void my_init_hook (void);
 static void *my_malloc_hook (size_t, const void *);
 static void my_free_hook (void*, const void *);
 
-/* Override initializing hook from the C library. */
-void (*__malloc_initialize_hook) (void) = my_init_hook;
-
 static void
-my_init_hook (void)
+my_init (void)
 @{
   old_malloc_hook = __malloc_hook;
   old_free_hook = __free_hook;
@@ -1465,6 +1444,7 @@ my_free_hook (void *ptr, const void *caller)
 
 main ()
 @{
+  my_init ();
   @dots{}
 @}
 @end smallexample

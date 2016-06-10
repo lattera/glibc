@@ -27,4 +27,4 @@ turn_on_mcheck (void)
   mcheck (NULL);
 }
 
-void (*__malloc_initialize_hook) (void) = turn_on_mcheck;
+void (*old__malloc_initialize_hook) (void) = turn_on_mcheck;

@@ -33,6 +33,9 @@ Version 2.24
   group: files [SUCCESS=merge] nis
   Implemented by Stephen Gallagher (Red Hat).
 
+* The deprecated __malloc_initialize_hook variable has been removed from the
+  API.
+
 Security related changes:
 
 * An unnecessary stack copy in _nss_dns_getnetbyname_r was removed.  It
