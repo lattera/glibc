@@ -1,3 +1,9 @@
+2016-06-09  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #20215]
+	* misc/sys/cdefs.h [__GNUC_PREREQ (3,2)]: Undef __always_inline first.
+	[!__GNUC_PREREQ (3,2)]: Likewise.
+
 2016-06-10  Adhemerval Zanela  <adhemerval.zanella@linaro.org>
 
 	* conform/data/sys/socket.h-data (msghdr.msg_iovlen): Add xfail-.
