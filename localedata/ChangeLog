@@ -1,3 +1,13 @@
+2016-06-11  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #19133]
+	* locales/pt_BR (abday): Make first letter lowercase in each element.
+	(abmon): Likewise.
+	* locales/pt_PT (abday): Likewise.
+	(day): Likewise.
+	(abmon): Likewise.
+	(mon): Likewise.
+
 2016-06-11  Eduardo Trápani  <eduardo@esperanto.org.uy>
 
 	[BZ #16190]
