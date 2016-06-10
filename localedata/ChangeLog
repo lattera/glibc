@@ -1,3 +1,8 @@
+2016-06-16  Simion Onea  <simionea@gmail.com>
+
+	[BZ #18911]
+	* locales/ro_RO (day): Change U0163 to U021B in Tuesday.
+
 2016-06-11  Paras pradhan  <pradhanparas@gmail.com>
 
 	[BZ #1170]
