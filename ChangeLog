@@ -1,3 +1,11 @@
+2016-06-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20240]
+	* math/Makefile (CFLAGS-s_modf.c): New variable.
+	(CFLAGS-s_modff.c): Likewise.
+	(CFLAGS-s_modfl.c): Likewise.
+	* math/libm-test.inc (modf_test_data): Add sNaN tests.
+
 2016-06-09  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #20215]

@@ -302,6 +302,12 @@ ifneq ($(long-double-fcts),yes)
 math-CPPFLAGS += -DNO_LONG_DOUBLE -D_Mlong_double_=double
 endif
 
+# These files quiet sNaNs in a way that is optimized away without
+# -fsignaling-nans.
+CFLAGS-s_modf.c += -fsignaling-nans
+CFLAGS-s_modff.c += -fsignaling-nans
+CFLAGS-s_modfl.c += -fsignaling-nans
+
 # The -lieee library is actually an object file.
 # The module just defines the _LIB_VERSION_ variable.
 # It's not a library to make sure it is linked in instead of s_lib_version.o.

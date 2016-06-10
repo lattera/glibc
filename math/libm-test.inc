@@ -9759,6 +9759,8 @@ static const struct test_fF_f1_data modf_test_data[] =
     TEST_fF_f1 (modf, minus_infty, minus_zero, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fF_f1 (modf, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fF_f1 (modf, -qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fF_f1 (modf, snan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_fF_f1 (modf, -snan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
     TEST_fF_f1 (modf, 0, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fF_f1 (modf, minus_zero, minus_zero, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fF_f1 (modf, min_value, min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
