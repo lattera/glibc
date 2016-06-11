@@ -1,3 +1,14 @@
+2016-06-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20222]
+	* libio/iofopncook.c (_IO_cookie_read): Demangle callback pointer.
+	(_IO_cookie_write): Likewise.
+	(_IO_cookie_seek): Likewise.
+	(_IO_cookie_close): Likewise.
+	(_IO_old_cookie_seek): Likewise.
+	(set_callbacks): New function.
+	(_IO_cookie_init): Call set_callbacks to copy callbacks.
+
 2016-06-11  Marko Myllynen  <myllynen@redhat.com>
 
 	* locale/programs/localedef.c (oldstyle_tables): Remove.
