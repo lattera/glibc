@@ -36,8 +36,9 @@ Version 2.24
 * The deprecated __malloc_initialize_hook variable has been removed from the
   API.
 
-* The long unused --old-style flag has been removed.  It hasn't done anything
-  in over 16 years.  Scripts using this flag can safely drop it.
+* The long unused localedef --old-style option has been removed.  It hasn't
+  done anything in over 16 years.  Scripts using this option can safely
+  drop it.
 
 Security related changes:
 
