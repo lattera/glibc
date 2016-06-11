@@ -1,3 +1,9 @@
+2016-06-11  Eduardo Trápani  <eduardo@esperanto.org.uy>
+
+	[BZ #16190]
+	* locales/eo: New locale.
+	* SUPPORTED (SUPPORTED-LOCALES): Add eo/UTF-8.
+
 2016-05-07  Neskie Manuel  <neskiem@gmail.com>
 
 	[BZ #12143]
