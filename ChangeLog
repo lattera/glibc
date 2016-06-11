@@ -1,5 +1,10 @@
 2016-06-11  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/malloc.c (musable): Return correct size for dumped fake
+	mmapped chunk.
+
+2016-06-11  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #20222]
 	* libio/iofopncook.c (_IO_cookie_read): Demangle callback pointer.
 	(_IO_cookie_write): Likewise.

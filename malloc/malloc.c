@@ -4622,7 +4622,12 @@ musable (void *mem)
         return malloc_check_get_size (p);
 
       if (chunk_is_mmapped (p))
-        return chunksize (p) - 2 * SIZE_SZ;
+	{
+	  if (DUMPED_MAIN_ARENA_CHUNK (p))
+	    return chunksize (p) - SIZE_SZ;
+	  else
+	    return chunksize (p) - 2 * SIZE_SZ;
+	}
       else if (inuse (p))
         return chunksize (p) - SIZE_SZ;
     }
