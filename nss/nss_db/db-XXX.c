@@ -77,7 +77,7 @@ CONCAT(_nss_db_set,ENTNAME) (int stayopen)
       keep_db |= stayopen;
 
       /* Reset the sequential index.  */
-      entidx  = (const char *) state.header + state.header->valstroffset;
+      entidx  = NULL;
     }
 
   __libc_lock_unlock (lock);
@@ -253,7 +253,13 @@ CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
 	  H_ERRNO_SET (NETDB_INTERNAL);
 	  goto out;
 	}
+      entidx = NULL;
     }
+
+  /* Start from the beginning if freshly initialized or reset
+     requested by set*ent.  */
+  if (entidx == NULL)
+    entidx = (const char *) state.header + state.header->valstroffset;
 
   status = NSS_STATUS_UNAVAIL;
   if (state.header != MAP_FAILED)
