@@ -20,7 +20,7 @@ static char *pages;
 static void
 do_prepare (void)
 {
-  pages = malloc (getpagesize () * 2);
+  pages = xmalloc (getpagesize () * 2);
   memset (pages, 'a', getpagesize ());
   memset (pages + getpagesize (), 'b', getpagesize ());
 

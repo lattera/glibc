@@ -26,8 +26,12 @@
 #include <wchar.h>
 #include <sys/resource.h>
 
-
 static const char inputfile[] = "../iconvdata/testdata/ISO-8859-1";
+
+static int do_test(void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 static int
 do_bz17916 (void)
@@ -39,7 +43,7 @@ do_bz17916 (void)
   setrlimit (RLIMIT_STACK, &rl);
 
   const size_t sz = 2 * 1024 * 1024;
-  char *ccs = malloc (sz);
+  char *ccs = xmalloc (sz);
   strcpy (ccs, "r,ccs=");
   memset (ccs + 6, 'A', sz - 6 - 1);
   ccs[sz - 1] = '\0';
@@ -85,6 +89,3 @@ do_test (void)
 
   return do_bz17916 ();
 }
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

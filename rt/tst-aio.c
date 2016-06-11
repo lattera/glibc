@@ -51,7 +51,7 @@ do_prepare (int argc, char *argv[])
   size_t name_len;
 
   name_len = strlen (test_dir);
-  name = malloc (name_len + sizeof ("/aioXXXXXX"));
+  name = xmalloc (name_len + sizeof ("/aioXXXXXX"));
   mempcpy (mempcpy (name, test_dir, name_len),
 	   "/aioXXXXXX", sizeof ("/aioXXXXXX"));
 

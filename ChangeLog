@@ -1,3 +1,18 @@
+2016-06-11  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #19670]
+	[BZ #19672]
+
+	* io/test-lfs.c (do_prepare): Use xmalloc.
+	* io/tst-fcntl.c (do_prepare): Likewise.
+	* libio/tst-fopenloc.c (do_bz17916): Likewise.
+	* libio/tst-mmap2-eofsync.c (do_prepare): Likewise.
+	* posix/tst-exec.c (do_prepare): Likewise.
+	* posix/tst-pathconf.c (prepare): Likewise.
+	* posix/tst-spawn.c (do_prepare): Likewise.
+	* posix/tst-truncate.c (do_prepare): Likewise.
+	* rt/tst-aio.c (do_prepare): Likewise.
+
 2016-06-11  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20237]
@@ -214,7 +229,7 @@
 	new entries in auto-propagate mode.
 	* nscd/grpcache.c (cache_addgr): Likewise.
 
-2016-06-09  Paul Pluzhnikov  <ppluzhnikov@gmail.com>
+2016-06-09  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* test-skeleton.c (oom_error, xmalloc, xcalloc, xrealloc):
 	New functions.

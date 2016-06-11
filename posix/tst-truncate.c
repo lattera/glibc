@@ -59,7 +59,7 @@ do_prepare (int argc, char *argv[])
 #define FNAME2(s) "/" STRINGIFY(s) "XXXXXX"
 
    name_len = strlen (test_dir);
-   name = malloc (name_len + sizeof (FNAME));
+   name = xmalloc (name_len + sizeof (FNAME));
    mempcpy (mempcpy (name, test_dir, name_len), FNAME, sizeof (FNAME));
    add_temp_file (name);
 

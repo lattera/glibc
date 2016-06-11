@@ -41,12 +41,7 @@ prepare (void)
   static const char dir_name[] = "/tst-pathconf.XXXXXX";
 
   size_t dirbuflen = test_dir_len + sizeof (dir_name);
-  dirbuf = malloc (dirbuflen);
-  if (dirbuf == NULL)
-    {
-      puts ("Out of memory");
-      exit (1);
-    }
+  dirbuf = xmalloc (dirbuflen);
 
   snprintf (dirbuf, dirbuflen, "%s%s", test_dir, dir_name);
   if (mkdtemp (dirbuf) == NULL)
@@ -73,7 +68,7 @@ do_test (void)
   static const char *fifo_name = "some-fifo";
 
   size_t filenamelen = strlen (dirbuf) + strlen (fifo_name) + 2;
-  char *filename = malloc (filenamelen);
+  char *filename = xmalloc (filenamelen);
 
   snprintf (filename, filenamelen, "%s/%s", dirbuf, fifo_name);
 

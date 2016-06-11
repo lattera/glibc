@@ -59,12 +59,12 @@ do_prepare (int argc, char *argv[])
    size_t name_len;
 
    name_len = strlen (test_dir);
-   name1 = malloc (name_len + sizeof ("/execXXXXXX"));
+   name1 = xmalloc (name_len + sizeof ("/execXXXXXX"));
    mempcpy (mempcpy (name1, test_dir, name_len),
 	    "/execXXXXXX", sizeof ("/execXXXXXX"));
    add_temp_file (name1);
 
-   name2 = malloc (name_len + sizeof ("/execXXXXXX"));
+   name2 = xmalloc (name_len + sizeof ("/execXXXXXX"));
    mempcpy (mempcpy (name2, test_dir, name_len),
 	    "/execXXXXXX", sizeof ("/execXXXXXX"));
    add_temp_file (name2);

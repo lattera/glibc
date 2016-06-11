@@ -63,17 +63,17 @@ do_prepare (int argc, char *argv[])
    size_t name_len;
 
    name_len = strlen (test_dir);
-   name1 = (char *) malloc (name_len + sizeof ("/spawnXXXXXX"));
+   name1 = (char *) xmalloc (name_len + sizeof ("/spawnXXXXXX"));
    mempcpy (mempcpy (name1, test_dir, name_len),
 	    "/spawnXXXXXX", sizeof ("/spawnXXXXXX"));
    add_temp_file (name1);
 
-   name2 = (char *) malloc (name_len + sizeof ("/spawnXXXXXX"));
+   name2 = (char *) xmalloc (name_len + sizeof ("/spawnXXXXXX"));
    mempcpy (mempcpy (name2, test_dir, name_len),
 	    "/spawnXXXXXX", sizeof ("/spawnXXXXXX"));
    add_temp_file (name2);
 
-   name3 = (char *) malloc (name_len + sizeof ("/spawnXXXXXX"));
+   name3 = (char *) xmalloc (name_len + sizeof ("/spawnXXXXXX"));
    mempcpy (mempcpy (name3, test_dir, name_len),
 	    "/spawnXXXXXX", sizeof ("/spawnXXXXXX"));
    add_temp_file (name3);

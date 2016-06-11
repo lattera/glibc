@@ -62,7 +62,7 @@ do_prepare (int argc, char *argv[])
   size_t name_len;
 
   name_len = strlen (test_dir);
-  name = malloc (name_len + sizeof ("/utmpXXXXXX"));
+  name = xmalloc (name_len + sizeof ("/utmpXXXXXX"));
   mempcpy (mempcpy (name, test_dir, name_len),
 	   "/utmpXXXXXX", sizeof ("/utmpXXXXXX"));
 

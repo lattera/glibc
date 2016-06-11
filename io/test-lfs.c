@@ -53,7 +53,7 @@ do_prepare (int argc, char *argv[])
   struct rlimit64 rlim;
 
   name_len = strlen (test_dir);
-  name = malloc (name_len + sizeof ("/lfsXXXXXX"));
+  name = xmalloc (name_len + sizeof ("/lfsXXXXXX"));
   mempcpy (mempcpy (name, test_dir, name_len),
            "/lfsXXXXXX", sizeof ("/lfsXXXXXX"));
 
