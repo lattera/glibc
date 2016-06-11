@@ -7,11 +7,13 @@
 	* io/tst-fcntl.c (do_prepare): Likewise.
 	* libio/tst-fopenloc.c (do_bz17916): Likewise.
 	* libio/tst-mmap2-eofsync.c (do_prepare): Likewise.
+	* login/tst-utmp.c (do_prepare): Likewise.
 	* posix/tst-exec.c (do_prepare): Likewise.
 	* posix/tst-pathconf.c (prepare): Likewise.
 	* posix/tst-spawn.c (do_prepare): Likewise.
 	* posix/tst-truncate.c (do_prepare): Likewise.
 	* rt/tst-aio.c (do_prepare): Likewise.
+	* rt/tst-aio64.c (do_prepare): Likewise.
 
 2016-06-11  Florian Weimer  <fweimer@redhat.com>
 
