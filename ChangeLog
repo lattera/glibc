@@ -1,3 +1,18 @@
+2016-06-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20250]
+	* sysdeps/i386/fpu/s_frexpl.S (__frexpl): Add non-finite input to
+	itself.
+	* sysdeps/ieee754/dbl-64/s_frexp.c (__frexp): Add non-finite or
+	zero input to itself.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_frexp.c (__frexp):
+	Likewise.
+	* sysdeps/ieee754/flt-32/s_frexpf.c (__frexpf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_frexpl.c (__frexpl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_frexpl.c (__frexpl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_frexpl.c (__frexpl): Likewise.
+	* math/libm-test.inc (frexp_test_data): Add sNaN tests.
+
 2016-06-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/Makefile (test): Add tst-cancel4_1 and tst-cancel4_2.

@@ -50,7 +50,7 @@ ENTRY (__frexpl)
 	jz	1f
 	xorl	%ecx, %ecx
 	cmpl	$0x7fff, %eax
-	je	1f
+	je	3f
 
 	cmpl	$0, %eax
 	jne	2f
@@ -80,6 +80,13 @@ ENTRY (__frexpl)
 	fldt	VAL0(%esp)
 	movl	%ecx, (%eax)
 
+	ret
+
+	/* Infinity or NaN; ensure signaling NaNs are quieted.  */
+3:	movl	EXPP(%esp), %eax
+	fldt	VAL0(%esp)
+	fadd	%st
+	movl	%ecx, (%eax)
 	ret
 END (__frexpl)
 weak_alias (__frexpl, frexpl)

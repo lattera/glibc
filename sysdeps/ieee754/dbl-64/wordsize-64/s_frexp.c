@@ -55,6 +55,9 @@ __frexp (double x, int *eptr)
       ix = (ix & INT64_C (0x800fffffffffffff)) | INT64_C (0x3fe0000000000000);
       INSERT_WORDS64 (x, ix);
     }
+  else
+    /* Quiet signaling NaNs.  */
+    x += x;
 
   *eptr = e;
   return x;

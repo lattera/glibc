@@ -46,7 +46,7 @@ long double __frexpl(long double x, int *eptr)
 	GET_LDOUBLE_WORDS(se,hx,lx,x);
 	ix = 0x7fff&se;
 	*eptr = 0;
-	if(ix==0x7fff||((ix|hx|lx)==0)) return x;	/* 0,inf,nan */
+	if(ix==0x7fff||((ix|hx|lx)==0)) return x + x;	/* 0,inf,nan */
 	if (ix==0x0000) {		/* subnormal */
 	    x *= two65;
 	    GET_LDOUBLE_EXP(se,x);

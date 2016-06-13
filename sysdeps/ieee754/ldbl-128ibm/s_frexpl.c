@@ -47,7 +47,7 @@ long double __frexpl(long double x, int *eptr)
     {
       /* 0,inf,nan.  */
       *eptr = expon;
-      return x;
+      return x + x;
     }
   expon = ix >> 52;
   if (expon == 0)

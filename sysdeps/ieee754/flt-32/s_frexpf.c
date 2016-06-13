@@ -29,7 +29,7 @@ float __frexpf(float x, int *eptr)
 	GET_FLOAT_WORD(hx,x);
 	ix = 0x7fffffff&hx;
 	*eptr = 0;
-	if(ix>=0x7f800000||(ix==0)) return x;	/* 0,inf,nan */
+	if(ix>=0x7f800000||(ix==0)) return x + x;	/* 0,inf,nan */
 	if (ix<0x00800000) {		/* subnormal */
 	    x *= two25;
 	    GET_FLOAT_WORD(hx,x);

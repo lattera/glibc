@@ -7760,6 +7760,8 @@ static const struct test_f_f1_data frexp_test_data[] =
     TEST_fI_f1 (frexp, minus_infty, minus_infty, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fI_f1 (frexp, qnan_value, qnan_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fI_f1 (frexp, -qnan_value, qnan_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fI_f1 (frexp, snan_value, qnan_value, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_fI_f1 (frexp, -snan_value, qnan_value, IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
 
     TEST_fI_f1 (frexp, 0.0, 0.0, 0.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fI_f1 (frexp, minus_zero, minus_zero, 0.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
