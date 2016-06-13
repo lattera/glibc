@@ -1,3 +1,12 @@
+2016-06-13  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20248]
+	* debug/tst-longjmp_chk2.c (pass): Use volatile sig_atomic_t.
+	(write_message): New function.
+	(stackoverflow_handler): Call it instead of printf, to avoid
+	excessive stack usage by printf.
+	(do_test): Restore SIGSEGV, SIGBUS default handlers.
+
 2016-06-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/pthread_mutex_init.c [__ASSUME_FUTEX_LOCK_PI]
