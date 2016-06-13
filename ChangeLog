@@ -1,5 +1,12 @@
 2016-06-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (cimag_test_data): Add sNaN tests.
+	(conj_test_data): Likewise.
+	(copysign_test_data): Likewise.
+	(creal_test_data): Likewise.
+	(fma_test_data): Likewise.
+	(fmod_test_data): Likewise.
+
 	[BZ #20250]
 	* sysdeps/i386/fpu/s_frexpl.S (__frexpl): Add non-finite input to
 	itself.
