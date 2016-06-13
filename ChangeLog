@@ -1,5 +1,11 @@
 2016-06-13  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20252]
+	* sysdeps/ieee754/dbl-64/e_atan2.c (__ieee754_atan2): Add both
+	arguments when second argument is a NaN.
+	* math/libm-test.inc (atan2_test_data): Add sNaN tests and more
+	qNaN tests.
+
 	* math/libm-test.inc (cimag_test_data): Add sNaN tests.
 	(conj_test_data): Likewise.
 	(copysign_test_data): Likewise.

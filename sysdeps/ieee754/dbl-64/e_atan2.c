@@ -91,7 +91,7 @@ __ieee754_atan2 (double y, double x)
   if ((ux & 0x7ff00000) == 0x7ff00000)
     {
       if (((ux & 0x000fffff) | dx) != 0x00000000)
-	return x + x;
+	return x + y;
     }
   num.d = y;
   uy = num.i[HIGH_HALF];
