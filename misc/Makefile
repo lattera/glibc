@@ -77,7 +77,8 @@ gpl2lgpl := error.c error.h
 
 tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
 	 tst-error1 tst-pselect tst-insremque tst-mntent2 bug-hsearch1 \
-	 tst-mntent-blank-corrupt tst-mntent-blank-passno bug18240
+	 tst-mntent-blank-corrupt tst-mntent-blank-passno bug18240 \
+	 tst-preadvwritev tst-preadvwritev64
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-error1-mem.out
 endif

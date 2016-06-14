@@ -27,8 +27,7 @@
 ssize_t
 preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
 {
-  return SYSCALL_CANCEL (preadv64, fd, vector, count,
-			 __ALIGNMENT_ARG SYSCALL_LL64 (offset));
+  return SYSCALL_CANCEL (preadv64, fd, vector, count, LO_HI_LONG (offset));
 }
 #else
 static ssize_t __atomic_preadv64_replacement (int, const struct iovec *,
@@ -38,7 +37,7 @@ preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
 {
 #ifdef __NR_preadv64
   ssize_t result = SYSCALL_CANCEL (preadv64, fd, vector, count,
-				   __ALIGNMENT_ARG SYSCALL_LL64 (offset));
+				   LO_HI_LONG (offset));
   if (result >= 0 || errno != ENOSYS)
     return result;
 #endif

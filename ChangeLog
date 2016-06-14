@@ -1,3 +1,15 @@
+2016-06-21 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* misc/Makefile (tests): Add tst-preadvwritev and tst-preadvwritev64.
+	* misc/tst-preadvwritev.c: New file.
+	* misc/tst-preadvwritev64.c: Likewise.
+	* sysdeps/unix/sysv/linux/preadv.c (preadv): Remove SYSCALL_LL{64}
+	usage.
+	* sysdeps/unix/sysv/linux/preadv64.c (preadv64): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev.c (pwritev): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64.c (pwritev64): Likewise.
+	* sysdeps/unix/sysv/linux/sysdep.h (LO_HI_LONG): New macro.
+
 2016-06-20  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	[BZ #19654]

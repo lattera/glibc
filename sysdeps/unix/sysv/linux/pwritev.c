@@ -29,8 +29,7 @@
 ssize_t
 pwritev (int fd, const struct iovec *vector, int count, off_t offset)
 {
-  return SYSCALL_CANCEL (pwritev, fd, vector, count,
-			 __ALIGNMENT_ARG SYSCALL_LL (offset));
+  return SYSCALL_CANCEL (pwritev, fd, vector, count, LO_HI_LONG (offset));
 }
 # else
 static ssize_t __atomic_pwritev_replacement (int, const struct iovec *,
@@ -40,7 +39,7 @@ pwritev (int fd, const struct iovec *vector, int count, off_t offset)
 {
 #  ifdef __NR_pwritev
   ssize_t result = SYSCALL_CANCEL (pwritev, fd, vector, count,
-				   __ALIGNMENT_ARG SYSCALL_LL (offset));
+				   LO_HI_LONG (offset));
   if (result >= 0 || errno != ENOSYS)
     return result;
 #  endif
