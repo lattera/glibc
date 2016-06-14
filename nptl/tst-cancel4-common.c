@@ -44,6 +44,12 @@ do_test (void)
     }
   setsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, sizeof(val));
 
+  if (mktemp (fifoname) == NULL)
+    {
+      printf ("%s: cannot generate temp file name: %m\n", __func__);
+      exit (1);
+    }
+
   int result = 0;
   size_t cnt;
   for (cnt = 0; cnt < ntest_tf; ++cnt)
@@ -71,7 +77,7 @@ do_test (void)
       int r = pthread_barrier_wait (&b2);
       if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
 	{
-	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  printf ("%s: barrier_wait failed\n", __func__);
 	  result = 1;
 	  continue;
 	}
@@ -169,7 +175,7 @@ do_test (void)
       int r = pthread_barrier_wait (&b2);
       if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
 	{
-	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  printf ("%s: barrier_wait failed\n", __func__);
 	  result = 1;
 	  continue;
 	}
@@ -184,7 +190,7 @@ do_test (void)
       r = pthread_barrier_wait (&b2);
       if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
 	{
-	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  printf ("%s: barrier_wait failed\n", __func__);
 	  result = 1;
 	  continue;
 	}

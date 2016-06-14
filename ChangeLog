@@ -1,3 +1,13 @@
+2016-07-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/tst-cancel4-common.c (do_test): Add temporary fifo creation.
+	* nptl/tst-cancel4-common.h (fifoname): New variable.
+	(fifofd): Likewise.
+	(cl_fifo): New function.
+	* nptl/tst-cancel4.c (tf_sigpause): Replace SIGCANCEL usage by
+	SIGINT.
+	(tf_open): Add early cancel test.
+
 2016-07-04  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/Makefile (CFLAGS-mcount.c): Define.

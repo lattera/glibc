@@ -36,8 +36,6 @@
 #include <sys/poll.h>
 #include <sys/wait.h>
 
-#include "pthreadP.h"
-
 
 /* Since STREAMS are not supported in the standard Linux kernel and
    there we don't advertise STREAMS as supported is no need to test
@@ -66,6 +64,7 @@
 */
 
 #include "tst-cancel4-common.h"
+
 
 #ifndef IPC_ADDVAL
 # define IPC_ADDVAL 0
@@ -734,13 +733,7 @@ tf_sigpause (void *arg)
 
   pthread_cleanup_push (cl, NULL);
 
-#ifdef SIGCANCEL
-  /* Just for fun block the cancellation signal.  We need to use
-     __xpg_sigpause since otherwise we will get the BSD version.  */
-  __xpg_sigpause (SIGCANCEL);
-#else
-  pause ();
-#endif
+  sigpause (sigmask (SIGINT));
 
   pthread_cleanup_pop (0);
 
@@ -1348,27 +1341,34 @@ static void *
 tf_open (void *arg)
 {
   if (arg == NULL)
-    // XXX If somebody can provide a portable test case in which open()
-    // blocks we can enable this test to run in both rounds.
-    abort ();
+    {
+      fifofd = mkfifo (fifoname, S_IWUSR | S_IRUSR);
+      if (fifofd == -1)
+	{
+	  printf ("%s: mkfifo failed: %m\n", __func__);
+	  exit (1);
+	}
+    }
+  else
+    {
+      int r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed: %m\n", __func__);
+	  exit (1);
+	}
+    }
 
   int r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      printf ("%s: 2nd barrier_wait failed: %m\n", __func__);
       exit (1);
     }
 
-  r = pthread_barrier_wait (&b2);
-  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
-      exit (1);
-    }
+  pthread_cleanup_push (cl_fifo, NULL);
 
-  pthread_cleanup_push (cl, NULL);
-
-  open ("Makefile", O_RDONLY);
+  open (arg ? "Makefile" : fifoname, O_RDONLY);
 
   pthread_cleanup_pop (0);
 

@@ -67,6 +67,22 @@ cl (void *arg)
   ++cl_called;
 }
 
+/* Named pipe used to check for blocking open.  It should be closed
+   after the cancellation handling.  */
+static char fifoname[] = "/tmp/tst-cancel4-fifo-XXXXXX";
+static int fifofd;
+
+static void
+__attribute__ ((used))
+cl_fifo (void *arg)
+{
+  ++cl_called;
+
+  unlink (fifoname);
+  close (fifofd);
+  fifofd = -1;
+}
+
 struct cancel_tests
 {
   const char *name;
