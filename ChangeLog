@@ -1,3 +1,25 @@
+2016-06-14  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
+	(sysdep_routines): Add P8 and PPC64 strcasecmp/strncasecmp targets.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Add entries for P8 and PPC64
+	ifunc'ed strcasecmp/strncasecmp.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp-power7.S:
+	[EALIGN]: Removed.
+	[END]: Likewise.
+	[__strcasecmp]: Define instead of the above to control symbol name.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp.c: Add IFUNC selector
+	for __strcasecmp_power8.
+	* sysdeps/powerpc/powerpc64/multiarch/strncase.c: Add IFUNC selector
+	for __strncasecmp_power8.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp-power8.S: New File.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncase-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncase-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strcasecmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strncase.S: Likewise.
+
 2016-06-13  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20252]

@@ -1,5 +1,5 @@
-/* Multiple versions of strncasecmp
-   Copyright (C) 2013-2016 Free Software Foundation, Inc.
+/* Optimized strcasecmp implementation for POWER8.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
-#include <shlib-compat.h>
-#include "init-arch.h"
+#include <sysdep.h>
 
-extern __typeof (__strncasecmp) __libc_strncasecmp;
+#define __strcasecmp __strcasecmp_power8
+#undef weak_alias
+#define weak_alias(name, alias)
 
-extern __typeof (__strncasecmp) __strncasecmp_ppc attribute_hidden;
-extern __typeof (__strncasecmp) __strncasecmp_power7 attribute_hidden;
-extern __typeof (__strncasecmp) __strncasecmp_power8 attribute_hidden;
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(name)
 
-libc_ifunc (__libc_strncasecmp,
-	     (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-             ? __strncasecmp_power8:
-	     (hwcap & PPC_FEATURE_HAS_VSX)
-             ? __strncasecmp_power7
-             : __strncasecmp_ppc);
-
-weak_alias (__libc_strncasecmp, strncasecmp)
+#include <sysdeps/powerpc/powerpc64/power8/strcasecmp.S>
