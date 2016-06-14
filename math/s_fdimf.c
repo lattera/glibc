@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <math.h>
+#include <math_private.h>
 
 float
 __fdimf (float x, float y)
@@ -26,7 +27,7 @@ __fdimf (float x, float y)
   if (islessequal (x, y))
     return 0.0f;
 
-  float r = x - y;
+  float r = math_narrow_eval (x - y);
   if (isinf (r) && !isinf (x) && !isinf (y))
     __set_errno (ERANGE);
 

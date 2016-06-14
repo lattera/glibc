@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <math.h>
+#include <math_private.h>
 
 double
 __fdim (double x, double y)
@@ -26,7 +27,7 @@ __fdim (double x, double y)
   if (islessequal (x, y))
     return 0.0;
 
-  double r = x - y;
+  double r = math_narrow_eval (x - y);
   if (isinf (r) && !isinf (x) && !isinf (y))
     __set_errno (ERANGE);
 

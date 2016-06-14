@@ -1,5 +1,26 @@
 2016-06-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #6796]
+	[BZ #20255]
+	[BZ #20256]
+	* math/s_fdim.c: Include <math_private.h>.
+	(__fdim): Use math_narrow_eval on result.
+	* math/s_fdimf.c: Include <math_private.h>.
+	(__fdimf): Use math_narrow_eval on result.
+	* sysdeps/i386/fpu/s_fdim.S: Remove file.
+	* sysdeps/i386/fpu/s_fdimf.S: Likewise.
+	* sysdeps/i386/fpu/s_fdiml.S: Likewise.
+	* sysdeps/i386/i686/fpu/s_fdim.S: Likewise.
+	* sysdeps/i386/i686/fpu/s_fdimf.S: Likewise.
+	* sysdeps/i386/i686/fpu/s_fdiml.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fdim.c: Likewise.
+	* sysdeps/powerpc/fpu/s_fdimf.c: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_fdim.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_fdim.c: Likewise.
+	* sysdeps/x86_64/fpu/s_fdiml.S: Likewise.
+	* math/libm-test.inc (fdim_test_data): Expect errno setting on
+	overflow.  Add sNaN tests.
+
 	* math/s_fdim.c (__fdim): Use islessequal and isinf instead of
 	fpclassify.
 	* math/s_fdimf.c (__fdimf): Likewise.
