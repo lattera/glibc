@@ -1,7 +1,6 @@
-/* Return the complex absolute value of float complex value.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Helper macros for long double variants of type generic functions of libm.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,12 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <complex.h>
-#include <math.h>
+#ifndef _MATH_TYPE_MACROS_LDOUBLE
+#define _MATH_TYPE_MACROS_LDOUBLE
 
-float
-__cabsf (float _Complex z)
-{
-  return __hypotf (__real__ z, __imag__ z);
-}
-weak_alias (__cabsf, cabsf)
+#define M_LIT(c) c ## L
+#define M_MLIT(c) c ## l
+#define M_PFX LDBL
+#define M_SUF(c) c ## l
+#define FLOAT long double
+#define CFLOAT _Complex long double
+
+/* Supply the generic macros.  */
+#include <math-type-macros.h>
+
+#endif

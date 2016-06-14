@@ -1,4 +1,4 @@
-/* Return complex conjugate of complex float value.
+/* Return complex conjugate of complex float type.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -19,9 +19,14 @@
 
 #include <complex.h>
 
-float _Complex
-__conjf (float _Complex z)
+CFLOAT
+M_DECL_FUNC (__conj) (CFLOAT z)
 {
   return ~z;
 }
-weak_alias (__conjf, conjf)
+
+declare_mgen_alias (__conj, conj)
+
+#if M_LIBM_NEED_COMPAT (conj)
+declare_mgen_libm_compat (__conj, conj)
+#endif

@@ -1,7 +1,6 @@
-/* Return complex conjugate of complex long double value.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Overrides for ldbl-opt versioning for long double types.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,11 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <complex.h>
+#ifndef _MATH_TYPE_MACROS_LDOUBLE
 
-long double _Complex
-__conjl (long double _Complex z)
-{
-  return ~z;
-}
-weak_alias (__conjl, conjl)
+#include <math_ldbl_opt.h>
+
+/* Use properly versioned symbols for long double on platforms where
+   it was not always a distinct type.  */
+#define declare_mgen_alias(from, to) \
+  long_double_symbol (libm, from ## l, to ## l);
+
+#include_next <math-type-macros-ldouble.h>
+#endif

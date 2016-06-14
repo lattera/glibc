@@ -1,4 +1,4 @@
-/* Return imaginary part of complex double value.
+/* Return imaginary part of complex float type.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -19,13 +19,14 @@
 
 #include <complex.h>
 
-double
-__cimag (double _Complex z)
+FLOAT
+M_DECL_FUNC (__cimag) (CFLOAT z)
 {
   return __imag__ z;
 }
-weak_alias (__cimag, cimag)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__cimag, __cimagl)
-weak_alias (__cimag, cimagl)
+
+declare_mgen_alias (__cimag, cimag)
+
+#if M_LIBM_NEED_COMPAT (cimag)
+declare_mgen_libm_compat (__cimag, cimag)
 #endif

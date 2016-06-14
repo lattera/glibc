@@ -1,4 +1,4 @@
-/* Return real part of complex float value.
+/* Return real part of complex float type.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -19,9 +19,14 @@
 
 #include <complex.h>
 
-float
-__crealf (float _Complex z)
+FLOAT
+M_DECL_FUNC (__creal) (CFLOAT z)
 {
   return __real__ z;
 }
-weak_alias (__crealf, crealf)
+
+declare_mgen_alias (__creal, creal)
+
+#if M_LIBM_NEED_COMPAT (creal)
+declare_mgen_libm_compat (__creal, creal)
+#endif

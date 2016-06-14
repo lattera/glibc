@@ -1,3 +1,53 @@
+2016-08-17  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile: (gen-libm-templates.stmp): New rule.
+	(libm-calls): Move carg conj cimag and cabs into ...
+	(gen-libm-calls): New variable.
+	(generated): Inform Make objects from gen-libm-calls
+	may be generated.
+
+	* sysdeps/generic/math-type-macros.h: New file.
+	* sysdeps/generic/math-type-macros-float.h: Likewise.
+	* sysdeps/generic/math-type-macros-double.h: Likewise.
+	* sysdeps/generic/math-type-macros-ldouble.h: Likewise.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h: Likewise.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-ldouble.h: Likewise.
+
+	* math/cabs.c: Refactor into
+	* math/cabs_template.c: new file.
+	* math/cabsf.c: Removed.
+	* math/cabsl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cabsf.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cabsl.c: Removed.
+
+	* math/carg.c: Refactor into
+	* math/carg_template.c: new file.
+	* math/cargf.c: Removed.
+	* math/cargl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cargf.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cargl.c: Removed.
+
+	* math/conj.c: Refactor into
+	* math/conj_template.c: new file.
+	* math/conjf.c: Removed.
+	* math/conjl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/conjf.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/conjl.c: Removed.
+
+	* math/cimag.c: Refactor into
+	* math/cimag_template.c: new file.
+	* math/cimagf.c: Removed.
+	* math/cimagl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cimagf.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cimagl.c: Removed.
+
+	* math/cimag.c: Refactor into
+	* math/cimag_template.c: new file.
+	* math/cimagf.c: Removed.
+	* math/cimagl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cimagf.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cimagl.c: Removed.
+
 2016-08-17  Florian Weimer  <fweimer@redhat.com>
 
 	Reduce time to expected nptl/tst-once5 failure.
