@@ -23,19 +23,11 @@
 long double
 __fdiml (long double x, long double y)
 {
-  int clsx = fpclassify (x);
-  int clsy = fpclassify (y);
-
-  if (clsx == FP_NAN || clsy == FP_NAN)
-    /* Raise invalid flag for signaling but not quiet NaN.  */
-    return x - y;
-
-  if (x <= y)
+  if (islessequal (x, y))
     return 0.0f;
 
   long double r = x - y;
-  if (fpclassify (r) == FP_INFINITE
-      && clsx != FP_INFINITE && clsy != FP_INFINITE)
+  if (isinf (r) && !isinf (x) && !isinf (y))
     __set_errno (ERANGE);
 
   return r;

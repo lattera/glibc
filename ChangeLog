@@ -1,3 +1,10 @@
+2016-06-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/s_fdim.c (__fdim): Use islessequal and isinf instead of
+	fpclassify.
+	* math/s_fdimf.c (__fdimf): Likewise.
+	* math/s_fdiml.c (__fdiml): Likewise.
+
 2016-06-14  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
