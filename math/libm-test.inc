@@ -7203,6 +7203,9 @@ static const struct test_ff_f_data fdim_test_data[] =
     TEST_ff_f (fdim, 0, 9, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (fdim, -9, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (fdim, 0, -9, 9, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#if TEST_COND_binary64
+    TEST_ff_f (fdim, 1.0, -0x1.0000000000001p-53, 1.0, INEXACT_EXCEPTION|ERRNO_UNCHANGED, 0x1.0000000000001p0, INEXACT_EXCEPTION|ERRNO_UNCHANGED, 1.0, INEXACT_EXCEPTION|ERRNO_UNCHANGED, 0x1.0000000000001p0, INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
     TEST_ff_f (fdim, min_subnorm_value, min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (fdim, -min_subnorm_value, -min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (fdim, min_subnorm_value, -min_subnorm_value, 2*min_subnorm_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),

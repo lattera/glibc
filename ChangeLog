@@ -1,5 +1,9 @@
 2016-06-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20255]
+	* sysdeps/i386/fpu/s_fdim.c: New file.  Based on math/s_fdim.c.
+	* math/libm-test.inc (fdim_test_data): Add another test.
+
 	[BZ #6796]
 	[BZ #20255]
 	[BZ #20256]
