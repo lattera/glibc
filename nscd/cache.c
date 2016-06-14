@@ -178,12 +178,12 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
   assert ((newp->packet & BLOCK_ALIGN_M1) == 0);
 
   /* Put the new entry in the first position.  */
-  do
-    newp->next = table->head->array[hash];
-  while (atomic_compare_and_exchange_bool_rel (&table->head->array[hash],
-					       (ref_t) ((char *) newp
-							- table->data),
-					       (ref_t) newp->next));
+  /* TODO Review concurrency.  Use atomic_exchange_release.  */
+  newp->next = atomic_load_relaxed (&table->head->array[hash]);
+  while (!atomic_compare_exchange_weak_release (&table->head->array[hash],
+						(ref_t *) &newp->next,
+						(ref_t) ((char *) newp
+							 - table->data)));
 
   /* Update the statistics.  */
   if (packet->notfound)

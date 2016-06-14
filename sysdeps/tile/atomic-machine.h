@@ -55,11 +55,6 @@ typedef uintmax_t uatomic_max_t;
     atomic_full_barrier ();                                     \
     atomic_compare_and_exchange_val_acq ((mem), (n), (o));      \
   })
-#define atomic_compare_and_exchange_bool_rel(mem, n, o)         \
-  ({                                                            \
-    atomic_full_barrier ();                                     \
-    atomic_compare_and_exchange_bool_acq ((mem), (n), (o));     \
-  })
 #define atomic_exchange_rel(mem, n)                             \
   ({                                                            \
     atomic_full_barrier ();                                     \

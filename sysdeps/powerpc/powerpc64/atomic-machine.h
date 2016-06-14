@@ -58,23 +58,6 @@
   __tmp != 0;								      \
 })
 
-#define __arch_compare_and_exchange_bool_32_rel(mem, newval, oldval) \
-({									      \
-  unsigned int __tmp, __tmp2;						      \
-  __asm __volatile (__ARCH_REL_INSTR "\n"				      \
-		    "   clrldi  %1,%1,32\n"				      \
-		    "1:	lwarx	%0,0,%2" MUTEX_HINT_REL "\n"		      \
-		    "	subf.	%0,%1,%0\n"				      \
-		    "	bne	2f\n"					      \
-		    "	stwcx.	%4,0,%2\n"				      \
-		    "	bne-	1b\n"					      \
-		    "2:	"						      \
-		    : "=&r" (__tmp), "=r" (__tmp2)			      \
-		    : "b" (mem), "1" (oldval), "r" (newval)		      \
-		    : "cr0", "memory");					      \
-  __tmp != 0;								      \
-})
-
 /*
  * Only powerpc64 processors support Load doubleword and reserve index (ldarx)
  * and Store doubleword conditional indexed (stdcx) instructions.  So here
@@ -90,22 +73,6 @@
 		    "	stdcx.	%3,0,%1\n"				      \
 		    "	bne-	1b\n"					      \
 		    "2:	" __ARCH_ACQ_INSTR				      \
-		    : "=&r" (__tmp)					      \
-		    : "b" (mem), "r" (oldval), "r" (newval)		      \
-		    : "cr0", "memory");					      \
-  __tmp != 0;								      \
-})
-
-#define __arch_compare_and_exchange_bool_64_rel(mem, newval, oldval) \
-({									      \
-  unsigned long	__tmp;							      \
-  __asm __volatile (__ARCH_REL_INSTR "\n"				      \
-		    "1:	ldarx	%0,0,%1" MUTEX_HINT_REL "\n"		      \
-		    "	subf.	%0,%2,%0\n"				      \
-		    "	bne	2f\n"					      \
-		    "	stdcx.	%3,0,%1\n"				      \
-		    "	bne-	1b\n"					      \
-		    "2:	"						      \
 		    : "=&r" (__tmp)					      \
 		    : "b" (mem), "r" (oldval), "r" (newval)		      \
 		    : "cr0", "memory");					      \

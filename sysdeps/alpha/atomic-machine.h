@@ -210,10 +210,6 @@ typedef uintmax_t uatomic_max_t;
 
 /* Compare and exchange with "release" semantics, ie barrier before.  */
 
-#define atomic_compare_and_exchange_bool_rel(mem, new, old)	\
-  __atomic_bool_bysize (__arch_compare_and_exchange_bool, int,	\
-		        mem, new, old, __MB, "")
-
 #define atomic_compare_and_exchange_val_rel(mem, new, old)	\
   __atomic_val_bysize (__arch_compare_and_exchange_val, int,	\
 		       mem, new, old, __MB, "")

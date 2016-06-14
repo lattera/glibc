@@ -237,15 +237,24 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
       int private = (robust
 		     ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
 		     : PTHREAD_MUTEX_PSHARED (mutex));
-      if ((mutex->__data.__lock & FUTEX_WAITERS) != 0
-	  || atomic_compare_and_exchange_bool_rel (&mutex->__data.__lock, 0,
-						   THREAD_GETMEM (THREAD_SELF,
-								  tid)))
+      /* Unlock the mutex using a CAS unless there are futex waiters or our
+	 TID is not the value of __lock anymore, in which case we let the
+	 kernel take care of the situation.  Use release MO in the CAS to
+	 synchronize with acquire MO in lock acquisitions.  */
+      int l = atomic_load_relaxed (&mutex->__data.__lock);
+      do
 	{
-	  INTERNAL_SYSCALL_DECL (__err);
-	  INTERNAL_SYSCALL (futex, __err, 2, &mutex->__data.__lock,
-			    __lll_private_flag (FUTEX_UNLOCK_PI, private));
+	  if (((l & FUTEX_WAITERS) != 0)
+	      || (l != THREAD_GETMEM (THREAD_SELF, tid)))
+	    {
+	      INTERNAL_SYSCALL_DECL (__err);
+	      INTERNAL_SYSCALL (futex, __err, 2, &mutex->__data.__lock,
+				__lll_private_flag (FUTEX_UNLOCK_PI, private));
+	      break;
+	    }
 	}
+      while (!atomic_compare_exchange_weak_release (&mutex->__data.__lock,
+						    &l, 0));
 
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
       break;
@@ -278,15 +287,16 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 	/* One less user.  */
 	--mutex->__data.__nusers;
 
-      /* Unlock.  */
-      int newval, oldval;
+      /* Unlock.  Use release MO in the CAS to synchronize with acquire MO in
+	 lock acquisitions.  */
+      int newval;
+      int oldval = atomic_load_relaxed (&mutex->__data.__lock);
       do
 	{
-	  oldval = mutex->__data.__lock;
 	  newval = oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK;
 	}
-      while (atomic_compare_and_exchange_bool_rel (&mutex->__data.__lock,
-						   newval, oldval));
+      while (!atomic_compare_exchange_weak_release (&mutex->__data.__lock,
+						    &oldval, newval));
 
       if ((oldval & ~PTHREAD_MUTEX_PRIO_CEILING_MASK) > 1)
 	lll_futex_wake (&mutex->__data.__lock, 1,

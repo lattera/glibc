@@ -1,3 +1,33 @@
+2016-06-24  Torvald Riegel  <triegel@redhat.com>
+
+	* nscd/cache.c (cache_add): Use new C11-like atomic operation instead
+	of atomic_compare_and_exchange_bool_rel.
+	* nptl/pthread_mutex_unlock.c (__pthread_mutex_unlock_full): Likewise.
+	* include/atomic.h (atomic_compare_and_exchange_bool_rel,
+	catomic_compare_and_exchange_bool_rel): Remove.
+	* sysdeps/aarch64/atomic-machine.h
+	(atomic_compare_and_exchange_bool_rel): Likewise.
+	* sysdeps/alpha/atomic-machine.h
+	(atomic_compare_and_exchange_bool_rel): Likewise.
+	* sysdeps/arm/atomic-machine.h
+	(atomic_compare_and_exchange_bool_rel): Likewise.
+	* sysdeps/mips/atomic-machine.h
+	(atomic_compare_and_exchange_bool_rel): Likewise.
+	* sysdeps/microblaze/atomic-machine.h
+	( __arch_compare_and_exchange_bool_8_rel,
+	__arch_compare_and_exchange_bool_16_rel): Likewise.
+	* sysdeps/powerpc/atomic-machine.h
+	( __arch_compare_and_exchange_bool_8_rel,
+	__arch_compare_and_exchange_bool_16_rel): Likewise.
+	* sysdeps/powerpc/powerpc32/atomic-machine.h
+	( __arch_compare_and_exchange_bool_32_rel,
+	__arch_compare_and_exchange_bool_64_rel): Likewise.
+	* sysdeps/powerpc/powerpc64/atomic-machine.h
+	( __arch_compare_and_exchange_bool_32_rel,
+	__arch_compare_and_exchange_bool_64_rel): Likewise.
+	* sysdeps/tile/atomic-machine.h
+	(atomic_compare_and_exchange_bool_rel): Likewise.
+
 2016-06-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20296]

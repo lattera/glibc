@@ -159,23 +159,6 @@
 #endif
 
 
-#ifndef catomic_compare_and_exchange_bool_rel
-# ifndef atomic_compare_and_exchange_bool_rel
-#  define catomic_compare_and_exchange_bool_rel(mem, newval, oldval)	      \
-  catomic_compare_and_exchange_bool_acq (mem, newval, oldval)
-# else
-#  define catomic_compare_and_exchange_bool_rel(mem, newval, oldval)	      \
-  atomic_compare_and_exchange_bool_rel (mem, newval, oldval)
-# endif
-#endif
-
-
-#ifndef atomic_compare_and_exchange_bool_rel
-# define atomic_compare_and_exchange_bool_rel(mem, newval, oldval) \
-  atomic_compare_and_exchange_bool_acq (mem, newval, oldval)
-#endif
-
-
 /* Store NEWVALUE in *MEM and return the old value.  */
 #ifndef atomic_exchange_acq
 # define atomic_exchange_acq(mem, newvalue) \
