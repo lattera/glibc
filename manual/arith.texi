@@ -1702,6 +1702,46 @@ These functions are identical to the corresponding versions of
 double}.
 @end deftypefun
 
+@comment math.h
+@comment GNU
+@deftypefun double nextup (double @var{x})
+@comment math.h
+@comment GNU
+@deftypefunx float nextupf (float @var{x})
+@comment math.h
+@comment GNU
+@deftypefunx {long double} nextupl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+The @code{nextup} function returns the next representable neighbor of @var{x}
+in the direction of positive infinity.  If @var{x} is the smallest negative
+subnormal number in the type of @var{x} the function returns @code{-0}.  If
+@math{@var{x} = @code{0}} the function returns the smallest positive subnormal
+number in the type of @var{x}.  If @var{x} is NaN, NaN is returned.
+If @var{x} is @math{+@infinity{}}, @math{+@infinity{}} is returned.
+@code{nextup} is based on TS 18661 and currently enabled as a GNU extension.
+@code{nextup} never raises an exception except for signaling NaNs.
+@end deftypefun
+
+@comment math.h
+@comment GNU
+@deftypefun double nextdown (double @var{x})
+@comment math.h
+@comment GNU
+@deftypefunx float nextdownf (float @var{x})
+@comment math.h
+@comment GNU
+@deftypefunx {long double} nextdownl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+The @code{nextdown} function returns the next representable neighbor of @var{x}
+in the direction of negative infinity.  If @var{x} is the smallest positive
+subnormal number in the type of @var{x} the function returns @code{+0}.  If
+@math{@var{x} = @code{0}} the function returns the smallest negative subnormal
+number in the type of @var{x}.  If @var{x} is NaN, NaN is returned.
+If @var{x} is @math{-@infinity{}}, @math{-@infinity{}} is returned.
+@code{nextdown} is based on TS 18661 and currently enabled as a GNU extension.
+@code{nextdown} never raises an exception except for signaling NaNs.
+@end deftypefun
+
 @cindex NaN
 @comment math.h
 @comment ISO

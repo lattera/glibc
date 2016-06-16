@@ -392,6 +392,13 @@
    prevailing rounding mode.  */
 #define rint(Val) __TGMATH_UNARY_REAL_ONLY (Val, rint)
 
+#ifdef __USE_GNU
+/* Return X - epsilon.  */
+# define nextdown(Val) __TGMATH_UNARY_REAL_ONLY (Val, nextdown)
+/* Return X + epsilon.  */
+# define nextup(Val) __TGMATH_UNARY_REAL_ONLY (Val, nextup)
+#endif
+
 /* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
 #define nextafter(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, nextafter)
 #define nexttoward(Val1, Val2) \

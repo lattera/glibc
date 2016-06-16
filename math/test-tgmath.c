@@ -50,7 +50,7 @@ int count_cdouble;
 int count_cfloat;
 int count_cldouble;
 
-#define NCALLS     115
+#define NCALLS     119
 #define NCALLS_INT 4
 #define NCCALLS    47
 
@@ -274,7 +274,9 @@ F(compile_test) (void)
   b = lgamma (lgamma (a));
   a = rint (rint (x));
   b = nextafter (nextafter (a, b), nextafter (c, x));
-  a = nexttoward (nexttoward (x, a), c);
+  a = nextdown (nextdown (a));
+  b = nexttoward (nexttoward (x, a), c);
+  a = nextup (nextup (a));
   b = remainder (remainder (a, b), remainder (c, x));
   a = scalb (scalb (x, a), (TYPE) (6));
   k = scalbn (a, 7) + scalbln (c, 10l);
@@ -777,11 +779,27 @@ TYPE
 }
 
 TYPE
+(F(nextdown)) (TYPE x)
+{
+  ++count;
+  P ();
+  return x;
+}
+
+TYPE
 (F(nexttoward)) (TYPE x, long double y)
 {
   ++count;
   P ();
   return x + y;
+}
+
+TYPE
+(F(nextup)) (TYPE x)
+{
+  ++count;
+  P ();
+  return x;
 }
 
 TYPE

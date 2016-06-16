@@ -73,9 +73,9 @@ use vars qw (%results @all_floats %suffices @all_functions);
     "fmax", "fmin", "fmod", "frexp", "gamma", "hypot",
     "ilogb", "j0", "j1", "jn", "lgamma", "lrint",
     "llrint", "log", "log10", "log1p", "log2", "logb", "lround",
-    "llround", "modf", "nearbyint", "nextafter", "nexttoward", "pow",
-    "remainder", "remquo", "rint", "round", "scalb", "scalbn", "scalbln",
-    "sin", "sincos", "sinh", "sqrt", "tan", "tanh", "tgamma",
+    "llround", "modf", "nearbyint", "nextafter", "nextdown", "nexttoward",
+    "nextup", "pow", "remainder", "remquo", "rint", "round", "scalb",
+    "scalbn", "sin", "sincos", "sinh", "sqrt", "tan", "tanh", "tgamma",
     "trunc", "y0", "y1", "yn" );
 # fpclassify, isnormal, isfinite, isinf, isnan, issignaling, signbit,
 # isgreater, isgreaterequal, isless, islessequal, islessgreater, isunordered

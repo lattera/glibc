@@ -405,4 +405,11 @@ GLIBC_2.23 __signgam D 0x4
 GLIBC_2.23 lgamma F
 GLIBC_2.23 lgammaf F
 GLIBC_2.23 lgammal F
+GLIBC_2.24 GLIBC_2.24 A
+GLIBC_2.24 nextdown F
+GLIBC_2.24 nextdownf F
+GLIBC_2.24 nextdownl F
+GLIBC_2.24 nextup F
+GLIBC_2.24 nextupf F
+GLIBC_2.24 nextupl F
 GLIBC_2.4 GLIBC_2.4 A

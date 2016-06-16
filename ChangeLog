@@ -1,3 +1,67 @@
+2016-06-16  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* NEWS: Mention addition of nextup and nextdown.
+	* manual/arith.texi: Document nextup and nextdown.
+	* manual/libm-err-tab.pl: Add nextup and nextdown.
+	* math/Makefile (libm-calls): Add s_nextdown and s_nextup.
+	* math/Versions (libm): Add GLIBC_2.24.
+	* math/bits/mathcalls.h: Add nextup and nextdown declaration.
+	* math/libm-test.inc (nextafter_test_data) [TEST_COND_intel96]:
+	Add new test.
+	(nextafter_test_data) [TEST_COND_binary32]: Likewise.
+	(nextafter_test_data) [TEST_COND_m68k96]: Likewise.
+	(nextafter_test_data) [TEST_COND_binary64]: Likewise.
+	(nextafter_test_data) [TEST_COND_binary128]: Likewise.
+	(nextup_test_data): Likewise.
+	(nextdown_test_data): Likewise.
+	* math/s_nextdown.c: New file.
+	* math/s_nextdownf.c: Likewise.
+	* math/s_nextdownl.c: Likewise.
+	* math/test-tgmath.c F(compile_test)): Add nextup and nextdown tests.
+	F(nextup): New function.
+	F(nextdown): Likewise.
+	* math/tgmath.h: Add nextup and nextdown.
+	* sysdeps/ieee754/flt-32/s_nextupf.c: New file.
+	* sysdeps/ieee754/dbl-64/s_nextup.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextupl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextupl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nextupl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls):
+	Add nextup and nextdown.
+	(CFLAGS-nldbl-nextup.c): New variable.
+	(CFLAGS-nldbl-nextdown.c): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nextdown.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-nextup.c: Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-06-16  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/pattern.texi: Fix typos & grammar errors.

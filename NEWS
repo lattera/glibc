@@ -40,6 +40,13 @@ Version 2.24
   done anything in over 16 years.  Scripts using this option can safely
   drop it.
 
+* nextupl, nextup, nextupf, nextdownl, nextdown and nextdownf are added to
+  libm.  They are defined by TS 18661 and IEEE754-2008.  The nextup functions
+  return the next representable value in the direction of positive infinity
+  and the nextdown functions return the next representable value in the
+  direction of negative infinity.  These are currently enabled as GNU
+  extensions.
+
 Security related changes:
 
 * An unnecessary stack copy in _nss_dns_getnetbyname_r was removed.  It

@@ -40,7 +40,8 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 isoc99_scanf isoc99_fscanf isoc99_sscanf \
 		 isoc99_vscanf isoc99_vfscanf isoc99_vsscanf \
 		 isoc99_wscanf isoc99_fwscanf isoc99_swscanf \
-		 isoc99_vwscanf isoc99_vfwscanf isoc99_vswscanf
+		 isoc99_vwscanf isoc99_vfwscanf isoc99_vswscanf \
+		 nextup nextdown
 libnldbl-routines = $(libnldbl-calls:%=nldbl-%)
 libnldbl-inhibit-o = $(object-suffixes)
 libnldbl-static-only-routines = $(libnldbl-routines)
@@ -120,8 +121,10 @@ CFLAGS-nldbl-modf.c = -fno-builtin-modfl
 CFLAGS-nldbl-nan.c = -fno-builtin-nanl
 CFLAGS-nldbl-nearbyint.c = -fno-builtin-nearbyintl
 CFLAGS-nldbl-nextafter.c = -fno-builtin-nextafterl
+CFLAGS-nldbl-nextdown.c = -fno-builtin-nextdownl
 CFLAGS-nldbl-nexttoward.c = -fno-builtin-nexttoward -fno-builtin-nexttowardl
 CFLAGS-nldbl-nexttowardf.c = -fno-builtin-nexttowardf
+CFLAGS-nldbl-nextup.c = -fno-builtin-nextupl
 CFLAGS-nldbl-pow.c = -fno-builtin-powl
 CFLAGS-nldbl-pow10.c = -fno-builtin-pow10l
 CFLAGS-nldbl-remainder.c = -fno-builtin-remainderl -fno-builtin-dreml

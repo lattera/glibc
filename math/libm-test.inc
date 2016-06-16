@@ -10177,17 +10177,40 @@ static const struct test_ff_f_data nextafter_test_data[] =
     TEST_ff_f (nextafter, -0x0.fffffffep-16382L, 0.0L, -0x0.fffffffdfffffffep-16382L, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
 #endif
 
-#if MANT_DIG >= 64
-    // XXX Enable once gcc is fixed.
-    //TEST_ff_f (nextafter, 0x0.00000040000000000000p-16385L, -0.1L, 0x0.0000003ffffffff00000p-16385L),
+#if TEST_COND_binary32
+    TEST_ff_f (nextafter, 1.0, 2.0, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, 1.0, 0.9, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, -1.0, -2.0, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, -1.0, 2.0, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
-#if MANT_DIG == 106
+#if TEST_COND_binary64
+    TEST_ff_f (nextafter, 1.0, 2.0, 0x1.0000000000001p+0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, 1.0, 0.9, 0x1.fffffffffffffp-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, -1.0, -2.0, -0x1.0000000000001p+0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, -1.0, 2.0, -0x1.fffffffffffffp-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_m68k96 || TEST_COND_intel96
+    TEST_ff_f (nextafter, 1.0L, 2.0L, 0x8.0000000000000010p-3L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, 1.0L, -2.0L, 0xf.fffffffffffffff0p-4L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, -1.0L, -2.0L, -0x8.0000000000000010p-3L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, -1.0L, 2.0L, -0xf.fffffffffffffff0p-4L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_m68k96
+    TEST_ff_f (nextafter, -0x0.fffffffep-16383L, 0.0L, -0x0.fffffffdfffffffep-16383L, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+#endif
+#if TEST_COND_ibm128
     TEST_ff_f (nextafter, 1.0L, -10.0L, 1.0L-0x1p-106L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (nextafter, 1.0L, 10.0L, 1.0L+0x1p-105L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (nextafter, 1.0L-0x1p-106L, 10.0L, 1.0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (nextafter, -1.0L, -10.0L, -1.0L-0x1p-105L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (nextafter, -1.0L, 10.0L, -1.0L+0x1p-106L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (nextafter, -1.0L+0x1p-106L, -10.0L, -1.0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_binary128
+    TEST_ff_f (nextafter, 1.0L, 10.0L, 0x1.0000000000000000000000000001p0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, 1.0L, -10.0L, 0x1.ffffffffffffffffffffffffffffp-1L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, -1.0L, 10.0L, -0x1.ffffffffffffffffffffffffffffp-1L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_f (nextafter, -1.0L, -10.0L, -0x1.0000000000000000000000000001p+0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
 
     /* XXX We need the hexadecimal FP number representation here for further
@@ -10198,6 +10221,100 @@ static void
 nextafter_test (void)
 {
   ALL_RM_TEST (nextafter, 1, nextafter_test_data, RUN_TEST_LOOP_ff_f, END);
+}
+static const struct test_f_f_data nextup_test_data[] =
+  {
+    TEST_f_f (nextup, minus_zero, min_subnorm_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, 0, min_subnorm_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, -min_subnorm_value, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, max_value, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, plus_infty, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, minus_infty, -max_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, snan_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_f_f (nextup, -snan_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#if TEST_COND_binary32
+    TEST_f_f (nextup, 1.0, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, -1.0, -0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_binary64
+    TEST_f_f (nextup, 1.0, 0x1.0000000000001p+0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, -1.0, -0x1.fffffffffffffp-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_m68k96 || TEST_COND_intel96
+    TEST_f_f (nextup, 1.0L, 0x8.0000000000000010p-3L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, -1.0L, -0xf.fffffffffffffff0p-4L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, 0xf.fffffffffffffff0p-4L, 1.0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_intel96
+    TEST_f_f (nextup, -0x0.fffffffep-16382L, -0x0.fffffffdfffffffep-16382L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_m68k96
+    TEST_f_f (nextup, -0x0.fffffffep-16383L, -0x0.fffffffdfffffffep-16383L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_ibm128
+    TEST_f_f (nextup, 1.0L, 1.0L+0x1p-105L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, -1.0L-0x1p-105L, -1.0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, -1.0L, -1.0L+0x1p-106L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_binary128
+    TEST_f_f (nextup, 1.0L, 0x1.0000000000000000000000000001p0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextup, -1.0L, -0x1.ffffffffffffffffffffffffffffp-1L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+  };
+
+static void
+nextup_test (void)
+{
+  ALL_RM_TEST (nextup, 1, nextup_test_data, RUN_TEST_LOOP_f_f, END);
+}
+static const struct test_f_f_data nextdown_test_data[] =
+  {
+    TEST_f_f (nextdown, minus_zero, -min_subnorm_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, 0, -min_subnorm_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, -max_value, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, plus_infty, max_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, minus_infty, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, snan_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+    TEST_f_f (nextdown, -snan_value, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION),
+#if TEST_COND_binary32
+    TEST_f_f (nextdown, 1.0, 0x0.ffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, -1.0, -0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_binary64
+    TEST_f_f (nextdown, 1.0, 0x1.fffffffffffffp-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, -1.0, -0x1.0000000000001p+0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_m68k96 || TEST_COND_intel96
+    TEST_f_f (nextdown, -1.0L, -0x8.0000000000000010p-3L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, 1.0L, 0xf.fffffffffffffff0p-4L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, 0x8.0000000000000010p-3L, 1.0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_intel96
+    TEST_f_f (nextdown, -0x0.fffffffdfffffffep-16382L, -0x0.fffffffep-16382L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_m68k96
+    TEST_f_f (nextdown, -0x0.fffffffdfffffffep-16383L, -0x0.fffffffep-16383L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_ibm128
+    TEST_f_f (nextdown, -1.0L, -1.0L-0x1p-105L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, 1.0L+0x1p-105L, 1.0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, 1.0L, 1.0L-0x1p-106L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if TEST_COND_binary128
+    TEST_f_f (nextdown, 1.0L, 0x1.ffffffffffffffffffffffffffffp-1L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_f (nextdown, -1.0L, -0x1.0000000000000000000000000001p+0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+  };
+
+static void
+nextdown_test (void)
+{
+  ALL_RM_TEST (nextdown, 1, nextdown_test_data, RUN_TEST_LOOP_f_f, END);
 }
 
 
@@ -12335,6 +12452,8 @@ main (int argc, char **argv)
 
   /* Manipulation functions:  */
   copysign_test ();
+  nextup_test();
+  nextdown_test();
   nextafter_test ();
   nexttoward_test ();
 

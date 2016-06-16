@@ -210,4 +210,8 @@ libm {
     # dynamic symbol for signgam but not __signgam.
     lgamma; lgammaf; lgammal; __signgam;
   }
+  GLIBC_2.24 {
+    nextup; nextupf; nextupl;
+    nextdown; nextdownf; nextdownl;
+  }
 }

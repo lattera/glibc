@@ -294,6 +294,13 @@ __MATHCALLX (nextafter,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 __MATHCALLX (nexttoward,, (_Mdouble_ __x, long double __y), (__const__));
 # endif
 
+#ifdef __USE_GNU
+/* Return X - epsilon.  */
+__MATHCALL (nextdown,, (_Mdouble_ __x));
+/* Return X + epsilon.  */
+__MATHCALL (nextup,, (_Mdouble_ __x));
+# endif
+
 /* Return the remainder of integer divison X / Y with infinite precision.  */
 __MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
 
