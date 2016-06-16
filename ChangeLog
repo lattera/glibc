@@ -1,3 +1,9 @@
+2016-07-07  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20263]
+	* nptl/tst-robust10.c: New test.
+	* nptl/Makefile (tests): Add tst-robust10.
+
 2016-07-07  Jiyoung Yun  <t2wish@gmail.com>
 
 	[BZ #20263]
