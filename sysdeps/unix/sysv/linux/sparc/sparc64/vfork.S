@@ -44,6 +44,8 @@ ENTRY(__vfork)
 	 nop
 END(__vfork)
 
+#if IS_IN (libc)
 libc_hidden_def (__vfork)
 weak_alias (__vfork, vfork)
 strong_alias (__vfork, __libc_vfork)
+#endif
