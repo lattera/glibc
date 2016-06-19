@@ -1,3 +1,7 @@
+2016-06-19  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/unix/sysv/linux/times.c (__times): Expand comments.
+
 2016-06-18  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/mips/vfork.S (__vfork): Conditionalize
