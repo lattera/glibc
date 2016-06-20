@@ -1,5 +1,5 @@
-/* Thread-local storage handling in the ELF dynamic linker.  hppa version.
-   Copyright (C) 2003-2016 Free Software Foundation, Inc.
+/* Generic declarations for DTV-based TLS handling in the dynamic linker.
+   Copyright (C) 2002-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,16 +13,24 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _DL_DTV_H
+#define _DL_DTV_H
 
-/* Type used for the representation of TLS information in the GOT.  */
-typedef struct
+/* Type for the dtv.  */
+typedef union dtv
 {
-  unsigned long int ti_module;
-  unsigned long int ti_offset;
-} tls_index;
+  size_t counter;
+  struct
+  {
+    void *val;
+    bool is_static;
+  } pointer;
+} dtv_t;
 
+/* Value used for dtv entries for which the allocation is delayed.  */
+#define TLS_DTV_UNALLOCATED ((void *) -1l)
 
-extern void *__tls_get_addr (tls_index *ti);
+#endif /* _DLT_DTV_H */

@@ -40,6 +40,3 @@ extern void *__tls_get_addr (tls_index *ti);
 /* Compute the value for a DTPREL reloc.  */
 #define TLS_DTPREL_VALUE(sym) \
   ((sym)->st_value - TLS_DTV_OFFSET)
-
-/* Value used for dtv entries for which the allocation is delayed.  */
-#define TLS_DTV_UNALLOCATED    ((void *) -1l)

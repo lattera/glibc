@@ -25,19 +25,10 @@
 # include <stdbool.h>
 # include <stddef.h>
 # include <stdint.h>
+# include <dl-dtv.h>
+
 /* Get system call information.  */
 # include <sysdep.h>
-
-/* Type for the dtv.  */
-typedef union dtv
-{
-  size_t counter;
-  struct
-  {
-    void *val;
-    bool is_static;
-  } pointer;
-} dtv_t;
 
 #ifdef __mips16
 /* MIPS16 uses GCC builtin to access the TP.  */

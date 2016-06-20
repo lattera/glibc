@@ -28,6 +28,3 @@
 #define DONT_USE_TLS_INDEX	1
 
 extern void *__tls_get_addr (size_t m, size_t offset);
-
-/* Value used for dtv entries for which the allocation is delayed.  */
-#define TLS_DTV_UNALLOCATED	((void *) -1l)

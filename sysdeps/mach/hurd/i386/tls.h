@@ -25,17 +25,7 @@
 
 
 #ifndef __ASSEMBLER__
-/* Type for the dtv.  */
-typedef union dtv
-{
-  size_t counter;
-  struct
-  {
-    void *val;
-    bool is_static;
-  } pointer;
-} dtv_t;
-
+# include <dl-dtv.h>
 
 /* Type of the TCB.  */
 typedef struct

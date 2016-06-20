@@ -28,6 +28,7 @@
 # include <sysdep.h>
 # include <libc-internal.h>
 # include <kernel-features.h>
+# include <dl-dtv.h>
 
 /* Replacement type for __m128 since this file is included by ld.so,
    which is compiled with -mno-sse.  It must not change the alignment
@@ -36,18 +37,6 @@ typedef struct
 {
   int i[4];
 } __128bits;
-
-
-/* Type for the dtv.  */
-typedef union dtv
-{
-  size_t counter;
-  struct
-  {
-    void *val;
-    bool is_static;
-  } pointer;
-} dtv_t;
 
 
 typedef struct

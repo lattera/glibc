@@ -26,19 +26,7 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <list.h>
-
-
-/* Type for the dtv.  */
-typedef union dtv
-{
-  size_t counter;
-  struct
-  {
-    void *val;
-    bool is_static;
-  } pointer;
-} dtv_t;
-
+# include <dl-dtv.h>
 
 typedef struct
 {

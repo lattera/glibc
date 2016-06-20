@@ -59,6 +59,3 @@ rtld_hidden_def (___tls_get_addr)
 
 # endif
 #endif
-
-/* Value used for dtv entries for which the allocation is delayed.  */
-#define TLS_DTV_UNALLOCATED	((void *) -1l)

@@ -1,5 +1,57 @@
 2016-06-20  Florian Weimer  <fweimer@redhat.com>
 
+	Consolidate machine-agnostic DTV definitions in <dl-dtv.h>.
+	* sysdeps/generic/dl-dtv.h: New file.
+	* sysdeps/aarch64/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/aarch64/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/alpha/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/alpha/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/arm/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/arm/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/hppa/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/hppa/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/i386/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/i386/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/ia64/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/ia64/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/m68k/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/m68k/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/mach/hurd/i386/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/microblaze/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/microblaze/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/mips/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/mips/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/nios2/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/nios2/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/powerpc/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/powerpc/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/s390/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/s390/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/sh/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/sh/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/sparc/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/sparc/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+	* sysdeps/x86_64/dl-tls.h (TLS_DTV_UNALLOCATED): Remove.
+	* sysdeps/x86_64/nptl/tls.h: Include <dl-dtv.h>.
+	(dtv_t): Remove.
+
+2016-06-20  Florian Weimer  <fweimer@redhat.com>
+
 	Revert symbol poisoning of  __malloc_initialize_hook.
 	* include/stdc-predef.h (__malloc_initialize_hook): Remove
 	poisoning.

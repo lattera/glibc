@@ -49,7 +49,4 @@ extern void *__tls_get_addr (tls_index *ti);
 # define __TLS_GET_ADDR(__ti)	(__tls_get_addr (__ti) - TLS_DTV_OFFSET)
 #endif
 
-/* Value used for dtv entries for which the allocation is delayed.  */
-#define TLS_DTV_UNALLOCATED	((void *) -1l)
-
 #endif /* dl-tls.h */
