@@ -1,5 +1,10 @@
 2016-06-20  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/aarch64/rawmemchr.S (__rawmemchr): New file.
+	* sysdeps/aarch64/strlen.S (__strlen): Change to __strlen to avoid PLT.
+
+2016-06-20  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/aarch64/memcpy.S (memcpy):
 	Rewrite of optimized memcpy and memmove.
 	* sysdeps/aarch64/memmove.S (memmove): Remove
