@@ -1,3 +1,33 @@
+2016-06-20  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	[BZ #19654]
+	* sysdeps/x86_64/fpu/Makefile: Added new tests.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias-avx-main.c: New.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias-avx-mod.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias-avx.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias-avx2-main.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias-avx2-mod.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias-avx2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias-avx512-main.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias-avx512-mod.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias-avx512.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias-main.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias-mod.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-alias.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias-avx-main.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias-avx-mod.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias-avx.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias-avx2-main.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias-avx2-mod.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias-avx2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias-avx512-main.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias-avx512-mod.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias-avx512.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias-main.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias-mod.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-alias.c: Likewise.
+	* sysdeps/x86_64/fpu/test-libmvec-alias-mod.c: Likewise.
+
 2016-06-20  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/rawmemchr.S (__rawmemchr): New file.
