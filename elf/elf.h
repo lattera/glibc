@@ -359,7 +359,9 @@ typedef struct
 				/* reserved 225-242 */
 #define EM_RISCV	243	/* RISC-V */
 
-#define EM_NUM		244
+#define EM_BPF		247	/* Linux BPF -- in-kernel virtual machine */
+
+#define EM_NUM		248
 
 /* Old spellings/synonyms.  */
 
@@ -3675,6 +3677,10 @@ enum
 
 #define R_TILEGX_NUM		130
 
+/* BPF specific declarations.  */
+
+#define R_BPF_NONE		0	/* No reloc */
+#define R_BPF_MAP_FD		1	/* Map fd to pointer */
 
 __END_DECLS
 

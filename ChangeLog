@@ -1,5 +1,9 @@
 2016-06-28  Richard Henderson  <rth@redhat.com>
 
+	* elf/elf.h (EM_BPF): New.
+	(EM_NUM): Update.
+	(R_BPF_NONE, R_BPF_MAP_FD): New.
+
 	* elf/elf.h (EM_IAMCU, EM_SPU, EM_PDP10, EM_PDP11, EM_ARC_COMPACT,
 	EM_VIDEOCORE, EM_TMM_GPP, EM_NS32K, EM_TPC, EM_SNP1K, EM_ST200,
 	EM_IP2K, EM_MAX, EM_CR, EM_F2MC16, EM_MSP430, EM_BLACKFIN, EM_SE_C33,
