@@ -1,3 +1,15 @@
+2016-06-20  Florian Weimer  <fweimer@redhat.com>
+
+	Revert symbol poisoning of  __malloc_initialize_hook.
+	* include/stdc-predef.h (__malloc_initialize_hook): Remove
+	poisoning.
+	* malloc/Makefile: Remove un-poisoning.
+	* malloc/arena.c (ptmalloc_init): Use __malloc_initialize_hook
+	instead of old__malloc_initialize_hook.
+	* malloc/malloc-hooks.h: Likewise.
+	* malloc/malloc.c: Likewise.
+	* malloc/mcheck-init.c: Likewise.
+
 2016-06-19  Carlos O'Donell  <carlos@redhat.com>
 
 	* sysdeps/unix/sysv/linux/times.c (__times): Expand comments.

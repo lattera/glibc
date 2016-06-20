@@ -1851,9 +1851,9 @@ static void *memalign_hook_ini (size_t alignment, size_t sz,
                                 const void *caller) __THROW;
 
 #if HAVE_MALLOC_INIT_HOOK
-void weak_variable (*old__malloc_initialize_hook) (void) = NULL;
-compat_symbol (libc, old__malloc_initialize_hook,
-	       old__malloc_initialize_hook, GLIBC_2_0);
+void weak_variable (*__malloc_initialize_hook) (void) = NULL;
+compat_symbol (libc, __malloc_initialize_hook,
+	       __malloc_initialize_hook, GLIBC_2_0);
 #endif
 
 void weak_variable (*__free_hook) (void *__ptr,

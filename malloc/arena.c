@@ -341,7 +341,7 @@ ptmalloc_init (void)
         __malloc_check_init ();
     }
 #if HAVE_MALLOC_INIT_HOOK
-  void (*hook) (void) = atomic_forced_read (old__malloc_initialize_hook);
+  void (*hook) (void) = atomic_forced_read (__malloc_initialize_hook);
   if (hook != NULL)
     (*hook)();
 #endif

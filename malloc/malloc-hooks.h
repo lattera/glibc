@@ -19,9 +19,6 @@
 #ifndef _MALLOC_HOOKS_H
 #define _MALLOC_HOOKS_H
 
-/* These hooks are no longer part of the public API and are poisoned
-   in <stdc-predef.h>.  Their names here reflect the command-line
-   mapping which is used inside glibc to get past the poisoning.  */
-void (*old__malloc_initialize_hook) (void);
+void (*__malloc_initialize_hook) (void);
 
 #endif  /* _MALLOC_HOOKS_H */

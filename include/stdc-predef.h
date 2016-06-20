@@ -57,11 +57,4 @@
 /* We do not support C11 <threads.h>.  */
 #define __STDC_NO_THREADS__		1
 
-/* Remove symbols from the API which can be interposed.  */
-#if defined (__GNUC__)
-# if __GNUC__ >= 4
-#  pragma GCC poison __malloc_initialize_hook
-# endif	 /* __GNUC__ >= 4 */
-#endif	/* __GNUC__ */
-
 #endif
