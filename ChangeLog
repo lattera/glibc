@@ -1,3 +1,10 @@
+2016-06-20  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/memcpy.S (memcpy):
+	Rewrite of optimized memcpy and memmove.
+	* sysdeps/aarch64/memmove.S (memmove): Remove
+	memmove code (merged into memcpy.S).
+
 2016-06-20  Florian Weimer  <fweimer@redhat.com>
 
 	Consolidate machine-agnostic DTV definitions in <dl-dtv.h>.
