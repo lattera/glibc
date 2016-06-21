@@ -131,8 +131,10 @@ _start:
 	stw	%sp, -60(%sp)
 
 #ifdef SHARED
+	/* load global */
 	addil	LT'.Lp__global, %r19
 	ldw	RT'.Lp__global(%r1), %dp
+	ldw	0(%dp), %dp
 #else
 	/* load global */
 	ldil	L%$global$, %dp
