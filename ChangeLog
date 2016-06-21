@@ -1,3 +1,12 @@
+2016-06-21  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/mips/vfork.S (__vfork): Rename into
+	__libc_vfork.
+	(__vfork) [IS_IN (libc)]: Remove alias.
+	(__libc_vfork) [IS_IN (libc)]: Define as an alias.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: Likewise.
+
 2016-06-24  Torvald Riegel  <triegel@redhat.com>
 
 	* nscd/cache.c (cache_add): Use new C11-like atomic operation instead

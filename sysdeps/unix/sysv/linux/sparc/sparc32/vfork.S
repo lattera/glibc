@@ -21,7 +21,7 @@
 
 	.text
 	.globl		__syscall_error
-ENTRY(__vfork)
+ENTRY(__libc_vfork)
 	ld	[%g7 + PID], %o5
 	cmp	%o5, 0
 	bne	1f
@@ -42,10 +42,10 @@ ENTRY(__vfork)
 	 st	%o5, [%g7 + PID]
 1:	retl
 	 nop
-END(__vfork)
+END(__libc_vfork)
 
 #if IS_IN (libc)
+weak_alias (__libc_vfork, vfork)
+strong_alias (__libc_vfork, __vfork)
 libc_hidden_def (__vfork)
-weak_alias (__vfork, vfork)
-strong_alias (__vfork, __libc_vfork)
 #endif
