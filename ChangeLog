@@ -1,3 +1,9 @@
+2016-06-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20284]
+	* malloc/arena.c (reused_arena): Do not return NULL if we start
+	out with a non-corrupted arena.
+
 2016-06-21 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* misc/Makefile (tests): Add tst-preadvwritev and tst-preadvwritev64.
