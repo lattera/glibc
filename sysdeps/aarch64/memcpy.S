@@ -35,6 +35,7 @@
 #define A_h	x7
 #define A_hw	w7
 #define B_l	x8
+#define B_lw	w8
 #define B_h	x9
 #define C_l	x10
 #define C_h	x11
@@ -70,45 +71,20 @@ END (memmove)
 libc_hidden_builtin_def (memmove)
 ENTRY (memcpy)
 
+	prfm	PLDL1KEEP, [src]
 	add	srcend, src, count
 	add	dstend, dstin, count
+	cmp	count, 16
+	b.ls	L(copy16)
 	cmp	count, 96
 	b.hi	L(copy_long)
-	cmp	count, 16
-	b.hs	L(copy_medium)
 
-	/* Small copies: 0..16 bytes.  */
-L(copy16):
-	tbz	count, 3, 1f
-	ldr	A_l, [src]
-	ldr	A_h, [srcend, -8]
-	str	A_l, [dstin]
-	str	A_h, [dstend, -8]
-	ret
-1:
-	tbz	count, 2, 1f
-	ldr	A_lw, [src]
-	ldr	A_hw, [srcend, -4]
-	str	A_lw, [dstin]
-	str	A_hw, [dstend, -4]
-	ret
-	.p2align 4
-1:
-	cbz	count, 2f
-	ldrb	A_lw, [src]
-	tbz	count, 1, 1f
-	ldrh	A_hw, [srcend, -2]
-	strh	A_hw, [dstend, -2]
-1:	strb	A_lw, [dstin]
-2:	ret
-
-	.p2align 4
 	/* Medium copies: 17..96 bytes.  */
-L(copy_medium):
+	sub	tmp1, count, 1
 	ldp	A_l, A_h, [src]
-	tbnz	count, 6, L(copy96)
+	tbnz	tmp1, 6, L(copy96)
 	ldp	D_l, D_h, [srcend, -16]
-	tbz	count, 5, 1f
+	tbz	tmp1, 5, 1f
 	ldp	B_l, B_h, [src, 16]
 	ldp	C_l, C_h, [srcend, -32]
 	stp	B_l, B_h, [dstin, 16]
@@ -117,6 +93,38 @@ L(copy_medium):
 	stp	A_l, A_h, [dstin]
 	stp	D_l, D_h, [dstend, -16]
 	ret
+
+	.p2align 4
+	/* Small copies: 0..16 bytes.  */
+L(copy16):
+	cmp	count, 8
+	b.lo	1f
+	ldr	A_l, [src]
+	ldr	A_h, [srcend, -8]
+	str	A_l, [dstin]
+	str	A_h, [dstend, -8]
+	ret
+	.p2align 4
+1:
+	tbz	count, 2, 1f
+	ldr	A_lw, [src]
+	ldr	A_hw, [srcend, -4]
+	str	A_lw, [dstin]
+	str	A_hw, [dstend, -4]
+	ret
+
+	/* Copy 0..3 bytes.  Use a branchless sequence that copies the same
+	   byte 3 times if count==1, or the 2nd byte twice if count==2.  */
+1:
+	cbz	count, 2f
+	lsr	tmp1, count, 1
+	ldrb	A_lw, [src]
+	ldrb	A_hw, [srcend, -1]
+	ldrb	B_lw, [src, tmp1]
+	strb	A_lw, [dstin]
+	strb	B_lw, [dstin, tmp1]
+	strb	A_hw, [dstend, -1]
+2:	ret
 
 	.p2align 4
 	/* Copy 64..96 bytes.  Copy 64 bytes from the start and
