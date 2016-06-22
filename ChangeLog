@@ -1,3 +1,8 @@
+2015-06-22  Zack Weinberg  <zackw@panix.com>
+
+	* sysdeps/generic/bits/hwcap.h: Moved to ...
+	* bits/hwcap.h: Here.
+
 2016-06-22  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/memcpy.S (memcpy):
