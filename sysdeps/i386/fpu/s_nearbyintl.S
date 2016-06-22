@@ -11,10 +11,6 @@ ENTRY(__nearbyintl)
 	subl	$32, %esp
 	cfi_adjust_cfa_offset (32)
 	fnstenv	4(%esp)
-	movl	4(%esp), %eax
-	orl	$0x20, %eax
-	movl	%eax, (%esp)
-	fldcw	(%esp)
 	frndint
 	fnstsw
 	andl	$0x1, %eax

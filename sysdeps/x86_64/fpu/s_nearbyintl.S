@@ -9,10 +9,6 @@
 ENTRY(__nearbyintl)
 	fldt	8(%rsp)
 	fnstenv	-28(%rsp)
-	movl	-28(%rsp), %eax
-	orl	$0x20, %eax
-	movl	%eax, -32(%rsp)
-	fldcw	-32(%rsp)
 	frndint
 	fnstsw
 	andl	$0x1, %eax

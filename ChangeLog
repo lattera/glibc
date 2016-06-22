@@ -1,3 +1,11 @@
+2016-06-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/i386/fpu/s_nearbyint.S (__nearbyint): Do not mask
+	"inexact" exceptions after fnstenv.
+	* sysdeps/i386/fpu/s_nearbyintf.S (__nearbyintf): Likewise.
+	* sysdeps/i386/fpu/s_nearbyintl.S (__nearbyintl): Likewise.
+	* sysdeps/x86_64/fpu/s_nearbyintl.S (__nearbyintl): Likewise.
+
 2015-06-22  Zack Weinberg  <zackw@panix.com>
 
 	* sysdeps/generic/bits/hwcap.h: Moved to ...
