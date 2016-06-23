@@ -1,5 +1,11 @@
 2016-06-23  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20296]
+	* sysdeps/i386/fpu/e_scalbl.S (__ieee754_scalbl): Add arguments
+	when either argument is a NaN.
+	* sysdeps/x86_64/fpu/e_scalbl.S (__ieee754_scalbl): Likewise.
+	* math/libm-test.inc (scalb_test_data): Add sNaN tests.
+
 	* math/libm-test.inc (snan_value_ld): New macro.
 	(isgreater_test_data): Add sNaN tests.
 	(isgreaterequal_test_data): Likewise.
