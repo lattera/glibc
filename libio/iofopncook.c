@@ -110,7 +110,7 @@ _IO_cookie_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
 }
 
 
-static const struct _IO_jump_t _IO_cookie_jumps = {
+static const struct _IO_jump_t _IO_cookie_jumps libio_vtable = {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_file_finish),
   JUMP_INIT(overflow, _IO_file_overflow),
@@ -151,13 +151,13 @@ void
 _IO_cookie_init (struct _IO_cookie_file *cfile, int read_write,
 		 void *cookie, _IO_cookie_io_functions_t io_functions)
 {
-  _IO_init (&cfile->__fp.file, 0);
+  _IO_init_internal (&cfile->__fp.file, 0);
   _IO_JUMPS (&cfile->__fp) = &_IO_cookie_jumps;
 
   cfile->__cookie = cookie;
   set_callbacks (&cfile->__io_functions, io_functions);
 
-  _IO_file_init (&cfile->__fp);
+  _IO_new_file_init_internal (&cfile->__fp);
 
   _IO_mask_flags (&cfile->__fp.file, read_write,
 		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
@@ -238,7 +238,7 @@ _IO_old_cookie_seek (_IO_FILE *fp, _IO_off64_t offset, int dir)
   return (ret == -1) ? _IO_pos_BAD : ret;
 }
 
-static const struct _IO_jump_t _IO_old_cookie_jumps = {
+static const struct _IO_jump_t _IO_old_cookie_jumps libio_vtable = {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_file_finish),
   JUMP_INIT(overflow, _IO_file_overflow),

@@ -512,7 +512,7 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 #ifdef _IO_MTSAFE_IO
       f._sbf._f._lock = NULL;
 #endif
-      _IO_init (&f._sbf._f, 0);
+      _IO_init_internal (&f._sbf._f, 0);
       _IO_JUMPS (&f._sbf) = &_IO_str_jumps;
       _IO_str_init_static_internal (&f, dest, (s + maxsize) - dest, dest);
       /* We clear the last available byte so we can find out whether

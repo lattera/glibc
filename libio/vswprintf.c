@@ -63,7 +63,7 @@ _IO_wstrn_overflow (_IO_FILE *fp, wint_t c)
 }
 
 
-const struct _IO_jump_t _IO_wstrn_jumps attribute_hidden =
+const struct _IO_jump_t _IO_wstrn_jumps libio_vtable attribute_hidden =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_wstr_finish),

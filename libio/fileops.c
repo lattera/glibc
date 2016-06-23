@@ -140,7 +140,7 @@ extern struct __gconv_trans_data __libio_translit attribute_hidden;
 
 
 void
-_IO_new_file_init (struct _IO_FILE_plus *fp)
+_IO_new_file_init_internal (struct _IO_FILE_plus *fp)
 {
   /* POSIX.1 allows another file handle to be used to change the position
      of our file descriptor.  Hence we actually don't know the actual
@@ -151,7 +151,15 @@ _IO_new_file_init (struct _IO_FILE_plus *fp)
   _IO_link_in (fp);
   fp->file._fileno = -1;
 }
-libc_hidden_ver (_IO_new_file_init, _IO_file_init)
+
+/* External version of _IO_new_file_init_internal which switches off
+   vtable validation.  */
+void
+_IO_new_file_init (struct _IO_FILE_plus *fp)
+{
+  IO_set_accept_foreign_vtables (&_IO_vtable_check);
+  _IO_new_file_init_internal (fp);
+}
 
 int
 _IO_new_file_close_it (_IO_FILE *fp)
@@ -1534,7 +1542,7 @@ versioned_symbol (libc, _IO_new_file_write, _IO_file_write, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_xsputn, _IO_file_xsputn, GLIBC_2_1);
 #endif
 
-const struct _IO_jump_t _IO_file_jumps =
+const struct _IO_jump_t _IO_file_jumps libio_vtable =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_file_finish),
@@ -1559,7 +1567,7 @@ const struct _IO_jump_t _IO_file_jumps =
 };
 libc_hidden_data_def (_IO_file_jumps)
 
-const struct _IO_jump_t _IO_file_jumps_mmap =
+const struct _IO_jump_t _IO_file_jumps_mmap libio_vtable =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_file_finish),
@@ -1583,7 +1591,7 @@ const struct _IO_jump_t _IO_file_jumps_mmap =
   JUMP_INIT(imbue, _IO_default_imbue)
 };
 
-const struct _IO_jump_t _IO_file_jumps_maybe_mmap =
+const struct _IO_jump_t _IO_file_jumps_maybe_mmap libio_vtable =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_file_finish),

@@ -20,7 +20,7 @@
 #include "../libio/libioP.h"
 #include "../libio/strfile.h"
 
-extern const struct _IO_jump_t _IO_strn_jumps attribute_hidden;
+extern const struct _IO_jump_t _IO_strn_jumps libio_vtable attribute_hidden;
 
 /* Write formatted output into S, according to the format
    string FORMAT, writing no more than MAXLEN characters.  */

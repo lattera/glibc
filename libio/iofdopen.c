@@ -153,15 +153,15 @@ _IO_new_fdopen (int fd, const char *mode)
     (use_mmap && (read_write & _IO_NO_WRITES)) ? &_IO_file_jumps_maybe_mmap :
 #endif
       &_IO_file_jumps;
-  _IO_file_init (&new_f->fp);
+  _IO_new_file_init_internal (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
-  /* We only need to record the fd because _IO_file_init will have unset the
-     offset.  It is important to unset the cached offset because the real
-     offset in the file could change between now and when the handle is
-     activated and we would then mislead ftell into believing that we have a
-     valid offset.  */
+  /* We only need to record the fd because _IO_file_init_internal will
+     have unset the offset.  It is important to unset the cached
+     offset because the real offset in the file could change between
+     now and when the handle is activated and we would then mislead
+     ftell into believing that we have a valid offset.  */
   new_f->fp.file._fileno = fd;
   new_f->fp.file._flags &= ~_IO_DELETE_DONT_CLOSE;
 

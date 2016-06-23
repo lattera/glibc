@@ -34,7 +34,7 @@ static int _IO_wmem_sync (_IO_FILE* fp) __THROW;
 static void _IO_wmem_finish (_IO_FILE* fp, int) __THROW;
 
 
-static const struct _IO_jump_t _IO_wmem_jumps =
+static const struct _IO_jump_t _IO_wmem_jumps libio_vtable =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT (finish, _IO_wmem_finish),

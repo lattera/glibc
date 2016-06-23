@@ -35,7 +35,7 @@ struct _IO_obstack_file
   struct obstack *obstack;
 };
 
-extern const struct _IO_jump_t _IO_obstack_jumps attribute_hidden;
+extern const struct _IO_jump_t _IO_obstack_jumps libio_vtable attribute_hidden;
 
 int
 __obstack_vprintf_chk (struct obstack *obstack, int flags, const char *format,

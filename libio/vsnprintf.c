@@ -64,7 +64,7 @@ _IO_strn_overflow (_IO_FILE *fp, int c)
 }
 
 
-const struct _IO_jump_t _IO_strn_jumps attribute_hidden =
+const struct _IO_jump_t _IO_strn_jumps libio_vtable attribute_hidden =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_str_finish),

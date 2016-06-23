@@ -211,7 +211,7 @@ _IO_old_popen (const char *command, const char *mode)
   fp = &new_f->fpx.file.file._file;
   _IO_old_init (fp, 0);
   _IO_JUMPS_FILE_plus (&new_f->fpx.file) = &_IO_old_proc_jumps;
-  _IO_old_file_init ((struct _IO_FILE_plus *) &new_f->fpx.file);
+  _IO_old_file_init_internal ((struct _IO_FILE_plus *) &new_f->fpx.file);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fpx.file.vtable = NULL;
 #endif
@@ -267,7 +267,7 @@ _IO_old_proc_close (_IO_FILE *fp)
   return wstatus;
 }
 
-const struct _IO_jump_t _IO_old_proc_jumps = {
+const struct _IO_jump_t _IO_old_proc_jumps libio_vtable = {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_old_file_finish),
   JUMP_INIT(overflow, _IO_old_file_overflow),

@@ -79,7 +79,7 @@ __fopen_internal (const char *filename, const char *mode, int is32)
   _IO_no_init (&new_f->fp.file, 1, 0, NULL, NULL);
 #endif
   _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
-  _IO_file_init (&new_f->fp);
+  _IO_new_file_init_internal (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif

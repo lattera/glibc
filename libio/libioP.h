@@ -125,11 +125,12 @@ extern "C" {
 
 #if _IO_JUMPS_OFFSET
 # define _IO_JUMPS_FUNC(THIS) \
- (*(struct _IO_jump_t **) ((void *) &_IO_JUMPS_FILE_plus (THIS) \
-			   + (THIS)->_vtable_offset))
+  (IO_validate_vtable                                                   \
+   (*(struct _IO_jump_t **) ((void *) &_IO_JUMPS_FILE_plus (THIS)	\
+			     + (THIS)->_vtable_offset)))
 # define _IO_vtable_offset(THIS) (THIS)->_vtable_offset
 #else
-# define _IO_JUMPS_FUNC(THIS) _IO_JUMPS_FILE_plus (THIS)
+# define _IO_JUMPS_FUNC(THIS) (IO_validate_vtable (_IO_JUMPS_FILE_plus (THIS)))
 # define _IO_vtable_offset(THIS) 0
 #endif
 #define _IO_WIDE_JUMPS_FUNC(THIS) _IO_WIDE_JUMPS(THIS)
@@ -378,8 +379,7 @@ extern void _IO_switch_to_main_get_area (_IO_FILE *) __THROW;
 extern void _IO_switch_to_backup_area (_IO_FILE *) __THROW;
 extern int _IO_switch_to_get_mode (_IO_FILE *);
 libc_hidden_proto (_IO_switch_to_get_mode)
-extern void _IO_init (_IO_FILE *, int) __THROW;
-libc_hidden_proto (_IO_init)
+extern void _IO_init_internal (_IO_FILE *, int) attribute_hidden;
 extern int _IO_sputbackc (_IO_FILE *, int) __THROW;
 libc_hidden_proto (_IO_sputbackc)
 extern int _IO_sungetc (_IO_FILE *) __THROW;
@@ -587,8 +587,6 @@ extern int _IO_file_underflow_maybe_mmap (_IO_FILE *);
 extern int _IO_file_overflow (_IO_FILE *, int);
 libc_hidden_proto (_IO_file_overflow)
 #define _IO_file_is_open(__fp) ((__fp)->_fileno != -1)
-extern void _IO_file_init (struct _IO_FILE_plus *) __THROW;
-libc_hidden_proto (_IO_file_init)
 extern _IO_FILE* _IO_file_attach (_IO_FILE *, int);
 libc_hidden_proto (_IO_file_attach)
 extern _IO_FILE* _IO_file_open (_IO_FILE *, const char *, int, int, int, int);
@@ -614,7 +612,8 @@ extern _IO_FILE* _IO_new_file_fopen (_IO_FILE *, const char *, const char *,
 				     int);
 extern void _IO_no_init (_IO_FILE *, int, int, struct _IO_wide_data *,
 			 const struct _IO_jump_t *) __THROW;
-extern void _IO_new_file_init (struct _IO_FILE_plus *) __THROW;
+extern void _IO_new_file_init_internal (struct _IO_FILE_plus *)
+  __THROW attribute_hidden;
 extern _IO_FILE* _IO_new_file_setbuf (_IO_FILE *, char *, _IO_ssize_t);
 extern _IO_FILE* _IO_file_setbuf_mmap (_IO_FILE *, char *, _IO_ssize_t);
 extern int _IO_new_file_sync (_IO_FILE *);
@@ -629,7 +628,8 @@ extern _IO_off64_t _IO_old_file_seekoff (_IO_FILE *, _IO_off64_t, int, int);
 extern _IO_size_t _IO_old_file_xsputn (_IO_FILE *, const void *, _IO_size_t);
 extern int _IO_old_file_underflow (_IO_FILE *);
 extern int _IO_old_file_overflow (_IO_FILE *, int);
-extern void _IO_old_file_init (struct _IO_FILE_plus *) __THROW;
+extern void _IO_old_file_init_internal (struct _IO_FILE_plus *)
+  __THROW attribute_hidden;
 extern _IO_FILE* _IO_old_file_attach (_IO_FILE *, int);
 extern _IO_FILE* _IO_old_file_fopen (_IO_FILE *, const char *, const char *);
 extern _IO_ssize_t _IO_old_file_write (_IO_FILE *, const void *, _IO_ssize_t);
@@ -673,10 +673,6 @@ extern void _IO_str_finish (_IO_FILE *, int) __THROW;
 
 /* Other strfile functions */
 struct _IO_strfile_;
-extern void _IO_str_init_static (struct _IO_strfile_ *, char *, int, char *)
-     __THROW;
-extern void _IO_str_init_readonly (struct _IO_strfile_ *, const char *, int)
-     __THROW;
 extern _IO_ssize_t _IO_str_count (_IO_FILE *) __THROW;
 
 /* And the wide character versions.  */
@@ -890,3 +886,57 @@ _IO_acquire_lock_clear_flags2_fct (_IO_FILE **p)
                                           | _IO_FLAGS2_SCANF_STD);	      \
   } while (0)
 #endif
+
+/* Collect all vtables in a special section for vtable verification.
+   These symbols cover the extent of this section.  */
+symbol_set_declare (__libc_IO_vtables)
+
+/* libio vtables need to carry this attribute so that they pass
+   validation.  */
+#define libio_vtable __attribute__ ((section ("__libc_IO_vtables")))
+
+#ifdef SHARED
+/* If equal to &_IO_vtable_check (with pointer guard protection),
+   unknown vtable pointers are valid.  This function pointer is solely
+   used as a flag.  */
+extern void (*IO_accept_foreign_vtables) (void) attribute_hidden;
+
+/* Assigns the passed function pointer (either NULL or
+   &_IO_vtable_check) to IO_accept_foreign_vtables.  */
+static inline void
+IO_set_accept_foreign_vtables (void (*flag) (void))
+{
+  PTR_MANGLE (flag);
+  atomic_store_relaxed (&IO_accept_foreign_vtables, flag);
+}
+
+#else  /* !SHARED */
+
+/* The statically-linked version does nothing. */
+static inline void
+IO_set_accept_foreign_vtables (void (*flag) (void))
+{
+}
+
+#endif
+
+/* Check if unknown vtable pointers are permitted; otherwise,
+   terminate the process.  */
+void _IO_vtable_check (void) attribute_hidden;
+
+/* Perform vtable pointer validation.  If validation fails, terminate
+   the process.  */
+static inline const struct _IO_jump_t *
+IO_validate_vtable (const struct _IO_jump_t *vtable)
+{
+  /* Fast path: The vtable pointer is within the __libc_IO_vtables
+     section.  */
+  uintptr_t section_length = __stop___libc_IO_vtables - __start___libc_IO_vtables;
+  const char *ptr = (const char *) vtable;
+  uintptr_t offset = ptr - __start___libc_IO_vtables;
+  if (__glibc_unlikely (offset >= section_length))
+    /* The vtable pointer is not in the expected section.  Use the
+       slow path, which will terminate the process if necessary.  */
+    _IO_vtable_check ();
+  return vtable;
+}

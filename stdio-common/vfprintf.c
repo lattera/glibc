@@ -2240,7 +2240,7 @@ _IO_helper_overflow (_IO_FILE *s, int c)
 }
 
 #ifdef COMPILE_WPRINTF
-static const struct _IO_jump_t _IO_helper_jumps =
+static const struct _IO_jump_t _IO_helper_jumps libio_vtable =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT (finish, _IO_wdefault_finish),
@@ -2262,7 +2262,7 @@ static const struct _IO_jump_t _IO_helper_jumps =
   JUMP_INIT (stat, _IO_default_stat)
 };
 #else
-static const struct _IO_jump_t _IO_helper_jumps =
+static const struct _IO_jump_t _IO_helper_jumps libio_vtable =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT (finish, _IO_default_finish),
