@@ -1,5 +1,9 @@
 2016-06-23  Florian Weimer  <fweimer@redhat.com>
 
+	* test-skeleton.c (xrealloc): Support deallocation with n == 0.
+
+2016-06-23  Florian Weimer  <fweimer@redhat.com>
+
 	* test-skeleton.c (xmalloc, xcalloc, xrealloc): Mark as
 	potentially unused.
 

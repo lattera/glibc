@@ -109,10 +109,10 @@ __attribute__ ((unused))
 static void *
 xrealloc (void *p, size_t n)
 {
-  p = realloc (p, n);
-  if (p == NULL)
+  void *result = realloc (p, n);
+  if (result == NULL && (n > 0 || p == NULL))
     oom_error ("realloc", n);
-  return p;
+  return result;
 }
 
 /* Write a message to standard output.  Can be used in signal
