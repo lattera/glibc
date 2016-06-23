@@ -644,7 +644,7 @@
 	(old__malloc_initialize_hook): Rename from
 	__malloc_initialize_hook to evade poisoning.  Turn into compat
 	symbol.
-        * malloc/mcheck-init.c (old__malloc_initialize_hook): Rename from
+	* malloc/mcheck-init.c (old__malloc_initialize_hook): Rename from
 	__malloc_initialize_hook.
 	* malloc/Makefile (poisoned_apis, unpoisoned_api_defines): New.
 	(mallo.c, mcheck-init.c): Compile with unpoisoned symbol.
