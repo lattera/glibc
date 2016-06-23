@@ -1,3 +1,8 @@
+2016-06-23  Florian Weimer  <fweimer@redhat.com>
+
+	* test-skeleton.c (xmalloc, xcalloc, xrealloc): Mark as
+	potentially unused.
+
 2016-06-22  Florian Weimer  <fweimer@redhat.com>
 
 	* test-skeleton.c (write_message): New function.

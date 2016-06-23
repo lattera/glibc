@@ -78,8 +78,8 @@ oom_error (const char *fn, size_t size)
 }
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
+__attribute__ ((unused))
 static void *
-__attribute__ ((used))
 xmalloc (size_t n)
 {
   void *p;
@@ -91,8 +91,8 @@ xmalloc (size_t n)
 }
 
 /* Allocate memory for N elements of S bytes, with error checking.  */
+__attribute__ ((unused))
 static void *
-__attribute__ ((used))
 xcalloc (size_t n, size_t s)
 {
   void *p;
@@ -105,8 +105,8 @@ xcalloc (size_t n, size_t s)
 
 /* Change the size of an allocated block of memory P to N bytes,
    with error checking.  */
+__attribute__ ((unused))
 static void *
-__attribute__ ((used))
 xrealloc (void *p, size_t n)
 {
   p = realloc (p, n);
