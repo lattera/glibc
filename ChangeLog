@@ -1,3 +1,9 @@
+2016-06-23  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* posix/getconf.c: Define ALL_ENVIRONMENTS_DEFINED if all
+	environment macros are defined.
+	(main): Avoid execve if ALL_ENVIRONMENTS_DEFINED is defined.
+
 2016-06-23  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20191]

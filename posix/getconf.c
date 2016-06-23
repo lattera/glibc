@@ -29,6 +29,23 @@
 #define NEED_SPEC_ARRAY 1
 #include <posix-conf-vars.h>
 
+/* If all of the environments are defined in environments.h, then we don't need
+   to bother with doing a runtime check for a specific environment.  */
+#if (defined _SC_V6_ILP32_OFF32 \
+     && defined _SC_V7_LPBIG_OFFBIG \
+     && defined _SC_XBS5_LP64_OFF64 \
+     && defined _SC_V6_LP64_OFF64 \
+     && defined _SC_V7_ILP32_OFFBIG \
+     && defined _SC_V6_LPBIG_OFFBIG \
+     && defined _SC_V7_LP64_OFF64 \
+     && defined _SC_V7_ILP32_OFF32 \
+     && defined _SC_XBS5_LPBIG_OFFBIG \
+     && defined _SC_XBS5_ILP32_OFFBIG \
+     && defined _SC_V6_ILP32_OFFBIG \
+     && defined _SC_XBS5_ILP32_OFF32)
+# define ALL_ENVIRONMENTS_DEFINED 1
+#endif
+
 struct conf
   {
     const char *name;
@@ -488,6 +505,24 @@ environment SPEC.\n\n"));
       return 0;
     }
 
+#ifdef ALL_ENVIRONMENTS_DEFINED
+  if (argc > 1 && strncmp (argv[1], "-v", 2) == 0)
+    {
+      if (argv[1][2] == '\0')
+	{
+	  if (argc < 3)
+	    usage ();
+
+	  argv += 2;
+	  argc -= 2;
+	}
+      else
+	{
+	  argv += 1;
+	  argc += 1;
+	}
+    }
+#else
   const char *getconf_dir = getenv ("GETCONF_DIR") ?: GETCONF_DIR;
   size_t getconf_dirlen = strlen (getconf_dir);
 
@@ -538,42 +573,42 @@ environment SPEC.\n\n"));
 
       switch (specs[i].num)
 	{
-#ifndef _XBS5_ILP32_OFF32
+# ifndef _XBS5_ILP32_OFF32
 	  case _SC_XBS5_ILP32_OFF32:
-#endif
-#ifndef _XBS5_ILP32_OFFBIG
+# endif
+# ifndef _XBS5_ILP32_OFFBIG
 	  case _SC_XBS5_ILP32_OFFBIG:
-#endif
-#ifndef _XBS5_LP64_OFF64
+# endif
+# ifndef _XBS5_LP64_OFF64
 	  case _SC_XBS5_LP64_OFF64:
-#endif
-#ifndef _XBS5_LPBIG_OFFBIG
+# endif
+# ifndef _XBS5_LPBIG_OFFBIG
 	  case _SC_XBS5_LPBIG_OFFBIG:
-#endif
-#ifndef _POSIX_V6_ILP32_OFF32
+# endif
+# ifndef _POSIX_V6_ILP32_OFF32
 	  case _SC_V6_ILP32_OFF32:
-#endif
-#ifndef _POSIX_V6_ILP32_OFFBIG
+# endif
+# ifndef _POSIX_V6_ILP32_OFFBIG
 	  case _SC_V6_ILP32_OFFBIG:
-#endif
-#ifndef _POSIX_V6_LP64_OFF64
+# endif
+# ifndef _POSIX_V6_LP64_OFF64
 	  case _SC_V6_LP64_OFF64:
-#endif
-#ifndef _POSIX_V6_LPBIG_OFFBIG
+# endif
+# ifndef _POSIX_V6_LPBIG_OFFBIG
 	  case _SC_V6_LPBIG_OFFBIG:
-#endif
-#ifndef _POSIX_V7_ILP32_OFF32
+# endif
+# ifndef _POSIX_V7_ILP32_OFF32
 	  case _SC_V7_ILP32_OFF32:
-#endif
-#ifndef _POSIX_V7_ILP32_OFFBIG
+# endif
+# ifndef _POSIX_V7_ILP32_OFFBIG
 	  case _SC_V7_ILP32_OFFBIG:
-#endif
-#ifndef _POSIX_V7_LP64_OFF64
+# endif
+# ifndef _POSIX_V7_LP64_OFF64
 	  case _SC_V7_LP64_OFF64:
-#endif
-#ifndef _POSIX_V7_LPBIG_OFFBIG
+# endif
+# ifndef _POSIX_V7_LPBIG_OFFBIG
 	  case _SC_V7_LPBIG_OFFBIG:
-#endif
+# endif
 	    {
 	      const char *args[argc + 3];
 	      size_t spec_len = strlen (spec);
@@ -592,6 +627,7 @@ environment SPEC.\n\n"));
 	    break;
 	}
     }
+#endif
 
   if (argc > 1 && strcmp (argv[1], "-a") == 0)
     {
