@@ -115,6 +115,16 @@ xrealloc (void *p, size_t n)
   return p;
 }
 
+/* Write a message to standard output.  Can be used in signal
+   handlers.  */
+static void
+__attribute__ ((unused))
+write_message (const char *message)
+{
+  ssize_t unused __attribute__ ((unused));
+  unused = write (STDOUT_FILENO, message, strlen (message));
+}
+
 /* List of temporary files.  */
 struct temp_name_list
 {

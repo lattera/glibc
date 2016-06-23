@@ -12,18 +12,20 @@
 #include <sys/resource.h>
 #include <unistd.h>
 
+static int do_test (void);
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 static jmp_buf mainloop;
 static sigset_t mainsigset;
 static volatile sig_atomic_t pass;
 
 static void
-write_message (const char *message)
+write_indented (const char *str)
 {
-  ssize_t unused __attribute__ ((unused));
   for (int i = 0; i < pass; ++i)
-    unused = write (STDOUT_FILENO, " ", 1);
-  unused = write (STDOUT_FILENO, message, strlen (message));
+    write_message (" ");
+  write_message (str);
 }
 
 static void
@@ -33,11 +35,10 @@ stackoverflow_handler (int sig)
   /* Sanity check to keep test from looping forever (in case the longjmp
      chk code is slightly broken).  */
   pass++;
-  assert (pass < 5);
   sigaltstack (NULL, &altstack);
-  write_message ("in signal handler\n");
+  write_indented ("in signal handler\n");
   if (altstack.ss_flags & SS_ONSTACK)
-    write_message ("on alternate stack\n");
+    write_indented ("on alternate stack\n");
   siglongjmp (mainloop, pass);
 }
 
@@ -127,6 +128,3 @@ do_test (void)
 
   return 0;
 }
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

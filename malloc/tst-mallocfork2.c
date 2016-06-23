@@ -44,6 +44,9 @@ enum { malloc_maximum_size = 70000 };
 /* How many signals need to be delivered before the test exits.  */
 enum { signal_count = 1000 };
 
+static int do_test (void);
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 /* Process ID of the subprocess which sends SIGUSR1 signals.  */
 static pid_t sigusr1_sender_pid;
@@ -55,14 +58,6 @@ static volatile sig_atomic_t sigusr1_received;
 /* Periodically set to 1, to indicate that the process is making
    progress.  Checked by liveness_signal_handler.  */
 static volatile sig_atomic_t progress_indicator = 1;
-
-/* Write the message to standard output.  Usable from signal
-   handlers.  */
-static void
-write_message (const char *str)
-{
-  write (STDOUT_FILENO, str, strlen (str));
-}
 
 static void
 sigusr1_handler (int signo)
@@ -213,6 +208,3 @@ do_test (void)
 
   return 0;
 }
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

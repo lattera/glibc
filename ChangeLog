@@ -1,3 +1,11 @@
+2016-06-22  Florian Weimer  <fweimer@redhat.com>
+
+	* test-skeleton.c (write_message): New function.
+	* malloc/tst-mallocfork2.c (write_message): Remove.
+	* debug/tst-longjmp_chk2.c (write_indented): New function.
+	(write_message): Remove.
+	(stackoverflow_handler): Call write_indented.
+
 2016-06-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/i386/fpu/s_nearbyint.S (__nearbyint): Do not mask
