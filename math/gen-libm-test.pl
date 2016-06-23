@@ -67,6 +67,7 @@ use vars qw (%auto_tests);
     "plus_infty" => "inf",
     "qnan_value" => "qNaN",
     "snan_value" => "sNaN",
+    "snan_value_ld" => "sNaN",
   );
 
 

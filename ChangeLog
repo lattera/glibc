@@ -1,3 +1,19 @@
+2016-06-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (snan_value_ld): New macro.
+	(isgreater_test_data): Add sNaN tests.
+	(isgreaterequal_test_data): Likewise.
+	(isless_test_data): Likewise.
+	(islessequal_test_data): Likewise.
+	(islessgreater_test_data): Likewise.
+	(isunordered_test_data): Likewise.
+	(nextafter_test_data): Likewise.
+	(nexttoward_test_data): Likewise.
+	(remainder_test_data): Likewise.
+	(remquo_test_data): Likewise.
+	(significand_test_data): Likewise.
+	* math/gen-libm-test.pl (%beautify): Add snan_value_ld.
+
 2016-06-23  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* posix/getconf.c: Define ALL_ENVIRONMENTS_DEFINED if all
