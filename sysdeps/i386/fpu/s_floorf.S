@@ -9,10 +9,10 @@ RCSID("$NetBSD: s_floorf.S,v 1.3 1995/05/09 00:04:32 jtc Exp $")
 
 ENTRY(__floorf)
 	flds	4(%esp)
-	subl	$8,%esp
-	cfi_adjust_cfa_offset (8)
+	subl	$32,%esp
+	cfi_adjust_cfa_offset (32)
 
-	fstcw	4(%esp)			/* store fpu control word */
+	fnstenv	4(%esp)			/* store fpu environment */
 
 	/* We use here %edx although only the low 1 bits are defined.
 	   But none of the operations should care and they are faster
@@ -25,10 +25,10 @@ ENTRY(__floorf)
 
 	frndint				/* round */
 
-	fldcw	4(%esp)			/* restore original control word */
+	fldenv	4(%esp)			/* restore original environment */
 
-	addl	$8,%esp
-	cfi_adjust_cfa_offset (-8)
+	addl	$32,%esp
+	cfi_adjust_cfa_offset (-32)
 	ret
 END (__floorf)
 weak_alias (__floorf, floorf)
