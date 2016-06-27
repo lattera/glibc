@@ -1,4 +1,4 @@
-/* Return cosine of complex double value.
+/* Return cosine of complex float type.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -22,19 +22,19 @@
 #include <math.h>
 #include <math_private.h>
 
-
-__complex__ double
-__ccos (__complex__ double x)
+CFLOAT
+M_DECL_FUNC (__ccos) (CFLOAT x)
 {
-  __complex__ double y;
+  CFLOAT y;
 
   __real__ y = -__imag__ x;
   __imag__ y = __real__ x;
 
-  return __ccosh (y);
+  return M_SUF (__ccosh) (y);
 }
-weak_alias (__ccos, ccos)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__ccos, __ccosl)
-weak_alias (__ccos, ccosl)
+
+declare_mgen_alias (__ccos, ccos);
+
+#if M_LIBM_NEED_COMPAT (carg)
+declare_mgen_libm_compat (__ccos, ccos)
 #endif

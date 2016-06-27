@@ -1,5 +1,46 @@
 2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/Makefile (libm-gen-calls): Move
+	s_cacos, s_cacosh, s_ccos, s_ccosh from ...
+	(libm-calls): Remove above.
+
+	* math/s_cacos_template.c: Update using type-generic macros.
+	* math/s_cacosh_template.c: Likewise.
+	* math/s_ccos_template.c: Likewise.
+	* math/s_ccosh_template.c: Likwise.
+
+	* math/s_cacosf.c: Removed.
+	* math/s_cacos.c: Removed.
+	* math/s_cacosl.c: Removed.
+	* math/s_cacoshf.c: Removed.
+	* math/s_cacosh.c: Removed.
+	* math/s_cacoshl.c: Removed.
+	* math/s_ccosf.c: Removed.
+	* math/s_ccos.c: Removed.
+	* math/s_ccosl.c: Removed.
+	* math/s_ccoshf.c: Removed.
+	* math/s_ccosh.c: Removed.
+	* math/s_ccoshl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/s_cacoshl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cacosl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ccos.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ccosh.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ccoshl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ccosl.c: Removed.
+
+	* sysdeps/m68k/m680x0/fpu/s_ccosh.c: Refactor into.
+	* sysdeps/m68k/m680x0/fpu/s_ccosh_template.c: New file.
+	* sysdeps/m68k/m680x0/fpu/s_ccoshf.c: Removed.
+	* sysdeps/m68k/m680x0/fpu/s_ccoshl.c: Removed.
+
+	* sysdeps/alpha/fpu/s_cacosf.c: Update to use template file.
+	* sysdeps/alpha/fpu/s_cacoshf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ccosf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ccoshf.c: Likewise.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* s_cacos_template.c: Copy of s_cacos.c.
 	* s_cacosh_template.c: Copy of s_cacosh.c.
 	* s_ccos_template.c: Copy of s_ccos.c.

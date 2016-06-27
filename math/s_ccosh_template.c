@@ -1,4 +1,4 @@
-/* Complex cosine hyperbole function for double.
+/* Complex cosine hyperbolic function for float types.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -23,10 +23,10 @@
 #include <math_private.h>
 #include <float.h>
 
-__complex__ double
-__ccosh (__complex__ double x)
+CFLOAT
+M_DECL_FUNC (__ccosh) (CFLOAT x)
 {
-  __complex__ double retval;
+  CFLOAT retval;
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
@@ -36,28 +36,28 @@ __ccosh (__complex__ double x)
       if (__glibc_likely (icls >= FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
-	  const int t = (int) ((DBL_MAX_EXP - 1) * M_LN2);
-	  double sinix, cosix;
+	  const int t = (int) ((M_MAX_EXP - 1) * M_MLIT (M_LN2));
+	  FLOAT sinix, cosix;
 
-	  if (__glibc_likely (fabs (__imag__ x) > DBL_MIN))
+	  if (__glibc_likely (M_FABS (__imag__ x) > M_MIN))
 	    {
-	      __sincos (__imag__ x, &sinix, &cosix);
+	      M_SINCOS (__imag__ x, &sinix, &cosix);
 	    }
 	  else
 	    {
 	      sinix = __imag__ x;
-	      cosix = 1.0;
+	      cosix = 1;
 	    }
 
-	  if (fabs (__real__ x) > t)
+	  if (M_FABS (__real__ x) > t)
 	    {
-	      double exp_t = __ieee754_exp (t);
-	      double rx = fabs (__real__ x);
+	      FLOAT exp_t = M_EXP (t);
+	      FLOAT rx = M_FABS (__real__ x);
 	      if (signbit (__real__ x))
 		sinix = -sinix;
 	      rx -= t;
-	      sinix *= exp_t / 2.0;
-	      cosix *= exp_t / 2.0;
+	      sinix *= exp_t / 2;
+	      cosix *= exp_t / 2;
 	      if (rx > t)
 		{
 		  rx -= t;
@@ -67,28 +67,28 @@ __ccosh (__complex__ double x)
 	      if (rx > t)
 		{
 		  /* Overflow (original real part of x > 3t).  */
-		  __real__ retval = DBL_MAX * cosix;
-		  __imag__ retval = DBL_MAX * sinix;
+		  __real__ retval = M_MAX * cosix;
+		  __imag__ retval = M_MAX * sinix;
 		}
 	      else
 		{
-		  double exp_val = __ieee754_exp (rx);
+		  FLOAT exp_val = M_EXP (rx);
 		  __real__ retval = exp_val * cosix;
 		  __imag__ retval = exp_val * sinix;
 		}
 	    }
 	  else
 	    {
-	      __real__ retval = __ieee754_cosh (__real__ x) * cosix;
-	      __imag__ retval = __ieee754_sinh (__real__ x) * sinix;
+	      __real__ retval = M_COSH (__real__ x) * cosix;
+	      __imag__ retval = M_SINH (__real__ x) * sinix;
 	    }
 
 	  math_check_force_underflow_complex (retval);
 	}
       else
 	{
-	  __imag__ retval = __real__ x == 0.0 ? 0.0 : __nan ("");
-	  __real__ retval = __nan ("") + __nan ("");
+	  __imag__ retval = __real__ x == 0 ? 0 : M_NAN;
+	  __real__ retval = M_NAN + M_NAN;
 
 	  if (icls == FP_INFINITE)
 	    feraiseexcept (FE_INVALID);
@@ -100,33 +100,33 @@ __ccosh (__complex__ double x)
       if (__glibc_likely (icls > FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
-	  double sinix, cosix;
+	  FLOAT sinix, cosix;
 
-	  if (__glibc_likely (fabs (__imag__ x) > DBL_MIN))
+	  if (__glibc_likely (M_FABS (__imag__ x) > M_MIN))
 	    {
-	      __sincos (__imag__ x, &sinix, &cosix);
+	      M_SINCOS (__imag__ x, &sinix, &cosix);
 	    }
 	  else
 	    {
 	      sinix = __imag__ x;
-	      cosix = 1.0;
+	      cosix = 1;
 	    }
 
-	  __real__ retval = __copysign (HUGE_VAL, cosix);
-	  __imag__ retval = (__copysign (HUGE_VAL, sinix)
-			     * __copysign (1.0, __real__ x));
+	  __real__ retval = M_COPYSIGN (M_HUGE_VAL, cosix);
+	  __imag__ retval = (M_COPYSIGN (M_HUGE_VAL, sinix)
+			     * M_COPYSIGN (1, __real__ x));
 	}
       else if (icls == FP_ZERO)
 	{
 	  /* Imaginary part is 0.0.  */
-	  __real__ retval = HUGE_VAL;
-	  __imag__ retval = __imag__ x * __copysign (1.0, __real__ x);
+	  __real__ retval = M_HUGE_VAL;
+	  __imag__ retval = __imag__ x * M_COPYSIGN (1, __real__ x);
 	}
       else
 	{
 	  /* The addition raises the invalid exception.  */
-	  __real__ retval = HUGE_VAL;
-	  __imag__ retval = __nan ("") + __nan ("");
+	  __real__ retval = M_HUGE_VAL;
+	  __imag__ retval = M_NAN + M_NAN;
 
 	  if (icls == FP_INFINITE)
 	    feraiseexcept (FE_INVALID);
@@ -134,14 +134,15 @@ __ccosh (__complex__ double x)
     }
   else
     {
-      __real__ retval = __nan ("");
-      __imag__ retval = __imag__ x == 0.0 ? __imag__ x : __nan ("");
+      __real__ retval = M_NAN;
+      __imag__ retval = __imag__ x == 0 ? __imag__ x : M_NAN;
     }
 
   return retval;
 }
-weak_alias (__ccosh, ccosh)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__ccosh, __ccoshl)
-weak_alias (__ccosh, ccoshl)
+
+declare_mgen_alias (__ccosh, ccosh);
+
+#if M_LIBM_NEED_COMPAT (carg)
+declare_mgen_libm_compat (__ccosh, ccosh)
 #endif

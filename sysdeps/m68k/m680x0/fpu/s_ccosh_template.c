@@ -21,27 +21,19 @@
 #include <math.h>
 #include "mathimpl.h"
 
-#ifndef SUFF
-#define SUFF
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
-#define CONCATX(a,b) __CONCAT(a,b)
-#define s(name) CONCATX(name,SUFF)
+#define s(name) M_SUF (name)
 #define m81(func) __m81_u(s(func))
 
-__complex__ float_type
-s(__ccosh) (__complex__ float_type x)
+CFLOAT
+s(__ccosh) (CFLOAT x)
 {
-  __complex__ float_type retval;
+  CFLOAT retval;
   unsigned long ix_cond = __m81_test (__imag__ x);
 
   if ((ix_cond & (__M81_COND_INF|__M81_COND_NAN)) == 0)
     {
       /* Imaginary part is finite.  */
-      float_type sin_ix, cos_ix;
+      FLOAT sin_ix, cos_ix;
 
       __asm ("fsincos%.x %2,%1:%0" : "=f" (sin_ix), "=f" (cos_ix)
 	     : "f" (__imag__ x));

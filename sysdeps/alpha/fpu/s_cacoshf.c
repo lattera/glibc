@@ -24,11 +24,17 @@
 
 #undef __cacoshf
 #undef cacoshf
-#define __cacoshf internal_cacoshf
 
 static _Complex float internal_cacoshf (_Complex float x);
 
-#include <math/s_cacoshf.c>
+#define M_DECL_FUNC(f) internal_cacoshf
+#include <math-type-macros-float.h>
+
+/* Disable any aliasing from base template.  */
+#undef declare_mgen_alias
+#define declare_mgen_alias(__to, __from)
+
+#include <math/s_cacosh_template.c>
 #include "cfloat-compat.h"
 
 #undef __cacoshf

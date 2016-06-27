@@ -24,14 +24,18 @@
 
 #undef __ccosf
 #undef ccosf
-#define __ccosf internal_ccosf
 
 static _Complex float internal_ccosf (_Complex float x);
 
-#include <math/s_ccosf.c>
-#include "cfloat-compat.h"
+#define M_DECL_FUNC(f) internal_ccosf
+#include <math-type-macros-float.h>
 
-#undef __ccosf
+/* Disable any aliasing from base template.  */
+#undef declare_mgen_alias
+#define declare_mgen_alias(__to, __from)
+
+#include <math/s_ccos_template.c>
+#include "cfloat-compat.h"
 
 c1_cfloat_rettype
 __c1_ccosf (c1_cfloat_decl (x))

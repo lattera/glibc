@@ -1,4 +1,4 @@
-/* Return cosine of complex double value.
+/* Return cosine of a complex type.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -20,22 +20,22 @@
 #include <complex.h>
 #include <math.h>
 
-__complex__ double
-__cacos (__complex__ double x)
+CFLOAT
+M_DECL_FUNC (__cacos) (CFLOAT x)
 {
-  __complex__ double y;
-  __complex__ double res;
+  CFLOAT y;
+  CFLOAT res;
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
   if (rcls <= FP_INFINITE || icls <= FP_INFINITE
       || (rcls == FP_ZERO && icls == FP_ZERO))
     {
-      y = __casin (x);
+      y = M_SUF (__casin) (x);
 
-      __real__ res = (double) M_PI_2 - __real__ y;
-      if (__real__ res == 0.0)
-	__real__ res = 0.0;
+      __real__ res = (FLOAT) M_MLIT (M_PI_2) - __real__ y;
+      if (__real__ res == 0)
+	__real__ res = 0;
       __imag__ res = -__imag__ y;
     }
   else
@@ -43,7 +43,7 @@ __cacos (__complex__ double x)
       __real__ y = -__imag__ x;
       __imag__ y = __real__ x;
 
-      y = __kernel_casinh (y, 1);
+      y = M_SUF (__kernel_casinh) (y, 1);
 
       __real__ res = __imag__ y;
       __imag__ res = __real__ y;
@@ -51,8 +51,9 @@ __cacos (__complex__ double x)
 
   return res;
 }
-weak_alias (__cacos, cacos)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__cacos, __cacosl)
-weak_alias (__cacos, cacosl)
+
+declare_mgen_alias (__cacos, cacos);
+
+#if M_LIBM_NEED_COMPAT (carg)
+declare_mgen_libm_compat (__cacos, cacos)
 #endif
