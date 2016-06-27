@@ -77,8 +77,8 @@ thread_function (void * arg __attribute__ ((unused)))
   return NULL;
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   int count = sysconf (_SC_NPROCESSORS_ONLN);
   if (count <= 0)
@@ -161,3 +161,6 @@ main (void)
 
   return result;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../../test-skeleton.c"

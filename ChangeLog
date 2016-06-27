@@ -1,3 +1,12 @@
+2016-06-27  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/mips/tst-mode-switch-1.c (main): Converted to ...
+	(do_test): ... this.
+	(TEST_FUNCTION): New macro.
+	 Include test-skeleton.c.
+	* sysdeps/mips/tst-mode-switch-2.c (main): Likewise.
+	* sysdeps/mips/tst-mode-switch-3.c (main): Likewise.
+
 2016-06-27  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15479]
