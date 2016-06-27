@@ -1588,8 +1588,10 @@ ildouble: 2
 ldouble: 2
 
 Function: "exp_upward":
+float: 1
 double: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 

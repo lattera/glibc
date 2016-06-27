@@ -1,3 +1,14 @@
+2016-06-30  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	[$(subdir) = math] (libm-sysdep_routines): Add e_expf-power8 and
+	e_expf-ppc64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_expf-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_expf-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_expf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/e_expf.S: Likewise.
+
 2016-06-30  John David Anglin  <danglin@gcc.gnu.org>
 
 	[BZ #20277]
