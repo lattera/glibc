@@ -1,6 +1,17 @@
 2016-06-27  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15479]
+	* sysdeps/i386/fpu/s_trunc.S (__trunc): Save and restore
+	floating-point environment rather than just control word.
+	* sysdeps/i386/fpu/s_truncf.S (__truncf): Likewise.
+	* sysdeps/i386/fpu/s_truncl.S (__truncl): Save and restore
+	floating-point environment, with "invalid" exceptions merged in,
+	rather than just control word.
+	* sysdeps/x86_64/fpu/s_truncl.S (__truncl): Likewise.
+	* math/libm-test.inc (trunc_test_data): Do not allow spurious
+	"inexact" exceptions.
+
+	[BZ #15479]
 	* sysdeps/i386/fpu/s_floor.S (__floor): Save and restore
 	floating-point environment rather than just control word.
 	* sysdeps/i386/fpu/s_floorf.S (__floorf): Likewise.

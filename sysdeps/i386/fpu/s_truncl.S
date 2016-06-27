@@ -21,17 +21,20 @@
 
 ENTRY(__truncl)
 	fldt	4(%esp)
-	subl	$8, %esp
-	cfi_adjust_cfa_offset (8)
-	fstcw	4(%esp)
+	subl	$32, %esp
+	cfi_adjust_cfa_offset (32)
+	fnstenv	4(%esp)
 	movl	$0xc00, %edx
 	orl	4(%esp), %edx
 	movl	%edx, (%esp)
 	fldcw	(%esp)
 	frndint
-	fldcw	4(%esp)
-	addl	$8, %esp
-	cfi_adjust_cfa_offset (-8)
+	fnstsw
+	andl	$0x1, %eax
+	orl	%eax, 8(%esp)
+	fldenv	4(%esp)
+	addl	$32, %esp
+	cfi_adjust_cfa_offset (-32)
 	ret
 END(__truncl)
 weak_alias (__truncl, truncl)
