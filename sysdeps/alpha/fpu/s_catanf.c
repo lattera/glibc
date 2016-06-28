@@ -24,14 +24,18 @@
 
 #undef __catanf
 #undef catanf
-#define __catanf internal_catanf
 
 static _Complex float internal_catanf (_Complex float x);
 
-#include <math/s_catanf.c>
-#include "cfloat-compat.h"
+#define M_DECL_FUNC(f) internal_catanf
+#include <math-type-macros-float.h>
 
-#undef __catanf
+/* Disable any aliasing from base template.  */
+#undef declare_mgen_alias
+#define declare_mgen_alias(__to, __from)
+
+#include <math/s_catan_template.c>
+#include "cfloat-compat.h"
 
 c1_cfloat_rettype
 __c1_catanf (c1_cfloat_decl (x))

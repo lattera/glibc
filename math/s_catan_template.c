@@ -1,4 +1,4 @@
-/* Return arc tangent of complex double value.
+/* Return arc tangent of complex float type.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -22,10 +22,10 @@
 #include <math_private.h>
 #include <float.h>
 
-__complex__ double
-__catan (__complex__ double x)
+CFLOAT
+M_DECL_FUNC (__catan) (CFLOAT x)
 {
-  __complex__ double res;
+  CFLOAT res;
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
@@ -33,26 +33,26 @@ __catan (__complex__ double x)
     {
       if (rcls == FP_INFINITE)
 	{
-	  __real__ res = __copysign (M_PI_2, __real__ x);
-	  __imag__ res = __copysign (0.0, __imag__ x);
+	  __real__ res = M_COPYSIGN (M_MLIT (M_PI_2), __real__ x);
+	  __imag__ res = M_COPYSIGN (0, __imag__ x);
 	}
       else if (icls == FP_INFINITE)
 	{
 	  if (rcls >= FP_ZERO)
-	    __real__ res = __copysign (M_PI_2, __real__ x);
+	    __real__ res = M_COPYSIGN (M_MLIT (M_PI_2), __real__ x);
 	  else
-	    __real__ res = __nan ("");
-	  __imag__ res = __copysign (0.0, __imag__ x);
+	    __real__ res = M_NAN;
+	  __imag__ res = M_COPYSIGN (0, __imag__ x);
 	}
       else if (icls == FP_ZERO || icls == FP_INFINITE)
 	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __copysign (0.0, __imag__ x);
+	  __real__ res = M_NAN;
+	  __imag__ res = M_COPYSIGN (0, __imag__ x);
 	}
       else
 	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __nan ("");
+	  __real__ res = M_NAN;
+	  __imag__ res = M_NAN;
 	}
     }
   else if (__glibc_unlikely (rcls == FP_ZERO && icls == FP_ZERO))
@@ -61,72 +61,73 @@ __catan (__complex__ double x)
     }
   else
     {
-      if (fabs (__real__ x) >= 16.0 / DBL_EPSILON
-	  || fabs (__imag__ x) >= 16.0 / DBL_EPSILON)
+      if (M_FABS (__real__ x) >= 16 / M_EPSILON
+	  || M_FABS (__imag__ x) >= 16 / M_EPSILON)
 	{
-	  __real__ res = __copysign (M_PI_2, __real__ x);
-	  if (fabs (__real__ x) <= 1.0)
-	    __imag__ res = 1.0 / __imag__ x;
-	  else if (fabs (__imag__ x) <= 1.0)
+	  __real__ res = M_COPYSIGN (M_MLIT (M_PI_2), __real__ x);
+	  if (M_FABS (__real__ x) <= 1)
+	    __imag__ res = 1 / __imag__ x;
+	  else if (M_FABS (__imag__ x) <= 1)
 	    __imag__ res = __imag__ x / __real__ x / __real__ x;
 	  else
 	    {
-	      double h = __ieee754_hypot (__real__ x / 2.0, __imag__ x / 2.0);
-	      __imag__ res = __imag__ x / h / h / 4.0;
+	      FLOAT h = M_HYPOT (__real__ x / 2, __imag__ x / 2);
+	      __imag__ res = __imag__ x / h / h / 4;
 	    }
 	}
       else
 	{
-	  double den, absx, absy;
+	  FLOAT den, absx, absy;
 
-	  absx = fabs (__real__ x);
-	  absy = fabs (__imag__ x);
+	  absx = M_FABS (__real__ x);
+	  absy = M_FABS (__imag__ x);
 	  if (absx < absy)
 	    {
-	      double t = absx;
+	      FLOAT t = absx;
 	      absx = absy;
 	      absy = t;
 	    }
 
-	  if (absy < DBL_EPSILON / 2.0)
+	  if (absy < M_EPSILON / 2)
 	    {
-	      den = (1.0 - absx) * (1.0 + absx);
-	      if (den == -0.0)
-		den = 0.0;
+	      den = (1 - absx) * (1 + absx);
+	      if (den == 0)
+		den = 0;
 	    }
-	  else if (absx >= 1.0)
-	    den = (1.0 - absx) * (1.0 + absx) - absy * absy;
-	  else if (absx >= 0.75 || absy >= 0.5)
-	    den = -__x2y2m1 (absx, absy);
+	  else if (absx >= 1)
+	    den = (1 - absx) * (1 + absx) - absy * absy;
+	  else if (absx >= M_LIT (0.75) || absy >= M_LIT (0.5))
+	    den = -M_SUF (__x2y2m1) (absx, absy);
 	  else
-	    den = (1.0 - absx) * (1.0 + absx) - absy * absy;
+	    den = (1 - absx) * (1 + absx) - absy * absy;
 
-	  __real__ res = 0.5 * __ieee754_atan2 (2.0 * __real__ x, den);
+	  __real__ res = M_LIT (0.5) * M_ATAN2 (2 * __real__ x, den);
 
-	  if (fabs (__imag__ x) == 1.0
-	      && fabs (__real__ x) < DBL_EPSILON * DBL_EPSILON)
-	    __imag__ res = (__copysign (0.5, __imag__ x)
-			    * (M_LN2 - __ieee754_log (fabs (__real__ x))));
+	  if (M_FABS (__imag__ x) == 1
+	      && M_FABS (__real__ x) < M_EPSILON * M_EPSILON)
+	    __imag__ res = (M_COPYSIGN (M_LIT (0.5), __imag__ x)
+			    * ((FLOAT) M_MLIT (M_LN2)
+			       - M_LOG (M_FABS (__real__ x))));
 	  else
 	    {
-	      double r2 = 0.0, num, f;
+	      FLOAT r2 = 0, num, f;
 
-	      if (fabs (__real__ x) >= DBL_EPSILON * DBL_EPSILON)
+	      if (M_FABS (__real__ x) >= M_EPSILON * M_EPSILON)
 		r2 = __real__ x * __real__ x;
 
-	      num = __imag__ x + 1.0;
+	      num = __imag__ x + 1;
 	      num = r2 + num * num;
 
-	      den = __imag__ x - 1.0;
+	      den = __imag__ x - 1;
 	      den = r2 + den * den;
 
 	      f = num / den;
-	      if (f < 0.5)
-		__imag__ res = 0.25 * __ieee754_log (f);
+	      if (f < M_LIT (0.5))
+		__imag__ res = M_LIT (0.25) * M_LOG (f);
 	      else
 		{
-		  num = 4.0 * __imag__ x;
-		  __imag__ res = 0.25 * __log1p (num / den);
+		  num = 4 * __imag__ x;
+		  __imag__ res = M_LIT (0.25) * M_LOG1P (num / den);
 		}
 	    }
 	}
@@ -136,8 +137,9 @@ __catan (__complex__ double x)
 
   return res;
 }
-weak_alias (__catan, catan)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__catan, __catanl)
-weak_alias (__catan, catanl)
+
+declare_mgen_alias (__catan, catan)
+
+#if M_LIBM_NEED_COMPAT (catan)
+declare_mgen_libm_compat (__catan, catan)
 #endif

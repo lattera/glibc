@@ -1,5 +1,41 @@
 2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/Makefile (libm-gen-calls): Add
+	catan, catanh, ctan, ctanh.
+	(libm-calls): Remove the above.
+
+	* math/s_catan_template.c: Update using type-generic macros.
+	* math/s_catanh_template.c: Likewise.
+	* math/s_ctan_template.c: Likewise.
+	* math/s_ctanh_template.c: Likewise.
+
+	* math/s_catanf.c: Removed.
+	* math/s_catan.c: Removed.
+	* math/s_catanl.c: Removed.
+	* math/s_catanhf.c: Removed.
+	* math/s_catanh.c: Removed.
+	* math/s_catanhl.c: Removed.
+	* math/s_ctanf.c: Removed.
+	* math/s_ctan.c: Removed.
+	* math/s_ctanl.c: Removed.
+	* math/s_ctanhf.c: Removed.
+	* math/s_ctanh.c: Removed.
+	* math/s_ctanhl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/s_catanhl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_catanl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ctan.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ctanh.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ctanhl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ctanl.c: Removed.
+
+	* sysdeps/alpha/fpu/s_catanf.c: Update to use template file.
+	* sysdeps/alpha/fpu/s_catanhf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ctanf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ctanhf.c: Likewise.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* s_catan_template.c: Copy of s_catan.c.
 	* s_catanh_template.c: Copy of s_catanh.c.
 	* s_ctan_template.c: Copy of s_ctan.c.
