@@ -1,4 +1,4 @@
-/* Complex sine function.  m68k fpu version
+/* Complex sine hyperbole function.  m68k fpu version
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
@@ -21,47 +21,42 @@
 #include <math.h>
 #include "mathimpl.h"
 
-#ifndef SUFF
-#define SUFF
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
 #define CONCATX(a,b) __CONCAT(a,b)
-#define s(name) CONCATX(name,SUFF)
+#define s(name) M_SUF (name)
 #define m81(func) __m81_u(s(func))
 
-__complex__ float_type
-s(__csin) (__complex__ float_type x)
+CFLOAT
+s(__csinh) (CFLOAT x)
 {
-  __complex__ float_type retval;
-  unsigned long rx_cond = __m81_test (__real__ x);
+  CFLOAT retval;
+  unsigned long ix_cond;
 
-  if ((rx_cond & (__M81_COND_INF|__M81_COND_NAN)) == 0)
+  ix_cond = __m81_test (__imag__ x);
+
+  if ((ix_cond & (__M81_COND_INF|__M81_COND_NAN)) == 0)
     {
-      /* Real part is finite.  */
-      float_type sin_rx, cos_rx;
+      /* Imaginary part is finite.  */
+      FLOAT sin_ix, cos_ix;
 
-      __asm ("fsincos%.x %2,%1:%0" : "=f" (sin_rx), "=f" (cos_rx)
-	     : "f" (__real__ x));
-      if (rx_cond & __M81_COND_ZERO)
-	__real__ retval = __real__ x;
+      __asm ("fsincos%.x %2,%1:%0" : "=f" (sin_ix), "=f" (cos_ix)
+	     : "f" (__imag__ x));
+      __real__ retval = cos_ix * m81(__ieee754_sinh) (__real__ x);
+      if (ix_cond & __M81_COND_ZERO)
+	__imag__ retval = __imag__ x;
       else
-	__real__ retval = sin_rx * m81(__ieee754_cosh) (__imag__ x);
-      __imag__ retval = cos_rx * m81(__ieee754_sinh) (__imag__ x);
+	__imag__ retval = sin_ix * m81(__ieee754_cosh) (__real__ x);
     }
   else
     {
-      unsigned long ix_cond = __m81_test (__imag__ x);
+      unsigned long rx_cond = __m81_test (__real__ x);
 
-      __real__ retval = __real__ x - __real__ x;
-      if (ix_cond & (__M81_COND_ZERO|__M81_COND_INF|__M81_COND_NAN))
-	__imag__ retval = __imag__ x;
+      __imag__ retval = __imag__ x - __imag__ x;
+      if (rx_cond & (__M81_COND_ZERO|__M81_COND_INF|__M81_COND_NAN))
+	__real__ retval = __real__ x;
       else
-	__imag__ retval = __real__ retval;
+	__real__ retval = __imag__ retval;
     }
 
   return retval;
 }
-weak_alias (s(__csin), s(csin))
+weak_alias (s(__csinh), s(csinh))

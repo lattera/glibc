@@ -1,4 +1,4 @@
-/* Complex sine hyperbole function for double.
+/* Complex sine hyperbole function for float types.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -23,15 +23,15 @@
 #include <math_private.h>
 #include <float.h>
 
-__complex__ double
-__csinh (__complex__ double x)
+CFLOAT
+M_DECL_FUNC (__csinh) (CFLOAT x)
 {
-  __complex__ double retval;
+  CFLOAT retval;
   int negate = signbit (__real__ x);
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  __real__ x = fabs (__real__ x);
+  __real__ x = M_FABS (__real__ x);
 
   if (__glibc_likely (rcls >= FP_ZERO))
     {
@@ -39,31 +39,31 @@ __csinh (__complex__ double x)
       if (__glibc_likely (icls >= FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
-	  const int t = (int) ((DBL_MAX_EXP - 1) * M_LN2);
-	  double sinix, cosix;
+	  const int t = (int) ((M_MAX_EXP - 1) * M_MLIT (M_LN2));
+	  FLOAT sinix, cosix;
 
-	  if (__glibc_likely (fabs (__imag__ x) > DBL_MIN))
+	  if (__glibc_likely (M_FABS (__imag__ x) > M_MIN))
 	    {
-	      __sincos (__imag__ x, &sinix, &cosix);
+	      M_SINCOS (__imag__ x, &sinix, &cosix);
 	    }
 	  else
 	    {
 	      sinix = __imag__ x;
-	      cosix = 1.0;
+	      cosix = 1;
 	    }
 
 	  if (negate)
 	    cosix = -cosix;
 
-	  if (fabs (__real__ x) > t)
+	  if (M_FABS (__real__ x) > t)
 	    {
-	      double exp_t = __ieee754_exp (t);
-	      double rx = fabs (__real__ x);
+	      FLOAT exp_t = M_EXP (t);
+	      FLOAT rx = M_FABS (__real__ x);
 	      if (signbit (__real__ x))
 		cosix = -cosix;
 	      rx -= t;
-	      sinix *= exp_t / 2.0;
-	      cosix *= exp_t / 2.0;
+	      sinix *= exp_t / 2;
+	      cosix *= exp_t / 2;
 	      if (rx > t)
 		{
 		  rx -= t;
@@ -73,20 +73,20 @@ __csinh (__complex__ double x)
 	      if (rx > t)
 		{
 		  /* Overflow (original real part of x > 3t).  */
-		  __real__ retval = DBL_MAX * cosix;
-		  __imag__ retval = DBL_MAX * sinix;
+		  __real__ retval = M_MAX * cosix;
+		  __imag__ retval = M_MAX * sinix;
 		}
 	      else
 		{
-		  double exp_val = __ieee754_exp (rx);
+		  FLOAT exp_val = M_EXP (rx);
 		  __real__ retval = exp_val * cosix;
 		  __imag__ retval = exp_val * sinix;
 		}
 	    }
 	  else
 	    {
-	      __real__ retval = __ieee754_sinh (__real__ x) * cosix;
-	      __imag__ retval = __ieee754_cosh (__real__ x) * sinix;
+	      __real__ retval = M_SINH (__real__ x) * cosix;
+	      __imag__ retval = M_COSH (__real__ x) * sinix;
 	    }
 
 	  math_check_force_underflow_complex (retval);
@@ -96,16 +96,16 @@ __csinh (__complex__ double x)
 	  if (rcls == FP_ZERO)
 	    {
 	      /* Real part is 0.0.  */
-	      __real__ retval = __copysign (0.0, negate ? -1.0 : 1.0);
-	      __imag__ retval = __nan ("") + __nan ("");
+	      __real__ retval = M_COPYSIGN (0, negate ? -1 : 1);
+	      __imag__ retval = M_NAN + M_NAN;
 
 	      if (icls == FP_INFINITE)
 		feraiseexcept (FE_INVALID);
 	    }
 	  else
 	    {
-	      __real__ retval = __nan ("");
-	      __imag__ retval = __nan ("");
+	      __real__ retval = M_NAN;
+	      __imag__ retval = M_NAN;
 
 	      feraiseexcept (FE_INVALID);
 	    }
@@ -117,20 +117,20 @@ __csinh (__complex__ double x)
       if (__glibc_likely (icls > FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
-	  double sinix, cosix;
+	  FLOAT sinix, cosix;
 
-	  if (__glibc_likely (fabs (__imag__ x) > DBL_MIN))
+	  if (__glibc_likely (M_FABS (__imag__ x) > M_MIN))
 	    {
-	      __sincos (__imag__ x, &sinix, &cosix);
+	      M_SINCOS (__imag__ x, &sinix, &cosix);
 	    }
 	  else
 	    {
 	      sinix = __imag__ x;
-	      cosix = 1.0;
+	      cosix = 1;
 	    }
 
-	  __real__ retval = __copysign (HUGE_VAL, cosix);
-	  __imag__ retval = __copysign (HUGE_VAL, sinix);
+	  __real__ retval = M_COPYSIGN (M_HUGE_VAL, cosix);
+	  __imag__ retval = M_COPYSIGN (M_HUGE_VAL, sinix);
 
 	  if (negate)
 	    __real__ retval = -__real__ retval;
@@ -138,14 +138,14 @@ __csinh (__complex__ double x)
       else if (icls == FP_ZERO)
 	{
 	  /* Imaginary part is 0.0.  */
-	  __real__ retval = negate ? -HUGE_VAL : HUGE_VAL;
+	  __real__ retval = negate ? -M_HUGE_VAL : M_HUGE_VAL;
 	  __imag__ retval = __imag__ x;
 	}
       else
 	{
 	  /* The addition raises the invalid exception.  */
-	  __real__ retval = HUGE_VAL;
-	  __imag__ retval = __nan ("") + __nan ("");
+	  __real__ retval = M_HUGE_VAL;
+	  __imag__ retval = M_NAN + M_NAN;
 
 	  if (icls == FP_INFINITE)
 	    feraiseexcept (FE_INVALID);
@@ -153,14 +153,15 @@ __csinh (__complex__ double x)
     }
   else
     {
-      __real__ retval = __nan ("");
-      __imag__ retval = __imag__ x == 0.0 ? __imag__ x : __nan ("");
+      __real__ retval = M_NAN;
+      __imag__ retval = __imag__ x == 0 ? __imag__ x : M_NAN;
     }
 
   return retval;
 }
-weak_alias (__csinh, csinh)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__csinh, __csinhl)
-weak_alias (__csinh, csinhl)
+
+declare_mgen_alias (__csinh, csinh)
+
+#if M_LIBM_NEED_COMPAT (csinh)
+declare_mgen_libm_compat (__csinh, csinh)
 #endif

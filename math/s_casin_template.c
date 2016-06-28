@@ -1,4 +1,4 @@
-/* Return arc sine of complex double value.
+/* Return arc sine of a complex float type.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -22,36 +22,36 @@
 #include <math_private.h>
 
 
-__complex__ double
-__casin (__complex__ double x)
+CFLOAT
+M_DECL_FUNC (__casin) (CFLOAT x)
 {
-  __complex__ double res;
+  CFLOAT res;
 
   if (isnan (__real__ x) || isnan (__imag__ x))
     {
-      if (__real__ x == 0.0)
+      if (__real__ x == 0)
 	{
 	  res = x;
 	}
       else if (isinf (__real__ x) || isinf (__imag__ x))
 	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __copysign (HUGE_VAL, __imag__ x);
+	  __real__ res = M_NAN;
+	  __imag__ res = M_COPYSIGN (M_HUGE_VAL, __imag__ x);
 	}
       else
 	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __nan ("");
+	  __real__ res = M_NAN;
+	  __imag__ res = M_NAN;
 	}
     }
   else
     {
-      __complex__ double y;
+      CFLOAT y;
 
       __real__ y = -__imag__ x;
       __imag__ y = __real__ x;
 
-      y = __casinh (y);
+      y = M_SUF (__casinh) (y);
 
       __real__ res = __imag__ y;
       __imag__ res = -__real__ y;
@@ -59,8 +59,9 @@ __casin (__complex__ double x)
 
   return res;
 }
-weak_alias (__casin, casin)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__casin, __casinl)
-weak_alias (__casin, casinl)
+
+declare_mgen_alias (__casin, casin)
+
+#if M_LIBM_NEED_COMPAT (casin)
+declare_mgen_libm_compat (__casin, casin)
 #endif

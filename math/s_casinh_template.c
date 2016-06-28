@@ -1,4 +1,4 @@
-/* Return arc hyperbole sine for double value.
+/* Return arc hyperbolic sine for a complex float type.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -21,10 +21,10 @@
 #include <math.h>
 #include <math_private.h>
 
-__complex__ double
-__casinh (__complex__ double x)
+CFLOAT
+M_DECL_FUNC (__casinh) (CFLOAT x)
 {
-  __complex__ double res;
+  CFLOAT res;
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
@@ -32,12 +32,13 @@ __casinh (__complex__ double x)
     {
       if (icls == FP_INFINITE)
 	{
-	  __real__ res = __copysign (HUGE_VAL, __real__ x);
+	  __real__ res = M_COPYSIGN (M_HUGE_VAL, __real__ x);
 
 	  if (rcls == FP_NAN)
-	    __imag__ res = __nan ("");
+	    __imag__ res = M_NAN;
 	  else
-	    __imag__ res = __copysign (rcls >= FP_ZERO ? M_PI_2 : M_PI_4,
+	    __imag__ res = M_COPYSIGN ((rcls >= FP_ZERO
+				        ? M_MLIT (M_PI_2) : M_MLIT (M_PI_4)),
 				       __imag__ x);
 	}
       else if (rcls <= FP_INFINITE)
@@ -45,14 +46,14 @@ __casinh (__complex__ double x)
 	  __real__ res = __real__ x;
 	  if ((rcls == FP_INFINITE && icls >= FP_ZERO)
 	      || (rcls == FP_NAN && icls == FP_ZERO))
-	    __imag__ res = __copysign (0.0, __imag__ x);
+	    __imag__ res = M_COPYSIGN (0, __imag__ x);
 	  else
-	    __imag__ res = __nan ("");
+	    __imag__ res = M_NAN;
 	}
       else
 	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __nan ("");
+	  __real__ res = M_NAN;
+	  __imag__ res = M_NAN;
 	}
     }
   else if (rcls == FP_ZERO && icls == FP_ZERO)
@@ -61,13 +62,14 @@ __casinh (__complex__ double x)
     }
   else
     {
-      res = __kernel_casinh (x, 0);
+      res = M_SUF (__kernel_casinh) (x, 0);
     }
 
   return res;
 }
-weak_alias (__casinh, casinh)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__casinh, __casinhl)
-weak_alias (__casinh, casinhl)
+
+declare_mgen_alias (__casinh, casinh)
+
+#if M_LIBM_NEED_COMPAT (casinh)
+declare_mgen_libm_compat (__casinh, casinh)
 #endif

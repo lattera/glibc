@@ -1,5 +1,57 @@
 2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/Makefile (gen-libm-calls): Move
+	casin, casinh, csin, csinh here.
+	(libm-calls): Remove the above.
+
+	* math/s_casin_template.c: Update using type-generic macros.
+	* math/s_casinh_template.c: Likewise.
+	* math/s_csin_template.c: Likewise.
+	* math/s_csinh_template.c: Likewise.
+	* math/k_casinh_template.c: Likewise.
+
+	* math/s_casinf.c: Removed.
+	* math/s_casin.c: Removed.
+	* math/s_casinl.c: Removed.
+	* math/s_casinh.c: Removed.
+	* math/s_casinhf.c: Removed.
+	* math/s_casinhl.c: Removed.
+	* math/s_csin.c: Removed.
+	* math/s_csinf.c: Removed.
+	* math/s_csinl.c: Removed.
+	* math/s_csinh.c: Removed.
+	* math/s_csinhf.c: Removed.
+	* math/s_csinhl.c: Removed.
+	* math/k_casinh.c: Removed.
+	* math/k_casinhf.c: Removed.
+	* math/k_casinhl.c: Removed.
+
+	* sysdeps/alpha/fpu/s_casinf.c: Refactor using templated version.
+	* sysdeps/alpha/fpu/s_casinhf.c: Likewise.
+	* sysdeps/alpha/fpu/s_csinf.c: Likewise.
+	* sysdeps/alpha/fpu/s_csinhf.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-opt/s_casin.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_casinh.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_casinhl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_casinl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csin.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csinh.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csinhl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csinl.c: Removed.
+
+	* sysdeps/m68k/m680x0/fpu/s_csin.c: Refactor into ...
+	* sysdeps/m68k/m680x0/fpu/s_csin_template.c: New file.
+	* sysdeps/m68k/m680x0/fpu/s_csinf.c: Removed.
+	* sysdeps/m68k/m680x0/fpu/s_csinl.c: Removed.
+
+	* sysdeps/m68k/m680x0/fpu/s_csinh.c: Refactor into.
+	* sysdeps/m68k/m680x0/fpu/s_csinh_template.c: New file.
+	* sysdeps/m68k/m680x0/fpu/s_csinhf.c: Removed.
+	* sysdeps/m68k/m680x0/fpu/s_csinhl.c: Removed.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* s_casin_template.c: Copy of s_casin.c.
 	* s_casinh_template.c: Copy of s_casinh.c.
 	* s_csin_template.c: Copy of s_csin.c.

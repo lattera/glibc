@@ -45,8 +45,9 @@ libm-support = s_lib_version s_matherr s_signgam			\
 
 # Wrappers for these functions generated per type using a file named
 # <func>_template.c and the appropriate math-type-macros-<TYPE>.h.
-gen-libm-calls = cargF conjF cimagF crealF cabsF s_cacosF \
-	         s_cacoshF s_ccosF s_ccoshF
+gen-libm-calls = cargF conjF cimagF crealF cabsF s_cacosF		  \
+	         s_cacoshF s_ccosF s_ccoshF s_casinF s_csinF s_casinhF	  \
+		 k_casinhF s_csinhF
 
 libm-calls =								  \
 	e_acosF e_acoshF e_asinF e_atan2F e_atanhF e_coshF e_expF e_fmodF \
@@ -64,11 +65,11 @@ libm-calls =								  \
 	w_ilogbF							  \
 	s_fpclassifyF s_fmaxF s_fminF s_fdimF s_nanF s_truncF		  \
 	s_remquoF e_log2F e_exp2F s_roundF s_nearbyintF s_sincosF	  \
-	s_cexpF s_csinhF s_clogF				  	  \
-	s_catanF s_casinF s_csinF s_ctanF s_ctanhF			  \
-	s_casinhF s_catanhF s_csqrtF s_cpowF s_cprojF s_clog10F 	  \
+	s_cexpF s_clogF							  \
+	s_catanF s_ctanF s_ctanhF					  \
+	s_catanhF s_csqrtF s_cpowF s_cprojF s_clog10F			  \
 	s_fmaF s_lrintF s_llrintF s_lroundF s_llroundF e_exp10F w_log2F	  \
-	s_issignalingF $(calls:s_%=m_%) x2y2m1F k_casinhF		  \
+	s_issignalingF $(calls:s_%=m_%) x2y2m1F				  \
 	gamma_productF lgamma_negF lgamma_productF			  \
 	s_nextupF s_nextdownF $(gen-libm-calls)
 

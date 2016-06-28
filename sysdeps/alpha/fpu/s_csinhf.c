@@ -24,14 +24,18 @@
 
 #undef __csinhf
 #undef csinhf
-#define __csinhf internal_csinhf
 
 static _Complex float internal_csinhf (_Complex float x);
 
-#include <math/s_csinhf.c>
-#include "cfloat-compat.h"
+#define M_DECL_FUNC(f) internal_csinhf
+#include <math-type-macros-float.h>
 
-#undef __csinhf
+/* Disable any aliasing from base template.  */
+#undef declare_mgen_alias
+#define declare_mgen_alias(__to, __from)
+
+#include <math/s_csinh_template.c>
+#include "cfloat-compat.h"
 
 c1_cfloat_rettype
 __c1_csinhf (c1_cfloat_decl (x))

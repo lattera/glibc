@@ -1,6 +1,6 @@
-/* Return arc hyperbole sine for double value, with the imaginary part
-   of the result possibly adjusted for use in computing other
-   functions.
+/* Return arc hyperbolic sine for a complex float type, with the
+   imaginary part of the result possibly adjusted for use in
+   computing other functions.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -27,18 +27,18 @@
    with the imaginary part of the result subtracted from pi/2 if ADJ
    is nonzero.  */
 
-__complex__ double
-__kernel_casinh (__complex__ double x, int adj)
+CFLOAT
+M_DECL_FUNC (__kernel_casinh) (CFLOAT x, int adj)
 {
-  __complex__ double res;
-  double rx, ix;
-  __complex__ double y;
+  CFLOAT res;
+  FLOAT rx, ix;
+  CFLOAT y;
 
   /* Avoid cancellation by reducing to the first quadrant.  */
-  rx = fabs (__real__ x);
-  ix = fabs (__imag__ x);
+  rx = M_FABS (__real__ x);
+  ix = M_FABS (__imag__ x);
 
-  if (rx >= 1.0 / DBL_EPSILON || ix >= 1.0 / DBL_EPSILON)
+  if (rx >= 1 / M_EPSILON || ix >= 1 / M_EPSILON)
     {
       /* For large x in the first quadrant, x + csqrt (1 + x * x)
 	 is sufficiently close to 2 * x to make no significant
@@ -49,162 +49,157 @@ __kernel_casinh (__complex__ double x, int adj)
 
       if (adj)
 	{
-	  double t = __real__ y;
-	  __real__ y = __copysign (__imag__ y, __imag__ x);
+	  FLOAT t = __real__ y;
+	  __real__ y = M_COPYSIGN (__imag__ y, __imag__ x);
 	  __imag__ y = t;
 	}
 
-      res = __clog (y);
-      __real__ res += M_LN2;
+      res = M_SUF (__clog) (y);
+      __real__ res += (FLOAT) M_MLIT (M_LN2);
     }
-  else if (rx >= 0.5 && ix < DBL_EPSILON / 8.0)
+  else if (rx >= M_LIT (0.5) && ix < M_EPSILON / 8)
     {
-      double s = __ieee754_hypot (1.0, rx);
+      FLOAT s = M_HYPOT (1, rx);
 
-      __real__ res = __ieee754_log (rx + s);
+      __real__ res = M_LOG (rx + s);
       if (adj)
-	__imag__ res = __ieee754_atan2 (s, __imag__ x);
+	__imag__ res = M_ATAN2 (s, __imag__ x);
       else
-	__imag__ res = __ieee754_atan2 (ix, s);
+	__imag__ res = M_ATAN2 (ix, s);
     }
-  else if (rx < DBL_EPSILON / 8.0 && ix >= 1.5)
+  else if (rx < M_EPSILON / 8 && ix >= M_LIT (1.5))
     {
-      double s = __ieee754_sqrt ((ix + 1.0) * (ix - 1.0));
+      FLOAT s = M_SQRT ((ix + 1) * (ix - 1));
 
-      __real__ res = __ieee754_log (ix + s);
+      __real__ res = M_LOG (ix + s);
       if (adj)
-	__imag__ res = __ieee754_atan2 (rx, __copysign (s, __imag__ x));
+	__imag__ res = M_ATAN2 (rx, M_COPYSIGN (s, __imag__ x));
       else
-	__imag__ res = __ieee754_atan2 (s, rx);
+	__imag__ res = M_ATAN2 (s, rx);
     }
-  else if (ix > 1.0 && ix < 1.5 && rx < 0.5)
+  else if (ix > 1 && ix < M_LIT (1.5) && rx < M_LIT (0.5))
     {
-      if (rx < DBL_EPSILON * DBL_EPSILON)
+      if (rx < M_EPSILON * M_EPSILON)
 	{
-	  double ix2m1 = (ix + 1.0) * (ix - 1.0);
-	  double s = __ieee754_sqrt (ix2m1);
+	  FLOAT ix2m1 = (ix + 1) * (ix - 1);
+	  FLOAT s = M_SQRT (ix2m1);
 
-	  __real__ res = __log1p (2.0 * (ix2m1 + ix * s)) / 2.0;
+	  __real__ res = M_LOG1P (2 * (ix2m1 + ix * s)) / 2;
 	  if (adj)
-	    __imag__ res = __ieee754_atan2 (rx, __copysign (s, __imag__ x));
+	    __imag__ res = M_ATAN2 (rx, M_COPYSIGN (s, __imag__ x));
 	  else
-	    __imag__ res = __ieee754_atan2 (s, rx);
-	}
-      else
-	{
-	  double ix2m1 = (ix + 1.0) * (ix - 1.0);
-	  double rx2 = rx * rx;
-	  double f = rx2 * (2.0 + rx2 + 2.0 * ix * ix);
-	  double d = __ieee754_sqrt (ix2m1 * ix2m1 + f);
-	  double dp = d + ix2m1;
-	  double dm = f / dp;
-	  double r1 = __ieee754_sqrt ((dm + rx2) / 2.0);
-	  double r2 = rx * ix / r1;
-
-	  __real__ res = __log1p (rx2 + dp + 2.0 * (rx * r1 + ix * r2)) / 2.0;
-	  if (adj)
-	    __imag__ res = __ieee754_atan2 (rx + r1, __copysign (ix + r2,
-								 __imag__ x));
-	  else
-	    __imag__ res = __ieee754_atan2 (ix + r2, rx + r1);
-	}
-    }
-  else if (ix == 1.0 && rx < 0.5)
-    {
-      if (rx < DBL_EPSILON / 8.0)
-	{
-	  __real__ res = __log1p (2.0 * (rx + __ieee754_sqrt (rx))) / 2.0;
-	  if (adj)
-	    __imag__ res = __ieee754_atan2 (__ieee754_sqrt (rx),
-					    __copysign (1.0, __imag__ x));
-	  else
-	    __imag__ res = __ieee754_atan2 (1.0, __ieee754_sqrt (rx));
+	    __imag__ res = M_ATAN2 (s, rx);
 	}
       else
 	{
-	  double d = rx * __ieee754_sqrt (4.0 + rx * rx);
-	  double s1 = __ieee754_sqrt ((d + rx * rx) / 2.0);
-	  double s2 = __ieee754_sqrt ((d - rx * rx) / 2.0);
+	  FLOAT ix2m1 = (ix + 1) * (ix - 1);
+	  FLOAT rx2 = rx * rx;
+	  FLOAT f = rx2 * (2 + rx2 + 2 * ix * ix);
+	  FLOAT d = M_SQRT (ix2m1 * ix2m1 + f);
+	  FLOAT dp = d + ix2m1;
+	  FLOAT dm = f / dp;
+	  FLOAT r1 = M_SQRT ((dm + rx2) / 2);
+	  FLOAT r2 = rx * ix / r1;
 
-	  __real__ res = __log1p (rx * rx + d + 2.0 * (rx * s1 + s2)) / 2.0;
+	  __real__ res = M_LOG1P (rx2 + dp + 2 * (rx * r1 + ix * r2)) / 2;
 	  if (adj)
-	    __imag__ res = __ieee754_atan2 (rx + s1, __copysign (1.0 + s2,
-								 __imag__ x));
+	    __imag__ res = M_ATAN2 (rx + r1, M_COPYSIGN (ix + r2, __imag__ x));
 	  else
-	    __imag__ res = __ieee754_atan2 (1.0 + s2, rx + s1);
+	    __imag__ res = M_ATAN2 (ix + r2, rx + r1);
 	}
     }
-  else if (ix < 1.0 && rx < 0.5)
+  else if (ix == 1 && rx < M_LIT (0.5))
     {
-      if (ix >= DBL_EPSILON)
+      if (rx < M_EPSILON / 8)
 	{
-	  if (rx < DBL_EPSILON * DBL_EPSILON)
+	  __real__ res = M_LOG1P (2 * (rx + M_SQRT (rx))) / 2;
+	  if (adj)
+	    __imag__ res = M_ATAN2 (M_SQRT (rx), M_COPYSIGN (1, __imag__ x));
+	  else
+	    __imag__ res = M_ATAN2 (1, M_SQRT (rx));
+	}
+      else
+	{
+	  FLOAT d = rx * M_SQRT (4 + rx * rx);
+	  FLOAT s1 = M_SQRT ((d + rx * rx) / 2);
+	  FLOAT s2 = M_SQRT ((d - rx * rx) / 2);
+
+	  __real__ res = M_LOG1P (rx * rx + d + 2 * (rx * s1 + s2)) / 2;
+	  if (adj)
+	    __imag__ res = M_ATAN2 (rx + s1, M_COPYSIGN (1 + s2, __imag__ x));
+	  else
+	    __imag__ res = M_ATAN2 (1 + s2, rx + s1);
+	}
+    }
+  else if (ix < 1 && rx < M_LIT (0.5))
+    {
+      if (ix >= M_EPSILON)
+	{
+	  if (rx < M_EPSILON * M_EPSILON)
 	    {
-	      double onemix2 = (1.0 + ix) * (1.0 - ix);
-	      double s = __ieee754_sqrt (onemix2);
+	      FLOAT onemix2 = (1 + ix) * (1 - ix);
+	      FLOAT s = M_SQRT (onemix2);
 
-	      __real__ res = __log1p (2.0 * rx / s) / 2.0;
+	      __real__ res = M_LOG1P (2 * rx / s) / 2;
 	      if (adj)
-		__imag__ res = __ieee754_atan2 (s, __imag__ x);
+		__imag__ res = M_ATAN2 (s, __imag__ x);
 	      else
-		__imag__ res = __ieee754_atan2 (ix, s);
+		__imag__ res = M_ATAN2 (ix, s);
 	    }
 	  else
 	    {
-	      double onemix2 = (1.0 + ix) * (1.0 - ix);
-	      double rx2 = rx * rx;
-	      double f = rx2 * (2.0 + rx2 + 2.0 * ix * ix);
-	      double d = __ieee754_sqrt (onemix2 * onemix2 + f);
-	      double dp = d + onemix2;
-	      double dm = f / dp;
-	      double r1 = __ieee754_sqrt ((dp + rx2) / 2.0);
-	      double r2 = rx * ix / r1;
+	      FLOAT onemix2 = (1 + ix) * (1 - ix);
+	      FLOAT rx2 = rx * rx;
+	      FLOAT f = rx2 * (2 + rx2 + 2 * ix * ix);
+	      FLOAT d = M_SQRT (onemix2 * onemix2 + f);
+	      FLOAT dp = d + onemix2;
+	      FLOAT dm = f / dp;
+	      FLOAT r1 = M_SQRT ((dp + rx2) / 2);
+	      FLOAT r2 = rx * ix / r1;
 
-	      __real__ res
-		= __log1p (rx2 + dm + 2.0 * (rx * r1 + ix * r2)) / 2.0;
+	      __real__ res = M_LOG1P (rx2 + dm + 2 * (rx * r1 + ix * r2)) / 2;
 	      if (adj)
-		__imag__ res = __ieee754_atan2 (rx + r1,
-						__copysign (ix + r2,
-							    __imag__ x));
+		__imag__ res = M_ATAN2 (rx + r1, M_COPYSIGN (ix + r2,
+							     __imag__ x));
 	      else
-		__imag__ res = __ieee754_atan2 (ix + r2, rx + r1);
+		__imag__ res = M_ATAN2 (ix + r2, rx + r1);
 	    }
 	}
       else
 	{
-	  double s = __ieee754_hypot (1.0, rx);
+	  FLOAT s = M_HYPOT (1, rx);
 
-	  __real__ res = __log1p (2.0 * rx * (rx + s)) / 2.0;
+	  __real__ res = M_LOG1P (2 * rx * (rx + s)) / 2;
 	  if (adj)
-	    __imag__ res = __ieee754_atan2 (s, __imag__ x);
+	    __imag__ res = M_ATAN2 (s, __imag__ x);
 	  else
-	    __imag__ res = __ieee754_atan2 (ix, s);
+	    __imag__ res = M_ATAN2 (ix, s);
 	}
       math_check_force_underflow_nonneg (__real__ res);
     }
   else
     {
-      __real__ y = (rx - ix) * (rx + ix) + 1.0;
-      __imag__ y = 2.0 * rx * ix;
+      __real__ y = (rx - ix) * (rx + ix) + 1;
+      __imag__ y = 2 * rx * ix;
 
-      y = __csqrt (y);
+      y = M_SUF (__csqrt) (y);
 
       __real__ y += rx;
       __imag__ y += ix;
 
       if (adj)
 	{
-	  double t = __real__ y;
-	  __real__ y = __copysign (__imag__ y, __imag__ x);
+	  FLOAT t = __real__ y;
+	  __real__ y = M_COPYSIGN (__imag__ y, __imag__ x);
 	  __imag__ y = t;
 	}
 
-      res = __clog (y);
+      res = M_SUF (__clog) (y);
     }
 
   /* Give results the correct sign for the original argument.  */
-  __real__ res = __copysign (__real__ res, __real__ x);
-  __imag__ res = __copysign (__imag__ res, (adj ? 1.0 : __imag__ x));
+  __real__ res = M_COPYSIGN (__real__ res, __real__ x);
+  __imag__ res = M_COPYSIGN (__imag__ res, (adj ? 1 : __imag__ x));
 
   return res;
 }

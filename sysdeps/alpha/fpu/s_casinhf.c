@@ -24,14 +24,18 @@
 
 #undef __casinhf
 #undef casinhf
-#define __casinhf internal_casinhf
 
 static _Complex float internal_casinhf (_Complex float x);
 
-#include <math/s_casinhf.c>
-#include "cfloat-compat.h"
+#define M_DECL_FUNC(f) internal_casinhf
+#include <math-type-macros-float.h>
 
-#undef __casinhf
+/* Disable any aliasing from base template.  */
+#undef declare_mgen_alias
+#define declare_mgen_alias(__to, __from)
+
+#include <math/s_casinh_template.c>
+#include "cfloat-compat.h"
 
 c1_cfloat_rettype
 __c1_casinhf (c1_cfloat_decl (x))
