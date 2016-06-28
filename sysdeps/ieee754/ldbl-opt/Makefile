@@ -24,6 +24,7 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 vdprintf_chk obstack_printf_chk obstack_vprintf_chk \
 		 syslog syslog_chk vsyslog vsyslog_chk \
 		 strfmon strfmon_l \
+		 strfroml \
 		 strtold strtold_l strtoldint wcstold wcstold_l wcstoldint \
 		 qecvt qfcvt qgcvt qecvt_r qfcvt_r \
 		 isinf isnan finite signbit scalb log2 lgamma_r ceil \

@@ -1846,3 +1846,6 @@ GLIBC_2.25 GLIBC_2.25 A
 GLIBC_2.25 gnu_dev_major F
 GLIBC_2.25 gnu_dev_makedev F
 GLIBC_2.25 gnu_dev_minor F
+GLIBC_2.25 strfromd F
+GLIBC_2.25 strfromf F
+GLIBC_2.25 strfroml F

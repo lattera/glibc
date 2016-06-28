@@ -60,6 +60,9 @@ Version 2.25
 
   - NaN functions: getpayload, getpayloadf, getpayloadl.
 
+* The functions strfromd, strfromf, and strfroml, from ISO/IEC TS 18661-1:2014,
+  are added to libc.  They convert a floating-point number into string.
+
 * The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
   for the Linux quota interface which predates kernel version 2.4.22 has
   been removed.

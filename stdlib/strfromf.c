@@ -1,5 +1,5 @@
-/* -mlong-double-64 compatibility mode for <stdlib.h> functions.
-   Copyright (C) 2006-2016 Free Software Foundation, Inc.
+/* Definitions for strfromf.  Implementation in stdlib/strfrom-skeleton.c.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,28 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _STDLIB_H
-# error "Never include <bits/stdlib-ldbl.h> directly; use <stdlib.h> instead."
-#endif
+#define FLOAT		float
+#define STRFROM		strfromf
 
-#ifdef	__USE_ISOC99
-__BEGIN_NAMESPACE_C99
-__LDBL_REDIR1_DECL (strtold, strtod)
-__END_NAMESPACE_C99
-#endif
-
-#ifdef __USE_GNU
-__LDBL_REDIR1_DECL (strtold_l, strtod_l)
-#endif
-
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
-__LDBL_REDIR1_DECL (strfroml, strfromd)
-#endif
-
-#ifdef __USE_MISC
-__LDBL_REDIR1_DECL (qecvt, ecvt)
-__LDBL_REDIR1_DECL (qfcvt, fcvt)
-__LDBL_REDIR1_DECL (qgcvt, gcvt)
-__LDBL_REDIR1_DECL (qecvt_r, ecvt_r)
-__LDBL_REDIR1_DECL (qfcvt_r, fcvt_r)
-#endif
+#include "strfrom-skeleton.c"

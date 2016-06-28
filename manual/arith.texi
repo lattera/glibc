@@ -20,6 +20,7 @@ These functions are declared in the header files @file{math.h} and
 * Complex Numbers::             The types.  Writing complex constants.
 * Operations on Complex::       Projection, conjugation, decomposition.
 * Parsing of Numbers::          Converting strings to numbers.
+* Printing of Floats::          Converting floating-point numbers to strings.
 * System V Number Conversion::  An archaic way to convert numbers to strings.
 @end menu
 
@@ -2805,6 +2806,46 @@ is provided mostly for compatibility with existing code; using
 which take an additional argument, the locale to use in conversion.
 
 See also @ref{Parsing of Integers}.
+
+@node Printing of Floats
+@section Printing of Floats
+
+@pindex stdlib.h
+The @samp{strfrom} functions are declared in @file{stdlib.h}.
+
+@comment stdlib.h
+@comment ISO/IEC TS 18661-1
+@deftypefun int strfromd (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, double @var{value})
+@deftypefunx int strfromf (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, float @var{value})
+@deftypefunx int strfroml (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, long double @var{value})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@comment these functions depend on __printf_fp and __printf_fphex, which are
+@comment AS-unsafe (ascuheap) and AC-unsafe (acsmem).
+The functions @code{strfromd} (``string-from-double''), @code{strfromf}
+(``string-from-float''), and @code{strfroml} (``string-from-long-double'')
+convert the floating-point number @var{value} to a string of characters and
+stores them into the area pointed to by @var{string}.  The conversion
+writes at most @var{size} characters and respects the format specified by
+@var{format}.
+
+The format string must start with the character @samp{%}.  An optional
+precision follows, which starts with a period, @samp{.}, and may be
+followed by a decimal integer, representing the precision.  If a decimal
+integer is not specified after the period, the precision is taken to be
+zero.  The character @samp{*} is not allowed.  Finally, the format string
+ends with one of the following conversion specifiers: @samp{a}, @samp{A},
+@samp{e}, @samp{E}, @samp{f}, @samp{F}, @samp{g} or @samp{G} (@pxref{Table
+of Output Conversions}).  Invalid format strings result in undefined
+behavior.
+
+These functions return the number of characters that would have been
+written to @var{string} had @var{size} been sufficiently large, not
+counting the terminating null character.  Thus, the null-terminated output
+has been completely written if and only if the returned value is less than
+@var{size}.
+
+These functions were introduced by ISO/IEC TS 18661-1.
+@end deftypefun
 
 @node System V Number Conversion
 @section Old-fashioned System V number-to-string functions

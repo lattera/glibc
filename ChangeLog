@@ -1,3 +1,50 @@
+2016-10-25  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* NEWS: Mention the addition of strfromd, strfromf, and strfroml.
+	* manual/arith.texi: Document strfromd, strfromf, strfroml.
+	* stdlib/Makefile: Add strfromd, strfromf, and strfroml.
+	* stdlib/Versions (GLIBC_2.25): Add strfromd, strfromf, and strfroml.
+	* stdlib/stdlib.h (strfromd): New declaration.
+	(strfromf): Likewise.
+	(strfroml): Likewise.
+	* stdlib/strfrom-skeleton.c: New file.  Generic implementation for
+	strfrom.
+	* stdlib/strfromd.c: New file.
+	* stdlib/strfromf.c: Likewise.
+	* stdlib/strfroml.c: Likewise.
+	* stdlib/bits/stdlib-ldbl.h: Add redirection from strfroml to strfromd.
+	* sysdeps/ieee754/ldbl-opt/Makefile: Add rule for nldbl-strfroml.c.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strfroml.c: New file;
+	* sysdeps/arm/nacl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise.
+
 2016-10-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/powerpc32/power6/memset.S (memset): Use cmplwi

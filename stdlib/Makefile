@@ -46,6 +46,7 @@ routines	:=							      \
 	drand48_r erand48_r lrand48_r nrand48_r mrand48_r jrand48_r	      \
 	srand48_r seed48_r lcong48_r					      \
 	drand48-iter							      \
+	strfromf strfromd strfroml					      \
 	strtol strtoul strtoll strtoull					      \
 	strtol_l strtoul_l strtoll_l strtoull_l				      \
 	strtof strtod strtold						      \
@@ -121,6 +122,12 @@ CFLAGS-fmtmsg.c = -fexceptions
 
 CFLAGS-strfmon.c = $(libio-mtsafe)
 CFLAGS-strfmon_l.c = $(libio-mtsafe)
+
+# The strfrom class of functions call __printf_fp in order to convert the
+# floating-point value to characters.  This requires the value of IO_MTSAFE_IO.
+CFLAGS-strfromd.c = $(libio-mtsafe)
+CFLAGS-strfromf.c = $(libio-mtsafe)
+CFLAGS-strfroml.c = $(libio-mtsafe)
 
 CFLAGS-tst-bsearch.c = $(stack-align-test-flags)
 CFLAGS-tst-qsort.c = $(stack-align-test-flags)

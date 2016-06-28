@@ -21,7 +21,8 @@
 
 #ifndef	_STDLIB_H
 
-#include <features.h>
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+#include <bits/libc-header-start.h>
 
 /* Get size_t, wchar_t and NULL from <stddef.h>.  */
 #define		__need_size_t
@@ -177,6 +178,21 @@ extern unsigned long long int strtoull (const char *__restrict __nptr,
      __THROW __nonnull ((1));
 __END_NAMESPACE_C99
 #endif /* ISO C99 or use MISC.  */
+
+/* Convert a floating-point number to a string.  */
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+extern int strfromd (char *__dest, size_t __size, const char *__format,
+		     double __f)
+     __THROW __nonnull ((3));
+
+extern int strfromf (char *__dest, size_t __size, const char *__format,
+		     float __f)
+     __THROW __nonnull ((3));
+
+extern int strfroml (char *__dest, size_t __size, const char *__format,
+		     long double __f)
+     __THROW __nonnull ((3));
+#endif
 
 
 #ifdef __USE_GNU
