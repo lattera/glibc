@@ -33,7 +33,7 @@ weak_alias (__libc_pwrite64, __pwrite64)
 libc_hidden_weak (__pwrite64)
 weak_alias (__libc_pwrite64, pwrite64)
 
-#if __WORDSIZE == 64 && !defined (__ASSUME_OFF_DIFF_OFF64)
+#ifdef __OFF_T_MATCHES_OFF64_T
 strong_alias (__libc_pwrite64, __libc_pwrite)
 weak_alias (__libc_pwrite64, __pwrite)
 weak_alias (__libc_pwrite64, pwrite)

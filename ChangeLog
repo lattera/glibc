@@ -1,3 +1,25 @@
+2016-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	(__ASSUME_OFF_DIFF_OFF64): Remove define.
+	* sysdeps/unix/sysv/linux/pread.c
+	[__WORDSIZE != 64 || __ASSUME_OFF_DIFF_OFF64] (pread): Replace by
+	__OFF_T_MATCHES_OFF64_T.
+	* sysdeps/unix/sysv/linux/pread64.c
+	[__WORDSIZE != 64 || __ASSUME_OFF_DIFF_OFF64] (pread64): Likewise.
+	* sysdeps/unix/sysv/linux/preadv.c
+	[__WORDSIZE != 64 || __ASSUME_OFF_DIFF_OFF64] (preadv): Likewise.
+	* sysdeps/unix/sysv/linux/preadv64.c
+	[__WORDSIZE != 64 || __ASSUME_OFF_DIFF_OFF64] (preadv64): Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c
+	[__WORDSIZE != 64 || __ASSUME_OFF_DIFF_OFF64] (pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/pwrite64.c
+	[__WORDSIZE != 64 || __ASSUME_OFF_DIFF_OFF64] (pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev.c
+	[__WORDSIZE != 64 || __ASSUME_OFF_DIFF_OFF64] (pwritev): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64.c
+	[__WORDSIZE != 64 || __ASSUME_OFF_DIFF_OFF64] (pwritev64): Likewise.
+
 2016-07-08  Martin Galvan  <martin.galvan@tallertechnologies.com>
 
 	* Makeconfig (build-hardcoded-path-in-tests): Set to 'yes'

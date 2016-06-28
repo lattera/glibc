@@ -49,6 +49,6 @@ pwritev64 (int fd, const struct iovec *vector, int count, off64_t offset)
 # include <sysdeps/posix/pwritev.c>
 #endif
 
-#if __WORDSIZE == 64 && !defined (__ASSUME_OFF_DIFF_OFF64)
+#ifdef __OFF_T_MATCHES_OFF64_T
 strong_alias (pwritev64, pwritev)
 #endif

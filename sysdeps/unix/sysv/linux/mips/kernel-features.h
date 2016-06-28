@@ -38,5 +38,4 @@
    pass 64-bits values through syscalls.  */
 #if _MIPS_SIM == _ABIN32
 # define __ASSUME_WORDSIZE64_ILP32	1
-# define __ASSUME_OFF_DIFF_OFF64        1
 #endif

@@ -33,7 +33,7 @@ __libc_pread64 (int fd, void *buf, size_t count, off64_t offset)
 weak_alias (__libc_pread64, __pread64)
 weak_alias (__libc_pread64, pread64)
 
-#if __WORDSIZE == 64 && !defined (__ASSUME_OFF_DIFF_OFF64)
+#ifdef __OFF_T_MATCHES_OFF64_T
 strong_alias (__libc_pread64, __libc_pread)
 weak_alias (__libc_pread64, __pread)
 weak_alias (__libc_pread64, pread)

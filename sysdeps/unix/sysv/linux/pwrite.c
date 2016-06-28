@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <sysdep-cancel.h>
 
-#if __WORDSIZE != 64 || defined (__ASSUME_OFF_DIFF_OFF64)
+#ifndef __OFF_T_MATCHES_OFF64_T
 
 # ifndef __NR_pwrite
 #  define __NR_pwrite __NR_pwrite64
