@@ -24,14 +24,18 @@
 
 #undef __cexpf
 #undef cexpf
-#define __cexpf internal_cexpf
 
 static _Complex float internal_cexpf (_Complex float x);
 
-#include <math/s_cexpf.c>
-#include "cfloat-compat.h"
+#define M_DECL_FUNC(f) internal_cexpf
+#include <math-type-macros-float.h>
 
-#undef __cexpf
+/* Disable any aliasing from base template.  */
+#undef declare_mgen_alias
+#define declare_mgen_alias(__to, __from)
+
+#include <math/s_cexp_template.c>
+#include "cfloat-compat.h"
 
 c1_cfloat_rettype
 __c1_cexpf (c1_cfloat_decl (x))

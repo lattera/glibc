@@ -1,5 +1,63 @@
 2016-08-29  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/Makefile (libm-gen-calls): Add cpow, clog, clog10, cexp, cproj.
+	(libm-calls): Remove the above.
+
+	* math/s_cexp_template.c: Update using type-generic macros.
+	* math/s_clog10_template.c: Likewise.
+	* math/s_cpow_template.c: Likewise.
+	* math/s_clog_template.c: Likewise.
+	* math/s_cproj_template.c: Likewise.
+	* math/s_csqrt_template.c: Likewise.
+
+	* math/s_cexp.c: Removed.
+	* math/s_cexpf.c: Removed.
+	* math/s_cexpl.c: Removed.
+	* math/s_clog10.c: Removed.
+	* math/s_clog10f.c: Removed.
+	* math/s_clog10l.c: Removed.
+	* math/s_cpow.c: Removed.
+	* math/s_cpowf.c: Removed.
+	* math/s_cpowl.c: Removed.
+	* math/s_clog.c: Removed.
+	* math/s_clogf.c: Removed.
+	* math/s_clogl.c: Removed.
+	* math/s_cproj.c: Removed.
+	* math/s_cprojf.c: Removed.
+	* math/s_cprojl.c: Removed.
+	* math/s_csqrt.c: Removed.
+	* math/s_csqrtf.c: Removed.
+	* math/s_csqrtl.c: Removed.
+
+	* sysdeps/alpha/fpu/s_cexpf.c: Update using templated version.
+	* sysdeps/alpha/fpu/s_clog10f.c: Update using templated version.
+	* sysdeps/alpha/fpu/s_clogf.c: Update using templated version.
+	* sysdeps/alpha/fpu/s_cpowf.c: Update using templated version.
+	* sysdeps/alpha/fpu/s_cprojf.c: Update using templated version.
+	* sysdeps/alpha/fpu/s_csqrtf.c: Update using templated version.
+
+	* sysdeps/ieee754/ldbl-opt/s_cexp.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cexpl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_clog.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_clog10.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_clog10l.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cpow.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cpowl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cproj.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cprojl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csqrt.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csqrtl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/s_clogl.c: Update using templated
+	version.
+
+	* sysdeps/m68k/m680x0/fpu/s_cexp.c: Refactor into.
+	* sysdeps/m68k/m680x0/fpu/s_cexp_template.c: New file.
+	* sysdeps/m68k/m680x0/fpu/s_cexpf.c: Removed.
+	* sysdeps/m68k/m680x0/fpu/s_cexpl.c: Removed.
+
+2016-08-29  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* s_cexp_template.c: Copy of s_cexp.c.
 	* s_clog_template.c: Copy of s_clog.c.
 	* s_clog10_template.c: Copy of s_clog10.c.

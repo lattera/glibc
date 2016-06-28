@@ -1,4 +1,4 @@
-/* Compute projection of complex double value to Riemann sphere.
+/* Compute projection of complex float type value to Riemann sphere.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -22,23 +22,24 @@
 #include <math_private.h>
 
 
-__complex__ double
-__cproj (__complex__ double x)
+CFLOAT
+M_DECL_FUNC (__cproj) (CFLOAT x)
 {
   if (isinf (__real__ x) || isinf (__imag__ x))
     {
-      __complex__ double res;
+      CFLOAT res;
 
       __real__ res = INFINITY;
-      __imag__ res = __copysign (0.0, __imag__ x);
+      __imag__ res = M_COPYSIGN (0, __imag__ x);
 
       return res;
     }
 
   return x;
 }
-weak_alias (__cproj, cproj)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__cproj, __cprojl)
-weak_alias (__cproj, cprojl)
+
+declare_mgen_alias (__cproj, cproj)
+
+#if M_LIBM_NEED_COMPAT (cproj)
+declare_mgen_libm_compat (__cproj, cproj)
 #endif

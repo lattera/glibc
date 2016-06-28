@@ -22,21 +22,14 @@
 #include <math.h>
 #include "mathimpl.h"
 
-#ifndef SUFF
-#define SUFF
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
 #define CONCATX(a,b) __CONCAT(a,b)
-#define s(name) CONCATX(name,SUFF)
+#define s(name) M_SUF (name)
 #define m81(func) __m81_u(s(func))
 
-__complex__ float_type
-s(__cexp) (__complex__ float_type x)
+CFLOAT
+s(__cexp) (CFLOAT x)
 {
-  __complex__ float_type retval;
+  CFLOAT retval;
   unsigned long ix_cond;
 
   ix_cond = __m81_test (__imag__ x);

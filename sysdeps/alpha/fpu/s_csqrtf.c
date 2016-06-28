@@ -24,14 +24,18 @@
 
 #undef __csqrtf
 #undef csqrtf
-#define __csqrtf internal_csqrtf
 
 static _Complex float internal_csqrtf (_Complex float x);
 
-#include <math/s_csqrtf.c>
-#include "cfloat-compat.h"
+#define M_DECL_FUNC(f) internal_csqrtf
+#include <math-type-macros-float.h>
 
-#undef __csqrtf
+/* Disable any aliasing from base template.  */
+#undef declare_mgen_alias
+#define declare_mgen_alias(__to, __from)
+
+#include <math/s_csqrt_template.c>
+#include "cfloat-compat.h"
 
 c1_cfloat_rettype
 __c1_csqrtf (c1_cfloat_decl (x))

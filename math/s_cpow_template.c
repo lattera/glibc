@@ -1,4 +1,4 @@
-/* Complex power of double values.
+/* Complex power of float type.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -20,14 +20,14 @@
 #include <complex.h>
 #include <math.h>
 
-
-__complex__ double
-__cpow (__complex__ double x, __complex__ double c)
+CFLOAT
+M_DECL_FUNC (__cpow) (CFLOAT x, CFLOAT c)
 {
-  return __cexp (c * __clog (x));
+  return M_SUF (__cexp) (c * M_SUF (__clog) (x));
 }
-weak_alias (__cpow, cpow)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__cpow, __cpowl)
-weak_alias (__cpow, cpowl)
+
+declare_mgen_alias (__cpow, cpow)
+
+#if M_LIBM_NEED_COMPAT (cpow)
+declare_mgen_libm_compat (__cpow, cpow)
 #endif

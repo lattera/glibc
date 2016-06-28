@@ -24,14 +24,18 @@
 
 #undef __cpowf
 #undef cpowf
-#define __cpowf internal_cpowf
 
 static _Complex float internal_cpowf (_Complex float x, _Complex float c);
 
-#include <math/s_cpowf.c>
-#include "cfloat-compat.h"
+#define M_DECL_FUNC(f) internal_cpowf
+#include <math-type-macros-float.h>
 
-#undef __cpowf
+/* Disable any aliasing from base template.  */
+#undef declare_mgen_alias
+#define declare_mgen_alias(__to, __from)
+
+#include <math/s_cpow_template.c>
+#include "cfloat-compat.h"
 
 c1_cfloat_rettype
 __c1_cpowf (c1_cfloat_decl (x), c1_cfloat_decl (c))

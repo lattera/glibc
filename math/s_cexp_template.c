@@ -1,4 +1,4 @@
-/* Return value of complex exponential function for double complex value.
+/* Return value of complex exponential function for a float type.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -23,10 +23,10 @@
 #include <math_private.h>
 #include <float.h>
 
-__complex__ double
-__cexp (__complex__ double x)
+CFLOAT
+M_DECL_FUNC (__cexp) (CFLOAT x)
 {
-  __complex__ double retval;
+  CFLOAT retval;
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
@@ -36,22 +36,22 @@ __cexp (__complex__ double x)
       if (__glibc_likely (icls >= FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
-	  const int t = (int) ((DBL_MAX_EXP - 1) * M_LN2);
-	  double sinix, cosix;
+	  const int t = (int) ((M_MAX_EXP - 1) * M_MLIT (M_LN2));
+	  FLOAT sinix, cosix;
 
-	  if (__glibc_likely (fabs (__imag__ x) > DBL_MIN))
+	  if (__glibc_likely (M_FABS (__imag__ x) > M_MIN))
 	    {
-	      __sincos (__imag__ x, &sinix, &cosix);
+	      M_SINCOS (__imag__ x, &sinix, &cosix);
 	    }
 	  else
 	    {
 	      sinix = __imag__ x;
-	      cosix = 1.0;
+	      cosix = 1;
 	    }
 
 	  if (__real__ x > t)
 	    {
-	      double exp_t = __ieee754_exp (t);
+	      FLOAT exp_t = M_EXP (t);
 	      __real__ x -= t;
 	      sinix *= exp_t;
 	      cosix *= exp_t;
@@ -65,12 +65,12 @@ __cexp (__complex__ double x)
 	  if (__real__ x > t)
 	    {
 	      /* Overflow (original real part of x > 3t).  */
-	      __real__ retval = DBL_MAX * cosix;
-	      __imag__ retval = DBL_MAX * sinix;
+	      __real__ retval = M_MAX * cosix;
+	      __imag__ retval = M_MAX * sinix;
 	    }
 	  else
 	    {
-	      double exp_val = __ieee754_exp (__real__ x);
+	      FLOAT exp_val = M_EXP (__real__ x);
 	      __real__ retval = exp_val * cosix;
 	      __imag__ retval = exp_val * sinix;
 	    }
@@ -80,8 +80,8 @@ __cexp (__complex__ double x)
 	{
 	  /* If the imaginary part is +-inf or NaN and the real part
 	     is not +-inf the result is NaN + iNaN.  */
-	  __real__ retval = __nan ("");
-	  __imag__ retval = __nan ("");
+	  __real__ retval = M_NAN;
+	  __imag__ retval = M_NAN;
 
 	  feraiseexcept (FE_INVALID);
 	}
@@ -92,7 +92,7 @@ __cexp (__complex__ double x)
       if (__glibc_likely (icls >= FP_ZERO))
 	{
 	  /* Imaginary part is finite.  */
-	  double value = signbit (__real__ x) ? 0.0 : HUGE_VAL;
+	  FLOAT value = signbit (__real__ x) ? 0 : M_HUGE_VAL;
 
 	  if (icls == FP_ZERO)
 	    {
@@ -102,46 +102,46 @@ __cexp (__complex__ double x)
 	    }
 	  else
 	    {
-	      double sinix, cosix;
+	      FLOAT sinix, cosix;
 
-	      if (__glibc_likely (fabs (__imag__ x) > DBL_MIN))
+	      if (__glibc_likely (M_FABS (__imag__ x) > M_MIN))
 		{
-		  __sincos (__imag__ x, &sinix, &cosix);
+		  M_SINCOS (__imag__ x, &sinix, &cosix);
 		}
 	      else
 		{
 		  sinix = __imag__ x;
-		  cosix = 1.0;
+		  cosix = 1;
 		}
 
-	      __real__ retval = __copysign (value, cosix);
-	      __imag__ retval = __copysign (value, sinix);
+	      __real__ retval = M_COPYSIGN (value, cosix);
+	      __imag__ retval = M_COPYSIGN (value, sinix);
 	    }
 	}
       else if (signbit (__real__ x) == 0)
 	{
-	  __real__ retval = HUGE_VAL;
-	  __imag__ retval = __nan ("");
+	  __real__ retval = M_HUGE_VAL;
+	  __imag__ retval = M_NAN;
 
 	  if (icls == FP_INFINITE)
 	    feraiseexcept (FE_INVALID);
 	}
       else
 	{
-	  __real__ retval = 0.0;
-	  __imag__ retval = __copysign (0.0, __imag__ x);
+	  __real__ retval = 0;
+	  __imag__ retval = M_COPYSIGN (0, __imag__ x);
 	}
     }
   else
     {
       /* If the real part is NaN the result is NaN + iNaN unless the
 	 imaginary part is zero.  */
-      __real__ retval = __nan ("");
+      __real__ retval = M_NAN;
       if (icls == FP_ZERO)
 	__imag__ retval = __imag__ x;
       else
 	{
-	  __imag__ retval = __nan ("");
+	  __imag__ retval = M_NAN;
 
 	  if (rcls != FP_NAN || icls != FP_NAN)
 	    feraiseexcept (FE_INVALID);
@@ -150,8 +150,8 @@ __cexp (__complex__ double x)
 
   return retval;
 }
-weak_alias (__cexp, cexp)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__cexp, __cexpl)
-weak_alias (__cexp, cexpl)
+declare_mgen_alias (__cexp, cexp)
+
+#if M_LIBM_NEED_COMPAT (cexp)
+declare_mgen_libm_compat (__cexp, cexp)
 #endif

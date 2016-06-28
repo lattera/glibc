@@ -1,4 +1,4 @@
-/* Complex square root of double value.
+/* Complex square root of a float type.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on an algorithm by Stephen L. Moshier <moshier@world.std.com>.
@@ -23,10 +23,10 @@
 #include <math_private.h>
 #include <float.h>
 
-__complex__ double
-__csqrt (__complex__ double x)
+CFLOAT
+M_DECL_FUNC (__csqrt) (CFLOAT x)
 {
-  __complex__ double res;
+  CFLOAT res;
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
@@ -34,132 +34,131 @@ __csqrt (__complex__ double x)
     {
       if (icls == FP_INFINITE)
 	{
-	  __real__ res = HUGE_VAL;
+	  __real__ res = M_HUGE_VAL;
 	  __imag__ res = __imag__ x;
 	}
       else if (rcls == FP_INFINITE)
 	{
-	  if (__real__ x < 0.0)
+	  if (__real__ x < 0)
 	    {
-	      __real__ res = icls == FP_NAN ? __nan ("") : 0;
-	      __imag__ res = __copysign (HUGE_VAL, __imag__ x);
+	      __real__ res = icls == FP_NAN ? M_NAN : 0;
+	      __imag__ res = M_COPYSIGN (M_HUGE_VAL, __imag__ x);
 	    }
 	  else
 	    {
 	      __real__ res = __real__ x;
 	      __imag__ res = (icls == FP_NAN
-			      ? __nan ("") : __copysign (0.0, __imag__ x));
+			      ? M_NAN : M_COPYSIGN (0, __imag__ x));
 	    }
 	}
       else
 	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __nan ("");
+	  __real__ res = M_NAN;
+	  __imag__ res = M_NAN;
 	}
     }
   else
     {
       if (__glibc_unlikely (icls == FP_ZERO))
 	{
-	  if (__real__ x < 0.0)
+	  if (__real__ x < 0)
 	    {
-	      __real__ res = 0.0;
-	      __imag__ res = __copysign (__ieee754_sqrt (-__real__ x),
-					 __imag__ x);
+	      __real__ res = 0;
+	      __imag__ res = M_COPYSIGN (M_SQRT (-__real__ x), __imag__ x);
 	    }
 	  else
 	    {
-	      __real__ res = fabs (__ieee754_sqrt (__real__ x));
-	      __imag__ res = __copysign (0.0, __imag__ x);
+	      __real__ res = M_FABS (M_SQRT (__real__ x));
+	      __imag__ res = M_COPYSIGN (0, __imag__ x);
 	    }
 	}
       else if (__glibc_unlikely (rcls == FP_ZERO))
 	{
-	  double r;
-	  if (fabs (__imag__ x) >= 2.0 * DBL_MIN)
-	    r = __ieee754_sqrt (0.5 * fabs (__imag__ x));
+	  FLOAT r;
+	  if (M_FABS (__imag__ x) >= 2 * M_MIN)
+	    r = M_SQRT (M_LIT (0.5) * M_FABS (__imag__ x));
 	  else
-	    r = 0.5 * __ieee754_sqrt (2.0 * fabs (__imag__ x));
+	    r = M_LIT (0.5) * M_SQRT (2 * M_FABS (__imag__ x));
 
 	  __real__ res = r;
-	  __imag__ res = __copysign (r, __imag__ x);
+	  __imag__ res = M_COPYSIGN (r, __imag__ x);
 	}
       else
 	{
-	  double d, r, s;
+	  FLOAT d, r, s;
 	  int scale = 0;
 
-	  if (fabs (__real__ x) > DBL_MAX / 4.0)
+	  if (M_FABS (__real__ x) > M_MAX / 4)
 	    {
 	      scale = 1;
-	      __real__ x = __scalbn (__real__ x, -2 * scale);
-	      __imag__ x = __scalbn (__imag__ x, -2 * scale);
+	      __real__ x = M_SCALBN (__real__ x, -2 * scale);
+	      __imag__ x = M_SCALBN (__imag__ x, -2 * scale);
 	    }
-	  else if (fabs (__imag__ x) > DBL_MAX / 4.0)
+	  else if (M_FABS (__imag__ x) > M_MAX / 4)
 	    {
 	      scale = 1;
-	      if (fabs (__real__ x) >= 4.0 * DBL_MIN)
-		__real__ x = __scalbn (__real__ x, -2 * scale);
+	      if (M_FABS (__real__ x) >= 4 * M_MIN)
+		__real__ x = M_SCALBN (__real__ x, -2 * scale);
 	      else
-		__real__ x = 0.0;
-	      __imag__ x = __scalbn (__imag__ x, -2 * scale);
+		__real__ x = 0;
+	      __imag__ x = M_SCALBN (__imag__ x, -2 * scale);
 	    }
-	  else if (fabs (__real__ x) < 2.0 * DBL_MIN
-		   && fabs (__imag__ x) < 2.0 * DBL_MIN)
+	  else if (M_FABS (__real__ x) < 2 * M_MIN
+		   && M_FABS (__imag__ x) < 2 * M_MIN)
 	    {
-	      scale = -((DBL_MANT_DIG + 1) / 2);
-	      __real__ x = __scalbn (__real__ x, -2 * scale);
-	      __imag__ x = __scalbn (__imag__ x, -2 * scale);
+	      scale = -((M_MANT_DIG + 1) / 2);
+	      __real__ x = M_SCALBN (__real__ x, -2 * scale);
+	      __imag__ x = M_SCALBN (__imag__ x, -2 * scale);
 	    }
 
-	  d = __ieee754_hypot (__real__ x, __imag__ x);
+	  d = M_HYPOT (__real__ x, __imag__ x);
 	  /* Use the identity   2  Re res  Im res = Im x
 	     to avoid cancellation error in  d +/- Re x.  */
 	  if (__real__ x > 0)
 	    {
-	      r = __ieee754_sqrt (0.5 * (d + __real__ x));
-	      if (scale == 1 && fabs (__imag__ x) < 1.0)
+	      r = M_SQRT (M_LIT (0.5) * (d + __real__ x));
+	      if (scale == 1 && M_FABS (__imag__ x) < 1)
 		{
 		  /* Avoid possible intermediate underflow.  */
 		  s = __imag__ x / r;
-		  r = __scalbn (r, scale);
+		  r = M_SCALBN (r, scale);
 		  scale = 0;
 		}
 	      else
-		s = 0.5 * (__imag__ x / r);
+		s = M_LIT (0.5) * (__imag__ x / r);
 	    }
 	  else
 	    {
-	      s = __ieee754_sqrt (0.5 * (d - __real__ x));
-	      if (scale == 1 && fabs (__imag__ x) < 1.0)
+	      s = M_SQRT (M_LIT (0.5) * (d - __real__ x));
+	      if (scale == 1 && M_FABS (__imag__ x) < 1)
 		{
 		  /* Avoid possible intermediate underflow.  */
-		  r = fabs (__imag__ x / s);
-		  s = __scalbn (s, scale);
+		  r = M_FABS (__imag__ x / s);
+		  s = M_SCALBN (s, scale);
 		  scale = 0;
 		}
 	      else
-		r = fabs (0.5 * (__imag__ x / s));
+		r = M_FABS (M_LIT (0.5) * (__imag__ x / s));
 	    }
 
 	  if (scale)
 	    {
-	      r = __scalbn (r, scale);
-	      s = __scalbn (s, scale);
+	      r = M_SCALBN (r, scale);
+	      s = M_SCALBN (s, scale);
 	    }
 
 	  math_check_force_underflow (r);
 	  math_check_force_underflow (s);
 
 	  __real__ res = r;
-	  __imag__ res = __copysign (s, __imag__ x);
+	  __imag__ res = M_COPYSIGN (s, __imag__ x);
 	}
     }
 
   return res;
 }
-weak_alias (__csqrt, csqrt)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__csqrt, __csqrtl)
-weak_alias (__csqrt, csqrtl)
+declare_mgen_alias (__csqrt, csqrt)
+
+#if M_LIBM_NEED_COMPAT (csqrt)
+declare_mgen_libm_compat (__csqrt, csqrt)
 #endif
