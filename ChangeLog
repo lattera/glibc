@@ -1,3 +1,13 @@
+2016-06-30  Anton Blanchard  <anton@samba.org>
+
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	[$(subdir) = math] (libm-sysdep_routines): Add s_sinf-power8 and
+	s_sinf-ppc64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_sinf-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_sinf-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_sinf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_sinf.S: Likewise.
+
 2016-06-30  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
