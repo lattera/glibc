@@ -1,3 +1,10 @@
+2016-06-29  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20260]
+	* sysdeps/x86/bits/string.h (__strncat_g) [!__i686__]: Compute the
+	address before the beginning of the string as an integer to avoid
+	array-bounds warning.
+
 2016-06-28  Richard Henderson  <rth@redhat.com>
 
 	* elf/elf.h (EM_BPF): New.

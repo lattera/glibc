@@ -1089,7 +1089,6 @@ __strncat_g (char *__dest, const char __src[], size_t __n)
      :  "g" (__n), "0" (0), "1" (__tmp), "2" (__src), "3" (0xffffffff)
      : "memory", "cc");
 # else
-  --__tmp;
   __asm__ __volatile__
     ("1:\n\t"
      "cmpb	$0,1(%1)\n\t"
@@ -1108,7 +1107,7 @@ __strncat_g (char *__dest, const char __src[], size_t __n)
      "3:\n\t"
      "movb	$0,(%1)"
      : "=&q" (__dummy), "=&r" (__tmp), "=&r" (__src), "=&r" (__n)
-     : "1" (__tmp), "2" (__src), "3" (__n)
+     : "1" ((unsigned long) __tmp - 1), "2" (__src), "3" (__n)
      : "memory", "cc");
 #endif
   return __dest;
