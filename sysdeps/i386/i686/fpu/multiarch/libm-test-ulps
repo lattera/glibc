@@ -230,9 +230,9 @@ ildouble: 2
 ldouble: 2
 
 Function: Real part of "cacos_downward":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 ildouble: 2
 ldouble: 2
@@ -246,9 +246,9 @@ ildouble: 5
 ldouble: 5
 
 Function: Real part of "cacos_towardzero":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 ildouble: 2
 ldouble: 2
@@ -302,9 +302,9 @@ ildouble: 5
 ldouble: 5
 
 Function: Imaginary part of "cacosh_downward":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 ildouble: 2
 ldouble: 2
@@ -318,9 +318,9 @@ ildouble: 5
 ldouble: 5
 
 Function: Imaginary part of "cacosh_towardzero":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 ildouble: 2
 ldouble: 2

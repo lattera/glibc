@@ -1,3 +1,7 @@
+2016-06-30  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Regenerated.
+
 2016-06-29  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #20260]
