@@ -35,6 +35,7 @@
 #define SIGN_BIT	%f12			/* -0.0 */
 
 ENTRY (__nearbyintf_vis3)
+	fcmps	%fcc3, %f1, %f1			/* Check for sNaN */
 	stx	%fsr, [%sp + STACK_BIAS + 144]
 	sethi	%hi(0xf8003e0), %o5
 	sethi	%hi(TWO_TWENTYTHREE), %o2

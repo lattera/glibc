@@ -1,3 +1,19 @@
+2016-07-01  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sparc/sparc32/sparcv9/fpu/s_nearbyint.S (__nearbyint): Trigger an
+	invalid exception for a sNaN input.
+	* sparc/sparc32/sparcv9/fpu/s_nearbyintf.S (__nearbyintf): Likewise.
+	* sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyint-vis3.S
+	(__nearbyint_vis3): Likewise
+	* sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyintf-vis3.S
+	(__nearbyintf_vis3): Likewise
+	* sparc/sparc64/fpu/s_nearbyint.S (__nearbyint): Likewise.
+	* sparc/sparc64/fpu/s_nearbyintf.S (__nearbyintf): Likewise.
+	* sparc/sparc64/fpu/multiarch/s_nearbyint-vis3.S (__nearbyint_vis3):
+	Likewise.
+	* sparc/sparc64/fpu/multiarch/s_nearbyintf-vis3.S (__nearbyintf_vis3):
+	Likewise.
+
 2016-07-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #20139]
