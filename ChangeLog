@@ -1,3 +1,31 @@
+2016-09-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysdep.h (__INTERNAL_SYSCALL0): New macro.
+	(__INTERNAL_SYSCALL1): Likewise.
+	(__INTERNAL_SYSCALL2): Likewise.
+	(__INTERNAL_SYSCALL3): Likewise.
+	(__INTERNAL_SYSCALL4): Likewise.
+	(__INTERNAL_SYSCALL5): Likewise.
+	(__INTERNAL_SYSCALL6): Likewise.
+	(__INTERNAL_SYSCALL7): Likewise.
+	(__INTERNAL_SYSCALL_NARGS_X): Likewise.
+	(__INTERNAL_SYSCALL_NARGS): Likewise.
+	(__INTERNAL_SYSCALL_DISP): Likewise.
+	(INTERNAL_SYSCALL_CALL): Likewise.
+	(__SYSCALL0): Rename to __INLINE_SYSCALL0.
+	(__SYSCALL1): Rename to __INLINE_SYSCALL1.
+	(__SYSCALL2): Rename to __INLINE_SYSCALL2.
+	(__SYSCALL3): Rename to __INLINE_SYSCALL3.
+	(__SYSCALL4): Rename to __INLINE_SYSCALL4.
+	(__SYSCALL5): Rename to __INLINE_SYSCALL5.
+	(__SYSCALL6): Rename to __INLINE_SYSCALL6.
+	(__SYSCALL7): Rename to __INLINE_SYSCALL7.
+	(__SYSCALL_NARGS_X): Rename to __INLINE_SYSCALL_NARGS_X.
+	(__SYSCALL_NARGS): Rename to __INLINE_SYSCALL_NARGS.
+	(__SYSCALL_DISP): Rename to __INLINE_SYSCALL_DISP.
+	(__SYSCALL_CALL): Rename to INLINE_SYSCALL_CALL.
+	(SYSCALL_CANCEL): Replace __SYSCALL_CALL with INLINE_SYSCALL_CALL.
+
 2016-09-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (iszero): New

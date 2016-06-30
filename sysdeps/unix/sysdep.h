@@ -24,42 +24,79 @@
 #define	SYSCALL__(name, args)	PSEUDO (__##name, name, args)
 #define	SYSCALL(name, args)	PSEUDO (name, name, args)
 
-#define __SYSCALL0(name) \
-  INLINE_SYSCALL (name, 0)
-#define __SYSCALL1(name, a1) \
-  INLINE_SYSCALL (name, 1, a1)
-#define __SYSCALL2(name, a1, a2) \
-  INLINE_SYSCALL (name, 2, a1, a2)
-#define __SYSCALL3(name, a1, a2, a3) \
-  INLINE_SYSCALL (name, 3, a1, a2, a3)
-#define __SYSCALL4(name, a1, a2, a3, a4) \
-  INLINE_SYSCALL (name, 4, a1, a2, a3, a4)
-#define __SYSCALL5(name, a1, a2, a3, a4, a5) \
-  INLINE_SYSCALL (name, 5, a1, a2, a3, a4, a5)
-#define __SYSCALL6(name, a1, a2, a3, a4, a5, a6) \
-  INLINE_SYSCALL (name, 6, a1, a2, a3, a4, a5, a6)
-#define __SYSCALL7(name, a1, a2, a3, a4, a5, a6, a7) \
-  INLINE_SYSCALL (name, 7, a1, a2, a3, a4, a5, a6, a7)
-
-#define __SYSCALL_NARGS_X(a,b,c,d,e,f,g,h,n,...) n
-#define __SYSCALL_NARGS(...) \
-  __SYSCALL_NARGS_X (__VA_ARGS__,7,6,5,4,3,2,1,0,)
 #define __SYSCALL_CONCAT_X(a,b)     a##b
 #define __SYSCALL_CONCAT(a,b)       __SYSCALL_CONCAT_X (a, b)
-#define __SYSCALL_DISP(b,...) \
-  __SYSCALL_CONCAT (b,__SYSCALL_NARGS(__VA_ARGS__))(__VA_ARGS__)
 
-#define __SYSCALL_CALL(...) __SYSCALL_DISP (__SYSCALL, __VA_ARGS__)
+
+#define __INTERNAL_SYSCALL0(name, err) \
+  INTERNAL_SYSCALL (name, err, 0)
+#define __INTERNAL_SYSCALL1(name, err, a1) \
+  INTERNAL_SYSCALL (name, err, 1, a1)
+#define __INTERNAL_SYSCALL2(name, err, a1, a2) \
+  INTERNAL_SYSCALL (name, err, 2, a1, a2)
+#define __INTERNAL_SYSCALL3(name, err, a1, a2, a3) \
+  INTERNAL_SYSCALL (name, err, 3, a1, a2, a3)
+#define __INTERNAL_SYSCALL4(name, err, a1, a2, a3, a4) \
+  INTERNAL_SYSCALL (name, err, 4, a1, a2, a3, a4)
+#define __INTERNAL_SYSCALL5(name, err, a1, a2, a3, a4, a5) \
+  INTERNAL_SYSCALL (name, err, 5, a1, a2, a3, a4, a5)
+#define __INTERNAL_SYSCALL6(name, err, a1, a2, a3, a4, a5, a6) \
+  INTERNAL_SYSCALL (name, err, 6, a1, a2, a3, a4, a5, a6)
+#define __INTERNAL_SYSCALL7(name, err, a1, a2, a3, a4, a5, a6, a7) \
+  INTERNAL_SYSCALL (name, err, 7, a1, a2, a3, a4, a5, a6, a7)
+
+#define __INTERNAL_SYSCALL_NARGS_X(a,b,c,d,e,f,g,h,n,o,...) o
+#define __INTERNAL_SYSCALL_NARGS(...) \
+  __INTERNAL_SYSCALL_NARGS_X (__VA_ARGS__,7,6,5,4,3,2,1,0,)
+#define __INTERNAL_SYSCALL_DISP(b,...) \
+  __SYSCALL_CONCAT (b,__INTERNAL_SYSCALL_NARGS(__VA_ARGS__))(__VA_ARGS__)
+
+/* Issue a syscall defined by syscall number plus any other argument required.
+   It is similar to INTERNAL_SYSCALL macro, but without the need to pass the
+   expected argument number as second parameter.  */
+#define INTERNAL_SYSCALL_CALL(...) \
+  __INTERNAL_SYSCALL_DISP (__INTERNAL_SYSCALL, __VA_ARGS__)
+
+#define __INLINE_SYSCALL0(name) \
+  INLINE_SYSCALL (name, 0)
+#define __INLINE_SYSCALL1(name, a1) \
+  INLINE_SYSCALL (name, 1, a1)
+#define __INLINE_SYSCALL2(name, a1, a2) \
+  INLINE_SYSCALL (name, 2, a1, a2)
+#define __INLINE_SYSCALL3(name, a1, a2, a3) \
+  INLINE_SYSCALL (name, 3, a1, a2, a3)
+#define __INLINE_SYSCALL4(name, a1, a2, a3, a4) \
+  INLINE_SYSCALL (name, 4, a1, a2, a3, a4)
+#define __INLINE_SYSCALL5(name, a1, a2, a3, a4, a5) \
+  INLINE_SYSCALL (name, 5, a1, a2, a3, a4, a5)
+#define __INLINE_SYSCALL6(name, a1, a2, a3, a4, a5, a6) \
+  INLINE_SYSCALL (name, 6, a1, a2, a3, a4, a5, a6)
+#define __INLINE_SYSCALL7(name, a1, a2, a3, a4, a5, a6, a7) \
+  INLINE_SYSCALL (name, 7, a1, a2, a3, a4, a5, a6, a7)
+
+#define __INLINE_SYSCALL_NARGS_X(a,b,c,d,e,f,g,h,n,...) n
+#define __INLINE_SYSCALL_NARGS(...) \
+  __INLINE_SYSCALL_NARGS_X (__VA_ARGS__,7,6,5,4,3,2,1,0,)
+#define __INLINE_SYSCALL_DISP(b,...) \
+  __SYSCALL_CONCAT (b,__INLINE_SYSCALL_NARGS(__VA_ARGS__))(__VA_ARGS__)
+
+/* Issue a syscall defined by syscall number plus any other argument
+   required.  Any error will be handled using arch defined macros and errno
+   will be set accordingly.
+   It is similar to INLINE_SYSCALL macro, but without the need to pass the
+   expected argument number as second parameter.  */
+#define INLINE_SYSCALL_CALL(...) \
+  __INLINE_SYSCALL_DISP (__INLINE_SYSCALL, __VA_ARGS__)
 
 #define SYSCALL_CANCEL(...) \
   ({									     \
     long int sc_ret;							     \
     if (SINGLE_THREAD_P) 						     \
-      sc_ret = __SYSCALL_CALL (__VA_ARGS__);   				     \
+      sc_ret = INLINE_SYSCALL_CALL (__VA_ARGS__); 			     \
     else								     \
       {									     \
 	int sc_cancel_oldtype = LIBC_CANCEL_ASYNC ();			     \
-	sc_ret = __SYSCALL_CALL (__VA_ARGS__);				     \
+	sc_ret = INLINE_SYSCALL_CALL (__VA_ARGS__);			     \
         LIBC_CANCEL_RESET (sc_cancel_oldtype);				     \
       }									     \
     sc_ret;								     \
