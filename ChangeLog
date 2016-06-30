@@ -46,7 +46,7 @@
 
 2016-06-28  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
-	[BZ #19860]
+	[BZ #18960]
 	* locale/localeinfo.h (_NL_CURRENT_DEFINE):
 	Set _nl_current_LC_CATEGORY_used to two instead of one.
 
