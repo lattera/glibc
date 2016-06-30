@@ -26,6 +26,9 @@
 ENTRY(memset)
 	.type	memset, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
+	lea	__memset_erms(%rip), %RAX_LP
+	HAS_ARCH_FEATURE (Prefer_ERMS)
+	jnz	2f
 	lea	__memset_sse2_unaligned_erms(%rip), %RAX_LP
 	HAS_CPU_FEATURE (ERMS)
 	jnz	1f

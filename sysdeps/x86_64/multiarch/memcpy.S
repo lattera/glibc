@@ -29,6 +29,9 @@
 ENTRY(__new_memcpy)
 	.type	__new_memcpy, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
+	lea	__memcpy_erms(%rip), %RAX_LP
+	HAS_ARCH_FEATURE (Prefer_ERMS)
+	jnz	2f
 # ifdef HAVE_AVX512_ASM_SUPPORT
 	HAS_ARCH_FEATURE (AVX512F_Usable)
 	jz	1f

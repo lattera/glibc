@@ -1,3 +1,18 @@
+2016-06-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.h (bit_arch_Prefer_ERMS): New.
+	(index_arch_Prefer_ERMS): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy.S (__new_memcpy): Return
+	__memcpy_erms for Prefer_ERMS.
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+	(__memmove_erms): Enabled for libc.a.
+	* ysdeps/x86_64/multiarch/memmove.S (__libc_memmove): Return
+	__memmove_erms or Prefer_ERMS.
+	* sysdeps/x86_64/multiarch/mempcpy.S (__mempcpy): Return
+	__mempcpy_erms for Prefer_ERMS.
+	* sysdeps/x86_64/multiarch/memset.S (memset): Return
+	__memset_erms for Prefer_ERMS.
+
 2016-06-30  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #20262]
