@@ -334,8 +334,9 @@ modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5modd tst-tls5mode tst-tls5modf tst-stack4mod \
 		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod tst-fini1mod \
 		tst-join7mod
-extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) tst-cleanup4aux.o
-test-extras += $(modules-names) tst-cleanup4aux
+extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) \
+		   tst-cleanup4aux.o tst-cleanupx4aux.o
+test-extras += $(modules-names) tst-cleanup4aux tst-cleanupx4aux
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 
 tst-atfork2mod.so-no-z-defs = yes
@@ -477,6 +478,7 @@ CFLAGS-tst-cleanupx1.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx2.c += -fexceptions
 CFLAGS-tst-cleanupx3.c += -fexceptions
 CFLAGS-tst-cleanupx4.c += -fexceptions
+CFLAGS-tst-cleanupx4aux.c += -fexceptions
 CFLAGS-tst-oncex3.c += -fexceptions
 CFLAGS-tst-oncex4.c += -fexceptions
 CFLAGS-tst-align.c += $(stack-align-test-flags)
@@ -520,7 +522,7 @@ clean:
 	rm -f $(tst-stack4mod.sos)
 
 $(objpfx)tst-cleanup4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)
-$(objpfx)tst-cleanupx4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)
+$(objpfx)tst-cleanupx4: $(objpfx)tst-cleanupx4aux.o $(shared-thread-library)
 
 $(objpfx)tst-tls3: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-tls3 = -rdynamic

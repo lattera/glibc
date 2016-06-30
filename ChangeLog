@@ -1,3 +1,13 @@
+2016-06-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18645]
+	* nptl/Makefile (extra-test-objs): Add tst-cleanupx4aux.o.
+	(test-extras): Add tst-cleanupx4aux.
+	(CFLAGS-tst-cleanupx4aux.c): New.  Set to -fexceptions.
+	($(objpfx)tst-cleanupx4): Replace tst-cleanup4aux.o with
+	tst-cleanupx4aux.o.
+	* nptl/tst-cleanupx4aux.c: New file.
+
 2016-06-30  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Regenerated.
