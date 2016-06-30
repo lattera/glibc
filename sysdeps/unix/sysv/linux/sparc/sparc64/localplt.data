@@ -1,4 +1,5 @@
 libc.so: _Qp_add ?
+libc.so: _Qp_cmp ?
 libc.so: _Qp_div ?
 libc.so: _Qp_feq ?
 libc.so: _Qp_fge ?

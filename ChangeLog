@@ -1,3 +1,7 @@
+2016-06-30  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/localplt.data: Add _Qp_cmp.
+
 2016-06-30  Anton Blanchard  <anton@samba.org>
 
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
