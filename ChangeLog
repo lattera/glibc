@@ -1,3 +1,10 @@
+2017-10-17  Jordi Mallach  <jordi@gnu.org>
+
+	Aurelien Jarno  <aurelien@aurel32.net>
+	[BZ #2522]
+	* localedata/locales/ca_ES@valencia: New file.
+	* localedata/SUPPORTED: Add ca_ES@valencia/UTF-8.
+
 2017-10-17  Romain Naour  <romain.naour@gmail.com>  (tiny change)
 
 	[BZ #22296]
