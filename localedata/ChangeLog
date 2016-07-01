@@ -1,3 +1,8 @@
+2016-07-04  Gunnar Hjalmarsson  <gunnarhj@ubuntu.com>
+
+	[BZ #20316]
+	* locales/id_ID (abmon, mon): Change "Peb" to "Feb".
+
 2016-06-16  Simion Onea  <simionea@gmail.com>
 
 	[BZ #18911]
