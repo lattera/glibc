@@ -94,7 +94,7 @@ __ccoshf (__complex__ float x)
 	    feraiseexcept (FE_INVALID);
 	}
     }
-  else if (__glibc_likely (rcls == FP_INFINITE))
+  else if (rcls == FP_INFINITE)
     {
       /* Real part is infinite.  */
       if (__glibc_likely (icls > FP_ZERO))
@@ -128,10 +128,8 @@ __ccoshf (__complex__ float x)
 	  __real__ retval = HUGE_VALF;
 	  __imag__ retval = __nanf ("") + __nanf ("");
 
-#ifdef FE_INVALID
 	  if (icls == FP_INFINITE)
 	    feraiseexcept (FE_INVALID);
-#endif
 	}
     }
   else

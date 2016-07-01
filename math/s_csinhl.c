@@ -111,7 +111,7 @@ __csinhl (__complex__ long double x)
 	    }
 	}
     }
-  else if (__glibc_likely (rcls == FP_INFINITE))
+  else if (rcls == FP_INFINITE)
     {
       /* Real part is infinite.  */
       if (__glibc_likely (icls > FP_ZERO))
@@ -147,10 +147,8 @@ __csinhl (__complex__ long double x)
 	  __real__ retval = HUGE_VALL;
 	  __imag__ retval = __nanl ("") + __nanl ("");
 
-#ifdef FE_INVALID
 	  if (icls == FP_INFINITE)
 	    feraiseexcept (FE_INVALID);
-#endif
 	}
     }
   else

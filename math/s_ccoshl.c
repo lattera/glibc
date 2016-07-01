@@ -94,7 +94,7 @@ __ccoshl (__complex__ long double x)
 	    feraiseexcept (FE_INVALID);
 	}
     }
-  else if (__glibc_likely (rcls == FP_INFINITE))
+  else if (rcls == FP_INFINITE)
     {
       /* Real part is infinite.  */
       if (__glibc_likely (icls > FP_ZERO))

@@ -1,5 +1,16 @@
 2016-08-03  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* s_ccoshf.c (__ccoshf): Remove FE_INVALID
+	check, and remove __glibc_likely hint
+	from FP_INFINITE check.
+	* s_csinhf.c (__csinhf): Likewise.
+
+	* s_ccoshl.c (__ccoshl): Remove __glibc_likely
+	hint from FP_INFINITE check.
+	* s_csinhl.c (__csinhl): Likewise.
+
+2016-08-03  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* math/Makefile (libm-calls): Insert F placeholder into
 	object names.  Move w_lgamma_compat* routines into
 	(libm-compat-calls): New variable.
