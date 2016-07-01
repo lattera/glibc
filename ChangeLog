@@ -1,5 +1,12 @@
 2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* s_cacos_template.c: Copy of s_cacos.c.
+	* s_cacosh_template.c: Copy of s_cacosh.c.
+	* s_ccos_template.c: Copy of s_ccos.c.
+	* s_ccosh_template.c: Copy of s_ccosh.c.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* stdlib/tst-strtod-round-skeleton.c:
 	Refactored from tst-strtod-round.c.
 
