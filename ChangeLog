@@ -1,5 +1,12 @@
 2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* s_catan_template.c: Copy of s_catan.c.
+	* s_catanh_template.c: Copy of s_catanh.c.
+	* s_ctan_template.c: Copy of s_ctan.c.
+	* s_ctanh_template.c: Copy of s_ctanh.c.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* math/Makefile (gen-libm-calls): Move
 	casin, casinh, csin, csinh here.
 	(libm-calls): Remove the above.
