@@ -1,5 +1,14 @@
 2016-08-29  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* s_cexp_template.c: Copy of s_cexp.c.
+	* s_clog_template.c: Copy of s_clog.c.
+	* s_clog10_template.c: Copy of s_clog10.c.
+	* s_cpow_template.c: Copy of s_cpow.c.
+	* s_cproj_template.c: Copy of s_cproj.c.
+	* s_csqrt_template.c: Copy of s_csqrt.c.
+
+2016-08-29  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	[BZ #20517]
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim.c:
 	Include ldbl-opt/s_fdim.c to ensure fdiml@GLIBC_2.1 is
