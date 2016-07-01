@@ -1,3 +1,57 @@
+2016-07-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20139]
+	* config.h.in (HAVE_AVX512_ASM_SUPPORT): Renamed to ...
+	(HAVE_AVX512DQ_ASM_SUPPORT): This.
+	* sysdeps/x86_64/configure.ac: Require assembler from binutils
+	2.24 or above.
+	(HAVE_AVX512_ASM_SUPPORT): Removed.
+	(HAVE_AVX512DQ_ASM_SUPPORT): New.
+	* sysdeps/x86_64/configure: Regenerated.
+	* sysdeps/x86_64/dl-trampoline.S: Make HAVE_AVX512_ASM_SUPPORT
+	check unconditional.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove-avx512-no-vzeroupper.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memmove-avx512-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memmove.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset-avx512-no-vzeroupper.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset-avx512-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset_chk.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos8_core_avx512.S: Check
+	HAVE_AVX512DQ_ASM_SUPPORT instead of HAVE_AVX512_ASM_SUPPORT.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp8_core_avx512.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log8_core_avx512.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow8_core_avx512.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin8_core_avx512.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos8_core_avx512.:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_cosf16_core_avx512.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf16_core_avx512.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_logf16_core_avx512.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf16_core_avx512.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf16_core_avx51:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sinf16_core_avx512.S:
+	Likewise.
+
 2016-07-01  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	[BZ #20024]

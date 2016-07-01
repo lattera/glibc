@@ -30,7 +30,6 @@ ENTRY(__libc_memmove)
 	lea	__memmove_erms(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (Prefer_ERMS)
 	jnz	2f
-# ifdef HAVE_AVX512_ASM_SUPPORT
 	HAS_ARCH_FEATURE (AVX512F_Usable)
 	jz	1f
 	lea	__memmove_avx512_no_vzeroupper(%rip), %RAX_LP
@@ -41,7 +40,6 @@ ENTRY(__libc_memmove)
 	jnz	2f
 	lea	__memmove_avx512_unaligned(%rip), %RAX_LP
 	ret
-# endif
 1:	lea	__memmove_avx_unaligned(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
 	jz	L(Fast_Unaligned_Load)

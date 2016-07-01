@@ -22,7 +22,7 @@
 
 	.text
 ENTRY (_ZGVeN8v_cos_knl)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512 _ZGVdN4v_cos
 #else
 /*
@@ -236,7 +236,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_cos
 END (_ZGVeN8v_cos_knl)
 
 ENTRY (_ZGVeN8v_cos_skx)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512 _ZGVdN4v_cos
 #else
 /*

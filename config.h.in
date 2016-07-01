@@ -67,8 +67,8 @@
 /* Define if compiler supports AVX512.  */
 #undef  HAVE_AVX512_SUPPORT
 
-/* Define if assembler supports AVX512.  */
-#undef  HAVE_AVX512_ASM_SUPPORT
+/* Define if assembler supports AVX512DQ.  */
+#undef  HAVE_AVX512DQ_ASM_SUPPORT
 
 /* Define if assembler supports vector instructions on S390.  */
 #undef  HAVE_S390_VX_ASM_SUPPORT

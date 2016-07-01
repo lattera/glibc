@@ -82,7 +82,7 @@
 
 	.text
 ENTRY (_ZGVeN8vv_pow_knl)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512_ff _ZGVdN4vv_pow
 #else
         pushq     %rbp
@@ -409,7 +409,7 @@ WRAPPER_IMPL_AVX512_ff _ZGVdN4vv_pow
 END (_ZGVeN8vv_pow_knl)
 
 ENTRY (_ZGVeN8vv_pow_skx)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512_ff _ZGVdN4vv_pow
 #else
         pushq     %rbp

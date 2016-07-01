@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 
-#if defined HAVE_AVX512_ASM_SUPPORT && IS_IN (libc)
+#if IS_IN (libc)
 
 # include "asm-syntax.h"
 

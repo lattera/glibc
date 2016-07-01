@@ -22,7 +22,7 @@
 
 	.text
 ENTRY (_ZGVeN16v_logf_knl)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512 _ZGVdN8v_logf
 #else
 /*
@@ -211,7 +211,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_logf
 END (_ZGVeN16v_logf_knl)
 
 ENTRY (_ZGVeN16v_logf_skx)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512 _ZGVdN8v_logf
 #else
 /*

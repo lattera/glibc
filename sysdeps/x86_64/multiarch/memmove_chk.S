@@ -29,7 +29,6 @@
 ENTRY(__memmove_chk)
 	.type	__memmove_chk, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
-# ifdef HAVE_AVX512_ASM_SUPPORT
 	HAS_ARCH_FEATURE (AVX512F_Usable)
 	jz	1f
 	lea	__memmove_chk_avx512_no_vzeroupper(%rip), %RAX_LP
@@ -40,7 +39,6 @@ ENTRY(__memmove_chk)
 	jnz	2f
 	lea	__memmove_chk_avx512_unaligned(%rip), %RAX_LP
 	ret
-# endif
 1:	lea	__memmove_chk_avx_unaligned(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
 	jz	L(Fast_Unaligned_Load)

@@ -1,4 +1,4 @@
-#if defined HAVE_AVX512_ASM_SUPPORT && IS_IN (libc)
+#if IS_IN (libc)
 # define VEC_SIZE	64
 # define VEC(i)		zmm##i
 # define VMOVNT		vmovntdq

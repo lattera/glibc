@@ -37,7 +37,7 @@
 
 	.text
 ENTRY (_ZGVeN8vl8l8_sincos_knl)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512_fFF _ZGVdN4vl8l8_sincos
 #else
         pushq     %rbp
@@ -308,7 +308,7 @@ END (_ZGVeN8vl8l8_sincos_knl)
 libmvec_hidden_def(_ZGVeN8vl8l8_sincos_knl)
 
 ENTRY (_ZGVeN8vl8l8_sincos_skx)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512_fFF _ZGVdN4vl8l8_sincos
 #else
         pushq     %rbp

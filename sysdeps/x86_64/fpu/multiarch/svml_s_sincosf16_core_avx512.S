@@ -50,7 +50,7 @@
 
 	.text
 ENTRY (_ZGVeN16vl4l4_sincosf_knl)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512_fFF _ZGVdN8vl4l4_sincosf
 #else
         pushq     %rbp
@@ -271,7 +271,7 @@ END (_ZGVeN16vl4l4_sincosf_knl)
 libmvec_hidden_def(_ZGVeN16vl4l4_sincosf_knl)
 
 ENTRY (_ZGVeN16vl4l4_sincosf_skx)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512_fFF _ZGVdN8vvv_sincosf
 #else
         pushq     %rbp

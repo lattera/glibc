@@ -22,7 +22,7 @@
 
 	.text
 ENTRY (_ZGVeN8v_exp_knl)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
 #else
 /*
@@ -238,7 +238,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
 END (_ZGVeN8v_exp_knl)
 
 ENTRY (_ZGVeN8v_exp_skx)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
 #else
 /*
