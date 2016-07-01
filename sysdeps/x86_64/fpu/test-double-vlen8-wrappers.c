@@ -17,13 +17,21 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "test-double-vlen8.h"
+#include "test-math-vector-sincos.h"
 #include <immintrin.h>
 
 #define VEC_TYPE __m512d
 
 VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVeN8v_cos)
 VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVeN8v_sin)
-VECTOR_WRAPPER_fFF (WRAPPER_NAME (sincos), _ZGVeN8vvv_sincos)
 VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVeN8v_log)
 VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVeN8v_exp)
 VECTOR_WRAPPER_ff (WRAPPER_NAME (pow), _ZGVeN8vv_pow)
+
+#ifndef __ILP32__
+# define VEC_INT_TYPE __m512i
+#else
+# define VEC_INT_TYPE __m256i
+#endif
+
+VECTOR_WRAPPER_fFF_2 (WRAPPER_NAME (sincos), _ZGVeN8vvv_sincos)

@@ -17,13 +17,21 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "test-float-vlen8.h"
+#include "test-math-vector-sincos.h"
 #include <immintrin.h>
 
 #define VEC_TYPE __m256
 
 VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVcN8v_cosf)
 VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVcN8v_sinf)
-VECTOR_WRAPPER_fFF (WRAPPER_NAME (sincosf), _ZGVcN8vvv_sincosf)
 VECTOR_WRAPPER (WRAPPER_NAME (logf), _ZGVcN8v_logf)
 VECTOR_WRAPPER (WRAPPER_NAME (expf), _ZGVcN8v_expf)
 VECTOR_WRAPPER_ff (WRAPPER_NAME (powf), _ZGVcN8vv_powf)
+
+#define VEC_INT_TYPE __m128i
+
+#ifndef __ILP32__
+VECTOR_WRAPPER_fFF_4 (WRAPPER_NAME (sincosf), _ZGVcN8vvv_sincosf)
+#else
+VECTOR_WRAPPER_fFF_3 (WRAPPER_NAME (sincosf), _ZGVcN8vvv_sincosf)
+#endif

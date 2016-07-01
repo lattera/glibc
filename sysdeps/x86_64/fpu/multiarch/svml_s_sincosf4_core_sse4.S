@@ -20,7 +20,7 @@
 #include "svml_s_trig_data.h"
 
 	.text
-ENTRY (_ZGVbN4vvv_sincosf_sse4)
+ENTRY (_ZGVbN4vl4l4_sincosf_sse4)
 /*
    ALGORITHM DESCRIPTION:
 
@@ -265,4 +265,82 @@ ENTRY (_ZGVbN4vvv_sincosf_sse4)
         movss     %xmm0, 256(%rsp,%r15,8)
         jmp       .LBL_1_7
 
+END (_ZGVbN4vl4l4_sincosf_sse4)
+libmvec_hidden_def(_ZGVbN4vl4l4_sincosf_sse4)
+
+/* vvv version implemented with wrapper to vl4l4 variant.  */
+ENTRY (_ZGVbN4vvv_sincosf_sse4)
+#ifndef __ILP32__
+        subq      $104, %rsp
+        .cfi_def_cfa_offset 112
+        movdqu    %xmm1, 32(%rsp)
+        lea       (%rsp), %rdi
+        movdqu    %xmm2, 48(%rdi)
+        lea       16(%rsp), %rsi
+        movdqu    %xmm3, 48(%rsi)
+        movdqu    %xmm4, 64(%rsi)
+        call      HIDDEN_JUMPTARGET(_ZGVbN4vl4l4_sincosf_sse4)
+        movq      32(%rsp), %rdx
+        movq      40(%rsp), %rsi
+        movq      48(%rsp), %r8
+        movq      56(%rsp), %r10
+        movl      (%rsp), %eax
+        movl      4(%rsp), %ecx
+        movl      8(%rsp), %edi
+        movl      12(%rsp), %r9d
+        movl      %eax, (%rdx)
+        movl      %ecx, (%rsi)
+        movq      64(%rsp), %rax
+        movq      72(%rsp), %rcx
+        movl      %edi, (%r8)
+        movl      %r9d, (%r10)
+        movq      80(%rsp), %rdi
+        movq      88(%rsp), %r9
+        movl      16(%rsp), %r11d
+        movl      20(%rsp), %edx
+        movl      24(%rsp), %esi
+        movl      28(%rsp), %r8d
+        movl      %r11d, (%rax)
+        movl      %edx, (%rcx)
+        movl      %esi, (%rdi)
+        movl      %r8d, (%r9)
+        addq      $104, %rsp
+        .cfi_def_cfa_offset 8
+        ret
+#else
+        subl    $72, %esp
+        .cfi_def_cfa_offset 80
+        leal    48(%rsp), %esi
+        movaps  %xmm1, 16(%esp)
+        leal    32(%rsp), %edi
+        movaps  %xmm2, (%esp)
+        call    HIDDEN_JUMPTARGET(_ZGVbN4vl4l4_sincosf_sse4)
+        movl    16(%esp), %eax
+        movss   32(%esp), %xmm0
+        movss   %xmm0, (%eax)
+        movl    20(%esp), %eax
+        movss   36(%esp), %xmm0
+        movss   %xmm0, (%eax)
+        movl    24(%esp), %eax
+        movss   40(%esp), %xmm0
+        movss   %xmm0, (%eax)
+        movl    28(%esp), %eax
+        movss   44(%esp), %xmm0
+        movss   %xmm0, (%eax)
+        movl    (%esp), %eax
+        movss   48(%esp), %xmm0
+        movss   %xmm0, (%eax)
+        movl    4(%esp), %eax
+        movss   52(%esp), %xmm0
+        movss   %xmm0, (%eax)
+        movl    8(%esp), %eax
+        movss   56(%esp), %xmm0
+        movss   %xmm0, (%eax)
+        movl    12(%esp), %eax
+        movss   60(%esp), %xmm0
+        movss   %xmm0, (%eax)
+        addl    $72, %esp
+        .cfi_def_cfa_offset 8
+        ret
+#endif
 END (_ZGVbN4vvv_sincosf_sse4)

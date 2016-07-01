@@ -20,7 +20,7 @@
 #include "svml_d_trig_data.h"
 
 	.text
-ENTRY (_ZGVdN4vvv_sincos_avx2)
+ENTRY (_ZGVdN4vl8l8_sincos_avx2)
 /*
    ALGORITHM DESCRIPTION:
 
@@ -274,4 +274,100 @@ ENTRY (_ZGVdN4vvv_sincos_avx2)
         vmovsd    %xmm0, 384(%rsp,%r15)
         jmp       .LBL_1_7
 
+END (_ZGVdN4vl8l8_sincos_avx2)
+libmvec_hidden_def(_ZGVdN4vl8l8_sincos_avx2)
+
+/* vvv version implemented with wrapper to vl8l8 variant.  */
+ENTRY (_ZGVdN4vvv_sincos_avx2)
+#ifndef __ILP32__
+        pushq     %rbp
+        cfi_adjust_cfa_offset (8)
+        cfi_rel_offset (%rbp, 0)
+        movq      %rsp, %rbp
+        cfi_def_cfa_register (%rbp)
+        andq      $-32, %rsp
+        subq      $128, %rsp
+        vmovdqu   %ymm1, 64(%rsp)
+        lea       (%rsp), %rdi
+        vmovdqu   %ymm2, 96(%rdi)
+        lea       32(%rsp), %rsi
+        call      HIDDEN_JUMPTARGET(_ZGVdN4vl8l8_sincos_avx2)
+        movq      64(%rsp), %rdx
+        movq      96(%rsp), %rsi
+        movq      72(%rsp), %r8
+        movq      104(%rsp), %r10
+        movq      (%rsp), %rax
+        movq      32(%rsp), %rcx
+        movq      8(%rsp), %rdi
+        movq      40(%rsp), %r9
+        movq      %rax, (%rdx)
+        movq      %rcx, (%rsi)
+        movq      80(%rsp), %rax
+        movq      112(%rsp), %rcx
+        movq      %rdi, (%r8)
+        movq      %r9, (%r10)
+        movq      88(%rsp), %rdi
+        movq      120(%rsp), %r9
+        movq      16(%rsp), %r11
+        movq      48(%rsp), %rdx
+        movq      24(%rsp), %rsi
+        movq      56(%rsp), %r8
+        movq      %r11, (%rax)
+        movq      %rdx, (%rcx)
+        movq      %rsi, (%rdi)
+        movq      %r8, (%r9)
+        movq      %rbp, %rsp
+        cfi_def_cfa_register (%rsp)
+        popq      %rbp
+        cfi_adjust_cfa_offset (-8)
+        cfi_restore (%rbp)
+        ret
+#else
+        leal    8(%rsp), %r10d
+        .cfi_def_cfa 10, 0
+        andl    $-32, %esp
+        pushq   -8(%r10d)
+        pushq   %rbp
+        .cfi_escape 0x10,0x6,0x2,0x76,0
+        movl    %esp, %ebp
+        pushq   %r10
+        .cfi_escape 0xf,0x3,0x76,0x78,0x6
+        leal    -48(%rbp), %esi
+        leal    -80(%rbp), %edi
+        subl    $104, %esp
+        vmovaps %xmm1, -96(%ebp)
+        vmovaps %xmm2, -112(%ebp)
+        call    HIDDEN_JUMPTARGET(_ZGVdN4vl8l8_sincos_avx2)
+        movl    -96(%ebp), %eax
+        vmovsd  -80(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movl    -92(%ebp), %eax
+        vmovsd  -72(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movl    -88(%ebp), %eax
+        vmovsd  -64(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movl    -84(%ebp), %eax
+        vmovsd  -56(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movl    -112(%ebp), %eax
+        vmovsd  -48(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movl    -108(%ebp), %eax
+        vmovsd  -40(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movl    -104(%ebp), %eax
+        vmovsd  -32(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movl    -100(%ebp), %eax
+        vmovsd  -24(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        addl    $104, %esp
+        popq    %r10
+        .cfi_def_cfa 10, 0
+        popq    %rbp
+        leal    -8(%r10), %esp
+        .cfi_def_cfa 7, 8
+        ret
+#endif
 END (_ZGVdN4vvv_sincos_avx2)

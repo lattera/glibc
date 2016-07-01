@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "test-float-vlen8.h"
+#include "test-math-vector-sincos.h"
 #include <immintrin.h>
 
 #undef VEC_SUFF
@@ -26,7 +27,17 @@
 
 VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVdN8v_cosf)
 VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVdN8v_sinf)
-VECTOR_WRAPPER_fFF (WRAPPER_NAME (sincosf), _ZGVdN8vvv_sincosf)
 VECTOR_WRAPPER (WRAPPER_NAME (logf), _ZGVdN8v_logf)
 VECTOR_WRAPPER (WRAPPER_NAME (expf), _ZGVdN8v_expf)
 VECTOR_WRAPPER_ff (WRAPPER_NAME (powf), _ZGVdN8vv_powf)
+
+/* Redefinition of wrapper to be compatible with _ZGVdN8vvv_sincosf.  */
+#undef VECTOR_WRAPPER_fFF
+
+#define VEC_INT_TYPE __m256i
+
+#ifndef __ILP32__
+VECTOR_WRAPPER_fFF_3 (WRAPPER_NAME (sincosf), _ZGVdN8vvv_sincosf)
+#else
+VECTOR_WRAPPER_fFF_2 (WRAPPER_NAME (sincosf), _ZGVdN8vvv_sincosf)
+#endif

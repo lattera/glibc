@@ -36,9 +36,9 @@
      sin(R), sin(R') are approximated by corresponding polynomial.  */
 
 	.text
-ENTRY (_ZGVeN8vvv_sincos_knl)
+ENTRY (_ZGVeN8vl8l8_sincos_knl)
 #ifndef HAVE_AVX512_ASM_SUPPORT
-WRAPPER_IMPL_AVX512_fFF _ZGVdN4vvv_sincos
+WRAPPER_IMPL_AVX512_fFF _ZGVdN4vl8l8_sincos
 #else
         pushq     %rbp
         cfi_adjust_cfa_offset (8)
@@ -304,11 +304,12 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN4vvv_sincos
         jmp       .LBL_1_7
 
 #endif
-END (_ZGVeN8vvv_sincos_knl)
+END (_ZGVeN8vl8l8_sincos_knl)
+libmvec_hidden_def(_ZGVeN8vl8l8_sincos_knl)
 
-ENTRY (_ZGVeN8vvv_sincos_skx)
+ENTRY (_ZGVeN8vl8l8_sincos_skx)
 #ifndef HAVE_AVX512_ASM_SUPPORT
-WRAPPER_IMPL_AVX512_fFF _ZGVdN4vvv_sincos
+WRAPPER_IMPL_AVX512_fFF _ZGVdN4vl8l8_sincos
 #else
         pushq     %rbp
         cfi_adjust_cfa_offset (8)
@@ -585,6 +586,175 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN4vvv_sincos
         jmp       .LBL_2_7
 
 #endif
+END (_ZGVeN8vl8l8_sincos_skx)
+libmvec_hidden_def(_ZGVeN8vl8l8_sincos_skx)
+
+/* Wrapper between vvv and vl8l8 vector variants.  */
+.macro WRAPPER_AVX512_vvv_vl8l8 callee
+#ifndef __ILP32__
+        pushq     %rbp
+        cfi_adjust_cfa_offset (8)
+        cfi_rel_offset (%rbp, 0)
+        movq      %rsp, %rbp
+        cfi_def_cfa_register (%rbp)
+        andq      $-64, %rsp
+        subq      $256, %rsp
+        /* Encoding for vmovups %zmm1, 128(%rsp).  */
+        .byte 0x62
+        .byte 0xf1
+        .byte 0x7c
+        .byte 0x48
+        .byte 0x11
+        .byte 0x4c
+        .byte 0x24
+        .byte 0x02
+        lea       (%rsp), %rdi
+        /* Encoding for vmovups %zmm2, 192(%rdi).  */
+        .byte 0x62
+        .byte 0xf1
+        .byte 0x7c
+        .byte 0x48
+        .byte 0x11
+        .byte 0x57
+        .byte 0x03
+        lea       64(%rsp), %rsi
+        call      HIDDEN_JUMPTARGET(\callee)
+        movq      128(%rsp), %rdx
+        movq      136(%rsp), %rsi
+        movq      144(%rsp), %r8
+        movq      152(%rsp), %r10
+        movq      (%rsp), %rax
+        movq      8(%rsp), %rcx
+        movq      16(%rsp), %rdi
+        movq      24(%rsp), %r9
+        movq      %rax, (%rdx)
+        movq      %rcx, (%rsi)
+        movq      160(%rsp), %rax
+        movq      168(%rsp), %rcx
+        movq      %rdi, (%r8)
+        movq      %r9, (%r10)
+        movq      176(%rsp), %rdi
+        movq      184(%rsp), %r9
+        movq      32(%rsp), %r11
+        movq      40(%rsp), %rdx
+        movq      48(%rsp), %rsi
+        movq      56(%rsp), %r8
+        movq      %r11, (%rax)
+        movq      %rdx, (%rcx)
+        movq      192(%rsp), %r11
+        movq      200(%rsp), %rdx
+        movq      %rsi, (%rdi)
+        movq      %r8, (%r9)
+        movq      208(%rsp), %rsi
+        movq      216(%rsp), %r8
+        movq      64(%rsp), %r10
+        movq      72(%rsp), %rax
+        movq      80(%rsp), %rcx
+        movq      88(%rsp), %rdi
+        movq      %r10, (%r11)
+        movq      %rax, (%rdx)
+        movq      224(%rsp), %r10
+        movq      232(%rsp), %rax
+        movq      %rcx, (%rsi)
+        movq      %rdi, (%r8)
+        movq      240(%rsp), %rcx
+        movq      248(%rsp), %rdi
+        movq      96(%rsp), %r9
+        movq      104(%rsp), %r11
+        movq      112(%rsp), %rdx
+        movq      120(%rsp), %rsi
+        movq      %r9, (%r10)
+        movq      %r11, (%rax)
+        movq      %rdx, (%rcx)
+        movq      %rsi, (%rdi)
+        movq      %rbp, %rsp
+        cfi_def_cfa_register (%rsp)
+        popq      %rbp
+        cfi_adjust_cfa_offset (-8)
+        cfi_restore (%rbp)
+        ret
+#else
+        leal    8(%rsp), %r10d
+        .cfi_def_cfa 10, 0
+        andl    $-64, %esp
+        pushq   -8(%r10d)
+        pushq   %rbp
+        .cfi_escape 0x10,0x6,0x2,0x76,0
+        movl    %esp, %ebp
+        pushq   %r10
+        .cfi_escape 0xf,0x3,0x76,0x78,0x6
+        leal    -112(%rbp), %esi
+        leal    -176(%rbp), %edi
+        subl    $232, %esp
+        vmovdqa %ymm1, -208(%ebp)
+        vmovdqa %ymm2, -240(%ebp)
+        call    HIDDEN_JUMPTARGET(\callee)
+        vmovdqa -208(%ebp), %xmm0
+        vmovq   %xmm0, %rax
+        vmovsd  -176(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        shrq    $32, %rax
+        vmovsd  -168(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movq    -200(%ebp), %rax
+        vmovsd  -160(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        shrq    $32, %rax
+        vmovsd  -152(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movq    -192(%ebp), %rax
+        vmovsd  -144(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        shrq    $32, %rax
+        vmovsd  -136(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movq    -184(%ebp), %rax
+        vmovsd  -128(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        shrq    $32, %rax
+        vmovsd  -120(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        vmovdqa -240(%ebp), %xmm0
+        vmovq   %xmm0, %rax
+        vmovsd  -112(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        shrq    $32, %rax
+        vmovsd  -104(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movq    -232(%ebp), %rax
+        vmovsd  -96(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        shrq    $32, %rax
+        vmovsd  -88(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movq    -224(%ebp), %rax
+        vmovsd  -80(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        shrq    $32, %rax
+        vmovsd  -72(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        movq    -216(%ebp), %rax
+        vmovsd  -64(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        shrq    $32, %rax
+        vmovsd  -56(%ebp), %xmm0
+        vmovsd  %xmm0, (%eax)
+        addl    $232, %esp
+        popq    %r10
+        .cfi_def_cfa 10, 0
+        popq    %rbp
+        leal    -8(%r10), %esp
+        .cfi_def_cfa 7, 8
+        ret
+#endif
+.endm
+
+ENTRY (_ZGVeN8vvv_sincos_knl)
+WRAPPER_AVX512_vvv_vl8l8 _ZGVeN8vl8l8_sincos_knl
+END (_ZGVeN8vvv_sincos_knl)
+
+ENTRY (_ZGVeN8vvv_sincos_skx)
+WRAPPER_AVX512_vvv_vl8l8 _ZGVeN8vl8l8_sincos_skx
 END (_ZGVeN8vvv_sincos_skx)
 
 	.section .rodata, "a"

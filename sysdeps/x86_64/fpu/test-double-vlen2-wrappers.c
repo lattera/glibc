@@ -17,13 +17,17 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "test-double-vlen2.h"
+#include "test-math-vector-sincos.h"
 #include <immintrin.h>
 
 #define VEC_TYPE __m128d
 
 VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVbN2v_cos)
 VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVbN2v_sin)
-VECTOR_WRAPPER_fFF (WRAPPER_NAME (sincos), _ZGVbN2vvv_sincos)
 VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVbN2v_log)
 VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVbN2v_exp)
 VECTOR_WRAPPER_ff (WRAPPER_NAME (pow), _ZGVbN2vv_pow)
+
+#define VEC_INT_TYPE __m128i
+
+VECTOR_WRAPPER_fFF_2 (WRAPPER_NAME (sincos), _ZGVbN2vvv_sincos)

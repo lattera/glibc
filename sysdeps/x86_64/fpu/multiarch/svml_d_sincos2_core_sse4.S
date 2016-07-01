@@ -20,7 +20,7 @@
 #include "svml_d_trig_data.h"
 
 	.text
-ENTRY (_ZGVbN2vvv_sincos_sse4)
+ENTRY (_ZGVbN2vl8l8_sincos_sse4)
 /*
    ALGORITHM DESCRIPTION:
 
@@ -311,4 +311,58 @@ ENTRY (_ZGVbN2vvv_sincos_sse4)
 
         movsd     %xmm0, 256(%rsp,%r15)
         jmp       .LBL_1_7
+END (_ZGVbN2vl8l8_sincos_sse4)
+libmvec_hidden_def(_ZGVbN2vl8l8_sincos_sse4)
+
+/* vvv version implemented with wrapper to vl8l8 variant.  */
+ENTRY (_ZGVbN2vvv_sincos_sse4)
+#ifndef __ILP32__
+        subq      $72, %rsp
+        .cfi_def_cfa_offset 80
+        movdqu    %xmm1, 32(%rsp)
+        lea       (%rsp), %rdi
+        movdqu    %xmm2, 48(%rdi)
+        lea       16(%rsp), %rsi
+        call      HIDDEN_JUMPTARGET(_ZGVbN2vl8l8_sincos_sse4)
+        movq      32(%rsp), %rdx
+        movq      48(%rsp), %rsi
+        movq      40(%rsp), %r8
+        movq      56(%rsp), %r10
+        movq      (%rsp), %rax
+        movq      16(%rsp), %rcx
+        movq      8(%rsp), %rdi
+        movq      24(%rsp), %r9
+        movq      %rax, (%rdx)
+        movq      %rcx, (%rsi)
+        movq      %rdi, (%r8)
+        movq      %r9, (%r10)
+        addq      $72, %rsp
+        .cfi_def_cfa_offset 8
+        ret
+#else
+        subl    $72, %esp
+        .cfi_def_cfa_offset 80
+        leal    48(%rsp), %esi
+        movaps  %xmm1, 16(%esp)
+        leal    32(%rsp), %edi
+        movaps  %xmm2, (%esp)
+        call    HIDDEN_JUMPTARGET(_ZGVbN2vl8l8_sincos_sse4)
+        movdqa  16(%esp), %xmm1
+        movsd   32(%esp), %xmm0
+        movq    %xmm1, %rax
+        movdqa  (%esp), %xmm2
+        movsd   %xmm0, (%eax)
+        movsd   40(%esp), %xmm0
+        pextrd  $1, %xmm1, %eax
+        movsd   %xmm0, (%eax)
+        movsd   48(%esp), %xmm0
+        movq    %xmm2, %rax
+        movsd   %xmm0, (%eax)
+        movsd   56(%esp), %xmm0
+        pextrd  $1, %xmm2, %eax
+        movsd   %xmm0, (%eax)
+        addl    $72, %esp
+        .cfi_def_cfa_offset 8
+        ret
+#endif
 END (_ZGVbN2vvv_sincos_sse4)

@@ -1,5 +1,5 @@
-/* Wrapper part of tests for AVX2 ISA versions of vector math functions.
-   Copyright (C) 2014-2016 Free Software Foundation, Inc.
+/* Test for vector sincos ABI.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,25 +16,54 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen4.h"
-#include "test-math-vector-sincos.h"
-#include <immintrin.h>
+#include <math.h>
+#include <math-tests-arch.h>
 
-#undef VEC_SUFF
-#define VEC_SUFF _vlen4_avx2
+#define N 1000
+double x[N], s[N], c[N];
+double* s_ptrs[N];
+double* c_ptrs[N];
+int arch_check = 1;
 
-#define VEC_TYPE __m256d
+static void
+init_arg (void)
+{
+  int i;
 
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVdN4v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVdN4v_sin)
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVdN4v_log)
-VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVdN4v_exp)
-VECTOR_WRAPPER_ff (WRAPPER_NAME (pow), _ZGVdN4vv_pow)
+  CHECK_ARCH_EXT;
 
-#ifndef __ILP32__
-# define VEC_INT_TYPE __m256i
-#else
-# define VEC_INT_TYPE __m128i
-#endif
+  arch_check = 0;
 
-VECTOR_WRAPPER_fFF_2 (WRAPPER_NAME (sincos), _ZGVdN4vvv_sincos)
+  for(i = 0; i < N; i++)
+  {
+    x[i] = i / 3;
+    s_ptrs[i] = &s[i];
+    c_ptrs[i] = &c[i];
+  }
+}
+
+static int
+test_sincos_abi (void)
+{
+  int i;
+
+  init_arg ();
+
+  if (arch_check)
+    return 77;
+
+#pragma omp simd
+  for(i = 0; i < N; i++)
+    sincos (x[i], s_ptrs[i], c_ptrs[i]);
+
+  return 0;
+}
+
+static int
+do_test (void)
+{
+    return test_sincos_abi ();
+}
+
+#define TEST_FUNCTION do_test ()
+#include "../../../test-skeleton.c"

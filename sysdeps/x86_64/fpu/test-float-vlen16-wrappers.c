@@ -17,13 +17,21 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "test-float-vlen16.h"
+#include "test-math-vector-sincos.h"
 #include <immintrin.h>
 
 #define VEC_TYPE __m512
 
 VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVeN16v_cosf)
 VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVeN16v_sinf)
-VECTOR_WRAPPER_fFF (WRAPPER_NAME (sincosf), _ZGVeN16vvv_sincosf)
 VECTOR_WRAPPER (WRAPPER_NAME (logf), _ZGVeN16v_logf)
 VECTOR_WRAPPER (WRAPPER_NAME (expf), _ZGVeN16v_expf)
 VECTOR_WRAPPER_ff (WRAPPER_NAME (powf), _ZGVeN16vv_powf)
+
+#define VEC_INT_TYPE __m512i
+
+#ifndef __ILP32__
+VECTOR_WRAPPER_fFF_3 (WRAPPER_NAME (sincosf), _ZGVeN16vvv_sincosf)
+#else
+VECTOR_WRAPPER_fFF_2 (WRAPPER_NAME (sincosf), _ZGVeN16vvv_sincosf)
+#endif
