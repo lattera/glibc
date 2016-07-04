@@ -1,5 +1,13 @@
 2016-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/sysdep.h
+	[__WORDSIZE == 64 || __ASSUME_WORDSIZE64_ILP32] (LO_HI_LONG): Remove
+	guards.
+	* misc/tst-preadvwritev-common.c: New file.
+	* misc/tst-preadvwritev.c: Use tst-preadvwritev-common.c.
+	* misc/tst-preadvwritev64.c: Use tst-preadwritev-common.c and add
+	a check for files larger than 2GB.
+
 	* sysdeps/unix/sysv/linux/mips/kernel-features.h
 	(__ASSUME_OFF_DIFF_OFF64): Remove define.
 	* sysdeps/unix/sysv/linux/pread.c

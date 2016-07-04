@@ -49,10 +49,6 @@
 #endif
 
 /* Provide a macro to pass the off{64}_t argument on p{readv,writev}{64}.  */
-#if __WORDSIZE == 64 || defined __ASSUME_WORDSIZE64_ILP32
-# define LO_HI_LONG(val) (val)
-#else
-# define LO_HI_LONG(val) \
-  (long) (val), \
-  (long) (((uint64_t) (val)) >> 32)
-#endif
+#define LO_HI_LONG(val) \
+ (long) (val), \
+ (long) (((uint64_t) (val)) >> 32)

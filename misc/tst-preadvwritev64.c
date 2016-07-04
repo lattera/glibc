@@ -16,7 +16,36 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define PREADV  preadv64
-#define PWRITEV pwritev64
+#define _FILE_OFFSET_BITS 64
+#include "tst-preadvwritev-common.c"
 
-#include "tst-preadvwritev.c"
+static int
+do_test (void)
+{
+  int ret;
+
+  ret = do_test_with_offset (0);
+
+  /* Create a sparse file larger than 4GB to check if offset is handled
+     correctly in p{write,read}v64. */
+  off_t base_offset = UINT32_MAX + 2048LL;
+  ret += do_test_with_offset (base_offset);
+
+  struct stat st;
+  if (fstat (temp_fd, &st) == -1)
+    {
+      printf ("error: fstat on temporary file failed: %m");
+      return 1;
+    }
+
+  /* The total size should base_offset plus 2 * 96.  */
+  off_t expected_value = base_offset + (2 * (96LL));
+  if (st.st_size != expected_value)
+    {
+      printf ("error: file size different than expected (%jd != %jd)\n",
+	      (intmax_t) expected_value, (intmax_t) st.st_size);
+      return 1;
+    }
+
+  return ret;
+}
