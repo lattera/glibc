@@ -43,3 +43,7 @@ endif
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
 endif
+
+ifeq ($(subdir),gmon)
+CFLAGS-mcount.c += -Wno-frame-address
+endif

@@ -1,3 +1,7 @@
+2016-07-04  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/Makefile (CFLAGS-mcount.c): Define.
+
 2016-07-01  Maciej W. Rozycki  <macro@imgtec.com>
 
 	* sysdeps/generic/ldsodefs.h
