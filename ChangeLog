@@ -1,3 +1,7 @@
+2016-07-05  Chris Metcalf  <cmetcalf@mellanox.com>
+
+	* malloc/tst-malloc-thread-fail.c (TIMEOUT): Bump up to 30s.
+
 2016-07-05  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	[BZ #20327]
