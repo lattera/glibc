@@ -889,7 +889,8 @@ override CFLAGS	= -std=gnu11 -fgnu89-inline $(config-extra-cflags) \
 		  $(CFLAGS-$(@F)) $(tls-model) \
 		  $(foreach lib,$(libof-$(basename $(@F))) \
 				$(libof-$(<F)) $(libof-$(@F)),$(CFLAGS-$(lib)))
-override CXXFLAGS = $(c++-sysincludes) \
+# Use our copies of cstdlib and cmath.
+override CXXFLAGS = -I$(common-objpfx) $(c++-sysincludes) \
 		    $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
 		    $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
 

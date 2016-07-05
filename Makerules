@@ -109,6 +109,30 @@ endif # avoid-generated
 endif # $(build-shared) = yes
 
 ifndef avoid-generated
+ifneq (,$(CXX))
+# If C++ headers <cstdlib> or <cmath> are used, GCC 6 will include
+# /usr/include/stdlib.h or /usr/include/math.h from "#include_next"
+# (instead of stdlib/stdlib.h or math/math.h in the glibc source
+# directory), and this turns up as a make dependency.  An implicit
+# rule will kick in and make will try to install stdlib/stdlib.h or
+# math/math.h as /usr/include/stdlib.h or /usr/include/math.h because
+# the target is out of date.  We make a copy of <cstdlib> and <cmath>
+# in the glibc build directory so that stdlib/stdlib.h and math/math.h
+# will be used instead of /usr/include/stdlib.h and /usr/include/math.h.
+before-compile := $(common-objpfx)cstdlib $(common-objpfx)cmath \
+	          $(before-compile)
+cstdlib=$(shell echo "\#include <cstdlib>" | $(CXX) -M -MP -x c++ - \
+		| sed -n "/cstdlib:/{s/:$$//;p}")
+$(common-objpfx)cstdlib: $(cstdlib)
+	$(INSTALL_DATA) $< $@T
+	$(move-if-change) $@T $@
+cmath=$(shell echo "\#include <cmath>" | $(CXX) -M -MP -x c++ - \
+		| sed -n "/cmath:/{s/:$$//;p}")
+$(common-objpfx)cmath: $(cmath)
+	$(INSTALL_DATA) $< $@T
+	$(move-if-change) $@T $@
+endif
+
 before-compile := $(common-objpfx)libc-abis.h $(before-compile)
 $(common-objpfx)libc-abis.h: $(common-objpfx)libc-abis.stamp; @:
 $(common-objpfx)libc-abis.stamp: $(..)scripts/gen-libc-abis \

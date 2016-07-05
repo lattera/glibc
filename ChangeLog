@@ -1,3 +1,12 @@
+2016-07-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20314]
+	* Makeconfig (CXXFLAGS): Prepend -I$(common-objpfx).
+	* Makerules (before-compile): Add $(common-objpfx)cstdlib and
+	$(common-objpfx)cmath.
+	($(common-objpfx)cstdlib): New target.
+	($(common-objpfx)cmath): Likewise.
+
 2016-07-05  Chris Metcalf  <cmetcalf@mellanox.com>
 
 	* malloc/tst-malloc-thread-fail.c (TIMEOUT): Bump up to 30s.
