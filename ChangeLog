@@ -1,3 +1,9 @@
+2016-07-05  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	[BZ #20327]
+	* sysdeps/powerpc/powerpc64/power8/strcasecmp.S: Mask bits that
+	are not part of the string.
+
 2016-07-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/tst-cancel4-common.c (do_test): Add temporary fifo creation.

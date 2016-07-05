@@ -40,11 +40,20 @@
 	vsel	v5, v7, v5, v8; \
 	vcmpequb.	v7, v5, v4;
 
-/* Get 16 bytes for unaligned case.  */
+/*
+ * Get 16 bytes for unaligned case.
+ * reg1: Vector to hold next 16 bytes.
+ * reg2: Address to read from.
+ * reg3: Permute control vector.
+ * v8: Tmp vector used to mask unwanted bytes.
+ * v9: Tmp vector,0 when null is found on first 16 bytes
+ */
 #ifdef __LITTLE_ENDIAN__
 #define GET16BYTES(reg1, reg2, reg3) \
 	lvx	reg1, 0, reg2; \
-	vcmpequb.	v8, v0, reg1; \
+	vspltisb	v8, -1; \
+	vperm	v8, v8, reg1, reg3; \
+	vcmpequb.	v8, v0, v8; \
 	beq	cr6, 1f; \
 	vspltisb	v9, 0; \
 	b	2f; \
@@ -57,7 +66,9 @@
 #else
 #define GET16BYTES(reg1, reg2, reg3) \
 	lvx	reg1, 0, reg2; \
-	vcmpequb.	v8, v0, reg1; \
+	vspltisb	 v8, -1; \
+	vperm	v8, reg1, v8,  reg3; \
+	vcmpequb.	v8, v0, v8; \
 	beq	cr6, 1f; \
 	vspltisb	v9, 0; \
 	b	2f; \
