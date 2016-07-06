@@ -1,5 +1,41 @@
 2016-10-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* posix/Makefile (tests): Add tst-posix_fadvise and tst-posix_fadvise64.
+	* posix/tst-posix_fadvise.c: New file.
+	* posix/tst-posix_fadvise64.c: Likewise.
+	* posix/tst-posix_fadvise-common.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_FADVISE64_64_6ARG): Define.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	[!__powerpc64__] (__ASSUME_FADVISE64_64_6ARG): Define.
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	[!LP64] (__ASSUME_FADVISE64_64_NO_ALIGN): Define.
+	* sysdeps/unix/sysv/linux/arm/posix_fadvise64.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fadvise64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/posix_fadvise64.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fadvise64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fadvise64.c
+	(SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3) [__posix_fadvise64_l64]:
+	Alias to __posix_fadvise64_l32.
+	(SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3) [__posix_fadvise64_l32]:
+	Add compat definition to posix_fadvise64.
+	(SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3) [__posix_fadvise64_l64]:
+	Add versioned definition to posix_fadvise64.
+	* sysdeps/unix/sysv/linux/posix_fadvise.c (posix_fadvise): Build iff
+	__OFF_T_MATCHES_OFF64_T is defined, use INTERNAL_SYSCALL_CALL, add
+	__ASSUME_FADVISE64_64_6ARG/__ASSUME_FADVISE64_64_NO_ALIGN support.
+	* sysdeps/unix/sysv/linux/posix_fadvise64.c (posix_fadvise64): Add
+	__ASSUME_FADVISE64_64_NO_ALIGN support and use INTERNAL_SYSCALL_CALL.
+
 	* io/Makefile (tests): Add tst-posix_fallocate and
 	tst-posix_fallocate64.
 	* io/tst-posix_fallocate-common.c: New file.

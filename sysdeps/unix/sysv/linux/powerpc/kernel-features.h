@@ -46,4 +46,9 @@
 # define __ASSUME_ALIGNED_REGISTER_PAIRS	1
 #endif
 
+/* powerpc compat fadvise64_64 reorganize the syscall argument.  */
+#ifndef __powerpc64__
+# define __ASSUME_FADVISE64_64_6ARG		1
+#endif
+
 #include_next <kernel-features.h>

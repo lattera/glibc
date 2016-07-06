@@ -17,10 +17,29 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <sysdep.h>
+#include <shlib-compat.h>
 
 int __posix_fadvise64_l64 (int fd, off64_t offset, off64_t len, int advise);
-int __posix_fadvise64_l32 (int fd, off64_t offset, size_t len, int advise);
+
+/* Both arm and powerpc implements fadvise64_64 with last 'advise' argument
+   just after 'fd' to avoid the requirement of implementing 7-arg syscalls.
+   ARM also defines __NR_fadvise64_64 as __NR_arm_fadvise64_64.
+
+   tile requires __ASSUME_ALIGNED_REGISTER_PAIRS but implements the 32-bit
+   fadvise64_64 without the padding 0 after fd.
+
+   s390 implements fadvice64_64 using a specific struct with arguments
+   packed inside.  This is the only implementation handled in arch-specific
+   code.  */
+
+#ifdef __ASSUME_FADVISE64_64_NO_ALIGN
+# undef __ALIGNMENT_ARG
+# define __ALIGNMENT_ARG
+#endif
+
+#ifndef __NR_fadvise64_64
+# define __NR_fadvise64_64 __NR_fadvise64
+#endif
 
 /* Advice the system about the expected behaviour of the application with
    respect to the file associated with FD.  */
@@ -29,20 +48,24 @@ int
 __posix_fadvise64_l64 (int fd, off64_t offset, off64_t len, int advise)
 {
   INTERNAL_SYSCALL_DECL (err);
-  int ret = INTERNAL_SYSCALL (fadvise64_64, err, 6, fd,
-			      __LONG_LONG_PAIR ((long) (offset >> 32),
-						(long) offset),
-			      __LONG_LONG_PAIR ((long) (len >> 32),
-						(long) len),
-			      advise);
+#ifdef __ASSUME_FADVISE64_64_6ARG
+  int ret = INTERNAL_SYSCALL_CALL (fadvise64_64, err, fd, advise,
+				   SYSCALL_LL64 (offset), SYSCALL_LL64 (len));
+#else
+  int ret = INTERNAL_SYSCALL_CALL (fadvise64_64, err, fd,
+				   __ALIGNMENT_ARG SYSCALL_LL64 (offset),
+				   SYSCALL_LL64 (len), advise);
+#endif
   if (!INTERNAL_SYSCALL_ERROR_P (ret, err))
     return 0;
   return INTERNAL_SYSCALL_ERRNO (ret, err);
 }
 
-#include <shlib-compat.h>
-
-#if SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3)
+/* The type of the len argument was changed from size_t to off_t in
+   POSIX.1-2003 TC1.  */
+#ifndef __OFF_T_MATCHES_OFF64_T
+# if SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3)
+int __posix_fadvise64_l32 (int fd, off64_t offset, size_t len, int advise);
 
 int
 attribute_compat_text_section
@@ -53,6 +76,10 @@ __posix_fadvise64_l32 (int fd, off64_t offset, size_t len, int advise)
 
 versioned_symbol (libc, __posix_fadvise64_l64, posix_fadvise64, GLIBC_2_3_3);
 compat_symbol (libc, __posix_fadvise64_l32, posix_fadvise64, GLIBC_2_2);
+# else
+weak_alias (__posix_fadvise64_l64, posix_fadvise64);
+# endif
 #else
-strong_alias (__posix_fadvise64_l64, posix_fadvise64);
+weak_alias (__posix_fadvise64_l64, posix_fadvise64);
+strong_alias (__posix_fadvise64_l64, posix_fadvise);
 #endif

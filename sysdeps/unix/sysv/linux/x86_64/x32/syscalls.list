@@ -3,5 +3,5 @@
 fallocate	-	fallocate	Ci:iiii	fallocate	fallocate64
 gettimeofday	-	gettimeofday:__vdso_gettimeofday@LINUX_2.6	i:pP	__gettimeofday	gettimeofday
 personality	EXTRA	personality	Ei:i	__personality	personality
-posix_fadvise	-	fadvise64	Vi:iiii	posix_fadvise	posix_fadvise64
+posix_fadvise64	-	fadvise64	Vi:iiii	posix_fadvise	posix_fadvise64
 time		-	time:__vdso_time@LINUX_2.6			Ei:P	time

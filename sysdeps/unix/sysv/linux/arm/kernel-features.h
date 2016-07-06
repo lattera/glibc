@@ -27,6 +27,13 @@
 # undef __ASSUME_SET_ROBUST_LIST
 #endif
 
+/* ARM fadvise64_64 reorganize the syscall arguments.  */
+#define __ASSUME_FADVISE64_64_6ARG	1
+
 /* Define this if your 32-bit syscall API requires 64-bit register
    pairs to start with an even-number register.  */
 #define __ASSUME_ALIGNED_REGISTER_PAIRS	1
+
+/* ARM only has a syscall for fadvise64{_64} and it is defined with a
+   non-standard name.  */
+#define __NR_fadvise64_64 __NR_arm_fadvise64_64

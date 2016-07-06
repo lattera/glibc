@@ -23,4 +23,5 @@
    pairs to start with an even-number register.  */
 #ifndef _LP64
 # define __ASSUME_ALIGNED_REGISTER_PAIRS	1
+# define __ASSUME_FADVISE64_64_NO_ALIGN		1
 #endif
