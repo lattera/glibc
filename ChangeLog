@@ -1,3 +1,13 @@
+2016-07-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/linkmap.h (struct link_map_machine):
+	Remove member gotplt and add member jmprel.
+	* sysdeps/s390/s390-32/dl-machine.h
+	(elf_machine_runtime_setup): Setup member jmprel with DT_JMPREL
+	instead of gotplt with &got[3].
+	(elf_machine_lazy_rel): Calculate address with reloc and jmprel.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+
 2016-07-06  John David Anglin  <danglin@gcc.gnu.org>
 
 	* sysdeps/hppa/fpu/libm-test-ulps: Regenerate.

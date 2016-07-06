@@ -98,7 +98,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       if (got[1])
 	{
 	  l->l_mach.plt = got[1] + l->l_addr;
-	  l->l_mach.gotplt = (Elf64_Addr) &got[3];
+	  l->l_mach.jmprel = (const Elf64_Rela *) D_PTR (l, l_info[DT_JMPREL]);
 	}
       got[1] = (Elf64_Addr) l;	/* Identify this shared object.	 */
 
@@ -460,9 +460,7 @@ elf_machine_lazy_rel (struct link_map *map,
       if (__builtin_expect (map->l_mach.plt, 0) == 0)
 	*reloc_addr += l_addr;
       else
-	*reloc_addr =
-	  map->l_mach.plt
-	  + (((Elf64_Addr) reloc_addr) - map->l_mach.gotplt) * 4;
+	*reloc_addr = map->l_mach.plt + (reloc - map->l_mach.jmprel) * 32;
     }
   else if (__glibc_likely (r_type == R_390_IRELATIVE))
     {
