@@ -1,3 +1,8 @@
+2016-07-06  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* locales/de_LI: New locale.
+	* SUPPORTED: Add de_LI.
+
 2016-07-04  Gunnar Hjalmarsson  <gunnarhj@ubuntu.com>
 
 	[BZ #20316]
