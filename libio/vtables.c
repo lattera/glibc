@@ -41,7 +41,9 @@ _IO_vtable_check (void)
 #ifdef SHARED
   /* Honor the compatibility flag.  */
   void (*flag) (void) = atomic_load_relaxed (&IO_accept_foreign_vtables);
+#ifdef PTR_DEMANGLE
   PTR_DEMANGLE (flag);
+#endif
   if (flag == &_IO_vtable_check)
     return;
 
