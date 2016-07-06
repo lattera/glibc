@@ -18,6 +18,8 @@
 	_IO_cookie_seek, _IO_cookie_close, _IO_old_cookie_seek)
 	[!PTR_DEMANGLE]: Do not call PTR_DEMANGLE.
 	(set_callbacks) [!PTR_MANGLE]: Do not call PTR_MANGLE.
+	* libio/vtables.c (_IO_vtable_check)
+	[!PTR_DEMANGLE]: Do not call PTR_DEMANGLE.
 	* libio/libioP.h (IO_set_accept_foreign_vtables)
 	[!PTR_MANGLE]: Do not call PTR_MANGLE.
 
