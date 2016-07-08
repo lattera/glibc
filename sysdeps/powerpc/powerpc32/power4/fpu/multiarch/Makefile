@@ -34,4 +34,9 @@ CFLAGS-s_logb-power7.c = -mcpu=power7
 CFLAGS-s_logbf-power7.c = -mcpu=power7
 CFLAGS-e_hypot-power7.c = -mcpu=power7
 CFLAGS-e_hypotf-power7.c = -mcpu=power7
+
+# These files quiet sNaNs in a way that is optimized away without
+# -fsignaling-nans.
+CFLAGS-s_modf-ppc32.c += -fsignaling-nans
+CFLAGS-s_modff-ppc32.c += -fsignaling-nans
 endif

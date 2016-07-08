@@ -1,3 +1,13 @@
+2016-07-08  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #20240]
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile
+	(CFLAGS-s_modf-ppc32.c): New variable.
+	(CFLAGS-s_modff-ppc32.c): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	(CFLAGS-s_modf-ppc64.c): Likewise.
+	(CFLAGS-s_modff-ppc64.c): Likewise.
+
 2016-07-07  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #20263]
