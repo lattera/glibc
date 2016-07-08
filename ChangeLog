@@ -1,5 +1,9 @@
 2016-07-08  Aurelien Jarno  <aurelien@aurel32.net>
 
+	* bits/in.h (__USE_KERNEL_IPV6_DEFS): Define to 0.
+
+2016-07-08  Aurelien Jarno  <aurelien@aurel32.net>
+
 	[BZ #20240]
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile
 	(CFLAGS-s_modf-ppc32.c): New variable.

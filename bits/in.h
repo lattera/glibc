@@ -21,6 +21,9 @@
 # error "Never use <bits/in.h> directly; include <netinet/in.h> instead."
 #endif
 
+/* This is the generic version, do not assume a linux-based kernel.  */
+#define __USE_KERNEL_IPV6_DEFS 0
+
 /* To select the IP level.  */
 #define SOL_IP		0
 
