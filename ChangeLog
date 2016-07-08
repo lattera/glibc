@@ -1,3 +1,30 @@
+2016-07-08  Martin Galvan  <martin.galvan@tallertechnologies.com>
+
+	* Makeconfig (build-hardcoded-path-in-tests): Set to 'yes'
+	for shared builds if tests-need-hardcoded-path is defined.
+	(all-subdirs): Add pretty-printers.
+	* Makerules ($(py-const)): New rule.
+	* Rules (others): Add $(py-const), if defined.
+	* nptl/Makefile (gen-py-const-headers): Define.
+	* nptl/nptl-printers.py: New file.
+	* nptl/nptl_lock_constants.pysym: Likewise.
+	* pretty-printers/Makefile: Likewise.
+	* pretty-printers/README: Likewise.
+	* pretty-printers/test-condvar-attributes.c: Likewise.
+	* pretty-printers/test-condvar-attributes.p: Likewise.
+	* pretty-printers/test-condvar-printer.c: Likewise.
+	* pretty-printers/test-condvar-printer.py: Likewise.
+	* pretty-printers/test-mutex-attributes.c: Likewise.
+	* pretty-printers/test-mutex-attributes.py: Likewise.
+	* pretty-printers/test-mutex-printer.c: Likewise.
+	* pretty-printers/test-mutex-printer.py: Likewise.
+	* pretty-printers/test-rwlock-attributes.c: Likewise.
+	* pretty-printers/test-rwlock-attributes.py: Likewise.
+	* pretty-printers/test-rwlock-printer.c: Likewise.
+	* pretty-printers/test-rwlock-printer.py: Likewise.
+	* pretty-printers/test_common.py: Likewise.
+	* scripts/gen-py-const.awk: Likewise.
+
 2016-07-08  Chris Metcalf  <cmetcalf@mellanox.com>
 
 	* sysdeps/unix/sysv/linux/tile/kernel-features.h

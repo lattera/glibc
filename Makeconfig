@@ -472,6 +472,18 @@ else
 +link-tests = $(+link-static-tests)
 endif
 endif
+
+# Some modules may have test programs that must always link against the newly
+# built libraries instead of the installed ones.  Such modules must define
+# tests-need-hardcoded-path in their Makefile before including Makerules.
+# This will cause the test programs to be linked with -rpath instead of
+# -rpath-link, and their dynamic linker will be set to the built ld.so.
+ifeq (yes,$(build-shared))
+ifdef tests-need-hardcoded-path
+build-hardcoded-path-in-tests := yes
+endif
+endif
+
 ifeq (yes,$(build-shared))
 ifndef rtld-LDFLAGS
 rtld-LDFLAGS = -Wl,-dynamic-linker=$(rtlddir)/$(rtld-installed-name)
@@ -1097,7 +1109,7 @@ all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
 	      gnulib iconv iconvdata wctype manual shadow gshadow po argp   \
 	      crypt localedata timezone rt conform debug mathvec	    \
-	      $(add-on-subdirs) dlfcn elf
+	      $(add-on-subdirs) dlfcn elf pretty-printers
 
 ifndef avoid-generated
 # sysd-sorted itself will contain rules making the sysd-sorted target

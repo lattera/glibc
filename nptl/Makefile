@@ -307,6 +307,7 @@ gen-as-const-headers = pthread-errnos.sym \
 		       unwindbuf.sym \
 		       lowlevelrobustlock.sym pthread-pi-defines.sym
 
+gen-py-const-headers = nptl_lock_constants.pysym
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
