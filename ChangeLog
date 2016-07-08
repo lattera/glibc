@@ -1,3 +1,8 @@
+2016-07-08  Chris Metcalf  <cmetcalf@mellanox.com>
+
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	(__ASSUME_ALIGNED_REGISTER_PAIRS): Only define if !_LP64.
+
 2016-07-08  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* bits/in.h (__USE_KERNEL_IPV6_DEFS): Define to 0.
