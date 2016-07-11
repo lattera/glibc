@@ -47,9 +47,6 @@ Version 2.24
   direction of negative infinity.  These are currently enabled as GNU
   extensions.
 
-* Initial support is added for pretty printing of pthread variables in gdb.
-  See pretty-printers/README for details on how to use it.
-
 Security related changes:
 
 * An unnecessary stack copy in _nss_dns_getnetbyname_r was removed.  It

@@ -98,11 +98,6 @@ tests: $(tests:%=$(objpfx)%.out) $(tests-special)
 xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-special)
 endif
 
-# Generate constant files for Python pretty printers if required.
-ifdef py-const
-others: $(py-const)
-endif
-
 tests-special-notdir = $(patsubst $(objpfx)%, %, $(tests-special))
 xtests-special-notdir = $(patsubst $(objpfx)%, %, $(xtests-special))
 tests:
