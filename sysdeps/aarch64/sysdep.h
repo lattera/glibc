@@ -66,9 +66,38 @@
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF
 # define CALL_MCOUNT						\
-	str	x30, [sp, #-16]!;				\
+	str	x30, [sp, #-80]!;				\
+	cfi_adjust_cfa_offset (80);				\
+	cfi_rel_offset (x30, 0);				\
+	stp	x0, x1, [sp, #16];				\
+	cfi_rel_offset (x0, 16);				\
+	cfi_rel_offset (x1, 24);				\
+	stp	x2, x3, [sp, #32];				\
+	cfi_rel_offset (x2, 32);				\
+	cfi_rel_offset (x3, 40);				\
+	stp	x4, x5, [sp, #48];				\
+	cfi_rel_offset (x4, 48);				\
+	cfi_rel_offset (x5, 56);				\
+	stp	x6, x7, [sp, #64];				\
+	cfi_rel_offset (x6, 64);				\
+	cfi_rel_offset (x7, 72);				\
+	mov	x0, x30;					\
 	bl	mcount;						\
-	ldr	x30, [sp], #16	;
+	ldp	x0, x1, [sp, #16];				\
+	cfi_restore (x0);					\
+	cfi_restore (x1);					\
+	ldp	x2, x3, [sp, #32];				\
+	cfi_restore (x2);					\
+	cfi_restore (x3);					\
+	ldp	x4, x5, [sp, #48];				\
+	cfi_restore (x4);					\
+	cfi_restore (x5);					\
+	ldp	x6, x7, [sp, #64];				\
+	cfi_restore (x6);					\
+	cfi_restore (x7);					\
+	ldr	x30, [sp], #80;					\
+	cfi_adjust_cfa_offset (-80);				\
+	cfi_restore (x30);
 #else
 # define CALL_MCOUNT		/* Do nothing.  */
 #endif

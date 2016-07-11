@@ -1,3 +1,9 @@
+2016-07-11  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #18707]
+	* sysdeps/aarch64/Makefile (CFLAGS-mcount.c): Add -mgeneral-regs-only.
+	* sysdeps/aarch64/sysdep.h (CALL_MCOUNT): Save argument registers.
+
 2016-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/sysdep.h
