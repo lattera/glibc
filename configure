@@ -619,6 +619,7 @@ LIBGD
 libc_cv_cc_loop_to_function
 libc_cv_cc_submachine
 libc_cv_cc_nofma
+libc_cv_mtls_dialect_gnu2
 stack_protector
 fno_unit_at_a_time
 libc_cv_output_format
@@ -5823,6 +5824,38 @@ elif test "$libc_cv_ssp" = "yes"; then
   stack_protector="-fstack-protector"
 fi
 
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -mtls-dialect=gnu2" >&5
+$as_echo_n "checking for -mtls-dialect=gnu2... " >&6; }
+if ${libc_cv_mtls_dialect_gnu2+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+__thread int i;
+void foo (void)
+{
+  i = 10;
+}
+EOF
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -S -fPIC -mtls-dialect=gnu2
+		   conftest.c 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then
+  libc_cv_mtls_dialect_gnu2=yes
+else
+  libc_cv_mtls_dialect_gnu2=no
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mtls_dialect_gnu2" >&5
+$as_echo "$libc_cv_mtls_dialect_gnu2" >&6; }
+
+config_vars="$config_vars
+have-mtls-dialect-gnu2 = $libc_cv_mtls_dialect_gnu2"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether cc puts quotes around section names" >&5
 $as_echo_n "checking whether cc puts quotes around section names... " >&6; }

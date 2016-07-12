@@ -1,3 +1,20 @@
+2016-07-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20309]
+	* configure.ac (have-mtls-dialect-gnu2): Set to yes if
+	-mtls-dialect=gnu2 works.
+	* configure: Regenerated.
+	* elf/Makefile [have-mtls-dialect-gnu2 = yes]
+	(tests): Add tst-gnu2-tls1.
+	(modules-names): Add tst-gnu2-tls1mod.
+	($(objpfx)tst-gnu2-tls1): New.
+	(tst-gnu2-tls1mod.so-no-z-defs): Likewise.
+	(CFLAGS-tst-gnu2-tls1mod.c): Likewise.
+	* elf/tst-gnu2-tls1.c: New file.
+	* elf/tst-gnu2-tls1mod.c: Likewise.
+	* sysdeps/x86_64/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Add 8
+	bytes for push in the PLT entry to align the stack.
+
 2016-07-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #20349]

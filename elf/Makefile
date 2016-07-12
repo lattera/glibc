@@ -224,6 +224,13 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-tlsalign-lib tst-nodelete-opened-lib tst-nodelete2mod \
 		tst-audit11mod1 tst-audit11mod2 tst-auditmod11 \
 		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12
+ifeq (yes,$(have-mtls-dialect-gnu2))
+tests += tst-gnu2-tls1
+modules-names += tst-gnu2-tls1mod
+$(objpfx)tst-gnu2-tls1: $(objpfx)tst-gnu2-tls1mod.so
+tst-gnu2-tls1mod.so-no-z-defs = yes
+CFLAGS-tst-gnu2-tls1mod.c += -mtls-dialect=gnu2
+endif
 ifeq (yes,$(have-protected-data))
 modules-names += tst-protected1moda tst-protected1modb
 tests += tst-protected1a tst-protected1b
