@@ -1,7 +1,6 @@
 /* Tests for pread64 and pwrite64.
    Copyright (C) 2000-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,7 +16,40 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define PREAD pread64
-#define PWRITE pwrite64
+#define _FILE_OFFSET_BITS 64
+#include "tst-preadwrite-common.c"
 
-#include "tst-preadwrite.c"
+static int
+do_test (void)
+{
+  ssize_t ret;
+
+  ret = do_test_with_offset (0);
+  if (ret == -1)
+    return 1;
+
+  /* Create a sparse file larger than 4GB to check if offset is handled
+     correctly in p{write,read}64. */
+  off_t base_offset = UINT32_MAX + 2048LL;
+  ret = do_test_with_offset (base_offset);
+  if (ret == -1)
+    return 1;
+
+  struct stat st;
+  if (fstat (fd, &st) == -1)
+    {
+      printf ("error: fstat on temporary file failed: %m");
+      return 1;
+    }
+
+  /* The file size should >= base_offset plus bytes read.  */
+  off_t expected_value = base_offset + ret;
+  if (st.st_size < expected_value)
+    {
+      printf ("error: file size less than expected (%jd > %jd)\n",
+	      (intmax_t) expected_value, (intmax_t) st.st_size);
+      return 1;
+    }
+
+  return 0;
+}
