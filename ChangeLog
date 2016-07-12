@@ -1,5 +1,11 @@
 2016-07-12  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #20348]
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Add pread64,
+	preadv64, pwrite64 and pwritev64.
+
+2016-07-12  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #20350]
 	* posix/tst-preadwrite.c: Renamed to ...
 	* posix/tst-preadwrite-common.c: This.

@@ -6,6 +6,10 @@ msgctl		-	msgctl		i:iip	__msgctl	msgctl
 msgget		-	msgget		i:ii	__msgget	msgget
 msgrcv		-	msgrcv		Ci:ibnii __msgrcv	msgrcv
 msgsnd		-	msgsnd		Ci:ibni	__msgsnd	msgsnd
+pread64		-	pread64		Ci:ipii	__libc_pread	__libc_pread64 __pread64 pread64 __pread pread
+preadv64	-	preadv		Ci:ipii	preadv64	preadv
+pwrite64	-	pwrite64	Ci:ipii	__libc_pwrite	__pwrite64 pwrite64 __pwrite pwrite
+pwritev64	-	pwritev		Ci:ipii	pwritev64	pwritev
 shmat		-	shmat		i:ipi	__shmat		shmat
 shmctl		-	shmctl		i:iip	__shmctl	shmctl
 shmdt		-	shmdt		i:s	__shmdt		shmdt
