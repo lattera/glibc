@@ -152,7 +152,7 @@ struct termios
 # define NLDLY	(3 << 8)	/* NL delay.  */
 # define NL0	(0 << 8)	/* NL type 0.  */
 # define NL1	(1 << 8)	/* NL type 1.  */
-# define TABDLY	(3 << 10)	/* TAB delay.  */
+# define TABDLY	(3 << 10 | 1 << 2)	/* TAB delay.  */
 # define TAB0	(0 << 10)	/* TAB delay type 0.  */
 # define TAB1	(1 << 10)	/* TAB delay type 1.  */
 # define TAB2	(2 << 10)	/* TAB delay type 2.  */

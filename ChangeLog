@@ -1,3 +1,7 @@
+2016-07-13  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* bits/termios.h (TABDLY): Change macro to include TAB3 bit too.
+
 2016-07-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #15368]
