@@ -221,33 +221,148 @@
 /* Registers clobbered by syscall.  */
 # define REGISTERS_CLOBBERED_BY_SYSCALL "cc", "r11", "cx"
 
-# define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
-  ({									      \
-    unsigned long int resultvar;					      \
-    LOAD_ARGS_##nr (args)						      \
-    LOAD_REGS_##nr							      \
-    asm volatile (							      \
-    "syscall\n\t"							      \
-    : "=a" (resultvar)							      \
-    : "0" (name) ASM_ARGS_##nr : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);   \
-    (long int) resultvar; })
-# undef INTERNAL_SYSCALL
-# define INTERNAL_SYSCALL(name, err, nr, args...) \
-  INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
+/* Create a variable 'name' based on type 'X' to avoid explicit types.
+   This is mainly used set use 64-bits arguments in x32.   */
+#define TYPEFY(X, name) __typeof__ ((X) - (X)) name
+/* Explicit cast the argument to avoid integer from pointer warning on
+   x32.  */
+#define ARGIFY(X) ((__typeof__ ((X) - (X))) (X))
 
-# define INTERNAL_SYSCALL_NCS_TYPES(name, err, nr, args...) \
-  ({									      \
-    unsigned long int resultvar;					      \
-    LOAD_ARGS_TYPES_##nr (args)						      \
-    LOAD_REGS_TYPES_##nr (args)						      \
-    asm volatile (							      \
-    "syscall\n\t"							      \
-    : "=a" (resultvar)							      \
-    : "0" (name) ASM_ARGS_##nr : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);   \
-    (long int) resultvar; })
-# undef INTERNAL_SYSCALL_TYPES
-# define INTERNAL_SYSCALL_TYPES(name, err, nr, args...) \
-  INTERNAL_SYSCALL_NCS_TYPES (__NR_##name, err, nr, ##args)
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, err, nr, args...)			\
+	internal_syscall##nr (SYS_ify (name), err, args)
+
+#undef INTERNAL_SYSCALL_NCS
+#define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
+	internal_syscall##nr (number, err, args)
+
+#undef internal_syscall0
+#define internal_syscall0(number, err, dummy...)			\
+({									\
+    unsigned long int resultvar;					\
+    asm volatile (							\
+    "syscall\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number)							\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall1
+#define internal_syscall1(number, err, arg1)				\
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "syscall\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1)						\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall2
+#define internal_syscall2(number, err, arg1, arg2)			\
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "syscall\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1), "r" (_a2)				\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall3
+#define internal_syscall3(number, err, arg1, arg2, arg3)		\
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "syscall\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)			\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall4
+#define internal_syscall4(number, err, arg1, arg2, arg3, arg4)		\
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "syscall\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)		\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall5
+#define internal_syscall5(number, err, arg1, arg2, arg3, arg4, arg5)	\
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg5, __arg5) = ARGIFY (arg5);			 	\
+    TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
+    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "syscall\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
+      "r" (_a5)								\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall6
+#define internal_syscall6(number, err, arg1, arg2, arg3, arg4, arg5, arg6) \
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg6, __arg6) = ARGIFY (arg6);			 	\
+    TYPEFY (arg5, __arg5) = ARGIFY (arg5);			 	\
+    TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg6, _a6) asm ("r9") = __arg6;			\
+    register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
+    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "syscall\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
+      "r" (_a5), "r" (_a6)						\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
 
 # undef INTERNAL_SYSCALL_ERROR_P
 # define INTERNAL_SYSCALL_ERROR_P(val, err) \
@@ -260,88 +375,6 @@
 # define HAVE_CLOCK_GETTIME_VSYSCALL    1
 # define HAVE_GETTIMEOFDAY_VSYSCALL     1
 # define HAVE_GETCPU_VSYSCALL		1
-
-# define LOAD_ARGS_0()
-# define LOAD_REGS_0
-# define ASM_ARGS_0
-
-# define LOAD_ARGS_TYPES_1(t1, a1)					   \
-  t1 __arg1 = (t1) (a1);						   \
-  LOAD_ARGS_0 ()
-# define LOAD_REGS_TYPES_1(t1, a1)					   \
-  register t1 _a1 asm ("rdi") = __arg1;					   \
-  LOAD_REGS_0
-# define ASM_ARGS_1	ASM_ARGS_0, "r" (_a1)
-# define LOAD_ARGS_1(a1)						   \
-  LOAD_ARGS_TYPES_1 (long int, a1)
-# define LOAD_REGS_1							   \
-  LOAD_REGS_TYPES_1 (long int, a1)
-
-# define LOAD_ARGS_TYPES_2(t1, a1, t2, a2)				   \
-  t2 __arg2 = (t2) (a2);						   \
-  LOAD_ARGS_TYPES_1 (t1, a1)
-# define LOAD_REGS_TYPES_2(t1, a1, t2, a2)				   \
-  register t2 _a2 asm ("rsi") = __arg2;					   \
-  LOAD_REGS_TYPES_1(t1, a1)
-# define ASM_ARGS_2	ASM_ARGS_1, "r" (_a2)
-# define LOAD_ARGS_2(a1, a2)						   \
-  LOAD_ARGS_TYPES_2 (long int, a1, long int, a2)
-# define LOAD_REGS_2							   \
-  LOAD_REGS_TYPES_2 (long int, a1, long int, a2)
-
-# define LOAD_ARGS_TYPES_3(t1, a1, t2, a2, t3, a3)			   \
-  t3 __arg3 = (t3) (a3);						   \
-  LOAD_ARGS_TYPES_2 (t1, a1, t2, a2)
-# define LOAD_REGS_TYPES_3(t1, a1, t2, a2, t3, a3)			   \
-  register t3 _a3 asm ("rdx") = __arg3;					   \
-  LOAD_REGS_TYPES_2(t1, a1, t2, a2)
-# define ASM_ARGS_3	ASM_ARGS_2, "r" (_a3)
-# define LOAD_ARGS_3(a1, a2, a3)					   \
-  LOAD_ARGS_TYPES_3 (long int, a1, long int, a2, long int, a3)
-# define LOAD_REGS_3							   \
-  LOAD_REGS_TYPES_3 (long int, a1, long int, a2, long int, a3)
-
-# define LOAD_ARGS_TYPES_4(t1, a1, t2, a2, t3, a3, t4, a4)		   \
-  t4 __arg4 = (t4) (a4);						   \
-  LOAD_ARGS_TYPES_3 (t1, a1, t2, a2, t3, a3)
-# define LOAD_REGS_TYPES_4(t1, a1, t2, a2, t3, a3, t4, a4)		   \
-  register t4 _a4 asm ("r10") = __arg4;					   \
-  LOAD_REGS_TYPES_3(t1, a2, t2, a2, t3, a3)
-# define ASM_ARGS_4	ASM_ARGS_3, "r" (_a4)
-# define LOAD_ARGS_4(a1, a2, a3, a4)					   \
-  LOAD_ARGS_TYPES_4 (long int, a1, long int, a2, long int, a3,		   \
-		     long int, a4)
-# define LOAD_REGS_4							   \
-  LOAD_REGS_TYPES_4 (long int, a1, long int, a2, long int, a3,		   \
-		     long int, a4)
-
-# define LOAD_ARGS_TYPES_5(t1, a1, t2, a2, t3, a3, t4, a4, t5, a5)	   \
-  t5 __arg5 = (t5) (a5);						   \
-  LOAD_ARGS_TYPES_4 (t1, a1, t2, a2, t3, a3, t4, a4)
-# define LOAD_REGS_TYPES_5(t1, a1, t2, a2, t3, a3, t4, a4, t5, a5)	   \
-  register t5 _a5 asm ("r8") = __arg5;					   \
-  LOAD_REGS_TYPES_4 (t1, a1, t2, a2, t3, a3, t4, a4)
-# define ASM_ARGS_5	ASM_ARGS_4, "r" (_a5)
-# define LOAD_ARGS_5(a1, a2, a3, a4, a5)				   \
-  LOAD_ARGS_TYPES_5 (long int, a1, long int, a2, long int, a3,		   \
-		     long int, a4, long int, a5)
-# define LOAD_REGS_5							   \
-  LOAD_REGS_TYPES_5 (long int, a1, long int, a2, long int, a3,		   \
-		     long int, a4, long int, a5)
-
-# define LOAD_ARGS_TYPES_6(t1, a1, t2, a2, t3, a3, t4, a4, t5, a5, t6, a6) \
-  t6 __arg6 = (t6) (a6);						   \
-  LOAD_ARGS_TYPES_5 (t1, a1, t2, a2, t3, a3, t4, a4, t5, a5)
-# define LOAD_REGS_TYPES_6(t1, a1, t2, a2, t3, a3, t4, a4, t5, a5, t6, a6) \
-  register t6 _a6 asm ("r9") = __arg6;					   \
-  LOAD_REGS_TYPES_5 (t1, a1, t2, a2, t3, a3, t4, a4, t5, a5)
-# define ASM_ARGS_6	ASM_ARGS_5, "r" (_a6)
-# define LOAD_ARGS_6(a1, a2, a3, a4, a5, a6)				   \
-  LOAD_ARGS_TYPES_6 (long int, a1, long int, a2, long int, a3,		   \
-		     long int, a4, long int, a5, long int, a6)
-# define LOAD_REGS_6							   \
-  LOAD_REGS_TYPES_6 (long int, a1, long int, a2, long int, a3,		   \
-		     long int, a4, long int, a5, long int, a6)
 
 #endif	/* __ASSEMBLER__ */
 

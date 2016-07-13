@@ -19,17 +19,19 @@
 #include <sysdep.h>
 
 /* Linux times system call returns 64-bit integer.  */
-#undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
-  ({									      \
-    unsigned long long int resultvar;					      \
-    LOAD_ARGS_##nr (args)						      \
-    LOAD_REGS_##nr							      \
-    asm volatile (							      \
-    "syscall\n\t"							      \
-    : "=a" (resultvar)							      \
-    : "0" (name) ASM_ARGS_##nr : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);   \
-    (long long int) resultvar; })
+#undef internal_syscall1
+#define internal_syscall1(number, err, arg1)				\
+({									\
+    unsigned long long int resultvar;					\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "syscall\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1)						\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long long int) resultvar;						\
+})
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err) \

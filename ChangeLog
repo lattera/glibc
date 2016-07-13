@@ -1,3 +1,53 @@
+2017-08-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h
+	(INTERNAL_SYSCALL_NCS_TYPES): Remove define.
+	(LOAD_ARGS_0): Likewise.
+	(LOAD_ARGS_1): Likewise.
+	(LOAD_ARGS_2): Likewise.
+	(LOAD_ARGS_3): Likewise.
+	(LOAD_ARGS_4): Likewise.
+	(LOAD_ARGS_5): Likewise.
+	(LOAD_ARGS_6): Likewise.
+	(LOAD_REGS_0): Likewise.
+	(LOAD_REGS_1): Likewise.
+	(LOAD_REGS_2): Likewise.
+	(LOAD_REGS_3): Likewise.
+	(LOAD_REGS_4): Likewise.
+	(LOAD_REGS_5): Likewise.
+	(LOAD_REGS_6): Likewise.
+	(ASM_ARGS_0): Likewise.
+	(ASM_ARGS_1): Likewise.
+	(ASM_ARGS_2): Likewise.
+	(ASM_ARGS_3): Likewise.
+	(ASM_ARGS_4): Likewise.
+	(ASM_ARGS_5): Likewise.
+	(ASM_ARGS_6): Likewise.
+	(LOAD_ARGS_TYPES_1): Likewise.
+	(LOAD_ARGS_TYPES_2): Likewise.
+	(LOAD_ARGS_TYPES_3): Likewise.
+	(LOAD_ARGS_TYPES_4): Likewise.
+	(LOAD_ARGS_TYPES_5): Likewise.
+	(LOAD_ARGS_TYPES_6): Likewise.
+	(LOAD_REGS_TYPES_1): Likewise.
+	(LOAD_REGS_TYPES_2): Likewise.
+	(LOAD_REGS_TYPES_3): Likewise.
+	(LOAD_REGS_TYPES_4): Likewise.
+	(LOAD_REGS_TYPES_5): Likewise.
+	(LOAD_REGS_TYPES_6): Likewise.
+	(TYPEFY): New define.
+	(ARGIFY): Likewise.
+	(internal_syscall0): Likewise.
+	(internal_syscall1): Likewise.
+	(internal_syscall2): Likewise.
+	(internal_syscall3): Likewise.
+	(internal_syscall4): Likewise.
+	(internal_syscall5): Likewise.
+	(internal_syscall6): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/times.c
+	(INTERNAL_SYSCALL_NCS): Remove define.
+	(internal_syscall1): Add define.
+
 2017-08-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/w_remainder_compat.c: Remove duplicate inclusion of
