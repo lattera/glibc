@@ -24,6 +24,7 @@
 /* Get definition of `struct ether_addr'.  */
 #include <netinet/if_ether.h>
 
+#ifdef __USE_MISC
 __BEGIN_DECLS
 
 /* Convert 48 bit Ethernet ADDRess to ASCII.  */
@@ -49,5 +50,6 @@ extern int ether_line (const char *__line, struct ether_addr *__addr,
 		       char *__hostname) __THROW;
 
 __END_DECLS
+#endif /* Use misc.  */
 
 #endif /* netinet/ether.h */

@@ -1,5 +1,22 @@
 2016-09-23  Zack Weinberg  <zackw@panix.com>
 
+	* sysdeps/mach/hurd/net/if_ppp.h
+	* sysdeps/unix/sysv/linux/net/if_ppp.h:
+	Only define struct ifpppstatsreq and struct ifpppcstatsreq
+	if __USE_MISC is defined, to ensure struct ifreq is declared.
+
+	* inet/netinet/ether.h: Condition all function prototypes
+	on __USE_MISC, to ensure struct ether_addr is declared.
+
+	* socket/bits/types/struct_osockaddr.h: New header.
+	* include/bits/types/struct_osockaddr.h: New wrapper.
+	* socket/Makefile: Install the new header.
+	* socket/sys/socket.h, inet/protocols/talkd.h:
+	Refer to bits/types/struct_osockaddr.h for the definition of
+	struct osockaddr.
+
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
 	* bits/in.h, gmon/sys/gmon.h, inet/netinet/igmp.h
 	* inet/protocols/routed.h, inet/protocols/talkd.h
 	* inet/protocols/timed.h, io/fts.h, nptl_db/thread_db.h

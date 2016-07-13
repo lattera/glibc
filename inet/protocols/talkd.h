@@ -53,6 +53,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdint.h>
+#include <bits/types/struct_osockaddr.h>
 
 /*
  * Client->server request message format.

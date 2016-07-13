@@ -119,6 +119,8 @@ struct ppp_option_data {
 	int	  transmit;
 };
 
+/* 'struct ifreq' is only available from net/if.h under __USE_MISC.  */
+#ifdef __USE_MISC
 struct ifpppstatsreq {
   struct ifreq	   b;
   struct ppp_stats stats;			/* statistic information */
@@ -131,6 +133,7 @@ struct ifpppcstatsreq {
 
 #define ifr__name       b.ifr_ifrn.ifrn_name
 #define stats_ptr       b.ifr_ifru.ifru_data
+#endif
 
 /*
  * Ioctl definitions.
