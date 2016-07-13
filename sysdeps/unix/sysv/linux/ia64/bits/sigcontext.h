@@ -16,12 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_SIGCONTEXT_H
+#define _BITS_SIGCONTEXT_H 1
+
 #if !defined _SIGNAL_H && !defined _SYS_UCONTEXT_H
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
-
-#ifndef _BITS_SIGCONTEXT_H
-#define _BITS_SIGCONTEXT_H 1
 
 #define __need_size_t
 #include <stddef.h>

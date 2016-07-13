@@ -24,6 +24,12 @@
 #include <features.h>
 #include <signal.h>
 
+/* We need the signal context definitions even if they are not exposed
+   by <signal.h>.  */
+#include <bits/sigcontext.h>
+#include <bits/sigstack.h>
+
+
 /* These definitions must be in sync with the kernel.  */
 
 #define MCONTEXT_VERSION 2

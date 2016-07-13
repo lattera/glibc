@@ -16,11 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_SIGCONTEXT_H
+#define _BITS_SIGCONTEXT_H 1
+
 #if !defined _SIGNAL_H && !defined _SYS_UCONTEXT_H
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
-
-#ifndef sc_pc
 
 /* Signal handlers are actually called:
    void handler (int sig, int code, struct sigcontext *scp);  */
@@ -116,4 +117,4 @@ struct sigcontext
 #define DBG_SINGLE_TRAP		0x1 /* single step */
 #define DBG_BRKPNT_FAULT	0x2 /* breakpoint instruction */
 
-#endif /* sc_pc */
+#endif /* bits/sigcontext.h */

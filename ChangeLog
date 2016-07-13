@@ -1,5 +1,47 @@
 2016-09-23  Zack Weinberg  <zackw@panix.com>
 
+	* sysdeps/generic/sys/ucontext.h
+	* sysdeps/arm/sys/ucontext.h
+	* sysdeps/i386/sys/ucontext.h
+	* sysdeps/m68k/sys/ucontext.h
+	* sysdeps/mips/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/aarch64/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/alpha/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/nios2/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/tile/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h:
+	Include both bits/sigcontext.h and bits/sigstack.h.
+	Fix grammar error in comment, if present.
+
+	* bits/sigstack.h
+	* sysdeps/unix/sysv/linux/aarch64/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/alpha/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/ia64/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/mips/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/powerpc/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/sparc/bits/sigstack.h
+	* bits/sigcontext.h
+	* sysdeps/mach/hurd/i386/bits/sigcontext.h
+	* sysdeps/unix/sysv/linux/bits/sigcontext.h
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h
+	* sysdeps/unix/sysv/linux/sparc/bits/sigcontext.h:
+	Add multiple inclusion guard.  Permit inclusion by sys/ucontext.h
+	as well as signal.h, if this was not already allowed.  Request
+	definition of size_t if necessary.  Minimize semantically-null
+	differences across files.
+
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
 	* time/time.h, bits/time.h, sysdeps/unix/sysv/linux/bits/time.h:
 	Remove all logic conditional on __need macros.	Move all the
 	conditionally defined types to their own headers...

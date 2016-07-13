@@ -16,10 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _SIGNAL_H
+#ifndef _BITS_SIGSTACK_H
+#define _BITS_SIGSTACK_H 1
+
+#if !defined _SIGNAL_H && !defined _SYS_UCONTEXT_H
 # error "Never include this file directly.  Use <signal.h> instead"
 #endif
 
+#define __need_size_t
+#include <stddef.h>
 
 /* Structure describing a signal stack (obsolete).  */
 struct sigstack
@@ -28,8 +33,15 @@ struct sigstack
     int ss_onstack;		/* Nonzero if executing on this stack.  */
   };
 
+/* Alternate, preferred interface.  */
+typedef struct sigaltstack
+  {
+    void *ss_sp;
+    int ss_flags;
+    size_t ss_size;
+  } stack_t;
 
-/* Possible values for `ss_flags.'.  */
+/* Possible values for `ss_flags'.  */
 enum
 {
   SS_ONSTACK = 1,
@@ -44,11 +56,4 @@ enum
 /* System default stack size.  */
 #define SIGSTKSZ	16384
 
-
-/* Alternate, preferred interface.  */
-typedef struct sigaltstack
-  {
-    void *ss_sp;
-    int ss_flags;
-    size_t ss_size;
-  } stack_t;
+#endif /* bits/sigstack.h */

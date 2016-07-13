@@ -18,15 +18,15 @@
 
 #ifndef _SYS_UCONTEXT_H
 #define _SYS_UCONTEXT_H	1
-/* Forward definition to avoid parse errors */
-struct ucontext;
-typedef struct ucontext ucontext_t;
+
 #include <features.h>
 #include <signal.h>
 
-/* We need the signal context definitions even if they are not used
-   included in <signal.h>.  */
+/* We need the signal context definitions even if they are not exposed
+   by in <signal.h>.  */
 #include <bits/sigcontext.h>
+#include <bits/sigstack.h>
+
 
 /* Type for a program status word.  */
 typedef struct

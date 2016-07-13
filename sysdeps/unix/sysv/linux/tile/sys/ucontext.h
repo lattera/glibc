@@ -22,12 +22,14 @@
 #include <features.h>
 #include <signal.h>
 
-/* We need the signal context definitions even if they are not used
-   included in <signal.h>.  */
+/* We need the signal context definitions even if they are not exposed
+   by <signal.h>.  */
 #include <bits/sigcontext.h>
+#include <bits/sigstack.h>
 
 /* Get register type and register names. */
 #include <arch/abi.h>
+
 
 /* Type for general register.  */
 typedef uint_reg_t greg_t;

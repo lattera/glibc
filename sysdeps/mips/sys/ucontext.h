@@ -21,8 +21,15 @@
 #define _SYS_UCONTEXT_H	1
 
 #include <features.h>
-#include <sgidefs.h>
 #include <signal.h>
+
+/* We need the signal context definitions even if they are not exposed
+   by <signal.h>.  */
+#include <bits/sigcontext.h>
+#include <bits/sigstack.h>
+
+#include <sgidefs.h>
+
 
 /* Type for general register.  */
 #if _MIPS_SIM == _ABIO32
