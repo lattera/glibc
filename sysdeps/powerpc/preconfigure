@@ -1,6 +1,9 @@
 # preconfigure fragment for powerpc.
 
 case "$machine" in
+powerpc64le)
+  base_machine=powerpc machine=powerpc/powerpc64le
+  ;;
 powerpc64*)
   base_machine=powerpc machine=powerpc/powerpc64
   ;;

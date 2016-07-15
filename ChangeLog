@@ -1,3 +1,25 @@
+2017-04-28  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64le/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/fpu/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power7/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power7/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power7/fpu/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power7/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power8/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power8/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power8/fpu/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power8/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power9/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power9/fpu/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power9/fpu/multiarch/Implies: New file.
+	* sysdeps/powerpc/powerpc64le/power9/multiarch/Implies: New file.
+	* sysdeps/powerpc/preconfigure: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64le/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64le/fpu/Implies: New file.
+
 2017-04-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/semaphore.h-data [XOPEN2K] (time.h): Allow header
