@@ -1,3 +1,14 @@
+2016-08-05  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/gen-libm-test.pl (apply_lit): Rewrite to apply
+	LIT() to individual constants in simple expressions
+	after splitting on spaces.
+	(_apply_lit): Rename replaced version, and use it to
+	apply to what appears to be a token.
+
+	* math/libm-test.inc: Fix many, many issues with
+	spacing.
+
 2016-08-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h: Move comment about <bits/mathdef.h> definitions

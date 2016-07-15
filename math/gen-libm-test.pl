@@ -163,7 +163,7 @@ sub show_exceptions {
 
 # Apply the LIT(x) macro to a literal floating point constant
 # and strip any existing suffix.
-sub apply_lit {
+sub _apply_lit {
   my ($lit) = @_;
   my $exp_re = "([+-])?[[:digit:]]+";
   # Don't wrap something that does not look like a:
@@ -178,6 +178,21 @@ sub apply_lit {
   $lit =~ s/[lLfF]$//;
 
   return "LIT (${lit})";
+}
+
+# Apply LIT macro to individual tokens within an expression.
+#
+# This function assumes the C expression follows GNU coding
+# standards.  Specifically, a space separates each lexical
+# token.  Otherwise, this post-processing may apply LIT
+# incorrectly, or around an entire expression.
+sub apply_lit {
+  my ($lit) = @_;
+  my @toks = split (/ /, $lit);
+  foreach (@toks) {
+    $_ = _apply_lit ($_);
+  }
+  return join (' ', @toks);
 }
 
 # Parse the arguments to TEST_x_y
