@@ -100,7 +100,7 @@ libm-compat-calls =							\
 # Finally, note that types is an intentionally recursive variable.
 # We only know the full set of supported types for the target machine
 # after the Rules makefile has been parsed.
-types = $(type-ldouble-$(long-double-fcts)) double float
+types-basic = $(type-ldouble-$(long-double-fcts)) double float
 
 # long double support
 type-ldouble-suffix := l
@@ -117,12 +117,23 @@ type-double-routines := branred doasin dosincos halfulp mpa mpatan2	\
 type-float-suffix := f
 type-float-routines := k_rem_pio2f
 
+# _Float128 support
+type-float128-suffix := f128
+type-float128-routines := t_sincosf128 k_sincosf128
+type-float128-yes := float128
+types = $(types-basic) $(type-float128-$(float128-fcts))
+
+# For each of the basic types (float, double, long double), replace the
+# occurrences of 'F' in arg 1 with the appropriate suffix for the type.
+type-basic-foreach = $(foreach t, $(types-basic), \
+		       $(subst F,$(type-$(t)-suffix),$(1)))
 
 # Apply suffix to each type in arg 1
 type-foreach = $(foreach t,$(types),$(subst F,$(type-$(t)-suffix),$(1)))
 
 libm-routines = $(strip $(libm-support)					\
-			$(call type-foreach, $(libm-compat-calls))	\
+			$(call type-basic-foreach,			\
+			       $(libm-compat-calls))			\
 			$(call type-foreach, $(libm-calls))		\
 			$(foreach t, $(types), $(type-$(t)-routines))) 	\
 
@@ -543,6 +554,7 @@ endif
 CFLAGS-s_modf.c += -fsignaling-nans
 CFLAGS-s_modff.c += -fsignaling-nans
 CFLAGS-s_modfl.c += -fsignaling-nans
+CFLAGS-s_modff128.c += -fsignaling-nans
 
 # The -lieee library is actually an object file.
 # The module just defines the _LIB_VERSION_ variable.

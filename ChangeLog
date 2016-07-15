@@ -1,3 +1,18 @@
+2017-05-09  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* math/Makefile:
+	(type-float128-suffix): New variable
+	(type-float128-routines): Likewise
+	(type-float128-yes): Likewise
+	(types): Append float128 if supported
+	(types-basic): New variable to control the use of templates for
+	float, double, and long double, but not for float128 or newer types.
+	(type-basic-foreach): Likewise.
+
+	* sysdeps/ieee754/float128/Makeconfig: New file.
+	* sysdeps/ieee754/float128/Versions: New file.
+
 2017-05-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PRLIMIT64):
