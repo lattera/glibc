@@ -1,5 +1,6 @@
-/* Common definitions for libm tests for double.
-   Copyright (C) 1997-2017 Free Software Foundation, Inc.
+/* Common definitions for libm tests for _Float128.
+
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +17,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC(function) function
-#define FLOAT double
-#define CFLOAT __complex__ double
-#define BUILD_COMPLEX(real, imag) (CMPLX ((real), (imag)))
-#define PREFIX DBL
-#define LIT(x) (x)
-#define TYPE_STR "double"
-#define LITM(x) x
-#define FTOSTR strfromd
-#define snan_value_MACRO SNAN
-#define TEST_FLOATN 0
+#include "test-math-floatn.h"
+
+/* Fixup builtins and constants for older compilers.  */
+#include <bits/floatn.h>
+#include <float.h>
+
+#define FUNC(function) function ## f128
+#define FLOAT _Float128
+#define CFLOAT __CFLOAT128
+#define BUILD_COMPLEX(real, imag) (CMPLXF128 ((real), (imag)))
+#define PREFIX FLT128
+#define TYPE_STR "float128"
+#define LIT(x) __f128 (x)
+#define LITM(x) x ## f128
+#define FTOSTR strfromf128
+#define snan_value_MACRO SNANF128

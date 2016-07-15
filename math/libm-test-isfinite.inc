@@ -47,7 +47,9 @@ static void
 finite_test (void)
 {
   /* finite uses the same test data as isfinite.  */
+#if !TEST_FLOATN
   ALL_RM_TEST (finite, 1, isfinite_test_data, RUN_TEST_LOOP_f_b, END);
+#endif
 }
 
 static void

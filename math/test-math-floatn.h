@@ -1,5 +1,5 @@
-/* Common definitions for libm tests for double.
-   Copyright (C) 1997-2017 Free Software Foundation, Inc.
+/* Common definitions for libm tests for TS 18661-3 derived types.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC(function) function
-#define FLOAT double
-#define CFLOAT __complex__ double
-#define BUILD_COMPLEX(real, imag) (CMPLX ((real), (imag)))
-#define PREFIX DBL
-#define LIT(x) (x)
-#define TYPE_STR "double"
-#define LITM(x) x
-#define FTOSTR strfromd
-#define snan_value_MACRO SNAN
-#define TEST_FLOATN 0
+#define TEST_FLOATN 1
+#define __STDC_WANT_IEC_60559_TYPES_EXT__

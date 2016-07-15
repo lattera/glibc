@@ -39,8 +39,10 @@ exp10_test (void)
 static void
 pow10_test (void)
 {
+#if !TEST_FLOATN
   /* pow10 uses the same test data as exp10.  */
   ALL_RM_TEST (pow10, 0, exp10_test_data, RUN_TEST_LOOP_f_f, END);
+#endif
 }
 
 static void

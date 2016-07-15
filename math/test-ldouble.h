@@ -18,6 +18,7 @@
 
 #define FUNC(function) function##l
 #define FLOAT long double
+#define CFLOAT __complex__ long double
 #define BUILD_COMPLEX(real, imag) (CMPLXL ((real), (imag)))
 #define PREFIX LDBL
 #define TYPE_STR "ldouble"
@@ -25,3 +26,4 @@
 #define LITM(x) x ## l
 #define FTOSTR strfroml
 #define snan_value_MACRO SNANL
+#define TEST_FLOATN 0

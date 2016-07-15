@@ -1,3 +1,28 @@
+2017-06-12  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* math/gen-libm-test.pl (@all_floats): Add ifloat128 and float128.
+	(%all_floats_pfx): Add macro prefix for float128 (FLT128).
+	* math/libm-test-exp10.inc (pow10_test): Do not test for _FloatN,
+	* math/libm-test-isfinite.inc (finite_test): Likewise.
+	* math/libm-test-lgamma.inc (gamma_test): Likewise.
+	* math/libm-test-nexttoward.inc (nexttoward_test): Likewise.
+	(nexttoward_test_data}: Likewise.
+	* math/libm-test-remainder.inc (drem_test): Likewise.
+	* math/libm-test-scalb.inc (scalb_test): Likewise.
+	(scalb_test_data): Likewise.
+	* math/libm-test-significand.inc (significand_test): Likewise.
+	(significand_test_data): Likewise.
+	* math/libm-test-support.c (check_complex): Replace __complex__
+	FLOAT with CFLOAT to get the support for old compiler.
+	* math/libm-test-support.h (check_complex): Likewise.
+	* math/test-double.h (CFLOAT, TEST_FLOATN): New macros.
+	* math/test-float.h (CFLOAT, TEST_FLOATN): Likewise.
+	* math/test-ldouble.h (CFLOAT, TEST_FLOATN): Likewise.
+	* math/test-float128.h: New file.
+	* math/test-math-floatn.h: New file.
+
 2017-06-12  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* include/float.h: Allow the definition of macros prefixed with

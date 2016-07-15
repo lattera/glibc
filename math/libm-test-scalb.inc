@@ -20,6 +20,7 @@
 
 static const struct test_ff_f_data scalb_test_data[] =
   {
+#if !TEST_FLOATN
     /* Results in this case are unspecified by POSIX, so, for an
        otherwise fully-determined function, spurious "inexact"
        exceptions are OK.  */
@@ -144,12 +145,15 @@ static const struct test_ff_f_data scalb_test_data[] =
 
     TEST_ff_f (scalb, 0.8L, 4, 12.8L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (scalb, -0.854375L, 5, -27.34L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
   };
 
 static void
 scalb_test (void)
 {
+#if !TEST_FLOATN
   ALL_RM_TEST (scalb, 1, scalb_test_data, RUN_TEST_LOOP_ff_f, END);
+#endif
 }
 
 static void

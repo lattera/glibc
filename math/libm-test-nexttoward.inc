@@ -20,6 +20,7 @@
 
 static const struct test_fj_f_data nexttoward_test_data[] =
   {
+#if !TEST_FLOATN
     TEST_fj_f (nexttoward, 0, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fj_f (nexttoward, minus_zero, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fj_f (nexttoward, 0, minus_zero, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -80,6 +81,7 @@ static const struct test_fj_f_data nexttoward_test_data[] =
     TEST_fj_f (nexttoward, min_subnorm_value, minus_zero, 0, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_fj_f (nexttoward, -min_subnorm_value, 0, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
     TEST_fj_f (nexttoward, -min_subnorm_value, minus_zero, minus_zero, INEXACT_EXCEPTION|UNDERFLOW_EXCEPTION|ERRNO_ERANGE),
+#endif
 
 #if TEST_COND_binary32
     TEST_fj_f (nexttoward, 1.0, 1.1L, 0x1.000002p0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -153,7 +155,9 @@ static const struct test_fj_f_data nexttoward_test_data[] =
 static void
 nexttoward_test (void)
 {
+#if !TEST_FLOATN
   ALL_RM_TEST (nexttoward, 1, nexttoward_test_data, RUN_TEST_LOOP_fj_f, END);
+#endif
 }
 
 static void

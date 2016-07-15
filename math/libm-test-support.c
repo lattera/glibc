@@ -732,8 +732,8 @@ check_float (const char *test_name, FLOAT computed, FLOAT expected,
 
 
 void
-check_complex (const char *test_name, __complex__ FLOAT computed,
-	       __complex__ FLOAT expected,
+check_complex (const char *test_name, CFLOAT computed,
+	       CFLOAT expected,
 	       int exception)
 {
   FLOAT part_comp, part_exp;

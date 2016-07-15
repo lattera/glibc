@@ -20,6 +20,7 @@
 
 static const struct test_f_f_data significand_test_data[] =
   {
+#if !TEST_FLOATN
     /* significand returns the mantissa of the exponential
        representation.  Tests for infinities, zero and NaNs reflect
        the implementation (including possibility of "inexact" and
@@ -45,12 +46,15 @@ static const struct test_f_f_data significand_test_data[] =
     TEST_f_f (significand, -6.0, -1.5, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (significand, 8.0, 1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (significand, -8.0, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
   };
 
 static void
 significand_test (void)
 {
+#if !TEST_FLOATN
   ALL_RM_TEST (significand, 1, significand_test_data, RUN_TEST_LOOP_f_f, END);
+#endif
 }
 
 static void

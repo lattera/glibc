@@ -143,7 +143,7 @@ void init_max_error (const char *, int);
 void print_max_error (const char *);
 void print_complex_max_error (const char *);
 void check_float (const char *, FLOAT, FLOAT, int);
-void check_complex (const char *, __complex__ FLOAT, __complex__ FLOAT, int);
+void check_complex (const char *, CFLOAT, CFLOAT, int);
 void check_int (const char *, int, int, int);
 void check_long (const char *, long int, long int, int);
 void check_bool (const char *, int, int, int);

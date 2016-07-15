@@ -184,8 +184,10 @@ remainder_test (void)
 static void
 drem_test (void)
 {
+#if !TEST_FLOATN
   /* drem uses the same test data as remainder.  */
   ALL_RM_TEST (drem, 1, remainder_test_data, RUN_TEST_LOOP_ff_f, END);
+#endif
 }
 
 static void
