@@ -803,7 +803,7 @@ sloww (double x, double dx, double orig, int k)
   a = t - y;
   da = ((t - a) - y) + da;
 
-  if (n == 2 || n == 1)
+  if (n & 2)
     {
       a = -a;
       da = -da;
@@ -817,7 +817,7 @@ sloww (double x, double dx, double orig, int k)
   if (w[0] == w[0] + cor)
     return (a > 0) ? w[0] : -w[0];
 
-  return (n & 1) ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
+  return k ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
 
 /***************************************************************************/

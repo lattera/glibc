@@ -1144,6 +1144,7 @@ cos 0x4.7857dp+68
 cos -0x1.02e34cp+0
 cos 0xf.f0274p+4
 cos 0x3.042d88p+0
+cos 0x1.8475e5afd4481p+0
 
 cosh 0
 cosh -0
@@ -3818,6 +3819,7 @@ sin min
 sin -min
 sin min_subnorm
 sin -min_subnorm
+sin 0x1.8475e5afd4481p+0
 
 sincos 0
 sincos -0
@@ -3852,6 +3854,7 @@ sincos min
 sincos -min
 sincos min_subnorm
 sincos -min_subnorm
+sincos 0x1.8475e5afd4481p+0
 
 sinh 0
 sinh -0

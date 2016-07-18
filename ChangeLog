@@ -1,3 +1,12 @@
+2016-07-18  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+	    Matt Clay  <mclay@lycos.com>
+
+	[BZ #20357]
+	* sysdeps/ieee754/dbl-64/s_sin.c (sloww): Fix up condition
+	to call __mpsin/__mpcos and to negate values.
+	* math/auto-libm-test-in: Add test.
+	* math/auto-libm-test-out: Regenerate.
+
 2016-07-18  Zack Weinberg  <zackw@panix.com>
 
 	* grp/Makefile: Don't install the internal header grp-merge.h.
