@@ -84,17 +84,20 @@ ifeq ($(subdir),csu)
 gen-as-const-headers += tlsdesc.sym
 endif
 
-ifeq ($(subdir),elf)
 # Make sure no code in ld.so uses mm/xmm/ymm/zmm registers on i386 since
 # the first 3 mm/xmm/ymm/zmm registers are used to pass vector parameters
 # which must be preserved.
 # With SSE disabled, ensure -fpmath is not set to use sse either.
+rtld-CFLAGS = -mno-sse -mno-mmx -mfpmath=387
+ifeq ($(subdir),elf)
 CFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
-		   -mno-sse -mno-mmx -mfpmath=387)
+		   $(rtld-CFLAGS))
 
 tests-special += $(objpfx)tst-ld-sse-use.out
 $(objpfx)tst-ld-sse-use.out: ../sysdeps/i386/tst-ld-sse-use.sh $(objpfx)ld.so
 	@echo "Checking ld.so for SSE register use.  This will take a few seconds..."
 	$(BASH) $< $(objpfx) '$(NM)' '$(OBJDUMP)' '$(READELF)' > $@; \
 	$(evaluate-test)
+else
+CFLAGS-.os += $(if $(filter rtld-%.os,$(@F)), $(rtld-CFLAGS))
 endif

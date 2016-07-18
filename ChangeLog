@@ -1,3 +1,11 @@
+2016-07-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/Makefile (rtld-CFLAGS): New.
+	[subdir == elf] (CFLAGS-.os): Replace -mno-sse -mno-mmx
+	-mfpmath=387 with $(rtld-CFLAGS).
+	[subdir != elf] (CFLAGS-.os): Compile rtld-*.os with
+	$(rtld-CFLAGS).
+
 2016-07-18   Ross Burton  <ross.burton@intel.com>
 	     Khem Raj  <raj.khem@gmail.com>
 
