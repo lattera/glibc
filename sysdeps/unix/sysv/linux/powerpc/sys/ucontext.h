@@ -64,8 +64,8 @@ typedef struct
 /* For 64-bit kernels with Altivec support, a machine context is exactly
  * a sigcontext.  For older kernel (without Altivec) the sigcontext matches
  * the mcontext upto but not including the v_regs field.  For kernels that
- * don't AT_HWCAP or return AT_HWCAP without PPC_FEATURE_HAS_ALTIVEC the
- * v_regs field may not exit and should not be referenced.  The v_regd field
+ * don't set AT_HWCAP or return AT_HWCAP without PPC_FEATURE_HAS_ALTIVEC the
+ * v_regs field may not exist and should not be referenced.  The v_regd field
  * can be refernced safely only after verifying that PPC_FEATURE_HAS_ALTIVEC
  * is set in AT_HWCAP.  */
 

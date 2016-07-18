@@ -1,3 +1,8 @@
+2016-07-21  Gustavo Romero  <gromero@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Fix missing verb
+	and typo in a comment about AT_HWCAP entry.
+
 2016-07-21  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Updated.
