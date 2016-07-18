@@ -1,3 +1,7 @@
+2016-07-18  Zack Weinberg  <zackw@panix.com>
+
+	* grp/Makefile: Don't install the internal header grp-merge.h.
+
 2016-07-18  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Regenerated.

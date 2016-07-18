@@ -22,7 +22,7 @@ subdir	:= grp
 
 include ../Makeconfig
 
-headers := grp.h grp-merge.h
+headers := grp.h
 
 routines := fgetgrent initgroups setgroups \
 	    getgrent getgrgid getgrnam putgrent \
