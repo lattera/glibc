@@ -40,9 +40,9 @@ ildouble: 2
 ldouble: 2
 
 Function: "acosh_downward":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 3
 ldouble: 3
@@ -1347,16 +1347,16 @@ ldouble: 5
 
 Function: Real part of "ctan_towardzero":
 double: 5
-float: 3
+float: 2
 idouble: 5
-ifloat: 3
+ifloat: 2
 ildouble: 4
 ldouble: 4
 
 Function: Imaginary part of "ctan_towardzero":
-double: 2
+double: 1
 float: 2
-idouble: 2
+idouble: 1
 ifloat: 2
 ildouble: 5
 ldouble: 5
@@ -1910,16 +1910,16 @@ ildouble: 1
 ldouble: 1
 
 Function: "log_towardzero":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
 Function: "log_upward":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 

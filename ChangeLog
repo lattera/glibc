@@ -1,3 +1,7 @@
+2016-07-18  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/libm-test-ulps: Regenerated.
+
 2016-07-13  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* bits/termios.h (TABDLY): Change macro to include TAB3 bit too.
