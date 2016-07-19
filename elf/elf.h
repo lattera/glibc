@@ -3703,6 +3703,9 @@ enum
 #define R_METAG_HIOG		13
 #define R_METAG_LOOG		14
 
+#define R_METAG_REL8		15
+#define R_METAG_REL16		16
+
 /* GNU */
 #define R_METAG_GNU_VTINHERIT	30
 #define R_METAG_GNU_VTENTRY	31
@@ -3725,9 +3728,21 @@ enum
 #define R_METAG_GLOB_DAT	46
 
 /* TLS relocations */
+#define R_METAG_TLS_GD		47
+#define R_METAG_TLS_LDM		48
+#define R_METAG_TLS_LDO_HI16	49
+#define R_METAG_TLS_LDO_LO16	50
+#define R_METAG_TLS_LDO		51
+#define R_METAG_TLS_IE		52
+#define R_METAG_TLS_IENONPIC	53
+#define R_METAG_TLS_IENONPIC_HI16 54
+#define R_METAG_TLS_IENONPIC_LO16 55
 #define R_METAG_TLS_TPOFF	56
 #define R_METAG_TLS_DTPMOD	57
 #define R_METAG_TLS_DTPOFF	58
+#define R_METAG_TLS_LE		59
+#define R_METAG_TLS_LE_HI16	60
+#define R_METAG_TLS_LE_LO16	61
 
 __END_DECLS
 
