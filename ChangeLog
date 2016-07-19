@@ -1,5 +1,10 @@
 2017-08-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (pread64): Remove.
+	(preadv64): Likewise.
+	(pwrite64(: Likewise.
+	(pwritev64): Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h
 	(INTERNAL_SYSCALL_NCS_TYPES): Remove define.
 	(LOAD_ARGS_0): Likewise.

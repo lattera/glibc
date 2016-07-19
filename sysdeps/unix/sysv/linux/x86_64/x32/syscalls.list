@@ -1,6 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-fallocate	-	fallocate	Ci:iiii	fallocate	fallocate64
 gettimeofday	-	gettimeofday:__vdso_gettimeofday@LINUX_2.6	i:pP	__gettimeofday	gettimeofday
 personality	EXTRA	personality	Ei:i	__personality	personality
 posix_fadvise64	-	fadvise64	Vi:iiii	posix_fadvise	posix_fadvise64
