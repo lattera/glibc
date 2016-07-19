@@ -1,3 +1,10 @@
+2016-07-19  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/microblaze/sysdep.h (inline_syscall0):
+	Rename "ret" to "__ret".
+	(inline_syscall1, inline_syscall2, inline_syscall3, inline_syscall4,
+	inline_syscall5, inline_syscall6): Likewise.
+
 2016-07-19   Will Newton  <will.newton@gmail.com>
 
 	* elf/elf.h (R_METAG_REL8, R_METAG_REL16, R_METAG_TLS_GD

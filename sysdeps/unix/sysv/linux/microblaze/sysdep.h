@@ -209,70 +209,70 @@ SYSCALL_ERROR_LABEL_DCL:                            \
 
 # define inline_syscall0(name,dummy)                                          \
   ({                                                                          \
-    register long ret __asm__("r3");                                          \
+    register long __ret __asm__("r3");                                        \
     register long __r12 __asm__("r12") = name;                                \
     __asm__ __volatile__( "brki r14,8; nop;"                                  \
-      : "=r"(ret)                                                             \
+      : "=r"(__ret)                                                           \
       : "r"(__r12)                                                            \
-      : SYSCALL_CLOBBERS_0 ); ret;                                            \
+      : SYSCALL_CLOBBERS_0 ); __ret;                                          \
   })
 
 # define inline_syscall1(name,arg1)                                           \
   ({                                                                          \
-    register long ret __asm__("r3");                                          \
+    register long __ret __asm__("r3");                                        \
     register long __r12 __asm__("r12") = name;                                \
     register long __r5 __asm__("r5") = (long)(arg1);                          \
     __asm__ __volatile__( "brki r14,8; nop;"                                  \
-      : "=r"(ret)                                                             \
+      : "=r"(__ret)                                                           \
       : "r"(__r5), "r"(__r12)                                                 \
-      : SYSCALL_CLOBBERS_1 ); ret;                                            \
+      : SYSCALL_CLOBBERS_1 ); __ret;                                          \
   })
 
 # define inline_syscall2(name,arg1,arg2)                                      \
   ({                                                                          \
-    register long ret __asm__("r3");                                          \
+    register long __ret __asm__("r3");                                        \
     register long __r12 __asm__("r12") = name;                                \
     register long __r5 __asm__("r5") = (long)(arg1);                          \
     register long __r6 __asm__("r6") = (long)(arg2);                          \
     __asm__ __volatile__( "brki r14,8; nop;"                                  \
-      : "=r"(ret)                                                             \
+      : "=r"(__ret)                                                           \
       : "r"(__r5), "r"(__r6), "r"(__r12)                                      \
-      : SYSCALL_CLOBBERS_2 ); ret;                                            \
+      : SYSCALL_CLOBBERS_2 ); __ret;                                          \
   })
 
 
 # define inline_syscall3(name,arg1,arg2,arg3)                                 \
   ({                                                                          \
-    register long ret __asm__("r3");                                          \
+    register long __ret __asm__("r3");                                        \
     register long __r12 __asm__("r12") = name;                                \
     register long __r5 __asm__("r5") = (long)(arg1);                          \
     register long __r6 __asm__("r6") = (long)(arg2);                          \
     register long __r7 __asm__("r7") = (long)(arg3);                          \
     __asm__ __volatile__( "brki r14,8; nop;"                                  \
-      : "=r"(ret)                                                             \
+      : "=r"(__ret)                                                           \
       : "r"(__r5), "r"(__r6), "r"(__r7), "r"(__r12)                           \
-      : SYSCALL_CLOBBERS_3 ); ret;                                            \
+      : SYSCALL_CLOBBERS_3 ); __ret;                                          \
   })
 
 
 # define inline_syscall4(name,arg1,arg2,arg3,arg4)                            \
   ({                                                                          \
-    register long ret __asm__("r3");                                          \
+    register long __ret __asm__("r3");                                        \
     register long __r12 __asm__("r12") = name;                                \
     register long __r5 __asm__("r5") = (long)(arg1);                          \
     register long __r6 __asm__("r6") = (long)(arg2);                          \
     register long __r7 __asm__("r7") = (long)(arg3);                          \
     register long __r8 __asm__("r8") = (long)(arg4);                          \
     __asm__ __volatile__( "brki r14,8; nop;"                                  \
-      : "=r"(ret)                                                             \
+      : "=r"(__ret)                                                           \
       : "r"(__r5), "r"(__r6), "r"(__r7), "r"(__r8),"r"(__r12)                 \
-      : SYSCALL_CLOBBERS_4 ); ret;                                            \
+      : SYSCALL_CLOBBERS_4 ); __ret;                                          \
   })
 
 
 # define inline_syscall5(name,arg1,arg2,arg3,arg4,arg5)                       \
   ({                                                                          \
-    register long ret __asm__("r3");                                          \
+    register long __ret __asm__("r3");                                        \
     register long __r12 __asm__("r12") = name;                                \
     register long __r5 __asm__("r5") = (long)(arg1);                          \
     register long __r6 __asm__("r6") = (long)(arg2);                          \
@@ -280,15 +280,15 @@ SYSCALL_ERROR_LABEL_DCL:                            \
     register long __r8 __asm__("r8") = (long)(arg4);                          \
     register long __r9 __asm__("r9") = (long)(arg5);                          \
     __asm__ __volatile__( "brki r14,8; nop;"                                  \
-      : "=r"(ret)                                                             \
+      : "=r"(__ret)                                                           \
       : "r"(__r5), "r"(__r6), "r"(__r7), "r"(__r8),"r"(__r9), "r"(__r12)      \
-      : SYSCALL_CLOBBERS_5 ); ret;                                            \
+      : SYSCALL_CLOBBERS_5 ); __ret;                                          \
   })
 
 
 # define inline_syscall6(name,arg1,arg2,arg3,arg4,arg5,arg6)                  \
   ({                                                                          \
-    register long ret __asm__("r3");                                          \
+    register long __ret __asm__("r3");                                        \
     register long __r12 __asm__("r12") = name;                                \
     register long __r5 __asm__("r5") = (long)(arg1);                          \
     register long __r6 __asm__("r6") = (long)(arg2);                          \
@@ -297,10 +297,10 @@ SYSCALL_ERROR_LABEL_DCL:                            \
     register long __r9 __asm__("r9") = (long)(arg5);                          \
     register long __r10 __asm__("r10") = (long)(arg6);                        \
     __asm__ __volatile__( "brki r14,8; nop;"                                  \
-      : "=r"(ret)                                                             \
+      : "=r"(__ret)                                                           \
       : "r"(__r5), "r"(__r6), "r"(__r7), "r"(__r8),"r"(__r9), "r"(__r10),     \
       "r"(__r12)                                                              \
-      : SYSCALL_CLOBBERS_6 ); ret;                                            \
+      : SYSCALL_CLOBBERS_6 ); __ret;                                          \
   })
 
 
