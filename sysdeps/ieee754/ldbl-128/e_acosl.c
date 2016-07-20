@@ -57,7 +57,7 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double
+static const _Float128
   one = 1.0L,
   pio2_hi = 1.5707963267948966192313216916397514420986L,
   pio2_lo = 4.3359050650618905123985220130216759843812E-35L,
@@ -148,10 +148,10 @@ static const long double
   qS8 = -4.175375777334867025769346564600396877176E1L;
   /* 1.000000000000000000000000000000000000000E0 */
 
-long double
-__ieee754_acosl (long double x)
+_Float128
+__ieee754_acosl (_Float128 x)
 {
-  long double z, r, w, p, q, s, t, f2;
+  _Float128 z, r, w, p, q, s, t, f2;
   int32_t ix, sign;
   ieee854_long_double_shape_type u;
 

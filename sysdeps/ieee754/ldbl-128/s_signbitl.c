@@ -18,9 +18,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <math_private.h>
 
 int
-__signbitl (long double x)
+__signbitl (_Float128 x)
 {
   return __builtin_signbitl (x);
 }

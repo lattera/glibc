@@ -23,8 +23,8 @@
 #include <math_private.h>
 
 
-long double
-__truncl (long double x)
+_Float128
+__truncl (_Float128 x)
 {
   int32_t j0;
   u_int64_t i0, i1, sx;

@@ -61,20 +61,20 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double
+static const _Float128
   invsqrtpi = 5.6418958354775628694807945156077258584405E-1L,
   two = 2.0e0L,
   one = 1.0e0L,
   zero = 0.0L;
 
 
-long double
-__ieee754_jnl (int n, long double x)
+_Float128
+__ieee754_jnl (int n, _Float128 x)
 {
   u_int32_t se;
   int32_t i, ix, sgn;
-  long double a, b, temp, di, ret;
-  long double z, w;
+  _Float128 a, b, temp, di, ret;
+  _Float128 z, w;
   ieee854_long_double_shape_type u;
 
 
@@ -110,7 +110,7 @@ __ieee754_jnl (int n, long double x)
     SET_RESTORE_ROUNDL (FE_TONEAREST);
     if (x == 0.0L || ix >= 0x7fff0000)	/* if x is 0 or inf */
       return sgn == 1 ? -zero : zero;
-    else if ((long double) n <= x)
+    else if ((_Float128) n <= x)
       {
 	/* Safe to use J(n+1,x)=2n/x *J(n,x)-J(n-1,x) */
 	if (ix >= 0x412D0000)
@@ -131,8 +131,8 @@ __ieee754_jnl (int n, long double x)
 	     *             2    -s+c            -c-s
 	     *             3     s+c             c-s
 	     */
-	    long double s;
-	    long double c;
+	    _Float128 s;
+	    _Float128 c;
 	    __sincosl (x, &s, &c);
 	    switch (n & 3)
 	      {
@@ -158,7 +158,7 @@ __ieee754_jnl (int n, long double x)
 	    for (i = 1; i < n; i++)
 	      {
 		temp = b;
-		b = b * ((long double) (i + i) / x) - a;	/* avoid underflow */
+		b = b * ((_Float128) (i + i) / x) - a;	/* avoid underflow */
 		a = temp;
 	      }
 	  }
@@ -178,7 +178,7 @@ __ieee754_jnl (int n, long double x)
 		b = temp;
 		for (a = one, i = 2; i <= n; i++)
 		  {
-		    a *= (long double) i;	/* a = n! */
+		    a *= (_Float128) i;	/* a = n! */
 		    b *= temp;	/* b = (x/2)^n */
 		  }
 		b = b / a;
@@ -215,11 +215,11 @@ __ieee754_jnl (int n, long double x)
 	     * When Q(k) > 1e17     good for quadruple
 	     */
 	    /* determine k */
-	    long double t, v;
-	    long double q0, q1, h, tmp;
+	    _Float128 t, v;
+	    _Float128 q0, q1, h, tmp;
 	    int32_t k, m;
-	    w = (n + n) / (long double) x;
-	    h = 2.0L / (long double) x;
+	    w = (n + n) / (_Float128) x;
+	    h = 2.0L / (_Float128) x;
 	    q0 = w;
 	    z = w + h;
 	    q1 = w * z - 1.0L;
@@ -251,7 +251,7 @@ __ieee754_jnl (int n, long double x)
 
 	    if (tmp < 1.1356523406294143949491931077970765006170e+04L)
 	      {
-		for (i = n - 1, di = (long double) (i + i); i > 0; i--)
+		for (i = n - 1, di = (_Float128) (i + i); i > 0; i--)
 		  {
 		    temp = b;
 		    b *= di;
@@ -262,7 +262,7 @@ __ieee754_jnl (int n, long double x)
 	      }
 	    else
 	      {
-		for (i = n - 1, di = (long double) (i + i); i > 0; i--)
+		for (i = n - 1, di = (_Float128) (i + i); i > 0; i--)
 		  {
 		    temp = b;
 		    b *= di;
@@ -306,13 +306,13 @@ __ieee754_jnl (int n, long double x)
 }
 strong_alias (__ieee754_jnl, __jnl_finite)
 
-long double
-__ieee754_ynl (int n, long double x)
+_Float128
+__ieee754_ynl (int n, _Float128 x)
 {
   u_int32_t se;
   int32_t i, ix;
   int32_t sign;
-  long double a, b, temp, ret;
+  _Float128 a, b, temp, ret;
   ieee854_long_double_shape_type u;
 
   u.value = x;
@@ -367,8 +367,8 @@ __ieee754_ynl (int n, long double x)
 	 *             2    -s+c            -c-s
 	 *             3     s+c             c-s
 	 */
-	long double s;
-	long double c;
+	_Float128 s;
+	_Float128 c;
 	__sincosl (x, &s, &c);
 	switch (n & 3)
 	  {
@@ -397,7 +397,7 @@ __ieee754_ynl (int n, long double x)
 	for (i = 1; i < n && se != 0xffff0000; i++)
 	  {
 	    temp = b;
-	    b = ((long double) (i + i) / x) * b - a;
+	    b = ((_Float128) (i + i) / x) * b - a;
 	    u.value = b;
 	    se = u.parts32.w0 & 0xffff0000;
 	    a = temp;

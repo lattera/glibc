@@ -48,10 +48,10 @@
 #include <math.h>
 #include <math_private.h>
 
-long double
-__ieee754_hypotl(long double x, long double y)
+_Float128
+__ieee754_hypotl(_Float128 x, _Float128 y)
 {
-	long double a,b,t1,t2,y1,y2,w;
+	_Float128 a,b,t1,t2,y1,y2,w;
 	int64_t j,k,ha,hb;
 
 	GET_LDOUBLE_MSW64(ha,x);

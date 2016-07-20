@@ -62,7 +62,7 @@
    -.5 ln 2  <  x  <  .5 ln 2
    Theoretical peak relative error = 8.1e-36  */
 
-static const long double
+static const _Float128
   P0 = 2.943520915569954073888921213330863757240E8L,
   P1 = -5.722847283900608941516165725053359168840E7L,
   P2 = 8.944630806357575461578107295909719817253E6L,
@@ -88,10 +88,10 @@ static const long double
   minarg = -7.9018778583833765273564461846232128760607E1L, big = 1e4932L;
 
 
-long double
-__expm1l (long double x)
+_Float128
+__expm1l (_Float128 x)
 {
-  long double px, qx, xx;
+  _Float128 px, qx, xx;
   int32_t ix, sign;
   ieee854_long_double_shape_type u;
   int k;

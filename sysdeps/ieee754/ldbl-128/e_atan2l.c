@@ -43,7 +43,7 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double
+static const _Float128
 tiny  = 1.0e-4900L,
 zero  = 0.0,
 pi_o_4  = 7.85398163397448309615660845819875699e-01L, /* 3ffe921fb54442d18469898cc51701b8 */
@@ -51,10 +51,10 @@ pi_o_2  = 1.57079632679489661923132169163975140e+00L, /* 3fff921fb54442d18469898
 pi      = 3.14159265358979323846264338327950280e+00L, /* 4000921fb54442d18469898cc51701b8 */
 pi_lo   = 8.67181013012378102479704402604335225e-35L; /* 3f8dcd129024e088a67cc74020bbea64 */
 
-long double
-__ieee754_atan2l(long double y, long double x)
+_Float128
+__ieee754_atan2l(_Float128 y, _Float128 x)
 {
-	long double z;
+	_Float128 z;
 	int64_t k,m,hx,hy,ix,iy;
 	u_int64_t lx,ly;
 

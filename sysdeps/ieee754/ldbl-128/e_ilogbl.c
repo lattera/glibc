@@ -28,7 +28,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-int __ieee754_ilogbl (long double x)
+int __ieee754_ilogbl (_Float128 x)
 {
 	int64_t hx,lx;
 	int ix;

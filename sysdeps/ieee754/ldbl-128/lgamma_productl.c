@@ -26,24 +26,24 @@
    X_EPS / X is small enough that factors quadratic in it can be
    neglected.  */
 
-long double
-__lgamma_productl (long double t, long double x, long double x_eps, int n)
+_Float128
+__lgamma_productl (_Float128 t, _Float128 x, _Float128 x_eps, int n)
 {
-  long double ret = 0, ret_eps = 0;
+  _Float128 ret = 0, ret_eps = 0;
   for (int i = 0; i < n; i++)
     {
-      long double xi = x + i;
-      long double quot = t / xi;
-      long double mhi, mlo;
+      _Float128 xi = x + i;
+      _Float128 quot = t / xi;
+      _Float128 mhi, mlo;
       mul_splitl (&mhi, &mlo, quot, xi);
-      long double quot_lo = (t - mhi - mlo) / xi - t * x_eps / (xi * xi);
+      _Float128 quot_lo = (t - mhi - mlo) / xi - t * x_eps / (xi * xi);
       /* We want (1 + RET + RET_EPS) * (1 + QUOT + QUOT_LO) - 1.  */
-      long double rhi, rlo;
+      _Float128 rhi, rlo;
       mul_splitl (&rhi, &rlo, ret, quot);
-      long double rpq = ret + quot;
-      long double rpq_eps = (ret - rpq) + quot;
-      long double nret = rpq + rhi;
-      long double nret_eps = (rpq - nret) + rhi;
+      _Float128 rpq = ret + quot;
+      _Float128 rpq_eps = (ret - rpq) + quot;
+      _Float128 nret = rpq + rhi;
+      _Float128 nret_eps = (rpq - nret) + rhi;
       ret_eps += (rpq_eps + nret_eps + rlo + ret_eps * quot
 		  + quot_lo + quot_lo * (ret + ret_eps));
       ret = nret;

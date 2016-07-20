@@ -36,14 +36,14 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double one = 1.0L, huge = 1e4900L;
+static const _Float128 one = 1.0L, huge = 1e4900L;
 
-static const long double zero = 0.0L;
+static const _Float128 zero = 0.0L;
 
-long double
-__ieee754_atanhl(long double x)
+_Float128
+__ieee754_atanhl(_Float128 x)
 {
-	long double t;
+	_Float128 t;
 	u_int32_t jx, ix;
 	ieee854_long_double_shape_type u;
 

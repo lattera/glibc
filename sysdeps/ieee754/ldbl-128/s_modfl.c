@@ -30,9 +30,9 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-static const long double one = 1.0;
+static const _Float128 one = 1.0;
 
-long double __modfl(long double x, long double *iptr)
+_Float128 __modfl(_Float128 x, _Float128 *iptr)
 {
 	int64_t i0,i1,j0;
 	u_int64_t i;

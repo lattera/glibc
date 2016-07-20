@@ -28,7 +28,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-long double __nextafterl(long double x, long double y)
+_Float128 __nextafterl(_Float128 x, _Float128 y)
 {
 	int64_t hx,hy,ix,iy;
 	u_int64_t lx,ly;
@@ -43,7 +43,7 @@ long double __nextafterl(long double x, long double y)
 	   return x+y;
 	if(x==y) return y;		/* x=y, return y */
 	if((ix|lx)==0) {			/* x == 0 */
-	    long double u;
+	    _Float128 u;
 	    SET_LDOUBLE_WORDS64(x,hy&0x8000000000000000ULL,1);/* return +-minsubnormal */
 	    u = math_opt_barrier (x);
 	    u = u * u;
@@ -69,12 +69,12 @@ long double __nextafterl(long double x, long double y)
 	}
 	hy = hx&0x7fff000000000000LL;
 	if(hy==0x7fff000000000000LL) {
-	    long double u = x + x;		/* overflow  */
+	    _Float128 u = x + x;		/* overflow  */
 	    math_force_eval (u);
 	    __set_errno (ERANGE);
 	}
 	if(hy==0) {
-	    long double u = x*x;		/* underflow */
+	    _Float128 u = x*x;		/* underflow */
 	    math_force_eval (u);		/* raise underflow flag */
 	    __set_errno (ERANGE);
 	}

@@ -60,7 +60,7 @@
 #include <libc-internal.h>
 #include <math.h>
 #include <math_private.h>
-static const long double
+static const _Float128
   one = 1.0L,
   pio4hi = 7.8539816339744830961566084581987569936977E-1L,
   pio4lo = 2.1679525325309452561992610065108379921906E-35L,
@@ -83,10 +83,10 @@ static const long double
   /* 1.000000000000000000000000000000000000000E0 */
 
 
-long double
-__kernel_tanl (long double x, long double y, int iy)
+_Float128
+__kernel_tanl (_Float128 x, _Float128 y, int iy)
 {
-  long double z, r, v, w, s;
+  _Float128 z, r, v, w, s;
   int32_t ix, sign;
   ieee854_long_double_shape_type u, u1;
 
@@ -134,7 +134,7 @@ __kernel_tanl (long double x, long double y, int iy)
   w = x + r;
   if (ix >= 0x3ffe5942)
     {
-      v = (long double) iy;
+      v = (_Float128) iy;
       w = (v - 2.0 * (x - (w * w / (w + v) - r)));
       /* SIGN is set for arguments that reach this code, but not
 	 otherwise, resulting in warnings that it may be used

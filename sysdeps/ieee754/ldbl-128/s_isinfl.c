@@ -17,7 +17,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math_private.h>
 
 int
-__isinfl (long double x)
+__isinfl (_Float128 x)
 {
 	int64_t hx,lx;
 	GET_LDOUBLE_WORDS64(hx,lx,x);

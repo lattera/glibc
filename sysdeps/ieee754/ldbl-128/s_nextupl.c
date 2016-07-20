@@ -20,8 +20,8 @@
 #include <math_private.h>
 
 /* Return the least floating-point number greater than X.  */
-long double
-__nextupl (long double x)
+_Float128
+__nextupl (_Float128 x)
 {
   int64_t hx, ix;
   u_int64_t lx;

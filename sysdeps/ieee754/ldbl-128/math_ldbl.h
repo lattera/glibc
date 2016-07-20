@@ -88,3 +88,11 @@ do {								\
   sh_u.value = (d);						\
   (v) = sh_u.parts64.lsw;					\
 } while (0)
+
+/*
+   On a platform already supporting a binary128 long double,
+   _Float128 will alias to long double.  This transformation
+   makes aliasing *l functions to *f128 trivial.
+*/
+#define _Float128 long double
+#define L(x) x##L

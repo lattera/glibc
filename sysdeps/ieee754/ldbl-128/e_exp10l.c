@@ -19,15 +19,15 @@
 #include <math_private.h>
 #include <float.h>
 
-static const long double log10_high = 0x2.4d763776aaa2bp0L;
-static const long double log10_low = 0x5.ba95b58ae0b4c28a38a3fb3e7698p-60L;
+static const _Float128 log10_high = 0x2.4d763776aaa2bp0L;
+static const _Float128 log10_low = 0x5.ba95b58ae0b4c28a38a3fb3e7698p-60L;
 
-long double
-__ieee754_exp10l (long double arg)
+_Float128
+__ieee754_exp10l (_Float128 arg)
 {
   ieee854_long_double_shape_type u;
-  long double arg_high, arg_low;
-  long double exp_high, exp_low;
+  _Float128 arg_high, arg_low;
+  _Float128 exp_high, exp_low;
 
   if (!isfinite (arg))
     return __ieee754_expl (arg);

@@ -21,7 +21,7 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double c[] = {
+static const _Float128 c[] = {
 #define ONE c[0]
  1.00000000000000000000000000000000000E+00L, /* 3fff0000000000000000000000000000 */
 
@@ -94,12 +94,12 @@ static const long double c[] = {
 #define SINCOSL_COS_LO 1
 #define SINCOSL_SIN_HI 2
 #define SINCOSL_SIN_LO 3
-extern const long double __sincosl_table[];
+extern const _Float128 __sincosl_table[];
 
 void
-__kernel_sincosl(long double x, long double y, long double *sinx, long double *cosx, int iy)
+__kernel_sincosl(_Float128 x, _Float128 y, _Float128 *sinx, _Float128 *cosx, int iy)
 {
-  long double h, l, z, sin_l, cos_l_m1;
+  _Float128 h, l, z, sin_l, cos_l_m1;
   int64_t ix;
   u_int32_t tix, hix, index;
   GET_LDOUBLE_MSW64 (ix, x);

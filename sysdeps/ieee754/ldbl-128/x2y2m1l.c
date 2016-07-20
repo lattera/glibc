@@ -27,7 +27,7 @@
    overflow occurs.  */
 
 static inline void
-add_split (long double *hi, long double *lo, long double x, long double y)
+add_split (_Float128 *hi, _Float128 *lo, _Float128 x, _Float128 y)
 {
   /* Apply Dekker's algorithm.  */
   *hi = x + y;
@@ -40,8 +40,8 @@ add_split (long double *hi, long double *lo, long double x, long double y)
 static int
 compare (const void *p, const void *q)
 {
-  long double pld = fabsl (*(const long double *) p);
-  long double qld = fabsl (*(const long double *) q);
+  _Float128 pld = fabsl (*(const _Float128 *) p);
+  _Float128 qld = fabsl (*(const _Float128 *) q);
   if (pld < qld)
     return -1;
   else if (pld == qld)
@@ -54,22 +54,22 @@ compare (const void *p, const void *q)
    It is given that 1 > X >= Y >= epsilon / 2, and that X^2 + Y^2 >=
    0.5.  */
 
-long double
-__x2y2m1l (long double x, long double y)
+_Float128
+__x2y2m1l (_Float128 x, _Float128 y)
 {
-  long double vals[5];
+  _Float128 vals[5];
   SET_RESTORE_ROUNDL (FE_TONEAREST);
   mul_splitl (&vals[1], &vals[0], x, x);
   mul_splitl (&vals[3], &vals[2], y, y);
   vals[4] = -1.0L;
-  qsort (vals, 5, sizeof (long double), compare);
+  qsort (vals, 5, sizeof (_Float128), compare);
   /* Add up the values so that each element of VALS has absolute value
      at most equal to the last set bit of the next nonzero
      element.  */
   for (size_t i = 0; i <= 3; i++)
     {
       add_split (&vals[i + 1], &vals[i], vals[i + 1], vals[i]);
-      qsort (vals + i + 1, 4 - i, sizeof (long double), compare);
+      qsort (vals + i + 1, 4 - i, sizeof (_Float128), compare);
     }
   /* Now any error from this addition will be small.  */
   return vals[4] + vals[3] + vals[2] + vals[1] + vals[0];

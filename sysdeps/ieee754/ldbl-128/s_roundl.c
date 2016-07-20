@@ -23,8 +23,8 @@
 #include <math_private.h>
 
 
-long double
-__roundl (long double x)
+_Float128
+__roundl (_Float128 x)
 {
   int32_t j0;
   u_int64_t i1, i0;

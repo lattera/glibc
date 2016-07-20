@@ -1,3 +1,93 @@
+2016-08-31  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128/math_ldbl.h:
+	(_Float128): Define as long double, always.
+	(L): Apply long double type suffix, always.
+
+	* sysdeps/ieee754/ldbl-128/e_acoshl.c: Rename long double
+	_Float128, excepting comments.
+
+	* sysdeps/ieee754/ldbl-128/e_acosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atan2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_coshl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_exp10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_fmodl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_ilogbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j0l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_logl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_powl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_rem_pio2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_remainderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_sinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/gamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/lgamma_negl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/lgamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_asinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_atanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_cbrtl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_ceill.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_copysignl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fabsl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_finitel.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_floorl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fpclassifyl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_frexpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isinfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isnanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_issignalingl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_logbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_modfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextupl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_remquol.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_rintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_roundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalblnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalbnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_truncl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/t_expl.h: Likewise.
+	* sysdeps/ieee754/ldbl-128/x2y2m1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_asinl.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-128/s_signbitl.c: Rename long double
+	_Float128, and include math_private.h.
+	* sysdeps/ieee754/ldbl-128/t_sincosl.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c (L): Define using
+	long double semantics.
+	(_Float128): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_lgammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_cbrtl.c: Likewise.
+
 2016-08-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* config.h.in (HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT): New undefine.

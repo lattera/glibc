@@ -45,12 +45,12 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double one = 1.0, two = 2.0, tiny = 1.0e-4900L;
+static const _Float128 one = 1.0, two = 2.0, tiny = 1.0e-4900L;
 
-long double
-__tanhl (long double x)
+_Float128
+__tanhl (_Float128 x)
 {
-  long double t, z;
+  _Float128 t, z;
   u_int32_t jx, ix;
   ieee854_long_double_shape_type u;
 

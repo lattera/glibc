@@ -68,7 +68,7 @@
 #include <stdlib.h>
 #include "t_expl.h"
 
-static const long double C[] = {
+static const _Float128 C[] = {
 /* Smallest integer x for which e^x overflows.  */
 #define himark C[0]
  11356.523406294143949491931077970765L,
@@ -132,14 +132,14 @@ static const long double C[] = {
  1.98412698413981650382436541785404286E-04L,
 };
 
-long double
-__ieee754_expl (long double x)
+_Float128
+__ieee754_expl (_Float128 x)
 {
   /* Check for usual case.  */
   if (isless (x, himark) && isgreater (x, lomark))
     {
       int tval1, tval2, unsafe, n_i;
-      long double x22, n, t, result, xl;
+      _Float128 x22, n, t, result, xl;
       union ieee854_long_double ex2_u, scale_u;
       fenv_t oldenv;
 

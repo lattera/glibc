@@ -24,7 +24,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-long double __fabsl(long double x)
+_Float128 __fabsl(_Float128 x)
 {
 	u_int64_t hx;
 	GET_LDOUBLE_MSW64(hx,x);

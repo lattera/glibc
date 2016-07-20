@@ -67,24 +67,24 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double bp[] = {
+static const _Float128 bp[] = {
   1.0L,
   1.5L,
 };
 
 /* log_2(1.5) */
-static const long double dp_h[] = {
+static const _Float128 dp_h[] = {
   0.0,
   5.8496250072115607565592654282227158546448E-1L
 };
 
 /* Low part of log_2(1.5) */
-static const long double dp_l[] = {
+static const _Float128 dp_l[] = {
   0.0,
   1.0579781240112554492329533686862998106046E-16L
 };
 
-static const long double zero = 0.0L,
+static const _Float128 zero = 0.0L,
   one = 1.0L,
   two = 2.0L,
   two113 = 1.0384593717069655257060992658440192E34L,
@@ -95,7 +95,7 @@ static const long double zero = 0.0L,
    z = (x-1)/(x+1)
    1 <= x <= 1.25
    Peak relative error 2.3e-37 */
-static const long double LN[] =
+static const _Float128 LN[] =
 {
  -3.0779177200290054398792536829702930623200E1L,
   6.5135778082209159921251824580292116201640E1L,
@@ -103,7 +103,7 @@ static const long double LN[] =
   1.2510208195629420304615674658258363295208E1L,
  -9.9266909031921425609179910128531667336670E-1L
 };
-static const long double LD[] =
+static const _Float128 LD[] =
 {
  -5.129862866715009066465422805058933131960E1L,
   1.452015077564081884387441590064272782044E2L,
@@ -116,7 +116,7 @@ static const long double LD[] =
 /* exp(x) = 1 + x - x / (1 - 2 / (x - x^2 R(x^2)))
    0 <= x <= 0.5
    Peak relative error 5.7e-38  */
-static const long double PN[] =
+static const _Float128 PN[] =
 {
   5.081801691915377692446852383385968225675E8L,
   9.360895299872484512023336636427675327355E6L,
@@ -124,7 +124,7 @@ static const long double PN[] =
   5.201006511142748908655720086041570288182E1L,
   9.088368420359444263703202925095675982530E-3L,
 };
-static const long double PD[] =
+static const _Float128 PD[] =
 {
   3.049081015149226615468111430031590411682E9L,
   1.069833887183886839966085436512368982758E8L,
@@ -133,7 +133,7 @@ static const long double PD[] =
   /* 1.0E0 */
 };
 
-static const long double
+static const _Float128
   /* ln 2 */
   lg2 = 6.9314718055994530941723212145817656807550E-1L,
   lg2_h = 6.9314718055994528622676398299518041312695E-1L,
@@ -144,12 +144,12 @@ static const long double
   cp_h = 9.6179669392597555432899980587535537779331E-1L,
   cp_l = 5.0577616648125906047157785230014751039424E-17L;
 
-long double
-__ieee754_powl (long double x, long double y)
+_Float128
+__ieee754_powl (_Float128 x, _Float128 y)
 {
-  long double z, ax, z_h, z_l, p_h, p_l;
-  long double y1, t1, t2, r, s, sgn, t, u, v, w;
-  long double s2, s_h, s_l, t_h, t_l, ay;
+  _Float128 z, ax, z_h, z_l, p_h, p_l;
+  _Float128 y1, t1, t2, r, s, sgn, t, u, v, w;
+  _Float128 s2, s_h, s_l, t_h, t_l, ay;
   int32_t i, j, k, yisint, n;
   u_int32_t ix, iy;
   int32_t hx, hy;
@@ -363,7 +363,7 @@ __ieee754_powl (long double x, long double y)
   z_h = cp_h * p_h;		/* cp_h+cp_l = 2/(3*log2) */
   z_l = cp_l * p_h + p_l * cp + dp_l[k];
   /* log2(ax) = (s+..)*2/(3*log2) = n + dp_h + z_h + z_l */
-  t = (long double) n;
+  t = (_Float128) n;
   t1 = (((z_h + z_l) + dp_h[k]) + t);
   o.value = t1;
   o.parts32.w3 = 0;
@@ -437,7 +437,7 @@ __ieee754_powl (long double x, long double y)
   if ((j >> 16) <= 0)
     {
       z = __scalbnl (z, n);	/* subnormal output */
-      long double force_underflow = z * z;
+      _Float128 force_underflow = z * z;
       math_force_eval (force_underflow);
     }
   else

@@ -48,9 +48,9 @@
 #include <math.h>
 #include <math_private.h>
 
-long double __cosl(long double x)
+_Float128 __cosl(_Float128 x)
 {
-	long double y[2],z=0.0L;
+	_Float128 y[2],z=0.0L;
 	int64_t n, ix;
 
     /* High word of x. */

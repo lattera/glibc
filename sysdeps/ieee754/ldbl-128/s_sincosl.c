@@ -24,7 +24,7 @@
 #include <math_private.h>
 
 void
-__sincosl (long double x, long double *sinx, long double *cosx)
+__sincosl (_Float128 x, _Float128 *sinx, _Float128 *cosx)
 {
   int64_t ix;
 
@@ -45,7 +45,7 @@ __sincosl (long double x, long double *sinx, long double *cosx)
   else
     {
       /* Argument reduction needed.  */
-      long double y[2];
+      _Float128 y[2];
       int n;
 
       n = __ieee754_rem_pio2l (x, y);

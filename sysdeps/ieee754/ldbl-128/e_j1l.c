@@ -101,16 +101,16 @@
 #include <float.h>
 
 /* 1 / sqrt(pi) */
-static const long double ONEOSQPI = 5.6418958354775628694807945156077258584405E-1L;
+static const _Float128 ONEOSQPI = 5.6418958354775628694807945156077258584405E-1L;
 /* 2 / pi */
-static const long double TWOOPI = 6.3661977236758134307553505349005744813784E-1L;
-static const long double zero = 0.0L;
+static const _Float128 TWOOPI = 6.3661977236758134307553505349005744813784E-1L;
+static const _Float128 zero = 0.0L;
 
 /* J1(x) = .5x + x x^2 R(x^2)
    Peak relative error 1.9e-35
    0 <= x <= 2  */
 #define NJ0_2N 6
-static const long double J0_2N[NJ0_2N + 1] = {
+static const _Float128 J0_2N[NJ0_2N + 1] = {
  -5.943799577386942855938508697619735179660E16L,
   1.812087021305009192259946997014044074711E15L,
  -2.761698314264509665075127515729146460895E13L,
@@ -120,7 +120,7 @@ static const long double J0_2N[NJ0_2N + 1] = {
  -1.559552840946694171346552770008812083969E3L
 };
 #define NJ0_2D 6
-static const long double J0_2D[NJ0_2D + 1] = {
+static const _Float128 J0_2D[NJ0_2D + 1] = {
   9.510079323819108569501613916191477479397E17L,
   1.063193817503280529676423936545854693915E16L,
   5.934143516050192600795972192791775226920E13L,
@@ -135,7 +135,7 @@ static const long double J0_2D[NJ0_2D + 1] = {
    0 <= 1/x <= .0625
    Peak relative error 3.6e-36  */
 #define NP16_IN 9
-static const long double P16_IN[NP16_IN + 1] = {
+static const _Float128 P16_IN[NP16_IN + 1] = {
   5.143674369359646114999545149085139822905E-16L,
   4.836645664124562546056389268546233577376E-13L,
   1.730945562285804805325011561498453013673E-10L,
@@ -148,7 +148,7 @@ static const long double P16_IN[NP16_IN + 1] = {
   3.032580002220628812728954785118117124520E-1L,
 };
 #define NP16_ID 9
-static const long double P16_ID[NP16_ID + 1] = {
+static const _Float128 P16_ID[NP16_ID + 1] = {
   4.389268795186898018132945193912677177553E-15L,
   4.132671824807454334388868363256830961655E-12L,
   1.482133328179508835835963635130894413136E-9L,
@@ -166,7 +166,7 @@ static const long double P16_ID[NP16_ID + 1] = {
     0.0625 <= 1/x <= 0.125
     Peak relative error 1.9e-36  */
 #define NP8_16N 11
-static const long double P8_16N[NP8_16N + 1] = {
+static const _Float128 P8_16N[NP8_16N + 1] = {
   2.984612480763362345647303274082071598135E-16L,
   1.923651877544126103941232173085475682334E-13L,
   4.881258879388869396043760693256024307743E-11L,
@@ -181,7 +181,7 @@ static const long double P8_16N[NP8_16N + 1] = {
   2.991314703282528370270179989044994319374E-2L,
 };
 #define NP8_16D 10
-static const long double P8_16D[NP8_16D + 1] = {
+static const _Float128 P8_16D[NP8_16D + 1] = {
   2.546869316918069202079580939942463010937E-15L,
   1.644650111942455804019788382157745229955E-12L,
   4.185430770291694079925607420808011147173E-10L,
@@ -200,7 +200,7 @@ static const long double P8_16D[NP8_16D + 1] = {
   0.125 <= 1/x <= 0.1875
   Peak relative error 1.3e-36  */
 #define NP5_8N 10
-static const long double P5_8N[NP5_8N + 1] = {
+static const _Float128 P5_8N[NP5_8N + 1] = {
   2.837678373978003452653763806968237227234E-12L,
   9.726641165590364928442128579282742354806E-10L,
   1.284408003604131382028112171490633956539E-7L,
@@ -214,7 +214,7 @@ static const long double P5_8N[NP5_8N + 1] = {
   5.465927698800862172307352821870223855365E-1L
 };
 #define NP5_8D 10
-static const long double P5_8D[NP5_8D + 1] = {
+static const _Float128 P5_8D[NP5_8D + 1] = {
   2.421485545794616609951168511612060482715E-11L,
   8.329862750896452929030058039752327232310E-9L,
   1.106137992233383429630592081375289010720E-6L,
@@ -233,7 +233,7 @@ static const long double P5_8D[NP5_8D + 1] = {
    Peak relative error 1.4e-36
    0.1875 <= 1/x <= 0.25  */
 #define NP4_5N 10
-static const long double P4_5N[NP4_5N + 1] = {
+static const _Float128 P4_5N[NP4_5N + 1] = {
   1.846029078268368685834261260420933914621E-10L,
   3.916295939611376119377869680335444207768E-8L,
   3.122158792018920627984597530935323997312E-6L,
@@ -247,7 +247,7 @@ static const long double P4_5N[NP4_5N + 1] = {
   1.804473805689725610052078464951722064757E-2L,
 };
 #define NP4_5D 9
-static const long double P4_5D[NP4_5D + 1] = {
+static const _Float128 P4_5D[NP4_5D + 1] = {
   1.575278146806816970152174364308980863569E-9L,
   3.361289173657099516191331123405675054321E-7L,
   2.704692281550877810424745289838790693708E-5L,
@@ -265,7 +265,7 @@ static const long double P4_5D[NP4_5D + 1] = {
    Peak relative error 3.0e-36
    0.25 <= 1/x <= 0.3125  */
 #define NP3r2_4N 9
-static const long double P3r2_4N[NP3r2_4N + 1] = {
+static const _Float128 P3r2_4N[NP3r2_4N + 1] = {
   8.240803130988044478595580300846665863782E-8L,
   1.179418958381961224222969866406483744580E-5L,
   6.179787320956386624336959112503824397755E-4L,
@@ -278,7 +278,7 @@ static const long double P3r2_4N[NP3r2_4N + 1] = {
   7.299530852495776936690976966995187714739E-1L,
 };
 #define NP3r2_4D 9
-static const long double P3r2_4D[NP3r2_4D + 1] = {
+static const _Float128 P3r2_4D[NP3r2_4D + 1] = {
   7.032152009675729604487575753279187576521E-7L,
   1.015090352324577615777511269928856742848E-4L,
   5.394262184808448484302067955186308730620E-3L,
@@ -296,7 +296,7 @@ static const long double P3r2_4D[NP3r2_4D + 1] = {
    Peak relative error 1.0e-35
    0.3125 <= 1/x <= 0.375  */
 #define NP2r7_3r2N 9
-static const long double P2r7_3r2N[NP2r7_3r2N + 1] = {
+static const _Float128 P2r7_3r2N[NP2r7_3r2N + 1] = {
   4.599033469240421554219816935160627085991E-7L,
   4.665724440345003914596647144630893997284E-5L,
   1.684348845667764271596142716944374892756E-3L,
@@ -309,7 +309,7 @@ static const long double P2r7_3r2N[NP2r7_3r2N + 1] = {
   1.316470424456061252962568223251247207325E-2L,
 };
 #define NP2r7_3r2D 8
-static const long double P2r7_3r2D[NP2r7_3r2D + 1] = {
+static const _Float128 P2r7_3r2D[NP2r7_3r2D + 1] = {
   3.924508608545520758883457108453520099610E-6L,
   4.029707889408829273226495756222078039823E-4L,
   1.484629715787703260797886463307469600219E-2L,
@@ -326,7 +326,7 @@ static const long double P2r7_3r2D[NP2r7_3r2D + 1] = {
    Peak relative error 1.7e-36
    0.3125 <= 1/x <= 0.4375  */
 #define NP2r3_2r7N 9
-static const long double P2r3_2r7N[NP2r3_2r7N + 1] = {
+static const _Float128 P2r3_2r7N[NP2r3_2r7N + 1] = {
   3.916766777108274628543759603786857387402E-6L,
   3.212176636756546217390661984304645137013E-4L,
   9.255768488524816445220126081207248947118E-3L,
@@ -339,7 +339,7 @@ static const long double P2r3_2r7N[NP2r3_2r7N + 1] = {
   1.109902737860249670981355149101343427885E-2L,
 };
 #define NP2r3_2r7D 8
-static const long double P2r3_2r7D[NP2r3_2r7D + 1] = {
+static const _Float128 P2r3_2r7D[NP2r3_2r7D + 1] = {
   3.342307880794065640312646341190547184461E-5L,
   2.782182891138893201544978009012096558265E-3L,
   8.221304931614200702142049236141249929207E-2L,
@@ -356,7 +356,7 @@ static const long double P2r3_2r7D[NP2r3_2r7D + 1] = {
    Peak relative error 1.7e-35
    0.4375 <= 1/x <= 0.5  */
 #define NP2_2r3N 8
-static const long double P2_2r3N[NP2_2r3N + 1] = {
+static const _Float128 P2_2r3N[NP2_2r3N + 1] = {
   3.397930802851248553545191160608731940751E-4L,
   2.104020902735482418784312825637833698217E-2L,
   4.442291771608095963935342749477836181939E-1L,
@@ -368,7 +368,7 @@ static const long double P2_2r3N[NP2_2r3N + 1] = {
   9.455702270242780642835086549285560316461E-1L,
 };
 #define NP2_2r3D 8
-static const long double P2_2r3D[NP2_2r3D + 1] = {
+static const _Float128 P2_2r3D[NP2_2r3D + 1] = {
   2.899568897241432883079888249845707400614E-3L,
   1.831107138190848460767699919531132426356E-1L,
   3.999350044057883839080258832758908825165E0L,
@@ -386,7 +386,7 @@ static const long double P2_2r3D[NP2_2r3D + 1] = {
    Peak relative error 8.0e-36
    0 <= 1/x <= .0625  */
 #define NQ16_IN 10
-static const long double Q16_IN[NQ16_IN + 1] = {
+static const _Float128 Q16_IN[NQ16_IN + 1] = {
   -3.917420835712508001321875734030357393421E-18L,
   -4.440311387483014485304387406538069930457E-15L,
   -1.951635424076926487780929645954007139616E-12L,
@@ -400,7 +400,7 @@ static const long double Q16_IN[NQ16_IN + 1] = {
   -1.922298704033332356899546792898156493887E-2L,
 };
 #define NQ16_ID 9
-static const long double Q16_ID[NQ16_ID + 1] = {
+static const _Float128 Q16_ID[NQ16_ID + 1] = {
   3.820418034066293517479619763498400162314E-17L,
   4.340702810799239909648911373329149354911E-14L,
   1.914985356383416140706179933075303538524E-11L,
@@ -419,7 +419,7 @@ static const long double Q16_ID[NQ16_ID + 1] = {
    Peak relative error 1.9e-36
    0.0625 <= 1/x <= 0.125  */
 #define NQ8_16N 11
-static const long double Q8_16N[NQ8_16N + 1] = {
+static const _Float128 Q8_16N[NQ8_16N + 1] = {
   -2.028630366670228670781362543615221542291E-17L,
   -1.519634620380959966438130374006858864624E-14L,
   -4.540596528116104986388796594639405114524E-12L,
@@ -434,7 +434,7 @@ static const long double Q8_16N[NQ8_16N + 1] = {
   -1.365364204556573800719985118029601401323E-1L,
 };
 #define NQ8_16D 11
-static const long double Q8_16D[NQ8_16D + 1] = {
+static const _Float128 Q8_16D[NQ8_16D + 1] = {
   1.978397614733632533581207058069628242280E-16L,
   1.487361156806202736877009608336766720560E-13L,
   4.468041406888412086042576067133365913456E-11L,
@@ -455,7 +455,7 @@ static const long double Q8_16D[NQ8_16D + 1] = {
    Peak relative error 1.5e-35
    0.125 <= 1/x <= 0.1875  */
 #define NQ5_8N 10
-static const long double Q5_8N[NQ5_8N + 1] = {
+static const _Float128 Q5_8N[NQ5_8N + 1] = {
   -3.656082407740970534915918390488336879763E-13L,
   -1.344660308497244804752334556734121771023E-10L,
   -1.909765035234071738548629788698150760791E-8L,
@@ -469,7 +469,7 @@ static const long double Q5_8N[NQ5_8N + 1] = {
   -1.549000892545288676809660828213589804884E-1L,
 };
 #define NQ5_8D 10
-static const long double Q5_8D[NQ5_8D + 1] = {
+static const _Float128 Q5_8D[NQ5_8D + 1] = {
   3.565550843359501079050699598913828460036E-12L,
   1.321016015556560621591847454285330528045E-9L,
   1.897542728662346479999969679234270605975E-7L,
@@ -489,7 +489,7 @@ static const long double Q5_8D[NQ5_8D + 1] = {
    Peak relative error 1.3e-35
    0.1875 <= 1/x <= 0.25  */
 #define NQ4_5N 10
-static const long double Q4_5N[NQ4_5N + 1] = {
+static const _Float128 Q4_5N[NQ4_5N + 1] = {
   -4.079513568708891749424783046520200903755E-11L,
   -9.326548104106791766891812583019664893311E-9L,
   -8.016795121318423066292906123815687003356E-7L,
@@ -503,7 +503,7 @@ static const long double Q4_5N[NQ4_5N + 1] = {
   -4.320429862021265463213168186061696944062E-3L,
 };
 #define NQ4_5D 9
-static const long double Q4_5D[NQ4_5D + 1] = {
+static const _Float128 Q4_5D[NQ4_5D + 1] = {
   3.978497042580921479003851216297330701056E-10L,
   9.203304163828145809278568906420772246666E-8L,
   8.059685467088175644915010485174545743798E-6L,
@@ -522,7 +522,7 @@ static const long double Q4_5D[NQ4_5D + 1] = {
    Peak relative error 2.1e-35
    0.25 <= 1/x <= 0.3125  */
 #define NQ3r2_4N 9
-static const long double Q3r2_4N[NQ3r2_4N + 1] = {
+static const _Float128 Q3r2_4N[NQ3r2_4N + 1] = {
   -1.087480809271383885936921889040388133627E-8L,
   -1.690067828697463740906962973479310170932E-6L,
   -9.608064416995105532790745641974762550982E-5L,
@@ -535,7 +535,7 @@ static const long double Q3r2_4N[NQ3r2_4N + 1] = {
   -1.812932453006641348145049323713469043328E-1L,
 };
 #define NQ3r2_4D 9
-static const long double Q3r2_4D[NQ3r2_4D + 1] = {
+static const _Float128 Q3r2_4D[NQ3r2_4D + 1] = {
   1.060552717496912381388763753841473407026E-7L,
   1.676928002024920520786883649102388708024E-5L,
   9.803481712245420839301400601140812255737E-4L,
@@ -554,7 +554,7 @@ static const long double Q3r2_4D[NQ3r2_4D + 1] = {
    Peak relative error 1.6e-36
    0.3125 <= 1/x <= 0.375  */
 #define NQ2r7_3r2N 9
-static const long double Q2r7_3r2N[NQ2r7_3r2N + 1] = {
+static const _Float128 Q2r7_3r2N[NQ2r7_3r2N + 1] = {
   -1.723405393982209853244278760171643219530E-7L,
   -2.090508758514655456365709712333460087442E-5L,
   -9.140104013370974823232873472192719263019E-4L,
@@ -567,7 +567,7 @@ static const long double Q2r7_3r2N[NQ2r7_3r2N + 1] = {
   -1.930796319299022954013840684651016077770E-1L,
 };
 #define NQ2r7_3r2D 9
-static const long double Q2r7_3r2D[NQ2r7_3r2D + 1] = {
+static const _Float128 Q2r7_3r2D[NQ2r7_3r2D + 1] = {
   1.680730662300831976234547482334347983474E-6L,
   2.084241442440551016475972218719621841120E-4L,
   9.445316642108367479043541702688736295579E-3L,
@@ -586,7 +586,7 @@ static const long double Q2r7_3r2D[NQ2r7_3r2D + 1] = {
    Peak relative error 9.5e-36
    0.375 <= 1/x <= 0.4375  */
 #define NQ2r3_2r7N 9
-static const long double Q2r3_2r7N[NQ2r3_2r7N + 1] = {
+static const _Float128 Q2r3_2r7N[NQ2r3_2r7N + 1] = {
   -8.603042076329122085722385914954878953775E-7L,
   -7.701746260451647874214968882605186675720E-5L,
   -2.407932004380727587382493696877569654271E-3L,
@@ -599,7 +599,7 @@ static const long double Q2r3_2r7N[NQ2r3_2r7N + 1] = {
   -1.890595651683552228232308756569450822905E-3L,
 };
 #define NQ2r3_2r7D 8
-static const long double Q2r3_2r7D[NQ2r3_2r7D + 1] = {
+static const _Float128 Q2r3_2r7D[NQ2r3_2r7D + 1] = {
   8.390017524798316921170710533381568175665E-6L,
   7.738148683730826286477254659973968763659E-4L,
   2.541480810958665794368759558791634341779E-2L,
@@ -617,7 +617,7 @@ static const long double Q2r3_2r7D[NQ2r3_2r7D + 1] = {
    Peak relative error 1.4e-36
    0.4375 <= 1/x <= 0.5  */
 #define NQ2_2r3N 9
-static const long double Q2_2r3N[NQ2_2r3N + 1] = {
+static const _Float128 Q2_2r3N[NQ2_2r3N + 1] = {
   -5.552507516089087822166822364590806076174E-6L,
   -4.135067659799500521040944087433752970297E-4L,
   -1.059928728869218962607068840646564457980E-2L,
@@ -630,7 +630,7 @@ static const long double Q2_2r3N[NQ2_2r3N + 1] = {
   -1.458550613639093752909985189067233504148E-3L,
 };
 #define NQ2_2r3D 8
-static const long double Q2_2r3D[NQ2_2r3D + 1] = {
+static const _Float128 Q2_2r3D[NQ2_2r3D + 1] = {
   5.415024336507980465169023996403597916115E-5L,
   4.179246497380453022046357404266022870788E-3L,
   1.136306384261959483095442402929502368598E-1L,
@@ -646,10 +646,10 @@ static const long double Q2_2r3D[NQ2_2r3D + 1] = {
 
 /* Evaluate P[n] x^n  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
-static long double
-neval (long double x, const long double *p, int n)
+static _Float128
+neval (_Float128 x, const _Float128 *p, int n)
 {
-  long double y;
+  _Float128 y;
 
   p += n;
   y = *p--;
@@ -664,10 +664,10 @@ neval (long double x, const long double *p, int n)
 
 /* Evaluate x^n+1  +  P[n] x^(n)  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
-static long double
-deval (long double x, const long double *p, int n)
+static _Float128
+deval (_Float128 x, const _Float128 *p, int n)
 {
-  long double y;
+  _Float128 y;
 
   p += n;
   y = x + *p--;
@@ -682,10 +682,10 @@ deval (long double x, const long double *p, int n)
 
 /* Bessel function of the first kind, order one.  */
 
-long double
-__ieee754_j1l (long double x)
+_Float128
+__ieee754_j1l (_Float128 x)
 {
-  long double xx, xinv, z, p, q, c, s, cc, ss;
+  _Float128 xx, xinv, z, p, q, c, s, cc, ss;
 
   if (! isfinite (x))
     {
@@ -699,7 +699,7 @@ __ieee754_j1l (long double x)
   xx = fabsl (x);
   if (xx <= 0x1p-58L)
     {
-      long double ret = x * 0.5L;
+      _Float128 ret = x * 0.5L;
       math_check_force_underflow (ret);
       if (ret == 0)
 	__set_errno (ERANGE);
@@ -815,7 +815,7 @@ strong_alias (__ieee754_j1l, __j1l_finite)
    Peak relative error 6.2e-38
    0 <= x <= 2   */
 #define NY0_2N 7
-static long double Y0_2N[NY0_2N + 1] = {
+static _Float128 Y0_2N[NY0_2N + 1] = {
   -6.804415404830253804408698161694720833249E19L,
   1.805450517967019908027153056150465849237E19L,
   -8.065747497063694098810419456383006737312E17L,
@@ -826,7 +826,7 @@ static long double Y0_2N[NY0_2N + 1] = {
   9.541172044989995856117187515882879304461E5L,
 };
 #define NY0_2D 7
-static long double Y0_2D[NY0_2D + 1] = {
+static _Float128 Y0_2D[NY0_2D + 1] = {
   3.470629591820267059538637461549677594549E20L,
   4.120796439009916326855848107545425217219E18L,
   2.477653371652018249749350657387030814542E16L,
@@ -841,10 +841,10 @@ static long double Y0_2D[NY0_2D + 1] = {
 
 /* Bessel function of the second kind, order one.  */
 
-long double
-__ieee754_y1l (long double x)
+_Float128
+__ieee754_y1l (_Float128 x)
 {
-  long double xx, xinv, z, p, q, c, s, cc, ss;
+  _Float128 xx, xinv, z, p, q, c, s, cc, ss;
 
   if (! isfinite (x))
     {

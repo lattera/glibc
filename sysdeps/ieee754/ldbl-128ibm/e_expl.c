@@ -65,6 +65,10 @@
 #include <fenv.h>
 #include <inttypes.h>
 #include <math_private.h>
+
+#define _Float128 long double
+#define L(x) x ## L
+
 #include <sysdeps/ieee754/ldbl-128/t_expl.h>
 
 static const long double C[] = {

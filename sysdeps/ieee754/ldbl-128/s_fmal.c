@@ -28,8 +28,8 @@
    double rounding.  See a paper by Boldo and Melquiond:
    http://www.lri.fr/~melquion/doc/08-tc.pdf  */
 
-long double
-__fmal (long double x, long double y, long double z)
+_Float128
+__fmal (_Float128 x, _Float128 y, _Float128 z)
 {
   union ieee854_long_double u, v, w;
   int adjust = 0;
@@ -75,7 +75,7 @@ __fmal (long double x, long double y, long double z)
 	  < IEEE854_LONG_DOUBLE_BIAS - LDBL_MANT_DIG - 2)
 	{
 	  int neg = u.ieee.negative ^ v.ieee.negative;
-	  long double tiny = neg ? -0x1p-16494L : 0x1p-16494L;
+	  _Float128 tiny = neg ? -0x1p-16494L : 0x1p-16494L;
 	  if (w.ieee.exponent >= 3)
 	    return tiny + z;
 	  /* Scaling up, adding TINY and scaling down produces the
@@ -94,7 +94,7 @@ __fmal (long double x, long double y, long double z)
 		     && w.ieee.mantissa1 == 0
 		     && w.ieee.mantissa0 == 0)))
 	    {
-	      long double force_underflow = x * y;
+	      _Float128 force_underflow = x * y;
 	      math_force_eval (force_underflow);
 	    }
 	  return v.d * 0x1p-114L;
@@ -190,22 +190,22 @@ __fmal (long double x, long double y, long double z)
 
   /* Multiplication m1 + m2 = x * y using Dekker's algorithm.  */
 #define C ((1LL << (LDBL_MANT_DIG + 1) / 2) + 1)
-  long double x1 = x * C;
-  long double y1 = y * C;
-  long double m1 = x * y;
+  _Float128 x1 = x * C;
+  _Float128 y1 = y * C;
+  _Float128 m1 = x * y;
   x1 = (x - x1) + x1;
   y1 = (y - y1) + y1;
-  long double x2 = x - x1;
-  long double y2 = y - y1;
-  long double m2 = (((x1 * y1 - m1) + x1 * y2) + x2 * y1) + x2 * y2;
+  _Float128 x2 = x - x1;
+  _Float128 y2 = y - y1;
+  _Float128 m2 = (((x1 * y1 - m1) + x1 * y2) + x2 * y1) + x2 * y2;
 
   /* Addition a1 + a2 = z + m1 using Knuth's algorithm.  */
-  long double a1 = z + m1;
-  long double t1 = a1 - z;
-  long double t2 = a1 - t1;
+  _Float128 a1 = z + m1;
+  _Float128 t1 = a1 - z;
+  _Float128 t2 = a1 - t1;
   t1 = m1 - t1;
   t2 = z - t2;
-  long double a2 = t1 + t2;
+  _Float128 a2 = t1 + t2;
   /* Ensure the arithmetic is not scheduled after feclearexcept call.  */
   math_force_eval (m2);
   math_force_eval (a2);

@@ -63,7 +63,7 @@
 /* log(1+x) = x - .5 x^2 + x^3 l(x)
    -.0078125 <= x <= +.0078125
    peak relative error 1.2e-37 */
-static const long double
+static const _Float128
 l3 =   3.333333333333333333333333333333336096926E-1L,
 l4 =  -2.499999999999999999999999999486853077002E-1L,
 l5 =   1.999999999999999999999999998515277861905E-1L,
@@ -81,7 +81,7 @@ l15 =  6.668057591071739754844678883223432347481E-2L;
 /* Lookup table of ln(t) - (t-1)
     t = 0.5 + (k+26)/128)
     k = 0, ..., 91   */
-static const long double logtbl[92] = {
+static const _Float128 logtbl[92] = {
 -5.5345593589352099112142921677820359632418E-2L,
 -5.2108257402767124761784665198737642086148E-2L,
 -4.8991686870576856279407775480686721935120E-2L,
@@ -178,14 +178,14 @@ static const long double logtbl[92] = {
 };
 
 /* ln(2) = ln2a + ln2b with extended precision. */
-static const long double
+static const _Float128
   ln2a = 6.93145751953125e-1L,
   ln2b = 1.4286068203094172321214581765680755001344E-6L;
 
-long double
-__ieee754_logl(long double x)
+_Float128
+__ieee754_logl(_Float128 x)
 {
-  long double z, y, w;
+  _Float128 z, y, w;
   ieee854_long_double_shape_type u, t;
   unsigned int m;
   int k, e;

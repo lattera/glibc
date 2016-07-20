@@ -26,19 +26,19 @@
 #include <math_private.h>
 #include <fix-fp-int-convert-overflow.h>
 
-static const long double two112[2] =
+static const _Float128 two112[2] =
 {
   5.19229685853482762853049632922009600E+33L, /* 0x406F000000000000, 0 */
  -5.19229685853482762853049632922009600E+33L  /* 0xC06F000000000000, 0 */
 };
 
 long long int
-__llrintl (long double x)
+__llrintl (_Float128 x)
 {
   int32_t j0;
   u_int64_t i0,i1;
-  long double w;
-  long double t;
+  _Float128 w;
+  _Float128 t;
   long long int result;
   int sx;
 
@@ -52,7 +52,7 @@ __llrintl (long double x)
     {
 #if defined FE_INVALID || defined FE_INEXACT
       /* X < LLONG_MAX + 1 implied by J0 < 63.  */
-      if (x > (long double) LLONG_MAX)
+      if (x > (_Float128) LLONG_MAX)
 	{
 	  /* In the event of overflow we must raise the "invalid"
 	     exception, but not "inexact".  */
@@ -83,8 +83,8 @@ __llrintl (long double x)
 	 FE_INVALID must be raised and the return value is
 	 unspecified.  */
 #if defined FE_INVALID || defined FE_INEXACT
-      if (x < (long double) LLONG_MIN
-	  && x > (long double) LLONG_MIN - 1.0L)
+      if (x < (_Float128) LLONG_MIN
+	  && x > (_Float128) LLONG_MIN - 1.0L)
 	{
 	  /* If truncation produces LLONG_MIN, the cast will not raise
 	     the exception, but may raise "inexact".  */
@@ -92,7 +92,7 @@ __llrintl (long double x)
 	  feraiseexcept (t == LLONG_MIN ? FE_INEXACT : FE_INVALID);
 	  return LLONG_MIN;
 	}
-      else if (FIX_LDBL_LLONG_CONVERT_OVERFLOW && x != (long double) LLONG_MIN)
+      else if (FIX_LDBL_LLONG_CONVERT_OVERFLOW && x != (_Float128) LLONG_MIN)
 	{
 	  feraiseexcept (FE_INVALID);
 	  return sx == 0 ? LLONG_MAX : LLONG_MIN;

@@ -28,13 +28,13 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-static const long double
+static const _Float128
 two114 = 2.0769187434139310514121985316880384E+34L, /* 0x4071000000000000, 0 */
 twom114 = 4.8148248609680896326399448564623183E-35L, /* 0x3F8D000000000000, 0 */
 huge   = 1.0E+4900L,
 tiny   = 1.0E-4900L;
 
-long double __scalblnl (long double x, long int n)
+_Float128 __scalblnl (_Float128 x, long int n)
 {
 	int64_t k,hx,lx;
 	GET_LDOUBLE_WORDS64(hx,lx,x);

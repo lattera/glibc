@@ -23,11 +23,11 @@
 #include <math_private.h>
 
 
-static const long double zero = 0.0;
+static const _Float128 zero = 0.0;
 
 
-long double
-__remquol (long double x, long double y, int *quo)
+_Float128
+__remquol (_Float128 x, _Float128 y, int *quo)
 {
   int64_t hx,hy;
   u_int64_t sx,lx,ly,qs;
@@ -87,7 +87,7 @@ __remquol (long double x, long double y, int *quo)
     }
   else
     {
-      long double y_half = 0.5L * y;
+      _Float128 y_half = 0.5L * y;
       if (x > y_half)
 	{
 	  x -= y;

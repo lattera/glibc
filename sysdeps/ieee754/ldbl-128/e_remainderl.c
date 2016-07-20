@@ -24,15 +24,15 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double zero = 0.0L;
+static const _Float128 zero = 0.0L;
 
 
-long double
-__ieee754_remainderl(long double x, long double p)
+_Float128
+__ieee754_remainderl(_Float128 x, _Float128 p)
 {
 	int64_t hx,hp;
 	u_int64_t sx,lx,lp;
-	long double p_half;
+	_Float128 p_half;
 
 	GET_LDOUBLE_WORDS64(hx,lx,x);
 	GET_LDOUBLE_WORDS64(hp,lp,p);

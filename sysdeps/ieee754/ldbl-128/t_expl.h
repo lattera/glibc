@@ -29,7 +29,7 @@
    __expl_table[T_EXPL_ARGN+2*i] == i/S+s
    where absl(s) <= 2^-54 and absl(r) <= 2^-212.  */
 
-static const long double __expl_table [] = {
+static const _Float128 __expl_table [] = {
  -3.47656250000000000584188889839535373E-01L, /* bffd640000000000002b1b04213cf000 */
   6.90417668990715641167244540876988960E-32L, /* 3f97667c3fdb588a6ae1af8748357a17 */
  -3.43749999999999981853132895957607418E-01L, /* bffd5ffffffffffffac4ff5f4050b000 */

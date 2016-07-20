@@ -20,7 +20,7 @@
 #include <math_private.h>
 
 int
-__issignalingl (long double x)
+__issignalingl (_Float128 x)
 {
   u_int64_t hxi, lxi __attribute__ ((unused));
   GET_LDOUBLE_WORDS64 (hxi, lxi, x);

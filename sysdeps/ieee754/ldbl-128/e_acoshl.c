@@ -30,14 +30,14 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double
+static const _Float128
 one	= 1.0,
 ln2	= 0.6931471805599453094172321214581766L;
 
-long double
-__ieee754_acoshl(long double x)
+_Float128
+__ieee754_acoshl(_Float128 x)
 {
-	long double t;
+	_Float128 t;
 	u_int64_t lx;
 	int64_t hx;
 	GET_LDOUBLE_WORDS64(hx,lx,x);

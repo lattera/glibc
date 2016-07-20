@@ -26,7 +26,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-long double __copysignl(long double x, long double y)
+_Float128 __copysignl(_Float128 x, _Float128 y)
 {
 	u_int64_t hx,hy;
 	GET_LDOUBLE_MSW64(hx,x);

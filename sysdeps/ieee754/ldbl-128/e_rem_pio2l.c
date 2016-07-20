@@ -183,7 +183,7 @@ static const int32_t two_over_pi[] = {
 0x7b7b89, 0x483d38,
 };
 
-static const long double c[] = {
+static const _Float128 c[] = {
 /* 113 bits of pi/2 */
 #define PI_2_1 c[0]
  0x1.921fb54442d18469898cc51701b8p+0L,
@@ -193,9 +193,9 @@ static const long double c[] = {
  0x3.9a252049c1114cf98e804177d4c8p-116L,
 };
 
-int32_t __ieee754_rem_pio2l(long double x, long double *y)
+int32_t __ieee754_rem_pio2l(_Float128 x, _Float128 *y)
 {
-  long double z, w, t;
+  _Float128 z, w, t;
   double tx[8];
   int64_t exp, n, ix, hx;
   u_int64_t lx;
@@ -255,8 +255,8 @@ int32_t __ieee754_rem_pio2l(long double x, long double *y)
 
   /* The result is now stored in 3 double values, we need to convert it into
      two long double values.  */
-  t = (long double) tx [6] + (long double) tx [7];
-  w = (long double) tx [5];
+  t = (_Float128) tx [6] + (_Float128) tx [7];
+  w = (_Float128) tx [5];
 
   if (hx >= 0)
     {

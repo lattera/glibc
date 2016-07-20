@@ -25,7 +25,7 @@
 /* Coefficients B_2k / 2k(2k-1) of x^-(2k-1) inside exp in Stirling's
    approximation to gamma function.  */
 
-static const long double gamma_coeff[] =
+static const _Float128 gamma_coeff[] =
   {
     0x1.5555555555555555555555555555p-4L,
     -0xb.60b60b60b60b60b60b60b60b60b8p-12L,
@@ -49,8 +49,8 @@ static const long double gamma_coeff[] =
    2^(*EXP2_ADJ), where R is the return value and *EXP2_ADJ is set to
    avoid overflow or underflow in intermediate calculations.  */
 
-static long double
-gammal_positive (long double x, int *exp2_adj)
+static _Float128
+gammal_positive (_Float128 x, int *exp2_adj)
 {
   int local_signgam;
   if (x < 0.5L)
@@ -67,24 +67,24 @@ gammal_positive (long double x, int *exp2_adj)
     {
       /* Adjust into the range for using exp (lgamma).  */
       *exp2_adj = 0;
-      long double n = __ceill (x - 1.5L);
-      long double x_adj = x - n;
-      long double eps;
-      long double prod = __gamma_productl (x_adj, 0, n, &eps);
+      _Float128 n = __ceill (x - 1.5L);
+      _Float128 x_adj = x - n;
+      _Float128 eps;
+      _Float128 prod = __gamma_productl (x_adj, 0, n, &eps);
       return (__ieee754_expl (__ieee754_lgammal_r (x_adj, &local_signgam))
 	      * prod * (1.0L + eps));
     }
   else
     {
-      long double eps = 0;
-      long double x_eps = 0;
-      long double x_adj = x;
-      long double prod = 1;
+      _Float128 eps = 0;
+      _Float128 x_eps = 0;
+      _Float128 x_adj = x;
+      _Float128 prod = 1;
       if (x < 24.0L)
 	{
 	  /* Adjust into the range for applying Stirling's
 	     approximation.  */
-	  long double n = __ceill (24.0L - x);
+	  _Float128 n = __ceill (24.0L - x);
 	  x_adj = x + n;
 	  x_eps = (x - (x_adj - n));
 	  prod = __gamma_productl (x_adj - n, x_eps, n, &eps);
@@ -93,25 +93,25 @@ gammal_positive (long double x, int *exp2_adj)
 	 Compute gamma (X_ADJ + X_EPS) using Stirling's approximation,
 	 starting by computing pow (X_ADJ, X_ADJ) with a power of 2
 	 factored out.  */
-      long double exp_adj = -eps;
-      long double x_adj_int = __roundl (x_adj);
-      long double x_adj_frac = x_adj - x_adj_int;
+      _Float128 exp_adj = -eps;
+      _Float128 x_adj_int = __roundl (x_adj);
+      _Float128 x_adj_frac = x_adj - x_adj_int;
       int x_adj_log2;
-      long double x_adj_mant = __frexpl (x_adj, &x_adj_log2);
+      _Float128 x_adj_mant = __frexpl (x_adj, &x_adj_log2);
       if (x_adj_mant < M_SQRT1_2l)
 	{
 	  x_adj_log2--;
 	  x_adj_mant *= 2.0L;
 	}
       *exp2_adj = x_adj_log2 * (int) x_adj_int;
-      long double ret = (__ieee754_powl (x_adj_mant, x_adj)
+      _Float128 ret = (__ieee754_powl (x_adj_mant, x_adj)
 			 * __ieee754_exp2l (x_adj_log2 * x_adj_frac)
 			 * __ieee754_expl (-x_adj)
 			 * __ieee754_sqrtl (2 * M_PIl / x_adj)
 			 / prod);
       exp_adj += x_eps * __ieee754_logl (x_adj);
-      long double bsum = gamma_coeff[NCOEFF - 1];
-      long double x_adj2 = x_adj * x_adj;
+      _Float128 bsum = gamma_coeff[NCOEFF - 1];
+      _Float128 x_adj2 = x_adj * x_adj;
       for (size_t i = 1; i <= NCOEFF - 1; i++)
 	bsum = bsum / x_adj2 + gamma_coeff[NCOEFF - 1 - i];
       exp_adj += bsum / x_adj;
@@ -119,12 +119,12 @@ gammal_positive (long double x, int *exp2_adj)
     }
 }
 
-long double
-__ieee754_gammal_r (long double x, int *signgamp)
+_Float128
+__ieee754_gammal_r (_Float128 x, int *signgamp)
 {
   int64_t hx;
   u_int64_t lx;
-  long double ret;
+  _Float128 ret;
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);
 
@@ -177,17 +177,17 @@ __ieee754_gammal_r (long double x, int *signgamp)
 	}
       else
 	{
-	  long double tx = __truncl (x);
+	  _Float128 tx = __truncl (x);
 	  *signgamp = (tx == 2.0L * __truncl (tx / 2.0L)) ? -1 : 1;
 	  if (x <= -1775.0L)
 	    /* Underflow.  */
 	    ret = LDBL_MIN * LDBL_MIN;
 	  else
 	    {
-	      long double frac = tx - x;
+	      _Float128 frac = tx - x;
 	      if (frac > 0.5L)
 		frac = 1.0L - frac;
-	      long double sinpix = (frac <= 0.25L
+	      _Float128 sinpix = (frac <= 0.25L
 				    ? __sinl (M_PIl * frac)
 				    : __cosl (M_PIl * (0.5L - frac)));
 	      int exp2_adj;

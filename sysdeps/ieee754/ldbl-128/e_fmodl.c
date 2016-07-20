@@ -21,10 +21,10 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double one = 1.0, Zero[] = {0.0, -0.0,};
+static const _Float128 one = 1.0, Zero[] = {0.0, -0.0,};
 
-long double
-__ieee754_fmodl (long double x, long double y)
+_Float128
+__ieee754_fmodl (_Float128 x, _Float128 y)
 {
 	int64_t n,hx,hy,hz,ix,iy,sx,i;
 	u_int64_t lx,ly,lz;

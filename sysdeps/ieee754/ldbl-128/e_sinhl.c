@@ -57,13 +57,13 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double one = 1.0, shuge = 1.0e4931L,
+static const _Float128 one = 1.0, shuge = 1.0e4931L,
 ovf_thresh = 1.1357216553474703894801348310092223067821E4L;
 
-long double
-__ieee754_sinhl (long double x)
+_Float128
+__ieee754_sinhl (_Float128 x)
 {
-  long double t, w, h;
+  _Float128 t, w, h;
   u_int32_t jx, ix;
   ieee854_long_double_shape_type u;
 

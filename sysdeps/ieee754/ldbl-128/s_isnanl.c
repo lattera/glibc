@@ -25,7 +25,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-int __isnanl(long double x)
+int __isnanl(_Float128 x)
 {
 	int64_t hx,lx;
 	GET_LDOUBLE_WORDS64(hx,lx,x);

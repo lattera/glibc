@@ -20,7 +20,7 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double lgamma_zeros[][2] =
+static const _Float128 lgamma_zeros[][2] =
   {
     { -0x2.74ff92c01f0d82abec9f315f1a08p+0L, 0xe.d3ccb7fb2658634a2b9f6b2ba81p-116L },
     { -0x2.bf6821437b20197995a4b4641eaep+0L, -0xb.f4b00b4829f961e428533e6ad048p-116L },
@@ -120,14 +120,14 @@ static const long double lgamma_zeros[][2] =
     { -0x3.2p+4L, 0x3.766dedc259af040be140a68a6c04p-216L },
   };
 
-static const long double e_hi = 0x2.b7e151628aed2a6abf7158809cf4p+0L;
-static const long double e_lo = 0xf.3c762e7160f38b4da56a784d9048p-116L;
+static const _Float128 e_hi = 0x2.b7e151628aed2a6abf7158809cf4p+0L;
+static const _Float128 e_lo = 0xf.3c762e7160f38b4da56a784d9048p-116L;
 
 
 /* Coefficients B_2k / 2k(2k-1) of x^-(2k-1) in Stirling's
    approximation to lgamma function.  */
 
-static const long double lgamma_coeff[] =
+static const _Float128 lgamma_coeff[] =
   {
     0x1.5555555555555555555555555555p-4L,
     -0xb.60b60b60b60b60b60b60b60b60b8p-12L,
@@ -166,7 +166,7 @@ static const long double lgamma_coeff[] =
    polynomial is expressed in terms of x-xm, where xm is the midpoint
    of the interval for which the polynomial applies.  */
 
-static const long double poly_coeff[] =
+static const _Float128 poly_coeff[] =
   {
     /* Interval [-2.125, -2] (polynomial degree 23).  */
     -0x1.0b71c5c54d42eb6c17f30b7aa8f5p+0L,
@@ -412,8 +412,8 @@ static const size_t poly_end[] =
 
 /* Compute sin (pi * X) for -0.25 <= X <= 0.5.  */
 
-static long double
-lg_sinpi (long double x)
+static _Float128
+lg_sinpi (_Float128 x)
 {
   if (x <= 0.25L)
     return __sinl (M_PIl * x);
@@ -423,8 +423,8 @@ lg_sinpi (long double x)
 
 /* Compute cos (pi * X) for -0.25 <= X <= 0.5.  */
 
-static long double
-lg_cospi (long double x)
+static _Float128
+lg_cospi (_Float128 x)
 {
   if (x <= 0.25L)
     return __cosl (M_PIl * x);
@@ -434,8 +434,8 @@ lg_cospi (long double x)
 
 /* Compute cot (pi * X) for -0.25 <= X <= 0.5.  */
 
-static long double
-lg_cotpi (long double x)
+static _Float128
+lg_cotpi (_Float128 x)
 {
   return lg_cospi (x) / lg_sinpi (x);
 }
@@ -443,34 +443,34 @@ lg_cotpi (long double x)
 /* Compute lgamma of a negative argument -50 < X < -2, setting
    *SIGNGAMP accordingly.  */
 
-long double
-__lgamma_negl (long double x, int *signgamp)
+_Float128
+__lgamma_negl (_Float128 x, int *signgamp)
 {
   /* Determine the half-integer region X lies in, handle exact
      integers and determine the sign of the result.  */
   int i = __floorl (-2 * x);
   if ((i & 1) == 0 && i == -2 * x)
     return 1.0L / 0.0L;
-  long double xn = ((i & 1) == 0 ? -i / 2 : (-i - 1) / 2);
+  _Float128 xn = ((i & 1) == 0 ? -i / 2 : (-i - 1) / 2);
   i -= 4;
   *signgamp = ((i & 2) == 0 ? -1 : 1);
 
   SET_RESTORE_ROUNDL (FE_TONEAREST);
 
   /* Expand around the zero X0 = X0_HI + X0_LO.  */
-  long double x0_hi = lgamma_zeros[i][0], x0_lo = lgamma_zeros[i][1];
-  long double xdiff = x - x0_hi - x0_lo;
+  _Float128 x0_hi = lgamma_zeros[i][0], x0_lo = lgamma_zeros[i][1];
+  _Float128 xdiff = x - x0_hi - x0_lo;
 
   /* For arguments in the range -3 to -2, use polynomial
      approximations to an adjusted version of the gamma function.  */
   if (i < 2)
     {
       int j = __floorl (-8 * x) - 16;
-      long double xm = (-33 - 2 * j) * 0.0625L;
-      long double x_adj = x - xm;
+      _Float128 xm = (-33 - 2 * j) * 0.0625L;
+      _Float128 x_adj = x - xm;
       size_t deg = poly_deg[j];
       size_t end = poly_end[j];
-      long double g = poly_coeff[end];
+      _Float128 g = poly_coeff[end];
       for (size_t j = 1; j <= deg; j++)
 	g = g * x_adj + poly_coeff[end - j];
       return __log1pl (g * xdiff / (x - xn));
@@ -478,8 +478,8 @@ __lgamma_negl (long double x, int *signgamp)
 
   /* The result we want is log (sinpi (X0) / sinpi (X))
      + log (gamma (1 - X0) / gamma (1 - X)).  */
-  long double x_idiff = fabsl (xn - x), x0_idiff = fabsl (xn - x0_hi - x0_lo);
-  long double log_sinpi_ratio;
+  _Float128 x_idiff = fabsl (xn - x), x0_idiff = fabsl (xn - x0_hi - x0_lo);
+  _Float128 log_sinpi_ratio;
   if (x0_idiff < x_idiff * 0.5L)
     /* Use log not log1p to avoid inaccuracy from log1p of arguments
        close to -1.  */
@@ -490,29 +490,29 @@ __lgamma_negl (long double x, int *signgamp)
       /* Use log1p not log to avoid inaccuracy from log of arguments
 	 close to 1.  X0DIFF2 has positive sign if X0 is further from
 	 XN than X is from XN, negative sign otherwise.  */
-      long double x0diff2 = ((i & 1) == 0 ? xdiff : -xdiff) * 0.5L;
-      long double sx0d2 = lg_sinpi (x0diff2);
-      long double cx0d2 = lg_cospi (x0diff2);
+      _Float128 x0diff2 = ((i & 1) == 0 ? xdiff : -xdiff) * 0.5L;
+      _Float128 sx0d2 = lg_sinpi (x0diff2);
+      _Float128 cx0d2 = lg_cospi (x0diff2);
       log_sinpi_ratio = __log1pl (2 * sx0d2
 				  * (-sx0d2 + cx0d2 * lg_cotpi (x_idiff)));
     }
 
-  long double log_gamma_ratio;
-  long double y0 = 1 - x0_hi;
-  long double y0_eps = -x0_hi + (1 - y0) - x0_lo;
-  long double y = 1 - x;
-  long double y_eps = -x + (1 - y);
+  _Float128 log_gamma_ratio;
+  _Float128 y0 = 1 - x0_hi;
+  _Float128 y0_eps = -x0_hi + (1 - y0) - x0_lo;
+  _Float128 y = 1 - x;
+  _Float128 y_eps = -x + (1 - y);
   /* We now wish to compute LOG_GAMMA_RATIO
      = log (gamma (Y0 + Y0_EPS) / gamma (Y + Y_EPS)).  XDIFF
      accurately approximates the difference Y0 + Y0_EPS - Y -
      Y_EPS.  Use Stirling's approximation.  First, we may need to
      adjust into the range where Stirling's approximation is
      sufficiently accurate.  */
-  long double log_gamma_adj = 0;
+  _Float128 log_gamma_adj = 0;
   if (i < 20)
     {
       int n_up = (21 - i) / 2;
-      long double ny0, ny0_eps, ny, ny_eps;
+      _Float128 ny0, ny0_eps, ny, ny_eps;
       ny0 = y0 + n_up;
       ny0_eps = y0 - (ny0 - n_up) + y0_eps;
       y0 = ny0;
@@ -521,28 +521,28 @@ __lgamma_negl (long double x, int *signgamp)
       ny_eps = y - (ny - n_up) + y_eps;
       y = ny;
       y_eps = ny_eps;
-      long double prodm1 = __lgamma_productl (xdiff, y - n_up, y_eps, n_up);
+      _Float128 prodm1 = __lgamma_productl (xdiff, y - n_up, y_eps, n_up);
       log_gamma_adj = -__log1pl (prodm1);
     }
-  long double log_gamma_high
+  _Float128 log_gamma_high
     = (xdiff * __log1pl ((y0 - e_hi - e_lo + y0_eps) / e_hi)
        + (y - 0.5L + y_eps) * __log1pl (xdiff / y) + log_gamma_adj);
   /* Compute the sum of (B_2k / 2k(2k-1))(Y0^-(2k-1) - Y^-(2k-1)).  */
-  long double y0r = 1 / y0, yr = 1 / y;
-  long double y0r2 = y0r * y0r, yr2 = yr * yr;
-  long double rdiff = -xdiff / (y * y0);
-  long double bterm[NCOEFF];
-  long double dlast = rdiff, elast = rdiff * yr * (yr + y0r);
+  _Float128 y0r = 1 / y0, yr = 1 / y;
+  _Float128 y0r2 = y0r * y0r, yr2 = yr * yr;
+  _Float128 rdiff = -xdiff / (y * y0);
+  _Float128 bterm[NCOEFF];
+  _Float128 dlast = rdiff, elast = rdiff * yr * (yr + y0r);
   bterm[0] = dlast * lgamma_coeff[0];
   for (size_t j = 1; j < NCOEFF; j++)
     {
-      long double dnext = dlast * y0r2 + elast;
-      long double enext = elast * yr2;
+      _Float128 dnext = dlast * y0r2 + elast;
+      _Float128 enext = elast * yr2;
       bterm[j] = dnext * lgamma_coeff[j];
       dlast = dnext;
       elast = enext;
     }
-  long double log_gamma_low = 0;
+  _Float128 log_gamma_low = 0;
   for (size_t j = 0; j < NCOEFF; j++)
     log_gamma_low += bterm[NCOEFF - 1 - j];
   log_gamma_ratio = log_gamma_high + log_gamma_low;

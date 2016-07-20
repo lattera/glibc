@@ -64,7 +64,7 @@
 #include <math_private.h>
 
 /* arctan(k/8), k = 0, ..., 82 */
-static const long double atantbl[84] = {
+static const _Float128 atantbl[84] = {
   0.0000000000000000000000000000000000000000E0L,
   1.2435499454676143503135484916387102557317E-1L, /* arctan(0.125)  */
   2.4497866312686415417208248121127581091414E-1L,
@@ -156,7 +156,7 @@ static const long double atantbl[84] = {
    |t| <= 0.09375
    peak relative error 5.3e-37 */
 
-static const long double
+static const _Float128
   p0 = -4.283708356338736809269381409828726405572E1L,
   p1 = -8.636132499244548540964557273544599863825E1L,
   p2 = -5.713554848244551350855604111031839613216E1L,
@@ -169,13 +169,13 @@ static const long double
   q4 = 2.173623741810414221251136181221172551416E1L;
   /* q5 = 1.000000000000000000000000000000000000000E0 */
 
-static const long double huge = 1.0e4930L;
+static const _Float128 huge = 1.0e4930L;
 
-long double
-__atanl (long double x)
+_Float128
+__atanl (_Float128 x)
 {
   int k, sign;
-  long double t, u, p, q;
+  _Float128 t, u, p, q;
   ieee854_long_double_shape_type s;
 
   s.value = x;

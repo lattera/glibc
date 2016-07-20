@@ -27,18 +27,18 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double
+static const _Float128
 TWO112[2]={
   5.19229685853482762853049632922009600E+33L, /* 0x406F000000000000, 0 */
  -5.19229685853482762853049632922009600E+33L  /* 0xC06F000000000000, 0 */
 };
 
-long double __nearbyintl(long double x)
+_Float128 __nearbyintl(_Float128 x)
 {
 	fenv_t env;
 	int64_t i0,j0,sx;
 	u_int64_t i1 __attribute__ ((unused));
-	long double w,t;
+	_Float128 w,t;
 	GET_LDOUBLE_WORDS64(i0,i1,x);
 	sx = (((u_int64_t)i0)>>63);
 	j0 = ((i0>>48)&0x7fff)-0x3fff;

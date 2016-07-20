@@ -26,7 +26,7 @@
 #include <fix-fp-int-convert-overflow.h>
 
 long int
-__lroundl (long double x)
+__lroundl (_Float128 x)
 {
   int64_t j0;
   u_int64_t i1, i0;
@@ -88,13 +88,13 @@ __lroundl (long double x)
 	 unspecified.  */
 #ifdef FE_INVALID
       if (FIX_LDBL_LONG_CONVERT_OVERFLOW
-	  && !(sign == -1 && x > (long double) LONG_MIN - 0.5L))
+	  && !(sign == -1 && x > (_Float128) LONG_MIN - 0.5L))
 	{
 	  feraiseexcept (FE_INVALID);
 	  return sign == 1 ? LONG_MAX : LONG_MIN;
 	}
       else if (!FIX_LDBL_LONG_CONVERT_OVERFLOW
-	       && x <= (long double) LONG_MIN - 0.5L)
+	       && x <= (_Float128) LONG_MIN - 0.5L)
 	{
 	  /* If truncation produces LONG_MIN, the cast will not raise
 	     the exception, but may raise "inexact".  */

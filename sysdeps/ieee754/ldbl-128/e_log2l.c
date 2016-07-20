@@ -67,7 +67,7 @@
  * Theoretical peak relative error = 5.3e-37,
  * relative peak error spread = 2.3e-14
  */
-static const long double P[13] =
+static const _Float128 P[13] =
 {
   1.313572404063446165910279910527789794488E4L,
   7.771154681358524243729929227226708890930E4L,
@@ -83,7 +83,7 @@ static const long double P[13] =
   4.998469661968096229986658302195402690910E-1L,
   1.538612243596254322971797716843006400388E-6L
 };
-static const long double Q[12] =
+static const _Float128 Q[12] =
 {
   3.940717212190338497730839731583397586124E4L,
   2.626900195321832660448791748036714883242E5L,
@@ -106,7 +106,7 @@ static const long double Q[12] =
  * Theoretical peak relative error = 1.1e-35,
  * relative peak error spread 1.1e-9
  */
-static const long double R[6] =
+static const _Float128 R[6] =
 {
   1.418134209872192732479751274970992665513E5L,
  -8.977257995689735303686582344659576526998E4L,
@@ -115,7 +115,7 @@ static const long double R[6] =
   8.057002716646055371965756206836056074715E1L,
  -8.828896441624934385266096344596648080902E-1L
 };
-static const long double S[6] =
+static const _Float128 S[6] =
 {
   1.701761051846631278975701529965589676574E6L,
  -1.332535117259762928288745111081235577029E6L,
@@ -126,7 +126,7 @@ static const long double S[6] =
 /* 1.000000000000000000000000000000000000000E0L, */
 };
 
-static const long double
+static const _Float128
 /* log2(e) - 1 */
 LOG2EA = 4.4269504088896340735992468100189213742664595E-1L,
 /* sqrt(2)/2 */
@@ -135,10 +135,10 @@ SQRTH = 7.071067811865475244008443621048490392848359E-1L;
 
 /* Evaluate P[n] x^n  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
-static long double
-neval (long double x, const long double *p, int n)
+static _Float128
+neval (_Float128 x, const _Float128 *p, int n)
 {
-  long double y;
+  _Float128 y;
 
   p += n;
   y = *p--;
@@ -153,10 +153,10 @@ neval (long double x, const long double *p, int n)
 
 /* Evaluate x^n+1  +  P[n] x^(n)  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
-static long double
-deval (long double x, const long double *p, int n)
+static _Float128
+deval (_Float128 x, const _Float128 *p, int n)
 {
-  long double y;
+  _Float128 y;
 
   p += n;
   y = x + *p--;
@@ -170,11 +170,11 @@ deval (long double x, const long double *p, int n)
 
 
 
-long double
-__ieee754_log2l (long double x)
+_Float128
+__ieee754_log2l (_Float128 x)
 {
-  long double z;
-  long double y;
+  _Float128 z;
+  _Float128 y;
   int e;
   int64_t hx, lx;
 

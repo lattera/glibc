@@ -27,7 +27,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-long double __ceill(long double x)
+_Float128 __ceill(_Float128 x)
 {
 	int64_t i0,i1,j0;
 	u_int64_t i,j;

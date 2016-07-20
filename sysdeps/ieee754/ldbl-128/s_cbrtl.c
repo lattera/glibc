@@ -57,17 +57,17 @@ Adapted for glibc October, 2001.
 #include <math.h>
 #include <math_private.h>
 
-static const long double CBRT2 = 1.259921049894873164767210607278228350570251L;
-static const long double CBRT4 = 1.587401051968199474751705639272308260391493L;
-static const long double CBRT2I = 0.7937005259840997373758528196361541301957467L;
-static const long double CBRT4I = 0.6299605249474365823836053036391141752851257L;
+static const _Float128 CBRT2 = 1.259921049894873164767210607278228350570251L;
+static const _Float128 CBRT4 = 1.587401051968199474751705639272308260391493L;
+static const _Float128 CBRT2I = 0.7937005259840997373758528196361541301957467L;
+static const _Float128 CBRT4I = 0.6299605249474365823836053036391141752851257L;
 
 
-long double
-__cbrtl (long double x)
+_Float128
+__cbrtl (_Float128 x)
 {
   int e, rem, sign;
-  long double z;
+  _Float128 z;
 
   if (!isfinite (x))
     return x + x;

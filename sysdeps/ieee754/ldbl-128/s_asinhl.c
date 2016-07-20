@@ -33,15 +33,15 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-static const long double
+static const _Float128
   one = 1.0L,
   ln2 = 6.931471805599453094172321214581765681e-1L,
   huge = 1.0e+4900L;
 
-long double
-__asinhl (long double x)
+_Float128
+__asinhl (_Float128 x)
 {
-  long double t, w;
+  _Float128 t, w;
   int32_t ix, sign;
   ieee854_long_double_shape_type u;
 
