@@ -1,3 +1,51 @@
+2017-05-14  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* bits/floatn.h: New file.
+	* bits/huge_val_flt128.h: Likewise.
+
+	* bits/libm-simd-decl-stubs.h (__DECL_SIMD_cosf128): New macro.
+	(__DECL_SIMD_sinf128): Likewise.
+	(__DECL_SIMD_sincosf128): Likewise.
+	(__DECL_SIMD_logf128): Likewise.
+	(__DECL_SIMD_expf128): Likewise.
+	(__DECL_SIMD_powf128): Likewise.
+
+	* math/Makefile (headers): Install bits/floatn.h and
+	bits/huge_val_flt128.h.
+
+	* math/bits/cmathcalls.h (_Mdouble_complex_): Only define if not
+	defined.
+
+	* math/bits/mathcalls.h (pow10, isinf, finite, drem, significand)
+	(isnan, gamma, nexttoward, scalb): Only define if not
+	__MATH_DECLARING_FLOATN.
+	(nextdown, nextup, llogb, roundeven, fromfp, ufromfp, fromfpx)
+	(ufromfpx, fmaxmag, fminmag, totalorder, totalordermag)
+	(canonicalize, getpayload, setpayload, setpayloadsig): Declare for
+	_FloatN even if	__STDC_WANT_IEC_60559_BFP_EXT__ is not defined.
+
+	* math/complex.h: Include bits/libc-header-start.h and bits/floatn.h.
+	Include bits/cmathcalls.h to get the declarations of _Float128
+	versions of complex functions.
+	[__HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)] (CMPLXF128):
+	Define macro.
+
+	* math/math.h: Include bits/floatn.h and bits/huge_val_flt128.h.
+	Include bits/mathcalls-helper-functions.h and bits/mathcalls.h to
+	get the declarations of _Float128 versions of math functions.
+	(__MATH_DECLARING_FLOATN): New macro to control declaration of
+	_FloatN types.
+	[__GNUC_PREREQ (6,0)] (signbit): Since GCC 6.0, __builtin_signbit
+	is type-generic, so use it without __MATH_TG.
+	[__HAVE_DISTINCT_FLOAT128] (isinf): This builtin is broken for
+	_Float128 type on GCC < 7.0.  Explicitly call __isinff128 for
+	_Float128 type and GCC < 7.0, otherwise use the builtin.
+	[__HAVE_FLOAT128 && defined __USE_GNU] (M_Ef128, M_LOG2Ef128)
+	(M_LOG10Ef128, M_LN2f128, M_LN10f128, M_PIf128, M_PI_2f128)
+	(M_PI_4f128, M_1_PIf128, M_2_PIf128, M_SQRT2f128, M_SQRT1_2f128):
+	New _GNU_SOURCE enabled macros.
+
 2017-05-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/sparc/sparc32/fpu/s_signbit.S (signbit): Remove alias.

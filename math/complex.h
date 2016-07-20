@@ -22,10 +22,14 @@
 #ifndef _COMPLEX_H
 #define _COMPLEX_H	1
 
-#include <features.h>
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+#include <bits/libc-header-start.h>
 
 /* Get general and ISO C99 specific information.  */
 #include <bits/mathdef.h>
+
+/* Gather machine-dependent _FloatN type support.  */
+#include <bits/floatn.h>
 
 __BEGIN_DECLS
 
@@ -53,6 +57,10 @@ __BEGIN_DECLS
 # define CMPLX(x, y) __builtin_complex ((double) (x), (double) (y))
 # define CMPLXF(x, y) __builtin_complex ((float) (x), (float) (y))
 # define CMPLXL(x, y) __builtin_complex ((long double) (x), (long double) (y))
+#endif
+
+#if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define CMPLXF128(x, y) __builtin_complex ((_Float128) (x), (_Float128) (y))
 #endif
 
 /* The file <bits/cmathcalls.h> contains the prototypes for all the
@@ -83,6 +91,24 @@ __BEGIN_DECLS
 #include <bits/cmathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
+
+#if (__HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)) \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# ifndef _Mfloat128_
+#  define _Mfloat128_		_Float128
+# endif
+/* GCC < 7 requires extra convincing to expose a complex float128 type.  */
+# ifdef __CFLOAT128
+#  undef _Mdouble_complex_
+#  define _Mdouble_complex_	__CFLOAT128
+# endif
+# define _Mdouble_		_Mfloat128_
+# define __MATH_PRECNAME(name)	name##f128
+# include <bits/cmathcalls.h>
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef _Mdouble_complex_
+#endif
 
 /* And the long double versions.  It is non-critical to define them
    here unconditionally since `long double' is required in ISO C99.  */

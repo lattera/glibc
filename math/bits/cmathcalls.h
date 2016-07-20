@@ -44,7 +44,9 @@
 #error "Never use <bits/cmathcalls.h> directly; include <complex.h> instead."
 #endif
 
-#define _Mdouble_complex_ _Mdouble_ _Complex
+#ifndef _Mdouble_complex_
+# define _Mdouble_complex_ _Mdouble_ _Complex
+#endif
 
 
 /* Trigonometric functions.  */

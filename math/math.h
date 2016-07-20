@@ -34,9 +34,17 @@ __BEGIN_DECLS
 /* Get machine-dependent vector math functions declarations.  */
 #include <bits/math-vector.h>
 
+/* Gather machine dependent type support.  */
+#include <bits/floatn.h>
+
 /* Get machine-dependent HUGE_VAL value (returned on overflow).
    On all IEEE754 machines, this is +Infinity.  */
 #include <bits/huge_val.h>
+
+#if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# include <bits/huge_val_flt128.h>
+#endif
+
 #ifdef __USE_ISOC99
 # include <bits/huge_valf.h>
 # include <bits/huge_vall.h>
@@ -208,11 +216,13 @@ enum
 #define _Mdouble_		double
 #define __MATH_PRECNAME(name,r)	__CONCAT(name,r)
 #define __MATH_DECLARING_DOUBLE  1
+#define __MATH_DECLARING_FLOATN  0
 #include <bits/mathcalls-helper-functions.h>
 #include <bits/mathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 #undef __MATH_DECLARING_DOUBLE
+#undef __MATH_DECLARING_FLOATN
 
 #ifdef __USE_ISOC99
 
@@ -226,11 +236,13 @@ enum
 # define _Mdouble_		_Mfloat_
 # define __MATH_PRECNAME(name,r) name##f##r
 # define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_FLOATN  0
 # include <bits/mathcalls-helper-functions.h>
 # include <bits/mathcalls.h>
 # undef	_Mdouble_
 # undef	__MATH_PRECNAME
 # undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_FLOATN
 
 # if !(defined __NO_LONG_DOUBLE_MATH && defined _LIBC) \
      || defined __LDBL_COMPAT \
@@ -269,16 +281,42 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #  define _Mdouble_		_Mlong_double_
 #  define __MATH_PRECNAME(name,r) name##l##r
 #  define __MATH_DECLARING_DOUBLE  0
+#  define __MATH_DECLARING_FLOATN  0
 #  define __MATH_DECLARE_LDOUBLE   1
 #  include <bits/mathcalls-helper-functions.h>
 #  include <bits/mathcalls.h>
 #  undef _Mdouble_
 #  undef __MATH_PRECNAME
 #  undef __MATH_DECLARING_DOUBLE
+#  undef __MATH_DECLARING_FLOATN
 
 # endif /* !(__NO_LONG_DOUBLE_MATH && _LIBC) || __LDBL_COMPAT */
 
 #endif	/* Use ISO C99.  */
+
+/* Include the file of declarations again, this time using `_Float128'
+   instead of `double' and appending f128 to each function name.  */
+
+#if __HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)
+# ifndef _Mfloat128_
+#  define _Mfloat128_		_Float128
+# endif
+# define _Mdouble_		_Mfloat128_
+# define __MATH_PRECNAME(name,r) name##f128##r
+# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_FLOATN  1
+# if __HAVE_DISTINCT_FLOAT128
+#  include <bits/mathcalls-helper-functions.h>
+# endif
+# if __GLIBC_USE (IEC_60559_TYPES_EXT)
+#  include <bits/mathcalls.h>
+# endif
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_FLOATN
+#endif /* __HAVE_DISTINCT_FLOAT128.  */
+
 #undef	__MATHDECL_1
 #undef	__MATHDECL
 #undef	__MATHCALL
@@ -348,7 +386,9 @@ enum
 # endif
 
 /* Return nonzero value if sign of X is negative.  */
-# if __GNUC_PREREQ (4,0)
+# if __GNUC_PREREQ (6,0)
+#  define signbit(x) __builtin_signbit (x)
+# elif __GNUC_PREREQ (4,0)
 #  define signbit(x) __MATH_TG ((x), __builtin_signbit, (x))
 # else
 #  define signbit(x) __MATH_TG ((x), __signbit, (x))
@@ -377,7 +417,13 @@ enum
 # endif
 
 /* Return nonzero value if X is positive or negative infinity.  */
-# if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__
+# if __HAVE_DISTINCT_FLOAT128 && !__GNUC_PREREQ (7,0) \
+     && !defined __SUPPORT_SNAN__
+   /* __builtin_isinf_sign is broken for float128 only before GCC 7.0.  */
+#  define isinf(x) \
+    (__builtin_types_compatible_p (__typeof (x), _Float128) \
+     ? __isinff128 (x) : __builtin_isinf_sign (x))
+# elif __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__
 #  define isinf(x) __builtin_isinf_sign (x)
 # else
 #  define isinf(x) __MATH_TG ((x), __isinf, (x))
@@ -529,6 +575,21 @@ extern int matherr (struct exception *__exc);
 # define M_SQRT1_2l	0.707106781186547524400844362104849039L /* 1/sqrt(2) */
 #endif
 
+#if __HAVE_FLOAT128 && defined __USE_GNU
+# define M_Ef128	__f128 (2.718281828459045235360287471352662498) /* e */
+# define M_LOG2Ef128	__f128 (1.442695040888963407359924681001892137) /* log_2 e */
+# define M_LOG10Ef128	__f128 (0.434294481903251827651128918916605082) /* log_10 e */
+# define M_LN2f128	__f128 (0.693147180559945309417232121458176568) /* log_e 2 */
+# define M_LN10f128	__f128 (2.302585092994045684017991454684364208) /* log_e 10 */
+# define M_PIf128	__f128 (3.141592653589793238462643383279502884) /* pi */
+# define M_PI_2f128	__f128 (1.570796326794896619231321691639751442) /* pi/2 */
+# define M_PI_4f128	__f128 (0.785398163397448309615660845819875721) /* pi/4 */
+# define M_1_PIf128	__f128 (0.318309886183790671537767526745028724) /* 1/pi */
+# define M_2_PIf128	__f128 (0.636619772367581343075535053490057448) /* 2/pi */
+# define M_2_SQRTPIf128	__f128 (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
+# define M_SQRT2f128	__f128 (1.414213562373095048801688724209698079) /* sqrt(2) */
+# define M_SQRT1_2f128	__f128 (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
+#endif
 
 /* When compiling in strict ISO C compatible mode we must not use the
    inline functions since they, among other things, do not set the
