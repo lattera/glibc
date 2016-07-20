@@ -1,6 +1,14 @@
 2017-05-09  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* bits/libc-header-start.h:
+	(__GLIBC_USE_IEC_60559_TYPES_EXT): New macro.
+	* include/features.h: Describe __STDC_WANT_IEC_60559_TYPES_EXT__.
+	* manual/creature.texi: Likewise.
+
+2017-05-09  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* math/Makefile:
 	(type-float128-suffix): New variable
 	(type-float128-routines): Likewise

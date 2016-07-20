@@ -192,6 +192,15 @@ enabled.  Only some of the features from this TS are supported by
 @end defvr
 
 @comment (none)
+@comment ISO
+@defvr Macro __STDC_WANT_IEC_60559_TYPES_EXT__
+If you define this macro, features from ISO/IEC TS 18661-3:2015
+(Floating-point extensions for C: Interchange and extended types) are
+enabled.  Only some of the features from this TS are supported by
+@theglibc{}.
+@end defvr
+
+@comment (none)
 @comment GNU
 @defvr Macro _GNU_SOURCE
 If you define this macro, everything is included: @w{ISO C89}, @w{ISO

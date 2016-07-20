@@ -30,6 +30,8 @@
 			Extensions to ISO C11 from TS 18661-1:2014.
    __STDC_WANT_IEC_60559_FUNCS_EXT__
 			Extensions to ISO C11 from TS 18661-4:2015.
+   __STDC_WANT_IEC_60559_TYPES_EXT__
+			Extensions to ISO C11 from TS 18661-3:2015.
 
    _POSIX_SOURCE	IEEE Std 1003.1.
    _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
