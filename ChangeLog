@@ -1,3 +1,8 @@
+2016-07-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/s390-32/memcpy.S (memcpy): Eliminate the usage
+	of r13 as it is not restored in mvcle case.
+
 2016-07-19  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/microblaze/sysdep.h (inline_syscall0):

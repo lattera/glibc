@@ -42,20 +42,18 @@ ENTRY(memcpy)
 	.machine "g5"
 	lr      %r1,%r2             # r1: Use as dest ; r2: Return dest
 .L_G5_start:
-	st      %r13,52(%r15)
-	.cfi_offset 13, -44
-	basr    %r13,0
-.L_G5_16:
 	ltr     %r4,%r4
-	je      .L_G5_4
+	je      .L_G5_99
 	ahi     %r4,-1
 	lr      %r5,%r4
 	srl     %r5,8
 	ltr     %r5,%r5
 	jne     .L_G5_13
-	ex      %r4,.L_G5_17-.L_G5_16(%r13)
 .L_G5_4:
-	l       %r13,52(%r15)
+	basr    %r5,0
+.L_G5_16:
+	ex      %r4,.L_G5_17-.L_G5_16(%r5)
+.L_G5_99:
 	br      %r14
 .L_G5_13:
 	chi	%r5,4096            # Switch to mvcle for copies >1MB
@@ -65,7 +63,6 @@ ENTRY(memcpy)
 	la      %r1,256(%r1)
 	la      %r3,256(%r3)
 	brct    %r5,.L_G5_12
-	ex      %r4,.L_G5_17-.L_G5_16(%r13)
 	j       .L_G5_4
 .L_G5_17:
 	mvc     0(1,%r1),0(%r3)
