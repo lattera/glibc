@@ -588,6 +588,9 @@ void __atomic_link_error (void);
   __atomic_compare_exchange_n ((mem), (expected), (desired), 1,		      \
     __ATOMIC_RELEASE, __ATOMIC_RELAXED); })
 
+# define atomic_exchange_relaxed(mem, desired) \
+  ({ __atomic_check_size((mem));					      \
+  __atomic_exchange_n ((mem), (desired), __ATOMIC_RELAXED); })
 # define atomic_exchange_acquire(mem, desired) \
   ({ __atomic_check_size((mem));					      \
   __atomic_exchange_n ((mem), (desired), __ATOMIC_ACQUIRE); })
@@ -684,6 +687,12 @@ void __atomic_link_error (void);
    *(expected) == __atg103_expected; })
 # endif
 
+/* XXX Fall back to acquire MO because archs do not define a weaker
+   atomic_exchange.  */
+# ifndef atomic_exchange_relaxed
+#  define atomic_exchange_relaxed(mem, val) \
+   atomic_exchange_acq ((mem), (val))
+# endif
 # ifndef atomic_exchange_acquire
 #  define atomic_exchange_acquire(mem, val) \
    atomic_exchange_acq ((mem), (val))

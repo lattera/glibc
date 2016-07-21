@@ -1,3 +1,7 @@
+2016-08-05  Torvald Riegel  <triegel@redhat.com>
+
+	* include/atomic.h (atomic_exchange_relaxed): New.
+
 2016-08-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/e_scalb.c: Do not include <fenv.h>.
