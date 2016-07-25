@@ -21,11 +21,24 @@
 
 #define FSTRLENMAX 128
 
+#include <bits/floatn.h>
+
+#define F128 __f128 ()
+
+/* Test strfromf128 and strtof128 on all platforms that provide them,
+   whether or not the type _Float128 is ABI-distinct from long double.  */
+#if __HAVE_FLOAT128
+# define IF_FLOAT128(x) x
+#else
+# define IF_FLOAT128(x)
+#endif
+
 /* Splat n variants of the same test for the various strtod functions.  */
-#define GEN_TEST_STRTOD_FOREACH(mfunc, ...)			 \
-    mfunc (  f,       float, strfromf, f, f, ##__VA_ARGS__)	 \
-    mfunc (  d,      double, strfromd,  ,  , ##__VA_ARGS__)	 \
-    mfunc ( ld, long double, strfroml, L, l, ##__VA_ARGS__)
+#define GEN_TEST_STRTOD_FOREACH(mfunc, ...)				      \
+  mfunc (  f,       float, strfromf, f, f, ##__VA_ARGS__)		      \
+  mfunc (  d,      double, strfromd,  ,  , ##__VA_ARGS__)		      \
+  mfunc ( ld, long double, strfroml, L, l, ##__VA_ARGS__)		      \
+  IF_FLOAT128 (mfunc (f128, _Float128, strfromf128, F128, f128, ##__VA_ARGS__))
 /* The arguments to the generated macros are:
    FSUF - Function suffix
    FTYPE - float type
@@ -36,13 +49,14 @@
 
 
 
-#define STRTOD_TEST_FOREACH(mfunc, ...)	  \
-({					  \
-   int result = 0;			  \
-   result |= mfunc ## f  (__VA_ARGS__);   \
-   result |= mfunc ## d  (__VA_ARGS__);   \
-   result |= mfunc ## ld (__VA_ARGS__);   \
-   result;				  \
+#define STRTOD_TEST_FOREACH(mfunc, ...)			\
+({							\
+   int result = 0;					\
+   result |= mfunc ## f  (__VA_ARGS__);			\
+   result |= mfunc ## d  (__VA_ARGS__);			\
+   result |= mfunc ## ld (__VA_ARGS__);			\
+   IF_FLOAT128 (result |= mfunc ## f128 (__VA_ARGS__));	\
+   result;						\
 })
 
 

@@ -4,7 +4,17 @@
 %endif
 libc {
   FLOAT128_VERSION {
+    __strtof128_internal;
+    __wcstof128_internal;
     strfromf128;
+    strtof128;
+    strtof128_l;
+    wcstof128;
+    wcstof128_l;
+  }
+  GLIBC_PRIVATE {
+    # For __nanf128.
+    __strtof128_nan;
   }
 }
 libm {

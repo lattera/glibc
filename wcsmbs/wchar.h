@@ -26,6 +26,9 @@
 #define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
 #include <bits/libc-header-start.h>
 
+/* Gather machine dependent type support.  */
+#include <bits/floatn.h>
+
 #define __need_size_t
 #define __need_wchar_t
 #define __need_NULL
@@ -381,6 +384,12 @@ extern long double wcstold (const wchar_t *__restrict __nptr,
 			    wchar_t **__restrict __endptr) __THROW;
 #endif /* C99 */
 
+/* Likewise for `_Float128' when support is enabled.  */
+#if __HAVE_FLOAT128 && defined __USE_GNU
+extern _Float128 wcstof128 (const wchar_t *__restrict __nptr,
+			    wchar_t **__restrict __endptr) __THROW;
+#endif
+
 
 /* Convert initial portion of wide string NPTR to `long int'
    representation.  */
@@ -473,6 +482,12 @@ extern float wcstof_l (const wchar_t *__restrict __nptr,
 extern long double wcstold_l (const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr,
 			      __locale_t __loc) __THROW;
+
+# if __HAVE_FLOAT128
+extern _Float128 wcstof128_l (const wchar_t *__restrict __nptr,
+			      wchar_t **__restrict __endptr,
+			      __locale_t __loc) __THROW;
+# endif
 #endif	/* use GNU */
 
 

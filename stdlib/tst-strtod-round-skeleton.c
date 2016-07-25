@@ -93,6 +93,7 @@
 /* Add type specific choosing macros below.  */
 #define CHOOSE_f(f,...) f
 #define CHOOSE_d(f,d,...) d
+#define CHOOSE_f128(f,d,ld64i,ld64m,ld106,ld113,...) ld113
 /* long double is special, and handled above.  */
 
 /* Selector for expected result field of a given type.  */

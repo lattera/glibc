@@ -31,5 +31,9 @@ extern double __mpn_construct_double (mp_srcptr frac_ptr, int expt,
 extern long double __mpn_construct_long_double (mp_srcptr frac_ptr, int expt,
 						int sign);
 
+#if __HAVE_DISTINCT_FLOAT128
+extern _Float128 __mpn_construct_float128 (mp_srcptr frac_ptr, int expt,
+					   int sign);
+#endif
 
 #endif

@@ -1,3 +1,56 @@
+2017-06-12  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* include/gmp.h (__mpn_construct_float128): New declaration.
+	* include/stdlib.h: Include bits/floatn.h for _Float128 tests.
+	(__strtof128_l): New declaration.
+	(__strtof128_nan): Likewise.
+	(__wcstof128_nan): Likewise.
+	(__strtof128_internal): Likewise.
+	(____strtof128_l_internal): Likewise.
+	* include/wchar.h: Include bits/floatn.h for _Float128 tests.
+	(__wcstof128_l): New declaration.
+	(__wcstof128_internal): Likewise.
+
+	* stdlib/Makefile (bug-strtod2): Link libm too.
+
+	* stdlib/stdlib.h (strtof128): New declaration.
+	(strtof128_l): Likewise.
+
+	* stdlib/tst-strtod-nan-locale-main.c: Updated to use
+	tst-strtod.h macros to ensure float128 gets tested too.
+
+	* stdlib/tst-strtod-round-skeleton.c (CHOOSE_f128): New macro.
+
+	* stdlib/tst-strtod.h: Include bits/floatn.h for _Float128
+	tests.
+	(IF_FLOAT128): New macro.
+	(GEN_TEST_STRTOD): Update to optionally include _Float128 in
+	the tests.
+	(STRTOD_TEST_FOREACH): Likewise.
+
+	* sysdeps/ieee754/float128/Makefile: Insert new strtof128 and
+	wcstof128 functions into libc.
+
+	* sysdeps/ieee754/float128/Versions: Add exports for the above
+	new functions.
+
+	* sysdeps/ieee754/float128/mpn2float128.c: New file.
+	* sysdeps/ieee754/float128/strtod_nan_float128.h: New file.
+	* sysdeps/ieee754/float128/strtof128.c: New file.
+	* sysdeps/ieee754/float128/strtof128_l.c: New file.
+	* sysdeps/ieee754/float128/strtof128_nan.c: New file.
+	* sysdeps/ieee754/float128/wcstof128.c: New file.
+	* sysdeps/ieee754/float128/wcstof128_l.c: New file.
+	* sysdeps/ieee754/float128/wcstof128_nan.c: New fike.
+	* wcsmbs/Makefile: (CFLAGS-wcstof128.c): Append strtox-CFLAGS.
+	(CFLAGS-wcstof128_l): Likewise.
+
+	* wcsmbs/wchar.h: Include bits/floatn.h for _Float128 tests.
+	(wcstof128): New declaration.
+	(wcstof128_l): Likewise.
+
 2017-06-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21552]

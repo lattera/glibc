@@ -128,6 +128,13 @@ extern long double strtold (const char *__restrict __nptr,
      __THROW __nonnull ((1));
 #endif
 
+#if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+/* Likewise for the '_Float128' format  */
+extern _Float128 strtof128 (const char *__restrict __nptr,
+		      char **__restrict __endptr)
+     __THROW __nonnull ((1));
+#endif
+
 /* Convert a string to a long integer.  */
 extern long int strtol (const char *__restrict __nptr,
 			char **__restrict __endptr, int __base)
@@ -236,6 +243,13 @@ extern long double strtold_l (const char *__restrict __nptr,
 			      char **__restrict __endptr,
 			      __locale_t __loc)
      __THROW __nonnull ((1, 3));
+
+# if __HAVE_FLOAT128
+extern _Float128 strtof128_l (const char *__restrict __nptr,
+			      char **__restrict __endptr,
+			      __locale_t __loc)
+     __THROW __nonnull ((1, 3));
+# endif
 #endif /* GNU */
 
 

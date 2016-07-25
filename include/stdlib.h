@@ -219,6 +219,35 @@ libc_hidden_proto (__wcstof_nan)
 libc_hidden_proto (__wcstod_nan)
 libc_hidden_proto (__wcstold_nan)
 
+/* Enable _FloatN bits as needed.  */
+#include <bits/floatn.h>
+
+#if __HAVE_DISTINCT_FLOAT128
+extern __typeof (strtof128_l) __strtof128_l;
+
+libc_hidden_proto (__strtof128_l)
+libc_hidden_proto (strtof128)
+
+extern _Float128 __strtof128_nan (const char *, char **, char)
+     internal_function;
+extern _Float128 __wcstof128_nan (const wchar_t *, wchar_t **, wchar_t)
+     internal_function;
+
+libc_hidden_proto (__strtof128_nan)
+libc_hidden_proto (__wcstof128_nan)
+
+extern _Float128 __strtof128_internal (const char *__restrict __nptr,
+				       char **__restrict __endptr,
+				       int __group);
+libc_hidden_proto (__strtof128_internal)
+
+extern _Float128 ____strtof128_l_internal (const char *__restrict __nptr,
+					   char **__restrict __endptr,
+					   int __group, __locale_t __loc);
+
+libc_hidden_proto (____strtof128_l_internal)
+#endif
+
 extern char *__ecvt (double __value, int __ndigit, int *__restrict __decpt,
 		     int *__restrict __sign);
 extern char *__fcvt (double __value, int __ndigit, int *__restrict __decpt,
