@@ -1,3 +1,23 @@
+2016-09-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #18241]
+	[BZ #20181]
+	* libio/Makefile (test): Add tst-memstream3 and tst-wmemstream3.
+	* libio/memstream.c (_IO_mem_sync): Only append a null byte if
+	write position is at the end the buffer.
+	* libio/wmemstream.c (_IO_wmem_sync): Likewise.
+	* libio/strops.c (_IO_str_switch_to_get_mode): New function.
+	(_IO_str_seekoff): Set correct offset from negative displacement and
+	set EINVAL for invalid ones.
+	* libio/wstrops.c (enlarge_userbuf): Use correct function to calculate
+	buffer length.
+	(_IO_wstr_switch_to_get_mode): New function.
+	(_IO_wstr_seekoff): Set correct offset from negative displacement and
+	set EINVAL for invalid ones.
+	* libio/tst-memstream3.c: New file.
+	* libio/tst-wmemstream3.c: Likewise.
+	* manual/examples/memstrm.c: Remove warning when priting size_t.
+
 2016-09-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/dbl-64/dla.h [__FP_FAST_FMA] (DLA_FMS): Define

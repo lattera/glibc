@@ -169,7 +169,7 @@ _IO_wstr_count (_IO_FILE *fp)
 static int
 enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
 {
-  if ((_IO_ssize_t) offset <= _IO_blen (fp))
+  if ((_IO_ssize_t) offset <= _IO_wblen (fp))
     return 0;
 
   struct _IO_wide_data *wd = fp->_wide_data;
@@ -235,6 +235,22 @@ enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
   return 0;
 }
 
+static void
+_IO_wstr_switch_to_get_mode (_IO_FILE *fp)
+{
+  if (_IO_in_backup (fp))
+    fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_backup_base;
+  else
+    {
+      fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_buf_base;
+      if (fp->_wide_data->_IO_write_ptr > fp->_wide_data->_IO_read_end)
+        fp->_wide_data->_IO_read_end = fp->_wide_data->_IO_write_ptr;
+    }
+  fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_write_ptr;
+  fp->_wide_data->_IO_read_end = fp->_wide_data->_IO_write_ptr;
+
+  fp->_flags &= ~_IO_CURRENTLY_PUTTING;
+}
 
 _IO_off64_t
 _IO_wstr_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
@@ -244,15 +260,16 @@ _IO_wstr_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
   if (mode == 0 && (fp->_flags & _IO_TIED_PUT_GET))
     mode = (fp->_flags & _IO_CURRENTLY_PUTTING ? _IOS_OUTPUT : _IOS_INPUT);
 
+  bool was_writing = (fp->_wide_data->_IO_write_ptr >
+			fp->_wide_data->_IO_write_base
+		     || _IO_in_put_mode (fp));
+  if (was_writing)
+    _IO_wstr_switch_to_get_mode (fp);
+
   if (mode == 0)
     {
-      /* Don't move any pointers. But there is no clear indication what
-	 mode FP is in. Let's guess. */
-      if (fp->_IO_file_flags & _IO_NO_WRITES)
-        new_pos = fp->_wide_data->_IO_read_ptr - fp->_wide_data->_IO_read_base;
-      else
-        new_pos = (fp->_wide_data->_IO_write_ptr
-		   - fp->_wide_data->_IO_write_base);
+      new_pos = (fp->_wide_data->_IO_write_ptr
+		 - fp->_wide_data->_IO_write_base);
     }
   else
     {
@@ -262,25 +279,32 @@ _IO_wstr_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
       /* Move the get pointer, if requested. */
       if (mode & _IOS_INPUT)
 	{
+	  _IO_ssize_t base;
 	  switch (dir)
 	    {
-	    case _IO_seek_end:
-	      offset += cur_size;
+	    case _IO_seek_set:
+	      base = 0;
 	      break;
 	    case _IO_seek_cur:
-	      offset += (fp->_wide_data->_IO_read_ptr
-			 - fp->_wide_data->_IO_read_base);
+	      base = (fp->_wide_data->_IO_read_ptr
+		     - fp->_wide_data->_IO_read_base);
 	      break;
-	    default: /* case _IO_seek_set: */
+	    default: /* case _IO_seek_end: */
+	      base = cur_size;
 	      break;
 	    }
-	  if (offset < 0)
-	    return EOF;
-	  if ((_IO_ssize_t) offset > cur_size
-	      && enlarge_userbuf (fp, offset, 1) != 0)
+	  _IO_ssize_t maxval = SSIZE_MAX/sizeof (wchar_t) - base;
+	  if (offset < -base || offset > maxval)
+	    {
+	      __set_errno (EINVAL);
+	      return EOF;
+	    }
+	  base += offset;
+	  if (base > cur_size
+	      && enlarge_userbuf (fp, base, 1) != 0)
 	    return EOF;
 	  fp->_wide_data->_IO_read_ptr = (fp->_wide_data->_IO_read_base
-					  + offset);
+					  + base);
 	  fp->_wide_data->_IO_read_end = (fp->_wide_data->_IO_read_base
 					  + cur_size);
 	  new_pos = offset;
@@ -289,26 +313,33 @@ _IO_wstr_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
       /* Move the put pointer, if requested. */
       if (mode & _IOS_OUTPUT)
 	{
+	  _IO_ssize_t base;
 	  switch (dir)
 	    {
-	    case _IO_seek_end:
-	      offset += cur_size;
+	    case _IO_seek_set:
+	      base = 0;
 	      break;
 	    case _IO_seek_cur:
-	      offset += (fp->_wide_data->_IO_write_ptr
-			 - fp->_wide_data->_IO_write_base);
+	      base = (fp->_wide_data->_IO_write_ptr
+		     - fp->_wide_data->_IO_write_base);
 	      break;
-	    default: /* case _IO_seek_set: */
+	    default: /* case _IO_seek_end: */
+	      base = cur_size;
 	      break;
 	    }
-	  if (offset < 0)
-	    return EOF;
-	  if ((_IO_ssize_t) offset > cur_size
-	      && enlarge_userbuf (fp, offset, 0) != 0)
+	  _IO_ssize_t maxval = SSIZE_MAX/sizeof (wchar_t) - base;
+	  if (offset < -base || offset > maxval)
+	    {
+	      __set_errno (EINVAL);
+	      return EOF;
+	    }
+	  base += offset;
+	  if (base > cur_size
+	      && enlarge_userbuf (fp, base, 0) != 0)
 	    return EOF;
 	  fp->_wide_data->_IO_write_ptr = (fp->_wide_data->_IO_write_base
-					   + offset);
-	  new_pos = offset;
+					   + base);
+	  new_pos = base;
 	}
     }
   return new_pos;

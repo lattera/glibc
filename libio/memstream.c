@@ -112,8 +112,6 @@ _IO_mem_sync (_IO_FILE *fp)
       _IO_str_overflow (fp, '\0');
       --fp->_IO_write_ptr;
     }
-  else
-    *fp->_IO_write_ptr = '\0';
 
   *mp->bufloc = fp->_IO_write_base;
   *mp->sizeloc = fp->_IO_write_ptr - fp->_IO_write_base;

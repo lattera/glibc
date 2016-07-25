@@ -112,8 +112,6 @@ _IO_wmem_sync (_IO_FILE *fp)
       _IO_wstr_overflow (fp, '\0');
       --fp->_wide_data->_IO_write_ptr;
     }
-  else
-    *fp->_wide_data->_IO_write_ptr = '\0';
 
   *mp->bufloc = fp->_wide_data->_IO_write_base;
   *mp->sizeloc = (fp->_wide_data->_IO_write_ptr
