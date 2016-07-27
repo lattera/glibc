@@ -1,3 +1,7 @@
+2016-07-27  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/nios2/localplt.data (__eqsf2): Remove.
+
 2016-07-21  Gustavo Romero  <gromero@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Fix missing verb
