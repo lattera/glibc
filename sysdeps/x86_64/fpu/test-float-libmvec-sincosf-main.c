@@ -1,4 +1,4 @@
-/* Test for vector sincos ABI.
+/* Test for vector sincosf ABI.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,29 +16,27 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math-tests-arch.h>
+#include <math.h>
 
-extern int test_sincos_abi (void);
+#define N 1000
+float x[N], s[N], c[N];
+float *s_ptrs[N];
+float *c_ptrs[N];
 
-int arch_check = 1;
-
-static void
-check_arch (void)
+int
+test_sincosf_abi (void)
 {
-  CHECK_ARCH_EXT;
-  arch_check = 0;
+  int i;
+  for(i = 0; i < N; i++)
+  {
+    x[i] = i / 3;
+    s_ptrs[i] = &s[i];
+    c_ptrs[i] = &c[i];
+  }
+
+#pragma omp simd
+  for(i = 0; i < N; i++)
+    sincosf (x[i], s_ptrs[i], c_ptrs[i]);
+
+  return 0;
 }
-
-static int
-do_test (void)
-{
-  check_arch ();
-
-  if (arch_check)
-    return 77;
-
-  return test_sincos_abi ();
-}
-
-#define TEST_FUNCTION do_test ()
-#include "../../../test-skeleton.c"

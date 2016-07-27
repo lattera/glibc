@@ -16,29 +16,28 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math-tests-arch.h>
+#include <math.h>
 
-extern int test_sincos_abi (void);
+#define N 1000
+double x[N], s[N], c[N];
+double* s_ptrs[N];
+double* c_ptrs[N];
 
-int arch_check = 1;
-
-static void
-check_arch (void)
+int
+test_sincos_abi (void)
 {
-  CHECK_ARCH_EXT;
-  arch_check = 0;
+  int i;
+
+  for(i = 0; i < N; i++)
+  {
+    x[i] = i / 3;
+    s_ptrs[i] = &s[i];
+    c_ptrs[i] = &c[i];
+  }
+
+#pragma omp simd
+  for(i = 0; i < N; i++)
+    sincos (x[i], s_ptrs[i], c_ptrs[i]);
+
+  return 0;
 }
-
-static int
-do_test (void)
-{
-  check_arch ();
-
-  if (arch_check)
-    return 77;
-
-  return test_sincos_abi ();
-}
-
-#define TEST_FUNCTION do_test ()
-#include "../../../test-skeleton.c"

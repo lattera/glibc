@@ -16,52 +16,27 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
 #include <math-tests-arch.h>
 
-#define N 1000
-float x[N], s[N], c[N];
-float *s_ptrs[N];
-float *c_ptrs[N];
+extern int test_sincosf_abi (void);
+
 int arch_check = 1;
 
 static void
-init_arg (void)
+check_arch (void)
 {
-  int i;
-
   CHECK_ARCH_EXT;
-
   arch_check = 0;
-
-  for(i = 0; i < N; i++)
-  {
-    x[i] = i / 3;
-    s_ptrs[i] = &s[i];
-    c_ptrs[i] = &c[i];
-  }
-}
-
-static int
-test_sincosf_abi (void)
-{
-  int i;
-
-  init_arg ();
-
-  if (arch_check)
-    return 77;
-
-#pragma omp simd
-  for(i = 0; i < N; i++)
-    sincosf (x[i], s_ptrs[i], c_ptrs[i]);
-
-  return 0;
 }
 
 static int
 do_test (void)
 {
+  check_arch ();
+
+  if (arch_check)
+    return 77;
+
   return test_sincosf_abi ();
 }
 

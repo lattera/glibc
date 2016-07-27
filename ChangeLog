@@ -1,3 +1,66 @@
+2016-07-27  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20384]
+	* sysdeps/x86_64/fpu/Makefile (extra-test-objs): Add
+	test-double-libmvec-sincos-avx-main.o,
+	test-double-libmvec-sincos-avx2-main.o,
+	test-double-libmvec-sincos-main.o,
+	test-float-libmvec-sincosf-avx-main.o,
+	test-float-libmvec-sincosf-avx2-main.o and
+	test-float-libmvec-sincosf-main.o.
+	test-float-libmvec-sincosf-avx512-main.o.
+	($(objpfx)test-double-libmvec-sincos): Also link with
+	$(objpfx)test-double-libmvec-sincos-main.o.
+	($(objpfx)test-double-libmvec-sincos-avx): Also link with
+	$(objpfx)test-double-libmvec-sincos-avx-main.o.
+	($(objpfx)test-double-libmvec-sincos-avx2): Also link with
+	$(objpfx)test-double-libmvec-sincos-avx2-main.o.
+	($(objpfx)test-float-libmvec-sincosf): Also link with
+	$(objpfx)test-float-libmvec-sincosf-main.o.
+	($(objpfx)test-float-libmvec-sincosf-avx): Also link with
+	$(objpfx)test-float-libmvec-sincosf-avx2-main.o.
+	[$(config-cflags-avx512) == yes] (extra-test-objs): Add
+	test-double-libmvec-sincos-avx512-main.o and
+	($(objpfx)test-double-libmvec-sincos-avx512): Also link with
+	$(objpfx)test-double-libmvec-sincos-avx512-main.o.
+	($(objpfx)test-float-libmvec-sincosf-avx512): Also link with
+	$(objpfx)test-float-libmvec-sincosf-avx512-main.o.
+	(CFLAGS-test-double-libmvec-sincos.c): Removed.
+	(CFLAGS-test-float-libmvec-sincosf.c): Likewise.
+	(CFLAGS-test-double-libmvec-sincos-main.c): New.
+	(CFLAGS-test-double-libmvec-sincos-avx-main.c): Likewise.
+	(CFLAGS-test-double-libmvec-sincos-avx2-main.c): Likewise.
+	(CFLAGS-test-float-libmvec-sincosf-main.c): Likewise.
+	(CFLAGS-test-float-libmvec-sincosf-avx-main.c): Likewise.
+	(CFLAGS-test-float-libmvec-sincosf-avx2-main.c): Likewise.
+	(CFLAGS-test-float-libmvec-sincosf-avx512-main.c): Likewise.
+	(CFLAGS-test-double-libmvec-sincos-avx.c): Set to -DREQUIRE_AVX.
+	(CFLAGS-test-float-libmvec-sincosf-avx.c ): Likewise.
+	(CFLAGS-test-double-libmvec-sincos-avx2.c): Set to
+	-DREQUIRE_AVX2.
+	(CFLAGS-test-float-libmvec-sincosf-avx2.c ): Likewise.
+	(CFLAGS-test-double-libmvec-sincos-avx512.c): Set to
+	-DREQUIRE_AVX512F.
+	(CFLAGS-test-float-libmvec-sincosf-avx512.c): Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos.c: Rewritten.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos-avx-main.c: New
+	file.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos-avx2-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos-avx512-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf-avx-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf-avx2-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf-avx512-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf-main.c:
+	Likewise.
+
 2016-07-27  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/nios2/localplt.data (__eqsf2): Remove.
