@@ -1,3 +1,29 @@
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* stdlib/tst-strtod-round-skeleton.c:
+	Refactored from tst-strtod-round.c.
+
+	(L_): New macro to apply literal modifier.
+	(FNPFX): New macro to select str or wcs prefix.
+	(CHAR): New macro to choose wchar_t or char.
+	(STRM): New macro to choose printf for tested character type.
+
+	(STRTO): New macro to choose appropriate string -> real function.
+	(FNPFXS): Stringitized version of FNPFX.
+	(STR): Support for above macro.
+	(STRX): Likewise.
+
+	(TEST): Update with above macros.
+	(test): Likewise.
+	(GEN_ONE_TEST): Likewise.
+	(test_in_one_mode): Likewise.
+
+	* stdlib/tst-strtod-round.c: New file.
+	* wcsmbs/tst-wcstod-round.c: New file.
+
+	* wcsmbs/Makefile: (tests): Add tst-wcstod-round
+	(tst-wcstod-round): Add libm depencency for fesetround.
+
 2016-08-19  Zack Weinberg  <zackw@panix.com>
 
 	* debug/tst-chk1.c: Add tests for fortification of bcopy and bzero.

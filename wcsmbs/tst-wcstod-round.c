@@ -1,4 +1,4 @@
-/* char shim for tst-strtod-round-skeleton.c.
+/* wide character shim for tst-strtod-round-skeleton.c.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,9 +16,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define L_(str) str
-#define FNPFX   str
-#define CHAR    char
-#define STRM    "%s"
+#include <wchar.h>
 
-#include <tst-strtod-round-skeleton.c>
+/* Include stdio.h early to avoid issues with the snprintf
+   redefinition below.  */
+#include <stdio.h>
+
+#define L_(str) L ## str
+#define FNPFX wcs
+#define CHAR wchar_t
+#define STRM "%ls"
+#define snprintf swprintf
+
+#include <stdlib/tst-strtod-round-skeleton.c>
