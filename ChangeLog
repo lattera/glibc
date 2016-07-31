@@ -1,3 +1,57 @@
+2016-08-01  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile
+	[$(subdir) = math] (libm-sysdep_routines): Remove.
+	[$(subdir) = math && $(have-as-vis3) = yes] (libm-sysdep_routines):
+	Remove s_ceilf-vis3, s_ceil-vis3, s_floorf-vis3, s_floor-vis3,
+	s_truncf-vis3, s_trunc-vis3.
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil-vis2.S: Delete
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil-vis3.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf-vis2.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf-vis3.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor-vis2.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor-vis3.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf-vis2.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf-vis3.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_trunc-vis3.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_trunc.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_truncf-vis3.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_truncf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_ceil.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_ceilf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_floor.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_floorf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_trunc.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_truncf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil-vis2.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil-vis3.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf-vis2.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf-vis3.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor-vis2.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor-vis3.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf-vis2.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf-vis3.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_trunc-vis3.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_trunc.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_truncf-vis3.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_truncf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_ceil.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_ceilf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_floor.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_floorf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_trunc.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_truncf.S: Likewise.
+
 2016-07-27  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #20384]
