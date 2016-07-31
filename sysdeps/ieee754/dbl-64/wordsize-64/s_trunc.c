@@ -48,8 +48,10 @@ __trunc (double x)
 
   return x;
 }
+#ifndef __trunc
 weak_alias (__trunc, trunc)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__trunc, __truncl)
 weak_alias (__trunc, truncl)
+# endif
 #endif

@@ -1,3 +1,31 @@
+2016-08-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/ieee754/dbl-64/s_trunc.c: Avoid alias renamed.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_trunc.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_truncf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile
+	[$(subdir) = math && $(have-as-vis3) = yes] (libm-sysdep_routines):
+	Add s_ceilf-vis3, s_ceil-vis3, s_floorf-vis3, s_floor-vis3,
+	s_truncf-vis3, s_trunc-vis3.
+	(CFLAGS-s_ceilf-vis3.c): New. Set to -Wa,-Av9d -mvis3.
+	(CFLAGS-s_ceil-vis3.c): Likewise.
+	(CFLAGS-s_floorf-vis3.c): Likewise.
+	(CFLAGS-s_floor-vis3.c): Likewise.
+	(CFLAGS-s_truncf-vis3.c): Likewise.
+	(CFLAGS-s_trunc-vis3.c): Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil-vis3.c: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf-vis3.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor-vis3.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf-vis3.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_trunc-vis3.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_trunc.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_truncf-vis3.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_truncf.c: Likewise.
+
 2016-08-02  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyint-vis3.S

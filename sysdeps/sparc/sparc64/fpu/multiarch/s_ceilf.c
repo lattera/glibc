@@ -1,7 +1,6 @@
-/* Truncate argument to nearest integral value not larger than the argument.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Float ceil function, sparc64 version.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,37 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
+#ifdef HAVE_AS_VIS3_SUPPORT
+# include <sparc-ifunc.h>
+# include <math.h>
 
-#include <math_private.h>
+extern float __ceilf_vis3 (float);
+extern float __ceilf_generic (float);
 
+sparc_libm_ifunc(__ceilf, hwcap & HWCAP_SPARC_VIS3 ? __ceilf_vis3 : __ceilf_generic);
+weak_alias (__ceilf, ceilf)
 
-float
-__truncf (float x)
-{
-  int32_t i0, j0;
-  int sx;
-
-  GET_FLOAT_WORD (i0, x);
-  sx = i0 & 0x80000000;
-  j0 = ((i0 >> 23) & 0xff) - 0x7f;
-  if (j0 < 23)
-    {
-      if (j0 < 0)
-	/* The magnitude of the number is < 1 so the result is +-0.  */
-	SET_FLOAT_WORD (x, sx);
-      else
-	SET_FLOAT_WORD (x, sx | (i0 & ~(0x007fffff >> j0)));
-    }
-  else
-    {
-      if (j0 == 0x80)
-	/* x is inf or NaN.  */
-	return x + x;
-    }
-
-  return x;
-}
-#ifndef __truncf
-weak_alias (__truncf, truncf)
+# define __ceilf __ceilf_generic
 #endif
+
+#include <sysdeps/ieee754/flt-32/s_ceilf.c>
