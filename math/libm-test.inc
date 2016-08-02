@@ -179,6 +179,7 @@
 #define IGNORE_RESULT			0x20000
 #define NON_FINITE			0x40000
 #define TEST_SNAN			0x80000
+#define NO_TEST_MATHVEC			0x100000
 
 #define __CONCATX(a,b) __CONCAT(a,b)
 
@@ -1056,6 +1057,9 @@ enable_test (int exceptions)
     return 0;
   if (!SNAN_TESTS (FLOAT) && (exceptions & TEST_SNAN) != 0)
     return 0;
+  if (TEST_MATHVEC && (exceptions & NO_TEST_MATHVEC) != 0)
+    return 0;
+
   return 1;
 }
 
@@ -10631,10 +10635,10 @@ nexttoward_test (void)
 
 static const struct test_ff_f_data pow_test_data[] =
   {
-    TEST_ff_f (pow, qnan_value, 0, 1, ERRNO_UNCHANGED),
-    TEST_ff_f (pow, -qnan_value, 0, 1, ERRNO_UNCHANGED),
-    TEST_ff_f (pow, qnan_value, minus_zero, 1, ERRNO_UNCHANGED),
-    TEST_ff_f (pow, -qnan_value, minus_zero, 1, ERRNO_UNCHANGED),
+    TEST_ff_f (pow, qnan_value, 0, 1, ERRNO_UNCHANGED|NO_TEST_MATHVEC),
+    TEST_ff_f (pow, -qnan_value, 0, 1, ERRNO_UNCHANGED|NO_TEST_MATHVEC),
+    TEST_ff_f (pow, qnan_value, minus_zero, 1, ERRNO_UNCHANGED|NO_TEST_MATHVEC),
+    TEST_ff_f (pow, -qnan_value, minus_zero, 1, ERRNO_UNCHANGED|NO_TEST_MATHVEC),
 
     TEST_ff_f (pow, 1.1L, plus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
     TEST_ff_f (pow, plus_infty, plus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),

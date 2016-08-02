@@ -1,3 +1,34 @@
+2016-08-02  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	[BZ #20033]
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp2_core_sse4.S: Call
+	finite version.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp4_core_avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp8_core_avx512.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log2_core_sse4.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log4_core_avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log8_core_avx512.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow2_core_sse4.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow4_core_avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow8_core_avx512.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf16_core_avx512.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf4_core_sse4.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf8_core_avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_logf16_core_avx512.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_logf4_core_sse4.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_logf8_core_avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf16_core_avx512.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf4_core_sse4.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_powf8_core_avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_d_exp2_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_d_log2_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_d_pow2_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_expf4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_logf4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_powf4_core.S: Likewise.
+	* math/libm-test.inc (pow_test_data): Exclude tests for qNaN
+	in zero power.
+
 2016-08-02  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20370]

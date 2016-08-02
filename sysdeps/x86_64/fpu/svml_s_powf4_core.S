@@ -21,7 +21,7 @@
 
 	.text
 ENTRY (_ZGVbN4vv_powf)
-WRAPPER_IMPL_SSE2_ff powf
+WRAPPER_IMPL_SSE2_ff __powf_finite
 END (_ZGVbN4vv_powf)
 
 #ifndef USE_MULTIARCH

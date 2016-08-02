@@ -177,7 +177,7 @@ ENTRY (_ZGVbN4v_logf_sse4)
         movzbl    %r12b, %r15d
         movss     196(%rsp,%r15,8), %xmm0
 
-        call      JUMPTARGET(logf)
+        call      JUMPTARGET(__logf_finite)
 
         movss     %xmm0, 260(%rsp,%r15,8)
         jmp       .LBL_1_8
@@ -186,7 +186,7 @@ ENTRY (_ZGVbN4v_logf_sse4)
         movzbl    %r12b, %r15d
         movss     192(%rsp,%r15,8), %xmm0
 
-        call      JUMPTARGET(logf)
+        call      JUMPTARGET(__logf_finite)
 
         movss     %xmm0, 256(%rsp,%r15,8)
         jmp       .LBL_1_7
