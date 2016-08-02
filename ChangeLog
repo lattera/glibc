@@ -1,5 +1,9 @@
 2016-08-01  Carlos O'Donell  <carlos@redhat.com>
 
+	* version.h (RELEASE): Set to "stable"
+	(VERSION): Set to 2.24.
+	* include/features.h (__GLIBC_MINOR__): Set to 24.
+
 	* NEWS: Add 2.24 fixed bugs.
 	* po/libc.pot: Regenerate.
 
