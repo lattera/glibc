@@ -166,3 +166,7 @@ $(objpfx)libmemusage.so: $(libdl)
 
 # Extra dependencies
 $(foreach o,$(all-object-suffixes),$(objpfx)malloc$(o)): arena.c hooks.c
+
+# Compile the tests with a flag which suppresses the mallopt call in
+# the test skeleton.
+$(tests:%=$(objpfx)%.o): CPPFLAGS += -DTEST_NO_MALLOPT

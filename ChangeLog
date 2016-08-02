@@ -1,3 +1,10 @@
+2016-08-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19469]
+	* malloc/Makefile (CPPFLAGS): Compile tests with
+	-DTEST_NO_MALLOPT.
+	* test-skeleton.c (main): Only call mallopt if !TEST_NO_MALLOPT.
+
 2016-08-02  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	[BZ #20033]
