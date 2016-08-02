@@ -1,3 +1,8 @@
+2016-08-01  Carlos O'Donell  <carlos@redhat.com>
+
+	* NEWS: Add 2.24 fixed bugs.
+	* po/libc.pot: Regenerate.
+
 2016-08-01  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile

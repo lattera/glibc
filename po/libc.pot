@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.23.90\n"
-"POT-Creation-Date: 2016-02-18 17:26-0200\n"
+"POT-Creation-Date: 2016-08-01 21:16-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,8 +66,7 @@ msgid "Give a short usage message"
 msgstr ""
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
-#: nss/makedb.c:120
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105 nss/makedb.c:120
 msgid "NAME"
 msgstr ""
 
@@ -137,12 +136,12 @@ msgid ""
 "[OUTPUT-FILE [INPUT-FILE]...]"
 msgstr ""
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:307
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
 #: elf/pldd.c:252 elf/sln.c:85 elf/sprof.c:372 iconv/iconv_prog.c:408
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:277
-#: locale/programs/localedef.c:376 login/programs/pt_chown.c:89
+#: locale/programs/localedef.c:366 login/programs/pt_chown.c:89
 #: malloc/memusagestat.c:563 nss/getent.c:913 nss/makedb.c:369
-#: posix/getconf.c:486 sunrpc/rpcinfo.c:676
+#: posix/getconf.c:503 sunrpc/rpcinfo.c:676
 #: sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -151,12 +150,12 @@ msgid ""
 msgstr ""
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:323 elf/ldd.bash.in:38 elf/pldd.c:268 elf/sotruss.sh:75
+#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:268 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:425 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:294 locale/programs/localedef.c:402
-#: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:86 nss/makedb.c:385
-#: posix/getconf.c:468 sysdeps/unix/sysv/linux/lddlibc4.c:68
+#: locale/programs/locale.c:294 locale/programs/localedef.c:392
+#: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
+#: nscd/nscd.c:509 nss/getent.c:86 nss/makedb.c:385 posix/getconf.c:485
+#: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -165,11 +164,11 @@ msgid ""
 msgstr ""
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:328 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:430
+#: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:430
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:299
-#: locale/programs/localedef.c:407 malloc/memusage.sh:75
+#: locale/programs/localedef.c:397 malloc/memusage.sh:75
 #: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:91 nss/makedb.c:390
-#: posix/getconf.c:473
+#: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
 msgstr ""
@@ -371,7 +370,7 @@ msgstr ""
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ""
 
-#: elf/cache.c:157 elf/ldconfig.c:1340
+#: elf/cache.c:157 elf/ldconfig.c:1341
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr ""
@@ -622,11 +621,11 @@ msgstr ""
 msgid "cannot map zero-fill pages"
 msgstr ""
 
-#: elf/dl-lookup.c:845
+#: elf/dl-lookup.c:849
 msgid "relocation error"
 msgstr ""
 
-#: elf/dl-lookup.c:872
+#: elf/dl-lookup.c:875
 msgid "symbol lookup error"
 msgstr ""
 
@@ -658,16 +657,16 @@ msgstr ""
 msgid "cannot make segment writable for relocation"
 msgstr ""
 
-#: elf/dl-reloc.c:276
+#: elf/dl-reloc.c:277
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr ""
 
-#: elf/dl-reloc.c:292
+#: elf/dl-reloc.c:293
 msgid "cannot restore segment prot after reloc"
 msgstr ""
 
-#: elf/dl-reloc.c:323
+#: elf/dl-reloc.c:324
 msgid "cannot apply additional memory protection after relocation"
 msgstr ""
 
@@ -687,222 +686,222 @@ msgstr ""
 msgid "cannot allocate version reference table"
 msgstr ""
 
-#: elf/ldconfig.c:141
+#: elf/ldconfig.c:142
 msgid "Print cache"
 msgstr ""
 
-#: elf/ldconfig.c:142
+#: elf/ldconfig.c:143
 msgid "Generate verbose messages"
 msgstr ""
 
-#: elf/ldconfig.c:143
+#: elf/ldconfig.c:144
 msgid "Don't build cache"
 msgstr ""
 
-#: elf/ldconfig.c:144
-msgid "Don't generate links"
+#: elf/ldconfig.c:145
+msgid "Don't update symbolic links"
 msgstr ""
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:146
 msgid "Change to and use ROOT as root directory"
 msgstr ""
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:146
 msgid "ROOT"
 msgstr ""
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:147
 msgid "CACHE"
 msgstr ""
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:147
 msgid "Use CACHE as cache file"
 msgstr ""
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:148
 msgid "CONF"
 msgstr ""
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:148
 msgid "Use CONF as configuration file"
 msgstr ""
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:149
 msgid ""
 "Only process directories specified on the command line.  Don't build cache."
 msgstr ""
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:150
 msgid "Manually link individual libraries."
 msgstr ""
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:151
 msgid "FORMAT"
 msgstr ""
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:151
 msgid "Format to use: new, old or compat (default)"
 msgstr ""
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:152
 msgid "Ignore auxiliary cache file"
 msgstr ""
 
-#: elf/ldconfig.c:159
+#: elf/ldconfig.c:160
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr ""
 
-#: elf/ldconfig.c:346
+#: elf/ldconfig.c:347
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr ""
 
-#: elf/ldconfig.c:386
+#: elf/ldconfig.c:387
 #, c-format
 msgid "%s is not a known library type"
 msgstr ""
 
-#: elf/ldconfig.c:414
+#: elf/ldconfig.c:415
 #, c-format
 msgid "Can't stat %s"
 msgstr ""
 
-#: elf/ldconfig.c:488
+#: elf/ldconfig.c:489
 #, c-format
 msgid "Can't stat %s\n"
 msgstr ""
 
-#: elf/ldconfig.c:498
+#: elf/ldconfig.c:499
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr ""
 
-#: elf/ldconfig.c:517
+#: elf/ldconfig.c:518
 #, c-format
 msgid "Can't unlink %s"
 msgstr ""
 
-#: elf/ldconfig.c:523
+#: elf/ldconfig.c:524
 #, c-format
 msgid "Can't link %s to %s"
 msgstr ""
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:530
 msgid " (changed)\n"
 msgstr ""
 
-#: elf/ldconfig.c:531
+#: elf/ldconfig.c:532
 msgid " (SKIPPED)\n"
 msgstr ""
 
-#: elf/ldconfig.c:586
+#: elf/ldconfig.c:587
 #, c-format
 msgid "Can't find %s"
 msgstr ""
 
-#: elf/ldconfig.c:602 elf/ldconfig.c:775 elf/ldconfig.c:834 elf/ldconfig.c:868
+#: elf/ldconfig.c:603 elf/ldconfig.c:776 elf/ldconfig.c:835 elf/ldconfig.c:869
 #, c-format
 msgid "Cannot lstat %s"
 msgstr ""
 
-#: elf/ldconfig.c:609
+#: elf/ldconfig.c:610
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr ""
 
-#: elf/ldconfig.c:618
+#: elf/ldconfig.c:619
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr ""
 
-#: elf/ldconfig.c:701
+#: elf/ldconfig.c:702
 #, c-format
 msgid "Can't open directory %s"
 msgstr ""
 
-#: elf/ldconfig.c:793 elf/ldconfig.c:855 elf/readlib.c:97
+#: elf/ldconfig.c:794 elf/ldconfig.c:856 elf/readlib.c:97
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr ""
 
-#: elf/ldconfig.c:800
+#: elf/ldconfig.c:801
 #, c-format
 msgid "Cannot stat %s"
 msgstr ""
 
-#: elf/ldconfig.c:951
+#: elf/ldconfig.c:952
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr ""
 
-#: elf/ldconfig.c:954
+#: elf/ldconfig.c:955
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr ""
 
-#: elf/ldconfig.c:957
+#: elf/ldconfig.c:958
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr ""
 
-#: elf/ldconfig.c:985
+#: elf/ldconfig.c:986
 #, c-format
 msgid ""
 "libraries %s and %s in directory %s have same soname but different type."
 msgstr ""
 
-#: elf/ldconfig.c:1094
+#: elf/ldconfig.c:1095
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr ""
 
-#: elf/ldconfig.c:1160
+#: elf/ldconfig.c:1161
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
 msgstr ""
 
-#: elf/ldconfig.c:1166
+#: elf/ldconfig.c:1167
 #, c-format
 msgid "%s:%u: hwcap index %lu above maximum %u"
 msgstr ""
 
-#: elf/ldconfig.c:1173 elf/ldconfig.c:1181
+#: elf/ldconfig.c:1174 elf/ldconfig.c:1182
 #, c-format
 msgid "%s:%u: hwcap index %lu already defined as %s"
 msgstr ""
 
-#: elf/ldconfig.c:1184
+#: elf/ldconfig.c:1185
 #, c-format
 msgid "%s:%u: duplicate hwcap %lu %s"
 msgstr ""
 
-#: elf/ldconfig.c:1206
+#: elf/ldconfig.c:1207
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr ""
 
-#: elf/ldconfig.c:1213 locale/programs/xmalloc.c:63 malloc/obstack.c:416
-#: malloc/obstack.c:418 posix/getconf.c:441 posix/getconf.c:661
+#: elf/ldconfig.c:1214 locale/programs/xmalloc.c:63 malloc/obstack.c:416
+#: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr ""
 
-#: elf/ldconfig.c:1245
+#: elf/ldconfig.c:1246
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr ""
 
-#: elf/ldconfig.c:1289
+#: elf/ldconfig.c:1290
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr ""
 
-#: elf/ldconfig.c:1319
+#: elf/ldconfig.c:1320
 #, c-format
 msgid "Can't chdir to /"
 msgstr ""
 
-#: elf/ldconfig.c:1360
+#: elf/ldconfig.c:1361
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr ""
@@ -945,7 +944,7 @@ msgstr ""
 msgid "No such file or directory"
 msgstr ""
 
-#: elf/ldd.bash.in:150 inet/rcmd.c:479
+#: elf/ldd.bash.in:150 inet/rcmd.c:475
 msgid "not regular file"
 msgstr ""
 
@@ -1358,7 +1357,7 @@ msgstr ""
 msgid "list all known coded character sets"
 msgstr ""
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:129
+#: iconv/iconv_prog.c:64 locale/programs/localedef.c:123
 msgid "Output control:"
 msgstr ""
 
@@ -1367,8 +1366,8 @@ msgid "omit invalid characters from output"
 msgstr ""
 
 #: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
-#: locale/programs/localedef.c:122 locale/programs/localedef.c:124
-#: locale/programs/localedef.c:126 locale/programs/localedef.c:147
+#: locale/programs/localedef.c:116 locale/programs/localedef.c:118
+#: locale/programs/localedef.c:120 locale/programs/localedef.c:140
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr ""
@@ -1461,7 +1460,7 @@ msgstr ""
 msgid "[DIR...]"
 msgstr ""
 
-#: iconv/iconvconfig.c:126 locale/programs/localedef.c:133
+#: iconv/iconvconfig.c:126 locale/programs/localedef.c:126
 msgid "PATH"
 msgstr ""
 
@@ -1484,7 +1483,7 @@ msgstr ""
 msgid "Directory arguments required when using --nostdlib"
 msgstr ""
 
-#: iconv/iconvconfig.c:341 locale/programs/localedef.c:294
+#: iconv/iconvconfig.c:341 locale/programs/localedef.c:287
 #, c-format
 msgid "no output file produced because warnings were issued"
 msgstr ""
@@ -1499,84 +1498,84 @@ msgstr ""
 msgid "cannot generate output file"
 msgstr ""
 
-#: inet/rcmd.c:159
+#: inet/rcmd.c:155
 msgid "rcmd: Cannot allocate memory\n"
 msgstr ""
 
-#: inet/rcmd.c:174
+#: inet/rcmd.c:170
 msgid "rcmd: socket: All ports in use\n"
 msgstr ""
 
-#: inet/rcmd.c:202
+#: inet/rcmd.c:198
 #, c-format
 msgid "connect to address %s: "
 msgstr ""
 
-#: inet/rcmd.c:215
+#: inet/rcmd.c:211
 #, c-format
 msgid "Trying %s...\n"
 msgstr ""
 
-#: inet/rcmd.c:251
+#: inet/rcmd.c:247
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr ""
 
-#: inet/rcmd.c:267
+#: inet/rcmd.c:263
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr ""
 
-#: inet/rcmd.c:270
+#: inet/rcmd.c:266
 msgid "poll: protocol failure in circuit setup\n"
 msgstr ""
 
-#: inet/rcmd.c:302
+#: inet/rcmd.c:298
 msgid "socket: protocol failure in circuit setup\n"
 msgstr ""
 
-#: inet/rcmd.c:326
+#: inet/rcmd.c:322
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr ""
 
-#: inet/rcmd.c:477
+#: inet/rcmd.c:473
 msgid "lstat failed"
 msgstr ""
 
-#: inet/rcmd.c:484
+#: inet/rcmd.c:480
 msgid "cannot open"
 msgstr ""
 
-#: inet/rcmd.c:486
+#: inet/rcmd.c:482
 msgid "fstat failed"
 msgstr ""
 
-#: inet/rcmd.c:488
+#: inet/rcmd.c:484
 msgid "bad owner"
 msgstr ""
 
-#: inet/rcmd.c:490
+#: inet/rcmd.c:486
 msgid "writeable by other than owner"
 msgstr ""
 
-#: inet/rcmd.c:492
+#: inet/rcmd.c:488
 msgid "hard linked somewhere"
 msgstr ""
 
-#: inet/ruserpass.c:169 inet/ruserpass.c:192
+#: inet/ruserpass.c:165 inet/ruserpass.c:188
 msgid "out of memory"
 msgstr ""
 
-#: inet/ruserpass.c:183
+#: inet/ruserpass.c:179
 msgid "Error: .netrc file is readable by others."
 msgstr ""
 
-#: inet/ruserpass.c:184
+#: inet/ruserpass.c:180
 msgid "Remove password or make file unreadable by others."
 msgstr ""
 
-#: inet/ruserpass.c:276
+#: inet/ruserpass.c:199
 #, c-format
 msgid "Unknown .netrc keyword %s"
 msgstr ""
@@ -1683,12 +1682,11 @@ msgstr ""
 #: locale/programs/charmap.c:610 locale/programs/ld-address.c:528
 #: locale/programs/ld-collate.c:2626 locale/programs/ld-collate.c:3784
 #: locale/programs/ld-ctype.c:2128 locale/programs/ld-ctype.c:2840
-#: locale/programs/ld-identification.c:368
-#: locale/programs/ld-measurement.c:215 locale/programs/ld-messages.c:298
-#: locale/programs/ld-monetary.c:740 locale/programs/ld-name.c:264
-#: locale/programs/ld-numeric.c:326 locale/programs/ld-paper.c:214
-#: locale/programs/ld-telephone.c:278 locale/programs/ld-time.c:943
-#: locale/programs/repertoire.c:313
+#: locale/programs/ld-identification.c:399 locale/programs/ld-measurement.c:215
+#: locale/programs/ld-messages.c:298 locale/programs/ld-monetary.c:740
+#: locale/programs/ld-name.c:264 locale/programs/ld-numeric.c:326
+#: locale/programs/ld-paper.c:214 locale/programs/ld-telephone.c:278
+#: locale/programs/ld-time.c:947 locale/programs/repertoire.c:313
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
 msgstr ""
@@ -1710,12 +1708,12 @@ msgstr ""
 #: locale/programs/charmap.c:850 locale/programs/ld-address.c:544
 #: locale/programs/ld-collate.c:2623 locale/programs/ld-collate.c:3977
 #: locale/programs/ld-ctype.c:2125 locale/programs/ld-ctype.c:2857
-#: locale/programs/ld-identification.c:384
-#: locale/programs/ld-measurement.c:231 locale/programs/ld-messages.c:314
-#: locale/programs/ld-monetary.c:756 locale/programs/ld-name.c:280
-#: locale/programs/ld-numeric.c:342 locale/programs/ld-paper.c:230
-#: locale/programs/ld-telephone.c:294 locale/programs/ld-time.c:959
-#: locale/programs/locfile.c:1000 locale/programs/repertoire.c:324
+#: locale/programs/ld-identification.c:415 locale/programs/ld-measurement.c:231
+#: locale/programs/ld-messages.c:314 locale/programs/ld-monetary.c:756
+#: locale/programs/ld-name.c:280 locale/programs/ld-numeric.c:342
+#: locale/programs/ld-paper.c:230 locale/programs/ld-telephone.c:294
+#: locale/programs/ld-time.c:963 locale/programs/locfile.c:1000
+#: locale/programs/repertoire.c:324
 #, c-format
 msgid "%s: premature end of file"
 msgstr ""
@@ -1820,33 +1818,32 @@ msgstr ""
 
 #: locale/programs/ld-address.c:436 locale/programs/ld-address.c:473
 #: locale/programs/ld-address.c:511 locale/programs/ld-ctype.c:2489
-#: locale/programs/ld-identification.c:280
-#: locale/programs/ld-measurement.c:198 locale/programs/ld-messages.c:267
-#: locale/programs/ld-monetary.c:495 locale/programs/ld-monetary.c:530
-#: locale/programs/ld-monetary.c:571 locale/programs/ld-name.c:237
-#: locale/programs/ld-numeric.c:218 locale/programs/ld-paper.c:197
-#: locale/programs/ld-telephone.c:253 locale/programs/ld-time.c:848
-#: locale/programs/ld-time.c:890
+#: locale/programs/ld-identification.c:311 locale/programs/ld-measurement.c:198
+#: locale/programs/ld-messages.c:267 locale/programs/ld-monetary.c:495
+#: locale/programs/ld-monetary.c:530 locale/programs/ld-monetary.c:571
+#: locale/programs/ld-name.c:237 locale/programs/ld-numeric.c:218
+#: locale/programs/ld-paper.c:197 locale/programs/ld-telephone.c:253
+#: locale/programs/ld-time.c:852 locale/programs/ld-time.c:894
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr ""
 
 #: locale/programs/ld-address.c:440 locale/programs/ld-address.c:478
-#: locale/programs/ld-identification.c:284 locale/programs/ld-messages.c:277
+#: locale/programs/ld-identification.c:315 locale/programs/ld-messages.c:277
 #: locale/programs/ld-monetary.c:499 locale/programs/ld-monetary.c:534
 #: locale/programs/ld-name.c:241 locale/programs/ld-numeric.c:222
-#: locale/programs/ld-telephone.c:257 locale/programs/ld-time.c:742
-#: locale/programs/ld-time.c:811 locale/programs/ld-time.c:853
+#: locale/programs/ld-telephone.c:257 locale/programs/ld-time.c:746
+#: locale/programs/ld-time.c:815 locale/programs/ld-time.c:857
 #, c-format
 msgid "%s: unknown character in field `%s'"
 msgstr ""
 
 #: locale/programs/ld-address.c:525 locale/programs/ld-collate.c:3782
-#: locale/programs/ld-ctype.c:2837 locale/programs/ld-identification.c:365
+#: locale/programs/ld-ctype.c:2837 locale/programs/ld-identification.c:396
 #: locale/programs/ld-measurement.c:212 locale/programs/ld-messages.c:296
 #: locale/programs/ld-monetary.c:738 locale/programs/ld-name.c:262
 #: locale/programs/ld-numeric.c:324 locale/programs/ld-paper.c:212
-#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:941
+#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:945
 #, c-format
 msgid "%s: incomplete `END' line"
 msgstr ""
@@ -1857,11 +1854,11 @@ msgstr ""
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
 #: locale/programs/ld-ctype.c:1857 locale/programs/ld-ctype.c:2115
 #: locale/programs/ld-ctype.c:2687 locale/programs/ld-ctype.c:2848
-#: locale/programs/ld-identification.c:375
-#: locale/programs/ld-measurement.c:222 locale/programs/ld-messages.c:305
-#: locale/programs/ld-monetary.c:747 locale/programs/ld-name.c:271
-#: locale/programs/ld-numeric.c:333 locale/programs/ld-paper.c:221
-#: locale/programs/ld-telephone.c:285 locale/programs/ld-time.c:950
+#: locale/programs/ld-identification.c:406 locale/programs/ld-measurement.c:222
+#: locale/programs/ld-messages.c:305 locale/programs/ld-monetary.c:747
+#: locale/programs/ld-name.c:271 locale/programs/ld-numeric.c:333
+#: locale/programs/ld-paper.c:221 locale/programs/ld-telephone.c:285
+#: locale/programs/ld-time.c:954
 #, c-format
 msgid "%s: syntax error"
 msgstr ""
@@ -2349,12 +2346,17 @@ msgstr ""
 msgid "%s: table for width: %lu bytes\n"
 msgstr ""
 
-#: locale/programs/ld-identification.c:170
+#: locale/programs/ld-identification.c:175
 #, c-format
 msgid "%s: no identification for category `%s'"
 msgstr ""
 
-#: locale/programs/ld-identification.c:351
+#: locale/programs/ld-identification.c:199
+#, c-format
+msgid "%s: unknown standard `%s' for category `%s'"
+msgstr ""
+
+#: locale/programs/ld-identification.c:382
 #, c-format
 msgid "%s: duplicate category version definition"
 msgstr ""
@@ -2478,27 +2480,27 @@ msgstr ""
 msgid "%s: missing era format in string %Zd in `era' field"
 msgstr ""
 
-#: locale/programs/ld-time.c:497
+#: locale/programs/ld-time.c:501
 #, c-format
 msgid "%s: third operand for value of field `%s' must not be larger than %d"
 msgstr ""
 
-#: locale/programs/ld-time.c:505 locale/programs/ld-time.c:513
-#: locale/programs/ld-time.c:521
+#: locale/programs/ld-time.c:509 locale/programs/ld-time.c:517
+#: locale/programs/ld-time.c:525
 #, c-format
 msgid "%s: values for field `%s' must not be larger than %d"
 msgstr ""
 
-#: locale/programs/ld-time.c:726
+#: locale/programs/ld-time.c:730
 #, c-format
 msgid "%s: too few values for field `%s'"
 msgstr ""
 
-#: locale/programs/ld-time.c:771
+#: locale/programs/ld-time.c:775
 msgid "extra trailing semicolon"
 msgstr ""
 
-#: locale/programs/ld-time.c:774
+#: locale/programs/ld-time.c:778
 #, c-format
 msgid "%s: too many values for field `%s'"
 msgstr ""
@@ -2609,115 +2611,111 @@ msgstr ""
 msgid "while preparing output"
 msgstr ""
 
-#: locale/programs/localedef.c:121
+#: locale/programs/localedef.c:115
 msgid "Input Files:"
 msgstr ""
 
-#: locale/programs/localedef.c:123
+#: locale/programs/localedef.c:117
 msgid "Symbolic character names defined in FILE"
 msgstr ""
 
-#: locale/programs/localedef.c:125
+#: locale/programs/localedef.c:119
 msgid "Source definitions are found in FILE"
 msgstr ""
 
-#: locale/programs/localedef.c:127
+#: locale/programs/localedef.c:121
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr ""
 
-#: locale/programs/localedef.c:131
+#: locale/programs/localedef.c:125
 msgid "Create output even if warning messages were issued"
 msgstr ""
 
-#: locale/programs/localedef.c:132
-msgid "Create old-style tables"
-msgstr ""
-
-#: locale/programs/localedef.c:133
+#: locale/programs/localedef.c:126
 msgid "Optional output file prefix"
 msgstr ""
 
-#: locale/programs/localedef.c:134
+#: locale/programs/localedef.c:127
 msgid "Strictly conform to POSIX"
 msgstr ""
 
-#: locale/programs/localedef.c:136
+#: locale/programs/localedef.c:129
 msgid "Suppress warnings and information messages"
 msgstr ""
 
-#: locale/programs/localedef.c:137
+#: locale/programs/localedef.c:130
 msgid "Print more messages"
 msgstr ""
 
-#: locale/programs/localedef.c:138
+#: locale/programs/localedef.c:131
 msgid "Archive control:"
 msgstr ""
 
-#: locale/programs/localedef.c:140
+#: locale/programs/localedef.c:133
 msgid "Don't add new data to archive"
 msgstr ""
 
-#: locale/programs/localedef.c:142
+#: locale/programs/localedef.c:135
 msgid "Add locales named by parameters to archive"
 msgstr ""
 
-#: locale/programs/localedef.c:143
+#: locale/programs/localedef.c:136
 msgid "Replace existing archive content"
 msgstr ""
 
-#: locale/programs/localedef.c:145
+#: locale/programs/localedef.c:138
 msgid "Remove locales named by parameters from archive"
 msgstr ""
 
-#: locale/programs/localedef.c:146
+#: locale/programs/localedef.c:139
 msgid "List content of archive"
 msgstr ""
 
-#: locale/programs/localedef.c:148
+#: locale/programs/localedef.c:141
 msgid "locale.alias file to consult when making archive"
 msgstr ""
 
-#: locale/programs/localedef.c:150
+#: locale/programs/localedef.c:143
 msgid "Generate little-endian output"
 msgstr ""
 
-#: locale/programs/localedef.c:152
+#: locale/programs/localedef.c:145
 msgid "Generate big-endian output"
 msgstr ""
 
-#: locale/programs/localedef.c:157
+#: locale/programs/localedef.c:150
 msgid "Compile locale specification"
 msgstr ""
 
-#: locale/programs/localedef.c:160
+#: locale/programs/localedef.c:153
 msgid ""
 "NAME\n"
 "[--add-to-archive|--delete-from-archive] FILE...\n"
 "--list-archive [FILE]"
 msgstr ""
 
-#: locale/programs/localedef.c:235
+#: locale/programs/localedef.c:228
 #, c-format
 msgid "cannot create directory for output files"
 msgstr ""
 
-#: locale/programs/localedef.c:246
+#: locale/programs/localedef.c:239
 #, c-format
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr ""
 
-#: locale/programs/localedef.c:260 locale/programs/localedef.c:276
-#: locale/programs/localedef.c:612 locale/programs/localedef.c:632
+#: locale/programs/localedef.c:253 locale/programs/localedef.c:269
+#: locale/programs/localedef.c:602 locale/programs/localedef.c:622
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr ""
 
-#: locale/programs/localedef.c:288
+#: locale/programs/localedef.c:281
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr ""
 
-#: locale/programs/localedef.c:380
+#: locale/programs/localedef.c:370
 #, c-format
 msgid ""
 "System's directory for character maps : %s\n"
@@ -2726,12 +2724,12 @@ msgid ""
 "%s"
 msgstr ""
 
-#: locale/programs/localedef.c:580
+#: locale/programs/localedef.c:570
 #, c-format
 msgid "circular dependencies between locale definitions"
 msgstr ""
 
-#: locale/programs/localedef.c:586
+#: locale/programs/localedef.c:576
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr ""
@@ -4022,23 +4020,23 @@ msgstr ""
 msgid "setgroups failed"
 msgstr ""
 
-#: nscd/grpcache.c:405 nscd/hstcache.c:432 nscd/initgrcache.c:411
-#: nscd/pwdcache.c:383 nscd/servicescache.c:338
+#: nscd/grpcache.c:416 nscd/hstcache.c:432 nscd/initgrcache.c:411
+#: nscd/pwdcache.c:394 nscd/servicescache.c:338
 #, c-format
 msgid "short write in %s: %s"
 msgstr ""
 
-#: nscd/grpcache.c:450 nscd/initgrcache.c:78
+#: nscd/grpcache.c:461 nscd/initgrcache.c:78
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr ""
 
-#: nscd/grpcache.c:452 nscd/initgrcache.c:80
+#: nscd/grpcache.c:463 nscd/initgrcache.c:80
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr ""
 
-#: nscd/grpcache.c:531
+#: nscd/grpcache.c:542
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr ""
@@ -4344,17 +4342,17 @@ msgid ""
 "%15s  check /etc/%s for changes\n"
 msgstr ""
 
-#: nscd/pwdcache.c:428
+#: nscd/pwdcache.c:439
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
 msgstr ""
 
-#: nscd/pwdcache.c:430
+#: nscd/pwdcache.c:441
 #, c-format
 msgid "Reloading \"%s\" in password cache!"
 msgstr ""
 
-#: nscd/pwdcache.c:511
+#: nscd/pwdcache.c:522
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
 msgstr ""
@@ -4602,17 +4600,17 @@ msgstr ""
 msgid "cannot set file creation context for `%s'"
 msgstr ""
 
-#: posix/getconf.c:400
+#: posix/getconf.c:417
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr ""
 
-#: posix/getconf.c:403
+#: posix/getconf.c:420
 #, c-format
 msgid "       %s -a [pathname]\n"
 msgstr ""
 
-#: posix/getconf.c:479
+#: posix/getconf.c:496
 #, c-format
 msgid ""
 "Usage: getconf [-v SPEC] VAR\n"
@@ -4624,21 +4622,21 @@ msgid ""
 "\n"
 msgstr ""
 
-#: posix/getconf.c:537
+#: posix/getconf.c:572
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr ""
 
-#: posix/getconf.c:589
+#: posix/getconf.c:624
 #, c-format
 msgid "Couldn't execute %s"
 msgstr ""
 
-#: posix/getconf.c:633 posix/getconf.c:649
+#: posix/getconf.c:669 posix/getconf.c:685
 msgid "undefined"
 msgstr ""
 
-#: posix/getconf.c:671
+#: posix/getconf.c:707
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr ""
@@ -4771,31 +4769,31 @@ msgstr ""
 msgid "parameter null or not set"
 msgstr ""
 
-#: resolv/herror.c:68
+#: resolv/herror.c:63
 msgid "Resolver Error 0 (no error)"
 msgstr ""
 
-#: resolv/herror.c:69
+#: resolv/herror.c:64
 msgid "Unknown host"
 msgstr ""
 
-#: resolv/herror.c:70
+#: resolv/herror.c:65
 msgid "Host name lookup failure"
 msgstr ""
 
-#: resolv/herror.c:71
+#: resolv/herror.c:66
 msgid "Unknown server error"
 msgstr ""
 
-#: resolv/herror.c:72
+#: resolv/herror.c:67
 msgid "No address associated with name"
 msgstr ""
 
-#: resolv/herror.c:107
+#: resolv/herror.c:102
 msgid "Resolver internal error"
 msgstr ""
 
-#: resolv/herror.c:110
+#: resolv/herror.c:105
 msgid "Unknown resolver error"
 msgstr ""
 
