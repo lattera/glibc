@@ -1,3 +1,10 @@
+2016-08-02  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/alpha/fpu/s_ceil.c (__ceil): Add argument with itself
+	when it is a NaN.
+	[_IEEE_FP_INEXACT] Remove.
+	* sysdeps/alpha/fpu/s_ceilf.c (__ceilf): Likewise.
+
 2016-08-01  Carlos O'Donell  <carlos@redhat.com>
 
 	* version.h (RELEASE): Set to "development"

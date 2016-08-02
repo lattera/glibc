@@ -25,6 +25,9 @@
 float
 __ceilf (float x)
 {
+  if (isnanf (x))
+    return x + x;
+
   if (isless (fabsf (x), 16777216.0f))	/* 1 << FLT_MANT_DIG */
     {
       /* Note that Alpha S_Floating is stored in registers in a
@@ -36,11 +39,7 @@ __ceilf (float x)
 
       new_x = -x;
       __asm ("cvtst/s %3,%2\n\t"
-#ifdef _IEEE_FP_INEXACT
-	     "cvttq/svim %2,%1\n\t"
-#else
 	     "cvttq/svm %2,%1\n\t"
-#endif
 	     "cvtqt/m %1,%0\n\t"
 	     : "=f"(new_x), "=&f"(tmp1), "=&f"(tmp2)
 	     : "f"(new_x));
