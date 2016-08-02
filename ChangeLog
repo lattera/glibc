@@ -1,3 +1,8 @@
+2016-08-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/powerpc/ifunc-sel.h (ifunc_sel): Replace beqlr instructions
+	by beq instructions jumping to the end of the function.
+
 2016-08-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/libc-header-start.h: New file.

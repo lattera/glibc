@@ -17,13 +17,14 @@ ifunc_sel (int (*f1) (void), int (*f2) (void), int (*f3) (void))
 	   "addis %0,11,%2-1b@ha\n\t"
 	   "addi %0,%0,%2-1b@l\n\t"
 	   "cmpwi 12,1\n\t"
-	   "beqlr\n\t"
+	   "beq 2f\n\t"
 	   "addis %0,11,%3-1b@ha\n\t"
 	   "addi %0,%0,%3-1b@l\n\t"
 	   "cmpwi 12,-1\n\t"
-	   "beqlr\n\t"
+	   "beq 2f\n\t"
 	   "addis %0,11,%4-1b@ha\n\t"
-	   "addi %0,%0,%4-1b@l"
+	   "addi %0,%0,%4-1b@l\n\t"
+	   "2:"
 	   : "=r" (ret)
 	   : "X" (&global), "X" (f1), "X" (f2), "X" (f3));
   return ret;
