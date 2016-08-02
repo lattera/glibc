@@ -702,8 +702,7 @@ _int_new_arena (size_t size)
 }
 
 
-/* Remove an arena from free_list.  The arena may be in use because it
-   was attached concurrently to a thread by reused_arena below.  */
+/* Remove an arena from free_list.  */
 static mstate
 get_free_list (void)
 {
@@ -718,7 +717,8 @@ get_free_list (void)
 	  free_list = result->next_free;
 
 	  /* The arena will be attached to this thread.  */
-	  ++result->attached_threads;
+	  assert (result->attached_threads == 0);
+	  result->attached_threads = 1;
 
 	  detach_arena (replaced_arena);
 	}
@@ -733,6 +733,26 @@ get_free_list (void)
     }
 
   return result;
+}
+
+/* Remove the arena from the free list (if it is present).
+   free_list_lock must have been acquired by the caller.  */
+static void
+remove_from_free_list (mstate arena)
+{
+  mstate *previous = &free_list;
+  for (mstate p = free_list; p != NULL; p = p->next_free)
+    {
+      assert (p->attached_threads == 0);
+      if (p == arena)
+	{
+	  /* Remove the requested arena from the list.  */
+	  *previous = p->next_free;
+	  break;
+	}
+      else
+	previous = &p->next_free;
+    }
 }
 
 /* Lock and return an arena that can be reused for memory allocation.
@@ -782,14 +802,25 @@ reused_arena (mstate avoid_arena)
   (void) mutex_lock (&result->mutex);
 
 out:
-  /* Attach the arena to the current thread.  Note that we may have
-     selected an arena which was on free_list.  */
+  /* Attach the arena to the current thread.  */
   {
     /* Update the arena thread attachment counters.   */
     mstate replaced_arena = thread_arena;
     (void) mutex_lock (&free_list_lock);
     detach_arena (replaced_arena);
+
+    /* We may have picked up an arena on the free list.  We need to
+       preserve the invariant that no arena on the free list has a
+       positive attached_threads counter (otherwise,
+       arena_thread_freeres cannot use the counter to determine if the
+       arena needs to be put on the free list).  We unconditionally
+       remove the selected arena from the free list.  The caller of
+       reused_arena checked the free list and observed it to be empty,
+       so the list is very short.  */
+    remove_from_free_list (result);
+
     ++result->attached_threads;
+
     (void) mutex_unlock (&free_list_lock);
   }
 

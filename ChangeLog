@@ -1,3 +1,11 @@
+2016-08-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20370]
+	* malloc/arena.c (get_free_list): Update comment.  Assert that
+	arenas on the free list have no attached threads.
+	(remove_from_free_list): New function.
+	(reused_arena): Call it.
+
 2016-08-02  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/alpha/fpu/s_ceil.c (__ceil): Add argument with itself
