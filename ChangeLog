@@ -1,5 +1,17 @@
 2016-08-02  Florian Weimer  <fweimer@redhat.com>
 
+	Support linking against compatibility symbols, for use in tests.
+	* include/libc-symbols.h (symbol_version_reference): New macro.
+	(symbol_version): Use it.
+	* include/shlib-compat.h: Unconditionally include <abi-versions.h>.
+	(compat_symbol): Use compat_symbol_reference.
+	(compat_symbol_1, compat_symbol_2): Remove.
+	(compat_symbol_reference, compat_symbol_reference_1)
+	(compat_symbol_reference_2): New macro.  Use
+	symbol_version_reference.
+
+2016-08-02  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19469]
 	* malloc/Makefile (CPPFLAGS): Compile tests with
 	-DTEST_NO_MALLOPT.
