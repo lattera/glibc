@@ -24,6 +24,7 @@
    __STRICT_ANSI__	ISO Standard C.
    _ISOC99_SOURCE	Extensions to ISO C89 from ISO C99.
    _ISOC11_SOURCE	Extensions to ISO C99 from ISO C11.
+   __STDC_WANT_LIB_EXT2__ Extensions to ISO C99 from TR 27431-2:2010.
    _POSIX_SOURCE	IEEE Std 1003.1.
    _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
 			if >=199309L, add IEEE Std 1003.1b-1993;
@@ -58,6 +59,10 @@
    These are defined by this file and are used by the
    header files to decide what to declare or define:
 
+   __GLIBC_USE (F)	Define things from feature set F.  This is defined
+			to 1 or 0; the subsequent macros are either defined
+			or undefined, and those tests should be moved to
+			__GLIBC_USE.
    __USE_ISOC11		Define ISO C11 things.
    __USE_ISOC99		Define ISO C99 things.
    __USE_ISOC95		Define ISO C90 AMD1 (C95) things.
@@ -90,7 +95,14 @@
    explicitly undefined if they are not explicitly defined.
    Feature-test macros that are not defined by the user or compiler
    but are implied by the other feature-test macros defined (or by the
-   lack of any definitions) are defined by the file.  */
+   lack of any definitions) are defined by the file.
+
+   ISO C feature test macros depend on the definition of the macro
+   when an affected header is included, not when the first system
+   header is included, and so they are handled in
+   <bits/libc-header-start.h>, which does not have a multiple include
+   guard.  Feature test macros that can be handled from the first
+   system header included are handled here.  */
 
 
 /* Undefine everything, so we get a clean slate.  */
@@ -138,6 +150,9 @@
 #else
 # define __GNUC_PREREQ(maj, min) 0
 #endif
+
+/* Whether to use feature set F.  */
+#define __GLIBC_USE(F)	__GLIBC_USE_ ## F
 
 /* _BSD_SOURCE and _SVID_SOURCE are deprecated aliases for
    _DEFAULT_SOURCE.  If _DEFAULT_SOURCE is present we do not

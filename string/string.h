@@ -22,7 +22,8 @@
 #ifndef	_STRING_H
 #define	_STRING_H	1
 
-#include <features.h>
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+#include <bits/libc-header-start.h>
 
 __BEGIN_DECLS
 
@@ -166,7 +167,8 @@ extern size_t strxfrm_l (char *__dest, const char *__src, size_t __n,
 			 __locale_t __l) __THROW __nonnull ((2, 4));
 #endif
 
-#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
+#if (defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8	\
+     || __GLIBC_USE (LIB_EXT2))
 /* Duplicate S, returning an identical malloc'd string.  */
 extern char *strdup (const char *__s)
      __THROW __attribute_malloc__ __nonnull ((1));
@@ -175,7 +177,7 @@ extern char *strdup (const char *__s)
 /* Return a malloc'd copy of at most N bytes of STRING.  The
    resultant string is terminated even if no null terminator
    appears before STRING[N].  */
-#if defined __USE_XOPEN2K8
+#if defined __USE_XOPEN2K8 || __GLIBC_USE (LIB_EXT2)
 extern char *strndup (const char *__string, size_t __n)
      __THROW __attribute_malloc__ __nonnull ((1));
 #endif

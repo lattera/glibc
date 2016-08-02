@@ -1,3 +1,31 @@
+2016-08-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* bits/libc-header-start.h: New file.
+	* Makefile (headers): Add bits/libc-header-start.h.
+	* include/features.h (__STDC_WANT_LIB_EXT2__): Document.
+	(__GLIBC_USE): New macro.
+	* libio/stdio.h: Define
+	__GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION and include
+	<bits/libc-header-start.h> instead of including <features.h>.
+	(fmemopen): Declare also if [__GLIBC_USE (LIB_EXT2)].
+	(open_memstream): Likewise.
+	(vasprintf): Declare if [__GLIBC_USE (LIB_EXT2)], not [__USE_GNU].
+	(__asprintf): Likewise.
+	(asprintf): Likewise.
+	(__getdelim): Declare also if [__GLIBC_USE (LIB_EXT2)].
+	(getdelim): Likewise.
+	(getline): Likewise.
+	* string/string.h: Define
+	__GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION and include
+	<bits/libc-header-start.h> instead of including <features.h>.
+	(strdup): Declare also if [__GLIBC_USE (LIB_EXT2)]
+	(strndup): Likewise.
+	* wcsmbs/wchar.h: Define
+	__GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION and include
+	<bits/libc-header-start.h> instead of including <features.h>.
+	(open_wmemstream): Declare also if [__GLIBC_USE (LIB_EXT2)].
+	* manual/creature.texi (__STDC_WANT_LIB_EXT2__): Document macro.
+
 2016-08-02  Florian Weimer  <fweimer@redhat.com>
 
 	Support linking against compatibility symbols, for use in tests.

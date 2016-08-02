@@ -24,7 +24,8 @@
 
 #if !defined __need_FILE && !defined __need___FILE
 # define _STDIO_H	1
-# include <features.h>
+# define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+# include <bits/libc-header-start.h>
 
 __BEGIN_DECLS
 
@@ -316,7 +317,7 @@ extern FILE *fopencookie (void *__restrict __magic_cookie,
 			  _IO_cookie_io_functions_t __io_funcs) __THROW __wur;
 #endif
 
-#ifdef __USE_XOPEN2K8
+#if defined __USE_XOPEN2K8 || __GLIBC_USE (LIB_EXT2)
 /* Create a new stream that refers to a memory buffer.  */
 extern FILE *fmemopen (void *__s, size_t __len, const char *__modes)
   __THROW __wur;
@@ -395,7 +396,7 @@ extern int vsnprintf (char *__restrict __s, size_t __maxlen,
 __END_NAMESPACE_C99
 #endif
 
-#ifdef __USE_GNU
+#if __GLIBC_USE (LIB_EXT2)
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
 extern int vasprintf (char **__restrict __ptr, const char *__restrict __f,
@@ -653,7 +654,7 @@ extern char *fgets_unlocked (char *__restrict __s, int __n,
 #endif
 
 
-#ifdef	__USE_XOPEN2K8
+#if defined __USE_XOPEN2K8 || __GLIBC_USE (LIB_EXT2)
 /* Read up to (and including) a DELIMITER from STREAM into *LINEPTR
    (and null-terminate it). *LINEPTR is a pointer returned from malloc (or
    NULL), pointing to *N characters of space.  It is realloc'd as

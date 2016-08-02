@@ -166,6 +166,14 @@ macro @code{_ISOC99_SOURCE} should be defined.
 @end defvr
 
 @comment (none)
+@comment ISO
+@defvr Macro __STDC_WANT_LIB_EXT2__
+If you define this macro to the value @code{1}, features from ISO/IEC
+TR 24731-2:2010 (Dynamic Allocation Functions) are enabled.  Only some
+of the features from this TR are supported by @theglibc{}.
+@end defvr
+
+@comment (none)
 @comment GNU
 @defvr Macro _GNU_SOURCE
 If you define this macro, everything is included: @w{ISO C89}, @w{ISO

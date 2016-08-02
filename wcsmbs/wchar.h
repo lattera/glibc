@@ -24,7 +24,8 @@
 
 #if !defined __need_mbstate_t && !defined __need_wint_t
 # define _WCHAR_H 1
-# include <features.h>
+# define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+# include <bits/libc-header-start.h>
 #endif
 
 #ifdef _WCHAR_H
@@ -574,10 +575,12 @@ extern wchar_t *wcpcpy (wchar_t *__restrict __dest,
 extern wchar_t *wcpncpy (wchar_t *__restrict __dest,
 			 const wchar_t *__restrict __src, size_t __n)
      __THROW;
+#endif
 
 
 /* Wide character I/O functions.  */
 
+#if defined __USE_XOPEN2K8 || __GLIBC_USE (LIB_EXT2)
 /* Like OPEN_MEMSTREAM, but the stream is wide oriented and produces
    a wide character string.  */
 extern __FILE *open_wmemstream (wchar_t **__bufloc, size_t *__sizeloc) __THROW;

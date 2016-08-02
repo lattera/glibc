@@ -7,7 +7,10 @@ using `glibc' in the "product" field.
 
 Version 2.25
 
-[Add important changes here]
+* The feature test macro __STDC_WANT_LIB_EXT2__, from ISO/IEC TR
+  24731-2:2010, is supported to enable declarations of functions from that
+  TR.  Note that not all functions from that TR are supported by the GNU C
+  Library.
 
 Security related changes:
 
