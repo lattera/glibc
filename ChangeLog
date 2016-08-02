@@ -2,6 +2,10 @@
 
 	* sysdeps/powerpc/ifunc-sel.h (ifunc_sel): Replace beqlr instructions
 	by beq instructions jumping to the end of the function.
+	* sysdeps/powerpc/ifunc-sel.h (ifunc_sel): Add "11", "12", "cr0" to the
+	clobber list. Use "i" constraint instead of "X".
+	(ifunc_one): Add "12" to the clobber list. Use "i" constraint instead
+	of "X".
 
 2016-08-02  Joseph Myers  <joseph@codesourcery.com>
 

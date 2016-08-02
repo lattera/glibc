@@ -26,7 +26,8 @@ ifunc_sel (int (*f1) (void), int (*f2) (void), int (*f3) (void))
 	   "addi %0,%0,%4-1b@l\n\t"
 	   "2:"
 	   : "=r" (ret)
-	   : "X" (&global), "X" (f1), "X" (f2), "X" (f3));
+	   : "i" (&global), "i" (f1), "i" (f2), "i" (f3)
+	   : "11", "12", "cr0");
   return ret;
 }
 
@@ -41,7 +42,8 @@ ifunc_one (int (*f1) (void))
 	   "addis %0,%0,%1-1b@ha\n\t"
 	   "addi %0,%0,%1-1b@l"
 	   : "=r" (ret)
-	   : "X" (f1));
+	   : "i" (f1)
+	   : "12");
   return ret;
 }
 #endif
