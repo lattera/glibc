@@ -8,6 +8,9 @@
 	when it is a NaN.
 	[_IEEE_FP_INEXACT] Remove.
 	* sysdeps/alpha/fpu/s_floorf.c (__floorf): Likewise.
+	* sysdeps/alpha/fpu/s_rint.c (__rint): Add argument with itself
+	when it is a NaN.
+	* sysdeps/alpha/fpu/s_rintf.c (__rintf): Likewise.
 
 2016-08-01  Carlos O'Donell  <carlos@redhat.com>
 

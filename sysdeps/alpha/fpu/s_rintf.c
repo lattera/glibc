@@ -22,6 +22,9 @@
 float
 __rintf (float x)
 {
+  if (isnanf (x))
+    return x + x;
+
   if (isless (fabsf (x), 16777216.0f))	/* 1 << FLT_MANT_DIG */
     {
       /* Note that Alpha S_Floating is stored in registers in a

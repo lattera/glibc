@@ -23,6 +23,9 @@
 double
 __rint (double x)
 {
+  if (isnan (x))
+    return x + x;
+
   if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
     {
       double tmp1, new_x;
