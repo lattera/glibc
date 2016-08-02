@@ -4,6 +4,10 @@
 	when it is a NaN.
 	[_IEEE_FP_INEXACT] Remove.
 	* sysdeps/alpha/fpu/s_ceilf.c (__ceilf): Likewise.
+	* sysdeps/alpha/fpu/s_floor.c (__floor): Add argument with itself
+	when it is a NaN.
+	[_IEEE_FP_INEXACT] Remove.
+	* sysdeps/alpha/fpu/s_floorf.c (__floorf): Likewise.
 
 2016-08-01  Carlos O'Donell  <carlos@redhat.com>
 

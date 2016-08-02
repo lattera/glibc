@@ -27,16 +27,15 @@
 double
 __floor (double x)
 {
+  if (isnan (x))
+    return x + x;
+
   if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
     {
       double tmp1, new_x;
 
       __asm (
-#ifdef _IEEE_FP_INEXACT
-	     "cvttq/svim %2,%1\n\t"
-#else
 	     "cvttq/svm %2,%1\n\t"
-#endif
 	     "cvtqt/m %1,%0\n\t"
 	     : "=f"(new_x), "=&f"(tmp1)
 	     : "f"(x));
