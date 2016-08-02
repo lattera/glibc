@@ -27,12 +27,11 @@ __truncf (float x)
   float two23 = copysignf (0x1.0p23, x);
   float r, tmp;
 
+  if (isgreaterequal (fabsf (x), 0x1.0p23))
+    return x;
+
   __asm (
-#ifdef _IEEE_FP_INEXACT
-	 "adds/suic %2, %3, %1\n\tsubs/suic %1, %3, %0"
-#else
 	 "adds/suc %2, %3, %1\n\tsubs/suc %1, %3, %0"
-#endif
 	 : "=&f"(r), "=&f"(tmp)
 	 : "f"(x), "f"(two23));
 

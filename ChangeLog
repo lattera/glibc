@@ -11,6 +11,12 @@
 	* sysdeps/alpha/fpu/s_rint.c (__rint): Add argument with itself
 	when it is a NaN.
 	* sysdeps/alpha/fpu/s_rintf.c (__rintf): Likewise.
+	* sysdeps/alpha/fpu/s_trunc.c (__trunc): Return the input value
+	when its absolute value is greater than 0x1.0p52.
+	[_IEEE_FP_INEXACT] Remove.
+	* sysdeps/alpha/fpu/s_truncf.c (__truncf): Return the input value
+	when its absolute value is greater than 0x1.0p23.
+	[_IEEE_FP_INEXACT] Remove.
 
 2016-08-01  Carlos O'Donell  <carlos@redhat.com>
 
