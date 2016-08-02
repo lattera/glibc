@@ -98,7 +98,7 @@ __kernel_tanl (long double x, long double y, int iy)
 	{			/* generate inexact */
 	  if ((ix | u.parts32.w1 | u.parts32.w2 | u.parts32.w3
 	       | (iy + 1)) == 0)
-	    return one / fabs (x);
+	    return one / fabsl (x);
 	  else if (iy == 1)
 	    {
 	      math_check_force_underflow (x);

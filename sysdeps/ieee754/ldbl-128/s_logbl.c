@@ -34,7 +34,7 @@ __logbl (long double x)
   GET_LDOUBLE_WORDS64 (hx, lx, x);
   hx &= 0x7fffffffffffffffLL;	/* high |x| */
   if ((hx | lx) == 0)
-    return -1.0 / fabs (x);
+    return -1.0 / fabsl (x);
   if (hx >= 0x7fff000000000000LL)
     return x * x;
   if ((ex = hx >> 48) == 0)	/* IEEE 754 logb */

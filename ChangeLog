@@ -1,3 +1,13 @@
+2016-08-03  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128/k_tanl.c (__kernal_tanl):
+	Use fabsl instead of fabs.
+	* sysdeps/ieee754/ldbl-128/s_logbl.c (__logbl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/s_atanl.c (__kernel_tanl):
+	Add long double suffix to constant to ensure proper
+	promotion to long double.
+
 2016-08-03  Tom Tromey  <tom@tromey.com>
 
 	[BZ #20311]

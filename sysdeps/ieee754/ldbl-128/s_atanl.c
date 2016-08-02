@@ -231,7 +231,7 @@ __atanl (long double x)
 	 Roundoff to integer is asymmetrical to avoid cancellation when t < 0
          (cf. fdlibm). */
       k = 8.0 * x + 0.25;
-      u = 0.125 * k;
+      u = 0.125L * k;
       /* Small arctan argument.  */
       t = (x - u) / (1.0 + x * u);
     }
