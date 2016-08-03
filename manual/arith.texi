@@ -1717,7 +1717,7 @@ subnormal number in the type of @var{x} the function returns @code{-0}.  If
 @math{@var{x} = @code{0}} the function returns the smallest positive subnormal
 number in the type of @var{x}.  If @var{x} is NaN, NaN is returned.
 If @var{x} is @math{+@infinity{}}, @math{+@infinity{}} is returned.
-@code{nextup} from TS 18661-1:2014.
+@code{nextup} is from TS 18661-1:2014.
 @code{nextup} never raises an exception except for signaling NaNs.
 @end deftypefun
 
