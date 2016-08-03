@@ -347,6 +347,22 @@ _dl_get_tls_static_info (size_t *sizep, size_t *alignp)
   *alignp = GL(dl_tls_static_align);
 }
 
+/* Derive the location of the pointer to the start of the original
+   allocation (before alignment) from the pointer to the TCB.  */
+static inline void **
+tcb_to_pointer_to_free_location (void *tcb)
+{
+#if TLS_TCB_AT_TP
+  /* The TCB follows the TLS blocks, and the pointer to the front
+     follows the TCB.  */
+  void **original_pointer_location = tcb + TLS_TCB_SIZE;
+#elif TLS_DTV_AT_TP
+  /* The TCB comes first, preceded by the pre-TCB, and the pointer is
+     before that.  */
+  void **original_pointer_location = tcb - TLS_PRE_TCB_SIZE - sizeof (void *);
+#endif
+  return original_pointer_location;
+}
 
 void *
 internal_function
@@ -359,39 +375,50 @@ _dl_allocate_tls_storage (void)
   /* Memory layout is:
      [ TLS_PRE_TCB_SIZE ] [ TLS_TCB_SIZE ] [ TLS blocks ]
 			  ^ This should be returned.  */
-  size += (TLS_PRE_TCB_SIZE + GL(dl_tls_static_align) - 1)
-	  & ~(GL(dl_tls_static_align) - 1);
+  size += TLS_PRE_TCB_SIZE;
 #endif
 
-  /* Allocate a correctly aligned chunk of memory.  */
-  result = __libc_memalign (GL(dl_tls_static_align), size);
-  if (__builtin_expect (result != NULL, 1))
-    {
-      /* Allocate the DTV.  */
-      void *allocated = result;
+  /* Perform the allocation.  Reserve space for the required alignment
+     and the pointer to the original allocation.  */
+  size_t alignment = GL(dl_tls_static_align);
+  void *allocated = malloc (size + alignment + sizeof (void *));
+  if (__glibc_unlikely (allocated == NULL))
+    return NULL;
 
+  /* Perform alignment and allocate the DTV.  */
 #if TLS_TCB_AT_TP
-      /* The TCB follows the TLS blocks.  */
-      result = (char *) result + size - TLS_TCB_SIZE;
+  /* The TCB follows the TLS blocks, which determine the alignment.
+     (TCB alignment requirements have been taken into account when
+     calculating GL(dl_tls_static_align).)  */
+  void *aligned = (void *) roundup ((uintptr_t) allocated, alignment);
+  result = aligned + size - TLS_TCB_SIZE;
 
-      /* Clear the TCB data structure.  We can't ask the caller (i.e.
-	 libpthread) to do it, because we will initialize the DTV et al.  */
-      memset (result, '\0', TLS_TCB_SIZE);
+  /* Clear the TCB data structure.  We can't ask the caller (i.e.
+     libpthread) to do it, because we will initialize the DTV et al.  */
+  memset (result, '\0', TLS_TCB_SIZE);
 #elif TLS_DTV_AT_TP
-      result = (char *) result + size - GL(dl_tls_static_size);
+  /* Pre-TCB and TCB come before the TLS blocks.  The layout computed
+     in _dl_determine_tlsoffset assumes that the TCB is aligned to the
+     TLS block alignment, and not just the TLS blocks after it.  This
+     can leave an unused alignment gap between the TCB and the TLS
+     blocks.  */
+  result = (void *) roundup
+    (sizeof (void *) + TLS_PRE_TCB_SIZE + (uintptr_t) allocated,
+     alignment);
 
-      /* Clear the TCB data structure and TLS_PRE_TCB_SIZE bytes before it.
-	 We can't ask the caller (i.e. libpthread) to do it, because we will
-	 initialize the DTV et al.  */
-      memset ((char *) result - TLS_PRE_TCB_SIZE, '\0',
-	      TLS_PRE_TCB_SIZE + TLS_TCB_SIZE);
+  /* Clear the TCB data structure and TLS_PRE_TCB_SIZE bytes before
+     it.  We can't ask the caller (i.e. libpthread) to do it, because
+     we will initialize the DTV et al.  */
+  memset (result - TLS_PRE_TCB_SIZE, '\0', TLS_PRE_TCB_SIZE + TLS_TCB_SIZE);
 #endif
 
-      result = allocate_dtv (result);
-      if (result == NULL)
-	free (allocated);
-    }
+  /* Record the value of the original pointer for later
+     deallocation.  */
+  *tcb_to_pointer_to_free_location (result) = allocated;
 
+  result = allocate_dtv (result);
+  if (result == NULL)
+    free (allocated);
   return result;
 }
 
@@ -558,17 +585,7 @@ _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
     free (dtv - 1);
 
   if (dealloc_tcb)
-    {
-#if TLS_TCB_AT_TP
-      /* The TCB follows the TLS blocks.  Back up to free the whole block.  */
-      tcb -= GL(dl_tls_static_size) - TLS_TCB_SIZE;
-#elif TLS_DTV_AT_TP
-      /* Back up the TLS_PRE_TCB_SIZE bytes.  */
-      tcb -= (TLS_PRE_TCB_SIZE + GL(dl_tls_static_align) - 1)
-	     & ~(GL(dl_tls_static_align) - 1);
-#endif
-      free (tcb);
-    }
+    free (*tcb_to_pointer_to_free_location (tcb));
 }
 rtld_hidden_def (_dl_deallocate_tls)
 

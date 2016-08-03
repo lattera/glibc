@@ -1,6 +1,21 @@
 2016-08-03  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #17730]
+	Avoid using memalign for TCB allocations.
+	* elf/dl-tls.c (tcb_to_pointer_to_free_location): New.
+	(_dl_allocate_tls_storage): Use malloc and manual alignment.
+	Avoid alignment gap in the TLS_DTV_AT_TP case.
+	(_dl_deallocate_tls): Use tcb_to_pointer_to_free_location to
+	determine the pointer to free.
+	* nptl/tst-tls3-malloc.c: New test.
+	* nptl/Makefile (tests): Add it.
+	(tst-tls3-malloc): Link with libdl, libpthread.
+	(LDFLAGS-tst-tls3-malloc): Set.
+	(tst-tls3-malloc.out): Depend on DSO used in test.
+
+2016-08-03  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17730]
 	Avoid using memalign for TLS allocations.
 	* sysdeps/generic/dl-dtv.h (struct dtv_pointer): New.  Replaces
 	is_static member with to_free member.
