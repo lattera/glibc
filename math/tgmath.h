@@ -392,7 +392,7 @@
    prevailing rounding mode.  */
 #define rint(Val) __TGMATH_UNARY_REAL_ONLY (Val, rint)
 
-#ifdef __USE_GNU
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
 /* Return X - epsilon.  */
 # define nextdown(Val) __TGMATH_UNARY_REAL_ONLY (Val, nextdown)
 /* Return X + epsilon.  */

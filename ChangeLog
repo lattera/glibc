@@ -1,5 +1,9 @@
 2016-08-03  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/tgmath.h (nextdown): Define if
+	[__GLIBC_USE (IEC_60559_BFP_EXT)], not if [__USE_GNU].
+	(nextup): Likewise.
+
 	* bits/libc-header-start.h (__GLIBC_USE_IEC_60559_FUNCS_EXT): New
 	macro.
 	* include/features.h (__STDC_WANT_IEC_60559_FUNCS_EXT__):
