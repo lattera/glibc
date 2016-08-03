@@ -175,7 +175,7 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif
-  _dl_static_dtv[2].pointer.is_static = true;
+  _dl_static_dtv[2].pointer.to_free = NULL;
   /* sbrk gives us zero'd memory, so we don't need to clear the remainder.  */
   memcpy (_dl_static_dtv[2].pointer.val, initimage, filesz);
 

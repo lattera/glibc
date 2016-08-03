@@ -1,5 +1,27 @@
 2016-08-03  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #17730]
+	Avoid using memalign for TLS allocations.
+	* sysdeps/generic/dl-dtv.h (struct dtv_pointer): New.  Replaces
+	is_static member with to_free member.
+	(union dtv): Use struct dtv_pointer.
+	* csu/libc-tls.c (__libc_setup_tls): Set to_free member of struct
+	dtv_pointer instead of is_static.
+	* elf/dl-tls.c (_dl_allocate_tls_init): Likewise.
+	(_dl_deallocate_tls): Free to_free member of struct dtv_pointer
+	instead of val.
+	(allocate_dtv_entry): New function.
+	(allocate_and_init): Return struct dtv_pointer.  Call
+	allocate_dtv_entry instead of __libc_memalign.
+	(_dl_update_slotinfo): Free to_free member of struct dtv_pointer
+	instead of val.
+	(tls_get_addr_tail): Set to_free member of struct dtv_pointer
+	instead of is_static.  Adjust call to allocate_and_init.
+	* nptl/allocatestack.c (get_cached_stack): Free to_free member of
+	struct dtv_pointer instead of val.
+
+2016-08-03  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/malloc.c (INTERNAL_SIZE_T, SIZE_SZ, MALLOC_ALIGNMENT)
 	(MALLOC_ALIGN_MASK): Move ...
 	* malloc/malloc-internal.h: ... to here.
