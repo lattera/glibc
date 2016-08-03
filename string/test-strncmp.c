@@ -156,6 +156,9 @@ do_test_limit (size_t align1, size_t align2, size_t len, size_t n, int max_char,
   size_t i, align_n;
   CHAR *s1, *s2;
 
+  align1 &= ~(CHARBYTES - 1);
+  align2 &= ~(CHARBYTES - 1);
+
   if (n == 0)
     {
       s1 = (CHAR *) (buf1 + page_size);
@@ -203,6 +206,9 @@ do_test (size_t align1, size_t align2, size_t len, size_t n, int max_char,
 {
   size_t i;
   CHAR *s1, *s2;
+
+  align1 &= ~(CHARBYTES - 1);
+  align2 &= ~(CHARBYTES - 1);
 
   if (n == 0)
     return;
