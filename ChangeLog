@@ -1,5 +1,8 @@
 2016-08-03  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/gnu/netinet/udp.h (UDP_ENCAP_GTP0): New macro.
+	(UDP_ENCAP_GTP1U): Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h (PF_QIPCRTR): New macro.
 	(PF_MAX): Update value.
 	(AF_QIPCRTR): New macro.
