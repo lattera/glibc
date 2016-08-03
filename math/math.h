@@ -23,7 +23,8 @@
 #ifndef	_MATH_H
 #define	_MATH_H	1
 
-#include <features.h>
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+#include <bits/libc-header-start.h>
 
 __BEGIN_DECLS
 
@@ -328,7 +329,7 @@ enum
 
 #endif /* Use ISO C99.  */
 
-#ifdef __USE_GNU
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
 /* Return nonzero value if X is a signaling NaN.  */
 # ifdef __NO_LONG_DOUBLE_MATH
 #  define issignaling(x) \
@@ -340,7 +341,7 @@ enum
       : sizeof (x) == sizeof (double)					      \
       ? __issignaling (x) : __issignalingl (x))
 # endif
-#endif /* Use GNU.  */
+#endif /* Use IEC_60559_BFP_EXT.  */
 
 #ifdef	__USE_MISC
 /* Support for various different standard error handling behaviors.  */

@@ -397,12 +397,11 @@ to
 @end deftypefn
 
 @comment math.h
-@comment GNU
+@comment ISO
 @deftypefn {Macro} int issignaling (@emph{float-type} @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns a nonzero value if @var{x} is a signaling NaN
-(sNaN).  It is based on draft TS 18661 and currently enabled as a GNU
-extension.
+(sNaN).  It is from TS 18661-1:2014.
 @end deftypefn
 
 Another set of floating-point classification functions was provided by
@@ -1703,13 +1702,13 @@ double}.
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment ISO
 @deftypefun double nextup (double @var{x})
 @comment math.h
-@comment GNU
+@comment ISO
 @deftypefunx float nextupf (float @var{x})
 @comment math.h
-@comment GNU
+@comment ISO
 @deftypefunx {long double} nextupl (long double @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{nextup} function returns the next representable neighbor of @var{x}
@@ -1718,18 +1717,18 @@ subnormal number in the type of @var{x} the function returns @code{-0}.  If
 @math{@var{x} = @code{0}} the function returns the smallest positive subnormal
 number in the type of @var{x}.  If @var{x} is NaN, NaN is returned.
 If @var{x} is @math{+@infinity{}}, @math{+@infinity{}} is returned.
-@code{nextup} is based on TS 18661 and currently enabled as a GNU extension.
+@code{nextup} from TS 18661-1:2014.
 @code{nextup} never raises an exception except for signaling NaNs.
 @end deftypefun
 
 @comment math.h
-@comment GNU
+@comment ISO
 @deftypefun double nextdown (double @var{x})
 @comment math.h
-@comment GNU
+@comment ISO
 @deftypefunx float nextdownf (float @var{x})
 @comment math.h
-@comment GNU
+@comment ISO
 @deftypefunx {long double} nextdownl (long double @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{nextdown} function returns the next representable neighbor of @var{x}
@@ -1738,7 +1737,7 @@ subnormal number in the type of @var{x} the function returns @code{+0}.  If
 @math{@var{x} = @code{0}} the function returns the smallest negative subnormal
 number in the type of @var{x}.  If @var{x} is NaN, NaN is returned.
 If @var{x} is @math{-@infinity{}}, @math{-@infinity{}} is returned.
-@code{nextdown} is based on TS 18661 and currently enabled as a GNU extension.
+@code{nextdown} is from TS 18661-1:2014.
 @code{nextdown} never raises an exception except for signaling NaNs.
 @end deftypefun
 

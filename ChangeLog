@@ -1,3 +1,28 @@
+2016-08-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* bits/libc-header-start.h (__GLIBC_USE_IEC_60559_BFP_EXT): New
+	macro.
+	* include/features.h (__STDC_WANT_IEC_60559_BFP_EXT__): Document.
+	* manual/arith.texi (issignaling): Document as ISO from TS
+	18661-1:2014.
+	(nextup): Likewise.
+	(nextupf): Likewise.
+	(nextupl): Likewise.
+	(nextdown): Likewise.
+	(nextdownf): Likewise.
+	(nextdownl): Likewise.
+	* manual/creature.texi (__STDC_WANT_IEC_60559_BFP_EXT__): Document
+	macro.
+	* math/math.h: Define
+	__GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION and include
+	<bits/libc-header-start.h> instead of including <features.h>.
+	(issignaling): Define if [__GLIBC_USE (IEC_60559_BFP_EXT)], not
+	[__USE_GNU].
+	* math/bits/mathcalls.h (nextdown): Declare if
+	[__GLIBC_USE (IEC_60559_BFP_EXT)], not [__USE_GNU].
+	(nextup): Likewise.
+	(__issignaling): Likewise.
+
 2016-08-03  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* s_ccoshf.c (__ccoshf): Remove FE_INVALID
