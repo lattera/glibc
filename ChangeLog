@@ -1,3 +1,10 @@
+2016-08-03  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (INTERNAL_SIZE_T, SIZE_SZ, MALLOC_ALIGNMENT)
+	(MALLOC_ALIGN_MASK): Move ...
+	* malloc/malloc-internal.h: ... to here.
+	* elf/dl-minimal.c (malloc): Allocate with MALLOC_ALIGNMENT.
+
 2016-08-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/gnu/netinet/udp.h (UDP_ENCAP_GTP0): New macro.
