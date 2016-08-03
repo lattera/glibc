@@ -1,3 +1,14 @@
+2016-08-03  Tom Tromey  <tom@tromey.com>
+
+	[BZ #20311]
+	* nptl_db/Makefile (headers): Add proc_service.h.
+	* nptl_db/proc_service.h: Add include guard.  Use
+	__BEGIN/__END_DECLS.
+	(ps_get_thread_area, ps_pstop, ps_pcontinue, ps_lstop)
+	(ps_lcontinue): Remove "const" from "struct ps_prochandle *"
+	arguments.
+
+
 2016-08-03  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #17730]

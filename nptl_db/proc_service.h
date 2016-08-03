@@ -16,8 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _PROC_SERVICE_H
+#define _PROC_SERVICE_H 1
+
 /* The definitions in this file must correspond to those in the debugger.  */
 #include <sys/procfs.h>
+
+__BEGIN_DECLS
 
 /* Functions in this interface return one of these status codes.  */
 typedef enum
@@ -64,7 +69,7 @@ extern pid_t ps_getpid (struct ps_prochandle *);
 /* Fetch the special per-thread address associated with the given LWP.
    This call is only used on a few platforms (most use a normal register).
    The meaning of the `int' parameter is machine-dependent.  */
-extern ps_err_e ps_get_thread_area (const struct ps_prochandle *,
+extern ps_err_e ps_get_thread_area (struct ps_prochandle *,
 				    lwpid_t, int, psaddr_t *);
 
 
@@ -78,9 +83,13 @@ extern ps_err_e ps_pglobal_lookup (struct ps_prochandle *,
 
 
 /* Stop or continue the entire process.  */
-extern ps_err_e ps_pstop (const struct ps_prochandle *);
-extern ps_err_e ps_pcontinue (const struct ps_prochandle *);
+extern ps_err_e ps_pstop (struct ps_prochandle *);
+extern ps_err_e ps_pcontinue (struct ps_prochandle *);
 
 /* Stop or continue the given LWP alone.  */
-extern ps_err_e ps_lstop (const struct ps_prochandle *, lwpid_t);
-extern ps_err_e ps_lcontinue (const struct ps_prochandle *, lwpid_t);
+extern ps_err_e ps_lstop (struct ps_prochandle *, lwpid_t);
+extern ps_err_e ps_lcontinue (struct ps_prochandle *, lwpid_t);
+
+__END_DECLS
+
+#endif /* proc_service.h */
