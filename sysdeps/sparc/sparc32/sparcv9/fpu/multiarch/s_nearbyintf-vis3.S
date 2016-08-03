@@ -35,9 +35,9 @@
 #define SIGN_BIT	%f12			/* -0.0 */
 
 ENTRY (__nearbyintf_vis3)
+	movwtos	%o0, %f1
 	fcmps	%fcc3, %f1, %f1			/* Check for sNaN */
 	st	%fsr, [%sp + 88]
-	movwtos	%o0, %f1
 	sethi	%hi(TWO_TWENTYTHREE), %o2
 	sethi	%hi(0xf8003e0), %o5
 	ld	[%sp + 88], %o4

@@ -1,5 +1,15 @@
 2016-08-02  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyint-vis3.S
+	(__nearbyint_vis3): Don't check for sNaN before float register is
+	loaded with the incoming argument.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyintf-vis3.S
+	(__nearbyintf_vis3): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_nearbyint.S (__nearbyint):
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_nearbyintf.S (__nearbyintf):
+	Likewise.
+
 	* string/test-strncmp.c (do_test_limit): Make sure the test data
 	stream is aligned as required for the type "CHAR".
 	(do_test): Likewise.
