@@ -17,6 +17,11 @@ Version 2.25
   from that TS.  Note that most features from that TS are not supported by
   the GNU C Library.
 
+* The feature test macro __STDC_WANT_IEC_60559_FUNCS_EXT__, from ISO/IEC TS
+  18661-4:2015, is supported to enable declarations of functions and macros
+  from that TS.  Note that most features from that TS are not supported by
+  the GNU C Library.
+
 * The inclusion of <sys/sysmacros.h> by <sys/types.h> is deprecated.  This
   means that in a future release, the macros “major”, “minor”, and “makedev”
   will only be available from <sys/sysmacros.h>.

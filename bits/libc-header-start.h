@@ -50,3 +50,12 @@
 #else
 # define __GLIBC_USE_IEC_60559_BFP_EXT 0
 #endif
+
+/* ISO/IEC TS 18661-4:2015 defines the
+   __STDC_WANT_IEC_60559_FUNCS_EXT__ macro.  */
+#undef __GLIBC_USE_IEC_60559_FUNCS_EXT
+#if defined __USE_GNU || defined __STDC_WANT_IEC_60559_FUNCS_EXT__
+# define __GLIBC_USE_IEC_60559_FUNCS_EXT 1
+#else
+# define __GLIBC_USE_IEC_60559_FUNCS_EXT 0
+#endif

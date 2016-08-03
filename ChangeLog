@@ -1,5 +1,17 @@
 2016-08-03  Joseph Myers  <joseph@codesourcery.com>
 
+	* bits/libc-header-start.h (__GLIBC_USE_IEC_60559_FUNCS_EXT): New
+	macro.
+	* include/features.h (__STDC_WANT_IEC_60559_FUNCS_EXT__):
+	Document.
+	* manual/creature.texi (__STDC_WANT_IEC_60559_FUNCS_EXT__):
+	Document macro.
+	* manual/math.texi (exp10): Document as ISO from TS 18661-4:2015.
+	(exp10f): Likewise.
+	(exp10l): Likewise.
+	* math/bits/mathcalls.h (exp10): Declare if
+	[__GLIBC_USE (IEC_60559_FUNCS_EXT)], not [__USE_GNU].
+
 	* manual/arith.texi (nextup): Fix typo in last change.
 
 2016-08-03  Zack Weinberg  <zackw@panix.com>
