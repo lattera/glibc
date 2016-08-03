@@ -83,7 +83,8 @@ typedef __socklen_t socklen_t;
 #define PF_NFC		39	/* NFC sockets.  */
 #define PF_VSOCK	40	/* vSockets.  */
 #define PF_KCM		41	/* Kernel Connection Multiplexor.  */
-#define PF_MAX		42	/* For now..  */
+#define PF_QIPCRTR	42	/* Qualcomm IPC Router.  */
+#define PF_MAX		43	/* For now..  */
 
 /* Address families.  */
 #define AF_UNSPEC	PF_UNSPEC
@@ -131,6 +132,7 @@ typedef __socklen_t socklen_t;
 #define AF_NFC		PF_NFC
 #define AF_VSOCK	PF_VSOCK
 #define AF_KCM		PF_KCM
+#define AF_QIPCRTR	PF_QIPCRTR
 #define AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
