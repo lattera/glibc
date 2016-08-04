@@ -1,13 +1,17 @@
 # GNU libc message catalog for Swedish
-# Copyright © 1996, 1998, 2001, 2002, 2003, 2006, 2008, 2009, 2011, 2012, 2013, 2014, 2015 Free Software Foundation, Inc.
+# Copyright © 1996, 1998, 2001, 2002, 2003, 2006, 2008, 2009, 2011, 2012, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
-# Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003, 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015
+#
+# Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003, 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015.
+# Göran Uddeborg <goeran@uddeborg.se>, 2016.
+#
+# $Revision: 1.3 $
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.21-pre1\n"
+"Project-Id-Version: libc 2.22-pre1\n"
 "POT-Creation-Date: 2015-07-31 00:10-0400\n"
-"PO-Revision-Date: 2015-01-24 10:35+0100\n"
-"Last-Translator: Jan Djärv <jan.h.d@swipnet.se>\n"
+"PO-Revision-Date: 2016-08-02 17:17+0200\n"
+"Last-Translator: Göran Uddeborg <goeran@uddeborg.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +52,7 @@ msgstr " [FLAGGA...]"
 #: argp/argp-help.c:1643
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
-msgstr "Försök med \"%s --help\" eller \"%s --usage\" för mer information\n"
+msgstr "Försök med ”%s --help” eller ”%s --usage” för mer information.\n"
 
 #: argp/argp-help.c:1671
 #, c-format
@@ -304,11 +308,11 @@ msgstr "Användning: xtrace [FLAGGA]... PROGRAM [PROGRAMFLAGGA}...\\n"
 #: debug/xtrace.sh:32 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
 #: malloc/memusage.sh:26
 msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
-msgstr "Försök med \\\"%s --help\\\" eller \\\"%s --usage\\\" för mer information\\n"
+msgstr "Försök med ”%s --help” eller ”%s --usage” för mer information\\n"
 
 #: debug/xtrace.sh:38
 msgid "%s: option '%s' requires an argument.\\n"
-msgstr "%s: flaggan \\\"%s\\\" kräver ett argument\\n"
+msgstr "%s: flaggan ”%s” kräver ett argument.\\n"
 
 #: debug/xtrace.sh:45
 msgid ""
@@ -332,19 +336,17 @@ msgstr ""
 "      --usage             Visa en kort hjälptext\n"
 "   -V,--version           Visa versionsinformation och avsluta\n"
 "\n"
-"Obligatoriska argument för långa flaggor är obligatoriska  även för\n"
+"Obligatoriska argument för långa flaggor är obligatoriska även för\n"
 "motsvarande korta.\n"
 
 #: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.sh:49
 #: malloc/memusage.sh:64
 msgid "For bug reporting instructions, please see:\\\\n%s.\\\\n"
-msgstr ""
-"För felrapporteringsinstruktioner, se:\\\\n%s.\\\\n\n"
-"Rapportera fel eller synpunkter på översättningen till <tp-sv@listor.tp-sv.se>.\\\\n"
+msgstr "För felrapporteringsinstruktioner, se:\\\\n%s.\\\\nRapportera fel eller synpunkter på översättningen till:\\\\n<tp-sv@listor.tp-sv.se>.\\\\n"
 
 #: debug/xtrace.sh:125
 msgid "xtrace: unrecognized option \\`$1'\\n"
-msgstr "xtrace: okänd flagga \"$1\"\\n"
+msgstr "xtrace: okänd flagga ”$1”\\n"
 
 #: debug/xtrace.sh:138
 msgid "No program name given\\n"
@@ -353,12 +355,12 @@ msgstr "Inget programnamn givet\\n"
 #: debug/xtrace.sh:146
 #, sh-format
 msgid "executable \\`$program' not found\\n"
-msgstr "program \"$program\" hittades inte\\n"
+msgstr "program ”$program” hittades inte\\n"
 
 #: debug/xtrace.sh:150
 #, sh-format
 msgid "\\`$program' is no executable\\n"
-msgstr "\"$program\" är inte en körbar binär\\n"
+msgstr "”$program” är inte en körbar binär\\n"
 
 #: dlfcn/dlinfo.c:63
 msgid "RTLD_SELF used in code not dynamically loaded"
@@ -396,7 +398,7 @@ msgstr ", OS ABI: %s %d.%d.%d"
 #: elf/cache.c:157 elf/ldconfig.c:1340
 #, c-format
 msgid "Can't open cache file %s\n"
-msgstr "Kan inte öppna cache-fil \"%s\"\n"
+msgstr "Kan inte öppna cache-filen %s\n"
 
 #: elf/cache.c:171
 #, c-format
@@ -416,7 +418,7 @@ msgstr "%d bibliotek hittades i cache \"%s\"\n"
 #: elf/cache.c:426
 #, c-format
 msgid "Can't create temporary cache file %s"
-msgstr "Kan inte skapa temporär cache-fil \"%s\""
+msgstr "Kan inte skapa en temporär cache-fil %s"
 
 #: elf/cache.c:434 elf/cache.c:444 elf/cache.c:448 elf/cache.c:453
 #, c-format
@@ -829,7 +831,7 @@ msgstr "Kan inte ta status (lstat) på %s"
 #: elf/ldconfig.c:609
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
-msgstr "Ignorerar fil %s eftersom den inte är en vanlig fil"
+msgstr "Ignorerar fil %s eftersom den inte är en vanlig fil."
 
 #: elf/ldconfig.c:618
 #, c-format
@@ -951,7 +953,7 @@ msgstr ""
 
 #: elf/ldd.bash.in:80
 msgid "ldd: option \\`$1' is ambiguous"
-msgstr "ldd: flaggan \"$1\" är tvetydig"
+msgstr "ldd: flaggan ”$1” är tvetydig"
 
 #: elf/ldd.bash.in:87
 msgid "unrecognized option"
@@ -959,7 +961,7 @@ msgstr "okänd flagga"
 
 #: elf/ldd.bash.in:88 elf/ldd.bash.in:125
 msgid "Try \\`ldd --help' for more information."
-msgstr "Försök med \"ldd --help\" för mer information"
+msgstr "Försök med \"ldd --help\" för mer information."
 
 #: elf/ldd.bash.in:124
 msgid "missing file arguments"
@@ -1028,10 +1030,9 @@ msgid "cannot read object name"
 msgstr "kan inte läsa objektnamn"
 
 #: elf/pldd-xx.c:219
-#, fuzzy, c-format
-#| msgid "cannot allocate memory for program header"
+#, c-format
 msgid "cannot allocate buffer for object name"
-msgstr "kan inte allokera minne för programhuvud"
+msgstr "kan inte allokera en buffert för objektnamn"
 
 #: elf/pldd.c:64
 msgid "List dynamic shared objects loaded into process."
@@ -1212,11 +1213,11 @@ msgstr ""
 
 #: elf/sotruss.sh:46
 msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
-msgstr "Obligatoriska respektive valfria argument för långa flaggor är obligatoriska respektive\\nvalfria även för korta.\\n"
+msgstr "Obligatoriska respektive valfria argument för långa flaggor är obligatoriska\\nrespektive valfria även för korta.\\n"
 
 #: elf/sotruss.sh:55
 msgid "%s: option requires an argument -- '%s'\\n"
-msgstr "%s: flaggan kräver ett argument -- \\\"%s\\\"\\n"
+msgstr "%s: flaggan kräver ett argument — ”%s”\\n"
 
 #: elf/sotruss.sh:61
 msgid "%s: option is ambiguous; possibilities:"
@@ -1240,7 +1241,7 @@ msgstr ""
 
 #: elf/sotruss.sh:134
 msgid "%s: unrecognized option '%c%s'\\n"
-msgstr "%s: okänd flagga \\\"%c%s\\\"\\n"
+msgstr "%s: okänd flagga ”%c%s”\\n"
 
 #: elf/sprof.c:77
 msgid "Output selection:"
@@ -1260,7 +1261,7 @@ msgstr "generera anropsgraf"
 
 #: elf/sprof.c:89
 msgid "Read and display shared object profiling data."
-msgstr "Läs och visa profildata för delat objekt"
+msgstr "Läs och visa profildata för delat objekt."
 
 #: elf/sprof.c:94
 msgid "SHOBJ [PROFDATA]"
@@ -1622,7 +1623,7 @@ msgstr "Fel: .netrc kan läsas av andra."
 
 #: inet/ruserpass.c:185
 msgid "Remove password or make file unreadable by others."
-msgstr "Ta bort lösenord eller gör filen oläsbar för andra"
+msgstr "Ta bort lösenord eller gör filen oläsbar för andra."
 
 #: inet/ruserpass.c:277
 #, c-format
@@ -2182,12 +2183,12 @@ msgstr "Inget namn definierat i teckenuppsättning"
 #: locale/programs/ld-ctype.c:479
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must be in class `%s'"
-msgstr "tecken L\"\\u%0*x\" i klass \"%s\" måste vara i klass \"%s\""
+msgstr "tecken L'\\u%0*x' i klassen ”%s” måste vara i klassen ”%s”"
 
 #: locale/programs/ld-ctype.c:494
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must not be in class `%s'"
-msgstr "tecken L\"\\u%0*x\" i klass \"%s\" får inte vara i klass \"%s\""
+msgstr "tecken L'\\u%0*x' i klassen ”%s” får inte vara i klassen ”%s”"
 
 #: locale/programs/ld-ctype.c:508 locale/programs/ld-ctype.c:566
 #, c-format
@@ -2611,7 +2612,7 @@ msgstr "Skriv mer information"
 
 #: locale/programs/locale.c:85
 msgid "Get locale-specific information."
-msgstr "Hämta lokalspecifik information"
+msgstr "Hämta lokalspecifik information."
 
 #: locale/programs/locale.c:88
 msgid ""
@@ -3022,7 +3023,7 @@ msgstr "felaktig mcheck_status, biblioteket är felaktigt\n"
 
 #: malloc/memusage.sh:32
 msgid "%s: option '%s' requires an argument\\n"
-msgstr "%s: flaggan \\\"%s\\\" kräver ett argument\\n"
+msgstr "%s: flaggan ”%s” kräver ett argument\\n"
 
 #: malloc/memusage.sh:38
 msgid ""
@@ -3091,11 +3092,11 @@ msgstr ""
 
 #: malloc/memusage.sh:191
 msgid "memusage: option \\`${1##*=}' is ambiguous"
-msgstr "memusage: flaggan \"${1##*=}\" är tvetydig"
+msgstr "memusage: flaggan ”${1##*=}” är tvetydig"
 
 #: malloc/memusage.sh:200
 msgid "memusage: unrecognized option \\`$1'"
-msgstr "memusage: okänd flagga \"$1\""
+msgstr "memusage: okänd flagga ”$1”"
 
 #: malloc/memusage.sh:213
 msgid "No program name given"
@@ -3341,7 +3342,7 @@ msgstr "Kan inte skapa process hos server"
 
 #: nis/nis_error.h:48
 msgid "Master server busy, full dump rescheduled."
-msgstr "Huvudserver är upptagen, full dump åter schemalagd"
+msgstr "Huvudserver är upptagen, full dump åter schemalagd."
 
 #: nis/nis_local_names.c:121
 #, c-format
@@ -3511,7 +3512,7 @@ msgstr "\t\tRättigheter   : "
 
 #: nis/nis_print.c:290
 msgid "Linked Object Type : "
-msgstr "Länkad objekttyp: "
+msgstr "Länkad objekttyp   : "
 
 #: nis/nis_print.c:292
 #, c-format
@@ -3802,15 +3803,14 @@ msgid " (first)"
 msgstr " (första)"
 
 #: nscd/cache.c:288
-#, fuzzy, c-format
-#| msgid "cannot stat() file `%s': %s"
+#, c-format
 msgid "checking for monitored file `%s': %s"
-msgstr "kan inte ta status på fil \"%s\": %s"
+msgstr "kontrollerar den övervakade filen ”%s”: %s"
 
 #: nscd/cache.c:298
 #, c-format
 msgid "monitored file `%s` changed (mtime)"
-msgstr ""
+msgstr "den övervakade filen ”%s” ändrades (mtime)"
 
 #: nscd/cache.c:341
 #, c-format
@@ -3906,34 +3906,32 @@ msgstr "kan inte få uttag (socket) att acceptera förbindelser: %s"
 #: nscd/connections.c:973
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
-msgstr ""
+msgstr "avaktiverade inotify-baserad övervakning för filen ”%s”: %s"
 
 #: nscd/connections.c:977
 #, c-format
 msgid "monitoring file `%s` (%d)"
-msgstr ""
+msgstr "övervakar filen ”%s” (%d)"
 
 #: nscd/connections.c:990
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
-msgstr ""
+msgstr "avaktiverade inotify-baserad övervakning av katalogen ”%s”: %s"
 
 #: nscd/connections.c:994
-#, fuzzy, c-format
-#| msgid "Can't open directory %s"
+#, c-format
 msgid "monitoring directory `%s` (%d)"
-msgstr "Kan inte öppna katalog %s"
+msgstr "övervakar katalogen ”%s” (%d)"
 
 #: nscd/connections.c:1022
-#, fuzzy, c-format
-#| msgid "register trace file %s for database %s"
+#, c-format
 msgid "monitoring file %s for database %s"
-msgstr "registrera spårningsfil %s för databas %s"
+msgstr "övervakar filen %s för databas %s"
 
 #: nscd/connections.c:1032
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
-msgstr ""
+msgstr "stat misslyckades för filen ”%s”; kommer försöka igen senare: %s"
 
 #: nscd/connections.c:1151
 #, c-format
@@ -4032,44 +4030,42 @@ msgstr "handle_request: begäran mottagen (Version = %d)"
 #: nscd/connections.c:1963
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
-msgstr ""
+msgstr "ignorerade inotify-händelse för ”%s” (filen finns)"
 
 #: nscd/connections.c:1968
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
-msgstr ""
+msgstr "den övervakade filen ”%s” var %s, tar bort vakten"
 
 #: nscd/connections.c:1976 nscd/connections.c:2018
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
-msgstr ""
+msgstr "misslyckades att ta bort filvakt ”%s”: %s"
 
 #: nscd/connections.c:1991
 #, c-format
 msgid "monitored file `%s` was written to"
-msgstr ""
+msgstr "den övervakade filen ”%s” skrevs till"
 
 #: nscd/connections.c:2015
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
-msgstr ""
+msgstr "den övervakade föräldrakatalogen ”%s” var %s, tar bort vakten av ”%s”"
 
 #: nscd/connections.c:2041
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
-msgstr ""
+msgstr "den övervakade filen ”%s” var %s, lägger till vakt"
 
 #: nscd/connections.c:2053
-#, fuzzy, c-format
-#| msgid "failed to load shared object `%s'"
+#, c-format
 msgid "failed to add file watch `%s`: %s"
-msgstr "misslyckades med att ladda delat objekt \"%s\""
+msgstr "misslyckades med att lägga till filvakt ”%s”: %s"
 
 #: nscd/connections.c:2247 nscd/connections.c:2428
-#, fuzzy, c-format
-#| msgid "disabled inotify after read error %d"
+#, c-format
 msgid "disabled inotify-based monitoring after read error %d"
-msgstr "inaktiverade inotify efter läsfel %d"
+msgstr "avaktiverade inotify-baserad övervakning efter läsfel %d"
 
 #: nscd/connections.c:2543
 msgid "could not initialize conditional variable"
@@ -4199,7 +4195,7 @@ msgstr "Använd separat cache för varje användare"
 
 #: nscd/nscd.c:122
 msgid "Name Service Cache Daemon."
-msgstr "Namntjänst cache-demon"
+msgstr "Cache-demon för namntjänsten."
 
 #: nscd/nscd.c:155 nss/getent.c:1007 nss/makedb.c:206
 #, c-format
@@ -4531,11 +4527,11 @@ msgstr "Access Vector Cache (AVC) startad"
 
 #: nscd/selinux.c:368
 msgid "Error querying policy for undefined object classes or permissions."
-msgstr "Fel när policy för odefinierade objektklasser eller rättigheter hämtades"
+msgstr "Fel när policy för odefinierade objektklasser eller rättigheter hämtades."
 
 #: nscd/selinux.c:375
 msgid "Error getting security class for nscd."
-msgstr "Fel när säkerhetsklass för nscd hämtades"
+msgstr "Fel när säkerhetsklass för nscd hämtades."
 
 #: nscd/selinux.c:380
 #, c-format
@@ -4609,7 +4605,7 @@ msgstr "inaktivera DIN-kodning"
 
 #: nss/getent.c:64
 msgid "Get entries from administrative database."
-msgstr "Hämta poster från den administrativa databasen"
+msgstr "Hämta poster från den administrativa databasen."
 
 #: nss/getent.c:148 nss/getent.c:477 nss/getent.c:522
 #, c-format
@@ -4652,7 +4648,7 @@ msgstr "Genererad rad som inte ingår i iterationen"
 
 #: nss/makedb.c:131
 msgid "Create simple database from textual input."
-msgstr "Skapa en enkel databas från textuell indata"
+msgstr "Skapa en enkel databas från textuell indata."
 
 #: nss/makedb.c:134
 msgid ""
@@ -5412,7 +5408,7 @@ msgstr "Kan inte ange netid-flaggan utan TIRPC!\n"
 #: sunrpc/rpc_main.c:1374
 #, c-format
 msgid "Cannot use table flags with newstyle!\n"
-msgstr "Kan inte ange tabellflaggor med ny stil\n"
+msgstr "Kan inte ange tabellflaggor med ny stil!\n"
 
 #: sunrpc/rpc_main.c:1393
 #, c-format
@@ -7270,18 +7266,9 @@ msgstr "tidszonsförkortning skiljer sig från POSIX-standarden"
 
 #: timezone/zic.c:2789
 msgid "too many, or too long, time zone abbreviations"
-msgstr "för många eller för långa tidszonförkortningar"
+msgstr "för många eller för långa tidszonsförkortningar"
 
 #: timezone/zic.c:2829
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr "%s: Kan inte skapa katalog %s: %s\n"
-
-#~ msgid "cannot load any more object with static TLS"
-#~ msgstr "kan inte ladda fler objekt med statiskt TLS"
-
-#~ msgid "%s: no PLTREL found in object %s\n"
-#~ msgstr "%s: hittade inga PLTREL i objekt %s\n"
-
-#~ msgid "cannot create internal descriptors"
-#~ msgstr "kan inte skapa interna deskriptorer"

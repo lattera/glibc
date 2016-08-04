@@ -24,16 +24,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.21-pre1\n"
+"Project-Id-Version: libc 2.22-pre1\n"
 "POT-Creation-Date: 2015-07-31 00:10-0400\n"
-"PO-Revision-Date: 2015-07-28 20:29+0300\n"
+"PO-Revision-Date: 2016-05-26 21:14+0300\n"
 "Last-Translator: Lauri Nurmi <lanurmi@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.8.7\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: argp/argp-help.c:227
@@ -126,7 +126,7 @@ msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sOdottamaton virhe: %s.\n"
 
 #: assert/assert.c:101
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 "%n"
@@ -169,12 +169,12 @@ msgstr ""
 #: malloc/memusagestat.c:563 nss/getent.c:973 nss/makedb.c:369
 #: posix/getconf.c:486 sunrpc/rpcinfo.c:691
 #: sysdeps/unix/sysv/linux/lddlibc4.c:61
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
 "%s.\n"
 msgstr ""
-"Ohjeet ohjelmistovioista ilmoittamiseen ovat osoitteessa\n"
+"Katso ohjeet vikailmoitusten tekemiseen osoitteesta:\n"
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
@@ -321,9 +321,8 @@ msgstr "Käyttö: xtrace [VALITSIN]... OHJELMA [OHJELMANVALITSIN]...\\n"
 
 #: debug/xtrace.sh:32 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
 #: malloc/memusage.sh:26
-#, fuzzy
 msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
-msgstr "Kokeile ”%s --help” tai ”%s --usage” saadaksesi lisää tietoa.\n"
+msgstr "Kokeile ”%s --help” tai ”%s --usage” saadaksesi lisää tietoa.\\n"
 
 #: debug/xtrace.sh:38
 #, fuzzy
@@ -594,9 +593,8 @@ msgid "cannot enable executable stack as shared object requires"
 msgstr "jaettua objektikahvaa ei voi luoda"
 
 #: elf/dl-load.c:1339
-#, fuzzy
 msgid "cannot close file descriptor"
-msgstr "tiedostoa %s ei voi sulkea"
+msgstr "tiedostokahvaa ei voi sulkea"
 
 #: elf/dl-load.c:1568
 msgid "file too short"
@@ -796,9 +794,8 @@ msgid "Format to use: new, old or compat (default)"
 msgstr "Käytettävä muoto: ”new”, ”old” tai ”compat” (oletus)"
 
 #: elf/ldconfig.c:151
-#, fuzzy
 msgid "Ignore auxiliary cache file"
-msgstr "Käytä CACHEa välimuistitiedostona"
+msgstr "Jätä huomiotta apuvälimuistitiedosto"
 
 #: elf/ldconfig.c:159
 msgid "Configure Dynamic Linker Run Time Bindings."
@@ -1087,9 +1084,9 @@ msgid "invalid process ID '%s'"
 msgstr "virheellinen prosessi-ID ”%s”"
 
 #: elf/pldd.c:120
-#, fuzzy, c-format
+#, c-format
 msgid "cannot open %s"
-msgstr "laitetta %s ei voi avata"
+msgstr "tiedostoa %s ei voi avata"
 
 #: elf/pldd.c:152
 #, fuzzy, c-format
@@ -1102,24 +1099,24 @@ msgid "cannot prepare reading %s/task"
 msgstr "ei voi avata laitetta %s lukutilaan"
 
 #: elf/pldd.c:168
-#, fuzzy, c-format
+#, c-format
 msgid "invalid thread ID '%s'"
-msgstr "virheellinen prosessi-ID ”%s”"
+msgstr "virheellinen säie-ID ”%s”"
 
 #: elf/pldd.c:179
-#, fuzzy, c-format
+#, c-format
 msgid "cannot attach to process %lu"
-msgstr "tiedostoa ”%s” ei voi avata"
+msgstr "ei voida kiinnittyä prosessiin %lu"
 
 #: elf/pldd.c:294
 #, c-format
 msgid "cannot get information about process %lu"
-msgstr ""
+msgstr "tietojen saaminen prosessista %lu ei onnistu"
 
 #: elf/pldd.c:307
-#, fuzzy, c-format
+#, c-format
 msgid "process %lu is no ELF program"
-msgstr "ohjelma %lu ei ole käytettävissä\n"
+msgstr "prosessi %lu ei ole ELF-ohjelma"
 
 #: elf/readelflib.c:34
 #, c-format
@@ -1203,7 +1200,7 @@ msgstr "%s kohde ei saa olla hakemisto\n"
 #: elf/sln.c:184
 #, c-format
 msgid "%s: failed to remove the old destination\n"
-msgstr ""
+msgstr "%s: vanhan kohteen poistaminen epäonnistui\n"
 
 #: elf/sln.c:192
 #, c-format
@@ -1237,9 +1234,8 @@ msgid "Mandatory arguments to long options are also mandatory for any correspond
 msgstr "Pakolliset argumentit pitkille valitsimille ovat pakollisia kaikille vastaaville lyhyille valitsimille.\\n"
 
 #: elf/sotruss.sh:55
-#, fuzzy
 msgid "%s: option requires an argument -- '%s'\\n"
-msgstr "%s: valitsin ”%s” vaatii argumentin\n"
+msgstr "%s: valitsin vaatii argumentin -- ”%c”\\n"
 
 #: elf/sotruss.sh:61
 msgid "%s: option is ambiguous; possibilities:"
@@ -1507,7 +1503,6 @@ msgid "unknown iconv() error %d"
 msgstr "tuntematon iconv()-virhe %d"
 
 #: iconv/iconv_prog.c:791
-#, fuzzy
 msgid ""
 "The following list contains all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -1516,9 +1511,9 @@ msgid ""
 "\n"
 "  "
 msgstr ""
-"Seuraavassa listassa ovat kaikki tunnetut koodatut merkistöt. Se ei\n"
+"Seuraavassa listassa ovat kaikki tunnetut koodatut merkistöt. Tämä ei\n"
 "kuitenkaan välttämättä tarkoita sitä, että kaikkia näiden nimien\n"
-"yhdistelmiä voidaan käyttää FROM- ja TO-komentoriviparametreina. Yksi\n"
+"yhdistelmiä voisi käyttää FROM- ja TO-komentoriviparametreina. Yksi\n"
 "koodattu merkistö voi olla listalla useilla eri nimillä (aliaksilla).\n"
 "\n"
 "  "
@@ -2733,14 +2728,12 @@ msgid "locale.alias file to consult when making archive"
 msgstr "Arkistoa luotaessa käytettävä locale.alias-tiedosto"
 
 #: locale/programs/localedef.c:150
-#, fuzzy
 msgid "Generate little-endian output"
-msgstr "Tuota little-endian-koodia"
+msgstr "Tuota little-endian-muotoa"
 
 #: locale/programs/localedef.c:152
-#, fuzzy
 msgid "Generate big-endian output"
-msgstr "Tuota big-endian-koodia"
+msgstr "Tuota big-endian-muotoa"
 
 #: locale/programs/localedef.c:157
 msgid "Compile locale specification"
@@ -4275,10 +4268,9 @@ msgid ""
 msgstr ""
 
 #: nscd/nscd.c:635
-#, fuzzy, c-format
-#| msgid "lstat failed"
+#, c-format
 msgid "'wait' failed\n"
-msgstr "tiedoston tilan luku epäonnistui"
+msgstr "”wait” epäonnistui\n"
 
 #: nscd/nscd.c:642
 #, c-format
@@ -4670,9 +4662,9 @@ msgid "cannot create temporary file"
 msgstr "tilapäistä tiedostoa ei voi luoda"
 
 #: nss/makedb.c:304
-#, fuzzy, c-format
+#, c-format
 msgid "cannot stat newly created file"
-msgstr "tiedoston ”%s” tilaa ei voi lukea: %s"
+msgstr "juuri luodun tiedoston tilaa ei voi lukea"
 
 #: nss/makedb.c:315
 #, c-format
@@ -4680,9 +4672,9 @@ msgid "cannot rename temporary file"
 msgstr "tilapäistä tiedostoa ei voi nimetä uudelleen"
 
 #: nss/makedb.c:531 nss/makedb.c:554
-#, fuzzy, c-format
+#, c-format
 msgid "cannot create search tree"
-msgstr "hakupolulle ei voi luoda välimuistia"
+msgstr "hakupuuta ei voi luoda"
 
 #: nss/makedb.c:560
 msgid "duplicate key"
@@ -4699,9 +4691,9 @@ msgid "failed to write new database file"
 msgstr "uuden tietokantatiedoston kirjoittaminen epäonnistui"
 
 #: nss/makedb.c:812
-#, fuzzy, c-format
+#, c-format
 msgid "cannot stat database file"
-msgstr "tiedoston ”%s” tilaa ei voi lukea: %s"
+msgstr "tietokantatiedoston tilaa ei voi lukea"
 
 #: nss/makedb.c:817
 #, fuzzy, c-format
@@ -4709,9 +4701,9 @@ msgid "cannot map database file"
 msgstr "Karttatietokannassa ei ole enempää tietueita"
 
 #: nss/makedb.c:820
-#, fuzzy, c-format
+#, c-format
 msgid "file not a database file"
-msgstr "luettaessa profilointidatatiedoston tilaa"
+msgstr "tiedosto ei ole tietokantatiedosto"
 
 #: nss/makedb.c:871
 #, fuzzy, c-format
@@ -4726,7 +4718,7 @@ msgstr "Käyttö: %s [-v määrittely] muuttujanimi [polku]\n"
 #: posix/getconf.c:403
 #, c-format
 msgid "       %s -a [pathname]\n"
-msgstr ""
+msgstr "       %s -a [polku]\n"
 
 #: posix/getconf.c:479
 #, c-format
@@ -5094,11 +5086,11 @@ msgstr "Laitetta irrotettu"
 
 #: stdio-common/psiginfo.c:139
 msgid "Signal sent by kill()"
-msgstr ""
+msgstr "Signaalin lähetti kill()"
 
 #: stdio-common/psiginfo.c:142
 msgid "Signal sent by sigqueue()"
-msgstr ""
+msgstr "Signaalin lähetti sigqueue()"
 
 #: stdio-common/psiginfo.c:145
 msgid "Signal generated by the expiration of a timer"
@@ -5114,7 +5106,7 @@ msgstr ""
 
 #: stdio-common/psiginfo.c:157
 msgid "Signal sent by tkill()"
-msgstr ""
+msgstr "Signaalin lähetti tkill()"
 
 #: stdio-common/psiginfo.c:162
 msgid "Signal generated by the completion of an asynchronous name lookup request"
@@ -5296,9 +5288,8 @@ msgid "Failed (unspecified error)"
 msgstr "Epäonnistui (määrittelemätön virhe)"
 
 #: sunrpc/clnt_raw.c:115
-#, fuzzy
 msgid "clnt_raw.c: fatal header serialization error"
-msgstr "clnt_raw.c: vakava otsikon serialisointivirhe"
+msgstr "clnt_raw.c: vakava otsikon sarjallistamisvirhe"
 
 #: sunrpc/pm_getmaps.c:77
 msgid "pmap_getmaps.c: rpc problem"
@@ -6825,9 +6816,8 @@ msgid "Interrupted by a signal"
 msgstr "Signaalin keskeyttämä"
 
 #: sysdeps/posix/gai_strerror-strs.h:17
-#, fuzzy
 msgid "Parameter string not correctly encoded"
-msgstr "Parametrimerkkijono on väärin koodattu"
+msgstr "Parametrimerkkijono ei ole koodattu oikein"
 
 #: sysdeps/unix/sysv/linux/i386/readelflib.c:65
 #, c-format
