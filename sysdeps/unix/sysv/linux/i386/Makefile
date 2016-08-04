@@ -48,9 +48,11 @@ endif
 ifeq ($(subdir),nptl)
 # pull in __syscall_error routine
 libpthread-routines += sysdep
+libpthread-shared-only-routines += sysdep
 endif
 
 ifeq ($(subdir),rt)
 # pull in __syscall_error routine
 librt-routines += sysdep
+librt-shared-only-routines += sysdep
 endif

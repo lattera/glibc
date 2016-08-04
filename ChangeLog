@@ -1,3 +1,10 @@
+2016-08-04  Florian Weimer  <fweimer@redhat.com>
+
+	Use sysdep.o from libc.a in static libraries.
+	* sysdeps/unix/sysv/linux/i386/Makefile
+	(libpthread-shared-only-routines): Add sysdep.
+	(librt-shared-only-routines): Likewise.
+
 2016-08-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/tgmath.h (nextdown): Define if
