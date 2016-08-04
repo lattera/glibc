@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fenv.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -26,10 +25,7 @@ __attribute__ ((noinline))
 invalid_fn (long double x, long double fn)
 {
   if (__rintl (fn) != fn)
-    {
-      feraiseexcept (FE_INVALID);
-      return __nan ("");
-    }
+    return (fn - fn) / (fn - fn);
   else if (fn > 65000.0L)
     return __scalbnl (x, 65000);
   else

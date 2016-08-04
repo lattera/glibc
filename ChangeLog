@@ -1,3 +1,15 @@
+2016-08-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/e_scalb.c: Do not include <fenv.h>.
+	(invalid_fn): Do calculation resulting in NaN instead of raising
+	FE_INVALID and returning a NaN explicitly.
+	* math/e_scalbf.c: Do not include <fenv.h>.
+	(invalid_fn): Do calculation resulting in NaN instead of raising
+	FE_INVALID and returning a NaN explicitly.
+	* math/e_scalbl.c: Do not include <fenv.h>.
+	(invalid_fn): Do calculation resulting in NaN instead of raising
+	FE_INVALID and returning a NaN explicitly.
+
 2016-08-04  Carlos O'Donell  <carlos@redhat.com>
 
 	* po/de.po: Updated from Translation Project.
