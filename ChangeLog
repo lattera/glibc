@@ -1,3 +1,9 @@
+2016-08-05  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/Makefile (sysdep-CFLAGS): Add -mvis.
+	* sysdeps/sparc/sparc64/Makefile (sysdep-CFLAGS): New. Define to
+	-Wa,-Av9a -mvis.
+
 2016-08-05  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* math/gen-libm-test.pl (apply_lit): Rewrite to apply

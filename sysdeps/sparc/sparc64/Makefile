@@ -1,3 +1,5 @@
+sysdep-CFLAGS += -Wa,-Av9a -mvis
+
 ifeq ($(subdir),string)
 sysdep_routines += align-cpy
 endif

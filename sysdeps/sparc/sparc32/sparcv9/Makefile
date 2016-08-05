@@ -1,4 +1,4 @@
-sysdep-CFLAGS += -mcpu=ultrasparc -Wa,-Av9a
+sysdep-CFLAGS += -mcpu=ultrasparc -Wa,-Av9a -mvis
 
 ifeq ($(have-as-vis3),yes)
 ASFLAGS-.o += -Wa,-Av9d
