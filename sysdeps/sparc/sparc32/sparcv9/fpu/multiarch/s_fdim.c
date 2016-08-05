@@ -1,7 +1,6 @@
-/* Return positive difference between arguments.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Compute positive difference, sparc 32-bit.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,26 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <math.h>
-#include <math_private.h>
+#ifdef HAVE_AS_VIS3_SUPPORT
+# include <sparc-ifunc.h>
+# include <math.h>
 
-double
-__fdim (double x, double y)
-{
-  if (islessequal (x, y))
-    return 0.0;
+extern double __fdim_vis3 (double, double);
+extern double __fdim_generic (double, double);
 
-  double r = math_narrow_eval (x - y);
-  if (isinf (r) && !isinf (x) && !isinf (y))
-    __set_errno (ERANGE);
-
-  return r;
-}
-#ifndef __fdim
+sparc_libm_ifunc(__fdim, hwcap & HWCAP_SPARC_VIS3 ? __fdim_vis3 : __fdim_generic);
 weak_alias (__fdim, fdim)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__fdim, __fdiml)
-weak_alias (__fdim, fdiml)
-# endif
+
+# define __fdim __fdim_generic
 #endif
+
+#include <math/s_fdim.c>

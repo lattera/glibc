@@ -33,4 +33,6 @@ __fdimf (float x, float y)
 
   return r;
 }
+#ifndef __fdimf
 weak_alias (__fdimf, fdimf)
+#endif
