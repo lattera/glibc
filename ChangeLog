@@ -1,5 +1,21 @@
 2016-08-05  Aurelien Jarno  <aurelien@aurel32.net>
 
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile
+	[$(subdir) = math && $(have-as-vis3) = yes] (libm-sysdep_routines):
+	Remove s_fdimf-vis3, s_fdim-vis3.
+	* sysdeps/sparc/sparc32/fpu/s_fdim.S: Delete file.
+	* sysdeps/sparc/sparc32/fpu/s_fdimf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim-vis3.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf-vis3.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fdim.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fdimf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_fdim.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_fdimf.S: Likewise.
+
+2016-08-05  Aurelien Jarno  <aurelien@aurel32.net>
+
 	* sysdeps/sparc/sparc32/sparcv9/Makefile (sysdep-CFLAGS): Add -mvis.
 	* sysdeps/sparc/sparc64/Makefile (sysdep-CFLAGS): New. Define to
 	-Wa,-Av9a -mvis.
