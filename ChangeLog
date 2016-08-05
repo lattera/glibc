@@ -1,3 +1,9 @@
+2016-08-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h: Move comment about <bits/mathdef.h> definitions
+	above inclusion of <bits/mathdef.h>.  Do not mention
+	FLT_EVAL_METHOD, INFINITY or DECIMAL_DIG in that comment.
+
 2016-08-05  Torvald Riegel  <triegel@redhat.com>
 
 	* include/atomic.h (atomic_exchange_relaxed): New.
