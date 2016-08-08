@@ -1,3 +1,9 @@
+2016-08-15  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20435]
+	* sysdeps/unix/sysv/linux/arm/setcontext.S (__startcontext): Mark
+	as .cantunwind.
+
 2016-08-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/fpu/fsetexcptflg.c (__fesetexceptflag): Add

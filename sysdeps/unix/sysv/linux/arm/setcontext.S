@@ -86,12 +86,19 @@ weak_alias(__setcontext, setcontext)
 
 	/* Called when a makecontext() context returns.  Start the
 	   context in R4 or fall through to exit().  */
+	/* Unwind descriptors are looked up based on PC - 2, so we have to
+	   make sure to mark the instruction preceding the __startcontext
+	   label as .cantunwind.  */
+	.fnstart
+	.cantunwind
+	nop
 ENTRY(__startcontext)
 	movs    r0, r4
 	bne     PLTJMP(__setcontext)
 
 	@ New context was 0 - exit
 	b       PLTJMP(HIDDEN_JUMPTARGET(exit))
+	.fnend
 END(__startcontext)
 
 #ifdef PIC
