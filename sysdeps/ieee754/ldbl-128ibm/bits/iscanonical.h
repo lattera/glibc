@@ -27,6 +27,9 @@ extern int __iscanonicall (long double __x)
      __THROW __attribute__ ((__const__));
 # define __iscanonicalf(x) ((void) (__typeof (x)) (x), 1)
 # define __iscanonical(x) ((void) (__typeof (x)) (x), 1)
+# if __HAVE_DISTINCT_FLOAT128
+#  define __iscanonicalf128(x) ((void) (__typeof (x)) (x), 1)
+# endif
 
 /* Return nonzero value if X is canonical.  In IEEE interchange binary
    formats, all values are canonical, but the argument must still be

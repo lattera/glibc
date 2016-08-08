@@ -1,3 +1,103 @@
+2017-05-25  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* math/math.h [__HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(SNANF128): New macro.
+	* math/e_sqrtf128.c: New file.
+	* math/s_fmaxmag_template.c: Include math_private.h in order to
+	make inline expansion of fabs128().
+	* math/s_fminmag_template.c: Likewise.
+
+	* sysdeps/ieee754/float128/e_acosf128.c: New file.
+	* sysdeps/ieee754/float128/e_acoshf128.c: New file.
+	* sysdeps/ieee754/float128/e_asinf128.c: New file.
+	* sysdeps/ieee754/float128/e_atan2f128.c: New file.
+	* sysdeps/ieee754/float128/e_atanhf128.c: New file.
+	* sysdeps/ieee754/float128/e_coshf128.c: New file.
+	* sysdeps/ieee754/float128/e_exp10f128.c: New file.
+	* sysdeps/ieee754/float128/e_expf128.c: New file.
+	* sysdeps/ieee754/float128/e_fmodf128.c: New file.
+	* sysdeps/ieee754/float128/e_gammaf128_r.c: New file.
+	* sysdeps/ieee754/float128/e_hypotf128.c: New file.
+	* sysdeps/ieee754/float128/e_ilogbf128.c: New file.
+	* sysdeps/ieee754/float128/e_j0f128.c: New file.
+	* sysdeps/ieee754/float128/e_j1f128.c: New file.
+	* sysdeps/ieee754/float128/e_jnf128.c: New file.
+	* sysdeps/ieee754/float128/e_lgammaf128_r.c: New file.
+	* sysdeps/ieee754/float128/e_log10f128.c: New file.
+	* sysdeps/ieee754/float128/e_log2f128.c: New file.
+	* sysdeps/ieee754/float128/e_logf128.c: New file.
+	* sysdeps/ieee754/float128/e_powf128.c: New file.
+	* sysdeps/ieee754/float128/e_rem_pio2f128.c: New file.
+	* sysdeps/ieee754/float128/e_remainderf128.c: New file.
+	* sysdeps/ieee754/float128/e_scalbf128.c: New file.
+	* sysdeps/ieee754/float128/e_sinhf128.c: New file.
+	* sysdeps/ieee754/float128/float128_private.h: New file.
+	* sysdeps/ieee754/float128/gamma_productf128.c: New file.
+	* sysdeps/ieee754/float128/ieee754_float128.h: New file.
+	* sysdeps/ieee754/float128/k_cosf128.c: New file.
+	* sysdeps/ieee754/float128/k_sincosf128.c: New file.
+	* sysdeps/ieee754/float128/k_sinf128.c: New file.
+	* sysdeps/ieee754/float128/k_tanf128.c: New file.
+	* sysdeps/ieee754/float128/lgamma_negf128.c: New file.
+	* sysdeps/ieee754/float128/lgamma_productf128.c: New file.
+	* sysdeps/ieee754/float128/s_asinhf128.c: New file.
+	* sysdeps/ieee754/float128/s_atanf128.c: New file.
+	* sysdeps/ieee754/float128/s_cbrtf128.c: New file.
+	* sysdeps/ieee754/float128/s_ceilf128.c: New file.
+	* sysdeps/ieee754/float128/s_copysignf128.c: New file.
+	* sysdeps/ieee754/float128/s_cosf128.c: New file.
+	* sysdeps/ieee754/float128/s_erff128.c: New file.
+	* sysdeps/ieee754/float128/s_expm1f128.c: New file.
+	* sysdeps/ieee754/float128/s_fabsf128.c: New file.
+	* sysdeps/ieee754/float128/s_finitef128.c: New file.
+	* sysdeps/ieee754/float128/s_floorf128.c: New file.
+	* sysdeps/ieee754/float128/s_fmaf128.c: New file.
+	* sysdeps/ieee754/float128/s_fpclassifyf128.c: New file.
+	* sysdeps/ieee754/float128/s_frexpf128.c: New file.
+	* sysdeps/ieee754/float128/s_fromfpf128.c: New file.
+	* sysdeps/ieee754/float128/s_fromfpxf128.c: New file.
+	* sysdeps/ieee754/float128/s_getpayloadf128.c: New file.
+	* sysdeps/ieee754/float128/s_isinff128.c: New file.
+	* sysdeps/ieee754/float128/s_isnanf128.c: New file.
+	* sysdeps/ieee754/float128/s_issignalingf128.c: New file.
+	* sysdeps/ieee754/float128/s_llrintf128.c: New file.
+	* sysdeps/ieee754/float128/s_llroundf128.c: New file.
+	* sysdeps/ieee754/float128/s_log1pf128.c: New file.
+	* sysdeps/ieee754/float128/s_logbf128.c: New file.
+	* sysdeps/ieee754/float128/s_lrintf128.c: New file.
+	* sysdeps/ieee754/float128/s_lroundf128.c: New file.
+	* sysdeps/ieee754/float128/s_modff128.c: New file.
+	* sysdeps/ieee754/float128/s_nearbyintf128.c: New file.
+	* sysdeps/ieee754/float128/s_nextafterf128.c: New file.
+	* sysdeps/ieee754/float128/s_nexttowardf128.c: New file.
+	* sysdeps/ieee754/float128/s_nextupf128.c: New file.
+	* sysdeps/ieee754/float128/s_remquof128.c: New file.
+	* sysdeps/ieee754/float128/s_rintf128.c: New file.
+	* sysdeps/ieee754/float128/s_roundevenf128.c: New file.
+	* sysdeps/ieee754/float128/s_roundf128.c: New file.
+	* sysdeps/ieee754/float128/s_scalblnf128.c: New file.
+	* sysdeps/ieee754/float128/s_scalbnf128.c: New file.
+	* sysdeps/ieee754/float128/s_setpayloadf128.c: New file.
+	* sysdeps/ieee754/float128/s_setpayloadsigf128.c: New file.
+	* sysdeps/ieee754/float128/s_signbitf128.c: New file.
+	* sysdeps/ieee754/float128/s_significandf128.c: New file.
+	* sysdeps/ieee754/float128/s_sincosf128.c: New file.
+	* sysdeps/ieee754/float128/s_sinf128.c: New file.
+	* sysdeps/ieee754/float128/s_tanf128.c: New file.
+	* sysdeps/ieee754/float128/s_tanhf128.c: New file.
+	* sysdeps/ieee754/float128/s_totalorderf128.c: New file.
+	* sysdeps/ieee754/float128/s_totalordermagf128.c: New file.
+	* sysdeps/ieee754/float128/s_truncf128.c: New file.
+	* sysdeps/ieee754/float128/s_ufromfpf128.c: New file.
+	* sysdeps/ieee754/float128/s_ufromfpxf128.c: New file.
+	* sysdeps/ieee754/float128/t_sincosf128.c: New file.
+	* sysdeps/ieee754/float128/x2y2m1f128.c: New file.
+
+	* sysdeps/ieee754/ldbl-128ibm/bits/iscanonical.h:
+	(__iscanonicalf128): Define as a macro.
+
 2017-05-24  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* sysdeps/aarch64/memcpy.S (MEMMOVE, MEMCPY): New macros.

@@ -64,6 +64,9 @@ __BEGIN_DECLS
 #  define SNANL (__builtin_nansl (""))
 # endif
 #endif
+#if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define SNANF128 (__builtin_nansf128 (""))
+#endif
 
 /* Get __GLIBC_FLT_EVAL_METHOD.  */
 #include <bits/flt-eval-method.h>
