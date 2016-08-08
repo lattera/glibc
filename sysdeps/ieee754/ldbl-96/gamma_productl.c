@@ -18,37 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
-#include <float.h>
-
-/* Calculate X * Y exactly and store the result in *HI + *LO.  It is
-   given that the values are small enough that no overflow occurs and
-   large enough (or zero) that no underflow occurs.  */
-
-static inline void
-mul_split (long double *hi, long double *lo, long double x, long double y)
-{
-#ifdef __FP_FAST_FMAL
-  /* Fast built-in fused multiply-add.  */
-  *hi = x * y;
-  *lo = __builtin_fmal (x, y, -*hi);
-#elif defined FP_FAST_FMAL
-  /* Fast library fused multiply-add, compiler before GCC 4.6.  */
-  *hi = x * y;
-  *lo = __fmal (x, y, -*hi);
-#else
-  /* Apply Dekker's algorithm.  */
-  *hi = x * y;
-# define C ((1LL << (LDBL_MANT_DIG + 1) / 2) + 1)
-  long double x1 = x * C;
-  long double y1 = y * C;
-# undef C
-  x1 = (x - x1) + x1;
-  y1 = (y - y1) + y1;
-  long double x2 = x - x1;
-  long double y2 = y - y1;
-  *lo = (((x1 * y1 - *hi) + x1 * y2) + x2 * y1) + x2 * y2;
-#endif
-}
+#include <mul_splitl.h>
 
 /* Compute the product of X + X_EPS, X + X_EPS + 1, ..., X + X_EPS + N
    - 1, in the form R * (1 + *EPS) where the return value R is an
@@ -68,7 +38,7 @@ __gamma_productl (long double x, long double x_eps, int n, long double *eps)
     {
       *eps += x_eps / (x + i);
       long double lo;
-      mul_split (&ret, &lo, ret, x + i);
+      mul_splitl (&ret, &lo, ret, x + i);
       *eps += lo / ret;
     }
   return ret;

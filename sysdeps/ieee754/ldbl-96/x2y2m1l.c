@@ -18,7 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
-#include <float.h>
+#include <mul_splitl.h>
 #include <stdlib.h>
 
 /* Calculate X + Y exactly and store the result in *HI + *LO.  It is
@@ -31,36 +31,6 @@ add_split (long double *hi, long double *lo, long double x, long double y)
   /* Apply Dekker's algorithm.  */
   *hi = x + y;
   *lo = (x - *hi) + y;
-}
-
-/* Calculate X * Y exactly and store the result in *HI + *LO.  It is
-   given that the values are small enough that no overflow occurs and
-   large enough (or zero) that no underflow occurs.  */
-
-static inline void
-mul_split (long double *hi, long double *lo, long double x, long double y)
-{
-#ifdef __FP_FAST_FMAL
-  /* Fast built-in fused multiply-add.  */
-  *hi = x * y;
-  *lo = __builtin_fmal (x, y, -*hi);
-#elif defined FP_FAST_FMAL
-  /* Fast library fused multiply-add, compiler before GCC 4.6.  */
-  *hi = x * y;
-  *lo = __fmal (x, y, -*hi);
-#else
-  /* Apply Dekker's algorithm.  */
-  *hi = x * y;
-# define C ((1LL << (LDBL_MANT_DIG + 1) / 2) + 1)
-  long double x1 = x * C;
-  long double y1 = y * C;
-# undef C
-  x1 = (x - x1) + x1;
-  y1 = (y - y1) + y1;
-  long double x2 = x - x1;
-  long double y2 = y - y1;
-  *lo = (((x1 * y1 - *hi) + x1 * y2) + x2 * y1) + x2 * y2;
-#endif
 }
 
 /* Compare absolute values of floating-point values pointed to by P
@@ -88,8 +58,8 @@ __x2y2m1l (long double x, long double y)
 {
   long double vals[5];
   SET_RESTORE_ROUNDL (FE_TONEAREST);
-  mul_split (&vals[1], &vals[0], x, x);
-  mul_split (&vals[3], &vals[2], y, y);
+  mul_splitl (&vals[1], &vals[0], x, x);
+  mul_splitl (&vals[3], &vals[2], y, y);
   vals[4] = -1.0L;
   qsort (vals, 5, sizeof (long double), compare);
   /* Add up the values so that each element of VALS has absolute value

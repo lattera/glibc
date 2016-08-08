@@ -1,5 +1,29 @@
 2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* sysdeps/ieee754/ldbl-128/gamma_productl.c:
+	(mul_split) Remove, rename as mul_splitl, remove
+	redundant float.h include, and include via mul_splitl.h
+
+	* sysdeps/ieee754/ldbl-128/lgamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/x2y2m1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/gamma_product.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/lgamma_product.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/x2y2m1.c: Likewise.
+
+	* math/mul_splitl.h: New file.
+
+	* sysdeps/ieee754/dbl-64/gamma_product.c (mul_split):
+	Move into mul_split.h, and remove redundant float.h include.
+
+	* sysdeps/ieee754/dbl-64/lgamma_product.c: Likewise.
+	* sysdeps/ieee754/dbl-64/x2y2m1.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fmal.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/x2y2m1.c: Likewise.
+
+	* math/mul_split.h: New file.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* math/Makefile (libm-gen-calls): Move
 	s_cacos, s_cacosh, s_ccos, s_ccosh from ...
 	(libm-calls): Remove above.

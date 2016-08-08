@@ -18,37 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
-#include <float.h>
-
-/* Calculate X * Y exactly and store the result in *HI + *LO.  It is
-   given that the values are small enough that no overflow occurs and
-   large enough (or zero) that no underflow occurs.  */
-
-static void
-mul_split (long double *hi, long double *lo, long double x, long double y)
-{
-#ifdef __FP_FAST_FMAL
-  /* Fast built-in fused multiply-add.  */
-  *hi = x * y;
-  *lo = __builtin_fmal (x, y, -*hi);
-#elif defined FP_FAST_FMAL
-  /* Fast library fused multiply-add, compiler before GCC 4.6.  */
-  *hi = x * y;
-  *lo = __fmal (x, y, -*hi);
-#else
-  /* Apply Dekker's algorithm.  */
-  *hi = x * y;
-# define C ((1LL << (LDBL_MANT_DIG + 1) / 2) + 1)
-  long double x1 = x * C;
-  long double y1 = y * C;
-# undef C
-  x1 = (x - x1) + x1;
-  y1 = (y - y1) + y1;
-  long double x2 = x - x1;
-  long double y2 = y - y1;
-  *lo = (((x1 * y1 - *hi) + x1 * y2) + x2 * y1) + x2 * y2;
-#endif
-}
+#include <mul_splitl.h>
 
 /* Compute the product of 1 + (T / (X + X_EPS)), 1 + (T / (X + X_EPS +
    1)), ..., 1 + (T / (X + X_EPS + N - 1)), minus 1.  X is such that
@@ -65,11 +35,11 @@ __lgamma_productl (long double t, long double x, long double x_eps, int n)
       long double xi = x + i;
       long double quot = t / xi;
       long double mhi, mlo;
-      mul_split (&mhi, &mlo, quot, xi);
+      mul_splitl (&mhi, &mlo, quot, xi);
       long double quot_lo = (t - mhi - mlo) / xi - t * x_eps / (xi * xi);
       /* We want (1 + RET + RET_EPS) * (1 + QUOT + QUOT_LO) - 1.  */
       long double rhi, rlo;
-      mul_split (&rhi, &rlo, ret, quot);
+      mul_splitl (&rhi, &rlo, ret, quot);
       long double rpq = ret + quot;
       long double rpq_eps = (ret - rpq) + quot;
       long double nret = rpq + rhi;

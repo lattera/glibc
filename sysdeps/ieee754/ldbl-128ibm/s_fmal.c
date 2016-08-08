@@ -22,6 +22,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
+#include <mul_split.h>
 #include <stdlib.h>
 
 /* Calculate X + Y exactly and store the result in *HI + *LO.  It is
@@ -34,32 +35,6 @@ add_split (double *hi, double *lo, double x, double y)
   /* Apply Dekker's algorithm.  */
   *hi = x + y;
   *lo = (x - *hi) + y;
-}
-
-/* Calculate X * Y exactly and store the result in *HI + *LO.  It is
-   given that the values are small enough that no overflow occurs and
-   large enough (or zero) that no underflow occurs.  */
-
-static void
-mul_split (double *hi, double *lo, double x, double y)
-{
-#ifdef __FP_FAST_FMA
-  /* Fast built-in fused multiply-add.  */
-  *hi = x * y;
-  *lo = __builtin_fma (x, y, -*hi);
-#else
-  /* Apply Dekker's algorithm.  */
-  *hi = x * y;
-# define C ((1 << (DBL_MANT_DIG + 1) / 2) + 1)
-  double x1 = x * C;
-  double y1 = y * C;
-# undef C
-  x1 = (x - x1) + x1;
-  y1 = (y - y1) + y1;
-  double x2 = x - x1;
-  double y2 = y - y1;
-  *lo = (((x1 * y1 - *hi) + x1 * y2) + x2 * y1) + x2 * y2;
-#endif
 }
 
 /* Value with extended range, used in intermediate computations.  */
