@@ -1,3 +1,9 @@
+2016-08-06  Christian Seiler  <christian@iwakd.de>
+
+	[BZ #20444]
+	* sysdeps/mach/hurd/recvmsg.c (__libc_recvmsg): Cope with aport being
+	MACH_PORT_NULL.
+
 2016-08-05  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* math/s_fdim.c: Avoid alias renamed.
