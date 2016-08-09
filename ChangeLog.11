@@ -1017,7 +1017,7 @@
 	* elf/dl-error.c (_dl_signal_error): Allocate memory for objname
 	as well.  Reported by Alexander V. Lukyanov <lav@yars.free.net>.
 
-	* iconvdata/gconv-modules: Add aliases for Winblowz charsets.
+	* iconvdata/gconv-modules: Add aliases for Windows charsets.
 	Patch by Joseph S. Myers <jsm28@cam.ac.uk>.
 
 2000-10-13  Andreas Schwab  <schwab@suse.de>
