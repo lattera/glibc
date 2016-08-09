@@ -121,6 +121,100 @@ Version 2.26
   C Library is GCC 4.9.  Older GCC versions, and non-GNU compilers, can
   still be used to compile programs using the GNU C Library.
 
+* Support is added, on powerpc64le, for interfaces supporting the _Float128
+  type from ISO/IEC TS 18661-3:2015.  Most of the interfaces are taken from
+  TS 18661-3.  The type-generic macros in <math.h> support this type, but
+  those in <tgmath.h> do not.  The GNU C Library now requires GCC 6.2 or
+  later to build for powerpc64le.  When used with GCC versions before GCC
+  7, these interfaces may be used with the type under the non-standard name
+  __float128.
+
+  New <stdlib.h> functions from ISO/IEC TS 18661-3:
+
+    - String Conversion Functions: strfromf128 and strtof128.
+
+  New <math.h> features from ISO/IEC TS 18661-3:
+
+    - Very Large Number macro: HUGE_VAL_F128.
+
+    - Signaling NaN macro: SNANF128.
+
+    - Trigonometric Functions: acosf128, asinf128, atanf128, atan2f128,
+      cosf128, sinf128, tanf128.
+
+    - Hyperbolic Functions: acoshf128, asinhf128, atanhf128, coshf128,
+      sinhf128, tanhf128.
+
+    - Exponential and Logarithmic Functions: expf128, exp2f128, expm1f128,
+      frexpf128, ilogbf128, ldexpf128, llogbf128, logf128, log10f128,
+      log1pf128, log2f128, logbf128, modff128, scalbnf128, scalblnf128.
+
+    - Power and Absolute Functions: cbrtf128, fabsf128, hypotf128, powf128,
+      sqrtf128.
+
+    - Error and Gamma Functions: erff128, erfcf128, lgammaf128, tgammaf128.
+
+    - Nearest Integer Functions: ceilf128, floorf128, nearbyintf128,
+      rintf128, lrintf128, llrintf128, roundf128, lroundf128, llroundf128,
+      roundevenf128, truncf128, fromfpf128, ufromfpf128, fromfpxf128,
+      ufromfpxf128.
+
+    - Remainder Functions: fmodf128, remainderf128, remquof128.
+
+    - Manipulation Functions: copysignf128, nanf128, nextafterf128,
+      nextupf128, nextdownf128, canonicalizef128.
+
+    - Minimum, Maximum, and Positive Difference Functions: fdimf128,
+      fmaxf128, fminf128, fmaxmagf128, fminmagf128.
+
+    - Floating Multiply-Add Function: fmaf128.
+
+    - Total Order Functions: totalorderf128, totalordermagf128.
+
+    - Payload Functions: getpayloadf128, setpayloadf128, setpayloadsigf128.
+
+  New <complex.h> functions from ISO/IEC TS 18661-3:
+
+    - Trigonometric Functions: cacosf128, casinf128, catanf128, ccosf128,
+      csinf128, ctanf128.
+
+    - Hyperbolic Functions: cacoshf128, casinhf128, catanhf128, ccoshf128,
+      csinhf128, ctanhf128.
+
+    - Exponential and Logarithmic Functions: cexpf128, clogf128.
+
+    - Power and Absolute Functions: cabsf128, cpowf128, csqrtf128.
+
+    - Manipulation Functions: cargf128, cimagf128, CMPLXF128, conjf128,
+      cprojf128, crealf128.
+
+  The following <wchar.h> functions are added as GNU extensions:
+
+    - Wide String Conversion Functions: wsctof128, wcstof128_l.
+
+  The following <stdlib.h> function is added as a GNU extension:
+
+    - String Conversion Function: strtof128_l.
+
+  The following <math.h> features are added as GNU extensions:
+
+    - Predefined Mathematical Constants: M_Ef128, M_LOG2Ef128,
+      M_LOG10Ef128, M_LN2f128, M_LN10f128, M_PIf128, M_PI_2f128,
+      M_PI_4f128, M_1_PIf128, M_2_PIf128, M_2_SQRTPIf128, M_SQRT2f128,
+      M_SQRT1_2f128.
+
+    - Trigonometric Function: sincosf128.
+
+    - Exponential and Logarithmic Function: exp10f128.
+
+    - Error and Gamma Function: lgammaf128_r.
+
+    - Bessel Functions: j0f128, j1f128, jnf128, y0f128, y1f128, ynf128.
+
+  The following <complex.h> function is added as a GNU extension:
+
+    - Exponential and Logarithmic Function: clog10f128.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,

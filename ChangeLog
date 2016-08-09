@@ -1,3 +1,24 @@
+2017-06-26  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* manual/math.texi (Mathematics): Mention the enabling of float128
+	for powerpc64le.
+	* sysdeps/powerpc/bits/floatn.h: New file.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Regenerated.
+	* sysdeps/powerpc/fpu/math_private.h:
+	(__ieee754_sqrtf128): New inline override.
+	* sysdeps/powerpc/powerpc64le/Implies-before: New file.
+	* sysdeps/powerpc/powerpc64le/Makefile: New file.
+	* sysdeps/powerpc/powerpc64le/fpu/e_sqrtf128.c: New file.
+	* sysdeps/powerpc/powerpc64le/fpu/sfp-machine.h: New file.
+	* sysdeps/powerpc/powerpc64le/power9/fpu/e_sqrtf128.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist:
+	Updated.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64le/float128-abi.h:
+	New file.
+
 2017-06-26  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64le/configure.ac: Check for POWER8.

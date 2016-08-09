@@ -25,6 +25,16 @@
 #include <fenv_private.h>
 #include_next <math_private.h>
 
+#if defined _ARCH_PWR9 && __HAVE_DISTINCT_FLOAT128
+extern __always_inline _Float128
+__ieee754_sqrtf128 (_Float128 __x)
+{
+  _Float128 __z;
+  asm ("xssqrtqp %0,%1" : "=wq" (__z) : "wq" (__x));
+  return __z;
+}
+#endif
+
 extern double __slow_ieee754_sqrt (double);
 extern __always_inline double
 __ieee754_sqrt (double __x)
