@@ -2,7 +2,7 @@
 <comment_char> %
 <escape_char> /
 
-% This is the old MacCyrillic which M$ keeps around as CP10007.
+% This is the old MacCyrillic which Microsoft keeps around as CP10007.
 CHARMAP
 <U0000>     /x00         NULL
 <U0001>     /x01         START OF HEADING

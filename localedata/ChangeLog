@@ -1,3 +1,7 @@
+2016-08-10  Mike Frysinger  <vapier@gentoo.org>
+
+	* charmaps/CP10007: Change M$ to Microsoft.
+
 2016-07-07  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* locales/de_LI (postal_fmt): Fix indentation.
