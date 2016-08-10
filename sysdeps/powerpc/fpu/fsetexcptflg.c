@@ -31,7 +31,10 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
   flag = *flagp & excepts;
 
   /* Replace the exception status */
-  n.l = ((u.l & ~(FPSCR_STICKY_BITS & excepts))
+  int excepts_mask = FPSCR_STICKY_BITS & excepts;
+  if ((excepts & FE_INVALID) != 0)
+    excepts_mask |= FE_ALL_INVALID;
+  n.l = ((u.l & ~excepts_mask)
 	 | (flag & FPSCR_STICKY_BITS)
 	 | (flag >> ((31 - FPSCR_VX) - (31 - FPSCR_VXSOFT))
 	    & FE_INVALID_SOFTWARE));

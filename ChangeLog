@@ -1,5 +1,10 @@
 2016-08-10  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20455]
+	* sysdeps/powerpc/fpu/fsetexcptflg.c (__fesetexceptflag): Mask out
+	all FE_INVALID sub-exceptions from FPSCR when FE_INVALID specified
+	to be restored.
+
 	* math/test-fexcept-traps.c: New file.
 	* math/test-fexcept.c: Likewise.
 	* math/Makefile (tests): Add test-fexcept and test-fexcept-traps.
