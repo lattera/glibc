@@ -24,4 +24,10 @@
    <http://gcc.gnu.org/PR56828>.  */
 #define SNAN_TESTS_TYPE_CAST	0
 
+#ifndef __NO_FPRS__
+/* Setting exception flags in FPSCR results in enabled traps for those
+   exceptions being taken.  */
+# define EXCEPTION_SET_FORCES_TRAP 1
+#endif
+
 #include_next <math-tests.h>

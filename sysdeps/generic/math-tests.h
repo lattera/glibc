@@ -87,3 +87,12 @@
 # define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)			\
    (EXCEPTION_TESTS_float || EXCEPTION_TESTS_double)
 #endif
+
+/* Indicate whether exception traps, if enabled, occur whenever an
+   exception flag is set explicitly, so it is not possible to set flag
+   bits with traps enabled without causing traps to be taken.  If
+   traps cannot be enabled, the value of this macro does not
+   matter.  */
+#ifndef EXCEPTION_SET_FORCES_TRAP
+# define EXCEPTION_SET_FORCES_TRAP 0
+#endif

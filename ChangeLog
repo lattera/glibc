@@ -1,3 +1,13 @@
+2016-08-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/test-fexcept-traps.c: New file.
+	* math/test-fexcept.c: Likewise.
+	* math/Makefile (tests): Add test-fexcept and test-fexcept-traps.
+	* sysdeps/generic/math-tests.h (EXCEPTION_SET_FORCES_TRAP): New
+	macro.
+	* sysdeps/powerpc/math-tests.h [!__NO_FPRS__]
+	(EXCEPTION_SET_FORCES_TRAP): Likewise.
+
 2016-08-09  Torvald Riegel  <triegel@redhat.com>
 
 	* include/atomic.h (atomic_fetch_and_relaxed,

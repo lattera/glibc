@@ -146,7 +146,7 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-nearbyint-except-2 test-signgam-uchar test-signgam-uchar-init \
 	test-signgam-uint test-signgam-uint-init test-signgam-ullong \
 	test-signgam-ullong-init test-nan-overflow test-nan-payload \
-	$(tests-static)
+	test-fexcept test-fexcept-traps $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
