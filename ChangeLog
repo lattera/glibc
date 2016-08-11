@@ -100,6 +100,7 @@
 
 2016-08-04  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20452]
 	Use sysdep.o from libc.a in static libraries.
 	* sysdeps/unix/sysv/linux/i386/Makefile
 	(libpthread-shared-only-routines): Add sysdep.
