@@ -20,6 +20,35 @@
 #include <stdio.h>
 #include <math-tests.h>
 
+/* Like feraiseexcept, but raise exactly the specified exceptions EXC,
+   without possibly raising "inexact" together with "overflow" or
+   "underflow" as permitted by ISO C.  (This is not used with traps
+   enabled, so side-effects from raising and then clearing "inexact"
+   are irrelevant.)  */
+
+static int
+feraiseexcept_exact (int exc)
+{
+#ifdef FE_INEXACT
+  int mask = 0;
+#ifdef FE_OVERFLOW
+  mask |= FE_OVERFLOW;
+#endif
+#ifdef FE_UNDERFLOW
+  mask |= FE_UNDERFLOW;
+#endif
+  if ((exc & FE_INEXACT) != 0
+      || (exc & mask) == 0
+      || fetestexcept (FE_INEXACT) != 0)
+    return feraiseexcept (exc);
+  int ret = feraiseexcept (exc);
+  feclearexcept (FE_INEXACT);
+  return ret;
+#else
+  return feraiseexcept (exc);
+#endif
+}
+
 static int
 test_set (int initial, const fexcept_t *saved, int mask, int expected)
 {
@@ -28,7 +57,7 @@ test_set (int initial, const fexcept_t *saved, int mask, int expected)
   printf ("Testing set: initial exceptions %x, mask %x, expected %x\n",
 	  (unsigned int) initial, (unsigned int) mask,
 	  (unsigned int) expected);
-  int ret = feraiseexcept (initial);
+  int ret = feraiseexcept_exact (initial);
   if (ret != 0)
     {
       puts ("feraiseexcept failed");
@@ -81,7 +110,7 @@ test_except (int exc, const char *exc_name)
       return result;
     }
 
-  ret = feraiseexcept (exc);
+  ret = feraiseexcept_exact (exc);
   if (ret == 0)
     printf ("feraiseexcept (%s) succeeded\n", exc_name);
   else

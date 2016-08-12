@@ -1,3 +1,9 @@
+2016-08-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/test-fexcept.c (feraiseexcept_exact): New function.
+	(test_set): Call feraiseexcept_exact instead of feraiseexcept.
+	(test_except): Likewise.
+
 2016-08-10  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20455]
