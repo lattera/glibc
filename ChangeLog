@@ -1,5 +1,8 @@
 2016-08-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/fpu/fsetexcptflg.c (__fesetexceptflag): Add
+	comment from fraiseexcpt.c.
+
 	* math/test-fexcept.c (feraiseexcept_exact): New function.
 	(test_set): Call feraiseexcept_exact instead of feraiseexcept.
 	(test_except): Likewise.
