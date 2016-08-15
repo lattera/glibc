@@ -1,3 +1,10 @@
+2016-08-15  Märt Põder  <tramm@p6drad-teel.net>
+
+	[BZ #20459]
+	* locales/et_EE (n_cs_precedes, p_cs_precedes): Adjust to
+	Requirements of information technology in Estonian language and
+	cultural environment.
+
 2016-08-10  Martin Pitt  <martin.pitt@ubuntu.com>
 
 	[BZ #9842]
