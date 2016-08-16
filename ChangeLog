@@ -1,3 +1,10 @@
+2016-08-16  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/tst-tls3.c (default_stack_size_in_mb, stack_size_in_mb):
+	New.
+	(do_test): Apply default_stack_size_in_mb if not set.
+	* nptl/tst-tls3-malloc.c (stack_size_in_mb): Override default.
+
 2016-08-15  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #20435]

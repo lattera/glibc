@@ -19,6 +19,11 @@
 /* Reuse the test.  */
 #include "tst-tls3.c"
 
+/* Increase the thread stack size to 10 MiB, so that some thread
+   stacks are actually freed.  (The stack cache size is currently
+   hard-wired to 40 MiB in allocatestack.c.)  */
+static long stack_size_in_mb = 10;
+
 #include <sys/mman.h>
 
 /* Interpose a minimal malloc implementation.  This implementation
