@@ -1,5 +1,9 @@
 2016-08-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/fpu/fesetexcept.c: New file.
+	* sysdeps/powerpc/nofpu/fesetexcept.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fesetexcept.c: Likewise.
+
 	* sysdeps/mips/fpu/fesetexcept.c: New file.
 
 	* sysdeps/m68k/fpu/fesetexcept.c: New file.
