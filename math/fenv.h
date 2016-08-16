@@ -22,7 +22,8 @@
 #ifndef _FENV_H
 #define _FENV_H	1
 
-#include <features.h>
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+#include <bits/libc-header-start.h>
 
 /* Get the architecture dependend definitions.  The following definitions
    are expected to be done:
@@ -69,6 +70,12 @@ extern int fegetexceptflag (fexcept_t *__flagp, int __excepts) __THROW;
 
 /* Raise the supported exceptions represented by EXCEPTS.  */
 extern int feraiseexcept (int __excepts) __THROW;
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Set the supported exception flags represented by EXCEPTS, without
+   causing enabled traps to be taken.  */
+extern int fesetexcept (int __excepts) __THROW;
+#endif
 
 /* Set complete status for exceptions indicated by EXCEPTS according to
    the representation in the object pointed to by FLAGP.  */

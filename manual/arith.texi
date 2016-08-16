@@ -759,6 +759,18 @@ non-zero value otherwise.
 
 @comment fenv.h
 @comment ISO
+@deftypefun int fesetexcept (int @var{excepts})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function sets the supported exception flags indicated by
+@var{excepts}, like @code{feraiseexcept}, but without causing enabled
+traps to be taken.  @code{fesetexcept} is from TS 18661-1:2014.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
+@end deftypefun
+
+@comment fenv.h
+@comment ISO
 @deftypefun int fetestexcept (int @var{excepts})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Test whether the exception flags indicated by the parameter @var{except}

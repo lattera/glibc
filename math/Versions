@@ -214,4 +214,7 @@ libm {
     nextup; nextupf; nextupl;
     nextdown; nextdownf; nextdownl;
   }
+  GLIBC_2.25 {
+    fesetexcept;
+  }
 }

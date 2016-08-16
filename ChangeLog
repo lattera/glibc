@@ -1,3 +1,54 @@
+2016-08-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/fesetexcept.c: New file.
+	* sysdeps/i386/fpu/fesetexcept.c: Likewise.
+	* sysdeps/x86_64/fpu/fesetexcept.c: Likewise.
+	* math/fenv.h: Define
+	__GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION and include
+	<bits/libc-header-start.h> instead of including <features.h>.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (fesetexcept): New function
+	declaration.
+	* manual/arith.texi (fesetexcept): Document function.
+	* math/Versions (fesetexcept): New libm symbol at version
+	GLIBC_2.25.
+	* math/Makefile (libm-support): Add fesetexcept.
+	(tests): Add test-fesetexcept and test-fesetexcept-traps.
+	* math/test-fesetexcept.c: New file.
+	* math/test-fesetexcept-traps.c: Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-08-16  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/tst-tls3.c (default_stack_size_in_mb, stack_size_in_mb):
