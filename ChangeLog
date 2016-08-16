@@ -1,5 +1,7 @@
 2016-08-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/aarch64/fpu/fesetexcept.c: New file.
+
 	* math/fesetexcept.c: New file.
 	* sysdeps/i386/fpu/fesetexcept.c: Likewise.
 	* sysdeps/x86_64/fpu/fesetexcept.c: Likewise.
