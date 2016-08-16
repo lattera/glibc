@@ -1,5 +1,7 @@
 2016-08-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/hppa/fpu/fesetexcept.c: New file.
+
 	* sysdeps/arm/fesetexcept.c: New file.
 
 	* sysdeps/alpha/fpu/fesetexcept.c: New file.
