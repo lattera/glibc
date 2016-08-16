@@ -1,5 +1,7 @@
 2016-08-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/m68k/fpu/fesetexcept.c: New file.
+
 	* sysdeps/ia64/fpu/fesetexcept.c: New file.
 
 	* sysdeps/hppa/fpu/fesetexcept.c: New file.
