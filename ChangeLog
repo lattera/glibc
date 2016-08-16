@@ -1,5 +1,11 @@
 2016-08-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/extended.h [_FP_W_TYPE_SIZE < 64] (FP_UNPACK_RAW_E):
+	Mask implicit bit out of unpacked value.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_RAW_EP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_RAW_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_RAW_EP): Likewise.
+
 	* sysdeps/sparc/fpu/fesetexcept.c: New file.
 
 	* sysdeps/sh/sh4/fpu/fesetexcept.c: New file.
