@@ -1,5 +1,7 @@
 2016-08-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/sparc/fpu/fesetexcept.c: New file.
+
 	* sysdeps/sh/sh4/fpu/fesetexcept.c: New file.
 
 	* sysdeps/s390/fpu/fesetexcept.c: New file.
