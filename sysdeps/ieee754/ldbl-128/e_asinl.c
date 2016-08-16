@@ -62,7 +62,6 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
-long double sqrtl (long double);
 
 static const long double
   one = 1.0L,

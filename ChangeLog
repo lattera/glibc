@@ -1,5 +1,10 @@
 2016-08-17  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* sysdeps/ieee754/ldbl-128/e_asinl.c:
+	Remove unused sqrtl declaration.
+
+2016-08-17  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* math/Makefile: (gen-libm-templates.stmp): New rule.
 	(libm-calls): Move carg conj cimag and cabs into ...
 	(gen-libm-calls): New variable.
