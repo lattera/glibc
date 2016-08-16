@@ -38,7 +38,7 @@ Security related changes:
   have been created with makecontext could fail to terminate due to a
   missing .cantunwind annotation.  This has been observed to lead to a hang
   (denial of service) in some Go applications compiled with gccgo.  Reported
-  by Andreas Schwab.
+  by Andreas Schwab.  (CVE-2016-6323)
 
 The following bugs are resolved with this release:
 
