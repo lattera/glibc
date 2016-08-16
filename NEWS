@@ -34,7 +34,11 @@ Version 2.25
 
 Security related changes:
 
-  [Add security related changes here]
+  On ARM EABI (32-bit), generating a backtrace for execution contexts which
+  have been created with makecontext could fail to terminate due to a
+  missing .cantunwind annotation.  This has been observed to lead to a hang
+  (denial of service) in some Go applications compiled with gccgo.  Reported
+  by Andreas Schwab.
 
 The following bugs are resolved with this release:
 

@@ -8,6 +8,7 @@
 2016-08-15  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #20435]
+	CVE-2016-6323
 	* sysdeps/unix/sysv/linux/arm/setcontext.S (__startcontext): Mark
 	as .cantunwind.
 
