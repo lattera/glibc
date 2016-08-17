@@ -1,3 +1,12 @@
+2016-08-18  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #20477]
+	* resolv/res_hconf.c (do_init): Use atomic access.
+	* resolv/res_hconf.h: Add comments.
+	* nscd/aicache.c (addhstaiX): Call _res_hconf_init unconditionally.
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Likewise.
+
 2016-08-18  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/dbl-64/k_rem_pio2.c (__kernel_rem_pio2):

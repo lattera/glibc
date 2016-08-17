@@ -25,6 +25,15 @@
 
 struct hconf
 {
+  /* We keep the INITIALIZED member only for backwards compatibility.  New
+     code should just call _res_hconf_init unconditionally.  For this field
+     to be used safely, users must ensure that either (1) a call to
+     _res_hconf_init happens-before any load from INITIALIZED, or (2) an
+     assignment of zero to INITIALIZED happens-before any load from it, and
+     these loads use acquire MO if the intent is to skip calling
+     _res_hconf_init if the load returns a nonzero value.  Such acquire MO
+     loads will then synchronize with the release MO store to INITIALIZED
+     in do_init in res_hconf.c; see pthread_once for more detail.  */
   int initialized;
   int unused1;
   int unused2[4];

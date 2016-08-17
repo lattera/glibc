@@ -274,8 +274,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	    }
 #endif /* need _res */
 #ifdef NEED__RES_HCONF
-	  if (!_res_hconf.initialized)
-	    _res_hconf_init ();
+	  _res_hconf_init ();
 #endif /* need _res_hconf */
 
 	  void *tmp_ptr = fct.l;

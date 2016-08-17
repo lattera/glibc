@@ -348,7 +348,8 @@ do_init (void)
       arg_trimdomain_list (ENV_TRIM_OVERR, 1, envval);
     }
 
-  _res_hconf.initialized = 1;
+  /* See comments on the declaration of _res_hconf.  */
+  atomic_store_release (&_res_hconf.initialized, 1);
 }
 
 

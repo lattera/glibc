@@ -101,8 +101,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
   nip = hosts_database;
 
   /* Initialize configurations.  */
-  if (__glibc_unlikely (!_res_hconf.initialized))
-    _res_hconf_init ();
+  _res_hconf_init ();
   if (__res_maybe_init (&_res, 0) == -1)
     no_more = 1;
 
