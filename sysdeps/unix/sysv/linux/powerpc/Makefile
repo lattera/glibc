@@ -8,6 +8,7 @@ abi-64-v2-condition := __WORDSIZE == 64 && _CALL_ELF == 2
 
 ifeq ($(subdir),rt)
 librt-routines += rt-sysdep
+librt-shared-only-routines += rt-sysdep
 endif
 
 ifeq ($(subdir),stdlib)
@@ -34,4 +35,5 @@ ifeq ($(subdir),nptl)
 libpthread-routines += sysdep
 libpthread-sysdep_routines += elision-lock elision-unlock elision-timed \
 			      elision-trylock
+libpthread-shared-only-routines += sysdep
 endif

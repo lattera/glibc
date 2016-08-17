@@ -19,6 +19,7 @@ endif
 
 ifeq ($(subdir),rt)
 librt-routines += rt-sysdep
+librt-shared-only-routines += rt-sysdep
 endif
 
 ifeq ($(subdir),nptl)

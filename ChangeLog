@@ -1,3 +1,37 @@
+2016-08-17  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20452]
+	Avoid additional copies of objects in libc.a in static libraries.
+	* sysdeps/ia64/nptl/Makefile (libpthread-shared-only-routines):
+	Add ptw-sysdep, ptw-sigblock, ptw-sigprocmask.
+	* sysdeps/mips/Makefile (librt-shared-only-routines): Add
+	rt-sysdep.
+	* sysdeps/mips/nptl/Makefile (libpthread-shared-only-routines):
+	Add nptl-sysdep.
+	* sysdeps/s390/nptl/Makefile (libpthread-shared-only-routines):
+	Add ptw-sysdep.
+	* sysdeps/unix/alpha/Makefile (librt-shared-only-routines): Add
+	rt-sysdep.
+	* sysdeps/unix/sysv/linux/alpha/Makefile
+	(libpthread-shared-only-routines): Add ptw-sysdep,
+	ptw-sigprocmask, ptw-rt_sigaction.
+	* sysdeps/unix/sysv/linux/ia64/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	* sysdeps/unix/sysv/linux/i386/Makefile
+	(libpthread-shared-only-routines): Add libc-do-syscall.
+	* sysdeps/unix/sysv/linux/microblaze/Makefile
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/s390/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	* sysdeps/unix/sysv/linux/sparc/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/tile/Makefile
+	(libpthread-shared-only-routines): Likewise.
+
 2016-08-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/extended.h [_FP_W_TYPE_SIZE < 64] (FP_UNPACK_RAW_E):

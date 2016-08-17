@@ -6,6 +6,7 @@ abi-64-condition := __WORDSIZE == 64
 
 ifeq ($(subdir),rt)
 librt-routines += rt-sysdep
+librt-shared-only-routines += rt-sysdep
 endif
 
 ifeq ($(subdir),stdlib)

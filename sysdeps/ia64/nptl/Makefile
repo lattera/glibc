@@ -21,4 +21,5 @@ endif
 
 ifeq ($(subdir),nptl)
 libpthread-routines += ptw-sysdep ptw-sigblock ptw-sigprocmask
+libpthread-shared-only-routines += ptw-sysdep ptw-sigblock ptw-sigprocmask
 endif

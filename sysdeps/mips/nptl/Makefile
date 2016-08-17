@@ -21,4 +21,5 @@ endif
 
 ifeq ($(subdir),nptl)
 libpthread-sysdep_routines += nptl-sysdep
+libpthread-shared-only-routines += nptl-sysdep
 endif
