@@ -1,5 +1,10 @@
 2016-08-17  Florian Weimer  <fweimer@redhat.com>
 
+	Reduce time to expected nptl/tst-once5 failure.
+	* nptl/tst-once5.cc (TIMEOUT): Define.
+
+2016-08-17  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #20452]
 	Avoid additional copies of objects in libc.a in static libraries.
 	* sysdeps/ia64/nptl/Makefile (libpthread-shared-only-routines):

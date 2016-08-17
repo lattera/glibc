@@ -75,5 +75,7 @@ do_test (void)
   return result;
 }
 
+// The test currently hangs and is XFAILed.  Reduce the timeout.
+#define TIMEOUT 1
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
