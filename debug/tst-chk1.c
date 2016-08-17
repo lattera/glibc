@@ -143,12 +143,21 @@ do_test (void)
   if (memcmp (buf, "aabcdefghi", 10))
     FAIL ();
 
+  memcpy (buf, "abcdefghij", 10);
+  bcopy (buf, buf + 1, 9);
+  if (memcmp (buf, "aabcdefghi", 10))
+    FAIL ();
+
   if (mempcpy (buf + 5, "abcde", 5) != buf + 10
       || memcmp (buf, "aabcdabcde", 10))
     FAIL ();
 
   memset (buf + 8, 'j', 2);
   if (memcmp (buf, "aabcdabcjj", 10))
+    FAIL ();
+
+  bzero (buf + 8, 2);
+  if (memcmp (buf, "aabcdabc\0\0", 10))
     FAIL ();
 
   strcpy (buf + 4, "EDCBA");
@@ -175,12 +184,21 @@ do_test (void)
   if (memcmp (buf, "aabcdefghi", 10))
     FAIL ();
 
+  memcpy (buf, "abcdefghij", l0 + 10);
+  bcopy (buf, buf + 1, l0 + 9);
+  if (memcmp (buf, "aabcdefghi", 10))
+    FAIL ();
+
   if (mempcpy (buf + 5, "abcde", l0 + 5) != buf + 10
       || memcmp (buf, "aabcdabcde", 10))
     FAIL ();
 
   memset (buf + 8, 'j', l0 + 2);
   if (memcmp (buf, "aabcdabcjj", 10))
+    FAIL ();
+
+  bzero (buf + 8, l0 + 2);
+  if (memcmp (buf, "aabcdabc\0\0", 10))
     FAIL ();
 
   strcpy (buf + 4, str1 + 5);
@@ -214,8 +232,15 @@ do_test (void)
   if (memcmp (buf, "aabcEcdZY", 10))
     FAIL ();
 
+  /* The following tests are supposed to succeed at all fortify
+     levels, even though they overflow a.buf1 into a.buf2.  */
   memcpy (a.buf1, "abcdefghij", l0 + 10);
   memmove (a.buf1 + 1, a.buf1, l0 + 9);
+  if (memcmp (a.buf1, "aabcdefghi", 10))
+    FAIL ();
+
+  memcpy (a.buf1, "abcdefghij", l0 + 10);
+  bcopy (a.buf1, a.buf1 + 1, l0 + 9);
   if (memcmp (a.buf1, "aabcdefghi", 10))
     FAIL ();
 
@@ -225,6 +250,10 @@ do_test (void)
 
   memset (a.buf1 + 8, 'j', l0 + 2);
   if (memcmp (a.buf1, "aabcdabcjj", 10))
+    FAIL ();
+
+  bzero (a.buf1 + 8, l0 + 2);
+  if (memcmp (a.buf1, "aabcdabc\0\0", 10))
     FAIL ();
 
 #if __USE_FORTIFY_LEVEL < 2
@@ -285,6 +314,14 @@ do_test (void)
   CHK_FAIL_END
 
   CHK_FAIL_START
+  bcopy (buf + 1, buf + 2, 9);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  bcopy (buf + 1, buf + 2, l0 + 9);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
   p = (char *) mempcpy (buf + 6, "abcde", 5);
   CHK_FAIL_END
 
@@ -298,6 +335,14 @@ do_test (void)
 
   CHK_FAIL_START
   memset (buf + 9, 'j', l0 + 2);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  bzero (buf + 9, 2);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  bzero (buf + 9, l0 + 2);
   CHK_FAIL_END
 
   CHK_FAIL_START
@@ -378,6 +423,14 @@ do_test (void)
   CHK_FAIL_END
 
   CHK_FAIL_START
+  bcopy (a.buf1 + 1, a.buf1 + 2, 9);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  bcopy (a.buf1 + 1, a.buf1 + 2, l0 + 9);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
   p = (char *) mempcpy (a.buf1 + 6, "abcde", 5);
   CHK_FAIL_END
 
@@ -391,6 +444,14 @@ do_test (void)
 
   CHK_FAIL_START
   memset (a.buf1 + 9, 'j', l0 + 2);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  bzero (a.buf1 + 9, 2);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  bzero (a.buf1 + 9, l0 + 2);
   CHK_FAIL_END
 
 # if __USE_FORTIFY_LEVEL >= 2

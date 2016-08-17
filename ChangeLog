@@ -1,3 +1,7 @@
+2016-08-19  Zack Weinberg  <zackw@panix.com>
+
+	* debug/tst-chk1.c: Add tests for fortification of bcopy and bzero.
+
 2016-08-18  Torvald Riegel  <triegel@redhat.com>
 
 	[BZ #20477]
