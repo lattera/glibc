@@ -1,3 +1,10 @@
+2016-08-18  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/dbl-64/k_rem_pio2.c (__kernel_rem_pio2):
+	Use DIAG_*_NEEDS_COMMENT macro to get rid of array-bounds warning.
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f):
+	Likewise.
+
 2016-08-18  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #16907]

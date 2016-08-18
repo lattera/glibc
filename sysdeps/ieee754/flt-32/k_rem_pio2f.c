@@ -19,6 +19,7 @@ static char rcsid[] = "$NetBSD: k_rem_pio2f.c,v 1.4 1995/05/10 20:46:28 jtc Exp 
 
 #include <math.h>
 #include <math_private.h>
+#include <libc-internal.h>
 
 /* In the float version, the input parameter x contains 8 bit
    integers, not 24 bit integers.  113 bit precision is not supported.  */
@@ -122,7 +123,16 @@ recompute:
 	    j = 0;
 	    for (i=jz-1;i>=jk;i--) j |= iq[i];
 	    if(j==0) { /* need recomputation */
+		/* On s390x gcc 6.1 -O3 produces the warning "array subscript is
+		   below array bounds [-Werror=array-bounds]".  Only
+		   __ieee754_rem_pio2f calls __kernel_rem_pio2f for normal
+		   numbers and |x| ~> 2^7*(pi/2).  Thus x can't be zero and
+		   ipio2 is not zero, too.  Thus not all iq[] values can't be
+		   zero.  */
+		DIAG_PUSH_NEEDS_COMMENT;
+		DIAG_IGNORE_NEEDS_COMMENT (6.1, "-Warray-bounds");
 		for(k=1;iq[jk-k]==0;k++);   /* k = no. of terms needed */
+		DIAG_POP_NEEDS_COMMENT;
 
 		for(i=jz+1;i<=jz+k;i++) {   /* add q[jz+1] to q[jz+k] */
 		    f[jx+i] = (float) ipio2[jv+i];
