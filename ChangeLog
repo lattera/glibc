@@ -1,3 +1,11 @@
+2016-08-18  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #16907]
+	* argp/argp.h: Switch to __BEGIN_DECLS and __END_DECLS.
+	(__THROW, __NTH, __attribute__, __restrict): Remove definitions.
+	* argp/argp-fmtstream.h: Add __BEGIN_DECLS and __END_DECLS.
+	(__attribute__): Remove definition.
+
 2016-08-17  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128/e_asinl.c:
