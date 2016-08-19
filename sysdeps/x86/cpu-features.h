@@ -63,7 +63,7 @@
 
 /* XCR0 Feature flags.  */
 #define bit_XMM_state		(1 << 1)
-#define bit_YMM_state		(2 << 1)
+#define bit_YMM_state		(1 << 2)
 #define bit_Opmask_state	(1 << 5)
 #define bit_ZMM0_15_state	(1 << 6)
 #define bit_ZMM16_31_state	(1 << 7)
