@@ -1,100 +1,33 @@
-#include <fcntl.h>
-#include <sys/stat.h>
+/* Basic posix_fallocate tests.
+   Copyright (C) 2016 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-static void do_prepare (void);
-#define PREPARE(argc, argv) do_prepare ()
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include <test-skeleton.c>
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-static int fd;
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-static void
-do_prepare (void)
-{
-  fd = create_temp_file ("tst-posix_fallocate.", NULL);
-  if (fd == -1)
-    {
-      printf ("cannot create temporary file: %m\n");
-      exit (1);
-    }
-}
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
 
+#include "tst-posix_fallocate-common.c"
 
 static int
 do_test (void)
 {
-  struct stat64 st;
+  struct stat st;
 
-  if (fstat64 (fd, &st) != 0)
-    {
-      puts ("1st fstat failed");
-      return 1;
-    }
+  if (fstat (temp_fd, &st) != 0)
+    FAIL_EXIT1 ("1st fstat failed");
 
   if (st.st_size != 0)
-    {
-      puts ("file not created with size 0");
-      return 1;
-    }
+    FAIL_EXIT1 ("file not created with size 0");
 
-  if (posix_fallocate (fd, 512, 768) != 0)
-    {
-      puts ("1st posix_fallocate call failed");
-      return 1;
-    }
-
-  if (fstat64 (fd, &st) != 0)
-    {
-      puts ("2nd fstat failed");
-      return 1;
-    }
-
-  if (st.st_size != 512 + 768)
-    {
-      printf ("file size after first posix_fallocate call is %llu, expected %u\n",
-	      (unsigned long long int) st.st_size, 512u + 768u);
-      return 1;
-    }
-
-  if (posix_fallocate (fd, 0, 1024) != 0)
-    {
-      puts ("2nd posix_fallocate call failed");
-      return 1;
-    }
-
-  if (fstat64 (fd, &st) != 0)
-    {
-      puts ("3rd fstat failed");
-      return 1;
-    }
-
-  if (st.st_size != 512 + 768)
-    {
-      puts ("file size changed in second posix_fallocate");
-      return 1;
-    }
-
-  if (posix_fallocate (fd, 2048, 64) != 0)
-    {
-      puts ("3rd posix_fallocate call failed");
-      return 1;
-    }
-
-  if (fstat64 (fd, &st) != 0)
-    {
-      puts ("4th fstat failed");
-      return 1;
-    }
-
-  if (st.st_size != 2048 + 64)
-    {
-      printf ("file size after first posix_fallocate call is %llu, expected %u\n",
-	      (unsigned long long int) st.st_size, 2048u + 64u);
-      return 1;
-    }
-
-  close (fd);
-
-  return 0;
+  return do_test_with_offset (512);
 }

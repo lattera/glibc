@@ -1,4 +1,5 @@
-/* Copyright (C) 2007-2016 Free Software Foundation, Inc.
+/* Basic posix_fallocate tests (with _FILE_OFFSET_BITS).
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,23 +16,29 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fcntl.h>
-#include <sysdep.h>
+#define _FILE_OFFSET_BITS 64
+#include "tst-posix_fallocate-common.c"
 
-#define posix_fallocate static internal_fallocate
-#include <sysdeps/posix/posix_fallocate.c>
-#undef posix_fallocate
-
-/* Reserve storage for the data of the file associated with FD.  */
-int
-posix_fallocate (int fd, __off_t offset, __off_t len)
+static int
+do_test (void)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  int res = INTERNAL_SYSCALL_CALL (fallocate, err, fd, 0,
-				   SYSCALL_LL (offset), SYSCALL_LL (len));
-  if (! INTERNAL_SYSCALL_ERROR_P (res, err))
-    return 0;
-  if (INTERNAL_SYSCALL_ERRNO (res, err) != EOPNOTSUPP)
-    return INTERNAL_SYSCALL_ERRNO (res, err);
-  return internal_fallocate (fd, offset, len);
+  struct stat st;
+  int ret;
+
+  if (fstat (temp_fd, &st) != 0)
+    FAIL_EXIT1 ("1st fstat failed");
+
+  if (st.st_size != 0)
+    FAIL_EXIT1 ("file not created with size 0");
+
+  ret = do_test_with_offset (512);
+  if (ret == 1)
+    return 1;
+
+  off_t base_offset = UINT32_MAX + 512LL;
+  ret = do_test_with_offset (base_offset);
+  if (ret == 1)
+    return 1;
+
+  return 0;
 }
