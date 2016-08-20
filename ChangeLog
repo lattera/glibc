@@ -1,5 +1,10 @@
 2016-09-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #15765]
+	* nptl/Makefile (tests): Add tst-sem16.
+	* nptl/tst-sem16.c: New file.
+	* nptl/sem_open.c (sem_open): Disable asynchronous cancellation.
+
 	* nptl/sem_open.c (sem_open): Init pad value to 0.
 	* sysdeps/sparc/sparc32/sem_open.c: Remove file.
 	* sysdeps/sparc/sparc32/sparcv9/sem_open.c: Likewise.

@@ -31,7 +31,7 @@
 #include "semaphoreP.h"
 #include <shm-directory.h>
 #include <futex-internal.h>
-
+#include <libc-lock.h>
 
 /* Comparison function for search of existing mapping.  */
 int
@@ -153,6 +153,13 @@ sem_open (const char *name, int oflag, ...)
   /* Create the name of the final file in local variable SHM_NAME.  */
   SHM_GET_NAME (EINVAL, SEM_FAILED, SEM_SHM_PREFIX);
 
+  /* Disable asynchronous cancellation.  */
+#ifdef __libc_ptf_call
+  int state;
+  __libc_ptf_call (__pthread_setcancelstate,
+                   (PTHREAD_CANCEL_DISABLE, &state), 0);
+#endif
+
   /* If the semaphore object has to exist simply open it.  */
   if ((oflag & O_CREAT) == 0 || (oflag & O_EXCL) == 0)
     {
@@ -193,7 +200,8 @@ sem_open (const char *name, int oflag, ...)
       if (value > SEM_VALUE_MAX)
 	{
 	  __set_errno (EINVAL);
-	  return SEM_FAILED;
+	  result = SEM_FAILED;
+	  goto out;
 	}
 
       /* Create the initial file content.  */
@@ -233,7 +241,10 @@ sem_open (const char *name, int oflag, ...)
 	     mode cannot later be set since then we cannot apply the
 	     file create mask.  */
 	  if (__mktemp (tmpfname) == NULL)
-	    return SEM_FAILED;
+	    {
+	      result = SEM_FAILED;
+	      goto out;
+	    }
 
 	  /* Open the file.  Make sure we do not overwrite anything.  */
 	  fd = __libc_open (tmpfname, O_RDWR | O_CREAT | O_EXCL, mode);
@@ -247,7 +258,8 @@ sem_open (const char *name, int oflag, ...)
 		  __set_errno (EAGAIN);
 		}
 
-	      return SEM_FAILED;
+	      result = SEM_FAILED;
+	      goto out;
 	    }
 
 	  /* We got a file.  */
@@ -307,6 +319,11 @@ sem_open (const char *name, int oflag, ...)
       __libc_close (fd);
       errno = save;
     }
+
+out:
+#ifdef __libc_ptf_call
+  __libc_ptf_call (__pthread_setcancelstate, (state, NULL), 0);
+#endif
 
   return result;
 }
