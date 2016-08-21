@@ -1,3 +1,7 @@
+2016-08-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* scripts/check-local-headers.sh (exclude): Add mach_debug/.
+
 2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* math/Makefile (libm-gen-calls): Add
