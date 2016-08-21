@@ -1,3 +1,8 @@
+2016-08-24  Ernestas Kulik  <ernestas.kulik@gmail.com>
+
+	[BZ #20497]
+	* locales/lt_LT (d_fmt): Change periods to dashes.
+
 2016-08-15  Märt Põder  <tramm@p6drad-teel.net>
 
 	[BZ #20459]
