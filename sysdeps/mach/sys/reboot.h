@@ -27,7 +27,7 @@
  * (pre-GNU) HISTORY
  *
  * Revision 2.8  93/03/11  13:46:40  danner
- * 	u_long -> u_int.
+ * 	unsigned long -> unsigned int.
  * 	[93/03/09            danner]
  *
  * Revision 2.7  92/05/21  17:25:11  jfriedl
@@ -145,8 +145,8 @@
 #define	B_TYPEMASK		0xff
 #define	B_TYPE(val)		(((val) >> B_TYPESHIFT) & B_TYPEMASK)
 
-#define	B_MAGICMASK	((u_int)0xf0000000U)
-#define	B_DEVMAGIC	((u_int)0xa0000000U)
+#define	B_MAGICMASK	0xf0000000U
+#define	B_DEVMAGIC	0xa0000000U
 
 #define MAKEBOOTDEV(type, adaptor, controller, unit, partition) \
 	(((type) << B_TYPESHIFT) | ((adaptor) << B_ADAPTORSHIFT) | \

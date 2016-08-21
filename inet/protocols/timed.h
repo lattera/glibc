@@ -44,9 +44,9 @@
 #define MAXHOSTNAMELEN	64
 
 struct tsp {
-	u_char	tsp_type;
-	u_char	tsp_vers;
-	u_short	tsp_seq;
+	unsigned char	tsp_type;
+	unsigned char	tsp_vers;
+	unsigned short	tsp_seq;
 	union {
 		struct timeval tspu_time;
 		char tspu_hopcnt;

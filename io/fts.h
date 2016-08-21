@@ -105,8 +105,8 @@ typedef struct _ftsent {
 	char *fts_path;			/* root path */
 	int fts_errno;			/* errno for this node */
 	int fts_symfd;			/* fd for symlink */
-	u_short fts_pathlen;		/* strlen(fts_path) */
-	u_short fts_namelen;		/* strlen(fts_name) */
+	unsigned short fts_pathlen;	/* strlen(fts_path) */
+	unsigned short fts_namelen;	/* strlen(fts_name) */
 
 	ino_t fts_ino;			/* inode */
 	dev_t fts_dev;			/* device */
@@ -130,17 +130,17 @@ typedef struct _ftsent {
 #define	FTS_SL		12		/* symbolic link */
 #define	FTS_SLNONE	13		/* symbolic link without target */
 #define FTS_W		14		/* whiteout object */
-	u_short fts_info;		/* user flags for FTSENT structure */
+	unsigned short fts_info;	/* user flags for FTSENT structure */
 
 #define	FTS_DONTCHDIR	 0x01		/* don't chdir .. to the parent */
 #define	FTS_SYMFOLLOW	 0x02		/* followed a symlink to get here */
-	u_short fts_flags;		/* private flags for FTSENT structure */
+	unsigned short fts_flags;	/* private flags for FTSENT structure */
 
 #define	FTS_AGAIN	 1		/* read node again */
 #define	FTS_FOLLOW	 2		/* follow symbolic link */
 #define	FTS_NOINSTR	 3		/* no instructions */
 #define	FTS_SKIP	 4		/* discard node */
-	u_short fts_instr;		/* fts_set() instructions */
+	unsigned short fts_instr;	/* fts_set() instructions */
 
 	struct stat *fts_statp;		/* stat(2) information */
 	char fts_name[1];		/* file name */
@@ -157,8 +157,8 @@ typedef struct _ftsent64 {
 	char *fts_path;			/* root path */
 	int fts_errno;			/* errno for this node */
 	int fts_symfd;			/* fd for symlink */
-	u_short fts_pathlen;		/* strlen(fts_path) */
-	u_short fts_namelen;		/* strlen(fts_name) */
+	unsigned short fts_pathlen;		/* strlen(fts_path) */
+	unsigned short fts_namelen;		/* strlen(fts_name) */
 
 	ino64_t fts_ino;		/* inode */
 	dev_t fts_dev;			/* device */
@@ -166,11 +166,11 @@ typedef struct _ftsent64 {
 
 	short fts_level;		/* depth (-1 to N) */
 
-	u_short fts_info;		/* user flags for FTSENT structure */
+	unsigned short fts_info;	/* user flags for FTSENT structure */
 
-	u_short fts_flags;		/* private flags for FTSENT structure */
+	unsigned short fts_flags;	/* private flags for FTSENT structure */
 
-	u_short fts_instr;		/* fts_set() instructions */
+	unsigned short fts_instr;	/* fts_set() instructions */
 
 	struct stat64 *fts_statp;	/* stat(2) information */
 	char fts_name[1];		/* file name */

@@ -1,5 +1,70 @@
 2016-09-23  Zack Weinberg  <zackw@panix.com>
 
+	* bits/in.h, gmon/sys/gmon.h, inet/netinet/igmp.h
+	* inet/protocols/routed.h, inet/protocols/talkd.h
+	* inet/protocols/timed.h, io/fts.h, nptl_db/thread_db.h
+	* resolv/arpa/nameser.h, resolv/resolv.h, sunrpc/rpc/rpc_des.h
+	* sysdeps/generic/netinet/if_ether.h
+	* sysdeps/generic/netinet/in_systm.h
+	* sysdeps/generic/netinet/ip.h, sysdeps/generic/netinet/tcp.h
+	* sysdeps/gnu/netinet/ip_icmp.h, sysdeps/gnu/netinet/tcp.h
+	* sysdeps/gnu/netinet/udp.h, sysdeps/mach/hurd/net/ethernet.h
+	* sysdeps/mach/hurd/net/if_arp.h
+	* sysdeps/mach/hurd/net/if_ppp.h
+	* sysdeps/mach/hurd/net/route.h, sysdeps/mach/sys/reboot.h
+	* sysdeps/unix/sysv/linux/bits/in.h
+	* sysdeps/unix/sysv/linux/net/ethernet.h
+	* sysdeps/unix/sysv/linux/net/if_arp.h
+	* sysdeps/unix/sysv/linux/net/if_ppp.h
+	* sysdeps/unix/sysv/linux/net/if_shaper.h
+	* sysdeps/unix/sysv/linux/net/route.h
+	* sysdeps/unix/sysv/linux/netinet/if_ether.h
+	* sysdeps/unix/sysv/linux/netinet/if_fddi.h
+	* sysdeps/unix/sysv/linux/netinet/if_tr.h
+	* sysdeps/unix/sysv/linux/netipx/ipx.h
+	* sysdeps/unix/sysv/linux/sys/acct.h
+	* include/arpa/nameser.h, include/resolv.h:
+	Change all uses of u_char to unsigned char,
+	u_short and ushort to unsigned short, u_int and uint to unsigned int,
+	u_long and ulong to unsigned long, u_int8_t to uint8_t,
+	u_int16_t to uint16_t, u_int32_t to uint32_t, quad_t to int64_t,
+	and u_int64_t and u_quad_t to uint64_t.
+
+	* mach/sys/reboot.h: Remove two casts of integer literals
+	to the types they already have.
+
+	* bits/in.h: Correct error in description of IP_MULTICAST_LOOP.
+	* sysdeps/unix/sysv/linux/bits/in.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/if_ether.h: Change a comment
+	from referring to 'unsigned char' to 'uint8_t' for consistency with
+	the macro definition below.
+
+	* gmon/sys/gmon.h, inet/netinet/igmp.h, inet/protocols/talkd.h
+	* io/fts.h, resolv/arpa/nameser.h, resolv/resolv.h
+	* sunrpc/rpc/rpc_des.h, sysdeps/generic/netinet/ip.h
+	* sysdeps/gnu/netinet/tcp.h, sysdeps/gnu/netinet/udp.h
+	* sysdeps/mach/hurd/net/if_ppp.h, sysdeps/unix/sysv/linux/net/if_ppp.h
+	* sysdeps/unix/sysv/linux/sys/acct.h
+	* include/arpa/nameser.h, include/resolv.h:
+	Fix indentation disrupted by mechanical edits.
+
+	* inet/protocols/talkd.h, resolv/arpa/nameser.h
+	* sysdeps/generic/netinet/in_systm.h
+	* sysdeps/gnu/netinet/ip_icmp.h, sysdeps/gnu/netinet/tcp.h
+	* sysdeps/gnu/netinet/udp.h
+	* sysdeps/unix/sysv/linux/net/ethernet.h
+	* sysdeps/unix/sysv/linux/net/if_arp.h
+	* sysdeps/unix/sysv/linux/net/if_ppp.h
+	* sysdeps/unix/sysv/linux/net/if_shaper.h
+	* sysdeps/unix/sysv/linux/netinet/if_fddi.h
+	* sysdeps/unix/sysv/linux/netinet/if_tr.h
+	* sysdeps/unix/sysv/linux/netipx/ipx.h
+	* sysdeps/unix/sysv/linux/sys/acct.h
+	Include stdint.h for uintNN_t definitions.
+	Don't include sys/cdefs.h, features.h, or asm/types.h directly.
+
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
 	* rpcsvc/nislib.h: Include rpcsvc/nis.h.
 	* sysdeps/unix/sysv/linux/netrose/rose.h:
 	Include sys/socket.h and netax25/ax25.h.

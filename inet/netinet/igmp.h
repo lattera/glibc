@@ -64,10 +64,10 @@ __BEGIN_DECLS
  */
 
 struct igmp {
-  u_int8_t igmp_type;             /* IGMP type */
-  u_int8_t igmp_code;             /* routing code */
-  u_int16_t igmp_cksum;           /* checksum */
-  struct in_addr igmp_group;      /* group address */
+  uint8_t igmp_type;             /* IGMP type */
+  uint8_t igmp_code;             /* routing code */
+  uint16_t igmp_cksum;           /* checksum */
+  struct in_addr igmp_group;     /* group address */
 };
 
 #define IGMP_MINLEN			8

@@ -48,9 +48,9 @@ struct netinfo {
 };
 
 struct rip {
-	u_char	rip_cmd;		/* request/response */
-	u_char	rip_vers;		/* protocol version # */
-	u_char	rip_res1[2];		/* pad to 32-bit boundary */
+	unsigned char	rip_cmd;		/* request/response */
+	unsigned char	rip_vers;		/* protocol version # */
+	unsigned char	rip_res1[2];		/* pad to 32-bit boundary */
 	union {
 		struct	netinfo ru_nets[1];	/* variable length... */
 		char	ru_tracefile[1];	/* ditto ... */

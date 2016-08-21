@@ -18,8 +18,8 @@
 #ifndef _NETINET_IF_TR_H
 #define	_NETINET_IF_TR_H 1
 
-#include <sys/cdefs.h>
 #include <sys/types.h>
+#include <stdint.h>
 
 /* IEEE 802.5 Token-Ring magic constants.  The frame sizes omit the preamble
    and FCS/CRC (frame check sequence). */
@@ -35,22 +35,22 @@
 /* This is an Token-Ring frame header. */
 struct trh_hdr
 {
-  u_int8_t  ac;			/* access control field */
-  u_int8_t  fc;			/* frame control field */
-  u_int8_t  daddr[TR_ALEN];	/* destination address */
-  u_int8_t  saddr[TR_ALEN];	/* source address */
-  u_int16_t rcf;		/* route control field */
-  u_int16_t rseg[8];		/* routing registers */
+  uint8_t  ac;			/* access control field */
+  uint8_t  fc;			/* frame control field */
+  uint8_t  daddr[TR_ALEN];	/* destination address */
+  uint8_t  saddr[TR_ALEN];	/* source address */
+  uint16_t rcf;			/* route control field */
+  uint16_t rseg[8];		/* routing registers */
 };
 
 /* This is an Token-Ring LLC structure */
 struct trllc
 {
-  u_int8_t  dsap;		/* destination SAP */
-  u_int8_t  ssap;		/* source SAP */
-  u_int8_t  llc;		/* LLC control field */
-  u_int8_t  protid[3];		/* protocol id */
-  u_int16_t ethertype;		/* ether type field */
+  uint8_t  dsap;		/* destination SAP */
+  uint8_t  ssap;		/* source SAP */
+  uint8_t  llc;			/* LLC control field */
+  uint8_t  protid[3];		/* protocol id */
+  uint16_t ethertype;		/* ether type field */
 };
 
 /* Token-Ring statistics collection data. */
@@ -97,12 +97,12 @@ struct tr_statistics
 
 struct trn_hdr
 {
-  u_int8_t trn_ac;                /* access control field */
-  u_int8_t trn_fc;                /* field control field */
-  u_int8_t trn_dhost[TR_ALEN];    /* destination host */
-  u_int8_t trn_shost[TR_ALEN];    /* source host */
-  u_int16_t trn_rcf;              /* route control field */
-  u_int16_t trn_rseg[8];          /* routing registers */
+  uint8_t trn_ac;                /* access control field */
+  uint8_t trn_fc;                /* field control field */
+  uint8_t trn_dhost[TR_ALEN];    /* destination host */
+  uint8_t trn_shost[TR_ALEN];    /* source host */
+  uint16_t trn_rcf;              /* route control field */
+  uint16_t trn_rseg[8];          /* routing registers */
 };
 
 #endif

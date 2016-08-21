@@ -53,8 +53,8 @@
 #define        IP_RECVRETOPTS  IP_RETOPTS       /* bool; Receive IP options for response.  */
 #define        IP_RETOPTS      7       /* ip_opts; Set/get IP per-packet options.  */
 #define IP_MULTICAST_IF 32	/* in_addr; set/get IP multicast i/f */
-#define IP_MULTICAST_TTL 33	/* u_char; set/get IP multicast ttl */
-#define IP_MULTICAST_LOOP 34	/* i_char; set/get IP multicast loopback */
+#define IP_MULTICAST_TTL 33	/* unsigned char; set/get IP multicast ttl */
+#define IP_MULTICAST_LOOP 34	/* bool; set/get IP multicast loopback */
 #define IP_ADD_MEMBERSHIP 35	/* ip_mreq; add an IP group membership */
 #define IP_DROP_MEMBERSHIP 36	/* ip_mreq; drop an IP group membership */
 #define IP_UNBLOCK_SOURCE 37	/* ip_mreq_source: unblock data from source */

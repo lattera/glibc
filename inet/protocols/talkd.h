@@ -52,16 +52,17 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <stdint.h>
 
 /*
  * Client->server request message format.
  */
 typedef struct {
-	u_char	vers;		/* protocol version */
-	u_char	type;		/* request type, see below */
-	u_char	answer;		/* not used */
-	u_char	pad;
-	u_int32_t id_num;	/* message id */
+	unsigned char	vers;	/* protocol version */
+	unsigned char	type;	/* request type, see below */
+	unsigned char	answer;	/* not used */
+	unsigned char	pad;
+	uint32_t id_num;	/* message id */
 	struct	osockaddr addr;		/* old (4.3) style */
 	struct	osockaddr ctl_addr;	/* old (4.3) style */
 	int32_t	pid;		/* caller's process id */
@@ -76,11 +77,11 @@ typedef struct {
  * Server->client response message format.
  */
 typedef struct {
-	u_char	vers;		/* protocol version */
-	u_char	type;		/* type of request message, see below */
-	u_char	answer;		/* response to request message, see below */
-	u_char	pad;
-	u_int32_t id_num;	/* message id */
+	unsigned char	vers;	/* protocol version */
+	unsigned char	type;	/* type of request message, see below */
+	unsigned char	answer;	/* response to request message, see below */
+	unsigned char	pad;
+	uint32_t	id_num;	/* message id */
 	struct	osockaddr addr;	/* address for establishing conversation */
 } CTL_RESPONSE;
 

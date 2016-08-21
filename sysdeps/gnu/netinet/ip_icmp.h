@@ -18,28 +18,28 @@
 #ifndef __NETINET_IP_ICMP_H
 #define __NETINET_IP_ICMP_H    1
 
-#include <sys/cdefs.h>
 #include <sys/types.h>
+#include <stdint.h>
 
 __BEGIN_DECLS
 
 struct icmphdr
 {
-  u_int8_t type;		/* message type */
-  u_int8_t code;		/* type sub-code */
-  u_int16_t checksum;
+  uint8_t type;		/* message type */
+  uint8_t code;		/* type sub-code */
+  uint16_t checksum;
   union
   {
     struct
     {
-      u_int16_t	id;
-      u_int16_t	sequence;
+      uint16_t	id;
+      uint16_t	sequence;
     } echo;			/* echo datagram */
-    u_int32_t	gateway;	/* gateway address */
+    uint32_t	gateway;	/* gateway address */
     struct
     {
-      u_int16_t	__glibc_reserved;
-      u_int16_t	mtu;
+      uint16_t	__glibc_reserved;
+      uint16_t	mtu;
     } frag;			/* path mtu discovery */
   } un;
 };
@@ -130,38 +130,38 @@ struct icmphdr
  */
 struct icmp_ra_addr
 {
-  u_int32_t ira_addr;
-  u_int32_t ira_preference;
+  uint32_t ira_addr;
+  uint32_t ira_preference;
 };
 
 struct icmp
 {
-  u_int8_t  icmp_type;	/* type of message, see below */
-  u_int8_t  icmp_code;	/* type sub code */
-  u_int16_t icmp_cksum;	/* ones complement checksum of struct */
+  uint8_t  icmp_type;	/* type of message, see below */
+  uint8_t  icmp_code;	/* type sub code */
+  uint16_t icmp_cksum;	/* ones complement checksum of struct */
   union
   {
-    u_char ih_pptr;		/* ICMP_PARAMPROB */
+    unsigned char ih_pptr;	/* ICMP_PARAMPROB */
     struct in_addr ih_gwaddr;	/* gateway address */
     struct ih_idseq		/* echo datagram */
     {
-      u_int16_t icd_id;
-      u_int16_t icd_seq;
+      uint16_t icd_id;
+      uint16_t icd_seq;
     } ih_idseq;
-    u_int32_t ih_void;
+    uint32_t ih_void;
 
     /* ICMP_UNREACH_NEEDFRAG -- Path MTU Discovery (RFC1191) */
     struct ih_pmtu
     {
-      u_int16_t ipm_void;
-      u_int16_t ipm_nextmtu;
+      uint16_t ipm_void;
+      uint16_t ipm_nextmtu;
     } ih_pmtu;
 
     struct ih_rtradv
     {
-      u_int8_t irt_num_addrs;
-      u_int8_t irt_wpa;
-      u_int16_t irt_lifetime;
+      uint8_t irt_num_addrs;
+      uint8_t irt_wpa;
+      uint16_t irt_lifetime;
     } ih_rtradv;
   } icmp_hun;
 #define	icmp_pptr	icmp_hun.ih_pptr
@@ -178,9 +178,9 @@ struct icmp
   {
     struct
     {
-      u_int32_t its_otime;
-      u_int32_t its_rtime;
-      u_int32_t its_ttime;
+      uint32_t its_otime;
+      uint32_t its_rtime;
+      uint32_t its_ttime;
     } id_ts;
     struct
     {
@@ -188,8 +188,8 @@ struct icmp
       /* options and then 64 bits of data */
     } id_ip;
     struct icmp_ra_addr id_radv;
-    u_int32_t   id_mask;
-    u_int8_t    id_data[1];
+    uint32_t   id_mask;
+    uint8_t    id_data[1];
   } icmp_dun;
 #define	icmp_otime	icmp_dun.id_ts.its_otime
 #define	icmp_rtime	icmp_dun.id_ts.its_rtime

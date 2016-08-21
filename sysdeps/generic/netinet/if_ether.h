@@ -26,7 +26,7 @@
    systems.  */
 struct ether_addr
 {
-  u_int8_t ether_addr_octet[ETH_ALEN];
+  uint8_t ether_addr_octet[ETH_ALEN];
 } __attribute__ ((__packed__));
 
 #endif /* netinet/if_ether.h */

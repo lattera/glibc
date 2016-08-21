@@ -50,7 +50,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
-#include <sys/cdefs.h>
+#include <stdint.h>
 
 /*
  * Define constants based on RFC 883, RFC 1034, RFC 1035
@@ -63,9 +63,9 @@
 #define NS_HFIXEDSZ	12	/*%< #/bytes of fixed data in header */
 #define NS_QFIXEDSZ	4	/*%< #/bytes of fixed data in query */
 #define NS_RRFIXEDSZ	10	/*%< #/bytes of fixed data in r record */
-#define NS_INT32SZ	4	/*%< #/bytes of data in a u_int32_t */
-#define NS_INT16SZ	2	/*%< #/bytes of data in a u_int16_t */
-#define NS_INT8SZ	1	/*%< #/bytes of data in a u_int8_t */
+#define NS_INT32SZ	4	/*%< #/bytes of data in a uint32_t */
+#define NS_INT16SZ	2	/*%< #/bytes of data in a uint16_t */
+#define NS_INT8SZ	1	/*%< #/bytes of data in a uint8_t */
 #define NS_INADDRSZ	4	/*%< IPv4 T_A */
 #define NS_IN6ADDRSZ	16	/*%< IPv6 T_AAAA */
 #define NS_CMPRSFLGS	0xc0	/*%< Flag bits indicating name compression. */
@@ -91,12 +91,12 @@ typedef enum __ns_sect {
  * leading _'s on the member names.  Use the accessor functions, not the _'s.
  */
 typedef struct __ns_msg {
-	const u_char	*_msg, *_eom;
-	u_int16_t	_id, _flags, _counts[ns_s_max];
-	const u_char	*_sections[ns_s_max];
-	ns_sect		_sect;
-	int		_rrnum;
-	const u_char	*_msg_ptr;
+	const unsigned char	*_msg, *_eom;
+	uint16_t		_id, _flags, _counts[ns_s_max];
+	const unsigned char	*_sections[ns_s_max];
+	ns_sect			_sect;
+	int			_rrnum;
+	const unsigned char	*_msg_ptr;
 } ns_msg;
 
 /* Private data structure - do not use from outside library. */
@@ -115,12 +115,12 @@ extern const struct _ns_flagdata _ns_flagdata[];
  * This is a parsed record.  It is caller allocated and has no dynamic data.
  */
 typedef	struct __ns_rr {
-	char		name[NS_MAXDNAME];
-	u_int16_t	type;
-	u_int16_t	rr_class;
-	u_int32_t	ttl;
-	u_int16_t	rdlength;
-	const u_char *	rdata;
+	char			name[NS_MAXDNAME];
+	uint16_t		type;
+	uint16_t		rr_class;
+	uint32_t		ttl;
+	uint16_t		rdlength;
+	const unsigned char *	rdata;
 } ns_rr;
 
 /* Accessor macros - this is part of the public interface. */
@@ -317,34 +317,34 @@ typedef enum __ns_cert_types {
  * Inline versions of get/put short/long.  Pointer is advanced.
  */
 #define NS_GET16(s, cp) do { \
-	const u_char *t_cp = (const u_char *)(cp); \
-	(s) = ((u_int16_t)t_cp[0] << 8) \
-	    | ((u_int16_t)t_cp[1]) \
+	const unsigned char *t_cp = (const unsigned char *)(cp); \
+	(s) = ((uint16_t)t_cp[0] << 8) \
+	    | ((uint16_t)t_cp[1]) \
 	    ; \
 	(cp) += NS_INT16SZ; \
 } while (0)
 
 #define NS_GET32(l, cp) do { \
-	const u_char *t_cp = (const u_char *)(cp); \
-	(l) = ((u_int32_t)t_cp[0] << 24) \
-	    | ((u_int32_t)t_cp[1] << 16) \
-	    | ((u_int32_t)t_cp[2] << 8) \
-	    | ((u_int32_t)t_cp[3]) \
+	const unsigned char *t_cp = (const unsigned char *)(cp); \
+	(l) = ((uint32_t)t_cp[0] << 24) \
+	    | ((uint32_t)t_cp[1] << 16) \
+	    | ((uint32_t)t_cp[2] << 8) \
+	    | ((uint32_t)t_cp[3]) \
 	    ; \
 	(cp) += NS_INT32SZ; \
 } while (0)
 
 #define NS_PUT16(s, cp) do { \
-	u_int16_t t_s = (u_int16_t)(s); \
-	u_char *t_cp = (u_char *)(cp); \
+	uint16_t t_s = (uint16_t)(s); \
+	unsigned char *t_cp = (unsigned char *)(cp); \
 	*t_cp++ = t_s >> 8; \
 	*t_cp   = t_s; \
 	(cp) += NS_INT16SZ; \
 } while (0)
 
 #define NS_PUT32(l, cp) do { \
-	u_int32_t t_l = (u_int32_t)(l); \
-	u_char *t_cp = (u_char *)(cp); \
+	uint32_t t_l = (uint32_t)(l); \
+	unsigned char *t_cp = (unsigned char *)(cp); \
 	*t_cp++ = t_l >> 24; \
 	*t_cp++ = t_l >> 16; \
 	*t_cp++ = t_l >> 8; \
@@ -354,38 +354,46 @@ typedef enum __ns_cert_types {
 
 __BEGIN_DECLS
 int		ns_msg_getflag (ns_msg, int) __THROW;
-u_int		ns_get16 (const u_char *) __THROW;
-u_long		ns_get32 (const u_char *) __THROW;
-void		ns_put16 (u_int, u_char *) __THROW;
-void		ns_put32 (u_long, u_char *) __THROW;
-int		ns_initparse (const u_char *, int, ns_msg *) __THROW;
-int		ns_skiprr (const u_char *, const u_char *, ns_sect, int)
-     __THROW;
+unsigned int	ns_get16 (const unsigned char *) __THROW;
+unsigned long	ns_get32 (const unsigned char *) __THROW;
+void		ns_put16 (unsigned int, unsigned char *) __THROW;
+void		ns_put32 (unsigned long, unsigned char *) __THROW;
+int		ns_initparse (const unsigned char *, int, ns_msg *) __THROW;
+int		ns_skiprr (const unsigned char *, const unsigned char *,
+			   ns_sect, int) __THROW;
 int		ns_parserr (ns_msg *, ns_sect, int, ns_rr *) __THROW;
 int		ns_sprintrr (const ns_msg *, const ns_rr *,
 			     const char *, const char *, char *, size_t)
      __THROW;
-int		ns_sprintrrf (const u_char *, size_t, const char *,
-			      ns_class, ns_type, u_long, const u_char *,
-			      size_t, const char *, const char *,
-			      char *, size_t) __THROW;
-int		ns_format_ttl (u_long, char *, size_t) __THROW;
-int		ns_parse_ttl (const char *, u_long *) __THROW;
-u_int32_t	ns_datetosecs (const char *, int *) __THROW;
-int		ns_name_ntol (const u_char *, u_char *, size_t) __THROW;
-int		ns_name_ntop (const u_char *, char *, size_t) __THROW;
-int		ns_name_pton (const char *, u_char *, size_t) __THROW;
-int		ns_name_unpack (const u_char *, const u_char *,
-				const u_char *, u_char *, size_t) __THROW;
-int		ns_name_pack (const u_char *, u_char *, int,
-			      const u_char **, const u_char **) __THROW;
-int		ns_name_uncompress (const u_char *, const u_char *,
-				    const u_char *, char *, size_t) __THROW;
-int		ns_name_compress (const char *, u_char *, size_t,
-				  const u_char **, const u_char **) __THROW;
-int		ns_name_skip (const u_char **, const u_char *) __THROW;
-void		ns_name_rollback (const u_char *, const u_char **,
-				  const u_char **) __THROW;
+int		ns_sprintrrf (const unsigned char *, size_t, const char *,
+			      ns_class, ns_type, unsigned long,
+			      const unsigned char *, size_t, const char *,
+			      const char *, char *, size_t) __THROW;
+int		ns_format_ttl (unsigned long, char *, size_t) __THROW;
+int		ns_parse_ttl (const char *, unsigned long *) __THROW;
+uint32_t	ns_datetosecs (const char *, int *) __THROW;
+int		ns_name_ntol (const unsigned char *, unsigned char *, size_t)
+     __THROW;
+int		ns_name_ntop (const unsigned char *, char *, size_t) __THROW;
+int		ns_name_pton (const char *, unsigned char *, size_t) __THROW;
+int		ns_name_unpack (const unsigned char *, const unsigned char *,
+				const unsigned char *, unsigned char *, size_t)
+     __THROW;
+int		ns_name_pack (const unsigned char *, unsigned char *, int,
+			      const unsigned char **, const unsigned char **)
+     __THROW;
+int		ns_name_uncompress (const unsigned char *,
+				    const unsigned char *,
+				    const unsigned char *,
+				    char *, size_t) __THROW;
+int		ns_name_compress (const char *, unsigned char *, size_t,
+				  const unsigned char **,
+				  const unsigned char **) __THROW;
+int		ns_name_skip (const unsigned char **, const unsigned char *)
+     __THROW;
+void		ns_name_rollback (const unsigned char *,
+				  const unsigned char **,
+				  const unsigned char **) __THROW;
 int		ns_samedomain (const char *, const char *) __THROW;
 int		ns_subdomain (const char *, const char *) __THROW;
 int		ns_makecanon (const char *, char *, size_t) __THROW;

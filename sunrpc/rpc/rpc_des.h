@@ -53,15 +53,15 @@ enum desmode
  */
 struct desparams
   {
-    u_char des_key[8];		/* key (with low bit parity) */
+    unsigned char des_key[8];	/* key (with low bit parity) */
     enum desdir des_dir;	/* direction */
     enum desmode des_mode;	/* mode */
-    u_char des_ivec[8];		/* input vector */
+    unsigned char des_ivec[8];	/* input vector */
     unsigned des_len;		/* number of bytes to crypt */
     union
       {
-	u_char UDES_data[DES_QUICKLEN];
-	u_char *UDES_buf;
+	unsigned char UDES_data[DES_QUICKLEN];
+	unsigned char *UDES_buf;
       }
     UDES;
 #define des_data UDES.UDES_data	/* direct data here if quick */
