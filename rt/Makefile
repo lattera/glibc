@@ -53,7 +53,7 @@ tests := tst-shm tst-clock tst-clock_nanosleep tst-timer tst-timer2 \
 	 tst-timer3 tst-timer4 tst-timer5 \
 	 tst-cpuclock1 tst-cpuclock2 \
 	 tst-cputimer1 tst-cputimer2 tst-cputimer3 \
-	 tst-clock2
+	 tst-clock2 tst-shm-cancel
 
 extra-libs := librt
 extra-libs-others := $(extra-libs)

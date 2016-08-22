@@ -40,6 +40,11 @@ shm_open (const char *name, int oflag, mode_t mode)
 # ifdef O_CLOEXEC
   oflag |= O_CLOEXEC;
 # endif
+
+  /* Disable asynchronous cancellation.  */
+  int state;
+  pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &state);
+
   int fd = open (shm_name, oflag, mode);
   if (fd == -1 && __glibc_unlikely (errno == EISDIR))
     /* It might be better to fold this error with EINVAL since
@@ -69,6 +74,8 @@ shm_open (const char *name, int oflag, mode_t mode)
 	}
     }
 # endif
+
+  pthread_setcancelstate (state, NULL);
 
   return fd;
 }

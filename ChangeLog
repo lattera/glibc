@@ -1,6 +1,11 @@
 2016-09-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #18243]
+	* rt/Makefile (test): Add tst-shm-cancel.
+	* rt/tst-shm-cancel.c: New file.
+	* sysdeps/posix/shm_open.c: Disable asynchronous cancellation.
+
+	[BZ #18243]
 	* nptl/pthreadP.h (__pthread_testcancel): Add prototype and hidden_proto.
 	* nptl/pthread_testcancel.c (pthread_cancel): Add internal aliais
 	definition.
