@@ -101,11 +101,11 @@ struct ip6_frag
     uint32_t  ip6f_ident;	/* identification */
   };
 
-#if BYTE_ORDER == BIG_ENDIAN
+#if __BYTE_ORDER == __BIG_ENDIAN
 # define IP6F_OFF_MASK       0xfff8  /* mask out offset from _offlg */
 # define IP6F_RESERVED_MASK  0x0006  /* reserved bits in ip6f_offlg */
 # define IP6F_MORE_FRAG      0x0001  /* more-fragments flag */
-#else   /* BYTE_ORDER == LITTLE_ENDIAN */
+#else   /* __BYTE_ORDER == __LITTLE_ENDIAN */
 # define IP6F_OFF_MASK       0xf8ff  /* mask out offset from _offlg */
 # define IP6F_RESERVED_MASK  0x0600  /* reserved bits in ip6f_offlg */
 # define IP6F_MORE_FRAG      0x0100  /* more-fragments flag */
@@ -175,11 +175,11 @@ struct ip6_opt_router
   };
 
 /* Router alert values (in network byte order) */
-#if BYTE_ORDER == BIG_ENDIAN
+#if __BYTE_ORDER == __BIG_ENDIAN
 # define IP6_ALERT_MLD	0x0000
 # define IP6_ALERT_RSVP	0x0001
 # define IP6_ALERT_AN	0x0002
-#else /* BYTE_ORDER == LITTLE_ENDING */
+#else /* __BYTE_ORDER == __LITTLE_ENDIAN */
 # define IP6_ALERT_MLD	0x0000
 # define IP6_ALERT_RSVP	0x0100
 # define IP6_ALERT_AN	0x0200

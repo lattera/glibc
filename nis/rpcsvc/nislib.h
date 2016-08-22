@@ -19,7 +19,7 @@
 #ifndef	__RPCSVC_NISLIB_H__
 #define	__RPCSVC_NISLIB_H__
 
-#include <features.h>
+#include <rpcsvc/nis.h>
 
 __BEGIN_DECLS
 

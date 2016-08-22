@@ -1,3 +1,32 @@
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
+	* rpcsvc/nislib.h: Include rpcsvc/nis.h.
+	* sysdeps/unix/sysv/linux/netrose/rose.h:
+	Include sys/socket.h and netax25/ax25.h.
+
+	* inet/netinet/icmp6.h, inet/netinet/ip6.h
+	* resolv/arpa/nameser_compat.h:
+	Use __BYTE_ORDER etc. instead of BYTE_ORDER etc.
+
+	* sysdeps/unix/sysv/linux/sys/quota.h:
+	Use __caddr_t instead of caddr_t.
+	* sysdeps/unix/sysv/linux/sys/timerfd.h:
+	Use __clockid_t instead of clockid_t.
+
+	* sysvipc/sys/ipc.h: Remove unnecessary #warning.
+
+	* argp/argp.h: Check whether _LIBC is defined before expanding it.
+	* posix/glob.h: Check whether __USE_XOPEN2K8 is defined instead of
+	expanding it.
+
+	* misc/sys/cdefs.h: Tidy up conditional nest defining __flexarr.
+	Define __glibc_c99_flexarr_available to 1 when the compiler
+	supports C99-compatible flexible array members, 0 otherwise.
+	* sysdeps/unix/sysv/linux/bits/socket.h
+	* sysdeps/mach/hurd/bits/socket.h
+	* bits/socket.h: Use __glibc_c99_flexarr_available in
+	definitions of struct cmsghdr and CMSG_DATA.
+
 2016-09-23  Florian Weimer  <fweimer@redhat.com>
 
 	* manual/nss.texi (NSS Modules Interface): Adjust function return

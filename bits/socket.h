@@ -216,13 +216,13 @@ struct cmsghdr
 				   of cmsghdr structure.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
-#if (!defined __STRICT_ANSI__ && __GNUC__ >= 2) || __STDC_VERSION__ >= 199901L
+#if __glibc_c99_flexarr_available
     __extension__ unsigned char __cmsg_data __flexarr; /* Ancillary data.  */
 #endif
   };
 
 /* Ancillary data object manipulation macros.  */
-#if (!defined __STRICT_ANSI__ && __GNUC__ >= 2) || __STDC_VERSION__ >= 199901L
+#if __glibc_c99_flexarr_available
 # define CMSG_DATA(cmsg) ((cmsg)->__cmsg_data)
 #else
 # define CMSG_DATA(cmsg) ((unsigned char *) ((struct cmsghdr *) (cmsg) + 1))

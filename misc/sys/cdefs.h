@@ -153,21 +153,27 @@
 # define __errordecl(name, msg) extern void name (void)
 #endif
 
-/* Support for flexible arrays.  */
-#if __GNUC_PREREQ (2,97)
-/* GCC 2.97 supports C99 flexible array members.  */
+/* Support for flexible arrays.
+   Headers that should use flexible arrays only if they're "real"
+   (e.g. only if they won't affect sizeof()) should test
+   #if __glibc_c99_flexarr_available.  */
+#if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
 # define __flexarr	[]
+# define __glibc_c99_flexarr_available 1
+#elif __GNUC_PREREQ (2,97)
+/* GCC 2.97 supports C99 flexible array members as an extension,
+   even when in C89 mode or compiling C++ (any version).  */
+# define __flexarr	[]
+# define __glibc_c99_flexarr_available 1
+#elif defined __GNUC__
+/* Pre-2.97 GCC did not support C99 flexible arrays but did have
+   an equivalent extension with slightly different notation.  */
+# define __flexarr	[0]
+# define __glibc_c99_flexarr_available 1
 #else
-# ifdef __GNUC__
-#  define __flexarr	[0]
-# else
-#  if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
-#   define __flexarr	[]
-#  else
 /* Some other non-C99 compiler.  Approximate with [1].  */
-#   define __flexarr	[1]
-#  endif
-# endif
+# define __flexarr	[1]
+# define __glibc_c99_flexarr_available 0
 #endif
 
 

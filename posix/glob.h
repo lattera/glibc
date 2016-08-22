@@ -25,7 +25,7 @@ __BEGIN_DECLS
 /* We need `size_t' for the following definitions.  */
 #ifndef __size_t
 typedef __SIZE_TYPE__ __size_t;
-# if defined __USE_XOPEN || __USE_XOPEN2K8
+# if defined __USE_XOPEN || defined __USE_XOPEN2K8
 typedef __SIZE_TYPE__ size_t;
 # endif
 #else

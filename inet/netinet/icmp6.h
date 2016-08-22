@@ -160,11 +160,11 @@ struct nd_neighbor_advert     /* neighbor advertisement */
 #define nd_na_code               nd_na_hdr.icmp6_code
 #define nd_na_cksum              nd_na_hdr.icmp6_cksum
 #define nd_na_flags_reserved     nd_na_hdr.icmp6_data32[0]
-#if     BYTE_ORDER == BIG_ENDIAN
+#if     __BYTE_ORDER == __BIG_ENDIAN
 #define ND_NA_FLAG_ROUTER        0x80000000
 #define ND_NA_FLAG_SOLICITED     0x40000000
 #define ND_NA_FLAG_OVERRIDE      0x20000000
-#else   /* BYTE_ORDER == LITTLE_ENDIAN */
+#else   /* __BYTE_ORDER == __LITTLE_ENDIAN */
 #define ND_NA_FLAG_ROUTER        0x00000080
 #define ND_NA_FLAG_SOLICITED     0x00000040
 #define ND_NA_FLAG_OVERRIDE      0x00000020
@@ -298,10 +298,10 @@ struct rr_pco_use      /* use prefix part */
 #define ICMP6_RR_PCOUSE_RAFLAGS_ONLINK  0x20
 #define ICMP6_RR_PCOUSE_RAFLAGS_AUTO    0x10
 
-#if BYTE_ORDER == BIG_ENDIAN
+#if __BYTE_ORDER == __BIG_ENDIAN
 # define ICMP6_RR_PCOUSE_FLAGS_DECRVLTIME 0x80000000
 # define ICMP6_RR_PCOUSE_FLAGS_DECRPLTIME 0x40000000
-#elif BYTE_ORDER == LITTLE_ENDIAN
+#elif __BYTE_ORDER == __LITTLE_ENDIAN
 # define ICMP6_RR_PCOUSE_FLAGS_DECRVLTIME 0x80
 # define ICMP6_RR_PCOUSE_FLAGS_DECRPLTIME 0x40
 #endif
@@ -315,10 +315,10 @@ struct rr_result       /* router renumbering result message */
     struct in6_addr     rrr_prefix;
   };
 
-#if BYTE_ORDER == BIG_ENDIAN
+#if __BYTE_ORDER == __BIG_ENDIAN
 # define ICMP6_RR_RESULT_FLAGS_OOB       0x0002
 # define ICMP6_RR_RESULT_FLAGS_FORBIDDEN 0x0001
-#elif BYTE_ORDER == LITTLE_ENDIAN
+#elif __BYTE_ORDER == __LITTLE_ENDIAN
 # define ICMP6_RR_RESULT_FLAGS_OOB       0x0200
 # define ICMP6_RR_RESULT_FLAGS_FORBIDDEN 0x0100
 #endif

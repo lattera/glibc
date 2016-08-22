@@ -511,7 +511,7 @@ extern void *__argp_input (const struct argp *__restrict __argp,
 
 #ifdef __USE_EXTERN_INLINES
 
-# if !_LIBC
+# if !(defined _LIBC && _LIBC)
 #  define __argp_usage argp_usage
 #  define __argp_state_help argp_state_help
 #  define __option_is_short _option_is_short
@@ -546,7 +546,7 @@ __NTH (__option_is_end (const struct argp_option *__opt))
   return !__opt->key && !__opt->name && !__opt->doc && !__opt->group;
 }
 
-# if !_LIBC
+# if !(defined _LIBC && _LIBC)
 #  undef __argp_usage
 #  undef __argp_state_help
 #  undef __option_is_short
