@@ -30,6 +30,9 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
       return -1;
     }
 
+  /* Check sem_wait.c for a more detailed explanation why it is required.  */
+  __pthread_testcancel ();
+
   if (__new_sem_wait_fast ((struct new_sem *) sem, 0) == 0)
     return 0;
   else

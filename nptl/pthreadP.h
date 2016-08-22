@@ -491,6 +491,7 @@ extern int __pthread_setcanceltype (int type, int *oldtype);
 extern int __pthread_enable_asynccancel (void) attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype)
      internal_function attribute_hidden;
+extern void __pthread_testcancel (void);
 
 #if IS_IN (libpthread)
 hidden_proto (__pthread_mutex_init)
@@ -505,6 +506,7 @@ hidden_proto (__pthread_getspecific)
 hidden_proto (__pthread_setspecific)
 hidden_proto (__pthread_once)
 hidden_proto (__pthread_setcancelstate)
+hidden_proto (__pthread_testcancel)
 #endif
 
 extern int __pthread_cond_broadcast_2_0 (pthread_cond_2_0_t *cond);

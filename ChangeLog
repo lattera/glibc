@@ -1,5 +1,25 @@
 2016-09-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #18243]
+	* nptl/pthreadP.h (__pthread_testcancel): Add prototype and hidden_proto.
+	* nptl/pthread_testcancel.c (pthread_cancel): Add internal aliais
+	definition.
+	* nptl/sem_timedwait.c (sem_timedwait): Add cancellation check for
+	uncontended case.
+	* nptl/sem_wait.c (__new_sem_wait): Likewise.
+	* nptl/tst-cancel12.c (cleanup): Remove wrong cancellation point.
+	(tf): Fix check for uncontended case.
+	(do_test): Likewise.
+	* nptl/tst-cancel13.c (cleanup): Remove wrong cancellation point.
+	(tf): Fix check for uncontended case.
+	(do_test): Likewise.
+	* nptl/tst-cancel14.c (cleanup): Remove wrong cancellation point.
+	(tf): Fix check for uncontended case.
+	(do_test): Likewise.
+	* nptl/tst-cancel15.c (cleanup): Remove wrong cancellation point.
+	(tf): Fix check for uncontended case.
+	(do_test): Likewise.
+
 	* sysdeps/sparc/sparc32/sem_wait.c: Remove file.
 	* sysdeps/sparc/sparc32/sparcv9/sem_wait.c: Likewise.
 

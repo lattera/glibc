@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2016 Free Software Foundation, Inc.
+/* Test sem_wait cancellation for uncontended case.
+   Copyright (C) 2003-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -39,8 +40,6 @@ cleanup (void *arg)
       puts ("second call to cleanup");
       exit (1);
     }
-
-  printf ("cleanup call #%d\n", ncall);
 }
 
 
@@ -52,16 +51,14 @@ tf (void *arg)
   int e = pthread_barrier_wait (&bar);
   if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      puts ("tf: 1st barrier_wait failed");
+      puts ("error: tf: 1st barrier_wait failed");
       exit (1);
     }
 
-  /* This call should block and be cancelable.  */
+  /* This call should be cancelable.  */
   sem_wait (&sem);
 
   pthread_cleanup_pop (0);
-
-  puts ("sem_wait returned");
 
   return NULL;
 }
@@ -74,47 +71,47 @@ do_test (void)
 
   if (pthread_barrier_init (&bar, NULL, 2) != 0)
     {
-      puts ("barrier_init failed");
+      puts ("error: barrier_init failed");
       exit (1);
     }
 
+  /* A value higher than 0 will check for uncontended pthread cancellation,
+     where the sem_wait operation will return immediatelly.  */
   if (sem_init (&sem, 0, 1) != 0)
     {
-      puts ("sem_init failed");
+      puts ("error: sem_init failed");
       exit (1);
     }
 
   if (pthread_create (&th, NULL, tf, NULL) != 0)
     {
-      puts ("create failed");
+      puts ("error: create failed");
       exit (1);
     }
 
-  /* Check whether cancellation is honored even before sem_wait does
-     anything.  */
   if (pthread_cancel (th) != 0)
     {
-      puts ("1st cancel failed");
+      puts ("error: pthread_cancel failed");
       exit (1);
     }
 
   int e = pthread_barrier_wait (&bar);
   if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      puts ("1st barrier_wait failed");
+      puts ("error: 1st barrier_wait failed");
       exit (1);
     }
 
   void *r;
   if (pthread_join (th, &r) != 0)
     {
-      puts ("join failed");
+      puts ("error: pthread_join failed");
       exit (1);
     }
 
   if (r != PTHREAD_CANCELED)
     {
-      puts ("thread not canceled");
+      puts ("error: thread not canceled");
       exit (1);
     }
 

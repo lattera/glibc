@@ -21,7 +21,9 @@
 
 
 void
-pthread_testcancel (void)
+__pthread_testcancel (void)
 {
   CANCELLATION_P (THREAD_SELF);
 }
+strong_alias (__pthread_testcancel, pthread_testcancel)
+hidden_def (__pthread_testcancel)
