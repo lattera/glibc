@@ -20,14 +20,10 @@
 #include <math_private.h>
 
 /* Return the greatest floating-point number less than X.  */
-double
-__nextdown (double x)
+FLOAT
+M_DECL_FUNC (__nextdown) (FLOAT x)
 {
-  return -__nextup (-x);
+  return -M_SUF (__nextup) (-x);
 }
 
-weak_alias (__nextdown, nextdown)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__nextdown, __nextdownl)
-weak_alias (__nextdown, nextdownl)
-#endif
+declare_mgen_alias (__nextdown, nextdown);

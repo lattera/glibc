@@ -1,5 +1,17 @@
 2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/Makefile: (gen-libm-calls): Add s_nextdown.
+	(libm-calls): Remove above.
+
+	* math/s_nextdown.c: Refactor into ...
+	* math/s_nextdown_template.c: New file.
+	* math/s_nextdownf.c: Removed.
+	* math/s_nextdownl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/s_nextdownl.c: New file.
+
+2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* math/Makefile (gen-libm-calls): Add s_fdim.
 	(libm-calls): Move to above.
 
