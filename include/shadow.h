@@ -1,6 +1,8 @@
 #ifndef _SHADOW_H
 #include <shadow/shadow.h>
 
+# ifndef _ISOMAC
+
 /* Now define the internal interfaces.  */
 extern int __getspent_r (struct spwd *__result_buf, char *__buffer,
 			 size_t __buflen, struct spwd **__result)
@@ -47,4 +49,5 @@ DECLARE_NSS_PROTOTYPES (nisplus)
 #undef DECLARE_NSS_PROTOTYPES
 
 
+# endif /* !_ISOMAC */
 #endif

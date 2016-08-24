@@ -1,5 +1,8 @@
 #ifndef _LIBINTL_H
 #include <intl/libintl.h>
+
+# ifndef _ISOMAC
+
 #include <locale.h>
 
 /* Now define the internal interfaces.  */
@@ -46,4 +49,5 @@ libc_hidden_proto (_libc_intl_domainname)
 # define _(msgid) \
   __dcgettext (_libc_intl_domainname, msgid, LC_MESSAGES)
 
+# endif /* !_ISOMAC */
 #endif

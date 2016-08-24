@@ -1,6 +1,8 @@
 #ifndef __RPCSVC_YP_H__
 #include <nis/rpcsvc/yp.h>
 
+# ifndef _ISOMAC
+
 libnsl_hidden_proto (xdr_ypstat)
 libnsl_hidden_proto (xdr_ypxfrstat)
 libnsl_hidden_proto (xdr_domainname)
@@ -23,4 +25,5 @@ libnsl_hidden_proto (xdr_ypresp_order)
 libnsl_hidden_proto (xdr_ypbind_resp)
 libnsl_hidden_proto (xdr_ypresp_master)
 
+# endif /* !_ISOMAC */
 #endif

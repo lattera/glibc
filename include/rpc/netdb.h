@@ -1,6 +1,8 @@
 #ifndef _RPC_NETDB_H
 #include <sunrpc/rpc/netdb.h>
 
+# ifndef _ISOMAC
+
 extern int __getrpcbyname_r (const char *__name, struct rpcent *__result_buf,
 			     char *__buffer, size_t __buflen,
 			     struct rpcent **__result);
@@ -48,4 +50,5 @@ DECLARE_NSS_PROTOTYPES (nisplus)
 
 #undef DECLARE_NSS_PROTOTYPES
 
+# endif /* !_ISOMAC */
 #endif

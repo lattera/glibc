@@ -3,11 +3,10 @@
 #include <features.h>		/* Get __GNU_LIBRARY__ defined now.  */
 #include <posix/getopt.h>
 
-# ifdef _GETOPT_H
+# if defined _GETOPT_H && !defined _ISOMAC
 
 /* Now define the internal interfaces.  */
 extern void __getopt_clean_environment (char **__env);
 
-# endif
-
+# endif /* _GETOPT_H && !_ISOMAC */
 #endif

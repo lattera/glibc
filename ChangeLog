@@ -1,5 +1,44 @@
 2016-09-23  Zack Weinberg  <zackw@panix.com>
 
+	* scripts/check-installed-headers.sh: New script.
+	* Rules: In each directory that defines header files to be installed,
+	run check-installed-headers.sh on them as a special test.
+	* Makefile: Likewise for the headers installed at top level.
+
+	* include/aliases.h, include/alloca.h, include/argz.h
+	* include/arpa/nameser.h, include/arpa/nameser_compat.h
+	* include/elf.h, include/envz.h, include/err.h
+	* include/execinfo.h, include/fpu_control.h, include/getopt.h
+	* include/gshadow.h, include/ifaddrs.h, include/libintl.h
+	* include/link.h, include/malloc.h, include/mcheck.h
+	* include/mntent.h, include/netinet/ether.h
+	* include/nss.h, include/obstack.h, include/printf.h
+	* include/pty.h, include/resolv.h, include/rpc/auth.h
+	* include/rpc/auth_des.h, include/rpc/auth_unix.h
+	* include/rpc/clnt.h, include/rpc/des_crypt.h
+	* include/rpc/key_prot.h, include/rpc/netdb.h
+	* include/rpc/pmap_clnt.h, include/rpc/pmap_prot.h
+	* include/rpc/pmap_rmt.h, include/rpc/rpc.h
+	* include/rpc/rpc_msg.h, include/rpc/svc.h
+	* include/rpc/svc_auth.h, include/rpc/xdr.h
+	* include/rpcsvc/nis_callback.h, include/rpcsvc/nislib.h
+	* include/rpcsvc/yp.h, include/rpcsvc/ypclnt.h
+	* include/rpcsvc/ypupd.h, include/shadow.h
+	* include/stdio_ext.h, include/sys/epoll.h
+	* include/sys/file.h, include/sys/gmon.h, include/sys/ioctl.h
+	* include/sys/prctl.h, include/sys/profil.h
+	* include/sys/statfs.h, include/sys/sysctl.h
+	* include/sys/sysinfo.h, include/ttyent.h, include/utmp.h
+	* sysdeps/arm/nacl/include/bits/setjmp.h
+	* sysdeps/mips/include/sys/asm.h
+	* sysdeps/unix/sysv/linux/include/sys/sysinfo.h
+	* sysdeps/unix/sysv/linux/include/sys/timex.h
+	* sysdeps/x86/fpu/include/bits/fenv.h:
+	Add #ifndef _ISOMAC guard around internal declarations.
+	Add multiple-inclusion guard if not already present.
+
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
 	* sysdeps/generic/sys/ucontext.h
 	* sysdeps/arm/sys/ucontext.h
 	* sysdeps/i386/sys/ucontext.h

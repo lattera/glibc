@@ -1,6 +1,7 @@
 #ifndef	_STDIO_EXT_H
+#include <stdio-common/stdio_ext.h>
 
-# include <stdio-common/stdio_ext.h>
+# ifndef _ISOMAC
 
 libc_hidden_proto (__fsetlocking)
 
@@ -18,5 +19,5 @@ libc_hidden_proto (__fsetlocking)
      __result;								\
   })
 
-
-#endif
+# endif /* !_ISOMAC */
+#endif /* stdio_ext.h */

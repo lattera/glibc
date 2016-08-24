@@ -2,6 +2,8 @@
 
 #include <resolv/arpa/nameser.h>
 
+# ifndef _ISOMAC
+
 /* If the machine allows unaligned access we can do better than using
    the NS_GET16, NS_GET32, NS_PUT16, and NS_PUT32 macros from the
    installed header.  */
@@ -74,4 +76,5 @@ libresolv_hidden_proto (ns_samename)
 libresolv_hidden_proto (ns_makecanon)
 libresolv_hidden_proto (ns_format_ttl)
 
+# endif /* !_ISOMAC */
 #endif

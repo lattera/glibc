@@ -1,5 +1,7 @@
 #ifndef _RPC_PMAP_CLNT_H
-# include <sunrpc/rpc/pmap_clnt.h>
+#include <sunrpc/rpc/pmap_clnt.h>
+
+# ifndef _ISOMAC
 
 libc_hidden_proto (pmap_getport)
 libc_hidden_proto (pmap_set)
@@ -18,4 +20,5 @@ libc_hidden_proto (clnt_broadcast)
 libc_hidden_proto (pmap_getmaps)
 libc_hidden_proto (pmap_rmtcall)
 
-#endif
+# endif /* !_ISOMAC */
+#endif /* rpc/pmap_clnt.h */

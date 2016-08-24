@@ -1,6 +1,9 @@
 #ifndef _ALLOCA_H
 
 #include <stdlib/alloca.h>
+
+# ifndef _ISOMAC
+
 #include <stackinfo.h>
 
 #undef	__alloca
@@ -73,4 +76,5 @@ libc_hidden_proto (__libc_alloca_cutoff)
      extend_alloca (buf, len, s__); })
 #endif
 
+# endif /* !_ISOMAC */
 #endif

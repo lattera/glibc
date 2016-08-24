@@ -16,8 +16,9 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_ASM_H
+#include_next <sys/asm.h>
 
-# include_next <sys/asm.h>
+# ifndef _ISOMAC
 
 # undef __mips_cfi_startproc
 # define __mips_cfi_startproc cfi_startproc
@@ -50,4 +51,5 @@
 	cfi_restore (gp)
 # endif
 
-#endif
+# endif /* _ISOMAC */
+#endif /* sys/asm.h */

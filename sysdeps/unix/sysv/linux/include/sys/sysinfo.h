@@ -21,6 +21,9 @@
 
 #include_next <sys/sysinfo.h>
 
+# ifndef _ISOMAC
+
 extern __typeof (sysinfo) __sysinfo __THROW;
 
+# endif /* _ISOMAC */
 #endif /* sys/sysinfo.h */

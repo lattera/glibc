@@ -318,6 +318,29 @@ $(objpfx)begin-end-check.out: scripts/begin-end-check.pl
 	$(evaluate-test)
 endif
 
+ifneq "$(headers)" ""
+# Special test of all the installed headers in this directory.
+tests-special += $(objpfx)check-installed-headers-c.out
+libof-check-installed-headers-c := nonlib
+$(objpfx)check-installed-headers-c.out: \
+    scripts/check-installed-headers.sh $(headers)
+	$(SHELL) $(..)scripts/check-installed-headers.sh c \
+	  "$(CC) $(filter-out -std=%,$(CFLAGS)) -D_ISOMAC $(+includes)" \
+	  $(headers) > $@; \
+	$(evaluate-test)
+
+ifneq "$(CXX)" ""
+tests-special += $(objpfx)check-installed-headers-cxx.out
+libof-check-installed-headers-cxx := nonlib
+$(objpfx)check-installed-headers-cxx.out: \
+    scripts/check-installed-headers.sh $(headers)
+	$(SHELL) $(..)scripts/check-installed-headers.sh c++ \
+	  "$(CXX) $(filter-out -std=%,$(CXXFLAGS)) -D_ISOMAC $(+includes)" \
+	  $(headers) > $@; \
+	$(evaluate-test)
+endif
+endif
+
 define summarize-tests
 @egrep -v '^(PASS|XFAIL):' $(objpfx)$1 || true
 @echo "Summary of test results$2:"

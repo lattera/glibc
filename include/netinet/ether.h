@@ -1,6 +1,8 @@
 #ifndef _NETINET_ETHER_H
 #include <inet/netinet/ether.h>
 
+# ifndef _ISOMAC
+
 libc_hidden_proto (ether_aton_r)
 libc_hidden_proto (ether_ntoa_r)
 
@@ -39,4 +41,5 @@ DECLARE_NSS_PROTOTYPES (nisplus)
 
 #undef DECLARE_NSS_PROTOTYPES
 
+# endif /* !_ISOMAC */
 #endif

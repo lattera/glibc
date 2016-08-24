@@ -16,7 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_FENV_H
 #include_next <bits/fenv.h>
+
+# ifndef _ISOMAC
 
 /* Ensure __feraiseexcept calls in glibc are optimized the same as
    feraiseexcept calls.  */
@@ -40,3 +43,6 @@ __NTH (__feraiseexcept (int __excepts))
 
 __END_DECLS
 #endif
+
+# endif /* _ISOMAC */
+#endif /* bits/fenv.h */

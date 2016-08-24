@@ -1,5 +1,8 @@
 #ifndef _RPC_RPC_H
 #include <sunrpc/rpc/rpc.h>
+
+# ifndef _ISOMAC
+
 #include <libc-tsd.h>
 
 /* Now define the internal interfaces.  */
@@ -56,4 +59,5 @@ libc_hidden_proto (__rpc_thread_createerr)
 
 #endif /* _RPC_THREAD_SAFE_ */
 
+# endif /* !_ISOMAC */
 #endif

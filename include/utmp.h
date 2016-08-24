@@ -1,6 +1,8 @@
 #ifndef _UTMP_H
 #include <login/utmp.h>
 
+# ifndef _ISOMAC
+
 /* Now define the internal interfaces.  */
 extern void __updwtmp (const char *__wtmp_file, const struct utmp *__utmp);
 extern int __utmpname (const char *__file);
@@ -18,4 +20,5 @@ extern int __getutline_r (const struct utmp *__line,
 
 libutil_hidden_proto (login_tty)
 
+# endif /* !_ISOMAC */
 #endif

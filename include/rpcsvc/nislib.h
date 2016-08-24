@@ -1,6 +1,8 @@
 #ifndef __RPCSVC_NISLIB_H__
 #include <nis/rpcsvc/nislib.h>
 
+# ifndef _ISOMAC
+
 libnsl_hidden_proto (nis_leaf_of_r)
 libnsl_hidden_proto (nis_name_of_r)
 libnsl_hidden_proto (nis_getnames)
@@ -44,4 +46,5 @@ libnsl_hidden_proto (nis_clone_object)
 
 extern const_nis_name __nis_domain_of (const_nis_name) __THROW;
 
+# endif /* !_ISOMAC */
 #endif

@@ -1,6 +1,8 @@
 #ifndef _MNTENT_H
 #include <misc/mntent.h>
 
+# ifndef _ISOMAC
+
 /* Now define the internal interfaces.  */
 extern FILE *__setmntent (const char *__file, const char *__mode);
 extern struct mntent *__getmntent_r (FILE *__stream,
@@ -14,4 +16,5 @@ libc_hidden_proto (__setmntent)
 libc_hidden_proto (__getmntent_r)
 libc_hidden_proto (__endmntent)
 
+# endif /* !_ISOMAC */
 #endif

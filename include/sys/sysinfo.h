@@ -1,6 +1,8 @@
 #ifndef _SYS_SYSINFO_H
 #include_next <sys/sysinfo.h>
 
+# ifndef _ISOMAC
+
 /* Now we define the internal interface.  */
 
 /* Return number of configured processors.  */
@@ -18,4 +20,5 @@ extern long int __get_avphys_pages (void);
 /* Return maximum number of processes this real user ID can have.  */
 extern long int __get_child_max (void);
 
+# endif /* !_ISOMAC */
 #endif /* sys/sysinfo.h */

@@ -21,6 +21,9 @@
 
 #include_next <sys/timex.h>
 
+# ifndef _ISOMAC
+
 libc_hidden_proto (__adjtimex)
 
+# endif /* _ISOMAC */
 #endif /* sys/timex.h */

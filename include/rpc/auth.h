@@ -1,6 +1,8 @@
 #ifndef _RPC_AUTH_H
 #include <sunrpc/rpc/auth.h>
 
+# ifndef _ISOMAC
+
 libc_hidden_proto (getnetname)
 libc_hidden_proto (netname2user)
 libc_hidden_proto (host2netname)
@@ -41,4 +43,5 @@ libc_hidden_proto (key_setnet)
 libc_hidden_proto (key_setsecret)
 libc_hidden_proto (netname2host)
 
+# endif /* !_ISOMAC */
 #endif

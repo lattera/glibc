@@ -1,17 +1,19 @@
 #ifndef _RESOLV_H_
 
-#define RES_SET_H_ERRNO(r,x)			\
+# ifndef _ISOMAC
+#  include <stdbool.h>
+#  define RES_SET_H_ERRNO(r,x)			\
   do						\
     {						\
       (r)->res_h_errno = x;			\
       __set_h_errno(x);				\
     }						\
   while (0)
+# endif
 
-#include <stdbool.h>
 #include <resolv/resolv.h>
 
-#ifdef _RESOLV_H_
+# if defined _RESOLV_H_ && !defined _ISOMAC
 
 # if IS_IN (libc)
 #  define __resp __libc_resp
@@ -97,6 +99,5 @@ libresolv_hidden_proto (__p_secstodate)
 extern const char *_res_opcodes[];
 libresolv_hidden_proto (_res_opcodes)
 
-#endif
-
+# endif /* _RESOLV_H_ && !_ISOMAC */
 #endif

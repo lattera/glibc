@@ -2,6 +2,8 @@
 
 #include <sunrpc/rpc/auth_des.h>
 
+# ifndef _ISOMAC
+
 libc_hidden_proto (getpublickey)
 libc_hidden_proto (getsecretkey)
 libc_hidden_proto (rtime)
@@ -32,4 +34,5 @@ libc_hidden_proto (authdes_getucred)
 libc_hidden_proto (xdr_authdes_cred)
 libc_hidden_proto (xdr_authdes_verf)
 
+# endif /* !_ISOMAC */
 #endif

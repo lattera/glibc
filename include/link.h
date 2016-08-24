@@ -24,12 +24,18 @@
 # error this should be impossible
 #endif
 
+# ifndef _ISOMAC
 /* Get most of the contents from the public header, but we define a
    different `struct link_map' type for private use.  The la_objopen
    prototype uses the type, so we have to declare it separately.  */
-#define link_map	link_map_public
-#define la_objopen	la_objopen_wrongproto
+#  define link_map	link_map_public
+#  define la_objopen	la_objopen_wrongproto
+# endif
+
 #include <elf/link.h>
+
+# ifndef _ISOMAC
+
 #undef	link_map
 #undef	la_objopen
 
@@ -341,4 +347,5 @@ extern int __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
    `ELF64_R_TYPE'.  */
 #define ELFW(type)	_ElfW (ELF, __ELF_NATIVE_CLASS, type)
 
+# endif /* !_ISOMAC */
 #endif /* include/link.h */

@@ -1,4 +1,7 @@
+#ifndef _RPC_XDR_H
 #include <sunrpc/rpc/xdr.h>
+
+# ifndef _ISOMAC
 
 libc_hidden_proto (xdrstdio_create)
 libc_hidden_proto (xdr_array)
@@ -45,3 +48,6 @@ libc_hidden_proto (xdr_int64_t)
 libc_hidden_proto (xdr_uint64_t)
 libc_hidden_proto (xdr_quad_t)
 libc_hidden_proto (xdr_u_quad_t)
+
+# endif /* !_ISOMAC */
+#endif /* rpc/xdr.h */
