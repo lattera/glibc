@@ -30,8 +30,7 @@
 #include <bits/shm.h>
 
 /* Define types required by the standard.  */
-#define __need_time_t
-#include <time.h>
+#include <bits/types/time_t.h>
 
 #ifdef __USE_XOPEN
 # ifndef __pid_t_defined

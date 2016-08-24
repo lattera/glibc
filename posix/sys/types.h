@@ -124,12 +124,11 @@ typedef __key_t key_t;
 #endif
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K8
-# define __need_clock_t
+# include <bits/types/clock_t.h>
 #endif
-#define	__need_time_t
-#define __need_timer_t
-#define __need_clockid_t
-#include <time.h>
+#include <bits/types/clockid_t.h>
+#include <bits/types/time_t.h>
+#include <bits/types/timer_t.h>
 
 #ifdef __USE_XOPEN
 # ifndef __useconds_t_defined

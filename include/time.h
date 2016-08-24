@@ -1,8 +1,7 @@
 #ifndef _TIME_H
-#if defined __need_time_t  || defined __need_clock_t || defined __need_timespec || defined _ISOMAC
-# include <time/time.h>
-#else
-# include <time/time.h>
+#include <time/time.h>
+
+#ifndef _ISOMAC
 # include <xlocale.h>
 
 __BEGIN_DECLS

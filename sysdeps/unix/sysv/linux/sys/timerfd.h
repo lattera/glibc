@@ -19,6 +19,7 @@
 #define	_SYS_TIMERFD_H	1
 
 #include <time.h>
+#include <bits/types/struct_itimerspec.h>
 
 /* Get the platform-dependent flags.  */
 #include <bits/timerfd.h>

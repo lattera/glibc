@@ -26,6 +26,7 @@
 #include <bits/pthreadtypes.h>
 #include <bits/setjmp.h>
 #include <bits/wordsize.h>
+#include <bits/types/struct_timespec.h>
 
 
 /* Detach state.  */

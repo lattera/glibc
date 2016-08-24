@@ -38,13 +38,11 @@ typedef __sigset_t sigset_t;
 #endif
 
 /* Get definition of timer specification structures.  */
-#define __need_time_t
+#include <bits/types/time_t.h>
+#include <bits/types/struct_timeval.h>
 #ifdef __USE_XOPEN2K
-# define __need_timespec
+# include <bits/types/struct_timespec.h>
 #endif
-#include <time.h>
-#define __need_timeval
-#include <bits/time.h>
 
 #ifndef __suseconds_t_defined
 typedef __suseconds_t suseconds_t;

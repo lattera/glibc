@@ -20,9 +20,7 @@
 
 #include <features.h>
 
-#define __need_time_t
-#include <time.h>
-
+#include <bits/types/time_t.h>
 
 __BEGIN_DECLS
 

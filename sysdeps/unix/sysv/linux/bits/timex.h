@@ -19,6 +19,7 @@
 #define	_BITS_TIMEX_H	1
 
 #include <bits/types.h>
+#include <bits/types/struct_timeval.h>
 
 /* These definitions from linux/timex.h as of 3.18.  */
 

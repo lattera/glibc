@@ -30,8 +30,7 @@
 #include <bits/msq.h>
 
 /* Define types required by the standard.  */
-#define	__need_time_t
-#include <time.h>
+#include <bits/types/time_t.h>
 
 #ifndef __pid_t_defined
 typedef __pid_t pid_t;

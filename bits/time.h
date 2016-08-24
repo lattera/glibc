@@ -20,9 +20,10 @@
  * Never include this file directly; use <time.h> instead.
  */
 
-#ifndef __need_timeval
-# ifndef _BITS_TIME_H
-#  define _BITS_TIME_H	1
+#ifndef _BITS_TIME_H
+#define _BITS_TIME_H	1
+
+#include <bits/types.h>
 
 /* ISO/IEC 9899:1999 7.23.1: Components of time
    The macro `CLOCKS_PER_SEC' is an expression with type `clock_t' that is
@@ -30,51 +31,34 @@
 /* CAE XSH, Issue 4, Version 2: <time.h>
    The value of CLOCKS_PER_SEC is required to be 1 million on all
    XSI-conformant systems. */
-#  define CLOCKS_PER_SEC  ((clock_t) 1000000)
+#define CLOCKS_PER_SEC  ((__clock_t) 1000000)
 
-#  if !defined __STRICT_ANSI__ && !defined __USE_XOPEN2K
+#if (!defined __STRICT_ANSI__ || defined __USE_POSIX) \
+   && !defined __USE_XOPEN2K
 /* Even though CLOCKS_PER_SEC has such a strange value CLK_TCK
    presents the real value for clock ticks per second for the system.  */
-#   include <bits/types.h>
 extern long int __sysconf (int);
-#   define CLK_TCK ((__clock_t) __sysconf (2))	/* 2 is _SC_CLK_TCK */
-#  endif
-
-#  ifdef __USE_POSIX199309
-/* Identifier for system-wide realtime clock.  */
-#   define CLOCK_REALTIME		0
-/* Monotonic system-wide clock.  */
-#   define CLOCK_MONOTONIC		1
-/* High-resolution timer from the CPU.  */
-#   define CLOCK_PROCESS_CPUTIME_ID	2
-/* Thread-specific CPU-time clock.  */
-#   define CLOCK_THREAD_CPUTIME_ID	3
-/* Monotonic system-wide clock, not adjusted for frequency scaling.  */
-#   define CLOCK_MONOTONIC_RAW		4
-/* Identifier for system-wide realtime clock, updated only on ticks.  */
-#   define CLOCK_REALTIME_COARSE	5
-/* Monotonic system-wide clock, updated only on ticks.  */
-#   define CLOCK_MONOTONIC_COARSE	6
-
-/* Flag to indicate time is absolute.  */
-#   define TIMER_ABSTIME		1
-#  endif
-
-# endif	/* bits/time.h */
+# define CLK_TCK ((__clock_t) __sysconf (2))	/* 2 is _SC_CLK_TCK */
 #endif
 
-#ifdef __need_timeval
-# undef __need_timeval
-# ifndef _STRUCT_TIMEVAL
-#  define _STRUCT_TIMEVAL	1
-#  include <bits/types.h>
+#ifdef __USE_POSIX199309
+/* Identifier for system-wide realtime clock.  */
+# define CLOCK_REALTIME			0
+/* Monotonic system-wide clock.  */
+# define CLOCK_MONOTONIC		1
+/* High-resolution timer from the CPU.  */
+# define CLOCK_PROCESS_CPUTIME_ID	2
+/* Thread-specific CPU-time clock.  */
+# define CLOCK_THREAD_CPUTIME_ID	3
+/* Monotonic system-wide clock, not adjusted for frequency scaling.  */
+# define CLOCK_MONOTONIC_RAW		4
+/* Identifier for system-wide realtime clock, updated only on ticks.  */
+# define CLOCK_REALTIME_COARSE		5
+/* Monotonic system-wide clock, updated only on ticks.  */
+# define CLOCK_MONOTONIC_COARSE		6
 
-/* A time value that is accurate to the nearest
-   microsecond but also has a range of years.  */
-struct timeval
-  {
-    __time_t tv_sec;		/* Seconds.  */
-    __suseconds_t tv_usec;	/* Microseconds.  */
-  };
-# endif	/* struct timeval */
-#endif	/* need timeval */
+/* Flag to indicate time is absolute.  */
+# define TIMER_ABSTIME			1
+#endif
+
+#endif	/* bits/time.h */

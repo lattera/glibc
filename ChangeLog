@@ -1,5 +1,47 @@
 2016-09-23  Zack Weinberg  <zackw@panix.com>
 
+	* time/time.h, bits/time.h, sysdeps/unix/sysv/linux/bits/time.h:
+	Remove all logic conditional on __need macros.	Move all the
+	conditionally defined types to their own headers...
+	* time/bits/types/clock_t.h: Define clock_t here.
+	* time/bits/types/clockid_t.h: Define clockid_t here.
+	* time/bits/types/struct_itimerspec.h: Define struct itimerspec here.
+	* time/bits/types/struct_timespec.h: Define struct timespec here.
+	* time/bits/types/struct_timeval.h: Define struct timeval here.
+	* time/bits/types/struct_tm.h: Define struct tm here.
+	* time/bits/types/time_t.h: Define time_t here.
+	* time/bits/types/timer_t.h: Define timer_t here.
+	* time/Makefile: Install the new headers.
+
+	* bits/resource.h, io/fcntl.h, io/sys/poll.h, io/sys/stat.h
+	* io/utime.h, misc/sys/select.h, posix/sched.h, posix/sys/times.h
+	* posix/sys/types.h, resolv/netdb.h, rt/aio.h, rt/mqueue.h
+	* signal/signal.h, pthread/semaphore.h, sysdeps/nptl/pthread.h
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h
+	* sysdeps/unix/sysv/linux/alpha/sys/acct.h
+	* sysdeps/unix/sysv/linux/bits/resource.h
+	* sysdeps/unix/sysv/linux/bits/timex.h
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h
+	* sysdeps/unix/sysv/linux/net/ppp_defs.h
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h
+	* sysdeps/unix/sysv/linux/sys/acct.h
+	* sysdeps/unix/sysv/linux/sys/timerfd.h
+	* sysvipc/sys/msg.h, sysvipc/sys/sem.h, sysvipc/sys/shm.h
+	* time/sys/time.h, time/sys/timeb.h
+	Use the new bits/types headers.
+
+	* include/time.h: Remove __need logic.
+	* include/bits/time.h
+	* include/bits/types/clock_t.h, include/bits/types/clockid_t.h
+	* include/bits/types/time_t.h, include/bits/types/timer_t.h
+	* include/bits/types/struct_itimerspec.h
+	* include/bits/types/struct_timespec.h
+	* include/bits/types/struct_timeval.h
+	* include/bits/types/struct_tm.h:
+	New wrapper headers.
+
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
 	* sysdeps/mach/hurd/net/if_ppp.h
 	* sysdeps/unix/sysv/linux/net/if_ppp.h:
 	Only define struct ifpppstatsreq and struct ifpppcstatsreq

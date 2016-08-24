@@ -25,13 +25,14 @@
 #include <bits/types.h>
 
 #define __need_size_t
+#define __need_NULL
 #include <stddef.h>
 
-#ifdef __USE_XOPEN2K
-# define __need_time_t
-# define __need_timespec
+#include <bits/types/time_t.h>
+#include <bits/types/struct_timespec.h>
+#ifndef __USE_XOPEN2K
+# include <time.h>
 #endif
-#include <time.h>
 
 #ifndef __pid_t_defined
 typedef __pid_t pid_t;

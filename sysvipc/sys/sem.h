@@ -30,8 +30,7 @@
 #include <bits/sem.h>
 
 #ifdef __USE_GNU
-# define __need_timespec
-# include <time.h>
+# include <bits/types/struct_timespec.h>
 #endif
 
 /* The following System V style IPC functions implement a semaphore

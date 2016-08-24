@@ -29,8 +29,7 @@ __BEGIN_DECLS
 #include <bits/types.h>
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K
-# define __need_time_t
-# include <time.h>
+# include <bits/types/time_t.h>
 #endif
 
 /* Structure describing file times.  */

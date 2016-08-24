@@ -35,8 +35,7 @@
 #ifdef __USE_GNU
 # define __need_sigevent_t
 # include <bits/siginfo.h>
-# define __need_timespec
-# include <time.h>
+# include <bits/types/struct_timespec.h>
 #endif
 
 #include <bits/netdb.h>

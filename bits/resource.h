@@ -129,8 +129,7 @@ enum __rusage_who
 #define RUSAGE_CHILDREN RUSAGE_CHILDREN
   };
 
-#define __need_timeval
-#include <bits/time.h>           /* For `struct timeval'.  */
+#include <bits/types/struct_timeval.h>
 
 /* Structure which says how much of each resource has been used.  */
 struct rusage

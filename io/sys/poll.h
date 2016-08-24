@@ -27,8 +27,7 @@
 /* Get the __sigset_t definition.  */
 # include <bits/sigset.h>
 /* Get the timespec definition.  */
-# define __need_timespec
-# include <time.h>
+#include <bits/types/struct_timespec.h>
 #endif
 
 

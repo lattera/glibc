@@ -24,9 +24,7 @@
 
 #include <features.h>
 
-#define	__need_clock_t
-#include <time.h>
-
+#include <bits/types/clock_t.h>
 
 __BEGIN_DECLS
 

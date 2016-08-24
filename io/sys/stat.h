@@ -26,19 +26,16 @@
 
 #include <bits/types.h>		/* For __mode_t and __dev_t.  */
 
-#if defined __USE_XOPEN || defined __USE_XOPEN2K || defined __USE_ATFILE
-# if defined __USE_XOPEN || defined __USE_XOPEN2K
-#  define __need_time_t
-# endif
-# ifdef __USE_ATFILE
-#  define __need_timespec
-# endif
-# include <time.h>		/* For time_t resp. timespec.  */
+#ifdef __USE_ATFILE
+# include <bits/types/struct_timespec.h>
 #endif
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K
 /* The Single Unix specification says that some more types are
    available here.  */
+
+# include <bits/types/time_t.h>
+
 # ifndef __dev_t_defined
 typedef __dev_t dev_t;
 #  define __dev_t_defined
