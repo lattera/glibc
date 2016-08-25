@@ -1,3 +1,17 @@
+2016-08-25  Mark Wielaard  <mark@klomp.org>
+
+	* misc/tsearch.c (struct node_t): Reduce to 3 pointers if
+	USE_MALLOC_LOW_BIT.  Define pointer/value accessors.
+	(check_tree_recurse): Use newly defined accessors.
+	(check_tree): Likewise.
+	(maybe_split_for_insert): Likewise.
+	(__tfind): Likewise.
+	(__tdelete): Likewise.
+	(trecurse): Likewise.
+	(tdestroy_recurse): Likewise.
+	(__tsearch): Likewise. And add asserts for malloc alignment.
+	(__twalk): Cast root to node in case CHECK_TREE is defined.
+
 2016-08-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* scripts/check-local-headers.sh (exclude): Add mach_debug/.
