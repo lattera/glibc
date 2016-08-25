@@ -46,6 +46,7 @@
 #define LDOUBLE___clog10l_libm_version GLIBC_2_1
 #define LDOUBLE_fdiml_libm_version GLIBC_2_1
 #define LDOUBLE_fmaxl_libm_version GLIBC_2_1
+#define LDOUBLE_fminl_libm_version GLIBC_2_1
 
 /* Define compat symbols for long double on platforms
    where it was not always a distinct type.  */

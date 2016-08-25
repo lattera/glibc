@@ -20,9 +20,13 @@
 #include <math.h>
 
 
-long double
-__fminl (long double x, long double y)
+FLOAT
+M_DECL_FUNC (__fmin) (FLOAT x, FLOAT y)
 {
   return (islessequal (x, y) || isnan (y)) ? x : y;
 }
-weak_alias (__fminl, fminl)
+declare_mgen_alias (__fmin, fmin);
+
+#if M_LIBM_NEED_COMPAT (fmin)
+declare_mgen_libm_compat (__fmin, fmin)
+#endif

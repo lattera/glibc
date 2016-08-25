@@ -1,5 +1,21 @@
 2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/Makefile (gen-libm-calls): Add s_fmin
+	(libm-calls): Remove above.
+
+	* math/s_fmin.c: Refactor into ...
+	* math/s_fmin_template.c: New file.
+
+	* math/s_fminf.c: Removed.
+	* math/s_fminl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h:
+	(LDOUBLE_fmin_libm_version): New macro.
+
+	* sysdeps/ieee754/ldbl-opt/s_fmin.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_fminl.c: Removed.
+
+2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* math/Makefile: (gen-libm-calls): Add s_fmax.
 	(libm-calls): Remove above.
 
