@@ -56,7 +56,7 @@ libm-calls =								  \
 	e_hypotF e_j0F e_j1F e_jnF e_lgammaF_r e_logF e_log10F e_powF	  \
 	e_rem_pio2F e_remainderF e_scalbF e_sinhF e_sqrtF e_gammaF_r	  \
 	e_ilogbF							  \
-	k_cosF k_rem_pio2F k_sinF k_tanF s_asinhF s_atanF s_cbrtF	  \
+	k_cosF k_sinF k_tanF s_asinhF s_atanF s_cbrtF			  \
 	s_ceilF s_cosF s_erfF s_expm1F s_fabsF				  \
 	s_floorF s_log1pF w_log1pF s_logbF				  \
 	s_nextafterF s_nexttowardF s_rintF s_scalblnF w_scalblnF	  \
@@ -99,11 +99,11 @@ type-ldouble-yes := ldouble
 type-double-suffix :=
 type-double-routines := branred doasin dosincos halfulp mpa mpatan2	\
 		       mpatan mpexp mplog mpsqrt mptan sincos32 slowexp	\
-		       slowpow sincostab
+		       slowpow sincostab k_rem_pio2
 
 # float support
 type-float-suffix := f
-type-float-routines :=
+type-float-routines := k_rem_pio2f
 
 
 # Apply suffix to each type in arg 1

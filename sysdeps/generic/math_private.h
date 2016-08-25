@@ -317,8 +317,6 @@ extern long double __kernel_cosl (long double,long double);
 extern long double __kernel_tanl (long double,long double,int);
 extern void __kernel_sincosl (long double,long double,
 			      long double *,long double *, int);
-extern int   __kernel_rem_pio2l (long double*,long double*,int,int,
-				 int,const int*);
 
 #ifndef NO_LONG_DOUBLE
 /* prototypes required to compile the ldbl-96 support without warnings */

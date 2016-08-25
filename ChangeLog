@@ -1,5 +1,20 @@
 2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/Makefile (libm-calls): Remove k_rem_pio2F.
+	(type-double-routines): Add k_rem_pio2.
+	(type-float-routines): Add k_rem_pio2f.
+
+	* sysdeps/generic/math_private.h:
+	(__kernel_rem_pio2l): Removed.
+
+	* math/k_rem_pio2l.c: Removed.
+	* sysdeps/i386/fpu/k_rem_pio2l.c: Removed.
+	* sysdeps/ia64/fpu/k_rem_pio2l.c: Removed.
+	* sysdeps/m68k/m680x0/fpu/k_rem_pio2l.c: Removed.
+	* sysdeps/x86_64/fpu/k_rem_pio2l.c: Removed.
+
+2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* math/Makefile (gen-libm-calls): Add s_fmin
 	(libm-calls): Remove above.
 
