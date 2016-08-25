@@ -19,5 +19,6 @@
 #include <math.h>
 
 #define __fdimf __fdimf_vis3
+#define declare_mgen_alias(t, f)
 
 #include <math/s_fdimf.c>

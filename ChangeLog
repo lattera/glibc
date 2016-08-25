@@ -1,3 +1,37 @@
+2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile (gen-libm-calls): Add s_fdim.
+	(libm-calls): Move to above.
+
+	* math/s_fdim.c: Renamed and refactored into to ...
+	* math/s_fdim_template.c: New file.
+	* math/s_fdiml.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_fdim.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_fdiml.c: Removed.
+
+	* sysdeps/generic/math-type-macros-double.h:
+	(declare_mgen_alias): Don't declare if already declared.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-ldouble.h:
+	Likewise.
+
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h:
+	(declare_mgen_alias): Don't declare if already declared.
+	(M_LIBM_NEED_COMPAT): Likewise.
+	(declare_mgen_libm_compat): Likewise.
+	(LDOUBLE_fdiml_libm_version): New macro.
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim.c:
+	Include math/s_fdim.c now that ldbl-opt version is not needed.
+	(declare_mgen_alias): New macro to disable aliasing.
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf-vis3.c:
+	(declare_mgen_alias): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf.c:
+	(declare_mgen_alias): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim-vis3.c:
+	(declare_mgen_alias): Likewise.
+	(M_LIBM_NEED_COMPAT): Likewise.
+
 2016-09-01  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20525]

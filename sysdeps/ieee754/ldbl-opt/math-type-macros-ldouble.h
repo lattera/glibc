@@ -22,8 +22,10 @@
 
 /* Use properly versioned symbols for long double on platforms where
    it was not always a distinct type.  */
-#define declare_mgen_alias(from, to) \
+#if !defined declare_mgen_alias
+# define declare_mgen_alias(from, to) \
   long_double_symbol (libm, from ## l, to ## l);
+#endif
 
 #include_next <math-type-macros-ldouble.h>
 #endif

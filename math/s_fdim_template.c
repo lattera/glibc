@@ -21,22 +21,20 @@
 #include <math.h>
 #include <math_private.h>
 
-double
-__fdim (double x, double y)
+FLOAT
+M_DECL_FUNC (__fdim) (FLOAT x, FLOAT y)
 {
   if (islessequal (x, y))
-    return 0.0;
+    return 0;
 
-  double r = math_narrow_eval (x - y);
+  FLOAT r = math_narrow_eval (x - y);
   if (isinf (r) && !isinf (x) && !isinf (y))
     __set_errno (ERANGE);
 
   return r;
 }
-#ifndef __fdim
-weak_alias (__fdim, fdim)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__fdim, __fdiml)
-weak_alias (__fdim, fdiml)
-# endif
+declare_mgen_alias (__fdim, fdim);
+
+#if M_LIBM_NEED_COMPAT (fdim)
+declare_mgen_libm_compat (__fdim, fdim)
 #endif

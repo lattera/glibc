@@ -19,5 +19,7 @@
 #include <math.h>
 
 #define __fdim __fdim_vis3
+#define declare_mgen_alias(t, f)
+#define M_LIBM_NEED_COMPAT(f) 0
 
 #include <math/s_fdim.c>

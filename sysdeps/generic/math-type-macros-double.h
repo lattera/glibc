@@ -29,12 +29,12 @@
 /* Machines without a distinct long double type
    alias long double functions to their double
    equivalent.  */
-#if defined NO_LONG_DOUBLE
+#if defined NO_LONG_DOUBLE && !defined declare_mgen_alias
 # define declare_mgen_alias(from, to)	    \
    weak_alias (from, to)		    \
    strong_alias (from, from ## l)	    \
    weak_alias (from, to ## l)
-#else
+#elif !defined declare_mgen_alias
 # define declare_mgen_alias(from, to)	    \
    weak_alias (M_SUF (from), M_SUF (to))
 #endif

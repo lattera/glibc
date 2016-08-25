@@ -27,6 +27,7 @@ sparc_libm_ifunc(__fdim, hwcap & HWCAP_SPARC_VIS3 ? __fdim_vis3 : __fdim_generic
 weak_alias (__fdim, fdim)
 
 # define __fdim __fdim_generic
+# define declare_mgen_alias(t, f)
 #endif
 
-#include <ldbl-opt/s_fdim.c>
+#include <math/s_fdim.c>

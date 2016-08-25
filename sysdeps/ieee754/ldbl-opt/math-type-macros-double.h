@@ -44,15 +44,20 @@
 #define LDOUBLE_cpowl_libm_version GLIBC_2_1
 #define LDOUBLE_clog10l_libm_version GLIBC_2_1
 #define LDOUBLE___clog10l_libm_version GLIBC_2_1
+#define LDOUBLE_fdiml_libm_version GLIBC_2_1
 
 /* Define compat symbols for long double on platforms
    where it was not always a distinct type.  */
-#define M_LIBM_NEED_COMPAT(f) \
+#if !defined M_LIBM_NEED_COMPAT
+# define M_LIBM_NEED_COMPAT(f) \
   LONG_DOUBLE_COMPAT (libm, LDOUBLE_ ## f ## l_libm_version)
+#endif
 
-#define declare_mgen_libm_compat(from, to)	      \
+#if !defined declare_mgen_libm_compat
+# define declare_mgen_libm_compat(from, to)	      \
   compat_symbol (libm, from, to ## l,		      \
 		 LDOUBLE_ ## to ## l_libm_version);
+#endif
 
 #include_next <math-type-macros-double.h>
 #endif
