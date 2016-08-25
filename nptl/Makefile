@@ -38,7 +38,7 @@ shared-only-routines = forward
 pthread-compat-wrappers = \
 		      write read close fcntl accept \
 		      connect recv recvfrom send \
-		      sendto fsync lseek llseek \
+		      sendto fsync lseek lseek64 \
 		      msync nanosleep open open64 pause \
 		      pread pread64 pwrite pwrite64 \
 		      tcdrain wait waitpid msgrcv msgsnd \

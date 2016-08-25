@@ -10,7 +10,7 @@ ifeq ($(subdir),misc)
 sysdep_headers += alpha/ptrace.h alpha/regdef.h sys/io.h
 
 sysdep_routines += ieee_get_fp_control ieee_set_fp_control \
-		   ioperm llseek
+		   ioperm
 
 # Support old timeval32 entry points
 sysdep_routines += osf_select osf_gettimeofday osf_settimeofday \

@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2016 Free Software Foundation, Inc.
+/* Linux lseek implementation, 32 bits off_t.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,23 +16,42 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <sys/types.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
+#include <errno.h>
 
-#include "overflow.h"
+#ifndef __OFF_T_MATCHES_OFF64_T
+
+/* Test for overflows of structures where we ask the kernel to fill them
+   in with standard 64-bit syscalls but return them through APIs that
+   only expose the low 32 bits of some fields.  */
+
+static inline off_t lseek_overflow (loff_t res)
+{
+  off_t retval = (off_t) res;
+  if (retval == res)
+    return retval;
+
+  __set_errno (EOVERFLOW);
+  return (off_t) -1;
+}
 
 off_t
 __lseek (int fd, off_t offset, int whence)
 {
+# ifdef __NR__llseek
   loff_t res;
-  int rc = INLINE_SYSCALL (_llseek, 5, fd, (off_t) (offset >> 31),
-                           (off_t) offset, &res, whence);
+  int rc = INLINE_SYSCALL_CALL (_llseek, fd,
+				(long) (((uint64_t) (offset)) >> 32),
+				(long) offset, &res, whence);
   return rc ?: lseek_overflow (res);
+# else
+  return INLINE_SYSCALL_CALL (lseek, fd, offset, whence);
+# endif
 }
 libc_hidden_def (__lseek)
 weak_alias (__lseek, lseek)
 strong_alias (__lseek, __libc_lseek)
+#endif /* __OFF_T_MATCHES_OFF64_T  */

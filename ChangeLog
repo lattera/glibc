@@ -1,3 +1,21 @@
+2016-11-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/Makefile (libpthread-routines): Remove ptw-llseek and add
+	ptw-lseek64.
+	* sysdeps/unix/sysv/linux/Makefile (sysdeps_routines): Remove llseek.
+	* sysdeps/unix/sysv/linux/alpha/Makefile  (sysdeps_routines):
+	Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/llseek.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/lseek.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/mips64/llseek.c: Likewise.
+	* sysdeps/unix/sysv/linux/llseek.c: Remove file.
+	* sysdeps/unix/sysv/linux/lseek.c: New file.
+	* sysdeps/unix/sysv/linux/lseek64.c: Add default Linux implementation.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list: Remove lseek and
+	__libc_lseek64 from auto-generation.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/lseek64.S: New file.
+
 2016-11-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* nptl/tst-basic1.c (tf, do_test): Use write_message.

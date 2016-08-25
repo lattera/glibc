@@ -22,7 +22,9 @@
 #include <sysdeps/unix/sysv/linux/sysdep.h>
 
 /* Provide the common name to allow more code reuse.  */
-#define __NR__llseek __NR_llseek
+#ifdef __NR_llseek
+# define __NR__llseek __NR_llseek
+#endif
 
 #if __WORDSIZE == 64
 /* By defining the older names, glibc will build syscall wrappers for
