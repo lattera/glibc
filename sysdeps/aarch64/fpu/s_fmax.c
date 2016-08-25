@@ -18,4 +18,4 @@
 
 #define FUNC fmax
 #define INSN "fmaxnm"
-#include <s_fmin.c>
+#include <fpu/s_fmin.c>

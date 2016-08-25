@@ -19,4 +19,4 @@
 #define FUNC fminf
 #define TYPE float
 #define REGS "s"
-#include <s_fmin.c>
+#include <fpu/s_fmin.c>

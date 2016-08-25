@@ -1,5 +1,26 @@
 2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/Makefile: (gen-libm-calls): Add s_fmax.
+	(libm-calls): Remove above.
+
+	* math/s_fmax.c: Refactor into ...
+	* math/s_fmax_template.c: New file.
+	* math/s_fmaxf.c: Removed.
+	* math/s_fmaxl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h:
+	(LDOUBLE_fmaxl_libm_version): New macro.
+
+	* sysdeps/ieee754/ldbl-opt/s_fmax.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_fmaxl.c: Removed.
+
+	* sysdeps/aarch64/fpu/s_fmax.c: Append fpu/ to include of
+	s_fmin.c to pick the aarch64 version of the file.
+	* sysdeps/aarch64/fpu/s_fmaxf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_fminf.c: Likewise.
+
+2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* math/Makefile: (gen-libm-calls): Add s_nextdown.
 	(libm-calls): Remove above.
 

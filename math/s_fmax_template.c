@@ -19,10 +19,14 @@
 
 #include <math.h>
 
-
-long double
-__fmaxl (long double x, long double y)
+FLOAT
+M_DECL_FUNC (__fmax) (FLOAT x, FLOAT y)
 {
   return (isgreaterequal (x, y) || isnan (y)) ? x : y;
 }
-weak_alias (__fmaxl, fmaxl)
+
+declare_mgen_alias (__fmax, fmax);
+
+#if M_LIBM_NEED_COMPAT (fmax)
+declare_mgen_libm_compat (__fmax, fmax)
+#endif
