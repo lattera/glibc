@@ -69,7 +69,9 @@ _dl_runtime_resolve:
 	and $-VEC_SIZE, %RSP_LP
 #endif
 	sub $REGISTER_SAVE_AREA, %RSP_LP
+#if !DL_RUNTIME_RESOLVE_REALIGN_STACK
 	cfi_adjust_cfa_offset(REGISTER_SAVE_AREA)
+#endif
 	# Preserve registers otherwise clobbered.
 	movq %rax, REGISTER_SAVE_RAX(%rsp)
 	movq %rcx, REGISTER_SAVE_RCX(%rsp)

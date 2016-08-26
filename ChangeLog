@@ -1,3 +1,9 @@
+2016-08-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve): Don't
+	adjust CFA when allocating register save area on re-aligned
+	stack.
+
 2016-08-26  Florian Weimer  <fweimer@redhat.com>
 
 	* string/tst-cmp.c: New test.
