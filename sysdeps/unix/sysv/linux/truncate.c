@@ -1,6 +1,5 @@
-/* Copyright (C) 2011-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,16 +15,21 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sys/types.h>
 #include <unistd.h>
+#include <sysdep.h>
+#include <errno.h>
 
+#ifndef __OFF_T_MATCHES_OFF64_T
 /* Truncate PATH to LENGTH bytes.  */
 int
 __truncate (const char *path, off_t length)
 {
-  return INLINE_SYSCALL (truncate64, __ALIGNMENT_COUNT (3, 4), path,
-                         __ALIGNMENT_ARG
-                         __LONG_LONG_PAIR (length >> 31, length));
+# ifndef __NR_truncate
+  return INLINE_SYSCALL_CALL (truncate64, path,
+			      __ALIGNMENT_ARG SYSCALL_LL (length));
+# else
+  return INLINE_SYSCALL_CALL (truncate, path, length);
+# endif
 }
 weak_alias (__truncate, truncate)
+#endif

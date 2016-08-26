@@ -1,5 +1,20 @@
 2016-11-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/arm/truncate64.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/truncate.c: Likewise.
+	* sysdeps/sysv/linux/generic/wordsize-32/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/truncate.c: New file.
+	* sysdeps/unix/sysv/linux/truncate64.c (truncate64): Use
+	INLINE_SYSCALL_CALL, __ALIGNMENT_ARG and SYSCALL_LL64 macros.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (truncate):
+	Remove.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list (truncate):
+	Likewise.
+
 	* posix/tst-truncate-common.c: New file.
 	* posix/tst-truncate.c: Use tst-truncate-common.c.
 	* posix/tst-truncate64.c: Likewise and add LFS tests.

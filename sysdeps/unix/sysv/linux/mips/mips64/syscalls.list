@@ -1,7 +1,5 @@
 # File name	Caller	Syscall name	Args	Strong name	Weak names
 
-truncate	-	truncate	i:si	truncate	truncate64
-
 # Semaphore and shm system calls.  msgctl, shmctl, and semctl have C
 # wrappers (to set __IPC_64).
 msgget		-	msgget		i:ii	__msgget	msgget

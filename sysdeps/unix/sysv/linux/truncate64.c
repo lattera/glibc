@@ -15,21 +15,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
-#include <endian.h>
-#include <errno.h>
 #include <unistd.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
+#include <errno.h>
 
-/* Truncate the file referenced by FD to LENGTH bytes.  */
+#ifndef __NR_truncate64
+# define __NR_truncate64 __NR_truncate
+#endif
+
+/* Truncate PATH to LENGTH bytes.  */
 int
-truncate64 (const char *path, off64_t length)
+__truncate64 (const char *path, off64_t length)
 {
-  unsigned int low = length & 0xffffffff;
-  unsigned int high = length >> 32;
-  int result = INLINE_SYSCALL (truncate64, 3, path,
-			       __LONG_LONG_PAIR (high, low));
-  return result;
+  return INLINE_SYSCALL_CALL (truncate64, path,
+			      __ALIGNMENT_ARG SYSCALL_LL64 (length));
 }
+weak_alias (__truncate64, truncate64)
+
+#ifdef __OFF_T_MATCHES_OFF64_T
+weak_alias (__truncate64, truncate);
+#endif
