@@ -1,6 +1,6 @@
 2016-08-26  Florian Weimer  <fweimer@redhat.com>
 
-	[BZ #20432]
+	[BZ #19946]
 	Avoid expected SIGALRM signals.
 	* test-skeleton.c (xpthread_sigmask, xpthread_mutex_lock)
 	(xpthread_spin_lock, xpthread_cond_wait, xpthread_barrier_wait)
