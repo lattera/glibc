@@ -17,7 +17,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define TRUNCATE truncate64
-#define FTRUNCATE ftruncate64
+#define _FILE_OFFSET_BITS 64
+#include "tst-truncate-common.c"
 
-#include "tst-truncate.c"
+static int
+do_test (void)
+{
+  int ret;
+
+  ret = do_test_with_offset (0);
+  if (ret == -1)
+    return -1;
+
+  off_t base_offset = UINT32_MAX + 512LL;
+  ret = do_test_with_offset (base_offset);
+  if (ret == -1)
+    return 1;
+
+  return 0;
+}

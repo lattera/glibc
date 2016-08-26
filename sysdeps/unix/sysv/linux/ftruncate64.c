@@ -15,22 +15,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
-#include <errno.h>
-#include <endian.h>
 #include <unistd.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
+#include <errno.h>
+
+#ifndef __NR_ftruncate64
+# define __NR_ftruncate64 __NR_ftruncate
+#endif
 
 /* Truncate the file referenced by FD to LENGTH bytes.  */
 int
 __ftruncate64 (int fd, off64_t length)
 {
-  unsigned int low = length & 0xffffffff;
-  unsigned int high = length >> 32;
-  int result = INLINE_SYSCALL (ftruncate64, 3, fd,
-			       __LONG_LONG_PAIR (high, low));
-  return result;
+  return INLINE_SYSCALL_CALL (ftruncate64, fd,
+			      __ALIGNMENT_ARG SYSCALL_LL64 (length));
 }
 weak_alias (__ftruncate64, ftruncate64)
+
+#ifdef __OFF_T_MATCHES_OFF64_T
+weak_alias (__ftruncate64, __ftruncate)
+weak_alias (__ftruncate64, ftruncate);
+#endif

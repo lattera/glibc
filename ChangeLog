@@ -1,3 +1,24 @@
+2016-11-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* posix/tst-truncate-common.c: New file.
+	* posix/tst-truncate.c: Use tst-truncate-common.c.
+	* posix/tst-truncate64.c: Likewise and add LFS tests.
+	* sysdeps/unix/sysv/linux/arm/ftruncate64.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/ftruncate.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/ftruncate.c: New file.
+	* sysdeps/unix/sysv/linux/ftruncate64.c (__ftruncate64): Use
+	INLINE_SYSCALL_CALL, __ALIGNMENT_ARG and SYSCALL_LL64 macros.
+	[__OFF_T_MATCHES_OFF64_T] (ftruncate): Add alias.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (ftruncate):
+	Remove.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list (ftruncate):
+	Likewise.
+
 2016-11-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20790]

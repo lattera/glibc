@@ -1,6 +1,5 @@
 # File name	Caller	Syscall name	Args	Strong name	Weak names
 
-ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate ftruncate64 __ftruncate64
 truncate	-	truncate	i:si	truncate	truncate64
 
 # Semaphore and shm system calls.  msgctl, shmctl, and semctl have C

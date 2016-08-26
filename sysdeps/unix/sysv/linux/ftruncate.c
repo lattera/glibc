@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,22 +15,21 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
-#include <errno.h>
-#include <endian.h>
 #include <unistd.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
+#include <errno.h>
 
-/* Truncate the file FD refers to to LENGTH bytes.  */
+#ifndef __OFF_T_MATCHES_OFF64_T
+/* Truncate the file FD refers to LENGTH bytes.  */
 int
-__ftruncate64 (int fd, off64_t length)
+__ftruncate (int fd, off_t length)
 {
-  unsigned int low = length & 0xffffffff;
-  unsigned int high = length >> 32;
-  int result = INLINE_SYSCALL (ftruncate64, 4, fd, 0,
-			       __LONG_LONG_PAIR (high, low));
-  return result;
+# ifndef __NR_ftruncate
+  return INLINE_SYSCALL_CALL (ftruncate64, fd,
+			      __ALIGNMENT_ARG SYSCALL_LL (length));
+# else
+  return INLINE_SYSCALL_CALL (ftruncate, fd, length);
+# endif
 }
-weak_alias (__ftruncate64, ftruncate64)
+weak_alias (__ftruncate, ftruncate)
+#endif

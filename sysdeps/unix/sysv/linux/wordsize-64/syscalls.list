@@ -3,7 +3,6 @@
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
 statfs		-	statfs		i:sp	__statfs	statfs statfs64
 mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
-ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate ftruncate64 __ftruncate64
 truncate	-	truncate	i:si	truncate	truncate64
 getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit getrlimit64 __getrlimit64
 setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit setrlimit64
