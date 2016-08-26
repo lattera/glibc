@@ -112,7 +112,7 @@ __fork (void)
 	 handlers may use malloc, and the libio list lock has an
 	 indirect malloc dependency as well (via the getdelim
 	 function).  */
-      __malloc_fork_lock_parent ();
+      call_function_static_weak (__malloc_fork_lock_parent);
 
       /* Lock things that want to be locked before we fork.  */
       {
@@ -612,7 +612,7 @@ __fork (void)
 	}
 
       /* Release malloc locks.  */
-      __malloc_fork_unlock_parent ();
+      call_function_static_weak (__malloc_fork_unlock_parent);
 
       /* Run things that want to run in the parent to restore it to
 	 normality.  Usually prepare hooks and parent hooks are
@@ -666,7 +666,7 @@ __fork (void)
       __sigemptyset (&_hurdsig_traced);
 
       /* Release malloc locks.  */
-      __malloc_fork_unlock_child ();
+      call_function_static_weak (__malloc_fork_unlock_child);
 
       /* Run things that want to run in the child task to set up.  */
       RUN_HOOK (_hurd_fork_child_hook, ());

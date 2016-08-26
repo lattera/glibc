@@ -121,6 +121,21 @@
 # define weak_extern(symbol) _weak_extern (weak symbol)
 # define _weak_extern(expr) _Pragma (#expr)
 
+/* In shared builds, the expression call_function_static_weak
+   (FUNCTION-SYMBOL, ARGUMENTS) invokes FUNCTION-SYMBOL (an
+   identifier) unconditionally, with the (potentially empty) argument
+   list ARGUMENTS.  In static builds, if FUNCTION-SYMBOL has a
+   definition, the function is invoked as before; if FUNCTION-SYMBOL
+   is NULL, no call is performed.  */
+# ifdef SHARED
+#  define call_function_static_weak(func, ...) func (__VA_ARGS__)
+# else	/* !SHARED */
+#  define call_function_static_weak(func, ...)		\
+  ({							\
+    extern __typeof__ (func) func weak_function;	\
+    (func != NULL ? func (__VA_ARGS__) : (void)0);	\
+  })
+# endif
 
 #else /* __ASSEMBLER__ */
 

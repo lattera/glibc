@@ -1,3 +1,37 @@
+2016-08-26  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20432]
+	Avoid strong references to malloc-internal symbols when linking
+	statically, to support statically interposed mallocs.
+	* include/libc-symbols.h (call_function_static_weak): New macro.
+	* malloc/Makefile (tests): Add tst-interpose-nothread,
+	tst-interpose-thread, tst-interpose-static-nothread,
+	tst-interpose-static-thread.
+	(tests-static): Add tst-interpose-static-nothread,
+	tst-interpose-static-thread.
+	(extra-tests-objs): Add tst-interpose-aux-nothread.o,
+	tst-interpose-aux-thread.o.
+	(test-extras): Add tst-interpose-aux-nothread,
+	tst-interpose-aux-thread.
+	(tst-interpose-nothread, tst-interpose-static-nothread): Link with
+	tst-interpose-aux-nothread.o.
+	(tst-interpose-thread, tst-interpose-static-thread): Link with
+	tst-interpose-aux-thread.o and libthread.
+	* malloc/tst-interpose-aux-nothread.c: New file.
+	* malloc/tst-interpose-aux-thread.c: Likewise.
+	* malloc/tst-interpose-aux.c: Likewise.
+	* malloc/tst-interpose-aux.h: Likewise.
+	* malloc/tst-interpose-nothread.c: Likewise.
+	* malloc/tst-interpose-skeleton.c: Likewise.
+	* malloc/tst-interpose-static-nothread.c: Likewise.
+	* malloc/tst-interpose-static-thread.c: Likewise.
+	* malloc/tst-interpose-thread.c: Likewise.
+	* nptl/tst-tls3-malloc.c: Use new interposed malloc.
+	* sysdeps/mach/hurd/fork.c (__fork): Only call
+	__malloc_fork_lock_parent, __malloc_fork_unlock_parent,
+	__malloc_fork_unlock_child if defined.
+	* sysdeps/nptl/fork.c (__libc_fork): Likewise.
+
 2016-08-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* test-skeleton.c (delayed_exit_thread): Add initializer on struct
