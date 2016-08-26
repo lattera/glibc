@@ -21,6 +21,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 static void *tf (void *a)
 {
@@ -43,14 +47,10 @@ do_test (void)
       _exit (1);
     }
 
-  pthread_join (th, NULL);
+  delayed_exit (1);
+  xpthread_join (th);
 
   puts ("join returned");
 
-  return 0;
+  return 1;
 }
-
-
-#define EXPECTED_SIGNAL SIGALRM
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

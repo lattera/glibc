@@ -22,6 +22,10 @@
 #include <string.h>
 #include <unistd.h>
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 /* Note that this test requires more than the standard.  It is
    required that there are no spurious wakeups if only more readers
@@ -50,7 +54,8 @@ tf (void *arg)
     }
 
   /* This call should never return.  */
-  pthread_cond_wait (&cond, &mut);
+  xpthread_cond_wait (&cond, &mut);
+  puts ("error: pthread_cond_wait in tf returned");
 
   /* We should never get here.  */
   exit (1);
@@ -96,17 +101,11 @@ do_test (void)
 	}
     }
 
-  /* Set an alarm for 1 second.  The wrapper will expect this.  */
-  alarm (1);
+  delayed_exit (1);
 
   /* This call should never return.  */
-  pthread_cond_wait (&cond, &mut);
+  xpthread_cond_wait (&cond, &mut);
 
-  puts ("cond_wait returned");
+  puts ("error: pthread_cond_wait in do_test returned");
   return 1;
 }
-
-
-#define EXPECTED_SIGNAL SIGALRM
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

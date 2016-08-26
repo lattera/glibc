@@ -5,6 +5,10 @@
 #include <string.h>
 #include <unistd.h>
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 static pthread_barrier_t b;
 
@@ -69,13 +73,11 @@ do_test (void)
       exit (1);
     }
 
+  delayed_exit (3);
+
   /* Terminate only this thread.  */
   pthread_exit (NULL);
 
   /* NOTREACHED */
   return 1;
 }
-
-#define EXPECTED_SIGNAL SIGALRM
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

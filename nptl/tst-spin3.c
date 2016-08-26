@@ -21,6 +21,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 static int
 do_test (void)
@@ -39,16 +43,11 @@ do_test (void)
       return 1;
     }
 
-  /* Set an alarm for 1 second.  The wrapper will expect this.  */
-  alarm (1);
+  delayed_exit (1);
 
   /* This call should never return.  */
-  pthread_spin_lock (&s);
+  xpthread_spin_lock (&s);
 
   puts ("2nd spin_lock returned");
   return 1;
 }
-
-#define EXPECTED_SIGNAL SIGALRM
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

@@ -4,6 +4,10 @@
 #include <string.h>
 #include <unistd.h>
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 static void *
 tf (void *arg)
@@ -28,13 +32,11 @@ do_test (void)
       return 1;
     }
 
+  delayed_exit (1);
+
   /* Terminate only this thread.  */
   pthread_exit (NULL);
 
   /* NOTREACHED */
   return 1;
 }
-
-#define EXPECTED_SIGNAL SIGALRM
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

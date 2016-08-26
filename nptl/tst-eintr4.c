@@ -23,6 +23,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
+
 #include "eintr.c"
 
 
@@ -40,16 +45,9 @@ do_test (void)
       exit (1);
     }
 
+  delayed_exit (1);
   /* This call must never return.  */
-  int e = pthread_barrier_wait (&b);
-
-  if (e == EINTR)
-    puts ("pthread_join returned with EINTR");
-
-  return 0;
+  xpthread_barrier_wait (&b);
+  puts ("error: pthread_barrier_wait returned");
+  return 1;
 }
-
-#define EXPECTED_SIGNAL SIGALRM
-#define TIMEOUT 1
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

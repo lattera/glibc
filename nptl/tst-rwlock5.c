@@ -22,6 +22,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 static pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
 static pthread_rwlock_t r;
@@ -65,22 +69,16 @@ do_test (void)
       return 1;
     }
 
-  /* Set an alarm for 1 second.  The wrapper will expect this.  */
-  alarm (1);
-
   if (pthread_create (&th, NULL, tf, NULL) != 0)
     {
       puts ("create failed");
       return 1;
     }
 
+  delayed_exit (1);
   /* This call should never return.  */
-  pthread_mutex_lock (&m);
+  xpthread_mutex_lock (&m);
 
   puts ("2nd mutex_lock returned");
   return 1;
 }
-
-#define EXPECTED_SIGNAL SIGALRM
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

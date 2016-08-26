@@ -559,3 +559,160 @@ main (int argc, char *argv[])
 #endif
     }
 }
+
+/* The following functionality is only available if <pthread.h> was
+   included before this file.  */
+#ifdef _PTHREAD_H
+
+/* Call pthread_sigmask with error checking.  */
+static void
+xpthread_sigmask (int how, const sigset_t *set, sigset_t *oldset)
+{
+  if (pthread_sigmask (how, set, oldset) != 0)
+    {
+      write_message ("error: pthread_setmask failed\n");
+      _exit (1);
+    }
+}
+
+/* Call pthread_mutex_lock with error checking.  */
+__attribute__ ((unused))
+static void
+xpthread_mutex_lock (pthread_mutex_t *mutex)
+{
+  int ret = pthread_mutex_lock (mutex);
+  if (ret != 0)
+    {
+      errno = ret;
+      printf ("error: pthread_mutex_lock: %m\n");
+      exit (1);
+    }
+}
+
+/* Call pthread_spin_lock with error checking.  */
+__attribute__ ((unused))
+static void
+xpthread_spin_lock (pthread_spinlock_t *lock)
+{
+  int ret = pthread_spin_lock (lock);
+  if (ret != 0)
+    {
+      errno = ret;
+      printf ("error: pthread_spin_lock: %m\n");
+      exit (1);
+    }
+}
+
+/* Call pthread_cond_wait with error checking.  */
+__attribute__ ((unused))
+static void
+xpthread_cond_wait (pthread_cond_t * cond,
+		    pthread_mutex_t * mutex)
+{
+  int ret = pthread_cond_wait (cond, mutex);
+  if (ret != 0)
+    {
+      errno = ret;
+      printf ("error: pthread_cond_wait: %m\n");
+      exit (1);
+    }
+}
+
+/* Call pthread_barrier_wait with error checking.  */
+__attribute__ ((unused))
+static int
+xpthread_barrier_wait (pthread_barrier_t *barrier)
+{
+  int ret = pthread_barrier_wait (barrier);
+  if (ret != 0 && ret != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      errno = ret;
+      printf ("error: pthread_barrier_wait: %m\n");
+      exit (1);
+    }
+  return ret;
+}
+
+/* Call pthread_create with error checking.  */
+static pthread_t
+xpthread_create (pthread_attr_t *attr,
+		 void *(*thread_func) (void *), void *closure)
+{
+  pthread_t thr;
+  int ret = pthread_create (&thr, attr, thread_func, closure);
+  if (ret != 0)
+    {
+      errno = ret;
+      printf ("error: pthread_create: %m\n");
+      exit (1);
+    }
+  return thr;
+}
+
+/* Call pthread_detach with error checking.  */
+static void
+xpthread_detach (pthread_t thr)
+{
+  int ret = pthread_detach (thr);
+  if (ret != 0)
+    {
+      errno = ret;
+      printf ("error: pthread_detach: %m\n");
+      exit (1);
+    }
+}
+
+/* Call pthread_join with error checking.  */
+__attribute__ ((unused))
+static void *
+xpthread_join (pthread_t thr)
+{
+  void *result;
+  int ret = pthread_join (thr, &result);
+  if (ret != 0)
+    {
+      errno = ret;
+      printf ("error: pthread_join: %m\n");
+      exit (1);
+    }
+  return result;
+}
+
+/* Used to implement the delayed_exit function defined below.  */
+static void *
+delayed_exit_thread (void *seconds_as_ptr)
+{
+  int seconds = (uintptr_t) seconds_as_ptr;
+  struct timespec delay = { seconds, 0 };
+  struct timespec remaining = {};
+  if (nanosleep (&delay, &remaining) != 0)
+    {
+      printf ("error: nanosleep: %m\n");
+      _exit (1);
+    }
+  /* Exit the process sucessfully.  */
+  exit (0);
+  return NULL;
+}
+
+/* Exit (with status 0) after SECONDS have elapsed, from a helper
+   thread.  The process is terminated with the exit function, so
+   atexit handlers are executed.  */
+__attribute__ ((unused))
+static void
+delayed_exit (int seconds)
+{
+  /* Create the new thread with all signals blocked.  */
+  sigset_t all_blocked;
+  sigfillset (&all_blocked);
+  sigset_t old_set;
+  xpthread_sigmask (SIG_SETMASK, &all_blocked, &old_set);
+  /* Create a detached thread. */
+  pthread_t thr = xpthread_create
+    (NULL, delayed_exit_thread, (void *) (uintptr_t) seconds);
+  xpthread_detach (thr);
+  /* Restore the original signal mask.  */
+  xpthread_sigmask (SIG_SETMASK, &old_set, NULL);
+}
+
+#endif	/* _PTHREAD_H */

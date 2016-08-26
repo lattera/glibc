@@ -24,6 +24,11 @@
 #include <string.h>
 #include <sys/time.h>
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
+
 #include "eintr.c"
 
 
@@ -66,15 +71,9 @@ do_test (void)
       exit (1);
     }
 
+  delayed_exit (3);
   /* This call must never return.  */
-  e = pthread_cond_wait (&c, &m);
-  printf ("main: cond_wait returned: %s\n",
-	  strerror_r (e, buf, sizeof (buf)));
-
-  return 0;
+  xpthread_cond_wait (&c, &m);
+  puts ("error: pthread_cond_wait returned");
+  return 1;
 }
-
-#define EXPECTED_SIGNAL SIGALRM
-#define TIMEOUT 3
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

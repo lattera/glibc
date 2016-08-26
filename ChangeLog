@@ -1,3 +1,45 @@
+2016-08-26  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20432]
+	Avoid expected SIGALRM signals.
+	* test-skeleton.c (xpthread_sigmask, xpthread_mutex_lock)
+	(xpthread_spin_lock, xpthread_cond_wait, xpthread_barrier_wait)
+	(xpthread_create, xpthread_detach, xpthread_join)
+	(delayed_exit_thread, delayed_exit): New functions.
+	* nptl/tst-cond3 (EXPECTED_SIGNAL): Remove.
+	(tf): Use xpthread_cond_wait.
+	(do_test): Likewise.  Replace alarm with delayed_exit.
+	* nptl/tst-eintr1.c (EXPECTED_SIGNAL, TIMEOUT): Remove.
+	(do_test): Call delayed_exit.  Report failure.
+	* nptl/tst-eintr2.c (EXPECTED_SIGNAL, TIMEOUT): Remove.
+	(do_test): Call delayed_exit.
+	* nptl/tst-eintr3.c (EXPECTED_SIGNAL, TIMEOUT): Remove.
+	(do_test): Call delayed_exit.  Use xpthread_join.  Report error.
+	* nptl/tst-eintr4.c (EXPECTED_SIGNAL, TIMEOUT): Remove.
+	(do_test): Call delayed_exit.  Use xpthread_barrier_wait.  Report
+	error.
+	* nptl/tst-eintr5.c (EXPECTED_SIGNAL, TIMEOUT): Remove.
+	(do_test): Call delayed_exit.  Use xpthread_cond_wait.  Report
+	error.
+	* nptl/tst-exit2.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit.
+	* nptl/tst-exit3.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit.
+	* nptl/tst-mutex6.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit instead of alarm.  Use
+	xpthread_mutex_lock.
+	* nptl/tst-rwlock5.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit instead of alarm.  Use
+	xpthread_mutex_lock.
+	* nptl/tst-sem2.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit instead of alarm.
+	* nptl/tst-spin3.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit instead of alarm.  Use
+	xpthread_spin_lock.
+	* nptl/tst-stdio1.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit instead of alarm.  Use
+	xpthread_join.
+
 2016-08-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve): Don't

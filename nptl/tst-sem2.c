@@ -17,11 +17,16 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <pthread.h>
 #include <semaphore.h>
 #include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 static int
 do_test (void)
@@ -34,8 +39,7 @@ do_test (void)
       return 1;
     }
 
-  /* Set an alarm for 1 second.  The wrapper will expect this.  */
-  alarm (1);
+  delayed_exit (1);
 
   if (TEMP_FAILURE_RETRY (sem_wait (&s)) == -1)
     {
@@ -47,7 +51,3 @@ do_test (void)
   puts ("wait succeeded");
   return 1;
 }
-
-#define EXPECTED_SIGNAL SIGALRM
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

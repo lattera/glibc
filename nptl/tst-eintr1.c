@@ -23,6 +23,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
+
 #include "eintr.c"
 
 
@@ -92,13 +97,8 @@ do_test (void)
 	}
     }
 
+  delayed_exit (3);
+  /* This call must never return.  */
   (void) tf1 (NULL);
-  /* NOTREACHED */
-
-  return 0;
+  return 1;
 }
-
-#define EXPECTED_SIGNAL SIGALRM
-#define TIMEOUT 3
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
