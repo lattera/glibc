@@ -1,3 +1,8 @@
+2016-08-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* test-skeleton.c (delayed_exit_thread): Add initializer on struct
+	timespec C99 designated initialization.
+
 2016-08-26  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19946]

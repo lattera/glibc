@@ -684,7 +684,7 @@ delayed_exit_thread (void *seconds_as_ptr)
 {
   int seconds = (uintptr_t) seconds_as_ptr;
   struct timespec delay = { seconds, 0 };
-  struct timespec remaining = {};
+  struct timespec remaining = { 0 };
   if (nanosleep (&delay, &remaining) != 0)
     {
       printf ("error: nanosleep: %m\n");
