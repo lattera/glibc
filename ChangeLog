@@ -1,3 +1,10 @@
+2016-08-29  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	[BZ #20517]
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim.c:
+	Include ldbl-opt/s_fdim.c to ensure fdiml@GLIBC_2.1 is
+	exported.
+
 2016-08-29  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/fetestexceptflag.c: New file.

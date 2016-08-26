@@ -29,4 +29,4 @@ weak_alias (__fdim, fdim)
 # define __fdim __fdim_generic
 #endif
 
-#include <math/s_fdim.c>
+#include <ldbl-opt/s_fdim.c>
