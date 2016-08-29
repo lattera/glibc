@@ -32,7 +32,8 @@ Version 2.25
   presently cannot avoid being compiled under _GNU_SOURCE, exacerbating the
   problem.
 
-* The fesetexcept function from TS 18661-1:2014 is added to libm.
+* The fesetexcept and fetestexceptflag functions from TS 18661-1:2014 are
+  added to libm.
 
 Security related changes:
 

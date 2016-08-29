@@ -41,7 +41,7 @@ libm-support = s_lib_version s_matherr s_signgam			\
 	       fclrexcpt fgetexcptflg fraiseexcpt fsetexcptflg		\
 	       ftestexcept fegetround fesetround fegetenv feholdexcpt	\
 	       fesetenv feupdateenv t_exp fedisblxcpt feenablxcpt	\
-	       fegetexcept fesetexcept
+	       fegetexcept fesetexcept fetestexceptflag
 
 # Wrappers for these functions generated per type using a file named
 # <func>_template.c and the appropriate math-type-macros-<TYPE>.h.
@@ -153,7 +153,7 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-signgam-uint test-signgam-uint-init test-signgam-ullong \
 	test-signgam-ullong-init test-nan-overflow test-nan-payload \
 	test-fexcept test-fexcept-traps test-fesetexcept \
-	test-fesetexcept-traps $(tests-static)
+	test-fesetexcept-traps test-fetestexceptflag $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \

@@ -1,3 +1,50 @@
+2016-08-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/fetestexceptflag.c: New file.
+	* sysdeps/s390/fpu/fetestexceptflag.c: Likewise.  Comment by
+	Stefan Liebler.
+	* math/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(fetestexceptflag): New function declaration.
+	* manual/arith.texi (fetestexceptflag): Document function.
+	* math/Versions (fetestexceptflag): New libm symbol at version
+	GLIBC_2.25.
+	* math/Makefile (libm-support): Add fetestexceptflag.
+	(tests): Add test-fetestexceptflag.
+	* math/test-fetestexceptflag.c: New file.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-08-26  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20432]

@@ -85,6 +85,12 @@ extern int fesetexceptflag (const fexcept_t *__flagp, int __excepts) __THROW;
    currently set.  */
 extern int fetestexcept (int __excepts) __THROW;
 
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Determine which of subset of the exceptions specified by EXCEPTS
+   are set in *FLAGP.  */
+extern int fetestexceptflag (const fexcept_t *__flagp, int __excepts) __THROW;
+#endif
+
 
 /* Rounding control.  */
 

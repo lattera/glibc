@@ -834,6 +834,17 @@ Note that the value stored in @code{fexcept_t} bears no resemblance to
 the bit mask returned by @code{fetestexcept}.  The type may not even be
 an integer.  Do not attempt to modify an @code{fexcept_t} variable.
 
+@comment fenv.h
+@comment ISO
+@deftypefun int fetestexceptflag (const fexcept_t *@var{flagp}, int @var{excepts})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Test whether the exception flags indicated by the parameter
+@var{excepts} are set in the variable pointed to by @var{flagp}.  If
+any of them are, a nonzero value is returned which specifies which
+exceptions are set.  Otherwise the result is zero.
+@code{fetestexceptflag} is from TS 18661-1:2014.
+@end deftypefun
+
 @node Math Error Reporting
 @subsection Error Reporting by Mathematical Functions
 @cindex errors, mathematical
