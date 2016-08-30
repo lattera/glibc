@@ -1,5 +1,9 @@
 2016-08-30  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute): Add
+	fall through comment.
+	(do_sincos_1): Likewise.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute):
 	Consolidate switch cases 0 and 2.
 

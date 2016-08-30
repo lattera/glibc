@@ -252,6 +252,7 @@ reduce_and_compute (double x, unsigned int k)
     case 2:
       a = -a;
       da = -da;
+      /* Fall through.  */
     case 0:
       if (a * a < 0.01588)
 	retval = bsloww (a, da, x, n);
@@ -305,6 +306,7 @@ do_sincos_1 (double a, double da, double x, int4 n, int4 k)
     case 2:
       a = -a;
       da = -da;
+      /* Fall through.  */
     case 0:
       xx = a * a;
       if (xx < 0.01588)
