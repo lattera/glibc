@@ -28,10 +28,14 @@ __adjtime (const struct timeval *delta, struct timeval *olddelta)
 {
   error_t err;
   mach_port_t hostpriv;
+  struct timeval dummy;
 
   err = __get_privileged_ports (&hostpriv, NULL);
   if (err)
     return __hurd_fail (EPERM);
+
+  if (olddelta == NULL)
+    olddelta = &dummy;
 
   err = __host_adjust_time (hostpriv,
 			    /* `time_value_t' and `struct timeval' are in
