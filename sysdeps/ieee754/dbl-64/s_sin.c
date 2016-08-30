@@ -249,23 +249,20 @@ reduce_and_compute (double x, unsigned int k)
   k = (n + k) % 4;
   switch (k)
     {
-      case 0:
-	if (a * a < 0.01588)
-	  retval = bsloww (a, da, x, n);
-	else
-	  retval = bsloww1 (a, da, x, n);
-	break;
-      case 2:
-	if (a * a < 0.01588)
-	  retval = bsloww (-a, -da, x, n);
-	else
-	  retval = bsloww1 (-a, -da, x, n);
-	break;
+    case 2:
+      a = -a;
+      da = -da;
+    case 0:
+      if (a * a < 0.01588)
+	retval = bsloww (a, da, x, n);
+      else
+	retval = bsloww1 (a, da, x, n);
+      break;
 
-      case 1:
-      case 3:
-	retval = bsloww2 (a, da, x, n);
-	break;
+    case 1:
+    case 3:
+      retval = bsloww2 (a, da, x, n);
+      break;
     }
   return retval;
 }

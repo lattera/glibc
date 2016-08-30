@@ -1,3 +1,8 @@
+2016-08-30  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute):
+	Consolidate switch cases 0 and 2.
+
 2016-08-29  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* math/Makefile (libm-gen-calls): Add cpow, clog, clog10, cexp, cproj.
