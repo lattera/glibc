@@ -12,7 +12,7 @@ static const char *tests[] =
   };
 #define ntests (sizeof (tests) / sizeof (tests[0]))
 
-#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF)		\
+#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)			\
 static int								\
 test_strto ## FSUF (void)						\
 {									\

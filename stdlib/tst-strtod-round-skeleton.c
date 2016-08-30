@@ -58,11 +58,11 @@
 
 /* Generator to create an FTYPE member variabled named FSUF
    used to populate struct member variables.  */
-#define FTYPE_MEMBER(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF)  \
+#define FTYPE_MEMBER(FSUF, FTYPE, FTOSTR, LSUF, CSUF)  \
        FTYPE FSUF;
 
 /* Likewise, but each member is of type bool.  */
-#define BOOL_MEMBER(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF)  \
+#define BOOL_MEMBER(FSUF, FTYPE, FTOSTR, LSUF, CSUF)  \
        bool FSUF;
 
 #define STRUCT_FOREACH_FLOAT_FTYPE GEN_TEST_STRTOD_FOREACH (FTYPE_MEMBER)
@@ -96,13 +96,13 @@
 /* long double is special, and handled above.  */
 
 /* Selector for expected result field of a given type.  */
-#define _ENTRY(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF, ...)  \
+#define _ENTRY(FSUF, FTYPE, FTOSTR, LSUF, CSUF, ...)  \
   CONCAT (CHOOSE_ ## FSUF (__VA_ARGS__), LSUF),
 #define ENTRY(...) \
   GEN_TEST_STRTOD_FOREACH (_ENTRY, __VA_ARGS__)
 
 /* Selector for boolean exact tag of expected results.  */
-#define _XNTRY(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF, ...)  \
+#define _XNTRY(FSUF, FTYPE, FTOSTR, LSUF, CSUF, ...)  \
   CHOOSE_ ## FSUF (__VA_ARGS__),
 #define XNTRY(...) \
   GEN_TEST_STRTOD_FOREACH (_XNTRY, __VA_ARGS__)
@@ -157,21 +157,19 @@ struct test {
 #define STR(x) STRX (x)
 #define FNPFXS STR (FNPFX)
 
-#define GEN_ONE_TEST(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF)	\
+#define GEN_ONE_TEST(FSUF, FTYPE, FTOSTR, LSUF, CSUF)		\
 {								\
   FTYPE f = STRTO (FSUF) (s, NULL);				\
   if (f != expected->FSUF					\
       || (copysign ## CSUF) (1.0 ## LSUF, f)			\
 	 != (copysign ## CSUF) (1.0 ## LSUF, expected->FSUF))	\
     {								\
-      CHAR efstr[FSTRLENMAX];					\
-      CHAR fstr[FSTRLENMAX];					\
-      FTOSTR (efstr, FSTRLENMAX, L_("%") L_(FTOSTRM) L_("a"),   \
-	      expected->FSUF);    				\
-      FTOSTR (fstr, FSTRLENMAX, L_("%") L_(FTOSTRM) L_("a"), f);\
-      printf (FNPFXS "to" #FSUF  " (" STRM ") returned " STRM   \
-	      " not " STRM " (%s)\n",				\
-	      s, fstr, efstr, mode_name);			\
+      char efstr[FSTRLENMAX];					\
+      char fstr[FSTRLENMAX];					\
+      FTOSTR (efstr, FSTRLENMAX, "%a", expected->FSUF);		\
+      FTOSTR (fstr, FSTRLENMAX, "%a", f);			\
+      printf (FNPFXS "to" #FSUF  " (" STRM ") returned %s not "	\
+	      "%s (%s)\n", s, fstr, efstr, mode_name);		\
       if (ROUNDING_TESTS (FTYPE, rnd_mode) || exact->FSUF)	\
 	result = 1;						\
       else							\

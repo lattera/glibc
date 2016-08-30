@@ -1,3 +1,11 @@
+2016-10-25  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* stdlib/bug-strtod.c: Refactor based on GEN_TEST_STRTOD_FOREACH.
+	* stdlib/bug-strtod2.c: Likewise.
+	* stdlib/tst-strtod-round-skeleton.c: Likewise.
+	* stdlib/tst-strtod6.c: Likewise.
+	* stdlib/tst-strtod.h (GEN_TEST_STRTOD_FOREACH): Use strfrom.
+
 2016-10-25  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* NEWS: Mention the addition of strfromd, strfromf, and strfroml.

@@ -5,7 +5,7 @@
 
 #include "tst-strtod.h"
 
-#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF) \
+#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)	  \
 static int						  \
 test_strto ## FSUF (const char str[])			  \
 {							  \

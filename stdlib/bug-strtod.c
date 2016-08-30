@@ -23,7 +23,7 @@
 
 #include "tst-strtod.h"
 
-#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, FTOSTRM, LSUF, CSUF)		\
+#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)			\
 static int								\
 test_strto ## FSUF (void)						\
 {									\
@@ -45,8 +45,8 @@ test_strto ## FSUF (void)						\
 	{								\
 	  char fstr[FSTRLENMAX];					\
 	  char fcntstr[FSTRLENMAX];					\
-	  FTOSTR (fstr, sizeof (fstr), "%" FTOSTRM "g", f);		\
-	  FTOSTR (fcntstr, sizeof (fstr), "%" FTOSTRM "g", (FTYPE) cnt); \
+	  FTOSTR (fstr, sizeof (fstr), "%g", f);			\
+	  FTOSTR (fcntstr, sizeof (fstr), "%g", (FTYPE) cnt); 		\
 	  printf ("strto" #FSUF "(\"%s\") "				\
 		  "failed for cnt == %d (%s instead of %s)\n",		\
 		  buf, cnt, fstr, fcntstr);				\
