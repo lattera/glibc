@@ -1,5 +1,20 @@
 2016-08-30  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos_slow): Use ternary
+	instead of if/else.
+	(do_sin_slow): Likewise.
+	(do_sincos_1): Use fabs instead of if/else.
+	(do_sincos_2): Likewise.
+	(__sin): Likewise.
+	(__cos): Likewise.
+	(slow2): Likewise.
+	(sloww): Likewise.
+	(sloww1): Likewise.  Drop argument M.
+	(sloww2): Use fabs instead of if/else.
+	(bsloww): Likewise.
+	(bsloww1): Likewise.
+	(bsloww2): Likewise.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute): Add
 	fall through comment.
 	(do_sincos_1): Likewise.
