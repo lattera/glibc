@@ -45,8 +45,7 @@ fesetexceptflag (const fexcept_t *flagp, int excepts)
     & newexcepts;
 
   /* Store the new status word (along with the rest of the environment.
-     Possibly new exceptions are set but they won't get executed unless
-     the next floating-point instruction.  */
+     Possibly new exceptions are set but they won't get executed.  */
   _FPU_SETCW (temp);
 
   /* Success.  */

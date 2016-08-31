@@ -1,3 +1,13 @@
+2016-08-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* config.h.in (HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT): New undefine.
+	* sysdeps/s390/configure.ac: Add test for z196 zarch support.
+	* sysdeps/s390/configure: Regenerated.
+	* sysdeps/s390/fpu/fraiseexcpt.c (__feraiseexcept): Use ledbra
+	instruction for raising over-/underflow if z196 zarch is supported
+	by default.
+	* sysdeps/s390/fpu/fsetexcptflg.c (fesetexceptflag): Correct comment.
+
 2016-08-30  Svante Signell  <svante.signell@gmail.com>
 
 	* sysdeps/mach/hurd/adjtime.c (__adjtime): When OLDDELTA is NULL, make

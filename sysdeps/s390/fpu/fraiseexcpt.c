@@ -35,6 +35,23 @@ fexceptadd (float d, float e)
   __asm__ __volatile__ ("aebr %0,%1" : : "f" (d), "f" (e) );
 }
 
+#ifdef HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT
+static __inline__ void
+fexceptround (double e)
+{
+  float d;
+  /* Load rounded from double to float with M3 = round toward 0, M4 = Suppress
+     IEEE-inexact exception.
+     In case of e=0x1p128 and the overflow-mask bit is zero, only the
+     IEEE-overflow flag is set. If overflow-mask bit is one, DXC field is set to
+     0x20 "IEEE overflow, exact".
+     In case of e=0x1p-150 and the underflow-mask bit is zero, only the
+     IEEE-underflow flag is set. If underflow-mask bit is one, DXC field is set
+     to 0x10 "IEEE underflow, exact".
+     This instruction is available with a zarch machine >= z196.  */
+  __asm__ __volatile__ ("ledbra %0,5,%1,4" : "=f" (d) : "f" (e) );
+}
+#endif
 
 int
 __feraiseexcept (int excepts)
@@ -54,13 +71,29 @@ __feraiseexcept (int excepts)
 
   /* Next: overflow.  */
   if (FE_OVERFLOW & excepts)
-    /* I don't think we can do the same trick as intel so we will have
-       to live with inexact coming also.  */
-    fexceptadd (FLT_MAX, 1.0e32);
+    {
+#ifdef HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT
+      fexceptround (0x1p128);
+#else
+      /* If overflow-mask bit is zero, both IEEE-overflow and IEEE-inexact flags
+	 are set.  If overflow-mask bit is one, DXC field is set to 0x2C "IEEE
+	 overflow, inexact and incremented".  */
+      fexceptadd (FLT_MAX, 1.0e32);
+#endif
+    }
 
   /* Next: underflow.  */
   if (FE_UNDERFLOW & excepts)
-    fexceptdiv (FLT_MIN, 3.0);
+    {
+#ifdef HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT
+      fexceptround (0x1p-150);
+#else
+      /* If underflow-mask bit is zero, both IEEE-underflow and IEEE-inexact
+	 flags are set.  If underflow-mask bit is one, DXC field is set to 0x1C
+	 "IEEE underflow, inexact and incremented".  */
+      fexceptdiv (FLT_MIN, 3.0);
+#endif
+    }
 
   /* Last: inexact.  */
   if (FE_INEXACT & excepts)

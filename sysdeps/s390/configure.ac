@@ -86,5 +86,31 @@ then
   AC_DEFINE(HAVE_S390_VX_GCC_SUPPORT)
 fi
 
+AC_CACHE_CHECK(for S390 z196 zarch instruction support as default,
+	       libc_cv_asm_s390_min_z196_zarch, [dnl
+cat > conftest.c <<\EOF
+float testinsn (double e)
+{
+    float d;
+    __asm__ ("ledbra %0,5,%1,4" : "=f" (d) : "f" (e) );
+    return d;
+}
+EOF
+dnl
+dnl test, if assembler supports S390 z196 zarch instructions as default
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS --shared conftest.c
+			-o conftest.o &> /dev/null]) ;
+then
+  libc_cv_asm_s390_min_z196_zarch=yes
+else
+  libc_cv_asm_s390_min_z196_zarch=no
+fi
+rm -f conftest* ])
+
+if test "$libc_cv_asm_s390_min_z196_zarch" = yes ;
+then
+  AC_DEFINE(HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT)
+fi
+
 test -n "$critic_missing" && AC_MSG_ERROR([
 *** $critic_missing])
