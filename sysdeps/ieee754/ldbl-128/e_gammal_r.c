@@ -105,10 +105,10 @@ gammal_positive (_Float128 x, int *exp2_adj)
 	}
       *exp2_adj = x_adj_log2 * (int) x_adj_int;
       _Float128 ret = (__ieee754_powl (x_adj_mant, x_adj)
-			 * __ieee754_exp2l (x_adj_log2 * x_adj_frac)
-			 * __ieee754_expl (-x_adj)
-			 * __ieee754_sqrtl (2 * M_PIl / x_adj)
-			 / prod);
+		       * __ieee754_exp2l (x_adj_log2 * x_adj_frac)
+		       * __ieee754_expl (-x_adj)
+		       * __ieee754_sqrtl (2 * M_PIl / x_adj)
+		       / prod);
       exp_adj += x_eps * __ieee754_logl (x_adj);
       _Float128 bsum = gamma_coeff[NCOEFF - 1];
       _Float128 x_adj2 = x_adj * x_adj;
@@ -188,8 +188,8 @@ __ieee754_gammal_r (_Float128 x, int *signgamp)
 	      if (frac > 0.5L)
 		frac = 1.0L - frac;
 	      _Float128 sinpix = (frac <= 0.25L
-				    ? __sinl (M_PIl * frac)
-				    : __cosl (M_PIl * (0.5L - frac)));
+				  ? __sinl (M_PIl * frac)
+				  : __cosl (M_PIl * (0.5L - frac)));
 	      int exp2_adj;
 	      ret = M_PIl / (-x * sinpix
 			     * gammal_positive (-x, &exp2_adj));

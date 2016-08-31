@@ -1,5 +1,11 @@
 2016-08-31  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c:
+	(gammal_positive): Fix spacing.
+	(__ieee754_gammal_r): Likewise.
+
+2016-08-31  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* sysdeps/ieee754/ldbl-128/math_ldbl.h:
 	(_Float128): Define as long double, always.
 	(L): Apply long double type suffix, always.
