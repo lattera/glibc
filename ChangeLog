@@ -1,3 +1,22 @@
+2016-09-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos): Accept X and DX as input
+	arguments.  Consolidate input partitioning from callers here.
+	(do_cos_slow): Likewise.
+	(do_sin): Likewise.
+	(do_sin_slow): Likewise.
+	(do_sincos_1): Remove the no longer necessary input partitioning.
+	(do_sincos_2): Likewise.
+	(__sin): Likewise.
+	(__cos): Likewise.
+	(slow1): Likewise.
+	(slow2): Likewise.
+	(sloww1): Likewise.
+	(sloww2): Likewise.
+	(bsloww1): Likewise.
+	(bsloww2): Likewise.
+	(cslow2): Likewise.
+
 2016-09-02  Florian Weimer  <fweimer@redhat.com>
 
 	* stdio-common/vfscanf.c (_IO_vfwscanf): Use MB_LEN_MAX instead of
