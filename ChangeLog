@@ -1,3 +1,22 @@
+2016-09-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20525]
+	* sysdeps/unix/sysv/linux/sys/quota.h: Update copyright.
+	Include <linux/quota.h>.
+	(fs_to_dq_blocks): Hard-code BLOCK_SIZE as 1024, to match dbtob
+	and btodb.
+	(_LINUX_QUOTA_VERSION, MAXQUOTAS, USRQUOTA, GRPQUOTA, INITQFNAMES)
+	(SUBCMDMASK, SUBCMDSHIFT, QCMD, Q_QUOTAON, Q_QUOTAOFF, Q_GETQUOTA)
+	(Q_SETQUOTA, Q_SETUSE, Q_SYNC, Q_SETQLIM, Q_GETSTATS, Q_RSQUASH)
+	(Q_GETFMT, Q_GETINFO, Q_SETINFO, Q_GETNEXTQUOTA, QIF_BLIMITS)
+	(QIF_SPACE, QIF_ILIMITS, QIF_INODES, QIF_BTIME, QIF_ITIME)
+	(QIF_LIMITS, QIF_USAGE, QIF_TIMES, QIF_ALL, IIF_BGRACE)
+	(IIF_IGRACE, IIF_FLAGS, IIF_ALL): Remove.
+	(struct dqblock, struct dqinfo): Use __uint64_t and __uint32_t
+	types.
+	* sysdeps/unix/sysv/linux/tst-quota.c: New test.
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add it.
+
 2016-08-31  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128/e_gammal_r.c:

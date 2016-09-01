@@ -42,7 +42,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/socket_type.h bits/syscall.h bits/sysctl.h \
 		  bits/mman-linux.h
 
-tests += tst-clone tst-clone2 tst-fanotify tst-personality
+tests += tst-clone tst-clone2 tst-fanotify tst-personality tst-quota
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 

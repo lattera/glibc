@@ -35,6 +35,10 @@ Version 2.25
 * The fesetexcept and fetestexceptflag functions from TS 18661-1:2014 are
   added to libm.
 
+* The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
+  for the Linux quota interface which predates kernel version 2.4.22 has
+  been removed.
+
 Security related changes:
 
   On ARM EABI (32-bit), generating a backtrace for execution contexts which
