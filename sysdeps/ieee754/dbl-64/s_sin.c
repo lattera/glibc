@@ -443,7 +443,7 @@ SECTION
 #endif
 __sin (double x)
 {
-  double xx, res, t, cor, y, s, c, sn, ssn, cs, ccs;
+  double xx, res, t, cor;
   mynumber u;
   int4 k, m;
   double retval = 0;
@@ -473,23 +473,8 @@ __sin (double x)
 /*---------------------------- 0.25<|x|< 0.855469---------------------- */
   else if (k < 0x3feb6000)
     {
-      u.x = big + fabs (x);
-      y = fabs (x) - (u.x - big);
-      y = (x > 0 ? y : -y);
-
-      xx = y * y;
-      s = y + y * xx * (sn3 + xx * sn5);
-      c = xx * (cs2 + xx * (cs4 + xx * cs6));
-      SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
-      if (m <= 0)
-        {
-          sn = -sn;
-	  ssn = -ssn;
-	}
-      cor = (ssn + s * ccs - sn * c) + cs * s;
-      res = sn + cor;
-      cor = (sn - res) + cor;
-      retval = (res == res + 1.096 * cor) ? res : slow1 (x);
+      res = do_sin (x, 0, &cor);
+      retval = (res == res + 1.096 * cor) ? (m > 0 ? res : -res) : slow1 (x);
     }				/*   else  if (k < 0x3feb6000)    */
 
 /*----------------------- 0.855469  <|x|<2.426265  ----------------------*/

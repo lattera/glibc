@@ -1,5 +1,7 @@
 2016-09-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Use do_sin.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos): Accept X and DX as input
 	arguments.  Consolidate input partitioning from callers here.
 	(do_cos_slow): Likewise.
