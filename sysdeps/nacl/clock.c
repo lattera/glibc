@@ -24,6 +24,6 @@
 clock_t
 clock (void)
 {
-  nacl_abi_clock_t result;
+  nacl_irt_clock_t result;
   return NACL_CALL (__nacl_irt_basic.clock (&result), result);
 }

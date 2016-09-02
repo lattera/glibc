@@ -1,3 +1,7 @@
+2016-09-02  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/clock.c (clock): nacl_abi_clock_t -> nacl_irt_clock_t
+
 2016-09-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos): Mark as inline.
