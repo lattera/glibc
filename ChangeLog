@@ -1,5 +1,8 @@
 2016-09-02  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/posix/wait3.c: Don't treat STAT_LOC as a union, since it's
+	not any more.
+
 	* sysdeps/nacl/clock.c (clock): nacl_abi_clock_t -> nacl_irt_clock_t
 
 2016-09-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
