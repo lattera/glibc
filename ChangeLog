@@ -1,5 +1,20 @@
 2016-09-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos): Mark as inline.
+	(do_cos_slow): Likewise.
+	(do_sin): Likewise.
+	(do_sin_slow): Likewise.
+	(slow): Likewise.
+	(slow1): Likewise.
+	(slow2): Likewise.
+	(sloww): Likewise.
+	(sloww1): Likewise.
+	(sloww2): Likewise.
+	(bsloww): Likewise.
+	(bsloww1): Likewise.
+	(bsloww2): Likewise.
+	(cslow2): Likewise.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Use do_sin.
 
 	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos): Accept X and DX as input

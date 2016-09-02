@@ -145,7 +145,8 @@ static double cslow2 (double x);
    of the number by combining the sin and cos of X (as computed by a variation
    of the Taylor series) with the values looked up from the sin/cos table to
    get the result in RES and a correction value in COR.  */
-static double
+static inline double
+__always_inline
 do_cos (double x, double dx, double *corp)
 {
   mynumber u;
@@ -170,7 +171,8 @@ do_cos (double x, double dx, double *corp)
 
 /* A more precise variant of DO_COS.  EPS is the adjustment to the correction
    COR.  */
-static double
+static inline double
+__always_inline
 do_cos_slow (double x, double dx, double eps, double *corp)
 {
   mynumber u;
@@ -205,7 +207,8 @@ do_cos_slow (double x, double dx, double eps, double *corp)
    the number by combining the sin and cos of X (as computed by a variation of
    the Taylor series) with the values looked up from the sin/cos table to get
    the result in RES and a correction value in COR.  */
-static double
+static inline double
+__always_inline
 do_sin (double x, double dx, double *corp)
 {
   mynumber u;
@@ -229,7 +232,8 @@ do_sin (double x, double dx, double *corp)
 
 /* A more precise variant of DO_SIN.  EPS is the adjustment to the correction
    COR.  */
-static double
+static inline double
+__always_inline
 do_sin_slow (double x, double dx, double eps, double *corp)
 {
   mynumber u;
@@ -617,8 +621,8 @@ __cos (double x)
 /* precision  and if still doesn't accurate enough by mpsin   or dubsin */
 /************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 slow (double x)
 {
   double res, cor, w[2];
@@ -638,8 +642,8 @@ slow (double x)
 /* and if result still doesn't accurate enough by mpsin   or dubsin            */
 /*******************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 slow1 (double x)
 {
   double w[2], cor, res;
@@ -659,8 +663,8 @@ slow1 (double x)
 /*  Routine compute sin(x) for   0.855469  <|x|<2.426265  by  __sincostab.tbl  */
 /* and if result still doesn't accurate enough by mpsin   or dubsin       */
 /**************************************************************************/
-static double
-SECTION
+static inline double
+__always_inline
 slow2 (double x)
 {
   double w[2], y, y1, y2, cor, res;
@@ -688,8 +692,8 @@ slow2 (double x)
 /* result.And if result not accurate enough routine calls mpsin1 or dubsin */
 /***************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 sloww (double x, double dx, double orig, int k)
 {
   double y, t, res, cor, w[2], a, da, xn;
@@ -749,8 +753,8 @@ sloww (double x, double dx, double orig, int k)
 /* accurate enough routine calls  mpsin1   or dubsin                       */
 /***************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 sloww1 (double x, double dx, double orig, int k)
 {
   double w[2], cor, res;
@@ -779,8 +783,8 @@ sloww1 (double x, double dx, double orig, int k)
 /* accurate enough routine calls  mpsin1   or dubsin                       */
 /***************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 sloww2 (double x, double dx, double orig, int n)
 {
   double w[2], cor, res;
@@ -810,8 +814,8 @@ sloww2 (double x, double dx, double orig, int n)
 /* result.And if result not accurate enough routine calls other routines    */
 /***************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 bsloww (double x, double dx, double orig, int n)
 {
   double res, cor, w[2], a, da;
@@ -839,8 +843,8 @@ bsloww (double x, double dx, double orig, int n)
 /* And if result not  accurate enough routine calls  other routines         */
 /***************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 bsloww1 (double x, double dx, double orig, int n)
 {
   double w[2], cor, res;
@@ -867,8 +871,8 @@ bsloww1 (double x, double dx, double orig, int n)
 /* And if result not accurate enough routine calls  other routines          */
 /***************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 bsloww2 (double x, double dx, double orig, int n)
 {
   double w[2], cor, res;
@@ -893,8 +897,8 @@ bsloww2 (double x, double dx, double orig, int n)
 /* precision  and if still doesn't accurate enough by mpcos   or docos  */
 /************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 cslow2 (double x)
 {
   double w[2], cor, res;
