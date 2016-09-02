@@ -1,5 +1,11 @@
 2016-09-02  Florian Weimer  <fweimer@redhat.com>
 
+	* stdio-common/vfscanf.c (_IO_vfwscanf): Use MB_LEN_MAX instead of
+	MB_CUR_MAX to avoid race condition.  Avoid pointer arithmetic
+	outside of allocated array.
+
+2016-09-02  Florian Weimer  <fweimer@redhat.com>
+
 	* stdio-common/vfprintf.c (process_string_arg): Use MB_LEN_MAX
 	instead of MB_CUR_MAX to avoid variable-length array.
 

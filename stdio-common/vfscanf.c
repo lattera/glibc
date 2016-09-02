@@ -757,7 +757,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		  size_t n;
 
 		  if (!(flags & SUPPRESS) && (flags & POSIX_MALLOC)
-		      && str + MB_CUR_MAX >= *strptr + strsize)
+		      && *strptr + strsize - str <= MB_LEN_MAX)
 		    {
 		      /* We have to enlarge the buffer if the `m' flag
 			 was given.  */
@@ -769,7 +769,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			{
 			  /* Can't allocate that much.  Last-ditch effort.  */
 			  newstr = (char *) realloc (*strptr,
-						     strleng + MB_CUR_MAX);
+						     strleng + MB_LEN_MAX);
 			  if (newstr == NULL)
 			    {
 			      /* c can't have `a' flag, only `m'.  */
@@ -780,7 +780,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			    {
 			      *strptr = newstr;
 			      str = newstr + strleng;
-			      strsize = strleng + MB_CUR_MAX;
+			      strsize = strleng + MB_LEN_MAX;
 			    }
 			}
 		      else
@@ -1048,7 +1048,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    size_t n;
 
 		    if (!(flags & SUPPRESS) && (flags & MALLOC)
-			&& str + MB_CUR_MAX >= *strptr + strsize)
+			&& *strptr + strsize - str <= MB_LEN_MAX)
 		      {
 			/* We have to enlarge the buffer if the `a' or `m'
 			   flag was given.  */
@@ -1061,7 +1061,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			    /* Can't allocate that much.  Last-ditch
 			       effort.  */
 			    newstr = (char *) realloc (*strptr,
-						       strleng + MB_CUR_MAX);
+						       strleng + MB_LEN_MAX);
 			    if (newstr == NULL)
 			      {
 				if (flags & POSIX_MALLOC)
@@ -1081,7 +1081,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			      {
 				*strptr = newstr;
 				str = newstr + strleng;
-				strsize = strleng + MB_CUR_MAX;
+				strsize = strleng + MB_LEN_MAX;
 			      }
 			  }
 			else
@@ -1097,7 +1097,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    if (__glibc_unlikely (n == (size_t) -1))
 		      encode_error ();
 
-		    assert (n <= MB_CUR_MAX);
+		    assert (n <= MB_LEN_MAX);
 		    str += n;
 		  }
 #else
@@ -2675,7 +2675,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			  /* Possibly correct character, just not enough
 			     input.  */
 			  ++cnt;
-			  assert (cnt < MB_CUR_MAX);
+			  assert (cnt < MB_LEN_MAX);
 			  continue;
 			}
 		      cnt = 0;
@@ -2827,7 +2827,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		  if (!(flags & SUPPRESS))
 		    {
 		      if ((flags & MALLOC)
-			  && str + MB_CUR_MAX >= *strptr + strsize)
+			  && *strptr + strsize - str <= MB_LEN_MAX)
 			{
 			  /* Enlarge the buffer.  */
 			  size_t strleng = str - *strptr;
@@ -2839,7 +2839,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			      /* Can't allocate that much.  Last-ditch
 				 effort.  */
 			      newstr = (char *) realloc (*strptr,
-							 strleng + MB_CUR_MAX);
+							 strleng + MB_LEN_MAX);
 			      if (newstr == NULL)
 				{
 				  if (flags & POSIX_MALLOC)
@@ -2859,7 +2859,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 				{
 				  *strptr = newstr;
 				  str = newstr + strleng;
-				  strsize = strleng + MB_CUR_MAX;
+				  strsize = strleng + MB_LEN_MAX;
 				}
 			    }
 			  else
@@ -2875,7 +2875,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		  if (__glibc_unlikely (n == (size_t) -1))
 		    encode_error ();
 
-		  assert (n <= MB_CUR_MAX);
+		  assert (n <= MB_LEN_MAX);
 		  str += n;
 		}
 	      while (--width > 0 && inchar () != WEOF);
