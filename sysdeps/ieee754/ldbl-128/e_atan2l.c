@@ -44,12 +44,12 @@
 #include <math_private.h>
 
 static const _Float128
-tiny  = 1.0e-4900L,
+tiny  = L(1.0e-4900),
 zero  = 0.0,
-pi_o_4  = 7.85398163397448309615660845819875699e-01L, /* 3ffe921fb54442d18469898cc51701b8 */
-pi_o_2  = 1.57079632679489661923132169163975140e+00L, /* 3fff921fb54442d18469898cc51701b8 */
-pi      = 3.14159265358979323846264338327950280e+00L, /* 4000921fb54442d18469898cc51701b8 */
-pi_lo   = 8.67181013012378102479704402604335225e-35L; /* 3f8dcd129024e088a67cc74020bbea64 */
+pi_o_4  = L(7.85398163397448309615660845819875699e-01), /* 3ffe921fb54442d18469898cc51701b8 */
+pi_o_2  = L(1.57079632679489661923132169163975140e+00), /* 3fff921fb54442d18469898cc51701b8 */
+pi      = L(3.14159265358979323846264338327950280e+00), /* 4000921fb54442d18469898cc51701b8 */
+pi_lo   = L(8.67181013012378102479704402604335225e-35); /* 3f8dcd129024e088a67cc74020bbea64 */
 
 _Float128
 __ieee754_atan2l(_Float128 y, _Float128 x)
@@ -86,8 +86,8 @@ __ieee754_atan2l(_Float128 y, _Float128 x)
 		switch(m) {
 		    case 0: return  pi_o_4+tiny;/* atan(+INF,+INF) */
 		    case 1: return -pi_o_4-tiny;/* atan(-INF,+INF) */
-		    case 2: return  3.0L*pi_o_4+tiny;/*atan(+INF,-INF)*/
-		    case 3: return -3.0L*pi_o_4-tiny;/*atan(-INF,-INF)*/
+		    case 2: return  3*pi_o_4+tiny;/*atan(+INF,-INF)*/
+		    case 3: return -3*pi_o_4-tiny;/*atan(-INF,-INF)*/
 		}
 	    } else {
 		switch(m) {
@@ -103,8 +103,8 @@ __ieee754_atan2l(_Float128 y, _Float128 x)
 
     /* compute y/x */
 	k = (iy-ix)>>48;
-	if(k > 120) z=pi_o_2+0.5L*pi_lo;	/* |y/x| >  2**120 */
-	else if(hx<0&&k<-120) z=0.0L;		/* |y|/x < -2**120 */
+	if(k > 120) z=pi_o_2+L(0.5)*pi_lo;	/* |y/x| >  2**120 */
+	else if(hx<0&&k<-120) z=0;		/* |y|/x < -2**120 */
 	else z=__atanl(fabsl(y/x));		/* safe to do y/x */
 	switch (m) {
 	    case 0: return       z  ;	/* atan(+,+) */

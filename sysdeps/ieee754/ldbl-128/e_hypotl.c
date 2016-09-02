@@ -127,7 +127,7 @@ __ieee754_hypotl(_Float128 x, _Float128 y)
 	}
 	if(k!=0) {
 	    u_int64_t high;
-	    t1 = 1.0L;
+	    t1 = 1;
 	    GET_LDOUBLE_MSW64(high,t1);
 	    SET_LDOUBLE_MSW64(t1,high+(k<<48));
 	    w *= t1;

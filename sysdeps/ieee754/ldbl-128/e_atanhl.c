@@ -36,9 +36,9 @@
 #include <math.h>
 #include <math_private.h>
 
-static const _Float128 one = 1.0L, huge = 1e4900L;
+static const _Float128 one = 1, huge = L(1e4900);
 
-static const _Float128 zero = 0.0L;
+static const _Float128 zero = 0;
 
 _Float128
 __ieee754_atanhl(_Float128 x)

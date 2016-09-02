@@ -32,7 +32,7 @@
 
 static const _Float128
 one	= 1.0,
-ln2	= 0.6931471805599453094172321214581766L;
+ln2	= L(0.6931471805599453094172321214581766);
 
 _Float128
 __ieee754_acoshl(_Float128 x)
@@ -49,13 +49,13 @@ __ieee754_acoshl(_Float128 x)
 	    } else
 		return __ieee754_logl(x)+ln2;	/* acoshl(huge)=logl(2x) */
 	} else if(((hx-0x3fff000000000000LL)|lx)==0) {
-	    return 0.0L;			/* acosh(1) = 0 */
+	    return 0;			/* acosh(1) = 0 */
 	} else if (hx > 0x4000000000000000LL) {	/* 2**28 > x > 2 */
 	    t=x*x;
-	    return __ieee754_logl(2.0L*x-one/(x+__ieee754_sqrtl(t-one)));
+	    return __ieee754_logl(2*x-one/(x+__ieee754_sqrtl(t-one)));
 	} else {			/* 1<x<2 */
 	    t = x-one;
-	    return __log1pl(t+__sqrtl(2.0L*t+t*t));
+	    return __log1pl(t+__sqrtl(2*t+t*t));
 	}
 }
 strong_alias (__ieee754_acoshl, __acoshl_finite)

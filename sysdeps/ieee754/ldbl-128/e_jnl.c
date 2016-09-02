@@ -62,10 +62,10 @@
 #include <math_private.h>
 
 static const _Float128
-  invsqrtpi = 5.6418958354775628694807945156077258584405E-1L,
-  two = 2.0e0L,
-  one = 1.0e0L,
-  zero = 0.0L;
+  invsqrtpi = L(5.6418958354775628694807945156077258584405E-1),
+  two = 2,
+  one = 1,
+  zero = 0;
 
 
 _Float128
@@ -108,7 +108,7 @@ __ieee754_jnl (int n, _Float128 x)
 
   {
     SET_RESTORE_ROUNDL (FE_TONEAREST);
-    if (x == 0.0L || ix >= 0x7fff0000)	/* if x is 0 or inf */
+    if (x == 0 || ix >= 0x7fff0000)	/* if x is 0 or inf */
       return sgn == 1 ? -zero : zero;
     else if ((_Float128) n <= x)
       {
@@ -219,12 +219,12 @@ __ieee754_jnl (int n, _Float128 x)
 	    _Float128 q0, q1, h, tmp;
 	    int32_t k, m;
 	    w = (n + n) / (_Float128) x;
-	    h = 2.0L / (_Float128) x;
+	    h = 2 / (_Float128) x;
 	    q0 = w;
 	    z = w + h;
-	    q1 = w * z - 1.0L;
+	    q1 = w * z - 1;
 	    k = 1;
-	    while (q1 < 1.0e17L)
+	    while (q1 < L(1.0e17))
 	      {
 		k += 1;
 		z += h;
@@ -249,7 +249,7 @@ __ieee754_jnl (int n, _Float128 x)
 	    v = two / x;
 	    tmp = tmp * __ieee754_logl (fabsl (v * tmp));
 
-	    if (tmp < 1.1356523406294143949491931077970765006170e+04L)
+	    if (tmp < L(1.1356523406294143949491931077970765006170e+04))
 	      {
 		for (i = n - 1, di = (_Float128) (i + i); i > 0; i--)
 		  {
@@ -270,7 +270,7 @@ __ieee754_jnl (int n, _Float128 x)
 		    a = temp;
 		    di -= two;
 		    /* scale b to avoid spurious overflow */
-		    if (b > 1e100L)
+		    if (b > L(1e100))
 		      {
 			a /= b;
 			t /= b;
@@ -325,10 +325,10 @@ __ieee754_ynl (int n, _Float128 x)
       if ((u.parts32.w0 & 0xffff) | u.parts32.w1 | u.parts32.w2 | u.parts32.w3)
 	return x + x;
     }
-  if (x <= 0.0L)
+  if (x <= 0)
     {
-      if (x == 0.0L)
-	return ((n < 0 && (n & 1) != 0) ? 1.0L : -1.0L) / 0.0L;
+      if (x == 0)
+	return ((n < 0 && (n & 1) != 0) ? 1 : -1) / L(0.0);
       if (se & 0x80000000)
 	return zero / (zero * x);
     }

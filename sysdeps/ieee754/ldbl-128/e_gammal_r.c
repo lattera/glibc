@@ -27,20 +27,20 @@
 
 static const _Float128 gamma_coeff[] =
   {
-    0x1.5555555555555555555555555555p-4L,
-    -0xb.60b60b60b60b60b60b60b60b60b8p-12L,
-    0x3.4034034034034034034034034034p-12L,
-    -0x2.7027027027027027027027027028p-12L,
-    0x3.72a3c5631fe46ae1d4e700dca8f2p-12L,
-    -0x7.daac36664f1f207daac36664f1f4p-12L,
-    0x1.a41a41a41a41a41a41a41a41a41ap-8L,
-    -0x7.90a1b2c3d4e5f708192a3b4c5d7p-8L,
-    0x2.dfd2c703c0cfff430edfd2c703cp-4L,
-    -0x1.6476701181f39edbdb9ce625987dp+0L,
-    0xd.672219167002d3a7a9c886459cp+0L,
-    -0x9.cd9292e6660d55b3f712eb9e07c8p+4L,
-    0x8.911a740da740da740da740da741p+8L,
-    -0x8.d0cc570e255bf59ff6eec24b49p+12L,
+    L(0x1.5555555555555555555555555555p-4),
+    L(-0xb.60b60b60b60b60b60b60b60b60b8p-12),
+    L(0x3.4034034034034034034034034034p-12),
+    L(-0x2.7027027027027027027027027028p-12),
+    L(0x3.72a3c5631fe46ae1d4e700dca8f2p-12),
+    L(-0x7.daac36664f1f207daac36664f1f4p-12),
+    L(0x1.a41a41a41a41a41a41a41a41a41ap-8),
+    L(-0x7.90a1b2c3d4e5f708192a3b4c5d7p-8),
+    L(0x2.dfd2c703c0cfff430edfd2c703cp-4),
+    L(-0x1.6476701181f39edbdb9ce625987dp+0),
+    L(0xd.672219167002d3a7a9c886459cp+0),
+    L(-0x9.cd9292e6660d55b3f712eb9e07c8p+4),
+    L(0x8.911a740da740da740da740da741p+8),
+    L(-0x8.d0cc570e255bf59ff6eec24b49p+12),
   };
 
 #define NCOEFF (sizeof (gamma_coeff) / sizeof (gamma_coeff[0]))
@@ -53,26 +53,26 @@ static _Float128
 gammal_positive (_Float128 x, int *exp2_adj)
 {
   int local_signgam;
-  if (x < 0.5L)
+  if (x < L(0.5))
     {
       *exp2_adj = 0;
       return __ieee754_expl (__ieee754_lgammal_r (x + 1, &local_signgam)) / x;
     }
-  else if (x <= 1.5L)
+  else if (x <= L(1.5))
     {
       *exp2_adj = 0;
       return __ieee754_expl (__ieee754_lgammal_r (x, &local_signgam));
     }
-  else if (x < 12.5L)
+  else if (x < L(12.5))
     {
       /* Adjust into the range for using exp (lgamma).  */
       *exp2_adj = 0;
-      _Float128 n = __ceill (x - 1.5L);
+      _Float128 n = __ceill (x - L(1.5));
       _Float128 x_adj = x - n;
       _Float128 eps;
       _Float128 prod = __gamma_productl (x_adj, 0, n, &eps);
       return (__ieee754_expl (__ieee754_lgammal_r (x_adj, &local_signgam))
-	      * prod * (1.0L + eps));
+	      * prod * (1 + eps));
     }
   else
     {
@@ -80,11 +80,11 @@ gammal_positive (_Float128 x, int *exp2_adj)
       _Float128 x_eps = 0;
       _Float128 x_adj = x;
       _Float128 prod = 1;
-      if (x < 24.0L)
+      if (x < 24)
 	{
 	  /* Adjust into the range for applying Stirling's
 	     approximation.  */
-	  _Float128 n = __ceill (24.0L - x);
+	  _Float128 n = __ceill (24 - x);
 	  x_adj = x + n;
 	  x_eps = (x - (x_adj - n));
 	  prod = __gamma_productl (x_adj - n, x_eps, n, &eps);
@@ -101,7 +101,7 @@ gammal_positive (_Float128 x, int *exp2_adj)
       if (x_adj_mant < M_SQRT1_2l)
 	{
 	  x_adj_log2--;
-	  x_adj_mant *= 2.0L;
+	  x_adj_mant *= 2;
 	}
       *exp2_adj = x_adj_log2 * (int) x_adj_int;
       _Float128 ret = (__ieee754_powl (x_adj_mant, x_adj)
@@ -154,7 +154,7 @@ __ieee754_gammal_r (_Float128 x, int *signgamp)
       return x + x;
     }
 
-  if (x >= 1756.0L)
+  if (x >= 1756)
     {
       /* Overflow.  */
       *signgamp = 0;
@@ -163,33 +163,33 @@ __ieee754_gammal_r (_Float128 x, int *signgamp)
   else
     {
       SET_RESTORE_ROUNDL (FE_TONEAREST);
-      if (x > 0.0L)
+      if (x > 0)
 	{
 	  *signgamp = 0;
 	  int exp2_adj;
 	  ret = gammal_positive (x, &exp2_adj);
 	  ret = __scalbnl (ret, exp2_adj);
 	}
-      else if (x >= -LDBL_EPSILON / 4.0L)
+      else if (x >= -LDBL_EPSILON / 4)
 	{
 	  *signgamp = 0;
-	  ret = 1.0L / x;
+	  ret = 1 / x;
 	}
       else
 	{
 	  _Float128 tx = __truncl (x);
-	  *signgamp = (tx == 2.0L * __truncl (tx / 2.0L)) ? -1 : 1;
-	  if (x <= -1775.0L)
+	  *signgamp = (tx == 2 * __truncl (tx / 2)) ? -1 : 1;
+	  if (x <= -1775)
 	    /* Underflow.  */
 	    ret = LDBL_MIN * LDBL_MIN;
 	  else
 	    {
 	      _Float128 frac = tx - x;
-	      if (frac > 0.5L)
-		frac = 1.0L - frac;
-	      _Float128 sinpix = (frac <= 0.25L
+	      if (frac > L(0.5))
+		frac = 1 - frac;
+	      _Float128 sinpix = (frac <= L(0.25)
 				  ? __sinl (M_PIl * frac)
-				  : __cosl (M_PIl * (0.5L - frac)));
+				  : __cosl (M_PIl * (L(0.5) - frac)));
 	      int exp2_adj;
 	      ret = M_PIl / (-x * sinpix
 			     * gammal_positive (-x, &exp2_adj));

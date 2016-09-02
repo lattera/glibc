@@ -54,8 +54,8 @@
 #include <math.h>
 #include <math_private.h>
 
-static const _Float128 one = 1.0, half = 0.5, huge = 1.0e4900L,
-ovf_thresh = 1.1357216553474703894801348310092223067821E4L;
+static const _Float128 one = 1.0, half = 0.5, huge = L(1.0e4900),
+ovf_thresh = L(1.1357216553474703894801348310092223067821E4);
 
 _Float128
 __ieee754_coshl (_Float128 x)

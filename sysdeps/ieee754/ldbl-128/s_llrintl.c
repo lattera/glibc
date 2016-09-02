@@ -28,8 +28,8 @@
 
 static const _Float128 two112[2] =
 {
-  5.19229685853482762853049632922009600E+33L, /* 0x406F000000000000, 0 */
- -5.19229685853482762853049632922009600E+33L  /* 0xC06F000000000000, 0 */
+  L(5.19229685853482762853049632922009600E+33), /* 0x406F000000000000, 0 */
+ L(-5.19229685853482762853049632922009600E+33)  /* 0xC06F000000000000, 0 */
 };
 
 long long int
@@ -84,7 +84,7 @@ __llrintl (_Float128 x)
 	 unspecified.  */
 #if defined FE_INVALID || defined FE_INEXACT
       if (x < (_Float128) LLONG_MIN
-	  && x > (_Float128) LLONG_MIN - 1.0L)
+	  && x > (_Float128) LLONG_MIN - 1)
 	{
 	  /* If truncation produces LLONG_MIN, the cast will not raise
 	     the exception, but may raise "inexact".  */

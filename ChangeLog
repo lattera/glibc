@@ -1,3 +1,61 @@
+2016-09-13  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128/e_acoshl.c: Wrap long double literals
+	with L() and remove explicit suffix, convert real literals
+	which can be equivalentally substituted with integers, and
+	transform -L(x) to L(-x).
+
+	* sysdeps/ieee754/ldbl-128/e_acosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atan2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_coshl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_exp10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j0l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_logl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_powl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_rem_pio2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_remainderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_sinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/lgamma_negl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_asinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_atanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_cbrtl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_frexpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_remquol.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalblnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalbnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/t_expl.h: Likewise.
+	* sysdeps/ieee754/ldbl-128/t_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/x2y2m1l.c: Likewise.
+
 2016-09-13  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/res_init.c: Remove _LIBC_REENTRANT; it is always defined.

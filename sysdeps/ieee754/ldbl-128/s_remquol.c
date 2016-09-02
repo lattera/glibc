@@ -87,7 +87,7 @@ __remquol (_Float128 x, _Float128 y, int *quo)
     }
   else
     {
-      _Float128 y_half = 0.5L * y;
+      _Float128 y_half = L(0.5) * y;
       if (x > y_half)
 	{
 	  x -= y;
@@ -103,8 +103,8 @@ __remquol (_Float128 x, _Float128 y, int *quo)
   *quo = qs ? -cquo : cquo;
 
   /* Ensure correct sign of zero result in round-downward mode.  */
-  if (x == 0.0L)
-    x = 0.0L;
+  if (x == 0)
+    x = 0;
   if (sx)
     x = -x;
   return x;

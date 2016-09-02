@@ -186,11 +186,11 @@ static const int32_t two_over_pi[] = {
 static const _Float128 c[] = {
 /* 113 bits of pi/2 */
 #define PI_2_1 c[0]
- 0x1.921fb54442d18469898cc51701b8p+0L,
+ L(0x1.921fb54442d18469898cc51701b8p+0),
 
 /* pi/2 - PI_2_1 */
 #define PI_2_1t c[1]
- 0x3.9a252049c1114cf98e804177d4c8p-116L,
+ L(0x3.9a252049c1114cf98e804177d4c8p-116),
 };
 
 int32_t __ieee754_rem_pio2l(_Float128 x, _Float128 *y)

@@ -88,13 +88,13 @@ __lroundl (_Float128 x)
 	 unspecified.  */
 #ifdef FE_INVALID
       if (FIX_LDBL_LONG_CONVERT_OVERFLOW
-	  && !(sign == -1 && x > (_Float128) LONG_MIN - 0.5L))
+	  && !(sign == -1 && x > (_Float128) LONG_MIN - L(0.5)))
 	{
 	  feraiseexcept (FE_INVALID);
 	  return sign == 1 ? LONG_MAX : LONG_MIN;
 	}
       else if (!FIX_LDBL_LONG_CONVERT_OVERFLOW
-	       && x <= (_Float128) LONG_MIN - 0.5L)
+	       && x <= (_Float128) LONG_MIN - L(0.5))
 	{
 	  /* If truncation produces LONG_MIN, the cast will not raise
 	     the exception, but may raise "inexact".  */

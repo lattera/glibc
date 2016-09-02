@@ -61,7 +61,7 @@ __x2y2m1l (_Float128 x, _Float128 y)
   SET_RESTORE_ROUNDL (FE_TONEAREST);
   mul_splitl (&vals[1], &vals[0], x, x);
   mul_splitl (&vals[3], &vals[2], y, y);
-  vals[4] = -1.0L;
+  vals[4] = -1;
   qsort (vals, 5, sizeof (_Float128), compare);
   /* Add up the values so that each element of VALS has absolute value
      at most equal to the last set bit of the next nonzero

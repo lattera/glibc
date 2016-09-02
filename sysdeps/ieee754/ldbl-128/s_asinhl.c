@@ -34,9 +34,9 @@ static char rcsid[] = "$NetBSD: $";
 #include <math_private.h>
 
 static const _Float128
-  one = 1.0L,
-  ln2 = 6.931471805599453094172321214581765681e-1L,
-  huge = 1.0e+4900L;
+  one = 1,
+  ln2 = L(6.931471805599453094172321214581765681e-1),
+  huge = L(1.0e+4900);
 
 _Float128
 __asinhl (_Float128 x)

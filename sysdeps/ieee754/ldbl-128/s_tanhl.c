@@ -45,7 +45,7 @@
 #include <math.h>
 #include <math_private.h>
 
-static const _Float128 one = 1.0, two = 2.0, tiny = 1.0e-4900L;
+static const _Float128 one = 1.0, two = 2.0, tiny = L(1.0e-4900);
 
 _Float128
 __tanhl (_Float128 x)

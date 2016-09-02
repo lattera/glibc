@@ -57,8 +57,8 @@
 #include <math.h>
 #include <math_private.h>
 
-static const _Float128 one = 1.0, shuge = 1.0e4931L,
-ovf_thresh = 1.1357216553474703894801348310092223067821E4L;
+static const _Float128 one = 1.0, shuge = L(1.0e4931),
+ovf_thresh = L(1.1357216553474703894801348310092223067821E4);
 
 _Float128
 __ieee754_sinhl (_Float128 x)

@@ -34,7 +34,7 @@ __sincosl (_Float128 x, _Float128 *sinx, _Float128 *cosx)
   /* |x| ~< pi/4 */
   ix &= 0x7fffffffffffffffLL;
   if (ix <= 0x3ffe921fb54442d1LL)
-    __kernel_sincosl (x, 0.0L, sinx, cosx, 0);
+    __kernel_sincosl (x, 0, sinx, cosx, 0);
   else if (ix >= 0x7fff000000000000LL)
     {
       /* sin(Inf or NaN) is NaN */

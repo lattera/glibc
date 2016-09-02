@@ -50,7 +50,7 @@
 
 _Float128 __tanl(_Float128 x)
 {
-	_Float128 y[2],z=0.0L;
+	_Float128 y[2],z=0;
 	int64_t n, ix;
 
     /* High word of x. */
