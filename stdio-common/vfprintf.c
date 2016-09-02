@@ -1082,7 +1082,7 @@ static const uint8_t jump_table[] =
     LABEL (form_wcharacter):						      \
       {									      \
 	/* Wide character.  */						      \
-	char buf[MB_CUR_MAX];						      \
+	char buf[MB_LEN_MAX];						      \
 	mbstate_t mbstate;						      \
 	size_t len;							      \
 									      \
