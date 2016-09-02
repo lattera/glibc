@@ -27,4 +27,5 @@ __dup (int fd)
   int result;
   return NACL_CALL (__nacl_irt_fdio.dup (fd, &result), result);
 }
+libc_hidden_def (__dup)
 weak_alias (__dup, dup)
