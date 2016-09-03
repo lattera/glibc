@@ -1,3 +1,10 @@
+2016-09-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #19810]
+	* elf/dl-open.c (dl_open_worker): Set DF_1_NODELETE flag later.
+	* elf/tst-noload.c: New test case.
+	* elf/Makefile (tests): Add tst-noload.
+
 2016-09-02  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/dup.c: Add libc_hidden_def.

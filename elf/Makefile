@@ -149,7 +149,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-nodelete) \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
 	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
-	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error
+	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload
 #	 reldep9
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
@@ -554,6 +554,7 @@ $(objpfx)tst-null-argv: $(objpfx)tst-null-argv-lib.so
 $(objpfx)tst-tlsalign: $(objpfx)tst-tlsalign-lib.so
 $(objpfx)tst-nodelete-opened.out: $(objpfx)tst-nodelete-opened-lib.so
 $(objpfx)tst-nodelete-opened: $(libdl)
+$(objpfx)tst-noload: $(libdl)
 
 $(objpfx)tst-tlsalign-extern: $(objpfx)tst-tlsalign-vars.o
 $(objpfx)tst-tlsalign-extern-static: $(objpfx)tst-tlsalign-vars.o

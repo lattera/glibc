@@ -226,12 +226,6 @@ dl_open_worker (void *a)
   args->map = new = _dl_map_object (call_map, file, lt_loaded, 0,
 				    mode | __RTLD_CALLMAP, args->nsid);
 
-  /* Mark the object as not deletable if the RTLD_NODELETE flags was passed.
-     Do this early so that we don't skip marking the object if it was
-     already loaded.  */
-  if (__glibc_unlikely (mode & RTLD_NODELETE))
-    new->l_flags_1 |= DF_1_NODELETE;
-
   /* If the pointer returned is NULL this means the RTLD_NOLOAD flag is
      set and the object is not already loaded.  */
   if (new == NULL)
@@ -239,6 +233,12 @@ dl_open_worker (void *a)
       assert (mode & RTLD_NOLOAD);
       return;
     }
+
+  /* Mark the object as not deletable if the RTLD_NODELETE flags was passed.
+     Do this early so that we don't skip marking the object if it was
+     already loaded.  */
+  if (__glibc_unlikely (mode & RTLD_NODELETE))
+    new->l_flags_1 |= DF_1_NODELETE;
 
   if (__glibc_unlikely (mode & __RTLD_SPROF))
     /* This happens only if we load a DSO for 'sprof'.  */
