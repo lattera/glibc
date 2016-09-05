@@ -1,3 +1,9 @@
+2016-09-05  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* conform/Makefile (conformtest-header-tests): Pass -I. to $(PERL).
+	(linknamespace-symlists-tests): Likewise.
+	(linknamespace-header-tests): Likewise.
+
 2016-09-03  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #19810]

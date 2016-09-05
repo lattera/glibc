@@ -196,13 +196,13 @@ $(conformtest-header-tests): $(objpfx)%/conform.out: \
 			     conformtest.pl $(conformtest-headers-data)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
 	 mkdir -p $(@D)/scratch; \
-	 $(PERL) conformtest.pl --tmpdir=$(@D)/scratch --cc='$(CC)' \
+	 $(PERL) -I. conformtest.pl --tmpdir=$(@D)/scratch --cc='$(CC)' \
 		 --flags='$(conformtest-cc-flags)' --standard=$$std \
 		 --headers=$$hdr > $@); \
 	$(evaluate-test)
 
 $(linknamespace-symlists-tests): $(objpfx)symlist-%: list-header-symbols.pl
-	$(PERL) -w $< --tmpdir=$(objpfx) --cc='$(CC)' \
+	$(PERL) -I. -w $< --tmpdir=$(objpfx) --cc='$(CC)' \
 		--flags='$(conformtest-cc-flags)' --standard=$* \
 		--headers="$(strip $(conformtest-headers-$*))" \
 		> $@ 2> $@.err; \
@@ -232,7 +232,7 @@ $(linknamespace-header-tests): $(objpfx)%/linknamespace.out: \
 			       $(linknamespace-symlist-stdlibs-tests)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
 	 mkdir -p $(@D)/scratch; \
-	 $(PERL) -w $< --tmpdir=$(@D)/scratch --cc='$(CC)' \
+	 $(PERL) -I. -w $< --tmpdir=$(@D)/scratch --cc='$(CC)' \
 		 --flags='$(conformtest-cc-flags)' --standard=$$std \
 		 --stdsyms=$(objpfx)symlist-$$std --header=$$hdr \
 		 --libsyms=$(objpfx)symlist-stdlibs-$$std \
