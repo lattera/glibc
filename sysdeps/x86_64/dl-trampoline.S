@@ -18,6 +18,7 @@
 
 #include <config.h>
 #include <sysdep.h>
+#include <cpu-features.h>
 #include <link-defines.h>
 
 #ifndef DL_STACK_ALIGNMENT
@@ -86,9 +87,11 @@
 #endif
 #define VEC(i)			zmm##i
 #define _dl_runtime_resolve	_dl_runtime_resolve_avx512
+#define _dl_runtime_resolve_opt	_dl_runtime_resolve_avx512_opt
 #define _dl_runtime_profile	_dl_runtime_profile_avx512
 #include "dl-trampoline.h"
 #undef _dl_runtime_resolve
+#undef _dl_runtime_resolve_opt
 #undef _dl_runtime_profile
 #undef VEC
 #undef VMOV
@@ -104,9 +107,11 @@
 #endif
 #define VEC(i)			ymm##i
 #define _dl_runtime_resolve	_dl_runtime_resolve_avx
+#define _dl_runtime_resolve_opt	_dl_runtime_resolve_avx_opt
 #define _dl_runtime_profile	_dl_runtime_profile_avx
 #include "dl-trampoline.h"
 #undef _dl_runtime_resolve
+#undef _dl_runtime_resolve_opt
 #undef _dl_runtime_profile
 #undef VEC
 #undef VMOV
@@ -125,4 +130,19 @@
 #define _dl_runtime_resolve	_dl_runtime_resolve_sse
 #define _dl_runtime_profile	_dl_runtime_profile_sse
 #undef RESTORE_AVX
+#include "dl-trampoline.h"
+#undef _dl_runtime_resolve
+#undef _dl_runtime_profile
+#undef VMOV
+#undef VMOVA
+
+/* Used by _dl_runtime_resolve_avx_opt/_dl_runtime_resolve_avx512_opt
+   to preserve the full vector registers with zero upper bits.  */
+#define VMOVA			vmovdqa
+#if DL_RUNTIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
+# define VMOV			vmovdqa
+#else
+# define VMOV			vmovdqu
+#endif
+#define _dl_runtime_resolve	_dl_runtime_resolve_sse_vex
 #include "dl-trampoline.h"

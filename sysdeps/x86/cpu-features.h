@@ -37,6 +37,8 @@
 #define bit_arch_Prefer_No_VZEROUPPER		(1 << 17)
 #define bit_arch_Fast_Unaligned_Copy		(1 << 18)
 #define bit_arch_Prefer_ERMS			(1 << 19)
+#define bit_arch_Use_dl_runtime_resolve_opt	(1 << 20)
+#define bit_arch_Use_dl_runtime_resolve_slow	(1 << 21)
 
 /* CPUID Feature flags.  */
 
@@ -107,6 +109,8 @@
 # define index_arch_Prefer_No_VZEROUPPER FEATURE_INDEX_1*FEATURE_SIZE
 # define index_arch_Fast_Unaligned_Copy	FEATURE_INDEX_1*FEATURE_SIZE
 # define index_arch_Prefer_ERMS		FEATURE_INDEX_1*FEATURE_SIZE
+# define index_arch_Use_dl_runtime_resolve_opt FEATURE_INDEX_1*FEATURE_SIZE
+# define index_arch_Use_dl_runtime_resolve_slow FEATURE_INDEX_1*FEATURE_SIZE
 
 
 # if defined (_LIBC) && !IS_IN (nonlib)
@@ -277,6 +281,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_arch_Prefer_No_VZEROUPPER FEATURE_INDEX_1
 # define index_arch_Fast_Unaligned_Copy	FEATURE_INDEX_1
 # define index_arch_Prefer_ERMS		FEATURE_INDEX_1
+# define index_arch_Use_dl_runtime_resolve_opt FEATURE_INDEX_1
+# define index_arch_Use_dl_runtime_resolve_slow FEATURE_INDEX_1
 
 #endif	/* !__ASSEMBLER__ */
 

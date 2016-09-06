@@ -50,6 +50,105 @@
 #endif
 
 	.text
+#ifdef _dl_runtime_resolve_opt
+/* Use the smallest vector registers to preserve the full YMM/ZMM
+   registers to avoid SSE transition penalty.  */
+
+# if VEC_SIZE == 32
+/* Check if the upper 128 bits in %ymm0 - %ymm7 registers are non-zero
+   and preserve %xmm0 - %xmm7 registers with the zero upper bits.  Since
+   there is no SSE transition penalty on AVX512 processors which don't
+   support XGETBV with ECX == 1, _dl_runtime_resolve_avx512_slow isn't
+   provided.   */
+	.globl _dl_runtime_resolve_avx_slow
+	.hidden _dl_runtime_resolve_avx_slow
+	.type _dl_runtime_resolve_avx_slow, @function
+	.align 16
+_dl_runtime_resolve_avx_slow:
+	cfi_startproc
+	cfi_adjust_cfa_offset(16) # Incorporate PLT
+	vorpd %ymm0, %ymm1, %ymm8
+	vorpd %ymm2, %ymm3, %ymm9
+	vorpd %ymm4, %ymm5, %ymm10
+	vorpd %ymm6, %ymm7, %ymm11
+	vorpd %ymm8, %ymm9, %ymm9
+	vorpd %ymm10, %ymm11, %ymm10
+	vpcmpeqd %xmm8, %xmm8, %xmm8
+	vorpd %ymm9, %ymm10, %ymm10
+	vptest %ymm10, %ymm8
+	# Preserve %ymm0 - %ymm7 registers if the upper 128 bits of any
+	# %ymm0 - %ymm7 registers aren't zero.
+	PRESERVE_BND_REGS_PREFIX
+	jnc _dl_runtime_resolve_avx
+	# Use vzeroupper to avoid SSE transition penalty.
+	vzeroupper
+	# Preserve %xmm0 - %xmm7 registers with the zero upper 128 bits
+	# when the upper 128 bits of %ymm0 - %ymm7 registers are zero.
+	PRESERVE_BND_REGS_PREFIX
+	jmp _dl_runtime_resolve_sse_vex
+	cfi_adjust_cfa_offset(-16) # Restore PLT adjustment
+	cfi_endproc
+	.size _dl_runtime_resolve_avx_slow, .-_dl_runtime_resolve_avx_slow
+# endif
+
+/* Use XGETBV with ECX == 1 to check which bits in vector registers are
+   non-zero and only preserve the non-zero lower bits with zero upper
+   bits.  */
+	.globl _dl_runtime_resolve_opt
+	.hidden _dl_runtime_resolve_opt
+	.type _dl_runtime_resolve_opt, @function
+	.align 16
+_dl_runtime_resolve_opt:
+	cfi_startproc
+	cfi_adjust_cfa_offset(16) # Incorporate PLT
+	pushq %rax
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%rax, 0)
+	pushq %rcx
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%rcx, 0)
+	pushq %rdx
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%rdx, 0)
+	movl $1, %ecx
+	xgetbv
+	movl %eax, %r11d
+	popq %rdx
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore (%rdx)
+	popq %rcx
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore (%rcx)
+	popq %rax
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore (%rax)
+# if VEC_SIZE == 32
+	# For YMM registers, check if YMM state is in use.
+	andl $bit_YMM_state, %r11d
+	# Preserve %xmm0 - %xmm7 registers with the zero upper 128 bits if
+	# YMM state isn't in use.
+	PRESERVE_BND_REGS_PREFIX
+	jz _dl_runtime_resolve_sse_vex
+# elif VEC_SIZE == 64
+	# For ZMM registers, check if YMM state and ZMM state are in
+	# use.
+	andl $(bit_YMM_state | bit_ZMM0_15_state), %r11d
+	cmpl $bit_YMM_state, %r11d
+	# Preserve %xmm0 - %xmm7 registers with the zero upper 384 bits if
+	# neither YMM state nor ZMM state are in use.
+	PRESERVE_BND_REGS_PREFIX
+	jl _dl_runtime_resolve_sse_vex
+	# Preserve %ymm0 - %ymm7 registers with the zero upper 256 bits if
+	# ZMM state isn't in use.
+	PRESERVE_BND_REGS_PREFIX
+	je _dl_runtime_resolve_avx
+# else
+#  error Unsupported VEC_SIZE!
+# endif
+	cfi_adjust_cfa_offset(-16) # Restore PLT adjustment
+	cfi_endproc
+	.size _dl_runtime_resolve_opt, .-_dl_runtime_resolve_opt
+#endif
 	.globl _dl_runtime_resolve
 	.hidden _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
@@ -164,7 +263,10 @@ _dl_runtime_resolve:
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
 
 
-#ifndef PROF
+/* To preserve %xmm0 - %xmm7 registers, dl-trampoline.h is included
+   twice, for _dl_runtime_resolve_sse and _dl_runtime_resolve_sse_vex.
+   But we don't need another _dl_runtime_profile for XMM registers.  */
+#if !defined PROF && defined _dl_runtime_profile
 # if (LR_VECTOR_OFFSET % VEC_SIZE) != 0
 #  error LR_VECTOR_OFFSET must be multples of VEC_SIZE
 # endif
