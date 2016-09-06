@@ -1,3 +1,8 @@
+2016-09-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/localplt.data: Mark ld.so:
+	__libc_memalign with "+ RELA R_390_GLOB_DAT".
+
 2016-09-06  Florian Weimer  <fweimer@redhat.com>
 
 	Convert malloc to __libc_lock.  Automated part, using this Perl

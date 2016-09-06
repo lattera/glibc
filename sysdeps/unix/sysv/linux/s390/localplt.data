@@ -8,7 +8,14 @@ libm.so: matherr
 # The dynamic loader uses __libc_memalign internally to allocate aligned
 # TLS storage. The other malloc family of functions are expected to allow
 # user symbol interposition.
-ld.so: __libc_memalign
+# It is also allowed to call __libc_memalign via function-pointer loaded from
+# GOT instead of calling via a plt-stub. In this case there is a R_390_GLOB_DAT
+# relocation in section .rela.dyn instead of R_390_JMP_SLOT in .rela.plt.
+# After commit "elf: Do not use memalign for TCB/TLS blocks allocation
+# [BZ #17730]" __libc_memalign is only called in elf/dl-minimal.c: malloc() in
+# ld.so and gcc -O2/-O3 leads to R_390_GLOB_DAT. If build with
+# -fno-optimize-sibling-calls an R_390_JMP_SLOT is generated.
+ld.so: __libc_memalign + RELA R_390_GLOB_DAT
 ld.so: malloc
 ld.so: calloc
 ld.so: realloc
