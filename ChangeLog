@@ -1,3 +1,12 @@
+2016-09-06  Florian Weimer  <fweimer@redhat.com>
+
+	Convert malloc to __libc_lock.  Automated part, using this Perl
+	s/// command:
+	  s/(?:\(void\)\s*)?mutex_((?:|un|try)lock|init)
+	    \s*\(\&([^\)]+)\)/__libc_lock_$1\ ($2)/gx;
+	* malloc/malloc.c, malloc/arena.c, malloc/hooks.c: Perform
+	conversion.
+
 2016-09-05  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* conform/Makefile (conformtest-header-tests): Pass -I. to $(PERL).

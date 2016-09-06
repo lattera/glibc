@@ -291,9 +291,9 @@ malloc_check (size_t sz, const void *caller)
       return NULL;
     }
 
-  (void) mutex_lock (&main_arena.mutex);
+  __libc_lock_lock (main_arena.mutex);
   victim = (top_check () >= 0) ? _int_malloc (&main_arena, sz + 1) : NULL;
-  (void) mutex_unlock (&main_arena.mutex);
+  __libc_lock_unlock (main_arena.mutex);
   return mem2mem_check (victim, sz);
 }
 
@@ -305,11 +305,11 @@ free_check (void *mem, const void *caller)
   if (!mem)
     return;
 
-  (void) mutex_lock (&main_arena.mutex);
+  __libc_lock_lock (main_arena.mutex);
   p = mem2chunk_check (mem, NULL);
   if (!p)
     {
-      (void) mutex_unlock (&main_arena.mutex);
+      __libc_lock_unlock (main_arena.mutex);
 
       malloc_printerr (check_action, "free(): invalid pointer", mem,
 		       &main_arena);
@@ -317,12 +317,12 @@ free_check (void *mem, const void *caller)
     }
   if (chunk_is_mmapped (p))
     {
-      (void) mutex_unlock (&main_arena.mutex);
+      __libc_lock_unlock (main_arena.mutex);
       munmap_chunk (p);
       return;
     }
   _int_free (&main_arena, p, 1);
-  (void) mutex_unlock (&main_arena.mutex);
+  __libc_lock_unlock (main_arena.mutex);
 }
 
 static void *
@@ -345,9 +345,9 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
       free_check (oldmem, NULL);
       return NULL;
     }
-  (void) mutex_lock (&main_arena.mutex);
+  __libc_lock_lock (main_arena.mutex);
   const mchunkptr oldp = mem2chunk_check (oldmem, &magic_p);
-  (void) mutex_unlock (&main_arena.mutex);
+  __libc_lock_unlock (main_arena.mutex);
   if (!oldp)
     {
       malloc_printerr (check_action, "realloc(): invalid pointer", oldmem,
@@ -357,7 +357,7 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
   const INTERNAL_SIZE_T oldsize = chunksize (oldp);
 
   checked_request2size (bytes + 1, nb);
-  (void) mutex_lock (&main_arena.mutex);
+  __libc_lock_lock (main_arena.mutex);
 
   if (chunk_is_mmapped (oldp))
     {
@@ -400,7 +400,7 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
   if (newmem == NULL)
     *magic_p ^= 0xFF;
 
-  (void) mutex_unlock (&main_arena.mutex);
+  __libc_lock_unlock (main_arena.mutex);
 
   return mem2mem_check (newmem, bytes);
 }
@@ -440,10 +440,10 @@ memalign_check (size_t alignment, size_t bytes, const void *caller)
       alignment = a;
     }
 
-  (void) mutex_lock (&main_arena.mutex);
+  __libc_lock_lock (main_arena.mutex);
   mem = (top_check () >= 0) ? _int_memalign (&main_arena, alignment, bytes + 1) :
         NULL;
-  (void) mutex_unlock (&main_arena.mutex);
+  __libc_lock_unlock (main_arena.mutex);
   return mem2mem_check (mem, bytes);
 }
 
@@ -503,7 +503,7 @@ __malloc_get_state (void)
   if (!ms)
     return 0;
 
-  (void) mutex_lock (&main_arena.mutex);
+  __libc_lock_lock (main_arena.mutex);
   malloc_consolidate (&main_arena);
   ms->magic = MALLOC_STATE_MAGIC;
   ms->version = MALLOC_STATE_VERSION;
@@ -540,7 +540,7 @@ __malloc_get_state (void)
   ms->arena_test = mp_.arena_test;
   ms->arena_max = mp_.arena_max;
   ms->narenas = narenas;
-  (void) mutex_unlock (&main_arena.mutex);
+  __libc_lock_unlock (main_arena.mutex);
   return (void *) ms;
 }
 
