@@ -1,5 +1,8 @@
 2016-09-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fetestexceptflag.c: New
+	file.
+
 	* sysdeps/sparc/fpu/fegetmode.c: New file.
 	* sysdeps/sparc/fpu/fesetmode.c: Likewise.
 
