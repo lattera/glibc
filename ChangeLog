@@ -1,5 +1,8 @@
 2016-09-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/sparc/fpu/fegetmode.c: New file.
+	* sysdeps/sparc/fpu/fesetmode.c: Likewise.
+
 	* sysdeps/sh/sh4/fpu/fegetmode.c: New file.
 	* sysdeps/sh/sh4/fpu/fesetmode.c: Likewise.
 
