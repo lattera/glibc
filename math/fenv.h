@@ -38,6 +38,12 @@
    fexcept_t	type for object representing the floating-point exception
 		flags including status associated with the flags
 
+   femode_t	type for object representing floating-point control modes
+
+   FE_DFL_MODE	macro of type pointer to const femode_t to be used as the
+		argument to fesetmode; in this case the default control
+		modes will be used
+
    The following macros are defined iff the implementation supports this
    kind of exception.
    FE_INEXACT		inexact result
@@ -121,6 +127,18 @@ extern int fesetenv (const fenv_t *__envp) __THROW;
    according to saved exceptions.  */
 extern int feupdateenv (const fenv_t *__envp) __THROW;
 
+
+/* Control modes.  */
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Store the current floating-point control modes in the object
+   pointed to by MODEP.  */
+extern int fegetmode (femode_t *__modep) __THROW;
+
+/* Establish the floating-point control modes represented by the
+   object pointed to by MODEP.  */
+extern int fesetmode (const femode_t *__modep) __THROW;
+#endif
 
 /* Include optimization.  */
 #ifdef __OPTIMIZE__

@@ -23,6 +23,10 @@
 const unsigned long long __fe_dfl_env __attribute__ ((aligned (8))) =
 0xfff8000000000000ULL;
 
+/* The same representation is used for femode_t.  */
+extern const unsigned long long __fe_dfl_mode
+  __attribute__ ((aligned (8), alias ("__fe_dfl_env")));
+
 /* Floating-point environment where none of the exceptions are masked.  */
 const unsigned long long __fe_enabled_env __attribute__ ((aligned (8))) =
 0xfff80000000000f8ULL;

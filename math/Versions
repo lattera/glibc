@@ -215,6 +215,6 @@ libm {
     nextdown; nextdownf; nextdownl;
   }
   GLIBC_2.25 {
-    fesetexcept; fetestexceptflag;
+    fesetexcept; fetestexceptflag; fegetmode; fesetmode;
   }
 }

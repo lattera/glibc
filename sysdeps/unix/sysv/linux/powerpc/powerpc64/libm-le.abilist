@@ -416,5 +416,8 @@ GLIBC_2.24 nextup F
 GLIBC_2.24 nextupf F
 GLIBC_2.24 nextupl F
 GLIBC_2.25 GLIBC_2.25 A
+GLIBC_2.25 __fe_dfl_mode D 0x8
+GLIBC_2.25 fegetmode F
 GLIBC_2.25 fesetexcept F
+GLIBC_2.25 fesetmode F
 GLIBC_2.25 fetestexceptflag F

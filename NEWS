@@ -32,8 +32,9 @@ Version 2.25
   presently cannot avoid being compiled under _GNU_SOURCE, exacerbating the
   problem.
 
-* The fesetexcept and fetestexceptflag functions from TS 18661-1:2014 are
-  added to libm.
+* New <fenv.h> features from TS 18661-1:2014 are added to libm: the
+  fesetexcept, fetestexceptflag, fegetmode and fesetmode functions,
+  the femode_t type and the FE_DFL_MODE macro.
 
 * The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
   for the Linux quota interface which predates kernel version 2.4.22 has

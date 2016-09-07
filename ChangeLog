@@ -1,3 +1,116 @@
+2016-09-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/fegetmode.c: New file.
+	* math/fesetmode.c: Likewise.
+	* sysdeps/i386/fpu/fegetmode.c: Likewise.
+	* sysdeps/i386/fpu/fesetmode.c: Likewise.
+	* sysdeps/x86_64/fpu/fegetmode.c: Likewise.
+	* sysdeps/x86_64/fpu/fesetmode.c: Likewise.
+	* math/fenv.h: Update comment on inclusion of <bits/fenv.h>.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (fegetmode): New function
+	declaration.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (fesetmode): Likewise.
+	* bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (femode_t): New
+	typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/aarch64/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/alpha/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/arm/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/hppa/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/ia64/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/m68k/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/microblaze/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/mips/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/nios2/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/powerpc/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (__fe_dfl_mode): New variable
+	declaration.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/s390/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/sh/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/sparc/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/tile/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/x86/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* manual/arith.texi (FE_DFL_MODE): Document macro.
+	(fegetmode): Document function.
+	(fesetmode): Likewise.
+	* math/Versions (fegetmode): New libm symbol at version
+	GLIBC_2.25.
+	(fesetmode): Likewise.
+	* math/Makefile (libm-support): Add fegetmode and fesetmode.
+	(tests): Add test-femode and test-femode-traps.
+	* math/test-femode-traps.c: New file.
+	* math/test-femode.c: Likewise.
+	* sysdeps/powerpc/fpu/fenv_const.c (__fe_dfl_mode): Declare as
+	alias for __fe_dfl_env.
+	* sysdeps/powerpc/nofpu/fenv_const.c (__fe_dfl_mode): Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fenv_const.c
+	(__fe_dfl_mode): Likewise.
+	* sysdeps/powerpc/Versions (__fe_dfl_mode): New libm symbol at
+	version GLIBC_2.25.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-09-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #20495]

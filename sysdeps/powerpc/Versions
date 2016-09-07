@@ -3,6 +3,9 @@ libm {
     # symbols used in macros from sysdeps/powerpc/bits/fenv.h
     __fe_dfl_env; __fe_enabled_env; __fe_nonieee_env; __fe_nomask_env;
   }
+  GLIBC_2.25 {
+    __fe_dfl_mode;
+  }
 }
 
 libc {

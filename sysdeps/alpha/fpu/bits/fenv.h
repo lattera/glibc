@@ -131,3 +131,11 @@ typedef unsigned long int fenv_t;
 /* The system calls to talk to the kernel's FP code.  */
 extern unsigned long int __ieee_get_fp_control (void) __THROW;
 extern void __ieee_set_fp_control (unsigned long int __value) __THROW;
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Type representing floating-point control modes.  */
+typedef unsigned long int femode_t;
+
+/* Default floating-point control modes.  */
+# define FE_DFL_MODE	((const femode_t *) 0x8800000000000000UL)
+#endif

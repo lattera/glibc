@@ -1127,6 +1127,39 @@ non-zero value otherwise.
 @end deftypefun
 
 @noindent
+TS 18661-1:2014 defines additional functions to save and restore
+floating-point control modes (such as the rounding mode and whether
+traps are enabled) while leaving other status (such as raised flags)
+unchanged.
+
+@vindex FE_DFL_MODE
+The special macro @code{FE_DFL_MODE} may be passed to
+@code{fesetmode}.  It represents the floating-point control modes at
+program start.
+
+@comment fenv.h
+@comment ISO
+@deftypefun int fegetmode (femode_t *@var{modep})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Store the floating-point control modes in the variable pointed to by
+@var{modep}.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
+@end deftypefun
+
+@comment fenv.h
+@comment ISO
+@deftypefun int fesetmode (const femode_t *@var{modep})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Set the floating-point control modes to those described by
+@var{modep}.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
+@end deftypefun
+
+@noindent
 To control for individual exceptions if raising them causes a trap to
 occur, you can use the following two functions.
 

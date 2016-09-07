@@ -169,3 +169,12 @@ extern const fenv_t __fe_nonieee_env;
 # define FE_MASK_ENV	FE_DFL_ENV
 
 #endif
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Type representing floating-point control modes.  */
+typedef double femode_t;
+
+/* Default floating-point control modes.  */
+extern const femode_t __fe_dfl_mode;
+# define FE_DFL_MODE	(&__fe_dfl_mode)
+#endif
