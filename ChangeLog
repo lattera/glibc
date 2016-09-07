@@ -1,5 +1,8 @@
 2016-09-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/aarch64/fpu/fegetmode.c: New file.
+	* sysdeps/aarch64/fpu/fesetmode.c: Likewise.
+
 	* math/fegetmode.c: New file.
 	* math/fesetmode.c: Likewise.
 	* sysdeps/i386/fpu/fegetmode.c: Likewise.
