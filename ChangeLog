@@ -1,5 +1,12 @@
 2016-09-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/fpu/fegetmode.c: New file.
+	* sysdeps/powerpc/fpu/fesetmode.c: Likewise.
+	* sysdeps/powerpc/nofpu/fegetmode.c: Likewise.
+	* sysdeps/powerpc/nofpu/fesetmode.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fegetmode.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fesetmode.c: Likewise.
+
 	* sysdeps/mips/fpu/fegetmode.c: New file.
 	* sysdeps/mips/fpu/fesetmode.c: Likewise.
 
