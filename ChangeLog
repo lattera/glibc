@@ -1,5 +1,8 @@
 2016-09-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/hppa/fpu/fegetmode.c: New file.
+	* sysdeps/hppa/fpu/fesetmode.c: Likewise.
+
 	* sysdeps/arm/fegetmode.c: New file.
 	* sysdeps/arm/fesetmode.c: Likewise.
 
