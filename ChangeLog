@@ -1,5 +1,8 @@
 2016-09-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/fpu/fegetmode.c: New file.
+	* sysdeps/mips/fpu/fesetmode.c: Likewise.
+
 	* sysdeps/m68k/fpu/fegetmode.c: New file.
 	* sysdeps/m69k/fpu/fesetmode.c: Likewise.
 
