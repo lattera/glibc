@@ -120,7 +120,8 @@ libm-routines = $(strip $(libm-support) $(libm-compat-calls)		\
 # In libm-calls (above), list m_foo in place of s_foo for any
 # routine that should be compiled separately for its libc and libm versions.
 calls = s_isinfF s_isnanF s_finiteF s_copysignF s_modfF s_scalbnF s_frexpF \
-	s_ldexpF s_signbitF
+	s_signbitF $(gen-calls)
+gen-calls = s_ldexpF
 generated += $(foreach s,.c .S,$(call type-foreach, $(calls:s_%=m_%$(s))))
 routines = $(call type-foreach, $(calls))
 
@@ -272,12 +273,15 @@ extra-objs += libieee.a ieee-math.o
 
 include ../Rules
 
-generated += $(addsuffix .c,$(call type-foreach,$(gen-libm-calls))) \
+gen-all-calls = $(gen-libm-calls) $(gen-calls)
+
+generated += $(addsuffix .c,$(call type-foreach,$(gen-all-calls))) \
 	     gen-libm-templates.stmp
 
 # Create wrappers in the math build directory.
-$(objpfx)gen-libm-templates.stmp:
-	for gcall in $(gen-libm-calls); do                                \
+$(objpfx)gen-libm-templates.stmp: Makefile
+	$(make-target-directory)
+	for gcall in $(gen-all-calls); do                                 \
 	  func=$${gcall%F*}$${gcall#*F};                                  \
 	  for type in $(foreach t,$(types),$(t)__$(type-$(t)-suffix)); do \
 	    suff=$${type#*__};                                            \
@@ -292,7 +296,7 @@ $(objpfx)gen-libm-templates.stmp:
 	echo > $(@)
 
 # Add dependency to ensure the generator runs prior.
-$(foreach t, $(call type-foreach, $(gen-libm-calls)), \
+$(foreach t, $(call type-foreach, $(gen-all-calls)), \
              $(objpfx)$(t).c): $(objpfx)gen-libm-templates.stmp
 
 ifneq (no,$(PERL))
@@ -334,6 +338,12 @@ endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 
+# Likewise, for those generated files shared with libc.
+define o-iterator-doit
+$(objpfx)m_%$o: $(objpfx)s_%.c $(before-compile); $$(compile-command.c)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
 
 # This file defines the default _LIB_VERSION variable that controls
 # the error return conventions for the math functions.

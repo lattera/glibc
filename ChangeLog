@@ -1,3 +1,29 @@
+2016-09-20  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile (gen-all-calls): New variable.
+	(generated): Replace gen-libm-calls with gen-all-calls.
+	(gen-libm-templates.stmp): Likewise.  Also, ensure
+	the output directory exists or is created and add
+	dependency on the Makefile.
+	(calls): Move s_ldexpF into gen-calls.
+	(gen-calls): New variable.
+
+	* math/s_ldexpf.c: Removed.
+	* math/s_ldexpl.c: Removed.
+	* math/s_ldexp.c: Refactored into ...
+	* math/s_ldexp_template.c: New file.
+
+	* sysdeps/generic/math-type-macros-double.h: Remove
+	redundant fall-through definition of declare_mgen_alias.
+	(declare_mgen_alias_2): New macro.
+
+	* sysdeps/generc/math-type-macros.h (declare_mgen_alias_2):
+	New macro for function aliased to two exported symbols.
+
+	* sysdeps/ieee754/ldbl-opt/s_ldexp.c: Update to use
+	new template file.
+	sysdeps/ieee754/ldbl-opt/s_ldexpl.c: Likewise.
+
 2016-09-20  Florian Weimer  <fweimer@redhat.com>
 
 	* Makeconfig (all-object-suffixes): Remove .og.

@@ -38,6 +38,11 @@
       This exposes the appropriate symbol(s) for a
       function f of type FLOAT.
 
+  declare_mgen_alias_2(from,to,to2)
+      This exposes the appropriate symbol(s) for a
+      function f of type FLOAT when it is aliased
+      to two symbols.
+
   M_LIBM_NEED_COMPAT(func)
       This is utilized in macro context to indicate
       whether func should declare compat symbols.
@@ -110,6 +115,13 @@
 /* If the type does not declare special aliasing, use the default.  */
 #ifndef declare_mgen_alias
 # define declare_mgen_alias(from, to) weak_alias (M_SUF (from), M_SUF (to))
+#endif
+
+/* Likewise, if two aliases are derived from the same symbol.  */
+#ifndef declare_mgen_alias_2
+# define declare_mgen_alias_2(from, to, to2)  \
+ declare_mgen_alias (from, to)		      \
+ declare_mgen_alias (from, to2)
 #endif
 
 /* Do not generate anything for compat symbols by default.  */

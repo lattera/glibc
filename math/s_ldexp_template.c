@@ -1,8 +1,4 @@
-/* s_ldexpl.c -- long double version of s_ldexp.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
- */
-
+/* @(#)s_ldexp.c 5.1 93/09/24 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -15,19 +11,22 @@
  */
 
 #if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
+static char rcsid[] = "$NetBSD: s_ldexp.c,v 1.6 1995/05/10 20:47:40 jtc Exp $";
 #endif
 
 #include <math.h>
 #include <math_private.h>
 #include <errno.h>
 
-long double __ldexpl(long double value, int exp)
+FLOAT
+M_SUF (__ldexp) (FLOAT value, int exp)
 {
-	if(!isfinite(value)||value==0.0) return value + value;
-	value = __scalbnl(value,exp);
-	if(!isfinite(value)||value==0.0) __set_errno (ERANGE);
+	if(!isfinite(value)||value==0) return value + value;
+	value = M_SCALBN(value,exp);
+	if(!isfinite(value)||value==0) __set_errno (ERANGE);
 	return value;
 }
-weak_alias (__ldexpl, ldexpl)
-weak_alias (__ldexpl, scalbnl)
+
+declare_mgen_alias_2 (__ldexp, ldexp, scalbn);
+
+/* Note, versioning issues are punted to ldbl-opt in this case.  */

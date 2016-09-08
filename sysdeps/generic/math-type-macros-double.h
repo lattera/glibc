@@ -34,9 +34,13 @@
    weak_alias (from, to)		    \
    strong_alias (from, from ## l)	    \
    weak_alias (from, to ## l)
-#elif !defined declare_mgen_alias
-# define declare_mgen_alias(from, to)	    \
-   weak_alias (M_SUF (from), M_SUF (to))
+#endif
+
+#if defined NO_LONG_DOUBLE && !defined declare_mgen_alias_2
+# define declare_mgen_alias_2(from, to, to2) \
+   declare_mgen_alias (from, to)	     \
+   weak_alias (from, to2)		     \
+   weak_alias (from, to2 ## l)
 #endif
 
 /* Supply the generic macros.  */
