@@ -1,5 +1,8 @@
 2016-09-10  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* malloc/Makefile (tests): Remove individual static test names
+	and just add all of tests-static.
+
 	* csu/libc-start.c (__libc_csu_irel): Remove declaration.
 
 2016-09-07  Joseph Myers  <joseph@codesourcery.com>

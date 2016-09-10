@@ -33,13 +33,12 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-mallocfork2 \
 	 tst-interpose-nothread \
 	 tst-interpose-thread \
-	 tst-interpose-static-nothread \
-	 tst-interpose-static-thread \
 
 tests-static := \
 	 tst-interpose-static-nothread \
 	 tst-interpose-static-thread \
 
+tests += $(tests-static)
 test-srcs = tst-mtrace
 
 routines = malloc morecore mcheck mtrace obstack \
