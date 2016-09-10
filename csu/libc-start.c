@@ -23,9 +23,6 @@
 #include <exit-thread.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
-#ifndef SHARED
-extern void __libc_csu_irel (void);
-#endif
 
 extern int __libc_multiple_libcs;
 
