@@ -25,6 +25,7 @@
 #define M_SUF(c) c ## l
 #define FLOAT long double
 #define CFLOAT _Complex long double
+#define M_STRTO_NAN __strtold_nan
 
 /* Supply the generic macros.  */
 #include <math-type-macros.h>

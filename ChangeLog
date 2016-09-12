@@ -1,5 +1,29 @@
 2016-09-20  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* math/Makefile (libm-calls): Remove s_nanF.
+	(gen-libm-calls): Add s_nanF.
+
+	* math/s_nan.c: Refactor into ...
+	* math/s_nan_template.c: New file.
+
+	* math/s_nanf.c: Removed.
+	* math/s_nanl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_nan.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_nanl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h:
+	(LDOUBLE_nanl_libm_version): New macro.
+
+	* sysdeps/generic/math-type-macros-double.h:
+	(M_STRTO_NAN): New macro.
+	* sysdeps/generic/math-type-macros-float.h: Likewise.
+	* sysdeps/generic/math-type-macros-ldouble.h: Likewise.
+
+	* sysdeps/generic/math-type-macros.h: Document
+	M_STRTO_NAN.
+
+2016-09-20  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* math/s_nanf.c: Remove __nanf undef.
 	* math/s_nan.c: Remove __nan undef.
 	* math/s_nanl.c: Remove __nanl undef.

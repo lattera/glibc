@@ -25,6 +25,7 @@
 #define M_SUF(c) c
 #define FLOAT double
 #define CFLOAT _Complex double
+#define M_STRTO_NAN __strtod_nan
 
 /* Machines without a distinct long double type
    alias long double functions to their double

@@ -24,13 +24,14 @@
 #include <ieee754.h>
 
 
-double
-__nan (const char *tagp)
+FLOAT
+M_DECL_FUNC (__nan) (const char *tagp)
 {
-  return __strtod_nan (tagp, NULL, 0);
+  return M_STRTO_NAN (tagp, NULL, 0);
 }
-weak_alias (__nan, nan)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__nan, __nanl)
-weak_alias (__nan, nanl)
+
+declare_mgen_alias (__nan, nan)
+
+#if M_LIBM_NEED_COMPAT (nan)
+declare_mgen_libm_compat (__nan, nan)
 #endif

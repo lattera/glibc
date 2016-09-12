@@ -24,6 +24,7 @@
 #define M_SUF(c) c ## f
 #define FLOAT float
 #define CFLOAT _Complex float
+#define M_STRTO_NAN __strtof_nan
 
 /* Standard/GNU macro literals do not exist for the float type.  Use
    the double macro constants.  */

@@ -30,6 +30,9 @@
 		i.e expf expl exp.
    FLOAT      - Resolves to the C typename of M_TYPE.
    CFLOAT     - Resolves to the complex typename of M_TYPE.
+   M_STRTO_NAN - Resolves to the internal libc function which
+		converts a string into the appropriate FLOAT nan
+		value.
 
   Optionally, these headers may inject a non-standard
   definition for the following:
