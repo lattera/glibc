@@ -775,11 +775,4 @@ libc_feresetround_noex_ctx (struct rm_ctx *ctx)
   SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_53bit,	      \
 			     libc_feresetround_53bit)
 
-#define __nan(str) \
-  (__builtin_constant_p (str) && str[0] == '\0' ? NAN : __nan (str))
-#define __nanf(str) \
-  (__builtin_constant_p (str) && str[0] == '\0' ? NAN : __nan (str))
-#define __nanl(str) \
-  (__builtin_constant_p (str) && str[0] == '\0' ? NAN : __nan (str))
-
 #endif /* _MATH_PRIVATE_H_ */

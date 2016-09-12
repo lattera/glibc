@@ -24,7 +24,6 @@
 #include <ieee754.h>
 
 
-#undef __nanl
 long double
 __nanl (const char *tagp)
 {
