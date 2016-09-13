@@ -1,3 +1,7 @@
+2016-09-13  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/res_init.c: Remove _LIBC_REENTRANT; it is always defined.
+
 2016-09-10  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* malloc/Makefile (tests): Remove individual static test names
