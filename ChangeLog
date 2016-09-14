@@ -1,5 +1,9 @@
 2016-09-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Correctly block and unblock
+	all signals when executing the clone vfork child.
+	(SIGALL_SET): Remove macro.
+
 	* nptl/Makefile (tests): Add tst-exec5.
 	* nptl/tst-exec5.c: New file.
 	* sysdeps/unix/sysv/linux/spawni.c (__spawni): Correctly enable and disable
