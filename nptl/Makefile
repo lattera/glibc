@@ -273,7 +273,7 @@ tests = tst-typesizes \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
 	tst-signal6 tst-signal7 \
-	tst-exec1 tst-exec2 tst-exec3 tst-exec4 \
+	tst-exec1 tst-exec2 tst-exec3 tst-exec4 tst-exec5 \
 	tst-exit1 tst-exit2 tst-exit3 \
 	tst-stdio1 tst-stdio2 \
 	tst-stack1 tst-stack2 tst-stack3 tst-stack4 tst-pthread-getattr \
