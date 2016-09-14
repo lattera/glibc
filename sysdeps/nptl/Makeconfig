@@ -26,7 +26,3 @@ shared-thread-library = $(common-objpfx)nptl/libpthread_nonshared.a \
 static-thread-library = $(common-objpfx)nptl/libpthread.a
 
 rpath-dirs += nptl
-
-# This makes for ptw-*.? object rules in sysd-rules.
-ptw-CPPFLAGS := -DPTW
-sysd-rules-patterns += ptw-%:%

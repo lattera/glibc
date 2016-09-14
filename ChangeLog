@@ -1,3 +1,20 @@
+2016-09-14  Florian Weimer  <fweimer@redhat.com>
+
+	Remove support for compiling wrappers with PTW.
+	* sysdeps/nptl/Makeconfig: Drop ptw- support.
+	* nptl/Makefile (pthread-compat-wrappers): Define.
+	(libpthread-routines): Use pthread-compat-wrappers.
+	* sysdeps/unix/sysv/linux/alpha/Makefile
+	(libpthread-routines, libpthread-shared-only-routines): Remove
+	ptw- prefix.
+	* sysdeps/s390/nptl/Makefile
+	(libpthread-routines, libpthread-shared-only-routines): Likewise.
+	* sysdeps/ia64/nptl/Makefile
+	(libpthread-routines, libpthread-shared-only-routines): Likewise.
+	* sysdeps/nacl/Makefile (libpthread-routines): Use
+	pthread-compat-wrappers to filter the routines list instead of the
+	ptw- prefix.
+
 2016-09-13  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128/e_acoshl.c: Wrap long double literals

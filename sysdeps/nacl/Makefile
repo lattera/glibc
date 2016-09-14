@@ -123,7 +123,8 @@ endif
 
 ifeq ($(subdir),nptl)
 # We do not need any wrappers in libpthread.
-libpthread-routines := $(filter-out ptw-%,$(libpthread-routines))
+libpthread-routines := \
+  $(filter-out $(pthread-compat-wrappers),$(libpthread-routines))
 endif
 
 ifeq ($(subdir),misc)

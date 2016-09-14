@@ -33,6 +33,18 @@ routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   register-atfork unregister-atfork
 shared-only-routines = forward
 
+# We need to provide certain routines for compatibility with existing
+# binaries.
+pthread-compat-wrappers = \
+		      write read close fcntl accept \
+		      connect recv recvfrom send \
+		      sendto fsync lseek llseek \
+		      msync nanosleep open open64 pause \
+		      pread pread64 pwrite pwrite64 \
+		      tcdrain wait waitpid msgrcv msgsnd \
+		      sigwait sigsuspend \
+		      recvmsg sendmsg
+
 libpthread-routines = nptl-init vars events version pt-interp \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
@@ -108,14 +120,7 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      lowlevellock lowlevelrobustlock \
 		      lll_timedlock_wait lll_timedwait_tid \
 		      pt-fork pt-vfork \
-		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
-		      ptw-connect ptw-recv ptw-recvfrom ptw-send \
-		      ptw-sendto ptw-fsync ptw-lseek ptw-llseek \
-		      ptw-msync ptw-nanosleep ptw-open ptw-open64 ptw-pause \
-		      ptw-pread ptw-pread64 ptw-pwrite ptw-pwrite64 \
-		      ptw-tcdrain ptw-wait ptw-waitpid ptw-msgrcv ptw-msgsnd \
-		      ptw-sigwait ptw-sigsuspend \
-		      ptw-recvmsg ptw-sendmsg \
+		      $(pthread-compat-wrappers) \
 		      pt-raise pt-system \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \
