@@ -81,6 +81,7 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <inet/net-internal.h>
 
 #include <not-cancel.h>
 
@@ -283,26 +284,12 @@ __res_vinit(res_state statp, int preinit) {
 				sa6->sin6_flowinfo = 0;
 				sa6->sin6_addr = a6;
 
-				if (__glibc_likely (el == NULL))
-				    sa6->sin6_scope_id = 0;
-				else {
-				    int try_numericscope = 1;
-				    if (IN6_IS_ADDR_LINKLOCAL (&a6)
-					|| IN6_IS_ADDR_MC_LINKLOCAL (&a6)) {
-					sa6->sin6_scope_id
-					  = __if_nametoindex (el + 1);
-					if (sa6->sin6_scope_id != 0)
-					    try_numericscope = 0;
-				    }
-
-				    if (try_numericscope) {
-					char *end;
-					sa6->sin6_scope_id
-					  = (uint32_t) strtoul (el + 1, &end,
-								10);
-					if (*end != '\0')
-					    sa6->sin6_scope_id = 0;
-				    }
+				sa6->sin6_scope_id = 0;
+				if (__glibc_likely (el != NULL)) {
+				  /* Ignore errors, for backwards
+				     compatibility.  */
+				  (void) __inet6_scopeid_pton
+				    (&a6, el + 1, &sa6->sin6_scope_id);
 				}
 
 				statp->nsaddr_list[nserv].sin_family = 0;

@@ -82,6 +82,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nscd/nscd_proto.h>
 #include <resolv/res_hconf.h>
 #include <scratch_buffer.h>
+#include <inet/net-internal.h>
 
 #ifdef HAVE_LIBIDN
 extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
@@ -570,31 +571,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  goto free_and_return;
 		}
 
-	      if (scope_delim != NULL)
+	      if (scope_delim != NULL
+		  && __inet6_scopeid_pton ((struct in6_addr *) at->addr,
+					   scope_delim + 1,
+					   &at->scopeid) != 0)
 		{
-		  int try_numericscope = 0;
-		  if (IN6_IS_ADDR_LINKLOCAL (at->addr)
-		      || IN6_IS_ADDR_MC_LINKLOCAL (at->addr))
-		    {
-		      at->scopeid = if_nametoindex (scope_delim + 1);
-		      if (at->scopeid == 0)
-			try_numericscope = 1;
-		    }
-		  else
-		    try_numericscope = 1;
-
-		  if (try_numericscope != 0)
-		    {
-		      char *end;
-		      assert (sizeof (uint32_t) <= sizeof (unsigned long));
-		      at->scopeid = (uint32_t) strtoul (scope_delim + 1, &end,
-							10);
-		      if (*end != '\0')
-			{
-			  result = -EAI_NONAME;
-			  goto free_and_return;
-			}
-		    }
+		  result = -EAI_NONAME;
+		  goto free_and_return;
 		}
 
 	      if (req->ai_flags & AI_CANONNAME)
