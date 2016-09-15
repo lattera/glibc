@@ -1,3 +1,62 @@
+2016-12-16  Zack Weinberg <zackw@panix.com>
+	    Florian Weimer <fweimer@redhat.com>
+	    Nick Mathewson <nickm@torproject.org>
+
+	* string/explicit_bzero.c: New routine.
+	* string/test-explicit_bzero.c, string/tst-xbzero-opt.c: New tests.
+	* string/Makefile (routines, strop-tests, tests): Add them.
+	* string/test-memset.c: Add ifdeffage for testing explicit_bzero.
+	* string/string.h [__USE_MISC]: Declare explicit_bzero.
+
+	* debug/explicit_bzero_chk.c: New routine.
+	* debug/Makefile (routines): Add it.
+	* debug/tst-chk1.c: Test fortification of explicit_bzero.
+	* string/bits/string3.h: Fortify explicit_bzero.
+
+	* manual/string.texi: Document explicit_bzero.
+	* NEWS: Mention addition of explicit_bzero.
+
+	* crypt/crypt-entry.c (__crypt_r): Clear key-dependent intermediate
+	data before returning, using explicit_bzero.
+	* crypt/md5-crypt.c (__md5_crypt_r): Likewise.
+	* crypt/sha256-crypt.c (__sha256_crypt_r): Likewise.
+	* crypt/sha512-crypt.c (__sha512_crypt_r): Likewise.
+
+	* include/string.h: Redirect internal uses of explicit_bzero
+	to __explicit_bzero_chk[_internal].
+	* string/Versions [GLIBC_2.25]: Add explicit_bzero.
+	* debug/Versions [GLIBC_2.25]: Add __explicit_bzero_chk.
+	* sysdeps/arm/nacl/libc.abilist
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist
+	* sysdeps/unix/sysv/linux/arm/libc.abilist
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist
+	* sysdeps/unix/sysv/linux/i386/libc.abilist
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
+	* sysdeps/unix/sysv/linux/sh/libc.abilist
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist:
+	Add entries for explicit_bzero and __explicit_bzero_chk.
+
 2016-12-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/fenv.h

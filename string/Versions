@@ -82,4 +82,7 @@ libc {
   }
   GLIBC_2.24 {
   }
+  GLIBC_2.25 {
+    explicit_bzero;
+  }
 }

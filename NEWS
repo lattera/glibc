@@ -84,6 +84,12 @@ Version 2.25
 * The functions strfromd, strfromf, and strfroml, from ISO/IEC TS 18661-1:2014,
   are added to libc.  They convert a floating-point number into string.
 
+* The function explicit_bzero, from OpenBSD, has been added to libc.  It is
+  intended to be used instead of memset() to erase sensitive data after use;
+  the compiler will not optimize out calls to explicit_bzero even if they
+  are "unnecessary" (in the sense that no _correct_ program can observe the
+  effects of the memory clear).
+
 * On ColdFire, MicroBlaze, Nios II and SH3, the float_t type is now defined
   to float instead of double.  This does not affect the ABI of any libraries
   that are part of the GNU C Library, but may affect the ABI of other

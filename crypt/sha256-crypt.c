@@ -371,16 +371,16 @@ __sha256_crypt_r (const char *key, const char *salt, char *buffer, int buflen)
 #ifndef USE_NSS
   __sha256_init_ctx (&ctx);
   __sha256_finish_ctx (&ctx, alt_result);
-  memset (&ctx, '\0', sizeof (ctx));
-  memset (&alt_ctx, '\0', sizeof (alt_ctx));
+  explicit_bzero (&ctx, sizeof (ctx));
+  explicit_bzero (&alt_ctx, sizeof (alt_ctx));
 #endif
-  memset (temp_result, '\0', sizeof (temp_result));
-  memset (p_bytes, '\0', key_len);
-  memset (s_bytes, '\0', salt_len);
+  explicit_bzero (temp_result, sizeof (temp_result));
+  explicit_bzero (p_bytes, key_len);
+  explicit_bzero (s_bytes, salt_len);
   if (copied_key != NULL)
-    memset (copied_key, '\0', key_len);
+    explicit_bzero (copied_key, key_len);
   if (copied_salt != NULL)
-    memset (copied_salt, '\0', salt_len);
+    explicit_bzero (copied_salt, salt_len);
 
   free (free_key);
   free (free_pbytes);

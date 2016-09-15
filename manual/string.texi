@@ -34,6 +34,8 @@ too.
 * Search Functions::            Searching for a specific element or substring.
 * Finding Tokens in a String::  Splitting a string into tokens by looking
 				 for delimiters.
+* Erasing Sensitive Data::      Clearing memory which contains sensitive
+                                 data, after it's no longer needed.
 * strfry::                      Function for flash-cooking a string.
 * Trivial Encryption::          Obscuring data.
 * Encode Binary Data::          Encoding and Decoding of Binary Data.
@@ -2402,6 +2404,103 @@ The @code{dirname} function is the compliment to the XPG version of
 by @var{path}.  If @var{path} is @code{NULL}, an empty string, or
 contains no '/' bytes, then "." is returned.  The prototype for this
 function can be found in @file{libgen.h}.
+@end deftypefun
+
+@node Erasing Sensitive Data
+@section Erasing Sensitive Data
+
+Sensitive data, such as cryptographic keys, should be erased from
+memory after use, to reduce the risk that a bug will expose it to the
+outside world.  However, compiler optimizations may determine that an
+erasure operation is ``unnecessary,'' and remove it from the generated
+code, because no @emph{correct} program could access the variable or
+heap object containing the sensitive data after it's deallocated.
+Since erasure is a precaution against bugs, this optimization is
+inappropriate.
+
+The function @code{explicit_bzero} erases a block of memory, and
+guarantees that the compiler will not remove the erasure as
+``unnecessary.''
+
+@smallexample
+@group
+#include <string.h>
+
+extern void encrypt (const char *key, const char *in,
+                     char *out, size_t n);
+extern void genkey (const char *phrase, char *key);
+
+void encrypt_with_phrase (const char *phrase, const char *in,
+                          char *out, size_t n)
+@{
+  char key[16];
+  genkey (phrase, key);
+  encrypt (key, in, out, n);
+  explicit_bzero (key, 16);
+@}
+@end group
+@end smallexample
+
+@noindent
+In this example, if @code{memset}, @code{bzero}, or a hand-written
+loop had been used, the compiler might remove them as ``unnecessary.''
+
+@strong{Warning:} @code{explicit_bzero} does not guarantee that
+sensitive data is @emph{completely} erased from the computer's memory.
+There may be copies in temporary storage areas, such as registers and
+``scratch'' stack space; since these are invisible to the source code,
+a library function cannot erase them.
+
+Also, @code{explicit_bzero} only operates on RAM.  If a sensitive data
+object never needs to have its address taken other than to call
+@code{explicit_bzero}, it might be stored entirely in CPU registers
+@emph{until} the call to @code{explicit_bzero}.  Then it will be
+copied into RAM, the copy will be erased, and the original will remain
+intact.  Data in RAM is more likely to be exposed by a bug than data
+in registers, so this creates a brief window where the data is at
+greater risk of exposure than it would have been if the program didn't
+try to erase it at all.
+
+Declaring sensitive variables as @code{volatile} will make both the
+above problems @emph{worse}; a @code{volatile} variable will be stored
+in memory for its entire lifetime, and the compiler will make
+@emph{more} copies of it than it would otherwise have.  Attempting to
+erase a normal variable ``by hand'' through a
+@code{volatile}-qualified pointer doesn't work at all---because the
+variable itself is not @code{volatile}, some compilers will ignore the
+qualification on the pointer and remove the erasure anyway.
+
+Having said all that, in most situations, using @code{explicit_bzero}
+is better than not using it.  At present, the only way to do a more
+thorough job is to write the entire sensitive operation in assembly
+language.  We anticipate that future compilers will recognize calls to
+@code{explicit_bzero} and take appropriate steps to erase all the
+copies of the affected data, whereever they may be.
+
+@comment string.h
+@comment BSD
+@deftypefun void explicit_bzero (void *@var{block}, size_t @var{len})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+@code{explicit_bzero} writes zero into @var{len} bytes of memory
+beginning at @var{block}, just as @code{bzero} would.  The zeroes are
+always written, even if the compiler could determine that this is
+``unnecessary'' because no correct program could read them back.
+
+@strong{Note:} The @emph{only} optimization that @code{explicit_bzero}
+disables is removal of ``unnecessary'' writes to memory.  The compiler
+can perform all the other optimizations that it could for a call to
+@code{memset}.  For instance, it may replace the function call with
+inline memory writes, and it may assume that @var{block} cannot be a
+null pointer.
+
+@strong{Portability Note:} This function first appeared in OpenBSD 5.5
+and has not been standardized.  Other systems may provide the same
+functionality under a different name, such as @code{explicit_memset},
+@code{memset_s}, or @code{SecureZeroMemory}.
+
+@Theglibc{} declares this function in @file{string.h}, but on other
+systems it may be in @file{strings.h} instead.
 @end deftypefun
 
 @node strfry

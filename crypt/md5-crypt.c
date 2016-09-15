@@ -288,13 +288,13 @@ __md5_crypt_r (const char *key, const char *salt, char *buffer, int buflen)
 #ifndef USE_NSS
   __md5_init_ctx (&ctx);
   __md5_finish_ctx (&ctx, alt_result);
-  memset (&ctx, '\0', sizeof (ctx));
-  memset (&alt_ctx, '\0', sizeof (alt_ctx));
+  explicit_bzero (&ctx, sizeof (ctx));
+  explicit_bzero (&alt_ctx, sizeof (alt_ctx));
 #endif
   if (copied_key != NULL)
-    memset (copied_key, '\0', key_len);
+    explicit_bzero (copied_key, key_len);
   if (copied_salt != NULL)
-    memset (copied_salt, '\0', salt_len);
+    explicit_bzero (copied_salt, salt_len);
 
   free (free_key);
   return buffer;

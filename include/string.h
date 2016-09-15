@@ -100,6 +100,17 @@ extern __typeof (memmem) __memmem;
 libc_hidden_proto (__memmem)
 libc_hidden_proto (__ffs)
 
+#if IS_IN (libc)
+/* Avoid hidden reference to IFUNC symbol __explicit_bzero_chk.  */
+void __explicit_bzero_chk_internal (void *, size_t, size_t)
+  __THROW __nonnull ((1)) attribute_hidden;
+# define explicit_bzero(buf, len) \
+  __explicit_bzero_chk_internal (buf, len, __bos0 (buf))
+#elif !IS_IN (nonlib)
+void __explicit_bzero_chk (void *, size_t, size_t) __THROW __nonnull ((1));
+# define explicit_bzero(buf, len) __explicit_bzero_chk (buf, len, __bos0 (buf))
+#endif
+
 libc_hidden_builtin_proto (memchr)
 libc_hidden_builtin_proto (memcpy)
 libc_hidden_builtin_proto (mempcpy)

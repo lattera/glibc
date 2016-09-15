@@ -1843,6 +1843,8 @@ GLIBC_2.23 fts64_set F
 GLIBC_2.24 GLIBC_2.24 A
 GLIBC_2.24 quick_exit F
 GLIBC_2.25 GLIBC_2.25 A
+GLIBC_2.25 __explicit_bzero_chk F
+GLIBC_2.25 explicit_bzero F
 GLIBC_2.25 getentropy F
 GLIBC_2.25 getrandom F
 GLIBC_2.25 gnu_dev_major F

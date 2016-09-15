@@ -48,6 +48,7 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    vdprintf_chk obprintf_chk \
 	    longjmp_chk ____longjmp_chk \
 	    fdelt_chk poll_chk ppoll_chk \
+	    explicit_bzero_chk \
 	    stack_chk_fail fortify_fail \
 	    $(static-only-routines)
 static-only-routines := warning-nop stack_chk_fail_local
