@@ -49,6 +49,8 @@ __new_sem_init (sem_t *sem, int pshared, unsigned int value)
   isem->data = value;
 #else
   isem->value = value << SEM_VALUE_SHIFT;
+  /* pad is used as a mutex on pre-v9 sparc and ignored otherwise.  */
+  isem->pad = 0;
   isem->nwaiters = 0;
 #endif
 

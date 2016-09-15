@@ -1,5 +1,11 @@
 2016-09-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/sem_init.c (__new_sem_init): Init pad value to 0.
+	* sysdeps/sparc/sparc32/sem_open.c: Remove file.
+	* sysdeps/sparc/sparc32/sparcv9/sem_open.c: Likewise.
+
+2016-09-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
 	[BZ #18243]
 	* rt/Makefile (test): Add tst-shm-cancel.
 	* rt/tst-shm-cancel.c: New file.
