@@ -497,6 +497,11 @@
 
 2016-09-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* posix/Makefile (tests): Add tst-spawn3.
+	* posix/tst-spawn3.c: New file.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Close file descriptor
+	if it is already opened for open action.
+
 	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Correctly block and unblock
 	all signals when executing the clone vfork child.
 	(SIGALL_SET): Remove macro.

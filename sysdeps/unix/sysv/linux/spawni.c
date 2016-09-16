@@ -219,6 +219,14 @@ __spawni_child (void *arguments)
 
 	    case spawn_do_open:
 	      {
+		/* POSIX states that if fildes was already an open file descriptor,
+		   it shall be closed before the new file is opened.  This avoid
+		   pontential issues when posix_spawn plus addopen action is called
+		   with the process already at maximum number of file descriptor
+		   opened and also for multiple actions on single-open special
+		   paths (like /dev/watchdog).  */
+		close_not_cancel (action->action.open_action.fd);
+
 		ret = open_not_cancel (action->action.open_action.path,
 				       action->action.
 				       open_action.oflag | O_LARGEFILE,
