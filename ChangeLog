@@ -1,3 +1,11 @@
+2016-09-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #20615]
+	* sysdeps/powerpc/powerpc32/power9/multiarch/Implies: Replace
+	fpu directory by non-fpu.
+	* sysdeps/powerpc/powerpc64/power9/fpu/Implies: Remove dependency
+	on non-fpu directory from a fpu directory.
+
 2016-09-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/limits.h: Define
