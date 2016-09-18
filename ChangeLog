@@ -1,6 +1,7 @@
 2016-09-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* intl/dcigettext.c (PATH_MAX): Call __pathconf instead of pathconf.
+	* sysdeps/posix/dup.c (__dup): Call __fcntl instead of fcntl.
 
 2016-09-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
