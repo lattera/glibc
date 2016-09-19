@@ -36,6 +36,10 @@ Version 2.25
   fesetexcept, fetestexceptflag, fegetmode and fesetmode functions,
   the femode_t type and the FE_DFL_MODE macro.
 
+* Integer width macros from TS 18661-1:2014 are added to <limits.h>:
+  CHAR_WIDTH, SCHAR_WIDTH, UCHAR_WIDTH, SHRT_WIDTH, USHRT_WIDTH, INT_WIDTH,
+  UINT_WIDTH, LONG_WIDTH, ULONG_WIDTH, LLONG_WIDTH, ULLONG_WIDTH.
+
 * The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
   for the Linux quota interface which predates kernel version 2.4.22 has
   been removed.

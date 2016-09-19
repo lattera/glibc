@@ -653,6 +653,56 @@ sizeof (@var{type}) * CHAR_BIT
 @end smallexample
 @end table
 
+That expression includes padding bits as well as value and sign bits.
+On all systems supported by @theglibc{}, standard integer types other
+than @code{_Bool} do not have any padding bits.  TS 18661-1:2014
+defines additional macros for the width of integer types (the number
+of value and sign bits); these macros can also be used in @code{#if}
+preprocessor directives, whereas @code{sizeof} cannot.  The following
+macros are defined in @file{limits.h}.
+
+@table @code
+@comment limits.h
+@comment ISO
+@item CHAR_WIDTH
+@comment limits.h
+@comment ISO
+@itemx SCHAR_WIDTH
+@comment limits.h
+@comment ISO
+@itemx UCHAR_WIDTH
+@comment limits.h
+@comment ISO
+@itemx SHRT_WIDTH
+@comment limits.h
+@comment ISO
+@itemx USHRT_WIDTH
+@comment limits.h
+@comment ISO
+@itemx INT_WIDTH
+@comment limits.h
+@comment ISO
+@itemx UINT_WIDTH
+@comment limits.h
+@comment ISO
+@itemx LONG_WIDTH
+@comment limits.h
+@comment ISO
+@itemx ULONG_WIDTH
+@comment limits.h
+@comment ISO
+@itemx LLONG_WIDTH
+@comment limits.h
+@comment ISO
+@itemx ULLONG_WIDTH
+
+These are the widths of the types @code{char}, @code{signed char},
+@code{unsigned char}, @code{short int}, @code{unsigned short int},
+@code{int}, @code{unsigned int}, @code{long int}, @code{unsigned long
+int}, @code{long long int} and @code{unsigned long long int},
+respectively.
+@end table
+
 @node Range of Type
 @subsection Range of an Integer Type
 @cindex integer type range

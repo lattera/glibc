@@ -22,7 +22,8 @@
 #ifndef _LIBC_LIMITS_H_
 #define _LIBC_LIMITS_H_	1
 
-#include <features.h>
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+#include <bits/libc-header-start.h>
 
 
 /* Maximum length of any multibyte character in any locale.
@@ -137,6 +138,54 @@
 #  define ULLONG_MAX	(LLONG_MAX * 2ULL + 1)
 # endif
 #endif
+
+/* The integer width macros are not defined by GCC's <limits.h> before
+   GCC 7, or if _GNU_SOURCE rather than
+   __STDC_WANT_IEC_60559_BFP_EXT__ is used to enable this feature.  */
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+# ifndef CHAR_WIDTH
+#  define CHAR_WIDTH 8
+# endif
+# ifndef SCHAR_WIDTH
+#  define SCHAR_WIDTH 8
+# endif
+# ifndef UCHAR_WIDTH
+#  define UCHAR_WIDTH 8
+# endif
+# ifndef SHRT_WIDTH
+#  define SHRT_WIDTH 16
+# endif
+# ifndef USHRT_WIDTH
+#  define USHRT_WIDTH 16
+# endif
+# ifndef INT_WIDTH
+#  define INT_WIDTH 32
+# endif
+# ifndef UINT_WIDTH
+#  define UINT_WIDTH 32
+# endif
+# if LONG_MAX == 0x7fffffffL
+#  ifndef LONG_WIDTH
+#   define LONG_WIDTH 32
+#  endif
+#  ifndef ULONG_WIDTH
+#   define ULONG_WIDTH 32
+#  endif
+# else
+#  ifndef LONG_WIDTH
+#   define LONG_WIDTH 64
+#  endif
+#  ifndef ULONG_WIDTH
+#   define ULONG_WIDTH 64
+#  endif
+# endif
+# ifndef LLONG_WIDTH
+#  define LLONG_WIDTH 64
+# endif
+# ifndef ULLONG_WIDTH
+#  define ULLONG_WIDTH 64
+# endif
+#endif /* Use IEC_60559_BFP_EXT.  */
 
 #ifdef	__USE_POSIX
 /* POSIX adds things to <limits.h>.  */
