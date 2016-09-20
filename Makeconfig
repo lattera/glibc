@@ -905,7 +905,7 @@ endif
 # The compilation rules use $(CPPFLAGS-${SUFFIX}) and $(CFLAGS-${SUFFIX})
 # to pass different flags for each flavor.
 libtypes = $(foreach o,$(object-suffixes-for-libc),$(libtype$o))
-all-object-suffixes := .o .os .op .og .oS
+all-object-suffixes := .o .os .op .oS
 object-suffixes :=
 CPPFLAGS-.o = $(pic-default)
 CFLAGS-.o = $(filter %frame-pointer,$(+cflags))

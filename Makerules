@@ -497,7 +497,6 @@ elide-routines.os += $(static-only-routines)
 # static libraries.
 elide-routines.o  += $(shared-only-routines)
 elide-routines.op += $(shared-only-routines)
-elide-routines.og += $(shared-only-routines)
 
 # Shared library building.
 

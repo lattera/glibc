@@ -1,5 +1,13 @@
 2016-09-20  Florian Weimer  <fweimer@redhat.com>
 
+	* Makeconfig (all-object-suffixes): Remove .og.
+	* Makerules (elide-routines.og): Remove.
+	* sysdeps/i386/i686/Makefile (CFLAGS-.og, ASFLAGS-.og): Remove.
+	* sysdeps/sparc/sparc32/sparcv9/Makefile (ASFLAGS-.og): Remove.
+	* sysdeps/sparc/sparc64/Makefile (ASFLAGS-.op): Remove.
+
+2016-09-20  Florian Weimer  <fweimer@redhat.com>
+
 	* scripts/sysd-rules.awk (BEGIN): Only generate rtld patterns for
 	.os objects.
 
