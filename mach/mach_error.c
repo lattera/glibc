@@ -63,9 +63,7 @@
 extern char * mach_error_string_int(mach_error_t, boolean_t *);
 
 void
-mach_error( str, err )
-	char	*str;
-	mach_error_t		err;
+mach_error(char *str, mach_error_t err)
 {
 	char * err_str;
 	char buf[1024];

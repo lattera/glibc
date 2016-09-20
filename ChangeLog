@@ -15,6 +15,7 @@
 	(_hurd_exception2signal): Replace 'exception', 'code', 'subcode',
 	'sigcode', 'error' parameters with 'detail' parameter.  Fix code
 	accordingly.
+	* mach/mach_error.c (mach_error): Fix old-style function definition.
 
 2016-09-20  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
