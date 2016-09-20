@@ -1,3 +1,8 @@
+2016-10-26  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* stdio-common/vfscanf.c (_IO_vfwscanf): Use read_int to parse
+	integer from the format string.
+
 2016-10-26  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19473]

@@ -133,6 +133,8 @@
 # define WINT_T		int
 #endif
 
+#include "printf-parse.h" /* Use read_int.  */
+
 #define encode_error() do {						      \
 			  errval = 4;					      \
 			  __set_errno (EILSEQ);				      \
@@ -488,9 +490,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
       /* Check for a positional parameter specification.  */
       if (ISDIGIT ((UCHAR_T) *f))
 	{
-	  argpos = (UCHAR_T) *f++ - L_('0');
-	  while (ISDIGIT ((UCHAR_T) *f))
-	    argpos = argpos * 10 + ((UCHAR_T) *f++ - L_('0'));
+	  argpos = read_int ((const UCHAR_T **) &f);
 	  if (*f == L_('$'))
 	    ++f;
 	  else
@@ -525,11 +525,8 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
       /* Find the maximum field width.  */
       width = 0;
-      while (ISDIGIT ((UCHAR_T) *f))
-	{
-	  width *= 10;
-	  width += (UCHAR_T) *f++ - L_('0');
-	}
+      if (ISDIGIT ((UCHAR_T) *f))
+	width = read_int ((const UCHAR_T **) &f);
     got_width:
       if (width == 0)
 	width = -1;
