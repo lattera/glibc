@@ -1,3 +1,8 @@
+2016-09-20  Florian Weimer  <fweimer@redhat.com>
+
+	* scripts/sysd-rules.awk (BEGIN): Only generate rtld patterns for
+	.os objects.
+
 2016-09-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #20615]
