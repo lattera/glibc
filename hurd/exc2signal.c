@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <hurd.h>
+#include <hurd/signal.h>
 
 /* This file must be modified with machine-dependent details.  */
 #error "need to write sysdeps/mach/hurd/MACHINE/exc2signal.c"
@@ -25,46 +26,45 @@
    into a signal number and signal subcode.  */
 
 void
-_hurd_exception2signal (int exception, int code, int subcode,
-			int *signo, int *sigcode, int *error)
+_hurd_exception2signal (struct hurd_signal_detail *detail, int *signo)
 {
-  *error = 0;
+  detail->error = 0;
 
-  switch (exception)
+  switch (detail->exc)
     {
     default:
       *signo = SIGIOT;
-      *sigcode = exception;
+      detail->code = detail->exc;
       break;
 
     case EXC_BAD_ACCESS:
-      if (code == KERN_PROTECTION_FAILURE)
+      if (detail->exc_code == KERN_PROTECTION_FAILURE)
 	*signo = SIGSEGV;
       else
 	*signo = SIGBUS;
-      *sigcode = subcode;
-      *error = code;
+      detail->code = detail->exc_subcode;
+      detail->error = detail->exc_code;
       break;
 
     case EXC_BAD_INSTRUCTION:
       *signo = SIGILL;
-      *sigcode = 0;
+      detail->code = 0;
       break;
 
     case EXC_ARITHMETIC:
       *signo = SIGFPE;
-      *sigcode = 0;
+      detail->code = 0;
       break;
 
     case EXC_EMULATION:
     case EXC_SOFTWARE:
       *signo = SIGEMT;
-      *sigcode = 0;
+      detail->code = 0;
       break;
 
     case EXC_BREAKPOINT:
       *signo = SIGTRAP;
-      *sigcode = 0;
+      detail->code = 0;
       break;
     }
 }

@@ -1,3 +1,10 @@
+2016-09-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/exc2signal.c: #include <hurd/signal.h>
+	(_hurd_exception2signal): Replace 'exception', 'code', 'subcode',
+	'sigcode', 'error' parameters with 'detail' parameter.  Fix code
+	accordingly.
+
 2016-09-20  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* math/Makefile (libm-calls): Remove s_nanF.
