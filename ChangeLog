@@ -16,6 +16,7 @@
 	'sigcode', 'error' parameters with 'detail' parameter.  Fix code
 	accordingly.
 	* mach/mach_error.c (mach_error): Fix old-style function definition.
+	* mach/errstring.c (mach_error_type, mach_error_string): Likewise.
 
 2016-09-20  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
