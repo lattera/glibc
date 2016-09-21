@@ -12,6 +12,10 @@ extern void *_hurd_malloc (size_t);
 extern void *_hurd_realloc (void *, size_t);
 extern void _hurd_free (void *);
 
+extern void _hurd_malloc_fork_prepare (void);
+extern void _hurd_malloc_fork_parent (void);
+extern void _hurd_malloc_fork_child (void);
+
 #define malloc	_hurd_malloc
 #define realloc	_hurd_realloc
 #define free	_hurd_free

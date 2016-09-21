@@ -405,8 +405,8 @@ print_malloc_free_list (void)
 }
 #endif	/* DEBUG */
 
-static void
-malloc_fork_prepare(void)
+void
+_hurd_malloc_fork_prepare(void)
 /*
  * Prepare the malloc module for a fork by insuring that no thread is in a
  * malloc critical section.
@@ -419,8 +419,8 @@ malloc_fork_prepare(void)
     }
 }
 
-static void
-malloc_fork_parent(void)
+void
+_hurd_malloc_fork_parent(void)
 /*
  * Called in the parent process after a fork() to resume normal operation.
  */
@@ -432,8 +432,8 @@ malloc_fork_parent(void)
     }
 }
 
-static void
-malloc_fork_child(void)
+void
+_hurd_malloc_fork_child(void)
 /*
  * Called in the child process after a fork() to resume normal operation.
  */
@@ -446,7 +446,4 @@ malloc_fork_child(void)
 }
 
 
-text_set_element (_hurd_fork_prepare_hook, malloc_fork_prepare);
-text_set_element (_hurd_fork_parent_hook, malloc_fork_parent);
-text_set_element (_hurd_fork_child_hook, malloc_fork_child);
 text_set_element (_hurd_preinit_hook, malloc_init);

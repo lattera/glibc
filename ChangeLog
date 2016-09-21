@@ -1,3 +1,20 @@
+2016-09-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdmalloc.c (malloc_fork_prepare): Rename to
+	_hurd_malloc_fork_prepare.
+	(malloc_fork_parent): Rename to _hurd_malloc_fork_parent.
+	(malloc_fork_child): Rename to _hurd_malloc_fork_child.
+	(_hurd_fork_prepare_hook): Drop malloc_fork_prepare.
+	(_hurd_fork_parent_hook): Drop malloc_fork_parent.
+	(_hurd_fork_child_hook): Drop malloc_fork_child.
+	* hurd/hurdmalloc.h (_hurd_malloc_fork_prepare,
+	_hurd_malloc_fork_parent, _hurd_malloc_fork_child): Add declarations.
+	* sysdeps/mach/hurd/fork.c (__fork): Call __malloc_fork_lock_parent
+	after locking locks (notably hurd_dtable_lock). Call
+	_hurd_malloc_fork_prepare after that. Call _hurd_malloc_fork_parent
+	before __malloc_fork_unlock_parent and _hurd_malloc_fork_child before
+	__malloc_fork_unlock_child.
+
 2016-09-21  James Greenhalgh  <james.greenhalgh@arm.com>
 
 	* soft-fp/extendhftf2.c: New.
