@@ -23,27 +23,6 @@
 #include <atomic.h>
 #include <libc-lock.h>
 
-/* Assume hurd, with cthreads */
-
-/* Cthreads `mutex_t' is a pointer to a mutex, and malloc wants just the
-   mutex itself.  */
-#undef mutex_t
-#define mutex_t struct mutex
-
-#undef mutex_init
-#define mutex_init(m) ({ __mutex_init(m); 0; })
-
-#undef mutex_lock
-#define mutex_lock(m) ({ __mutex_lock(m); 0; })
-
-#undef mutex_unlock
-#define mutex_unlock(m) ({ __mutex_unlock(m); 0; })
-
-#define mutex_trylock(m) (!__mutex_trylock(m))
-
-/* No we're *not* using pthreads.  */
-#define __pthread_initialize ((void (*)(void))0)
-
 /* madvise is a stub on Hurd, so don't bother calling it.  */
 
 #include <sys/mman.h>

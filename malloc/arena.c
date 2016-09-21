@@ -73,7 +73,7 @@ static __thread mstate thread_arena attribute_tls_model_ie;
    members of struct malloc_state objects.  No other locks must be
    acquired after free_list_lock has been acquired.  */
 
-static mutex_t free_list_lock = _LIBC_LOCK_INITIALIZER;
+__libc_lock_define_initialized (static, free_list_lock);
 static size_t narenas = 1;
 static mstate free_list;
 
@@ -89,7 +89,7 @@ static mstate free_list;
    acquired, no arena lock must have been acquired, but it is
    permitted to acquire arena locks subsequently, while list_lock is
    acquired.  */
-static mutex_t list_lock = _LIBC_LOCK_INITIALIZER;
+__libc_lock_define_initialized (static, list_lock);
 
 /* Already initialized? */
 int __malloc_initialized = -1;
@@ -112,7 +112,7 @@ int __malloc_initialized = -1;
 
 #define arena_lock(ptr, size) do {					      \
       if (ptr && !arena_is_corrupt (ptr))				      \
-        __libc_lock_lock (ptr->mutex);				      \
+        __libc_lock_lock (ptr->mutex);					      \
       else								      \
         ptr = arena_get2 ((size), NULL);				      \
   } while (0)

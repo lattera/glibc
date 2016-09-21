@@ -1,5 +1,21 @@
 2016-09-21  Florian Weimer  <fweimer@redhat.com>
 
+	malloc: Use __libc_lock wrappers.
+	* malloc/arena.c (list_lock, free_list_lock): Define using
+	__libc_lock_define_initialized.
+	(arena_lock): Adjust formatting.
+	* malloc/malloc.c (struct malloc_state): Define mutex using
+	__libc_lock_define.
+	* sysdeps/generic/malloc-machine.h (mutex_t, mutex_init)
+	(mutex_lock, mutex_trylock, mutex_unlock): Remove.
+	* sysdeps/mach/hurd/malloc-machine.h (mutex_t, mutex_lock)
+	(mutex_unlock, mutex_trylock): Remove.
+	(__pthread_initialize): Remove unused macro.
+	* sysdeps/nptl/malloc-machine.h (mutex_t, mutex_lock)
+	(mutex_unlock, mutex_trylock): Remove.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #20592]
 	Remove RR type classification macros.
 	* resolv/arpa/nameser.h (ns_t_qt_p, ns_t_mrr_p, ns_t_rr_p)

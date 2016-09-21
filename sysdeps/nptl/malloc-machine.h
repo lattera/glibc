@@ -22,14 +22,6 @@
 
 #include <atomic.h>
 #include <libc-lock.h>
-
-__libc_lock_define (typedef, mutex_t)
-
-#define mutex_init(m)		__libc_lock_init (*(m))
-#define mutex_lock(m)		__libc_lock_lock (*(m))
-#define mutex_trylock(m)	__libc_lock_trylock (*(m))
-#define mutex_unlock(m)		__libc_lock_unlock (*(m))
-
 #include <sysdeps/generic/malloc-machine.h>
 
 #endif /* !defined(_MALLOC_MACHINE_H) */
