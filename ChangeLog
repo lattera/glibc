@@ -1,3 +1,8 @@
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/sln.c: Remove HAVE_CONFIG_H, S_ISDIR, S_ISLNK preprocessor
+	conditionals.  Do not define PATH_MAX.
+
 2016-09-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Correctly block and unblock
