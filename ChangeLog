@@ -1,5 +1,13 @@
 2016-09-21  Florian Weimer  <fweimer@redhat.com>
 
+	Remove the always-defined BIND_4_COMPAT macro.
+	* resolv/arpa/nameser.h: Unconditionally include
+	<arpa/nameser_compat.h>.
+	(BIND_4_COMPAT): Remove.
+	* resolv/res_comp.c: Do not check BIND_4_COMPAT.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #20591]
 	Remove obsolete DNSSEC support.
 	* resolv/arpa/nameser.h (ns_key_types, NS_KEY_*, NS_ALG_*)

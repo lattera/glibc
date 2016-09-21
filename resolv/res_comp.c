@@ -228,7 +228,6 @@ res_dnok(const char *dn) {
 }
 libresolv_hidden_def (res_dnok)
 
-#ifdef BIND_4_COMPAT
 /*
  * This module must export the following externally-visible symbols:
  *	___putlong
@@ -243,7 +242,6 @@ void __putshort(u_int16_t src, u_char *dst) { ns_put16(src, dst); }
 libresolv_hidden_def (__putshort)
 u_int32_t _getlong(const u_char *src) { return (ns_get32(src)); }
 u_int16_t _getshort(const u_char *src) { return (ns_get16(src)); }
-#endif /*BIND_4_COMPAT*/
 
 
 #include <shlib-compat.h>

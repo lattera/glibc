@@ -52,10 +52,6 @@
 #ifndef _ARPA_NAMESER_H_
 #define _ARPA_NAMESER_H_
 
-/*! \file */
-
-#define BIND_4_COMPAT
-
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/cdefs.h>
@@ -420,9 +416,7 @@ int		ns_makecanon (const char *, char *, size_t) __THROW;
 int		ns_samename (const char *, const char *) __THROW;
 __END_DECLS
 
-#ifdef BIND_4_COMPAT
 #include <arpa/nameser_compat.h>
-#endif
 
 #endif /* !_ARPA_NAMESER_H_ */
 /*! \file */
