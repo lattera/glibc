@@ -121,14 +121,10 @@ ifneq (,$(CXX))
 # will be used instead of /usr/include/stdlib.h and /usr/include/math.h.
 before-compile := $(common-objpfx)cstdlib $(common-objpfx)cmath \
 	          $(before-compile)
-cstdlib=$(shell echo "\#include <cstdlib>" | $(CXX) -M -MP -x c++ - \
-		| sed -n "/cstdlib:/{s/:$$//;p}")
-$(common-objpfx)cstdlib: $(cstdlib)
+$(common-objpfx)cstdlib: $(c++-cstdlib-header)
 	$(INSTALL_DATA) $< $@T
 	$(move-if-change) $@T $@
-cmath=$(shell echo "\#include <cmath>" | $(CXX) -M -MP -x c++ - \
-		| sed -n "/cmath:/{s/:$$//;p}")
-$(common-objpfx)cmath: $(cmath)
+$(common-objpfx)cmath: $(c++-cmath-header)
 	$(INSTALL_DATA) $< $@T
 	$(move-if-change) $@T $@
 endif

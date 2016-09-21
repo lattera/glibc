@@ -45,6 +45,8 @@ defines = @DEFINES@
 sysheaders = @sysheaders@
 sysincludes = @SYSINCLUDES@
 c++-sysincludes = @CXX_SYSINCLUDES@
+c++-cstdlib-header = @CXX_CSTDLIB_HEADER@
+c++-cmath-header = @CXX_CMATH_HEADER@
 all-warnings = @all_warnings@
 enable-werror = @enable_werror@
 

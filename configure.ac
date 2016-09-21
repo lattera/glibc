@@ -1039,6 +1039,18 @@ fi
 AC_SUBST(SYSINCLUDES)
 AC_SUBST(CXX_SYSINCLUDES)
 
+# Obtain some C++ header file paths.  This is used to make a local
+# copy of those headers in Makerules.
+if test -n "$CXX"; then
+  find_cxx_header () {
+    echo "#include <$1>" | $CXX -M -MP -x c++ - | sed -n "/$1:/{s/:\$//;p}"
+  }
+  CXX_CSTDLIB_HEADER="$(find_cxx_header cstdlib)"
+  CXX_CMATH_HEADER="$(find_cxx_header cmath)"
+fi
+AC_SUBST(CXX_CSTDLIB_HEADER)
+AC_SUBST(CXX_CMATH_HEADER)
+
 # Test if LD_LIBRARY_PATH contains the notation for the current directory
 # since this would lead to problems installing/building glibc.
 # LD_LIBRARY_PATH contains the current directory if one of the following
