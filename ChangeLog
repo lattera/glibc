@@ -1,5 +1,14 @@
 2016-09-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (issubnormal): New
+	macro.
+	* math/libm-test.inc (issubnormal_test_data): New array.
+	(issubnormal_test): New function.
+	* manual/arith.texi (Floating Point Classes): Document
+	issubnormal.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+
 	* sysdeps/generic/stdint.h: Define
 	__GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION and include
 	<bits/libc-header-start.h> instead of including <features.h>.

@@ -49,6 +49,10 @@ Version 2.25
   UINTMAX_WIDTH, PTRDIFF_WIDTH, SIG_ATOMIC_WIDTH, SIZE_WIDTH, WCHAR_WIDTH,
   WINT_WIDTH.
 
+* New <math.h> features are added from TS 18661-1:2014:
+
+  - Classification macros: issubnormal.
+
 * The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
   for the Linux quota interface which predates kernel version 2.4.22 has
   been removed.

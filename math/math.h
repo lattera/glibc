@@ -328,6 +328,9 @@ enum
       : sizeof (x) == sizeof (double)					      \
       ? __issignaling (x) : __issignalingl (x))
 # endif
+
+/* Return nonzero value if X is subnormal.  */
+# define issubnormal(x) (fpclassify (x) == FP_SUBNORMAL)
 #endif /* Use IEC_60559_BFP_EXT.  */
 
 #ifdef	__USE_MISC

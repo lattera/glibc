@@ -406,6 +406,14 @@ This macro returns a nonzero value if @var{x} is a signaling NaN
 (sNaN).  It is from TS 18661-1:2014.
 @end deftypefn
 
+@comment math.h
+@comment ISO
+@deftypefn {Macro} int issubnormal (@emph{float-type} @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This macro returns a nonzero value if @var{x} is subnormal.  It is
+from TS 18661-1:2014.
+@end deftypefn
+
 Another set of floating-point classification functions was provided by
 BSD.  @Theglibc{} also supports these functions; however, we
 recommend that you use the ISO C99 macros in new code.  Those are standard

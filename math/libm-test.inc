@@ -46,7 +46,7 @@
    cbrt, ceil, copysign, cos, cosh, drem, erf, erfc, exp, exp10, exp2, expm1,
    fabs, fdim, finite, floor, fma, fmax, fmin, fmod, fpclassify,
    frexp, gamma, hypot,
-   ilogb, isfinite, isinf, isnan, isnormal, issignaling,
+   ilogb, isfinite, isinf, isnan, isnormal, issignaling, issubnormal,
    isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
    j0, j1, jn,
    ldexp, lgamma, log, log10, log1p, log2, logb,
@@ -8587,6 +8587,31 @@ issignaling_test (void)
   ALL_RM_TEST (issignaling, 1, issignaling_test_data, RUN_TEST_LOOP_f_b_tg, END);
 }
 
+static const struct test_f_i_data issubnormal_test_data[] =
+  {
+    TEST_f_b (issubnormal, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, 10, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, min_subnorm_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, -min_subnorm_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, -min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, -max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, plus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issubnormal, -snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+  };
+
+static void
+issubnormal_test (void)
+{
+  ALL_RM_TEST (issubnormal, 1, issubnormal_test_data, RUN_TEST_LOOP_f_b_tg, END);
+}
+
 static const struct test_ff_i_data isunordered_test_data[] =
   {
     TEST_ff_i (isunordered, minus_zero, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -12668,6 +12693,7 @@ main (int argc, char **argv)
   isnan_test ();
   isnormal_test ();
   issignaling_test ();
+  issubnormal_test ();
   signbit_test ();
 
   /* Trigonometric functions:  */
