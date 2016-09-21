@@ -1374,29 +1374,61 @@ The @code{strverscmp} function compares the string @var{s1} against
 @var{s2}, considering them as holding indices/version numbers.  The
 return value follows the same conventions as found in the
 @code{strcmp} function.  In fact, if @var{s1} and @var{s2} contain no
-digits, @code{strverscmp} behaves like @code{strcmp}.
+digits, @code{strverscmp} behaves like @code{strcmp}
+(in the sense that the sign of the result is the same).
 
-Basically, we compare strings normally (byte by byte), until
-we find a digit in each string - then we enter a special comparison
-mode, where each sequence of digits is taken as a whole.  If we reach the
-end of these two parts without noticing a difference, we return to the
-standard comparison mode.  There are two types of numeric parts:
-"integral" and "fractional" (those  begin with a '0').  The types
-of the numeric parts affect the way we sort them:
+The comparison algorithm which the @code{strverscmp} function implements
+differs slightly from other version-comparison algorithms.  The
+implementation is based on a finite-state machine, whose behavior is
+approximated below.
 
 @itemize @bullet
 @item
-integral/integral: we compare values as you would expect.
+The input strings are each split into sequences of non-digits and
+digits.  These sequences can be empty at the beginning and end of the
+string.  Digits are determined by the @code{isdigit} function and are
+thus subject to the current locale.
 
 @item
-fractional/integral: the fractional part is less than the integral one.
-Again, no surprise.
+Comparison starts with a (possibly empty) non-digit sequence.  The first
+non-equal sequences of non-digits or digits determines the outcome of
+the comparison.
 
 @item
-fractional/fractional: the things become a bit more complex.
-If the common prefix contains only leading zeroes, the longest part is less
-than the other one; else the comparison behaves normally.
+Corresponding non-digit sequences in both strings are compared
+lexicographically if their lengths are equal.  If the lengths differ,
+the shorter non-digit sequence is extended with the input string
+character immediately following it (which may be the null terminator),
+the other sequence is truncated to be of the same (extended) length, and
+these two sequences are compared lexicographically.  In the last case,
+the sequence comparison determines the result of the function because
+the extension character (or some character before it) is necessarily
+different from the character at the same offset in the other input
+string.
+
+@item
+For two sequences of digits, the number of leading zeros is counted (which
+can be zero).  If the count differs, the string with more leading zeros
+in the digit sequence is considered smaller than the other string.
+
+@item
+If the two sequences of digits have no leading zeros, they are compared
+as integers, that is, the string with the longer digit sequence is
+deemed larger, and if both sequences are of equal length, they are
+compared lexicographically.
+
+@item
+If both digit sequences start with a zero and have an equal number of
+leading zeros, they are compared lexicographically if their lengths are
+the same.  If the lengths differ, the shorter sequence is extended with
+the following character in its input string, and the other sequence is
+truncated to the same length, and both sequences are compared
+lexicographically (similar to the non-digit sequence case above).
 @end itemize
+
+The treatment of leading zeros and the tie-breaking extension characters
+(which in effect propagate across non-digit/digit sequence boundaries)
+differs from other version-comparison algorithms.
 
 @smallexample
 strverscmp ("no digit", "no digit")
@@ -1404,15 +1436,12 @@ strverscmp ("no digit", "no digit")
 strverscmp ("item#99", "item#100")
     @result{} <0   /* @r{same prefix, but 99 < 100.} */
 strverscmp ("alpha1", "alpha001")
-    @result{} >0   /* @r{fractional part inferior to integral one.} */
+    @result{} >0   /* @r{different number of leading zeros (0 and 2).} */
 strverscmp ("part1_f012", "part1_f01")
-    @result{} >0   /* @r{two fractional parts.} */
+    @result{} >0   /* @r{lexicographical comparison with leading zeros.} */
 strverscmp ("foo.009", "foo.0")
-    @result{} <0   /* @r{idem, but with leading zeroes only.} */
+    @result{} <0   /* @r{different number of leading zeros (2 and 1).} */
 @end smallexample
-
-This function is especially useful when dealing with filename sorting,
-because filenames frequently hold indices/version numbers.
 
 @code{strverscmp} is a GNU extension.
 @end deftypefun
