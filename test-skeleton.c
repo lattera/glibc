@@ -33,6 +33,7 @@
 #include <sys/wait.h>
 #include <sys/param.h>
 #include <time.h>
+#include <stdarg.h>
 
 /* The test function is normally called `do_test' and it is called
    with argc and argv as the arguments.  We nevertheless provide the
@@ -112,6 +113,20 @@ xrealloc (void *p, size_t n)
   void *result = realloc (p, n);
   if (result == NULL && (n > 0 || p == NULL))
     oom_error ("realloc", n);
+  return result;
+}
+
+/* Call asprintf with error checking.  */
+__attribute__ ((always_inline, format (printf, 1, 2)))
+static __inline__ char *
+xasprintf (const char *format, ...)
+{
+  char *result;
+  if (asprintf (&result, format, __builtin_va_arg_pack ()) < 0)
+    {
+      printf ("error: asprintf: %m\n");
+      exit (1);
+    }
   return result;
 }
 

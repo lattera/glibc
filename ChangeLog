@@ -1,5 +1,11 @@
 2016-09-21  Florian Weimer  <fweimer@redhat.com>
 
+	* test-skeleton.c (xasprintf): Add function.
+	* io/tst-open-tmpfile.c: New test.
+	* io/Makefile (tests): Add it.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
 	Avoid running $(CXX) during build to obtain header file paths.
 	* configure.ac (CXX_SYSINCLUDES, CXX_CMATH_HEADER): Set.
 	* config.make.in (c++-cstdlib-header, c++-cmath-header): Define.
