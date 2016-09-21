@@ -1,3 +1,13 @@
+2016-09-21  James Greenhalgh  <james.greenhalgh@arm.com>
+
+	* soft-fp/extendhftf2.c: New.
+	* soft-fp/fixhfti.c: Likewise.
+	* soft-fp/fixunshfti.c: Likewise.
+	* soft-fp/floattihf.c: Likewise.
+	* soft-fp/floatuntihf.c: Likewise.
+	* soft-fp/half.h: Likewise.
+	* soft-fp/trunctfhf2.c: Likewise.
+
 2016-09-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (issubnormal): New
