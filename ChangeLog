@@ -1,5 +1,10 @@
 2016-09-21  Florian Weimer  <fweimer@redhat.com>
 
+	* Makeconfig (all-object-suffixes): Include .op only if
+	$(build-profile).
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
 	* elf/sln.c: Remove HAVE_CONFIG_H, S_ISDIR, S_ISLNK preprocessor
 	conditionals.  Do not define PATH_MAX.
 
