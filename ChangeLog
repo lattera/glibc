@@ -1,5 +1,12 @@
 2016-09-21  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20592]
+	Remove RR type classification macros.
+	* resolv/arpa/nameser.h (ns_t_qt_p, ns_t_mrr_p, ns_t_rr_p)
+	(ns_t_udp_p, ns_t_xfr_p): Remove.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
 	Remove misleading version information.
 	* resolv/arpa/nameser.h (__NAMESER): Remove.
 	* resolv/arpa/nameser_compat.h (__BIND): Remove.

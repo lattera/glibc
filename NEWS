@@ -50,6 +50,12 @@ Version 2.25
   only implemented minimal support for the previous version of DNSSEC, which
   is incompatible with the currently deployed version.
 
+* The resource record type classification macros ns_t_qt_p, ns_t_mrr_p,
+  ns_t_rr_p, ns_t_udp_p, ns_t_xfr_p have been removed from the
+  <arpa/nameser.h> header file because the distinction between RR types and
+  meta-RR types is not officially standardized, subject to revision, and
+  thus not suitable for encoding in a macro.
+
 Security related changes:
 
   On ARM EABI (32-bit), generating a backtrace for execution contexts which

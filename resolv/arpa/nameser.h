@@ -283,17 +283,6 @@ typedef enum __ns_type {
 	ns_t_max = 65536
 } ns_type;
 
-/* Exclusively a QTYPE? (not also an RTYPE) */
-#define	ns_t_qt_p(t) (ns_t_xfr_p(t) || (t) == ns_t_any || \
-		      (t) == ns_t_mailb || (t) == ns_t_maila)
-/* Some kind of meta-RR? (not a QTYPE, but also not an RTYPE) */
-#define	ns_t_mrr_p(t) ((t) == ns_t_tsig || (t) == ns_t_opt)
-/* Exclusively an RTYPE? (not also a QTYPE or a meta-RR) */
-#define ns_t_rr_p(t) (!ns_t_qt_p(t) && !ns_t_mrr_p(t))
-#define ns_t_udp_p(t) ((t) != ns_t_axfr && (t) != ns_t_zxfr)
-#define ns_t_xfr_p(t) ((t) == ns_t_axfr || (t) == ns_t_ixfr || \
-		       (t) == ns_t_zxfr)
-
 /*%
  * Values for class field
  */
