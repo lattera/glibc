@@ -45,10 +45,6 @@
  * SOFTWARE.
  */
 
-/*
- *	$BINDId: nameser.h,v 8.37 2000/03/30 21:16:49 vixie Exp $
- */
-
 #ifndef _ARPA_NAMESER_H_
 #define _ARPA_NAMESER_H_
 
@@ -56,15 +52,6 @@
 #include <sys/types.h>
 #include <sys/cdefs.h>
 
-/*%
- * Revision information.  This is the release date in YYYYMMDD format.
- * It can change every day so the right thing to do with it is use it
- * in preprocessor commands such as "#if (__NAMESER > 19931104)".  Do not
- * compare for equality; rather, use it to determine whether your libbind.a
- * contains a new enough lib/nameser/ to support the feature you need.
- */
-
-#define __NAMESER	19991006	/*%< New interface version stamp. */
 /*
  * Define constants based on RFC 883, RFC 1034, RFC 1035
  */

@@ -1,5 +1,11 @@
 2016-09-21  Florian Weimer  <fweimer@redhat.com>
 
+	Remove misleading version information.
+	* resolv/arpa/nameser.h (__NAMESER): Remove.
+	* resolv/arpa/nameser_compat.h (__BIND): Remove.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
 	Remove the always-defined BIND_4_COMPAT macro.
 	* resolv/arpa/nameser.h: Unconditionally include
 	<arpa/nameser_compat.h>.

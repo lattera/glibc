@@ -26,15 +26,8 @@
  * SUCH DAMAGE.
  */
 
-/*%
- *      from nameser.h	8.1 (Berkeley) 6/2/93
- *	$BINDId: nameser_compat.h,v 8.11 1999/01/02 08:00:58 vixie Exp $
- */
-
 #ifndef _ARPA_NAMESER_COMPAT_
 #define	_ARPA_NAMESER_COMPAT_
-
-#define	__BIND		19950621	/*%< (DEAD) interface version stamp. */
 
 #include <endian.h>
 
