@@ -371,24 +371,6 @@ const struct res_sym __p_update_section_syms[] attribute_hidden = {
 	{0,             (char *)0}
 };
 
-const struct res_sym __p_key_syms[] attribute_hidden = {
-	{NS_ALG_MD5RSA,		"RSA",		"RSA KEY with MD5 hash"},
-	{NS_ALG_DH,		"DH",		"Diffie Hellman"},
-	{NS_ALG_DSA,		"DSA",		"Digital Signature Algorithm"},
-	{NS_ALG_EXPIRE_ONLY,	"EXPIREONLY",	"No algorithm"},
-	{NS_ALG_PRIVATE_OID,	"PRIVATE",	"Algorithm obtained from OID"},
-	{0,			NULL,		NULL}
-};
-
-const struct res_sym __p_cert_syms[] attribute_hidden = {
-	{cert_t_pkix,	"PKIX",		"PKIX (X.509v3) Certificate"},
-	{cert_t_spki,	"SPKI",		"SPKI certificate"},
-	{cert_t_pgp,	"PGP",		"PGP certificate"},
-	{cert_t_url,	"URL",		"URL Private"},
-	{cert_t_oid,	"OID",		"OID Private"},
-	{0,		NULL,		NULL}
-};
-
 /*
  * Names of RR types and qtypes.  Types and qtypes are the same, except
  * that T_ANY is a qtype but not a type.  (You can ask for records of type

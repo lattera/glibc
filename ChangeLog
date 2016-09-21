@@ -1,5 +1,21 @@
 2016-09-21  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20591]
+	Remove obsolete DNSSEC support.
+	* resolv/arpa/nameser.h (ns_key_types, NS_KEY_*, NS_ALG_*)
+	(NS_MD5_RSA_*, NS_DSA_*, NS_NXT_*, ns_sign, ns_sign2, ns_sign_tcp)
+	(ns_sign_tcp2, ns_sign_tcp_init, ns_find_tsig, ns_verify)
+	(ns_verify_tcp, ns_verify_tcp_init): Remove.
+	(ns_cert_types): Add comment.
+	* resolv/ns_print.c (ns_sprintrrf): Do not handle DNSSEC records
+	separately.
+	(KEY_RSA, KEY_HMAC_MD5, dst_s_id_calc, dst_s_get_int16)
+	(dst_s_dns_key_id): Remove.
+	* resolv/res_debug.c (__p_key_syms, __p_cert_syms): Remove unused
+	variables.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #20524]
 	* manual/string.texi (String/Array Comparison): Clarify the
 	strverscmp behavior.

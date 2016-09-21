@@ -44,6 +44,12 @@ Version 2.25
   for the Linux quota interface which predates kernel version 2.4.22 has
   been removed.
 
+* DNSSEC-related declarations and definitions have been removed from the
+  <arpa/nameser.h> header file, and libresolv will no longer attempt to
+  decode the data part of DNSSEC record types.  Previous versions of glibc
+  only implemented minimal support for the previous version of DNSSEC, which
+  is incompatible with the currently deployed version.
+
 Security related changes:
 
   On ARM EABI (32-bit), generating a backtrace for execution contexts which

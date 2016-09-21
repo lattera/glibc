@@ -326,15 +326,7 @@ typedef enum __ns_class {
 	ns_c_max = 65536
 } ns_class;
 
-/* DNSSEC constants. */
-
-typedef enum __ns_key_types {
-	ns_kt_rsa = 1,		/*%< key type RSA/MD5 */
-	ns_kt_dh  = 2,		/*%< Diffie Hellman */
-	ns_kt_dsa = 3,		/*%< Digital Signature Standard (MANDATORY) */
-	ns_kt_private = 254	/*%< Private key type starts with OID */
-} ns_key_types;
-
+/* Certificate type values in CERT resource records.  */
 typedef enum __ns_cert_types {
 	cert_t_pkix = 1,	/*%< PKIX (X.509v3) */
 	cert_t_spki = 2,	/*%< SPKI */
@@ -342,82 +334,6 @@ typedef enum __ns_cert_types {
 	cert_t_url  = 253,	/*%< URL private type */
 	cert_t_oid  = 254	/*%< OID private type */
 } ns_cert_types;
-
-/* Flags field of the KEY RR rdata. */
-#define	NS_KEY_TYPEMASK		0xC000	/*%< Mask for "type" bits */
-#define	NS_KEY_TYPE_AUTH_CONF	0x0000	/*%< Key usable for both */
-#define	NS_KEY_TYPE_CONF_ONLY	0x8000	/*%< Key usable for confidentiality */
-#define	NS_KEY_TYPE_AUTH_ONLY	0x4000	/*%< Key usable for authentication */
-#define	NS_KEY_TYPE_NO_KEY	0xC000	/*%< No key usable for either; no key */
-/* The type bits can also be interpreted independently, as single bits: */
-#define	NS_KEY_NO_AUTH		0x8000	/*%< Key unusable for authentication */
-#define	NS_KEY_NO_CONF		0x4000	/*%< Key unusable for confidentiality */
-#define	NS_KEY_RESERVED2	0x2000	/* Security is *mandatory* if bit=0 */
-#define	NS_KEY_EXTENDED_FLAGS	0x1000	/*%< reserved - must be zero */
-#define	NS_KEY_RESERVED4	0x0800  /*%< reserved - must be zero */
-#define	NS_KEY_RESERVED5	0x0400  /*%< reserved - must be zero */
-#define	NS_KEY_NAME_TYPE	0x0300	/*%< these bits determine the type */
-#define	NS_KEY_NAME_USER	0x0000	/*%< key is assoc. with user */
-#define	NS_KEY_NAME_ENTITY	0x0200	/*%< key is assoc. with entity eg host */
-#define	NS_KEY_NAME_ZONE	0x0100	/*%< key is zone key */
-#define	NS_KEY_NAME_RESERVED	0x0300	/*%< reserved meaning */
-#define	NS_KEY_RESERVED8	0x0080  /*%< reserved - must be zero */
-#define	NS_KEY_RESERVED9	0x0040  /*%< reserved - must be zero */
-#define	NS_KEY_RESERVED10	0x0020  /*%< reserved - must be zero */
-#define	NS_KEY_RESERVED11	0x0010  /*%< reserved - must be zero */
-#define	NS_KEY_SIGNATORYMASK	0x000F	/*%< key can sign RR's of same name */
-#define	NS_KEY_RESERVED_BITMASK ( NS_KEY_RESERVED2 | \
-				  NS_KEY_RESERVED4 | \
-				  NS_KEY_RESERVED5 | \
-				  NS_KEY_RESERVED8 | \
-				  NS_KEY_RESERVED9 | \
-				  NS_KEY_RESERVED10 | \
-				  NS_KEY_RESERVED11 )
-#define NS_KEY_RESERVED_BITMASK2 0xFFFF /*%< no bits defined here */
-/* The Algorithm field of the KEY and SIG RR's is an integer, {1..254} */
-#define	NS_ALG_MD5RSA		1	/*%< MD5 with RSA */
-#define	NS_ALG_DH               2	/*%< Diffie Hellman KEY */
-#define	NS_ALG_DSA              3	/*%< DSA KEY */
-#define	NS_ALG_DSS              NS_ALG_DSA
-#define	NS_ALG_EXPIRE_ONLY	253	/*%< No alg, no security */
-#define	NS_ALG_PRIVATE_OID	254	/*%< Key begins with OID giving alg */
-/* Protocol values  */
-/* value 0 is reserved */
-#define NS_KEY_PROT_TLS         1
-#define NS_KEY_PROT_EMAIL       2
-#define NS_KEY_PROT_DNSSEC      3
-#define NS_KEY_PROT_IPSEC       4
-#define NS_KEY_PROT_ANY		255
-
-/* Signatures */
-#define	NS_MD5RSA_MIN_BITS	 512	/*%< Size of a mod or exp in bits */
-#define	NS_MD5RSA_MAX_BITS	4096
-	/* Total of binary mod and exp */
-#define	NS_MD5RSA_MAX_BYTES	((NS_MD5RSA_MAX_BITS+7/8)*2+3)
-	/* Max length of text sig block */
-#define	NS_MD5RSA_MAX_BASE64	(((NS_MD5RSA_MAX_BYTES+2)/3)*4)
-#define NS_MD5RSA_MIN_SIZE	((NS_MD5RSA_MIN_BITS+7)/8)
-#define NS_MD5RSA_MAX_SIZE	((NS_MD5RSA_MAX_BITS+7)/8)
-
-#define NS_DSA_SIG_SIZE         41
-#define NS_DSA_MIN_SIZE         213
-#define NS_DSA_MAX_BYTES        405
-
-/* Offsets into SIG record rdata to find various values */
-#define	NS_SIG_TYPE	0	/*%< Type flags */
-#define	NS_SIG_ALG	2	/*%< Algorithm */
-#define	NS_SIG_LABELS	3	/*%< How many labels in name */
-#define	NS_SIG_OTTL	4	/*%< Original TTL */
-#define	NS_SIG_EXPIR	8	/*%< Expiration time */
-#define	NS_SIG_SIGNED	12	/*%< Signature time */
-#define	NS_SIG_FOOT	16	/*%< Key footprint */
-#define	NS_SIG_SIGNER	18	/*%< Domain name of who signed it */
-/* How RR types are represented as bit-flags in NXT records */
-#define	NS_NXT_BITS 8
-#define	NS_NXT_BIT_SET(  n,p) (p[(n)/NS_NXT_BITS] |=  (0x80>>((n)%NS_NXT_BITS)))
-#define	NS_NXT_BIT_CLEAR(n,p) (p[(n)/NS_NXT_BITS] &= ~(0x80>>((n)%NS_NXT_BITS)))
-#define	NS_NXT_BIT_ISSET(n,p) (p[(n)/NS_NXT_BITS] &   (0x80>>((n)%NS_NXT_BITS)))
-#define NS_NXT_MAX 127
 
 /*%
  * EDNS0 extended flags and option codes, host order.
@@ -498,25 +414,6 @@ int		ns_name_compress (const char *, u_char *, size_t,
 int		ns_name_skip (const u_char **, const u_char *) __THROW;
 void		ns_name_rollback (const u_char *, const u_char **,
 				  const u_char **) __THROW;
-int		ns_sign (u_char *, int *, int, int, void *,
-			 const u_char *, int, u_char *, int *, time_t) __THROW;
-int		ns_sign2 (u_char *, int *, int, int, void *,
-			  const u_char *, int, u_char *, int *, time_t,
-			  u_char **, u_char **) __THROW;
-int		ns_sign_tcp (u_char *, int *, int, int,
-			     ns_tcp_tsig_state *, int) __THROW;
-int		ns_sign_tcp2 (u_char *, int *, int, int,
-			      ns_tcp_tsig_state *, int,
-			      u_char **, u_char **) __THROW;
-int		ns_sign_tcp_init (void *, const u_char *, int,
-				  ns_tcp_tsig_state *) __THROW;
-u_char		*ns_find_tsig (u_char *, u_char *) __THROW;
-int		ns_verify (u_char *, int *, void *, const u_char *, int,
-			   u_char *, int *, time_t *, int) __THROW;
-int		ns_verify_tcp (u_char *, int *, ns_tcp_tsig_state *, int)
-     __THROW;
-int		ns_verify_tcp_init (void *, const u_char *, int,
-				    ns_tcp_tsig_state *) __THROW;
 int		ns_samedomain (const char *, const char *) __THROW;
 int		ns_subdomain (const char *, const char *) __THROW;
 int		ns_makecanon (const char *, char *, size_t) __THROW;
