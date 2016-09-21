@@ -110,7 +110,9 @@ minimum possible values for each integer data type.  The macro names
 follow these examples: @code{INT32_MAX}, @code{UINT8_MAX},
 @code{INT_FAST32_MIN}, @code{INT_LEAST64_MIN}, @code{UINTMAX_MAX},
 @code{INTMAX_MAX}, @code{INTMAX_MIN}.  Note that there are no macros for
-unsigned integer minima.  These are always zero.
+unsigned integer minima.  These are always zero.  Similiarly, there
+are macros such as @code{INTMAX_WIDTH} for the width of these types.
+Those macros for integer type widths come from TS 18661-1:2014.
 @cindex maximum possible integer
 @cindex minimum possible integer
 

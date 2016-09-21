@@ -1,3 +1,48 @@
+2016-09-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/stdint.h: Define
+	__GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION and include
+	<bits/libc-header-start.h> instead of including <features.h>.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT8_WIDTH): New macro.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT8_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_LEAST8_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_LEAST8_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_LEAST16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_LEAST16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_LEAST32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_LEAST32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_LEAST64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_LEAST64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_FAST8_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_FAST8_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_FAST16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_FAST16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_FAST32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_FAST32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_FAST64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_FAST64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INTPTR_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINTPTR_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INTMAX_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINTMAX_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (PTRDIFF_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (SIG_ATOMIC_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (SIZE_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (WCHAR_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (WINT_WIDTH): Likewise.
+	* manual/arith.texi (Integers): Document these macros for types
+	specified by width properties.
+	* manual/lang.texi (Width of Type): Document these macros for
+	other standard typedefs.
+	* stdlib/tst-width-stdint.c: New file.
+	* stdlib/Makefile (tests): Add tst-width-stdint.
+
 2016-09-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20016]

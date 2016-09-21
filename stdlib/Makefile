@@ -77,7 +77,8 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-tininess tst-strtod-underflow tst-tls-atexit	    \
 		   tst-setcontext3 tst-tls-atexit-nodelete		    \
 		   tst-strtol-locale tst-strtod-nan-locale tst-strfmon_l    \
-		   tst-quick_exit tst-thread-quick_exit tst-width
+		   tst-quick_exit tst-thread-quick_exit tst-width	    \
+		   tst-width-stdint
 tests-static	:= tst-secure-getenv
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-quick_exit.o = -std=c++11

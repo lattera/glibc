@@ -22,7 +22,8 @@
 #ifndef _STDINT_H
 #define _STDINT_H	1
 
-#include <features.h>
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+#include <bits/libc-header-start.h>
 #include <bits/wchar.h>
 #include <bits/wordsize.h>
 
@@ -306,5 +307,48 @@ typedef unsigned long long int	uintmax_t;
 #  define INTMAX_C(c)	c ## LL
 #  define UINTMAX_C(c)	c ## ULL
 # endif
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+
+# define INT8_WIDTH 8
+# define UINT8_WIDTH 8
+# define INT16_WIDTH 16
+# define UINT16_WIDTH 16
+# define INT32_WIDTH 32
+# define UINT32_WIDTH 32
+# define INT64_WIDTH 64
+# define UINT64_WIDTH 64
+
+# define INT_LEAST8_WIDTH 8
+# define UINT_LEAST8_WIDTH 8
+# define INT_LEAST16_WIDTH 16
+# define UINT_LEAST16_WIDTH 16
+# define INT_LEAST32_WIDTH 32
+# define UINT_LEAST32_WIDTH 32
+# define INT_LEAST64_WIDTH 64
+# define UINT_LEAST64_WIDTH 64
+
+# define INT_FAST8_WIDTH 8
+# define UINT_FAST8_WIDTH 8
+# define INT_FAST16_WIDTH __WORDSIZE
+# define UINT_FAST16_WIDTH __WORDSIZE
+# define INT_FAST32_WIDTH __WORDSIZE
+# define UINT_FAST32_WIDTH __WORDSIZE
+# define INT_FAST64_WIDTH 64
+# define UINT_FAST64_WIDTH 64
+
+# define INTPTR_WIDTH __WORDSIZE
+# define UINTPTR_WIDTH __WORDSIZE
+
+# define INTMAX_WIDTH 64
+# define UINTMAX_WIDTH 64
+
+# define PTRDIFF_WIDTH __WORDSIZE
+# define SIG_ATOMIC_WIDTH 32
+# define SIZE_WIDTH __WORDSIZE
+# define WCHAR_WIDTH 32
+# define WINT_WIDTH 32
+
+#endif
 
 #endif /* stdint.h */

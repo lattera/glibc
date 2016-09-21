@@ -703,6 +703,38 @@ int}, @code{long long int} and @code{unsigned long long int},
 respectively.
 @end table
 
+Further such macros are defined in @file{stdint.h}.  Apart from those
+for types specified by width (@pxref{Integers}), the following are
+defined.
+
+@table @code
+@comment stdint.h
+@comment ISO
+@item INTPTR_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx UINTPTR_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx PTRDIFF_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx SIG_ATOMIC_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx SIZE_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx WCHAR_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx WINT_WIDTH
+
+These are the widths of the types @code{intptr_t}, @code{uintptr_t},
+@code{ptrdiff_t}, @code{sig_atomic_t}, @code{size_t}, @code{wchar_t}
+and @code{wint_t}, respectively.
+@end table
+
 @node Range of Type
 @subsection Range of an Integer Type
 @cindex integer type range
