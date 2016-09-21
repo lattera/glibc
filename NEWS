@@ -56,6 +56,11 @@ Version 2.25
   meta-RR types is not officially standardized, subject to revision, and
   thus not suitable for encoding in a macro.
 
+* The types res_sendhookact, res_send_qhook, re_send_rhook, and the qhook
+  and rhook members of the res_state type in <resolv.h> have been removed.
+  The glibc stub resolver did not support these hooks, but the header file
+  did not reflect that.
+
 Security related changes:
 
   On ARM EABI (32-bit), generating a backtrace for execution contexts which

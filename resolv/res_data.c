@@ -104,16 +104,6 @@ res_query(const char *name,	/* domain name */
 	return (res_nquery(&_res, name, class, type, answer, anslen));
 }
 
-void
-res_send_setqhook(res_send_qhook hook) {
-	_res.qhook = hook;
-}
-
-void
-res_send_setrhook(res_send_rhook hook) {
-	_res.rhook = hook;
-}
-
 int
 res_isourserver(const struct sockaddr_in *inp) {
 	return (res_ourserver_p(&_res, (const struct sockaddr_in6 *) inp));

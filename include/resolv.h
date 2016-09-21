@@ -33,8 +33,6 @@ extern u_int32_t _getlong (const u_char *__src);
 extern u_int16_t _getshort (const u_char *__src);
 extern void res_pquery (const res_state __statp, const u_char *__msg,
 			int __len, FILE *__file);
-extern void res_send_setqhook (res_send_qhook __hook);
-extern void res_send_setrhook (res_send_rhook __hook);
 extern int res_ourserver_p (const res_state __statp,
 			    const struct sockaddr_in6 *__inp);
 extern void __res_iclose (res_state statp, bool free_addr);

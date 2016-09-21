@@ -144,8 +144,8 @@ __res_vinit(res_state statp, int preinit) {
 	statp->pfcode = 0;
 	statp->_vcsock = -1;
 	statp->_flags = 0;
-	statp->qhook = NULL;
-	statp->rhook = NULL;
+	statp->__glibc_unused_qhook = NULL;
+	statp->__glibc_unused_rhook = NULL;
 	statp->_u._ext.nscount = 0;
 	for (n = 0; n < MAXNS; n++)
 	    statp->_u._ext.nsaddrs[n] = NULL;

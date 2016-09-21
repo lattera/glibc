@@ -1,5 +1,20 @@
 2016-09-21  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20016]
+	* resolv/res_send.c (__libc_res_nsend): Remove USE_HOOK code.
+	* resolv/res_data.c (res_send_setqhook, res_send_setrhook):
+	Move ...
+	* resolv/compat-hooks.c (res_send_setqhook, res_send_setrhook):
+	... here, as compatibility symbols in a new file.
+	* resolv/Makefile (libresolv-routines): Add compat-hooks.
+	* resolv/res_init.c (__res_vinit): Adjust member names.
+	* include/resolv.h (res_send_setqhook, res_send_setrhook): Remove.
+	* resolv/resolv.h (res_sendhookact, res_send_qhook)
+	(res_send_rhook): Remove.
+	(struct __res_state): Rename qhook, rhook members.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
 	malloc: Use __libc_lock wrappers.
 	* malloc/arena.c (list_lock, free_list_lock): Define using
 	__libc_lock_define_initialized.

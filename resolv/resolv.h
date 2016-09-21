@@ -68,23 +68,6 @@
 #ifndef __res_state_defined
 # define __res_state_defined
 
-typedef enum { res_goahead, res_nextns, res_modified, res_done, res_error }
-	res_sendhookact;
-
-typedef res_sendhookact (*res_send_qhook) (struct sockaddr_in * const *__ns,
-					   const u_char **__query,
-					   int *__querylen,
-					   u_char *__ans,
-					   int __anssiz,
-					   int *__resplen);
-
-typedef res_sendhookact (*res_send_rhook) (const struct sockaddr_in *__ns,
-					   const u_char *__query,
-					   int __querylen,
-					   u_char *__ans,
-					   int __anssiz,
-					   int *__resplen);
-
 /*
  * Global defines and variables for resolver stub.
  */
@@ -123,8 +106,8 @@ struct __res_state {
 		u_int32_t	mask;
 	} sort_list[MAXRESOLVSORT];
 	/* 4 byte hole here on 64-bit architectures.  */
-	res_send_qhook qhook;		/* query hook */
-	res_send_rhook rhook;		/* response hook */
+	void * __glibc_unused_qhook;
+	void * __glibc_unused_rhook;
 	int	res_h_errno;		/* last one set for this context */
 	int	_vcsock;		/* PRIVATE: for res_send VC i/o */
 	u_int	_flags;			/* PRIVATE: see below */
