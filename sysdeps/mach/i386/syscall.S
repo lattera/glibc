@@ -22,5 +22,8 @@ ENTRY (syscall)
 	popl %eax		/* Pop syscall number into %eax.  */
 	pushl %ecx		/* Push back return address.  */
 	.byte 0x9a, 0, 0, 0, 0, 7, 0 /* lcall $7, $0 -- gas bug */
+	popl %ecx		/* Pop return address into %ecx.  */
+	pushl $0		/* Push back dumb syscall number.  */
+	pushl %ecx		/* Push back return address.  */
 	ret
 END (syscall)

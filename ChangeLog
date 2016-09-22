@@ -14,6 +14,7 @@
 	_hurd_malloc_fork_prepare after that. Call _hurd_malloc_fork_parent
 	before __malloc_fork_unlock_parent and _hurd_malloc_fork_child before
 	__malloc_fork_unlock_child.
+	* sysdeps/mach/i386/syscall.S (syscall): Push back syscall number.
 
 2016-09-21  James Greenhalgh  <james.greenhalgh@arm.com>
 
