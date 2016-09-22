@@ -1,3 +1,11 @@
+2016-09-21  Alexandre Oliva <aoliva@redhat.com>
+
+	[BZ #19826]
+	* elf/dl-tls.c (_dl_allocate_tls_init): Restore DTV early
+	initialization of static TLS entries.
+	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Likewise.
+	* nptl/allocatestack.c (init_one_static_tls): Likewise.
+
 2016-09-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurdmalloc.c (malloc_fork_prepare): Rename to

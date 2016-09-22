@@ -1207,9 +1207,12 @@ init_one_static_tls (struct pthread *curp, struct link_map *map)
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
 
-  /* We cannot delay the initialization of the Static TLS area, since
-     it can be accessed with LE or IE, but since the DTV is only used
-     by GD and LD, we can delay its update to avoid a race.  */
+  /* Fill in the DTV slot so that a later LD/GD access will find it.  */
+  dtv_t *dtv = GET_DTV (TLS_TPADJ (curp));
+  dtv[map->l_tls_modid].pointer.to_free = NULL;
+  dtv[map->l_tls_modid].pointer.val = dest;
+
+  /* Initialize the memory.  */
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
 	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
 }

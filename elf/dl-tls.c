@@ -538,6 +538,10 @@ _dl_allocate_tls_init (void *result)
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif
 
+	  /* Set up the DTV entry.  The simplified __tls_get_addr that
+	     some platforms use in static programs requires it.  */
+	  dtv[map->l_tls_modid].pointer.val = dest;
+
 	  /* Copy the initialization image and clear the BSS part.  */
 	  memset (__mempcpy (dest, map->l_tls_initimage,
 			     map->l_tls_initimage_size), '\0',
