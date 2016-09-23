@@ -1,3 +1,14 @@
+2016-09-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (iszero): New
+	macro.
+	* math/libm-test.inc (iszero_test_data): New array.
+	(iszero_test): New function.
+	(main): Call iszero_test.
+	* manual/arith.texi (Floating Point Classes): Document iszero.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+
 2016-09-23  Zack Weinberg  <zackw@panix.com>
 
 	* scripts/check-installed-headers.sh: New script.

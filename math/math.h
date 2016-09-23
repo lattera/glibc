@@ -331,6 +331,13 @@ enum
 
 /* Return nonzero value if X is subnormal.  */
 # define issubnormal(x) (fpclassify (x) == FP_SUBNORMAL)
+
+/* Return nonzero value if X is zero.  */
+# ifdef __SUPPORT_SNAN__
+#  define iszero(x) (fpclassify (x) == FP_ZERO)
+# else
+#  define iszero(x) ((x) == 0)
+# endif
 #endif /* Use IEC_60559_BFP_EXT.  */
 
 #ifdef	__USE_MISC

@@ -46,7 +46,7 @@
    cbrt, ceil, copysign, cos, cosh, drem, erf, erfc, exp, exp10, exp2, expm1,
    fabs, fdim, finite, floor, fma, fmax, fmin, fmod, fpclassify,
    frexp, gamma, hypot,
-   ilogb, isfinite, isinf, isnan, isnormal, issignaling, issubnormal,
+   ilogb, isfinite, isinf, isnan, isnormal, issignaling, issubnormal, iszero,
    isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
    j0, j1, jn,
    ldexp, lgamma, log, log10, log1p, log2, logb,
@@ -8671,6 +8671,31 @@ isunordered_test (void)
   ALL_RM_TEST (isunordered, 1, isunordered_test_data, RUN_TEST_LOOP_ff_i_tg, END);
 }
 
+static const struct test_f_i_data iszero_test_data[] =
+  {
+    TEST_f_b (iszero, 0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, 10, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, -min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, -min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, -max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, plus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iszero, -snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+  };
+
+static void
+iszero_test (void)
+{
+  ALL_RM_TEST (iszero, 1, iszero_test_data, RUN_TEST_LOOP_f_b_tg, END);
+}
+
 static const struct test_f_f_data j0_test_data[] =
   {
     /* j0 is the Bessel function of the first kind of order 0 */
@@ -12694,6 +12719,7 @@ main (int argc, char **argv)
   isnormal_test ();
   issignaling_test ();
   issubnormal_test ();
+  iszero_test ();
   signbit_test ();
 
   /* Trigonometric functions:  */
