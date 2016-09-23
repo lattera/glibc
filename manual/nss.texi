@@ -445,9 +445,10 @@ enum nss_status _nss_files_gethostbyname_r (const char *name,
 @end smallexample
 
 I.e., the interface function is in fact the reentrant function with the
-change of the return value and the omission of the @var{result}
-parameter.  While the user-level function returns a pointer to the
-result the reentrant function return an @code{enum nss_status} value:
+change of the return value, the omission of the @var{result} parameter,
+and the addition of the @var{errnop} parameter.  While the user-level
+function returns a pointer to the result the reentrant function return
+an @code{enum nss_status} value:
 
 @vtable @code
 @item NSS_STATUS_TRYAGAIN
@@ -507,13 +508,16 @@ exception:} when returning @code{NSS_STATUS_TRYAGAIN} the error code
 @code{ERANGE} @emph{must} mean that the user provided buffer is too
 small.  Everything is non-critical.
 
+In statically linked programs, the main application and NSS modules do
+not share the same thread-local variable @code{errno}, which is the
+reason why there is an explicit @var{errnop} function argument.
+
 The above function has something special which is missing for almost all
 the other module functions.  There is an argument @var{h_errnop}.  This
 points to a variable which will be filled with the error code in case
-the execution of the function fails for some reason.  The reentrant
-function cannot use the global variable @var{h_errno};
-@code{gethostbyname} calls @code{gethostbyname_r} with the last argument
-set to @code{&h_errno}.
+the execution of the function fails for some reason.  (In statically
+linked programs, the thread-local variable @code{h_errno} is not shared
+with the main application.)
 
 The @code{get@var{XXX}by@var{YYY}} functions are the most important
 functions in the NSS modules.  But there are others which implement
@@ -525,14 +529,14 @@ signature of the module function:
 
 @itemize @bullet
 @item
-the return value is @code{int};
+the return value is @code{enum nss_status};
 @item
-the name is as explained in @pxref{NSS Module Names};
+the name (@pxref{NSS Module Names});
 @item
 the first arguments are identical to the arguments of the non-reentrant
 function;
 @item
-the next three arguments are:
+the next four arguments are:
 
 @table @code
 @item STRUCT_TYPE *result_buf
@@ -543,11 +547,21 @@ pointer to a buffer where the function can store additional data for
 the result etc.
 @item size_t buflen
 length of the buffer pointed to by @var{buffer}.
+@item int *errnop
+the low-level error code to return to the application.  If the return
+value is not @code{NSS_STATUS_SUCCESS}, @code{*@var{errnop}} needs to be
+set to a non-zero value.  An NSS module should never set
+@code{*@var{errnop}} to zero.  The value @code{ERANGE} is special, as
+described above.
 @end table
 
 @item
 possibly a last argument @var{h_errnop}, for the host name and network
-name lookup functions.
+name lookup functions.  If the return value is not
+@code{NSS_STATUS_SUCCESS}, @code{*@var{h_errnop}} needs to be set to a
+non-zero value.  A generic error code is @code{NETDB_INTERNAL}, which
+instructs the caller to examine @code{*@var{errnop}} for further
+details.  (This includes the @code{ERANGE} special case.)
 @end itemize
 
 @noindent
@@ -672,10 +686,11 @@ guaranteed that the same buffer will be passed for the next call of this
 function.  Therefore one must not misuse this buffer to save some state
 information from one call to another.
 
-Before the function returns the implementation should store the value of
-the local @var{errno} variable in the variable pointed to be
-@var{errnop}.  This is important to guarantee the module working in
-statically linked programs.
+Before the function returns with a failure code, the implementation
+should store the value of the local @var{errno} variable in the variable
+pointed to be @var{errnop}.  This is important to guarantee the module
+working in statically linked programs.  The stored value must not be
+zero.
 
 As explained above this function could also have an additional last
 argument.  This depends on the database used; it happens only for

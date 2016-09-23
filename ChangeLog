@@ -1,5 +1,13 @@
 2016-09-23  Florian Weimer  <fweimer@redhat.com>
 
+	* manual/nss.texi (NSS Modules Interface): Adjust function return
+	type to enum nss_status.  Document errnop argument.  Clarify
+	h_errnop semantics.  Fix cross-reference formatting.
+	(NSS Module Function Internals): Mention that *errnop needs to be
+	set on failure, but not to zero.
+
+2016-09-23  Florian Weimer  <fweimer@redhat.com>
+
 	* io/tst-open-tmpfile.c (wrap_open64, wrap_openat64)
 	(get_random_name): New functions.
 	(check_wrapper_flags_mode): Use linkat to give the new file a name
