@@ -1,3 +1,7 @@
+2016-09-23  Florian Weimer  <fweimer@redhat.com>
+
+	* test-skeleton.c: Remove #include <stdarg.h>.
+
 2016-09-21  Alexandre Oliva <aoliva@redhat.com>
 
 	[BZ #19826]
