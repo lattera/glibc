@@ -1,5 +1,13 @@
 2016-09-23  Florian Weimer  <fweimer@redhat.com>
 
+	* io/tst-open-tmpfile.c (wrap_open64, wrap_openat64)
+	(get_random_name): New functions.
+	(check_wrapper_flags_mode): Use linkat to give the new file a name
+	determined by get_random_name.
+	(do_test): Add calls to test open64 and openat64.
+
+2016-09-23  Florian Weimer  <fweimer@redhat.com>
+
 	* test-skeleton.c: Remove #include <stdarg.h>.
 
 2016-09-21  Alexandre Oliva <aoliva@redhat.com>

@@ -64,6 +64,34 @@ wrap_openat (const char *path, int flags, mode_t mode)
   return ret;
 }
 
+/* Error-checking wrapper for the open64 function, compatible with the
+   wrapper_func type.  */
+static int
+wrap_open64 (const char *path, int flags, mode_t mode)
+{
+  int ret = open64 (path, flags, mode);
+  if (ret < 0)
+    {
+      printf ("error: open64 (\"%s\", 0x%x, 0%03o): %m\n", path, flags, mode);
+      exit (1);
+    }
+  return ret;
+}
+
+/* Error-checking wrapper for the openat64 function, compatible with the
+   wrapper_func type.  */
+static int
+wrap_openat64 (const char *path, int flags, mode_t mode)
+{
+  int ret = openat64 (AT_FDCWD, path, flags, mode);
+  if (ret < 0)
+    {
+      printf ("error: openat64 (\"%s\", 0x%x, 0%03o): %m\n", path, flags, mode);
+      exit (1);
+    }
+  return ret;
+}
+
 /* Return true if FD is flagged as deleted in /proc/self/fd, false if
    not.  */
 static bool
@@ -97,6 +125,32 @@ is_file_deteted (int fd)
               deleted, strlen (deleted)) == 0;
 }
 
+/* Obtain a file name which is difficult to guess.  */
+static char *
+get_random_name (void)
+{
+  unsigned long long bytes[2];
+  int random_device = open ("/dev/urandom", O_RDONLY);
+  if (random_device < 0)
+    {
+      printf ("error: open (\"/dev/urandom\"): %m\n");
+      exit (1);
+    }
+  ssize_t ret = read (random_device, bytes, sizeof (bytes));
+  if (ret < 0)
+    {
+      printf ("error: read (\"/dev/urandom\"): %m\n");
+      exit (1);
+    }
+  if (ret != sizeof (bytes))
+    {
+      printf ("error: short read from /dev/urandom: %zd\n", ret);
+      exit (1);
+    }
+  close (random_device);
+  return xasprintf ("tst-open-tmpfile-%08llx%08llx.tmp", bytes[0], bytes[1]);
+}
+
 /* Check open/openat (as specified by OP and WRAPPER) with a specific
    PATH/FLAGS/MODE combination.  */
 static void
@@ -127,6 +181,53 @@ check_wrapper_flags_mode (const char *op, wrapper_func wrapper,
       exit (1);
     }
 
+  /* Check that the file can be turned into a regular file with
+     linkat.  Open a file descriptor for the directory at PATH.  Use
+     AT_FDCWD if PATH is ".", to exercise that functionality as
+     well.  */
+  int path_fd;
+  if (strcmp (path, ".") == 0)
+    path_fd = AT_FDCWD;
+  else
+    {
+      path_fd = open (path, O_RDONLY | O_DIRECTORY);
+      if (path_fd < 0)
+        {
+          printf ("error: open (\"%s\"): %m\n", path);
+          exit (1);
+        }
+    }
+
+  /* Use a hard-to-guess name for the new directory entry.  */
+  char *new_name = get_random_name ();
+
+  /* linkat does not require privileges if the path in /proc/self/fd
+     is used.  */
+  char *proc_fd_path = xasprintf ("/proc/self/fd/%d", fd);
+  if (linkat (AT_FDCWD, proc_fd_path, path_fd, new_name,
+              AT_SYMLINK_FOLLOW) == 0)
+    {
+      if (unlinkat (path_fd, new_name, 0) != 0 && errno != ENOENT)
+        {
+          printf ("error: unlinkat (\"%s/%s\"): %m\n", path, new_name);
+          exit (1);
+        }
+    }
+  else
+    {
+      /* linkat failed.  This is expected if O_EXCL was specified.  */
+      if ((flags & O_EXCL) == 0)
+        {
+          printf ("error: linkat failed after %s (\"%s\", 0x%x, 0%03o): %m\n",
+                  op, path, flags, mode);
+          exit (1);
+        }
+    }
+
+  free (proc_fd_path);
+  free (new_name);
+  if (path_fd != AT_FDCWD)
+    close (path_fd);
   close (fd);
 }
 
@@ -197,6 +298,8 @@ do_test (void)
         supported = true;
         check_wrapper ("open", wrap_open, paths[i]);
         check_wrapper ("openat", wrap_openat, paths[i]);
+        check_wrapper ("open64", wrap_open64, paths[i]);
+        check_wrapper ("openat64", wrap_openat64, paths[i]);
       }
 
   if (!supported)
