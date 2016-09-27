@@ -18,13 +18,10 @@
 
 #define FUNC(function) function##l
 #define FLOAT long double
-#define PRINTF_EXPR "Le"
-#define PRINTF_XEXPR "La"
-#define PRINTF_NEXPR "Lf"
 #define BUILD_COMPLEX(real, imag) (CMPLXL ((real), (imag)))
 #define PREFIX LDBL
 #define TYPE_STR "ldouble"
 #define LIT(x) (x ## L)
 #define LITM(x) x ## l
-#define FTOSTR snprintf
+#define FTOSTR strfroml
 #define snan_value_MACRO SNANL

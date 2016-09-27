@@ -1,3 +1,24 @@
+2016-12-20  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* math/libm-test.inc (fmt_ftostr): New function.
+	(print_float, check_float_internal): Replace some uses of
+	FTOSTR with uses of fmt_ftostr.
+	(print_max_error, print_complex_max_error, print_function_ulps)
+	(print_complex_function_ulps): Remove uses of the macros
+	PRINTF_EXPR, PRINTF_NEXPR, and PRINTF_XEXPR.
+	* math/test-double.h (FTOSTR): Define to strfromd.
+	(PRINTF_EXPR): Delete.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	* math/test-float.h (FTOSTR): Define to strfromf.
+	(PRINTF_EXPR): Delete.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+	* math/test-ldouble.h (FTOSTR): Define to strfroml.
+	(PRINTF_EXPR): Delete.
+	(PRINTF_XEXPR): Likewise.
+	(PRINTF_NEXPR): Likewise.
+
 2016-12-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/lowlevellock.h
