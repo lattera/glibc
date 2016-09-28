@@ -74,14 +74,14 @@ typedef struct
   } mcontext_t;
 
 /* Userlevel context.  */
-struct ucontext
+typedef struct ucontext
   {
     unsigned long int uc_flags;
     struct ucontext *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     __sigset_t uc_sigmask;
-  };
+  } ucontext_t;
 
 
 #endif /* sys/ucontext.h */
