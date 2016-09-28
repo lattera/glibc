@@ -77,9 +77,14 @@ for header in "$@"; do
         (bits/* | regexp.h | rpcsvc/*.x)
             continue;;
 
-        # sys/elf.h and sys/vm86.h are "unsupported on x86-64" and
-        # #error out on that target.
-        (sys/elf.h | sys/vm86.h)
+        # All extant versions of sys/elf.h contain nothing more than an
+        # exhortation (either a #warning or an #error) to use sys/procfs.h
+        # instead, plus an inclusion of that header.
+        (sys/elf.h)
+            continue;;
+
+        # sys/vm86.h is "unsupported on x86-64" and errors out on that target.
+        (sys/vm86.h)
             case "$is_x86_64" in
                 (yes) continue;;
                 (no)  ;;

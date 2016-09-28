@@ -1,5 +1,8 @@
 2016-09-28  Zack Weinberg  <zackw@panix.com>
 
+	* scripts/check-installed-headers.sh: Generalize treatment of
+	sys/elf.h to all target architectures.
+
 	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h: Restore accidentally-
 	deleted typedef ucontext_t.
 
