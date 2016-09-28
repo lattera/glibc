@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <spawn.h>
+#include <assert.h>
 #include <fcntl.h>
 #include <paths.h>
 #include <string.h>
@@ -44,11 +45,12 @@
    3. Child must synchronize with parent to enforce 2. and to possible
       return execv issues.
 
-   The first issue is solved by blocking all signals in child, even the
-   NPTL-internal ones (SIGCANCEL and SIGSETXID).  The second and third issue
-   is done by a stack allocation in parent and a synchronization with using
-   a pipe or waitpid (in case or error).  The pipe has the advantage of
-   allowing the child the communicate an exec error.  */
+   The first issue is solved by blocking all signals in child, even
+   the NPTL-internal ones (SIGCANCEL and SIGSETXID).  The second and
+   third issue is done by a stack allocation in parent, and by using a
+   field in struct spawn_args where the child can write an error
+   code. CLONE_VFORK ensures that the parent does not run until the
+   child has either exec'ed successfully or exited.  */
 
 
 /* The Unix standard contains a long explanation of the way to signal
@@ -75,7 +77,6 @@
 
 struct posix_spawn_args
 {
-  int pipe[2];
   sigset_t oldmask;
   const char *file;
   int (*exec) (const char *, char *const *, char *const *);
@@ -85,6 +86,7 @@ struct posix_spawn_args
   ptrdiff_t argc;
   char *const *envp;
   int xflags;
+  int err;
 };
 
 /* Older version requires that shell script without shebang definition
@@ -121,10 +123,7 @@ __spawni_child (void *arguments)
   struct posix_spawn_args *args = arguments;
   const posix_spawnattr_t *restrict attr = args->attr;
   const posix_spawn_file_actions_t *file_actions = args->fa;
-  int p = args->pipe[1];
   int ret;
-
-  close_not_cancel (args->pipe[0]);
 
   /* The child must ensure that no signal handler are enabled because it shared
      memory with parent, so the signal disposition must be either SIG_DFL or
@@ -199,17 +198,6 @@ __spawni_child (void *arguments)
 	{
 	  struct __spawn_action *action = &file_actions->__actions[cnt];
 
-	  /* Dup the pipe fd onto an unoccupied one to avoid any file
-	     operation to clobber it.  */
-	  if ((action->action.close_action.fd == p)
-	      || (action->action.open_action.fd == p)
-	      || (action->action.dup2_action.fd == p))
-	    {
-	      if ((ret = __dup (p)) < 0)
-		goto fail;
-	      p = ret;
-	    }
-
 	  switch (action->tag)
 	    {
 	    case spawn_do_close:
@@ -269,6 +257,7 @@ __spawni_child (void *arguments)
   __sigprocmask (SIG_SETMASK, (attr->__flags & POSIX_SPAWN_SETSIGMASK)
 		 ? &attr->__ss : &args->oldmask, 0);
 
+  args->err = 0;
   args->exec (args->file, args->argv, args->envp);
 
   /* This is compatibility function required to enable posix_spawn run
@@ -276,14 +265,13 @@ __spawni_child (void *arguments)
      (2.15).  */
   maybe_script_execute (args);
 
-  ret = -errno;
-
 fail:
-  /* Since sizeof errno < PIPE_BUF, the write is atomic. */
-  ret = -ret;
-  if (ret)
-    while (write_not_cancel (p, &ret, sizeof ret) < 0)
-      continue;
+  /* errno should have an appropriate non-zero value; otherwise,
+     there's a bug in glibc or the kernel.  For lack of an error code
+     (EINTERNALBUG) describing that, use ECHILD.  Another option would
+     be to set args->err to some negative sentinel and have the parent
+     abort(), but that seems needlessly harsh.  */
+  args->err = errno ? : ECHILD;
   _exit (SPAWN_ERROR);
 }
 
@@ -299,9 +287,6 @@ __spawnix (pid_t * pid, const char *file,
   pid_t new_pid;
   struct posix_spawn_args args;
   int ec;
-
-  if (__pipe2 (args.pipe, O_CLOEXEC))
-    return errno;
 
   /* To avoid imposing hard limits on posix_spawn{p} the total number of
      arguments is first calculated to allocate a mmap to hold all possible
@@ -329,17 +314,16 @@ __spawnix (pid_t * pid, const char *file,
   void *stack = __mmap (NULL, stack_size, prot,
 			MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
   if (__glibc_unlikely (stack == MAP_FAILED))
-    {
-      close_not_cancel (args.pipe[0]);
-      close_not_cancel (args.pipe[1]);
-      return errno;
-    }
+    return errno;
 
   /* Disable asynchronous cancellation.  */
   int state;
   __libc_ptf_call (__pthread_setcancelstate,
                    (PTHREAD_CANCEL_DISABLE, &state), 0);
 
+  /* Child must set args.err to something non-negative - we rely on
+     the parent and child sharing VM.  */
+  args.err = -1;
   args.file = file;
   args.exec = exec;
   args.fa = file_actions;
@@ -353,9 +337,8 @@ __spawnix (pid_t * pid, const char *file,
 
   /* The clone flags used will create a new child that will run in the same
      memory space (CLONE_VM) and the execution of calling thread will be
-     suspend until the child calls execve or _exit.  These condition as
-     signal below either by pipe write (_exit with SPAWN_ERROR) or
-     a successful execve.
+     suspend until the child calls execve or _exit.
+
      Also since the calling thread execution will be suspend, there is not
      need for CLONE_SETTLS.  Although parent and child share the same TLS
      namespace, there will be no concurrent access for TLS variables (errno
@@ -363,21 +346,17 @@ __spawnix (pid_t * pid, const char *file,
   new_pid = CLONE (__spawni_child, STACK (stack, stack_size), stack_size,
 		   CLONE_VM | CLONE_VFORK | SIGCHLD, &args);
 
-  close_not_cancel (args.pipe[1]);
-
   if (new_pid > 0)
     {
-      if (__read (args.pipe[0], &ec, sizeof ec) != sizeof ec)
-	ec = 0;
-      else
-	__waitpid (new_pid, NULL, 0);
+      ec = args.err;
+      assert (ec >= 0);
+      if (ec != 0)
+	  __waitpid (new_pid, NULL, 0);
     }
   else
     ec = -new_pid;
 
   __munmap (stack, stack_size);
-
-  close_not_cancel (args.pipe[0]);
 
   if ((ec == 0) && (pid != NULL))
     *pid = new_pid;

@@ -1,3 +1,10 @@
+2016-09-28  Rasmus Villemoes <rv@rasmusvillemoes.dk>
+
+	* sysdeps/unix/sysv/linux/spawni.c (posix_spawn_args): Remove pipe
+	field, add err field.
+	(__spawni_child): Report error through err member instead of pipe.
+	(__spawnix): Likewise.
+
 2016-09-28  Zack Weinberg  <zackw@panix.com>
 
 	* scripts/check-installed-headers.sh: Generalize treatment of
