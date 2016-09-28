@@ -336,7 +336,7 @@ enum
 # ifdef __SUPPORT_SNAN__
 #  define iszero(x) (fpclassify (x) == FP_ZERO)
 # else
-#  define iszero(x) ((x) == 0)
+#  define iszero(x) (((__typeof (x)) (x)) == 0)
 # endif
 #endif /* Use IEC_60559_BFP_EXT.  */
 

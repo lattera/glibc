@@ -1,3 +1,12 @@
+2016-09-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h
+	[__GLIBC_USE (IEC_60559_BFP_EXT) && !__SUPPORT_SNAN__] (iszero):
+	Cast argument to its own type.
+	* math/test-iszero-excess-precision.c: New file.
+	* math/Makefile (tests): Add test-iszero-excess-precision.
+	(CFLAGS-test-iszero-excess-precision.c): New variable.
+
 2016-09-28  Rasmus Villemoes <rv@rasmusvillemoes.dk>
 
 	* sysdeps/unix/sysv/linux/spawni.c (posix_spawn_args): Remove pipe
