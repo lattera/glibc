@@ -1,5 +1,18 @@
 2016-09-29  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos_slow): use copysign
+	instead of ternary condition.
+	(do_sin_slow): Likewise.
+	(do_sincos_1): Likewise.
+	(do_sincos_2): Likewise.
+	(__cos): Likewise.
+	(sloww): Likewise.
+	(sloww1): Likewise.
+	(sloww2): Likewise.
+	(bsloww): Likewise.
+	(bsloww1): Likewise.
+	(bsloww2): Likewise.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (slow1): Consolidate sign
 	check from here...
 	(slow2): ... and here...

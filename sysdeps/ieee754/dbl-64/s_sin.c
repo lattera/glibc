@@ -198,7 +198,7 @@ do_cos_slow (double x, double dx, double eps, double *corp)
   cor = cor + ((cs - y) - e1 * x1);
   res = y + cor;
   cor = (y - res) + cor;
-  cor = 1.0005 * cor + ((cor > 0) ? eps : -eps);
+  cor = 1.0005 * cor + __copysign (eps, cor);
   *corp = cor;
   return res;
 }
@@ -258,7 +258,7 @@ do_sin_slow (double x, double dx, double eps, double *corp)
   cor = cor + ((sn - y) + c1 * x1);
   res = y + cor;
   cor = (y - res) + cor;
-  cor = 1.0005 * cor + ((cor > 0) ? eps : -eps);
+  cor = 1.0005 * cor + __copysign (eps, cor);
   *corp = cor;
   return res;
 }
@@ -337,13 +337,13 @@ do_sincos_1 (double a, double da, double x, int4 n, int4 k)
 	{
 	  /* Taylor series.  */
 	  res = TAYLOR_SIN (xx, a, da, cor);
-	  cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
+	  cor = 1.02 * cor + __copysign (eps, cor);
 	  retval = (res == res + cor) ? res : sloww (a, da, x, k);
 	}
       else
 	{
 	  res = do_sin (a, da, &cor);
-	  cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
+	  cor = 1.035 * cor + __copysign (eps, cor);
 	  retval = ((res == res + cor) ? ((a > 0) ? res : -res)
 		    : sloww1 (a, da, x, k));
 	}
@@ -352,7 +352,7 @@ do_sincos_1 (double a, double da, double x, int4 n, int4 k)
     case 1:
     case 3:
       res = do_cos (a, da, &cor);
-      cor = (cor > 0) ? 1.025 * cor + eps : 1.025 * cor - eps;
+      cor = 1.025 * cor + __copysign (eps, cor);
       retval = ((res == res + cor) ? ((k1 & 2) ? -res : res)
 		: sloww2 (a, da, x, n));
       break;
@@ -411,13 +411,13 @@ do_sincos_2 (double a, double da, double x, int4 n, int4 k)
 	{
 	  /* Taylor series.  */
 	  res = TAYLOR_SIN (xx, a, da, cor);
-	  cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
+	  cor = 1.02 * cor + __copysign (eps, cor);
 	  retval = (res == res + cor) ? res : bsloww (a, da, x, n);
 	}
       else
 	{
 	  res = do_sin (a, da, &cor);
-	  cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
+	  cor = 1.035 * cor + __copysign (eps, cor);
 	  retval = ((res == res + cor) ? ((a > 0) ? res : -res)
 		    : bsloww1 (a, da, x, n));
 	}
@@ -426,7 +426,7 @@ do_sincos_2 (double a, double da, double x, int4 n, int4 k)
     case 1:
     case 3:
       res = do_cos (a, da, &cor);
-      cor = (cor > 0) ? 1.025 * cor + eps : 1.025 * cor - eps;
+      cor = 1.025 * cor + __copysign (eps, cor);
       retval = ((res == res + cor) ? ((n & 2) ? -res : res)
 		: bsloww2 (a, da, x, n));
       break;
@@ -573,13 +573,13 @@ __cos (double x)
       if (xx < 0.01588)
 	{
 	  res = TAYLOR_SIN (xx, a, da, cor);
-	  cor = (cor > 0) ? 1.02 * cor + 1.0e-31 : 1.02 * cor - 1.0e-31;
+	  cor = 1.02 * cor + __copysign (1.0e-31, cor);
 	  retval = (res == res + cor) ? res : sloww (a, da, x, 1);
 	}
       else
 	{
 	  res = do_sin (a, da, &cor);
-	  cor = (cor > 0) ? 1.035 * cor + 1.0e-31 : 1.035 * cor - 1.0e-31;
+	  cor = 1.035 * cor + __copysign (1.0e-31, cor);
 	  retval = ((res == res + cor) ? ((a > 0) ? res : -res)
 		    : sloww1 (a, da, x, 1));
 	}
@@ -705,7 +705,7 @@ sloww (double x, double dx, double orig, int k)
 
   double eps = fabs (orig) * 3.1e-30;
 
-  cor = 1.0005 * cor + ((cor > 0) ? eps : -eps);
+  cor = 1.0005 * cor + __copysign (eps, cor);
 
   if (res == res + cor)
     return res;
@@ -714,7 +714,7 @@ sloww (double x, double dx, double orig, int k)
   da = (x > 0) ? dx : -dx;
   __dubsin (a, da, w);
   eps = fabs (orig) * 1.1e-30;
-  cor = 1.000000001 * w[1] + ((w[1] > 0) ? eps : -eps);
+  cor = 1.000000001 * w[1] + __copysign (eps, w[1]);
 
   if (w[0] == w[0] + cor)
     return (x > 0) ? w[0] : -w[0];
@@ -740,7 +740,7 @@ sloww (double x, double dx, double orig, int k)
   dx = (a > 0) ? da : -da;
   __dubsin (x, dx, w);
   eps = fabs (orig) * 1.1e-40;
-  cor = 1.000000001 * w[1] + ((w[1] > 0) ? eps : -eps);
+  cor = 1.000000001 * w[1] + __copysign (eps, w[1]);
 
   if (w[0] == w[0] + cor)
     return (a > 0) ? w[0] : -w[0];
@@ -770,7 +770,7 @@ sloww1 (double x, double dx, double orig, int k)
   __dubsin (fabs (x), dx, w);
 
   double eps = 1.1e-30 * fabs (orig);
-  cor = 1.000000005 * w[1] + ((w[1] > 0) ? eps : -eps);
+  cor = 1.000000005 * w[1] + __copysign (eps, w[1]);
 
   if (w[0] == w[0] + cor)
     return (x > 0) ? w[0] : -w[0];
@@ -800,7 +800,7 @@ sloww2 (double x, double dx, double orig, int n)
   __docos (fabs (x), dx, w);
 
   double eps = 1.1e-30 * fabs (orig);
-  cor = 1.000000005 * w[1] + ((w[1] > 0) ? eps : -eps);
+  cor = 1.000000005 * w[1] + __copysign (eps, w[1]);
 
   if (w[0] == w[0] + cor)
     return (n & 2) ? -w[0] : w[0];
@@ -823,14 +823,14 @@ bsloww (double x, double dx, double orig, int n)
   double res, cor, w[2], a, da;
 
   res = TAYLOR_SLOW (x, dx, cor);
-  cor = 1.0005 * cor + ((cor > 0) ? 1.1e-24 : -1.1e-24);
+  cor = 1.0005 * cor + __copysign (1.1e-24, cor);
   if (res == res + cor)
     return res;
 
   a = fabs (x);
   da = (x > 0) ? dx : -dx;
   __dubsin (a, da, w);
-  cor = 1.000000001 * w[1] + ((w[1] > 0) ? 1.1e-24 : -1.1e-24);
+  cor = 1.000000001 * w[1] + __copysign (1.1e-24, w[1]);
 
   if (w[0] == w[0] + cor)
     return (x > 0) ? w[0] : -w[0];
@@ -858,7 +858,7 @@ bsloww1 (double x, double dx, double orig, int n)
   dx = (x > 0) ? dx : -dx;
   __dubsin (fabs (x), dx, w);
 
-  cor = 1.000000005 * w[1] + ((w[1] > 0) ? 1.1e-24 : -1.1e-24);
+  cor = 1.000000005 * w[1] + __copysign (1.1e-24, w[1]);
 
   if (w[0] == w[0] + cor)
     return (x > 0) ? w[0] : -w[0];
@@ -886,7 +886,7 @@ bsloww2 (double x, double dx, double orig, int n)
   dx = (x > 0) ? dx : -dx;
   __docos (fabs (x), dx, w);
 
-  cor = 1.000000005 * w[1] + ((w[1] > 0) ? 1.1e-24 : -1.1e-24);
+  cor = 1.000000005 * w[1] + __copysign (1.1e-24, w[1]);
 
   if (w[0] == w[0] + cor)
     return (n & 2) ? -w[0] : w[0];
