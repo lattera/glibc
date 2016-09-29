@@ -344,7 +344,7 @@ do_sincos_1 (double a, double da, double x, int4 n, int4 k)
 	{
 	  res = do_sin (a, da, &cor);
 	  cor = 1.035 * cor + __copysign (eps, cor);
-	  retval = ((res == res + cor) ? ((a > 0) ? res : -res)
+	  retval = ((res == res + cor) ? __copysign (res, a)
 		    : sloww1 (a, da, x, k));
 	}
       break;
@@ -418,7 +418,7 @@ do_sincos_2 (double a, double da, double x, int4 n, int4 k)
 	{
 	  res = do_sin (a, da, &cor);
 	  cor = 1.035 * cor + __copysign (eps, cor);
-	  retval = ((res == res + cor) ? ((a > 0) ? res : -res)
+	  retval = ((res == res + cor) ? __copysign (res, a)
 		    : bsloww1 (a, da, x, n));
 	}
       break;
@@ -479,7 +479,7 @@ __sin (double x)
     {
       res = do_sin (x, 0, &cor);
       retval = (res == res + 1.096 * cor) ? res : slow1 (x);
-      retval = m > 0 ? retval : -retval;
+      retval = __copysign (retval, x);
     }				/*   else  if (k < 0x3feb6000)    */
 
 /*----------------------- 0.855469  <|x|<2.426265  ----------------------*/
@@ -489,7 +489,7 @@ __sin (double x)
       t = hp0 - fabs (x);
       res = do_cos (t, hp1, &cor);
       retval = (res == res + 1.020 * cor) ? res : slow2 (x);
-      retval = m > 0 ? retval : -retval;
+      retval = __copysign (retval, x);
     }				/*   else  if (k < 0x400368fd)    */
 
 #ifndef IN_SINCOS
@@ -580,7 +580,7 @@ __cos (double x)
 	{
 	  res = do_sin (a, da, &cor);
 	  cor = 1.035 * cor + __copysign (1.0e-31, cor);
-	  retval = ((res == res + cor) ? ((a > 0) ? res : -res)
+	  retval = ((res == res + cor) ? __copysign (res, a)
 		    : sloww1 (a, da, x, 1));
 	}
 
@@ -634,9 +634,9 @@ slow (double x)
 
   __dubsin (fabs (x), 0, w);
   if (w[0] == w[0] + 1.000000001 * w[1])
-    return (x > 0) ? w[0] : -w[0];
+    return __copysign (w[0], x);
 
-  return (x > 0) ? __mpsin (x, 0, false) : -__mpsin (-x, 0, false);
+  return __copysign (__mpsin (fabs (x), 0, false), x);
 }
 
 /*******************************************************************************/
@@ -717,7 +717,7 @@ sloww (double x, double dx, double orig, int k)
   cor = 1.000000001 * w[1] + __copysign (eps, w[1]);
 
   if (w[0] == w[0] + cor)
-    return (x > 0) ? w[0] : -w[0];
+    return __copysign (w[0], x);
 
   t = (orig * hpinv + toint);
   xn = t - toint;
@@ -743,7 +743,7 @@ sloww (double x, double dx, double orig, int k)
   cor = 1.000000001 * w[1] + __copysign (eps, w[1]);
 
   if (w[0] == w[0] + cor)
-    return (a > 0) ? w[0] : -w[0];
+    return __copysign (w[0], a);
 
   return k ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
@@ -764,7 +764,7 @@ sloww1 (double x, double dx, double orig, int k)
   res = do_sin_slow (x, dx, 3.1e-30 * fabs (orig), &cor);
 
   if (res == res + cor)
-    return (x > 0) ? res : -res;
+    return __copysign (res, x);
 
   dx = (x > 0 ? dx : -dx);
   __dubsin (fabs (x), dx, w);
@@ -773,7 +773,7 @@ sloww1 (double x, double dx, double orig, int k)
   cor = 1.000000005 * w[1] + __copysign (eps, w[1]);
 
   if (w[0] == w[0] + cor)
-    return (x > 0) ? w[0] : -w[0];
+    return __copysign (w[0], x);
 
   return (k == 1) ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
@@ -833,7 +833,7 @@ bsloww (double x, double dx, double orig, int n)
   cor = 1.000000001 * w[1] + __copysign (1.1e-24, w[1]);
 
   if (w[0] == w[0] + cor)
-    return (x > 0) ? w[0] : -w[0];
+    return __copysign (w[0], x);
 
   return (n & 1) ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
@@ -861,7 +861,7 @@ bsloww1 (double x, double dx, double orig, int n)
   cor = 1.000000005 * w[1] + __copysign (1.1e-24, w[1]);
 
   if (w[0] == w[0] + cor)
-    return (x > 0) ? w[0] : -w[0];
+    return __copysign (w[0], x);
 
   return (n & 1) ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
