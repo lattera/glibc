@@ -478,7 +478,8 @@ __sin (double x)
   else if (k < 0x3feb6000)
     {
       res = do_sin (x, 0, &cor);
-      retval = (res == res + 1.096 * cor) ? (m > 0 ? res : -res) : slow1 (x);
+      retval = (res == res + 1.096 * cor) ? res : slow1 (x);
+      retval = m > 0 ? retval : -retval;
     }				/*   else  if (k < 0x3feb6000)    */
 
 /*----------------------- 0.855469  <|x|<2.426265  ----------------------*/
@@ -487,7 +488,8 @@ __sin (double x)
 
       t = hp0 - fabs (x);
       res = do_cos (t, hp1, &cor);
-      retval = (res == res + 1.020 * cor) ? ((m > 0) ? res : -res) : slow2 (x);
+      retval = (res == res + 1.020 * cor) ? res : slow2 (x);
+      retval = m > 0 ? retval : -retval;
     }				/*   else  if (k < 0x400368fd)    */
 
 #ifndef IN_SINCOS
@@ -650,13 +652,13 @@ slow1 (double x)
 
   res = do_sin_slow (x, 0, 0, &cor);
   if (res == res + cor)
-    return (x > 0) ? res : -res;
+    return res;
 
   __dubsin (fabs (x), 0, w);
   if (w[0] == w[0] + 1.000000005 * w[1])
-    return (x > 0) ? w[0] : -w[0];
+    return w[0];
 
-  return (x > 0) ? __mpsin (x, 0, false) : -__mpsin (-x, 0, false);
+  return __mpsin (fabs (x), 0, false);
 }
 
 /**************************************************************************/
@@ -672,16 +674,16 @@ slow2 (double x)
   double t = hp0 - fabs (x);
   res = do_cos_slow (t, hp1, 0, &cor);
   if (res == res + cor)
-    return (x > 0) ? res : -res;
+    return res;
 
   y = fabs (x) - hp0;
   y1 = y - hp1;
   y2 = (y - y1) - hp1;
   __docos (y1, y2, w);
   if (w[0] == w[0] + 1.000000005 * w[1])
-    return (x > 0) ? w[0] : -w[0];
+    return w[0];
 
-  return (x > 0) ? __mpsin (x, 0, false) : -__mpsin (-x, 0, false);
+  return __mpsin (fabs (x), 0, false);
 }
 
 /***************************************************************************/
