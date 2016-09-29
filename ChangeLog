@@ -1,3 +1,7 @@
+2016-09-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* string/bits/string3.h: Remove C++ style comments.
+
 2016-09-29  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/ieee754/dbl-64/s_sin.c (do_sincos_1): Use copysign
