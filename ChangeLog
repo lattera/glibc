@@ -1,3 +1,9 @@
+2016-09-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/bits/iscanonical.h
+	[__NO_LONG_DOUBLE_MATH] (__iscanonicall): Do not declare.
+	[__NO_LONG_DOUBLE_MATH] (iscanonical): Define to evaluate to 1.
+
 2016-09-30  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #20292]

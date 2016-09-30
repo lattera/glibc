@@ -20,6 +20,9 @@
 # error "Never use <bits/iscanonical.h> directly; include <math.h> instead."
 #endif
 
+#ifdef __NO_LONG_DOUBLE_MATH
+# define iscanonical(x) ((void) (__typeof (x)) (x), 1)
+#else
 extern int __iscanonicall (long double __x)
      __THROW __attribute__ ((__const__));
 
@@ -29,7 +32,8 @@ extern int __iscanonicall (long double __x)
    conversion, before being discarded; in IBM long double, there are
    encodings that are not consistently handled as corresponding to any
    particular value of the type, and we return 0 for those.  */
-#define iscanonical(x)				\
+# define iscanonical(x)				\
   (sizeof (x) == sizeof (long double)		\
    ? __iscanonicall (x)				\
    : ((void) (__typeof (x)) (x), 1))
+#endif
