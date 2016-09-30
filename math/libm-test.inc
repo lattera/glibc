@@ -46,9 +46,9 @@
    cbrt, ceil, copysign, cos, cosh, drem, erf, erfc, exp, exp10, exp2, expm1,
    fabs, fdim, finite, floor, fma, fmax, fmin, fmod, fpclassify,
    frexp, gamma, hypot,
-   ilogb, isfinite, isinf, isnan, isnormal, issignaling, issubnormal, iszero,
-   isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
-   j0, j1, jn,
+   ilogb, iscanonical, isfinite, isinf, isnan, isnormal, issignaling,
+   issubnormal, iszero, isless, islessequal, isgreater,
+   isgreaterequal, islessgreater, isunordered, j0, j1, jn,
    ldexp, lgamma, log, log10, log1p, log2, logb,
    modf, nearbyint, nextafter, nexttoward,
    pow, pow10, remainder, remquo, rint, lrint, llrint,
@@ -8160,6 +8160,31 @@ ilogb_test (void)
   ALL_RM_TEST (ilogb, 1, ilogb_test_data, RUN_TEST_LOOP_f_i, END);
 }
 
+static const struct test_f_i_data iscanonical_test_data[] =
+  {
+    TEST_f_b (iscanonical, 0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, 10, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, min_subnorm_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, -min_subnorm_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, min_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, -min_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, max_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, -max_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, plus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, minus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, -qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (iscanonical, -snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+  };
+
+static void
+iscanonical_test (void)
+{
+  ALL_RM_TEST (iscanonical, 1, iscanonical_test_data, RUN_TEST_LOOP_f_b_tg, END);
+}
+
 static const struct test_f_i_data isfinite_test_data[] =
   {
     TEST_f_b (isfinite, 0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -12713,6 +12738,7 @@ main (int argc, char **argv)
   /* Classification macros:  */
   finite_test ();
   fpclassify_test ();
+  iscanonical_test ();
   isfinite_test ();
   isinf_test ();
   isnan_test ();

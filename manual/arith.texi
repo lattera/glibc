@@ -361,6 +361,23 @@ You should therefore use the specific macros whenever possible.
 
 @comment math.h
 @comment ISO
+@deftypefn {Macro} int iscanonical (@emph{float-type} @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+In some floating-point formats, some values have canonical (preferred)
+and noncanonical encodings (for IEEE interchange binary formats, all
+encodings are canonical).  This macro returns a nonzero value if
+@var{x} has a canonical encoding.  It is from TS 18661-1:2014.
+
+Note that some formats have multiple encodings of a value which are
+all equally canonical; @code{iscanonical} returns a nonzero value for
+all such encodings.  Also, formats may have encodings that do not
+correspond to any valid value of the type.  In ISO C terms these are
+@dfn{trap representations}; in @theglibc{}, @code{iscanonical} returns
+zero for such encodings.
+@end deftypefn
+
+@comment math.h
+@comment ISO
 @deftypefn {Macro} int isfinite (@emph{float-type} @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns a nonzero value if @var{x} is finite: not plus or

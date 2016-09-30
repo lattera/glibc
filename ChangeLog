@@ -1,3 +1,44 @@
+2016-09-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)]: Include
+	<bits/iscanonical.h>.
+	* bits/iscanonical.h: New file.
+	* math/s_iscanonicall.c: Likewise.
+	* math/Versions (__iscanonicall): New libm symbol at version
+	GLIBC_2.25.
+	* math/libm-test.inc (iscanonical_test_data): New array.
+	(iscanonical_test): New function.
+	(main): Call iscanonical_test.
+	* math/Makefile (headers): Add bits/iscanonical.h.
+	(type-ldouble-routines): Add s_iscanonicall.
+	* manual/arith.texi (Floating Point Classes): Document
+	iscanonical.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/ldbl-128ibm/bits/iscanonical.h: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_iscanonicall.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/test-iscanonical-ldbl-128ibm.c:
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/Makefile (tests): Add
+	test-iscanonical-ldbl-128ibm.
+	* sysdeps/ieee754/ldbl-96/bits/iscanonical.h: New file.
+	* sysdeps/ieee754/ldbl-96/s_iscanonicall.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/test-iscanonical-ldbl-96.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-09-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* string/bits/string3.h: Remove C++ style comments.

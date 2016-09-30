@@ -51,7 +51,7 @@ Version 2.25
 
 * New <math.h> features are added from TS 18661-1:2014:
 
-  - Classification macros: issubnormal, iszero.
+  - Classification macros: iscanonical, issubnormal, iszero.
 
 * The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
   for the Linux quota interface which predates kernel version 2.4.22 has

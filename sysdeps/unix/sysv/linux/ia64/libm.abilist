@@ -352,6 +352,7 @@ GLIBC_2.24 nextup F
 GLIBC_2.24 nextupf F
 GLIBC_2.24 nextupl F
 GLIBC_2.25 GLIBC_2.25 A
+GLIBC_2.25 __iscanonicall F
 GLIBC_2.25 fegetmode F
 GLIBC_2.25 fesetexcept F
 GLIBC_2.25 fesetmode F

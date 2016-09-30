@@ -317,6 +317,8 @@ enum
 #endif /* Use ISO C99.  */
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT)
+# include <bits/iscanonical.h>
+
 /* Return nonzero value if X is a signaling NaN.  */
 # ifdef __NO_LONG_DOUBLE_MATH
 #  define issignaling(x) \

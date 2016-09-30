@@ -77,7 +77,7 @@ use vars qw (%results @all_floats %suffices @all_functions);
     "nextup", "pow", "remainder", "remquo", "rint", "round", "scalb",
     "scalbn", "sin", "sincos", "sinh", "sqrt", "tan", "tanh", "tgamma",
     "trunc", "y0", "y1", "yn" );
-# fpclassify, isnormal, isfinite, isinf, isnan, issignaling,
+# fpclassify, iscanonical, isnormal, isfinite, isinf, isnan, issignaling,
 # issubnormal, iszero, signbit, isgreater, isgreaterequal, isless,
 # islessequal, islessgreater, isunordered are not tabulated.
 
