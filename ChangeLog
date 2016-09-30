@@ -1,3 +1,19 @@
+2016-09-30  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #20292]
+	* elf/Makefile (routines): Add dl-addr-obj.
+	[ifeq (yesyes,$(have-fpie)$(build-shared))] (tests): Add
+	tst-_dl_addr_inside_object.
+	[ifeq (yesyes,$(have-fpie)$(build-shared))] (tests-pie): Likewise.
+	[ifeq (yesyes,$(have-fpie)$(build-shared))]
+	($(objpfx)tst-_dl_addr_inside_object): Add $(objpfx)dl-addr-obj.os.
+	[ifeq (yesyes,$(have-fpie)$(build-shared))]
+	(CFLAGS-tst-_dl_addr_inside_object.c): Add $(PIE-ccflag).
+	* elf/dl-addr.c: Remove _dl_addr_inside_object function.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-addr-obj.c: New file.
+	* elf/tst-_dl_addr_inside_object.c: New file.
+
 2016-09-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)]: Include

@@ -144,19 +144,3 @@ _dl_addr (const void *address, Dl_info *info,
   return result;
 }
 libc_hidden_def (_dl_addr)
-
-/* Return non-zero if ADDR lies within one of L's segments.  */
-int
-internal_function
-_dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
-{
-  int n = l->l_phnum;
-  const ElfW(Addr) reladdr = addr - l->l_addr;
-
-  while (--n >= 0)
-    if (l->l_phdr[n].p_type == PT_LOAD
-	&& reladdr - l->l_phdr[n].p_vaddr >= 0
-	&& reladdr - l->l_phdr[n].p_vaddr < l->l_phdr[n].p_memsz)
-      return 1;
-  return 0;
-}
