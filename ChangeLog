@@ -1,5 +1,9 @@
 2016-09-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/dbl-64/dla.h [__FP_FAST_FMA] (DLA_FMS): Define
+	macro to use __builtin_fma.
+	* sysdeps/x86_64/fpu/dla.h: Remove file.
+
 	* sysdeps/ieee754/ldbl-128ibm/bits/iscanonical.h
 	[__NO_LONG_DOUBLE_MATH] (__iscanonicall): Do not declare.
 	[__NO_LONG_DOUBLE_MATH] (iscanonical): Define to evaluate to 1.

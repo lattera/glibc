@@ -57,6 +57,10 @@
 	   z=(x)-(y);  zz=(fabs(x)>fabs(y)) ? (((x)-(z))-(y)) : ((x)-((y)+(z)));
 
 
+#ifdef __FP_FAST_FMA
+# define DLA_FMS(x, y, z) __builtin_fma (x, y, -(z))
+#endif
+
 /* Exact multiplication of two single-length floating point numbers,   */
 /* Veltkamp. The macro produces a double-length number (z,zz) that     */
 /* satisfies z+zz = x*y exactly. p,hx,tx,hy,ty are temporary           */
