@@ -1,3 +1,7 @@
+2016-10-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* libio/tst-memstream3.c: Include string.h.
+
 2016-09-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #18241]
