@@ -69,6 +69,7 @@
 				       connections.  */
 #define TCP_SAVED_SYN		 28 /* Get SYN headers recorded for
 				       connection.  */
+#define TCP_REPAIR_WINDOW	 29 /* Get/set window parameters.  */
 
 #ifdef __USE_MISC
 # include <sys/types.h>
@@ -305,6 +306,16 @@ struct tcp_cookie_transactions
   uint16_t	tcpct_s_data_desired;
   uint16_t	tcpct_used;
   uint8_t	tcpct_value[TCP_MSS_DEFAULT];
+};
+
+/* For use with TCP_REPAIR_WINDOW.  */
+struct tcp_repair_window
+{
+  uint32_t snd_wl1;
+  uint32_t snd_wnd;
+  uint32_t max_window;
+  uint32_t rcv_wnd;
+  uint32_t rcv_wup;
 };
 
 #endif /* Misc.  */

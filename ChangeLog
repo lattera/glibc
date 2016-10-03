@@ -1,3 +1,8 @@
+2016-10-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/gnu/netinet/tcp.h (TCP_REPAIR_WINDOW): New macro.
+	(struct tcp_repair_window): New type.
+
 2016-10-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* libio/tst-memstream3.c: Include string.h.
