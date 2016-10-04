@@ -24,7 +24,7 @@
 #include <bits/ppc.h>
 
 /* Read the Time Base Register.   */
-static inline uint64_t
+static __inline__ uint64_t
 __ppc_get_timebase (void)
 {
 #if __GNUC_PREREQ (4, 8)
@@ -56,7 +56,7 @@ __ppc_get_timebase (void)
 /* Provides a hint that performance will probably be improved if shared
    resources dedicated to the executing processor are released for use by other
    processors.  */
-static inline void
+static __inline__ void
 __ppc_yield (void)
 {
   __asm__ volatile ("or 27,27,27");
@@ -66,7 +66,7 @@ __ppc_yield (void)
    resources dedicated to the executing processor are released until
    all outstanding storage accesses to caching-inhibited storage have been
    completed.  */
-static inline void
+static __inline__ void
 __ppc_mdoio (void)
 {
   __asm__ volatile ("or 29,29,29");
@@ -76,7 +76,7 @@ __ppc_mdoio (void)
    resources dedicated to the executing processor are released until all
    outstanding storage accesses to cacheable storage for which the data is not
    in the cache have been completed.  */
-static inline void
+static __inline__ void
 __ppc_mdoom (void)
 {
   __asm__ volatile ("or 30,30,30");
@@ -94,19 +94,19 @@ __ppc_mdoom (void)
    use unguarded. The default value is 'medium'.
  */
 
-static inline void
+static __inline__ void
 __ppc_set_ppr_med (void)
 {
   __asm__ volatile ("or 2,2,2");
 }
 
-static inline void
+static __inline__ void
 __ppc_set_ppr_med_low (void)
 {
   __asm__ volatile ("or 6,6,6");
 }
 
-static inline void
+static __inline__ void
 __ppc_set_ppr_low (void)
 {
   __asm__ volatile ("or 1,1,1");
@@ -129,13 +129,13 @@ __ppc_set_ppr_low (void)
 
 #ifdef _ARCH_PWR8
 
-static inline void
+static __inline__ void
 __ppc_set_ppr_very_low (void)
 {
   __asm__ volatile ("or 31,31,31");
 }
 
-static inline void
+static __inline__ void
 __ppc_set_ppr_med_high (void)
 {
   __asm__ volatile ("or 5,5,5");

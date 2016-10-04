@@ -1,3 +1,15 @@
+2016-10-04  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/sys/platform/ppc.h (__ppc_get_timebase): Replace
+	inline by __inline__.
+	(__ppc_yield, __ppc_mdoio, __ppc_mdoom, __ppc_set_ppr_med): Likewise.
+	(__ppc_set_ppr_med_low, __ppc_set_ppr_low): Likewise.
+	(__ppc_set_ppr_very_low, __ppc_set_ppr_med_high): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Require
+	sigset_t from signal.h.
+	* sysdeps/unix/sysv/linux/powerpc/sys/user.h: Include stddef.h,
+	which is already required.
+
 2016-10-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.

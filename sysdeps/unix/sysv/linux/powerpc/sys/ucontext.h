@@ -19,6 +19,7 @@
 #define _SYS_UCONTEXT_H	1
 
 #include <features.h>
+#define __need_sigset_t
 #include <signal.h>
 
 /* We need the signal context definitions even if they are not exposed

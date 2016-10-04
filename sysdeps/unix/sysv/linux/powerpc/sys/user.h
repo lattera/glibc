@@ -18,6 +18,7 @@
 #ifndef _SYS_USER_H
 
 #define _SYS_USER_H	1
+#include <stddef.h>
 #include <features.h>
 
 #include <asm/ptrace.h>
