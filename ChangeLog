@@ -1,3 +1,10 @@
+2016-10-09  Alan Modra  <amodra@gmail.com>
+	    Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #20554]
+	* sysdeps/powerpc/powerpc32/ppc-mcount.S (_mcount)
+	[PIC && !SHARED]: Set up PIC register for PLT call.
+
 2016-10-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (iseqsig): Define
