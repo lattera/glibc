@@ -1,3 +1,10 @@
+2016-10-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/limits.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (LONG_WIDTH):
+	Define to __WORDSIZE, not conditional on [LONG_MAX ==
+	0x7fffffffL].
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (ULONG_WIDTH): Likewise.
+
 2016-10-04  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/sys/platform/ppc.h (__ppc_get_timebase): Replace

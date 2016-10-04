@@ -164,20 +164,11 @@
 # ifndef UINT_WIDTH
 #  define UINT_WIDTH 32
 # endif
-# if LONG_MAX == 0x7fffffffL
-#  ifndef LONG_WIDTH
-#   define LONG_WIDTH 32
-#  endif
-#  ifndef ULONG_WIDTH
-#   define ULONG_WIDTH 32
-#  endif
-# else
-#  ifndef LONG_WIDTH
-#   define LONG_WIDTH 64
-#  endif
-#  ifndef ULONG_WIDTH
-#   define ULONG_WIDTH 64
-#  endif
+# ifndef LONG_WIDTH
+#  define LONG_WIDTH __WORDSIZE
+# endif
+# ifndef ULONG_WIDTH
+#  define ULONG_WIDTH __WORDSIZE
 # endif
 # ifndef LLONG_WIDTH
 #  define LLONG_WIDTH 64
