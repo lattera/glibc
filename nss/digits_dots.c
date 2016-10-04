@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <wctype.h>
-#include <resolv.h>
+#include <resolv/resolv-internal.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include "nsswitch.h"
@@ -80,7 +80,7 @@ __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
 	  break;
 
 	default:
-	  af = (_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET;
+	  af = res_use_inet6 () ? AF_INET6 : AF_INET;
 	  addr_size = af == AF_INET6 ? IN6ADDRSZ : INADDRSZ;
 	  break;
 	}
@@ -167,7 +167,7 @@ __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
 		  (*h_addr_ptrs)[0] = (char *) host_addr;
 		  (*h_addr_ptrs)[1] = NULL;
 		  resbuf->h_addr_list = *h_addr_ptrs;
-		  if (af == AF_INET && (_res.options & RES_USE_INET6))
+		  if (af == AF_INET && res_use_inet6 ())
 		    {
 		      /* We need to change the IP v4 address into the
 			 IP v6 address.  */
@@ -211,7 +211,7 @@ __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
 	  switch (af)
 	    {
 	    default:
-	      af = (_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET;
+	      af = res_use_inet6 () ? AF_INET6 : AF_INET;
 	      if (af == AF_INET6)
 		{
 		  addr_size = IN6ADDRSZ;

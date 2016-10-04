@@ -66,7 +66,7 @@
 
 #include <ctype.h>
 #include <netdb.h>
-#include <resolv.h>
+#include <resolv/resolv-internal.h>
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
@@ -437,7 +437,7 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 		    unsigned long int flag;
 		  } options[] = {
 #define STRnLEN(str) str, sizeof (str) - 1
-		    { STRnLEN ("inet6"), 0, RES_USE_INET6 },
+		    { STRnLEN ("inet6"), 0, DEPRECATED_RES_USE_INET6 },
 		    { STRnLEN ("rotate"), 0, RES_ROTATE },
 		    { STRnLEN ("edns0"), 0, RES_USE_EDNS0 },
 		    { STRnLEN ("single-request-reopen"), 0, RES_SNGLKUPREOP },

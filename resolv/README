@@ -80,11 +80,7 @@ code:
 
 * In Multi-threaded that manipulate the _res structure, calls to
   functions like `gethostbyname' in threads other than the "main"
-  thread won't be influenced by the those changes anymore.  So if you
-  set RES_USE_INET6, a call to `gethostbyname' won't return any IPv6
-  hosts anymore.  If you recompile such programs, manipulating the
-  _res structure will affect the thread in which you do so instead of
-  the "main" thread.
+  thread won't be influenced by the those changes anymore.
 
 We recommend to use the new thread-safe interfaces in new code, since
 the traditional interfaces have been deprecated by the BIND folks.

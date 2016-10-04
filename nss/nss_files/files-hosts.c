@@ -21,7 +21,7 @@
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
 #include <netdb.h>
-#include <resolv.h>
+#include <resolv/resolv-internal.h>
 
 
 /* Get implementation for some internal functions.  */
@@ -98,8 +98,8 @@ LINE_PARSER
  })
 
 #define EXTRA_ARGS_VALUE \
-  , ((_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET),		      \
-  ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0)
+  , (res_use_inet6 () ? AF_INET6 : AF_INET),		      \
+  (res_use_inet6 () ? AI_V4MAPPED : 0)
 #include "files-XXX.c"
 #undef EXTRA_ARGS_VALUE
 
@@ -132,7 +132,7 @@ _nss_files_gethostbyname3_r (const char *name, int af, struct hostent *result,
     {
       /* XXX Is using _res to determine whether we want to convert IPv4
          addresses to IPv6 addresses really the right thing to do?  */
-      int flags = ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0);
+      int flags = (res_use_inet6 () ? AI_V4MAPPED : 0);
 
       while ((status = internal_getent (stream, result, buffer, buflen, errnop,
 					herrnop, af, flags))
@@ -351,7 +351,7 @@ _nss_files_gethostbyname_r (const char *name, struct hostent *result,
 			    char *buffer, size_t buflen, int *errnop,
 			    int *herrnop)
 {
-  int af = ((_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET);
+  int af = (res_use_inet6 () ? AF_INET6 : AF_INET);
 
   return _nss_files_gethostbyname3_r (name, af, result, buffer, buflen,
 				      errnop, herrnop, NULL, NULL);

@@ -43,6 +43,7 @@ static u_long tablename_len;
 	(NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
 
 /* Get implementation for some internal functions. */
+#include <resolv/resolv-internal.h>
 #include <resolv/mapv4v6addr.h>
 
 
@@ -321,7 +322,7 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
 	    }
 	}
 
-      if (_res.options & RES_USE_INET6)
+      if (res_use_inet6 ())
 	parse_res = _nss_nisplus_parse_hostent (result, AF_INET6, host, buffer,
 						buflen, errnop, AI_V4MAPPED);
       else
@@ -488,7 +489,7 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
 
   return internal_gethostbyname2_r (name, af, host, buffer, buflen, errnop,
 				    herrnop,
-			 ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
+				    (res_use_inet6 () ? AI_V4MAPPED : 0));
 }
 
 
@@ -497,7 +498,7 @@ _nss_nisplus_gethostbyname_r (const char *name, struct hostent *host,
 			      char *buffer, size_t buflen, int *errnop,
 			      int *h_errnop)
 {
-  if (_res.options & RES_USE_INET6)
+  if (res_use_inet6 ())
     {
       enum nss_status status;
 
@@ -558,7 +559,7 @@ _nss_nisplus_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
 
   parse_res = _nss_nisplus_parse_hostent (result, af, host,
 					  buffer, buflen, errnop,
-					  ((_res.options & RES_USE_INET6)
+					  (res_use_inet6 ()
 					   ? AI_V4MAPPED : 0));
   nis_freeresult (result);
 

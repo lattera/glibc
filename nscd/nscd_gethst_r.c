@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <resolv.h>
+#include <resolv/resolv-internal.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
@@ -42,7 +42,7 @@ __nscd_gethostbyname_r (const char *name, struct hostent *resultbuf,
 {
   request_type reqtype;
 
-  reqtype = (_res.options & RES_USE_INET6) ? GETHOSTBYNAMEv6 : GETHOSTBYNAME;
+  reqtype = res_use_inet6 () ? GETHOSTBYNAMEv6 : GETHOSTBYNAME;
 
   return nscd_gethst_r (name, strlen (name) + 1, reqtype, resultbuf,
 			buffer, buflen, result, h_errnop);

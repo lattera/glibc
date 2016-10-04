@@ -66,7 +66,7 @@
 
 # include <stdio.h>
 # include <netdb.h>
-# include <resolv.h>
+# include <resolv/resolv-internal.h>
 # include <ctype.h>
 # include <errno.h>
 # include <stdlib.h>
@@ -412,7 +412,7 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 			bp += n;
 			buflen -= n;
 		}
-		if (_res.options & RES_USE_INET6)
+		if (res_use_inet6 ())
 			map_v4v6_hostent(&host, &bp, &buflen);
 		__set_h_errno (NETDB_SUCCESS);
 		return (&host);
@@ -434,7 +434,7 @@ res_gethostbyname (const char *name)
 		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
-	if (_res.options & RES_USE_INET6) {
+	if (res_use_inet6 ()) {
 		hp = res_gethostbyname2(name, AF_INET6);
 		if (hp)
 			return (hp);
@@ -516,7 +516,7 @@ res_gethostbyname2 (const char *name, int af)
 				h_addr_ptrs[0] = (char *)host_addr;
 				h_addr_ptrs[1] = NULL;
 				host.h_addr_list = h_addr_ptrs;
-				if (_res.options & RES_USE_INET6)
+				if (res_use_inet6 ())
 					map_v4v6_hostent(&host, &bp, &len);
 				__set_h_errno (NETDB_SUCCESS);
 				return (&host);
@@ -665,7 +665,7 @@ res_gethostbyaddr (const void *addr, socklen_t len, int af)
 	memmove(host_addr, addr, len);
 	h_addr_ptrs[0] = (char *)host_addr;
 	h_addr_ptrs[1] = NULL;
-	if (af == AF_INET && (_res.options & RES_USE_INET6)) {
+	if (af == AF_INET && res_use_inet6 ()) {
 		map_v4v6_address((char*)host_addr, (char*)host_addr);
 		hp->h_addrtype = AF_INET6;
 		hp->h_length = IN6ADDRSZ;
@@ -724,7 +724,7 @@ _gethtent (void)
 		af = AF_INET6;
 		len = IN6ADDRSZ;
 	} else if (inet_pton(AF_INET, p, host_addr) > 0) {
-		if (_res.options & RES_USE_INET6) {
+		if (res_use_inet6 ()) {
 			map_v4v6_address((char*)host_addr, (char*)host_addr);
 			af = AF_INET6;
 			len = IN6ADDRSZ;
@@ -768,7 +768,7 @@ _gethtbyname (const char *name)
 {
 	struct hostent *hp;
 
-	if (_res.options & RES_USE_INET6) {
+	if (res_use_inet6 ()) {
 		hp = _gethtbyname2(name, AF_INET6);
 		if (hp)
 			return (hp);

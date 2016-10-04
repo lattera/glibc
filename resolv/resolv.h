@@ -190,7 +190,8 @@ struct res_sym {
 #define	RES_INSECURE1	0x00000400	/* type 1 security disabled */
 #define	RES_INSECURE2	0x00000800	/* type 2 security disabled */
 #define	RES_NOALIASES	0x00001000	/* shuts off HOSTALIASES feature */
-#define	RES_USE_INET6	0x00002000	/* use/map IPv6 in gethostbyname() */
+#define	RES_USE_INET6	\
+  __glibc_macro_warning ("RES_USE_INET6 is deprecated") 0x00002000
 #define RES_ROTATE	0x00004000	/* rotate ns list after each query */
 #define	RES_NOCHECKNAME \
   __glibc_macro_warning ("RES_NOCHECKNAME is deprecated") 0x00008000

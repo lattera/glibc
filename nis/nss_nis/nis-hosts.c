@@ -27,7 +27,7 @@
 #include <string.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <resolv.h>
+#include <resolv/resolv-internal.h>
 #include <libc-lock.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
@@ -231,8 +231,8 @@ _nss_nis_gethostent_r (struct hostent *host, char *buffer, size_t buflen,
   __libc_lock_lock (lock);
 
   status = internal_nis_gethostent_r (host, buffer, buflen, errnop, h_errnop,
-			((_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET),
-			((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0 ));
+			(res_use_inet6 () ? AF_INET6 : AF_INET),
+			(res_use_inet6 () ? AI_V4MAPPED : 0 ));
 
   __libc_lock_unlock (lock);
 
@@ -351,7 +351,7 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
 
   return internal_gethostbyname2_r (name, af, host, buffer, buflen, errnop,
 				    h_errnop,
-			((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
+			(res_use_inet6 () ? AI_V4MAPPED : 0));
 }
 
 
@@ -359,7 +359,7 @@ enum nss_status
 _nss_nis_gethostbyname_r (const char *name, struct hostent *host, char *buffer,
 			  size_t buflen, int *errnop, int *h_errnop)
 {
-  if (_res.options & RES_USE_INET6)
+  if (res_use_inet6 ())
     {
       enum nss_status status;
 
@@ -433,8 +433,7 @@ _nss_nis_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
   free (result);
 
   int parse_res = parse_line (p, host, data, buflen, errnop, af,
-			      ((_res.options & RES_USE_INET6)
-			       ? AI_V4MAPPED : 0));
+			      (res_use_inet6 () ? AI_V4MAPPED : 0));
   if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)

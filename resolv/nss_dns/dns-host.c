@@ -81,7 +81,8 @@
 
 #include "nsswitch.h"
 
-/* Get implementation for some internal functions.  */
+/* Get implementeation for some internal functions.  */
+#include <resolv/resolv-internal.h>
 #include <resolv/mapv4v6addr.h>
 #include <resolv/mapv4v6hostent.h>
 
@@ -232,7 +233,7 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
       /* If we are looking for an IPv6 address and mapping is enabled
 	 by having the RES_USE_INET6 bit in _res.options set, we try
 	 another lookup.  */
-      if (af == AF_INET6 && (_res.options & RES_USE_INET6))
+      if (af == AF_INET6 && res_use_inet6 ())
 	n = __libc_res_nsearch (&_res, name, C_IN, T_A, host_buffer.buf->buf,
 				host_buffer.buf != orig_host_buffer
 				? MAXPACKET : 1024, &host_buffer.ptr,
@@ -277,7 +278,7 @@ _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
 {
   enum nss_status status = NSS_STATUS_NOTFOUND;
 
-  if (_res.options & RES_USE_INET6)
+  if (res_use_inet6 ())
     status = _nss_dns_gethostbyname3_r (name, AF_INET6, result, buffer,
 					buflen, errnop, h_errnop, NULL, NULL);
   if (status == NSS_STATUS_NOTFOUND)
@@ -503,17 +504,6 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
   memcpy (host_data->host_addr, addr, len);
   host_data->h_addr_ptrs[0] = (char *) host_data->host_addr;
   host_data->h_addr_ptrs[1] = NULL;
-#if 0
-  /* XXX I think this is wrong.  Why should an IPv4 address be
-     converted to IPv6 if the user explicitly asked for IPv4?  */
-  if (af == AF_INET && (_res.options & RES_USE_INET6))
-    {
-      map_v4v6_address ((char *) host_data->host_addr,
-			(char *) host_data->host_addr);
-      result->h_addrtype = AF_INET6;
-      result->h_length = IN6ADDRSZ;
-    }
-#endif
   *h_errnop = NETDB_SUCCESS;
   return NSS_STATUS_SUCCESS;
 }

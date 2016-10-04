@@ -148,6 +148,11 @@ Version 2.25
   in the <resolv.h> header file have been deprecated.  They were already
   unimplemented.
 
+* The "inet6" option in /etc/resolv.conf and the RES_USE_INET6 flag for
+  _res.flags are deprecated.  The flag was standardized in RFC 2133, but
+  removed again from the IETF name lookup interface specification in RFC
+  2553.  Applications should use getaddrinfo instead.
+
 * DNSSEC-related declarations and definitions have been removed from the
   <arpa/nameser.h> header file, and libresolv will no longer attempt to
   decode the data part of DNSSEC record types.  Previous versions of glibc

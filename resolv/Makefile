@@ -124,3 +124,6 @@ $(objpfx)tst-res_use_inet6: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-network: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
+
+# This test case uses the deprecated RES_USE_INET6 resolver option.
+CFLAGS-tst-res_use_inet6.c += -Wno-error

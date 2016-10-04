@@ -1,3 +1,41 @@
+2016-12-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19582]
+	Deprecate RES_USE_INET6.
+	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostent_r)
+	(_nss_nis_gethostbyname2_r, _nss_nis_gethostbyname_r)
+	(_nss_nis_gethostbyaddr_r): Use res_use_inet6 instead of
+	RES_USE_INET6.
+	* nis/nss_nisplus/nisplus-hosts.c (internal_nisplus_gethostent_r)
+	(_nss_nisplus_gethostbyname2_r, _nss_nisplus_gethostbyname_r)
+	(_nss_nisplus_gethostbyaddr_r): Likewise.
+	* nscd/aicache.c (addhstaiX): Use DEPRECATED_RES_USE_INET6 instead
+	of res_use_inet6.
+	* nscd/nscd_gethst_r.c (__nscd_gethostbyname_r): Use res_use_inet6
+	instead of RES_USE_INET6.
+	* nss/digits_dots.c (__nss_hostname_digits_dots): Likewise.
+	* nss/nss_files/files-hosts.c (EXTRA_ARGS_VALUE)
+	(_nss_files_gethostbyname3_r, _nss_files_gethostbyname_r):
+	Likewise.
+	* resolv/compat-gethnamaddr.c (getanswer, res_gethostbyname)
+	(res_gethostbyname2, res_gethostbyaddr, _gethtent, _gethtbyname):
+	Likewise.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname3_r)
+	(_nss_dns_gethostbyname_r): Likewise.
+	(_nss_dns_gethostbyaddr2_r): Remove commented-out code for
+	alternate RES_USE_INET6 handling.
+	* resolv/res_debug.c (p_option): Use DEPRECATED_RES_USE_INET6
+	instead of RES_USE_INET6.
+	* resolv/res_init.c (res_setoptions): Likewise.
+	* resolv/resolv.h (RES_USE_INET6): Mark as deprecated.
+	* resolv/resolv-internal.h: New file.
+	* resolv/Makefile (CFLAGS-tst-res_use_inet6.c): Use -Wno-error to
+	make the deprecation warning non-fatal.
+	* resolv/README (Using the resolver in multi-threaded code): Drop
+	reference to RES_USE_INET6.
+	* sysdeps/posix/getaddrinfo.c (gethosts, gaih_inet): Use
+	DEPRECATED_RES_USE_INET6 instead of res_use_inet6.
+
 2016-12-31  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/Makefile (tests): Add tst-bug18665, tst-bug18665-tcp,
