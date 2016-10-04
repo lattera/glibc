@@ -1,3 +1,13 @@
+2016-10-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-sync_file_range.
+	* sysdeps/unix/sysv/linux/mips/mips32/sync_file_range.c: Remove file.
+	* sysdeps/sysv/linux/powerpc/powerpc64/sync_file_range.c: Likewise.
+	* sysdeps/unix/sysv/linux/sync_file_range.c: Use SYSCALL_LL64 and
+	remove ENOSYS implementation.
+	* sysdeps/unix/sysv/linux/tst-sync_file_range.c (sync_file_range):
+	Consolidate all Linux implementations.
+
 2016-10-11  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/Makefile (+cflags): Do not set -Wno-write-strings.

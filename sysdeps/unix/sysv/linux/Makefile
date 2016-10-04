@@ -43,7 +43,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/mman-linux.h
 
 tests += tst-clone tst-clone2 tst-fanotify tst-personality tst-quota \
-	 tst-fallocate tst-fallocate64
+	 tst-fallocate tst-fallocate64 tst-sync_file_range
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 
