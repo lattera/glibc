@@ -1,3 +1,13 @@
+2016-10-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_sincos_1): Rename K to
+	SHIFT_QUADRANT and make it bool.
+	(do_sincos_2): Likewise.
+	(sloww): Likewise.
+	(sloww1): Likewise.
+	(__sin): Adjust calls to do_sincos_1 and do_sincos_2.
+	(__cos): Likewise.
+
 2016-10-05  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Regenerated.

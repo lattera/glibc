@@ -132,8 +132,8 @@ double __mpcos (double x, double dx, bool reduce_range);
 static double slow (double x);
 static double slow1 (double x);
 static double slow2 (double x);
-static double sloww (double x, double dx, double orig, int n);
-static double sloww1 (double x, double dx, double orig, int n);
+static double sloww (double x, double dx, double orig, bool shift_quadrant);
+static double sloww1 (double x, double dx, double orig, bool shift_quadrant);
 static double sloww2 (double x, double dx, double orig, int n);
 static double bsloww (double x, double dx, double orig, int n);
 static double bsloww1 (double x, double dx, double orig, int n);
@@ -319,12 +319,12 @@ reduce_sincos_1 (double x, double *a, double *da)
    clockwise.  */
 static double
 __always_inline
-do_sincos_1 (double a, double da, double x, int4 n, int4 k)
+do_sincos_1 (double a, double da, double x, int4 n, bool shift_quadrant)
 {
   double xx, retval, res, cor;
   double eps = fabs (x) * 1.2e-30;
 
-  int k1 = (n + k) & 3;
+  int k1 = (n + shift_quadrant) & 3;
   switch (k1)
     {			/* quarter of unit circle */
     case 2:
@@ -338,14 +338,14 @@ do_sincos_1 (double a, double da, double x, int4 n, int4 k)
 	  /* Taylor series.  */
 	  res = TAYLOR_SIN (xx, a, da, cor);
 	  cor = 1.02 * cor + __copysign (eps, cor);
-	  retval = (res == res + cor) ? res : sloww (a, da, x, k);
+	  retval = (res == res + cor) ? res : sloww (a, da, x, shift_quadrant);
 	}
       else
 	{
 	  res = do_sin (a, da, &cor);
 	  cor = 1.035 * cor + __copysign (eps, cor);
 	  retval = ((res == res + cor) ? __copysign (res, a)
-		    : sloww1 (a, da, x, k));
+		    : sloww1 (a, da, x, shift_quadrant));
 	}
       break;
 
@@ -391,13 +391,13 @@ reduce_sincos_2 (double x, double *a, double *da)
    clockwise.  */
 static double
 __always_inline
-do_sincos_2 (double a, double da, double x, int4 n, int4 k)
+do_sincos_2 (double a, double da, double x, int4 n, bool shift_quadrant)
 {
   double res, retval, cor, xx;
 
   double eps = 1.0e-24;
 
-  k = (n + k) & 3;
+  int4 k = (n + shift_quadrant) & 3;
 
   switch (k)
     {
@@ -498,7 +498,7 @@ __sin (double x)
     {
       double a, da;
       int4 n = reduce_sincos_1 (x, &a, &da);
-      retval = do_sincos_1 (a, da, x, n, 0);
+      retval = do_sincos_1 (a, da, x, n, false);
     }				/*   else  if (k <  0x419921FB )    */
 
 /*---------------------105414350 <|x|< 281474976710656 --------------------*/
@@ -507,7 +507,7 @@ __sin (double x)
       double a, da;
 
       int4 n = reduce_sincos_2 (x, &a, &da);
-      retval = do_sincos_2 (a, da, x, n, 0);
+      retval = do_sincos_2 (a, da, x, n, false);
     }				/*   else  if (k <  0x42F00000 )   */
 
 /* -----------------281474976710656 <|x| <2^1024----------------------------*/
@@ -574,14 +574,14 @@ __cos (double x)
 	{
 	  res = TAYLOR_SIN (xx, a, da, cor);
 	  cor = 1.02 * cor + __copysign (1.0e-31, cor);
-	  retval = (res == res + cor) ? res : sloww (a, da, x, 1);
+	  retval = (res == res + cor) ? res : sloww (a, da, x, true);
 	}
       else
 	{
 	  res = do_sin (a, da, &cor);
 	  cor = 1.035 * cor + __copysign (1.0e-31, cor);
 	  retval = ((res == res + cor) ? __copysign (res, a)
-		    : sloww1 (a, da, x, 1));
+		    : sloww1 (a, da, x, true));
 	}
 
     }				/*   else  if (k < 0x400368fd)    */
@@ -592,7 +592,7 @@ __cos (double x)
     {				/* 2.426265<|x|< 105414350 */
       double a, da;
       int4 n = reduce_sincos_1 (x, &a, &da);
-      retval = do_sincos_1 (a, da, x, n, 1);
+      retval = do_sincos_1 (a, da, x, n, true);
     }				/*   else  if (k <  0x419921FB )    */
 
   else if (k < 0x42F00000)
@@ -600,7 +600,7 @@ __cos (double x)
       double a, da;
 
       int4 n = reduce_sincos_2 (x, &a, &da);
-      retval = do_sincos_2 (a, da, x, n, 1);
+      retval = do_sincos_2 (a, da, x, n, true);
     }				/*   else  if (k <  0x42F00000 )    */
 
   /* 281474976710656 <|x| <2^1024 */
@@ -696,7 +696,7 @@ slow2 (double x)
 
 static inline double
 __always_inline
-sloww (double x, double dx, double orig, int k)
+sloww (double x, double dx, double orig, bool shift_quadrant)
 {
   double y, t, res, cor, w[2], a, da, xn;
   mynumber v;
@@ -723,7 +723,7 @@ sloww (double x, double dx, double orig, int k)
   xn = t - toint;
   v.x = t;
   y = (orig - xn * mp1) - xn * mp2;
-  n = (v.i[LOW_HALF] + k) & 3;
+  n = (v.i[LOW_HALF] + shift_quadrant) & 3;
   da = xn * pp3;
   t = y - da;
   da = (y - t) - da;
@@ -745,7 +745,7 @@ sloww (double x, double dx, double orig, int k)
   if (w[0] == w[0] + cor)
     return __copysign (w[0], a);
 
-  return k ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
+  return shift_quadrant ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
 
 /***************************************************************************/
@@ -757,7 +757,7 @@ sloww (double x, double dx, double orig, int k)
 
 static inline double
 __always_inline
-sloww1 (double x, double dx, double orig, int k)
+sloww1 (double x, double dx, double orig, bool shift_quadrant)
 {
   double w[2], cor, res;
 
@@ -775,7 +775,7 @@ sloww1 (double x, double dx, double orig, int k)
   if (w[0] == w[0] + cor)
     return __copysign (w[0], x);
 
-  return (k == 1) ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
+  return shift_quadrant ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
 
 /***************************************************************************/
