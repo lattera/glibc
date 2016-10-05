@@ -353,7 +353,7 @@ do_sincos_1 (double a, double da, double x, int4 n, bool shift_quadrant)
     case 3:
       res = do_cos (a, da, &cor);
       cor = 1.025 * cor + __copysign (eps, cor);
-      retval = ((res == res + cor) ? ((k1 & 2) ? -res : res)
+      retval = ((res == res + cor) ? ((n & 2) ? -res : res)
 		: sloww2 (a, da, x, n));
       break;
     }

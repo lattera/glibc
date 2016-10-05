@@ -1,5 +1,8 @@
 2016-10-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_sincos_1): Check N
+	instead of K1.
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (do_sincos_1): Rename K to
 	SHIFT_QUADRANT and make it bool.
 	(do_sincos_2): Likewise.
