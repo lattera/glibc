@@ -1,3 +1,7 @@
+2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/stdio.text: Fix typos in the manual.
+
 2016-10-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/ieee754/dbl-64/s_sin.c (do_sincos_1): Check N

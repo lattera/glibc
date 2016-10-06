@@ -250,7 +250,7 @@ meaningful in other systems.
 
 If the open fails, @code{fopen} returns a null pointer.
 
-When the sources are compiling with @code{_FILE_OFFSET_BITS == 64} on a
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bit machine this function is in fact @code{fopen64} since the LFS
 interface replaces transparently the old interface.
 @end deftypefun
@@ -325,7 +325,7 @@ hard-coded.  In @theglibc{}, you can simply close the standard
 streams and open new ones with @code{fopen}.  But other systems lack
 this ability, so using @code{freopen} is more portable.
 
-When the sources are compiling with @code{_FILE_OFFSET_BITS == 64} on a
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bit machine this function is in fact @code{freopen64} since the LFS
 interface replaces transparently the old interface.
 @end deftypefun
@@ -374,7 +374,7 @@ is nonzero.  For read-only streams the function returns zero.
 This function is declared in @file{stdio_ext.h}.
 @end deftypefun
 
-For slightly different kind of problems there are two more functions.
+For slightly different kinds of problems there are two more functions.
 They provide even finer-grained information.
 
 @comment stdio_ext.h
@@ -458,7 +458,7 @@ another function.
 @c streams, without any locking.  It's the flushing without locking that
 @c makes it unsafe.
 This function causes all open streams of the process to be closed and
-the connection to corresponding files to be broken.  All buffered data
+the connections to corresponding files to be broken.  All buffered data
 is written and any buffered input is discarded.  The @code{fcloseall}
 function returns a value of @code{0} if all the files were closed
 successfully, and @code{EOF} if an error was detected.
@@ -490,7 +490,7 @@ Streams can be used in multi-threaded applications in the same way they
 are used in single-threaded applications.  But the programmer must be
 aware of the possible complications.  It is important to know about
 these also if the program one writes never use threads since the design
-and implementation of many stream functions is heavily influenced by the
+and implementation of many stream functions are heavily influenced by the
 requirements added by multi-threaded programming.
 
 The POSIX standard requires that by default the stream operations are
@@ -519,7 +519,7 @@ perform the stream locking in the application code.
 The @code{flockfile} function acquires the internal locking object
 associated with the stream @var{stream}.  This ensures that no other
 thread can explicitly through @code{flockfile}/@code{ftrylockfile} or
-implicit through a call of a stream function lock the stream.  The
+implicitly through the call of a stream function lock the stream.  The
 thread will block until the lock is acquired.  An explicit call to
 @code{funlockfile} has to be used to release the lock.
 @end deftypefun
@@ -566,7 +566,7 @@ FILE *fp;
 @end smallexample
 
 Without the explicit locking it would be possible for another thread to
-use the stream @var{fp} after the @code{fputs} call return and before
+use the stream @var{fp} after the @code{fputs} call returns and before
 @code{fprintf} was called with the result that the number does not
 follow the word @samp{number}.
 
@@ -609,7 +609,7 @@ foo (FILE *fp)
 @}
 @end smallexample
 
-Now that we covered why it is necessary to have these locking it is
+Now that we covered why it is necessary to have locking it is
 necessary to talk about situations when locking is unwanted and what can
 be done.  The locking operations (explicit or implicit) don't come for
 free.  Even if a lock is not taken the cost is not zero.  The operations
@@ -688,7 +688,7 @@ locking.  Every stream operation with exception of the @code{_unlocked}
 variants will implicitly lock the stream.
 
 @item FSETLOCKING_BYCALLER
-After the @code{__fsetlocking} function returns the user is responsible
+After the @code{__fsetlocking} function returns, the user is responsible
 for locking the stream.  None of the stream operations will implicitly
 do this anymore until the state is set back to
 @code{FSETLOCKING_INTERNAL}.
@@ -758,12 +758,12 @@ call to @code{freopen} or @code{freopen64} can reset the
 
 @itemize @bullet
 @item
-If any of the normal character functions is used (this includes the
+If any of the normal character functions are used (this includes the
 @code{fread} and @code{fwrite} functions) the stream is marked as not
 wide oriented.
 
 @item
-If any of the wide character functions is used the stream is marked as
+If any of the wide character functions are used the stream is marked as
 wide oriented.
 
 @item
@@ -773,7 +773,7 @@ The @code{fwide} function can be used to set the orientation either way.
 It is important to never mix the use of wide and not wide operations on
 a stream.  There are no diagnostics issued.  The application behavior
 will simply be strange or the application will simply crash.  The
-@code{fwide} function can help avoiding this.
+@code{fwide} function can help avoid this.
 
 @comment wchar.h
 @comment ISO
@@ -831,7 +831,7 @@ print_f (FILE *fp)
 
 Note that in this case the function @code{print_f} decides about the
 orientation of the stream if it was unoriented before (will not happen
-if the advise above is followed).
+if the advice above is followed).
 
 The encoding used for the @code{wchar_t} values is unspecified and the
 user must not make any assumptions about it.  For I/O of @code{wchar_t}
@@ -843,7 +843,7 @@ chosen by the implementation for @code{wchar_t}.  The external encoding
 is determined by the @code{LC_CTYPE} category of the current locale or
 by the @samp{ccs} part of the mode specification given to @code{fopen},
 @code{fopen64}, @code{freopen}, or @code{freopen64}.  How and when the
-conversion happens is unspecified and it happens invisible to the user.
+conversion happens is unspecified and it happens invisibly to the user.
 
 Since a stream is created in the unoriented state it has at that point
 no conversion associated with it.  The conversion which will be used is
@@ -860,7 +860,7 @@ possible, perhaps with a call to @code{fwide}.
 This section describes functions for performing character- and
 line-oriented output.
 
-These narrow streams functions are declared in the header file
+These narrow stream functions are declared in the header file
 @file{stdio.h} and the wide stream functions in @file{wchar.h}.
 @pindex stdio.h
 @pindex wchar.h
@@ -1079,7 +1079,7 @@ recommend you use @code{fwrite} instead (@pxref{Block Input/Output}).
 
 @cindex reading from a stream, by characters
 This section describes functions for performing character-oriented
-input.  These narrow streams functions are declared in the header file
+input.  These narrow stream functions are declared in the header file
 @file{stdio.h} and the wide character functions are declared in
 @file{wchar.h}.
 @pindex stdio.h
@@ -1789,7 +1789,7 @@ extension allows an explicit parameter to be specified.
 
 The @var{param-no} parts of the format must be integers in the range of
 1 to the maximum number of arguments present to the function call.  Some
-implementations limit this number to a certainly upper bound.  The exact
+implementations limit this number to a certain upper bound.  The exact
 limit can be retrieved by the following constant.
 
 @defvr Macro NL_ARGMAX
@@ -1799,7 +1799,7 @@ actual value in effect at runtime can be retrieved by using
 @code{sysconf} using the @code{_SC_NL_ARGMAX} parameter @pxref{Sysconf
 Definition}.
 
-Some system have a quite low limit such as @math{9} for @w{System V}
+Some systems have a quite low limit such as @math{9} for @w{System V}
 systems.  @Theglibc{} has no real limit.
 @end defvr
 
@@ -1908,7 +1908,7 @@ lower-case letters and @samp{%G} uses upper-case.  @xref{Floating-Point
 Conversions}, for details.
 
 @item @samp{%a}, @samp{%A}
-Print a floating-point number in a hexadecimal fractional notation which
+Print a floating-point number in a hexadecimal fractional notation with
 the exponent to base 2 represented in decimal digits.  @samp{%a} uses
 lower-case letters and @samp{%A} uses upper-case.  @xref{Floating-Point
 Conversions}, for details.
@@ -2023,7 +2023,7 @@ modifiers:
 Specifies that the argument is a @code{signed char} or @code{unsigned
 char}, as appropriate.  A @code{char} argument is converted to an
 @code{int} or @code{unsigned int} by the default argument promotions
-anyway, but the @samp{h} modifier says to convert it back to a
+anyway, but the @samp{hh} modifier says to convert it back to a
 @code{char} again.
 
 This modifier was introduced in @w{ISO C99}.
@@ -2043,7 +2043,7 @@ This modifier was introduced in @w{ISO C99}.
 
 @item l
 Specifies that the argument is a @code{long int} or @code{unsigned long
-int}, as appropriate.  Two @samp{l} characters is like the @samp{L}
+int}, as appropriate.  Two @samp{l} characters are like the @samp{L}
 modifier, below.
 
 If used with @samp{%c} or @samp{%s} the corresponding parameter is
@@ -2139,7 +2139,7 @@ a decimal-point character appears only if it is followed by a digit.
 The @samp{%a} and @samp{%A} conversions are meant for representing
 floating-point numbers exactly in textual form so that they can be
 exchanged as texts between different programs and/or machines.  The
-numbers are represented is the form
+numbers are represented in the form
 @w{[@code{-}]@code{0x}@var{h}@code{.}@var{hhh}@code{p}[@code{+}|@code{-}]@var{dd}}.
 At the left of the decimal-point character exactly one digit is print.
 This character is only @code{0} if the number is denormalized.
@@ -2265,7 +2265,7 @@ printf ("%c%c%c%c%c", 'h', 'e', 'l', 'l', 'o');
 @noindent
 prints @samp{hello}.
 
-If there is a @samp{l} modifier present the argument is expected to be
+If there is an @samp{l} modifier present the argument is expected to be
 of type @code{wint_t}.  If used in a multibyte function the wide
 character is converted into a multibyte character before being added to
 the output.  In this case more than one output byte can be produced.
@@ -2273,7 +2273,7 @@ the output.  In this case more than one output byte can be produced.
 The @samp{%s} conversion prints a string.  If no @samp{l} modifier is
 present the corresponding argument must be of type @code{char *} (or
 @code{const char *}).  If used in a wide stream function the string is
-first converted in a wide character string.  A precision can be
+first converted to a wide character string.  A precision can be
 specified to indicate the maximum number of characters to write;
 otherwise characters in the string up to but not including the
 terminating null character are written to the output stream.  The
@@ -2288,7 +2288,8 @@ printf ("%3s%-6s", "no", "where");
 @noindent
 prints @samp{ nowhere }.
 
-If there is a @samp{l} modifier present the argument is expected to be of type @code{wchar_t} (or @code{const wchar_t *}).
+If there is an @samp{l} modifier present, the argument is expected to
+be of type @code{wchar_t} (or @code{const wchar_t *}).
 
 If you accidentally pass a null pointer as the argument for a @samp{%s}
 conversion, @theglibc{} prints it as @samp{(null)}.  We think this
@@ -2441,7 +2442,7 @@ described below.
 
 @comment wchar.h
 @comment GNU
-@deftypefun int swprintf (wchar_t *@var{s}, size_t @var{size}, const wchar_t *@var{template}, @dots{})
+@deftypefun int swprintf (wchar_t *@var{ws}, size_t @var{size}, const wchar_t *@var{template}, @dots{})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is like @code{wprintf}, except that the output is stored in the
 wide character array @var{ws} instead of written to a stream.  A null
@@ -2477,7 +2478,7 @@ If @var{size} is zero, nothing, not even the null byte, shall be written and
 
 The return value is the number of characters which would be generated
 for the given input, excluding the trailing null.  If this value is
-greater or equal to @var{size}, not all characters from the result have
+greater than or equal to @var{size}, not all characters from the result have
 been stored in @var{s}.  You should try again with a bigger output
 string.  Here is an example of doing this:
 
@@ -2720,7 +2721,7 @@ specified directly as for @code{vprintf}.
 
 @comment wchar.h
 @comment GNU
-@deftypefun int vswprintf (wchar_t *@var{s}, size_t @var{size}, const wchar_t *@var{template}, va_list @var{ap})
+@deftypefun int vswprintf (wchar_t *@var{ws}, size_t @var{size}, const wchar_t *@var{template}, va_list @var{ap})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This is the equivalent of @code{swprintf} with the variable argument list
 specified directly as for @code{vwprintf}.
@@ -3639,10 +3640,10 @@ Matches a string of one or more characters; the number of characters
 read is controlled by the maximum field width given for the conversion.
 @xref{String Input Conversions}.
 
-If the @samp{%c} is used in a wide stream function the read value is
+If @samp{%c} is used in a wide stream function the read value is
 converted from a wide character to the corresponding multibyte character
 before storing it.  Note that this conversion can produce more than one
-byte of output and therefore the provided buffer be large enough for up
+byte of output and therefore the provided buffer must be large enough for up
 to @code{MB_CUR_MAX} bytes for each character.  If @samp{%lc} is used in
 a multibyte function the input is treated as a multibyte sequence (and
 not bytes) and the result is converted as with calls to @code{mbrtowc}.
@@ -3803,7 +3804,7 @@ conversions:
 @item
 Provide a buffer to store it in.  This is the default.  You should
 provide an argument of type @code{char *} or @code{wchar_t *} (the
-latter of the @samp{l} modifier is present).
+latter if the @samp{l} modifier is present).
 
 @strong{Warning:} To make a robust program, you must make sure that the
 input (plus its terminating null) cannot possibly exceed the size of the
@@ -3834,7 +3835,7 @@ If the format is @samp{%lc} or @samp{%C} the function stores wide
 characters which are converted using the conversion determined at the
 time the stream was opened from the external byte stream.  The number of
 bytes read from the medium is limited by @code{MB_CUR_LEN * @var{n}} but
-at most @var{n} wide character get stored in the output string.
+at most @var{n} wide characters get stored in the output string.
 
 The @samp{%s} conversion matches a string of non-whitespace characters.
 It skips and discards initial whitespace, but stops when it encounters
@@ -3881,7 +3882,7 @@ last character of the set) is used to specify a range of characters.
 
 @item
 If a caret character @samp{^} immediately follows the initial @samp{[},
-then the set of allowed input characters is the everything @emph{except}
+then the set of allowed input characters is everything @emph{except}
 the characters listed.
 @end itemize
 
@@ -4450,7 +4451,7 @@ For this reason it is a good idea to prefer @code{ftello} whenever it is
 available since its functionality is (if different at all) closer the
 underlying definition.
 
-The functionality and return value is the same as for @code{fseek}.
+The functionality and return value are the same as for @code{fseek}.
 
 The function is an extension defined in the Unix Single Specification
 version 2.
@@ -4489,7 +4490,7 @@ function (@pxref{I/O Primitives}) and to specify offsets for file locks
 @comment ISO
 @deftypevr Macro int SEEK_SET
 This is an integer constant which, when used as the @var{whence}
-argument to the @code{fseek} or @code{fseeko} function, specifies that
+argument to the @code{fseek} or @code{fseeko} functions, specifies that
 the offset provided is relative to the beginning of the file.
 @end deftypevr
 
@@ -4497,7 +4498,7 @@ the offset provided is relative to the beginning of the file.
 @comment ISO
 @deftypevr Macro int SEEK_CUR
 This is an integer constant which, when used as the @var{whence}
-argument to the @code{fseek} or @code{fseeko} function, specifies that
+argument to the @code{fseek} or @code{fseeko} functions, specifies that
 the offset provided is relative to the current file position.
 @end deftypevr
 
@@ -4505,7 +4506,7 @@ the offset provided is relative to the current file position.
 @comment ISO
 @deftypevr Macro int SEEK_END
 This is an integer constant which, when used as the @var{whence}
-argument to the @code{fseek} or @code{fseeko} function, specifies that
+argument to the @code{fseek} or @code{fseeko} functions, specifies that
 the offset provided is relative to the end of the file.
 @end deftypevr
 
@@ -4848,7 +4849,7 @@ The @code{__fpurge} function causes the buffer of the stream
 @var{stream} to be emptied.  If the stream is currently in read mode all
 input in the buffer is lost.  If the stream is in output mode the
 buffered output is not written to the device (or whatever other
-underlying storage) and the buffer the cleared.
+underlying storage) and the buffer is cleared.
 
 This function is declared in @file{stdio_ext.h}.
 @end deftypefun
@@ -5015,7 +5016,7 @@ This function is declared in the @file{stdio_ext.h} header.
 @safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acsafe{}}
 The @code{__fpending}
 function returns the number of bytes currently in the output buffer.
-For wide-oriented stream the measuring unit is wide characters.  This
+For wide-oriented streams the measuring unit is wide characters.  This
 function should not be used on buffers in read mode or opened read-only.
 
 This function is declared in the @file{stdio_ext.h} header.
@@ -5583,7 +5584,7 @@ the @code{fmtsmg} function is.  It is available on System V systems.
 @node Example
 @subsection How to use @code{fmtmsg} and @code{addseverity}
 
-Here is a simple example program to illustrate the use of the both
+Here is a simple example program to illustrate the use of both
 functions described in this section.
 
 @smallexample
@@ -5613,7 +5614,7 @@ TO FIX: refer to manual UX:cat:001
 @end smallexample
 
 We see the different fields of the message and how the extra glue (the
-colons and the @code{TO FIX} string) are printed.  But only one of the
+colons and the @code{TO FIX} string) is printed.  But only one of the
 three calls to @code{fmtmsg} produced output.  The first call does not
 print anything because the @var{label} parameter is not in the correct
 form.  The string must contain two fields, separated by a colon
