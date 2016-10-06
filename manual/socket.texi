@@ -254,7 +254,7 @@ address.  Other processes can find it for communication only if you
 give it an address.  We call this @dfn{binding} the address to the
 socket, and the way to do it is with the @code{bind} function.
 
-You need be concerned with the address of a socket if other processes
+You need only be concerned with the address of a socket if other processes
 are to find it and start communicating with it.  You can specify an
 address for other sockets, but this is usually pointless; the first time
 you send data from a socket, or use it to initiate a connection, the
@@ -662,8 +662,8 @@ To create a socket in the local namespace, use the constant
 @comment POSIX
 @deftypevr Macro int PF_LOCAL
 This designates the local namespace, in which socket addresses are local
-names, and its associated family of protocols.  @code{PF_Local} is the
-macro used by Posix.1g.
+names, and its associated family of protocols.  @code{PF_LOCAL} is the
+macro used by POSIX.1g.
 @end deftypevr
 
 @comment sys/socket.h
@@ -713,7 +713,7 @@ the file name string.  This can be done using the macro @code{SUN_LEN}:
 @comment BSD
 @deftypefn {Macro} int SUN_LEN (@emph{struct sockaddr_un *} @var{ptr})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-The macro computes the length of socket address in the local namespace.
+This macro computes the length of the socket address in the local namespace.
 @end deftypefn
 
 @node Local Socket Example
@@ -1148,7 +1148,7 @@ a pointer into a statically-allocated buffer.  Subsequent calls will
 overwrite the same buffer, so you should copy the string if you need
 to save it.
 
-In multi-threaded programs each thread has an own statically-allocated
+In multi-threaded programs each thread has its own statically-allocated
 buffer.  But still subsequent calls of @code{inet_ntoa} in the same
 thread will overwrite the result of the last call.
 
@@ -1464,7 +1464,7 @@ The host database contains an entry for the name, but it doesn't have an
 associated Internet address.
 @end table
 
-The lookup functions above all have one in common: they are not
+The lookup functions above all have one thing in common: they are not
 reentrant and therefore unusable in multi-threaded applications.
 Therefore provides @theglibc{} a new set of functions which can be
 used in this context.
@@ -1545,7 +1545,7 @@ used in this context.
 The @code{gethostbyname_r} function returns information about the host
 named @var{name}.  The caller must pass a pointer to an object of type
 @code{struct hostent} in the @var{result_buf} parameter.  In addition
-the function may need extra buffer space and the caller must pass an
+the function may need extra buffer space and the caller must pass a
 pointer and the size of the buffer in the @var{buf} and @var{buflen}
 parameters.
 
@@ -2527,7 +2527,7 @@ connection in progress (see @code{EINPROGRESS} above).
 
 This function is defined as a cancellation point in multi-threaded
 programs, so one has to be prepared for this and make sure that
-allocated resources (like memory, files descriptors, semaphores or
+allocated resources (like memory, file descriptors, semaphores or
 whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
@@ -2663,7 +2663,7 @@ connections immediately available.
 
 This function is defined as a cancellation point in multi-threaded
 programs, so one has to be prepared for this and make sure that
-allocated resources (like memory, files descriptors, semaphores or
+allocated resources (like memory, file descriptors, semaphores or
 whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
@@ -2797,7 +2797,7 @@ signal is ignored or blocked, or if its handler returns, then
 
 This function is defined as a cancellation point in multi-threaded
 programs, so one has to be prepared for this and make sure that
-allocated resources (like memory, files descriptors, semaphores or
+allocated resources (like memory, file descriptors, semaphores or
 whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
@@ -2848,7 +2848,7 @@ You never connected this socket.
 
 This function is defined as a cancellation point in multi-threaded
 programs, so one has to be prepared for this and make sure that
-allocated resources (like memory, files descriptors, semaphores or
+allocated resources (like memory, file descriptors, semaphores or
 whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
@@ -3163,7 +3163,7 @@ owing to a problem related to a previous call.
 
 This function is defined as a cancellation point in multi-threaded
 programs, so one has to be prepared for this and make sure that
-allocated resources (like memory, files descriptors, semaphores or
+allocated resources (like memory, file descriptors, semaphores or
 whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
@@ -3202,7 +3202,7 @@ are also the same as for @code{recv}.
 
 This function is defined as a cancellation point in multi-threaded
 programs, so one has to be prepared for this and make sure that
-allocated resources (like memory, files descriptors, semaphores or
+allocated resources (like memory, file descriptors, semaphores or
 whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
@@ -3431,7 +3431,7 @@ They are declared in @file{sys/socket.h}.
 The @code{getsockopt} function gets information about the value of
 option @var{optname} at level @var{level} for socket @var{socket}.
 
-The option value is stored in a buffer that @var{optval} points to.
+The option value is stored in the buffer that @var{optval} points to.
 Before the call, you should supply in @code{*@var{optlen-ptr}} the
 size of this buffer; on return, it contains the number of bytes of
 information actually stored in the buffer.

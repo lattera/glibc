@@ -1,5 +1,7 @@
 2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/socket.texi: Fix typos in the manual.
+
 	* manual/filesys.texi: Fix typos in the manual.
 
 	* manual/llio.texi: Fix typos in the manual.
