@@ -12,7 +12,7 @@ Network Information Service (NIS) and the Domain Name Service (DNS))
 became popular, and were hacked into the C library, usually with a fixed
 search order.
 
-@Theglibc{} contains a cleaner solution of this problem.  It is
+@Theglibc{} contains a cleaner solution to this problem.  It is
 designed after a method used by Sun Microsystems in the C library of
 @w{Solaris 2}.  @Theglibc{} follows their name and calls this
 scheme @dfn{Name Service Switch} (NSS).
@@ -46,7 +46,7 @@ The modules can be updated separately.
 The C library image is smaller.
 @end enumerate
 
-To fulfill the first goal above the ABI of the modules will be described
+To fulfill the first goal above, the ABI of the modules will be described
 below.  For getting the implementation of a new service right it is
 important to understand how the functions in the modules get called.
 They are in no way designed to be used by the programmer directly.
@@ -106,7 +106,7 @@ There will be some more added later (@code{automount}, @code{bootparams},
 @cindex @file{nsswitch.conf}
 Somehow the NSS code must be told about the wishes of the user.  For
 this reason there is the file @file{/etc/nsswitch.conf}.  For each
-database this file contain a specification how the lookup process should
+database, this file contains a specification of how the lookup process should
 work.  The file could look like this:
 
 @example
@@ -141,7 +141,7 @@ the reaction on lookup result like @code{[NOTFOUND=return]}.
 The above example file mentions five different services: @code{files},
 @code{db}, @code{dns}, @code{nis}, and @code{nisplus}.  This does not
 mean these
-services are available on all sites and it does also not mean these are
+services are available on all sites and neither does it mean these are
 all the services which will ever be available.
 
 In fact, these names are simply strings which the NSS code uses to find
@@ -323,8 +323,8 @@ and the default value for the three databases above is
 @code{compat [NOTFOUND=return] files}.
 
 For all other databases the default value is
-@code{nis [NOTFOUND=return] files}.  This solution give the best
-chance to be correct since NIS and file based lookup is used.
+@code{nis [NOTFOUND=return] files}.  This solution gives the best
+chance to be correct since NIS and file based lookups are used.
 
 @cindex optimizing NSS
 A second point is that the user should try to optimize the lookup
@@ -360,7 +360,7 @@ interested in this topic should read about Dynamic Linking.
 @subsection The Naming Scheme of the NSS Modules
 
 @noindent
-The name of each function consist of various parts:
+The name of each function consists of various parts:
 
 @quotation
        _nss_@var{service}_@var{function}
@@ -393,7 +393,7 @@ functions.  I.e., if the user would call the @code{gethostbyname_r}
 function this also would end in the above function.  For all user
 interface functions the C library maps this call to a call to the
 reentrant function.  For reentrant functions this is trivial since the
-interface is (nearly) the same.  For the non-reentrant version The
+interface is (nearly) the same.  For the non-reentrant version the
 library keeps internal buffers which are used to replace the user
 supplied buffer.
 
@@ -423,7 +423,7 @@ not starting with @file{lib} but don't tell this to anybody.}
 Now we know about the functions contained in the modules.  It is now
 time to describe the types.  When we mentioned the reentrant versions of
 the functions above, this means there are some additional arguments
-(compared with the standard, non-reentrant version).  The prototypes for
+(compared with the standard, non-reentrant versions).  The prototypes for
 the non-reentrant and reentrant versions of our function above are:
 
 @smallexample
@@ -475,7 +475,7 @@ necessary the source code should be examined to learn about the details.
 
 In case the interface function has to return an error it is important
 that the correct error code is stored in @code{*@var{errnop}}.  Some
-return status value have only one associated error code, others have
+return status values have only one associated error code, others have
 more.
 
 @multitable @columnfractions .3 .2 .50
@@ -506,7 +506,7 @@ These are proposed values.  There can be other error codes and the
 described error codes can have different meaning.  @strong{With one
 exception:} when returning @code{NSS_STATUS_TRYAGAIN} the error code
 @code{ERANGE} @emph{must} mean that the user provided buffer is too
-small.  Everything is non-critical.
+small.  Everything else is non-critical.
 
 In statically linked programs, the main application and NSS modules do
 not share the same thread-local variable @code{errno}, which is the
@@ -667,7 +667,7 @@ This function simply closes all files which are still open or removes
 buffer caches.  If there are no files or buffers to remove this is again
 a simple noop.
 
-There normally is no return value different to @var{NSS_STATUS_SUCCESS}.
+There normally is no return value other than @var{NSS_STATUS_SUCCESS}.
 
 @item enum nss_status _nss_@var{database}_get@var{db}ent_r (@var{STRUCTURE} *result, char *buffer, size_t buflen, int *errnop)
 Since this function will be called several times in a row to retrieve
@@ -701,7 +701,7 @@ more entries.  When the last entry was read it should return
 @code{NSS_STATUS_NOTFOUND}.  When the buffer given as an argument is too
 small for the data to be returned @code{NSS_STATUS_TRYAGAIN} should be
 returned.  When the service was not formerly initialized by a call to
-@code{_nss_@var{DATABASE}_set@var{db}ent} all return value allowed for
+@code{_nss_@var{DATABASE}_set@var{db}ent} all return values allowed for
 this function can also be returned here.
 
 @item enum nss_status _nss_@var{DATABASE}_get@var{db}by@var{XX}_r (@var{PARAMS}, @var{STRUCTURE} *result, char *buffer, size_t buflen, int *errnop)
@@ -712,17 +712,17 @@ interface functions.  All arguments given to the non-reentrant version
 are here described by @var{PARAMS}.
 
 The result must be stored in the structure pointed to by @var{result}.
-If there is additional data to return (say strings, where the
+If there are additional data to return (say strings, where the
 @var{result} structure only contains pointers) the function must use the
-@var{buffer} or length @var{buflen}.  There must not be any references
+@var{buffer} of length @var{buflen}.  There must not be any references
 to non-constant global data.
 
 The implementation of this function should honor the @var{stayopen}
 flag set by the @code{set@var{DB}ent} function whenever this makes sense.
 
-Before the function returns the implementation should store the value of
-the local @var{errno} variable in the variable pointed to be
-@var{errnop}.  This is important to guarantee the module working in
+Before the function returns, the implementation should store the value of
+the local @var{errno} variable in the variable pointed to by
+@var{errnop}.  This is important to guarantee the module works in
 statically linked programs.
 
 Again, this function takes an additional last argument for the

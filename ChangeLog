@@ -1,4 +1,9 @@
 2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
+	    Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* manual/nss.texi: Fix typos in the manual.
+
+2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/contrib.texi: Fix typos in the manual.
 
