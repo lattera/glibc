@@ -89,7 +89,7 @@ more meaning than the system administrator gives to it.
 
 @item priority
 This tells how important the content of the message is.  Examples of
-defined priority values are: debug, informational, warning, critical.
+defined priority values are: debug, informational, warning and critical.
 For the complete list, see @ref{syslog; vsyslog}.  Except for
 the fact that the priorities have a defined order, the meaning of each
 of these priorities is entirely determined by the system administrator.
@@ -257,7 +257,7 @@ If any other bit in @var{options} is on, the result is undefined.
 @var{facility} is the default facility code for this connection.  A
 @code{syslog} on this connection that specifies default facility causes
 this facility to be associated with the message.  See @code{syslog} for
-possible values.  A value of zero means the default default, which is
+possible values.  A value of zero means the default, which is
 @code{LOG_USER}.
 
 If a Syslog connection is already open when you call @code{openlog},
