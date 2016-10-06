@@ -560,7 +560,7 @@ recommend instead adding a prototype for the function you are calling.
 The result of subtracting two pointers in C is always an integer, but the
 precise data type varies from C compiler to C compiler.  Likewise, the
 data type of the result of @code{sizeof} also varies between compilers.
-ISO defines standard aliases for these two types, so you can refer to
+ISO C defines standard aliases for these two types, so you can refer to
 them in a portable fashion.  They are defined in the header file
 @file{stddef.h}.
 @pindex stddef.h
@@ -1143,7 +1143,7 @@ macros are supposed to be at least @code{10}.
 @comment ISO
 @item FLT_MIN_EXP
 This is the smallest possible exponent value for type @code{float}.
-More precisely, is the minimum negative integer such that the value
+More precisely, it is the minimum negative integer such that the value
 @code{FLT_RADIX} raised to this power minus 1 can be represented as a
 normalized floating point number of type @code{float}.
 
