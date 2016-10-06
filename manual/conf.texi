@@ -148,7 +148,7 @@ should always be defined even if there is no specific imposed limit.
 POSIX defines certain system-specific options that not all POSIX systems
 support.  Since these options are provided in the kernel, not in the
 library, simply using @theglibc{} does not guarantee any of these
-features is supported; it depends on the system you are using.
+features are supported; it depends on the system you are using.
 
 @pindex unistd.h
 You can test for the availability of a given option using the macros in
@@ -466,7 +466,7 @@ Inquire about the parameter corresponding to @code{_POSIX_AIO_MAX}.
 @comment unistd.h
 @comment POSIX.1
 @item _SC_AIO_PRIO_DELTA_MAX
-Inquire the value by which a process can decrease its asynchronous I/O
+Inquire about the value by which a process can decrease its asynchronous I/O
 priority level from its own scheduling priority.  This corresponds to the
 run-time invariant value @code{AIO_PRIO_DELTA_MAX}.
 
@@ -573,7 +573,7 @@ Inquire about the parameter corresponding to @code{_POSIX_PII_OSI_M}.
 @comment unistd.h
 @comment POSIX.1g
 @item _SC_T_IOV_MAX
-Inquire the value of the value associated with the @code{T_IOV_MAX}
+Inquire about the value associated with the @code{T_IOV_MAX}
 variable.
 
 @comment unistd.h
@@ -888,7 +888,7 @@ Inquire about the number of bits in a variable of a register word.
 @comment unistd.h
 @comment X/Open
 @item _SC_MB_LEN_MAX
-Inquire the maximum length of a multi-byte representation of a wide
+Inquire about the maximum length of a multi-byte representation of a wide
 character value.
 
 @comment unistd.h
@@ -1553,7 +1553,7 @@ the collating sequence for a locale.
 @comment limits.h
 @comment POSIX.2
 @deftypevr Macro int EXPR_NEST_MAX
-The maximum number of expressions that can be nested within parenthesis
+The maximum number of expressions that can be nested within parentheses
 by the @code{expr} utility.
 @end deftypevr
 
