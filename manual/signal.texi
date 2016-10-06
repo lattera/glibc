@@ -1207,7 +1207,7 @@ the signal.  These are described in more detail in @ref{Flags for Sigaction}.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @var{action} argument is used to set up a new action for the signal
 @var{signum}, while the @var{old-action} argument is used to return
-information about the action previously associated with this symbol.
+information about the action previously associated with this signal.
 (In other words, @var{old-action} has the same purpose as the
 @code{signal} function's return value---you can check to see what the
 old action in effect for the signal was, and restore it later if you
@@ -2092,7 +2092,7 @@ it can also handle a signal in the middle of clearing the flag.  (This
 is an example of the sort of reasoning you need to do to figure out
 whether non-atomic usage is safe.)
 
-Sometimes you can insure uninterrupted access to one object by
+Sometimes you can ensure uninterrupted access to one object by
 protecting its use with another object, perhaps one whose type
 guarantees atomicity.  @xref{Merged Signals}, for an example.
 
@@ -3371,7 +3371,7 @@ signals.  The return value is the previous set of blocked signals.
 @c The exception are BSD systems other than 4.4, where it is a syscall.
 @c sigsetmask @asulock/hurd @aculock/hurd
 @c  sigprocmask(SIG_SETMASK) dup @asulock/hurd @aculock/hurd [no @mtasurace:sigprocmask/bsd(SIG_UNBLOCK)]
-This function equivalent to @code{sigprocmask} (@pxref{Process
+This function is equivalent to @code{sigprocmask} (@pxref{Process
 Signal Mask}) with a @var{how} argument of @code{SIG_SETMASK}: it sets
 the calling process's signal mask to @var{mask}.  The return value is
 the previous set of blocked signals.

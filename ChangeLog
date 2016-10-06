@@ -1,5 +1,7 @@
 2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/signal.texi: Fix typos in the manual.
+
 	* manual/setjmp.texi: Fix typos in the manual.
 
 	* manual/resource.texi: Fix typos in the manual.
