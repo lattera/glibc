@@ -314,7 +314,7 @@ A symbolic link.
 This member is a BSD extension.  The symbol @code{_DIRENT_HAVE_D_TYPE}
 is defined if this member is available.  On systems where it is used, it
 corresponds to the file type bits in the @code{st_mode} member of
-@code{struct stat}.  If the value cannot be determine the member
+@code{struct stat}.  If the value cannot be determined the member
 value is DT_UNKNOWN.  These two macros convert between @code{d_type}
 values and @code{st_mode} values:
 
@@ -335,7 +335,7 @@ This returns the @code{st_mode} value corresponding to @var{dtype}.
 
 This structure may contain additional members in the future.  Their
 availability is always announced in the compilation environment by a
-macro names @code{_DIRENT_HAVE_D_@var{xxx}} where @var{xxx} is replaced
+macro named @code{_DIRENT_HAVE_D_@var{xxx}} where @var{xxx} is replaced
 by the name of the new member.  For instance, the member @code{d_reclen}
 available on some systems is announced through the macro
 @code{_DIRENT_HAVE_D_RECLEN}.
@@ -723,7 +723,7 @@ the result.
 
 The @code{scandir} function scans the contents of the directory selected
 by @var{dir}.  The result in *@var{namelist} is an array of pointers to
-structure of type @code{struct dirent} which describe all selected
+structures of type @code{struct dirent} which describe all selected
 directory entries and which is allocated using @code{malloc}.  Instead
 of always getting all directory entries returned, the user supplied
 function @var{selector} can be used to decide which entries are in the
@@ -742,7 +742,7 @@ directory could not be opened for reading or the malloc call failed) and
 the global variable @code{errno} contains more information on the error.
 @end deftypefun
 
-As described above the fourth argument to the @code{scandir} function
+As described above, the fourth argument to the @code{scandir} function
 must be a pointer to a sorting function.  For the convenience of the
 programmer @theglibc{} contains implementations of functions which
 are very helpful for this purpose.
@@ -1009,7 +1009,7 @@ the @var{filename} parameter and appending the names of all passed
 directories and then the local file name.  So the callback function can
 use this parameter to access the file.  @code{ftw} also calls
 @code{stat} for the file and passes that information on to the callback
-function.  If this @code{stat} call was not successful the failure is
+function.  If this @code{stat} call is not successful the failure is
 indicated by setting the third argument of the callback function to
 @code{FTW_NS}.  Otherwise it is set according to the description given
 in the account of @code{__ftw_func_t} above.
@@ -1261,7 +1261,7 @@ purpose is to obtain information about the link.  @code{link}, the
 function that makes a hard link, does too.  It makes a hard link to the
 symbolic link, which one rarely wants.
 
-Some systems have for some functions operating on files have a limit on
+Some systems have, for some functions operating on files, a limit on
 how many symbolic links are followed when resolving a path name.  The
 limit if it exists is published in the @file{sys/param.h} header file.
 
@@ -1271,7 +1271,7 @@ limit if it exists is published in the @file{sys/param.h} header file.
 
 The macro @code{MAXSYMLINKS} specifies how many symlinks some function
 will follow before returning @code{ELOOP}.  Not all functions behave the
-same and this value is not the same a that returned for
+same and this value is not the same as that returned for
 @code{_SC_SYMLOOP} by @code{sysconf}.  In fact, the @code{sysconf}
 result can indicate that there is no fixed limit although
 @code{MAXSYMLINKS} exists and has a finite value.
@@ -1376,7 +1376,7 @@ In some situations it is desirable to resolve all the
 symbolic links to get the real
 name of a file where no prefix names a symbolic link which is followed
 and no filename in the path is @code{.} or @code{..}.  This is for
-instance desirable if files have to be compare in which case different
+instance desirable if files have to be compared in which case different
 names can refer to the same inode.
 
 @comment stdlib.h
@@ -1392,7 +1392,7 @@ result is passed back as the return value of the function in a block of
 memory allocated with @code{malloc}.  If the result is not used anymore
 the memory should be freed with a call to @code{free}.
 
-If any of the path components is missing the function returns a NULL
+If any of the path components are missing the function returns a NULL
 pointer.  This is also what is returned if the length of the path
 reaches or exceeds @code{PATH_MAX} characters.  In any case
 @code{errno} is set accordingly.
@@ -1448,7 +1448,7 @@ This function is declared in @file{stdlib.h}.
 @end deftypefun
 
 The advantage of using this function is that it is more widely
-available.  The drawback is that it reports failures for long path on
+available.  The drawback is that it reports failures for long paths on
 systems which have no limits on the file name length.
 
 @node Deleting Files
@@ -1828,8 +1828,8 @@ might not be detected as sparse at all.  For practical applications,
 this is not a problem.
 
 @item unsigned int st_blksize
-The optimal block size for reading of writing this file, in bytes.  You
-might use this size for allocating the buffer space for reading of
+The optimal block size for reading or writing this file, in bytes.  You
+might use this size for allocating the buffer space for reading or
 writing the file.  (This is unrelated to @code{st_blocks}.)
 @end table
 @end deftp
@@ -2254,10 +2254,10 @@ This is the file type constant of a FIFO or pipe.
 @end table
 
 The POSIX.1b standard introduced a few more objects which possibly can
-be implemented as object in the filesystem.  These are message queues,
+be implemented as objects in the filesystem.  These are message queues,
 semaphores, and shared memory objects.  To allow differentiating these
-objects from other files the POSIX standard introduces three new test
-macros.  But unlike the other macros it does not take the value of the
+objects from other files the POSIX standard introduced three new test
+macros.  But unlike the other macros they do not take the value of the
 @code{st_mode} field as the parameter.  Instead they expect a pointer to
 the whole @code{struct stat} structure.
 
@@ -2265,7 +2265,7 @@ the whole @code{struct stat} structure.
 @comment POSIX
 @deftypefn Macro int S_TYPEISMQ (struct stat *@var{s})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-If the system implement POSIX message queues as distinct objects and the
+If the system implements POSIX message queues as distinct objects and the
 file is a message queue object, this macro returns a non-zero value.
 In all other cases the result is zero.
 @end deftypefn
@@ -2274,7 +2274,7 @@ In all other cases the result is zero.
 @comment POSIX
 @deftypefn Macro int S_TYPEISSEM (struct stat *@var{s})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-If the system implement POSIX semaphores as distinct objects and the
+If the system implements POSIX semaphores as distinct objects and the
 file is a semaphore object, this macro returns a non-zero value.
 In all other cases the result is zero.
 @end deftypefn
@@ -2283,7 +2283,7 @@ In all other cases the result is zero.
 @comment POSIX
 @deftypefn Macro int S_TYPEISSHM (struct stat *@var{s})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-If the system implement POSIX shared memory objects as distinct objects
+If the system implements POSIX shared memory objects as distinct objects
 and the file is a shared memory object, this macro returns a non-zero
 value.  In all other cases the result is zero.
 @end deftypefn
@@ -2760,7 +2760,7 @@ allow write access to files like @file{/etc/passwd}, which normally can
 be written only by the super-user, the modifying program will have to be
 owned by @code{root} and the setuid-bit must be set.
 
-But beside the files the program is intended to change the user should
+But besides the files the program is intended to change the user should
 not be allowed to access any file to which s/he would not have access
 anyway.  The program therefore must explicitly check whether @emph{the
 user} would have the necessary access to a file, before it reads or
@@ -2780,7 +2780,7 @@ want to try to keep track of the diverse features that different systems
 have.  Using @code{access} is simple and automatically does whatever is
 appropriate for the system you are using.
 
-@code{access} is @emph{only} only appropriate to use in setuid programs.
+@code{access} is @emph{only} appropriate to use in setuid programs.
 A non-setuid program will always use the effective ID rather than the
 real ID.
 
@@ -3230,7 +3230,7 @@ add (off_t at, void *block, size_t size)
 
 The function @code{add} writes a block of memory at an arbitrary
 position in the file.  If the current size of the file is too small it
-is extended.  Note the it is extended by a round number of pages.  This
+is extended.  Note that it is extended by a whole number of pages.  This
 is a requirement of @code{mmap}.  The program has to keep track of the
 real size, and when it has finished a final @code{ftruncate} call should
 set the real size of the file.
