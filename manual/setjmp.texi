@@ -243,9 +243,9 @@ blocked signals.
 
 The Unix standard provides one more set of functions to control the
 execution path and these functions are more powerful than those
-discussed in this chapter so far.  These function were part of the
+discussed in this chapter so far.  These functions were part of the
 original @w{System V} API and by this route were added to the Unix
-API.  Beside on branded Unix implementations these interfaces are not
+API.  Besides on branded Unix implementations these interfaces are not
 widely available.  Not all platforms and/or architectures @theglibc{}
 is available on provide this interface.  Use @file{configure} to
 detect the availability.
@@ -350,7 +350,7 @@ heap memory are normally not tagged to allow this.  The result is that
 programs would fail.  Examples for such code include the calling
 sequences the GNU C compiler generates for calls to nested functions.
 Safe ways to allocate stacks correctly include using memory on the
-original threads stack or explicitly allocate memory tagged for
+original thread's stack or explicitly allocating memory tagged for
 execution using (@pxref{Memory-mapped I/O}).
 
 @strong{Compatibility note}: The current Unix standard is very imprecise
@@ -360,7 +360,7 @@ the elements of the @code{stack_t} value are unclear.  @Theglibc{}
 and most other Unix implementations require the @code{ss_sp} value of
 the @code{uc_stack} element to point to the base of the memory region
 allocated for the stack and the size of the memory region is stored in
-@code{ss_size}.  There are implements out there which require
+@code{ss_size}.  There are implementations out there which require
 @code{ss_sp} to be set to the value the stack pointer will have (which
 can, depending on the direction the stack grows, be different).  This
 difference makes the @code{makecontext} function hard to use and it
