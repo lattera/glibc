@@ -452,7 +452,7 @@ above do.  The functions above are better choices.
 
 @code{ulimit} gets the current limit or sets the current and maximum
 limit for a particular resource for the calling process according to the
-command @var{cmd}.a
+command @var{cmd}.
 
 If you are getting a limit, the command argument is the only argument.
 If you are setting a limit, there is a second argument:
@@ -652,7 +652,7 @@ instructions for your process.
 Similarly, a page fault causes what looks like a straightforward
 sequence of instructions to take a long time.  The fact that other
 processes get to run while the page faults in is of no consequence,
-because as soon as the I/O is complete, the high priority process will
+because as soon as the I/O is complete, the higher priority process will
 kick them out and run again, but the wait for the I/O itself could be a
 problem.  To neutralize this threat, use @code{mlock} or
 @code{mlockall}.
@@ -668,7 +668,7 @@ order to run.  The errant program is in complete control.  It controls
 the vertical, it controls the horizontal.
 
 There are two ways to avoid this: 1) keep a shell running somewhere with
-a higher absolute priority.  2) keep a controlling terminal attached to
+a higher absolute priority or 2) keep a controlling terminal attached to
 the high priority process group.  All the priority in the world won't
 stop an interrupt handler from running and delivering a signal to the
 process if you hit Control-C.
@@ -733,7 +733,7 @@ between Round Robin and First Come First Served.
 
 To understand how scheduling works when processes of different scheduling
 policies occupy the same absolute priority, you have to know the nitty
-gritty details of how processes enter and exit the ready to run list:
+gritty details of how processes enter and exit the ready to run list.
 
 In both cases, the ready to run list is organized as a true queue, where
 a process gets pushed onto the tail when it becomes ready to run and is
@@ -931,7 +931,7 @@ you want to know.
 absolute priority of the process.
 
 On success, the return value is @code{0}.  Otherwise, it is @code{-1}
-and @code{ERRNO} is set accordingly.  The @code{errno} values specific
+and @code{errno} is set accordingly.  The @code{errno} values specific
 to this function are:
 
 @table @code
@@ -1067,7 +1067,7 @@ among the great unwashed processes gets them.
 @subsubsection Introduction To Traditional Scheduling
 
 Long before there was absolute priority (See @ref{Absolute Priority}),
-Unix systems were scheduling the CPU using this system.  When Posix came
+Unix systems were scheduling the CPU using this system.  When POSIX came
 in like the Romans and imposed absolute priorities to accommodate the
 needs of realtime processing, it left the indigenous Absolute Priority
 Zero processes to govern themselves by their own familiar scheduling
@@ -1095,7 +1095,7 @@ The dynamic priority sometimes determines who gets the next turn on the
 CPU.  Sometimes it determines how long turns last.  Sometimes it
 determines whether a process can kick another off the CPU.
 
-In Linux, the value is a combination of these things, but mostly it is
+In Linux, the value is a combination of these things, but mostly it
 just determines the length of the time slice.  The higher a process'
 dynamic priority, the longer a shot it gets on the CPU when it gets one.
 If it doesn't use up its time slice before giving up the CPU to do
@@ -1124,7 +1124,7 @@ ability to refuse its equal share of CPU time that others might prosper.
 Hence, the higher a process' nice value, the nicer the process is.
 (Then a snake came along and offered some process a negative nice value
 and the system became the crass resource allocation system we know
-today).
+today.)
 
 Dynamic priorities tend upward and downward with an objective of
 smoothing out allocation of CPU time and giving quick response time to
@@ -1181,7 +1181,7 @@ have the same nice value, this returns the lowest value that any of them
 has.
 
 On success, the return value is @code{0}.  Otherwise, it is @code{-1}
-and @code{ERRNO} is set accordingly.  The @code{errno} values specific
+and @code{errno} is set accordingly.  The @code{errno} values specific
 to this function are:
 
 @table @code
@@ -1306,7 +1306,7 @@ over this aspect of the system as well:
 @item
 One thread or process is responsible for absolutely critical work
 which under no circumstances must be interrupted or hindered from
-making process by other process or threads using CPU resources.  In
+making progress by other processes or threads using CPU resources.  In
 this case the special process would be confined to a CPU which no
 other process or thread is allowed to use.
 
@@ -1316,7 +1316,7 @@ from different CPUs.  This is the case in NUMA (Non-Uniform Memory
 Architecture) machines.  Preferably memory should be accessed locally
 but this requirement is usually not visible to the scheduler.
 Therefore forcing a process or thread to the CPUs which have local
-access to the mostly used memory helps to significantly boost the
+access to the most-used memory helps to significantly boost the
 performance.
 
 @item
@@ -1331,7 +1331,7 @@ problem.  The Linux kernel provides a set of interfaces to allow
 specifying @emph{affinity sets} for a process.  The scheduler will
 schedule the thread or process on CPUs specified by the affinity
 masks.  The interfaces which @theglibc{} define follow to some
-extend the Linux kernel interface.
+extent the Linux kernel interface.
 
 @comment sched.h
 @comment GNU
@@ -1345,7 +1345,7 @@ different interface has to be used.
 This type is a GNU extension and is defined in @file{sched.h}.
 @end deftp
 
-To manipulate the bitset, to set and reset bits, a number of macros is
+To manipulate the bitset, to set and reset bits, a number of macros are
 defined.  Some of the macros take a CPU number as a parameter.  Here
 it is important to never exceed the size of the bitset.  The following
 macro specifies the number of bits in the @code{cpu_set_t} bitset.
@@ -1432,7 +1432,7 @@ affinity mask can be retrieved from the system.
 @c Wrapped syscall to zero out past the kernel cpu set size; Linux
 @c only.
 
-This functions stores the CPU affinity mask for the process or thread
+This function stores the CPU affinity mask for the process or thread
 with the ID @var{pid} in the @var{cpusetsize} bytes long bitmap
 pointed to by @var{cpuset}.  If successful, the function always
 initializes all bits in the @code{cpu_set_t} object and returns zero.
@@ -1446,7 +1446,7 @@ and @code{errno} is set to represent the error condition.
 No process or thread with the given ID found.
 
 @item EFAULT
-The pointer @var{cpuset} is does not point to a valid object.
+The pointer @var{cpuset} does not point to a valid object.
 @end table
 
 This function is a GNU extension and is declared in @file{sched.h}.
@@ -1465,7 +1465,7 @@ interface must be provided for that.
 
 This function installs the @var{cpusetsize} bytes long affinity mask
 pointed to by @var{cpuset} for the process or thread with the ID @var{pid}.
-If successful the function returns zero and the scheduler will in future
+If successful the function returns zero and the scheduler will in the future
 take the affinity information into account.
 
 If the function fails it will return @code{-1} and @code{errno} is set
@@ -1476,7 +1476,7 @@ to the error code:
 No process or thread with the given ID found.
 
 @item EFAULT
-The pointer @var{cpuset} is does not point to a valid object.
+The pointer @var{cpuset} does not point to a valid object.
 
 @item EINVAL
 The bitset is not valid.  This might mean that the affinity set might
@@ -1518,7 +1518,7 @@ virtual addresses into physical addresses.  This is normally done by the
 hardware of the processor.
 
 @cindex shared memory
-Using a virtual address space has several advantage.  The most important
+Using a virtual address space has several advantages.  The most important
 is process isolation.  The different processes running on the system
 cannot interfere directly with each other.  No process can write into
 the address space of another process (except when shared memory is used
@@ -1548,16 +1548,16 @@ stores memory content externally it cannot do this on a byte-by-byte
 basis.  The administrative overhead does not allow this (leaving alone
 the processor hardware).  Instead several thousand bytes are handled
 together and form a @dfn{page}.  The size of each page is always a power
-of two byte.  The smallest page size in use today is 4096, with 8192,
+of two bytes.  The smallest page size in use today is 4096, with 8192,
 16384, and 65536 being other popular sizes.
 
 @node Query Memory Parameters
 @subsection How to get information about the memory subsystem?
 
 The page size of the virtual memory the process sees is essential to
-know in several situations.  Some programming interface (e.g.,
+know in several situations.  Some programming interfaces (e.g.,
 @code{mmap}, @pxref{Memory-mapped I/O}) require the user to provide
-information adjusted to the page size.  In the case of @code{mmap} is it
+information adjusted to the page size.  In the case of @code{mmap} it is
 necessary to provide a length argument which is a multiple of the page
 size.  Another place where the knowledge about the page size is useful
 is in memory allocation.  If one allocates pieces of memory in larger
@@ -1568,7 +1568,7 @@ of the page size the kernel's memory handling can work more effectively
 since it only has to allocate memory pages which are fully used.  (To do
 this optimization it is necessary to know a bit about the memory
 allocator which will require a bit of memory itself for each block and
-this overhead must not push the total size over the page size multiple.
+this overhead must not push the total size over the page size multiple.)
 
 The page size traditionally was a compile time constant.  But recent
 development of processors changed this.  Processors now support
@@ -1605,7 +1605,7 @@ information about the physical memory the system has.  The call
 @end smallexample
 
 @noindent
-returns the total number of pages of physical the system has.
+returns the total number of pages of physical memory the system has.
 This does not mean all this memory is available.  This information can
 be found using
 
@@ -1634,7 +1634,7 @@ get this information two functions.  They are declared in the file
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c This fopens a /proc file and scans it for the requested information.
 The @code{get_phys_pages} function returns the total number of pages of
-physical the system has.  To get the amount of memory this number has to
+physical memory the system has.  To get the amount of memory this number has to
 be multiplied by the page size.
 
 This function is a GNU extension.
@@ -1645,7 +1645,7 @@ This function is a GNU extension.
 @deftypefun {long int} get_avphys_pages (void)
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 The @code{get_avphys_pages} function returns the number of available pages of
-physical the system has.  To get the amount of memory this number has to
+physical memory the system has.  To get the amount of memory this number has to
 be multiplied by the page size.
 
 This function is a GNU extension.
@@ -1712,7 +1712,7 @@ This function is a GNU extension.
 Before starting more threads it should be checked whether the processors
 are not already overused.  Unix systems calculate something called the
 @dfn{load average}.  This is a number indicating how many processes were
-running.  This number is average over different periods of times
+running.  This number is an average over different periods of time
 (normally 1, 5, and 15 minutes).
 
 @comment stdlib.h
