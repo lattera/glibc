@@ -210,7 +210,7 @@ function to do that.
 @deftypefunx void sincosl (long double @var{x}, long double *@var{sinx}, long double *@var{cosx})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the sine of @var{x} in @code{*@var{sinx}} and the
-cosine of @var{x} in @code{*@var{cos}}, where @var{x} is given in
+cosine of @var{x} in @code{*@var{cosx}}, where @var{x} is given in
 radians.  Both values, @code{*@var{sinx}} and @code{*@var{cosx}}, are in
 the range of @code{-1} to @code{1}.
 
@@ -303,7 +303,7 @@ pole.
 @section Inverse Trigonometric Functions
 @cindex inverse trigonometric functions
 
-These are the usual arc sine, arc cosine and arc tangent functions,
+These are the usual arcsine, arccosine and arctangent functions,
 which are the inverses of the sine, cosine and tangent functions
 respectively.
 
@@ -317,12 +317,12 @@ respectively.
 @comment ISO
 @deftypefunx {long double} asinl (long double @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions compute the arc sine of @var{x}---that is, the value whose
+These functions compute the arcsine of @var{x}---that is, the value whose
 sine is @var{x}.  The value is in units of radians.  Mathematically,
 there are infinitely many such values; the one actually returned is the
 one between @code{-pi/2} and @code{pi/2} (inclusive).
 
-The arc sine function is defined mathematically only
+The arcsine function is defined mathematically only
 over the domain @code{-1} to @code{1}.  If @var{x} is outside the
 domain, @code{asin} signals a domain error.
 @end deftypefun
@@ -337,12 +337,12 @@ domain, @code{asin} signals a domain error.
 @comment ISO
 @deftypefunx {long double} acosl (long double @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions compute the arc cosine of @var{x}---that is, the value
+These functions compute the arccosine of @var{x}---that is, the value
 whose cosine is @var{x}.  The value is in units of radians.
 Mathematically, there are infinitely many such values; the one actually
 returned is the one between @code{0} and @code{pi} (inclusive).
 
-The arc cosine function is defined mathematically only
+The arccosine function is defined mathematically only
 over the domain @code{-1} to @code{1}.  If @var{x} is outside the
 domain, @code{acos} signals a domain error.
 @end deftypefun
@@ -357,7 +357,7 @@ domain, @code{acos} signals a domain error.
 @comment ISO
 @deftypefunx {long double} atanl (long double @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions compute the arc tangent of @var{x}---that is, the value
+These functions compute the arctangent of @var{x}---that is, the value
 whose tangent is @var{x}.  The value is in units of radians.
 Mathematically, there are infinitely many such values; the one actually
 returned is the one between @code{-pi/2} and @code{pi/2} (inclusive).
@@ -373,7 +373,7 @@ returned is the one between @code{-pi/2} and @code{pi/2} (inclusive).
 @comment ISO
 @deftypefunx {long double} atan2l (long double @var{y}, long double @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function computes the arc tangent of @var{y}/@var{x}, but the signs
+This function computes the arctangent of @var{y}/@var{x}, but the signs
 of both arguments are used to determine the quadrant of the result, and
 @var{x} is permitted to be zero.  The return value is given in radians
 and is in the range @code{-pi} to @code{pi}, inclusive.
@@ -402,7 +402,7 @@ If both @var{x} and @var{y} are zero, @code{atan2} returns zero.
 @comment ISO
 @deftypefunx {complex long double} casinl (complex long double @var{z})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions compute the complex arc sine of @var{z}---that is, the
+These functions compute the complex arcsine of @var{z}---that is, the
 value whose sine is @var{z}.  The value returned is in radians.
 
 Unlike the real-valued functions, @code{casin} is defined for all
@@ -419,7 +419,7 @@ values of @var{z}.
 @comment ISO
 @deftypefunx {complex long double} cacosl (complex long double @var{z})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions compute the complex arc cosine of @var{z}---that is, the
+These functions compute the complex arccosine of @var{z}---that is, the
 value whose cosine is @var{z}.  The value returned is in radians.
 
 Unlike the real-valued functions, @code{cacos} is defined for all
@@ -437,7 +437,7 @@ values of @var{z}.
 @comment ISO
 @deftypefunx {complex long double} catanl (complex long double @var{z})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions compute the complex arc tangent of @var{z}---that is,
+These functions compute the complex arctangent of @var{z}---that is,
 the value whose tangent is @var{z}.  The value is in units of radians.
 @end deftypefun
 
@@ -730,7 +730,7 @@ to subtraction of two numbers that are nearly equal.
 @comment ISO
 @deftypefunx {long double} log1pl (long double @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions returns a value equivalent to @w{@code{log (1 + @var{x})}}.
+These functions return a value equivalent to @w{@code{log (1 + @var{x})}}.
 They are computed in a way that is accurate even if @var{x} is
 near zero.
 @end deftypefun
@@ -873,7 +873,7 @@ may signal overflow if @var{x} is too large.
 @comment ISO
 @deftypefunx {long double} coshl (long double @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These function return the hyperbolic cosine of @var{x},
+These functions return the hyperbolic cosine of @var{x},
 defined mathematically as @w{@code{(exp (@var{x}) + exp (-@var{x})) / 2}}.
 They may signal overflow if @var{x} is too large.
 @end deftypefun
@@ -1146,7 +1146,7 @@ instead of in the @var{signgam} global.  This means it is reentrant.
 @safety{@prelim{}@mtunsafe{@mtasurace{:signgam}}@asunsafe{}@acsafe{}}
 These functions exist for compatibility reasons.  They are equivalent to
 @code{lgamma} etc.  It is better to use @code{lgamma} since for one the
-name reflects better the actual computation, moreover @code{lgamma} is
+name reflects better the actual computation, and moreover @code{lgamma} is
 standardized in @w{ISO C99} while @code{gamma} is not.
 @end deftypefun
 
@@ -1298,7 +1298,7 @@ for functions in the math library, and does not aim for correctness in
 whether ``inexact'' exceptions are raised.  Instead, the goals for
 accuracy of functions without fully specified results are as follows;
 some functions have bugs meaning they do not meet these goals in all
-cases.  In future, @theglibc{} may provide some other correctly
+cases.  In the future, @theglibc{} may provide some other correctly
 rounding functions under the names such as @code{crsin} proposed for
 an extension to ISO C.
 
@@ -1583,7 +1583,7 @@ pseudo-random number generator.
 
 @Theglibc{} contains four additional functions which contain the
 state as an explicit parameter and therefore make it possible to handle
-thread-local PRNGs.  Beside this there is no difference.  In fact, the
+thread-local PRNGs.  Besides this there is no difference.  In fact, the
 four functions already discussed are implemented internally using the
 following interfaces.
 
@@ -1785,7 +1785,7 @@ the user has called the @code{lcong48} function (see below).
 The @code{seed48} function initializes all 48 bits of the state of the
 internal random number generator from the contents of the parameter
 @var{seed16v}.  Here the lower 16 bits of the first element of
-@var{see16v} initialize the least significant 16 bits of the internal
+@var{seed16v} initialize the least significant 16 bits of the internal
 state, the lower 16 bits of @code{@var{seed16v}[1]} initialize the mid-order
 16 bits of the state and the 16 lower bits of @code{@var{seed16v}[2]}
 initialize the most significant 16 bits of the state.
@@ -2027,7 +2027,7 @@ This means that no calls to the library functions may be necessary, and
 can increase the speed of generated code significantly.  The drawback is
 that code size will increase, and the increase is not always negligible.
 
-There are two kind of inline functions: Those that give the same result
+There are two kinds of inline functions: those that give the same result
 as the library functions and others that might not set @code{errno} and
 might have a reduced precision and/or argument range in comparison with
 the library functions.  The latter inline functions are only available
