@@ -164,7 +164,7 @@ The remainder from the division.
 @deftypefun div_t div (int @var{numerator}, int @var{denominator})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Functions in this section are pure, and thus safe.
-This function @code{div} computes the quotient and remainder from
+The function @code{div} computes the quotient and remainder from
 the division of @var{numerator} by @var{denominator}, returning the
 result in a structure of type @code{div_t}.
 
@@ -567,7 +567,7 @@ Division: @math{0/0} or @math{@infinity{}/@infinity{}}.
 Remainder: @math{x} REM @math{y}, where @math{y} is zero or @math{x} is
 infinite.
 @item
-Square root if the operand is less then zero.  More generally, any
+Square root if the operand is less than zero.  More generally, any
 mathematical function evaluated outside its domain produces this
 exception.
 @item
@@ -1027,7 +1027,7 @@ the calculation was negative, the result is @dfn{negative zero}.
 Negative zero can also result from some operations on infinity, such as
 @math{4/-@infinity{}}.
 
-At any time one of the above four rounding modes is selected.  You can
+At any time, one of the above four rounding modes is selected.  You can
 find out which one with this function:
 
 @comment fenv.h
@@ -1048,7 +1048,7 @@ To change the rounding mode, use this function:
 Changes the currently selected rounding mode to @var{round}.  If
 @var{round} does not correspond to one of the supported rounding modes
 nothing is changed.  @code{fesetround} returns zero if it changed the
-rounding mode, a nonzero value if the mode is not supported.
+rounding mode, or a nonzero value if the mode is not supported.
 @end deftypefun
 
 You should avoid changing the rounding mode if possible.  It can be an
@@ -1204,8 +1204,8 @@ occur, you can use the following two functions.
 @comment GNU
 @deftypefun int feenableexcept (int @var{excepts})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This functions enables traps for each of the exceptions as indicated by
-the parameter @var{except}.  The individual exceptions are described in
+This function enables traps for each of the exceptions as indicated by
+the parameter @var{excepts}.  The individual exceptions are described in
 @ref{Status bit operations}.  Only the specified exceptions are
 enabled, the status of the other exceptions is not changed.
 
@@ -1217,8 +1217,8 @@ operation was successful, @code{-1} otherwise.
 @comment GNU
 @deftypefun int fedisableexcept (int @var{excepts})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This functions disables traps for each of the exceptions as indicated by
-the parameter @var{except}.  The individual exceptions are described in
+This function disables traps for each of the exceptions as indicated by
+the parameter @var{excepts}.  The individual exceptions are described in
 @ref{Status bit operations}.  Only the specified exceptions are
 disabled, the status of the other exceptions is not changed.
 

@@ -1,5 +1,7 @@
 2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/arith.texi: Fix typos in the manual.
+
 	* manual/math.texi: Fix typos in the manual.
 
 	* manual/syslog.texi: Fix typos in the manual.
