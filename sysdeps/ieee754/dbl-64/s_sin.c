@@ -263,9 +263,9 @@ do_sin_slow (double x, double dx, double eps, double *corp)
   return res;
 }
 
-/* Reduce range of X and compute sin of a + da.  K is the amount by which to
-   rotate the quadrants.  This allows us to use the same routine to compute cos
-   by simply rotating the quadrants by 1.  */
+/* Reduce range of X and compute sin of a + da. When SHIFT_QUADRANT is true,
+   the routine returns the cosine of a + da by rotating the quadrant once and
+   computing the sine of the result.  */
 static inline double
 __always_inline
 reduce_and_compute (double x, bool shift_quadrant)
@@ -315,8 +315,8 @@ reduce_sincos_1 (double x, double *a, double *da)
   return n;
 }
 
-/* Compute sin (A + DA).  cos can be computed by shifting the quadrant N
-   clockwise.  */
+/* Compute sin (A + DA).  cos can be computed by passing SHIFT_QUADRANT as
+   true, which results in shifting the quadrant N clockwise.  */
 static double
 __always_inline
 do_sincos_1 (double a, double da, double x, int4 n, bool shift_quadrant)
@@ -387,8 +387,8 @@ reduce_sincos_2 (double x, double *a, double *da)
   return n;
 }
 
-/* Compute sin (A + DA).  cos can be computed by shifting the quadrant N
-   clockwise.  */
+/* Compute sin (A + DA).  cos can be computed by passing SHIFT_QUADRANT as
+   true, which results in shifting the quadrant N clockwise.  */
 static double
 __always_inline
 do_sincos_2 (double a, double da, double x, int4 n, bool shift_quadrant)
@@ -686,14 +686,11 @@ slow2 (double x)
   return __mpsin (fabs (x), 0, false);
 }
 
-/***************************************************************************/
-/*  Routine compute sin(x+dx) (Double-Length number) where x is small enough*/
-/* to use Taylor series around zero and   (x+dx)                            */
-/* in first or third quarter of unit circle.Routine receive also            */
-/* (right argument) the  original   value of x for computing error of      */
-/* result.And if result not accurate enough routine calls mpsin1 or dubsin */
-/***************************************************************************/
-
+/* Compute sin(x + dx) where X is small enough to use Taylor series around zero
+   and (x + dx) in the first or third quarter of the unit circle.  ORIG is the
+   original value of X for computing error of the result.  If the result is not
+   accurate enough, the routine calls mpsin or dubsin.  SHIFT_QUADRANT rotates
+   the unit circle by 1 to compute the cosine instead of sine.  */
 static inline double
 __always_inline
 sloww (double x, double dx, double orig, bool shift_quadrant)
@@ -748,13 +745,11 @@ sloww (double x, double dx, double orig, bool shift_quadrant)
   return shift_quadrant ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
 
-/***************************************************************************/
-/*  Routine compute sin(x+dx)   (Double-Length number) where x in first or  */
-/*  third quarter of unit circle.Routine receive also (right argument) the  */
-/*  original   value of x for computing error of result.And if result not  */
-/* accurate enough routine calls  mpsin1   or dubsin                       */
-/***************************************************************************/
-
+/* Compute sin(x + dx) where X is in the first or third quarter of the unit
+   circle.  ORIG is the original value of X for computing error of the result.
+   If the result is not accurate enough, the routine calls mpsin or dubsin.
+   SHIFT_QUADRANT rotates the unit circle by 1 to compute the cosine instead of
+   sine.  */
 static inline double
 __always_inline
 sloww1 (double x, double dx, double orig, bool shift_quadrant)

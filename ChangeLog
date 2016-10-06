@@ -1,5 +1,8 @@
 2016-10-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute, do_sincos_1,
+	do_sincos_2, sloww, sloww1): Update comments.
+
 	* sysdeps/ieee754/dbl-64/s_sincos.c (__sincos): Adjust calls to
 	do_sincos_1 and do_sincos_2 to pass a boolean shift_quadrant.
 
