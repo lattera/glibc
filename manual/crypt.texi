@@ -307,7 +307,7 @@ defined in @file{crypt.h}.
 
 @comment rpc/des_crypt.h
 @comment SUNRPC
-@deftypefun int ecb_crypt (char *@var{key}, char *@var{blocks}, unsigned @var{len}, unsigned @var{mode})
+@deftypefun int ecb_crypt (char *@var{key}, char *@var{blocks}, unsigned int @var{len}, unsigned int @var{mode})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 The function @code{ecb_crypt} encrypts or decrypts one or more blocks
@@ -320,7 +320,7 @@ least-significant bit of @code{key[7]}.  The @var{key} should have the
 correct parity.
 
 @var{len} is the number of bytes in @var{blocks}.  It should be a
-multiple of 8 (so that there is a whole number of blocks to encrypt).
+multiple of 8 (so that there are a whole number of blocks to encrypt).
 @var{len} is limited to a maximum of @code{DES_MAXDATA} bytes.
 
 The result of the encryption replaces the input in @var{blocks}.
@@ -390,7 +390,7 @@ This macro returns 1 if @var{err} is a `success' result code from
 
 @comment rpc/des_crypt.h
 @comment SUNRPC
-@deftypefun int cbc_crypt (char *@var{key}, char *@var{blocks}, unsigned @var{len}, unsigned @var{mode}, char *@var{ivec})
+@deftypefun int cbc_crypt (char *@var{key}, char *@var{blocks}, unsigned int @var{len}, unsigned int @var{mode}, char *@var{ivec})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 The function @code{cbc_crypt} encrypts or decrypts one or more blocks
@@ -409,7 +409,7 @@ Usually, @var{ivec} is set to 8 random bytes before encryption starts.
 Then the 8 random bytes are transmitted along with the encrypted data
 (without themselves being encrypted), and passed back in as @var{ivec}
 for decryption.  Another possibility is to set @var{ivec} to 8 zeroes
-initially, and have the first the block encrypted consist of 8 random
+initially, and have the first block encrypted consist of 8 random
 bytes.
 
 Otherwise, all the parameters are similar to those for @code{ecb_crypt}.

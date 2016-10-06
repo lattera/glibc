@@ -1,5 +1,7 @@
 2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/crypt.texi: Fix typos in the manual.
+
 	* manual/conf.texi: Fix typos in the manual.
 
 	* manual/sysinfo.texi: Fix typos in the manual.
