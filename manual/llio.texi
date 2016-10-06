@@ -103,7 +103,7 @@ for this function:
 @table @code
 @item EACCES
 The file exists but is not readable/writable as requested by the @var{flags}
-argument, the file does not exist and the directory is unwritable so
+argument, or the file does not exist and the directory is unwritable so
 it cannot be created.
 
 @item EEXIST
@@ -152,7 +152,7 @@ If on a 32 bit machine the sources are translated with
 descriptor opened in the large file mode which enables the file handling
 functions to use files up to @twoexp{63} bytes in size and offset from
 @minus{}@twoexp{63} to @twoexp{63}.  This happens transparently for the user
-since all of the lowlevel file handling functions are equally replaced.
+since all of the low-level file handling functions are equally replaced.
 
 This function is a cancellation point in multi-threaded programs.  This
 is a problem if the thread allocates some resources (like memory, file
@@ -203,7 +203,7 @@ If on a 32 bit machine the sources are translated with
 descriptor opened in the large file mode which enables the file handling
 functions to use files up to @twoexp{63} in size and offset from
 @minus{}@twoexp{63} to @twoexp{63}.  This happens transparently for the user
-since all of the lowlevel file handling functions are equally replaced.
+since all of the low-level file handling functions are equally replaced.
 @end deftypefn
 
 @comment fcntl.h
@@ -212,7 +212,7 @@ since all of the lowlevel file handling functions are equally replaced.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 This function is similar to @code{creat}.  It returns a file descriptor
 which can be used to access the file named by @var{filename}.  The only
-the difference is that on 32 bit systems the file is opened in the
+difference is that on 32 bit systems the file is opened in the
 large file mode.  I.e., file length and file offsets can exceed 31 bits.
 
 To use this file descriptor one must not use the normal operations but
@@ -364,7 +364,7 @@ or is not open for reading.
 
 @item EINTR
 @code{read} was interrupted by a signal while it was waiting for input.
-@xref{Interrupted Primitives}.  A signal will not necessary cause
+@xref{Interrupted Primitives}.  A signal will not necessarily cause
 @code{read} to return @code{EINTR}; it may instead result in a
 successful @code{read} which returns fewer bytes than requested.
 
@@ -433,7 +433,7 @@ error codes are also the same, with these additions:
 The value given for @var{offset} is negative and therefore illegal.
 
 @item ESPIPE
-The file descriptor @var{filedes} is associate with a pipe or a FIFO and
+The file descriptor @var{filedes} is associated with a pipe or a FIFO and
 this device does not allow positioning of the file pointer.
 @end table
 
@@ -903,7 +903,7 @@ do not permit the access specified by the @var{opentype} argument), a
 null pointer is returned instead.
 
 In some other systems, @code{fdopen} may fail to detect that the modes
-for file descriptor do not permit the access specified by
+for file descriptors do not permit the access specified by
 @code{opentype}.  @Theglibc{} always checks for this.
 @end deftypefun
 
@@ -1182,7 +1182,7 @@ Note that if the buffers are small (under about 1kB), high-level streams
 may be easier to use than these functions.  However, @code{readv} and
 @code{writev} are more efficient when the individual buffers themselves
 (as opposed to the total output), are large.  In that case, a high-level
-stream would not be able to cache the data effectively.
+stream would not be able to cache the data efficiently.
 
 @node Memory-mapped I/O
 @section Memory-mapped I/O
@@ -1281,7 +1281,7 @@ This forces the system to use the exact mapping address specified in
 @item MAP_ANONYMOUS
 @itemx MAP_ANON
 This flag tells the system to create an anonymous mapping, not connected
-to a file.  @var{filedes} and @var{off} are ignored, and the region is
+to a file.  @var{filedes} and @var{offset} are ignored, and the region is
 initialized with zeros.
 
 Anonymous maps are used as the basic primitive to extend the heap on some
@@ -1596,7 +1596,7 @@ On failure @code{errno} is set.
 @c  mempcpy dup ok
 @c  unlink dup ok
 
-This function is inverse of @code{shm_open} and removes the object with
+This function is the inverse of @code{shm_open} and removes the object with
 the given @var{name} previously created by @code{shm_open}.
 
 @code{shm_unlink} returns @math{0} on success or @math{-1} on error.
@@ -1863,7 +1863,7 @@ file descriptor.  E.g., in database files which do not change in size it
 is enough to write all the file content data to the device.
 Meta-information, like the modification time etc., are not that important
 and leaving such information uncommitted does not prevent a successful
-recovering of the file in case of a problem.
+recovery of the file in case of a problem.
 
 @comment unistd.h
 @comment POSIX
@@ -1897,7 +1897,7 @@ No synchronization is possible since the system does not implement this.
 @section Perform I/O Operations in Parallel
 
 The POSIX.1b standard defines a new set of I/O operations which can
-significantly reduce the time an application spends waiting at I/O.  The
+significantly reduce the time an application spends waiting for I/O.  The
 new functions allow a program to initiate one or more I/O operations and
 then immediately resume normal work while the I/O operations are
 executed in parallel.  This functionality is available if the
@@ -2035,16 +2035,16 @@ AIO operation.
 
 @item struct sigevent aio_sigevent
 This element specifies how the calling process is notified once the
-operation terminates.  If the @code{sigev_notify}, element is
+operation terminates.  If the @code{sigev_notify} element is
 @code{SIGEV_NONE} no notification is sent.  If it is @code{SIGEV_SIGNAL},
 the signal determined by @code{sigev_signo} is sent.  Otherwise,
 @code{sigev_notify} must be @code{SIGEV_THREAD} in which case a thread
-which starts executing the function pointed to by
+is created which starts executing the function pointed to by
 @code{sigev_notify_function}.
 
 @item int aio_lio_opcode
 This element is only used by the @code{lio_listio} and
-@code{[lio_listio64} functions.  Since these functions allow an
+@code{lio_listio64} functions.  Since these functions allow an
 arbitrary number of operations to start at once, and since each operation can be
 input or output (or nothing), the information must be stored in the
 control block.  See the description of @code{struct aiocb} for a description
@@ -2293,7 +2293,7 @@ difference is that on @w{32 bit} machines, the file descriptor should
 be opened in the large file mode.  Internally, @code{aio_read64} uses
 functionality equivalent to @code{lseek64} (@pxref{File Position
 Primitive}) to position the file descriptor correctly for the reading,
-as opposed to @code{lseek} functionality used in @code{aio_read}.
+as opposed to the @code{lseek} functionality used in @code{aio_read}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64}, this
 function is available under the name @code{aio_read} and so transparently
@@ -2345,12 +2345,12 @@ request and so this error might also be signaled asynchronously.
 @end table
 
 In the case @code{aio_write} returns zero, the current status of the
-request can be queried using @code{aio_error} and @code{aio_return}
+request can be queried using the @code{aio_error} and @code{aio_return}
 functions.  As long as the value returned by @code{aio_error} is
 @code{EINPROGRESS} the operation has not yet completed.  If
 @code{aio_error} returns zero, the operation successfully terminated,
 otherwise the value is to be interpreted as an error code.  If the
-function terminated, the result of the operation can be get using a call
+function terminated, the result of the operation can be obtained using a call
 to @code{aio_return}.  The returned value is the same as an equivalent
 call to @code{read} would have returned.  Possible error codes returned
 by @code{aio_error} are:
@@ -2379,7 +2379,7 @@ difference is that on @w{32 bit} machines the file descriptor should
 be opened in the large file mode.  Internally @code{aio_write64} uses
 functionality equivalent to @code{lseek64} (@pxref{File Position
 Primitive}) to position the file descriptor correctly for the writing,
-as opposed to @code{lseek} functionality used in @code{aio_write}.
+as opposed to the @code{lseek} functionality used in @code{aio_write}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64}, this
 function is available under the name @code{aio_write} and so transparently
@@ -2432,12 +2432,12 @@ waits until all requests terminated.  Otherwise @var{mode} must be
 having enqueued all the requests.  In this case the caller gets a
 notification of the termination of all requests according to the
 @var{sig} parameter.  If @var{sig} is @code{NULL} no notification is
-send.  Otherwise a signal is sent or a thread is started, just as
+sent.  Otherwise a signal is sent or a thread is started, just as
 described in the description for @code{aio_read} or @code{aio_write}.
 
 If @var{mode} is @code{LIO_WAIT}, the return value of @code{lio_listio}
 is @math{0} when all requests completed successfully.  Otherwise the
-function return @math{-1} and @code{errno} is set accordingly.  To find
+function returns @math{-1} and @code{errno} is set accordingly.  To find
 out which request or requests failed one has to use the @code{aio_error}
 function on all the elements of the array @var{list}.
 
@@ -2490,7 +2490,7 @@ difference is that on @w{32 bit} machines, the file descriptor should
 be opened in the large file mode.  Internally, @code{lio_listio64} uses
 functionality equivalent to @code{lseek64} (@pxref{File Position
 Primitive}) to position the file descriptor correctly for the reading or
-writing, as opposed to @code{lseek} functionality used in
+writing, as opposed to the @code{lseek} functionality used in
 @code{lio_listio}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64}, this
@@ -2553,7 +2553,7 @@ machines.
 This function can be used to retrieve the return status of the operation
 carried out by the request described in the variable pointed to by
 @var{aiocbp}.  As long as the error status of this request as returned
-by @code{aio_error} is @code{EINPROGRESS} the return of this function is
+by @code{aio_error} is @code{EINPROGRESS} the return value of this function is
 undefined.
 
 Once the request is finished this function can be used exactly once to
@@ -2589,7 +2589,7 @@ machines.
 
 When dealing with asynchronous operations it is sometimes necessary to
 get into a consistent state.  This would mean for AIO that one wants to
-know whether a certain request or a group of request were processed.
+know whether a certain request or a group of requests were processed.
 This could be done by waiting for the notification sent by the system
 after the operation terminated, but this sometimes would mean wasting
 resources (mainly computation time).  Instead POSIX.1b defines two
@@ -2605,7 +2605,7 @@ if the symbol @code{_POSIX_SYNCHRONIZED_IO} is defined in @file{unistd.h}.
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 @c After fcntl to check that the FD is open, it calls
 @c aio_enqueue_request.
-Calling this function forces all I/O operations operating queued at the
+Calling this function forces all I/O operations queued at the
 time of the function call operating on the file descriptor
 @code{aiocbp->aio_fildes} into the synchronized I/O completion state
 (@pxref{Synchronizing I/O}).  The @code{aio_fsync} function returns
@@ -2626,7 +2626,7 @@ done @code{aio_error} return @math{0} if the synchronization was not
 successful.  Otherwise the value returned is the value to which the
 @code{fsync} or @code{fdatasync} function would have set the
 @code{errno} variable.  In this case nothing can be assumed about the
-consistency for the data written to this file descriptor.
+consistency of the data written to this file descriptor.
 
 The return value of this function is @math{0} if the request was
 successfully enqueued.  Otherwise the return value is @math{-1} and
@@ -2669,9 +2669,9 @@ functions to notify the initiating process about the termination but in
 some situations this is not the ideal solution.  In a program which
 constantly updates clients somehow connected to the server it is not
 always the best solution to go round robin since some connections might
-be slow.  On the other hand letting the @code{aio_*} function notify the
+be slow.  On the other hand letting the @code{aio_*} functions notify the
 caller might also be not the best solution since whenever the process
-works on preparing data for on client it makes no sense to be
+works on preparing data for a client it makes no sense to be
 interrupted by a notification since the new client will not be handled
 before the current client is served.  For situations like this
 @code{aio_suspend} should be used.
@@ -2781,7 +2781,7 @@ The return value of the function is @code{AIO_CANCELED} if there were
 requests which haven't terminated and which were successfully canceled.
 If there is one or more requests left which couldn't be canceled, the
 return value is @code{AIO_NOTCANCELED}.  In this case @code{aio_error}
-must be used to find out which of the, perhaps multiple, requests (in
+must be used to find out which of the, perhaps multiple, requests (if
 @var{aiocbp} is @code{NULL}) weren't successfully canceled.  If all
 requests already terminated at the time @code{aio_cancel} is called the
 return value is @code{AIO_ALLDONE}.
@@ -2823,10 +2823,10 @@ The POSIX standard does not specify how the AIO functions are
 implemented.  They could be system calls, but it is also possible to
 emulate them at userlevel.
 
-At the point of this writing, the available implementation is a userlevel
+At the time of writing, the available implementation is a user-level
 implementation which uses threads for handling the enqueued requests.
 While this implementation requires making some decisions about
-limitations, hard limitations are something which is best avoided
+limitations, hard limitations are something best avoided
 in @theglibc{}.  Therefore, @theglibc{} provides a means
 for tuning the AIO implementation according to the individual use.
 
@@ -2867,13 +2867,13 @@ This function must be called before any other AIO function.  Calling it
 is completely voluntary, as it is only meant to help the AIO
 implementation perform better.
 
-Before calling the @code{aio_init}, function the members of a variable of
+Before calling @code{aio_init}, the members of a variable of
 type @code{struct aioinit} must be initialized.  Then a reference to
 this variable is passed as the parameter to @code{aio_init} which itself
 may or may not pay attention to the hints.
 
 The function has no return value and no error cases are defined.  It is
-a extension which follows a proposal from the SGI implementation in
+an extension which follows a proposal from the SGI implementation in
 @w{Irix 6}.  It is not covered by POSIX.1b or Unix98.
 @end deftypefun
 
@@ -3361,7 +3361,7 @@ clobber an existing file.
 This prevents @code{open} from blocking for a ``long time'' to open the
 file.  This is only meaningful for some kinds of files, usually devices
 such as serial ports; when it is not meaningful, it is harmless and
-ignored.  Often opening a port to a modem blocks until the modem reports
+ignored.  Often, opening a port to a modem blocks until the modem reports
 carrier detection; if @code{O_NONBLOCK} is specified, @code{open} will
 return immediately without a carrier.
 
@@ -3680,7 +3680,7 @@ can be one of @code{SEEK_SET}, @code{SEEK_CUR}, or @code{SEEK_END}.
 
 @item off_t l_start
 This specifies the offset of the start of the region to which the lock
-applies, and is given in bytes relative to the point specified by
+applies, and is given in bytes relative to the point specified by the
 @code{l_whence} member.
 
 @item off_t l_len
@@ -3759,8 +3759,8 @@ on that part is replaced with the new lock.  You can remove a lock
 by specifying a lock type of @code{F_UNLCK}.
 
 If the lock cannot be set, @code{fcntl} returns immediately with a value
-of @math{-1}.  This function does not block waiting for other processes
-to release locks.  If @code{fcntl} succeeds, it return a value other
+of @math{-1}.  This function does not block while waiting for other processes
+to release locks.  If @code{fcntl} succeeds, it returns a value other
 than @math{-1}.
 
 The following @code{errno} error conditions are defined for this
