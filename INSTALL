@@ -155,8 +155,8 @@ will be used, and CFLAGS sets optimization options for the compiler.
      can configure with '--disable-werror'.
 
 '--disable-mathvec'
-     By default for x86_64, the GNU C Library is built with vector math
-     library.  Use this option to disable vector math library.
+     By default for x86_64, the GNU C Library is built with the vector
+     math library.  Use this option to disable the vector math library.
 
 '--build=BUILD-SYSTEM'
 '--host=HOST-SYSTEM'
@@ -193,8 +193,8 @@ will be used, and CFLAGS sets optimization options for the compiler.
 
    To build the library and related programs, type 'make'.  This will
 produce a lot of output, some of which may look like errors from 'make'
-but isn't.  Look for error messages from 'make' containing '***'.  Those
-indicate that something is seriously wrong.
+but aren't.  Look for error messages from 'make' containing '***'.
+Those indicate that something is seriously wrong.
 
    The compilation process can take a long time, depending on the
 configuration and the speed of your machine.  Some complex modules may

@@ -186,8 +186,8 @@ new warnings cause the build with @option{-Werror} to fail), you can
 configure with @option{--disable-werror}.
 
 @item --disable-mathvec
-By default for x86_64, @theglibc{} is built with vector math library.
-Use this option to disable vector math library.
+By default for x86_64, @theglibc{} is built with the vector math library.
+Use this option to disable the vector math library.
 
 @item --build=@var{build-system}
 @itemx --host=@var{host-system}
@@ -225,7 +225,7 @@ information for @theglibc{}.
 
 To build the library and related programs, type @code{make}.  This will
 produce a lot of output, some of which may look like errors from
-@code{make} but isn't.  Look for error messages from @code{make}
+@code{make} but aren't.  Look for error messages from @code{make}
 containing @samp{***}.  Those indicate that something is seriously wrong.
 
 The compilation process can take a long time, depending on the

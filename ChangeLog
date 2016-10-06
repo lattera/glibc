@@ -1,5 +1,8 @@
 2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/install.texi: Fix typos in the manual.
+	* INSTALL: Regenerated.
+
 	* manual/lang.texi: Fix typos in the manual.
 
 	* manual/probes.texi: Fix typos in the manual.
