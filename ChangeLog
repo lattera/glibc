@@ -1,5 +1,7 @@
 2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/probes.texi: Fix typos in the manual.
+
 	* manual/threads.texi: Fix typos in the manual.
 
 	* manual/debug.texi: Fix typos in the manual.

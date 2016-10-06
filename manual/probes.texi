@@ -121,7 +121,7 @@ This occurs within
 point to the same arena.  In this configuration, this will usually only
 occur once per thread.  The exception is when a thread first selected
 the main arena, but a subsequent allocation from it fails: then, and
-only then, may we switch to another arena to retry that allocations, and
+only then, may we switch to another arena to retry that allocation, and
 for further allocations within that thread.
 @end deftp
 
@@ -163,7 +163,7 @@ parameter.
 @end deftp
 
 @deftp Probe memory_mallopt_trim_threshold (int @var{$arg1}, int @var{$arg2}, int @var{$arg3})
-This probe is triggere shortly after the @code{memory_mallopt} probe,
+This probe is triggered shortly after the @code{memory_mallopt} probe,
 when the parameter to be changed is @code{M_TRIM_THRESHOLD}.  Argument
 @var{$arg1} is the requested value, @var{$arg2} is the previous value of
 this @code{malloc} parameter, and @var{$arg3} is nonzero if dynamic
