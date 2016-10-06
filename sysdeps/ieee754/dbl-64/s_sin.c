@@ -268,11 +268,11 @@ do_sin_slow (double x, double dx, double eps, double *corp)
    by simply rotating the quadrants by 1.  */
 static inline double
 __always_inline
-reduce_and_compute (double x, unsigned int k)
+reduce_and_compute (double x, bool shift_quadrant)
 {
   double retval = 0, a, da;
   unsigned int n = __branred (x, &a, &da);
-  k = (n + k) % 4;
+  int4 k = (n + shift_quadrant) % 4;
   switch (k)
     {
     case 2:
@@ -512,7 +512,7 @@ __sin (double x)
 
 /* -----------------281474976710656 <|x| <2^1024----------------------------*/
   else if (k < 0x7ff00000)
-    retval = reduce_and_compute (x, 0);
+    retval = reduce_and_compute (x, false);
 
 /*--------------------- |x| > 2^1024 ----------------------------------*/
   else
@@ -605,7 +605,7 @@ __cos (double x)
 
   /* 281474976710656 <|x| <2^1024 */
   else if (k < 0x7ff00000)
-    retval = reduce_and_compute (x, 1);
+    retval = reduce_and_compute (x, true);
 
   else
     {

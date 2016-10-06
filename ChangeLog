@@ -1,3 +1,10 @@
+2016-10-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute): Make
+	K boolean and rename it.
+	(__sin): Adjust.
+	(__cos): Adjust.
+
 2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
 	    Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
