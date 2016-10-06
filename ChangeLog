@@ -1,5 +1,7 @@
 2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/job.texi: Fix typos in the manual.
+
 	* manual/process.texi: Fix typos in the manual.
 
 	* manual/argp.texi: Fix typos in the manual.

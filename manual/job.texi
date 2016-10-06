@@ -100,7 +100,7 @@ for allowing the user to interactively continue stopped jobs and switch
 jobs between foreground and background.
 
 @xref{Access to the Terminal}, for more information about I/O to the
-controlling terminal,
+controlling terminal.
 
 @node Job Control is Optional, Controlling Terminal, Concepts of Job Control , Job Control
 @section Job Control is Optional
