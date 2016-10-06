@@ -90,12 +90,12 @@ contains a printable representation of the corresponding element of
 determined), an offset into the function, and the actual return address
 (in hexadecimal).
 
-Currently, the function name and offset only be obtained on systems that
+Currently, the function name and offset can only be obtained on systems that
 use the ELF binary format for programs and libraries.  On other systems,
 only the hexadecimal return address will be present.  Also, you may need
 to pass additional flags to the linker to make the function names
 available to the program.  (For example, on systems using GNU ld, you
-must pass (@code{-rdynamic}.)
+must pass @code{-rdynamic}.)
 
 The return value of @code{backtrace_symbols} is a pointer obtained via
 the @code{malloc} function, and it is the responsibility of the caller
