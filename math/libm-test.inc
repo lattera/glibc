@@ -47,7 +47,7 @@
    fabs, fdim, finite, floor, fma, fmax, fmin, fmod, fpclassify,
    frexp, gamma, hypot,
    ilogb, iscanonical, isfinite, isinf, isnan, isnormal, issignaling,
-   issubnormal, iszero, isless, islessequal, isgreater,
+   issubnormal, iszero, iseqsig, isless, islessequal, isgreater,
    isgreaterequal, islessgreater, isunordered, j0, j1, jn,
    ldexp, lgamma, log, log10, log1p, log2, logb,
    modf, nearbyint, nextafter, nexttoward,
@@ -8185,6 +8185,64 @@ iscanonical_test (void)
   ALL_RM_TEST (iscanonical, 1, iscanonical_test_data, RUN_TEST_LOOP_f_b_tg, END);
 }
 
+static const struct test_ff_i_data iseqsig_test_data[] =
+  {
+    TEST_ff_i (iseqsig, minus_zero, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (iseqsig, minus_zero, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (iseqsig, minus_zero, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (iseqsig, minus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, minus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, minus_zero, snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, minus_zero, -snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, plus_zero, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (iseqsig, plus_zero, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (iseqsig, plus_zero, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (iseqsig, plus_zero, qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, plus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, plus_zero, snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, plus_zero, -snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, (FLOAT) 1, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (iseqsig, (FLOAT) 1, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (iseqsig, (FLOAT) 1, (FLOAT) 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_i (iseqsig, (FLOAT) 1, qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, (FLOAT) 1, -qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, (FLOAT) 1, snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, (FLOAT) 1, -snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -qnan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, snan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -snan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, snan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -snan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, snan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -snan_value, (FLOAT) 1, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -qnan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, snan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, snan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -snan_value, qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -snan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, qnan_value, snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, qnan_value, -snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -qnan_value, snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -qnan_value, -snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, snan_value, snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, snan_value, -snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -snan_value, snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_ff_i (iseqsig, -snan_value, -snan_value, 0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+  };
+
+static void
+iseqsig_test (void)
+{
+  ALL_RM_TEST (iseqsig, 1, iseqsig_test_data, RUN_TEST_LOOP_ff_i_tg, END);
+}
 static const struct test_f_i_data isfinite_test_data[] =
   {
     TEST_f_b (isfinite, 0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -12834,6 +12892,7 @@ main (int argc, char **argv)
   fma_test ();
 
   /* Comparison macros:  */
+  iseqsig_test ();
   isgreater_test ();
   isgreaterequal_test ();
   isless_test ();

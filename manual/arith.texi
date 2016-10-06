@@ -1873,7 +1873,8 @@ undesirable.  @w{ISO C99} therefore defines comparison functions that
 do not raise exceptions when NaN is examined.  All of the functions are
 implemented as macros which allow their arguments to be of any
 floating-point type.  The macros are guaranteed to evaluate their
-arguments only once.
+arguments only once.  TS 18661-1:2014 adds such a macro for an
+equality comparison that @emph{does} raise an exception for a NaN argument.
 
 @comment math.h
 @comment ISO
@@ -1930,6 +1931,16 @@ expression is true if @var{x} or @var{y} are NaN.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro determines whether its arguments are unordered.  In other
 words, it is true if @var{x} or @var{y} are NaN, and false otherwise.
+@end deftypefn
+
+@comment math.h
+@comment ISO
+@deftypefn Macro int iseqsig (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This macro determines whether its arguments are equal.  It is
+equivalent to @code{(@var{x}) == (@var{y})}, but it raises the invalid
+exception and sets @code{errno} to @code{EDOM} is either argument is a
+NaN.
 @end deftypefn
 
 Not all machines provide hardware support for these operations.  On

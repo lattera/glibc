@@ -1,3 +1,58 @@
+2016-10-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (iseqsig): New
+	macro.
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(__iseqsig): New declaration.
+	* math/s_iseqsig_template.c: New file.
+	* math/Versions (__iseqsigf): New libm symbol at version
+	GLIBC_2.25.
+	(__iseqsig): Likewise.
+	(__iseqsigl): Likewise.
+	* math/libm-test.inc (iseqsig_test_data): New array.
+	(iseqsig_test): New function.
+	(main): Call iseqsig_test.
+	* math/Makefile (gen-libm-calls): Add s_iseqsigF.
+	* manual/arith.texi (FP Comparison Functions): Document iseqsig.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/generic/fix-fp-int-compare-invalid.h: New file.
+	* sysdeps/powerpc/fpu/fix-fp-int-compare-invalid.h: Likewise.
+	* sysdeps/x86/fpu/fix-fp-int-compare-invalid.h: Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-10-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute, do_sincos_1,

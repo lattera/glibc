@@ -78,7 +78,7 @@ use vars qw (%results @all_floats %suffices @all_functions);
     "scalbn", "sin", "sincos", "sinh", "sqrt", "tan", "tanh", "tgamma",
     "trunc", "y0", "y1", "yn" );
 # fpclassify, iscanonical, isnormal, isfinite, isinf, isnan, issignaling,
-# issubnormal, iszero, signbit, isgreater, isgreaterequal, isless,
+# issubnormal, iszero, signbit, iseqsig, isgreater, isgreaterequal, isless,
 # islessequal, islessgreater, isunordered are not tabulated.
 
 if ($#ARGV == 0) {

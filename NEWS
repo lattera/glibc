@@ -51,6 +51,8 @@ Version 2.25
 
 * New <math.h> features are added from TS 18661-1:2014:
 
+  - Comparison macros: iseqsig.
+
   - Classification macros: iscanonical, issubnormal, iszero.
 
 * The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
