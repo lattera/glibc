@@ -26,7 +26,7 @@ we use a rigorous terminology to avoid confusion, and the only thing we
 use the simple word ``time'' for is to talk about the abstract concept.
 
 A @dfn{calendar time} is a point in the time continuum, for example
-November 4, 1990 at 18:02.5 UTC.  Sometimes this is called ``absolute
+November 4, 1990, at 18:02.5 UTC.  Sometimes this is called ``absolute
 time''.
 @cindex calendar time
 
@@ -298,7 +298,7 @@ child processes which have not yet been reported by @code{wait} or
 
 @item clock_t tms_cstime
 This is similar to @code{tms_cutime}, but represents the total processor
-time system has used on behalf of all the terminated child processes
+time the system has used on behalf of all the terminated child processes
 of the calling process.
 @end table
 
@@ -501,7 +501,7 @@ The @code{gettimeofday} function returns the current calendar time as
 the elapsed time since the epoch in the @code{struct timeval} structure
 indicated by @var{tp}.  (@pxref{Elapsed Time} for a description of
 @code{struct timeval}).  Information about the time zone is returned in
-the structure pointed at @var{tzp}.  If the @var{tzp} argument is a null
+the structure pointed to by @var{tzp}.  If the @var{tzp} argument is a null
 pointer, time zone information is ignored.
 
 The return value is @code{0} on success and @code{-1} on failure.  The
@@ -1010,7 +1010,7 @@ system clock from the true calendar time.
 The @code{ntp_gettime} function sets the structure pointed to by
 @var{tptr} to current values.  The elements of the structure afterwards
 contain the values the timer implementation in the kernel assumes.  They
-might or might not be correct.  If they are not a @code{ntp_adjtime}
+might or might not be correct.  If they are not, an @code{ntp_adjtime}
 call is necessary.
 
 The return value is @code{0} on success and other values on failure.  The
@@ -1220,7 +1220,7 @@ for at least 26 bytes, including the terminating null.
 
 If no error occurred the function returns a pointer to the string the
 result was written into, i.e., it returns @var{buffer}.  Otherwise
-return @code{NULL}.
+it returns @code{NULL}.
 @end deftypefun
 
 
@@ -1260,7 +1260,7 @@ gcc extensions, @pxref{Statement Exprs,,,gcc,Porting and Using gcc}):
 
 If no error occurred the function returns a pointer to the string the
 result was written into, i.e., it returns @var{buffer}.  Otherwise
-return @code{NULL}.
+it returns @code{NULL}.
 @end deftypefun
 
 
@@ -1360,7 +1360,7 @@ padded, since there is no natural width for them.
 
 Following the flag an optional specification of the width is possible.
 This is specified in decimal notation.  If the natural size of the
-output is of the field has less than the specified number of characters,
+output of the field has less than the specified number of characters,
 the result is written right adjusted and space padded to the given
 size.
 
@@ -1422,7 +1422,7 @@ The date using the format @code{%m/%d/%y}.
 This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 
 @item %e
-The day of the month like with @code{%d}, but padded with blank (range
+The day of the month like with @code{%d}, but padded with spaces (range
 @code{ 1} through @code{31}).
 
 This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
@@ -1469,13 +1469,13 @@ The day of the year as a decimal number (range @code{001} through @code{366}).
 
 @item %k
 The hour as a decimal number, using a 24-hour clock like @code{%H}, but
-padded with blank (range @code{ 0} through @code{23}).
+padded with spaces (range @code{ 0} through @code{23}).
 
 This format is a GNU extension.
 
 @item %l
 The hour as a decimal number, using a 12-hour clock like @code{%I}, but
-padded with blank (range @code{ 1} through @code{12}).
+padded with spaces (range @code{ 1} through @code{12}).
 
 This format is a GNU extension.
 
@@ -1703,7 +1703,7 @@ function with the difference that it operates on wide character
 strings.  The buffer where the result is stored, pointed to by @var{s},
 must be an array of wide characters.  The parameter @var{size} which
 specifies the size of the output buffer gives the number of wide
-character, not the number of bytes.
+characters, not the number of bytes.
 
 Also the format string @var{template} is a wide character string.  Since
 all characters needed to specify the format string are in the basic
@@ -2105,7 +2105,7 @@ or date elements changed.  This has two implications:
 @item
 Before calling the @code{strptime} function for a new input string, you
 should prepare the @var{tm} structure you pass.  Normally this will mean
-initializing all values are to zero.  Alternatively, you can set all
+initializing all values to zero.  Alternatively, you can set all
 fields to values like @code{INT_MAX}, allowing you to determine which
 elements were set by the function call.  Zero does not work here since
 it is a valid value for many of the fields.
@@ -2121,7 +2121,7 @@ time information.  By parsing one after the other without clearing the
 structure in-between, you can construct a complete broken-down time.
 @end itemize
 
-The following example shows a function which parses a string which is
+The following example shows a function which parses a string which
 contains the date information in either US style or @w{ISO 8601} form:
 
 @smallexample
@@ -2225,7 +2225,7 @@ solution to this.
 
 @item
 If only the weekday is specified the selected day depends on the current
-date.  If the current weekday is greater or equal to the @code{tm_wday}
+date.  If the current weekday is greater than or equal to the @code{tm_wday}
 value the current week's day is chosen, otherwise the day next week is chosen.
 
 @item
@@ -2261,7 +2261,7 @@ run job at %I %p,%B %dnd
 
 As you can see, the template list can contain very specific strings like
 @code{run job at %I %p,%B %dnd}.  Using the above list of templates and
-assuming the current time is Mon Sep 22 12:19:47 EDT 1986 we can obtain the
+assuming the current time is Mon Sep 22 12:19:47 EDT 1986, we can obtain the
 following results for the given input.
 
 @multitable {xxxxxxxxxxxx} {xxxxxxxxxx} {xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
@@ -2671,7 +2671,7 @@ To be able to use the alarm function to interrupt a system call which
 might block otherwise indefinitely it is important to @emph{not} set the
 @code{SA_RESTART} flag when registering the signal handler using
 @code{sigaction}.  When not using @code{sigaction} things get even
-uglier: the @code{signal} function has to fixed semantics with respect
+uglier: the @code{signal} function has fixed semantics with respect
 to restarts.  The BSD semantics for this function is to set the flag.
 Therefore, if @code{sigaction} for whatever reason cannot be used, it is
 necessary to use @code{sysv_signal} and not @code{signal}.
@@ -2774,7 +2774,7 @@ can do this by calling @code{alarm} with a @var{seconds} argument of
 zero.
 
 The return value indicates how many seconds remain before the previous
-alarm would have been sent.  If there is no previous alarm, @code{alarm}
+alarm would have been sent.  If there was no previous alarm, @code{alarm}
 returns zero.
 @end deftypefun
 
@@ -2831,10 +2831,10 @@ any descriptors to wait for.
 @c On Mach, it uses ports and calls time.  On generic posix, it calls
 @c nanosleep.  On Linux, it temporarily blocks SIGCHLD, which is MT- and
 @c AS-Unsafe, and in a way that makes it AC-Unsafe (C-unsafe, even!).
-The @code{sleep} function waits for @var{seconds} or until a signal
+The @code{sleep} function waits for @var{seconds} seconds or until a signal
 is delivered, whichever happens first.
 
-If @code{sleep} function returns because the requested interval is over,
+If @code{sleep} returns because the requested interval is over,
 it returns a value of zero.  If it returns because of delivery of a
 signal, its return value is the remaining time in the sleep interval.
 
