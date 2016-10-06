@@ -152,7 +152,7 @@ functions should be called @file{sys/platform/@var{name}.h}.
 
 @item
 Each header file's name should include the platform name, to avoid
-users thinking there is anything in common between different the
+users thinking there is anything in common between the different
 header files for different platforms.  For example, a
 @file{sys/platform/@var{arch}.h} name such as
 @file{sys/platform/ppc.h} is better than @file{sys/platform.h}.
