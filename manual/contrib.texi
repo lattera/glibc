@@ -159,7 +159,7 @@ Ultrix 4 (@code{mips-dec-ultrix4}) and the port to the DEC Alpha
 running OSF/1 (@code{alpha-dec-osf1}).
 
 @item
-Mark Kettenis for implementing the @code{utmpx} interface and an utmp
+Mark Kettenis for implementing the @code{utmpx} interface and a utmp
 daemon, and for a Hesiod NSS module.
 
 @item
@@ -183,7 +183,7 @@ Jeff Law for various fixes.
 
 @item
 Doug Lea for contributing the memory allocation functions
-functions @code{malloc}, @code{realloc} and @code{free} and related
+@code{malloc}, @code{realloc} and @code{free} and related
 code.
 
 @item
@@ -358,7 +358,7 @@ package by Arthur David Olson and his many contributors.
 
 @item
 Some of the support code for Mach is taken from Mach 3.0 by CMU;
-the file if_ppp.h is also copyright by CMU, but under a different license;
+the file @file{if_ppp.h} is also copyright by CMU, but under a different license;
 see the file @file{LICENSES} for the text of the licenses.
 
 @item

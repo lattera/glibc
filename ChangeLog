@@ -1,5 +1,7 @@
 2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/contrib.texi: Fix typos in the manual.
+
 	* manual/maint.texi: Fix typos in the manual.
 
 	* manual/install.texi: Fix typos in the manual.
