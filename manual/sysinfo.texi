@@ -36,7 +36,7 @@ computer networks were an issue, it's just a word like @samp{chicken}.
 
 But any system attached to the Internet or any network like it conforms
 to a more rigorous naming convention as part of the Domain Name System
-(DNS).  In DNS, every host name is composed of two parts:
+(DNS).  In the DNS, every host name is composed of two parts:
 @cindex DNS
 @cindex Domain Name System
 
@@ -53,7 +53,7 @@ You will note that ``hostname'' looks a lot like ``host name'', but is
 not the same thing, and that people often incorrectly refer to entire
 host names as ``domain names.''
 
-In DNS, the full host name is properly called the FQDN (Fully Qualified
+In the DNS, the full host name is properly called the FQDN (Fully Qualified
 Domain Name) and consists of the hostname, then a period, then the
 domain name.  The domain name itself usually has multiple components
 separated by periods.  So for example, a system's hostname may be
@@ -61,7 +61,7 @@ separated by periods.  So for example, a system's hostname may be
 its FQDN (which is its host name) is @samp{chicken.ai.mit.edu}.
 @cindex FQDN
 
-Adding to the confusion, though, is that DNS is not the only name space
+Adding to the confusion, though, is that the DNS is not the only name space
 in which a computer needs to be known.  Another name space is the
 NIS (aka YP) name space.  For NIS purposes, there is another domain
 name, which is called the NIS domain name or the YP domain name.  It
@@ -71,7 +71,7 @@ need not have anything to do with the DNS domain name.
 @cindex NIS domain name
 @cindex YP domain name
 
-Confusing things even more is the fact that in DNS, it is possible for
+Confusing things even more is the fact that in the DNS, it is possible for
 multiple FQDNs to refer to the same system.  However, there is always
 exactly one of them that is the true host name, and it is called the
 canonical FQDN.
@@ -97,7 +97,7 @@ by calling these functions.
 This function returns the host name of the system on which it is called,
 in the array @var{name}.  The @var{size} argument specifies the size of
 this array, in bytes.  Note that this is @emph{not} the DNS hostname.
-If the system participates in DNS, this is the FQDN (see above).
+If the system participates in the DNS, this is the FQDN (see above).
 
 The return value is @code{0} on success and @code{-1} on failure.  In
 @theglibc{}, @code{gethostname} fails if @var{size} is not large
@@ -172,7 +172,7 @@ The specifics of this function are analogous to @code{gethostname}, above.
 @cindex NIS domain name
 @cindex YP domain name
 
-@code{getdomainname} sets the NIS (aka YP) domain name of the system
+@code{setdomainname} sets the NIS (aka YP) domain name of the system
 on which it is called.  Note that this is not the more popular DNS
 domain name.  Set that with @code{sethostname}.
 
@@ -295,7 +295,7 @@ This is the host name of this particular computer.  In @theglibc{},
 the value is the same as that returned by @code{gethostname};
 see @ref{Host Identification}.
 
-@ gethostname() is implemented with a call to uname().
+@code{gethostname} is implemented with a call to @code{uname}.
 
 @item char domainname[]
 This is the NIS or YP domain name.  It is the same value returned by
@@ -317,9 +317,9 @@ use of the rest of the structure.
 @c proc_uname and then gethostname.
 The @code{uname} function fills in the structure pointed to by
 @var{info} with information about the operating system and host machine.
-A non-negative value indicates that the data was successfully stored.
+A non-negative return value indicates that the data was successfully stored.
 
-@code{-1} as the value indicates an error.  The only error possible is
+@code{-1} as the return value indicates an error.  The only error possible is
 @code{EFAULT}, which we normally don't mention as it is always a
 possibility.
 @end deftypefun
@@ -373,7 +373,7 @@ necessary filesystems.  The information about all the filesystems
 actually mounted is normally kept in a file named either
 @file{/var/run/mtab} or @file{/etc/mtab}.  Both files share the same
 syntax and it is crucial that this syntax is followed all the time.
-Therefore it is best to never directly write the files.  The functions
+Therefore it is best to never directly write to the files.  The functions
 described in this section can do this and they also provide the
 functionality to convert the external textual representation to the
 internal representation.
@@ -392,7 +392,7 @@ files as described herein.
 @vindex MNTTAB
 @vindex MOUNTED
 The filenames given above should never be used directly.  The portable
-way to handle these file is to use the macro @code{_PATH_FSTAB},
+way to handle these files is to use the macros @code{_PATH_FSTAB},
 defined in @file{fstab.h}, or @code{_PATH_MNTTAB}, defined in
 @file{mntent.h} and @file{paths.h}, for @file{fstab}; and the macro
 @code{_PATH_MOUNTED}, also defined in @file{mntent.h} and
@@ -458,9 +458,9 @@ possible values:
 
 @vtable @code
 @item FSTAB_RW
-The filesystems gets mounted with read and write enabled.
+The filesystem gets mounted with read and write enabled.
 @item FSTAB_RQ
-The filesystems gets mounted with read and write enabled.  Write access
+The filesystem gets mounted with read and write enabled.  Write access
 is restricted by quotas.
 @item FSTAB_RO
 The filesystem gets mounted read-only.
@@ -470,7 +470,7 @@ This is not a real filesystem, it is a swap device.
 This entry from the @file{fstab} file is totally ignored.
 @end vtable
 
-Testing for equality with these value must happen using @code{strcmp}
+Testing for equality with these values must happen using @code{strcmp}
 since these are all strings.  Comparing the pointer will probably always
 fail.
 
@@ -594,7 +594,7 @@ The following functions and data structure access the @file{mtab} file.
 @comment mntent.h
 @comment BSD
 @deftp {Data Type} {struct mntent}
-This structure is used with the @code{getmntent}, @code{getmntent_t},
+This structure is used with the @code{getmntent}, @code{getmntent_r},
 @code{addmntent}, and @code{hasmntopt} functions.
 
 @table @code
@@ -619,7 +619,7 @@ list of the symbols provided in @file{mntent.h}.
 
 @vtable @code
 @item MNTTYPE_IGNORE
-This symbol expands to @code{"ignore"}.  The value is sometime used in
+This symbol expands to @code{"ignore"}.  The value is sometimes used in
 @file{fstab} files to make sure entries are not used without removing them.
 @item MNTTYPE_NFS
 Expands to @code{"nfs"}.  Using this macro sometimes could make sense
@@ -650,7 +650,7 @@ default.
 Expands to @code{"ro"}.  See the @code{FSTAB_RO} value, it means the
 filesystem is mounted read-only.
 @item MNTOPT_RW
-Expand to @code{"rw"}.  See the @code{FSTAB_RW} value, it means the
+Expands to @code{"rw"}.  See the @code{FSTAB_RW} value, it means the
 filesystem is mounted with read and write permissions.
 @item MNTOPT_SUID
 Expands to @code{"suid"}.  This means that the SUID bit (@pxref{How
@@ -681,7 +681,7 @@ which is uninteresting for all programs beside @code{dump}.
 For accessing the @file{mtab} file there is again a set of three
 functions to access all entries in a row.  Unlike the functions to
 handle @file{fstab} these functions do not access a fixed file and there
-is even a thread safe variant of the get function.  Beside this @theglibc
+is even a thread safe variant of the get function.  Besides this @theglibc{}
 contains functions to alter the file and test for specific options.
 
 @comment mntent.h
@@ -702,7 +702,7 @@ parameter for @code{fopen} (@pxref{Opening Streams}) can be chosen.  If
 the file is opened for writing the file is also allowed to be empty.
 
 If the file was successfully opened @code{setmntent} returns a file
-descriptor for future use.  Otherwise the return value is @code{NULL}
+handle for future use.  Otherwise the return value is @code{NULL}
 and @code{errno} is set accordingly.
 @end deftypefun
 
@@ -730,13 +730,13 @@ is @math{0}.
 @c    malloc dup @ascuheap @acsmem
 @c  getmntent_r dup @mtslocale @asucorrupt @ascuheap @acucorrupt @aculock @acsmem
 The @code{getmntent} function takes as the parameter a file handle
-previously returned by successful call to @code{setmntent}.  It returns
+previously returned by a successful call to @code{setmntent}.  It returns
 a pointer to a static variable of type @code{struct mntent} which is
 filled with the information from the next entry from the file currently
 read.
 
 The file format used prescribes the use of spaces or tab characters to
-separate the fields.  This makes it harder to use name containing one
+separate the fields.  This makes it harder to use names containing one
 of these characters (e.g., mount points using spaces).  Therefore
 these characters are encoded in the files and the @code{getmntent}
 function takes care of the decoding while reading the entries back in.
@@ -809,7 +809,7 @@ chosen name.
 
 This function takes care of spaces and tab characters in the names to be
 written to the file.  It converts them and the backslash character into
-the format describe in the @code{getmntent} description above.
+the format described in the @code{getmntent} description above.
 
 This function returns @math{0} in case the operation was successful.
 Otherwise the return value is @math{1} and @code{errno} is set
@@ -886,7 +886,7 @@ ignored.  Remounting a filesystem means changing the options that control
 operations on the filesystem while it is mounted.  It does not mean
 unmounting and mounting again.
 
-For a mount, you must identify the type of the filesystem as
+For a mount, you must identify the type of the filesystem with
 @var{fstype}.  This type tells the kernel how to access the filesystem
 and can be thought of as the name of a filesystem driver.  The
 acceptable values are system dependent.  On a system with a Linux kernel
@@ -1023,7 +1023,7 @@ The mount point is busy.  (E.g. it is some process' working directory or
 has a filesystem mounted on it already).
 
 @item
-The request is to remount read-only, but there are files open for write.
+The request is to remount read-only, but there are files open for writing.
 @end itemize
 
 @item EINVAL
@@ -1177,7 +1177,7 @@ The set of available parameters depends on the kernel configuration and
 can change while the system is running, particularly when you load and
 unload loadable kernel modules.
 
-The system parameters with which @code{syslog} is concerned are arranged
+The system parameters with which @code{sysctl} is concerned are arranged
 in a hierarchical structure like a hierarchical filesystem.  To identify
 a particular parameter, you specify a path through the structure in a
 way analogous to specifying the pathname of a file.  Each component of
