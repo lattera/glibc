@@ -4,7 +4,7 @@
 @c %MENU% POSIX Threads
 @cindex pthreads
 
-This chapter describes the @glibcadj{} POSIX Thread implementation.
+This chapter describes the @glibcadj{} POSIX Threads implementation.
 
 @menu
 * Thread-specific Data::          Support for creating and
