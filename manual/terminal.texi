@@ -235,7 +235,7 @@ and set the attributes.
 @comment termios.h
 @comment POSIX.1
 @deftp {Data Type} {struct termios}
-Structure that records all the I/O attributes of a terminal.  The
+A @code{struct termios} records all the I/O attributes of a terminal.  The
 structure includes at least the following members:
 
 @table @code
@@ -869,7 +869,7 @@ input, without which @code{ECHOE} is simply irrelevant.
 @comment termios.h
 @comment BSD
 @deftypevr Macro tcflag_t ECHOPRT
-This bit is like @code{ECHOE}, enables display of the ERASE character in
+This bit, like @code{ECHOE}, enables display of the ERASE character in
 a way that is geared to a hardcopy terminal.  When you type the ERASE
 character, a @samp{\} character is printed followed by the first
 character erased.  Typing the ERASE character again just prints the next
@@ -933,7 +933,7 @@ This is a BSD extension, and exists only in BSD systems and
 This bit controls whether the INTR, QUIT, and SUSP characters are
 recognized.  The functions associated with these characters are performed
 if and only if this bit is set.  Being in canonical or noncanonical
-input mode has no affect on the interpretation of these characters.
+input mode has no effect on the interpretation of these characters.
 
 You should use caution when disabling recognition of these characters.
 Programs that cannot be interrupted interactively are very
@@ -1457,7 +1457,7 @@ The DSUSP (suspend) character is recognized only if the implementation
 supports job control (@pxref{Job Control}).  It sends a @code{SIGTSTP}
 signal, like the SUSP character, but not right away---only when the
 program tries to read it as input.  Not all systems with job control
-support DSUSP; only BSD-compatible systems (including @gnuhurdsystems{}).
+support DSUSP; only BSD-compatible systems do (including @gnuhurdsystems{}).
 
 @xref{Signal Handling}, for more information about signals.
 
@@ -1484,7 +1484,7 @@ input modes.  If @code{IXON} is set, receiving a START character resumes
 suspended output; the START character itself is discarded.  If
 @code{IXANY} is set, receiving any character at all resumes suspended
 output; the resuming character is not discarded unless it is the START
-character.  @code{IXOFF} is set, the system may also transmit START
+character.  If @code{IXOFF} is set, the system may also transmit START
 characters to the terminal.
 
 The usual value for the START character is @kbd{C-q}.  You may not be
@@ -1588,7 +1588,7 @@ The MIN and TIME are stored in elements of the @code{c_cc} array, which
 is a member of the @w{@code{struct termios}} structure.  Each element of
 this array has a particular role, and each element has a symbolic
 constant that stands for the index of that element.  @code{VMIN} and
-@code{VMAX} are the names for the indices in the array of the MIN and
+@code{VTIME} are the names for the indices in the array of the MIN and
 TIME slots.
 
 @comment termios.h
@@ -1702,7 +1702,7 @@ It does exactly this:
 
 The usual way to get and set terminal modes is with the functions described
 in @ref{Terminal Modes}.  However, on some systems you can use the
-BSD-derived functions in this section to do some of the same thing.  On
+BSD-derived functions in this section to do some of the same things.  On
 many systems, these functions do not exist.  Even with @theglibc{},
 the functions simply fail with @code{errno} = @code{ENOSYS} with many
 kernels, including Linux.
@@ -1749,7 +1749,7 @@ of the terminal which is open with file descriptor @var{filedes}.
 This function sets the attributes of a terminal.
 
 @code{stty} sets the terminal attributes of the terminal which is open with
-file descriptor @var{filedes} to those described by *@var{filedes}.
+file descriptor @var{filedes} to those described by *@var{attributes}.
 @end deftypefun
 
 @node Line Control
@@ -2254,7 +2254,7 @@ is not a null pointer, the file name of the slave pseudo-terminal
 device is stored in @code{*name}.  If @var{termp} is not a null pointer,
 the terminal attributes of the slave are set to the ones specified in
 the structure that @var{termp} points to (@pxref{Terminal Modes}).
-Likewise, if the @var{winp} is not a null pointer, the screen size of
+Likewise, if @var{winp} is not a null pointer, the screen size of
 the slave is set to the values specified in the structure that
 @var{winp} points to.
 
