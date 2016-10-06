@@ -347,7 +347,7 @@ be displayed in much the same manner as the options.  This is known as a
 If this flag is set, then the option @code{name} field is displayed
 unmodified (e.g., no @samp{--} prefix is added) at the left-margin where
 a @emph{short} option would normally be displayed, and this
-documentation string is left in it's usual place.  For purposes of
+documentation string is left in its usual place.  For purposes of
 sorting, any leading whitespace and punctuation is ignored, unless the
 first non-whitespace character is @samp{-}.  This entry is displayed
 after all options, after @code{OPTION_DOC} entries with a leading
@@ -692,7 +692,7 @@ parser function.  @xref{Argp Parsing State}.
 @safety{@prelim{}@mtunsafe{@mtasurace{:argpbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @ascuintl{} @asucorrupt{}}@acunsafe{@acsmem{} @acucorrupt{} @aculock{}}}
 @c Just calls argp_state_help with stderr and ARGP_HELP_STD_USAGE.
 Outputs the standard usage message for the argp parser referred to by
-@var{state} to @code{@var{state}->err_stream} and terminate the program
+@var{state} to @code{@var{state}->err_stream} and terminates the program
 with @code{exit (argp_err_exit_status)}.  @xref{Argp Global Variables}.
 @end deftypefun
 
@@ -723,7 +723,7 @@ by the program name and @samp{:}, and followed by a @w{@samp{Try @dots{}
 @c blank, release the buffer, call strerror_r with an automatic buffer,
 @c print it out after colon and blank, put[w]c a line break, unlock the
 @c stream, then exit unless ARGP_NO_EXIT.
-Similar to the standard gnu error-reporting function @code{error}, this
+Similar to the standard GNU error-reporting function @code{error}, this
 prints the program name and @samp{:}, the printf format string
 @var{fmt}, and the appropriate following args.  If it is non-zero, the
 standard unix error text for @var{errnum} is printed.  If @var{status} is
@@ -1010,7 +1010,7 @@ Don't exit on errors, although they may still result in error messages.
 @comment argp.h
 @comment GNU
 @item ARGP_LONG_ONLY
-Use the gnu getopt `long-only' rules for parsing arguments.  This allows
+Use the GNU getopt `long-only' rules for parsing arguments.  This allows
 long-options to be recognized with only a single @samp{-}
 (i.e., @samp{-help}).  This results in a less useful interface, and its
 use is discouraged as it conflicts with the way most GNU programs work
@@ -1213,7 +1213,7 @@ These example programs demonstrate the basic usage of argp.
 @subsubsection A Minimal Program Using Argp
 
 This is perhaps the smallest program possible that uses argp.  It won't
-do much except give an error messages and exit when there are any
+do much except give an error message and exit when there are any
 arguments, and prints a rather pointless message for @samp{--help}.
 
 @smallexample

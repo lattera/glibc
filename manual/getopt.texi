@@ -110,7 +110,7 @@ is treated specially.  It permits arguments that are not options to be
 returned as if they were associated with option character @samp{\1}.
 
 @item
-POSIX demands the following behavior: The first non-option stops option
+POSIX demands the following behavior: the first non-option stops option
 processing.  This mode is selected by either setting the environment
 variable @code{POSIXLY_CORRECT} or beginning the @var{options} argument
 string with a plus sign (@samp{+}).
@@ -256,7 +256,7 @@ options to accept (see above).
 
 When @code{getopt_long} encounters a short option, it does the same
 thing that @code{getopt} would do: it returns the character code for the
-option, and stores the options argument (if it has one) in @code{optarg}.
+option, and stores the option's argument (if it has one) in @code{optarg}.
 
 When @code{getopt_long} encounters a long option, it takes actions based
 on the @code{flag} and @code{val} fields of the definition of that
@@ -293,8 +293,8 @@ When @code{getopt_long} has no more options to handle, it returns
 @var{argv} of the next remaining argument.
 @end deftypefun
 
-Since long option names were used before the @code{getopt_long}
-options was invented there are program interfaces which require programs
+Since long option names were used before @code{getopt_long}
+was invented there are program interfaces which require programs
 to recognize options like @w{@samp{-option value}} instead of
 @w{@samp{--option value}}.  To enable these programs to use the GNU
 getopt functionality there is one more function available.
@@ -306,7 +306,7 @@ getopt functionality there is one more function available.
 @c Same issues as getopt.
 
 The @code{getopt_long_only} function is equivalent to the
-@code{getopt_long} function but it allows to specify the user of the
+@code{getopt_long} function but it allows the user of the
 application to pass long options with only @samp{-} instead of
 @samp{--}.  The @samp{--} prefix is still recognized but instead of
 looking through the short options if a @samp{-} is seen it is first

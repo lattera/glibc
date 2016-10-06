@@ -18,7 +18,7 @@ one program.
 
 Note that we are using a specific definition of ``program'' for the
 purposes of this manual, which corresponds to a common definition in the
-context of Unix system.  In popular usage, ``program'' enjoys a much
+context of Unix systems.  In popular usage, ``program'' enjoys a much
 broader definition; it can refer for example to a system's kernel, an
 editor macro, a complex package of software, or a discrete section of
 code executing within a process.
@@ -228,9 +228,9 @@ available.
 @c  strncmp dup ok
 
 The @var{optionp} parameter must be a pointer to a variable containing
-the address of the string to process.  When the function returns the
+the address of the string to process.  When the function returns, the
 reference is updated to point to the next suboption or to the
-terminating @samp{\0} character if there is no more suboption available.
+terminating @samp{\0} character if there are no more suboptions available.
 
 The @var{tokens} parameter references an array of strings containing the
 known suboptions.  All strings must be @samp{\0} terminated and to mark
@@ -441,7 +441,7 @@ environment.  If the environment contains an entry with the key
 equivalent to a call to @code{putenv} when the @var{value} part of the
 string is empty.
 
-The function return @code{-1} if @var{name} is a null pointer, points to
+The function returns @code{-1} if @var{name} is a null pointer, points to
 an empty string, or points to a string containing a @code{=} character.
 It returns @code{0} if the call succeeded.
 
