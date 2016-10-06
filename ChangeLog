@@ -1,5 +1,7 @@
 2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/process.texi: Fix typos in the manual.
+
 	* manual/argp.texi: Fix typos in the manual.
 	* manual/getopt.texi: Likewise.
 	* manual/startup.texi: Likewise.

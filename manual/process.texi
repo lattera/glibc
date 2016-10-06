@@ -497,7 +497,7 @@ information about signals, see @ref{Signal Handling}.
 File descriptors open in the existing process image remain open in the
 new process image, unless they have the @code{FD_CLOEXEC}
 (close-on-exec) flag set.  The files that remain open inherit all
-attributes of the open file description from the existing process image,
+attributes of the open file descriptors from the existing process image,
 including file locks.  File descriptors are discussed in @ref{Low-Level I/O}.
 
 Streams, by contrast, cannot survive through @code{exec} functions,
