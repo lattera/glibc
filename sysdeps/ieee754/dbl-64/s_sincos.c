@@ -80,8 +80,8 @@ __sincos (double x, double *sinx, double *cosx)
       double a, da;
       int4 n = reduce_sincos_1 (x, &a, &da);
 
-      *sinx = do_sincos_1 (a, da, x, n, 0);
-      *cosx = do_sincos_1 (a, da, x, n, 1);
+      *sinx = do_sincos_1 (a, da, x, n, false);
+      *cosx = do_sincos_1 (a, da, x, n, true);
 
       return;
     }
@@ -90,8 +90,8 @@ __sincos (double x, double *sinx, double *cosx)
       double a, da;
       int4 n = reduce_sincos_2 (x, &a, &da);
 
-      *sinx = do_sincos_2 (a, da, x, n, 0);
-      *cosx = do_sincos_2 (a, da, x, n, 1);
+      *sinx = do_sincos_2 (a, da, x, n, false);
+      *cosx = do_sincos_2 (a, da, x, n, true);
 
       return;
     }
