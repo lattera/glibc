@@ -152,7 +152,7 @@ by creating a new user ID and login name (say, @code{games}) to own the
 scores file, and make the file writable only by this user.  Then, when
 the game program wants to update this file, it can change its effective
 user ID to be that for @code{games}.  In effect, the program must
-adopt the persona of @code{games} so it can write the scores file.
+adopt the persona of @code{games} so it can write to the scores file.
 
 @node How Change Persona
 @section How an Application Can Change Persona
@@ -357,7 +357,7 @@ have this function.
 @c setuid @asulock @aculock
 @c  INLINE_SETXID_SYSCALL dup @asulock @aculock
 If the calling process is privileged, this function sets both the real
-and effective user ID of the process to @var{newuid}.  It also deletes
+and effective user IDs of the process to @var{newuid}.  It also deletes
 the file user ID of the process, if any.  @var{newuid} may be any
 legal value.  (Once this has been done, there is no way to recover the
 old effective user ID.)
@@ -1059,7 +1059,7 @@ The Internet address of a remote host.
 The @code{ut_type}, @code{ut_pid}, @code{ut_id}, @code{ut_tv}, and
 @code{ut_host} fields are not available on all systems.  Portable
 applications therefore should be prepared for these situations.  To help
-doing this the @file{utmp.h} header provides macros
+do this the @file{utmp.h} header provides macros
 @code{_HAVE_UT_TYPE}, @code{_HAVE_UT_PID}, @code{_HAVE_UT_ID},
 @code{_HAVE_UT_TV}, and @code{_HAVE_UT_HOST} if the respective field is
 available.  The programmer can handle the situations by using
@@ -1081,7 +1081,7 @@ accounting information.
 @comment SVID
 @vindex RUN_LVL
 @item RUN_LVL
-This macro is used to identify the systems runlevel.
+This macro is used to identify the system's runlevel.
 
 @comment utmp.h
 @comment SVID
@@ -1099,7 +1099,7 @@ This macro is used to identify the time when the system clock changed.
 @comment SVID
 @vindex NEW_TIME
 @item NEW_TIME
-This macro is used to identify the time after the system changed.
+This macro is used to identify the time after the system clock changed.
 
 @comment utmp.h
 @comment SVID
@@ -1559,7 +1559,7 @@ accounting information.
 @comment XPG4.2
 @vindex RUN_LVL
 @item RUN_LVL
-This macro is used to identify the systems runlevel.
+This macro is used to identify the system's runlevel.
 
 @comment utmpx.h
 @comment XPG4.2
@@ -1577,7 +1577,7 @@ This macro is used to identify the time when the system clock changed.
 @comment XPG4.2
 @vindex NEW_TIME
 @item NEW_TIME
-This macro is used to identify the time after the system changed.
+This macro is used to identify the time after the system clock changed.
 
 @comment utmpx.h
 @comment XPG4.2
@@ -2153,7 +2153,7 @@ A null pointer return indicates there is no user named @var{name}.
 @c
 @c _nss_*_getpwnam_r (assumed) @asuinit @asulock @acucorrupt @aculock
 
-This function is similar to @code{getpwnam} in that is returns
+This function is similar to @code{getpwnam} in that it returns
 information about the user whose user name is @var{name}.  However, like
 @code{getpwuid_r}, it fills the user supplied buffers in
 @var{result_buf} and @var{buffer} with the information instead of using
@@ -2466,13 +2466,12 @@ A null pointer indicates there is no group named @var{name}.
 @c  nss_group_lookup2 dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  *fct.l @ascuplugin
 @c  nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
-This function is similar to @code{getgrnam} in that is returns
+This function is similar to @code{getgrnam} in that it returns
 information about the group whose group name is @var{name}.  Like
 @code{getgrgid_r}, it uses the user supplied buffers in
 @var{result_buf} and @var{buffer}, not a static buffer.
 
-The return values are the same as for @code{getgrgid_r}
-@code{ERANGE}.
+The return values are the same as for @code{getgrgid_r}.
 @end deftypefun
 
 @node Scanning All Groups
@@ -2570,7 +2569,7 @@ wish to save the information.
 This function is similar to @code{getgrent} in that it returns the next
 entry from the stream initialized by @code{setgrent}.  Like
 @code{fgetgrent_r}, it places the result in user-supplied buffers
-pointed to @var{result_buf} and @var{buffer}.
+pointed to by @var{result_buf} and @var{buffer}.
 
 If the function returns zero @var{result} contains a pointer to the data
 (normally equal to @var{result_buf}).  If errors occurred the return
@@ -2630,7 +2629,7 @@ Sometimes it is useful to group users according to other criteria
 group of users with a certain machine.  On the other hand grouping of
 host names is not supported so far.
 
-In Sun Microsystems SunOS appeared a new kind of database, the netgroup
+In Sun Microsystems' SunOS appeared a new kind of database, the netgroup
 database.  It allows grouping hosts, users, and domains freely, giving
 them individual names.  To be more concrete, a netgroup is a list of triples
 consisting of a host name, a user name, and a domain name where any of
@@ -2657,7 +2656,7 @@ character @code{-} shall be used.
 @node Lookup Netgroup
 @subsection Looking up one Netgroup
 
-The lookup functions for netgroups are a bit different to all other
+The lookup functions for netgroups are a bit different than all other
 system database handling functions.  Since a single netgroup can contain
 many entries a two-step process is needed.  First a single netgroup is
 selected and then one can iterate over all entries in this netgroup.
@@ -2701,7 +2700,7 @@ These functions are declared in @file{netdb.h}.
 @c    memcpy dup ok
 @c  libc_lock_unlock dup @aculock
 A call to this function initializes the internal state of the library to
-allow following calls of the @code{getnetgrent} to iterate over all entries
+allow following calls of @code{getnetgrent} to iterate over all entries
 in the netgroup with name @var{netgroup}.
 
 When the call is successful (i.e., when a netgroup with this name exists)
@@ -2831,7 +2830,7 @@ selected netgroup.
 @c  nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  free_memory dup @ascuheap @acsmem
 This function tests whether the triple specified by the parameters
-@var{hostp}, @var{userp}, and @var{domainp} is part of the netgroup
+@var{host}, @var{user}, and @var{domain} is part of the netgroup
 @var{netgroup}.  Using this function has the advantage that
 
 @enumerate
@@ -2843,7 +2842,7 @@ the function is implemented more efficiently than successive calls
 to the other @code{set}/@code{get}/@code{endnetgrent} functions.
 @end enumerate
 
-Any of the pointers @var{hostp}, @var{userp}, and @var{domainp} can be
+Any of the pointers @var{host}, @var{user}, or @var{domain} can be
 @code{NULL} which means any value is accepted in this position.  This is
 also true for the name @code{-} which should not match any other string
 otherwise.
