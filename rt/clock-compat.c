@@ -28,13 +28,9 @@
 #include <time.h>
 
 #if HAVE_IFUNC
-# define COMPAT_REDIRECT(name, proto, arglist)				      \
-  __typeof (name) *name##_ifunc (void) asm (#name);			      \
-  __typeof (name) *name##_ifunc (void)					      \
-  {									      \
-    return &__##name;							      \
-  }									      \
-  asm (".type " #name ", %gnu_indirect_function");
+# undef INIT_ARCH
+# define INIT_ARCH()
+# define COMPAT_REDIRECT(name, proto, arglist) libc_ifunc (name, &__##name)
 #else
 # define COMPAT_REDIRECT(name, proto, arglist)				      \
   int									      \
@@ -45,21 +41,21 @@
 #endif
 
 COMPAT_REDIRECT (clock_getres,
-                 (clockid_t clock_id, struct timespec *res),
-                 (clock_id, res))
+		 (clockid_t clock_id, struct timespec *res),
+		 (clock_id, res))
 COMPAT_REDIRECT (clock_gettime,
-                 (clockid_t clock_id, struct timespec *tp),
-                 (clock_id, tp))
+		 (clockid_t clock_id, struct timespec *tp),
+		 (clock_id, tp))
 COMPAT_REDIRECT (clock_settime,
-                 (clockid_t clock_id, const struct timespec *tp),
-                 (clock_id, tp))
+		 (clockid_t clock_id, const struct timespec *tp),
+		 (clock_id, tp))
 COMPAT_REDIRECT (clock_getcpuclockid,
-                 (pid_t pid, clockid_t *clock_id),
-                 (pid, clock_id))
+		 (pid_t pid, clockid_t *clock_id),
+		 (pid, clock_id))
 COMPAT_REDIRECT (clock_nanosleep,
-                 (clockid_t clock_id, int flags,
-                  const struct timespec *req,
-                  struct timespec *rem),
-                 (clock_id, flags, req, rem))
+		 (clockid_t clock_id, int flags,
+		  const struct timespec *req,
+		  struct timespec *rem),
+		 (clock_id, flags, req, rem))
 
 #endif
