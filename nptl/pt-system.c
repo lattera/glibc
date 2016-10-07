@@ -32,21 +32,10 @@
 
 # if HAVE_IFUNC
 
-static __typeof (system) *
-__attribute__ ((used))
-system_resolve (void)
-{
-  return &__libc_system;
-}
-
-asm (".globl system_ifunc\n"
-     ".type system_ifunc, %gnu_indirect_function");
-
-#  ifdef HAVE_ASM_SET_DIRECTIVE
-asm (".set system_ifunc, system_resolve");
-#  else
-asm ("system_ifunc = system_resolve");
-#  endif
+extern __typeof(system) system_ifunc;
+#  undef INIT_ARCH
+#  define INIT_ARCH()
+libc_ifunc (system_ifunc, &__libc_system)
 
 # else  /* !HAVE_IFUNC */
 

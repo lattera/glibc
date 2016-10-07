@@ -1,5 +1,9 @@
 2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* nptl/pt-system.c (system_ifunc): Use libc_ifunc macro.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* rt/clock-compat.c (COMPAT_REDIRECT): Use libc_ifunc macro.
 
 2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
