@@ -869,21 +869,6 @@ for linking")
 #define libm_ifunc(name, expr)				\
   __ifunc (name, name, expr, void, libm_ifunc_init)
 
-#ifdef HAVE_ASM_SET_DIRECTIVE
-# define libc_ifunc_hidden_def1(local, name)				\
-    __asm__ (".globl " #local "\n\t"					\
-	     ".hidden " #local "\n\t"					\
-	     ".set " #local ", " #name);
-#else
-# define libc_ifunc_hidden_def1(local, name)				\
-    __asm__ (".globl " #local "\n\t"					\
-	     ".hidden " #local "\n\t"					\
-	     #local " = " #name);
-#endif
-
-#define libc_ifunc_hidden_def(name) \
-  libc_ifunc_hidden_def1 (__GI_##name, name)
-
 /* Add the compiler optimization to inhibit loop transformation to library
    calls.  This is used to avoid recursive calls in memset and memmove
    default implementations.  */

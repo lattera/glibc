@@ -16,14 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifdef SHARED
+# define __gettimeofday __redirect___gettimeofday
+#endif
+
 #include <sys/time.h>
 
 #ifdef SHARED
+# undef __gettimeofday
+# define __gettimeofday_type __redirect___gettimeofday
 
-# undef libc_ifunc_hidden_def
-# define libc_ifunc_hidden_def(name)  \
-  libc_ifunc_hidden_def1 (__GI_##name, __gettimeofday_syscall)
-
+# undef libc_hidden_def
+# define libc_hidden_def(name) \
+  __hidden_ver1 (__gettimeofday_syscall, __GI___gettimeofday, \
+	       __gettimeofday_syscall);
 #endif
 
 #include <sysdeps/unix/sysv/linux/x86/gettimeofday.c>

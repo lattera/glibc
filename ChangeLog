@@ -1,5 +1,19 @@
 2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/unix/sysv/linux/x86/gettimeofday.c (__gettimeofday):
+	Use libc_ifunc_hidden macro. Use libc_hidden_def instead of
+	libc_ifunc_hidden_def.
+	* sysdeps/unix/sysv/linux/x86/time.c (time): Likewise.
+	* sysdeps/unix/sysv/linux/i386/gettimeofday.c (__gettimeofday):
+	Redirect ifunced function in header for using it as type of ifunc'ed
+	function. Redefine libc_hidden_def to use fallback non ifunc'ed
+	function for __GI_* symbol.
+	* sysdeps/unix/sysv/linux/i386/time.c (time): Likewise.
+	* include/libc-symbols.h
+	(libc_ifunc_hidden_def, libc_ifunc_hidden_def1): Delete macro.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	[BZ #20478]
 	* sysdeps/s390/multiarch/ifunc-resolve.h
 	(s390_vx_libc_ifunc2, s390_libc_ifunc): Use __ifunc from libc-symbols.h

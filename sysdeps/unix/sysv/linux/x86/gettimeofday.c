@@ -29,20 +29,20 @@ __gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
   return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
 }
 
-void *gettimeofday_ifunc (void) __asm__ ("__gettimeofday");
+# ifndef __gettimeofday_type
+/* The i386 gettimeofday.c includes this file with a defined
+   __gettimeofday_type macro.  For x86_64 we have to define it to __gettimeofday
+   as the internal symbol is the ifunc'ed one.  */
+#  define __gettimeofday_type __gettimeofday
+# endif
 
-void *
-gettimeofday_ifunc (void)
-{
-  PREPARE_VERSION_KNOWN (linux26, LINUX_2_6);
-
-  /* If the vDSO is not available we fall back to syscall.  */
-  return (_dl_vdso_vsym ("__vdso_gettimeofday", &linux26)
-	  ?: (void*) (&__gettimeofday_syscall));
-}
-asm (".type __gettimeofday, %gnu_indirect_function");
-
-libc_ifunc_hidden_def(__gettimeofday)
+# undef INIT_ARCH
+# define INIT_ARCH() PREPARE_VERSION_KNOWN (linux26, LINUX_2_6)
+/* If the vDSO is not available we fall back to syscall.  */
+libc_ifunc_hidden (__gettimeofday_type, __gettimeofday,
+		   (_dl_vdso_vsym ("__vdso_gettimeofday", &linux26)
+		    ?: &__gettimeofday_syscall))
+libc_hidden_def (__gettimeofday)
 
 #else
 

@@ -30,20 +30,20 @@ __time_syscall (time_t *t)
   return INTERNAL_SYSCALL (time, err, 1, t);
 }
 
-void *time_ifunc (void) __asm__ ("time");
+# ifndef time_type
+/* The i386 time.c includes this file with a defined time_type macro.
+   For x86_64 we have to define it to time as the internal symbol is the
+   ifunc'ed one.  */
+#  define time_type time
+# endif
 
-void *
-time_ifunc (void)
-{
-  PREPARE_VERSION_KNOWN (linux26, LINUX_2_6);
-
+#undef INIT_ARCH
+#define INIT_ARCH() PREPARE_VERSION_KNOWN (linux26, LINUX_2_6);
 /* If the vDSO is not available we fall back on the syscall.  */
-  return _dl_vdso_vsym ("__vdso_time", &linux26)
-			?: (void*) &__time_syscall;
-}
-asm (".type time, %gnu_indirect_function");
-
-libc_ifunc_hidden_def(time)
+libc_ifunc_hidden (time_type, time,
+		   (_dl_vdso_vsym ("__vdso_time", &linux26)
+		    ?:  &__time_syscall))
+libc_hidden_def (time)
 
 #else
 

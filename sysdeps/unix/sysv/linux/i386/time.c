@@ -17,10 +17,18 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifdef SHARED
+# define time __redirect_time
+#endif
 
-# undef libc_ifunc_hidden_def
-# define libc_ifunc_hidden_def(name)  \
-  libc_ifunc_hidden_def1 (__GI_##name, __time_syscall)
+#include <time.h>
+
+#ifdef SHARED
+# undef time
+# define time_type __redirect_time
+
+# undef libc_hidden_def
+# define libc_hidden_def(name)  \
+  __hidden_ver1 (__time_syscall, __GI_time, __time_syscall);
 #endif
 
 #include <sysdeps/unix/sysv/linux/x86/time.c>
