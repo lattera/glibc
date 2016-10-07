@@ -1,3 +1,14 @@
+2016-10-07  Florian Weimer  <fweimer@redhat.com>
+
+	resolv: Deprecate unimplemented flags.
+	* misc/sys/cdefs.h (__glibc_macro_warning1)
+	(__glibc_macro_warning): Define.
+	* resolv/resolv.h (RES_AAONLY, RES_PRIMARY, RES_NOCHECKNAME)
+	(RES_KEEPTSIG): Mark as deprecated.
+	* resolv/res_debug.c (p_option): Remove RES_AAONLY, RES_PRIMARY,
+	RES_NOCHECKNAME, RES_KEEPTSIG.
+	* resolv/res_init.c (res_setoptions): Remove RES_NOCHECKNAME handling.
+
 2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* nptl/pt-longjmp.c (DEFINE_LONGJMP): Use libc_ifunc macro.

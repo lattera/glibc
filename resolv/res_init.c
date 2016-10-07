@@ -442,7 +442,6 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 		    { STRnLEN ("no-ip6-dotint"), 0, RES_NOIP6DOTINT },
 		    { STRnLEN ("ip6-dotint"), 1, ~RES_NOIP6DOTINT },
 		    { STRnLEN ("rotate"), 0, RES_ROTATE },
-		    { STRnLEN ("no-check-names"), 0, RES_NOCHECKNAME },
 		    { STRnLEN ("edns0"), 0, RES_USE_EDNS0 },
 		    { STRnLEN ("single-request-reopen"), 0, RES_SNGLKUPREOP },
 		    { STRnLEN ("single-request"), 0, RES_SNGLKUP },

@@ -546,9 +546,7 @@ p_option(u_long option) {
 	switch (option) {
 	case RES_INIT:		return "init";
 	case RES_DEBUG:		return "debug";
-	case RES_AAONLY:	return "aaonly(unimpl)";
 	case RES_USEVC:		return "use-vc";
-	case RES_PRIMARY:	return "primry(unimpl)";
 	case RES_IGNTC:		return "igntc";
 	case RES_RECURSE:	return "recurs";
 	case RES_DEFNAMES:	return "defnam";
@@ -559,8 +557,6 @@ p_option(u_long option) {
 	case RES_NOALIASES:	return "noaliases";
 	case RES_USE_INET6:	return "inet6";
 	case RES_ROTATE:	return "rotate";
-	case RES_NOCHECKNAME:	return "no-check-names(unimpl)";
-	case RES_KEEPTSIG:	return "keeptsig(unimpl)";
 	case RES_BLAST:		return "blast";
 	case RES_USEBSTRING:	return "ip6-bytestring";
 	case RES_NOIP6DOTINT:	return "no-ip6-dotint";

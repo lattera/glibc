@@ -472,4 +472,14 @@
 # endif
 #endif
 
+/* __glibc_macro_warning (MESSAGE) issues warning MESSAGE.  This is
+   intended for use in preprocessor macros.  */
+#if __GNUC_PREREQ (4,8)
+# define __glibc_macro_warning1(message) _Pragma (#message)
+# define __glibc_macro_warning(message) \
+  __glibc_macro_warning1 (GCC warning message)
+#else
+# define __glibc_macro_warning(msg)
+#endif
+
 #endif	 /* sys/cdefs.h */

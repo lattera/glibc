@@ -177,9 +177,11 @@ struct res_sym {
  */
 #define RES_INIT	0x00000001	/* address initialized */
 #define RES_DEBUG	0x00000002	/* print debug messages */
-#define RES_AAONLY	0x00000004	/* authoritative answers only (!IMPL)*/
+#define RES_AAONLY \
+  __glibc_macro_warning ("RES_AAONLY is deprecated") 0x00000004
 #define RES_USEVC	0x00000008	/* use virtual circuit */
-#define RES_PRIMARY	0x00000010	/* query primary server only (!IMPL) */
+#define RES_PRIMARY \
+  __glibc_macro_warning ("RES_PRIMARY is deprecated") 0x00000010
 #define RES_IGNTC	0x00000020	/* ignore trucation errors */
 #define RES_RECURSE	0x00000040	/* recursion desired */
 #define RES_DEFNAMES	0x00000080	/* use default domain name */
@@ -190,8 +192,10 @@ struct res_sym {
 #define	RES_NOALIASES	0x00001000	/* shuts off HOSTALIASES feature */
 #define	RES_USE_INET6	0x00002000	/* use/map IPv6 in gethostbyname() */
 #define RES_ROTATE	0x00004000	/* rotate ns list after each query */
-#define	RES_NOCHECKNAME	0x00008000	/* do not check names for sanity (!IMPL) */
-#define	RES_KEEPTSIG	0x00010000	/* do not strip TSIG records */
+#define	RES_NOCHECKNAME \
+  __glibc_macro_warning ("RES_NOCHECKNAME is deprecated") 0x00008000
+#define	RES_KEEPTSIG \
+  __glibc_macro_warning ("RES_KEEPTSIG is deprecated") 0x00010000
 #define	RES_BLAST	0x00020000	/* blast all recursive servers */
 #define RES_USEBSTRING	0x00040000	/* IPv6 reverse lookup with byte
 					   strings */

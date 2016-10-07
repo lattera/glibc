@@ -59,6 +59,10 @@ Version 2.25
   for the Linux quota interface which predates kernel version 2.4.22 has
   been removed.
 
+* The flags RES_AAONLY, RES_PRIMARY, RES_NOCHECKNAME, RES_KEEPTSIG defined
+  in the <resolv.h> header file have been deprecated.  They were already
+  unimplemented.
+
 * DNSSEC-related declarations and definitions have been removed from the
   <arpa/nameser.h> header file, and libresolv will no longer attempt to
   decode the data part of DNSSEC record types.  Previous versions of glibc
