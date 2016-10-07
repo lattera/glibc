@@ -1,5 +1,44 @@
 2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	[BZ #20478]
+	* sysdeps/s390/multiarch/ifunc-resolve.h
+	(s390_vx_libc_ifunc2, s390_libc_ifunc): Use __ifunc from libc-symbols.h
+	to create ifunc symbols.
+	(s390_vx_libc_ifunc_init, s390_vx_libc_ifunc_redirected
+	, s390_vx_libc_ifunc2_redirected, s390_libc_ifunc_init): New define.
+	* sysdeps/s390/multiarch/memchr.c: Redirect ifunced function in header
+	for using it as type for ifunc function.
+	* sysdeps/s390/multiarch/mempcpy.c: Likewise.
+	* sysdeps/s390/multiarch/rawmemchr.c: Likewise.
+	* sysdeps/s390/multiarch/stpcpy.c: Likewise.
+	* sysdeps/s390/multiarch/stpncpy.c: Likewise.
+	* sysdeps/s390/multiarch/strcat.c: Likewise.
+	* sysdeps/s390/multiarch/strchr.c: Likewise.
+	* sysdeps/s390/multiarch/strcmp.c: Likewise.
+	* sysdeps/s390/multiarch/strcpy.c: Likewise.
+	* sysdeps/s390/multiarch/strcspn.c: Likewise.
+	* sysdeps/s390/multiarch/strlen.c: Likewise.
+	* sysdeps/s390/multiarch/strncmp.c: Likewise.
+	* sysdeps/s390/multiarch/strncpy.c: Likewise.
+	* sysdeps/s390/multiarch/strnlen.c: Likewise.
+	* sysdeps/s390/multiarch/strpbrk.c: Likewise.
+	* sysdeps/s390/multiarch/strrchr.c: Likewise.
+	* sysdeps/s390/multiarch/strspn.c: Likewise.
+	* sysdeps/s390/multiarch/wcschr.c: Likewise.
+	* sysdeps/s390/multiarch/wcscmp.c: Likewise.
+	* sysdeps/s390/multiarch/wcspbrk.c: Likewise.
+	* sysdeps/s390/multiarch/wcsspn.c: Likewise.
+	* sysdeps/s390/multiarch/wmemchr.c: Likewise.
+	* sysdeps/s390/multiarch/wmemset.c: Likewise.
+	* sysdeps/s390/s390-32/multiarch/memcmp.c: Likewise.
+	* sysdeps/s390/s390-32/multiarch/memcpy.c: Likewise.
+	* sysdeps/s390/s390-32/multiarch/memset.c: Likewise.
+	* sysdeps/s390/s390-64/multiarch/memcmp.c: Likewise.
+	* sysdeps/s390/s390-64/multiarch/memcpy.c: Likewise.
+	* sysdeps/s390/s390-64/multiarch/memset.c: Likewise.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* include/libc-symbols.h (__ifunc_resolver):
 	New macro is used by __ifunc* macros.
 	(__ifunc): New macro uses gcc attribute ifunc or inline assembly

@@ -17,12 +17,15 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define wmemset __redirect_wmemset
+# define __wmemset __redirect___wmemset
 # include <wchar.h>
+# undef wmemset
+# undef __wmemset
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc (__wmemset)
+s390_vx_libc_ifunc_redirected (__redirect___wmemset, __wmemset)
 weak_alias (__wmemset, wmemset)
-libc_hidden_weak (wmemset)
 
 #else
 # include <wcsmbs/wmemset.c>

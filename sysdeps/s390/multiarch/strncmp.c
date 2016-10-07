@@ -17,13 +17,14 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define strncmp __redirect_strncmp
+/* Omit the strncmp inline definitions because it would redefine strncmp.  */
+# define __NO_STRING_INLINES
 # include <string.h>
+# undef strncmp
 # include <ifunc-resolve.h>
 
-
-# undef strcmp
-extern __typeof (strncmp) __strncmp;
-s390_vx_libc_ifunc2 (__strncmp, strncmp)
+s390_vx_libc_ifunc2_redirected (__redirect_strncmp, __strncmp, strncmp)
 
 #else
 # include <string/strncmp.c>

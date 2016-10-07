@@ -17,8 +17,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define memchr __redirect_memchr
 # include <string.h>
+# undef memchr
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc2 (__memchr, memchr)
+s390_vx_libc_ifunc2_redirected (__redirect_memchr, __memchr, memchr)
+
 #endif

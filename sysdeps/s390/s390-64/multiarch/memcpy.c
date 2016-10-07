@@ -18,7 +18,10 @@
 
 /* In the static lib memcpy is needed before the reloc is resolved.  */
 #if defined SHARED && IS_IN (libc)
+# define memcpy __redirect_memcpy
+# include <string.h>
+# undef memcpy
 # include <ifunc-resolve.h>
 
-s390_libc_ifunc (memcpy)
+s390_libc_ifunc (__redirect_memcpy, __memcpy, memcpy)
 #endif

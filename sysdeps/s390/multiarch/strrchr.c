@@ -17,11 +17,13 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define strrchr __redirect_strrchr
 # include <string.h>
+# undef strrchr
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc2 (__strrchr, strrchr)
-weak_alias (strrchr, rindex)
+s390_vx_libc_ifunc2_redirected (__redirect_strrchr, __strrchr, strrchr)
+weak_alias (strrchr, rindex);
 
 #else
 # include <string/strrchr.c>

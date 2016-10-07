@@ -17,12 +17,15 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define wmemchr __redirect_wmemchr
+# define __wmemchr __redirect___wmemchr
 # include <wchar.h>
+# undef wmemchr
+# undef __wmemchr
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc (__wmemchr)
+s390_vx_libc_ifunc_redirected (__redirect___wmemchr, __wmemchr)
 weak_alias (__wmemchr, wmemchr)
-libc_hidden_weak (wmemchr)
 
 #else
 # include <wcsmbs/wmemchr.c>

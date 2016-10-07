@@ -17,8 +17,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define strcpy __redirect_strcpy
 # include <string.h>
+# undef strcpy
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc2 (__strcpy, strcpy)
+s390_vx_libc_ifunc2_redirected (__redirect_strcpy, __strcpy, strcpy)
+
 #endif

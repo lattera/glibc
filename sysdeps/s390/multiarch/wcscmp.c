@@ -17,10 +17,12 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define __wcscmp __redirect___wcscmp
 # include <wchar.h>
+# undef __wcscmp
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc (__wcscmp)
+s390_vx_libc_ifunc_redirected (__redirect___wcscmp, __wcscmp)
 weak_alias (__wcscmp, wcscmp)
 
 #else

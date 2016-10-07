@@ -17,8 +17,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc)
+# define memcmp __redirect_memcmp
+# include <string.h>
+# undef memcmp
 # include <ifunc-resolve.h>
 
-s390_libc_ifunc (memcmp)
-__asm__(".weak bcmp ; bcmp = memcmp");
+s390_libc_ifunc (__redirect_memcmp, __memcmp, memcmp)
+weak_alias (memcmp, bcmp);
 #endif

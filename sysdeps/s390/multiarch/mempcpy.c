@@ -18,9 +18,15 @@
 
 
 #if defined SHARED && IS_IN (libc)
+# define mempcpy __redirect_mempcpy
+# define __mempcpy __redirect___mempcpy
+/* Omit the mempcpy inline definitions because it would redefine mempcpy.  */
+# define _HAVE_STRING_ARCH_mempcpy 1
+# include <string.h>
+# undef mempcpy
+# undef __mempcpy
 # include <ifunc-resolve.h>
-s390_libc_ifunc (__mempcpy)
 
-__asm__ (".weak mempcpy\n\t"
-	 ".set mempcpy,__mempcpy\n\t");
+s390_libc_ifunc (__redirect___mempcpy, ____mempcpy, __mempcpy)
+weak_alias (__mempcpy, mempcpy);
 #endif

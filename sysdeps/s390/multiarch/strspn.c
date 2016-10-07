@@ -17,10 +17,14 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define strspn __redirect_strspn
+/* Omit the strspn inline definitions because it would redefine strspn.  */
+# define __NO_STRING_INLINES
 # include <string.h>
+# undef strspn
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc2 (__strspn, strspn)
+s390_vx_libc_ifunc2_redirected (__redirect_strspn, __strspn, strspn)
 
 #else
 # include <string/strspn.c>

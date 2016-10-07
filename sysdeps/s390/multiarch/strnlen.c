@@ -17,12 +17,15 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+# define strnlen __redirect_strnlen
+# define __strnlen __redirect___strnlen
 # include <string.h>
+# undef strnlen
+# undef __strnlen
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc (__strnlen)
+s390_vx_libc_ifunc_redirected (__redirect___strnlen, __strnlen)
 weak_alias (__strnlen, strnlen)
-libc_hidden_def (strnlen)
 
 #else
 # include <string/strnlen.c>
