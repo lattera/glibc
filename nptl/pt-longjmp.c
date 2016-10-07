@@ -32,24 +32,12 @@
 
 # if HAVE_IFUNC
 
-static __typeof (longjmp) *
-__attribute__ ((used))
-longjmp_resolve (void)
-{
-  return &__libc_longjmp;
-}
+#  undef INIT_ARCH
+#  define INIT_ARCH()
+#  define DEFINE_LONGJMP(name) libc_ifunc (name, &__libc_longjmp)
 
-#  ifdef HAVE_ASM_SET_DIRECTIVE
-#   define DEFINE_LONGJMP(name) \
-  asm (".set " #name ", longjmp_resolve\n" \
-       ".globl " #name "\n" \
-       ".type " #name ", %gnu_indirect_function");
-#  else
-#   define DEFINE_LONGJMP(name) \
-  asm (#name " = longjmp_resolve\n" \
-       ".globl " #name "\n" \
-       ".type " #name ", %gnu_indirect_function");
-#  endif
+extern __typeof(longjmp) longjmp_ifunc;
+extern __typeof(siglongjmp) siglongjmp_ifunc;
 
 # else  /* !HAVE_IFUNC */
 
@@ -66,7 +54,7 @@ longjmp_compat (jmp_buf env, int val)
 DEFINE_LONGJMP (longjmp_ifunc)
 compat_symbol (libpthread, longjmp_ifunc, longjmp, GLIBC_2_0);
 
-DEFINE_LONGJMP (siglongjmp_ifunc)
+strong_alias (longjmp_ifunc, siglongjmp_ifunc)
 compat_symbol (libpthread, siglongjmp_ifunc, siglongjmp, GLIBC_2_0);
 
 #endif

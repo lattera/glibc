@@ -1,5 +1,11 @@
 2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* nptl/pt-longjmp.c (DEFINE_LONGJMP): Use libc_ifunc macro.
+	* sysdeps/unix/sysv/linux/s390/pt-longjmp.c (longjmp, siglongjmp):
+	Use strong_alias to create symbols for glibc verison 2.19.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* nptl/pt-vfork.c (DEFINE_VFORK): Use libc_ifunc macro.
 
 2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>

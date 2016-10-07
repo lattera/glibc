@@ -26,8 +26,8 @@
 /* In glibc release 2.19 new versions of longjmp-functions were introduced,
    but were reverted before 2.20. Thus both versions are the same function.  */
 
-DEFINE_LONGJMP (__v2longjmp)
+strong_alias (longjmp_ifunc, __v2longjmp)
 compat_symbol (libpthread, __v2longjmp, longjmp, GLIBC_2_19);
-DEFINE_LONGJMP (__v2siglongjmp)
+strong_alias (siglongjmp_ifunc, __v2siglongjmp)
 compat_symbol (libpthread, __v2siglongjmp, siglongjmp, GLIBC_2_19);
 #endif /* SHLIB_COMPAT (libpthread, GLIBC_2_19, GLIBC_2_20))  */
