@@ -1,3 +1,10 @@
+2016-10-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (iseqsig): Define
+	conditional on value of [__FLT_EVAL_METHOD__].
+	* math/test-iseqsig-excess-precision.c: New file.
+	* math/Makefile (tests): Add test-iseqsig-excess-precision.
+
 2016-10-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* math/s_iseqsig_template.c: Include math-private.h.

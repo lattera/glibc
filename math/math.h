@@ -535,17 +535,32 @@ extern int matherr (struct exception *__exc);
 /* Return X == Y but raising "invalid" and setting errno if X or Y is
    a NaN.  */
 # ifdef __NO_LONG_DOUBLE_MATH
-#  define iseqsig(x, y)				\
+#  if (__FLT_EVAL_METHOD__ == 1			\
+       || __FLT_EVAL_METHOD__ == 2		\
+       || __FLT_EVAL_METHOD__ > 32)
+#   define iseqsig(x, y) __iseqsig ((x), (y))
+#  else
+#   define iseqsig(x, y)			\
   (sizeof ((x) + (y)) == sizeof (float)		\
    ? __iseqsigf ((x), (y))			\
    : __iseqsig ((x), (y)))
+#  endif
 # else
-#  define iseqsig(x, y)				\
+#  if __FLT_EVAL_METHOD__ == 2 || __FLT_EVAL_METHOD__ > 64
+#   define iseqsig(x, y) __iseqsigl ((x), (y))
+#  elif __FLT_EVAL_METHOD__ == 1 || __FLT_EVAL_METHOD__ > 32
+#   define iseqsig(x, y)			\
+  (sizeof ((x) + (y)) <= sizeof (double)	\
+   ? __iseqsig ((x), (y))			\
+   : __iseqsigl ((x), (y)))
+#  else
+#   define iseqsig(x, y)			\
   (sizeof ((x) + (y)) == sizeof (float)		\
    ? __iseqsigf ((x), (y))			\
    : sizeof ((x) + (y)) == sizeof (double)	\
    ? __iseqsig ((x), (y))			\
    : __iseqsigl ((x), (y)))
+#  endif
 # endif
 #endif
 
