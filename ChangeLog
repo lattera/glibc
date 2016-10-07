@@ -1,3 +1,12 @@
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* config.h.in (HAVE_GCC_IFUNC): New undef.
+	* configure.ac: Add check if gcc supports attribute ifunc feature.
+	* configure: Regenerated.
+	* manual/install.texi: Add recommendation for gcc with
+	indirect-function support.
+	* INSTALL: Regenerated.
+
 2016-10-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (iseqsig): New

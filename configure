@@ -3916,12 +3916,49 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ld_gnu_indirect_function" >&5
 $as_echo "$libc_cv_ld_gnu_indirect_function" >&6; }
 
+# Check if gcc supports attribute ifunc as it is used in libc_ifunc macro.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for gcc attribute ifunc support" >&5
+$as_echo_n "checking for gcc attribute ifunc support... " >&6; }
+if ${libc_cv_gcc_indirect_function+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+extern int func (int);
+int used_func (int a)
+{
+  return a;
+}
+static void *resolver ()
+{
+  return &used_func;
+}
+extern __typeof (func) func __attribute__ ((ifunc ("resolver")));
+EOF
+libc_cv_gcc_indirect_function=no
+if ${CC-cc} -c conftest.c -o conftest.o 1>&5 \
+   2>&5 ; then
+  if $READELF -s conftest.o | grep IFUNC >/dev/null 2>&5; then
+    libc_cv_gcc_indirect_function=yes
+  fi
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_indirect_function" >&5
+$as_echo "$libc_cv_gcc_indirect_function" >&6; }
+
 if test x"$libc_cv_ld_gnu_indirect_function" != xyes; then
   if test x"$multi_arch" = xyes; then
     as_fn_error $? "--enable-multi-arch support requires assembler and linker support" "$LINENO" 5
   else
     multi_arch=no
   fi
+fi
+if test x"$libc_cv_gcc_indirect_function" != xyes &&
+   test x"$multi_arch" = xyes; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --enable-multi-arch support recommends a gcc with gnu-indirect-function support.
+Please use a gcc which supports it by default or configure gcc with --enable-gnu-indirect-function" >&5
+$as_echo "$as_me: WARNING: --enable-multi-arch support recommends a gcc with gnu-indirect-function support.
+Please use a gcc which supports it by default or configure gcc with --enable-gnu-indirect-function" >&2;}
 fi
 multi_arch_d=
 if test x"$multi_arch" != xno; then
@@ -6515,6 +6552,11 @@ fi
 # usable even though the assembler knows how to generate the symbol type.
 if test x"$libc_cv_ld_gnu_indirect_function" = xyes; then
   $as_echo "#define HAVE_IFUNC 1" >>confdefs.h
+
+fi
+
+if test x"$libc_cv_gcc_indirect_function" = xyes; then
+  $as_echo "#define HAVE_GCC_IFUNC 1" >>confdefs.h
 
 fi
 
