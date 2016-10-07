@@ -737,27 +737,137 @@ for linking")
 # define compat_data_section .section ".data.compat", "aw";
 #endif
 
-/* Marker used for indirection function symbols.  */
-#define libc_ifunc(name, expr)						\
-  extern void *name##_ifunc (void) __asm__ (#name);			\
-  void *name##_ifunc (void)						\
+/* Helper / base  macros for indirect function symbols.  */
+#define __ifunc_resolver(type_name, name, expr, arg, init, classifier)	\
+  classifier void *name##_ifunc (arg)					\
   {									\
-    INIT_ARCH ();							\
-    __typeof (name) *res = expr;					\
+    init ();								\
+    __typeof (type_name) *res = expr;					\
     return res;								\
-  }									\
-  __asm__ (".type " #name ", %gnu_indirect_function");
+  }
+
+#ifdef HAVE_GCC_IFUNC
+# define __ifunc(type_name, name, expr, arg, init)			\
+  extern __typeof (type_name) name __attribute__			\
+			      ((ifunc (#name "_ifunc")));		\
+  __ifunc_resolver (type_name, name, expr, arg, init, static)
+
+# define __ifunc_hidden(type_name, name, expr, arg, init)	\
+  __ifunc (type_name, name, expr, arg, init)
+#else
+/* Gcc does not support __attribute__ ((ifunc (...))).  Use the old behaviour
+   as fallback.  But keep in mind that the debug information for the ifunc
+   resolver functions is not correct.  It contains the ifunc'ed function as
+   DW_AT_linkage_name.  E.g. lldb uses this field and an inferior function
+   call of the ifunc'ed function will fail due to "no matching function for
+   call to ..." because the ifunc'ed function and the resolver function have
+   different signatures.  (Gcc support is disabled at least on a ppc64le
+   Ubuntu 14.04 system.)  */
+
+# define __ifunc(type_name, name, expr, arg, init)			\
+  extern __typeof (type_name) name;					\
+  void *name##_ifunc (arg) __asm__ (#name);				\
+  __ifunc_resolver (type_name, name, expr, arg, init,)			\
+ __asm__ (".type " #name ", %gnu_indirect_function");
+
+# define __ifunc_hidden(type_name, name, expr, arg, init)		\
+  extern __typeof (type_name) __libc_##name;				\
+  __ifunc (type_name, __libc_##name, expr, arg, init)			\
+  strong_alias (__libc_##name, name);
+#endif /* !HAVE_GCC_IFUNC  */
+
+/* The following macros are used for indirect function symbols in libc.so.
+   First of all, you need to have the function prototyped somewhere,
+   say in foo.h:
+
+   int foo (int __bar);
+
+   If you have an implementation for foo which e.g. uses a special hardware
+   feature which isn't available on all machines where this libc.so will be
+   used but decideable if available at runtime e.g. via hwcaps, you can provide
+   two or multiple implementations of foo:
+
+   int __foo_default (int __bar)
+   {
+     return __bar;
+   }
+
+   int __foo_special (int __bar)
+   {
+     return __bar;
+   }
+
+   If your function foo has no libc_hidden_proto (foo) defined for PLT
+   bypassing, you can use:
+
+   #define INIT_ARCH() unsigned long int hwcap = __GLRO(dl_hwcap);
+
+   libc_ifunc (foo, (hwcap & HWCAP_SPECIAL) ? __foo_special : __foo_default);
+
+   This will define a resolver function for foo which returns __foo_special or
+   __foo_default depending on your specified expression.  Please note that you
+   have to define a macro function INIT_ARCH before using libc_ifunc macro as
+   it is called by the resolver function before evaluating the specified
+   expression.  In this example it is used to prepare the hwcap variable.
+   The resolver function is assigned to an ifunc'ed symbol foo.  Calls to foo
+   from inside or outside of libc.so will be indirected by a PLT call.
+
+   If your function foo has a libc_hidden_proto (foo) defined for PLT bypassing
+   and calls to foo within libc.so should always go to one specific
+   implementation of foo e.g. __foo_default then you have to add:
+
+   __hidden_ver1 (__foo_default, __GI_foo, __foo_default);
+
+   or a tweaked definition of libc_hidden_def macro after the __foo_default
+   function definition.  Calls to foo within libc.so will always go directly to
+   __foo_default.  Calls to foo from outside libc.so will be indirected by a
+   PLT call to ifunc'ed symbol foo which you have to define in a separate
+   compile unit:
+
+   #define foo __redirect_foo
+   #include <foo.h>
+   #undef foo
+
+   extern __typeof (__redirect_foo) __foo_default attribute_hidden;
+   extern __typeof (__redirect_foo) __foo_special attribute_hidden;
+
+   libc_ifunc_redirected (__redirect_foo, foo,
+			  (hwcap & HWCAP_SPECIAL)
+			  ? __foo_special
+			  : __foo_default);
+
+   This will define the ifunc'ed symbol foo like above.  The redirection of foo
+   in header file is needed to omit an additional defintion of __GI_foo which
+   would end in a linker error while linking libc.so.  You have to specify
+   __redirect_foo as first parameter which is used within libc_ifunc_redirected
+   macro in conjunction with typeof to define the ifunc'ed symbol foo.
+
+   If your function foo has a libc_hidden_proto (foo) defined and calls to foo
+   within or from outside libc.so should go via ifunc'ed symbol, then you have
+   to use:
+
+   libc_ifunc_hidden (foo, foo,
+		      (hwcap & HWCAP_SPECIAL)
+		      ? __foo_special
+		      : __foo_default);
+   libc_hidden_def (foo)
+
+   The first parameter foo of libc_ifunc_hidden macro is used in the same way
+   as for libc_ifunc_redirected macro.  */
+
+#define libc_ifunc(name, expr) __ifunc (name, name, expr, void, INIT_ARCH)
+
+#define libc_ifunc_redirected(redirected_name, name, expr)	\
+  __ifunc (redirected_name, name, expr, void, INIT_ARCH)
+
+#define libc_ifunc_hidden(redirected_name, name, expr)			\
+  __ifunc_hidden (redirected_name, name, expr, void, INIT_ARCH)
 
 /* The body of the function is supposed to use __get_cpu_features
    which will, if necessary, initialize the data first.  */
-#define libm_ifunc(name, expr)						\
-  extern void *name##_ifunc (void) __asm__ (#name);			\
-  void *name##_ifunc (void)						\
-  {									\
-    __typeof (name) *res = expr;					\
-    return res;								\
-  }									\
-  __asm__ (".type " #name ", %gnu_indirect_function");
+#define libm_ifunc_init()
+#define libm_ifunc(name, expr)				\
+  __ifunc (name, name, expr, void, libm_ifunc_init)
 
 #ifdef HAVE_ASM_SET_DIRECTIVE
 # define libc_ifunc_hidden_def1(local, name)				\

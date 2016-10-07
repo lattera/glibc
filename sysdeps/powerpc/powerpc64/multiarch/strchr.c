@@ -18,18 +18,22 @@
 
 /* Define multiple versions only for definition in libc.  */
 #if defined SHARED && IS_IN (libc)
+# define strchr __redirect_strchr
+/* Omit the strchr inline definitions because it would redefine strchr.  */
+# define __NO_STRING_INLINES
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"
 
 extern __typeof (strchr) __strchr_ppc attribute_hidden;
 extern __typeof (strchr) __strchr_power7 attribute_hidden;
+# undef strchr
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc (strchr,
-	    (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __strchr_power7
-            : __strchr_ppc);
+libc_ifunc_redirected (__redirect_strchr, strchr,
+		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       ? __strchr_power7
+		       : __strchr_ppc);
 weak_alias (strchr, index)
 #endif

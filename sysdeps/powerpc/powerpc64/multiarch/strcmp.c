@@ -17,6 +17,9 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined SHARED && IS_IN (libc)
+# define strcmp __redirect_strcmp
+/* Omit the strcmp inline definitions because it would redefine strcmp.  */
+# define __NO_STRING_INLINES
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"
@@ -24,11 +27,12 @@
 extern __typeof (strcmp) __strcmp_ppc attribute_hidden;
 extern __typeof (strcmp) __strcmp_power7 attribute_hidden;
 extern __typeof (strcmp) __strcmp_power8 attribute_hidden;
+# undef strcmp
 
-libc_ifunc (strcmp,
-            (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-              ? __strcmp_power8 :
-              (hwcap & PPC_FEATURE_HAS_VSX)
-              ? __strcmp_power7
-            : __strcmp_ppc);
+libc_ifunc_redirected (__redirect_strcmp, strcmp,
+		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+		       ? __strcmp_power8
+		       : (hwcap & PPC_FEATURE_HAS_VSX)
+			 ? __strcmp_power7
+			 : __strcmp_ppc);
 #endif

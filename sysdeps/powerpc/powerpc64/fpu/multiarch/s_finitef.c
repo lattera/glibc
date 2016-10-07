@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define __finitef __redirect___finitef
 #include <math.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
@@ -24,12 +25,13 @@ extern __typeof (__finitef) __finitef_ppc64 attribute_hidden;
 /* The double-precision version also works for single-precision.  */
 extern __typeof (__finitef) __finite_power7 attribute_hidden;
 extern __typeof (__finitef) __finite_power8 attribute_hidden;
+#undef __finitef
 
-libc_ifunc (__finitef,
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-	    ? __finite_power8 :
-	      (hwcap & PPC_FEATURE_ARCH_2_06)
-	      ? __finite_power7
-            : __finitef_ppc64);
+libc_ifunc_redirected (__redirect___finitef, __finitef,
+		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+		       ? __finite_power8
+		       : (hwcap & PPC_FEATURE_ARCH_2_06)
+			 ? __finite_power7
+			 : __finitef_ppc64);
 
 weak_alias (__finitef, finitef)

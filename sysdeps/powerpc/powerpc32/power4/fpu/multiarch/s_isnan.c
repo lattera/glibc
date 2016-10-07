@@ -16,6 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define __isnan __redirect___isnan
+#define __isnanf __redirect___isnanf
+#define __isnanl __redirect___isnanl
 #include <math.h>
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
@@ -25,15 +28,18 @@ extern __typeof (__isnan) __isnan_ppc32 attribute_hidden;
 extern __typeof (__isnan) __isnan_power5 attribute_hidden;
 extern __typeof (__isnan) __isnan_power6 attribute_hidden;
 extern __typeof (__isnan) __isnan_power7 attribute_hidden;
+#undef __isnan
+#undef __isnanf
+#undef __isnanl
 
-libc_ifunc (__isnan,
-	    (hwcap & PPC_FEATURE_ARCH_2_06)
-	    ? __isnan_power7 :
-	      (hwcap & PPC_FEATURE_ARCH_2_05)
-	      ? __isnan_power6 :
-		(hwcap & PPC_FEATURE_POWER5)
-		? __isnan_power5
-            : __isnan_ppc32);
+libc_ifunc_redirected (__redirect___isnan, __isnan,
+		       (hwcap & PPC_FEATURE_ARCH_2_06)
+		       ? __isnan_power7
+		       : (hwcap & PPC_FEATURE_ARCH_2_05)
+			 ? __isnan_power6
+			 : (hwcap & PPC_FEATURE_POWER5)
+			   ? __isnan_power5
+			   : __isnan_ppc32);
 
 weak_alias (__isnan, isnan)
 

@@ -17,17 +17,20 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc)
+# define strnlen __redirect_strnlen
+# define __strnlen __redirect___strnlen
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"
 
 extern __typeof (__strnlen) __strnlen_ppc attribute_hidden;
 extern __typeof (__strnlen) __strnlen_power7 attribute_hidden;
+# undef strnlen
+# undef __strnlen
 
-libc_ifunc (__strnlen,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __strnlen_power7
-            : __strnlen_ppc);
+libc_ifunc_redirected (__redirect___strnlen, __strnlen,
+		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       ? __strnlen_power7
+		       : __strnlen_ppc);
 weak_alias (__strnlen, strnlen)
-libc_hidden_def (strnlen)
 #endif

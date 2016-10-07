@@ -18,6 +18,7 @@
 
 /* Define multiple versions only for definition in libc.  */
 #if IS_IN (libc)
+# define memcmp __redirect_memcmp
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"
@@ -25,15 +26,16 @@
 extern __typeof (memcmp) __memcmp_ppc attribute_hidden;
 extern __typeof (memcmp) __memcmp_power4 attribute_hidden;
 extern __typeof (memcmp) __memcmp_power7 attribute_hidden;
+# undef memcmp
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc (memcmp,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __memcmp_power7 :
-	      (hwcap & PPC_FEATURE_POWER4)
-		? __memcmp_power4
-            : __memcmp_ppc);
+libc_ifunc_redirected (__redirect_memcmp, memcmp,
+		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       ? __memcmp_power7
+		       : (hwcap & PPC_FEATURE_POWER4)
+			 ? __memcmp_power4
+			 : __memcmp_ppc);
 #else
 #include <string/memcmp.c>
 #endif

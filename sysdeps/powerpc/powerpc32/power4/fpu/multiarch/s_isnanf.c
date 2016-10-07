@@ -26,13 +26,14 @@ extern __typeof (__isnanf) __isnanf_power5 attribute_hidden;
 extern __typeof (__isnanf) __isnanf_power6 attribute_hidden;
 extern __typeof (__isnanf) __isnan_power7 attribute_hidden;
 
-libc_ifunc (__isnanf,
-	    (hwcap & PPC_FEATURE_ARCH_2_06)
-	    ? __isnan_power7 :
-	      (hwcap & PPC_FEATURE_ARCH_2_05)
-	      ? __isnanf_power6 :
-		(hwcap & PPC_FEATURE_POWER5)
-		? __isnanf_power5
-            : __isnan_ppc32);
+libc_ifunc_hidden (__isnanf, __isnanf,
+		   (hwcap & PPC_FEATURE_ARCH_2_06)
+		   ? __isnan_power7
+		   : (hwcap & PPC_FEATURE_ARCH_2_05)
+		     ? __isnanf_power6
+		     : (hwcap & PPC_FEATURE_POWER5)
+		       ? __isnanf_power5
+		       : __isnan_ppc32);
 
+hidden_def (__isnanf)
 weak_alias (__isnanf, isnanf)

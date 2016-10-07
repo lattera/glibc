@@ -1,5 +1,54 @@
 2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* include/libc-symbols.h (__ifunc_resolver):
+	New macro is used by __ifunc* macros.
+	(__ifunc): New macro uses gcc attribute ifunc or inline assembly
+	depending on HAVE_GCC_IFUNC.
+	(libc_ifunc, libm_ifunc): Use __ifunc as base macro.
+	(libc_ifunc_redirected, libc_ifunc_hidden, libm_ifunc_init): New macro.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finite.c:
+	Redirect ifunced function in header for using as type for ifunc function.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finitef.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinf.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinff.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnan.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memcmp.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memcpy.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memmove.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/mempcpy.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memset.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/rawmemchr.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strchr.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strlen.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strncmp.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strnlen.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finitef.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinff.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/mempcpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/rawmemchr.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcat.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strchr.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strnlen.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strrchr.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strstr.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcschr.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnanf.c:
+	Add libc_hidden_def() and use libc_ifunc_hidden() macro
+	instead of libc_ifunc() macro.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnanf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy.c: Likewise.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* config.h.in (HAVE_GCC_IFUNC): New undef.
 	* configure.ac: Add check if gcc supports attribute ifunc feature.
 	* configure: Regenerated.

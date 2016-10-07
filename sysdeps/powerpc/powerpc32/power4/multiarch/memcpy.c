@@ -20,6 +20,8 @@
    DSO.  In static binaries we need memcpy before the initialization
    happened.  */
 #if defined SHARED && IS_IN (libc)
+# undef memcpy
+# define memcpy __redirect_memcpy
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"
@@ -29,17 +31,18 @@ extern __typeof (memcpy) __memcpy_cell attribute_hidden;
 extern __typeof (memcpy) __memcpy_power6 attribute_hidden;
 extern __typeof (memcpy) __memcpy_a2 attribute_hidden;
 extern __typeof (memcpy) __memcpy_power7 attribute_hidden;
+# undef memcpy
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc (memcpy,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __memcpy_power7 :
-	      (hwcap & PPC_FEATURE_ARCH_2_06)
-	      ? __memcpy_a2 :
-		(hwcap & PPC_FEATURE_ARCH_2_05)
-		? __memcpy_power6 :
-		  (hwcap & PPC_FEATURE_CELL_BE)
-		  ? __memcpy_cell
-            : __memcpy_ppc);
+libc_ifunc_redirected (__redirect_memcpy, memcpy,
+		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       ? __memcpy_power7
+		       : (hwcap & PPC_FEATURE_ARCH_2_06)
+			 ? __memcpy_a2
+			 : (hwcap & PPC_FEATURE_ARCH_2_05)
+			   ? __memcpy_power6
+			   : (hwcap & PPC_FEATURE_CELL_BE)
+			     ? __memcpy_cell
+			     : __memcpy_ppc);
 #endif

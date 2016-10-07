@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define __isinff __redirect___isinff
 #include <math.h>
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
@@ -25,12 +26,13 @@ extern __typeof (__isinff) __isinff_ppc64 attribute_hidden;
 /* The double-precision version also works for single-precision.  */
 extern __typeof (__isinff) __isinf_power7 attribute_hidden;
 extern __typeof (__isinff) __isinf_power8 attribute_hidden;
+#undef __isinff
 
-libc_ifunc (__isinff,
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-	    ? __isinf_power8 :
-	      (hwcap & PPC_FEATURE_ARCH_2_06)
-	      ? __isinf_power7
-            : __isinff_ppc64);
+libc_ifunc_redirected (__redirect___isinff, __isinff,
+		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+		       ? __isinf_power8
+		       : (hwcap & PPC_FEATURE_ARCH_2_06)
+			 ? __isinf_power7
+			 : __isinff_ppc64);
 
 weak_alias (__isinff, isinff)

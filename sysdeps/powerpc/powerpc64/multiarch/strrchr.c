@@ -18,18 +18,20 @@
 
 /* Define multiple versions only for definition in libc.  */
 #if IS_IN (libc)
+# define strrchr __redirect_strrchr
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"
 
 extern __typeof (strrchr) __strrchr_ppc attribute_hidden;
 extern __typeof (strrchr) __strrchr_power7 attribute_hidden;
+#undef strrchr
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc (strrchr,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __strrchr_power7
-            : __strrchr_ppc);
+libc_ifunc_redirected (__redirect_strrchr, strrchr,
+		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       ? __strrchr_power7
+		       : __strrchr_ppc);
 weak_alias (strrchr, rindex)
 #endif

@@ -18,17 +18,19 @@
 
 /* Define multiple versions only for definition in libc.  */
 #if IS_IN (libc)
+# define strstr __redirect_strstr
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"
 
 extern __typeof (strstr) __strstr_ppc attribute_hidden;
 extern __typeof (strstr) __strstr_power7 attribute_hidden;
+# undef strstr
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc (strstr,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __strstr_power7
-            : __strstr_ppc);
+libc_ifunc_redirected (__redirect_strstr, strstr,
+		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       ? __strstr_power7
+		       : __strstr_ppc);
 #endif

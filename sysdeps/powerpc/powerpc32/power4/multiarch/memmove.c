@@ -19,16 +19,18 @@
 #if defined SHARED && IS_IN (libc)
 /* Redefine memmove so that the compiler won't complain about the type
    mismatch with the IFUNC selector in strong_alias, below.  */
+# define memmove __redirect_memmove
 # include <string.h>
 # include "init-arch.h"
 
 extern __typeof (memmove) __memmove_ppc attribute_hidden;
 extern __typeof (memmove) __memmove_power7 attribute_hidden;
+# undef memmove
 
-libc_ifunc (memmove,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __memmove_power7
-            : __memmove_ppc);
+libc_ifunc_redirected (__redirect_memmove, memmove,
+		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       ? __memmove_power7
+		       : __memmove_ppc);
 #else
 # include <string/memmove.c>
 #endif

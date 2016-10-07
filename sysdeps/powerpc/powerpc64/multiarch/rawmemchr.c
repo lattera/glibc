@@ -17,19 +17,21 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc)
+# define __rawmemchr __redirect___rawmemchr
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"
 
 extern __typeof (__rawmemchr) __rawmemchr_ppc attribute_hidden;
 extern __typeof (__rawmemchr) __rawmemchr_power7 attribute_hidden;
+# undef __rawmemchr
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc (__rawmemchr,
-	    (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __rawmemchr_power7
-            : __rawmemchr_ppc);
+libc_ifunc_redirected (__redirect___rawmemchr, __rawmemchr,
+		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       ? __rawmemchr_power7
+		       : __rawmemchr_ppc);
 
 weak_alias (__rawmemchr, rawmemchr)
 #else
