@@ -1,5 +1,7 @@
 2016-10-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* math/s_iseqsig_template.c: Include math-private.h.
+
 	* posix/Makefile (tests): Add tst-posix_fadvise and tst-posix_fadvise64.
 	* posix/tst-posix_fadvise.c: New file.
 	* posix/tst-posix_fadvise64.c: Likewise.
