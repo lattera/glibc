@@ -15,6 +15,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#if defined SHARED && !defined __powerpc64__
+# define __gettimeofday __redirect___gettimeofday
+#else
+# define __redirect___gettimeofday __gettimeofday
+#endif
 
 #include <sys/time.h>
 
@@ -24,30 +29,14 @@
 # include <libc-vdso.h>
 # include <dl-machine.h>
 
-void *gettimeofday_ifunc (void) __asm__ ("__gettimeofday");
+# ifndef __powerpc64__
+#  undef __gettimeofday
 
-static int
-__gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
+int
+__gettimeofday_vsyscall (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
 }
-
-void *
-gettimeofday_ifunc (void)
-{
-  PREPARE_VERSION (linux2615, "LINUX_2.6.15", 123718565);
-
-  /* If the vDSO is not available we fall back syscall.  */
-  void *vdso_gettimeofday = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2615);
-  return (vdso_gettimeofday ? VDSO_IFUNC_RET (vdso_gettimeofday)
-	  : (void*)__gettimeofday_syscall);
-}
-asm (".type __gettimeofday, %gnu_indirect_function");
-
-/* This is doing "libc_hidden_def (__gettimeofday)" but the compiler won't
-   let us do it in C because it doesn't know we're defining __gettimeofday
-   here in this file.  */
-asm (".globl __GI___gettimeofday");
 
 /* __GI___gettimeofday is defined as hidden and for ppc32 it enables the
    compiler make a local call (symbol@local) for internal GLIBC usage. It
@@ -55,16 +44,29 @@ asm (".globl __GI___gettimeofday");
    For ppc64 a call to a function in another translation unit might use a
    different toc pointer thus disallowing direct branchess and making internal
    ifuncs calls safe.  */
-#ifdef __powerpc64__
-asm ("__GI___gettimeofday = __gettimeofday");
-#else
-int
-__gettimeofday_vsyscall (struct timeval *tv, struct timezone *tz)
+#  undef libc_hidden_def
+#  define libc_hidden_def(name)					\
+  __hidden_ver1 (__gettimeofday_vsyscall, __GI___gettimeofday,	\
+	       __gettimeofday_vsyscall);
+
+# endif /* !__powerpc64__  */
+
+static int
+__gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
+  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
 }
-asm ("__GI___gettimeofday = __gettimeofday_vsyscall");
-#endif
+
+# define INIT_ARCH()							\
+  PREPARE_VERSION (linux2615, "LINUX_2.6.15", 123718565);		\
+  void *vdso_gettimeofday = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2615);
+
+/* If the vDSO is not available we fall back syscall.  */
+libc_ifunc_hidden (__redirect___gettimeofday, __gettimeofday,
+		   vdso_gettimeofday
+		   ? VDSO_IFUNC_RET (vdso_gettimeofday)
+		   : (void *) __gettimeofday_syscall);
+libc_hidden_def (__gettimeofday)
 
 #else
 

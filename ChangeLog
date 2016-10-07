@@ -1,5 +1,13 @@
 2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c (__gettimeofday):
+	Use libc_ifunc_hidden and libc_hidden_def macro. Redirect ifunced function
+	in header for using it as type for ifunc function because __GI_* symbols
+	for ppc32 do not target the ifunc symbols.
+	* sysdeps/unix/sysv/linux/powerpc/time.c (time): Likewise.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/unix/sysv/linux/x86/gettimeofday.c (__gettimeofday):
 	Use libc_ifunc_hidden macro. Use libc_hidden_def instead of
 	libc_ifunc_hidden_def.

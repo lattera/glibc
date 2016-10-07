@@ -17,6 +17,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifdef SHARED
+# ifndef __powerpc64__
+#  define time __redirect_time
+# else
+#  define __redirect_time time
+# endif
 
 # include <time.h>
 # include <sysdep.h>
@@ -24,7 +29,26 @@
 # include <libc-vdso.h>
 # include <dl-machine.h>
 
-void *time_ifunc (void) asm ("time");
+# ifndef __powerpc64__
+#  undef time
+
+time_t
+__time_vsyscall (time_t *t)
+{
+  return INLINE_VSYSCALL (time, 1, t);
+}
+
+/* __GI_time is defined as hidden and for ppc32 it enables the
+   compiler make a local call (symbol@local) for internal GLIBC usage. It
+   means the PLT won't be used and the ifunc resolver will be called directly.
+   For ppc64 a call to a function in another translation unit might use a
+   different toc pointer thus disallowing direct branchess and making internal
+   ifuncs calls safe.  */
+#  undef libc_hidden_def
+#  define libc_hidden_def(name)					\
+  __hidden_ver1 (__time_vsyscall, __GI_time, __time_vsyscall);
+
+# endif /* !__powerpc64__  */
 
 static time_t
 time_syscall (time_t *t)
@@ -42,42 +66,19 @@ time_syscall (time_t *t)
   return result;
 }
 
-void *
-time_ifunc (void)
-{
-  PREPARE_VERSION (linux2615, "LINUX_2.6.15", 123718565);
-
-  /* If the vDSO is not available we fall back to the syscall.  */
+# define INIT_ARCH()							\
+  PREPARE_VERSION (linux2615, "LINUX_2.6.15", 123718565);		\
   void *vdso_time = _dl_vdso_vsym ("__kernel_time", &linux2615);
-  return (vdso_time ? VDSO_IFUNC_RET (vdso_time)
-	  : (void*)time_syscall);
-}
-asm (".type time, %gnu_indirect_function");
 
-/* This is doing "libc_hidden_def (time)" but the compiler won't
- * let us do it in C because it doesn't know we're defining time
- * here in this file.  */
-asm (".globl __GI_time");
-
-/* __GI_time is defined as hidden and for ppc32 it enables the
-   compiler make a local call (symbol@local) for internal GLIBC usage. It
-   means the PLT won't be used and the ifunc resolver will be called directly.
-   For ppc64 a call to a function in another translation unit might use a
-   different toc pointer thus disallowing direct branchess and making internal
-   ifuncs calls safe.  */
-#ifdef __powerpc64__
-asm ("__GI_time = time");
-#else
-time_t
-__time_vsyscall (time_t *t)
-{
-  return INLINE_VSYSCALL (time, 1, t);
-}
-asm ("__GI_time = __time_vsyscall");
-#endif
+/* If the vDSO is not available we fall back to the syscall.  */
+libc_ifunc_hidden (__redirect_time, time,
+		   vdso_time
+		   ? VDSO_IFUNC_RET (vdso_time)
+		   : (void *) time_syscall);
+libc_hidden_def (time)
 
 #else
 
 #include <sysdeps/posix/time.c>
 
-#endif
+#endif /* !SHARED */
