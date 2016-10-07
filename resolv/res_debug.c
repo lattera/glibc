@@ -559,7 +559,6 @@ p_option(u_long option) {
 	case RES_ROTATE:	return "rotate";
 	case RES_BLAST:		return "blast";
 	case RES_USEBSTRING:	return "ip6-bytestring";
-	case RES_NOIP6DOTINT:	return "no-ip6-dotint";
 	case RES_USE_EDNS0:	return "edns0";
 	case RES_SNGLKUP:	return "single-request";
 	case RES_SNGLKUPREOP:	return "single-request-reopen";

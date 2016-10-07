@@ -439,8 +439,6 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 #define STRnLEN(str) str, sizeof (str) - 1
 		    { STRnLEN ("inet6"), 0, RES_USE_INET6 },
 		    { STRnLEN ("ip6-bytestring"), 0, RES_USEBSTRING },
-		    { STRnLEN ("no-ip6-dotint"), 0, RES_NOIP6DOTINT },
-		    { STRnLEN ("ip6-dotint"), 1, ~RES_NOIP6DOTINT },
 		    { STRnLEN ("rotate"), 0, RES_ROTATE },
 		    { STRnLEN ("edns0"), 0, RES_USE_EDNS0 },
 		    { STRnLEN ("single-request-reopen"), 0, RES_SNGLKUPREOP },

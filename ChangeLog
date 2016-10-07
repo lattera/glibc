@@ -1,5 +1,16 @@
 2016-10-07  Florian Weimer  <fweimer@redhat.com>
 
+	resolv: Remove RES_NOIP6DOTINT and its implementation.
+	* resolv/resolv.h (RES_DEFAULT): Remove RES_NOIP6DOTINT.
+	(RES_NOIP6DOTINT): Remove.
+	* resolv/gethnamaddr.c (gethostbyaddr): Remove RES_NOIP6DOTINT
+	handling.
+	* resolv/res_debug.c (p_option): Likewise.
+	* resolv/res_init.c (res_setoptions): Likewise.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr2_r): Likewise.
+
+2016-10-07  Florian Weimer  <fweimer@redhat.com>
+
 	resolv: Deprecate unimplemented flags.
 	* misc/sys/cdefs.h (__glibc_macro_warning1)
 	(__glibc_macro_warning): Define.

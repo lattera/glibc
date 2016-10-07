@@ -59,6 +59,11 @@ Version 2.25
   for the Linux quota interface which predates kernel version 2.4.22 has
   been removed.
 
+* The “ip6-dotint” and “no-ip6-dotint” resolver options, and the
+  corresponding RES_NOIP6DOTINT flag from <resolv.h> have been removed.
+  “no-ip6-dotint” had already been the default, and support for the
+  “ip6-dotint” option was removed from the Internet in 2006.
+
 * The flags RES_AAONLY, RES_PRIMARY, RES_NOCHECKNAME, RES_KEEPTSIG defined
   in the <resolv.h> header file have been deprecated.  They were already
   unimplemented.

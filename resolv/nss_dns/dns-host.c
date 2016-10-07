@@ -495,14 +495,6 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
 
   n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer.buf->buf,
 			 1024, &host_buffer.ptr, NULL, NULL, NULL, NULL);
-  if (n < 0 && af == AF_INET6 && (_res.options & RES_NOIP6DOTINT) == 0)
-    {
-      strcpy (qp, "ip6.int");
-      n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer.buf->buf,
-			     host_buffer.buf != orig_host_buffer
-			     ? MAXPACKET : 1024, &host_buffer.ptr,
-			     NULL, NULL, NULL, NULL);
-    }
   if (n < 0)
     {
       *h_errnop = h_errno;

@@ -642,12 +642,6 @@ gethostbyaddr (const void *addr, socklen_t len, int af)
 
 	n = __libc_res_nquery(&_res, qbuf, C_IN, T_PTR, buf.buf->buf, 1024,
 			      &buf.ptr, NULL, NULL, NULL, NULL);
-	if (n < 0 && af == AF_INET6 && (_res.options & RES_NOIP6DOTINT) == 0) {
-		strcpy(qp, "ip6.int");
-		n = __libc_res_nquery(&_res, qbuf, C_IN, T_PTR, buf.buf->buf,
-				      buf.buf != orig_buf ? MAXPACKET : 1024,
-				      &buf.ptr, NULL, NULL, NULL, NULL);
-	}
 	if (n < 0) {
 		if (buf.buf != orig_buf)
 			free (buf.buf);
