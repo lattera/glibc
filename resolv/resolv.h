@@ -197,8 +197,6 @@ struct res_sym {
 #define	RES_KEEPTSIG \
   __glibc_macro_warning ("RES_KEEPTSIG is deprecated") 0x00010000
 #define	RES_BLAST	0x00020000	/* blast all recursive servers */
-#define RES_USEBSTRING	0x00040000	/* IPv6 reverse lookup with byte
-					   strings */
 #define RES_USE_EDNS0	0x00100000	/* Use EDNS0.  */
 #define RES_SNGLKUP	0x00200000	/* one outstanding request at a time */
 #define RES_SNGLKUPREOP	0x00400000	/* -"-, but open new socket for each

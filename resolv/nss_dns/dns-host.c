@@ -464,19 +464,6 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
 	       (uaddr[2] & 0xff), (uaddr[1] & 0xff), (uaddr[0] & 0xff));
       break;
     case AF_INET6:
-      /* Only lookup with the byte string format if the user wants it.  */
-      if (__glibc_unlikely (_res.options & RES_USEBSTRING))
-	{
-	  qp = stpcpy (qbuf, "\\[x");
-	  for (n = 0; n < IN6ADDRSZ; ++n)
-	    qp += sprintf (qp, "%02hhx", uaddr[n]);
-	  strcpy (qp, "].ip6.arpa");
-	  n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR,
-				 host_buffer.buf->buf, 1024, &host_buffer.ptr,
-				 NULL, NULL, NULL, NULL);
-	  if (n >= 0)
-	    goto got_it_already;
-	}
       qp = qbuf;
       for (n = IN6ADDRSZ - 1; n >= 0; n--)
 	{
@@ -504,7 +491,6 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
       return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
- got_it_already:
   status = getanswer_r (host_buffer.buf, n, qbuf, T_PTR, result, buffer, buflen,
 			errnop, h_errnop, 0 /* XXX */, ttlp, NULL);
   if (host_buffer.buf != orig_host_buffer)

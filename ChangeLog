@@ -1,5 +1,18 @@
 2016-10-07  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20629]
+	resolv: Remove RES_USEBSTRING and its implementation.
+	* resolv/resolv.h (RES_USEBSTRING): Remove.
+	* resolv/ns_name.c (NS_TYPE_ELT, DNS_LABELTYPE_BITSTRING)
+	(digitvalue, encode_bitstring, decode_bitstring): Remove.
+	(ns_name_ntop, ns_name_pton, ns_name_unpack, ns_name_skip)
+	(labellen): Remove extended label types support.
+	* resolv/res_debug.c (p_option): Remove RES_USEBSTRING handling.
+	* resolv/res_init.c (res_setoptions): Likewise.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr2_r): Likewise.
+
+2016-10-07  Florian Weimer  <fweimer@redhat.com>
+
 	resolv: Remove RES_NOIP6DOTINT and its implementation.
 	* resolv/resolv.h (RES_DEFAULT): Remove RES_NOIP6DOTINT.
 	(RES_NOIP6DOTINT): Remove.

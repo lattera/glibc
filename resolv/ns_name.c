@@ -29,31 +29,9 @@
 
 # define SPRINTF(x) ((size_t)sprintf x)
 
-#define NS_TYPE_ELT			0x40 /*%< EDNS0 extended label type */
-#define DNS_LABELTYPE_BITSTRING		0x41
-
 /* Data. */
 
 static const char	digits[] = "0123456789";
-
-static const char digitvalue[256] = {
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*16*/
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*32*/
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*48*/
-         0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1, /*64*/
-	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*80*/
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*96*/
-	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*112*/
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*128*/
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /*256*/
-};
 
 /* Forward. */
 
@@ -62,12 +40,7 @@ static int		printable(int);
 static int		dn_find(const u_char *, const u_char *,
 				const u_char * const *,
 				const u_char * const *);
-static int		encode_bitstring(const char **, const char *,
-					 unsigned char **, unsigned char **,
-					 unsigned const char *);
 static int		labellen(const u_char *);
-static int		decode_bitstring(const unsigned char **,
-					 char *, const char *);
 
 /* Public. */
 
@@ -114,22 +87,6 @@ ns_name_ntop(const u_char *src, char *dst, size_t dstsiz)
 		if (dn + l >= eom) {
 			__set_errno (EMSGSIZE);
 			return (-1);
-		}
-		if ((n & NS_CMPRSFLGS) == NS_TYPE_ELT) {
-			int m;
-
-			if (n != DNS_LABELTYPE_BITSTRING) {
-				/* XXX: labellen should reject this case */
-				__set_errno (EINVAL);
-				return(-1);
-			}
-			if ((m = decode_bitstring(&cp, dn, eom)) < 0)
-			{
-				__set_errno (EMSGSIZE);
-				return(-1);
-			}
-			dn += m;
-			continue;
 		}
 		for ((void)NULL; l > 0; l--) {
 			c = *cp++;
@@ -192,7 +149,7 @@ int
 ns_name_pton(const char *src, u_char *dst, size_t dstsiz)
 {
 	u_char *label, *bp, *eom;
-	int c, n, escaped, e = 0;
+	int c, n, escaped;
 	char *cp;
 
 	escaped = 0;
@@ -202,28 +159,7 @@ ns_name_pton(const char *src, u_char *dst, size_t dstsiz)
 
 	while ((c = *src++) != 0) {
 		if (escaped) {
-			if (c == '[') { /*%< start a bit string label */
-				if ((cp = strchr(src, ']')) == NULL) {
-					__set_errno (EINVAL);
-					return(-1);
-				}
-				if ((e = encode_bitstring(&src, cp + 2,
-							  &label, &bp, eom))
-				    != 0) {
-					__set_errno (e);
-					return(-1);
-				}
-				escaped = 0;
-				label = bp++;
-				if ((c = *src++) == 0)
-					goto done;
-				else if (c != '.') {
-					__set_errno (EINVAL);
-					return(-1);
-				}
-				continue;
-			}
-			else if ((cp = strchr(digits, c)) != NULL) {
+			if ((cp = strchr(digits, c)) != NULL) {
 				n = (cp - digits) * 100;
 				if ((c = *src++) == 0 ||
 				    (cp = strchr(digits, c)) == NULL) {
@@ -291,7 +227,6 @@ ns_name_pton(const char *src, u_char *dst, size_t dstsiz)
 		__set_errno (EMSGSIZE);
 		return (-1);
 	}
-  done:
 	if (label >= eom) {
 		__set_errno (EMSGSIZE);
 		return (-1);
@@ -394,7 +329,6 @@ ns_name_unpack(const u_char *msg, const u_char *eom, const u_char *src,
 		/* Check for indirection. */
 		switch (n & NS_CMPRSFLGS) {
 		case 0:
-		case NS_TYPE_ELT:
 			/* Limit checks. */
 			if ((l = labellen(srcp - 1)) < 0) {
 				__set_errno (EMSGSIZE);
@@ -639,7 +573,6 @@ ns_name_skip(const u_char **ptrptr, const u_char *eom)
 {
 	const u_char *cp;
 	u_int n;
-	int l;
 
 	cp = *ptrptr;
 	while (cp < eom && (n = *cp++) != 0) {
@@ -647,13 +580,6 @@ ns_name_skip(const u_char **ptrptr, const u_char *eom)
 		switch (n & NS_CMPRSFLGS) {
 		case 0:			/*%< normal case, n == len */
 			cp += n;
-			continue;
-		case NS_TYPE_ELT: /*%< EDNS0 extended label */
-			if ((l = labellen(cp - 1)) < 0) {
-				__set_errno (EMSGSIZE);
-				return(-1);
-			}
-			cp += l;
 			continue;
 		case NS_CMPRSFLGS:	/*%< indirection */
 			cp++;
@@ -791,180 +717,14 @@ dn_find(const u_char *domain, const u_char *msg,
 	return (-1);
 }
 
+/* Return the length of the encoded label starting at LP, or -1 for
+   compression references and extended label types.  */
 static int
-decode_bitstring(const unsigned char **cpp, char *dn, const char *eom)
+labellen (const unsigned char *lp)
 {
-	const unsigned char *cp = *cpp;
-	char *beg = dn, tc;
-	int b, blen, plen, i;
-
-	if ((blen = (*cp & 0xff)) == 0)
-		blen = 256;
-	plen = (blen + 3) / 4;
-	plen += sizeof("\\[x/]") + (blen > 99 ? 3 : (blen > 9) ? 2 : 1);
-	if (dn + plen >= eom)
-		return(-1);
-
-	cp++;
-	i = SPRINTF((dn, "\\[x"));
-	if (i < 0)
-		return (-1);
-	dn += i;
-	for (b = blen; b > 7; b -= 8, cp++) {
-		i = SPRINTF((dn, "%02x", *cp & 0xff));
-		if (i < 0)
-			return (-1);
-		dn += i;
-	}
-	if (b > 4) {
-		tc = *cp++;
-		i = SPRINTF((dn, "%02x", tc & (0xff << (8 - b))));
-		if (i < 0)
-			return (-1);
-		dn += i;
-	} else if (b > 0) {
-		tc = *cp++;
-		i = SPRINTF((dn, "%1x",
-			       ((tc >> 4) & 0x0f) & (0x0f << (4 - b))));
-		if (i < 0)
-			return (-1);
-		dn += i;
-	}
-	i = SPRINTF((dn, "/%d]", blen));
-	if (i < 0)
-		return (-1);
-	dn += i;
-
-	*cpp = cp;
-	return(dn - beg);
-}
-
-static int
-encode_bitstring(const char **bp, const char *end, unsigned char **labelp,
-		 unsigned char ** dst, unsigned const char *eom)
-{
-	int afterslash = 0;
-	const char *cp = *bp;
-	unsigned char *tp;
-	char c;
-	const char *beg_blen;
-	char *end_blen = NULL;
-	int value = 0, count = 0, tbcount = 0, blen = 0;
-
-	beg_blen = end_blen = NULL;
-
-	/* a bitstring must contain at least 2 characters */
-	if (end - cp < 2)
-		return(EINVAL);
-
-	/* XXX: currently, only hex strings are supported */
-	if (*cp++ != 'x')
-		return(EINVAL);
-	if (!isxdigit((*cp) & 0xff)) /*%< reject '\[x/BLEN]' */
-		return(EINVAL);
-
-	for (tp = *dst + 1; cp < end && tp < eom; cp++) {
-		switch((c = *cp)) {
-		case ']':	/*%< end of the bitstring */
-			if (afterslash) {
-				if (beg_blen == NULL)
-					return(EINVAL);
-				blen = (int)strtol(beg_blen, &end_blen, 10);
-				if (*end_blen != ']')
-					return(EINVAL);
-			}
-			if (count)
-				*tp++ = ((value << 4) & 0xff);
-			cp++;	/*%< skip ']' */
-			goto done;
-		case '/':
-			afterslash = 1;
-			break;
-		default:
-			if (afterslash) {
-				if (!isdigit(c&0xff))
-					return(EINVAL);
-				if (beg_blen == NULL) {
-
-					if (c == '0') {
-						/* blen never begings with 0 */
-						return(EINVAL);
-					}
-					beg_blen = cp;
-				}
-			} else {
-				if (!isxdigit(c&0xff))
-					return(EINVAL);
-				value <<= 4;
-				value += digitvalue[(int)c];
-				count += 4;
-				tbcount += 4;
-				if (tbcount > 256)
-					return(EINVAL);
-				if (count == 8) {
-					*tp++ = value;
-					count = 0;
-				}
-			}
-			break;
-		}
-	}
-  done:
-	if (cp >= end || tp >= eom)
-		return(EMSGSIZE);
-
-	/*
-	 * bit length validation:
-	 * If a <length> is present, the number of digits in the <bit-data>
-	 * MUST be just sufficient to contain the number of bits specified
-	 * by the <length>. If there are insignificant bits in a final
-	 * hexadecimal or octal digit, they MUST be zero.
-	 * RFC2673, Section 3.2.
-	 */
-	if (blen > 0) {
-		int traillen;
-
-		if (((blen + 3) & ~3) != tbcount)
-			return(EINVAL);
-		traillen = tbcount - blen; /*%< between 0 and 3 */
-		if (((value << (8 - traillen)) & 0xff) != 0)
-			return(EINVAL);
-	}
-	else
-		blen = tbcount;
-	if (blen == 256)
-		blen = 0;
-
-	/* encode the type and the significant bit fields */
-	**labelp = DNS_LABELTYPE_BITSTRING;
-	**dst = blen;
-
-	*bp = cp;
-	*dst = tp;
-
-	return(0);
-}
-
-static int
-labellen(const u_char *lp)
-{
-	int bitlen;
-	u_char l = *lp;
-
-	if ((l & NS_CMPRSFLGS) == NS_CMPRSFLGS) {
-		/* should be avoided by the caller */
-		return(-1);
-	}
-
-	if ((l & NS_CMPRSFLGS) == NS_TYPE_ELT) {
-		if (l == DNS_LABELTYPE_BITSTRING) {
-			if ((bitlen = *(lp + 1)) == 0)
-				bitlen = 256;
-			return((bitlen + 7 ) / 8 + 1);
-		}
-		return(-1);	/*%< unknwon ELT */
-	}
-	return(l);
+  if (*lp <= 63)
+    return *lp;
+  return -1;
 }
 
 /*! \file */

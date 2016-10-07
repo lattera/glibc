@@ -64,6 +64,11 @@ Version 2.25
   “no-ip6-dotint” had already been the default, and support for the
   “ip6-dotint” option was removed from the Internet in 2006.
 
+* The "ip6-bytestring" resolver option and the corresponding RES_NOIP6DOTINT
+  flag from <resolv.h> have been removed.  The option relied on a
+  backwards-incompatible DNS extension which was never deployed on the
+  Internet.
+
 * The flags RES_AAONLY, RES_PRIMARY, RES_NOCHECKNAME, RES_KEEPTSIG defined
   in the <resolv.h> header file have been deprecated.  They were already
   unimplemented.
