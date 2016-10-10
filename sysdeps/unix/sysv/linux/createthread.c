@@ -128,10 +128,10 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
 	      /* The operation failed.  We have to kill the thread.
 		 We let the normal cancellation mechanism do the work.  */
 
+	      pid_t pid = __getpid ();
 	      INTERNAL_SYSCALL_DECL (err2);
-	      (void) INTERNAL_SYSCALL (tgkill, err2, 3,
-				       THREAD_GETMEM (THREAD_SELF, pid),
-				       pd->tid, SIGCANCEL);
+	      (void) INTERNAL_SYSCALL_CALL (tgkill, err2, pid, pd->tid,
+					    SIGCANCEL);
 
 	      return INTERNAL_SYSCALL_ERRNO (res, err);
 	    }

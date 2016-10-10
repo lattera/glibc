@@ -27,27 +27,10 @@
 
 ENTRY (__vfork)
 
-	/* Save the TCB-cached PID away in w3, and then negate the TCB
-           field.  But if it's zero, set it to 0x80000000 instead.  See
-           raise.c for the logic that relies on this value.  */
-	mrs	x2, tpidr_el0
-	sub	x2, x2, #PTHREAD_SIZEOF
-	ldr	w3, [x2, #PTHREAD_PID_OFFSET]
-	mov	w1, #0x80000000
-	negs	w0, w3
-	csel	w0, w1, w0, eq
-	str	w0, [x2, #PTHREAD_PID_OFFSET]
-
 	mov	x0, #0x4111	/* CLONE_VM | CLONE_VFORK | SIGCHLD */
 	mov	x1, sp
 	DO_CALL (clone, 2)
 
-	/* Restore the original value of the TCB cache of the PID, if we're
-	   the parent.  But in the child (syscall return value equals zero),
-	   leave things as they are.  */
-	cbz	x0, 1f
-	str	w3, [x2, #PTHREAD_PID_OFFSET]
-1:
 	cmn	x0, #4095
 	b.cs    .Lsyscall_error
 	RET

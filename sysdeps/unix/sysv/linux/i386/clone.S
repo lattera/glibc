@@ -107,9 +107,6 @@ L(thread_start):
 	cfi_undefined (eip);
 	/* Note: %esi is zero.  */
 	movl	%esi,%ebp	/* terminate the stack frame */
-	testl	$CLONE_VM, %edi
-	je	L(newpid)
-L(haspid):
 	call	*%ebx
 #ifdef PIC
 	call	L(here)
@@ -121,18 +118,6 @@ L(here):
 	movl	$SYS_ify(exit), %eax
 	ENTER_KERNEL
 
-	.subsection 2
-L(newpid):
-	movl	$SYS_ify(getpid), %eax
-	ENTER_KERNEL
-L(nomoregetpid):
-	movl	%eax, %gs:PID
-	movl	%eax, %gs:TID
-	jmp	L(haspid)
-	.previous
-	cfi_endproc;
-
-	cfi_startproc
 PSEUDO_END (__clone)
 
 libc_hidden_def (__clone)

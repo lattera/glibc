@@ -163,22 +163,6 @@ ENTRY (__clone)
 .Lthread_start:
 	cfi_def_cfa_offset (FRAME_SIZE)
 	cfi_undefined (lr)
-	/* Check and see if we need to reset the PID, which we do if
-	   CLONE_VM isn't set, i.e. it's a fork-like clone with a new
-	   address space.  In that case we update the cached values
-	   from the true system pid (retrieved via __NR_getpid syscall).  */
-	moveli r0, CLONE_VM
-	and r0, r30, r0
-	BNEZ r0, .Lno_reset_pid   /* CLONE_VM is set */
-	moveli TREG_SYSCALL_NR_NAME, __NR_getpid
-	swint1
-	ADDLI_PTR r2, tp, PID_OFFSET
-	{
-	 ST4 r2, r0
-	 ADDLI_PTR r2, tp, TID_OFFSET
-	}
-	ST4 r2, r0
-.Lno_reset_pid:
 	{
 	 /* Invoke user function with specified argument. */
 	 move r0, r31

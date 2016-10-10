@@ -26,13 +26,6 @@
 int
 raise (int sig)
 {
-  /* raise is an async-safe function so it could be called while the
-     fork/vfork function temporarily invalidated the PID field.  To avoid
-     relying on cached value we block all user-defined signal handler
-     (which might call fork/vfork) and issue the getpid and gettid
-     syscalls directly.  */
-
-
   /* rt_sigprocmask may fail if:
 
      1. sigsetsize != sizeof (sigset_t) (EINVAL)

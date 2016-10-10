@@ -72,16 +72,6 @@ thread_start:
 	cfi_undefined (x30)
 	mov	x29, 0
 
-	tbnz	x11, #CLONE_VM_BIT, 1f
-
-	mov	x8, #SYS_ify(getpid)
-	svc	0x0
-	mrs	x1, tpidr_el0
-	sub	x1, x1, #PTHREAD_SIZEOF
-	str	w0, [x1, #PTHREAD_PID_OFFSET]
-	str	w0, [x1, #PTHREAD_TID_OFFSET]
-1:
-
 	/* Pick the function arg and execute.  */
 	mov	x0, x12
 	blr	x10

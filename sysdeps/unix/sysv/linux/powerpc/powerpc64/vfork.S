@@ -28,30 +28,7 @@
 ENTRY (__vfork)
 	CALL_MCOUNT 0
 
-	/* Load the TCB-cached PID value and negates it. If It it is zero
-	   sets it to 0x800000.  And then sets its value again on TCB field.
-	   See raise.c for the logic that relies on this value.  */
-	lwz	r0,PID(r13)
-	cmpwi	cr0,r0,0
-	neg	r0,r0
-	bne-	cr0,1f
-	lis	r0,0x8000
-1:	stw	r0,PID(r13)
-
 	DO_CALL (SYS_ify (vfork))
-
-	cmpwi	cr1,r3,0
-	beqlr-	1
-
-	/* Restore the original value of the TCB cache of the PID, if we're
-	   the parent.  But in the child (syscall return value equals zero),
-	   leave things as they are.  */
-	lwz	r0,PID(r13)
-	clrlwi	r4,r0,1
-	cmpwi	cr1,r4,0
-	beq-	cr1,1f
-	neg	r4,r0
-1:	stw	r4,PID(r13)
 
 	PSEUDO_RET
 

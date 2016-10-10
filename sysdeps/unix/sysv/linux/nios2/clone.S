@@ -68,14 +68,6 @@ thread_start:
 	cfi_startproc
 	cfi_undefined (ra)
 
-	/* We expect the argument registers to be preserved across system
-	   calls and across task cloning, so flags should be in r4 here.  */
-	andi	r2, r4, CLONE_VM
-	bne	r2, zero, 2f
-        DO_CALL (getpid, 0)
-	stw	r2, PID_OFFSET(r23)
-	stw	r2, TID_OFFSET(r23)
-2:
 	ldw	r5, 4(sp)	/* Function pointer.  */
 	ldw	r4, 0(sp)	/* Argument pointer.  */
 	addi	sp, sp, 8

@@ -130,11 +130,6 @@ L(thread_start):
 	SAVE_GP (GPOFF)
 	/* The stackframe has been created on entry of clone().  */
 
-	/* Check and see if we need to reset the PID.  */
-	and	a1,a0,CLONE_VM
-	beqz	a1,L(restore_pid)
-L(donepid):
-
 	/* Restore the arg for user's function.  */
 	PTR_L		t9,0(sp)	/* Function pointer.  */
 	PTR_L		a0,PTRSIZE(sp)	/* Argument pointer.  */
@@ -150,14 +145,6 @@ L(donepid):
 #else
 	jal		_exit
 #endif
-
-L(restore_pid):
-	li		v0,__NR_getpid
-	syscall
-	READ_THREAD_POINTER(v1)
-	INT_S		v0,PID_OFFSET(v1)
-	INT_S		v0,TID_OFFSET(v1)
-	b		L(donepid)
 
 	END(__thread_start)
 

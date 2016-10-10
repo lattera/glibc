@@ -4,7 +4,6 @@
 
 RESULT			offsetof (struct pthread, result)
 TID			offsetof (struct pthread, tid)
-PID			offsetof (struct pthread, pid)
 CANCELHANDLING		offsetof (struct pthread, cancelhandling)
 CLEANUP_JMP_BUF		offsetof (struct pthread, cleanup_jmp_buf)
 CLEANUP			offsetof (struct pthread, cleanup)

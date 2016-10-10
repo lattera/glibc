@@ -18,6 +18,7 @@ execve		-	execve		i:spp	__execve	execve
 fdatasync	-	fdatasync	Ci:i	fdatasync
 flock		-	flock		i:ii	__flock		flock
 get_kernel_syms	EXTRA	get_kernel_syms	i:p	__compat_get_kernel_syms	get_kernel_syms@GLIBC_2.0:GLIBC_2.23
+getpid          -       getpid          Ei:     __getpid        getpid
 getegid		-	getegid		Ei:	__getegid	getegid
 geteuid		-	geteuid		Ei:	__geteuid	geteuid
 getpgid		-	getpgid		i:i	__getpgid	getpgid

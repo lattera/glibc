@@ -132,18 +132,6 @@ ENTRY(__clone)
 	ldwm	-64(%sp), %r4
 
 .LthreadStart:
-# define CLONE_VM_BIT		23	/* 0x00000100  */
-	/* Load original clone flags.
-	   If CLONE_VM was passed, don't modify PID/TID.
-	   Otherwise store the result of getpid to PID/TID.  */
-	ldw	-56(%sp), %r26
-	bb,<,n	%r26, CLONE_VM_BIT, 1f
-	ble     0x100(%sr2, %r0)
-	ldi	__NR_getpid, %r20
-	mfctl	%cr27, %r26
-	stw	%ret0, PID_THREAD_OFFSET(%r26)
-	stw	%ret0, TID_THREAD_OFFSET(%r26)
-1:
 	/* Load up the arguments.  */
 	ldw	-60(%sp), %arg0
 	ldw     -64(%sp), %r22

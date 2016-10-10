@@ -66,23 +66,7 @@ ENTRY(__clone)
 2:
 	/* terminate the stack frame */
 	mov	#0, r14
-	mov	r4, r0
-	shlr8	r0
-	tst	#1, r0			// CLONE_VM = (1 << 8)
-	bf/s	4f
-	 mov	r4, r0
-	/* new pid */
-	mov	#+SYS_ify(getpid), r3
-	trapa	#0x15
-3:
-	stc	gbr, r1
-	mov.w	.Lpidoff, r2
-	add	r1, r2
-	mov.l	r0, @r2
-	mov.w	.Ltidoff, r2
-	add	r1, r2
-	mov.l	r0, @r2
-4:
+
 	/* thread starts */
 	mov.l	@r15, r1
 	jsr	@r1
@@ -113,10 +97,6 @@ ENTRY(__clone)
 	.long	_GLOBAL_OFFSET_TABLE_
 .L3:
 	.long	PLTJMP(C_SYMBOL_NAME(_exit))
-.Lpidoff:
-	.word	PID - TLS_PRE_TCB_SIZE
-.Ltidoff:
-	.word	TID - TLS_PRE_TCB_SIZE
 PSEUDO_END (__clone)
 
 libc_hidden_def (__clone)

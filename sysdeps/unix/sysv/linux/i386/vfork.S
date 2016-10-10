@@ -34,17 +34,6 @@ ENTRY (__vfork)
 	cfi_adjust_cfa_offset (-4)
 	cfi_register (%eip, %ecx)
 
-	/* Save the TCB-cached PID away in %edx, and then negate the TCB
-           field.  But if it's zero, set it to 0x80000000 instead.  See
-           raise.c for the logic that relies on this value.  */
-	movl	%gs:PID, %edx
-	movl	%edx, %eax
-	negl	%eax
-	jne	1f
-	movl	$0x80000000, %eax
-1:	movl	%eax, %gs:PID
-
-
 	/* Stuff the syscall number in EAX and enter into the kernel.  */
 	movl	$SYS_ify (vfork), %eax
 	int	$0x80
@@ -54,14 +43,6 @@ ENTRY (__vfork)
 	   address back on the stack.  */
 	pushl	%ecx
 	cfi_adjust_cfa_offset (4)
-
-	/* Restore the original value of the TCB cache of the PID, if we're
-	   the parent.  But in the child (syscall return value equals zero),
-	   leave things as they are.  */
-	testl	%eax, %eax
-	je	1f
-	movl	%edx, %gs:PID
-1:
 
 	cmpl	$-4095, %eax
 	/* Branch forward if it failed.  */

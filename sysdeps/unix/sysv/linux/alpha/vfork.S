@@ -25,24 +25,9 @@ ENTRY(__libc_vfork)
 	rduniq
 	mov	v0, a1
 
-	/* Save the TCB-cached PID away in A2, and then negate the TCB
-           field.  But if it's zero, set it to 0x80000000 instead.  See
-           raise.c for the logic that relies on this value.  */
-	ldl	a2, PID_OFFSET(v0)
-	ldah	t0, -0x8000
-	negl	a2, t1
-	cmovne	a2, t1, t0
-	stl	t0, PID_OFFSET(v0);
-
 	lda	v0, SYS_ify(vfork)
 	call_pal PAL_callsys
 
-	/* Restore the original value of the TCB cache of the PID, if we're
-	   the parent.  But in the child (syscall return value equals zero),
-	   leave things as they are.  */
-	beq	v0, 1f
-	stl	a2, PID_OFFSET(a1)
-1:
 	/* Normal error check and return.  */
 	bne	a3, SYSCALL_ERROR_LABEL
 	ret

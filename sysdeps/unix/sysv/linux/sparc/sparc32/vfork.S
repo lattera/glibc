@@ -22,24 +22,14 @@
 	.text
 	.globl		__syscall_error
 ENTRY(__libc_vfork)
-	ld	[%g7 + PID], %o5
-	cmp	%o5, 0
-	bne	1f
-	 sub	%g0, %o5, %o4
-	sethi	%hi(0x80000000), %o4
-1:	st	%o4, [%g7 + PID]
-
 	LOADSYSCALL(vfork)
 	ta	0x10
 	bcc	2f
 	 mov	%o7, %g1
-	st	%o5, [%g7 + PID]
 	call	__syscall_error
 	 mov	%g1, %o7
 2:	sub	%o1, 1, %o1
 	andcc	%o0, %o1, %o0
-	bne,a	1f
-	 st	%o5, [%g7 + PID]
 1:	retl
 	 nop
 END(__libc_vfork)

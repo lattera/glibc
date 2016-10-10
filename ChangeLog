@@ -1,3 +1,84 @@
+2016-11-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/nptl/fork.c (__libc_fork): Remove pid cache setting.
+	* nptl/allocatestack.c (allocate_stack): Likewise.
+	(__reclaim_stacks): Likewise.
+	(setxid_signal_thread): Obtain pid through syscall.
+	* nptl/nptl-init.c (sigcancel_handler): Likewise.
+	(sighandle_setxid): Likewise.
+	* nptl/pthread_cancel.c (pthread_cancel): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_kill.c (__pthread_kill): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_sigqueue.c (pthread_sigqueue):
+	Likewise.
+	* sysdeps/unix/sysv/linux/createthread.c (create_thread): Likewise.
+	* sysdeps/unix/sysv/linux/raise.c (raise): Remove old behaviour
+	comment.
+	* sysdeps/unix/sysv/linux/getpid.c: Remove file.
+	* nptl/descr.h (struct pthread): Change comment about pid value.
+	* nptl/pthread_getattr_np.c (pthread_getattr_np): Remove thread
+	pid assert.
+	* sysdeps/unix/sysv/linux/pthread-pids.h (__pthread_initialize_pids):
+	Do not set pid value.
+	* nptl_db/td_ta_thr_iter.c (iterate_thread_list): Remove thread
+	pid cache check.
+	* nptl_db/td_thr_validate.c (td_thr_validate): Likewise.
+	* sysdeps/aarch64/nptl/tcb-offsets.sym: Remove pid offset.
+	* sysdeps/alpha/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/arm/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/hppa/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/i386/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/ia64/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/m68k/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/microblaze/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/mips/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/nios2/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/powerpc/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/s390/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/sh/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/sparc/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/tile/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/x86_64/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/clone.S: Remove pid and tid caching.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/tile/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/vfork.S: Remove pid set and reset.
+	* sysdeps/unix/sysv/linux/alpha/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/tile/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/tst-clone2.c (f): Remove direct pthread
+	struct access.
+	(clone_test): Remove function.
+	(do_test): Rewrite to take in consideration pid is not cached anymore.
+
 2016-11-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/flt-eval-method.h: New file.

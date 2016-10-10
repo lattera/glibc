@@ -30,18 +30,6 @@
 	.text
 ENTRY (__vfork)
 	{
-	 addli r11, tp, PID_OFFSET	/* Point at PID. */
-	 movei r13, 1
-	}
-	{
-	 LD4U r12, r11			/* Load the saved PID.  */
-	 shli r13, r13, 31		/* Build 0x80000000. */
-	}
-	sub r12, zero, r12		/* Negate it.  */
-	CMOVEQZ r12, r12, r13		/* Replace zero pids.  */
-	ST4 r11, r12			/* Store the temporary PID.  */
-
-	{
 	 moveli r0, CLONE_VFORK | CLONE_VM | SIGCHLD
 	 move r1, zero
 	}
@@ -52,22 +40,6 @@ ENTRY (__vfork)
 	moveli TREG_SYSCALL_NR_NAME, __NR_clone
 	swint1
 
-	BEQZ r0, 1f			/* If we are the parent... */
-	{
-	 addli r11, tp, PID_OFFSET	/* Point at PID. */
-	 movei r13, 1
-	}
-	{
-	 LD4U r12, r11			/* Load the saved PID.  */
-	 shli r13, r13, 31		/* Build 0x80000000. */
-	}
-	{
-	 CMPEQ r13, r12, r12		/* Test for that value. */
-	 sub r12, zero, r12		/* Re-negate it.  */
-	}
-	CMOVNEZ r12, r13, zero		/* Replace zero pids.  */
-	ST4 r11, r12			/* Restore the PID.  */
-1:
 	BNEZ r1, 0f
 	jrp lr
 PSEUDO_END (__vfork)

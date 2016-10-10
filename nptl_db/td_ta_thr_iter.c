@@ -76,48 +76,28 @@ iterate_thread_list (td_thragent_t *ta, td_thr_iter_f *callback,
       if (ps_pdread (ta->ph, addr, copy, ta->ta_sizeof_pthread) != PS_OK)
 	return TD_ERR;
 
-      /* Verify that this thread's pid field matches the child PID.
-	 If its pid field is negative, it's about to do a fork or it
-	 is the sole thread in a fork child.  */
-      psaddr_t pid;
-      err = DB_GET_FIELD_LOCAL (pid, ta, copy, pthread, pid, 0);
-      if (err == TD_OK && (pid_t) (uintptr_t) pid < 0)
-	{
-	  if (-(pid_t) (uintptr_t) pid == match_pid)
-	    /* It is about to do a fork, but is really still the parent PID.  */
-	    pid = (psaddr_t) (uintptr_t) match_pid;
-	  else
-	    /* It must be a fork child, whose new PID is in the tid field.  */
-	    err = DB_GET_FIELD_LOCAL (pid, ta, copy, pthread, tid, 0);
-	}
+      err = DB_GET_FIELD_LOCAL (schedpolicy, ta, copy, pthread,
+				schedpolicy, 0);
+      if (err != TD_OK)
+	break;
+      err = DB_GET_FIELD_LOCAL (schedprio, ta, copy, pthread,
+				schedparam_sched_priority, 0);
       if (err != TD_OK)
 	break;
 
-      if ((pid_t) (uintptr_t) pid == match_pid)
+      /* Now test whether this thread matches the specified conditions.  */
+
+      /* Only if the priority level is as high or higher.  */
+      int descr_pri = ((uintptr_t) schedpolicy == SCHED_OTHER
+		       ? 0 : (uintptr_t) schedprio);
+      if (descr_pri >= ti_pri)
 	{
-	  err = DB_GET_FIELD_LOCAL (schedpolicy, ta, copy, pthread,
-				    schedpolicy, 0);
-	  if (err != TD_OK)
-	    break;
-	  err = DB_GET_FIELD_LOCAL (schedprio, ta, copy, pthread,
-				    schedparam_sched_priority, 0);
-	  if (err != TD_OK)
-	    break;
-
-	  /* Now test whether this thread matches the specified conditions.  */
-
-	  /* Only if the priority level is as high or higher.  */
-	  int descr_pri = ((uintptr_t) schedpolicy == SCHED_OTHER
-			   ? 0 : (uintptr_t) schedprio);
-	  if (descr_pri >= ti_pri)
-	    {
-	      /* Yep, it matches.  Call the callback function.  */
-	      td_thrhandle_t th;
-	      th.th_ta_p = (td_thragent_t *) ta;
-	      th.th_unique = addr;
-	      if (callback (&th, cbdata_p) != 0)
-		return TD_DBERR;
-	    }
+	  /* Yep, it matches.  Call the callback function.  */
+	  td_thrhandle_t th;
+	  th.th_ta_p = (td_thragent_t *) ta;
+	  th.th_unique = addr;
+	  if (callback (&th, cbdata_p) != 0)
+	    return TD_DBERR;
 	}
 
       /* Get the pointer to the next element.  */

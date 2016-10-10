@@ -60,31 +60,12 @@ NESTED(__libc_vfork,FRAMESZ,sp)
 	PTR_ADDU	sp, FRAMESZ
 	cfi_adjust_cfa_offset (-FRAMESZ)
 
-	/* Save the PID value.  */
-	READ_THREAD_POINTER(v1)	   /* Get the thread pointer.  */
-	lw	a2, PID_OFFSET(v1) /* Load the saved PID.  */
-	subu	a2, $0, a2	   /* Negate it.  */
-	bnez	a2, 1f		   /* If it was zero... */
-	lui	a2, 0x8000	   /* use 0x80000000 instead.  */
-1:	sw	a2, PID_OFFSET(v1) /* Store the temporary PID.  */
-
 	li		a0, 0x4112	/* CLONE_VM | CLONE_VFORK | SIGCHLD */
 	move		a1, sp
 
 	/* Do the system call */
 	li		v0,__NR_clone
 	syscall
-
-	/* Restore the old PID value in the parent.  */
-	beqz	v0, 1f		/* If we are the parent... */
-	READ_THREAD_POINTER(v1)	/* Get the thread pointer.  */
-	lw	a2, PID_OFFSET(v1) /* Load the saved PID.  */
-	subu	a2, $0, a2	   /* Re-negate it.  */
-	lui	a0, 0x8000	   /* Load 0x80000000... */
-	bne	a2, a0, 2f	   /* ... compare against it... */
-	li	a2, 0		   /* ... use 0 instead.  */
-2:	sw	a2, PID_OFFSET(v1) /* Restore the PID.  */
-1:
 
 	cfi_remember_state
 	bnez		a3,L(error)

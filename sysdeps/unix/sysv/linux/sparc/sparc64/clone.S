@@ -76,13 +76,6 @@ END(__clone)
 
 	.type __thread_start,@function
 __thread_start:
-	andcc	%g4, CLONE_VM, %g0
-	bne,pt	%icc, 1f
-	set	__NR_getpid,%g1
-	ta	0x6d
-	st	%o0,[%g7 + PID]
-	st	%o0,[%g7 + TID]
-1:
 	mov	%g0, %fp	/* terminate backtrace */
 	call	%g2
 	 mov	%g3,%o0

@@ -67,19 +67,7 @@ ENTRY(__clone2)
 (CHILD)	mov loc0=gp
 (PARENT) ret
 	;;
-	tbit.nz p6,p0=in3,8	/* CLONE_VM */
-(p6)	br.cond.dptk 1f
-	;;
-	mov r15=SYS_ify (getpid)
-(p7)	break __BREAK_SYSCALL
-	;;
-	add r9=PID,r13
-	add r10=TID,r13
-	;;
-	st4 [r9]=r8
-	st4 [r10]=r8
-	;;
-1:	ld8 out1=[in0],8	/* Retrieve code pointer.	*/
+	ld8 out1=[in0],8	/* Retrieve code pointer.	*/
 	mov out0=in4		/* Pass proper argument	to fn */
 	;;
 	ld8 gp=[in0]		/* Load function gp.		*/

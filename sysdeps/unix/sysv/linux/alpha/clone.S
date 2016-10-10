@@ -91,13 +91,6 @@ thread_start:
 	cfi_def_cfa_register(fp)
 	cfi_undefined(ra)
 
-	/* Check and see if we need to reset the PID.  */
-	ldq	t0, 16(sp)
-	lda	t1, CLONE_VM
-	and	t0, t1, t2
-	beq	t2, 2f
-1:
-
 	/* Load up the arguments.  */
 	ldq	pv, 0(sp)
 	ldq	a0, 8(sp)
@@ -120,15 +113,6 @@ thread_start:
 	halt
 
 	.align	4
-2:
-	rduniq
-	mov	v0, s0
-	lda	v0, __NR_getxpid
-	callsys
-3:
-	stl	v0, PID_OFFSET(s0)
-	stl	v0, TID_OFFSET(s0)
-	br	1b
 	cfi_endproc
 	.end thread_start
 

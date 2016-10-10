@@ -76,15 +76,6 @@ ENTRY (__clone)
 	crandc	cr1*4+eq,cr1*4+eq,cr0*4+so
 	bne-	cr1,L(parent)		/* The '-' is to minimise the race.  */
 
-	/* If CLONE_VM is set do not update the pid/tid field.  */
-	andi.	r0,r28,CLONE_VM
-	bne+	cr0,L(oldpid)
-
-	DO_CALL(SYS_ify(getpid))
-	stw	r3,TID(r2)
-	stw	r3,PID(r2)
-L(oldpid):
-
 	/* Call procedure.  */
 	mtctr	r30
 	mr	r3,r31

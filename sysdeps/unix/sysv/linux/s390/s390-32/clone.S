@@ -54,13 +54,6 @@ error:
 PSEUDO_END (__clone)
 
 thread_start:
-	tml	%r3,256		/* CLONE_VM == 0x00000100 */
-	jne	1f
-	svc	SYS_ify(getpid)
-	ear	%r3,%a0
-	st	%r2,PID(%r3)
-	st	%r2,TID(%r3)
-1:
 	/* fn is in gpr 1, arg in gpr 0 */
 	lr      %r2,%r0         /* set first parameter to void *arg */
 	ahi     %r15,-96        /* make room on the stack for the save area */

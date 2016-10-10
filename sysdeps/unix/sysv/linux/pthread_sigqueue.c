@@ -49,27 +49,22 @@ pthread_sigqueue (pthread_t threadid, int signo, const union sigval value)
   if (signo == SIGCANCEL || signo == SIGTIMER || signo == SIGSETXID)
     return EINVAL;
 
+  pid_t pid = getpid ();
+
   /* Set up the siginfo_t structure.  */
   siginfo_t info;
   memset (&info, '\0', sizeof (siginfo_t));
   info.si_signo = signo;
   info.si_code = SI_QUEUE;
-  info.si_pid = THREAD_GETMEM (THREAD_SELF, pid);
+  info.si_pid = pid;
   info.si_uid = getuid ();
   info.si_value = value;
 
   /* We have a special syscall to do the work.  */
   INTERNAL_SYSCALL_DECL (err);
 
-  /* One comment: The PID field in the TCB can temporarily be changed
-     (in fork).  But this must not affect this code here.  Since this
-     function would have to be called while the thread is executing
-     fork, it would have to happen in a signal handler.  But this is
-     no allowed, pthread_sigqueue is not guaranteed to be async-safe.  */
-  int val = INTERNAL_SYSCALL (rt_tgsigqueueinfo, err, 4,
-			      THREAD_GETMEM (THREAD_SELF, pid),
-			      tid, signo, &info);
-
+  int val = INTERNAL_SYSCALL_CALL (rt_tgsigqueueinfo, err, pid, tid, signo,
+				   &info);
   return (INTERNAL_SYSCALL_ERROR_P (val, err)
 	  ? INTERNAL_SYSCALL_ERRNO (val, err) : 0);
 #else

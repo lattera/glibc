@@ -91,14 +91,6 @@ L(thread_start):
 	   the outermost frame obviously.  */
 	xorl	%ebp, %ebp
 
-	andq	$CLONE_VM, %rdi
-	jne	1f
-	movl	$SYS_ify(getpid), %eax
-	syscall
-	movl	%eax, %fs:PID
-	movl	%eax, %fs:TID
-1:
-
 	/* Set up arguments for the function call.  */
 	popq	%rax		/* Function to call.  */
 	popq	%rdi		/* Argument.  */

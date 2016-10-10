@@ -28,18 +28,6 @@
 
 ENTRY (__vfork)
 
-	/* Save the TCB-cached PID away in %d1, and then negate the TCB
-	   field.  But if it's zero, set it to 0x80000000 instead.  See
-	   raise.c for the logic that relies on this value.  */
-	jbsr	__m68k_read_tp@PLTPC
-	movel	%a0, %a1
-	movel	PID_OFFSET(%a1), %d0
-	movel	%d0, %d1
-	negl	%d0
-	jne	1f
-	movel	#0x80000000, %d0
-1:	movel	%d0, PID_OFFSET(%a1)
-
 	/* Pop the return PC value into A0.  */
 	movel	%sp@+, %a0
 	cfi_adjust_cfa_offset (-4)
@@ -48,14 +36,6 @@ ENTRY (__vfork)
 	/* Stuff the syscall number in D0 and trap into the kernel.  */
 	movel	#SYS_ify (vfork), %d0
 	trap	#0
-
-	/* Restore the original value of the TCB cache of the PID, if we're
-	   the parent.  But in the child (syscall return value equals zero),
-	   leave things as they are.  */
-	tstl	%d0
-	jeq	1f
-	movel	%d1, PID_OFFSET(%a1)
-1:
 
 	tstl	%d0
 	jmi	.Lerror		/* Branch forward if it failed.  */

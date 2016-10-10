@@ -13,7 +13,6 @@
 #if TLS_MULTIPLE_THREADS_IN_TCB
 MULTIPLE_THREADS_OFFSET		thread_offsetof (header.multiple_threads)
 #endif
-PID				thread_offsetof (pid)
 TID				thread_offsetof (tid)
 POINTER_GUARD			(offsetof (tcbhead_t, pointer_guard) - TLS_TCB_OFFSET - sizeof (tcbhead_t))
 TAR_SAVE			(offsetof (tcbhead_t, tar_save) - TLS_TCB_OFFSET - sizeof (tcbhead_t))
