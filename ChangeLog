@@ -1,3 +1,8 @@
+2016-10-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* misc/getauxval.c [!HAVE_AUX_VECTOR] (__getauxval): Do not define
+	unused variable 'p'.
+
 2016-10-09  Alan Modra  <amodra@gmail.com>
 	    Andreas Schwab  <schwab@linux-m68k.org>
 
