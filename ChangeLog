@@ -1,3 +1,9 @@
+2016-10-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/s_ccosh_template.c (M_DECL_FUNC (__ccosh)): Use M_NAN
+	instead of M_NAN + M_NAN.
+	* math/s_csinh_template.c (M_DECL_FUNC (__csinh)): Likewise.
+
 2016-10-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* misc/getauxval.c [!HAVE_AUX_VECTOR] (__getauxval): Do not define

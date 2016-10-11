@@ -88,7 +88,7 @@ M_DECL_FUNC (__ccosh) (CFLOAT x)
       else
 	{
 	  __imag__ retval = __real__ x == 0 ? 0 : M_NAN;
-	  __real__ retval = M_NAN + M_NAN;
+	  __real__ retval = M_NAN;
 
 	  if (icls == FP_INFINITE)
 	    feraiseexcept (FE_INVALID);
@@ -124,9 +124,8 @@ M_DECL_FUNC (__ccosh) (CFLOAT x)
 	}
       else
 	{
-	  /* The addition raises the invalid exception.  */
 	  __real__ retval = M_HUGE_VAL;
-	  __imag__ retval = M_NAN + M_NAN;
+	  __imag__ retval = M_NAN;
 
 	  if (icls == FP_INFINITE)
 	    feraiseexcept (FE_INVALID);
