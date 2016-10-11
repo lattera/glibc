@@ -428,6 +428,11 @@ build the GNU C Library:
      better code.  As of release time, GCC 6.3 is the newest compiler
      verified to work to build the GNU C Library.
 
+     For PowerPC 64-bits little-endian (powerpc64le), GCC 6.2 or higher
+     is required.  This compiler version is the first to provide the
+     features required for building the GNU C Library with support for
+     '_Float128'.
+
      For multi-arch support it is recommended to use a GCC which has
      been built with support for GNU indirect functions.  This ensures
      that correct debugging information is generated for functions

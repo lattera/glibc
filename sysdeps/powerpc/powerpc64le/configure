@@ -1,0 +1,45 @@
+# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
+ # Local configure fragment for sysdeps/powerpc/powerpc64le.
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if $CC supports binary128 floating point type" >&5
+$as_echo_n "checking if $CC supports binary128 floating point type... " >&6; }
+if ${libc_cv_compiler_powerpc64le_binary128_ok+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  save_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -Werror -mfloat128"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+__float128 a, b, c, d, e;
+int i;
+
+__float128
+foobar (__float128 x)
+{
+  a = __builtin_nansq ("0");
+  b = __builtin_huge_valq ();
+  c = __builtin_infq ();
+  d = __builtin_fabsq (x);
+  e = __builtin_nanq ("0");
+  i = __builtin_signbit (x);
+  return __builtin_copysignq (x, x);
+}
+
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_cv_compiler_powerpc64le_binary128_ok=yes
+else
+  libc_cv_compiler_powerpc64le_binary128_ok=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+CFLAGS="$save_CFLAGS"
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_compiler_powerpc64le_binary128_ok" >&5
+$as_echo "$libc_cv_compiler_powerpc64le_binary128_ok" >&6; }
+if test "$libc_cv_compiler_powerpc64le_binary128_ok" != "yes"; then :
+  critic_missing="$critic_missing binary128 floating point type (GCC >= 6.2) is required on powerpc64le."
+fi
+
+test -n "$critic_missing" && as_fn_error $? "*** $critic_missing" "$LINENO" 5

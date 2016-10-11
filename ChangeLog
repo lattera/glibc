@@ -1,3 +1,13 @@
+2017-06-26  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* INSTALL: Regenerate.
+	* manual/install.texi (Recommended Tools for Compilation): Mention
+	the powerpc64le-specific requirement in the manual.
+	* sysdeps/powerpc/powerpc64le/configure.ac: New file with checks
+	for the compiler features required for building float128.
+	* sysdeps/powerpc/powerpc64le/configure: New, auto-generated file.
+
 2017-06-26  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* malloc/tst-alloc_buffer.c (test_misaligned): Cast to char
