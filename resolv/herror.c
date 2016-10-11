@@ -80,14 +80,14 @@ herror(const char *s) {
 		v->iov_base = (/*noconst*/ char *)s;
 		v->iov_len = strlen(s);
 		v++;
-		v->iov_base = ": ";
+		v->iov_base = (char *) ": ";
 		v->iov_len = 2;
 		v++;
 	}
 	v->iov_base = (char *)hstrerror(h_errno);
 	v->iov_len = strlen(v->iov_base);
 	v++;
-	v->iov_base = "\n";
+	v->iov_base = (char *) "\n";
 	v->iov_len = 1;
 	writev_not_cancel_no_status(STDERR_FILENO, iov, (v - iov) + 1);
 }

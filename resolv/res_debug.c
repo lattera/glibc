@@ -342,13 +342,13 @@ p_fqname(const u_char *cp, const u_char *msg, FILE *file) {
 extern const struct res_sym __p_class_syms[];
 libresolv_hidden_proto (__p_class_syms)
 const struct res_sym __p_class_syms[] = {
-	{C_IN,		"IN"},
-	{C_CHAOS,	"CHAOS"},
-	{C_HS,		"HS"},
-	{C_HS,		"HESIOD"},
-	{C_ANY,		"ANY"},
-	{C_NONE,	"NONE"},
-	{C_IN,		(char *)0}
+  {C_IN,    (char *) "IN"},
+  {C_CHAOS, (char *) "CHAOS"},
+  {C_HS,    (char *) "HS"},
+  {C_HS,    (char *) "HESIOD"},
+  {C_ANY,   (char *) "ANY"},
+  {C_NONE,  (char *) "NONE"},
+  {C_IN, NULL, NULL}
 };
 libresolv_hidden_data_def (__p_class_syms)
 
@@ -356,19 +356,19 @@ libresolv_hidden_data_def (__p_class_syms)
  * Names of message sections.
  */
 const struct res_sym __p_default_section_syms[] attribute_hidden = {
-	{ns_s_qd,	"QUERY"},
-	{ns_s_an,	"ANSWER"},
-	{ns_s_ns,	"AUTHORITY"},
-	{ns_s_ar,	"ADDITIONAL"},
-	{0,             (char *)0}
+  {ns_s_qd, (char *) "QUERY"},
+  {ns_s_an, (char *) "ANSWER"},
+  {ns_s_ns, (char *) "AUTHORITY"},
+  {ns_s_ar, (char *) "ADDITIONAL"},
+  {0, NULL, NULL}
 };
 
 const struct res_sym __p_update_section_syms[] attribute_hidden = {
-	{S_ZONE,	"ZONE"},
-	{S_PREREQ,	"PREREQUISITE"},
-	{S_UPDATE,	"UPDATE"},
-	{S_ADDT,	"ADDITIONAL"},
-	{0,             (char *)0}
+  {S_ZONE,   (char *) "ZONE"},
+  {S_PREREQ, (char *) "PREREQUISITE"},
+  {S_UPDATE, (char *) "UPDATE"},
+  {S_ADDT,   (char *) "ADDITIONAL"},
+  {0, NULL, NULL}
 };
 
 /*
@@ -379,52 +379,53 @@ const struct res_sym __p_update_section_syms[] attribute_hidden = {
 extern const struct res_sym __p_type_syms[];
 libresolv_hidden_proto (__p_type_syms)
 const struct res_sym __p_type_syms[] = {
-	{ns_t_a,	"A",		"address"},
-	{ns_t_ns,	"NS",		"name server"},
-	{ns_t_md,	"MD",		"mail destination (deprecated)"},
-	{ns_t_mf,	"MF",		"mail forwarder (deprecated)"},
-	{ns_t_cname,	"CNAME",	"canonical name"},
-	{ns_t_soa,	"SOA",		"start of authority"},
-	{ns_t_mb,	"MB",		"mailbox"},
-	{ns_t_mg,	"MG",		"mail group member"},
-	{ns_t_mr,	"MR",		"mail rename"},
-	{ns_t_null,	"NULL",		"null"},
-	{ns_t_wks,	"WKS",		"well-known service (deprecated)"},
-	{ns_t_ptr,	"PTR",		"domain name pointer"},
-	{ns_t_hinfo,	"HINFO",	"host information"},
-	{ns_t_minfo,	"MINFO",	"mailbox information"},
-	{ns_t_mx,	"MX",		"mail exchanger"},
-	{ns_t_txt,	"TXT",		"text"},
-	{ns_t_rp,	"RP",		"responsible person"},
-	{ns_t_afsdb,	"AFSDB",	"DCE or AFS server"},
-	{ns_t_x25,	"X25",		"X25 address"},
-	{ns_t_isdn,	"ISDN",		"ISDN address"},
-	{ns_t_rt,	"RT",		"router"},
-	{ns_t_nsap,	"NSAP",		"nsap address"},
-	{ns_t_nsap_ptr,	"NSAP_PTR",	"domain name pointer"},
-	{ns_t_sig,	"SIG",		"signature"},
-	{ns_t_key,	"KEY",		"key"},
-	{ns_t_px,	"PX",		"mapping information"},
-	{ns_t_gpos,	"GPOS",		"geographical position (withdrawn)"},
-	{ns_t_aaaa,	"AAAA",		"IPv6 address"},
-	{ns_t_loc,	"LOC",		"location"},
-	{ns_t_nxt,	"NXT",		"next valid name (unimplemented)"},
-	{ns_t_eid,	"EID",		"endpoint identifier (unimplemented)"},
-	{ns_t_nimloc,	"NIMLOC",	"NIMROD locator (unimplemented)"},
-	{ns_t_srv,	"SRV",		"server selection"},
-	{ns_t_atma,	"ATMA",		"ATM address (unimplemented)"},
-	{ns_t_dname,	"DNAME",	"Non-terminal DNAME (for IPv6)"},
-	{ns_t_tsig,	"TSIG",		"transaction signature"},
-	{ns_t_ixfr,	"IXFR",		"incremental zone transfer"},
-	{ns_t_axfr,	"AXFR",		"zone transfer"},
-	{ns_t_zxfr,	"ZXFR",		"compressed zone transfer"},
-	{ns_t_mailb,	"MAILB",	"mailbox-related data (deprecated)"},
-	{ns_t_maila,	"MAILA",	"mail agent (deprecated)"},
-	{ns_t_naptr,	"NAPTR",	"URN Naming Authority"},
-	{ns_t_kx,	"KX",		"Key Exchange"},
-	{ns_t_cert,	"CERT",		"Certificate"},
-	{ns_t_any,	"ANY",		"\"any\""},
-	{0, 		NULL,		NULL}
+  {ns_t_a,      (char *) "A",     (char *) "address"},
+  {ns_t_ns,     (char *) "NS",    (char *) "name server"},
+  {ns_t_md,     (char *) "MD",    (char *) "mail destination (deprecated)"},
+  {ns_t_mf,     (char *) "MF",    (char *) "mail forwarder (deprecated)"},
+  {ns_t_cname,  (char *) "CNAME", (char *) "canonical name"},
+  {ns_t_soa,    (char *) "SOA",   (char *) "start of authority"},
+  {ns_t_mb,     (char *) "MB",    (char *) "mailbox"},
+  {ns_t_mg,     (char *) "MG",    (char *) "mail group member"},
+  {ns_t_mr,     (char *) "MR",    (char *) "mail rename"},
+  {ns_t_null,   (char *) "NULL",  (char *) "null"},
+  {ns_t_wks,    (char *) "WKS",   (char *) "well-known service (deprecated)"},
+  {ns_t_ptr,    (char *) "PTR",   (char *) "domain name pointer"},
+  {ns_t_hinfo,  (char *) "HINFO", (char *) "host information"},
+  {ns_t_minfo,  (char *) "MINFO", (char *) "mailbox information"},
+  {ns_t_mx,     (char *) "MX",    (char *) "mail exchanger"},
+  {ns_t_txt,    (char *) "TXT",   (char *) "text"},
+  {ns_t_rp,     (char *) "RP",    (char *) "responsible person"},
+  {ns_t_afsdb,  (char *) "AFSDB", (char *) "DCE or AFS server"},
+  {ns_t_x25,    (char *) "X25",   (char *) "X25 address"},
+  {ns_t_isdn,   (char *) "ISDN",  (char *) "ISDN address"},
+  {ns_t_rt,     (char *) "RT",    (char *) "router"},
+  {ns_t_nsap,   (char *) "NSAP",  (char *) "nsap address"},
+  {ns_t_nsap_ptr, (char *) "NSAP_PTR", (char *) "domain name pointer"},
+  {ns_t_sig,    (char *) "SIG",   (char *) "signature"},
+  {ns_t_key,    (char *) "KEY",   (char *) "key"},
+  {ns_t_px,     (char *) "PX",    (char *) "mapping information"},
+  {ns_t_gpos,   (char *) "GPOS",
+   (char *) "geographical position (withdrawn)"},
+  {ns_t_aaaa,   (char *) "AAAA",  (char *) "IPv6 address"},
+  {ns_t_loc,    (char *) "LOC",   (char *) "location"},
+  {ns_t_nxt,    (char *) "NXT",   (char *) "next valid name (unimplemented)"},
+  {ns_t_eid,    (char *) "EID",   (char *) "endpoint identifier (unimplemented)"},
+  {ns_t_nimloc, (char *) "NIMLOC", (char *) "NIMROD locator (unimplemented)"},
+  {ns_t_srv,    (char *) "SRV",   (char *) "server selection"},
+  {ns_t_atma,   (char *) "ATMA",  (char *) "ATM address (unimplemented)"},
+  {ns_t_dname,  (char *) "DNAME", (char *) "Non-terminal DNAME (for IPv6)"},
+  {ns_t_tsig,   (char *) "TSIG",  (char *) "transaction signature"},
+  {ns_t_ixfr,   (char *) "IXFR",  (char *) "incremental zone transfer"},
+  {ns_t_axfr,   (char *) "AXFR",  (char *) "zone transfer"},
+  {ns_t_zxfr,   (char *) "ZXFR",  (char *) "compressed zone transfer"},
+  {ns_t_mailb,  (char *) "MAILB", (char *) "mailbox-related data (deprecated)"},
+  {ns_t_maila,  (char *) "MAILA", (char *) "mail agent (deprecated)"},
+  {ns_t_naptr,  (char *) "NAPTR", (char *) "URN Naming Authority"},
+  {ns_t_kx,     (char *) "KX",    (char *) "Key Exchange"},
+  {ns_t_cert,   (char *) "CERT",  (char *) "Certificate"},
+  {ns_t_any,    (char *) "ANY",   (char *) "\"any\""},
+  {0, NULL, NULL}
 };
 libresolv_hidden_data_def (__p_type_syms)
 
@@ -432,22 +433,22 @@ libresolv_hidden_data_def (__p_type_syms)
  * Names of DNS rcodes.
  */
 const struct res_sym __p_rcode_syms[] attribute_hidden = {
-	{ns_r_noerror,	"NOERROR",		"no error"},
-	{ns_r_formerr,	"FORMERR",		"format error"},
-	{ns_r_servfail,	"SERVFAIL",		"server failed"},
-	{ns_r_nxdomain,	"NXDOMAIN",		"no such domain name"},
-	{ns_r_notimpl,	"NOTIMP",		"not implemented"},
-	{ns_r_refused,	"REFUSED",		"refused"},
-	{ns_r_yxdomain,	"YXDOMAIN",		"domain name exists"},
-	{ns_r_yxrrset,	"YXRRSET",		"rrset exists"},
-	{ns_r_nxrrset,	"NXRRSET",		"rrset doesn't exist"},
-	{ns_r_notauth,	"NOTAUTH",		"not authoritative"},
-	{ns_r_notzone,	"NOTZONE",		"Not in zone"},
-	{ns_r_max,	"",			""},
-	{ns_r_badsig,	"BADSIG",		"bad signature"},
-	{ns_r_badkey,	"BADKEY",		"bad key"},
-	{ns_r_badtime,	"BADTIME",		"bad time"},
-	{0, 		NULL,			NULL}
+  {ns_r_noerror,  (char *) "NOERROR",  (char *) "no error"},
+  {ns_r_formerr,  (char *) "FORMERR",  (char *) "format error"},
+  {ns_r_servfail, (char *) "SERVFAIL", (char *) "server failed"},
+  {ns_r_nxdomain, (char *) "NXDOMAIN", (char *) "no such domain name"},
+  {ns_r_notimpl,  (char *) "NOTIMP",   (char *) "not implemented"},
+  {ns_r_refused,  (char *) "REFUSED",  (char *) "refused"},
+  {ns_r_yxdomain, (char *) "YXDOMAIN", (char *) "domain name exists"},
+  {ns_r_yxrrset,  (char *) "YXRRSET",  (char *) "rrset exists"},
+  {ns_r_nxrrset,  (char *) "NXRRSET",  (char *) "rrset doesn't exist"},
+  {ns_r_notauth,  (char *) "NOTAUTH",  (char *) "not authoritative"},
+  {ns_r_notzone,  (char *) "NOTZONE",  (char *) "Not in zone"},
+  {ns_r_max,      (char *) "",         (char *) ""},
+  {ns_r_badsig,   (char *) "BADSIG",   (char *) "bad signature"},
+  {ns_r_badkey,   (char *) "BADKEY",   (char *) "bad key"},
+  {ns_r_badtime,  (char *) "BADTIME",  (char *) "bad time"},
+  {0, NULL, NULL}
 };
 
 int

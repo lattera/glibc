@@ -1,3 +1,10 @@
+2016-10-11  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/Makefile (+cflags): Do not set -Wno-write-strings.
+	* resolv/herror.c (herror): Cast away const-ness.
+	* resolv/res_debug.c (__p_class_syms, __p_default_section_syms)
+	(__p_update_section_syms, __p_type_syms, __p_rcode_syms): Likewise.
+
 2016-10-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/s_ccosh_template.c (M_DECL_FUNC (__ccosh)): Use M_NAN
