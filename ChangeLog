@@ -1,3 +1,9 @@
+2016-10-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20647]
+	* sysdeps/x86/cacheinfo.c (handle_intel): Return -1 if the
+	maximum CPUID level is less than 2.
+
 2016-10-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
