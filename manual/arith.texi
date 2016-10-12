@@ -1874,7 +1874,10 @@ do not raise exceptions when NaN is examined.  All of the functions are
 implemented as macros which allow their arguments to be of any
 floating-point type.  The macros are guaranteed to evaluate their
 arguments only once.  TS 18661-1:2014 adds such a macro for an
-equality comparison that @emph{does} raise an exception for a NaN argument.
+equality comparison that @emph{does} raise an exception for a NaN
+argument; it also adds functions that provide a total ordering on all
+floating-point values, including NaNs, without raising any exceptions
+even for signaling NaNs.
 
 @comment math.h
 @comment ISO
@@ -1942,6 +1945,28 @@ equivalent to @code{(@var{x}) == (@var{y})}, but it raises the invalid
 exception and sets @code{errno} to @code{EDOM} is either argument is a
 NaN.
 @end deftypefn
+
+@comment math.h
+@comment ISO
+@deftypefun int totalorder (double @var{x}, double @var{y})
+@comment ISO
+@deftypefunx int totalorderf (float @var{x}, float @var{y})
+@comment ISO
+@deftypefunx int totalorderl (long double @var{x}, long double @var{y})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions determine whether the total order relationship,
+defined in IEEE 754-2008, is true for @var{x} and @var{y}, returning
+nonzero if it is true and zero if it is false.  No exceptions are
+raised even for signaling NaNs.  The relationship is true if they are
+the same floating-point value (including sign for zero and NaNs, and
+payload for NaNs), or if @var{x} comes before @var{y} in the following
+order: negative quiet NaNs, in order of decreasing payload; negative
+signaling NaNs, in order of decreasing payload; negative infinity;
+finite numbers, in ascending order, with negative zero before positive
+zero; positive infinity; positive signaling NaNs, in order of
+increasing payload; positive quiet NaNs, in order of increasing
+payload.
+@end deftypefun
 
 Not all machines provide hardware support for these operations.  On
 machines that don't, the macros can be very slow.  Therefore, you should

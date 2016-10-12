@@ -17,5 +17,5 @@
 # <http://www.gnu.org/licenses/>.
 
 ifeq ($(subdir),math)
-tests += test-iscanonical-ldbl-96
+tests += test-iscanonical-ldbl-96 test-totalorderl-ldbl-96
 endif

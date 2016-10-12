@@ -11,5 +11,6 @@ endif
 
 ifeq ($(subdir),math)
 tests += test-fmodl-ldbl-128ibm test-remainderl-ldbl-128ibm \
-	 test-remquol-ldbl-128ibm test-iscanonical-ldbl-128ibm
+	 test-remquol-ldbl-128ibm test-iscanonical-ldbl-128ibm \
+	 test-totalorderl-ldbl-128ibm
 endif

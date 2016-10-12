@@ -416,6 +416,9 @@ GLIBC_2.25 fegetmode F
 GLIBC_2.25 fesetexcept F
 GLIBC_2.25 fesetmode F
 GLIBC_2.25 fetestexceptflag F
+GLIBC_2.25 totalorder F
+GLIBC_2.25 totalorderf F
+GLIBC_2.25 totalorderl F
 GLIBC_2.4 GLIBC_2.4 A
 GLIBC_2.4 __clog10l F
 GLIBC_2.4 __finitel F

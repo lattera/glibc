@@ -437,6 +437,12 @@
 #define fma(Val1, Val2, Val3) \
      __TGMATH_TERNARY_REAL_ONLY (Val1, Val2, Val3, fma)
 
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Total order operation.  */
+# define totalorder(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2,	\
+							   totalorder)
+#endif
+
 
 /* Absolute value, conjugates, and projection.  */
 

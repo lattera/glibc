@@ -1,3 +1,86 @@
+2016-10-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(totalorder): New declaration.
+	* math/tgmath.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (totalorder):
+	New macro.
+	* math/Versions (totalorder): New libm symbol at version
+	GLIBC_2.25.
+	(totalorderf): Likewise.
+	(totalorderl): Likewise.
+	* math/Makefile (libm-calls): Add s_totalorderF.
+	* math/gen-libm-test.pl (parse_args): Escape quotes in test name
+	string.
+	* math/libm-test.inc (PAYLOAD_DIG): New macro.
+	(qnan_value_pl): Likewise.
+	(snan_value_pl): Likewise.
+	(qnan_value): Define using qnan_value_pl.
+	(snan_value): Define using snan_value_pl.
+	(struct test_ff_i_data): Add comment about which tests use this
+	structure.
+	(RUN_TEST_ff_b): New macro.
+	(RUN_TEST_LOOP_ff_b): Likewise.
+	(totalorder_test_data): New array.
+	(totalorder_test): New function.
+	(main): Call totalorder_test.
+	* math/test-tgmath.c (NCALLS): Increase to 122.
+	(F(compile_test)): Call totalorder.
+	(F(totalorder)): New function.
+	* manual/arith.texi (FP Comparison Functions): Document
+	totalorder, totalorderf and totalorderl.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/dbl-64/s_totalorder.c: New file.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalorder.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_totalorderf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_totalorderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalorderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_totalorderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-totalorder.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	totalorder.
+	(CFLAGS-nldbl-totalorder.c): New variable.
+	* sysdeps/ieee754/ldbl-128ibm/test-totalorderl-ldbl-128ibm.c: New
+	file.
+	* sysdeps/ieee754/ldbl-128ibm/Makefile [$(subdir) = math] (tests):
+	Add test-totalorderl-ldbl-128ibm.
+	* sysdeps/ieee754/ldbl-96/test-totalorderl-ldbl-96.c: New file.
+	* sysdeps/ieee754/ldbl-96/Makefile [$(subdir) = math] (tests): Add
+	test-totalorderl-ldbl-96.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-10-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-sync_file_range.

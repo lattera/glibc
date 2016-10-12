@@ -53,7 +53,8 @@
    modf, nearbyint, nextafter, nexttoward,
    pow, pow10, remainder, remquo, rint, lrint, llrint,
    round, lround, llround,
-   scalb, scalbn, scalbln, signbit, sin, sincos, sinh, sqrt, tan, tanh, tgamma, trunc,
+   scalb, scalbn, scalbln, signbit, sin, sincos, sinh, sqrt,
+   tan, tanh, tgamma, totalorder, trunc,
    y0, y1, yn, significand
 
    and for the following complex math functions:
@@ -84,7 +85,8 @@
    against.  These implemented tests should check all cases that are
    specified in ISO C99.
 
-   NaN values: The payload of NaNs is not examined.
+   NaN values: The payload of NaNs is not examined, but is set in
+   inputs for functions where it is significant.
 
    Inline functions: Inlining functions should give an improvement in
    speed - but not in precission.  The inlined functions return
@@ -224,6 +226,13 @@
 			  && MIN_EXP == -16382	\
 			  && MAX_EXP == 16384)
 
+/* Number of bits in NaN payload.  */
+#if TEST_COND_ibm128
+# define PAYLOAD_DIG (DBL_MANT_DIG - 2)
+#else
+# define PAYLOAD_DIG (MANT_DIG - 2)
+#endif
+
 /* Values underflowing only for float.  */
 #if TEST_COND_binary32
 # define UNDERFLOW_EXCEPTION_FLOAT	UNDERFLOW_EXCEPTION
@@ -312,8 +321,10 @@ static int ignore_max_ulp;	/* Should we ignore max_ulp?  */
 #define minus_zero	LIT (-0.0)
 #define plus_infty	FUNC (__builtin_inf) ()
 #define minus_infty	-(FUNC (__builtin_inf) ())
-#define qnan_value	FUNC (__builtin_nan) ("")
-#define snan_value	FUNC (__builtin_nans) ("")
+#define qnan_value_pl(S)	FUNC (__builtin_nan) (S)
+#define qnan_value	qnan_value_pl ("")
+#define snan_value_pl(S)	FUNC (__builtin_nans) (S)
+#define snan_value	snan_value_pl ("")
 #define max_value	TYPE_MAX
 #define min_value	TYPE_MIN
 #define min_subnorm_value TYPE_TRUE_MIN
@@ -1220,6 +1231,7 @@ struct test_f_i_data
     int exceptions;
   } rd, rn, rz, ru;
 };
+/* Used for both RUN_TEST_LOOP_ff_b and RUN_TEST_LOOP_ff_i_tg.  */
 struct test_ff_i_data
 {
   const char *arg_str;
@@ -1595,6 +1607,25 @@ struct test_fFF_11_data
       RUN_TEST_f_i_tg ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
 		       (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
 		       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);	\
+  ROUND_RESTORE_ ## ROUNDING_MODE
+#define RUN_TEST_ff_b(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,		\
+		      EXCEPTIONS)					\
+  do									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_bool (test_name, FUNC_TEST (FUNC_NAME) (ARG1, ARG2),	\
+		    EXPECTED, EXCEPTIONS);				\
+	COMMON_TEST_CLEANUP;						\
+      }									\
+  while (0)
+#define RUN_TEST_LOOP_ff_b(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_ff_b ((ARRAY)[i].arg_str, FUNC_NAME,			\
+		     (ARRAY)[i].arg1, (ARRAY)[i].arg2,			\
+		     (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		     (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_i_tg(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
 			 EXCEPTIONS)					\
@@ -12238,6 +12269,226 @@ tgamma_test (void)
 }
 
 
+static const struct test_ff_i_data totalorder_test_data[] =
+  {
+    TEST_ff_b (totalorder, minus_zero, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_zero, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_zero, 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_zero, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_zero, plus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_zero, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_zero, snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_zero, -snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_zero, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_zero, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_zero, 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_zero, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_zero, plus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_zero, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_zero, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_zero, snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_zero, -snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, plus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, -snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_infty, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_infty, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_infty, 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_infty, minus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_infty, plus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_infty, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_infty, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_infty, snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_infty, -snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_infty, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_infty, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_infty, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_infty, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_infty, plus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_infty, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_infty, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_infty, snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_infty, -snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value, 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value, minus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value, plus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value, plus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value, 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value, minus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value, plus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value, plus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value, -qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value, qnan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value, snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value, -snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value, snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value, -snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value, snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value, -snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value, snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value, -snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_zero, -min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, minus_zero, min_subnorm_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_zero, -min_subnorm_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, plus_zero, min_subnorm_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -min_subnorm_value, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -min_subnorm_value, plus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, min_subnorm_value, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, min_subnorm_value, plus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, min_value, max_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, min_value, -max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -min_value, max_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -min_value, -max_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, max_value, min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, max_value, -min_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -max_value, min_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -max_value, -min_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x1"), qnan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x1"), qnan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x1"), qnan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x2"), qnan_value_pl ("0x1"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x2"), qnan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x2"), qnan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x3fffff"), qnan_value_pl ("0x1"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x3fffff"), qnan_value_pl ("0x2"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x3fffff"), qnan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x1"), -qnan_value_pl ("0x1"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x1"), -qnan_value_pl ("0x2"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x1"), -qnan_value_pl ("0x3fffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x2"), -qnan_value_pl ("0x1"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x2"), -qnan_value_pl ("0x2"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x2"), -qnan_value_pl ("0x3fffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x3fffff"), -qnan_value_pl ("0x1"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x3fffff"), -qnan_value_pl ("0x2"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x3fffff"), -qnan_value_pl ("0x3fffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x1"), qnan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x1"), qnan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x1"), qnan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x2"), qnan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x2"), qnan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x2"), qnan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x3fffff"), qnan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x3fffff"), qnan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x3fffff"), qnan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x1"), -qnan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x1"), -qnan_value_pl ("0x2"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x1"), -qnan_value_pl ("0x3fffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x2"), -qnan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x2"), -qnan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x2"), -qnan_value_pl ("0x3fffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x3fffff"), -qnan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x3fffff"), -qnan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x3fffff"), -qnan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x1"), snan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x1"), snan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x1"), snan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x2"), snan_value_pl ("0x1"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x2"), snan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x2"), snan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x3fffff"), snan_value_pl ("0x1"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x3fffff"), snan_value_pl ("0x2"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x3fffff"), snan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x1"), -snan_value_pl ("0x1"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x1"), -snan_value_pl ("0x2"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x1"), -snan_value_pl ("0x3fffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x2"), -snan_value_pl ("0x1"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x2"), -snan_value_pl ("0x2"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x2"), -snan_value_pl ("0x3fffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x3fffff"), -snan_value_pl ("0x1"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x3fffff"), -snan_value_pl ("0x2"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x3fffff"), -snan_value_pl ("0x3fffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x1"), snan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x1"), snan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x1"), snan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x2"), snan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x2"), snan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x2"), snan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x3fffff"), snan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x3fffff"), snan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x3fffff"), snan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x1"), -snan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x1"), -snan_value_pl ("0x2"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x1"), -snan_value_pl ("0x3fffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x2"), -snan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x2"), -snan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x2"), -snan_value_pl ("0x3fffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x3fffff"), -snan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x3fffff"), -snan_value_pl ("0x2"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x3fffff"), -snan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x3fffff"), qnan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x3fffff"), -qnan_value_pl ("0x1"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x1"), snan_value_pl ("0x3fffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x1"), -snan_value_pl ("0x3fffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#if PAYLOAD_DIG >= 34
+    TEST_ff_b (totalorder, qnan_value_pl ("0xffffffff"), qnan_value_pl ("0x100000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0xffffffff"), -qnan_value_pl ("0x100000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x100000000"), qnan_value_pl ("0xffffffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x100000000"), -qnan_value_pl ("0xffffffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0xffffffff"), snan_value_pl ("0x100000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0xffffffff"), -snan_value_pl ("0x100000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x100000000"), snan_value_pl ("0xffffffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x100000000"), -snan_value_pl ("0xffffffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x100000000"), qnan_value_pl ("0x200000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x100000000"), -qnan_value_pl ("0x200000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x200000000"), qnan_value_pl ("0x100000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x200000000"), -qnan_value_pl ("0x100000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x100000000"), snan_value_pl ("0x200000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x100000000"), -snan_value_pl ("0x200000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x200000000"), snan_value_pl ("0x100000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x200000000"), -snan_value_pl ("0x100000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 66
+    TEST_ff_b (totalorder, qnan_value_pl ("0xffffffffffffffff"), qnan_value_pl ("0x10000000000000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0xffffffffffffffff"), -qnan_value_pl ("0x10000000000000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x10000000000000000"), qnan_value_pl ("0xffffffffffffffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x10000000000000000"), -qnan_value_pl ("0xffffffffffffffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0xffffffffffffffff"), snan_value_pl ("0x10000000000000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0xffffffffffffffff"), -snan_value_pl ("0x10000000000000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x10000000000000000"), snan_value_pl ("0xffffffffffffffff"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x10000000000000000"), -snan_value_pl ("0xffffffffffffffff"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x10000000000000000"), qnan_value_pl ("0x20000000000000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x10000000000000000"), -qnan_value_pl ("0x20000000000000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, qnan_value_pl ("0x20000000000000000"), qnan_value_pl ("0x10000000000000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -qnan_value_pl ("0x20000000000000000"), -qnan_value_pl ("0x10000000000000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x10000000000000000"), snan_value_pl ("0x20000000000000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x10000000000000000"), -snan_value_pl ("0x20000000000000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, snan_value_pl ("0x20000000000000000"), snan_value_pl ("0x10000000000000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, -snan_value_pl ("0x20000000000000000"), -snan_value_pl ("0x10000000000000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+  };
+
+static void
+totalorder_test (void)
+{
+  ALL_RM_TEST (totalorder, 1, totalorder_test_data, RUN_TEST_LOOP_ff_b, END);
+}
+
+
 static const struct test_f_f_data trunc_test_data[] =
   {
     TEST_f_f (trunc, plus_infty, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -12899,6 +13150,9 @@ main (int argc, char **argv)
   islessequal_test ();
   islessgreater_test ();
   isunordered_test ();
+
+  /* Total order functions:  */
+  totalorder_test ();
 
   /* Complex functions:  */
   cabs_test ();

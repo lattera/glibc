@@ -280,6 +280,7 @@ sub parse_args {
   # Put the C program line together
   # Reset some variables to start again
   $current_arg = 1;
+  $call_args =~ s/\"/\\\"/g;
   $cline = "{ \"$call_args\"";
   @descr = split //,$descr_args;
   for ($i=0; $i <= $#descr; $i++) {

@@ -79,7 +79,7 @@ use vars qw (%results @all_floats %suffices @all_functions);
     "trunc", "y0", "y1", "yn" );
 # fpclassify, iscanonical, isnormal, isfinite, isinf, isnan, issignaling,
 # issubnormal, iszero, signbit, iseqsig, isgreater, isgreaterequal, isless,
-# islessequal, islessgreater, isunordered are not tabulated.
+# islessequal, islessgreater, isunordered, totalorder are not tabulated.
 
 if ($#ARGV == 0) {
   $sources = $ARGV[0];
