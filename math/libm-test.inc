@@ -12480,6 +12480,34 @@ static const struct test_ff_i_data totalorder_test_data[] =
     TEST_ff_b (totalorder, snan_value_pl ("0x20000000000000000"), snan_value_pl ("0x10000000000000000"), 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_b (totalorder, -snan_value_pl ("0x20000000000000000"), -snan_value_pl ("0x10000000000000000"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
+    TEST_ff_b (totalorder, 1, 0x1.000002p0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 0x1.000002p0, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, 0x0.ffffffp0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 0x0.ffffffp0, 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#if MANT_DIG >= 53
+    TEST_ff_b (totalorder, 1, 0x1.0000000000001p0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 0x1.0000000000001p0, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, 0x0.fffffffffffff8p0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 0x0.fffffffffffff8p0, 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if MANT_DIG >= 64
+    TEST_ff_b (totalorder, 1, 0x1.0000000000000002p0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 0x1.0000000000000002p0, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, 0x0.ffffffffffffffffp0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 0x0.ffffffffffffffffp0, 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if MANT_DIG >= 106
+    TEST_ff_b (totalorder, 1, 0x1.000000000000000000000000008p0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 0x1.000000000000000000000000008p0, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, 0x0.ffffffffffffffffffffffffffcp0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 0x0.ffffffffffffffffffffffffffcp0, 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if MANT_DIG >= 113
+    TEST_ff_b (totalorder, 1, 0x1.0000000000000000000000000001p0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 0x1.0000000000000000000000000001p0, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 1, 0x0.ffffffffffffffffffffffffffff8p0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_ff_b (totalorder, 0x0.ffffffffffffffffffffffffffff8p0, 1, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
   };
 
 static void

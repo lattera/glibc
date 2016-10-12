@@ -1,3 +1,7 @@
+2016-10-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (totalorder_test_data): Add more tests.
+
 2016-10-12  Adhemerval Zanela  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fadvise64.c:
