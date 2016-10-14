@@ -1,3 +1,8 @@
+2016-10-14  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/ieee754/dbl-64/e_pow.c (checkint) Make conditions explicitly
+	boolean.
+
 2016-10-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/s_ccosh_template.c (M_DECL_FUNC (__ccosh)): Instead of

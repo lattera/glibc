@@ -466,15 +466,15 @@ checkint (double x)
     return (n & 1) ? -1 : 1;	/* odd or even */
   if (k > 20)
     {
-      if (n << (k - 20))
+      if (n << (k - 20) != 0)
 	return 0;		/* if not integer */
-      return (n << (k - 21)) ? -1 : 1;
+      return (n << (k - 21) != 0) ? -1 : 1;
     }
   if (n)
     return 0;			/*if  not integer */
   if (k == 20)
     return (m & 1) ? -1 : 1;
-  if (m << (k + 12))
+  if (m << (k + 12) != 0)
     return 0;
-  return (m << (k + 11)) ? -1 : 1;
+  return (m << (k + 11) != 0) ? -1 : 1;
 }
