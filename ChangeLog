@@ -1,3 +1,12 @@
+2016-10-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/s_ccosh_template.c (M_DECL_FUNC (__ccosh)): Instead of
+	raising FE_INVALID with feraisexcept in case where part of
+	argument is infinite, subtract that part of argument from itself.
+	* math/s_cexp_template.c (M_DECL_FUNC (__cexp)): Likewise.
+	* math/s_csin_template.c (M_DECL_FUNC (__csin)): Likewise.
+	* math/s_csinh_template.c (M_DECL_FUNC (__csinh)): Likewise.
+
 2016-10-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (totalorder_test_data): Add more tests.

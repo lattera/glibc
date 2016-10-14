@@ -96,11 +96,8 @@ M_DECL_FUNC (__csin) (CFLOAT x)
 	  if (icls == FP_ZERO)
 	    {
 	      /* Imaginary part is 0.0.  */
-	      __real__ retval = M_NAN;
+	      __real__ retval = __real__ x - __real__ x;
 	      __imag__ retval = __imag__ x;
-
-	      if (rcls == FP_INFINITE)
-		feraiseexcept (FE_INVALID);
 	    }
 	  else
 	    {
@@ -145,12 +142,8 @@ M_DECL_FUNC (__csin) (CFLOAT x)
 	}
       else
 	{
-	  /* The addition raises the invalid exception.  */
-	  __real__ retval = M_NAN;
+	  __real__ retval = __real__ x - __real__ x;
 	  __imag__ retval = M_HUGE_VAL;
-
-	  if (rcls == FP_INFINITE)
-	    feraiseexcept (FE_INVALID);
 	}
     }
   else

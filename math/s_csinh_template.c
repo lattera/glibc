@@ -97,10 +97,7 @@ M_DECL_FUNC (__csinh) (CFLOAT x)
 	    {
 	      /* Real part is 0.0.  */
 	      __real__ retval = M_COPYSIGN (0, negate ? -1 : 1);
-	      __imag__ retval = M_NAN;
-
-	      if (icls == FP_INFINITE)
-		feraiseexcept (FE_INVALID);
+	      __imag__ retval = __imag__ x - __imag__ x;
 	    }
 	  else
 	    {
@@ -144,10 +141,7 @@ M_DECL_FUNC (__csinh) (CFLOAT x)
       else
 	{
 	  __real__ retval = M_HUGE_VAL;
-	  __imag__ retval = M_NAN;
-
-	  if (icls == FP_INFINITE)
-	    feraiseexcept (FE_INVALID);
+	  __imag__ retval = __imag__ x - __imag__ x;
 	}
     }
   else

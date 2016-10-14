@@ -121,10 +121,7 @@ M_DECL_FUNC (__cexp) (CFLOAT x)
       else if (signbit (__real__ x) == 0)
 	{
 	  __real__ retval = M_HUGE_VAL;
-	  __imag__ retval = M_NAN;
-
-	  if (icls == FP_INFINITE)
-	    feraiseexcept (FE_INVALID);
+	  __imag__ retval = __imag__ x - __imag__ x;
 	}
       else
 	{
