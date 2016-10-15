@@ -1,3 +1,72 @@
+2016-10-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(totalordermag): New declaration.
+	* math/tgmath.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (totalordermag):
+	New macro.
+	* math/Versions (totalordermag): New libm symbol at version
+	GLIBC_2.25.
+	(totalordermagf): Likewise.
+	(totalordermagl): Likewise.
+	* math/Makefile (libm-calls): Add s_totalordermagF.
+	* math/libm-test.inc (totalordermag_test_data): New array.
+	(totalordermag_test): New function.
+	(main): Call totalordermag_test.
+	* math/test-tgmath.c (NCALLS): Increase to 125.
+	(F(compile_test)): Call totalordermag.
+	(F(totalordermag)): New function.
+	* manual/arith.texi (FP Comparison Functions): Document
+	totalordermag, totalordermagf and totalordermagl.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/dbl-64/s_totalordermag.c: New file.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalordermag.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_totalordermagf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_totalordermagl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalordermagl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_totalordermagl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-totalordermag.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	totalordermag.
+	(CFLAGS-nldbl-totalordermag.c): New variable.
+	* sysdeps/ieee754/ldbl-128ibm/test-totalorderl-ldbl-128ibm.c
+	(do_test): Also test totalordermagl.
+	* sysdeps/ieee754/ldbl-96/test-totalorderl-ldbl-96.c (do_test):
+	Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-10-14  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* sysdeps/ieee754/dbl-64/e_pow.c (checkint) Make conditions explicitly

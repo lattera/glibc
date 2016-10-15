@@ -41,7 +41,7 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 isoc99_vscanf isoc99_vfscanf isoc99_vsscanf \
 		 isoc99_wscanf isoc99_fwscanf isoc99_swscanf \
 		 isoc99_vwscanf isoc99_vfwscanf isoc99_vswscanf \
-		 nextup nextdown totalorder
+		 nextup nextdown totalorder totalordermag
 libnldbl-routines = $(libnldbl-calls:%=nldbl-%)
 libnldbl-inhibit-o = $(object-suffixes)
 libnldbl-static-only-routines = $(libnldbl-routines)
@@ -143,6 +143,7 @@ CFLAGS-nldbl-tan.c = -fno-builtin-tanl
 CFLAGS-nldbl-tanh.c = -fno-builtin-tanhl
 CFLAGS-nldbl-tgamma.c = -fno-builtin-tgammal
 CFLAGS-nldbl-totalorder.c = -fno-builtin-totalorderl
+CFLAGS-nldbl-totalordermag.c = -fno-builtin-totalordermagl
 CFLAGS-nldbl-trunc.c = -fno-builtin-truncl
 CFLAGS-nldbl-y0.c = -fno-builtin-y0l
 CFLAGS-nldbl-y1.c = -fno-builtin-y1l

@@ -441,6 +441,10 @@
 /* Total order operation.  */
 # define totalorder(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2,	\
 							   totalorder)
+
+/* Total order operation on absolute values.  */
+# define totalordermag(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, \
+							      totalordermag)
 #endif
 
 

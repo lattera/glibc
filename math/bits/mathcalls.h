@@ -390,6 +390,10 @@ __MATHDECL_1 (int, __issignaling,, (_Mdouble_ __value))
 /* Total order operation.  */
 __MATHDECL_1 (int, totalorder,, (_Mdouble_ __x, _Mdouble_ __y))
      __attribute__ ((__const__));
+
+/* Total order operation on absolute values.  */
+__MATHDECL_1 (int, totalordermag,, (_Mdouble_ __x, _Mdouble_ __y))
+     __attribute__ ((__const__));
 #endif
 
 #if defined __USE_MISC || (defined __USE_XOPEN_EXTENDED \

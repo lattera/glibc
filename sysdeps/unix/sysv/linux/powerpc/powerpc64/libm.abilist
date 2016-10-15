@@ -109,6 +109,9 @@ GLIBC_2.25 fetestexceptflag F
 GLIBC_2.25 totalorder F
 GLIBC_2.25 totalorderf F
 GLIBC_2.25 totalorderl F
+GLIBC_2.25 totalordermag F
+GLIBC_2.25 totalordermagf F
+GLIBC_2.25 totalordermagl F
 GLIBC_2.3 GLIBC_2.3 A
 GLIBC_2.3 _LIB_VERSION D 0x4
 GLIBC_2.3 __clog10 F

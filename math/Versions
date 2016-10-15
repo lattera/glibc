@@ -218,5 +218,6 @@ libm {
     fesetexcept; fetestexceptflag; fegetmode; fesetmode;
     __iscanonicall; __iseqsigf; __iseqsig; __iseqsigl;
     totalorder; totalorderf; totalorderl;
+    totalordermag; totalordermagf; totalordermagl;
   }
 }

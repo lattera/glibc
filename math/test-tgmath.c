@@ -50,7 +50,7 @@ int count_cdouble;
 int count_cfloat;
 int count_cldouble;
 
-#define NCALLS     122
+#define NCALLS     125
 #define NCALLS_INT 4
 #define NCCALLS    47
 
@@ -286,6 +286,7 @@ F(compile_test) (void)
   a = fmin (fmin (x, a), fmin (c, b));
   b = fma (sin (a), sin (x), sin (c));
   a = totalorder (totalorder (x, b), totalorder (c, x));
+  b = totalordermag (totalordermag (x, a), totalordermag (c, x));
 
 #ifdef TEST_INT
   a = atan2 (i, b);
@@ -383,6 +384,7 @@ F(compile_test) (void)
       a = fmin (y, y);
       a = fma (y, y, y);
       a = totalorder (y, y);
+      a = totalordermag (y, y);
 
 #ifdef TEST_INT
       a = atan2 (i, y);
@@ -878,6 +880,14 @@ TYPE
 
 int
 (F(totalorder)) (TYPE x, TYPE y)
+{
+  ++count;
+  P ();
+  return x + y;
+}
+
+int
+(F(totalordermag)) (TYPE x, TYPE y)
 {
   ++count;
   P ();

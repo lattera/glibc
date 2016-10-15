@@ -1968,6 +1968,20 @@ increasing payload; positive quiet NaNs, in order of increasing
 payload.
 @end deftypefun
 
+@comment math.h
+@comment ISO
+@deftypefun int totalordermag (double @var{x}, double @var{y})
+@comment ISO
+@deftypefunx int totalordermagf (float @var{x}, float @var{y})
+@comment ISO
+@deftypefunx int totalordermagl (long double @var{x}, long double @var{y})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions determine whether the total order relationship,
+defined in IEEE 754-2008, is true for the absolute values of @var{x}
+and @var{y}, returning nonzero if it is true and zero if it is false.
+No exceptions are raised even for signaling NaNs.
+@end deftypefun
+
 Not all machines provide hardware support for these operations.  On
 machines that don't, the macros can be very slow.  Therefore, you should
 not use these functions when NaN is not a concern.

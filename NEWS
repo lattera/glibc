@@ -55,7 +55,8 @@ Version 2.25
 
   - Classification macros: iscanonical, issubnormal, iszero.
 
-  - Total order functions: totalorder, totalorderf, totalorderl.
+  - Total order functions: totalorder, totalorderf, totalorderl,
+    totalordermag, totalordermagf, totalordermagl.
 
 * The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
   for the Linux quota interface which predates kernel version 2.4.22 has

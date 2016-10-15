@@ -422,4 +422,7 @@ GLIBC_2.25 fetestexceptflag F
 GLIBC_2.25 totalorder F
 GLIBC_2.25 totalorderf F
 GLIBC_2.25 totalorderl F
+GLIBC_2.25 totalordermag F
+GLIBC_2.25 totalordermagf F
+GLIBC_2.25 totalordermagl F
 GLIBC_2.4 GLIBC_2.4 A

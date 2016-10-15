@@ -1,4 +1,4 @@
-/* Test totalorderl for ldbl-128ibm.
+/* Test totalorderl and totalordermagl for ldbl-128ibm.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -53,6 +53,15 @@ do_test (void)
       else
 	{
 	  printf ("FAIL: test %zu\n", i);
+	  result = 1;
+	}
+      to1 = totalordermagl (ldx, ldy);
+      to2 = totalordermagl (ldy, ldx);
+      if (to1 && to2)
+	printf ("PASS: test %zu (totalordermagl)\n", i);
+      else
+	{
+	  printf ("FAIL: test %zu (totalordermagl)\n", i);
 	  result = 1;
 	}
     }
