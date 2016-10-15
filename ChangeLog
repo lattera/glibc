@@ -1,3 +1,12 @@
+2016-09-22  John David Anglin  <dave.anglin@bell.net>
+
+	* sysdeps/unix/sysv/linux/hppa/atomic-machine.h: Don't include
+	abort-instr.h.
+	(EFAULT): Remove conditional define.
+	(ENOSYS): Likewise.
+	(atomic_compare_and_exchange_val_acq): Use instruction nullification
+	instead of conditional branch instructions.
+
 2016-10-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
