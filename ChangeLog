@@ -1,3 +1,10 @@
+2016-10-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = math] (tests): Move
+	tst-fallocate{64}.
+	* sysdeps/unix/sysv/linux/tst-fallocate-common.c: Check for EOPNOTSUPP
+	on syscall return.
+
 2016-10-17  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #20689]

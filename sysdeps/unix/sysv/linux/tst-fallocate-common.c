@@ -58,7 +58,13 @@ do_test_with_offset (off_t offset)
      and check if both buffer have the same contents.  */
   ret = fallocate (temp_fd, 0, offset, BLK_SIZE);
   if (ret == -1)
-    FAIL_EXIT1 ("fallocate failed");
+    {
+      /* fallocate might not be fully supported by underlying filesystem (for
+	 instance some NFS versions).   */
+      if (errno == EOPNOTSUPP)
+	FAIL_EXIT (77, "fallocate not supported");
+      FAIL_EXIT1 ("fallocate failed");
+    }
 
   ret = fstat (temp_fd, &finfo);
   if (ret == -1)
