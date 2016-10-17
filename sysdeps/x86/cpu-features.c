@@ -60,12 +60,20 @@ get_common_indeces (struct cpu_features *cpu_features,
 	{
 	  /* Determine if AVX is usable.  */
 	  if (CPU_FEATURES_CPU_P (cpu_features, AVX))
-	    cpu_features->feature[index_arch_AVX_Usable]
-	      |= bit_arch_AVX_Usable;
-	  /* Determine if AVX2 is usable.  */
-	  if (CPU_FEATURES_CPU_P (cpu_features, AVX2))
-	    cpu_features->feature[index_arch_AVX2_Usable]
-	      |= bit_arch_AVX2_Usable;
+	    {
+	      cpu_features->feature[index_arch_AVX_Usable]
+		|= bit_arch_AVX_Usable;
+	      /* The following features depend on AVX being usable.  */
+	      /* Determine if AVX2 is usable.  */
+	      if (CPU_FEATURES_CPU_P (cpu_features, AVX2))
+		cpu_features->feature[index_arch_AVX2_Usable]
+		  |= bit_arch_AVX2_Usable;
+	      /* Determine if FMA is usable.  */
+	      if (CPU_FEATURES_CPU_P (cpu_features, FMA))
+		cpu_features->feature[index_arch_FMA_Usable]
+		  |= bit_arch_FMA_Usable;
+	    }
+
 	  /* Check if OPMASK state, upper 256-bit of ZMM0-ZMM15 and
 	     ZMM16-ZMM31 state are enabled.  */
 	  if ((xcrlow & (bit_Opmask_state | bit_ZMM0_15_state
@@ -83,10 +91,6 @@ get_common_indeces (struct cpu_features *cpu_features,
 		      |= bit_arch_AVX512DQ_Usable;
 		}
 	    }
-	  /* Determine if FMA is usable.  */
-	  if (CPU_FEATURES_CPU_P (cpu_features, FMA))
-	    cpu_features->feature[index_arch_FMA_Usable]
-	      |= bit_arch_FMA_Usable;
 	}
     }
 }
