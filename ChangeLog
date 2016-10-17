@@ -1,5 +1,12 @@
 2018-03-15  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
+	[BZ #22963]
+	* localedata/locales/cs_CZ (mon): Rename to...
+	(alt_mon): This.
+	(mon): Import from CLDR (genitive case).
+
+2018-03-15  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
 	[BZ #22937]
 	* localedata/locales/el_CY (abmon): Rename to...
 	(ab_alt_mon): This.

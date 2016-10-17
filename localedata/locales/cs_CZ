@@ -283,7 +283,7 @@ day		"Ned<U011B>le";/
 		"P<U00E1>tek";/
 		"Sobota"
 
-mon		"leden";/
+alt_mon		"leden";/
 		"<U00FA>nor";/
 		"b<U0159>ezen";/
 		"duben";/
@@ -344,6 +344,19 @@ abmon		"led";/
 %		"Oct";/
 %		"Nov";/
 %		"Dec"
+
+mon		"ledna";/
+		"<U00FA>nora";/
+		"b<U0159>ezna";/
+		"dubna";/
+		"kv<U011B>tna";/
+		"<U010D>ervna";/
+		"<U010D>ervence";/
+		"srpna";/
+		"z<U00E1><U0159><U00ED>";/
+		"<U0159><U00ED>jna";/
+		"listopadu";/
+		"prosince"
 
 week		7;19971130;4
 first_weekday	2
