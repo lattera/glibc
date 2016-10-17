@@ -1,3 +1,7 @@
+2016-10-17  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/fpu/fix-fp-int-compare-invalid.h: New file.
+
 2016-09-22  John David Anglin  <dave.anglin@bell.net>
 
 	* sysdeps/unix/sysv/linux/hppa/atomic-machine.h: Don't include
