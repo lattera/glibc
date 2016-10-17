@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <nan-high-order-bit.h>
 #include <stdint.h>
 
 int
@@ -30,7 +31,7 @@ totalordermagl (long double x, long double y)
   EXTRACT_WORDS64 (hx, xhi);
   ldbl_unpack (y, &yhi, &ylo);
   EXTRACT_WORDS64 (hy, yhi);
-#ifdef HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
 # error not implemented
 #endif
   uint64_t x_sign = hx & 0x8000000000000000ULL;

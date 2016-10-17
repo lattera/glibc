@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <nan-high-order-bit.h>
 #include <stdint.h>
 
 int
@@ -27,7 +28,7 @@ totalorder (double x, double y)
   uint32_t lx, ly;
   EXTRACT_WORDS (hx, lx, x);
   EXTRACT_WORDS (hy, ly, y);
-#ifdef HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
   uint32_t uhx = hx & 0x7fffffff, uhy = hy & 0x7fffffff;
   /* For the preferred quiet NaN convention, this operation is a
      comparison of the representations of the arguments interpreted as

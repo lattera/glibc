@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <nan-high-order-bit.h>
 #include <stdint.h>
 
 int
@@ -29,7 +30,7 @@ totalordermag (double x, double y)
   EXTRACT_WORDS (hy, ly, y);
   hx &= 0x7fffffff;
   hy &= 0x7fffffff;
-#ifdef HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
   /* For the preferred quiet NaN convention, this operation is a
      comparison of the representations of the absolute values of the
      arguments.  If both arguments are NaNs, invert the

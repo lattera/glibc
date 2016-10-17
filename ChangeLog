@@ -1,3 +1,66 @@
+2016-10-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/nan-high-order-bit.h: New file.
+	* sysdeps/hppa/nan-high-order-bit.h: Likewise.
+	* sysdeps/mips/nan-high-order-bit.h: Likewise.
+	* sysdeps/hppa/math_private.h: Remove file.
+	* sysdeps/mips/math_private.h (HIGH_ORDER_BIT_IS_SET_FOR_SNAN): Do
+	not define here.
+	* sysdeps/ieee754/dbl-64/s_issignaling.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/dbl-64/s_totalorder.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/dbl-64/s_totalordermag.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_issignaling.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalorder.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalordermag.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/flt-32/s_issignalingf.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/flt-32/s_totalorderf.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/flt-32/s_totalordermagf.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128/s_issignalingl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128/s_totalorderl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128/s_totalordermagl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128ibm/s_issignalingl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalorderl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalordermagl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-96/s_issignalingl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-96/s_totalorderl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-96/s_totalordermagl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+
 2016-10-17  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/fix-fp-int-compare-invalid.h: New file.

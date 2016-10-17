@@ -18,13 +18,14 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <nan-high-order-bit.h>
 
 int
 __issignalingl (long double x)
 {
   u_int32_t exi, hxi, lxi;
   GET_LDOUBLE_WORDS (exi, hxi, lxi, x);
-#ifdef HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
 # error not implemented
 #else
   /* To keep the following comparison simple, toggle the quiet/signaling bit,

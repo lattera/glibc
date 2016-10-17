@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <nan-high-order-bit.h>
 #include <stdint.h>
 
 int
@@ -27,7 +28,7 @@ totalorderl (_Float128 x, _Float128 y)
   uint64_t lx, ly;
   GET_LDOUBLE_WORDS64 (hx, lx, x);
   GET_LDOUBLE_WORDS64 (hy, ly, y);
-#ifdef HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
   uint64_t uhx = hx & 0x7fffffffffffffffULL;
   uint64_t uhy = hy & 0x7fffffffffffffffULL;
   /* For the preferred quiet NaN convention, this operation is a

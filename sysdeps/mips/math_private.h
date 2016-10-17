@@ -19,14 +19,6 @@
 #ifndef MIPS_MATH_PRIVATE_H
 #define MIPS_MATH_PRIVATE_H 1
 
-#ifdef __mips_nan2008
-/* MIPS aligned to IEEE 754-2008.  */
-#else
-/* One of the few architectures where the meaning of the quiet/signaling bit is
-   inverse to IEEE 754-2008 (as well as common practice for IEEE 754-1985).  */
-# define HIGH_ORDER_BIT_IS_SET_FOR_SNAN
-#endif
-
 /* Inline functions to speed up the math library implementation.  The
    default versions of these routines are in generic/math_private.h
    and call fesetround, feholdexcept, etc.  These routines use inlined

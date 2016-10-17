@@ -18,11 +18,12 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <nan-high-order-bit.h>
 
 int
 __issignaling (double x)
 {
-#ifdef HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
   u_int32_t hxi;
   GET_HIGH_WORD (hxi, x);
   /* We only have to care about the high-order bit of x's significand, because

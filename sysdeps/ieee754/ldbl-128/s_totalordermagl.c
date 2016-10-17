@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <nan-high-order-bit.h>
 #include <stdint.h>
 
 int
@@ -29,7 +30,7 @@ totalordermagl (_Float128 x, _Float128 y)
   GET_LDOUBLE_WORDS64 (hy, ly, y);
   hx &= 0x7fffffffffffffffULL;
   hy &= 0x7fffffffffffffffULL;
-#ifdef HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
   /* For the preferred quiet NaN convention, this operation is a
      comparison of the representations of the absolute values of the
      arguments.  If both arguments are NaNs, invert the

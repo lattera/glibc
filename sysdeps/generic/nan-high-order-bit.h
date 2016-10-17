@@ -1,4 +1,4 @@
-/* Total order operation on absolute values.  flt-32 version.
+/* Specify NaN high-order bit conventions.  Generic version.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,29 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <math_private.h>
-#include <nan-high-order-bit.h>
-#include <stdint.h>
+#ifndef NAN_HIGH_ORDER_BIT_H
+#define NAN_HIGH_ORDER_BIT_H	1
 
-int
-totalordermagf (float x, float y)
-{
-  uint32_t ix, iy;
-  GET_FLOAT_WORD (ix, x);
-  GET_FLOAT_WORD (iy, y);
-  ix &= 0x7fffffff;
-  iy &= 0x7fffffff;
-#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
-  /* For the preferred quiet NaN convention, this operation is a
-     comparison of the representations of the absolute values of the
-     arguments.  If both arguments are NaNs, invert the
-     quiet/signaling bit so comparing that way works.  */
-  if (ix > 0x7f800000 && iy > 0x7f800000)
-    {
-      ix ^= 0x00400000;
-      iy ^= 0x00400000;
-    }
-#endif
-  return ix <= iy;
-}
+/* Define this macro to 1 if the high-order bit of a NaN's mantissa is
+   set for signaling NaNs and clear for quiet NaNs, 0 otherwise (the
+   preferred IEEE convention).  */
+#define HIGH_ORDER_BIT_IS_SET_FOR_SNAN 0
+
+#endif /* nan-high-order-bit.h */

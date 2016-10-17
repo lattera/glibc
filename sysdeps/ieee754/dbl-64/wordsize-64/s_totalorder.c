@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <nan-high-order-bit.h>
 #include <stdint.h>
 
 int
@@ -26,7 +27,7 @@ totalorder (double x, double y)
   int64_t ix, iy;
   EXTRACT_WORDS64 (ix, x);
   EXTRACT_WORDS64 (iy, y);
-#ifdef HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
   /* For the preferred quiet NaN convention, this operation is a
      comparison of the representations of the arguments interpreted as
      sign-magnitude integers.  If both arguments are NaNs, invert the

@@ -19,6 +19,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <nan-high-order-bit.h>
 #include <stdint.h>
 
 int
@@ -41,7 +42,7 @@ totalorderl (long double x, long double y)
       if ((expy & 0x7fff) == 0x7fff)
 	hy |= 0x80000000;
     }
-#ifdef HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
 # error not implemented
 #endif
   uint32_t x_sign = expx >> 15;
