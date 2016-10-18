@@ -1,4 +1,5 @@
-/* Copyright (C) 1999-2016 Free Software Foundation, Inc.
+/* Linux getrlimit64 sparc32 implementation (64 bits rlim_t).
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,11 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define getrlimit64 __new_getrlimit64
-
-#include "../getrlimit64.c"
-
-#undef getrlimit64
 #include <shlib-compat.h>
-versioned_symbol (libc, __getrlimit64, getrlimit64, GLIBC_2_2);
-strong_alias (__getrlimit64, __GI_getrlimit64)
+
+#undef SHLIB_COMPAT
+#define SHLIB_COMPAT(a,b,c) 0
+
+#include <sysdeps/unix/sysv/linux/getrlimit64.c>

@@ -66,6 +66,9 @@
    for C type-checking purposes.  */
 #define __OFF_T_MATCHES_OFF64_T	1
 
+/* And for __rlim_t and __rlim64_t.  */
+#define __RLIM_T_MATCHES_RLIM64_T 1
+
 /* Number of descriptors that can fit in an `fd_set'.  */
 #define	__FD_SETSIZE		1024
 

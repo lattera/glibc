@@ -3,10 +3,6 @@
 chown		-	chown		i:sii	__chown		chown@@GLIBC_2.1
 lchown		-	lchown		i:sii	__lchown	lchown@@GLIBC_2.0 chown@GLIBC_2.0
 
-# System calls with wrappers.
-oldgetrlimit	EXTRA	getrlimit	i:ip	__old_getrlimit	getrlimit@GLIBC_2.0
-setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit@GLIBC_2.0 setrlimit@@GLIBC_2.2
-
 # Due to 64bit alignment there is a dummy second parameter
 readahead	-	readahead	i:iiiii	__readahead	readahead
 

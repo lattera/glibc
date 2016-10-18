@@ -4,8 +4,6 @@ chown		-	chown32		i:sii	__chown		chown
 lchown		-	lchown32	i:sii	__lchown	lchown
 fchown		-	fchown32	i:iii	__fchown	fchown
 
-setrlimit	-	setrlimit	2	__setrlimit	setrlimit
-getrlimit	-	getrlimit	2	__getrlimit	getrlimit
 getegid		-	getegid32	Ei:	__getegid	getegid
 geteuid		-	geteuid32	Ei:	__geteuid	geteuid
 getgid		-	getgid32	Ei:	__getgid	getgid

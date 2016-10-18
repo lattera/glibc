@@ -75,6 +75,11 @@
 
 /* Same for ino_t and ino64_t.  */
 # define __INO_T_MATCHES_INO64_T	1
+
+/* And for __rlim_t and __rlim64_t.  */
+# define __RLIM_T_MATCHES_RLIM64_T	1
+#else
+# define __RLIM_T_MATCHES_RLIM64_T	0
 #endif
 
 /* Number of descriptors that can fit in an `fd_set'.  */

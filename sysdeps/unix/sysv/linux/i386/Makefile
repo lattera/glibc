@@ -49,10 +49,6 @@ libpthread-sysdep_routines += libc-do-syscall
 libpthread-shared-only-routines += libc-do-syscall
 endif
 
-ifeq ($(subdir),resource)
-sysdep_routines += oldgetrlimit64
-endif
-
 ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext_i.sym
 endif

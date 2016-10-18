@@ -1,3 +1,62 @@
+2016-11-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Yury Norov  <ynorov@caviumnetworks.com>
+
+	* bits/typesizes.h (__RLIM_T_MATCHES_RLIM64_T): define.
+	* sysdeps/unix/sysv/linux/alpha/bits/typesizes.h
+	(__RLIM_T_MATCHES_RLIM64_T): Likewise.
+	* sysdeps/unix/sysv/linux/generic/bits/typesizes.h
+	(__RLIM_T_MATCHES_RLIM64_T): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h [__s390x__]
+	(__RLIM_T_MATCHES_RLIM64_T): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h
+	[__arch64__ || __sparcv9] (__RLIM_T_MATCHES_RLIM64_T): Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/typesizes.h [__86_64__]
+	(__RLIM_T_MATCHES_RLIM64_T): Likewise.
+	* sysdeps/unix/sysv/linux/arm/Makefile [$(subdir) = resource]
+	(sysdep_routines): Remove oldgetrlimit64.
+	* sysdeps/unix/sysv/linux/i386/Makefile [$(subdir) = resource]
+	(sysdep_routines): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/Makefile [$(subdir) = resource]
+	(sysdep_routines): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Makefile
+	[$(subdir) = resource] (sysdep_routines): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Makefile
+	[$(subdir) = resource] (sysdep_routines): Likewise.
+	* sysdeps/unix/sysv/linux/arm/getrlimit64.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/oldgetrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/oldgetrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/oldsetrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/oldgetrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/oldgetrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/oldgetrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/oldgetrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/setrlimit64.c: Likewise.
+	* sysdeps/sysv/linux/generic/wordsize-32/syscalls.list: Remove
+	setrlimit and getrlimit.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/getrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/getrlimit64.c (__getrlimit64): Handle
+	__RLIM_T_MATCHES_RLIM64_T and add alias if defined.
+	(__old_getrlimit64): Add compatibility symbol.
+	* sysdeps/unix/sysv/linux/setrlimit64.c (__setrlimit): Likewise.
+
 2016-11-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Config.build_gcc): Configure with

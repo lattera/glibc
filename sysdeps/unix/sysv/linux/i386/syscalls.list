@@ -18,8 +18,6 @@ setfsuid	-	setfsuid32	Ei:i	setfsuid
 modify_ldt	EXTRA	modify_ldt	i:ipi	__modify_ldt	modify_ldt
 vm86old		EXTRA	vm86old		i:p	__vm86old	vm86@GLIBC_2.0
 vm86		-	vm86		i:ip	__vm86		vm86@@GLIBC_2.3.4
-oldgetrlimit	EXTRA	getrlimit	i:ip	__old_getrlimit	getrlimit@GLIBC_2.0
-setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit@GLIBC_2.0 setrlimit@@GLIBC_2.2
 waitpid		-	waitpid		Ci:ipi	__waitpid	waitpid
 
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64

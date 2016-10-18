@@ -12,10 +12,6 @@ ifeq ($(subdir),signal)
 sysdep_routines += sigrestorer
 endif
 
-ifeq ($(subdir),resource)
-sysdep_routines += oldgetrlimit64
-endif
-
 ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext_i.sym
 endif
