@@ -1,5 +1,11 @@
 2016-10-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20718]
+	* sysdeps/powerpc/powerpc32/fpu/s_copysignl.S (__copysignl): Do
+	not use floating-point comparisons to test sign.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysignl.S (__copysignl):
+	Likewise.
+
 	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
 	(getpayload): New declaration.
 	* math/Versions (getpayload): New libm symbol at version
