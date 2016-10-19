@@ -45,7 +45,7 @@
    acos, acosh, asin, asinh, atan, atan2, atanh,
    cbrt, ceil, copysign, cos, cosh, drem, erf, erfc, exp, exp10, exp2, expm1,
    fabs, fdim, finite, floor, fma, fmax, fmin, fmod, fpclassify,
-   frexp, gamma, hypot,
+   frexp, gamma, getpayload, hypot,
    ilogb, iscanonical, isfinite, isinf, isnan, isnormal, issignaling,
    issubnormal, iszero, iseqsig, isless, islessequal, isgreater,
    isgreaterequal, islessgreater, isunordered, j0, j1, jn,
@@ -131,6 +131,7 @@
 #include <tininess.h>
 #include <math-tests.h>
 #include <math-tests-arch.h>
+#include <nan-high-order-bit.h>
 
 /* This header defines func_ulps, func_real_ulps and func_imag_ulps
    arrays.  */
@@ -1075,6 +1076,7 @@ enable_test (int exceptions)
 }
 
 /* Structures for each kind of test.  */
+/* Used for both RUN_TEST_LOOP_f_f and RUN_TEST_LOOP_fp_f.  */
 struct test_f_f_data
 {
   const char *arg_str;
@@ -1349,6 +1351,24 @@ struct test_fFF_11_data
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
       RUN_TEST_f_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
+  ROUND_RESTORE_ ## ROUNDING_MODE
+#define RUN_TEST_fp_f(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
+		     EXCEPTIONS)					\
+  do									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_float (test_name,	FUNC_TEST (FUNC_NAME) (&(ARG)),		\
+		     EXPECTED, EXCEPTIONS);				\
+	COMMON_TEST_CLEANUP;						\
+      }									\
+  while (0)
+#define RUN_TEST_LOOP_fp_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_fp_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
 		    (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
 		    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
@@ -8046,6 +8066,66 @@ frexp_test (void)
   ALL_RM_TEST (frexp, 1, frexp_test_data, RUN_TEST_LOOP_fI_f1, END, x);
 }
 
+
+static const struct test_f_f_data getpayload_test_data[] =
+  {
+    TEST_fp_f (getpayload, plus_infty, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, minus_infty, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, plus_zero, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, minus_zero, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, 1000, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, max_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -max_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, min_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -min_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, min_subnorm_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -min_subnorm_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+    TEST_fp_f (getpayload, snan_value_pl ("0x0"), plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -snan_value_pl ("0x0"), plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#else
+    TEST_fp_f (getpayload, qnan_value_pl ("0x0"), plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -qnan_value_pl ("0x0"), plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+    TEST_fp_f (getpayload, qnan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -qnan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, snan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -snan_value_pl ("0x1"), 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, qnan_value_pl ("0x2"), 2, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -qnan_value_pl ("0x2"), 2, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, snan_value_pl ("0x2"), 2, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -snan_value_pl ("0x2"), 2, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, qnan_value_pl ("0x3fffff"), 0x3fffff, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -qnan_value_pl ("0x3fffff"), 0x3fffff, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, snan_value_pl ("0x3fffff"), 0x3fffff, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -snan_value_pl ("0x3fffff"), 0x3fffff, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#if PAYLOAD_DIG >= 51
+    TEST_fp_f (getpayload, qnan_value_pl ("0x7ffffffffffff"), 0x7ffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -qnan_value_pl ("0x7ffffffffffff"), 0x7ffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, snan_value_pl ("0x7ffffffffffff"), 0x7ffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -snan_value_pl ("0x7ffffffffffff"), 0x7ffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 62
+    TEST_fp_f (getpayload, qnan_value_pl ("0x3fffffffffffffff"), 0x3fffffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -qnan_value_pl ("0x3fffffffffffffff"), 0x3fffffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, snan_value_pl ("0x3fffffffffffffff"), 0x3fffffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -snan_value_pl ("0x3fffffffffffffff"), 0x3fffffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 111
+    TEST_fp_f (getpayload, qnan_value_pl ("0x7fffffffffffffffffffffffffff"), 0x7fffffffffffffffffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -qnan_value_pl ("0x7fffffffffffffffffffffffffff"), 0x7fffffffffffffffffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, snan_value_pl ("0x7fffffffffffffffffffffffffff"), 0x7fffffffffffffffffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -snan_value_pl ("0x7fffffffffffffffffffffffffff"), 0x7fffffffffffffffffffffffffffp0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+  };
+
+static void
+getpayload_test (void)
+{
+  ALL_RM_TEST (getpayload, 1, getpayload_test_data, RUN_TEST_LOOP_fp_f, END);
+}
+
+
 static const struct test_ff_f_data hypot_test_data[] =
   {
     TEST_ff_f (hypot, plus_infty, 1, plus_infty, ERRNO_UNCHANGED),
@@ -13430,6 +13510,9 @@ main (int argc, char **argv)
   /* Total order functions:  */
   totalorder_test ();
   totalordermag_test ();
+
+  /* NaN functions:  */
+  getpayload_test ();
 
   /* Complex functions:  */
   cabs_test ();

@@ -1854,6 +1854,26 @@ The argument @var{tagp} is used in an unspecified manner.  On @w{IEEE
 selects one.  On other systems it may do nothing.
 @end deftypefun
 
+@comment math.h
+@comment ISO
+@deftypefun double getpayload (const double *@var{x})
+@comment math.h
+@comment ISO
+@deftypefunx float getpayloadf (const float *@var{x})
+@comment math.h
+@comment ISO
+@deftypefunx {long double} getpayloadl (const long double *@var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+IEEE 754 defines the @dfn{payload} of a NaN to be an integer value
+encoded in the representation of the NaN.  Payloads are typically
+propagated from NaN inputs to the result of a floating-point
+operation.  These functions, defined by TS 18661-1:2014, return the
+payload of the NaN pointed to by @var{x} (returned as a positive
+integer, or positive zero, represented as a floating-point number); if
+@var{x} is not a NaN, they return an unspecified value.  They raise no
+floating-point exceptions even for signaling NaNs.
+@end deftypefun
+
 @node FP Comparison Functions
 @subsection Floating-Point Comparison Functions
 @cindex unordered comparison

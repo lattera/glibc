@@ -1,3 +1,65 @@
+2016-10-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(getpayload): New declaration.
+	* math/Versions (getpayload): New libm symbol at version
+	GLIBC_2.25.
+	(getpayloadf): Likewise.
+	(getpayloadl): Likewise.
+	* math/Makefile (libm-calls): Add s_getpayloadF.
+	* math/libm-test.inc: Include <nan-high-order-bit.h>.
+	(struct test_f_f_data): Add comment.
+	(RUN_TEST_fp_f): New macro.
+	(RUN_TEST_LOOP_fp_f): Likewise.
+	(getpayload_test_data): New array.
+	(getpayload_test): New function.
+	(main): Call getpayload_test.
+	* math/gen-libm-test.pl (parse_args): Handle 'p' in argument
+	descriptor.
+	* manual/arith.texi (FP Bit Twiddling): Document getpayload,
+	getpayloadf and getpayloadl.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/dbl-64/s_getpayload.c: New file.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_getpayload.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_getpayloadf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_getpayloadl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_getpayloadl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_getpayloadl.c: Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-10-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = math] (tests): Move

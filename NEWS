@@ -58,6 +58,8 @@ Version 2.25
   - Total order functions: totalorder, totalorderf, totalorderl,
     totalordermag, totalordermagf, totalordermagl.
 
+  - NaN functions: getpayload, getpayloadf, getpayloadl.
+
 * The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
   for the Linux quota interface which predates kernel version 2.4.22 has
   been removed.
