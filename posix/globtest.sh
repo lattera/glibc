@@ -794,6 +794,22 @@ if test $failed -ne 0; then
   result=1
 fi
 
+# Test GLOB_BRACE and GLIB_DOOFFS with malloc checking
+failed=0
+${test_wrapper_env} \
+MALLOC_PERTURB_=65 \
+${test_via_rtld_prefix} \
+${common_objpfx}posix/globtest -b -o "$testdir" "file{1,2}" > $testout || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
+`abc'
+`file1'
+`file2'
+EOF
+if test $failed -ne 0; then
+  echo "GLOB_BRACE+GLOB_DOOFFS test failed" >> $logfile
+  result=1
+fi
+
 if test $result -eq 0; then
     chmod 777 $testdir/noread
     rm -fr $testdir $testout

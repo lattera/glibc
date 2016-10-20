@@ -1,3 +1,11 @@
+2016-10-31  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20707]
+	* posix/glob.c (glob): Initialize pglob before checking for
+	GLOB_BRACE.  Don't call glob recursively if pattern contains no
+	valid brace expression despite GLOB_BRACE.
+	* posix/globtest.sh: Test it.
+
 2016-10-28  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #20729]

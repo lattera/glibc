@@ -312,6 +312,28 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
        also makes all the code that uses gl_offs simpler. */
     pglob->gl_offs = 0;
 
+  if (!(flags & GLOB_APPEND))
+    {
+      pglob->gl_pathc = 0;
+      if (!(flags & GLOB_DOOFFS))
+	pglob->gl_pathv = NULL;
+      else
+	{
+	  size_t i;
+
+	  if (pglob->gl_offs >= ~((size_t) 0) / sizeof (char *))
+	    return GLOB_NOSPACE;
+
+	  pglob->gl_pathv = (char **) malloc ((pglob->gl_offs + 1)
+					      * sizeof (char *));
+	  if (pglob->gl_pathv == NULL)
+	    return GLOB_NOSPACE;
+
+	  for (i = 0; i <= pglob->gl_offs; ++i)
+	    pglob->gl_pathv[i] = NULL;
+	}
+    }
+
   if (flags & GLOB_BRACE)
     {
       const char *begin;
@@ -359,14 +381,7 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 	    {
 	      onealt = (char *) malloc (pattern_len);
 	      if (onealt == NULL)
-		{
-		  if (!(flags & GLOB_APPEND))
-		    {
-		      pglob->gl_pathc = 0;
-		      pglob->gl_pathv = NULL;
-		    }
-		  return GLOB_NOSPACE;
-		}
+		return GLOB_NOSPACE;
 	    }
 
 	  /* We know the prefix for all sub-patterns.  */
@@ -383,7 +398,8 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 	      if (__glibc_unlikely (!alloca_onealt))
 #endif
 		free (onealt);
-	      return glob (pattern, flags & ~GLOB_BRACE, errfunc, pglob);
+	      flags &= ~GLOB_BRACE;
+	      goto no_brace;
 	    }
 
 	  /* Now find the end of the whole brace expression.  */
@@ -404,14 +420,6 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 	     points past the final }.  We will accumulate result names from
 	     recursive runs for each brace alternative in the buffer using
 	     GLOB_APPEND.  */
-
-	  if (!(flags & GLOB_APPEND))
-	    {
-	      /* This call is to set a new vector, so clear out the
-		 vector so we can append to it.  */
-	      pglob->gl_pathc = 0;
-	      pglob->gl_pathv = NULL;
-	    }
 	  firstc = pglob->gl_pathc;
 
 	  p = begin + 1;
@@ -463,28 +471,7 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 	}
     }
 
-  if (!(flags & GLOB_APPEND))
-    {
-      pglob->gl_pathc = 0;
-      if (!(flags & GLOB_DOOFFS))
-	pglob->gl_pathv = NULL;
-      else
-	{
-	  size_t i;
-
-	  if (pglob->gl_offs >= ~((size_t) 0) / sizeof (char *))
-	    return GLOB_NOSPACE;
-
-	  pglob->gl_pathv = (char **) malloc ((pglob->gl_offs + 1)
-					      * sizeof (char *));
-	  if (pglob->gl_pathv == NULL)
-	    return GLOB_NOSPACE;
-
-	  for (i = 0; i <= pglob->gl_offs; ++i)
-	    pglob->gl_pathv[i] = NULL;
-	}
-    }
-
+ no_brace:
   oldcount = pglob->gl_pathc + pglob->gl_offs;
 
   /* Find the filename.  */
