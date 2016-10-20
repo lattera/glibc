@@ -1667,12 +1667,14 @@ echo >&AS_MESSAGE_LOG_FD "libc_undefs='$libc_undefs'"
 # symbols (resolved by the linker), so filter out unknown symbols.
 # This will fail to produce the correct result if the compiler
 # defaults to -fstack-protector but this produces an undefined symbol
-# other than __stack_chk_fail.  However, compilers like that have not
-# been encountered in practice.
-libc_undefs=`echo "$libc_undefs" | egrep '^(foobar|__stack_chk_fail)$'`
+# other than __stack_chk_fail or __stack_chk_fail_local. However,
+# compilers like that have not been encountered in practice.
+libc_undefs=`echo "$libc_undefs" | \
+  egrep '^(foobar|__stack_chk_fail|__stack_chk_fail_local)$'`
 case "$libc_undefs" in
 foobar) libc_cv_predef_stack_protector=no ;;
 '__stack_chk_fail
+foobar'|'__stack_chk_fail_local
 foobar') libc_cv_predef_stack_protector=yes ;;
 *) AC_MSG_ERROR([unexpected symbols in test: $libc_undefs]) ;;
 esac],
