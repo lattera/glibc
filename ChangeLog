@@ -1,3 +1,11 @@
+2016-10-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20715]
+	* math/math.h [__cplusplus] (iszero): Define as function template.
+	* math/Makefile [CXX] (tests): Add test-math-iszero.
+	(CFLAGS-test-math-iszero.cc): Set.
+	* math/test-math-iszero.cc: New file.
+
 2016-10-20  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20660]

@@ -335,11 +335,25 @@ enum
 # define issubnormal(x) (fpclassify (x) == FP_SUBNORMAL)
 
 /* Return nonzero value if X is zero.  */
-# ifdef __SUPPORT_SNAN__
-#  define iszero(x) (fpclassify (x) == FP_ZERO)
-# else
-#  define iszero(x) (((__typeof (x)) (x)) == 0)
-# endif
+# ifndef __cplusplus
+#  ifdef __SUPPORT_SNAN__
+#   define iszero(x) (fpclassify (x) == FP_ZERO)
+#  else
+#   define iszero(x) (((__typeof (x)) (x)) == 0)
+#  endif
+# else	/* __cplusplus */
+__END_DECLS
+template <class __T> inline bool
+iszero (__T __val)
+{
+#  ifdef __SUPPORT_SNAN__
+  return fpclassify (__val) == FP_ZERO;
+#  else
+  return __val == 0;
+#  endif
+}
+__BEGIN_DECLS
+# endif	/* __cplusplus */
 #endif /* Use IEC_60559_BFP_EXT.  */
 
 #ifdef	__USE_MISC
