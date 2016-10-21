@@ -1,3 +1,19 @@
+2016-10-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/pread.c (__libc_pread): Use SYSCALL_LL_PRW.
+	* sysdeps/unix/sysv/linux/pwrite.c (__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c (__libc_pread64): Use
+	SYSCALL_LL64_PRW.
+	* sysdeps/unix/sysv/linux/pwrite64.c (__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h: Define
+	__ASSUME_PRW_DUMMY_ARG.
+	* sysdeps/unix/sysv/linux/sh/pread.c: Remove file.
+	* sysdeps/unix/sysv/linux/sh/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sysdep.h: Define SYSCALL_LL_PRW and
+	SYSCALL_LL_PRW64 based on __ASSUME_PRW_DUMMY_ARG.
+
 2016-10-24  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* sysdeps/unix/sysv/linux/tst-setgetname.c: Increase buffer size.
