@@ -72,6 +72,7 @@ benchset := $(string-benchset-all) $(stdlib-benchset) $(stdio-common-benchset) \
 
 CFLAGS-bench-ffs.c += -fno-builtin
 CFLAGS-bench-ffsll.c += -fno-builtin
+CFLAGS-bench-sqrt.c += -fno-builtin
 
 bench-malloc := malloc-thread
 

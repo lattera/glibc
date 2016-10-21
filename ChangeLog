@@ -1,3 +1,7 @@
+2016-10-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* benchtests/Makefile (CFLAGS-bench-sqrt.c): New variable.
+
 2016-10-21  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/fenv_private.h:
