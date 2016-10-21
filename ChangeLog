@@ -1,3 +1,9 @@
+2016-10-28  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #20728]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Replace a
+	branch to _exit() by a function call.
+
 2016-10-28  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/malloc.c: Update chunk layout comments.

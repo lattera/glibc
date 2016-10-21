@@ -97,7 +97,7 @@ L(oldpid):
 #ifdef SHARED
 	b	JUMPTARGET(__GI__exit)
 #else
-	b	JUMPTARGET(_exit)
+	bl	JUMPTARGET(_exit)
 	/* We won't ever get here but provide a nop so that the linker
 	   will insert a toc adjusting stub if necessary.  */
 	nop
