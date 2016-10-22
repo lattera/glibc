@@ -1,3 +1,9 @@
+2016-10-22  Florian Weimer  <fweimer@redhat.com>
+
+	* math/math.h [__cplusplus] (iszero): Wrap C++ bits in extern
+	"C++", to override a potential extern "C" directive around the
+	header file inclusion.
+
 2016-10-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* benchtests/Makefile (CFLAGS-bench-sqrt.c): New variable.

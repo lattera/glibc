@@ -342,7 +342,7 @@ enum
 #   define iszero(x) (((__typeof (x)) (x)) == 0)
 #  endif
 # else	/* __cplusplus */
-__END_DECLS
+extern "C++" {
 template <class __T> inline bool
 iszero (__T __val)
 {
@@ -352,7 +352,7 @@ iszero (__T __val)
   return __val == 0;
 #  endif
 }
-__BEGIN_DECLS
+} /* extern C++ */
 # endif	/* __cplusplus */
 #endif /* Use IEC_60559_BFP_EXT.  */
 
