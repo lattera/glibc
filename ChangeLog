@@ -1,5 +1,10 @@
 2016-10-25  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
+	* stdlib/Makefile (tests): Add tst-strfrom and tst-strfrom-locale.
+	* stdlib/tst-strfrom.h: New file.
+	* stdlib/tst-strfrom.c: New file.
+	* stdlib/tst-strfrom-locale.c: New file.
+
 	* stdlib/bug-strtod.c: Refactor based on GEN_TEST_STRTOD_FOREACH.
 	* stdlib/bug-strtod2.c: Likewise.
 	* stdlib/tst-strtod-round-skeleton.c: Likewise.

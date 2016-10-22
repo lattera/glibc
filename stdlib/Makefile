@@ -79,7 +79,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-setcontext3 tst-tls-atexit-nodelete		    \
 		   tst-strtol-locale tst-strtod-nan-locale tst-strfmon_l    \
 		   tst-quick_exit tst-thread-quick_exit tst-width	    \
-		   tst-width-stdint
+		   tst-width-stdint tst-strfrom tst-strfrom-locale
 tests-static	:= tst-secure-getenv
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-quick_exit.o = -std=c++11
@@ -158,6 +158,8 @@ $(objpfx)tst-strtod5.out: $(gen-locales)
 $(objpfx)tst-strtol-locale.out: $(gen-locales)
 $(objpfx)tst-strtod-nan-locale.out: $(gen-locales)
 $(objpfx)tst-strfmon_l.out: $(gen-locales)
+$(objpfx)tst-strfrom.out: $(gen-locales)
+$(objpfx)tst-strfrom-locale.out: $(gen-locales)
 endif
 
 # Testdir has to be named stdlib and needs to be writable
