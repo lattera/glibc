@@ -38,7 +38,7 @@ __lxstat (int vers, const char *name, struct stat *buf)
   int result;
 
   if (vers == _STAT_VER_KERNEL)
-    return INLINE_SYSCALL (lstat, 2, name, (struct kernel_stat *) buf);
+    return INLINE_SYSCALL (lstat, 2, name, buf);
 
   {
     struct stat64 buf64;

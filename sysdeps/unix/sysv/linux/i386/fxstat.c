@@ -37,7 +37,7 @@ __fxstat (int vers, int fd, struct stat *buf)
   int result;
 
   if (vers == _STAT_VER_KERNEL)
-    return INLINE_SYSCALL (fstat, 2, fd, (struct kernel_stat *) buf);
+    return INLINE_SYSCALL (fstat, 2, fd, buf);
 
   {
     struct stat64 buf64;
