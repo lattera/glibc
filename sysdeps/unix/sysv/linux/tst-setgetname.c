@@ -56,7 +56,7 @@ get_self_comm (long tid, char *buf, size_t len)
 {
   int res = 0;
 #define FMT "/proc/self/task/%lu/comm"
-  char fname[sizeof (FMT) + 8];
+  char fname[sizeof (FMT) + 32];
   sprintf (fname, FMT, (unsigned long) tid);
 
   int fd = open (fname, O_RDONLY);

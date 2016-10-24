@@ -1,3 +1,7 @@
+2016-10-24  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/unix/sysv/linux/tst-setgetname.c: Increase buffer size.
+
 2016-10-22  Florian Weimer  <fweimer@redhat.com>
 
 	* math/math.h [__cplusplus] (iszero): Wrap C++ bits in extern
