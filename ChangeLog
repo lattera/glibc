@@ -1,5 +1,20 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (msgctl): Remove.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (msgctl): Likewise.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list (msgctl): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (msgctl): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (msgctl): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/syscalls.list (msgctl): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (msgctl):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (msgctl): Likewise,
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (msgctl):
+	Likewise.
+	* sysdeps/unix/sysv/linux/msgrcv.c (__libc_msgrcv): Use msgrcv syscall
+	if defined.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/msgrcv.c: Remove file.
+
 	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdeps_routines): Remove
 	oldmsgctl.
 	* sysdeps/unix/sysv/linux/alpha/msgctl.c: Remove file.

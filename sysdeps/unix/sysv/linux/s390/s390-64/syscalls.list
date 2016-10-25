@@ -2,7 +2,6 @@
 
 # semaphore and shm system calls
 msgget		-	msgget		i:ii	__msgget	msgget
-msgrcv		-	msgrcv		Ci:ibnii __msgrcv	msgrcv
 msgsnd		-	msgsnd		Ci:ibni	__msgsnd	msgsnd
 shmat		-	shmat		i:ipi	__shmat		shmat
 shmctl		-	shmctl		i:iip	__shmctl	shmctl
