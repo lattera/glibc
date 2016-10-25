@@ -2,7 +2,6 @@
 
 # SysV APIs
 msgget		-	msgget		i:ii	__msgget	msgget
-msgctl		-	msgctl		i:iip	__msgctl	msgctl
 msgrcv		-	msgrcv		Ci:ibnii __msgrcv	msgrcv
 msgsnd		-	msgsnd		Ci:ibni	__msgsnd	msgsnd
 semget		-	semget		i:iii	__semget	semget

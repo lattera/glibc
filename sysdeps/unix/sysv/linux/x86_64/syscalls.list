@@ -2,7 +2,6 @@
 
 arch_prctl	EXTRA	arch_prctl	i:ii	__arch_prctl	arch_prctl
 modify_ldt	EXTRA	modify_ldt	i:ipi	__modify_ldt	modify_ldt
-msgctl		-	msgctl		i:iip	__msgctl	msgctl
 msgget		-	msgget		i:ii	__msgget	msgget
 msgrcv		-	msgrcv		Ci:ibnii __msgrcv	msgrcv
 msgsnd		-	msgsnd		Ci:ibni	__msgsnd	msgsnd

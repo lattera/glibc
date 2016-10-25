@@ -1,5 +1,22 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdeps_routines): Remove
+	oldmsgctl.
+	* sysdeps/unix/sysv/linux/alpha/msgctl.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (oldmsgctl): Remove.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list (msgctl): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (msgctl): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (msgctl): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (msgctl):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (msgctl): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/msgctl.c: Use default
+	implementation.
+	* sysdeps/unix/sysv/linux/msgctl.c (__new_msgctl): Use msgctl syscall
+	if defined.
+
 	* sysdeps/unix/sysv/linux/aarch64/ipc_priv.h: New file.
 	* sysdeps/unix/sysv/linux/alpha/ipc_priv.h: Avoid included other arch
 	definition and define its own.

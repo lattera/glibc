@@ -16,17 +16,30 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <sys/msg.h>
 #include <ipc_priv.h>
-
 #include <sysdep.h>
-#include <string.h>
-#include <sys/syscall.h>
 #include <shlib-compat.h>
+#include <errno.h>
 
-#include <kernel-features.h>
+#ifndef DEFAULT_VERSION
+# define DEFAULT_VERSION GLIBC_2_2
+#endif
 
+int
+__new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
+{
+#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (msgctl, msqid, cmd | __IPC_64, buf);
+#else
+  return INLINE_SYSCALL_CALL (ipc, IPCOP_msgctl, msqid, cmd | __IPC_64, 0,
+			      buf);
+#endif
+}
+versioned_symbol (libc, __new_msgctl, msgctl, DEFAULT_VERSION);
+
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 struct __old_msqid_ds
 {
   struct __old_ipc_perm msg_perm;	/* structure describing operation permission */
@@ -44,27 +57,15 @@ struct __old_msqid_ds
   __ipc_pid_t msg_lrpid;		/* pid of last msgrcv() */
 };
 
-/* Allows to control internal state and destruction of message queue
-   objects.  */
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
-int __old_msgctl (int, int, struct __old_msqid_ds *);
-#endif
-int __new_msgctl (int, int, struct msqid_ds *);
-
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int
 attribute_compat_text_section
 __old_msgctl (int msqid, int cmd, struct __old_msqid_ds *buf)
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd, 0, buf);
+#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (msgctl, msqid, cmd | __IPC_64, buf);
+#else
+  return INLINE_SYSCALL_CALL (ipc, IPCOP_msgctl, msqid, cmd, 0, buf);
+#endif
 }
 compat_symbol (libc, __old_msgctl, msgctl, GLIBC_2_0);
 #endif
-
-int
-__new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
-{
-  return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd | __IPC_64, 0, buf);
-}
-
-versioned_symbol (libc, __new_msgctl, msgctl, GLIBC_2_2);
