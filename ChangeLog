@@ -1,3 +1,10 @@
+2016-10-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/powerpc32/power6/memset.S (memset): Use cmplwi
+	instead of cmpli.
+	* sysdeps/powerpc/powerpc64/power6/memset.S (memset): Use cmpldi
+	instead of cmpli.
+
 2016-10-24  Yury Norov  <ynorov@caviumnetworks.com>
 
 	* sysdeps/unix/sysv/linux/fxstat.c: Remove useless cast.

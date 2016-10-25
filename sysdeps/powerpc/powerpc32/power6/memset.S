@@ -394,7 +394,7 @@ L(cacheAlignedx):
 /* A simple loop for the longer (>640 bytes) lengths.  This form limits
    the branch miss-predicted to exactly 1 at loop exit.*/
 L(cacheAligned512):
-	cmpli	cr1,rLEN,128
+	cmplwi	cr1,rLEN,128
 	blt	cr1,L(cacheAligned1)
 	dcbz	0,rMEMP
 	addi	rLEN,rLEN,-128
