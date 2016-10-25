@@ -1,5 +1,19 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (msgsnd): Remove.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (msgsnd): Likewise.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list (msgsnd): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (msgsnd): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (msgsnd): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/syscalls.list (msgsnd): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (msgsnd):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (msgsnd):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (msgsnd): Likewise.
+	* sysdeps/unix/sysv/linux/msgsnd.c (__libc_msgsnd): Use msgsnd syscall
+	if defined.
+
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (msgctl): Remove.
 	* sysdeps/unix/sysv/linux/arm/syscalls.list (msgctl): Likewise.
 	* sysdeps/unix/sysv/linux/generic/syscalls.list (msgctl): Likewise.

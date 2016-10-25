@@ -2,7 +2,6 @@
 
 # SysV APIs
 msgget		-	msgget		i:ii	__msgget	msgget
-msgsnd		-	msgsnd		Ci:ibni	__msgsnd	msgsnd
 semget		-	semget		i:iii	__semget	semget
 semctl		-	semctl		i:iiii	__semctl	semctl
 semtimedop	-	semtimedop	i:ipip	semtimedop

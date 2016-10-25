@@ -16,17 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <sys/msg.h>
 #include <ipc_priv.h>
-
 #include <sysdep-cancel.h>
-#include <sys/syscall.h>
 
 int
 __libc_msgsnd (int msqid, const void *msgp, size_t msgsz, int msgflg)
 {
+#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return SYSCALL_CANCEL (msgsnd, msqid, msgp, msgsz, msgflg);
+#else
   return SYSCALL_CANCEL (ipc, IPCOP_msgsnd, msqid, msgsz, msgflg,
-			 (void *) msgp);
+			 msgp);
+#endif
 }
 weak_alias (__libc_msgsnd, msgsnd)
