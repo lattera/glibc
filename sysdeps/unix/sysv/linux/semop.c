@@ -16,17 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <sys/sem.h>
 #include <ipc_priv.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
+#include <errno.h>
 
 /* Perform user-defined atomical operation of array of semaphores.  */
 
 int
 semop (int semid, struct sembuf *sops, size_t nsops)
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_semop, semid, (int) nsops, 0, sops);
+#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (semop, semid, sops, nsops);
+#else
+  return INLINE_SYSCALL_CALL (ipc, IPCOP_semop, semid, nsops, 0, sops);
+#endif
 }

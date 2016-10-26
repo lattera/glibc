@@ -10,7 +10,6 @@ shmat		-	shmat		i:ipi	__shmat		shmat
 shmctl		-	shmctl		i:iip	__shmctl	shmctl
 shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
-semop		-	semop		i:ipi	__semop		semop
 semtimedop	-	semtimedop	i:ipip	semtimedop
 syscall_clock_gettime	EXTRA	clock_gettime	Ei:ip		__syscall_clock_gettime
 

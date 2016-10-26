@@ -1,5 +1,19 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (semop): Remove.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (semop): Likewise.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list (semop): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (semop): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (semop): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/syscalls.list (semop): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (semop):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (semop):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (semop): Likewise.
+	* sysdeps/unix/sysv/linux/semop.c (semop): Use semop syscall if it is
+	defined.
+
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (semget): Remove.
 	* sysdeps/unix/sysv/linux/arm/syscalls.list (semget): Likewise.
 	* sysdeps/unix/sysv/linux/generic/syscalls.list (semget): Likewise.

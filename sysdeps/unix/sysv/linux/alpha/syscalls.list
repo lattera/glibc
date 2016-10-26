@@ -4,7 +4,6 @@ shmat		-	osf_shmat	i:ipi	__shmat		shmat
 oldshmctl	EXTRA	shmctl		i:iip	__old_shmctl	shmctl@GLIBC_2.0
 shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
-semop		-	semop		i:ipi	__semop		semop
 semtimedop	-	semtimedop	i:ipip	semtimedop
 
 sigstack	-	sigstack	2	sigstack
