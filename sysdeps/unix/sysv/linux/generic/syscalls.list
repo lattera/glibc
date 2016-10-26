@@ -2,7 +2,6 @@
 
 # SysV APIs
 shmget		-	shmget		i:iii	__shmget	shmget
-shmctl		-	shmctl		i:iip	__shmctl	shmctl
 shmdt		-	shmdt		i:s	__shmdt		shmdt
 
 # Socket APIs

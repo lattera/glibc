@@ -15,18 +15,11 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sys/shm.h>
-#include <ipc_priv.h>
-#include <sysdep.h>
-
-int __shmctl (int shmid, int cmd, struct shmid_ds *buf);
-
-int
-__shmctl (int shmid, int cmd, struct shmid_ds *buf)
-{
-  return INLINE_SYSCALL (shmctl, 3, shmid, cmd | __IPC_64, buf);
-}
-
 #include <shlib-compat.h>
-versioned_symbol (libc, __shmctl, shmctl, GLIBC_2_0);
+
+#undef SHLIB_COMPAT
+#define SHLIB_COMPAT(a, b, c) 0
+
+#define DEFAULT_VERSION GLIBC_2_0
+
+#include <./sysdeps/unix/sysv/linux/shmctl.c>

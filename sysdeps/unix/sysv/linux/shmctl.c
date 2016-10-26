@@ -16,18 +16,34 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <sys/shm.h>
+#include <stdarg.h>
 #include <ipc_priv.h>
-
 #include <sysdep.h>
-#include <string.h>
-#include <sys/syscall.h>
-#include <bits/wordsize.h>
 #include <shlib-compat.h>
+#include <errno.h>
 
-#include <kernel-features.h>
 
+#ifndef DEFAULT_VERSION
+# define DEFAULT_VERSION GLIBC_2_2
+#endif
+
+
+/* Provide operations to control over shared memory segments.  */
+int
+__new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
+{
+#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (shmctl, shmid, cmd | __IPC_64, buf);
+#else
+  return INLINE_SYSCALL_CALL (ipc, IPCOP_shmctl, shmid, cmd | __IPC_64, 0,
+			      buf);
+#endif
+}
+versioned_symbol (libc, __new_shmctl, shmctl, DEFAULT_VERSION);
+
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 struct __old_shmid_ds
 {
   struct __old_ipc_perm shm_perm;	/* operation permission struct */
@@ -43,36 +59,15 @@ struct __old_shmid_ds
   struct vm_area_struct *__attaches;	/* descriptors for attaches */
 };
 
-struct __old_shminfo
-{
-  int shmmax;
-  int shmmin;
-  int shmmni;
-  int shmseg;
-  int shmall;
-};
-
-/* Provide operations to control over shared memory segments.  */
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
-int __old_shmctl (int, int, struct __old_shmid_ds *);
-#endif
-int __new_shmctl (int, int, struct shmid_ds *);
-
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int
 attribute_compat_text_section
 __old_shmctl (int shmid, int cmd, struct __old_shmid_ds *buf)
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, buf);
+#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (shmctl, shmid, cmd, buf);
+#else
+  return INLINE_SYSCALL_CALL (ipc, IPCOP_shmctl, shmid, cmd, 0, buf);
+#endif
 }
 compat_symbol (libc, __old_shmctl, shmctl, GLIBC_2_0);
 #endif
-
-int
-__new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
-{
-  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0,
-			 buf);
-}
-
-versioned_symbol (libc, __new_shmctl, shmctl, GLIBC_2_2);

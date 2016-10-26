@@ -1,5 +1,26 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdeps_routines): Remove
+	oldshmctl.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (shmctl): Remove.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (shmctl): Likewise.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list (shmctl): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (shmctl): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (shmctl): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/syscalls.list (shmctl): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (shmctl):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (shmctl):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (shmctl): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/shmctl.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/shmctl.c: Use default
+	implementation.
+	* sysdeps/unix/sysv/linux/shmctl.c (__new_shmctl): Use shmctl syscall
+	if it is defined.
+
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (shmat): Remove.
 	* sysdeps/unix/sysv/linux/arm/syscalls.list (shmat): Likewise.
 	* sysdeps/unix/sysv/linux/generic/syscalls.list (shmat): Likewise.
