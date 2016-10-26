@@ -1,5 +1,19 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (shmdt): Remove.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (shmdt): Likewise.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list (shmdt): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (shmdt): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (shmdt): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/syscalls.list (shmdt): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (shmdt):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (shmdt):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (shmdt): Likewise.
+	* sysdeps/unix/sysv/linux/shmdt.c (shmdt): Use shmdt syscall if it is
+	defined.
+
 	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdeps_routines): Remove
 	oldshmctl.
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (shmctl): Remove.

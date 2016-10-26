@@ -1,5 +1,4 @@
 # File name     Caller  Syscall name    # args  Strong name     Weak names
 
 # semaphore and shm system calls
-shmdt           -       shmdt           i:s     __shmdt         shmdt
 shmget          -       shmget          i:iii   __shmget        shmget

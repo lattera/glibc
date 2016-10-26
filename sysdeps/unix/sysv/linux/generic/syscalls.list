@@ -2,7 +2,6 @@
 
 # SysV APIs
 shmget		-	shmget		i:iii	__shmget	shmget
-shmdt		-	shmdt		i:s	__shmdt		shmdt
 
 # Socket APIs
 socket		-	socket		i:iii	__socket	socket

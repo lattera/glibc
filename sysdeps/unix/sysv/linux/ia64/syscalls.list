@@ -5,7 +5,6 @@ umount2		-	umount		2	__umount2	umount2
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
 
 # semaphore and shm system calls
-shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
 
 # proper socket implementations:
