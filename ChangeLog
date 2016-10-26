@@ -1,5 +1,7 @@
 2016-10-26  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* malloc/malloc.c (M_ARENA_TEST, M_ARENA_MAX): Remove.
+
 	* manual/memory.texi (M_TOP_PAD): Remove reference to sbrk.
 	(M_TRIM_THRESHOLD): Likewise.
 

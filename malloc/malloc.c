@@ -1717,11 +1717,6 @@ static struct malloc_par mp_ =
   .arena_test = NARENAS_FROM_NCORES (1)
 };
 
-
-#define M_ARENA_TEST -7
-#define M_ARENA_MAX  -8
-
-
 /* Maximum size of memory handled in fastbins.  */
 static INTERNAL_SIZE_T global_max_fast;
 
