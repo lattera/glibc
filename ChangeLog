@@ -1,3 +1,16 @@
+2016-10-26  Florian Weimer  <fweimer@redhat.com>
+
+	* iconvdata/ibm930.h (__ucs4_to_ibm930sb): Remove indirection and
+	make const.
+	* iconvdata/ibm933.h (__ucs4_to_ibm933sb): Likewise.
+	* iconvdata/ibm935.h (__ucs4_to_ibm935sb): Likewise.
+	* iconvdata/ibm939.h (__ucs4_to_ibm939sb): Likewise.
+	* iconvdata/ibm930.c [TO_LOOP] (BODY): Store converted single-byte
+	character in sbconv.
+	* iconvdata/ibm933.c [TO_LOOP] (BODY): Likewise.
+	* iconvdata/ibm935.c [TO_LOOP] (BODY): Likewise.
+	* iconvdata/ibm939.c [TO_LOOP] (BODY): Likewise.
+
 2016-10-26  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* malloc/malloc.c (M_ARENA_TEST, M_ARENA_MAX): Remove.

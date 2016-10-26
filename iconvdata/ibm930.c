@@ -191,7 +191,6 @@ enum
     uint32_t ch = get32 (inptr);					      \
     const struct gap *rp1 = __ucs4_to_ibm930sb_idx;			      \
     const struct gap *rp2 = __ucs4_to_ibm930db_idx;			      \
-    const char *cp;							      \
 									      \
     if (__glibc_unlikely (ch >= 0xffff))				      \
       {									      \
@@ -204,14 +203,16 @@ enum
       ++rp1;								      \
 									      \
     /* Use the UCS4 table for single byte.  */				      \
+    unsigned char sbconv;						      \
     if (__builtin_expect (ch < rp1->start, 0)				      \
-	|| (cp = __ucs4_to_ibm930sb[ch + rp1->idx],			      \
-	    __builtin_expect (cp[0], L'\1') == L'\0' && ch != '\0'))	      \
+	|| (sbconv = __ucs4_to_ibm930sb[ch + rp1->idx],			      \
+	    __builtin_expect (sbconv, L'\1') == L'\0' && ch != '\0'))	      \
       {									      \
 	/* Use the UCS4 table for double byte. */			      \
 	while (ch > rp2->end)						      \
 	  ++rp2;							      \
 									      \
+	const char *cp;							      \
 	if (__builtin_expect (ch < rp2->start, 0)			      \
 	    || (cp = __ucs4_to_ibm930db[ch + rp2->idx],			      \
 		__builtin_expect (cp[0], L'\1')== L'\0' && ch != '\0'))	      \
@@ -264,7 +265,7 @@ enum
 	else if (ch == 0x5c)						      \
 	  *outptr++ = 0x5b;						      \
 	else								      \
-	  *outptr++ = cp[0];						      \
+	  *outptr++ = sbconv;						      \
       }									      \
 									      \
     /* Now that we wrote the output increment the input pointer.  */	      \
