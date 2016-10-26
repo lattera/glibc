@@ -1,5 +1,21 @@
 2016-10-26  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19473]
+	* malloc/malloc.h (malloc_get_state, malloc_set_state): Remove
+	declarations.
+	* malloc/malloc.c (malloc_get_state, malloc_set_state): Remove
+	weak aliases.
+	* malloc/hooks.c (__malloc_get_state): Remove definition.
+	(malloc_get_state): New stub implementation as
+	compatibility symbol.
+	(malloc_set_state): Rename from __malloc_set_state.  Turn into
+	compat symbol.
+	* malloc/tst-mallocstate.c: Rewrite to approximate how Emacs uses
+	malloc_set_state.
+	* malloc/Makefile (LDFLAGS-tst-mallocstate): Link with -rdynamic.
+
+2016-10-26  Florian Weimer  <fweimer@redhat.com>
+
 	* iconvdata/iso646.c (enum variant): Drop illegal_var.
 	(names): Turn into concatenation of strings.
 	(gconv_init): Adapt iteration over names.

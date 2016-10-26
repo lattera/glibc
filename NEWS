@@ -67,6 +67,14 @@ Version 2.25
   for the Linux quota interface which predates kernel version 2.4.22 has
   been removed.
 
+* The malloc_get_state and malloc_set_state functions have been removed.
+  Already-existing binaries that dynamically link to these functions will
+  get a hidden implementation in which malloc_get_state is a stub.  As far
+  as we know, these functions are used only by GNU Emacs and this change
+  will not adversely affect already-built Emacs executables.  Any undumped
+  Emacs executables, which normally exist only during an Emacs build, should
+  be rebuilt by re-running “./configure; make” in the Emacs build tree.
+
 * The “ip6-dotint” and “no-ip6-dotint” resolver options, and the
   corresponding RES_NOIP6DOTINT flag from <resolv.h> have been removed.
   “no-ip6-dotint” had already been the default, and support for the

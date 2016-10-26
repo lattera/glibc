@@ -134,13 +134,6 @@ extern void malloc_stats (void) __THROW;
 /* Output information about state of allocator to stream FP.  */
 extern int malloc_info (int __options, FILE *__fp) __THROW;
 
-/* Record the state of all malloc variables in an opaque data structure. */
-extern void *malloc_get_state (void) __THROW;
-
-/* Restore the state of all malloc variables from data obtained with
-   malloc_get_state(). */
-extern int malloc_set_state (void *__ptr) __THROW;
-
 /* Hooks for debugging and user-defined versions. */
 extern void (*__MALLOC_HOOK_VOLATILE __free_hook) (void *__ptr,
                                                    const void *)

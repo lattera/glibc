@@ -447,6 +447,7 @@ memalign_check (size_t alignment, size_t bytes, const void *caller)
   return mem2mem_check (mem, bytes);
 }
 
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_25)
 
 /* Get/set state: malloc_get_state() records the current state of all
    malloc variables (_except_ for the actual heap contents and `hook'
@@ -492,60 +493,21 @@ struct malloc_save_state
   unsigned long narenas;
 };
 
+/* Dummy implementation which always fails.  We need to provide this
+   symbol so that existing Emacs binaries continue to work with
+   BIND_NOW.  */
 void *
-__malloc_get_state (void)
+attribute_compat_text_section
+malloc_get_state (void)
 {
-  struct malloc_save_state *ms;
-  int i;
-  mbinptr b;
-
-  ms = (struct malloc_save_state *) __libc_malloc (sizeof (*ms));
-  if (!ms)
-    return 0;
-
-  __libc_lock_lock (main_arena.mutex);
-  malloc_consolidate (&main_arena);
-  ms->magic = MALLOC_STATE_MAGIC;
-  ms->version = MALLOC_STATE_VERSION;
-  ms->av[0] = 0;
-  ms->av[1] = 0; /* used to be binblocks, now no longer used */
-  ms->av[2] = top (&main_arena);
-  ms->av[3] = 0; /* used to be undefined */
-  for (i = 1; i < NBINS; i++)
-    {
-      b = bin_at (&main_arena, i);
-      if (first (b) == b)
-        ms->av[2 * i + 2] = ms->av[2 * i + 3] = 0; /* empty bin */
-      else
-        {
-          ms->av[2 * i + 2] = first (b);
-          ms->av[2 * i + 3] = last (b);
-        }
-    }
-  ms->sbrk_base = mp_.sbrk_base;
-  ms->sbrked_mem_bytes = main_arena.system_mem;
-  ms->trim_threshold = mp_.trim_threshold;
-  ms->top_pad = mp_.top_pad;
-  ms->n_mmaps_max = mp_.n_mmaps_max;
-  ms->mmap_threshold = mp_.mmap_threshold;
-  ms->check_action = check_action;
-  ms->max_sbrked_mem = main_arena.max_system_mem;
-  ms->max_total_mem = 0;
-  ms->n_mmaps = mp_.n_mmaps;
-  ms->max_n_mmaps = mp_.max_n_mmaps;
-  ms->mmapped_mem = mp_.mmapped_mem;
-  ms->max_mmapped_mem = mp_.max_mmapped_mem;
-  ms->using_malloc_checking = using_malloc_checking;
-  ms->max_fast = get_max_fast ();
-  ms->arena_test = mp_.arena_test;
-  ms->arena_max = mp_.arena_max;
-  ms->narenas = narenas;
-  __libc_lock_unlock (main_arena.mutex);
-  return (void *) ms;
+  __set_errno (ENOSYS);
+  return NULL;
 }
+compat_symbol (libc, malloc_get_state, malloc_get_state, GLIBC_2_0);
 
 int
-__malloc_set_state (void *msptr)
+attribute_compat_text_section
+malloc_set_state (void *msptr)
 {
   struct malloc_save_state *ms = (struct malloc_save_state *) msptr;
 
@@ -612,6 +574,9 @@ __malloc_set_state (void *msptr)
 
   return 0;
 }
+compat_symbol (libc, malloc_set_state, malloc_set_state, GLIBC_2_0);
+
+#endif	/* SHLIB_COMPAT */
 
 /*
  * Local variables:

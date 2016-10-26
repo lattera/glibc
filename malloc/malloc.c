@@ -5202,8 +5202,6 @@ strong_alias (__libc_mallopt, __mallopt) weak_alias (__libc_mallopt, mallopt)
 weak_alias (__malloc_stats, malloc_stats)
 weak_alias (__malloc_usable_size, malloc_usable_size)
 weak_alias (__malloc_trim, malloc_trim)
-weak_alias (__malloc_get_state, malloc_get_state)
-weak_alias (__malloc_set_state, malloc_set_state)
 
 
 /* ------------------------------------------------------------

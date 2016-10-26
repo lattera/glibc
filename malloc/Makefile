@@ -69,6 +69,9 @@ $(objpfx)tst-malloc-thread-exit: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-fail: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock: $(shared-thread-library)
 
+# Export the __malloc_initialize_hook variable to libc.so.
+LDFLAGS-tst-mallocstate = -rdynamic
+
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
 
