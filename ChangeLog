@@ -1,5 +1,11 @@
 2016-10-26  Florian Weimer  <fweimer@redhat.com>
 
+	* iconvdata/iso646.c (enum variant): Drop illegal_var.
+	(names): Turn into concatenation of strings.
+	(gconv_init): Adapt iteration over names.
+
+2016-10-26  Florian Weimer  <fweimer@redhat.com>
+
 	* iconvdata/ibm930.h (__ucs4_to_ibm930sb): Remove indirection and
 	make const.
 	* iconvdata/ibm933.h (__ucs4_to_ibm933sb): Likewise.

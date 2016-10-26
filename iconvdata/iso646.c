@@ -60,9 +60,9 @@ enum direction
   from_iso646
 };
 
+/* See names below, must be in the same order.  */
 enum variant
 {
-  illegal_var,
   GB,		/* BS_4730 */
   CA,		/* CSA_Z243.4-1985-1 */
   CA2,		/* CSA_Z243.4-1985-2 */
@@ -88,33 +88,33 @@ enum variant
   SE2		/* SEN_850200_C */
 };
 
-static const char *names[] =
-{
-  [GB] = "BS_4730//",
-  [CA] = "CSA_Z243.4-1985-1//",
-  [CA2] = "CSA_Z243.4-1985-2//",
-  [DE] = "DIN_66003//",
-  [DK] = "DS_2089//",
-  [ES] = "ES//",
-  [ES2] = "ES2//",
-  [CN] = "GB_1988-80//",
-  [IT] = "IT//",
-  [JP] = "JIS_C6220-1969-RO//",
-  [JP_OCR_B] = "JIS_C6229-1984-B//",
-  [YU] = "JUS_I.B1.002//",
-  [KR] = "KSC5636//",
-  [HU] = "MSZ_7795.3//",
-  [CU] = "NC_NC00-10//",
-  [FR] = "NF_Z_62-010//",
-  [FR1] = "NF_Z_62-010_1973//",	/* Note that we don't have the parenthesis
-				   in the name.  */
-  [NO] = "NS_4551-1//",
-  [NO2] = "NS_4551-2//",
-  [PT] = "PT//",
-  [PT2] = "PT2//",
-  [SE] = "SEN_850200_B//",
-  [SE2] = "SEN_850200_C//"
-};
+/* Must be in the same order as enum variant above.  */
+static const char names[] =
+  "BS_4730//\0"
+  "CSA_Z243.4-1985-1//\0"
+  "CSA_Z243.4-1985-2//\0"
+  "DIN_66003//\0"
+  "DS_2089//\0"
+  "ES//\0"
+  "ES2//\0"
+  "GB_1988-80//\0"
+  "IT//\0"
+  "JIS_C6220-1969-RO//\0"
+  "JIS_C6229-1984-B//\0"
+  "JUS_I.B1.002//\0"
+  "KSC5636//\0"
+  "MSZ_7795.3//\0"
+  "NC_NC00-10//\0"
+  "NF_Z_62-010//\0"
+  "NF_Z_62-010_1973//\0" /* Note that we don't have the parenthesis in
+			    the name.  */
+  "NS_4551-1//\0"
+  "NS_4551-2//\0"
+  "PT//\0"
+  "PT2//\0"
+  "SEN_850200_B//\0"
+  "SEN_850200_C//\0"
+  "\0";
 
 struct iso646_data
 {
@@ -130,20 +130,24 @@ gconv_init (struct __gconv_step *step)
   /* Determine which direction.  */
   struct iso646_data *new_data;
   enum direction dir = illegal_dir;
-  enum variant var;
   int result;
 
-  for (var = sizeof (names) / sizeof (names[0]) - 1; var > illegal_var; --var)
-    if (__strcasecmp (step->__from_name, names[var]) == 0)
-      {
-	dir = from_iso646;
-	break;
-      }
-    else if (__strcasecmp (step->__to_name, names[var]) == 0)
-      {
-	dir = to_iso646;
-	break;
-      }
+  enum variant var = 0;
+  for (const char *name = names; *name != '\0';
+       name = __rawmemchr (name, '\0') + 1)
+    {
+      if (__strcasecmp (step->__from_name, name) == 0)
+	{
+	  dir = from_iso646;
+	  break;
+	}
+      else if (__strcasecmp (step->__to_name, name) == 0)
+	{
+	  dir = to_iso646;
+	  break;
+	}
+      ++var;
+    }
 
   result = __GCONV_NOCONV;
   if (__builtin_expect (dir, from_iso646) != illegal_dir)
