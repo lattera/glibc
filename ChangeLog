@@ -1,5 +1,21 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (shmat): Remove.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (shmat): Likewise.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list (shmat): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (shmat): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (shmat): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/syscalls.list (shmat): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (shmat):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (shmat):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (shmat): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h (__NR_shmat):
+	Define to __NR_osf_shmat.
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): Use shmat syscall if it is
+	defined.
+
 	* sysvipc/Makefile (tests): Add test-sysvsem.
 	* sysvipc/test-sysvsem.c: New file.
 

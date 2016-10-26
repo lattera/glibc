@@ -29,4 +29,7 @@
 #undef __ASSUME_STATFS64
 #define __ASSUME_STATFS64 0
 
+/* Alpha defines SysV ipc shmat syscall with a different name.  */
+#define __NR_shmat __NR_osf_shmat
+
 #endif /* _KERNEL_FEATURES_H */

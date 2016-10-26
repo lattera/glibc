@@ -2,6 +2,5 @@
 
 # Semaphore and shm system calls.  msgctl, shmctl, and semctl have C
 # wrappers (to set __IPC_64).
-shmat		-	shmat		i:ipi	__shmat		shmat
 shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
