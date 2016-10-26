@@ -16,12 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <sys/sem.h>
 #include <ipc_priv.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
+#include <errno.h>
 
 /* Perform user-defined atomical operation of array of semaphores.  */
 
@@ -29,6 +27,10 @@ int
 semtimedop (int semid, struct sembuf *sops, size_t nsops,
 	    const struct timespec *timeout)
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_semtimedop,
-			 semid, (int) nsops, timeout, sops);
+  /* The s390 sys_ipc variant has only five parameters instead of six
+     (as for default variant) and the only difference is the handling of
+     SEMTIMEDOP where on s390 the third parameter is used as a pointer
+     to a struct timespec where the generic variant uses fifth parameter.  */
+  return INLINE_SYSCALL_CALL (ipc, IPCOP_semtimedop, semid, nsops, timeout,
+			      sops);
 }

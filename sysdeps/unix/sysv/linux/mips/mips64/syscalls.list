@@ -5,4 +5,3 @@
 shmat		-	shmat		i:ipi	__shmat		shmat
 shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
-semtimedop	-	semtimedop	i:ipip	semtimedop

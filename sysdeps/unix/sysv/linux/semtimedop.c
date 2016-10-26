@@ -16,12 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <sys/sem.h>
 #include <ipc_priv.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
+#include <errno.h>
 
 /* Perform user-defined atomical operation of array of semaphores.  */
 
@@ -29,7 +27,10 @@ int
 semtimedop (int semid, struct sembuf *sops, size_t nsops,
 	    const struct timespec *timeout)
 {
-  return INLINE_SYSCALL (ipc, 6, IPCOP_semtimedop,
-			 semid, (int) nsops, 0, sops,
-			 timeout);
+#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (semtimedop, semid, sops, nsops, timeout);
+#else
+  return INLINE_SYSCALL_CALL (ipc, IPCOP_semtimedop, semid, nsops, 0, sops,
+			      timeout);
+#endif
 }

@@ -9,7 +9,6 @@ shmat		-	shmat		i:ipi	__shmat		shmat
 shmctl		-	shmctl		i:iip	__shmctl	shmctl
 shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
-semtimedop	-	semtimedop	i:ipip	semtimedop
 
 # proper socket implementations:
 accept		-	accept		Ci:iBN	__libc_accept	__accept accept
