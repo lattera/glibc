@@ -162,6 +162,8 @@ special to @theglibc{} and GNU Compiler.
 
 @menu
 * Memory Allocation and C::     How to get different kinds of allocation in C.
+* The GNU Allocator::		An overview of the GNU @code{malloc}
+				implementation.
 * Unconstrained Allocation::    The @code{malloc} facility allows fully general
 		 		 dynamic allocation.
 * Allocation Debugging::        Finding memory leaks and not freed memory.
@@ -258,6 +260,45 @@ address of the space.  Then you can use the operators @samp{*} and
 @}
 @end smallexample
 
+@node The GNU Allocator
+@subsection The GNU Allocator
+@cindex gnu allocator
+
+The @code{malloc} implementation in @theglibc{} is derived from ptmalloc
+(pthreads malloc), which in turn is derived from dlmalloc (Doug Lea malloc).
+This malloc may allocate memory in two different ways depending on their size
+and certain parameters that may be controlled by users. The most common way is
+to allocate portions of memory (called chunks) from a large contiguous area of
+memory and manage these areas to optimize their use and reduce wastage in the
+form of unusable chunks. Traditionally the system heap was set up to be the one
+large memory area but the @glibcadj{} @code{malloc} implementation maintains
+multiple such areas to optimize their use in multi-threaded applications.  Each
+such area is internally referred to as an @dfn{arena}.
+
+As opposed to other versions, the @code{malloc} in @theglibc{} does not round
+up chunk sizes to powers of two, neither for large nor for small sizes.
+Neighboring chunks can be coalesced on a @code{free} no matter what their size
+is.  This makes the implementation suitable for all kinds of allocation
+patterns without generally incurring high memory waste through fragmentation.
+The presence of multiple arenas allows multiple threads to allocate
+memory simultaneously in separate arenas, thus improving performance.
+
+The other way of memory allocation is for very large blocks, i.e. much larger
+than a page. These requests are allocated with @code{mmap} (anonymous or via
+@file{/dev/zero}; @pxref{Memory-mapped I/O})). This has the great advantage
+that these chunks are returned to the system immediately when they are freed.
+Therefore, it cannot happen that a large chunk becomes ``locked'' in between
+smaller ones and even after calling @code{free} wastes memory.  The size
+threshold for @code{mmap} to be used is dynamic and gets adjusted according to
+allocation patterns of the program.  @code{mallopt} can be used to statically
+adjust the threshold using @code{M_MMAP_THRESHOLD} and the use of @code{mmap}
+can be disabled completely with @code{M_MMAP_MAX};
+@pxref{Malloc Tunable Parameters}.
+
+A more detailed technical description of the GNU Allocator is maintained in
+the @glibcadj{} wiki. See
+@uref{https://sourceware.org/glibc/wiki/MallocInternals}.
+
 @node Unconstrained Allocation
 @subsection Unconstrained Allocation
 @cindex unconstrained memory allocation
@@ -278,8 +319,6 @@ any time (or never).
 				 bigger or smaller.
 * Allocating Cleared Space::    Use @code{calloc} to allocate a
 				 block and clear it.
-* Efficiency and Malloc::       Efficiency considerations in use of
-				 these functions.
 * Aligned Memory Blocks::       Allocating specially aligned memory.
 * Malloc Tunable Parameters::   Use @code{mallopt} to adjust allocation
                                  parameters.
@@ -867,59 +906,6 @@ But in general, it is not guaranteed that @code{calloc} calls
 @code{malloc}/@code{realloc}/@code{free} outside the C library, it
 should always define @code{calloc}, too.
 
-@node Efficiency and Malloc
-@subsubsection Efficiency Considerations for @code{malloc}
-@cindex efficiency and @code{malloc}
-
-
-
-
-@ignore
-
-@c No longer true, see below instead.
-To make the best use of @code{malloc}, it helps to know that the GNU
-version of @code{malloc} always dispenses small amounts of memory in
-blocks whose sizes are powers of two.  It keeps separate pools for each
-power of two.  This holds for sizes up to a page size.  Therefore, if
-you are free to choose the size of a small block in order to make
-@code{malloc} more efficient, make it a power of two.
-@c !!! xref getpagesize
-
-Once a page is split up for a particular block size, it can't be reused
-for another size unless all the blocks in it are freed.  In many
-programs, this is unlikely to happen.  Thus, you can sometimes make a
-program use memory more efficiently by using blocks of the same size for
-many different purposes.
-
-When you ask for memory blocks of a page or larger, @code{malloc} uses a
-different strategy; it rounds the size up to a multiple of a page, and
-it can coalesce and split blocks as needed.
-
-The reason for the two strategies is that it is important to allocate
-and free small blocks as fast as possible, but speed is less important
-for a large block since the program normally spends a fair amount of
-time using it.  Also, large blocks are normally fewer in number.
-Therefore, for large blocks, it makes sense to use a method which takes
-more time to minimize the wasted space.
-
-@end ignore
-
-As opposed to other versions, the @code{malloc} in @theglibc{}
-does not round up block sizes to powers of two, neither for large nor
-for small sizes.  Neighboring chunks can be coalesced on a @code{free}
-no matter what their size is.  This makes the implementation suitable
-for all kinds of allocation patterns without generally incurring high
-memory waste through fragmentation.
-
-Very large blocks (much larger than a page) are allocated with
-@code{mmap} (anonymous or via @code{/dev/zero}) by this implementation.
-This has the great advantage that these chunks are returned to the
-system immediately when they are freed.  Therefore, it cannot happen
-that a large chunk becomes ``locked'' in between smaller ones and even
-after calling @code{free} wastes memory.  The size threshold for
-@code{mmap} to be used can be adjusted with @code{mallopt}.  The use of
-@code{mmap} can also be disabled completely.
-
 @node Aligned Memory Blocks
 @subsubsection Allocating Aligned Memory Blocks
 
@@ -1105,10 +1091,6 @@ parameter to be set, and @var{value} the new value to be set.  Possible
 choices for @var{param}, as defined in @file{malloc.h}, are:
 
 @table @code
-@comment TODO: @item M_ARENA_MAX
-@comment       - Document ARENA_MAX env var.
-@comment TODO: @item M_ARENA_TEST
-@comment       - Document ARENA_TEST env var.
 @comment TODO: @item M_CHECK_ACTION
 @item M_MMAP_MAX
 The maximum number of chunks to allocate with @code{mmap}.  Setting this
@@ -1174,6 +1156,29 @@ value is set statically to the provided input.
 This parameter can also be set for the process at startup by setting the
 environment variable @env{MALLOC_TRIM_THRESHOLD_} to the desired value.
 
+@item M_ARENA_TEST
+This parameter specifies the number of arenas that can be created before the
+test on the limit to the number of arenas is conducted. The value is ignored if
+@code{M_ARENA_MAX} is set.
+
+The default value of this parameter is 2 on 32-bit systems and 8 on 64-bit
+systems.
+
+This parameter can also be set for the process at startup by setting the
+environment variable @env{MALLOC_ARENA_TEST} to the desired value.
+
+@item M_ARENA_MAX
+This parameter sets the number of arenas to use regardless of the number of
+cores in the system.
+
+The default value of this tunable is @code{0}, meaning that the limit on the
+number of arenas is determined by the number of CPU cores online. For 32-bit
+systems the limit is twice the number of cores online and on 64-bit systems, it
+is eight times the number of cores online.  Note that the default value is not
+derived from the default value of M_ARENA_TEST and is computed independently.
+
+This parameter can also be set for the process at startup by setting the
+environment variable @env{MALLOC_ARENA_MAX} to the desired value.
 @end table
 
 @end deftypefun
@@ -1515,8 +1520,8 @@ This is the total size of memory allocated with @code{sbrk} by
 @item int ordblks
 This is the number of chunks not in use.  (The memory allocator
 internally gets chunks of memory from the operating system, and then
-carves them up to satisfy individual @code{malloc} requests; see
-@ref{Efficiency and Malloc}.)
+carves them up to satisfy individual @code{malloc} requests;
+@pxref{The GNU Allocator}.)
 
 @item int smblks
 This field is unused.

@@ -1,5 +1,9 @@
 2016-10-26  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* manual/memory.texi (M_ARENA_TEST): Add documentation.
+	(M_ARENA_MAX): Likewise.
+	* malloc/malloc.c: Remove obsolete comment.
+
 	* manual/memory.texi: Add environment variable alternatives to
 	setting mallopt parameters.
 
