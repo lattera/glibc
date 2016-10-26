@@ -1,8 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-# SysV APIs
-shmget		-	shmget		i:iii	__shmget	shmget
-
 # Socket APIs
 socket		-	socket		i:iii	__socket	socket
 socketpair	-	socketpair	i:iiif	__socketpair	socketpair

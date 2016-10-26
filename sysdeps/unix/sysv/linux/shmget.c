@@ -16,13 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sys/shm.h>
+#include <sys/msg.h>
 #include <ipc_priv.h>
-#include <stdlib.h>		/* for definition of NULL */
-
 #include <sysdep.h>
-#include <sys/syscall.h>
+#include <errno.h>
 
 /* Return an identifier for an shared memory segment of at least size SIZE
    which is associated with KEY.  */
@@ -30,5 +27,9 @@
 int
 shmget (key_t key, size_t size, int shmflg)
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_shmget, key, size, shmflg, NULL);
+#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (shmget, key, size, shmflg, NULL);
+#else
+  return INLINE_SYSCALL_CALL (ipc, IPCOP_shmget, key, size, shmflg, NULL);
+#endif
 }

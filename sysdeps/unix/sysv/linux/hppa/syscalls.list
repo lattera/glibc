@@ -1,8 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-# semaphore and shm system calls
-shmget		-	shmget		i:iii	__shmget	shmget
-
 # proper socket implementations:
 accept		-	accept		Ci:iBN	__libc_accept	__accept accept
 bind		-	bind		i:ipi	__bind		bind

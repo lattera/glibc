@@ -1,7 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-shmget		-	shmget		i:iii	__shmget	shmget
-
 sigstack	-	sigstack	2	sigstack
 
 getpriority	-	getpriority	i:ii	__getpriority	getpriority

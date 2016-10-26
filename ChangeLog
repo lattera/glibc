@@ -1,5 +1,19 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (shmget): Remove.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (shmget): Likewise.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list (shmget): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (shmget): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (shmget): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/syscalls.list (shmget): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (shmget):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (shmget):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (shmget): Likewise.
+	* sysdeps/unix/sysv/linux/shmget.c (shmget): Use shmget syscall if it
+	is defined.
+
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (shmdt): Remove.
 	* sysdeps/unix/sysv/linux/arm/syscalls.list (shmdt): Likewise.
 	* sysdeps/unix/sysv/linux/generic/syscalls.list (shmdt): Likewise.

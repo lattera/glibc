@@ -1,5 +1,0 @@
-# File name	Caller	Syscall name	Args	Strong name	Weak names
-
-# Semaphore and shm system calls.  msgctl, shmctl, and semctl have C
-# wrappers (to set __IPC_64).
-shmget		-	shmget		i:iii	__shmget	shmget

@@ -6,7 +6,6 @@ pread64		-	pread64		Ci:ipii	__libc_pread	__libc_pread64 __pread64 pread64 __prea
 preadv64	-	preadv		Ci:ipii	preadv64	preadv
 pwrite64	-	pwrite64	Ci:ipii	__libc_pwrite	__libc_pwrite64 __pwrite64 pwrite64 __pwrite pwrite
 pwritev64	-	pwritev		Ci:ipii	pwritev64	pwritev
-shmget		-	shmget		i:iii	__shmget	shmget
 syscall_clock_gettime	EXTRA	clock_gettime	Ei:ip		__syscall_clock_gettime
 
 

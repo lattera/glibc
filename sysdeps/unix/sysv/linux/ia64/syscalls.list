@@ -4,9 +4,6 @@ umount2		-	umount		2	__umount2	umount2
 
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
 
-# semaphore and shm system calls
-shmget		-	shmget		i:iii	__shmget	shmget
-
 # proper socket implementations:
 accept		-	accept		Ci:iBN	__libc_accept	__accept accept
 bind		-	bind		i:ipi	__bind		bind
