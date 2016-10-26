@@ -1,3 +1,9 @@
+2016-10-26  Carlos O'Donell  <carlos@redhat.com>
+
+	* include/atomic.h
+	[USE_COMPILER_ATOMIC_BUILTINS && !atomic_fetch_xor_release]
+	(atomic_fetch_xor_release): Use	atomic_compare_exchange_weak_release.
+
 2016-10-25  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* stdlib/Makefile (tests): Add tst-strfrom and tst-strfrom-locale.

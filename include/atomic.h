@@ -777,18 +777,21 @@ void __atomic_link_error (void);
 # endif
 
 # ifndef atomic_fetch_xor_release
+/* Failing the atomic_compare_exchange_weak_release reloads the value in
+   __atg104_expected, so we need only do the XOR again and retry.  */
 # define atomic_fetch_xor_release(mem, operand) \
-  ({ __typeof (*(mem)) __atg104_old;					      \
-     __typeof (mem) __atg104_memp = (mem);				      \
+  ({ __typeof (mem) __atg104_memp = (mem);				      \
+     __typeof (*(mem)) __atg104_expected = (*__atg104_memp);		      \
+     __typeof (*(mem)) __atg104_desired;				      \
      __typeof (*(mem)) __atg104_op = (operand);				      \
 									      \
      do									      \
-       __atg104_old = (*__atg104_memp);					      \
-     while (__builtin_expect						      \
-	    (atomic_compare_and_exchange_bool_rel (			      \
-		__atg104_memp, __atg104_old ^ __atg104_op, __atg104_old), 0));\
-									      \
-     __atg104_old; })
+       __atg104_desired = __atg104_expected ^ __atg104_op;		      \
+     while (__glibc_unlikely						      \
+	    (atomic_compare_exchange_weak_release (			      \
+	       __atg104_memp, &__atg104_expected, __atg104_desired)	      \
+	     == 0));							      \
+     __atg104_expected; })
 #endif
 
 #endif /* !USE_ATOMIC_COMPILER_BUILTINS  */
