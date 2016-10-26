@@ -1,3 +1,8 @@
+2016-10-26  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* manual/memory.texi: Add environment variable alternatives to
+	setting mallopt parameters.
+
 2016-10-26  Carlos O'Donell  <carlos@redhat.com>
 
 	* include/atomic.h

@@ -1113,13 +1113,28 @@ choices for @var{param}, as defined in @file{malloc.h}, are:
 @item M_MMAP_MAX
 The maximum number of chunks to allocate with @code{mmap}.  Setting this
 to zero disables all use of @code{mmap}.
+
+The default value of this parameter is @code{65536}.
+
+This parameter can also be set for the process at startup by setting the
+environment variable @env{MALLOC_MMAP_MAX_} to the desired value.
+
 @item M_MMAP_THRESHOLD
 All chunks larger than this value are allocated outside the normal
 heap, using the @code{mmap} system call.  This way it is guaranteed
 that the memory for these chunks can be returned to the system on
 @code{free}.  Note that requests smaller than this threshold might still
 be allocated via @code{mmap}.
+
+If this parameter is not set, the default value is set as 128 KiB and the
+threshold is adjusted dynamically to suit the allocation patterns of the
+program. If the parameter is set, the dynamic adjustment is disabled and the
+value is set statically to the input value.
+
+This parameter can also be set for the process at startup by setting the
+environment variable @env{MALLOC_MMAP_THRESHOLD_} to the desired value.
 @comment TODO: @item M_MXFAST
+
 @item M_PERTURB
 If non-zero, memory blocks are filled with values depending on some
 low order bits of this parameter when they are allocated (except when
@@ -1128,16 +1143,37 @@ use of uninitialized or freed heap memory.  Note that this option does not
 guarantee that the freed block will have any specific values.  It only
 guarantees that the content the block had before it was freed will be
 overwritten.
+
+The default value of this parameter is @code{0}.
+
+This parameter can also be set for the process at startup by setting the
+environment variable @env{MALLOC_MMAP_PERTURB_} to the desired value.
+
 @item M_TOP_PAD
 This parameter determines the amount of extra memory to obtain from the
 system when a call to @code{sbrk} is required.  It also specifies the
 number of bytes to retain when shrinking the heap by calling @code{sbrk}
 with a negative argument.  This provides the necessary hysteresis in
 heap size such that excessive amounts of system calls can be avoided.
+
+The default value of this parameter is @code{0}.
+
+This parameter can also be set for the process at startup by setting the
+environment variable @env{MALLOC_TOP_PAD_} to the desired value.
+
 @item M_TRIM_THRESHOLD
 This is the minimum size (in bytes) of the top-most, releasable chunk
 that will cause @code{sbrk} to be called with a negative argument in
 order to return memory to the system.
+
+If this parameter is not set, the default value is set as 128 KiB and the
+threshold is adjusted dynamically to suit the allocation patterns of the
+program. If the parameter is set, the dynamic adjustment is disabled and the
+value is set statically to the provided input.
+
+This parameter can also be set for the process at startup by setting the
+environment variable @env{MALLOC_TRIM_THRESHOLD_} to the desired value.
+
 @end table
 
 @end deftypefun
