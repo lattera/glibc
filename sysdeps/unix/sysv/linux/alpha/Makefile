@@ -18,7 +18,7 @@ sysdep_routines += osf_select osf_gettimeofday osf_settimeofday \
 		   osf_getrusage osf_wait4
 
 # Support old ipc control
-sysdep_routines += oldsemctl oldshmctl
+sysdep_routines += oldshmctl
 
 CFLAGS-ioperm.c = -Wa,-mev6
 endif

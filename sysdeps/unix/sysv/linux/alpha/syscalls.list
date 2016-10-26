@@ -7,7 +7,6 @@ shmget		-	shmget		i:iii	__shmget	shmget
 semop		-	semop		i:ipi	__semop		semop
 semtimedop	-	semtimedop	i:ipip	semtimedop
 semget		-	semget		i:iii	__semget	semget
-oldsemctl	EXTRA	semctl		i:iiii	__old_semctl	semctl@GLIBC_2.0
 
 sigstack	-	sigstack	2	sigstack
 

@@ -7,4 +7,3 @@ shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
 semop		-	semop		i:ipi	__semop		semop
 semget		-	semget		i:iii	__semget	semget
-semctl		-	semctl		i:iiii	__semctl	semctl

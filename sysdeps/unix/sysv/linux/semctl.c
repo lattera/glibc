@@ -16,29 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stdarg.h>
 #include <sys/sem.h>
+#include <stdarg.h>
 #include <ipc_priv.h>
-
 #include <sysdep.h>
-#include <string.h>
-#include <sys/syscall.h>
 #include <shlib-compat.h>
-
-#include <kernel-features.h>
-
-struct __old_semid_ds
-{
-  struct __old_ipc_perm sem_perm;	/* operation permission struct */
-  __time_t sem_otime;			/* last semop() time */
-  __time_t sem_ctime;			/* last time changed by semctl() */
-  struct sem *__sembase;		/* ptr to first semaphore in array */
-  struct sem_queue *__sem_pending;	/* pending operations */
-  struct sem_queue *__sem_pending_last; /* last pending operation */
-  struct sem_undo *__undo;		/* ondo requests on this array */
-  unsigned short int sem_nsems;		/* number of semaphores in set */
-};
+#include <errno.h>
 
 /* Define a `union semun' suitable for Linux here.  */
 union semun
@@ -47,56 +30,19 @@ union semun
   struct semid_ds *buf;		/* buffer for IPC_STAT & IPC_SET */
   unsigned short int *array;	/* array for GETALL & SETALL */
   struct seminfo *__buf;	/* buffer for IPC_INFO */
-  struct __old_semid_ds *__old_buf;
 };
 
-/* Return identifier for array of NSEMS semaphores associated with
-   KEY.  */
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
-int __old_semctl (int semid, int semnum, int cmd, ...);
-#endif
-int __new_semctl (int semid, int semnum, int cmd, ...);
-
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
-int
-attribute_compat_text_section
-__old_semctl (int semid, int semnum, int cmd, ...)
-{
-  union semun arg;
-  va_list ap;
-
-  /* Get the argument only if required.  */
-  arg.buf = NULL;
-  switch (cmd)
-    {
-    case SETVAL:        /* arg.val */
-    case GETALL:        /* arg.array */
-    case SETALL:
-    case IPC_STAT:      /* arg.buf */
-    case IPC_SET:
-    case SEM_STAT:
-    case IPC_INFO:      /* arg.__buf */
-    case SEM_INFO:
-      va_start (ap, cmd);
-      arg = va_arg (ap, union semun);
-      va_end (ap);
-      break;
-    }
-
-  return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd,
-			 &arg);
-}
-compat_symbol (libc, __old_semctl, semctl, GLIBC_2_0);
+#ifndef DEFAULT_VERSION
+# define DEFAULT_VERSION GLIBC_2_2
 #endif
 
 int
 __new_semctl (int semid, int semnum, int cmd, ...)
 {
-  union semun arg;
+  union semun arg = { 0 };
   va_list ap;
 
   /* Get the argument only if required.  */
-  arg.buf = NULL;
   switch (cmd)
     {
     case SETVAL:        /* arg.val */
@@ -113,8 +59,51 @@ __new_semctl (int semid, int semnum, int cmd, ...)
       break;
     }
 
-  return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd | __IPC_64,
-			 &arg);
+#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (semctl, semid, semnum, cmd | __IPC_64,
+			      arg.array);
+#else
+  return INLINE_SYSCALL_CALL (ipc, IPCOP_semctl, semid, semnum, cmd | __IPC_64,
+			      SEMCTL_ARG_ADDRESS (arg));
+#endif
 }
+versioned_symbol (libc, __new_semctl, semctl, DEFAULT_VERSION);
 
-versioned_symbol (libc, __new_semctl, semctl, GLIBC_2_2);
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
+/* Since semctl use a variadic argument for semid_ds there is not need to
+   define and tie the compatibility symbol to the old 'union semun'
+   definition.  */
+int
+attribute_compat_text_section
+__old_semctl (int semid, int semnum, int cmd, ...)
+{
+  union semun arg = { 0 };
+  va_list ap;
+
+  /* Get the argument only if required.  */
+  switch (cmd)
+    {
+    case SETVAL:        /* arg.val */
+    case GETALL:        /* arg.array */
+    case SETALL:
+    case IPC_STAT:      /* arg.buf */
+    case IPC_SET:
+    case SEM_STAT:
+    case IPC_INFO:      /* arg.__buf */
+    case SEM_INFO:
+      va_start (ap, cmd);
+      arg = va_arg (ap, union semun);
+      va_end (ap);
+      break;
+    }
+
+# ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (semctl, semid, semnum, cmd, arg.array);
+# else
+  return INLINE_SYSCALL_CALL (ipc, IPCOP_semctl, semid, semnum, cmd,
+			      SEMCTL_ARG_ADDRESS (arg));
+# endif
+}
+compat_symbol (libc, __old_semctl, semctl, GLIBC_2_0);
+#endif

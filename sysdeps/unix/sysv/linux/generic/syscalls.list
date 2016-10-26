@@ -2,7 +2,6 @@
 
 # SysV APIs
 semget		-	semget		i:iii	__semget	semget
-semctl		-	semctl		i:iiii	__semctl	semctl
 semtimedop	-	semtimedop	i:ipip	semtimedop
 semop		-	semop		i:ipi	__semop		semop
 shmget		-	shmget		i:iii	__shmget	shmget

@@ -8,7 +8,6 @@ shmget		-	shmget		i:iii	__shmget	shmget
 semop		-	semop		i:ipi	__semop		semop
 semtimedop      -       semtimedop      i:ipip  semtimedop
 semget		-	semget		i:iii	__semget	semget
-semctl		-	semctl		i:iiii	__semctl	semctl
 
 # proper socket implementations:
 accept		-	accept		Ci:iBN	__libc_accept	__accept accept

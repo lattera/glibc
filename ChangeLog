@@ -1,5 +1,23 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdeps_routines): Remove
+	oldsemctl.
+	* sysdeps/unix/sysv/linux/alpha/semctl.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/semctl.c: Use defaulf
+	implementation.
+	* sysdeps/unix/sysv/linux/semctl.c (__new_semctl): Use semctl
+	syscall if it is defined.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list (semctl): Remove.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (semctl): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (semctl): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (semctl): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (semctl):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (semctl): Likewise.
+
 	* sysvipc/Makefile (tests): Add test-sysvmsg.
 	* sysvipc/test-sysvmsg.c: New file.
 	* support/check.h (FAIL_UNSUPPORTED): New define.
