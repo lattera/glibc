@@ -1132,11 +1132,10 @@ This parameter can also be set for the process at startup by setting the
 environment variable @env{MALLOC_MMAP_PERTURB_} to the desired value.
 
 @item M_TOP_PAD
-This parameter determines the amount of extra memory to obtain from the
-system when a call to @code{sbrk} is required.  It also specifies the
-number of bytes to retain when shrinking the heap by calling @code{sbrk}
-with a negative argument.  This provides the necessary hysteresis in
-heap size such that excessive amounts of system calls can be avoided.
+This parameter determines the amount of extra memory to obtain from the system
+when an arena needs to be extended.  It also specifies the number of bytes to
+retain when shrinking an arena.  This provides the necessary hysteresis in heap
+size such that excessive amounts of system calls can be avoided.
 
 The default value of this parameter is @code{0}.
 
@@ -1145,8 +1144,7 @@ environment variable @env{MALLOC_TOP_PAD_} to the desired value.
 
 @item M_TRIM_THRESHOLD
 This is the minimum size (in bytes) of the top-most, releasable chunk
-that will cause @code{sbrk} to be called with a negative argument in
-order to return memory to the system.
+that will trigger a system call in order to return memory to the system.
 
 If this parameter is not set, the default value is set as 128 KiB and the
 threshold is adjusted dynamically to suit the allocation patterns of the
