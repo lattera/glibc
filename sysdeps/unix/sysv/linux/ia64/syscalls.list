@@ -5,7 +5,6 @@ umount2		-	umount		2	__umount2	umount2
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
 
 # semaphore and shm system calls
-msgget		-	msgget		i:ii	__msgget	msgget
 shmat		-	shmat		i:ipi	__shmat		shmat
 shmctl		-	shmctl		i:iip	__shmctl	shmctl
 shmdt		-	shmdt		i:s	__shmdt		shmdt

@@ -1,5 +1,19 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (msgget): Remove.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (msgget): Likewise.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list (msgget): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (msgget): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (msgget): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/syscalls.list (msgget): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (msgget):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (msgget):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (msgget): Likewise.
+	* sysdeps/unix/sysv/linux/msgget.c (msgget): Use msgget syscall if
+	define.
+
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (msgsnd): Remove.
 	* sysdeps/unix/sysv/linux/arm/syscalls.list (msgsnd): Likewise.
 	* sysdeps/unix/sysv/linux/generic/syscalls.list (msgsnd): Likewise.

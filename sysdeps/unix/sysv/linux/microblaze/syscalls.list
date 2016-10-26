@@ -8,7 +8,6 @@ personality	EXTRA	personality	Ei:i	__personality	personality
 
 # Semaphore and shm system calls.  msgctl, shmctl, and semctl have C
 # wrappers (to set __IPC_64).
-msgget          -       msgget          i:ii    __msgget        msgget
 shmat           -       shmat           i:ipi   __shmat         shmat
 shmdt           -       shmdt           i:s     __shmdt         shmdt
 shmget          -       shmget          i:iii   __shmget        shmget
