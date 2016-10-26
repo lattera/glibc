@@ -1,3 +1,10 @@
+2016-10-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-getpayload.c: New file.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	getpayload.
+	(CFLAGS-nldbl-getpayload.c): New variable.
+
 2016-10-26  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* stdio-common/vfscanf.c (_IO_vfwscanf): Use read_int to parse
