@@ -35,4 +35,10 @@
 # define EXCEPTION_TESTS_long_double	0
 #endif
 
+/* NaN payload preservation when converting a signaling NaN to quiet
+   is only required in NAN2008 mode.  */
+#if defined __mips_hard_float && !defined __mips_nan2008
+# define SNAN_TESTS_PRESERVE_PAYLOAD	0
+#endif
+
 #include_next <math-tests.h>

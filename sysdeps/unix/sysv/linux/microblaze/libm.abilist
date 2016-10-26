@@ -382,6 +382,9 @@ GLIBC_2.24 nextupl F
 GLIBC_2.25 GLIBC_2.25 A
 GLIBC_2.25 __iseqsig F
 GLIBC_2.25 __iseqsigf F
+GLIBC_2.25 canonicalize F
+GLIBC_2.25 canonicalizef F
+GLIBC_2.25 canonicalizel F
 GLIBC_2.25 fegetmode F
 GLIBC_2.25 fesetexcept F
 GLIBC_2.25 fesetmode F

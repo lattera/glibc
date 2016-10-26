@@ -395,6 +395,9 @@ __MATHDECL_1 (int, totalorder,, (_Mdouble_ __x, _Mdouble_ __y))
 __MATHDECL_1 (int, totalordermag,, (_Mdouble_ __x, _Mdouble_ __y))
      __attribute__ ((__const__));
 
+/* Canonicalize floating-point representation.  */
+__MATHDECL_1 (int, canonicalize,, (_Mdouble_ *__cx, const _Mdouble_ *__x));
+
 /* Get NaN payload.  */
 __MATHCALL (getpayload,, (const _Mdouble_ *__x));
 #endif

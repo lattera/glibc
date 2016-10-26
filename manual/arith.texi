@@ -1857,6 +1857,36 @@ selects one.  On other systems it may do nothing.
 
 @comment math.h
 @comment ISO
+@deftypefun int canonicalize (double *@var{cx}, const double *@var{x})
+@comment math.h
+@comment ISO
+@deftypefunx int canonicalizef (float *@var{cx}, const float *@var{x})
+@comment math.h
+@comment ISO
+@deftypefunx int canonicalizel (long double *@var{cx}, const long double *@var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+In some floating-point formats, some values have canonical (preferred)
+and noncanonical encodings (for IEEE interchange binary formats, all
+encodings are canonical).  These functions, defined by TS
+18661-1:2014, attempt to produce a canonical version of the
+floating-point value pointed to by @var{x}; if that value is a
+signaling NaN, they raise the invalid exception and produce a quiet
+NaN.  If a canonical value is produced, it is stored in the object
+pointed to by @var{cx}, and these functions return zero.  Otherwise
+(if a canonical value could not be produced because the object pointed
+to by @var{x} is not a valid representation of any floating-point
+value), the object pointed to by @var{cx} is unchanged and a nonzero
+value is returned.
+
+Note that some formats have multiple encodings of a value which are
+all equally canonical; when such an encoding is used as an input to
+this function, any such encoding of the same value (or of the
+corresponding quiet NaN, if that value is a signaling NaN) may be
+produced as output.
+@end deftypefun
+
+@comment math.h
+@comment ISO
 @deftypefun double getpayload (const double *@var{x})
 @comment math.h
 @comment ISO

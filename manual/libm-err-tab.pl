@@ -77,10 +77,10 @@ use vars qw (%results @all_floats %suffices @all_functions);
     "nextup", "pow", "remainder", "remquo", "rint", "round", "scalb",
     "scalbn", "sin", "sincos", "sinh", "sqrt", "tan", "tanh", "tgamma",
     "trunc", "y0", "y1", "yn" );
-# fpclassify, getpayload, iscanonical, isnormal, isfinite, isinf, isnan,
-# issignaling, issubnormal, iszero, signbit, iseqsig, isgreater,
-# isgreaterequal, isless, islessequal, islessgreater, isunordered,
-# totalorder, totalordermag
+# canonicalize, fpclassify, getpayload, iscanonical, isnormal,
+# isfinite, isinf, isnan, issignaling, issubnormal, iszero, signbit,
+# iseqsig, isgreater, isgreaterequal, isless, islessequal,
+# islessgreater, isunordered, totalorder, totalordermag
 # are not tabulated.
 
 if ($#ARGV == 0) {

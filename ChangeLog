@@ -1,5 +1,99 @@
 2016-10-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(canonicalize): New declaration.
+	* math/Versions (canonicalize): New libm symbol at version
+	GLIBC_2.25.
+	(canonicalizef): Likewise.
+	(canonicalizel): Likewise.
+	* math/Makefile (gen-libm-calls): Add s_canonicalizeF.
+	* math/s_canonicalize_template.c: New file.
+	* math/libm-test.inc: Update comment on functions tested and
+	testing of NaN payloads.
+	(TEST_NAN_PAYLOAD): New macro.
+	(NO_TEST_INLINE): Update value.
+	(XFAIL_TEST): Likewise.
+	(ERRNO_UNCHANGED): Likewise.
+	(ERRNO_EDOM): Likewise.
+	(ERRNO_ERANGE): Likewise.
+	(IGNORE_RESULT): Likewise.
+	(NON_FINITE): Likewise.
+	(TEST_SNAN): Likewise.
+	(NO_TEST_MATHVEC): Likewise.
+	(TEST_NAN_PAYLOAD_CANONICALIZE): New macro.
+	(check_float_internal): Check NaN payloads if TEST_NAN_PAYLOAD.
+	(struct test_Ffp_b1_data): New type.
+	(RUN_TEST_Ffp_b1): New macro.
+	(RUN_TEST_LOOP_Ffp_b1): Likewise.
+	(canonicalize_test_data): New array.
+	(canonicalize_test): New function.
+	(main): Call canonicalize_test.
+	* manual/arith.texi (FP Bit Twiddling): Document canonicalize,
+	canonicalizef and canonicalizel.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/ldbl-opt/nldbl-canonicalize.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_canonicalizel.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	canonicalize.
+	(CFLAGS-nldbl-canonicalize.c): New variable.
+	* sysdeps/ieee754/ldbl-128ibm/test-iscanonical-ldbl-128ibm.c: Move
+	to ...
+	* sysdeps/ieee754/ldbl-128ibm/test-canonical-ldbl-128ibm.c:
+	... here.
+	(do_test): Also test canonicalizel.
+	* sysdeps/ieee754/ldbl-128ibm/Makefile (tests): Change
+	test-iscanonical-ldbl-128ibm to test-canonical-ldbl-128ibm.
+	* sysdeps/ieee754/ldbl-128ibm/include/bits/iscanonical.h: New
+	file.
+	* sysdeps/ieee754/ldbl-128ibm/s_iscanonicall.c (__iscanonicall):
+	Use libm_hidden_def.
+	* sysdeps/ieee754/ldbl-96/test-iscanonical-ldbl-96.c: Move to ...
+	* sysdeps/ieee754/ldbl-96/test-canonical-ldbl-96.c: ... here.
+	(do_test): Also test canonicalizel.
+	* sysdeps/ieee754/ldbl-96/Makefile (tests): Change
+	test-iscanonical-ldbl-96 to test-canonical-ldbl-96.
+	* sysdeps/ieee754/ldbl-96/include/bits/iscanonical.h: New file.
+	* sysdeps/ieee754/ldbl-96/s_iscanonicall.c (__iscanonicall): Use
+	libm_hidden_def.
+	* sysdeps/generic/math-tests.h (SNAN_TESTS_PRESERVE_PAYLOAD): New
+	macro.
+	* sysdeps/mips/math-tests.h [__mips_hard_float && !__mips_nan2008]
+	(SNAN_TESTS_PRESERVE_PAYLOAD): Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 	* sysdeps/ieee754/ldbl-opt/nldbl-getpayload.c: New file.
 	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
 	getpayload.

@@ -58,6 +58,8 @@ Version 2.25
   - Total order functions: totalorder, totalorderf, totalorderl,
     totalordermag, totalordermagf, totalordermagl.
 
+  - Canonicalize functions: canonicalize, canonicalizef, canonicalizel.
+
   - NaN functions: getpayload, getpayloadf, getpayloadl.
 
 * The functions strfromd, strfromf, and strfroml, from ISO/IEC TS 18661-1:2014,

@@ -57,3 +57,4 @@ __iscanonicall (long double x)
   int expdiff = hexp - lexp;
   return expdiff > 53 || (expdiff == 53 && low_p2 && (ix & 1) == 0);
 }
+libm_hidden_def (__iscanonicall)

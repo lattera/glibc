@@ -1,4 +1,4 @@
-/* Test iscanonical for ldbl-96.
+/* Test iscanonical and canonicalizel for ldbl-96.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -99,10 +99,37 @@ do_test (void)
 			 tests[i].mantissa & 0xffffffffULL);
       bool canonical = iscanonical (ld);
       if (canonical == tests[i].canonical)
-	printf ("PASS: test %zu\n", i);
+	{
+	  printf ("PASS: iscanonical test %zu\n", i);
+	  long double ldc = 12345.0L;
+	  bool canonicalize_ret = canonicalizel (&ldc, &ld);
+	  if (canonicalize_ret == !canonical)
+	    {
+	      printf ("PASS: canonicalizel test %zu\n", i);
+	      bool canon_ok;
+	      if (!canonical)
+		canon_ok = ldc == 12345.0L;
+	      else if (isnan (ld))
+		canon_ok = isnan (ldc) && !issignaling (ldc);
+	      else
+		canon_ok = ldc == ld;
+	      if (canon_ok)
+		printf ("PASS: canonicalized value test %zu\n", i);
+	      else
+		{
+		  printf ("FAIL: canonicalized value test %zu\n", i);
+		  result = 1;
+		}
+	    }
+	  else
+	    {
+	      printf ("FAIL: canonicalizel test %zu\n", i);
+	      result = 1;
+	    }
+	}
       else
 	{
-	  printf ("FAIL: test %zu\n", i);
+	  printf ("FAIL: iscanonical test %zu\n", i);
 	  result = 1;
 	}
     }
