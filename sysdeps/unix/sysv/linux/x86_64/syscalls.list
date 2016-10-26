@@ -12,7 +12,6 @@ shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
 semop		-	semop		i:ipi	__semop		semop
 semtimedop	-	semtimedop	i:ipip	semtimedop
-semget		-	semget		i:iii	__semget	semget
 syscall_clock_gettime	EXTRA	clock_gettime	Ei:ip		__syscall_clock_gettime
 
 

@@ -1,7 +1,6 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 # SysV APIs
-semget		-	semget		i:iii	__semget	semget
 semtimedop	-	semtimedop	i:ipip	semtimedop
 semop		-	semop		i:ipi	__semop		semop
 shmget		-	shmget		i:iii	__shmget	shmget

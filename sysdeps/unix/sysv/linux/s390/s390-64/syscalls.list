@@ -6,4 +6,3 @@ shmctl		-	shmctl		i:iip	__shmctl	shmctl
 shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
 semop		-	semop		i:ipi	__semop		semop
-semget		-	semget		i:iii	__semget	semget

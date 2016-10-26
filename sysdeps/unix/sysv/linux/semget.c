@@ -16,13 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <sys/sem.h>
 #include <ipc_priv.h>
-#include <stdlib.h>		/* for definition of NULL */
-
 #include <sysdep.h>
-#include <sys/syscall.h>
+#include <errno.h>
 
 /* Return identifier for array of NSEMS semaphores associated with
    KEY.  */
@@ -30,5 +27,9 @@
 int
 semget (key_t key, int nsems, int semflg)
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_semget, key, nsems, semflg, NULL);
+#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (semget, key, nsems, semflg);
+#else
+  return INLINE_SYSCALL_CALL (ipc, IPCOP_semget, key, nsems, semflg, NULL);
+#endif
 }
