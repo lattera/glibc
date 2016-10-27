@@ -1,3 +1,8 @@
+2016-10-27  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (sysmalloc): Initialize previous size field of
+	mmaped chunks.
+
 2016-10-28  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/malloc.c (struct malloc_chunk): Rename prev_size, size
