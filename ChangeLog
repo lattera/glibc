@@ -1,3 +1,15 @@
+2016-10-27  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* malloc/malloc.c (do_set_mallopt_check): New function.
+	(do_set_mmap_threshold): Likewise.
+	(do_set_mmaps_max): Likewise.
+	(do_set_top_pad): Likewise.
+	(do_set_perturb_byte): Likewise.
+	(do_set_trim_threshold): Likewise.
+	(do_set_arena_max): Likewise.
+	(do_set_arena_test): Likewise.
+	(__libc_mallopt): Use them.
+
 2016-10-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]

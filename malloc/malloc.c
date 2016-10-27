@@ -4718,6 +4718,91 @@ __malloc_stats (void)
 /*
    ------------------------------ mallopt ------------------------------
  */
+static inline int
+__always_inline
+do_set_trim_threshold (size_t value)
+{
+  LIBC_PROBE (memory_mallopt_trim_threshold, 3, value, mp_.trim_threshold,
+	      mp_.no_dyn_threshold);
+  mp_.trim_threshold = value;
+  mp_.no_dyn_threshold = 1;
+  return 1;
+}
+
+static inline int
+__always_inline
+do_set_top_pad (size_t value)
+{
+  LIBC_PROBE (memory_mallopt_top_pad, 3, value, mp_.top_pad,
+	      mp_.no_dyn_threshold);
+  mp_.top_pad = value;
+  mp_.no_dyn_threshold = 1;
+  return 1;
+}
+
+static inline int
+__always_inline
+do_set_mmap_threshold (size_t value)
+{
+  /* Forbid setting the threshold too high.  */
+  if (value <= HEAP_MAX_SIZE / 2)
+    {
+      LIBC_PROBE (memory_mallopt_mmap_threshold, 3, value, mp_.mmap_threshold,
+		  mp_.no_dyn_threshold);
+      mp_.mmap_threshold = value;
+      mp_.no_dyn_threshold = 1;
+      return 1;
+    }
+  return 0;
+}
+
+static inline int
+__always_inline
+do_set_mmaps_max (int32_t value)
+{
+  LIBC_PROBE (memory_mallopt_mmap_max, 3, value, mp_.n_mmaps_max,
+	      mp_.no_dyn_threshold);
+  mp_.n_mmaps_max = value;
+  mp_.no_dyn_threshold = 1;
+  return 1;
+}
+
+static inline int
+__always_inline
+do_set_mallopt_check (int32_t value)
+{
+  LIBC_PROBE (memory_mallopt_check_action, 2, value, check_action);
+  check_action = value;
+  return 1;
+}
+
+static inline int
+__always_inline
+do_set_perturb_byte (int32_t value)
+{
+  LIBC_PROBE (memory_mallopt_perturb, 2, value, perturb_byte);
+  perturb_byte = value;
+  return 1;
+}
+
+static inline int
+__always_inline
+do_set_arena_test (size_t value)
+{
+  LIBC_PROBE (memory_mallopt_arena_test, 2, value, mp_.arena_test);
+  mp_.arena_test = value;
+  return 1;
+}
+
+static inline int
+__always_inline
+do_set_arena_max (size_t value)
+{
+  LIBC_PROBE (memory_mallopt_arena_max, 2, value, mp_.arena_max);
+  mp_.arena_max = value;
+  return 1;
+}
+
 
 int
 __libc_mallopt (int param_number, int value)
@@ -4746,63 +4831,37 @@ __libc_mallopt (int param_number, int value)
       break;
 
     case M_TRIM_THRESHOLD:
-      LIBC_PROBE (memory_mallopt_trim_threshold, 3, value,
-                  mp_.trim_threshold, mp_.no_dyn_threshold);
-      mp_.trim_threshold = value;
-      mp_.no_dyn_threshold = 1;
+      do_set_trim_threshold (value);
       break;
 
     case M_TOP_PAD:
-      LIBC_PROBE (memory_mallopt_top_pad, 3, value,
-                  mp_.top_pad, mp_.no_dyn_threshold);
-      mp_.top_pad = value;
-      mp_.no_dyn_threshold = 1;
+      do_set_top_pad (value);
       break;
 
     case M_MMAP_THRESHOLD:
-      /* Forbid setting the threshold too high. */
-      if ((unsigned long) value > HEAP_MAX_SIZE / 2)
-        res = 0;
-      else
-        {
-          LIBC_PROBE (memory_mallopt_mmap_threshold, 3, value,
-                      mp_.mmap_threshold, mp_.no_dyn_threshold);
-          mp_.mmap_threshold = value;
-          mp_.no_dyn_threshold = 1;
-        }
+      res = do_set_mmap_threshold (value);
       break;
 
     case M_MMAP_MAX:
-      LIBC_PROBE (memory_mallopt_mmap_max, 3, value,
-                  mp_.n_mmaps_max, mp_.no_dyn_threshold);
-      mp_.n_mmaps_max = value;
-      mp_.no_dyn_threshold = 1;
+      do_set_mmaps_max (value);
       break;
 
     case M_CHECK_ACTION:
-      LIBC_PROBE (memory_mallopt_check_action, 2, value, check_action);
-      check_action = value;
+      do_set_mallopt_check (value);
       break;
 
     case M_PERTURB:
-      LIBC_PROBE (memory_mallopt_perturb, 2, value, perturb_byte);
-      perturb_byte = value;
+      do_set_perturb_byte (value);
       break;
 
     case M_ARENA_TEST:
       if (value > 0)
-        {
-          LIBC_PROBE (memory_mallopt_arena_test, 2, value, mp_.arena_test);
-          mp_.arena_test = value;
-        }
+	do_set_arena_test (value);
       break;
 
     case M_ARENA_MAX:
       if (value > 0)
-        {
-          LIBC_PROBE (memory_mallopt_arena_max, 2, value, mp_.arena_max);
-          mp_.arena_max = value;
-        }
+	do_set_arena_test (value);
       break;
     }
   __libc_lock_unlock (av->mutex);
