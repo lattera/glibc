@@ -18,6 +18,8 @@
 #ifndef _SYS_USER_H
 #define _SYS_USER_H	1
 
+#include <stddef.h>
+
 struct sunos_regs
 {
   unsigned int psr, pc, npc, y;

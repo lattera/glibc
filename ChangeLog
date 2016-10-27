@@ -1,3 +1,7 @@
+2016-10-27  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sys/user.h: Include stddef.h
+
 2016-10-27  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* malloc/malloc.c (do_set_mallopt_check): New function.
