@@ -35,6 +35,10 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 
   LIBC_PROBE (rwlock_unlock, 1, rwlock);
 
+  /* Trying to elide an unlocked lock may crash the process.  This
+     is expected and is compatible with POSIX.1-2008: "results are
+     undefined if the read-write lock rwlock is not held by the
+     calling thread".  */
   if (ELIDE_UNLOCK (rwlock->__data.__writer == 0
 		    && rwlock->__data.__nr_readers == 0))
     return 0;

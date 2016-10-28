@@ -102,6 +102,9 @@ __elide_unlock (int is_lock_free)
 {
   if (is_lock_free)
     {
+      /* This code is expected to crash when trying to unlock a lock not
+	 held by this thread.  More information is available in the
+	 __pthread_rwlock_unlock() implementation.  */
       __libc_tend (0);
       return true;
     }

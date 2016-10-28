@@ -1,5 +1,11 @@
 2016-10-28  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
+	* nptl/pthread_rwlock_unlock.c: Add a comment explaining its
+	behavior when eliding a lock not held by the current thread.
+	* sysdeps/powerpc/nptl/elide.h: Likewise.
+
+2016-10-28  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
 	[BZ #20728]
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Replace a
 	branch to _exit() by a function call.
