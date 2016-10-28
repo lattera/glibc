@@ -1,3 +1,9 @@
+2016-10-28  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/tst-linkall-static.c: New file.
+	* elf/Makefile (tests-static): Add tst-linkall-static.
+	(tst-linkall-static): Link against static libraries.
+
 2016-10-27  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/malloc.c (sysmalloc): Initialize previous size field of

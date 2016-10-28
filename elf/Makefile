@@ -122,7 +122,8 @@ tests = tst-tls1 tst-tls2 tst-tls9 tst-leaks1 \
 tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static \
 	       tst-leaks1-static tst-array1-static tst-array5-static \
 	       tst-ptrguard1-static tst-dl-iter-static \
-	       tst-tlsalign-static tst-tlsalign-extern-static
+	       tst-tlsalign-static tst-tlsalign-extern-static \
+	       tst-linkall-static
 ifeq (yes,$(build-shared))
 tests-static += tst-tls9-static
 tst-tls9-static-ENV = \
@@ -1278,3 +1279,13 @@ $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
 	$(evaluate-test)
 
 $(objpfx)tst-dlsym-error: $(libdl)
+
+$(objpfx)tst-linkall-static: \
+  $(common-objpfx)math/libm.a \
+  $(common-objpfx)crypt/libcrypt.a \
+  $(common-objpfx)resolv/libresolv.a \
+  $(common-objpfx)dlfcn/libdl.a \
+  $(common-objpfx)login/libutil.a \
+  $(common-objpfx)rt/librt.a \
+  $(common-objpfx)resolv/libanl.a \
+  $(static-thread-library) \
