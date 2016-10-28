@@ -81,8 +81,7 @@ static const uint32_t K[64] =
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
   };
 
-void
-sha256_process_block (const void *, size_t, struct sha256_ctx *);
+void __sha256_process_block (const void *, size_t, struct sha256_ctx *);
 
 /* Initialize structure containing state of computation.
    (FIPS 180-2:5.3.2)  */
@@ -131,7 +130,7 @@ __sha256_finish_ctx (struct sha256_ctx *ctx, void *resbuf)
 #endif
 
   /* Process last bytes.  */
-  sha256_process_block (ctx->buffer, bytes + pad + 8, ctx);
+  __sha256_process_block (ctx->buffer, bytes + pad + 8, ctx);
 
   /* Put result from CTX in first 32 bytes following RESBUF.  */
   for (unsigned int i = 0; i < 8; ++i)
@@ -156,7 +155,7 @@ __sha256_process_bytes (const void *buffer, size_t len, struct sha256_ctx *ctx)
 
       if (ctx->buflen > 64)
 	{
-	  sha256_process_block (ctx->buffer, ctx->buflen & ~63, ctx);
+	  __sha256_process_block (ctx->buffer, ctx->buflen & ~63, ctx);
 
 	  ctx->buflen &= 63;
 	  /* The regions in the following copy operation cannot overlap.  */
@@ -182,14 +181,14 @@ __sha256_process_bytes (const void *buffer, size_t len, struct sha256_ctx *ctx)
       if (UNALIGNED_P (buffer))
 	while (len > 64)
 	  {
-	    sha256_process_block (memcpy (ctx->buffer, buffer, 64), 64, ctx);
+	    __sha256_process_block (memcpy (ctx->buffer, buffer, 64), 64, ctx);
 	    buffer = (const char *) buffer + 64;
 	    len -= 64;
 	  }
       else
 #endif
 	{
-	  sha256_process_block (buffer, len & ~63, ctx);
+	  __sha256_process_block (buffer, len & ~63, ctx);
 	  buffer = (const char *) buffer + (len & ~63);
 	  len &= 63;
 	}
@@ -204,7 +203,7 @@ __sha256_process_bytes (const void *buffer, size_t len, struct sha256_ctx *ctx)
       left_over += len;
       if (left_over >= 64)
 	{
-	  sha256_process_block (ctx->buffer, 64, ctx);
+	  __sha256_process_block (ctx->buffer, 64, ctx);
 	  left_over -= 64;
 	  memcpy (ctx->buffer, &ctx->buffer[64], left_over);
 	}

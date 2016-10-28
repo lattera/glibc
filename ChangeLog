@@ -1,3 +1,12 @@
+2016-10-28  Florian Weimer  <fweimer@redhat.com>
+
+	* crypt/sha256.c, crypt/sha256-block.c,
+	sysdeps/sparc/sparc64/multiarch/sha256-block.c: Rename
+	sha256_process_block to __sha256_process_block.
+	* crypt/sha512.c, crypt/sha512-block.c,
+	sysdeps/sparc/sparc64/multiarch/sha512-block.c: Rename
+	sha512_process_block to __sha512_process_block.
+
 2016-10-28  Carlos O'Donell  <carlos@redhat.com>
 
 	* elf/Makefile (CFLAGS-tst-linkall-static): Define.

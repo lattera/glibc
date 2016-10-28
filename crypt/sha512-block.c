@@ -3,7 +3,7 @@
 /* Process LEN bytes of BUFFER, accumulating context into CTX.
    It is assumed that LEN % 128 == 0.  */
 void
-sha512_process_block (const void *buffer, size_t len, struct sha512_ctx *ctx)
+__sha512_process_block (const void *buffer, size_t len, struct sha512_ctx *ctx)
 {
   const uint64_t *words = buffer;
   size_t nwords = len / sizeof (uint64_t);

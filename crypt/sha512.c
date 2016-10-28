@@ -101,8 +101,8 @@ static const uint64_t K[80] =
     UINT64_C (0x5fcb6fab3ad6faec), UINT64_C (0x6c44198c4a475817)
   };
 
-void
-sha512_process_block (const void *buffer, size_t len, struct sha512_ctx *ctx);
+void __sha512_process_block (const void *buffer, size_t len,
+			     struct sha512_ctx *ctx);
 
 /* Initialize structure containing state of computation.
    (FIPS 180-2:5.3.3)  */
@@ -153,7 +153,7 @@ __sha512_finish_ctx (struct sha512_ctx *ctx, void *resbuf)
 					   (ctx->total[TOTAL128_low] >> 61));
 
   /* Process last bytes.  */
-  sha512_process_block (ctx->buffer, bytes + pad + 16, ctx);
+  __sha512_process_block (ctx->buffer, bytes + pad + 16, ctx);
 
   /* Put result from CTX in first 64 bytes following RESBUF.  */
   for (unsigned int i = 0; i < 8; ++i)
@@ -178,7 +178,7 @@ __sha512_process_bytes (const void *buffer, size_t len, struct sha512_ctx *ctx)
 
       if (ctx->buflen > 128)
 	{
-	  sha512_process_block (ctx->buffer, ctx->buflen & ~127, ctx);
+	  __sha512_process_block (ctx->buffer, ctx->buflen & ~127, ctx);
 
 	  ctx->buflen &= 127;
 	  /* The regions in the following copy operation cannot overlap.  */
@@ -204,7 +204,7 @@ __sha512_process_bytes (const void *buffer, size_t len, struct sha512_ctx *ctx)
       if (UNALIGNED_P (buffer))
 	while (len > 128)
 	  {
-	    sha512_process_block (memcpy (ctx->buffer, buffer, 128), 128,
+	    __sha512_process_block (memcpy (ctx->buffer, buffer, 128), 128,
 				    ctx);
 	    buffer = (const char *) buffer + 128;
 	    len -= 128;
@@ -212,7 +212,7 @@ __sha512_process_bytes (const void *buffer, size_t len, struct sha512_ctx *ctx)
       else
 #endif
 	{
-	  sha512_process_block (buffer, len & ~127, ctx);
+	  __sha512_process_block (buffer, len & ~127, ctx);
 	  buffer = (const char *) buffer + (len & ~127);
 	  len &= 127;
 	}
@@ -227,7 +227,7 @@ __sha512_process_bytes (const void *buffer, size_t len, struct sha512_ctx *ctx)
       left_over += len;
       if (left_over >= 128)
 	{
-	  sha512_process_block (ctx->buffer, 128, ctx);
+	  __sha512_process_block (ctx->buffer, 128, ctx);
 	  left_over -= 128;
 	  memcpy (ctx->buffer, &ctx->buffer[128], left_over);
 	}
