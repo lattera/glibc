@@ -1070,18 +1070,19 @@ struct malloc_chunk {
 
 
     chunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	    |             Size of previous chunk, if allocated            | |
+	    |             Size of previous chunk, if unallocated (P clear)  |
 	    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	    |             Size of chunk, in bytes                       |M|P|
+	    |             Size of chunk, in bytes                     |A|M|P|
       mem-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	    |             User data starts here...                          .
 	    .                                                               .
 	    .             (malloc_usable_size() bytes)                      .
 	    .                                                               |
 nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	    |             Size of chunk                                     |
+	    |             (size of chunk, but used for application data)    |
 	    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
+	    |             Size of next chunk, in bytes                |A|0|1|
+	    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
     Where "chunk" is the front of the chunk for the purpose of most of
     the malloc code, but "mem" is the pointer that is returned to the
@@ -1094,9 +1095,9 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     Free chunks are stored in circular doubly-linked lists, and look like this:
 
     chunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	    |             Size of previous chunk                            |
+	    |             Size of previous chunk, if unallocated (P clear)  |
 	    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    `head:' |             Size of chunk, in bytes                         |P|
+    `head:' |             Size of chunk, in bytes                     |A|0|P|
       mem-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	    |             Forward pointer to next chunk in list             |
 	    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1107,6 +1108,8 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	    .                                                               |
 nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     `foot:' |             Size of chunk, in bytes                           |
+	    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	    |             Size of next chunk, in bytes                |A|0|0|
 	    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
     The P (PREV_INUSE) bit, stored in the unused low-order bit of the
@@ -1120,12 +1123,21 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     the size of the previous chunk, and might even get a memory
     addressing fault when trying to do so.
 
+    The A (NON_MAIN_ARENA) bit is cleared for chunks on the initial,
+    main arena, described by the main_arena variable.  When additional
+    threads are spawned, each thread receives its own arena (up to a
+    configurable limit, after which arenas are reused for multiple
+    threads), and the chunks in these arenas have the A bit set.  To
+    find the arena for a chunk on such a non-main arena, heap_for_ptr
+    performs a bit mask operation and indirection through the ar_ptr
+    member of the per-heap header heap_info (see arena.c).
+
     Note that the `foot' of the current chunk is actually represented
     as the prev_size of the NEXT chunk. This makes it easier to
     deal with alignments etc but can be very confusing when trying
     to extend or adapt this code.
 
-    The two exceptions to all this are
+    The three exceptions to all this are:
 
      1. The special chunk `top' doesn't bother using the
 	trailing size field since there is no next contiguous chunk
@@ -1135,8 +1147,16 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
      2. Chunks allocated via mmap, which have the second-lowest-order
 	bit M (IS_MMAPPED) set in their size fields.  Because they are
-	allocated one-by-one, each must contain its own trailing size field.
+	allocated one-by-one, each must contain its own trailing size
+	field.  If the M bit is set, the other bits are ignored
+	(because mmapped chunks are neither in an arena, nor adjacent
+	to a freed chunk).  The M bit is also used for chunks which
+	originally came from a dumped heap via malloc_set_state in
+	hooks.c.
 
+     3. Chunks in fastbins are treated as allocated chunks from the
+	point of view of the chunk allocator.  They are consolidated
+	with their neighbors only in bulk, in malloc_consolidate.
 */
 
 /*
@@ -1215,7 +1235,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    the chunk to the user, if necessary.  */
 #define NON_MAIN_ARENA 0x4
 
-/* check for chunk from non-main arena */
+/* Check for chunk from main arena.  */
 #define chunk_main_arena(p) (((p)->mchunk_size & NON_MAIN_ARENA) == 0)
 
 /* Mark a chunk as not being on the main arena.  */

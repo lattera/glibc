@@ -1,5 +1,10 @@
 2016-10-28  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/malloc.c: Update chunk layout comments.
+	(chunk_main_arena): Update comment.
+
+2016-10-28  Florian Weimer  <fweimer@redhat.com>
+
 	* crypt/sha256.c, crypt/sha256-block.c,
 	sysdeps/sparc/sparc64/multiarch/sha256-block.c: Rename
 	sha256_process_block to __sha256_process_block.
