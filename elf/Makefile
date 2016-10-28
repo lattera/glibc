@@ -1280,7 +1280,6 @@ $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
 
 $(objpfx)tst-dlsym-error: $(libdl)
 
-CFLAGS-tst-linkall-static.c = -I../crypt
 $(objpfx)tst-linkall-static: \
   $(common-objpfx)math/libm.a \
   $(common-objpfx)crypt/libcrypt.a \

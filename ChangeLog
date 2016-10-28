@@ -1,3 +1,8 @@
+2016-10-28  Carlos O'Donell  <carlos@redhat.com>
+
+	* elf/Makefile (CFALGS-tst-linkall-static): Remove.
+	* include/crypt.h: New file.
+
 2016-10-28  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* dlfcn/bug-atexit3-lib.cc (write_message): New function, copied
