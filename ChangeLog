@@ -1,5 +1,9 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysvipc/Makefile (tests): Add test-sysvmsg.
+	* sysvipc/test-sysvmsg.c: New file.
+	* support/check.h (FAIL_UNSUPPORTED): New define.
+
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (msgget): Remove.
 	* sysdeps/unix/sysv/linux/arm/syscalls.list (msgget): Likewise.
 	* sysdeps/unix/sysv/linux/generic/syscalls.list (msgget): Likewise.

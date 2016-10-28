@@ -30,6 +30,8 @@ routines := ftok \
 	    semop semget semctl semtimedop \
 	    shmat shmdt shmget shmctl
 
+tests    := test-sysvmsg
+
 include ../Rules
 
 CFLAGS-msgrcv.c = -fexceptions -fasynchronous-unwind-tables

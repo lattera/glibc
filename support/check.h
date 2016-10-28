@@ -35,6 +35,11 @@ __BEGIN_DECLS
 #define FAIL_EXIT1(...) \
   support_exit_failure_impl (1, __FILE__, __LINE__, __VA_ARGS__)
 
+/* Print failure message and terminate with as unsupported test (exit
+   status of 77).  */
+#define FAIL_UNSUPPORTED(...) \
+  support_exit_failure_impl (77, __FILE__, __LINE__, __VA_ARGS__)
+
 /* Record a test failure (but continue executing) if EXPR evaluates to
    false.  */
 #define TEST_VERIFY(expr)                                       \
