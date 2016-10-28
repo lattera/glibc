@@ -1,3 +1,7 @@
+2016-10-28  Carlos O'Donell  <carlos@redhat.com>
+
+	* math/test-nan-overflow.c: Include stdlib.h for malloc.
+
 2016-10-28  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #20019]

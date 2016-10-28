@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/resource.h>
+#include <stdlib.h>
 
 #define STACK_LIM 1048576
 #define STRING_SIZE (2 * STACK_LIM)
