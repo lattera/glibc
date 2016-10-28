@@ -1,3 +1,39 @@
+2016-10-28  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (struct malloc_chunk): Rename prev_size, size
+	members to mchunk_prev_size, mchunk_size.
+	(chunk_main_arena): Reverse sense and rename from
+	chunk_non_main_arena.
+	(prev_inuse, chunk_is_mmapped, chunk_main_arena): Use
+	mchunk_size instead of size.
+	(set_non_main_arena): Define.
+	(chunksize): Use chunksize_nomask instead of direct member access.
+	(chunksize_nomask): Define.
+	(next_chunk): Use chunksize instead of direct member access.
+	(prev_size, set_prev_size): Define.
+	(prev_chunk): Use prev_size instead of direct member access.
+	(inuse, set_inuse, clear_inuse): Use chunksize and mchunk_size member.
+	(inuse_bit_at_offset, set_inuse_bit_at_offset)
+	(clear_inuse_bit_at_offset): Use mchunk_size member instead of size.
+	(mchunk_prev_size, mchunk_size): Poison tokens.
+	(unlink): Use chunksize_nomask, prev_size accessors.
+	(do_check_remalloced_chunk): Use chunk_main_arena accessor.
+	(do_check_free_chunk): Use prev_size accessor.
+	(sysmalloc): Use set_prev_size, set_head accessors.
+	(munmap_chunk, mremap_chunk): Use prev_size accessor.
+	(__libc_free): Use chunksize_nomask accessor.
+	(_int_malloc): Use set_non_main_arena, chunksize_nomask,
+	chunk_main_arena accessors.
+	(_int_free): Use chunksize_nomask, prev_size accessors.
+	(malloc_consolidate): Use chunksize, prev_size accessors.
+	(_int_realloc): Use chunksize_nomask accessor.
+	(_int_memalign): Use set_prev_size accessor.
+	(__malloc_info): Use chunksize_nomask accessor.
+	* malloc/hooks.c (mem2chunk_check): Use prev_size, prev_inuse
+	accessors.
+	* malloc/arena.c (arena_for_chunk): Use chunk_main_arena accessor.
+	(heap_trim): Use chunksize_nomask, prev_size accessors.
+
 2016-10-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19380]

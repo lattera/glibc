@@ -192,7 +192,7 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
            ((char *) p < mp_.sbrk_base ||
             ((char *) p + sz) >= (mp_.sbrk_base + main_arena.system_mem))) ||
           sz < MINSIZE || sz & MALLOC_ALIGN_MASK || !inuse (p) ||
-          (!prev_inuse (p) && (p->prev_size & MALLOC_ALIGN_MASK ||
+          (!prev_inuse (p) && ((prev_size (p) & MALLOC_ALIGN_MASK) != 0 ||
                                (contig && (char *) prev_chunk (p) < mp_.sbrk_base) ||
                                next_chunk (prev_chunk (p)) != p)))
         return NULL;
@@ -215,9 +215,9 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
            offset != 0x20 && offset != 0x40 && offset != 0x80 && offset != 0x100 &&
            offset != 0x200 && offset != 0x400 && offset != 0x800 && offset != 0x1000 &&
            offset < 0x2000) ||
-          !chunk_is_mmapped (p) || (p->size & PREV_INUSE) ||
-          ((((unsigned long) p - p->prev_size) & page_mask) != 0) ||
-          ((p->prev_size + sz) & page_mask) != 0)
+          !chunk_is_mmapped (p) || prev_inuse (p) ||
+          ((((unsigned long) p - prev_size (p)) & page_mask) != 0) ||
+          ((prev_size (p) + sz) & page_mask) != 0)
         return NULL;
 
       for (sz -= 1; (c = ((unsigned char *) p)[sz]) != magic; sz -= c)

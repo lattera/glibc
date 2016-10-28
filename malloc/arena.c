@@ -122,7 +122,7 @@ int __malloc_initialized = -1;
 #define heap_for_ptr(ptr) \
   ((heap_info *) ((unsigned long) (ptr) & ~(HEAP_MAX_SIZE - 1)))
 #define arena_for_chunk(ptr) \
-  (chunk_non_main_arena (ptr) ? heap_for_ptr (ptr)->ar_ptr : &main_arena)
+  (chunk_main_arena (ptr) ? &main_arena : heap_for_ptr (ptr)->ar_ptr)
 
 
 /**************************************************************************/
@@ -560,12 +560,12 @@ heap_trim (heap_info *heap, size_t pad)
       /* fencepost must be properly aligned.  */
       misalign = ((long) p) & MALLOC_ALIGN_MASK;
       p = chunk_at_offset (prev_heap, prev_size - misalign);
-      assert (p->size == (0 | PREV_INUSE)); /* must be fencepost */
+      assert (chunksize_nomask (p) == (0 | PREV_INUSE)); /* must be fencepost */
       p = prev_chunk (p);
       new_size = chunksize (p) + (MINSIZE - 2 * SIZE_SZ) + misalign;
       assert (new_size > 0 && new_size < (long) (2 * MINSIZE));
       if (!prev_inuse (p))
-        new_size += p->prev_size;
+        new_size += prev_size (p);
       assert (new_size > 0 && new_size < HEAP_MAX_SIZE);
       if (new_size + (HEAP_MAX_SIZE - prev_heap->size) < pad + MINSIZE + pagesz)
         break;
