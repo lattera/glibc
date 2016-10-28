@@ -1,14 +1,22 @@
 #include <unistd.h>
+#include <string.h>
+
+static void
+write_message (const char *message)
+{
+  ssize_t unused __attribute__ ((unused));
+  unused = write (STDOUT_FILENO, message, strlen (message));
+}
 
 struct statclass
 {
   statclass()
   {
-    write (1, "statclass\n", 10);
+    write_message ("statclass\n");
   }
   ~statclass()
   {
-    write (1, "~statclass\n", 11);
+    write_message ("~statclass\n");
   }
 };
 
