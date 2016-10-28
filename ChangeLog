@@ -1,3 +1,16 @@
+2016-10-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19380]
+	* stdlib/strtod_l.c (round_and_return): Force "inexact" exception
+	for inexact results.
+	* stdlib/gen-tst-strtod-round.c (string_to_fp): Return indication
+	of inexact result where mpfr_subnormalize is the only inexact
+	step.
+	* stdlib/tst-strtod-round-data.h: Regenerated.
+	* stdlib/tst-strtod-round-skeleton.c [!FE_INEXACT] (FE_INEXACT):
+	Define to 0.
+	(GEN_ONE_TEST): Test inexact exceptions raised are as expected.
+
 2016-10-27  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sys/user.h: Include stddef.h

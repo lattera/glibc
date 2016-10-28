@@ -294,11 +294,14 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
   if (exponent > MAX_EXP)
     goto overflow;
 
+  bool half_bit = (round_limb & (((mp_limb_t) 1) << round_bit)) != 0;
+  bool more_bits_nonzero
+    = (more_bits
+       || (round_limb & ((((mp_limb_t) 1) << round_bit) - 1)) != 0);
   if (round_away (negative,
 		  (retval[0] & 1) != 0,
-		  (round_limb & (((mp_limb_t) 1) << round_bit)) != 0,
-		  (more_bits
-		   || (round_limb & ((((mp_limb_t) 1) << round_bit) - 1)) != 0),
+		  half_bit,
+		  more_bits_nonzero,
 		  mode))
     {
       mp_limb_t cy = __mpn_add_1 (retval, retval, RETURN_LIMB_SIZE, 1);
@@ -325,6 +328,11 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
   overflow:
     return overflow_value (negative);
 
+  if (half_bit || more_bits_nonzero)
+    {
+      FLOAT force_inexact = (FLOAT) 1 + MIN_VALUE;
+      math_force_eval (force_inexact);
+    }
   return MPN2FLOAT (retval, exponent, negative);
 }
 

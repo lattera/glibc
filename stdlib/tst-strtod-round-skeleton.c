@@ -157,8 +157,13 @@ struct test {
 #define STR(x) STRX (x)
 #define FNPFXS STR (FNPFX)
 
+#ifndef FE_INEXACT
+# define FE_INEXACT 0
+#endif
+
 #define GEN_ONE_TEST(FSUF, FTYPE, FTOSTR, LSUF, CSUF)		\
 {								\
+  feclearexcept (FE_INEXACT);					\
   FTYPE f = STRTO (FSUF) (s, NULL);				\
   if (f != expected->FSUF					\
       || (copysign ## CSUF) (1.0 ## LSUF, f)			\
@@ -174,6 +179,19 @@ struct test {
 	result = 1;						\
       else							\
 	printf ("ignoring this inexact result\n");		\
+    }								\
+  else if (FE_INEXACT != 0)					\
+    {								\
+      bool inexact_raised = fetestexcept (FE_INEXACT) != 0;	\
+      if (inexact_raised != !exact->FSUF)			\
+	{							\
+	  printf (FNPFXS "to" #FSUF  " (" STRM ") inexact %d "	\
+		  "not %d\n", s, inexact_raised, !exact->FSUF);	\
+	  if (EXCEPTION_TESTS (FTYPE))				\
+	    result = 1;						\
+	  else							\
+	    printf ("ignoring this exception error\n");		\
+	}							\
     }								\
 }
 
