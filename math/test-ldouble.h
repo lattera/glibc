@@ -27,3 +27,4 @@
 #define LIT(x) (x ## L)
 #define LITM(x) x ## l
 #define FTOSTR snprintf
+#define snan_value_MACRO SNANL

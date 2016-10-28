@@ -28,3 +28,4 @@
 /* Use the double variants of macro constants.  */
 #define LITM(x) x
 #define FTOSTR snprintf
+#define snan_value_MACRO SNANF

@@ -8901,6 +8901,8 @@ static const struct test_f_i_data issignaling_test_data[] =
     TEST_f_b (issignaling, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (issignaling, snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (issignaling, -snan_value, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issignaling, snan_value_MACRO, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_b (issignaling, -snan_value_MACRO, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
 static void

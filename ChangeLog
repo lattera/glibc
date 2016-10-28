@@ -1,3 +1,20 @@
+2016-10-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h
+	[__GLIBC_USE (IEC_60559_BFP_EXT) && __GNUC_PREREQ (3, 3)] (SNANF):
+	New macro.
+	[__GLIBC_USE (IEC_60559_BFP_EXT) && __GNUC_PREREQ (3, 3)] (SNAN):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT) && __GNUC_PREREQ (3, 3)] (SNANL):
+	Likewise.
+	* manual/arith.texi (Infinity and NaN): Document SNANF, SNAN and
+	SNANL.
+	* math/test-double.h (snan_value_MACRO): New macro.
+	* math/test-float.h (snan_value_MACRO): Likewise.
+	* math/test-ldouble.h (snan_value_MACRO): Likewise.
+	* math/libm-test.inc (issignaling_test_data): Add tests of
+	snan_value_MACRO.
+
 2016-10-28  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* nptl/pthread_rwlock_unlock.c: Add a comment explaining its

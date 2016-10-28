@@ -711,6 +711,15 @@ such as by defining @code{_GNU_SOURCE}, and then you must include
 @file{math.h}.)
 @end deftypevr
 
+@comment math.h
+@comment ISO
+@deftypevr Macro float SNANF
+@deftypevrx Macro double SNAN
+@deftypevrx Macro {long double} SNANL
+These macros, defined by TS 18661-1:2014, are constant expressions for
+signaling NaNs.
+@end deftypevr
+
 @w{IEEE 754} also allows for another unusual value: negative zero.  This
 value is produced when you divide a positive number by negative
 infinity, or when a negative result is smaller than the limits of

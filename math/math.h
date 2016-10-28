@@ -45,6 +45,15 @@ __BEGIN_DECLS
 # include <bits/nan.h>
 #endif /* __USE_ISOC99 */
 
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Signaling NaN macros, if supported.  */
+# if __GNUC_PREREQ (3, 3)
+#  define SNANF (__builtin_nansf (""))
+#  define SNAN (__builtin_nans (""))
+#  define SNANL (__builtin_nansl (""))
+# endif
+#endif
+
 /* Get the architecture specific values describing the floating-point
    evaluation.  The following symbols will get defined:
 
