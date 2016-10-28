@@ -321,7 +321,23 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 			       0)
 	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
 	  && __builtin_expect (!skip_ifunc, 1))
-	value = ((Elf32_Addr (*) (void)) value) ();
+	{
+# ifndef RTLD_BOOTSTRAP
+	  if (sym_map != map
+	      && sym_map->l_type != lt_executable
+	      && !sym_map->l_relocated)
+	    {
+	      const char *strtab
+		= (const char *) D_PTR (map, l_info[DT_STRTAB]);
+	      _dl_fatal_printf ("\
+%s: Relink `%s' with `%s' for IFUNC symbol `%s'\n",
+				RTLD_PROGNAME, map->l_name,
+				sym_map->l_name,
+				strtab + refsym->st_name);
+	    }
+# endif
+	  value = ((Elf32_Addr (*) (void)) value) ();
+	}
 
       switch (r_type)
 	{

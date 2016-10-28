@@ -1,3 +1,10 @@
+2016-10-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20019]
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Check IFUNC
+	definition in unrelocated shared library.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Likewise.
+
 2016-10-28  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20729]
