@@ -36,7 +36,7 @@
 #define STRUCT_FOREACH_FLOAT_FTYPE GEN_TEST_STRTOD_FOREACH (FTYPE_MEMBER)
 
 #define ENTRY(FSUF, FTYPE, FTOSTR, LSUF, CSUF, ...)  \
-   CONCAT (__VA_ARGS__, CSUF),
+   CONCAT (__VA_ARGS__, LSUF),
 /* This is hacky way around the seemingly unavoidable macro
  * expansion of the INFINITY or HUGE_VAL like macros in the
  * above.  It is assumed the compiler will implicitly convert

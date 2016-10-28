@@ -1,3 +1,7 @@
+2016-12-14  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* stdlib/tst-strfrom.h (ENTRY): Replace use of CSUF with LSUF.
+
 2016-12-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/renameat.c: New file.
