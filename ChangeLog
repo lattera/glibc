@@ -1,5 +1,29 @@
 2016-10-28  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20729]
+	Support i386 builds with CFLAGS which imply -fno-omit-frame-pointer.
+	* sysdeps/unix/sysv/linux/i386/Makefile
+	(uses-6-syscall-arguments): Define.
+	[subdir == misc] (CFLAGS-epoll_pwait.o, CFLAGS-epoll_pwait.os)
+	(CFLAGS-mmap.o, CFLAGS-mmap.os, CFLAGS-mmap64.o, CFLAGS-mmap64.os)
+	(CFLAGS-pselect.o, CFLAGS-pselect.os, CFLAGS-rtld-mmap.os): Use it.
+	[subdir = sysvipc] (CFLAGS-semtimedop.o, CFLAGS-semtimedop.os):
+	Likewise.
+	[subdir = io] (CFLAGS-posix_fadvise64.o, CFLAGS-posix_fadvise64.os)
+	(CFLAGS-posix_fallocate.o, CFLAGS-posix_fallocate.os)
+	(CFLAGS-posix_fallocate64.o, CFLAGS-posix_fallocate64.os)
+	(CFLAGS-sync_file_range.o, CFLAGS-sync_file_range.os)
+	(CFLAGS-fallocate.o, CFLAGS-fallocate.os, CFLAGS-fallocate64.o)
+	(CFLAGS-fallocate64.os): Likewise.
+	[subdir = nptl] (CFLAGS-pthread_rwlock_timedrdlock.o)
+	(CFLAGS-pthread_rwlock_timedrdlock.os)
+	(CFLAGS-pthread_rwlock_timedwrlock.o)
+	(CFLAGS-pthread_rwlock_timedwrlock.os, CFLAGS-sem_wait.o)
+	(CFLAGS-sem_wait.os, CFLAGS-sem_timedwait.o)
+	(CFLAGS-sem_timedwait.os): Likewise.
+
+2016-10-28  Florian Weimer  <fweimer@redhat.com>
+
 	* elf/tst-linkall-static.c: New file.
 	* elf/Makefile (tests-static): Add tst-linkall-static.
 	(tst-linkall-static): Link against static libraries.
