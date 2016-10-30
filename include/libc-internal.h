@@ -111,4 +111,19 @@ extern __typeof (__profile_frequency) __profile_frequency attribute_hidden;
 #define DIAG_IGNORE_NEEDS_COMMENT(version, option)	\
   _Pragma (_DIAG_STR (GCC diagnostic ignored option))
 
+/* Similar to DIAG_IGNORE_NEEDS_COMMENT the following macro ignores the
+   diagnostic OPTION but only if optimizations for size are enabled.
+   This is required because different warnings may be generated for
+   different optimization levels.  For example a key piece of code may
+   only generate a warning when compiled at -Os, but at -O2 you could
+   still want the warning to be enabled to catch errors.  In this case
+   you would use DIAG_IGNORE_Os_NEEDS_COMMENT to disable the warning
+   only for -Os.  */
+#ifdef __OPTIMIZE_SIZE__
+# define DIAG_IGNORE_Os_NEEDS_COMMENT(version, option)	\
+  _Pragma (_DIAG_STR (GCC diagnostic ignored option))
+#else
+# define DIAG_IGNORE_Os_NEEDS_COMMENT(version, option)
+#endif
+
 #endif /* _LIBC_INTERNAL  */

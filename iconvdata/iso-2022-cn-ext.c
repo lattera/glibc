@@ -27,6 +27,7 @@
 #include "cns11643.h"
 #include "cns11643l1.h"
 #include "cns11643l2.h"
+#include <libc-internal.h>
 
 #include <assert.h>
 
@@ -394,6 +395,16 @@ enum
 #define MIN_NEEDED_OUTPUT	TO_LOOP_MIN_NEEDED_TO
 #define MAX_NEEDED_OUTPUT	TO_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			TO_LOOP
+/* With GCC 5.3 when compiling with -Os the compiler emits a warning
+   that buf[0] and buf[1] may be used uninitialized.  This can only
+   happen in the case where tmpbuf[3] is used, and in that case the
+   write to the tmpbuf[1] and tmpbuf[2] was assured because
+   ucs4_to_cns11643 would have filled in those entries.  The difficulty
+   is in getting the compiler to see this logic because tmpbuf[0] is
+   involved in determining the code page and is the indicator that
+   tmpbuf[2] is initialized.  */
+DIAG_PUSH_NEEDS_COMMENT;
+DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
 #define BODY \
   {									      \
     uint32_t ch;							      \
@@ -645,6 +656,7 @@ enum
     /* Now that we wrote the output increment the input pointer.  */	      \
     inptr += 4;								      \
   }
+DIAG_POP_NEEDS_COMMENT;
 #define EXTRA_LOOP_DECLS	, int *setp
 #define INIT_PARAMS		int set = (*setp >> 3) & CURRENT_MASK; \
 				int ann = (*setp >> 3) & ~CURRENT_MASK

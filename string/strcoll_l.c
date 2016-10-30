@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <sys/param.h>
+#include <libc-internal.h>
 
 #ifndef STRING_TYPE
 # define STRING_TYPE char
@@ -170,7 +171,19 @@ get_next_seq (coll_seq *seq, int nrules, const unsigned char *rulesets,
 	    }
 	}
 
+      /* With GCC 5.3 when compiling with -Os the compiler complains
+	 that idx, taken from seq->idx (seq1 or seq2 from STRCOLL) may
+	 be used uninitialized.  In general this can't possibly be true
+	 since seq1.idx and seq2.idx are initialized to zero in the
+	 outer function.  Only one case where seq->idx is restored from
+	 seq->save_idx might result in an uninitialized idx value, but
+	 it is guarded by a sequence of checks against backw_stop which
+	 ensures that seq->save_idx was saved to first and contains a
+	 valid value.  */
+      DIAG_PUSH_NEEDS_COMMENT;
+      DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
       len = weights[idx++];
+      DIAG_POP_NEEDS_COMMENT;
       /* Skip over indices of previous levels.  */
       for (int i = 0; i < pass; i++)
 	{

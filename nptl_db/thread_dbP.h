@@ -160,10 +160,19 @@ extern ps_err_e td_mod_lookup (struct ps_prochandle *ps, const char *modname,
 		   SYM_##type##_FIELD_##field, \
 		   (psaddr_t) 0 + (idx), (ptr), &(var))
 
+/* With GCC 5.3 when compiling with -Os the compiler emits a warning
+   that slot may be used uninitialized.  This is never the case since
+   the dynamic loader initializes the slotinfo list and
+   dtv_slotinfo_list will point slot at the first entry.  Therefore
+   when DB_GET_FIELD_ADDRESS is called with a slot for ptr, the slot is
+   always initialized.  */
+DIAG_PUSH_NEEDS_COMMENT;
+DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
 #define DB_GET_FIELD_ADDRESS(var, ta, ptr, type, field, idx) \
   ((var) = (ptr), _td_locate_field ((ta), (ta)->ta_field_##type##_##field, \
 				    SYM_##type##_FIELD_##field, \
 				    (psaddr_t) 0 + (idx), &(var)))
+DIAG_POP_NEEDS_COMMENT;
 
 extern td_err_e _td_locate_field (td_thragent_t *ta,
 				  db_desc_t desc, int descriptor_name,

@@ -61,9 +61,17 @@ findidx (const int32_t *table,
 	     already.  */
 	  size_t cnt;
 
+	  /* With GCC 5.3 when compiling with -Os the compiler warns
+	     that seq2.back_us, which becomes usrc, might be used
+	     uninitialized.  This can't be true because we pass a length
+	     of -1 for len at the same time which means that this loop
+	     never executes.  */
+	  DIAG_PUSH_NEEDS_COMMENT;
+	  DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
 	  for (cnt = 0; cnt < nhere && cnt < len; ++cnt)
 	    if (cp[cnt] != usrc[cnt])
 	      break;
+	  DIAG_POP_NEEDS_COMMENT;
 
 	  if (cnt == nhere)
 	    {

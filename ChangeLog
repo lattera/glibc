@@ -1,5 +1,21 @@
 2016-10-28  Carlos O'Donell  <carlos@redhat.com>
 
+	[BZ #20729]
+	* include/libc-internal.h (DIAG_IGNORE_Os_NEEDS_COMMENT):
+	Define.
+	* iso-2022-cn-ext.c: Include libc-internal.h and ignore
+	-Wmaybe-uninitialized for BODY macro only for -Os compiles.
+	* locale/weight.h (findix): Ignore -Wmaybe-uninitialized error
+	for seq2.back_us and seq1.back_us only for -Os compiles.
+	* locale/weightwc.h (findix): Likewise.
+	* nptl_db/thread_dbP.h: Ignore -Wmaybe-uninitialized error for
+	DB_GET_FIELD_ADDRESS only for -Os compiles.
+	* resolv/res_send (reopen): Ignore -Wmaybe-uninitialized error
+	for slen only for -Os compiles.
+	* string/strcoll_l.c (get_next_seq): Ignore
+	-Wmaybe-uninitialized for seq2.save_idx and seq1.save_idx only
+	for -Os compiles.
+
 	* elf/Makefile (CFALGS-tst-linkall-static): Remove.
 	* include/crypt.h: New file.
 
