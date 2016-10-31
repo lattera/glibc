@@ -30,7 +30,7 @@ routines := ftok \
 	    semop semget semctl semtimedop \
 	    shmat shmdt shmget shmctl
 
-tests    := test-sysvmsg
+tests    := test-sysvmsg test-sysvsem
 
 include ../Rules
 
