@@ -473,7 +473,8 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
       err = __io_map ((mach_port_t) fd, &memobj_rd, &memobj_wr);
       if (err)
 	return __hurd_fail (err), MAP_FAILED;
-      __mach_port_deallocate (__mach_task_self (), memobj_wr);
+      if (memobj_wr != MACH_PORT_NULL)
+	__mach_port_deallocate (__mach_task_self (), memobj_wr);
     }
 
   mapaddr = (vm_address_t) addr;

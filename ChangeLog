@@ -1,3 +1,8 @@
+2016-10-31  Brent W. Baccala  <cosine@freesoft.org>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__mmap): Do not deallocate memobj_wr
+	when it is MACH_PORT_NULL.
+
 2016-10-31  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #20707]
