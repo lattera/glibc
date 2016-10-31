@@ -25,6 +25,11 @@
 #include <unistd.h>
 
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
+
 static pthread_t receiver;
 static sem_t sem;
 static pthread_barrier_t b;
@@ -34,19 +39,19 @@ handler (int sig)
 {
   if (sig != SIGUSR1)
     {
-      write (STDOUT_FILENO, "wrong signal\n", 13);
+      write_message ("wrong signal\n");
       _exit (1);
     }
 
   if (pthread_self () != receiver)
     {
-      write (STDOUT_FILENO, "not the intended receiver\n", 26);
+      write_message ("not the intended receiver\n");
       _exit (1);
     }
 
   if (sem_post (&sem) != 0)
     {
-      write (STDOUT_FILENO, "sem_post failed\n", 16);
+      write_message ("sem_post failed\n");
       _exit (1);
     }
 }
@@ -155,7 +160,3 @@ do_test (void)
 
   return 0;
 }
-
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

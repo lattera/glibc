@@ -39,13 +39,19 @@ static long stack_size_in_mb;
 static pthread_t th[N];
 
 
+static int do_test (void);
+
+#define TIMEOUT 5
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
+
 #define CB(n) \
 static void								      \
 cb##n (void)								      \
 {									      \
   if (th[n] != pthread_self ())						      \
     {									      \
-      write (STDOUT_FILENO, "wrong callback\n", 15);			      \
+      write_message ("wrong callback\n");				      \
       _exit (1);							      \
     }									      \
 }
@@ -207,8 +213,3 @@ do_test (void)
 
   return 0;
 }
-
-
-#define TIMEOUT 5
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

@@ -1,3 +1,10 @@
+2016-11-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* nptl/tst-kill3.c (handler): Use write_message in place of write.
+	* nptl/tst-kill6.c (handler): Likewise.
+	* nptl/tst-tls2.c (CB): Likewise.
+	* nptl/tst-tls3.c (CB): Likewise.
+
 2016-11-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/check-installed-headers.sh: Ignore sys/sysctl.h for x32.
