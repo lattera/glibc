@@ -1,3 +1,10 @@
+2016-10-31  Carlos O'Donell  <carlos@redhat.com>
+
+	[Bz #20729]
+	* locale/weight.h: Include libc-internal.h.
+	* locale/weightwc.h: Likewise.
+	* nptl/nptl_dbP.h: Likewise.
+
 2016-10-31  Brent W. Baccala  <cosine@freesoft.org>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (__mmap): Do not deallocate memobj_wr
@@ -16,7 +23,7 @@
 	[BZ #20729]
 	* include/libc-internal.h (DIAG_IGNORE_Os_NEEDS_COMMENT):
 	Define.
-	* iso-2022-cn-ext.c: Include libc-internal.h and ignore
+	* iconvdata/iso-2022-cn-ext.c: Include libc-internal.h and ignore
 	-Wmaybe-uninitialized for BODY macro only for -Os compiles.
 	* locale/weight.h (findix): Ignore -Wmaybe-uninitialized error
 	for seq2.back_us and seq1.back_us only for -Os compiles.

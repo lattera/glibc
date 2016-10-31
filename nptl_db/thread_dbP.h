@@ -30,6 +30,7 @@
 #include "../nptl/pthreadP.h"  	/* This is for *_BITMASK only.  */
 #include <list.h>
 #include <gnu/lib-names.h>
+#include <libc-internal.h>
 
 /* Indeces for the symbol names.  */
 enum
