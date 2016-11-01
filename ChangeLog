@@ -1,3 +1,7 @@
+2016-11-01  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* stdio-common/tst-printf.c: Ignore -Wformat-length warning.
+
 2016-11-01  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19673]

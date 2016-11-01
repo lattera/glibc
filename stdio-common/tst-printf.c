@@ -32,6 +32,11 @@
    The compiler warnings are not useful here.  */
 DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
 
+#if __GNUC_PREREQ (7, 0)
+/* Compiler warnings about format lengths should also be ignored.  */
+DIAG_IGNORE_NEEDS_COMMENT (7.0, "-Wformat-length");
+#endif
+
 static void rfg1 (void);
 static void rfg2 (void);
 static void rfg3 (void);
