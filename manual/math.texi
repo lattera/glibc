@@ -804,10 +804,10 @@ These functions return the base 10 logarithm of the complex value
 @var{z}.  Mathematically, this corresponds to the value
 
 @ifnottex
-@math{log (z) = log10 (cabs (z)) + I * carg (z)}
+@math{log10 (z) = log10 (cabs (z)) + I * carg (z) / log (10)}
 @end ifnottex
 @tex
-$$\log_{10}(z) = \log_{10}|z| + i \arg z$$
+$$\log_{10}(z) = \log_{10}|z| + i \arg z / \log (10)$$
 @end tex
 
 These functions are GNU extensions.
