@@ -43,7 +43,7 @@ do_test (void)
 
   if (pthread_create (&th, NULL, tf, NULL) != 0)
     {
-      write (2, "create failed\n", 14);
+      write_message ("create failed\n");
       _exit (1);
     }
 

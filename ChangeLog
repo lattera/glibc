@@ -1,5 +1,14 @@
 2016-11-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* nptl/tst-basic1.c (tf, do_test): Use write_message.
+	* nptl/tst-cleanup1.c (do_test): Likewise.
+	* nptl/tst-cleanup3.c (do_test): Likewise.
+	* nptl/tst-key1.c (do_test): Likewise.
+	* nptl/tst-key2.c (tf, do_test): Likewise.
+	* nptl/tst-key3.c (tf, do_test): Likewise.
+	* nptl/tst-stdio1.c (do_test): Likewise.
+	* nptl/tst-stdio2.c (do_test): Likewise.
+
 	* nptl/tst-kill3.c (handler): Use write_message in place of write.
 	* nptl/tst-kill6.c (handler): Likewise.
 	* nptl/tst-tls2.c (CB): Likewise.

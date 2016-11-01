@@ -23,6 +23,11 @@
 #include <unistd.h>
 
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
+
 int
 do_test (void)
 {
@@ -38,7 +43,7 @@ do_test (void)
   for (i = 0; i < max; ++i)
     if (pthread_key_create (&keys[i], NULL) != 0)
       {
-	write (2, "key_create failed\n", 18);
+	write_message ("key_create failed\n");
 	_exit (1);
       }
     else
@@ -82,7 +87,3 @@ do_test (void)
 
   return 0;
 }
-
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

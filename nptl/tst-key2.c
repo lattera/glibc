@@ -23,6 +23,11 @@
 #define N 2
 
 
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
+
 static int cnt0;
 static void
 f0 (void *p)
@@ -53,7 +58,7 @@ tf (void *arg)
 
   if (pthread_setspecific (*key, (void *) -1l) != 0)
     {
-      write (2, "setspecific failed\n", 19);
+      write_message ("setspecific failed\n");
       _exit (1);
     }
 
@@ -70,45 +75,41 @@ do_test (void)
   for (i = 0; i < N; ++i)
     if (pthread_key_create (&keys[i], fcts[i]) != 0)
       {
-	write (2, "key_create failed\n", 18);
+	write_message ("key_create failed\n");
 	_exit (1);
       }
 
   pthread_t th;
   if (pthread_create (&th, NULL, tf, &keys[1]) != 0)
     {
-      write (2, "create failed\n", 14);
+      write_message ("create failed\n");
       _exit (1);
     }
 
   if (pthread_join (th, NULL) != 0)
     {
-      write (2, "join failed\n", 12);
+      write_message ("join failed\n");
       _exit (1);
     }
 
   if (cnt0 != 0)
     {
-      write (2, "cnt0 != 0\n", 10);
+      write_message ("cnt0 != 0\n");
       _exit (1);
     }
 
   if (cnt1 != 1)
     {
-      write (2, "cnt1 != 1\n", 10);
+      write_message ("cnt1 != 1\n");
       _exit (1);
     }
 
   for (i = 0; i < N; ++i)
     if (pthread_key_delete (keys[i]) != 0)
       {
-	write (2, "key_delete failed\n", 18);
+	write_message ("key_delete failed\n");
 	_exit (1);
       }
 
   return 0;
 }
-
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
