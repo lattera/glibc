@@ -1,3 +1,11 @@
+2016-11-02  Florian Weimer  <fweimer@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[Bug #20729]
+	* resolv/res_send.c (send_vc): Revert DIAG_IGNORE_Os_NEEDS_COMMENT
+	change to non -Os related diagnostic.  Use DIAG_IGNORE_Os_NEEDS_COMMENT
+	for -Os related change.
+
 2016-11-01  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* stdio-common/tst-printf.c: Ignore -Wformat-length warning.

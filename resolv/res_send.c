@@ -664,7 +664,7 @@ send_vc(res_state statp,
 	   a false-positive.
 	 */
 	DIAG_PUSH_NEEDS_COMMENT;
-	DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+	DIAG_IGNORE_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
 	int resplen;
 	DIAG_POP_NEEDS_COMMENT;
 	struct iovec iov[4];
@@ -937,7 +937,7 @@ reopen (res_state statp, int *terrno, int ns)
 		   the function return -1 before control flow reaches
 		   the call to connect with slen.  */
 		DIAG_PUSH_NEEDS_COMMENT;
-		DIAG_IGNORE_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+		DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
 		if (connect(EXT(statp).nssocks[ns], nsap, slen) < 0) {
 		DIAG_POP_NEEDS_COMMENT;
 			Aerror(statp, stderr, "connect(dg)", errno, nsap);
