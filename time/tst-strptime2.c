@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
+#include <libc-internal.h>
 
 /* Dummy string is used to match strptime's %s specifier.  */
 
@@ -67,10 +68,20 @@ mkbuf (char *buf, bool neg, bool colon, unsigned int hhmm, size_t ndigits)
   long int expect = LONG_MAX;
 
   i = sprintf (buf, "%s %c", dummy_string, sign);
+#if __GNUC_PREREQ (7, 0)
+  /* GCC issues a warning when it thinks the snprintf buffer may be too short.
+     This test is explicitly using short buffers to force snprintf to truncate
+     the output so we ignore the warnings.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (7.0, "-Wformat-length");
+#endif
   if (colon)
     snprintf (buf + i, ndigits + 2, "%02u:%02u", hh, mm);
   else
     snprintf (buf + i, ndigits + 1, "%04u", hhmm);
+#if __GNUC_PREREQ (7, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
 
   if (mm <= mm_max && (ndigits == 2 || ndigits == 4))
     {

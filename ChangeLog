@@ -1,3 +1,7 @@
+2016-11-02  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* time/tst-strptime2.c: Ignore -Wformat-length warning.
+
 2016-11-02  Florian Weimer  <fweimer@redhat.com>
 	    Carlos O'Donell  <carlos@redhat.com>
 
