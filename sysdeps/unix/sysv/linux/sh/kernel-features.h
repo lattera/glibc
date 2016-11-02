@@ -54,4 +54,7 @@
    before the offset.  */
 #define __ASSUME_PRW_DUMMY_ARG	1
 
+/* sh only supports ipc syscall.  */
+#undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+
 #endif

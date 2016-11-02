@@ -52,3 +52,6 @@
 #endif
 
 #include_next <kernel-features.h>
+
+/* powerpc only supports ipc syscall.  */
+#undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS

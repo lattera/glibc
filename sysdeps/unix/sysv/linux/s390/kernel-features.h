@@ -48,3 +48,6 @@
 # undef __ASSUME_SENDMSG_SYSCALL
 # undef __ASSUME_RECVMSG_SYSCALL
 #endif
+
+/* s390 only supports ipc syscall.  */
+#undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
