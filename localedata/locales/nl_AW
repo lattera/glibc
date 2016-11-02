@@ -50,7 +50,7 @@ LC_MONETARY
 int_curr_symbol     "<U0041><U0057><U0047><U0020>"
 currency_symbol     "<U0041><U0066><U006C><U002E>"
 mon_decimal_point   "<U002C>"
-mon_thousands_sep   "<U0020>"
+mon_thousands_sep   "<U202F>"
 mon_grouping        3;3
 positive_sign       ""
 negative_sign       "<U002D>"

@@ -2134,7 +2134,7 @@ LC_MONETARY
 int_curr_symbol     "<U0045><U0055><U0052><U0020>"
 currency_symbol     "<U20AC>"
 mon_decimal_point   "<U002C>"
-mon_thousands_sep   "<U00A0>"
+mon_thousands_sep   "<U202F>"
 mon_grouping        3;3
 positive_sign       ""
 negative_sign       "<U002D>"
@@ -2150,7 +2150,7 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point           "<U002C>"
-thousands_sep           "<U00A0>"
+thousands_sep           "<U202F>"
 grouping                3;3
 END LC_NUMERIC
 

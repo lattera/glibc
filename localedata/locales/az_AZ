@@ -214,7 +214,7 @@ LC_MONETARY
 int_curr_symbol           "<U0041><U005A><U004E><U0020>"
 currency_symbol           "<U20BC>"
 mon_decimal_point         "<U002E>"
-mon_thousands_sep         "<U0020>"
+mon_thousands_sep         "<U202F>"
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "<U002D>"

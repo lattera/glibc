@@ -630,7 +630,7 @@ mon_decimal_point         "<U002C>"
 % This string is used as a thousands separator when formatting monetary
 % quantities.
 % see LC_NUMERIC:thousands separator
-mon_thousands_sep         "<U00A0>" % <NBSP> (0xA0)
+mon_thousands_sep         "<U202F>" % <NNBSP> (0X202F)
 
 % Define  the  size of each group of digits in formatted monetary
 % quantities.  The operand is a sequence of integers separated by
@@ -760,7 +760,7 @@ decimal_point             "<U002C>" % see LC_MONETARY:mon_decimal_pint
 % The string that will be used as a group separator when formatting
 % numeric quantities.
 % see LC_MONETARY:mon_thousands_sep
-thousands_sep             "<U00A0>" % <NBSP> (0xA0)
+thousands_sep             "<U202F>" % <NNBSP> (0X202F)
 
 % A string that describes the formatting of numeric quantities.
 %

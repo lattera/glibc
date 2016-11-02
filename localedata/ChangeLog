@@ -1,3 +1,71 @@
+2017-08-12  Stanislav Brabec <sbrabec@suse.cz>
+
+	[BZ #20756]
+	* locales/aa_DJ (LC_MONETARY): Replace space by NNBSP as thousands separator.
+	* locales/az_AZ (LC_MONETARY): Likewise.
+	* locales/be_BY (LC_MONETARY): Likewise.
+	* locales/be_BY@latin (LC_MONETARY): Likewise.
+	* locales/bg_BG (LC_MONETARY): Likewise.
+	* locales/bs_BA (LC_MONETARY): Likewise.
+	* locales/ce_RU (LC_MONETARY): Likewise.
+	* locales/crh_UA (LC_MONETARY): Likewise.
+	* locales/cs_CZ (LC_MONETARY): Likewise.
+	* locales/cs_CZ (LC_NUMERIC): Likewise.
+	* locales/cv_RU (LC_MONETARY): Likewise.
+	* locales/de_AT (LC_MONETARY): Likewise.
+	* locales/eo (LC_MONETARY): Likewise.
+	* locales/es_CR (LC_MONETARY): Likewise.
+	* locales/es_CR (LC_NUMERIC): Likewise.
+	* locales/es_CU (LC_MONETARY): Likewise.
+	* locales/et_EE (LC_MONETARY): Likewise.
+	* locales/et_EE (LC_NUMERIC): Likewise.
+	* locales/fi_FI (LC_MONETARY): Likewise.
+	* locales/fi_FI (LC_NUMERIC): Likewise.
+	* locales/fr_CA (LC_MONETARY): Likewise.
+	* locales/fr_FR (LC_MONETARY): Likewise.
+	* locales/fr_FR (LC_NUMERIC): Likewise.
+	* locales/fr_LU (LC_MONETARY): Likewise.
+	* locales/fr_LU (LC_NUMERIC): Likewise.
+	* locales/hr_HR (LC_MONETARY): Likewise.
+	* locales/ht_HT (LC_NUMERIC): Likewise.
+	* locales/kk_KZ (LC_MONETARY): Likewise.
+	* locales/kk_KZ (LC_NUMERIC): Likewise.
+	* locales/ky_KG (LC_MONETARY): Likewise.
+	* locales/ky_KG (LC_NUMERIC): Likewise.
+	* locales/lv_LV (LC_MONETARY): Likewise.
+	* locales/lv_LV (LC_NUMERIC): Likewise.
+	* locales/mg_MG (LC_MONETARY): Likewise.
+	* locales/mhr_RU (LC_MONETARY): Likewise.
+	* locales/mk_MK (LC_MONETARY): Likewise.
+	* locales/mk_MK (LC_NUMERIC): Likewise.
+	* locales/mn_MN (LC_MONETARY): Likewise.
+	* locales/nb_NO (LC_MONETARY): Likewise.
+	* locales/nb_NO (LC_NUMERIC): Likewise.
+	* locales/nl_AW (LC_MONETARY): Likewise.
+	* locales/nl_NL (LC_MONETARY): Likewise.
+	* locales/nn_NO (LC_MONETARY): Likewise.
+	* locales/os_RU (LC_MONETARY): Likewise.
+	* locales/pap_AW (LC_MONETARY): Likewise.
+	* locales/pap_CW (LC_MONETARY): Likewise.
+	* locales/ru_RU (LC_MONETARY): Likewise.
+	* locales/ru_RU (LC_NUMERIC): Likewise.
+	* locales/ru_UA (LC_MONETARY): Likewise.
+	* locales/sk_SK (LC_MONETARY): Likewise.
+	* locales/sk_SK (LC_NUMERIC): Likewise.
+	* locales/sl_SI (LC_MONETARY): Likewise.
+	* locales/sl_SI (LC_NUMERIC): Likewise.
+	* locales/sq_MK (LC_MONETARY): Likewise.
+	* locales/sv_SE (LC_MONETARY): Likewise.
+	* locales/sv_SE (LC_NUMERIC): Likewise.
+	* locales/tg_TJ (LC_MONETARY): Likewise.
+	* locales/tt_RU (LC_MONETARY): Likewise.
+	* locales/tt_RU@iqtelif (LC_MONETARY): Likewise.
+	* locales/uk_UA (LC_MONETARY): Likewise.
+	* locales/uk_UA (LC_NUMERIC): Likewise.
+	* locales/unm_US (LC_MONETARY): Likewise.
+	* locales/unm_US (LC_NUMERIC): Likewise.
+	* locales/wo_SN (LC_MONETARY): Likewise.
+
 2017-08-10  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	Remove redundant data for LC_MONETARY
