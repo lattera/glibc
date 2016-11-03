@@ -6,6 +6,8 @@
 
 #include <stdlib/gmp.h>
 
+#include <bits/floatn.h>
+
 /* Now define the internal interfaces.  */
 extern mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 				       int *expt, int *is_neg,
@@ -14,6 +16,12 @@ extern mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 extern mp_size_t __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 					    int *expt, int *is_neg,
 					    long double value);
+
+#if __HAVE_DISTINCT_FLOAT128
+extern mp_size_t __mpn_extract_float128 (mp_ptr res_ptr, mp_size_t size,
+					 int *expt, int *is_neg,
+					 _Float128 value);
+#endif
 
 extern float __mpn_construct_float (mp_srcptr frac_ptr, int expt, int sign);
 

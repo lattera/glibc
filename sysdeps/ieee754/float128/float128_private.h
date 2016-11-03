@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* This must be included before the function renames below.  */
+#include <gmp.h>
 #include <math.h>
 #undef HUGE_VALL
 #define HUGE_VALL HUGE_VAL_F128
@@ -291,6 +292,7 @@
 #define __kernel_tanl __kernel_tanf128
 #define __lgamma_negl __lgamma_negf128
 #define __lgamma_productl __lgamma_productf128
+#define __mpn_extract_long_double __mpn_extract_float128
 #define __sincosl_table __sincosf128_table
 #define mul_splitl mul_splitf128
 

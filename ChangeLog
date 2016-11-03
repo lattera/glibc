@@ -1,3 +1,18 @@
+2017-06-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* include/gmp.h: Include bits/floatn.h
+	(__mpn_extract_float128): Declare when __HAVE_DISTINCT_FLOAT128 is 1.
+	* stdlib/gmp-impl.h: Also check if alloca is not defined before
+	including stack-alloc.h.  It could have been defined by other header
+	which not necessarily defines HAVE_ALLOCA.
+	* sysdeps/ieee754/float128/Makefile: New file.
+	* sysdeps/ieee754/float128/float1282mpn.c: New file.
+	* sysdeps/ieee754/float128/float128_private.h: Include gmp.h before
+	redefining __mpn_extract_long_double to __mpn_extract_float128, then
+	redefine __mpn_extract_long_double to __mpn_extract_float128.
+	* sysdeps/ieee754/ldbl-128/ldbl2mpn.c: Replace long double with
+	_Float128 to allow float128_private.h overrides.
+
 2017-06-07  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* stdlib/fpioconst.h: Include bits/floatn.h.
