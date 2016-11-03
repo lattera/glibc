@@ -1,3 +1,8 @@
+2016-11-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/Makefile ($(linknamespace-header-tests)): Also depend on
+	$(linknamespace-symlists-tests).
+
 2016-11-02  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* time/tst-strptime2.c: Ignore -Wformat-length warning.

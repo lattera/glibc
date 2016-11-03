@@ -229,6 +229,7 @@ $(linknamespace-symlist-stdlibs-tests): $(objpfx)symlist-stdlibs-%: \
 
 $(linknamespace-header-tests): $(objpfx)%/linknamespace.out: \
 			       linknamespace.pl \
+			       $(linknamespace-symlists-tests) \
 			       $(linknamespace-symlist-stdlibs-tests)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
 	 mkdir -p $(@D)/scratch; \
