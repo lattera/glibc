@@ -47,7 +47,9 @@ struct printf_info
   unsigned int is_char:1;	/* hh flag.  */
   unsigned int wide:1;		/* Nonzero for wide character streams.  */
   unsigned int i18n:1;		/* I flag.  */
-  unsigned int __pad:4;		/* Unused so far.  */
+  unsigned int is_binary128:1;	/* Floating-point argument is ABI-compatible
+				   with IEC 60559 binary128.  */
+  unsigned int __pad:3;		/* Unused so far.  */
   unsigned short int user;	/* Bits for user-installed modifiers.  */
   wchar_t pad;			/* Padding character.  */
 };

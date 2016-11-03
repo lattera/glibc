@@ -104,6 +104,9 @@ __printf_size (FILE *fp, const struct printf_info *info,
     {
       union ieee754_double dbl;
       long double ldbl;
+#if __HAVE_DISTINCT_FLOAT128
+      _Float128 f128;
+#endif
     }
   fpnum;
   const void *ptr = &fpnum;
@@ -144,6 +147,11 @@ __printf_size (FILE *fp, const struct printf_info *info,
   }
 
   /* Fetch the argument value.	*/
+#if __HAVE_DISTINCT_FLOAT128
+  if (info->is_binary128)
+    PRINTF_SIZE_FETCH (_Float128, fpnum.f128)
+  else
+#endif
 #ifndef __NO_LONG_DOUBLE_MATH
   if (info->is_long_double && sizeof (long double) > sizeof (double))
     PRINTF_SIZE_FETCH (long double, fpnum.ldbl)

@@ -218,6 +218,9 @@ __printf_fp_l (FILE *fp, locale_t loc,
     {
       double dbl;
       __long_double_t ldbl;
+#if __HAVE_DISTINCT_FLOAT128
+      _Float128 f128;
+#endif
     }
   fpnum;
 
@@ -234,9 +237,17 @@ __printf_fp_l (FILE *fp, locale_t loc,
   const char *special = NULL;
   const wchar_t *wspecial = NULL;
 
+  /* When _Float128 is enabled in the library and ABI-distinct from long
+     double, we need mp_limbs enough for any of them.  */
+#if __HAVE_DISTINCT_FLOAT128
+# define GREATER_MANT_DIG FLT128_MANT_DIG
+#else
+# define GREATER_MANT_DIG LDBL_MANT_DIG
+#endif
   /* We need just a few limbs for the input before shifting to the right
      position.	*/
-  mp_limb_t fp_input[(LDBL_MANT_DIG + BITS_PER_MP_LIMB - 1) / BITS_PER_MP_LIMB];
+  mp_limb_t fp_input[(GREATER_MANT_DIG + BITS_PER_MP_LIMB - 1)
+		     / BITS_PER_MP_LIMB];
   /* We need to shift the contents of fp_input by this amount of bits.	*/
   int to_shift = 0;
 
@@ -371,6 +382,11 @@ __printf_fp_l (FILE *fp, locale_t loc,
   }
 
   /* Fetch the argument value.	*/
+#if __HAVE_DISTINCT_FLOAT128
+  if (info->is_binary128)
+    PRINTF_FP_FETCH (_Float128, fpnum.f128, float128, FLT128_MANT_DIG)
+  else
+#endif
 #ifndef __NO_LONG_DOUBLE_MATH
   if (info->is_long_double && sizeof (long double) > sizeof (double))
     PRINTF_FP_FETCH (long double, fpnum.ldbl, long_double, LDBL_MANT_DIG)
@@ -414,7 +430,8 @@ __printf_fp_l (FILE *fp, locale_t loc,
   {
     mp_size_t bignum_size = ((abs (p.exponent) + BITS_PER_MP_LIMB - 1)
 			     / BITS_PER_MP_LIMB
-			     + (LDBL_MANT_DIG / BITS_PER_MP_LIMB > 2 ? 8 : 4))
+			     + (GREATER_MANT_DIG / BITS_PER_MP_LIMB > 2
+				? 8 : 4))
 			    * sizeof (mp_limb_t);
     p.frac = (mp_limb_t *) alloca (bignum_size);
     p.tmp = (mp_limb_t *) alloca (bignum_size);
@@ -429,7 +446,15 @@ __printf_fp_l (FILE *fp, locale_t loc,
     {
       /* |FP| >= 8.0.  */
       int scaleexpo = 0;
-      int explog = LDBL_MAX_10_EXP_LOG;
+      int explog;
+#if __HAVE_DISTINCT_FLOAT128
+      if (info->is_binary128)
+	explog = FLT128_MAX_10_EXP_LOG;
+      else
+	explog = LDBL_MAX_10_EXP_LOG;
+#else
+      explog = LDBL_MAX_10_EXP_LOG;
+#endif
       int exp10 = 0;
       const struct mp_power *powers = &_fpioconst_pow10[explog + 1];
       int cnt_h, cnt_l, i;
@@ -463,6 +488,27 @@ __printf_fp_l (FILE *fp, locale_t loc,
 	    {
 	      if (p.scalesize == 0)
 		{
+#if __HAVE_DISTINCT_FLOAT128
+		  if ((FLT128_MANT_DIG
+			    > _FPIO_CONST_OFFSET * BITS_PER_MP_LIMB)
+			   && info->is_binary128)
+		    {
+#define _FLT128_FPIO_CONST_SHIFT \
+  (((FLT128_MANT_DIG + BITS_PER_MP_LIMB - 1) / BITS_PER_MP_LIMB) \
+   - _FPIO_CONST_OFFSET)
+		      /* 64bit const offset is not enough for
+			 IEEE 854 quad long double (_Float128).  */
+		      p.tmpsize = powers->arraysize + _FLT128_FPIO_CONST_SHIFT;
+		      memcpy (p.tmp + _FLT128_FPIO_CONST_SHIFT,
+			      &__tens[powers->arrayoff],
+			      p.tmpsize * sizeof (mp_limb_t));
+		      MPN_ZERO (p.tmp, _FLT128_FPIO_CONST_SHIFT);
+		      /* Adjust p.exponent, as scaleexpo will be this much
+			 bigger too.  */
+		      p.exponent += _FLT128_FPIO_CONST_SHIFT * BITS_PER_MP_LIMB;
+		    }
+		  else
+#endif /* __HAVE_DISTINCT_FLOAT128 */
 #ifndef __NO_LONG_DOUBLE_MATH
 		  if (LDBL_MANT_DIG > _FPIO_CONST_OFFSET * BITS_PER_MP_LIMB
 		      && info->is_long_double)
@@ -603,7 +649,15 @@ __printf_fp_l (FILE *fp, locale_t loc,
     {
       /* |FP| < 1.0.  */
       int exp10 = 0;
-      int explog = LDBL_MAX_10_EXP_LOG;
+      int explog;
+#if __HAVE_DISTINCT_FLOAT128
+      if (info->is_binary128)
+	explog = FLT128_MAX_10_EXP_LOG;
+      else
+	explog = LDBL_MAX_10_EXP_LOG;
+#else
+      explog = LDBL_MAX_10_EXP_LOG;
+#endif
       const struct mp_power *powers = &_fpioconst_pow10[explog + 1];
 
       /* Now shift the input value to its right place.	*/

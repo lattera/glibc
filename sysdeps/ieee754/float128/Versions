@@ -2,6 +2,11 @@
 %ifndef FLOAT128_VERSION
 % error "float128-abi.h must define FLOAT128_VERSION"
 %endif
+libc {
+  FLOAT128_VERSION {
+    strfromf128;
+  }
+}
 libm {
   FLOAT128_VERSION {
     __acosf128_finite;

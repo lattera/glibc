@@ -79,6 +79,7 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
   spec->info.extra = 0;
   spec->info.pad = ' ';
   spec->info.wide = sizeof (UCHAR_T) > 1;
+  spec->info.is_binary128 = 0;
 
   /* Test for positional argument.  */
   if (ISDIGIT (*format))

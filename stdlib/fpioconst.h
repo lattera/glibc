@@ -44,6 +44,10 @@
    IBM extended precision).  */
 #include <bits/floatn.h>
 
+#if __HAVE_DISTINCT_FLOAT128
+# define FLT128_MAX_10_EXP_LOG	12 /* = floor(log_2(FLT128_MAX_10_EXP)) */
+#endif
+
 /* For strtold, we need powers of 10 up to floor (log_2 (LDBL_MANT_DIG
    - LDBL_MIN_EXP + 2)).  When _Float128 is enabled in libm and it is
    ABI-distinct from long double (e.g. on powerpc64le), we also need powers

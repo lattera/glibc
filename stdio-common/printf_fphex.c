@@ -31,6 +31,14 @@
 #include <stdbool.h>
 #include <rounding-mode.h>
 
+#if __HAVE_DISTINCT_FLOAT128
+# include "ieee754_float128.h"
+# include <ldbl-128/printf_fphex_macros.h>
+# define PRINT_FPHEX_FLOAT128 \
+   PRINT_FPHEX (_Float128, fpnum.flt128, ieee854_float128, \
+		IEEE854_FLOAT128_BIAS)
+#endif
+
 /* #define NDEBUG 1*/		/* Undefine this for debugging assertions.  */
 #include <assert.h>
 
@@ -94,6 +102,9 @@ __printf_fphex (FILE *fp,
     {
       union ieee754_double dbl;
       long double ldbl;
+#if __HAVE_DISTINCT_FLOAT128
+      _Float128 flt128;
+#endif
     }
   fpnum;
 
@@ -195,6 +206,11 @@ __printf_fphex (FILE *fp,
   }
 
   /* Fetch the argument value.	*/
+#if __HAVE_DISTINCT_FLOAT128
+  if (info->is_binary128)
+    PRINTF_FPHEX_FETCH (_Float128, fpnum.flt128)
+  else
+#endif
 #ifndef __NO_LONG_DOUBLE_MATH
   if (info->is_long_double && sizeof (long double) > sizeof (double))
     PRINTF_FPHEX_FETCH (long double, fpnum.ldbl)
@@ -230,6 +246,11 @@ __printf_fphex (FILE *fp,
       return done;
     }
 
+#if __HAVE_DISTINCT_FLOAT128
+  if (info->is_binary128)
+    PRINT_FPHEX_FLOAT128;
+  else
+#endif
   if (info->is_long_double == 0 || sizeof (double) == sizeof (long double))
     {
       /* We have 52 bits of mantissa plus one implicit digit.  Since

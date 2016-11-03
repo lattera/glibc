@@ -51,6 +51,9 @@ __BEGIN_DECLS
 # endif
 #endif	/* X/Open or XPG7 and <sys/wait.h> not included.  */
 
+/* _FloatN API tests for enablement.  */
+#include <bits/floatn.h>
+
 /* Returned by `div'.  */
 typedef struct
   {
@@ -172,6 +175,12 @@ extern int strfromf (char *__dest, size_t __size, const char *__format,
 
 extern int strfroml (char *__dest, size_t __size, const char *__format,
 		     long double __f)
+     __THROW __nonnull ((3));
+#endif
+
+#if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern int strfromf128 (char *__dest, size_t __size, const char * __format,
+			_Float128 __f)
      __THROW __nonnull ((3));
 #endif
 

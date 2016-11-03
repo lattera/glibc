@@ -1,5 +1,29 @@
 2017-06-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* stdio-common/printf-parsemb.c (__parse_one_specmb): Initialize
+	spec->info.is_binary128 to zero.
+	* stdio-common/printf.h (printf_info): Add new member is_binary128
+	to indicate that the number being converted to string is compatible
+	with the IEC 60559 binary128 format.
+	* stdio-common/printf_fp.c (__printf_fp_l): Add code to deal with
+	_Float128 numbers.
+	* stdio-common/printf_fphex.c: Include ieee754_float128.h and
+	ldbl-128/printf_fphex_macros.h
+	(__printf_fphex): Add code to deal with _Float128 numbers.
+	* stdio-common/printf_size.c (__printf_size): Likewise.
+	* stdio-common/vfprintf.c (process_arg): Initialize member
+	info.is_binary128 to zero.
+	* stdlib/fpioconst.h (FLT128_MAX_10_EXP_LOG): New macro.
+	* stdlib/stdlib.h: Include bits/floatn.h for _Float128 support.
+	(strfromf128): New declaration.
+	* stdlib/strfrom-skeleton.c (STRFROM): Set member info.is_binary128
+	to one.
+	* sysdeps/ieee754/float128/Makefile: Add strfromf128.
+	* sysdeps/ieee754/float128/Versions: Likewise.
+	* sysdeps/ieee754/float128/strfromf128.c: New file.
+
+2017-06-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* sysdeps/ieee754/ldbl-128/printf_fphex.c: Include
 	ldbl-128/printf_fphex_macros.h for the definition of PRINT_FPHEX.
 	(PRINT_FPHEX_LONG_DOUBLE): Define based on PRINT_FPHEX.
