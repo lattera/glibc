@@ -1,5 +1,9 @@
 2016-11-04  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20768]
+	* sysdeps/alpha/fpu/feholdexcpt.c (__feholdexcept): Call
+	__fegetenv instead of fegetenv.
+
 	[BZ #14139]
 	* manual/libm-err-tab.pl (%pplatforms): Initialize to empty.
 	(find_files): Obtain platform name from libm-test-ulps-name and

@@ -23,7 +23,7 @@ int
 __feholdexcept (fenv_t *envp)
 {
   /* Save the current state.  */
-  fegetenv(envp);
+  __fegetenv(envp);
 
   /* Clear all exception status bits and exception enable bits.  */
   __ieee_set_fp_control(*envp & SWCR_MAP_MASK);
