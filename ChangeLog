@@ -1,5 +1,35 @@
 2016-11-04  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14139]
+	* manual/libm-err-tab.pl (%pplatforms): Initialize to empty.
+	(find_files): Obtain platform name from libm-test-ulps-name and
+	store in %pplatforms.
+	(canonicalize_platform): Remove.
+	(print_platforms): Use $pplatforms directly.
+	(by_platforms): Do not allow for platforms missing from
+	%pplatforms.
+	* sysdeps/aarch64/libm-test-ulps-name: New file.
+	* sysdeps/alpha/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/arm/libm-test-ulps-name: Likewise.
+	* sysdeps/generic/libm-test-ulps-name: Likewise.
+	* sysdeps/hppa/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps-name: Likewise.
+	* sysdeps/ia64/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/m68k/coldfire/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/microblaze/libm-test-ulps-name: Likewise.
+	* sysdeps/mips/mips32/libm-test-ulps-name: Likewise.
+	* sysdeps/mips/mips64/libm-test-ulps-name: Likewise.
+	* sysdeps/nios2/libm-test-ulps-name: Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/powerpc/nofpu/libm-test-ulps-name: Likewise.
+	* sysdeps/s390/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/sh/libm-test-ulps-name: Likewise.
+	* sysdeps/sparc/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/tile/libm-test-ulps-name: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps-name: Likewise.
+
 	* sysdeps/unix/sysv/linux/mips/sys/user.h: Include <stddef.h>.
 
 	* sysdeps/unix/sysv/linux/mips/Makefile [$(subdir) = elf]
