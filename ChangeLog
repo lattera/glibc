@@ -1,3 +1,8 @@
+2016-11-04  Wilco Dijkstra  <wdijkstr@arm.com>
+	    Kevin Petit  <kevin.petit@arm.com>
+
+	* sysdeps/aarch64/memchr.S (__memchr): New file.
+
 2016-11-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/tile/preconfigure: Accept tilegx* instead of tilegx.
