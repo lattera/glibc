@@ -114,7 +114,8 @@ else
 others: $(addprefix $(objpfx),$(extra-objs))
 endif
 ifeq ($(run-built-tests),no)
-tests: $(addprefix $(objpfx),$(tests) $(test-srcs)) $(tests-special)
+tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported),$(tests)) \
+			     $(test-srcs)) $(tests-special)
 xtests: tests $(xtests-special)
 else
 tests: $(tests:%=$(objpfx)%.out) $(tests-special)
