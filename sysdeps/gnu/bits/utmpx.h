@@ -66,7 +66,7 @@ struct utmpx
 /* The fields ut_session and ut_tv must be the same size when compiled
    32- and 64-bit.  This allows files and shared memory to be shared
    between 32- and 64-bit applications.  */
-#ifdef __WORDSIZE_TIME64_COMPAT32
+#if __WORDSIZE_TIME64_COMPAT32
   __int32_t ut_session;		/* Session ID, used for windowing.  */
   struct
   {

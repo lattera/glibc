@@ -1,3 +1,32 @@
+2016-11-04  Yury Norov  <ynorov@caviumnetworks.com>
+	    Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* bits/wordsize.h: Add documentation.
+	* sysdeps/aarch64/bits/wordsize.h : New file
+	* sysdeps/generic/stdint.h (PTRDIFF_MIN, PTRDIFF_MAX): Update
+	definitions.
+	(SIZE_MAX): Change ifdef to if in __WORDSIZE32_SIZE_ULONG check.
+	* sysdeps/gnu/bits/utmp.h (__WORDSIZE_TIME64_COMPAT32): Check
+	with #if instead of #ifdef.
+	* sysdeps/gnu/bits/utmpx.h (__WORDSIZE_TIME64_COMPAT32): Ditto.
+	* sysdeps/mips/bits/wordsize.h (__WORDSIZE32_SIZE_ULONG,
+	__WORDSIZE32_PTRDIFF_LONG, __WORDSIZE_TIME64_COMPAT32):
+	Add or change defines.
+	* sysdeps/powerpc/powerpc32/bits/wordsize.h: Likewise.
+	* sysdeps/powerpc/powerpc64/bits/wordsize.h: Likewise.
+	* sysdeps/s390/s390-32/bits/wordsize.h: Likewise.
+	* sysdeps/s390/s390-64/bits/wordsize.h: Likewise.
+	* sysdeps/sparc/sparc32/bits/wordsize.h: Likewise.
+	* sysdeps/sparc/sparc64/bits/wordsize.h: Likewise.
+	* sysdeps/tile/tilegx/bits/wordsize.h: Likewise.
+	* sysdeps/tile/tilepro/bits/wordsize.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/wordsize.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/wordsize.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/wordsize.h: Likewise.
+	* sysdeps/wordsize-32/bits/wordsize.h: Likewise.
+	* sysdeps/wordsize-64/bits/wordsize.h: Likewise.
+	* sysdeps/x86/bits/wordsize.h: Likewise.
+
 2016-11-04  Wilco Dijkstra  <wdijkstr@arm.com>
 	    Kevin Petit  <kevin.petit@arm.com>
 

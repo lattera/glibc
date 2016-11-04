@@ -35,7 +35,7 @@
    previous logins.  */
 struct lastlog
   {
-#ifdef __WORDSIZE_TIME64_COMPAT32
+#if __WORDSIZE_TIME64_COMPAT32
     int32_t ll_time;
 #else
     __time_t ll_time;
@@ -68,7 +68,7 @@ struct utmp
 /* The ut_session and ut_tv fields must be the same size when compiled
    32- and 64-bit.  This allows data files and shared memory to be
    shared between 32- and 64-bit applications.  */
-#ifdef __WORDSIZE_TIME64_COMPAT32
+#if __WORDSIZE_TIME64_COMPAT32
   int32_t ut_session;		/* Session ID, used for windowing.  */
   struct
   {

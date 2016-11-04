@@ -4,6 +4,8 @@
 # define __WORDSIZE	64
 #else
 # define __WORDSIZE	32
+# define __WORDSIZE32_SIZE_ULONG	0
+# define __WORDSIZE32_PTRDIFF_LONG	0
 #endif
 
 #if !defined __NO_LONG_DOUBLE_MATH && !defined __LONG_DOUBLE_MATH_OPTIONAL
