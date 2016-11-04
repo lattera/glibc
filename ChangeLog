@@ -1,5 +1,10 @@
 2016-11-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* Rules (tests-expected): New variable, depending on
+	$(run-built-tests).
+	(tests): Pass $(tests-expected) to merge-test-results.sh, not
+	$(tests).
+
 	* Rules [$(run-built-tests) = no] (tests): Do not depend on
 	$(tests-unsupported).
 
