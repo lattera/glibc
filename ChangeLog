@@ -1,3 +1,7 @@
+2016-11-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/localplt.data: New file.
+
 2016-11-04  Yury Norov  <ynorov@caviumnetworks.com>
 	    Steve Ellcey  <sellcey@caviumnetworks.com>
 
