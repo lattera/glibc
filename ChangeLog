@@ -1,5 +1,8 @@
 2016-11-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/Makefile [$(subdir) = elf]
+	(test-xfail-check-execstack): New variable.
+
 	* sysdeps/mips/localplt.data: New file.
 
 2016-11-04  Yury Norov  <ynorov@caviumnetworks.com>

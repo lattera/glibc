@@ -99,6 +99,12 @@ sysdep-dl-routines += dl-static
 
 sysdep_routines += dl-vdso
 endif
+
+# Supporting non-executable stacks on MIPS requires changes to both
+# the Linux kernel and glibc.  See
+# <https://sourceware.org/ml/libc-alpha/2016-01/msg00567.html> and
+# <https://sourceware.org/ml/libc-alpha/2016-01/msg00719.html>.
+test-xfail-check-execstack = yes
 endif
 
 ifeq ($(subdir),stdlib)
