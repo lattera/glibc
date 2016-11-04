@@ -1,3 +1,13 @@
+2017-06-07  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* stdlib/fpioconst.h: Include bits/floatn.h.
+	(FPIOCONST_HAVE_EXTENDED_RANGE): New macro for testing how big the
+	power of ten table should be.
+	(FPIOCONST_POW10_ARRAY_SIZE): Use larger table if above is true.
+	* stdlib/fpioconst.c (__tens): Use FPIOCONST_HAVE_EXTENDED_RANGE
+	to include larger tables when _Float128 support is enabled.
+	(_fpioconst_pow10): Likewise.
+
 2017-06-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/bits/types/clock_t.h: Use #include <path> instead of

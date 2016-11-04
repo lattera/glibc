@@ -40,9 +40,19 @@
 #define DBL_MAX_10_EXP_LOG	8 /* = floor(log_2(DBL_MAX_10_EXP)) */
 #define FLT_MAX_10_EXP_LOG	5 /* = floor(log_2(FLT_MAX_10_EXP)) */
 
+/* On some machines, _Float128 may be ABI-distinct from long double (e.g
+   IBM extended precision).  */
+#include <bits/floatn.h>
+
 /* For strtold, we need powers of 10 up to floor (log_2 (LDBL_MANT_DIG
-   - LDBL_MIN_EXP + 2)).  */
-#if !defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024
+   - LDBL_MIN_EXP + 2)).  When _Float128 is enabled in libm and it is
+   ABI-distinct from long double (e.g. on powerpc64le), we also need powers
+   of 10 up to floor (log_2 (FLT128_MANT_DIG - FLT128_MIN_EXP + 2)).  */
+#define FPIOCONST_HAVE_EXTENDED_RANGE \
+  ((!defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024) \
+   || __HAVE_DISTINCT_FLOAT128)
+
+#if FPIOCONST_HAVE_EXTENDED_RANGE
 # define FPIOCONST_POW10_ARRAY_SIZE	15
 #else
 # define FPIOCONST_POW10_ARRAY_SIZE	11
