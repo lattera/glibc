@@ -1,3 +1,8 @@
+2016-11-06  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* iconv/gconv.h (__gconv_info): Define __data element using a
+	zero-length array.
+
 2016-11-04  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* math/test-tgmath2.c: Split up test function.
