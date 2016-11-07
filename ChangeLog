@@ -1,3 +1,7 @@
+2016-11-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/check-installed-headers.sh: Ignore sys/sysctl.h for x32.
+
 2016-11-07  Yury Norov  <ynorov@caviumnetworks.com>
 	    Steve Ellcey  <sellcey@caviumnetworks.com>
 
