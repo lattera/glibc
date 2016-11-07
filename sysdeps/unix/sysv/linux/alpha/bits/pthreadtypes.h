@@ -63,7 +63,7 @@ typedef union
     int __owner;
     unsigned int __nusers;
     /* KIND must stay at this position in the structure to maintain
-       binary compatibility.  */
+       binary compatibility with static initializers.  */
     int __kind;
     int __spins;
     __pthread_list_t __list;

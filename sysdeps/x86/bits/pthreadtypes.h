@@ -98,7 +98,7 @@ typedef union
     unsigned int __nusers;
 #endif
     /* KIND must stay at this position in the structure to maintain
-       binary compatibility.  */
+       binary compatibility with static initializers.  */
     int __kind;
 #ifdef __x86_64__
     short __spins;

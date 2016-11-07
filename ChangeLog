@@ -1,3 +1,36 @@
+2016-11-07  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/aarch64/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Document ABI exposure of the __kind offset.
+	* sysdeps/arm/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Mention reason for the __kind offset exposure in the ABI.
+	* sysdeps/hppa/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/ia64/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/m68k/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/microblaze/nptl/bits/pthreadtypes.h
+	(struct __pthread_mutex_s): Likewise.
+	* sysdeps/mips/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/nios2/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/s390/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/sh/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/sparc/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/tile/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h
+	(struct __pthread_mutex_s): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h
+	(struct __pthread_mutex_s): Likewise.
+	* sysdeps/x86/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+
 2016-11-07  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* test-skeleton.c: Document do_test usage.

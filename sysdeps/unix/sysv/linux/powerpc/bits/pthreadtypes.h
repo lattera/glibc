@@ -87,7 +87,7 @@ typedef union
     unsigned int __nusers;
 #endif
     /* KIND must stay at this position in the structure to maintain
-       binary compatibility.  */
+       binary compatibility with static initializers.  */
     int __kind;
 #if __WORDSIZE == 64
     short __spins;

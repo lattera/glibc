@@ -63,7 +63,7 @@ typedef union
     unsigned int __count;
     int __owner;
     /* KIND must stay at this position in the structure to maintain
-       binary compatibility.  */
+       binary compatibility with static initializers.  */
     int __kind;
     unsigned int __nusers;
     __extension__ union

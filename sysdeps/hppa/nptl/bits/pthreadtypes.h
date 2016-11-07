@@ -71,7 +71,7 @@ typedef union
     unsigned int __count;
     int __owner;
     /* KIND must stay at this position in the structure to maintain
-       binary compatibility.  */
+       binary compatibility with static initializers.  */
     int __kind;
     /* The old 4-word 16-byte aligned lock. This is initalized
        to all ones by the Linuxthreads PTHREAD_MUTEX_INITIALIZER.
