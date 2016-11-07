@@ -190,7 +190,7 @@ __xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
 	buf->__pad1 = 0;
 #endif
 #ifdef _HAVE_STAT64___ST_INO
-# ifndef __ASSUME_ST_INO_64_BIT
+# if !__ASSUME_ST_INO_64_BIT
 	if (kbuf->st_ino == 0)
 	  buf->st_ino = kbuf->__st_ino;
 	else

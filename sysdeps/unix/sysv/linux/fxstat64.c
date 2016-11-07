@@ -33,7 +33,7 @@ ___fxstat64 (int vers, int fd, struct stat64 *buf)
 {
   int result;
   result = INLINE_SYSCALL (fstat64, 2, fd, buf);
-#if defined _HAVE_STAT64___ST_INO && !defined __ASSUME_ST_INO_64_BIT
+#if defined _HAVE_STAT64___ST_INO && !__ASSUME_ST_INO_64_BIT
   if (__builtin_expect (!result, 1) && buf->__st_ino != (__ino_t) buf->st_ino)
     buf->st_ino = buf->__st_ino;
 #endif

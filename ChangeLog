@@ -1,3 +1,15 @@
+2016-11-07  Yury Norov  <ynorov@caviumnetworks.com>
+	    Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h: #define
+	  __ASSUME_ST_INO_64_BIT as 0
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h: Likewise.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Replace #ifdef with #if
+	  over the code where __ASSUME_ST_INO_64_BIT is used.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstatconv.c: Likewise.
+
 2016-11-07  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/aarch64/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
