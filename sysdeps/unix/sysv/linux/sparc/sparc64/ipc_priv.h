@@ -1,4 +1,4 @@
-/* Old SysV permission definition for Linux.  Alpha version.
+/* Old SysV permission definition for Linux.  x86_64 version.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,7 +18,7 @@
 
 #include <sys/ipc.h>  /* For __key_t  */
 
-#define __IPC_64	0x100
+#define __IPC_64	0x0
 
 struct __old_ipc_perm
 {
@@ -30,3 +30,12 @@ struct __old_ipc_perm
   unsigned int mode;		/* Read/write permission.  */
   unsigned short int __seq;	/* Sequence number.  */
 };
+
+/* SPARC semctl multiplex syscall expects the union pointed address, not
+   the union address itself.  */
+#define SEMCTL_ARG_ADDRESS(__arg) __arg.array
+
+/* Also for msgrcv it does not use the kludge on final 2 arguments.  */
+#define MSGRCV_ARGS(__msgp, __msgtyp) __msgp, __msgtyp
+
+#include <ipc_ops.h>

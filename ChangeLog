@@ -1,5 +1,17 @@
 2016-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/aarch64/ipc_priv.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/ipc_priv.h: Avoid included other arch
+	definition and define its own.
+	* sysdeps/unix/sysv/linux/ipc_ops.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/ipc_priv.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/ipc_priv.h: Remove file.
+	* sysdeps/unix/sysv/linux/mips/mips64/ipc_priv.h: New file.
+	* sysdeps/unix/sysv/linux/ipc_priv.h: Move ipc syscall operation
+	definitions to common header.
+	* sysdeps/unix/sysv/linux/powerpc/ipc_priv.h: Use common syscall
+	operation from ipc_ops.h.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	(__ASSUME_DIRECT_SYSVIPC_SYSCALLS): New define.
 	* sysdeps/unix/sysv/linux/i386/kernel-features.h

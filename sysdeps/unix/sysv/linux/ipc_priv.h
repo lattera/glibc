@@ -1,4 +1,5 @@
-/* Copyright (C) 1995-2016 Free Software Foundation, Inc.
+/* Old SysV permission definition for Linux.  Default version.
+   Copyright (C) 1995-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/ipc.h>
+#include <sys/ipc.h>  /* For __key_t  */
 
 #define __IPC_64	0x100
 
@@ -30,17 +31,9 @@ struct __old_ipc_perm
   unsigned short int __seq;		/* Sequence number.  */
 };
 
+#define SEMCTL_ARG_ADDRESS(__arg) &__arg.array
 
-/* The codes for the functions to use the ipc syscall multiplexer.  */
-#define IPCOP_semop	 1
-#define IPCOP_semget	 2
-#define IPCOP_semctl	 3
-#define IPCOP_semtimedop 4
-#define IPCOP_msgsnd	11
-#define IPCOP_msgrcv	12
-#define IPCOP_msgget	13
-#define IPCOP_msgctl	14
-#define IPCOP_shmat	21
-#define IPCOP_shmdt	22
-#define IPCOP_shmget	23
-#define IPCOP_shmctl	24
+#define MSGRCV_ARGS(__msgp, __msgtyp) \
+  ((long int []){ (long int) __msgp, __msgtyp })
+
+#include <ipc_ops.h>
