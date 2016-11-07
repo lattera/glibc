@@ -36,7 +36,22 @@
 
 /* The test function is normally called `do_test' and it is called
    with argc and argv as the arguments.  We nevertheless provide the
-   possibility to overwrite this name.  */
+   possibility to overwrite this name.
+
+   The TEST_FUNCTION expression should have a type of 'int' and should
+   return 0 to indicate a passing test, 1 to indicate a failing test,
+   or 77 to indicate an unsupported test.  Other result values could be
+   used to indicate a failing test, but the result of the expression
+   is passed to exit and exit only returns the lower 8 bits of its input.
+   A non-zero return with some values could cause a test to incorrectly
+   be considered passing when it really failed. For this reason the
+   expression should always return 0, 1, or 77.
+
+   The test function may print out diagnostic or warning messages as well
+   as messages about failures.  These messages should be printed to stdout
+   and not stderr so that the output is properly ordered with respect to
+   the rest of the glibc testsuite run output.  */
+
 #ifndef TEST_FUNCTION
 # define TEST_FUNCTION do_test (argc, argv)
 #endif
