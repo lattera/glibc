@@ -1,5 +1,14 @@
 2016-11-08  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20790]
+	* sunrpc/rpc_parse.c (get_prog_declaration): Increase buffer size
+	to MAXLINESIZE.
+	* sunrpc/bug20790.x: New file.
+	* sunrpc/Makefile [$(run-built-tests) = yes] (rpcgen-tests): New
+	variable.
+	[$(run-built-tests) = yes] (tests-special): Add $(rpcgen-tests).
+	[$(run-built-tests) = yes] ($(rpcgen-tests)): New rule.
+
 	* sysdeps/unix/sysv/linux/sh/localplt.data: New file.
 
 	* sysdeps/unix/sysv/linux/hppa/localplt.data: New file.

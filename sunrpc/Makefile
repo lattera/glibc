@@ -103,6 +103,11 @@ ifeq ($(have-thread-library),yes)
 xtests += thrsvc
 endif
 
+ifeq ($(run-built-tests),yes)
+rpcgen-tests := $(objpfx)bug20790.out
+tests-special += $(rpcgen-tests)
+endif
+
 headers += $(rpcsvc:%.x=rpcsvc/%.h)
 extra-libs := librpcsvc
 extra-libs-others := librpcsvc # Make it in `others' pass, not `lib' pass.
@@ -225,3 +230,9 @@ endif
 endif
 
 $(objpfx)thrsvc: $(common-objpfx)linkobj/libc.so $(shared-thread-library)
+
+ifeq ($(run-built-tests),yes)
+$(rpcgen-tests): $(objpfx)%.out: %.x $(objpfx)rpcgen
+	$(built-program-cmd) -c $< -o $@; \
+	$(evaluate-test)
+endif
