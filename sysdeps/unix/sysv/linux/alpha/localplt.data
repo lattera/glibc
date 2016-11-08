@@ -15,11 +15,11 @@ libc.so: _OtsNeqX ?
 libc.so: _OtsNintXQ ?
 libc.so: _OtsSubX ?
 libc.so: _Unwind_Find_FDE
-libc.so: calloc ?
-libc.so: free ?
-libc.so: malloc ?
-libc.so: memalign ?
-libc.so: realloc ?
+libc.so: calloc + RELA R_ALPHA_GLOB_DAT
+libc.so: free + RELA R_ALPHA_GLOB_DAT
+libc.so: malloc + RELA R_ALPHA_GLOB_DAT
+libc.so: memalign + RELA R_ALPHA_GLOB_DAT
+libc.so: realloc + RELA R_ALPHA_GLOB_DAT
 libm.so: matherr
 # We used to offer inline functions that used this, so it must be exported.
 # Ought to reorg things such that carg isn't thus forced to use a plt.
@@ -27,9 +27,9 @@ libm.so: __atan2
 # The dynamic loader needs __tls_get_addr for TLS, and uses __libc_memalign
 # internally to allocate aligned TLS storage. The other malloc family of
 # functions are expected to allow user symbol interposition.
-ld.so: __tls_get_addr
-ld.so: __libc_memalign
-ld.so: malloc
-ld.so: calloc
-ld.so: realloc
-ld.so: free
+ld.so: __tls_get_addr ?
+ld.so: __libc_memalign + RELA R_ALPHA_GLOB_DAT
+ld.so: malloc + RELA R_ALPHA_GLOB_DAT
+ld.so: calloc + RELA R_ALPHA_GLOB_DAT
+ld.so: realloc + RELA R_ALPHA_GLOB_DAT
+ld.so: free + RELA R_ALPHA_GLOB_DAT

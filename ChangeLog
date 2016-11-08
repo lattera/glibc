@@ -1,5 +1,10 @@
 2016-11-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/alpha/localplt.data: Make __tls_get_addr
+	optional in ld.so.  Allow R_ALPHA_GLOB_DAT relocation for malloc,
+	calloc, realloc, free, memalign and __libc_memalign rather than
+	making them optional.
+
 	* sysdeps/unix/sysv/linux/nios2/localplt.data: Add __extendsfdf2
 	for libc.so.
 
