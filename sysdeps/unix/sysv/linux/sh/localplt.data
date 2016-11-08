@@ -1,0 +1,20 @@
+# See scripts/check-localplt.awk for how this file is processed.
+# PLT use is required for the malloc family and for matherr because
+# users can define their own functions and have library internals call them.
+libc.so: calloc
+libc.so: free
+libc.so: malloc
+libc.so: memalign
+libc.so: realloc
+libc.so: _Unwind_Find_FDE
+libc.so: _exit
+libc.so: __errno_location
+libm.so: matherr
+# The dynamic loader uses __libc_memalign internally to allocate aligned
+# TLS storage. The other malloc family of functions are expected to allow
+# user symbol interposition.
+ld.so: __libc_memalign
+ld.so: malloc
+ld.so: calloc
+ld.so: realloc
+ld.so: free

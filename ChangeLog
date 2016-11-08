@@ -1,5 +1,7 @@
 2016-11-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/sh/localplt.data: New file.
+
 	* sysdeps/unix/sysv/linux/hppa/localplt.data: New file.
 
 	* sysdeps/unix/sysv/linux/alpha/localplt.data: Make __tls_get_addr
