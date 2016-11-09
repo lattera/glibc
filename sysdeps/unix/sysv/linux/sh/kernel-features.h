@@ -17,6 +17,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef __KERNEL_FEATURES_SH__
+# define __KERNEL_FEATURES_SH__
+
 /* SH uses socketcall.  */
 #define __ASSUME_SOCKETCALL		1
 
@@ -50,3 +53,5 @@
    the kernel interface for p{read,write}64 adds a dummy long argument
    before the offset.  */
 #define __ASSUME_PRW_DUMMY_ARG	1
+
+#endif

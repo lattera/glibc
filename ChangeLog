@@ -1,5 +1,8 @@
 2016-11-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h: Add include
+	guards.
+
 	* sysdeps/unix/sysv/linux/access.c: New file.
 	* sysdeps/unix/sysv/linux/generic/access.c: Remove file.
 
