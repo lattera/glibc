@@ -427,12 +427,7 @@ extern long double __lgamma_productl (long double t, long double x,
    })
 #endif
 
-#define fabs_tg(x) __builtin_choose_expr			\
-  (__builtin_types_compatible_p (__typeof (x), float),		\
-   __builtin_fabsf (x),						\
-   __builtin_choose_expr					\
-   (__builtin_types_compatible_p (__typeof (x), double),	\
-    __builtin_fabs (x), __builtin_fabsl (x)))
+#define fabs_tg(x) __MATH_TG ((x), (__typeof (x)) __builtin_fabs, (x))
 #define min_of_type(type) __builtin_choose_expr		\
   (__builtin_types_compatible_p (type, float),		\
    FLT_MIN,						\

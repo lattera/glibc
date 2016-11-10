@@ -1,3 +1,26 @@
+2016-11-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h (__MATH_TG): New macro.
+	[__USE_ISOC99] (fpclassify): Define using __MATH_TG.
+	[__USE_ISOC99] (signbit): Likewise.
+	[__USE_ISOC99] (isfinite): Likewise.
+	[__USE_ISOC99] (isnan): Likewise.
+	[__USE_ISOC99] (isinf): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (issignaling): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (__MATH_EVAL_FMT2): New macro.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (iseqsig): Define using
+	__MATH_TG and __MATH_EVAL_FMT2.
+	* sysdeps/generic/math_private.h (fabs_tg): Define using
+	__MATH_TG.
+	* sysdeps/ieee754/ldbl-128ibm/bits/iscanonical.h
+	[!__NO_LONG_DOUBLE_MATH] (__iscanonicalf): New macro.
+	[!__NO_LONG_DOUBLE_MATH] (__iscanonical): Likewise.
+	[!__NO_LONG_DOUBLE_MATH] (iscanonical): Define using __MATH_TG.
+	* sysdeps/ieee754/ldbl-96/bits/iscanonical.h (__iscanonicalf): New
+	macro.
+	(__iscanonical): Likewise.
+	(iscanonical): Define using __MATH_TG.
+
 2016-11-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/sh/kernel-features.h: Add include

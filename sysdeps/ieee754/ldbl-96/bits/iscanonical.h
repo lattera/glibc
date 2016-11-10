@@ -22,6 +22,8 @@
 
 extern int __iscanonicall (long double __x)
      __THROW __attribute__ ((__const__));
+#define __iscanonicalf(x) ((void) (__typeof (x)) (x), 1)
+#define __iscanonical(x) ((void) (__typeof (x)) (x), 1)
 
 /* Return nonzero value if X is canonical.  In IEEE interchange binary
    formats, all values are canonical, but the argument must still be
@@ -29,7 +31,4 @@ extern int __iscanonicall (long double __x)
    conversion, before being discarded; in extended precision, there
    are encodings that are not consistently handled as corresponding to
    any particular value of the type, and we return 0 for those.  */
-#define iscanonical(x)				\
-  (sizeof (x) == sizeof (long double)		\
-   ? __iscanonicall (x)				\
-   : ((void) (__typeof (x)) (x), 1))
+#define iscanonical(x) __MATH_TG ((x), __iscanonical, (x))

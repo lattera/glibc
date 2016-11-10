@@ -199,6 +199,27 @@ extern int signgam;
 #endif
 
 
+/* Depending on the type of TG_ARG, call an appropriately suffixed
+   version of FUNC with arguments (including parentheses) ARGS.
+   Suffixed functions may not exist for long double if it has the same
+   format as double, or for other types with the same format as float,
+   double or long double.  The behavior is undefined if the argument
+   does not have a real floating type.  The definition may use a
+   conditional expression, so all suffixed versions of FUNC must
+   return the same type (FUNC may include a cast if necessary rather
+   than being a single identifier).  */
+#ifdef __NO_LONG_DOUBLE_MATH
+# define __MATH_TG(TG_ARG, FUNC, ARGS)					\
+  (sizeof (TG_ARG) == sizeof (float) ? FUNC ## f ARGS : FUNC ARGS)
+#else
+# define __MATH_TG(TG_ARG, FUNC, ARGS)		\
+  (sizeof (TG_ARG) == sizeof (float)		\
+   ? FUNC ## f ARGS				\
+   : sizeof (TG_ARG) == sizeof (double)		\
+   ? FUNC ARGS					\
+   : FUNC ## l ARGS)
+#endif
+
 /* ISO C99 defines some generic macros which work on any data type.  */
 #ifdef __USE_ISOC99
 
@@ -231,49 +252,22 @@ enum
      && !defined __OPTIMIZE_SIZE__
 #  define fpclassify(x) __builtin_fpclassify (FP_NAN, FP_INFINITE,	      \
      FP_NORMAL, FP_SUBNORMAL, FP_ZERO, x)
-# elif defined __NO_LONG_DOUBLE_MATH
-#  define fpclassify(x) \
-     (sizeof (x) == sizeof (float) ? __fpclassifyf (x) : __fpclassify (x))
 # else
-#  define fpclassify(x) \
-     (sizeof (x) == sizeof (float)					      \
-      ? __fpclassifyf (x)						      \
-      : sizeof (x) == sizeof (double)					      \
-      ? __fpclassify (x) : __fpclassifyl (x))
+#  define fpclassify(x) __MATH_TG ((x), __fpclassify, (x))
 # endif
 
 /* Return nonzero value if sign of X is negative.  */
 # if __GNUC_PREREQ (4,0)
-#  define signbit(x) \
-     (sizeof (x) == sizeof (float)                                            \
-      ? __builtin_signbitf (x)                                                        \
-      : sizeof (x) == sizeof (double)                                         \
-      ? __builtin_signbit (x) : __builtin_signbitl (x))
+#  define signbit(x) __MATH_TG ((x), __builtin_signbit, (x))
 # else
-#  ifdef __NO_LONG_DOUBLE_MATH
-#   define signbit(x) \
-     (sizeof (x) == sizeof (float) ? __signbitf (x) : __signbit (x))
-#  else
-#   define signbit(x) \
-     (sizeof (x) == sizeof (float)					      \
-      ? __signbitf (x)							      \
-      : sizeof (x) == sizeof (double)					      \
-      ? __signbit (x) : __signbitl (x))
-#  endif
+#  define signbit(x) __MATH_TG ((x), __signbit, (x))
 # endif
 
 /* Return nonzero value if X is not +-Inf or NaN.  */
 # if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__
 #  define isfinite(x) __builtin_isfinite (x)
-# elif defined __NO_LONG_DOUBLE_MATH
-#  define isfinite(x) \
-     (sizeof (x) == sizeof (float) ? __finitef (x) : __finite (x))
 # else
-#  define isfinite(x) \
-     (sizeof (x) == sizeof (float)					      \
-      ? __finitef (x)							      \
-      : sizeof (x) == sizeof (double)					      \
-      ? __finite (x) : __finitel (x))
+#  define isfinite(x) __MATH_TG ((x), __finite, (x))
 # endif
 
 /* Return nonzero value if X is neither zero, subnormal, Inf, nor NaN.  */
@@ -287,29 +281,15 @@ enum
    we already have this functions `__isnan' and it is faster.  */
 # if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__
 #  define isnan(x) __builtin_isnan (x)
-# elif defined __NO_LONG_DOUBLE_MATH
-#  define isnan(x) \
-     (sizeof (x) == sizeof (float) ? __isnanf (x) : __isnan (x))
 # else
-#  define isnan(x) \
-     (sizeof (x) == sizeof (float)					      \
-      ? __isnanf (x)							      \
-      : sizeof (x) == sizeof (double)					      \
-      ? __isnan (x) : __isnanl (x))
+#  define isnan(x) __MATH_TG ((x), __isnan, (x))
 # endif
 
 /* Return nonzero value if X is positive or negative infinity.  */
 # if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__
 #  define isinf(x) __builtin_isinf_sign (x)
-# elif defined __NO_LONG_DOUBLE_MATH
-#  define isinf(x) \
-     (sizeof (x) == sizeof (float) ? __isinff (x) : __isinf (x))
 # else
-#  define isinf(x) \
-     (sizeof (x) == sizeof (float)					      \
-      ? __isinff (x)							      \
-      : sizeof (x) == sizeof (double)					      \
-      ? __isinf (x) : __isinfl (x))
+#  define isinf(x) __MATH_TG ((x), __isinf, (x))
 # endif
 
 /* Bitmasks for the math_errhandling macro.  */
@@ -329,16 +309,7 @@ enum
 # include <bits/iscanonical.h>
 
 /* Return nonzero value if X is a signaling NaN.  */
-# ifdef __NO_LONG_DOUBLE_MATH
-#  define issignaling(x) \
-     (sizeof (x) == sizeof (float) ? __issignalingf (x) : __issignaling (x))
-# else
-#  define issignaling(x) \
-     (sizeof (x) == sizeof (float)					      \
-      ? __issignalingf (x)						      \
-      : sizeof (x) == sizeof (double)					      \
-      ? __issignaling (x) : __issignalingl (x))
-# endif
+# define issignaling(x) __MATH_TG ((x), __issignaling, (x))
 
 /* Return nonzero value if X is subnormal.  */
 # define issubnormal(x) (fpclassify (x) == FP_SUBNORMAL)
@@ -555,36 +526,20 @@ extern int matherr (struct exception *__exc);
 #endif
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* An expression whose type has the widest of the evaluation formats
+   of X and Y (which are of floating-point types).  */
+# if __FLT_EVAL_METHOD__ == 2 || __FLT_EVAL_METHOD__ > 64
+#  define __MATH_EVAL_FMT2(x, y) ((x) + (y) + 0.0L)
+# elif __FLT_EVAL_METHOD__ == 1 || __FLT_EVAL_METHOD__ > 32
+#  define __MATH_EVAL_FMT2(x, y) ((x) + (y) + 0.0)
+# else
+#  define __MATH_EVAL_FMT2(x, y) ((x) + (y))
+# endif
+
 /* Return X == Y but raising "invalid" and setting errno if X or Y is
    a NaN.  */
-# ifdef __NO_LONG_DOUBLE_MATH
-#  if (__FLT_EVAL_METHOD__ == 1			\
-       || __FLT_EVAL_METHOD__ == 2		\
-       || __FLT_EVAL_METHOD__ > 32)
-#   define iseqsig(x, y) __iseqsig ((x), (y))
-#  else
-#   define iseqsig(x, y)			\
-  (sizeof ((x) + (y)) == sizeof (float)		\
-   ? __iseqsigf ((x), (y))			\
-   : __iseqsig ((x), (y)))
-#  endif
-# else
-#  if __FLT_EVAL_METHOD__ == 2 || __FLT_EVAL_METHOD__ > 64
-#   define iseqsig(x, y) __iseqsigl ((x), (y))
-#  elif __FLT_EVAL_METHOD__ == 1 || __FLT_EVAL_METHOD__ > 32
-#   define iseqsig(x, y)			\
-  (sizeof ((x) + (y)) <= sizeof (double)	\
-   ? __iseqsig ((x), (y))			\
-   : __iseqsigl ((x), (y)))
-#  else
-#   define iseqsig(x, y)			\
-  (sizeof ((x) + (y)) == sizeof (float)		\
-   ? __iseqsigf ((x), (y))			\
-   : sizeof ((x) + (y)) == sizeof (double)	\
-   ? __iseqsig ((x), (y))			\
-   : __iseqsigl ((x), (y)))
-#  endif
-# endif
+# define iseqsig(x, y) \
+  __MATH_TG (__MATH_EVAL_FMT2 (x, y), __iseqsig, ((x), (y)))
 #endif
 
 __END_DECLS
