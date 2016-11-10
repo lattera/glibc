@@ -1,3 +1,8 @@
+2016-11-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/access.c: New file.
+	* sysdeps/unix/sysv/linux/generic/access.c: Remove file.
+
 2016-11-10  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* sysdeps/tile/tilepro/bits/wordsize.h: Define __WORDSIZE32_SIZE_ULONG
