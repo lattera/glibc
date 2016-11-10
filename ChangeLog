@@ -1,3 +1,8 @@
+2016-11-10  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/tile/tilepro/bits/wordsize.h: Define __WORDSIZE32_SIZE_ULONG
+	and __WORDSIZE32_PTRDIFF_LONG.
+
 2016-11-10  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/aarch64/libm-test-ulps: Regenerated.
