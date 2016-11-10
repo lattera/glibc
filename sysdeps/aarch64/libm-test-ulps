@@ -900,9 +900,9 @@ ildouble: 2
 ldouble: 2
 
 Function: Imaginary part of "clog10":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 2
 ldouble: 2
