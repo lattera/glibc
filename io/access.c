@@ -19,6 +19,13 @@
 #include <stddef.h>
 #include <unistd.h>
 
+/* Test for access to FILE without setting errno.   */
+int
+__access_noerrno (const char *file, int type)
+{
+  return -1;
+}
+
 /* Test for access to FILE.  */
 int
 __access (const char *file, int type)

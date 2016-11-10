@@ -21,6 +21,21 @@
 #include <sysdep-cancel.h>
 
 int
+__access_noerrno (const char *file, int type)
+{
+  int res;
+  INTERNAL_SYSCALL_DECL (err);
+#ifdef __NR_access
+  res = INTERNAL_SYSCALL_CALL (access, err, file, type);
+#else
+  res = INTERNAL_SYSCALL_CALL (faccessat, err, AT_FDCWD, file, type);
+#endif
+  if (INTERNAL_SYSCALL_ERROR_P (res, err))
+    return INTERNAL_SYSCALL_ERRNO (res, err);
+  return 0;
+}
+
+int
 __access (const char *file, int type)
 {
 #ifdef __NR_access

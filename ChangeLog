@@ -1,3 +1,18 @@
+2016-11-16  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* hurd/hurd.h (__hurd_fail_noerrno): New function.
+	* include/unistd.h [IS_IN (rtld) || !defined SHARED]: Declare
+	__access_noerrno.
+	* io/access.c (__access_noerrno): New function.
+	* sysdeps/mach/hurd/access.c (hurd_fail_seterrno): New function.
+	(hurd_fail_seterrno): Likewise.
+	(access_common): Likewise.
+	(__access_noerrno): Likewise.
+	* sysdeps/nacl/access.c (__access_noerrno): Likewise.
+	* sysdeps/unix/sysv/linux/access.c (__access_noerrno): Likewise.
+	* sysdeps/nacl/nacl-interfaces.h (NACL_CALL_NOERRNO): New
+	macro.
+
 2016-11-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sh/sh4/register-dump.h (register_dump):

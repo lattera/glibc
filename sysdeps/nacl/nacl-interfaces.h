@@ -113,4 +113,8 @@ __nacl_fail (int err)
 #define NACL_CALL(err, val) \
   ({ int _err = (err); _err ? __nacl_fail (_err) : (val); })
 
+/* Same as NACL_CALL but without setting errno.  */
+#define NACL_CALL_NOERRNO(err, val) \
+  ({ int _err = (err); _err ? _err : (val); })
+
 #endif  /* nacl-interfaces.h */

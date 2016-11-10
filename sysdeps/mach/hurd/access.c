@@ -22,9 +22,20 @@
 #include <hurd/lookup.h>
 #include <fcntl.h>
 
-/* Test for access to FILE by our real user and group IDs.  */
-int
-__access (const char *file, int type)
+static int
+hurd_fail_seterrno (error_t err)
+{
+  return __hurd_fail (err);
+}
+
+static int
+hurd_fail_noerrno (error_t err)
+{
+  return __hurd_fail_noerrno (err);
+}
+
+static int
+access_common (const char *file, int type, int (*errfunc) (error_t))
 {
   error_t err;
   file_t rcrdir, rcwdir, io;
@@ -120,13 +131,13 @@ __access (const char *file, int type)
   if (rcwdir != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), rcwdir);
   if (err)
-    return __hurd_fail (err);
+    return errfunc (err);
 
   /* Find out what types of access we are allowed to this file.  */
   err = __file_check_access (io, &allowed);
   __mach_port_deallocate (__mach_task_self (), io);
   if (err)
-    return __hurd_fail (err);
+    return errfunc (err);
 
   flags = 0;
   if (type & R_OK)
@@ -138,9 +149,23 @@ __access (const char *file, int type)
 
   if (flags & ~allowed)
     /* We are not allowed all the requested types of access.  */
-    return __hurd_fail (EACCES);
+    return errfunc (EACESS);
 
   return 0;
 }
 
+/* Test for access to FILE by our real user and group IDs without setting
+   errno.  */
+int
+__access_noerrno (const char *file, int type)
+{
+  return access_common (file, type, hurd_fail_noerrno);
+}
+
+/* Test for access to FILE by our real user and group IDs.  */
+int
+__access (const char *file, int type)
+{
+  return access_common (file, type, hurd_fail_seterrno);
+}
 weak_alias (__access, access)

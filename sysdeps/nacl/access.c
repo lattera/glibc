@@ -19,6 +19,13 @@
 #include <unistd.h>
 #include <nacl-interfaces.h>
 
+/* Test for access to FILE without setting errno.  */
+int
+__access_noerrno (const char *file, int type)
+{
+  return NACL_CALL_NOERRNO (__nacl_irt_dev_filename.access (file, type), 0);
+}
+
 /* Test for access to FILE.  */
 int
 __access (const char *file, int type)
