@@ -1,3 +1,8 @@
+2016-11-10  Chris Metcalf  <cmetcalf@mellanox.com>
+
+	* sysdeps/tile/tilepro/atomic-machine.h (atomic_store_relaxed)
+	(atomic_store_release): Provide tilepro-specific implementations.
+
 2016-11-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h (__MATH_TG): New macro.

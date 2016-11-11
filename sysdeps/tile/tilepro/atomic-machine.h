@@ -83,6 +83,16 @@ int __atomic_update_32 (volatile int *mem, int mask, int addend)
   ({ __typeof (mask) __att1_v = (mask);                 \
     __atomic_update ((mem), ~__att1_v, __att1_v); })
 
+/*
+ * We must use the kernel atomics for atomic_store, since otherwise an
+ * unsynchronized store could become visible after another core's
+ * kernel-atomic implementation had read the memory word in question,
+ * but before it had written the updated value to it, which would
+ * cause the unsynchronized store to be lost.
+ */
+#define atomic_store_relaxed(mem, val) atomic_exchange_acq (mem, val)
+#define atomic_store_release(mem, val) atomic_exchange_rel (mem, val)
+
 #include <sysdeps/tile/atomic-machine.h>
 
 #endif /* atomic-machine.h */
