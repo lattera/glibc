@@ -15,10 +15,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <stdarg.h>
-#include <stdio.h>
+
 #include <sysdep-cancel.h>
 
 /* Open FILE with access OFLAG.  If O_CREAT or O_TMPFILE is in OFLAG,
@@ -36,8 +37,23 @@ __libc_open64 (const char *file, int oflag, ...)
       va_end (arg);
     }
 
-  return SYSCALL_CANCEL (open, file, oflag | O_LARGEFILE, mode);
+#ifdef __OFF_T_MATCHES_OFF64_T
+# define EXTRA_OPEN_FLAGS 0
+#else
+# define EXTRA_OPEN_FLAGS O_LARGEFILE
+#endif
+
+  return SYSCALL_CANCEL (openat, AT_FDCWD, file, oflag | EXTRA_OPEN_FLAGS,
+			 mode);
 }
-weak_alias (__libc_open64, __open64)
+
+strong_alias (__libc_open64, __open64)
 libc_hidden_weak (__open64)
 weak_alias (__libc_open64, open64)
+
+#ifdef __OFF_T_MATCHES_OFF64_T
+strong_alias (__libc_open64, __libc_open)
+strong_alias (__libc_open64, __open)
+libc_hidden_weak (__open)
+weak_alias (__libc_open64, open)
+#endif

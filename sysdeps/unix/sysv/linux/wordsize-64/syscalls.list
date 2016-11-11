@@ -6,7 +6,6 @@ readahead	-	readahead	i:iii	__readahead	readahead
 sendfile	-	sendfile	i:iipi	sendfile	sendfile64
 sync_file_range	-	sync_file_range	Ci:iiii	sync_file_range
 creat		-	creat		Ci:si	creat		creat64
-open		-	open		Ci:siv	__libc_open	__open open __open64 open64
 prlimit		EXTRA	prlimit64	i:iipp	prlimit		prlimit64
 
 fanotify_mark	EXTRA	fanotify_mark	i:iiiis	fanotify_mark

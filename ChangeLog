@@ -1,5 +1,14 @@
 2016-05-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/generic/open.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/open64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/open64.c: Likewise.
+	* sysdeps/unix/sysv/linux/open.c: New file.
+	* sysdeps/unix/sysv/linux/open64.c (__libc_open64): Define symbol
+	iff __WORDSIZE != 64 and use __NR_openat when available.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Remove open
+	from auto-generated list.
+
 	* nptl/Makefile (CFLAGS-close.c): New flag.
 	* sysdeps/unix/sysv/linux/close.c: New file.
 
