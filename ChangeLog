@@ -1,3 +1,7 @@
+2016-11-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/sys/user.h: Include <stddef.h>.
+
 2016-11-10  Chris Metcalf  <cmetcalf@mellanox.com>
 
 	* sysdeps/tile/tilepro/atomic-machine.h (atomic_store_relaxed)

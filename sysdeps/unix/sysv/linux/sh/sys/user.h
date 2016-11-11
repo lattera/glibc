@@ -19,6 +19,7 @@
 #define _SYS_USER_H	1
 
 #include <asm/ptrace.h>
+#include <stddef.h>
 
 /* asm/ptrace.h polutes the namespace.  */
 #undef PTRACE_GETREGS
