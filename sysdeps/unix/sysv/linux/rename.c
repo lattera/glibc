@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2016 Free Software Foundation, Inc.
+/* Linux implementation for rename function.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,13 +17,19 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <sysdep.h>
+#include <errno.h>
 
 /* Rename the file OLD to NEW.  */
 int
 rename (const char *old, const char *new)
 {
-  return INLINE_SYSCALL (renameat, 4, AT_FDCWD, old, AT_FDCWD, new);
+#if defined (__NR_rename)
+  return INLINE_SYSCALL_CALL (rename, old, new);
+#elif defined (__NR_renameat)
+  return INLINE_SYSCALL_CALL (renameat, AT_FDCWD, old, AT_FDCWD, new);
+#else
+  return INLINE_SYSCALL_CALL (renameat2, AT_FDCWD, old, AT_FDCWD, new, 0);
+#endif
 }

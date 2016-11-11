@@ -1,3 +1,8 @@
+2016-12-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/rename.c: New file.
+	* sysdeps/unix/sysv/linux/generic/rename.c: Remove file.
+
 2015-12-14  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-strtok.c (oldstrtok): Add old implementation.
