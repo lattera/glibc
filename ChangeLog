@@ -1,5 +1,16 @@
 2016-05-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* io/Makefile (CFLAGS-creat.c): New rule.
+	(CFLAGS-creat64.c): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/creat.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/creat.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/creat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/creat.c: New file.
+	* sysdeps/unix/sysv/linux/creat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove create from
+	auto-generated list.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.
+
 	* sysdeps/unix/sysv/linux/generic/open.c: Remove file.
 	* sysdeps/unix/sysv/linux/generic/open64.c: Likewise.
 	* sysdeps/unix/sysv/linux/wordsize-64/open64.c: Likewise.

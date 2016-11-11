@@ -80,6 +80,8 @@ include ../Rules
 
 CFLAGS-open.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-open64.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-creat.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-creat64.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fcntl.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-poll.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-ppoll.c = -fexceptions -fasynchronous-unwind-tables
