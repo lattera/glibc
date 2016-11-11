@@ -1,5 +1,7 @@
 2016-11-11  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/build-many-glibcs.py: New file.
+
 	* stdlib/bug-getcontext.c: Include <libc-internal.h>.
 	(do_test): Disable -Wmaybe-uninitialized around uses of
 	except_mask.
