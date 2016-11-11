@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ucontext.h>
+#include <libc-internal.h>
 
 static int
 do_test (void)
@@ -49,6 +50,13 @@ do_test (void)
   printf ("\nDone with getcontext()!\n");
   fflush (NULL);
 
+  /* On nios2 and tilepro, GCC 5 warns that except_mask may be used
+     uninitialized.  Because it is always initialized and nothing in
+     this test ever calls setcontext (a setcontext call could result
+     in local variables being clobbered on the second return from
+     getcontext), in fact an uninitialized use is not possible.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
   int mask = fegetexcept ();
   if (mask != except_mask)
     {
@@ -59,6 +67,7 @@ do_test (void)
 
   printf("\nAt end fegetexcept() returned %d, expected: %d.\n",
 	 mask, except_mask);
+  DIAG_POP_NEEDS_COMMENT;
 
   return 0;
 }
