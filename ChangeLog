@@ -1,3 +1,8 @@
+2016-11-15  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/sysinfo.texi (S_APPEND): Delete.
+	(S_IMMUTABLE): Likewise.
+
 2016-11-15  Denis Kaganovich  <mahatma@eu.by>
 	    Magnus Granberg  <zorry@gentoo.org>
 	    Mike Frysinger  <vapier@gentoo.org>

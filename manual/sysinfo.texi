@@ -930,20 +930,6 @@ This bit on specifies that no writing to the filesystem shall be allowed
 while it is mounted.  This cannot be overridden by @code{ioctl}.  This
 option is available on nearly all filesystems.
 
-@item S_IMMUTABLE
-This bit on specifies that no writing to the files in the filesystem
-shall be allowed while it is mounted.  This can be overridden for a
-particular file access by a properly privileged call to @code{ioctl}.
-This option is a relatively new invention and is not available on many
-filesystems.
-
-@item S_APPEND
-This bit on specifies that the only file writing that shall be allowed
-while the filesystem is mounted is appending.  Some filesystems allow
-this to be overridden for a particular process by a properly privileged
-call to @code{ioctl}.  This is a relatively new invention and is not
-available on many filesystems.
-
 @item MS_NOSUID
 This bit on specifies that Setuid and Setgid permissions on files in the
 filesystem shall be ignored while it is mounted.
