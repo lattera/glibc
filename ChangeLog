@@ -1,3 +1,9 @@
+2016-11-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/tile/tilegx/configure.ac: Use
+	LIBC_SLIBDIR_RTLDDIR for tilegx32.
+	* sysdeps/unix/sysv/linux/tile/tilegx/configure: Regenerated.
+
 2016-11-14  Zack Weinberg  <zackw@panix.com>
 
 	* sunrpc/Makefile (rpcgen-tests): Delete the .out file before
