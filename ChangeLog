@@ -1,5 +1,8 @@
 2016-11-14  Zack Weinberg  <zackw@panix.com>
 
+	* sunrpc/Makefile (rpcgen-tests): Delete the .out file before
+	creating or re-creating it.
+
 	* string/bits/string2.h: Fix typo in comment.
 
 2016-11-14  Zack Weinberg  <zackw@panix.com>
