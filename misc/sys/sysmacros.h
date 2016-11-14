@@ -40,33 +40,33 @@
 #include <bits/types.h>
 #include <bits/sysmacros.h>
 
-/* The extra "\n " moves gcc's [-Wdeprecated-declarations] annotation
-   onto the next line.  */
-#define __SYSMACROS_DEPRECATION_MSG(symbol)				     \
-  "\n  In the GNU C Library, `" #symbol "' is defined by <sys/sysmacros.h>." \
-  "\n  For historical compatibility, it is currently defined by"	     \
-  "\n  <sys/types.h> as well, but we plan to remove this soon."		     \
-  "\n  To use `" #symbol "', include <sys/sysmacros.h> directly."	     \
-  "\n  If you did not intend to use a system-defined macro `" #symbol "',"   \
-  "\n  you should #undef it after including <sys/types.h>."		     \
-  "\n "
+/* Caution: The text of this deprecation message is unquoted, so that
+   #symbol can be substituted.  (It is converted to a string by
+   __SYSMACROS_DM1.)  This means the message must be a sequence of
+   complete pp-tokens; in particular, English contractions (it's,
+   can't) cannot be used.
+
+   The message has been manually word-wrapped to fit in 80 columns
+   when output by GCC 5 and 6.  The first line is shorter to leave
+   some room for the "foo.c:23: warning:" annotation.  */
+#define __SYSMACROS_DM(symbol) __SYSMACROS_DM1 \
+ (In the GNU C Library, #symbol is defined\n\
+  by <sys/sysmacros.h>. For historical compatibility, it is\n\
+  currently defined by <sys/types.h> as well, but we plan to\n\
+  remove this soon.  To use #symbol, include <sys/sysmacros.h>\n\
+  directly.  If you did not intend to use a system-defined macro\n\
+  #symbol, you should undefine it after including <sys/types.h>.)
+
+/* This macro is variadic because the deprecation message above
+   contains commas.  */
+#define __SYSMACROS_DM1(...) __glibc_macro_warning (#__VA_ARGS__)
 
 #define __SYSMACROS_DECL_TEMPL(rtype, name, proto)			     \
   extern rtype gnu_dev_##name proto __THROW __attribute_const__;
 
-#define __SYSMACROS_FST_DECL_TEMPL(rtype, name, proto)			     \
-  extern rtype __REDIRECT_NTH (__##name##_from_sys_types, proto,	     \
-			       gnu_dev_##name)				     \
-       __attribute_const__						     \
-       __attribute_deprecated_msg__ (__SYSMACROS_DEPRECATION_MSG (name));
-
 #define __SYSMACROS_IMPL_TEMPL(rtype, name, proto)			     \
   __extension__ __extern_inline __attribute_const__ rtype		     \
   __NTH (gnu_dev_##name proto)
-
-#define __SYSMACROS_FST_IMPL_TEMPL(rtype, name, proto)			     \
-  __extension__ __extern_inline __attribute_const__ rtype		     \
-  __NTH (__##name##_from_sys_types proto)
 
 __BEGIN_DECLS
 
@@ -74,19 +74,11 @@ __SYSMACROS_DECLARE_MAJOR (__SYSMACROS_DECL_TEMPL)
 __SYSMACROS_DECLARE_MINOR (__SYSMACROS_DECL_TEMPL)
 __SYSMACROS_DECLARE_MAKEDEV (__SYSMACROS_DECL_TEMPL)
 
-__SYSMACROS_DECLARE_MAJOR (__SYSMACROS_FST_DECL_TEMPL)
-__SYSMACROS_DECLARE_MINOR (__SYSMACROS_FST_DECL_TEMPL)
-__SYSMACROS_DECLARE_MAKEDEV (__SYSMACROS_FST_DECL_TEMPL)
-
 #ifdef __USE_EXTERN_INLINES
 
 __SYSMACROS_DEFINE_MAJOR (__SYSMACROS_IMPL_TEMPL)
 __SYSMACROS_DEFINE_MINOR (__SYSMACROS_IMPL_TEMPL)
 __SYSMACROS_DEFINE_MAKEDEV (__SYSMACROS_IMPL_TEMPL)
-
-__SYSMACROS_DEFINE_MAJOR (__SYSMACROS_FST_IMPL_TEMPL)
-__SYSMACROS_DEFINE_MINOR (__SYSMACROS_FST_IMPL_TEMPL)
-__SYSMACROS_DEFINE_MAKEDEV (__SYSMACROS_FST_IMPL_TEMPL)
 
 #endif
 
@@ -96,9 +88,7 @@ __END_DECLS
 
 #ifndef __SYSMACROS_NEED_IMPLEMENTATION
 # undef __SYSMACROS_DECL_TEMPL
-# undef __SYSMACROS_FST_DECL_TEMPL
 # undef __SYSMACROS_IMPL_TEMPL
-# undef __SYSMACROS_FST_IMPL_TEMPL
 # undef __SYSMACROS_DECLARE_MAJOR
 # undef __SYSMACROS_DECLARE_MINOR
 # undef __SYSMACROS_DECLARE_MAKEDEV
@@ -108,9 +98,9 @@ __END_DECLS
 #endif
 
 #ifdef __SYSMACROS_DEPRECATED_INCLUSION
-# define major(dev) __major_from_sys_types (dev)
-# define minor(dev) __minor_from_sys_types (dev)
-# define makedev(maj, min) __makedev_from_sys_types (maj, min)
+# define major(dev) __SYSMACROS_DM (major) gnu_dev_major (dev)
+# define minor(dev) __SYSMACROS_DM (minor) gnu_dev_minor (dev)
+# define makedev(maj, min) __SYSMACROS_DM (makedev) gnu_dev_makedev (maj, min)
 #else
 # define major(dev) gnu_dev_major (dev)
 # define minor(dev) gnu_dev_minor (dev)

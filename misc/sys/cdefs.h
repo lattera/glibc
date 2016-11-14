@@ -473,8 +473,11 @@
 #endif
 
 /* __glibc_macro_warning (MESSAGE) issues warning MESSAGE.  This is
-   intended for use in preprocessor macros.  */
-#if __GNUC_PREREQ (4,8)
+   intended for use in preprocessor macros.
+
+   Note: MESSAGE must be a _single_ string; concatenation of string
+   literals is not supported.  */
+#if __GNUC_PREREQ (4,8) || __glibc_clang_prereq (3,5)
 # define __glibc_macro_warning1(message) _Pragma (#message)
 # define __glibc_macro_warning(message) \
   __glibc_macro_warning1 (GCC warning message)

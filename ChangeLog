@@ -1,3 +1,14 @@
+2016-11-14  Zack Weinberg  <zackw@panix.com>
+
+	* misc/sys/sysmacros.h (__SYSMACROS_DM, __SYSMACROS_DM1): New macros.
+	(__SYSMACROS_DEPRECATION_MSG, __SYSMACROS_FST_DECL_TEMPL)
+	(__SYSMACROS_FST_IMPL_TEMPL): Delete.
+	(major, minor, makedev): Use __SYSMACROS_DM in definition, instead
+	of redirected function names.
+
+	* misc/sys/cdefs.h (__glibc_macro_warning): Activate for clang >= 3.5
+	as well.  Document that MESSAGE must be a single string literal.
+
 2016-11-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py: New file.
