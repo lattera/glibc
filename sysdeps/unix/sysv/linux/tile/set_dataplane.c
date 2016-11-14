@@ -19,13 +19,13 @@
 #include <errno.h>
 #include <stddef.h>
 #include <unistd.h>
-#ifdef __NR_set_dataplane
-#include <sys/dataplane.h>
-#endif
+#include <shlib-compat.h>
 
-/* Request dataplane modes from the kernel. */
+/* Request dataplane modes from the kernel (compatibility only). */
+#if SHLIB_COMPAT (libc, GLIBC_2_12, GLIBC_2_25)
 int
-set_dataplane (int flags)
+attribute_compat_text_section
+__old_set_dataplane (int flags)
 {
 #ifdef __NR_set_dataplane
   return INLINE_SYSCALL (set_dataplane, 1, flags);
@@ -34,3 +34,6 @@ set_dataplane (int flags)
   return -1;
 #endif
 }
+
+compat_symbol (libc, __old_set_dataplane, set_dataplane, GLIBC_2_12);
+#endif

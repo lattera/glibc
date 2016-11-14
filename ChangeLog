@@ -1,3 +1,12 @@
+2016-11-18  Chris Metcalf  <cmetcalf@mellanox.com>
+
+	* sysdeps/unix/sysv/linux/tile/set_dataplane.c
+	(__old_set_dataplane): Rename from set_dataplane and make a
+	compatibility symbol.
+	* sysdeps/unix/sysv/linux/tile/sys/dataplane.h: Remove file.
+	* sysdeps/unix/sysv/linux/tile/Makefile (sysdep_headers): Remove
+	sys/dataplane.h.
+
 2016-11-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.write_files): Make wrapper
