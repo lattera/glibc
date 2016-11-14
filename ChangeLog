@@ -1,5 +1,9 @@
 2016-11-14  Zack Weinberg  <zackw@panix.com>
 
+	* string/bits/string2.h: Fix typo in comment.
+
+2016-11-14  Zack Weinberg  <zackw@panix.com>
+
 	* misc/sys/sysmacros.h (__SYSMACROS_DM, __SYSMACROS_DM1): New macros.
 	(__SYSMACROS_DEPRECATION_MSG, __SYSMACROS_FST_DECL_TEMPL)
 	(__SYSMACROS_FST_IMPL_TEMPL): Delete.

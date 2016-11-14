@@ -52,7 +52,7 @@
 #define __string2_1bptr_p(__x) \
   ((size_t)(const void *)((__x) + 1) - (size_t)(const void *)(__x) == 1)
 
-/* Set N bytes of S to C.  */
+/* Set N bytes of S to 0.  */
 #if !defined _HAVE_STRING_ARCH_memset
 # define __bzero(s, n) __builtin_memset (s, '\0', n)
 #endif
