@@ -1,3 +1,13 @@
+2017-06-12  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* manual/math.texi (Mathematics): Add description for _FloatN and
+	_FloatNx types and mentions that they are not support in glibc for
+	any architecture, so far.
+	* manual/arith.texi (wcstof, wcstold): Replace the mention to
+	stdlib.h with wchar.h.
+	(Parsing of Floats): Add descriptions for strtofN and wcstofN.
+	(Printing of Floats): Add description for strfromfN.
+
 2017-06-12  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>

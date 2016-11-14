@@ -2980,6 +2980,7 @@ examining @var{errno} and @var{tailptr}.
 @comment ISO
 @deftypefunx {long double} strtold (const char *@var{string}, char **@var{tailptr})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@comment See safety comments for strtod.
 These functions are analogous to @code{strtod}, but return @code{float}
 and @code{long double} values respectively.  They report errors in the
 same way as @code{strtod}.  @code{strtof} can be substantially faster
@@ -2990,23 +2991,52 @@ double} is a separate type).
 These functions have been GNU extensions and are new to @w{ISO C99}.
 @end deftypefun
 
+@comment stdlib.h
+@comment ISO/IEC TS 18661-3
+@deftypefun _FloatN strtofN (const char *@var{string}, char **@var{tailptr})
+@comment stdlib.h
+@comment ISO/IEC TS 18661-3
+@deftypefunx _FloatNx strtofNx (const char *@var{string}, char **@var{tailptr})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+@comment See safety comments for strtod.
+These functions are like @code{strtod}, except for the return type.
+
+They were introduced in @w{ISO/IEC TS 18661-3} and are available on machines
+that support the related types; @pxref{Mathematics}.
+@end deftypefun
+
 @comment wchar.h
 @comment ISO
 @deftypefun double wcstod (const wchar_t *restrict @var{string}, wchar_t **restrict @var{tailptr})
-@comment stdlib.h
+@comment wchar.h
 @comment ISO
 @deftypefunx float wcstof (const wchar_t *@var{string}, wchar_t **@var{tailptr})
-@comment stdlib.h
+@comment wchar.h
 @comment ISO
 @deftypefunx {long double} wcstold (const wchar_t *@var{string}, wchar_t **@var{tailptr})
+@comment wchar.h
+@comment GNU
+@deftypefunx _FloatN wcstofN (const wchar_t *@var{string}, wchar_t **@var{tailptr})
+@comment wchar.h
+@comment GNU
+@deftypefunx _FloatNx wcstofNx (const wchar_t *@var{string}, wchar_t **@var{tailptr})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
-The @code{wcstod}, @code{wcstof}, and @code{wcstol} functions are
-equivalent in nearly all aspect to the @code{strtod}, @code{strtof}, and
-@code{strtold} functions but it handles wide character string.
+@comment See safety comments for strtod.
+The @code{wcstod}, @code{wcstof}, @code{wcstol}, @code{wcstof@var{N}},
+and @code{wcstof@var{N}x} functions are equivalent in nearly all aspects
+to the @code{strtod}, @code{strtof}, @code{strtold},
+@code{strtof@var{N}}, and @code{strtof@var{N}x} functions, but they
+handle wide character strings.
 
 The @code{wcstod} function was introduced in @w{Amendment 1} of @w{ISO
 C90}.  The @code{wcstof} and @code{wcstold} functions were introduced in
 @w{ISO C99}.
+
+The @code{wcstof@var{N}} and @code{wcstof@var{N}x} functions are not in
+any standard, but are added to provide completeness for the
+non-deprecated interface of wide character string to floating-point
+conversion functions.  They are only available on machines that support
+the related types; @pxref{Mathematics}.
 @end deftypefun
 
 @comment stdlib.h
@@ -3033,11 +3063,15 @@ The @samp{strfrom} functions are declared in @file{stdlib.h}.
 @comment stdlib.h
 @comment ISO/IEC TS 18661-1
 @deftypefun int strfromd (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, double @var{value})
+@comment stdlib.h
+@comment ISO/IEC TS 18661-1
 @deftypefunx int strfromf (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, float @var{value})
+@comment stdlib.h
+@comment ISO/IEC TS 18661-1
 @deftypefunx int strfroml (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, long double @var{value})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
-@comment these functions depend on __printf_fp and __printf_fphex, which are
-@comment AS-unsafe (ascuheap) and AC-unsafe (acsmem).
+@comment All these functions depend on both __printf_fp and __printf_fphex,
+@comment which are both AS-unsafe (ascuheap) and AC-unsafe (acsmem).
 The functions @code{strfromd} (``string-from-double''), @code{strfromf}
 (``string-from-float''), and @code{strfroml} (``string-from-long-double'')
 convert the floating-point number @var{value} to a string of characters and
@@ -3062,6 +3096,21 @@ has been completely written if and only if the returned value is less than
 @var{size}.
 
 These functions were introduced by ISO/IEC TS 18661-1.
+@end deftypefun
+
+@comment stdlib.h
+@comment ISO/IEC TS 18661-3
+@deftypefun int strfromfN (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, _Float@var{N} @var{value})
+@comment stdlib.h
+@comment ISO/IEC TS 18661-3
+@deftypefunx int strfromfNx (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, _Float@var{N}x @var{value})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@comment See safety comments for strfromd.
+These functions are like @code{strfromd}, except for the type of
+@code{value}.
+
+They were introduced in @w{ISO/IEC TS 18661-3} and are available on machines
+that support the related types; @pxref{Mathematics}.
 @end deftypefun
 
 @node System V Number Conversion

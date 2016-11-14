@@ -53,6 +53,17 @@ usually wise to pick the narrowest type that can accommodate your data.
 Not all machines have a distinct @code{long double} type; it may be the
 same as @code{double}.
 
+On some machines, @theglibc{} also provides @code{_Float@var{N}} and
+@code{_Float@var{N}x} types.  These types are defined in @w{ISO/IEC TS
+18661-3}, which extends @w{ISO C} and defines floating-point types that
+are not machine-dependent.  When such a type, such as @code{_Float128},
+is supported by @theglibc{}, extra variants for most of the mathematical
+functions provided for @code{double}, @code{float}, and @code{long
+double} are also provided for the supported type.
+
+Currently, support for @code{_Float@var{N}} or @code{_Float@var{N}x}
+types is not provided for any machine.
+
 @menu
 * Mathematical Constants::      Precise numeric values for often-used
                                  constants.
