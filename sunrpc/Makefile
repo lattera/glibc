@@ -233,6 +233,7 @@ $(objpfx)thrsvc: $(common-objpfx)linkobj/libc.so $(shared-thread-library)
 
 ifeq ($(run-built-tests),yes)
 $(rpcgen-tests): $(objpfx)%.out: %.x $(objpfx)rpcgen
+	-rm -f $@
 	$(built-program-cmd) -c $< -o $@; \
 	$(evaluate-test)
 endif
