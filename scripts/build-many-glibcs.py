@@ -33,7 +33,6 @@ configurations for which compilers or glibc are to be built.
 
 import argparse
 import os
-import os.path
 import re
 import shutil
 import stat
@@ -42,8 +41,7 @@ import sys
 import urllib.request
 
 
-class Context:
-
+class Context(object):
     """The global state associated with builds in a given directory."""
 
     def __init__(self, topdir, parallelism, keep, action):
@@ -460,9 +458,10 @@ class Context:
             'record_status PASS\n')
         with open(self.wrapper, 'w') as f:
             f.write(wrapper_text)
-        os.chmod(self.wrapper,
-                 (stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|
-                  stat.S_IROTH|stat.S_IXOTH))
+        # Mode 0o755.
+        mode_exec = (stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|
+                     stat.S_IROTH|stat.S_IXOTH)
+        os.chmod(self.wrapper, mode_exec)
         save_logs_text = (
             '#!/bin/sh\n'
             'if ! [ -f tests.sum ]; then\n'
@@ -487,9 +486,7 @@ class Context:
             'done\n')
         with open(self.save_logs, 'w') as f:
             f.write(save_logs_text)
-        os.chmod(self.save_logs,
-                 (stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|
-                  stat.S_IROTH|stat.S_IXOTH))
+        os.chmod(self.save_logs, mode_exec)
 
     def do_build(self):
         """Do the actual build."""
@@ -678,8 +675,7 @@ class Context:
         os.remove(filename)
 
 
-class Config:
-
+class Config(object):
     """A configuration for building a compiler and associated libraries."""
 
     def __init__(self, ctx, arch, os_name, variant=None, gcc_cfg=None,
@@ -846,8 +842,7 @@ class Config:
         self.build_cross_tool(cmdlist, 'gcc', tool_build, cfg_opts)
 
 
-class Glibc:
-
+class Glibc(object):
     """A configuration for building glibc."""
 
     def __init__(self, compiler, arch=None, os_name=None, variant=None,
@@ -958,8 +953,7 @@ class Glibc:
         cmdlist.cleanup_dir()
 
 
-class Command:
-
+class Command(object):
     """A command run in the build process."""
 
     def __init__(self, desc, num, dir, path, command, always_run=False):
@@ -999,8 +993,7 @@ class Command:
         return self.shell_make_quote_list(self.command, True)
 
 
-class CommandList:
-
+class CommandList(object):
     """A list of commands run in the build process."""
 
     def __init__(self, desc, keep):

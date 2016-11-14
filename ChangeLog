@@ -1,5 +1,14 @@
 2016-11-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/build-many-glibcs.py (os.path): Do not import.
+	(Context): Inherit explicitly from object.  Remove blank line
+	between class and docstring.
+	(Config): Likewise.
+	(Glibc): Likewise.
+	(Command): Likewise.
+	(CommandList): Likewise.
+	(Context.write_files): Store chmod mode in a variable.
+
 	* sysdeps/unix/sysv/linux/tile/tilegx/configure.ac: Use
 	LIBC_SLIBDIR_RTLDDIR for tilegx32.
 	* sysdeps/unix/sysv/linux/tile/tilegx/configure: Regenerated.
