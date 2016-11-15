@@ -69,6 +69,7 @@ fgetpwent (FILE *stream)
 
       /* Reset the stream.  */
       if (fsetpos (stream, &pos) != 0)
+	free(new_buf);
 	buffer = NULL;
     }
 
