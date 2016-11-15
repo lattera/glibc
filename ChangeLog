@@ -1,3 +1,9 @@
+2016-11-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h [__SH4__ || __SH4A__]:
+	Make code unconditional.
+	[!(__SH4__ || __SH4A__)]: Remove conditional code.
+
 2016-11-15  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/sysinfo.texi (S_APPEND): Delete.
