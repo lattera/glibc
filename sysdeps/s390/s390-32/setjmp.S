@@ -24,17 +24,16 @@
 #include <shlib-compat.h>
 #include <stap-probe.h>
 
-#if !IS_IN (rtld)
-# if defined SHARED &&  SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
-	/* we need a unique name in case of symbol versioning.  */
-#  define setjmp __v1setjmp
-#  define _setjmp __v1_setjmp
-#  define __sigsetjmp __v1__sigsetjmp
-
-#  undef libc_hidden_def
-#  define libc_hidden_def(name) strong_alias(_setjmp, __GI__setjmp)
-# endif /* if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)  */
-#endif /* !IS_IN (rtld)  */
+#if !IS_IN (rtld) && defined SHARED \
+  && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
+# define NEED_COMPAT_SYMBOLS 1
+/* We need a unique name in case of symbol versioning.  */
+# define setjmp __v1setjmp
+# define _setjmp __v1_setjmp
+# define __sigsetjmp __v1__sigsetjmp
+#else
+# define NEED_COMPAT_SYMBOLS 0
+#endif
 
 	/* We include the BSD entry points here as well.  */
 ENTRY (setjmp)
@@ -47,7 +46,11 @@ ENTRY(_setjmp)
 	lhi    %r3,0                /* second argument of zero */
 	j      .Linternal_sigsetjmp /* branch relativ to __sigsetjmp */
 END (_setjmp)
+#if NEED_COMPAT_SYMBOLS
+strong_alias (_setjmp, __GI__setjmp)
+#else
 libc_hidden_def (_setjmp)
+#endif
 
 ENTRY(__setjmp)
 	lhi    %r3,0                /* second argument of zero */
@@ -92,15 +95,19 @@ ENTRY(__sigsetjmp)
 .L1:    .long  __sigjmp_save
 #endif
 END (__sigsetjmp)
+#if NEED_COMPAT_SYMBOLS
+strong_alias (__sigsetjmp, __GI___sigsetjmp)
+#else
+libc_hidden_def (__sigsetjmp)
+#endif
 
-#if !IS_IN (rtld)
-# if defined SHARED &&  SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)
+#if NEED_COMPAT_SYMBOLS
 /* In glibc release 2.19 new versions of setjmp-functions were introduced,
    but were reverted before 2.20. Thus both versions are the same function.  */
 
-#  undef setjmp
-#  undef _setjmp
-#  undef __sigsetjmp
+# undef setjmp
+# undef _setjmp
+# undef __sigsetjmp
 
 strong_alias (__v1setjmp, __v2setjmp);
 versioned_symbol (libc, __v1setjmp, setjmp, GLIBC_2_0);
@@ -113,5 +120,4 @@ compat_symbol (libc, __v2_setjmp, _setjmp, GLIBC_2_19);
 strong_alias (__v1__sigsetjmp, __v2__sigsetjmp);
 versioned_symbol (libc, __v1__sigsetjmp, __sigsetjmp, GLIBC_2_0);
 compat_symbol (libc, __v2__sigsetjmp, __sigsetjmp, GLIBC_2_19);
-# endif /* if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)  */
-#endif /* if !IS_IN (rtld)  */
+#endif /* NEED_COMPAT_SYMBOLS */

@@ -1,3 +1,12 @@
+2016-11-15  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/s390/s390-64/setjmp.S (NEED_COMPAT_SYMBOLS): New macro.
+	(libc_hidden_def): Remove redefinition.
+	(__sigsetjmp): Add hidden definition.
+	* sysdeps/s390/s390-32/setjmp.S (NEED_COMPAT_SYMBOLS): New macro.
+	(libc_hidden_def): Remove redefinition.
+	(__sigsetjmp): Add hidden definition.
+
 2016-11-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (os.path): Do not import.
