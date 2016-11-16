@@ -440,117 +440,13 @@ extern char *strerror_r (int __errnum, char *__buf, size_t __buflen)
 extern char *strerror_l (int __errnum, __locale_t __l) __THROW;
 #endif
 
-
-/* We define this function always since `bzero' is sometimes needed when
-   the namespace rules does not allow this.  */
-extern void __bzero (void *__s, size_t __n) __THROW __nonnull ((1));
-
 #ifdef __USE_MISC
-/* Copy N bytes of SRC to DEST (like memmove, but args reversed).  */
-extern void bcopy (const void *__src, void *__dest, size_t __n)
-     __THROW __nonnull ((1, 2));
+# include <strings.h>
 
-/* Set N bytes of S to 0.  */
-extern void bzero (void *__s, size_t __n) __THROW __nonnull ((1));
-
-/* As bzero, but the compiler will not delete a call to this
+/* Set N bytes of S to 0.  The compiler will not delete a call to this
    function, even if S is dead after the call.  */
 extern void explicit_bzero (void *__s, size_t __n) __THROW __nonnull ((1));
 
-/* Compare N bytes of S1 and S2 (same as memcmp).  */
-extern int bcmp (const void *__s1, const void *__s2, size_t __n)
-     __THROW __attribute_pure__ __nonnull ((1, 2));
-
-/* Find the first occurrence of C in S (same as strchr).  */
-# ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
-extern "C++"
-{
-extern char *index (char *__s, int __c)
-     __THROW __asm ("index") __attribute_pure__ __nonnull ((1));
-extern const char *index (const char *__s, int __c)
-     __THROW __asm ("index") __attribute_pure__ __nonnull ((1));
-
-#  if defined __OPTIMIZE__ && !defined __CORRECT_ISO_CPP_STRINGS_H_PROTO
-__extern_always_inline char *
-index (char *__s, int __c) __THROW
-{
-  return __builtin_index (__s, __c);
-}
-
-__extern_always_inline const char *
-index (const char *__s, int __c) __THROW
-{
-  return __builtin_index (__s, __c);
-}
-#  endif
-}
-# else
-extern char *index (const char *__s, int __c)
-     __THROW __attribute_pure__ __nonnull ((1));
-# endif
-
-/* Find the last occurrence of C in S (same as strrchr).  */
-# ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
-extern "C++"
-{
-extern char *rindex (char *__s, int __c)
-     __THROW __asm ("rindex") __attribute_pure__ __nonnull ((1));
-extern const char *rindex (const char *__s, int __c)
-     __THROW __asm ("rindex") __attribute_pure__ __nonnull ((1));
-
-#  if defined __OPTIMIZE__ && !defined __CORRECT_ISO_CPP_STRINGS_H_PROTO
-__extern_always_inline char *
-rindex (char *__s, int __c) __THROW
-{
-  return __builtin_rindex (__s, __c);
-}
-
-__extern_always_inline const char *
-rindex (const char *__s, int __c) __THROW
-{
-  return __builtin_rindex (__s, __c);
-}
-#endif
-}
-# else
-extern char *rindex (const char *__s, int __c)
-     __THROW __attribute_pure__ __nonnull ((1));
-# endif
-
-/* Return the position of the first bit set in I, or 0 if none are set.
-   The least-significant bit is position 1, the most-significant 32.  */
-extern int ffs (int __i) __THROW __attribute__ ((__const__));
-
-/* The following two functions are non-standard but necessary for non-32 bit
-   platforms.  */
-# ifdef	__USE_GNU
-extern int ffsl (long int __l) __THROW __attribute__ ((__const__));
-__extension__ extern int ffsll (long long int __ll)
-     __THROW __attribute__ ((__const__));
-# endif
-
-/* Compare S1 and S2, ignoring case.  */
-extern int strcasecmp (const char *__s1, const char *__s2)
-     __THROW __attribute_pure__ __nonnull ((1, 2));
-
-/* Compare no more than N chars of S1 and S2, ignoring case.  */
-extern int strncasecmp (const char *__s1, const char *__s2, size_t __n)
-     __THROW __attribute_pure__ __nonnull ((1, 2));
-#endif /* Use misc.  */
-
-#ifdef	__USE_GNU
-/* Again versions of a few functions which use the given locale instead
-   of the global one.  */
-extern int strcasecmp_l (const char *__s1, const char *__s2,
-			 __locale_t __loc)
-     __THROW __attribute_pure__ __nonnull ((1, 2, 3));
-
-extern int strncasecmp_l (const char *__s1, const char *__s2,
-			  size_t __n, __locale_t __loc)
-     __THROW __attribute_pure__ __nonnull ((1, 2, 4));
-#endif
-
-#ifdef	__USE_MISC
 /* Return the next DELIM-delimited token from *STRINGP,
    terminating it with a '\0', and update *STRINGP to point past it.  */
 extern char *strsep (char **__restrict __stringp,

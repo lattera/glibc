@@ -41,6 +41,8 @@ extern void *__memrchr (const void *__s, int __c, size_t __n)
 extern void *__memchr (const void *__s, int __c, size_t __n)
      __attribute_pure__;
 
+extern void __bzero (void *__s, size_t __n) __THROW __nonnull ((1));
+
 extern int __ffs (int __i) __attribute__ ((const));
 
 extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
