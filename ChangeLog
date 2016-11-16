@@ -1,5 +1,17 @@
 2016-11-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/Makefile (linknamespace-libs): Rename to
+	linknamespace-libs-thr.
+	(linknamespace-libs-posix): New variable.
+	(linknamespace-libs-xsi): Likewise.
+	(linknamespace-libs-XPG3): Include libcrypt.a.
+	(linknamespace-libs-XPG4): Use $(linknamespace-libs-XPG3).
+	(linknamespace-libs-POSIX): Use $(linknamespace-libs-thr).
+	(linknamespace-libs-UNIX98): Use $(linknamespace-libs-xsi).
+	(linknamespace-libs-XOPEN2K): Likewise.
+	(linknamespace-libs-XOPEN2K8): Likewise.
+	(linknamespace-libs-POSIX2008): Use $(linknamespace-libs-posix).
+
 	[BZ #20829]
 	* stdio-common/Versions (__snprintf): Add to version
 	GLIBC_PRIVATE.
