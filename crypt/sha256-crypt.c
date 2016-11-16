@@ -319,8 +319,8 @@ __sha256_crypt_r (const char *key, const char *salt, char *buffer, int buflen)
 
   if (rounds_custom)
     {
-      int n = snprintf (cp, MAX (0, buflen), "%s%zu$",
-			sha256_rounds_prefix, rounds);
+      int n = __snprintf (cp, MAX (0, buflen), "%s%zu$",
+			  sha256_rounds_prefix, rounds);
       cp += n;
       buflen -= n;
     }

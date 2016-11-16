@@ -1,3 +1,14 @@
+2016-11-16  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20829]
+	* stdio-common/Versions (__snprintf): Add to version
+	GLIBC_PRIVATE.
+	* include/stdio.h (__snprintf): Use libc_hidden_proto.
+	* stdio-common/snprintf.c (__snprintf): Use libc_hidden_def.
+	* crypt/sha256-crypt.c (__sha256_crypt_r): Use __snprintf instead
+	of snprintf.
+	* crypt/sha512-crypt.c (__sha512_crypt_r): Likewise.
+
 2016-11-16  Zack Weinberg  <zackw@panix.com>
 
 	* string/string.h: Remove obsolete comment stating that

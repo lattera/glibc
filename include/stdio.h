@@ -11,6 +11,7 @@ extern int __fcloseall (void);
 extern int __snprintf (char *__restrict __s, size_t __maxlen,
 		       const char *__restrict __format, ...)
      __attribute__ ((__format__ (__printf__, 3, 4)));
+libc_hidden_proto (__snprintf)
 extern int __vsnprintf (char *__restrict __s, size_t __maxlen,
 			const char *__restrict __format, _G_va_list __arg)
      __attribute__ ((__format__ (__printf__, 3, 0)));

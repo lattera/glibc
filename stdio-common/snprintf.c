@@ -35,4 +35,5 @@ __snprintf (char *s, size_t maxlen, const char *format, ...)
 
   return done;
 }
+libc_hidden_def (__snprintf)
 ldbl_weak_alias (__snprintf, snprintf)
