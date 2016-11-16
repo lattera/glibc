@@ -154,15 +154,13 @@ extern size_t strxfrm (char *__restrict __dest,
 __END_NAMESPACE_STD
 
 #ifdef __USE_XOPEN2K8
-/* The following functions are equivalent to the both above but they
-   take the locale they use for the collation as an extra argument.
-   This is not standardsized but something like will come.  */
 # include <xlocale.h>
 
-/* Compare the collated forms of S1 and S2 using rules from L.  */
+/* Compare the collated forms of S1 and S2, using sorting rules from L.  */
 extern int strcoll_l (const char *__s1, const char *__s2, __locale_t __l)
      __THROW __attribute_pure__ __nonnull ((1, 2, 3));
-/* Put a transformation of SRC into no more than N bytes of DEST.  */
+/* Put a transformation of SRC into no more than N bytes of DEST,
+   using sorting rules from L.  */
 extern size_t strxfrm_l (char *__dest, const char *__src, size_t __n,
 			 __locale_t __l) __THROW __nonnull ((2, 4));
 #endif

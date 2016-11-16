@@ -1,3 +1,8 @@
+2016-11-16  Zack Weinberg  <zackw@panix.com>
+
+	* string/string.h: Remove obsolete comment stating that
+	strcoll_l and strxfrm_l have not yet been standardized.
+
 2016-11-16  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* hurd/hurd.h (__hurd_fail_noerrno): New function.
