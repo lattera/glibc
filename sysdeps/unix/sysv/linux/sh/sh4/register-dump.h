@@ -56,7 +56,6 @@ static void
 register_dump (int fd, struct sigcontext *ctx)
 {
   char regs[22][8];
-  char fpregs[34][8];
   struct iovec iov[22 * 2 + 34 * 2 + 2];
   size_t nr = 0;
 
@@ -144,6 +143,7 @@ register_dump (int fd, struct sigcontext *ctx)
   ADD_STRING ("\n");
 
 #ifdef __SH_FPU_ANY__
+  char fpregs[34][8];
   if (ctx->sc_ownedfp != 0)
     {
       hexvalue (ctx->sc_fpregs[0], fpregs[0], 8);

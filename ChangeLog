@@ -1,3 +1,8 @@
+2016-11-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/sh4/register-dump.h (register_dump):
+	Only declare fpregs if [__SH_FPU_ANY__].
+
 2016-11-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h [__SH4__ || __SH4A__]:
