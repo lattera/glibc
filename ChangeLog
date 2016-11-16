@@ -1,3 +1,10 @@
+2017-04-09  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #20831]
+	* elf/dl-map-segments.h (_dl_map_segments): Check for failure
+	of __mprotect to change protection on the excess portion
+	to disallow all access.
+
 2017-04-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/fpu/fclrexcpt.c (__feclearexcept): Use

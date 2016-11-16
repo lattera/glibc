@@ -64,14 +64,18 @@ _dl_map_segments (struct link_map *l, int fd,
       l->l_addr = l->l_map_start - c->mapstart;
 
       if (has_holes)
-        /* Change protection on the excess portion to disallow all access;
-           the portions we do not remap later will be inaccessible as if
-           unallocated.  Then jump into the normal segment-mapping loop to
-           handle the portion of the segment past the end of the file
-           mapping.  */
-        __mprotect ((caddr_t) (l->l_addr + c->mapend),
-                    loadcmds[nloadcmds - 1].mapstart - c->mapend,
-                    PROT_NONE);
+        {
+          /* Change protection on the excess portion to disallow all access;
+             the portions we do not remap later will be inaccessible as if
+             unallocated.  Then jump into the normal segment-mapping loop to
+             handle the portion of the segment past the end of the file
+             mapping.  */
+          if (__glibc_unlikely
+              (__mprotect ((caddr_t) (l->l_addr + c->mapend),
+                           loadcmds[nloadcmds - 1].mapstart - c->mapend,
+                           PROT_NONE) < 0))
+            return DL_MAP_SEGMENTS_ERROR_MPROTECT;
+        }
 
       l->l_contiguous = 1;
 
