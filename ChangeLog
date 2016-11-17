@@ -1,5 +1,26 @@
 2016-03-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove connect from
+	auto-generation list.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/connect.c: Simplify include list.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_CONNECT_SYSCALL): Define.
+	* sysdeps/unix/sysv/linux/i386/kernel-features.h
+	(__ASSUME_CONNECT_SYSCALL): Undef if kernel does not support it.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_CONNECT_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/s390/kernel-features.h
+	(__ASSUME_CONNECT_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h
+	(__ASSUME_CONNECT_SYSCALL): Likewise.
+
 	* sysdeps/unix/sysv/linux/accept.c (__libc_accept): Replace
 	__ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL by __ASSUME_ACCEPT4_SYSCALL.
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list?: Remove accept from

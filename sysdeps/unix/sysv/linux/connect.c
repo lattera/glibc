@@ -15,14 +15,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <signal.h>
 #include <sys/socket.h>
-
 #include <sysdep-cancel.h>
 #include <socketcall.h>
-#include <kernel-features.h>
-#include <sys/syscall.h>
 
 int
 __libc_connect (int fd, __CONST_SOCKADDR_ARG addr, socklen_t len)

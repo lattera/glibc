@@ -3,7 +3,6 @@
 # Override select.S in parent directory:
 select		-	select		C:5	__select	select
 bind		-	bind		3	__bind		bind
-connect		-	connect		C:3	__libc_connect	__connect connect
 getpeername	-	getpeername	3	__getpeername	getpeername
 getsockname	-	getsockname	3	__getsockname	getsockname
 getsockopt	-	getsockopt	5	__getsockopt	getsockopt

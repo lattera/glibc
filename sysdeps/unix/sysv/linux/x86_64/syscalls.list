@@ -11,7 +11,6 @@ syscall_clock_gettime	EXTRA	clock_gettime	Ei:ip		__syscall_clock_gettime
 
 # proper socket implementations:
 bind		-	bind		i:ipi	__bind		bind
-connect		-	connect		Ci:ipi	__libc_connect	__connect connect
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
