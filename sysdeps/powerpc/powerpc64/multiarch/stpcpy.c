@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if defined SHARED && IS_IN (libc)
+# define __NO_STRING_INLINES
 # define NO_MEMPCPY_STPCPY_REDIRECT
 # include <string.h>
 # include <shlib-compat.h>

@@ -15,28 +15,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/*  <bits/string.h> may declare some extern inline functions.
-    These functions are defined here if inlining is not possible.  */
+/* This file contains compatibility definitions of functions that were
+   formerly defined as "extern inline" in string.h; it's conceivable
+   that old binaries contain references to them.  */
 
-#undef __USE_STRING_INLINES
-#define __USE_STRING_INLINES
-#define _FORCE_INLINES
-#define __STRING_INLINE /* empty */
-#define __NO_INLINE__
-
+#define __NO_STRING_INLINES
 #include <string.h>
-#undef index
-#undef rindex
-#undef __stpcpy
 
-#undef __NO_INLINE__
-#include <bits/string.h>
 #include "shlib-compat.h"
 
 #if SHLIB_COMPAT (libc, GLIBC_2_1_1, GLIBC_2_25)
-/* The inline functions are not used from GLIBC 2.25 and forward, however
-   they are required to provide the symbols through string-inlines.c
-   (if inlining is not possible for compatibility reasons).  */
+/* These functions were removed from string.h in glibc 2.25.  */
 
 char *
 __old_strtok_r_1c (char *__s, char __sep, char **__nextp)
@@ -128,9 +117,8 @@ compat_symbol (libc, __old_strsep_3c, __strsep_3c, GLIBC_2_1_1);
 #endif
 
 #if SHLIB_COMPAT (libc, GLIBC_2_1_1, GLIBC_2_24)
-/* The inline functions are not used from GLIBC 2.24 and forward, however
-   they are required to provide the symbols through string-inlines.c
-   (if inlining is not possible for compatibility reasons).  */
+/* These functions were removed from string.h in glibc 2.24.  */
+
 size_t
 __old_strcspn_c1 (const char *__s, int __reject)
 {
@@ -220,9 +208,13 @@ __old_strpbrk_c3 (const char *__s, int __accept1, int __accept2, int __accept3)
 }
 compat_symbol (libc, __old_strpbrk_c3, __strpbrk_c3, GLIBC_2_1_1);
 
+# if defined __mc68020__ || defined __s390__ || defined __i386__
+#  define _STRING_INLINE_unaligned 1
+# else
+#  define _STRING_INLINE_unaligned 0
 /* These are a few types we need for the optimizations if we cannot
    use unaligned memory accesses.  */
-# define __STRING2_COPY_TYPE(N) \
+#  define __STRING2_COPY_TYPE(N) \
   typedef struct { unsigned char __arr[N]; }				      \
     __attribute__ ((__packed__)) __STRING2_COPY_ARR##N
 __STRING2_COPY_TYPE (2);
@@ -232,8 +224,8 @@ __STRING2_COPY_TYPE (5);
 __STRING2_COPY_TYPE (6);
 __STRING2_COPY_TYPE (7);
 __STRING2_COPY_TYPE (8);
-# undef __STRING2_COPY_TYPE
-
+#  undef __STRING2_COPY_TYPE
+# endif
 
 # if _STRING_INLINE_unaligned
 void *

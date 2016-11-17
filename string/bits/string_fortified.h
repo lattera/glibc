@@ -15,36 +15,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_STRING_FORTIFIED_H
+#define _BITS_STRING_FORTIFIED_H 1
+
 #ifndef _STRING_H
-# error "Never use <bits/string3.h> directly; include <string.h> instead."
+# error "Never use <bits/string_fortified.h> directly; include <string.h> instead."
 #endif
 
 #if !__GNUC_PREREQ (5,0)
 __warndecl (__warn_memset_zero_len,
 	    "memset used with constant zero length parameter; this could be due to transposed parameters");
 #endif
-
-#ifndef __cplusplus
-/* XXX This is temporarily.  We should not redefine any of the symbols
-   and instead integrate the error checking into the original
-   definitions.  */
-# undef memcpy
-# undef memmove
-# undef memset
-# undef strcat
-# undef strcpy
-# undef strncat
-# undef strncpy
-# ifdef __USE_GNU
-#  undef mempcpy
-#  undef stpcpy
-# endif
-# ifdef __USE_MISC
-#  undef bcopy
-#  undef bzero
-# endif
-#endif
-
 
 __fortify_function void *
 __NTH (memcpy (void *__restrict __dest, const void *__restrict __src,
@@ -154,3 +135,5 @@ __NTH (strncat (char *__restrict __dest, const char *__restrict __src,
 {
   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
 }
+
+#endif /* bits/string_fortified.h */

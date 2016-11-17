@@ -20,8 +20,8 @@
 #if defined SHARED && IS_IN (libc)
 # define mempcpy __redirect_mempcpy
 # define __mempcpy __redirect___mempcpy
-/* Omit the mempcpy inline definitions because it would redefine mempcpy.  */
-# define _HAVE_STRING_ARCH_mempcpy 1
+# define __NO_STRING_INLINES
+# define NO_MEMPCPY_STPCPY_REDIRECT
 # include <string.h>
 # undef mempcpy
 # undef __mempcpy

@@ -76,12 +76,20 @@ extern __typeof (strncasecmp_l) __strncasecmp_l;
 #endif
 
 libc_hidden_proto (__mempcpy)
+#ifndef __NO_STRING_INLINES
+# define __mempcpy(dest, src, n) __builtin_mempcpy (dest, src, n)
+#endif
 libc_hidden_proto (__stpcpy)
+#ifndef __NO_STRING_INLINES
+# define __stpcpy(dest, src) __builtin_stpcpy (dest, src)
+#endif
 libc_hidden_proto (__stpncpy)
 libc_hidden_proto (__rawmemchr)
 libc_hidden_proto (__strcasecmp)
 libc_hidden_proto (__strcasecmp_l)
 libc_hidden_proto (__strncasecmp_l)
+extern __typeof (strncat) __strncat;
+libc_hidden_proto (__strncat)
 libc_hidden_proto (__strdup)
 libc_hidden_proto (__strndup)
 libc_hidden_proto (__strerror_r)
@@ -160,11 +168,6 @@ extern __typeof (strsep) strsep attribute_hidden;
    __mempcpy and __stpcpy if not inlined.  */
 extern __typeof (mempcpy) mempcpy __asm__ ("__mempcpy");
 extern __typeof (stpcpy) stpcpy __asm__ ("__stpcpy");
-#endif
-
-/* Redirect internal calls to builtins.  */
-#ifndef __stpcpy
-# define __stpcpy(dest, src) __builtin_stpcpy (dest, src)
 #endif
 
 extern void *__memcpy_chk (void *__restrict __dest,

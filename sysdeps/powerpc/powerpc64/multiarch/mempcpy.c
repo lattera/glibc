@@ -20,8 +20,7 @@
 # define mempcpy __redirect_mempcpy
 # define __mempcpy __redirect___mempcpy
 # define NO_MEMPCPY_STPCPY_REDIRECT
-/* Omit the mempcpy inline definitions because it would redefine mempcpy.  */
-# define _HAVE_STRING_ARCH_mempcpy 1
+# define __NO_STRING_INLINES
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"

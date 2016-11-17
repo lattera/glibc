@@ -18,6 +18,6 @@
 
 #if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
 # define STRNCAT  __strncat_c
-
+# define STRNCAT_PRIMARY
 # include <string/strncat.c>
 #endif

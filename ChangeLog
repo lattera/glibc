@@ -1,3 +1,46 @@
+2017-06-20  Zack Weinberg  <zackw@panix.com>
+
+	* bits/string.h, string/bits/string.h
+	* sysdeps/aarch64/bits/string.h
+	* sysdeps/m68k/m680x0/m68020/bits/string.h
+	* sysdeps/s390/bits/string.h, sysdeps/sparc/bits/string.h
+	* sysdeps/x86/bits/string.h: Delete file.
+
+	* string/string.h: Don't include bits/string.h.
+	* string/bits/string3.h: Rename to bits/string_fortified.h.
+	No need to undef various symbols that the removed headers
+	might have defined as macros.
+	* string/Makefile (headers): Remove bits/string.h, change
+	bits/string3.h to bits/string_fortified.h.
+	* string/string-inlines.c: Update commentary.  Remove definitions
+	of various macros that nothing looks at anymore.  Don't directly
+	include bits/string.h. Set _STRING_INLINE_unaligned here, based on
+	compiler-predefined macros.
+	* string/strncat.c: If STRNCAT is not defined, or STRNCAT_PRIMARY
+	_is_ defined, provide internal hidden alias __strncat.
+	* include/string.h: Declare internal hidden alias __strncat.
+	Only forward __stpcpy to __builtin_stpcpy if __NO_STRING_INLINES is
+	not defined.
+	* include/bits/string3.h: Rename to bits/string_fortified.h,
+	update to match above.
+
+	* sysdeps/i386/string-inlines.c: Define compat symbols for
+	everything formerly defined by sysdeps/x86/bits/string.h.
+	Make existing definitions into compat symbols as well.
+	Remove some no-longer-necessary messing around with macros.
+
+	* sysdeps/powerpc/powerpc32/power4/multiarch/mempcpy.c
+	* sysdeps/powerpc/powerpc64/multiarch/mempcpy.c
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy.c
+	* sysdeps/s390/multiarch/mempcpy.c
+	No need to define _HAVE_STRING_ARCH_mempcpy.
+	Do define __NO_STRING_INLINES and NO_MEMPCPY_STPCPY_REDIRECT.
+
+	* sysdeps/i386/i686/multiarch/strncat-c.c
+	* sysdeps/s390/multiarch/strncat-c.c
+	* sysdeps/x86_64/multiarch/strncat-c.c
+	Define STRNCAT_PRIMARY.  Don't change definition of libc_hidden_def.
+
 2017-06-20  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/lang.texi (LDBL_MANT_DIG): Add annotation.

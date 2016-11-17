@@ -487,30 +487,10 @@ extern char *basename (const char *__filename) __THROW __nonnull ((1));
 # endif
 #endif
 
-
 #if __GNUC_PREREQ (3,4)
-# if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
-     && !defined __NO_INLINE__ && !defined __cplusplus
-/* When using GNU CC we provide some optimized versions of selected
-   functions from this header.  There are two kinds of optimizations:
-
-   - machine-dependent optimizations, most probably using inline
-     assembler code; these might be quite expensive since the code
-     size can increase significantly.
-     These optimizations are not used unless the symbol
-	__USE_STRING_INLINES
-     is defined before including this header.
-
-   One can inhibit all optimizations by defining __NO_STRING_INLINES.  */
-
-/* Get the machine-dependent optimizations (if any).  */
-#  include <bits/string.h>
-
-# endif
-
 # if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
 /* Functions with security checks.  */
-#  include <bits/string3.h>
+#  include <bits/string_fortified.h>
 # endif
 #endif
 
