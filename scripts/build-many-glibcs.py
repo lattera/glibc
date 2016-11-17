@@ -813,6 +813,10 @@ class Config(object):
         # relevance with glibc's own stack checking support.
         cfg_opts = list(self.gcc_cfg)
         cfg_opts += ['--disable-libsanitizer', '--disable-libssp']
+        host_libs = self.ctx.host_libraries_installdir
+        cfg_opts += ['--with-gmp=%s' % host_libs,
+                     '--with-mpfr=%s' % host_libs,
+                     '--with-mpc=%s' % host_libs]
         if bootstrap:
             tool_build = 'gcc-first'
             # Building a static-only, C-only compiler that is

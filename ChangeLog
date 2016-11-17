@@ -1,5 +1,8 @@
 2016-11-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/build-many-glibcs.py (Config.build_gcc): Configure with
+	newly built gmp, mpfr and mpc.
+
 	* sysdeps/unix/sysv/linux/alpha/sys/user.h: Include <stddef.h>.
 
 2016-11-16  Joseph Myers  <joseph@codesourcery.com>
