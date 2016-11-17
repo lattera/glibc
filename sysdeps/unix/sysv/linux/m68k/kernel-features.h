@@ -32,7 +32,6 @@
 # define __ASSUME_GETPEERNAME_SYSCALL        1
 # define __ASSUME_SENDTO_SYSCALL             1
 # define __ASSUME_SENDTO_FOR_SEND_SYSCALL    1
-# define __ASSUME_RECVFROM_FOR_RECV_SYSCALL  1
 # define __ASSUME_SHUTDOWN_SYSCALL           1
 #endif
 

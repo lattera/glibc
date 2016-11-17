@@ -1,5 +1,35 @@
 2016-03-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove recv from
+	auto-generation list.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_RECV_SYSCALL): New define.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_RECV_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h
+	(__ASSUME_RECV_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h
+	(__ASSUME_RECV_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	(__ASSUME_RECV_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/i386/kernel-features.h
+	(__ASSUME_RECVFROM_FOR_RECV_SYSCALL): Remove define.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_RECVFROM_FOR_RECV_SYSCALL): Remove define.
+	* sysdeps/unix/sysv/linux/s390/kernel-features.h
+	(__ASSUME_RECVFROM_FOR_RECV_SYSCALL): Remove define.
+	* sysdeps/unix/sysv/linux/generic/recv.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/mips64/recv.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/recv.c: Likewise.
+	* sysdeps/unix/sysv/linux/recv.c: Simplify includes.
+	(__libc_recv): Use __ASSUME_RECVFROM_SYSCALL instead of
+	__ASSUME_RECVFROM_FOR_RECV_SYSCALL to issue recvfrom syscall.
+
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove recvfrom from
 	auto-generation list.
 	* sysdeps/unix/sysv/linux/arm/syscalls.list: Likewise.

@@ -37,3 +37,5 @@
 /* ARM only has a syscall for fadvise64{_64} and it is defined with a
    non-standard name.  */
 #define __NR_fadvise64_64 __NR_arm_fadvise64_64
+
+#define __ASSUME_RECV_SYSCALL   1
