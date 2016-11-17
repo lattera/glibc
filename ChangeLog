@@ -1,3 +1,36 @@
+2016-03-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/accept.c (__libc_accept): Replace
+	__ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL by __ASSUME_ACCEPT4_SYSCALL.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list?: Remove accept from
+	auto-generation list.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/generic/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/i386/kernel-features.h
+	(__ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL): Remove define.
+	(__ASSUME_ACCEPT_SYSCALL): Undefine.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_ACCEPT_SYSCALL): New define.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL): Remove define.
+	(__ASSUME_ACCEPT_SYSCALL): Define wheter kernel version supports.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_ACCEPT_SYSCALL): Define.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	(__ASSUME_ACCEPT_SYSCALL): Undefine.
+	* sysdeps/unix/sysv/linux/s390/kernel-features.h
+	(__ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL): Remove define.
+	(__ASSUME_ACCEPT_SYSCALL): Undefine.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	(__ASSUME_ACCEPT_SYSCALL): Undefine.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h
+	(__ASSUME_ACCEPT_SYSCALL): Undefine for 32 bits.
+
 2017-03-08  Yury Norov <ynorov@caviumnetworks.com>
 	    Zack Weinberg  <zackw@panix.com>
 

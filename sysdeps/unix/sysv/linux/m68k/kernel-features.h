@@ -27,7 +27,6 @@
 # define __ASSUME_BIND_SYSCALL               1
 # define __ASSUME_CONNECT_SYSCALL            1
 # define __ASSUME_LISTEN_SYSCALL             1
-# define __ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL 1
 # define __ASSUME_GETSOCKOPT_SYSCALL         1
 # define __ASSUME_SETSOCKOPT_SYSCALL         1
 # define __ASSUME_GETSOCKNAME_SYSCALL        1
@@ -40,6 +39,8 @@
 #endif
 
 #include_next <kernel-features.h>
+
+#undef __ASSUME_ACCEPT_SYSCALL
 
 #if __LINUX_KERNEL_VERSION < 0x040300
 # undef __ASSUME_ACCEPT4_SYSCALL

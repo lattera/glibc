@@ -22,7 +22,6 @@ fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	fanotify_mark
 personality	EXTRA	personality	Ei:i	__personality	personality
 
 # proper socket implementations:
-accept		-	accept		Ci:iBN	__libc_accept	__accept accept
 bind		-	bind		i:ipi	__bind		bind
 connect		-	connect		Ci:ipi	__libc_connect	__connect connect
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername

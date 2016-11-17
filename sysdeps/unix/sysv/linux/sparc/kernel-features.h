@@ -38,5 +38,9 @@
 # undef __ASSUME_SET_ROBUST_LIST
 #endif
 
+#if !defined __arch64__
+# undef __ASSUME_ACCEPT_SYSCALL
+#endif
+
 /* sparc only supports ipc syscall.  */
 #undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
