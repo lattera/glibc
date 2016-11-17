@@ -23,6 +23,7 @@
    than gdb/strace unless you know what you are doing. */
 
 #include <asm/reg.h>
+#include <stddef.h>
 
 struct user
 {

@@ -1,3 +1,7 @@
+2016-11-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sys/user.h: Include <stddef.h>.
+
 2016-11-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/Makefile (linknamespace-libs): Rename to
