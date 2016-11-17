@@ -74,6 +74,7 @@ _init:
 	.reloc 1f,R_MIPS_JALR,PREINIT_FUNCTION
 1:	jalr $25
 .Lno_weak_fn:
+	.insn
 #else
 	lw $25,%got(PREINIT_FUNCTION)($28)
 	.reloc 1f,R_MIPS_JALR,PREINIT_FUNCTION

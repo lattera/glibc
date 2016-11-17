@@ -1,3 +1,11 @@
+2016-11-18  Matthew Fortune  <Matthew.Fortune@imgtec.com>
+	    Maciej W. Rozycki  <macro@imgtec.com>
+
+	* sysdeps/mips/mips32/crti.S (_init): Add `.insn' pseudo-op at
+	`.Lno_weak_fn' label.
+	* sysdeps/mips/mips64/n32/crti.S (_init): Likewise.
+	* sysdeps/mips/mips64/n64/crti.S (_init): Likewise.
+
 2016-11-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Yury Norov  <ynorov@caviumnetworks.com>
 
