@@ -1,3 +1,10 @@
+2016-04-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/generic/poll.c: Remove file.
+	* sysdeps/unix/sysv/linux/poll.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove poll from
+	auto-generation list.
+
 2017-05-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h (HWCAP_ASIMDRDM):
