@@ -31,7 +31,7 @@ hurd_fail_seterrno (error_t err)
 static int
 hurd_fail_noerrno (error_t err)
 {
-  return __hurd_fail_noerrno (err);
+  return -1;
 }
 
 static int
@@ -149,13 +149,15 @@ access_common (const char *file, int type, int (*errfunc) (error_t))
 
   if (flags & ~allowed)
     /* We are not allowed all the requested types of access.  */
-    return errfunc (EACESS);
+    return errfunc (EACCES);
 
   return 0;
 }
 
 /* Test for access to FILE by our real user and group IDs without setting
-   errno.  */
+   errno.  This may be unsafe to run during initialization of tunables
+   since access_common calls __hurd_file_name_lookup, which calls
+   __hurd_file_name_lookup_retry, which can set errno.  */
 int
 __access_noerrno (const char *file, int type)
 {

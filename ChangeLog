@@ -1,3 +1,11 @@
+2016-11-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* hurd/hurd.h (__hurd_fail_noerrno): Remove function.
+	* include/unistd.h: Extend comment about __access_noerrno return
+	semantics.
+	* sysdeps/match/hurd/access.c (__hurd_fail_noerrno): Return -1.
+	(access_common): Correct typo for EACCES.
+
 2016-11-18  Chris Metcalf  <cmetcalf@mellanox.com>
 
 	* sysdeps/tile/math-tests.h: New file.

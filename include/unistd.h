@@ -183,7 +183,8 @@ extern int __getlogin_r_loginuid (char *name, size_t namesize)
 
 #  if IS_IN (rtld) || !defined SHARED
 /* __access variant that does not set errno.  Used in very early initialization
-   code in libc.a and ld.so.  */
+   code in libc.a and ld.so.  It follows access return semantics (zero for
+   sucess otherwise a value different than 0).  */
 extern __typeof (__access) __access_noerrno attribute_hidden;
 #  endif
 
