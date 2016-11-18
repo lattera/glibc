@@ -23,7 +23,6 @@ pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
 pciconfig_iobase EXTRA	pciconfig_iobase 3	__pciconfig_iobase pciconfig_iobase
 
 # support old timeval32 entry points
-osf_select	-	osf_select	C:5	__select_tv32  __select@GLIBC_2.0 select@GLIBC_2.0
 osf_gettimeofday -	osf_gettimeofday 2	__gettimeofday_tv32  __gettimeofday@GLIBC_2.0 gettimeofday@GLIBC_2.0
 osf_settimeofday -	osf_settimeofday 2	__settimeofday_tv32  settimeofday@GLIBC_2.0
 osf_getitimer	-	osf_getitimer	2	__getitimer_tv32  getitimer@GLIBC_2.0
@@ -33,7 +32,6 @@ osf_getrusage	-	osf_getrusage	2	__getrusage_tv32  getrusage@GLIBC_2.0
 osf_wait4	-	osf_wait4	4	__wait4_tv32  wait4@GLIBC_2.0
 
 # support new timeval64 entry points
-select		-	select		C:5	__GI___select select@@GLIBC_2.1 __select@@GLIBC_2.1
 gettimeofday	-	gettimeofday	2	__GI___gettimeofday gettimeofday@@GLIBC_2.1 __gettimeofday@@GLIBC_2.1
 settimeofday	-	settimeofday	2	__settimeofday settimeofday@@GLIBC_2.1
 getitimer	-	getitimer	2	__getitimer getitimer@@GLIBC_2.1

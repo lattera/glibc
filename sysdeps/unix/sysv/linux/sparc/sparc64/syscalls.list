@@ -1,7 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-# Override select.S in parent directory:
-select		-	select		C:5	__select	select
 bind		-	bind		3	__bind		bind
 getpeername	-	getpeername	3	__getpeername	getpeername
 getsockname	-	getsockname	3	__getsockname	getsockname
