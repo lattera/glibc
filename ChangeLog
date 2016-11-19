@@ -1,3 +1,74 @@
+2016-11-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(setpayload): New declaration.
+	* math/Versions (setpayload): New libm symbol at version
+	GLIBC_2.25.
+	(setpayloadf): Likewise.
+	(setpayloadl): Likewise.
+	* math/Makefile (libm-calls): Add s_setpayloadF.
+	* math/libm-test.inc (struct test_Ffp_b1_data): Rename to struct
+	test_Ff_b1_data.
+	(RUN_TEST_Ff_b1): New macro.
+	(RUN_TEST_LOOP_Ff_b1): Likewise.
+	(canonicalize_test_data): Update type.
+	(setpayload_test_data): New array.
+	(setpayload_test): New function.
+	(main): Call setpayload_test.
+	* manual/arith.texi (FP Bit Twiddling): Document setpayload,
+	setpayloadf and setpayloadl.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/dbl-64/s_setpayload.c: New file.
+	* sysdeps/ieee754/dbl-64/s_setpayload_main.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_setpayload_main.c:
+	Likewise.
+	* sysdeps/ieee754/flt-32/s_setpayloadf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_setpayloadf_main.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_setpayloadl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_setpayloadl_main.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_setpayloadl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_setpayloadl_main.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_setpayloadl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_setpayloadl_main.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-setpayload.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	setpayload.
+	(CFLAGS-nldbl-setpayload.c): New variable.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-11-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* hurd/hurd.h (__hurd_fail_noerrno): Remove function.

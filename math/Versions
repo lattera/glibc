@@ -221,5 +221,6 @@ libm {
     totalordermag; totalordermagf; totalordermagl;
     getpayload; getpayloadf; getpayloadl;
     canonicalize; canonicalizef; canonicalizel;
+    setpayload; setpayloadf; setpayloadl;
   }
 }

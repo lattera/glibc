@@ -1914,6 +1914,24 @@ integer, or positive zero, represented as a floating-point number); if
 floating-point exceptions even for signaling NaNs.
 @end deftypefun
 
+@comment math.h
+@comment ISO
+@deftypefun int setpayload (double *@var{x}, double @var{payload})
+@comment math.h
+@comment ISO
+@deftypefunx int setpayloadf (float *@var{x}, float @var{payload})
+@comment math.h
+@comment ISO
+@deftypefunx int setpayloadl (long double *@var{x}, long double @var{payload})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, defined by TS 18661-1:2014, set the object pointed to
+by @var{x} to a quiet NaN with payload @var{payload} and a zero sign
+bit and return zero.  If @var{payload} is not a positive-signed
+integer that is a valid payload for a quiet NaN of the given type, the
+object pointed to by @var{x} is set to positive zero and a nonzero
+value is returned.  They raise no floating-point exceptions.
+@end deftypefun
+
 @node FP Comparison Functions
 @subsection Floating-Point Comparison Functions
 @cindex unordered comparison

@@ -54,7 +54,7 @@
    modf, nearbyint, nextafter, nexttoward,
    pow, pow10, remainder, remquo, rint, lrint, llrint,
    round, lround, llround,
-   scalb, scalbn, scalbln, signbit, sin, sincos, sinh, sqrt,
+   scalb, scalbn, scalbln, setpayload, signbit, sin, sincos, sinh, sqrt,
    tan, tanh, tgamma, totalorder, totalordermag, trunc,
    y0, y1, yn, significand
 
@@ -1298,7 +1298,8 @@ struct test_fFF_11_data
     FLOAT extra2_expected;
   } rd, rn, rz, ru;
 };
-struct test_Ffp_b1_data
+/* Used for both RUN_TEST_LOOP_Ff_b1 and RUN_TEST_LOOP_Ffp_b1.  */
+struct test_Ff_b1_data
 {
   const char *arg_str;
   FLOAT arg;
@@ -1582,6 +1583,36 @@ struct test_Ffp_b1_data
 			    EXTRA_VAR,					\
 			    (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,	\
 			    (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected); \
+  ROUND_RESTORE_ ## ROUNDING_MODE
+#define RUN_TEST_Ff_b1(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
+		       EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
+		       EXTRA_EXPECTED)					\
+  do									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	(EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
+	check_bool (test_name, FUNC_TEST (FUNC_NAME) (&(EXTRA_VAR),	\
+						      (ARG)),		\
+		    EXPECTED, EXCEPTIONS);				\
+	EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);				\
+	if (EXTRA_TEST)							\
+	  check_float (extra1_name, EXTRA_VAR, EXTRA_EXPECTED,		\
+		       (EXCEPTIONS) & TEST_NAN_PAYLOAD);		\
+	EXTRA_OUTPUT_TEST_CLEANUP (1);					\
+	COMMON_TEST_CLEANUP;						\
+      }									\
+  while (0)
+#define RUN_TEST_LOOP_Ff_b1(FUNC_NAME, ARRAY, ROUNDING_MODE,		\
+			    EXTRA_VAR)					\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_Ff_b1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,		\
+		      EXTRA_VAR,					\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,		\
+		      (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_Ffp_b1(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
 			EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,		\
@@ -3620,7 +3651,7 @@ cacosh_test (void)
 }
 
 
-static const struct test_Ffp_b1_data canonicalize_test_data[] =
+static const struct test_Ff_b1_data canonicalize_test_data[] =
   {
     TEST_Ffp_b1 (canonicalize, plus_infty, 0, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_Ffp_b1 (canonicalize, minus_infty, 0, minus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -12304,6 +12335,88 @@ scalbln_test (void)
 }
 
 
+static const struct test_Ff_b1_data setpayload_test_data[] =
+  {
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+    TEST_Ff_b1 (setpayload, plus_zero, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#else
+    TEST_Ff_b1 (setpayload, plus_zero, 0, qnan_value_pl ("0x0"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#endif
+    TEST_Ff_b1 (setpayload, 0x1p0, 0, qnan_value_pl ("0x1"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+    TEST_Ff_b1 (setpayload, 0x2p0, 0, qnan_value_pl ("0x2"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+    TEST_Ff_b1 (setpayload, 0x3fffffp0, 0, qnan_value_pl ("0x3fffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#if PAYLOAD_DIG >= 51
+    TEST_Ff_b1 (setpayload, 0x7ffffffffffffp0, 0, qnan_value_pl ("0x7ffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayload, 0x7ffffffffffffp0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 62
+    TEST_Ff_b1 (setpayload, 0x3fffffffffffffffp0, 0, qnan_value_pl ("0x3fffffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayload, 0x3fffffffffffffffp0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 111
+    TEST_Ff_b1 (setpayload, 0x7fffffffffffffffffffffffffffp0, 0, qnan_value_pl ("0x7fffffffffffffffffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayload, 0x7fffffffffffffffffffffffffffp0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+    TEST_Ff_b1 (setpayload, minus_zero, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, -1.0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, -2.0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, 0.5, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, -0.5, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, max_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, -max_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, min_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, -min_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, min_subnorm_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, -min_subnorm_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, plus_infty, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, minus_infty, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, qnan_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, -qnan_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, snan_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, -snan_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayload, 0xffffffp-1, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#if MANT_DIG >= 53
+    TEST_Ff_b1 (setpayload, 0x1fffffffffffffp-1, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if MANT_DIG >= 64
+    TEST_Ff_b1 (setpayload, 0xffffffffffffffffp-1, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if MANT_DIG >= 106
+    TEST_Ff_b1 (setpayload, 0x3ffffffffffffffffffffffffffp-1, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if MANT_DIG >= 113
+    TEST_Ff_b1 (setpayload, 0x1ffffffffffffffffffffffffffffp-1, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 23
+    TEST_Ff_b1 (setpayload, 0x1p22, 0, qnan_value_pl ("0x400000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayload, 0x1p22, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 52
+    TEST_Ff_b1 (setpayload, 0x1p51, 0, qnan_value_pl ("0x8000000000000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayload, 0x1p51, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 63
+    TEST_Ff_b1 (setpayload, 0x1p62, 0, qnan_value_pl ("0x4000000000000000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayload, 0x1p62, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+    TEST_Ff_b1 (setpayload, 0x1p111, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+  };
+
+static void
+setpayload_test (void)
+{
+  FLOAT x;
+
+  ALL_RM_TEST (setpayload, 1, setpayload_test_data, RUN_TEST_LOOP_Ff_b1, END, x);
+}
+
+
 static const struct test_f_i_data signbit_test_data[] =
   {
     TEST_f_b (signbit, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -13646,6 +13759,7 @@ main (int argc, char **argv)
 
   /* NaN functions:  */
   getpayload_test ();
+  setpayload_test ();
 
   /* Complex functions:  */
   cabs_test ();
