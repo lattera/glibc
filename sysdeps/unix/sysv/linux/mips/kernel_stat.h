@@ -55,3 +55,5 @@ struct kernel_stat
     unsigned int st_gen;
   };
 #endif
+
+#define XSTAT_IS_XSTAT64 0

@@ -49,7 +49,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
     return __xstat32_conv (vers, &st64, st);
 }
 libc_hidden_def (__fxstatat)
-#ifdef XSTAT_IS_XSTAT64
+#if XSTAT_IS_XSTAT64
 # undef __fxstatat64
 strong_alias (__fxstatat, __fxstatat64);
 libc_hidden_ver (__fxstatat, __fxstatat64)

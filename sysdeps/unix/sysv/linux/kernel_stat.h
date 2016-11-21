@@ -33,3 +33,5 @@ struct kernel_stat
 #define _HAVE_STAT64___PAD2
 #define _HAVE_STAT64___ST_INO
 #define _HAVE_STAT64_NSEC
+
+#define XSTAT_IS_XSTAT64 0

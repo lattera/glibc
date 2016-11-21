@@ -29,3 +29,5 @@ struct kernel_stat {
 
 #define _HAVE_STAT_NSEC
 #define _HAVE_STAT64_NSEC
+
+#define XSTAT_IS_XSTAT64 0

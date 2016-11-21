@@ -23,4 +23,6 @@
 /* We provide separate 32-bit API versions that check for EOVERFLOW. */
 #if __WORDSIZE == 64
 # define XSTAT_IS_XSTAT64 1
+#else
+# define XSTAT_IS_XSTAT64 0
 #endif

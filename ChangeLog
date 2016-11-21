@@ -1,3 +1,27 @@
+2016-11-21  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/unix/sysv/linux/generic/kernel_stat.h: Set XSTAT_IS_XSTAT64
+	to 0 when in 32 bit mode.
+	* sysdeps/unix/sysv/linux/hppa/kernel_stat.h: Set XSTAT_IS_XSTAT64 to 0.
+	* sysdeps/unix/sysv/linux/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/microblaze/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/mips/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/fxstat.c: Replace #ifdef with #if on
+	XSTAT_IS_XSTAT64 test.
+	* sysdeps/unix/sysv/linux/fxstatat.c: Ditto.
+	* sysdeps/unix/sysv/linux/generic/lxstat.c: Ditto.
+	* sysdeps/unix/sysv/linux/generic/xstat.c: Ditto.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c: Ditto.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c: Ditto.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c: Ditto.
+	* sysdeps/unix/sysv/linux/i386/xstat.c: Ditto.
+	* sysdeps/unix/sysv/linux/lxstat.c: Ditto.
+	* sysdeps/unix/sysv/linux/mips/xstatconv.c: Ditto.
+	* sysdeps/unix/sysv/linux/xstat.c: Ditto.
+	* sysdeps/unix/sysv/linux/xstatconv.c: Ditto.
+
 2016-11-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
