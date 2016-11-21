@@ -136,6 +136,7 @@
 #undef	__USE_GNU
 #undef	__USE_FORTIFY_LEVEL
 #undef	__KERNEL_STRICT_NAMES
+#undef	__GLIBC_USE_DEPRECATED_GETS
 
 /* Suppress kernel-name space pollution unless user expressedly asks
    for it.  */
@@ -381,6 +382,16 @@
 #endif
 #ifndef __USE_FORTIFY_LEVEL
 # define __USE_FORTIFY_LEVEL 0
+#endif
+
+/* The function 'gets' existed in C89, but is impossible to use
+   safely.  It has been removed from ISO C11 and ISO C++14.  Note: for
+   compatibility with various implementations of <cstdio>, this test
+   must consider only the value of __cplusplus when compiling C++.  */
+#if defined __cplusplus ? __cplusplus >= 201402L : defined __USE_ISOC11
+# define __GLIBC_USE_DEPRECATED_GETS 0
+#else
+# define __GLIBC_USE_DEPRECATED_GETS 1
 #endif
 
 /* Get definitions of __STDC_* predefined macros, if the compiler has

@@ -181,24 +181,6 @@ libc_hidden_proto (__vasprintf_chk)
 libc_hidden_proto (__vdprintf_chk)
 libc_hidden_proto (__obstack_vprintf_chk)
 
-/* The <stdio.h> header does not include the declaration for gets
-   anymore when compiling with _GNU_SOURCE.  Provide a copy here.  */
-extern char *gets (char *__s);
-#  if __USE_FORTIFY_LEVEL > 0
-extern char *__gets_chk (char *__str, size_t) __wur;
-extern char *__REDIRECT (__gets_warn, (char *__str), gets)
-     __wur __warnattr ("please use fgets or getline instead, gets can't "
-		       "specify buffer size");
-
-__fortify_function __wur char *
-gets (char *__str)
-{
-  if (__bos (__str) != (size_t) -1)
-    return __gets_chk (__str, __bos (__str));
-  return __gets_warn (__str);
-}
-#  endif
-
 extern FILE * __fmemopen (void *buf, size_t len, const char *mode);
 libc_hidden_proto (__fmemopen)
 

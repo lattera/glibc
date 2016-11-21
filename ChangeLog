@@ -1,3 +1,19 @@
+2017-02-25  Zack Weinberg  <zackw@panix.com>
+
+	* include/features.h (__GLIBC_USE_DEPRECATED_GETS): New macro.
+	* libio/stdio.h, libio/bits/stdio2.h: Condition gets on
+	__GLIBC_USE (DEPRECATED_GETS).  Update comments to indicate
+	gets was removed from C++ in C++14.
+	* include/stdio.h: Remove redundant declaration of gets.
+	* debug/tst-chk1.c, stdio-common/tst-gets.c: Force gets to
+	be declared, since we are testing it.
+	* stdio-common/Makefile (tst-gets.c): Compile with
+	-Wno-deprecated-declarations.
+	* debug/Makefile (tst-chk1.c, tst-chk2.c, tst-chk3.c, tst-chk4.cc)
+	(tst-chk5.cc, tst-chk6.cc, tst-lfschk1.c, tst-lfschk2.c)
+	(tst-lfschk3.c, tst-lfschk4.cc, tst-lfschk5.cc, tst-lfschk6.cc):
+	Compile with -Wno-deprecated-declarations.
+
 2017-02-24  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* math/libm-test-support.c (check_ulp): Use LIT() around literal

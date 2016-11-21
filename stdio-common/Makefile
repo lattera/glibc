@@ -141,6 +141,9 @@ CFLAGS-scanf15.c = -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
 CFLAGS-scanf17.c = -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
 		   -I../wctype
 
+# tst-gets.c tests a deprecated function.
+CFLAGS-tst-gets.c += -Wno-deprecated-declarations
+
 CPPFLAGS += $(libio-mtsafe)
 
 $(objpfx)tst-setvbuf1.out: /dev/null $(objpfx)tst-setvbuf1
