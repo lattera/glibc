@@ -1,3 +1,21 @@
+2017-03-01  Zack Weinberg  <zackw@panix.com>
+
+	* nss/tst-cancel-getpwuid_r.c: Include nss.h.
+	* string/strcasestr.c: No need to include config.h.
+	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c: Include
+	sys/auxv.h. Don't include sysdep.h.
+	* sysdeps/powerpc/tst-set_ppr.c: Don't include dl-procinfo.h.
+
+	* dlfcn/tst-dladdr.c: Don't include ldsodefs.h.	 Don't use
+	DL_LOOKUP_ADDRESS.
+	* math/test-misc.c: Instead of testing NO_LONG_DOUBLE, test whether
+	LDBL_MANT_DIG is greater than DBL_MANT_DIG.
+	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-tst-writev.c): Use
+	sysconf (_SC_PAGESIZE) instead of __getpagesize in definition
+	of ARTIFICIAL_LIMIT.
+	* sysdeps/unix/sysv/linux/tst-clone.c [__ia64__]: Add extern
+	declaration of __clone2.
+
 2017-02-28  Florian Weimer  <fweimer@redhat.com>
 
 	* scripts/backport-support.sh (latest_commit): New file.

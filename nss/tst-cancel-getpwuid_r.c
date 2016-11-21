@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <pwd.h>
+#include <nss.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <semaphore.h>

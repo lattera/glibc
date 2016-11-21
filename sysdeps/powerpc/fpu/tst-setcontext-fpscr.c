@@ -26,8 +26,8 @@
 #include <malloc.h>
 #include <link.h>
 #include <elf.h>
-#include <sysdep.h>
 #include <fpu_control.h>
+#include <sys/auxv.h>
 
 static ucontext_t ctx[3];
 

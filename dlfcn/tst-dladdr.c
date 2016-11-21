@@ -24,8 +24,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <ldsodefs.h>
-
 
 #define TEST_FUNCTION do_test ()
 extern int do_test (void);
@@ -53,8 +51,6 @@ do_test (void)
   if (ret == 0)
     error (EXIT_FAILURE, 0, "dladdr failed");
 
-  printf ("address of ref1 = %lx\n",
-	  (unsigned long int)  DL_LOOKUP_ADDRESS (sym));
   printf ("ret = %d\n", ret);
   printf ("info.dli_fname = %p (\"%s\")\n", info.dli_fname, info.dli_fname);
   printf ("info.dli_fbase = %p\n", info.dli_fbase);

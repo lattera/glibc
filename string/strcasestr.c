@@ -25,10 +25,6 @@
  *
  * Stephen R. van den Berg, berg@pool.informatik.rwth-aachen.de	*/
 
-#if HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 /* Specification.  */
 #include <string.h>
 

@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <dl-procinfo.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdint.h>

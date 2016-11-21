@@ -20,7 +20,7 @@ sysdep_routines += clone umount umount2 readahead \
 		   personality
 
 CFLAGS-gethostid.c = -fexceptions
-CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=0x80000000-__getpagesize()"
+CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=(0x80000000-sysconf(_SC_PAGESIZE))"
 
 # Note that bits/mman-linux.h is listed here though the file lives in the
 # top-level bits/ subdirectory instead of here in sysdeps/.../linux/bits/.

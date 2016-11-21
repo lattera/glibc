@@ -30,7 +30,7 @@ do_test (void)
 {
   int result = 0;
 
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
   {
     long double x = 0x100000001ll + (long double) 0.5;
     long double q;
@@ -60,7 +60,7 @@ do_test (void)
 # elif LDBL_MANT_DIG == 113
     m = 0x1.ffffffffffffffffffffffffffffp-1L;
 # else
-#  error "Please adjust"
+#  error "Unsupported LDBL_MANT_DIG, please adjust"
 # endif
 
     for (i = LDBL_MAX_EXP, x = LDBL_MAX; i >= LDBL_MIN_EXP; --i, x /= 2.0L)
@@ -720,7 +720,7 @@ do_test (void)
       }
   }
 
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
   {
     long double v1, v2;
 
@@ -910,7 +910,7 @@ do_test (void)
       puts ("isnormal (DBL_MIN) failed");
       result = 1;
     }
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
   if (! isnormal (LDBL_MIN))
     {
       puts ("isnormal (LDBL_MIN) failed");
@@ -960,7 +960,7 @@ do_test (void)
   }
 #endif
 
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
   {
     long double r;
 
@@ -1027,7 +1027,7 @@ do_test (void)
       puts ("nextafter -DBL_MIN test failed");
       result = 1;
     }
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
   if (nextafterl (nextafterl (LDBL_MIN, LDBL_MIN / 2.0), LDBL_MIN)
       != LDBL_MIN)
     {
@@ -1072,7 +1072,7 @@ do_test (void)
     }
 #endif
 
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
   volatile long double ld1 = LDBL_MAX;
   volatile long double ld2 = LDBL_MAX / 2;
   (void) &ld1;
@@ -1087,9 +1087,8 @@ do_test (void)
       result = 1;
     }
 # endif
-#endif
 
-#if !defined NO_LONG_DOUBLE && LDBL_MANT_DIG == 113
+# if LDBL_MANT_DIG == 113
   volatile long double ld3 = 0x1.0000000000010000000100000001p+1;
   volatile long double ld4 = 0x1.0000000000000000000000000001p+1;
   (void) &ld3;
@@ -1100,14 +1099,13 @@ do_test (void)
       printf ("long double subtraction test failed %.28La\n", ld3);
       result = 1;
     }
-#endif
+# endif
 
 /* Skip testing IBM long double format, for 2 reasons:
    1) it only supports FE_TONEAREST
    2) nextafter (0.0, 1.0) == nextafterl (0.0L, 1.0L), so
       nextafter (0.0, 1.0) / 16.0L will be 0.0L.  */
-#if !defined NO_LONG_DOUBLE && LDBL_MANT_DIG >= DBL_MANT_DIG + 4 \
-    && LDBL_MANT_DIG != 106
+# if LDBL_MANT_DIG >= DBL_MANT_DIG + 4 && LDBL_MANT_DIG != 106
   int oldmode = fegetround ();
   int j;
   for (j = 0; j < 4; j++)
@@ -1197,6 +1195,7 @@ do_test (void)
       else
 	puts ("ignoring this failure");
     }
+# endif
 #endif
 
   return result;
