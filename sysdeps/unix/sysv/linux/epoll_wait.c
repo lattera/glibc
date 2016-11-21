@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
+/* Linux epoll_wait syscall implementation.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -24,5 +24,9 @@
 int
 epoll_wait (int epfd, struct epoll_event *events, int maxevents, int timeout)
 {
+#ifdef __NR_epoll_wait
+  return SYSCALL_CANCEL (epoll_wait, epfd, events, maxevents, timeout);
+#else
   return epoll_pwait (epfd, events, maxevents, timeout, NULL);
+#endif
 }

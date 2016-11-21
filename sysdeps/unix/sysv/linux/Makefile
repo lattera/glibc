@@ -17,7 +17,7 @@ include $(firstword $(wildcard $(sysdirs:=/sysctl.mk)))
 sysdep_routines += clone umount umount2 readahead \
 		   setfsuid setfsgid epoll_pwait signalfd \
 		   eventfd eventfd_read eventfd_write prlimit \
-		   personality
+		   personality epoll_wait
 
 CFLAGS-gethostid.c = -fexceptions
 CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=(0x80000000-sysconf(_SC_PAGESIZE))"
