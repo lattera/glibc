@@ -1,3 +1,10 @@
+2016-11-22  Adhemerval Zanella  <adhemerva.zanella@linaro.org>
+
+	[BZ #20847]
+	* posix/execvpe.c (maybe_script_execute): Remove write past allocated
+	array bounds.
+	(__execvpe): Likewise.
+
 2016-11-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.add_all_configs): Also use

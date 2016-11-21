@@ -48,12 +48,13 @@ maybe_script_execute (const char *file, char *const argv[], char *const envp[])
 	}
     }
 
-  /* Construct an argument list for the shell.  */
+  /* Construct an argument list for the shell.  It will contain at minimum 3
+     arguments (current shell, script, and an ending NULL.  */
   char *new_argv[argc + 1];
   new_argv[0] = (char *) _PATH_BSHELL;
   new_argv[1] = (char *) file;
   if (argc > 1)
-    memcpy (new_argv + 2, argv + 1, argc * sizeof(char *));
+    memcpy (new_argv + 2, argv + 1, (argc - 1) * sizeof(char *));
   else
     new_argv[2] = NULL;
 
@@ -91,10 +92,11 @@ __execvpe (const char *file, char *const argv[], char *const envp[])
   /* Although GLIBC does not enforce NAME_MAX, we set it as the maximum
      size to avoid unbounded stack allocation.  Same applies for
      PATH_MAX.  */
-  size_t file_len = __strnlen (file, NAME_MAX + 1);
+  size_t file_len = __strnlen (file, NAME_MAX) + 1;
   size_t path_len = __strnlen (path, PATH_MAX - 1) + 1;
 
-  if ((file_len > NAME_MAX)
+  /* NAME_MAX does not include the terminating null character.  */
+  if (((file_len-1) > NAME_MAX)
       || !__libc_alloca_cutoff (path_len + file_len + 1))
     {
       errno = ENAMETOOLONG;
@@ -103,6 +105,9 @@ __execvpe (const char *file, char *const argv[], char *const envp[])
 
   const char *subp;
   bool got_eacces = false;
+  /* The resulting string maximum size would be potentially a entry
+     in PATH plus '/' (path_len + 1) and then the the resulting file name
+     plus '\0' (file_len since it already accounts for the '\0').  */
   char buffer[path_len + file_len + 1];
   for (const char *p = path; ; p = subp)
     {
@@ -123,7 +128,7 @@ __execvpe (const char *file, char *const argv[], char *const envp[])
          execute.  */
       char *pend = mempcpy (buffer, p, subp - p);
       *pend = '/';
-      memcpy (pend + (p < subp), file, file_len + 1);
+      memcpy (pend + (p < subp), file, file_len);
 
       __execve (buffer, argv, envp);
 
