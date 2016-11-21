@@ -1,3 +1,7 @@
+2017-02-19  Zack Weinberg  <zackw@panix.com>
+
+	* rt/tst-mqueue4.c: Include stdint.h.
+
 2017-02-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/libm-test-ulps: Update.
