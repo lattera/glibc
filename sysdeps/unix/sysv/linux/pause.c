@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
+/* Linux pause syscall implementation.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -26,14 +26,10 @@
 int
 __libc_pause (void)
 {
-  sigset_t set;
-
-  int rc =
-    SYSCALL_CANCEL (rt_sigprocmask, SIG_BLOCK, NULL, &set, _NSIG / 8);
-  if (rc == 0)
-    rc = SYSCALL_CANCEL (rt_sigsuspend, &set, _NSIG / 8);
-
-  return rc;
+#ifdef __NR_pause
+  return SYSCALL_CANCEL (pause);
+#else
+  return SYSCALL_CANCEL (ppoll, NULL, 0, NULL, NULL);
+#endif
 }
-
 weak_alias (__libc_pause, pause)

@@ -32,6 +32,10 @@
 # undef __ASSUME_ACCEPT_SYSCALL
 # undef __ASSUME_CONNECT_SYSCALL
 # undef __ASSUME_RECVFROM_SYSCALL
+#else
+/* sparc64 defines __NR_pause,  however it is not supported (ENOSYS).
+   Undefine so pause.c can use a correct alternative.  */
+# undef __NR_pause
 #endif
 
 /* sparc only supports ipc syscall.  */

@@ -9,6 +9,5 @@ sysdep_routines += __start_context
 endif
 
 ifeq ($(subdir),nptl)
-CFLAGS-pause.c += -fexceptions
 CFLAGS-sigsuspend.c += -fexceptions
 endif

@@ -221,7 +221,6 @@ CFLAGS-spawnp.c = -fexceptions
 CFLAGS-spawnp.os = -fomit-frame-pointer
 CFLAGS-spawni.c = -fexceptions
 CFLAGS-spawni.os = -fomit-frame-pointer
-CFLAGS-pause.c = -fexceptions
 CFLAGS-glob.c = $(uses-callbacks) -fexceptions
 CFLAGS-glob64.c = $(uses-callbacks) -fexceptions
 CFLAGS-getconf.c = -DGETCONF_DIR='"$(libexecdir)/getconf"'

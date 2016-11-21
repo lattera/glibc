@@ -1,3 +1,16 @@
+2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/generic/pause.c: Remove file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pause.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h [__arch64__]
+	(__NR_pause): Undefine.
+	* sysdeps/unix/sysv/linux/pause.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove pause from
+	auto-generation list.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile (CFLAGS-pause.c):
+	Remove rule.
+	* posix/Makefile (CFLAGS-pause.c): Remove redundant rule.
+
 2017-05-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/memcmp.S (__GI_memcmp): Correct
