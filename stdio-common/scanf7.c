@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 int
 main (int argc, char *argv[])

@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdbool.h>
-
+#include <libc-diag.h>
 
 #ifndef ATTR
 # define ATTR NULL
@@ -45,11 +45,16 @@ do_test (void)
       return 1;
     }
 
+  /* This deliberately tests supplying a null pointer to a function whose
+     argument is marked __attribute__ ((nonnull)). */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (5, "-Wnonnull");
   if (!ATTR_NULL && pthread_mutexattr_destroy (ATTR) != 0)
     {
       puts ("mutexattr_destroy failed");
       return 1;
     }
+  DIAG_POP_NEEDS_COMMENT;
 
   if (pthread_mutex_lock (&m) != 0)
     {

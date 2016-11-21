@@ -26,7 +26,7 @@
 #endif
 
 #include <float.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 /* This whole file is picayune tests of corner cases of printf format strings.
    The compiler warnings are not useful here.  */

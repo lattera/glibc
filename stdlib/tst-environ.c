@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <libc-diag.h>
 
 #define VAR "FOOBAR"
 
@@ -196,12 +196,17 @@ do_test (void)
       result = 1;
     }
 
+  /* This deliberately tests supplying a null pointer to a function whose
+     argument is marked __attribute__ ((nonnull)). */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT(5, "-Wnonnull");
   errno = 0;
   if (unsetenv (NULL) >= 0 || errno != EINVAL)
     {
       puts ("unsetenv #1 failed");
       result = 1;
     }
+  DIAG_POP_NEEDS_COMMENT;
 
   errno = 0;
   if (unsetenv ("") >= 0 || errno != EINVAL)

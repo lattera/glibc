@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 
 static int

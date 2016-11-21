@@ -3,7 +3,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 #if __GNUC_PREREQ (6, 0)
 /* GCC 6.0 warns on big endian systems about:

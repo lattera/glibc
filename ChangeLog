@@ -1,5 +1,29 @@
 2017-02-25  Zack Weinberg  <zackw@panix.com>
 
+	* include/libc-diag.h: New file.  Define ignore_value,
+	DIAG_PUSH_NEEDS_COMMENT, DIAG_POP_NEEDS_COMMENT,
+	DIAG_IGNORE_NEEDS_COMMENT, and DIAG_IGNORE_Os_NEEDS_COMMENT here.
+
+	* include/libc-internal.h: Definitions of above macros moved from
+	here.  Include libc-diag.h.  Add copyright notice.
+
+	* malloc/tst-malloc.c, malloc/tst-memcheck.c, malloc/tst-realloc.c
+	* misc/tst-error1.c, posix/tst-dir.c, stdio-common/bug21.c
+	* stdio-common/scanf14.c, stdio-common/scanf4.c, stdio-common/scanf7.c
+	* stdio-common/test-vfprintf.c, stdio-common/tst-printf.c
+	* stdio-common/tst-printfsz.c, stdio-common/tst-sprintf.c
+	* stdio-common/tst-unlockedio.c, stdio-common/tstdiomisc.c
+	* stdlib/bug-getcontext.c, string/tester.c, string/tst-endian.c
+	* time/tst-strptime2.c, wcsmbs/tst-wcstof.c:
+	Include libc-diag.h instead of libc-internal.h.
+
+	* stdlib/tst-environ.c: Include libc-diag.h.  Suppress -Wnonnull for
+	call to unsetenv (NULL).
+	* nptl/tst-mutex1.c: Include libc-diag.h.  Suppress -Wnonnull for
+	call to pthread_mutexattr_destroy (NULL).
+
+2017-02-25  Zack Weinberg  <zackw@panix.com>
+
 	* include/features.h (__GLIBC_USE_DEPRECATED_GETS): New macro.
 	* libio/stdio.h, libio/bits/stdio2.h: Condition gets on
 	__GLIBC_USE (DEPRECATED_GETS).  Update comments to indicate

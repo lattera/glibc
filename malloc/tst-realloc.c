@@ -19,7 +19,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 static int errors = 0;
 

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ucontext.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 static int
 do_test (void)

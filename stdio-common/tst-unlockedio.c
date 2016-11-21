@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 int fd;
 static void do_prepare (void);
