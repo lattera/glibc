@@ -141,8 +141,7 @@ extern struct mutex _hurd_brk_lock;
 
 extern int _hurd_set_brk (vm_address_t newbrk);
 
-#define __need_FILE
-#include <stdio.h>
+#include <bits/types/FILE.h>
 
 /* Calls to get and set basic ports.  */
 

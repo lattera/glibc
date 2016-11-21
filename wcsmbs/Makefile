@@ -22,7 +22,8 @@ subdir	:= wcsmbs
 
 include ../Makeconfig
 
-headers	:= wchar.h bits/wchar.h bits/wchar2.h bits/wchar-ldbl.h uchar.h
+headers	:= wchar.h bits/wchar.h bits/wchar2.h bits/wchar-ldbl.h uchar.h \
+	   bits/types/__mbstate_t.h bits/types/mbstate_t.h bits/types/wint_t.h
 
 routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcsncmp wcsncpy wcspbrk wcsrchr wcsspn wcstok wcsstr wmemchr \

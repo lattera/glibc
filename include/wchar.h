@@ -1,8 +1,6 @@
 #ifndef _WCHAR_H
-#include <wcsmbs/wchar.h>
-
+# include <wcsmbs/wchar.h>
 # ifndef _ISOMAC
-# ifdef _WCHAR_H
 
 extern __typeof (wcscasecmp_l) __wcscasecmp_l;
 extern __typeof (wcsncasecmp_l) __wcsncasecmp_l;
@@ -219,10 +217,4 @@ extern size_t __mbsrtowcs_l (wchar_t *dst, const char **src, size_t len,
 #  define __mbsinit(state) ((state)->__count == 0)
 
 # endif
-# endif
 #endif
-
-/* Undefine all __need_* constants in case we are included to get those
-   constants but the whole file was already read.  */
-#undef __need_mbstate_t
-#undef __need_wint_t

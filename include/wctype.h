@@ -1,30 +1,7 @@
 #ifndef _WCTYPE_H
+#include <wctype/wctype.h>
 
 #ifndef _ISOMAC
-/* We try to get wint_t from <stddef.h>, but not all GCC versions define it
-   there.  So define it ourselves if it remains undefined.  */
-# define __need_wint_t
-# include <stddef.h>
-# ifndef _WINT_T
-/* Integral type unchanged by default argument promotions that can
-   hold any value corresponding to members of the extended character
-   set, as well as at least one value that does not correspond to any
-   member of the extended character set.  */
-#  define _WINT_T
-typedef unsigned int wint_t;
-# endif
-
-/* Need to repeat these prototypes here, as wctype/wctype.h defines all
-   these as macros and thus we couldn't add libc_hidden_proto.  */
-
-extern int iswalpha (wint_t __wc);
-extern int iswalnum (wint_t __wc);
-extern int iswdigit (wint_t __wc);
-extern int iswlower (wint_t __wc);
-extern int iswspace (wint_t __wc);
-extern int iswxdigit (wint_t __wc);
-extern wint_t towlower (wint_t __wc);
-extern wint_t towupper (wint_t __wc);
 
 libc_hidden_proto (iswalpha)
 libc_hidden_proto (iswalnum)
@@ -34,11 +11,7 @@ libc_hidden_proto (iswspace)
 libc_hidden_proto (iswxdigit)
 libc_hidden_proto (towlower)
 libc_hidden_proto (towupper)
-#endif
 
-#include <wctype/wctype.h>
-
-#ifndef _ISOMAC
 /* Internal interfaces.  */
 extern int __iswspace (wint_t __wc);
 extern int __iswctype (wint_t __wc, wctype_t __desc);

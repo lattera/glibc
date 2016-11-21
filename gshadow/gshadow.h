@@ -21,11 +21,9 @@
 #define _GSHADOW_H	1
 
 #include <features.h>
-
 #include <paths.h>
+#include <bits/types/FILE.h>
 
-#define	__need_FILE
-#include <stdio.h>
 #define __need_size_t
 #include <stddef.h>
 

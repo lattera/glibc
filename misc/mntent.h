@@ -20,10 +20,8 @@
 #define	_MNTENT_H	1
 
 #include <features.h>
-#define __need_FILE
-#include <stdio.h>
 #include <paths.h>
-
+#include <bits/types/FILE.h>
 
 /* File listing canonical interesting mount points.  */
 #define	MNTTAB		_PATH_MNTTAB	/* Deprecated alias.  */

@@ -1,8 +1,6 @@
 #ifndef _STDIO_H
-# if defined _ISOMAC || defined __need_FILE || defined __need___FILE
-#  include <libio/stdio.h>
-# else
-#  include <libio/stdio.h>
+# include <libio/stdio.h>
+# ifndef _ISOMAC
 
 /* Now define the internal interfaces.  */
 
@@ -71,11 +69,11 @@ libc_hidden_proto (__isoc99_vfscanf)
 extern FILE *__new_tmpfile (void);
 extern FILE *__old_tmpfile (void);
 
-
-
 #  define __need_size_t
-#  define __need_wint_t
 #  include <stddef.h>
+
+#  include <bits/types/wint_t.h>
+
 /* Generate a unique file name (and possibly open it).  */
 extern int __path_search (char *__tmpl, size_t __tmpl_len,
 			  const char *__dir, const char *__pfx,
@@ -183,5 +181,5 @@ libc_hidden_proto (__obstack_vprintf_chk)
 extern FILE * __fmemopen (void *buf, size_t len, const char *mode);
 libc_hidden_proto (__fmemopen)
 
-# endif
-#endif
+# endif /* not _ISOMAC */
+#endif /* stdio.h */

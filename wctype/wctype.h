@@ -21,185 +21,31 @@
  */
 
 #ifndef _WCTYPE_H
+#define _WCTYPE_H 1
 
 #include <features.h>
 #include <bits/types.h>
-
-#ifndef __need_iswxxx
-# define _WCTYPE_H	1
-
-/* Get wint_t from <wchar.h>.  */
-# define __need_wint_t
-# include <wchar.h>
+#include <bits/types/wint_t.h>
 
 /* Constant expression of type `wint_t' whose value does not correspond
    to any member of the extended character set.  */
-# ifndef WEOF
-#  define WEOF (0xffffffffu)
-# endif
+#ifndef WEOF
+# define WEOF (0xffffffffu)
 #endif
-#undef __need_iswxxx
 
-
-/* The following part is also used in the <wcsmbs.h> header when compiled
-   in the Unix98 compatibility mode.  */
-#ifndef __iswxxx_defined
-# define __iswxxx_defined	1
-
-/* Scalar type that can hold values which represent locale-specific
-   character classifications.  */
-typedef unsigned long int wctype_t;
-
-# ifndef _ISwbit
-/* The characteristics are stored always in network byte order (big
-   endian).  We define the bit value interpretations here dependent on the
-   machine's byte order.  */
-
-#  include <endian.h>
-#  if __BYTE_ORDER == __BIG_ENDIAN
-#   define _ISwbit(bit)	(1 << (bit))
-#  else /* __BYTE_ORDER == __LITTLE_ENDIAN */
-#   define _ISwbit(bit)	\
-	((bit) < 8 ? (int) ((1UL << (bit)) << 24)			      \
-	 : ((bit) < 16 ? (int) ((1UL << (bit)) << 8)			      \
-	    : ((bit) < 24 ? (int) ((1UL << (bit)) >> 8)			      \
-	       : (int) ((1UL << (bit)) >> 24))))
-#  endif
-
-enum
-{
-  __ISwupper = 0,			/* UPPERCASE.  */
-  __ISwlower = 1,			/* lowercase.  */
-  __ISwalpha = 2,			/* Alphabetic.  */
-  __ISwdigit = 3,			/* Numeric.  */
-  __ISwxdigit = 4,			/* Hexadecimal numeric.  */
-  __ISwspace = 5,			/* Whitespace.  */
-  __ISwprint = 6,			/* Printing.  */
-  __ISwgraph = 7,			/* Graphical.  */
-  __ISwblank = 8,			/* Blank (usually SPC and TAB).  */
-  __ISwcntrl = 9,			/* Control character.  */
-  __ISwpunct = 10,			/* Punctuation.  */
-  __ISwalnum = 11,			/* Alphanumeric.  */
-
-  _ISwupper = _ISwbit (__ISwupper),	/* UPPERCASE.  */
-  _ISwlower = _ISwbit (__ISwlower),	/* lowercase.  */
-  _ISwalpha = _ISwbit (__ISwalpha),	/* Alphabetic.  */
-  _ISwdigit = _ISwbit (__ISwdigit),	/* Numeric.  */
-  _ISwxdigit = _ISwbit (__ISwxdigit),	/* Hexadecimal numeric.  */
-  _ISwspace = _ISwbit (__ISwspace),	/* Whitespace.  */
-  _ISwprint = _ISwbit (__ISwprint),	/* Printing.  */
-  _ISwgraph = _ISwbit (__ISwgraph),	/* Graphical.  */
-  _ISwblank = _ISwbit (__ISwblank),	/* Blank (usually SPC and TAB).  */
-  _ISwcntrl = _ISwbit (__ISwcntrl),	/* Control character.  */
-  _ISwpunct = _ISwbit (__ISwpunct),	/* Punctuation.  */
-  _ISwalnum = _ISwbit (__ISwalnum)	/* Alphanumeric.  */
-};
-# endif /* Not _ISwbit  */
-
-
-__BEGIN_DECLS
-
-/*
- * Wide-character classification functions: 7.15.2.1.
- */
-
-/* Test for any wide character for which `iswalpha' or `iswdigit' is
-   true.  */
-extern int iswalnum (wint_t __wc) __THROW;
-
-/* Test for any wide character for which `iswupper' or 'iswlower' is
-   true, or any wide character that is one of a locale-specific set of
-   wide-characters for which none of `iswcntrl', `iswdigit',
-   `iswpunct', or `iswspace' is true.  */
-extern int iswalpha (wint_t __wc) __THROW;
-
-/* Test for any control wide character.  */
-extern int iswcntrl (wint_t __wc) __THROW;
-
-/* Test for any wide character that corresponds to a decimal-digit
-   character.  */
-extern int iswdigit (wint_t __wc) __THROW;
-
-/* Test for any wide character for which `iswprint' is true and
-   `iswspace' is false.  */
-extern int iswgraph (wint_t __wc) __THROW;
-
-/* Test for any wide character that corresponds to a lowercase letter
-   or is one of a locale-specific set of wide characters for which
-   none of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
-extern int iswlower (wint_t __wc) __THROW;
-
-/* Test for any printing wide character.  */
-extern int iswprint (wint_t __wc) __THROW;
-
-/* Test for any printing wide character that is one of a
-   locale-specific et of wide characters for which neither `iswspace'
-   nor `iswalnum' is true.  */
-extern int iswpunct (wint_t __wc) __THROW;
-
-/* Test for any wide character that corresponds to a locale-specific
-   set of wide characters for which none of `iswalnum', `iswgraph', or
-   `iswpunct' is true.  */
-extern int iswspace (wint_t __wc) __THROW;
-
-/* Test for any wide character that corresponds to an uppercase letter
-   or is one of a locale-specific set of wide character for which none
-   of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
-extern int iswupper (wint_t __wc) __THROW;
-
-/* Test for any wide character that corresponds to a hexadecimal-digit
-   character equivalent to that performed be the functions described
-   in the previous subclause.  */
-extern int iswxdigit (wint_t __wc) __THROW;
-
-/* Test for any wide character that corresponds to a standard blank
-   wide character or a locale-specific set of wide characters for
-   which `iswalnum' is false.  */
-# ifdef __USE_ISOC99
-extern int iswblank (wint_t __wc) __THROW;
-# endif
-
-/*
- * Extensible wide-character classification functions: 7.15.2.2.
- */
-
-/* Construct value that describes a class of wide characters identified
-   by the string argument PROPERTY.  */
-extern wctype_t wctype (const char *__property) __THROW;
-
-/* Determine whether the wide-character WC has the property described by
-   DESC.  */
-extern int iswctype (wint_t __wc, wctype_t __desc) __THROW;
-
-
-/*
- * Wide-character case-mapping functions: 7.15.3.1.
- */
-
-/* Scalar type that can hold values which represent locale-specific
-   character mappings.  */
-typedef const __int32_t *wctrans_t;
-
-/* Converts an uppercase letter to the corresponding lowercase letter.  */
-extern wint_t towlower (wint_t __wc) __THROW;
-
-/* Converts an lowercase letter to the corresponding uppercase letter.  */
-extern wint_t towupper (wint_t __wc) __THROW;
-
-__END_DECLS
-
-#endif	/* need iswxxx.  */
-
-
-/* The remaining definitions and declarations must not appear in the
-   <wchar.h> header.  */
-#ifdef _WCTYPE_H
+/* Some definitions from this header also appear in <wchar.h> in
+   Unix98 mode.  */
+#include <bits/wctype-wchar.h>
 
 /*
  * Extensible wide-character mapping functions: 7.15.3.2.
  */
 
 __BEGIN_DECLS
+
+/* Scalar type that can hold values which represent locale-specific
+   character mappings.  */
+typedef const __int32_t *wctrans_t;
 
 /* Construct value that describes a mapping between wide characters
    identified by the string argument PROPERTY.  */
@@ -276,7 +122,6 @@ extern wctype_t wctype_l (const char *__property, __locale_t __locale)
 extern int iswctype_l (wint_t __wc, wctype_t __desc, __locale_t __locale)
      __THROW;
 
-
 /*
  * Wide-character case-mapping functions.
  */
@@ -299,7 +144,5 @@ extern wint_t towctrans_l (wint_t __wc, wctrans_t __desc,
 # endif /* Use POSIX 2008.  */
 
 __END_DECLS
-
-#endif	/* __WCTYPE_H defined.  */
 
 #endif /* wctype.h  */

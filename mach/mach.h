@@ -20,9 +20,7 @@
 
 #define	_MACH_H	1
 
-/* We must include this before using __need_FILE with <stdio.h> below.  */
 #include <features.h>
-
 
 /* Get the basic types used by Mach.  */
 #include <mach/mach_types.h>
@@ -79,9 +77,7 @@ extern void
 __mach_msg_destroy (mach_msg_header_t *msg),
 mach_msg_destroy (mach_msg_header_t *msg);
 
-
-#define __need_FILE
-#include <stdio.h>
+#include <bits/types/FILE.h>
 
 /* Open a stream on a Mach device.  */
 extern FILE *mach_open_devstream (mach_port_t device_port, const char *mode);

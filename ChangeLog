@@ -1,3 +1,28 @@
+2017-06-08  Zack Weinberg  <zackw@panix.com>
+
+	* libio/bits/types/FILE.h, libio/bits/types/__FILE.h
+	* wcsmbs/bits/types/mbstate_t.h, wcsmbs/bits/types/__mbstate_t.h
+	* wcsmbs/bits/types/wint_t.h: New single-type definition files.
+	* wctype/bits/wctype-wchar.h: New file holding declarations shared
+	between wctype.h and wchar.h.
+
+	* libio/Makefile, wcsmbs/Makefile, wctype/Makefile:
+	Install them.
+
+	* include/bits/types/FILE.h, include/bits/types/__FILE.h
+	* include/bits/types/mbstate_t.h, include/bits/types/__mbstate_t.h
+	* include/bits/types/wint_t.h, include/bits/wcsmbs-wchar.h:
+	New wrappers.
+	* include/stdio.h, include/wchar.h, include/wctype.h:
+	No need to handle __need macros.
+
+	* grp/grp.h, gshadow/gshadow.h, hurd/hurd.h, iconv/gconv.h
+	* libio/stdio.h, mach/mach.h, misc/mntent.h, pwd/pwd.h
+	* shadow/shadow.h, stdio-common/printf.h, wcsmbs/uchar.h
+	* wcsmbs/wchar.h, wctype/wctype.h
+	* sysdeps/generic/_G_config.h, sysdeps/unix/sysv/linux/_G_config.h
+	Use the new files instead of __need macros.
+
 2017-06-08  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* string/test-memrchr.c (test_main): Add tests for len == 0

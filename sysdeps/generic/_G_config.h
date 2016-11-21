@@ -13,11 +13,12 @@
 #endif
 #define __need_NULL
 #include <stddef.h>
-#define __need_mbstate_t
+
+#include <bits/types/__mbstate_t.h>
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-# define __need_wint_t
+# include <bits/types/wint_t.h>
 #endif
-#include <wchar.h>
+
 typedef struct
 {
   __off_t __pos;

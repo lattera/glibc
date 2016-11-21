@@ -23,9 +23,9 @@
 #define _GCONV_H	1
 
 #include <features.h>
-#define __need_mbstate_t
-#define __need_wint_t
-#include <wchar.h>
+#include <bits/types/__mbstate_t.h>
+#include <bits/types/wint_t.h>
+
 #define __need_size_t
 #define __need_wchar_t
 #include <stddef.h>

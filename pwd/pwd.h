@@ -59,8 +59,7 @@ struct passwd
 
 
 #ifdef __USE_MISC
-# define __need_FILE
-# include <stdio.h>
+# include <bits/types/FILE.h>
 #endif
 
 
