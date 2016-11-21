@@ -1,6 +1,23 @@
-#ifndef _MATH_PRIVATE_H_
-#error "Never use <math_ldbl.h> directly; include <math_private.h> instead."
-#endif
+/* Manipulation of the bit representation of 'long double' quantities.
+   Copyright (C) 2006-2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+#ifndef _MATH_LDBL_H_
+#define _MATH_LDBL_H_ 1
 
 #include <ieee754.h>
 #include <stdint.h>
@@ -239,9 +256,15 @@ ldbl_nearbyint (double a)
 static inline void
 ldbl_canonicalize_int (double *a, double *aa)
 {
-  int64_t ax, aax;
-  EXTRACT_WORDS64 (ax, *a);
-  EXTRACT_WORDS64 (aax, *aa);
+  /* Previously we used EXTRACT_WORDS64 from math_private.h, but in order
+     to avoid including internal headers we duplicate that code here.  */
+  uint64_t ax, aax;
+  union { double value; uint64_t word; } extractor;
+  extractor.value = *a;
+  ax = extractor.word;
+  extractor.value = *aa;
+  aax = extractor.word;
+
   int expdiff = ((ax >> 52) & 0x7ff) - ((aax >> 52) & 0x7ff);
   if (expdiff <= 53)
     {
@@ -263,3 +286,5 @@ ldbl_canonicalize_int (double *a, double *aa)
 	}
     }
 }
+
+#endif /* math_ldbl.h */

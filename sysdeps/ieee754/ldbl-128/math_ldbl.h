@@ -1,41 +1,61 @@
-#ifndef _MATH_PRIVATE_H_
-#error "Never use <math_ldbl.h> directly; include <math_private.h> instead."
-#endif
+/* Manipulation of the bit representation of 'long double' quantities.
+   Copyright (C) 1999-2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+#ifndef _MATH_LDBL_H_
+#define _MATH_LDBL_H_ 1
+
+#include <stdint.h>
+#include <endian.h>
 
 /* A union which permits us to convert between a long double and
    four 32 bit ints or two 64 bit ints.  */
 
-#if __FLOAT_WORD_ORDER == BIG_ENDIAN
+#if __FLOAT_WORD_ORDER == __BIG_ENDIAN
 
 typedef union
 {
   long double value;
   struct
   {
-    u_int64_t msw;
-    u_int64_t lsw;
+    uint64_t msw;
+    uint64_t lsw;
   } parts64;
   struct
   {
-    u_int32_t w0, w1, w2, w3;
+    uint32_t w0, w1, w2, w3;
   } parts32;
 } ieee854_long_double_shape_type;
 
 #endif
 
-#if __FLOAT_WORD_ORDER == LITTLE_ENDIAN
+#if __FLOAT_WORD_ORDER == __LITTLE_ENDIAN
 
 typedef union
 {
   long double value;
   struct
   {
-    u_int64_t lsw;
-    u_int64_t msw;
+    uint64_t lsw;
+    uint64_t msw;
   } parts64;
   struct
   {
-    u_int32_t w3, w2, w1, w0;
+    uint32_t w3, w2, w1, w0;
   } parts32;
 } ieee854_long_double_shape_type;
 
@@ -96,3 +116,5 @@ do {								\
 */
 #define _Float128 long double
 #define L(x) x##L
+
+#endif /* math_ldbl.h */

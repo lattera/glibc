@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <math_private.h>
+#include <math_ldbl.h>
 #include <stdbool.h>
 #include <stdio.h>
 

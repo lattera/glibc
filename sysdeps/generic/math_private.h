@@ -37,7 +37,7 @@
 /* A union which permits us to convert between a double and two 32 bit
    ints.  */
 
-#if __FLOAT_WORD_ORDER == BIG_ENDIAN
+#if __FLOAT_WORD_ORDER == __BIG_ENDIAN
 
 typedef union
 {
@@ -52,7 +52,7 @@ typedef union
 
 #endif
 
-#if __FLOAT_WORD_ORDER == LITTLE_ENDIAN
+#if __FLOAT_WORD_ORDER == __LITTLE_ENDIAN
 
 typedef union
 {

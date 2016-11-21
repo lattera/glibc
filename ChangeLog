@@ -1,5 +1,31 @@
 2017-02-25  Zack Weinberg  <zackw@panix.com>
 
+	* sysdeps/generic/math_private.h: Use __BIG_ENDIAN and
+	__LITTLE_ENDIAN, not BIG_ENDIAN and LITTLE_ENDIAN.
+
+	* sysdeps/generic/math_ldbl.h
+	* sysdeps/ia64/fpu/math_ldbl.h
+	* sysdeps/ieee754/ldbl-128/math_ldbl.h
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h
+	* sysdeps/ieee754/ldbl-96/math_ldbl.h
+	* sysdeps/powerpc/fpu/math_ldbl.h
+	* sysdeps/x86_64/fpu/math_ldbl.h:
+	Allow direct inclusion.  Use uintNN_t instead of u_intNN_t.
+	Use __BIG_ENDIAN and __LITTLE_ENDIAN, not BIG_ENDIAN and
+	LITTLE_ENDIAN.  Include endian.h and/or stdint.h if necessary.
+	Add copyright notices.
+
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h (ldbl_canonicalize_int):
+	Don't use EXTRACT_WORDS64.
+
+	* sysdeps/ieee754/ldbl-96/test-canonical-ldbl-96.c
+	* sysdeps/ieee754/ldbl-96/test-totalorderl-ldbl-96.c
+	* sysdeps/ieee754/ldbl-128ibm/test-canonical-ldbl-128ibm.c
+	* sysdeps/ieee754/ldbl-128ibm/test-totalorderl-ldbl-128ibm.c:
+	Include math_ldbl.h, not math_private.h.
+
+2017-02-25  Zack Weinberg  <zackw@panix.com>
+
 	* include/libc-diag.h: New file.  Define ignore_value,
 	DIAG_PUSH_NEEDS_COMMENT, DIAG_POP_NEEDS_COMMENT,
 	DIAG_IGNORE_NEEDS_COMMENT, and DIAG_IGNORE_Os_NEEDS_COMMENT here.

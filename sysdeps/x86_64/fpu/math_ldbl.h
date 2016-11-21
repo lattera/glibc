@@ -1,6 +1,25 @@
-#ifndef _MATH_PRIVATE_H_
-#error "Never use <math_ldbl.h> directly; include <math_private.h> instead."
-#endif
+/* Manipulation of the bit representation of 'long double' quantities.
+   Copyright (C) 2001-2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+#ifndef _MATH_LDBL_H_
+#define _MATH_LDBL_H_ 1
+
+#include <stdint.h>
 
 /* A union which permits us to convert between a long double and
    three 32 bit ints.  */
@@ -10,8 +29,8 @@ typedef union
   long double value;
   struct
   {
-    u_int32_t lsw;
-    u_int32_t msw;
+    uint32_t lsw;
+    uint32_t msw;
     int sign_exponent:16;
     unsigned int empty1:16;
     unsigned int empty0:32;
@@ -77,3 +96,5 @@ do {								\
   se_u.parts.sign_exponent = (exp);				\
   (d) = se_u.value;						\
 } while (0)
+
+#endif /* math_ldbl.h */
