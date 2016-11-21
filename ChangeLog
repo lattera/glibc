@@ -1,3 +1,11 @@
+2016-12-13  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/powerpc/dl-procinfo.c: Don't define
+	_dl_powerpc_platforms.
+	* sysdeps/powerpc/dl-procinfo.h (_dl_string_platform): Use string
+	constants instead of referencing _dl_powerpc_platforms.
+	(_dl_platform_string): Remove.
+
 2016-12-13  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/tst-cancel7.c (cmdline_process): Add missing case label.

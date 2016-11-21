@@ -68,13 +68,6 @@ _dl_hwcap_string (int idx)
   return GLRO(dl_powerpc_cap_flags)[idx];
 }
 
-static inline const char *
-__attribute__ ((unused))
-_dl_platform_string (int idx)
-{
-  return GLRO(dl_powerpc_platforms)[idx - _DL_FIRST_PLATFORM];
-}
-
 static inline int
 __attribute__ ((unused))
 _dl_string_hwcap (const char *str)
@@ -92,7 +85,7 @@ _dl_string_platform (const char *str)
   if (str == NULL)
     return -1;
 
-  if (strncmp (str, GLRO(dl_powerpc_platforms)[PPC_PLATFORM_POWER4], 5) == 0)
+  if (strncmp (str, "power", 5) == 0)
     {
       int ret;
       str += 5;
@@ -132,35 +125,21 @@ _dl_string_platform (const char *str)
       if (str[1] == '\0')
        return ret;
     }
-  else if (strncmp (str, GLRO(dl_powerpc_platforms)[PPC_PLATFORM_PPC970],
-		    3) == 0)
+  else if (strncmp (str, "ppc", 3) == 0)
     {
-      if (strcmp (str + 3, GLRO(dl_powerpc_platforms)[PPC_PLATFORM_PPC970]
-			   + 3) == 0)
+      if (strcmp (str + 3, "970") == 0)
 	return _DL_FIRST_PLATFORM + PPC_PLATFORM_PPC970;
-      else if (strcmp (str + 3,
-		       GLRO(dl_powerpc_platforms)[PPC_PLATFORM_CELL_BE] + 3)
-	       == 0)
+      else if (strcmp (str + 3, "-cell-be") == 0)
 	return _DL_FIRST_PLATFORM + PPC_PLATFORM_CELL_BE;
-      else if (strcmp (str + 3,
-		       GLRO(dl_powerpc_platforms)[PPC_PLATFORM_PPCA2] + 3)
-	       == 0)
+      else if (strcmp (str + 3, "a2") == 0)
 	return _DL_FIRST_PLATFORM + PPC_PLATFORM_PPCA2;
-      else if (strcmp (str + 3,
-		       GLRO(dl_powerpc_platforms)[PPC_PLATFORM_PPC405] + 3)
-	       == 0)
+      else if (strcmp (str + 3, "405") == 0)
 	return _DL_FIRST_PLATFORM + PPC_PLATFORM_PPC405;
-      else if (strcmp (str + 3,
-		       GLRO(dl_powerpc_platforms)[PPC_PLATFORM_PPC440] + 3)
-	       == 0)
+      else if (strcmp (str + 3, "440") == 0)
 	return _DL_FIRST_PLATFORM + PPC_PLATFORM_PPC440;
-      else if (strcmp (str + 3,
-		       GLRO(dl_powerpc_platforms)[PPC_PLATFORM_PPC464] + 3)
-	       == 0)
+      else if (strcmp (str + 3, "464") == 0)
 	return _DL_FIRST_PLATFORM + PPC_PLATFORM_PPC464;
-      else if (strcmp (str + 3,
-		       GLRO(dl_powerpc_platforms)[PPC_PLATFORM_PPC476] + 3)
-	       == 0)
+      else if (strcmp (str + 3, "476") == 0)
 	return _DL_FIRST_PLATFORM + PPC_PLATFORM_PPC476;
     }
 
