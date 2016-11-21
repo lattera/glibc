@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define N_(msgid) msgid
+
 struct data_t
 {
   const char *selection;

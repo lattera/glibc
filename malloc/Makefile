@@ -25,9 +25,9 @@ include ../Makeconfig
 dist-headers := malloc.h
 headers := $(dist-headers) obstack.h mcheck.h
 tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
-	 tst-mallocstate tst-mcheck tst-mallocfork tst-trim1 \
+	 tst-mcheck tst-mallocfork tst-trim1 \
 	 tst-malloc-usable tst-realloc tst-posix_memalign \
-	 tst-pvalloc tst-memalign tst-mallopt tst-scratch_buffer \
+	 tst-pvalloc tst-memalign tst-mallopt \
 	 tst-malloc-backtrace tst-malloc-thread-exit \
 	 tst-malloc-thread-fail tst-malloc-fork-deadlock \
 	 tst-mallocfork2 \
@@ -38,6 +38,8 @@ tests-static := \
 	 tst-interpose-static-nothread \
 	 tst-interpose-static-thread \
 	 tst-malloc-usable-static \
+
+tests-internal := tst-mallocstate tst-scratch_buffer
 
 ifneq (no,$(have-tunables))
 tests += tst-malloc-usable-tunables

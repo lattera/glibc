@@ -19,6 +19,5 @@
 /* Process tst-checks.c in POSIX mode.  */
 #undef _GNU_SOURCE
 #define _POSIX_C_SOURCE 200112L
-#define _ISOMAC
 
 #include "tst-checks.c"

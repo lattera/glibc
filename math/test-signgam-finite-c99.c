@@ -20,7 +20,6 @@
 #undef __LIBC_INTERNAL_MATH_INLINES
 #undef _GNU_SOURCE
 #undef _Mlong_double_
-#define _ISOMAC
 
 #include <math.h>
 #include <stdio.h>

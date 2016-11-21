@@ -4,8 +4,6 @@
 #ifndef _ISOMAC
 # include <xlocale.h>
 
-__BEGIN_DECLS
-
 extern __typeof (strftime_l) __strftime_l;
 libc_hidden_proto (__strftime_l)
 extern __typeof (strptime_l) __strptime_l;
@@ -103,8 +101,6 @@ extern double __difftime (time_t time1, time_t time0);
 /* Use in the clock_* functions.  Size of the field representing the
    actual clock ID.  */
 #define CLOCK_IDFIELD_SIZE	3
-
-__END_DECLS
 
 #endif
 #endif

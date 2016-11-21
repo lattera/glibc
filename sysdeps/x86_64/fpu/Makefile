@@ -45,6 +45,12 @@ modules-names += test-double-libmvec-alias-mod \
 		 test-float-libmvec-alias-mod \
 		 test-float-libmvec-alias-avx-mod \
 		 test-float-libmvec-alias-avx2-mod
+modules-names-tests += test-double-libmvec-alias-mod \
+		 test-double-libmvec-alias-avx-mod \
+		 test-double-libmvec-alias-avx2-mod \
+		 test-float-libmvec-alias-mod \
+		 test-float-libmvec-alias-avx-mod \
+		 test-float-libmvec-alias-avx2-mod
 extra-test-objs += test-double-libmvec-sincos-avx-main.o \
 		   test-double-libmvec-sincos-avx2-main.o \
 		   test-double-libmvec-sincos-main.o \
@@ -145,6 +151,8 @@ tests += test-double-libmvec-alias-avx512 \
 	 test-double-libmvec-sincos-avx512 \
 	 test-float-libmvec-sincosf-avx512
 modules-names += test-double-libmvec-alias-avx512-mod \
+		 test-float-libmvec-alias-avx512-mod
+modules-names-tests += test-double-libmvec-alias-avx512-mod \
 		 test-float-libmvec-alias-avx512-mod
 extra-test-objs += test-double-libmvec-sincos-avx512-main.o \
 		   test-float-libmvec-sincosf-avx512-main.o

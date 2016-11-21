@@ -1,6 +1,8 @@
 #ifndef _STRING_H
 
-#if !defined _ISOMAC && !defined __cplusplus
+#ifndef _ISOMAC
+/* Some of these are defined as macros in the real string.h, so we must
+   prototype them before including it.  */
 #include <sys/types.h>
 
 extern void *__memccpy (void *__dest, const void *__src,
@@ -46,16 +48,14 @@ extern void __bzero (void *__s, size_t __n) __THROW __nonnull ((1));
 extern int __ffs (int __i) __attribute__ ((const));
 
 extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
-#endif
 
 /* Get _STRING_ARCH_unaligned.  */
 #include <string_private.h>
+#endif
 
-/* Now the real definitions.  We do this here since some of the functions
-   above are defined as macros in the headers.  */
 #include <string/string.h>
 
-#if !defined _ISOMAC && !defined __cplusplus
+#ifndef _ISOMAC
 extern __typeof (strcoll_l) __strcoll_l;
 extern __typeof (strxfrm_l) __strxfrm_l;
 extern __typeof (strcasecmp_l) __strcasecmp_l;

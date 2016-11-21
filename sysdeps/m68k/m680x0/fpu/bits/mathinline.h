@@ -112,19 +112,22 @@ __NTH (__signbitl (long double __x))
 #ifdef	__LIBC_INTERNAL_MATH_INLINES
 /* This is used when defining the functions themselves.  Define them with
    __ names, and with `static inline' instead of `extern inline' so the
-   bodies will always be used, never an external function call.  */
+   bodies will always be used, never an external function call.
+   Note: GCC 6 objects to __attribute__ ((__leaf__)) on static functions.  */
 # define __m81_u(x)		__CONCAT(__,x)
 # define __m81_inline		static __inline
+# define __m81_nth(fn)		__NTHNL (fn)
 #else
 # define __m81_u(x)		x
-# define __m81_inline __MATH_INLINE
+# define __m81_inline		__MATH_INLINE
+# define __m81_nth(fn)		__NTH (fn)
 # define __M81_MATH_INLINES	1
 #endif
 
 /* Define a const math function.  */
 #define __m81_defun(rettype, func, args)				      \
   __m81_inline rettype __attribute__((__const__))			      \
-  __NTH (__m81_u(func) args)
+  __m81_nth (__m81_u(func) args)
 
 /* Define the three variants of a math function that has a direct
    implementation in the m68k fpu.  FUNC is the name for C (which will be
@@ -335,8 +338,8 @@ __inline_functions (long double,l)
 
 # define __inline_functions(float_type, s)				\
 __m81_inline void							\
-__NTH (__m81_u(__CONCAT(__sincos,s))(float_type __x, float_type *__sinx, \
-				     float_type *__cosx))		\
+__m81_nth (__m81_u(__CONCAT(__sincos,s))				\
+	   (float_type __x, float_type *__sinx, float_type *__cosx))	\
 {									\
   __asm __volatile__ ("fsincos%.x %2,%1:%0"				\
 		      : "=f" (*__sinx), "=f" (*__cosx) : "f" (__x));	\
@@ -353,8 +356,6 @@ __inline_functions (long double,l)
 
 /* Define inline versions of the user visible functions.  */
 
-/* Note that there must be no whitespace before the argument passed for
-   NAME, to make token pasting work correctly with -traditional.  */
 # define __inline_forward_c(rettype, name, args1, args2)	\
 __MATH_INLINE rettype __attribute__((__const__))		\
 __NTH (name args1)						\

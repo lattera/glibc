@@ -19,6 +19,12 @@
    glibc.malloc.check and glibc.malloc.mmap_threshold but also retain
    glibc.malloc.mmap_threshold in an unprivileged child.  */
 
+/* This is compiled as part of the testsuite but needs to see
+   HAVE_TUNABLES. */
+#define _LIBC 1
+#include "config.h"
+#undef _LIBC
+
 #define test_parent test_parent_tunables
 #define test_child test_child_tunables
 

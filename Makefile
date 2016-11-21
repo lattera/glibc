@@ -270,7 +270,7 @@ $(objpfx)check-local-headers.out: scripts/check-local-headers.sh
 ifneq "$(headers)" ""
 # Special test of all the installed headers in this directory.
 tests-special += $(objpfx)check-installed-headers-c.out
-libof-check-installed-headers-c := nonlib
+libof-check-installed-headers-c := testsuite
 $(objpfx)check-installed-headers-c.out: \
     scripts/check-installed-headers.sh $(headers)
 	$(SHELL) $(..)scripts/check-installed-headers.sh c \
@@ -280,7 +280,7 @@ $(objpfx)check-installed-headers-c.out: \
 
 ifneq "$(CXX)" ""
 tests-special += $(objpfx)check-installed-headers-cxx.out
-libof-check-installed-headers-cxx := nonlib
+libof-check-installed-headers-cxx := testsuite
 $(objpfx)check-installed-headers-cxx.out: \
     scripts/check-installed-headers.sh $(headers)
 	$(SHELL) $(..)scripts/check-installed-headers.sh c++ \

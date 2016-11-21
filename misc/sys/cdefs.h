@@ -55,15 +55,18 @@
 #  define __THROW	__attribute__ ((__nothrow__ __LEAF))
 #  define __THROWNL	__attribute__ ((__nothrow__))
 #  define __NTH(fct)	__attribute__ ((__nothrow__ __LEAF)) fct
+#  define __NTHNL(fct)  __attribute__ ((__nothrow__)) fct
 # else
 #  if defined __cplusplus && __GNUC_PREREQ (2,8)
 #   define __THROW	throw ()
 #   define __THROWNL	throw ()
 #   define __NTH(fct)	__LEAF_ATTR fct throw ()
+#   define __NTHNL(fct) fct throw ()
 #  else
 #   define __THROW
 #   define __THROWNL
 #   define __NTH(fct)	fct
+#   define __NTHNL(fct) fct
 #  endif
 # endif
 

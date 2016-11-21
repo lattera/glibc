@@ -19,7 +19,6 @@
 #undef _LIBC
 #undef __LIBC_INTERNAL_MATH_INLINES
 #undef _GNU_SOURCE
-#define _ISOMAC
 
 #include <math.h>
 #include <stdio.h>

@@ -40,7 +40,18 @@ extern impl_t __start_impls[], __stop_impls[];
 
 #undef __USE_STRING_INLINES
 
+/* We are compiled under _ISOMAC, so libc-symbols.h does not do this
+   for us.  */
+#include "config.h"
+#ifdef HAVE_CC_INHIBIT_LOOP_TO_LIBCALL
+# define inhibit_loop_to_libcall \
+    __attribute__ ((__optimize__ ("-fno-tree-loop-distribute-patterns")))
+#else
+# define inhibit_loop_to_libcall
+#endif
+
 #include <getopt.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -27,7 +27,7 @@ gen-as-const-headers += locale-defines.sym
 endif
 
 ifeq ($(subdir),nptl)
-tests += test-get_hwcap test-get_hwcap-static
+tests-internal += test-get_hwcap test-get_hwcap-static
 tests-static += test-get_hwcap-static
 endif
 

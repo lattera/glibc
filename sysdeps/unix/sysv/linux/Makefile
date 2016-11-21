@@ -199,7 +199,8 @@ CFLAGS-gai.c += -DNEED_NETLINK
 endif
 
 ifeq ($(subdir),nptl)
-tests += tst-setgetname tst-align-clone tst-getpid1 \
+tests += tst-align-clone tst-getpid1 \
 	tst-thread-affinity-pthread tst-thread-affinity-pthread2 \
 	tst-thread-affinity-sched
+tests-internal += tst-setgetname
 endif

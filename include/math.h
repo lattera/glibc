@@ -1,5 +1,10 @@
 #ifndef	_MATH_H
 
+#ifdef _ISOMAC
+# undef NO_LONG_DOUBLE
+# undef _Mlong_double_
+#endif
+
 #include <math/math.h>
 
 #ifndef _ISOMAC

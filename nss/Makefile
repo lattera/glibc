@@ -49,9 +49,9 @@ makedb-modules = xmalloc hash-string
 extra-objs		+= $(makedb-modules:=.o)
 
 tests-static            = tst-field
+tests-internal		= tst-field
 tests			= test-netdb tst-nss-test1 test-digits-dots \
-			  tst-nss-getpwent bug17079 \
-			  $(tests-static)
+			  tst-nss-getpwent bug17079
 xtests			= bug-erange
 
 # If we have a thread library then we can test cancellation against

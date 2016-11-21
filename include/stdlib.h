@@ -9,8 +9,6 @@
 #if !defined _ISOMAC
 # include <sys/stat.h>
 
-__BEGIN_DECLS
-
 extern __typeof (strtol_l) __strtol_l;
 extern __typeof (strtoul_l) __strtoul_l;
 extern __typeof (strtoll_l) __strtoll_l;
@@ -260,8 +258,6 @@ libc_hidden_proto (__abort_msg)
 extern __typeof (unsetenv) unsetenv attribute_hidden;
 extern __typeof (__strtoul_internal) __strtoul_internal attribute_hidden;
 # endif
-
-__END_DECLS
 
 #endif
 

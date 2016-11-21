@@ -2,7 +2,6 @@
 # include <posix/unistd.h>
 
 # ifndef _ISOMAC
-__BEGIN_DECLS
 
 libc_hidden_proto (_exit, __noreturn__)
 rtld_hidden_proto (_exit, __noreturn__)
@@ -190,7 +189,5 @@ extern int __getlogin_r_loginuid (char *name, size_t namesize)
 extern __typeof (__access) __access_noerrno attribute_hidden;
 #  endif
 
-__END_DECLS
 # endif
-
 #endif

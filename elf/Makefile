@@ -142,43 +142,49 @@ $(inst_auditdir)/sotruss-lib.so: $(objpfx)sotruss-lib.so $(+force)
 	$(do-install-program)
 endif
 
-tests = tst-tls1 tst-tls2 tst-tls9 tst-leaks1 \
-	tst-array1 tst-array2 tst-array3 tst-array4 tst-array5 \
-	tst-auxv
-tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static \
-	       tst-leaks1-static tst-array1-static tst-array5-static \
-	       tst-ptrguard1-static tst-dl-iter-static \
+tests-static-normal := tst-leaks1-static tst-array1-static tst-array5-static \
+	       tst-dl-iter-static \
 	       tst-tlsalign-static tst-tlsalign-extern-static \
 	       tst-linkall-static tst-env-setuid tst-env-setuid-tunables
+tests-static-internal := tst-tls1-static tst-tls2-static \
+	       tst-ptrguard1-static tst-stackguard1-static
+
+tests := tst-tls9 tst-leaks1 \
+	tst-array1 tst-array2 tst-array3 tst-array4 tst-array5 \
+	tst-auxv
+tests-internal := tst-tls1 tst-tls2 $(tests-static-internal)
+tests-static := $(tests-static-normal) $(tests-static-internal)
+
 ifeq (yes,$(build-shared))
 tests-static += tst-tls9-static
 tst-tls9-static-ENV = \
        LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
-endif
-tests += $(tests-static)
-ifeq (yes,$(build-shared))
-tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
-	 constload1 order noload filter unload \
+
+tests += restest1 preloadtest loadfail multiload origtest resolvfail \
+	 constload1 order noload filter \
 	 reldep reldep2 reldep3 reldep4 nodelete nodelete2 \
-	 nodlopen nodlopen2 neededtest neededtest2 \
-	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
+	 nodlopen nodlopen2 lateglobal initfirst global \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
-	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
+	 tst-tls4 tst-tls5 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-tls15 \
 	 tst-tls16 tst-tls17 tst-tls18 tst-tls19 tst-tls-dlinfo \
 	 tst-align tst-align2 $(tests-execstack-$(have-z-execstack)) \
 	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
-	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
+	 tst-dlmopen1 tst-dlmopen3 \
 	 unload3 unload4 unload5 unload6 unload7 unload8 tst-global1 order2 \
 	 tst-audit1 tst-audit2 tst-audit8 tst-audit9 \
-	 tst-stackguard1 tst-addr1 tst-thrlock \
+	 tst-addr1 tst-thrlock \
 	 tst-unique1 tst-unique2 $(if $(CXX),tst-unique3 tst-unique4 \
 	 tst-nodelete) \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
-	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
+	 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
 	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
 	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose
 #	 reldep9
+tests-internal += loadtest unload unload2 circleload1 \
+	 neededtest neededtest2 neededtest3 neededtest4 \
+	 tst-tls3 tst-tls6 tst-tls7 tst-tls8 tst-dlmopen2 \
+	 tst-ptrguard1 tst-stackguard1
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
 LDFLAGS-tst-dlopen-aout = $(no-pie-ldflag)
@@ -289,21 +295,23 @@ CFLAGS-vismain.c = $(PIE-ccflag)
 endif
 modules-execstack-yes = tst-execstack-mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
-# We need this variable to be sure the test modules get the right CPPFLAGS.
-test-extras += $(modules-names)
 
 # filtmod1.so has a special rule
 modules-names-nobuild := filtmod1
 
+tests += $(tests-static)
+
 ifneq (no,$(multi-arch))
-tests-static += ifuncmain1static ifuncmain1picstatic \
+tests-ifuncstatic := ifuncmain1static ifuncmain1picstatic \
 		ifuncmain2static ifuncmain2picstatic \
 		ifuncmain4static ifuncmain4picstatic \
 		ifuncmain5static ifuncmain5picstatic \
 		ifuncmain7static ifuncmain7picstatic
-
+tests-static += $(tests-ifuncstatic)
+tests-internal += $(tests-ifuncstatic)
 ifeq (yes,$(build-shared))
-tests += ifuncmain1 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
+tests-internal += \
+	 ifuncmain1 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
 	 ifuncmain1staticpic \
 	 ifuncmain2 ifuncmain2pic ifuncmain3 ifuncmain4 \
 	 ifuncmain5 ifuncmain5pic ifuncmain5staticpic \
@@ -311,11 +319,11 @@ tests += ifuncmain1 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
 ifunc-test-modules = ifuncdep1 ifuncdep1pic ifuncdep2 ifuncdep2pic \
 		     ifuncdep5 ifuncdep5pic
 extra-test-objs += $(ifunc-test-modules:=.o)
-test-extras += $(ifunc-test-modules)
+test-internal-extras += $(ifunc-test-modules)
 ifeq (yes,$(have-fpie))
 ifunc-pie-tests = ifuncmain1pie ifuncmain1vispie ifuncmain1staticpie \
 		  ifuncmain5pie ifuncmain6pie ifuncmain7pie
-tests += $(ifunc-pie-tests)
+tests-internal += $(ifunc-pie-tests)
 tests-pie += $(ifunc-pie-tests)
 endif
 modules-names += ifuncmod1 ifuncmod3 ifuncmod5 ifuncmod6
@@ -357,7 +365,7 @@ endif
 # unit test driver must be able to link with the shared object
 # that is going to eventually go into an installed DSO.
 ifeq (yesyes,$(have-fpie)$(build-shared))
-tests += tst-_dl_addr_inside_object
+tests-internal += tst-_dl_addr_inside_object
 tests-pie += tst-_dl_addr_inside_object
 $(objpfx)tst-_dl_addr_inside_object: $(objpfx)dl-addr-obj.os
 CFLAGS-tst-_dl_addr_inside_object.c += $(PIE-ccflag)

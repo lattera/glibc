@@ -84,7 +84,7 @@ common-generated += dummy.o dummy.c
 ifneq "$(headers)" ""
 # Special test of all the installed headers in this directory.
 tests-special += $(objpfx)check-installed-headers-c.out
-libof-check-installed-headers-c := nonlib
+libof-check-installed-headers-c := testsuite
 $(objpfx)check-installed-headers-c.out: \
     $(..)scripts/check-installed-headers.sh $(headers)
 	$(SHELL) $(..)scripts/check-installed-headers.sh c \
@@ -94,7 +94,7 @@ $(objpfx)check-installed-headers-c.out: \
 
 ifneq "$(CXX)" ""
 tests-special += $(objpfx)check-installed-headers-cxx.out
-libof-check-installed-headers-cxx := nonlib
+libof-check-installed-headers-cxx := testsuite
 $(objpfx)check-installed-headers-cxx.out: \
     $(..)scripts/check-installed-headers.sh $(headers)
 	$(SHELL) $(..)scripts/check-installed-headers.sh c++ \
@@ -129,12 +129,14 @@ endif
 others: $(py-const)
 
 ifeq ($(run-built-tests),no)
-tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported),$(tests)) \
+tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported), \
+                                          $(tests) $(tests-internal)) \
 			     $(test-srcs)) $(tests-special) \
 			     $(tests-printers-programs)
 xtests: tests $(xtests-special)
 else
-tests: $(tests:%=$(objpfx)%.out) $(tests-special) $(tests-printers-out)
+tests: $(tests:%=$(objpfx)%.out) $(tests-internal:%=$(objpfx)%.out) \
+       $(tests-special) $(tests-printers-out)
 xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-special)
 endif
 
@@ -143,7 +145,7 @@ xtests-special-notdir = $(patsubst $(objpfx)%, %, $(xtests-special))
 ifeq ($(run-built-tests),no)
 tests-expected =
 else
-tests-expected = $(tests) $(tests-printers)
+tests-expected = $(tests) $(tests-internal) $(tests-printers)
 endif
 tests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
@@ -156,7 +158,7 @@ xtests:
 
 ifeq ($(build-programs),yes)
 binaries-all-notests = $(others) $(sysdep-others)
-binaries-all-tests = $(tests) $(xtests) $(test-srcs)
+binaries-all-tests = $(tests) $(tests-internal) $(xtests) $(test-srcs)
 binaries-all = $(binaries-all-notests) $(binaries-all-tests)
 binaries-static-notests = $(others-static)
 binaries-static-tests = $(tests-static) $(xtests-static)
@@ -170,7 +172,7 @@ binaries-pie-notests =
 endif
 else
 binaries-all-notests =
-binaries-all-tests = $(tests) $(xtests) $(test-srcs)
+binaries-all-tests = $(tests) $(tests-internal) $(xtests) $(test-srcs)
 binaries-all = $(binaries-all-tests)
 binaries-static-notests =
 binaries-static-tests =
@@ -230,7 +232,7 @@ $(addprefix $(objpfx),$(binaries-static-tests)): %: %.o \
 	$(+link-static-tests)
 endif
 
-ifneq "$(strip $(tests) $(xtests) $(test-srcs))" ""
+ifneq "$(strip $(tests) $(tests-internal) $(xtests) $(test-srcs))" ""
 # These are the implicit rules for making test outputs
 # from the test programs and whatever input files are present.
 

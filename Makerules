@@ -277,7 +277,7 @@ $(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
 vpath %.sym $(sysdirs)
 before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
 
-tests += $(gen-as-const-headers:%.sym=test-as-const-%)
+tests-internal += $(gen-as-const-headers:%.sym=test-as-const-%)
 generated += $(gen-as-const-headers:%.sym=test-as-const-%.c)
 $(objpfx)test-as-const-%.c: $(..)scripts/gen-as-const.awk $(..)Makerules \
 			    %.sym $(common-objpfx)%.h
@@ -793,10 +793,21 @@ endif
 
 # The makefile may define $(modules-names) to build additional modules.
 # These are built with $(build-module), except any in $(modules-names-nobuild).
+# MODULE_NAME=extramodules, except any in $(modules-names-tests).
 ifdef modules-names
-cpp-srcs-left := $(modules-names)
-lib = extramodules
-include $(patsubst %,$(..)libof-iterator.mk,$(modules-names))
+cpp-srcs-left := $(filter-out $(modules-names-tests),$(modules-names))
+ifneq (,$(cpp-srcs-left))
+lib := extramodules
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
+endif
+
+ifdef modules-names-tests
+cpp-srcs-left := $(filter $(modules-names-tests),$(modules-names))
+ifneq (,$(cpp-srcs-left))
+lib := testsuite
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
+endif
+endif
 
 extra-modules-build := $(filter-out $(modules-names-nobuild),$(modules-names))
 $(extra-modules-build:%=$(objpfx)%.so): $(objpfx)%.so: \
@@ -808,7 +819,7 @@ endif
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
 	     $(patsubst %.oS,%.d,$(filter %.oS,$(extra-objs))) \
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-test-objs:.os=.o))) \
-	     $(addsuffix .d,$(tests) $(xtests) $(test-srcs))
+	     $(addsuffix .d,$(tests) $(tests-internal) $(xtests) $(test-srcs))
 ifeq ($(build-programs),yes)
 +depfiles += $(addsuffix .d,$(others) $(sysdep-others))
 endif
@@ -1321,7 +1332,17 @@ check: tests
 .PHONY: xcheck
 xcheck: xtests
 
-all-nonlib = $(strip $(tests) $(xtests) $(test-srcs) $(test-extras) $(others))
+# The only difference between MODULE_NAME=testsuite and MODULE_NAME=nonlib is
+# that almost all internal declarations from config.h, libc-symbols.h, and
+# include/*.h are not available to 'testsuite' code, but are to 'nonlib' code.
+all-testsuite := $(strip $(tests) $(xtests) $(test-srcs) $(test-extras))
+ifneq (,$(all-testsuite))
+cpp-srcs-left = $(all-testsuite)
+lib := testsuite
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
+endif
+
+all-nonlib := $(strip $(tests-internal) $(test-internal-extras) $(others))
 ifneq (,$(all-nonlib))
 cpp-srcs-left = $(all-nonlib)
 lib := nonlib
@@ -1535,22 +1556,32 @@ clean: common-clean
 mostlyclean: common-mostlyclean
 
 do-tests-clean:
-	-rm -f $(addprefix $(objpfx),$(addsuffix .out,$(tests) $(xtests) \
+	-rm -f $(addprefix $(objpfx),$(addsuffix .out,$(tests) \
+						      $(tests-internal) \
+						      $(xtests) \
 						      $(test-srcs)) \
 				     $(addsuffix .test-result,$(tests) \
+							      $(tests-internal) \
 							      $(xtests) \
 							      $(test-srcs)))
 
 # Remove the object files.
 common-mostlyclean:
-	-rm -f $(addprefix $(objpfx),$(tests) $(xtests) $(test-srcs) \
+	-rm -f $(addprefix $(objpfx),$(tests) $(tests-internal) $(xtests) \
+				     $(test-srcs) \
 				     $(others) $(sysdep-others) stubs \
-				     $(addsuffix .o,$(tests) $(xtests) \
-						    $(test-srcs) $(others) \
+				     $(addsuffix .o,$(tests) \
+						    $(tests-internal) \
+						    $(xtests) \
+						    $(test-srcs) \
+						    $(others) \
 						    $(sysdep-others)) \
-				     $(addsuffix .out,$(tests) $(xtests) \
+				     $(addsuffix .out,$(tests) \
+						      $(tests-internal) \
+						      $(xtests) \
 						      $(test-srcs)) \
 				     $(addsuffix .test-result,$(tests) \
+							      $(tests-internal) \
 							      $(xtests) \
 							      $(test-srcs)))
 	-rm -f $(addprefix $(objpfx),$(extra-objs) $(extra-test-objs) \

@@ -1,4 +1,4 @@
-#if !defined __STRICT_ANSI__ && !defined __cplusplus
+#ifndef _ISOMAC
 # include <sysdep.h>
 # undef ret	/* get rid of the stupid "ret" macro; it breaks br.ret */
 

@@ -223,8 +223,7 @@ LDLIBS-tst-once5 = -lstdc++
 CFLAGS-tst-thread_local1.o = -std=gnu++11
 LDLIBS-tst-thread_local1 = -lstdc++
 
-tests = tst-typesizes \
-	tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
+tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-mutex7 tst-mutex8 tst-mutex9 tst-mutex5a tst-mutex7a \
 	tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 tst-mutexpi5 \
@@ -244,13 +243,12 @@ tests = tst-typesizes \
 	tst-rwlock4 tst-rwlock5 tst-rwlock6 tst-rwlock7 tst-rwlock8 \
 	tst-rwlock9 tst-rwlock10 tst-rwlock11 tst-rwlock12 tst-rwlock13 \
 	tst-rwlock14 tst-rwlock15 tst-rwlock16 tst-rwlock17 tst-rwlock18 \
-	tst-rwlock19 \
 	tst-once1 tst-once2 tst-once3 tst-once4 tst-once5 \
 	tst-key1 tst-key2 tst-key3 tst-key4 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
-	tst-sem8 tst-sem9 tst-sem10 tst-sem11 tst-sem12 tst-sem13 tst-sem14 \
+	tst-sem8 tst-sem9 tst-sem10 tst-sem14 \
 	tst-sem15 tst-sem16 \
-	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 tst-barrier5 \
+	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
 	tst-align tst-align3 \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	tst-basic7 \
@@ -275,7 +273,7 @@ tests = tst-typesizes \
 	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 tst-cleanup4 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
-	tst-signal6 tst-signal7 \
+	tst-signal6 \
 	tst-exec1 tst-exec2 tst-exec3 tst-exec4 tst-exec5 \
 	tst-exit1 tst-exit2 tst-exit3 \
 	tst-stdio1 tst-stdio2 \
@@ -300,6 +298,10 @@ tests = tst-typesizes \
 	tst-bad-schedattr \
 	tst-thread_local1 tst-mutex-errorcheck tst-robust10 \
 	tst-robust-fork tst-create-detached
+
+tests-internal := tst-typesizes tst-rwlock19 tst-sem11 tst-sem12 tst-sem13 \
+		  tst-barrier5 tst-signal7
+
 xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
 	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10
 test-srcs = tst-oddstacklimit
@@ -357,8 +359,8 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3 tst-cleanupx4 \
 	 tst-oncex3 tst-oncex4
 ifeq ($(build-shared),yes)
-tests += tst-atfork2 tst-tls3 tst-tls3-malloc tst-tls4 tst-tls5 tst-_res1 \
-	 tst-fini1 tst-stackguard1
+tests += tst-atfork2 tst-tls4 tst-_res1 tst-fini1
+tests-internal += tst-tls3 tst-tls3-malloc tst-tls5 tst-stackguard1
 tests-nolibpthread += tst-fini1
 ifeq ($(have-z-execstack),yes)
 tests += tst-execstack
@@ -372,7 +374,7 @@ modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-join7mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) \
 		   tst-cleanup4aux.o tst-cleanupx4aux.o
-test-extras += $(modules-names) tst-cleanup4aux tst-cleanupx4aux
+test-extras += tst-cleanup4aux tst-cleanupx4aux
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 
 tst-atfork2mod.so-no-z-defs = yes
@@ -425,9 +427,9 @@ tests-static += tst-locale1 tst-locale2 tst-stackguard1-static \
 		tst-cancel21-static tst-cancel24-static tst-cond8-static \
 		tst-mutex8-static tst-mutexpi8-static tst-sem11-static \
 		tst-sem12-static
-tests += tst-stackguard1-static tst-cancel21-static tst-cancel24-static \
-	 tst-cond8-static tst-mutex8-static tst-mutexpi8-static \
-	 tst-sem11-static tst-sem12-static
+tests += tst-cancel21-static tst-cancel24-static \
+	 tst-cond8-static tst-mutex8-static tst-mutexpi8-static
+tests-internal += tst-sem11-static tst-sem12-static tst-stackguard1-static
 xtests-static += tst-setuid1-static
 
 # These tests are linked with libc before libpthread
@@ -622,8 +624,9 @@ ifeq ($(build-shared),yes)
 $(addprefix $(objpfx), \
   $(filter-out $(tests-static) $(xtests-static) $(tests-reverse) \
     $(tests-nolibpthread), \
-    $(tests) $(xtests) $(test-srcs))): $(objpfx)libpthread.so \
-				       $(objpfx)libpthread_nonshared.a
+    $(tests) $(tests-internal) $(xtests) $(test-srcs))): \
+	$(objpfx)libpthread.so \
+	$(objpfx)libpthread_nonshared.a
 $(objpfx)tst-unload: $(libdl)
 # $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
 # since otherwise libpthread.so comes before libc.so when linking.

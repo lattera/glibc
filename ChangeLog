@@ -1,5 +1,107 @@
 2017-05-11  Zack Weinberg  <zackw@panix.com>
 
+	* Makerules: New subdir configuration variables 'tests-internal'
+	and 'test-internal-extras'.  Test files in these categories will
+	still be compiled with MODULE_NAME=nonlib.  Test files in the
+	existing categories (tests, xtests, test-srcs, test-extras) are
+	now compiled with MODULE_NAME=testsuite.
+	New subdir configuration variable 'modules-names-tests'.  Files
+	which are in both 'modules-names' and 'modules-names-tests' will
+	be compiled with MODULE_NAME=testsuite instead of
+	MODULE_NAME=extramodules.
+	(gen-as-const-headers): Move to tests-internal.
+	(do-tests-clean, common-mostlyclean): Support tests-internal.
+	* Makeconfig (built-modules): Add testsuite.
+	* Makefile: Change libof-check-installed-headers-c and
+	libof-check-installed-headers-cxx to 'testsuite'.
+	* Rules: Likewise.  Support tests-internal.
+	* benchtests/strcoll-inputs/filelist#en_US.UTF-8:
+	Remove extra-modules.mk.
+
+	* config.h.in: Don't check for __OPTIMIZE__ or __FAST_MATH__ here.
+	* include/libc-symbols.h: Move definitions of _GNU_SOURCE,
+	PASTE_NAME, PASTE_NAME1, IN_MODULE, IS_IN, and IS_IN_LIB to the
+	very top of the file and rationalize their order.
+	If MODULE_NAME is not defined at all, define IS_IN to always be
+	false, and don't define _ISOMAC.
+	If any of IS_IN (testsuite), IS_IN_build, or __cplusplus are
+	true, define _ISOMAC and suppress everything else in this file,
+	starting with the inclusion of config.h.
+	Do check for inappropriate definitions of __OPTIMIZE__ and
+	__FAST_MATH__ here, but only if _ISOMAC is not defined.
+	Correct some out-of-date commentary.
+
+	* include/math.h: If _ISOMAC is defined, undefine NO_LONG_DOUBLE
+	and _Mlong_double_ before including math.h.
+	* include/string.h: If _ISOMAC is defined, don't expose
+	_STRING_ARCH_unaligned. Move a comment to a more appropriate
+	location.
+
+	* include/errno.h, include/stdio.h, include/stdlib.h, include/string.h
+	* include/time.h, include/unistd.h, include/wchar.h: No need to
+	check __cplusplus nor use __BEGIN_DECLS/__END_DECLS.
+
+	* misc/sys/cdefs.h (__NTHNL): New macro.
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h
+	(__m81_defun): Use __NTHNL to avoid errors with GCC 6.
+
+	* elf/tst-env-setuid-tunables.c: Include config.h with _LIBC
+	defined, for HAVE_TUNABLES.
+	* inet/tst-checks-posix.c: No need to define _ISOMAC.
+	* intl/tst-gettext2.c: Provide own definition of N_.
+	* math/test-signgam-finite-c99.c: No need to define _ISOMAC.
+	* math/test-signgam-main.c: No need to define _ISOMAC.
+	* stdlib/tst-strtod.c: Convert to test-driver. Split locale_test to...
+	* stdlib/tst-strtod1i.c: ...this new file.
+	* stdlib/tst-strtod5.c: Convert to test-driver and add copyright notice.
+	Split tests of __strtod_internal to...
+	* stdlib/tst-strtod5i.c: ...this new file.
+	* string/test-string.h: Include stdint.h. Duplicate definition of
+	inhibit_loop_to_libcall here (from libc-symbols.h).
+	* string/test-strstr.c: Provide dummy definition of
+	libc_hidden_builtin_def when including strstr.c.
+	* sysdeps/ia64/fpu/libm-symbols.h: Suppress entire file in _ISOMAC
+	mode; no need to test __STRICT_ANSI__ nor __cplusplus as well.
+	* sysdeps/x86_64/fpu/math-tests-arch.h: Include cpu-features.h.
+	Don't include init-arch.h.
+	* sysdeps/x86_64/multiarch/test-multiarch.h: Include cpu-features.h.
+	Don't include init-arch.h.
+
+	* elf/Makefile: Move tst-ptrguard1-static, tst-stackguard1-static,
+	tst-tls1-static, tst-tls2-static, tst-tls3-static, loadtest,
+	unload, unload2, circleload1, neededtest, neededtest2,
+	neededtest3, neededtest4, tst-tls1, tst-tls2, tst-tls3,
+	tst-tls6, tst-tls7, tst-tls8, tst-dlmopen2, tst-ptrguard1,
+	tst-stackguard1, tst-_dl_addr_inside_object, and all of the
+	ifunc tests to tests-internal.
+	Don't add $(modules-names) to test-extras.
+	* inet/Makefile: Move tst-inet6_scopeid_pton to tests-internal.
+	Add tst-deadline to tests-static-internal.
+	* malloc/Makefile: Move tst-mallocstate and tst-scratch_buffer to
+	tests-internal.
+	* misc/Makefile: Move tst-atomic and tst-atomic-long to tests-internal.
+	* nptl/Makefile: Move tst-typesizes, tst-rwlock19, tst-sem11,
+	tst-sem12, tst-sem13, tst-barrier5, tst-signal7, tst-tls3,
+	tst-tls3-malloc, tst-tls5, tst-stackguard1, tst-sem11-static,
+	tst-sem12-static, and tst-stackguard1-static to tests-internal.
+	Link tests-internal with libpthread also.
+	Don't add $(modules-names) to test-extras.
+	* nss/Makefile: Move tst-field to tests-internal.
+	* posix/Makefile: Move bug-regex5, bug-regex20, bug-regex33,
+	tst-rfc3484, tst-rfc3484-2, and tst-rfc3484-3 to tests-internal.
+	* stdlib/Makefile: Move tst-strtod1i, tst-strtod3, tst-strtod4,
+	tst-strtod5i, tst-tls-atexit, and tst-tls-atexit-nodelete to
+	tests-internal.
+	* sunrpc/Makefile: Move tst-svc_register to tests-internal.
+	* sysdeps/powerpc/Makefile: Move test-get_hwcap and
+	test-get_hwcap-static to tests-internal.
+	* sysdeps/unix/sysv/linux/Makefile: Move tst-setgetname to
+	tests-internal.
+	* sysdeps/x86_64/fpu/Makefile: Add all libmvec test modules to
+	modules-names-tests.
+
+2017-05-11  Zack Weinberg  <zackw@panix.com>
+
 	* libio/libio.h: Condition dummy definition of _IO_lock_t on
 	_IO_lock_t_defined, not _IO_MTSAFE_IO. Unconditionally use the
 	non-_IO_MTSAFE_IO definitions for _IO_peekc, _IO_flockfile,

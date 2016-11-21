@@ -100,7 +100,8 @@ xtests := tst-getmyaddr
 
 ifeq ($(have-thread-library),yes)
 xtests += thrsvc
-tests += tst-svc_register tst-udp-garbage
+tests += tst-udp-garbage
+tests-internal += tst-svc_register
 endif
 
 ifeq ($(run-built-tests),yes)

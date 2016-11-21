@@ -69,23 +69,26 @@ test-srcs	:= tst-fmtmsg
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   test-canon test-canon2 tst-strtoll tst-environ	    \
 		   tst-xpg-basename tst-random tst-random2 tst-bsearch	    \
-		   tst-limits tst-rand48 bug-strtod tst-setcontext          \
+		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
 		   tst-setcontext2 test-a64l tst-qsort tst-system testmb2   \
-		   bug-strtod2 tst-atof1 tst-atof2 tst-strtod2 tst-strtod3  \
-		   tst-rand48-2 tst-makecontext tst-strtod4 tst-strtod5     \
+		   bug-strtod2 tst-atof1 tst-atof2 tst-strtod2		    \
+		   tst-rand48-2 tst-makecontext tst-strtod5		    \
 		   tst-qsort2 tst-makecontext2 tst-strtod6 tst-unsetenv1    \
 		   tst-makecontext3 bug-getcontext bug-fmtmsg1		    \
 		   tst-secure-getenv tst-strtod-overflow tst-strtod-round   \
-		   tst-tininess tst-strtod-underflow tst-tls-atexit	    \
-		   tst-setcontext3 tst-tls-atexit-nodelete		    \
+		   tst-tininess tst-strtod-underflow tst-setcontext3	    \
 		   tst-strtol-locale tst-strtod-nan-locale tst-strfmon_l    \
 		   tst-quick_exit tst-thread-quick_exit tst-width	    \
-		   tst-width-stdint tst-strfrom tst-strfrom-locale \
+		   tst-width-stdint tst-strfrom tst-strfrom-locale	    \
 		   tst-getrandom
+tests-internal	:= tst-strtod1i tst-strtod3 tst-strtod4 tst-strtod5i \
+		   tst-tls-atexit tst-tls-atexit-nodelete
+tests-static	:= tst-secure-getenv
+
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-empty-env
 endif
-tests-static	:= tst-secure-getenv
+
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-quick_exit.o = -std=c++11
 LDLIBS-tst-quick_exit = -lstdc++
