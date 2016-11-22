@@ -1,3 +1,10 @@
+2016-11-22  Andreas Schwab  <schwab@suse.de>
+
+	* misc/mkstemp.c: Include <fcntl.h>.
+	* misc/mkstemps.c: Likewise.
+	* misc/mkostemp.c: Likewise.
+	* misc/mkostemps.c: Likewise.
+
 2016-11-22  Adhemerval Zanella  <adhemerva.zanella@linaro.org>
 
 	[BZ #20847]
