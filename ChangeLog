@@ -1,3 +1,15 @@
+2016-12-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Dominik Vogt  <vogt@linux.vnet.ibm.com>
+
+	[BZ #20847]
+	* posix/execvpe.c (maybe_script_execute): Remove write past allocated
+	array bounds for else branch.
+	(__execvpe): Style fixes.
+	* posix/tst-vfork3.c (run_script): New function.
+	(create_script): Likewise.
+	(do_test): Use run_script internal function.
+	(do_prepare): Use create_script internal function.
+
 2016-12-07  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86/elision-conf.h

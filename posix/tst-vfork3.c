@@ -33,6 +33,35 @@ char *tmpdirname;
 #define PREPARE(argc, argv) do_prepare ()
 #include "../test-skeleton.c"
 
+static void
+run_script (const char *script, char *const argv[])
+{
+  for (size_t i = 0; i < 5; i++)
+    {
+      pid_t pid = vfork ();
+      if (pid < 0)
+	FAIL_EXIT1 ("vfork failed: %m");
+      else if (pid == 0)
+	{
+	  execvp (script, argv);
+	  _exit (errno);
+	}
+
+      int status;
+      if (TEMP_FAILURE_RETRY (waitpid (pid, &status, 0)) != pid)
+	FAIL_EXIT1 ("waitpid failed");
+      else if (status != 0)
+	{
+	  if (WIFEXITED (status))
+	    FAIL_EXIT1 ("%s failed with status %d\n", script,
+			WEXITSTATUS (status));
+	  else
+	    FAIL_EXIT1 ("%s killed by signal %d\n", script,
+			WTERMSIG (status));
+	}
+    }
+}
+
 static int
 do_test (void)
 {
@@ -49,68 +78,22 @@ do_test (void)
       return 1;
     }
 
-  size_t i;
-  char *argv[3] = { (char *) "script1.sh", (char *) "1", NULL };
-  for (i = 0; i < 5; i++)
-    {
-      pid_t pid = vfork ();
-      if (pid < 0)
-	{
-	  printf ("vfork failed: %m\n");
-	  return 1;
-	}
-      else if (pid == 0)
-	{
-	  execvp ("script1.sh", argv);
-	  _exit (errno);
-	}
-      int status;
-      if (TEMP_FAILURE_RETRY (waitpid (pid, &status, 0)) != pid)
-	{
-	  puts ("waitpid failed");
-	  return 1;
-	}
-      else if (status != 0)
-	{
-	  if (WIFEXITED (status))
-	    printf ("script1.sh failed with status %d\n",
-		    WEXITSTATUS (status));
-	  else
-	    printf ("script1.sh kill by signal %d\n",
-		    WTERMSIG (status));
-	  return 1;
-	}
-    }
+  /* Although manual states first argument should be the script name itself,
+     current execv{p,e} implementation allows it.  */
+  char *argv00[] = { NULL };
+  run_script ("script0.sh", argv00);
 
-  argv[0] = (char *) "script2.sh";
-  argv[1] = (char *) "2";
-  for (i = 0; i < 5; i++)
-    {
-      pid_t pid = vfork ();
-      if (pid < 0)
-	{
-	  printf ("vfork failed: %m\n");
-	  return 1;
-	}
-      else if (pid == 0)
-	{
-	  execvp ("script2.sh", argv);
-	  _exit (errno);
-	}
-      int status;
-      if (TEMP_FAILURE_RETRY (waitpid (pid, &status, 0)) != pid)
-	{
-	  puts ("waitpid failed");
-	  return 1;
-	}
-      else if (status != 0)
-	{
-	  printf ("script2.sh failed with status %d\n", status);
-	  return 1;
-	}
-    }
+  char *argv01[] = { (char*) "script0.sh", NULL };
+  run_script ("script0.sh", argv01);
 
-  for (i = 0; i < 5; i++)
+  char *argv1[] = { (char *) "script1.sh", (char *) "1", NULL };
+  run_script ("script1.sh", argv1);
+
+  char *argv2[] = { (char *) "script2.sh", (char *) "2", NULL };
+  run_script ("script2.sh", argv2);
+
+  /* Same as before but with execlp.  */
+  for (size_t i = 0; i < 5; i++)
     {
       pid_t pid = vfork ();
       if (pid < 0)
@@ -137,35 +120,21 @@ do_test (void)
     }
 
   unsetenv ("PATH");
-  argv[0] = (char *) "echo";
-  argv[1] = (char *) "script 4";
-  for (i = 0; i < 5; i++)
-    {
-      pid_t pid = vfork ();
-      if (pid < 0)
-	{
-	  printf ("vfork failed: %m\n");
-	  return 1;
-	}
-      else if (pid == 0)
-	{
-	  execvp ("echo", argv);
-	  _exit (errno);
-	}
-      int status;
-      if (TEMP_FAILURE_RETRY (waitpid (pid, &status, 0)) != pid)
-	{
-	  puts ("waitpid failed");
-	  return 1;
-	}
-      else if (status != 0)
-	{
-	  printf ("echo failed with status %d\n", status);
-	  return 1;
-	}
-    }
+  char *argv4[] = { (char *) "echo", (char *) "script 4", NULL };
+  run_script ("echo", argv4);
 
   return 0;
+}
+
+static void
+create_script (const char *script, const char *contents, size_t size)
+{
+  int fd = open (script, O_WRONLY | O_CREAT, 0700);
+  if (fd < 0
+      || TEMP_FAILURE_RETRY (write (fd, contents, size)) != size
+      || fchmod (fd, S_IRUSR | S_IXUSR) < 0)
+    FAIL_EXIT1 ("could not write %s\n", script);
+  close (fd);
 }
 
 static void
@@ -173,51 +142,34 @@ do_prepare (void)
 {
   size_t len = strlen (test_dir) + sizeof ("/tst-vfork3.XXXXXX");
   tmpdirname = malloc (len);
-  char *script1 = malloc (len + sizeof "/script1.sh");
-  char *script2 = malloc (len + sizeof "/script2.sh");
-  if (tmpdirname == NULL || script1 == NULL || script2 == NULL)
-    {
-      puts ("out of memory");
-      exit (1);
-    }
+  if (tmpdirname == NULL)
+    FAIL_EXIT1 ("out of memory");
   strcpy (stpcpy (tmpdirname, test_dir), "/tst-vfork3.XXXXXX");
 
   tmpdirname = mkdtemp (tmpdirname);
   if (tmpdirname == NULL)
-    {
-      puts ("could not create temporary directory");
-      exit (1);
-    }
+    FAIL_EXIT1 ("could not create temporary directory");
 
+  char script0[len + sizeof "/script0.sh"];
+  char script1[len + sizeof "/script1.sh"];
+  char script2[len + sizeof "/script2.sh"];
+
+  strcpy (stpcpy (script0, tmpdirname), "/script0.sh");
   strcpy (stpcpy (script1, tmpdirname), "/script1.sh");
   strcpy (stpcpy (script2, tmpdirname), "/script2.sh");
 
-  /* Need to make sure tmpdirname is at the end of the linked list.  */
+  add_temp_file (script0);
   add_temp_file (script1);
-  add_temp_file (tmpdirname);
   add_temp_file (script2);
+  /* Need to make sure tmpdirname is at the end of the linked list.  */
+  add_temp_file (tmpdirname);
+
+  const char content0[] = "#!/bin/sh\necho empty\n";
+  create_script (script0, content0, sizeof content0);
 
   const char content1[] = "#!/bin/sh\necho script $1\n";
-  int fd = open (script1, O_WRONLY | O_CREAT, 0700);
-  if (fd < 0
-      || TEMP_FAILURE_RETRY (write (fd, content1, sizeof content1))
-	 != sizeof content1
-      || fchmod (fd, S_IRUSR | S_IXUSR) < 0)
-    {
-      printf ("Could not write %s\n", script1);
-      exit (1);
-    }
-  close (fd);
+  create_script (script1, content1, sizeof content1);
 
   const char content2[] = "echo script $1\n";
-  fd = open (script2, O_WRONLY | O_CREAT, 0700);
-  if (fd < 0
-      || TEMP_FAILURE_RETRY (write (fd, content2, sizeof content2))
-	 != sizeof content2
-      || fchmod (fd, S_IRUSR | S_IXUSR) < 0)
-    {
-      printf ("Could not write %s\n", script2);
-      exit (1);
-    }
-  close (fd);
+  create_script (script2, content2, sizeof content2);
 }

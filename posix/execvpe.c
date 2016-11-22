@@ -38,8 +38,8 @@
 static void
 maybe_script_execute (const char *file, char *const argv[], char *const envp[])
 {
-  ptrdiff_t argc = 0;
-  while (argv[argc++] != NULL)
+  ptrdiff_t argc;
+  for (argc = 0; argv[argc] != NULL; argc++)
     {
       if (argc == INT_MAX - 1)
 	{
@@ -48,13 +48,18 @@ maybe_script_execute (const char *file, char *const argv[], char *const envp[])
 	}
     }
 
-  /* Construct an argument list for the shell.  It will contain at minimum 3
-     arguments (current shell, script, and an ending NULL.  */
-  char *new_argv[argc + 1];
+  /* Construct an argument list for the shell based on original arguments:
+     1. Empty list (argv = { NULL }, argc = 1 }: new argv will contain 3
+	arguments - default shell, script to execute, and ending NULL.
+     2. Non empty argument list (argc = { ..., NULL }, argc > 1}: new argv
+	will contain also the default shell and the script to execute.  It
+	will also skip the script name in arguments and only copy script
+	arguments.  */
+  char *new_argv[argc > 1 ? 2 + argc : 3];
   new_argv[0] = (char *) _PATH_BSHELL;
   new_argv[1] = (char *) file;
   if (argc > 1)
-    memcpy (new_argv + 2, argv + 1, (argc - 1) * sizeof(char *));
+    memcpy (new_argv + 2, argv + 1, argc * sizeof(char *));
   else
     new_argv[2] = NULL;
 
@@ -96,7 +101,7 @@ __execvpe (const char *file, char *const argv[], char *const envp[])
   size_t path_len = __strnlen (path, PATH_MAX - 1) + 1;
 
   /* NAME_MAX does not include the terminating null character.  */
-  if (((file_len-1) > NAME_MAX)
+  if ((file_len - 1 > NAME_MAX)
       || !__libc_alloca_cutoff (path_len + file_len + 1))
     {
       errno = ENAMETOOLONG;
