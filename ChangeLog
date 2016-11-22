@@ -1,3 +1,8 @@
+2016-11-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Also use
+	-fno-isolate-erroneous-paths options for tilepro.
+
 2016-11-21  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* sysdeps/unix/sysv/linux/generic/kernel_stat.h: Set XSTAT_IS_XSTAT64

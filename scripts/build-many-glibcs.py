@@ -91,6 +91,11 @@ class Context(object):
 
     def add_all_configs(self):
         """Add all known glibc build configurations."""
+        # On architectures missing __builtin_trap support, these
+        # options may be needed as a workaround; see
+        # <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70216> for SH.
+        no_isolate = ('-fno-isolate-erroneous-paths-dereference'
+                      ' -fno-isolate-erroneous-paths-attribute')
         self.add_config(arch='aarch64',
                         os_name='linux-gnu')
         self.add_config(arch='aarch64_be',
@@ -260,10 +265,6 @@ class Context(object):
                         os_name='linux-gnu',
                         glibcs=[{},
                                 {'arch': 's390', 'ccopts': '-m31'}])
-        # SH is missing __builtin_trap support, so work around this;
-        # see <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70216>.
-        no_isolate = ('-fno-isolate-erroneous-paths-dereference'
-                      ' -fno-isolate-erroneous-paths-attribute')
         self.add_config(arch='sh3',
                         os_name='linux-gnu',
                         glibcs=[{'ccopts': no_isolate}])
@@ -304,7 +305,8 @@ class Context(object):
                         glibcs=[{},
                                 {'variant': '32', 'ccopts': '-m32'}])
         self.add_config(arch='tilepro',
-                        os_name='linux-gnu')
+                        os_name='linux-gnu',
+                        glibcs=[{'ccopts': no_isolate}])
         self.add_config(arch='x86_64',
                         os_name='linux-gnu',
                         gcc_cfg=['--with-multilib-list=m64,m32,mx32'],
