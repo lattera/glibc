@@ -1,3 +1,29 @@
+2016-11-22  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/unix/sysv/linux/fstatfs64.c: Hide prototypes for fstatfs
+	and __fstatfs.  Make them aliases of __fstatfs64 if
+	STATFS_IS_STATFS64 is set to non-zero.
+	* sysdeps/unix/sysv/linux/statfs64.c: Ditto for __statfs, statfs,
+	and __statfs64.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/fstatfs.c: Do not
+	define __fstatfs and fstatfs if STATFS_IS_STATFS64 is non-zero.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/statfs.c: Ditto
+	for __statfs and statfs.
+	* sysdeps/unix/sysv/linux/alpha/kernel_stat.h: Set STATFS_IS_STATFS64
+	to 0.
+	* sysdeps/unix/sysv/linux/generic/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/hppa/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/ia64/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/microblaze/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/mips/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/s390/s390-64/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/kernel_stat.h: Ditto.
+	* sysdeps/unix/sysv/linux/x86_64/kernel_stat.h: Ditto.
+
 2016-11-22  Andreas Schwab  <schwab@suse.de>
 
 	* misc/mkstemp.c: Include <fcntl.h>.

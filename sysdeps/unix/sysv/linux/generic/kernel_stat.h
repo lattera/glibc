@@ -26,3 +26,5 @@
 #else
 # define XSTAT_IS_XSTAT64 0
 #endif
+
+#define STATFS_IS_STATFS64 0

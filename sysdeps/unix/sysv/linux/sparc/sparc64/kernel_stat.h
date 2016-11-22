@@ -45,3 +45,4 @@ struct kernel_stat64
   };
 
 #define XSTAT_IS_XSTAT64 1
+#define STATFS_IS_STATFS64 0
