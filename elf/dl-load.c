@@ -1135,54 +1135,14 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	    }
 
 #ifdef SHARED
-	  if (l->l_prev == NULL || (mode & __RTLD_AUDIT) != 0)
-	    /* We are loading the executable itself when the dynamic linker
-	       was executed directly.  The setup will happen later.  */
-	    break;
-
-# ifdef _LIBC_REENTRANT
-	  /* In a static binary there is no way to tell if we dynamically
-	     loaded libpthread.  */
-	  if (GL(dl_error_catch_tsd) == &_dl_initial_error_catch_tsd)
-# endif
+	  /* We are loading the executable itself when the dynamic
+	     linker was executed directly.  The setup will happen
+	     later.  Otherwise, the TLS data structures are already
+	     initialized, and we assigned a TLS modid above.  */
+	  assert (l->l_prev == NULL || (mode & __RTLD_AUDIT) != 0);
+#else
+	  assert (false && "TLS not initialized in static application");
 #endif
-	    {
-	      /* We have not yet loaded libpthread.
-		 We can do the TLS setup right now!  */
-
-	      void *tcb;
-
-	      /* The first call allocates TLS bookkeeping data structures.
-		 Then we allocate the TCB for the initial thread.  */
-	      if (__glibc_unlikely (_dl_tls_setup ())
-		  || __glibc_unlikely ((tcb = _dl_allocate_tls (NULL)) == NULL))
-		{
-		  errval = ENOMEM;
-		  errstring = N_("\
-cannot allocate TLS data structures for initial thread");
-		  goto call_lose;
-		}
-
-	      /* Now we install the TCB in the thread register.  */
-	      errstring = TLS_INIT_TP (tcb);
-	      if (__glibc_likely (errstring == NULL))
-		{
-		  /* Now we are all good.  */
-		  l->l_tls_modid = ++GL(dl_tls_max_dtv_idx);
-		  break;
-		}
-
-	      /* The kernel is too old or somesuch.  */
-	      errval = 0;
-	      _dl_deallocate_tls (tcb, 1);
-	      goto call_lose;
-	    }
-
-	  /* Uh-oh, the binary expects TLS support but we cannot
-	     provide it.  */
-	  errval = 0;
-	  errstring = N_("cannot handle TLS data");
-	  goto call_lose;
 	  break;
 
 	case PT_GNU_STACK:

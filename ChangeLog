@@ -1,3 +1,8 @@
+2016-11-23  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Delayed TLS data
+	structure initialization is no longer needed.
+
 2016-11-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20855]
