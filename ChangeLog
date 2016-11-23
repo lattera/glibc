@@ -1,3 +1,11 @@
+2016-11-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20859]
+	* sysdeps/sh/sh4/bits/mathdef.h (FP_ILOGB0): Define to
+	(-0x7fffffff) instead of 0x80000001.
+	* math/test-fp-ilogb-constants.c: New file.
+	* math/Makefile (tests): Add test-fp-ilogb-constants.
+
 2016-11-23  Maciej W. Rozycki  <macro@imgtec.com>
 
 	* sysdeps/mips/mips32/crti.S (JALR_RELOC): New macro.

@@ -34,7 +34,7 @@ typedef float float_t;
 typedef double double_t;
 
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
-# define FP_ILOGB0	0x80000001
+# define FP_ILOGB0	(-0x7fffffff)
 # define FP_ILOGBNAN	0x7fffffff
 
 #endif	/* ISO C99 */

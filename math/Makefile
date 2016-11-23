@@ -158,7 +158,8 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-fexcept test-fexcept-traps test-fesetexcept \
 	test-fesetexcept-traps test-fetestexceptflag test-femode \
 	test-femode-traps test-iszero-excess-precision \
-	test-iseqsig-excess-precision test-flt-eval-method $(tests-static)
+	test-iseqsig-excess-precision test-flt-eval-method \
+	test-fp-ilogb-constants $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
