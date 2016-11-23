@@ -65,6 +65,11 @@ Version 2.25
   - NaN functions: getpayload, getpayloadf, getpayloadl, setpayload,
     setpayloadf, setpayloadl.
 
+* On ColdFire, MicroBlaze, Nios II and SH3, the float_t type is now defined
+  to float instead of double.  This does not affect the ABI of any libraries
+  that are part of the GNU C Library, but may affect the ABI of other
+  libraries that use this type in their interfaces.
+
 * The functions strfromd, strfromf, and strfroml, from ISO/IEC TS 18661-1:2014,
   are added to libc.  They convert a floating-point number into string.
 

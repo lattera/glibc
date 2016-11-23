@@ -1,3 +1,11 @@
+2016-11-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20855]
+	* bits/mathdef.h (float_t): Define to float.
+	* math/test-flt-eval-method.c: New file.
+	* math/Makefile (tests): Add test-flt-eval-method.
+	(CFLAGS-test-flt-eval-method.c): New variable.
+
 2016-11-22  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* sysdeps/unix/sysv/linux/fstatfs64.c: Hide prototypes for fstatfs
