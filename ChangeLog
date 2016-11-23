@@ -1,3 +1,18 @@
+2016-11-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20787]
+	* sysdeps/x86/bits/mathdef.h (float_t): Do not define to float if
+	[__x86_64__] when __FLT_EVAL_METHOD__ is nonzero.
+	(double_t): Do not define to double if [__x86_64__] when
+	__FLT_EVAL_METHOD__ is nonzero.
+	* sysdeps/x86/fpu/test-flt-eval-method-387.c: New file.
+	* sysdeps/x86/fpu/test-flt-eval-method-sse.c: Likewise.
+	* sysdeps/x86/fpu/Makefile [$(subdir) = math] (tests): Add
+	test-flt-eval-method-387 and test-flt-eval-method-sse.
+	[$(subdir) = math] (CFLAGS-test-flt-eval-method-387.c): New
+	variable.
+	[$(subdir) = math] (CFLAGS-test-flt-eval-method-sse.c): Likewise.
+
 2016-11-23  Chris Metcalf  <cmetcalf@mellanox.com>
 
 	* scripts/build-many-glibcs.py (Context.add_all_configs): Revert

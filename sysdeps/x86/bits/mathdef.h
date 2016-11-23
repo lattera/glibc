@@ -22,7 +22,8 @@
 #if defined __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
 # define _MATH_H_MATHDEF	1
 
-# if defined __x86_64__ || (defined __FLT_EVAL_METHOD__ && __FLT_EVAL_METHOD__ == 0)
+# if ((defined __x86_64__ && !defined __FLT_EVAL_METHOD__)		\
+      || (defined __FLT_EVAL_METHOD__ && __FLT_EVAL_METHOD__ == 0))
 /* The x86-64 architecture computes values with the precission of the
    used type.  Similarly for -m32 -mfpmath=sse.  */
 typedef float float_t;		/* `float' expressions are evaluated as `float'.  */
