@@ -65,13 +65,20 @@ Version 2.25
   - NaN functions: getpayload, getpayloadf, getpayloadl, setpayload,
     setpayloadf, setpayloadl.
 
+* The functions strfromd, strfromf, and strfroml, from ISO/IEC TS 18661-1:2014,
+  are added to libc.  They convert a floating-point number into string.
+
 * On ColdFire, MicroBlaze, Nios II and SH3, the float_t type is now defined
   to float instead of double.  This does not affect the ABI of any libraries
   that are part of the GNU C Library, but may affect the ABI of other
   libraries that use this type in their interfaces.
 
-* The functions strfromd, strfromf, and strfroml, from ISO/IEC TS 18661-1:2014,
-  are added to libc.  They convert a floating-point number into string.
+* On x86_64, when compiling with -mfpmath=387 or -mfpmath=sse+387, the
+  float_t and double_t types are now defined to long double instead of float
+  and double.  These options are not the default, and this does not affect
+  the ABI of any libraries that are part of the GNU C Library, but it may
+  affect the ABI of other libraries that use this type in their interfaces,
+  if they are compiled or used with those options.
 
 * The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
   for the Linux quota interface which predates kernel version 2.4.22 has
