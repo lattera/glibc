@@ -305,8 +305,7 @@ class Context(object):
                         glibcs=[{},
                                 {'variant': '32', 'ccopts': '-m32'}])
         self.add_config(arch='tilepro',
-                        os_name='linux-gnu',
-                        glibcs=[{'ccopts': no_isolate}])
+                        os_name='linux-gnu')
         self.add_config(arch='x86_64',
                         os_name='linux-gnu',
                         gcc_cfg=['--with-multilib-list=m64,m32,mx32'],

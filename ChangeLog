@@ -1,3 +1,8 @@
+2016-11-23  Chris Metcalf  <cmetcalf@mellanox.com>
+
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Revert
+	use of -fno-isolate-erroneous-paths options for tilepro.
+
 2016-11-23  Florian Weimer  <fweimer@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Delayed TLS data
