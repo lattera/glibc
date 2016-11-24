@@ -1,5 +1,11 @@
 2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/Makefile (sysdeps_routines): Add tee.
+	(CFLAGS-tee.c): New rule.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove tee from
+	auto-generated list.
+	* sysdeps/unix/sysv/linux/tee.c: New file.
+
 	* nptl/Makefile (CFLAGS-nanosleep.c): New rule.
 	* posix/Makefile (CFLAGS-nanosleep.c): Likewise.
 	* sysdeps/unix/sysv/linux/nanosleep.c: New file.

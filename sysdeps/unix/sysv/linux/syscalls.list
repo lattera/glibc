@@ -70,7 +70,6 @@ stime		-	stime		i:p	stime
 sysinfo		EXTRA	sysinfo		i:p	__sysinfo	sysinfo
 swapon		-	swapon		i:si	__swapon	swapon
 swapoff		-	swapoff		i:s	__swapoff	swapoff
-tee		EXTRA	tee		Ci:iiii	tee
 unshare		EXTRA	unshare		i:i	unshare
 uselib		EXTRA	uselib		i:s	__compat_uselib	uselib@GLIBC_2.0:GLIBC_2.23
 utime		-	utime		i:sP	utime
