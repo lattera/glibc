@@ -1,3 +1,21 @@
+2016-11-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py: Import json module.
+	(Context.__init__): Take replace_sources argument.  Load
+	versions.json.
+	(Context.load_versions_json): New function.
+	(Context.store_json): Likewise.
+	(Context.store_versions_json): Likewise.
+	(Context.set_component_version): Likewise.
+	(Context.checkout): Update versions.json.  Check for and handle
+	changes of version.  Prefer previously explicitly specified
+	version to default version.
+	(Context.checkout_vcs): Return a revision identifier.
+	(Context.git_checkout): Likewise.
+	(Context.gcc_checkout): Likewise.
+	(get_parser): Add --replace-sources option.
+	(main): Pass replace_sources argument to Context call.
+
 2016-11-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/nptl/fork.c (__libc_fork): Remove pid cache setting.

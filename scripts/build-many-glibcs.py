@@ -32,6 +32,7 @@ configurations for which compilers or glibc are to be built.
 """
 
 import argparse
+import json
 import os
 import re
 import shutil
@@ -44,12 +45,14 @@ import urllib.request
 class Context(object):
     """The global state associated with builds in a given directory."""
 
-    def __init__(self, topdir, parallelism, keep, action):
+    def __init__(self, topdir, parallelism, keep, replace_sources, action):
         """Initialize the context."""
         self.topdir = topdir
         self.parallelism = parallelism
         self.keep = keep
+        self.replace_sources = replace_sources
         self.srcdir = os.path.join(topdir, 'src')
+        self.versions_json = os.path.join(self.srcdir, 'versions.json')
         self.installdir = os.path.join(topdir, 'install')
         self.host_libraries_installdir = os.path.join(self.installdir,
                                                       'host-libraries')
@@ -65,6 +68,7 @@ class Context(object):
         self.glibc_configs = {}
         self.makefile_pieces = ['.PHONY: all\n']
         self.add_all_configs()
+        self.load_versions_json()
 
     def get_build_triplet(self):
         """Determine the build triplet with config.guess."""
@@ -559,6 +563,32 @@ class Context(object):
         for c in configs:
             self.glibc_configs[c].build()
 
+    def load_versions_json(self):
+        """Load information about source directory versions."""
+        if not os.access(self.versions_json, os.F_OK):
+            self.versions = {}
+            return
+        with open(self.versions_json, 'r') as f:
+            self.versions = json.load(f)
+
+    def store_json(self, data, filename):
+        """Store information in a JSON file."""
+        filename_tmp = filename + '.tmp'
+        with open(filename_tmp, 'w') as f:
+            json.dump(data, f, indent=2, sort_keys=True)
+        os.rename(filename_tmp, filename)
+
+    def store_versions_json(self):
+        """Store information about source directory versions."""
+        self.store_json(self.versions, self.versions_json)
+
+    def set_component_version(self, component, version, explicit, revision):
+        """Set the version information for a component."""
+        self.versions[component] = {'version': version,
+                                    'explicit': explicit,
+                                    'revision': revision}
+        self.store_versions_json()
+
     def checkout(self, versions):
         """Check out the desired component versions."""
         default_versions = {'binutils': 'vcs-2.27',
@@ -569,6 +599,7 @@ class Context(object):
                             'mpc': '1.0.3',
                             'mpfr': '3.1.5'}
         use_versions = {}
+        explicit_versions = {}
         for v in versions:
             found_v = False
             for k in default_versions.keys():
@@ -579,6 +610,7 @@ class Context(object):
                         print('error: multiple versions for %s' % k)
                         exit(1)
                     use_versions[k] = vx
+                    explicit_versions[k] = True
                     found_v = True
                     break
             if not found_v:
@@ -586,19 +618,36 @@ class Context(object):
                 exit(1)
         for k in default_versions.keys():
             if k not in use_versions:
-                use_versions[k] = default_versions[k]
+                if k in self.versions and self.versions[k]['explicit']:
+                    use_versions[k] = self.versions[k]['version']
+                    explicit_versions[k] = True
+                else:
+                    use_versions[k] = default_versions[k]
+                    explicit_versions[k] = False
         os.makedirs(self.srcdir, exist_ok=True)
         for k in sorted(default_versions.keys()):
             update = os.access(self.component_srcdir(k), os.F_OK)
             v = use_versions[k]
+            if (update and
+                k in self.versions and
+                v != self.versions[k]['version']):
+                if not self.replace_sources:
+                    print('error: version of %s has changed from %s to %s, '
+                          'use --replace-sources to check out again' %
+                          (k, self.versions[k]['version'], v))
+                    exit(1)
+                shutil.rmtree(self.component_srcdir(k))
+                update = False
             if v.startswith('vcs-'):
-                self.checkout_vcs(k, v[4:], update)
+                revision = self.checkout_vcs(k, v[4:], update)
             else:
                 self.checkout_tar(k, v, update)
+                revision = v
+            self.set_component_version(k, v, explicit_versions[k], revision)
 
     def checkout_vcs(self, component, version, update):
         """Check out the given version of the given component from version
-        control."""
+        control.  Return a revision identifier."""
         if component == 'binutils':
             git_url = 'git://sourceware.org/git/binutils-gdb.git'
             if version == 'mainline':
@@ -606,7 +655,7 @@ class Context(object):
             else:
                 trans = str.maketrans({'.': '_'})
                 git_branch = 'binutils-%s-branch' % version.translate(trans)
-            self.git_checkout(component, git_url, git_branch, update)
+            return self.git_checkout(component, git_url, git_branch, update)
         elif component == 'gcc':
             if version == 'mainline':
                 branch = 'trunk'
@@ -614,21 +663,22 @@ class Context(object):
                 trans = str.maketrans({'.': '_'})
                 branch = 'branches/gcc-%s-branch' % version.translate(trans)
             svn_url = 'svn://gcc.gnu.org/svn/gcc/%s' % branch
-            self.gcc_checkout(svn_url, update)
+            return self.gcc_checkout(svn_url, update)
         elif component == 'glibc':
             git_url = 'git://sourceware.org/git/glibc.git'
             if version == 'mainline':
                 git_branch = 'master'
             else:
                 git_branch = 'release/%s/master' % version
-            self.git_checkout(component, git_url, git_branch, update)
+            r = self.git_checkout(component, git_url, git_branch, update)
             self.fix_glibc_timestamps()
+            return r
         else:
             print('error: component %s coming from VCS' % component)
             exit(1)
 
     def git_checkout(self, component, git_url, git_branch, update):
-        """Check out a component from git."""
+        """Check out a component from git.  Return a commit identifier."""
         if update:
             subprocess.run(['git', 'remote', 'prune', 'origin'],
                            cwd=self.component_srcdir(component), check=True)
@@ -637,6 +687,11 @@ class Context(object):
         else:
             subprocess.run(['git', 'clone', '-q', '-b', git_branch, git_url,
                             self.component_srcdir(component)], check=True)
+        r = subprocess.run(['git', 'rev-parse', 'HEAD'],
+                           cwd=self.component_srcdir(component),
+                           stdout=subprocess.PIPE,
+                           check=True, universal_newlines=True).stdout
+        return r.rstrip()
 
     def fix_glibc_timestamps(self):
         """Fix timestamps in a glibc checkout."""
@@ -652,12 +707,16 @@ class Context(object):
                     subprocess.run(['touch', to_touch], check=True)
 
     def gcc_checkout(self, svn_url, update):
-        """Check out GCC from SVN."""
+        """Check out GCC from SVN.  Return the revision number."""
         if not update:
             subprocess.run(['svn', 'co', '-q', svn_url,
                             self.component_srcdir('gcc')], check=True)
         subprocess.run(['contrib/gcc_update', '--silent'],
                        cwd=self.component_srcdir('gcc'), check=True)
+        r = subprocess.run(['svnversion', self.component_srcdir('gcc')],
+                           stdout=subprocess.PIPE,
+                           check=True, universal_newlines=True).stdout
+        return r.rstrip()
 
     def checkout_tar(self, component, version, update):
         """Check out the given version of the given component from a
@@ -1125,6 +1184,9 @@ def get_parser():
                         help='Whether to keep all build directories, '
                         'none or only those from failed builds',
                         default='none', choices=('none', 'all', 'failed'))
+    parser.add_argument('--replace-sources', action='store_true',
+                        help='Remove and replace source directories '
+                        'with the wrong version of a component')
     parser.add_argument('topdir',
                         help='Toplevel working directory')
     parser.add_argument('action',
@@ -1142,7 +1204,8 @@ def main(argv):
     parser = get_parser()
     opts = parser.parse_args(argv)
     topdir = os.path.abspath(opts.topdir)
-    ctx = Context(topdir, opts.parallelism, opts.keep, opts.action)
+    ctx = Context(topdir, opts.parallelism, opts.keep, opts.replace_sources,
+                  opts.action)
     ctx.run_builds(opts.action, opts.configs)
 
 
