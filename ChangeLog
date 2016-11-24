@@ -1,5 +1,11 @@
 2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S: Remove file.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Simplify include list.
+	* nptl/Makefile (CFLAGS-sigsuspend.c): New rule.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile
+	(CFLAGS-sigsuspend.c): Remove rule.
+
 	* sysdeps/unix/sysv/linux/Makefile (sysdeps_routines): Add tee.
 	(CFLAGS-tee.c): New rule.
 	* sysdeps/unix/sysv/linux/syscalls.list: Remove tee from

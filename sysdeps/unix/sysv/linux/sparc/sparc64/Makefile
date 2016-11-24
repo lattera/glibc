@@ -7,7 +7,3 @@ LD += -melf64_sparc
 ifeq ($(subdir),stdlib)
 sysdep_routines += __start_context
 endif
-
-ifeq ($(subdir),nptl)
-CFLAGS-sigsuspend.c += -fexceptions
-endif
