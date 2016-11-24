@@ -1,3 +1,8 @@
+2016-11-24  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/x86_64/memcpy_chk.S (__memcpy_chk): Check for SHARED
+	instead of PIC.
+
 2016-11-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20859]
