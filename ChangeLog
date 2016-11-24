@@ -1,3 +1,42 @@
+2016-11-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* bits/flt-eval-method.h: New file.
+	* sysdeps/m68k/m680x0/bits/flt-eval-method.h: Likewise.
+	* sysdeps/s390/bits/flt-eval-method.h: Likewise.
+	* sysdeps/x86/bits/flt-eval-method.h: Likewise.
+	* math/Makefile (headers): Add bits/flt-eval-method.h.
+	* math/math.h: Include <bits/flt-eval-method.h>.
+	[__USE_ISOC99] (float_t): Define based on __GLIBC_FLT_EVAL_METHOD.
+	[__USE_ISOC99] (double_t): Likewise.
+	* bits/mathdef.h (float_t): Remove.
+	(double_t): Likewise.
+	* sysdeps/aarch64/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/alpha/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/arm/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/hppa/fpu/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/ia64/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/m68k/m680x0/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/mips/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/powerpc/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/s390/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/sh/sh4/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/sparc/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/tile/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+	* sysdeps/x86/bits/mathdef.h (float_t): Likewise.
+	(double_t): Likewise.
+
 2016-11-24  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/x86_64/memcpy_chk.S (__memcpy_chk): Check for SHARED

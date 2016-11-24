@@ -22,14 +22,6 @@
 #if defined __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
 # define _MATH_H_MATHDEF	1
 
-/* The m68k FPUs evaluate all values in the 96 bit floating-point format
-   which is also available for the user as `long double'.  Therefore we
-   define: */
-typedef long double float_t;	/* `float' expressions are evaluated as
-				   `long double'.  */
-typedef long double double_t;	/* `double' expressions are evaluated as
-				   `long double'.  */
-
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
 # define FP_ILOGB0	(-2147483647 - 1)
 # define FP_ILOGBNAN	(2147483647)

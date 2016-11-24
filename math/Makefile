@@ -27,7 +27,8 @@ headers		:= math.h bits/mathcalls.h bits/mathinline.h bits/huge_val.h \
 		   fpu_control.h complex.h bits/cmathcalls.h fenv.h \
 		   bits/fenv.h bits/fenvinline.h bits/mathdef.h tgmath.h \
 		   bits/math-finite.h bits/math-vector.h \
-		   bits/libm-simd-decl-stubs.h bits/iscanonical.h
+		   bits/libm-simd-decl-stubs.h bits/iscanonical.h \
+		   bits/flt-eval-method.h
 
 # FPU support code.
 aux		:= setfpucw fpu_control

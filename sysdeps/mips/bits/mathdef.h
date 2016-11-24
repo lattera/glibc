@@ -24,12 +24,6 @@
 #if defined  __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
 # define _MATH_H_MATHDEF	1
 
-/* MIPS has `float' and `double' operations.  */
-typedef float float_t;		/* `float' expressions are evaluated as
-				   `float'.  */
-typedef double double_t;	/* `double' expressions are evaluated as
-				   `double'.  */
-
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
 # define FP_ILOGB0	(-2147483647)
 # define FP_ILOGBNAN	2147483647

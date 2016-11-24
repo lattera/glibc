@@ -1,5 +1,5 @@
-/* Copyright (C) 1999-2016 Free Software Foundation, Inc.
-
+/* Define __GLIBC_FLT_EVAL_METHOD.  x86 version.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if !defined _MATH_H && !defined _COMPLEX_H
-# error "Never use <bits/mathdef.h> directly; include <math.h> instead"
+#ifndef _MATH_H
+# error "Never use <bits/flt-eval-method.h> directly; include <math.h> instead."
 #endif
 
-#if defined  __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
-# define _MATH_H_MATHDEF	1
-
-/* The values returned by `ilogb' for 0 and NaN respectively.  */
-# define FP_ILOGB0	(-2147483647)
-# define FP_ILOGBNAN	(2147483647)
-
-# define FP_FAST_FMA 1
-# define FP_FAST_FMAF 1
-
-#endif	/* ISO C99 */
+#ifdef __FLT_EVAL_METHOD__
+# if __FLT_EVAL_METHOD__ == -1
+#  define __GLIBC_FLT_EVAL_METHOD	2
+# else
+#  define __GLIBC_FLT_EVAL_METHOD	__FLT_EVAL_METHOD__
+# endif
+#elif defined __x86_64__
+# define __GLIBC_FLT_EVAL_METHOD	0
+#else
+# define __GLIBC_FLT_EVAL_METHOD	2
+#endif

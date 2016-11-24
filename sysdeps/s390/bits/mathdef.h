@@ -22,13 +22,6 @@
 #if defined  __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
 # define _MATH_H_MATHDEF	1
 
-/* Normally, there is no long double type and the `float' and `double'
-   expressions are evaluated as `double'.  */
-typedef double float_t;		/* `float' expressions are evaluated as
-				   `double'.  */
-typedef double double_t;	/* `double' expressions are evaluated as
-				   `double'.  */
-
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
 # define FP_ILOGB0	(-2147483647)
 # define FP_ILOGBNAN	2147483647

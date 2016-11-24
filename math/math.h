@@ -54,13 +54,51 @@ __BEGIN_DECLS
 # endif
 #endif
 
-/* Get the architecture specific values describing the floating-point
-   evaluation.  The following symbols will get defined:
+/* Get __GLIBC_FLT_EVAL_METHOD.  */
+#include <bits/flt-eval-method.h>
+
+#ifdef __USE_ISOC99
+/* Define the following typedefs.
 
     float_t	floating-point type at least as wide as `float' used
 		to evaluate `float' expressions
     double_t	floating-point type at least as wide as `double' used
 		to evaluate `double' expressions
+*/
+# if __GLIBC_FLT_EVAL_METHOD == 0 || __GLIBC_FLT_EVAL_METHOD == 16
+typedef float float_t;
+typedef double double_t;
+# elif __GLIBC_FLT_EVAL_METHOD == 1
+typedef double float_t;
+typedef double double_t;
+# elif __GLIBC_FLT_EVAL_METHOD == 2
+typedef long double float_t;
+typedef long double double_t;
+# elif __GLIBC_FLT_EVAL_METHOD == 32
+typedef _Float32 float_t;
+typedef double double_t;
+# elif __GLIBC_FLT_EVAL_METHOD == 33
+typedef _Float32x float_t;
+typedef _Float32x double_t;
+# elif __GLIBC_FLT_EVAL_METHOD == 64
+typedef _Float64 float_t;
+typedef _Float64 double_t;
+# elif __GLIBC_FLT_EVAL_METHOD == 65
+typedef _Float64x float_t;
+typedef _Float64x double_t;
+# elif __GLIBC_FLT_EVAL_METHOD == 128
+typedef _Float128 float_t;
+typedef _Float128 double_t;
+# elif __GLIBC_FLT_EVAL_METHOD == 129
+typedef _Float128x float_t;
+typedef _Float128x double_t;
+# else
+#  error "Unknown __GLIBC_FLT_EVAL_METHOD"
+# endif
+#endif
+
+/* Get the architecture specific values describing the floating-point
+   evaluation.  The following symbols will get defined:
 
     FP_FAST_FMA
     FP_FAST_FMAF
