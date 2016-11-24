@@ -84,6 +84,9 @@ GLIBC_2.25 getpayloadl F
 GLIBC_2.25 setpayload F
 GLIBC_2.25 setpayloadf F
 GLIBC_2.25 setpayloadl F
+GLIBC_2.25 setpayloadsig F
+GLIBC_2.25 setpayloadsigf F
+GLIBC_2.25 setpayloadsigl F
 GLIBC_2.25 totalorder F
 GLIBC_2.25 totalorderf F
 GLIBC_2.25 totalorderl F

@@ -67,7 +67,8 @@ use vars qw (%results @all_floats %suffices @all_functions);
 # canonicalize, fpclassify, getpayload, iscanonical, isnormal,
 # isfinite, isinf, isnan, issignaling, issubnormal, iszero, signbit,
 # iseqsig, isgreater, isgreaterequal, isless, islessequal,
-# islessgreater, isunordered, setpayload, totalorder, totalordermag
+# islessgreater, isunordered, setpayload, setpayloadsig,
+# totalorder, totalordermag
 # are not tabulated.
 
 if ($#ARGV == 0) {

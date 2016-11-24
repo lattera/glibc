@@ -403,6 +403,9 @@ __MATHCALL (getpayload,, (const _Mdouble_ *__x));
 
 /* Set quiet NaN payload.  */
 __MATHDECL_1 (int, setpayload,, (_Mdouble_ *__x, _Mdouble_ __payload));
+
+/* Set signaling NaN payload.  */
+__MATHDECL_1 (int, setpayloadsig,, (_Mdouble_ *__x, _Mdouble_ __payload));
 #endif
 
 #if defined __USE_MISC || (defined __USE_XOPEN_EXTENDED \

@@ -1,5 +1,64 @@
 2016-11-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(setpayloadsig): New declaration.
+	* math/Versions (setpayloadsig): New libm symbol at version
+	GLIBC_2.25.
+	(setpayloadsigf): Likewise.
+	(setpayloadsigl): Likewise.
+	* math/Makefile (libm-calls): Add s_setpayloadsigF.
+	* math/libm-test.inc (RUN_TEST_Ff_b1): Call feclearexcept
+	(FE_ALL_EXCEPT) after initializing EXTRA_VAR.
+	(setpayloadsig_test_data): New array.
+	(setpayloadsig_test): New function.
+	(main): Call setpayloadsig_test.
+	* manual/arith.texi (FP Bit Twiddling): Document setpayloadsig,
+	setpayloadsigf and setpayloadsigl.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/dbl-64/s_setpayloadsig.c: New file.
+	* sysdeps/ieee754/flt-32/s_setpayloadsigf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_setpayloadsigl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_setpayloadsigl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_setpayloadsigl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-setpayloadsig.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	setpayloadsig.
+	(CFLAGS-nldbl-setpayloadsig.c): New variable.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 	* scripts/build-many-glibcs.py: Import json module.
 	(Context.__init__): Take replace_sources argument.  Load
 	versions.json.

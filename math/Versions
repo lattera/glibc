@@ -222,5 +222,6 @@ libm {
     getpayload; getpayloadf; getpayloadl;
     canonicalize; canonicalizef; canonicalizel;
     setpayload; setpayloadf; setpayloadl;
+    setpayloadsig; setpayloadsigf; setpayloadsigl;
   }
 }

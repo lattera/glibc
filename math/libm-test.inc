@@ -54,7 +54,8 @@
    modf, nearbyint, nextafter, nexttoward,
    pow, pow10, remainder, remquo, rint, lrint, llrint,
    round, lround, llround,
-   scalb, scalbn, scalbln, setpayload, signbit, sin, sincos, sinh, sqrt,
+   scalb, scalbn, scalbln, setpayload, setpayloadsig, signbit,
+   sin, sincos, sinh, sqrt,
    tan, tanh, tgamma, totalorder, totalordermag, trunc,
    y0, y1, yn, significand
 
@@ -1592,6 +1593,9 @@ struct test_Ff_b1_data
       {									\
 	COMMON_TEST_SETUP (ARG_STR);					\
 	(EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;			\
+	/* Clear any exceptions from comparison involving sNaN		\
+	   EXTRA_EXPECTED.  */						\
+	feclearexcept (FE_ALL_EXCEPT);					\
 	check_bool (test_name, FUNC_TEST (FUNC_NAME) (&(EXTRA_VAR),	\
 						      (ARG)),		\
 		    EXPECTED, EXCEPTIONS);				\
@@ -12417,6 +12421,88 @@ setpayload_test (void)
 }
 
 
+static const struct test_Ff_b1_data setpayloadsig_test_data[] =
+  {
+#if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
+    TEST_Ff_b1 (setpayloadsig, plus_zero, 0, snan_value_pl ("0x0"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayloadsig, plus_zero, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+    TEST_Ff_b1 (setpayloadsig, 0x1p0, 0, snan_value_pl ("0x1"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+    TEST_Ff_b1 (setpayloadsig, 0x2p0, 0, snan_value_pl ("0x2"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+    TEST_Ff_b1 (setpayloadsig, 0x3fffffp0, 0, snan_value_pl ("0x3fffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#if PAYLOAD_DIG >= 51
+    TEST_Ff_b1 (setpayloadsig, 0x7ffffffffffffp0, 0, snan_value_pl ("0x7ffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayloadsig, 0x7ffffffffffffp0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 62
+    TEST_Ff_b1 (setpayloadsig, 0x3fffffffffffffffp0, 0, snan_value_pl ("0x3fffffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayloadsig, 0x3fffffffffffffffp0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 111
+    TEST_Ff_b1 (setpayloadsig, 0x7fffffffffffffffffffffffffffp0, 0, snan_value_pl ("0x7fffffffffffffffffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayloadsig, 0x7fffffffffffffffffffffffffffp0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+    TEST_Ff_b1 (setpayloadsig, minus_zero, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, -1.0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, -2.0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, 0.5, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, -0.5, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, max_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, -max_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, min_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, -min_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, min_subnorm_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, -min_subnorm_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, plus_infty, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, minus_infty, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, qnan_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, -qnan_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, snan_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, -snan_value, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_Ff_b1 (setpayloadsig, 0xffffffp-1, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#if MANT_DIG >= 53
+    TEST_Ff_b1 (setpayloadsig, 0x1fffffffffffffp-1, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if MANT_DIG >= 64
+    TEST_Ff_b1 (setpayloadsig, 0xffffffffffffffffp-1, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if MANT_DIG >= 106
+    TEST_Ff_b1 (setpayloadsig, 0x3ffffffffffffffffffffffffffp-1, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if MANT_DIG >= 113
+    TEST_Ff_b1 (setpayloadsig, 0x1ffffffffffffffffffffffffffffp-1, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 23
+    TEST_Ff_b1 (setpayloadsig, 0x1p22, 0, snan_value_pl ("0x400000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayloadsig, 0x1p22, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 52
+    TEST_Ff_b1 (setpayloadsig, 0x1p51, 0, snan_value_pl ("0x8000000000000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayloadsig, 0x1p51, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+#if PAYLOAD_DIG >= 63
+    TEST_Ff_b1 (setpayloadsig, 0x1p62, 0, snan_value_pl ("0x4000000000000000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+#else
+    TEST_Ff_b1 (setpayloadsig, 0x1p62, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+    TEST_Ff_b1 (setpayloadsig, 0x1p111, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+  };
+
+static void
+setpayloadsig_test (void)
+{
+  FLOAT x;
+
+  ALL_RM_TEST (setpayloadsig, 1, setpayloadsig_test_data, RUN_TEST_LOOP_Ff_b1, END, x);
+}
+
+
 static const struct test_f_i_data signbit_test_data[] =
   {
     TEST_f_b (signbit, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -13760,6 +13846,7 @@ main (int argc, char **argv)
   /* NaN functions:  */
   getpayload_test ();
   setpayload_test ();
+  setpayloadsig_test ();
 
   /* Complex functions:  */
   cabs_test ();
