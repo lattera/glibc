@@ -1,3 +1,11 @@
+2016-11-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.__init__): Save text of
+	script being executed.
+	(Context.get_script_text): New function.
+	(Context.exec_self): Likewise.
+	(Context.checkout): Re-exec script if changed by checkout process.
+
 2016-11-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]

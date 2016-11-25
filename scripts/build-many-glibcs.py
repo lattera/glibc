@@ -61,6 +61,7 @@ class Context(object):
         self.makefile = os.path.join(self.builddir, 'Makefile')
         self.wrapper = os.path.join(self.builddir, 'wrapper')
         self.save_logs = os.path.join(self.builddir, 'save-logs')
+        self.script_text = self.get_script_text()
         if action != 'checkout':
             self.build_triplet = self.get_build_triplet()
             self.glibc_version = self.get_glibc_version()
@@ -69,6 +70,15 @@ class Context(object):
         self.makefile_pieces = ['.PHONY: all\n']
         self.add_all_configs()
         self.load_versions_json()
+
+    def get_script_text(self):
+        """Return the text of this script."""
+        with open(sys.argv[0], 'r') as f:
+            return f.read()
+
+    def exec_self(self):
+        """Re-execute this script with the same arguments."""
+        os.execv(sys.executable, [sys.executable] + sys.argv)
 
     def get_build_triplet(self):
         """Determine the build triplet with config.guess."""
@@ -644,6 +654,10 @@ class Context(object):
                 self.checkout_tar(k, v, update)
                 revision = v
             self.set_component_version(k, v, explicit_versions[k], revision)
+        if self.get_script_text() != self.script_text:
+            # Rerun the checkout process in case the updated script
+            # uses different default versions or new components.
+            self.exec_self()
 
     def checkout_vcs(self, component, version, update):
         """Check out the given version of the given component from version
