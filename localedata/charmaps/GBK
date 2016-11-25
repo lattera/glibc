@@ -3,10 +3,15 @@
 <mb_cur_min> 1
 <comment_char> %
 <escape_char> /
+% https://en.wikipedia.org/wiki/GBK
 
+% https://www-01.ibm.com/software/globalization/ccsid/ccsid936.html
 % alias CP936
+
+% ftp://ftp.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WindowsBestFit
 % alias MS936
 % alias WINDOWS-936
+
 CHARMAP
 <U0000>     /x00         NULL (NUL)
 <U0001>     /x01         START OF HEADING (SOH)
@@ -136,6 +141,8 @@ CHARMAP
 <U007D>     /x7d         RIGHT CURLY BRACKET
 <U007E>     /x7e         TILDE
 <U007F>     /x7f         DELETE (DEL)
+% This isn't in GBK 1.0, but Microsoft added it to their CP936 page.
+<U20AC>     /x80         EURO SIGN
 
 <U4E02>     /x81/x40     <CJK>
 <U4E04>     /x81/x41     <CJK>

@@ -1,3 +1,8 @@
+2016-11-26  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #20864]
+	* localedata/GBK: Map 0x80 to U20AC.
+
 2016-08-24  Ernestas Kulik  <ernestas.kulik@gmail.com>
 
 	[BZ #20497]
