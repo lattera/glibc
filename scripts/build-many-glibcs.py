@@ -32,6 +32,7 @@ configurations for which compilers or glibc are to be built.
 """
 
 import argparse
+import datetime
 import json
 import os
 import re
@@ -53,6 +54,7 @@ class Context(object):
         self.replace_sources = replace_sources
         self.srcdir = os.path.join(topdir, 'src')
         self.versions_json = os.path.join(self.srcdir, 'versions.json')
+        self.build_state_json = os.path.join(topdir, 'build-state.json')
         self.installdir = os.path.join(topdir, 'install')
         self.host_libraries_installdir = os.path.join(self.installdir,
                                                       'host-libraries')
@@ -70,6 +72,8 @@ class Context(object):
         self.makefile_pieces = ['.PHONY: all\n']
         self.add_all_configs()
         self.load_versions_json()
+        self.load_build_state_json()
+        self.status_log_list = []
 
     def get_script_text(self):
         """Return the text of this script."""
@@ -388,17 +392,41 @@ class Context(object):
         if action == 'checkout':
             self.checkout(configs)
             return
-        elif action == 'host-libraries':
-            if configs:
-                print('error: configurations specified for host-libraries')
-                exit(1)
+        if action == 'host-libraries' and configs:
+            print('error: configurations specified for host-libraries')
+            exit(1)
+        self.clear_last_build_state(action)
+        build_time = datetime.datetime.utcnow()
+        if action == 'host-libraries':
+            build_components = ('gmp', 'mpfr', 'mpc')
+            old_components = ()
+            old_versions = {}
             self.build_host_libraries()
         elif action == 'compilers':
+            build_components = ('binutils', 'gcc', 'glibc', 'linux')
+            old_components = ('gmp', 'mpfr', 'mpc')
+            old_versions = self.build_state['host-libraries']['build-versions']
             self.build_compilers(configs)
         else:
+            build_components = ('glibc',)
+            old_components = ('gmp', 'mpfr', 'mpc', 'binutils', 'gcc', 'linux')
+            old_versions = self.build_state['compilers']['build-versions']
             self.build_glibcs(configs)
         self.write_files()
         self.do_build()
+        if configs:
+            # Partial build, do not update stored state.
+            return
+        build_versions = {}
+        for k in build_components:
+            if k in self.versions:
+                build_versions[k] = {'version': self.versions[k]['version'],
+                                     'revision': self.versions[k]['revision']}
+        for k in old_components:
+            if k in old_versions:
+                build_versions[k] = {'version': old_versions[k]['version'],
+                                     'revision': old_versions[k]['revision']}
+        self.update_build_state(action, build_time, build_versions)
 
     @staticmethod
     def remove_dirs(*args):
@@ -418,6 +446,7 @@ class Context(object):
         commands = cmdlist.makefile_commands(self.wrapper, logsdir)
         self.makefile_pieces.append('all: %s\n.PHONY: %s\n%s:\n%s\n' %
                                     (target, target, target, commands))
+        self.status_log_list.extend(cmdlist.status_logs(logsdir))
 
     def write_files(self):
         """Write out the Makefile and wrapper script."""
@@ -757,6 +786,79 @@ class Context(object):
         os.rename(os.path.join(self.srcdir, '%s-%s' % (component, version)),
                   self.component_srcdir(component))
         os.remove(filename)
+
+    def load_build_state_json(self):
+        """Load information about the state of previous builds."""
+        if os.access(self.build_state_json, os.F_OK):
+            with open(self.build_state_json, 'r') as f:
+                self.build_state = json.load(f)
+        else:
+            self.build_state = {}
+        for k in ('host-libraries', 'compilers', 'glibcs'):
+            if k not in self.build_state:
+                self.build_state[k] = {}
+            if 'build-time' not in self.build_state[k]:
+                self.build_state[k]['build-time'] = ''
+            if 'build-versions' not in self.build_state[k]:
+                self.build_state[k]['build-versions'] = {}
+            if 'build-results' not in self.build_state[k]:
+                self.build_state[k]['build-results'] = {}
+            if 'result-changes' not in self.build_state[k]:
+                self.build_state[k]['result-changes'] = {}
+            if 'ever-passed' not in self.build_state[k]:
+                self.build_state[k]['ever-passed'] = []
+
+    def store_build_state_json(self):
+        """Store information about the state of previous builds."""
+        self.store_json(self.build_state, self.build_state_json)
+
+    def clear_last_build_state(self, action):
+        """Clear information about the state of part of the build."""
+        # We clear the last build time and versions when starting a
+        # new build.  The results of the last build are kept around,
+        # as comparison is still meaningful if this build is aborted
+        # and a new one started.
+        self.build_state[action]['build-time'] = ''
+        self.build_state[action]['build-versions'] = {}
+        self.store_build_state_json()
+
+    def update_build_state(self, action, build_time, build_versions):
+        """Update the build state after a build."""
+        build_time = build_time.replace(microsecond=0)
+        self.build_state[action]['build-time'] = str(build_time)
+        self.build_state[action]['build-versions'] = build_versions
+        build_results = {}
+        for log in self.status_log_list:
+            with open(log, 'r') as f:
+                log_text = f.read()
+            log_text = log_text.rstrip()
+            m = re.fullmatch('([A-Z]+): (.*)', log_text)
+            result = m.group(1)
+            test_name = m.group(2)
+            assert test_name not in build_results
+            build_results[test_name] = result
+        old_build_results = self.build_state[action]['build-results']
+        self.build_state[action]['build-results'] = build_results
+        result_changes = {}
+        all_tests = set(old_build_results.keys()) | set(build_results.keys())
+        for t in all_tests:
+            if t in old_build_results:
+                old_res = old_build_results[t]
+            else:
+                old_res = '(New test)'
+            if t in build_results:
+                new_res = build_results[t]
+            else:
+                new_res = '(Test removed)'
+            if old_res != new_res:
+                result_changes[t] = '%s -> %s' % (old_res, new_res)
+        self.build_state[action]['result-changes'] = result_changes
+        old_ever_passed = {t for t in self.build_state[action]['ever-passed']
+                           if t in build_results}
+        new_passes = {t for t in build_results if build_results[t] == 'PASS'}
+        self.build_state[action]['ever-passed'] = sorted(old_ever_passed |
+                                                         new_passes)
+        self.store_build_state_json()
 
 
 class Config(object):
@@ -1186,6 +1288,11 @@ class CommandList(object):
             prelim_txt = Command.shell_make_quote_list(prelims, False)
             cmds.append('\t@%s %s' % (prelim_txt, ctxt))
         return '\n'.join(cmds)
+
+    def status_logs(self, logsdir):
+        """Return the list of log files with command status."""
+        return [os.path.join(logsdir, '%s-status.txt' % c.logbase)
+                for c in self.cmdlist]
 
 
 def get_parser():

@@ -1,3 +1,16 @@
+2016-11-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py: Import datetime module.
+	(Context.__init__): Load JSON build state.  Initialize list of
+	status logs.
+	(Context.run_builds): Update saved build state.
+	(Context.add_makefile_cmdlist): Update list of status logs.
+	(Context.load_build_state_json): New function.
+	(Context.store_build_state_json): Likewise.
+	(Context.clear_last_build_state): Likewise.
+	(Context.update_build_state): Likewise.
+	(CommandList.status_logs): Likewise.
+
 2016-11-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.__init__): Save text of
