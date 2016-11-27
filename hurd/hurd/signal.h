@@ -340,18 +340,18 @@ extern mach_msg_timeout_t _hurd_interrupted_rpc_timeout;
     do									      \
       {									      \
 	/* Get the message port.  */					      \
-	__err = (fetch_msgport_expr);					      \
+	__err = (error_t) (fetch_msgport_expr);				      \
 	if (__err)							      \
 	  break;							      \
 	/* Get the reference port.  */					      \
-	__err = (fetch_refport_expr);					      \
+	__err = (error_t) (fetch_refport_expr);				      \
 	if (__err)							      \
 	  {								      \
 	    /* Couldn't get it; deallocate MSGPORT and fail.  */	      \
 	    __mach_port_deallocate (__mach_task_self (), msgport);	      \
 	    break;							      \
 	  }								      \
-	__err = (rpc_expr);						      \
+	__err = (error_t) (rpc_expr);					      \
 	__mach_port_deallocate (__mach_task_self (), msgport);		      \
 	if ((dealloc_refport) && refport != MACH_PORT_NULL)		      \
 	  __mach_port_deallocate (__mach_task_self (), refport);    	      \

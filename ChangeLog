@@ -1,3 +1,8 @@
+2016-11-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurd/signal.h (HURD_MSGPORT_RPC): Cast expressions results to
+	error_t to fix usage in C++ programs.
+
 2016-11-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py: Import datetime module.
