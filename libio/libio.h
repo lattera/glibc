@@ -353,7 +353,7 @@ typedef int __io_seek_fn (void *__cookie, _IO_off64_t *__pos, int __w);
 typedef int __io_close_fn (void *__cookie);
 
 
-#ifdef _GNU_SOURCE
+#ifdef __USE_GNU
 /* User-visible names for the above.  */
 typedef __io_read_fn cookie_read_function_t;
 typedef __io_write_fn cookie_write_function_t;

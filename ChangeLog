@@ -1,3 +1,8 @@
+2016-11-27  Zack Weinberg  <zackw@panix.com>
+
+	* libio/libio.h: Use __USE_GNU, not _GNU_SOURCE, in a conditional.
+	* test-skeleton.c: Include stdint.h to ensure uintptr_t is available.
+
 2016-11-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurd/signal.h (HURD_MSGPORT_RPC): Cast expressions results to

@@ -33,6 +33,7 @@
 #include <sys/wait.h>
 #include <sys/param.h>
 #include <time.h>
+#include <stdint.h>
 
 /* The test function is normally called `do_test' and it is called
    with argc and argv as the arguments.  We nevertheless provide the
