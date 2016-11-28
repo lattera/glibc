@@ -89,13 +89,14 @@ lose:									      \
   END (name)
 
 #undef JUMPTARGET
-#ifdef PIC
+#ifdef SHARED
 # ifdef BIND_NOW
 #  define JUMPTARGET(name)	*name##@GOTPCREL(%rip)
 # else
 #  define JUMPTARGET(name)	name##@PLT
 # endif
 #else
+/* For static archives, branch to target directly.  */
 # define JUMPTARGET(name)	name
 #endif
 
