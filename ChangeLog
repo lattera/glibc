@@ -1,3 +1,9 @@
+2016-11-28  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/unix/sysv/linux/fstatfs64.c: Reorder include files,
+	only alias fstatfs and __fstatfs if STATFS_IS_STATFS64 is non-zero.
+	* sysdeps/unix/sysv/linux/statfs64.c: Ditto for statfs and __statfs.
+
 2016-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/nios2/sys/cachectl.h: Do not include

@@ -16,20 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
+#include <string.h>
+#include <stddef.h>
+#include <sysdep.h>
+#include <kernel_stat.h>
+
 /* Hide the prototypes for __statfs and statfs so that GCC will not
    complain about the different function signatures if they are aliased
    to  __stat64.  If STATFS_IS_STATFS64 is not zero then the statfs and
    statfs64 structures have an identical layout but different type names.  */
 
-#define __statfs __statfs_disable
-#define statfs statfs_disable
-
-#include <errno.h>
-#include <string.h>
+#if STATFS_IS_STATFS64
+# define __statfs __statfs_disable
+# define statfs statfs_disable
+#endif
 #include <sys/statfs.h>
-#include <kernel_stat.h>
-#include <stddef.h>
-#include <sysdep.h>
+
 #include <kernel-features.h>
 
 
