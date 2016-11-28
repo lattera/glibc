@@ -16,7 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _AARCH64_SYSDEP_H
+#define _AARCH64_SYSDEP_H
+
 #include <sysdeps/generic/sysdep.h>
+
+#ifdef __LP64__
+# define AARCH64_R(NAME)	R_AARCH64_ ## NAME
+# define PTR_REG(n)		x##n
+# define PTR_LOG_SIZE		3
+# define DELOUSE(n)
+#else
+# define AARCH64_R(NAME)	R_AARCH64_P32_ ## NAME
+# define PTR_REG(n)		w##n
+# define PTR_LOG_SIZE		2
+# define DELOUSE(n)		mov     w##n, w##n
+#endif
+
+#define PTR_SIZE	(1<<PTR_LOG_SIZE)
 
 #ifdef	__ASSEMBLER__
 
@@ -107,16 +124,18 @@
 # define L(name)         .L##name
 #endif
 
-/* Load or store to/from a pc-relative EXPR into/from R, using T.  */
-#define LDST_PCREL(OP, R, T, EXPR)  \
-	adrp	T, EXPR;	    \
-	OP	R, [T, #:lo12:EXPR];\
+/* Load or store to/from a pc-relative EXPR into/from R, using T.
+   Note R and T are register numbers and not register names.  */
+#define LDST_PCREL(OP, R, T, EXPR)			\
+	adrp	x##T, EXPR;				\
+	OP	PTR_REG (R), [x##T, #:lo12:EXPR];	\
 
-/* Load or store to/from a got-relative EXPR into/from R, using T.  */
-#define LDST_GLOBAL(OP, R, T, EXPR)     \
-	adrp	T, :got:EXPR;		\
-	ldr	T, [T, #:got_lo12:EXPR];\
-	OP	R, [T];
+/* Load or store to/from a got-relative EXPR into/from R, using T.
+   Note R and T are register numbers and not register names.  */
+#define LDST_GLOBAL(OP, R, T,  EXPR)			\
+	adrp	x##T, :got:EXPR;			\
+	ldr	PTR_REG (T), [x##T, #:got_lo12:EXPR];	\
+	OP	PTR_REG (R), [x##T];
 
 /* Since C identifiers are not normally prefixed with an underscore
    on this system, the asm identifier `syscall_error' intrudes on the
@@ -125,3 +144,5 @@
 #define mcount		_mcount
 
 #endif	/* __ASSEMBLER__ */
+
+#endif  /* _AARCH64_SYSDEP_H */

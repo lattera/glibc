@@ -60,6 +60,7 @@
    identify exactly which byte is causing the termination.  */
 
 ENTRY (__strchrnul)
+	DELOUSE (0)
 	/* Magic constant 0x40100401 to allow us to identify which lane
 	   matches the termination condition.  */
 	mov	wtmp2, #0x0401

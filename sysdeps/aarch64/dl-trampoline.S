@@ -22,8 +22,12 @@
 #include "dl-link.h"
 
 #define ip0 x16
+#define ip0l PTR_REG (16)
 #define ip1 x17
 #define lr  x30
+
+/* RELA relocatons are 3 pointers */
+#define RELA_SIZE (PTR_SIZE * 3)
 
 	.text
 	.globl _dl_runtime_resolve
@@ -79,7 +83,7 @@ _dl_runtime_resolve:
 	cfi_rel_offset (q1, 80+7*16)
 
 	/* Get pointer to linker struct.  */
-	ldr	x0, [ip0, #-8]
+	ldr	PTR_REG (0), [ip0, #-PTR_SIZE]
 
 	/* Prepare to call _dl_fixup().  */
 	ldr	x1, [sp, 80+8*16]	/* Recover &PLTGOT[n] */
@@ -87,7 +91,7 @@ _dl_runtime_resolve:
 	sub     x1, x1, ip0
 	add     x1, x1, x1, lsl #1
 	lsl     x1, x1, #3
-	sub     x1, x1, #192
+	sub     x1, x1, #(RELA_SIZE<<3)
 	lsr     x1, x1, #3
 
 	/* Call fixup routine.  */
@@ -191,7 +195,7 @@ _dl_runtime_profile:
 	stp	x0, x1, [x29, #OFFSET_RG + DL_OFFSET_RG_SP]
 
 	/* Get pointer to linker struct.  */
-	ldr	x0, [ip0, #-8]
+	ldr	PTR_REG (0), [ip0, #-PTR_SIZE]
 
 	/* Prepare to call _dl_profile_fixup().  */
 	ldr	x1, [x29, OFFSET_PLTGOTN]	/* Recover &PLTGOT[n] */
@@ -199,7 +203,7 @@ _dl_runtime_profile:
 	sub     x1, x1, ip0
 	add     x1, x1, x1, lsl #1
 	lsl     x1, x1, #3
-	sub     x1, x1, #192
+	sub     x1, x1, #(RELA_SIZE<<3)
 	lsr     x1, x1, #3
 
 	stp	x0, x1, [x29, #OFFSET_SAVED_CALL_X0]
@@ -210,8 +214,8 @@ _dl_runtime_profile:
 	add	x4, x29, #OFFSET_FS		/* address of framesize */
 	bl	_dl_profile_fixup
 
-	ldr	ip0, [x29, #OFFSET_FS]		/* framesize == 0 */
-	cmp	ip0, #0
+	ldr	ip0l, [x29, #OFFSET_FS]		/* framesize == 0 */
+	cmp	ip0l, #0
 	bge	1f
 	cfi_remember_state
 
@@ -243,7 +247,7 @@ _dl_runtime_profile:
 1:
 	/* The new frame size is in ip0.  */
 
-	sub	x1, x29, ip0
+	sub	PTR_REG (1), PTR_REG (29), ip0l
 	and	sp, x1, #0xfffffffffffffff0
 
 	str	x0, [x29, #OFFSET_T1]

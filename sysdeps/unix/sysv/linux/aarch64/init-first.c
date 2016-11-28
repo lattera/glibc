@@ -27,17 +27,21 @@ int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *);
 static inline void
 _libc_vdso_platform_setup (void)
 {
-  PREPARE_VERSION (linux2639, "LINUX_2.6.39", 123718537);
+#ifdef __LP64__
+  PREPARE_VERSION (linux_version, "LINUX_2.6.39", 123718537);
+#else
+  PREPARE_VERSION (linux_version, "LINUX_4.9", 61765625);
+#endif
 
-  void *p = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2639);
+  void *p = _dl_vdso_vsym ("__kernel_gettimeofday", &linux_version);
   PTR_MANGLE (p);
   VDSO_SYMBOL(gettimeofday) = p;
 
-  p = _dl_vdso_vsym ("__kernel_clock_gettime", &linux2639);
+  p = _dl_vdso_vsym ("__kernel_clock_gettime", &linux_version);
   PTR_MANGLE (p);
   VDSO_SYMBOL(clock_gettime) = p;
 
-  p = _dl_vdso_vsym ("__kernel_clock_getres", &linux2639);
+  p = _dl_vdso_vsym ("__kernel_clock_getres", &linux_version);
   PTR_MANGLE (p);
   VDSO_SYMBOL(clock_getres) = p;
 }

@@ -61,6 +61,10 @@
 
 ENTRY_ALIGN (memmove, 6)
 
+	DELOUSE (0)
+	DELOUSE (1)
+	DELOUSE (2)
+
 	sub	tmp1, dstin, src
 	cmp	count, 96
 	ccmp	tmp1, count, 2, hi
@@ -70,6 +74,10 @@ ENTRY_ALIGN (memmove, 6)
 END (memmove)
 libc_hidden_builtin_def (memmove)
 ENTRY (memcpy)
+
+	DELOUSE (0)
+	DELOUSE (1)
+	DELOUSE (2)
 
 	prfm	PLDL1KEEP, [src]
 	add	srcend, src, count

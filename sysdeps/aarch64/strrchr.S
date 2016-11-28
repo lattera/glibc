@@ -68,6 +68,7 @@
    identify exactly which byte is causing the termination, and why.  */
 
 ENTRY(strrchr)
+	DELOUSE (0)
 	cbz	x1, L(null_search)
 	/* Magic constant 0x40100401 to allow us to identify which lane
 	   matches the requested byte.  Magic constant 0x80200802 used

@@ -62,6 +62,7 @@
 /* Locals and temporaries.  */
 
 ENTRY (strchr)
+	DELOUSE (0)
 	mov	wtmp2, #0x0401
 	movk	wtmp2, #0x4010, lsl #16
 	dup	vrepchr.16b, chrin

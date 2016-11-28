@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <sysdep.h>
 
 #define ELF_MACHINE_IRELA	1
 
@@ -40,7 +41,7 @@ elf_irela (const ElfW(Rela) *reloc)
   ElfW(Addr) *const reloc_addr = (void *) reloc->r_offset;
   const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
 
-  if (__glibc_likely (r_type == R_AARCH64_IRELATIVE))
+  if (__glibc_likely (r_type == AARCH64_R(IRELATIVE)))
     {
       ElfW(Addr) value = elf_ifunc_invoke (reloc->r_addend);
       *reloc_addr = value;

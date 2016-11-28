@@ -85,6 +85,8 @@
 	   boundary.  */
 
 ENTRY_ALIGN (__strlen, 6)
+	DELOUSE (0)
+	DELOUSE (1)
 	and	tmp1, srcin, MIN_PAGE_SIZE - 1
 	mov	zeroones, REP8_01
 	cmp	tmp1, MIN_PAGE_SIZE - 16

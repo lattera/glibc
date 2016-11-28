@@ -1,3 +1,72 @@
+2016-11-28  Andrew Pinski  <andrew.pinski@caviumnetworks.com>
+	    Yury Norov  <ynorov@caviumnetworks.com>
+	    Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/aarch64/crti.S: Add include of sysdep.h.
+	(call_weak_fn): Use PTR_REG to get correct reg name in ILP32.
+	* sysdeps/aarch64/dl-irel.h: Add include of sysdep.h.
+	(elf_irela): Use AARCH64_R macro to get correct relocation in ILP32.
+	* sysdeps/aarch64/dl-machine.h: Add include of sysdep.h.
+	(elf_machine_load_address, RTLD_START, RTLD_START_1, RTLD_START,
+	elf_machine_type_class, ELF_MACHINE_JMP_SLOT, elf_machine_rela,
+	elf_machine_lazy_rel): Add ifdef's for ILP32 support.
+	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_return,
+	_dl_tlsdesc_return_lazy, _dl_tlsdesc_dynamic,
+	_dl_tlsdesc_resolve_hold): Extend pointers in ILP32, use PTR_REG
+	to get correct reg name for ILP32.
+	* sysdeps/aarch64/dl-trampoline.S (ip01): New Macro.
+	(RELA_SIZE): New Macro.
+	(_dl_runtime_resolve, _dl_runtime_profile): Use new macros and PTR_REG
+	to support ILP32.
+	* sysdeps/aarch64/jmpbuf-unwind.h (_JMPBUF_CFA_UNWINDS_ADJ): Add
+	cast for ILP32 mode.
+	* sysdeps/aarch64/memcmp.S (memcmp): Extend arg pointers for ILP32 mode.
+	* sysdeps/aarch64/memcpy.S (memmove, memcpy): Ditto.
+	* sysdeps/aarch64/memset.S (__memset): Ditto.
+	* sysdeps/aarch64/strchr.S (strchr): Ditto.
+	* sysdeps/aarch64/strchrnul.S (__strchrnul): Ditto.
+	* sysdeps/aarch64/strcmp.S (strcmp): Ditto.
+	* sysdeps/aarch64/strcpy.S (strcpy): Ditto.
+	* sysdeps/aarch64/strlen.S (__strlen): Ditto.
+	* sysdeps/aarch64/strncmp.S (strncmp): Ditto.
+	* sysdeps/aarch64/strnlen.S (strnlen): Ditto.
+	* sysdeps/aarch64/strrchr.S (strrchr): Ditto.
+	* sysdeps/unix/sysv/linux/aarch64/clone.S: Ditto.
+	* sysdeps/unix/sysv/linux/aarch64/setcontext.S (__setcontext): Ditto.
+	* sysdeps/unix/sysv/linux/aarch64/swapcontext.S (__swapcontext): Ditto.
+	* sysdeps/aarch64/__longjmp.S (__longjmp): Extend pointers in ILP32,
+	change PTR_MANGLE call to use register numbers instead of names.
+	* sysdeps/unix/sysv/linux/aarch64/getcontext.S (__getcontext): Ditto.
+	* sysdeps/aarch64/setjmp.S (__sigsetjmp): Extend arg pointers for
+	ILP32 mode, change PTR_MANGLE calls to use register numbers.
+	* sysdeps/aarch64/start.S (_start): Ditto.
+	* sysdeps/aarch64/nptl/bits/pthreadtypes.h
+	(__PTHREAD_RWLOCK_INT_FLAGS_SHARED): New define.
+	(__SIZEOF_PTHREAD_ATTR_T, __SIZEOF_PTHREAD_MUTEX_T,
+	__SIZEOF_PTHREAD_MUTEXATTR_T, __SIZEOF_PTHREAD_COND_T,
+	__SIZEOF_PTHREAD_COND_COMPAT_T, __SIZEOF_PTHREAD_CONDATTR_T,
+	__SIZEOF_PTHREAD_RWLOCK_T, __SIZEOF_PTHREAD_RWLOCKATTR_T,
+	__SIZEOF_PTHREAD_BARRIER_T, __SIZEOF_PTHREAD_BARRIERATTR_T):
+	Make defined values dependent on __ILP32__.
+	* sysdeps/aarch64/nptl/bits/semaphore.h (__SIZEOF_SEM_T): Change define.
+	(sem_t): Change __align type.
+	* sysdeps/aarch64/sysdep.h (AARCH64_R, PTR_REG, PTR_LOG_SIZE, DELOUSE,
+	PTR_SIZE): New Macros.
+	(LDST_PCREL, LDST_GLOBAL) Update to use PTR_REG.
+	* sysdeps/unix/sysv/linux/aarch64/bits/fcntl.h (O_LARGEFILE):
+	Set when in ILP32 mode.
+	(F_GETLK64, F_SETLK64, F_SETLKW64): Only set in LP64 mode.
+	* sysdeps/unix/sysv/linux/aarch64/dl-cache.h (DL_CACHE_DEFAULT_ID):
+	Set elf flags for ILP32.
+	(add_system_dir): Set ILP32 library directories.
+	* sysdeps/unix/sysv/linux/aarch64/init-first.c
+	(_libc_vdso_platform_setup): Set minimum kernel version for ILP32.
+	* sysdeps/unix/sysv/linux/aarch64/ldconfig.h
+	(SYSDEP_KNOWN_INTERPRETER_NAMES): Add ILP32 names.
+	* sysdeps/unix/sysv/linux/aarch64/sigcontextinfo.h (GET_PC, SET_PC):
+	New Macros.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h: Handle ILP32 pointers.
+
 2016-11-28  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* sysdeps/unix/sysv/linux/fstatfs64.c: Reorder include files,

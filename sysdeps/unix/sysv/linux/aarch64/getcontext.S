@@ -30,6 +30,7 @@
 	.text
 
 ENTRY(__getcontext)
+	DELOUSE (0)
 	/* The saved context will return to the getcontext() call point
 	   with a return value of 0 */
 	str	xzr,	  [x0, oX0 +  0 * SZREG]
@@ -90,7 +91,7 @@ ENTRY(__getcontext)
 
 	/* Grab the signal mask */
 	/* rt_sigprocmask (SIG_BLOCK, NULL, &ucp->uc_sigmask, _NSIG8) */
-	add	x2, x0, #UCONTEXT_SIGMASK
+	add	PTR_REG (2), PTR_REG (0), #UCONTEXT_SIGMASK
 	mov	x0, SIG_BLOCK
 	mov	x1, 0
 	mov	x3, _NSIG8

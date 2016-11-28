@@ -39,6 +39,13 @@
  */
         .text
 ENTRY(__clone)
+	DELOUSE (0)
+	DELOUSE (1)
+	DELOUSE (2)
+	DELOUSE (3)
+	DELOUSE (4)
+	DELOUSE (5)
+	DELOUSE (6)
 	/* Save args for the child.  */
 	mov	x10, x0
 	mov	x11, x2

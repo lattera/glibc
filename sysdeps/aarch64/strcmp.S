@@ -49,6 +49,8 @@
 	/* Start of performance-critical section  -- one 64B cache line.  */
 ENTRY_ALIGN(strcmp, 6)
 
+	DELOUSE (0)
+	DELOUSE (1)
 	eor	tmp1, src1, src2
 	mov	zeroones, #REP8_01
 	tst	tmp1, #7

@@ -39,6 +39,9 @@
 
 ENTRY_ALIGN (__memset, 6)
 
+	DELOUSE (0)
+	DELOUSE (2)
+
 	dup	v0.16B, valw
 	add	dstend, dstin, count
 
