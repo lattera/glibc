@@ -15,51 +15,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
-#include <errno.h>
-#include <sysdep-cancel.h>	/* Must come before <fcntl.h>.  */
+#include <unistd.h>
 #include <fcntl.h>
-#include <stdarg.h>
 
-#include <sys/syscall.h>
-
-
-#ifndef NO_CANCELLATION
-int
-__fcntl_nocancel (int fd, int cmd, ...)
+static inline int
+fcntl_adjust_cmd (int cmd)
 {
-  va_list ap;
-  void *arg;
-
-  va_start (ap, cmd);
-  arg = va_arg (ap, void *);
-  va_end (ap);
-
-  return INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);
-}
-#endif
-
-
-int
-__libc_fcntl (int fd, int cmd, ...)
-{
-  va_list ap;
-  void *arg;
-
-  va_start (ap, cmd);
-  arg = va_arg (ap, void *);
-  va_end (ap);
-
   if (cmd >= F_GETLK64 && cmd <= F_SETLKW64)
     cmd -= F_GETLK64 - F_GETLK;
-
-  if (cmd != F_SETLKW)
-    return INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);
-
-  return SYSCALL_CANCEL (fcntl, fd, cmd, arg);
+  return cmd;
 }
-libc_hidden_def (__libc_fcntl)
 
-weak_alias (__libc_fcntl, __fcntl)
-libc_hidden_weak (__fcntl)
-weak_alias (__libc_fcntl, fcntl)
+#define FCNTL_ADJUST_CMD(__cmd) \
+  fcntl_adjust_cmd (__cmd)
+
+#include <sysdeps/unix/sysv/linux/fcntl.c>

@@ -1,3 +1,23 @@
+2017-06-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/fcntl.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/fcntl.c (do_fcntl): Rename to
+	fcntl_common and add check for F_GETOWN.
+	(__libc_fcntl): Use SYSCALL_CANCEL macro.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fcntl.c: Refactor to
+	use default implementation.
+
 2017-06-30  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* elf/dl-tunables.h (tunable_is_name): Move from...

@@ -15,31 +15,36 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
-#include <errno.h>
-#include <sysdep-cancel.h>	/* Must come before <fcntl.h>.  */
 #include <fcntl.h>
 #include <stdarg.h>
+#include <errno.h>
+#include <sysdep-cancel.h>
 
-#include <sys/syscall.h>
+#ifndef __NR_fcntl64
+# define __NR_fcntl64 __NR_fcntl
+#endif
 
+#ifndef FCNTL_ADJUST_CMD
+# define FCNTL_ADJUST_CMD(__cmd) __cmd
+#endif
 
 static int
-do_fcntl (int fd, int cmd, void *arg)
+fcntl_common (int fd, int cmd, void *arg)
 {
-  if (cmd != F_GETOWN)
-    return INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);
+  if (cmd == F_GETOWN)
+    {
+      INTERNAL_SYSCALL_DECL (err);
+      struct f_owner_ex fex;
+      int res = INTERNAL_SYSCALL_CALL (fcntl64, err, fd, F_GETOWN_EX, &fex);
+      if (!INTERNAL_SYSCALL_ERROR_P (res, err))
+	return fex.type == F_OWNER_GID ? -fex.pid : fex.pid;
 
-  INTERNAL_SYSCALL_DECL (err);
-  struct f_owner_ex fex;
-  int res = INTERNAL_SYSCALL (fcntl, err, 3, fd, F_GETOWN_EX, &fex);
-  if (!INTERNAL_SYSCALL_ERROR_P (res, err))
-    return fex.type == F_OWNER_GID ? -fex.pid : fex.pid;
-
-  return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (res,
+      return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (res,
 								    err));
-}
+    }
 
+  return INLINE_SYSCALL_CALL (fcntl64, fd, cmd, (void *) arg);
+}
 
 #ifndef NO_CANCELLATION
 int
@@ -52,10 +57,9 @@ __fcntl_nocancel (int fd, int cmd, ...)
   arg = va_arg (ap, void *);
   va_end (ap);
 
-  return do_fcntl (fd, cmd, arg);
+  return fcntl_common (fd, cmd, arg);
 }
 #endif
-
 
 int
 __libc_fcntl (int fd, int cmd, ...)
@@ -67,16 +71,12 @@ __libc_fcntl (int fd, int cmd, ...)
   arg = va_arg (ap, void *);
   va_end (ap);
 
-  if (SINGLE_THREAD_P || cmd != F_SETLKW)
-    return do_fcntl (fd, cmd, arg);
+  cmd = FCNTL_ADJUST_CMD (cmd);
 
-  int oldtype = LIBC_CANCEL_ASYNC ();
+  if (cmd == F_SETLKW || cmd == F_SETLKW64)
+    return SYSCALL_CANCEL (fcntl64, fd, cmd, (void *) arg);
 
-  int result = do_fcntl (fd, cmd, arg);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  return fcntl_common (fd, cmd, arg);
 }
 libc_hidden_def (__libc_fcntl)
 
