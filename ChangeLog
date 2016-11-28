@@ -1,3 +1,8 @@
+2016-11-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ia64/fpu/libm-symbols.h: Make contents conditional on
+	[!__STRICT_ANSI__ && !__cplusplus].
+
 2016-11-28  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #20750]
