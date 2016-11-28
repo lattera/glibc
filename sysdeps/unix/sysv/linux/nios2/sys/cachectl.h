@@ -21,9 +21,6 @@
 
 #include <features.h>
 
-/* Get the kernel definition for the op bits.  */
-#include <asm/cachectl.h>
-
 __BEGIN_DECLS
 
 #ifdef __USE_MISC
