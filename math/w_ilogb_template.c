@@ -1,6 +1,6 @@
-/* Copyright (C) 2012-2016 Free Software Foundation, Inc.
+/* Wrapper to set errno for ilogb.
+   Copyright (C) 2012-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Adhemerval Zanella <azanella@linux.vnet.ibm.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -21,18 +21,22 @@
 #include <limits.h>
 #include <math_private.h>
 
-/* wrapper ilogbl */
+/* wrapper ilogb */
 int
-__ilogbl (long double x)
+M_DECL_FUNC (__ilogb) (FLOAT x)
 {
-  int r = __ieee754_ilogbl (x);
+  int r = M_SUF (__ieee754_ilogb) (x);
   if (__builtin_expect (r == FP_ILOGB0, 0)
       || __builtin_expect (r == FP_ILOGBNAN, 0)
       || __builtin_expect (r == INT_MAX, 0))
     {
       __set_errno (EDOM);
-      feraiseexcept (FE_INVALID);
+      __feraiseexcept (FE_INVALID);
     }
   return r;
 }
-weak_alias (__ilogbl, ilogbl)
+declare_mgen_alias (__ilogb, ilogb)
+
+#if M_LIBM_NEED_COMPAT (ilogb)
+declare_mgen_libm_compat (__ilogb, ilogb)
+#endif

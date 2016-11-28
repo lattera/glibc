@@ -1,5 +1,16 @@
 2016-11-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/w_ilogb_template.c: New file.  Based on math/w_ilogb.c.
+	* math/w_ilogb.c: Remove.
+	* math/w_ilogbf.c: Likewise.
+	* math/w_ilogbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_ilogb.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_ilogbl.c: Likewise.
+	* math/Makefile (gen-libm-calls): Add w_ilogbF.
+	(libm-calls): Remove w_ilogbF.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h
+	(LDOUBLE_ilogbl_libm_version): New macro.
+
 	* sysdeps/unix/sysv/linux/ia64/tst-setcontext2.c: New file.
 
 	* sysdeps/ia64/fpu/libm-symbols.h: Make contents conditional on

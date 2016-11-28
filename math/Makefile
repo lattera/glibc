@@ -52,7 +52,7 @@ gen-libm-calls = cargF conjF cimagF crealF cabsF s_cacosF		  \
 		 k_casinhF s_csinhF k_casinhF s_csinhF s_catanhF s_catanF \
 		 s_ctanF s_ctanhF s_cexpF s_clogF s_cprojF s_csqrtF	  \
 		 s_cpowF s_clog10F s_fdimF s_nextdownF s_fmaxF s_fminF	  \
-		 s_nanF s_iseqsigF s_canonicalizeF
+		 s_nanF s_iseqsigF s_canonicalizeF w_ilogbF
 
 libm-calls =								  \
 	e_acosF e_acoshF e_asinF e_atan2F e_atanhF e_coshF e_expF e_fmodF \
@@ -67,7 +67,6 @@ libm-calls =								  \
 	w_atan2F w_atanhF w_coshF w_expF w_exp2F w_exp10F w_fmodF	  \
 	w_tgammaF w_hypotF w_j0F w_j1F w_jnF w_lgammaF w_lgammaF_r	  \
 	w_logF w_log10F w_powF w_remainderF w_scalbF w_sinhF w_sqrtF	  \
-	w_ilogbF							  \
 	s_fpclassifyF s_truncF						  \
 	s_remquoF e_log2F e_exp2F s_roundF s_nearbyintF s_sincosF	  \
 	s_fmaF s_lrintF s_llrintF s_lroundF s_llroundF e_exp10F w_log2F	  \
