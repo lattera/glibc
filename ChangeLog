@@ -1,5 +1,7 @@
 2016-11-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/ia64/tst-setcontext2.c: New file.
+
 	* sysdeps/ia64/fpu/libm-symbols.h: Make contents conditional on
 	[!__STRICT_ANSI__ && !__cplusplus].
 
