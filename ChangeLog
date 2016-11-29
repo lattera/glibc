@@ -1,3 +1,7 @@
+2016-12-27  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* manual/arith.texi (FP Comparison Functions): Fix typo in iseqsig.
+
 2016-12-27  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #17252]

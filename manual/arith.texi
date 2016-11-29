@@ -2067,7 +2067,7 @@ words, it is true if @var{x} or @var{y} are NaN, and false otherwise.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro determines whether its arguments are equal.  It is
 equivalent to @code{(@var{x}) == (@var{y})}, but it raises the invalid
-exception and sets @code{errno} to @code{EDOM} is either argument is a
+exception and sets @code{errno} to @code{EDOM} if either argument is a
 NaN.
 @end deftypefn
 
