@@ -1,5 +1,12 @@
 2016-11-29  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/powerpc/powerpc64/setjmp-common.S (__GI___sigsetjmp):
+	Define.
+	* sysdeps/powerpc/powerpc32/setjmp.S (__sigsetjmp): Add hidden
+	definition.
+
+2016-11-29  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/powerpc/powerpc32/fpu/__longjmp.S (__longjmp): Remove
 	version and turn into strong alias.  Remove compat symbol.
 
