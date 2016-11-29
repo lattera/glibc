@@ -2112,7 +2112,6 @@ GLIBC_2.3.4 GLIBC_2.3.4 A
 GLIBC_2.3.4 __chk_fail F
 GLIBC_2.3.4 __fprintf_chk F
 GLIBC_2.3.4 __gets_chk F
-GLIBC_2.3.4 __longjmp F
 GLIBC_2.3.4 __memcpy_chk F
 GLIBC_2.3.4 __memmove_chk F
 GLIBC_2.3.4 __mempcpy_chk F

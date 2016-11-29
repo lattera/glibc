@@ -26,15 +26,13 @@
 # include "__longjmp-common.S"
 
 #else /* IS_IN (libc) */
-/* Build a versioned object for libc.  */
-versioned_symbol (libc, __vmx__longjmp, __longjmp, GLIBC_2_3_4);
+strong_alias (__vmx__longjmp, __longjmp)
 # define __longjmp_symbol  __vmx__longjmp
 # include "__longjmp-common.S"
 
 # if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
 #  define __NO_VMX__
 #  undef JB_SIZE
-compat_symbol (libc, __novmx__longjmp, __longjmp, GLIBC_2_0);
 #  undef __longjmp_symbol
 #  define __longjmp_symbol  __novmx__longjmp
 #  include "__longjmp-common.S"
