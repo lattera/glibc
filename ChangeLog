@@ -1,3 +1,20 @@
+2016-11-29  Yury Norov  <ynorov@caviumnetworks.com>
+	    Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/fxstat.c: Do not define
+	fxstat if XSTAT_IS_XSTAT64 is set to non-zero.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/fxstatat.c: Ditto for
+	fxstatat.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/lxstat.c: Ditto for
+	lxstat.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/xstat.c: Ditto for xstat.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/fxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/fxstatat64.c: New file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/lxstat64.c: Make __lxstat
+	an alias of __lxstat64 if XSTAT_IS_XSTAT64 is set to non-zero.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/xstat64.c: Ditto for
+	__xstat.
+
 2016-11-29  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/setjmp-common.S (__GI___sigsetjmp):

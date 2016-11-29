@@ -26,6 +26,7 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#if !XSTAT_IS_XSTAT64
 #include "overflow.h"
 
 /* Get information about the file NAME in BUF.  */
@@ -42,3 +43,4 @@ __fxstatat (int vers, int fd, const char *file, struct stat *buf, int flag)
   return -1;
 }
 libc_hidden_def (__fxstatat)
+#endif

@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2016 Free Software Foundation, Inc.
+/* __fxstat64 () implementation.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -16,32 +17,20 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stddef.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <kernel_stat.h>
+/* Hide the prototypes for __fxstat and _fxstat so that GCC will not
+   complain about the different function signatures if they are aliased
+   to  __fxstat64.  If XSTAT_IS_XSTAT64 is set to non-zero then the stat and
+   stat64 structures have an identical layout but different type names.  */
 
-#include <sysdep.h>
-#include <sys/syscall.h>
+#define __fxstat __fxstat_disable
+#define _fxstat _fxstat_disable
 
-#if !XSTAT_IS_XSTAT64
-#include "overflow.h"
+#include <sysdeps/unix/sysv/linux/fxstat64.c>
 
-/* Get information about the file FD in BUF.  */
-int
-__fxstat (int vers, int fd, struct stat *buf)
-{
-  if (vers == _STAT_VER_KERNEL)
-    {
-      int rc = INLINE_SYSCALL (fstat64, 2, fd, buf);
-      return rc ?: stat_overflow (buf);
-    }
-
-  errno = EINVAL;
-  return -1;
-}
-
-hidden_def (__fxstat)
-weak_alias (__fxstat, _fxstat);
+#undef __fxstat
+#undef _fxstat
+#if XSTAT_IS_XSTAT64
+weak_alias (__fxstat64, __fxstat)
+weak_alias (__fxstat64, _fxstat)
+hidden_ver (__fxstat64, __fxstat)
 #endif
