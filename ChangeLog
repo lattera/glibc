@@ -1,3 +1,25 @@
+2016-11-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* bits/fp-fast.h: New file.
+	* sysdeps/aarch64/bits/fp-fast.h: Likewise.
+	* sysdeps/powerpc/bits/fp-fast.h: Likewise.
+	* math/Makefile (headers): Add bits/fp-fast.h.
+	* math/math.h: Include <bits/fp-fast.h>.
+	* bits/mathdef.h (FP_FAST_FMA): Remove.
+	(FP_FAST_FMAF): Likewise.
+	(FP_FAST_FMAL): Likewise.
+	* sysdeps/aarch64/bits/mathdef.h (FP_FAST_FMA): Likewise.
+	(FP_FAST_FMAF): Likewise.
+	* sysdeps/powerpc/bits/mathdef.h (FP_FAST_FMA): Likewise.
+	(FP_FAST_FMAF): Likewise.
+	* sysdeps/x86/bits/mathdef.h (FP_FAST_FMA): Likewise.
+	(FP_FAST_FMAF): Likewise.
+	(FP_FAST_FMAL): Likewise.
+	* sysdeps/arm/bits/mathdef.h: Remove file.
+	* sysdeps/hppa/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/sh/sh4/bits/mathdef.h: Likewise.
+	* sysdeps/tile/bits/mathdef.h: Likewise.
+
 2016-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/w_ilogb_template.c: New file.  Based on math/w_ilogb.c.

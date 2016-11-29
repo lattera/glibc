@@ -97,6 +97,15 @@ typedef _Float128x double_t;
 # endif
 #endif
 
+/* Define macros for the return value of ilogb.
+
+    FP_ILOGB0	Expands to a value returned by `ilogb (0.0)'.
+    FP_ILOGBNAN	Expands to a value returned by `ilogb (NAN)'.
+
+*/
+
+#include <bits/mathdef.h>
+
 /* Get the architecture specific values describing the floating-point
    evaluation.  The following symbols will get defined:
 
@@ -107,13 +116,9 @@ typedef _Float128x double_t;
 		generally executes about as fast as a multiply and an add.
 		This macro is defined only iff the `fma' function is
 		implemented directly with a hardware multiply-add instructions.
-
-    FP_ILOGB0	Expands to a value returned by `ilogb (0.0)'.
-    FP_ILOGBNAN	Expands to a value returned by `ilogb (NAN)'.
-
 */
 
-#include <bits/mathdef.h>
+#include <bits/fp-fast.h>
 
 /* The file <bits/mathcalls.h> contains the prototypes for all the
    actual math functions.  These macros are used for those prototypes,
