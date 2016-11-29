@@ -13148,8 +13148,17 @@ static const char __gbk_from_ucs4_tab12[][2] =
       if (__builtin_expect (ch <= 0x80, 0)				      \
 	  || __builtin_expect (ch > 0xfe, 0))				      \
 	{								      \
-	  /* This is illegal.  */					      \
-	  STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
+	  if (__glibc_likely (ch == 0x80))				      \
+	    {								      \
+	      /* Exception for the Euro sign (see CP936).  */		      \
+	      ch = 0x20ac;						      \
+	      ++inptr;							      \
+	    }								      \
+	  else								      \
+	    {								      \
+	      /* This is illegal.  */					      \
+	      STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
+	    }								      \
 	}								      \
       else								      \
 	{								      \
@@ -13291,6 +13300,10 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  break;							      \
 	case 0x2010 ... 0x203b:						      \
 	  cp = __gbk_from_ucs4_tab4[ch - 0x2010];			      \
+	  break;							      \
+	case 0x20ac:							      \
+	  /* Exception for the Euro sign (see CP396).  */		      \
+	  cp = "\x80";							      \
 	  break;							      \
 	case 0x2103 ... 0x22bf:						      \
 	  cp = __gbk_from_ucs4_tab5[ch - 0x2103];			      \

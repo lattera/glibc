@@ -1,3 +1,7 @@
+2016-11-29  Florian Weimer  <fweimer@redhat.com>
+
+	* iconvdata/gbk.c (BODY): Add Euro sign support (both directions).
+
 2016-11-29  Yury Norov  <ynorov@caviumnetworks.com>
 	    Steve Ellcey  <sellcey@caviumnetworks.com>
 
