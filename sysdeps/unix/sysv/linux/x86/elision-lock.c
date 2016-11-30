@@ -44,7 +44,13 @@
 int
 __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 {
-  if (*adapt_count <= 0)
+  /* adapt_count can be accessed concurrently; these accesses can be both
+     inside of transactions (if critical sections are nested and the outer
+     critical section uses lock elision) and outside of transactions.  Thus,
+     we need to use atomic accesses to avoid data races.  However, the
+     value of adapt_count is just a hint, so relaxed MO accesses are
+     sufficient.  */
+  if (atomic_load_relaxed (adapt_count) <= 0)
     {
       unsigned status;
       int try_xbegin;
@@ -70,15 +76,20 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 			&& _XABORT_CODE (status) == _ABORT_LOCK_BUSY)
 	        {
 		  /* Right now we skip here.  Better would be to wait a bit
-		     and retry.  This likely needs some spinning.  */
-		  if (*adapt_count != aconf.skip_lock_busy)
-		    *adapt_count = aconf.skip_lock_busy;
+		     and retry.  This likely needs some spinning.  See
+		     above for why relaxed MO is sufficient.  */
+		  if (atomic_load_relaxed (adapt_count)
+		      != aconf.skip_lock_busy)
+		    atomic_store_relaxed (adapt_count, aconf.skip_lock_busy);
 		}
 	      /* Internal abort.  There is no chance for retry.
 		 Use the normal locking and next time use lock.
-		 Be careful to avoid writing to the lock.  */
-	      else if (*adapt_count != aconf.skip_lock_internal_abort)
-		*adapt_count = aconf.skip_lock_internal_abort;
+		 Be careful to avoid writing to the lock.  See above for why
+		 relaxed MO is sufficient.  */
+	      else if (atomic_load_relaxed (adapt_count)
+		  != aconf.skip_lock_internal_abort)
+		atomic_store_relaxed (adapt_count,
+		    aconf.skip_lock_internal_abort);
 	      break;
 	    }
 	}
@@ -87,7 +98,8 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
     {
       /* Use a normal lock until the threshold counter runs out.
 	 Lost updates possible.  */
-      (*adapt_count)--;
+      atomic_store_relaxed (adapt_count,
+	  atomic_load_relaxed (adapt_count) - 1);
     }
 
   /* Use a normal lock here.  */

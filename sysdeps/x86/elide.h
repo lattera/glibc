@@ -20,8 +20,8 @@
 
 #include <hle.h>
 #include <elision-conf.h>
+#include <atomic.h>
 
-#define ACCESS_ONCE(x) (* (volatile typeof(x) *) &(x))
 
 /* Adapt elision with ADAPT_COUNT and STATUS and decide retries.  */
 
@@ -35,28 +35,35 @@ elision_adapt(signed char *adapt_count, unsigned int status)
     {
       /* Right now we skip here.  Better would be to wait a bit
 	 and retry.  This likely needs some spinning. Be careful
-	 to avoid writing the lock.  */
-      if (*adapt_count != __elision_aconf.skip_lock_busy)
-	ACCESS_ONCE (*adapt_count) = __elision_aconf.skip_lock_busy;
+	 to avoid writing the lock.
+	 Using relaxed MO and separate atomic accesses is sufficient because
+	 adapt_count is just a hint.  */
+      if (atomic_load_relaxed (adapt_count) != __elision_aconf.skip_lock_busy)
+	atomic_store_relaxed (adapt_count, __elision_aconf.skip_lock_busy);
     }
   /* Internal abort.  There is no chance for retry.
      Use the normal locking and next time use lock.
-     Be careful to avoid writing to the lock.  */
-  else if (*adapt_count != __elision_aconf.skip_lock_internal_abort)
-    ACCESS_ONCE (*adapt_count) = __elision_aconf.skip_lock_internal_abort;
+     Be careful to avoid writing to the lock.  See above for MO.  */
+  else if (atomic_load_relaxed (adapt_count)
+      != __elision_aconf.skip_lock_internal_abort)
+    atomic_store_relaxed (adapt_count,
+	__elision_aconf.skip_lock_internal_abort);
   return true;
 }
 
 /* is_lock_free must be executed inside the transaction */
 
 /* Returns true if lock defined by IS_LOCK_FREE was elided.
-   ADAPT_COUNT is a pointer to per-lock state variable. */
+   ADAPT_COUNT is a per-lock state variable; it must be accessed atomically
+   to avoid data races but is just a hint, so using relaxed MO and separate
+   atomic loads and stores instead of atomic read-modify-write operations is
+   sufficient.  */
 
 #define ELIDE_LOCK(adapt_count, is_lock_free)			\
   ({								\
     int ret = 0;						\
 								\
-    if ((adapt_count) <= 0) 					\
+    if (atomic_load_relaxed (&(adapt_count)) <= 0)		\
       {								\
         for (int i = __elision_aconf.retry_try_xbegin; i > 0; i--) \
           {							\
@@ -75,12 +82,13 @@ elision_adapt(signed char *adapt_count, unsigned int status)
           }							\
       }								\
     else 							\
-      (adapt_count)--; /* missing updates ok */			\
+      atomic_store_relaxed (&(adapt_count),			\
+	  atomic_load_relaxed (&(adapt_count)) - 1);		\
     ret;							\
   })
 
 /* Returns true if lock defined by IS_LOCK_FREE was try-elided.
-   ADAPT_COUNT is a pointer to per-lock state variable.  */
+   ADAPT_COUNT is a per-lock state variable.  */
 
 #define ELIDE_TRYLOCK(adapt_count, is_lock_free, write) ({	\
   int ret = 0;						\

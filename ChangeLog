@@ -1,3 +1,15 @@
+2016-12-05  Torvald Riegel  <triegel@redhat.com>
+
+	* include/atomic.h (__atomic_check_size_ls): New.
+	(atomic_load_relaxed, atomic_load_acquire, atomic_store_relaxed,
+	atomic_store_release): Use it.
+	* sysdeps/x86/elide.h (ACCESS_ONCE): Remove.
+	(elision_adapt, ELIDE_LOCK): Use atomics.
+	* sysdeps/unix/sysv/linux/x86/elision-lock.c (__lll_lock_elision): Use
+	atomics and improve code comments.
+	* sysdeps/unix/sysv/linux/x86/elision-trylock.c
+	(__lll_trylock_elision): Likewise.
+
 2016-12-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurd.h: Cast errno constants to error_t to fix usage in C++
