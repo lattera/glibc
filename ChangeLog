@@ -1,3 +1,16 @@
+2016-11-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py: Add bot-cycle to usage message.
+	Import email.mime.text, email.utils and smtplib modules.
+	(Context.__init__): Initialize self.bot_config_json.
+	(Context.run_builds): Handle bot-cycle action.
+	(Context.load_bot_config_json): New function.
+	(Context.part_build_old): Likewise.
+	(Context.bot_cycle): Likewise.
+	(Context.bot_build_mail): Likewise.
+	(Context.bot_run_self): Likewise.
+	(get_parser): Allow bot-cycle action.
+
 2016-11-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/powerpc64/multiarch/stpcpy-ppc64.c (weak_alias):

@@ -22,21 +22,26 @@
 This script takes as arguments a directory name (containing a src
 subdirectory with sources of the relevant toolchain components) and a
 description of what to do: 'checkout', to check out sources into that
-directory, 'host-libraries', to build libraries required by the
-toolchain, 'compilers', to build cross-compilers for various
-configurations, or 'glibcs', to build glibc for various configurations
-and run the compilation parts of the testsuite.  Subsequent arguments
-name the versions of components to check out (<component>-<version),
-for 'checkout', or, for actions other than 'checkout', name
-configurations for which compilers or glibc are to be built.
+directory, 'bot-cycle', to run a series of checkout and build steps,
+'host-libraries', to build libraries required by the toolchain,
+'compilers', to build cross-compilers for various configurations, or
+'glibcs', to build glibc for various configurations and run the
+compilation parts of the testsuite.  Subsequent arguments name the
+versions of components to check out (<component>-<version), for
+'checkout', or, for actions other than 'checkout' and 'bot-cycle',
+name configurations for which compilers or glibc are to be built.
+
 """
 
 import argparse
 import datetime
+import email.mime.text
+import email.utils
 import json
 import os
 import re
 import shutil
+import smtplib
 import stat
 import subprocess
 import sys
@@ -55,6 +60,7 @@ class Context(object):
         self.srcdir = os.path.join(topdir, 'src')
         self.versions_json = os.path.join(self.srcdir, 'versions.json')
         self.build_state_json = os.path.join(topdir, 'build-state.json')
+        self.bot_config_json = os.path.join(topdir, 'bot-config.json')
         self.installdir = os.path.join(topdir, 'install')
         self.host_libraries_installdir = os.path.join(self.installdir,
                                                       'host-libraries')
@@ -391,6 +397,12 @@ class Context(object):
         """Run the requested builds."""
         if action == 'checkout':
             self.checkout(configs)
+            return
+        if action == 'bot-cycle':
+            if configs:
+                print('error: configurations specified for bot-cycle')
+                exit(1)
+            self.bot_cycle()
             return
         if action == 'host-libraries' and configs:
             print('error: configurations specified for host-libraries')
@@ -860,6 +872,146 @@ class Context(object):
                                                          new_passes)
         self.store_build_state_json()
 
+    def load_bot_config_json(self):
+        """Load bot configuration."""
+        with open(self.bot_config_json, 'r') as f:
+            self.bot_config = json.load(f)
+
+    def part_build_old(self, action, delay):
+        """Return whether the last build for a given action was at least a
+        given number of seconds ago, or does not have a time recorded."""
+        old_time_str = self.build_state[action]['build-time']
+        if not old_time_str:
+            return True
+        old_time = datetime.datetime.strptime(old_time_str,
+                                              '%Y-%m-%d %H:%M:%S')
+        new_time = datetime.datetime.utcnow()
+        delta = new_time - old_time
+        return delta.total_seconds() >= delay
+
+    def bot_cycle(self):
+        """Run a single round of checkout and builds."""
+        print('Bot cycle starting %s.' % str(datetime.datetime.utcnow()))
+        self.load_bot_config_json()
+        actions = ('host-libraries', 'compilers', 'glibcs')
+        self.bot_run_self(['--replace-sources'], 'checkout')
+        self.load_versions_json()
+        if self.get_script_text() != self.script_text:
+            print('Script changed, re-execing.')
+            # On script change, all parts of the build should be rerun.
+            for a in actions:
+                self.clear_last_build_state(a)
+            self.exec_self()
+        check_components = {'host-libraries': ('gmp', 'mpfr', 'mpc'),
+                            'compilers': ('binutils', 'gcc', 'glibc', 'linux'),
+                            'glibcs': ('glibc',)}
+        must_build = {}
+        for a in actions:
+            build_vers = self.build_state[a]['build-versions']
+            must_build[a] = False
+            if not self.build_state[a]['build-time']:
+                must_build[a] = True
+            old_vers = {}
+            new_vers = {}
+            for c in check_components[a]:
+                if c in build_vers:
+                    old_vers[c] = build_vers[c]
+                new_vers[c] = {'version': self.versions[c]['version'],
+                               'revision': self.versions[c]['revision']}
+            if new_vers == old_vers:
+                print('Versions for %s unchanged.' % a)
+            else:
+                print('Versions changed or rebuild forced for %s.' % a)
+                if a == 'compilers' and not self.part_build_old(
+                        a, self.bot_config['compilers-rebuild-delay']):
+                    print('Not requiring rebuild of compilers this soon.')
+                else:
+                    must_build[a] = True
+        if must_build['host-libraries']:
+            must_build['compilers'] = True
+        if must_build['compilers']:
+            must_build['glibcs'] = True
+        for a in actions:
+            if must_build[a]:
+                print('Must rebuild %s.' % a)
+                self.clear_last_build_state(a)
+            else:
+                print('No need to rebuild %s.' % a)
+        for a in actions:
+            if must_build[a]:
+                build_time = datetime.datetime.utcnow()
+                print('Rebuilding %s at %s.' % (a, str(build_time)))
+                self.bot_run_self([], a)
+                self.load_build_state_json()
+                self.bot_build_mail(a, build_time)
+        print('Bot cycle done at %s.' % str(datetime.datetime.utcnow()))
+
+    def bot_build_mail(self, action, build_time):
+        """Send email with the results of a build."""
+        build_time = build_time.replace(microsecond=0)
+        subject = (self.bot_config['email-subject'] %
+                   {'action': action,
+                    'build-time': str(build_time)})
+        results = self.build_state[action]['build-results']
+        changes = self.build_state[action]['result-changes']
+        ever_passed = set(self.build_state[action]['ever-passed'])
+        versions = self.build_state[action]['build-versions']
+        new_regressions = {k for k in changes if changes[k] == 'PASS -> FAIL'}
+        all_regressions = {k for k in ever_passed if results[k] == 'FAIL'}
+        all_fails = {k for k in results if results[k] == 'FAIL'}
+        if new_regressions:
+            new_reg_list = sorted(['FAIL: %s' % k for k in new_regressions])
+            new_reg_text = ('New regressions:\n\n%s\n\n' %
+                            '\n'.join(new_reg_list))
+        else:
+            new_reg_text = ''
+        if all_regressions:
+            all_reg_list = sorted(['FAIL: %s' % k for k in all_regressions])
+            all_reg_text = ('All regressions:\n\n%s\n\n' %
+                            '\n'.join(all_reg_list))
+        else:
+            all_reg_text = ''
+        if all_fails:
+            all_fail_list = sorted(['FAIL: %s' % k for k in all_fails])
+            all_fail_text = ('All failures:\n\n%s\n\n' %
+                             '\n'.join(all_fail_list))
+        else:
+            all_fail_text = ''
+        if changes:
+            changes_list = sorted(changes.keys())
+            changes_list = ['%s: %s' % (changes[k], k) for k in changes_list]
+            changes_text = ('All changed results:\n\n%s\n\n' %
+                            '\n'.join(changes_list))
+        else:
+            changes_text = ''
+        results_text = (new_reg_text + all_reg_text + all_fail_text +
+                        changes_text)
+        if not results_text:
+            results_text = 'Clean build with unchanged results.\n\n'
+        versions_list = sorted(versions.keys())
+        versions_list = ['%s: %s (%s)' % (k, versions[k]['version'],
+                                          versions[k]['revision'])
+                         for k in versions_list]
+        versions_text = ('Component versions for this build:\n\n%s\n' %
+                         '\n'.join(versions_list))
+        body_text = results_text + versions_text
+        msg = email.mime.text.MIMEText(body_text)
+        msg['Subject'] = subject
+        msg['From'] = self.bot_config['email-from']
+        msg['To'] = self.bot_config['email-to']
+        msg['Message-ID'] = email.utils.make_msgid()
+        msg['Date'] = email.utils.format_datetime(datetime.datetime.utcnow())
+        with smtplib.SMTP(self.bot_config['email-server']) as s:
+            s.send_message(msg)
+
+    def bot_run_self(self, opts, action):
+        """Run a copy of this script with given options."""
+        cmd = [sys.executable, sys.argv[0], '--keep=none',
+               '-j%d' % self.parallelism]
+        cmd.extend(opts)
+        cmd.extend([self.topdir, action])
+        subprocess.run(cmd, check=True)
+
 
 class Config(object):
     """A configuration for building a compiler and associated libraries."""
@@ -1312,8 +1464,8 @@ def get_parser():
                         help='Toplevel working directory')
     parser.add_argument('action',
                         help='What to do',
-                        choices=('checkout', 'host-libraries', 'compilers',
-                                 'glibcs'))
+                        choices=('checkout', 'bot-cycle', 'host-libraries',
+                                 'compilers', 'glibcs'))
     parser.add_argument('configs',
                         help='Versions to check out or configurations to build',
                         nargs='*')
