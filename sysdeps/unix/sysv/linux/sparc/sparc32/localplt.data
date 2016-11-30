@@ -16,10 +16,8 @@ libc.so: malloc
 libc.so: memalign
 libc.so: realloc
 libm.so: matherr
-# The dynamic loader uses __libc_memalign internally to allocate
-# aligned TLS storage. The other malloc family of functions are
-# expected to allow user symbol interposition.
-ld.so: __libc_memalign
+# The main malloc is interposed into the dynamic linker, for
+# allocations after the initial link (when dlopen is used).
 ld.so: malloc
 ld.so: calloc
 ld.so: realloc

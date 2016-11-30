@@ -31,8 +31,10 @@
 
 #include <assert.h>
 
-/* Minimal `malloc' allocator for use while loading shared libraries.
-   No block is ever freed.  */
+/* Minimal malloc allocator for used during initial link.  After the
+   initial link, a full malloc implementation is interposed, either
+   the one in libc, or a different one supplied by the user through
+   interposition.  */
 
 static void *alloc_ptr, *alloc_end, *alloc_last_block;
 
@@ -49,7 +51,7 @@ extern unsigned long int weak_function strtoul (const char *nptr,
 
 /* Allocate an aligned memory block.  */
 void * weak_function
-__libc_memalign (size_t align, size_t n)
+malloc (size_t n)
 {
   if (alloc_end == 0)
     {
@@ -62,8 +64,8 @@ __libc_memalign (size_t align, size_t n)
     }
 
   /* Make sure the allocation pointer is ideally aligned.  */
-  alloc_ptr = (void *) 0 + (((alloc_ptr - (void *) 0) + align - 1)
-			    & ~(align - 1));
+  alloc_ptr = (void *) 0 + (((alloc_ptr - (void *) 0) + MALLOC_ALIGNMENT - 1)
+			    & ~(MALLOC_ALIGNMENT - 1));
 
   if (alloc_ptr + n >= alloc_end || n >= -(uintptr_t) alloc_ptr)
     {
@@ -86,12 +88,6 @@ __libc_memalign (size_t align, size_t n)
   alloc_last_block = (void *) alloc_ptr;
   alloc_ptr += n;
   return alloc_last_block;
-}
-
-void * weak_function
-malloc (size_t n)
-{
-  return __libc_memalign (MALLOC_ALIGNMENT, n);
 }
 
 /* We use this function occasionally since the real implementation may

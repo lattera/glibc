@@ -1,5 +1,4 @@
 GLIBC_2.22 GLIBC_2.22 A
-GLIBC_2.22 __libc_memalign F
 GLIBC_2.22 __libc_stack_end D 0x4
 GLIBC_2.22 __stack_chk_guard D 0x4
 GLIBC_2.22 __tls_get_addr F

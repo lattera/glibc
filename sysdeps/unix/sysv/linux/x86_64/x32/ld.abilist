@@ -1,5 +1,4 @@
 GLIBC_2.16 GLIBC_2.16 A
-GLIBC_2.16 __libc_memalign F
 GLIBC_2.16 __libc_stack_end D 0x4
 GLIBC_2.16 __tls_get_addr F
 GLIBC_2.16 _dl_mcount F

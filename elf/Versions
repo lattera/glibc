@@ -34,8 +34,8 @@ libc {
 
 ld {
   GLIBC_2.0 {
-    # Function from libc.so which must be shared with libc.
-    __libc_memalign; calloc; free; malloc; realloc;
+    # Functions which are interposed from libc.so.
+    calloc; free; malloc; realloc;
 
     _r_debug;
   }

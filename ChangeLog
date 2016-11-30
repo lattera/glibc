@@ -1,5 +1,62 @@
 2016-11-30  Florian Weimer  <fweimer@redhat.com>
 
+	Remove __libc_memalign from ld.so because it is unused.
+	* elf/dl-minimal.c: Update comment on the malloc implementation.
+	(malloc): Renamed from __libc_memalign, replacing the original
+	malloc implementation.  Replace the align parameter with
+	MALLOC_ALIGNMENT.
+	* elf/Versions (ld): Update comment and remove __libc_memalign.
+	* sysdeps/nacl/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ld-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/ld.abilist: Likewise.
+	* sysdeps/generic/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/arm/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/i386/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/localplt.data
+	(ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/localplt.data
+	(ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/localplt.data (ld.so):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/sh/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/localplt.data (ld.so): Likewise.
+	* sysdeps/x86_64/localplt.data (ld.so): Likewise.
+
+2016-11-30  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #16628]
 	Implement _dl_catch_error, _dl_signal_error in libc.so.
 	* elf/dl-error-skeleton.c: Rename from elf/dl-error.c.
