@@ -80,6 +80,12 @@ Version 2.25
   affect the ABI of other libraries that use this type in their interfaces,
   if they are compiled or used with those options.
 
+* The buffer size for byte-oriented stdio streams is now limited to 8192
+  bytes by default.  Previously, on Linux, the default buffer size on most
+  file systems was 4096 bytes (and thus remains unchanged), except on
+  network file systems, where the buffer size was unpredictable and could be
+  as large as several megabytes.
+
 * The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
   for the Linux quota interface which predates kernel version 2.4.22 has
   been removed.

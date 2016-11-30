@@ -1,3 +1,9 @@
+2016-11-30  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #4099]
+	* libio/filedoalloc.c (_IO_file_doallocate): Limit buffer size to
+	_IO_BUFSIZ (8192).
+
 2016-11-30  Carlos O'Donell  <carlos@redhat.com>
 
 	* PROJECTS: Remove file.
