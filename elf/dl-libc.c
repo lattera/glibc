@@ -43,8 +43,8 @@ dlerror_run (void (*operate) (void *), void *args)
   const char *last_errstring = NULL;
   bool malloced;
 
-  int result = (GLRO(dl_catch_error) (&objname, &last_errstring, &malloced,
-				      operate, args)
+  int result = (_dl_catch_error (&objname, &last_errstring, &malloced,
+				operate, args)
 		?: last_errstring != NULL);
 
   if (result && malloced)

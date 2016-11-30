@@ -24,12 +24,12 @@ include ../Makeconfig
 headers		= elf.h bits/elfclass.h link.h bits/link.h
 routines	= $(all-dl-routines) dl-support dl-iteratephdr \
 		  dl-addr dl-addr-obj enbl-secure dl-profstub \
-		  dl-origin dl-libc dl-sym dl-tsd dl-sysdep
+		  dl-origin dl-libc dl-sym dl-sysdep dl-error
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
 dl-routines	= $(addprefix dl-,load lookup object reloc deps hwcaps \
-				  runtime error init fini debug misc \
+				  runtime init fini debug misc \
 				  version profile conflict tls origin scope \
 				  execstack caller open close trampoline)
 ifeq (yes,$(use-ldconfig))
@@ -43,7 +43,8 @@ shared-only-routines += dl-caller
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
-rtld-routines	= rtld $(all-dl-routines) dl-sysdep dl-environ dl-minimal
+rtld-routines	= rtld $(all-dl-routines) dl-sysdep dl-environ dl-minimal \
+  dl-error-minimal
 all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
@@ -150,7 +151,8 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-nodelete) \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
 	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
-	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload
+	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
+	 tst-latepthread
 #	 reldep9
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
@@ -224,7 +226,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-array5dep tst-null-argv-lib \
 		tst-tlsalign-lib tst-nodelete-opened-lib tst-nodelete2mod \
 		tst-audit11mod1 tst-audit11mod2 tst-auditmod11 \
-		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12
+		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12 \
+		tst-latepthreadmod
 ifeq (yes,$(have-mtls-dialect-gnu2))
 tests += tst-gnu2-tls1
 modules-names += tst-gnu2-tls1mod
@@ -1263,6 +1266,14 @@ $(objpfx)tst-audit12: $(libdl)
 tst-audit12-ENV = LD_AUDIT=$(objpfx)tst-auditmod12.so
 $(objpfx)tst-audit12mod1.so: $(objpfx)tst-audit12mod2.so
 LDFLAGS-tst-audit12mod2.so = -Wl,--version-script=tst-audit12mod2.map
+
+# Override -z defs, so that we can reference an undefined symbol.
+# Force lazy binding for the same reason.
+LDFLAGS-tst-latepthreadmod.so = \
+  -Wl,-z,lazy -Wl,--unresolved-symbols=ignore-all
+$(objpfx)tst-latepthreadmod.so: $(shared-thread-library)
+$(objpfx)tst-latepthread: $(libdl)
+$(objpfx)tst-latepthread.out: $(objpfx)tst-latepthreadmod.so
 
 tst-prelink-ENV = LD_TRACE_PRELINKING=1
 

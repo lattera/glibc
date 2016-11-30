@@ -357,10 +357,6 @@ struct rtld_global
   /* List of search directories.  */
   EXTERN struct r_search_path_elem *_dl_all_dirs;
 
-#ifdef _LIBC_REENTRANT
-  EXTERN void **(*_dl_error_catch_tsd) (void) __attribute__ ((const));
-#endif
-
   /* Structure describing the dynamic linker itself.  We need to
      reserve memory for the data the audit libraries need.  */
   EXTERN struct link_map _dl_rtld_map;
@@ -583,10 +579,6 @@ struct rtld_global_ro
      PLT relocations in libc.so.  */
   void (*_dl_debug_printf) (const char *, ...)
        __attribute__ ((__format__ (__printf__, 1, 2)));
-  int (internal_function *_dl_catch_error) (const char **, const char **,
-					    bool *, void (*) (void *), void *);
-  void (internal_function *_dl_signal_error) (int, const char *, const char *,
-					      const char *);
   void (*_dl_mcount) (ElfW(Addr) frompc, ElfW(Addr) selfpc);
   lookup_t (internal_function *_dl_lookup_symbol_x) (const char *,
 						     struct link_map *,
@@ -630,13 +622,6 @@ extern const struct rtld_global_ro _rtld_global_ro
 /* dl-support.c defines these and initializes them early on.  */
 extern const ElfW(Phdr) *_dl_phdr;
 extern size_t _dl_phnum;
-#endif
-
-#if IS_IN (rtld)
-/* This is the initial value of GL(dl_error_catch_tsd).
-   A non-TLS libpthread will change it.  */
-extern void **_dl_initial_error_catch_tsd (void) __attribute__ ((const))
-     attribute_hidden;
 #endif
 
 /* This is the initial value of GL(dl_make_stack_executable_hook).
@@ -705,9 +690,20 @@ extern void _dl_debug_printf_c (const char *fmt, ...)
 
 /* Write a message on the specified descriptor FD.  The parameters are
    interpreted as for a `printf' call.  */
+#if IS_IN (rtld) || !defined (SHARED)
 extern void _dl_dprintf (int fd, const char *fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3)))
      attribute_hidden;
+#else
+__attribute__ ((always_inline, __format__ (__printf__, 2, 3)))
+static inline void
+_dl_dprintf (int fd, const char *fmt, ...)
+{
+  /* Use local declaration to avoid includign <stdio.h>.  */
+  extern int __dprintf(int fd, const char *format, ...) attribute_hidden;
+  __dprintf (fd, fmt, __builtin_va_arg_pack ());
+}
+#endif
 
 /* Write a message on the specified descriptor standard output.  The
    parameters are interpreted as for a `printf' call.  */
@@ -737,13 +733,26 @@ extern void _dl_dprintf (int fd, const char *fmt, ...)
    problem.  */
 extern void _dl_signal_error (int errcode, const char *object,
 			      const char *occurred, const char *errstring)
-     internal_function __attribute__ ((__noreturn__)) attribute_hidden;
+     internal_function __attribute__ ((__noreturn__));
+libc_hidden_proto (_dl_signal_error)
 
 /* Like _dl_signal_error, but may return when called in the context of
-   _dl_receive_error.  */
+   _dl_receive_error.  This is only used during ld.so bootstrap.  In
+   static and profiled builds, this is equivalent to
+   _dl_signal_error.  */
+#if IS_IN (rtld)
 extern void _dl_signal_cerror (int errcode, const char *object,
 			       const char *occation, const char *errstring)
      internal_function attribute_hidden;
+#else
+__attribute__ ((always_inline))
+static inline void
+_dl_signal_cerror (int errcode, const char *object,
+			       const char *occation, const char *errstring)
+{
+  _dl_signal_error (errcode, object, occation, errstring);
+}
+#endif
 
 /* Call OPERATE, receiving errors from `dl_signal_cerror'.  Unlike
    `_dl_catch_error' the operation is resumed after the OPERATE
@@ -764,7 +773,8 @@ extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
 extern int _dl_catch_error (const char **objname, const char **errstring,
 			    bool *mallocedp, void (*operate) (void *),
 			    void *args)
-     internal_function attribute_hidden;
+     internal_function;
+libc_hidden_proto (_dl_catch_error)
 
 /* Open the shared object NAME and map in its segments.
    LOADER's DT_RPATH is used in searching for NAME.

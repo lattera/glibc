@@ -1,5 +1,5 @@
-/* Error handling for runtime dynamic linker, full version.
-   Copyright (C) 1995-2016 Free Software Foundation, Inc.
+/* DSO which links against libpthread and triggers a lazy binding.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This implementation lives in libc.so because it uses thread-local
-   data, which is not available in ld.so.  It interposes the version
-   in dl-error-minimal.c after ld.so bootstrap.
+/* This file is compiled into a DSO which loads libpthread, but fails
+   the dynamic linker afterwards.  */
 
-   The signal/catch mechanism is used by the audit framework, which
-   means that even in ld.so, not all errors are fatal.  */
+#include <pthread.h>
 
-#define DL_ERROR_BOOTSTRAP 0
-#include "dl-error-skeleton.c"
+/* Link in libpthread.  */
+void *pthread_create_ptr = &pthread_create;
+
+int this_function_is_not_defined (void);
+
+int
+trigger_dynlink_failure (void)
+{
+  return this_function_is_not_defined ();
+}

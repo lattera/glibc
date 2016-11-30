@@ -16,3 +16,6 @@ ld.so: malloc
 ld.so: calloc
 ld.so: realloc
 ld.so: free
+# The TLS-enabled version of these functions is interposed from libc.so.
+ld.so: _dl_signal_error
+ld.so: _dl_catch_error

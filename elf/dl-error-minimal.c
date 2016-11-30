@@ -1,4 +1,4 @@
-/* Error handling for runtime dynamic linker, full version.
+/* Error handling for runtime dynamic linker, minimal version.
    Copyright (C) 1995-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This implementation lives in libc.so because it uses thread-local
-   data, which is not available in ld.so.  It interposes the version
-   in dl-error-minimal.c after ld.so bootstrap.
+/* This version does lives in ld.so, does not use thread-local data
+   and supports _dl_signal_cerror and _dl_receive_error.  */
 
-   The signal/catch mechanism is used by the audit framework, which
-   means that even in ld.so, not all errors are fatal.  */
-
-#define DL_ERROR_BOOTSTRAP 0
+#define DL_ERROR_BOOTSTRAP 1
 #include "dl-error-skeleton.c"

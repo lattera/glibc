@@ -814,7 +814,7 @@ _dl_close (void *_map)
     }
 
   if (__builtin_expect (map->l_direct_opencount, 1) == 0)
-    GLRO(dl_signal_error) (0, map->l_name, NULL, N_("shared object not open"));
+    _dl_signal_error (0, map->l_name, NULL, N_("shared object not open"));
 
   /* Acquire the lock.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));

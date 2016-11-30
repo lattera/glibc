@@ -61,7 +61,7 @@ dlopen_doit (void *a)
   if (args->mode & ~(RTLD_BINDING_MASK | RTLD_NOLOAD | RTLD_DEEPBIND
 		     | RTLD_GLOBAL | RTLD_LOCAL | RTLD_NODELETE
 		     | __RTLD_SPROF))
-    GLRO(dl_signal_error) (0, NULL, NULL, _("invalid mode parameter"));
+    _dl_signal_error (0, NULL, NULL, _("invalid mode parameter"));
 
   args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
 			     args->caller,

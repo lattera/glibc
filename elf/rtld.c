@@ -167,8 +167,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
 
     /* Function pointers.  */
     ._dl_debug_printf = _dl_debug_printf,
-    ._dl_catch_error = _dl_catch_error,
-    ._dl_signal_error = _dl_signal_error,
     ._dl_mcount = _dl_mcount,
     ._dl_lookup_symbol_x = _dl_lookup_symbol_x,
     ._dl_check_caller = _dl_check_caller,
@@ -637,18 +635,6 @@ cannot allocate TLS data structures for initial thread");
   return tcbp;
 }
 
-#ifdef _LIBC_REENTRANT
-/* _dl_error_catch_tsd points to this for the single-threaded case.
-   It's reset by the thread library for multithreaded programs.  */
-void ** __attribute__ ((const))
-_dl_initial_error_catch_tsd (void)
-{
-  static void *data;
-  return &data;
-}
-#endif
-
-
 static unsigned int
 do_preload (const char *fname, struct link_map *main_map, const char *where)
 {
@@ -751,11 +737,6 @@ dl_main (const ElfW(Phdr) *phdr,
   hp_timing_t diff;
 #endif
   void *tcbp = NULL;
-
-#ifdef _LIBC_REENTRANT
-  /* Explicit initialization since the reloc would just be more work.  */
-  GL(dl_error_catch_tsd) = &_dl_initial_error_catch_tsd;
-#endif
 
   GL(dl_init_static_tls) = &_dl_nothread_init_static_tls;
 

@@ -60,12 +60,12 @@ dlmopen_doit (void *a)
 	 must be the main one.  */
       if (args->file == NULL)
 # endif
-	GLRO(dl_signal_error) (EINVAL, NULL, NULL, N_("invalid namespace"));
+	_dl_signal_error (EINVAL, NULL, NULL, N_("invalid namespace"));
 
       /* It makes no sense to use RTLD_GLOBAL when loading a DSO into
 	 a namespace other than the base namespace.  */
       if (__glibc_unlikely (args->mode & RTLD_GLOBAL))
-	GLRO(dl_signal_error) (EINVAL, NULL, NULL, N_("invalid mode"));
+	_dl_signal_error (EINVAL, NULL, NULL, N_("invalid mode"));
     }
 
   args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,

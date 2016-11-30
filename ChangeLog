@@ -1,5 +1,83 @@
 2016-11-30  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #16628]
+	Implement _dl_catch_error, _dl_signal_error in libc.so.
+	* elf/dl-error-skeleton.c: Rename from elf/dl-error.c.
+	(catch_hook): Define as thread-local or regular variable,
+	depending on DL_ERROR_BOOTSTRAP.
+	(CATCH_HOOK): Remove.
+	(dl_signal_error, _dl_catch_error): Use
+	catch_hook.  Add hidden definition for libc.
+	(_dl_receive_error, _dl_signal_cerror): Use catch_hook.  Compile
+	for DL_ERROR_BOOTSTRAP only.
+	* elf/dl-error.c: New file.
+	* elf/dl-error-minimal.c: Likewise.
+	* elf/tst-latepthread.c: Likewise.
+	* elf/tst-latepthreadmod.c: Likewise.
+	* elf/Makefile (routines): Add dl-error.
+	(dl-routines): Remove dl-error.
+	(rtld-routines): Add dl-error-minimal.
+	[build-shared] (tests): Add tst-latepthread.
+	(module-names): Add tst-latepthreadmod.
+	(LDFLAGS-tst-latepthreadmod.so): Enable lazy binding to undefined
+	symbol.
+	(tst-latepthreadmod.so): Link against libpthread.
+	(tst-latepthread): Link against libdbl.
+	* elf/Versions [libc] (GLIBC_PRIVATE): Add _dl_signal_error,
+	_dl_catch_error.
+	[ld] (GLIBC_PRIVATE): Likewise.
+	* elf/dl-close.c (_dl_cose): Call _dl_signal_error directly.
+	* elf/dl-libc.c (dlerror_run): Call _dl_catch_error directly.
+	* elf/dl-sym.c (do_sym): Call _dl_signal_error, _dl_catch_error
+	directly.
+	* elf/dl-tsd.c: Remove file.
+	* elf/rtld.c (_rtld_global_ro): Remove initializers for
+	_dl_catch_error, _dl_signal_error.
+	(_dl_initial_error_catch_tsd): Remove definition.
+	(do_preload): Remove initialization of dl_error_catch_tsd.
+	* dlfcn/dlerror.c (_dlerror_run): Call _dl_catch_error directly.
+	* dlfcn/dlinfo.c (dlinfo_doit): Call _dl_signal_error directly.
+	* dlfcn/dlmopen.c (dlmopen_doit): Likewise.
+	* dlfcn/dlopen.c (dlopen_doit): Likewise.
+	* nptl/nptl-init.c (__pthread_initialize_minimal_internal): Do not
+	set dl_error_catch_tsd.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Remove
+	_dl_error_catch_tsd member.
+	(struct rtld_global_ro): Remove _dl_catch_error, _dl_signal_error
+	members.
+	(_dl_initial_error_catch_tsd): Remove declaration.
+	(_dl_dprintf): Provide definition for use outside of ld.so.
+	[!rtld] (_dl_signal_cerror): Redirect to _dl_signal_error.
+	(_dl_signal_error, _dl_catch_error): Make public.  Add hidden
+	prototype for libc.
+	* sysdeps/generic/localplt.data (ld.so): Add _dl_signal_error,
+	_dl_catch_error.
+	* sysdeps/unix/sysv/linux/aarch64/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/arm/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/i386/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/localplt.data (ld.so):
+	Likewise.
+	* sysdeps/unix/sysv/linux/nios2/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/localplt.data
+	(ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/localplt.data
+	(ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/localplt.data (ld.so):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/sh/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/localplt.data (ld.so):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/localplt.data (ld.so):
+	Likewise.
+	* sysdeps/x86_64/localplt.data (ld.so): Likewise.
+
+2016-11-30  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #4099]
 	* libio/filedoalloc.c (_IO_file_doallocate): Limit buffer size to
 	_IO_BUFSIZ (8192).

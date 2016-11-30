@@ -60,7 +60,7 @@ dlinfo_doit (void *argsblock)
 	    break;
 
       if (l == NULL)
-	GLRO(dl_signal_error) (0, NULL, NULL, N_("\
+	_dl_signal_error (0, NULL, NULL, N_("\
 RTLD_SELF used in code not dynamically loaded"));
     }
 # endif
@@ -69,7 +69,7 @@ RTLD_SELF used in code not dynamically loaded"));
     {
     case RTLD_DI_CONFIGADDR:
     default:
-      GLRO(dl_signal_error) (0, NULL, NULL, N_("unsupported dlinfo request"));
+      _dl_signal_error (0, NULL, NULL, N_("unsupported dlinfo request"));
       break;
 
     case RTLD_DI_LMID:

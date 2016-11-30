@@ -123,8 +123,8 @@ do_sym (void *handle, const char *name, void *who,
 	  const char *objname;
 	  const char *errstring = NULL;
 	  bool malloced;
-	  int err = GLRO(dl_catch_error) (&objname, &errstring, &malloced,
-					  call_dl_lookup, &args);
+	  int err = _dl_catch_error (&objname, &errstring, &malloced,
+				     call_dl_lookup, &args);
 
 	  THREAD_GSCOPE_RESET_FLAG ();
 
@@ -136,7 +136,7 @@ do_sym (void *handle, const char *name, void *who,
 	      if (malloced)
 		free ((char *) errstring);
 
-	      GLRO(dl_signal_error) (err, objname_dup, NULL, errstring_dup);
+	      _dl_signal_error (err, objname_dup, NULL, errstring_dup);
 	      /* NOTREACHED */
 	    }
 
@@ -150,7 +150,7 @@ do_sym (void *handle, const char *name, void *who,
 	  if (match == NULL
 	      || caller < match->l_map_start
 	      || caller >= match->l_map_end)
-	    GLRO(dl_signal_error) (0, NULL, NULL, N_("\
+	    _dl_signal_error (0, NULL, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
 	}
 
