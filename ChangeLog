@@ -1,3 +1,8 @@
+2016-11-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy-ppc64.c (weak_alias):
+	Remove redirection to __stpcpy_ppc.
+
 2016-11-30  Florian Weimer  <fweimer@redhat.com>
 
 	Remove __libc_memalign from ld.so because it is unused.

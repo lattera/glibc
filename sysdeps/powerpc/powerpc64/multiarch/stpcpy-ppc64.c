@@ -27,9 +27,7 @@ extern __typeof (stpcpy) __stpcpy_ppc attribute_hidden;
 #define strlen __strlen_ppc
 
 #undef weak_alias
-#define weak_alias(name, aliasname) \
-  extern __typeof (__stpcpy_ppc) aliasname \
-    __attribute__ ((weak, alias ("__stpcpy_ppc")));
+#define weak_alias(name, aliasname)
 
 #undef libc_hidden_def
 #define libc_hidden_def(name)
