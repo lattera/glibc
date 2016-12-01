@@ -1,3 +1,15 @@
+2016-12-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py: Add bot to usage message.  Import
+	time module.
+	(Context.__init__): Initialize self.logsdir_old.
+	(Context.run_builds): Handle bot action.
+	(Context.bot_cycle): Copy logs directory before running builds.
+	(Context.bot_run_self): Take argument for whether to check
+	subprocess result.  Flush stdout before running subprocess.
+	(Context.bot): New function.
+	(get_parser): Allow bot action.
+
 2016-11-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py: Add bot-cycle to usage message.

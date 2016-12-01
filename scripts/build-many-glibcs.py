@@ -23,13 +23,14 @@ This script takes as arguments a directory name (containing a src
 subdirectory with sources of the relevant toolchain components) and a
 description of what to do: 'checkout', to check out sources into that
 directory, 'bot-cycle', to run a series of checkout and build steps,
-'host-libraries', to build libraries required by the toolchain,
-'compilers', to build cross-compilers for various configurations, or
-'glibcs', to build glibc for various configurations and run the
-compilation parts of the testsuite.  Subsequent arguments name the
-versions of components to check out (<component>-<version), for
-'checkout', or, for actions other than 'checkout' and 'bot-cycle',
-name configurations for which compilers or glibc are to be built.
+'bot', to run 'bot-cycle' repeatedly, 'host-libraries', to build
+libraries required by the toolchain, 'compilers', to build
+cross-compilers for various configurations, or 'glibcs', to build
+glibc for various configurations and run the compilation parts of the
+testsuite.  Subsequent arguments name the versions of components to
+check out (<component>-<version), for 'checkout', or, for actions
+other than 'checkout' and 'bot-cycle', name configurations for which
+compilers or glibc are to be built.
 
 """
 
@@ -45,6 +46,7 @@ import smtplib
 import stat
 import subprocess
 import sys
+import time
 import urllib.request
 
 
@@ -66,6 +68,7 @@ class Context(object):
                                                       'host-libraries')
         self.builddir = os.path.join(topdir, 'build')
         self.logsdir = os.path.join(topdir, 'logs')
+        self.logsdir_old = os.path.join(topdir, 'logs-old')
         self.makefile = os.path.join(self.builddir, 'Makefile')
         self.wrapper = os.path.join(self.builddir, 'wrapper')
         self.save_logs = os.path.join(self.builddir, 'save-logs')
@@ -403,6 +406,12 @@ class Context(object):
                 print('error: configurations specified for bot-cycle')
                 exit(1)
             self.bot_cycle()
+            return
+        if action == 'bot':
+            if configs:
+                print('error: configurations specified for bot')
+                exit(1)
+            self.bot()
             return
         if action == 'host-libraries' and configs:
             print('error: configurations specified for host-libraries')
@@ -937,6 +946,9 @@ class Context(object):
                 self.clear_last_build_state(a)
             else:
                 print('No need to rebuild %s.' % a)
+        if os.access(self.logsdir, os.F_OK):
+            shutil.rmtree(self.logsdir_old, ignore_errors=True)
+            shutil.copytree(self.logsdir, self.logsdir_old)
         for a in actions:
             if must_build[a]:
                 build_time = datetime.datetime.utcnow()
@@ -1004,13 +1016,31 @@ class Context(object):
         with smtplib.SMTP(self.bot_config['email-server']) as s:
             s.send_message(msg)
 
-    def bot_run_self(self, opts, action):
+    def bot_run_self(self, opts, action, check=True):
         """Run a copy of this script with given options."""
         cmd = [sys.executable, sys.argv[0], '--keep=none',
                '-j%d' % self.parallelism]
         cmd.extend(opts)
         cmd.extend([self.topdir, action])
-        subprocess.run(cmd, check=True)
+        sys.stdout.flush()
+        subprocess.run(cmd, check=check)
+
+    def bot(self):
+        """Run repeated rounds of checkout and builds."""
+        while True:
+            self.load_bot_config_json()
+            if not self.bot_config['run']:
+                print('Bot exiting by request.')
+                exit(0)
+            self.bot_run_self([], 'bot-cycle', check=False)
+            self.load_bot_config_json()
+            if not self.bot_config['run']:
+                print('Bot exiting by request.')
+                exit(0)
+            time.sleep(self.bot_config['delay'])
+            if self.get_script_text() != self.script_text:
+                print('Script changed, bot re-execing.')
+                self.exec_self()
 
 
 class Config(object):
@@ -1464,8 +1494,8 @@ def get_parser():
                         help='Toplevel working directory')
     parser.add_argument('action',
                         help='What to do',
-                        choices=('checkout', 'bot-cycle', 'host-libraries',
-                                 'compilers', 'glibcs'))
+                        choices=('checkout', 'bot-cycle', 'bot',
+                                 'host-libraries', 'compilers', 'glibcs'))
     parser.add_argument('configs',
                         help='Versions to check out or configurations to build',
                         nargs='*')
