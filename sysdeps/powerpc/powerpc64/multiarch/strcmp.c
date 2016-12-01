@@ -27,9 +27,13 @@
 extern __typeof (strcmp) __strcmp_ppc attribute_hidden;
 extern __typeof (strcmp) __strcmp_power7 attribute_hidden;
 extern __typeof (strcmp) __strcmp_power8 attribute_hidden;
+extern __typeof (strcmp) __strcmp_power9 attribute_hidden;
+
 # undef strcmp
 
 libc_ifunc_redirected (__redirect_strcmp, strcmp,
+			(hwcap2 & PPC_FEATURE2_ARCH_3_00)
+			? __strcmp_power9 :
 		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
 		       ? __strcmp_power8
 		       : (hwcap & PPC_FEATURE_HAS_VSX)

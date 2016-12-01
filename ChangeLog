@@ -1,3 +1,14 @@
+2016-12-01  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile
+	(sysdep_routines): Add strcmp_power9.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(strcmp): Add __strcmp_power9 to list of strcmp functions.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power9.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp.c
+	(strcmp): Add __strcmp_power9 to ifunc list.
+	* sysdeps/powerpc/powerpc64/power9/strcmp.S: New file.
+
 2016-12-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/fp-logb.h: New file.

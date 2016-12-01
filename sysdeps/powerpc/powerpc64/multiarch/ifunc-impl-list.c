@@ -311,6 +311,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/powerpc/powerpc64/multiarch/strcmp.c.  */
   IFUNC_IMPL (i, name, strcmp,
 	      IFUNC_IMPL_ADD (array, i, strcmp,
+			      hwcap2 & PPC_FEATURE2_ARCH_3_00,
+			      __strcmp_power9)
+	      IFUNC_IMPL_ADD (array, i, strcmp,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strcmp_power8)
 	      IFUNC_IMPL_ADD (array, i, strcmp,
