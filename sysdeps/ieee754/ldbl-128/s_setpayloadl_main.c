@@ -27,7 +27,7 @@
 #define EXPLICIT_MANT_DIG 112
 
 int
-FUNC (long double *x, long double payload)
+FUNC (_Float128 *x, _Float128 payload)
 {
   uint64_t hx, lx;
   GET_LDOUBLE_WORDS64 (hx, lx, payload);

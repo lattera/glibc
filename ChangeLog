@@ -1,5 +1,9 @@
 2016-12-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/ldbl-128/s_getpayloadl.c (getpayloadl): Use
+	_Float128 instead of long double.
+	* sysdeps/ieee754/ldbl-128/s_setpayloadl_main.c (FUNC): Likewise.
+
 	* sysdeps/alpha/setjmp.S (__sigsetjmp): Use hidden_def.
 	* sysdeps/hppa/setjmp.S (__sigsetjmp): Likewise.
 	* sysdeps/mips/mips64/setjmp.S (__sigsetjmp): Likewise.
