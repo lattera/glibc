@@ -44,3 +44,4 @@ ENTRY(__sigsetjmp)
 	j plt(__sigjmp_save)
 	jrp lr   /* Keep the backtracer happy. */
 END(__sigsetjmp)
+hidden_def (__sigsetjmp)

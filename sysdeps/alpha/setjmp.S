@@ -96,6 +96,7 @@ $sigsetjmp_local:
 #endif
 
 END(__sigsetjmp)
+hidden_def (__sigsetjmp)
 
 /* Put these traditional entry points in the same file so that we can
    elide much of the nonsense in trying to jmp to the real function.  */

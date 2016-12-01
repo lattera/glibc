@@ -78,3 +78,4 @@ ENTRY (__sigsetjmp)
 # endif
 #endif
 END (__sigsetjmp)
+hidden_def (__sigsetjmp)

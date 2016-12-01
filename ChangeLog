@@ -1,3 +1,16 @@
+2016-12-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/alpha/setjmp.S (__sigsetjmp): Use hidden_def.
+	* sysdeps/hppa/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/mips/mips64/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/mips/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/sh/sh3/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/sh/sh4/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/sparc/sparc32/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/tile/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setjmp.S (__sigsetjmp):
+	Likewise.
+
 2016-12-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/powerpc64/multiarch/strrchr-ppc64.c (weak_alias):

@@ -61,6 +61,7 @@ __sigsetjmp_local:
 	 mov	%g1, %o0
 
 END(__sigsetjmp)
+hidden_def (__sigsetjmp)
 
 weak_extern(_setjmp)
 weak_extern(setjmp)

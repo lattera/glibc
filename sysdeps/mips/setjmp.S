@@ -44,3 +44,4 @@ ENTRY (__sigsetjmp)
 	j	__sigsetjmp_aux
 #endif
 END (__sigsetjmp)
+hidden_def (__sigsetjmp)

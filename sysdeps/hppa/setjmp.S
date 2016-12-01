@@ -70,3 +70,4 @@ __sigsetjmp:
 	b __sigjmp_save
 	nop
 	.procend
+hidden_def (__sigsetjmp)

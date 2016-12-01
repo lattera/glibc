@@ -42,3 +42,4 @@ ENTRY (__sigsetjmp)
 #endif
 	jr t9
 END (__sigsetjmp)
+hidden_def (__sigsetjmp)

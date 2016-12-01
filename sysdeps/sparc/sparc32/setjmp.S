@@ -53,6 +53,7 @@ ENTRY (__sigsetjmp)
 	call	__sigjmp_save
 	 mov	%g1, %o7
 END(__sigsetjmp)
+hidden_def (__sigsetjmp)
 
 weak_extern(_setjmp)
 weak_extern(setjmp)
