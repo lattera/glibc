@@ -97,12 +97,29 @@ typedef _Float128x double_t;
 # endif
 #endif
 
-/* Define macros for the return value of ilogb.
+/* Define macros for the return value of ilogb, based on
+   __FP_LOGB0_IS_MIN and __FP_LOGBNAN_IS_MIN.
 
     FP_ILOGB0	Expands to a value returned by `ilogb (0.0)'.
     FP_ILOGBNAN	Expands to a value returned by `ilogb (NAN)'.
 
 */
+
+#include <bits/fp-logb.h>
+#ifdef __USE_ISOC99
+# if __FP_LOGB0_IS_MIN
+#  define FP_ILOGB0	(-2147483647 - 1)
+# else
+#  define FP_ILOGB0	(-2147483647)
+# endif
+# if __FP_LOGBNAN_IS_MIN
+#  define FP_ILOGBNAN	(-2147483647 - 1)
+# else
+#  define FP_ILOGBNAN	2147483647
+# endif
+#endif
+
+/* Get information about long double.  */
 
 #include <bits/mathdef.h>
 

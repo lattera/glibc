@@ -1,5 +1,34 @@
 2016-12-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* bits/fp-logb.h: New file.
+	* sysdeps/ia64/bits/fp-logb.h: Likewise.
+	* sysdeps/m68k/m680x0/bits/fp-logb.h: Likewise.
+	* sysdeps/x86/bits/fp-logb.h: Likewise.
+	* math/Makefile (headers): Add bits/fp-logb.h.
+	* math/math.h: Include <bits/fp-logb.h>.
+	[__USE_ISOC99] (FP_ILOGB0): Define based on __FP_LOGB0_IS_MIN.
+	[__USE_ISOC99] (FP_ILOGBNAN): Define based on __FP_LOGBNAN_IS_MIN.
+	* bits/mathdef.h (FP_ILOGB0): Remove.
+	(FP_ILOGBNAN): Likewise.
+	* sysdeps/aarch64/bits/mathdef.h (FP_ILOGB0): Likewise.
+	(FP_ILOGBNAN): Likewise.
+	* sysdeps/alpha/bits/mathdef.h (FP_ILOGB0): Likewise.
+	(FP_ILOGBNAN): Likewise.
+	* sysdeps/ia64/bits/mathdef.h (FP_ILOGB0): Likewise.
+	(FP_ILOGBNAN): Likewise.
+	* sysdeps/m68k/m680x0/bits/mathdef.h (FP_ILOGB0): Likewise.
+	(FP_ILOGBNAN): Likewise.
+	* sysdeps/mips/bits/mathdef.h (FP_ILOGB0): Likewise.
+	(FP_ILOGBNAN): Likewise.
+	* sysdeps/powerpc/bits/mathdef.h (FP_ILOGB0): Likewise.
+	(FP_ILOGBNAN): Likewise.
+	* sysdeps/s390/bits/mathdef.h (FP_ILOGB0): Likewise.
+	(FP_ILOGBNAN): Likewise.
+	* sysdeps/sparc/bits/mathdef.h (FP_ILOGB0): Likewise.
+	(FP_ILOGBNAN): Likewise.
+	* sysdeps/x86/bits/mathdef.h (FP_ILOGB0): Likewise.
+	(FP_ILOGBNAN): Likewise.
+
 	* scripts/build-many-glibcs.py: Add bot to usage message.  Import
 	time module.
 	(Context.__init__): Initialize self.logsdir_old.

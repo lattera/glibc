@@ -1,4 +1,5 @@
-/* Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Define __FP_LOGB0_IS_MIN and __FP_LOGBNAN_IS_MIN.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,12 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if !defined _MATH_H && !defined _COMPLEX_H
-# error "Never use <bits/mathdef.h> directly; include <math.h> instead"
+#ifndef _MATH_H
+# error "Never use <bits/fp-logb.h> directly; include <math.h> instead."
 #endif
 
-#ifndef __NO_LONG_DOUBLE_MATH
-/* Signal that we do not really have a `long double'.  The disables the
-   declaration of all the `long double' function variants.  */
-# define __NO_LONG_DOUBLE_MATH	1
-#endif
+/* __FP_LOGB0_IS_MIN is defined to 1 if FP_ILOGB0 is INT_MIN, and 0 if
+   it is -INT_MAX.  __FP_LOGBNAN_IS_MIN is defined to 1 if FP_ILOGBNAN
+   is INT_MIN, and 0 if it is INT_MAX.  */
+
+#define __FP_LOGB0_IS_MIN	0
+#define __FP_LOGBNAN_IS_MIN	0
