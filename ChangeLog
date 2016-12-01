@@ -1,3 +1,8 @@
+2017-02-16  Zack Weinberg  <zackw@panix.com>
+
+	* bits/types.h: Move to posix/bits.
+	* include/bits/types.h: New wrapper.
+
 2017-02-15  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* string/bits/string2.h (strcmp): Remove define.
