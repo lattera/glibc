@@ -1,5 +1,9 @@
 2016-12-02  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
+
+2016-12-02  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* elf/Makefile (CFLAGS-tst-latepthreadmod.c):
 	Add -fno-optimize-sibling-calls.
 

@@ -40,9 +40,9 @@ ildouble: 2
 ldouble: 2
 
 Function: "acosh_downward":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 3
 ldouble: 3
@@ -1904,16 +1904,16 @@ ildouble: 1
 ldouble: 1
 
 Function: "log_towardzero":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
 Function: "log_upward":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
