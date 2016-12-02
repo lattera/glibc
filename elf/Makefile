@@ -152,7 +152,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
 	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
 	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
-	 tst-latepthread
+	 tst-latepthread tst-tls-manydynamic
 #	 reldep9
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
@@ -173,6 +173,10 @@ tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod17a-modules = $(addprefix tst-tlsmod17a, $(tlsmod17a-suffixes))
 tlsmod18a-modules = $(addprefix tst-tlsmod18a, $(tlsmod17a-suffixes))
+one-hundred = $(foreach x,0 1 2 3 4 5 6 7 8 9, \
+  0$x 1$x 2$x 3$x 4$x 5$x 6$x 7$x 8$x 9$x)
+tst-tls-many-dynamic-modules := \
+  $(foreach n,$(one-hundred),tst-tls-manydynamic$(n)mod)
 extra-test-objs += $(tlsmod17a-modules:=.os) $(tlsmod18a-modules:=.os) \
 		   tst-tlsalign-vars.o
 test-extras += tst-tlsmod17a tst-tlsmod18a tst-tlsalign-vars
@@ -227,7 +231,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-tlsalign-lib tst-nodelete-opened-lib tst-nodelete2mod \
 		tst-audit11mod1 tst-audit11mod2 tst-auditmod11 \
 		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12 \
-		tst-latepthreadmod
+		tst-latepthreadmod $(tst-tls-many-dynamic-modules)
 ifeq (yes,$(have-mtls-dialect-gnu2))
 tests += tst-gnu2-tls1
 modules-names += tst-gnu2-tls1mod
@@ -1277,6 +1281,15 @@ CFLAGS-tst-latepthreadmod.c = -fno-optimize-sibling-calls
 $(objpfx)tst-latepthreadmod.so: $(shared-thread-library)
 $(objpfx)tst-latepthread: $(libdl)
 $(objpfx)tst-latepthread.out: $(objpfx)tst-latepthreadmod.so
+
+# The test modules are parameterized by preprocessor macros.
+$(patsubst %,$(objpfx)%.os,$(tst-tls-many-dynamic-modules)): \
+  $(objpfx)tst-tls-manydynamic%mod.os : tst-tls-manydynamicmod.c
+	$(compile-command.c) \
+	  -DNAME=tls_global_$* -DSETTER=set_value_$* -DGETTER=get_value_$*
+$(objpfx)tst-tls-manydynamic: $(libdl) $(shared-thread-library)
+$(objpfx)tst-tls-manydynamic.out: \
+  $(patsubst %,$(objpfx)%.so,$(tst-tls-many-dynamic-modules))
 
 tst-prelink-ENV = LD_TRACE_PRELINKING=1
 

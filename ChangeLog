@@ -1,5 +1,19 @@
 2016-12-02  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/Makefile [build-shared] (tests): Add tst-latepthread.
+	(one-hundred, tst-tls-many-dynamic-modules): Define.
+	(modules-names): Add $(tst-tls-many-dynamic-modules).
+	(tst-tls-manydynamic%mod.os): Build with special preprocessor
+	macros.
+	(tst-tls-manydynamic): Link against libdl, libpthread.
+	(tst-tls-manydynamic.out): The test needs the test modules at run
+	time.
+	* elf/tst-tls-manydynamic.c: New file.
+	* elf/tst-tls-manydynamic.h: Likewise.
+	* elf/tst-tls-manydynamicmod.c: Likewise.
+
+2016-12-02  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/aarch64/tlsdesc.sym (TCBHEAD_DTV, DTV_COUNTER)
 	(TLS_DTV_UNALLOCATED): Add.
 	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Use explicit
