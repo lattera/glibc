@@ -920,14 +920,14 @@ compat_symbol (libpthread, __pthread_create_2_0, pthread_create,
 
 /* If pthread_create is present, libgcc_eh.a and libsupc++.a expects some other POSIX thread
    functions to be present as well.  */
-PTHREAD_STATIC_FN_REQUIRE (pthread_mutex_lock)
-PTHREAD_STATIC_FN_REQUIRE (pthread_mutex_trylock)
-PTHREAD_STATIC_FN_REQUIRE (pthread_mutex_unlock)
+PTHREAD_STATIC_FN_REQUIRE (__pthread_mutex_lock)
+PTHREAD_STATIC_FN_REQUIRE (__pthread_mutex_trylock)
+PTHREAD_STATIC_FN_REQUIRE (__pthread_mutex_unlock)
 
-PTHREAD_STATIC_FN_REQUIRE (pthread_once)
-PTHREAD_STATIC_FN_REQUIRE (pthread_cancel)
+PTHREAD_STATIC_FN_REQUIRE (__pthread_once)
+PTHREAD_STATIC_FN_REQUIRE (__pthread_cancel)
 
-PTHREAD_STATIC_FN_REQUIRE (pthread_key_create)
-PTHREAD_STATIC_FN_REQUIRE (pthread_key_delete)
-PTHREAD_STATIC_FN_REQUIRE (pthread_setspecific)
-PTHREAD_STATIC_FN_REQUIRE (pthread_getspecific)
+PTHREAD_STATIC_FN_REQUIRE (__pthread_key_create)
+PTHREAD_STATIC_FN_REQUIRE (__pthread_key_delete)
+PTHREAD_STATIC_FN_REQUIRE (__pthread_setspecific)
+PTHREAD_STATIC_FN_REQUIRE (__pthread_getspecific)

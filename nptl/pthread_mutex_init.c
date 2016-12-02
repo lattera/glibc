@@ -144,5 +144,5 @@ __pthread_mutex_init (pthread_mutex_t *mutex,
 
   return 0;
 }
-strong_alias (__pthread_mutex_init, pthread_mutex_init)
+weak_alias (__pthread_mutex_init, pthread_mutex_init)
 hidden_def (__pthread_mutex_init)

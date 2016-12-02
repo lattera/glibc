@@ -1,3 +1,67 @@
+2017-05-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Juan Manuel Torres Palma  <jmtorrespalma@gmail.com>
+
+	* include/sched.h (__sched_get_priority_max): Add libc hidden proto.
+	(__sched_get_prioriry_min): Likewise.
+	* include/sys/mman.h (__mmap): Likewise.
+	(__mmap64): Likewise.
+	(__munmap): Likewise.
+	(__mprotect): Likewise.
+	* include/termios.h (__tcsetattr): Likewise.
+	* include/time.h (__nanosleep): Use hidden_proto instead of
+	libc_hidden_proto.
+	* posix/nanosleep.c (__nanosleep): Likewise.
+	* misc/Versions (libc): Export __mmap, __munmap, __mprotect,
+	__sched_get_priority_min, and __sched_get_priority_max under
+	GLIBC_PRIVATE.
+	* nptl/allocatestack.c (__free_stacks): Use internal definition for
+	libc symbols.
+	(change_stack_perm): Likewise.
+	(change_stack_perm): Likewise.
+	(allocate_stack): Likewise.
+	* sysdeps/posix/gethostname.c: Likewise.
+	* nptl/tpp.c (__init_sched_fifo_prio): Likewise.
+	* sysdeps/unix/sysv/linux/i386/smp.h (is_smp_system): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/ioctl.c (__ioctl): Likewise.
+	* nptl/pthreadP.h (__pthread_mutex_timedlock): Add definition.
+	(__pthread_key_delete): Likewise.
+	(__pthread_detach): Likewise.
+	(__pthread_cancel): Likewise.
+	(__pthread_mutex_trylock): Likewise.
+	(__pthread_mutexattr_init): Likewise.
+	(__pthread_mutexattr_settype): Likewise.
+	* nptl/pthread_cancel.c (pthread_cancel): Change to internal name and
+	create alias for exported one.
+	* nptl/pthread_join.c (pthread_join): Likewise.
+	* nptl/pthread_detach.c (pthread_detach): Likewise.
+	* nptl/pthread_key_delete.c (pthread_key_delete): Likewise.
+	* nptl/pthread_mutex_timedlock.c (pthread_mutex_timedlock): Likewise.
+	* nptl/pthread_create.c: Change static requirements for pthread
+	symbols.
+	* nptl/pthread_equal.c (__pthread_equal): Change strong alias to weak
+	for internal definition.
+	* nptl/pthread_exit.c (__pthread_exit): Likewise.
+	* nptl/pthread_getspecific.c (__pthread_getspecific): Likewise.
+	* nptl/pthread_key_create.c (__pthread_key_create): Likewise.
+	* nptl/pthread_mutex_destroy.c (__pthread_mutex_destroy): Likewise.
+	* nptl/pthread_mutex_init.c (__pthread_mutex_init): Likewise.
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock): Likewise.
+	* nptl/pthread_mutex_trylock.c (__pthread_mutex_trylock): Likewise.
+	* nptl/pthread_mutex_unlock.c (__pthread_mutex_unlock): Likewise.
+	* nptl/pthread_mutexattr_init.c (__pthread_mutexattr_init): Likwise.
+	* nptl/pthread_mutexattr_settype.c (__pthread_mutexattr_settype):
+	Likewise.
+	* nptl/pthread_self.c (__pthread_self): Likewise.
+	* nptl/pthread_setspecific.c (__pthread_setspecific): Likewise.
+	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Likewise.
+	* misc/mmap.c (__mmap): Add internal symbol definition.
+	* misc/mmap.c (__mmap64): Likewise.
+	* sysdeps/unix/sysv/linux/mmap.c (__mmap): Likewise.
+	* sysdeps/unix/sysv/linux/mmap64.c (__mmap): Likewise.
+	(__mmap64): Likewise.
+	* sysdeps/unix/sysv/linux/i386/Versions (libc) [GLIBC_PRIVATE):
+	Add __uname.
+
 2017-06-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Update.

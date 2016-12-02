@@ -37,7 +37,7 @@ cleanup (void *arg)
 
 
 int
-pthread_join (pthread_t threadid, void **thread_return)
+__pthread_join (pthread_t threadid, void **thread_return)
 {
   struct pthread *pd = (struct pthread *) threadid;
 
@@ -115,3 +115,4 @@ pthread_join (pthread_t threadid, void **thread_return)
 
   return result;
 }
+weak_alias (__pthread_join, pthread_join)

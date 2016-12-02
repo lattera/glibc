@@ -22,7 +22,7 @@
 
 
 int
-pthread_key_delete (pthread_key_t key)
+__pthread_key_delete (pthread_key_t key)
 {
   int result = EINVAL;
 
@@ -39,3 +39,4 @@ pthread_key_delete (pthread_key_t key)
 
   return result;
 }
+weak_alias (__pthread_key_delete, pthread_key_delete)

@@ -428,6 +428,8 @@ extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
+     const struct timespec *__abstime);
 extern int __pthread_mutex_cond_lock (pthread_mutex_t *__mutex)
      attribute_hidden internal_function;
 extern void __pthread_mutex_cond_lock_adjust (pthread_mutex_t *__mutex)
@@ -491,6 +493,7 @@ extern int __pthread_cond_timedwait (pthread_cond_t *cond,
 extern int __pthread_condattr_destroy (pthread_condattr_t *attr);
 extern int __pthread_condattr_init (pthread_condattr_t *attr);
 extern int __pthread_key_create (pthread_key_t *key, void (*destr) (void *));
+extern int __pthread_key_delete (pthread_key_t key);
 extern void *__pthread_getspecific (pthread_key_t key);
 extern int __pthread_setspecific (pthread_key_t key, const void *value);
 extern int __pthread_once (pthread_once_t *once_control,
@@ -499,8 +502,11 @@ extern int __pthread_atfork (void (*prepare) (void), void (*parent) (void),
 			     void (*child) (void));
 extern pthread_t __pthread_self (void);
 extern int __pthread_equal (pthread_t thread1, pthread_t thread2);
+extern int __pthread_detach (pthread_t th);
+extern int __pthread_cancel (pthread_t th);
 extern int __pthread_kill (pthread_t threadid, int signo);
 extern void __pthread_exit (void *value) __attribute__ ((__noreturn__));
+extern int __pthread_join (pthread_t threadid, void **thread_return);
 extern int __pthread_setcanceltype (int type, int *oldtype);
 extern int __pthread_enable_asynccancel (void) attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype)
@@ -511,6 +517,7 @@ extern void __pthread_testcancel (void);
 hidden_proto (__pthread_mutex_init)
 hidden_proto (__pthread_mutex_destroy)
 hidden_proto (__pthread_mutex_lock)
+hidden_proto (__pthread_mutex_trylock)
 hidden_proto (__pthread_mutex_unlock)
 hidden_proto (__pthread_rwlock_rdlock)
 hidden_proto (__pthread_rwlock_wrlock)
@@ -521,6 +528,8 @@ hidden_proto (__pthread_setspecific)
 hidden_proto (__pthread_once)
 hidden_proto (__pthread_setcancelstate)
 hidden_proto (__pthread_testcancel)
+hidden_proto (__pthread_mutexattr_init)
+hidden_proto (__pthread_mutexattr_settype)
 #endif
 
 extern int __pthread_cond_broadcast_2_0 (pthread_cond_2_0_t *cond);

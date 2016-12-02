@@ -78,7 +78,7 @@ extern struct tm *__tz_convert (const time_t *timer, int use_localtime, struct t
 
 extern int __nanosleep (const struct timespec *__requested_time,
 			struct timespec *__remaining);
-libc_hidden_proto (__nanosleep)
+hidden_proto (__nanosleep)
 extern int __nanosleep_nocancel (const struct timespec *__requested_time,
 				 struct timespec *__remaining)
   attribute_hidden;

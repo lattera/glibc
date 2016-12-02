@@ -25,7 +25,7 @@
 #include <unistd.h>
 
 int
-pthread_cancel (pthread_t th)
+__pthread_cancel (pthread_t th)
 {
   volatile struct pthread *pd = (volatile struct pthread *) th;
 
@@ -66,7 +66,7 @@ pthread_cancel (pthread_t th)
 #ifdef SIGCANCEL
 	  /* The cancellation handler will take care of marking the
 	     thread as canceled.  */
-	  pid_t pid = getpid ();
+	  pid_t pid = __getpid ();
 
 	  INTERNAL_SYSCALL_DECL (err);
 	  int val = INTERNAL_SYSCALL_CALL (tgkill, err, pid, pd->tid,
@@ -99,5 +99,6 @@ pthread_cancel (pthread_t th)
 
   return result;
 }
+weak_alias (__pthread_cancel, pthread_cancel)
 
-PTHREAD_STATIC_FN_REQUIRE (pthread_create)
+PTHREAD_STATIC_FN_REQUIRE (__pthread_create)

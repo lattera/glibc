@@ -29,7 +29,7 @@ __gethostname (char *name, size_t len)
   struct utsname buf;
   size_t node_len;
 
-  if (uname (&buf))
+  if (__uname (&buf))
     return -1;
 
   node_len = strlen (buf.nodename) + 1;

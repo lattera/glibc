@@ -53,8 +53,10 @@ __mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
 #endif
 }
 weak_alias (__mmap64, mmap64)
+libc_hidden_def (__mmap64)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
 weak_alias (__mmap64, mmap)
 weak_alias (__mmap64, __mmap)
+libc_hidden_def (__mmap)
 #endif

@@ -40,4 +40,5 @@ __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind)
   return 0;
 }
 weak_alias (__pthread_mutexattr_settype, pthread_mutexattr_setkind_np)
-strong_alias (__pthread_mutexattr_settype, pthread_mutexattr_settype)
+weak_alias (__pthread_mutexattr_settype, pthread_mutexattr_settype)
+hidden_def (__pthread_mutexattr_settype)

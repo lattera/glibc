@@ -41,7 +41,7 @@
 
 /* Set the state of FD to *TERMIOS_P.  */
 int
-tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
+__tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
 {
   struct __kernel_termios k_termios;
   unsigned long int cmd;
@@ -77,4 +77,5 @@ tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
 
   return INLINE_SYSCALL (ioctl, 3, fd, cmd, &k_termios);
 }
+weak_alias (__tcsetattr, tcsetattr)
 libc_hidden_def (tcsetattr)

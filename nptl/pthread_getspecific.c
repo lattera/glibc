@@ -63,5 +63,5 @@ __pthread_getspecific (pthread_key_t key)
 
   return result;
 }
-strong_alias (__pthread_getspecific, pthread_getspecific)
+weak_alias (__pthread_getspecific, pthread_getspecific)
 hidden_def (__pthread_getspecific)

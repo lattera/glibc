@@ -47,5 +47,5 @@ __pthread_key_create (pthread_key_t *key, void (*destr) (void *))
 
   return EAGAIN;
 }
-strong_alias (__pthread_key_create, pthread_key_create)
+weak_alias (__pthread_key_create, pthread_key_create)
 hidden_def (__pthread_key_create)

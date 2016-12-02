@@ -29,5 +29,5 @@ __nanosleep (const struct timespec *requested_time,
 }
 stub_warning (nanosleep)
 
-libc_hidden_def (__nanosleep)
+hidden_def (__nanosleep)
 weak_alias (__nanosleep, nanosleep)

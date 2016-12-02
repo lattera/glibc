@@ -22,7 +22,7 @@
 
 
 int
-pthread_detach (pthread_t th)
+__pthread_detach (pthread_t th)
 {
   struct pthread *pd = (struct pthread *) th;
 
@@ -53,3 +53,4 @@ pthread_detach (pthread_t th)
 
   return result;
 }
+weak_alias (__pthread_detach, pthread_detach)

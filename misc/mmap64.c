@@ -45,3 +45,4 @@ __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd,
 }
 
 weak_alias (__mmap64, mmap64)
+libc_hidden_def (__mmap64)

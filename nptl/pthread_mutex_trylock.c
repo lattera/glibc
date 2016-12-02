@@ -403,6 +403,7 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 
 #ifndef __pthread_mutex_trylock
 #ifndef pthread_mutex_trylock
-strong_alias (__pthread_mutex_trylock, pthread_mutex_trylock)
+weak_alias (__pthread_mutex_trylock, pthread_mutex_trylock)
+hidden_def (__pthread_mutex_trylock)
 #endif
 #endif

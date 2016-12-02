@@ -41,15 +41,15 @@ __ioctl (int fd, unsigned long int request, ...)
       break;
 
     case TCSETS:
-      result = tcsetattr (fd, TCSANOW, (struct termios *) arg);
+      result = __tcsetattr (fd, TCSANOW, (struct termios *) arg);
       break;
 
     case TCSETSW:
-      result = tcsetattr (fd, TCSADRAIN, (struct termios *) arg);
+      result = __tcsetattr (fd, TCSADRAIN, (struct termios *) arg);
       break;
 
     case TCSETSF:
-      result = tcsetattr (fd, TCSAFLUSH, (struct termios *) arg);
+      result = __tcsetattr (fd, TCSAFLUSH, (struct termios *) arg);
       break;
 
     default:

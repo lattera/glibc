@@ -33,4 +33,5 @@ __pthread_mutexattr_init (pthread_mutexattr_t *attr)
 
   return 0;
 }
-strong_alias (__pthread_mutexattr_init, pthread_mutexattr_init)
+weak_alias (__pthread_mutexattr_init, pthread_mutexattr_init)
+hidden_def (__pthread_mutexattr_init)

@@ -36,7 +36,7 @@ is_smp_system (void)
   char *cp;
 
   /* Try reading the number using `sysctl' first.  */
-  if (uname (&u.uts) == 0)
+  if (__uname (&u.uts) == 0)
     cp = u.uts.version;
   else
     {

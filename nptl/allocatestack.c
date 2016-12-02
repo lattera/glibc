@@ -278,7 +278,7 @@ __free_stacks (size_t limit)
 
 	  /* Remove this block.  This should never fail.  If it does
 	     something is really wrong.  */
-	  if (munmap (curr->stackblock, curr->stackblock_size) != 0)
+	  if (__munmap (curr->stackblock, curr->stackblock_size) != 0)
 	    abort ();
 
 	  /* Maybe we have freed enough.  */
@@ -328,7 +328,7 @@ change_stack_perm (struct pthread *pd
 #else
 # error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
-  if (mprotect (stack, len, PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
+  if (__mprotect (stack, len, PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
     return errno;
 
   return 0;
@@ -359,14 +359,14 @@ setup_stack_prot (char *mem, size_t size, char *guard, size_t guardsize,
 #if _STACK_GROWS_DOWN
   /* As defined at guard_position, for architectures with downward stack
      the guard page is always at start of the allocated area.  */
-  if (mprotect (guardend, size - guardsize, prot) != 0)
+  if (__mprotect (guardend, size - guardsize, prot) != 0)
     return errno;
 #else
   size_t mprots1 = (uintptr_t) guard - (uintptr_t) mem;
-  if (mprotect (mem, mprots1, prot) != 0)
+  if (__mprotect (mem, mprots1, prot) != 0)
     return errno;
   size_t mprots2 = ((uintptr_t) mem + size) - (uintptr_t) guardend;
-  if (mprotect (guardend, mprots2, prot) != 0)
+  if (__mprotect (guardend, mprots2, prot) != 0)
     return errno;
 #endif
   return 0;
@@ -530,8 +530,8 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  /* If a guard page is required, avoid committing memory by first
 	     allocate with PROT_NONE and then reserve with required permission
 	     excluding the guard page.  */
-	  mem = mmap (NULL, size, (guardsize == 0) ? prot : PROT_NONE,
-		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
+	  mem = __mmap (NULL, size, (guardsize == 0) ? prot : PROT_NONE,
+			MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
 
 	  if (__glibc_unlikely (mem == MAP_FAILED))
 	    return errno;
@@ -557,7 +557,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 					    pagesize_m1);
 	      if (setup_stack_prot (mem, size, guard, guardsize, prot) != 0)
 		{
-		  munmap (mem, size);
+		  __munmap (mem, size);
 		  return errno;
 		}
 	    }
@@ -600,7 +600,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	      assert (errno == ENOMEM);
 
 	      /* Free the stack memory we just allocated.  */
-	      (void) munmap (mem, size);
+	      (void) __munmap (mem, size);
 
 	      return errno;
 	    }
@@ -630,7 +630,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	      if (err != 0)
 		{
 		  /* Free the stack memory we just allocated.  */
-		  (void) munmap (mem, size);
+		  (void) __munmap (mem, size);
 
 		  return err;
 		}
@@ -650,7 +650,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	{
 	  char *guard = guard_position (mem, size, guardsize, pd,
 					pagesize_m1);
-	  if (mprotect (guard, guardsize, PROT_NONE) != 0)
+	  if (__mprotect (guard, guardsize, PROT_NONE) != 0)
 	    {
 	    mprot_error:
 	      lll_lock (stack_cache_lock, LLL_PRIVATE);
@@ -668,7 +668,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 		 of memory caused problems we better do not use it
 		 anymore.  Uh, and we ignore possible errors.  There
 		 is nothing we could do.  */
-	      (void) munmap (mem, size);
+	      (void) __munmap (mem, size);
 
 	      return errno;
 	    }
@@ -685,19 +685,19 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  char *oldguard = mem + (((size - pd->guardsize) / 2) & ~pagesize_m1);
 
 	  if (oldguard < guard
-	      && mprotect (oldguard, guard - oldguard, prot) != 0)
+	      && __mprotect (oldguard, guard - oldguard, prot) != 0)
 	    goto mprot_error;
 
-	  if (mprotect (guard + guardsize,
+	  if (__mprotect (guard + guardsize,
 			oldguard + pd->guardsize - guard - guardsize,
 			prot) != 0)
 	    goto mprot_error;
 #elif _STACK_GROWS_DOWN
-	  if (mprotect ((char *) mem + guardsize, pd->guardsize - guardsize,
+	  if (__mprotect ((char *) mem + guardsize, pd->guardsize - guardsize,
 			prot) != 0)
 	    goto mprot_error;
 #elif _STACK_GROWS_UP
-	  if (mprotect ((char *) pd - pd->guardsize,
+	  if (__mprotect ((char *) pd - pd->guardsize,
 			pd->guardsize - guardsize, prot) != 0)
 	    goto mprot_error;
 #endif

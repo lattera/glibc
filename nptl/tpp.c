@@ -43,9 +43,9 @@ void
 __init_sched_fifo_prio (void)
 {
   atomic_store_relaxed (&__sched_fifo_max_prio,
-			sched_get_priority_max (SCHED_FIFO));
+			__sched_get_priority_max (SCHED_FIFO));
   atomic_store_relaxed (&__sched_fifo_min_prio,
-			sched_get_priority_min (SCHED_FIFO));
+			__sched_get_priority_min (SCHED_FIFO));
 }
 
 int

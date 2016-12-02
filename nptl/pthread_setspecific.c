@@ -89,5 +89,5 @@ __pthread_setspecific (pthread_key_t key, const void *value)
 
   return 0;
 }
-strong_alias (__pthread_setspecific, pthread_setspecific)
+weak_alias (__pthread_setspecific, pthread_setspecific)
 hidden_def (__pthread_setspecific)

@@ -27,8 +27,8 @@ __pthread_exit (void *value)
 
   __do_cancel ();
 }
-strong_alias (__pthread_exit, pthread_exit)
+weak_alias (__pthread_exit, pthread_exit)
 
 /* After a thread terminates, __libc_start_main decrements
    __nptl_nthreads defined in pthread_create.c.  */
-PTHREAD_STATIC_FN_REQUIRE (pthread_create)
+PTHREAD_STATIC_FN_REQUIRE (__pthread_create)
