@@ -50,7 +50,7 @@ int count_cdouble;
 int count_cfloat;
 int count_cldouble;
 
-#define NCALLS     125
+#define NCALLS     126
 #define NCALLS_INT 4
 #define NCCALLS    47
 
@@ -281,6 +281,7 @@ F(compile_test) (void)
   a = scalb (scalb (x, a), (TYPE) (6));
   k = scalbn (a, 7) + scalbln (c, 10l);
   i = ilogb (x);
+  j = llogb (x);
   a = fdim (fdim (x, a), fdim (c, b));
   b = fmax (fmax (a, x), fmax (c, b));
   a = fmin (fmin (x, a), fmin (c, b));
@@ -379,6 +380,7 @@ F(compile_test) (void)
       a = scalb (y, (const TYPE) (6));
       k = scalbn (y, 7) + scalbln (y, 10l);
       i = ilogb (y);
+      j = llogb (y);
       a = fdim (y, y);
       a = fmax (y, y);
       a = fmin (y, y);
@@ -840,6 +842,14 @@ TYPE
 
 int
 (F(ilogb)) (TYPE x)
+{
+  ++count;
+  P ();
+  return x;
+}
+
+long int
+(F(llogb)) (TYPE x)
 {
   ++count;
   P ();

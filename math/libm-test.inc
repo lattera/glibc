@@ -50,7 +50,7 @@
    ilogb, iscanonical, isfinite, isinf, isnan, isnormal, issignaling,
    issubnormal, iszero, iseqsig, isless, islessequal, isgreater,
    isgreaterequal, islessgreater, isunordered, j0, j1, jn,
-   ldexp, lgamma, log, log10, log1p, log2, logb,
+   ldexp, lgamma, llogb, log, log10, log1p, log2, logb,
    modf, nearbyint, nextafter, nexttoward,
    pow, pow10, remainder, remquo, rint, lrint, llrint,
    round, lround, llround,
@@ -9171,6 +9171,48 @@ gamma_test (void)
 }
 
 
+static const struct test_f_l_data llogb_test_data[] =
+  {
+    TEST_f_l (llogb, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_l (llogb, lit_e, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_l (llogb, 1024, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_l (llogb, -2000, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_l (llogb, 0.5, -1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_l (llogb, -0.5, -1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+
+#if MANT_DIG >= 57
+    TEST_f_l (llogb, 0x1.ffffffffffffffp1L, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_l (llogb, -0x1.ffffffffffffffp1L, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
+
+    TEST_f_l (llogb, min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_l (llogb, -min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_l (llogb, min_value, MIN_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_l (llogb, -min_value, MIN_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_l (llogb, max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_l (llogb, -max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+
+    /* llogb (0.0) == FP_LLOGB0 plus invalid exception  */
+    TEST_f_l (llogb, 0.0, FP_LLOGB0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_l (llogb, -0.0, FP_LLOGB0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    /* llogb (qNaN) == FP_LLOGBNAN plus invalid exception  */
+    TEST_f_l (llogb, qnan_value, FP_LLOGBNAN, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_l (llogb, -qnan_value, FP_LLOGBNAN, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_l (llogb, snan_value, FP_LLOGBNAN, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_l (llogb, -snan_value, FP_LLOGBNAN, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    /* llogb (inf) == LONG_MAX plus invalid exception  */
+    TEST_f_l (llogb, plus_infty, LONG_MAX, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+    /* llogb (-inf) == LONG_MAX plus invalid exception  */
+    TEST_f_l (llogb, minus_infty, LONG_MAX, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
+  };
+
+static void
+llogb_test (void)
+{
+  ALL_RM_TEST (llogb, 1, llogb_test_data, RUN_TEST_LOOP_f_l, END);
+}
+
+
 static const struct test_f_l_data lrint_test_data[] =
   {
     /* Bug 6798: errno setting may be missing.  */
@@ -13775,6 +13817,7 @@ main (int argc, char **argv)
   modf_test ();
   pow10_test ();
   ilogb_test ();
+  llogb_test ();
   scalb_test ();
   scalbn_test ();
   scalbln_test ();

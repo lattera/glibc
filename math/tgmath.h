@@ -438,6 +438,9 @@
      __TGMATH_TERNARY_REAL_ONLY (Val1, Val2, Val3, fma)
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Like ilogb, but returning long int.  */
+#define llogb(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long int, llogb)
+
 /* Total order operation.  */
 # define totalorder(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2,	\
 							   totalorder)

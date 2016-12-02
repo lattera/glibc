@@ -61,6 +61,7 @@ check_return_ ##func (void)						      \
 }
 
 CHECK_RET_CONST(ilogb, int)
+CHECK_RET_CONST(llogb, long)
 CHECK_RET_CONST(lrint, long)
 CHECK_RET_CONST(lround, long)
 CHECK_RET_CONST(llrint, long long)
@@ -70,6 +71,7 @@ static int
 do_test (void)
 {
   check_return_ilogb ();
+  check_return_llogb ();
   check_return_lrint ();
   check_return_lround ();
   check_return_llrint ();

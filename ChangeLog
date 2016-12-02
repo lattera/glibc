@@ -1,3 +1,71 @@
+2016-12-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (llogb):
+	New declaration.
+	* math/tgmath.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (llogb): New
+	macro.
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (__FP_LONG_MAX):
+	New macro.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FP_LLOGB0): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FP_LLOGBNAN): Likewise.
+	* math/Versions (llogb): New libm symbol at version GLIBC_2.25.
+	(llogbf): Likewise.
+	(llogbl): Likewise.
+	* math/Makefile (gen-libm-calls): Add w_llogbF.
+	(tests): Add test-fp-llogb-constants.
+	* math/w_llogb_template.c: New file.  Based on
+	math/w_ilogb_template.c.
+	* math/libm-test.inc (llogb_test_data): New array.
+	(llogb_test): New function.
+	(main): Call llogb_test.
+	* math/test-fp-llogb-constants.c: New file.  Based on
+	math/test-fp-ilogb-constants.c.
+	* math/test-tgmath-ret.c (llogb): New CHECK_RET_CONST call.
+	(do_test): Call check_return_llogb.
+	* math/test-tgmath.c (NCALLS): Increase to 126.
+	(F(compile_test)): Call llogb.
+	(F(llogb)): New function.
+	* manual/math.texi (Exponents and Logarithms): Document llogb,
+	llogbf, llogbl, FP_LLOGB0 and FP_LLOGBNAN.
+	* manual/libm-err-tab.pl (@all_functions): Add llogb.
+	* sysdeps/ieee754/ldbl-opt/nldbl-llogb.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_llogbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add llogb.
+	(CFLAGS-nldbl-llogb.c): New variable.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-12-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-128/s_getpayloadl.c (getpayloadl): Use

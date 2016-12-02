@@ -584,9 +584,20 @@ negative), @code{logb} returns @math{@infinity{}}.  If @var{x} is zero,
 @comment math.h
 @comment ISO
 @deftypefunx int ilogbl (long double @var{x})
+@comment math.h
+@comment ISO
+@deftypefunx {long int} llogb (double @var{x})
+@comment math.h
+@comment ISO
+@deftypefunx {long int} llogbf (float @var{x})
+@comment math.h
+@comment ISO
+@deftypefunx {long int} llogbl (long double @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are equivalent to the corresponding @code{logb}
-functions except that they return signed integer values.
+functions except that they return signed integer values.  The
+@code{ilogb} functions are from ISO C99; the @code{llogb} functions
+are from TS 18661-1:2014.
 @end deftypefun
 
 @noindent
@@ -605,11 +616,29 @@ This macro is defined in @w{ISO C99}.
 
 @comment math.h
 @comment ISO
+@deftypevr Macro {long int} FP_LLOGB0
+@code{llogb} returns this value if its argument is @code{0}.  The
+numeric value is either @code{LONG_MIN} or @code{-LONG_MAX}.
+
+This macro is defined in TS 18661-1:2014.
+@end deftypevr
+
+@comment math.h
+@comment ISO
 @deftypevr Macro int FP_ILOGBNAN
 @code{ilogb} returns this value if its argument is @code{NaN}.  The
 numeric value is either @code{INT_MIN} or @code{INT_MAX}.
 
 This macro is defined in @w{ISO C99}.
+@end deftypevr
+
+@comment math.h
+@comment ISO
+@deftypevr Macro {long int} FP_LLOGBNAN
+@code{llogb} returns this value if its argument is @code{NaN}.  The
+numeric value is either @code{LONG_MIN} or @code{LONG_MAX}.
+
+This macro is defined in TS 18661-1:2014.
 @end deftypevr
 
 These values are system specific.  They might even be the same.  The

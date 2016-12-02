@@ -315,6 +315,11 @@ __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
 __MATHDECL (int,ilogb,, (_Mdouble_ __x));
 #endif
 
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Like ilogb, but returning long int.  */
+__MATHDECL (long int, llogb,, (_Mdouble_ __x));
+#endif
+
 #ifdef __USE_ISOC99
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalbln,, (_Mdouble_ __x, long int __n));
