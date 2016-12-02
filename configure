@@ -665,6 +665,7 @@ add_ons
 build_pt_chown
 build_nscd
 link_obsolete_rpc
+libc_cv_static_nss_crypt
 libc_cv_nss_crypt
 enable_werror
 all_warnings
@@ -3529,6 +3530,7 @@ cannot find NSS headers with lowlevel hash function interfaces" "$LINENO" 5
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
   old_LIBS="$LIBS"
+  old_LDFLAGS="$LDFLAGS"
   LIBS="$LIBS -lfreebl3"
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -3551,11 +3553,38 @@ cannot link program using lowlevel NSS hash functions" "$LINENO" 5
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
+  # Check to see if there is a static NSS cryptographic library.
+  # If there isn't then we can't link anything with libcrypt.a,
+  # and that might mean disabling some static tests.
+  LDFLAGS="$LDFLAGS -static"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+typedef int PRBool;
+#include <hasht.h>
+#include <nsslowhash.h>
+int
+main ()
+{
+NSSLOW_Init();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  libc_cv_static_nss_crypt=yes
+else
+  libc_cv_static_nss_crypt=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+  LDFLAGS="$old_LDFLAGS"
   CFLAGS="$old_CFLAGS"
   LIBS="$old_LIBS"
 else
   libc_cv_nss_crypt=no
+  libc_cv_static_nss_crypt=no
 fi
+
 
 
 

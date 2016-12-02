@@ -1,3 +1,19 @@
+2016-12-02  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #20918]
+	* configure.ac: Test for static NSS cryptographic libraries and set
+	libc_cv_static_nss_crypt.
+	* configure: Regenerate.
+	* config.make.in (static-nss-crypt): Define.
+	* elf/Makefile (CFLAGS-tst-linkall-static.c): Define.
+	[ifeq (yesno,$(nss-crypt)$(static-nss-crypt))]
+	(CFLAGS-tst-linkall-static.c): Define.
+	($(objpfx)tst-linkall-static): Remove libcrypt.a.
+	[ifeq (yesyes,$(nss-crypt)$(static-nss-crypt))]
+	($(objpfx)tst-linkall-static): Define.
+	[ifeq (no,$(nss-crypt))] ($(objpfx)tst-linkall-static): Define.
+	* elf/tst-linkall-static.c [USE_CRYPT](references): Reference crypt().
+
 2016-12-02  Florian Weimer  <fweimer@redhat.com>
 
 	* elf/Makefile [build-shared] (tests): Add tst-latepthread.

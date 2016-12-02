@@ -321,6 +321,7 @@ void f (void) { NSSLOW_Init (); }])],
 	     AC_MSG_ERROR([
 cannot find NSS headers with lowlevel hash function interfaces]))
   old_LIBS="$LIBS"
+  old_LDFLAGS="$LDFLAGS"
   LIBS="$LIBS -lfreebl3"
   AC_LINK_IFELSE([AC_LANG_PROGRAM([typedef int PRBool;
 #include <hasht.h>
@@ -329,12 +330,25 @@ cannot find NSS headers with lowlevel hash function interfaces]))
 		 libc_cv_nss_crypt=yes,
 		 AC_MSG_ERROR([
 cannot link program using lowlevel NSS hash functions]))
+  # Check to see if there is a static NSS cryptographic library.
+  # If there isn't then we can't link anything with libcrypt.a,
+  # and that might mean disabling some static tests.
+  LDFLAGS="$LDFLAGS -static"
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([typedef int PRBool;
+#include <hasht.h>
+#include <nsslowhash.h>],
+				  [NSSLOW_Init();])],
+		 libc_cv_static_nss_crypt=yes,
+		 libc_cv_static_nss_crypt=no)
+  LDFLAGS="$old_LDFLAGS"
   CFLAGS="$old_CFLAGS"
   LIBS="$old_LIBS"
 else
   libc_cv_nss_crypt=no
+  libc_cv_static_nss_crypt=no
 fi
 AC_SUBST(libc_cv_nss_crypt)
+AC_SUBST(libc_cv_static_nss_crypt)
 
 
 AC_ARG_ENABLE([obsolete-rpc],

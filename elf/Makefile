@@ -337,6 +337,16 @@ $(objpfx)tst-_dl_addr_inside_object: $(objpfx)dl-addr-obj.os
 CFLAGS-tst-_dl_addr_inside_object.c += $(PIE-ccflag)
 endif
 
+# By default tst-linkall-static should try to use crypt routines to test
+# static libcrypt use.
+CFLAGS-tst-linkall-static.c = -DUSE_CRYPT=1
+# However, if we are using NSS crypto and we don't have a static
+# library, then we exclude the use of crypt functions in the test.
+# We similarly exclude libcrypt.a from the static link (see below).
+ifeq (yesno,$(nss-crypt)$(static-nss-crypt))
+CFLAGS-tst-linkall-static.c = -DUSE_CRYPT=0
+endif
+
 include ../Rules
 
 ifeq (yes,$(build-shared))
@@ -1307,12 +1317,30 @@ $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
 
 $(objpfx)tst-dlsym-error: $(libdl)
 
+# Test static linking of all the libraries we can possibly link
+# together.  Note that in some configurations this may be less than the
+# complete list of libraries we build but we try to maxmimize this list.
 $(objpfx)tst-linkall-static: \
   $(common-objpfx)math/libm.a \
-  $(common-objpfx)crypt/libcrypt.a \
   $(common-objpfx)resolv/libresolv.a \
   $(common-objpfx)dlfcn/libdl.a \
   $(common-objpfx)login/libutil.a \
   $(common-objpfx)rt/librt.a \
   $(common-objpfx)resolv/libanl.a \
-  $(static-thread-library) \
+  $(static-thread-library)
+
+# If we are using NSS crypto and we have the ability to link statically
+# then we include libcrypt.a, otherwise we leave out libcrypt.a and
+# link as much as we can into the tst-linkall-static test.  This assumes
+# that linking with libcrypt.a does everything required to include the
+# static NSS crypto library.
+ifeq (yesyes,$(nss-crypt)$(static-nss-crypt))
+$(objpfx)tst-linkall-static: \
+  $(common-objpfx)crypt/libcrypt.a
+endif
+# If we are not using NSS crypto then we always have the ability to link
+# with libcrypt.a.
+ifeq (no,$(nss-crypt))
+$(objpfx)tst-linkall-static: \
+  $(common-objpfx)crypt/libcrypt.a
+endif

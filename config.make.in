@@ -75,6 +75,7 @@ multi-arch = @multi_arch@
 mach-interface-list = @mach_interface_list@
 
 nss-crypt = @libc_cv_nss_crypt@
+static-nss-crypt = @libc_cv_static_nss_crypt@
 
 # Configuration options.
 build-shared = @shared@

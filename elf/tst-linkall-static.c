@@ -32,7 +32,9 @@ void *references[] =
   {
     &pow,                       /* libm */
     &pthread_create,            /* libpthread */
+#if USE_CRYPT
     &crypt,                     /* libcrypt */
+#endif
     &res_send,                  /* libresolv */
     &dlopen,                    /* libdl */
     &login,                     /* libutil */
