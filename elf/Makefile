@@ -1271,6 +1271,9 @@ LDFLAGS-tst-audit12mod2.so = -Wl,--version-script=tst-audit12mod2.map
 # Force lazy binding for the same reason.
 LDFLAGS-tst-latepthreadmod.so = \
   -Wl,-z,lazy -Wl,--unresolved-symbols=ignore-all
+# Do not optimize sibling calls as the test relies on a JMP_SLOT relocation for
+# function this_function_is_not_defined.
+CFLAGS-tst-latepthreadmod.c = -fno-optimize-sibling-calls
 $(objpfx)tst-latepthreadmod.so: $(shared-thread-library)
 $(objpfx)tst-latepthread: $(libdl)
 $(objpfx)tst-latepthread.out: $(objpfx)tst-latepthreadmod.so

@@ -1,3 +1,8 @@
+2016-12-02  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* elf/Makefile (CFLAGS-tst-latepthreadmod.c):
+	Add -fno-optimize-sibling-calls.
+
 2016-12-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (llogb):
