@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <signal.h>
+#include <sigsetops.h>
 
 /* The signal used for asynchronous cancelation.  */
 #define SIGCANCEL       __SIGRTMIN

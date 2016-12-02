@@ -15,7 +15,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "sigsetops.h"
+#include <errno.h>
+#include <signal.h>
+#include <sigsetops.h>
 
 /* Return 1 if SIGNO is in SET, 0 if not.  */
 int

@@ -1,11 +1,53 @@
-/* Define the real-function versions of all inline functions
-   defined in signal.h (or bits/sigset.h).  */
+/* Compatibility symbols for old versions of signal.h.
+   Copyright (C) 2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-#include <features.h>
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#define _EXTERN_INLINE
-#ifndef __USE_EXTERN_INLINES
-# define __USE_EXTERN_INLINES	1
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+#include <signal.h>
+#include <sigsetops.h>
+#include <shlib-compat.h>
+
+/* These were formerly defined by <signal.h> as inline functions,
+   so they require out-of-line compatibility definitions.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_26)
+
+int
+attribute_compat_text_section
+(__sigismember) (const __sigset_t *set, int sig)
+{
+  return __sigismember (set, sig);
+}
+compat_symbol (libc, __sigismember, __sigismember, GLIBC_2_0);
+
+int
+attribute_compat_text_section
+(__sigaddset) (__sigset_t *set, int sig)
+{
+  __sigaddset (set, sig);
+  return 0;
+}
+compat_symbol (libc, __sigaddset, __sigaddset, GLIBC_2_0);
+
+int
+attribute_compat_text_section
+(__sigdelset) (__sigset_t *set, int sig)
+{
+  __sigdelset (set, sig);
+  return 0;
+}
+compat_symbol (libc, __sigdelset, __sigdelset, GLIBC_2_0);
+
 #endif
-
-#include "signal.h"

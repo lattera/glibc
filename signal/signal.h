@@ -20,39 +20,20 @@
  */
 
 #ifndef	_SIGNAL_H
-
-#if !defined __need_sig_atomic_t && !defined __need_sigset_t
-# define _SIGNAL_H
-#endif
+#define _SIGNAL_H
 
 #include <features.h>
 
 __BEGIN_DECLS
 
-#include <bits/sigset.h>		/* __sigset_t, __sig_atomic_t.  */
-
-/* An integral type that can be modified atomically, without the
-   possibility of a signal arriving in the middle of the operation.  */
-#if defined __need_sig_atomic_t || defined _SIGNAL_H
-# ifndef __sig_atomic_t_defined
-#  define __sig_atomic_t_defined
-typedef __sig_atomic_t sig_atomic_t;
-# endif
-# undef __need_sig_atomic_t
-#endif
-
-#if defined __need_sigset_t || (defined _SIGNAL_H && defined __USE_POSIX)
-# ifndef __sigset_t_defined
-#  define __sigset_t_defined
-typedef __sigset_t sigset_t;
-# endif
-# undef __need_sigset_t
-#endif
-
-#ifdef _SIGNAL_H
-
 #include <bits/types.h>
 #include <bits/signum.h>
+
+#include <bits/types/sig_atomic_t.h>
+
+#if defined __USE_POSIX
+#include <bits/types/sigset_t.h>
+#endif
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K
 # ifndef __pid_t_defined
@@ -73,8 +54,10 @@ typedef __uid_t uid_t;
 #endif
 
 #if defined __USE_POSIX199309 || defined __USE_XOPEN_EXTENDED
-/* Get the `siginfo_t' type plus the needed symbols.  */
-# include <bits/siginfo.h>
+# include <bits/types/siginfo_t.h>
+# include <bits/types/sigevent_t.h>
+# include <bits/siginfo-consts.h>
+# include <bits/sigevent-consts.h>
 #endif
 
 
@@ -174,7 +157,7 @@ extern int __sigpause (int __sig_or_mask, int __is_sig);
    simply do not work in many situations.  Use `sigprocmask' instead.  */
 
 /* Compute mask for signal SIG.  */
-# define sigmask(sig)	__sigmask(sig)
+# define sigmask(sig) ((int)(1u << ((sig) - 1)))
 
 /* Block signals in MASK, returning the old mask.  */
 extern int sigblock (int __mask) __THROW __attribute_deprecated__;
@@ -365,8 +348,6 @@ extern __sighandler_t sigset (int __sig, __sighandler_t __disp) __THROW;
 extern int __libc_current_sigrtmin (void) __THROW;
 /* Return number of available real-time signal with lowest priority.  */
 extern int __libc_current_sigrtmax (void) __THROW;
-
-#endif /* signal.h  */
 
 __END_DECLS
 

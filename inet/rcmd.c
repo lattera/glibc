@@ -78,6 +78,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <sys/uio.h>
+#include <sigsetops.h>
 
 
 int __ivaliduser (FILE *, u_int32_t, const char *, const char *);
@@ -112,7 +113,8 @@ rcmd_af (char **ahost, u_short rport, const char *locuser, const char *remuser,
 		struct sockaddr_in6 sin6;
 	} from;
 	struct pollfd pfd[2];
-	int32_t oldmask;
+	sigset_t mask, omask;
+
 	pid_t pid;
 	int s, lport, timo, error;
 	char c;
@@ -160,7 +162,9 @@ rcmd_af (char **ahost, u_short rport, const char *locuser, const char *remuser,
 		*ahost = NULL;
 	ai = res;
 	refused = 0;
-	oldmask = __sigblock(sigmask(SIGURG));
+	__sigemptyset(&mask);
+	__sigaddset(&mask, SIGURG);
+	__sigprocmask (SIG_BLOCK, &mask, &omask);
 	for (timo = 1, lport = IPPORT_RESERVED - 1;;) {
 		char errbuf[200];
 
@@ -172,7 +176,7 @@ rcmd: socket: All ports in use\n"));
 			else
 				__fxprintf(NULL, "rcmd: socket: %m\n");
 
-			__sigsetmask(oldmask);
+			__sigprocmask (SIG_SETMASK, &omask, 0);
 			freeaddrinfo(res);
 			return -1;
 		}
@@ -225,7 +229,7 @@ rcmd: socket: All ports in use\n"));
 		freeaddrinfo(res);
 		(void)__fxprintf(NULL, "%s: %s\n", *ahost,
 				 __strerror_r(errno, errbuf, sizeof (errbuf)));
-		__sigsetmask(oldmask);
+		__sigprocmask (SIG_SETMASK, &omask, 0);
 		return -1;
 	}
 	lport--;
@@ -337,7 +341,7 @@ socket: protocol failure in circuit setup\n")) >= 0)
 		}
 		goto bad2;
 	}
-	__sigsetmask(oldmask);
+	__sigprocmask (SIG_SETMASK, &omask, 0);
 	freeaddrinfo(res);
 	return s;
 bad2:
@@ -345,7 +349,7 @@ bad2:
 		(void)__close(*fd2p);
 bad:
 	(void)__close(s);
-	__sigsetmask(oldmask);
+	__sigprocmask (SIG_SETMASK, &omask, 0);
 	freeaddrinfo(res);
 	return -1;
 }

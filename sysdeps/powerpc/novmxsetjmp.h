@@ -54,7 +54,7 @@ typedef long int __jmp_buf[40];
 typedef long int __jmp_buf[58];
 # endif
 
-# include <bits/sigset.h>		/* Get `__sigset_t'.  */
+# include <bits/types/__sigset_t.h>
 
 /* Calling environment, plus possibly a saved signal mask.  */
 typedef struct __novmx__jmp_buf_tag

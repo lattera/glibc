@@ -26,6 +26,7 @@
 /* Signal handlers are actually called:
    void handler (int sig, int code, struct sigcontext *scp);  */
 
+#include <bits/types/__sigset_t.h>
 #include <mach/machine/fp_reg.h>
 
 /* State of this thread when the signal was taken.  */

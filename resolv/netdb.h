@@ -33,8 +33,7 @@
 #endif
 
 #ifdef __USE_GNU
-# define __need_sigevent_t
-# include <bits/siginfo.h>
+# include <bits/types/sigevent_t.h>
 # include <bits/types/struct_timespec.h>
 #endif
 

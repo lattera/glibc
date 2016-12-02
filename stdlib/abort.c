@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sigsetops.h>
 
 /* Try to get a machine dependent instruction which will make the
    program crash.  This is used in case everything else fails.  */
@@ -57,13 +58,13 @@ abort (void)
 
   /* Now it's for sure we are alone.  But recursive calls are possible.  */
 
-  /* Unlock SIGABRT.  */
+  /* Unblock SIGABRT.  */
   if (stage == 0)
     {
       ++stage;
-      if (__sigemptyset (&sigs) == 0 &&
-	  __sigaddset (&sigs, SIGABRT) == 0)
-	__sigprocmask (SIG_UNBLOCK, &sigs, (sigset_t *) NULL);
+      __sigemptyset (&sigs);
+      __sigaddset (&sigs, SIGABRT);
+      __sigprocmask (SIG_UNBLOCK, &sigs, 0);
     }
 
   /* Flush all streams.  We cannot close them now because the user

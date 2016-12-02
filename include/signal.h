@@ -1,7 +1,4 @@
 #ifndef _SIGNAL_H
-#if defined __need_sig_atomic_t || defined __need_sigset_t
-# include <signal/signal.h>
-#else
 # include <signal/signal.h>
 
 # ifndef _ISOMAC
@@ -53,12 +50,6 @@ libc_hidden_proto (__libc_sigaction)
 extern int __default_sigpause (int mask);
 extern int __xpg_sigpause (int sig);
 
-/* Simplified sigemptyset() implementation without the parameter checking.  */
-#undef __sigemptyset
-#define __sigemptyset(ss) \
-  ({ __builtin_memset (ss, '\0', sizeof (sigset_t)); 0; })
-
-
 /* Allocate real-time signal with highest/lowest available priority.  */
 extern int __libc_allocate_rtsig (int __high);
 
@@ -66,6 +57,6 @@ extern int __libc_allocate_rtsig (int __high);
 extern __typeof (__sigaction) __sigaction attribute_hidden;
 extern __typeof (__libc_sigaction) __libc_sigaction attribute_hidden;
 #  endif
-# endif
-#endif
-#endif
+
+# endif /* _ISOMAC */
+#endif /* signal.h */

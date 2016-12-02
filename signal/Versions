@@ -1,13 +1,13 @@
 libc {
   GLIBC_2.0 {
     # functions with special/multiple interfaces
-    __sigaddset; __sigdelset; __sigismember; __sysv_signal;
+    __sigpause;  __sysv_signal;
 
-    # functions used in inline functions or macros
-    __sigpause;
+    # functions formerly used in inline functions or macros
+    __sigaddset; __sigdelset; __sigismember;
 
     # functions used in other libraries
-     __sigaction;
+    __sigaction;
 
     # b*
     bsd_signal;

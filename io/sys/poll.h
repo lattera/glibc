@@ -24,10 +24,8 @@
 /* Get the platform dependent bits of `poll'.  */
 #include <bits/poll.h>
 #ifdef __USE_GNU
-/* Get the __sigset_t definition.  */
-# include <bits/sigset.h>
-/* Get the timespec definition.  */
-#include <bits/types/struct_timespec.h>
+# include <bits/types/__sigset_t.h>
+# include <bits/types/struct_timespec.h>
 #endif
 
 

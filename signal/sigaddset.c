@@ -15,7 +15,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "sigsetops.h"
+#include <errno.h>
+#include <signal.h>
+#include <sigsetops.h>
 
 /* Add SIGNO to SET.  */
 int
@@ -27,6 +29,7 @@ sigaddset (sigset_t *set, int signo)
       return -1;
     }
 
-  return __sigaddset (set, signo);
+  __sigaddset (set, signo);
+  return 0;
 }
 libc_hidden_def (sigaddset)

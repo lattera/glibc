@@ -18,9 +18,8 @@
 #ifndef	_SYS_SIGNALFD_H
 #define	_SYS_SIGNALFD_H	1
 
-#define __need_sigset_t
-#include <signal.h>
 #include <stdint.h>
+#include <bits/types/sigset_t.h>
 
 /* Get the platform-dependent flags.  */
 #include <bits/signalfd.h>

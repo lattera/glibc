@@ -103,8 +103,7 @@ typedef __id_t id_t;
 #  define __id_t_defined
 # endif
 
-# define __need_siginfo_t
-# include <bits/siginfo.h>
+# include <bits/types/siginfo_t.h>
 
 /* Wait for a childing matching IDTYPE and ID to change the status and
    place appropriate information in *INFOP.

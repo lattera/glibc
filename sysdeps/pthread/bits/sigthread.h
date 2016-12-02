@@ -24,6 +24,7 @@
 #endif
 
 /* Functions for handling signals. */
+#include <bits/types/__sigset_t.h>
 
 /* Modify the signal mask for the calling thread.  The arguments have
    the same meaning as for sigprocmask(2). */

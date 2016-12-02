@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2017 Free Software Foundation, Inc.
+/* sigevent constants.  Stub version.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,18 +16,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Definitions relevant to functions that operate on `sigset_t's.  */
+#ifndef _BITS_SIGEVENT_CONSTS_H
+#define _BITS_SIGEVENT_CONSTS_H 1
 
-#include <errno.h>
-#include <signal.h>
-#include <string.h>
+#if !defined _SIGNAL_H && !defined _AIO_H
+#error "Don't include <bits/sigevent-consts.h> directly; use <signal.h> instead."
+#endif
 
-#define	BITS		(_NSIG - 1)
-#define	ELT(signo)	(((signo) - 1) / BITS)
-#define	MASK(signo)	(1 << (((signo) - 1) % BITS))
+/* `sigev_notify' values.  */
+enum
+{
+  SIGEV_SIGNAL = 0,		/* Notify via signal.  */
+# define SIGEV_SIGNAL	SIGEV_SIGNAL
+  SIGEV_NONE,			/* Other notification: meaningless.  */
+# define SIGEV_NONE	SIGEV_NONE
+  SIGEV_THREAD			/* Deliver via thread creation.  */
+# define SIGEV_THREAD	SIGEV_THREAD
+};
 
-#undef	sigemptyset
-#undef	sigfillset
-#undef	sigaddset
-#undef	sigdelset
-#undef	sigismember
+#endif

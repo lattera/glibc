@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sigsetops.h>
 
 #include <sys/time.h>
 #include <sys/profil.h>

@@ -197,6 +197,10 @@ __STD_TYPE __SWORD_TYPE __intptr_t;
 /* Duplicate info from sys/socket.h.  */
 __STD_TYPE __U32_TYPE __socklen_t;
 
+/* C99: An integer type that can be accessed as an atomic entity,
+   even in the presence of asynchronous interrupts.
+   It is not currently necessary for this to be machine-specific.  */
+typedef int __sig_atomic_t;
 
 #undef __STD_TYPE
 

@@ -26,6 +26,7 @@
 
 /* We need the signal context definitions even if they are not exposed
    by <signal.h>.  */
+#include <bits/types/__sigset_t.h>
 #include <bits/sigcontext.h>
 #include <bits/sigstack.h>
 #include <bits/types/struct_sigstack.h>

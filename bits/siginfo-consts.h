@@ -1,4 +1,4 @@
-/* siginfo_t, sigevent and constants.  Stub version.
+/* siginfo_t constants.  Stub version.
    Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,42 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if !defined _SIGNAL_H && !defined __need_siginfo_t \
-    && !defined __need_sigevent_t
-# error "Never include this file directly.  Use <signal.h> instead"
-#endif
-
-#if (!defined __have_sigval_t \
-     && (defined _SIGNAL_H || defined __need_siginfo_t \
-	 || defined __need_sigevent_t))
-# define __have_sigval_t 1
-
-/* Type for data associated with a signal.  */
-typedef union sigval
-  {
-    int sival_int;
-    void *sival_ptr;
-  } sigval_t;
-#endif
-
-#if (!defined __have_siginfo_t \
-     && (defined _SIGNAL_H || defined __need_siginfo_t))
-# define __have_siginfo_t	1
-
-typedef struct siginfo
-  {
-    int si_signo;		/* Signal number.  */
-    int si_errno;		/* If non-zero, an errno value associated with
-				   this signal, as defined in <errno.h>.  */
-    int si_code;		/* Signal code.  */
-    __pid_t si_pid;		/* Sending process ID.  */
-    __uid_t si_uid;		/* Real user ID of sending process.  */
-    void *si_addr;		/* Address of faulting instruction.  */
-    int si_status;		/* Exit value or signal.  */
-    long int si_band;		/* Band event for SIGPOLL.  */
-    union sigval si_value;	/* Signal value.  */
-  } siginfo_t;
-
+#ifndef _BITS_SIGINFO_CONSTS_H
+#define _BITS_SIGINFO_CONSTS_H 1
 
 /* Values for `si_code'.  Positive values are reserved for kernel-generated
    signals.  */
@@ -181,36 +147,4 @@ enum
 };
 # endif
 
-# undef __need_siginfo_t
-#endif	/* !have siginfo_t && (have _SIGNAL_H || need siginfo_t).  */
-
-
-#if (defined _SIGNAL_H || defined __need_sigevent_t) \
-    && !defined __have_sigevent_t
-# define __have_sigevent_t	1
-
-/* Structure to transport application-defined values with signals.  */
-# define SIGEV_MAX_SIZE	64
-# define SIGEV_PAD_SIZE	((SIGEV_MAX_SIZE / sizeof (int)) - 3)
-
-typedef struct sigevent
-  {
-    sigval_t sigev_value;
-    int sigev_signo;
-    int sigev_notify;
-    void (*sigev_notify_function) (sigval_t);	    /* Function to start.  */
-    void *sigev_notify_attributes;		    /* Really pthread_attr_t.*/
-  } sigevent_t;
-
-/* `sigev_notify' values.  */
-enum
-{
-  SIGEV_SIGNAL = 0,		/* Notify via signal.  */
-# define SIGEV_SIGNAL	SIGEV_SIGNAL
-  SIGEV_NONE,			/* Other notification: meaningless.  */
-# define SIGEV_NONE	SIGEV_NONE
-  SIGEV_THREAD			/* Deliver via thread creation.  */
-# define SIGEV_THREAD	SIGEV_THREAD
-};
-
-#endif	/* have _SIGNAL_H.  */
+#endif

@@ -1,5 +1,132 @@
 2017-05-20  Zack Weinberg  <zackw@panix.com>
 
+	* bits/sigevent-consts.h
+	* bits/siginfo-consts.h
+	* bits/types/__sigset_t.h
+	* bits/types/sigevent_t.h
+	* bits/types/siginfo_t.h
+	* sysdeps/unix/sysv/linux/bits/sigevent-consts.h
+	* sysdeps/unix/sysv/linux/bits/siginfo-consts.h
+	* sysdeps/unix/sysv/linux/bits/types/__sigset_t.h
+	* sysdeps/unix/sysv/linux/bits/types/sigevent_t.h
+	* sysdeps/unix/sysv/linux/bits/types/siginfo_t.h:
+	New system-dependent bits headers.
+
+	* sysdeps/unix/sysv/linux/bits/siginfo-arch.h
+	* sysdeps/unix/sysv/linux/bits/siginfo-consts-arch.h
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo-arch.h
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo-consts-arch.h
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo-arch.h
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo-arch.h
+	* sysdeps/unix/sysv/linux/tile/bits/siginfo-arch.h
+	* sysdeps/unix/sysv/linux/tile/bits/siginfo-consts-arch.h
+	* sysdeps/unix/sysv/linux/x86/bits/siginfo-arch.h:
+	New Linux-only system-dependent bits headers.
+
+	* signal/bits/types/sig_atomic_t.h
+	* signal/bits/types/sigset_t.h
+	* signal/bits/types/sigval_t.h:
+	New non-system-dependent bits headers.
+
+	* sysdeps/generic/sigsetops.h
+	* sysdeps/unix/sysv/linux/sigsetops.h:
+	New internal headers.
+
+	* include/bits/types/sig_atomic_t.h
+	* include/bits/types/sigset_t.h
+	* include/bits/types/sigval_t.h:
+	New wrappers.
+
+	* signal/sigsetops.h
+	* bits/siginfo.h
+	* bits/sigset.h
+	* sysdeps/unix/sysv/linux/bits/siginfo.h
+	* sysdeps/unix/sysv/linux/bits/sigset.h
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h
+	* sysdeps/unix/sysv/linux/tile/bits/siginfo.h
+	* sysdeps/unix/sysv/linux/x86/bits/siginfo.h:
+	Deleted.
+
+	* signal/Makefile, sysdeps/unix/sysv/linux/Makefile:
+	Update lists of installed headers.
+
+	* posix/bits/types.h: Define __sig_atomic_t here.
+	* signal/signal.h: Use the new bits headers; no need to handle
+	__need_sig_atomic_t nor __need_sigset_t.  Don't use __sigmask
+	to define sigmask.
+	* include/signal.h: No need to handle __need_sig_atomic_t
+	nor __need_sigset_t.  Don't define __sigemptyset.
+
+	* io/sys/poll.h, setjmp/setjmp.h
+	* sysdeps/arm/sys/ucontext.h, sysdeps/generic/sys/ucontext.h
+	* sysdeps/i386/sys/ucontext.h, sysdeps/m68k/sys/ucontext.h
+	* sysdeps/mach/hurd/i386/bits/sigcontext.h
+	* sysdeps/mips/sys/ucontext.h, sysdeps/powerpc/novmxsetjmp.h
+	* sysdeps/pthread/bits/sigthread.h
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/nios2/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/tile/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h:
+	Use bits/types/__sigset_t.h.
+
+	* misc/sys/select.h, posix/spawn.h
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/sys/epoll.h
+	* sysdeps/unix/sysv/linux/sys/signalfd.h:
+	Use bits/types/sigset_t.h.
+
+	* resolv/netdb.h, rt/mqueue.h: Use bits/types/sigevent_t.h.
+	* rt/aio.h: Use bits/types/sigevent_t.h and bits/sigevent-consts.h.
+	* socket/sys/socket.h: Don't include bits/sigset.h.
+
+	* login/utmp_file.c, shadow/lckpwdf.c, signal/sigandset.c
+	* signal/sigisempty.c, stdlib/abort.c, sysdeps/posix/profil.c
+	* sysdeps/posix/sigignore.c, sysdeps/posix/sigintr.c
+	* sysdeps/posix/signal.c, sysdeps/posix/sigset.c
+	* sysdeps/posix/sprofil.c, sysdeps/posix/sysv_signal.c
+	* sysdeps/unix/sysv/linux/nptl-signals.h:
+	Include sigsetops.h.
+
+	* signal/sigaddset.c, signal/sigandset.c, signal/sigdelset.c
+	* signal/sigorset.c, stdlib/abort.c, sysdeps/posix/sigignore.c
+	* sysdeps/posix/signal.c, sysdeps/posix/sigset.c:
+	__sigaddset, __sigandset, __sigdelset, __sigemptyset, __sigorset
+	now return no value.
+
+	* signal/sigaddset.c, signal/sigdelset.c, signal/sigismem.c
+	Include <errno.h>, <signal.h>, and <sigsetops.h> instead of
+	"sigsetops.h".
+
+	* signal/sigsetops.c: Explicitly define __sigismember,
+	__sigaddset, and __sigdelset as compatibility symbols.
+
+	* signal/Versions: Correct commentary on __sigpause,
+	__sigaddset, __sigdelset, __sigismember.
+
+	* inet/rcmd.c: Include sigsetops.h.  Convert old code using
+	__sigblock/__sigsetmask to use __sigprocmask and friends.
+
+	* resolv/resolv.h: Remove __need_res_state logic.
+	Move definition of res_state and related constants to ...
+	* resolv/bits/types/res_state.h: ...this new file.
+	* resolv/Makefile: Install bits/types/res_state.h.
+	* include/bits/types/res_state.h: New wrapper.
+	* include/list.h: Remove __need_list_t logic.
+	Move definition of list_t to ...
+	* include/list_t.h: ...this new file.
+
+	* nptl/descr.h: Include list_t.h and bits/types/res_state.h
+	instead of list.h and resolv.h.
+
 	* resolv/resolv.h: Remove __need_res_state logic.
 	Move definition of res_state and related constants to ...
 	* resolv/bits/types/res_state.h: ...this new file.

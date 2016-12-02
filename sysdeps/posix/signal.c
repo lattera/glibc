@@ -19,7 +19,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <string.h>	/* For the real memset prototype.  */
-
+#include <sigsetops.h>
 
 sigset_t _sigintr attribute_hidden;		/* Set by siginterrupt.  */
 
@@ -38,9 +38,8 @@ __bsd_signal (int sig, __sighandler_t handler)
     }
 
   act.sa_handler = handler;
-  if (__sigemptyset (&act.sa_mask) < 0
-      || __sigaddset (&act.sa_mask, sig) < 0)
-    return SIG_ERR;
+  __sigemptyset (&act.sa_mask);
+  __sigaddset (&act.sa_mask, sig);
   act.sa_flags = __sigismember (&_sigintr, sig) ? 0 : SA_RESTART;
   if (__sigaction (sig, &act, &oact) < 0)
     return SIG_ERR;

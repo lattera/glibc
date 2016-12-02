@@ -18,6 +18,7 @@
 #include <stddef.h>
 #include <signal.h>
 #include <errno.h>
+#include <sigsetops.h>
 
 /* If INTERRUPT is nonzero, make signal SIG interrupt system calls
    (causing them to fail with EINTR); if INTERRUPT is zero, make system

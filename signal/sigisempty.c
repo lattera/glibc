@@ -17,18 +17,17 @@
 
 #include <errno.h>
 #include <signal.h>
-#define __need_NULL
-#include <stddef.h>
+#include <sigsetops.h>
 
 /* Test whether SET is empty.  */
 int
 sigisemptyset (const sigset_t *set)
 {
-  if (set == NULL)
+  if (!set)
     {
       __set_errno (EINVAL);
       return -1;
     }
 
-    return __sigisemptyset (set);
+  return __sigisemptyset (set);
 }

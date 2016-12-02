@@ -27,8 +27,7 @@
 __BEGIN_DECLS
 
 #include <bits/setjmp.h>		/* Get `__jmp_buf'.  */
-#include <bits/sigset.h>		/* Get `__sigset_t'.  */
-
+#include <bits/types/__sigset_t.h>
 
 /* Calling environment, plus possibly a saved signal mask.  */
 struct __jmp_buf_tag

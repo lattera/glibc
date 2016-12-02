@@ -8,7 +8,7 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 #include <stddef.h>
 #include <signal.h>
 #include <string.h>	/* For the real memset prototype.  */
-
+#include <sigsetops.h>
 
 /* Set the disposition for SIG.  */
 __sighandler_t
@@ -31,19 +31,19 @@ sigset (int sig, __sighandler_t disp)
   sigset_t set;
   sigset_t oset;
 
-#ifdef SIG_HOLD
-  /* Handle SIG_HOLD first.  */
+  /* Check signal extents to protect __sigismember.  */
+  if (disp == SIG_ERR || sig < 1 || sig >= NSIG)
+    {
+      __set_errno (EINVAL);
+      return SIG_ERR;
+    }
+
+  __sigemptyset (&set);
+  __sigaddset (&set, sig);
+
   if (disp == SIG_HOLD)
     {
-      /* Create an empty signal set.  */
-      if (__sigemptyset (&set) < 0)
-	return SIG_ERR;
-
-      /* Add the specified signal.  */
-      if (__sigaddset (&set, sig) < 0)
-	return SIG_ERR;
-
-      /* Add the signal set to the current signal mask.  */
+      /* Add the signal to the current signal mask.  */
       if (__sigprocmask (SIG_BLOCK, &set, &oset) < 0)
 	return SIG_ERR;
 
@@ -57,34 +57,19 @@ sigset (int sig, __sighandler_t disp)
 
       return oact.sa_handler;
     }
-#endif	/* SIG_HOLD */
-
-  /* Check signal extents to protect __sigismember.  */
-  if (disp == SIG_ERR || sig < 1 || sig >= NSIG)
+  else
     {
-      __set_errno (EINVAL);
-      return SIG_ERR;
+      act.sa_handler = disp;
+      __sigemptyset (&act.sa_mask);
+      act.sa_flags = 0;
+      if (__sigaction (sig, &act, &oact) < 0)
+	return SIG_ERR;
+
+      /* Remove the signal from the current signal mask.  */
+      if (__sigprocmask (SIG_UNBLOCK, &set, &oset) < 0)
+	return SIG_ERR;
+
+      /* If the signal was already blocked return SIG_HOLD.  */
+      return __sigismember (&oset, sig) ? SIG_HOLD : oact.sa_handler;
     }
-
-  act.sa_handler = disp;
-  if (__sigemptyset (&act.sa_mask) < 0)
-    return SIG_ERR;
-  act.sa_flags = 0;
-  if (__sigaction (sig, &act, &oact) < 0)
-    return SIG_ERR;
-
-  /* Create an empty signal set.  */
-  if (__sigemptyset (&set) < 0)
-    return SIG_ERR;
-
-  /* Add the specified signal.  */
-  if (__sigaddset (&set, sig) < 0)
-    return SIG_ERR;
-
-  /* Remove the signal set from the current signal mask.  */
-  if (__sigprocmask (SIG_UNBLOCK, &set, &oset) < 0)
-    return SIG_ERR;
-
-  /* If the signal was already blocked return SIG_HOLD.  */
-  return __sigismember (&oset, sig) ? SIG_HOLD : oact.sa_handler;
 }
