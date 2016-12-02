@@ -73,7 +73,8 @@ __ieee754_pow (double x, double y)
     {				/* of y */
       qx = u.i[HIGH_HALF] & 0x7fffffff;
       /* Is x a NaN?  */
-      if (((qx == 0x7ff00000) && (u.i[LOW_HALF] != 0)) || (qx > 0x7ff00000))
+      if ((((qx == 0x7ff00000) && (u.i[LOW_HALF] != 0)) || (qx > 0x7ff00000))
+	  && y != 0)
 	return x;
       if (y == 1.0)
 	return x;

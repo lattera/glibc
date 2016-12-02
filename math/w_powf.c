@@ -29,13 +29,7 @@ __powf (float x, float y)
     {
       if (_LIB_VERSION != _IEEE_)
 	{
-	  if (isnan (x))
-	    {
-	      if (y == 0.0f)
-		/* pow(NaN,0.0) */
-		return __kernel_standard_f (x, y, 142);
-	    }
-	  else if (isfinite (x) && isfinite (y))
+	  if (isfinite (x) && isfinite (y))
 	    {
 	      if (isnan (z))
 		/* pow neg**non-int */
@@ -55,19 +49,11 @@ __powf (float x, float y)
 	    }
 	}
     }
-  else if (__builtin_expect (z == 0.0f, 0) && isfinite (x) && isfinite (y)
+  else if (__builtin_expect (z == 0.0f, 0)
+	   && isfinite (x) && x != 0 && isfinite (y)
 	   && _LIB_VERSION != _IEEE_)
-    {
-      if (x == 0.0f)
-	{
-	  if (y == 0.0f)
-	    /* pow(0.0,0.0) */
-	    return __kernel_standard_f (x, y, 120);
-	}
-      else
-	/* pow underflow */
-	return __kernel_standard_f (x, y, 122);
-    }
+    /* pow underflow */
+    return __kernel_standard_f (x, y, 122);
 
   return z;
 }

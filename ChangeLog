@@ -1,3 +1,15 @@
+2016-12-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20919]
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Do not return
+	NaN first argument when raised to power 0.
+	* math/w_pow.c (__pow): Do not check for NaN or zero results from
+	raising to power zero.
+	* math/w_powf.c (__powf): Likewise.
+	* math/w_powl.c (__powl): Likewise.
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Do not handle
+	pow (0, 0) or pow (NaN, 0).
+
 2016-12-02  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #20918]
