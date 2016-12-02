@@ -165,11 +165,12 @@ __ieee754_powl (_Float128 x, _Float128 y)
 
 
   /* y==zero: x**0 = 1 */
-  if ((iy | q.parts32.w1 | q.parts32.w2 | q.parts32.w3) == 0)
+  if ((iy | q.parts32.w1 | q.parts32.w2 | q.parts32.w3) == 0
+      && !issignaling (x))
     return one;
 
   /* 1.0**y = 1; -1.0**+-Inf = 1 */
-  if (x == one)
+  if (x == one && !issignaling (y))
     return one;
   if (x == -1 && iy == 0x7fff0000
       && (q.parts32.w1 | q.parts32.w2 | q.parts32.w3) == 0)

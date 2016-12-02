@@ -165,11 +165,11 @@ __ieee754_powl (long double x, long double y)
   iy = hy & 0x7fffffff;
 
   /* y==zero: x**0 = 1 */
-  if ((iy | ly) == 0)
+  if ((iy | ly) == 0 && !issignaling (x))
     return one;
 
   /* 1.0**y = 1; -1.0**+-Inf = 1 */
-  if (x == one)
+  if (x == one && !issignaling (y))
     return one;
   if (x == -1.0L && ((iy - 0x7ff00000) | ly) == 0)
     return one;

@@ -74,8 +74,8 @@ __ieee754_pow (double x, double y)
       qx = u.i[HIGH_HALF] & 0x7fffffff;
       /* Is x a NaN?  */
       if ((((qx == 0x7ff00000) && (u.i[LOW_HALF] != 0)) || (qx > 0x7ff00000))
-	  && y != 0)
-	return x;
+	  && (y != 0 || issignaling (x)))
+	return x + x;
       if (y == 1.0)
 	return x;
       if (y == 2.0)
@@ -129,7 +129,7 @@ __ieee754_pow (double x, double y)
     {
       if (((v.i[HIGH_HALF] & 0x7fffffff) == 0x7ff00000 && v.i[LOW_HALF] != 0)
 	  || (v.i[HIGH_HALF] & 0x7fffffff) > 0x7ff00000)	/* NaN */
-	return y;
+	return y + y;
       if (fabs (y) > 1.0e20)
 	return (y > 0) ? 0 : 1.0 / 0.0;
       k = checkint (y);
@@ -143,9 +143,9 @@ __ieee754_pow (double x, double y)
   qy = v.i[HIGH_HALF] & 0x7fffffff;	/*   no sign   */
 
   if (qx >= 0x7ff00000 && (qx > 0x7ff00000 || u.i[LOW_HALF] != 0))	/* NaN */
-    return x;
+    return x + y;
   if (qy >= 0x7ff00000 && (qy > 0x7ff00000 || v.i[LOW_HALF] != 0))	/* NaN */
-    return x == 1.0 ? 1.0 : y;
+    return x == 1.0 && !issignaling (y) ? 1.0 : y + y;
 
   /* if x<0 */
   if (u.i[HIGH_HALF] < 0)

@@ -62,10 +62,10 @@ __ieee754_powf(float x, float y)
 	ix = hx&0x7fffffff;  iy = hy&0x7fffffff;
 
     /* y==zero: x**0 = 1 */
-	if(iy==0) return one;
+	if(iy==0 && !issignaling (x)) return one;
 
     /* x==+-1 */
-	if(x == 1.0) return one;
+	if(x == 1.0 && !issignaling (y)) return one;
 	if(x == -1.0 && isinf(y)) return one;
 
     /* +-NaN return x+y */

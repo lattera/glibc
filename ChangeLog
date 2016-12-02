@@ -1,5 +1,14 @@
 2016-12-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20916]
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Do not return 1
+	for arguments (sNaN, 0) or (1, sNaN).  Do arithmetic on NaN
+	arguments to compute result.
+	* sysdeps/ieee754/flt-32/e_powf.c (__ieee754_powf): Do not return
+	1 for arguments (sNaN, 0) or (1, sNaN).
+	* sysdeps/ieee754/ldbl-128/e_powl.c (__ieee754_powl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c (__ieee754_powl): Likewise.
+
 	[BZ #20919]
 	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Do not return
 	NaN first argument when raised to power 0.
