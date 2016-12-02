@@ -154,7 +154,7 @@ _dl_tlsdesc_undefweak:
 	   _dl_tlsdesc_dynamic (struct tlsdesc *tdp)
 	   {
 	     struct tlsdesc_dynamic_arg *td = tdp->arg;
-	     dtv_t *dtv = *(dtv_t **)((char *)__thread_pointer + DTV_OFFSET);
+	     dtv_t *dtv = *(dtv_t **)((char *)__thread_pointer + TCBHEAD_DTV);
 	     if (__builtin_expect (td->gen_count <= dtv[0].counter
 		&& (dtv[td->tlsinfo.ti_module].pointer.val
 		    != TLS_DTV_UNALLOCATED),
@@ -193,18 +193,18 @@ _dl_tlsdesc_dynamic:
 	   td->entry in _dl_tlsdesc_resolve_rela_fixup ensuring that the load
 	   from [x0,#PTR_SIZE] here happens after the initialization of td->arg.  */
 	ldar	PTR_REG (zr), [x0]
-	ldr	PTR_REG (1), [x0,#PTR_SIZE]
-	ldr	PTR_REG (0), [x4]
-	ldr	PTR_REG (3), [x1,#(PTR_SIZE * 2)]
-	ldr	PTR_REG (2), [x0]
+	ldr	PTR_REG (1), [x0,#TLSDESC_ARG]
+	ldr	PTR_REG (0), [x4,#TCBHEAD_DTV]
+	ldr	PTR_REG (3), [x1,#TLSDESC_GEN_COUNT]
+	ldr	PTR_REG (2), [x0,#DTV_COUNTER]
 	cmp	PTR_REG (3), PTR_REG (2)
 	b.hi	2f
-	ldr	PTR_REG (2), [x1]
+	ldr	PTR_REG (2), [x1,#TLSDESC_MODID]
 	add	PTR_REG (0), PTR_REG (0), PTR_REG (2), lsl #(PTR_LOG_SIZE + 1)
-	ldr	PTR_REG (0), [x0]
-	cmn	x0, #0x1
+	ldr	PTR_REG (0), [x0] /* Load val member of DTV entry.  */
+	cmp	x0, #TLS_DTV_UNALLOCATED
 	b.eq	2f
-	ldr	PTR_REG (1), [x1,#(PTR_SIZE * 2)]
+	ldr	PTR_REG (1), [x1,#TLSDESC_MODOFF]
 	add	PTR_REG (0), PTR_REG (0), PTR_REG (1)
 	sub	PTR_REG (0), PTR_REG (0), PTR_REG (4)
 1:

@@ -1,3 +1,10 @@
+2016-12-02  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/aarch64/tlsdesc.sym (TCBHEAD_DTV, DTV_COUNTER)
+	(TLS_DTV_UNALLOCATED): Add.
+	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Use explicit
+	offsets.
+
 2016-12-02  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
