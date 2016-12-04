@@ -54,15 +54,15 @@ __hurd_fail (error_t err)
     case EMACH_SEND_INVALID_DEST:
     case EMIG_SERVER_DIED:
       /* The server has disappeared!  */
-      err = EIEIO;
+      err = (error_t) EIEIO;
       break;
 
     case KERN_NO_SPACE:
-      err = ENOMEM;
+      err = (error_t) ENOMEM;
       break;
 
     case KERN_INVALID_ARGUMENT:
-      err = EINVAL;
+      err = (error_t) EINVAL;
       break;
 
     case 0:

@@ -1,3 +1,8 @@
+2016-12-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurd.h: Cast errno constants to error_t to fix usage in C++
+	programs.
+
 2016-12-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20916]
