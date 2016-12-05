@@ -315,7 +315,10 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-thread_local1 tst-mutex-errorcheck tst-robust10 \
 	tst-robust-fork tst-create-detached tst-memstream \
 	tst-thread-exit-clobber tst-minstack-cancel tst-minstack-exit \
-	tst-minstack-throw
+	tst-minstack-throw \
+	tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
+	tst-cnd-timedwait tst-thrd-detach tst-mtx-basic tst-thrd-sleep \
+	tst-mtx-recursive tst-tss-basic tst-call-once tst-mtx-timedlock
 
 tests-internal := tst-rwlock19 tst-rwlock20 \
 		  tst-sem11 tst-sem12 tst-sem13 \

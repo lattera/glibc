@@ -1,4 +1,22 @@
 2018-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Juan Manuel Torres Palma  <jmtorrespalma@gmail.com>
+
+	[BZ #14092]
+	* nptl/Makefile (tests): Add new test files.
+	* nptl/tst-call-once.c : New file. Tests C11 functions and types.
+	* nptl/tst-cnd-basic.c: Likewise.
+	* nptl/tst-cnd-broadcast.c: Likewise.
+	* nptl/tst-cnd-timedwait.c: Likewise.
+	* nptl/tst-mtx-basic.c: Likewise.
+	* nptl/tst-mtx-recursive.c: Likewise.
+	* nptl/tst-mtx-timedlock.c: Likewise.
+	* nptl/tst-mtx-trylock.c: Likewise.
+	* nptl/tst-thrd-basic.c: Likewise.
+	* nptl/tst-thrd-detach.c: Likewise.
+	* nptl/tst-thrd-sleep.c: Likewise.
+	* nptl/tst-tss-basic.c: Likewise.
+
+2018-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #14092]
 	* sysdeps/unix/sysv/linux/aarch64/libc.abilist [GLIBC_2.28]
