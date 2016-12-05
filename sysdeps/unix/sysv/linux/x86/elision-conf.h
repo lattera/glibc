@@ -33,7 +33,6 @@ struct elision_config
 
 extern struct elision_config __elision_aconf attribute_hidden;
 
-extern int __elision_available attribute_hidden;
 extern int __pthread_force_elision attribute_hidden;
 
 /* Tell the test suite to test elision for this architecture.  */

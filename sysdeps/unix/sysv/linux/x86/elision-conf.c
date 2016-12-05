@@ -43,11 +43,6 @@ struct elision_config __elision_aconf =
     .skip_trylock_internal_abort = 3,
   };
 
-/* Set when the CPU supports elision.  When false elision is never attempted.
- */
-
-int __elision_available attribute_hidden;
-
 /* Force elision for all new locks.  This is used to decide whether existing
    DEFAULT locks should be automatically upgraded to elision in
    pthread_mutex_lock().  Disabled for suid programs.  Only used when elision
@@ -62,11 +57,11 @@ elision_init (int argc __attribute__ ((unused)),
 	      char **argv  __attribute__ ((unused)),
 	      char **environ)
 {
-  __elision_available = HAS_CPU_FEATURE (RTM);
+  int elision_available = HAS_CPU_FEATURE (RTM);
 #ifdef ENABLE_LOCK_ELISION
-  __pthread_force_elision = __libc_enable_secure ? 0 : __elision_available;
+  __pthread_force_elision = __libc_enable_secure ? 0 : elision_available;
 #endif
-  if (!HAS_CPU_FEATURE (RTM))
+  if (!elision_available)
     __elision_aconf.retry_try_xbegin = 0; /* Disable elision on rwlocks */
 }
 
