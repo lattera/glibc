@@ -1,3 +1,12 @@
+2016-12-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20916]
+	* sysdeps/i386/fpu/e_powl.S (__ieee754_powl): Do not return 1 for
+	arguments (sNaN, 0) or (1, sNaN).  Do arithmetic on NaN arguments
+	to compute result.
+	* sysdeps/x86_64/fpu/e_powl.S (__ieee754_powl): Likewise.
+	* math/libm-test.inc (pow_test_data): Add tests of sNaN arguments.
+
 2016-12-05  Torvald Riegel  <triegel@redhat.com>
 
 	* include/atomic.h (__atomic_check_size_ls): New.

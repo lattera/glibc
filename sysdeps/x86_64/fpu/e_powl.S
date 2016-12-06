@@ -184,9 +184,15 @@ ENTRY(__ieee754_powl)
 30:	fldt	8(%rsp)		// x : y
 	fldl	MO(one)		// 1.0 : x : y
 	fucomip	%st(1),%st	// x : y
-	je	31f
-	fxch			// y : x
-31:	fstp	%st(1)
+	je	32f
+31:	/* At least one argument NaN, and result should be NaN.  */
+	faddp
+	ret
+32:	jc	31b
+	/* pow (1, NaN); check if the NaN signaling.  */
+	testb	$0x40, 31(%rsp)
+	jz	31b
+	fstp	%st(1)
 	ret
 
 	.align ALIGNARG(4)
@@ -217,10 +223,22 @@ ENTRY(__ieee754_powl)
 	cfi_adjust_cfa_offset (-40)
 	ret
 
-	// pow(x,±0) = 1
+	// pow(x,±0) = 1, unless x is sNaN
 	.align ALIGNARG(4)
 11:	fstp	%st(0)		// pop y
+	fldt	8(%rsp)		// x
+	fxam
+	fnstsw
+	andb	$0x45, %ah
+	cmpb	$0x01, %ah
+	je	112f		// x is NaN
+111:	fstp	%st(0)
 	fldl	MO(one)
+	ret
+
+112:	testb	$0x40, 15(%rsp)
+	jnz	111b
+	fadd	%st(0)
 	ret
 
 	// y == ±inf
@@ -255,6 +273,7 @@ ENTRY(__ieee754_powl)
 
 	.align ALIGNARG(4)
 13:	fldt	8(%rsp)		// load x == NaN
+	fadd	%st(0)
 	ret
 
 	.align ALIGNARG(4)

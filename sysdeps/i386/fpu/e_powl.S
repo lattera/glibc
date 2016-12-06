@@ -201,15 +201,21 @@ ENTRY(__ieee754_powl)
 	fucomp	%st(1)		// x : y
 	fnstsw
 	sahf
-	je	31f
-	fxch			// y : x
-31:	fstp	%st(1)
+	je	33f
+31:	/* At least one argument NaN, and result should be NaN.  */
+	faddp
+	ret
+33:	jp	31b
+	/* pow (1, NaN); check if the NaN signaling.  */
+	testb	$0x40, 23(%esp)
+	jz	31b
+	fstp	%st(1)
 	ret
 
 	cfi_adjust_cfa_offset (8)
 32:	addl	$8, %esp
 	cfi_adjust_cfa_offset (-8)
-	fstp	%st(1)
+	faddp
 	ret
 
 	cfi_adjust_cfa_offset (8)
@@ -241,10 +247,22 @@ ENTRY(__ieee754_powl)
 	cfi_adjust_cfa_offset (-36)
 	ret
 
-	// pow(x,±0) = 1
+	// pow(x,±0) = 1, unless x is sNaN
 	.align ALIGNARG(4)
 11:	fstp	%st(0)		// pop y
+	fldt	4(%esp)		// x
+	fxam
+	fnstsw
+	andb	$0x45, %ah
+	cmpb	$0x01, %ah
+	je	112f		// x is NaN
+111:	fstp	%st(0)
 	fldl	MO(one)
+	ret
+
+112:	testb	$0x40, 11(%esp)
+	jnz	111b
+	fadd	%st(0)
 	ret
 
 	// y == ±inf
@@ -274,6 +292,7 @@ ENTRY(__ieee754_powl)
 
 	.align ALIGNARG(4)
 13:	fldt	4(%esp)		// load x == NaN
+	fadd	%st(0)
 	ret
 
 	cfi_adjust_cfa_offset (8)
