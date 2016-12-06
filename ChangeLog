@@ -1,7 +1,17 @@
-2018-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+2018-07-24  Rical Jasan <rj@2c3t.io>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Juan Manuel Torres Palma  <jmtorrespalma@gmail.com>
 
 	[BZ #14092]
+	* manual/debug.texi: Update adjacent chapter name.
+	* manual/probes.texi: Likewise.
+	* manual/threads.texi (ISO C Threads): New section.
+	(POSIX Threads): Convert to a section.
+
+2018-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Juan Manuel Torres Palma  <jmtorrespalma@gmail.com>
+
+	[BZ# 14092]
 	* nptl/Makefile (tests): Add new test files.
 	* nptl/tst-call-once.c : New file. Tests C11 functions and types.
 	* nptl/tst-cnd-basic.c: Likewise.
