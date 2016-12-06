@@ -219,15 +219,11 @@ cause them to be disabled.
 @comment GNU
 @defvr Macro _REENTRANT
 @defvrx Macro _THREAD_SAFE
-If you define one of these macros, reentrant versions of several functions get
-declared.  Some of the functions are specified in POSIX.1c but many others
-are only available on a few other systems or are unique to @theglibc{}.
-The problem is the delay in the standardization of the thread safe C library
-interface.
+These macros are obsolete.  They have the same effect as defining
+@code{_POSIX_C_SOURCE} with the value @code{199506L}.
 
-Unlike on some other systems, no special version of the C library must be
-used for linking.  There is only one version but while compiling this
-it must have been specified to compile as thread safe.
+Some very old C libraries required one of these macros to be defined
+for basic functionality (e.g.@: @code{getchar}) to be thread-safe.
 @end defvr
 
 We recommend you use @code{_GNU_SOURCE} in new programs.  If you don't

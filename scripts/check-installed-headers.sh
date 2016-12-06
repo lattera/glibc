@@ -143,7 +143,6 @@ EOF
    inappropriate for this test.  */
 #undef _LIBC
 #undef _GNU_SOURCE
-#undef _REENTRANT
 /* The library mode is selected here rather than on the command line to
    ensure that this selection wins. */
 $expanded_lib_mode

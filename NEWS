@@ -22,6 +22,19 @@ Version 2.25
   from that TS.  Note that most features from that TS are not supported by
   the GNU C Library.
 
+* The nonstandard feature selection macros _REENTRANT and _THREAD_SAFE are
+  now treated as compatibility synonyms for _POSIX_C_SOURCE=199506L.
+  Since the GNU C Library defaults to a much newer revision of POSIX, this
+  will only affect programs that specifically request an old conformance
+  mode.  For instance, a program compiled with -std=c89 -D_REENTRANT will
+  see a change in the visible declarations, but a program compiled with
+  just -D_REENTRANT, or -std=c99 -D_POSIX_C_SOURCE=200809L -D_REENTRANT,
+  will not.
+
+  Some C libraries once required _REENTRANT and/or _THREAD_SAFE to be
+  defined by all multithreaded code, but glibc has not required this for
+  many years.
+
 * The inclusion of <sys/sysmacros.h> by <sys/types.h> is deprecated.  This
   means that in a future release, the macros “major”, “minor”, and “makedev”
   will only be available from <sys/sysmacros.h>.

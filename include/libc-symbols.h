@@ -52,8 +52,6 @@
 
 /* Enable declarations of GNU extensions, since we are compiling them.  */
 #define _GNU_SOURCE	1
-/* And we also need the data for the reentrant functions.  */
-#define _REENTRANT	1
 
 #include <config.h>
 

@@ -24,10 +24,13 @@
    __STRICT_ANSI__	ISO Standard C.
    _ISOC99_SOURCE	Extensions to ISO C89 from ISO C99.
    _ISOC11_SOURCE	Extensions to ISO C99 from ISO C11.
-   __STDC_WANT_LIB_EXT2__ Extensions to ISO C99 from TR 27431-2:2010.
-   __STDC_WANT_IEC_60559_BFP_EXT__ Extensions to ISO C11 from TS 18661-1:2014.
-   __STDC_WANT_IEC_60559_FUNCS_EXT__ Extensions to ISO C11 from
-			TS 18661-4:2015.
+   __STDC_WANT_LIB_EXT2__
+			Extensions to ISO C99 from TR 27431-2:2010.
+   __STDC_WANT_IEC_60559_BFP_EXT__
+			Extensions to ISO C11 from TS 18661-1:2014.
+   __STDC_WANT_IEC_60559_FUNCS_EXT__
+			Extensions to ISO C11 from TS 18661-4:2015.
+
    _POSIX_SOURCE	IEEE Std 1003.1.
    _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
 			if >=199309L, add IEEE Std 1003.1b-1993;
@@ -45,10 +48,12 @@
    _GNU_SOURCE		All of the above, plus GNU extensions.
    _DEFAULT_SOURCE	The default set of features (taking precedence over
 			__STRICT_ANSI__).
-   _REENTRANT		Select additionally reentrant object.
-   _THREAD_SAFE		Same as _REENTRANT, often used by other systems.
-   _FORTIFY_SOURCE	If set to numeric value > 0 additional security
-			measures are defined, according to level.
+
+   _FORTIFY_SOURCE	Add security hardening to many library functions.
+			Set to 1 or 2; 2 performs stricter checks than 1.
+
+   _REENTRANT, _THREAD_SAFE
+			Obsolete; equivalent to _POSIX_C_SOURCE=199506L.
 
    The `-ansi' switch to the GNU C compiler, and standards conformance
    options such as `-std=c99', define __STRICT_ANSI__.  If none of
@@ -86,7 +91,6 @@
    __USE_MISC		Define things from 4.3BSD or System V Unix.
    __USE_ATFILE		Define *at interfaces and AT_* constants for them.
    __USE_GNU		Define GNU extensions.
-   __USE_REENTRANT	Define reentrant/thread-safe *_r functions.
    __USE_FORTIFY_LEVEL	Additional security measures used, according to level.
 
    The macros `__GNU_LIBRARY__', `__GLIBC__', and `__GLIBC_MINOR__' are
@@ -130,7 +134,6 @@
 #undef	__USE_MISC
 #undef	__USE_ATFILE
 #undef	__USE_GNU
-#undef	__USE_REENTRANT
 #undef	__USE_FORTIFY_LEVEL
 #undef	__KERNEL_STRICT_NAMES
 
@@ -253,6 +256,7 @@
 # undef  _POSIX_C_SOURCE
 # define _POSIX_C_SOURCE	200809L
 #endif
+
 #if ((!defined __STRICT_ANSI__					\
       || (defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) >= 500))	\
      && !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE)
@@ -267,6 +271,19 @@
 #  define _POSIX_C_SOURCE	200809L
 # endif
 # define __USE_POSIX_IMPLICITLY	1
+#endif
+
+/* Some C libraries once required _REENTRANT and/or _THREAD_SAFE to be
+   defined in all multithreaded code.  GNU libc has not required this
+   for many years.  We now treat them as compatibility synonyms for
+   _POSIX_C_SOURCE=199506L, which is the earliest level of POSIX with
+   comprehensive support for multithreaded code.  Using them never
+   lowers the selected level of POSIX conformance, only raises it.  */
+#if ((!defined _POSIX_C_SOURCE || (_POSIX_C_SOURCE - 0) < 199506L) \
+     && (defined _REENTRANT || defined _THREAD_SAFE))
+# define _POSIX_SOURCE   1
+# undef  _POSIX_C_SOURCE
+# define _POSIX_C_SOURCE 199506L
 #endif
 
 #if (defined _POSIX_SOURCE					\
@@ -349,10 +366,6 @@
 
 #ifdef	_GNU_SOURCE
 # define __USE_GNU	1
-#endif
-
-#if defined _REENTRANT || defined _THREAD_SAFE
-# define __USE_REENTRANT	1
 #endif
 
 #if defined _FORTIFY_SOURCE && _FORTIFY_SOURCE > 0
