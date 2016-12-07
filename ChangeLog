@@ -13,7 +13,8 @@
 	for arguments Inf and sNaN.  When returning a NaN, compute it by
 	arithmetic on the arguments.
 	* sysdeps/powerpc/fpu/e_hypotf.c (TEST_INF_NAN): Likewise.
-	* math/libm-test.inc (pow_test_data): Add tests of sNaN arguments.
+	* math/libm-test.inc (hypot_test_data): Add tests of sNaN
+	arguments.
 
 2016-12-06  Joseph Myers  <joseph@codesourcery.com>
 
