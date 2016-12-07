@@ -20,22 +20,17 @@
 #include <math.h>
 #include <math_private.h>
 
-double
-__w_log1p (double x)
+FLOAT
+M_DECL_FUNC (__w_log1p) (FLOAT x)
 {
-  if (__glibc_unlikely (islessequal (x, -1.0)))
+  if (__glibc_unlikely (islessequal (x, M_LIT (-1.0))))
     {
-      if (x == -1.0)
+      if (x == -1)
 	__set_errno (ERANGE);
       else
 	__set_errno (EDOM);
     }
 
-  return __log1p (x);
+  return M_SUF (__log1p) (x);
 }
-weak_alias (__w_log1p, log1p)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__w_log1p, __log1pl)
-weak_alias (__w_log1p, log1pl)
-#endif
+declare_mgen_alias (__w_log1p, log1p)

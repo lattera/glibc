@@ -1,3 +1,15 @@
+2016-12-14  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* math/Makefile (gen-libm-calls): Add w_log1pF.
+	(libm-calls): Remove w_log1pF.
+	* math/w_log1p.c: Remove.
+	* math/w_log1pf.c: Likewise.
+	* math/w_log1pl.c: Likewise.
+	* math/w_log1p_template.c: New file with type-generic
+	implementation based on math/w_log1p.c.
+	* sysdeps/ieee754/ldbl-128ibm/w_log1pl.c: Remove.
+	* sysdeps/ieee754/ldbl-64-128/w_log1pl.c: Likewise.
+
 2015-12-14  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* string/rawmemchr.c (RAWMEMCHR): Use faster memchr/strlen.
