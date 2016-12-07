@@ -1,3 +1,12 @@
+2016-12-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.__init__): Take strip
+	argument.
+	(Glibc.build_glibc): Strip installed shared libraries if
+	requested.
+	(get_parser): Add --strip option.
+	(main): Update Context call.
+
 2016-12-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Dominik Vogt  <vogt@linux.vnet.ibm.com>
 

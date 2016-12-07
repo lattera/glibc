@@ -53,12 +53,14 @@ import urllib.request
 class Context(object):
     """The global state associated with builds in a given directory."""
 
-    def __init__(self, topdir, parallelism, keep, replace_sources, action):
+    def __init__(self, topdir, parallelism, keep, replace_sources, strip,
+                 action):
         """Initialize the context."""
         self.topdir = topdir
         self.parallelism = parallelism
         self.keep = keep
         self.replace_sources = replace_sources
+        self.strip = strip
         self.srcdir = os.path.join(topdir, 'src')
         self.versions_json = os.path.join(self.srcdir, 'versions.json')
         self.build_state_json = os.path.join(topdir, 'build-state.json')
@@ -1318,6 +1320,11 @@ class Glibc(object):
                                           os.path.join(installdir,
                                                        'usr', 'lib')])
         if not for_compiler:
+            if self.ctx.strip:
+                cmdlist.add_command('strip',
+                                    ['sh', '-c',
+                                     ('%s %s/lib*/*.so' %
+                                      (self.tool_name('strip'), installdir))])
             cmdlist.add_command('check', ['make', 'check'])
             cmdlist.add_command('save-logs', [self.ctx.save_logs],
                                 always_run=True)
@@ -1490,6 +1497,8 @@ def get_parser():
     parser.add_argument('--replace-sources', action='store_true',
                         help='Remove and replace source directories '
                         'with the wrong version of a component')
+    parser.add_argument('--strip', action='store_true',
+                        help='Strip installed glibc libraries')
     parser.add_argument('topdir',
                         help='Toplevel working directory')
     parser.add_argument('action',
@@ -1508,7 +1517,7 @@ def main(argv):
     opts = parser.parse_args(argv)
     topdir = os.path.abspath(opts.topdir)
     ctx = Context(topdir, opts.parallelism, opts.keep, opts.replace_sources,
-                  opts.action)
+                  opts.strip, opts.action)
     ctx.run_builds(opts.action, opts.configs)
 
 
