@@ -31,10 +31,11 @@
 #ifdef _ARCH_PWR7
 /* POWER7 isinf and isnan optimizations are fast. */
 # define TEST_INF_NAN(x, y)                                      \
-   if (isinff(x) || isinff(y))                                   \
+   if ((isinff(x) || isinff(y))					 \
+       && !issignaling (x) && !issignaling (y))			 \
      return INFINITY;                                            \
    if (isnanf(x) || isnanf(y))                                   \
-     return NAN;
+     return x + y;
 # else
 /* For POWER6 and below isinf/isnan triggers LHS and PLT calls are
  * costly (especially for POWER6). */
@@ -56,9 +57,10 @@
      uint32_t ht = hx; hx = hy; hy = ht;                         \
    }                                                             \
    if (hx >= 0x7f800000) {                                       \
-     if (hx == 0x7f800000 || hy == 0x7f800000)                   \
+     if ((hx == 0x7f800000 || hy == 0x7f800000)			 \
+	 && !issignaling (x) && !issignaling (y))		 \
        return INFINITY;                                          \
-     return NAN;                                                 \
+     return x + y;						 \
    }                                                             \
  } while (0)
 #endif

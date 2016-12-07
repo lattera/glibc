@@ -67,6 +67,8 @@ __ieee754_hypotl(_Float128 x, _Float128 y)
 	   if(ha >= 0x7fff000000000000LL) {	/* Inf or NaN */
 	       u_int64_t low;
 	       w = a+b;			/* for sNaN */
+	       if (issignaling (a) || issignaling (b))
+		 return w;
 	       GET_LDOUBLE_LSW64(low,a);
 	       if(((ha&0xffffffffffffLL)|low)==0) w = a;
 	       GET_LDOUBLE_LSW64(low,b);

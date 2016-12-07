@@ -41,10 +41,11 @@ static const double pdnum   = 2.225073858507201e-308;
 #ifdef _ARCH_PWR7
 /* POWER7 isinf and isnan optimization are fast. */
 # define TEST_INF_NAN(x, y)                                       \
-   if (isinf(x) || isinf(y))                                      \
+   if ((isinf(x) || isinf(y))					  \
+       && !issignaling (x) && !issignaling (y))			  \
        return INFINITY;                                           \
    if (isnan(x) || isnan(y))                                      \
-       return NAN;
+       return x + y;
 # else
 /* For POWER6 and below isinf/isnan triggers LHS and PLT calls are
  * costly (especially for POWER6). */
@@ -66,9 +67,10 @@ static const double pdnum   = 2.225073858507201e-308;
      uint32_t ht = hx; hx = hy; hy = ht;                         \
    }                                                             \
    if (hx >= 0x7ff00000) {                                       \
-     if (hx == 0x7ff00000 || hy == 0x7ff00000)                   \
+     if ((hx == 0x7ff00000 || hy == 0x7ff00000)			 \
+	 && !issignaling (x) && !issignaling (y))		 \
        return INFINITY;                                          \
-     return NAN;                                                 \
+     return x + y;						 \
    }                                                             \
  } while (0)
 

@@ -76,6 +76,8 @@ __ieee754_hypot (double x, double y)
 	{
 	  u_int32_t low;
 	  w = a + b;                    /* for sNaN */
+	  if (issignaling (a) || issignaling (b))
+	    return w;
 	  GET_LOW_WORD (low, a);
 	  if (((ha & 0xfffff) | low) == 0)
 	    w = a;

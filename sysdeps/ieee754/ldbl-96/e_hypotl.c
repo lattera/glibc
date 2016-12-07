@@ -68,6 +68,8 @@ long double __ieee754_hypotl(long double x, long double y)
 	       u_int32_t exp __attribute__ ((unused));
 	       u_int32_t high,low;
 	       w = a+b;			/* for sNaN */
+	       if (issignaling (a) || issignaling (b))
+		 return w;
 	       GET_LDOUBLE_WORDS(exp,high,low,a);
 	       if(((high&0x7fffffff)|low)==0) w = a;
 	       GET_LDOUBLE_WORDS(exp,high,low,b);

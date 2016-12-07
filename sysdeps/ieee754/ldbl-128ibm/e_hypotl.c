@@ -67,6 +67,8 @@ __ieee754_hypotl(long double x, long double y)
 	if(ha > 0x5f30000000000000LL) {	/* a>2**500 */
 	   if(ha >= 0x7ff0000000000000LL) {	/* Inf or NaN */
 	       w = a+b;			/* for sNaN */
+	       if (issignaling (a) || issignaling (b))
+		 return w;
 	       if(ha == 0x7ff0000000000000LL)
 		 w = a;
 	       if(hb == 0x7ff0000000000000LL)

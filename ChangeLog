@@ -1,3 +1,20 @@
+2016-12-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20940]
+	* sysdeps/ieee754/dbl-64/e_hypot.c (__ieee754_hypot): Do not
+	return Inf for arguments Inf and sNaN.
+	* sysdeps/ieee754/flt-32/e_hypotf.c (__ieee754_hypotf): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c (__ieee754_hypotl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c (__ieee754_hypotl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/e_hypotl.c (__ieee754_hypotl): Likewise.
+	* sysdeps/powerpc/fpu/e_hypot.c (TEST_INF_NAN): Do not return Inf
+	for arguments Inf and sNaN.  When returning a NaN, compute it by
+	arithmetic on the arguments.
+	* sysdeps/powerpc/fpu/e_hypotf.c (TEST_INF_NAN): Likewise.
+	* math/libm-test.inc (pow_test_data): Add tests of sNaN arguments.
+
 2016-12-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20916]
