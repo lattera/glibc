@@ -416,6 +416,11 @@ $(+link-pie-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
 			 $(+link-pie-after-libc)
 $(call after-link,$@)
 endef
+define +link-pie-printers-tests
+$(+link-pie-before-libc) $(built-rtld-LDFLAGS) $(link-libc-printers-tests) \
+			 $(+link-pie-after-libc)
+$(call after-link,$@)
+endef
 endif
 # Command for statically linking programs with the C library.
 ifndef +link-static
@@ -445,7 +450,8 @@ ifeq (yes,$(build-pie-default))
 no-pie-ldflag = -no-pie
 +link = $(+link-pie)
 +link-tests = $(+link-pie-tests)
-else
++link-printers-tests = $(+link-pie-printers-tests)
+else  # not build-pie-default
 +link-before-libc = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	      $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
@@ -466,51 +472,87 @@ $(+link-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
 		     $(+link-after-libc)
 $(call after-link,$@)
 endef
-endif
-else
+define +link-printers-tests
+$(+link-before-libc) $(built-rtld-LDFLAGS) $(link-libc-printers-tests) \
+		     $(+link-after-libc)
+$(call after-link,$@)
+endef
+endif  # build-pie-default
+else  # build-static
 +link = $(+link-static)
 +link-tests = $(+link-static-tests)
-endif
-endif
++link-printers-tests = $(+link-static-tests)
+endif  # build-shared
+endif  # +link
+
+# The pretty printer test programs need to be compiled without optimizations
+# so they won't confuse gdb.  We could use either the 'GCC optimize' pragma
+# or the 'optimize' function attribute to achieve this; however, at least on
+# ARM, gcc always produces different debugging symbols when invoked with
+# a -O greater than 0 than when invoked with -O0, regardless of anything else
+# we're using to suppress optimizations.  Therefore, we need to explicitly pass
+# -O0 to it through CFLAGS.
+# Additionally, the build system will try to -include $(common-objpfx)/config.h
+# when compiling the tests, which will throw an error if some special macros
+# (such as __OPTIMIZE__ and IS_IN_build) aren't defined.  To avoid this, we
+# tell gcc to define IS_IN_build.
+CFLAGS-printers-tests := -O0 -ggdb3 -DIS_IN_build
+
 ifeq (yes,$(build-shared))
+# These indicate whether to link using the built ld.so or the installed one.
+installed-rtld-LDFLAGS = -Wl,-dynamic-linker=$(rtlddir)/$(rtld-installed-name)
+built-rtld-LDFLAGS = -Wl,-dynamic-linker=$(elf-objpfx)ld.so
+
 ifndef rtld-LDFLAGS
-rtld-LDFLAGS = -Wl,-dynamic-linker=$(rtlddir)/$(rtld-installed-name)
+rtld-LDFLAGS = $(installed-rtld-LDFLAGS)
 endif
+
 ifndef rtld-tests-LDFLAGS
 ifeq (yes,$(build-hardcoded-path-in-tests))
-rtld-tests-LDFLAGS = -Wl,-dynamic-linker=$(elf-objpfx)ld.so
+rtld-tests-LDFLAGS = $(built-rtld-LDFLAGS)
 else
-rtld-tests-LDFLAGS = $(rtld-LDFLAGS)
-endif
-endif
-endif
+rtld-tests-LDFLAGS = $(installed-rtld-LDFLAGS)
+endif  # build-hardcoded-path-in-tests
+endif  # rtld-tests-LDFLAGS
+
+endif  # build-shared
+
 ifndef link-libc
 ifeq (yes,$(build-shared))
 # We need the versioned name of libc.so in the deps of $(others) et al
 # so that the symlink to libc.so is created before anything tries to
 # run the linked programs.
+link-libc-rpath = -Wl,-rpath=$(rpath-link)
 link-libc-rpath-link = -Wl,-rpath-link=$(rpath-link)
+
 ifeq (yes,$(build-hardcoded-path-in-tests))
-link-libc-tests-rpath-link = -Wl,-rpath=$(rpath-link)
+link-libc-tests-rpath-link = $(link-libc-rpath)
 else
 link-libc-tests-rpath-link = $(link-libc-rpath-link)
-endif
+endif  # build-hardcoded-path-in-tests
+
 link-libc-before-gnulib = $(common-objpfx)libc.so$(libc.so-version) \
 			  $(common-objpfx)$(patsubst %,$(libtype.oS),c) \
 			  $(as-needed) $(elf-objpfx)ld.so \
 			  $(no-as-needed)
 link-libc = $(link-libc-rpath-link) $(link-libc-before-gnulib) $(gnulib)
+
+link-libc-tests-after-rpath-link = $(link-libc-before-gnulib) $(gnulib-tests)
 link-libc-tests = $(link-libc-tests-rpath-link) \
-		  $(link-libc-before-gnulib) $(gnulib-tests)
+		  $(link-libc-tests-after-rpath-link)
+# Pretty printer test programs always require rpath instead of rpath-link.
+link-libc-printers-tests = $(link-libc-rpath) \
+			   $(link-libc-tests-after-rpath-link)
+
 # This is how to find at build-time things that will be installed there.
 rpath-dirs = math elf dlfcn nss nis rt resolv crypt mathvec
 rpath-link = \
 $(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
-else
+else  # build-static
 link-libc = $(common-objpfx)libc.a $(otherlibs) $(gnulib) $(common-objpfx)libc.a $(gnulib)
 link-libc-tests = $(common-objpfx)libc.a $(otherlibs) $(gnulib-tests) $(common-objpfx)libc.a $(gnulib-tests)
-endif
-endif
+endif  # build-shared
+endif  # link-libc
 
 # Differences in the linkers on the various platforms.
 LDFLAGS-rpath-ORIGIN = -Wl,-rpath,'$$ORIGIN'

@@ -141,6 +141,11 @@ Version 2.25
   variable for a particular architecture in the GCC source file
   'gcc/config.gcc'.
 
+* GDB pretty printers have been added for mutex and condition variable
+  structures in POSIX Threads. When installed and loaded in gdb these pretty
+  printers show various pthread variables in human-readable form when read
+  using the 'print' or 'display' commands in gdb.
+
 Security related changes:
 
   On ARM EABI (32-bit), generating a backtrace for execution contexts which

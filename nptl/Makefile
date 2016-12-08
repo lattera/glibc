@@ -312,6 +312,24 @@ gen-as-const-headers = pthread-errnos.sym \
 		       unwindbuf.sym \
 		       lowlevelrobustlock.sym pthread-pi-defines.sym
 
+gen-py-const-headers := nptl_lock_constants.pysym
+pretty-printers := nptl-printers.py
+tests-printers := test-mutexattr-printers test-mutex-printers \
+		  test-condattr-printers test-cond-printers \
+		  test-rwlockattr-printers test-rwlock-printers
+
+CFLAGS-test-mutexattr-printers.c := $(CFLAGS-printers-tests)
+CFLAGS-test-mutex-printers.c := $(CFLAGS-printers-tests)
+CFLAGS-test-condattr-printers.c := $(CFLAGS-printers-tests)
+CFLAGS-test-cond-printers.c := $(CFLAGS-printers-tests)
+CFLAGS-test-rwlockattr-printers.c := $(CFLAGS-printers-tests)
+CFLAGS-test-rwlock-printers.c := $(CFLAGS-printers-tests)
+
+ifeq ($(build-shared),yes)
+tests-printers-libs := $(shared-thread-library)
+else
+tests-printers-libs := $(static-thread-library)
+endif
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 

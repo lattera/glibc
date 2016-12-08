@@ -1,3 +1,48 @@
+2016-12-08  Martin Galvan  <martin.galvan@tallertechnologies.com>
+
+	* INSTALL: Regenerated.
+	* Makeconfig: Add comments and whitespace to make the control flow
+	clearer.
+	(+link-printers-tests, +link-pie-printers-tests,
+	CFLAGS-printers-tests, installed-rtld-LDFLAGS,
+	built-rtld-LDFLAGS, link-libc-rpath,
+	link-libc-tests-after-rpath-link,
+	link-libc-printers-tests): New.
+	(rtld-LDFLAGS, rtld-tests-LDFLAGS, link-libc-tests-rpath-link,
+	link-libc-tests): Use the new variables as required.
+	* Makerules ($(py-const)): New rule.
+	generated: Add $(py-const).
+	* README.pretty-printers: New file.
+	* Rules (tests-printers-programs, tests-printers-out, py-env): New.
+	(others): Depend on $(py-const).
+	(tests): Depend on $(tests-printers-programs) or
+	$(tests-printers-out),
+	as required.  Pass $(tests-printers) to merge-test-results.sh.
+	* manual/install.texi: Add requirements for testing the pretty
+	printers.
+	* nptl/Makefile (gen-py-const-headers, pretty-printers,
+	tests-printers, CFLAGS-test-mutexattr-printers.c
+	CFLAGS-test-mutex-printers.c, CFLAGS-test-condattr-printers.c,
+	CFLAGS-test-cond-printers.c, CFLAGS-test-rwlockattr-printers.c
+	CFLAGS-test-rwlock-printers.c, tests-printers-libs): Define.
+	* nptl/nptl-printers.py: New file.
+	* nptl/nptl_lock_constants.pysym: Likewise.
+	* nptl/test-cond-printers.c: Likewise.
+	* nptl/test-cond-printers.py: Likewise.
+	* nptl/test-condattr-printers.c: Likewise.
+	* nptl/test-condattr-printers.py: Likewise.
+	* nptl/test-mutex-printers.c: Likewise.
+	* nptl/test-mutex-printers.py: Likewise.
+	* nptl/test-mutexattr-printers.c: Likewise.
+	* nptl/test-mutexattr-printers.py: Likewise.
+	* nptl/test-rwlock-printers.c: Likewise.
+	* nptl/test-rwlock-printers.py: Likewise.
+	* nptl/test-rwlockattr-printers.c: Likewise.
+	* nptl/test-rwlockattr-printers.py: Likewise.
+	* scripts/gen-py-const.awk: Likewise.
+	* scripts/test_printers_common.py: Likewise.
+	* scripts/test_printers_exceptions.py: Likewise.
+
 2016-12-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.__init__): Take strip
