@@ -138,12 +138,11 @@ xtests-special-notdir = $(patsubst $(objpfx)%, %, $(xtests-special))
 ifeq ($(run-built-tests),no)
 tests-expected =
 else
-tests-expected = $(tests)
+tests-expected = $(tests) $(tests-printers)
 endif
 tests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
-	  $(sort $(tests-expected) $(tests-special-notdir:.out=) \
-	  $(tests-printers)) \
+	  $(sort $(tests-expected) $(tests-special-notdir:.out=)) \
 	  > $(objpfx)subdir-tests.sum
 xtests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \

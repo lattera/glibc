@@ -1,3 +1,9 @@
+2016-12-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* Rules [$(run-built-tests) != no] (tests-expected): Add
+	$(tests-printers).
+	(tests): Do not pass $(tests-printers) to merge-test-results.sh.
+
 2016-12-08  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	[BZ #20539]
