@@ -1237,6 +1237,7 @@ $(addprefix $(inst_sbindir)/,$(install-sbin)): \
 endif
 ifdef install-lib
 install-lib.a := $(filter lib%.a,$(install-lib))
+install-lib.a := $(filter-out $(install-lib-ldscripts),$(install-lib.a))
 install-lib-non.a := $(filter-out lib%.a,$(install-lib))
 ifdef install-lib-non.a
 $(addprefix $(inst_libdir)/$(libprefix),$(install-lib-non.a)): \

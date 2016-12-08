@@ -128,10 +128,10 @@ generated += $(foreach s,.c .S,$(call type-foreach, $(calls:s_%=m_%$(s))))
 routines = $(call type-foreach, $(calls))
 
 ifeq ($(build-mathvec),yes)
-# We need to install libm.so as linker script
-# for more comfortable use of vector math library.
-install-lib-ldscripts := libm.so
-install_subdir: $(inst_libdir)/libm.so
+# We need to install libm.so and libm.a as linker scripts
+# for transparent use of vector math library.
+install-lib-ldscripts := libm.so libm.a
+install-others = $(inst_libdir)/libm.so $(inst_libdir)/libm.a
 $(inst_libdir)/libm.so: $(common-objpfx)format.lds \
 			$(libm) \
 			$(libmvec) \
@@ -141,6 +141,17 @@ $(inst_libdir)/libm.so: $(common-objpfx)format.lds \
 	 echo 'GROUP ( $(slibdir)/libm.so$(libm.so-version) ' \
 	      'AS_NEEDED ( $(libdir)/libmvec_nonshared.a $(slibdir)/libmvec.so$(libmvec.so-version) ) )' \
 	) > $@.new
+	mv -f $@.new $@
+
+$(inst_libdir)/libm.a: $(common-objpfx)format.lds \
+		       $(libm) \
+		       $(libmvec) \
+		       $(+force)
+	(echo '/* GNU ld script'; echo '*/';\
+	 cat $<; \
+	 echo 'GROUP ( $(libdir)/libm-$(lib-version).a $(libdir)/libmvec.a )' \
+	) > $@.new
+	cp $(objpfx)libm.a $(inst_libdir)/libm-$(lib-version).a
 	mv -f $@.new $@
 endif
 

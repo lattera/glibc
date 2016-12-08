@@ -1,3 +1,13 @@
+2016-12-08  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	[BZ #20539]
+	* math/Makefile (install-lib-ldscripts): Add libm.a.
+	(install_subdir): Remove.
+	(install-others): Add.
+	($(inst_libdir)/libm.a): Add rule for installation as
+	linker script.
+	* Makerules (install-lib.a): Filter out install-lib-ldscripts.
+
 2016-12-08  Martin Galvan  <martin.galvan@tallertechnologies.com>
 
 	* INSTALL: Regenerated.
