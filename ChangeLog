@@ -1,3 +1,10 @@
+2017-05-17  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* math/math.h (__MATH_TG): Extend the conditions to add
+	_Float128 support.
+	* misc/sys/cdefs.h (__HAVE_GENERIC_SELECTION): New macro.
+
 2017-05-17  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
