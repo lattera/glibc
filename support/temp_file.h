@@ -1,0 +1,37 @@
+/* Declarations for temporary file handling.
+   Copyright (C) 2016 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+#ifndef SUPPORT_TEMP_FILE_H
+#define SUPPORT_TEMP_FILE_H
+
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
+
+/* Schedule a temporary file for deletion on exit.  */
+void add_temp_file (const char *name);
+
+/* Create a temporary file.  Return the opened file descriptor on
+   success, or -1 on failure.  Write the file name to *FILENAME if
+   FILENAME is not NULL.  In this case, the caller is expected to free
+   *FILENAME.  */
+int create_temp_file (const char *base, char **filename);
+
+__END_DECLS
+
+#endif /* SUPPORT_TEMP_FILE_H */

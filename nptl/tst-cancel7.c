@@ -24,6 +24,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <getopt.h>
+
+#include <support/xthread.h>
 
 const char *command;
 const char *pidfile;
@@ -105,18 +108,8 @@ do_test (void)
     sleep (1);
   while (access (pidfilename, R_OK) != 0);
 
-  if (pthread_cancel (th) != 0)
-    {
-      puts ("pthread_cancel failed");
-      return 1;
-    }
-
-  void *r;
-  if (pthread_join (th, &r) != 0)
-    {
-      puts ("pthread_join failed");
-      return 1;
-    }
+  xpthread_cancel (th);
+  void *r = xpthread_join (th);
 
   sleep (1);
 
@@ -196,15 +189,20 @@ do_cleanup (void)
 #define CMDLINE_OPTIONS \
   { "command", required_argument, NULL, OPT_COMMAND },	\
   { "pidfile", required_argument, NULL, OPT_PIDFILE },
-#define CMDLINE_PROCESS \
-  case OPT_COMMAND:	\
-    command = optarg;	\
-    break;		\
-  case OPT_PIDFILE:	\
-    pidfile = optarg;	\
-    break;
-#define CLEANUP_HANDLER do_cleanup ()
-#define PREPARE(argc, argv) do_prepare (argc, argv)
-#define TEST_FUNCTION do_test ()
+static void
+cmdline_process (int c)
+{
+  switch (c)
+    {
+      command = optarg;
+      break;
+    case OPT_PIDFILE:
+      pidfile = optarg;
+      break;
+    }
+}
+#define CMDLINE_PROCESS cmdline_process
+#define CLEANUP_HANDLER do_cleanup
+#define PREPARE do_prepare
 #define TIMEOUT 5
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

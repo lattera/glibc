@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <support/temp_file.h>
+
 static char *templ_filename;
 
 // Writes template given as parameter to file,
@@ -133,14 +135,18 @@ do_test (int argc, char *argv[])
 
   return res;
 }
+#define TEST_FUNCTION_ARGV do_test
 
-#define PREPARE(argc, argv) \
-  if (argc < 2)								\
-    {									\
-      puts ("Command line: progname template_filename_full_path");	\
-      exit (1);								\
-    }									\
-  add_temp_file (argv[1])
+static void
+do_prepare (int argc, char **argv)
+{
+  if (argc < 2)
+    {
+      puts ("Command line: progname template_filename_full_path");
+      exit (1);
+    }
+  add_temp_file (argv[1]);
+}
+#define PREPARE do_prepare
 
-#define TEST_FUNCTION do_test (argc, argv)
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

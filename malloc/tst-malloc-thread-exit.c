@@ -33,10 +33,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-static int do_test (void);
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/support.h>
+#include <support/xthread.h>
+#include <support/test-driver.h>
 
 static bool termination_requested;
 static int inner_thread_count = 4;
@@ -53,19 +52,8 @@ static void *
 malloc_first_thread (void * closure)
 {
   pthread_barrier_t *barrier = closure;
-  void *ptr = malloc (malloc_size);
-  if (ptr == NULL)
-    {
-      printf ("error: malloc: %m\n");
-      abort ();
-    }
-  int ret = pthread_barrier_wait (barrier);
-  if (ret != 0 && ret != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      errno = ret;
-      printf ("error: pthread_barrier_wait: %m\n");
-      abort ();
-    }
+  void *ptr = xmalloc (malloc_size);
+  xpthread_barrier_wait (barrier);
   unoptimized_free (ptr);
   return NULL;
 }
@@ -74,19 +62,8 @@ static void *
 wait_first_thread (void * closure)
 {
   pthread_barrier_t *barrier = closure;
-  int ret = pthread_barrier_wait (barrier);
-  if (ret != 0 && ret != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      errno = ret;
-      printf ("error: pthread_barrier_wait: %m\n");
-      abort ();
-    }
-  void *ptr = malloc (malloc_size);
-  if (ptr == NULL)
-    {
-      printf ("error: malloc: %m\n");
-      abort ();
-    }
+  xpthread_barrier_wait (barrier);
+  void *ptr = xmalloc (malloc_size);
   unoptimized_free (ptr);
   return NULL;
 }
@@ -94,23 +71,11 @@ wait_first_thread (void * closure)
 static void *
 outer_thread (void *closure)
 {
-  pthread_t *threads = calloc (sizeof (*threads), inner_thread_count);
-  if (threads == NULL)
-    {
-      printf ("error: calloc: %m\n");
-      abort ();
-    }
-
+  pthread_t *threads = xcalloc (sizeof (*threads), inner_thread_count);
   while (!__atomic_load_n (&termination_requested, __ATOMIC_RELAXED))
     {
       pthread_barrier_t barrier;
-      int ret = pthread_barrier_init (&barrier, NULL, inner_thread_count + 1);
-      if (ret != 0)
-        {
-          errno = ret;
-          printf ("pthread_barrier_init: %m\n");
-          abort ();
-        }
+      xpthread_barrier_init (&barrier, NULL, inner_thread_count + 1);
       for (int i = 0; i < inner_thread_count; ++i)
         {
           void *(*func) (void *);
@@ -118,38 +83,12 @@ outer_thread (void *closure)
             func = malloc_first_thread;
           else
             func = wait_first_thread;
-          ret = pthread_create (threads + i, NULL, func, &barrier);
-          if (ret != 0)
-            {
-              errno = ret;
-              printf ("error: pthread_create: %m\n");
-              abort ();
-            }
+          threads[i] = xpthread_create (NULL, func, &barrier);
         }
-      ret = pthread_barrier_wait (&barrier);
-      if (ret != 0 && ret != PTHREAD_BARRIER_SERIAL_THREAD)
-        {
-          errno = ret;
-          printf ("pthread_wait: %m\n");
-          abort ();
-        }
+      xpthread_barrier_wait (&barrier);
       for (int i = 0; i < inner_thread_count; ++i)
-        {
-          ret = pthread_join (threads[i], NULL);
-          if (ret != 0)
-            {
-              ret = errno;
-              printf ("error: pthread_join: %m\n");
-              abort ();
-            }
-        }
-      ret = pthread_barrier_destroy (&barrier);
-      if (ret != 0)
-        {
-          ret = errno;
-          printf ("pthread_barrier_destroy: %m\n");
-          abort ();
-        }
+        xpthread_join (threads[i]);
+      xpthread_barrier_destroy (&barrier);
     }
 
   free (threads);
@@ -172,26 +111,12 @@ do_test (void)
 
   /* Leave some room for shutting down all threads gracefully.  */
   int timeout = 3;
-  if (timeout > TIMEOUT)
-    timeout = TIMEOUT - 1;
+  if (timeout > DEFAULT_TIMEOUT)
+    timeout = DEFAULT_TIMEOUT - 1;
 
-  pthread_t *threads = calloc (sizeof (*threads), outer_thread_count);
-  if (threads == NULL)
-    {
-      printf ("error: calloc: %m\n");
-      abort ();
-    }
-
+  pthread_t *threads = xcalloc (sizeof (*threads), outer_thread_count);
   for (long i = 0; i < outer_thread_count; ++i)
-    {
-      int ret = pthread_create (threads + i, NULL, outer_thread, NULL);
-      if (ret != 0)
-        {
-          errno = ret;
-          printf ("error: pthread_create: %m\n");
-          abort ();
-        }
-    }
+    threads[i] = xpthread_create (NULL, outer_thread, NULL);
 
   struct timespec ts = {timeout, 0};
   if (nanosleep (&ts, NULL))
@@ -203,16 +128,10 @@ do_test (void)
   __atomic_store_n (&termination_requested, true, __ATOMIC_RELAXED);
 
   for (long i = 0; i < outer_thread_count; ++i)
-    {
-      int ret = pthread_join (threads[i], NULL);
-      if (ret != 0)
-        {
-          errno = ret;
-          printf ("error: pthread_join: %m\n");
-          abort ();
-        }
-    }
+    xpthread_join (threads[i]);
   free (threads);
 
   return 0;
 }
+
+#include <support/test-driver.c>

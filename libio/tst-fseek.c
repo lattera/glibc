@@ -24,9 +24,7 @@
 #include <unistd.h>
 #include <string.h>
 
-/* Defined in test-skeleton.c.  */
-static int create_temp_file (const char *base, char **filename);
-
+#include <support/temp_file.h>
 
 static int
 do_seek_end (FILE *fp)
@@ -168,6 +166,4 @@ do_test (void)
   return ret;
 }
 
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

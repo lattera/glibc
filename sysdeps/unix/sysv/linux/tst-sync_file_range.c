@@ -18,20 +18,17 @@
 
 /* sync_file_range is only define for LFS.  */
 #define _FILE_OFFSET_BITS 64
-#include <fcntl.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <sys/stat.h>
 
-static void do_prepare (void);
-#define PREPARE(argc, argv)     do_prepare ()
-static int do_test (void);
-#define TEST_FUNCTION           do_test ()
-
-#define TIMEOUT 20 /* sec.  */
+#include <support/temp_file.h>
+#include <support/check.h>
 
 #define XSTR(s) STR(S)
 #define STR(s)  #s
-
-#include <test-skeleton.c>
 
 static char *temp_filename;
 static int temp_fd;
@@ -40,7 +37,7 @@ static char fifoname[] = "/tmp/tst-posix_fadvise-fifo-XXXXXX";
 static int fifofd;
 
 void
-do_prepare (void)
+do_prepare (int argc, char **argv)
 {
   temp_fd = create_temp_file ("tst-file_sync_range.", &temp_filename);
   if (temp_fd == -1)
@@ -57,6 +54,7 @@ do_prepare (void)
   if (fifofd == -1)
     FAIL_EXIT1 ("cannot open fifo: %m");
 }
+#define PREPARE do_prepare
 
 static int
 do_test (void)
@@ -129,3 +127,5 @@ do_test (void)
 
   return 0;
 }
+
+#include <support/test-driver.c>

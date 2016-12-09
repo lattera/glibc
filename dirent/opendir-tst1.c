@@ -58,7 +58,7 @@ real_test (void)
 
 
 static int
-do_test (int argc, char *argv[])
+do_test (void)
 {
   int retval;
 
@@ -89,8 +89,6 @@ do_cleanup (void)
 {
   remove (tmpname);
 }
-#define CLEANUP_HANDLER do_cleanup ()
+#define CLEANUP_HANDLER do_cleanup
 
-
-/* Include the test skeleton.  */
-#include <test-skeleton.c>
+#include <support/test-driver.c>

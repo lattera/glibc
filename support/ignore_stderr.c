@@ -1,4 +1,4 @@
-/* Verify that backtrace does not deadlock on itself on memory corruption.
+/* Avoid all the buffer overflow messages on stderr.
    Copyright (C) 2015-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,38 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <signal.h>
-#include <stdlib.h>
-
 #include <support/support.h>
 
-#define SIZE 4096
+#include <fcntl.h>
+#include <paths.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-/* Wrap free with a function to prevent gcc from optimizing it out.  */
-static void
-__attribute__((noinline))
-call_free (void *ptr)
+void
+ignore_stderr (void)
 {
-  free (ptr);
-  *(size_t *)(ptr - sizeof (size_t)) = 1;
+  int fd = open (_PATH_DEVNULL, O_WRONLY);
+  if (fd == -1)
+    close (STDERR_FILENO);
+  else
+    {
+      dup2 (fd, STDERR_FILENO);
+      close (fd);
+    }
+  setenv ("LIBC_FATAL_STDERR_", "1", 1);
 }
-
-int
-do_test (void)
-{
-  void *ptr1 = malloc (SIZE);
-  void *ptr2 = malloc (SIZE);
-
-  /* Avoid unwanted output to TTY after an expected memory corruption.  */
-  ignore_stderr();
-
-  call_free (ptr1);
-  ptr1 = malloc (SIZE);
-
-  /* Not reached.  The return statement is to put ptr2 into use so that gcc
-     doesn't optimize out that malloc call.  */
-  return (ptr1 == ptr2);
-}
-
-#define EXPECTED_SIGNAL SIGABRT
-#include <support/test-driver.c>

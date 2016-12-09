@@ -17,32 +17,27 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <fcntl.h>
-#include <sys/types.h>
+#include <limits.h>
+#include <stdint.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 
-static void do_prepare (void);
-#define PREPARE(argc, argv)     do_prepare ()
-static int do_test (void);
-#define TEST_FUNCTION           do_test ()
-
-#define TIMEOUT 20 /* sec.  */
-
-#include <test-skeleton.c>
+#include <support/support.h>
+#include <support/check.h>
+#include <support/temp_file.h>
 
 static char *temp_filename;
 static int temp_fd;
 
 static void
-do_prepare (void)
+do_prepare (int argc, char **argv)
 {
   temp_fd = create_temp_file ("tst-posix_fallocate.", &temp_filename);
   if (temp_fd == -1)
     FAIL_EXIT1 ("cannot create temporary file: %m\n");
 }
-
-#define FAIL(str) \
-  do { printf ("error: %s (line %d)\n", str, __LINE__); return 1; } while (0)
+#define PREPARE do_prepare
 
 static int
 do_test_with_offset (off_t offset)
@@ -83,3 +78,8 @@ do_test_with_offset (off_t offset)
 
   return 0;
 }
+
+/* This function is defined by the individual tests.  */
+static int do_test (void);
+
+#include <support/test-driver.c>

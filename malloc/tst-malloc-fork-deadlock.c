@@ -28,9 +28,9 @@
 #include <string.h>
 #include <signal.h>
 
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/xthread.h>
+#include <support/temp_file.h>
+#include <support/test-driver.h>
 
 enum {
   /* Number of threads which call fork.  */
@@ -117,30 +117,14 @@ static void
 create_threads (pthread_t *threads, size_t count, void *(*func) (void *))
 {
   for (size_t i = 0; i < count; ++i)
-    {
-      int ret = pthread_create (threads + i, NULL, func, NULL);
-      if (ret != 0)
-        {
-          errno = ret;
-          printf ("error: pthread_create: %m\n");
-          abort ();
-        }
-    }
+    threads[i] = xpthread_create (NULL, func, NULL);
 }
 
 static void
 join_threads (pthread_t *threads, size_t count)
 {
   for (size_t i = 0; i < count; ++i)
-    {
-      int ret = pthread_join (threads[i], NULL);
-      if (ret != 0)
-        {
-          errno = ret;
-          printf ("error: pthread_join: %m\n");
-          abort ();
-        }
-    }
+    xpthread_join (threads[i]);
 }
 
 /* Create a file which consists of a single long line, and assigns
@@ -189,8 +173,8 @@ do_test (void)
 
   /* Leave some room for shutting down all threads gracefully.  */
   int timeout = 3;
-  if (timeout > TIMEOUT)
-    timeout = TIMEOUT - 1;
+  if (timeout > DEFAULT_TIMEOUT)
+    timeout = DEFAULT_TIMEOUT - 1;
 
   create_file_with_large_line ();
 
@@ -218,3 +202,5 @@ do_test (void)
 
   return 0;
 }
+
+#include <support/test-driver.c>

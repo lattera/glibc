@@ -30,10 +30,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <support/support.h>
+#include <support/test-driver.h>
+
 static char MAGIC_ARGUMENT[] = "run-actual-test";
 #define MAGIC_STATUS 19
-
-static const char *test_dir;
 
 /* Return a GID which is not our current GID, but is present in the
    supplementary group list.  */
@@ -64,25 +65,15 @@ choose_gid (void)
 static int
 run_executable_sgid (gid_t target)
 {
-  char *dirname = 0;
-  char *execname = 0;
+  char *dirname = xasprintf ("%s/secure-getenv.%jd",
+			     test_dir, (intmax_t) getpid ());
+  char *execname = xasprintf ("%s/bin", dirname);
   int infd = -1;
   int outfd = -1;
   int ret = -1;
-  if (asprintf (&dirname, "%s/secure-getenv.%jd",
-		test_dir, (intmax_t) getpid ()) < 0)
-    {
-      printf ("asprintf: %m\n");
-      goto err;
-    }
   if (mkdir (dirname, 0700) < 0)
     {
       printf ("mkdir: %m\n");
-      goto err;
-    }
-  if (asprintf (&execname, "%s/bin", dirname) < 0)
-    {
-      printf ("asprintf: %m\n");
       goto err;
     }
   infd = open ("/proc/self/exe", O_RDONLY);
@@ -247,6 +238,5 @@ alternative_main (int argc, char **argv)
     }
 }
 
-#define PREPARE(argc, argv) alternative_main(argc, argv)
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#define PREPARE alternative_main
+#include <support/test-driver.c>

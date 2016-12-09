@@ -1,3 +1,83 @@
+2016-12-09  Florian Weimer  <fweimer@redhat.com>
+
+	New subdirectory support for build and test infrastructure.
+	* extra-libs.mk (extra-libs-noinstall): Add variable.  Use it when
+	setting install-lib.
+	* Makeconfig (link-extra-libs-tests): Define.
+	(+link-pie-tests, +link-static-tests, +link-tests): Use
+	link-extra-libs-tests.
+	(rpath-dirs, all-subdirs): Add support.
+	(built-modules): Add libsupport.
+	(libsupport): Define.
+	* support: New directory.
+	* support/Makefile: New file.
+	* support/check.c: Likewise.
+	* support/check.h: Likewise.
+	* support/delayed_exit.c: Likewise.
+	* support/ignore_stderr.c: Likewise.
+	* support/oom_error.c: Likewise.
+	* support/set_fortify_handler.c: Likewise.
+	* support/support.h: Likewise.
+	* support/temp_file-internal.h: Likewise.
+	* support/temp_file.c: Likewise.
+	* support/test-driver.c: Likewise.
+	* support/test-driver.h: Likewise.
+	* support/test_main.c: Likewise.
+	* support/write_message.c: Likewise.
+	* support/xasprintf.c: Likewise.
+	* support/xcalloc.c: Likewise.
+	* support/xmalloc.c: Likewise.
+	* support/xpthread_barrier_destroy.c: Likewise.
+	* support/xpthread_barrier_init.c: Likewise.
+	* support/xpthread_barrier_wait.c: Likewise.
+	* support/xpthread_cancel.c: Likewise.
+	* support/xpthread_check_return.c: Likewise.
+	* support/xpthread_cond_wait.c: Likewise.
+	* support/xpthread_create.c: Likewise.
+	* support/xpthread_detach.c: Likewise.
+	* support/xpthread_join.c: Likewise.
+	* support/xpthread_mutex_lock.c: Likewise.
+	* support/xpthread_mutex_unlock.c: Likewise.
+	* support/xpthread_sigmask.c: Likewise.
+	* support/xpthread_spin_lock.c: Likewise.
+	* support/xpthread_spin_unlock.c: Likewise.
+	* support/xrealloc.c: Likweise.
+	* support/xsignal.h: Likewise.
+	* support/xthread.h: Likewise.
+	* support_tempfile.h: Likewise.
+	* test-skeleton.c: Include <support/support.h>, <support/xsignal.h>.
+	(TEST_DATA_LIMIT): Remove unused macro.
+	(_FAIL, FAIL_RET, FAIL_EXIT, FAIL_EXIT1): Remove.  Now in
+	<support/check.h>.
+	(oom_error, xmalloc, xcalloc, xrealloc, xasprintf, write_message)
+	(ignore_stderr, set_fortify_handler): Remove.  Now in
+	<support/support.h>.
+	(xpthread_sigmask): Remove.  Now in <support/xsignal.h>.
+	(xpthread_mutex_lock, xpthread_spin_lock, xpthread_cond_wait)
+	(xpthread_barrier_wait, xpthread_create, xpthread_detach)
+	(xpthread_join): Remove.  Now in <support/xthread.h>.
+	(TEST_FUNCTION, PREPARE, CLEANUP_HANDLER, CMDLINE_PROCESS):
+	Introduce legacy wrappers.
+	* dlfcn/Makefile (bug-atexit3-lib.so): Link with $(libsupport).
+	* dlfcn/bug-atexit3-lib.cc: Include <support/support.h>.
+	(write_message): Remove.
+	* dirent/opendir-tst1.c: Use <support/test-driver.h> instead of
+	test-skeleton.c.
+	* io/test-open-tmpfile: Likewise.
+	* io/tst-posix_fallocate-common.c: Likewise.
+	* libio/tst-fseek.c: Likewise.
+	* malloc/tst-malloc-backtrace.c: Likewise.
+	* malloc/tst-malloc-fork-deadlock.c: Likewise.
+	* malloc/tst-malloc-thread-exit.c: Likewise.
+	* nptl/tst-cancel7.c: Likewise.
+	* nptl/tst-cleanup0.c: Likewise.
+	* posix/tst-posix_fadvise-common.c: Likewise.
+	* rt/tst-shm.c: Likewise.
+	* time/bug-getdate1.c: Likewise.
+	* sysdeps/unix/sysv/linux/tst-fallocate-common.c: Likewise.
+	* sysdeps/unix/sysv/linux/tst-sync_file_range.c: Likewise.
+	* elf/Makefile (tst-piemod1.so): Link against libsupport.
+
 2016-12-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* Rules [$(run-built-tests) != no] (tests-expected): Add

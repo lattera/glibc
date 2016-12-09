@@ -981,6 +981,7 @@ $(objpfx)tst-array5-static-cmp.out: tst-array5-static.exp \
 CFLAGS-tst-pie1.c += $(pie-ccflag)
 CFLAGS-tst-pie2.c += $(pie-ccflag)
 
+$(objpfx)tst-piemod1.so: $(libsupport)
 $(objpfx)tst-pie1: $(objpfx)tst-piemod1.so
 
 ifeq (yes,$(build-shared))

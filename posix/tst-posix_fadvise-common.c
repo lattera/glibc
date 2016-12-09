@@ -16,17 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
-static void do_prepare (void);
-#define PREPARE(argc, argv)     do_prepare ()
-static int do_test (void);
-#define TEST_FUNCTION           do_test ()
-
-#include <test-skeleton.c>
+#include <support/support.h>
+#include <support/check.h>
+#include <support/temp_file.h>
 
 static char *temp_filename;
 static int temp_fd;
@@ -34,7 +34,7 @@ static char fifoname[] = "/tmp/tst-posix_fadvise-fifo-XXXXXX";
 static int fifofd;
 
 static void
-do_prepare (void)
+do_prepare (int argc, char **argv)
 {
   temp_fd = create_temp_file ("tst-posix_fadvise.", &temp_filename);
   if (temp_fd == -1)
@@ -101,3 +101,10 @@ do_test_common (void)
 
   return 0;
 }
+
+#define PREPARE do_prepare
+
+/* This function is defined by the individual tests.  */
+static int do_test (void);
+
+#include <support/test-driver.c>
