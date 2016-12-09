@@ -1,3 +1,18 @@
+2016-12-09  Carlos O'Donell  <carlos@redhat.com>
+	    Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #16421]
+	* inet/netinet/in.h (struct in6_addr): Always define __u6_addr16
+	and __u6_addr32 members.
+	(IN6_IS_ADDR_UNSPECIFIED, IN6_IS_ADDR_LOOPBACK)
+	(IN6_IS_ADDR_LINKLOCAL, IN6_IS_ADDR_SITELOCAL)
+	(IN6_IS_ADDR_V4MAPPED, IN6_IS_ADDR_V4COMPAT, IN6_ARE_ADDR_EQUAL):
+	Use __u6_addr32.
+	* inet/tst-checks.c: Use <support/test-driver.c>
+	* inet/tst-checks-posix.c: New file.
+	* inet/Makefile (tests): Add it.
+	(CFLAGS-tst-checks-posix.c): Compile in C99 mode.
+
 2016-12-09  Florian Weimer  <fweimer@redhat.com>
 
 	New subdirectory support for build and test infrastructure.
