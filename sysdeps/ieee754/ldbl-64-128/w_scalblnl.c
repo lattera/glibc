@@ -16,10 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math_ldbl_opt.h>
-#undef weak_alias
-#define weak_alias(name, alias)
-#include <math/w_scalblnl.c>
+#define declare_mgen_alias(from, to)
+#include <math-type-macros-ldouble.h>
+#include <w_scalbln_template.c>
 #if IS_IN (libm)
 long_double_symbol (libm, __w_scalblnl, scalblnl);
 #else

@@ -1,3 +1,15 @@
+2016-12-16  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* math/Makefile (gen-libm-calls): Remove w_scalblnF.
+	(libm-calls): Add w_scalblnF.
+	* math/w_scalbln.c: Remove.
+	* math/w_scalblnf.c: Likewise.
+	* math/w_scalblnl.c: Likewise.
+	* math/w_scalbln_template.c: New file with type-generic
+	implementation based on math/w_scalbln.c.
+	* sysdeps/ieee754/ldbl-128ibm/w_scalblnl.c: Remove.
+	* sysdeps/ieee754/ldbl-64-128/w_scalblnl.c: Use new template.
+
 2016-12-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20947]

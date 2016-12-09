@@ -1,4 +1,4 @@
-/* Wrapper for __scalblnf handles setting errno.
+/* Wrapper for __scalbln handles setting errno.
    Copyright (C) 2014-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,17 +20,22 @@
 #include <math.h>
 #include <math_private.h>
 
-float
-__w_scalblnf (float x, long int n)
+FLOAT
+M_DECL_FUNC (__w_scalbln) (FLOAT x, long int n)
 {
-  if (!isfinite (x) || x == 0.0f)
+  if (!isfinite (x) || x == 0)
     return x + x;
 
-  x = __scalblnf (x, n);
+  x = M_SUF (__scalbln) (x, n);
 
-  if (!isfinite (x) || x == 0.0f)
+  if (!isfinite (x) || x == 0)
     __set_errno (ERANGE);
 
   return x;
 }
-weak_alias (__w_scalblnf, scalblnf)
+
+/* Define strong_alias to nothing because we don't want
+   declare_mgen_alias to create a strong alias for scalblnl.  */
+#undef strong_alias
+#define strong_alias(name, alias_name)
+declare_mgen_alias (__w_scalbln, scalbln)
