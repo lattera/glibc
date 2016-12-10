@@ -1,3 +1,8 @@
+2016-12-10  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* support/support_test_main.c (support_test_main): Use correct
+	timeout.
+
 2016-12-09  Carlos O'Donell  <carlos@redhat.com>
 	    Florian Weimer  <fweimer@redhat.com>
 

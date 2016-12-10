@@ -338,7 +338,7 @@ support_test_main (int argc, char **argv, const struct test_config *config)
 
   /* Set timeout.  */
   signal (SIGALRM, signal_handler);
-  alarm (config->timeout * timeoutfactor);
+  alarm (timeout * timeoutfactor);
 
   /* Make sure we clean up if the wrapper gets interrupted.  */
   signal (SIGINT, signal_handler);
