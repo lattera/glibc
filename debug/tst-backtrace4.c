@@ -27,10 +27,6 @@
 
 #include "tst-backtrace.h"
 
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
-
 /* The backtrace should include at least handle_signal, a signal
    trampoline, 3 * fn, and do_test.  */
 #define NUM_FUNCTIONS 6
@@ -115,9 +111,11 @@ fn (int c)
   return 0;
 }
 
-NO_INLINE static int
+NO_INLINE int
 do_test (void)
 {
   fn (2);
   return ret;
 }
+
+#include <support/test-driver.c>

@@ -32,10 +32,6 @@
 # define SIGACTION_FLAGS 0
 #endif
 
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
-
 /* The backtrace should include at least handle_signal, a signal
    trampoline, read, 3 * fn, and do_test.  */
 #define NUM_FUNCTIONS 7
@@ -133,9 +129,11 @@ fn (int c, int flags)
   return 0;
 }
 
-NO_INLINE static int
+NO_INLINE int
 do_test (void)
 {
   fn (2, SIGACTION_FLAGS);
   return ret;
 }
+
+#include <support/test-driver.c>

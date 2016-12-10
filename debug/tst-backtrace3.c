@@ -24,10 +24,6 @@
 
 #include "tst-backtrace.h"
 
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
-
 /* The backtrace should include at least 3 * fn, and do_test.  */
 #define NUM_FUNCTIONS 4
 
@@ -75,9 +71,11 @@ fn (int c)
   return x;
 }
 
-NO_INLINE static int
+NO_INLINE int
 do_test (void)
 {
   fn (2);
   return ret;
 }
+
+#include <support/test-driver.c>

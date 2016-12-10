@@ -24,10 +24,6 @@
 
 #include "tst-backtrace.h"
 
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
-
 /* The backtrace should include at least f1, f2, f3, and do_test.  */
 #define NUM_FUNCTIONS 4
 
@@ -75,7 +71,7 @@ fn1 (void)
      check do_test.  */
 }
 
-NO_INLINE static int
+NO_INLINE int
 fn2 (void)
 {
   fn1 ();
@@ -91,7 +87,7 @@ fn3 (void)
   return x;
 }
 
-NO_INLINE static int
+NO_INLINE int
 do_test (void)
 {
   /* Test BZ #18084.  */
@@ -103,3 +99,5 @@ do_test (void)
   fn3 ();
   return ret;
 }
+
+#include <support/test-driver.c>

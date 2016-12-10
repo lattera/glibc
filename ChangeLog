@@ -1,3 +1,17 @@
+2016-12-10  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20956]
+	* debug/tst-backtrace.h (NO_INLINE): Add noclone, weak attributes
+	as additional compiler barriers.
+	* debug/tst-backtrace2.c: Switch to <support/test-driver.c>.
+	(fn2, do_test): Declare with external linkage.
+	* debug/tst-backtrace3.c: Switch to <support/test-driver.c>.
+	(do_test): Declare with external linkage.
+	* debug/tst-backtrace4.c: Switch to <support/test-driver.c>.
+	(do_test): Declare with external linkage.
+	* debug/tst-backtrace5.c: Switch to <support/test-driver.c>.
+	(do_test): Declare with external linkage.
+
 2016-12-10  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* support/support_test_main.c (support_test_main): Use correct
