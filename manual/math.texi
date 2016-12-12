@@ -1443,7 +1443,8 @@ is convenient when you are debugging a program, but it is unhelpful if
 you want the program to behave unpredictably.  If you want a different
 pseudo-random series each time your program runs, you must specify a
 different seed each time.  For ordinary purposes, basing the seed on the
-current time works well.
+current time works well.  For random numbers in cryptography,
+@pxref{Unpredictable Bytes}.
 
 You can obtain repeatable sequences of numbers on a particular machine type
 by specifying the same initial seed value for the random number

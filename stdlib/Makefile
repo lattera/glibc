@@ -28,7 +28,7 @@ headers	:= stdlib.h bits/stdlib.h bits/stdlib-ldbl.h bits/stdlib-float.h      \
 	   errno.h sys/errno.h bits/errno.h				      \
 	   ucontext.h sys/ucontext.h					      \
 	   alloca.h fmtmsg.h						      \
-	   bits/stdlib-bsearch.h
+	   bits/stdlib-bsearch.h sys/random.h
 
 routines	:=							      \
 	atof atoi atol atoll						      \
@@ -45,7 +45,7 @@ routines	:=							      \
 	srand48 seed48 lcong48						      \
 	drand48_r erand48_r lrand48_r nrand48_r mrand48_r jrand48_r	      \
 	srand48_r seed48_r lcong48_r					      \
-	drand48-iter							      \
+	drand48-iter getrandom getentropy				      \
 	strfromf strfromd strfroml					      \
 	strtol strtoul strtoll strtoull					      \
 	strtol_l strtoul_l strtoll_l strtoull_l				      \
@@ -79,7 +79,8 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-setcontext3 tst-tls-atexit-nodelete		    \
 		   tst-strtol-locale tst-strtod-nan-locale tst-strfmon_l    \
 		   tst-quick_exit tst-thread-quick_exit tst-width	    \
-		   tst-width-stdint tst-strfrom tst-strfrom-locale
+		   tst-width-stdint tst-strfrom tst-strfrom-locale \
+		   tst-getrandom
 tests-static	:= tst-secure-getenv
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-quick_exit.o = -std=c++11

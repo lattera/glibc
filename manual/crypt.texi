@@ -45,6 +45,7 @@ encrypted authentication use normal DES.
 * getpass::                     Prompting the user for a password.
 * crypt::                       A one-way function for passwords.
 * DES Encryption::              Routines for DES encryption.
+* Unpredictable Bytes::         Randomness for cryptography purposes.
 @end menu
 
 @node Legal Problems
@@ -428,3 +429,114 @@ each byte.
 The @code{ecb_crypt}, @code{cbc_crypt}, and @code{des_setparity}
 functions and their accompanying macros are all defined in the header
 @file{rpc/des_crypt.h}.
+
+@node Unpredictable Bytes
+@section Generating Unpredictable Bytes
+
+Some cryptographic applications (such as session key generation) need
+unpredictable bytes.
+
+In general, application code should use a deterministic random bit
+generator, which could call the @code{getentropy} function described
+below internally to obtain randomness to seed the generator.  The
+@code{getrandom} function is intended for low-level applications which
+need additional control over the blocking behavior.
+
+@comment sys/random.h
+@comment GNU
+@deftypefun int getentropy (void *@var{buffer}, size_t @var{length})
+@safety{@mtsafe{}@assafe{}@acsafe{}}
+
+This function writes @var{length} bytes of random data to the array
+starting at @var{buffer}, which must be at most 256 bytes long.  The
+function returns zero on success.  On failure, it returns @code{-1} and
+@code{errno} is updated accordingly.
+
+The @code{getentropy} function is declared in the header file
+@file{sys/random.h}.  It is derived from OpenBSD.
+
+The @code{getentropy} function is not a cancellation point.  A call to
+@code{getentropy} can block if the system has just booted and the kernel
+entropy pool has not yet been initialized.  In this case, the function
+will keep blocking even if a signal arrives, and return only after the
+entropy pool has been initialized.
+
+The @code{getentropy} function can fail with several errors, some of
+which are listed below.
+
+@table @code
+@item ENOSYS
+The kernel does not implement the required system call.
+
+@item EFAULT
+The combination of @var{buffer} and @var{length} arguments specifies
+an invalid memory range.
+
+@item EIO
+More than 256 bytes of randomness have been requested, or the buffer
+could not be overwritten with random data for an unspecified reason.
+
+@end table
+
+@end deftypefun
+
+@comment sys/random.h
+@comment GNU
+@deftypefun ssize_t getrandom (void *@var{buffer}, size_t @var{length}, unsigned int @var{flags})
+@safety{@mtsafe{}@assafe{}@acsafe{}}
+
+This function writes @var{length} bytes of random data to the array
+starting at @var{buffer}.  On success, this function returns the number
+of bytes which have been written to the buffer (which can be less than
+@var{length}).  On error, @code{-1} is returned, and @code{errno} is
+updated accordingly.
+
+The @code{getrandom} function is declared in the header file
+@file{sys/random.h}.  It is a GNU extension.
+
+The following flags are defined for the @var{flags} argument:
+
+@table @code
+@item GRND_RANDOM
+Use the @file{/dev/random} (blocking) pool instead of the
+@file{/dev/urandom} (non-blocking) pool to obtain randomness.  If the
+@code{GRND_RANDOM} flag is specified, the @code{getrandom} function can
+block even after the randomness source has been initialized.
+
+@item GRND_NONBLOCK
+Instead of blocking, return to the caller immediately if no data is
+available.
+@end table
+
+The @code{getrandom} function is a cancellation point.
+
+Obtaining randomness from the @file{/dev/urandom} pool (i.e., a call
+without the @code{GRND_RANDOM} flag) can block if the system has just
+booted and the pool has not yet been initialized.
+
+The @code{getrandom} function can fail with several errors, some of
+which are listed below.  In addition, the function may not fill the
+buffer completely and return a value less than @var{length}.
+
+@table @code
+@item ENOSYS
+The kernel does not implement the @code{getrandom} system call.
+
+@item EAGAIN
+No random data was available and @code{GRND_NONBLOCK} was specified in
+@var{flags}.
+
+@item EFAULT
+The combination of @var{buffer} and @var{length} arguments specifies
+an invalid memory range.
+
+@item EINTR
+The system call was interrupted.  During the system boot process, before
+the kernel randomness pool is initialized, this can happen even if
+@var{flags} is zero.
+
+@item EINVAL
+The @var{flags} argument contains an invalid combination of flags.
+@end table
+
+@end deftypefun

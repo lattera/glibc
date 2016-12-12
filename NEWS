@@ -96,6 +96,9 @@ Version 2.25
   affect the ABI of other libraries that use this type in their interfaces,
   if they are compiled or used with those options.
 
+* The getentropy and getrandom functions, and the <sys/random.h> header file
+  have been added.
+
 * The buffer size for byte-oriented stdio streams is now limited to 8192
   bytes by default.  Previously, on Linux, the default buffer size on most
   file systems was 4096 bytes (and thus remains unchanged), except on
