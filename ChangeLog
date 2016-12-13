@@ -1,3 +1,10 @@
+2016-12-13  Florian Weimer  <fweimer@redhat.com>
+
+	* Rules (binaries-shared-tests, binaries-pie-tests)
+	(binaries-static-tests): Link with $(link-extra-libs-tests).
+	* Makeconfig (+link-pie-tests, +link-static-tests, +link-tests):
+	Remove $(link-extra-libs-tests).
+
 2016-12-13  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile

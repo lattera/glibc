@@ -415,8 +415,8 @@ $(+link-pie-before-libc) $(rtld-LDFLAGS) $(link-libc) $(+link-pie-after-libc)
 $(call after-link,$@)
 endef
 define +link-pie-tests
-$(+link-pie-before-libc) $(link-extra-libs-tests) \
-  $(rtld-tests-LDFLAGS) $(link-libc-tests) $(+link-pie-after-libc)
+$(+link-pie-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
+			 $(+link-pie-after-libc)
 $(call after-link,$@)
 endef
 define +link-pie-printers-tests
@@ -442,8 +442,7 @@ $(+link-static-before-libc) $(link-libc-static) $(+link-static-after-libc)
 $(call after-link,$@)
 endef
 define +link-static-tests
-$(+link-static-before-libc) $(link-extra-libs-tests) \
-  $(link-libc-static-tests) $(+link-static-after-libc)
+$(+link-static-before-libc) $(link-libc-static-tests) $(+link-static-after-libc)
 $(call after-link,$@)
 endef
 endif
@@ -472,8 +471,8 @@ $(+link-before-libc) $(rtld-LDFLAGS) $(link-libc) $(+link-after-libc)
 $(call after-link,$@)
 endef
 define +link-tests
-$(+link-before-libc) $(link-extra-libs-tests) \
-  $(rtld-tests-LDFLAGS) $(link-libc-tests) $(+link-after-libc)
+$(+link-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
+		     $(+link-after-libc)
 $(call after-link,$@)
 endef
 define +link-printers-tests
