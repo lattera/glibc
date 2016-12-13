@@ -194,6 +194,7 @@ cmdline_process (int c)
 {
   switch (c)
     {
+    case OPT_COMMAND:
       command = optarg;
       break;
     case OPT_PIDFILE:
