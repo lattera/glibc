@@ -1,3 +1,8 @@
+2016-12-12  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* math/Makefile ($(inst_libdir)/libm-$(version).a): New target.
+	($(inst_libdir)/libm.a): Fix rule to create the target only.
+
 2016-12-13  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/powerpc/dl-procinfo.c: Don't define

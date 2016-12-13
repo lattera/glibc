@@ -143,15 +143,18 @@ $(inst_libdir)/libm.so: $(common-objpfx)format.lds \
 	) > $@.new
 	mv -f $@.new $@
 
+$(inst_libdir)/libm-$(version).a: $(objpfx)libm.a \
+				  $(+force)
+	$(do-install)
+
 $(inst_libdir)/libm.a: $(common-objpfx)format.lds \
-		       $(libm) \
-		       $(libmvec) \
+		       $(inst_libdir)/libm-$(version).a \
+		       $(objpfx)../mathvec/libmvec.a \
 		       $(+force)
 	(echo '/* GNU ld script'; echo '*/';\
 	 cat $<; \
-	 echo 'GROUP ( $(libdir)/libm-$(lib-version).a $(libdir)/libmvec.a )' \
+	 echo 'GROUP ( $(libdir)/libm-$(version).a $(libdir)/libmvec.a )' \
 	) > $@.new
-	cp $(objpfx)libm.a $(inst_libdir)/libm-$(lib-version).a
 	mv -f $@.new $@
 endif
 
