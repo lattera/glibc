@@ -1,5 +1,8 @@
 2016-12-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/renameat.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove renameat.
+
 	* sysdeps/unix/sysv/linux/rename.c: New file.
 	* sysdeps/unix/sysv/linux/generic/rename.c: Remove file.
 

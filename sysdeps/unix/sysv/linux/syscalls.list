@@ -89,7 +89,6 @@ fchownat	-	fchownat	i:isiii	fchownat
 linkat		-	linkat		i:isisi	linkat
 mkdirat		-	mkdirat		i:isi	mkdirat
 readlinkat	-	readlinkat	i:issi	readlinkat
-renameat	-	renameat	i:isis	renameat
 symlinkat	-	symlinkat	i:sis	symlinkat
 unlinkat	-	unlinkat	i:isi	unlinkat
 
