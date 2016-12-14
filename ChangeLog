@@ -1,3 +1,8 @@
+2016-12-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
+	kernel version to 4.9.
+
 2016-12-12  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* math/Makefile ($(inst_libdir)/libm-$(version).a): New target.
