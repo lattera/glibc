@@ -1,3 +1,11 @@
+2015-12-14  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-strtok.c (oldstrtok): Add old implementation.
+	* string/strtok.c (strtok): Change to tailcall __strtok_r.
+	* string/strtok_r.c (__strtok_r): Optimize for performance.
+	* string/string-inlines.c (__old_strtok_r_1c): New function.
+	* string/bits/string2.h (__strtok_r): Move to string-inlines.c.
+
 2016-12-14  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/Makefile (gen-libm-calls): Add w_log1pF.

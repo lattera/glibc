@@ -35,6 +35,36 @@
 
 #include "shlib-compat.h"
 
+#if SHLIB_COMPAT (libc, GLIBC_2_1_1, GLIBC_2_25)
+/* The inline functions are not used from GLIBC 2.25 and forward, however
+   they are required to provide the symbols through string-inlines.c
+   (if inlining is not possible for compatibility reasons).  */
+
+char *
+__old_strtok_r_1c (char *__s, char __sep, char **__nextp)
+{
+  char *__result;
+  if (__s == NULL)
+    __s = *__nextp;
+  while (*__s == __sep)
+    ++__s;
+  __result = NULL;
+  if (*__s != '\0')
+    {
+      __result = __s++;
+      while (*__s != '\0')
+	if (*__s++ == __sep)
+	  {
+	    __s[-1] = '\0';
+	    break;
+	  }
+    }
+  *__nextp = __s;
+  return __result;
+}
+compat_symbol (libc, __old_strtok_r_1c, __strtok_r_1c, GLIBC_2_1_1);
+#endif
+
 #if SHLIB_COMPAT (libc, GLIBC_2_1_1, GLIBC_2_24)
 /* The inline functions are not used from GLIBC 2.24 and forward, however
    they are required to provide the symbols through string-inlines.c

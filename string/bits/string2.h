@@ -180,45 +180,6 @@ extern void *__rawmemchr (const void *__s, int __c);
 #endif
 
 
-#if !defined _HAVE_STRING_ARCH_strtok_r || defined _FORCE_INLINES
-# ifndef _HAVE_STRING_ARCH_strtok_r
-#  define __strtok_r(s, sep, nextp) \
-  (__extension__ (__builtin_constant_p (sep) && __string2_1bptr_p (sep)	      \
-		  && ((const char *) (sep))[0] != '\0'			      \
-		  && ((const char *) (sep))[1] == '\0'			      \
-		  ? __strtok_r_1c (s, ((const char *) (sep))[0], nextp)       \
-		  : __strtok_r (s, sep, nextp)))
-# endif
-
-__STRING_INLINE char *__strtok_r_1c (char *__s, char __sep, char **__nextp);
-__STRING_INLINE char *
-__strtok_r_1c (char *__s, char __sep, char **__nextp)
-{
-  char *__result;
-  if (__s == NULL)
-    __s = *__nextp;
-  while (*__s == __sep)
-    ++__s;
-  __result = NULL;
-  if (*__s != '\0')
-    {
-      __result = __s++;
-      while (*__s != '\0')
-	if (*__s++ == __sep)
-	  {
-	    __s[-1] = '\0';
-	    break;
-	  }
-    }
-  *__nextp = __s;
-  return __result;
-}
-# ifdef __USE_POSIX
-#  define strtok_r(s, sep, nextp) __strtok_r (s, sep, nextp)
-# endif
-#endif
-
-
 #if !defined _HAVE_STRING_ARCH_strsep || defined _FORCE_INLINES
 # ifndef _HAVE_STRING_ARCH_strsep
 

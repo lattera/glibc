@@ -22,14 +22,10 @@
 
 #include <string.h>
 
-#undef strtok_r
-#undef __strtok_r
-
 #ifndef _LIBC
 /* Get specification.  */
 # include "strtok_r.h"
 # define __strtok_r strtok_r
-# define __rawmemchr strchr
 #endif
 
 /* Parse S into tokens separated by characters in DELIM.
@@ -45,10 +41,16 @@
 char *
 __strtok_r (char *s, const char *delim, char **save_ptr)
 {
-  char *token;
+  char *end;
 
   if (s == NULL)
     s = *save_ptr;
+
+  if (*s == '\0')
+    {
+      *save_ptr = s;
+      return NULL;
+    }
 
   /* Scan leading delimiters.  */
   s += strspn (s, delim);
@@ -59,18 +61,17 @@ __strtok_r (char *s, const char *delim, char **save_ptr)
     }
 
   /* Find the end of the token.  */
-  token = s;
-  s = strpbrk (token, delim);
-  if (s == NULL)
-    /* This token finishes the string.  */
-    *save_ptr = __rawmemchr (token, '\0');
-  else
+  end = s + strcspn (s, delim);
+  if (*end == '\0')
     {
-      /* Terminate the token and make *SAVE_PTR point past it.  */
-      *s = '\0';
-      *save_ptr = s + 1;
+      *save_ptr = end;
+      return s;
     }
-  return token;
+
+  /* Terminate the token and make *SAVE_PTR point past it.  */
+  *end = '\0';
+  *save_ptr = end + 1;
+  return s;
 }
 #ifdef weak_alias
 libc_hidden_def (__strtok_r)
