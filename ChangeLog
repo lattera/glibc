@@ -1,3 +1,12 @@
+2016-12-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h [__USE_GNU]: Include
+	<linux/falloc.h>.
+	(FALLOC_FL_KEEP_SIZE): Remove.
+	(FALLOC_FL_PUNCH_HOLE): Likewise.
+	(FALLOC_FL_COLLAPSE_RANGE): Likewise.
+	(FALLOC_FL_ZERO_RANGE): Likewise.
+
 2016-12-14  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* stdlib/tst-strfrom.h (ENTRY): Replace use of CSUF with LSUF.

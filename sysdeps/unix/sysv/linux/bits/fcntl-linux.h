@@ -318,15 +318,7 @@ struct f_owner_ex
 
 
 /* Flags for fallocate.  */
-# define FALLOC_FL_KEEP_SIZE		1 /* Don't extend size of file
-					     even if offset + len is
-					     greater than file size.  */
-# define FALLOC_FL_PUNCH_HOLE		2 /* Create a hole in the file.  */
-# define FALLOC_FL_COLLAPSE_RANGE	8 /* Remove a range of a file
-					     without leaving a
-					     hole.  */
-# define FALLOC_FL_ZERO_RANGE		16 /* Convert a range of a
-					      file to zeros.  */
+# include <linux/falloc.h>
 
 
 /* File handle structure.  */
