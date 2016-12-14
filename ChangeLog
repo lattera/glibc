@@ -1,5 +1,44 @@
 2016-12-14  Joseph Myers  <joseph@codesourcery.com>
 
+	* bits/long-double.h: New file.
+	* sysdeps/ieee754/ldbl-128/bits/long-double.h: Likewise.
+	* sysdeps/ieee754/ldbl-96/bits/long-double.h: Likewise.
+	* sysdeps/ieee754/ldbl-opt/bits/long-double.h: Likewise.
+	* sysdeps/mips/bits/long-double.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/long-double.h: Likewise.
+	* math/Makefile (headers): Add bits/long-double.h.
+	* misc/sys/cdefs.h: Include <bits/long-double.h>.
+	* stdlib/strtold.c: Include <bits/long-double.h> instead of
+	<bits/wordsize.h>.
+	* bits/mathdef.h [!_COMPLEX_H]: Do not allow inclusion.
+	[!__NO_LONG_DOUBLE_MATH]: Remove conditional code.
+	* math/math.h: Do not include <bits/mathdef.h>.
+	* sysdeps/aarch64/bits/mathdef.h: Remove file.
+	* sysdeps/alpha/bits/mathdef.h [!_COMPLEX_H]: Do not allow
+	inclusion.
+	* sysdeps/ia64/bits/mathdef.h: Remove file.
+	* sysdeps/m68k/m680x0/bits/mathdef.h: Likewise.
+	* sysdeps/mips/bits/mathdef.h: Likewise.
+	* sysdeps/powerpc/bits/mathdef.h: Likewise.
+	* sysdeps/s390/bits/mathdef.h: Likewise.
+	* sysdeps/sparc/bits/mathdef.h: Likewise.
+	* sysdeps/x86/bits/mathdef.h: Likewise.
+	* sysdeps/s390/s390-32/bits/wordsize.h
+	[!__NO_LONG_DOUBLE_MATH && !__LONG_DOUBLE_MATH_OPTIONAL]: Remove
+	conditional code.
+	* sysdeps/s390/s390-64/bits/wordsize.h
+	[!__NO_LONG_DOUBLE_MATH && !__LONG_DOUBLE_MATH_OPTIONAL]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/wordsize.h
+	[!__NO_LONG_DOUBLE_MATH && !__LONG_DOUBLE_MATH_OPTIONAL]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/wordsize.h
+	[!__NO_LONG_DOUBLE_MATH && !__LONG_DOUBLE_MATH_OPTIONAL]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/wordsize.h
+	[!__NO_LONG_DOUBLE_MATH && !__LONG_DOUBLE_MATH_OPTIONAL]:
+	Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h [__USE_GNU]: Include
 	<linux/falloc.h>.
 	(FALLOC_FL_KEEP_SIZE): Remove.

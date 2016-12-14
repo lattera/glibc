@@ -15,8 +15,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if !defined _MATH_H && !defined _COMPLEX_H
-# error "Never use <bits/mathdef.h> directly; include <math.h> instead"
+#ifndef _COMPLEX_H
+# error "Never use <bits/mathdef.h> directly; include <complex.h> instead"
 #endif
 
 #if defined _COMPLEX_H && !defined _COMPLEX_H_MATHDEF

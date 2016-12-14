@@ -20,7 +20,7 @@
 /* The actual implementation for all floating point sizes is in strtod.c.
    These macros tell it to produce the `float' version, `strtof'.  */
 
-#include <bits/wordsize.h>
+#include <bits/long-double.h>
 
 #ifdef __LONG_DOUBLE_MATH_OPTIONAL
 # include <wchar.h>

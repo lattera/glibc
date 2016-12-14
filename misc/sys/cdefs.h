@@ -439,6 +439,7 @@
 #endif
 
 #include <bits/wordsize.h>
+#include <bits/long-double.h>
 
 #if defined __LONG_DOUBLE_MATH_OPTIONAL && defined __NO_LONG_DOUBLE_MATH
 # define __LDBL_COMPAT 1

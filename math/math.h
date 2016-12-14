@@ -138,10 +138,6 @@ typedef _Float128x double_t;
 # endif
 #endif
 
-/* Get information about long double.  */
-
-#include <bits/mathdef.h>
-
 /* Get the architecture specific values describing the floating-point
    evaluation.  The following symbols will get defined:
 
