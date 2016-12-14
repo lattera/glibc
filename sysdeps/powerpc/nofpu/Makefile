@@ -24,9 +24,9 @@ CFLAGS-s_clogl.c += -fno-builtin-fabsl
 CFLAGS-s_clog10l.c += -fno-builtin-fabsl
 CFLAGS-s_csinl.c += -fno-builtin-fabsl
 CFLAGS-s_csqrtl.c += -fno-builtin-fabsl
-CFLAGS-w_acosl.c += -fno-builtin-fabsl
-CFLAGS-w_asinl.c += -fno-builtin-fabsl
-CFLAGS-w_atanhl.c += -fno-builtin-fabsl
-CFLAGS-w_j0l.c += -fno-builtin-fabsl
-CFLAGS-w_j1l.c += -fno-builtin-fabsl
+CFLAGS-w_acosl_compat.c += -fno-builtin-fabsl
+CFLAGS-w_asinl_compat.c += -fno-builtin-fabsl
+CFLAGS-w_atanhl_compat.c += -fno-builtin-fabsl
+CFLAGS-w_j0l_compat.c += -fno-builtin-fabsl
+CFLAGS-w_j1l_compat.c += -fno-builtin-fabsl
 endif

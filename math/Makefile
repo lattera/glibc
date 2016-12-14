@@ -65,18 +65,25 @@ libm-calls =								  \
 	s_ceilF s_cosF s_erfF s_expm1F s_fabsF				  \
 	s_floorF s_log1pF s_logbF				  \
 	s_nextafterF s_nexttowardF s_rintF s_scalblnF			  \
-	s_significandF s_sinF s_tanF s_tanhF w_acosF w_acoshF w_asinF	  \
-	w_atan2F w_atanhF w_coshF w_expF w_exp2F w_exp10F w_fmodF	  \
-	w_tgammaF w_hypotF w_j0F w_j1F w_jnF w_lgammaF w_lgammaF_r	  \
-	w_logF w_log10F w_powF w_remainderF w_scalbF w_sinhF w_sqrtF	  \
+	s_significandF s_sinF s_tanF s_tanhF				  \
+	w_expF								  \
+	w_lgammaF w_lgammaF_r						  \
 	s_fpclassifyF s_truncF						  \
 	s_remquoF e_log2F e_exp2F s_roundF s_nearbyintF s_sincosF	  \
-	s_fmaF s_lrintF s_llrintF s_lroundF s_llroundF e_exp10F w_log2F	  \
+	s_fmaF s_lrintF s_llrintF s_lroundF s_llroundF e_exp10F		  \
 	s_issignalingF $(calls:s_%=m_%) x2y2m1F				  \
 	gamma_productF lgamma_negF lgamma_productF			  \
 	s_nextupF s_totalorderF s_totalordermagF s_getpayloadF		  \
 	s_setpayloadF s_setpayloadsigF s_roundevenF s_fromfpF s_ufromfpF  \
 	s_fromfpxF s_ufromfpxF $(gen-libm-calls)
+
+libm-compat-calls-auto =						\
+	w_acosF_compat w_acoshF_compat w_asinF_compat w_atan2F_compat	\
+	w_atanhF_compat w_coshF_compat w_exp2F_compat w_exp10F_compat	\
+	w_fmodF_compat w_hypotF_compat w_j0F_compat w_j1F_compat	\
+	w_jnF_compat w_log2F_compat w_log10F_compat w_logF_compat	\
+	w_powF_compat w_remainderF_compat w_scalbF_compat		\
+	w_sinhF_compat w_sqrtF_compat w_tgammaF_compat
 
 libm-compat-calls-ldouble-yes = w_lgamma_compatl k_standardl
 libm-compat-calls = w_lgamma_compatf w_lgamma_compat k_standard k_standardf \
@@ -116,6 +123,7 @@ type-float-routines := k_rem_pio2f
 type-foreach = $(foreach t,$(types),$(subst F,$(type-$(t)-suffix),$(1)))
 
 libm-routines = $(strip $(libm-support) $(libm-compat-calls)		\
+			$(call type-foreach, $(libm-compat-calls-auto))	\
 			$(call type-foreach, $(libm-calls))		\
 			$(foreach t, $(types), $(type-$(t)-routines))) 	\
 
