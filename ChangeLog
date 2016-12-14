@@ -1832,6 +1832,7 @@
 
 2016-11-03  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19398]
 	* conform/Makefile ($(linknamespace-header-tests)): Also depend on
 	$(linknamespace-symlists-tests).
 
