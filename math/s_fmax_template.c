@@ -22,7 +22,14 @@
 FLOAT
 M_DECL_FUNC (__fmax) (FLOAT x, FLOAT y)
 {
-  return (isgreaterequal (x, y) || isnan (y)) ? x : y;
+  if (isgreaterequal (x, y))
+    return x;
+  else if (isless (x, y))
+    return y;
+  else if (issignaling (x) || issignaling (y))
+    return x + y;
+  else
+    return isnan (y) ? x : y;
 }
 
 declare_mgen_alias (__fmax, fmax);

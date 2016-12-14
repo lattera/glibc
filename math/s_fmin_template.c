@@ -23,7 +23,14 @@
 FLOAT
 M_DECL_FUNC (__fmin) (FLOAT x, FLOAT y)
 {
-  return (islessequal (x, y) || isnan (y)) ? x : y;
+  if (islessequal (x, y))
+    return x;
+  else if (isgreater (x, y))
+    return y;
+  else if (issignaling (x) || issignaling (y))
+    return x + y;
+  else
+    return isnan (y) ? x : y;
 }
 declare_mgen_alias (__fmin, fmin);
 

@@ -1,5 +1,10 @@
 2016-12-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20947]
+	* math/s_fmax_template.c (M_DECL_FUNC (__fmax)): Add the arguments
+	when either is a signaling NaN.
+	* math/s_fmin_template.c (M_DECL_FUNC (__fmin)): Likewise.
+
 	* bits/long-double.h: New file.
 	* sysdeps/ieee754/ldbl-128/bits/long-double.h: Likewise.
 	* sysdeps/ieee754/ldbl-96/bits/long-double.h: Likewise.
