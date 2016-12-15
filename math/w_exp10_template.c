@@ -1,5 +1,5 @@
-/* Helper macros for long double variants of type generic functions of libm.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* Wrapper to set errno for exp10.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_TYPE_MACROS_LDOUBLE
-#define _MATH_TYPE_MACROS_LDOUBLE
+/* Only build wrappers from the templates for the types that define the macro
+   below.  This macro is set in math-type-macros-<type>.h in sysdeps/generic
+   for each floating-point type.  */
+#if __USE_WRAPPER_TEMPLATE
 
-#define M_LIT(c) c ## L
-#define M_MLIT(c) c ## l
-#define M_PFX LDBL
-#define M_SUF(c) c ## l
-#define FLOAT long double
-#define CFLOAT _Complex long double
-#define M_STRTO_NAN __strtold_nan
+# include <fenv.h>
+# include <math.h>
+# include <math_private.h>
 
-/* Supply the generic macros.  */
-#include <math-type-macros.h>
+FLOAT
+M_DECL_FUNC (__exp10) (FLOAT x)
+{
+  FLOAT z = M_SUF (__ieee754_exp10) (x);
+  if (__glibc_unlikely (!isfinite (z) || z == 0) && isfinite (x))
+    /* Overflow or underflow.  */
+    __set_errno (ERANGE);
+  return z;
+}
+declare_mgen_alias (__exp10, exp10)
 
-/* Do not use the type-generic wrapper templates.  */
-#define __USE_WRAPPER_TEMPLATE 0
-
-#endif
+#endif /* __USE_WRAPPER_TEMPLATE.  */

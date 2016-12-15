@@ -1,3 +1,37 @@
+2017-02-23 Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+	   Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile: Add wrappers to gen-libm-calls.
+	* math/w_acos_template.c: New file.
+	* math/w_acosh_template.c: Likewise.
+	* math/w_asin_template.c: Likewise.
+	* math/w_atan2_template.c: Likewise.
+	* math/w_atanh_template.c: Likewise.
+	* math/w_cosh_template.c: Likewise.
+	* math/w_exp10_template.c: Likewise.
+	* math/w_exp2_template.c: Likewise.
+	* math/w_exp_template.c: Likewise.
+	* math/w_fmod_template.c: Likewise.
+	* math/w_hypot_template.c: Likewise.
+	* math/w_j0_template.c: Likewise.
+	* math/w_j1_template.c: Likewise.
+	* math/w_jn_template.c: Likewise.
+	* math/w_lgamma_r_template.c: Likewise.
+	* math/w_lgamma_template.c: Likewise.
+	* math/w_log10_template.c: Likewise.
+	* math/w_log2_template.c: Likewise.
+	* math/w_log_template.c: Likewise.
+	* math/w_pow_template.c: Likewise.
+	* math/w_remainder_template.c: Likewise.
+	* math/w_sinh_template.c: Likewise.
+	* math/w_sqrt_template.c: Likewise.
+	* math/w_tgamma_template.c: Likewise.: Likewise.
+	* sysdeps/generic/math-type-macros-double.h
+	(__USE_WRAPPER_TEMPLATE): New macro to control inclusion of
+	the new wrappers.
+	* sysdeps/generic/math-type-macros-float.h: Likewise.
+	* sysdeps/generic/math-type-macros-ldouble.h: Likewise.
+
 2017-02-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sys/timerfd.h (TFD_TIMER_CANCEL_ON_SET):

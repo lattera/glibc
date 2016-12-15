@@ -54,7 +54,11 @@ gen-libm-calls = cargF conjF cimagF crealF cabsF s_cacosF		  \
 		 s_ctanF s_ctanhF s_cexpF s_clogF s_cprojF s_csqrtF	  \
 		 s_cpowF s_clog10F s_fdimF s_nextdownF s_fmaxF s_fminF	  \
 		 s_nanF s_iseqsigF s_canonicalizeF w_ilogbF w_llogbF	  \
-		 w_log1pF w_scalblnF s_fmaxmagF s_fminmagF
+		 w_log1pF w_scalblnF s_fmaxmagF s_fminmagF w_acosF	  \
+		 w_acoshF w_asinF w_atan2F w_atanhF w_coshF w_exp10F	  \
+		 w_exp2F w_fmodF w_hypotF w_j0F w_j1F w_jnF w_logF	  \
+		 w_log10F w_log2F w_powF w_remainderF w_sinhF w_sqrtF	  \
+		 w_tgammaF w_lgammaF w_lgammaF_r w_expF
 
 libm-calls =								  \
 	e_acosF e_acoshF e_asinF e_atan2F e_atanhF e_coshF e_expF e_fmodF \
