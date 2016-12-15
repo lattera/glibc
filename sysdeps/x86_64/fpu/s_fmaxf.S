@@ -27,8 +27,25 @@ ENTRY(__fmaxf)
 	jmp	2f
 
 1:	ucomiss	%xmm1, %xmm1	// Is xmm1 a NaN?
-	jp	2f		// then return xmm0
+	jp	3f
+	// xmm0 is a NaN; xmm1 is not.  Test if xmm0 is signaling.
+	movss	%xmm0, -4(%rsp)
+	testb	$0x40, -2(%rsp)
+	jz	4f
 	movss	%xmm1, %xmm0	// otherwise return xmm1
+	ret
+
+3:	// xmm1 is a NaN; xmm0 may or may not be.
+	ucomiss	%xmm0, %xmm0
+	jp	4f
+	// xmm1 is a NaN; xmm0 is not.  Test if xmm1 is signaling.
+	movss	%xmm1, -4(%rsp)
+	testb	$0x40, -2(%rsp)
+	jz	4f
+	ret
+
+4:	// Both arguments are NaNs, or one is a signaling NaN.
+	addss	%xmm1, %xmm0
 
 2:	ret
 END(__fmaxf)

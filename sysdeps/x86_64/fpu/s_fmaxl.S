@@ -24,16 +24,35 @@ ENTRY(__fmaxl)
 	fldt	8(%rsp)		// x
 	fldt	24(%rsp)	// x : y
 
-	fucomi	%st(0), %st
-	fcmovu	%st(1), %st	// now %st contains y if not NaN, x otherwise
-
-	fxch
-
 	fucomi	%st(1), %st
+	jp	2f
 	fcmovb	%st(1), %st
 
 	fstp	%st(1)
 
+	ret
+
+2:	// Unordered.
+	fucomi	%st(0), %st
+	jp	3f
+	// st(1) is a NaN; st(0) is not.  Test if st(1) is signaling.
+	testb	$0x40, 15(%rsp)
+	jz	4f
+	fstp	%st(1)
+	ret
+
+3:	// st(0) is a NaN; st(1) may or may not be.
+	fxch
+	fucomi	%st(0), %st
+	jp	4f
+	// st(1) is a NaN; st(0) is not.  Test if st(1) is signaling.
+	testb	$0x40, 31(%rsp)
+	jz	4f
+	fstp	%st(1)
+	ret
+
+4:	// Both arguments are NaNs, or one is a signaling NaN.
+	faddp
 	ret
 END(__fmaxl)
 weak_alias (__fmaxl, fmaxl)

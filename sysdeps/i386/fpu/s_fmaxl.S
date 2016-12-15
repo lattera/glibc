@@ -28,7 +28,13 @@ ENTRY(__fmaxl)
 
 	andb	$0x45, %ah
 	cmpb	$0x01, %ah
-	je	1f		// y == NaN
+	je	2f		// y == NaN
+
+	fxam
+	fnstsw
+	andb	$0x45, %ah
+	cmpb	$0x01, %ah
+	je	3f		// x == NaN
 
 	fucom	%st(1)
 	fnstsw
@@ -38,6 +44,28 @@ ENTRY(__fmaxl)
 	fxch	%st(1)
 1:	fstp	%st(1)
 
+	ret
+
+2:	// st(1) is a NaN; st(0) may or may not be.
+	fxam
+	fnstsw
+	andb	$0x45, %ah
+	cmpb	$0x01, %ah
+	je	4f
+	// st(1) is a NaN; st(0) is not.  Test if st(1) is signaling.
+	testb	$0x40, 23(%esp)
+	jz	4f
+	fstp	%st(1)
+	ret
+
+3:	// st(0) is a NaN; st(1) is not.  Test if st(0) is signaling.
+	testb	$0x40, 11(%esp)
+	jz	4f
+	fstp	%st(0)
+	ret
+
+4:	// Both arguments are NaNs, or one is a signaling NaN.
+	faddp
 	ret
 END(__fmaxl)
 weak_alias (__fmaxl, fmaxl)

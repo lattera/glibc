@@ -1,3 +1,22 @@
+2016-12-15  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20947]
+	* sysdeps/i386/fpu/s_fmaxl.S (__fmaxl): Add the arguments when
+	either is a signaling NaN.
+	* sysdeps/i386/fpu/s_fminl.S (__fminl): Likewise.  Make code
+	follow fmaxl more closely.
+	* sysdeps/i386/i686/fpu/s_fmaxl.S (__fmaxl): Add the arguments
+	when either is a signaling NaN.
+	* sysdeps/i386/i686/fpu/s_fminl.S (__fminl): Likewise.
+	* sysdeps/x86_64/fpu/s_fmax.S (__fmax): Likewise.
+	* sysdeps/x86_64/fpu/s_fmaxf.S (__fmaxf): Likewise.
+	* sysdeps/x86_64/fpu/s_fmaxl.S (__fmaxl): Likewise.
+	* sysdeps/x86_64/fpu/s_fmin.S (__fmin): Likewise.
+	* sysdeps/x86_64/fpu/s_fminf.S (__fminf): Likewise.
+	* sysdeps/x86_64/fpu/s_fminl.S (__fminl): Likewise.
+	* math/libm-test.inc (fmax_test_data): Add tests of sNaN inputs.
+	(fmin_test_data): Likewise.
+
 2016-12-15  Andreas Schwab  <schwab@suse.de>
 
 	* support/support_test_main.c (support_test_main): Don't shadow
