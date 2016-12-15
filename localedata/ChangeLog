@@ -1,3 +1,9 @@
+2016-12-30  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #20974]
+	* localedata/bs_BA (LC_MESSAGES): Delete "*." from the end of
+	yesexpr and noexpr.
+
 2016-11-26  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #20864]
