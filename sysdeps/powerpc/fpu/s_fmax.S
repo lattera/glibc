@@ -25,7 +25,42 @@ ENTRY(__fmax)
 	bnulr+	cr0
 /* x and y are unordered, so one of x or y must be a NaN... */
 	fcmpu	cr1,fp2,fp2
-	bunlr	cr1
+	bun	cr1,1f
+/* x is a NaN; y is not.  Test if x is signaling.  */
+#ifdef __powerpc64__
+	stfd	fp1,-8(r1)
+	lwz	r3,-8+HIWORD(r1)
+#else
+	stwu	r1,-16(r1)
+	cfi_adjust_cfa_offset (16)
+	stfd	fp1,8(r1)
+	lwz	r3,8+HIWORD(r1)
+	addi	r1,r1,16
+	cfi_adjust_cfa_offset (-16)
+#endif
+	andis.	r3,r3,8
+	bne	cr0,0f
+	b	2f
+1:	/* y is a NaN; x may or may not be.  */
+	fcmpu	cr1,fp1,fp1
+	bun	cr1,2f
+/* y is a NaN; x is not.  Test if y is signaling.  */
+#ifdef __powerpc64__
+	stfd	fp2,-8(r1)
+	lwz	r3,-8+HIWORD(r1)
+#else
+	stwu	r1,-16(r1)
+	cfi_adjust_cfa_offset (16)
+	stfd	fp2,8(r1)
+	lwz	r3,8+HIWORD(r1)
+	addi	r1,r1,16
+	cfi_adjust_cfa_offset (-16)
+#endif
+	andis.	r3,r3,8
+	bnelr	cr0
+2:	/* x and y are NaNs, or one is a signaling NaN.  */
+	fadd	fp1,fp1,fp2
+	blr
 0:	fmr	fp1,fp2
 	blr
 END(__fmax)

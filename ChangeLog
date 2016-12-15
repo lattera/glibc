@@ -1,3 +1,10 @@
+2016-12-15  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20947]
+	* sysdeps/powerpc/fpu/s_fmax.S (__fmax): Add the arguments when
+	either is a signaling NaN.
+	* sysdeps/powerpc/fpu/s_fmin.S (__fmin): Likewise.
+
 2016-12-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20947]
