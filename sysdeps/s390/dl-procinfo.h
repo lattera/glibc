@@ -66,13 +66,6 @@ _dl_hwcap_string (int idx)
   return GLRO(dl_s390_cap_flags)[idx];
 };
 
-static inline const char *
-__attribute__ ((unused))
-_dl_platform_string (int idx)
-{
-  return GLRO(dl_s390_platforms)[idx - _DL_FIRST_PLATFORM];
-};
-
 static inline int
 __attribute__ ((unused, always_inline))
 _dl_string_hwcap (const char *str)

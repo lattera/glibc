@@ -71,9 +71,6 @@ _dl_string_hwcap (const char *str)
 #define HWCAP_IMPORTANT		(HWCAP_IMPORTANT_V9 | HWCAP_SPARC_ULTRA3 \
 				 | HWCAP_SPARC_BLKINIT | HWCAP_SPARC_N2)
 
-/* There are no different platforms defined.  */
-#define _dl_platform_string(idx) ""
-
 /* There're no platforms to filter out.  */
 #define _DL_HWCAP_PLATFORM 0
 

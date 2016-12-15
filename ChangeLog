@@ -1,3 +1,14 @@
+2017-03-14  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/generic/dl-procinfo.h (_dl_platform_string): Remove.
+	* sysdeps/alpha/dl-procinfo.h (_dl_platform_string): Remove.
+	(_dl_string_platform): Use GLRO(dl_alpha_platforms) directly.
+	* sysdeps/i386/dl-procinfo.h (_dl_platform_string): Remove.
+	* sysdeps/mips/dl-procinfo.h (_dl_platform_string): Remove.
+	(_dl_string_platform): Use GLRO(dl_mips_platforms) directly.
+	* sysdeps/s390/dl-procinfo.h (_dl_platform_string): Remove.
+	* sysdeps/sparc/dl-procinfo.h (_dl_platform_string): Remove.
+
 2017-03-13  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/send.c (__send): Convert hurdish error code into
