@@ -26,7 +26,17 @@ ENTRY (__memchr)
 	dcbt	0,r3
 	clrrdi  r8,r3,3
 	insrdi	r4,r4,8,48
-	add	r7,r3,r5      /* Calculate the last acceptable address.  */
+
+	/* Calculate the last acceptable address and check for possible
+	   addition overflow by using satured math:
+	   r7 = r3 + r5
+	   r7 |= -(r7 < x)  */
+	add     r7,r3,r5
+	subfc   r6,r3,r7
+	subfe   r9,r9,r9
+	extsw   r6,r9
+	or      r7,r7,r6
+
 	insrdi	r4,r4,16,32
 	cmpldi	r5,32
 	li	r9, -1

@@ -1,3 +1,12 @@
+2016-12-16  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ# 20971]
+	* sysdeps/powerpc/powerpc64/power7/memchr.S (__memchr): Avoid
+	overflow in pointer addition.
+	* string/test-memchr.c (do_test): Add an argument to pass as
+	the size on memchr.
+	(test_main): Add check for SIZE_MAX.
+
 2016-12-16  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/Makefile (gen-libm-calls): Remove w_scalblnF.
