@@ -182,6 +182,11 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 		     &mutex->__data.__list.__next);
 
       oldval = mutex->__data.__lock;
+      /* This is set to FUTEX_WAITERS iff we might have shared the
+	 FUTEX_WAITERS flag with other threads, and therefore need to keep it
+	 set to avoid lost wake-ups.  We have the same requirement in the
+	 simple mutex algorithm.  */
+      unsigned int assume_other_futex_waiters = 0;
       do
 	{
 	again:
@@ -190,9 +195,11 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 	      /* The previous owner died.  Try locking the mutex.  */
 	      int newval = id;
 #ifdef NO_INCR
+	      /* We are not taking assume_other_futex_waiters into accoount
+		 here simply because we'll set FUTEX_WAITERS anyway.  */
 	      newval |= FUTEX_WAITERS;
 #else
-	      newval |= (oldval & FUTEX_WAITERS);
+	      newval |= (oldval & FUTEX_WAITERS) | assume_other_futex_waiters;
 #endif
 
 	      newval
@@ -253,7 +260,11 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 		}
 	    }
 
-	  oldval = LLL_ROBUST_MUTEX_LOCK (mutex, id);
+	  oldval = LLL_ROBUST_MUTEX_LOCK (mutex,
+					  id | assume_other_futex_waiters);
+	  /* See above.  We set FUTEX_WAITERS and might have shared this flag
+	     with other threads; thus, we need to preserve it.  */
+	  assume_other_futex_waiters = FUTEX_WAITERS;
 
 	  if (__builtin_expect (mutex->__data.__owner
 				== PTHREAD_MUTEX_NOTRECOVERABLE, 0))

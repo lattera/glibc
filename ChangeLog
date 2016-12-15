@@ -1,3 +1,10 @@
+2016-12-19  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #20973]
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock_full): Fix lost
+	wake-up in robust mutexes.
+	* nptl/pthread_mutex_timedlock.c (pthread_mutex_timedlock): Likewise.
+
 2016-12-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* benchtests/Makefile (bench-math): Add fminf and fmaxf.

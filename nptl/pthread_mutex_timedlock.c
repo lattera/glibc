@@ -142,13 +142,19 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 		     &mutex->__data.__list.__next);
 
       oldval = mutex->__data.__lock;
+      /* This is set to FUTEX_WAITERS iff we might have shared the
+	 FUTEX_WAITERS flag with other threads, and therefore need to keep it
+	 set to avoid lost wake-ups.  We have the same requirement in the
+	 simple mutex algorithm.  */
+      unsigned int assume_other_futex_waiters = 0;
       do
 	{
 	again:
 	  if ((oldval & FUTEX_OWNER_DIED) != 0)
 	    {
 	      /* The previous owner died.  Try locking the mutex.  */
-	      int newval = id | (oldval & FUTEX_WAITERS);
+	      int newval = id | (oldval & FUTEX_WAITERS)
+		  | assume_other_futex_waiters;
 
 	      newval
 		= atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
@@ -203,8 +209,12 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 		}
 	    }
 
-	  result = lll_robust_timedlock (mutex->__data.__lock, abstime, id,
+	  result = lll_robust_timedlock (mutex->__data.__lock, abstime,
+					 id | assume_other_futex_waiters,
 					 PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
+	  /* See above.  We set FUTEX_WAITERS and might have shared this flag
+	     with other threads; thus, we need to preserve it.  */
+	  assume_other_futex_waiters = FUTEX_WAITERS;
 
 	  if (__builtin_expect (mutex->__data.__owner
 				== PTHREAD_MUTEX_NOTRECOVERABLE, 0))
