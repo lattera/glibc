@@ -1,3 +1,8 @@
+2016-12-15  Andreas Schwab  <schwab@suse.de>
+
+	* support/support_test_main.c (support_test_main): Don't shadow
+	file-local variable test_pid.
+
 2016-12-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20947]

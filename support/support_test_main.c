@@ -307,7 +307,7 @@ support_test_main (int argc, char **argv, const struct test_config *config)
      - set up the timer
      - fork and execute the function.  */
 
-  pid_t test_pid = fork ();
+  test_pid = fork ();
   if (test_pid == 0)
     {
       /* This is the child.  */
