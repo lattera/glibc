@@ -1,3 +1,11 @@
+2016-12-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ# 19387]
+	* sysdeps/x86_64/memchr.S (memchr): Avoid overflow in pointer
+	addition.
+	* string/test-memchr.c (do_test): Remove alignment limitation.
+	(test_main): Add test that trigger BZ# 19387.
+
 2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
 
 	[BZ #7065]

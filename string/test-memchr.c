@@ -76,7 +76,6 @@ do_test (size_t align, size_t pos, size_t len, size_t n, int seek_char)
   size_t i;
   CHAR *result;
 
-  align &= 7;
   if ((align + len) * sizeof (CHAR) >= page_size)
     return;
 
@@ -194,12 +193,12 @@ test_main (void)
       do_test (i, 64, 256, SIZE_MAX, 0);
     }
 
-  for (i = 1; i < 16; ++i)
+  for (i = 1; i < 64; ++i)
     {
-      for (j = 1; j < 16; j++)
+      for (j = 1; j < 64; j++)
         {
-	  do_test (0, 16 - j, 16, SIZE_MAX, 23);
-	  do_test (i, 16 - j, 16, SIZE_MAX, 23);
+	  do_test (0, 64 - j, 64, SIZE_MAX, 23);
+	  do_test (i, 64 - j, 64, SIZE_MAX, 23);
         }
     }
 
