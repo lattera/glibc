@@ -1,5 +1,11 @@
 2016-12-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* benchtests/Makefile (bench-math): Add fmin and fmax.
+	(CFLAGS-bench-fmax.c): New rule.
+	(CFLAGS-bench-fmin.c): Likewise.
+	* benchtests/fmax-inputs: New file.
+	* benchtests/fmin-inputs: Likewise.
+
 	* benchtests/bench-string.h (TEST_FUNCTION): Use name without
 	parenthesis.
 	(CMDLINE_PROCESS): Define using function instead of macro.
