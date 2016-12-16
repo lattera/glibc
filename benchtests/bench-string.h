@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <getopt.h>
 #include <sys/cdefs.h>
 
 typedef struct
@@ -55,7 +56,7 @@ extern impl_t __start_impls[], __stop_impls[];
 # include "bench-timing.h"
 
 
-# define TEST_FUNCTION test_main ()
+# define TEST_FUNCTION test_main
 # ifndef TIMEOUT
 #  define TIMEOUT (4 * 60)
 # endif
@@ -87,24 +88,31 @@ size_t iterations = 100000;
 # define CMDLINE_OPTIONS ITERATIONS_OPTIONS \
     { "random", no_argument, NULL, OPT_RANDOM },			      \
     { "seed", required_argument, NULL, OPT_SEED },
-# define CMDLINE_PROCESS ITERATIONS_PROCESS \
-    case OPT_RANDOM:							      \
-      {									      \
-	int fdr = open ("/dev/urandom", O_RDONLY);			      \
-									      \
-	if (fdr < 0 || read (fdr, &seed, sizeof(seed)) != sizeof (seed))      \
-	  seed = time (NULL);						      \
-	if (fdr >= 0)							      \
-	  close (fdr);							      \
-	do_srandom = 1;							      \
-	break;								      \
-      }									      \
-									      \
-    case OPT_SEED:							      \
-      seed = strtoul (optarg, NULL, 0);					      \
-      do_srandom = 1;							      \
-      break;
 
+static void __attribute__ ((used))
+cmdline_process_function (int c)
+{
+  switch (c)
+    {
+      ITERATIONS_PROCESS
+      case OPT_RANDOM:
+	{
+	  int fdr = open ("/dev/urandom", O_RDONLY);
+	  if (fdr < 0 || read (fdr, &seed, sizeof(seed)) != sizeof (seed))
+	    seed = time (NULL);
+	  if (fdr >= 0)
+	    close (fdr);
+	  do_srandom = 1;
+	  break;
+	}
+
+      case OPT_SEED:
+	seed = strtoul (optarg, NULL, 0);
+	do_srandom = 1;
+      break;
+    }
+}
+# define CMDLINE_PROCESS cmdline_process_function
 # define CALL(impl, ...)	\
     (* (proto_t) (impl)->fn) (__VA_ARGS__)
 

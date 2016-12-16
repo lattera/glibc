@@ -1,3 +1,39 @@
+2016-12-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* benchtests/bench-string.h (TEST_FUNCTION): Use name without
+	parenthesis.
+	(CMDLINE_PROCESS): Define using function instead of macro.
+	* benchtests/bench-memccpy.c: Include <support/test-driver.c> instead
+	of test-skeleton.
+	* benchtests/bench-memchr.c: Likewise.
+	* benchtests/bench-memcmp.c: Likewise.
+	* benchtests/bench-memcpy-large.c: Likewise.
+	* benchtests/bench-memcpy.c: Likewise.
+	* benchtests/bench-memmem.c: Likewise.
+	* benchtests/bench-memmove-large.c: Likewise.
+	* benchtests/bench-memmove.c: Likewise.
+	* benchtests/bench-memset-large.c: Likewise.
+	* benchtests/bench-memset.c: Likewise.
+	* benchtests/bench-rawmemchr.c: Likewise.
+	* benchtests/bench-strcasecmp.c: Likewise.
+	* benchtests/bench-strcasestr.c: Likewise.
+	* benchtests/bench-strcat.c: Likewise.
+	* benchtests/bench-strchr.c: Likewise.
+	* benchtests/bench-strcmp.c: Likewise.
+	* benchtests/bench-strcpy.c: Likewise.
+	* benchtests/bench-strcpy_chk.c: Likewise.
+	* benchtests/bench-strlen.c: Likewise.
+	* benchtests/bench-strncasecmp.c: Likewise.
+	* benchtests/bench-strncmp.c: Likewise.
+	* benchtests/bench-strncpy.c: Likewise.
+	* benchtests/bench-strnlen.c: Likewise.
+	* benchtests/bench-strpbrk.c: Likewise.
+	* benchtests/bench-strrchr.c: Likewise.
+	* benchtests/bench-strsep.c: Likewise.
+	* benchtests/bench-strspn.c: Likewise.
+	* benchtests/bench-strstr.c: Likewise.
+	* benchtests/bench-strtok.c: Likewise.
+
 2016-12-19  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	* sysdeps/x86/cpu-features.c (get_common_indeces): Add

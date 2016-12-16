@@ -172,7 +172,7 @@ do_test (size_t align1, size_t align2, size_t len, size_t n, int max_char)
   putchar ('\n');
 }
 
-int
+static int
 test_main (void)
 {
   size_t i;
@@ -207,4 +207,4 @@ test_main (void)
   return ret;
 }
 
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
