@@ -1,3 +1,14 @@
+2016-12-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/fpu/s_fmaxf.S: Remove file.
+	* sysdeps/powerpc/fpu/s_fminf.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmax.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmin.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_fmax.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_fmin.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_fmax.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_fmin.S: Likewise.
+
 2016-12-27  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* manual/arith.texi (FP Comparison Functions): Fix typo in iseqsig.
