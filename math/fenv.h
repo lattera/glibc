@@ -145,6 +145,14 @@ extern int fesetmode (const femode_t *__modep) __THROW;
 # include <bits/fenvinline.h>
 #endif
 
+/* NaN support.  */
+
+#if (__GLIBC_USE (IEC_60559_BFP_EXT)		\
+     && defined FE_INVALID			\
+     && defined __SUPPORT_SNAN__)
+# define FE_SNANS_ALWAYS_SIGNAL	1
+#endif
+
 #ifdef __USE_GNU
 
 /* Enable individual exceptions.  Will not enable more exceptions than

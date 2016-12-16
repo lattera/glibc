@@ -46,8 +46,8 @@ Version 2.25
   problem.
 
 * New <fenv.h> features from TS 18661-1:2014 are added to libm: the
-  fesetexcept, fetestexceptflag, fegetmode and fesetmode functions,
-  the femode_t type and the FE_DFL_MODE macro.
+  fesetexcept, fetestexceptflag, fegetmode and fesetmode functions, the
+  femode_t type and the FE_DFL_MODE and FE_SNANS_ALWAYS_SIGNAL macros.
 
 * Integer width macros from TS 18661-1:2014 are added to <limits.h>:
   CHAR_WIDTH, SCHAR_WIDTH, UCHAR_WIDTH, SHRT_WIDTH, USHRT_WIDTH, INT_WIDTH,

@@ -720,6 +720,20 @@ These macros, defined by TS 18661-1:2014, are constant expressions for
 signaling NaNs.
 @end deftypevr
 
+@comment fenv.h
+@comment ISO
+@deftypevr Macro int FE_SNANS_ALWAYS_SIGNAL
+This macro, defined by TS 18661-1:2014, is defined to @code{1} in
+@file{fenv.h} to indicate that functions and operations with signaling
+NaN inputs and floating-point results always raise the invalid
+exception and return a quiet NaN, even in cases (such as @code{fmax},
+@code{hypot} and @code{pow}) where a quiet NaN input can produce a
+non-NaN result.  Because some compiler optimizations may not handle
+signaling NaNs correctly, this macro is only defined if compiler
+support for signaling NaNs is enabled.  That support can be enabled
+with the GCC option @option{-fsignaling-nans}.
+@end deftypevr
+
 @w{IEEE 754} also allows for another unusual value: negative zero.  This
 value is produced when you divide a positive number by negative
 infinity, or when a negative result is smaller than the limits of

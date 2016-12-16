@@ -175,7 +175,8 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-fesetexcept-traps test-fetestexceptflag test-femode \
 	test-femode-traps test-iszero-excess-precision \
 	test-iseqsig-excess-precision test-flt-eval-method \
-	test-fp-ilogb-constants test-fp-llogb-constants $(tests-static)
+	test-fp-ilogb-constants test-fp-llogb-constants \
+	test-fe-snans-always-signal $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
@@ -289,6 +290,8 @@ CFLAGS-test-math-iszero.cc = -std=gnu++11
 CFLAGS-test-iszero-excess-precision.c = -fexcess-precision=standard
 CFLAGS-test-iseqsig-excess-precision.c = -fexcess-precision=standard
 CFLAGS-test-flt-eval-method.c = -fexcess-precision=standard
+
+CFLAGS-test-fe-snans-always-signal.c = -fsignaling-nans
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
 # for error handling in the -lm functions.
