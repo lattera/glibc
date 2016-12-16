@@ -1,3 +1,8 @@
+2016-12-16  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* string/test-memchr.c (do_test): Typo on ‘byte’ and missing closing
+	bracket.
+
 2016-12-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.exec_self): Flush stdout

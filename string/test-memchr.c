@@ -184,8 +184,8 @@ test_main (void)
       do_test (i, 64, 256, 256, 0);
 
       /* Check for large input sizes and for these cases we need to
-	 make sure the bye is within the size range (that's why
-	 7 << i must be smaller than 2048.  */
+	 make sure the byte is within the size range (that's why
+	 7 << i must be smaller than 2048).  */
       do_test (0, 7 << i, 2048, SIZE_MAX, 23);
       do_test (0, 2048 - i, 2048, SIZE_MAX, 23);
       do_test (i, 64, 256, SIZE_MAX, 23);
