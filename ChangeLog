@@ -1,3 +1,8 @@
+2016-12-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.exec_self): Flush stdout
+	before calling execv.
+
 2016-12-16  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ# 20971]

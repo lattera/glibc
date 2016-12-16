@@ -93,6 +93,7 @@ class Context(object):
 
     def exec_self(self):
         """Re-execute this script with the same arguments."""
+        sys.stdout.flush()
         os.execv(sys.executable, [sys.executable] + sys.argv)
 
     def get_build_triplet(self):
