@@ -1,3 +1,8 @@
+2016-12-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/arith.texi (Math Error Reporting): Document that sNaN
+	arguments are not considered domain errors.
+
 2016-12-16  Zack Weinberg <zackw@panix.com>
 	    Florian Weimer <fweimer@redhat.com>
 	    Nick Mathewson <nickm@torproject.org>

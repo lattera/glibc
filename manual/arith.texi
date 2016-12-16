@@ -939,6 +939,11 @@ guaranteed; it is intended that @theglibc{} should set it when the
 underflow is to an appropriately signed zero, but not necessarily for
 other underflows.
 
+When a math function has an argument that is a signaling NaN,
+@theglibc{} does not consider this a domain error, so @code{errno} is
+unchanged, but the invalid exception is still raised (except for a few
+functions that are specified to handle signaling NaNs differently).
+
 Some of the math functions are defined mathematically to result in a
 complex value over parts of their domains.  The most familiar example of
 this is taking the square root of a negative number.  The complex math
