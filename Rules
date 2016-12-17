@@ -260,6 +260,12 @@ ifneq "$(strip $(tests-printers))" ""
 # inside Makeconfig.
 PYTHON := python
 
+# Invoke Python using -B to avoid generating .pyc files on the source dir,
+# so that we can keep it read-only.
+python-flags := -B
+
+python-invoke := $(PYTHON) $(python-flags)
+
 # Static pattern rule for building the test programs for the pretty printers.
 $(tests-printers-programs): %: %.o $(tests-printers-libs) \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc-static-tests))) \
@@ -277,7 +283,7 @@ py-env := PYTHONPATH=$(py-const-dir):$(..)scripts:$${PYTHONPATH}
 $(tests-printers-out): $(objpfx)%.out: $(objpfx)% %.py %.c $(pretty-printers) \
 		       $(..)scripts/test_printers_common.py
 	$(test-wrapper-env) $(py-env) \
-	    $(PYTHON) $*.py $*.c $(objpfx)$* $(pretty-printers) > $@; \
+	    $(python-invoke) $*.py $*.c $(objpfx)$* $(pretty-printers) > $@; \
 	$(evaluate-test)
 endif
 
