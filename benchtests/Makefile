@@ -192,6 +192,7 @@ bench-func: $(binaries-bench)
 
 $(timing-type) $(binaries-bench) $(binaries-benchset) \
 	$(binaries-bench-malloc): %: %.o $(objpfx)json-lib.o \
+	$(link-extra-libs-tests) \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-tests)

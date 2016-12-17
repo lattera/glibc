@@ -1,3 +1,8 @@
+2016-12-17  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* benchtests/Makefile (binaries-benchset): Depend on libsupport
+	DSO.
+
 2016-12-17  Martin Galvan  <martingalvan@sourceware.org>
 
 	* Rules (python-flags, python-invoke): New.
