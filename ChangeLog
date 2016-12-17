@@ -1,3 +1,8 @@
+2016-12-17  Martin Galvan  <martingalvan@sourceware.org>
+
+	* Rules (python-flags, python-invoke): New.
+	($(test-printers-out)): Use $(python-flags).
+
 2016-12-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/arith.texi (Math Error Reporting): Document that sNaN
