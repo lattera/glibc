@@ -1,5 +1,6 @@
 2016-11-25  Jim Meyering  <meyering@fb.com>
 
+	[BZ #20386]
 	Let gcc detect assert(a = 1) errors.
 	* assert/assert.h (assert) Rewrite, retaining the old definintion
 	when required, but otherwise putting the expression as-is in an "if"
