@@ -1,5 +1,11 @@
 2016-12-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* benchtests/Makefile (bench-math): Add fminf and fmaxf.
+	(CFLAGS-bench-fmaxf.c): New rule.
+	(CFLAGS-bench-fminf.c): Likewise.
+	* benchtests/fmaxf-inputs: New file.
+	* benchtests/fminf-inputs: Likewise.
+
 	* benchtests/Makefile (bench-math): Add fmin and fmax.
 	(CFLAGS-bench-fmax.c): New rule.
 	(CFLAGS-bench-fmin.c): Likewise.

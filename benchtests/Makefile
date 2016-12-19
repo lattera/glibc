@@ -24,7 +24,8 @@ subdir := benchtests
 
 include ../Makeconfig
 bench-math := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 \
-	      modf pow rint sin sincos sinh sqrt tan tanh fmin fmax
+	      modf pow rint sin sincos sinh sqrt tan tanh fmin fmax fminf \
+	      fmaxf
 
 bench-pthread := pthread_once
 
@@ -74,7 +75,9 @@ CFLAGS-bench-ffs.c += -fno-builtin
 CFLAGS-bench-ffsll.c += -fno-builtin
 CFLAGS-bench-sqrt.c += -fno-builtin
 CFLAGS-bench-fmin.c += -fno-builtin
+CFLAGS-bench-fminf.c += -fno-builtin
 CFLAGS-bench-fmax.c += -fno-builtin
+CFLAGS-bench-fmaxf.c += -fno-builtin
 
 bench-malloc := malloc-thread
 
