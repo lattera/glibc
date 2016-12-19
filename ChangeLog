@@ -1,3 +1,9 @@
+2016-12-19  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* sysdeps/x86/cpu-features.c (get_common_indeces): Add
+	stepping identification.
+	(init_cpu_features): Add handle of Haswell.
+
 2016-11-25  Jim Meyering  <meyering@fb.com>
 
 	[BZ #20386]

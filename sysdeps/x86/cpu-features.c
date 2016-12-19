@@ -22,7 +22,7 @@
 static void
 get_common_indeces (struct cpu_features *cpu_features,
 		    unsigned int *family, unsigned int *model,
-		    unsigned int *extended_model)
+		    unsigned int *extended_model, unsigned int *stepping)
 {
   if (family)
     {
@@ -34,6 +34,7 @@ get_common_indeces (struct cpu_features *cpu_features,
       *family = (eax >> 8) & 0x0f;
       *model = (eax >> 4) & 0x0f;
       *extended_model = (eax >> 12) & 0xf0;
+      *stepping = eax & 0x0f;
       if (*family == 0x0f)
 	{
 	  *family += (eax >> 20) & 0xff;
@@ -116,11 +117,12 @@ init_cpu_features (struct cpu_features *cpu_features)
   /* This spells out "GenuineIntel".  */
   if (ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69)
     {
-      unsigned int extended_model;
+      unsigned int extended_model, stepping;
 
       kind = arch_kind_intel;
 
-      get_common_indeces (cpu_features, &family, &model, &extended_model);
+      get_common_indeces (cpu_features, &family, &model, &extended_model,
+			  &stepping);
 
       if (family == 0x06)
 	{
@@ -201,6 +203,20 @@ init_cpu_features (struct cpu_features *cpu_features)
 		    | bit_arch_Fast_Unaligned_Copy
 		    | bit_arch_Prefer_PMINUB_for_stringop);
 	      break;
+
+	    case 0x3f:
+	      /* Xeon E7 v3 with stepping >= 4 has working TSX.  */
+	      if (stepping >= 4)
+		break;
+	    case 0x3c:
+	    case 0x45:
+	    case 0x46:
+	      /* Disable Intel TSX on Haswell processors (except Xeon E7 v3
+		 with stepping >= 4) to avoid TSX on kernels that weren't
+		 updated with the latest microcode package (which disables
+		 broken feature by default).  */
+	      cpu_features->cpuid[COMMON_CPUID_INDEX_7].ebx &= ~(bit_cpu_RTM);
+	      break;
 	    }
 	}
 
@@ -227,11 +243,12 @@ init_cpu_features (struct cpu_features *cpu_features)
   /* This spells out "AuthenticAMD".  */
   else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
     {
-      unsigned int extended_model;
+      unsigned int extended_model, stepping;
 
       kind = arch_kind_amd;
 
-      get_common_indeces (cpu_features, &family, &model, &extended_model);
+      get_common_indeces (cpu_features, &family, &model, &extended_model,
+			  &stepping);
 
       ecx = cpu_features->cpuid[COMMON_CPUID_INDEX_1].ecx;
 
@@ -268,7 +285,7 @@ init_cpu_features (struct cpu_features *cpu_features)
   else
     {
       kind = arch_kind_other;
-      get_common_indeces (cpu_features, NULL, NULL, NULL);
+      get_common_indeces (cpu_features, NULL, NULL, NULL, NULL);
     }
 
   /* Support i586 if CX8 is available.  */
