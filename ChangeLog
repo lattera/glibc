@@ -1,3 +1,8 @@
+2016-12-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/tgmath.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (llogb): Add
+	preprocessor indentation inside #if.
+
 2016-12-20  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/libm-test.inc (fmt_ftostr): New function.
