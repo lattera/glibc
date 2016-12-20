@@ -43,23 +43,36 @@ __lll_trylock_elision (int *futex, short *adapt_count)
 	 until their try_tbegin is zero.
       */
       __libc_tabort (_HTM_FIRST_USER_ABORT_CODE | 1);
+      __builtin_unreachable ();
     }
 
-  /* Only try a transaction if it's worth it.  See __lll_lock_elision for
-     why we need atomic accesses.  Relaxed MO is sufficient because this is
-     just a hint.  */
-  if (atomic_load_relaxed (adapt_count) <= 0)
+  /* adapt_count can be accessed concurrently; these accesses can be both
+     inside of transactions (if critical sections are nested and the outer
+     critical section uses lock elision) and outside of transactions.  Thus,
+     we need to use atomic accesses to avoid data races.  However, the
+     value of adapt_count is just a hint, so relaxed MO accesses are
+     sufficient.
+     Do not begin a transaction if another cpu has locked the
+     futex with normal locking.  If adapt_count is zero, it remains and the
+     next pthread_mutex_lock call will try to start a transaction again.  */
+    if (atomic_load_relaxed (futex) == 0
+	&& atomic_load_relaxed (adapt_count) <= 0 && aconf.try_tbegin > 0)
     {
-      int status;
-
-      if (__builtin_expect
-	  ((status = __libc_tbegin ((void *) 0)) == _HTM_TBEGIN_STARTED, 1))
+      int status = __libc_tbegin ((void *) 0);
+      if (__builtin_expect (status  == _HTM_TBEGIN_STARTED,
+			    _HTM_TBEGIN_STARTED))
 	{
-	  if (*futex == 0)
+	  /* Check the futex to make sure nobody has touched it in the
+	     mean time.  This forces the futex into the cache and makes
+	     sure the transaction aborts if some other cpu uses the
+	     lock (writes the futex).  */
+	  if (__builtin_expect (atomic_load_relaxed (futex) == 0, 1))
+	    /* Lock was free.  Return to user code in a transaction.  */
 	    return 0;
-	  /* Lock was busy.  Fall back to normal locking.  */
-	  /* Since we are in a non-nested transaction there is no need to abort,
-	     which is expensive.  */
+
+	  /* Lock was busy.  Fall back to normal locking.  Since we are in
+	     a non-nested transaction there is no need to abort, which is
+	     expensive.  Simply end the started transaction.  */
 	  __libc_tend ();
 	  /* Note: Changing the adapt_count here might abort a transaction on a
 	     different cpu, but that could happen anyway when the futex is
@@ -68,27 +81,18 @@ __lll_trylock_elision (int *futex, short *adapt_count)
 	  if (aconf.skip_lock_busy > 0)
 	    atomic_store_relaxed (adapt_count, aconf.skip_lock_busy);
 	}
-      else
+      else if (status != _HTM_TBEGIN_TRANSIENT)
 	{
-	  if (status != _HTM_TBEGIN_TRANSIENT)
-	    {
-	      /* A persistent abort (cc 1 or 3) indicates that a retry is
-		 probably futile.  Use the normal locking now and for the
-		 next couple of calls.
-		 Be careful to avoid writing to the lock.  */
-	      if (aconf.skip_trylock_internal_abort > 0)
-		*adapt_count = aconf.skip_trylock_internal_abort;
-	    }
+	  /* A persistent abort (cc 1 or 3) indicates that a retry is
+	     probably futile.  Use the normal locking now and for the
+	     next couple of calls.
+	     Be careful to avoid writing to the lock.  */
+	  if (aconf.skip_trylock_internal_abort > 0)
+	    *adapt_count = aconf.skip_trylock_internal_abort;
 	}
       /* Could do some retries here.  */
     }
-  else
-    {
-      /* Lost updates are possible, but harmless.  Due to races this might lead
-	 to *adapt_count becoming less than zero.  */
-      atomic_store_relaxed (adapt_count,
-			    atomic_load_relaxed (adapt_count) - 1);
-    }
 
+  /* Use normal locking as fallback path if transaction does not succeed.  */
   return lll_trylock (*futex);
 }

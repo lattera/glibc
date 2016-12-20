@@ -1,5 +1,17 @@
 2016-12-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h
+	(__lll_unlock_elision, lll_unlock_elision): Add adapt_count argument.
+	* sysdeps/unix/sysv/linux/s390/elision-lock.c:
+	(__lll_lock_elision): Decrement adapt_count while unlocking
+	instead of before locking.
+	* sysdeps/unix/sysv/linux/s390/elision-trylock.c
+	(__lll_trylock_elision): Likewise.
+	* sysdeps/unix/sysv/linux/s390/elision-unlock.c:
+	(__lll_unlock_elision): Likewise.
+
+2016-12-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/unix/sysv/linux/s390/htm.h(__libc_tbegin_retry): New macro.
 	* sysdeps/unix/sysv/linux/s390/elision-lock.c (__lll_lock_elision):
 	Use __libc_tbegin_retry macro.

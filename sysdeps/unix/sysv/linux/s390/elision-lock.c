@@ -50,31 +50,30 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
      critical section uses lock elision) and outside of transactions.  Thus,
      we need to use atomic accesses to avoid data races.  However, the
      value of adapt_count is just a hint, so relaxed MO accesses are
-     sufficient.  */
-  if (atomic_load_relaxed (adapt_count) > 0)
-    {
-      /* Lost updates are possible, but harmless.  Due to races this might lead
-	 to *adapt_count becoming less than zero.  */
-      atomic_store_relaxed (adapt_count,
-			    atomic_load_relaxed (adapt_count) - 1);
-      goto use_lock;
-    }
-
-  if (aconf.try_tbegin > 0)
+     sufficient.
+     Do not begin a transaction if another cpu has locked the
+     futex with normal locking.  If adapt_count is zero, it remains and the
+     next pthread_mutex_lock call will try to start a transaction again.  */
+    if (atomic_load_relaxed (futex) == 0
+	&& atomic_load_relaxed (adapt_count) <= 0 && aconf.try_tbegin > 0)
     {
       int status = __libc_tbegin_retry ((void *) 0, aconf.try_tbegin - 1);
       if (__builtin_expect (status == _HTM_TBEGIN_STARTED,
 			    _HTM_TBEGIN_STARTED))
 	{
-	  if (__builtin_expect (*futex == 0, 1))
+	  /* Check the futex to make sure nobody has touched it in the
+	     mean time.  This forces the futex into the cache and makes
+	     sure the transaction aborts if some other cpu uses the
+	     lock (writes the futex).  */
+	  if (__builtin_expect (atomic_load_relaxed (futex) == 0, 1))
 	    /* Lock was free.  Return to user code in a transaction.  */
 	    return 0;
 
 	  /* Lock was busy.  Fall back to normal locking.  */
-	  if (__builtin_expect (__libc_tx_nesting_depth (), 1))
+	  if (__builtin_expect (__libc_tx_nesting_depth () <= 1, 1))
 	    {
 	      /* In a non-nested transaction there is no need to abort,
-		 which is expensive.  */
+		 which is expensive.  Simply end the started transaction.  */
 	      __libc_tend ();
 	      /* Don't try to use transactions for the next couple of times.
 		 See above for why relaxed MO is sufficient.  */
@@ -92,9 +91,9 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 		 is zero.
 		 The adapt_count of this inner mutex is not changed,
 		 because using the default lock with the inner mutex
-		 would abort the outer transaction.
-	      */
+		 would abort the outer transaction.  */
 	      __libc_tabort (_HTM_FIRST_USER_ABORT_CODE | 1);
+	      __builtin_unreachable ();
 	    }
 	}
       else if (status != _HTM_TBEGIN_TRANSIENT)
@@ -110,15 +109,15 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 	}
       else
 	{
-	  /* Same logic as above, but for for a number of temporary failures in
-	     a row.  */
+	  /* The transaction failed for some retries with
+	     _HTM_TBEGIN_TRANSIENT.  Use the normal locking now and for the
+	     next couple of calls.  */
 	  if (aconf.skip_lock_out_of_tbegin_retries > 0)
 	    atomic_store_relaxed (adapt_count,
 				  aconf.skip_lock_out_of_tbegin_retries);
 	}
     }
 
-  use_lock:
   /* Use normal locking as fallback path if transaction does not succeed.  */
   return LLL_LOCK ((*futex), private);
 }
