@@ -1,5 +1,11 @@
 2016-12-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/unix/sysv/linux/s390/htm.h(__libc_tbegin_retry): New macro.
+	* sysdeps/unix/sysv/linux/s390/elision-lock.c (__lll_lock_elision):
+	Use __libc_tbegin_retry macro.
+
+2016-12-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/unix/sysv/linux/s390/Makefile (elision-CFLAGS):
 	Add -msoft-float.
 	* sysdeps/unix/sysv/linux/s390/htm.h: New File.

@@ -60,17 +60,16 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
       goto use_lock;
     }
 
-  int try_tbegin;
-  for (try_tbegin = aconf.try_tbegin;
-       try_tbegin > 0;
-       try_tbegin--)
+  if (aconf.try_tbegin > 0)
     {
-      int status;
-      if (__builtin_expect
-	  ((status = __libc_tbegin ((void *) 0)) == _HTM_TBEGIN_STARTED, 1))
+      int status = __libc_tbegin_retry ((void *) 0, aconf.try_tbegin - 1);
+      if (__builtin_expect (status == _HTM_TBEGIN_STARTED,
+			    _HTM_TBEGIN_STARTED))
 	{
-	  if (*futex == 0)
+	  if (__builtin_expect (*futex == 0, 1))
+	    /* Lock was free.  Return to user code in a transaction.  */
 	    return 0;
+
 	  /* Lock was busy.  Fall back to normal locking.  */
 	  if (__builtin_expect (__libc_tx_nesting_depth (), 1))
 	    {
@@ -81,7 +80,6 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 		 See above for why relaxed MO is sufficient.  */
 	      if (aconf.skip_lock_busy > 0)
 		atomic_store_relaxed (adapt_count, aconf.skip_lock_busy);
-	      goto use_lock;
 	    }
 	  else /* nesting depth is > 1 */
 	    {
@@ -99,28 +97,28 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 	      __libc_tabort (_HTM_FIRST_USER_ABORT_CODE | 1);
 	    }
 	}
+      else if (status != _HTM_TBEGIN_TRANSIENT)
+	{
+	  /* A persistent abort (cc 1 or 3) indicates that a retry is
+	     probably futile.  Use the normal locking now and for the
+	     next couple of calls.
+	     Be careful to avoid writing to the lock.  See above for why
+	     relaxed MO is sufficient.  */
+	  if (aconf.skip_lock_internal_abort > 0)
+	    atomic_store_relaxed (adapt_count,
+				  aconf.skip_lock_internal_abort);
+	}
       else
 	{
-	  if (status != _HTM_TBEGIN_TRANSIENT)
-	    {
-	      /* A persistent abort (cc 1 or 3) indicates that a retry is
-		 probably futile.  Use the normal locking now and for the
-		 next couple of calls.
-		 Be careful to avoid writing to the lock.  See above for why
-		 relaxed MO is sufficient.  */
-	      if (aconf.skip_lock_internal_abort > 0)
-		atomic_store_relaxed (adapt_count,
-				      aconf.skip_lock_internal_abort);
-	      goto use_lock;
-	    }
+	  /* Same logic as above, but for for a number of temporary failures in
+	     a row.  */
+	  if (aconf.skip_lock_out_of_tbegin_retries > 0)
+	    atomic_store_relaxed (adapt_count,
+				  aconf.skip_lock_out_of_tbegin_retries);
 	}
     }
 
-  /* Same logic as above, but for for a number of temporary failures in a
-     row.  See above for why relaxed MO is sufficient.  */
-  if (aconf.skip_lock_out_of_tbegin_retries > 0 && aconf.try_tbegin > 0)
-    atomic_store_relaxed (adapt_count, aconf.skip_lock_out_of_tbegin_retries);
-
   use_lock:
+  /* Use normal locking as fallback path if transaction does not succeed.  */
   return LLL_LOCK ((*futex), private);
 }

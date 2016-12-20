@@ -69,7 +69,36 @@
    started.  Thus the user of the tbegin macros in this header file has to
    compile the file / function with -msoft-float.  It prevents gcc from using
    fprs / vrs.  */
-#define __libc_tbegin(tdb)						\
+#define __libc_tbegin(tdb) __libc_tbegin_base(tdb,,,)
+
+#define __libc_tbegin_retry_output_regs , [R_TX_CNT] "+&d" (__tx_cnt)
+#define __libc_tbegin_retry_input_regs(retry_cnt) , [R_RETRY] "d" (retry_cnt)
+#define __libc_tbegin_retry_abort_path_insn				\
+  /* If tbegin returned _HTM_TBEGIN_TRANSIENT, retry immediately so	\
+     that max tbegin_cnt transactions are tried.  Otherwise return and	\
+     let the caller of this macro do the fallback path.  */		\
+  "   jnh 1f\n\t" /* cc 1/3: jump to fallback path.  */			\
+  /* tbegin returned _HTM_TBEGIN_TRANSIENT: retry with transaction.  */ \
+  "   crje %[R_TX_CNT], %[R_RETRY], 1f\n\t" /* Reached max retries?  */	\
+  "   ahi %[R_TX_CNT], 1\n\t"						\
+  "   ppa %[R_TX_CNT], 0, 1\n\t" /* Transaction-Abort Assist.  */	\
+  "   j 2b\n\t" /* Loop to tbegin.  */
+
+/* Same as __libc_tbegin except if tbegin aborts with _HTM_TBEGIN_TRANSIENT.
+   Then this macros restores the fpc, fprs and automatically retries up to
+   retry_cnt tbegins.  Further saving of the state is omitted as it is already
+   saved.  This macro calls tbegin at most as retry_cnt + 1 times.  */
+#define __libc_tbegin_retry(tdb, retry_cnt)				\
+  ({ int __ret;								\
+    int __tx_cnt = 0;							\
+    __ret = __libc_tbegin_base(tdb,					\
+			       __libc_tbegin_retry_abort_path_insn,	\
+			       __libc_tbegin_retry_output_regs,		\
+			       __libc_tbegin_retry_input_regs(retry_cnt)); \
+    __ret;								\
+  })
+
+#define __libc_tbegin_base(tdb, abort_path_insn, output_regs, input_regs) \
   ({ int __ret;								\
      int __fpc;								\
      char __fprs[TX_FPRS_BYTES];					\
@@ -95,7 +124,7 @@
 			      again and result in a core dump wich does	\
 			      now show at tbegin but the real executed	\
 			      instruction.  */				\
-			   "   tbegin 0, 0xFF0E\n\t"			\
+			   "2: tbegin 0, 0xFF0E\n\t"			\
 			   /* Branch away in abort case (this is the	\
 			      prefered sequence.  See PoP in chapter 5	\
 			      Transactional-Execution Facility		\
@@ -111,11 +140,14 @@
 			   "   srl %[R_RET], 28\n\t"			\
 			   "   sfpc %[R_FPC]\n\t"			\
 			   TX_RESTORE_FPRS				\
+			   abort_path_insn				\
 			   "1:\n\t"					\
 			   ".machine pop\n"				\
 			   : [R_RET] "=&d" (__ret),			\
 			     [R_FPC] "=&d" (__fpc)			\
+			     output_regs				\
 			   : [R_FPRS] "a" (__fprs)			\
+			     input_regs					\
 			   : "cc", "memory");				\
      __ret;								\
      })
