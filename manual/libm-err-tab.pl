@@ -57,7 +57,7 @@ use vars qw (%results @all_floats %suffices @all_functions);
     "clog", "clog10", "conj", "copysign", "cos", "cosh", "cpow", "cproj",
     "creal", "csin", "csinh", "csqrt", "ctan", "ctanh", "erf", "erfc",
     "exp", "exp10", "exp2", "expm1", "fabs", "fdim", "floor", "fma",
-    "fmax", "fmin", "fmod", "frexp", "gamma", "hypot",
+    "fmax", "fmaxmag", "fmin", "fminmag", "fmod", "frexp", "gamma", "hypot",
     "ilogb", "j0", "j1", "jn", "lgamma", "llogb", "lrint",
     "llrint", "log", "log10", "log1p", "log2", "logb", "lround",
     "llround", "modf", "nearbyint", "nextafter", "nextdown", "nexttoward",

@@ -43,7 +43,7 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 isoc99_wscanf isoc99_fwscanf isoc99_swscanf \
 		 isoc99_vwscanf isoc99_vfwscanf isoc99_vswscanf \
 		 nextup nextdown totalorder totalordermag getpayload \
-		 canonicalize setpayload setpayloadsig llogb
+		 canonicalize setpayload setpayloadsig llogb fmaxmag fminmag
 libnldbl-routines = $(libnldbl-calls:%=nldbl-%)
 libnldbl-inhibit-o = $(object-suffixes)
 libnldbl-static-only-routines = $(libnldbl-routines)
@@ -97,7 +97,9 @@ CFLAGS-nldbl-finite.c = -fno-builtin-finitel
 CFLAGS-nldbl-floor.c = -fno-builtin-floorl
 CFLAGS-nldbl-fma.c = -fno-builtin-fmal
 CFLAGS-nldbl-fmax.c = -fno-builtin-fmaxl
+CFLAGS-nldbl-fmaxmag.c = -fno-builtin-fmaxmagl
 CFLAGS-nldbl-fmin.c = -fno-builtin-fminl
+CFLAGS-nldbl-fminmag.c = -fno-builtin-fminmagl
 CFLAGS-nldbl-fmod.c = -fno-builtin-fmodl
 CFLAGS-nldbl-frexp.c = -fno-builtin-frexpl
 CFLAGS-nldbl-gamma.c = -fno-builtin-gammal

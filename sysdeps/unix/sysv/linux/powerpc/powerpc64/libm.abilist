@@ -109,6 +109,12 @@ GLIBC_2.25 fegetmode F
 GLIBC_2.25 fesetexcept F
 GLIBC_2.25 fesetmode F
 GLIBC_2.25 fetestexceptflag F
+GLIBC_2.25 fmaxmag F
+GLIBC_2.25 fmaxmagf F
+GLIBC_2.25 fmaxmagl F
+GLIBC_2.25 fminmag F
+GLIBC_2.25 fminmagf F
+GLIBC_2.25 fminmagl F
 GLIBC_2.25 getpayload F
 GLIBC_2.25 getpayloadf F
 GLIBC_2.25 getpayloadl F

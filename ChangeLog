@@ -1,3 +1,75 @@
+2016-12-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(fmaxmag): New declaration.
+	(fminmag): Likewise.
+	* math/tgmath.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (fmaxmag): New
+	macro.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (fminmag): Likewise.
+	* math/Versions (fmaxmag): New libm symbol at version GLIBC_2.25.
+	(fmaxmagf): Likewise.
+	(fmaxmagl): Likewise.
+	(fminmag): Likewise.
+	(fminmagf): Likewise.
+	(fminmagl): Likewise.
+	* math/Makefile (gen-libm-calls): Add s_fmaxmagF and s_fminmagF.
+	* math/s_fmaxmag_template.c: New file.
+	* math/s_fminmag_template.c: Likewise.
+	* math/libm-test.inc (fmaxmag_test_data): New array.
+	(fmaxmag_test): New function.
+	(fminmag_test_data): New array.
+	(fminmag_test): New function.
+	(main): Call fmaxmag_test and fminmag_test.
+	* math/test-tgmath.c (NCALLS): Increase to 132.
+	(F(compile_test)): Call fmaxmag and fminmag.
+	(F(fminmag)): New function.
+	(F(fmaxmag)): Likewise.
+	* manual/arith.texi (Misc FP Arithmetic): Document fminmag,
+	fminmagf, fminmagl, fmaxmag, fmaxmagf and fmaxmagl.
+	* manual/libm-err-tab.pl (@all_functions): Add fmaxmag and
+	fminmag.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fmaxmag.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fminmag.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_fmaxmagl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_fminmagl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add fmaxmag
+	and fminmag.
+	(CFLAGS-nldbl-fmaxmag.c): New variable.
+	(CFLAGS-nldbl-fminmag.c): Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-12-19  Torvald Riegel  <triegel@redhat.com>
 
 	[BZ #20973]

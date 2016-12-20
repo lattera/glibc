@@ -441,6 +441,12 @@
 /* Like ilogb, but returning long int.  */
 #define llogb(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long int, llogb)
 
+/* Return value with maximum magnitude.  */
+# define fmaxmag(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmaxmag)
+
+/* Return value with minimum magnitude.  */
+# define fminmag(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fminmag)
+
 /* Total order operation.  */
 # define totalorder(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2,	\
 							   totalorder)

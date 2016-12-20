@@ -50,7 +50,7 @@ int count_cdouble;
 int count_cfloat;
 int count_cldouble;
 
-#define NCALLS     126
+#define NCALLS     132
 #define NCALLS_INT 4
 #define NCCALLS    47
 
@@ -285,6 +285,8 @@ F(compile_test) (void)
   a = fdim (fdim (x, a), fdim (c, b));
   b = fmax (fmax (a, x), fmax (c, b));
   a = fmin (fmin (x, a), fmin (c, b));
+  b = fmaxmag (fmaxmag (a, x), fmaxmag (c, b));
+  a = fminmag (fminmag (x, a), fminmag (c, b));
   b = fma (sin (a), sin (x), sin (c));
   a = totalorder (totalorder (x, b), totalorder (c, x));
   b = totalordermag (totalordermag (x, a), totalordermag (c, x));
@@ -384,6 +386,8 @@ F(compile_test) (void)
       a = fdim (y, y);
       a = fmax (y, y);
       a = fmin (y, y);
+      a = fmaxmag (y, y);
+      a = fminmag (y, y);
       a = fma (y, y, y);
       a = totalorder (y, y);
       a = totalordermag (y, y);
@@ -874,6 +878,22 @@ TYPE
 
 TYPE
 (F(fmax)) (TYPE x, TYPE y)
+{
+  ++count;
+  P ();
+  return x + y;
+}
+
+TYPE
+(F(fminmag)) (TYPE x, TYPE y)
+{
+  ++count;
+  P ();
+  return x + y;
+}
+
+TYPE
+(F(fmaxmag)) (TYPE x, TYPE y)
 {
   ++count;
   P ();

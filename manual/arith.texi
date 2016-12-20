@@ -2157,6 +2157,38 @@ are NaN, NaN is returned.
 
 @comment math.h
 @comment ISO
+@deftypefun double fminmag (double @var{x}, double @var{y})
+@comment math.h
+@comment ISO
+@deftypefunx float fminmagf (float @var{x}, float @var{y})
+@comment math.h
+@comment ISO
+@deftypefunx {long double} fminmagl (long double @var{x}, long double @var{y})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, from TS 18661-1:2014, return whichever of the two
+values @var{x} and @var{y} has the smaller absolute value.  If both
+have the same absolute value, or either is NaN, they behave the same
+as the @code{fmin} functions.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun double fmaxmag (double @var{x}, double @var{y})
+@comment math.h
+@comment ISO
+@deftypefunx float fmaxmagf (float @var{x}, float @var{y})
+@comment math.h
+@comment ISO
+@deftypefunx {long double} fmaxmagl (long double @var{x}, long double @var{y})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, from TS 18661-1:2014, return whichever of the two
+values @var{x} and @var{y} has the greater absolute value.  If both
+have the same absolute value, or either is NaN, they behave the same
+as the @code{fmax} functions.
+@end deftypefun
+
+@comment math.h
+@comment ISO
 @deftypefun double fdim (double @var{x}, double @var{y})
 @comment math.h
 @comment ISO

@@ -385,6 +385,12 @@ __END_NAMESPACE_C99
 #endif
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Return value with maximum magnitude.  */
+__MATHCALLX (fmaxmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+
+/* Return value with minimum magnitude.  */
+__MATHCALLX (fminmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+
 /* Test equality.  */
 __MATHDECL_1 (int, __iseqsig,, (_Mdouble_ __x, _Mdouble_ __y));
 
