@@ -1,3 +1,10 @@
+2016-12-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/elision-lock.c
+	(__lll_lock_elision): Use atomics to load / store adapt_count.
+	* sysdeps/unix/sysv/linux/s390/elision-trylock.c
+	(__lll_trylock_elision): Likewise.
+
 2016-12-20  Florian Weimer  <fweimer@redhat.com>
 
 	Do not require memset elimination in explicit_bzero test.

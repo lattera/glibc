@@ -49,8 +49,10 @@ __lll_trylock_elision (int *futex, short *adapt_count)
       __builtin_tabort (_HTM_FIRST_USER_ABORT_CODE | 1);
     }
 
-  /* Only try a transaction if it's worth it.  */
-  if (*adapt_count <= 0)
+  /* Only try a transaction if it's worth it.  See __lll_lock_elision for
+     why we need atomic accesses.  Relaxed MO is sufficient because this is
+     just a hint.  */
+  if (atomic_load_relaxed (adapt_count) <= 0)
     {
       unsigned status;
 
@@ -65,9 +67,10 @@ __lll_trylock_elision (int *futex, short *adapt_count)
 	  __builtin_tend ();
 	  /* Note: Changing the adapt_count here might abort a transaction on a
 	     different cpu, but that could happen anyway when the futex is
-	     acquired, so there's no need to check the nesting depth here.  */
+	     acquired, so there's no need to check the nesting depth here.
+	     See above for why relaxed MO is sufficient.  */
 	  if (aconf.skip_lock_busy > 0)
-	    *adapt_count = aconf.skip_lock_busy;
+	    atomic_store_relaxed (adapt_count, aconf.skip_lock_busy);
 	}
       else
 	{
@@ -87,7 +90,8 @@ __lll_trylock_elision (int *futex, short *adapt_count)
     {
       /* Lost updates are possible, but harmless.  Due to races this might lead
 	 to *adapt_count becoming less than zero.  */
-      (*adapt_count)--;
+      atomic_store_relaxed (adapt_count,
+			    atomic_load_relaxed (adapt_count) - 1);
     }
 
   return lll_trylock (*futex);

@@ -45,11 +45,18 @@
 int
 __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 {
-  if (*adapt_count > 0)
+  /* adapt_count can be accessed concurrently; these accesses can be both
+     inside of transactions (if critical sections are nested and the outer
+     critical section uses lock elision) and outside of transactions.  Thus,
+     we need to use atomic accesses to avoid data races.  However, the
+     value of adapt_count is just a hint, so relaxed MO accesses are
+     sufficient.  */
+  if (atomic_load_relaxed (adapt_count) > 0)
     {
       /* Lost updates are possible, but harmless.  Due to races this might lead
 	 to *adapt_count becoming less than zero.  */
-      (*adapt_count)--;
+      atomic_store_relaxed (adapt_count,
+			    atomic_load_relaxed (adapt_count) - 1);
       goto use_lock;
     }
 
@@ -74,8 +81,10 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 	      /* In a non-nested transaction there is no need to abort,
 		 which is expensive.  */
 	      __builtin_tend ();
+	      /* Don't try to use transactions for the next couple of times.
+		 See above for why relaxed MO is sufficient.  */
 	      if (aconf.skip_lock_busy > 0)
-		*adapt_count = aconf.skip_lock_busy;
+		atomic_store_relaxed (adapt_count, aconf.skip_lock_busy);
 	      goto use_lock;
 	    }
 	  else /* nesting depth is > 1 */
@@ -101,18 +110,20 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 	      /* A persistent abort (cc 1 or 3) indicates that a retry is
 		 probably futile.  Use the normal locking now and for the
 		 next couple of calls.
-		 Be careful to avoid writing to the lock.  */
+		 Be careful to avoid writing to the lock.  See above for why
+		 relaxed MO is sufficient.  */
 	      if (aconf.skip_lock_internal_abort > 0)
-		*adapt_count = aconf.skip_lock_internal_abort;
+		atomic_store_relaxed (adapt_count,
+				      aconf.skip_lock_internal_abort);
 	      goto use_lock;
 	    }
 	}
     }
 
   /* Same logic as above, but for for a number of temporary failures in a
-     row.  */
+     row.  See above for why relaxed MO is sufficient.  */
   if (aconf.skip_lock_out_of_tbegin_retries > 0 && aconf.try_tbegin > 0)
-    *adapt_count = aconf.skip_lock_out_of_tbegin_retries;
+    atomic_store_relaxed (adapt_count, aconf.skip_lock_out_of_tbegin_retries);
 
   use_lock:
   return LLL_LOCK ((*futex), private);
