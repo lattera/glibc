@@ -88,19 +88,19 @@ static const unsigned char test_pattern[16] =
    between preparing it and letting it go out of scope, and we expect
    to find it.  This confirms that the test buffer does get filled in
    and we can find it from the stack buffer.  In the "ordinary_clear"
-   case, we clear it using memset, and we expect to find it.  This
-   confirms that the compiler can optimize out block clears in this
-   context; if it can't, the real test might be succeeding for the
-   wrong reason.  Finally, the "explicit_clear" case uses
-   explicit_bzero and expects _not_ to find the test buffer, which is
-   the real test.  */
+   case, we clear it using memset.  Depending on the target, the
+   compiler may not be able to apply dead store elimination to the
+   memset call, so the test does not fail if the memset is not
+   eliminated.  Finally, the "explicit_clear" case uses explicit_bzero
+   and expects _not_ to find the test buffer, which is the real
+   test.  */
 
 static ucontext_t uc_main, uc_co;
 
 /* Always check the test buffer immediately after filling it; this
    makes externally visible side effects depend on the buffer existing
    and having been filled in.  */
-static void
+static inline __attribute__  ((always_inline)) void
 prepare_test_buffer (unsigned char *buf)
 {
   for (unsigned int i = 0; i < PATTERN_REPS; i++)
@@ -133,7 +133,10 @@ setup_explicit_clear (void)
   explicit_bzero (buf, TEST_BUFFER_SIZE);
 }
 
-enum test_expectation { EXPECT_NONE, EXPECT_SOME, EXPECT_ALL };
+enum test_expectation
+  {
+    EXPECT_NONE, EXPECT_SOME, EXPECT_ALL, NO_EXPECTATIONS
+  };
 struct subtest
 {
   void (*setup_subtest) (void);
@@ -145,7 +148,9 @@ static const struct subtest *cur_subtest;
 static const struct subtest subtests[] =
 {
   { setup_no_clear,       "no clear",       EXPECT_SOME },
-  { setup_ordinary_clear, "ordinary clear", EXPECT_SOME },
+  /* The memset may happen or not, depending on compiler
+     optimizations.  */
+  { setup_ordinary_clear, "ordinary clear", NO_EXPECTATIONS },
   { setup_explicit_clear, "explicit clear", EXPECT_NONE },
   { 0,                    0,                -1          }
 };
@@ -223,6 +228,11 @@ check_test_buffer (enum test_expectation expected,
 		  PATTERN_REPS, cnt);
 	  test_status = 1;
 	}
+      break;
+
+    case NO_EXPECTATIONS:
+      printf ("INFO: %s/%s: found %d patterns%s\n", label, stage, cnt,
+	      cnt == 0 ? " (memset not eliminated)" : "");
       break;
 
     default:

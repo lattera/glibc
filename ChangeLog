@@ -1,3 +1,12 @@
+2016-12-20  Florian Weimer  <fweimer@redhat.com>
+
+	Do not require memset elimination in explicit_bzero test.
+	* string/tst-xbzero-opt.c (prepare_test_buffer): Force inlining.
+	(enum test_expectation): Add NO_EXPECTATIONS.
+	(subtests): NO_EXPECTATIONS for ordinary clear.
+	(check_test_buffer): Handle NO_EXPECTATIONS.
+	* string/Makefile (CFLAGS-tst-xbzero-opt.c): Compile with -O3.
+
 2016-12-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]

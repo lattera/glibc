@@ -71,6 +71,7 @@ CFLAGS-tst-strlen.c = -fno-builtin
 CFLAGS-stratcliff.c = -fno-builtin
 CFLAGS-test-ffs.c = -fno-builtin
 CFLAGS-tst-inlcall.c = -fno-builtin
+CFLAGS-tst-xbzero-opt.c = -O3
 
 ifeq ($(run-built-tests),yes)
 $(objpfx)tst-svc-cmp.out: tst-svc.expect $(objpfx)tst-svc.out
