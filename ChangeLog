@@ -1,5 +1,15 @@
 2016-12-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/unix/sysv/linux/s390/Makefile (elision-CFLAGS):
+	Add -msoft-float.
+	* sysdeps/unix/sysv/linux/s390/htm.h: New File.
+	* sysdeps/unix/sysv/linux/s390/elision-lock.c:
+	Use __libc_t* transaction macros instead of __builtin_t*.
+	* sysdeps/unix/sysv/linux/s390/elision-trylock.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/elision-unlock.c: Likewise.
+
+2016-12-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/unix/sysv/linux/s390/elision-lock.c
 	(__lll_lock_elision): Use atomics to load / store adapt_count.
 	* sysdeps/unix/sysv/linux/s390/elision-trylock.c

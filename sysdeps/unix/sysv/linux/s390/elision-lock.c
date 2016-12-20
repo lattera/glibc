@@ -19,7 +19,7 @@
 #include <pthread.h>
 #include <pthreadP.h>
 #include <lowlevellock.h>
-#include <htmintrin.h>
+#include <htm.h>
 #include <elision-conf.h>
 #include <stdint.h>
 
@@ -60,27 +60,23 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
       goto use_lock;
     }
 
-  __asm__ volatile (".machinemode \"zarch_nohighgprs\"\n\t"
-		    ".machine \"all\""
-		    : : : "memory");
-
   int try_tbegin;
   for (try_tbegin = aconf.try_tbegin;
        try_tbegin > 0;
        try_tbegin--)
     {
-      unsigned status;
+      int status;
       if (__builtin_expect
-	  ((status = __builtin_tbegin((void *)0)) == _HTM_TBEGIN_STARTED, 1))
+	  ((status = __libc_tbegin ((void *) 0)) == _HTM_TBEGIN_STARTED, 1))
 	{
 	  if (*futex == 0)
 	    return 0;
 	  /* Lock was busy.  Fall back to normal locking.  */
-	  if (__builtin_expect (__builtin_tx_nesting_depth (), 1))
+	  if (__builtin_expect (__libc_tx_nesting_depth (), 1))
 	    {
 	      /* In a non-nested transaction there is no need to abort,
 		 which is expensive.  */
-	      __builtin_tend ();
+	      __libc_tend ();
 	      /* Don't try to use transactions for the next couple of times.
 		 See above for why relaxed MO is sufficient.  */
 	      if (aconf.skip_lock_busy > 0)
@@ -100,7 +96,7 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 		 because using the default lock with the inner mutex
 		 would abort the outer transaction.
 	      */
-	      __builtin_tabort (_HTM_FIRST_USER_ABORT_CODE | 1);
+	      __libc_tabort (_HTM_FIRST_USER_ABORT_CODE | 1);
 	    }
 	}
       else

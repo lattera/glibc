@@ -18,6 +18,7 @@
 
 #include <pthreadP.h>
 #include <lowlevellock.h>
+#include <htm.h>
 
 int
 __lll_unlock_elision(int *futex, int private)
@@ -27,10 +28,7 @@ __lll_unlock_elision(int *futex, int private)
      have closed the transaction, but that is impossible to detect reliably.  */
   if (*futex == 0)
     {
-      __asm__ volatile (".machinemode \"zarch_nohighgprs\"\n\t"
-			".machine \"all\""
-			: : : "memory");
-      __builtin_tend();
+      __libc_tend ();
     }
   else
     lll_unlock ((*futex), private);
