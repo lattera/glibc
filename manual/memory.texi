@@ -1090,8 +1090,8 @@ When calling @code{mallopt}, the @var{param} argument specifies the
 parameter to be set, and @var{value} the new value to be set.  Possible
 choices for @var{param}, as defined in @file{malloc.h}, are:
 
-@table @code
 @comment TODO: @item M_CHECK_ACTION
+@vtable @code
 @item M_MMAP_MAX
 The maximum number of chunks to allocate with @code{mmap}.  Setting this
 to zero disables all use of @code{mmap}.
@@ -1177,7 +1177,7 @@ derived from the default value of M_ARENA_TEST and is computed independently.
 
 This parameter can also be set for the process at startup by setting the
 environment variable @env{MALLOC_ARENA_MAX} to the desired value.
-@end table
+@end vtable
 
 @end deftypefun
 
@@ -3213,7 +3213,7 @@ user space kernel data, shared memory, and memory mapped files.
 macros.  They tell @code{mlockall} which of its functions you want.  All
 other bits must be zero.
 
-@table @code
+@vtable @code
 
 @item MCL_CURRENT
 Lock all pages which currently exist in the calling process' virtual
@@ -3226,7 +3226,7 @@ affect future address spaces owned by the same process so exec, which
 replaces a process' address space, wipes out @code{MCL_FUTURE}.
 @xref{Executing a File}.
 
-@end table
+@end vtable
 
 When the function returns successfully, and you specified
 @code{MCL_CURRENT}, all of the process' pages are backed by (connected

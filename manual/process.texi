@@ -594,7 +594,7 @@ These symbolic constants are defined as values for the @var{pid} argument
 to the @code{waitpid} function.
 
 @comment Extra blank lines make it look better.
-@table @code
+@vtable @code
 @item WAIT_ANY
 
 This constant macro (whose value is @code{-1}) specifies that
@@ -605,13 +605,13 @@ This constant macro (whose value is @code{-1}) specifies that
 This constant (with value @code{0}) specifies that @code{waitpid} should
 return status information about any child process in the same process
 group as the calling process.
-@end table
+@end vtable
 
 These symbolic constants are defined as flags for the @var{options}
 argument to the @code{waitpid} function.  You can bitwise-OR the flags
 together to obtain a value to use as the argument.
 
-@table @code
+@vtable @code
 @item WNOHANG
 
 This flag specifies that @code{waitpid} should return immediately
@@ -622,7 +622,7 @@ instead of waiting, if there is no child process ready to be noticed.
 This flag specifies that @code{waitpid} should report the status of any
 child processes that have been stopped as well as those that have
 terminated.
-@end table
+@end vtable
 
 @comment sys/wait.h
 @comment POSIX.1

@@ -311,63 +311,53 @@ establish the handler.  @Theglibc{} does provide this extra
 argument, but the value is meaningful only on operating systems that
 provide the information (BSD systems and @gnusystems{}).
 
-@table @code
+@vtable @code
 @comment signal.h
 @comment BSD
 @item FPE_INTOVF_TRAP
-@vindex FPE_INTOVF_TRAP
 Integer overflow (impossible in a C program unless you enable overflow
 trapping in a hardware-specific fashion).
 @comment signal.h
 @comment BSD
 @item FPE_INTDIV_TRAP
-@vindex FPE_INTDIV_TRAP
 Integer division by zero.
 @comment signal.h
 @comment BSD
 @item FPE_SUBRNG_TRAP
-@vindex FPE_SUBRNG_TRAP
 Subscript-range (something that C programs never check for).
 @comment signal.h
 @comment BSD
 @item FPE_FLTOVF_TRAP
-@vindex FPE_FLTOVF_TRAP
 Floating overflow trap.
 @comment signal.h
 @comment BSD
 @item FPE_FLTDIV_TRAP
-@vindex FPE_FLTDIV_TRAP
 Floating/decimal division by zero.
 @comment signal.h
 @comment BSD
 @item FPE_FLTUND_TRAP
-@vindex FPE_FLTUND_TRAP
 Floating underflow trap.  (Trapping on floating underflow is not
 normally enabled.)
 @comment signal.h
 @comment BSD
 @item FPE_DECOVF_TRAP
-@vindex FPE_DECOVF_TRAP
 Decimal overflow trap.  (Only a few machines have decimal arithmetic and
 C never uses it.)
 @ignore @c These seem redundant
 @comment signal.h
 @comment BSD
 @item FPE_FLTOVF_FAULT
-@vindex FPE_FLTOVF_FAULT
 Floating overflow fault.
 @comment signal.h
 @comment BSD
 @item FPE_FLTDIV_FAULT
-@vindex FPE_FLTDIV_FAULT
 Floating divide by zero fault.
 @comment signal.h
 @comment BSD
 @item FPE_FLTUND_FAULT
-@vindex FPE_FLTUND_FAULT
 Floating underflow fault.
 @end ignore
-@end table
+@end vtable
 
 @comment signal.h
 @comment ISO
@@ -2633,10 +2623,9 @@ The @code{sigprocmask} function is used to examine or change the calling
 process's signal mask.  The @var{how} argument determines how the signal
 mask is changed, and must be one of the following values:
 
-@table @code
+@vtable @code
 @comment signal.h
 @comment POSIX.1
-@vindex SIG_BLOCK
 @item SIG_BLOCK
 Block the signals in @code{set}---add them to the existing mask.  In
 other words, the new mask is the union of the existing mask and
@@ -2644,16 +2633,14 @@ other words, the new mask is the union of the existing mask and
 
 @comment signal.h
 @comment POSIX.1
-@vindex SIG_UNBLOCK
 @item SIG_UNBLOCK
 Unblock the signals in @var{set}---remove them from the existing mask.
 
 @comment signal.h
 @comment POSIX.1
-@vindex SIG_SETMASK
 @item SIG_SETMASK
 Use @var{set} for the mask; ignore the previous value of the mask.
-@end table
+@end vtable
 
 The last argument, @var{oldset}, is used to return information about the
 old process signal mask.  If you just want to change the mask without

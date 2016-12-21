@@ -1015,31 +1015,27 @@ down.
 various rounding modes.  Each one will be defined if and only if the FPU
 supports the corresponding rounding mode.
 
-@table @code
+@vtable @code
 @comment fenv.h
 @comment ISO
-@vindex FE_TONEAREST
 @item FE_TONEAREST
 Round to nearest.
 
 @comment fenv.h
 @comment ISO
-@vindex FE_UPWARD
 @item FE_UPWARD
 Round toward @math{+@infinity{}}.
 
 @comment fenv.h
 @comment ISO
-@vindex FE_DOWNWARD
 @item FE_DOWNWARD
 Round toward @math{-@infinity{}}.
 
 @comment fenv.h
 @comment ISO
-@vindex FE_TOWARDZERO
 @item FE_TOWARDZERO
 Round toward zero.
-@end table
+@end vtable
 
 Underflow is an unusual case.  Normally, @w{IEEE 754} floating point
 numbers are always normalized (@pxref{Floating Point Concepts}).

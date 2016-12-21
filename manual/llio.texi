@@ -690,7 +690,7 @@ interpreted, in the same way as for the @code{fseek} function, and it must
 be one of the symbolic constants @code{SEEK_SET}, @code{SEEK_CUR}, or
 @code{SEEK_END}.
 
-@table @code
+@vtable @code
 @item SEEK_SET
 Specifies that @var{offset} is a count of characters from the beginning
 of the file.
@@ -706,7 +706,7 @@ extent of the file; a positive count specifies a position past the
 current end.  If you set the position past the current end, and
 actually write data, you will extend the file with zeros up to that
 position.
-@end table
+@end vtable
 
 The return value from @code{lseek} is normally the resulting file
 position, measured in bytes from the beginning of the file.
@@ -858,7 +858,7 @@ These aliases for the @samp{SEEK_@dots{}} constants exist for the sake
 of compatibility with older BSD systems.  They are defined in two
 different header files: @file{fcntl.h} and @file{sys/file.h}.
 
-@table @code
+@vtable @code
 @item L_SET
 An alias for @code{SEEK_SET}.
 
@@ -867,7 +867,7 @@ An alias for @code{SEEK_CUR}.
 
 @item L_XTND
 An alias for @code{SEEK_END}.
-@end table
+@end vtable
 
 @node Descriptors and Streams
 @section Descriptors and Streams
@@ -938,11 +938,10 @@ file descriptors belonging to the standard streams @code{stdin},
 @code{stdout}, and @code{stderr}; see @ref{Standard Streams}.
 @pindex unistd.h
 
+@vtable @code
 @comment unistd.h
 @comment POSIX.1
-@table @code
 @item STDIN_FILENO
-@vindex STDIN_FILENO
 This macro has value @code{0}, which is the file descriptor for
 standard input.
 @cindex standard input file descriptor
@@ -950,7 +949,6 @@ standard input.
 @comment unistd.h
 @comment POSIX.1
 @item STDOUT_FILENO
-@vindex STDOUT_FILENO
 This macro has value @code{1}, which is the file descriptor for
 standard output.
 @cindex standard output file descriptor
@@ -958,10 +956,9 @@ standard output.
 @comment unistd.h
 @comment POSIX.1
 @item STDERR_FILENO
-@vindex STDERR_FILENO
 This macro has value @code{2}, which is the file descriptor for
 standard error output.
-@end table
+@end vtable
 @cindex standard error file descriptor
 
 @node Stream/Descriptor Precautions
@@ -1492,7 +1489,7 @@ and extending @var{length} bytes.
 
 The valid BSD values for @var{advice} are:
 
-@table @code
+@vtable @code
 
 @item MADV_NORMAL
 The region should receive no further special treatment.
@@ -1515,11 +1512,11 @@ The region is no longer needed.  The kernel may free these pages,
 causing any changes to the pages to be lost, as well as swapped
 out pages to be discarded.
 
-@end table
+@end vtable
 
 The POSIX names are slightly different, but with the same meanings:
 
-@table @code
+@vtable @code
 
 @item POSIX_MADV_NORMAL
 This corresponds with BSD's @code{MADV_NORMAL}.
@@ -1536,7 +1533,7 @@ This corresponds with BSD's @code{MADV_WILLNEED}.
 @item POSIX_MADV_DONTNEED
 This corresponds with BSD's @code{MADV_DONTNEED}.
 
-@end table
+@end vtable
 
 @code{madvise} returns @math{0} for success and @math{-1} for
 error.  Errors include:
@@ -2906,7 +2903,7 @@ descriptions of the individual commands.
 
 Briefly, here is a list of what the various commands are.
 
-@table @code
+@vtable @code
 @item F_DUPFD
 Duplicate the file descriptor (return another file descriptor pointing
 to the same open file).  @xref{Duplicating Descriptors}.
@@ -2951,7 +2948,7 @@ Get process or process group ID to receive @code{SIGIO} signals.
 @item F_SETOWN
 Set process or process group ID to receive @code{SIGIO} signals.
 @xref{Interrupt Input}.
-@end table
+@end vtable
 
 This function is a cancellation point in multi-threaded programs.  This
 is a problem if the thread allocates some resources (like memory, file
@@ -3827,25 +3824,22 @@ you know if it notices one.
 The following macros are defined for use as values for the @code{l_type}
 member of the @code{flock} structure.  The values are integer constants.
 
-@table @code
+@vtable @code
 @comment fcntl.h
 @comment POSIX.1
-@vindex F_RDLCK
 @item F_RDLCK
 This macro is used to specify a read (or shared) lock.
 
 @comment fcntl.h
 @comment POSIX.1
-@vindex F_WRLCK
 @item F_WRLCK
 This macro is used to specify a write (or exclusive) lock.
 
 @comment fcntl.h
 @comment POSIX.1
-@vindex F_UNLCK
 @item F_UNLCK
 This macro is used to specify that the region is unlocked.
-@end table
+@end vtable
 
 As an example of a situation where file locking is useful, consider a
 program that can be run simultaneously by several different users, that

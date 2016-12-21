@@ -325,11 +325,10 @@ Each address format has a symbolic name which starts with @samp{AF_}.
 Each of them corresponds to a @samp{PF_} symbol which designates the
 corresponding namespace.  Here is a list of address format names:
 
-@table @code
+@vtable @code
 @comment sys/socket.h
 @comment POSIX
 @item AF_LOCAL
-@vindex AF_LOCAL
 This designates the address format that goes with the local namespace.
 (@code{PF_LOCAL} is the name of that namespace.)  @xref{Local Namespace
 Details}, for information about this address format.
@@ -337,7 +336,6 @@ Details}, for information about this address format.
 @comment sys/socket.h
 @comment BSD, Unix98
 @item AF_UNIX
-@vindex AF_UNIX
 This is a synonym for @code{AF_LOCAL}.  Although @code{AF_LOCAL} is
 mandated by POSIX.1g, @code{AF_UNIX} is portable to more systems.
 @code{AF_UNIX} was the traditional name stemming from BSD, so even most
@@ -348,14 +346,12 @@ vs. @code{PF_LOCAL}).
 @comment sys/socket.h
 @comment GNU
 @item AF_FILE
-@vindex AF_FILE
 This is another synonym for @code{AF_LOCAL}, for compatibility.
 (@code{PF_FILE} is likewise a synonym for @code{PF_LOCAL}.)
 
 @comment sys/socket.h
 @comment BSD
 @item AF_INET
-@vindex AF_INET
 This designates the address format that goes with the Internet
 namespace.  (@code{PF_INET} is the name of that namespace.)
 @xref{Internet Address Formats}.
@@ -369,14 +365,13 @@ This is similar to @code{AF_INET}, but refers to the IPv6 protocol.
 @comment sys/socket.h
 @comment BSD
 @item AF_UNSPEC
-@vindex AF_UNSPEC
 This designates no particular address format.  It is used only in rare
 cases, such as to clear out the default destination address of a
 ``connected'' datagram socket.  @xref{Sending Datagrams}.
 
 The corresponding namespace designator symbol @code{PF_UNSPEC} exists
 for completeness, but there is no reason to use it in a program.
-@end table
+@end vtable
 
 @file{sys/socket.h} defines symbols starting with @samp{AF_} for many
 different kinds of networks, most or all of which are not actually
@@ -1436,33 +1431,29 @@ with other systems.)
 
 Here are the error codes that you may find in @code{h_errno}:
 
-@table @code
+@vtable @code
 @comment netdb.h
 @comment BSD
 @item HOST_NOT_FOUND
-@vindex HOST_NOT_FOUND
 No such host is known in the database.
 
 @comment netdb.h
 @comment BSD
 @item TRY_AGAIN
-@vindex TRY_AGAIN
 This condition happens when the name server could not be contacted.  If
 you try again later, you may succeed then.
 
 @comment netdb.h
 @comment BSD
 @item NO_RECOVERY
-@vindex NO_RECOVERY
 A non-recoverable error occurred.
 
 @comment netdb.h
 @comment BSD
 @item NO_ADDRESS
-@vindex NO_ADDRESS
 The host database contains an entry for the name, but it doesn't have an
 associated Internet address.
-@end table
+@end vtable
 
 The lookup functions above all have one thing in common: they are not
 reentrant and therefore unusable in multi-threaded applications.

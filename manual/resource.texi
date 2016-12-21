@@ -337,11 +337,10 @@ This is analogous to @code{rlimit.rlim_max}, but with a different type.
 Here is a list of resources for which you can specify a limit.  Memory
 and file sizes are measured in bytes.
 
-@table @code
+@vtable @code
 @comment sys/resource.h
 @comment BSD
 @item RLIMIT_CPU
-@vindex RLIMIT_CPU
 The maximum amount of CPU time the process can use.  If it runs for
 longer than this, it gets a signal: @code{SIGXCPU}.  The value is
 measured in seconds.  @xref{Operation Error Signals}.
@@ -349,7 +348,6 @@ measured in seconds.  @xref{Operation Error Signals}.
 @comment sys/resource.h
 @comment BSD
 @item RLIMIT_FSIZE
-@vindex RLIMIT_FSIZE
 The maximum size of file the process can create.  Trying to write a
 larger file causes a signal: @code{SIGXFSZ}.  @xref{Operation Error
 Signals}.
@@ -357,7 +355,6 @@ Signals}.
 @comment sys/resource.h
 @comment BSD
 @item RLIMIT_DATA
-@vindex RLIMIT_DATA
 The maximum size of data memory for the process.  If the process tries
 to allocate data memory beyond this amount, the allocation function
 fails.
@@ -365,7 +362,6 @@ fails.
 @comment sys/resource.h
 @comment BSD
 @item RLIMIT_STACK
-@vindex RLIMIT_STACK
 The maximum stack size for the process.  If the process tries to extend
 its stack past this size, it gets a @code{SIGSEGV} signal.
 @xref{Program Error Signals}.
@@ -373,7 +369,6 @@ its stack past this size, it gets a @code{SIGSEGV} signal.
 @comment sys/resource.h
 @comment BSD
 @item RLIMIT_CORE
-@vindex RLIMIT_CORE
 The maximum size core file that this process can create.  If the process
 terminates and would dump a core file larger than this, then no core
 file is created.  So setting this limit to zero prevents core files from
@@ -382,7 +377,6 @@ ever being created.
 @comment sys/resource.h
 @comment BSD
 @item RLIMIT_RSS
-@vindex RLIMIT_RSS
 The maximum amount of physical memory that this process should get.
 This parameter is a guide for the system's scheduler and memory
 allocator; the system may give the process more memory when there is a
@@ -404,9 +398,7 @@ with @code{EAGAIN}.  @xref{Creating a Process}.
 @comment sys/resource.h
 @comment BSD
 @item RLIMIT_NOFILE
-@vindex RLIMIT_NOFILE
 @itemx RLIMIT_OFILE
-@vindex RLIMIT_OFILE
 The maximum number of files that the process can open.  If it tries to
 open more files than this, its open attempt fails with @code{errno}
 @code{EMFILE}.  @xref{Error Codes}.  Not all systems support this limit;
@@ -415,7 +407,6 @@ GNU does, and 4.4 BSD does.
 @comment sys/resource.h
 @comment Unix98
 @item RLIMIT_AS
-@vindex RLIMIT_AS
 The maximum size of total memory that this process should get.  If the
 process tries to allocate more memory beyond this amount with, for
 example, @code{brk}, @code{malloc}, @code{mmap} or @code{sbrk}, the
@@ -424,10 +415,9 @@ allocation function fails.
 @comment sys/resource.h
 @comment BSD
 @item RLIM_NLIMITS
-@vindex RLIM_NLIMITS
 The number of different resource limits.  Any valid @var{resource}
 operand must be less than @code{RLIM_NLIMITS}.
-@end table
+@end vtable
 
 @comment sys/resource.h
 @comment BSD
@@ -460,7 +450,7 @@ If you are setting a limit, there is a second argument:
 the limit.
 
 The @var{cmd} values and the operations they specify are:
-@table @code
+@vtable @code
 
 @item GETFSIZE
 Get the current limit on the size of a file, in units of 512 bytes.
@@ -469,7 +459,7 @@ Get the current limit on the size of a file, in units of 512 bytes.
 Set the current and maximum limit on the size of a file to @var{limit} *
 512 bytes.
 
-@end table
+@end vtable
 
 There are also some other @var{cmd} values that may do things on some
 systems, but they are not supported.
@@ -504,7 +494,7 @@ A process tried to increase a maximum limit, but is not superuser.
 
 @var{resource} identifies the resource:
 
-@table @code
+@vtable @code
 @item LIM_CPU
 Maximum CPU time.  Same as @code{RLIMIT_CPU} for @code{setrlimit}.
 @item LIM_FSIZE
@@ -517,7 +507,7 @@ Maximum stack size.  Same as @code{RLIMIT_STACK} for @code{setrlimit}.
 Maximum core file size.  Same as @code{RLIMIT_COR} for @code{setrlimit}.
 @item LIM_MAXRSS
 Maximum physical memory.  Same as @code{RLIMIT_RSS} for @code{setrlimit}.
-@end table
+@end vtable
 
 The return value is zero for success, and @code{-1} with @code{errno} set
 accordingly for failure:
@@ -810,14 +800,14 @@ negative, @code{sched_setscheduler} keeps the existing scheduling policy.
 
 The following macros represent the valid values for @var{policy}:
 
-@table @code
+@vtable @code
 @item SCHED_OTHER
 Traditional Scheduling
 @item SCHED_FIFO
 First In First Out
 @item SCHED_RR
 Round Robin
-@end table
+@end vtable
 
 @c The Linux kernel code (in sched.c) actually reschedules the process,
 @c but it puts it at the head of the run queue, so I'm not sure just what

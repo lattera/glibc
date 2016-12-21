@@ -326,17 +326,15 @@ structure that @var{termios-p} points to.
 The @var{when} argument specifies how to deal with input and output
 already queued.  It can be one of the following values:
 
-@table @code
+@vtable @code
 @comment termios.h
 @comment POSIX.1
 @item TCSANOW
-@vindex TCSANOW
 Make the change immediately.
 
 @comment termios.h
 @comment POSIX.1
 @item TCSADRAIN
-@vindex TCSADRAIN
 Make the change after waiting until all queued output has been written.
 You should usually use this option when changing parameters that affect
 output.
@@ -344,13 +342,11 @@ output.
 @comment termios.h
 @comment POSIX.1
 @item TCSAFLUSH
-@vindex TCSAFLUSH
 This is like @code{TCSADRAIN}, but also discards any queued input.
 
 @comment termios.h
 @comment BSD
 @item TCSASOFT
-@vindex TCSASOFT
 This is a flag bit that you can add to any of the above alternatives.
 Its meaning is to inhibit alteration of the state of the terminal
 hardware.  It is a BSD extension; it is only supported on BSD systems
@@ -359,7 +355,7 @@ and @gnuhurdsystems{}.
 Using @code{TCSASOFT} is exactly the same as setting the @code{CIGNORE}
 bit in the @code{c_cflag} member of the structure @var{termios-p} points
 to.  @xref{Control Modes}, for a description of @code{CIGNORE}.
-@end table
+@end vtable
 
 If this function is called from a background process on its controlling
 terminal, normally all processes in the process group are sent a
@@ -1846,22 +1842,19 @@ argument specifies which queue(s) to clear, and can be one of the
 following values:
 
 @c Extra blank lines here make it look better.
-@table @code
-@vindex TCIFLUSH
+@vtable @code
 @item TCIFLUSH
 
 Clear any input data received, but not yet read.
 
-@vindex TCOFLUSH
 @item TCOFLUSH
 
 Clear any output data written, but not yet transmitted.
 
-@vindex TCIOFLUSH
 @item TCIOFLUSH
 
 Clear both queued input and output.
-@end table
+@end vtable
 
 The return value is normally zero.  In the event of an error, a value
 of @math{-1} is returned.  The following @code{errno} error conditions
@@ -1901,23 +1894,19 @@ XON/XOFF flow control on the terminal file specified by @var{filedes}.
 The @var{action} argument specifies what operation to perform, and can
 be one of the following values:
 
-@table @code
-@vindex TCOOFF
+@vtable @code
 @item TCOOFF
 Suspend transmission of output.
 
-@vindex TCOON
 @item TCOON
 Restart transmission of output.
 
-@vindex TCIOFF
 @item TCIOFF
 Transmit a STOP character.
 
-@vindex TCION
 @item TCION
 Transmit a START character.
-@end table
+@end vtable
 
 For more information about the STOP and START characters, see @ref{Special
 Characters}.

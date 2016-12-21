@@ -1,3 +1,23 @@
+2016-12-21  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/nss.texi: Change incorrect @vtable to @table.
+	* manual/arith.texi: Convert @tables of variables to @vtables
+	and remove unnecessary indexing.
+	* manual/filesys.texi: Likewise.
+	* manual/llio.texi: Likewise.
+	* manual/memory.texi: Likewise.
+	* manual/process.texi: Likewise.
+	* manual/resource.texi: Likewise.
+	* manual/search.texi: Likewise.
+	* manual/signal.texi: Likewise.
+	* manual/socket.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/sysinfo.texi: Likewise.
+	* manual/syslog.texi: Likewise.
+	* manual/terminal.texi: Likewise.
+	* manual/time.texi: Likewise.
+	* manual/users.texi: Likewise.
+
 2016-12-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]

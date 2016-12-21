@@ -912,7 +912,7 @@ file accesses via @code{ioctl}.
 @var{options} is a bit string with bit fields defined using the
 following mask and masked value macros:
 
-@table @code
+@vtable @code
 @item MS_MGC_MASK
 This multibit field contains a magic number.  If it does not have the value
 @code{MS_MGC_VAL}, @code{mount} assumes all the following bits are zero and
@@ -962,7 +962,7 @@ when the directories are accessed while the filesystem in mounted.
 @c there is also S_QUOTA Linux fs.h (mount.h still uses its former name
 @c S_WRITE), but I can't see what it does.  Turns on quotas, I guess.
 
-@end table
+@end vtable
 
 Any bits not covered by the above masks should be set off; otherwise,
 results are undefined.
@@ -1066,7 +1066,7 @@ the same.  Specify either as the string @var{file}.
 @var{flags} contains the one-bit field identified by the following
 mask macro:
 
-@table @code
+@vtable @code
 
 @item MNT_FORCE
 This bit on means to force the unmounting even if the filesystem is
@@ -1074,7 +1074,7 @@ busy, by making it unbusy first.  If the bit is off and the filesystem is
 busy, @code{umount2} fails with @code{errno} = @code{EBUSY}.  Depending
 on the filesystem, this may override all, some, or no busy conditions.
 
-@end table
+@end vtable
 
 All other bits in @var{flags} should be set to zero; otherwise, the result
 is undefined.

@@ -1016,12 +1016,12 @@ call is necessary.
 The return value is @code{0} on success and other values on failure.  The
 following @code{errno} error conditions are defined for this function:
 
-@table @code
+@vtable @code
 @item TIME_ERROR
 The precision clock model is not properly set up at the moment, thus the
 clock must be considered unsynchronized, and the values should be
 treated with care.
-@end table
+@end vtable
 @end deftypefun
 
 @tindex struct timex

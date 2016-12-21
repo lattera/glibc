@@ -221,7 +221,7 @@ implicitly and uses defaults for the information in @var{ident} and
 @var{options} is a bit string, with the bits as defined by the following
 single bit masks:
 
-@table @code
+@vtable @code
 @item LOG_PERROR
 If on, @code{openlog} sets up the connection so that any @code{syslog}
 on this connection writes its message to the calling process' Standard
@@ -250,7 +250,7 @@ exactly the opposite.
 @item LOG_ODELAY
 This bit does nothing.  It exists for backward compatibility.
 
-@end table
+@end vtable
 
 If any other bit in @var{options} is on, the result is undefined.
 

@@ -600,7 +600,7 @@ the first child is processed, after the first child is processed and
 after both children are processed.  This makes it possible to handle all
 three methods of tree traversal (or even a combination of them).
 
-@table @code
+@vtable @code
 @item preorder
 The current node is an internal node and the function is called before
 the first child was processed.
@@ -612,7 +612,7 @@ The current node is an internal node and the function is called after
 the second child was processed.
 @item leaf
 The current node is a leaf.
-@end table
+@end vtable
 @end deftp
 
 @comment search.h

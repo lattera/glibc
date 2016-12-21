@@ -1069,68 +1069,58 @@ The following macros are defined for use as values for the
 @code{ut_type} member of the @code{utmp} structure.  The values are
 integer constants.
 
-@table @code
+@vtable @code
 @comment utmp.h
 @comment SVID
-@vindex EMPTY
 @item EMPTY
 This macro is used to indicate that the entry contains no valid user
 accounting information.
 
 @comment utmp.h
 @comment SVID
-@vindex RUN_LVL
 @item RUN_LVL
 This macro is used to identify the system's runlevel.
 
 @comment utmp.h
 @comment SVID
-@vindex BOOT_TIME
 @item BOOT_TIME
 This macro is used to identify the time of system boot.
 
 @comment utmp.h
 @comment SVID
-@vindex OLD_TIME
 @item OLD_TIME
 This macro is used to identify the time when the system clock changed.
 
 @comment utmp.h
 @comment SVID
-@vindex NEW_TIME
 @item NEW_TIME
 This macro is used to identify the time after the system clock changed.
 
 @comment utmp.h
 @comment SVID
-@vindex INIT_PROCESS
 @item INIT_PROCESS
 This macro is used to identify a process spawned by the init process.
 
 @comment utmp.h
 @comment SVID
-@vindex LOGIN_PROCESS
 @item LOGIN_PROCESS
 This macro is used to identify the session leader of a logged in user.
 
 @comment utmp.h
 @comment SVID
-@vindex USER_PROCESS
 @item USER_PROCESS
 This macro is used to identify a user process.
 
 @comment utmp.h
 @comment SVID
-@vindex DEAD_PROCESS
 @item DEAD_PROCESS
 This macro is used to identify a terminated process.
 
 @comment utmp.h
 @comment SVID
-@vindex ACCOUNTING
 @item ACCOUNTING
 ???
-@end table
+@end vtable
 
 The size of the @code{ut_line}, @code{ut_id}, @code{ut_user} and
 @code{ut_host} arrays can be found using the @code{sizeof} operator.
@@ -1547,62 +1537,53 @@ The following macros are defined for use as values for the
 integer constants and are, in @theglibc{}, identical to the
 definitions in @file{utmp.h}.
 
-@table @code
+@vtable @code
 @comment utmpx.h
 @comment XPG4.2
-@vindex EMPTY
 @item EMPTY
 This macro is used to indicate that the entry contains no valid user
 accounting information.
 
 @comment utmpx.h
 @comment XPG4.2
-@vindex RUN_LVL
 @item RUN_LVL
 This macro is used to identify the system's runlevel.
 
 @comment utmpx.h
 @comment XPG4.2
-@vindex BOOT_TIME
 @item BOOT_TIME
 This macro is used to identify the time of system boot.
 
 @comment utmpx.h
 @comment XPG4.2
-@vindex OLD_TIME
 @item OLD_TIME
 This macro is used to identify the time when the system clock changed.
 
 @comment utmpx.h
 @comment XPG4.2
-@vindex NEW_TIME
 @item NEW_TIME
 This macro is used to identify the time after the system clock changed.
 
 @comment utmpx.h
 @comment XPG4.2
-@vindex INIT_PROCESS
 @item INIT_PROCESS
 This macro is used to identify a process spawned by the init process.
 
 @comment utmpx.h
 @comment XPG4.2
-@vindex LOGIN_PROCESS
 @item LOGIN_PROCESS
 This macro is used to identify the session leader of a logged in user.
 
 @comment utmpx.h
 @comment XPG4.2
-@vindex USER_PROCESS
 @item USER_PROCESS
 This macro is used to identify a user process.
 
 @comment utmpx.h
 @comment XPG4.2
-@vindex DEAD_PROCESS
 @item DEAD_PROCESS
 This macro is used to identify a terminated process.
-@end table
+@end vtable
 
 The size of the @code{ut_line}, @code{ut_id} and @code{ut_user} arrays
 can be found using the @code{sizeof} operator.

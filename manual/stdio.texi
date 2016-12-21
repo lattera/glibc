@@ -4526,25 +4526,22 @@ These three aliases for the @samp{SEEK_@dots{}} constants exist for the
 sake of compatibility with older BSD systems.  They are defined in two
 different header files: @file{fcntl.h} and @file{sys/file.h}.
 
-@table @code
+@vtable @code
 @comment sys/file.h
 @comment BSD
 @item L_SET
-@vindex L_SET
 An alias for @code{SEEK_SET}.
 
 @comment sys/file.h
 @comment BSD
 @item L_INCR
-@vindex L_INCR
 An alias for @code{SEEK_CUR}.
 
 @comment sys/file.h
 @comment BSD
 @item L_XTND
-@vindex L_XTND
 An alias for @code{SEEK_END}.
-@end table
+@end vtable
 
 @node Portable Positioning
 @section Portable File-Position Functions
