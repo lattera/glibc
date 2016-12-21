@@ -1,5 +1,9 @@
 2016-12-21  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20978]
+	* nis/nss_nisplus/nisplus-alias.c (_nss_nisplus_getaliasbyname_r):
+	Compare name == NULL, not name != NULL.
+
 	* manual/texinfo.tex: Update to version 2016-09-18.18 with
 	trailing whitespace removed.
 	* scripts/config.guess: Update to version 2016-10-02.

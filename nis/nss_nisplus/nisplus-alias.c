@@ -291,7 +291,7 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
 	return status;
     }
 
-  if (name != NULL)
+  if (name == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
