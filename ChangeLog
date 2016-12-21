@@ -1,3 +1,30 @@
+2017-02-08  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* math/Makefile (libm-calls): Move w_lgammaF_r...
+	(libm-compat-calls-auto): Here.
+
+	* math/w_lgamma_r.c: Add suffix "_compat" to filename.
+	* math/w_lgammaf_r.c: Likewise.
+	* math/w_lgammal_r.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgammal_r.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgammaf_r.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgamma_r.c: Likewise.
+
+	* math/w_lgamma_r_compat.c: New file, copied from above.
+	* math/w_lgammaf_r_compat.c: Likewise.
+	* math/w_lgammal_r_compat.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgamma_r_compat.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgammaf_r_compat.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgammal_r_compat.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-opt/w_lgamma_r.c: Add suffix "_compat"
+	to filename.
+	* sysdeps/ieee754/ldbl-opt/w_lgammal_r.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-opt/w_lgamma_r_compat.c: New file
+	copied from above and adjusted for the new filenames.
+	* sysdeps/ieee754/ldbl-opt/w_lgammal_r_compat.c: Likewise.
+
 2017-02-08  Yury Norov  <ynorov@caviumnetworks.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/sysdep.h: use PTR_REG() for offset
