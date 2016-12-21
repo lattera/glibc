@@ -67,7 +67,6 @@ libm-calls =								  \
 	s_nextafterF s_nexttowardF s_rintF s_scalblnF			  \
 	s_significandF s_sinF s_tanF s_tanhF				  \
 	w_expF								  \
-	w_lgammaF							  \
 	s_fpclassifyF s_truncF						  \
 	s_remquoF e_log2F e_exp2F s_roundF s_nearbyintF s_sincosF	  \
 	s_fmaF s_lrintF s_llrintF s_lroundF s_llroundF e_exp10F		  \
@@ -84,7 +83,7 @@ libm-compat-calls-auto =						\
 	w_jnF_compat w_log2F_compat w_log10F_compat w_logF_compat	\
 	w_powF_compat w_remainderF_compat w_scalbF_compat		\
 	w_sinhF_compat w_sqrtF_compat w_tgammaF_compat			\
-	w_lgammaF_r_compat
+	w_lgammaF_r_compat w_lgammaF_compat2
 
 libm-compat-calls-ldouble-yes = w_lgamma_compatl k_standardl
 libm-compat-calls = w_lgamma_compatf w_lgamma_compat k_standard k_standardf \

@@ -1,5 +1,18 @@
 2017-02-08  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* math/Makefile (libm-calls): Move w_lgammaF...
+	(libm-compat-calls-auto): Here.
+
+	* math/w_lgamma.c: Add suffix "_compat2" to filename.
+	* math/w_lgammaf.c: Likewise.
+	* math/w_lgammal.c: Likewise.
+
+	* math/w_lgamma_compat2.c: New file, copied from above.
+	* math/w_lgammaf_compat2.c: Likewise.
+	* math/w_lgammal_compat2.c: Likewise.
+
+2017-02-08  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* math/Makefile (libm-calls): Move w_lgammaF_r...
 	(libm-compat-calls-auto): Here.
 
