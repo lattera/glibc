@@ -42,8 +42,9 @@ install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
 generated += version-info.h
 before-compile += $(objpfx)version-info.h
 
-tests := tst-empty tst-atomic tst-atomic-long
-tests-static := tst-empty
+# No tests are allowed in the csu/ subdirectory because the startup
+# code is compiled with special flags.
+tests =
 
 ifeq (yes,$(build-shared))
 extra-objs += S$(start-installed-name) gmon-start.os

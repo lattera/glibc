@@ -1,3 +1,19 @@
+2016-12-21  Nick Alcock <nick.alcock@oracle.com>
+	    Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #7065]
+	* csu/Makefile (tests): Empty assignment and document it.
+	(tests-static): Remove.
+	* csu/tst-empty.c: Move to...
+	* misc/tst-empty.c: ... here.  Switch to new test driver.
+	* csu/tst-atomic.c: Move to...
+	* misc/tst-atomic.c: ... here.  Switch to new test driver.
+	* csu/tst-atomic-long.c: Move to...
+	* misc/tst-atomic-long.c: ... here.
+	* misc/Makefile (tests): Add tst-empty, tst-atomic,
+	tst-atomic-long.
+	(tests-static): Add tst-empty.
+
 2016-12-21  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/nss.texi: Change incorrect @vtable to @table.
