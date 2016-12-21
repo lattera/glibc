@@ -49,10 +49,56 @@ simple_strsep (char **s1, char *s2)
   return begin;
 }
 
+char *
+oldstrsep (char **stringp, const char *delim)
+{
+  char *begin, *end;
+
+  begin = *stringp;
+  if (begin == NULL)
+    return NULL;
+
+  /* A frequent case is when the delimiter string contains only one
+     character.  Here we don't need to call the expensive `strpbrk'
+     function and instead work using `strchr'.  */
+  if (delim[0] == '\0' || delim[1] == '\0')
+    {
+      char ch = delim[0];
+
+      if (ch == '\0')
+	end = NULL;
+      else
+	{
+	  if (*begin == ch)
+	    end = begin;
+	  else if (*begin == '\0')
+	    end = NULL;
+	  else
+	    end = strchr (begin + 1, ch);
+	}
+    }
+  else
+    /* Find the end of the token.  */
+    end = strpbrk (begin, delim);
+
+  if (end)
+    {
+      /* Terminate the token and set *STRINGP past NUL character.  */
+      *end++ = '\0';
+      *stringp = end;
+    }
+  else
+    /* No more delimiters; this is the last token.  */
+    *stringp = NULL;
+
+  return begin;
+}
+
 typedef char *(*proto_t) (const char **, const char *);
 
 IMPL (simple_strsep, 0)
 IMPL (strsep, 1)
+IMPL (oldstrsep, 2)
 
 static void
 do_one_test (impl_t * impl, const char *s1, const char *s2)
@@ -63,7 +109,10 @@ do_one_test (impl_t * impl, const char *s1, const char *s2)
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)
     {
-      CALL (impl, &s1, s2);
+      const char *s1a = s1;
+      CALL (impl, &s1a, s2);
+      if (s1a != NULL)
+	((char*)s1a)[-1] = '1';
     }
   TIMING_NOW (stop);
 
@@ -76,7 +125,10 @@ static void
 do_test (size_t align1, size_t align2, size_t len1, size_t len2, int fail)
 {
   char *s2 = (char *) (buf2 + align2);
-  static const char d[] = "1234567890abcdef";
+
+  /* Search for a delimiter in a string containing mostly '0', so don't
+     use '0' as a delimiter.  */
+  static const char d[] = "123456789abcdefg";
 #define dl (sizeof (d) - 1)
   char *ss2 = s2;
   for (size_t l = len2; l > 0; l = l > dl ? l - dl : 0)
@@ -92,24 +144,9 @@ do_test (size_t align1, size_t align2, size_t len1, size_t len2, int fail)
   FOR_EACH_IMPL (impl, 0)
   {
     char *s1 = (char *) (buf1 + align1);
-    if (fail)
-      {
-	char *ss1 = s1;
-	for (size_t l = len1; l > 0; l = l > dl ? l - dl : 0)
-	  {
-	    size_t t = l > dl ? dl : l;
-	    memcpy (ss1, d, t);
-	    ++ss1[len2 > 7 ? 7 : len2 - 1];
-	    ss1 += t;
-	  }
-      }
-    else
-      {
-	memset (s1, '0', len1);
-	memcpy (s1 + (len1 - len2) - 2, s2, len2);
-	if ((len1 / len2) > 4)
-	  memcpy (s1 + (len1 - len2) - (3 * len2), s2, len2);
-      }
+    memset (s1, '0', len1);
+    if (!fail)
+      s1[len1 / 2] = '1';
     s1[len1] = '\0';
     do_one_test (impl, s1, s2);
   }
@@ -127,7 +164,7 @@ test_main (void)
   putchar ('\n');
 
   for (size_t klen = 2; klen < 32; ++klen)
-    for (size_t hlen = 2 * klen; hlen < 16 * klen; hlen += klen)
+    for (size_t hlen = 4 * klen; hlen < 8 * klen; hlen += klen)
       {
 	do_test (0, 0, hlen, klen, 0);
 	do_test (0, 0, hlen, klen, 1);

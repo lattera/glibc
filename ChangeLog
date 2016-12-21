@@ -1,3 +1,22 @@
+2015-12-21  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-strsep.c (oldstrsep): Add old implementation.
+	(do_one_test) Restore original string so iteration works.
+	* string/string-inlines.c (do_test): Create better input strings.
+	(test_main) Reduce number of testruns.
+	* string/string-inlines.c (__old_strsep_1c): New function.
+	(__old_strsep_2c): Likewise.
+	(__old_strsep_3c): Likewise.
+	* string/strsep.c (__strsep): Remove case of small delim string.
+	Call strcspn directly rather than strpbrk.
+	* string/bits/string2.h (__strsep): Remove define.
+	(__strsep_1c): Remove.
+	(__strsep_2c): Remove.
+	(__strsep_3c): Remove.
+	(strsep): Remove.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c
+	(__statvfs_getflags): Rename to __strsep.
+
 2016-12-21  Florian Weimer  <fweimer@redhat.com>
 
 	* csu/libc-tls.c (_dl_tls_setup): Remove.
