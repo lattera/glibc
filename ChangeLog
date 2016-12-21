@@ -1,3 +1,13 @@
+2016-12-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/texinfo.tex: Update to version 2016-09-18.18 with
+	trailing whitespace removed.
+	* scripts/config.guess: Update to version 2016-10-02.
+	* scripts/config.sub: Update to version 2016-11-19.
+	* scripts/install-sh: Update to version 2016-01-11.22.
+	* scripts/mkinstalldirs: Update to version 2016-01-11.22.
+	* scripts/move-if-change: Update to version 2016-01-11 22:04.
+
 2015-12-21  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-strsep.c (oldstrsep): Add old implementation.
