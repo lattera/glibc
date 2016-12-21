@@ -438,6 +438,9 @@
      __TGMATH_TERNARY_REAL_ONLY (Val1, Val2, Val3, fma)
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Round X to nearest integer value, rounding halfway cases to even.  */
+# define roundeven(Val) __TGMATH_UNARY_REAL_ONLY (Val, roundeven)
+
 /* Like ilogb, but returning long int.  */
 # define llogb(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long int, llogb)
 

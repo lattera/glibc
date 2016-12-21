@@ -385,6 +385,9 @@ __END_NAMESPACE_C99
 #endif
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Round X to nearest integer value, rounding halfway cases to even.  */
+__MATHCALLX (roundeven,, (_Mdouble_ __x), (__const__));
+
 /* Return value with maximum magnitude.  */
 __MATHCALLX (fmaxmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 

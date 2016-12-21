@@ -440,6 +440,9 @@ GLIBC_2.25 getpayloadl F
 GLIBC_2.25 llogb F
 GLIBC_2.25 llogbf F
 GLIBC_2.25 llogbl F
+GLIBC_2.25 roundeven F
+GLIBC_2.25 roundevenf F
+GLIBC_2.25 roundevenl F
 GLIBC_2.25 setpayload F
 GLIBC_2.25 setpayloadf F
 GLIBC_2.25 setpayloadl F

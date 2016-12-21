@@ -66,6 +66,8 @@ Version 2.25
 
   - Signaling NaN macros: SNANF, SNAN, SNANL.
 
+  - Nearest integer functions: roundeven, roundevenf, roundevenl.
+
   - llogb functions: the llogb, llogbf and llogbl functions, and the
     FP_LLOGB0 and FP_LLOGBNAN macros.
 

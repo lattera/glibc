@@ -1596,6 +1596,20 @@ current rounding mode).
 
 @comment math.h
 @comment ISO
+@deftypefun double roundeven (double @var{x})
+@comment math.h
+@comment ISO
+@deftypefunx float roundevenf (float @var{x})
+@comment math.h
+@comment ISO
+@deftypefunx {long double} roundevenl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, from TS 18661-1:2014, are similar to @code{round},
+but they round halfway cases to even instead of away from zero.
+@end deftypefun
+
+@comment math.h
+@comment ISO
 @deftypefun {long int} lrint (double @var{x})
 @comment math.h
 @comment ISO

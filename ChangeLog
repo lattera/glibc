@@ -1,3 +1,68 @@
+2016-12-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(roundeven): New declaration.
+	* math/tgmath.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (roundeven): New
+	macro.
+	* math/Versions (roundeven): New libm symbol at version
+	GLIBC_2.25.
+	(roundevenf): Likewise.
+	(roundevenl): Likewise.
+	* math/Makefile (libm-calls): Add s_roundevenF.
+	* math/libm-test.inc (roundeven_test_data): New array.
+	(roundeven_test): New function.
+	(main): Call roundeven_test.
+	* math/test-tgmath.c (NCALLS): Increase to 134.
+	(F(compile_test)): Call roundeven.
+	(F(roundeven)): New function.
+	* manual/arith.texi (Rounding Functions): Document roundeven,
+	roundevenf and roundevenl.
+	* manual/libm-err-tab.pl (@all_functions): Add roundeven.
+	* include/math.h (roundeven): Use libm_hidden_proto.
+	* sysdeps/ieee754/dbl-64/s_roundeven.c: New file.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_roundeven.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_roundevenf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_roundevenl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_roundevenl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_roundevenl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	roundeven.
+	(CFLAGS-nldbl-roundeven.c): New variable.
+	* sysdeps/ieee754/ldbl-opt/nldbl-roundeven.c: New file.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-12-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/tgmath.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (llogb): Add

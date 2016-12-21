@@ -50,7 +50,7 @@ int count_cdouble;
 int count_cfloat;
 int count_cldouble;
 
-#define NCALLS     132
+#define NCALLS     134
 #define NCALLS_INT 4
 #define NCCALLS    47
 
@@ -264,6 +264,7 @@ F(compile_test) (void)
   b = fmod (fmod (a, b), fmod (c, x));
   a = nearbyint (nearbyint (x));
   b = round (round (a));
+  c = roundeven (roundeven (a));
   a = trunc (trunc (x));
   b = remquo (remquo (a, b, &i), remquo (c, x, &i), &i);
   j = lrint (x) + lround (a);
@@ -367,6 +368,7 @@ F(compile_test) (void)
       a = fmod (y, y);
       a = nearbyint (y);
       a = round (y);
+      a = roundeven (y);
       a = trunc (y);
       a = remquo (y, y, &i);
       j = lrint (y) + lround (y);
@@ -686,6 +688,14 @@ TYPE
 
 TYPE
 (F(round)) (TYPE x)
+{
+  ++count;
+  P ();
+  return x;
+}
+
+TYPE
+(F(roundeven)) (TYPE x)
 {
   ++count;
   P ();

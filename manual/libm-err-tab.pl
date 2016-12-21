@@ -61,9 +61,9 @@ use vars qw (%results @all_floats %suffices @all_functions);
     "ilogb", "j0", "j1", "jn", "lgamma", "llogb", "lrint",
     "llrint", "log", "log10", "log1p", "log2", "logb", "lround",
     "llround", "modf", "nearbyint", "nextafter", "nextdown", "nexttoward",
-    "nextup", "pow", "remainder", "remquo", "rint", "round", "scalb",
-    "scalbn", "sin", "sincos", "sinh", "sqrt", "tan", "tanh", "tgamma",
-    "trunc", "y0", "y1", "yn" );
+    "nextup", "pow", "remainder", "remquo", "rint", "round", "roundeven",
+    "scalb", "scalbn", "sin", "sincos", "sinh", "sqrt", "tan", "tanh",
+    "tgamma", "trunc", "y0", "y1", "yn" );
 # canonicalize, fpclassify, getpayload, iscanonical, isnormal,
 # isfinite, isinf, isnan, issignaling, issubnormal, iszero, signbit,
 # iseqsig, isgreater, isgreaterequal, isless, islessequal,
