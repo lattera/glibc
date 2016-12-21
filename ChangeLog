@@ -1,5 +1,11 @@
 2016-01-13  Torvald Riegel  <triegel@redhat.com>
 
+	[BZ #19402]
+	* sysdeps/nptl/fork.c (__libc_fork): Clear list of acquired robust
+	mutexes.
+
+2016-01-13  Torvald Riegel  <triegel@redhat.com>
+
 	[BZ #20985]
 	* nptl/Makefile: Adapt.
 	* nptl/pthread_mutex_cond_lock.c (LLL_ROBUST_MUTEX_LOCK): Remove.

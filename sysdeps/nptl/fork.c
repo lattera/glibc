@@ -162,12 +162,20 @@ __libc_fork (void)
 #endif
 
 #ifdef __NR_set_robust_list
-      /* Initialize the robust mutex list which has been reset during
-	 the fork.  We do not check for errors since if it fails here
-	 it failed at process start as well and noone could have used
-	 robust mutexes.  We also do not have to set
-	 self->robust_head.futex_offset since we inherit the correct
-	 value from the parent.  */
+      /* Initialize the robust mutex list setting in the kernel which has
+	 been reset during the fork.  We do not check for errors because if
+	 it fails here, it must have failed at process startup as well and
+	 nobody could have used robust mutexes.
+	 Before we do that, we have to clear the list of robust mutexes
+	 because we do not inherit ownership of mutexes from the parent.
+	 We do not have to set self->robust_head.futex_offset since we do
+	 inherit the correct value from the parent.  We do not need to clear
+	 the pending operation because it must have been zero when fork was
+	 called.  */
+# ifdef __PTHREAD_MUTEX_HAVE_PREV
+      self->robust_prev = &self->robust_head;
+# endif
+      self->robust_head.list = &self->robust_head;
 # ifdef SHARED
       if (__builtin_expect (__libc_pthread_functions_init, 0))
 	PTHFCT_CALL (ptr_set_robust, (self));
