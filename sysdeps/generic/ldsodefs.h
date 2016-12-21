@@ -994,12 +994,6 @@ extern size_t _dl_count_modids (void) internal_function attribute_hidden;
 /* Calculate offset of the TLS blocks in the static TLS block.  */
 extern void _dl_determine_tlsoffset (void) internal_function attribute_hidden;
 
-/* Set up the data structures for TLS, when they were not set up at startup.
-   Returns nonzero on malloc failure.
-   This is called from _dl_map_object_from_fd or by libpthread.  */
-extern int _dl_tls_setup (void) internal_function;
-rtld_hidden_proto (_dl_tls_setup)
-
 /* Allocate memory for static TLS block (unless MEM is nonzero) and dtv.  */
 extern void *_dl_allocate_tls (void *mem) internal_function;
 rtld_hidden_proto (_dl_allocate_tls)

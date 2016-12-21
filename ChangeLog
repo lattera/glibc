@@ -1,3 +1,10 @@
+2016-12-21  Florian Weimer  <fweimer@redhat.com>
+
+	* csu/libc-tls.c (_dl_tls_setup): Remove.
+	* elf/dl-tls.c (_dl_tls_setup): Likewise.
+	* elf/Versions (GLIBC_PRIVATE): Remove _dl_tls_setup.
+	* sysdeps/generic/ldsodefs.h (_dl_tls_setup): Remove declaration.
+
 2016-12-21  Nick Alcock <nick.alcock@oracle.com>
 
 	[BZ #7065]
