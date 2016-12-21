@@ -49,6 +49,9 @@ extra-test-objs += tst-quadmod1pie.o tst-quadmod2pie.o
 $(objpfx)tst-quad1pie: $(objpfx)tst-quadmod1pie.o
 $(objpfx)tst-quad2pie: $(objpfx)tst-quadmod2pie.o
 
+CFLAGS-tst-quad1pie.c = $(PIE-ccflag)
+CFLAGS-tst-quad2pie.c = $(PIE-ccflag)
+
 tests += tst-audit3 tst-audit4 tst-audit5 tst-audit6 tst-audit7 tst-audit10
 test-extras += tst-audit4-aux tst-audit10-aux
 extra-test-objs += tst-audit4-aux.o tst-audit10-aux.o

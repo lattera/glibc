@@ -1,4 +1,10 @@
 2016-12-21  Nick Alcock <nick.alcock@oracle.com>
+
+	[BZ #7065]
+	* sysdeps/x86_64/Makefile [$(subdir) = elf]
+	(CFLAGS-tst-quad1pie.c, CFLAGS-tst-quad2pie.c): Add $(PIE-ccflag).
+
+2016-12-21  Nick Alcock <nick.alcock@oracle.com>
 	    Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #7065]
