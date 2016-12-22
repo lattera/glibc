@@ -114,6 +114,11 @@ tests-printers-programs := $(addprefix $(objpfx),$(tests-printers))
 # .out files with the output of running the pretty printer tests.
 tests-printers-out := $(patsubst %,$(objpfx)%.out,$(tests-printers))
 
+ifndef PYTHON
+# Mark tests-printers tests as unsupported if we don't have PYTHON.
+tests-unsupported += $(tests-printers)
+endif
+
 ifeq ($(build-programs),yes)
 others: $(addprefix $(objpfx),$(others) $(sysdep-others) $(extra-objs))
 else
@@ -124,9 +129,9 @@ endif
 others: $(py-const)
 
 ifeq ($(run-built-tests),no)
-tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported),$(tests)) \
-			     $(test-srcs)) $(tests-special) \
-       $(tests-printers-programs)
+tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported),$(tests) \
+			       $(tests-printers-programs)) \
+			     $(test-srcs)) $(tests-special)
 xtests: tests $(xtests-special)
 else
 tests: $(tests:%=$(objpfx)%.out) $(tests-special) $(tests-printers-out)
@@ -255,16 +260,8 @@ endif
 
 endif	# tests
 
+ifdef PYTHON
 ifneq "$(strip $(tests-printers))" ""
-# We're defining this here for now; later it'll be defined at configure time
-# inside Makeconfig.
-PYTHON := python
-
-# Invoke Python using -B to avoid generating .pyc files on the source dir,
-# so that we can keep it read-only.
-python-flags := -B
-
-python-invoke := $(PYTHON) $(python-flags)
 
 # Static pattern rule for building the test programs for the pretty printers.
 $(tests-printers-programs): %: %.o $(tests-printers-libs) \
@@ -283,8 +280,9 @@ py-env := PYTHONPATH=$(py-const-dir):$(..)scripts:$${PYTHONPATH}
 $(tests-printers-out): $(objpfx)%.out: $(objpfx)% %.py %.c $(pretty-printers) \
 		       $(..)scripts/test_printers_common.py
 	$(test-wrapper-env) $(py-env) \
-	    $(python-invoke) $*.py $*.c $(objpfx)$* $(pretty-printers) > $@; \
+	    $(PYTHON) $*.py $*.c $(objpfx)$* $(pretty-printers) > $@; \
 	$(evaluate-test)
+endif
 endif
 
 

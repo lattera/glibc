@@ -18,8 +18,6 @@
 # Makefile for benchmark tests.  The only useful target here is `bench`.
 # Add benchmark functions in alphabetical order.
 
-PYTHON := python
-
 subdir := benchtests
 
 include ../Makeconfig
@@ -146,7 +144,15 @@ bench-clean:
 	rm -f $(timing-type) $(addsuffix .o,$(timing-type))
 	rm -f $(addprefix $(objpfx),$(bench-extra-objs))
 
+# Define the bench target only if the target has a usable python installation.
+ifdef PYTHON
 bench: bench-build bench-set bench-func bench-malloc
+else
+bench:
+	@echo "The bench target needs python to run."
+	@exit 1
+endif
+
 # Target to only build the benchmark without running it.  We generate locales
 # only if we're building natively.
 ifeq (no,$(cross-compiling))

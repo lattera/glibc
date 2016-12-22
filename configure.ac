@@ -1050,13 +1050,27 @@ else
   AUTOCONF=no
 fi
 
+# Check for python3 if available, or else python.
+AC_CHECK_PROGS(PYTHON_PROG, python3 python,no)
+case "x$PYTHON_PROG" in
+xno|x|x:) PYTHON_PROG=no ;;
+*) ;;
+esac
+
+if test "x$PYTHON_PROG" = xno; then
+  aux_missing="$aux_missing python"
+else
+  PYTHON="$PYTHON_PROG -B"
+  AC_SUBST(PYTHON)
+fi
+
 test -n "$critic_missing" && AC_MSG_ERROR([
 *** These critical programs are missing or too old:$critic_missing
 *** Check the INSTALL file for required versions.])
 
 test -n "$aux_missing" && AC_MSG_WARN([
 *** These auxiliary programs are missing or incompatible versions:$aux_missing
-*** some features will be disabled.
+*** some features or tests will be disabled.
 *** Check the INSTALL file for required versions.])
 
 # if using special system headers, find out the compiler's sekrit

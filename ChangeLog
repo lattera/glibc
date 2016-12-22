@@ -1,3 +1,17 @@
+2016-12-22  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* configure.ac: Check for python3 or python.
+	* configure: Regenerated.
+	* config.make.in (PYTHON): New variable.
+	* benchtests/Makefile: Don't define PYTHON.
+	(bench): Define target only if PYTHON was defined.
+	* Rules: Don't define PYTHON.
+	Define pretty printer targets only if PYTHON was defined.
+	(tests-printers): Add to tests-unsupported if PYTHON is not
+	found.
+	(python-flags, python-invoke): Remove.
+	(tests-printers-out): Use PYTHON instead of python-invoke.
+
 2016-12-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20978]

@@ -126,6 +126,7 @@ MSGFMT = @MSGFMT@
 BASH = @BASH_SHELL@
 AWK = @AWK@
 PERL = @PERL@
+PYTHON = @PYTHON@
 
 # Additional libraries.
 LIBGD = @LIBGD@
