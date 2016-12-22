@@ -36,14 +36,14 @@
 #define lll_trylock_elision(a,t) lll_trylock(a)
 #endif
 
+/* Some of the following definitions differ when pthread_mutex_cond_lock.c
+   includes this file.  */
 #ifndef LLL_MUTEX_LOCK
 # define LLL_MUTEX_LOCK(mutex) \
   lll_lock ((mutex)->__data.__lock, PTHREAD_MUTEX_PSHARED (mutex))
 # define LLL_MUTEX_TRYLOCK(mutex) \
   lll_trylock ((mutex)->__data.__lock)
-# define LLL_ROBUST_MUTEX_LOCK(mutex, id) \
-  lll_robust_lock ((mutex)->__data.__lock, id, \
-		   PTHREAD_ROBUST_MUTEX_PSHARED (mutex))
+# define LLL_ROBUST_MUTEX_LOCK_MODIFIER 0
 # define LLL_MUTEX_LOCK_ELISION(mutex) \
   lll_lock_elision ((mutex)->__data.__lock, (mutex)->__data.__elision, \
 		   PTHREAD_MUTEX_PSHARED (mutex))
@@ -185,11 +185,21 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
       /* This is set to FUTEX_WAITERS iff we might have shared the
 	 FUTEX_WAITERS flag with other threads, and therefore need to keep it
 	 set to avoid lost wake-ups.  We have the same requirement in the
-	 simple mutex algorithm.  */
-      unsigned int assume_other_futex_waiters = 0;
-      do
+	 simple mutex algorithm.
+	 We start with value zero for a normal mutex, and FUTEX_WAITERS if we
+	 are building the special case mutexes for use from within condition
+	 variables.  */
+      unsigned int assume_other_futex_waiters = LLL_ROBUST_MUTEX_LOCK_MODIFIER;
+      while (1)
 	{
-	again:
+	  /* Try to acquire the lock through a CAS from 0 (not acquired) to
+	     our TID | assume_other_futex_waiters.  */
+	  if (__glibc_likely ((oldval == 0)
+			      && (atomic_compare_and_exchange_bool_acq
+				  (&mutex->__data.__lock,
+				   id | assume_other_futex_waiters, 0) == 0)))
+	      break;
+
 	  if ((oldval & FUTEX_OWNER_DIED) != 0)
 	    {
 	      /* The previous owner died.  Try locking the mutex.  */
@@ -209,7 +219,7 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 	      if (newval != oldval)
 		{
 		  oldval = newval;
-		  goto again;
+		  continue;
 		}
 
 	      /* We got the mutex.  */
@@ -260,24 +270,47 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 		}
 	    }
 
-	  oldval = LLL_ROBUST_MUTEX_LOCK (mutex,
-					  id | assume_other_futex_waiters);
-	  /* See above.  We set FUTEX_WAITERS and might have shared this flag
-	     with other threads; thus, we need to preserve it.  */
-	  assume_other_futex_waiters = FUTEX_WAITERS;
-
-	  if (__builtin_expect (mutex->__data.__owner
-				== PTHREAD_MUTEX_NOTRECOVERABLE, 0))
+	  /* We cannot acquire the mutex nor has its owner died.  Thus, try
+	     to block using futexes.  Set FUTEX_WAITERS if necessary so that
+	     other threads are aware that there are potentially threads
+	     blocked on the futex.  Restart if oldval changed in the
+	     meantime.  */
+	  if ((oldval & FUTEX_WAITERS) == 0)
 	    {
-	      /* This mutex is now not recoverable.  */
-	      mutex->__data.__count = 0;
-	      lll_unlock (mutex->__data.__lock,
-			  PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
-	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
-	      return ENOTRECOVERABLE;
+	      if (atomic_compare_and_exchange_bool_acq (&mutex->__data.__lock,
+							oldval | FUTEX_WAITERS,
+							oldval)
+		  != 0)
+		{
+		  oldval = mutex->__data.__lock;
+		  continue;
+		}
+	      oldval |= FUTEX_WAITERS;
 	    }
+
+	  /* It is now possible that we share the FUTEX_WAITERS flag with
+	     another thread; therefore, update assume_other_futex_waiters so
+	     that we do not forget about this when handling other cases
+	     above and thus do not cause lost wake-ups.  */
+	  assume_other_futex_waiters |= FUTEX_WAITERS;
+
+	  /* Block using the futex and reload current lock value.  */
+	  lll_futex_wait (&mutex->__data.__lock, oldval,
+			  PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
+	  oldval = mutex->__data.__lock;
 	}
-      while ((oldval & FUTEX_OWNER_DIED) != 0);
+
+      /* We have acquired the mutex; check if it is still consistent.  */
+      if (__builtin_expect (mutex->__data.__owner
+			    == PTHREAD_MUTEX_NOTRECOVERABLE, 0))
+	{
+	  /* This mutex is now not recoverable.  */
+	  mutex->__data.__count = 0;
+	  int private = PTHREAD_ROBUST_MUTEX_PSHARED (mutex);
+	  lll_unlock (mutex->__data.__lock, private);
+	  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
+	  return ENOTRECOVERABLE;
+	}
 
       mutex->__data.__count = 1;
       ENQUEUE_MUTEX (mutex);

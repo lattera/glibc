@@ -1,3 +1,30 @@
+2016-01-13  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #20985]
+	* nptl/Makefile: Adapt.
+	* nptl/pthread_mutex_cond_lock.c (LLL_ROBUST_MUTEX_LOCK): Remove.
+	(LLL_ROBUST_MUTEX_LOCK_MODIFIER): New.
+	* nptl/pthread_mutex_lock.c (LLL_ROBUST_MUTEX_LOCK): Remove.
+	(LLL_ROBUST_MUTEX_LOCK_MODIFIER): New.
+	(__pthread_mutex_lock_full): Inline lll_robust* functions and adapt.
+	* nptl/pthread_mutex_timedlock.c (pthread_mutex_timedlock): Inline
+	lll_robust* functions and adapt.
+	* nptl/pthread_mutex_unlock.c (__pthread_mutex_unlock_full): Likewise.
+	* sysdeps/nptl/lowlevellock.h (__lll_robust_lock_wait,
+	__lll_robust_lock, lll_robust_cond_lock, __lll_robust_timedlock_wait,
+	__lll_robust_timedlock, __lll_robust_unlock): Remove.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_robust_lock,
+	lll_robust_cond_lock, lll_robust_timedlock, lll_robust_unlock): Remove.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_robust_lock,
+	lll_robust_cond_lock, lll_robust_timedlock, lll_robust_unlock): Remove.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (__lll_robust_lock_wait,
+	__lll_robust_lock, lll_robust_cond_lock, __lll_robust_timedlock_wait,
+	__lll_robust_timedlock, __lll_robust_unlock): Remove.
+	* nptl/lowlevelrobustlock.c: Remove file.
+	* nptl/lowlevelrobustlock.sym: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lowlevelrobustlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S: Likewise.
+
 2017-01-13  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Regenerated.

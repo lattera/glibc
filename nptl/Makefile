@@ -117,7 +117,7 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      cleanup_defer_compat unwind \
 		      pt-longjmp pt-cleanup\
 		      cancellation \
-		      lowlevellock lowlevelrobustlock \
+		      lowlevellock \
 		      lll_timedlock_wait lll_timedwait_tid \
 		      pt-fork pt-vfork \
 		      $(pthread-compat-wrappers) \
@@ -309,7 +309,7 @@ tests-nolibpthread = tst-unload
 
 gen-as-const-headers = pthread-errnos.sym \
 		       unwindbuf.sym \
-		       lowlevelrobustlock.sym pthread-pi-defines.sym
+		       pthread-pi-defines.sym
 
 gen-py-const-headers := nptl_lock_constants.pysym
 pretty-printers := nptl-printers.py

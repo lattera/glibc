@@ -136,23 +136,6 @@
 			   : "cx", "r11", "cc", "memory");		      \
     })									      \
 
-#define lll_robust_lock(futex, id, private) \
-  ({ int result, ignore1, ignore2;					      \
-    __asm __volatile (LOCK_INSTR "cmpxchgl %4, %2\n\t"			      \
-		      "jz 24f\n"					      \
-		      "1:\tlea %2, %%" RDI_LP "\n"			      \
-		      "2:\tsub $128, %%" RSP_LP "\n"			      \
-		      ".cfi_adjust_cfa_offset 128\n"			      \
-		      "3:\tcallq __lll_robust_lock_wait\n"		      \
-		      "4:\tadd $128, %%" RSP_LP "\n"			      \
-		      ".cfi_adjust_cfa_offset -128\n"			      \
-		      "24:"						      \
-		      : "=S" (ignore1), "=D" (ignore2), "=m" (futex),	      \
-			"=a" (result)					      \
-		      : "1" (id), "m" (futex), "3" (0), "0" (private)	      \
-		      : "cx", "r11", "cc", "memory");			      \
-    result; })
-
 #define lll_cond_lock(futex, private) \
   (void)								      \
     ({ int ignore1, ignore2, ignore3;					      \
@@ -170,24 +153,6 @@
 			 : "1" (2), "m" (futex), "3" (0), "0" (private)	      \
 			 : "cx", "r11", "cc", "memory");		      \
     })
-
-#define lll_robust_cond_lock(futex, id, private) \
-  ({ int result, ignore1, ignore2;					      \
-    __asm __volatile (LOCK_INSTR "cmpxchgl %4, %2\n\t"			      \
-		      "jz 24f\n"					      \
-		      "1:\tlea %2, %%" RDI_LP "\n"			      \
-		      "2:\tsub $128, %%" RSP_LP "\n"			      \
-		      ".cfi_adjust_cfa_offset 128\n"			      \
-		      "3:\tcallq __lll_robust_lock_wait\n"		      \
-		      "4:\tadd $128, %%" RSP_LP "\n"			      \
-		      ".cfi_adjust_cfa_offset -128\n"			      \
-		      "24:"						      \
-		      : "=S" (ignore1), "=D" (ignore2), "=m" (futex),	      \
-			"=a" (result)					      \
-		      : "1" (id | FUTEX_WAITERS), "m" (futex), "3" (0),	      \
-			"0" (private)					      \
-		      : "cx", "r11", "cc", "memory");			      \
-    result; })
 
 #define lll_timedlock(futex, timeout, private) \
   ({ int result, ignore1, ignore2, ignore3;				      \
@@ -214,25 +179,6 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 
 #define lll_timedlock_elision(futex, adapt_count, timeout, private)	\
   __lll_timedlock_elision(&(futex), &(adapt_count), timeout, private)
-
-#define lll_robust_timedlock(futex, timeout, id, private) \
-  ({ int result, ignore1, ignore2, ignore3;				      \
-     __asm __volatile (LOCK_INSTR "cmpxchgl %1, %4\n\t"			      \
-		       "jz 24f\n\t"					      \
-		       "1:\tlea %4, %%" RDI_LP "\n"			      \
-		       "0:\tmov %8, %%" RDX_LP "\n"			      \
-		       "2:\tsub $128, %%" RSP_LP "\n"			      \
-		       ".cfi_adjust_cfa_offset 128\n"			      \
-		       "3:\tcallq __lll_robust_timedlock_wait\n"	      \
-		       "4:\tadd $128, %%" RSP_LP "\n"			      \
-		       ".cfi_adjust_cfa_offset -128\n"			      \
-		       "24:"						      \
-		       : "=a" (result), "=D" (ignore1), "=S" (ignore2),       \
-			 "=&d" (ignore3), "=m" (futex)			      \
-		       : "0" (0), "1" (id), "m" (futex), "m" (timeout),	      \
-			 "2" (private)					      \
-		       : "memory", "cx", "cc", "r10", "r11");		      \
-     result; })
 
 #if !IS_IN (libc) || defined UP
 # define __lll_unlock_asm_start LOCK_INSTR "decl %0\n\t"		      \
@@ -275,26 +221,6 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 			   : "m" (futex), "S" (private)			      \
 			   : "ax", "cx", "r11", "cc", "memory");	      \
     })
-
-#define lll_robust_unlock(futex, private) \
-  do									      \
-    {									      \
-      int ignore;							      \
-      __asm __volatile (LOCK_INSTR "andl %2, %0\n\t"			      \
-			"je 24f\n\t"					      \
-			"1:\tlea %0, %%" RDI_LP "\n"			      \
-			"2:\tsub $128, %%" RSP_LP "\n"			      \
-			".cfi_adjust_cfa_offset 128\n"			      \
-			"3:\tcallq __lll_unlock_wake\n"			      \
-			"4:\tadd $128, %%" RSP_LP "\n"			      \
-			".cfi_adjust_cfa_offset -128\n"			      \
-			"24:"						      \
-			: "=m" (futex), "=&D" (ignore)			      \
-			: "i" (FUTEX_WAITERS), "m" (futex),		      \
-			  "S" (private)					      \
-			: "ax", "cx", "r11", "cc", "memory");		      \
-    }									      \
-  while (0)
 
 #define lll_islocked(futex) \
   (futex != LLL_LOCK_INITIALIZER)

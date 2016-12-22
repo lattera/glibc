@@ -96,6 +96,7 @@ internal_function
 __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 {
   int newowner = 0;
+  int private;
 
   switch (PTHREAD_MUTEX_TYPE (mutex))
     {
@@ -149,9 +150,14 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 	/* One less user.  */
 	--mutex->__data.__nusers;
 
-      /* Unlock.  */
-      lll_robust_unlock (mutex->__data.__lock,
-			 PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
+      /* Unlock by setting the lock to 0 (not acquired); if the lock had
+	 FUTEX_WAITERS set previously, then wake any waiters.
+         The unlock operation must be the last access to the mutex to not
+         violate the mutex destruction requirements (see __lll_unlock).  */
+      private = PTHREAD_ROBUST_MUTEX_PSHARED (mutex);
+      if (__glibc_unlikely ((atomic_exchange_rel (&mutex->__data.__lock, 0)
+			     & FUTEX_WAITERS) != 0))
+	lll_futex_wake (&mutex->__data.__lock, 1, private);
 
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
       break;
@@ -234,9 +240,9 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 	 to not violate the mutex destruction requirements (see
 	 lll_unlock).  */
       int robust = mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP;
-      int private = (robust
-		     ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
-		     : PTHREAD_MUTEX_PSHARED (mutex));
+      private = (robust
+		 ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
+		 : PTHREAD_MUTEX_PSHARED (mutex));
       /* Unlock the mutex using a CAS unless there are futex waiters or our
 	 TID is not the value of __lock anymore, in which case we let the
 	 kernel take care of the situation.  Use release MO in the CAS to

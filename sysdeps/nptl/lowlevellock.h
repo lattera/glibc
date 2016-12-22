@@ -74,7 +74,6 @@
 
 extern void __lll_lock_wait_private (int *futex) attribute_hidden;
 extern void __lll_lock_wait (int *futex, int private) attribute_hidden;
-extern int __lll_robust_lock_wait (int *futex, int private) attribute_hidden;
 
 /* This is an expression rather than a statement even though its value is
    void, so that it can be used in a comma expression or as an expression
@@ -103,28 +102,6 @@ extern int __lll_robust_lock_wait (int *futex, int private) attribute_hidden;
   __lll_lock (&(futex), private)
 
 
-/* If FUTEX is 0 (not acquired), set to ID (acquired with no waiters) and
-   return 0.  Otherwise, ensure that it is set to FUTEX | FUTEX_WAITERS
-   (acquired, possibly with waiters) and block until we acquire the lock.
-   FUTEX will now be ID | FUTEX_WAITERS and we return 0.
-   If the previous owner of the lock dies before we acquire the lock then FUTEX
-   will be the value of id as set by the previous owner, with FUTEX_OWNER_DIED
-   set (FUTEX_WAITERS may or may not be set).  We return this value to indicate
-   that the lock is not acquired.  */
-#define __lll_robust_lock(futex, id, private)                           \
-  ({                                                                    \
-    int *__futex = (futex);                                             \
-    int __val = 0;                                                      \
-                                                                        \
-    if (__glibc_unlikely                                                \
-        (atomic_compare_and_exchange_bool_acq (__futex, id, 0)))        \
-      __val = __lll_robust_lock_wait (__futex, private);                \
-    __val;                                                              \
-  })
-#define lll_robust_lock(futex, id, private)     \
-  __lll_robust_lock (&(futex), id, private)
-
-
 /* This is an expression rather than a statement even though its value is
    void, so that it can be used in a comma expression or as an expression
    that's cast to void.  */
@@ -142,16 +119,8 @@ extern int __lll_robust_lock_wait (int *futex, int private) attribute_hidden;
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
 
 
-/* As __lll_robust_lock, but set to ID | FUTEX_WAITERS (acquired, possibly with
-   waiters) if FUTEX is 0.  */
-#define lll_robust_cond_lock(futex, id, private)	\
-  __lll_robust_lock (&(futex), (id) | FUTEX_WAITERS, private)
-
-
 extern int __lll_timedlock_wait (int *futex, const struct timespec *,
 				 int private) attribute_hidden;
-extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
-					int private) attribute_hidden;
 
 
 /* As __lll_lock, but with a timeout.  If the timeout occurs then return
@@ -168,22 +137,6 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
   })
 #define lll_timedlock(futex, abstime, private)  \
   __lll_timedlock (&(futex), abstime, private)
-
-
-/* As __lll_robust_lock, but with a timeout.  If the timeout occurs then return
-   ETIMEDOUT.  If ABSTIME is invalid, return EINVAL.  */
-#define __lll_robust_timedlock(futex, abstime, id, private)             \
-  ({                                                                    \
-    int *__futex = (futex);                                             \
-    int __val = 0;                                                      \
-                                                                        \
-    if (__glibc_unlikely                                                \
-        (atomic_compare_and_exchange_bool_acq (__futex, id, 0)))        \
-      __val = __lll_robust_timedlock_wait (__futex, abstime, private);  \
-    __val;                                                              \
-  })
-#define lll_robust_timedlock(futex, abstime, id, private)       \
-  __lll_robust_timedlock (&(futex), abstime, id, private)
 
 
 /* This is an expression rather than a statement even though its value is
@@ -209,27 +162,6 @@ extern int __lll_robust_timedlock_wait (int *futex, const struct timespec *,
    }))
 #define lll_unlock(futex, private)	\
   __lll_unlock (&(futex), private)
-
-
-/* This is an expression rather than a statement even though its value is
-   void, so that it can be used in a comma expression or as an expression
-   that's cast to void.  */
-/* Unconditionally set FUTEX to 0 (not acquired), releasing the lock.  If FUTEX
-   had FUTEX_WAITERS set then wake any waiters.  The waiter that acquires the
-   lock will set FUTEX_WAITERS.
-   Evaluate PRIVATE before releasing the lock so that we do not violate the
-   mutex destruction requirements (see __lll_unlock).  */
-#define __lll_robust_unlock(futex, private)             \
-  ((void)                                               \
-   ({                                                   \
-     int *__futex = (futex);                            \
-     int __private = (private);                         \
-     int __oldval = atomic_exchange_rel (__futex, 0);   \
-     if (__glibc_unlikely (__oldval & FUTEX_WAITERS))	\
-       lll_futex_wake (__futex, 1, __private);          \
-   }))
-#define lll_robust_unlock(futex, private)       \
-  __lll_robust_unlock (&(futex), private)
 
 
 #define lll_islocked(futex) \

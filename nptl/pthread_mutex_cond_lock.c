@@ -11,9 +11,9 @@
   lll_cond_trylock ((mutex)->__data.__lock)
 #define LLL_MUTEX_TRYLOCK_ELISION(mutex) LLL_MUTEX_TRYLOCK(mutex)
 
-#define LLL_ROBUST_MUTEX_LOCK(mutex, id) \
-  lll_robust_cond_lock ((mutex)->__data.__lock, id, \
-			PTHREAD_ROBUST_MUTEX_PSHARED (mutex))
+/* We need to assume that there are other threads blocked on the futex.
+   See __pthread_mutex_lock_full for further details.  */
+#define LLL_ROBUST_MUTEX_LOCK_MODIFIER FUTEX_WAITERS
 #define __pthread_mutex_lock internal_function __pthread_mutex_cond_lock
 #define __pthread_mutex_lock_full __pthread_mutex_cond_lock_full
 #define NO_INCR

@@ -132,20 +132,6 @@
 	 }								      \
     })
 
-#define lll_robust_lock(futex, id, private) \
-  ({ int result, ignore1, ignore2;					      \
-     __asm __volatile (LOCK_INSTR "cmpxchgl %1, %2\n\t"			      \
-		       "jz 18f\n\t"					      \
-		       "1:\tleal %2, %%edx\n"				      \
-		       "0:\tmovl %7, %%ecx\n"				      \
-		       "2:\tcall __lll_robust_lock_wait\n"		      \
-		       "18:"						      \
-		       : "=a" (result), "=c" (ignore1), "=m" (futex),	      \
-			 "=&d" (ignore2)				      \
-		       : "0" (0), "1" (id), "m" (futex), "g" ((int) (private))\
-		       : "memory");					      \
-     result; })
-
 
 /* Special version of lll_lock which causes the unlock function to
    always wakeup waiters.  */
@@ -163,22 +149,6 @@
 			 : "0" (0), "1" (2), "m" (futex), "g" ((int) (private))\
 			 : "memory");					      \
     })
-
-
-#define lll_robust_cond_lock(futex, id, private) \
-  ({ int result, ignore1, ignore2;					      \
-     __asm __volatile (LOCK_INSTR "cmpxchgl %1, %2\n\t"			      \
-		       "jz 18f\n\t"					      \
-		       "1:\tleal %2, %%edx\n"				      \
-		       "0:\tmovl %7, %%ecx\n"				      \
-		       "2:\tcall __lll_robust_lock_wait\n"		      \
-		       "18:"						      \
-		       : "=a" (result), "=c" (ignore1), "=m" (futex),	      \
-			 "=&d" (ignore2)				      \
-		       : "0" (0), "1" (id | FUTEX_WAITERS), "m" (futex),      \
-			 "g" ((int) (private))				      \
-		       : "memory");					      \
-     result; })
 
 
 #define lll_timedlock(futex, timeout, private) \
@@ -202,21 +172,6 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 
 #define lll_timedlock_elision(futex, adapt_count, timeout, private)	\
   __lll_timedlock_elision(&(futex), &(adapt_count), timeout, private)
-
-#define lll_robust_timedlock(futex, timeout, id, private) \
-  ({ int result, ignore1, ignore2, ignore3;				      \
-     __asm __volatile (LOCK_INSTR "cmpxchgl %1, %3\n\t"			      \
-		       "jz 18f\n\t"			   		      \
-		       "1:\tleal %3, %%ecx\n"				      \
-		       "0:\tmovl %8, %%edx\n"				      \
-		       "2:\tcall __lll_robust_timedlock_wait\n"		      \
-		       "18:"						      \
-		       : "=a" (result), "=c" (ignore1), "=&d" (ignore2),      \
-			 "=m" (futex), "=S" (ignore3)			      \
-		       : "0" (0), "1" (id), "m" (futex), "m" (timeout),	      \
-			 "4" ((int) (private))				      \
-		       : "memory");					      \
-     result; })
 
 #if !IS_IN (libc) || defined UP
 # define __lll_unlock_asm LOCK_INSTR "subl $1, %0\n\t"
@@ -253,21 +208,6 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 			       "g" ((int) (private))			      \
 			     : "memory");				      \
 	 }								      \
-    })
-
-#define lll_robust_unlock(futex, private) \
-  (void)								      \
-    ({ int ignore, ignore2;						      \
-       __asm __volatile (LOCK_INSTR "andl %3, %0\n\t"			      \
-			 "je 18f\n\t"					      \
-			 "1:\tleal %0, %%eax\n"				      \
-			 "0:\tmovl %5, %%ecx\n"				      \
-			 "2:\tcall __lll_unlock_wake\n"			      \
-			 "18:"						      \
-			 : "=m" (futex), "=&a" (ignore), "=&c" (ignore2)      \
-			 : "i" (FUTEX_WAITERS), "m" (futex),		      \
-			   "g" ((int) (private))			      \
-			 : "memory");					      \
     })
 
 
