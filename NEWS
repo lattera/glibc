@@ -14,7 +14,7 @@ Version 2.25
 
 * The feature test macro __STDC_WANT_IEC_60559_BFP_EXT__, from ISO/IEC TS
   18661-1:2014, is supported to enable declarations of functions and macros
-  from that TS.  Note that most features from that TS are not supported by
+  from that TS.  Note that not all features from that TS are supported by
   the GNU C Library.
 
 * The feature test macro __STDC_WANT_IEC_60559_FUNCS_EXT__, from ISO/IEC TS
