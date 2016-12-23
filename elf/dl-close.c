@@ -805,19 +805,37 @@ _dl_close (void *_map)
 {
   struct link_map *map = _map;
 
-  /* First see whether we can remove the object at all.  */
+  /* We must take the lock to examine the contents of map and avoid
+     concurrent dlopens.  */
+  __rtld_lock_lock_recursive (GL(dl_load_lock));
+
+  /* At this point we are guaranteed nobody else is touching the list of
+     loaded maps, but a concurrent dlclose might have freed our map
+     before we took the lock. There is no way to detect this (see below)
+     so we proceed assuming this isn't the case.  First see whether we
+     can remove the object at all.  */
   if (__glibc_unlikely (map->l_flags_1 & DF_1_NODELETE))
     {
-      assert (map->l_init_called);
       /* Nope.  Do nothing.  */
+      __rtld_lock_unlock_recursive (GL(dl_load_lock));
       return;
     }
 
+  /* At present this is an unreliable check except in the case where the
+     caller has recursively called dlclose and we are sure the link map
+     has not been freed.  In a non-recursive dlclose the map itself
+     might have been freed and this access is potentially a data race
+     with whatever other use this memory might have now, or worse we
+     might silently corrupt memory if it looks enough like a link map.
+     POSIX has language in dlclose that appears to guarantee that this
+     should be a detectable case and given that dlclose should be threadsafe
+     we need this to be a reliable detection.
+     This is bug 20990. */
   if (__builtin_expect (map->l_direct_opencount, 1) == 0)
-    _dl_signal_error (0, map->l_name, NULL, N_("shared object not open"));
-
-  /* Acquire the lock.  */
-  __rtld_lock_lock_recursive (GL(dl_load_lock));
+    {
+      __rtld_lock_unlock_recursive (GL(dl_load_lock));
+      _dl_signal_error (0, map->l_name, NULL, N_("shared object not open"));
+    }
 
   _dl_close_worker (map, false);
 

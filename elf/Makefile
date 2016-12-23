@@ -152,7 +152,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
 	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
 	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
-	 tst-latepthread tst-tls-manydynamic
+	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose
 #	 reldep9
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
@@ -231,7 +231,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-tlsalign-lib tst-nodelete-opened-lib tst-nodelete2mod \
 		tst-audit11mod1 tst-audit11mod2 tst-auditmod11 \
 		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12 \
-		tst-latepthreadmod $(tst-tls-many-dynamic-modules)
+		tst-latepthreadmod $(tst-tls-many-dynamic-modules) \
+		tst-nodelete-dlclose-dso tst-nodelete-dlclose-plugin
 ifeq (yes,$(have-mtls-dialect-gnu2))
 tests += tst-gnu2-tls1
 modules-names += tst-gnu2-tls1mod
@@ -1345,3 +1346,12 @@ ifeq (no,$(nss-crypt))
 $(objpfx)tst-linkall-static: \
   $(common-objpfx)crypt/libcrypt.a
 endif
+
+# The application depends on the DSO, and the DSO loads the plugin.
+# The plugin also depends on the DSO. This creates the circular
+# dependency via dlopen that we're testing to make sure works.
+$(objpfx)tst-nodelete-dlclose-dso.so: $(libdl)
+$(objpfx)tst-nodelete-dlclose-plugin.so: $(objpfx)tst-nodelete-dlclose-dso.so
+$(objpfx)tst-nodelete-dlclose: $(objpfx)tst-nodelete-dlclose-dso.so
+$(objpfx)tst-nodelete-dlclose.out: $(objpfx)tst-nodelete-dlclose-dso.so \
+				   $(objpfx)tst-nodelete-dlclose-plugin.so
