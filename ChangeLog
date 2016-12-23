@@ -1,5 +1,13 @@
 2016-01-13  Torvald Riegel  <triegel@redhat.com>
 
+	* nptl/descr.h (ENQUEUE_MUTEX_BOTH, DEQUEUE_MUTEX): Add compiler
+	barriers and comments.
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock_full): Likewise.
+	* nptl/pthread_mutex_timedlock.c (pthread_mutex_timedlock): Likewise.
+	* nptl/pthread_mutex_unlock.c (__pthread_mutex_unlock_full): Likewise.
+
+2016-01-13  Torvald Riegel  <triegel@redhat.com>
+
 	[BZ #19402]
 	* sysdeps/nptl/fork.c (__libc_fork): Clear list of acquired robust
 	mutexes.

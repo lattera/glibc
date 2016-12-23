@@ -143,6 +143,9 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
       /* Remove mutex from the list.  */
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 		     &mutex->__data.__list.__next);
+      /* We must set op_pending before we dequeue the mutex.  Also see
+	 comments at ENQUEUE_MUTEX.  */
+      __asm ("" ::: "memory");
       DEQUEUE_MUTEX (mutex);
 
       mutex->__data.__owner = newowner;
@@ -159,6 +162,14 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 			     & FUTEX_WAITERS) != 0))
 	lll_futex_wake (&mutex->__data.__lock, 1, private);
 
+      /* We must clear op_pending after we release the mutex.
+	 FIXME However, this violates the mutex destruction requirements
+	 because another thread could acquire the mutex, destroy it, and
+	 reuse the memory for something else; then, if this thread crashes,
+	 and the memory happens to have a value equal to the TID, the kernel
+	 will believe it is still related to the mutex (which has been
+	 destroyed already) and will modify some other random object.  */
+      __asm ("" ::: "memory");
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
       break;
 
@@ -227,6 +238,9 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 	  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 			 (void *) (((uintptr_t) &mutex->__data.__list.__next)
 				   | 1));
+	  /* We must set op_pending before we dequeue the mutex.  Also see
+	     comments at ENQUEUE_MUTEX.  */
+	  __asm ("" ::: "memory");
 	  DEQUEUE_MUTEX (mutex);
 	}
 
@@ -262,6 +276,9 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
       while (!atomic_compare_exchange_weak_release (&mutex->__data.__lock,
 						    &l, 0));
 
+      /* This happens after the kernel releases the mutex but violates the
+	 mutex destruction requirements; see comments in the code handling
+	 PTHREAD_MUTEX_ROBUST_NORMAL_NP.  */
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
       break;
 #endif  /* __NR_futex.  */

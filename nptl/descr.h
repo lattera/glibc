@@ -179,7 +179,16 @@ struct pthread
      but the pointer to the next/previous element of the list points
      in the middle of the object, the __next element.  Whenever
      casting to __pthread_list_t we need to adjust the pointer
-     first.  */
+     first.
+     These operations are effectively concurrent code in that the thread
+     can get killed at any point in time and the kernel takes over.  Thus,
+     the __next elements are a kind of concurrent list and we need to
+     enforce using compiler barriers that the individual operations happen
+     in such a way that the kernel always sees a consistent list.  The
+     backward links (ie, the __prev elements) are not used by the kernel.
+     FIXME We should use relaxed MO atomic operations here and signal fences
+     because this kind of concurrency is similar to synchronizing with a
+     signal handler.  */
 # define QUEUE_PTR_ADJUST (offsetof (__pthread_list_t, __next))
 
 # define ENQUEUE_MUTEX_BOTH(mutex, val)					      \
@@ -191,6 +200,8 @@ struct pthread
     mutex->__data.__list.__next = THREAD_GETMEM (THREAD_SELF,		      \
 						 robust_head.list);	      \
     mutex->__data.__list.__prev = (void *) &THREAD_SELF->robust_head;	      \
+    /* Ensure that the new list entry is ready before we insert it.  */	      \
+    __asm ("" ::: "memory");						      \
     THREAD_SETMEM (THREAD_SELF, robust_head.list,			      \
 		   (void *) (((uintptr_t) &mutex->__data.__list.__next)	      \
 			     | val));					      \
@@ -205,6 +216,9 @@ struct pthread
       ((char *) (((uintptr_t) mutex->__data.__list.__prev) & ~1ul)	      \
        - QUEUE_PTR_ADJUST);						      \
     prev->__next = mutex->__data.__list.__next;				      \
+    /* Ensure that we remove the entry from the list before we change the     \
+       __next pointer of the entry, which is read by the kernel.  */	      \
+    __asm ("" ::: "memory");						      \
     mutex->__data.__list.__prev = NULL;					      \
     mutex->__data.__list.__next = NULL;					      \
   } while (0)
@@ -219,6 +233,8 @@ struct pthread
   do {									      \
     mutex->__data.__list.__next						      \
       = THREAD_GETMEM (THREAD_SELF, robust_list.__next);		      \
+    /* Ensure that the new list entry is ready before we insert it.  */	      \
+    __asm ("" ::: "memory");						      \
     THREAD_SETMEM (THREAD_SELF, robust_list.__next,			      \
 		   (void *) (((uintptr_t) &mutex->__data.__list) | val));     \
   } while (0)
@@ -239,6 +255,9 @@ struct pthread
 	  }								      \
 									      \
 	runp->__next = next->__next;					      \
+	/* Ensure that we remove the entry from the list before we change the \
+	   __next pointer of the entry, which is read by the kernel.  */      \
+	    __asm ("" ::: "memory");					      \
 	mutex->__data.__list.__next = NULL;				      \
       }									      \
   } while (0)
