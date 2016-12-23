@@ -1,3 +1,8 @@
+2016-12-23  Florian Weimer  <fweimer@redhat.com>
+
+	* scripts/test_printers_common.py: Log GDB output in case of
+	Python detection failure.
+
 2016-12-22  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* configure.ac: Check for python3 or python.

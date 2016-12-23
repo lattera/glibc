@@ -87,6 +87,7 @@ try:
 
     if gdb_python_error:
         print('gdb must have python support to test the pretty printers.')
+        print('gdb output: {!r}'.format(gdb_python_error))
         exit(UNSUPPORTED)
 
     # If everything's ok, spawn the gdb process we'll use for testing.
