@@ -54,6 +54,12 @@ tests			= test-netdb tst-nss-test1 test-digits-dots \
 			  $(tests-static)
 xtests			= bug-erange
 
+# If we have a thread library then we can test cancellation against
+# some routines like getpwuid_r.
+ifeq (yes,$(have-thread-library))
+tests += tst-cancel-getpwuid_r
+endif
+
 # Specify rules for the nss_* modules.  We have some services.
 services		:= files db
 
@@ -125,3 +131,7 @@ $(objpfx)/libnss_test1.so$(libnss_test1.so-version): $(objpfx)/libnss_test1.so
 	$(make-link)
 endif
 $(objpfx)tst-nss-test1.out: $(objpfx)/libnss_test1.so$(libnss_test1.so-version)
+
+ifeq (yes,$(have-thread-library))
+$(objpfx)tst-cancel-getpwuid_r: $(shared-thread-library)
+endif

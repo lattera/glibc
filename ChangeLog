@@ -1,5 +1,9 @@
 2016-12-24  Carlos O'Donell  <carlos@redhat.com>
 
+	* nss/Makefile [ifeq (yes,$(have-thread-library))]
+	(tests): Add tst-cancel-getpwuid_r.
+	* nss/tst-cancel-getpwuid_r.c: New file.
+
 	[BZ #11941]
 	* elf/dl-close.c (_dl_close): Take dl_load_lock to examine map.
 	Remove assert (map->l_init_called); if DF_1_NODELETE is set.
