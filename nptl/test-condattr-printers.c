@@ -66,6 +66,7 @@ condvar_reinit (pthread_cond_t *condvar, const pthread_condattr_t *attr)
 }
 
 /* Tests setting the clock ID attribute.  */
+__attribute__ ((noinline))
 static int
 test_setclock (pthread_cond_t *condvar, pthread_condattr_t *attr)
 {

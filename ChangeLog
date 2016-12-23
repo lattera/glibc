@@ -1,5 +1,13 @@
 2016-12-24  Carlos O'Donell  <carlos@redhat.com>
 
+	* README.pretty-printers: Must specify CPPFLAGS-* also.
+	* nptl/Makefile (CPPFLAGS-test-mutexattr-printers.c): Define.
+	(CPPFLAGS-test-mutex-printers.c): Define.
+	(CPPFLAGS-test-condattr-printers.c): Define.
+	(CPPFLAGS-test-cond-printers.c): Define.
+	(CPPFLAGS-test-rwlockattr-printers.c): Define.
+	(CPPFLAGS-test-rwlock-printers.c): Define.
+
 	* nss/Makefile [ifeq (yes,$(have-thread-library))]
 	(tests): Add tst-cancel-getpwuid_r.
 	* nss/tst-cancel-getpwuid_r.c: New file.

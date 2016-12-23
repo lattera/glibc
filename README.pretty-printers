@@ -126,11 +126,12 @@ You can use the existing unit tests as examples.
 
 4. Add the names of the pretty printer tests to the 'tests-printers' variable
 in your submodule's Makefile (without extensions).  In addition, for each test
-program you must define a corresponding CFLAGS-* variable and set it to
-$(CFLAGS-printers-tests) to ensure they're compiled correctly.  For example,
-test-foo-printer.c requires the following:
+program you must define a corresponding CFLAGS-* and CPPFLAGS-* variable and
+set it to $(CFLAGS-printers-tests) to ensure they're compiled correctly.  For
+example, test-foo-printer.c requires the following:
 
 CFLAGS-test-foo-printer.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-foo-printer.c := $(CFLAGS-printers-tests)
 
 Finally, if your programs need to be linked with a specific library, you can add
 its name to the 'tests-printers-libs' variable in your submodule's Makefile.

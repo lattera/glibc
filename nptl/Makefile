@@ -318,12 +318,22 @@ tests-printers := test-mutexattr-printers test-mutex-printers \
 		  test-condattr-printers test-cond-printers \
 		  test-rwlockattr-printers test-rwlock-printers
 
+# We must specify both CFLAGS and CPPFLAGS to override any
+# compiler options the user might have provided that conflict
+# with what we need e.g. user specifies CPPFLAGS with -O2 and
+# we need -O0.
 CFLAGS-test-mutexattr-printers.c := $(CFLAGS-printers-tests)
 CFLAGS-test-mutex-printers.c := $(CFLAGS-printers-tests)
 CFLAGS-test-condattr-printers.c := $(CFLAGS-printers-tests)
 CFLAGS-test-cond-printers.c := $(CFLAGS-printers-tests)
 CFLAGS-test-rwlockattr-printers.c := $(CFLAGS-printers-tests)
 CFLAGS-test-rwlock-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-mutexattr-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-mutex-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-condattr-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-cond-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-rwlockattr-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-rwlock-printers.c := $(CFLAGS-printers-tests)
 
 ifeq ($(build-shared),yes)
 tests-printers-libs := $(shared-thread-library)
