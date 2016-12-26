@@ -1,3 +1,16 @@
+2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
+
+	[BZ #7065]
+	* configure.ac (libc_cv_ssp): Move up.
+	(libc_cv_ssp_strong): Likewise.
+	(libc_cv_ssp_all): New.
+	(stack_protector): Augment, adding -fstack-protector-all.
+	(no_stack_protector): New.
+	(STACK_PROTECTOR_LEVEL): New.
+	(AC_ARG_ENABLE(stack-protector)): New configure flag.
+	* manual/install.texi (--enable-stack-protector): Document it.
+	* config.h.in (STACK_PROTECTOR_LEVEL): New macro.
+
 2016-12-24  Carlos O'Donell  <carlos@redhat.com>
 
 	* README.pretty-printers: Must specify CPPFLAGS-* also.

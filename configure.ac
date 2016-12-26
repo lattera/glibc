@@ -235,6 +235,18 @@ if test "x$bindnow" = xyes; then
   AC_DEFINE(BIND_NOW)
 fi
 
+dnl Build glibc with -fstack-protector, -fstack-protector-all, or
+dnl -fstack-protector-strong.
+AC_ARG_ENABLE([stack-protector],
+	      AC_HELP_STRING([--enable-stack-protector=@<:@yes|no|all|strong@:>@],
+			     [Use -fstack-protector[-all|-strong] to detect glibc buffer overflows]),
+	      [enable_stack_protector=$enableval],
+	      [enable_stack_protector=no])
+case "$enable_stack_protector" in
+all|yes|no|strong) ;;
+*) AC_MSG_ERROR([Not a valid argument for --enable-stack-protector: \"$enable_stack_protector\"]);;
+esac
+
 dnl On some platforms we cannot use dynamic loading.  We must provide
 dnl static NSS modules.
 AC_ARG_ENABLE([static-nss],
@@ -618,6 +630,44 @@ fi
 # Set base_machine if not set by a preconfigure fragment.
 test -n "$base_machine" || base_machine=$machine
 AC_SUBST(base_machine)
+
+AC_CACHE_CHECK(for -fstack-protector, libc_cv_ssp, [dnl
+LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector],
+		   [libc_cv_ssp=yes],
+		   [libc_cv_ssp=no])
+])
+
+AC_CACHE_CHECK(for -fstack-protector-strong, libc_cv_ssp_strong, [dnl
+LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector-strong],
+		   [libc_cv_ssp_strong=yes],
+		   [libc_cv_ssp_strong=no])
+])
+
+AC_CACHE_CHECK(for -fstack-protector-all, libc_cv_ssp_all, [dnl
+LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector-all],
+		   [libc_cv_ssp_all=yes],
+		   [libc_cv_ssp_all=no])
+])
+
+stack_protector=
+no_stack_protector=
+if test "$libc_cv_ssp" = yes; then
+  no_stack_protector="-fno-stack-protector -DSTACK_PROTECTOR_LEVEL=0"
+fi
+
+if test "$enable_stack_protector" = yes && test "$libc_cv_ssp" = yes; then
+  stack_protector="-fstack-protector"
+  AC_DEFINE(STACK_PROTECTOR_LEVEL, 1)
+elif test "$enable_stack_protector" = all && test "$libc_cv_ssp_all" = yes; then
+  stack_protector="-fstack-protector-all"
+  AC_DEFINE(STACK_PROTECTOR_LEVEL, 2)
+elif test "$enable_stack_protector" = strong && test "$libc_cv_ssp_strong" = yes; then
+  stack_protector="-fstack-protector-strong"
+  AC_DEFINE(STACK_PROTECTOR_LEVEL, 3)
+fi
+AC_SUBST(libc_cv_ssp)
+AC_SUBST(stack_protector)
+AC_SUBST(no_stack_protector)
 
 # For the multi-arch option we need support in the assembler & linker.
 AC_CACHE_CHECK([for assembler and linker STT_GNU_IFUNC support],
@@ -1460,26 +1510,6 @@ else
   fno_unit_at_a_time=-fno-unit-at-a-time
 fi
 AC_SUBST(fno_unit_at_a_time)
-
-AC_CACHE_CHECK(for -fstack-protector, libc_cv_ssp, [dnl
-LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector],
-		   [libc_cv_ssp=yes],
-		   [libc_cv_ssp=no])
-])
-
-AC_CACHE_CHECK(for -fstack-protector-strong, libc_cv_ssp_strong, [dnl
-LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector-strong],
-		   [libc_cv_ssp_strong=yes],
-		   [libc_cv_ssp_strong=no])
-])
-
-stack_protector=
-if test "$libc_cv_ssp_strong" = "yes"; then
-  stack_protector="-fstack-protector-strong"
-elif test "$libc_cv_ssp" = "yes"; then
-  stack_protector="-fstack-protector"
-fi
-AC_SUBST(stack_protector)
 
 AC_CACHE_CHECK([for -mtls-dialect=gnu2], libc_cv_mtls_dialect_gnu2,
 [dnl

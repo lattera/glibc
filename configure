@@ -620,7 +620,6 @@ libc_cv_cc_loop_to_function
 libc_cv_cc_submachine
 libc_cv_cc_nofma
 libc_cv_mtls_dialect_gnu2
-stack_protector
 fno_unit_at_a_time
 libc_cv_output_format
 libc_cv_has_glob_dat
@@ -661,6 +660,9 @@ sysdeps_add_ons
 sysnames
 submachine
 multi_arch
+no_stack_protector
+stack_protector
+libc_cv_ssp
 base_machine
 add_on_subdirs
 add_ons
@@ -766,6 +768,7 @@ enable_lock_elision
 enable_add_ons
 enable_hidden_plt
 enable_bind_now
+enable_stack_protector
 enable_static_nss
 enable_force_install
 enable_maintainer_mode
@@ -1427,6 +1430,9 @@ Optional Features:
                           for add-ons if no parameter given
   --disable-hidden-plt    do not hide internal function calls to avoid PLT
   --enable-bind-now       disable lazy relocations in DSOs
+  --enable-stack-protector=[yes|no|all|strong]
+                          Use -fstack-protector[-all|-strong] to detect glibc
+                          buffer overflows
   --enable-static-nss     build static NSS modules [default=no]
   --disable-force-install don't force installation of files from this package,
                           even if they are older than the installed files
@@ -3427,6 +3433,18 @@ if test "x$bindnow" = xyes; then
 
 fi
 
+# Check whether --enable-stack-protector was given.
+if test "${enable_stack_protector+set}" = set; then :
+  enableval=$enable_stack_protector; enable_stack_protector=$enableval
+else
+  enable_stack_protector=no
+fi
+
+case "$enable_stack_protector" in
+all|yes|no|strong) ;;
+*) as_fn_error $? "Not a valid argument for --enable-stack-protector: \"$enable_stack_protector\"" "$LINENO" 5;;
+esac
+
 # Check whether --enable-static-nss was given.
 if test "${enable_static_nss+set}" = set; then :
   enableval=$enable_static_nss; static_nss=$enableval
@@ -3910,6 +3928,89 @@ fi
 
 # Set base_machine if not set by a preconfigure fragment.
 test -n "$base_machine" || base_machine=$machine
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector" >&5
+$as_echo_n "checking for -fstack-protector... " >&6; }
+if ${libc_cv_ssp+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  libc_cv_ssp=yes
+else
+  libc_cv_ssp=no
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp" >&5
+$as_echo "$libc_cv_ssp" >&6; }
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector-strong" >&5
+$as_echo_n "checking for -fstack-protector-strong... " >&6; }
+if ${libc_cv_ssp_strong+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector-strong -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  libc_cv_ssp_strong=yes
+else
+  libc_cv_ssp_strong=no
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp_strong" >&5
+$as_echo "$libc_cv_ssp_strong" >&6; }
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector-all" >&5
+$as_echo_n "checking for -fstack-protector-all... " >&6; }
+if ${libc_cv_ssp_all+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector-all -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  libc_cv_ssp_all=yes
+else
+  libc_cv_ssp_all=no
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp_all" >&5
+$as_echo "$libc_cv_ssp_all" >&6; }
+
+stack_protector=
+no_stack_protector=
+if test "$libc_cv_ssp" = yes; then
+  no_stack_protector="-fno-stack-protector -DSTACK_PROTECTOR_LEVEL=0"
+fi
+
+if test "$enable_stack_protector" = yes && test "$libc_cv_ssp" = yes; then
+  stack_protector="-fstack-protector"
+  $as_echo "#define STACK_PROTECTOR_LEVEL 1" >>confdefs.h
+
+elif test "$enable_stack_protector" = all && test "$libc_cv_ssp_all" = yes; then
+  stack_protector="-fstack-protector-all"
+  $as_echo "#define STACK_PROTECTOR_LEVEL 2" >>confdefs.h
+
+elif test "$enable_stack_protector" = strong && test "$libc_cv_ssp_strong" = yes; then
+  stack_protector="-fstack-protector-strong"
+  $as_echo "#define STACK_PROTECTOR_LEVEL 3" >>confdefs.h
+
+fi
+
+
 
 
 # For the multi-arch option we need support in the assembler & linker.
@@ -5912,54 +6013,6 @@ if test $libc_cv_fno_toplevel_reorder = yes; then
   fno_unit_at_a_time="-fno-toplevel-reorder -fno-section-anchors"
 else
   fno_unit_at_a_time=-fno-unit-at-a-time
-fi
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector" >&5
-$as_echo_n "checking for -fstack-protector... " >&6; }
-if ${libc_cv_ssp+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector -xc /dev/null -S -o /dev/null'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then :
-  libc_cv_ssp=yes
-else
-  libc_cv_ssp=no
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp" >&5
-$as_echo "$libc_cv_ssp" >&6; }
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector-strong" >&5
-$as_echo_n "checking for -fstack-protector-strong... " >&6; }
-if ${libc_cv_ssp_strong+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector-strong -xc /dev/null -S -o /dev/null'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then :
-  libc_cv_ssp_strong=yes
-else
-  libc_cv_ssp_strong=no
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp_strong" >&5
-$as_echo "$libc_cv_ssp_strong" >&6; }
-
-stack_protector=
-if test "$libc_cv_ssp_strong" = "yes"; then
-  stack_protector="-fstack-protector-strong"
-elif test "$libc_cv_ssp" = "yes"; then
-  stack_protector="-fstack-protector"
 fi
 
 

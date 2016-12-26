@@ -164,6 +164,17 @@ time.  Consult the @file{timezone} subdirectory for more details.
 @item --enable-lock-elision=yes
 Enable lock elision for pthread mutexes by default.
 
+@item --enable-stack-protector
+@itemx --enable-stack-protector=strong
+@itemx --enable-stack-protector=all
+Compile the C library and all other parts of the glibc package
+(including the threading and math libraries, NSS modules, and
+transliteration modules) using the GCC @option{-fstack-protector},
+@option{-fstack-protector-strong} or @option{-fstack-protector-all}
+options to detect stack overruns.  Only the dynamic linker and a small
+number of routines called directly from assembler are excluded from this
+protection.
+
 @pindex pt_chown
 @findex grantpt
 @item --enable-pt_chown

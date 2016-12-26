@@ -135,6 +135,17 @@ will be used, and CFLAGS sets optimization options for the compiler.
 '--enable-lock-elision=yes'
      Enable lock elision for pthread mutexes by default.
 
+'--enable-stack-protector'
+'--enable-stack-protector=strong'
+'--enable-stack-protector=all'
+     Compile the C library and all other parts of the glibc package
+     (including the threading and math libraries, NSS modules, and
+     transliteration modules) using the GCC '-fstack-protector',
+     '-fstack-protector-strong' or '-fstack-protector-all' options to
+     detect stack overruns.  Only the dynamic linker and a small number
+     of routines called directly from assembler are excluded from this
+     protection.
+
 '--enable-pt_chown'
      The file 'pt_chown' is a helper binary for 'grantpt' (*note
      Pseudo-Terminals: Allocation.) that is installed setuid root to fix
