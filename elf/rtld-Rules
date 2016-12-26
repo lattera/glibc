@@ -144,4 +144,6 @@ cpp-srcs-left := $(rtld-modules:%.os=%)
 lib := rtld
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
+rtld-CFLAGS += $(no-stack-protector)
+
 endif

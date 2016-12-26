@@ -1,6 +1,16 @@
 2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
 
 	[BZ #7065]
+	Compile the dynamic linker without stack protection.
+	* elf/Makefile (elide-stack-protector): New.
+	(CFLAGS-.os): Use it, eliding $(all-rtld-routines).
+	(CFLAGS-.o, CFLAGS-.op): Likewise, but for $(elide-routines.os).
+	* elf/rtld-Rules (rtld-CFLAGS): Add $(no-stack-protector).
+	* sysdeps/i386/Makefile (rtld-CFLAGS): Use +=, not =.
+
+2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
+
+	[BZ #7065]
 	* config.make.in (have-ssp, no-stack-protector): New.
 	* csu/Makefile (CFLAGS-.o, CFLAGS-.op, CFLAGS-.os): Use it.
 	* misc/Makefile (CFLAGS-sbrk.o): Likewise.
