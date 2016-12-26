@@ -1,6 +1,12 @@
 2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
 
 	[BZ #7065]
+	* elf/Makefile (dummy-stack-chk-fail): New.
+	(librtld.map): Use it.
+
+2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
+
+	[BZ #7065]
 	Compile the dynamic linker without stack protection.
 	* elf/Makefile (elide-stack-protector): New.
 	(CFLAGS-.os): Use it, eliding $(all-rtld-routines).

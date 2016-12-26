@@ -386,9 +386,22 @@ $(objpfx)dl-allobjs.os: $(all-rtld-routines:%=$(objpfx)%.os)
 # are compiled with special flags, and puts these modules into rtld-libc.a
 # for us.  Then we do the real link using rtld-libc.a instead of libc_pic.a.
 
+# If the compiler can do SSP, build the mapfile with dummy __stack_chk_fail
+# and __stack_chk_fail_local symbols defined, to prevent the real things
+# being dragged into rtld even though rtld is never built with stack-
+# protection.
+
+ifeq ($(have-ssp),yes)
+dummy-stack-chk-fail := -Wl,--defsym='__stack_chk_fail=0' \
+			-Wl,--defsym='__stack_chk_fail_local=0'
+else
+dummy-stack-chk-fail :=
+endif
+
 $(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 	@-rm -f $@T
-	$(reloc-link) -o $@.o '-Wl,-(' $^ -lgcc '-Wl,-)' -Wl,-Map,$@T
+	$(reloc-link) -o $@.o $(dummy-stack-chk-fail) \
+		'-Wl,-(' $^ -lgcc '-Wl,-)' -Wl,-Map,$@T
 	rm -f $@.o
 	mv -f $@T $@
 
