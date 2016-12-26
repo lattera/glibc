@@ -807,6 +807,11 @@ endif
 # disable any optimization that assume default rounding mode.
 +math-flags = -frounding-math
 
+# We might want to compile with some stack-protection flag.
+ifneq ($(stack-protector),)
++stack-protector=$(stack-protector)
+endif
+
 # This is the program that generates makefile dependencies from C source files.
 # The -MP flag tells GCC >= 3.2 (which we now require) to produce dummy
 # targets for headers so that removed headers don't break the build.
@@ -866,7 +871,8 @@ ifeq	"$(strip $(+cflags))" ""
 +cflags	:= $(default_cflags)
 endif	# $(+cflags) == ""
 
-+cflags += $(cflags-cpu) $(+gccwarn) $(+merge-constants) $(+math-flags)
++cflags += $(cflags-cpu) $(+gccwarn) $(+merge-constants) $(+math-flags) \
+	   $(+stack-protector)
 +gcc-nowarn := -w
 
 # Don't duplicate options if we inherited variables from the parent.
