@@ -1,4 +1,10 @@
 2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
+
+	[BZ #7065]
+	* elf/Makefile (CFLAGS-filtmod1.c): Use $(no-stack-protector) for
+	non-libc-linking testcase.
+
+2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Florian Weimer  <fweimer@redhat.com>
 
