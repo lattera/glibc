@@ -65,7 +65,9 @@ libc_hidden_def (__libc_sigaction)
 #include <nptl/sigaction.c>
 
 
-static void
+static
+inhibit_stack_protector
+void
 __rt_sigreturn_stub (void)
 {
   __asm__ ("mov %0, %%g1\n\t"
@@ -74,7 +76,9 @@ __rt_sigreturn_stub (void)
 	   : "i" (__NR_rt_sigreturn));
 }
 
-static void
+static
+inhibit_stack_protector
+void
 __sigreturn_stub (void)
 {
   __asm__ ("mov %0, %%g1\n\t"

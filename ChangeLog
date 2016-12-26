@@ -1,6 +1,15 @@
 2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
 
 	[BZ #7065]
+	* signal/Makefile (CFLAGS-sigreturn.c): Use $(no-stack-protector).
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c:
+	(__rt_sigreturn_stub): Use inhibit_stack_protector.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c
+	(__rt_sigreturn_stub, __sigreturn_stub): Likewise.
+
+2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
+
+	[BZ #7065]
 	* login/Makefile (pt_chown-cflags): Remove.
 	* nscd/Makefile (CFLAGS-nscd): Likewise.
 	* resolv/Makefile (CFLAGS-libresolv): Likewise.
