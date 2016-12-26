@@ -108,6 +108,13 @@ CFLAGS-getusershell.c = -fexceptions
 CFLAGS-err.c = -fexceptions
 CFLAGS-tst-tsearch.c = $(stack-align-test-flags)
 
+# Called during static library initialization, so turn stack-protection
+# off for non-shared builds.
+CFLAGS-sbrk.o = $(no-stack-protector)
+CFLAGS-sbrk.op = $(no-stack-protector)
+CFLAGS-brk.o = $(no-stack-protector)
+CFLAGS-brk.op = $(no-stack-protector)
+
 include ../Rules
 
 $(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)

@@ -1,6 +1,18 @@
 2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
 
 	[BZ #7065]
+	* config.make.in (have-ssp, no-stack-protector): New.
+	* csu/Makefile (CFLAGS-.o, CFLAGS-.op, CFLAGS-.os): Use it.
+	* misc/Makefile (CFLAGS-sbrk.o): Likewise.
+	(CFLAGS-sbrk.op): Likewise.
+	(CFLAGS-brk.o): Likewise.
+	(CFLAGS-brk.op): Likewise.
+	* string/Makefile (CFLAGS-memcpy.c): Likewise.
+	(CFLAGS-wordcopy.c): Likewise.
+
+2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
+
+	[BZ #7065]
 	* configure.ac (HAVE_CC_NO_STACK_PROTECTOR): Define.
 	* config.h.in (HAVE_CC_NO_STACK_PROTECTOR): New macro.
 	* include/libc-symbols.h (inhibit_stack_protector): New macro.
