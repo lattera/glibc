@@ -1,6 +1,27 @@
 2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
 
 	[BZ #7065]
+	* configure.ac: Add check for unsupported stack-protection level.
+	(libc_cv_predef_stack_protector): Remove.
+	(no_ssp): New variable.
+	(STACK_PROTECTOR_LEVEL): Set to zero when --disable-stack-protector.
+	(stack_protector): Set to -fno-stack-protector similarly.
+	(libc_cv_ld_gnu_indirect_function): Use no_ssp.
+	(libc_cv_asm_set_directive): Likewise.
+	(libc_cv_protected_data): Likewise.
+	(libc_cv_z_combreloc): Likewise.
+	(libc_cv_hashstyle): Likewise.
+	(libc_cv_has_glob_dat): Likewise.
+	(libc_cv_output_format): Likewise.
+	(libc_cv_output_format): Likewise.
+	(libc_cv_ehdr_start): Likewise.
+	* aclocal.m4 (LIBC_TRY_LINK_STATIC): Likewise.
+	(LIBC_LINKER_FEATURE): Likewise.
+	(LIBC_COMPILER_BUILTIN_INLINED): Likewise.
+
+2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
+
+	[BZ #7065]
 	* elf/Makefile (dummy-stack-chk-fail): New.
 	(librtld.map): Use it.
 

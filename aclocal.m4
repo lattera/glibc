@@ -141,7 +141,7 @@ int _start (void) { return 0; }
 int __start (void) { return 0; }
 $1
 EOF
-AS_IF([AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -o conftest
+AS_IF([AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -o conftest
 		       conftest.c -static -nostartfiles -nostdlib
 		       1>&AS_MESSAGE_LOG_FD])],
       [$2], [$3])
@@ -226,7 +226,7 @@ if test x"$gnu_ld" = x"yes"; then
     cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-    if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+    if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
 				$2 -nostdlib -nostartfiles
 				-fPIC -shared -o conftest.so conftest.c
 				1>&AS_MESSAGE_LOG_FD])
@@ -268,7 +268,7 @@ libc_compiler_builtin_inlined=no
 cat > conftest.c <<EOF
 int _start (void) { $2 return 0; }
 EOF
-if ! AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+if ! AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
 		     $3 -nostdlib -nostartfiles
 		     -S conftest.c -o - | fgrep "$1"
 		     1>&AS_MESSAGE_LOG_FD])

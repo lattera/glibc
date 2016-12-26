@@ -665,10 +665,25 @@ elif test "$enable_stack_protector" = all && test "$libc_cv_ssp_all" = yes; then
 elif test "$enable_stack_protector" = strong && test "$libc_cv_ssp_strong" = yes; then
   stack_protector="-fstack-protector-strong"
   AC_DEFINE(STACK_PROTECTOR_LEVEL, 3)
+else
+  stack_protector="-fno-stack-protector"
+  AC_DEFINE(STACK_PROTECTOR_LEVEL, 0)
 fi
 AC_SUBST(libc_cv_ssp)
 AC_SUBST(stack_protector)
 AC_SUBST(no_stack_protector)
+
+if test -n "$stack_protector"; then
+  dnl Don't run configure tests with stack-protection on, to avoid problems with
+  dnl bootstrapping.
+  no_ssp=-fno-stack-protector
+else
+  no_ssp=
+
+  if test "$enable_stack_protector" != no; then
+    AC_MSG_ERROR([--enable-stack-protector=$enable_stack_protector specified, but specified level of stack protection is not supported by the compiler.])
+  fi
+fi
 
 # For the multi-arch option we need support in the assembler & linker.
 AC_CACHE_CHECK([for assembler and linker STT_GNU_IFUNC support],
@@ -689,7 +704,7 @@ __start:
 EOF
 libc_cv_ld_gnu_indirect_function=no
 if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-	    -nostartfiles -nostdlib \
+	    -nostartfiles -nostdlib $no_ssp \
 	    -o conftest conftest.S 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
   # Do a link to see if the backend supports IFUNC relocs.
   $READELF -r conftest 1>&AS_MESSAGE_LOG_FD
@@ -1213,7 +1228,7 @@ extern int glibc_conftest_frobozz;
 void _start() { glibc_conftest_frobozz = 1; }
 EOF
 if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-	    -nostartfiles -nostdlib \
+	    -nostartfiles -nostdlib $no_ssp \
 	    -o conftest conftest.s conftest1.c 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
   libc_cv_asm_set_directive=yes
 else
@@ -1230,12 +1245,12 @@ AC_CACHE_CHECK(linker support for protected data symbol,
 		int bar __attribute__ ((visibility ("protected"))) = 1;
 EOF
 		libc_cv_protected_data=no
-		if AC_TRY_COMMAND(${CC-cc} -nostdlib -nostartfiles -fPIC -shared conftest.c -o conftest.so); then
+		if AC_TRY_COMMAND(${CC-cc} -nostdlib -nostartfiles $no_ssp -fPIC -shared conftest.c -o conftest.so); then
 		  cat > conftest.c <<EOF
 		  extern int bar;
 		  int main (void) { return bar; }
 EOF
-		  if AC_TRY_COMMAND(${CC-cc} -nostdlib -nostartfiles conftest.c -o conftest conftest.so); then
+		  if AC_TRY_COMMAND(${CC-cc} -nostdlib -nostartfiles $no_ssp conftest.c -o conftest conftest.so); then
 		    libc_cv_protected_data=yes
 		  fi
 		fi
@@ -1357,7 +1372,7 @@ extern int mumble;
 int foo (void) { return bar (mumble); }
 EOF
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			-fPIC -shared -o conftest.so conftest.c
+			-fPIC -shared $no_ssp -o conftest.so conftest.c
 			-nostdlib -nostartfiles
 			-Wl,-z,combreloc 1>&AS_MESSAGE_LOG_FD])
 then
@@ -1395,7 +1410,7 @@ AC_CACHE_CHECK(for --hash-style option,
 cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
 			    -fPIC -shared -o conftest.so conftest.c
 			    -Wl,--hash-style=both -nostdlib 1>&AS_MESSAGE_LOG_FD])
 then
@@ -1467,7 +1482,7 @@ int foo (void) { return mumble; }
 EOF
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
 			-fPIC -shared -o conftest.so conftest.c
-			-nostdlib -nostartfiles
+			-nostdlib -nostartfiles $no_ssp
 			1>&AS_MESSAGE_LOG_FD])
 then
 dnl look for GLOB_DAT relocation.
@@ -1484,7 +1499,7 @@ AC_SUBST(libc_cv_has_glob_dat)
 
 AC_CACHE_CHECK(linker output format, libc_cv_output_format, [dnl
 if libc_cv_output_format=`
-${CC-cc} -nostartfiles -nostdlib -Wl,--print-output-format 2>&AS_MESSAGE_LOG_FD`
+${CC-cc} -nostartfiles -nostdlib $no_ssp -Wl,--print-output-format 2>&AS_MESSAGE_LOG_FD`
 then
   :
 else
@@ -1703,48 +1718,6 @@ if test $libc_cv_predef_fortify_source = yes; then
 fi
 AC_SUBST(CPPUNDEFS)
 
-dnl Check for silly hacked compilers inserting -fstack-protector.
-dnl This breaks badly for the early startup code we compile, since
-dnl the compiled code can refer to a magic machine-dependent location
-dnl for the canary value before we have sufficient setup for that to
-dnl work.  It's also questionable to build all of libc with this flag
-dnl even when you're doing that for most applications you build, since
-dnl libc's code is so heavily-used and performance-sensitive.  If we
-dnl ever really want to make that work, it should be enabled explicitly
-dnl in the libc build, not inherited from implicit compiler settings.
-AC_CACHE_CHECK([whether $CC implicitly enables -fstack-protector],
-	       libc_cv_predef_stack_protector, [
-AC_TRY_COMPILE([extern void foobar (char *);],
-	       [char large_array[2048]; foobar (large_array);], [
-libc_undefs=`$NM -u conftest.o |
-  LC_ALL=C $AWK '$1 == "U" { print $2 | "sort -u"; next } { exit(1) }' \
-    2>&AS_MESSAGE_LOG_FD` || {
-  AC_MSG_ERROR([confusing output from $NM -u])
-}
-echo >&AS_MESSAGE_LOG_FD "libc_undefs='$libc_undefs'"
-# On some architectures, there are architecture-specific undefined
-# symbols (resolved by the linker), so filter out unknown symbols.
-# This will fail to produce the correct result if the compiler
-# defaults to -fstack-protector but this produces an undefined symbol
-# other than __stack_chk_fail or __stack_chk_fail_local. However,
-# compilers like that have not been encountered in practice.
-libc_undefs=`echo "$libc_undefs" | \
-  egrep '^(foobar|__stack_chk_fail|__stack_chk_fail_local)$'`
-case "$libc_undefs" in
-foobar) libc_cv_predef_stack_protector=no ;;
-'__stack_chk_fail
-foobar'|'__stack_chk_fail_local
-foobar') libc_cv_predef_stack_protector=yes ;;
-*) AC_MSG_ERROR([unexpected symbols in test: $libc_undefs]) ;;
-esac],
-	       [AC_MSG_ERROR([test compilation failed])])
-])
-libc_extra_cflags=
-if test $libc_cv_predef_stack_protector = yes; then
-  libc_extra_cflags="$libc_extra_cflags -fno-stack-protector"
-fi
-libc_extra_cppflags=
-
 # Some linkers on some architectures support __ehdr_start but with
 # bugs.  Make sure usage of it does not create relocations in the
 # output (as the linker should resolve them all for us).
@@ -1754,7 +1727,7 @@ old_CFLAGS="$CFLAGS"
 old_LDFLAGS="$LDFLAGS"
 old_LIBS="$LIBS"
 CFLAGS="$CFLAGS -fPIC"
-LDFLAGS="$LDFLAGS -nostdlib -nostartfiles -shared"
+LDFLAGS="$LDFLAGS -nostdlib -nostartfiles -shared $no_ssp"
 LIBS=
 AC_LINK_IFELSE([AC_LANG_SOURCE([
 typedef struct {

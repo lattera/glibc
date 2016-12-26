@@ -4010,10 +4010,24 @@ elif test "$enable_stack_protector" = strong && test "$libc_cv_ssp_strong" = yes
   stack_protector="-fstack-protector-strong"
   $as_echo "#define STACK_PROTECTOR_LEVEL 3" >>confdefs.h
 
+else
+  stack_protector="-fno-stack-protector"
+  $as_echo "#define STACK_PROTECTOR_LEVEL 0" >>confdefs.h
+
 fi
 
 
 
+
+if test -n "$stack_protector"; then
+      no_ssp=-fno-stack-protector
+else
+  no_ssp=
+
+  if test "$enable_stack_protector" != no; then
+    as_fn_error $? "--enable-stack-protector=$enable_stack_protector specified, but specified level of stack protection is not supported by the compiler." "$LINENO" 5
+  fi
+fi
 
 # For the multi-arch option we need support in the assembler & linker.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler and linker STT_GNU_IFUNC support" >&5
@@ -4037,7 +4051,7 @@ __start:
 EOF
 libc_cv_ld_gnu_indirect_function=no
 if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-	    -nostartfiles -nostdlib \
+	    -nostartfiles -nostdlib $no_ssp \
 	    -o conftest conftest.S 1>&5 2>&5; then
   # Do a link to see if the backend supports IFUNC relocs.
   $READELF -r conftest 1>&5
@@ -5532,7 +5546,7 @@ extern int glibc_conftest_frobozz;
 void _start() { glibc_conftest_frobozz = 1; }
 EOF
 if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-	    -nostartfiles -nostdlib \
+	    -nostartfiles -nostdlib $no_ssp \
 	    -o conftest conftest.s conftest1.c 1>&5 2>&5; then
   libc_cv_asm_set_directive=yes
 else
@@ -5556,7 +5570,7 @@ else
 		int bar __attribute__ ((visibility ("protected"))) = 1;
 EOF
 		libc_cv_protected_data=no
-		if { ac_try='${CC-cc} -nostdlib -nostartfiles -fPIC -shared conftest.c -o conftest.so'
+		if { ac_try='${CC-cc} -nostdlib -nostartfiles $no_ssp -fPIC -shared conftest.c -o conftest.so'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -5566,7 +5580,7 @@ EOF
 		  extern int bar;
 		  int main (void) { return bar; }
 EOF
-		  if { ac_try='${CC-cc} -nostdlib -nostartfiles conftest.c -o conftest conftest.so'
+		  if { ac_try='${CC-cc} -nostdlib -nostartfiles $no_ssp conftest.c -o conftest conftest.so'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -5651,7 +5665,7 @@ __attribute__ ((constructor)) void ctor (void) { asm (""); }
 __attribute__ ((destructor))  void dtor (void) { asm (""); }
 
 EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -o conftest
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -o conftest
 		       conftest.c -static -nostartfiles -nostdlib
 		       1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
@@ -5764,7 +5778,7 @@ extern int mumble;
 int foo (void) { return bar (mumble); }
 EOF
 if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			-fPIC -shared -o conftest.so conftest.c
+			-fPIC -shared $no_ssp -o conftest.so conftest.c
 			-nostdlib -nostartfiles
 			-Wl,-z,combreloc 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
@@ -5800,7 +5814,7 @@ if test x"$gnu_ld" = x"yes"; then
     cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-    if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+    if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
 				-Wl,-z,execstack -nostdlib -nostartfiles
 				-fPIC -shared -o conftest.so conftest.c
 				1>&5'
@@ -5854,7 +5868,7 @@ else
   cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
 			    -fPIC -shared -o conftest.so conftest.c
 			    -Wl,--hash-style=both -nostdlib 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
@@ -5947,7 +5961,7 @@ int foo (void) { return mumble; }
 EOF
 if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
 			-fPIC -shared -o conftest.so conftest.c
-			-nostdlib -nostartfiles
+			-nostdlib -nostartfiles $no_ssp
 			1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
@@ -5975,7 +5989,7 @@ if ${libc_cv_output_format+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if libc_cv_output_format=`
-${CC-cc} -nostartfiles -nostdlib -Wl,--print-output-format 2>&5`
+${CC-cc} -nostartfiles -nostdlib $no_ssp -Wl,--print-output-format 2>&5`
 then
   :
 else
@@ -6453,60 +6467,6 @@ if test $libc_cv_predef_fortify_source = yes; then
 fi
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC implicitly enables -fstack-protector" >&5
-$as_echo_n "checking whether $CC implicitly enables -fstack-protector... " >&6; }
-if ${libc_cv_predef_stack_protector+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-extern void foobar (char *);
-int
-main ()
-{
-char large_array[2048]; foobar (large_array);
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-
-libc_undefs=`$NM -u conftest.o |
-  LC_ALL=C $AWK '$1 == "U" { print $2 | "sort -u"; next } { exit(1) }' \
-    2>&5` || {
-  as_fn_error $? "confusing output from $NM -u" "$LINENO" 5
-}
-echo >&5 "libc_undefs='$libc_undefs'"
-# On some architectures, there are architecture-specific undefined
-# symbols (resolved by the linker), so filter out unknown symbols.
-# This will fail to produce the correct result if the compiler
-# defaults to -fstack-protector but this produces an undefined symbol
-# other than __stack_chk_fail or __stack_chk_fail_local. However,
-# compilers like that have not been encountered in practice.
-libc_undefs=`echo "$libc_undefs" | \
-  egrep '^(foobar|__stack_chk_fail|__stack_chk_fail_local)$'`
-case "$libc_undefs" in
-foobar) libc_cv_predef_stack_protector=no ;;
-'__stack_chk_fail
-foobar'|'__stack_chk_fail_local
-foobar') libc_cv_predef_stack_protector=yes ;;
-*) as_fn_error $? "unexpected symbols in test: $libc_undefs" "$LINENO" 5 ;;
-esac
-else
-  as_fn_error $? "test compilation failed" "$LINENO" 5
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_predef_stack_protector" >&5
-$as_echo "$libc_cv_predef_stack_protector" >&6; }
-libc_extra_cflags=
-if test $libc_cv_predef_stack_protector = yes; then
-  libc_extra_cflags="$libc_extra_cflags -fno-stack-protector"
-fi
-libc_extra_cppflags=
-
 # Some linkers on some architectures support __ehdr_start but with
 # bugs.  Make sure usage of it does not create relocations in the
 # output (as the linker should resolve them all for us).
@@ -6520,7 +6480,7 @@ old_CFLAGS="$CFLAGS"
 old_LDFLAGS="$LDFLAGS"
 old_LIBS="$LIBS"
 CFLAGS="$CFLAGS -fPIC"
-LDFLAGS="$LDFLAGS -nostdlib -nostartfiles -shared"
+LDFLAGS="$LDFLAGS -nostdlib -nostartfiles -shared $no_ssp"
 LIBS=
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
