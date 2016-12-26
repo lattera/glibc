@@ -29,6 +29,7 @@ extern TYPE_nacl_irt_query nacl_interface_query_ifunc (void)
   asm ("nacl_interface_query");
 
 TYPE_nacl_irt_query
+inhibit_stack_protector
 nacl_interface_query_ifunc (void)
 {
   return &__nacl_irt_query;

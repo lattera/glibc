@@ -21,6 +21,7 @@
 void *getcpu_ifunc (void) __asm__ ("__getcpu");
 
 void *
+inhibit_stack_protector
 getcpu_ifunc (void)
 {
   PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);

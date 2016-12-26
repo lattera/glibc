@@ -48,6 +48,10 @@
 /* Define if compiler accepts -ftree-loop-distribute-patterns.  */
 #undef  HAVE_CC_INHIBIT_LOOP_TO_LIBCALL
 
+/* Define if compiler accepts -fno-stack-protector in an
+   __attribute__ ((__optimize__)).  */
+#undef	HAVE_CC_NO_STACK_PROTECTOR
+
 /* The level of stack protection in use for glibc as a whole.
    May be overridden on a file-by-file basis.  */
 #ifndef STACK_PROTECTOR_LEVEL

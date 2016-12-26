@@ -32,6 +32,7 @@ void * foo1_ifunc (void) __asm__ ("foo1");
 __asm__(".type foo1, %gnu_indirect_function");
 
 void *
+inhibit_stack_protector
 foo1_ifunc (void)
 {
   return ifunc_sel (one, minus_one, zero);
@@ -41,6 +42,7 @@ void * foo2_ifunc (void) __asm__ ("foo2");
 __asm__(".type foo2, %gnu_indirect_function");
 
 void *
+inhibit_stack_protector
 foo2_ifunc (void)
 {
   return ifunc_sel (minus_one, one, zero);
@@ -50,6 +52,7 @@ void * foo3_ifunc (void) __asm__ ("foo3");
 __asm__(".type foo3, %gnu_indirect_function");
 
 void *
+inhibit_stack_protector
 foo3_ifunc (void)
 {
   return ifunc_sel (one, zero, minus_one);

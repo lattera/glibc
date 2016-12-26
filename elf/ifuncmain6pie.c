@@ -21,6 +21,7 @@ void * foo_ifunc (void) __asm__ ("foo");
 __asm__(".type foo, %gnu_indirect_function");
 
 void *
+inhibit_stack_protector
 foo_ifunc (void)
 {
   return ifunc_one (one);

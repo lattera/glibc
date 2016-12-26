@@ -5,6 +5,7 @@
 extern int global;
 
 static inline void *
+inhibit_stack_protector
 ifunc_sel (int (*f1) (void), int (*f2) (void), int (*f3) (void))
 {
   register void *ret __asm__ ("r3");
@@ -32,6 +33,7 @@ ifunc_sel (int (*f1) (void), int (*f2) (void), int (*f3) (void))
 }
 
 static inline void *
+inhibit_stack_protector
 ifunc_one (int (*f1) (void))
 {
   register void *ret __asm__ ("r3");

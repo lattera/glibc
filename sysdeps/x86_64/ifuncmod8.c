@@ -28,6 +28,7 @@ foo_impl (float x)
 }
 
 void *
+inhibit_stack_protector
 foo_ifunc (void)
 {
   __m128i xmm = _mm_set1_epi32 (-1);

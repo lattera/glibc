@@ -653,6 +653,7 @@ stack_protector=
 no_stack_protector=
 if test "$libc_cv_ssp" = yes; then
   no_stack_protector="-fno-stack-protector -DSTACK_PROTECTOR_LEVEL=0"
+  AC_DEFINE(HAVE_CC_NO_STACK_PROTECTOR)
 fi
 
 if test "$enable_stack_protector" = yes && test "$libc_cv_ssp" = yes; then

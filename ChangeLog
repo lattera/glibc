@@ -1,4 +1,29 @@
 2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
+
+	[BZ #7065]
+	* configure.ac (HAVE_CC_NO_STACK_PROTECTOR): Define.
+	* config.h.in (HAVE_CC_NO_STACK_PROTECTOR): New macro.
+	* include/libc-symbols.h (inhibit_stack_protector): New macro.
+	(__ifunc_resolver): Use it.
+	* elf/ifuncdep2.c (foo1_ifunc, foo2_ifunc, foo3_ifunc): Apply
+	inhibit_stack_protector.
+	* elf/ifuncmain6pie.c (foo_ifunc): Likewise.
+	* elf/ifuncmain7.c (foo_ifunc): Likewise.
+	* elf/ifuncmod1.c (foo_ifunc, foo_hidden_ifunc)
+	(foo_protected_ifunc): Likewise.
+	* elf/ifuncmod5.c (foo_ifunc, foo_hidden_ifunc)
+	(foo_protected_ifunc): Likewise.
+	* sysdeps/generic/ifunc-sel.h (ifunc_sel, ifunc_one): Likewise.
+	* sysdeps/nacl/nacl_interface_query.c
+	(nacl_interface_query_ifunc): Likewise.
+	* sysdeps/powerpc/ifunc-sel.h (ifunc_sel, ifunc_one): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/getcpu.c (getcpu_ifunc):
+	Likewise.
+	* sysdeps/x86_64/ifuncmod8.c (foo_ifunc): Likewise.
+	* sysdeps/unix/make-syscalls.sh: Apply inhibit_stack_protector to
+	the generated vDSO syscall resolver.
+
+2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
 	    Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #7065]

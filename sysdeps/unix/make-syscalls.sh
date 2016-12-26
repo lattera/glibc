@@ -287,6 +287,7 @@ while read file srcfile caller syscall args strong weak; do
 	(echo '#include <dl-vdso.h>'; \\
 	 echo 'extern void *${strong}_ifunc (void) __asm ("${strong}");'; \\
 	 echo 'void *'; \\
+	 echo 'inhibit_stack_protector'; \\
 	 echo '${strong}_ifunc (void)'; \\
 	 echo '{'; \\
 	 echo '  PREPARE_VERSION_KNOWN (symver, ${vdso_symver});'; \\
