@@ -84,7 +84,6 @@ CPPFLAGS-nscd += -D_FORTIFY_SOURCE=2
 ifeq (yesyes,$(have-fpie)$(build-shared))
 CFLAGS-nscd += $(pie-ccflag)
 endif
-CFLAGS-nscd += $(stack-protector)
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 LDFLAGS-nscd = -Wl,-z,now

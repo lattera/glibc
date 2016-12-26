@@ -90,7 +90,6 @@ CPPFLAGS += -Dgethostbyname=res_gethostbyname \
 	    -Dgetnetbyname=res_getnetbyname \
 	    -Dgetnetbyaddr=res_getnetbyaddr
 
-CFLAGS-libresolv += $(stack-protector)
 CFLAGS-res_hconf.c = -fexceptions
 
 # The DNS NSS modules needs the resolver.
