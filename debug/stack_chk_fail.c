@@ -27,3 +27,5 @@ __stack_chk_fail (void)
 {
   __fortify_fail ("stack smashing detected");
 }
+
+strong_alias (__stack_chk_fail, __stack_chk_fail_local)

@@ -53,6 +53,12 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    $(static-only-routines)
 static-only-routines := warning-nop stack_chk_fail_local
 
+# Building the stack-protector failure routines with stack protection
+# makes no sense.
+
+CFLAGS-stack_chk_fail.c = $(no-stack-protector)
+CFLAGS-stack_chk_fail_local.c = $(no-stack-protector)
+
 CFLAGS-backtrace.c = -fno-omit-frame-pointer
 CFLAGS-sprintf_chk.c = $(libio-mtsafe)
 CFLAGS-snprintf_chk.c = $(libio-mtsafe)

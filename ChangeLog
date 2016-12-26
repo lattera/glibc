@@ -1,4 +1,18 @@
 2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #7065]
+	PLT avoidance for __stack_chk_fail*.
+	* debug/Makefile (CFLAGS-stack_chk_fail.c)
+	(CFLAGS-stack_chk_fail_local.c): Build without stack protector.
+	* debug/stack_chk_fail.c (__stack_chk_fail): Add
+	__stack_chk_fail_local alias.
+	* sysdeps/generic/symbol-hacks.h [IS_IN (libc)]
+	(__stack_chk_fail): Turn into hidden reference to
+	__stack_chk_fail_local.
+
+2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
 
 	[BZ #7065]
 	* configure.ac: Add check for unsupported stack-protection level.
