@@ -102,14 +102,14 @@ init_static_tls (size_t memsz, size_t align)
 }
 
 void
-__libc_setup_tls (size_t tcbsize, size_t tcbalign)
+__libc_setup_tls (void)
 {
   void *tlsblock;
   size_t memsz = 0;
   size_t filesz = 0;
   void *initimage = NULL;
   size_t align = 0;
-  size_t max_align = tcbalign;
+  size_t max_align = TCB_ALIGNMENT;
   size_t tcb_offset;
   const ElfW(Phdr) *phdr;
 
@@ -142,9 +142,9 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
      _dl_allocate_tls_storage (in elf/dl-tls.c) does using __libc_memalign
      and dl_tls_static_align.  */
   tcb_offset = roundup (memsz + GL(dl_tls_static_size), max_align);
-  tlsblock = __sbrk (tcb_offset + tcbsize + max_align);
+  tlsblock = __sbrk (tcb_offset + TLS_INIT_TCB_SIZE + max_align);
 #elif TLS_DTV_AT_TP
-  tcb_offset = roundup (tcbsize, align ?: 1);
+  tcb_offset = roundup (TLS_INIT_TCB_SIZE, align ?: 1);
   tlsblock = __sbrk (tcb_offset + memsz + max_align
 		     + TLS_PRE_TCB_SIZE + GL(dl_tls_static_size));
   tlsblock += TLS_PRE_TCB_SIZE;
@@ -214,13 +214,4 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 #endif
 
   init_static_tls (memsz, MAX (TLS_TCB_ALIGN, max_align));
-}
-
-/* This is the minimal initialization function used when libpthread is
-   not used.  */
-void
-__attribute__ ((weak))
-__pthread_initialize_minimal (void)
-{
-  __libc_setup_tls (TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN);
 }

@@ -1,4 +1,23 @@
 2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
+	    Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #7065]
+	Initialize the stack guard earlier when linking statically.
+	* sysdeps/generic/ldsodefs.h (__libc_setup_tls)
+	(__pthread_initialize_minimal): Declare.
+	* csu/libc-start.c (__pthread_initialize_minimal): Remove
+	declaration.
+	(LIBC_START_MAIN): Call __libc_setup_tls early and directly.  Move
+	stack canary and apply_irel initialization up.  Call
+	__pthread_initialize_minimal only if linked in.
+	* csu/libc-tls.c (__libc_setup_tls): Replace arguments with their
+	constant values.
+	(__pthread_initialize_minimal): Remove.
+	* nptl/nptl-init.c (__libc_setup_tls): Remove declaration.
+	(__pthread_initialize_minimal_internal): Do not call
+	__libc_setup_tls.
+
+2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
 
 	[BZ #7065]
 	* configure.ac (libc_cv_ssp): Move up.

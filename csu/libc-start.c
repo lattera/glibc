@@ -29,7 +29,6 @@ extern int __libc_multiple_libcs;
 #include <tls.h>
 #ifndef SHARED
 # include <dl-osinfo.h>
-extern void __pthread_initialize_minimal (void);
 # ifndef THREAD_SET_STACK_GUARD
 /* Only exported for architectures that don't store the stack guard canary
    in thread local area.  */
@@ -175,6 +174,20 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
         }
     }
 
+  /* Perform IREL{,A} relocations.  */
+  apply_irel ();
+
+  /* The stack guard goes into the TCB, so initialize it early.  */
+  __libc_setup_tls ();
+
+  /* Set up the stack checker's canary.  */
+  uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random);
+# ifdef THREAD_SET_STACK_GUARD
+  THREAD_SET_STACK_GUARD (stack_chk_guard);
+# else
+  __stack_chk_guard = stack_chk_guard;
+# endif
+
 # ifdef DL_SYSDEP_OSCHECK
   if (!__libc_multiple_libcs)
     {
@@ -184,21 +197,9 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
     }
 # endif
 
-  /* Perform IREL{,A} relocations.  */
-  apply_irel ();
-
-  /* Initialize the thread library at least a bit since the libgcc
-     functions are using thread functions if these are available and
-     we need to setup errno.  */
-  __pthread_initialize_minimal ();
-
-  /* Set up the stack checker's canary.  */
-  uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random);
-# ifdef THREAD_SET_STACK_GUARD
-  THREAD_SET_STACK_GUARD (stack_chk_guard);
-# else
-  __stack_chk_guard = stack_chk_guard;
-# endif
+  /* Initialize libpthread if linked in.  */
+  if (__pthread_initialize_minimal != NULL)
+    __pthread_initialize_minimal ();
 
   /* Set up the pointer guard value.  */
   uintptr_t pointer_chk_guard = _dl_setup_pointer_guard (_dl_random,

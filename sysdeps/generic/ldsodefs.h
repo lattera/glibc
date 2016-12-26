@@ -994,6 +994,17 @@ extern size_t _dl_count_modids (void) internal_function attribute_hidden;
 /* Calculate offset of the TLS blocks in the static TLS block.  */
 extern void _dl_determine_tlsoffset (void) internal_function attribute_hidden;
 
+#ifndef SHARED
+/* Set up the TCB for statically linked applications.  This is called
+   early during startup because we always use TLS (for errno and the
+   stack protector, among other things).  */
+void __libc_setup_tls (void);
+
+/* Initialization of libpthread for statically linked applications.
+   If libpthread is not linked in, this is an empty function.  */
+void __pthread_initialize_minimal (void) weak_function;
+#endif
+
 /* Allocate memory for static TLS block (unless MEM is nonzero) and dtv.  */
 extern void *_dl_allocate_tls (void *mem) internal_function;
 rtld_hidden_proto (_dl_allocate_tls)
