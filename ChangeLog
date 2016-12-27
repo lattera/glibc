@@ -1,3 +1,8 @@
+2016-12-27  Florian Weimer  <fweimer@redhat.com>
+
+	* sunrpc/rpcinfo.c: Remove.
+	* sunrpc/Makefile: Remove comments referring to rpcinfo.
+
 2016-12-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ# 19387]

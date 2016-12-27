@@ -85,10 +85,6 @@ shared-only-routines = $(routines)
 endif
 endif
 
-# We do not build rpcinfo anymore.  It is not needed for a bootstrap
-# and not wanted on complete systems.
-# others := rpcinfo
-# install-sbin := rpcinfo
 install-bin := rpcgen
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o \
