@@ -21,9 +21,6 @@
    Though mostly compatibly, the following differences exist compared
    to the original implementation:
 
-	- new command "spoof" takes an arguments like RESOLV_SPOOF_CHECK
-	  environment variable (i.e., `off', `nowarn', or `warn').
-
 	- line comments can appear anywhere (not just at the beginning of
 	  a line)
 */
@@ -55,7 +52,6 @@
 
 /* Environment vars that all user to override default behavior:  */
 #define ENV_HOSTCONF	"RESOLV_HOST_CONF"
-#define ENV_SPOOF	"RESOLV_SPOOF_CHECK"
 #define ENV_TRIM_OVERR	"RESOLV_OVERRIDE_TRIM_DOMAINS"
 #define ENV_TRIM_ADD	"RESOLV_ADD_TRIM_DOMAINS"
 #define ENV_MULTI	"RESOLV_MULTI"
@@ -65,7 +61,6 @@ enum parse_cbs
   {
     CB_none,
     CB_arg_trimdomain_list,
-    CB_arg_spoof,
     CB_arg_bool
   };
 
@@ -78,10 +73,7 @@ static const struct cmd
 {
   {"order",		CB_none,		0},
   {"trim",		CB_arg_trimdomain_list,	0},
-  {"spoof",		CB_arg_spoof,		0},
   {"multi",		CB_arg_bool,		HCONF_FLAG_MULTI},
-  {"nospoof",		CB_arg_bool,		HCONF_FLAG_SPOOF},
-  {"spoofalert",	CB_arg_bool,		HCONF_FLAG_SPOOFALERT},
   {"reorder",		CB_arg_bool,		HCONF_FLAG_REORDER}
 };
 
@@ -164,28 +156,6 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args)
 
 
 static const char *
-arg_spoof (const char *fname, int line_num, const char *args)
-{
-  const char *start = args;
-  size_t len;
-
-  args = skip_string (args);
-  len = args - start;
-
-  if (len == 3 && __strncasecmp (start, "off", len) == 0)
-    _res_hconf.flags &= ~(HCONF_FLAG_SPOOF | HCONF_FLAG_SPOOFALERT);
-  else
-    {
-      _res_hconf.flags |= (HCONF_FLAG_SPOOF | HCONF_FLAG_SPOOFALERT);
-      if ((len == 6 && __strncasecmp (start, "nowarn", len) == 0)
-	  || !(len == 4 && __strncasecmp (start, "warn", len) == 0))
-	_res_hconf.flags &= ~HCONF_FLAG_SPOOFALERT;
-    }
-  return args;
-}
-
-
-static const char *
 arg_bool (const char *fname, int line_num, const char *args, unsigned flag)
 {
   if (__strncasecmp (args, "on", 2) == 0)
@@ -261,8 +231,6 @@ parse_line (const char *fname, int line_num, const char *str)
 
   if (c->cb == CB_arg_trimdomain_list)
     str = arg_trimdomain_list (fname, line_num, str);
-  else if (c->cb == CB_arg_spoof)
-    str = arg_spoof (fname, line_num, str);
   else if (c->cb == CB_arg_bool)
     str = arg_bool (fname, line_num, str, c->arg);
   else
@@ -324,10 +292,6 @@ do_init (void)
 	}
       fclose (fp);
     }
-
-  envval = getenv (ENV_SPOOF);
-  if (envval)
-    arg_spoof (ENV_SPOOF, 1, envval);
 
   envval = getenv (ENV_MULTI);
   if (envval)

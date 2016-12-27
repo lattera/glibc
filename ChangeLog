@@ -1,5 +1,14 @@
 2016-12-27  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_hconf.h (HCONF_FLAG_SPOOF, HCONF_FLAG_SPOOFALERT):
+	Remove.
+	* resolv/res_hconf.c (ENV_SPOOF, arg_spoof): Remove.
+	(cmd): Remove spoof, nospoof, spoofalert.
+	(parse_line): Ignore spoof-related lines.
+	(do_init): Do not process RESOLV_SPOOF_CHECK.
+
+2016-12-27  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #20964]
 	sunrpc: Always obtain AF_INET addresses from NSS.
 	* include/rpc/rpc.h (__libc_rpc_gethostbyname): Declare.
