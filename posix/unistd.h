@@ -1157,6 +1157,11 @@ extern int pthread_atfork (void (*__prepare) (void),
 			   void (*__child) (void)) __THROW;
 #endif
 
+#ifdef __USE_GNU
+/* Write LENGTH bytes of randomness starting at BUFFER.  Return 0 on
+   success or -1 on error.  */
+int getentropy (void *__buffer, size_t __length) __wur;
+#endif
 
 /* Define some macros helping to catch buffer overflows.  */
 #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function

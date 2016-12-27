@@ -1,5 +1,10 @@
 2016-12-27  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #17252]
+	* posix/unistd.h (getentropy): Declare.
+
+2016-12-27  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_hconf.h (HCONF_FLAG_SPOOF, HCONF_FLAG_SPOOFALERT):
 	Remove.
 	* resolv/res_hconf.c (ENV_SPOOF, arg_spoof): Remove.
