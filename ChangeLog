@@ -1,3 +1,7 @@
+2016-12-27  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* scripts/check-c++-types.sh: Add comments.
+
 2016-12-27  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #19514]
