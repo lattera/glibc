@@ -1,3 +1,19 @@
+2016-12-28  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile
+	(sysdep_routines): Add strchr-power8 and strchrnul_power8.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(strchr): Add __strchr_power8 to list of strchr functions.
+	(strchrnul): Add __strchrnul_power8 to list of strchr functions.
+	* sysdeps/powerpc/powerpc64/multiarch/strchr-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strchrnul-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strchr.c
+	(strchr): Add __strchr_power8 to ifunc list.
+	* sysdeps/powerpc/powerpc64/multiarch/strchrnul.c
+	(__strchrnul): Add __strchrnul_power8 to ifunc list.
+	* sysdeps/powerpc/powerpc64/power8/strchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power8/strchrnul.S: New file.
+
 2016-12-28  Florian Weimer  <fweimer@redhat.com>
 
 	* support/Makefile (libsupport-routines): Add
