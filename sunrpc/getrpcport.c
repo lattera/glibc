@@ -1,3 +1,21 @@
+/* Obtain the RPC port number for an RPC service on a host.
+   Copyright (C) 2016 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If
+   not, see <http://www.gnu.org/licenses/>.  */
+
 /*
  * Copyright (c) 2010, Oracle America, Inc.
  *
@@ -43,26 +61,8 @@ int
 getrpcport (const char *host, u_long prognum, u_long versnum, u_int proto)
 {
   struct sockaddr_in addr;
-  struct hostent hostbuf, *hp;
-  size_t buflen;
-  char *buffer;
-  int herr;
 
-  buflen = 1024;
-  buffer = __alloca (buflen);
-  while (__gethostbyname_r (host, &hostbuf, buffer, buflen, &hp, &herr) != 0
-	 || hp == NULL)
-    if (herr != NETDB_INTERNAL || errno != ERANGE)
-      return 0;
-    else
-      {
-	/* Enlarge the buffer.  */
-	buflen *= 2;
-	buffer = __alloca (buflen);
-      }
-
-  memcpy ((char *) &addr.sin_addr, hp->h_addr, hp->h_length);
-  addr.sin_family = AF_INET;
-  addr.sin_port = 0;
+  if (__libc_rpc_gethostbyname (host, &addr) != 0)
+    return 0;
   return pmap_getport (&addr, prognum, versnum, proto);
 }

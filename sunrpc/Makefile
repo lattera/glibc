@@ -78,7 +78,8 @@ routines := auth_none authuxprot bindrsvprt clnt_raw clnt_simp \
 	    des_crypt des_impl des_soft key_prot openchild rtime svcauth_des \
 	    getrpcent getrpcbyname getrpcbynumber \
 	    getrpcent_r getrpcbyname_r getrpcbynumber_r \
-	    clnt_unix svc_unix create_xid $(need-export-routines)
+	    clnt_unix svc_unix create_xid $(need-export-routines) \
+	    rpc_gethostbyname
 ifneq ($(link-obsolete-rpc),yes)
 # We only add the RPC for compatibility to libc.so.
 shared-only-routines = $(routines)

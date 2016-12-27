@@ -57,6 +57,12 @@ libc_hidden_proto (__rpc_thread_svc_pollfd)
 libc_hidden_proto (__rpc_thread_svc_fdset)
 libc_hidden_proto (__rpc_thread_createerr)
 
+/* Perform a host name lookup for NAME and return the first IPv4
+   address in *ADDR.  Return 0 on success and -1 on error (and set an
+   RPC error).  */
+int __libc_rpc_gethostbyname (const char *host, struct sockaddr_in *addr)
+  attribute_hidden;
+
 #endif /* _RPC_THREAD_SAFE_ */
 
 # endif /* !_ISOMAC */

@@ -1,5 +1,16 @@
 2016-12-27  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20964]
+	sunrpc: Always obtain AF_INET addresses from NSS.
+	* include/rpc/rpc.h (__libc_rpc_gethostbyname): Declare.
+	* sunrpc/rpc_gethostbyname.c: New file.
+	* sunrpc/Makefile (routines): Add it.
+	* sunrpc/clnt_gen.c (clnt_create): Use __libc_rpc_gethostbyname.
+	* sunrpc/clnt_simp.c (callrpc): Likewise.
+	* sunrpc/getrpcport.c (getrpcport): Likewise.
+
+2016-12-27  Florian Weimer  <fweimer@redhat.com>
+
 	* sunrpc/rpcinfo.c: Remove.
 	* sunrpc/Makefile: Remove comments referring to rpcinfo.
 
