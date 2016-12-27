@@ -1,4 +1,4 @@
-/* S/390-specific implemetation of profiling support.
+/* S/390-specific implementation of profiling support.
    Copyright (C) 2000-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com)

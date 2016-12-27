@@ -1,3 +1,12 @@
+2016-12-27  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #19514]
+	* resolv/res_send.c: Fix typo in comment.
+	* sysdeps/i386/i386-mcount.S: Likewise.
+	* sysdeps/s390/s390-32/s390-mcount.S: Likewise.
+	* sysdeps/s390/s390-64/s390x-mcount.S: Likewise.
+	* sysdeps/sparc/sparc-mcount.S: Likewise.
+
 2016-12-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/fpu/s_fmaxf.S: Remove file.
@@ -53816,7 +53825,7 @@
 	(ulp): New function.
 	(check_float_internal): Use ULPDIFF.
 	(cpow_test): Disable failing test.
-	(check_ulp): Test ulp() implemetnation.
+	(check_ulp): Test ulp() implementation.
 	(main): Call check_ulp before starting tests.
 
 2013-05-24  Joseph Myers  <joseph@codesourcery.com>

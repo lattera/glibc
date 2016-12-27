@@ -579,7 +579,7 @@ close_and_return_error (res_state statp, int *resplen2)
    Please note that for TCP there is no way to disable sending both
    queries, unlike UDP, which honours RES_SNGLKUP and RES_SNGLKUPREOP
    and sends the queries serially and waits for the result after each
-   sent query.  This implemetnation should be corrected to honour these
+   sent query.  This implementation should be corrected to honour these
    options.
 
    Please also note that for TCP we send both queries over the same

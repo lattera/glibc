@@ -1,4 +1,4 @@
-/* i386-specific implemetation of profiling support.
+/* i386-specific implementation of profiling support.
    Copyright (C) 1997-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
