@@ -633,7 +633,7 @@
 
 	[BZ #20386]
 	Let gcc detect assert(a = 1) errors.
-	* assert/assert.h (assert) Rewrite, retaining the old definintion
+	* assert/assert.h (assert): Rewrite, retaining the old definintion
 	when required, but otherwise putting the expression as-is in an "if"
 	expression (hence, with no added parentheses) within a statement
 	expression.
@@ -1039,7 +1039,7 @@
 	* support/xpthread_sigmask.c: Likewise.
 	* support/xpthread_spin_lock.c: Likewise.
 	* support/xpthread_spin_unlock.c: Likewise.
-	* support/xrealloc.c: Likweise.
+	* support/xrealloc.c: Likewise.
 	* support/xsignal.h: Likewise.
 	* support/xthread.h: Likewise.
 	* support_tempfile.h: Likewise.
@@ -5852,7 +5852,7 @@
 	* math/s_cacos_template.c: Update using type-generic macros.
 	* math/s_cacosh_template.c: Likewise.
 	* math/s_ccos_template.c: Likewise.
-	* math/s_ccosh_template.c: Likwise.
+	* math/s_ccosh_template.c: Likewise.
 
 	* math/s_cacosf.c: Removed.
 	* math/s_cacos.c: Removed.
@@ -8463,7 +8463,7 @@
 	* sysdeps/unix/sysv/linux/generic/wordsize-32/pwritev64.c: Likewise.
 	* sysdeps/unix/sysv/linux/mips/mips64/n64/pwritev64.c: Likewise.
 	* sysdeps/unix/sysv/linux/wordsize-64/pwritev.c: Likewise.
-	* sysdeps/unix/sysv/linux/wordsize-64/pwritev64.: Likwise.
+	* sysdeps/unix/sysv/linux/wordsize-64/pwritev64.: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/x32/syscalls.list (pwritev): Remove
 	syscall from auto-generation.
 	* sysdeps/unix/sysv/linux/pwritev.c: Rewrite implementation.
@@ -8490,7 +8490,7 @@
 	* sysdeps/unix/sysv/linux/generic/wordsize-32/preadv64.c: Likewise.
 	* sysdeps/unix/sysv/linux/mips/mips64/n64/preadv64.c: Likewise.
 	* sysdeps/unix/sysv/linux/wordsize-64/preadv.c: Likewise.
-	* sysdeps/unix/sysv/linux/wordsize-64/preadv64.: Likwise.
+	* sysdeps/unix/sysv/linux/wordsize-64/preadv64.: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/x32/syscalls.list (preadv): Remove
 	syscall from auto-generation.
 	* sysdeps/unix/sysv/linux/preadv.c: Rewrite implementation.
@@ -10381,7 +10381,7 @@
 	[INITIAL_MASK]: New macro.
 	[STRCSPN]: Likewise.
 	[UPDATE_MASK]: Likewise.
-	[USE_AS_STRCSPN]: Lisewise.
+	[USE_AS_STRCSPN]: Likewise.
 
 2016-04-25  Florian Weimer  <fweimer@redhat.com>
 
@@ -11082,11 +11082,11 @@
 	* sysdeps/x86_64/multiarch/memmove-avx-unaligned-erms.S: New
 	file.
 	* sysdeps/x86_64/multiarch/memmove-avx512-unaligned-erms.S:
-	Likwise.
+	Likewise.
 	* sysdeps/x86_64/multiarch/memmove-sse2-unaligned-erms.S:
-	Likwise.
+	Likewise.
 	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:
-	Likwise.
+	Likewise.
 
 2016-03-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
@@ -11488,7 +11488,7 @@
 	* catgets/tst-catgets.c (do_bz17905): Mark result unused.
 	* dlfcn/bug-dl-leaf-lib.c (check_val_fini): Mark ret unused.
 	* math/atest-exp.c (exp_mpn): Mark chk unused.
-	* math/atest-exp2.c (exp_mpn): Likwise.
+	* math/atest-exp2.c (exp_mpn): Likewise.
 	* sysdeps/arm/dl-machine.h (elf_machine_rela): Mark td unused.
 	* sysdeps/i386/i686/dl-hash.h: Mark _dl_elf_hash unused.
 
@@ -25779,7 +25779,7 @@
 	* sysdeps/unix/sysv/linux/posix_fallocate.c (posix_fallocate):
 	Assume __ASSUME_FALLOCATE is always true.
 	* sysdeps/unix/sysv/linux/posix_fallocate64.c
-	(__posix_fallocate64_l64): Likweise.
+	(__posix_fallocate64_l64): Likewise.
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fallocate.c
 	(posix_fallocate): Likewise.
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fallocate64.c
@@ -32523,7 +32523,7 @@
 	* sysdeps/powerpc/powerpc64/power8/memset.S (MTVSRD_V1_R4): Simplify
 	definition.
 	* sysdeps/powerpc/powerpc64/power8/fpu/s_finite.S (MFVSRD_R3_V1):
-	Likwise.
+	Likewise.
 	* sysdeps/powerpc/powerpc64/power8/fpu/s_isinf.S (MFVSRD_R3_V1):
 	Likewise.
 	* sysdeps/powerpc/powerpc64/power8/fpu/s_isnan.S (MFVSRD_R3_V1):
@@ -63929,7 +63929,7 @@
 	$(built-program-cmd) to tst-getconf.sh, not $(elf-objpfx) and
 	$(rtld-installed-name).
 	* posix/tst-getconf.sh (elf_objpfx): Remove variable.
-	(rtld_installed_name): Likwise.
+	(rtld_installed_name): Likewise.
 	(runit): Remove function.
 	(run_getconf): New variable,  Use it for running getconf binary.
 
@@ -67189,7 +67189,7 @@
 	* sysdeps/sh/configure: Likewise.
 	* sysdeps/powerpc/powerpc64/configure: Likewise.
 	* sysdeps/powerpc/powerpc32/configure: Likewise.
-	* sysdeps/sparc/configure: Likwise.
+	* sysdeps/sparc/configure: Likewise.
 	* sysdeps/i386/configure: Likewise.
 
 	* elf/dl-open.c: Comment fixes.
@@ -73731,9 +73731,9 @@
 	* sysdeps/x86_64/fpu/bits/mathinline.h: Don't include
 	<bits/wordsize.h>.
 	(__signbitf): Check __x86_64__ instead of __WORDSIZE.
-	(__signbit): Likwise.
-	(llrintf): Likwise.
-	(llrint): Likwise.
+	(__signbit): Likewise.
+	(llrintf): Likewise.
+	(llrint): Likewise.
 
 2012-03-20  H.J. Lu  <hongjiu.lu@intel.com>
 
@@ -73804,7 +73804,7 @@
 
 	* sysdeps/x86_64/fpu/math_private.h (EXTRACT_WORDS64): Use
 	int64_t instead of long int.
-	(INSERT_WORDS64): Likwise.
+	(INSERT_WORDS64): Likewise.
 
 2012-03-19  H.J. Lu  <hongjiu.lu@intel.com>
 
