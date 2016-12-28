@@ -26,7 +26,16 @@ ENTRY (__memchr)
 	dcbt	0,r3
 	clrrwi  r8,r3,2
 	insrwi	r4,r4,8,16    /* Replicate byte to word.  */
-	add	r7,r3,r5      /* Calculate the last acceptable address.  */
+
+	/* Calculate the last acceptable address and check for possible
+	   addition overflow by using satured math:
+	   r7 = r3 + r5
+	   r7 |= -(r7 < x)  */
+	add     r7,r3,r5
+	subfc   r6,r3,r7
+	subfe   r9,r9,r9
+	or      r7,r7,r9
+
 	insrwi	r4,r4,16,0
 	cmplwi	r5,16
 	li	r9, -1

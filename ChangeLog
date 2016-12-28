@@ -1,3 +1,8 @@
+2016-12-28  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/memchr.S (__memchr): Avoid an
+	overflow in pointer addition.
+
 2016-12-28  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile
