@@ -30,11 +30,14 @@ libsupport-routines = \
   ignore_stderr \
   oom_error \
   set_fortify_handler \
+  support_record_failure \
   support_test_main \
+  support_test_verify_impl \
   temp_file \
   write_message \
   xasprintf \
   xcalloc \
+  xfork \
   xmalloc \
   xpthread_barrier_destroy \
   xpthread_barrier_init \
@@ -51,6 +54,7 @@ libsupport-routines = \
   xpthread_spin_lock \
   xpthread_spin_unlock \
   xrealloc \
+  xwaitpid \
 
 libsupport-static-only-routines := $(libsupport-routines)
 # Only build one variant of the library.
@@ -59,6 +63,18 @@ ifeq ($(build-shared),yes)
 libsupport-inhibit-o += .o
 endif
 
-tests = README-testing
+tests = \
+  README-testing \
+  tst-support_record_failure \
+
+tests-special = \
+  $(objpfx)tst-support_record_failure-2.out
+
+$(objpfx)tst-support_record_failure-2.out: tst-support_record_failure-2.sh \
+  $(objpfx)tst-support_record_failure
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix-before-env)' \
+	  '$(run-program-env)' '$(test-program-prefix-after-env)' \
+	  > $@; \
+	$(evaluate-test)
 
 include ../Rules

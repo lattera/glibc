@@ -1,4 +1,4 @@
-/* Macros for reporting test results.
+/* Functionality for reporting test results.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -35,6 +35,25 @@ __BEGIN_DECLS
 #define FAIL_EXIT1(...) \
   support_exit_failure_impl (1, __FILE__, __LINE__, __VA_ARGS__)
 
+/* Record a test failure (but continue executing) if EXPR evaluates to
+   false.  */
+#define TEST_VERIFY(expr)                                       \
+  ({                                                            \
+    if (expr)                                                   \
+      ;                                                         \
+    else                                                        \
+      support_test_verify_impl (-1, __FILE__, __LINE__, #expr); \
+  })
+
+/* Record a test failure and exit if EXPR evaluates to false.  */
+#define TEST_VERIFY_EXIT(expr)                                  \
+  ({                                                            \
+    if (expr)                                                   \
+      ;                                                         \
+    else                                                        \
+      support_test_verify_impl (1, __FILE__, __LINE__, #expr);  \
+  })
+
 int support_print_failure_impl (const char *file, int line,
                                 const char *format, ...)
   __attribute__ ((nonnull (1), format (printf, 3, 4)));
@@ -42,7 +61,24 @@ void support_exit_failure_impl (int exit_status,
                                 const char *file, int line,
                                 const char *format, ...)
   __attribute__ ((noreturn, nonnull (2), format (printf, 4, 5)));
+void support_test_verify_impl (int status, const char *file, int line,
+                               const char *expr);
 
+/* Record a test failure.  This function returns and does not
+   terminate the process.  The failure counter is stored in a shared
+   memory mapping, so that failures reported in child processes are
+   visible to the parent process and test driver.  This function
+   depends on initialization by an ELF constructor, so it can only be
+   invoked after the test driver has run.  Note that this function
+   does not support reporting failures from a DSO.  */
+void support_record_failure (void);
+
+/* Internal function called by the test driver.  */
+int support_report_failure (int status)
+  __attribute__ ((weak, warn_unused_result));
+
+/* Internal function used to test the failure recording framework.  */
+void support_record_failure_reset (void);
 
 __END_DECLS
 

@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <support/test-driver.h>
+#include <support/check.h>
 #include <support/temp_file-internal.h>
 
 #include <assert.h>
@@ -164,6 +165,17 @@ static bool test_main_called;
 
 const char *test_dir = NULL;
 
+
+/* If test failure reporting has been linked in, it may contribute
+   additional test failures.  */
+static int
+adjust_exit_status (int status)
+{
+  if (support_report_failure != NULL)
+    return support_report_failure (status);
+  return status;
+}
+
 int
 support_test_main (int argc, char **argv, const struct test_config *config)
 {
@@ -300,7 +312,7 @@ support_test_main (int argc, char **argv, const struct test_config *config)
 
   /* If we are not expected to fork run the function immediately.  */
   if (direct)
-    return run_test_function (argc, argv, config);
+    return adjust_exit_status (run_test_function (argc, argv, config));
 
   /* Set up the test environment:
      - prevent core dumps
@@ -363,8 +375,8 @@ support_test_main (int argc, char **argv, const struct test_config *config)
       if (config->expected_status == 0)
         {
           if (config->expected_signal == 0)
-            /* Simply exit with the return value of the test.  */
-            return WEXITSTATUS (status);
+            /* Exit with the return value of the test.  */
+            return adjust_exit_status (WEXITSTATUS (status));
           else
             {
               printf ("Expected signal '%s' from child, got none\n",
@@ -382,7 +394,7 @@ support_test_main (int argc, char **argv, const struct test_config *config)
               exit (1);
             }
         }
-      return 0;
+      return adjust_exit_status (0);
     }
   /* Process was killed by timer or other signal.  */
   else
@@ -401,6 +413,6 @@ support_test_main (int argc, char **argv, const struct test_config *config)
           exit (1);
         }
 
-      return 0;
+      return adjust_exit_status (0);
     }
 }

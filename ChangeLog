@@ -1,3 +1,23 @@
+2016-12-28  Florian Weimer  <fweimer@redhat.com>
+
+	* support/Makefile (libsupport-routines): Add
+	support_test_verify_impl, support_record_failure, xfork, xwaitpid.
+	(tests): Add tst-support_record_failure.
+	(tests-special): tst-support_record_failure-2.
+	(tst-support_record_failure-2.out): Depend on
+	tst-support_record_failure-2.sh and tst-support_record_failure.
+	* support/check.h (TEST_VERIFY, TEST_VERIFY_EXIT): Define.
+	(support_test_verify_impl, support_record_failure)
+	(support_report_failure, support_report_failure_reset): Declare.
+	* support/support_test_main.c (adjust_exit_status): New function.
+	(support_test_main): Call it to incorporate record test failures.
+	* support/support_record_failure.c: New file.
+	* support/tst-support_record_failure.c: Likewise.
+	* support/tst-support_record_failure-2.sh: Likewise.
+	* support/xunistd.h: Likewise.
+	* support/xfork.c: Likewise.
+	* support/xwaitpid.c: Likewise.
+
 2016-12-27  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* scripts/check-c++-types.sh: Add comments.
