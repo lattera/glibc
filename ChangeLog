@@ -11,7 +11,8 @@
 	(support_report_failure, support_report_failure_reset): Declare.
 	* support/support_test_main.c (adjust_exit_status): New function.
 	(support_test_main): Call it to incorporate record test failures.
-	* support/support_record_failure.c: New file.
+	* support/support_test_verify_impl.c: New file.
+	* support/support_record_failure.c: Likewise.
 	* support/tst-support_record_failure.c: Likewise.
 	* support/tst-support_record_failure-2.sh: Likewise.
 	* support/xunistd.h: Likewise.
