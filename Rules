@@ -129,9 +129,9 @@ endif
 others: $(py-const)
 
 ifeq ($(run-built-tests),no)
-tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported),$(tests) \
-			       $(tests-printers-programs)) \
-			     $(test-srcs)) $(tests-special)
+tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported),$(tests)) \
+			     $(test-srcs)) $(tests-special) \
+			     $(tests-printers-programs)
 xtests: tests $(xtests-special)
 else
 tests: $(tests:%=$(objpfx)%.out) $(tests-special) $(tests-printers-out)
