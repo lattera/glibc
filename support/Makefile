@@ -67,6 +67,7 @@ tests = \
   README-testing \
   tst-support_record_failure \
 
+ifeq ($(run-built-tests),yes)
 tests-special = \
   $(objpfx)tst-support_record_failure-2.out
 
@@ -76,5 +77,6 @@ $(objpfx)tst-support_record_failure-2.out: tst-support_record_failure-2.sh \
 	  '$(run-program-env)' '$(test-program-prefix-after-env)' \
 	  > $@; \
 	$(evaluate-test)
+endif
 
 include ../Rules

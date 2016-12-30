@@ -1,3 +1,10 @@
+2016-12-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* support/Makefile (tests-special): Make definition conditional on
+	[$(run-built-tests) = yes].
+	($(objpfx)tst-support_record_failure-2.out): Make rule conditional
+	on [$(run-built-tests) = yes].
+
 2016-12-30  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* Rules (tests): Add tests-printers-programs to tests to be
