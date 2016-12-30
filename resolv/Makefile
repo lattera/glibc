@@ -42,11 +42,12 @@ routines += gai_sigqueue
 tests += tst-res_hconf_reorder
 endif
 extra-libs-others = $(extra-libs)
-libresolv-routines := gethnamaddr res_comp res_debug	\
+libresolv-routines := res_comp res_debug \
 		      res_data res_mkquery res_query res_send		\
 		      inet_net_ntop inet_net_pton inet_neta base64	\
 		      ns_parse ns_name ns_netint ns_ttl ns_print	\
-		      ns_samedomain ns_date compat-hooks
+		      ns_samedomain ns_date \
+		      compat-hooks compat-gethnamaddr
 
 libanl-routines := gai_cancel gai_error gai_misc gai_notify gai_suspend \
 		   getaddrinfo_a
@@ -83,12 +84,6 @@ generated += mtrace-tst-leaks.out tst-leaks.mtrace \
 	     mtrace-tst-leaks2.out tst-leaks2.mtrace
 
 include ../Rules
-
-CPPFLAGS += -Dgethostbyname=res_gethostbyname \
-	    -Dgethostbyname2=res_gethostbyname2 \
-	    -Dgethostbyaddr=res_gethostbyaddr \
-	    -Dgetnetbyname=res_getnetbyname \
-	    -Dgetnetbyaddr=res_getnetbyaddr
 
 CFLAGS-res_hconf.c = -fexceptions
 

@@ -26,7 +26,6 @@ extern __thread struct __res_state *__resp attribute_tls_model_ie;
 extern int __res_vinit (res_state, int);
 extern int __res_maybe_init (res_state, int);
 extern void _sethtent (int);
-extern void _endhtent (void);
 extern struct hostent *_gethtent (void);
 extern struct hostent *_gethtbyname (const char *__name);
 extern struct hostent *_gethtbyname2 (const char *__name, int __af);

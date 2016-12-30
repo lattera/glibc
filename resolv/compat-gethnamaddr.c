@@ -54,23 +54,26 @@
    it exports symbols in the libresolv ABI.  The file is not maintained any
    more, nor are these functions.  */
 
-#include <sys/types.h>
-#include <sys/param.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <arpa/nameser.h>
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_25)
 
-#include <stdio.h>
-#include <netdb.h>
-#include <resolv.h>
-#include <ctype.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <string.h>
+# include <sys/types.h>
+# include <sys/param.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
+# include <arpa/nameser.h>
 
-#define	MAXALIASES	35
-#define	MAXADDRS	35
+# include <stdio.h>
+# include <netdb.h>
+# include <resolv.h>
+# include <ctype.h>
+# include <errno.h>
+# include <stdlib.h>
+# include <string.h>
+
+# define	MAXALIASES	35
+# define	MAXADDRS	35
 
 static char *h_addr_ptrs[MAXADDRS + 1];
 
@@ -86,17 +89,17 @@ static void map_v4v6_hostent (struct hostent *hp, char **bp, int *len) __THROW;
 
 extern void addrsort (char **, int) __THROW;
 
-#if PACKETSZ > 65536
-#define	MAXPACKET	PACKETSZ
-#else
-#define	MAXPACKET	65536
-#endif
+# if PACKETSZ > 65536
+#  define	MAXPACKET	PACKETSZ
+# else
+#  define	MAXPACKET	65536
+# endif
 
 /* As per RFC 1034 and 1035 a host name cannot exceed 255 octets in length.  */
-#ifdef MAXHOSTNAMELEN
-# undef MAXHOSTNAMELEN
-#endif
-#define MAXHOSTNAMELEN 256
+# ifdef MAXHOSTNAMELEN
+#  undef MAXHOSTNAMELEN
+# endif
+# define MAXHOSTNAMELEN 256
 
 typedef union {
     HEADER hdr;
@@ -108,11 +111,11 @@ typedef union {
     char ac;
 } align;
 
-#ifndef h_errno
+# ifndef h_errno
 extern int h_errno;
-#endif
+# endif
 
-#ifdef DEBUG
+# ifdef DEBUG
 static void
 Dprintf (char *msg, int num)
 {
@@ -123,11 +126,11 @@ Dprintf (char *msg, int num)
 		__set_errno (save);
 	}
 }
-#else
-# define Dprintf(msg, num) /*nada*/
-#endif
+# else
+#  define Dprintf(msg, num) /*nada*/
+# endif
 
-#define BOUNDED_INCR(x) \
+# define BOUNDED_INCR(x) \
 	do { \
 		cp += x; \
 		if (cp > eom) { \
@@ -136,7 +139,7 @@ Dprintf (char *msg, int num)
 		} \
 	} while (0)
 
-#define BOUNDS_CHECK(ptr, count) \
+# define BOUNDS_CHECK(ptr, count) \
 	do { \
 		if ((ptr) + (count) > eom) { \
 			__set_h_errno (NO_RECOVERY); \
@@ -419,11 +422,11 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 	return (NULL);
 }
 
-extern struct hostent *gethostbyname2(const char *name, int af);
-libresolv_hidden_proto (gethostbyname2)
+extern struct hostent *res_gethostbyname2(const char *name, int af);
+libresolv_hidden_proto (res_gethostbyname2)
 
 struct hostent *
-gethostbyname (const char *name)
+res_gethostbyname (const char *name)
 {
 	struct hostent *hp;
 
@@ -432,15 +435,16 @@ gethostbyname (const char *name)
 		return (NULL);
 	}
 	if (_res.options & RES_USE_INET6) {
-		hp = gethostbyname2(name, AF_INET6);
+		hp = res_gethostbyname2(name, AF_INET6);
 		if (hp)
 			return (hp);
 	}
-	return (gethostbyname2(name, AF_INET));
+	return (res_gethostbyname2(name, AF_INET));
 }
+compat_symbol (libresolv, res_gethostbyname, res_gethostbyname, GLIBC_2_0);
 
 struct hostent *
-gethostbyname2 (const char *name, int af)
+res_gethostbyname2 (const char *name, int af)
 {
 	union
 	{
@@ -568,10 +572,11 @@ gethostbyname2 (const char *name, int af)
 		free (buf.buf);
 	return ret;
 }
-libresolv_hidden_def (gethostbyname2)
+libresolv_hidden_def (res_gethostbyname2)
+compat_symbol (libresolv, res_gethostbyname2, res_gethostbyname2, GLIBC_2_0);
 
 struct hostent *
-gethostbyaddr (const void *addr, socklen_t len, int af)
+res_gethostbyaddr (const void *addr, socklen_t len, int af)
 {
 	const u_char *uaddr = (const u_char *)addr;
 	static const u_char mapped[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0xff,0xff };
@@ -668,6 +673,7 @@ gethostbyaddr (const void *addr, socklen_t len, int af)
 	__set_h_errno (NETDB_SUCCESS);
 	return (hp);
 }
+compat_symbol (libresolv, res_gethostbyaddr, res_gethostbyaddr, GLIBC_2_0);
 
 void
 _sethtent (int f)
@@ -679,8 +685,9 @@ _sethtent (int f)
 	stayopen = f;
 }
 libresolv_hidden_def (_sethtent)
+compat_symbol (libresolv, _sethtent, _sethtent, GLIBC_2_0);
 
-void
+static void
 _endhtent (void)
 {
 	if (hostf && !stayopen) {
@@ -754,6 +761,7 @@ _gethtent (void)
 	return (&host);
 }
 libresolv_hidden_def (_gethtent)
+compat_symbol (libresolv, _gethtent, _gethtent, GLIBC_2_0);
 
 struct hostent *
 _gethtbyname (const char *name)
@@ -767,6 +775,7 @@ _gethtbyname (const char *name)
 	}
 	return (_gethtbyname2(name, AF_INET));
 }
+compat_symbol (libresolv, _gethtbyname, _gethtbyname, GLIBC_2_0);
 
 struct hostent *
 _gethtbyname2 (const char *name, int af)
@@ -789,6 +798,7 @@ _gethtbyname2 (const char *name, int af)
 	return (p);
 }
 libresolv_hidden_def (_gethtbyname2)
+compat_symbol (libresolv, _gethtbyname2, _gethtbyname2, GLIBC_2_0);
 
 struct hostent *
 _gethtbyaddr (const char *addr, size_t len, int af)
@@ -803,6 +813,7 @@ _gethtbyaddr (const char *addr, size_t len, int af)
 	return (p);
 }
 libresolv_hidden_def (_gethtbyaddr)
+compat_symbol (libresolv, _gethtbyaddr, _gethtbyaddr, GLIBC_2_0);
 
 static void
 map_v4v6_address (const char *src, char *dst)
@@ -888,3 +899,5 @@ addrsort (char **ap, int num)
 	    needsort++;
 	}
 }
+
+#endif	/* SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_25) */

@@ -1,3 +1,21 @@
+2016-12-30  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/Makefile (libresolv-routines): Rename gethnamaddr to
+	compat-gethnamaddr.
+	(CPPFLAGS): Remove.
+	* resolv/gethnamaddr.c: Rename ...
+	* resolv/compat-gethnamaddr.c: ... to this file.
+	(_endhtent): Make static.
+	(res_gethostbyname): Renamed from gethostbyname.  Turn into compat
+	symbol.
+	(res_gethostbyname2): Renamed from gethostbyname2.  Turn into
+	compat symbol.
+	(res_gethostbyaddr): Renamed from gethostbyaddr.  Turn into compat
+	symbol.
+	(_sethtent, _gethtent, _gethtbyname, gethtbyname2, _gethtbyaddr):
+	Turn into compat symbol.
+	* include/resolv.h (_endhtent): Remove declaration.
+
 2016-12-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/types.h (__intmax_t): New typedef.
