@@ -1,5 +1,11 @@
 2016-12-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* bits/types.h (__intmax_t): New typedef.
+	(__uintmax_t): Likewise.
+	* sysdeps/generic/stdint.h: Include <bits/types.h>.
+	(intmax_t): Define using __intmax_t.
+	(uintmax_t): Define using __uintmax_t.
+
 	* support/Makefile (tests-special): Make definition conditional on
 	[$(run-built-tests) = yes].
 	($(objpfx)tst-support_record_failure-2.out): Make rule conditional

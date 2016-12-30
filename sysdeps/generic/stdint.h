@@ -24,6 +24,7 @@
 
 #define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
 #include <bits/libc-header-start.h>
+#include <bits/types.h>
 #include <bits/wchar.h>
 #include <bits/wordsize.h>
 
@@ -131,15 +132,8 @@ typedef unsigned int		uintptr_t;
 
 
 /* Largest integral types.  */
-#if __WORDSIZE == 64
-typedef long int		intmax_t;
-typedef unsigned long int	uintmax_t;
-#else
-__extension__
-typedef long long int		intmax_t;
-__extension__
-typedef unsigned long long int	uintmax_t;
-#endif
+typedef __intmax_t		intmax_t;
+typedef __uintmax_t		uintmax_t;
 
 
 # if __WORDSIZE == 64
