@@ -96,6 +96,7 @@ use-nscd = @use_nscd@
 build-hardcoded-path-in-tests= @hardcoded_path_in_tests@
 build-pt-chown = @build_pt_chown@
 enable-lock-elision = @enable_lock_elision@
+have-tunables = @have_tunables@
 
 # Build tools.
 CC = @CC@

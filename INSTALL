@@ -169,6 +169,11 @@ will be used, and CFLAGS sets optimization options for the compiler.
      By default for x86_64, the GNU C Library is built with the vector
      math library.  Use this option to disable the vector math library.
 
+'--enable-tunables'
+     Tunables support allows additional library parameters to be
+     customized at runtime.  This is an experimental feature and affects
+     startup time and is thus disabled by default.
+
 '--build=BUILD-SYSTEM'
 '--host=HOST-SYSTEM'
      These options are for cross-compiling.  If you specify both options

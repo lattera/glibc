@@ -70,5 +70,8 @@ ld {
 
     # Internal error handling support.  Interposed by libc.so.
     _dl_signal_error; _dl_catch_error;
+
+    # Set value of a tunable.
+    __tunable_set_val;
   }
 }

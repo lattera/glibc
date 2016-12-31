@@ -1,0 +1,85 @@
+			TUNABLE FRAMEWORK
+			=================
+
+Tunables is a feature in the GNU C Library that allows application authors and
+distribution maintainers to alter the runtime library behaviour to match their
+workload.
+
+The tunable framework allows modules within glibc to register variables that
+may be tweaked through an environment variable.  It aims to enforce a strict
+namespace rule to bring consistency to naming of these tunable environment
+variables across the project.  This document is a guide for glibc developers to
+add tunables to the framework.
+
+ADDING A NEW TUNABLE
+--------------------
+
+The TOP_NAMESPACE macro is defined by default as 'glibc'.  If distributions
+intend to add their own tunables, they should do so in a different top
+namespace by overriding the TOP_NAMESPACE macro for that tunable.  Downstream
+implementations are discouraged from using the 'glibc' top namespace for
+tunables they don't already have consensus to push upstream.
+
+There are two steps to adding a tunable:
+
+1. Add a tunable ID:
+
+Modules that wish to use the tunables interface must define the
+TUNABLE_NAMESPACE macro.  Following this, for each tunable you want to
+add, make an entry in elf/dl-tunables.list.  The format of the file is as
+follows:
+
+TOP_NAMESPACE {
+  NAMESPACE1 {
+    TUNABLE1 {
+      # tunable attributes, one per line
+    }
+    # A tunable with default attributes, i.e. string variable.
+    TUNABLE2
+    TUNABLE3 {
+      # its attributes
+    }
+  }
+  NAMESPACE2 {
+    ...
+  }
+}
+
+The list of allowed attributes are:
+
+- type:			Data type.  Defaults to STRING.  Allowed types are:
+			INT_32, SIZE_T and STRING.
+
+- minval:		Optional minimum acceptable value.  For a string type
+			this is the minimum length of the value.
+
+- maxval:		Optional maximum acceptable value.  For a string type
+			this is the maximum length of the value.
+
+- env_alias:		An alias environment variable
+
+- is_secure:		Specify whether the tunable should be read for setuid
+			binaries.  True allows the tunable to be read for
+			setuid binaries while false disables it.  Note that
+			even if this is set as true and the value is read, it
+			may not be used if it does not validate against the
+			acceptable values or is not considered safe by the
+			module.
+
+2. Call either the TUNABLE_SET_VALUE and pass into it the tunable name and a
+   pointer to the variable that should be set with the tunable value.
+   If additional work needs to be done after setting the value, use the
+   TUNABLE_SET_VALUE_WITH_CALLBACK instead and additionally pass a pointer to
+   the function that should be called if the tunable value has been set.
+
+FUTURE WORK
+-----------
+
+The framework currently only allows a one-time initialization of variables
+through environment variables and in some cases, modification of variables via
+an API call.  A future goals for this project include:
+
+- Setting system-wide and user-wide defaults for tunables through some
+  mechanism like a configuration file.
+
+- Allow tweaking of some tunables at runtime

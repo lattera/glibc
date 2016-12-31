@@ -1,3 +1,44 @@
+2016-12-31  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* manual/install.texi: Add --enable-tunables option.
+	* INSTALL: Regenerate.
+	* README.tunables: New file.
+	* Makeconfig (CPPFLAGS): Define TOP_NAMESPACE.
+	(before-compile): Generate dl-tunable-list.h early.
+	* config.h.in: Add HAVE_TUNABLES.
+	* config.make.in: Add have-tunables.
+	* configure.ac: Add --enable-tunables option.
+	* configure: Regenerate.
+	* csu/init-first.c (__libc_init_first): Move
+	__libc_init_secure earlier...
+	* csu/init-first.c (LIBC_START_MAIN):... to here.
+	Include dl-tunables.h, libc-internal.h.
+	(LIBC_START_MAIN) [!SHARED]: Initialize tunables for static
+	binaries.
+	* elf/Makefile (dl-routines): Add dl-tunables.
+	* elf/Versions (ld): Add __tunable_set_val to GLIBC_PRIVATE
+	namespace.
+	* elf/dl-support (_dl_nondynamic_init): Unset MALLOC_CHECK_
+	only when !HAVE_TUNABLES.
+	* elf/rtld.c (process_envvars): Likewise.
+	* elf/dl-sysdep.c [HAVE_TUNABLES]: Include dl-tunables.h
+	(_dl_sysdep_start): Call __tunables_init.
+	* elf/dl-tunable-types.h: New file.
+	* elf/dl-tunables.c: New file.
+	* elf/dl-tunables.h: New file.
+	* elf/dl-tunables.list: New file.
+	* malloc/tst-malloc-usable-static.c: New test case.
+	* malloc/Makefile (tests-static): Add it.
+	* malloc/arena.c [HAVE_TUNABLES]: Include dl-tunables.h.
+	Define TUNABLE_NAMESPACE.
+	(DL_TUNABLE_CALLBACK (set_mallopt_check)): New function.
+	(DL_TUNABLE_CALLBACK_FNDECL): New macro.  Use it to define
+	callback functions.
+	(ptmalloc_init): Set tunable values.
+	* scripts/gen-tunables.awk: New file.
+	* sysdeps/mach/hurd/dl-sysdep.c: Include dl-tunables.h.
+	(_dl_sysdep_start): Call __tunables_init.
+
 2016-12-31  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/resolv.h (RES_BLAST): Deprecate.

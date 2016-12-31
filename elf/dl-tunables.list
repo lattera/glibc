@@ -1,0 +1,69 @@
+# Copyright (C) 2016 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public
+# License along with the GNU C Library; if not, see
+# <http://www.gnu.org/licenses/>.
+
+# Allowed attributes for tunables:
+#
+# type: Defaults to STRING
+# minval: Optional minimum acceptable value
+# maxval: Optional maximum acceptable value
+# env_alias: An alias environment variable
+# is_secure: Specify whether the environment variable should be read for
+# setuid binaries.
+
+glibc {
+  malloc {
+    check {
+      type: INT_32
+      minval: 0
+      maxval: 3
+      env_alias: MALLOC_CHECK_
+      is_secure: true
+    }
+    top_pad {
+      type: SIZE_T
+      env_alias: MALLOC_TOP_PAD_
+    }
+    perturb {
+      type: INT_32
+      minval: 0
+      maxval: 0xff
+      env_alias: MALLOC_PERTURB_
+    }
+    mmap_threshold {
+      type: SIZE_T
+      env_alias: MALLOC_MMAP_THRESHOLD_
+    }
+    trim_threshold {
+      type: SIZE_T
+      env_alias: MALLOC_TRIM_THRESHOLD_
+    }
+    mmap_max {
+      type: INT_32
+      env_alias: MALLOC_MMAP_MAX_
+    }
+    arena_max {
+      type: SIZE_T
+      env_alias: MALLOC_ARENA_MAX
+      minval: 1
+    }
+    arena_test {
+      type: SIZE_T
+      env_alias: MALLOC_ARENA_TEST
+      minval: 1
+    }
+  }
+}

@@ -200,6 +200,11 @@ configure with @option{--disable-werror}.
 By default for x86_64, @theglibc{} is built with the vector math library.
 Use this option to disable the vector math library.
 
+@item --enable-tunables
+Tunables support allows additional library parameters to be customized at
+runtime.  This is an experimental feature and affects startup time and is thus
+disabled by default.
+
 @item --build=@var{build-system}
 @itemx --host=@var{host-system}
 These options are for cross-compiling.  If you specify both options and

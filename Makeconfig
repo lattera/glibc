@@ -934,6 +934,11 @@ CPPFLAGS = $(config-extra-cppflags) $(CPPUNDEFS) $(CPPFLAGS-config) \
 	   $(foreach lib,$(libof-$(basename $(@F))) \
 			 $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
 	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F)))
+
+ifeq (yes,$(have-tunables))
+CPPFLAGS += -DTOP_NAMESPACE=glibc
+endif
+
 override CFLAGS	= -std=gnu11 -fgnu89-inline $(config-extra-cflags) \
 		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
 		  $(sysdep-CFLAGS) $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) \
@@ -1106,6 +1111,17 @@ $(common-objpfx)libc-modules.stmp: $(..)scripts/gen-libc-modules.awk \
 	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
 	touch $@
 
+endif
+
+# Build the tunables list header early since it could be used by any module in
+# glibc.
+ifeq (yes,$(have-tunables))
+before-compile += $(common-objpfx)dl-tunable-list.h
+
+$(common-objpfx)dl-tunable-list.h: $(..)scripts/gen-tunables.awk \
+				   $(..)elf/dl-tunables.list
+	$(AWK) -f $^ > $@.tmp
+	mv $@.tmp $@
 endif
 
 common-generated += libc-modules.h libc-modules.stmp

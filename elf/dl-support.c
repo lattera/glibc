@@ -354,8 +354,10 @@ _dl_non_dynamic_init (void)
 	  cp = (const char *) __rawmemchr (cp, '\0') + 1;
 	}
 
+#if !HAVE_TUNABLES
       if (__access ("/etc/suid-debug", F_OK) != 0)
 	__unsetenv ("MALLOC_CHECK_");
+#endif
     }
 
 #ifdef DL_PLATFORM_INIT

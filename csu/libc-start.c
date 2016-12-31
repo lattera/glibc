@@ -21,6 +21,9 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <exit-thread.h>
+#include <libc-internal.h>
+
+#include <elf/dl-tunables.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
 
@@ -173,6 +176,11 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
           GL(dl_phnum) = __ehdr_start.e_phnum;
         }
     }
+
+  /* Initialize very early so that tunables can use it.  */
+  __libc_init_secure ();
+
+  __tunables_init (__environ);
 
   /* Perform IREL{,A} relocations.  */
   apply_irel ();
