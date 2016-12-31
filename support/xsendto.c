@@ -1,4 +1,4 @@
-/* POSIX-specific extra functions.
+/* sendto with error checking.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,23 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* These wrapper functions use POSIX types and therefore cannot be
-   declared in <support/support.h>.  */
+#include <support/xsocket.h>
 
-#ifndef SUPPORT_XUNISTD_H
-#define SUPPORT_XUNISTD_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <support/check.h>
 
-#include <unistd.h>
-#include <sys/cdefs.h>
-
-__BEGIN_DECLS
-
-pid_t xfork (void);
-pid_t xwaitpid (pid_t, int *status, int flags);
-
-/* Write the buffer.  Retry on short writes.  */
-void xwrite (int, const void *, size_t);
-
-__END_DECLS
-
-#endif /* SUPPORT_XUNISTD_H */
+void
+xsendto (int fd, const void *buf, size_t buflen, int flags,
+         const struct sockaddr *sa, socklen_t salen)
+{
+  ssize_t ret = sendto (fd, buf, buflen, flags, sa, salen);
+  if (ret < 0)
+    FAIL_EXIT1 ("sendto (%d), %zu bytes, family %d: %m",
+                fd, buflen, sa->sa_family);
+  if (ret != buflen)
+    FAIL_EXIT1 ("sendto (%d) sent %zd bytes instead of %zu", fd, ret, buflen);
+}

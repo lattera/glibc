@@ -1,4 +1,4 @@
-/* POSIX-specific extra functions.
+/* fopen with error checking.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,23 +16,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* These wrapper functions use POSIX types and therefore cannot be
-   declared in <support/support.h>.  */
+#include <support/xstdio.h>
 
-#ifndef SUPPORT_XUNISTD_H
-#define SUPPORT_XUNISTD_H
+#include <support/check.h>
+#include <stdlib.h>
 
-#include <unistd.h>
-#include <sys/cdefs.h>
-
-__BEGIN_DECLS
-
-pid_t xfork (void);
-pid_t xwaitpid (pid_t, int *status, int flags);
-
-/* Write the buffer.  Retry on short writes.  */
-void xwrite (int, const void *, size_t);
-
-__END_DECLS
-
-#endif /* SUPPORT_XUNISTD_H */
+FILE *
+xfopen (const char *path, const char *mode)
+{
+  FILE *fp = fopen (path, mode);
+  if (fp == NULL)
+    FAIL_EXIT1 ("could not open %s (mode \"%s\"): %m", path, mode);
+  return fp;
+}

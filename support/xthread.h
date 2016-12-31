@@ -51,6 +51,7 @@ pthread_t xpthread_create (pthread_attr_t *attr,
 void xpthread_detach (pthread_t thr);
 void xpthread_cancel (pthread_t thr);
 void *xpthread_join (pthread_t thr);
+void xpthread_once (pthread_once_t *guard, void (*func) (void));
 
 /* This function returns non-zero if pthread_barrier_wait returned
    PTHREAD_BARRIER_SERIAL_THREAD.  */

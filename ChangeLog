@@ -1,5 +1,65 @@
 2016-12-31  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/Makefile (tests): Add tst-bug18665, tst-bug18665-tcp,
+	tst-res_use_inet6, tst-resolv-basic, tst-resolv-network,
+	tst-resolv-search.
+	(tst-bug18665, tst-bug18665-tcp, tst-res_use_inet6)
+	(tst-resolv-basic, tst-resolv-network, tst-resolv-search): Link
+	with libresolv and libpthread.
+	* resolv/tst-bug18665.c: New file.
+	* resolv/tst-bug18665-tcp: Likewise.
+	* resolv/tst-res_use_inet6: Likewise.
+	* resolv/tst-resolv-basic: Likewise.
+	* resolv/tst-resolv-network: Likewise.
+	* resolv/tst-resolv-search: Likewise.
+	* support/Makefile (libsupport-routines): Add check_addrinfo,
+	check_dns_packet, check_hostent, check_netent, resolv_test,
+	support_format_address_family, support_format_addrinfo,
+	support_format_dns_packet, support_format_herrno,
+	support_format_hostent, support_format_netent, support_run_diff,
+	xaccept, xbind, xconnect, xfclose, xfopen, xgetsockname, xlisten,
+	xmemstream, xpoll, xpthread_once, xrecvfrom, xsendto, xsetsockopt,
+	xstrdup, xwrite.
+	* support/check_addrinfo.c: New file.
+	* support/check_dns_packet.c: Likewise.
+	* support/check_hostent.c: Likewise.
+	* support/check_netent.c: Likewise.
+	* support/check_nss.h: Likewise.
+	* support/format_nss.h: Likewise.
+	* support/resolv_test.c: Likewise.
+	* support/resolv_test.h: Likewise.
+	* support/run_diff.h: Likewise.
+	* support/support_format_address_family.c: Likewise.
+	* support/support_format_addrinfo.c: Likewise.
+	* support/support_format_dns_packet.c: Likewise.
+	* support/support_format_herrno.c: Likewise.
+	* support/support_format_hostent.c: Likewise.
+	* support/support_format_netent.c: Likewise.
+	* support/support_run_diff.c: Likewise.
+	* support/xaccept.c: Likewise.
+	* support/xbind.c: Likewise.
+	* support/xconnect.c: Likewise.
+	* support/xfclose.c: Likewise.
+	* support/xfopen.c: Likewise.
+	* support/xgetsockname.c: Likewise.
+	* support/xlisten.c: Likewise.
+	* support/xmemstream.c: Likewise.
+	* support/xmemstream.h: Likewise.
+	* support/xpoll.c: Likewise.
+	* support/xpthread_once.c: Likewise.
+	* support/xrecvfrom.c: Likewise.
+	* support/xsendto.c: Likewise.
+	* support/xsetsockopt.c: Likewise.
+	* support/xstdio.h: Likewise.
+	* support/xstrdup.c: Likewise.
+	* support/support.h (xstrdup): Declare.
+	* support/xsocket.h (xsetsockopt, xgetsockname, xconnect, xbind)
+	(xlisten, xaccept, xsendto, xrecvfrom, xpoll): Likewise.
+	* support/xthread.h (xpthread_once): Likwise.
+	* support/xunistd.h (xwrite): Declare.
+
+2016-12-31  Florian Weimer  <fweimer@redhat.com>
+
 	* support/test-driver.h (TEST_DEFAULT_OPTIONS): Add --verbose.
 	(test_verbose): Declare.
 	* support/test-driver.c (main): Use TEST_DEFAULT_OPTIONS.

@@ -39,7 +39,16 @@ extra-libs := libresolv libnss_dns
 ifeq ($(have-thread-library),yes)
 extra-libs += libanl
 routines += gai_sigqueue
-tests += tst-res_hconf_reorder
+
+tests += \
+  tst-bug18665 \
+  tst-bug18665-tcp \
+  tst-res_hconf_reorder \
+  tst-res_use_inet6 \
+  tst-resolv-basic \
+  tst-resolv-network \
+  tst-resolv-search \
+
 endif
 extra-libs-others = $(extra-libs)
 libresolv-routines := res_comp res_debug \
@@ -108,3 +117,10 @@ tst-leaks2-ENV = MALLOC_TRACE=$(objpfx)tst-leaks2.mtrace
 $(objpfx)mtrace-tst-leaks2.out: $(objpfx)tst-leaks2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace > $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-bug18665-tcp: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-bug18665: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-res_use_inet6: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-network: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)

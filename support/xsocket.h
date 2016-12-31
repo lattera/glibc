@@ -19,9 +19,20 @@
 #ifndef SUPPORT_XSOCKET_H
 #define SUPPORT_XSOCKET_H
 
+#include <poll.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 
 int xsocket (int, int, int);
+void xsetsockopt (int, int, int, const void *, socklen_t);
+void xgetsockname (int, struct sockaddr *, socklen_t *);
+void xconnect (int, const struct sockaddr *, socklen_t);
+void xbind (int, const struct sockaddr *, socklen_t);
+void xlisten (int, int);
+int xaccept (int, struct sockaddr *, socklen_t *);
+void xsendto (int, const void *, size_t, int,
+              const struct sockaddr *, socklen_t);
+size_t xrecvfrom (int, void *, size_t, int, struct sockaddr *, socklen_t *);
+int xpoll (struct pollfd *, nfds_t, int);
 
 #endif /* SUPPORT_XSOCKET_H */

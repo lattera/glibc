@@ -1,4 +1,4 @@
-/* POSIX-specific extra functions.
+/* Compare struct hostent values against a formatted string.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,23 +16,27 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* These wrapper functions use POSIX types and therefore cannot be
-   declared in <support/support.h>.  */
+#include <support/check_nss.h>
 
-#ifndef SUPPORT_XUNISTD_H
-#define SUPPORT_XUNISTD_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <support/check.h>
+#include <support/format_nss.h>
+#include <support/run_diff.h>
 
-#include <unistd.h>
-#include <sys/cdefs.h>
-
-__BEGIN_DECLS
-
-pid_t xfork (void);
-pid_t xwaitpid (pid_t, int *status, int flags);
-
-/* Write the buffer.  Retry on short writes.  */
-void xwrite (int, const void *, size_t);
-
-__END_DECLS
-
-#endif /* SUPPORT_XUNISTD_H */
+void
+check_hostent (const char *query_description, struct hostent *h,
+               const char *expected)
+{
+  char *formatted = support_format_hostent (h);
+  if (strcmp (formatted, expected) != 0)
+    {
+      support_record_failure ();
+      printf ("error: hostent comparison failure\n");
+      if (query_description != NULL)
+        printf ("query: %s\n", query_description);
+      support_run_diff ("expected", expected,
+                        "actual", formatted);
+    }
+  free (formatted);
+}

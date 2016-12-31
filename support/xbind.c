@@ -1,4 +1,4 @@
-/* POSIX-specific extra functions.
+/* bind with error checking.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,23 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* These wrapper functions use POSIX types and therefore cannot be
-   declared in <support/support.h>.  */
+#include <support/xsocket.h>
 
-#ifndef SUPPORT_XUNISTD_H
-#define SUPPORT_XUNISTD_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <support/check.h>
 
-#include <unistd.h>
-#include <sys/cdefs.h>
-
-__BEGIN_DECLS
-
-pid_t xfork (void);
-pid_t xwaitpid (pid_t, int *status, int flags);
-
-/* Write the buffer.  Retry on short writes.  */
-void xwrite (int, const void *, size_t);
-
-__END_DECLS
-
-#endif /* SUPPORT_XUNISTD_H */
+void
+xbind (int fd, const struct sockaddr *sa, socklen_t sa_len)
+{
+  if (bind (fd, sa, sa_len) != 0)
+    FAIL_EXIT1 ("bind (%d), family %d: %m", fd, sa->sa_family);
+}

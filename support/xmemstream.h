@@ -1,4 +1,4 @@
-/* POSIX-specific extra functions.
+/* Error-checking wrappers for memstream functions.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,23 +16,34 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* These wrapper functions use POSIX types and therefore cannot be
-   declared in <support/support.h>.  */
+#ifndef SUPPORT_XMEMSTREAM_H
+#define SUPPORT_XMEMSTREAM_H
 
-#ifndef SUPPORT_XUNISTD_H
-#define SUPPORT_XUNISTD_H
-
-#include <unistd.h>
+#include <stdio.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
-pid_t xfork (void);
-pid_t xwaitpid (pid_t, int *status, int flags);
+/* Wrappers for other libc functions.  */
+struct xmemstream
+{
+  FILE *out;
+  char *buffer;
+  size_t length;
+};
 
-/* Write the buffer.  Retry on short writes.  */
-void xwrite (int, const void *, size_t);
+/* Create a new in-memory stream.  Initializes *STREAM.  After this
+   function returns, STREAM->out is a file descriptor open for
+   writing.  errno is preserved, so that the %m format specifier can
+   be used for writing to STREAM->out.  */
+void xopen_memstream (struct xmemstream *stream);
+
+/* Closes STREAM->OUT.  After this function returns, STREAM->buffer
+   and STREAM->length denote a memory range which contains the bytes
+   written to the output stream.  The caller should free
+   STREAM->buffer.  */
+void xfclose_memstream (struct xmemstream *stream);
 
 __END_DECLS
 
-#endif /* SUPPORT_XUNISTD_H */
+#endif /* SUPPORT_XMEMSTREAM_H */

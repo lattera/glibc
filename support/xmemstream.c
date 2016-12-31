@@ -1,4 +1,4 @@
-/* POSIX-specific extra functions.
+/* Error-checking wrappers for memstream functions.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,23 +16,27 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* These wrapper functions use POSIX types and therefore cannot be
-   declared in <support/support.h>.  */
+#include <support/xmemstream.h>
 
-#ifndef SUPPORT_XUNISTD_H
-#define SUPPORT_XUNISTD_H
+#include <errno.h>
+#include <stdlib.h>
+#include <support/check.h>
+#include <support/xstdio.h>
 
-#include <unistd.h>
-#include <sys/cdefs.h>
+void
+xopen_memstream (struct xmemstream *stream)
+{
+  int old_errno = errno;
+  *stream = (struct xmemstream) {};
+  stream->out = open_memstream (&stream->buffer, &stream->length);
+  if (stream->out == NULL)
+    FAIL_EXIT1 ("open_memstream: %m");
+  errno = old_errno;
+}
 
-__BEGIN_DECLS
-
-pid_t xfork (void);
-pid_t xwaitpid (pid_t, int *status, int flags);
-
-/* Write the buffer.  Retry on short writes.  */
-void xwrite (int, const void *, size_t);
-
-__END_DECLS
-
-#endif /* SUPPORT_XUNISTD_H */
+void
+xfclose_memstream (struct xmemstream *stream)
+{
+  xfclose (stream->out);
+  stream->out = NULL;
+}

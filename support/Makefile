@@ -26,21 +26,42 @@ extra-libs-noinstall := $(extra-libs)
 
 libsupport-routines = \
   check \
+  check_addrinfo \
+  check_dns_packet \
+  check_hostent \
+  check_netent \
   delayed_exit \
   ignore_stderr \
   oom_error \
+  resolv_test \
   set_fortify_handler \
   support_become_root \
   support_enter_network_namespace \
+  support_format_address_family \
+  support_format_addrinfo \
+  support_format_dns_packet \
+  support_format_herrno \
+  support_format_hostent \
+  support_format_netent \
   support_record_failure \
+  support_run_diff \
   support_test_main \
   support_test_verify_impl \
   temp_file \
   write_message \
+  xaccept \
   xasprintf \
+  xbind \
   xcalloc \
+  xconnect \
+  xfclose \
+  xfopen \
   xfork \
+  xgetsockname \
+  xlisten \
   xmalloc \
+  xmemstream \
+  xpoll \
   xpthread_barrier_destroy \
   xpthread_barrier_init \
   xpthread_barrier_wait \
@@ -52,12 +73,18 @@ libsupport-routines = \
   xpthread_join \
   xpthread_mutex_lock \
   xpthread_mutex_unlock \
+  xpthread_once \
   xpthread_sigmask \
   xpthread_spin_lock \
   xpthread_spin_unlock \
   xrealloc \
+  xrecvfrom \
+  xsendto \
+  xsetsockopt \
   xsocket \
+  xstrdup \
   xwaitpid \
+  xwrite \
 
 libsupport-static-only-routines := $(libsupport-routines)
 # Only build one variant of the library.

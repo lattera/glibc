@@ -1,4 +1,4 @@
-/* POSIX-specific extra functions.
+/* Convert a h_errno error code to a string.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,23 +16,30 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* These wrapper functions use POSIX types and therefore cannot be
-   declared in <support/support.h>.  */
+#include <support/format_nss.h>
 
-#ifndef SUPPORT_XUNISTD_H
-#define SUPPORT_XUNISTD_H
+#include <support/support.h>
 
-#include <unistd.h>
-#include <sys/cdefs.h>
-
-__BEGIN_DECLS
-
-pid_t xfork (void);
-pid_t xwaitpid (pid_t, int *status, int flags);
-
-/* Write the buffer.  Retry on short writes.  */
-void xwrite (int, const void *, size_t);
-
-__END_DECLS
-
-#endif /* SUPPORT_XUNISTD_H */
+char *
+support_format_herrno (int code)
+{
+  const char *errstr;
+  switch (code)
+    {
+    case HOST_NOT_FOUND:
+      errstr = "HOST_NOT_FOUND";
+      break;
+    case NO_ADDRESS:
+      errstr = "NO_ADDRESS";
+      break;
+    case NO_RECOVERY:
+      errstr = "NO_RECOVERY";
+      break;
+    case TRY_AGAIN:
+      errstr = "TRY_AGAIN";
+      break;
+    default:
+      return xasprintf ("<invalid h_errno value %d>\n", code);
+    }
+  return xstrdup (errstr);
+}

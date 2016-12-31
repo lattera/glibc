@@ -1,4 +1,4 @@
-/* POSIX-specific extra functions.
+/* Invoke the system diff tool to compare two strings.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,23 +16,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* These wrapper functions use POSIX types and therefore cannot be
-   declared in <support/support.h>.  */
+#ifndef SUPPORT_RUN_DIFF_H
+#define SUPPORT_RUN_DIFF_H
 
-#ifndef SUPPORT_XUNISTD_H
-#define SUPPORT_XUNISTD_H
+/* Compare the two NUL-terminated strings LEFT and RIGHT using the
+   diff tool.  Label the sides of the diff with LEFT_LABEL and
+   RIGHT_LABEL, respectively.
 
-#include <unistd.h>
-#include <sys/cdefs.h>
+   This function assumes that LEFT and RIGHT are different
+   strings.  */
+void support_run_diff (const char *left_label, const char *left,
+                       const char *right_label, const char *right);
 
-__BEGIN_DECLS
-
-pid_t xfork (void);
-pid_t xwaitpid (pid_t, int *status, int flags);
-
-/* Write the buffer.  Retry on short writes.  */
-void xwrite (int, const void *, size_t);
-
-__END_DECLS
-
-#endif /* SUPPORT_XUNISTD_H */
+#endif /* SUPPORT_RUN_DIFF_H */

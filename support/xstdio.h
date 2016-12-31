@@ -1,4 +1,4 @@
-/* POSIX-specific extra functions.
+/* Error-checking wrappers for stdio functions.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,23 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* These wrapper functions use POSIX types and therefore cannot be
-   declared in <support/support.h>.  */
+#ifndef SUPPORT_XSTDIO_H
+#define SUPPORT_XSTDIO_H
 
-#ifndef SUPPORT_XUNISTD_H
-#define SUPPORT_XUNISTD_H
-
-#include <unistd.h>
+#include <stdio.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
-pid_t xfork (void);
-pid_t xwaitpid (pid_t, int *status, int flags);
-
-/* Write the buffer.  Retry on short writes.  */
-void xwrite (int, const void *, size_t);
+FILE *xfopen (const char *path, const char *mode);
+void xfclose (FILE *);
 
 __END_DECLS
 
-#endif /* SUPPORT_XUNISTD_H */
+#endif /* SUPPORT_XSTDIO_H */

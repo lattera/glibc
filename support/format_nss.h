@@ -1,4 +1,4 @@
-/* POSIX-specific extra functions.
+/* String formatting functions for NSS- and DNS-related data.
    Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,23 +16,26 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* These wrapper functions use POSIX types and therefore cannot be
-   declared in <support/support.h>.  */
+#ifndef SUPPORT_FORMAT_NSS_H
+#define SUPPORT_FORMAT_NSS_H
 
-#ifndef SUPPORT_XUNISTD_H
-#define SUPPORT_XUNISTD_H
-
-#include <unistd.h>
+#include <netdb.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
-pid_t xfork (void);
-pid_t xwaitpid (pid_t, int *status, int flags);
-
-/* Write the buffer.  Retry on short writes.  */
-void xwrite (int, const void *, size_t);
+/* The following functions format their arguments as human-readable
+   strings (which can span multiple lines).  The caller must free the
+   returned buffer.  For NULL pointers or failure status arguments,
+   error variables such as h_errno and errno are included in the
+   result.  */
+char *support_format_address_family (int);
+char *support_format_addrinfo (struct addrinfo *, int ret);
+char *support_format_dns_packet (const unsigned char *buffer, size_t length);
+char *support_format_herrno (int);
+char *support_format_hostent (struct hostent *);
+char *support_format_netent (struct netent *);
 
 __END_DECLS
 
-#endif /* SUPPORT_XUNISTD_H */
+#endif  /* SUPPORT_FORMAT_NSS_H */
