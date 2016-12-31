@@ -1,3 +1,10 @@
+2016-12-31  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/resolv.h (RES_BLAST): Deprecate.
+	* resolv/res_debug.c (p_option): Remove RES_BLAST.
+	* resolv/res_send.c (__libc_res_nsend): Remove vestigial reference
+	to RES_BLAST.
+
 2016-12-27  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19582]

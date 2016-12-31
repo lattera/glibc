@@ -144,9 +144,9 @@ Version 2.25
   backwards-incompatible DNS extension which was never deployed on the
   Internet.
 
-* The flags RES_AAONLY, RES_PRIMARY, RES_NOCHECKNAME, RES_KEEPTSIG defined
-  in the <resolv.h> header file have been deprecated.  They were already
-  unimplemented.
+* The flags RES_AAONLY, RES_PRIMARY, RES_NOCHECKNAME, RES_KEEPTSIG,
+  RES_BLAST defined in the <resolv.h> header file have been deprecated.
+  They were already unimplemented.
 
 * The "inet6" option in /etc/resolv.conf and the RES_USE_INET6 flag for
   _res.flags are deprecated.  The flag was standardized in RFC 2133, but
