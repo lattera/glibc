@@ -935,7 +935,7 @@ CPPFLAGS = $(config-extra-cppflags) $(CPPUNDEFS) $(CPPFLAGS-config) \
 			 $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
 	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F)))
 
-ifeq (yes,$(have-tunables))
+ifneq (no,$(have-tunables))
 CPPFLAGS += -DTOP_NAMESPACE=glibc
 endif
 
@@ -1115,7 +1115,7 @@ endif
 
 # Build the tunables list header early since it could be used by any module in
 # glibc.
-ifeq (yes,$(have-tunables))
+ifneq (no,$(have-tunables))
 before-compile += $(common-objpfx)dl-tunable-list.h
 
 $(common-objpfx)dl-tunable-list.h: $(..)scripts/gen-tunables.awk \

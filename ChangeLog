@@ -1,5 +1,28 @@
 2016-12-31  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* Makeconfig (have-tunables): Check for non-negative instead
+	of positive.
+	* configure.ac: Add 'valstring' as a valid value for
+	--enable-tunables.
+	* configure: Regenerate.
+	* elf/Makefile (have-tunables): Check for non-negative instead
+	of positive.
+	(CPPFLAGS-dl-tunables.c): Define TUNABLES_FRONTEND for
+	dl-tunables.c.
+	* elf/dl-tunables.c (GLIBC_TUNABLES): Define only when
+	TUNABLES_FRONTEND == TUNABLES_FRONTEND_valstring.
+	(tunables_strdup): Likewise.
+	(disable_tunables): Likewise.
+	(parse_tunables): Likewise.
+	(__tunables_init): Process GLIBC_TUNABLES envvar only when.
+	TUNABLES_FRONTEND == TUNABLES_FRONTEND_valstring.
+	* elf/dl-tunables.h (TUNABLES_FRONTEND_valstring): New macro.
+	(TUNABLES_FRONTEND_yes): New macro, define as
+	TUNABLES_FRONTEND_valstring by default.
+	* manual/install.texi: Document new acceptable values for
+	--enable-tunables.
+	* INSTALL: Regenerate.
+
 	* config.make.in (have-loop-to-function): Define.
 	* elf/Makefile (CFLAGS-dl-tunables.c): Add
 	-fno-tree-loop-distribute-patterns.

@@ -84,5 +84,9 @@ extern void __tunable_set_val (tunable_id_t, void *, tunable_callback_t);
 /* Namespace sanity for callback functions.  Use this macro to keep the
    namespace of the modules clean.  */
 # define DL_TUNABLE_CALLBACK(__name) _dl_tunable_ ## __name
+
+# define TUNABLES_FRONTEND_valstring 1
+/* The default value for TUNABLES_FRONTEND.  */
+# define TUNABLES_FRONTEND_yes TUNABLES_FRONTEND_valstring
 #endif
 #endif

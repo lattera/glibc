@@ -1454,7 +1454,8 @@ Optional Features:
   --disable-build-nscd    disable building and installing the nscd daemon
   --disable-nscd          library functions will not contact the nscd daemon
   --enable-pt_chown       Enable building and installing pt_chown
-  --enable-tunables       Enable tunables support
+  --enable-tunables       Enable tunables support. Known values are 'yes',
+                          'no' and 'valstring'
   --enable-mathvec        Enable building and installing mathvec [default
                           depends on architecture]
 

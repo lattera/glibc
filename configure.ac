@@ -423,7 +423,7 @@ fi
 
 AC_ARG_ENABLE([tunables],
 	      [AS_HELP_STRING([--enable-tunables],
-	       [Enable tunables support])],
+	       [Enable tunables support. Known values are 'yes', 'no' and 'valstring'])],
 	      [have_tunables=$enableval],
 	      [have_tunables=no])
 AC_SUBST(have_tunables)

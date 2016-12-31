@@ -36,8 +36,10 @@ ifeq (yes,$(use-ldconfig))
 dl-routines += dl-cache
 endif
 
-ifeq (yes,$(have-tunables))
+ifneq (no,$(have-tunables))
 dl-routines += dl-tunables
+tunables-type = $(addprefix TUNABLES_FRONTEND_,$(have-tunables))
+CPPFLAGS-dl-tunables.c = -DTUNABLES_FRONTEND=$(tunables-type)
 
 # Make sure that the compiler does not insert any library calls in tunables
 # code paths.
