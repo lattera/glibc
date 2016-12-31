@@ -1,5 +1,29 @@
 2016-12-31  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20593]
+	Update DNS RR type definitions.
+	* scripts/gen-rrtypes.py: New file.
+	* resolv/arpa/nameser.h (ns_type): Remove ns_t_zxfr, a
+	BIND-internal RR type not used on the Internet.  Add ns_t_ds,
+	ns_t_sshfp, ns_t_ipseckey, ns_t_rrsig, ns_t_nsec, ns_t_dnskey,
+	ns_t_dhcid, ns_t_nsec3, ns_t_nsec3param, ns_t_tlsa, ns_t_smimea,
+	ns_t_hip, ns_t_ninfo, ns_t_rkey, ns_t_talink, ns_t_cds,
+	ns_t_cdnskey, ns_t_openpgpkey, ns_t_csync, ns_t_spf, ns_t_uinfo,
+	ns_t_uid, ns_t_gid, ns_t_unspec, ns_t_nid, ns_t_l32, ns_t_l64,
+	ns_t_lp, ns_t_eui48, ns_t_eui64, ns_t_uri, ns_t_caa, ns_t_avc,
+	ns_t_ta, ns_t_dlv.
+	* resolv/arpa/nameser_compat.h (T_KX, T_CERT, T_SINK, T_OPT)
+	(T_APL, T_DS, T_SSHFP, T_IPSECKEY, T_RRSIG, T_NSEC, T_DNSKEY)
+	(T_DHCID, T_NSEC3, T_NSEC3PARAM, T_TLSA, T_SMIMEA, T_HIP, T_NINFO)
+	(T_RKEY, T_TALINK, T_CDS, T_CDNSKEY, T_OPENPGPKEY, T_CSYNC, T_SPF)
+	(T_UINFO, T_UID, T_GID, T_UNSPEC, T_NID, T_L32, T_L64, T_LP)
+	(T_EUI48, T_EUI64, T_TKEY, T_URI, T_CAA, T_AVC, T_TA, T_DLV):
+	Define.
+	* resolv/res_debug.c (__p_type_syms): Update comment.  Remove
+	entry for ns_t_zxfr.
+
+2016-12-31  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #18784]
 	CVE-2015-5180
 	* include/arpa/nameser_compat.h (T_QUERY_A_AND_AAAA): Rename from
