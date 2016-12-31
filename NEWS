@@ -184,6 +184,11 @@ Version 2.25
   printers show various pthread variables in human-readable form when read
   using the 'print' or 'display' commands in gdb.
 
+* Tunables feature added to allow tweaking of the runtime for an application
+  program.  This feature can be enabled with the '--enable-tunables' configure
+  flag.  The GNU C Library manual has details on usage and README.tunables has
+  instructions on adding new tunables to the library.
+
 Security related changes:
 
   On ARM EABI (32-bit), generating a backtrace for execution contexts which
