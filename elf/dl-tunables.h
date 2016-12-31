@@ -24,7 +24,7 @@
 #if !HAVE_TUNABLES
 static inline void
 __always_inline
-__tunables_init (char **unused __attribute_unused)
+__tunables_init (char **unused __attribute__ ((unused)))
 {
   /* This is optimized out if tunables are not enabled.  */
 }

@@ -1,3 +1,7 @@
+2016-12-31  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/dl-tunables.h (__tunables_init): Fix unused attribute.
+
 2016-12-31  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* manual/tunables.texi: New chapter.
