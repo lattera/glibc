@@ -30,6 +30,8 @@ libsupport-routines = \
   ignore_stderr \
   oom_error \
   set_fortify_handler \
+  support_become_root \
+  support_enter_network_namespace \
   support_record_failure \
   support_test_main \
   support_test_verify_impl \
@@ -54,6 +56,7 @@ libsupport-routines = \
   xpthread_spin_lock \
   xpthread_spin_unlock \
   xrealloc \
+  xsocket \
   xwaitpid \
 
 libsupport-static-only-routines := $(libsupport-routines)
@@ -65,6 +68,7 @@ endif
 
 tests = \
   README-testing \
+  tst-support-namespace \
   tst-support_record_failure \
 
 ifeq ($(run-built-tests),yes)

@@ -1,5 +1,17 @@
 2016-12-31  Florian Weimer  <fweimer@redhat.com>
 
+	* support/namespace.h: New file.
+	* support/support_become_root.c: Likewise.
+	* support/support_enter_network_namespace.c: Likewise.
+	* support/tst-support-namespace.c: Likewise.
+	* support/xsocket.c: Likewise.
+	* support/xsocket.h: Likewise.
+	* support/Makefile (libsupport-routines): Add support_become_root,
+	support_enter_network_namespace, xsocket.
+	(tests): Add tst-support-namespace.
+
+2016-12-31  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #17252]
 	* posix/unistd.h (getentropy): Declare for __USE_MISC, not just
 	__USE_GNU.
