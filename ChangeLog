@@ -1,5 +1,19 @@
 2016-12-31  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #18784]
+	CVE-2015-5180
+	* include/arpa/nameser_compat.h (T_QUERY_A_AND_AAAA): Rename from
+	T_UNSPEC.  Adjust value.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname4_r): Use it.
+	* resolv/res_query.c (__libc_res_nquery): Likewise.
+	* resolv/res_mkquery.c (res_nmkquery): Check for out-of-range
+	QTYPEs.
+	* resolv/tst-resolv-qtypes.c: New file.
+	* resolv/Makefile (xtests): Add tst-resolv-qtypes.
+	(tst-resolv-qtypes): Link against libresolv and libpthread.
+
+2016-12-31  Florian Weimer  <fweimer@redhat.com>
+
 	* elf/dl-tunables.h (__tunables_init): Fix unused attribute.
 
 2016-12-31  Siddhesh Poyarekar  <siddhesh@sourceware.org>

@@ -103,6 +103,10 @@ res_nmkquery(res_state statp,
 	int n;
 	u_char *dnptrs[20], **dpp, **lastdnptr;
 
+	if (class < 0 || class > 65535
+	    || type < 0 || type > 65535)
+	  return -1;
+
 #ifdef DEBUG
 	if (statp->options & RES_DEBUG)
 		printf(";; res_nmkquery(%s, %s, %s, %s)\n",

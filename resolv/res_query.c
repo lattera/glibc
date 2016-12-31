@@ -122,7 +122,7 @@ __libc_res_nquery(res_state statp,
 	int n, use_malloc = 0;
 	u_int oflags = statp->_flags;
 
-	size_t bufsize = (type == T_UNSPEC ? 2 : 1) * QUERYSIZE;
+	size_t bufsize = (type == T_QUERY_A_AND_AAAA ? 2 : 1) * QUERYSIZE;
 	u_char *buf = alloca (bufsize);
 	u_char *query1 = buf;
 	int nquery1 = -1;
@@ -137,7 +137,7 @@ __libc_res_nquery(res_state statp,
 		printf(";; res_query(%s, %d, %d)\n", name, class, type);
 #endif
 
-	if (type == T_UNSPEC)
+	if (type == T_QUERY_A_AND_AAAA)
 	  {
 	    n = res_nmkquery(statp, QUERY, name, class, T_A, NULL, 0, NULL,
 			     query1, bufsize);
@@ -190,7 +190,7 @@ __libc_res_nquery(res_state statp,
 	if (__builtin_expect (n <= 0, 0) && !use_malloc) {
 		/* Retry just in case res_nmkquery failed because of too
 		   short buffer.  Shouldn't happen.  */
-		bufsize = (type == T_UNSPEC ? 2 : 1) * MAXPACKET;
+		bufsize = (type == T_QUERY_A_AND_AAAA ? 2 : 1) * MAXPACKET;
 		buf = malloc (bufsize);
 		if (buf != NULL) {
 			query1 = buf;

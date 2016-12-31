@@ -191,11 +191,17 @@ Version 2.25
 
 Security related changes:
 
-  On ARM EABI (32-bit), generating a backtrace for execution contexts which
+* On ARM EABI (32-bit), generating a backtrace for execution contexts which
   have been created with makecontext could fail to terminate due to a
   missing .cantunwind annotation.  This has been observed to lead to a hang
   (denial of service) in some Go applications compiled with gccgo.  Reported
   by Andreas Schwab.  (CVE-2016-6323)
+
+* The DNS stub resolver functions would crash due to a NULL pointer
+  dereference when processing a query with a valid DNS question type which
+  was used internally in the implementation.  The stub resolver now uses a
+  question type which is outside the range of valid question type values.
+  (CVE-2015-5180)
 
 The following bugs are resolved with this release:
 

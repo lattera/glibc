@@ -49,6 +49,8 @@ tests += \
   tst-resolv-network \
   tst-resolv-search \
 
+# This test sends millions of packets and is rather slow.
+xtests += tst-resolv-qtypes
 endif
 extra-libs-others = $(extra-libs)
 libresolv-routines := res_comp res_debug \
@@ -123,6 +125,7 @@ $(objpfx)tst-bug18665: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-res_use_inet6: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-network: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
 
 # This test case uses the deprecated RES_USE_INET6 resolver option.

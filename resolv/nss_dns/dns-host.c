@@ -324,7 +324,7 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 
   int olderr = errno;
   enum nss_status status;
-  int n = __libc_res_nsearch (&_res, name, C_IN, T_UNSPEC,
+  int n = __libc_res_nsearch (&_res, name, C_IN, T_QUERY_A_AND_AAAA,
 			      host_buffer.buf->buf, 2048, &host_buffer.ptr,
 			      &ans2p, &nans2p, &resplen2, &ans2p_malloced);
   if (n >= 0)

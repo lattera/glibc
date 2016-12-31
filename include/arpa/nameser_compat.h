@@ -3,9 +3,9 @@
 
 # ifndef _ISOMAC
 
-/* Picksome unused number to represent lookups of IPv4 and IPv6 (i.e.,
-   T_A and T_AAAA).  */
-#define T_UNSPEC 62321
+/* The number is outside the 16-bit RR type range and is used
+   internally by the implementation.  */
+#define T_QUERY_A_AND_AAAA 439963904
 
 # endif /* !_ISOMAC */
 #endif
