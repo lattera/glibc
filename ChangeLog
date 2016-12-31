@@ -1,5 +1,19 @@
 2016-12-31  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* config.make.in (have-loop-to-function): Define.
+	* elf/Makefile (CFLAGS-dl-tunables.c): Add
+	-fno-tree-loop-distribute-patterns.
+	* elf/dl-tunables.c: Include libc-internals.h.
+	(GLIBC_TUNABLES): New macro.
+	(tunables_strdup): New function.
+	(parse_tunables): New function.
+	(min_strlen): New function.
+	(__tunables_init): Use the new functions and macro.
+	(disable_tunable): Disable tunable from GLIBC_TUNABLES.
+	* malloc/tst-malloc-usable-tunables.c: New test case.
+	* malloc/tst-malloc-usable-static-tunables.c: New test case.
+	* malloc/Makefile (tests, tests-static): Add tests.
+
 	* manual/install.texi: Add --enable-tunables option.
 	* INSTALL: Regenerate.
 	* README.tunables: New file.
