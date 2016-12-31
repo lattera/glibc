@@ -144,9 +144,7 @@ main (int argc, char **argv)
   struct option options[] =
     {
       CMDLINE_OPTIONS
-      { "direct", no_argument, NULL, OPT_DIRECT },
-      { "test-dir", required_argument, NULL, OPT_TESTDIR },
-      { NULL, 0, NULL, 0 }
+      TEST_DEFAULT_OPTIONS
     };
   test_config.options = &options;
 #endif

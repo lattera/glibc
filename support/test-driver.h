@@ -55,11 +55,17 @@ enum
 
 /* Options provided by the test driver.  */
 #define TEST_DEFAULT_OPTIONS                            \
+  { "verbose", no_argument, NULL, 'v' },                \
   { "direct", no_argument, NULL, OPT_DIRECT },          \
   { "test-dir", required_argument, NULL, OPT_TESTDIR }, \
 
 /* The directory the test should use for temporary files.  */
 extern const char *test_dir;
+
+/* The number of --verbose arguments specified during program
+   invocation.  This variable can be used to control the verbosity of
+   tests.  */
+extern unsigned int test_verbose;
 
 int support_test_main (int argc, char **argv, const struct test_config *);
 

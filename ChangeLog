@@ -1,5 +1,18 @@
 2016-12-31  Florian Weimer  <fweimer@redhat.com>
 
+	* support/test-driver.h (TEST_DEFAULT_OPTIONS): Add --verbose.
+	(test_verbose): Declare.
+	* support/test-driver.c (main): Use TEST_DEFAULT_OPTIONS.
+	* support/support_test_main.c (default_options): Likewise.
+	(usage, support_test_main): Handle 'v'.
+	(test_verbose): Define.
+	* support/tst-support_record_failure.c (do_test): Use
+	test_verbose.
+	* support/tst-support_record_failure-2.sh (different_status): Add
+	--verbose test.
+
+2016-12-31  Florian Weimer  <fweimer@redhat.com>
+
 	* support/check.h (FAIL_RET, FAIL_EXIT, FAIL_EXIT1): Document that
 	test failures are recorded.
 	* support/check.c (support_print_failure_impl): Call

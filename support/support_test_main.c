@@ -37,8 +37,7 @@
 
 static const struct option default_options[] =
 {
-  { "direct", no_argument, NULL, OPT_DIRECT },
-  { "test-dir", required_argument, NULL, OPT_TESTDIR },
+  TEST_DEFAULT_OPTIONS
   { NULL, 0, NULL, 0 }
 };
 
@@ -67,6 +66,9 @@ usage (const struct option *options)
       printf ("%*s", 25 - indent, "");
       switch (options[i].val)
         {
+        case 'v':
+          printf ("Increase the output verbosity");
+          break;
         case OPT_DIRECT:
           printf ("Run the test directly (instead of forking & monitoring)");
           break;
@@ -164,7 +166,7 @@ run_test_function (int argc, char **argv, const struct test_config *config)
 static bool test_main_called;
 
 const char *test_dir = NULL;
-
+unsigned int test_verbose = 0;
 
 /* If test failure reporting has been linked in, it may contribute
    additional test failures.  */
@@ -215,6 +217,9 @@ support_test_main (int argc, char **argv, const struct test_config *config)
       case '?':
         usage (options);
         exit (1);
+      case 'v':
+        ++test_verbose;
+        break;
       case OPT_DIRECT:
         direct = 1;
         break;

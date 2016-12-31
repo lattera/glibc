@@ -106,6 +106,8 @@ do_test (void)
   if (test_verify)
     {
       TEST_VERIFY (false);
+      if (test_verbose)
+        printf ("info: execution passed failed TEST_VERIFY\n");
       return 2; /* Expected exit status.  */
     }
   if (test_verify_exit)
