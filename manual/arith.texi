@@ -1495,6 +1495,37 @@ result can actually be represented as an @code{int}---for very large
 numbers, this is impossible.  The functions listed here return the
 result as a @code{double} instead to get around this problem.
 
+The @code{fromfp} functions use the following macros, from TS
+18661-1:2014, to specify the direction of rounding.  These correspond
+to the rounding directions defined in IEEE 754-2008.
+
+@vtable @code
+@comment math.h
+@comment ISO
+@item FP_INT_UPWARD
+Round toward @math{+@infinity{}}.
+
+@comment math.h
+@comment ISO
+@item FP_INT_DOWNWARD
+Round toward @math{-@infinity{}}.
+
+@comment math.h
+@comment ISO
+@item FP_INT_TOWARDZERO
+Round toward zero.
+
+@comment math.h
+@comment ISO
+@item FP_INT_TONEARESTFROMZERO
+Round to nearest, ties round away from zero.
+
+@comment math.h
+@comment ISO
+@item FP_INT_TONEAREST
+Round to nearest, ties round to even.
+@end vtable
+
 @comment math.h
 @comment ISO
 @deftypefun double ceil (double @var{x})
@@ -1658,6 +1689,56 @@ These functions are just like @code{round}, but they return a
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are just like @code{round}, but they return a
 @code{long long int} instead of a floating-point number.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun intmax_t fromfp (double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx intmax_t fromfpf (float @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx intmax_t fromfpl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfp (double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfpf (float @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfpl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx intmax_t fromfpx (double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx intmax_t fromfpxf (float @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx intmax_t fromfpxl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfpx (double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfpxf (float @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfpxl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, from TS 18661-1:2014, convert a floating-point number
+to an integer according to the rounding direction @var{round} (one of
+the @code{FP_INT_*} macros).  If the integer is outside the range of a
+signed or unsigned (depending on the return type of the function) type
+of width @var{width} bits (or outside the range of the return type, if
+@var{width} is larger), or if @var{x} is infinite or NaN, or if
+@var{width} is zero, a domain error occurs and an unspecified value is
+returned.  The functions with an @samp{x} in their names raise the
+inexact exception when a domain error does not occur and the argument
+is not an integer; the other functions do not raise the inexact
+exception.
 @end deftypefun
 
 

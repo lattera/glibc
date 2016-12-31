@@ -44,7 +44,7 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 isoc99_vwscanf isoc99_vfwscanf isoc99_vswscanf \
 		 nextup nextdown totalorder totalordermag getpayload \
 		 canonicalize setpayload setpayloadsig llogb fmaxmag fminmag \
-		 roundeven
+		 roundeven fromfp ufromfp fromfpx ufromfpx
 libnldbl-routines = $(libnldbl-calls:%=nldbl-%)
 libnldbl-inhibit-o = $(object-suffixes)
 libnldbl-static-only-routines = $(libnldbl-routines)
@@ -103,6 +103,8 @@ CFLAGS-nldbl-fmin.c = -fno-builtin-fminl
 CFLAGS-nldbl-fminmag.c = -fno-builtin-fminmagl
 CFLAGS-nldbl-fmod.c = -fno-builtin-fmodl
 CFLAGS-nldbl-frexp.c = -fno-builtin-frexpl
+CFLAGS-nldbl-fromfp.c = -fno-builtin-fromfpl
+CFLAGS-nldbl-fromfpx.c = -fno-builtin-fromfpxl
 CFLAGS-nldbl-gamma.c = -fno-builtin-gammal
 CFLAGS-nldbl-getpayload.c = -fno-builtin-getpayloadl
 CFLAGS-nldbl-hypot.c = -fno-builtin-hypotl
@@ -156,6 +158,8 @@ CFLAGS-nldbl-tgamma.c = -fno-builtin-tgammal
 CFLAGS-nldbl-totalorder.c = -fno-builtin-totalorderl
 CFLAGS-nldbl-totalordermag.c = -fno-builtin-totalordermagl
 CFLAGS-nldbl-trunc.c = -fno-builtin-truncl
+CFLAGS-nldbl-ufromfp.c = -fno-builtin-ufromfpl
+CFLAGS-nldbl-ufromfpx.c = -fno-builtin-ufromfpxl
 CFLAGS-nldbl-y0.c = -fno-builtin-y0l
 CFLAGS-nldbl-y1.c = -fno-builtin-y1l
 CFLAGS-nldbl-yn.c = -fno-builtin-ynl

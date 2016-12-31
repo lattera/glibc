@@ -428,6 +428,12 @@ GLIBC_2.25 fmaxmagl F
 GLIBC_2.25 fminmag F
 GLIBC_2.25 fminmagf F
 GLIBC_2.25 fminmagl F
+GLIBC_2.25 fromfp F
+GLIBC_2.25 fromfpf F
+GLIBC_2.25 fromfpl F
+GLIBC_2.25 fromfpx F
+GLIBC_2.25 fromfpxf F
+GLIBC_2.25 fromfpxl F
 GLIBC_2.25 getpayload F
 GLIBC_2.25 getpayloadf F
 GLIBC_2.25 getpayloadl F
@@ -449,3 +455,9 @@ GLIBC_2.25 totalorderl F
 GLIBC_2.25 totalordermag F
 GLIBC_2.25 totalordermagf F
 GLIBC_2.25 totalordermagl F
+GLIBC_2.25 ufromfp F
+GLIBC_2.25 ufromfpf F
+GLIBC_2.25 ufromfpl F
+GLIBC_2.25 ufromfpx F
+GLIBC_2.25 ufromfpxf F
+GLIBC_2.25 ufromfpxl F

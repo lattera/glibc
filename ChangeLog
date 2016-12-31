@@ -1,3 +1,161 @@
+2016-12-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(fromfp): New declaration.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (fromfpx): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (ufromfp): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (ufromfpx): Likewise.
+	* math/tgmath.h (__TGMATH_TERNARY_FIRST_REAL_RET_ONLY): New macro.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (fromfp): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (ufromfp): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (fromfpx): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (ufromfpx): Likewise.
+	* math/math.h: Include <bits/types.h>.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FP_INT_UPWARD): New enum
+	constant and macro.
+	(FP_INT_DOWNWARD): Likewise.
+	(FP_INT_TOWARDZERO): Likewise.
+	(FP_INT_TONEARESTFROMZERO): Likewise.
+	(FP_INT_TONEAREST): Likewise.
+	* math/Versions (fromfp): New libm symbol at version GLIBC_2.25.
+	(fromfpf): Likewise.
+	(fromfpl): Likewise.
+	(ufromfp): Likewise.
+	(ufromfpf): Likewise.
+	(ufromfpl): Likewise.
+	(fromfpx): Likewise.
+	(fromfpxf): Likewise.
+	(fromfpxl): Likewise.
+	(ufromfpx): Likewise.
+	(ufromfpxf): Likewise.
+	(ufromfpxl): Likewise.
+	* math/Makefile (libm-calls): Add s_fromfpF, s_ufromfpF,
+	s_fromfpxF and s_ufromfpxF.
+	* math/gen-fromfp-tests.py: New file.
+	* math/gen-fromfp-tests-inputs: Likewise.
+	* math/libm-test.inc: Include <stdint.h>
+	(check_intmax_t): New function.
+	(check_uintmax_t): Likewise.
+	(struct test_fiu_M_data): New type.
+	(struct test_fiu_U_data): Likewise.
+	(RUN_TEST_fiu_M): New macro.
+	(RUN_TEST_LOOP_fiu_M): Likewise.
+	(RUN_TEST_fiu_U): Likewise.
+	(RUN_TEST_LOOP_fiu_U): Likewise.
+	(fromfp_test_data): New array.
+	(fromfp_test): New function.
+	(fromfpx_test_data): New array.
+	(fromfpx_test): New function.
+	(ufromfp_test_data): New array.
+	(ufromfp_test): New function.
+	(ufromfpx_test_data): New array.
+	(ufromfpx_test): New function.
+	(main): Call fromfp_test, fromfpx_test, ufromfp_test and
+	ufromfpx_test.
+	* math/gen-libm-test.pl (parse_args): Handle u, M and U descriptor
+	characters.
+	* math/test-tgmath-ret.c: Include <stdint.h>.
+	(rm): New variable.
+	(width): Likewise.
+	(CHECK_RET_CONST_TYPE): Take extra arguments and pass them to
+	called function.
+	(CHECK_RET_CONST_FLOAT): Take extra arguments and pass them to
+	CHECK_RET_CONST_TYPE.
+	(CHECK_RET_CONST_DOUBLE): Likewise.
+	(CHECK_RET_CONST_LDOUBLE): Likewise.
+	(CHECK_RET_CONST): Take extra arguments and pass them to calls
+	macros.
+	(fromfp): New CHECK_RET_CONST call.
+	(ufromfp): Likewise.
+	(fromfpx): Likewise.
+	(ufromfpx): Likewise.
+	(do_test): Call check_return_fromfp, check_return_ufromfp,
+	check_return_fromfpx and check_return_ufromfpx.
+	* math/test-tgmath.c: Include <stdint.h>
+	(NCALLS): Increase to 138.
+	(F(compile_test)): Initialize i.  Call fromfp functions.
+	(F(fromfp)): New function.
+	(F(fromfpx)): Likewise.
+	(F(ufromfp)): Likewise.
+	(F(ufromfpx)): Likewise.
+	* manual/arith.texi (Rounding Functions): Document FP_INT_UPWARD,
+	FP_INT_DOWNWARD, FP_INT_TOWARDZERO, FP_INT_TONEARESTFROMZERO,
+	FP_INT_TONEAREST, fromfp, fromfpf, fromfpl, ufromfp, ufromfpf,
+	ufromfpl, fromfpx, fromfpxf, fromfpxl, ufromfpx, ufromfpxf and
+	ufromfpxl.
+	* manual/libm-err-tab.pl (@all_functions): Add fromfp, fromfpx,
+	ufromfp and ufromfpx.
+	* math/fromfp.h: New file.
+	* sysdeps/ieee754/dbl-64/s_fromfp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_fromfp_main.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_fromfpx.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_ufromfp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_ufromfpx.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_fromfpf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_fromfpf_main.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_fromfpxf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_ufromfpf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_ufromfpxf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fromfpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fromfpl_main.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fromfpxl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_ufromfpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_ufromfpxl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fromfpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fromfpl_main.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fromfpxl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_ufromfpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_ufromfpxl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fromfpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fromfpl_main.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fromfpxl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_ufromfpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_ufromfpxl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add fromfp,
+	ufromfp, fromfpx and ufromfpx.
+	(CFLAGS-nldbl-fromfp.c): New variable.
+	(CFLAGS-nldbl-fromfpx.c): Likewise.
+	(CFLAGS-nldbl-ufromfp.c): Likewise.
+	(CFLAGS-nldbl-ufromfpx.c): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h: Include <stdint.h>.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fromfp.c: New file.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fromfpx.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ufromfp.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-ufromfpx.c: Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2016-12-30  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/Makefile (libresolv-routines): Rename gethnamaddr to

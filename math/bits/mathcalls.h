@@ -388,6 +388,28 @@ __END_NAMESPACE_C99
 /* Round X to nearest integer value, rounding halfway cases to even.  */
 __MATHCALLX (roundeven,, (_Mdouble_ __x), (__const__));
 
+/* Round X to nearest signed integer value, not raising inexact, with
+   control of rounding direction and width of result.  */
+__MATHDECL (__intmax_t, fromfp,, (_Mdouble_ __x, int __round,
+				  unsigned int __width));
+
+/* Round X to nearest unsigned integer value, not raising inexact,
+   with control of rounding direction and width of result.  */
+__MATHDECL (__uintmax_t, ufromfp,, (_Mdouble_ __x, int __round,
+				    unsigned int __width));
+
+/* Round X to nearest signed integer value, raising inexact for
+   non-integers, with control of rounding direction and width of
+   result.  */
+__MATHDECL (__intmax_t, fromfpx,, (_Mdouble_ __x, int __round,
+				   unsigned int __width));
+
+/* Round X to nearest unsigned integer value, raising inexact for
+   non-integers, with control of rounding direction and width of
+   result.  */
+__MATHDECL (__uintmax_t, ufromfpx,, (_Mdouble_ __x, int __round,
+				     unsigned int __width));
+
 /* Return value with maximum magnitude.  */
 __MATHCALLX (fmaxmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 

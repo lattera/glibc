@@ -22,6 +22,7 @@
 #undef __NO_MATH_INLINES
 #define __NO_MATH_INLINES 1
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <tgmath.h>
 
@@ -50,7 +51,7 @@ int count_cdouble;
 int count_cfloat;
 int count_cldouble;
 
-#define NCALLS     134
+#define NCALLS     138
 #define NCALLS_INT 4
 #define NCCALLS    47
 
@@ -226,10 +227,12 @@ F(compile_test) (void)
 {
   TYPE a, b, c = 1.0;
   complex TYPE d;
-  int i;
+  int i = 2;
   int saved_count;
   long int j;
   long long int k;
+  intmax_t m;
+  uintmax_t um;
 
   a = cos (cos (x));
   b = acos (acos (a));
@@ -269,6 +272,8 @@ F(compile_test) (void)
   b = remquo (remquo (a, b, &i), remquo (c, x, &i), &i);
   j = lrint (x) + lround (a);
   k = llrint (b) + llround (c);
+  m = fromfp (a, FP_INT_UPWARD, 2) + fromfpx (b, FP_INT_DOWNWARD, 3);
+  um = ufromfp (c, FP_INT_TONEAREST, 4) + ufromfpx (a, FP_INT_TOWARDZERO, 5);
   a = erf (erf (x));
   b = erfc (erfc (a));
   a = tgamma (tgamma (x));
@@ -298,7 +303,7 @@ F(compile_test) (void)
   c = fma (i, b, i);
   a = pow (i, c);
 #endif
-  x = a + b + c + i + j + k;
+  x = a + b + c + i + j + k + m + um;
 
   saved_count = count;
   if (ccount != 0)
@@ -373,6 +378,9 @@ F(compile_test) (void)
       a = remquo (y, y, &i);
       j = lrint (y) + lround (y);
       k = llrint (y) + llround (y);
+      m = fromfp (y, FP_INT_UPWARD, 6) + fromfpx (y, FP_INT_DOWNWARD, 7);
+      um = (ufromfp (y, FP_INT_TONEAREST, 8)
+	    + ufromfpx (y, FP_INT_TOWARDZERO, 9));
       a = erf (y);
       a = erfc (y);
       a = tgamma (y);
@@ -744,6 +752,38 @@ long long int
 
 long long int
 (F(llround)) (TYPE x)
+{
+  ++count;
+  P ();
+  return x;
+}
+
+intmax_t
+(F(fromfp)) (TYPE x, int round, unsigned int width)
+{
+  ++count;
+  P ();
+  return x;
+}
+
+intmax_t
+(F(fromfpx)) (TYPE x, int round, unsigned int width)
+{
+  ++count;
+  P ();
+  return x;
+}
+
+uintmax_t
+(F(ufromfp)) (TYPE x, int round, unsigned int width)
+{
+  ++count;
+  P ();
+  return x;
+}
+
+uintmax_t
+(F(ufromfpx)) (TYPE x, int round, unsigned int width)
 {
   ++count;
   P ();

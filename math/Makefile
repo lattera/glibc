@@ -75,7 +75,8 @@ libm-calls =								  \
 	s_issignalingF $(calls:s_%=m_%) x2y2m1F				  \
 	gamma_productF lgamma_negF lgamma_productF			  \
 	s_nextupF s_totalorderF s_totalordermagF s_getpayloadF		  \
-	s_setpayloadF s_setpayloadsigF s_roundevenF $(gen-libm-calls)
+	s_setpayloadF s_setpayloadsigF s_roundevenF s_fromfpF s_ufromfpF  \
+	s_fromfpxF s_ufromfpxF $(gen-libm-calls)
 
 libm-compat-calls-ldouble-yes = w_lgamma_compatl k_standardl
 libm-compat-calls = w_lgamma_compatf w_lgamma_compat k_standard k_standardf \

@@ -155,6 +155,14 @@
 				   + (__tgmath_real_type (Val3)) 0))	      \
 		       Fct##f (Val1, Val2, Val3)))
 
+# define __TGMATH_TERNARY_FIRST_REAL_RET_ONLY(Val1, Val2, Val3, RetType, Fct) \
+     (__extension__ ((sizeof (Val1) == sizeof (double)			\
+		      || __builtin_classify_type (Val1) != 8)		\
+		     ? (RetType) Fct (Val1, Val2, Val3)			\
+		     : (sizeof (Val1) == sizeof (float))		\
+		     ? (RetType) Fct##f (Val1, Val2, Val3)		\
+		     : (RetType) __tgml(Fct) (Val1, Val2, Val3)))
+
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
 # define __TGMATH_UNARY_REAL_IMAG(Val, Fct, Cfct) \
@@ -440,6 +448,18 @@
 #if __GLIBC_USE (IEC_60559_BFP_EXT)
 /* Round X to nearest integer value, rounding halfway cases to even.  */
 # define roundeven(Val) __TGMATH_UNARY_REAL_ONLY (Val, roundeven)
+
+# define fromfp(Val1, Val2, Val3)					\
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __intmax_t, fromfp)
+
+# define ufromfp(Val1, Val2, Val3)					\
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __uintmax_t, ufromfp)
+
+# define fromfpx(Val1, Val2, Val3)					\
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __intmax_t, fromfpx)
+
+# define ufromfpx(Val1, Val2, Val3)					\
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __uintmax_t, ufromfpx)
 
 /* Like ilogb, but returning long int.  */
 # define llogb(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long int, llogb)

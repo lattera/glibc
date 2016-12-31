@@ -24,6 +24,7 @@
 #define __NO_LONG_DOUBLE_MATH	1
 #include <stdarg.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <printf.h>
 #include <wchar.h>

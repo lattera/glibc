@@ -223,8 +223,8 @@ sub parse_args {
     if ($current_arg > 1) {
       $comma = ', ';
     }
-    # FLOAT, int, long int, long long int
-    if ($descr[$i] =~ /f|j|i|l|L/) {
+    # FLOAT, long double, int, unsigned int, long int, long long int
+    if ($descr[$i] =~ /f|j|i|u|l|L/) {
       $call_args .= $comma . &beautify ($args[$current_arg]);
       ++$current_arg;
       next;
@@ -252,7 +252,7 @@ sub parse_args {
   $num_res = 0;
   @descr = split //,$descr_res;
   foreach (@descr) {
-    if ($_ =~ /f|i|l|L/) {
+    if ($_ =~ /f|i|l|L|M|U/) {
       ++$num_res;
     } elsif ($_ eq 'c') {
       $num_res += 2;
@@ -289,7 +289,7 @@ sub parse_args {
   @descr = split //,$descr_args;
   for ($i=0; $i <= $#descr; $i++) {
     # FLOAT, int, long int, long long int
-    if ($descr[$i] =~ /f|j|i|l|L/) {
+    if ($descr[$i] =~ /f|j|i|u|l|L/) {
       if ($descr[$i] eq "f") {
         $cline .= ", " . &apply_lit ($args[$current_arg]);
       } else {
@@ -327,7 +327,7 @@ sub parse_args {
     $cline_res = "";
     @special = ();
     foreach (@descr) {
-      if ($_ =~ /b|f|j|i|l|L/ ) {
+      if ($_ =~ /b|f|j|i|l|L|M|U/ ) {
 	my ($result) = $args_res[$current_arg];
 	if ($result eq "IGNORE") {
 	  $ignore_result_any = 1;

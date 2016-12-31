@@ -57,13 +57,14 @@ use vars qw (%results @all_floats %suffices @all_functions);
     "clog", "clog10", "conj", "copysign", "cos", "cosh", "cpow", "cproj",
     "creal", "csin", "csinh", "csqrt", "ctan", "ctanh", "erf", "erfc",
     "exp", "exp10", "exp2", "expm1", "fabs", "fdim", "floor", "fma",
-    "fmax", "fmaxmag", "fmin", "fminmag", "fmod", "frexp", "gamma", "hypot",
+    "fmax", "fmaxmag", "fmin", "fminmag", "fmod", "frexp", "fromfp", "fromfpx",
+    "gamma", "hypot",
     "ilogb", "j0", "j1", "jn", "lgamma", "llogb", "lrint",
     "llrint", "log", "log10", "log1p", "log2", "logb", "lround",
     "llround", "modf", "nearbyint", "nextafter", "nextdown", "nexttoward",
     "nextup", "pow", "remainder", "remquo", "rint", "round", "roundeven",
     "scalb", "scalbn", "sin", "sincos", "sinh", "sqrt", "tan", "tanh",
-    "tgamma", "trunc", "y0", "y1", "yn" );
+    "tgamma", "trunc", "ufromfp", "ufromfpx", "y0", "y1", "yn" );
 # canonicalize, fpclassify, getpayload, iscanonical, isnormal,
 # isfinite, isinf, isnan, issignaling, issubnormal, iszero, signbit,
 # iseqsig, isgreater, isgreaterequal, isless, islessequal,

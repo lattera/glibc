@@ -28,6 +28,9 @@
 
 __BEGIN_DECLS
 
+/* Get definitions of __intmax_t and __uintmax_t.  */
+#include <bits/types.h>
+
 /* Get machine-dependent vector math functions declarations.  */
 #include <bits/math-vector.h>
 
@@ -151,6 +154,28 @@ typedef _Float128x double_t;
 */
 
 #include <bits/fp-fast.h>
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Rounding direction macros for fromfp functions.  */
+enum
+  {
+    FP_INT_UPWARD =
+# define FP_INT_UPWARD 0
+      FP_INT_UPWARD,
+    FP_INT_DOWNWARD =
+# define FP_INT_DOWNWARD 1
+      FP_INT_DOWNWARD,
+    FP_INT_TOWARDZERO =
+# define FP_INT_TOWARDZERO 2
+      FP_INT_TOWARDZERO,
+    FP_INT_TONEARESTFROMZERO =
+# define FP_INT_TONEARESTFROMZERO 3
+      FP_INT_TONEARESTFROMZERO,
+    FP_INT_TONEAREST =
+# define FP_INT_TONEAREST 4
+      FP_INT_TONEAREST,
+  };
+#endif
 
 /* The file <bits/mathcalls.h> contains the prototypes for all the
    actual math functions.  These macros are used for those prototypes,
