@@ -1,5 +1,5 @@
 @node Internal Probes
-@c @node Internal Probes, , POSIX Threads, Top
+@c @node Internal Probes, Tunables, POSIX Threads, Top
 @c %MENU% Probes to monitor libc internal behavior
 @chapter Internal probes
 

@@ -38,7 +38,8 @@ chapters = $(addsuffix .texi, \
 		       message search pattern io stdio llio filesys	\
 		       pipe socket terminal syslog math arith time	\
 		       resource setjmp signal startup process ipc job	\
-		       nss users sysinfo conf crypt debug threads probes)
+		       nss users sysinfo conf crypt debug threads	\
+		       probes tunables)
 add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
 appendices = lang.texi header.texi install.texi maint.texi platform.texi \
 	     contrib.texi

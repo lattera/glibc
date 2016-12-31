@@ -1,5 +1,9 @@
 2016-12-31  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* manual/tunables.texi: New chapter.
+	* manual/Makefile (chapters): Add it.
+	* manual/probes.texi (@node): Point to the Tunables chapter.
+
 	* Makeconfig (have-tunables): Check for non-negative instead
 	of positive.
 	* configure.ac: Add 'valstring' as a valid value for

@@ -1,0 +1,192 @@
+@node Tunables
+@c @node Tunables, , Internal Probes, Top
+@c %MENU% Tunable switches to alter libc internal behavior
+@chapter Tunables
+@cindex tunables
+
+@dfn{Tunables} are a feature in @theglibc{} that allows application authors and
+distribution maintainers to alter the runtime library behavior to match
+their workload. These are implemented as a set of switches that may be
+modified in different ways. The current default method to do this is via
+the @env{GLIBC_TUNABLES} environment variable by setting it to a string
+of colon-separated @var{name}=@var{value} pairs.  For example, the following
+example enables malloc checking and sets the malloc trim threshold to 128
+bytes:
+
+@example
+GLIBC_TUNABLES=glibc.malloc.trim_threshold=128:glibc.malloc.check=3
+export GLIBC_TUNABLES
+@end example
+
+Tunables are not part of the @glibcadj{} stable ABI, and they are
+subject to change or removal across releases.  Additionally, the method to
+modify tunable values may change between releases and across distributions.
+It is possible to implement multiple `frontends' for the tunables allowing
+distributions to choose their preferred method at build time.
+
+Finally, the set of tunables available may vary between distributions as
+the tunables feature allows distributions to add their own tunables under
+their own namespace.
+
+@menu
+* Tunable names::  The structure of a tunable name
+* Memory Allocation Tunables::  Tunables in the memory allocation subsystem
+@end menu
+
+@node Tunable names
+@section Tunable names
+@cindex Tunable names
+@cindex Tunable namespaces
+
+A tunable name is split into three components, a top namespace, a tunable
+namespace and the tunable name. The top namespace for tunables implemented in
+@theglibc{} is @code{glibc}. Distributions that choose to add custom tunables
+in their maintained versions of @theglibc{} may choose to do so under their own
+top namespace.
+
+The tunable namespace is a logical grouping of tunables in a single
+module. This currently holds no special significance, although that may
+change in the future.
+
+The tunable name is the actual name of the tunable. It is possible that
+different tunable namespaces may have tunables within them that have the
+same name, likewise for top namespaces. Hence, we only support
+identification of tunables by their full name, i.e. with the top
+namespace, tunable namespace and tunable name, separated by periods.
+
+@node Memory Allocation Tunables
+@section Memory Allocation Tunables
+@cindex memory allocation tunables
+@cindex malloc tunables
+@cindex tunables, malloc
+
+@deftp {Tunable namespace} glibc.malloc
+Memory allocation behavior can be modified by setting any of the
+following tunables in the @code{malloc} namespace:
+@end deftp
+
+@deftp Tunable glibc.malloc.check
+This tunable supersedes the @env{MALLOC_CHECK_} environment variable and is
+identical in features.
+
+Setting this tunable enables a special (less efficient) memory allocator for
+the malloc family of functions that is designed to be tolerant against simple
+errors such as double calls of free with the same argument, or overruns of a
+single byte (off-by-one bugs). Not all such errors can be protected against,
+however, and memory leaks can result.  The following list describes the values
+that this tunable can take and the effect they have on malloc functionality:
+
+@itemize @bullet
+@item @code{0} Ignore all errors.  The default allocator continues to be in
+use, but all errors are silently ignored.
+@item @code{1} Report errors.  The alternate allocator is selected and heap
+corruption, if detected, is reported as diagnostic messages to @code{stderr}
+and the program continues execution.
+@item @code{2} Abort on errors.  The alternate allocator is selected and if
+heap corruption is detected, the program is ended immediately by calling
+@code{abort}.
+@item @code{3} Fully enabled.  The alternate allocator is selected and is fully
+functional.  That is, if heap corruption is detected, a verbose diagnostic
+message is printed to @code{stderr} and the program is ended by calling
+@code{abort}.
+@end itemize
+
+Like @env{MALLOC_CHECK_}, @code{glibc.malloc.check} has a problem in that it
+diverges from normal program behavior by writing to @code{stderr}, which could
+by exploited in SUID and SGID binaries.  Therefore, @code{glibc.malloc.check}
+is disabled by default for SUID and SGID binaries.  This can be enabled again
+by the system administrator by adding a file @file{/etc/suid-debug}; the
+content of the file could be anything or even empty.
+@end deftp
+
+@deftp Tunable glibc.malloc.top_pad
+This tunable supersedes the @env{MALLOC_TOP_PAD_} environment variable and is
+identical in features.
+
+This tunable determines the amount of extra memory in bytes to obtain from the
+system when any of the arenas need to be extended.  It also specifies the
+number of bytes to retain when shrinking any of the arenas.  This provides the
+necessary hysteresis in heap size such that excessive amounts of system calls
+can be avoided.
+
+The default value of this tunable is @samp{0}.
+@end deftp
+
+@deftp Tunable glibc.malloc.perturb
+This tunable supersedes the @env{MALLOC_PERTURB_} environment variable and is
+identical in features.
+
+If set to a non-zero value, memory blocks are initialized with values depending
+on some low order bits of this tunable when they are allocated (except when
+allocated by calloc) and freed.  This can be used to debug the use of
+uninitialized or freed heap memory. Note that this option does not guarantee
+that the freed block will have any specific values. It only guarantees that the
+content the block had before it was freed will be overwritten.
+
+The default value of this tunable is @samp{0}.
+@end deftp
+
+@deftp Tunable glibc.malloc.mmap_threshold
+This tunable supersedes the @env{MALLOC_MMAP_THRESHOLD_} environment variable
+and is identical in features.
+
+When this tunable is set, all chunks larger than this value in bytes are
+allocated outside the normal heap, using the @code{mmap} system call. This way
+it is guaranteed that the memory for these chunks can be returned to the system
+on @code{free}. Note that requests smaller than this threshold might still be
+allocated via @code{mmap}.
+
+If this tunable is not set, the default value is set to @samp{131072} bytes and
+the threshold is adjusted dynamically to suit the allocation patterns of the
+program.  If the tunable is set, the dynamic adjustment is disabled and the
+value is set as static.
+@end deftp
+
+@deftp Tunable glibc.malloc.trim_threshold
+This tunable supersedes the @env{MALLOC_TRIM_THRESHOLD_} environment variable
+and is identical in features.
+
+The value of this tunable is the minimum size (in bytes) of the top-most,
+releasable chunk in an arena that will trigger a system call in order to return
+memory to the system from that arena.
+
+If this tunable is not set, the default value is set as 128 KB and the
+threshold is adjusted dynamically to suit the allocation patterns of the
+program.  If the tunable is set, the dynamic adjustment is disabled and the
+value is set as static.
+@end deftp
+
+@deftp Tunable glibc.malloc.mmap_max
+This tunable supersedes the @env{MALLOC_MMAP_MAX_} environment variable and is
+identical in features.
+
+The value of this tunable is maximum number of chunks to allocate with
+@code{mmap}.  Setting this to zero disables all use of @code{mmap}.
+
+The default value of this tunable is @samp{65536}.
+@end deftp
+
+@deftp Tunable glibc.malloc.arena_test
+This tunable supersedes the @env{MALLOC_ARENA_TEST} environment variable and is
+identical in features.
+
+The @code{glibc.malloc.arena_test} tunable specifies the number of arenas that
+can be created before the test on the limit to the number of arenas is
+conducted.  The value is ignored if @code{glibc.malloc.arena_max} is set.
+
+The default value of this tunable is 2 for 32-bit systems and 8 for 64-bit
+systems.
+@end deftp
+
+@deftp Tunable glibc.malloc.arena_max
+This tunable supersedes the @env{MALLOC_ARENA_MAX} environment variable and is
+identical in features.
+
+This tunable sets the number of arenas to use in a process regardless of the
+number of cores in the system.
+
+The default value of this tunable is @code{0}, meaning that the limit on the
+number of arenas is determined by the number of CPU cores online.  For 32-bit
+systems the limit is twice the number of cores online and on 64-bit systems, it
+is 8 times the number of cores online.
+@end deftp
