@@ -1,3 +1,9 @@
+2016-12-31  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17252]
+	* posix/unistd.h (getentropy): Declare for __USE_MISC, not just
+	__USE_GNU.
+
 2016-12-31  Torvald Riegel  <triegel@redhat.com>
 
 	[BZ #13165]
