@@ -26,7 +26,7 @@ support_test_verify_impl (int status, const char *file, int line,
                           const char *expr)
 {
   support_record_failure ();
-  printf ("FAIL %s:%d: not true: %s\n", file, line, expr);
+  printf ("error: %s:%d: not true: %s\n", file, line, expr);
   if (status >= 0)
     exit (status);
 

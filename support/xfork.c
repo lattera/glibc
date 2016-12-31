@@ -20,15 +20,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <support/check.h>
 
 pid_t
 xfork (void)
 {
   pid_t result = fork ();
   if (result < 0)
-    {
-      printf ("error: fork: %m\n");
-      exit (1);
-    }
+    FAIL_EXIT1 ("fork: %m");
   return result;
 }

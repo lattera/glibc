@@ -52,15 +52,15 @@ different_status () {
     run_test 1 "error: 1 test failures" $direct --status=1
     run_test 2 "error: 1 test failures" $direct --status=2
     run_test 1 "error: 1 test failures" $direct --status=77
-    run_test 2 "FAIL tst-support_record_failure.c:108: not true: false
+    run_test 2 "error: tst-support_record_failure.c:108: not true: false
 error: 1 test failures" $direct --test-verify
 }
 
 different_status
 different_status --direct
 
-run_test 1 "FAIL tst-support_record_failure.c:113: not true: false
+run_test 1 "error: tst-support_record_failure.c:113: not true: false
 error: 1 test failures" --test-verify-exit
 # --direct does not print the summary error message if exit is called.
-run_test 1 "FAIL tst-support_record_failure.c:113: not true: false" \
+run_test 1 "error: tst-support_record_failure.c:113: not true: false" \
 	 --direct --test-verify-exit

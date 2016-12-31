@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <support/check.h>
 #include <sys/wait.h>
 
 int
@@ -27,9 +28,6 @@ xwaitpid (int pid, int *status, int flags)
 {
   pid_t result = waitpid (pid, status, flags);
   if (result < 0)
-    {
-      printf ("error: waitpid: %m\n");
-      exit (1);
-    }
+    FAIL_EXIT1 ("waitpid: %m\n");
   return result;
 }

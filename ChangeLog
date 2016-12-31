@@ -1,5 +1,27 @@
 2016-12-31  Florian Weimer  <fweimer@redhat.com>
 
+	* support/check.h (FAIL_RET, FAIL_EXIT, FAIL_EXIT1): Document that
+	test failures are recorded.
+	* support/check.c (support_print_failure_impl): Call
+	support_record_failure.
+	(support_exit_failure_impl): Call support_record_failure if status
+	indicates failure.
+	* support/delayed_exit.c (delayed_exit_thread): Use FAIL_EXIT1.
+	* support/xasprintf.c (xasprintf): Likewise.
+	* support/xfork.c (xfork): Likewise.
+	* support/xpthread_check_return.c (xpthread_check_return):
+	Likewise.
+	* support/xsocket.c (xsocket): Likeweise.
+	* support/xwaitpid.c (xwaitpid): Likewise.
+	* support/support_record_failure.c (struct test_failures): Adjust
+	to coding style.
+	* support/support_test_verify_impl.c (support_test_verify_impl):
+	Adjust error messages.
+	* support/tst-support_record_failure-2.sh (different_status):
+	Adjust error messages.
+
+2016-12-31  Florian Weimer  <fweimer@redhat.com>
+
 	* support/namespace.h: New file.
 	* support/support_become_root.c: Likewise.
 	* support/support_enter_network_namespace.c: Likewise.

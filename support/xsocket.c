@@ -27,10 +27,6 @@ xsocket (int domain, int type, int protocol)
 {
   int fd = socket (domain, type, protocol);
   if (fd < 0)
-    {
-      support_record_failure ();
-      printf ("error: socket (%d, %d, %d): %m\n", domain, type, protocol);
-      exit (1);
-    }
+    FAIL_EXIT1 ("socket (%d, %d, %d): %m\n", domain, type, protocol);
   return fd;
 }

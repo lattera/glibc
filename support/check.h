@@ -23,15 +23,19 @@
 
 __BEGIN_DECLS
 
-/* Print failure message to standard output and return 1.  */
+/* Record a test failure, print the failure message to standard output
+   and return 1.  */
 #define FAIL_RET(...) \
   return support_print_failure_impl (__FILE__, __LINE__, __VA_ARGS__)
 
-/* Print failure message and terminate the process with STATUS.  */
+/* Print the failure message and terminate the process with STATUS.
+   Record a the process as failed if STATUS is neither EXIT_SUCCESS
+   nor EXIT_UNSUPPORTED.  */
 #define FAIL_EXIT(status, ...) \
   support_exit_failure_impl (status, __FILE__, __LINE__, __VA_ARGS__)
 
-/* Print failure message and terminate with exit status 1.  */
+/* Record a test failure, print the failure message and terminate with
+   exit status 1.  */
 #define FAIL_EXIT1(...) \
   support_exit_failure_impl (1, __FILE__, __LINE__, __VA_ARGS__)
 

@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <support/check.h>
 
 void
 xpthread_check_return (const char *function, int value)
@@ -28,7 +29,6 @@ xpthread_check_return (const char *function, int value)
   if (value != 0)
     {
       errno = value;
-      printf ("error: %s: %m\n", function);
-      exit (1);
+      FAIL_EXIT1 ("%s: %m", function);
     }
 }

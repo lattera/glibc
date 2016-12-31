@@ -36,8 +36,8 @@
    propagate to the parent process.  */
 struct test_failures
 {
-  unsigned counter;
-  unsigned failed;
+  unsigned int counter;
+  unsigned int failed;
 };
 static struct test_failures *state;
 

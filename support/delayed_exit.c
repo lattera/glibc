@@ -22,6 +22,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <support/check.h>
 #include <time.h>
 
 static void *
@@ -31,10 +32,7 @@ delayed_exit_thread (void *seconds_as_ptr)
   struct timespec delay = { seconds, 0 };
   struct timespec remaining = { 0 };
   if (nanosleep (&delay, &remaining) != 0)
-    {
-      printf ("error: nanosleep: %m\n");
-      exit (1);
-    }
+    FAIL_EXIT1 ("nanosleep: %m");
   /* Exit the process sucessfully.  */
   exit (0);
   return NULL;
