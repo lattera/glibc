@@ -29,10 +29,10 @@ xwrite (int fd, const void *buffer, size_t length)
     {
       ssize_t ret = write (fd, p, end - p);
       if (ret < 0)
-        FAIL_EXIT1 ("write of %zu bytes failed after %zd: %m",
+        FAIL_EXIT1 ("write of %zu bytes failed after %td: %m",
                     length, p - (const char *) buffer);
       if (ret == 0)
-        FAIL_EXIT1 ("write return 0 after writing %zd bytes of %zu",
+        FAIL_EXIT1 ("write return 0 after writing %td bytes of %zu",
                     p - (const char *) buffer, length);
       p += ret;
     }

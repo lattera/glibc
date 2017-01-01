@@ -1,5 +1,9 @@
 2017-01-01  Florian Weimer  <fweimer@redhat.com>
 
+	* support/xwrite.c (xwrite): Use %td for pointer difference.
+
+2017-01-01  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/Makefile (tests): Add tst-malloc-usable-tunables for
 	have-tunables only.
 	(tests-static): Add tst-malloc-usable-static-tunables for
