@@ -1,3 +1,10 @@
+2017-01-01  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/Makefile (tests): Add tst-malloc-usable-tunables for
+	have-tunables only.
+	(tests-static): Add tst-malloc-usable-static-tunables for
+	have-tunables only.
+
 2017-01-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/config.guess: Update to version 2017-01-01.
