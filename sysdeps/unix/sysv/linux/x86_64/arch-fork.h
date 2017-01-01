@@ -1,5 +1,5 @@
 /* Internal definitions for thread-friendly fork implementation.  Linux/x86_64.
-   Copyright (C) 2003-2016 Free Software Foundation, Inc.
+   Copyright (C) 2003-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 

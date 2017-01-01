@@ -1,5 +1,5 @@
 /* CPU strand yielding for busy loops.
-   Copyright (C) 2012-2016 Free Software Foundation, Inc.
+   Copyright (C) 2012-2017 Free Software Foundation, Inc.
    Contributed by David S. Miller (davem@davemloft.net)
    This file is part of the GNU C Library.
 

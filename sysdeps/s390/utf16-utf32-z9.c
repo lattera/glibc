@@ -2,7 +2,7 @@
 
    This module uses the Z9-109 variants of the Convert Unicode
    instructions.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
 
    Author: Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
    Based on the work by Ulrich Drepper  <drepper@cygnus.com>, 1997.

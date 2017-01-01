@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/ia64 version.
-   Copyright (C) 2000-2016 Free Software Foundation, Inc.
+   Copyright (C) 2000-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 

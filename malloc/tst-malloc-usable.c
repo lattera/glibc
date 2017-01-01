@@ -1,7 +1,7 @@
 /* Ensure that malloc_usable_size returns the request size with
    MALLOC_CHECK_ exported to a positive value.
 
-   Copyright (C) 2012-2016 Free Software Foundation, Inc.
+   Copyright (C) 2012-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

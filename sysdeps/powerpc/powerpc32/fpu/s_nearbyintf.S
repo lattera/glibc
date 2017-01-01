@@ -1,5 +1,5 @@
 /* Round to int floating-point values.  PowerPC32 version.
-   Copyright (C) 2011-2016 Free Software Foundation, Inc.
+   Copyright (C) 2011-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Adhemerval Zanella <azanella@br.ibm.com>, 2011
 

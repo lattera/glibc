@@ -1,6 +1,6 @@
 /* Count bits in CPU set.  x86-64 multi-arch version.
    This file is part of the GNU C Library.
-   Copyright (C) 2008-2016 Free Software Foundation, Inc.
+   Copyright (C) 2008-2017 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>.
 
    The GNU C Library is free software; you can redistribute it and/or

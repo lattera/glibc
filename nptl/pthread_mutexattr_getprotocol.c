@@ -1,5 +1,5 @@
 /* Get priority protocol setting from pthread_mutexattr_t.
-   Copyright (C) 2006-2016 Free Software Foundation, Inc.
+   Copyright (C) 2006-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2006.
 

@@ -1,5 +1,5 @@
 /* e_rem_pio2f.c -- float version of e_rem_pio2.c
-   Copyright (C) 2011-2016 Free Software Foundation, Inc.
+   Copyright (C) 2011-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Adhemerval Zanella <azanella@br.ibm.com>, 2011
 

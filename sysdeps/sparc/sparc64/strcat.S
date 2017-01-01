@@ -1,6 +1,6 @@
 /* strcat (dest, src) -- Append SRC on the end of DEST.
    For SPARC v9.
-   Copyright (C) 1998-2016 Free Software Foundation, Inc.
+   Copyright (C) 1998-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz> and
 		  Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz>.

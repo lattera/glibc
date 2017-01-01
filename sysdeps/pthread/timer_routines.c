@@ -1,5 +1,5 @@
 /* Helper code for POSIX timer implementation on NPTL.
-   Copyright (C) 2000-2016 Free Software Foundation, Inc.
+   Copyright (C) 2000-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 

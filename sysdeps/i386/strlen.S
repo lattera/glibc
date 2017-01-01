@@ -1,6 +1,6 @@
 /* strlen(str) -- determine the length of the string STR.
    Optimized for Intel 80x86, x>=4.
-   Copyright (C) 1991-2016 Free Software Foundation, Inc.
+   Copyright (C) 1991-2017 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>.
    This file is part of the GNU C Library.
 

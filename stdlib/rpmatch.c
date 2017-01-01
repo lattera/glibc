@@ -1,7 +1,7 @@
 /* Determine whether string value is affirmation or negative response
    according to current locale's data.
    This file is part of the GNU C Library.
-   Copyright (C) 1996-2016 Free Software Foundation, Inc.
+   Copyright (C) 1996-2017 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

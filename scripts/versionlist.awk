@@ -1,5 +1,5 @@
 # Extract ordered list of version sets from Versions files.
-# Copyright (C) 2014-2016 Free Software Foundation, Inc.
+# Copyright (C) 2014-2017 Free Software Foundation, Inc.
 
 BEGIN { in_lib = ""; in_version = 0 }
 

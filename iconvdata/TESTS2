@@ -1,5 +1,5 @@
 # Tests for endianness dependent iconv(1) (and therefore iconv(3)) in GNU libc.
-# Copyright (C) 2001-2016 Free Software Foundation, Inc.
+# Copyright (C) 2001-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Bruno Haible <haible@clisp.cons.org>, 2001.
 #

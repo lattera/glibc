@@ -1,5 +1,5 @@
 /* Software floating-point emulation: convert to fortran nearest.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).

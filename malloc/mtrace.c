@@ -1,5 +1,5 @@
 /* More debugging hooks for `malloc'.
-   Copyright (C) 1991-2016 Free Software Foundation, Inc.
+   Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
                  Written April 2, 1991 by John Gilmore of Cygnus Support.
                  Based on mcheck.c by Mike Haertel.

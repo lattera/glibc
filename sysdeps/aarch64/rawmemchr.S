@@ -1,6 +1,6 @@
 /* rawmemchr - find a character in a memory zone
 
-   Copyright (C) 2015 Free Software Foundation, Inc.
+   Copyright (C) 2015-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

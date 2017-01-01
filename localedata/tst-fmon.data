@@ -1,5 +1,5 @@
 # Test data for test-strfmon, which checks it's implementation in glibc
-# Copyright (C) 1996-2016 Free Software Foundation, Inc.
+# Copyright (C) 1996-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Jochen Hein <jochen.hein@delphi.central.de>, 1997.
 #

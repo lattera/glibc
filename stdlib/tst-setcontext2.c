@@ -1,6 +1,6 @@
 /* Testcase checks, if setcontext(), swapcontext() restores signal-mask
    and if pending signals are delivered after those calls.
-   Copyright (C) 2015-2016 Free Software Foundation, Inc.
+   Copyright (C) 2015-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

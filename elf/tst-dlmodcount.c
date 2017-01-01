@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2004-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@hpl.hp.com>, 2004.
 

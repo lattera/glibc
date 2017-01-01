@@ -1,6 +1,6 @@
 /* Copy SRC to DEST returning the address of the terminating '\0' in DEST.
    For SPARC v7.
-   Copyright (C) 1996-2016 Free Software Foundation, Inc.
+   Copyright (C) 1996-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>.
 

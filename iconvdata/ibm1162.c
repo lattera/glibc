@@ -1,5 +1,5 @@
 /* Conversion from and to IBM1162.
-   Copyright (C) 2001-2016 Free Software Foundation, Inc.
+   Copyright (C) 2001-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@jp.ibm.com>, 2001.
 

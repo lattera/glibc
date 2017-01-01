@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values. 4.4BSD/Generic version.
-   Copyright (C) 1991-2016 Free Software Foundation, Inc.
+   Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

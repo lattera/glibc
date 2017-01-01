@@ -1,5 +1,5 @@
 /* Test we don't segfault on invalid UTF-8 sequence.
-   Copyright (C) 2004-2016 Free Software Foundation, Inc.
+   Copyright (C) 2004-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 

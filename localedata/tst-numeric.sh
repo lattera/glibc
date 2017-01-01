@@ -1,6 +1,6 @@
 #!/bin/sh
 # Testing the implementation of LC_NUMERIC and snprintf(3).
-# Copyright (C) 1996-2016 Free Software Foundation, Inc.
+# Copyright (C) 1996-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Jochen Hein <jochen.hein@delphi.central.de>, 1997.
 

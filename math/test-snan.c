@@ -1,5 +1,5 @@
 /* Test signaling NaNs in issignaling, isnan, isinf, and similar functions.
-   Copyright (C) 2008-2016 Free Software Foundation, Inc.
+   Copyright (C) 2008-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2005.
 

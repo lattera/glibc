@@ -1,5 +1,5 @@
 /* Test re_search with multi-byte characters in EUC-JP.
-   Copyright (C) 2012-2016 Free Software Foundation, Inc.
+   Copyright (C) 2012-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Stanislav Brabec <sbrabec@suse.cz>, 2012.
 

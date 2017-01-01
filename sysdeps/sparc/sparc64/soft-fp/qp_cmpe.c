@@ -1,7 +1,7 @@
 /* Software floating-point emulation.
    Compare (*a) and (*b), return float condition code.
    Signal exception (unless masked) if unordered.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).

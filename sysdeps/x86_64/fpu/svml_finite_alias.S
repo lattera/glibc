@@ -2,7 +2,7 @@
    aliases in libmvec.so while compiler creates the vector names
    based on scalar asm name.  Corresponding discussion is at
    <https://gcc.gnu.org/ml/gcc/2015-06/msg00173.html>.
-   Copyright (C) 2015-2016 Free Software Foundation, Inc.
+   Copyright (C) 2015-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

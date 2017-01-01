@@ -1,5 +1,5 @@
 /* Machine-specific calling sequence for `mcount' profiling function.  ia64
-   Copyright (C) 2000-2016 Free Software Foundation, Inc.
+   Copyright (C) 2000-2017 Free Software Foundation, Inc.
      Contributed by David Mosberger <davidm@hpl.hp.com>
    This file is part of the GNU C Library.
 

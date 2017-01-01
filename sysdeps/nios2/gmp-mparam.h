@@ -1,6 +1,6 @@
 /* gmp-mparam.h -- Compiler/machine parameter header file.
 
-Copyright (C) 2015-2016 Free Software Foundation, Inc.
+Copyright (C) 2015-2017 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 

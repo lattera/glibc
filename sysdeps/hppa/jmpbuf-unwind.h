@@ -1,5 +1,5 @@
 /* Examine __jmp_buf for unwinding frames.  HPPA version.
-   Copyright (C) 2006-2016 Free Software Foundation, Inc.
+   Copyright (C) 2006-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

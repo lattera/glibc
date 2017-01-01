@@ -1,7 +1,7 @@
 /* SPARC v9 __mpn_submul_1 -- Multiply a limb vector with a single limb and
    subtract the product from a second limb vector.
 
-   Copyright (C) 1996-2016 Free Software Foundation, Inc.
+   Copyright (C) 1996-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU MP Library.
 

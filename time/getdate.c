@@ -1,5 +1,5 @@
 /* Convert a string representation of time to a time value.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 

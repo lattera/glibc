@@ -1,5 +1,5 @@
 /* Copy SIZE bytes from SRC to DEST.  For SUN4V Niagara-2.
-   Copyright (C) 2007-2016 Free Software Foundation, Inc.
+   Copyright (C) 2007-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller (davem@davemloft.net)
 

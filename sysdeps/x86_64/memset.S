@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Optimized version for x86-64.
-   Copyright (C) 2002-2016 Free Software Foundation, Inc.
+   Copyright (C) 2002-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

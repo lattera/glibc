@@ -1,6 +1,6 @@
 /* rawmemchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For Motorola 68000.
-   Copyright (C) 1999-2016 Free Software Foundation, Inc.
+   Copyright (C) 1999-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 

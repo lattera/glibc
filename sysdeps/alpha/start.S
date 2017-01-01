@@ -1,5 +1,5 @@
 /* Startup code for Alpha/ELF.
-   Copyright (C) 1993-2016 Free Software Foundation, Inc.
+   Copyright (C) 1993-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>
 

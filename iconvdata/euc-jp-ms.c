@@ -1,5 +1,5 @@
 /* Mapping tables for EUCJP-MS handling.
-   Copyright (C) 1998-2016 Free Software Foundation, Inc.
+   Copyright (C) 1998-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by MORIYAMA Masayuki <msyk@mtg.biglobe.ne.jp>, 2003.
 

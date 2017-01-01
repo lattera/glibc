@@ -1,6 +1,6 @@
 #!/bin/sh
 # Test how rtld loads itself.
-# Copyright (C) 2012-2016 Free Software Foundation, Inc.
+# Copyright (C) 2012-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 

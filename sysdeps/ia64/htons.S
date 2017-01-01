@@ -1,5 +1,5 @@
 /* Change byte order in 16-bit value.  ia64 version.
-   Copyright (C) 2000-2016 Free Software Foundation, Inc.
+   Copyright (C) 2000-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Dan Pop <Dan.Pop@cern.ch>
 

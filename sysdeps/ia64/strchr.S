@@ -1,6 +1,6 @@
 /* Optimized version of the standard strchr() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000-2016 Free Software Foundation, Inc.
+   Copyright (C) 2000-2017 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or

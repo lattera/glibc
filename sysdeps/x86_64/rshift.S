@@ -1,5 +1,5 @@
 /* x86-64 __mpn_rshift --
-   Copyright (C) 2007-2016 Free Software Foundation, Inc.
+   Copyright (C) 2007-2017 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify

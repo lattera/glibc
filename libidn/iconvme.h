@@ -1,5 +1,5 @@
 /* Recode strings between character sets, using iconv.
-   Copyright (C) 2004-2016 Free Software Foundation, Inc.
+   Copyright (C) 2004-2017 Free Software Foundation, Inc.
    Written by Simon Josefsson.
 
    This program is free software; you can redistribute it and/or modify

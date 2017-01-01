@@ -1,7 +1,7 @@
 /* strchrnul (str, ch) -- Return pointer to first occurrence of CH in STR
    or the final NUL byte.
    For Motorola 68000.
-   Copyright (C) 1999-2016 Free Software Foundation, Inc.
+   Copyright (C) 1999-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 

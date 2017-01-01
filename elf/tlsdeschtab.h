@@ -1,5 +1,5 @@
 /* Hash table for TLS descriptors.
-   Copyright (C) 2005-2016 Free Software Foundation, Inc.
+   Copyright (C) 2005-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Alexandre Oliva  <aoliva@redhat.com>
 

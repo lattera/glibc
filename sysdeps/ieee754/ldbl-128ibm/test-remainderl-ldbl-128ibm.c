@@ -1,5 +1,5 @@
 /* Test for ldbl-128ibm remainderl handling of equal values (bug 19677).
-   Copyright (C) 2016 Free Software Foundation, Inc.
+   Copyright (C) 2016-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
