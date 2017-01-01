@@ -1,5 +1,8 @@
 2017-01-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/config.guess: Update to version 2017-01-01.
+	* scripts/config.sub: Update to version 2017-01-01.
+
 	* NEWS: Update copyright dates.
 	* catgets/gencat.c (print_version): Likewise.
 	* csu/version.c (banner): Likewise.
