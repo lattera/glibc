@@ -43,7 +43,9 @@ support_format_netent (struct netent *e)
     fprintf (mem.out, "alias: %s\n", *ap);
   if (e->n_addrtype != AF_INET)
     fprintf (mem.out, "addrtype: %d\n", e->n_addrtype);
-  fprintf (mem.out, "net: 0x%08x\n", e->n_net);
+  /* On alpha, e->n_net is an unsigned long.  */
+  unsigned int n_net = e->n_net;
+  fprintf (mem.out, "net: 0x%08x\n", n_net);
 
   xfclose_memstream (&mem);
   return mem.buffer;

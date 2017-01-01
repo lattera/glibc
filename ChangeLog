@@ -1,5 +1,10 @@
 2017-01-01  Florian Weimer  <fweimer@redhat.com>
 
+	* support/support_format_netent.c (support_format_netent): Work
+	around alpha struct netent definition difference.
+
+2017-01-01  Florian Weimer  <fweimer@redhat.com>
+
 	* support/xwrite.c (xwrite): Use %td for pointer difference.
 
 2017-01-01  Florian Weimer  <fweimer@redhat.com>
