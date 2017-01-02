@@ -1,5 +1,12 @@
 2017-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21019]
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list (lseek64):
+	New syscall entry.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/lseek.c: New file.
+	* io/test-lfs.c (do_test): Test offset returned from lseek64 and
+	lseek.
+
 	* scripts/build-many-glibcs.py (Context.add_all_configs): Add
 	power4 glibc for powerpc-linux-gnu.
 

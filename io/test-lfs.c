@@ -163,6 +163,27 @@ do_test (int argc, char *argv[])
       error (0, errno, "lseek64 failed with error");
       exit (EXIT_FAILURE);
     }
+  off64_t offset64 = lseek64 (fd, 0, SEEK_CUR);
+  if (offset64 != TWO_GB + 100)
+    {
+      error (0, 0, "lseek64 did not return expected offset");
+      exit (EXIT_FAILURE);
+    }
+  off_t offset = lseek (fd, 0, SEEK_CUR);
+  if (sizeof (off_t) < sizeof (off64_t))
+    {
+      if (offset != -1 || errno != EOVERFLOW)
+	{
+	  error (0, 0, "lseek did not fail with EOVERFLOW");
+	  exit (EXIT_FAILURE);
+	}
+    }
+  else
+    if (offset != TWO_GB + 100)
+      {
+	error (0, 0, "lseek did not return expected offset");
+	exit (EXIT_FAILURE);
+      }
 
   ret = write (fd, "Hello", 5);
   if (ret == -1 && errno == EFBIG)
