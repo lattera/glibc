@@ -1,3 +1,8 @@
+2017-01-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.checkout): Default
+	binutils version to 2.28 branch.
+
 2017-01-01  Florian Weimer  <fweimer@redhat.com>
 
 	* support/support_format_netent.c (support_format_netent): Work
