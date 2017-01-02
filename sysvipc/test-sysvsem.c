@@ -55,6 +55,13 @@ do_prepare (int argc, char *argv[])
 
 #define SEM_MODE 0644
 
+union semun
+{
+  int val;
+  struct semid_ds *buf;
+  unsigned short  *array;
+};
+
 static int
 do_test (void)
 {
@@ -74,7 +81,7 @@ do_test (void)
 
   /* Get semaphore kernel information and do some sanity checks.  */
   struct semid_ds seminfo;
-  if (semctl (semid, 0, IPC_STAT, &seminfo) == -1)
+  if (semctl (semid, 0, IPC_STAT, (union semun) { .buf = &seminfo }) == -1)
     FAIL_EXIT1 ("semctl with IPC_STAT failed (errno=%d)", errno);
 
   if (seminfo.sem_perm.__key != key)

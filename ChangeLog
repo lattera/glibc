@@ -1,3 +1,8 @@
+2017-01-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysvipc/test-sysvsem.c (do_test): Define and use union semun on
+	semctl.
+
 2017-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/test-nearbyint-except.c: Include <stdbool.h>.
