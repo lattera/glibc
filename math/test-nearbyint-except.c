@@ -18,6 +18,7 @@
 
 #include <fenv.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 
 #include <math-tests.h>
@@ -26,11 +27,16 @@
 # define FE_INVALID 0
 #endif
 
+static bool any_supported = false;
+
 #define TEST_FUNC(NAME, FLOAT, SUFFIX)					\
 static int								\
 NAME (void)								\
 {									\
   int result = 0;							\
+  if (!EXCEPTION_TESTS (FLOAT))						\
+    return 0;								\
+  any_supported = true;							\
   volatile FLOAT a, b __attribute__ ((unused));				\
   a = 1.0;								\
   /* nearbyint must not clear already-raised exceptions.  */		\
@@ -44,7 +50,7 @@ NAME (void)								\
       result = 1;							\
     }									\
   /* But it mustn't lose exceptions from sNaN arguments.  */		\
-  if (SNAN_TESTS (FLOAT) && EXCEPTION_TESTS (FLOAT))			\
+  if (SNAN_TESTS (FLOAT))						\
     {									\
       static volatile FLOAT snan = __builtin_nans ## SUFFIX ("");	\
       volatile FLOAT c __attribute__ ((unused));			\
@@ -75,6 +81,8 @@ do_test (void)
 #ifndef NO_LONG_DOUBLE
   result |= ldouble_test ();
 #endif
+  if (!any_supported)
+    return 77;
   return result;
 }
 

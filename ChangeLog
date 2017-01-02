@@ -1,5 +1,12 @@
 2017-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/test-nearbyint-except.c: Include <stdbool.h>.
+	(any_supported): New variable.
+	(TEST_FUNC): Return early if !EXCEPTION_TESTS (FLOAT).  Otherwise
+	set any_supported.
+	(do_test): Return 77 if no floating-point type supported
+	exceptions.
+
 	* sysdeps/mips/math-tests.h (SNAN_TESTS_PRESERVE_PAYLOAD): Do not
 	condition on [__mips_hard_float].
 
