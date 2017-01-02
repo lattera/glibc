@@ -268,7 +268,10 @@ class Context(object):
                         os_name='linux-gnu')
         self.add_config(arch='powerpc',
                         os_name='linux-gnu',
-                        gcc_cfg=['--disable-multilib', '--enable-secureplt'])
+                        gcc_cfg=['--disable-multilib', '--enable-secureplt'],
+                        extra_glibcs=[{'variant': 'power4',
+                                       'ccopts': '-mcpu=power4',
+                                       'cfg': ['--with-cpu=power4']}])
         self.add_config(arch='powerpc',
                         os_name='linux-gnu',
                         variant='soft',

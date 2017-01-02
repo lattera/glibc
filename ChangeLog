@@ -1,3 +1,8 @@
+2017-01-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Add
+	power4 glibc for powerpc-linux-gnu.
+
 2017-01-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysvipc/test-sysvsem.c (do_test): Define and use union semun on
