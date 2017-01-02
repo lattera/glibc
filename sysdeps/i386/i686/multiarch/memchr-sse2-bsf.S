@@ -149,9 +149,15 @@ L(crosscache):
 	.p2align 4
 L(unaligned_no_match):
 # ifndef USE_AS_RAWMEMCHR
-	sub	$16, %edx
+        /* Calculate the last acceptable address and check for possible
+           addition overflow by using satured math:
+           edx = ecx + edx
+           edx |= -(edx < ecx)  */
 	add	%ecx, %edx
-	jle	L(return_null)
+	sbb	%eax, %eax
+	or	%eax, %edx
+	sub	$16, %edx
+	jbe	L(return_null)
 	add	$16, %edi
 # else
 	add	$16, %edx

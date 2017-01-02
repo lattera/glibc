@@ -118,8 +118,14 @@ L(crosscache):
 # ifndef USE_AS_RAWMEMCHR
 	jnz	L(match_case2_prolog1)
 	lea	-16(%edx), %edx
+        /* Calculate the last acceptable address and check for possible
+           addition overflow by using satured math:
+           edx = ecx + edx
+           edx |= -(edx < ecx)  */
 	add	%ecx, %edx
-	jle	L(return_null)
+	sbb	%eax, %eax
+	or	%eax, %edx
+	jbe	L(return_null)
 	lea	16(%edi), %edi
 # else
 	jnz	L(match_case1_prolog1)

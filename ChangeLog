@@ -1,3 +1,10 @@
+2017-01-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21014]
+	* sysdeps/i386/i686/multiarch/memchr-sse2-bsf.S (MEMCHR): Avoid overflow
+	in pointer addition.
+	* sysdeps/i386/i686/multiarch/memchr-sse2.S (MEMCHR): Likewise.
+
 2017-01-02  Torvald Riegel  <triegel@redhat.com>
 
 	* sysdeps/sparc/nptl/bits/pthreadtypes.h (pthread_cond_t): Adapt to
