@@ -1,3 +1,8 @@
+2017-01-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/math-tests.h (SNAN_TESTS_PRESERVE_PAYLOAD): Do not
+	condition on [__mips_hard_float].
+
 2017-01-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #21014]
