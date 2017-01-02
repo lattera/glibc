@@ -1,3 +1,7 @@
+2017-01-03  Martin Galvan  <martingalvan@sourceware.org>
+
+	* nptl/nptl-printers.py: Fix tabs/spaces mismatches.
+
 2017-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21019]

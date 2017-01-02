@@ -348,10 +348,10 @@ class ConditionVariablePrinter(object):
     def read_attributes(self):
         """Read the condvar's attributes."""
 
-	if (self.wrefs & PTHREAD_COND_CLOCK_MONOTONIC_MASK) != 0:
-		self.values.append(('Clock ID', 'CLOCK_MONOTONIC'))
-	else:
-		self.values.append(('Clock ID', 'CLOCK_REALTIME'))
+        if (self.wrefs & PTHREAD_COND_CLOCK_MONOTONIC_MASK) != 0:
+            self.values.append(('Clock ID', 'CLOCK_MONOTONIC'))
+        else:
+            self.values.append(('Clock ID', 'CLOCK_REALTIME'))
 
         if (self.wrefs & PTHREAD_COND_SHARED_MASK) != 0:
             self.values.append(('Shared', 'Yes'))
@@ -409,10 +409,10 @@ class ConditionVariableAttributesPrinter(object):
 
         clock_id = (self.condattr >> 1) & ((1 << COND_CLOCK_BITS) - 1)
 
-	if clock_id != 0:
-		self.values.append(('Clock ID', 'CLOCK_MONOTONIC'))
-	else:
-		self.values.append(('Clock ID', 'CLOCK_REALTIME'))
+        if clock_id != 0:
+            self.values.append(('Clock ID', 'CLOCK_MONOTONIC'))
+        else:
+            self.values.append(('Clock ID', 'CLOCK_REALTIME'))
 
         if self.condattr & 1:
             self.values.append(('Shared', 'Yes'))
