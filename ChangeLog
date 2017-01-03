@@ -1,3 +1,8 @@
+2017-01-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/test-fenvinline.c (do_test): Disable tests of raised
+	exceptions if !EXCEPTION_TESTS (FLOAT).
+
 2017-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #19390]
