@@ -1,3 +1,16 @@
+2017-01-03  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+	    Steven Munroe  <sjmunroe@us.ibm.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #20822]
+	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c
+	(__lll_lock_elision): Access adapt_count via C11 atomics.
+	* sysdeps/unix/sysv/linux/powerpc/elision-trylock.c
+	(__lll_trylock_elision): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-unlock.c
+	(__lll_unlock_elision):  Update adapt_count variable inside the
+	critical section using C11 atomics.
+
 2017-01-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/test-fenvinline.c (do_test): Disable tests of raised

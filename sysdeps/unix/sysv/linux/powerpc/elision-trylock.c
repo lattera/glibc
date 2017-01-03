@@ -34,7 +34,7 @@ __lll_trylock_elision (int *futex, short *adapt_count)
   __libc_tabort (_ABORT_NESTED_TRYLOCK);
 
   /* Only try a transaction if it's worth it.  */
-  if (*adapt_count > 0)
+  if (atomic_load_relaxed (adapt_count) > 0)
     {
       goto use_lock;
     }
@@ -49,7 +49,7 @@ __lll_trylock_elision (int *futex, short *adapt_count)
       __libc_tend (0);
 
       if (aconf.skip_lock_busy > 0)
-	*adapt_count = aconf.skip_lock_busy;
+	atomic_store_relaxed (adapt_count, aconf.skip_lock_busy);
     }
   else
     {
@@ -59,7 +59,8 @@ __lll_trylock_elision (int *futex, short *adapt_count)
 	     result in another failure.  Use normal locking now and
 	     for the next couple of calls.  */
 	  if (aconf.skip_trylock_internal_abort > 0)
-	    *adapt_count = aconf.skip_trylock_internal_abort;
+	    atomic_store_relaxed (adapt_count,
+				aconf.skip_trylock_internal_abort);
 	}
     }
 

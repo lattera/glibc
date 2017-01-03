@@ -45,7 +45,9 @@
 int
 __lll_lock_elision (int *lock, short *adapt_count, EXTRAARG int pshared)
 {
-  if (*adapt_count > 0)
+  /* adapt_count is accessed concurrently but is just a hint.  Thus,
+     use atomic accesses but relaxed MO is sufficient.  */
+  if (atomic_load_relaxed (adapt_count) > 0)
     {
       goto use_lock;
     }
@@ -67,7 +69,8 @@ __lll_lock_elision (int *lock, short *adapt_count, EXTRAARG int pshared)
 	  if (_TEXASRU_FAILURE_PERSISTENT (__builtin_get_texasru ()))
 	    {
 	      if (aconf.skip_lock_internal_abort > 0)
-		*adapt_count = aconf.skip_lock_internal_abort;
+		atomic_store_relaxed (adapt_count,
+				      aconf.skip_lock_internal_abort);
 	      goto use_lock;
 	    }
 	}
@@ -75,7 +78,8 @@ __lll_lock_elision (int *lock, short *adapt_count, EXTRAARG int pshared)
 
   /* Fall back to locks for a bit if retries have been exhausted */
   if (aconf.try_tbegin > 0 && aconf.skip_lock_out_of_tbegin_retries > 0)
-    *adapt_count = aconf.skip_lock_out_of_tbegin_retries;
+    atomic_store_relaxed (adapt_count,
+			  aconf.skip_lock_out_of_tbegin_retries);
 
 use_lock:
   return LLL_LOCK ((*lock), pshared);
