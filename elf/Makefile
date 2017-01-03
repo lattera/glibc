@@ -1355,7 +1355,8 @@ $(objpfx)tst-prelink-cmp.out: tst-prelink.exp \
 	$(evaluate-test)
 
 $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
-	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper)' '$(test-wrapper-env)' > $@; \
+	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper-env)' \
+		 '$(run-program-env)' > $@; \
 	$(evaluate-test)
 
 $(objpfx)tst-dlsym-error: $(libdl)

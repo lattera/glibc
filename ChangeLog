@@ -1,3 +1,8 @@
+2017-01-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/Makefile ($(objpfx)tst-ldconfig-X.out): Correct arguments
+	passed to tst-ldconfig-X.sh.
+
 2017-01-03  Martin Galvan  <martingalvan@sourceware.org>
 
 	* nptl/nptl-printers.py: Fix tabs/spaces mismatches.
