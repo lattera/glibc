@@ -1,3 +1,13 @@
+2017-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #19390]
+	* string/test-strncat.c (test_main): Add tests with SIZE_MAX as
+	maximum string size.
+	* sysdeps/i386/i686/multiarch/strcat-sse2.S (STRCAT): Avoid overflow
+	in pointer addition.
+	* sysdeps/x86_64/multiarch/strcpy-sse2-unaligned.S (STRCPY):
+	Likewise.
+
 2017-01-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/Makefile ($(objpfx)tst-ldconfig-X.out): Correct arguments

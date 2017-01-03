@@ -227,6 +227,8 @@ L(StartStrcpyPart):
 	pxor	%xmm0, %xmm0
 # ifdef USE_AS_STRNCAT
 	add	%ecx, %ebx
+	sbb	%edx, %edx
+	or	%edx, %ebx
 # endif
 	sub	%ecx, %eax
 	jmp	L(Unalign16Both)

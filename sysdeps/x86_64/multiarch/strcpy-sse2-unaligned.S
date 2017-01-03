@@ -99,6 +99,8 @@ L(Unalign16Both):
 	sub	%rcx, %rdi
 # ifdef USE_AS_STRNCPY
 	add	%rcx, %r8
+	sbb	%rcx, %rcx
+	or	%rcx, %r8
 # endif
 	mov	$16, %rcx
 	movdqa	(%rsi, %rcx), %xmm1
