@@ -27,4 +27,4 @@ extern typeof (strlen) __strlen_power7;
 
 #define strcpy __strcpy_power7
 #define strlen __strlen_power7
-#include <sysdeps/powerpc/strcat.c>
+#include <string/strcat.c>

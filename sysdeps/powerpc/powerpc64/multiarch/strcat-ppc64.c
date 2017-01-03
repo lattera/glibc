@@ -26,4 +26,4 @@
 
 extern __typeof (strcat) __strcat_ppc attribute_hidden;
 
-#include <sysdeps/powerpc/strcat.c>
+#include <string/strcat.c>
