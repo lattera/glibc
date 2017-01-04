@@ -27,7 +27,7 @@ _identify_sighandler (unsigned long fp, unsigned long pc,
                       unsigned long *pprev_fp, unsigned long *pprev_pc,
                       unsigned long *retaddr);
 
-inline long
+static inline long
 get_frame_size (unsigned long instr)
 {
   return abs ((short signed) (instr & 0xFFFF));

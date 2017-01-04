@@ -1,3 +1,8 @@
+2017-01-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21022]
+	* sysdeps/microblaze/backtrace.c (get_frame_size): Make static.
+
 2017-01-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Update.
