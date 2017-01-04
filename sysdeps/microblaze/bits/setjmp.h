@@ -25,7 +25,7 @@
 # error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
 #endif
 
-typedef struct
+typedef struct __jmp_buf_internal_tag
   {
     /* There are 21 4-byte registers that should be saved:
        r1, r2, r13-r31. Actually, there seems no need to save

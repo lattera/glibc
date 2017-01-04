@@ -1,5 +1,8 @@
 2017-01-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/microblaze/bits/setjmp.h (__jmp_buf): Give struct tag
+	__jmp_buf_internal_tag.
+
 	* sysdeps/mips/mips32/sfp-machine.h (_FP_CHOOSENAN): Always
 	preserve NaN payload if [__mips_nan2008].
 	* sysdeps/mips/mips64/sfp-machine.h (_FP_CHOOSENAN): Likewise.
