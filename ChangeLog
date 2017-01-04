@@ -1,3 +1,12 @@
+2017-01-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (TEST_COND_ibm128_libgcc): New macro.
+	(init_max_error) [TEST_COND_ibm128]: Increase maximum error
+	allowed to 16 ulps.
+	* math/auto-libm-test-in: Change most XFAILs for ibm128 to use
+	ibm128-libgcc.  XFAIL more tests for ibm128-libgcc.
+	* math/auto-libm-test-out: Regenerated.
+
 2017-01-04  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/Makefile (libm-calls): Move wrappers...
