@@ -353,28 +353,70 @@ test_strncat (void)
      mechanism.  */
   it = "strncat";
   (void) strcpy (one, "ijk");
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about the size passed to strncat being larger than
+     the size of the buffer; this is deliberately tested here..  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
+#endif
   check (strncat (one, "lmn", 99) == one, 1);	/* Returned value. */
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "ijklmn", 2);		/* Basic test. */
 
   (void) strcpy (one, "x");
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about the size passed to strncat being larger than
+     the size of the buffer; this is deliberately tested here..  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
+#endif
   (void) strncat (one, "yz", 99);
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "xyz", 3);		/* Writeover. */
   equal (one+4, "mn", 4);		/* Wrote too much? */
 
   (void) strcpy (one, "gh");
   (void) strcpy (two, "ef");
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about the size passed to strncat being larger than
+     the size of the buffer; this is deliberately tested here..  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
+#endif
   (void) strncat (one, two, 99);
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "ghef", 5);			/* Basic test encore. */
   equal (two, "ef", 6);			/* Stomped on source? */
 
   (void) strcpy (one, "");
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about the size passed to strncat being larger than
+     the size of the buffer; this is deliberately tested here..  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
+#endif
   (void) strncat (one, "", 99);
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "", 7);			/* Boundary conditions. */
   (void) strcpy (one, "ab");
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about the size passed to strncat being larger than
+     the size of the buffer; this is deliberately tested here..  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
+#endif
   (void) strncat (one, "", 99);
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "ab", 8);
   (void) strcpy (one, "");
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about the size passed to strncat being larger than
+     the size of the buffer; this is deliberately tested here..  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
+#endif
   (void) strncat (one, "cd", 99);
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "cd", 9);
 
   (void) strcpy (one, "ab");
@@ -387,7 +429,14 @@ test_strncat (void)
   (void) strncat (one, "gh", 2);
   equal (one, "abcdgh", 12);		/* Count and length equal. */
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about the size passed to strncat being larger than
+     the size of the buffer; this is deliberately tested here..  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
+#endif
   (void) strncat (one, "ij", (size_t)-1);	/* set sign bit in count */
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "abcdghij", 13);
 
   int ntest = 14;
@@ -406,8 +455,16 @@ test_strncat (void)
 	    buf1[n2 + n3] = '\0';
 	    strcpy (buf2 + n1, "123");
 
+	    DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+	    /* GCC 7 warns about the size passed to strncat being
+	       larger than the size of the buffer; this is
+	       deliberately tested here..  */
+	    DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
+#endif
 	    check (strncat (buf1 + n2, buf2 + n1, ~((size_t) 0) - n4)
 		   == buf1 + n2, ntest);
+	    DIAG_POP_NEEDS_COMMENT;
 	    if (errors == olderrors)
 	      for (size_t i = 0; i < sizeof (buf1); ++i)
 		{

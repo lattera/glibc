@@ -1,5 +1,8 @@
 2017-01-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* string/tester.c (test_strncat): Disable -Wstringop-overflow=
+	around tests of strncat with large sizes.
+
 	* malloc/tst-malloc.c: Include <libc-internal.h>.
 	(do_test): Disable -Walloc-size-larger-than= around tests of
 	malloc with negative sizes.
