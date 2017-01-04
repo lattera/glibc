@@ -1,5 +1,15 @@
 2017-01-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* malloc/tst-malloc.c: Include <libc-internal.h>.
+	(do_test): Disable -Walloc-size-larger-than= around tests of
+	malloc with negative sizes.
+	* malloc/tst-mcheck.c: Include <libc-internal.h>.
+	(do_test): Disable -Walloc-size-larger-than= around tests of
+	malloc and realloc with negative sizes.
+	* malloc/tst-realloc.c: Include <libc-internal.h>.
+	(do_test): Disable -Walloc-size-larger-than= around tests of
+	realloc with negative sizes.
+
 	* math/libm-test.inc (TEST_COND_ibm128_libgcc): New macro.
 	(init_max_error) [TEST_COND_ibm128]: Increase maximum error
 	allowed to 16 ulps.

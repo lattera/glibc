@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <malloc.h>
 #include <stdio.h>
+#include <libc-internal.h>
 
 static int errors = 0;
 
@@ -37,7 +38,14 @@ do_test (void)
 
   errno = 0;
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about too-large allocations; here we want to test
+     that they fail.  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   p = malloc (-1);
+  DIAG_POP_NEEDS_COMMENT;
   save = errno;
 
   if (p != NULL)
@@ -67,7 +75,14 @@ do_test (void)
   if (p == NULL)
     merror ("malloc (513K) failed.");
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about too-large allocations; here we want to test
+     that they fail.  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   q = malloc (-512 * 1024);
+  DIAG_POP_NEEDS_COMMENT;
   if (q != NULL)
     merror ("malloc (-512K) succeeded.");
 

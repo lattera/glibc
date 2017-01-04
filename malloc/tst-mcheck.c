@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <libc-internal.h>
 
 static int errors = 0;
 
@@ -36,7 +37,14 @@ do_test (void)
 
   errno = 0;
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about too-large allocations; here we want to test
+     that they fail.  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   p = malloc (-1);
+  DIAG_POP_NEEDS_COMMENT;
 
   if (p != NULL)
     merror ("malloc (-1) succeeded.");
@@ -67,10 +75,17 @@ do_test (void)
   if (p == NULL)
     merror ("malloc (512) failed.");
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about too-large allocations; here we want to test
+     that they fail.  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   if (realloc (p, -256) != NULL)
     merror ("realloc (p, -256) succeeded.");
   else if (errno != ENOMEM)
     merror ("errno is not set correctly.");
+  DIAG_POP_NEEDS_COMMENT;
 
   free (p);
 
@@ -78,10 +93,17 @@ do_test (void)
   if (p == NULL)
     merror ("malloc (512) failed.");
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about too-large allocations; here we want to test
+     that they fail.  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   if (realloc (p, -1) != NULL)
     merror ("realloc (p, -1) succeeded.");
   else if (errno != ENOMEM)
     merror ("errno is not set correctly.");
+  DIAG_POP_NEEDS_COMMENT;
 
   free (p);
   free (q);

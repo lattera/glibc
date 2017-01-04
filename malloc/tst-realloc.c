@@ -19,6 +19,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
+#include <libc-internal.h>
 
 static int errors = 0;
 
@@ -39,7 +40,14 @@ do_test (void)
   errno = 0;
 
   /* realloc (NULL, ...) behaves similarly to malloc (C89).  */
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about too-large allocations; here we want to test
+     that they fail.  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   p = realloc (NULL, -1);
+  DIAG_POP_NEEDS_COMMENT;
   save = errno;
 
   if (p != NULL)
@@ -111,7 +119,14 @@ do_test (void)
     merror ("first 16 bytes were not correct");
 
   /* Check failed realloc leaves original untouched (C89).  */
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about too-large allocations; here we want to test
+     that they fail.  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   c = realloc (p, -1);
+  DIAG_POP_NEEDS_COMMENT;
   if (c != NULL)
     merror ("realloc (p, -1) succeeded.");
 
