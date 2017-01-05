@@ -436,7 +436,7 @@ do_test (void)
 }
 
 /* The repeated allocations take some time on slow machines.  */
-#define TIMEOUT 30
+#define TIMEOUT 100
 
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

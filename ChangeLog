@@ -1,5 +1,12 @@
 2017-01-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* elf/tst-tls13.c (TIMEOUT): Remove.
+	* iconvdata/tst-loading.c (TIMEOUT): Likewise.
+	* malloc/tst-malloc-thread-fail.c (TIMEOUT): Increase to 100.
+	* malloc/tst-mallocfork2.c (TIMEOUT): Define to 100.
+	* nss/tst-cancel-getpwuid_r.c (TIMEOUT): Define to 900.
+	* nss/tst-nss-getpwent.c (TIMEOUT): Define to 300.
+
 	[BZ #21026]
 	* sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list
 	(readahead): New syscall entry.

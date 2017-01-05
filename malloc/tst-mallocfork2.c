@@ -45,6 +45,7 @@ enum { malloc_maximum_size = 70000 };
 enum { signal_count = 1000 };
 
 static int do_test (void);
+#define TIMEOUT 100
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
 
