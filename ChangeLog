@@ -1,5 +1,15 @@
 2017-02-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #16640]
+	* sysdeps/i386/i686/strtok.S: Remove file.
+	* sysdeps/i386/i686/strtok_r.S: Likewise.
+	* sysdeps/i386/strtok.S: Likewise.
+	* sysdeps/i386/strtok_r.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strtok.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strtok_r.S: Likewise.
+	* sysdeps/x86_64/strtok.S: Likewise.
+	* sysdeps/x86_64/strtok_r.S: Likewise.
+
 	* sysdeps/unix/sysv/linux/arm/posix_fadvise.c: Remove file.
 	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise.c: Likewise.
 	* sysdeps/unix/sysv/linux/mips/kernel-features.h
