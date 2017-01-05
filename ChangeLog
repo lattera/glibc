@@ -1,3 +1,9 @@
+2017-01-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21026]
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list
+	(readahead): New syscall entry.
+
 2017-01-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* string/tester.c (test_strncat): Disable -Wstringop-overflow=

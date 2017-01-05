@@ -2,6 +2,8 @@
 
 mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
 
+readahead	-	readahead	i:iii	__readahead	readahead
+
 prlimit		EXTRA	prlimit64	i:iipp	prlimit		prlimit64
 
 fanotify_mark	EXTRA	fanotify_mark	i:iiiis	fanotify_mark
