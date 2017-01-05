@@ -136,4 +136,12 @@ __END_DECLS
 
 #endif	/* string.h  */
 
+#if __GNUC_PREREQ (3,4) && __USE_FORTIFY_LEVEL > 0 \
+    && defined __fortify_function
+/* Functions with security checks.  */
+# if defined __USE_MISC || !defined __USE_XOPEN2K8
+#  include <bits/strings_fortified.h>
+# endif
+#endif
+
 #endif	/* strings.h  */

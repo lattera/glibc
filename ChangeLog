@@ -1,3 +1,15 @@
+2017-01-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #20558]
+	* string/bits/string3.h [__USE_MISC] (bcopy): Move to
+	strings_fortified.h.
+	[__USE_MISC] (bzero): Likewise.
+	[__USE_MISC] (explicit_bzero): Likewise.
+	* string/strings.h: Include strings_fortified.h.
+	* string/Makefile (headers): Add strings_fortified.h.
+	* string/bits/strings_fortified.h: New file.
+	* include/bits/strings_fortified.h: Likewise.
+
 2017-01-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/tst-tls13.c (TIMEOUT): Remove.
