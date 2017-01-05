@@ -1,3 +1,10 @@
+2017-01-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21028]
+	* math/fsetexcptflg.c (__fesetexceptflag): Always return 0.
+	* math/test-fexcept.c (test_set): Allow failure of feraiseexcept
+	if EXCEPTION_TESTS returns false.
+
 2017-01-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #20558]
