@@ -1,3 +1,8 @@
+2017-01-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* string/bits/strings_fortified.h (explicit_bzero): Move back to ..
+	* string/bits/string3.h: ... here.
+
 2017-01-05  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21028]

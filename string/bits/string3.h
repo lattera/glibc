@@ -92,6 +92,15 @@ __NTH (memset (void *__dest, int __ch, size_t __len))
 
 #ifdef __USE_MISC
 # include <bits/strings_fortified.h>
+
+void __explicit_bzero_chk (void *__dest, size_t __len, size_t __destlen)
+  __THROW __nonnull ((1));
+
+__fortify_function void
+__NTH (explicit_bzero (void *__dest, size_t __len))
+{
+  __explicit_bzero_chk (__dest, __len, __bos0 (__dest));
+}
 #endif
 
 __fortify_function char *
