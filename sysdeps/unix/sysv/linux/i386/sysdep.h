@@ -44,9 +44,9 @@
 /* Since GCC 5 and above can properly spill %ebx with PIC when needed,
    we can inline syscalls with 6 arguments if GCC 5 or above is used
    to compile glibc.  Disable GCC 5 optimization when compiling for
-   profiling since asm ("ebp") can't be used to put the 6th argument
-   in %ebp for syscall.  */
-#if __GNUC_PREREQ (5,0) && !defined PROF
+   profiling or when -fno-omit-frame-pointer is used since asm ("ebp")
+   can't be used to put the 6th argument in %ebp for syscall.  */
+#if __GNUC_PREREQ (5,0) && !defined PROF && CAN_USE_REGISTER_ASM_EBP
 # define OPTIMIZE_FOR_GCC_5
 #endif
 

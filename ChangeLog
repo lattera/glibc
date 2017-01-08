@@ -1,3 +1,52 @@
+2017-01-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21029]
+	* config.h.in [CAN_USE_REGISTER_ASM_EBP]: New define.
+	* sysdeps/unix/sysv/linux/i386/Makefile
+	[$(subdir) = elf] (sysdep-dl-routines): Add libc-do-syscall.
+	(uses-6-syscall-arguments): Remove.
+	[$(subdir) = misc] (CFLAGS-epoll_pwait.o): Likewise.
+	[$(subdir) = misc] (CFLAGS-epoll_pwait.os): Likewise.
+	[$(subdir) = misc] (CFLAGS-mmap.o): Likewise.
+	[$(subdir) = misc] (CFLAGS-mmap.os): Likewise.
+	[$(subdir) = misc] (CFLAGS-mmap64.o): Likewise.
+	[$(subdir) = misc] (CFLAGS-mmap64.os): Likewise.
+	[$(subdir) = misc] (CFLAGS-pselect.o): Likewise.
+	[$(subdir) = misc] (cflags-pselect.o): Likewise.
+	[$(subdir) = misc] (cflags-pselect.os): Likewise.
+	[$(subdir) = misc] (cflags-rtld-mmap.os): Likewise.
+	[$(subdir) = sysvipc] (cflags-semtimedop.o): Likewise.
+	[$(subdir) = sysvipc] (cflags-semtimedop.os): Likewise.
+	[$(subdir) = io] (CFLAGS-posix_fadvise64.o): Likewise.
+	[$(subdir) = io] (CFLAGS-posix_fadvise64.os): Likewise.
+	[$(subdir) = io] (CFLAGS-posix_fallocate.o): Likewise.
+	[$(subdir) = io] (CFLAGS-posix_fallocate.os): Likewise.
+	[$(subdir) = io] (CFLAGS-posix_fallocate64.o): Likewise.
+	[$(subdir) = io] (CFLAGS-posix_fallocate64.os): Likewise.
+	[$(subdir) = io] (CFLAGS-sync_file_range.o): Likewise.
+	[$(subdir) = io] (CFLAGS-sync_file_range.os): Likewise.
+	[$(subdir) = io] (CFLAGS-fallocate.o): Likewise.
+	[$(subdir) = io] (CFLAGS-fallocate.os): Likewise.
+	[$(subdir) = io] (CFLAGS-fallocate64.o): Likewise.
+	[$(subdir) = io] (CFLAGS-fallocate64.os): Likewise.
+	[$(subdir) = nptl] (CFLAGS-pthread_rwlock_timedrdlock.o):
+	Likewise.
+	[$(subdir) = nptl] (CFLAGS-pthread_rwlock_timedrdlock.os):
+	Likewise.
+	[$(subdir) = nptl] (CFLAGS-pthread_rwlock_timedrwlock.o):
+	Likewise.
+	[$(subdir) = nptl] (CFLAGS-pthread_rwlock_timedrwlock.os):
+	Likewise.
+	[$(subdir) = nptl] (CFLAGS-sem_wait.o): Likewise.
+	[$(subdir) = nptl] (CFLAGS-sem_wait.os): Likewise.
+	[$(subdir) = nptl] (CFLAGS-sem_timedwait.o): Likewise.
+	[$(subdir) = nptl] (CFLAGS-sem_timedwait.os): Likewise.
+	* sysdeps/unix/sysv/linux/i386/configure.ac: Add check if compiler allows
+	ebp on inline assembly.
+	* sysdeps/unix/sysv/linux/i386/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (OPTIMIZE_FOR_GCC_5):
+	Set if CAN_USE_REGISTER_ASM_EBP is set.
+
 2017-02-17  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.c (init_cpu_features): Use

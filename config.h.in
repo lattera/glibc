@@ -259,4 +259,8 @@
 /* Build glibc with tunables support.  */
 #define HAVE_TUNABLES 0
 
+/* Some compiler options may now allow to use ebp in __asm__ (used mainly
+   in i386 6 argument syscall issue).  */
+#define CAN_USE_REGISTER_ASM_EBP 0
+
 #endif
