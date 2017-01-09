@@ -1907,6 +1907,7 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 		error (EXIT_FAILURE, errno, "write to '%s'", filename);
 	      /* Print outputs.  */
 	      bool must_erange = false;
+	      bool some_underflow_zero = false;
 	      for (size_t i = 0; i < tf->num_ret; i++)
 		{
 		  generic_value g;
@@ -1924,6 +1925,10 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 			  && (all_exc_before[i][m]
 			      & (1U << exc_underflow)) != 0)
 			must_erange = true;
+		      if (mpfr_zero_p (all_res[i][rm_towardzero])
+			  && (all_exc_before[i][m]
+			      & (1U << exc_underflow)) != 0)
+			some_underflow_zero = true;
 		      mpfr_init2 (g.value.f, fp_formats[f].mant_dig);
 		      assert_exact (mpfr_set (g.value.f, all_res[i][m],
 					      MPFR_RNDN));
@@ -1971,6 +1976,16 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 		  default:
 		    break;
 		  }
+	      /* For the ibm128 format, expect incorrect overflowing
+		 results in rounding modes other than to nearest;
+		 likewise incorrect results where the result may
+		 underflow to 0.  */
+	      if (f == fp_ldbl_128ibm
+		  && m != rm_tonearest
+		  && (some_underflow_zero
+		      || (merged_exc_before[m] & (1U << exc_overflow)) != 0))
+		if (fputs (" xfail:ibm128-libgcc", fp) < 0)
+		  error (EXIT_FAILURE, errno, "write to '%s'", filename);
 	      /* Print exception flags and compute errno
 		 expectations where not already computed.  */
 	      bool may_edom = false;

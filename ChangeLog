@@ -1,5 +1,12 @@
 2017-01-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/gen-auto-libm-tests.c (output_for_one_input_case): Apply
+	xfail-rounding:ibm128-libgcc automatically to tests overflowing
+	and those that can underflow to zero.
+	* math/auto-libm-test-in: Remove most XFAILs for ibm128-libgcc and
+	add others.
+	* math/auto-libm-test-out: Regenerated.
+
 	* math/test-fenv.c (fe_tests): Skip most tests when exceptions not
 	supported.
 	(feholdexcept_tests): Skip tests requiring exceptions or rounding
