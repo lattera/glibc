@@ -1,5 +1,10 @@
 2017-01-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/test-fenv.c (fe_tests): Skip most tests when exceptions not
+	supported.
+	(feholdexcept_tests): Skip tests requiring exceptions or rounding
+	modes support if not supported.
+
 	* sysdeps/unix/sysv/linux/microblaze/localplt.data (__pread64):
 	Add libc.so PLT entry.
 	(__tls_get_addr): Make ld.so PLT entry optional.

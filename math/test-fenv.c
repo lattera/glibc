@@ -208,6 +208,9 @@ fe_tests (void)
   test_exceptions ("feclearexcept (FE_ALL_EXCEPT) clears all exceptions",
                    NO_EXC, 0);
 
+  /* Skip further tests here if exceptions not supported.  */
+  if (!EXCEPTION_TESTS (float) && FE_ALL_EXCEPT != 0)
+    return;
   /* raise all exceptions and test if all are raised */
   feraiseexcept (FE_ALL_EXCEPT);
   test_exceptions ("feraiseexcept (FE_ALL_EXCEPT) raises all exceptions",
@@ -657,8 +660,9 @@ feholdexcept_tests (void)
 #ifdef FE_DIVBYZERO
   feraiseexcept (FE_DIVBYZERO);
 #endif
-  test_exceptions ("feholdexcept_tests FE_DIVBYZERO test",
-		   DIVBYZERO_EXC, 0);
+  if (EXCEPTION_TESTS (float))
+    test_exceptions ("feholdexcept_tests FE_DIVBYZERO test",
+		     DIVBYZERO_EXC, 0);
   res = feholdexcept (&saved);
   if (res != 0)
     {
@@ -667,7 +671,7 @@ feholdexcept_tests (void)
     }
 #if defined FE_TONEAREST && defined FE_TOWARDZERO
   res = fesetround (FE_TOWARDZERO);
-  if (res != 0)
+  if (res != 0 && ROUNDING_TESTS (float, FE_TOWARDZERO))
     {
       printf ("fesetround failed: %d\n", res);
       ++count_errors;
@@ -676,8 +680,9 @@ feholdexcept_tests (void)
   test_exceptions ("feholdexcept_tests 0 test", NO_EXC, 0);
 #ifdef FE_INVALID
   feraiseexcept (FE_INVALID);
-  test_exceptions ("feholdexcept_tests FE_INVALID test",
-		   INVALID_EXC, 0);
+  if (EXCEPTION_TESTS (float))
+    test_exceptions ("feholdexcept_tests FE_INVALID test",
+		     INVALID_EXC, 0);
 #endif
   res = feupdateenv (&saved);
   if (res != 0)
@@ -693,15 +698,16 @@ feholdexcept_tests (void)
       ++count_errors;
     }
 #endif
-  test_exceptions ("feholdexcept_tests FE_DIVBYZERO|FE_INVALID test",
-		   DIVBYZERO_EXC | INVALID_EXC, 0);
+  if (EXCEPTION_TESTS (float))
+    test_exceptions ("feholdexcept_tests FE_DIVBYZERO|FE_INVALID test",
+		     DIVBYZERO_EXC | INVALID_EXC, 0);
   feclearexcept (FE_ALL_EXCEPT);
 #ifdef FE_INVALID
   feraiseexcept (FE_INVALID);
 #endif
 #if defined FE_TONEAREST && defined FE_UPWARD
   res = fesetround (FE_UPWARD);
-  if (res != 0)
+  if (res != 0 && ROUNDING_TESTS (float, FE_UPWARD))
     {
       printf ("fesetround failed: %d\n", res);
       ++count_errors;
@@ -724,8 +730,9 @@ feholdexcept_tests (void)
   test_exceptions ("feholdexcept_tests 0 2nd test", NO_EXC, 0);
 #ifdef FE_INEXACT
   feraiseexcept (FE_INEXACT);
-  test_exceptions ("feholdexcept_tests FE_INEXACT test",
-		   INEXACT_EXC, 0);
+  if (EXCEPTION_TESTS (float))
+    test_exceptions ("feholdexcept_tests FE_INEXACT test",
+		     INEXACT_EXC, 0);
 #endif
   res = feupdateenv (&saved2);
   if (res != 0)
@@ -735,15 +742,16 @@ feholdexcept_tests (void)
     }
 #if defined FE_TONEAREST && defined FE_UPWARD
   res = fegetround ();
-  if (res != FE_UPWARD)
+  if (res != FE_UPWARD && ROUNDING_TESTS (float, FE_UPWARD))
     {
       printf ("feupdateenv didn't restore rounding mode: %d\n", res);
       ++count_errors;
     }
   fesetround (FE_TONEAREST);
 #endif
-  test_exceptions ("feholdexcept_tests FE_INEXACT|FE_INVALID test",
-		   INVALID_EXC | INEXACT_EXC, 0);
+  if (EXCEPTION_TESTS (float))
+    test_exceptions ("feholdexcept_tests FE_INEXACT|FE_INVALID test",
+		     INVALID_EXC | INEXACT_EXC, 0);
   feclearexcept (FE_ALL_EXCEPT);
 }
 
