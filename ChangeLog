@@ -1,3 +1,9 @@
+2017-01-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/microblaze/localplt.data (__pread64):
+	Add libc.so PLT entry.
+	(__tls_get_addr): Make ld.so PLT entry optional.
+
 2017-01-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* string/bits/strings_fortified.h (explicit_bzero): Move back to ..

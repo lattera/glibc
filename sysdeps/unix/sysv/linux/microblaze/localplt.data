@@ -1,4 +1,5 @@
 libc.so: __errno_location
+libc.so: __pread64
 libc.so: calloc
 libc.so: free
 libc.so: malloc
@@ -7,7 +8,7 @@ libc.so: realloc
 libm.so: matherr
 libpthread.so: __errno_location
 # The dynamic loader needs __tls_get_addr for TLS.
-ld.so: __tls_get_addr
+ld.so: __tls_get_addr ?
 # The main malloc is interposed into the dynamic linker, for
 # allocations after the initial link (when dlopen is used).
 ld.so: malloc
