@@ -1,3 +1,21 @@
+2017-01-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (XFAIL_IBM128_LIBGCC): New macro.
+	(fdim_test_data): Use XFAIL_ROUNDING_IBM128_LIBGCC for some tests.
+	(fma_test_data): Likewise.
+	(hypot_test_data): Likewise.
+	(log1p_test_data): Likewise.
+	(modf_test_data): Likewise.
+	(pow_test_data): Likewise.
+	(remainder_test_data): Likewise.
+	(remquo_test_data): Likewise.
+	(scalb_test_data): Likewise.
+	(scalbn_test_data): Likewise.
+	(scalbln_test_data): Likewise.
+	* math/gen-libm-test.pl (parse_args): Transform
+	XFAIL_ROUNDING_IBM128_LIBGCC to XFAIL_IBM128_LIBGCC or 0 depending
+	on the rounding mode.
+
 2017-01-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-auto-libm-tests.c (output_for_one_input_case): Apply

@@ -207,6 +207,7 @@ sub parse_args {
   my (@plus_oflow, @minus_oflow, @plus_uflow, @minus_uflow);
   my (@errno_plus_oflow, @errno_minus_oflow);
   my (@errno_plus_uflow, @errno_minus_uflow);
+  my (@xfail_rounding_ibm128_libgcc);
   my ($non_finite, $test_snan);
 
   ($descr_args, $descr_res) = split /_/,$descr, 2;
@@ -272,7 +273,7 @@ sub parse_args {
   } elsif ($#args_res == $num_res) {
     # One set of results for all rounding modes, with flags.
     die ("wrong number of arguments")
-      unless ($args_res[$#args_res] =~ /EXCEPTION|ERRNO|IGNORE_ZERO_INF_SIGN|TEST_NAN_SIGN|NO_TEST_INLINE|XFAIL_TEST/);
+      unless ($args_res[$#args_res] =~ /EXCEPTION|ERRNO|IGNORE_ZERO_INF_SIGN|TEST_NAN_SIGN|NO_TEST_INLINE|XFAIL/);
     @start_rm = ( 0, 0, 0, 0 );
   } elsif ($#args_res == 4 * $num_res + 3) {
     # One set of results per rounding mode, with flags.
@@ -320,6 +321,8 @@ sub parse_args {
   @errno_minus_oflow = qw(ERRNO_ERANGE ERRNO_ERANGE 0 0);
   @errno_plus_uflow = qw(ERRNO_ERANGE ERRNO_ERANGE ERRNO_ERANGE 0);
   @errno_minus_uflow = qw(0 ERRNO_ERANGE ERRNO_ERANGE ERRNO_ERANGE);
+  @xfail_rounding_ibm128_libgcc = qw(XFAIL_IBM128_LIBGCC 0
+				     XFAIL_IBM128_LIBGCC XFAIL_IBM128_LIBGCC);
   for ($rm = 0; $rm <= 3; $rm++) {
     $current_arg = $start_rm[$rm];
     $ignore_result_any = 0;
@@ -401,6 +404,7 @@ sub parse_args {
     $cline_res =~ s/ERRNO_MINUS_OFLOW/$errno_minus_oflow[$rm]/g;
     $cline_res =~ s/ERRNO_PLUS_UFLOW/$errno_plus_uflow[$rm]/g;
     $cline_res =~ s/ERRNO_MINUS_UFLOW/$errno_minus_uflow[$rm]/g;
+    $cline_res =~ s/XFAIL_ROUNDING_IBM128_LIBGCC/$xfail_rounding_ibm128_libgcc[$rm]/g;
     $cline .= ", { $cline_res }";
   }
   print $file "    $cline },\n";
