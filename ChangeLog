@@ -1,3 +1,8 @@
+2017-01-11  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* scripts/build-many-glibcs.py (os.cpu_count): Add compatibility definition.
+	(re.fullmatch, subprocess.run): Likewise.
+
 2016-01-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* po/libc.pot: Regenerate.

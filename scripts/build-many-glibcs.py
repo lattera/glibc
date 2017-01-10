@@ -49,6 +49,43 @@ import sys
 import time
 import urllib.request
 
+try:
+    os.cpu_count
+except:
+    import multiprocessing
+    os.cpu_count = lambda: multiprocessing.cpu_count()
+
+try:
+    re.fullmatch
+except:
+    re.fullmatch = lambda p,s,f=0: re.match(p+"\\Z",s,f)
+
+try:
+    subprocess.run
+except:
+    class _CompletedProcess:
+        def __init__(self, args, returncode, stdout=None, stderr=None):
+            self.args = args
+            self.returncode = returncode
+            self.stdout = stdout
+            self.stderr = stderr
+
+    def _run(*popenargs, input=None, timeout=None, check=False, **kwargs):
+        assert(timeout is None)
+        with subprocess.Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input)
+            except:
+                process.kill()
+                process.wait()
+                raise
+            returncode = process.poll()
+            if check and returncode:
+                raise subprocess.CalledProcessError(returncode, popenargs)
+        return _CompletedProcess(popenargs, returncode, stdout, stderr)
+
+    subprocess.run = _run
+
 
 class Context(object):
     """The global state associated with builds in a given directory."""
