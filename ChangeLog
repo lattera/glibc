@@ -1,3 +1,16 @@
+2016-01-10  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* elf/dl-tunables.c (tunables_unsetenv): Remove function.
+	(min_strlen): Likewise.
+	(disable_tunable): Likewise.
+	(maybe_disable_malloc_check): Rename to
+	maybe_enable_malloc_check.
+	(maybe_enable_malloc_check): Enable glibc.malloc.check tunable
+	if /etc/suid-debug file exists.
+	(__tunables_init): Update caller.
+	* elf/dl-tunables.list (glibc.malloc.check): Don't mark as
+	secure.
+
 2016-01-10  Torvald Riegel  <triegel@redhat.com>
 
 	* nptl/DESIGN-rwlock.txt: Remove.

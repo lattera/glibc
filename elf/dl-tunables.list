@@ -31,7 +31,6 @@ glibc {
       minval: 0
       maxval: 3
       env_alias: MALLOC_CHECK_
-      is_secure: true
     }
     top_pad {
       type: SIZE_T
