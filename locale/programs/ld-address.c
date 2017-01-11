@@ -485,8 +485,8 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 		address->cat = arg->val.str.startmb;			      \
 	      else							      \
 		{							      \
-		  char *numbuf = (char *) xmalloc (11);			      \
-		  snprintf (numbuf, 11, "%ld", arg->val.num);		      \
+		  char *numbuf = (char *) xmalloc (21);			      \
+		  snprintf (numbuf, 21, "%ld", arg->val.num);		      \
 		  address->cat = numbuf;				      \
 		}							      \
 	    }								      \
