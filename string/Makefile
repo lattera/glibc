@@ -25,7 +25,7 @@ include ../Makeconfig
 headers	:= string.h strings.h memory.h endian.h bits/endian.h \
 	   argz.h envz.h byteswap.h bits/byteswap.h bits/byteswap-16.h \
 	   bits/string.h bits/string2.h bits/string3.h \
-	   bits/strings_fortified.h
+	   bits/strings_fortified.h bits/uintn-identity.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   strverscmp strdup strndup				\
@@ -56,7 +56,8 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strtok tst-strxfrm bug-strcoll1 tst-strfry	\
 		   bug-strtok1 $(addprefix test-,$(strop-tests))	\
 		   bug-envz1 tst-strxfrm2 tst-endian tst-svc2		\
-		   tst-strtok_r bug-strcoll2 tst-cmp tst-xbzero-opt
+		   tst-strtok_r bug-strcoll2 tst-cmp tst-xbzero-opt	\
+		   test-endian-types
 
 xtests = tst-strcoll-overflow
 

@@ -383,6 +383,7 @@ extern uint16_t htons (uint16_t __hostshort)
 
 /* Get machine dependent optimized versions of byte swapping functions.  */
 #include <bits/byteswap.h>
+#include <bits/uintn-identity.h>
 
 #ifdef __OPTIMIZE__
 /* We can optimize calls to the conversion functions.  Either nothing has
@@ -391,10 +392,10 @@ extern uint16_t htons (uint16_t __hostshort)
 # if __BYTE_ORDER == __BIG_ENDIAN
 /* The host byte order is the same as network byte order,
    so these functions are all just identity.  */
-# define ntohl(x)	(x)
-# define ntohs(x)	(x)
-# define htonl(x)	(x)
-# define htons(x)	(x)
+# define ntohl(x)	__uint32_identity (x)
+# define ntohs(x)	__uint16_identity (x)
+# define htonl(x)	__uint32_identity (x)
+# define htons(x)	__uint16_identity (x)
 # else
 #  if __BYTE_ORDER == __LITTLE_ENDIAN
 #   define ntohl(x)	__bswap_32 (x)

@@ -1,3 +1,37 @@
+2017-01-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16458]
+	* bits/uintn-identity.h: New file.
+	* inet/netinet/in.h: Include <bits/uintn-identity.h>.
+	[__BYTE_ORDER == __BIG_ENDIAN] (ntohl): Use __uint32_identity.
+	[__BYTE_ORDER == __BIG_ENDIAN] (ntohs): Use __uint16_identity.
+	[__BYTE_ORDER == __BIG_ENDIAN] (htonl): Use __uint32_identity.
+	[__BYTE_ORDER == __BIG_ENDIAN] (htohs): Use __uint16_identity.
+	* string/endian.h: Include <bits/uintn-identity.h>.
+	[__BYTE_ORDER == __LITTLE_ENDIAN] (htole16): Use
+	__uint16_identity.
+	[__BYTE_ORDER == __LITTLE_ENDIAN] (le16toh): Likewise.
+	[__BYTE_ORDER == __LITTLE_ENDIAN] (htole32): Use
+	__uint32_identity.
+	[__BYTE_ORDER == __LITTLE_ENDIAN] (le32toh): Likewise.
+	[__BYTE_ORDER == __LITTLE_ENDIAN] (htole64): Use
+	__uint64_identity.
+	[__BYTE_ORDER == __LITTLE_ENDIAN] (le64toh): Likewise.
+	[__BYTE_ORDER != __LITTLE_ENDIAN] (htobe16): Use
+	__uint16_identity.
+	[__BYTE_ORDER != __LITTLE_ENDIAN] (be16toh): Likewise.
+	[__BYTE_ORDER != __LITTLE_ENDIAN] (htobe32): Use
+	__uint32_identity.
+	[__BYTE_ORDER != __LITTLE_ENDIAN] (be32toh): Likewise.
+	[__BYTE_ORDER != __LITTLE_ENDIAN] (htobe64): Use
+	__uint64_identity.
+	[__BYTE_ORDER != __LITTLE_ENDIAN] (be64toh): Likewise.
+	* string/Makefile (headers): Add bits/uintn-identity.h.
+	(tests): Add test-endian-types.
+	* string/test-endian-types.c: New file.
+	* inet/Makefile (tests): Add test-hnto-types.
+	* inet/test-hnto-types.c: New file.
+
 2016-01-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* po/be.po: Update from Translation Project.
