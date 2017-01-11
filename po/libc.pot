@@ -5,8 +5,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.23.90\n"
-"POT-Creation-Date: 2016-08-01 21:16-0400\n"
+"Project-Id-Version: libc 2.24.90\n"
+"POT-Creation-Date: 2017-01-11 17:27+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,12 +137,11 @@ msgid ""
 msgstr ""
 
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
-#: elf/pldd.c:252 elf/sln.c:85 elf/sprof.c:372 iconv/iconv_prog.c:408
+#: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:408
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:277
 #: locale/programs/localedef.c:366 login/programs/pt_chown.c:89
 #: malloc/memusagestat.c:563 nss/getent.c:913 nss/makedb.c:369
-#: posix/getconf.c:503 sunrpc/rpcinfo.c:676
-#: sysdeps/unix/sysv/linux/lddlibc4.c:61
+#: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
@@ -414,7 +413,7 @@ msgstr ""
 msgid "cannot create scope list"
 msgstr ""
 
-#: elf/dl-close.c:817
+#: elf/dl-close.c:837
 msgid "shared object not open"
 msgstr ""
 
@@ -445,11 +444,11 @@ msgstr ""
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr ""
 
-#: elf/dl-error.c:77
+#: elf/dl-error-skeleton.c:87
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr ""
 
-#: elf/dl-error.c:127
+#: elf/dl-error-skeleton.c:136
 msgid "error while loading shared libraries"
 msgstr ""
 
@@ -493,11 +492,11 @@ msgstr ""
 msgid "cannot open zero fill device"
 msgstr ""
 
-#: elf/dl-load.c:1012 elf/dl-load.c:2212
+#: elf/dl-load.c:1012 elf/dl-load.c:2172
 msgid "cannot create shared object descriptor"
 msgstr ""
 
-#: elf/dl-load.c:1031 elf/dl-load.c:1596 elf/dl-load.c:1708
+#: elf/dl-load.c:1031 elf/dl-load.c:1556 elf/dl-load.c:1668
 msgid "cannot read file data"
 msgstr ""
 
@@ -509,107 +508,99 @@ msgstr ""
 msgid "ELF load command address/offset not properly aligned"
 msgstr ""
 
-#: elf/dl-load.c:1161
-msgid "cannot allocate TLS data structures for initial thread"
-msgstr ""
-
-#: elf/dl-load.c:1184
-msgid "cannot handle TLS data"
-msgstr ""
-
-#: elf/dl-load.c:1203
+#: elf/dl-load.c:1163
 msgid "object file has no loadable segments"
 msgstr ""
 
-#: elf/dl-load.c:1212 elf/dl-load.c:1688
+#: elf/dl-load.c:1172 elf/dl-load.c:1648
 msgid "cannot dynamically load executable"
 msgstr ""
 
-#: elf/dl-load.c:1233
+#: elf/dl-load.c:1193
 msgid "object file has no dynamic section"
 msgstr ""
 
-#: elf/dl-load.c:1256
+#: elf/dl-load.c:1216
 msgid "shared object cannot be dlopen()ed"
 msgstr ""
 
-#: elf/dl-load.c:1269
+#: elf/dl-load.c:1229
 msgid "cannot allocate memory for program header"
 msgstr ""
 
-#: elf/dl-load.c:1285 elf/dl-open.c:195
+#: elf/dl-load.c:1245 elf/dl-open.c:195
 msgid "invalid caller"
 msgstr ""
 
-#: elf/dl-load.c:1308 elf/dl-load.h:130
+#: elf/dl-load.c:1268 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr ""
 
-#: elf/dl-load.c:1328
+#: elf/dl-load.c:1288
 msgid "cannot enable executable stack as shared object requires"
 msgstr ""
 
-#: elf/dl-load.c:1341
+#: elf/dl-load.c:1301
 msgid "cannot close file descriptor"
 msgstr ""
 
-#: elf/dl-load.c:1596
+#: elf/dl-load.c:1556
 msgid "file too short"
 msgstr ""
 
-#: elf/dl-load.c:1631
+#: elf/dl-load.c:1591
 msgid "invalid ELF header"
 msgstr ""
 
-#: elf/dl-load.c:1643
+#: elf/dl-load.c:1603
 msgid "ELF file data encoding not big-endian"
 msgstr ""
 
-#: elf/dl-load.c:1645
+#: elf/dl-load.c:1605
 msgid "ELF file data encoding not little-endian"
 msgstr ""
 
-#: elf/dl-load.c:1649
+#: elf/dl-load.c:1609
 msgid "ELF file version ident does not match current one"
 msgstr ""
 
-#: elf/dl-load.c:1653
+#: elf/dl-load.c:1613
 msgid "ELF file OS ABI invalid"
 msgstr ""
 
-#: elf/dl-load.c:1656
+#: elf/dl-load.c:1616
 msgid "ELF file ABI version invalid"
 msgstr ""
 
-#: elf/dl-load.c:1659
+#: elf/dl-load.c:1619
 msgid "nonzero padding in e_ident"
 msgstr ""
 
-#: elf/dl-load.c:1662
+#: elf/dl-load.c:1622
 msgid "internal error"
 msgstr ""
 
-#: elf/dl-load.c:1669
+#: elf/dl-load.c:1629
 msgid "ELF file version does not match current one"
 msgstr ""
 
-#: elf/dl-load.c:1677
+#: elf/dl-load.c:1637
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr ""
 
-#: elf/dl-load.c:1693
+#: elf/dl-load.c:1653
 msgid "ELF file's phentsize not the expected size"
 msgstr ""
 
-#: elf/dl-load.c:2231
+#: elf/dl-load.c:2191
 msgid "wrong ELF class: ELFCLASS64"
 msgstr ""
 
-#: elf/dl-load.c:2232
+#: elf/dl-load.c:2192
 msgid "wrong ELF class: ELFCLASS32"
 msgstr ""
 
-#: elf/dl-load.c:2235
+#: elf/dl-load.c:2195
 msgid "cannot open shared object file"
 msgstr ""
 
@@ -653,20 +644,20 @@ msgstr ""
 msgid "cannot allocate memory in static TLS block"
 msgstr ""
 
-#: elf/dl-reloc.c:206
+#: elf/dl-reloc.c:212
 msgid "cannot make segment writable for relocation"
 msgstr ""
 
-#: elf/dl-reloc.c:277
+#: elf/dl-reloc.c:283
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr ""
 
-#: elf/dl-reloc.c:293
+#: elf/dl-reloc.c:299
 msgid "cannot restore segment prot after reloc"
 msgstr ""
 
-#: elf/dl-reloc.c:324
+#: elf/dl-reloc.c:330
 msgid "cannot apply additional memory protection after relocation"
 msgstr ""
 
@@ -674,7 +665,7 @@ msgstr ""
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr ""
 
-#: elf/dl-tls.c:934
+#: elf/dl-tls.c:940
 msgid "cannot create TLS data structures"
 msgstr ""
 
@@ -1112,39 +1103,39 @@ msgstr ""
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr ""
 
-#: elf/sln.c:84
+#: elf/sln.c:76
 #, c-format
 msgid ""
 "Usage: sln src dest|file\n"
 "\n"
 msgstr ""
 
-#: elf/sln.c:108
+#: elf/sln.c:97
 #, c-format
 msgid "%s: file open error: %m\n"
 msgstr ""
 
-#: elf/sln.c:145
+#: elf/sln.c:134
 #, c-format
 msgid "No target in line %d\n"
 msgstr ""
 
-#: elf/sln.c:175
+#: elf/sln.c:164
 #, c-format
 msgid "%s: destination must not be a directory\n"
 msgstr ""
 
-#: elf/sln.c:181
+#: elf/sln.c:170
 #, c-format
 msgid "%s: failed to remove the old destination\n"
 msgstr ""
 
-#: elf/sln.c:189
+#: elf/sln.c:178
 #, c-format
 msgid "%s: invalid destination: %s\n"
 msgstr ""
 
-#: elf/sln.c:204 elf/sln.c:213
+#: elf/sln.c:189 elf/sln.c:198
 #, c-format
 msgid "Invalid link from \"%s\" to \"%s\": %s\n"
 msgstr ""
@@ -3711,12 +3702,12 @@ msgstr ""
 msgid "yp_update: cannot get server address\n"
 msgstr ""
 
-#: nscd/aicache.c:83 nscd/hstcache.c:485
+#: nscd/aicache.c:84 nscd/hstcache.c:485
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr ""
 
-#: nscd/aicache.c:85 nscd/hstcache.c:487
+#: nscd/aicache.c:86 nscd/hstcache.c:487
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr ""
@@ -4797,27 +4788,27 @@ msgstr ""
 msgid "Unknown resolver error"
 msgstr ""
 
-#: resolv/res_hconf.c:126
+#: resolv/res_hconf.c:118
 #, c-format
 msgid "%s: line %d: cannot specify more than %d trim domains"
 msgstr ""
 
-#: resolv/res_hconf.c:147
+#: resolv/res_hconf.c:139
 #, c-format
 msgid "%s: line %d: list delimiter not followed by domain"
 msgstr ""
 
-#: resolv/res_hconf.c:206
+#: resolv/res_hconf.c:176
 #, c-format
 msgid "%s: line %d: expected `on' or `off', found `%s'\n"
 msgstr ""
 
-#: resolv/res_hconf.c:249
+#: resolv/res_hconf.c:219
 #, c-format
 msgid "%s: line %d: bad command `%s'\n"
 msgstr ""
 
-#: resolv/res_hconf.c:284
+#: resolv/res_hconf.c:252
 #, c-format
 msgid "%s: line %d: ignoring trailing garbage `%s'\n"
 msgstr ""
@@ -5473,83 +5464,6 @@ msgstr ""
 
 #: sunrpc/rpc_scan.c:521 sunrpc/rpc_scan.c:531
 msgid "preprocessor error"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:243 sunrpc/rpcinfo.c:386
-#, c-format
-msgid "program %lu is not available\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:270 sunrpc/rpcinfo.c:316 sunrpc/rpcinfo.c:339
-#: sunrpc/rpcinfo.c:410 sunrpc/rpcinfo.c:456 sunrpc/rpcinfo.c:479
-#: sunrpc/rpcinfo.c:510
-#, c-format
-msgid "program %lu version %lu is not available\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:515
-#, c-format
-msgid "program %lu version %lu ready and waiting\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:554 sunrpc/rpcinfo.c:561
-msgid "rpcinfo: can't contact portmapper"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:568
-msgid "No remote programs registered.\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:572
-msgid "   program vers proto   port\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:611
-msgid "(unknown)"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:633
-#, c-format
-msgid "rpcinfo: broadcast failed: %s\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:652
-msgid "Sorry. You are not root\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:659
-#, c-format
-msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:668
-msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:670
-msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:672
-msgid "       rpcinfo -p [ host ]\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:673
-msgid "       rpcinfo -b prognum versnum\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:674
-msgid "       rpcinfo -d prognum versnum\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:698
-#, c-format
-msgid "rpcinfo: %s is unknown service\n"
-msgstr ""
-
-#: sunrpc/rpcinfo.c:732
-#, c-format
-msgid "rpcinfo: %s is unknown host\n"
 msgstr ""
 
 #: sunrpc/svc_run.c:71

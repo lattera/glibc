@@ -1,3 +1,7 @@
+2016-01-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* po/libc.pot: Regenerate.
+
 2016-01-10  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* elf/dl-tunables.c (tunables_unsetenv): Remove function.
