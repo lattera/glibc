@@ -33,8 +33,9 @@
 DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
 
 #if __GNUC_PREREQ (7, 0)
-/* Compiler warnings about format lengths should also be ignored.  */
-DIAG_IGNORE_NEEDS_COMMENT (7.0, "-Wformat-length");
+/* Compiler warnings about snprintf output truncation should also be
+   ignored.  */
+DIAG_IGNORE_NEEDS_COMMENT (7.0, "-Wformat-truncation");
 #endif
 
 static void rfg1 (void);

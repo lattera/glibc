@@ -1,5 +1,13 @@
 2017-01-11  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdio-common/tst-printf.c [__GNUC_PREREQ (7, 0)]: Ignore
+	-Wformat-truncation instead of -Wformat-length.
+	* time/tst-strptime2.c (mkbuf) [__GNUC_PREREQ (7, 0)]: Likewise.
+	* stdio-common/tstdiomisc.c (F): Ignore -Wformat-truncation for
+	GCC 7.
+	* wcsmbs/tst-wcstof.c: Include <libc-internal.h>.
+	(do_test): Ignore -Wformat-truncation for GCC 7.
+
 	* locale/programs/ld-address.c (INT_STR_ELEM): Increase size of
 	buffer used to print long int value.
 
