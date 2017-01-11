@@ -84,11 +84,11 @@ init (void)
 
       if (out_filename != NULL && out_filename[0] != 0)
 	{
-	  size_t out_filename_len = strlen (out_filename) + 12;
+	  size_t out_filename_len = strlen (out_filename) + 13;
 	  char fullname[out_filename_len];
 	  char *endp = stpcpy (fullname, out_filename);
 	  if (which_process == NULL || which_process[0] == '\0')
-	    snprintf (endp, 12, ".%lu", (unsigned long int) pid);
+	    snprintf (endp, 13, ".%ld", (long int) pid);
 
 	  out_fd = open (fullname, O_RDWR | O_CREAT | O_TRUNC, 0666);
 	  if (out_fd != -1)

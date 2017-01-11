@@ -1,3 +1,8 @@
+2017-01-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/sotruss-lib.c (init): Increase space allocated for pid by
+	one byte.  Print it with %ld, cast to long int.
+
 2017-01-11  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* scripts/build-many-glibcs.py (os.cpu_count): Add compatibility definition.
