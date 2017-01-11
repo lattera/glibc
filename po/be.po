@@ -2,39 +2,40 @@
 # Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 # Ales Nyakhaychyk <nab@mail.by>, 2002, 2003.
-# Viktar Siarheichyk <vics@eq.by>, 2014.
+# Viktar Siarheichyk <vics@eq.by>, 2014, 2016.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.19.90\n"
+"Project-Id-Version: libc 2.22-pre1\n"
 "POT-Creation-Date: 2015-07-31 00:10-0400\n"
-"PO-Revision-Date: 2014-12-24 15:35+0300\n"
+"PO-Revision-Date: 2016-12-20 17:54+0300\n"
 "Last-Translator: Viktar Siarheichyk <vics@eq.by>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Virtaal 0.7.1\n"
 
 #: argp/argp-help.c:227
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
-msgstr ""
+msgstr "%.*s: параметр ARGP_HELP_FMT патрабуе значэнне"
 
 #: argp/argp-help.c:237
 #, c-format
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
-msgstr "%.*s: невядомы ARGP_HELP_FMT парамэтар"
+msgstr "%.*s: невядомы ARGP_HELP_FMT параметр"
 
 #: argp/argp-help.c:250
 #, c-format
 msgid "Garbage in ARGP_HELP_FMT: %s"
-msgstr ""
+msgstr "Смецце ў ARGP_HELP_FMT: %s"
 
 #: argp/argp-help.c:1214
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
-msgstr ""
+msgstr "Абавязковыя ці неабавязковыя аргументы да доўгіх параметраў таксама абавязковыя ці неабавязковыя для ўсіх адпаведных кароткіх параметраў."
 
 #: argp/argp-help.c:1600
 msgid "Usage:"
@@ -56,7 +57,7 @@ msgstr "Паспрабуйце \"%s --help\" ці \"%s --usage\" для боль
 #: argp/argp-help.c:1671
 #, c-format
 msgid "Report bugs to %s.\n"
-msgstr ""
+msgstr "Паведамляйце аб памылках на %s.\n"
 
 #: argp/argp-parse.c:101
 msgid "Give this help list"
