@@ -1,3 +1,14 @@
+2017-01-12  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* po/cs.po: Merge translations from the Translation Project.
+	* po/de.po: Likewise.
+	* po/pl.po: Likewise.
+	* po/ru.po: Likewise.
+	* po/tr.po: Likewise.
+	* po/uk.po: Likewise.
+	* po/vi.po: Likewise.
+	* po/zh_CN.po: Likewise.
+
 2017-01-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise.c: New file.
