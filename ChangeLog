@@ -1,5 +1,7 @@
 2017-01-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise.c: New file.
+
 	* math/fgetexcptflg.c (__fegetexceptflag): Store 0 in fexcept_t
 	object.
 
