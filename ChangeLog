@@ -1,3 +1,8 @@
+2017-01-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/fgetexcptflg.c (__fegetexceptflag): Store 0 in fexcept_t
+	object.
+
 2017-01-11  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16458]

@@ -24,6 +24,7 @@ int
 __fegetexceptflag (fexcept_t *flagp, int excepts)
 {
   /* Nothing to do.  */
+  *flagp = 0;
   return 0;
 }
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
