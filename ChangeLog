@@ -1,3 +1,7 @@
+2017-01-13  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Regenerated.
+
 2017-01-12  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* po/cs.po: Merge translations from the Translation Project.

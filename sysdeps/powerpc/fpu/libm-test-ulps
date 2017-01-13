@@ -40,9 +40,9 @@ ildouble: 2
 ldouble: 2
 
 Function: "acosh_downward":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 3
 ldouble: 3
@@ -1672,16 +1672,16 @@ double: 4
 float: 4
 idouble: 4
 ifloat: 4
-ildouble: 14
-ldouble: 14
+ildouble: 15
+ldouble: 15
 
 Function: "gamma_towardzero":
 double: 4
 float: 3
 idouble: 4
 ifloat: 3
-ildouble: 14
-ldouble: 14
+ildouble: 16
+ldouble: 16
 
 Function: "gamma_upward":
 double: 4
@@ -1824,16 +1824,16 @@ double: 4
 float: 4
 idouble: 4
 ifloat: 4
-ildouble: 14
-ldouble: 14
+ildouble: 15
+ldouble: 15
 
 Function: "lgamma_towardzero":
 double: 4
 float: 3
 idouble: 4
 ifloat: 3
-ildouble: 14
-ldouble: 14
+ildouble: 16
+ldouble: 16
 
 Function: "lgamma_upward":
 double: 4
@@ -1952,16 +1952,16 @@ ildouble: 1
 ldouble: 1
 
 Function: "log_towardzero":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
 Function: "log_upward":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
