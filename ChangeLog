@@ -1,3 +1,16 @@
+2017-02-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/posix_fadvise.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	(__ASSUME_FADVISE64_AS_64_64): Define.
+	* sysdeps/unix/sysv/linux/posix_fadvise.c [__NR_fadvise64]: Add
+	!defined __ASSUME_FADVISE64_AS_64_64 to use syscall issue.
+	[!__NR_fadvise64 && __ASSUME_FADVISE64_64_6ARG]: Remove
+	__ALIGNMENT_ARG usage.
+	[!__NR_fadvise64 && !__ASSUME_FADVISE64_64_6ARG]: Define
+	__NR_fadvise64_64 if it is not defined.
+
 2017-02-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* version.h (RELEASE): Set to "development"

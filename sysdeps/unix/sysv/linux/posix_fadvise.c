@@ -24,12 +24,16 @@
 
 #ifndef __OFF_T_MATCHES_OFF64_T
 
-/* Both arm and powerpc implements fadvise64_64 with last 'advise' argument
-   just after 'fd' to avoid the requirement of implementing 7-arg syscalls.
-   ARM also defines __NR_fadvise64_64 as __NR_arm_fadvise64_64.
+/* Default implementation will use __NR_fadvise64 with expected argument
+   positions (for instance i386 and powerpc32 that uses __ALIGNMENT_ARG).
 
-   tile requires __ASSUME_ALIGNED_REGISTER_PAIRS but implements the 32-bit
-   fadvise64_64 without the padding 0 after fd.
+   Second option will be used by arm which define __NR_arm_fadvise64_64
+   (redefined to __NR_fadvise64_64 in kernel-features.h) that behaves as
+   __NR_fadvise64_64 (without the aligment argument required for the ABI).
+
+   Third option will be used by both tile 32-bits and mips o32.  Tile
+   will set __ASSUME_FADVISE64_64_NO_ALIGN to issue a 6 argument syscall,
+   while mips will use a 7 argument one with __NR_fadvise64.
 
    s390 implements fadvice64_64 using a specific struct with arguments
    packed inside.  This is the only implementation handled in arch-specific
@@ -39,20 +43,23 @@ int
 posix_fadvise (int fd, off_t offset, off_t len, int advise)
 {
   INTERNAL_SYSCALL_DECL (err);
-# ifdef __NR_fadvise64
+# if defined (__NR_fadvise64) && !defined (__ASSUME_FADVISE64_AS_64_64)
   int ret = INTERNAL_SYSCALL_CALL (fadvise64, err, fd,
 				   __ALIGNMENT_ARG SYSCALL_LL (offset),
 				   len, advise);
 # else
 #  ifdef __ASSUME_FADVISE64_64_6ARG
   int ret = INTERNAL_SYSCALL_CALL (fadvise64_64, err, fd, advise,
-				   __ALIGNMENT_ARG SYSCALL_LL (offset),
-				   SYSCALL_LL (len));
+				   SYSCALL_LL (offset), SYSCALL_LL (len));
 #  else
 
 #   ifdef __ASSUME_FADVISE64_64_NO_ALIGN
 #    undef __ALIGNMENT_ARG
 #    define __ALIGNMENT_ARG
+#   endif
+
+#   ifndef __NR_fadvise64_64
+#    define __NR_fadvise64_64 __NR_fadvise64
 #   endif
 
   int ret = INTERNAL_SYSCALL_CALL (fadvise64_64, err, fd,

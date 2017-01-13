@@ -34,6 +34,9 @@
 # define __ASSUME_ALIGNED_REGISTER_PAIRS	1
 /* mips32 only supports ipc syscall.  */
 # undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+
+/* The o32 MIPS fadvise64 syscall behaves as fadvise64_64.  */
+# define __ASSUME_FADVISE64_AS_64_64		1
 #endif
 
 /* Define that mips64-n32 is a ILP32 ABI to set the correct interface to
