@@ -271,7 +271,8 @@ ENTRY(__CONTEXT_FUNC_NAME)
 
 /* Restore ucontext (parm1) from stack.  */
 	lwz	r12,_FRAME_PARM_SAVE1(r1)
-	li	r4,0
+	lwz	r4,_FRAME_PARM_SAVE2(r1)
+	addi	r4,r4,_UC_SIGMASK
 	stw	r3,_UC_REGS_PTR(r12)
 	addi	r5,r12,_UC_SIGMASK
 	li	r3,SIG_SETMASK

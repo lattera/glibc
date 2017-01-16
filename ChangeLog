@@ -1,3 +1,10 @@
+2017-01-16  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21045]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S
+	(__CONTEXT_FUNC_NAME): Pass address of signal mask to be restored
+	to __sigprocmask.
+
 2017-01-16  Chris Metcalf  <cmetcalf@mellanox.com>
 
 	* sysdeps/tile/tilegx/memchr.c (__memchr): Handle pointer
