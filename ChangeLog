@@ -1,5 +1,9 @@
 2017-01-16  Chris Metcalf  <cmetcalf@mellanox.com>
 
+	* sysdeps/tile/tilegx/memchr.c (__memchr): Handle pointer
+	wrap-around.
+	* sysdeps/tile/tilepro/memchr.c (__memchr): Likewise.
+
 	* sysdeps/unix/sysv/linux/tile/ipc_priv.h: New file.
 
 2016-01-14  Siddhesh Poyarekar  <siddhesh@sourceware.org>

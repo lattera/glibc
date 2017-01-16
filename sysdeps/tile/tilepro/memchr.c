@@ -51,6 +51,10 @@ __memchr (const void *s, int c, size_t n)
   /* Compute the address of the last byte. */
   last_byte_ptr = (const char *) s + n - 1;
 
+  /* Handle possible addition overflow.  */
+  if (__glibc_unlikely ((uintptr_t) last_byte_ptr < (uintptr_t) s))
+    last_byte_ptr = (const char *) UINTPTR_MAX;
+
   /* Compute the address of the word containing the last byte. */
   last_word_ptr = (const uint32_t *) ((uintptr_t) last_byte_ptr & -4);
 
