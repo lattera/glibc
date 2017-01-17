@@ -1,5 +1,13 @@
 2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/sh/syscalls.list: Remove waitid from
+	auto-generated list.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/syscalls.list: Remove file.
+	* sysdeps/unix/sysv/linux/tile/waitpid.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Likewise.
+
 	* sysdeps/unix/sysv/linux/generic/pause.c: Remove file.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/pause.c: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/kernel-features.h [__arch64__]
