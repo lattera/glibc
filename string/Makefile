@@ -74,6 +74,14 @@ CFLAGS-stratcliff.c = -fno-builtin
 CFLAGS-test-ffs.c = -fno-builtin
 CFLAGS-tst-inlcall.c = -fno-builtin
 CFLAGS-tst-xbzero-opt.c = -O3
+# BZ 21006: Resolve all functions but at least explicit_bzero at startup.
+# Otherwise the test fails on s390x as the memcpy in prepare_test_buffer is
+# done by loading r4 / r5 with the test_pattern and using store multiple
+# instruction to store r4 / r5 to buf.  If explicit_bzero would be resolved in
+# setup_explicit_clear, r4 / r5 would be stored to stack by _dl_runtime_resolve
+# and the call to memmem in count_test_patterns will find a hit of the
+# test_pattern on the stack.
+LDFLAGS-tst-xbzero-opt = -z now
 
 # Called during TLS initialization.
 CFLAGS-memcpy.c = $(no-stack-protector)
