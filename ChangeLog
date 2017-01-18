@@ -1,3 +1,8 @@
+2017-01-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Config.build_cross_tool): Use -j1
+	for make install.
+
 2017-01-18  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* po/bg.po: Merge from Translation Project.

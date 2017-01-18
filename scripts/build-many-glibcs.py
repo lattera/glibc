@@ -1173,7 +1173,17 @@ class Config(object):
             cfg_cmd.extend(extra_opts)
         cmdlist.add_command('configure', cfg_cmd)
         cmdlist.add_command('build', ['make'])
-        cmdlist.add_command('install', ['make', 'install'])
+        # Parallel "make install" for GCC has race conditions that can
+        # cause it to fail; see
+        # <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=42980>.  Such
+        # problems are not known for binutils, but doing the
+        # installation in parallel within a particular toolchain build
+        # (as opposed to installation of one toolchain from
+        # build-many-glibcs.py running in parallel to the installation
+        # of other toolchains being built) is not known to be
+        # significantly beneficial, so it is simplest just to disable
+        # parallel install for cross tools here.
+        cmdlist.add_command('install', ['make', '-j1', 'install'])
         cmdlist.cleanup_dir()
         cmdlist.pop_subdesc()
 
