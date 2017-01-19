@@ -1,3 +1,10 @@
+2017-01-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21047]
+	* sysdeps/arm/fpu_control.h [!__SOFTFP__] (_FPU_GETCW): Use VFP
+	name for instruction.
+	[!__SOFTFP__] (_FPU_SETCW): Likewise.
+
 2017-01-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Config.build_cross_tool): Use -j1
