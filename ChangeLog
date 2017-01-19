@@ -1,3 +1,9 @@
+2017-01-19  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* elf/dl-tunables (get_next_env): Always advance envp.
+	* stdlib/tst-empty-env.c: New test case.
+	* stdlib/Makefile (tests): Use it.
+
 2017-01-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21047]

@@ -80,7 +80,7 @@ get_next_env (char **envp, char **name, size_t *namelen, char **val)
 {
   while (envp != NULL && *envp != NULL)
     {
-      char *envline = *envp;
+      char *envline = *envp++;
       int len = 0;
 
       while (envline[len] != '\0' && envline[len] != '=')
@@ -94,7 +94,7 @@ get_next_env (char **envp, char **name, size_t *namelen, char **val)
       *namelen = len;
       *val = &envline[len + 1];
 
-      return ++envp;
+      return envp;
     }
 
   return NULL;

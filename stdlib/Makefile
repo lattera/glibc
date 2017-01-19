@@ -81,6 +81,9 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-quick_exit tst-thread-quick_exit tst-width	    \
 		   tst-width-stdint tst-strfrom tst-strfrom-locale \
 		   tst-getrandom
+ifeq ($(build-hardcoded-path-in-tests),yes)
+tests += tst-empty-env
+endif
 tests-static	:= tst-secure-getenv
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-quick_exit.o = -std=c++11
