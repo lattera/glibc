@@ -28,8 +28,9 @@ int
 setgroups (size_t n, const gid_t *groups)
 {
 #ifdef __NR_setgroups32
-# error "wrong setgroups.c file used"
-#endif
+  return INLINE_SETXID_SYSCALL (setgroups32, 2, n, groups);
+#else
   return INLINE_SETXID_SYSCALL (setgroups, 2, n, groups);
+#endif
 }
 libc_hidden_def (setgroups)

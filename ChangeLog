@@ -1,3 +1,150 @@
+2017-03-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/setegid.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setegid.c (setegid): Use
+	INLINE_SYSCALL_ERROR_RETURN_VALUE.
+	* sysdeps/unix/sysv/linux/seteuid.c (seteuid): Likewise.
+	* sysdeps/unix/sysv/linux/setgid.c (setgid): Use __NR_setgid32 if
+	defined.
+	* sysdeps/unix/sysv/linux/setgroups.c (setgroups): Use
+	__NR_setgroups32 if defined.
+	* sysdeps/unix/sysv/linux/setregid.c (__setregid): Use __NR_setregid32
+	if defined.
+	* sysdeps/unix/sysv/linux/setresgid.c (__setresgid): Use
+	__NR_setresgid32 is defined.
+	* sysdeps/unix/sysv/linux/setresuid.c (__setresuid): Use
+	__NR_setresuid32 if defined.
+	* sysdeps/unix/sysv/linux/setreuid.c (__setreuid): Use
+	__NR_setreuid32 if defined.
+	* sysdeps/unix/sysv/linux/setuid.c (__setuid): Use __NR_setuid32 if
+	defined.
+	* sysdeps/unix/sysv/linux/arm/setegid.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setegid.c (setegid): Use
+	INLINE_SYSCALL_ERROR_RETURN_VALUE.
+	* sysdeps/unix/sysv/linux/seteuid.c (seteuid): Likewise.
+	* sysdeps/unix/sysv/linux/setgid.c (setgid): Use __NR_setgid32 if
+	defined.
+	* sysdeps/unix/sysv/linux/setgroups.c (setgroups): Use
+	__NR_setgroups32 if defined.
+	* sysdeps/unix/sysv/linux/setregid.c (__setregid): Use __NR_setregid32
+	if defined.
+	* sysdeps/unix/sysv/linux/setresgid.c (__setresgid): Use
+	__NR_setresgid32 is defined.
+	* sysdeps/unix/sysv/linux/setresuid.c (__setresuid): Use
+	__NR_setresuid32 if defined.
+	* sysdeps/unix/sysv/linux/setreuid.c (__setreuid): Use
+	__NR_setreuid32 if defined.
+	* sysdeps/unix/sysv/linux/setuid.c (__setuid): Use __NR_setuid32 if
+	defined.
+
 2017-03-27  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21277]
