@@ -109,3 +109,14 @@ linguas: $(pofiles:$(podir)/%=%)
 linguas.mo: $(pofiles:$(podir)/%.po=%.mo)
 
 endif
+
+# Update translations from the translation project.
+TRANSLATIONS_URL = https://translationproject.org/latest/libc
+WGET = wget
+
+update-translations:
+	$(WGET) -qO- $(TRANSLATIONS_URL) | sed -n 's|.*href="\([^"]\+po\)".*|\1|p' | \
+	  while read f; do \
+	    $(WGET) -O $(objdir)/$$f-tmp $(TRANSLATIONS_URL)/$$f && \
+	    mv -f $(objdir)/$$f-tmp $$f; \
+	  done

@@ -1,3 +1,7 @@
+2017-01-20  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* po/Makefile (update-translations): New target.
+
 2017-01-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21061]
