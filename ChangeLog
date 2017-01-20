@@ -1,3 +1,14 @@
+2017-01-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/htm.h: Adjust comments.
+	* sysdeps/unix/sysv/linux/s390/elision-unlock.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/elision-lock.c: Adjust comments.
+	(__lll_lock_elision): Do not test futex before starting a
+	transaction.  Use __glibc_likely instead of __builtin_expect.
+	* sysdeps/unix/sysv/linux/s390/elision-trylock.c: Adjust comments.
+	(__lll_trylock_elision): Do not test futex before starting a
+	transaction.  Use __glibc_likely instead of __builtin_expect.
+
 2017-01-20  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* po/Makefile (update-translations): New target.

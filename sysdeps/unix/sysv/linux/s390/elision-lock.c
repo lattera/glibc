@@ -50,27 +50,28 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
      critical section uses lock elision) and outside of transactions.  Thus,
      we need to use atomic accesses to avoid data races.  However, the
      value of adapt_count is just a hint, so relaxed MO accesses are
-     sufficient.
-     Do not begin a transaction if another cpu has locked the
-     futex with normal locking.  If adapt_count is zero, it remains and the
-     next pthread_mutex_lock call will try to start a transaction again.  */
-    if (atomic_load_relaxed (futex) == 0
-	&& atomic_load_relaxed (adapt_count) <= 0 && aconf.try_tbegin > 0)
+     sufficient.  */
+    if (atomic_load_relaxed (adapt_count) <= 0 && aconf.try_tbegin > 0)
     {
+      /* Start a transaction and retry it automatically if it aborts with
+	 _HTM_TBEGIN_TRANSIENT.  This macro calls tbegin at most retry_cnt
+	 + 1 times.  The second argument is considered as retry_cnt.  */
       int status = __libc_tbegin_retry ((void *) 0, aconf.try_tbegin - 1);
-      if (__builtin_expect (status == _HTM_TBEGIN_STARTED,
-			    _HTM_TBEGIN_STARTED))
+      if (__glibc_likely (status == _HTM_TBEGIN_STARTED))
 	{
 	  /* Check the futex to make sure nobody has touched it in the
 	     mean time.  This forces the futex into the cache and makes
-	     sure the transaction aborts if some other cpu uses the
-	     lock (writes the futex).  */
-	  if (__builtin_expect (atomic_load_relaxed (futex) == 0, 1))
+	     sure the transaction aborts if another thread acquires the lock
+	     concurrently.  */
+	  if (__glibc_likely (atomic_load_relaxed (futex) == 0))
 	    /* Lock was free.  Return to user code in a transaction.  */
 	    return 0;
 
-	  /* Lock was busy.  Fall back to normal locking.  */
-	  if (__builtin_expect (__libc_tx_nesting_depth () <= 1, 1))
+	  /* Lock was busy.  Fall back to normal locking.
+	     This can be the case if e.g. adapt_count was decremented to zero
+	     by a former release and another thread has been waken up and
+	     acquired it.  */
+	  if (__glibc_likely (__libc_tx_nesting_depth () <= 1))
 	    {
 	      /* In a non-nested transaction there is no need to abort,
 		 which is expensive.  Simply end the started transaction.  */
@@ -118,6 +119,7 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 	}
     }
 
-  /* Use normal locking as fallback path if transaction does not succeed.  */
+  /* Use normal locking as fallback path if the transaction does not
+     succeed.  */
   return LLL_LOCK ((*futex), private);
 }

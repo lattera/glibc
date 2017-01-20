@@ -119,11 +119,16 @@
 			      ar modification and fp operations.  Some	\
 			      program-interruptions (e.g. a null	\
 			      pointer access) are filtered and the	\
-			      trancsaction will abort.  In this case	\
+			      transaction will abort.  In this case	\
 			      the normal lock path will execute it	\
 			      again and result in a core dump wich does	\
 			      now show at tbegin but the real executed	\
-			      instruction.  */				\
+			      instruction.				\
+			      However it is not guaranteed that this	\
+			      retry operate on the same data and thus	\
+			      may not end in an program-interruption.	\
+			      Note: This could also be used to probe	\
+			      memory for being accessible!  */		\
 			   "2: tbegin 0, 0xFF0E\n\t"			\
 			   /* Branch away in abort case (this is the	\
 			      prefered sequence.  See PoP in chapter 5	\
@@ -152,7 +157,8 @@
      __ret;								\
      })
 
-/* These builtins are correct.  Use them.  */
+/* These builtins are usable in context of glibc lock elision code without any
+   changes.  Use them.  */
 #define __libc_tend()							\
   ({ __asm__ __volatile__ (".machine push\n\t"				\
 			   ".machinemode \"zarch_nohighgprs\"\n\t"	\

@@ -51,31 +51,29 @@ __lll_trylock_elision (int *futex, short *adapt_count)
      critical section uses lock elision) and outside of transactions.  Thus,
      we need to use atomic accesses to avoid data races.  However, the
      value of adapt_count is just a hint, so relaxed MO accesses are
-     sufficient.
-     Do not begin a transaction if another cpu has locked the
-     futex with normal locking.  If adapt_count is zero, it remains and the
-     next pthread_mutex_lock call will try to start a transaction again.  */
-    if (atomic_load_relaxed (futex) == 0
-	&& atomic_load_relaxed (adapt_count) <= 0 && aconf.try_tbegin > 0)
+     sufficient.  */
+    if (atomic_load_relaxed (adapt_count) <= 0 && aconf.try_tbegin > 0)
     {
       int status = __libc_tbegin ((void *) 0);
-      if (__builtin_expect (status  == _HTM_TBEGIN_STARTED,
-			    _HTM_TBEGIN_STARTED))
+      if (__glibc_likely (status  == _HTM_TBEGIN_STARTED))
 	{
 	  /* Check the futex to make sure nobody has touched it in the
 	     mean time.  This forces the futex into the cache and makes
-	     sure the transaction aborts if some other cpu uses the
-	     lock (writes the futex).  */
-	  if (__builtin_expect (atomic_load_relaxed (futex) == 0, 1))
+	     sure the transaction aborts if another thread acquires the lock
+	     concurrently.  */
+	  if (__glibc_likely (atomic_load_relaxed (futex) == 0))
 	    /* Lock was free.  Return to user code in a transaction.  */
 	    return 0;
 
-	  /* Lock was busy.  Fall back to normal locking.  Since we are in
-	     a non-nested transaction there is no need to abort, which is
-	     expensive.  Simply end the started transaction.  */
+	  /* Lock was busy.  Fall back to normal locking.
+	     This can be the case if e.g. adapt_count was decremented to zero
+	     by a former release and another thread has been waken up and
+	     acquired it.
+	     Since we are in a non-nested transaction there is no need to abort,
+	     which is expensive.  Simply end the started transaction.  */
 	  __libc_tend ();
 	  /* Note: Changing the adapt_count here might abort a transaction on a
-	     different cpu, but that could happen anyway when the futex is
+	     different CPU, but that could happen anyway when the futex is
 	     acquired, so there's no need to check the nesting depth here.
 	     See above for why relaxed MO is sufficient.  */
 	  if (aconf.skip_lock_busy > 0)
@@ -93,6 +91,7 @@ __lll_trylock_elision (int *futex, short *adapt_count)
       /* Could do some retries here.  */
     }
 
-  /* Use normal locking as fallback path if transaction does not succeed.  */
+  /* Use normal locking as fallback path if the transaction does not
+     succeed.  */
   return lll_trylock (*futex);
 }
