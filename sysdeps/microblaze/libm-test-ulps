@@ -154,17 +154,7 @@ Function: "cos":
 float: 1
 ifloat: 1
 
-Function: "cos_tonearest":
-float: 1
-ifloat: 1
-
 Function: "cosh":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-
-Function: "cosh_tonearest":
 double: 1
 float: 1
 idouble: 1
@@ -220,18 +210,6 @@ float: 1
 idouble: 2
 ifloat: 1
 
-Function: Real part of "ctan_tonearest":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-
-Function: Imaginary part of "ctan_tonearest":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-
 Function: Real part of "ctanh":
 double: 2
 float: 1
@@ -239,18 +217,6 @@ idouble: 2
 ifloat: 1
 
 Function: Imaginary part of "ctanh":
-double: 2
-float: 2
-idouble: 2
-ifloat: 2
-
-Function: Real part of "ctanh_tonearest":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-
-Function: Imaginary part of "ctanh_tonearest":
 double: 2
 float: 2
 idouble: 2
@@ -270,17 +236,7 @@ Function: "exp10":
 double: 1
 idouble: 1
 
-Function: "exp10_tonearest":
-double: 1
-idouble: 1
-
 Function: "expm1":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-
-Function: "expm1_tonearest":
 double: 1
 float: 1
 idouble: 1
@@ -342,15 +298,7 @@ Function: "pow10":
 double: 1
 idouble: 1
 
-Function: "pow_tonearest":
-float: 1
-ifloat: 1
-
 Function: "sin":
-float: 1
-ifloat: 1
-
-Function: "sin_tonearest":
 float: 1
 ifloat: 1
 

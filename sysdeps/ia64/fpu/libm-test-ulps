@@ -191,10 +191,6 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
-Function: "cos_tonearest":
-double: 1
-idouble: 1
-
 Function: "cos_towardzero":
 double: 1
 float: 1
@@ -295,22 +291,6 @@ ifloat: 2
 ildouble: 2
 ldouble: 2
 
-Function: Real part of "ctan_tonearest":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
-
-Function: Imaginary part of "ctan_tonearest":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 2
-ldouble: 2
-
 Function: Real part of "ctan_towardzero":
 double: 2
 float: 1
@@ -375,22 +355,6 @@ ifloat: 4
 ildouble: 2
 ldouble: 2
 
-Function: Real part of "ctanh_tonearest":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 1
-ldouble: 1
-
-Function: Imaginary part of "ctanh_tonearest":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 2
-ldouble: 2
-
 Function: Real part of "ctanh_towardzero":
 double: 3
 float: 2
@@ -428,10 +392,6 @@ ildouble: 1
 ldouble: 1
 
 Function: "expm1_downward":
-ildouble: 1
-ldouble: 1
-
-Function: "expm1_tonearest":
 ildouble: 1
 ldouble: 1
 
@@ -488,10 +448,6 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
-
-Function: "sin_tonearest":
-double: 1
-idouble: 1
 
 Function: "sin_towardzero":
 double: 1

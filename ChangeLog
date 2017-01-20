@@ -1,5 +1,11 @@
 2017-01-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/hppa/fpu/libm-test-ulps: Remove *_tonearest entries.
+	* sysdeps/ia64/fpu/libm-test-ulps: Likewise.
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Likewise.
+	* sysdeps/microblaze/libm-test-ulps: Likewise.
+	* sysdeps/sh/libm-test-ulps: Likewise.
+
 	* math/README.libm-test: Update list of characters for input and
 	output types.
 

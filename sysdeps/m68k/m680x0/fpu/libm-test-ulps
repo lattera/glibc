@@ -1451,14 +1451,6 @@ ifloat: 7
 ildouble: 9
 ldouble: 9
 
-Function: "pow_tonearest":
-double: 1
-float: 7
-idouble: 1
-ifloat: 7
-ildouble: 7
-ldouble: 7
-
 Function: "pow_towardzero":
 double: 1
 float: 4
