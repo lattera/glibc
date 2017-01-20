@@ -35,7 +35,7 @@ __lll_unlock_elision (int *lock, short *adapt_count, int pshared)
 	 the mutex destruction requirements.  */
       short __tmp = atomic_load_relaxed (adapt_count);
       if (__tmp > 0)
-	atomic_store_relaxed (adapt_count, __tmp--);
+	atomic_store_relaxed (adapt_count, __tmp - 1);
 
       lll_unlock ((*lock), pshared);
     }

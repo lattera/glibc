@@ -1,3 +1,8 @@
+2017-01-20  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/elision-unlock.c
+	(__lll_unlock_elision): Fix adapt_count decrement.
+
 2017-01-14  Martin Galvan  <martingalvan@sourceware.org>
 
 	* README.pretty-printers (Known issues): Warn about printers not
