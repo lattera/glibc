@@ -29,7 +29,7 @@ However, with a pretty printer gdb will output something like this:
 (gdb) print mutex
 $1 = pthread_mutex_t = {
   Type = Normal,
-  Status = Unlocked,
+  Status = Not acquired,
   Robust = No,
   Shared = No,
   Protocol = Priority protect,
@@ -144,6 +144,11 @@ Known issues
 any changes to the target code must also update the corresponding printers.
 On the plus side, the printer code itself may serve as a kind of documentation
 for the target code.
+
+* There's no guarantee that the information the pretty printers provide is
+complete, i.e. some details might be left off.  For example, the pthread_mutex_t
+printers won't report whether a thread is spin-waiting in an attempt to acquire
+the mutex.
 
 * Older versions of the gdb Python API have a bug where
 gdb.RegexpCollectionPrettyPrinter would not be able to get a value's real type

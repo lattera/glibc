@@ -1,3 +1,10 @@
+2017-01-14  Martin Galvan  <martingalvan@sourceware.org>
+
+	* README.pretty-printers (Known issues): Warn about printers not
+	always covering everything.
+	* nptl/nptl-printers.py (MutexPrinter): Change output.
+	* nptl/test-mutex-printers.py: Fix test and adapt to changed output.
+
 2017-01-20  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/htm.h: Adjust comments.

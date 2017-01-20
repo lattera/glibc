@@ -101,9 +101,9 @@ class MutexPrinter(object):
     def read_status(self):
         """Read the mutex's status.
 
-        For architectures which support lock elision, this method reads
-        whether the mutex appears as locked in memory (i.e. it may show it as
-        unlocked even after calling pthread_mutex_lock).
+        Architectures that support lock elision might not record the mutex owner
+        ID in the __owner field.  In that case, the owner will be reported as
+        "Unknown".
         """
 
         if self.kind == PTHREAD_MUTEX_DESTROYED:
@@ -124,13 +124,14 @@ class MutexPrinter(object):
         """
 
         if self.lock == PTHREAD_MUTEX_UNLOCKED:
-            self.values.append(('Status', 'Unlocked'))
+            self.values.append(('Status', 'Not acquired'))
         else:
             if self.lock & FUTEX_WAITERS:
-                self.values.append(('Status', 'Locked, possibly with waiters'))
+                self.values.append(('Status',
+                                    'Acquired, possibly with waiters'))
             else:
                 self.values.append(('Status',
-                                    'Locked, possibly with no waiters'))
+                                    'Acquired, possibly with no waiters'))
 
             if self.lock & FUTEX_OWNER_DIED:
                 self.values.append(('Owner ID', '%d (dead)' % self.owner))
@@ -147,7 +148,7 @@ class MutexPrinter(object):
     def read_status_no_robust(self):
         """Read the status of a non-robust mutex.
 
-        Read info on whether the mutex is locked, if it may have waiters
+        Read info on whether the mutex is acquired, if it may have waiters
         and its owner (if any).
         """
 
@@ -157,7 +158,7 @@ class MutexPrinter(object):
             lock_value &= ~(PTHREAD_MUTEX_PRIO_CEILING_MASK)
 
         if lock_value == PTHREAD_MUTEX_UNLOCKED:
-            self.values.append(('Status', 'Unlocked'))
+            self.values.append(('Status', 'Not acquired'))
         else:
             if self.kind & PTHREAD_MUTEX_PRIO_INHERIT_NP:
                 waiters = self.lock & FUTEX_WAITERS
@@ -168,12 +169,18 @@ class MutexPrinter(object):
                 owner = self.owner
 
             if waiters:
-                self.values.append(('Status', 'Locked, possibly with waiters'))
+                self.values.append(('Status',
+                                    'Acquired, possibly with waiters'))
             else:
                 self.values.append(('Status',
-                                    'Locked, possibly with no waiters'))
+                                    'Acquired, possibly with no waiters'))
 
-            self.values.append(('Owner ID', owner))
+            if self.owner != 0:
+                self.values.append(('Owner ID', owner))
+            else:
+                # Owner isn't recorded, probably because lock elision
+                # is enabled.
+                self.values.append(('Owner ID', 'Unknown'))
 
     def read_attributes(self):
         """Read the mutex's attributes."""
@@ -208,14 +215,14 @@ class MutexPrinter(object):
     def read_misc_info(self):
         """Read miscellaneous info on the mutex.
 
-        For now this reads the number of times a recursive mutex was locked
+        For now this reads the number of times a recursive mutex was acquired
         by the same thread.
         """
 
         mutex_type = self.kind & PTHREAD_MUTEX_KIND_MASK
 
         if mutex_type == PTHREAD_MUTEX_RECURSIVE and self.count > 1:
-            self.values.append(('Times locked recursively', self.count))
+            self.values.append(('Times acquired by the owner', self.count))
 
 class MutexAttributesPrinter(object):
     """Pretty printer for pthread_mutexattr_t.

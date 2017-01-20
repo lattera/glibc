@@ -39,15 +39,18 @@ try:
 
     break_at(test_source, 'Test status (non-robust)')
     continue_cmd() # Go to test_status_no_robust
-    test_printer(var, to_string, {'Status': 'Unlocked'})
+    test_printer(var, to_string, {'Status': 'Not acquired'})
     next_cmd()
     thread_id = get_current_thread_lwpid()
-    test_printer(var, to_string, {'Status': 'Locked, possibly with no waiters',
-                                  'Owner ID': thread_id})
+    # Owner ID might be reported either as the thread ID or as "Unknown"
+    # (if e.g. lock elision is enabled).
+    test_printer(var, to_string,
+                 {'Status': 'Acquired, possibly with no waiters',
+                  'Owner ID': r'({0}|Unknown)'.format(thread_id)})
 
     break_at(test_source, 'Test status (robust)')
     continue_cmd() # Go to test_status_robust
-    test_printer(var, to_string, {'Status': 'Unlocked'})
+    test_printer(var, to_string, {'Status': 'Not acquired'})
 
     # We'll now test the robust mutex locking states.  We'll create a new
     # thread that will lock a robust mutex and exit without unlocking it.
@@ -75,15 +78,15 @@ try:
     test_printer(var, to_string, {'Owner ID': thread_id,
                            'State protected by this mutex': 'Inconsistent'})
     next_cmd()
-    test_printer(var, to_string, {'Status': 'Unlocked',
+    test_printer(var, to_string, {'Status': 'Not acquired',
                         'State protected by this mutex': 'Not recoverable'})
     set_scheduler_locking(False)
 
     break_at(test_source, 'Test recursive locks')
     continue_cmd() # Go to test_recursive_locks
-    test_printer(var, to_string, {'Times locked recursively': '2'})
+    test_printer(var, to_string, {'Times acquired by the owner': '2'})
     next_cmd()
-    test_printer(var, to_string, {'Times locked recursively': '3'})
+    test_printer(var, to_string, {'Times acquired by the owner': '3'})
     continue_cmd() # Exit
 
 except (NoLineError, pexpect.TIMEOUT) as exception:
