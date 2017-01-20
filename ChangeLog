@@ -1,3 +1,8 @@
+2017-01-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/README.libm-test: Update list of characters for input and
+	output types.
+
 2017-01-20  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/elision-unlock.c

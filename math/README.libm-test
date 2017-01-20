@@ -117,6 +117,7 @@ parameter.
 
 The accepted parameter types are:
 - "f" for FLOAT
+- "j" for long double.
 - "b" for boolean - just tests if the output parameter evaluates to 0
   or 1 (only for output).
 - "c" for complex.  This parameter needs two values, first the real,
@@ -124,8 +125,15 @@ The accepted parameter types are:
 - "i" for int.
 - "l" for long int.
 - "L" for long long int.
+- "u" for unsigned int.
+- "M" for intmax_t.
+- "U" for uintmax_t.
+- "p" for an argument (described in the previous character) passed
+  through a pointer rather than directly.
 - "F" for the address of a FLOAT (only as input parameter)
 - "I" for the address of an int (only as input parameter)
+- "1" for an additional output (either output through a pointer passed
+  as an argument, or to a global variable such as signgam).
 
 How to read the test output
 ===========================
