@@ -172,13 +172,35 @@ tunables_strtoul (const char *nptr)
    explicit constraints of the tunable or with the implicit constraints of its
    type.  */
 static void
-tunable_set_val_if_valid_range (tunable_t *cur, const char *strval,
+tunable_set_val_if_valid_range_signed (tunable_t *cur, const char *strval,
 				int64_t default_min, int64_t default_max)
 {
-  int64_t val = tunables_strtoul (strval);
+  int64_t val = (int64_t) tunables_strtoul (strval);
 
   int64_t min = cur->type.min;
   int64_t max = cur->type.max;
+
+  if (min == max)
+    {
+      min = default_min;
+      max = default_max;
+    }
+
+  if (val >= min && val <= max)
+    {
+      cur->val.numval = val;
+      cur->strval = strval;
+    }
+}
+
+static void
+tunable_set_val_if_valid_range_unsigned (tunable_t *cur, const char *strval,
+					 uint64_t default_min, uint64_t default_max)
+{
+  uint64_t val = (uint64_t) tunables_strtoul (strval);
+
+  uint64_t min = cur->type.min;
+  uint64_t max = cur->type.max;
 
   if (min == max)
     {
@@ -202,12 +224,12 @@ tunable_initialize (tunable_t *cur, const char *strval)
     {
     case TUNABLE_TYPE_INT_32:
 	{
-	  tunable_set_val_if_valid_range (cur, strval, INT32_MIN, INT32_MAX);
+	  tunable_set_val_if_valid_range_signed (cur, strval, INT32_MIN, INT32_MAX);
 	  break;
 	}
     case TUNABLE_TYPE_SIZE_T:
 	{
-	  tunable_set_val_if_valid_range (cur, strval, 0, SIZE_MAX);
+	  tunable_set_val_if_valid_range_unsigned (cur, strval, 0, SIZE_MAX);
 	  break;
 	}
     case TUNABLE_TYPE_STRING:

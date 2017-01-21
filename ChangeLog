@@ -1,3 +1,10 @@
+2017-01-20  DJ Delorie  <dj@redhat.com>
+
+	* elf/dl-tunables.c (tunable_set_val_if_valid_range): Split into ...
+	(tunable_set_val_if_valid_range_signed) ... this, and ...
+	(tunable_set_val_if_valid_range_unsigned) ... this.
+	(tunable_initialize): Call the correct one of the above based on type.
+
 2017-01-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/hppa/fpu/libm-test-ulps: Remove *_tonearest entries.
