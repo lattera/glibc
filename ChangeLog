@@ -1,5 +1,6 @@
 2017-01-24  James Clarke  <jrtc27@jrtc27.com>
 
+	[BZ #21053]
 	* sysdeps/unix/sysv/linux/sh/sh3/ucontext_i.sym: Use new REG_R*
 	constants instead of the old R* ones.
 	* sysdeps/unix/sysv/linux/sh/sh4/ucontext_i.sym: Likewise.
