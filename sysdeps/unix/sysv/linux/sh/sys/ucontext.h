@@ -32,49 +32,47 @@
 typedef int greg_t;
 
 /* Number of general registers.  */
-#define NGPREG	16
+#define NGREG	16
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGPREG];
+typedef greg_t gregset_t[NGREG];
 
-#ifdef __USE_GNU
 /* Number of each register is the `gregset_t' array.  */
 enum
 {
-  R0 = 0,
-#define R0	R0
-  R1 = 1,
-#define R1	R1
-  R2 = 2,
-#define R2	R2
-  R3 = 3,
-#define R3	R3
-  R4 = 4,
-#define R4	R4
-  R5 = 5,
-#define R5	R5
-  R6 = 6,
-#define R6	R6
-  R7 = 7,
-#define R7	R7
-  R8 = 8,
-#define R8	R8
-  R9 = 9,
-#define R9	R9
-  R10 = 10,
-#define R10	R10
-  R11 = 11,
-#define R11	R11
-  R12 = 12,
-#define R12	R12
-  R13 = 13,
-#define R13	R13
-  R14 = 14,
-#define R14	R14
-  R15 = 15,
-#define R15	R15
+  REG_R0 = 0,
+#define REG_R0	REG_R0
+  REG_R1 = 1,
+#define REG_R1	REG_R1
+  REG_R2 = 2,
+#define REG_R2	REG_R2
+  REG_R3 = 3,
+#define REG_R3	REG_R3
+  REG_R4 = 4,
+#define REG_R4	REG_R4
+  REG_R5 = 5,
+#define REG_R5	REG_R5
+  REG_R6 = 6,
+#define REG_R6	REG_R6
+  REG_R7 = 7,
+#define REG_R7	REG_R7
+  REG_R8 = 8,
+#define REG_R8	REG_R8
+  REG_R9 = 9,
+#define REG_R9	REG_R9
+  REG_R10 = 10,
+#define REG_R10	REG_R10
+  REG_R11 = 11,
+#define REG_R11	REG_R11
+  REG_R12 = 12,
+#define REG_R12	REG_R12
+  REG_R13 = 13,
+#define REG_R13	REG_R13
+  REG_R14 = 14,
+#define REG_R14	REG_R14
+  REG_R15 = 15,
+#define REG_R15	REG_R15
 };
-#endif
 
 typedef int freg_t;
 

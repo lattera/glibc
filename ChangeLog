@@ -1,3 +1,15 @@
+2017-01-24  James Clarke  <jrtc27@jrtc27.com>
+
+	* sysdeps/unix/sysv/linux/sh/sh3/ucontext_i.sym: Use new REG_R*
+	constants instead of the old R* ones.
+	* sysdeps/unix/sysv/linux/sh/sh4/ucontext_i.sym: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h (NGPREG): Rename...
+	(NGREG): ... to this, to fit in with other architectures.
+	(gpregset_t): Use new NGREG macro.
+	[__USE_GNU]: Remove condition; all architectures other than tile
+	are unconditional.
+	(R*): Rename to REG_R*.
+
 2017-01-20  DJ Delorie  <dj@redhat.com>
 
 	* elf/dl-tunables.c (tunable_set_val_if_valid_range): Split into ...
