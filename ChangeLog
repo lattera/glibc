@@ -1,3 +1,8 @@
+2017-01-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* soft-fp/op-common.h (_FP_MUL, _FP_FMA, _FP_DIV): Add
+	/* FALLTHRU */ comments.
+
 2017-01-24  James Clarke  <jrtc27@jrtc27.com>
 
 	[BZ #21053]
