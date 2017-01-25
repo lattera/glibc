@@ -1,3 +1,17 @@
+2017-01-25  Florian Weimer  <fweimer@redhat.com>
+
+	* string/Makefile (xtests): Add comment.
+	(LOCALES): Add en_GB.UTF-8.
+	(tst-strcoll-overflow.out): Depend on generated locales.
+	* string/tst-strcoll-overflow.c: Convert to support/test-driver.c.
+	(SIZE, TIMEOUT): Update comments.
+	(do_test): Define as static.  Fail test if setlocale fails.
+	Return EXIT_UNSUPPORTED if insufficient memory.  Enhance output
+	messages.
+	(EXPECTED_SIGNAL, EXPECTED_STATUS, TEST_FUNCTION): Remove.
+	TIMEOUT at 300 seconds should be enough to run this test
+	successfully.
+
 2017-01-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* soft-fp/op-common.h (_FP_MUL, _FP_FMA, _FP_DIV): Add

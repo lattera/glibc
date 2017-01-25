@@ -21,42 +21,34 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Verify that strcoll does not crash for large strings for which it cannot
-   cache weight lookup results.  The size is large enough to cause integer
-   overflows on 32-bit as well as buffer overflows on 64-bit.  The test should
-   work reasonably reliably when overcommit is disabled, but it obviously
-   depends on how much memory the system has.  There's a limitation to this
-   test in that it does not run to completion.  Actually collating such a
-   large string can take days and we can't have xcheck running that long.  For
-   that reason, we run the test for about 5 minutes and then assume that
-   everything is fine if there are no crashes.  */
+#include <support/check.h>
+#include <support/test-driver.h>
+
+/* Verify that strcoll does not crash for large strings for which it
+   cannot cache weight lookup results.  The size is large enough to
+   cause integer overflows on 32-bit as well as buffer overflows on
+   64-bit.  */
 #define SIZE 0x40000000ul
 
-int
+static int
 do_test (void)
 {
-  if (setlocale (LC_COLLATE, "en_GB.UTF-8") == NULL)
-    {
-      puts ("setlocale failed, cannot test for overflow");
-      return 0;
-    }
+  TEST_VERIFY_EXIT (setlocale (LC_COLLATE, "en_GB.UTF-8") != NULL);
 
   char *p = malloc (SIZE);
-
   if (p == NULL)
     {
-      puts ("could not allocate memory");
-      return 1;
+      puts ("info: could not allocate memory, cannot run test");
+      return EXIT_UNSUPPORTED;
     }
 
   memset (p, 'x', SIZE - 1);
   p[SIZE - 1] = 0;
-  printf ("%d\n", strcoll (p, p));
+  printf ("info: strcoll result: %d\n", strcoll (p, p));
   return 0;
 }
 
+/* This test can rung for a long time, but it should complete within
+   this time on reasonably current hardware.  */
 #define TIMEOUT 300
-#define EXPECTED_SIGNAL SIGALRM
-#define EXPECTED_STATUS 0
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
