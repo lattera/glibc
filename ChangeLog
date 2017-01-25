@@ -1,3 +1,18 @@
+2017-12-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/Makefile (libpthread-routines): Add pthread_join_common.
+	* nptl/pthreadP.h (__pthread_timedjoin_ex): New prototype.
+	* nptl/pthread_join_common.c: New file: common function used on
+	pthread_join, pthread_timedjoin_np, pthread_tryjoin_np.
+	* nptl/pthread_join.c (pthread_join): Use __pthread_timedjoin_ex.
+	* nptl/pthread_tryjoin.c (pthread_tryjoin): Likewise.
+	* nptl/pthread_timedjoin.c (pthread_timedjoin_np): Likewise.
+	(cleanup): Move definition to pthread_join_common.c.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (__lll_timedwait_tid):
+	Remove superflous checks.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (__lll_timedwait_tid):
+	Likewise.
+
 2017-12-20  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Update.

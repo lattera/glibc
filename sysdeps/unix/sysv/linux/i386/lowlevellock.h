@@ -237,12 +237,7 @@ extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)
   ({									      \
     int __result = 0;							      \
     if ((tid) != 0)							      \
-      {									      \
-	if ((abstime)->tv_nsec < 0 || (abstime)->tv_nsec >= 1000000000)	      \
-	  __result = EINVAL;						      \
-	else								      \
-	  __result = __lll_timedwait_tid (&(tid), (abstime));		      \
-      }									      \
+      __result = __lll_timedwait_tid (&(tid), (abstime));		      \
     __result; })
 
 
