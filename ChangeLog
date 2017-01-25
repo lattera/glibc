@@ -1,5 +1,11 @@
 2017-03-15  Alexey Neyman  <stilor@att.net>
 
+	[BZ #21088]
+	* nss/nsswitch.c (nscd_init_cb, is_nscd): Make the #if check
+	around definitions match those around use.
+
+2017-03-15  Alexey Neyman  <stilor@att.net>
+
 	* configure.ac: Avoid empty subexpression in grep.
 	* configure: Regenerate.
 
