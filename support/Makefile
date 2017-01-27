@@ -61,6 +61,8 @@ libsupport-routines = \
   xlisten \
   xmalloc \
   xmemstream \
+  xmmap \
+  xmunmap \
   xpoll \
   xpthread_barrier_destroy \
   xpthread_barrier_init \
@@ -71,8 +73,17 @@ libsupport-routines = \
   xpthread_create \
   xpthread_detach \
   xpthread_join \
+  xpthread_mutex_consistent \
+  xpthread_mutex_destroy \
+  xpthread_mutex_init \
   xpthread_mutex_lock \
   xpthread_mutex_unlock \
+  xpthread_mutexattr_destroy \
+  xpthread_mutexattr_init \
+  xpthread_mutexattr_setprotocol \
+  xpthread_mutexattr_setpshared \
+  xpthread_mutexattr_setrobust \
+  xpthread_mutexattr_settype \
   xpthread_once \
   xpthread_sigmask \
   xpthread_spin_lock \

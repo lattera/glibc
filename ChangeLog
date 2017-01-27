@@ -1,3 +1,31 @@
+2017-01-27  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/Makefile (tests): Add tst-robust-fork.
+	* nptl/tst-robust-fork.c: New file.
+	* support/Makefile (libsupport-routines): Add xmmap, xmunmap,
+	xpthread_mutex_consistent, xpthread_mutex_destroy,
+	xpthread_mutex_init, xpthread_mutexattr_destroy,
+	xpthread_mutexattr_init, xpthread_mutexattr_setprotocol,
+	xpthread_mutexattr_setpshared, xpthread_mutexattr_setrobust,
+	xpthread_mutexattr_settype.
+	* support/xmmap.c: New file.
+	* support/xmunmap.c: Likewise.
+	* support/xpthread_mutex_consistent.c: Likewise.
+	* support/xpthread_mutex_destroy.c: Likewise.
+	* support/xpthread_mutex_init.c: Likewise.
+	* support/xpthread_mutexattr_destroy.c: Likewise.
+	* support/xpthread_mutexattr_init.c: Likewise.
+	* support/xpthread_mutexattr_setprotocol.c: Likewise.
+	* support/xpthread_mutexattr_setpshared.c: Likewise.
+	* support/xpthread_mutexattr_setrobust.c: Likewise.
+	* support/xpthread_mutexattr_settype.c: Likewise.
+	* support/xthread.h (xpthread_mutexattr_destroy)
+	(xpthread_mutexattr_init, xpthread_mutexattr_setprotocol)
+	(xpthread_mutexattr_setpshared, xpthread_mutexattr_setrobust)
+	(xpthread_mutexattr_settype, xpthread_mutex_init)
+	(xpthread_mutex_destroy, xpthread_mutex_consistent): Declare.
+	* support/xunistd.h (xmmap, xmunmap): Likewise.
+
 2017-01-25  Florian Weimer  <fweimer@redhat.com>
 
 	* string/Makefile (xtests): Add comment.
