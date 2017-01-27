@@ -28,6 +28,8 @@
 
 #include <_itoa.h>
 
+#include "ttyname.h"
+
 #if 0
 /* Is this used anywhere?  It is not exported.  */
 char *__ttyname;
@@ -170,12 +172,18 @@ ttyname (int fd)
 #ifdef _STATBUF_ST_RDEV
 	  && S_ISCHR (st1.st_mode)
 	  && st1.st_rdev == st.st_rdev
-#else
-	  && st1.st_ino == st.st_ino
-	  && st1.st_dev == st.st_dev
 #endif
-	  )
+	  && st1.st_ino == st.st_ino
+	  && st1.st_dev == st.st_dev)
 	return ttyname_buf;
+
+      /* If the link doesn't exist, then it points to a device in another
+	 namespace. */
+      if (is_pty (&st))
+	{
+	  __set_errno (ENODEV);
+	  return NULL;
+	}
     }
 
   if (__xstat64 (_STAT_VER, "/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
