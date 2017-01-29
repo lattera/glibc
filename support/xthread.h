@@ -61,6 +61,12 @@ void xpthread_detach (pthread_t thr);
 void xpthread_cancel (pthread_t thr);
 void *xpthread_join (pthread_t thr);
 void xpthread_once (pthread_once_t *guard, void (*func) (void));
+void xpthread_attr_destroy (pthread_attr_t *attr);
+void xpthread_attr_init (pthread_attr_t *attr);
+void xpthread_attr_setdetachstate (pthread_attr_t *attr,
+				   int detachstate);
+void xpthread_attr_setstacksize (pthread_attr_t *attr,
+				 size_t stacksize);
 
 /* This function returns non-zero if pthread_barrier_wait returned
    PTHREAD_BARRIER_SERIAL_THREAD.  */

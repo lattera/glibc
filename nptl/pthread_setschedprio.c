@@ -38,6 +38,7 @@ pthread_setschedprio (pthread_t threadid, int prio)
   struct sched_param param;
   param.sched_priority = prio;
 
+  /* See CREATE THREAD NOTES in nptl/pthread_create.c.  */
   lll_lock (pd->lock, LLL_PRIVATE);
 
   /* If the thread should have higher priority because of some

@@ -1,3 +1,36 @@
+2016-01-28  Carlos O'Donell  <carlos@redhat.com>
+	    Alexey Makhalov <amakhalov@vmware.com>
+	    Florian Weimer <fweimer@redhat.com>
+
+	[BZ #20116]
+	* nptl/pthread_create.c: Document concurrency notes.
+	Enhance thread creation notes.
+	(create_thread): Use bool *stopped_start.
+	(START_THREAD_DEFN): Comment ownership of PD.
+	(__pthread_create_2_1): Add local bool stopped_start and use
+	that instead of pd->stopped_start where appropriate.
+	* nptl/createthread.c (create_thread): Use bool *stopped_start.
+	* sysdeps/nacl/createthread.c (create_thread): Use bool *stopped_start.
+	* sysdeps/unix/sysv/linux/createthread.c (create_thread): Likewise.
+	* nptl/tst-create-detached.c: New file.
+	* nptl/Makefile (tests): Add tst-create-detached.
+	* nptl/pthread_getschedparam.c (__pthread_getschedparam):
+	Reference the enhanced thread creation notes.
+	* nptl/pthread_setschedparam.c (__pthread_setschedparam): Likewise.
+	* nptl/pthread_setschedprio.c (pthread_setschedprio): Likewise.
+	* nptl/tpp.c (__pthread_tpp_change_priority): Likewise.
+	(__pthread_current_priority): Likewise.
+	* support/Makefile (libsupport-routines): Add xpthread_attr_destroy
+	xpthread_attr_init, xpthread_attr_setdetachstate, and
+	xpthread_attr_setstacksize.
+	* support/xpthread_attr_destroy.c: New file.
+	* support/xpthread_attr_init.c: New file.
+	* support/xpthread_attr_setdetachstate.c: New file.
+	* support/xpthread_attr_setstacksize.c: New file.
+	* support/xthread.h: Define prototypes for xpthread_attr_destroy
+	xpthread_attr_init, xpthread_attr_setdetachstate, and
+	xpthread_attr_setstacksize.
+
 2017-01-27  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/Makefile (tests): Add tst-robust-fork.

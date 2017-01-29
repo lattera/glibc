@@ -46,7 +46,7 @@ static int start_thread (void *arg) __attribute__ ((noreturn));
 
 static int
 create_thread (struct pthread *pd, const struct pthread_attr *attr,
-	       bool stopped_start, STACK_VARIABLES_PARMS, bool *thread_ran)
+	       bool *stopped_start, STACK_VARIABLES_PARMS, bool *thread_ran)
 {
   /* Determine whether the newly created threads has to be started
      stopped since we have to set the scheduling parameters or set the
@@ -54,13 +54,11 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
   if (attr != NULL
       && (__glibc_unlikely (attr->cpuset != NULL)
 	  || __glibc_unlikely ((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0)))
-    stopped_start = true;
+    *stopped_start = true;
 
-  pd->stopped_start = stopped_start;
-  if (__glibc_unlikely (stopped_start))
-    /* We make sure the thread does not run far by forcing it to get a
-       lock.  We lock it here too so that the new thread cannot continue
-       until we tell it to.  */
+  pd->stopped_start = *stopped_start;
+  if (__glibc_unlikely (*stopped_start))
+    /* See CONCURRENCY NOTES in nptl/pthread_creat.c.  */
     lll_lock (pd->lock, LLL_PRIVATE);
 
   /* We rely heavily on various flags the CLONE function understands:
@@ -117,7 +115,7 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
       /* Set the affinity mask if necessary.  */
       if (attr->cpuset != NULL)
 	{
-	  assert (stopped_start);
+	  assert (*stopped_start);
 
 	  res = INTERNAL_SYSCALL (sched_setaffinity, err, 3, pd->tid,
 				  attr->cpusetsize, attr->cpuset);
@@ -140,7 +138,7 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
       /* Set the scheduling parameters.  */
       if ((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0)
 	{
-	  assert (stopped_start);
+	  assert (*stopped_start);
 
 	  res = INTERNAL_SYSCALL (sched_setscheduler, err, 3, pd->tid,
 				  pd->schedpolicy, &pd->schedparam);

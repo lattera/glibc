@@ -54,25 +54,141 @@ unsigned int __nptl_nthreads = 1;
 /* Code to allocate and deallocate a stack.  */
 #include "allocatestack.c"
 
-/* createthread.c defines this function, and two macros:
+/* CONCURRENCY NOTES:
+
+   Understanding who is the owner of the 'struct pthread' or 'PD'
+   (refers to the value of the 'struct pthread *pd' function argument)
+   is critically important in determining exactly which operations are
+   allowed and which are not and when, particularly when it comes to the
+   implementation of pthread_create, pthread_join, pthread_detach, and
+   other functions which all operate on PD.
+
+   The owner of PD is responsible for freeing the final resources
+   associated with PD, and may examine the memory underlying PD at any
+   point in time until it frees it back to the OS or to reuse by the
+   runtime.
+
+   The thread which calls pthread_create is called the creating thread.
+   The creating thread begins as the owner of PD.
+
+   During startup the new thread may examine PD in coordination with the
+   owner thread (which may be itself).
+
+   The four cases of ownership transfer are:
+
+   (1) Ownership of PD is released to the process (all threads may use it)
+       after the new thread starts in a joinable state
+       i.e. pthread_create returns a usable pthread_t.
+
+   (2) Ownership of PD is released to the new thread starting in a detached
+       state.
+
+   (3) Ownership of PD is dynamically released to a running thread via
+       pthread_detach.
+
+   (4) Ownership of PD is acquired by the thread which calls pthread_join.
+
+   Implementation notes:
+
+   The PD->stopped_start and thread_ran variables are used to determine
+   exactly which of the four ownership states we are in and therefore
+   what actions can be taken.  For example after (2) we cannot read or
+   write from PD anymore since the thread may no longer exist and the
+   memory may be unmapped.  The most complicated cases happen during
+   thread startup:
+
+   (a) If the created thread is in a detached (PTHREAD_CREATE_DETACHED),
+       or joinable (default PTHREAD_CREATE_JOINABLE) state and
+       STOPPED_START is true, then the creating thread has ownership of
+       PD until the PD->lock is released by pthread_create.  If any
+       errors occur we are in states (c), (d), or (e) below.
+
+   (b) If the created thread is in a detached state
+       (PTHREAD_CREATED_DETACHED), and STOPPED_START is false, then the
+       creating thread has ownership of PD until it invokes the OS
+       kernel's thread creation routine.  If this routine returns
+       without error, then the created thread owns PD; otherwise, see
+       (c) and (e) below.
+
+   (c) If the detached thread setup failed and THREAD_RAN is true, then
+       the creating thread releases ownership to the new thread by
+       sending a cancellation signal.  All threads set THREAD_RAN to
+       true as quickly as possible after returning from the OS kernel's
+       thread creation routine.
+
+   (d) If the joinable thread setup failed and THREAD_RAN is true, then
+       then the creating thread retains ownership of PD and must cleanup
+       state.  Ownership cannot be released to the process via the
+       return of pthread_create since a non-zero result entails PD is
+       undefined and therefore cannot be joined to free the resources.
+       We privately call pthread_join on the thread to finish handling
+       the resource shutdown (Or at least we should, see bug 19511).
+
+   (e) If the thread creation failed and THREAD_RAN is false, then the
+       creating thread retains ownership of PD and must cleanup state.
+       No waiting for the new thread is required because it never
+       started.
+
+   The nptl_db interface:
+
+   The interface with nptl_db requires that we enqueue PD into a linked
+   list and then call a function which the debugger will trap.  The PD
+   will then be dequeued and control returned to the thread.  The caller
+   at the time must have ownership of PD and such ownership remains
+   after control returns to thread. The enqueued PD is removed from the
+   linked list by the nptl_db callback td_thr_event_getmsg.  The debugger
+   must ensure that the thread does not resume execution, otherwise
+   ownership of PD may be lost and examining PD will not be possible.
+
+   Note that the GNU Debugger as of (December 10th 2015) commit
+   c2c2a31fdb228d41ce3db62b268efea04bd39c18 no longer uses
+   td_thr_event_getmsg and several other related nptl_db interfaces. The
+   principal reason for this is that nptl_db does not support non-stop
+   mode where other threads can run concurrently and modify runtime
+   structures currently in use by the debugger and the nptl_db
+   interface.
+
+   Axioms:
+
+   * The create_thread function can never set stopped_start to false.
+   * The created thread can read stopped_start but never write to it.
+   * The variable thread_ran is set some time after the OS thread
+     creation routine returns, how much time after the thread is created
+     is unspecified, but it should be as quickly as possible.
+
+*/
+
+/* CREATE THREAD NOTES:
+
+   createthread.c defines the create_thread function, and two macros:
    START_THREAD_DEFN and START_THREAD_SELF (see below).
 
-   create_thread is obliged to initialize PD->stopped_start.  It
-   should be true if the STOPPED_START parameter is true, or if
-   create_thread needs the new thread to synchronize at startup for
-   some other implementation reason.  If PD->stopped_start will be
-   true, then create_thread is obliged to perform the operation
-   "lll_lock (PD->lock, LLL_PRIVATE)" before starting the thread.
+   create_thread must initialize PD->stopped_start.  It should be true
+   if the STOPPED_START parameter is true, or if create_thread needs the
+   new thread to synchronize at startup for some other implementation
+   reason.  If STOPPED_START will be true, then create_thread is obliged
+   to lock PD->lock before starting the thread.  Then pthread_create
+   unlocks PD->lock which synchronizes-with START_THREAD_DEFN in the
+   child thread which does an acquire/release of PD->lock as the last
+   action before calling the user entry point.  The goal of all of this
+   is to ensure that the required initial thread attributes are applied
+   (by the creating thread) before the new thread runs user code.  Note
+   that the the functions pthread_getschedparam, pthread_setschedparam,
+   pthread_setschedprio, __pthread_tpp_change_priority, and
+   __pthread_current_priority reuse the same lock, PD->lock, for a
+   similar purpose e.g. synchronizing the setting of similar thread
+   attributes.  These functions are never called before the thread is
+   created, so don't participate in startup syncronization, but given
+   that the lock is present already and in the unlocked state, reusing
+   it saves space.
 
    The return value is zero for success or an errno code for failure.
    If the return value is ENOMEM, that will be translated to EAGAIN,
    so create_thread need not do that.  On failure, *THREAD_RAN should
    be set to true iff the thread actually started up and then got
-   cancelled before calling user code (*PD->start_routine), in which
-   case it is responsible for doing its own cleanup.  */
-
+   canceled before calling user code (*PD->start_routine).  */
 static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
-			  bool stopped_start, STACK_VARIABLES_PARMS,
+			  bool *stopped_start, STACK_VARIABLES_PARMS,
 			  bool *thread_ran);
 
 #include <createthread.c>
@@ -314,12 +430,19 @@ START_THREAD_DEFN
       /* Store the new cleanup handler info.  */
       THREAD_SETMEM (pd, cleanup_jmp_buf, &unwind_buf);
 
+      /* We are either in (a) or (b), and in either case we either own
+         PD already (2) or are about to own PD (1), and so our only
+	 restriction would be that we can't free PD until we know we
+	 have ownership (see CONCURRENCY NOTES above).  */
       if (__glibc_unlikely (pd->stopped_start))
 	{
 	  int oldtype = CANCEL_ASYNC ();
 
 	  /* Get the lock the parent locked to force synchronization.  */
 	  lll_lock (pd->lock, LLL_PRIVATE);
+
+	  /* We have ownership of PD now.  */
+
 	  /* And give it up right away.  */
 	  lll_unlock (pd->lock, LLL_PRIVATE);
 
@@ -378,7 +501,8 @@ START_THREAD_DEFN
 							   pd, pd->nextevent));
 	    }
 
-	  /* Now call the function to signal the event.  */
+	  /* Now call the function which signals the event.  See
+	     CONCURRENCY NOTES for the nptl_db interface comments.  */
 	  __nptl_death_event ();
 	}
     }
@@ -642,19 +766,28 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
      that cares whether the thread count is correct.  */
   atomic_increment (&__nptl_nthreads);
 
-  bool thread_ran = false;
+  /* Our local value of stopped_start and thread_ran can be accessed at
+     any time. The PD->stopped_start may only be accessed if we have
+     ownership of PD (see CONCURRENCY NOTES above).  */
+  bool stopped_start = false; bool thread_ran = false;
 
   /* Start the thread.  */
   if (__glibc_unlikely (report_thread_creation (pd)))
     {
-      /* Create the thread.  We always create the thread stopped
-	 so that it does not get far before we tell the debugger.  */
-      retval = create_thread (pd, iattr, true, STACK_VARIABLES_ARGS,
-			      &thread_ran);
+      stopped_start = true;
+
+      /* We always create the thread stopped at startup so we can
+	 notify the debugger.  */
+      retval = create_thread (pd, iattr, &stopped_start,
+			      STACK_VARIABLES_ARGS, &thread_ran);
       if (retval == 0)
 	{
-	  /* create_thread should have set this so that the logic below can
-	     test it.  */
+	  /* We retain ownership of PD until (a) (see CONCURRENCY NOTES
+	     above).  */
+
+	  /* Assert stopped_start is true in both our local copy and the
+	     PD copy.  */
+	  assert (stopped_start);
 	  assert (pd->stopped_start);
 
 	  /* Now fill in the information about the new thread in
@@ -671,26 +804,30 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 						       pd, pd->nextevent)
 		 != 0);
 
-	  /* Now call the function which signals the event.  */
+	  /* Now call the function which signals the event.  See
+	     CONCURRENCY NOTES for the nptl_db interface comments.  */
 	  __nptl_create_event ();
 	}
     }
   else
-    retval = create_thread (pd, iattr, false, STACK_VARIABLES_ARGS,
-			    &thread_ran);
+    retval = create_thread (pd, iattr, &stopped_start,
+			    STACK_VARIABLES_ARGS, &thread_ran);
 
   if (__glibc_unlikely (retval != 0))
     {
-      /* If thread creation "failed", that might mean that the thread got
-	 created and ran a little--short of running user code--but then
-	 create_thread cancelled it.  In that case, the thread will do all
-	 its own cleanup just like a normal thread exit after a successful
-	 creation would do.  */
-
       if (thread_ran)
-	assert (pd->stopped_start);
+	/* State (c) or (d) and we may not have PD ownership (see
+	   CONCURRENCY NOTES above).  We can assert that STOPPED_START
+	   must have been true because thread creation didn't fail, but
+	   thread attribute setting did.  */
+	/* See bug 19511 which explains why doing nothing here is a
+	   resource leak for a joinable thread.  */
+	assert (stopped_start);
       else
 	{
+	  /* State (e) and we have ownership of PD (see CONCURRENCY
+	     NOTES above).  */
+
 	  /* Oops, we lied for a second.  */
 	  atomic_decrement (&__nptl_nthreads);
 
@@ -710,10 +847,14 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
     }
   else
     {
-      if (pd->stopped_start)
-	/* The thread blocked on this lock either because we're doing TD_CREATE
-	   event reporting, or for some other reason that create_thread chose.
-	   Now let it run free.  */
+      /* We don't know if we have PD ownership.  Once we check the local
+         stopped_start we'll know if we're in state (a) or (b) (see
+	 CONCURRENCY NOTES above).  */
+      if (stopped_start)
+	/* State (a), we own PD. The thread blocked on this lock either
+	   because we're doing TD_CREATE event reporting, or for some
+	   other reason that create_thread chose.  Now let it run
+	   free.  */
 	lll_unlock (pd->lock, LLL_PRIVATE);
 
       /* We now have for sure more than one thread.  The main thread might

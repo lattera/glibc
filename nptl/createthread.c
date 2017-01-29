@@ -25,16 +25,14 @@
 
 static int
 create_thread (struct pthread *pd, const struct pthread_attr *attr,
-	       bool stopped_start, STACK_VARIABLES_PARMS, bool *thread_ran)
+	       bool *stopped_start, STACK_VARIABLES_PARMS, bool *thread_ran)
 {
   /* If the implementation needs to do some tweaks to the thread after
      it has been created at the OS level, it can set STOPPED_START here.  */
 
-  pd->stopped_start = stopped_start;
-  if (__glibc_unlikely (stopped_start))
-    /* We make sure the thread does not run far by forcing it to get a
-       lock.  We lock it here too so that the new thread cannot continue
-       until we tell it to.  */
+  pd->stopped_start = *stopped_start;
+  if (__glibc_unlikely (*stopped_start))
+    /* See CONCURRENCY NOTES in nptl/pthread_create.c.  */
     lll_lock (pd->lock, LLL_PRIVATE);
 
   return ENOSYS;

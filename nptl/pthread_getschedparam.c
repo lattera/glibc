@@ -35,6 +35,7 @@ __pthread_getschedparam (pthread_t threadid, int *policy,
 
   int result = 0;
 
+  /* See CREATE THREAD NOTES in nptl/pthread_create.c.  */
   lll_lock (pd->lock, LLL_PRIVATE);
 
   /* The library is responsible for maintaining the values at all
