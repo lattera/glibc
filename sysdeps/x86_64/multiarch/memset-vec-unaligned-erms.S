@@ -110,6 +110,8 @@ ENTRY (__memset_erms)
 ENTRY (MEMSET_SYMBOL (__memset, erms))
 # endif
 L(stosb):
+	/* Issue vzeroupper before rep stosb.  */
+	VZEROUPPER
 	movq	%rdx, %rcx
 	movzbl	%sil, %eax
 	movq	%rdi, %rdx
