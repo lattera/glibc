@@ -1,5 +1,38 @@
 2017-02-08  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* math/Makefile (libm-calls): Move w_exp...
+	(libm-compat-calls-auto): Here.
+
+	* math/w_expl.c: Add suffix "_compat" to filename.
+	* sysdeps/ia64/fpu/w_expl.c: Likewise.
+	* sysdeps/ia64/fpu/w_expf.c: Likewise.
+	* sysdeps/ia64/fpu/w_exp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/w_exp.c: Likewise.
+	* sysdeps/ieee754/flt-32/w_expf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/w_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/w_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/w_expl.c: Likewise.
+
+	* math/w_expl_compat.c: New file, copied from above.
+	* sysdeps/ia64/fpu/w_exp_compat.c: Likewise.
+	* sysdeps/ia64/fpu/w_expf_compat.c: Likewise.
+	* sysdeps/ia64/fpu/w_expl_compat.c: Likewise.
+	* sysdeps/ieee754/dbl-64/w_exp_compat.c: Likewise.
+	* sysdeps/ieee754/flt-32/w_expf_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/w_expl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/w_expl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/w_expl_compat.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-64-128/w_expl.c: Add suffix "_compat"
+	to filename.
+	* sysdeps/ieee754/ldbl-opt/w_exp.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-64-128/w_expl_compat.c: New file,
+	copied from above and adjusted for the new filenames.
+	* sysdeps/ieee754/ldbl-opt/w_exp_compat.c: Likewise.
+
+2017-02-08  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* math/Makefile (libm-calls): Move w_lgammaF...
 	(libm-compat-calls-auto): Here.
 
