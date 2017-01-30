@@ -16,11 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* It turns out that stack coloring is in general not good on P4s.  Some
-   applications will benefit.  We will probably have a configuration option
-   at some point.  To enable coloring, set this to 128.  */
-#define COLORING_INCREMENT      0
-
 /* What is useful is to avoid the 64k aliasing problem which reliably
    happens if all stacks use sizes which are a multiple of 64k.  Tell
    the stack allocator to disturb this by allocation one more page if

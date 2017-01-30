@@ -1,3 +1,10 @@
+2016-02-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/allocatestack.c [COLORING_INCREMENT] (nptl_ncreated): Remove.
+	(allocate_stack): Remove COLORING_INCREMENT usage.
+	* nptl/stack-aliasing.h (COLORING_INCREMENT). Likewise.
+	* sysdeps/i386/i686/stack-aliasing.h (COLORING_INCREMENT): Likewise.
+
 2017-02-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/libm-err-tab.pl (@all_functions): Change to

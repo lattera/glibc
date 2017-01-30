@@ -125,11 +125,6 @@ static uintptr_t in_flight_stack;
 list_t __stack_user __attribute__ ((nocommon));
 hidden_data_def (__stack_user)
 
-#if COLORING_INCREMENT != 0
-/* Number of threads created.  */
-static unsigned int nptl_ncreated;
-#endif
-
 
 /* Check whether the stack is still used or not.  */
 #define FREE_P(descr) ((descr)->tid <= 0)
@@ -467,14 +462,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       const int prot = (PROT_READ | PROT_WRITE
 			| ((GL(dl_stack_flags) & PF_X) ? PROT_EXEC : 0));
 
-#if COLORING_INCREMENT != 0
-      /* Add one more page for stack coloring.  Don't do it for stacks
-	 with 16 times pagesize or larger.  This might just cause
-	 unnecessary misalignment.  */
-      if (size <= 16 * pagesize_m1)
-	size += pagesize_m1 + 1;
-#endif
-
       /* Adjust the stack size for alignment.  */
       size &= ~__static_tls_align_m1;
       assert (size != 0);
@@ -513,34 +500,11 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	     So we can never get a null pointer back from mmap.  */
 	  assert (mem != NULL);
 
-#if COLORING_INCREMENT != 0
-	  /* Atomically increment NCREATED.  */
-	  unsigned int ncreated = atomic_increment_val (&nptl_ncreated);
-
-	  /* We chose the offset for coloring by incrementing it for
-	     every new thread by a fixed amount.  The offset used
-	     module the page size.  Even if coloring would be better
-	     relative to higher alignment values it makes no sense to
-	     do it since the mmap() interface does not allow us to
-	     specify any alignment for the returned memory block.  */
-	  size_t coloring = (ncreated * COLORING_INCREMENT) & pagesize_m1;
-
-	  /* Make sure the coloring offsets does not disturb the alignment
-	     of the TCB and static TLS block.  */
-	  if (__glibc_unlikely ((coloring & __static_tls_align_m1) != 0))
-	    coloring = (((coloring + __static_tls_align_m1)
-			 & ~(__static_tls_align_m1))
-			& ~pagesize_m1);
-#else
-	  /* Unless specified we do not make any adjustments.  */
-# define coloring 0
-#endif
-
 	  /* Place the thread descriptor at the end of the stack.  */
 #if TLS_TCB_AT_TP
-	  pd = (struct pthread *) ((char *) mem + size - coloring) - 1;
+	  pd = (struct pthread *) ((char *) mem + size) - 1;
 #elif TLS_DTV_AT_TP
-	  pd = (struct pthread *) ((((uintptr_t) mem + size - coloring
+	  pd = (struct pthread *) ((((uintptr_t) mem + size
 				    - __static_tls_size)
 				    & ~__static_tls_align_m1)
 				   - TLS_PRE_TCB_SIZE);
