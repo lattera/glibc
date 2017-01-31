@@ -1,3 +1,7 @@
+2017-01-31  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/nios2/ipc_priv.h: New file.
+
 2017-01-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21081]
