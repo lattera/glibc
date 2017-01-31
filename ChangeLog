@@ -1,3 +1,18 @@
+2017-06-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #18988]
+	* benchtests/thread_create-inputs: New file.
+	* benchtests/thread_create-source.c: Likewise.
+	* support/xpthread_attr_setguardsize.c: Likewise.
+	* support/Makefile (libsupport-routines): Add
+	xpthread_attr_setguardsize object.
+	* support/xthread.h: Add xpthread_attr_setguardsize prototype.
+	* benchtests/Makefile (bench-pthread): Add thread_create.
+	* nptl/allocatestack.c (allocate_stack): Call mmap with PROT_NONE and
+	then mprotect the required area.
+	(guard_position): New function.
+	(setup_stack_prot): Likewise.
+
 2017-06-14  H.J. Lu  <hongjiu.lu@intel.com>
 	    Erich Elsen  <eriche@google.com>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>

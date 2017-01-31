@@ -67,6 +67,8 @@ void xpthread_attr_setdetachstate (pthread_attr_t *attr,
 				   int detachstate);
 void xpthread_attr_setstacksize (pthread_attr_t *attr,
 				 size_t stacksize);
+void xpthread_attr_setguardsize (pthread_attr_t *attr,
+				 size_t guardsize);
 
 /* This function returns non-zero if pthread_barrier_wait returned
    PTHREAD_BARRIER_SERIAL_THREAD.  */

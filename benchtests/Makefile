@@ -25,7 +25,7 @@ bench-math := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 \
 	      modf pow rint sin sincos sinh sqrt tan tanh fmin fmax fminf \
 	      fmaxf
 
-bench-pthread := pthread_once
+bench-pthread := pthread_once thread_create
 
 bench-string := ffs ffsll
 
