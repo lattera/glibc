@@ -73,7 +73,7 @@ typedef uintmax_t uatomic_max_t;
      __typeof (mem) __memp = (mem);					      \
      __asm __volatile ("cas2%.l %0:%R0,%1:%R1,(%2):(%3)"		      \
 		       : "=d" (__ret)					      \
-		       : "d" (newval), "r" (__memp),			      \
+		       : "d" ((__typeof (*(mem))) (newval)), "r" (__memp),    \
 			 "r" ((char *) __memp + 4), "0" (oldval)	      \
 		       : "memory");					      \
      __ret; })
@@ -101,8 +101,9 @@ typedef uintmax_t uatomic_max_t;
 	 __asm __volatile ("1: cas2%.l %0:%R0,%1:%R1,(%2):(%3);"	      \
 			   "   jbne 1b"					      \
 			   : "=d" (__result)				      \
-			   : "d" (newvalue), "r" (__memp),		      \
-			     "r" ((char *) __memp + 4), "0" (__result)	      \
+			   : "d" ((__typeof (*(mem))) (newvalue)),	      \
+			     "r" (__memp), "r" ((char *) __memp + 4),	      \
+			     "0" (__result)				      \
 			   : "memory");					      \
        }								      \
      __result; })
@@ -144,7 +145,7 @@ typedef uintmax_t uatomic_max_t;
 			   "   cas2%.l %0:%R0,%1:%R1,(%3):(%4);"	      \
 			   "   jbne 1b"					      \
 			   : "=d" (__result), "=&d" (__temp)		      \
-			   : "d" (value), "r" (__memp),			      \
+			   : "d" ((__typeof (*(mem))) (value)), "r" (__memp), \
 			     "r" ((char *) __memp + 4), "0" (__result)	      \
 			   : "memory");					      \
        }								      \
@@ -175,8 +176,9 @@ typedef uintmax_t uatomic_max_t;
 				  "   cas2%.l %0:%R0,%1:%R1,(%3):(%4);"	      \
 				  "   jbne 1b"				      \
 				  : "=d" (__oldval), "=&d" (__temp)	      \
-				  : "d" (value), "r" (__memp),		      \
-				    "r" ((char *) __memp + 4), "0" (__oldval) \
+				  : "d" ((__typeof (*(mem))) (value)),	      \
+				    "r" (__memp), "r" ((char *) __memp + 4),  \
+				    "0" (__oldval)			      \
 				  : "memory");				      \
 	      }								      \
 	    })

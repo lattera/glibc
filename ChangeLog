@@ -1,3 +1,10 @@
+2017-02-01  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/m68020/atomic-machine.h
+	(__arch_compare_and_exchange_val_64_acq, atomic_exchange_acq)
+	(atomic_exchange_and_add, atomic_add): Add casts to 64 bit asm
+	operands.
+
 2017-01-31  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/nios2/ipc_priv.h: New file.
