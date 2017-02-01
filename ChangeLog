@@ -1,3 +1,9 @@
+2017-05-14  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* sysdeps/generic/math-type-macros-float128.h
+	(__USE_WRAPPER_TEMPLATE): Define to 1 to enable use of the
+	wrapper templates.
+
 2017-05-14  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 

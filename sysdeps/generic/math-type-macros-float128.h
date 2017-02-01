@@ -36,4 +36,7 @@
 /* Supply the generic macros.  */
 #include <math-type-macros.h>
 
+/* Use the type-generic wrapper templates.  */
+#define __USE_WRAPPER_TEMPLATE 1
+
 #endif
