@@ -41,11 +41,16 @@ struct _tunable
   tunable_val_t val;			/* The value.  */
   const char *strval;			/* The string containing the value,
 					   points into envp.  */
-  bool is_secure;			/* Whether the tunable must be read
-					   even for setuid binaries.  Note that
-					   even if the tunable is read, it may
-					   not get used by the target module if
-					   the value is considered unsafe.  */
+  tunable_seclevel_t security_level;	/* Specify the security level for the
+					   tunable with respect to AT_SECURE
+					   programs.  See description of
+					   tunable_seclevel_t to see a
+					   description of the values.
+
+					   Note that even if the tunable is
+					   read, it may not get used by the
+					   target module if the value is
+					   considered unsafe.  */
   /* Compatibility elements.  */
   const char *env_alias;		/* The compatibility environment
 					   variable name.  */

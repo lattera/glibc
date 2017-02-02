@@ -52,7 +52,7 @@ $1 == "}" {
       env_alias[top_ns][ns][tunable] = "NULL"
     }
     if (!is_secure[top_ns][ns][tunable]) {
-      is_secure[top_ns][ns][tunable] = "false"
+      is_secure[top_ns][ns][tunable] = "SXID_ERASE"
     }
 
     tunable = ""
@@ -102,8 +102,8 @@ $1 == "}" {
   else if (attr == "env_alias") {
     env_alias[top_ns][ns][tunable] = sprintf("\"%s\"", val)
   }
-  else if (attr == "is_secure") {
-    if (val == "true" || val == "false") {
+  else if (attr == "security_level") {
+    if (val == "SXID_ERASE" || val == "SXID_IGNORE" || val == "NONE") {
       is_secure[top_ns][ns][tunable] = val
     }
     else {
@@ -146,7 +146,7 @@ END {
     for (n in types[t]) {
       for (m in types[t][n]) {
         printf ("  {TUNABLE_NAME_S(%s, %s, %s)", t, n, m)
-        printf (", {TUNABLE_TYPE_%s, %s, %s}, {.numval = 0}, NULL, %s, %s},\n",
+        printf (", {TUNABLE_TYPE_%s, %s, %s}, {.numval = 0}, NULL, TUNABLE_SECLEVEL_%s, %s},\n",
 		types[t][n][m], minvals[t][n][m], maxvals[t][n][m],
 		is_secure[t][n][m], env_alias[t][n][m]);
       }

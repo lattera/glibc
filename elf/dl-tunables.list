@@ -21,8 +21,13 @@
 # minval: Optional minimum acceptable value
 # maxval: Optional maximum acceptable value
 # env_alias: An alias environment variable
-# is_secure: Specify whether the environment variable should be read for
-# setuid binaries.
+# security_level: Specify security level of the tunable.  Valid values are:
+#
+# 	     SXID_ERASE: (default) Don't read for AT_SECURE binaries and
+# 	     		 removed so that child processes can't read it.
+# 	     SXID_IGNORE: Don't read for AT_SECURE binaries, but retained for
+# 	     		  non-AT_SECURE subprocesses.
+# 	     SXID_NONE: Read all the time.
 
 glibc {
   malloc {
@@ -35,34 +40,41 @@ glibc {
     top_pad {
       type: SIZE_T
       env_alias: MALLOC_TOP_PAD_
+      security_level: SXID_IGNORE
     }
     perturb {
       type: INT_32
       minval: 0
       maxval: 0xff
       env_alias: MALLOC_PERTURB_
+      security_level: SXID_IGNORE
     }
     mmap_threshold {
       type: SIZE_T
       env_alias: MALLOC_MMAP_THRESHOLD_
+      security_level: SXID_IGNORE
     }
     trim_threshold {
       type: SIZE_T
       env_alias: MALLOC_TRIM_THRESHOLD_
+      security_level: SXID_IGNORE
     }
     mmap_max {
       type: INT_32
       env_alias: MALLOC_MMAP_MAX_
+      security_level: SXID_IGNORE
     }
     arena_max {
       type: SIZE_T
       env_alias: MALLOC_ARENA_MAX
       minval: 1
+      security_level: SXID_IGNORE
     }
     arena_test {
       type: SIZE_T
       env_alias: MALLOC_ARENA_TEST
       minval: 1
+      security_level: SXID_IGNORE
     }
   }
 }

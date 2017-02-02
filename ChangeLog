@@ -1,3 +1,28 @@
+2017-02-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	[BZ #21073]
+	* elf/dl-tunable-types.h (tunable_seclevel_t): New enum.
+	* elf/dl-tunables.c (tunables_strdup): Remove.
+	(get_next_env): Also return the previous envp.
+	(parse_tunables): Erase tunables of category
+	TUNABLES_SECLEVEL_SXID_ERASE.
+	(maybe_enable_malloc_check): Make MALLOC_CHECK_
+	TUNABLE_SECLEVEL_NONE if /etc/setuid-debug is accessible.
+	(__tunables_init)[TUNABLES_FRONTEND ==
+	TUNABLES_FRONTEND_valstring]: Update GLIBC_TUNABLES envvar
+	after parsing.
+	[TUNABLES_FRONTEND != TUNABLES_FRONTEND_valstring]: Erase
+	tunable envvars of category TUNABLES_SECLEVEL_SXID_ERASE.
+	* elf/dl-tunables.h (struct _tunable): Change member is_secure
+	to security_level.
+	* elf/dl-tunables.list: Add security_level annotations for all
+	tunables.
+	* scripts/gen-tunables.awk: Recognize and generate enum values
+	for security_level.
+	* elf/tst-env-setuid.c: New test case.
+	* elf/tst-env-setuid-tunables: new test case.
+	* elf/Makefile (tests-static): Add them.
+
 2017-02-01  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/alpha/memchr.c (__memchr): Use saturating arithmetic

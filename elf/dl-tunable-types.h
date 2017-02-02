@@ -43,4 +43,19 @@ typedef union
   const char *strval;
 } tunable_val_t;
 
+/* Security level for tunables.  This decides what to do with individual
+   tunables for AT_SECURE binaries.  */
+typedef enum
+{
+  /* Erase the tunable for AT_SECURE binaries so that child processes don't
+     read it.  */
+  TUNABLE_SECLEVEL_SXID_ERASE = 0,
+  /* Ignore the tunable for AT_SECURE binaries, but don't erase it, so that
+     child processes can read it.  */
+  TUNABLE_SECLEVEL_SXID_IGNORE = 1,
+  /* Read the tunable.  */
+  TUNABLE_SECLEVEL_NONE = 2,
+} tunable_seclevel_t;
+
+
 #endif
