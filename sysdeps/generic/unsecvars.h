@@ -1,9 +1,16 @@
+#if !HAVE_TUNABLES
+# define GLIBC_TUNABLES_ENVVAR "GLIBC_TUNABLES\0"
+#else
+# define GLIBC_TUNABLES_ENVVAR
+#endif
+
 /* Environment variable to be removed for SUID programs.  The names are
    all stuffed in a single string which means they have to be terminated
    with a '\0' explicitly.  */
 #define UNSECURE_ENVVARS \
   "GCONV_PATH\0"							      \
   "GETCONF_DIR\0"							      \
+  GLIBC_TUNABLES_ENVVAR							      \
   "HOSTALIASES\0"							      \
   "LD_AUDIT\0"								      \
   "LD_DEBUG\0"								      \

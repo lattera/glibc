@@ -1,5 +1,10 @@
 2017-02-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/generic/unsecvars.h: Add GLIBC_TUNABLES.
+	* elf/tst-env-setuid-tunables.c
+	(test_child_tunables)[!HAVE_TUNABLES]: Verify that
+	GLIBC_TUNABLES is removed in a setgid process.
+
 	[BZ #21073]
 	* elf/dl-tunable-types.h (tunable_seclevel_t): New enum.
 	* elf/dl-tunables.c (tunables_strdup): Remove.

@@ -36,6 +36,7 @@ test_child_tunables (void)
 {
   const char *val = getenv ("GLIBC_TUNABLES");
 
+#if HAVE_TUNABLES
   if (val != NULL && strcmp (val, CHILD_VALSTRING_VALUE) == 0)
     return 0;
 
@@ -43,6 +44,14 @@ test_child_tunables (void)
     printf ("Unexpected GLIBC_TUNABLES VALUE %s\n", val);
 
   return 1;
+#else
+  if (val != NULL)
+    {
+      printf ("GLIBC_TUNABLES not cleared\n");
+      return 1;
+    }
+  return 0;
+#endif
 }
 
 static int
