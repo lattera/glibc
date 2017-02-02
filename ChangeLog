@@ -1,3 +1,10 @@
+2017-02-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Replace
+	_dl_fatal_printf with _dl_error_printf for IFUNC relocation
+	against unrelocated shared library.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Likewise.
+
 2017-02-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/generic/unsecvars.h: Add GLIBC_TUNABLES.

@@ -329,7 +329,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    {
 	      const char *strtab
 		= (const char *) D_PTR (map, l_info[DT_STRTAB]);
-	      _dl_fatal_printf ("\
+	      _dl_error_printf ("\
 %s: Relink `%s' with `%s' for IFUNC symbol `%s'\n",
 				RTLD_PROGNAME, map->l_name,
 				sym_map->l_name,
