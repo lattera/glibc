@@ -1,3 +1,12 @@
+2017-02-03  Alexandre Oliva  <aoliva@redhat.com>
+	    Florian Weimer  <fweimer@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #20915]
+	* elf/dl-reloc.c (_dl_nothread_init_static_tls):
+	Do not initialize DTV.
+	* nptl/allocatestack.c (init_one_static_tls): Likewise.
+
 2017-02-03  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmax-vis3.S: Remove file.
