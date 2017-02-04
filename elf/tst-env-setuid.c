@@ -87,10 +87,13 @@ do_execve (char **args)
       return 1;
     }
 
+  if (WEXITSTATUS (status) == EXIT_UNSUPPORTED)
+    return EXIT_UNSUPPORTED;
+
   if (!WIFEXITED (status) || WEXITSTATUS (status) != CHILD_STATUS)
     {
       printf ("Unexpected exit status %d from child process\n",
-	      status);
+	      WEXITSTATUS (status));
       return 1;
     }
   return 0;
@@ -235,7 +238,7 @@ test_parent (void)
 #endif
 
 static int
-do_test_prep (int argc, char **argv)
+do_test (int argc, char **argv)
 {
   /* Setgid child process.  */
   if (argc == 2 && strcmp (argv[1], SETGID_CHILD) == 0)
@@ -270,13 +273,12 @@ do_test_prep (int argc, char **argv)
 	  exit (0);
 	}
 
-      if (run_executable_sgid (target) == 0)
-	exit (0);
+      return run_executable_sgid (target);
     }
 
   /* Something went wrong and our argv was corrupted.  */
   _exit (1);
 }
 
-#define TEST_FUNCTION_ARGV do_test_prep
+#define TEST_FUNCTION_ARGV do_test
 #include <support/test-driver.c>

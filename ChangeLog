@@ -1,3 +1,12 @@
+2017-02-04  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* elf/tst-env-setuid.c (do_execve): Return EXIT_UNSUPPORTED in
+	parent if child exited in that manner.  Print WEXITSTATUS
+	instead of the raw status.
+	(do_test_prep): Rename to do_test.
+	(do_test): Return the result of run_executable_sgid.
+	(TEST_FUNCTION_ARGV): Adjust.
+
 2017-02-03  Alexandre Oliva  <aoliva@redhat.com>
 	    Florian Weimer  <fweimer@redhat.com>
 	    Carlos O'Donell  <carlos@redhat.com>
