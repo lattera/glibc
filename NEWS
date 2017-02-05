@@ -189,6 +189,14 @@ Version 2.25
   flag.  The GNU C Library manual has details on usage and README.tunables has
   instructions on adding new tunables to the library.
 
+* A new version of condition variables functions have been implemented in
+  the NPTL implementation of POSIX Threads to provide stronger ordering
+  guarantees.
+
+* A new version of pthread_rwlock functions have been implemented to use a more
+  scalable algorithm primarily through not using a critical section anymore to
+  make state changes.
+
 Security related changes:
 
 * On ARM EABI (32-bit), generating a backtrace for execution contexts which

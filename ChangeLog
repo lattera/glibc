@@ -1,3 +1,7 @@
+2017-02-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* NEWS: Add missing news items.
+
 2017-02-04  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* elf/tst-env-setuid.c (do_execve): Return EXIT_UNSUPPORTED in
