@@ -12,6 +12,10 @@ order.
 @itemize @bullet
 
 @item
+Nick Alcock for contributing fixes to allow @theglibc{} to be built with the
+stack smashing protector enabled.
+
+@item
 Ryan S. Arnold for his improvements for Linux on PowerPC and his direction
 as FSF Project Steward for @theglibc{}.
 
@@ -85,6 +89,9 @@ and wide-character support functions (@file{wctype.h}, @file{wchar.h}, etc.).
 @end itemize
 
 @item
+Wilco Dijkstra for various fixes.
+
+@item
 Richard Earnshaw for continued support and fixes to the various ARM
 machine files.
 
@@ -98,11 +105,15 @@ Steve Ellcey for various fixes.
 @item
 Tulio Magno Quites Machado Filho for adding a new class of installed
 headers for low-level platform-specific functionality and one such for
-PowerPC.
+PowerPC and various fixes.
 
 @item
 Mike Frysinger for his maintaining of the IA64 architecture and for
 testing and bug fixing.
+
+@item
+Martin Galvan for contributing gdb pretty printer support to glibc and adding
+an initial set of pretty printers for structures in the POSIX Threads library.
 
 @item
 Michael Glad for the DES encryption function @code{crypt} and related
@@ -146,6 +157,9 @@ direction as part of @theglibc{} steering committee.
 Aurelien Jarno for various fixes.
 
 @item
+Rical Jasan for contributing various fixes in @theglibc manual.
+
+@item
 Jakub Jelinek for implementing a number of checking functions and for
 his direction as part of @theglibc{} steering committee.
 
@@ -169,6 +183,9 @@ Andi Kleen for implementing pthreads lock elision with TSX.
 Kazumoto Kojima for the port of the Mach and Hurd code to the MIPS
 architecture (@code{mips-@var{anything}-gnu}) and for his work on the
 SH architecture.
+
+@item
+Maxim Kuvyrkov for various fixes.
 
 @item
 Andreas Krebbel for his work on Linux for s390 and s390x.
@@ -247,12 +264,18 @@ Stephen Munroe for his port to Linux on PowerPC64
 implementations for PowerPC.
 
 @item
+Paul E. Murphy for various fixes on PowerPC.
+
+@item
 Joseph S. Myers for numerous bug fixes for the libm functions, for
 his maintainership of the ARM and MIPS architectures, improving
 cross-compilation and cross-testing of @theglibc{}, expanded
 coverage of conformtest, merging the ports/ subdirectory
 into the @glibcadj{} main repository and his direction as FSF Project
 Steward for @theglibc{}.
+
+@item
+Szabolcs Nagy for various fixes.
 
 @item
 Will Newton for contributing some optimized string functions and pointer
@@ -277,8 +300,9 @@ Paul Pluzhnikov for various fixes.
 Marek Polacek for various fixes.
 
 @item
-Siddhesh Poyarekar for various fixes and an implementation of a
-framework for performance benchmarking of functions.
+Siddhesh Poyarekar for various fixes, an implementation of a framework for
+performance benchmarking of functions and implementating the tunables
+infrastructure.
 
 @item
 Tom Quinn for contributing the startup code to support SunOS shared
@@ -286,7 +310,11 @@ libraries and the port to SGI machines running Irix 4
 (@code{mips-sgi-irix4}).
 
 @item
-Torvald Riegel for the implementation of a new semaphore algorithm.
+Torvald Riegel for the implementation of new algorithms for semaphores,
+pthread_rwlock and condition variables.
+
+@item
+Maciej W. Rozycki for various fixes.
 
 @item
 Pravin Satpute for writing sorting rules for some Indian languages.
@@ -312,6 +340,9 @@ Martin Schwidefsky for porting to Linux on s390
 Thomas Schwinge for his contribution to Hurd and the SH architecture.
 
 @item
+Andrew Senkevich for contributing vector math function implementations for x86.
+
+@item
 Carlos Eduardo Seo for optimized functions on PowerPC.
 
 @item
@@ -322,6 +353,9 @@ Franz Sirl for various fixes.
 
 @item
 Jes Sorensen for porting to Linux on IA64 (@code{ia64-@var{anything}-linux}).
+
+@item
+Rajalakshmi Srinivasaraghavan for various fixes and optimizations on PowerPC.
 
 @item
 Richard Stallman for his contribution to the @code{getopt} function.
@@ -341,10 +375,14 @@ Tim Waugh for the implementation of the POSIX.2 @code{wordexp}
 function family.
 
 @item
+Zack Weinberg for the @code{explicit_bzero} implementation and for various
+fixes.
+
+@item
 Eric Youngdale for implementing versioning of objects on the symbol level.
 
 @item
-Adhemerval Zanella for optimized functions on PowerPC.
+Adhemerval Zanella for optimized functions on PowerPC and various fixes.
 
 @end itemize
 

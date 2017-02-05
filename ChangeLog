@@ -1,5 +1,8 @@
 2017-02-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* manual/contrib.texi: Add more contributors from this release
+	and past releases.
+
 	* NEWS (2.25): Add list of bugs fixed.
 
 	* NEWS: Add missing news items.
