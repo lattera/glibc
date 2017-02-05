@@ -1,5 +1,7 @@
 2017-02-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* NEWS (2.25): Add list of bugs fixed.
+
 	* NEWS: Add missing news items.
 
 2017-02-04  Siddhesh Poyarekar  <siddhesh@sourceware.org>
