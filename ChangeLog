@@ -1,5 +1,68 @@
 2017-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/gen-auto-libm-tests.c: Update comment about use of program.
+	(generate_output): Add argument FUNCTION.
+	(main): Require extra argument.  Pass function name to
+	generate_output.
+	* math/Makefile (generated): Add auto-libm-test-out.
+	(libm-test-funcs-auto): New variable.
+	(auto-libm-test-out-files): New variable.
+	($(objpfx)libm-test.c): Depend on $(auto-libm-test-out-files).
+	Concatenate those files to form $(objpfx)auto-libm-test-out and
+	use it as input to gen-libm-test.pl.
+	* math/README.libm-test: Update.
+	* math/auto-libm-test-out: Remove.
+	* math/auto-libm-test-out-acos: New generated file.
+	* math/auto-libm-test-out-acosh: Likewise.
+	* math/auto-libm-test-out-asin: Likewise.
+	* math/auto-libm-test-out-asinh: Likewise.
+	* math/auto-libm-test-out-atan: Likewise.
+	* math/auto-libm-test-out-atan2: Likewise.
+	* math/auto-libm-test-out-atanh: Likewise.
+	* math/auto-libm-test-out-cabs: Likewise.
+	* math/auto-libm-test-out-carg: Likewise.
+	* math/auto-libm-test-out-cbrt: Likewise.
+	* math/auto-libm-test-out-ccos: Likewise.
+	* math/auto-libm-test-out-ccosh: Likewise.
+	* math/auto-libm-test-out-cexp: Likewise.
+	* math/auto-libm-test-out-clog: Likewise.
+	* math/auto-libm-test-out-clog10: Likewise.
+	* math/auto-libm-test-out-cos: Likewise.
+	* math/auto-libm-test-out-cosh: Likewise.
+	* math/auto-libm-test-out-cpow: Likewise.
+	* math/auto-libm-test-out-csin: Likewise.
+	* math/auto-libm-test-out-csinh: Likewise.
+	* math/auto-libm-test-out-csqrt: Likewise.
+	* math/auto-libm-test-out-ctan: Likewise.
+	* math/auto-libm-test-out-ctanh: Likewise.
+	* math/auto-libm-test-out-erf: Likewise.
+	* math/auto-libm-test-out-erfc: Likewise.
+	* math/auto-libm-test-out-exp: Likewise.
+	* math/auto-libm-test-out-exp10: Likewise.
+	* math/auto-libm-test-out-exp2: Likewise.
+	* math/auto-libm-test-out-expm1: Likewise.
+	* math/auto-libm-test-out-fma: Likewise.
+	* math/auto-libm-test-out-hypot: Likewise.
+	* math/auto-libm-test-out-j0: Likewise.
+	* math/auto-libm-test-out-j1: Likewise.
+	* math/auto-libm-test-out-jn: Likewise.
+	* math/auto-libm-test-out-lgamma: Likewise.
+	* math/auto-libm-test-out-log: Likewise.
+	* math/auto-libm-test-out-log10: Likewise.
+	* math/auto-libm-test-out-log1p: Likewise.
+	* math/auto-libm-test-out-log2: Likewise.
+	* math/auto-libm-test-out-pow: Likewise.
+	* math/auto-libm-test-out-sin: Likewise.
+	* math/auto-libm-test-out-sincos: Likewise.
+	* math/auto-libm-test-out-sinh: Likewise.
+	* math/auto-libm-test-out-sqrt: Likewise.
+	* math/auto-libm-test-out-tan: Likewise.
+	* math/auto-libm-test-out-tanh: Likewise.
+	* math/auto-libm-test-out-tgamma: Likewise.
+	* math/auto-libm-test-out-y0: Likewise.
+	* math/auto-libm-test-out-y1: Likewise.
+	* math/auto-libm-test-out-yn: Likewise.
+
 	* math/Makefile (generated): Do not include libm-test.stmp.
 	($(addprefix $(objpfx), $(libm-tests-generated))): Do not depend
 	on $(objpfx)libm-test.stmp.

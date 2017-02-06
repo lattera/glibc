@@ -208,7 +208,7 @@ libm-vec-test-wrappers = $(addsuffix -wrappers, $(libm-vec-tests))
 test-extras += $(libm-vec-test-wrappers)
 extra-test-objs += $(addsuffix .o, $(libm-vec-test-wrappers))
 libm-tests-generated = libm-test-ulps.h libm-have-vector-test.h libm-test.c
-generated += $(libm-tests-generated)
+generated += $(libm-tests-generated) auto-libm-test-out
 
 ulps-file = $(firstword $(wildcard $(sysdirs:%=%/libm-test-ulps)))
 
@@ -216,9 +216,18 @@ $(objpfx)libm-test-ulps.h: $(ulps-file) gen-libm-test.pl
 	$(make-target-directory)
 	$(PERL) gen-libm-test.pl -u $< -H $@
 
-$(objpfx)libm-test.c: libm-test.inc gen-libm-test.pl auto-libm-test-out
+libm-test-funcs-auto = acos acosh asin asinh atan atan2 atanh cabs carg cbrt \
+		       ccos ccosh cexp clog clog10 cos cosh cpow csin csinh \
+		       csqrt ctan ctanh erf erfc exp exp10 exp2 expm1 fma \
+		       hypot j0 j1 jn lgamma log log10 log1p log2 pow sin \
+		       sincos sinh sqrt tan tanh tgamma y0 y1 yn
+auto-libm-test-out-files = $(addprefix auto-libm-test-out-,\
+				       $(libm-test-funcs-auto))
+
+$(objpfx)libm-test.c: libm-test.inc gen-libm-test.pl $(auto-libm-test-out-files)
 	$(make-target-directory)
-	$(PERL) gen-libm-test.pl -c $< -a auto-libm-test-out -C $@
+	cat $(auto-libm-test-out-files) > $(objpfx)auto-libm-test-out
+	$(PERL) gen-libm-test.pl -c $< -a $(objpfx)auto-libm-test-out -C $@
 
 $(objpfx)libm-have-vector-test.h: libm-test.inc gen-libm-have-vector-test.sh
 	$(make-target-directory)

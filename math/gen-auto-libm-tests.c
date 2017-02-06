@@ -23,7 +23,7 @@
 
    (use of current MPC and MPFR versions recommended) and run it as:
 
-   gen-auto-libm-tests auto-libm-test-in auto-libm-test-out
+   gen-auto-libm-tests auto-libm-test-in <func> auto-libm-test-out-<func>
 
    The input file auto-libm-test-in contains three kinds of lines:
 
@@ -98,7 +98,7 @@
    accompanied by a comment referring to an open bug in glibc
    Bugzilla.
 
-   The output file auto-libm-test-out contains the test lines from
+   The output file auto-libm-test-out-<func> contains the test lines from
    auto-libm-test-in, and, after the line for a given test, some
    number of output test lines.  An output test line is of the form "=
    function rounding-mode format input1 input2 ... : output1 output2
@@ -2158,10 +2158,10 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
     generic_value_free (&generic_outputs[i]);
 }
 
-/* Generate test output data to FILENAME.  */
+/* Generate test output data for FUNCTION to FILENAME.  */
 
 static void
-generate_output (const char *filename)
+generate_output (const char *function, const char *filename)
 {
   FILE *fp = fopen (filename, "w");
   if (fp == NULL)
@@ -2169,6 +2169,8 @@ generate_output (const char *filename)
   for (size_t i = 0; i < ARRAY_SIZE (test_functions); i++)
     {
       test_function *tf = &test_functions[i];
+      if (strcmp (tf->name, function) != 0)
+	continue;
       for (size_t j = 0; j < tf->num_tests; j++)
 	{
 	  input_test *it = &tf->tests[j];
@@ -2185,12 +2187,14 @@ generate_output (const char *filename)
 int
 main (int argc, char **argv)
 {
-  if (argc != 3)
-    error (EXIT_FAILURE, 0, "usage: gen-auto-libm-tests <input> <output>");
+  if (argc != 4)
+    error (EXIT_FAILURE, 0,
+	   "usage: gen-auto-libm-tests <input> <func> <output>");
   const char *input_filename = argv[1];
-  const char *output_filename = argv[2];
+  const char *function = argv[2];
+  const char *output_filename = argv[3];
   init_fp_formats ();
   read_input (input_filename);
-  generate_output (output_filename);
+  generate_output (function, output_filename);
   exit (EXIT_SUCCESS);
 }
