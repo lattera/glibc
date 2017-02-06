@@ -64,13 +64,13 @@
    0.  Otherwise leave lock unchanged and return non-zero to indicate that the
    lock was not acquired.  */
 #define lll_trylock(lock)	\
-  atomic_compare_and_exchange_bool_acq (&(lock), 1, 0)
+  __glibc_unlikely (atomic_compare_and_exchange_bool_acq (&(lock), 1, 0))
 
 /* If LOCK is 0 (not acquired), set to 2 (acquired, possibly with waiters) and
    return 0.  Otherwise leave lock unchanged and return non-zero to indicate
    that the lock was not acquired.  */
 #define lll_cond_trylock(lock)	\
-  atomic_compare_and_exchange_bool_acq (&(lock), 2, 0)
+  __glibc_unlikely (atomic_compare_and_exchange_bool_acq (&(lock), 2, 0))
 
 extern void __lll_lock_wait_private (int *futex) attribute_hidden;
 extern void __lll_lock_wait (int *futex, int private) attribute_hidden;
