@@ -1,5 +1,396 @@
 2017-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc: Move all tests of individual functions to
+	libm-test-*.inc and #include libm-test-*.c files.
+	(acos_test_data): Remove.
+	(acos_test): Likewise.
+	(acosh_test_data): Likewise.
+	(acosh_test): Likewise.
+	(asin_test_data): Likewise.
+	(asin_test): Likewise.
+	(asinh_test_data): Likewise.
+	(asinh_test): Likewise.
+	(atan_test_data): Likewise.
+	(atan_test): Likewise.
+	(atanh_test_data): Likewise.
+	(atanh_test): Likewise.
+	(atan2_test_data): Likewise.
+	(atan2_test): Likewise.
+	(cabs_test_data): Likewise.
+	(cabs_test): Likewise.
+	(cacos_test_data): Likewise.
+	(cacos_test): Likewise.
+	(cacosh_test_data): Likewise.
+	(cacosh_test): Likewise.
+	(canonicalize_test_data): Likewise.
+	(canonicalize_test): Likewise.
+	(carg_test_data): Likewise.
+	(carg_test): Likewise.
+	(casin_test_data): Likewise.
+	(casin_test): Likewise.
+	(casinh_test_data): Likewise.
+	(casinh_test): Likewise.
+	(catan_test_data): Likewise.
+	(catan_test): Likewise.
+	(catanh_test_data): Likewise.
+	(catanh_test): Likewise.
+	(cbrt_test_data): Likewise.
+	(cbrt_test): Likewise.
+	(ccos_test_data): Likewise.
+	(ccos_test): Likewise.
+	(ccosh_test_data): Likewise.
+	(ccosh_test): Likewise.
+	(ceil_test_data): Likewise.
+	(ceil_test): Likewise.
+	(cexp_test_data): Likewise.
+	(cexp_test): Likewise.
+	(cimag_test_data): Likewise.
+	(cimag_test): Likewise.
+	(clog_test_data): Likewise.
+	(clog_test): Likewise.
+	(clog10_test_data): Likewise.
+	(clog10_test): Likewise.
+	(conj_test_data): Likewise.
+	(conj_test): Likewise.
+	(copysign_test_data): Likewise.
+	(copysign_test): Likewise.
+	(cos_test_data): Likewise.
+	(cos_test): Likewise.
+	(cosh_test_data): Likewise.
+	(cosh_test): Likewise.
+	(cpow_test_data): Likewise.
+	(cpow_test): Likewise.
+	(cproj_test_data): Likewise.
+	(cproj_test): Likewise.
+	(creal_test_data): Likewise.
+	(creal_test): Likewise.
+	(csin_test_data): Likewise.
+	(csin_test): Likewise.
+	(csinh_test_data): Likewise.
+	(csinh_test): Likewise.
+	(csqrt_test_data): Likewise.
+	(csqrt_test): Likewise.
+	(ctan_test_data): Likewise.
+	(ctan_test): Likewise.
+	(ctanh_test_data): Likewise.
+	(ctanh_test): Likewise.
+	(erf_test_data): Likewise.
+	(erf_test): Likewise.
+	(erfc_test_data): Likewise.
+	(erfc_test): Likewise.
+	(exp_test_data): Likewise.
+	(exp_test): Likewise.
+	(exp10_test_data): Likewise.
+	(exp10_test): Likewise.
+	(pow10_test): Likewise.
+	(exp2_test_data): Likewise.
+	(exp2_test): Likewise.
+	(expm1_test_data): Likewise.
+	(expm1_test): Likewise.
+	(fabs_test_data): Likewise.
+	(fabs_test): Likewise.
+	(fdim_test_data): Likewise.
+	(fdim_test): Likewise.
+	(floor_test_data): Likewise.
+	(floor_test): Likewise.
+	(fma_test_data): Likewise.
+	(fma_test): Likewise.
+	(fmax_test_data): Likewise.
+	(fmax_test): Likewise.
+	(fmaxmag_test_data): Likewise.
+	(fmaxmag_test): Likewise.
+	(fmin_test_data): Likewise.
+	(fmin_test): Likewise.
+	(fminmag_test_data): Likewise.
+	(fminmag_test): Likewise.
+	(fmod_test_data): Likewise.
+	(fmod_test): Likewise.
+	(fpclassify_test_data): Likewise.
+	(fpclassify_test): Likewise.
+	(frexp_test_data): Likewise.
+	(frexp_test): Likewise.
+	(fromfp_test_data): Likewise.
+	(fromfp_test): Likewise.
+	(fromfpx_test_data): Likewise.
+	(fromfpx_test): Likewise.
+	(getpayload_test_data): Likewise.
+	(getpayload_test): Likewise.
+	(hypot_test_data): Likewise.
+	(hypot_test): Likewise.
+	(ilogb_test_data): Likewise.
+	(ilogb_test): Likewise.
+	(iscanonical_test_data): Likewise.
+	(iscanonical_test): Likewise.
+	(iseqsig_test_data): Likewise.
+	(iseqsig_test): Likewise.
+	(isfinite_test_data): Likewise.
+	(isfinite_test): Likewise.
+	(finite_test): Likewise.
+	(isgreater_test_data): Likewise.
+	(isgreater_test): Likewise.
+	(isgreaterequal_test_data): Likewise.
+	(isgreaterequal_test): Likewise.
+	(isinf_test_data): Likewise.
+	(isinf_test): Likewise.
+	(isless_test_data): Likewise.
+	(isless_test): Likewise.
+	(islessequal_test_data): Likewise.
+	(islessequal_test): Likewise.
+	(islessgreater_test_data): Likewise.
+	(islessgreater_test): Likewise.
+	(isnan_test_data): Likewise.
+	(isnan_test): Likewise.
+	(isnormal_test_data): Likewise.
+	(isnormal_test): Likewise.
+	(issignaling_test_data): Likewise.
+	(issignaling_test): Likewise.
+	(issubnormal_test_data): Likewise.
+	(issubnormal_test): Likewise.
+	(isunordered_test_data): Likewise.
+	(isunordered_test): Likewise.
+	(iszero_test_data): Likewise.
+	(iszero_test): Likewise.
+	(j0_test_data): Likewise.
+	(j0_test): Likewise.
+	(j1_test_data): Likewise.
+	(j1_test): Likewise.
+	(jn_test_data): Likewise.
+	(jn_test): Likewise.
+	(lgamma_test_data): Likewise.
+	(lgamma_test): Likewise.
+	(gamma_test): Likewise.
+	(llogb_test_data): Likewise.
+	(llogb_test): Likewise.
+	(lrint_test_data): Likewise.
+	(lrint_test): Likewise.
+	(llrint_test_data): Likewise.
+	(llrint_test): Likewise.
+	(log_test_data): Likewise.
+	(log_test): Likewise.
+	(log10_test_data): Likewise.
+	(log10_test): Likewise.
+	(log1p_test_data): Likewise.
+	(log1p_test): Likewise.
+	(log2_test_data): Likewise.
+	(log2_test): Likewise.
+	(logb_test_data): Likewise.
+	(logb_test): Likewise.
+	(lround_test_data): Likewise.
+	(lround_test): Likewise.
+	(llround_test_data): Likewise.
+	(llround_test): Likewise.
+	(modf_test_data): Likewise.
+	(modf_test): Likewise.
+	(nearbyint_test_data): Likewise.
+	(nearbyint_test): Likewise.
+	(nextafter_test_data): Likewise.
+	(nextafter_test): Likewise.
+	(nextup_test_data): Likewise.
+	(nextup_test): Likewise.
+	(nextdown_test_data): Likewise.
+	(nextdown_test): Likewise.
+	(nexttoward_test_data): Likewise.
+	(nexttoward_test): Likewise.
+	(pow_test_data): Likewise.
+	(pow_test): Likewise.
+	(remainder_test_data): Likewise.
+	(remainder_test): Likewise.
+	(drem_test): Likewise.
+	(remquo_test_data): Likewise.
+	(remquo_test): Likewise.
+	(rint_test_data): Likewise.
+	(rint_test): Likewise.
+	(round_test_data): Likewise.
+	(round_test): Likewise.
+	(roundeven_test_data): Likewise.
+	(roundeven_test): Likewise.
+	(scalb_test_data): Likewise.
+	(scalb_test): Likewise.
+	(scalbn_test_data): Likewise.
+	(scalbn_test): Likewise.
+	(ldexp_test): Likewise.
+	(scalbln_test_data): Likewise.
+	(scalbln_test): Likewise.
+	(setpayload_test_data): Likewise.
+	(setpayload_test): Likewise.
+	(setpayloadsig_test_data): Likewise.
+	(setpayloadsig_test): Likewise.
+	(signbit_test_data): Likewise.
+	(signbit_test): Likewise.
+	(sin_test_data): Likewise.
+	(sin_test): Likewise.
+	(sincos_test_data): Likewise.
+	(sincos_test): Likewise.
+	(sinh_test_data): Likewise.
+	(sinh_test): Likewise.
+	(sqrt_test_data): Likewise.
+	(sqrt_test): Likewise.
+	(tan_test_data): Likewise.
+	(tan_test): Likewise.
+	(tanh_test_data): Likewise.
+	(tanh_test): Likewise.
+	(tgamma_test_data): Likewise.
+	(tgamma_test): Likewise.
+	(totalorder_test_data): Likewise.
+	(totalorder_test): Likewise.
+	(totalordermag_test_data): Likewise.
+	(totalordermag_test): Likewise.
+	(trunc_test_data): Likewise.
+	(trunc_test): Likewise.
+	(ufromfp_test_data): Likewise.
+	(ufromfp_test): Likewise.
+	(ufromfpx_test_data): Likewise.
+	(ufromfpx_test): Likewise.
+	(y0_test_data): Likewise.
+	(y0_test): Likewise.
+	(y1_test_data): Likewise.
+	(y1_test): Likewise.
+	(yn_test_data): Likewise.
+	(yn_test): Likewise.
+	(significand_test_data): Likewise.
+	(significand_test): Likewise.
+	* math/Makefile (auto-libm-test-out-files): Remove variable.
+	(libm-test-funcs-noauto): New variable.
+	(libm-test-funcs-all): Likewise.
+	(libm-test-c-auto): Likewise.
+	(libm-test-c-noauto): Likewise.
+	(libm-tests-generated): Add $(libm-test-c-auto) and
+	$(libm-test-c-noauto).
+	(generated): Do not add auto-libm-test-out.
+	(libm-test-c-auto-obj): New variable.
+	(libm-test-c-noauto-obj): Likewise.
+	($(objpfx)libm-test.c): Do not generate or use auto-libm-test-out.
+	($(libm-test-c-noauto-obj)): New static pattern rule.
+	($(libm-test-c-auto-obj)): Likewise.
+	(libm-test-incs): New variable.
+	($(objpfx)libm-have-vector-test.h): Depend on $(libm-test-incs)
+	and pass it to gen-libm-have-vector-test.sh.
+	* math/gen-libm-have-vector-test.sh: Expect list of .inc files to
+	be passed on command line.
+	* math/libm-test-acos.inc: New file.  Content from
+	math/libm-test.inc.
+	* math/libm-test-acosh.inc: Likewise.
+	* math/libm-test-asin.inc: Likewise.
+	* math/libm-test-asinh.inc: Likewise.
+	* math/libm-test-atan.inc: Likewise.
+	* math/libm-test-atan2.inc: Likewise.
+	* math/libm-test-atanh.inc: Likewise.
+	* math/libm-test-cabs.inc: Likewise.
+	* math/libm-test-cacos.inc: Likewise.
+	* math/libm-test-cacosh.inc: Likewise.
+	* math/libm-test-canonicalize.inc: Likewise.
+	* math/libm-test-carg.inc: Likewise.
+	* math/libm-test-casin.inc: Likewise.
+	* math/libm-test-casinh.inc: Likewise.
+	* math/libm-test-catan.inc: Likewise.
+	* math/libm-test-catanh.inc: Likewise.
+	* math/libm-test-cbrt.inc: Likewise.
+	* math/libm-test-ccos.inc: Likewise.
+	* math/libm-test-ccosh.inc: Likewise.
+	* math/libm-test-ceil.inc: Likewise.
+	* math/libm-test-cexp.inc: Likewise.
+	* math/libm-test-cimag.inc: Likewise.
+	* math/libm-test-clog.inc: Likewise.
+	* math/libm-test-clog10.inc: Likewise.
+	* math/libm-test-conj.inc: Likewise.
+	* math/libm-test-copysign.inc: Likewise.
+	* math/libm-test-cos.inc: Likewise.
+	* math/libm-test-cosh.inc: Likewise.
+	* math/libm-test-cpow.inc: Likewise.
+	* math/libm-test-cproj.inc: Likewise.
+	* math/libm-test-creal.inc: Likewise.
+	* math/libm-test-csin.inc: Likewise.
+	* math/libm-test-csinh.inc: Likewise.
+	* math/libm-test-csqrt.inc: Likewise.
+	* math/libm-test-ctan.inc: Likewise.
+	* math/libm-test-ctanh.inc: Likewise.
+	* math/libm-test-erf.inc: Likewise.
+	* math/libm-test-erfc.inc: Likewise.
+	* math/libm-test-exp.inc: Likewise.
+	* math/libm-test-exp10.inc: Likewise.
+	* math/libm-test-exp2.inc: Likewise.
+	* math/libm-test-expm1.inc: Likewise.
+	* math/libm-test-fabs.inc: Likewise.
+	* math/libm-test-fdim.inc: Likewise.
+	* math/libm-test-floor.inc: Likewise.
+	* math/libm-test-fma.inc: Likewise.
+	* math/libm-test-fmax.inc: Likewise.
+	* math/libm-test-fmaxmag.inc: Likewise.
+	* math/libm-test-fmin.inc: Likewise.
+	* math/libm-test-fminmag.inc: Likewise.
+	* math/libm-test-fmod.inc: Likewise.
+	* math/libm-test-fpclassify.inc: Likewise.
+	* math/libm-test-frexp.inc: Likewise.
+	* math/libm-test-fromfp.inc: Likewise.
+	* math/libm-test-fromfpx.inc: Likewise.
+	* math/libm-test-getpayload.inc: Likewise.
+	* math/libm-test-hypot.inc: Likewise.
+	* math/libm-test-ilogb.inc: Likewise.
+	* math/libm-test-iscanonical.inc: Likewise.
+	* math/libm-test-iseqsig.inc: Likewise.
+	* math/libm-test-isfinite.inc: Likewise.
+	* math/libm-test-isgreater.inc: Likewise.
+	* math/libm-test-isgreaterequal.inc: Likewise.
+	* math/libm-test-isinf.inc: Likewise.
+	* math/libm-test-isless.inc: Likewise.
+	* math/libm-test-islessequal.inc: Likewise.
+	* math/libm-test-islessgreater.inc: Likewise.
+	* math/libm-test-isnan.inc: Likewise.
+	* math/libm-test-isnormal.inc: Likewise.
+	* math/libm-test-issignaling.inc: Likewise.
+	* math/libm-test-issubnormal.inc: Likewise.
+	* math/libm-test-isunordered.inc: Likewise.
+	* math/libm-test-iszero.inc: Likewise.
+	* math/libm-test-j0.inc: Likewise.
+	* math/libm-test-j1.inc: Likewise.
+	* math/libm-test-jn.inc: Likewise.
+	* math/libm-test-lgamma.inc: Likewise.
+	* math/libm-test-llogb.inc: Likewise.
+	* math/libm-test-llrint.inc: Likewise.
+	* math/libm-test-llround.inc: Likewise.
+	* math/libm-test-log.inc: Likewise.
+	* math/libm-test-log10.inc: Likewise.
+	* math/libm-test-log1p.inc: Likewise.
+	* math/libm-test-log2.inc: Likewise.
+	* math/libm-test-logb.inc: Likewise.
+	* math/libm-test-lrint.inc: Likewise.
+	* math/libm-test-lround.inc: Likewise.
+	* math/libm-test-modf.inc: Likewise.
+	* math/libm-test-nearbyint.inc: Likewise.
+	* math/libm-test-nextafter.inc: Likewise.
+	* math/libm-test-nextdown.inc: Likewise.
+	* math/libm-test-nexttoward.inc: Likewise.
+	* math/libm-test-nextup.inc: Likewise.
+	* math/libm-test-pow.inc: Likewise.
+	* math/libm-test-remainder.inc: Likewise.
+	* math/libm-test-remquo.inc: Likewise.
+	* math/libm-test-rint.inc: Likewise.
+	* math/libm-test-round.inc: Likewise.
+	* math/libm-test-roundeven.inc: Likewise.
+	* math/libm-test-scalb.inc: Likewise.
+	* math/libm-test-scalbln.inc: Likewise.
+	* math/libm-test-scalbn.inc: Likewise.
+	* math/libm-test-setpayload.inc: Likewise.
+	* math/libm-test-setpayloadsig.inc: Likewise.
+	* math/libm-test-signbit.inc: Likewise.
+	* math/libm-test-significand.inc: Likewise.
+	* math/libm-test-sin.inc: Likewise.
+	* math/libm-test-sincos.inc: Likewise.
+	* math/libm-test-sinh.inc: Likewise.
+	* math/libm-test-sqrt.inc: Likewise.
+	* math/libm-test-tan.inc: Likewise.
+	* math/libm-test-tanh.inc: Likewise.
+	* math/libm-test-tgamma.inc: Likewise.
+	* math/libm-test-totalorder.inc: Likewise.
+	* math/libm-test-totalordermag.inc: Likewise.
+	* math/libm-test-trunc.inc: Likewise.
+	* math/libm-test-ufromfp.inc: Likewise.
+	* math/libm-test-ufromfpx.inc: Likewise.
+	* math/libm-test-y0.inc: Likewise.
+	* math/libm-test-y1.inc: Likewise.
+	* math/libm-test-yn.inc: Likewise.
+	* math/README.libm-test: Update.
+
 	* math/gen-auto-libm-tests.c: Update comment about use of program.
 	(generate_output): Add argument FUNCTION.
 	(main): Require extra argument.  Pass function name to

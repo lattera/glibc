@@ -21,17 +21,17 @@ NaNs and minus zero), some more or less random values are tested.
 Files that are part of libm-test
 ================================
 
-The main file is "libm-test.inc".  It is independent of the target
-platform and the specific real floating type and format and contains
-placeholder test "templates" for math functions defined in libm.
-The file, along with generated files named "auto-libm-test-out-<func>",
-is preprocessed by the Perl script "gen-libm-test.pl" to expand
-the templates and produce a set of test cases for each math function
-that are specific to the target platform but still independent of
-the real floating type.  The results of the processing are
-"libm-test.c" and a file "libm-test-ulps.h" with platform specific
-deltas by which the actual math function results may deviate from
-the expected results and still be considered correct.
+The main files are "libm-test-<func>.inc".  They are independent of
+the target platform and the specific real floating type and format and
+contain placeholder test "templates" for math functions defined in
+libm.  These files, along with generated files named
+"auto-libm-test-out-<func>", are preprocessed by the Perl script
+"gen-libm-test.pl" to expand the templates and produce a set of test
+cases for each math function that are specific to the target platform
+but still independent of the real floating type.  The results of the
+processing are "libm-test-<func>.c" and a file "libm-test-ulps.h" with
+platform specific deltas by which the actual math function results may
+deviate from the expected results and still be considered correct.
 
 The test drivers "test-double.c", "test-float.c", and "test-ldouble.c"
 test the normal double, float and long double implementation of libm.
@@ -104,8 +104,8 @@ idouble: 6
 The keywords are float, ifloat, double, idouble, ldouble and ildouble
 (the prefix i stands for inline).
 
-Adding tests to libm-test.inc
-=============================
+Adding tests to libm-test-<func>.inc
+====================================
 
 The tests are evaluated by a set of special test macros.  The macros
 start with "TEST_" followed by a specification the input values, an

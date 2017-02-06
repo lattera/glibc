@@ -33,19 +33,19 @@ print_defs()
   echo
 }
 
-for func in $(cat libm-test.inc | grep ALL_RM_TEST | grep -v define | grep -v RUN_TEST_LOOP_ff_f | grep -v RUN_TEST_LOOP_fFF_11 | sed -r "s/.*\(//; s/,.*//" ); do
+for func in $(cat $@ | grep ALL_RM_TEST | grep -v define | grep -v RUN_TEST_LOOP_ff_f | grep -v RUN_TEST_LOOP_fFF_11 | sed -r "s/.*\(//; s/,.*//" ); do
   print_defs ${func}
   print_defs ${func}f
   print_defs ${func}l
 done
 
-for func in $(cat libm-test.inc | grep ALL_RM_TEST | grep RUN_TEST_LOOP_ff_f | sed -r "s/.*\(//; s/,.*//" ); do
+for func in $(cat $@ | grep ALL_RM_TEST | grep RUN_TEST_LOOP_ff_f | sed -r "s/.*\(//; s/,.*//" ); do
   print_defs ${func} "_ff"
   print_defs ${func}f "_ff"
   print_defs ${func}l "_ff"
 done
 
-for func in $(cat libm-test.inc | grep ALL_RM_TEST | grep RUN_TEST_LOOP_fFF_11 | sed -r "s/.*\(//; s/,.*//" ); do
+for func in $(cat $@ | grep ALL_RM_TEST | grep RUN_TEST_LOOP_fFF_11 | sed -r "s/.*\(//; s/,.*//" ); do
   print_defs ${func} "_fFF"
   print_defs ${func}f "_fFF"
   print_defs ${func}l "_fFF"

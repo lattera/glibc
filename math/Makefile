@@ -207,8 +207,6 @@ tests += $(libm-tests)
 libm-vec-test-wrappers = $(addsuffix -wrappers, $(libm-vec-tests))
 test-extras += $(libm-vec-test-wrappers)
 extra-test-objs += $(addsuffix .o, $(libm-vec-test-wrappers))
-libm-tests-generated = libm-test-ulps.h libm-have-vector-test.h libm-test.c
-generated += $(libm-tests-generated) auto-libm-test-out
 
 ulps-file = $(firstword $(wildcard $(sysdirs:%=%/libm-test-ulps)))
 
@@ -221,17 +219,44 @@ libm-test-funcs-auto = acos acosh asin asinh atan atan2 atanh cabs carg cbrt \
 		       csqrt ctan ctanh erf erfc exp exp10 exp2 expm1 fma \
 		       hypot j0 j1 jn lgamma log log10 log1p log2 pow sin \
 		       sincos sinh sqrt tan tanh tgamma y0 y1 yn
-auto-libm-test-out-files = $(addprefix auto-libm-test-out-,\
-				       $(libm-test-funcs-auto))
+libm-test-funcs-noauto = cacos cacosh canonicalize casin casinh catan catanh \
+			 ceil cimag conj copysign cproj creal fabs fdim floor \
+			 fmax fmaxmag fmin fminmag fmod fpclassify frexp \
+			 fromfp fromfpx getpayload ilogb iscanonical iseqsig \
+			 isfinite isgreater isgreaterequal isinf isless \
+			 islessequal islessgreater isnan isnormal issignaling \
+			 issubnormal isunordered iszero llogb llrint llround \
+			 logb lrint lround modf nearbyint nextafter nextdown \
+			 nexttoward nextup remainder remquo rint round \
+			 roundeven scalb scalbln scalbn setpayload \
+			 setpayloadsig signbit significand totalorder \
+			 totalordermag trunc ufromfp ufromfpx
+libm-test-funcs-all = $(libm-test-funcs-auto) $(libm-test-funcs-noauto)
+libm-test-c-auto = $(foreach f,$(libm-test-funcs-auto),libm-test-$(f).c)
+libm-test-c-noauto = $(foreach f,$(libm-test-funcs-noauto),libm-test-$(f).c)
+libm-tests-generated = libm-test-ulps.h libm-have-vector-test.h libm-test.c \
+		       $(libm-test-c-auto) $(libm-test-c-noauto)
+generated += $(libm-tests-generated)
 
-$(objpfx)libm-test.c: libm-test.inc gen-libm-test.pl $(auto-libm-test-out-files)
-	$(make-target-directory)
-	cat $(auto-libm-test-out-files) > $(objpfx)auto-libm-test-out
-	$(PERL) gen-libm-test.pl -c $< -a $(objpfx)auto-libm-test-out -C $@
+libm-test-c-auto-obj = $(addprefix $(objpfx),$(libm-test-c-auto))
+libm-test-c-noauto-obj = $(addprefix $(objpfx),$(libm-test-c-noauto))
 
-$(objpfx)libm-have-vector-test.h: libm-test.inc gen-libm-have-vector-test.sh
+$(objpfx)libm-test.c $(libm-test-c-noauto-obj): $(objpfx)libm-test%.c: \
+						libm-test%.inc gen-libm-test.pl
 	$(make-target-directory)
-	$(SHELL) gen-libm-have-vector-test.sh > $@
+	$(PERL) gen-libm-test.pl -c $< -a /dev/null -C $@
+
+$(libm-test-c-auto-obj): $(objpfx)libm-test%.c: libm-test%.inc \
+						gen-libm-test.pl \
+						auto-libm-test-out%
+	$(make-target-directory)
+	$(PERL) gen-libm-test.pl -c $< -a auto-libm-test-out$* -C $@
+
+libm-test-incs = $(foreach f,$(libm-test-funcs-all),libm-test-$(f).inc)
+
+$(objpfx)libm-have-vector-test.h: $(libm-test-incs) gen-libm-have-vector-test.sh
+	$(make-target-directory)
+	$(SHELL) gen-libm-have-vector-test.sh $(sort $(libm-test-incs)) > $@
 endif
 
 libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH
