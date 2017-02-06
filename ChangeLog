@@ -1,5 +1,14 @@
 2017-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/libm-err-tab.pl (@all_functions): Change to
+	%all_functions.  Initialize as empty.
+	(parse_ulps): Add to %all_functions based on functions found in
+	ulps files.  Ignore results for non-default rounding modes and
+	vector functions.
+	(print_platforms): Use %all_platforms.
+	* manual/math.texi (Errors in Math Functions): Document omissions
+	from the table.
+
 	* math/Makefile (before-compile): Remove.
 
 2017-02-06  Ivo Raisr <ivo.raisr@oracle.com>

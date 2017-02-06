@@ -1417,7 +1417,9 @@ figure) but this is often not achieved due to the large search space.
 The table lists the ULP values for different architectures.  Different
 architectures have different results since their hardware support for
 floating-point operations varies and also the existing hardware support
-is different.
+is different.  Only the round-to-nearest rounding mode is covered by
+this table, and vector versions of functions are not covered.
+Functions not listed do not have known errors.
 
 @page
 @c This multitable does not fit on a single page

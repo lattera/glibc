@@ -35,7 +35,7 @@ use File::Find;
 use strict;
 
 use vars qw ($sources @platforms %pplatforms);
-use vars qw (%results @all_floats %suffices @all_functions);
+use vars qw (%results @all_floats %suffices %all_functions);
 
 
 # all_floats is in output order and contains all recognised float types that
@@ -50,27 +50,7 @@ use vars qw (%results @all_floats %suffices @all_functions);
 # Pretty description of platform
 %pplatforms = ();
 
-@all_functions =
-  ( "acos", "acosh", "asin", "asinh", "atan", "atanh",
-    "atan2", "cabs", "cacos", "cacosh", "carg", "casin", "casinh",
-    "catan", "catanh", "cbrt", "ccos", "ccosh", "ceil", "cexp", "cimag",
-    "clog", "clog10", "conj", "copysign", "cos", "cosh", "cpow", "cproj",
-    "creal", "csin", "csinh", "csqrt", "ctan", "ctanh", "erf", "erfc",
-    "exp", "exp10", "exp2", "expm1", "fabs", "fdim", "floor", "fma",
-    "fmax", "fmaxmag", "fmin", "fminmag", "fmod", "frexp", "fromfp", "fromfpx",
-    "gamma", "hypot",
-    "ilogb", "j0", "j1", "jn", "lgamma", "llogb", "lrint",
-    "llrint", "log", "log10", "log1p", "log2", "logb", "lround",
-    "llround", "modf", "nearbyint", "nextafter", "nextdown", "nexttoward",
-    "nextup", "pow", "remainder", "remquo", "rint", "round", "roundeven",
-    "scalb", "scalbn", "sin", "sincos", "sinh", "sqrt", "tan", "tanh",
-    "tgamma", "trunc", "ufromfp", "ufromfpx", "y0", "y1", "yn" );
-# canonicalize, fpclassify, getpayload, iscanonical, isnormal,
-# isfinite, isinf, isnan, issignaling, issubnormal, iszero, signbit,
-# iseqsig, isgreater, isgreaterequal, isless, islessequal,
-# islessgreater, isunordered, setpayload, setpayloadsig,
-# totalorder, totalordermag
-# are not tabulated.
+%all_functions = ();
 
 if ($#ARGV == 0) {
   $sources = $ARGV[0];
@@ -102,7 +82,7 @@ sub find_files {
 # Parse ulps file
 sub parse_ulps {
   my ($file, $platform) = @_;
-  my ($test, $type, $float, $eps);
+  my ($test, $type, $float, $eps, $ignore_fn);
 
   # $type has the following values:
   # "normal": No complex variable
@@ -127,9 +107,17 @@ sub parse_ulps {
       ($test) = ($_ =~ /^Function:\s*\"([a-zA-Z0-9_]+)\"/);
       next;
     }
+    if ($test =~ /_(downward|towardzero|upward|vlen)/) {
+      $ignore_fn = 1;
+    } else {
+      $ignore_fn = 0;
+      $all_functions{$test} = 1;
+    }
     if (/^i?(float|double|ldouble):/) {
       ($float, $eps) = split /\s*:\s*/,$_,2;
-      if ($eps eq 'fail') {
+      if ($ignore_fn) {
+	next;
+      } elsif ($eps eq 'fail') {
 	$results{$test}{$platform}{$type}{$float} = 'fail';
       } elsif ($eps eq "0") {
 	# ignore
@@ -175,7 +163,7 @@ sub print_platforms {
   print "\n";
 
 
-  foreach $fct (@all_functions) {
+  foreach $fct (sort keys %all_functions) {
     foreach $float (@all_floats) {
       print "\@item $fct$suffices{$float} ";
       foreach $platform (@p) {
