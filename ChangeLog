@@ -1,5 +1,254 @@
 2017-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test-driver.c: New file.  Based on math/libm-test.inc.
+	* math/libm-test.inc: Move all contents, other than tests of
+	individual functions, to libm-test-driver.c.
+	[!FE_TONEAREST] (FE_TONEAREST): Move to libm-test-driver.c.
+	[!FE_TOWARDZERO] (FE_TOWARDZERO): Likewise.
+	[!FE_UPWARD] (FE_UPWARD): Likewise.
+	[!FE_DOWNWARD] (FE_DOWNWARD): Likewise.
+	(NO_EXCEPTION): Likewise.
+	(INVALID_EXCEPTION): Likewise.
+	(DIVIDE_BY_ZERO_EXCEPTION): Likewise.
+	(OVERFLOW_EXCEPTION): Likewise.
+	(UNDERFLOW_EXCEPTION): Likewise.
+	(INEXACT_EXCEPTION): Likewise.
+	(INVALID_EXCEPTION_OK): Likewise.
+	(DIVIDE_BY_ZERO_EXCEPTION_OK): Likewise.
+	(OVERFLOW_EXCEPTION_OK): Likewise.
+	(UNDERFLOW_EXCEPTION_OK): Likewise.
+	(NO_INEXACT_EXCEPTION): Likewise.
+	(EXCEPTIONS_OK): Likewise.
+	(IGNORE_ZERO_INF_SIGN): Likewise.
+	(TEST_NAN_SIGN): Likewise.
+	(TEST_NAN_PAYLOAD): Likewise.
+	(NO_TEST_INLINE): Likewise.
+	(XFAIL_TEST): Likewise.
+	(ERRNO_UNCHANGED): Likewise.
+	(ERRNO_EDOM): Likewise.
+	(ERRNO_ERANGE): Likewise.
+	(IGNORE_RESULT): Likewise.
+	(NON_FINITE): Likewise.
+	(TEST_SNAN): Likewise.
+	(NO_TEST_MATHVEC): Likewise.
+	(TEST_NAN_PAYLOAD_CANONICALIZE): Likewise.
+	(__CONCATX): Likewise.
+	(TYPE_MIN): Likewise.
+	(TYPE_TRUE_MIN): Likewise.
+	(TYPE_MAX): Likewise.
+	(MIN_EXP): Likewise.
+	(MAX_EXP): Likewise.
+	(MANT_DIG): Likewise.
+	(FSTR_MAX): Likewise.
+	(ULP_IDX): Likewise.
+	(QTYPE_STR): Likewise.
+	(TEST_COND_binary32): Likewise.
+	(TEST_COND_binary64): Likewise.
+	(TEST_COND_binary128): Likewise.
+	(TEST_COND_ibm128): Likewise.
+	(TEST_COND_intel96): Likewise.
+	(TEST_COND_m68k96): Likewise.
+	(TEST_COND_ibm128_libgcc): Likewise.
+	(XFAIL_IBM128_LIBGCC): Likewise.
+	(PAYLOAD_DIG): Likewise.
+	(UNDERFLOW_EXCEPTION_FLOAT): Likewise.
+	(UNDERFLOW_EXCEPTION_OK_FLOAT): Likewise.
+	(UNDERFLOW_EXCEPTION_DOUBLE): Likewise.
+	(UNDERFLOW_EXCEPTION_OK_DOUBLE): Likewise.
+	(UNDERFLOW_EXCEPTION_LDOUBLE_IBM): Likewise.
+	(UNDERFLOW_EXCEPTION_BEFORE_ROUNDING): Likewise.
+	(TEST_COND_long32): Likewise.
+	(TEST_COND_long64): Likewise.
+	(TEST_COND_before_rounding): Likewise.
+	(TEST_COND_after_rounding): Likewise.
+	(lit_pi_3_m_4_d): Likewise.
+	(lit_pi_3_m_4_ln10_m_d): Likewise.
+	(lit_pi_2_ln10_m_d): Likewise.
+	(lit_pi_4_ln10_m_d): Likewise.
+	(lit_pi_ln10_d): Likewise.
+	(lit_pi_2_d): Likewise.
+	(lit_pi_4_d): Likewise.
+	(lit_pi): Likewise.
+	(lit_e): Likewise.
+	(ulps_file_name): Likewise.
+	(ulps_file): Likewise.
+	(output_ulps): Likewise.
+	(output_dir): Likewise.
+	(noErrors): Likewise.
+	(noTests): Likewise.
+	(noExcTests): Likewise.
+	(noErrnoTests): Likewise.
+	(verbose): Likewise.
+	(output_max_error): Likewise.
+	(output_points): Likewise.
+	(ignore_max_ulp): Likewise.
+	(plus_zero): Likewise.
+	(minus_zero): Likewise.
+	(plus_infty): Likewise.
+	(minus_infty): Likewise.
+	(qnan_value_pl): Likewise.
+	(qnan_value): Likewise.
+	(snan_value_pl): Likewise.
+	(snan_value): Likewise.
+	(max_value): Likewise.
+	(min_value): Likewise.
+	(min_subnorm_value): Likewise.
+	(snan_value_ld): Likewise.
+	(max_error): Likewise.
+	(real_max_error): Likewise.
+	(imag_max_error): Likewise.
+	(prev_max_error): Likewise.
+	(prev_real_max_error): Likewise.
+	(prev_imag_max_error): Likewise.
+	(max_valid_error): Likewise.
+	(TYPE_DECIMAL_DIG): Likewise.
+	(TYPE_HEX_DIG): Likewise.
+	(fmt_ftostr): Likewise.
+	(compare_ulp_data): Likewise.
+	(find_ulps): Likewise.
+	(init_max_error): Likewise.
+	(set_max_error): Likewise.
+	(print_float): Likewise.
+	(print_screen): Likewise.
+	(print_screen_max_error): Likewise.
+	(update_stats): Likewise.
+	(print_function_ulps): Likewise.
+	(print_complex_function_ulps): Likewise.
+	(fpstack_test): Likewise.
+	(print_max_error): Likewise.
+	(print_complex_max_error): Likewise.
+	(test_single_exception): Likewise.
+	(test_exceptions): Likewise.
+	(test_single_errno): Likewise.
+	(test_errno): Likewise.
+	(ULPDIFF): Likewise.
+	(ulp): Likewise.
+	(check_float_internal): Likewise.
+	(check_float): Likewise.
+	(check_complex): Likewise.
+	(check_int): Likewise.
+	(check_long): Likewise.
+	(check_bool): Likewise.
+	(check_longlong): Likewise.
+	(check_intmax_t): Likewise.
+	(check_uintmax_t): Likewise.
+	(enable_test): Likewise.
+	(struct test_f_f_data): Likewise.
+	(struct test_ff_f_data): Likewise.
+	(struct test_fj_f_data): Likewise.
+	(struct test_fi_f_data): Likewise.
+	(struct test_fl_f_data): Likewise.
+	(struct test_if_f_data): Likewise.
+	(struct test_fff_f_data): Likewise.
+	(struct test_fiu_M_data): Likewise.
+	(struct test_fiu_U_data): Likewise.
+	(struct test_c_f_data): Likewise.
+	(struct test_f_f1_data): Likewise.
+	(struct test_fF_f1_data): Likewise.
+	(struct test_ffI_f1_data): Likewise.
+	(struct test_c_c_data): Likewise.
+	(struct test_cc_c_data): Likewise.
+	(struct test_f_i_data): Likewise.
+	(struct test_ff_i_data): Likewise.
+	(struct test_f_l_data): Likewise.
+	(struct test_f_L_data): Likewise.
+	(struct test_fFF_11_data): Likewise.
+	(struct test_Ff_b1_data): Likewise.
+	(IF_ROUND_INIT_): Likewise.
+	(IF_ROUND_INIT_FE_DOWNWARD): Likewise.
+	(IF_ROUND_INIT_FE_TONEAREST): Likewise.
+	(IF_ROUND_INIT_FE_TOWARDZERO): Likewise.
+	(IF_ROUND_INIT_FE_UPWARD): Likewise.
+	(ROUND_RESTORE_): Likewise.
+	(ROUND_RESTORE_FE_DOWNWARD): Likewise.
+	(ROUND_RESTORE_FE_TONEAREST): Likewise.
+	(ROUND_RESTORE_FE_TOWARDZERO): Likewise.
+	(ROUND_RESTORE_FE_UPWARD): Likewise.
+	(RM_): Likewise.
+	(RM_FE_DOWNWARD): Likewise.
+	(RM_FE_TONEAREST): Likewise.
+	(RM_FE_TOWARDZERO): Likewise.
+	(RM_FE_UPWARD): Likewise.
+	(COMMON_TEST_SETUP): Likewise.
+	(EXTRA_OUTPUT_TEST_SETUP): Likewise.
+	(COMMON_TEST_CLEANUP): Likewise.
+	(EXTRA_OUTPUT_TEST_CLEANUP): Likewise.
+	(RUN_TEST_f_f): Likewise.
+	(RUN_TEST_LOOP_f_f): Likewise.
+	(RUN_TEST_fp_f): Likewise.
+	(RUN_TEST_LOOP_fp_f): Likewise.
+	(RUN_TEST_2_f): Likewise.
+	(RUN_TEST_LOOP_2_f): Likewise.
+	(RUN_TEST_ff_f): Likewise.
+	(RUN_TEST_LOOP_ff_f): Likewise.
+	(RUN_TEST_LOOP_fj_f): Likewise.
+	(RUN_TEST_fi_f): Likewise.
+	(RUN_TEST_LOOP_fi_f): Likewise.
+	(RUN_TEST_fl_f): Likewise.
+	(RUN_TEST_LOOP_fl_f): Likewise.
+	(RUN_TEST_if_f): Likewise.
+	(RUN_TEST_LOOP_if_f): Likewise.
+	(RUN_TEST_fff_f): Likewise.
+	(RUN_TEST_LOOP_fff_f): Likewise.
+	(RUN_TEST_fiu_M): Likewise.
+	(RUN_TEST_LOOP_fiu_M): Likewise.
+	(RUN_TEST_fiu_U): Likewise.
+	(RUN_TEST_LOOP_fiu_U): Likewise.
+	(RUN_TEST_c_f): Likewise.
+	(RUN_TEST_LOOP_c_f): Likewise.
+	(RUN_TEST_f_f1): Likewise.
+	(RUN_TEST_LOOP_f_f1): Likewise.
+	(RUN_TEST_fF_f1): Likewise.
+	(RUN_TEST_LOOP_fF_f1): Likewise.
+	(RUN_TEST_fI_f1): Likewise.
+	(RUN_TEST_LOOP_fI_f1): Likewise.
+	(RUN_TEST_ffI_f1_mod8): Likewise.
+	(RUN_TEST_LOOP_ffI_f1_mod8): Likewise.
+	(RUN_TEST_Ff_b1): Likewise.
+	(RUN_TEST_LOOP_Ff_b1): Likewise.
+	(RUN_TEST_Ffp_b1): Likewise.
+	(RUN_TEST_LOOP_Ffp_b1): Likewise.
+	(RUN_TEST_c_c): Likewise.
+	(RUN_TEST_LOOP_c_c): Likewise.
+	(RUN_TEST_cc_c): Likewise.
+	(RUN_TEST_LOOP_cc_c): Likewise.
+	(RUN_TEST_f_i): Likewise.
+	(RUN_TEST_LOOP_f_i): Likewise.
+	(RUN_TEST_f_i_tg): Likewise.
+	(RUN_TEST_LOOP_f_i_tg): Likewise.
+	(RUN_TEST_ff_b): Likewise.
+	(RUN_TEST_LOOP_ff_b): Likewise.
+	(RUN_TEST_ff_i_tg): Likewise.
+	(RUN_TEST_LOOP_ff_i_tg): Likewise.
+	(RUN_TEST_f_b): Likewise.
+	(RUN_TEST_LOOP_f_b): Likewise.
+	(RUN_TEST_f_b_tg): Likewise.
+	(RUN_TEST_LOOP_f_b_tg): Likewise.
+	(RUN_TEST_f_l): Likewise.
+	(RUN_TEST_LOOP_f_l): Likewise.
+	(RUN_TEST_f_L): Likewise.
+	(RUN_TEST_LOOP_f_L): Likewise.
+	(RUN_TEST_fFF_11): Likewise.
+	(RUN_TEST_LOOP_fFF_11): Likewise.
+	(VEC_SUFF): Likewise.
+	(STR_CONCAT): Likewise.
+	(STR_CON3): Likewise.
+	(HAVE_VECTOR): Likewise.
+	(START): Likewise.
+	(END): Likewise.
+	(END_COMPLEX): Likewise.
+	(ALL_RM_TEST): Likewise.
+	(matherr): Likewise.
+	(initialize): Likewise.
+	(options): Likewise.
+	(doc): Likewise.
+	(parse_opt): Likewise.
+	(argp): Likewise.
+	(check_ulp): Likewise.
+	(main): Likewise.
+	(do_test): New function.  Call tests of individual functions
+	previously called from main.
+
 	* math/libm-test.inc: Remove comment listing functions tested and
 	not tested.
 
