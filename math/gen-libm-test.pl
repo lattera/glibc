@@ -40,7 +40,7 @@ use strict;
 use vars qw ($input $output $auto_input);
 use vars qw (%results);
 use vars qw (%beautify @all_floats %all_floats_pfx);
-use vars qw ($output_dir $ulps_file $srcdir);
+use vars qw ($ulps_file);
 use vars qw (%auto_tests);
 
 # all_floats is sorted and contains all recognised float types
@@ -73,38 +73,41 @@ use vars qw (%auto_tests);
 
 # get Options
 # Options:
+# a: auto-libm-test-out input file
+# c: .inc input file
 # u: ulps-file
+# n: new ulps file
+# C: libm-test.c output file
+# H: libm-test-ulps.h output file
 # h: help
-# o: output-directory
-# n: generate new ulps file
-use vars qw($opt_u $opt_h $opt_o $opt_n);
-getopts('u:o:nh');
+use vars qw($opt_a $opt_c $opt_u $opt_n $opt_C $opt_H $opt_h);
+getopts('a:c:u:n:C:H:h');
 
 $ulps_file = 'libm-test-ulps';
-$output_dir = '';
-($srcdir = $0) =~ s{[^/]*$}{};
 
 if ($opt_h) {
   print "Usage: gen-libm-test.pl [OPTIONS]\n";
   print " -h         print this help, then exit\n";
-  print " -o DIR     directory where generated files will be placed\n";
-  print " -n         only generate sorted file NewUlps from libm-test-ulps\n";
+  print " -a FILE    input file with automatically generated tests\n";
+  print " -c FILE    input file .inc file with tests\n";
   print " -u FILE    input file with ulps\n";
+  print " -n FILE    generate sorted file FILE from libm-test-ulps\n";
+  print " -C FILE    generate output C file FILE from libm-test.inc\n";
+  print " -H FILE    generate output ulps header FILE from libm-test-ulps\n";
   exit 0;
 }
 
 $ulps_file = $opt_u if ($opt_u);
-$output_dir = $opt_o if ($opt_o);
 
-$input = "libm-test.inc";
-$auto_input = "${srcdir}auto-libm-test-out";
-$output = "${output_dir}libm-test.c";
+$input = $opt_c if ($opt_c);
+$auto_input = $opt_a if ($opt_a);
+$output = $opt_C if ($opt_C);
 
-&parse_ulps ($ulps_file);
-&parse_auto_input ($auto_input);
-&generate_testfile ($input, $output) unless ($opt_n);
-&output_ulps ("${output_dir}libm-test-ulps.h", $ulps_file) unless ($opt_n);
-&print_ulps_file ("${output_dir}NewUlps") if ($opt_n);
+&parse_ulps ($ulps_file) if ($opt_H || $opt_n);
+&parse_auto_input ($auto_input) if ($opt_C);
+&generate_testfile ($input, $output) if ($opt_C);
+&output_ulps ($opt_H, $ulps_file) if ($opt_H);
+&print_ulps_file ($opt_n) if ($opt_n);
 
 # Return a nicer representation
 sub beautify {

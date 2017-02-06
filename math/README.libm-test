@@ -81,7 +81,7 @@ generate the ULPs for all other formats, the tests will be appending the
 data to the "ULPs" file.  As final step run "gen-libm-test.pl" with the
 file as input and ask to generate a pretty printed output in the file
 "NewUlps":
-  gen-libm-test.pl -u ULPs -n
+  gen-libm-test.pl -u ULPs -n NewUlps
 Copy "NewUlps" to "libm-test-ulps" in the appropriate machine sysdep
 directory.
 

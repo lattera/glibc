@@ -217,7 +217,9 @@ $(addprefix $(objpfx), $(libm-tests-generated)): $(objpfx)libm-test.stmp
 $(objpfx)libm-test.stmp: $(ulps-file) libm-test.inc gen-libm-test.pl \
 			 gen-libm-have-vector-test.sh auto-libm-test-out
 	$(make-target-directory)
-	$(PERL) gen-libm-test.pl -u $< -o "$(objpfx)"
+	$(PERL) gen-libm-test.pl -u $< -H "$(objpfx)libm-test-ulps.h"
+	$(PERL) gen-libm-test.pl -c libm-test.inc -a auto-libm-test-out \
+				 -C "$(objpfx)libm-test.c"
 	$(SHELL) gen-libm-have-vector-test.sh > $(objpfx)libm-have-vector-test.h
 	@echo > $@
 endif
@@ -353,7 +355,8 @@ regen-ulps: $(addprefix $(objpfx),$(libm-tests))
 	  cat $(objpfx)ULPs >> $(objpfx)libm-test-ulps; \
 	  rm $(objpfx)ULPs; \
 	done; \
-	$(PERL) gen-libm-test.pl -o $(objpfx) -n -u $(objpfx)libm-test-ulps; \
+	$(PERL) gen-libm-test.pl -n $(objpfx)NewUlps \
+				 -u $(objpfx)libm-test-ulps; \
 	echo "Automatic regeneration of ULPs complete."; \
 	echo "Difference between the current baseline and the new baseline is:";\
 	diff -urN $(ulps-file) $(objpfx)NewUlps; \

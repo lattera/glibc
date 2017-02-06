@@ -1,3 +1,24 @@
+2017-02-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl ($output_dir): Remove variable.
+	($srcdir): Likewise.
+	($opt_a): New variable.
+	($opt_c): Likewise.
+	($opt_C): Likewise.
+	($opt_H): Likewise.
+	(-n): Make option take argument and use it as NewUlps output.
+	(-a): New option.  Use its argument for auto-libm-test-out input.
+	(-c): New option.  Use its argument for libm-test.inc input.
+	(-C): New option.  Use its argument for libm-test.c output.
+	(-H): New option.  Use its argument for libm-test-ulps.h output.
+	(top level): Only process inputs needed to generate outputs
+	specified by command-line options.  Only generate outputs
+	specified by command-line options.
+	* math/README.libm-test: Update example gen-libm-test.pl command.
+	* math/Makefile ($(objpfx)libm-test.stmp): Update gen-libm-test.pl
+	commands.
+	(regen-ulps): Likewise.
+
 2017-02-06  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* hurd/path-lookup.c (file_name_path_scan): Rename index to strchr.
