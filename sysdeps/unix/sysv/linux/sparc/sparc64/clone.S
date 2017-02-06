@@ -51,7 +51,6 @@ ENTRY (__clone)
 	   expects.  Also, subtract STACK_BIAS.  */
 	sub	%i1, 192 + 0x7ff, %o1
 	mov	%i3, %g3
-	mov	%i2, %g4
 
 	mov	%i4,%o2			/* PTID */
 	mov	%i5,%o3			/* TLS */

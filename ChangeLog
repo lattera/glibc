@@ -1,3 +1,10 @@
+2017-02-06  Ivo Raisr <ivo.raisr@oracle.com>
+
+	[BZ #21075]
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__clone): Remove
+	unused assignment.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone): Likewise.
+
 2017-02-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/nptl/lowlevellock.h (lll_trylock, lll_cond_trylock):
