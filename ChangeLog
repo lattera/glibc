@@ -1,5 +1,27 @@
 2017-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test-driver.c (STRX): New macro.
+	(STR): Likewise.
+	(STR_FLOAT): Likewise.
+	(STR_VEC_LEN): Likewise.
+	(TEST_MSG): Likewise.  Define here instead of expecting to be
+	defined by including file.
+	* math/test-double-finite.c (TEST_MSG): Remove macro.
+	* math/test-double-vlen2.h (TEST_MSG): Likewise.
+	* math/test-double-vlen4.h (TEST_MSG): Likewise.
+	* math/test-double-vlen8.h (TEST_MSG): Likewise.
+	* math/test-double.c (TEST_MSG): Likewise.
+	* math/test-float-finite.c (TEST_MSG): Likewise.
+	* math/test-float-vlen16.h (TEST_MSG): Likewise.
+	* math/test-float-vlen4.h (TEST_MSG): Likewise.
+	* math/test-float-vlen8.h (TEST_MSG): Likewise.
+	* math/test-float.c (TEST_MSG): Likewise.
+	* math/test-idouble.c (TEST_MSG): Likewise.
+	* math/test-ifloat.c (TEST_MSG): Likewise.
+	* math/test-ildouble.c (TEST_MSG): Likewise.
+	* math/test-ldouble-finite.c (TEST_MSG): Likewise.
+	* math/test-ldouble.c (TEST_MSG): Likewise.
+
 	* math/libm-test.inc: Move all tests of individual functions to
 	libm-test-*.inc and #include libm-test-*.c files.
 	(acos_test_data): Remove.

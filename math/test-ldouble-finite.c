@@ -20,6 +20,4 @@
 #include "test-math-no-inline.h"
 #include "test-math-scalar.h"
 
-#define TEST_MSG "testing long double (finite-math-only)\n"
-
 #include "libm-test.c"

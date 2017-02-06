@@ -22,6 +22,4 @@
 #include "test-math-errno.h"
 #include "test-math-scalar.h"
 
-#define TEST_MSG "testing float (without inline functions)\n"
-
 #include "libm-test.c"

@@ -25,7 +25,6 @@
    FUNC(function): converts general function name (like cos) to
    name with correct suffix (e.g. cosl or cosf)
    FLOAT:	   floating point type to test
-   - TEST_MSG:	   informal message to be displayed
    chooses one of the parameters as delta for testing
    equality
    PREFIX A macro which defines the prefix for common macros for the
@@ -107,6 +106,22 @@
 /* This header defines func_ulps, func_real_ulps and func_imag_ulps
    arrays.  */
 #include "libm-test-ulps.h"
+
+#define STRX(x) #x
+#define STR(x) STRX (x)
+#define STR_FLOAT STR (FLOAT)
+#define STR_VEC_LEN STR (VEC_LEN)
+
+/* Informal description of the functions being tested.  */
+#if TEST_MATHVEC
+# define TEST_MSG "testing " STR_FLOAT " (vector length " STR_VEC_LEN ")\n"
+#elif TEST_INLINE
+# define TEST_MSG "testing " STR_FLOAT " (inline functions)\n"
+#elif TEST_FINITE
+# define TEST_MSG "testing " STR_FLOAT " (finite-math-only)\n"
+#else
+# define TEST_MSG "testing " STR_FLOAT " (without inline functions)\n"
+#endif
 
 /* Allow platforms without all rounding modes to test properly,
    assuming they provide an __FE_UNDEFINED in <bits/fenv.h> which

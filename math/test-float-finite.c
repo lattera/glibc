@@ -20,6 +20,4 @@
 #include "test-math-no-inline.h"
 #include "test-math-scalar.h"
 
-#define TEST_MSG "testing float (finite-math-only)\n"
-
 #include "libm-test.c"
