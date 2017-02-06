@@ -210,9 +210,6 @@ extra-test-objs += $(addsuffix .o, $(libm-vec-test-wrappers))
 libm-tests-generated = libm-test-ulps.h libm-have-vector-test.h libm-test.c
 generated += $(libm-tests-generated) libm-test.stmp
 
-# This is needed for dependencies
-before-compile += $(objpfx)libm-test.c
-
 ulps-file = $(firstword $(wildcard $(sysdirs:%=%/libm-test-ulps)))
 
 $(addprefix $(objpfx), $(libm-tests-generated)): $(objpfx)libm-test.stmp
