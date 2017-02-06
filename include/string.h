@@ -160,15 +160,6 @@ extern __typeof (mempcpy) mempcpy __asm__ ("__mempcpy");
 extern __typeof (stpcpy) stpcpy __asm__ ("__stpcpy");
 #endif
 
-# ifndef _ISOMAC
-#  ifndef index
-#   define index(s, c)	(strchr ((s), (c)))
-#  endif
-#  ifndef rindex
-#   define rindex(s, c)	(strrchr ((s), (c)))
-#  endif
-# endif
-
 extern void *__memcpy_chk (void *__restrict __dest,
 			   const void *__restrict __src, size_t __len,
 			   size_t __destlen) __THROW;

@@ -56,7 +56,7 @@ ttyslot (void)
 	__setttyent();
 	for (cnt = 0; cnt < 3; ++cnt)
 		if (__ttyname_r (cnt, name, buflen) == 0) {
-			if ((p = rindex(name, '/')))
+			if ((p = strrchr (name, '/')))
 				++p;
 			else
 				p = name;

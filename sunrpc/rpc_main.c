@@ -956,7 +956,7 @@ mkfile_output (struct commandline *cmd)
       mkfilename = alloc (strlen ("Makefile.") + strlen (cmd->infile) + 1);
       if (mkfilename == NULL)
 	abort ();
-      temp = rindex (cmd->infile, '.');
+      temp = strrchr (cmd->infile, '.');
       cp = stpcpy (mkfilename, "Makefile.");
       if (temp != NULL)
 	*((char *) stpncpy (cp, cmd->infile, temp - cmd->infile)) = '\0';
