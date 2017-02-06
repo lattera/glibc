@@ -1,5 +1,29 @@
 2017-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test-driver.c (flag_test_errno): New variable.
+	(flag_test_exceptions): Likewise.
+	(flag_test_finite): Likewise.
+	(flag_test_inline): Likewise.
+	(flag_test_mathvec): Likewise.
+	(test_msg): Likewise.
+	(ulp_idx): Likewise.
+	(qtype_str): Likewise.
+	(ULP_IDX): Remove macro.
+	(QTYPE_STR): Likewise.
+	(find_ulps): Use ulp_idx not ULP_IDX.
+	(print_function_ulps): Use qtype_str, printed with %s, not
+	QTYPE_STR, printed with concatentation to format string.
+	(print_complex_function_ulps): Likewise.
+	(test_exceptions): Use flag_test_exceptions not TEST_EXCEPTIONS.
+	(test_errno): Use flag_test_errno not TEST_ERRNO.
+	(enable_test): Use flag_test_inline, flag_test_finite and
+	flag_test_mathvec instead of TEST_INLINE, TEST_FINITE and
+	TEST_MATHVEC.
+	(libm_test_init): New function.  Factored out of main.
+	(libm_test_finish): Likewise.
+	(main): Call libm_test_init and libm_test_finish and move most
+	code to those functions.
+
 	* math/libm-test-driver.c (STRX): New macro.
 	(STR): Likewise.
 	(STR_FLOAT): Likewise.

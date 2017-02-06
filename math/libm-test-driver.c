@@ -107,6 +107,13 @@
    arrays.  */
 #include "libm-test-ulps.h"
 
+/* Flags set by the including file.  */
+static const int flag_test_errno = TEST_ERRNO;
+static const int flag_test_exceptions = TEST_EXCEPTIONS;
+static const int flag_test_finite = TEST_FINITE;
+static const int flag_test_inline = TEST_INLINE;
+static const int flag_test_mathvec = TEST_MATHVEC;
+
 #define STRX(x) #x
 #define STR(x) STRX (x)
 #define STR_FLOAT STR (FLOAT)
@@ -122,6 +129,7 @@
 #else
 # define TEST_MSG "testing " STR_FLOAT " (without inline functions)\n"
 #endif
+static const char test_msg[] = TEST_MSG;
 
 /* Allow platforms without all rounding modes to test properly,
    assuming they provide an __FE_UNDEFINED in <bits/fenv.h> which
@@ -188,11 +196,11 @@
 #define FSTR_MAX (128)
 
 #if TEST_INLINE
-# define ULP_IDX __CONCATX (ULP_I_, PREFIX)
-# define QTYPE_STR "i" TYPE_STR
+static const int ulp_idx = __CONCATX (ULP_I_, PREFIX);
+static const char qtype_str[] = "i" TYPE_STR;
 #else
-# define ULP_IDX __CONCATX (ULP_, PREFIX)
-# define QTYPE_STR TYPE_STR
+static const int ulp_idx = __CONCATX (ULP_, PREFIX);
+static const char qtype_str[] = TYPE_STR;
 #endif
 
 /* Format specific test macros.  */
@@ -404,7 +412,7 @@ find_ulps (const char *name, const struct ulp_data *data, size_t nmemb)
   if (entry == NULL)
     return 0;
   else
-    return entry->max_ulp[ULP_IDX];
+    return entry->max_ulp[ulp_idx];
 }
 
 static void
@@ -511,7 +519,7 @@ print_function_ulps (const char *function_name, FLOAT ulp)
       char ustrn[FSTR_MAX];
       FTOSTR (ustrn, FSTR_MAX, "%.0f", FUNC (ceil) (ulp));
       fprintf (ulps_file, "Function: \"%s\":\n", function_name);
-      fprintf (ulps_file, QTYPE_STR ": %s\n", ustrn);
+      fprintf (ulps_file, "%s: %s\n", qtype_str, ustrn);
     }
 }
 
@@ -527,13 +535,13 @@ print_complex_function_ulps (const char *function_name, FLOAT real_ulp,
 	{
 	  FTOSTR (fstrn, FSTR_MAX, "%.0f", FUNC (ceil) (real_ulp));
 	  fprintf (ulps_file, "Function: Real part of \"%s\":\n", function_name);
-	  fprintf (ulps_file, QTYPE_STR ": %s\n", fstrn);
+	  fprintf (ulps_file, "%s: %s\n", qtype_str, fstrn);
 	}
       if (imag_ulp != 0.0)
 	{
 	  FTOSTR (fstrn, FSTR_MAX, "%.0f", FUNC (ceil) (imag_ulp));
 	  fprintf (ulps_file, "Function: Imaginary part of \"%s\":\n", function_name);
-	  fprintf (ulps_file, QTYPE_STR ": %s\n", fstrn);
+	  fprintf (ulps_file, "%s: %s\n", qtype_str, fstrn);
 	}
 
 
@@ -689,7 +697,7 @@ test_single_exception (const char *test_name,
 static void
 test_exceptions (const char *test_name, int exception)
 {
-  if (TEST_EXCEPTIONS && EXCEPTION_TESTS (FLOAT))
+  if (flag_test_exceptions && EXCEPTION_TESTS (FLOAT))
     {
       ++noExcTests;
 #ifdef FE_DIVBYZERO
@@ -756,7 +764,7 @@ test_single_errno (const char *test_name, int errno_value,
 static void
 test_errno (const char *test_name, int errno_value, int exceptions)
 {
-  if (TEST_ERRNO)
+  if (flag_test_errno)
     {
       ++noErrnoTests;
       if (exceptions & ERRNO_UNCHANGED)
@@ -1169,13 +1177,13 @@ enable_test (int exceptions)
 {
   if (exceptions & XFAIL_TEST)
     return 0;
-  if (TEST_INLINE && (exceptions & NO_TEST_INLINE))
+  if (flag_test_inline && (exceptions & NO_TEST_INLINE))
     return 0;
-  if (TEST_FINITE && (exceptions & NON_FINITE) != 0)
+  if (flag_test_finite && (exceptions & NON_FINITE) != 0)
     return 0;
   if (!SNAN_TESTS (FLOAT) && (exceptions & TEST_SNAN) != 0)
     return 0;
-  if (TEST_MATHVEC && (exceptions & NO_TEST_MATHVEC) != 0)
+  if (flag_test_mathvec && (exceptions & NO_TEST_MATHVEC) != 0)
     return 0;
 
   return 1;
@@ -2228,10 +2236,11 @@ check_ulp (void)
 
 static void do_test (void);
 
-int
-main (int argc, char **argv)
+/* Do all initialization for a test run with arguments given by ARGC
+   and ARGV.  */
+static void
+libm_test_init (int argc, char **argv)
 {
-
   int remaining;
   char *ulps_file_path;
   size_t dir_len = 0;
@@ -2275,14 +2284,17 @@ main (int argc, char **argv)
 
 
   initialize ();
-  printf (TEST_MSG);
+  fputs (test_msg, stdout);
 
   INIT_ARCH_EXT;
 
   check_ulp ();
+}
 
-  do_test ();
-
+/* Process the test results, returning the exit status.  */
+static int
+libm_test_finish (void)
+{
   if (output_ulps)
     fclose (ulps_file);
 
@@ -2298,4 +2310,12 @@ main (int argc, char **argv)
   printf ("  All tests passed successfully.\n");
 
   return 0;
+}
+
+int
+main (int argc, char **argv)
+{
+  libm_test_init (argc, argv);
+  do_test ();
+  return libm_test_finish ();
 }
