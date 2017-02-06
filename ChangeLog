@@ -1,3 +1,8 @@
+2017-02-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc: Remove comment listing functions tested and
+	not tested.
+
 2016-02-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/allocatestack.c [COLORING_INCREMENT] (nptl_ncreated): Remove.
