@@ -208,20 +208,21 @@ libm-vec-test-wrappers = $(addsuffix -wrappers, $(libm-vec-tests))
 test-extras += $(libm-vec-test-wrappers)
 extra-test-objs += $(addsuffix .o, $(libm-vec-test-wrappers))
 libm-tests-generated = libm-test-ulps.h libm-have-vector-test.h libm-test.c
-generated += $(libm-tests-generated) libm-test.stmp
+generated += $(libm-tests-generated)
 
 ulps-file = $(firstword $(wildcard $(sysdirs:%=%/libm-test-ulps)))
 
-$(addprefix $(objpfx), $(libm-tests-generated)): $(objpfx)libm-test.stmp
-
-$(objpfx)libm-test.stmp: $(ulps-file) libm-test.inc gen-libm-test.pl \
-			 gen-libm-have-vector-test.sh auto-libm-test-out
+$(objpfx)libm-test-ulps.h: $(ulps-file) gen-libm-test.pl
 	$(make-target-directory)
-	$(PERL) gen-libm-test.pl -u $< -H "$(objpfx)libm-test-ulps.h"
-	$(PERL) gen-libm-test.pl -c libm-test.inc -a auto-libm-test-out \
-				 -C "$(objpfx)libm-test.c"
-	$(SHELL) gen-libm-have-vector-test.sh > $(objpfx)libm-have-vector-test.h
-	@echo > $@
+	$(PERL) gen-libm-test.pl -u $< -H $@
+
+$(objpfx)libm-test.c: libm-test.inc gen-libm-test.pl auto-libm-test-out
+	$(make-target-directory)
+	$(PERL) gen-libm-test.pl -c $< -a auto-libm-test-out -C $@
+
+$(objpfx)libm-have-vector-test.h: libm-test.inc gen-libm-have-vector-test.sh
+	$(make-target-directory)
+	$(SHELL) gen-libm-have-vector-test.sh > $@
 endif
 
 libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH
@@ -337,7 +338,8 @@ $(foreach t, $(call type-foreach, $(gen-all-calls)), \
 
 ifneq (no,$(PERL))
 # This must come after the inclusion of sysdeps Makefiles via Rules.
-$(addprefix $(objpfx), $(libm-tests.o)): $(objpfx)libm-test.stmp
+$(addprefix $(objpfx), $(libm-tests.o)): $(addprefix $(objpfx),\
+						     $(libm-tests-generated))
 
 # Run the math programs to automatically generate ULPs files.
 .PHONY: regen-ulps

@@ -1,5 +1,15 @@
 2017-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/Makefile (generated): Do not include libm-test.stmp.
+	($(addprefix $(objpfx), $(libm-tests-generated))): Do not depend
+	on $(objpfx)libm-test.stmp.
+	($(objpfx)libm-test.stmp): Remove rule.
+	($(objpfx)libm-test-ulps.h): New rule.
+	($(objpfx)libm-test.c): Likewise.
+	($(objpfx)libm-have-vector-test.h): Likewise.
+	($(addprefix $(objpfx), $(libm-tests.o)): Depend directly on
+	individual generated files, not libm-test.stmp.
+
 	* math/gen-libm-test.pl ($output_dir): Remove variable.
 	($srcdir): Likewise.
 	($opt_a): New variable.
