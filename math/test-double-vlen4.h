@@ -20,7 +20,6 @@
 #include "test-math-no-inline.h"
 #include "test-math-vector.h"
 
-#define EXCEPTION_TESTS_double 0
 #define ROUNDING_TESTS_double(MODE) ((MODE) == FE_TONEAREST)
 
 #define VEC_SUFF _vlen4

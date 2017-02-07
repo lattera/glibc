@@ -1,5 +1,16 @@
 2017-02-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/test-math-finite.h (TEST_EXCEPTIONS): New macro.
+	* math/test-math-no-finite.h (TEST_EXCEPTIONS): Likewise.
+	* math/test-math-vector.h (TEST_EXCEPTIONS): Likewise.
+	* math/test-math-no-inline.h (TEST_EXCEPTIONS): Remove macro.
+	* math/test-double-vlen2.h (EXCEPTION_TESTS_double): Likewise.
+	* math/test-double-vlen4.h (EXCEPTION_TESTS_double): Likewise.
+	* math/test-double-vlen8.h (EXCEPTION_TESTS_double): Likewise.
+	* math/test-float-vlen4.h (EXCEPTION_TESTS_float): Likewise.
+	* math/test-float-vlen8.h (EXCEPTION_TESTS_float): Likewise.
+	* math/test-float-vlen16.h (EXCEPTION_TESTS_float): Likewise.
+
 	[BZ #21112]
 	* sysdeps/ieee754/flt-32/e_powf.c (cp_h): Use value with trailing
 	12 bits zero.

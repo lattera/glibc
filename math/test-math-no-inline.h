@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_INLINE 0
-#define TEST_EXCEPTIONS 1
 
 #ifndef __NO_MATH_INLINES
 # define __NO_MATH_INLINES
