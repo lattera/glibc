@@ -1,3 +1,14 @@
+2017-02-08  Kir Kolyshkin  <kir@openvz.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/sys/ptrace.h (__ptrace_eventcodes):
+	Add PTRACE_EVENT_STOP.
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h: Likewise.
+
 2017-02-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/test-math-finite.h (TEST_EXCEPTIONS): New macro.
