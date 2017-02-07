@@ -27,3 +27,10 @@ else
     libc_extra_cppflags="$libc_extra_cppflags -D_CALL_ELF=1"
   fi
 fi
+# Set minimum kernel version for ppc64le.
+AC_CACHE_CHECK([the machine type to set minimum kernel version],
+  [libc_cv_ppc64_le],
+  [AC_EGREP_CPP(yes,[#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+                      yes
+                     #endif
+  ], arch_minimum_kernel=3.10.0, libc_cv_ppc64_le=no)])

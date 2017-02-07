@@ -1,5 +1,12 @@
 2017-02-07  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
+	[BZ #15998]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure.ac
+	(arch_minimum_kernel): Set as 3.10.0 for ppc64le.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure: Regenerate.
+
+2017-02-07  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/strcasestr-power8.S: Redefine
 	STRCHR as __strchr_power8.
 	* sysdeps/powerpc/powerpc64/multiarch/strcat-power8.c: Redefine
