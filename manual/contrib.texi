@@ -301,7 +301,7 @@ Marek Polacek for various fixes.
 
 @item
 Siddhesh Poyarekar for various fixes, an implementation of a framework for
-performance benchmarking of functions and implementating the tunables
+performance benchmarking of functions and implementing the tunables
 infrastructure.
 
 @item
