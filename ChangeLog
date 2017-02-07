@@ -1,3 +1,12 @@
+2017-02-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21112]
+	* sysdeps/ieee754/flt-32/e_powf.c (cp_h): Use value with trailing
+	12 bits zero.
+	(cp_l): Update for new value of cp_h.
+	* math/auto-libm-test-in: Add another test of pow.
+	* math/auto-libm-test-out-pow: Regenerated.
+
 2017-02-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* manual/contrib.texi: Fix typo.

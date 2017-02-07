@@ -3749,6 +3749,7 @@ pow 0xf.fffffp+124 -0x5.b5b648p+0
 pow 0x1.430d4cp+0 0x5.0e462p+4
 pow 0x9.8b82ap-4 -0x1.99907ap+12
 pow 0xd.73035p-4 -0x1.47bb8p+8
+pow 0x1.059c76p+0 0x1.ff80bep+11
 
 sin 0
 sin -0
