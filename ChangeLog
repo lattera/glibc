@@ -1,3 +1,9 @@
+2017-02-07  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/strcmp.S: Adjust address for
+	unaligned load for shorter strings.
+	* sysdeps/powerpc/powerpc64/power9/strcmp.S: Likewise.
+
 2017-02-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test-driver.c (flag_test_errno): New variable.
