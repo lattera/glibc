@@ -75,19 +75,15 @@ libm-calls =								  \
 	s_setpayloadF s_setpayloadsigF s_roundevenF s_fromfpF s_ufromfpF  \
 	s_fromfpxF s_ufromfpxF $(gen-libm-calls)
 
-libm-compat-calls-auto =						\
+libm-compat-calls =							\
 	w_acosF_compat w_acoshF_compat w_asinF_compat w_atan2F_compat	\
 	w_atanhF_compat w_coshF_compat w_exp2F_compat w_exp10F_compat	\
 	w_fmodF_compat w_hypotF_compat w_j0F_compat w_j1F_compat	\
 	w_jnF_compat w_log2F_compat w_log10F_compat w_logF_compat	\
 	w_powF_compat w_remainderF_compat w_scalbF_compat		\
 	w_sinhF_compat w_sqrtF_compat w_tgammaF_compat			\
-	w_lgammaF_r_compat w_lgammaF_compat2 w_expF_compat
-
-libm-compat-calls-ldouble-yes = w_lgamma_compatl k_standardl
-libm-compat-calls = w_lgamma_compatf w_lgamma_compat k_standard k_standardf \
-		    $(libm-compat-calls-ldouble-$(long-double-fcts))
-
+	w_lgammaF_r_compat w_lgammaF_compat2 w_expF_compat		\
+	w_lgamma_compatF k_standardF
 
 # Type specific routine support.
 #
@@ -121,8 +117,8 @@ type-float-routines := k_rem_pio2f
 # Apply suffix to each type in arg 1
 type-foreach = $(foreach t,$(types),$(subst F,$(type-$(t)-suffix),$(1)))
 
-libm-routines = $(strip $(libm-support) $(libm-compat-calls)		\
-			$(call type-foreach, $(libm-compat-calls-auto))	\
+libm-routines = $(strip $(libm-support)					\
+			$(call type-foreach, $(libm-compat-calls))	\
 			$(call type-foreach, $(libm-calls))		\
 			$(foreach t, $(types), $(type-$(t)-routines))) 	\
 

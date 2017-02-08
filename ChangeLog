@@ -1,3 +1,13 @@
+2017-02-09  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* math/Makefile (libm-compat-calls-ldouble-yes): Merge into
+	libm-compat-calls-auto.
+	(libm-compat-calls): Likewise.
+	(libm-compat-calls-auto): Rename to libm-compat-calls and add
+	w_lgamma_compatF and k_standardF (merged from the items above).
+	(libm-routines): Use libm-compat-calls, instead of
+	libm-compat-calls-auto, with type-foreach.
+
 2017-02-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/test-math-inline.h (__LIBC_INTERNAL_MATH_INLINES): Undefine
