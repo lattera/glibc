@@ -1,3 +1,9 @@
+2017-03-12  Alexey Neyman <stilor@att.net>
+
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): The condition
+	in R_SH_DIR32 case is always false when inlined from
+	dl-conflict.c. Ifdef out to prevent GCC from insertin an
+
 2016-03-12  Marko Myllynen  <myllynen@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h

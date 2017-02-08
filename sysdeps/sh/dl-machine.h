@@ -389,7 +389,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  break;
 	case R_SH_DIR32:
 	  {
-#ifndef RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
 	   /* This is defined in rtld.c, but nowhere in the static
 	      libc.a; make the reference weak so static programs can
 	      still link.  This declaration cannot be done when
