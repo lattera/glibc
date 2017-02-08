@@ -212,9 +212,9 @@ __malloc_fork_unlock_child (void)
 #if HAVE_TUNABLES
 static inline int do_set_mallopt_check (int32_t value);
 void
-DL_TUNABLE_CALLBACK (set_mallopt_check) (void *valp)
+DL_TUNABLE_CALLBACK (set_mallopt_check) (tunable_val_t *valp)
 {
-  int32_t value = *(int32_t *) valp;
+  int32_t value = (int32_t) valp->numval;
   do_set_mallopt_check (value);
   if (check_action != 0)
     __malloc_check_init ();
@@ -223,9 +223,9 @@ DL_TUNABLE_CALLBACK (set_mallopt_check) (void *valp)
 # define DL_TUNABLE_CALLBACK_FNDECL(__name, __type) \
 static inline int do_ ## __name (__type value);				      \
 void									      \
-DL_TUNABLE_CALLBACK (__name) (void *valp)				      \
+DL_TUNABLE_CALLBACK (__name) (tunable_val_t *valp)			      \
 {									      \
-  __type value = *(__type *) valp;					      \
+  __type value = (__type) (valp)->numval;				      \
   do_ ## __name (value);						      \
 }
 

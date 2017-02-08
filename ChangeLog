@@ -1,3 +1,13 @@
+2017-02-08  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	[BZ #21109]
+	* elf/dl-tunable-types.h (tunable_callback_t): Accept
+	tunable_val_t as argument.
+	* elf/dl-tunables.c (__tunable_set_val): Add comment.
+	* malloc/arena.c (set_mallopt_check): Take tunable_val_t as
+	argument.
+	(DL_TUNABLE_CALLBACK_FNDECL): Likewise.
+
 2017-02-08  Kir Kolyshkin  <kir@openvz.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/sys/ptrace.h (__ptrace_eventcodes):

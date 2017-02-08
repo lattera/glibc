@@ -455,6 +455,8 @@ __tunable_set_val (tunable_id_t id, void *valp, tunable_callback_t callback)
   if (cur->strval == NULL)
     return;
 
+  /* Caller does not need the value, just call the callback with our tunable
+     value.  */
   if (valp == NULL)
     goto cb;
 
