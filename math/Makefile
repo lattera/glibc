@@ -203,6 +203,9 @@ libm-tests = $(foreach t,$(types),test-$(t) test-$(t)-finite test-i$(t)) \
 libm-tests.o = $(addsuffix .o,$(libm-tests))
 
 tests += $(libm-tests)
+libm-test-support = $(foreach t,$(types),libm-test-support-$(t))
+test-extras += $(libm-test-support)
+extra-test-objs += $(addsuffix .o, $(libm-test-support))
 libm-vec-test-wrappers = $(addsuffix -wrappers, $(libm-vec-tests))
 test-extras += $(libm-vec-test-wrappers)
 extra-test-objs += $(addsuffix .o, $(libm-vec-test-wrappers))
@@ -290,10 +293,13 @@ libm-test-finite-cflags = $(libm-test-no-inline-cflags) \
 			  -U__FINITE_MATH_ONLY__ -D__FINITE_MATH_ONLY__=1
 CFLAGS-test-float.c = $(libm-test-no-inline-cflags)
 CFLAGS-test-float-finite.c = $(libm-test-finite-cflags)
+CFLAGS-libm-test-support-float.c = $(libm-test-no-inline-cflags)
 CFLAGS-test-double.c = $(libm-test-no-inline-cflags)
 CFLAGS-test-double-finite.c = $(libm-test-finite-cflags)
+CFLAGS-libm-test-support-double.c = $(libm-test-no-inline-cflags)
 CFLAGS-test-ldouble.c = $(libm-test-no-inline-cflags)
 CFLAGS-test-ldouble-finite.c = $(libm-test-finite-cflags)
+CFLAGS-libm-test-support-ldouble.c = $(libm-test-no-inline-cflags)
 CFLAGS-test-tgmath.c = -fno-builtin
 # The following testcase uses very long lines (>3 million), so it may take a
 # while to compile it. See: http://llvm.org/bugs/show_bug.cgi?id=14106 and
@@ -373,6 +379,18 @@ ifneq (no,$(PERL))
 # This must come after the inclusion of sysdeps Makefiles via Rules.
 $(addprefix $(objpfx), $(libm-tests.o)): $(addprefix $(objpfx),\
 						     $(libm-tests-generated))
+
+$(addprefix $(objpfx),\
+	    $(filter test-float% test-ifloat%,\
+		     $(libm-tests))): $(objpfx)libm-test-support-float.o
+
+$(addprefix $(objpfx),\
+	    $(filter test-double% test-idouble%,\
+		     $(libm-tests))): $(objpfx)libm-test-support-double.o
+
+$(addprefix $(objpfx),\
+	    $(filter test-ldouble% test-ildouble%,\
+		     $(libm-tests))): $(objpfx)libm-test-support-ldouble.o
 
 # Run the math programs to automatically generate ULPs files.
 .PHONY: regen-ulps

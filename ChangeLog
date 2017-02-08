@@ -1,3 +1,142 @@
+2017-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test-support.c: New file.  Content from
+	math/libm-test-driver.c.
+	* math/libm-test-support.h: Likewise.
+	* math/libm-test-support-double.c: New file.
+	* math/libm-test-support-float.c: Likewise.
+	* math/libm-test-support-ldouble.c: Likewise.
+	* math/libm-test-driver.c: Remove main comment and header
+	includes.  Include libm-test-support.h.
+	[!_GNU_SOURCE] (_GNU_SOURCE): Do not define.
+	(flag_test_errno): Remove static.
+	(flag_test_exceptions): Likewise.
+	(flag_test_finite): Likewise.
+	(flag_test_inline): Likewise.
+	(flag_test_mathvec): Likewise.
+	(test_msg): Likewise.
+	(NO_EXCEPTION): Remove.
+	(INVALID_EXCEPTION): Likewise.
+	(DIVIDE_BY_ZERO_EXCEPTION): Likewise.
+	(OVERFLOW_EXCEPTION): Likewise.
+	(UNDERFLOW_EXCEPTION): Likewise.
+	(INEXACT_EXCEPTION): Likewise.
+	(INVALID_EXCEPTION_OK): Likewise.
+	(DIVIDE_BY_ZERO_EXCEPTION_OK): Likewise.
+	(OVERFLOW_EXCEPTION_OK): Likewise.
+	(UNDERFLOW_EXCEPTION_OK): Likewise.
+	(NO_INEXACT_EXCEPTION): Likewise.
+	(EXCEPTIONS_OK): Likewise.
+	(IGNORE_ZERO_INF_SIGN): Likewise.
+	(TEST_NAN_SIGN): Likewise.
+	(TEST_NAN_PAYLOAD): Likewise.
+	(NO_TEST_INLINE): Likewise.
+	(XFAIL_TEST): Likewise.
+	(ERRNO_UNCHANGED): Likewise.
+	(ERRNO_EDOM): Likewise.
+	(ERRNO_ERANGE): Likewise.
+	(IGNORE_RESULT): Likewise.
+	(NON_FINITE): Likewise.
+	(TEST_SNAN): Likewise.
+	(NO_TEST_MATHVEC): Likewise.
+	(__CONCATX): Likewise.
+	(TYPE_MIN): Likewise.
+	(TYPE_TRUE_MIN): Likewise.
+	(TYPE_MAX): Likewise.
+	(MIN_EXP): Likewise.
+	(MAX_EXP): Likewise.
+	(MANT_DIG): Likewise.
+	(FSTR_MAX): Likewise.
+	(ulp_idx): Likewise.
+	(qtype_str): Remove static.
+	(TEST_COND_binary32): Remove.
+	(TEST_COND_binary64): Likewise.
+	(TEST_COND_binary128): Likewise.
+	(TEST_COND_ibm128): Likewise.
+	(TEST_COND_intel96): Likewise.
+	(TEST_COND_m68k96): Likewise.
+	(TEST_COND_ibm128_libgcc): Likewise.
+	(XFAIL_IBM128_LIBGCC): Likewise.
+	(PAYLOAD_DIG): Likewise.
+	(UNDERFLOW_EXCEPTION_FLOAT): Likewise.
+	(UNDERFLOW_EXCEPTION_OK_FLOAT): Likewise.
+	(UNDERFLOW_EXCEPTION_DOUBLE): Likewise.
+	(UNDERFLOW_EXCEPTION_OK_DOUBLE): Likewise.
+	(UNDERFLOW_EXCEPTION_LDOUBLE_IBM): Likewise.
+	(UNDERFLOW_EXCEPTION_BEFORE_ROUNDING): Likewise.
+	(TEST_COND_long32): Likewise.
+	(TEST_COND_long64): Likewise.
+	(TEST_COND_before_rounding): Likewise.
+	(TEST_COND_after_rounding): Likewise.
+	(ulps_file_name): Likewise.
+	(ulps_file): Likewise.
+	(output_ulps): Likewise.
+	(output_dir): Likewise.
+	(noErrors): Likewise.
+	(noTests): Likewise.
+	(noExcTests): Likewise.
+	(noErrnoTests): Likewise.
+	(verbose): Likewise.
+	(output_max_error): Likewise.
+	(output_points): Likewise.
+	(ignore_max_ulp): Likewise.
+	(max_error): Likewise.
+	(real_max_error): Likewise.
+	(imag_max_error): Likewise.
+	(prev_max_error): Likewise.
+	(prev_real_max_error): Likewise.
+	(prev_imag_max_error): Likewise.
+	(max_valid_error): Likewise.
+	(TYPE_DECIMAL_DIG): Likewise.
+	(TYPE_HEX_DIG): Likewise.
+	(fmt_ftostr): Likewise.
+	(compare_ulp_data): Likewise.
+	(find_ulps): Likewise.
+	(init_max_error): Likewise.
+	(set_max_error): Likewise.
+	(print_float): Likewise.
+	(print_screen): Likewise.
+	(print_screen_max_error): Likewise.
+	(update_stats): Likewise.
+	(print_function_ulps): Likewise.
+	(print_complex_function_ulps): Likewise.
+	(fpstack_test): Likewise.
+	(print_max_error): Likewise.
+	(print_complex_max_error): Likewise.
+	(test_single_exception): Likewise.
+	(test_exceptions): Likewise.
+	(test_single_errno): Likewise.
+	(test_errno): Likewise.
+	(ULPDIFF): Likewise.
+	(ulp): Likewise.
+	(check_float_internal): Likewise.
+	(check_float): Likewise.
+	(check_complex): Likewise.
+	(check_int): Likewise.
+	(check_long): Likewise.
+	(check_bool): Likewise.
+	(check_longlong): Likewise.
+	(check_intmax_t): Likewise.
+	(check_uintmax_t): Likewise.
+	(enable_test): Likewise.
+	(matherr): Likewise.
+	(initialize): Likewise.
+	(options): Likewise.
+	(doc): Remove static.
+	(argp): Likewise.
+	(parse_opt): Remove.
+	(check_ulp): Likewise.
+	(libm_test_init): Likewise.
+	(libm_test_finish): Likewise.
+	* math/Makefile (libm-test-support): New variable.
+	(test-extras): Add libm-test-support files.
+	(extra-test-objs): Likewise.
+	(CFLAGS-libm-test-support-float.c): New variable.
+	(CFLAGS-libm-test-support-double.c): Likewise.
+	(CFLAGS-libm-test-support-ldouble.c): Likewise.
+	($(addprefix $(objpfx),$(libm-tests)): Depend on appropriate
+	libm-test-support objects.
+
 2017-02-08  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/Makefile (libm-calls): Move w_exp...
