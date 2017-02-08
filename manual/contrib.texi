@@ -157,7 +157,7 @@ direction as part of @theglibc{} steering committee.
 Aurelien Jarno for various fixes.
 
 @item
-Rical Jasan for contributing various fixes in @theglibc manual.
+Rical Jasan for contributing various fixes in @theglibc{} manual.
 
 @item
 Jakub Jelinek for implementing a number of checking functions and for
