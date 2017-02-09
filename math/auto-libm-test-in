@@ -1253,6 +1253,9 @@ csin -min 1
 csin min_subnorm 80
 csin -min_subnorm 80
 
+csin min_subnorm min
+csin min min_subnorm
+
 csinh 0.0 0.0
 csinh -0 0.0
 csinh 0.0 -0
@@ -1287,6 +1290,9 @@ csinh 1 min
 csinh 1 -min
 csinh 80 min_subnorm
 csinh 80 -min_subnorm
+
+csinh min_subnorm min
+csinh min min_subnorm
 
 csqrt 0 0
 csqrt 0 -0

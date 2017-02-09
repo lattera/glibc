@@ -1,3 +1,12 @@
+2017-02-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/auto-libm-test-in: Add more tests of csin and csinh.
+	* math/auto-libm-test-out-csin: Regenerated.
+	* math/auto-libm-test-out-csinh: Likewise.
+	* math/libm-test-csin.inc (csin_test_data): Remove tests moved to
+	auto-libm-test-in.
+	* math/libm-test-csinh.inc (csinh_test_data): Likewise.
+
 2017-02-09  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/Makefile (libm-compat-calls-ldouble-yes): Merge into

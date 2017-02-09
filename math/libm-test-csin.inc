@@ -64,9 +64,6 @@ static const struct test_c_c_data csin_test_data[] =
     TEST_c_c (csin, qnan_value, qnan_value, qnan_value, qnan_value),
 
     AUTO_TESTS_c_c (csin),
-
-    TEST_c_c (csin, min_subnorm_value, min_value, min_subnorm_value, min_value, UNDERFLOW_EXCEPTION),
-    TEST_c_c (csin, min_value, min_subnorm_value, min_value, min_subnorm_value, UNDERFLOW_EXCEPTION),
   };
 
 static void
