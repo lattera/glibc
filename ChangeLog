@@ -1,3 +1,26 @@
+2017-02-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/Makefile (tests): Add tst-sse, tst-avx and
+	tst-avx512.
+	(test-extras): Add tst-avx-aux and tst-avx512-aux.
+	(extra-test-objs): Add tst-avx-aux.o and tst-avx512-aux.o.
+	(modules-names): Add tst-ssemod, tst-avxmod and tst-avx512mod.
+	($(objpfx)tst-sse): New rule.
+	($(objpfx)tst-avx): Likewise.
+	($(objpfx)tst-avx512): Likewise.
+	(CFLAGS-tst-avx-aux.c): New.
+	(CFLAGS-tst-avxmod.c): Likewise.
+	(CFLAGS-tst-avx512-aux.c): Likewise.
+	(CFLAGS-tst-avx512mod.c): Likewise.
+	* sysdeps/x86_64/tst-avx-aux.c: New file.
+	* sysdeps/x86_64/tst-avx.c: Likewise.
+	* sysdeps/x86_64/tst-avx512-aux.c: Likewise.
+	* sysdeps/x86_64/tst-avx512.c: Likewise.
+	* sysdeps/x86_64/tst-avx512mod.c: Likewise.
+	* sysdeps/x86_64/tst-avxmod.c: Likewise.
+	* sysdeps/x86_64/tst-sse.c: Likewise.
+	* sysdeps/x86_64/tst-ssemod.c: Likewise.
+
 2017-02-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/auto-libm-test-in: Add more tests of csin and csinh.
