@@ -309,12 +309,9 @@ CFLAGS-test-tgmath-ret.c = -fno-builtin
 CFLAGS-test-powl.c = -fno-builtin
 
 CFLAGS-test-snan.c = -fsignaling-nans
-CPPFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES \
-			 $(libm-test-fast-math-cflags)
-CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES \
-			  $(libm-test-fast-math-cflags)
-CPPFLAGS-test-ildouble.c = -U__LIBC_INTERNAL_MATH_INLINES \
-			  $(libm-test-fast-math-cflags)
+CFLAGS-test-ifloat.c = $(libm-test-fast-math-cflags)
+CFLAGS-test-idouble.c = $(libm-test-fast-math-cflags)
+CFLAGS-test-ildouble.c = $(libm-test-fast-math-cflags)
 
 CFLAGS-test-signgam-finite.c = -ffinite-math-only
 CFLAGS-test-signgam-finite-c99.c = -ffinite-math-only -std=c99

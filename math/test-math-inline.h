@@ -21,6 +21,7 @@
 #define TEST_ERRNO 0
 #define TEST_EXCEPTIONS 0
 
+#undef __LIBC_INTERNAL_MATH_INLINES
 #ifdef __NO_MATH_INLINES
 # undef __NO_MATH_INLINES
 #endif
