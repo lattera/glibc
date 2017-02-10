@@ -58,16 +58,6 @@
 #endif
 
 
-#ifndef _HAVE_STRING_ARCH_strchr
-extern void *__rawmemchr (const void *__s, int __c);
-#  define strchr(s, c) \
-  (__extension__ (__builtin_constant_p (c) && !__builtin_constant_p (s)	      \
-		  && (c) == '\0'					      \
-		  ? (char *) __rawmemchr (s, c)				      \
-		  : __builtin_strchr (s, c)))
-#endif
-
-
 /* Copy SRC to DEST, returning pointer to final NUL byte.  */
 #ifdef __USE_GNU
 # ifndef _HAVE_STRING_ARCH_stpcpy

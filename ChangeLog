@@ -1,3 +1,7 @@
+2017-02-10  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/bits/string2.h (strchr): Remove define.
+
 2017-02-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/Makefile (tests): Add tst-sse, tst-avx and
