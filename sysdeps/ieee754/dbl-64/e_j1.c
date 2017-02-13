@@ -174,7 +174,7 @@ __ieee754_y1 (double x)
   if (__glibc_unlikely (ix >= 0x7ff00000))
     return one / (x + x * x);
   if (__glibc_unlikely ((ix | lx) == 0))
-    return -HUGE_VAL + x;
+    return -1 / zero; /* -inf and divide by zero exception.  */
   /* -inf and overflow exception.  */;
   if (__glibc_unlikely (hx < 0))
     return zero / (zero * x);

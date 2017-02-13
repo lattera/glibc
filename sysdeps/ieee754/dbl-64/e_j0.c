@@ -169,7 +169,7 @@ __ieee754_y0 (double x)
   if (ix >= 0x7ff00000)
     return one / (x + x * x);
   if ((ix | lx) == 0)
-    return -HUGE_VAL + x;                  /* -inf and overflow exception.  */
+    return -1 / zero; /* -inf and divide by zero exception.  */
   if (hx < 0)
     return zero / (zero * x);
   if (ix >= 0x40000000)         /* |x| >= 2.0 */

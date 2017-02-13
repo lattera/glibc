@@ -112,7 +112,7 @@ __ieee754_y1f(float x)
     /* if Y1(NaN) is NaN, Y1(-inf) is NaN, Y1(inf) is 0 */
 	if(__builtin_expect(ix>=0x7f800000, 0)) return  one/(x+x*x);
 	if(__builtin_expect(ix==0, 0))
-		return -HUGE_VALF+x;  /* -inf and overflow exception.  */
+		return -1/zero; /* -inf and divide by zero exception.  */
 	if(__builtin_expect(hx<0, 0)) return zero/(zero*x);
 	if(ix >= 0x40000000) {  /* |x| >= 2.0 */
 		SET_RESTORE_ROUNDF (FE_TONEAREST);

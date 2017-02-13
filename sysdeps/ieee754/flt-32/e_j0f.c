@@ -105,7 +105,7 @@ __ieee754_y0f(float x)
 	ix = 0x7fffffff&hx;
     /* Y0(NaN) is NaN, y0(-inf) is Nan, y0(inf) is 0, y0(0) is -inf.  */
 	if(ix>=0x7f800000) return  one/(x+x*x);
-	if(ix==0) return -HUGE_VALF+x;  /* -inf and overflow exception.  */
+	if(ix==0) return -1/zero; /* -inf and divide by zero exception.  */
 	if(hx<0) return zero/(zero*x);
 	if(ix >= 0x40000000) {  /* |x| >= 2.0 */
 	/* y0(x) = sqrt(2/(pi*x))*(p0(x)*sin(x0)+q0(x)*cos(x0))

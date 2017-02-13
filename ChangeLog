@@ -1,3 +1,14 @@
+2017-02-15  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	[BZ #21134]
+	* sysdeps/ieee754/dbl-64/e_j0.c (__ieee754_y0): Raise the
+	"divide by zero" exception when the input is zero.
+	* sysdeps/ieee754/dbl-64/e_j1.c (__ieee754_y1): Likewise.
+	* sysdeps/ieee754/flt-32/e_j0f.c (__ieee754_y0f): Likewise.
+	* sysdeps/ieee754/flt-32/e_j1f.c (__ieee754_y1f): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j0l.c (__ieee754_y0l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_y1l): Likewise.
+
 2017-02-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86_64/fpu/test-double-vlen2.c: Move most contents to,
