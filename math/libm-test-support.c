@@ -1182,8 +1182,6 @@ libm_test_init (int argc, char **argv)
   initialize ();
   fputs (test_msg, stdout);
 
-  INIT_ARCH_EXT;
-
   check_ulp ();
 }
 

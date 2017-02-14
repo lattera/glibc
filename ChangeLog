@@ -1,3 +1,12 @@
+2017-02-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test-support.h: Do not include <math-tests-arch.h>
+	here.
+	* math/libm-test-support.c (libm_test_init): Do not call
+	INIT_ARCH_EXT here.
+	* math/libm-test-driver.c: Include <math-tests-arch.h>.
+	(main): Call INIT_ARCH_EXT.
+
 2017-02-12  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	[BZ #21130]

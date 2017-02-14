@@ -30,7 +30,6 @@
 #include <stdio.h>
 #include <tininess.h>
 #include <math-tests.h>
-#include <math-tests-arch.h>
 #include <nan-high-order-bit.h>
 
 extern const int flag_test_errno;

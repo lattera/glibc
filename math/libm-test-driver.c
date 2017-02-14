@@ -18,6 +18,8 @@
 
 #include "libm-test-support.h"
 
+#include <math-tests-arch.h>
+
 /* Flags set by the including file.  */
 const int flag_test_errno = TEST_ERRNO;
 const int flag_test_exceptions = TEST_EXCEPTIONS;
@@ -1010,6 +1012,7 @@ int
 main (int argc, char **argv)
 {
   libm_test_init (argc, argv);
+  INIT_ARCH_EXT;
   do_test ();
   return libm_test_finish ();
 }
