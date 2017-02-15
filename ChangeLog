@@ -1,5 +1,11 @@
 2017-02-15  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* string/bits/string2.h (strcmp): Remove define.
+	(__strcmp_cg): Likewise.
+	(strncmp): Likewise.
+
+2017-02-15  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* include/string.h: Add __cplusplus check.
 
 2017-02-15  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>

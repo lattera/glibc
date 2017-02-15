@@ -92,64 +92,6 @@
 #endif
 
 
-/* Compare characters of S1 and S2.  */
-#ifndef _HAVE_STRING_ARCH_strcmp
-# define strcmp(s1, s2) \
-  __extension__								      \
-  ({ size_t __s1_len, __s2_len;						      \
-     (__builtin_constant_p (s1) && __builtin_constant_p (s2)		      \
-      && (__s1_len = strlen (s1), __s2_len = strlen (s2),		      \
-	  (!__string2_1bptr_p (s1) || __s1_len >= 4)			      \
-	  && (!__string2_1bptr_p (s2) || __s2_len >= 4))		      \
-      ? __builtin_strcmp (s1, s2)					      \
-      : (__builtin_constant_p (s1) && __string2_1bptr_p (s1)		      \
-	 && (__s1_len = strlen (s1), __s1_len < 4)			      \
-	 ? (__builtin_constant_p (s2) && __string2_1bptr_p (s2)		      \
-	    ? __builtin_strcmp (s1, s2)					      \
-	    : __strcmp_cg (s1, s2, __s1_len))				      \
-	 : (__builtin_constant_p (s2) && __string2_1bptr_p (s2)		      \
-	    && (__s2_len = strlen (s2), __s2_len < 4)			      \
-	    ? (__builtin_constant_p (s1) && __string2_1bptr_p (s1)	      \
-	       ? __builtin_strcmp (s1, s2)				      \
-	       : -__strcmp_cg (s2, s1, __s2_len))			      \
-            : __builtin_strcmp (s1, s2)))); })
-
-# define __strcmp_cg(s1, s2, l1) \
-  (__extension__ ({ const unsigned char *__s2 =				      \
-		      (const unsigned char *) (const char *) (s2);	      \
-		    int __result =					      \
-		      (((const unsigned char *) (const char *) (s1))[0]	      \
-		       - __s2[0]);					      \
-		    if (l1 > 0 && __result == 0)			      \
-		      {							      \
-			__result = (((const unsigned char *)		      \
-				     (const char *) (s1))[1] - __s2[1]);      \
-			if (l1 > 1 && __result == 0)			      \
-			  {						      \
-			    __result = (((const unsigned char *)	      \
-					 (const char *) (s1))[2] - __s2[2]);  \
-			    if (l1 > 2 && __result == 0)		      \
-			      __result = (((const unsigned char *)	      \
-					  (const char *)  (s1))[3]	      \
-					  - __s2[3]);			      \
-			  }						      \
-		      }							      \
-		    __result; }))
-#endif
-
-
-/* Compare N characters of S1 and S2.  */
-#ifndef _HAVE_STRING_ARCH_strncmp
-# define strncmp(s1, s2, n)						      \
-  (__extension__ (__builtin_constant_p (n)				      \
-		  && ((__builtin_constant_p (s1)			      \
-		       && strlen (s1) < ((size_t) (n)))			      \
-		      || (__builtin_constant_p (s2)			      \
-			  && strlen (s2) < ((size_t) (n))))		      \
-		  ? strcmp (s1, s2) : strncmp (s1, s2, n)))
-#endif
-
-
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
 #ifndef _HAVE_STRING_ARCH_strcspn
