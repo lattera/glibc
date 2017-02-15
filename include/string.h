@@ -1,6 +1,6 @@
 #ifndef _STRING_H
 
-#ifndef _ISOMAC
+#if !defined _ISOMAC && !defined __cplusplus
 #include <sys/types.h>
 
 extern void *__memccpy (void *__dest, const void *__src,
@@ -53,7 +53,7 @@ extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
    above are defined as macros in the headers.  */
 #include <string/string.h>
 
-#ifndef _ISOMAC
+#if !defined _ISOMAC && !defined __cplusplus
 extern __typeof (strcoll_l) __strcoll_l;
 extern __typeof (strxfrm_l) __strxfrm_l;
 extern __typeof (strcasecmp_l) __strcasecmp_l;
