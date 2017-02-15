@@ -1,4 +1,4 @@
-/* Tests for AVX-512 versions of vector math functions.
+/* Tests for AVX2 ISA versions of vector math functions.
    Copyright (C) 2014-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,6 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <test-double-vlen8.h>
+#include <test-double-vlen4.h>
 
-#include "libm-test.c"
+#undef VEC_SUFF
+#define VEC_SUFF _vlen4_avx2
+
+#undef REQUIRE_AVX
+#define REQUIRE_AVX2

@@ -16,15 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen8.h"
-
-#define TEST_VECTOR_cosf 1
-#define TEST_VECTOR_sinf 1
-#define TEST_VECTOR_sincosf 1
-#define TEST_VECTOR_logf 1
-#define TEST_VECTOR_expf 1
-#define TEST_VECTOR_powf 1
-
-#define REQUIRE_AVX
+#include <test-float-vlen8.h>
 
 #include "libm-test.c"

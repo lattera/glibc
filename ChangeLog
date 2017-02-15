@@ -1,3 +1,31 @@
+2017-02-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86_64/fpu/test-double-vlen2.c: Move most contents to,
+	and include ...
+	* sysdeps/x86_64/fpu/test-double-vlen2.h: ... here.  New file.
+	* sysdeps/x86_64/fpu/test-double-vlen4-avx2.c: Move most contents
+	to, and include ...
+	* sysdeps/x86_64/fpu/test-double-vlen4-avx2.h: ... here.  New
+	file.
+	* sysdeps/x86_64/fpu/test-double-vlen4.c: Move most contents to,
+	and include ...
+	* sysdeps/x86_64/fpu/test-double-vlen4.h: ... here.  New file.
+	* sysdeps/x86_64/fpu/test-double-vlen8.c: Move most contents to,
+	and include ...
+	* sysdeps/x86_64/fpu/test-double-vlen8.h: ... here.  New file.
+	* sysdeps/x86_64/fpu/test-float-vlen16.c: Move most contents to,
+	and include ...
+	* sysdeps/x86_64/fpu/test-float-vlen16.h: ... here.  New file.
+	* sysdeps/x86_64/fpu/test-float-vlen4.c: Move most contents to,
+	and include ...
+	* sysdeps/x86_64/fpu/test-float-vlen4.h: ... here.  New file.
+	* sysdeps/x86_64/fpu/test-float-vlen8-avx2.c: Move most contents
+	to, and include ...
+	* sysdeps/x86_64/fpu/test-float-vlen8-avx2.h: ... here.  New file.
+	* sysdeps/x86_64/fpu/test-float-vlen8.c: Move most contents to,
+	and include ...
+	* sysdeps/x86_64/fpu/test-float-vlen8.h: ... here.  New file.
+
 2017-02-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test-support.h: Do not include <math-tests-arch.h>
