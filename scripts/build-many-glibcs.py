@@ -122,6 +122,7 @@ class Context(object):
         self.load_versions_json()
         self.load_build_state_json()
         self.status_log_list = []
+        self.email_warning = False
 
     def get_script_text(self):
         """Return the text of this script."""
@@ -1003,6 +1004,15 @@ class Context(object):
 
     def bot_build_mail(self, action, build_time):
         """Send email with the results of a build."""
+        if not ('email-from' in self.bot_config and
+                'email-server' in self.bot_config and
+                'email-subject' in self.bot_config and
+                'email-to' in self.bot_config):
+            if not self.email_warning:
+                print("Email not configured, not sending.")
+                self.email_warning = True
+            return
+
         build_time = build_time.replace(microsecond=0)
         subject = (self.bot_config['email-subject'] %
                    {'action': action,

@@ -1,5 +1,11 @@
 2017-02-16  Zack Weinberg  <zackw@panix.com>
 
+	* scripts/build-many-glibcs.py (bot_build_mail): If the
+	bot_config does not contain all of the necessary email-
+	related settings, just print a warning and continue.
+
+2017-02-16  Zack Weinberg  <zackw@panix.com>
+
 	* crypt/md5.h: Test _LIBC with #if defined, not #if.
 	* dirent/opendir-tst1.c: Include sys/stat.h.
 	* dirent/tst-fdopendir.c: Include sys/stat.h.
