@@ -1,5 +1,21 @@
 2017-02-16  Zack Weinberg  <zackw@panix.com>
 
+	* string/string.h [__USE_MISC]: Include strings.h.
+	(__bzero, bcmp, bcopy, bzero, index, rindex)
+	(strcasecmp, strncasecmp, strcasecmp_l, strncasecmp_l)
+	(ffs, ffsl, ffsll): Don't declare.
+	* string/strings.h: Do not suppress the file if string.h has
+	already been included.
+	(bcmp, bcopy, bzero, strcasecmp, strncasecmp): Add __nonnull
+	annotations.
+	(index, rindex): Define inline forwarders even if
+	__CORRECT_ISO_CPP_STRING_H_PROTO is defined.
+	(ffs): Use __attribute_const__.
+	(ffsl, ffsll): Declare here.
+	(strcasecmp_l, strncasecmp_l): Correct comments; these functions
+	have now been standardized.
+	* include/string.h (__bzero): Declare here.
+
 	* bits/types.h: Move to posix/bits.
 	* include/bits/types.h: New wrapper.
 
