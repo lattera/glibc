@@ -16,11 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <cpu-features.h>
+
 #if defined REQUIRE_AVX
-# include <init-arch.h>
 
 # define INIT_ARCH_EXT
-
 # define CHECK_ARCH_EXT                                        \
   do                                                           \
     {                                                          \
@@ -29,10 +29,8 @@
   while (0)
 
 #elif defined REQUIRE_AVX2
-# include <init-arch.h>
 
 # define INIT_ARCH_EXT
-
 # define CHECK_ARCH_EXT                                        \
   do                                                           \
     {                                                          \
@@ -41,10 +39,8 @@
   while (0)
 
 #elif defined REQUIRE_AVX512F
-# include <init-arch.h>
 
 # define INIT_ARCH_EXT
-
 # define CHECK_ARCH_EXT                                        \
   do                                                           \
     {                                                          \

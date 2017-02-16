@@ -20,6 +20,7 @@
 #include <error.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 static void do_prepare (void);
 #define PREPARE(argc, argv)	do_prepare ()

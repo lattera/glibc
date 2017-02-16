@@ -38,6 +38,7 @@
 #include <string.h>
 #include <errno.h>
 #include <link.h>
+#include <stdbool.h>
 
 #ifndef NO_DELETE
 # define LOADED_IS_GOOD false

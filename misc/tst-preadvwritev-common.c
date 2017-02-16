@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/uio.h>
+#include <sys/stat.h>
 
 static void do_prepare (void);
 #define PREPARE(argc, argv)     do_prepare ()

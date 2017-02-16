@@ -23,6 +23,7 @@
 #include <limits.h>
 #include <malloc.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 

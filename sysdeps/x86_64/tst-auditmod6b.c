@@ -2,6 +2,8 @@
    function parameter passing/return.  */
 
 #include <dlfcn.h>
+#include <link.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>

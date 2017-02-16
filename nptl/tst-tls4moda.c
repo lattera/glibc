@@ -16,11 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stdio.h>
+#include <stddef.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <tls.h>
-
 
 static __thread unsigned char foo [32]
   __attribute__ ((tls_model ("initial-exec"), aligned (sizeof (void *))));

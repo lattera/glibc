@@ -1,5 +1,97 @@
 2017-02-16  Zack Weinberg  <zackw@panix.com>
 
+	* crypt/md5.h: Test _LIBC with #if defined, not #if.
+	* dirent/opendir-tst1.c: Include sys/stat.h.
+	* dirent/tst-fdopendir.c: Include sys/stat.h.
+	* dirent/tst-fdopendir2.c: Include stdlib.h.
+	* dirent/tst-scandir.c: Include stdbool.h.
+	* elf/tst-auditmod1.c: Include link.h and stddef.h.
+	* elf/tst-tls15.c: Include stdlib.h.
+	* elf/tst-tls16.c: Include stdlib.h.
+	* elf/tst-tls17.c: Include stdlib.h.
+	* elf/tst-tls18.c: Include stdlib.h.
+	* iconv/tst-iconv6.c: Include endian.h.
+	* iconvdata/bug-iconv11.c: Include limits.h.
+	* io/test-utime.c: Include stdint.h.
+	* io/tst-faccessat.c: Include sys/stat.h.
+	* io/tst-fchmodat.c: Include sys/stat.h.
+	* io/tst-fchownat.c: Include sys/stat.h.
+	* io/tst-fstatat.c: Include sys/stat.h.
+	* io/tst-futimesat.c: Include sys/stat.h.
+	* io/tst-linkat.c: Include sys/stat.h.
+	* io/tst-mkdirat.c: Include sys/stat.h and stdbool.h.
+	* io/tst-mkfifoat.c: Include sys/stat.h and stdbool.h.
+	* io/tst-mknodat.c: Include sys/stat.h and stdbool.h.
+	* io/tst-openat.c: Include stdbool.h.
+	* io/tst-readlinkat.c: Include sys/stat.h.
+	* io/tst-renameat.c: Include sys/stat.h.
+	* io/tst-symlinkat.c: Include sys/stat.h.
+	* io/tst-unlinkat.c: Include stdbool.h.
+	* libio/bug-memstream1.c: Include stdlib.h.
+	* libio/bug-wmemstream1.c: Include stdlib.h.
+	* libio/tst-fwrite-error.c: Include stdlib.h.
+	* libio/tst-memstream1.c: Include stdlib.h.
+	* libio/tst-memstream2.c: Include stdlib.h.
+	* libio/tst-memstream3.c: Include stdlib.h.
+	* malloc/tst-interpose-aux.c: Include stdint.h.
+	* misc/tst-preadvwritev-common.c: Include sys/stat.h.
+	* nptl/tst-basic7.c: Include limits.h.
+	* nptl/tst-cancel25.c: Include pthread.h, not pthreadP.h.
+	* nptl/tst-cancel4.c: Include stddef.h, limits.h, and sys/stat.h.
+	* nptl/tst-cancel4_1.c: Include stddef.h.
+	* nptl/tst-cancel4_2.c: Include stddef.h.
+	* nptl/tst-cond16.c: Include limits.h.
+	Use sysconf(_SC_PAGESIZE) instead of __getpagesize.
+	* nptl/tst-cond18.c: Include limits.h.
+	Use sysconf(_SC_PAGESIZE) instead of __getpagesize.
+	* nptl/tst-cond4.c: Include stdint.h.
+	* nptl/tst-cond6.c: Include stdint.h.
+	* nptl/tst-stack2.c: Include limits.h.
+	* nptl/tst-stackguard1.c: Include stddef.h.
+	* nptl/tst-tls4.c: Include stdint.h. Don't include tls.h.
+	* nptl/tst-tls4moda.c: Include stddef.h.
+	Don't include stdio.h, unistd.h, or tls.h.
+	* nptl/tst-tls4modb.c: Include stddef.h.
+	Don't include stdio.h, unistd.h, or tls.h.
+	* nptl/tst-tls5.h: Include stddef.h. Don't include stdlib.h or tls.h.
+	* posix/tst-getaddrinfo2.c: Include stdio.h.
+	* posix/tst-getaddrinfo5.c: Include stdio.h.
+	* posix/tst-pathconf.c: Include sys/stat.h.
+	* posix/tst-posix_fadvise-common.c: Include stdint.h.
+	* posix/tst-preadwrite-common.c: Include sys/stat.h.
+	* posix/tst-regex.c: Include stdint.h.
+	Don't include spawn.h or spawn_int.h.
+	* posix/tst-regexloc.c: Don't include spawn.h or spawn_int.h.
+	* posix/tst-vfork3.c: Include sys/stat.h.
+	* resolv/tst-bug18665-tcp.c: Include stdlib.h.
+	* resolv/tst-res_hconf_reorder.c: Include stdlib.h.
+	* resolv/tst-resolv-search.c: Include stdlib.h.
+	* stdio-common/tst-fmemopen2.c: Include stdint.h.
+	* stdio-common/tst-vfprintf-width-prec.c: Include stdlib.h.
+	* stdlib/test-canon.c: Include sys/stat.h.
+	* stdlib/tst-tls-atexit.c: Include stdbool.h.
+	* string/test-memchr.c: Include stdint.h.
+	* string/tst-cmp.c: Include stdint.h.
+	* sysdeps/pthread/tst-timer.c: Include stdint.h.
+	* sysdeps/unix/sysv/linux/tst-sync_file_range.c: Include stdint.h.
+	* sysdeps/wordsize-64/tst-writev.c: Include limits.h and stdint.h.
+	* sysdeps/x86_64/fpu/math-tests-arch.h: Include cpu-features.h.
+	Don't include init-arch.h.
+	* sysdeps/x86_64/multiarch/test-multiarch.h: Include cpu-features.h.
+	Don't include init-arch.h.
+	* sysdeps/x86_64/tst-auditmod10b.c: Include link.h and stddef.h.
+	* sysdeps/x86_64/tst-auditmod3b.c: Include link.h and stddef.h.
+	* sysdeps/x86_64/tst-auditmod4b.c: Include link.h and stddef.h.
+	* sysdeps/x86_64/tst-auditmod5b.c: Include link.h and stddef.h.
+	* sysdeps/x86_64/tst-auditmod6b.c: Include link.h and stddef.h.
+	* sysdeps/x86_64/tst-auditmod6c.c: Include link.h and stddef.h.
+	* sysdeps/x86_64/tst-auditmod7b.c: Include link.h and stddef.h.
+	* time/clocktest.c: Include stdint.h.
+	* time/tst-posixtz.c: Include stdint.h.
+	* timezone/tst-timezone.c: Include stdint.h.
+
+2017-02-16  Zack Weinberg  <zackw@panix.com>
+
 	* string/string.h [__USE_MISC]: Include strings.h.
 	(__bzero, bcmp, bcopy, bzero, index, rindex)
 	(strcasecmp, strncasecmp, strcasecmp_l, strncasecmp_l)

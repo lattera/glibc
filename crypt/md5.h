@@ -22,7 +22,7 @@
 
 #include <stdio.h>
 
-#if defined HAVE_LIMITS_H || _LIBC
+#if defined HAVE_LIMITS_H || defined _LIBC
 # include <limits.h>
 #endif
 

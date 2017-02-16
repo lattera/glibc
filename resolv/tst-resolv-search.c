@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <resolv.h>
+#include <stdlib.h>
 #include <string.h>
 #include <support/check.h>
 #include <support/check_nss.h>

@@ -23,7 +23,9 @@
 #else
 # define TEST_NAME "wmemchr"
 #endif /* WIDE */
+
 #include "test-string.h"
+#include <stdint.h>
 
 #ifndef WIDE
 # define MEMCHR memchr

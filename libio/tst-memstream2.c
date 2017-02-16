@@ -1,5 +1,6 @@
 #include <mcheck.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 #ifndef CHAR_T
