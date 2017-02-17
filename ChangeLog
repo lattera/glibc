@@ -1,3 +1,20 @@
+2017-02-17  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #21171]
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c (__ieee754_lgamma_r): Return
+	+Inf and raise divide-by-zero when x is negative.
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c (__ieee754_lgammaf_r): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r): Likewise.
+	* sysdeps/ieee754/dbl-64/e_log10.c (__ieee754_log10):  Return
+	-Inf and raise divide-by-zero when x = +-0.
+	* sysdeps/ieee754/dbl-64/e_log2.c (__ieee754_log2): Likewise.
+	* sysdeps/ieee754/flt-32/e_log10f.c (__ieee754_log10f):	Likewise.
+	* sysdeps/ieee754/flt-32/e_log2f.c (__ieee754_log2f): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log10l.c (__ieee754_log10l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log2l.c (__ieee754_log2l): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_log10l.c (__ieee754_log10l): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_log2l.c (__ieee754_log2l): Likewise.
+
 2017-02-16  Zack Weinberg  <zackw@panix.com>
 
 	* scripts/build-many-glibcs.py (bot_build_mail): If the

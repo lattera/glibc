@@ -83,7 +83,7 @@ __ieee754_log2 (double x)
   if (hx < 0x00100000)
     {                           /* x < 2**-1022  */
       if (__glibc_unlikely (((hx & 0x7fffffff) | lx) == 0))
-	return -two54 / (x - x);        /* log(+-0)=-inf */
+	return -two54 / __fabs (x);        /* log(+-0)=-inf */
       if (__glibc_unlikely (hx < 0))
 	return (x - x) / (x - x);       /* log(-#) = NaN */
       k -= 54;

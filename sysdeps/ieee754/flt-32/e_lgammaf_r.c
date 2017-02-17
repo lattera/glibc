@@ -160,7 +160,7 @@ __ieee754_lgammaf_r(float x, int *signgamp)
 	}
 	if(hx<0) {
 	    if(ix>=0x4b000000)	/* |x|>=2**23, must be -integer */
-		return x/zero;
+		return __fabsf (x)/zero;
 	    if (ix > 0x40000000 /* X < 2.0f.  */
 		&& ix < 0x41700000 /* X > -15.0f.  */)
 		return __lgamma_negf (x, signgamp);

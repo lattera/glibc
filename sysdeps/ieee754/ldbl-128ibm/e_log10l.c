@@ -189,7 +189,7 @@ __ieee754_log10l (long double x)
   xhi = ldbl_high (x);
   EXTRACT_WORDS64 (hx, xhi);
   if ((hx & 0x7fffffffffffffffLL) == 0)
-    return (-1.0L / (x - x));
+    return (-1.0L / __fabsl (x));		/* log10l(+-0)=-inf  */
   if (hx < 0)
     return (x - x) / (x - x);
   if (hx >= 0x7ff0000000000000LL)

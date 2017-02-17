@@ -181,7 +181,7 @@ __ieee754_log2l (_Float128 x)
 /* Test for domain */
   GET_LDOUBLE_WORDS64 (hx, lx, x);
   if (((hx & 0x7fffffffffffffffLL) | lx) == 0)
-    return (-1 / (x - x));
+    return (-1 / __fabsl (x));		/* log2l(+-0)=-inf  */
   if (hx < 0)
     return (x - x) / (x - x);
   if (hx >= 0x7fff000000000000LL)

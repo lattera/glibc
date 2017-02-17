@@ -225,7 +225,7 @@ __ieee754_lgamma_r(double x, int *signgamp)
 	if(hx<0) {
 	    if(__builtin_expect(ix>=0x43300000, 0))
 		/* |x|>=2**52, must be -integer */
-		return x/zero;
+		return __fabs (x)/zero;
 	    if (x < -2.0 && x > -28.0)
 		return __lgamma_neg (x, signgamp);
 	    t = sin_pi(x);

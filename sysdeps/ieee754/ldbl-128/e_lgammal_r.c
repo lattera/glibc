@@ -782,7 +782,7 @@ __ieee754_lgammal_r (_Float128 x, int *signgamp)
       q = -x;
       p = __floorl (q);
       if (p == q)
-	return (one / (p - p));
+	return (one / __fabsl (p - p));
       _Float128 halfp = p * L(0.5);
       if (halfp == __floorl (halfp))
 	*signgamp = -1;
