@@ -215,7 +215,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 		 with stepping >= 4) to avoid TSX on kernels that weren't
 		 updated with the latest microcode package (which disables
 		 broken feature by default).  */
-	      cpu_features->cpuid[COMMON_CPUID_INDEX_7].ebx &= ~(bit_cpu_RTM);
+	      cpu_features->cpuid[index_cpu_RTM].reg_RTM &= ~bit_cpu_RTM;
 	      break;
 	    }
 	}
