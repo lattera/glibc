@@ -1,3 +1,10 @@
+2017-02-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/libm-test-ulps: Update.
+	* sysdeps/mips/mips32/libm-test-ulps: Likewise.
+	* sysdeps/mips/mips64/libm-test-ulps: Likewise.
+	* sysdeps/powerpc/nofpu/libm-test-ulps: Likewise.
+
 2017-01-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #21029]
