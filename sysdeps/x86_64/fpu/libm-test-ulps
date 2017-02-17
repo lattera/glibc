@@ -528,8 +528,12 @@ ildouble: 2
 ldouble: 2
 
 Function: Real part of "catan":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "catan":
 double: 1
@@ -541,9 +545,9 @@ ldouble: 1
 
 Function: Real part of "catan_downward":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
@@ -557,22 +561,24 @@ ldouble: 4
 
 Function: Real part of "catan_towardzero":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
 Function: Imaginary part of "catan_towardzero":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 4
 ldouble: 4
 
 Function: Real part of "catan_upward":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -594,8 +600,12 @@ ildouble: 1
 ldouble: 1
 
 Function: Imaginary part of "catanh":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Real part of "catanh_downward":
 double: 2
@@ -615,9 +625,9 @@ ldouble: 1
 
 Function: Real part of "catanh_towardzero":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 4
 ldouble: 4
 
@@ -631,14 +641,16 @@ ldouble: 1
 
 Function: Real part of "catanh_upward":
 double: 4
-float: 3
+float: 4
 idouble: 4
-ifloat: 3
+ifloat: 4
 ildouble: 4
 ldouble: 4
 
 Function: Imaginary part of "catanh_upward":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1

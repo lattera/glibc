@@ -499,6 +499,12 @@ ifloat: 2
 ildouble: 2
 ldouble: 2
 
+Function: Real part of "catan":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
 Function: Imaginary part of "catan":
 double: 1
 float: 1
@@ -560,6 +566,12 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: Imaginary part of "catanh":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 
