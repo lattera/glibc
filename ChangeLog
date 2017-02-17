@@ -1,3 +1,13 @@
+2017-02-17  Joseph Myers  <joseph@codesourcery.com>
+
+	Revert:
+	2017-02-16  Zack Weinberg  <zackw@panix.com>
+
+	* sysdeps/x86_64/fpu/math-tests-arch.h: Include cpu-features.h.
+	Don't include init-arch.h.
+	* sysdeps/x86_64/multiarch/test-multiarch.h: Include cpu-features.h.
+	Don't include init-arch.h.
+
 2017-02-17  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #21171]
