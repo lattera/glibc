@@ -1,5 +1,17 @@
 2017-02-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/auto-libm-test-in: Add tests of cacos and cacosh.
+	* math/auto-libm-test-out-cacos: New generated file.
+	* math/auto-libm-test-out-cacosh: Likewise.
+	* math/libm-test-cacos.inc (cacos_test_data): Use AUTO_TESTS_c_c.
+	Move tests with finite inputs to auto-libm-test-in.
+	* math/libm-test-cacosh.inc (cacosh_test_data): Likewise.
+	* math/Makefile (libm-test-funcs-auto): Add cacos and cacosh.
+	(libm-test-funcs-noauto): Remove cacos and cacosh.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	Revert:
 	2017-02-16  Zack Weinberg  <zackw@panix.com>
 
