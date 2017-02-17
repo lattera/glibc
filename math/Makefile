@@ -213,11 +213,12 @@ $(objpfx)libm-test-ulps.h: $(ulps-file) gen-libm-test.pl
 	$(PERL) gen-libm-test.pl -u $< -H $@
 
 libm-test-funcs-auto = acos acosh asin asinh atan atan2 atanh cabs cacos \
-		       cacosh carg cbrt ccos ccosh cexp clog clog10 cos cosh \
-		       cpow csin csinh csqrt ctan ctanh erf erfc exp exp10 \
-		       exp2 expm1 fma hypot j0 j1 jn lgamma log log10 log1p \
-		       log2 pow sin sincos sinh sqrt tan tanh tgamma y0 y1 yn
-libm-test-funcs-noauto = canonicalize casin casinh catan catanh \
+		       cacosh carg casin casinh cbrt ccos ccosh cexp clog \
+		       clog10 cos cosh cpow csin csinh csqrt ctan ctanh erf \
+		       erfc exp exp10 exp2 expm1 fma hypot j0 j1 jn lgamma \
+		       log log10 log1p log2 pow sin sincos sinh sqrt tan tanh \
+		       tgamma y0 y1 yn
+libm-test-funcs-noauto = canonicalize catan catanh \
 			 ceil cimag conj copysign cproj creal fabs fdim floor \
 			 fmax fmaxmag fmin fminmag fmod fpclassify frexp \
 			 fromfp fromfpx getpayload ilogb iscanonical iseqsig \
