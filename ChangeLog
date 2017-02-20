@@ -1,3 +1,12 @@
+2017-02-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test-support.h (EXCEPTIONS_OK): Remove macro.
+	(UNDERFLOW_EXCEPTION_FLOAT): Likewise.
+	(UNDERFLOW_EXCEPTION_OK_FLOAT): Likewise.
+	(UNDERFLOW_EXCEPTION_DOUBLE): Likewise.
+	(UNDERFLOW_EXCEPTION_OK_DOUBLE): Likewise.
+	(UNDERFLOW_EXCEPTION_LDOUBLE_IBM): Likewise.
+
 2017-02-19  Zack Weinberg  <zackw@panix.com>
 
 	* rt/tst-mqueue4.c: Include stdint.h.

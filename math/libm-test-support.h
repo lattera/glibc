@@ -56,7 +56,6 @@ extern const char doc[];
 /* For "inexact" exceptions, the default is allowed but not required
    unless INEXACT_EXCEPTION or NO_INEXACT_EXCEPTION is specified.  */
 #define NO_INEXACT_EXCEPTION		0x200
-#define EXCEPTIONS_OK INVALID_EXCEPTION_OK+DIVIDE_BY_ZERO_EXCEPTION_OK
 /* Some special test flags, passed together with exceptions.  */
 #define IGNORE_ZERO_INF_SIGN		0x400
 #define TEST_NAN_SIGN			0x800
@@ -121,33 +120,6 @@ extern const char doc[];
 # define PAYLOAD_DIG (DBL_MANT_DIG - 2)
 #else
 # define PAYLOAD_DIG (MANT_DIG - 2)
-#endif
-
-/* Values underflowing only for float.  */
-#if TEST_COND_binary32
-# define UNDERFLOW_EXCEPTION_FLOAT	UNDERFLOW_EXCEPTION
-# define UNDERFLOW_EXCEPTION_OK_FLOAT	UNDERFLOW_EXCEPTION_OK
-#else
-# define UNDERFLOW_EXCEPTION_FLOAT	0
-# define UNDERFLOW_EXCEPTION_OK_FLOAT	0
-#endif
-
-/* Values underflowing only for double or types with a larger least
-   positive normal value.  */
-#if TEST_COND_binary32 || TEST_COND_binary64 || TEST_COND_ibm128
-# define UNDERFLOW_EXCEPTION_DOUBLE	UNDERFLOW_EXCEPTION
-# define UNDERFLOW_EXCEPTION_OK_DOUBLE	UNDERFLOW_EXCEPTION_OK
-#else
-# define UNDERFLOW_EXCEPTION_DOUBLE	0
-# define UNDERFLOW_EXCEPTION_OK_DOUBLE	0
-#endif
-
-/* Values underflowing only for IBM long double or types with a larger least
-   positive normal value.  */
-#if TEST_COND_binary32 || TEST_COND_ibm128
-# define UNDERFLOW_EXCEPTION_LDOUBLE_IBM	UNDERFLOW_EXCEPTION
-#else
-# define UNDERFLOW_EXCEPTION_LDOUBLE_IBM	0
 #endif
 
 /* Values underflowing on architectures detecting tininess before
