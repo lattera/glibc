@@ -1,5 +1,12 @@
 2017-02-21  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/tst-set_ppr.c: New file.
+	Implement test cases for __ppc_set_ppr_* functions.
+	* sysdeps/powerpc/Makefile ($(subdir),misc): Add tst-set_ppr
+	in the list of tests.
+
+2017-02-21  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/test-get_hwcap.c: Use <support/test-driver.c>
 	instead of test-skeleton.c.
 	(do_test): Replaced pthread_create and pthread_join with
