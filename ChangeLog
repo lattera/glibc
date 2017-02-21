@@ -1,3 +1,14 @@
+2017-02-21  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/test-get_hwcap.c: Use <support/test-driver.c>
+	instead of test-skeleton.c.
+	(do_test): Replaced pthread_create and pthread_join with
+	xpthread_create and xpthread_join.  Use TEST_VERIFY_EXIT macro.
+	Removed unneeded status variable.
+	* sysdeps/powerpc/test-gettimebase.c: Use <support/test-driver.c>
+	instead of test-skeleton.c.
+	* sysdeps/powerpc/tst-tlsopt-powerpc.c: Likewise.
+
 2017-02-20  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #20313]
