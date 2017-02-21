@@ -9,7 +9,7 @@ comment_char %
 % otherwise be governed by that license.
 
 % Transliterations of fractions.
-% Generated automatically from UnicodeData.txt by gen_translit_fraction.py on 2015-12-09 for Unicode 8.0.0.
+% Generated automatically from UnicodeData.txt by gen_translit_fraction.py on 2016-06-29 for Unicode 9.0.0.
 % The replacements have been surrounded with spaces, because fractions are
 % often preceded by a decimal number and followed by a unit or a math symbol.
 

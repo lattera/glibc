@@ -7,7 +7,9 @@ using `glibc' in the "product" field.
 
 Version 2.26
 
-[Add important changes here]
+* Unicode 9.0.0 Support: Character encoding, character type info, and
+  transliteration tables are all updated to Unicode 9.0.0, using
+  generator scripts contributed by Mike FABIAN (Red Hat).
 
 Security related changes:
 

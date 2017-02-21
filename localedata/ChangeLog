@@ -1,3 +1,19 @@
+2017-02-20  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #20313]
+	* unicode-gen/Makefile (UNICODE_VERSION): Set to 9.0.0.
+	* unicode-gen/UnicodeData.txt: Update to Unicode 9.0.0 release.
+	* unicode-gen/DerivedCoreProperties.txt: Likewise.
+	* unicode-gen/EastAsianWidth.txt: Likewise.
+	* charmaps/UTF-8: Regenerate.
+	* locales/i18n: Regenerate.
+	* locales/translit_circle: Regenerate.
+	* locales/translit_cjk_compat: Regenerate.
+	* locales/translit_combining: Regenerate.
+	* locales/translit_compat: Regenerate.
+	* locales/translit_font: Regenerate.
+	* locales/translit_fraction: Regenerate.
+
 2017-01-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* All files with FSF copyright notices: Update copyright dates

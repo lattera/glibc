@@ -9,7 +9,7 @@ comment_char %
 % otherwise be governed by that license.
 
 % Transliterations of CJK compatibility characters.
-% Generated automatically from UnicodeData.txt by gen_translit_cjk_compat.py on 2015-12-09 for Unicode 8.0.0.
+% Generated automatically from UnicodeData.txt by gen_translit_cjk_compat.py on 2016-06-29 for Unicode 9.0.0.
 
 LC_CTYPE
 
@@ -583,6 +583,8 @@ translit_start
 <U0001F239> <U5272>
 % SQUARED CJK UNIFIED IDEOGRAPH-55B6
 <U0001F23A> <U55B6>
+% SQUARED CJK UNIFIED IDEOGRAPH-914D
+<U0001F23B> <U914D>
 % CJK COMPATIBILITY IDEOGRAPH-F900
 <UF900> <U8C48>
 % CJK COMPATIBILITY IDEOGRAPH-F901
