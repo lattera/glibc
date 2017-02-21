@@ -1,3 +1,8 @@
+2017-03-15  John David Anglin  <danglin@gcc.gnu.org>
+
+	* sysdeps/hppa/dl-machine.h (DL_STACK_END): Define.
+	(RTLD_START): Don't record stack end address in _dl_start_user.
+
 2017-03-15  Alexey Neyman  <stilor@att.net>
 
 	[BZ #21088]

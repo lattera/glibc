@@ -302,6 +302,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #define ARCH_LA_PLTENTER hppa_gnu_pltenter
 #define ARCH_LA_PLTEXIT hppa_gnu_pltexit
 
+/* Adjust DL_STACK_END to get value we want in __libc_stack_end.  */
+#define DL_STACK_END(cookie) \
+  ((void *) (((long) (cookie)) + 0x160))
+
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
@@ -400,11 +404,6 @@ asm (									\
 "_dl_start_user:\n"							\
 	/* Save the entry point in %r3. */				\
 "	copy	%ret0,%r3\n"						\
-									\
-	/* Remember the lowest stack address. */			\
-"	addil	LT'__libc_stack_end,%r19\n"				\
-"	ldw	RT'__libc_stack_end(%r1),%r20\n"			\
-"	stw	%sp,0(%r20)\n"						\
 									\
 	/* See if we were called as a command with the executable file	\
 	   name as an extra leading argument. */			\
