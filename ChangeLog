@@ -1,5 +1,8 @@
 2017-02-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/sys/timerfd.h (TFD_TIMER_CANCEL_ON_SET):
+	New enum constant and macro.
+
 	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
 	kernel version to 4.10.
 

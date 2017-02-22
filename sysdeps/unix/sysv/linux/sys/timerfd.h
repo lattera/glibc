@@ -28,8 +28,10 @@
 /* Bits to be set in the FLAGS parameter of `timerfd_settime'.  */
 enum
   {
-    TFD_TIMER_ABSTIME = 1 << 0
+    TFD_TIMER_ABSTIME = 1 << 0,
 #define TFD_TIMER_ABSTIME TFD_TIMER_ABSTIME
+    TFD_TIMER_CANCEL_ON_SET = 1 << 1
+#define TFD_TIMER_CANCEL_ON_SET TFD_TIMER_CANCEL_ON_SET
   };
 
 
