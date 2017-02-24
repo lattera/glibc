@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data sin_test_data[] =
   {
     TEST_f_f (sin, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
@@ -32,6 +34,12 @@ static void
 sin_test (void)
 {
   ALL_RM_TEST (sin, 0, sin_test_data, RUN_TEST_LOOP_f_f, END);
+}
+
+static void
+do_test (void)
+{
+  sin_test ();
 }
 
 /*

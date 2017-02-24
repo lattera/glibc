@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_if_f_data yn_test_data[] =
   {
     /* yn is the Bessel function of the second kind of order n */
@@ -117,6 +119,12 @@ static void
 yn_test (void)
 {
   ALL_RM_TEST (yn, 0, yn_test_data, RUN_TEST_LOOP_if_f, END);
+}
+
+static void
+do_test (void)
+{
+  yn_test ();
 }
 
 /*

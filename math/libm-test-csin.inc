@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_c_c_data csin_test_data[] =
   {
     TEST_c_c (csin, 0.0, plus_infty, 0.0, plus_infty),
@@ -70,6 +72,12 @@ static void
 csin_test (void)
 {
   ALL_RM_TEST (csin, 0, csin_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
+}
+
+static void
+do_test (void)
+{
+  csin_test ();
 }
 
 /*

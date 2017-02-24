@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data exp10_test_data[] =
   {
     TEST_f_f (exp10, plus_infty, plus_infty, ERRNO_UNCHANGED),
@@ -39,6 +41,13 @@ pow10_test (void)
 {
   /* pow10 uses the same test data as exp10.  */
   ALL_RM_TEST (pow10, 0, exp10_test_data, RUN_TEST_LOOP_f_f, END);
+}
+
+static void
+do_test (void)
+{
+  exp10_test ();
+  pow10_test ();
 }
 
 /*

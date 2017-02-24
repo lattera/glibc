@@ -24,5 +24,3 @@
 
 #define VEC_SUFF _vlen8
 #define VEC_LEN 8
-
-#define FUNC_TEST(function) function ## f ## _VEC_SUFF

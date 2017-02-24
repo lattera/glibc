@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f1_data lgamma_test_data[] =
   {
     TEST_f_f1 (lgamma, plus_infty, plus_infty, 1, ERRNO_UNCHANGED),
@@ -45,6 +47,13 @@ gamma_test (void)
 {
   /* gamma uses the same test data as lgamma.  */
   ALL_RM_TEST (gamma, 0, lgamma_test_data, RUN_TEST_LOOP_f_f1, END, signgam);
+}
+
+static void
+do_test (void)
+{
+  lgamma_test ();
+  gamma_test ();
 }
 
 /*

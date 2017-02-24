@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_ff_i_data totalorder_test_data[] =
   {
     TEST_ff_b (totalorder, minus_zero, minus_zero, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -261,6 +263,12 @@ static void
 totalorder_test (void)
 {
   ALL_RM_TEST (totalorder, 1, totalorder_test_data, RUN_TEST_LOOP_ff_b, END);
+}
+
+static void
+do_test (void)
+{
+  totalorder_test ();
 }
 
 /*

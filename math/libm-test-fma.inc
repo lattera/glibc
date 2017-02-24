@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_fff_f_data fma_test_data[] =
   {
     TEST_fff_f (fma, qnan_value, 2.0, 3.0, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -118,6 +120,12 @@ static void
 fma_test (void)
 {
   ALL_RM_TEST (fma, 1, fma_test_data, RUN_TEST_LOOP_fff_f, END);
+}
+
+static void
+do_test (void)
+{
+  fma_test ();
 }
 
 /*

@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_i_data fpclassify_test_data[] =
   {
     TEST_f_i (fpclassify, qnan_value, FP_NAN, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -39,6 +41,12 @@ static void
 fpclassify_test (void)
 {
   ALL_RM_TEST (fpclassify, 1, fpclassify_test_data, RUN_TEST_LOOP_f_i_tg, END);
+}
+
+static void
+do_test (void)
+{
+  fpclassify_test ();
 }
 
 /*

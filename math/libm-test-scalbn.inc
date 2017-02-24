@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_fi_f_data scalbn_test_data[] =
   {
     TEST_fi_f (scalbn, 0, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -97,6 +99,13 @@ ldexp_test (void)
 {
   /* ldexp uses the same test data as scalbn.  */
   ALL_RM_TEST (ldexp, 1, scalbn_test_data, RUN_TEST_LOOP_fi_f, END);
+}
+
+static void
+do_test (void)
+{
+  scalbn_test ();
+  ldexp_test ();
 }
 
 /*

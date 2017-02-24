@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_if_f_data jn_test_data[] =
   {
     /* jn is the Bessel function of the first kind of order n.  */
@@ -58,6 +60,12 @@ static void
 jn_test (void)
 {
   ALL_RM_TEST (jn, 0, jn_test_data, RUN_TEST_LOOP_if_f, END);
+}
+
+static void
+do_test (void)
+{
+  jn_test ();
 }
 
 /*

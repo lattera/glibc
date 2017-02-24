@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data expm1_test_data[] =
   {
     TEST_f_f (expm1, plus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
@@ -32,6 +34,12 @@ static void
 expm1_test (void)
 {
   ALL_RM_TEST (expm1, 0, expm1_test_data, RUN_TEST_LOOP_f_f, END);
+}
+
+static void
+do_test (void)
+{
+  expm1_test ();
 }
 
 /*

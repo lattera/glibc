@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data acosh_test_data[] =
   {
     TEST_f_f (acosh, plus_infty, plus_infty, ERRNO_UNCHANGED),
@@ -43,6 +45,12 @@ static void
 acosh_test (void)
 {
   ALL_RM_TEST (acosh, 0, acosh_test_data, RUN_TEST_LOOP_f_f, END);
+}
+
+static void
+do_test (void)
+{
+  acosh_test ();
 }
 
 /*

@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data sinh_test_data[] =
   {
     TEST_f_f (sinh, plus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
@@ -32,6 +34,12 @@ static void
 sinh_test (void)
 {
   ALL_RM_TEST (sinh, 0, sinh_test_data, RUN_TEST_LOOP_f_f, END);
+}
+
+static void
+do_test (void)
+{
+  sinh_test ();
 }
 
 /*

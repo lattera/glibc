@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_c_c_data conj_test_data[] =
   {
     TEST_c_c (conj, 0.0, 0.0, 0.0, minus_zero, NO_INEXACT_EXCEPTION),
@@ -34,6 +36,12 @@ static void
 conj_test (void)
 {
   ALL_RM_TEST (conj, 1, conj_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
+}
+
+static void
+do_test (void)
+{
+  conj_test ();
 }
 
 /*

@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_ff_f_data remainder_test_data[] =
   {
     TEST_ff_f (remainder, 1, 0, qnan_value, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
@@ -184,6 +186,13 @@ drem_test (void)
 {
   /* drem uses the same test data as remainder.  */
   ALL_RM_TEST (drem, 1, remainder_test_data, RUN_TEST_LOOP_ff_f, END);
+}
+
+static void
+do_test (void)
+{
+  remainder_test ();
+  drem_test ();
 }
 
 /*

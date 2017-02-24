@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_ff_i_data islessgreater_test_data[] =
   {
     TEST_ff_i (islessgreater, minus_zero, minus_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -73,6 +75,12 @@ static void
 islessgreater_test (void)
 {
   ALL_RM_TEST (islessgreater, 1, islessgreater_test_data, RUN_TEST_LOOP_ff_i_tg, END);
+}
+
+static void
+do_test (void)
+{
+  islessgreater_test ();
 }
 
 /*

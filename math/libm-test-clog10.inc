@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_c_c_data clog10_test_data[] =
   {
     TEST_c_c (clog10, minus_zero, 0, minus_infty, lit_pi_ln10_d, DIVIDE_BY_ZERO_EXCEPTION),
@@ -73,6 +75,12 @@ static void
 clog10_test (void)
 {
   ALL_RM_TEST (clog10, 0, clog10_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
+}
+
+static void
+do_test (void)
+{
+  clog10_test ();
 }
 
 /*

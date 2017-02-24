@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f1_data frexp_test_data[] =
   {
     TEST_fI_f1 (frexp, plus_infty, plus_infty, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -79,6 +81,12 @@ frexp_test (void)
   int x;
 
   ALL_RM_TEST (frexp, 1, frexp_test_data, RUN_TEST_LOOP_fI_f1, END, x);
+}
+
+static void
+do_test (void)
+{
+  frexp_test ();
 }
 
 /*

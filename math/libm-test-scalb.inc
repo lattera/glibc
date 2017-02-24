@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_ff_f_data scalb_test_data[] =
   {
     /* Results in this case are unspecified by POSIX, so, for an
@@ -148,6 +150,12 @@ static void
 scalb_test (void)
 {
   ALL_RM_TEST (scalb, 1, scalb_test_data, RUN_TEST_LOOP_ff_f, END);
+}
+
+static void
+do_test (void)
+{
+  scalb_test ();
 }
 
 /*

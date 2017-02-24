@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_c_c_data ccos_test_data[] =
   {
     TEST_c_c (ccos, plus_infty, 0.0, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN),
@@ -70,6 +72,12 @@ static void
 ccos_test (void)
 {
   ALL_RM_TEST (ccos, 0, ccos_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
+}
+
+static void
+do_test (void)
+{
+  ccos_test ();
 }
 
 /*

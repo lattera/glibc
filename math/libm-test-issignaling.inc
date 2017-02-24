@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_i_data issignaling_test_data[] =
   {
     TEST_f_b (issignaling, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -41,6 +43,12 @@ static void
 issignaling_test (void)
 {
   ALL_RM_TEST (issignaling, 1, issignaling_test_data, RUN_TEST_LOOP_f_b_tg, END);
+}
+
+static void
+do_test (void)
+{
+  issignaling_test ();
 }
 
 /*

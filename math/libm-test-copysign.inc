@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_ff_f_data copysign_test_data[] =
   {
     TEST_ff_f (copysign, 0, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -103,6 +105,12 @@ static void
 copysign_test (void)
 {
   ALL_RM_TEST (copysign, 1, copysign_test_data, RUN_TEST_LOOP_ff_f, END);
+}
+
+static void
+do_test (void)
+{
+  copysign_test ();
 }
 
 /*

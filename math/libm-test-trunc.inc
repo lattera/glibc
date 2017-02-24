@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data trunc_test_data[] =
   {
     TEST_f_f (trunc, plus_infty, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -177,6 +179,12 @@ static void
 trunc_test (void)
 {
   ALL_RM_TEST (trunc, 1, trunc_test_data, RUN_TEST_LOOP_f_f, END);
+}
+
+static void
+do_test (void)
+{
+  trunc_test ();
 }
 
 /*

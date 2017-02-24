@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_ffI_f1_data remquo_test_data[] =
   {
     /* Bug 6802: errno setting may be missing.  */
@@ -175,6 +177,12 @@ remquo_test (void)
   int x;
 
   ALL_RM_TEST (remquo, 1, remquo_test_data, RUN_TEST_LOOP_ffI_f1_mod8, END, x);
+}
+
+static void
+do_test (void)
+{
+  remquo_test ();
 }
 
 /*

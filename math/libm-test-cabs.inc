@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_c_f_data cabs_test_data[] =
   {
     /* cabs (x + iy) is specified as hypot (x,y) */
@@ -37,6 +39,12 @@ static void
 cabs_test (void)
 {
   ALL_RM_TEST (cabs, 0, cabs_test_data, RUN_TEST_LOOP_c_f, END);
+}
+
+static void
+do_test (void)
+{
+  cabs_test ();
 }
 
 /*

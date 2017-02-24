@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data j0_test_data[] =
   {
     /* j0 is the Bessel function of the first kind of order 0 */
@@ -33,6 +35,12 @@ static void
 j0_test (void)
 {
   ALL_RM_TEST (j0, 0, j0_test_data, RUN_TEST_LOOP_f_f, END);
+}
+
+static void
+do_test (void)
+{
+  j0_test ();
 }
 
 /*

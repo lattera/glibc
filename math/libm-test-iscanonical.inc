@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_i_data iscanonical_test_data[] =
   {
     TEST_f_b (iscanonical, 0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -39,6 +41,12 @@ static void
 iscanonical_test (void)
 {
   ALL_RM_TEST (iscanonical, 1, iscanonical_test_data, RUN_TEST_LOOP_f_b_tg, END);
+}
+
+static void
+do_test (void)
+{
+  iscanonical_test ();
 }
 
 /*

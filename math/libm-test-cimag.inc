@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_c_f_data cimag_test_data[] =
   {
     TEST_c_f (cimag, 1.0, 0.0, 0.0, NO_INEXACT_EXCEPTION),
@@ -35,6 +37,12 @@ static void
 cimag_test (void)
 {
   ALL_RM_TEST (cimag, 1, cimag_test_data, RUN_TEST_LOOP_c_f, END);
+}
+
+static void
+do_test (void)
+{
+  cimag_test ();
 }
 
 /*

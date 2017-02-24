@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data significand_test_data[] =
   {
     /* significand returns the mantissa of the exponential
@@ -49,6 +51,12 @@ static void
 significand_test (void)
 {
   ALL_RM_TEST (significand, 1, significand_test_data, RUN_TEST_LOOP_f_f, END);
+}
+
+static void
+do_test (void)
+{
+  significand_test ();
 }
 
 /*

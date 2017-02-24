@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_fFF_11_data sincos_test_data[] =
   {
     TEST_fFF_11 (sincos, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
@@ -34,6 +36,12 @@ sincos_test (void)
   FLOAT sin_res, cos_res;
 
   ALL_RM_TEST (sincos, 0, sincos_test_data, RUN_TEST_LOOP_fFF_11, END, sin_res, cos_res);
+}
+
+static void
+do_test (void)
+{
+  sincos_test ();
 }
 
 /*

@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data nextdown_test_data[] =
   {
     TEST_f_f (nextdown, minus_zero, -min_subnorm_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -68,6 +70,12 @@ nextdown_test (void)
 /* Note, the second argument is always typed as long double.  The j type
    argument to TEST_ indicates the literal should not be post-processed by
    gen-libm-test.pl.  */
+
+static void
+do_test (void)
+{
+  nextdown_test ();
+}
 
 /*
  * Local Variables:

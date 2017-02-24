@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_Ff_b1_data setpayloadsig_test_data[] =
   {
 #if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
@@ -95,6 +97,12 @@ setpayloadsig_test (void)
   FLOAT x;
 
   ALL_RM_TEST (setpayloadsig, 1, setpayloadsig_test_data, RUN_TEST_LOOP_Ff_b1, END, x);
+}
+
+static void
+do_test (void)
+{
+  setpayloadsig_test ();
 }
 
 /*

@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_fl_f_data scalbln_test_data[] =
   {
     TEST_fl_f (scalbln, 0, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -136,6 +138,12 @@ static void
 scalbln_test (void)
 {
   ALL_RM_TEST (scalbln, 1, scalbln_test_data, RUN_TEST_LOOP_fl_f, END);
+}
+
+static void
+do_test (void)
+{
+  scalbln_test ();
 }
 
 /*

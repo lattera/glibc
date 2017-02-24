@@ -1,3 +1,376 @@
+2017-02-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/Makefile (libm-tests-generated): Remove variable.
+	(libm-tests-base-normal): New variable.
+	(libm-tests-base-finite): Likewise.
+	(libm-tests-base-inline): Likewise.
+	(libm-tests-base): Likewise.
+	(libm-tests-normal): Likewise.
+	(libm-tests-finite): Likewise.
+	(libm-tests-inline): Likewise.
+	(libm-tests-vector): Likewise.
+	(libm-tests): Define in terms of these new variables.
+	(libm-tests-for-type): New variable.
+	(libm-tests.o): Move definition.
+	(tests): Move addition of $(libm-tests).
+	(generated): Update for new and removed libm test files.
+	($(objpfx)libm-test.c): Remove target.
+	($(objpfx)libm-have-vector-test.h): Likewise.
+	(CFLAGS-test-double-vlen2.c): Remove variable.
+	(CFLAGS-test-double-vlen4.c): Likewise.
+	(CFLAGS-test-double-vlen8.c): Likewise.
+	(CFLAGS-test-float-vlen4.c): Likewise.
+	(CFLAGS-test-float-vlen8.c): Likewise.
+	(CFLAGS-test-float-vlen16.c): Likewise.
+	(CFLAGS-test-float.c): Likewise.
+	(CFLAGS-test-float-finite.c): Likewise.
+	(CFLAGS-libm-test-support-float.c): Likewise.
+	(CFLAGS-test-double.c): Likewise.
+	(CFLAGS-test-double-finite.c): Likewise.
+	(CFLAGS-libm-test-support-double.c): Likewise.
+	(CFLAGS-test-ldouble.c): Likewise.
+	(CFLAGS-test-ldouble-finite.c): Likewise.
+	(CFLAGS-libm-test-support-ldouble.c): Likewise.
+	(libm-test-inline-cflags): New variable.
+	(CFLAGS-test-ifloat.c): Remove variable.
+	(CFLAGS-test-idouble.c): Likewise.
+	(CFLAGS-test-ildouble.c): Likewise.
+	($(addprefix $(objpfx), $(libm-tests.o))): Move target and update
+	dependencies.
+	($(foreach t,$(libm-tests-normal),$(objpfx)$(t).c)): New rule.
+	($(foreach t,$(libm-tests-finite),$(objpfx)$(t).c)): Likewise.
+	($(foreach t,$(libm-tests-inline),$(objpfx)$(t).c)): Likewise.
+	($(foreach t,$(libm-tests-vector),$(objpfx)$(t).c)): Likewise.
+	($(foreach t,$(types),$(objpfx)libm-test-support-$(t).c)):
+	Likewise.
+	(dependencies on libm-test-support-*.o): Remove.
+	($(foreach f,$(libm-test-funcs-all),$(objpfx)$(o)-$(f).o)): New
+	rules using iterators.
+	($(addprefix $(objpfx),$(call libm-tests-for-type,$(o)))):
+	Likewise.
+	($(objpfx)libm-test-support-$(o).o): Likewise.
+	($(addprefix $(objpfx),$(filter-out $(tests-static)
+	$(libm-vec-tests),$(tests)))): Filter out $(libm-tests-vector)
+	instead.
+	($(addprefix $(objpfx), $(libm-vec-tests))): Use iterator to
+	define rule instead.
+	* math/README.libm-test: Update.
+	* math/libm-test-acos.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-acosh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-asin.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-asinh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-atan.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-atan2.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-atanh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-cabs.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-cacos.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-cacosh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-canonicalize.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-carg.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-casin.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-casinh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-catan.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-catanh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-cbrt.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-ccos.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-ccosh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-ceil.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-cexp.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-cimag.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-clog.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-clog10.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-conj.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-copysign.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-cos.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-cosh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-cpow.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-cproj.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-creal.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-csin.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-csinh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-csqrt.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-ctan.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-ctanh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-erf.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-erfc.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-exp.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-exp10.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-exp2.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-expm1.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-fabs.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-fdim.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-floor.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-fma.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-fmax.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-fmaxmag.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-fmin.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-fminmag.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-fmod.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-fpclassify.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-frexp.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-fromfp.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-fromfpx.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-getpayload.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-hypot.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-ilogb.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-iscanonical.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-iseqsig.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-isfinite.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-isgreater.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-isgreaterequal.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-isinf.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-isless.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-islessequal.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-islessgreater.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-isnan.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-isnormal.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-issignaling.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-issubnormal.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-isunordered.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-iszero.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-j0.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-j1.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-jn.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-lgamma.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-llogb.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-llrint.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-llround.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-log.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-log10.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-log1p.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-log2.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-logb.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-lrint.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-lround.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-modf.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-nearbyint.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-nextafter.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-nextdown.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-nexttoward.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-nextup.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-pow.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-remainder.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-remquo.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-rint.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-round.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-roundeven.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-scalb.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-scalbln.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-scalbn.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-setpayload.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-setpayloadsig.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-signbit.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-significand.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-sin.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-sincos.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-sinh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-sqrt.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-tan.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-tanh.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-tgamma.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-totalorder.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-totalordermag.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-trunc.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-ufromfp.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-ufromfpx.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-y0.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-y1.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-yn.inc: Include libm-test-driver.c.
+	(do_test): New function.
+	* math/libm-test-driver.c: Do not include libm-have-vector-test.h.
+	(HAVE_VECTOR): Remove macro.
+	(START): Do not call HAVE_VECTOR.
+	* math/test-double-vlen2.h (FUNC_TEST): Remove macro.
+	* math/test-double-vlen4.h (FUNC_TEST): Remove macro.
+	* math/test-double-vlen8.h (FUNC_TEST): Remove macro.
+	* math/test-float-vlen16.h (FUNC_TEST): Remove macro.
+	* math/test-float-vlen4.h (FUNC_TEST): Remove macro.
+	* math/test-float-vlen8.h (FUNC_TEST): Remove macro.
+	* math/test-math-vector.h (FUNC_TEST): New macro.
+	(WRAPPER_DECL): Rename to WRAPPER_DECL_f.
+	* sysdeps/x86_64/fpu/Makefile (double-vlen2-funcs): New variable.
+	(double-vlen4-funcs): Likewise.
+	(double-vlen4-avx2-funcs): Likewise.
+	(double-vlen8-funcs): Likewise.
+	(float-vlen4-funcs): Likewise.
+	(float-vlen8-funcs): Likewise.
+	(float-vlen8-avx2-funcs): Likewise.
+	(float-vlen16-funcs): Likewise.
+	(CFLAGS-test-double-vlen4-avx2.c): Remove variable.
+	(CFLAGS-test-float-vlen8-avx2.c): Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4.h (TEST_VECTOR_cos): Remove
+	macro.
+	(TEST_VECTOR_sin): Likewise.
+	(TEST_VECTOR_sincos): Likewise.
+	(TEST_VECTOR_log): Likewise.
+	(TEST_VECTOR_exp): Likewise.
+	(TEST_VECTOR_pow): Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen8.h (TEST_VECTOR_cos):
+	Likewise.
+	(TEST_VECTOR_sin): Likewise.
+	(TEST_VECTOR_sincos): Likewise.
+	(TEST_VECTOR_log): Likewise.
+	(TEST_VECTOR_exp): Likewise.
+	(TEST_VECTOR_pow): Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen16.h (TEST_VECTOR_cosf):
+	Likewise.
+	(TEST_VECTOR_sinf): Likewise.
+	(TEST_VECTOR_sincosf): Likewise.
+	(TEST_VECTOR_logf): Likewise.
+	(TEST_VECTOR_expf): Likewise.
+	(TEST_VECTOR_powf): Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8.h (TEST_VECTOR_cosf):
+	Likewise.
+	(TEST_VECTOR_sinf): Likewise.
+	(TEST_VECTOR_sincosf): Likewise.
+	(TEST_VECTOR_logf): Likewise.
+	(TEST_VECTOR_expf): Likewise.
+	(TEST_VECTOR_powf): Likewise.
+	* math/gen-libm-have-vector-test.sh: Remove file.
+	* math/libm-test.inc: Likewise.
+	* math/libm-test-support-double.c: Likewise.
+	* math/libm-test-support-float.c: Likewise.
+	* math/libm-test-support-ldouble.c: Likewise.
+	* math/test-double-finite.c: Likewise.: Likewise.
+	* math/test-double.c: Likewise.
+	* math/test-float-finite.c: Likewise.
+	* math/test-float.c: Likewise.
+	* math/test-idouble.c: Likewise.
+	* math/test-ifloat.c: Likewise.
+	* math/test-ildouble.c: Likewise.
+	* math/test-ldouble-finite.c: Likewise.
+	* math/test-ldouble.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen2.h: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-avx2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen8.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen16.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen4.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen4.h: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8-avx2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8.c: Likewise.
+
 2017-02-23 Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 	   Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 

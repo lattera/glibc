@@ -952,15 +952,9 @@ struct test_Ff_b1_data
 #define STR_CONCAT(a, b, c) __STRING (a##b##c)
 #define STR_CON3(a, b, c) STR_CONCAT (a, b, c)
 
-/* This generated header defines series of macros started with HAVE_VECTOR_. */
-#include "libm-have-vector-test.h"
-
-#define HAVE_VECTOR(func) __CONCAT (HAVE_VECTOR_, func)
-
 /* Start and end the tests for a given function.  */
 #define START(FUN, SUFF, EXACT)					\
   CHECK_ARCH_EXT;						\
-  if (TEST_MATHVEC && !HAVE_VECTOR (FUNC (FUN))) return;	\
   const char *this_func = STR_CON3 (FUN, SUFF, VEC_SUFF);	\
   init_max_error (this_func, EXACT)
 #define END					\

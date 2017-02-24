@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data getpayload_test_data[] =
   {
     TEST_fp_f (getpayload, plus_infty, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -72,6 +74,12 @@ static void
 getpayload_test (void)
 {
   ALL_RM_TEST (getpayload, 1, getpayload_test_data, RUN_TEST_LOOP_fp_f, END);
+}
+
+static void
+do_test (void)
+{
+  getpayload_test ();
 }
 
 /*

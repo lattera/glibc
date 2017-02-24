@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_ff_f_data fmod_test_data[] =
   {
     /* fmod (+0, y) == +0 for y != 0.  */
@@ -260,6 +262,12 @@ static void
 fmod_test (void)
 {
   ALL_RM_TEST (fmod, 1, fmod_test_data, RUN_TEST_LOOP_ff_f, END);
+}
+
+static void
+do_test (void)
+{
+  fmod_test ();
 }
 
 /*

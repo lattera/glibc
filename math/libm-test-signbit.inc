@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_i_data signbit_test_data[] =
   {
     TEST_f_b (signbit, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -43,6 +45,12 @@ static void
 signbit_test (void)
 {
   ALL_RM_TEST (signbit, 1, signbit_test_data, RUN_TEST_LOOP_f_b_tg, END);
+}
+
+static void
+do_test (void)
+{
+  signbit_test ();
 }
 
 /*

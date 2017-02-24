@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_ff_f_data atan2_test_data[] =
   {
     /* atan2 (y,inf) == +0 for finite y > 0 or +0.  */
@@ -194,6 +196,12 @@ static void
 atan2_test (void)
 {
   ALL_RM_TEST (atan2, 0, atan2_test_data, RUN_TEST_LOOP_ff_f, END);
+}
+
+static void
+do_test (void)
+{
+  atan2_test ();
 }
 
 /*

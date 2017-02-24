@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_Ff_b1_data canonicalize_test_data[] =
   {
     TEST_Ffp_b1 (canonicalize, plus_infty, 0, plus_infty, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -78,6 +80,12 @@ canonicalize_test (void)
   FLOAT x;
 
   ALL_RM_TEST (canonicalize, 1, canonicalize_test_data, RUN_TEST_LOOP_Ffp_b1, END, x);
+}
+
+static void
+do_test (void)
+{
+  canonicalize_test ();
 }
 
 /*

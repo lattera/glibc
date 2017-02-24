@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_i_data isfinite_test_data[] =
   {
     TEST_f_b (isfinite, 0, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -46,6 +48,13 @@ finite_test (void)
 {
   /* finite uses the same test data as isfinite.  */
   ALL_RM_TEST (finite, 1, isfinite_test_data, RUN_TEST_LOOP_f_b, END);
+}
+
+static void
+do_test (void)
+{
+  isfinite_test ();
+  finite_test ();
 }
 
 /*

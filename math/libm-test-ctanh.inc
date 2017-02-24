@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_c_c_data ctanh_test_data[] =
   {
     TEST_c_c (ctanh, plus_infty, 0, 1.0, 0.0),
@@ -123,6 +125,12 @@ static void
 ctanh_test (void)
 {
   ALL_RM_TEST (ctanh, 0, ctanh_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
+}
+
+static void
+do_test (void)
+{
+  ctanh_test ();
 }
 
 /*

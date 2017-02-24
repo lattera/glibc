@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_fj_f_data nexttoward_test_data[] =
   {
     TEST_fj_f (nexttoward, 0, 0, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -152,6 +154,12 @@ static void
 nexttoward_test (void)
 {
   ALL_RM_TEST (nexttoward, 1, nexttoward_test_data, RUN_TEST_LOOP_fj_f, END);
+}
+
+static void
+do_test (void)
+{
+  nexttoward_test ();
 }
 
 /*

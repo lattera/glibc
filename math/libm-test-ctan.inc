@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_c_c_data ctan_test_data[] =
   {
     TEST_c_c (ctan, 0, plus_infty, 0.0, 1.0),
@@ -124,6 +126,12 @@ static void
 ctan_test (void)
 {
   ALL_RM_TEST (ctan, 0, ctan_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
+}
+
+static void
+do_test (void)
+{
+  ctan_test ();
 }
 
 /*

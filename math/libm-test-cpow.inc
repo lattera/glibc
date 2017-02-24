@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_cc_c_data cpow_test_data[] =
   {
     TEST_cc_c (cpow, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value),
@@ -27,6 +29,12 @@ static void
 cpow_test (void)
 {
   ALL_RM_TEST (cpow, 0, cpow_test_data, RUN_TEST_LOOP_cc_c, END_COMPLEX);
+}
+
+static void
+do_test (void)
+{
+  cpow_test ();
 }
 
 /*

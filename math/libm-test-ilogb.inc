@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_i_data ilogb_test_data[] =
   {
     TEST_f_i (ilogb, 1, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -55,6 +57,12 @@ static void
 ilogb_test (void)
 {
   ALL_RM_TEST (ilogb, 1, ilogb_test_data, RUN_TEST_LOOP_f_i, END);
+}
+
+static void
+do_test (void)
+{
+  ilogb_test ();
 }
 
 /*

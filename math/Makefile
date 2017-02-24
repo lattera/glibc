@@ -196,13 +196,6 @@ endif
 
 ifneq (no,$(PERL))
 libm-vec-tests = $(addprefix test-,$(libmvec-tests))
-
-libm-tests = $(foreach t,$(types),test-$(t) test-$(t)-finite test-i$(t)) \
-	     $(libm-vec-tests)
-
-libm-tests.o = $(addsuffix .o,$(libm-tests))
-
-tests += $(libm-tests)
 libm-test-support = $(foreach t,$(types),libm-test-support-$(t))
 test-extras += $(libm-test-support)
 extra-test-objs += $(addsuffix .o, $(libm-test-support))
@@ -237,15 +230,42 @@ libm-test-funcs-noauto = canonicalize ceil cimag conj copysign cproj creal \
 libm-test-funcs-all = $(libm-test-funcs-auto) $(libm-test-funcs-noauto)
 libm-test-c-auto = $(foreach f,$(libm-test-funcs-auto),libm-test-$(f).c)
 libm-test-c-noauto = $(foreach f,$(libm-test-funcs-noauto),libm-test-$(f).c)
-libm-tests-generated = libm-test-ulps.h libm-have-vector-test.h libm-test.c \
-		       $(libm-test-c-auto) $(libm-test-c-noauto)
-generated += $(libm-tests-generated)
+generated += libm-test-ulps.h $(libm-test-c-auto) $(libm-test-c-noauto)
+
+libm-tests-base-normal = $(foreach t,$(types),test-$(t))
+libm-tests-base-finite = $(foreach t,$(types),test-$(t)-finite)
+libm-tests-base-inline = $(foreach t,$(types),test-i$(t))
+libm-tests-base = $(libm-tests-base-normal) $(libm-tests-base-finite) \
+		  $(libm-tests-base-inline) $(libm-vec-tests)
+libm-tests-normal = $(foreach t,$(libm-tests-base-normal),\
+				$(foreach f,$(libm-test-funcs-all),\
+					    $(t)-$(f)))
+libm-tests-finite = $(foreach t,$(libm-tests-base-finite),\
+				$(foreach f,$(libm-test-funcs-all),\
+					    $(t)-$(f)))
+libm-tests-inline = $(foreach t,$(libm-tests-base-inline),\
+				$(foreach f,$(libm-test-funcs-all),\
+					    $(t)-$(f)))
+libm-tests-vector = $(foreach t,$(libmvec-tests),\
+				$(foreach f,$($(t)-funcs),test-$(t)-$(f)))
+libm-tests = $(libm-tests-normal) $(libm-tests-finite) $(libm-tests-inline) \
+	     $(libm-tests-vector)
+libm-tests-for-type = $(foreach f,$(libm-test-funcs-all),\
+				  test-$(1)-$(f) test-$(1)-finite-$(f) \
+				  test-i$(1)-$(f)) \
+		      $(filter test-$(1)-%,$(libm-tests-vector))
+
+libm-tests.o = $(addsuffix .o,$(libm-tests))
+
+tests += $(libm-tests)
+generated += $(addsuffix .c,$(libm-tests)) \
+	     $(foreach t,$(types),libm-test-support-$(t).c)
 
 libm-test-c-auto-obj = $(addprefix $(objpfx),$(libm-test-c-auto))
 libm-test-c-noauto-obj = $(addprefix $(objpfx),$(libm-test-c-noauto))
 
-$(objpfx)libm-test.c $(libm-test-c-noauto-obj): $(objpfx)libm-test%.c: \
-						libm-test%.inc gen-libm-test.pl
+$(libm-test-c-noauto-obj): $(objpfx)libm-test%.c: libm-test%.inc \
+						  gen-libm-test.pl
 	$(make-target-directory)
 	$(PERL) gen-libm-test.pl -c $< -a /dev/null -C $@
 
@@ -256,30 +276,18 @@ $(libm-test-c-auto-obj): $(objpfx)libm-test%.c: libm-test%.inc \
 	$(PERL) gen-libm-test.pl -c $< -a auto-libm-test-out$* -C $@
 
 libm-test-incs = $(foreach f,$(libm-test-funcs-all),libm-test-$(f).inc)
-
-$(objpfx)libm-have-vector-test.h: $(libm-test-incs) gen-libm-have-vector-test.sh
-	$(make-target-directory)
-	$(SHELL) gen-libm-have-vector-test.sh $(sort $(libm-test-incs)) > $@
 endif
 
 libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH
 libm-test-vec-cflags = $(libm-test-fast-math-cflags) -fno-inline \
 		       -ffloat-store -D_OPENMP=201307 -Wno-unknown-pragmas
 
-CFLAGS-test-double-vlen2.c = $(libm-test-vec-cflags)
-
-CFLAGS-test-double-vlen4.c = $(libm-test-vec-cflags)
 CFLAGS-test-double-vlen4-wrappers.c = $(double-vlen4-arch-ext-cflags)
 
-CFLAGS-test-double-vlen8.c = $(libm-test-vec-cflags)
 CFLAGS-test-double-vlen8-wrappers.c = $(double-vlen8-arch-ext-cflags)
 
-CFLAGS-test-float-vlen4.c = $(libm-test-vec-cflags)
-
-CFLAGS-test-float-vlen8.c = $(libm-test-vec-cflags)
 CFLAGS-test-float-vlen8-wrappers.c = $(float-vlen8-arch-ext-cflags)
 
-CFLAGS-test-float-vlen16.c = $(libm-test-vec-cflags)
 CFLAGS-test-float-vlen16-wrappers.c = $(float-vlen16-arch-ext-cflags)
 
 # The no-inline tests use -fsignaling-nans, and thereby use the
@@ -292,15 +300,7 @@ libm-test-no-inline-cflags = -fno-inline -ffloat-store -fno-builtin \
 			     -fsignaling-nans
 libm-test-finite-cflags = $(libm-test-no-inline-cflags) \
 			  -U__FINITE_MATH_ONLY__ -D__FINITE_MATH_ONLY__=1
-CFLAGS-test-float.c = $(libm-test-no-inline-cflags)
-CFLAGS-test-float-finite.c = $(libm-test-finite-cflags)
-CFLAGS-libm-test-support-float.c = $(libm-test-no-inline-cflags)
-CFLAGS-test-double.c = $(libm-test-no-inline-cflags)
-CFLAGS-test-double-finite.c = $(libm-test-finite-cflags)
-CFLAGS-libm-test-support-double.c = $(libm-test-no-inline-cflags)
-CFLAGS-test-ldouble.c = $(libm-test-no-inline-cflags)
-CFLAGS-test-ldouble-finite.c = $(libm-test-finite-cflags)
-CFLAGS-libm-test-support-ldouble.c = $(libm-test-no-inline-cflags)
+libm-test-inline-cflags = $(libm-test-fast-math-cflags)
 CFLAGS-test-tgmath.c = -fno-builtin
 # The following testcase uses very long lines (>3 million), so it may take a
 # while to compile it. See: http://llvm.org/bugs/show_bug.cgi?id=14106 and
@@ -310,9 +310,6 @@ CFLAGS-test-tgmath-ret.c = -fno-builtin
 CFLAGS-test-powl.c = -fno-builtin
 
 CFLAGS-test-snan.c = -fsignaling-nans
-CFLAGS-test-ifloat.c = $(libm-test-fast-math-cflags)
-CFLAGS-test-idouble.c = $(libm-test-fast-math-cflags)
-CFLAGS-test-ildouble.c = $(libm-test-fast-math-cflags)
 
 CFLAGS-test-signgam-finite.c = -ffinite-math-only
 CFLAGS-test-signgam-finite-c99.c = -ffinite-math-only -std=c99
@@ -375,20 +372,111 @@ $(foreach t, $(call type-foreach, $(gen-all-calls)), \
 
 ifneq (no,$(PERL))
 # This must come after the inclusion of sysdeps Makefiles via Rules.
-$(addprefix $(objpfx), $(libm-tests.o)): $(addprefix $(objpfx),\
-						     $(libm-tests-generated))
 
-$(addprefix $(objpfx),\
-	    $(filter test-float% test-ifloat%,\
-		     $(libm-tests))): $(objpfx)libm-test-support-float.o
+$(foreach t,$(libm-tests-normal),$(objpfx)$(t).c): $(objpfx)test-%.c:
+	type_func=$*; \
+	type=$${type_func%%-*}; \
+	func=$${type_func#*-}; \
+	( \
+	  echo "#include <test-$$type.h>"; \
+	  echo "#include <test-math-no-finite.h>"; \
+	  echo "#include <test-math-no-inline.h>"; \
+	  echo "#include <test-math-errno.h>"; \
+	  echo "#include <test-math-scalar.h>"; \
+	  echo "#include <libm-test-$$func.c>"; \
+	) > $@
 
-$(addprefix $(objpfx),\
-	    $(filter test-double% test-idouble%,\
-		     $(libm-tests))): $(objpfx)libm-test-support-double.o
+$(foreach t,$(libm-tests-finite),$(objpfx)$(t).c): $(objpfx)test-%.c:
+	type_func=$*; \
+	type=$${type_func%%-*}; \
+	func=$${type_func#*-finite-}; \
+	( \
+	  echo "#include <test-$$type.h>"; \
+	  echo "#include <test-math-finite.h>"; \
+	  echo "#include <test-math-no-inline.h>"; \
+	  echo "#include <test-math-scalar.h>"; \
+	  echo "#include <libm-test-$$func.c>"; \
+	) > $@
 
+$(foreach t,$(libm-tests-inline),$(objpfx)$(t).c): $(objpfx)test-i%.c:
+	type_func=$*; \
+	type=$${type_func%%-*}; \
+	func=$${type_func#*-}; \
+	( \
+	  echo "#include <test-$$type.h>"; \
+	  echo "#include <test-math-inline.h>"; \
+	  echo "#include <test-math-scalar.h>"; \
+	  echo "#include <libm-test-$$func.c>"; \
+	) > $@
+
+$(foreach t,$(libm-tests-vector),$(objpfx)$(t).c): $(objpfx)test-%.c:
+	type_func=$*; \
+	type=$${type_func%-*}; \
+	func=$${type_func##*-}; \
+	func_args=$$(grep ALL_RM_TEST libm-test-$$func.inc \
+		     | sed 's/.*RUN_TEST_LOOP_//;s/_.*//'); \
+	( \
+	  echo "#include <test-$$type.h>"; \
+	  echo "WRAPPER_DECL_$$func_args (WRAPPER_NAME (FUNC ($$func)))"; \
+	  echo "#include <libm-test-$$func.c>"; \
+	) > $@
+
+$(foreach t,$(types),\
+	    $(objpfx)libm-test-support-$(t).c): $(objpfx)libm-test-support-%.c:
+	( \
+	  echo "#include <test-$*.h>"; \
+	  echo "#include <libm-test-support.c>"; \
+	) > $@
+
+$(addprefix $(objpfx), $(libm-tests.o)): $(objpfx)libm-test-ulps.h
+
+define o-iterator-doit
+$(foreach f,$(libm-test-funcs-all),\
+	    $(objpfx)$(o)-$(f).o): $(objpfx)$(o)%.o: $(objpfx)libm-test%.c
+endef
+object-suffixes-left := $(libm-tests-base)
+include $(o-iterator)
+
+define o-iterator-doit
+$(foreach f,$(libm-test-funcs-all),\
+	    $(objpfx)$(o)-$(f).o): CFLAGS += $(libm-test-no-inline-cflags)
+endef
+object-suffixes-left := $(libm-tests-base-normal)
+include $(o-iterator)
+
+define o-iterator-doit
+$(foreach f,$(libm-test-funcs-all),\
+	    $(objpfx)$(o)-$(f).o): CFLAGS += $(libm-test-finite-cflags)
+endef
+object-suffixes-left := $(libm-tests-base-finite)
+include $(o-iterator)
+
+define o-iterator-doit
+$(foreach f,$(libm-test-funcs-all),\
+	    $(objpfx)$(o)-$(f).o): CFLAGS += $(libm-test-inline-cflags)
+endef
+object-suffixes-left := $(libm-tests-base-inline)
+include $(o-iterator)
+
+define o-iterator-doit
+$(foreach f,$($(o)-funcs),\
+	    $(objpfx)test-$(o)-$(f).o): CFLAGS += $(libm-test-vec-cflags)
+endef
+object-suffixes-left := $(libmvec-tests)
+include $(o-iterator)
+
+define o-iterator-doit
 $(addprefix $(objpfx),\
-	    $(filter test-ldouble% test-ildouble%,\
-		     $(libm-tests))): $(objpfx)libm-test-support-ldouble.o
+	    $(call libm-tests-for-type,$(o))): $(objpfx)libm-test-support-$(o).o
+endef
+object-suffixes-left := $(types)
+include $(o-iterator)
+
+define o-iterator-doit
+$(objpfx)libm-test-support-$(o).o: CFLAGS += $(libm-test-no-inline-cflags)
+endef
+object-suffixes-left := $(types)
+include $(o-iterator)
 
 # Run the math programs to automatically generate ULPs files.
 .PHONY: regen-ulps
@@ -465,10 +553,16 @@ $(objpfx)libieee.a: $(objpfx)ieee-math.o
 	$(LN_S) $(<F) $(@F)
 
 $(addprefix $(objpfx),\
-	    $(filter-out $(tests-static) $(libm-vec-tests),$(tests))): $(libm)
+	    $(filter-out $(tests-static) $(libm-tests-vector),\
+			 $(tests))): $(libm)
 $(addprefix $(objpfx),$(tests-static)): $(objpfx)libm.a
-$(addprefix $(objpfx), $(libm-vec-tests)): $(objpfx)%: $(objpfx)%-wrappers.o \
-						       $(libm) $(libmvec)
+define o-iterator-doit
+$(foreach f,$($(o)-funcs),\
+	    $(objpfx)test-$(o)-$(f)): $(objpfx)test-$(o)-wrappers.o \
+				      $(libm) $(libmvec)
+endef
+object-suffixes-left := $(libmvec-tests)
+include $(o-iterator)
 
 gmp-objs = $(patsubst %,$(common-objpfx)stdlib/%.o,\
 		      add_n sub_n cmp addmul_1 mul_1 mul_n divmod_1 \

@@ -25,6 +25,7 @@
 #define CONCAT(a, b) CNCT (a, b)
 
 #define WRAPPER_NAME(function) CONCAT (function, VEC_SUFF)
+#define FUNC_TEST(function) WRAPPER_NAME (FUNC (function))
 
 /* This macro is used in VECTOR_WRAPPER macros for vector tests.  */
 #define TEST_VEC_LOOP(vec, len) 				\
@@ -51,7 +52,7 @@
     }								\
   while (0)
 
-#define WRAPPER_DECL(function) extern FLOAT function (FLOAT);
+#define WRAPPER_DECL_f(function) extern FLOAT function (FLOAT);
 #define WRAPPER_DECL_ff(function) extern FLOAT function (FLOAT, FLOAT);
 #define WRAPPER_DECL_fFF(function) extern void function (FLOAT, FLOAT *, FLOAT *);
 

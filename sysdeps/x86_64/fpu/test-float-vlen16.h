@@ -18,11 +18,4 @@
 
 #include_next <test-float-vlen16.h>
 
-#define TEST_VECTOR_cosf 1
-#define TEST_VECTOR_sinf 1
-#define TEST_VECTOR_sincosf 1
-#define TEST_VECTOR_logf 1
-#define TEST_VECTOR_expf 1
-#define TEST_VECTOR_powf 1
-
 #define REQUIRE_AVX512F

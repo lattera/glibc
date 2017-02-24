@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data nearbyint_test_data[] =
   {
     TEST_f_f (nearbyint, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -167,6 +169,12 @@ static void
 nearbyint_test (void)
 {
   ALL_RM_TEST (nearbyint, 1, nearbyint_test_data, RUN_TEST_LOOP_f_f, END);
+}
+
+static void
+do_test (void)
+{
+  nearbyint_test ();
 }
 
 /*

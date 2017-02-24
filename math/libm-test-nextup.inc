@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_f_data nextup_test_data[] =
   {
     TEST_f_f (nextup, minus_zero, min_subnorm_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
@@ -62,6 +64,12 @@ static void
 nextup_test (void)
 {
   ALL_RM_TEST (nextup, 1, nextup_test_data, RUN_TEST_LOOP_f_f, END);
+}
+
+static void
+do_test (void)
+{
+  nextup_test ();
 }
 
 /*

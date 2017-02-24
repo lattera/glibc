@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_f_l_data lrint_test_data[] =
   {
     /* Bug 6798: errno setting may be missing.  */
@@ -343,6 +345,12 @@ static void
 lrint_test (void)
 {
   ALL_RM_TEST (lrint, 1, lrint_test_data, RUN_TEST_LOOP_f_l, END);
+}
+
+static void
+do_test (void)
+{
+  lrint_test ();
 }
 
 /*

@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_ff_f_data pow_test_data[] =
   {
     TEST_ff_f (pow, qnan_value, 0, 1, ERRNO_UNCHANGED|NO_TEST_MATHVEC),
@@ -367,6 +369,12 @@ static void
 pow_test (void)
 {
   ALL_RM_TEST (pow, 0, pow_test_data, RUN_TEST_LOOP_ff_f, END);
+}
+
+static void
+do_test (void)
+{
+  pow_test ();
 }
 
 /*

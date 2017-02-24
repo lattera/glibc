@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_c_f_data carg_test_data[] =
   {
     /* carg (x + iy) is specified as atan2 (y, x) */
@@ -55,6 +57,12 @@ static void
 carg_test (void)
 {
   ALL_RM_TEST (carg, 0, carg_test_data, RUN_TEST_LOOP_c_f, END);
+}
+
+static void
+do_test (void)
+{
+  carg_test ();
 }
 
 /*

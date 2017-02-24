@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_fiu_U_data ufromfp_test_data[] =
   {
     /* Infinity, NaN and values that are definitely out of range
@@ -6828,6 +6830,12 @@ static void
 ufromfp_test (void)
 {
   ALL_RM_TEST (ufromfp, 1, ufromfp_test_data, RUN_TEST_LOOP_fiu_U, END);
+}
+
+static void
+do_test (void)
+{
+  ufromfp_test ();
 }
 
 /*
