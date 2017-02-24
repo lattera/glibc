@@ -1,3 +1,46 @@
+2017-06-16  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #21217]
+	* locales/be_BY (mon, abmon): Reworded "Травень" ("travyen'")
+	and abbreviated "Тра" ("tra") to "Май" ("may").
+	* locales/be_BY@latin (mon, abmon): Likewise, "Travień" and
+	abbreviated "Tra" reworded to "Maj".
+	* locales/br_FR (day, abmon, mon, d_t_fmt): Use the proper
+	Unicode apostrophe (Cʼhwevrer, mercʼher, Dʼar).
+	* locales/es_PE (mon, abmon): Reworded "septiembre" to
+	"setiembre" and abbreviated "sep" to "set".
+	* locales/es_UY: Likewise.
+	* locales/fil_PH (mon): Reworded "Septiyembre" to "Setyembre"
+	and "Nobiyembre" to "Nobyembre".
+	* locales/fur_IT (mon, abmon): Reworded "Decembar" to
+	"Dicembar" and abbreviated "Dec" to "Dic".
+	* locales/fy_NL (mon): Reworded "Janaris" to "Jannewaris".
+	* locales/ha_NG (mon, abmon): Reworded "Fabrairu" to
+	"Faburairu" and "Afrilu" to "Afirilu", also abbreviated
+	"Afr" to "Afi".
+	* locales/ig_NG (mon, abmon): All months begin with uppercase.
+	Reworded: "febụrụwarị" to "Febrụwarị", "epreel" to "Eprel",
+	"ọgọstụ" to "Ọgọọst", "nọvemba" to "Novemba", "nọv" to "Nov".
+	* locales/kw_GB (mon): Months imported from CLDR, many
+	changes: all "Mys" to "mis", "Mys Whevrel" to "mis Hwevrer",
+	"Mys Merth" to "mis Meurth", "Mys Evan" to "mis Metheven",
+	and so on.
+	(abmon): "Whe>" to "Hwe", "Mer" to "Meu", "Evn" to "Met".
+	* locales/lg_UG (mon): Reworded "Julaai" to "Julaayi".
+	* locales/mg_MG (mon, abmon): All months now begin with
+	uppercase.
+	* locales/se_NO (mon): Months imported from CLDR, all
+	suffixes changed from "mánu" to "mánnu".
+	* locales/sr_RS@latin (mon): Reworded "juni" to "jun"
+	and "juli" to "jul".
+	* locales/uz_UZ (mon): Reworded "Sentyabr" to "Sentabr"
+	and "Oktyabr" to "Oktabr".
+	* locales/uz_UZ@cyrillic (mon): Most of the names reworded,
+	no longer end with a soft sign.
+	* locales/wae_CH (mon): reworded "Bráchet" to "Bráčet",
+	"Öigschte" to "Öigšte", "Herbschtmánet" to "Herbštmánet",
+	"Chrischtmánet" to "Chrištmánet".
+
 2017-06-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	* locales/fur_IT (day, abday): reworded "Miarcus" to "Miercus"
