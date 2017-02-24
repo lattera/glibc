@@ -50,7 +50,7 @@ response (const struct resolv_response_context *ctx,
   resolv_response_close_record (b);
 }
 
-static const const char *domain = "www.example.com";
+static const char * const domain = "www.example.com";
 
 static int
 wrap_res_query (int type, unsigned char *answer, int answer_length)
