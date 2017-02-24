@@ -1,3 +1,10 @@
+2018-06-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #23140]
+	* localedata/locales/hy_AM (mon): Synchronize with CLDR (lowercase,
+	genitive case).
+	(alt_mon): New entry, import from CLDR (nominative case).
+
 2018-06-29  Sylvain Lesage  <severo@rednegra.net>
 
 	[BZ #22996]
