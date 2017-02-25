@@ -1083,7 +1083,7 @@ check_ulp (void)
        exit (EXIT_FAILURE);
      }
    /* Check that the ulp of one is a normal value... */
-   ulps = ulp (1.0L);
+   ulps = ulp (LIT(1.0));
    if (fpclassify (ulps) != FP_NORMAL)
      {
        fprintf (stderr, "ulp (1.0L) is not FP_NORMAL\n");
@@ -1094,8 +1094,8 @@ check_ulp (void)
       We allow +/- 1 ulp around the represented value.  */
    value = FUNC(nextafter) (0, 1);
    ulps = ULPDIFF (value, 0);
-   ulpx = ulp (1.0L);
-   if (ulps < (1.0L - ulpx) || ulps > (1.0L + ulpx))
+   ulpx = ulp (LIT(1.0));
+   if (ulps < (LIT(1.0) - ulpx) || ulps > (LIT(1.0) + ulpx))
      {
        fprintf (stderr, "Value outside of 1 +/- 1ulp.\n");
        exit (EXIT_FAILURE);
@@ -1105,8 +1105,8 @@ check_ulp (void)
       We allow +/- 1 ulp around the represented value.  */
    value = FUNC(nextafter) (10, 20);
    ulps = ULPDIFF (value, 10);
-   ulpx = ulp (1.0L);
-   if (ulps < (1.0L - ulpx) || ulps > (1.0L + ulpx))
+   ulpx = ulp (LIT(1.0));
+   if (ulps < (LIT(1.0) - ulpx) || ulps > (LIT(1.0) + ulpx))
      {
        fprintf (stderr, "Value outside of 1 +/- 1ulp.\n");
        exit (EXIT_FAILURE);
@@ -1114,8 +1114,8 @@ check_ulp (void)
    /* This gives one more ulp.  */
    value = FUNC(nextafter) (value, 20);
    ulps = ULPDIFF (value, 10);
-   ulpx = ulp (2.0L);
-   if (ulps < (2.0L - ulpx) || ulps > (2.0L + ulpx))
+   ulpx = ulp (LIT(2.0));
+   if (ulps < (LIT(2.0) - ulpx) || ulps > (LIT(2.0) + ulpx))
      {
        fprintf (stderr, "Value outside of 2 +/- 1ulp.\n");
        exit (EXIT_FAILURE);
@@ -1124,8 +1124,8 @@ check_ulp (void)
    for (i = 2; i < 100; i++)
      value = FUNC(nextafter) (value, 20);
    ulps = ULPDIFF (value, 10);
-   ulpx = ulp (100.0L);
-   if (ulps < (100.0L - ulpx) || ulps > (100.0L + ulpx))
+   ulpx = ulp (LIT(100.0));
+   if (ulps < (LIT(100.0) - ulpx) || ulps > (LIT(100.0) + ulpx))
      {
        fprintf (stderr, "Value outside of 100 +/- 1ulp.\n");
        exit (EXIT_FAILURE);

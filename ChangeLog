@@ -1,3 +1,8 @@
+2017-02-24  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* math/libm-test-support.c (check_ulp): Use LIT() around literal
+	numbers.
+
 2017-02-24  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* resolv/tst-resolv-qtypes.c (domain):
