@@ -421,9 +421,9 @@ send_again:
 		 cmsg = CMSG_NXTHDR (&msg, cmsg))
 	      if (cmsg->cmsg_level == SOL_IP && cmsg->cmsg_type == IP_RECVERR)
 		{
-		  free (cbuf);
 		  e = (struct sock_extended_err *) CMSG_DATA(cmsg);
 		  cu->cu_error.re_errno = e->ee_errno;
+		  free (cbuf);
 		  return (cu->cu_error.re_status = RPC_CANTRECV);
 		}
 	  free (cbuf);
