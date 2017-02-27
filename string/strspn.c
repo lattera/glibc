@@ -17,7 +17,7 @@
 
 #include <string.h>
 #include <stdint.h>
-#include <libc-internal.h>
+#include <libc-pointer-arith.h>
 
 #undef strspn
 #ifndef STRSPN

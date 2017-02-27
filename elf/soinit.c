@@ -4,7 +4,6 @@
    calling those lists of functions.  */
 
 #ifndef NO_CTORS_DTORS_SECTIONS
-# include <libc-internal.h>
 # include <stdlib.h>
 
 static void (*const __CTOR_LIST__[1]) (void)

@@ -59,7 +59,7 @@
 #include <resolv/resolv.h>
 
 #include <kernel-features.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 
 /* Support to run nscd as an unprivileged user */

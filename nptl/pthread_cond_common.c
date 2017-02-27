@@ -19,7 +19,6 @@
 #include <atomic.h>
 #include <stdint.h>
 #include <pthread.h>
-#include <libc-internal.h>
 
 /* We need 3 least-significant bits on __wrefs for something else.  */
 #define __PTHREAD_COND_MAX_GROUP_SIZE ((unsigned) 1 << 29)

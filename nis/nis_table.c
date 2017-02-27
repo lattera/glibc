@@ -19,7 +19,7 @@
 #include <assert.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 #include "nis_xdr.h"
 #include "nis_intern.h"

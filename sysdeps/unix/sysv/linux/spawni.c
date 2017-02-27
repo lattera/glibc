@@ -30,8 +30,8 @@
 #include <shlib-compat.h>
 #include <nptl/pthreadP.h>
 #include <dl-sysdep.h>
+#include <libc-pointer-arith.h>
 #include <ldsodefs.h>
-#include <libc-internal.h>
 #include "spawn_int.h"
 
 /* The Linux implementation of posix_spawn{p} uses the clone syscall directly

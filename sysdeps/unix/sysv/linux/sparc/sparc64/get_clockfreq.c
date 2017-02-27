@@ -24,7 +24,6 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <sys/ioctl.h>
-#include <libc-internal.h>
 #include <asm/openpromio.h>
 
 static hp_timing_t

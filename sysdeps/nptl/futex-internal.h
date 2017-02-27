@@ -23,7 +23,7 @@
 #include <sys/time.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 /* This file defines futex operations used internally in glibc.  A futex
    consists of the so-called futex word in userspace, which is of type

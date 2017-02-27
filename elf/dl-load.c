@@ -36,7 +36,7 @@
 #include <caller.h>
 #include <sysdep.h>
 #include <stap-probe.h>
-#include <libc-internal.h>
+#include <libc-pointer-arith.h>
 
 #include <dl-dst.h>
 #include <dl-load.h>

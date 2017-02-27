@@ -108,7 +108,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <kernel-features.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 #if PACKETSZ > 65536
 #define MAXPACKET       PACKETSZ

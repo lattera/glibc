@@ -13,9 +13,9 @@
  * ====================================================
  */
 
-#include <libc-internal.h>
 #include <math.h>
 #include <math_private.h>
+#include <libc-diag.h>
 
 static const float
 two23=  8.3886080000e+06, /* 0x4b000000 */

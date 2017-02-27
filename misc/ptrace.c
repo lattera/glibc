@@ -19,7 +19,6 @@
 #include <sys/ptrace.h>
 #include <sys/types.h>
 #include <stdarg.h>
-#include <libc-internal.h>
 
 /* Perform process tracing functions.  REQUEST is one of the values
    in <sys/ptrace.h>, and determines the action to be taken.

@@ -1,5 +1,51 @@
 2017-03-01  Zack Weinberg  <zackw@panix.com>
 
+	* include/libc-pointer-arith.h: New file.  Define
+	cast_to_integer, ALIGN_UP, ALIGN_DOWN, PTR_ALIGN_UP, and
+	PTR_ALIGN_DOWN here.
+	* include/libc-internal.h: Definitions of above macros
+	moved from here.  Don't include libc-diag.h anymore either.
+	* posix/wordexp-test.c: Include stdint.h and libc-pointer-arith.h.
+	Don't include libc-internal.h.
+
+	* debug/pcprofile.c, elf/dl-tunables.c, elf/soinit.c, io/openat.c
+	* io/openat64.c, misc/ptrace.c, nptl/pthread_clock_gettime.c
+	* nptl/pthread_clock_settime.c, nptl/pthread_cond_common.c
+	* string/strcoll_l.c, sysdeps/nacl/brk.c
+	* sysdeps/unix/clock_settime.c
+	* sysdeps/unix/sysv/linux/i386/get_clockfreq.c
+	* sysdeps/unix/sysv/linux/ia64/get_clockfreq.c
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c:
+	Don't include libc-internal.h.
+
+	* elf/get-dynamic-info.h, iconv/loop.c
+	* iconvdata/iso-2022-cn-ext.c, locale/weight.h, locale/weightwc.h
+	* misc/reboot.c, nis/nis_table.c, nptl_db/thread_dbP.h
+	* nscd/connections.c, resolv/res_send.c, soft-fp/fmadf4.c
+	* soft-fp/fmasf4.c, soft-fp/fmatf4.c, stdio-common/vfscanf.c
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c
+	* sysdeps/ieee754/dbl-64/k_rem_pio2.c
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c
+	* sysdeps/ieee754/ldbl-128/k_tanl.c
+	* sysdeps/ieee754/ldbl-128ibm/k_tanl.c
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c
+	* sysdeps/ieee754/ldbl-96/k_tanl.c, sysdeps/nptl/futex-internal.h:
+	Include libc-diag.h instead of libc-internal.h.
+
+	* elf/dl-load.c, elf/dl-reloc.c, locale/programs/locarchive.c
+	* nptl/nptl-init.c, string/strcspn.c, string/strspn.c
+	* malloc/malloc.c, sysdeps/i386/nptl/tls.h
+	* sysdeps/nacl/dl-map-segments.h, sysdeps/x86_64/atomic-machine.h
+	* sysdeps/unix/sysv/linux/spawni.c
+	* sysdeps/x86_64/nptl/tls.h:
+	Include libc-pointer-arith.h instead of libc-internal.h.
+
+	* elf/get-dynamic-info.h, sysdeps/nacl/dl-map-segments.h
+	* sysdeps/x86_64/atomic-machine.h:
+	Add multiple include guard.
+
 	* nss/tst-cancel-getpwuid_r.c: Include nss.h.
 	* string/strcasestr.c: No need to include config.h.
 	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c: Include

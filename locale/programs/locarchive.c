@@ -40,8 +40,8 @@
 #include <sys/shm.h>
 #include <sys/stat.h>
 
-#include <libc-internal.h>
 #include <libc-mmap.h>
+#include <libc-pointer-arith.h>
 #include "../../crypt/md5.h"
 #include "../localeinfo.h"
 #include "../locarchive.h"

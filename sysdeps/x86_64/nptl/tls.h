@@ -26,7 +26,7 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <sysdep.h>
-# include <libc-internal.h>
+# include <libc-pointer-arith.h> /* For cast_to_integer.  */
 # include <kernel-features.h>
 # include <dl-dtv.h>
 

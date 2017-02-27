@@ -21,7 +21,6 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <sys/stat.h>
-#include <libc-internal.h>
 
 /* Open FILE with access OFLAG.  Interpret relative paths relative to
    the directory associated with FD.  If O_CREAT or O_TMPFILE is in OFLAG, a

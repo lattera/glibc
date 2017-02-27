@@ -27,7 +27,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <wctype.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 #include <libc-lock.h>
 #include <locale/localeinfo.h>
 #include <scratch_buffer.h>

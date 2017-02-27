@@ -27,7 +27,7 @@
 #include "cns11643.h"
 #include "cns11643l1.h"
 #include "cns11643l2.h"
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 #include <assert.h>
 

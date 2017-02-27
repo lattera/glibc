@@ -57,9 +57,10 @@
  */
 
 #include <float.h>
-#include <libc-internal.h>
 #include <math.h>
 #include <math_private.h>
+#include <libc-diag.h>
+
 static const _Float128
   one = 1,
   pio4hi = L(7.8539816339744830961566084581987569936977E-1),

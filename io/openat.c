@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <kernel-features.h>
-#include <libc-internal.h>
 
 /* Some mostly-generic code (e.g. sysdeps/posix/getcwd.c) uses this variable
    if __ASSUME_ATFCTS is not defined.  */

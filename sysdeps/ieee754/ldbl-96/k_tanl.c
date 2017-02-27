@@ -57,9 +57,10 @@
  */
 
 #include <float.h>
-#include <libc-internal.h>
 #include <math.h>
 #include <math_private.h>
+#include <libc-diag.h>
+
 static const long double
   one = 1.0L,
   pio4hi = 0xc.90fdaa22168c235p-4L,

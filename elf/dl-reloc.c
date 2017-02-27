@@ -25,8 +25,8 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <_itoa.h>
+#include <libc-pointer-arith.h>
 #include "dynamic-link.h"
-#include <libc-internal.h>
 
 /* Statistics function.  */
 #ifdef SHARED

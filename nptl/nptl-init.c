@@ -36,7 +36,7 @@
 #include <lowlevellock.h>
 #include <futex-internal.h>
 #include <kernel-features.h>
-#include <libc-internal.h>
+#include <libc-pointer-arith.h>
 #include <pthread-pids.h>
 
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB

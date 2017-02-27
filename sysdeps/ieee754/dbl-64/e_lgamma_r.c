@@ -77,9 +77,9 @@
  *
  */
 
-#include <libc-internal.h>
 #include <math.h>
 #include <math_private.h>
+#include <libc-diag.h>
 
 static const double
 two52=  4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */

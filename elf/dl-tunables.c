@@ -22,7 +22,6 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <libc-internal.h>
 #include <sysdep.h>
 #include <fcntl.h>
 #include <ldsodefs.h>

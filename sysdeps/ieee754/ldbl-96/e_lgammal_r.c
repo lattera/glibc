@@ -91,9 +91,9 @@
  *
  */
 
-#include <libc-internal.h>
 #include <math.h>
 #include <math_private.h>
+#include <libc-diag.h>
 
 static const long double
   half = 0.5L,

@@ -22,7 +22,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <libc-internal.h>
 
 /* Nonzero if we are actually doing something.  */
 static int active;
