@@ -1,3 +1,8 @@
+2017-02-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* bits/sigthread.h: Refer to <signal.h>, not <pthread.h>.
+	* sysdeps/pthread/bits/sigthread.h: Likewise.
+
 2017-02-27  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21115]
