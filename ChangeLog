@@ -1,5 +1,28 @@
 2017-02-28  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20257]
+	* inet/Makefile (routines): Add deadline.
+	(tests-static): Add tst-deadline.
+	* inet/net-internal.h (struct deadline_current_time)
+	(__deadline_current_time, struct deadline, __deadline_is_infinite)
+	(__deadline_elapsed, __deadline_first, __deadline_from_timeval)
+	(__deadline_to_ms, __is_timeval_valid_timeout): Declare.
+	* inet/deadline.c: New file.
+	* inet/tst-deadline.c: Likewise.
+	* sunrpc/Makefile (tests): Add tst-udp-nonblocking,
+	tst-udp-timeout, tst-udp-garbage.
+	(tst-udp-nonblocking, tst-udp-timeout): Link against libc.so
+	explicitly.
+	(tst-udp-garbage): Likewise.  Also link against thread library.
+	* sunrpc/clnt_udp.c (struct cu_data): Mention in comment that the
+	struct layout is part of the ABI.
+	(clntudp_call): Rework timeout handling.
+	* sunrpc/tst-udp-garbage.c: New file.
+	* sunrpc/tst-udp-nonblocking.c: Likewise.
+	* sunrpc/tst-udp-timeout.c: Likewise.
+
+2017-02-28  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #5010]
 	* sunrpc/svc.c (svc_is_mapped): Remove.
 	(svc_unregister): Obtain mapped status while the service is still

@@ -55,6 +55,7 @@
 #endif
 
 #include <kernel-features.h>
+#include <inet/net-internal.h>
 
 extern u_long _create_xid (void);
 
@@ -80,7 +81,9 @@ static const struct clnt_ops udp_ops =
 };
 
 /*
- * Private data kept per client handle
+ * Private data kept per client handle.  This private struct is
+ * unfortunately part of the ABI; ypbind contains a copy of it and
+ * accesses it through CLIENT::cl_private field.
  */
 struct cu_data
   {
@@ -278,28 +281,38 @@ clntudp_call (/* client handle */
   int inlen;
   socklen_t fromlen;
   struct pollfd fd;
-  int milliseconds = (cu->cu_wait.tv_sec * 1000) +
-    (cu->cu_wait.tv_usec / 1000);
   struct sockaddr_in from;
   struct rpc_msg reply_msg;
   XDR reply_xdrs;
-  struct timeval time_waited;
   bool_t ok;
   int nrefreshes = 2;		/* number of times to refresh cred */
-  struct timeval timeout;
   int anyup;			/* any network interface up */
 
-  if (cu->cu_total.tv_usec == -1)
+  struct deadline_current_time current_time = __deadline_current_time ();
+  struct deadline total_deadline; /* Determined once by overall timeout.  */
+  struct deadline response_deadline; /* Determined anew for each query.  */
+
+  /* Choose the timeout value.  For non-sending usage (xargs == NULL),
+     the total deadline does not matter, only cu->cu_wait is used
+     below.  */
+  if (xargs != NULL)
     {
-      timeout = utimeout;	/* use supplied timeout */
-    }
-  else
-    {
-      timeout = cu->cu_total;	/* use default timeout */
+      struct timeval tv;
+      if (cu->cu_total.tv_usec == -1)
+	/* Use supplied timeout.  */
+	tv = utimeout;
+      else
+	/* Use default timeout.  */
+	tv = cu->cu_total;
+      if (!__is_timeval_valid_timeout (tv))
+	return (cu->cu_error.re_status = RPC_TIMEDOUT);
+      total_deadline = __deadline_from_timeval (current_time, tv);
     }
 
-  time_waited.tv_sec = 0;
-  time_waited.tv_usec = 0;
+  /* Guard against bad timeout specification.  */
+  if (!__is_timeval_valid_timeout (cu->cu_wait))
+    return (cu->cu_error.re_status = RPC_TIMEDOUT);
+
 call_again:
   xdrs = &(cu->cu_outxdrs);
   if (xargs == NULL)
@@ -325,27 +338,46 @@ send_again:
       return (cu->cu_error.re_status = RPC_CANTSEND);
     }
 
-  /*
-   * Hack to provide rpc-based message passing
-   */
-  if (timeout.tv_sec == 0 && timeout.tv_usec == 0)
-    {
-      return (cu->cu_error.re_status = RPC_TIMEDOUT);
-    }
+  /* sendto may have blocked, so recompute the current time.  */
+  current_time = __deadline_current_time ();
  get_reply:
-  /*
-   * sub-optimal code appears here because we have
-   * some clock time to spare while the packets are in flight.
-   * (We assume that this is actually only executed once.)
-   */
+  response_deadline = __deadline_from_timeval (current_time, cu->cu_wait);
+
   reply_msg.acpted_rply.ar_verf = _null_auth;
   reply_msg.acpted_rply.ar_results.where = resultsp;
   reply_msg.acpted_rply.ar_results.proc = xresults;
   fd.fd = cu->cu_sock;
   fd.events = POLLIN;
   anyup = 0;
+
+  /* Per-response retry loop.  current_time must be up-to-date at the
+     top of the loop.  */
   for (;;)
     {
+      int milliseconds;
+      if (xargs != NULL)
+	{
+	  if (__deadline_elapsed (current_time, total_deadline))
+	    /* Overall timeout expired.  */
+	    return (cu->cu_error.re_status = RPC_TIMEDOUT);
+	  milliseconds = __deadline_to_ms
+	    (current_time, __deadline_first (total_deadline,
+					     response_deadline));
+	  if (milliseconds == 0)
+	    /* Per-query timeout expired.  */
+	    goto send_again;
+	}
+      else
+	{
+	  /* xatgs == NULL.  Collect a response without sending a
+	     query.  In this mode, we need to ignore the total
+	     deadline.  */
+	  milliseconds = __deadline_to_ms (current_time, response_deadline);
+	  if (milliseconds == 0)
+	    /* Cannot send again, so bail out.  */
+	    return (cu->cu_error.re_status = RPC_CANTSEND);
+	}
+
       switch (__poll (&fd, 1, milliseconds))
 	{
 
@@ -356,27 +388,10 @@ send_again:
 	      if (!anyup)
 		return (cu->cu_error.re_status = RPC_CANTRECV);
 	    }
-
-	  time_waited.tv_sec += cu->cu_wait.tv_sec;
-	  time_waited.tv_usec += cu->cu_wait.tv_usec;
-	  while (time_waited.tv_usec >= 1000000)
-	    {
-	      time_waited.tv_sec++;
-	      time_waited.tv_usec -= 1000000;
-	    }
-	  if ((time_waited.tv_sec < timeout.tv_sec) ||
-	      ((time_waited.tv_sec == timeout.tv_sec) &&
-	       (time_waited.tv_usec < timeout.tv_usec)))
-	    goto send_again;
-	  return (cu->cu_error.re_status = RPC_TIMEDOUT);
-
-	  /*
-	   * buggy in other cases because time_waited is not being
-	   * updated.
-	   */
+	  goto next_response;
 	case -1:
 	  if (errno == EINTR)
-	    continue;
+	    goto next_response;
 	  cu->cu_error.re_errno = errno;
 	  return (cu->cu_error.re_status = RPC_CANTRECV);
 	}
@@ -440,20 +455,22 @@ send_again:
       if (inlen < 0)
 	{
 	  if (errno == EWOULDBLOCK)
-	    continue;
+	    goto next_response;
 	  cu->cu_error.re_errno = errno;
 	  return (cu->cu_error.re_status = RPC_CANTRECV);
 	}
-      if (inlen < 4)
-	continue;
+      /* Accept the response if the packet is sufficiently long and
+	 the transaction ID matches the query (if available).  */
+      if (inlen >= 4
+	  && (xargs == NULL
+	      || memcmp (cu->cu_inbuf, cu->cu_outbuf,
+			 sizeof (u_int32_t)) == 0))
+	break;
 
-      /* see if reply transaction id matches sent id.
-	Don't do this if we only wait for a replay */
-      if (xargs != NULL
-	  && memcmp (cu->cu_inbuf, cu->cu_outbuf, sizeof (u_int32_t)) != 0)
-	continue;
-      /* we now assume we have the proper reply */
-      break;
+    next_response:
+      /* Update the current time because poll and recvmsg waited for
+	 an unknown time.  */
+      current_time = __deadline_current_time ();
     }
 
   /*

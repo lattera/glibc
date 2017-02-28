@@ -45,14 +45,18 @@ routines := htonl htons		\
 	    in6_addr getnameinfo if_index ifaddrs inet6_option \
 	    getipv4sourcefilter setipv4sourcefilter \
 	    getsourcefilter setsourcefilter inet6_opt inet6_rth \
-	    inet6_scopeid_pton
+	    inet6_scopeid_pton deadline
 
 aux := check_pf check_native ifreq
 
 tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network \
 	 tst-gethnm test-ifaddrs bug-if1 test-inet6_opt tst-ether_line \
 	 tst-getni1 tst-getni2 tst-inet6_rth tst-checks tst-checks-posix \
-	 tst-sockaddr tst-inet6_scopeid_pton test-hnto-types
+	 tst-sockaddr tst-inet6_scopeid_pton test-hnto-types tst-deadline
+
+# tst-deadline must be linked statically so that we can access
+# internal functions.
+tests-static += tst-deadline
 
 include ../Rules
 
