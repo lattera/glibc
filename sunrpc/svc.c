@@ -182,17 +182,6 @@ done:
   return s;
 }
 
-
-static bool_t
-svc_is_mapped (rpcprog_t prog, rpcvers_t vers)
-{
-  struct svc_callout *prev;
-  register struct svc_callout *s;
-  s = svc_find (prog, vers, &prev);
-  return s!= NULL_SVC && s->sc_mapped;
-}
-
-
 /* Add a service program to the callout list.
    The dispatch routine will be called when a rpc request for this
    program number comes in. */
@@ -248,6 +237,7 @@ svc_unregister (rpcprog_t prog, rpcvers_t vers)
 
   if ((s = svc_find (prog, vers, &prev)) == NULL_SVC)
     return;
+  bool is_mapped = s->sc_mapped;
 
   if (prev == NULL_SVC)
     svc_head = s->sc_next;
@@ -257,7 +247,7 @@ svc_unregister (rpcprog_t prog, rpcvers_t vers)
   s->sc_next = NULL_SVC;
   mem_free ((char *) s, (u_int) sizeof (struct svc_callout));
   /* now unregister the information with the local binder service */
-  if (! svc_is_mapped (prog, vers))
+  if (is_mapped)
     pmap_unset (prog, vers);
 }
 libc_hidden_nolink_sunrpc (svc_unregister, GLIBC_2_0)

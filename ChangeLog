@@ -1,3 +1,15 @@
+2017-02-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #5010]
+	* sunrpc/svc.c (svc_is_mapped): Remove.
+	(svc_unregister): Obtain mapped status while the service is still
+	registered.
+	* sunrpc/Makefile [have-thread-library] (tests): Add
+	tst-svc_register.
+	(tst-svc_register): Link against libc.so explicitly and the thread
+	library.
+	* sunrpc/tst-svc_register.c: New file.
+
 2017-02-28  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* bits/sigthread.h: Refer to <signal.h>, not <pthread.h>.

@@ -98,6 +98,7 @@ xtests := tst-getmyaddr
 
 ifeq ($(have-thread-library),yes)
 xtests += thrsvc
+tests += tst-svc_register
 endif
 
 ifeq ($(run-built-tests),yes)
@@ -156,6 +157,8 @@ $(objpfx)tst-getmyaddr: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-xdrmem: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-xdrmem2: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-udp-error: $(common-objpfx)linkobj/libc.so
+$(objpfx)tst-svc_register: \
+  $(common-objpfx)linkobj/libc.so $(shared-thread-library)
 
 $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs))
 
