@@ -1,5 +1,9 @@
 2017-02-28  Florian Weimer  <fweimer@redhat.com>
 
+	* scripts/backport-support.sh (latest_commit): New file.
+
+2017-02-28  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #20257]
 	* inet/Makefile (routines): Add deadline.
 	(tests-static): Add tst-deadline.
