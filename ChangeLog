@@ -1,3 +1,17 @@
+2017-05-11  Zack Weinberg  <zackw@panix.com>
+
+	* libio/libio.h: Condition dummy definition of _IO_lock_t on
+	_IO_lock_t_defined, not _IO_MTSAFE_IO. Unconditionally use the
+	non-_IO_MTSAFE_IO definitions for _IO_peekc, _IO_flockfile,
+	_IO_funlockfile, and _IO_ftrylockfile.  Only define
+	_IO_cleanup_region_start and _IO_cleanup_region_end if not
+	already defined.
+	* include/libio.h: If _IO_MTSAFE_IO is defined, redefine
+	_IO_peekc, _IO_flockfile, _IO_funlockfile, and _IO_ftrylockfile
+	appropriately.
+	* sysdeps/generic/stdio-lock.h, sysdeps/nptl/stdio-lock.h:
+	Define _IO_lock_t_defined after defining _IO_lock_t.
+
 2016-05-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/powerpc32/backtrace.c (is_sigtramp_address): Use

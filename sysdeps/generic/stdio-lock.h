@@ -22,6 +22,7 @@
 #include <libc-lock.h>
 
 __libc_lock_define_recursive (typedef, _IO_lock_t)
+#define _IO_lock_t_defined 1
 
 /* We need recursive (counting) mutexes.  */
 #ifdef _LIBC_LOCK_RECURSIVE_INITIALIZER
