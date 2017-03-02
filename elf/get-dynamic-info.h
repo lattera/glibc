@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _GET_DYNAMIC_INFO_H
-#define _GET_DYNAMIC_INFO_H 1
+/* This file is included multiple times and therefore lacks a header
+   file inclusion guard.  */
 
 #include <assert.h>
 #include <libc-diag.h>
@@ -182,5 +182,3 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
     info[DT_RPATH] = NULL;
 #endif
 }
-
-#endif /* get-dynamic-info.h */

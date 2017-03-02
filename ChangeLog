@@ -1,5 +1,9 @@
 2017-03-02  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/get-dynamic-info.h: Remove header file inclusion guard.
+
+2017-03-02  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #21015]
 	* manual/install.texi (Configuring and compiling): Document
 	--enable-bind-now.
