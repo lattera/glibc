@@ -146,6 +146,12 @@ will be used, and CFLAGS sets optimization options for the compiler.
      of routines called directly from assembler are excluded from this
      protection.
 
+'--enable-bind-now'
+     Disable lazy binding for installed shared objects.  This provides
+     additional security hardening because it enables full RELRO and a
+     read-only global offset table (GOT), at the cost of slightly
+     increased program load times.
+
 '--enable-pt_chown'
      The file 'pt_chown' is a helper binary for 'grantpt' (*note
      Pseudo-Terminals: Allocation.) that is installed setuid root to fix

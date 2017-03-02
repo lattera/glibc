@@ -8,7 +8,7 @@ libc.so: free + RELA R_X86_64_GLOB_DAT
 libc.so: malloc + RELA R_X86_64_GLOB_DAT
 libc.so: memalign + RELA R_X86_64_GLOB_DAT
 libc.so: realloc + RELA R_X86_64_GLOB_DAT
-libm.so: matherr
+libm.so: matherr + RELA R_X86_64_GLOB_DAT
 # The main malloc is interposed into the dynamic linker, for
 # allocations after the initial link (when dlopen is used).
 ld.so: malloc + RELA R_X86_64_GLOB_DAT

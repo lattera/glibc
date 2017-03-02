@@ -588,7 +588,7 @@ $(LINK.o) -shared -static-libgcc -Wl,-O1 $(sysdep-LDFLAGS) \
 	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
-	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
+	  $(LDFLAGS.so) $(LDFLAGS-lib.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link)
 endef
 
@@ -686,10 +686,6 @@ LDFLAGS-c.so = -nostdlib -nostartfiles
 LDLIBS-c.so += $(libc.so-gnulib)
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -e __libc_main
-# If lazy relocation is disabled add the -z now flag.
-ifeq ($(bind-now),yes)
-LDFLAGS-c.so += -Wl,-z,now
-endif
 # Pre-link the objects of libc_pic.a so that we can locally resolve
 # COMMON symbols before we link against ld.so.  This is because ld.so
 # contains some of libc_pic.a already, which will prevent the COMMONs
@@ -1104,7 +1100,8 @@ $(common-objpfx)format.lds: $(..)scripts/output-format.sed \
 ifneq (unknown,$(output-format))
 	echo > $@.new 'OUTPUT_FORMAT($(output-format))'
 else
-	$(LINK.o) -shared $(sysdep-LDFLAGS) $(rtld-LDFLAGS) $(LDFLAGS.so) \
+	$(LINK.o) -shared $(sysdep-LDFLAGS) $(rtld-LDFLAGS) \
+		  $(LDFLAGS.so) $(LDFLAGS-lib.so) \
 		  -x c /dev/null -o $@.so -Wl,--verbose -v 2>&1 \
 	| sed -n -f $< > $@.new
 	test -s $@.new

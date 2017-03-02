@@ -6,7 +6,7 @@ libc.so: free + REL R_386_GLOB_DAT
 libc.so: malloc + REL R_386_GLOB_DAT
 libc.so: memalign + REL R_386_GLOB_DAT
 libc.so: realloc + REL R_386_GLOB_DAT
-libm.so: matherr
+libm.so: matherr + REL R_386_GLOB_DAT
 # The main malloc is interposed into the dynamic linker, for
 # allocations after the initial link (when dlopen is used).
 ld.so: malloc + REL R_386_GLOB_DAT

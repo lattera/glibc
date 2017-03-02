@@ -1,3 +1,20 @@
+2017-03-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21015]
+	* manual/install.texi (Configuring and compiling): Document
+	--enable-bind-now.
+	* Makeconfig [bind-now] (LDFLAGS-lib.so): Set.
+	(build-shlib-helper): Use $(LDFLAGS-lib.so).
+	(format.lds): Likewise.
+	[bind-now] (LDFLAGS-c.so): Remove.
+	* sysdeps/x86_64/localplt.data (libm.so): matherr relocation can
+	be R_X86_64_GLOB_DAT.
+	* sysdeps/unix/sysv/linux/i386/localplt.data (libm.so): matherr
+	relocation can be R_386_GLOB_DAT.
+	* sysdeps/unix/sysv/linux/alpha/localplt.data (libm.so): matherr
+	relocaiton can be R_ALPHA_GLOB_DAT.
+	* iconvdata/Makefile [bind-now] (LDFLAGS.so): Add -Wl,-z,now.
+
 2017-03-01  Zack Weinberg  <zackw@panix.com>
 
 	* include/libc-pointer-arith.h: New file.  Define

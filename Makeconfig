@@ -386,6 +386,13 @@ LDFLAGS.so += $(hashstyle-LDFLAGS)
 LDFLAGS-rtld += $(hashstyle-LDFLAGS)
 endif
 
+# If lazy relocations are disabled, add the -z now flag.  Use
+# LDFLAGS-lib.so instead of LDFLAGS.so, to avoid adding the flag to
+# test modules.
+ifeq ($(bind-now),yes)
+LDFLAGS-lib.so += -Wl,-z,now
+endif
+
 # Command to run after every final link (executable or shared object).
 # This is invoked with $(call after-link,...), so it should operate on
 # the file $1.  This can be set to do some sort of post-processing on
