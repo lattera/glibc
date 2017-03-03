@@ -1,3 +1,8 @@
+2017-03-03  Justus Winter <justus@gnupg.org>
+
+	* sysdeps/mach/hurd/ftruncate64.c: New file.
+	* sysdeps/mach/hurd/truncate64.c: Likewise.
+
 2017-03-03  Florian Weimer  <fweimer@redhat.com>
 
 	* time/tzfile.c (NOID): Do not define.
