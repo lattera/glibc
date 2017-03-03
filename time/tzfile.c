@@ -26,7 +26,6 @@
 #include <sys/stat.h>
 #include <stdint.h>
 
-#define	NOID
 #include <timezone/tzfile.h>
 
 int __use_tzfile;

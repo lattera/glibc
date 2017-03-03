@@ -1,5 +1,10 @@
 2017-03-03  Florian Weimer  <fweimer@redhat.com>
 
+	* time/tzfile.c (NOID): Do not define.
+	* time/tzset.c (NOID): Likewise.
+
+2017-03-03  Florian Weimer  <fweimer@redhat.com>
+
 	* time/tzset.c (compute_offset): Remove __attribute_noinline__.
 
 2017-03-02  Florian Weimer  <fweimer@redhat.com>

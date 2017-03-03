@@ -25,8 +25,6 @@
 #include <string.h>
 #include <time.h>
 
-
-#define NOID
 #include <timezone/tzfile.h>
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
