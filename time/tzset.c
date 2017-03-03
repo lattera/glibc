@@ -168,7 +168,6 @@ update_vars (void)
 
 
 static unsigned int
-__attribute_noinline__
 compute_offset (unsigned int ss, unsigned int mm, unsigned int hh)
 {
   return min (ss, 59) + min (mm, 59) * 60 + min (hh, 24) * 60 * 60;
