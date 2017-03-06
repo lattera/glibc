@@ -1,3 +1,24 @@
+2017-03-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/atomic-machine.h
+	(USE_ATOMIC_COMPILER_BUILTINS): Define to 1.
+	(__arch_compare_and_exchange_val_8_acq,
+	__arch_compare_and_exchange_val_16_acq,
+	__arch_compare_and_exchange_val_32_acq,
+	__arch_compare_and_exchange_val_64_acq):
+	Delete macro.
+	(atomic_compare_and_exchange_val_acq,
+	atomic_compare_and_exchange_val_rel,
+	atomic_compare_and_exchange_bool_acq,
+	catomic_compare_and_exchange_bool_acq,
+	atomic_exchange_acq, atomic_exchange_rel,
+	atomic_exchange_and_add_acq,
+	atomic_exchange_and_add_rel,
+	catomic_exchange_and_add, atomic_or_val,
+	atomic_or, catomic_or, atomic_bit_test_set,
+	atomic_and_val, atomic_and, catomic_and):
+	Define macros with help of C11 atomic builtins.
+
 2017-03-03  Justus Winter <justus@gnupg.org>
 
 	* sysdeps/mach/hurd/ftruncate64.c: New file.

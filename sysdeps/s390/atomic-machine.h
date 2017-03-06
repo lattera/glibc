@@ -43,78 +43,117 @@ typedef uintptr_t uatomicptr_t;
 typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
-#define USE_ATOMIC_COMPILER_BUILTINS 0
+/* Activate all C11 atomic builtins.
 
+   Note:
+   E.g. in nptl/pthread_key_delete.c if compiled with GCCs 6 and before,
+   an extra stack-frame is generated and the old value is stored on stack
+   before cs instruction but it never loads this value from stack.
+   An unreleased GCC 7 omit those stack operations.
 
-#define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
-  (abort (), (__typeof (*mem)) 0)
+   E.g. in nptl/pthread_once.c the condition code of cs instruction is
+   evaluated by a sequence of ipm, sra, compare and jump instructions instead
+   of one conditional jump instruction.  This also occurs with an unreleased
+   GCC 7.
 
-#define __arch_compare_and_exchange_val_16_acq(mem, newval, oldval) \
-  (abort (), (__typeof (*mem)) 0)
-
-#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
-  ({ __typeof (mem) __archmem = (mem);					      \
-     __typeof (*mem) __archold = (oldval);				      \
-     __asm__ __volatile__ ("cs %0,%2,%1"				      \
-			   : "+d" (__archold), "=Q" (*__archmem)	      \
-			   : "d" (newval), "m" (*__archmem) : "cc", "memory" );	\
-     __archold; })
+   The atomic_fetch_abc_def C11 builtins are now using load-and-abc instructions
+   on z196 zarch and higher cpus instead of a loop with compare-and-swap
+   instruction.  */
+#define USE_ATOMIC_COMPILER_BUILTINS 1
 
 #ifdef __s390x__
 # define __HAVE_64B_ATOMICS 1
-# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  ({ __typeof (mem) __archmem = (mem);					      \
-     __typeof (*mem) __archold = (oldval);				      \
-     __asm__ __volatile__ ("csg %0,%2,%1"				      \
-			   : "+d" (__archold), "=Q" (*__archmem)	      \
-			   : "d" ((long) (newval)), "m" (*__archmem) : "cc", "memory" ); \
-     __archold; })
 #else
 # define __HAVE_64B_ATOMICS 0
-/* For 31 bit we do not really need 64-bit compare-and-exchange. We can
-   implement them by use of the csd instruction. The straightforward
-   implementation causes warnings so we skip the definition for now.  */
-# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  (abort (), (__typeof (*mem)) 0)
 #endif
 
+/* Implement some of the non-C11 atomic macros from include/atomic.h
+   with help of the C11 atomic builtins.  The other non-C11 atomic macros
+   are using the macros defined here.  */
+
+/* Atomically store NEWVAL in *MEM if *MEM is equal to OLDVAL.
+   Return the old *MEM value.  */
+#define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
+  ({ __atomic_check_size((mem));					\
+    typeof ((__typeof (*(mem))) *(mem)) __atg1_oldval = (oldval);	\
+    __atomic_compare_exchange_n (mem, (void *) &__atg1_oldval,		\
+				 newval, 1, __ATOMIC_ACQUIRE,		\
+				 __ATOMIC_RELAXED);			\
+    __atg1_oldval; })
+#define atomic_compare_and_exchange_val_rel(mem, newval, oldval)	\
+  ({ __atomic_check_size((mem));					\
+    typeof ((__typeof (*(mem))) *(mem)) __atg1_2_oldval = (oldval);	\
+    __atomic_compare_exchange_n (mem, (void *) &__atg1_2_oldval,	\
+				 newval, 1, __ATOMIC_RELEASE,		\
+				 __ATOMIC_RELAXED);			\
+    __atg1_2_oldval; })
+
+/* Atomically store NEWVAL in *MEM if *MEM is equal to OLDVAL.
+   Return zero if *MEM was changed or non-zero if no exchange happened.  */
+#define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)	\
+  ({ __atomic_check_size((mem));					\
+    typeof ((__typeof (*(mem))) *(mem)) __atg2_oldval = (oldval);	\
+    !__atomic_compare_exchange_n (mem, (void *) &__atg2_oldval, newval,	\
+				  1, __ATOMIC_ACQUIRE,			\
+				  __ATOMIC_RELAXED); })
+#define catomic_compare_and_exchange_bool_acq(mem, newval, oldval)	\
+  atomic_compare_and_exchange_bool_acq (mem, newval, oldval)
+
 /* Store NEWVALUE in *MEM and return the old value.  */
-/* On s390, the atomic_exchange_acq is different from generic implementation,
-   because the generic one does not use the condition-code of cs-instruction
-   to determine if looping is needed. Instead it saves the old-value and
-   compares it against old-value returned by cs-instruction.  */
-#ifdef __s390x__
-# define atomic_exchange_acq(mem, newvalue)				\
-  ({ __typeof (mem) __atg5_memp = (mem);				\
-    __typeof (*(mem)) __atg5_oldval = *__atg5_memp;			\
-    __typeof (*(mem)) __atg5_value = (newvalue);			\
-    if (sizeof (*mem) == 4)						\
-      __asm__ __volatile__ ("0: cs %0,%2,%1\n"				\
-			    "   jl 0b"					\
-			    : "+d" (__atg5_oldval), "=Q" (*__atg5_memp)	\
-			    : "d" (__atg5_value), "m" (*__atg5_memp)	\
-			    : "cc", "memory" );				\
-     else if (sizeof (*mem) == 8)					\
-       __asm__ __volatile__ ("0: csg %0,%2,%1\n"			\
-			     "   jl 0b"					\
-			     : "+d" ( __atg5_oldval), "=Q" (*__atg5_memp) \
-			     : "d" ((long) __atg5_value), "m" (*__atg5_memp) \
-			     : "cc", "memory" );			\
-     else								\
-       abort ();							\
-     __atg5_oldval; })
-#else
-# define atomic_exchange_acq(mem, newvalue)				\
-  ({ __typeof (mem) __atg5_memp = (mem);				\
-    __typeof (*(mem)) __atg5_oldval = *__atg5_memp;			\
-    __typeof (*(mem)) __atg5_value = (newvalue);			\
-    if (sizeof (*mem) == 4)						\
-      __asm__ __volatile__ ("0: cs %0,%2,%1\n"				\
-			    "   jl 0b"					\
-			    : "+d" (__atg5_oldval), "=Q" (*__atg5_memp)	\
-			    : "d" (__atg5_value), "m" (*__atg5_memp)	\
-			    : "cc", "memory" );				\
-    else								\
-      abort ();								\
-    __atg5_oldval; })
-#endif
+#define atomic_exchange_acq(mem, newvalue)				\
+  ({ __atomic_check_size((mem));					\
+    __atomic_exchange_n (mem, newvalue, __ATOMIC_ACQUIRE); })
+#define atomic_exchange_rel(mem, newvalue)				\
+  ({ __atomic_check_size((mem));					\
+    __atomic_exchange_n (mem, newvalue, __ATOMIC_RELEASE); })
+
+/* Add VALUE to *MEM and return the old value of *MEM.  */
+/* The gcc builtin uses load-and-add instruction on z196 zarch and higher cpus
+   instead of a loop with compare-and-swap instruction.  */
+# define atomic_exchange_and_add_acq(mem, operand)			\
+  ({ __atomic_check_size((mem));					\
+  __atomic_fetch_add ((mem), (operand), __ATOMIC_ACQUIRE); })
+# define atomic_exchange_and_add_rel(mem, operand)			\
+  ({ __atomic_check_size((mem));					\
+  __atomic_fetch_add ((mem), (operand), __ATOMIC_RELEASE); })
+#define catomic_exchange_and_add(mem, value)	\
+  atomic_exchange_and_add (mem, value)
+
+/* Atomically *mem |= mask and return the old value of *mem.  */
+/* The gcc builtin uses load-and-or instruction on z196 zarch and higher cpus
+   instead of a loop with compare-and-swap instruction.  */
+#define atomic_or_val(mem, operand)					\
+  ({ __atomic_check_size((mem));					\
+  __atomic_fetch_or ((mem), (operand), __ATOMIC_ACQUIRE); })
+/* Atomically *mem |= mask.  */
+#define atomic_or(mem, mask)			\
+  do {						\
+    atomic_or_val (mem, mask);			\
+  } while (0)
+#define catomic_or(mem, mask)			\
+  atomic_or (mem, mask)
+
+/* Atomically *mem |= 1 << bit and return true if the bit was set in old value
+   of *mem.  */
+/* The load-and-or instruction is used on z196 zarch and higher cpus
+   instead of a loop with compare-and-swap instruction.  */
+#define atomic_bit_test_set(mem, bit)					\
+  ({ __typeof (*(mem)) __atg14_old;					\
+    __typeof (mem) __atg14_memp = (mem);				\
+    __typeof (*(mem)) __atg14_mask = ((__typeof (*(mem))) 1 << (bit));	\
+    __atg14_old = atomic_or_val (__atg14_memp, __atg14_mask);		\
+    __atg14_old & __atg14_mask; })
+
+/* Atomically *mem &= mask and return the old value of *mem.  */
+/* The gcc builtin uses load-and-and instruction on z196 zarch and higher cpus
+   instead of a loop with compare-and-swap instruction.  */
+#define atomic_and_val(mem, operand)					\
+  ({ __atomic_check_size((mem));					\
+  __atomic_fetch_and ((mem), (operand), __ATOMIC_ACQUIRE); })
+/* Atomically *mem &= mask.  */
+#define atomic_and(mem, mask)			\
+  do {						\
+    atomic_and_val (mem, mask);			\
+  } while (0)
+#define catomic_and(mem, mask)			\
+  atomic_and(mem, mask)
