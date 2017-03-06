@@ -18,7 +18,6 @@ getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
 listen		-	listen		i:ii	__listen	listen
 send		-	send		Ci:ibni	__libc_send	__send send
-sendto		-	sendto		Ci:ibnibn __libc_sendto	__sendto sendto
 setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
 shutdown	-	shutdown	i:ii	__shutdown	shutdown
 socket		-	socket		i:iii	__socket	socket
