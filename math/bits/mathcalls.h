@@ -187,14 +187,6 @@ __MATHCALLX (floor,, (_Mdouble_ __x), (__const__));
 
 /* Floating-point modulo remainder of X/Y.  */
 __MATHCALL (fmod,, (_Mdouble_ __x, _Mdouble_ __y));
-
-
-/* Return 0 if VALUE is finite or NaN, +1 if it
-   is +Infinity, -1 if it is -Infinity.  */
-__MATHDECL_1 (int,__isinf,, (_Mdouble_ __value)) __attribute__ ((__const__));
-
-/* Return nonzero if VALUE is finite and not NaN.  */
-__MATHDECL_1 (int,__finite,, (_Mdouble_ __value)) __attribute__ ((__const__));
 _Mdouble_END_NAMESPACE
 
 #ifdef __USE_MISC
@@ -231,9 +223,6 @@ __MATHCALLX (nan,, (const char *__tagb), (__const__));
 __END_NAMESPACE_C99
 #endif
 
-
-/* Return nonzero if VALUE is not a number.  */
-__MATHDECL_1 (int,__isnan,, (_Mdouble_ __value)) __attribute__ ((__const__));
 
 #if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 # if (!defined __cplusplus \
@@ -366,16 +355,6 @@ __MATHCALLX (fmax,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 /* Return minimum numeric value from X and Y.  */
 __MATHCALLX (fmin,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
-
-/* Classify given number.  */
-__MATHDECL_1 (int, __fpclassify,, (_Mdouble_ __value))
-     __attribute__ ((__const__));
-
-/* Test for negative number.  */
-__MATHDECL_1 (int, __signbit,, (_Mdouble_ __value))
-     __attribute__ ((__const__));
-
-
 /* Multiply-add function computed as a ternary operation.  */
 __MATHCALL (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
 #endif /* Use ISO C99.  */
@@ -415,13 +394,6 @@ __MATHCALLX (fmaxmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return value with minimum magnitude.  */
 __MATHCALLX (fminmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
-
-/* Test equality.  */
-__MATHDECL_1 (int, __iseqsig,, (_Mdouble_ __x, _Mdouble_ __y));
-
-/* Test for signaling NaN.  */
-__MATHDECL_1 (int, __issignaling,, (_Mdouble_ __value))
-     __attribute__ ((__const__));
 
 /* Total order operation.  */
 __MATHDECL_1 (int, totalorder,, (_Mdouble_ __x, _Mdouble_ __y))

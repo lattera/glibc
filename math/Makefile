@@ -29,7 +29,7 @@ headers		:= math.h bits/mathcalls.h bits/mathinline.h bits/huge_val.h \
 		   bits/math-finite.h bits/math-vector.h \
 		   bits/libm-simd-decl-stubs.h bits/iscanonical.h \
 		   bits/flt-eval-method.h bits/fp-fast.h bits/fp-logb.h \
-		   bits/long-double.h
+		   bits/long-double.h bits/mathcalls-helper-functions.h
 
 # FPU support code.
 aux		:= setfpucw fpu_control

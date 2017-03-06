@@ -1,3 +1,14 @@
+2017-03-14  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* include/bits/mathcalls-helper-functions.h: New file.
+	* math/Makefile (headers): Add bits/mathcalls-helper-functions.h.
+	* math/bits/mathcalls.h (__finite, __fpclassify, __iseqsig)
+	(__isinf, __isnan, __issignaling, __signbit): Move declarations to
+	math/bits/mathcalls-helper-functions.h.
+	* math/bits/mathcalls-helper-functions.h: New file.
+	* math/math.h: Include bits/mathcalls-helper-functions.h for
+	float, double, and long double.
+
 2017-03-15  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/s_iseqsig_template.c (__iseqsig): Use __feraiseexcept
