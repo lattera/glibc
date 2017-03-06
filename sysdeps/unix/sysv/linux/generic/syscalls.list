@@ -8,7 +8,6 @@ listen		-	listen		i:ii	__listen	listen
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 sendto		-	sendto		Ci:ibnibn	__libc_sendto	__sendto sendto
-recvfrom	-	recvfrom	Ci:ibniBN	__libc_recvfrom	__recvfrom recvfrom
 setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
 shutdown	-	shutdown	i:ii	__shutdown	shutdown

@@ -149,6 +149,7 @@
 #define __ASSUME_RECVMSG_SYSCALL	1
 #define __ASSUME_ACCEPT_SYSCALL		1
 #define __ASSUME_CONNECT_SYSCALL	1
+#define __ASSUME_RECVFROM_SYSCALL	1
 
 /* Support for SysV IPC through wired syscalls.  All supported architectures
    either support ipc syscall and/or all the ipc correspondent syscalls.  */

@@ -11,7 +11,6 @@ getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
 listen		-	listen		i:ii	__listen	listen
 recv		-	recv		Ci:ibni	__libc_recv	__recv recv
-recvfrom	-	recvfrom	Ci:ibniBN	__libc_recvfrom	__recvfrom recvfrom
 send		-	send		Ci:ibni	__libc_send	__send send
 sendto		-	sendto		Ci:ibnibn	__libc_sendto	__sendto sendto
 setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
