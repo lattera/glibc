@@ -157,6 +157,10 @@
 # define HAVE_CLOCK_GETTIME_VSYSCALL	1
 # define HAVE_GETTIMEOFDAY_VSYSCALL	1
 
+/* Previously AArch64 used the generic version without the libc_hidden_def
+   which lead in a non existent __send symbol in libc.so.  */
+# undef HAVE_INTERNAL_SEND_SYMBOL
+
 /* Define a macro which expands into the inline wrapper code for a system
    call.  */
 # undef INLINE_SYSCALL

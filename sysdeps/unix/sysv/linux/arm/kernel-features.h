@@ -39,3 +39,4 @@
 #define __NR_fadvise64_64 __NR_arm_fadvise64_64
 
 #define __ASSUME_RECV_SYSCALL   1
+#define __ASSUME_SEND_SYSCALL	1

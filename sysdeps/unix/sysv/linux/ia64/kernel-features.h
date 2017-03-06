@@ -29,5 +29,6 @@
 #endif
 
 #define __ASSUME_RECV_SYSCALL   	1
+#define __ASSUME_SEND_SYSCALL		1
 
 #endif /* _KERNEL_FEATURES_H */

@@ -40,6 +40,7 @@
 
 /* mips32 support wire-up network syscalls.  */
 # define __ASSUME_RECV_SYSCALL		1
+# define __ASSUME_SEND_SYSCALL		1
 #endif
 
 /* Define that mips64-n32 is a ILP32 ABI to set the correct interface to

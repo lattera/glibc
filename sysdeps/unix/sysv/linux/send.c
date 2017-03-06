@@ -15,21 +15,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <signal.h>
 #include <sys/socket.h>
-
 #include <sysdep-cancel.h>
 #include <socketcall.h>
-#include <kernel-features.h>
-#include <sys/syscall.h>
 
 ssize_t
 __libc_send (int fd, const void *buf, size_t len, int flags)
 {
 #ifdef __ASSUME_SEND_SYSCALL
   return SYSCALL_CANCEL (send, fd, buf, len, flags);
-#elif defined __ASSUME_SENDTO_FOR_SEND_SYSCALL
+#elif defined __ASSUME_SENDTO_SYSCALL
   return SYSCALL_CANCEL (sendto, fd, buf, len, flags, NULL, 0);
 #else
   return SOCKETCALL_CANCEL (send, fd, buf, len, flags);
@@ -37,4 +32,6 @@ __libc_send (int fd, const void *buf, size_t len, int flags)
 }
 weak_alias (__libc_send, send)
 weak_alias (__libc_send, __send)
+#ifdef HAVE_INTERNAL_SEND_SYMBOL
 libc_hidden_def (__send)
+#endif

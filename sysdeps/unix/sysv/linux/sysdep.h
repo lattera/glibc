@@ -62,3 +62,7 @@
 #define LO_HI_LONG(val) \
  (long) (val), \
  (long) (((uint64_t) (val)) >> 32)
+
+/* Exports the __send symbol on send.c linux implementation (some ABI have
+   it missing due the usage of a old generic version without it).  */
+#define HAVE_INTERNAL_SEND_SYMBOL	1
