@@ -48,8 +48,6 @@ struct leap
     long int change;		/* Seconds of correction to apply.  */
   };
 
-static void compute_tzname_max (size_t) internal_function;
-
 static size_t num_transitions;
 libc_freeres_ptr (static time_t *transitions);
 static unsigned char *type_idxs;
@@ -494,8 +492,6 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   if (__tzname[1] == NULL)
     __tzname[1] = __tzname[0];
 
-  compute_tzname_max (chars);
-
   if (num_transitions == 0)
     /* Use the first rule (which should also be the only one).  */
     rule_stdoff = rule_dstoff = types[0].offset;
@@ -625,8 +621,6 @@ __tzfile_default (const char *std, const char *dst,
 
   /* Set the timezone.  */
   __timezone = -types[0].offset;
-
-  compute_tzname_max (stdlen + dstlen);
 
   /* Invalidate the tzfile attribute cache to force rereading
      TZDEFRULES the next time it is used.  */
@@ -835,22 +829,4 @@ __tzfile_compute (time_t timer, int use_localtime,
 	  --i;
 	}
     }
-}
-
-static void
-internal_function
-compute_tzname_max (size_t chars)
-{
-  const char *p;
-
-  p = zone_names;
-  do
-    {
-      const char *start = p;
-      while (*p != '\0')
-	++p;
-      if ((size_t) (p - start) > __tzname_cur_max)
-	__tzname_cur_max = p - start;
-    }
-  while (++p < &zone_names[chars]);
 }

@@ -1,3 +1,21 @@
+2017-03-07  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #15576]
+	Remove TZNAME_MAX limit from sysconf.
+	* include/time.h (__tzname_cur_max, __tzname_max): Remove
+	declaration.
+	* time/tzfile.c (__tzfile_read, __tzfile_default): Do not call
+	compute_tzname_max.
+	(compute_tzname_max): Remove.
+	* time/tzset.c (__tzname_cur_max, __tzname_max): Remove.
+	(update_vars): Do not update __tzname_cur_max.
+	(tzset_internal): Remove argument.
+	(__tzset): Adjust call to tzset_internal.
+	(__tz_convert): Likewise.
+	* posix/sysconf.c (__sysconf): Return -1 for _SC_TZNAME_MAX.
+	* sysdeps/posix/sysconf.c (__sysconf): Likewise.
+	* manual/conf.texi (Sysconf Definition): Update comment.
+
 2017-03-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	[BZ #21209]

@@ -37,10 +37,6 @@ extern struct tm _tmbuf attribute_hidden;
 /* Defined in tzset.c.  */
 extern char *__tzstring (const char *string);
 
-/* Defined in tzset.c. */
-extern size_t __tzname_cur_max attribute_hidden;
-
-
 extern int __use_tzfile attribute_hidden;
 
 extern void __tzfile_read (const char *file, size_t extra,
@@ -81,10 +77,6 @@ extern void __tzset (void);
 
 /* Prototype for the internal function to get information based on TZ.  */
 extern struct tm *__tz_convert (const time_t *timer, int use_localtime, struct tm *tp);
-
-/* Return the maximum length of a timezone name.
-   This is what `sysconf (_SC_TZNAME_MAX)' does.  */
-extern long int __tzname_max (void);
 
 extern int __nanosleep (const struct timespec *__requested_time,
 			struct timespec *__remaining);

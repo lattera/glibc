@@ -291,14 +291,10 @@ constants are declared in the header file @file{unistd.h}.
 @safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c Some parts of the implementation open /proc and /sys files and dirs
 @c to collect system details, using fd and stream I/O depending on the
-@c case.  _SC_TZNAME_MAX calls __tzname_max, that (while holding a lock)
-@c calls tzset_internal, that calls getenv if it's called the first
-@c time; there are free and strdup calls in there too.  The returned max
-@c value may change over time for TZNAME_MAX, depending on selected
-@c timezones; NPROCS, NPROCS_CONF, PHYS_PAGES, AVPHYS_PAGES,
-@c NGROUPS_MAX, SIGQUEUE_MAX, depending on variable values read from
-@c /proc at each call, and from rlimit-obtained values CHILD_MAX,
-@c OPEN_MAX, ARG_MAX, SIGQUEUE_MAX.
+@c case.  The returned max value may change over time for NPROCS,
+@c NPROCS_CONF, PHYS_PAGES, AVPHYS_PAGES, NGROUPS_MAX, SIGQUEUE_MAX,
+@c depending on variable values read from /proc at each call, and from
+@c rlimit-obtained values CHILD_MAX, OPEN_MAX, ARG_MAX, SIGQUEUE_MAX.
 This function is used to inquire about runtime system parameters.  The
 @var{parameter} argument should be one of the @samp{_SC_} symbols listed
 below.
