@@ -1,3 +1,13 @@
+2017-03-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	[BZ #21209]
+	* elf/rtld.c (process_envvars): Ignore LD_HWCAP_MASK for
+	AT_SECURE processes.
+	* sysdeps/generic/unsecvars.h: Add LD_HWCAP_MASK.
+	* elf/tst-env-setuid.c (test_parent): Test LD_HWCAP_MASK.
+	(test_child): Likewise.
+	* elf/Makefile (tst-env-setuid-ENV): Add LD_HWCAP_MASK.
+
 2017-03-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/hppa/ipc_priv.h: New file.

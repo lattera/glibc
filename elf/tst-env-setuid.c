@@ -213,6 +213,12 @@ test_child (void)
       return 1;
     }
 
+  if (getenv ("LD_HWCAP_MASK") != NULL)
+    {
+      printf ("LD_HWCAP_MASK still set\n");
+      return 1;
+    }
+
   return 0;
 }
 #endif
@@ -230,6 +236,12 @@ test_parent (void)
   if (getenv ("MALLOC_MMAP_THRESHOLD_") == NULL)
     {
       printf ("MALLOC_MMAP_THRESHOLD_ lost\n");
+      return 1;
+    }
+
+  if (getenv ("LD_HWCAP_MASK") == NULL)
+    {
+      printf ("LD_HWCAP_MASK lost\n");
       return 1;
     }
 

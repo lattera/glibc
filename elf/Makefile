@@ -1398,6 +1398,7 @@ $(objpfx)tst-nodelete-dlclose: $(objpfx)tst-nodelete-dlclose-dso.so
 $(objpfx)tst-nodelete-dlclose.out: $(objpfx)tst-nodelete-dlclose-dso.so \
 				   $(objpfx)tst-nodelete-dlclose-plugin.so
 
-tst-env-setuid-ENV = MALLOC_CHECK_=2 MALLOC_MMAP_THRESHOLD_=4096
+tst-env-setuid-ENV = MALLOC_CHECK_=2 MALLOC_MMAP_THRESHOLD_=4096 \
+		     LD_HWCAP_MASK=0xffffffff
 tst-env-setuid-tunables-ENV = \
 	GLIBC_TUNABLES=glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096
