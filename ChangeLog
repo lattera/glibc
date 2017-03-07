@@ -5,8 +5,6 @@
 
 2017-03-07  Florian Weimer  <fweimer@redhat.com>
 
-2017-03-07  Florian Weimer  <fweimer@redhat.com>
-
 	[BZ #15576]
 	Remove TZNAME_MAX limit from sysconf.
 	* include/time.h (__tzname_cur_max, __tzname_max): Remove
