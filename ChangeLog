@@ -1,3 +1,7 @@
+2017-03-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/hppa/ipc_priv.h: New file.
+
 2017-03-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/atomic-machine.h
