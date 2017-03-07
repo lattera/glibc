@@ -38,12 +38,6 @@ weak_alias (__timezone, timezone)
 /* This locks all the state variables in tzfile.c and this file.  */
 __libc_lock_define_initialized (static, tzset_lock)
 
-
-#define	min(a, b)	((a) < (b) ? (a) : (b))
-#define	max(a, b)	((a) > (b) ? (a) : (b))
-#define	sign(x)		((x) < 0 ? -1 : 1)
-
-
 /* This structure contains all the information about a
    timezone given in the POSIX standard TZ envariable.  */
 typedef struct
@@ -142,7 +136,13 @@ update_vars (void)
 static unsigned int
 compute_offset (unsigned int ss, unsigned int mm, unsigned int hh)
 {
-  return min (ss, 59) + min (mm, 59) * 60 + min (hh, 24) * 60 * 60;
+  if (ss > 59)
+    ss = 59;
+  if (mm > 59)
+    mm = 59;
+  if (hh > 24)
+    hh = 24;
+  return ss + mm * 60 + hh * 60 * 60;
 }
 
 /* Parses the time zone name at *TZP, and writes a pointer to an
