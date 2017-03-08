@@ -62,7 +62,7 @@ routines :=								      \
 	get_child_max sched_cpucount sched_cpualloc sched_cpufree
 
 aux		:= init-posix environ
-tests		:= tstgetopt testfnm runtests runptests	     \
+tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-preadwrite tst-preadwrite64 test-vfork regexbug1 \
 		   tst-mmap tst-mmap-offset tst-getaddrinfo tst-truncate \
 		   tst-truncate64 tst-fork tst-fnmatch tst-regexloc tst-dir \
