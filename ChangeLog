@@ -1,3 +1,8 @@
+2017-03-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/mips64/libm-test-ulps: Update catan and catanh ulps
+	for long double with corrected test expectations.
+
 2016-03-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/sysdep.h (HAVE_INTERNAL_SEND_SYMBOL):
