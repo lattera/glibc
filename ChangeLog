@@ -1,3 +1,9 @@
+2017-03-10  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* math/auto-libm-test-out-catan: Regenerated.
+	* math/auto-libm-test-out-catanh: Likewise.
+	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
+
 2017-03-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/mips64/libm-test-ulps: Update catan and catanh ulps
