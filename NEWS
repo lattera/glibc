@@ -11,6 +11,12 @@ Version 2.26
   transliteration tables are all updated to Unicode 9.0.0, using
   generator scripts contributed by Mike FABIAN (Red Hat).
 
+* The rpcgen, librpcsvc and related headers will only be built and
+  installed when glibc is configured with --enable-obsolete-rpc.
+  This allows alternative RPC implementations, like TIRPC, to be used
+  by default. Applications needing features missing from TIRPC should
+  consider the rpcsvc-proto project developed by Thorsten Kukuk (SUSE).
+
 Security related changes:
 
   [Add security related changes here]

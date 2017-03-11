@@ -48,11 +48,10 @@ include ../Makeconfig
 rpcsvc = bootparam_prot.x nlm_prot.x rstat.x \
 	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
 	 rusers.x spray.x nfs_prot.x rquota.x key_prot.x
-headers-in-tirpc = $(addprefix rpc/,auth.h auth_unix.h clnt.h pmap_clnt.h \
-				    pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h \
-				    svc.h svc_auth.h types.h xdr.h auth_des.h \
-				    des_crypt.h)
-headers-not-in-tirpc = $(addprefix rpc/,key_prot.h rpc_des.h) \
+headers-sunrpc = $(addprefix rpc/,auth.h auth_unix.h clnt.h pmap_clnt.h \
+				  pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h \
+				  svc.h svc_auth.h types.h xdr.h auth_des.h \
+				  des_crypt.h key_prot.h rpc_des.h) \
 		       $(rpcsvc:%=rpcsvc/%) rpcsvc/bootparam.h
 headers = rpc/netdb.h
 install-others = $(inst_sysconfdir)/rpc
@@ -61,7 +60,7 @@ generated += $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) $(rpcsvc:%.x=x%.stmp) \
 generated-dirs += rpcsvc
 
 ifeq ($(link-obsolete-rpc),yes)
-headers += $(headers-in-tirpc) $(headers-not-in-tirpc)
+headers += $(headers-sunrpc)
 endif
 
 ifeq ($(build-shared),yes)
@@ -86,12 +85,14 @@ shared-only-routines = $(routines)
 endif
 endif
 
+ifeq ($(link-obsolete-rpc),yes)
 install-bin := rpcgen
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o \
 	      rpc_tblout.o rpc_sample.o
 extra-objs = $(rpcgen-objs) $(addprefix cross-,$(rpcgen-objs))
 others += rpcgen
+endif
 
 tests = tst-xdrmem tst-xdrmem2 test-rpcent tst-udp-error tst-udp-timeout \
   tst-udp-nonblocking
@@ -107,12 +108,14 @@ rpcgen-tests := $(objpfx)bug20790.out
 tests-special += $(rpcgen-tests)
 endif
 
+ifeq ($(link-obsolete-rpc),yes)
 headers += $(rpcsvc:%.x=rpcsvc/%.h)
 extra-libs := librpcsvc
 extra-libs-others := librpcsvc # Make it in `others' pass, not `lib' pass.
 librpcsvc-routines = $(rpcsvc:%.x=x%)
 librpcsvc-inhibit-o = .os # Build no shared rpcsvc library.
 omit-deps = $(librpcsvc-routines)
+endif
 
 ifeq (yes,$(build-shared))
 rpc-compat-routines = $(addprefix compat-,$(need-export-routines))
