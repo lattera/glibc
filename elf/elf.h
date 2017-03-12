@@ -79,7 +79,7 @@ typedef struct
   Elf32_Half	e_phnum;		/* Program header table entry count */
   Elf32_Half	e_shentsize;		/* Section header table entry size */
   Elf32_Half	e_shnum;		/* Section header table entry count */
-  Elf32_Half	e_shstrndx;		/* Section header string table index */
+  Elf32_Section	e_shstrndx;		/* Section header string table index */
 } Elf32_Ehdr;
 
 typedef struct
@@ -97,7 +97,7 @@ typedef struct
   Elf64_Half	e_phnum;		/* Program header table entry count */
   Elf64_Half	e_shentsize;		/* Section header table entry size */
   Elf64_Half	e_shnum;		/* Section header table entry count */
-  Elf64_Half	e_shstrndx;		/* Section header string table index */
+  Elf64_Section	e_shstrndx;		/* Section header string table index */
 } Elf64_Ehdr;
 
 /* Fields in the e_ident array.  The EI_* macros are indices into the
