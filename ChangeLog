@@ -1,3 +1,9 @@
+2016-03-12  Marko Myllynen  <myllynen@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_RECV_SYSCALL): Replace duplicate by
+	__ASSUME_SEND_SYSCALL.
+
 2017-03-10  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* math/auto-libm-test-out-catan: Regenerated.
