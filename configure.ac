@@ -1390,8 +1390,8 @@ dnl The following test is a bit weak.  We must use a tool which can test
 dnl cross-platform since the gcc used can be a cross compiler.  Without
 dnl introducing new options this is not easily doable.  Instead use a tool
 dnl which always is cross-platform: readelf.  To detect whether -z combreloc
-dnl look for a section named .rel.dyn.
-  if $READELF -S conftest.so | grep '\.rel\(a\|\)\.dyn' > /dev/null; then
+dnl look for a section named .rel.dyn or .rela.dyn.
+  if $READELF -S conftest.so | grep -E '.rela?.dyn' > /dev/null; then
     libc_cv_z_combreloc=yes
   else
     libc_cv_z_combreloc=no
@@ -1586,7 +1586,7 @@ void zero (void *x)
 }
 EOF
 dnl
-if AC_TRY_COMMAND([${CC-cc} -O3 -S conftest.c -o - | fgrep "memset" > /dev/null]);
+if AC_TRY_COMMAND([${CC-cc} -O3 -S conftest.c -o - | grep -F "memset" > /dev/null]);
 then
   libc_cv_gcc_builtin_memset=no
 else
@@ -1606,7 +1606,7 @@ char *foo (const char *a, const char *b)
 }
 EOF
 dnl
-if AC_TRY_COMMAND([${CC-cc} -O3 -S conftest.c -o - | fgrep "my_strstr" > /dev/null]);
+if AC_TRY_COMMAND([${CC-cc} -O3 -S conftest.c -o - | grep -F "my_strstr" > /dev/null]);
 then
   libc_cv_gcc_builtin_redirection=yes
 else
@@ -1747,7 +1747,7 @@ typedef struct {
 extern const Ehdr __ehdr_start __attribute__ ((visibility ("hidden")));
 long ehdr (void) { return __ehdr_start.val; }
 ])],
-	       [if $READELF -r conftest | fgrep __ehdr_start >/dev/null; then
+	       [if $READELF -r conftest | grep -F __ehdr_start >/dev/null; then
 		  libc_cv_ehdr_start=broken
 		else
 		  libc_cv_ehdr_start=yes

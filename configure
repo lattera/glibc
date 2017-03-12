@@ -5804,7 +5804,7 @@ if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
 then
-  if $READELF -S conftest.so | grep '\.rel\(a\|\)\.dyn' > /dev/null; then
+  if $READELF -S conftest.so | grep -E '.rela?.dyn' > /dev/null; then
     libc_cv_z_combreloc=yes
   else
     libc_cv_z_combreloc=no
@@ -6120,7 +6120,7 @@ void zero (void *x)
   __builtin_memset (x, 0, 1000);
 }
 EOF
-if { ac_try='${CC-cc} -O3 -S conftest.c -o - | fgrep "memset" > /dev/null'
+if { ac_try='${CC-cc} -O3 -S conftest.c -o - | grep -F "memset" > /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -6152,7 +6152,7 @@ char *foo (const char *a, const char *b)
   return __builtin_strstr (a, b);
 }
 EOF
-if { ac_try='${CC-cc} -O3 -S conftest.c -o - | fgrep "my_strstr" > /dev/null'
+if { ac_try='${CC-cc} -O3 -S conftest.c -o - | grep -F "my_strstr" > /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -6511,7 +6511,7 @@ long ehdr (void) { return __ehdr_start.val; }
 
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
-  if $READELF -r conftest | fgrep __ehdr_start >/dev/null; then
+  if $READELF -r conftest | grep -F __ehdr_start >/dev/null; then
 		  libc_cv_ehdr_start=broken
 		else
 		  libc_cv_ehdr_start=yes
