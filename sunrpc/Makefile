@@ -104,8 +104,10 @@ tests += tst-svc_register tst-udp-garbage
 endif
 
 ifeq ($(run-built-tests),yes)
+ifeq ($(link-obsolete-rpc),yes)
 rpcgen-tests := $(objpfx)bug20790.out
 tests-special += $(rpcgen-tests)
+endif
 endif
 
 ifeq ($(link-obsolete-rpc),yes)
