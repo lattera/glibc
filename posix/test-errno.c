@@ -131,7 +131,7 @@ do_test (void)
   fails |= test_wrp (EINVAL, mprotect, (void *) -1, pagesize, -1);
   fails |= test_wrp (EINVAL, msync, (void *) -1, pagesize, -1);
   fails |= test_wrp (EINVAL, munmap, (void *) -1, 0);
-  fails |= test_wrp (EINVAL, open, "/bin/sh", -1, 0);
+  fails |= test_wrp (EISDIR, open, "/bin", EISDIR, O_WRONLY);
   fails |= test_wrp (EBADF, read, -1, buf, 1);
   fails |= test_wrp (EINVAL, readlink, "/", buf, -1);
   fails |= test_wrp (EBADF, readv, -1, iov, 1);
@@ -142,7 +142,7 @@ do_test (void)
   fails |= test_wrp (EBADF, send, -1, buf, 1, 0);
   fails |= test_wrp (EBADF, sendmsg, -1, &msg, 0);
   fails |= test_wrp (EBADF, sendto, -1, buf, 1, 0, &sa, sl);
-  fails |= test_wrp (EBADF, setsockopt, -1, 0, 0, buf, sl);
+  fails |= test_wrp (EBADF, setsockopt, -1, 0, 0, buf, sizeof (*buf));
   fails |= test_wrp (EBADF, shutdown, -1, SHUT_RD);
   fails |= test_wrp (EBADF, write, -1, "Hello", sizeof ("Hello") );
   fails |= test_wrp (EBADF, writev, -1, iov, 1 );

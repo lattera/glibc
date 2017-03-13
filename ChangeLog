@@ -1,3 +1,13 @@
+2017-03-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* posix/test-errno.c (do_test): Initialize setsockopt optlen.
+	* sysdeps/unix/sysv/linux/test-errno.c: Move to ...
+	* sysdeps/unix/sysv/linux/test-errno-linux.c: ... here.
+	(test_wrp_rv): Fix format.
+	(test_wrp_rv2): New macro.
+	(do_test): Handle mlock return on 64 bits kernels with 32 bits
+	binaries.
+
 2017-03-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86/fpu/test-math-vector-sincos.h (INIT_VEC_PTRS_LOOP):

@@ -1,4 +1,5 @@
 /* Test that failing system calls do set errno to the correct value.
+   Linux sycalls version.
 
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -72,26 +73,54 @@
     rtype ret = syscall (__VA_ARGS__);				\
     int err = errno;						\
     int fail;							\
-    if (ret == (rtype) -1 && err == experr)			\
+    if ((ret == (rtype) -1) && (err == experr))			\
       fail = 0;							\
     else							\
       {								\
         fail = 1;						\
         if (ret != (rtype) -1)					\
           printf ("FAIL: " #syscall ": didn't fail as expected"	\
-               " (return "prtype")\n", ret);			\
+		  " (return "prtype")\n", ret);			\
         else if (err == 0xdead)					\
-          puts("FAIL: " #syscall ": didn't update errno\n");	\
+          puts ("FAIL: " #syscall ": didn't update errno");	\
         else if (err != experr)					\
           printf ("FAIL: " #syscall				\
-               ": errno is: %d (%s) expected: %d (%s)\n",	\
-               err, strerror (err), experr, strerror (experr));	\
+		  ": errno is: %d (%s) expected: %d (%s)\n",	\
+		  err, strerror (err), experr, strerror (experr));\
       }								\
     fail;							\
   }))
 
+#define test_wrp_rv2(rtype, prtype, experr1, experr2, syscall, ...) 	\
+  (__extension__ ({							\
+    errno = 0xdead;							\
+    rtype ret = syscall (__VA_ARGS__);					\
+    int err = errno;							\
+    int fail;								\
+    if ((ret == (rtype) -1) && ((err == experr1) || (err == experr2)))	\
+      fail = 0;								\
+    else								\
+      {									\
+        fail = 1;							\
+        if (ret != (rtype) -1)						\
+          printf ("FAIL: " #syscall ": didn't fail as expected"		\
+		  " (return "prtype")\n", ret);				\
+        else if (err == 0xdead)						\
+          puts ("FAIL: " #syscall ": didn't update errno");		\
+        else if (err != experr1 && err != experr2)			\
+          printf ("FAIL: " #syscall					\
+		  ": errno is: %d (%s) expected: %d (%s) or %d (%s)\n",	\
+		  err, strerror (err), experr1, strerror (experr1),	\
+		  experr2, strerror (experr2));				\
+      }									\
+    fail;								\
+  }))
+
 #define test_wrp(experr, syscall, ...)				\
   test_wrp_rv(int, "%d", experr, syscall, __VA_ARGS__)
+
+#define test_wrp2(experr1, experr2, syscall, ...)		\
+  test_wrp_rv2(int, "%d", experr1, experr2, syscall, __VA_ARGS__)
 
 static int
 do_test (void)
@@ -120,7 +149,12 @@ do_test (void)
   fails |= test_wrp (ESRCH, getpgid, -1);
   fails |= test_wrp (EINVAL, inotify_add_watch, -1, "/", 0);
   fails |= test_wrp (EINVAL, mincore, (void *) -1, 0, vec);
-  fails |= test_wrp (EINVAL, mlock, (void *) -1, 1); // different errors
+  /* mlock fails if the result of the addition addr+len was less than addr
+     (which indicates final address overflow), however on 32 bits binaries
+     running on 64 bits kernels, internal syscall address check won't result
+     in an invalid address and thus syscalls fails later in vma
+     allocation.  */
+  fails |= test_wrp2 (EINVAL, ENOMEM, mlock, (void *) -1, 1);
   fails |= test_wrp (EINVAL, nanosleep, &ts, &ts);
   fails |= test_wrp (EINVAL, poll, &pollfd, -1, 0);
   fails |= test_wrp (ENODEV, quotactl, Q_GETINFO, NULL, -1, (caddr_t) &dqblk);
