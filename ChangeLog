@@ -1,3 +1,15 @@
+2017-03-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_AUTOFLOWLABEL): New
+	macro.
+	(IPV6_ADDR_PREFERENCES): Likewise.
+	(IPV6_MINHOPCOUNT): Likewise.
+	(IPV6_ORIGDSTADDR): Likewise.
+	(IPV6_RECVORIGDSTADDR): Likewise.
+	(IPV6_TRANSPARENT): Likewise.
+	(IPV6_UNICAST_IF): Likewise.
+	(IPV6_RECVFRAGSIZE): Likewise.
+
 2017-03-13  Thorsten Kukuk  <kukuk@suse.com>
 
 	* sunrpc/Makefile: only run rpcgen tests if we build rpcgen.
