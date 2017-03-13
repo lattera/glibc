@@ -33,6 +33,10 @@ __send (int fd, const void *buf, size_t n, int flags)
 					   NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 					   NULL, 0, &wrote));
 
+  if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+    /* The file did not grok the socket protocol.  */
+    err = ENOTSOCK;
+
   return err ? __hurd_sockfail (fd, flags, err) : wrote;
 }
 libc_hidden_def (__send)

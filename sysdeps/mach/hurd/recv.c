@@ -37,12 +37,16 @@ __recv (int fd, void *buf, size_t n, int flags)
   char *cdata = NULL;
   mach_msg_type_number_t clen = 0;
 
-  if (err = HURD_DPORT_USE (fd, __socket_recv (port, &addrport,
+  err = HURD_DPORT_USE (fd, __socket_recv (port, &addrport,
 					       flags, &bufp, &nread,
 					       &ports, &nports,
 					       &cdata, &clen,
 					       &flags,
-					       n)))
+					       n));
+  if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+    /* The file did not grok the socket protocol.  */
+    err = ENOTSOCK;
+  if (err)
     return __hurd_sockfail (fd, flags, err);
 
   __mach_port_deallocate (__mach_task_self (), addrport);

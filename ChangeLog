@@ -1,3 +1,9 @@
+2017-03-13  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/send.c (__send): Convert hurdish error code into
+	posix error code.
+	* sysdeps/mach/hurd/recv.c (__recv): Likewise.
+
 2017-03-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* scripts/build-many-glibcs.py (Context.add_all_configs): Remove
