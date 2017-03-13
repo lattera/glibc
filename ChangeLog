@@ -1,3 +1,7 @@
+2017-03-13  Thorsten Kukuk  <kukuk@suse.com>
+
+	* sunrpc/Makefile: only run rpcgen tests if we build rpcgen.
+
 2017-03-12  Alexey Neyman <stilor@att.net>
 
 	* sysdeps/sh/dl-machine.h (elf_machine_rela): The condition
@@ -9,6 +13,11 @@
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
 	(__ASSUME_RECV_SYSCALL): Replace duplicate by
 	__ASSUME_SEND_SYSCALL.
+
+2017-03-11  Thorsten Kukuk  <kukuk@suse.com>
+
+	* sunrpc/Makefile: don't build and install rpcsvc header
+	files, rpcgen and librpcsvc.a by default.
 
 2017-03-10  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
