@@ -1,3 +1,8 @@
+2017-03-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Remove
+	no_isolate usage for SH.
+
 2017-03-13  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	[BZ #15105]
