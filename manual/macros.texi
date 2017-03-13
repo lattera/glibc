@@ -274,4 +274,11 @@ cwd\comments\
 ``\str\.''
 @end macro
 
+@c Dummy placeholder while converting annotations.
+@macro standards {standard, header}
+@end macro
+@c To be used for @*x lists of elements.
+@macro standardsx {element, standard, header}
+@end macro
+
 @end ifclear

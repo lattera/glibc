@@ -1,3 +1,9 @@
+2017-06-15  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/macros.texi (@standards): New macro.  Provide placeholder
+	for header and standards annotations.
+	(@standardsx): New macro.  Likewise, for lists of @*x elements.
+
 2017-06-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* io/Makefile (CFLAGS-sync_file_range.c): Remove rule.
