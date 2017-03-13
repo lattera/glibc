@@ -25,16 +25,13 @@
 #include <bits/libc-header-start.h>
 
 /* Get size_t, wchar_t and NULL from <stddef.h>.  */
-#define		__need_size_t
-#ifndef __need_malloc_and_calloc
-# define	__need_wchar_t
-# define	__need_NULL
-#endif
+#define __need_size_t
+#define __need_wchar_t
+#define __need_NULL
 #include <stddef.h>
 
 __BEGIN_DECLS
 
-#ifndef __need_malloc_and_calloc
 #define	_STDLIB_H	1
 
 #if (defined __USE_XOPEN || defined __USE_XOPEN2K8) && !defined _SYS_WAIT_H
@@ -434,10 +431,6 @@ extern int lcong48_r (unsigned short int __param[7],
 # endif	/* Use misc.  */
 #endif	/* Use misc or X/Open.  */
 
-#endif /* don't just need malloc and calloc */
-
-#ifndef __malloc_and_calloc_defined
-# define __malloc_and_calloc_defined
 __BEGIN_NAMESPACE_STD
 /* Allocate SIZE bytes of memory.  */
 extern void *malloc (size_t __size) __THROW __attribute_malloc__ __wur;
@@ -445,9 +438,7 @@ extern void *malloc (size_t __size) __THROW __attribute_malloc__ __wur;
 extern void *calloc (size_t __nmemb, size_t __size)
      __THROW __attribute_malloc__ __wur;
 __END_NAMESPACE_STD
-#endif
 
-#ifndef __need_malloc_and_calloc
 __BEGIN_NAMESPACE_STD
 /* Re-allocate the previously allocated block
    in PTR, making the new block SIZE bytes long.  */
@@ -943,9 +934,6 @@ extern int ttyslot (void) __THROW;
 #ifdef __LDBL_COMPAT
 # include <bits/stdlib-ldbl.h>
 #endif
-
-#endif /* don't just need malloc and calloc */
-#undef __need_malloc_and_calloc
 
 __END_DECLS
 

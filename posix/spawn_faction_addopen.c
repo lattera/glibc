@@ -34,7 +34,7 @@ posix_spawn_file_actions_addopen (posix_spawn_file_actions_t *file_actions,
   if (!__spawn_valid_fd (fd))
     return EBADF;
 
-  char *path_copy = strdup (path);
+  char *path_copy = __strdup (path);
   if (path_copy == NULL)
     return ENOMEM;
 

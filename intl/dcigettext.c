@@ -131,6 +131,7 @@ extern int errno;
 /* Rename the non ANSI C functions.  This is required by the standard
    because some ANSI C functions will require linking with this object
    file and the name space must not be polluted.  */
+# define strdup __strdup
 # define getcwd __getcwd
 # ifndef stpcpy
 #  define stpcpy __stpcpy

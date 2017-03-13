@@ -1,3 +1,28 @@
+2017-03-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	[BZ #15105]
+	[BZ #19463]
+	* elf/dl-cache.c (_dl_load_cache_lookup): Use __strdup.
+	* inet/rcmd.c (rcmd_af): Likewise.
+	* inet/rexec.c   (rexec_af): Likewise.
+	* intl/dcigettext.c (_LIBC): Likewise.
+	* intl/finddomain.c (_nl_find_domain): Use strdup expansion.
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Use __strdup.
+	* locale/setlocale.c (setlocale): Likewise.
+	* posix/spawn_faction_addopen.c
+	(posix_spawn_file_actions_addopen): Likewise.
+	* stdlib/putenv.c (putenv): Use __strndup.
+	* sunrpc/svc_simple.c (__registerrpc): Use __strdup.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Use __strdup/__strndup.
+	* include/stdlib.h (__need_malloc_and_calloc): Remove uses.
+	(__Need_M_And_C) Remove define/undef.
+	* stdlib/stdlib.h (__need_malloc_and_calloc): Remove uses.
+	(__malloc_and_calloc_defined): Remove define.
+	* string/bits/string2.h (__strdup): Remove define.
+	(strdup): Likewise.
+	(__strndup): Likewise.
+	(strndup): Likewise.
+
 2017-03-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_AUTOFLOWLABEL): New

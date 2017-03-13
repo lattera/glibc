@@ -536,7 +536,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		      }
 		    else
 		      {
-			namebuf = strndup (name, scope_delim - name);
+			namebuf = __strndup (name, scope_delim - name);
 			if (namebuf == NULL)
 			  {
 			    assert (!malloc_name);
@@ -1141,7 +1141,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  malloc_canonbuf = false;
 		else
 		  {
-		    canon = strdup (canon);
+		    canon = __strdup (canon);
 		    if (canon == NULL)
 		      {
 			result = -EAI_MEMORY;

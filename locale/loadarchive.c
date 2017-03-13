@@ -462,7 +462,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
   if (__glibc_unlikely (lia == NULL))
     return NULL;
 
-  lia->name = strdup (*namep);
+  lia->name = __strdup (*namep);
   if (__glibc_unlikely (lia->name == NULL))
     {
       free (lia);

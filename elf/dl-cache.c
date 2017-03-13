@@ -302,7 +302,7 @@ _dl_load_cache_lookup (const char *name)
   char *temp;
   temp = alloca (strlen (best) + 1);
   strcpy (temp, best);
-  return strdup (temp);
+  return __strdup (temp);
 }
 
 #ifndef MAP_COPY

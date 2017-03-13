@@ -73,7 +73,7 @@ rexec_af (char **ahost, int rport, const char *name, const char *pass,
 
 	if (res0->ai_canonname){
 		free (ahostbuf);
-		ahostbuf = strdup (res0->ai_canonname);
+		ahostbuf = __strdup (res0->ai_canonname);
 		if (ahostbuf == NULL) {
 			perror ("rexec: strdup");
 			return (-1);

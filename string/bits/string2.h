@@ -112,65 +112,6 @@
 #endif
 
 
-/* We need the memory allocation functions for inline strdup().
-   Referring to stdlib.h (even minimally) is not allowed
-   in any of the tight standards compliant modes.  */
-#ifdef __USE_MISC
-
-# if !defined _HAVE_STRING_ARCH_strdup || !defined _HAVE_STRING_ARCH_strndup
-#  define __need_malloc_and_calloc
-#  include <stdlib.h>
-# endif
-
-# ifndef _HAVE_STRING_ARCH_strdup
-
-extern char *__strdup (const char *__string) __THROW __attribute_malloc__;
-#  define __strdup(s) \
-  (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
-		  ? (((const char *) (s))[0] == '\0'			      \
-		     ? (char *) calloc ((size_t) 1, (size_t) 1)		      \
-		     : ({ size_t __len = strlen (s) + 1;		      \
-			  char *__retval = (char *) malloc (__len);	      \
-			  if (__retval != NULL)				      \
-			    __retval = (char *) memcpy (__retval, s, __len);  \
-			  __retval; }))					      \
-		  : __strdup (s)))
-
-#  if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
-#   define strdup(s) __strdup (s)
-#  endif
-# endif
-
-# ifndef _HAVE_STRING_ARCH_strndup
-
-extern char *__strndup (const char *__string, size_t __n)
-     __THROW __attribute_malloc__;
-#  define __strndup(s, n) \
-  (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
-		  ? (((const char *) (s))[0] == '\0'			      \
-		     ? (char *) calloc ((size_t) 1, (size_t) 1)		      \
-		     : ({ size_t __len = strlen (s) + 1;		      \
-			  size_t __n = (n);				      \
-			  char *__retval;				      \
-			  if (__n < __len)				      \
-			    __len = __n + 1;				      \
-			  __retval = (char *) malloc (__len);		      \
-			  if (__retval != NULL)				      \
-			    {						      \
-			      __retval[__len - 1] = '\0';		      \
-			      __retval = (char *) memcpy (__retval, s,	      \
-							  __len - 1);	      \
-			    }						      \
-			  __retval; }))					      \
-		  : __strndup (s, n)))
-
-#  ifdef __USE_XOPEN2K8
-#   define strndup(s, n) __strndup (s, n)
-#  endif
-# endif
-
-#endif /* Use misc. or use GNU.  */
-
 #ifndef _FORCE_INLINES
 # undef __STRING_INLINE
 #endif

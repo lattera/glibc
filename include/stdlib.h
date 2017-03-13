@@ -1,16 +1,12 @@
 #ifndef _STDLIB_H
 
-#ifdef __need_malloc_and_calloc
-#define __Need_M_And_C
-#endif
-
 #ifndef _ISOMAC
 # include <stddef.h>
 #endif
 #include <stdlib/stdlib.h>
 
 /* Now define the internal interfaces.  */
-#if !defined __Need_M_And_C && !defined _ISOMAC
+#if !defined _ISOMAC
 # include <sys/stat.h>
 
 __BEGIN_DECLS
@@ -268,7 +264,5 @@ extern __typeof (__strtoul_internal) __strtoul_internal attribute_hidden;
 __END_DECLS
 
 #endif
-
-#undef __Need_M_And_C
 
 #endif  /* include/stdlib.h */
