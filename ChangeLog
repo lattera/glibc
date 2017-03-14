@@ -1,3 +1,8 @@
+2017-03-15  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* math/s_iseqsig_template.c (__iseqsig): Use __feraiseexcept
+	instead of feraiseexcept.
+
 2017-03-15  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21243]

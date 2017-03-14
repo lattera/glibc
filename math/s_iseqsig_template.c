@@ -36,7 +36,7 @@ M_DECL_FUNC (__iseqsig) (FLOAT x, FLOAT y)
   else if (!cmp1 && !cmp2)
     {
       if (FIX_COMPARE_INVALID)
-	feraiseexcept (FE_INVALID);
+	__feraiseexcept (FE_INVALID);
       __set_errno (EDOM);
     }
   return 0;
