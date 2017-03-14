@@ -29,5 +29,7 @@
 _strong_alias (__posix_fadvise64_l64, __posix_fadvise64_l32);
 compat_symbol (libc, __posix_fadvise64_l32, posix_fadvise64, GLIBC_2_2);
 versioned_symbol (libc, __posix_fadvise64_l64, posix_fadvise64, GLIBC_2_3_3);
+#else
+_weak_alias (posix_fadvise, posix_fadvise64);
 #endif
 _strong_alias (__posix_fadvise64_l64, posix_fadvise);
