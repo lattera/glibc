@@ -1,3 +1,11 @@
+2017-03-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ# 21182]
+	* string/test-memchr.c (do_test): Add BZ#21182 checks for address
+	near end of a page.
+	* sysdeps/i386/i686/multiarch/memchr-sse2.S (__memchr): Fix
+	overflow calculation.
+
 2017-03-28  Steve Ellcey  <sellcey@caviumnetworks.com>
 
 	* benchtests/bench-memcpy-random.c (TEST_NAME): Change to memcpy.
