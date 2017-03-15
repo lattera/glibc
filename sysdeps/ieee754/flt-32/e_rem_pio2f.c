@@ -100,7 +100,7 @@ int32_t __ieee754_rem_pio2f(float x, float *y)
 	if(ix<0x4016cbe4) {  /* |x| < 3pi/4, special case with n=+-1 */
 	    if(hx>0) {
 		z = x - pio2_1;
-		if((ix&0xfffffff0)!=0x3fc90fd0) { /* 24+24 bit pi OK */
+		if((ix&0xffffffc0)!=0x3fc90fc0) { /* 24+24 bit pi OK */
 		    y[0] = z - pio2_1t;
 		    y[1] = (z-y[0])-pio2_1t;
 		} else {		/* near pi/2, use 24+24+24 bit pi */
@@ -111,7 +111,7 @@ int32_t __ieee754_rem_pio2f(float x, float *y)
 		return 1;
 	    } else {	/* negative x */
 		z = x + pio2_1;
-		if((ix&0xfffffff0)!=0x3fc90fd0) { /* 24+24 bit pi OK */
+		if((ix&0xffffffc0)!=0x3fc90fc0) { /* 24+24 bit pi OK */
 		    y[0] = z + pio2_1t;
 		    y[1] = (z-y[0])+pio2_1t;
 		} else {		/* near pi/2, use 24+24+24 bit pi */

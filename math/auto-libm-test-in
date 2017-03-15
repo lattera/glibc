@@ -4324,6 +4324,8 @@ cos -0x1.02e34cp+0
 cos 0xf.f0274p+4
 cos 0x3.042d88p+0
 cos 0x1.8475e5afd4481p+0
+cos 1.57079697
+cos -1.57079697
 
 cosh 0
 cosh -0
@@ -7236,6 +7238,8 @@ tan 0x2.091d68p+0
 tan -0x5.302ab9b18593264p+0
 tan 0x1.1ad374p+0
 tan -0x1.0d55b8p+0
+tan 1.57079697
+tan -1.57079697
 tan 0x1p-5
 tan 0x1p-10
 tan 0x1p-15

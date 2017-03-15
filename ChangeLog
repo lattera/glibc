@@ -1,3 +1,12 @@
+2017-03-15  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21094]
+	* sysdeps/ieee754/flt-32/e_rem_pio2f.c (__ieee754_rem_pio2f): Use
+	24+24+24-bit pi for wider range of values around pi/2.
+	* math/auto-libm-test-in: Add more tests of cos and tan.
+	* math/auto-libm-test-out-cos: Regenerated.
+	* math/auto-libm-test-out-tan: Likewise.
+
 2017-03-15  John David Anglin  <danglin@gcc.gnu.org>
 
 	* sysdeps/hppa/dl-machine.h (DL_STACK_END): Define.
