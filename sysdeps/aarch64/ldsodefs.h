@@ -20,6 +20,7 @@
 #define _AARCH64_LDSODEFS_H 1
 
 #include <elf.h>
+#include <cpu-features.h>
 
 struct La_aarch64_regs;
 struct La_aarch64_retval;

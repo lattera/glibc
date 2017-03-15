@@ -1,6 +1,6 @@
-/* Defines for bits in AT_HWCAP.  AArch64 Linux version.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* Initialize CPU feature data.  AArch64 version.
    This file is part of the GNU C Library.
+   Copyright (C) 2017 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,20 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if !defined (_SYS_AUXV_H)
-# error "Never include <bits/hwcap.h> directly; use <sys/auxv.h> instead."
-#endif
+#include <cpu-features.h>
+#include <sys/auxv.h>
 
-/* The following must match the kernel's <asm/hwcap.h>.  */
-#define HWCAP_FP		(1 << 0)
-#define HWCAP_ASIMD		(1 << 1)
-#define HWCAP_EVTSTRM		(1 << 2)
-#define HWCAP_AES		(1 << 3)
-#define HWCAP_PMULL		(1 << 4)
-#define HWCAP_SHA1		(1 << 5)
-#define HWCAP_SHA2		(1 << 6)
-#define HWCAP_CRC32		(1 << 7)
-#define HWCAP_ATOMICS		(1 << 8)
-#define HWCAP_FPHP		(1 << 9)
-#define HWCAP_ASIMDHP		(1 << 10)
-#define HWCAP_CPUID		(1 << 11)
+static inline void
+init_cpu_features (struct cpu_features *cpu_features)
+{
+  if (GLRO(dl_hwcap) & HWCAP_CPUID)
+    {
+      register uint64_t id = 0;
+      asm volatile ("mrs %0, midr_el1" : "=r"(id));
+      cpu_features->midr_el1 = id;
+    }
+  else
+    {
+      cpu_features->midr_el1 = 0;
+    }
+}
