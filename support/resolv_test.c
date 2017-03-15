@@ -32,9 +32,10 @@
 #include <support/test-driver.h>
 #include <support/xsocket.h>
 #include <support/xthread.h>
+#include <support/xunistd.h>
 #include <unistd.h>
 
-/* Response builder. */
+/* Response builder.  */
 
 enum
   {
@@ -860,7 +861,7 @@ server_thread_tcp_client (void *arg)
         break;
     }
 
-  close (closure->client_socket);
+  xclose (closure->client_socket);
   free (closure);
   return NULL;
 }
@@ -881,7 +882,7 @@ server_thread_tcp (struct resolv_test *obj, int server_index)
       if (obj->termination_requested)
         {
           xpthread_mutex_unlock (&obj->lock);
-          close (client_socket);
+          xclose (client_socket);
           break;
         }
       xpthread_mutex_unlock (&obj->lock);
@@ -941,8 +942,8 @@ make_server_sockets (struct resolv_test_server *server)
              next local UDP address randomly.  */
           if (errno == EADDRINUSE)
             {
-              close (server->socket_udp);
-              close (server->socket_tcp);
+              xclose (server->socket_udp);
+              xclose (server->socket_tcp);
               continue;
             }
           FAIL_EXIT1 ("TCP bind: %m");
@@ -1025,7 +1026,7 @@ resolv_test_start (struct resolv_redirect_config config)
       struct resolv_test_server *server = obj->servers + server_index;
       if (config.servers[server_index].disable_udp)
         {
-          close (server->socket_udp);
+          xclose (server->socket_udp);
           server->socket_udp = -1;
         }
       else if (!config.single_thread_udp)
@@ -1033,7 +1034,7 @@ resolv_test_start (struct resolv_redirect_config config)
                                                   server_thread_udp);
       if (config.servers[server_index].disable_tcp)
         {
-          close (server->socket_tcp);
+          xclose (server->socket_tcp);
           server->socket_tcp = -1;
         }
       else
@@ -1114,7 +1115,7 @@ resolv_test_end (struct resolv_test *obj)
           xsendto (sock, "", 1, 0,
                    (struct sockaddr *) &obj->servers[server_index].address,
                    sizeof (obj->servers[server_index].address));
-          close (sock);
+          xclose (sock);
         }
       if (!obj->config.servers[server_index].disable_tcp)
         {
@@ -1122,7 +1123,7 @@ resolv_test_end (struct resolv_test *obj)
           xconnect (sock,
                     (struct sockaddr *) &obj->servers[server_index].address,
                     sizeof (obj->servers[server_index].address));
-          close (sock);
+          xclose (sock);
         }
     }
 
@@ -1137,12 +1138,12 @@ resolv_test_end (struct resolv_test *obj)
         {
           if (!obj->config.single_thread_udp)
             xpthread_join (obj->servers[server_index].thread_udp);
-          close (obj->servers[server_index].socket_udp);
+          xclose (obj->servers[server_index].socket_udp);
         }
       if (!obj->config.servers[server_index].disable_tcp)
         {
           xpthread_join (obj->servers[server_index].thread_tcp);
-          close (obj->servers[server_index].socket_tcp);
+          xclose (obj->servers[server_index].socket_tcp);
         }
     }
 

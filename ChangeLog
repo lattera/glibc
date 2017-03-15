@@ -1,5 +1,18 @@
 2017-03-15  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #21244]
+	* support/xclose.c: New file.
+	* support/Makefile (libsupport-routines): Add xclose.
+	* support/xunistd.h (xclose): Declare.
+	* support/resolv_test.c (server_thread_tcp_client)
+	(server_thread_tcp, make_server_sockets, resolv_test_start)
+	(resolv_test_end): Call xclose instead of close.
+	* support/support_enter_network_namespace.c
+	(support_enter_network_namespace): Likewise.
+	* support/support_run_diff.c (write_to_temp_file): Likewise.
+
+2017-03-15  Florian Weimer  <fweimer@redhat.com>
+
 	* support/support_format_dns_packet.c (support_format_dns_packet):
 	Handle CNAME records in the response.  Extract RDATA names from
 	rdata, not the whole packet.  Check AAAA record length.

@@ -23,9 +23,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <support/check.h>
+#include <support/xsocket.h>
+#include <support/xunistd.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
-#include <xsocket.h>
 
 static bool in_uts_namespace;
 
@@ -58,7 +59,7 @@ support_enter_network_namespace (void)
           req.ifr_flags |= IFF_UP | IFF_RUNNING;
           TEST_VERIFY_EXIT (ioctl (fd, SIOCSIFFLAGS, &req) == 0);
         }
-      close (fd);
+      xclose (fd);
 
       return !already_up;
     }

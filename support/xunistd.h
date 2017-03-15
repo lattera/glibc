@@ -30,6 +30,10 @@ __BEGIN_DECLS
 pid_t xfork (void);
 pid_t xwaitpid (pid_t, int *status, int flags);
 
+/* Close the file descriptor.  Ignore EINTR errors, but terminate the
+   process on other errors.  */
+void xclose (int);
+
 /* Write the buffer.  Retry on short writes.  */
 void xwrite (int, const void *, size_t);
 

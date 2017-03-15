@@ -24,8 +24,8 @@
 #include <support/check.h>
 #include <support/support.h>
 #include <support/temp_file.h>
+#include <support/xunistd.h>
 #include <sys/wait.h>
-#include <xunistd.h>
 
 static char *
 write_to_temp_file (const char *prefix, const char *str)
@@ -36,7 +36,7 @@ write_to_temp_file (const char *prefix, const char *str)
   TEST_VERIFY_EXIT (fd >= 0);
   free (template);
   xwrite (fd, str, strlen (str));
-  TEST_VERIFY_EXIT (close (fd) == 0);
+  xclose (fd);
   return name;
 }
 

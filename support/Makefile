@@ -53,6 +53,7 @@ libsupport-routines = \
   xasprintf \
   xbind \
   xcalloc \
+  xclose \
   xconnect \
   xfclose \
   xfopen \
