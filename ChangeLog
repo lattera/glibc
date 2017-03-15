@@ -1,3 +1,12 @@
+2017-03-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86/fpu/test-math-vector-sincos.h (INIT_VEC_PTRS_LOOP):
+	Use a union when storing pointers.
+	(VECTOR_WRAPPER_fFF_2): Do not take address of integer vector and
+	cast result when passing to INIT_VEC_PTRS_LOOP.
+	(VECTOR_WRAPPER_fFF_3): Likewise.
+	(VECTOR_WRAPPER_fFF_4): Likewise.
+
 2017-03-14  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* include/bits/mathcalls-helper-functions.h: New file.

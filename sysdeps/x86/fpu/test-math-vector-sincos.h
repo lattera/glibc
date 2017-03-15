@@ -17,14 +17,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define INIT_VEC_PTRS_LOOP(vec, val, len)			\
-  do								\
-    {								\
-      for (i = 0; i < len; i++)					\
-        {							\
-          vec[i] = &val[i];					\
-        }							\
-    }								\
+#define INIT_VEC_PTRS_LOOP(vec, val, len)				\
+  do									\
+    {									\
+      union { VEC_INT_TYPE v; __typeof__ ((val)[0]) *a[(len)]; } u;	\
+      for (i = 0; i < len; i++)						\
+	u.a[i] = &(val)[i];						\
+      (vec) = u.v;							\
+    }									\
   while (0)
 
 /* Wrapper for vector sincos/sincosf compatible with x86_64 and x32 variants
@@ -40,8 +40,8 @@ void scalar_func (FLOAT x, FLOAT * r, FLOAT * r1)		\
   VEC_TYPE mx;							\
   VEC_INT_TYPE mr, mr1;						\
   INIT_VEC_LOOP (mx, x, VEC_LEN);				\
-  INIT_VEC_PTRS_LOOP (((FLOAT **) &mr), r_loc, VEC_LEN);	\
-  INIT_VEC_PTRS_LOOP (((FLOAT **) &mr1), r1_loc, VEC_LEN);	\
+  INIT_VEC_PTRS_LOOP (mr, r_loc, VEC_LEN);			\
+  INIT_VEC_PTRS_LOOP (mr1, r1_loc, VEC_LEN);			\
   vector_func (mx, mr, mr1);					\
   TEST_VEC_LOOP (r_loc, VEC_LEN);				\
   TEST_VEC_LOOP (r1_loc, VEC_LEN);				\
@@ -63,8 +63,8 @@ void scalar_func (FLOAT x, FLOAT * r, FLOAT * r1)		\
   VEC_TYPE mx;							\
   VEC_INT_TYPE mr, mr1;						\
   INIT_VEC_LOOP (mx, x, VEC_LEN);				\
-  INIT_VEC_PTRS_LOOP (((FLOAT **) &mr), r_loc, VEC_LEN/2);	\
-  INIT_VEC_PTRS_LOOP (((FLOAT **) &mr1), r1_loc, VEC_LEN/2);	\
+  INIT_VEC_PTRS_LOOP (mr, r_loc, VEC_LEN/2);			\
+  INIT_VEC_PTRS_LOOP (mr1, r1_loc, VEC_LEN/2);			\
   vector_func (mx, mr, mr, mr1, mr1);				\
   TEST_VEC_LOOP (r_loc, VEC_LEN/2);				\
   TEST_VEC_LOOP (r1_loc, VEC_LEN/2);				\
@@ -87,8 +87,8 @@ void scalar_func (FLOAT x, FLOAT * r, FLOAT * r1)		\
   VEC_TYPE mx;							\
   VEC_INT_TYPE mr, mr1;						\
   INIT_VEC_LOOP (mx, x, VEC_LEN);				\
-  INIT_VEC_PTRS_LOOP (((FLOAT **) &mr), r_loc, VEC_LEN/4);	\
-  INIT_VEC_PTRS_LOOP (((FLOAT **) &mr1), r1_loc, VEC_LEN/4);	\
+  INIT_VEC_PTRS_LOOP (mr, r_loc, VEC_LEN/4);			\
+  INIT_VEC_PTRS_LOOP (mr1, r1_loc, VEC_LEN/4);			\
   vector_func (mx, mr, mr, mr, mr, mr1, mr1, mr1, mr1);		\
   TEST_VEC_LOOP (r_loc, VEC_LEN/4);				\
   TEST_VEC_LOOP (r1_loc, VEC_LEN/4);				\
