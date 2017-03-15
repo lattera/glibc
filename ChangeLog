@@ -1,5 +1,11 @@
 2017-03-15  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #21243]
+	* support/temp_file.c (support_delete_temp_files): Add comment
+	about ignored errors.
+
+2017-03-15  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #21244]
 	* support/xclose.c: New file.
 	* support/Makefile (libsupport-routines): Add xclose.

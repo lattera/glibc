@@ -99,7 +99,10 @@ support_delete_temp_files (void)
 {
   while (temp_name_list != NULL)
     {
-      remove (temp_name_list->name);
+      /* For some tests, the temporary file removal runs multiple
+	 times (in the parent processes and the subprocess), so do not
+	 report a failed removal attempt.  */
+      (void) remove (temp_name_list->name);
       free (temp_name_list->name);
 
       struct temp_name_list *next
