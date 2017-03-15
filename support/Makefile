@@ -111,6 +111,7 @@ endif
 tests = \
   README-testing \
   tst-support-namespace \
+  tst-support_format_dns_packet \
   tst-support_record_failure \
 
 ifeq ($(run-built-tests),yes)
@@ -124,5 +125,7 @@ $(objpfx)tst-support_record_failure-2.out: tst-support_record_failure-2.sh \
 	  > $@; \
 	$(evaluate-test)
 endif
+
+$(objpfx)tst-support_format_dns_packet: $(common-objpfx)resolv/libresolv.so
 
 include ../Rules

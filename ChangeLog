@@ -1,3 +1,12 @@
+2017-03-15  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support_format_dns_packet.c (support_format_dns_packet):
+	Handle CNAME records in the response.  Extract RDATA names from
+	rdata, not the whole packet.  Check AAAA record length.
+	* support/tst-support_format_dns_packet.c: New file.
+	* support/Makefile (tests): Add tst-support_format_dns_packet.
+	(tst-support_format_dns_packet): Link against libresolv.
+
 2017-03-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #21232]

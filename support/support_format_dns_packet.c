@@ -174,7 +174,7 @@ support_format_dns_packet (const unsigned char *buffer, size_t length)
           goto out;
         }
       /* Skip non-matching record types.  */
-      if (rtype != qtype || rclass != qclass)
+      if ((rtype != qtype && rtype != T_CNAME) || rclass != qclass)
         continue;
       switch (rtype)
         {
@@ -186,22 +186,29 @@ support_format_dns_packet (const unsigned char *buffer, size_t length)
                        rdata.data[2],
                        rdata.data[3]);
           else
-            fprintf (mem.out, "error: A record of size %d: %s\n", rdlen, rname.name);
+            fprintf (mem.out, "error: A record of size %d: %s\n",
+                     rdlen, rname.name);
           break;
         case T_AAAA:
           {
-            char buf[100];
-            if (inet_ntop (AF_INET6, rdata.data, buf, sizeof (buf)) == NULL)
-              fprintf (mem.out, "error: AAAA record decoding failed: %m\n");
+            if (rdlen == 16)
+              {
+                char buf[100];
+                if (inet_ntop (AF_INET6, rdata.data, buf, sizeof (buf)) == NULL)
+                  fprintf (mem.out, "error: AAAA record decoding failed: %m\n");
+                else
+                  fprintf (mem.out, "address: %s\n", buf);
+              }
             else
-              fprintf (mem.out, "address: %s\n", buf);
+              fprintf (mem.out, "error: AAAA record of size %d: %s\n",
+                       rdlen, rname.name);
           }
           break;
         case T_CNAME:
         case T_PTR:
           {
             struct dname name;
-            if (extract_name (full, &in, &name))
+            if (extract_name (full, &rdata, &name))
               fprintf (mem.out, "name: %s\n", name.name);
             else
               fprintf (mem.out, "error: malformed CNAME/PTR record\n");
