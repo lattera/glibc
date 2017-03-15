@@ -4,6 +4,11 @@ m68k-syntax-flag = -DMOTOROLA_SYNTAX
 
 ifeq ($(subdir),csu)
 sysdep_routines += m68k-helpers
+ifeq (yes,$(build-shared))
+sysdep_routines += divdi3
+shared-only-routines += divdi3
+CPPFLAGS-divdi3.c = -Din_divdi3_c
+endif
 endif
 
 ifeq ($(subdir),misc)

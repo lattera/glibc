@@ -1,3 +1,29 @@
+2017-04-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/i386/symbol-hacks.h: New file.
+	* sysdeps/m68k/symbol-hacks.h: New file.
+	* sysdeps/powerpc/powerpc32/symbol-hacks.h: New file.
+	* sysdeps/s390/s390-32/symbol-hacks.h: New file.
+	* sysdeps/unix/sysv/linux/i386/Makefile
+	[$(subdir) = csu] (sysdep_routines): New rule: divdi3 object.
+	[$(subdir) = csu] (sysdep-only-routines): Likewise.
+	[$(subdir) = csu] (CFLAGS-divdi3.c): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/Makefile
+	[$(subdir) = csu] (sysdep_routines): Likewise.
+	[$(subdir) = csu] (sysdep-only-routines): Likewise.
+	[$(subdir) = csu] (CFLAGS-divdi3.c): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Makefile
+	[$(subdir) = csu] (sysdep_routines): Likewise.
+	[$(subdir) = csu] (sysdep-only-routines): Likewise.
+	[$(subdir) = csu] (CFLAGS-divdi3.c): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Makefile
+	[$(subdir) = csu] (sysdep_routines): Likewise.
+	[$(subdir) = csu] (sysdep-only-routines): Likewise.
+	[$(subdir) = csu] (CFLAGS-divdi3.c): Likewise.
+	* sysdeps/wordsize-32/Makefile: Remove file.
+	* sysdeps/wordsize-32/symbol-hacks.h: Definitions move to ...
+	* sysdeps/wordsize-32/divdi3-symbol-hacks.h: ... here.
+
 2017-04-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/tst-dlopen-aout.c (TEST_FUNCTION): Removed.

@@ -1,5 +1,5 @@
-/* Hacks needed for symbol manipulation.
-   Copyright (C) 2004-2017 Free Software Foundation, Inc.
+/* Hacks needed for symbol manipulation.  i386 version.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include_next "symbol-hacks.h"
+#include <sysdeps/wordsize-32/divdi3-symbol-hacks.h>
 
-/* A very dirty trick: gcc emits references to __divdi3, __udivdi3,
-   __moddi3, and __umoddi3.  These functions are exported and
-   therefore we get PLTs.  Unnecessarily so.  Changing gcc is a big
-   task which might not be worth it so we play tricks with the
-   assembler.  */
-#if !defined __ASSEMBLER__ && !defined in_divdi3_c && IS_IN (libc) && defined SHARED
-asm ("__divdi3 = __divdi3_internal");
-asm ("__udivdi3 = __udivdi3_internal");
-asm ("__moddi3 = __moddi3_internal");
-asm ("__umoddi3 = __umoddi3_internal");
-#endif
+#include_next "symbol-hacks.h"
