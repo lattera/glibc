@@ -101,8 +101,6 @@ extern const __int32_t **__ctype_toupper_loc (void)
 
 #define	__exctype(name)	extern int name (int) __THROW
 
-__BEGIN_NAMESPACE_STD
-
 /* The following names are all functions:
      int isCHARACTERISTIC(int c);
    which return nonzero iff C has CHARACTERISTIC.
@@ -126,16 +124,10 @@ extern int tolower (int __c) __THROW;
 /* Return the uppercase version of C.  */
 extern int toupper (int __c) __THROW;
 
-__END_NAMESPACE_STD
-
 
 /* ISO C99 introduced one new function.  */
 #ifdef	__USE_ISOC99
-__BEGIN_NAMESPACE_C99
-
 __exctype (isblank);
-
-__END_NAMESPACE_C99
 #endif
 
 #ifdef __USE_GNU

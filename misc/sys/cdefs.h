@@ -112,31 +112,6 @@
 #endif
 
 
-/* The standard library needs the functions from the ISO C90 standard
-   in the std namespace.  At the same time we want to be safe for
-   future changes and we include the ISO C99 code in the non-standard
-   namespace __c99.  The C++ wrapper header take case of adding the
-   definitions to the global namespace.  */
-#if defined __cplusplus && defined _GLIBCPP_USE_NAMESPACES
-# define __BEGIN_NAMESPACE_STD	namespace std {
-# define __END_NAMESPACE_STD	}
-# define __USING_NAMESPACE_STD(name) using std::name;
-# define __BEGIN_NAMESPACE_C99	namespace __c99 {
-# define __END_NAMESPACE_C99	}
-# define __USING_NAMESPACE_C99(name) using __c99::name;
-#else
-/* For compatibility we do not add the declarations into any
-   namespace.  They will end up in the global namespace which is what
-   old code expects.  */
-# define __BEGIN_NAMESPACE_STD
-# define __END_NAMESPACE_STD
-# define __USING_NAMESPACE_STD(name)
-# define __BEGIN_NAMESPACE_C99
-# define __END_NAMESPACE_C99
-# define __USING_NAMESPACE_C99(name)
-#endif
-
-
 /* Fortify support.  */
 #define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
 #define __bos0(ptr) __builtin_object_size (ptr, 0)

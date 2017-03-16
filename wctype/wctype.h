@@ -46,11 +46,9 @@
 #ifndef __iswxxx_defined
 # define __iswxxx_defined	1
 
-__BEGIN_NAMESPACE_C99
 /* Scalar type that can hold values which represent locale-specific
    character classifications.  */
 typedef unsigned long int wctype_t;
-__END_NAMESPACE_C99
 
 # ifndef _ISwbit
 /* The characteristics are stored always in network byte order (big
@@ -101,7 +99,6 @@ enum
 
 __BEGIN_DECLS
 
-__BEGIN_NAMESPACE_C99
 /*
  * Wide-character classification functions: 7.15.2.1.
  */
@@ -173,29 +170,21 @@ extern wctype_t wctype (const char *__property) __THROW;
 /* Determine whether the wide-character WC has the property described by
    DESC.  */
 extern int iswctype (wint_t __wc, wctype_t __desc) __THROW;
-__END_NAMESPACE_C99
 
 
 /*
  * Wide-character case-mapping functions: 7.15.3.1.
  */
 
-__BEGIN_NAMESPACE_C99
 /* Scalar type that can hold values which represent locale-specific
    character mappings.  */
 typedef const __int32_t *wctrans_t;
-__END_NAMESPACE_C99
-#ifdef __USE_GNU
-__USING_NAMESPACE_C99(wctrans_t)
-#endif
 
-__BEGIN_NAMESPACE_C99
 /* Converts an uppercase letter to the corresponding lowercase letter.  */
 extern wint_t towlower (wint_t __wc) __THROW;
 
 /* Converts an lowercase letter to the corresponding uppercase letter.  */
 extern wint_t towupper (wint_t __wc) __THROW;
-__END_NAMESPACE_C99
 
 __END_DECLS
 
@@ -212,14 +201,12 @@ __END_DECLS
 
 __BEGIN_DECLS
 
-__BEGIN_NAMESPACE_C99
 /* Construct value that describes a mapping between wide characters
    identified by the string argument PROPERTY.  */
 extern wctrans_t wctrans (const char *__property) __THROW;
 
 /* Map the wide character WC using the mapping described by DESC.  */
 extern wint_t towctrans (wint_t __wc, wctrans_t __desc) __THROW;
-__END_NAMESPACE_C99
 
 # ifdef __USE_XOPEN2K8
 /* Declare the interface to extended locale model.  */

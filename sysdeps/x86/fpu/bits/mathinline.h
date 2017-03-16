@@ -120,7 +120,6 @@
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */
 # if __GNUC_PREREQ (2, 8)
-__BEGIN_NAMESPACE_C99
 
 /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int
@@ -154,7 +153,6 @@ __NTH (__signbitl (long double __x))
   return (__u.__i[2] & 0x8000) != 0;
 }
 
-__END_NAMESPACE_C99
 # endif
 #endif
 
@@ -168,7 +166,6 @@ __END_NAMESPACE_C99
    there's no need to define any of these inline functions.  */
 
 #  ifdef __USE_ISOC99
-__BEGIN_NAMESPACE_C99
 
 /* Round to nearest integer.  */
 #   ifdef __SSE_MATH__
@@ -279,12 +276,10 @@ __NTH (fmin (double __x, double __y))
 }
 #   endif
 
-__END_NAMESPACE_C99
 #  endif
 
 #  if defined __SSE4_1__ && defined __SSE2_MATH__
 #   if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
-__BEGIN_NAMESPACE_C99
 
 /* Round to nearest integer.  */
 __MATH_INLINE double
@@ -336,10 +331,8 @@ __NTH (nearbyintf (float __x))
 }
 #    endif
 
-__END_NAMESPACE_C99
 #   endif
 
-__BEGIN_NAMESPACE_STD
 /* Smallest integral value not less than X.  */
 __MATH_INLINE double
 __NTH (ceil (double __x))
@@ -348,9 +341,7 @@ __NTH (ceil (double __x))
   __asm ("roundsd $2, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
-__END_NAMESPACE_STD
 
-__BEGIN_NAMESPACE_C99
 __MATH_INLINE float
 __NTH (ceilf (float __x))
 {
@@ -358,9 +349,7 @@ __NTH (ceilf (float __x))
   __asm ("roundss $2, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
-__END_NAMESPACE_C99
 
-__BEGIN_NAMESPACE_STD
 /* Largest integer not greater than X.  */
 __MATH_INLINE double
 __NTH (floor (double __x))
@@ -369,9 +358,7 @@ __NTH (floor (double __x))
   __asm ("roundsd $1, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
-__END_NAMESPACE_STD
 
-__BEGIN_NAMESPACE_C99
 __MATH_INLINE float
 __NTH (floorf (float __x))
 {
@@ -379,7 +366,6 @@ __NTH (floorf (float __x))
   __asm ("roundss $1, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
-__END_NAMESPACE_C99
 #  endif
 # endif
 #endif

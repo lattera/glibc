@@ -38,7 +38,6 @@ __BEGIN_DECLS
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* Copy N bytes of SRC to DEST.  */
 extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
 		     size_t __n) __THROW __nonnull ((1, 2));
@@ -46,7 +45,6 @@ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
    correct behavior for overlapping strings.  */
 extern void *memmove (void *__dest, const void *__src, size_t __n)
      __THROW __nonnull ((1, 2));
-__END_NAMESPACE_STD
 
 /* Copy no more than N bytes of SRC to DEST, stopping when C is found.
    Return the position in DEST one byte past where C was copied,
@@ -58,7 +56,6 @@ extern void *memccpy (void *__restrict __dest, const void *__restrict __src,
 #endif /* Misc || X/Open.  */
 
 
-__BEGIN_NAMESPACE_STD
 /* Set N bytes of S to C.  */
 extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
 
@@ -93,7 +90,6 @@ memchr (const void *__s, int __c, size_t __n) __THROW
 extern void *memchr (const void *__s, int __c, size_t __n)
       __THROW __attribute_pure__ __nonnull ((1));
 #endif
-__END_NAMESPACE_STD
 
 #ifdef __USE_GNU
 /* Search in S for C.  This is similar to `memchr' but there is no
@@ -121,7 +117,6 @@ extern void *memrchr (const void *__s, int __c, size_t __n)
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* Copy SRC to DEST.  */
 extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
      __THROW __nonnull ((1, 2));
@@ -151,7 +146,6 @@ extern int strcoll (const char *__s1, const char *__s2)
 extern size_t strxfrm (char *__restrict __dest,
 		       const char *__restrict __src, size_t __n)
      __THROW __nonnull ((2));
-__END_NAMESPACE_STD
 
 #ifdef __USE_XOPEN2K8
 # include <xlocale.h>
@@ -203,7 +197,6 @@ extern char *strndup (const char *__string, size_t __n)
     }))
 #endif
 
-__BEGIN_NAMESPACE_STD
 /* Find the first occurrence of C in S.  */
 #ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
 extern "C++"
@@ -258,7 +251,6 @@ strrchr (const char *__s, int __c) __THROW
 extern char *strrchr (const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
 #endif
-__END_NAMESPACE_STD
 
 #ifdef __USE_GNU
 /* This function is similar to `strchr'.  But it returns a pointer to
@@ -274,7 +266,6 @@ extern char *strchrnul (const char *__s, int __c)
 # endif
 #endif
 
-__BEGIN_NAMESPACE_STD
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
 extern size_t strcspn (const char *__s, const char *__reject)
@@ -342,7 +333,6 @@ extern char *strstr (const char *__haystack, const char *__needle)
 /* Divide S into tokens separated by characters in DELIM.  */
 extern char *strtok (char *__restrict __s, const char *__restrict __delim)
      __THROW __nonnull ((2));
-__END_NAMESPACE_STD
 
 /* Divide S into tokens separated by characters in DELIM.  Information
    passed between calls are stored in SAVE_PTR.  */
@@ -389,11 +379,9 @@ extern void *mempcpy (void *__restrict __dest,
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* Return the length of S.  */
 extern size_t strlen (const char *__s)
      __THROW __attribute_pure__ __nonnull ((1));
-__END_NAMESPACE_STD
 
 #ifdef	__USE_XOPEN2K8
 /* Find the length of STRING, but scan at most MAXLEN characters.
@@ -403,10 +391,8 @@ extern size_t strnlen (const char *__string, size_t __maxlen)
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* Return a string describing the meaning of the `errno' code in ERRNUM.  */
 extern char *strerror (int __errnum) __THROW;
-__END_NAMESPACE_STD
 #ifdef __USE_XOPEN2K
 /* Reentrant version of `strerror'.
    There are 2 flavors of `strerror_r', GNU which returns the string

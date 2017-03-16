@@ -47,8 +47,6 @@ __BEGIN_DECLS
 #define LC_IDENTIFICATION __LC_IDENTIFICATION
 
 
-__BEGIN_NAMESPACE_STD
-
 /* Structure giving information about numeric and monetary notation.  */
 struct lconv
 {
@@ -125,8 +123,6 @@ extern char *setlocale (int __category, const char *__locale) __THROW;
 
 /* Return the numeric/monetary information for the current locale.  */
 extern struct lconv *localeconv (void) __THROW;
-
-__END_NAMESPACE_STD
 
 
 #ifdef	__USE_XOPEN2K8

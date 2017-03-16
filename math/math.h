@@ -208,13 +208,9 @@ enum
 #define _Mdouble_		double
 #define __MATH_PRECNAME(name,r)	__CONCAT(name,r)
 #define __MATH_DECLARING_DOUBLE  1
-#define _Mdouble_BEGIN_NAMESPACE __BEGIN_NAMESPACE_STD
-#define _Mdouble_END_NAMESPACE   __END_NAMESPACE_STD
 #include <bits/mathcalls-helper-functions.h>
 #include <bits/mathcalls.h>
 #undef	_Mdouble_
-#undef _Mdouble_BEGIN_NAMESPACE
-#undef _Mdouble_END_NAMESPACE
 #undef	__MATH_PRECNAME
 #undef __MATH_DECLARING_DOUBLE
 
@@ -230,13 +226,9 @@ enum
 # define _Mdouble_		_Mfloat_
 # define __MATH_PRECNAME(name,r) name##f##r
 # define __MATH_DECLARING_DOUBLE  0
-# define _Mdouble_BEGIN_NAMESPACE __BEGIN_NAMESPACE_C99
-# define _Mdouble_END_NAMESPACE   __END_NAMESPACE_C99
 # include <bits/mathcalls-helper-functions.h>
 # include <bits/mathcalls.h>
 # undef	_Mdouble_
-# undef _Mdouble_BEGIN_NAMESPACE
-# undef _Mdouble_END_NAMESPACE
 # undef	__MATH_PRECNAME
 # undef __MATH_DECLARING_DOUBLE
 
@@ -277,14 +269,10 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #  define _Mdouble_		_Mlong_double_
 #  define __MATH_PRECNAME(name,r) name##l##r
 #  define __MATH_DECLARING_DOUBLE  0
-#  define _Mdouble_BEGIN_NAMESPACE __BEGIN_NAMESPACE_C99
-#  define _Mdouble_END_NAMESPACE   __END_NAMESPACE_C99
 #  define __MATH_DECLARE_LDOUBLE   1
 #  include <bits/mathcalls-helper-functions.h>
 #  include <bits/mathcalls.h>
 #  undef _Mdouble_
-#  undef _Mdouble_BEGIN_NAMESPACE
-#  undef _Mdouble_END_NAMESPACE
 #  undef __MATH_PRECNAME
 #  undef __MATH_DECLARING_DOUBLE
 

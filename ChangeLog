@@ -1,3 +1,40 @@
+2017-03-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* misc/sys/cdefs.h (__BEGIN_NAMESPACE_STD): Remove macro.
+	(__END_NAMESPACE_STD): Likewise.
+	(__USING_NAMESPACE_STD): Likewise.
+	(__BEGIN_NAMESPACE_C99): Likewise.
+	(__END_NAMESPACE_C99): Likewise.
+	(__USING_NAMESPACE_C99): Likewise.
+	* math/math.h (_Mdouble_BEGIN_NAMESPACE): Do not define and
+	undefine macro.
+	(_Mdouble_END_NAMESPACE): Likewise.
+	* ctype/ctype.h: Do not handle C++ namespaces.
+	* libio/bits/stdio-ldbl.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* locale/locale.h: Likewise.
+	* math/bits/mathcalls.h: Likewise.
+	* setjmp/setjmp.h: Likewise.
+	* signal/signal.h: Likewise.
+	* stdlib/bits/stdlib-float.h: Likewise.
+	* stdlib/bits/stdlib-ldbl.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/string.h: Likewise.
+	* sysdeps/x86/fpu/bits/mathinline.h: Likewise.
+	* time/bits/types/clock_t.h: Likewise.
+	* time/bits/types/struct_tm.h: Likewise.
+	* time/bits/types/time_t.h: Likewise.
+	* time/time.h: Likewise.
+	* wcsmbs/bits/wchar-ldbl.h: Likewise.
+	* wcsmbs/uchar.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+	[_GLIBCPP_USE_NAMESPACES] (wint_t): Remove conditional definition.
+	* wctype/wctype.h: Do not handle C++ namespaces.
+	* scripts/begin-end-check.pl: Remove.
+	* Makefile (installed-headers): Likewise.
+	(tests-special): Do not add $(objpfx)begin-end-check.out.
+	($(objpfx)begin-end-check.out): Remove.
+
 2017-03-15  Steve Ellcey  <sellcey@caviumnetworks.com>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 

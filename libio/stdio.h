@@ -44,15 +44,8 @@ __BEGIN_DECLS
 /* Define outside of namespace so the C++ is happy.  */
 struct _IO_FILE;
 
-__BEGIN_NAMESPACE_STD
 /* The opaque type of streams.  This is the definition used elsewhere.  */
 typedef struct _IO_FILE FILE;
-__END_NAMESPACE_STD
-#if defined __USE_LARGEFILE64 || defined __USE_POSIX \
-    || defined __USE_ISOC99 || defined __USE_XOPEN \
-    || defined __USE_POSIX2
-__USING_NAMESPACE_STD(FILE)
-#endif
 
 # define __FILE_defined	1
 #endif /* FILE not defined.  */
@@ -108,13 +101,11 @@ typedef __ssize_t ssize_t;
 #endif
 
 /* The type of the second argument to `fgetpos' and `fsetpos'.  */
-__BEGIN_NAMESPACE_STD
 #ifndef __USE_FILE_OFFSET64
 typedef _G_fpos_t fpos_t;
 #else
 typedef _G_fpos64_t fpos_t;
 #endif
-__END_NAMESPACE_STD
 #ifdef __USE_LARGEFILE64
 typedef _G_fpos64_t fpos64_t;
 #endif
@@ -176,12 +167,10 @@ extern struct _IO_FILE *stderr;		/* Standard error output stream.  */
 #define stdout stdout
 #define stderr stderr
 
-__BEGIN_NAMESPACE_STD
 /* Remove file FILENAME.  */
 extern int remove (const char *__filename) __THROW;
 /* Rename file OLD to NEW.  */
 extern int rename (const char *__old, const char *__new) __THROW;
-__END_NAMESPACE_STD
 
 #ifdef __USE_ATFILE
 /* Rename file OLD relative to OLDFD to NEW relative to NEWFD.  */
@@ -189,7 +178,6 @@ extern int renameat (int __oldfd, const char *__old, int __newfd,
 		     const char *__new) __THROW;
 #endif
 
-__BEGIN_NAMESPACE_STD
 /* Create a temporary file and open it read/write.
 
    This function is a possible cancellation point and therefore not
@@ -210,7 +198,6 @@ extern FILE *tmpfile64 (void) __wur;
 
 /* Generate a temporary filename.  */
 extern char *tmpnam (char *__s) __THROW __wur;
-__END_NAMESPACE_STD
 
 #ifdef __USE_MISC
 /* This is the reentrant variant of `tmpnam'.  The only difference is
@@ -232,7 +219,6 @@ extern char *tempnam (const char *__dir, const char *__pfx)
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* Close STREAM.
 
    This function is a possible cancellation point and therefore not
@@ -243,7 +229,6 @@ extern int fclose (FILE *__stream);
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int fflush (FILE *__stream);
-__END_NAMESPACE_STD
 
 #ifdef __USE_MISC
 /* Faster versions when locking is not required.
@@ -266,7 +251,6 @@ extern int fcloseall (void);
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 #ifndef __USE_FILE_OFFSET64
 /* Open a file and create a new stream for it.
 
@@ -295,7 +279,6 @@ extern FILE *__REDIRECT (freopen, (const char *__restrict __filename,
 #  define freopen freopen64
 # endif
 #endif
-__END_NAMESPACE_STD
 #ifdef __USE_LARGEFILE64
 extern FILE *fopen64 (const char *__restrict __filename,
 		      const char *__restrict __modes) __wur;
@@ -329,7 +312,6 @@ extern FILE *open_memstream (char **__bufloc, size_t *__sizeloc) __THROW __wur;
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* If BUF is NULL, make STREAM unbuffered.
    Else make it use buffer BUF, of size BUFSIZ.  */
 extern void setbuf (FILE *__restrict __stream, char *__restrict __buf) __THROW;
@@ -338,7 +320,6 @@ extern void setbuf (FILE *__restrict __stream, char *__restrict __buf) __THROW;
    else allocate an internal buffer N bytes long.  */
 extern int setvbuf (FILE *__restrict __stream, char *__restrict __buf,
 		    int __modes, size_t __n) __THROW;
-__END_NAMESPACE_STD
 
 #ifdef	__USE_MISC
 /* If BUF is NULL, make STREAM unbuffered.
@@ -351,7 +332,6 @@ extern void setlinebuf (FILE *__stream) __THROW;
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* Write formatted output to STREAM.
 
    This function is a possible cancellation point and therefore not
@@ -381,10 +361,8 @@ extern int vprintf (const char *__restrict __format, _G_va_list __arg);
 /* Write formatted output to S from argument list ARG.  */
 extern int vsprintf (char *__restrict __s, const char *__restrict __format,
 		     _G_va_list __arg) __THROWNL;
-__END_NAMESPACE_STD
 
 #if defined __USE_ISOC99 || defined __USE_UNIX98
-__BEGIN_NAMESPACE_C99
 /* Maximum chars of output to write in MAXLEN.  */
 extern int snprintf (char *__restrict __s, size_t __maxlen,
 		     const char *__restrict __format, ...)
@@ -393,7 +371,6 @@ extern int snprintf (char *__restrict __s, size_t __maxlen,
 extern int vsnprintf (char *__restrict __s, size_t __maxlen,
 		      const char *__restrict __format, _G_va_list __arg)
      __THROWNL __attribute__ ((__format__ (__printf__, 3, 0)));
-__END_NAMESPACE_C99
 #endif
 
 #if __GLIBC_USE (LIB_EXT2)
@@ -420,7 +397,6 @@ extern int dprintf (int __fd, const char *__restrict __fmt, ...)
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* Read formatted input from STREAM.
 
    This function is a possible cancellation point and therefore not
@@ -463,10 +439,7 @@ extern int __isoc99_sscanf (const char *__restrict __s,
 # endif
 #endif
 
-__END_NAMESPACE_STD
-
 #ifdef	__USE_ISOC99
-__BEGIN_NAMESPACE_C99
 /* Read formatted input from S into argument list ARG.
 
    This function is a possible cancellation point and therefore not
@@ -521,12 +494,9 @@ extern int __isoc99_vsscanf (const char *__restrict __s,
 #   define vsscanf __isoc99_vsscanf
 #  endif
 # endif
-
-__END_NAMESPACE_C99
 #endif /* Use ISO C9x.  */
 
 
-__BEGIN_NAMESPACE_STD
 /* Read a character from STREAM.
 
    These functions are possible cancellation points and therefore not
@@ -539,7 +509,6 @@ extern int getc (FILE *__stream);
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int getchar (void);
-__END_NAMESPACE_STD
 
 /* The C standard explicitly says this is a macro, so we always do the
    optimization for it.  */
@@ -565,7 +534,6 @@ extern int fgetc_unlocked (FILE *__stream);
 #endif /* Use MISC.  */
 
 
-__BEGIN_NAMESPACE_STD
 /* Write a character to STREAM.
 
    These functions are possible cancellation points and therefore not
@@ -581,7 +549,6 @@ extern int putc (int __c, FILE *__stream);
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int putchar (int __c);
-__END_NAMESPACE_STD
 
 /* The C standard explicitly says this can be a macro,
    so we always do the optimization for it.  */
@@ -617,7 +584,6 @@ extern int putw (int __w, FILE *__stream);
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* Get a newline-terminated string of finite length from STREAM.
 
    This function is a possible cancellation point and therefore not
@@ -637,7 +603,6 @@ extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
    marked with __THROW.  */
 extern char *gets (char *__s) __wur __attribute_deprecated__;
 #endif
-__END_NAMESPACE_STD
 
 #ifdef __USE_GNU
 /* This function does the same as `fgets' but does not lock the stream.
@@ -681,7 +646,6 @@ extern _IO_ssize_t getline (char **__restrict __lineptr,
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* Write a string to STREAM.
 
    This function is a possible cancellation point and therefore not
@@ -714,7 +678,6 @@ extern size_t fread (void *__restrict __ptr, size_t __size,
    marked with __THROW.  */
 extern size_t fwrite (const void *__restrict __ptr, size_t __size,
 		      size_t __n, FILE *__restrict __s);
-__END_NAMESPACE_STD
 
 #ifdef __USE_GNU
 /* This function does the same as `fputs' but does not lock the stream.
@@ -741,7 +704,6 @@ extern size_t fwrite_unlocked (const void *__restrict __ptr, size_t __size,
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* Seek to a certain position on STREAM.
 
    This function is a possible cancellation point and therefore not
@@ -757,7 +719,6 @@ extern long int ftell (FILE *__stream) __wur;
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern void rewind (FILE *__stream);
-__END_NAMESPACE_STD
 
 /* The Single Unix Specification, Version 2, specifies an alternative,
    more adequate interface for the two functions above which deal with
@@ -789,7 +750,6 @@ extern __off64_t __REDIRECT (ftello, (FILE *__stream), ftello64);
 # endif
 #endif
 
-__BEGIN_NAMESPACE_STD
 #ifndef __USE_FILE_OFFSET64
 /* Get STREAM's position.
 
@@ -812,7 +772,6 @@ extern int __REDIRECT (fsetpos,
 #  define fsetpos fsetpos64
 # endif
 #endif
-__END_NAMESPACE_STD
 
 #ifdef __USE_LARGEFILE64
 extern int fseeko64 (FILE *__stream, __off64_t __off, int __whence);
@@ -821,14 +780,12 @@ extern int fgetpos64 (FILE *__restrict __stream, fpos64_t *__restrict __pos);
 extern int fsetpos64 (FILE *__stream, const fpos64_t *__pos);
 #endif
 
-__BEGIN_NAMESPACE_STD
 /* Clear the error and EOF indicators for STREAM.  */
 extern void clearerr (FILE *__stream) __THROW;
 /* Return the EOF indicator for STREAM.  */
 extern int feof (FILE *__stream) __THROW __wur;
 /* Return the error indicator for STREAM.  */
 extern int ferror (FILE *__stream) __THROW __wur;
-__END_NAMESPACE_STD
 
 #ifdef __USE_MISC
 /* Faster versions when locking is not required.  */
@@ -838,13 +795,11 @@ extern int ferror_unlocked (FILE *__stream) __THROW __wur;
 #endif
 
 
-__BEGIN_NAMESPACE_STD
 /* Print a message describing the meaning of the value of errno.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern void perror (const char *__s);
-__END_NAMESPACE_STD
 
 /* Provide the declarations for `sys_errlist' and `sys_nerr' if they
    are available on this system.  Even if available, these variables

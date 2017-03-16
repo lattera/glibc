@@ -31,10 +31,8 @@
 #include <wchar.h>
 
 #ifndef __mbstate_t_defined
-__BEGIN_NAMESPACE_C99
 /* Public type.  */
 typedef __mbstate_t mbstate_t;
-__END_NAMESPACE_C99
 # define __mbstate_t_defined 1
 #endif
 

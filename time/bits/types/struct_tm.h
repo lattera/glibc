@@ -4,7 +4,6 @@
 #include <bits/types.h>
 
 /* ISO C `broken-down time' structure.  */
-__BEGIN_NAMESPACE_STD
 struct tm
 {
   int tm_sec;			/* Seconds.	[0-60] (1 leap second) */
@@ -25,9 +24,5 @@ struct tm
   const char *__tm_zone;	/* Timezone abbreviation.  */
 # endif
 };
-__END_NAMESPACE_STD
-#if defined __USE_XOPEN || defined __USE_POSIX
-__USING_NAMESPACE_STD(tm)
-#endif
 
 #endif

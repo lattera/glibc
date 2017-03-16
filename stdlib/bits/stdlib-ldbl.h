@@ -21,9 +21,7 @@
 #endif
 
 #ifdef	__USE_ISOC99
-__BEGIN_NAMESPACE_C99
 __LDBL_REDIR1_DECL (strtold, strtod)
-__END_NAMESPACE_C99
 #endif
 
 #ifdef __USE_GNU

@@ -21,7 +21,6 @@
 #endif
 
 #if defined __USE_ISOC95 || defined __USE_UNIX98
-__BEGIN_NAMESPACE_C99
 __LDBL_REDIR_DECL (fwprintf);
 __LDBL_REDIR_DECL (wprintf);
 __LDBL_REDIR_DECL (swprintf);
@@ -39,11 +38,9 @@ __LDBL_REDIR_DECL (fwscanf);
 __LDBL_REDIR_DECL (wscanf);
 __LDBL_REDIR_DECL (swscanf);
 # endif
-__END_NAMESPACE_C99
 #endif
 
 #ifdef __USE_ISOC99
-__BEGIN_NAMESPACE_C99
 __LDBL_REDIR1_DECL (wcstold, wcstod);
 # if !defined __USE_GNU && !defined __REDIRECT \
      && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
@@ -55,7 +52,6 @@ __LDBL_REDIR_DECL (vfwscanf);
 __LDBL_REDIR_DECL (vwscanf);
 __LDBL_REDIR_DECL (vswscanf);
 # endif
-__END_NAMESPACE_C99
 #endif
 
 #ifdef __USE_GNU

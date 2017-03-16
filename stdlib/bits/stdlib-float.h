@@ -21,11 +21,9 @@
 #endif
 
 #ifdef __USE_EXTERN_INLINES
-__BEGIN_NAMESPACE_STD
 __extern_inline double
 __NTH (atof (const char *__nptr))
 {
   return strtod (__nptr, (char **) NULL);
 }
-__END_NAMESPACE_STD
 #endif /* Optimizing and Inlining.  */
