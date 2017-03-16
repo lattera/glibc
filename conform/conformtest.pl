@@ -472,11 +472,11 @@ while ($#headers >= 0) {
 	}
 	print TESTFILE "# define conformtest_value ($s)\n";
 	print TESTFILE "#endif\n";
-	print TESTFILE "int main (void) { return !((($symbol < 0) == conformtest_negative) && ($symbol == conformtest_value)); }\n";
+	print TESTFILE "_Static_assert ((($symbol < 0) == conformtest_negative) && ($symbol == conformtest_value), \"value match inside and outside #if\");\n";
 	close (TESTFILE);
 
-	runtest ($fnamebase, "Testing for #if usability of symbol $symbol",
-		 "Symbol \"$symbol\" not usable in #if.", $res, $xfail);
+	compiletest ($fnamebase, "Testing for #if usability of symbol $symbol",
+		     "Symbol \"$symbol\" not usable in #if.", $res, 0, $xfail);
       }
 
       if (defined ($type) && ($res == 0 || !$optional)) {
@@ -503,13 +503,12 @@ while ($#headers >= 0) {
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
 	print TESTFILE "#include <$h>\n";
-	# Negate the value since 0 means ok
-	print TESTFILE "int main (void) { return !($symbol $op $value); }\n";
+	print TESTFILE "_Static_assert ($symbol $op $value, \"value constraint\");\n";
 	close (TESTFILE);
 
-	$res = runtest ($fnamebase, "Testing for value of symbol $symbol",
-			"Symbol \"$symbol\" has not the right value.", $res,
-			$xfail);
+	$res = compiletest ($fnamebase, "Testing for value of symbol $symbol",
+			    "Symbol \"$symbol\" has not the right value.",
+			    $res, 0, $xfail);
       }
     } elsif (/^symbol *([a-zA-Z0-9_]*) *([A-Za-z0-9_-]*)?/) {
       my($symbol) = $1;

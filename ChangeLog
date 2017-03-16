@@ -1,3 +1,8 @@
+2017-03-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/conformtest.pl: Use compilation instead of execution
+	tests for testing values of constants and usability in #if.
+
 2017-03-16  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* math/auto-libm-test-in: Mark some catan and catanh as
