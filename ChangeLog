@@ -1,5 +1,11 @@
 2017-04-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/sparc/sparc32/Makefile (libc.so-gnulib): New rule.
+	* sysdeps/sparc/sparc32/sparcv8/udiv.S (.udiv): Make a strong_alias
+	to __wrap_.udiv.
+	* sysdeps/sparc/sparc32/sparcv9/udiv.S (.udiv): Likewise.
+	* sysdeps/sparc/sparc32/udiv.S (.udiv): Likewise.
+
 	* sysdeps/i386/symbol-hacks.h: New file.
 	* sysdeps/m68k/symbol-hacks.h: New file.
 	* sysdeps/powerpc/powerpc32/symbol-hacks.h: New file.

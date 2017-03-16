@@ -344,3 +344,4 @@ LOC(got_result):
 	mov %o2, %o0
 
 END(.udiv)
+strong_alias (.udiv, __wrap_.udiv)

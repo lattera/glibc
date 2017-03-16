@@ -13,3 +13,4 @@ ENTRY(.udiv)
 	 udiv	%o0, %o1, %o0
 
 END(.udiv)
+strong_alias (.udiv, __wrap_.udiv)
