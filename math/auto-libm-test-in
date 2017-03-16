@@ -3020,10 +3020,10 @@ catan 0.0 0x1.fp16383
 catan -0.0 0x1.fp16383
 catan 0.0 -0x1.fp16383
 catan -0.0 -0x1.fp16383
-catan 0x1.fp16383 0x1.fp16383
-catan 0x1.fp16383 -0x1.fp16383
-catan -0x1.fp16383 0x1.fp16383
-catan -0x1.fp16383 -0x1.fp16383
+catan 0x1.fp16383 0x1.fp16383 xfail-rounding:ibm128-libgcc
+catan 0x1.fp16383 -0x1.fp16383 xfail-rounding:ibm128-libgcc
+catan -0x1.fp16383 0x1.fp16383 xfail-rounding:ibm128-libgcc
+catan -0x1.fp16383 -0x1.fp16383 xfail-rounding:ibm128-libgcc
 catan 0x1p-13 1.0
 catan 0x1p-13 -1.0
 catan -0x1p-13 1.0
@@ -3438,10 +3438,10 @@ catanh 0.0 0x1.fp16383
 catanh -0.0 0x1.fp16383
 catanh 0.0 -0x1.fp16383
 catanh -0.0 -0x1.fp16383
-catanh 0x1.fp16383 0x1.fp16383
-catanh 0x1.fp16383 -0x1.fp16383
-catanh -0x1.fp16383 0x1.fp16383
-catanh -0x1.fp16383 -0x1.fp16383
+catanh 0x1.fp16383 0x1.fp16383 xfail-rounding:ibm128-libgcc
+catanh 0x1.fp16383 -0x1.fp16383 xfail-rounding:ibm128-libgcc
+catanh -0x1.fp16383 0x1.fp16383 xfail-rounding:ibm128-libgcc
+catanh -0x1.fp16383 -0x1.fp16383 xfail-rounding:ibm128-libgcc
 catanh 0x1p-13 1.0
 catanh 0x1p-13 -1.0
 catanh -0x1p-13 1.0

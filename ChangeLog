@@ -1,3 +1,10 @@
+2017-03-16  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* math/auto-libm-test-in: Mark some catan and catanh as
+	xfail-rounding:ibm128-libgcc.
+	* math/auto-libm-test-out-catan: Regenerate.
+	* math/auto-libm-test-out-catanh: Likewise.
+
 2017-03-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* misc/sys/cdefs.h (__BEGIN_NAMESPACE_STD): Remove macro.
