@@ -319,6 +319,11 @@ __spawnix (pid_t * pid, const char *file,
 
   /* Add a slack area for child's stack.  */
   size_t argv_size = (argc * sizeof (void *)) + 512;
+  /* We need at least a few pages in case the compiler's stack checking is
+     enabled.  In some configs, it is known to use at least 24KiB.  We use
+     32KiB to be "safe" from anything the compiler might do.  Besides, the
+     extra pages won't actually be allocated unless they get used.  */
+  argv_size += (32 * 1024);
   size_t stack_size = ALIGN_UP (argv_size, GLRO(dl_pagesize));
   void *stack = __mmap (NULL, stack_size, prot,
 			MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
