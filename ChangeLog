@@ -1,5 +1,10 @@
 2017-03-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17786]
+	* sysdeps/unix/sysv/linux/mips/mips32/Makefile: New file.
+	* conform/data/sys/stat.h-data (stat.st_dev): XFAIL for
+	mips-o32-linux.
+
 	[BZ #21260]
 	* sysdeps/unix/sysv/linux/alpha/Makefile
 	[$(subdir) = conform] (conformtest-xfail-conds): New variable.
