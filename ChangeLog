@@ -1,3 +1,8 @@
+2017-03-17  Chris Evans  <scarybeasts@gmail.com>
+
+	* malloc/malloc.c (unlink): Add consistency check between size and
+	next->prev->size, to further harden against 1-byte overflows.
+
 2017-03-17  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.c (init_cpu_features): Check AVX with
