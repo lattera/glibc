@@ -197,13 +197,19 @@ conformtest-cc-flags = -I../include $(+sysdep-includes) $(sysincludes) -I..
 # in xfail[cond]- lines in test expectations.
 conformtest-xfail = $(if $(conformtest-xfail-conds),\
 			 --xfail='$(conformtest-xfail-conds)')
+ifeq (no,$(cross-compiling))
+conformtest-cross =
+else
+conformtest-cross = --cross
+endif
 $(conformtest-header-tests): $(objpfx)%/conform.out: \
 			     conformtest.pl $(conformtest-headers-data)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
 	 mkdir -p $(@D)/scratch; \
 	 $(PERL) -I. conformtest.pl --tmpdir=$(@D)/scratch --cc='$(CC)' \
 		 --flags='$(conformtest-cc-flags)' --standard=$$std \
-		 --headers=$$hdr $(conformtest-xfail) > $@); \
+		 --headers=$$hdr $(conformtest-xfail) $(conformtest-cross) \
+		 > $@); \
 	$(evaluate-test)
 
 $(linknamespace-symlists-tests): $(objpfx)symlist-%: list-header-symbols.pl

@@ -7,10 +7,11 @@ use POSIX;
 $standard = "XOPEN2K8";
 $CC = "gcc";
 $tmpdir = "/tmp";
+$cross = "";
 $xfail_str = "";
 GetOptions ('headers=s' => \@headers, 'standard=s' => \$standard,
 	    'flags=s' => \$flags, 'cc=s' => \$CC, 'tmpdir=s' => \$tmpdir,
-	    'xfail=s' => \$xfail_str);
+	    'cross' => \$cross, 'xfail=s' => \$xfail_str);
 @headers = split(/,/,join(',',@headers));
 
 # List of the headers we are testing.
@@ -192,6 +193,8 @@ sub runtest
       }
       note_error($xfail);
       $result = 1;
+    } elsif ($cross) {
+      printf (" SKIP\n");
     } else {
       # Now run the program.  If the exit code is not zero something is wrong.
       $result = system "$fnamebase > $fnamebase.out2 2>&1";

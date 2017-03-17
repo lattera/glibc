@@ -1,5 +1,12 @@
 2017-03-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.pl ($cross): New variable.
+	(--cross): New command-line option.
+	(runtest): Skip test execution when cross-compiling.
+	* conform/Makefile (conformtest-cross): New variable.
+	($(conformtest-header-tests)): Pass $(conformtest-cross) to
+	conformtest.pl.
+
 	* conform/conformtest.pl ($xfail_str): New variable.
 	(--xfail=): New command-line option.
 	(top level): Handle expectations starting xfail[cond]-.
