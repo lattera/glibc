@@ -1,5 +1,9 @@
 2017-03-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21259]
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h (IXANY): Define
+	unconditionally, not just for [__USE_MISC].
+
 	[BZ #17786]
 	* sysdeps/unix/sysv/linux/mips/mips32/Makefile: New file.
 	* conform/data/sys/stat.h-data (stat.st_dev): XFAIL for

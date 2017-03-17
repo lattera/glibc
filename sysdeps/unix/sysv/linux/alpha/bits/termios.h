@@ -70,9 +70,9 @@ struct termios
 #define ICRNL	0000400
 #define IXON	0001000
 #define IXOFF	0002000
+#define IXANY	0004000
 #ifdef __USE_MISC
   /* POSIX.1 doesn't want these... */
-# define IXANY		0004000
 # define IUCLC		0010000
 # define IMAXBEL	0020000
 # define IUTF8		0040000
