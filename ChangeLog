@@ -1,3 +1,8 @@
+2017-03-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Check AVX with
+	CPU_FEATURES_CPU_P.
+
 2017-03-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21259]

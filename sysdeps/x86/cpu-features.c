@@ -126,7 +126,6 @@ init_cpu_features (struct cpu_features *cpu_features)
 
       if (family == 0x06)
 	{
-	  ecx = cpu_features->cpuid[COMMON_CPUID_INDEX_1].ecx;
 	  model += extended_model;
 	  switch (model)
 	    {
@@ -176,7 +175,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 	    default:
 	      /* Unknown family 0x06 processors.  Assuming this is one
 		 of Core i3/i5/i7 processors if AVX is available.  */
-	      if ((ecx & bit_cpu_AVX) == 0)
+	      if (!CPU_FEATURES_CPU_P (cpu_features, AVX))
 		break;
 
 	    case 0x1a:
