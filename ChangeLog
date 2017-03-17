@@ -3,6 +3,7 @@
 	[BZ #21260]
 	* sysdeps/unix/sysv/linux/alpha/Makefile
 	[$(subdir) = conform] (conformtest-xfail-conds): New variable.
+	* conform/data/netdb.h-data (netent.n_net): XFAIL for alpha-linux.
 
 	* conform/conformtest.pl ($cross): New variable.
 	(--cross): New command-line option.
