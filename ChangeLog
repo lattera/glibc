@@ -1,5 +1,9 @@
 2017-03-17  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21260]
+	* sysdeps/unix/sysv/linux/alpha/Makefile
+	[$(subdir) = conform] (conformtest-xfail-conds): New variable.
+
 	* conform/conformtest.pl ($cross): New variable.
 	(--cross): New command-line option.
 	(runtest): Skip test execution when cross-compiling.

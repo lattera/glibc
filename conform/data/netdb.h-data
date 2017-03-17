@@ -15,7 +15,8 @@ type {struct netent}
 element {struct netent} {char*} n_name
 element {struct netent} {char**} n_aliases
 element {struct netent} int n_addrtype
-element {struct netent} uint32_t n_net
+// Bug 21260: n_net has wrong type.
+xfail[alpha-linux]-element {struct netent} uint32_t n_net
 
 type uint32_t
 
