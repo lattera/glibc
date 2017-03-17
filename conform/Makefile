@@ -192,13 +192,18 @@ test-xfail-XOPEN2K8/signal.h/conform = yes
 test-xfail-XOPEN2K8/sys/wait.h/conform = yes
 
 conformtest-cc-flags = -I../include $(+sysdep-includes) $(sysincludes) -I..
+# conformtest-xfail-conds may be set by a sysdeps Makefile fragment to
+# a list of conditions that are considered to be true when encountered
+# in xfail[cond]- lines in test expectations.
+conformtest-xfail = $(if $(conformtest-xfail-conds),\
+			 --xfail='$(conformtest-xfail-conds)')
 $(conformtest-header-tests): $(objpfx)%/conform.out: \
 			     conformtest.pl $(conformtest-headers-data)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
 	 mkdir -p $(@D)/scratch; \
 	 $(PERL) -I. conformtest.pl --tmpdir=$(@D)/scratch --cc='$(CC)' \
 		 --flags='$(conformtest-cc-flags)' --standard=$$std \
-		 --headers=$$hdr > $@); \
+		 --headers=$$hdr $(conformtest-xfail) > $@); \
 	$(evaluate-test)
 
 $(linknamespace-symlists-tests): $(objpfx)symlist-%: list-header-symbols.pl

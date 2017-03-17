@@ -7,8 +7,10 @@ use POSIX;
 $standard = "XOPEN2K8";
 $CC = "gcc";
 $tmpdir = "/tmp";
+$xfail_str = "";
 GetOptions ('headers=s' => \@headers, 'standard=s' => \$standard,
-	    'flags=s' => \$flags, 'cc=s' => \$CC, 'tmpdir=s' => \$tmpdir);
+	    'flags=s' => \$flags, 'cc=s' => \$CC, 'tmpdir=s' => \$tmpdir,
+	    'xfail=s' => \$xfail_str);
 @headers = split(/,/,join(',',@headers));
 
 # List of the headers we are testing.
@@ -347,6 +349,15 @@ while ($#headers >= 0) {
     if (/^xfail-/) {
       s/^xfail-//;
       $xfail = 1;
+    } elsif (/^xfail\[([^\]]*)\]-/) {
+      my($xfail_cond) = $1;
+      s/^xfail\[([^\]]*)\]-//;
+      # "xfail[cond]-" or "xfail[cond1|cond2|...]-" means a failure of
+      # the test is allowed if any of the listed conditions are in the
+      # --xfail command-line option argument.
+      if ($xfail_str =~ /\b($xfail_cond)\b/) {
+	$xfail = 1;
+      }
     }
     my($optional) = 0;
     if (/^optional-/) {
