@@ -9,7 +9,8 @@ macro-int-constant TIME_UTC > 0
 type {struct timespec}
 
 element {struct timespec} time_t tv_sec
-element {struct timespec} long tv_nsec
+// Bug 16437: tv_nsec has wrong type.
+xfail[x86_64-x32-linux]-element {struct timespec} long tv_nsec
 #endif
 
 type size_t

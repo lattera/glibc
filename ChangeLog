@@ -1,5 +1,14 @@
 2017-03-18  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #16437]
+	* sysdeps/unix/sysv/linux/x86_64/x32/Makefile
+	[$(subdir) = conform] (conformtest-xfail-conds): New variable.
+	* conform/data/signal.h-data (timespec.tv_nsec): XFAIL for
+	x86_64-x32-linux.
+	* conform/data/sys/select.h-data (timespec.tv_nsec): Likewise.
+	* conform/data/sys/stat.h-data (timespec.tv_nsec): Likewise.
+	* conform/data/time.h-data (timespec.tv_nsec): Likewise.
+
 	[BZ #21261]
 	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h
 	[__WORDSIZE == 64 && !_ASM] (__sparc64_jmp_buf): Use reserved

@@ -30,7 +30,8 @@ element ucontext_t mcontext_t uc_mcontext
 
 type {struct timespec}
 element {struct timespec} __time_t tv_sec
-element {struct timespec} long tv_nsec
+// Bug 16437: tv_nsec has wrong type.
+xfail[x86_64-x32-linux]-element {struct timespec} long tv_nsec
 #endif
 
 #if defined POSIX || defined UNIX98 || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
