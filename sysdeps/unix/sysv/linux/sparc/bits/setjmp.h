@@ -29,30 +29,30 @@
 #ifndef _ASM
 typedef struct __sparc64_jmp_buf
   {
-    struct __sparc64_jmp_buf	*uc_link;
-    unsigned long		uc_flags;
-    unsigned long		uc_sigmask;
+    struct __sparc64_jmp_buf	*__uc_link;
+    unsigned long		__uc_flags;
+    unsigned long		__uc_sigmask;
     struct __sparc64_jmp_buf_mcontext
       {
-	unsigned long		mc_gregs[19];
-	unsigned long		mc_fp;
-	unsigned long		mc_i7;
+	unsigned long		__mc_gregs[19];
+	unsigned long		__mc_fp;
+	unsigned long		__mc_i7;
 	struct __sparc64_jmp_buf_fpu
 	  {
 	    union
 	      {
-		unsigned int	sregs[32];
-		unsigned long	dregs[32];
-		long double	qregs[16];
-	      }			mcfpu_fpregs;
-	    unsigned long	mcfpu_fprs;
-	    unsigned long	mcfpu_gsr;
-	    void		*mcfpu_fq;
-	    unsigned char	mcfpu_qcnt;
-	    unsigned char	mcfpu_qentsz;
-	    unsigned char	mcfpu_enab;
-	  }			mc_fpregs;
-      }				uc_mcontext;
+		unsigned int	__sregs[32];
+		unsigned long	__dregs[32];
+		long double	__qregs[16];
+	      }			__mcfpu_fpregs;
+	    unsigned long	__mcfpu_fprs;
+	    unsigned long	__mcfpu_gsr;
+	    void		*__mcfpu_fq;
+	    unsigned char	__mcfpu_qcnt;
+	    unsigned char	__mcfpu_qentsz;
+	    unsigned char	__mcfpu_enab;
+	  }			__mc_fpregs;
+      }				__uc_mcontext;
   } __jmp_buf[1];
 #endif
 

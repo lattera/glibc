@@ -1,5 +1,13 @@
 2017-03-18  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21261]
+	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h
+	[__WORDSIZE == 64 && !_ASM] (__sparc64_jmp_buf): Use reserved
+	names for all fields.
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h (_JMPBUF_UNWINDS): Update
+	for jmp_buf field renaming.
+	(_JMPBUF_UNWINDS_ADJ): Likewise.
+
 	* conform/conformtest.pl: Handle xfail[cond]- in header mentioned
 	with allow-header.
 
