@@ -1,3 +1,8 @@
+2017-03-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/conformtest.pl: Handle xfail[cond]- in header mentioned
+	with allow-header.
+
 2017-03-17  Chris Evans  <scarybeasts@gmail.com>
 
 	* malloc/malloc.c (unlink): Add consistency check between size and

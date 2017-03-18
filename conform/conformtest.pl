@@ -810,7 +810,7 @@ while ($#headers >= 0) {
       next acontrol if (/^#/);
       next acontrol if (/^[	]*$/);
 
-      s/^xfail-//;
+      s/^xfail(\[([^\]]*)\])?-//;
       s/^optional-//;
       if (/^element *({([^}]*)}|([^ ]*)) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
 	push @allow, $7;
