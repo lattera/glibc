@@ -1,3 +1,11 @@
+2017-03-20  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #21275]
+	* sysdeps/unix/sysv/linux/spawni.c [__ia64__] (CLONE): Rename
+	__stack to __stackbase.
+	(STACK): Invert _STACK_GROWS_DOWN and _STACK_GROWS_UP order of
+	checks so we can include defined(__ia64__) first.
+
 2017-03-19  Christian Brauner  <christian.brauner@ubuntu.com>
 
 	* sysdeps/unix/sysv/linux/ttyname.h: New file.

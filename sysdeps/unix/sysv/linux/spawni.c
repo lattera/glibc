@@ -61,17 +61,18 @@
 #define SPAWN_ERROR	127
 
 #ifdef __ia64__
-# define CLONE(__fn, __stack, __stacksize, __flags, __args) \
-  __clone2 (__fn, __stack, __stacksize, __flags, __args, 0, 0, 0)
+# define CLONE(__fn, __stackbase, __stacksize, __flags, __args) \
+  __clone2 (__fn, __stackbase, __stacksize, __flags, __args, 0, 0, 0)
 #else
 # define CLONE(__fn, __stack, __stacksize, __flags, __args) \
   __clone (__fn, __stack, __flags, __args)
 #endif
 
-#if _STACK_GROWS_DOWN
-# define STACK(__stack, __stack_size) (__stack + __stack_size)
-#elif _STACK_GROWS_UP
+/* Since ia64 wants the stackbase w/clone2, re-use the grows-up macro.  */
+#if _STACK_GROWS_UP || defined (__ia64__)
 # define STACK(__stack, __stack_size) (__stack)
+#elif _STACK_GROWS_DOWN
+# define STACK(__stack, __stack_size) (__stack + __stack_size)
 #endif
 
 
