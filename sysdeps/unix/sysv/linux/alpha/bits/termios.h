@@ -93,8 +93,10 @@ struct termios
 # define NLDLY	00001400
 # define   NL0	00000000
 # define   NL1	00000400
-# define   NL2	00001000
-# define   NL3	00001400
+# if defined __USE_MISC
+#  define   NL2	00001000
+#  define   NL3	00001400
+# endif
 # define TABDLY	00006000
 # define   TAB0	00000000
 # define   TAB1	00002000

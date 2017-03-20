@@ -1,3 +1,10 @@
+2017-03-20  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21268]
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h (NL2): Define only
+	if [__USE_MISC]
+	(NL3): Likewise.
+
 2017-03-20  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #21275]
