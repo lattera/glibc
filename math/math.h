@@ -626,11 +626,13 @@ extern int matherr (struct exception *__exc);
 # define _Mdouble_ double
 # define __MATH_DECLARING_DOUBLE 1
 # define __MATH_DECLARING_LDOUBLE 0
+# define __MATH_DECLARING_FLOATN 0
 # define _MSUF_
 # include <bits/math-finite.h>
 # undef _Mdouble_
 # undef __MATH_DECLARING_DOUBLE
 # undef __MATH_DECLARING_LDOUBLE
+# undef __MATH_DECLARING_FLOATN
 # undef _MSUF_
 
 /* When __USE_ISOC99 is defined, include math-finite for float and
@@ -641,11 +643,13 @@ extern int matherr (struct exception *__exc);
 #  define _Mdouble_ float
 #  define __MATH_DECLARING_DOUBLE 0
 #  define __MATH_DECLARING_LDOUBLE 0
+#  define __MATH_DECLARING_FLOATN 0
 #  define _MSUF_ f
 #  include <bits/math-finite.h>
 #  undef _Mdouble_
 #  undef __MATH_DECLARING_DOUBLE
 #  undef __MATH_DECLARING_LDOUBLE
+#  undef __MATH_DECLARING_FLOATN
 #  undef _MSUF_
 
 /* Include bits/math-finite.h for long double.  */
@@ -653,15 +657,33 @@ extern int matherr (struct exception *__exc);
 #   define _Mdouble_ long double
 #   define __MATH_DECLARING_DOUBLE 0
 #   define __MATH_DECLARING_LDOUBLE 1
+#   define __MATH_DECLARING_FLOATN 0
 #   define _MSUF_ l
 #   include <bits/math-finite.h>
 #   undef _Mdouble_
 #   undef __MATH_DECLARING_DOUBLE
 #   undef __MATH_DECLARING_LDOUBLE
+#   undef __MATH_DECLARING_FLOATN
 #   undef _MSUF_
 #  endif
 
 # endif /* __USE_ISOC99.  */
+
+/* Include bits/math-finite.h for float128.  */
+# if (__HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)) \
+      && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#  define _Mdouble_ _Float128
+#  define __MATH_DECLARING_DOUBLE 0
+#  define __MATH_DECLARING_LDOUBLE 0
+#  define __MATH_DECLARING_FLOATN 1
+#  define _MSUF_ f128
+#  include <bits/math-finite.h>
+#  undef _Mdouble_
+#  undef __MATH_DECLARING_DOUBLE
+#  undef __MATH_DECLARING_LDOUBLE
+#  undef __MATH_DECLARING_FLOATN
+#  undef _MSUF_
+# endif
 #endif /* __FINITE_MATH_ONLY__ > 0.  */
 
 #ifdef __USE_ISOC99

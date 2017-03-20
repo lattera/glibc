@@ -83,7 +83,9 @@ __MATH_REDIRCALL (exp, , (_Mdouble_));
 __MATH_REDIRCALL (exp10, , (_Mdouble_));
 
 /* pow10.  */
+# if !__MATH_DECLARING_FLOATN
 __MATH_REDIRCALL_2 (pow10, , (_Mdouble_), exp10);
+# endif
 #endif
 
 #ifdef __USE_ISOC99
@@ -146,7 +148,7 @@ __NTH (__REDIRFROM (lgamma, , _MSUF_) (_Mdouble_ __d))
 #endif
 
 #if ((defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_XOPEN2K)) \
-     && defined __extern_always_inline)
+     && defined __extern_always_inline) && !__MATH_DECLARING_FLOATN
 /* gamma.  */
 __extern_always_inline _Mdouble_
 __NTH (__REDIRFROM (gamma, , _MSUF_) (_Mdouble_ __d))
@@ -174,10 +176,11 @@ __MATH_REDIRCALL (pow, , (_Mdouble_, _Mdouble_));
 __MATH_REDIRCALL (remainder, , (_Mdouble_, _Mdouble_));
 #endif
 
-#if (__MATH_DECLARING_DOUBLE \
-     && (defined __USE_MISC \
-	 || (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8))) \
-    || (!defined __MATH_DECLARE_LDOUBLE && defined __USE_MISC)
+#if ((__MATH_DECLARING_DOUBLE \
+      && (defined __USE_MISC \
+	  || (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8))) \
+     || (!defined __MATH_DECLARE_LDOUBLE && defined __USE_MISC)) \
+    && !__MATH_DECLARING_FLOATN
 /* scalb.  */
 __MATH_REDIRCALL (scalb, , (_Mdouble_, _Mdouble_));
 #endif

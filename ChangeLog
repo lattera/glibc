@@ -1,3 +1,12 @@
+2017-05-14  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* math/math.h: Include bits/math-finite.h for float128.
+	(__MATH_DECLARING_FLOATN): Define to control declaration of
+	float128 functions.
+	* math/bits/math-finite.h (pow10): Do not declare for float128.
+	(gamma): Likewise.
+	(scalb): Likewise.
+
 2017-05-14  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
