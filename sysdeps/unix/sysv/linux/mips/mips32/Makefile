@@ -1,4 +1,4 @@
 ifeq ($(subdir),conform)
-# For bug 17786.
+# For bugs 17786 and 21278.
 conformtest-xfail-conds += mips-o32-linux
 endif

@@ -34,7 +34,8 @@ element {struct stat} nlink_t st_nlink
 element {struct stat} uid_t st_uid
 element {struct stat} gid_t st_gid
 #if !defined POSIX && !defined POSIX2008
-element {struct stat} dev_t st_rdev
+// Bug 21278: st_rdev has wrong type.
+xfail[mips-o32-linux]-element {struct stat} dev_t st_rdev
 #endif
 element {struct stat} off_t st_size
 element {struct stat} time_t st_atime
