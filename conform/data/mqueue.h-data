@@ -10,10 +10,11 @@ element {struct sigevent} {void(*} sigev_notify_function )(union sigval)
 element {struct sigevent} {pthread_attr_t*} sigev_notify_attributes
 
 type {struct mq_attr}
-element {struct mq_attr} long mq_flags
-element {struct mq_attr} long mq_maxmsg
-element {struct mq_attr} long mq_msgsize
-element {struct mq_attr} long mq_curmsgs
+// Bug 21279: mq_attr elements have wrong type.
+xfail[x86_64-x32-linux]-element {struct mq_attr} long mq_flags
+xfail[x86_64-x32-linux]-element {struct mq_attr} long mq_maxmsg
+xfail[x86_64-x32-linux]-element {struct mq_attr} long mq_msgsize
+xfail[x86_64-x32-linux]-element {struct mq_attr} long mq_curmsgs
 
 function int mq_close (mqd_t)
 function int mq_getattr (mqd_t, struct mq_attr*)

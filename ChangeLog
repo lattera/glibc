@@ -1,5 +1,14 @@
 2017-03-20  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21279]
+	* sysdeps/unix/sysv/linux/x86_64/x32/Makefile
+	[$(subdir) = conform] (conformtest-xfail-conds): Update comment.
+	* conform/data/mqueue.h-data (mq_attr.mq_flags): XFAIL for
+	x86_64-x32-linux.
+	(mq_attr.mq_maxmsg): Likewise.
+	(mq_attr.mq_msgsize): Likewise.
+	(mq_attr.mq_curmsgs): Likewise.
+
 	[BZ #21278]
 	* sysdeps/unix/sysv/linux/mips/mips32/Makefile
 	[$(subdir) = conform] (conformtest-xfail-conds): Update comment.
