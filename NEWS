@@ -17,6 +17,26 @@ Version 2.26
   by default. Applications needing features missing from TIRPC should
   consider the rpcsvc-proto project developed by Thorsten Kukuk (SUSE).
 
+* The NIS(+) name service modules, libnss_nis, libnss_nisplus, and
+  libnss_compat, are deprecated, and will not be built or installed by
+  default.  Replacement implementations based on TIRPC, which
+  additionally support IPv6, are available from
+  <https://github.com/thkukuk/libnss_{compat,nis,nisplus}>.
+
+* The NIS(+) support library, libnsl, is deprecated.  By default, a
+  compatibility shared library will be built and installed, but not
+  headers or development libraries.
+
+  Only a few NIS-related programs require this library.
+  A replacement implementation based on TIRPC is available from
+  <https://github.com/thkukuk/libnsl>.  Like the replacement NIS(+)
+  name service modules, the replacement supports IPv6, and it can be
+  coinstalled with the compatibility shared library from glibc.
+
+* New configure option --enable-obsolete-nsl will cause libnsl's
+  headers, and the NIS(+) name service modules, to be built and
+  installed.  This option may be removed in a future release.
+
 Security related changes:
 
   [Add security related changes here]

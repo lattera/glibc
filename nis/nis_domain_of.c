@@ -25,6 +25,7 @@ nis_domain_of (const_nis_name name)
 
   return nis_domain_of_r (name, result, NIS_MAXNAMELEN);
 }
+libnsl_hidden_nolink_def (nis_domain_of, GLIBC_2_1)
 
 const_nis_name
 __nis_domain_of (const_nis_name name)

@@ -24,6 +24,10 @@ libnsl_hidden_proto (xdr_ypresp_maplist)
 libnsl_hidden_proto (xdr_ypresp_order)
 libnsl_hidden_proto (xdr_ypbind_resp)
 libnsl_hidden_proto (xdr_ypresp_master)
+libnsl_hidden_proto (xdr_ypreq_xfr)
+libnsl_hidden_proto (xdr_ypresp_xfr)
+libnsl_hidden_proto (xdr_yppushresp_xfr)
+libnsl_hidden_proto (xdr_ypbind_setdom)
 
 # endif /* !_ISOMAC */
 #endif

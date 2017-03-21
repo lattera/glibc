@@ -67,3 +67,4 @@ nis_ping (const_nis_name dirname, unsigned int utime,
 		   (caddr_t) NULL, 0, NULL);
   nis_freeresult (res);
 }
+libnsl_hidden_nolink_def (nis_ping, GLIBC_2_1)

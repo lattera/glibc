@@ -45,7 +45,7 @@ __nis_finddirectory (directory_obj *dir, const_nis_name name)
 
   return fd_res;
 }
-libnsl_hidden_def (__nis_finddirectory)
+libnsl_hidden_nolink_def (__nis_finddirectory, GLIBC_2_1)
 
 /* The hash implementation is in a separate file.  */
 #include "nis_hash.c"

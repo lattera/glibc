@@ -374,6 +374,17 @@ if test "$link_obsolete_rpc" = yes; then
   AC_DEFINE(LINK_OBSOLETE_RPC)
 fi
 
+AC_ARG_ENABLE([obsolete-nsl],
+              AC_HELP_STRING([--enable-obsolete-nsl],
+                             [build and install the obsolete libnsl library and depending NSS modules]),
+              [build_obsolete_nsl=$enableval],
+              [build_obsolete_nsl=no])
+AC_SUBST(build_obsolete_nsl)
+
+if test "$build_obsolete_nsl" = yes; then
+  AC_DEFINE(LINK_OBSOLETE_NSL)
+fi
+
 AC_ARG_ENABLE([systemtap],
               [AS_HELP_STRING([--enable-systemtap],
 	       [enable systemtap static probe points @<:@default=no@:>@])],

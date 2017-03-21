@@ -156,7 +156,7 @@ nis_print_rights (const unsigned int access)
     }
   fputs (result, stdout);
 }
-libnsl_hidden_def (nis_print_rights)
+libnsl_hidden_nolink_def (nis_print_rights, GLIBC_2_1)
 
 void
 nis_print_directory (const directory_obj *dir)
@@ -244,7 +244,7 @@ nis_print_directory (const directory_obj *dir)
 	}
     }
 }
-libnsl_hidden_def (nis_print_directory)
+libnsl_hidden_nolink_def (nis_print_directory, GLIBC_2_1)
 
 void
 nis_print_group (const group_obj *obj)
@@ -259,7 +259,7 @@ nis_print_group (const group_obj *obj)
   for (i = 0; i < obj->gr_members.gr_members_len; i++)
     printf ("\t%s\n", obj->gr_members.gr_members_val[i]);
 }
-libnsl_hidden_def (nis_print_group)
+libnsl_hidden_nolink_def (nis_print_group, GLIBC_2_1)
 
 void
 nis_print_table (const table_obj *obj)
@@ -282,7 +282,7 @@ nis_print_table (const table_obj *obj)
       fputc ('\n', stdout);
     }
 }
-libnsl_hidden_def (nis_print_table)
+libnsl_hidden_nolink_def (nis_print_table, GLIBC_2_1)
 
 void
 nis_print_link (const link_obj *obj)
@@ -292,7 +292,7 @@ nis_print_link (const link_obj *obj)
   printf (_("Linked to : %s\n"), obj->li_name);
   /* XXX Print the attributes here, if they exists */
 }
-libnsl_hidden_def (nis_print_link)
+libnsl_hidden_nolink_def (nis_print_link, GLIBC_2_1)
 
 void
 nis_print_entry (const entry_obj *obj)
@@ -316,7 +316,7 @@ nis_print_entry (const entry_obj *obj)
 		obj->en_cols.en_cols_val[i].ec_value.ec_value_val);
     }
 }
-libnsl_hidden_def (nis_print_entry)
+libnsl_hidden_nolink_def (nis_print_entry, GLIBC_2_1)
 
 void
 nis_print_object (const nis_object * obj)
@@ -362,7 +362,7 @@ nis_print_object (const nis_object * obj)
       break;
     }
 }
-libnsl_hidden_def (nis_print_object)
+libnsl_hidden_nolink_def (nis_print_object, GLIBC_2_1)
 
 void
 nis_print_result (const nis_result *res)
@@ -378,3 +378,4 @@ nis_print_result (const nis_result *res)
       nis_print_object (&res->objects.objects_val[i]);
     }
 }
+libnsl_hidden_nolink_def (nis_print_result, GLIBC_2_1)

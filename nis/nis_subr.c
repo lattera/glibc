@@ -27,6 +27,7 @@ nis_leaf_of (const_nis_name name)
 
   return nis_leaf_of_r (name, result, NIS_MAXNAMELEN);
 }
+libnsl_hidden_nolink_def (nis_leaf_of, GLIBC_2_1)
 
 nis_name
 nis_leaf_of_r (const_nis_name name, char *buffer, size_t buflen)
@@ -48,7 +49,7 @@ nis_leaf_of_r (const_nis_name name, char *buffer, size_t buflen)
 
   return buffer;
 }
-libnsl_hidden_def (nis_leaf_of_r)
+libnsl_hidden_nolink_def (nis_leaf_of_r, GLIBC_2_1)
 
 nis_name
 nis_name_of (const_nis_name name)
@@ -57,6 +58,7 @@ nis_name_of (const_nis_name name)
 
   return nis_name_of_r (name, result, NIS_MAXNAMELEN);
 }
+libnsl_hidden_nolink_def (nis_name_of, GLIBC_2_1)
 
 nis_name
 nis_name_of_r (const_nis_name name, char *buffer, size_t buflen)
@@ -86,7 +88,7 @@ nis_name_of_r (const_nis_name name, char *buffer, size_t buflen)
 
   return buffer;
 }
-libnsl_hidden_def (nis_name_of_r)
+libnsl_hidden_nolink_def (nis_name_of_r, GLIBC_2_1)
 
 static int __always_inline
 count_dots (const_nis_name str)
@@ -288,7 +290,7 @@ nis_getnames (const_nis_name name)
 
   return getnames;
 }
-libnsl_hidden_def (nis_getnames)
+libnsl_hidden_nolink_def (nis_getnames, GLIBC_2_1)
 
 void
 nis_freenames (nis_name *names)
@@ -303,7 +305,7 @@ nis_freenames (nis_name *names)
 
   free (names);
 }
-libnsl_hidden_def  (nis_freenames)
+libnsl_hidden_nolink_def  (nis_freenames, GLIBC_2_1)
 
 name_pos
 nis_dir_cmp (const_nis_name n1, const_nis_name n2)
@@ -341,11 +343,11 @@ nis_dir_cmp (const_nis_name n1, const_nis_name n2)
 
     }
 }
-libnsl_hidden_def (nis_dir_cmp)
+libnsl_hidden_nolink_def (nis_dir_cmp, GLIBC_2_1)
 
 void
 nis_destroy_object (nis_object *obj)
 {
   nis_free_object (obj);
 }
-libnsl_hidden_def (nis_destroy_object)
+libnsl_hidden_nolink_def (nis_destroy_object, GLIBC_2_1)

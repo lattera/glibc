@@ -80,13 +80,14 @@ readColdStartFile (void)
   return read_nis_obj (cold_start_file, (iofct_t) _xdr_directory_obj,
 		       (freefct_t) nis_free_directory, sizeof (directory_obj));
 }
-libnsl_hidden_def (readColdStartFile)
+libnsl_hidden_nolink_def (readColdStartFile, GLIBC_2_1)
 
 bool_t
 writeColdStartFile (const directory_obj *obj)
 {
   return write_nis_obj (cold_start_file, obj, (iofct_t) _xdr_directory_obj);
 }
+libnsl_hidden_nolink_def (writeColdStartFile, GLIBC_2_1)
 
 nis_object *
 nis_read_obj (const char *name)
@@ -94,9 +95,11 @@ nis_read_obj (const char *name)
   return read_nis_obj (name, (iofct_t) _xdr_nis_object,
 		       (freefct_t) nis_free_object, sizeof (nis_object));
 }
+libnsl_hidden_nolink_def (nis_read_obj, GLIBC_2_1)
 
 bool_t
 nis_write_obj (const char *name, const nis_object *obj)
 {
   return write_nis_obj (name, obj, (iofct_t) _xdr_nis_object);
 }
+libnsl_hidden_nolink_def (nis_write_obj, GLIBC_2_1)

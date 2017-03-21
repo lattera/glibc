@@ -28,7 +28,7 @@ __free_fdresult (fd_result *res)
       free (res);
     }
 }
-libnsl_hidden_def (__free_fdresult)
+libnsl_hidden_nolink_def (__free_fdresult, GLIBC_2_1)
 
 void
 nis_free_request (ib_request *ibreq)
@@ -39,7 +39,7 @@ nis_free_request (ib_request *ibreq)
       free (ibreq);
     }
 }
-libnsl_hidden_def (nis_free_request)
+libnsl_hidden_nolink_def (nis_free_request, GLIBC_2_1)
 
 void
 nis_free_directory (directory_obj *obj)
@@ -50,7 +50,7 @@ nis_free_directory (directory_obj *obj)
       free (obj);
     }
 }
-libnsl_hidden_def (nis_free_directory)
+libnsl_hidden_nolink_def (nis_free_directory, GLIBC_2_1)
 
 void
 nis_free_object (nis_object *obj)
@@ -61,7 +61,7 @@ nis_free_object (nis_object *obj)
       free (obj);
     }
 }
-libnsl_hidden_def (nis_free_object)
+libnsl_hidden_nolink_def (nis_free_object, GLIBC_2_1)
 
 void
 nis_freeresult (nis_result *res)
@@ -72,4 +72,4 @@ nis_freeresult (nis_result *res)
       free (res);
     }
 }
-libnsl_hidden_def (nis_freeresult)
+libnsl_hidden_nolink_def (nis_freeresult, GLIBC_2_1)

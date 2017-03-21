@@ -45,35 +45,35 @@ xdr_ypstat (XDR *xdrs, ypstat *objp)
 {
   return xdr_enum (xdrs, (enum_t *) objp);
 }
-libnsl_hidden_def (xdr_ypstat)
+libnsl_hidden_nolink_def (xdr_ypstat, GLIBC_2_0)
 
 bool_t
 xdr_ypxfrstat (XDR *xdrs, ypxfrstat *objp)
 {
   return xdr_enum (xdrs, (enum_t *) objp);
 }
-libnsl_hidden_def (xdr_ypxfrstat)
+libnsl_hidden_nolink_def (xdr_ypxfrstat, GLIBC_2_0)
 
 bool_t
 xdr_domainname (XDR *xdrs, domainname *objp)
 {
   return xdr_string (xdrs, objp, XDRMAXNAME);
 }
-libnsl_hidden_def (xdr_domainname)
+libnsl_hidden_nolink_def (xdr_domainname, GLIBC_2_0)
 
 bool_t
 xdr_mapname (XDR *xdrs, mapname *objp)
 {
   return xdr_string (xdrs, objp, XDRMAXNAME);
 }
-libnsl_hidden_def (xdr_mapname)
+libnsl_hidden_nolink_def (xdr_mapname, GLIBC_2_0)
 
 bool_t
 xdr_peername (XDR *xdrs, peername *objp)
 {
   return xdr_string (xdrs, objp, XDRMAXNAME);
 }
-libnsl_hidden_def (xdr_peername)
+libnsl_hidden_nolink_def (xdr_peername, GLIBC_2_0)
 
 bool_t
 xdr_keydat (XDR *xdrs, keydat *objp)
@@ -81,7 +81,7 @@ xdr_keydat (XDR *xdrs, keydat *objp)
   return xdr_bytes (xdrs, (char **) &objp->keydat_val,
 		    (u_int *) &objp->keydat_len, XDRMAXRECORD);
 }
-libnsl_hidden_def (xdr_keydat)
+libnsl_hidden_nolink_def (xdr_keydat, GLIBC_2_0)
 
 bool_t
 xdr_valdat (XDR *xdrs, valdat *objp)
@@ -89,7 +89,7 @@ xdr_valdat (XDR *xdrs, valdat *objp)
   return xdr_bytes (xdrs, (char **) &objp->valdat_val,
 		    (u_int *) &objp->valdat_len, XDRMAXRECORD);
 }
-libnsl_hidden_def (xdr_valdat)
+libnsl_hidden_nolink_def (xdr_valdat, GLIBC_2_0)
 
 bool_t
 xdr_ypmap_parms (XDR *xdrs, ypmap_parms *objp)
@@ -102,7 +102,7 @@ xdr_ypmap_parms (XDR *xdrs, ypmap_parms *objp)
     return FALSE;
   return xdr_peername (xdrs, &objp->peer);
 }
-libnsl_hidden_def (xdr_ypmap_parms)
+libnsl_hidden_nolink_def (xdr_ypmap_parms, GLIBC_2_0)
 
 bool_t
 xdr_ypreq_key (XDR *xdrs, ypreq_key *objp)
@@ -113,7 +113,7 @@ xdr_ypreq_key (XDR *xdrs, ypreq_key *objp)
     return FALSE;
   return xdr_keydat (xdrs, &objp->key);
 }
-libnsl_hidden_def (xdr_ypreq_key)
+libnsl_hidden_nolink_def (xdr_ypreq_key, GLIBC_2_0)
 
 bool_t
 xdr_ypreq_nokey (XDR *xdrs, ypreq_nokey *objp)
@@ -122,7 +122,7 @@ xdr_ypreq_nokey (XDR *xdrs, ypreq_nokey *objp)
     return FALSE;
   return xdr_mapname (xdrs, &objp->map);
 }
-libnsl_hidden_def (xdr_ypreq_nokey)
+libnsl_hidden_nolink_def (xdr_ypreq_nokey, GLIBC_2_0)
 
 bool_t
 xdr_ypreq_xfr (XDR *xdrs, ypreq_xfr *objp)
@@ -135,6 +135,7 @@ xdr_ypreq_xfr (XDR *xdrs, ypreq_xfr *objp)
     return FALSE;
   return xdr_u_int (xdrs, &objp->port);
 }
+libnsl_hidden_nolink_def (xdr_ypreq_xfr, GLIBC_2_0)
 
 bool_t
 xdr_ypresp_val (XDR *xdrs, ypresp_val *objp)
@@ -143,7 +144,7 @@ xdr_ypresp_val (XDR *xdrs, ypresp_val *objp)
     return FALSE;
   return xdr_valdat (xdrs, &objp->val);
 }
-libnsl_hidden_def (xdr_ypresp_val)
+libnsl_hidden_nolink_def (xdr_ypresp_val, GLIBC_2_0)
 
 bool_t
 xdr_ypresp_key_val (XDR *xdrs, ypresp_key_val *objp)
@@ -154,7 +155,7 @@ xdr_ypresp_key_val (XDR *xdrs, ypresp_key_val *objp)
     return FALSE;
   return xdr_keydat (xdrs, &objp->key);
 }
-libnsl_hidden_def (xdr_ypresp_key_val)
+libnsl_hidden_nolink_def (xdr_ypresp_key_val, GLIBC_2_0)
 
 bool_t
 xdr_ypresp_master (XDR *xdrs, ypresp_master *objp)
@@ -163,7 +164,7 @@ xdr_ypresp_master (XDR *xdrs, ypresp_master *objp)
     return FALSE;
   return xdr_peername (xdrs, &objp->peer);
 }
-libnsl_hidden_def (xdr_ypresp_master)
+libnsl_hidden_nolink_def (xdr_ypresp_master, GLIBC_2_0)
 
 bool_t
 xdr_ypresp_order (XDR *xdrs, ypresp_order *objp)
@@ -172,7 +173,7 @@ xdr_ypresp_order (XDR *xdrs, ypresp_order *objp)
     return FALSE;
   return xdr_u_int (xdrs, &objp->ordernum);
 }
-libnsl_hidden_def (xdr_ypresp_order)
+libnsl_hidden_nolink_def (xdr_ypresp_order, GLIBC_2_0)
 
 bool_t
 xdr_ypresp_all (XDR *xdrs, ypresp_all *objp)
@@ -190,7 +191,7 @@ xdr_ypresp_all (XDR *xdrs, ypresp_all *objp)
     }
   return TRUE;
 }
-libnsl_hidden_def (xdr_ypresp_all)
+libnsl_hidden_nolink_def (xdr_ypresp_all, GLIBC_2_0)
 
 bool_t
 xdr_ypresp_xfr (XDR *xdrs, ypresp_xfr *objp)
@@ -199,6 +200,7 @@ xdr_ypresp_xfr (XDR *xdrs, ypresp_xfr *objp)
     return FALSE;
   return xdr_ypxfrstat (xdrs, &objp->xfrstat);
 }
+libnsl_hidden_nolink_def (xdr_ypresp_xfr, GLIBC_2_0)
 
 bool_t
 xdr_ypmaplist (XDR *xdrs, ypmaplist *objp)
@@ -209,7 +211,7 @@ xdr_ypmaplist (XDR *xdrs, ypmaplist *objp)
   char **tp = (void *) &objp->next;
   return xdr_pointer (xdrs, tp, sizeof (ypmaplist), (xdrproc_t) xdr_ypmaplist);
 }
-libnsl_hidden_def (xdr_ypmaplist)
+libnsl_hidden_nolink_def (xdr_ypmaplist, GLIBC_2_0)
 
 bool_t
 xdr_ypresp_maplist (XDR *xdrs, ypresp_maplist *objp)
@@ -220,14 +222,14 @@ xdr_ypresp_maplist (XDR *xdrs, ypresp_maplist *objp)
   char **tp = (void *) &objp->maps;
   return xdr_pointer (xdrs, tp, sizeof (ypmaplist), (xdrproc_t) xdr_ypmaplist);
 }
-libnsl_hidden_def (xdr_ypresp_maplist)
+libnsl_hidden_nolink_def (xdr_ypresp_maplist, GLIBC_2_0)
 
 bool_t
 xdr_yppush_status (XDR *xdrs, yppush_status *objp)
 {
   return xdr_enum (xdrs, (enum_t *) objp);
 }
-libnsl_hidden_def (xdr_yppush_status)
+libnsl_hidden_nolink_def (xdr_yppush_status, GLIBC_2_0)
 
 bool_t
 xdr_yppushresp_xfr (XDR *xdrs, yppushresp_xfr *objp)
@@ -236,13 +238,14 @@ xdr_yppushresp_xfr (XDR *xdrs, yppushresp_xfr *objp)
     return FALSE;
   return xdr_yppush_status (xdrs, &objp->status);
 }
+libnsl_hidden_nolink_def (xdr_yppushresp_xfr, GLIBC_2_0)
 
 bool_t
 xdr_ypbind_resptype (XDR *xdrs, ypbind_resptype *objp)
 {
   return xdr_enum (xdrs, (enum_t *) objp);
 }
-libnsl_hidden_def (xdr_ypbind_resptype)
+libnsl_hidden_nolink_def (xdr_ypbind_resptype, GLIBC_2_0)
 
 bool_t
 xdr_ypbind_binding (XDR *xdrs, ypbind_binding *objp)
@@ -251,7 +254,7 @@ xdr_ypbind_binding (XDR *xdrs, ypbind_binding *objp)
     return FALSE;
   return xdr_opaque (xdrs, objp->ypbind_binding_port, 2);
 }
-libnsl_hidden_def (xdr_ypbind_binding)
+libnsl_hidden_nolink_def (xdr_ypbind_binding, GLIBC_2_0)
 
 bool_t
 xdr_ypbind_resp (XDR *xdrs, ypbind_resp *objp)
@@ -267,7 +270,7 @@ xdr_ypbind_resp (XDR *xdrs, ypbind_resp *objp)
     }
   return FALSE;
 }
-libnsl_hidden_def (xdr_ypbind_resp)
+libnsl_hidden_nolink_def (xdr_ypbind_resp, GLIBC_2_0)
 
 bool_t
 xdr_ypbind_setdom (XDR *xdrs, ypbind_setdom *objp)
@@ -278,6 +281,7 @@ xdr_ypbind_setdom (XDR *xdrs, ypbind_setdom *objp)
     return FALSE;
   return xdr_u_int (xdrs, &objp->ypsetdom_vers);
 }
+libnsl_hidden_nolink_def (xdr_ypbind_setdom, GLIBC_2_0)
 
 bool_t
 xdr_ypall(XDR *xdrs, struct ypall_callback *incallback)
@@ -322,3 +326,4 @@ xdr_ypall(XDR *xdrs, struct ypall_callback *incallback)
 	    return FALSE;
     }
 }
+/* XXX libnsl_hidden_nolink_def(xdr_ypall, GLIBC_2_2) */

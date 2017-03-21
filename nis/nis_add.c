@@ -71,4 +71,4 @@ nis_add (const_nis_name name, const nis_object *obj2)
 
   return res;
 }
-libnsl_hidden_def (nis_add)
+libnsl_hidden_nolink_def (nis_add, GLIBC_2_1)

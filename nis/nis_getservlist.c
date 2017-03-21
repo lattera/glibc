@@ -148,6 +148,7 @@ nis_getservlist (const_nis_name dir)
 
   return serv;
 }
+libnsl_hidden_nolink_def (nis_getservlist, GLIBC_2_1)
 
 void
 nis_freeservlist (nis_server **serv)
@@ -166,3 +167,4 @@ nis_freeservlist (nis_server **serv)
     }
   free (serv);
 }
+libnsl_hidden_nolink_def (nis_freeservlist, GLIBC_2_1)

@@ -90,3 +90,4 @@ nis_addmember (const_nis_name member, const_nis_name group)
   else
     return NIS_FAIL;
 }
+libnsl_hidden_nolink_def (nis_addmember, GLIBC_2_1)

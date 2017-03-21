@@ -59,19 +59,21 @@ nis_sperrno (const nis_error status)
   else
     return gettext (msgstr.str + msgidx[status]);
 }
-libnsl_hidden_def (nis_sperrno)
+libnsl_hidden_nolink_def (nis_sperrno, GLIBC_2_1)
 
 void
 nis_perror (const nis_error status, const char *label)
 {
   fprintf (stderr, "%s: %s\n", label, nis_sperrno (status));
 }
+libnsl_hidden_nolink_def (nis_perror, GLIBC_2_1)
 
 void
 nis_lerror (const nis_error status, const char *label)
 {
   syslog (LOG_ERR, "%s: %s", label, nis_sperrno (status));
 }
+libnsl_hidden_nolink_def (nis_lerror, GLIBC_2_1)
 
 char *
 nis_sperror_r (const nis_error status, const char *label,
@@ -86,7 +88,7 @@ nis_sperror_r (const nis_error status, const char *label,
 
   return buffer;
 }
-libnsl_hidden_def (nis_sperror_r)
+libnsl_hidden_nolink_def (nis_sperror_r, GLIBC_2_1)
 
 char *
 nis_sperror (const nis_error status, const char *label)
@@ -95,3 +97,4 @@ nis_sperror (const nis_error status, const char *label)
 
   return nis_sperror_r (status, label, buffer, sizeof (buffer));
 }
+libnsl_hidden_nolink_def (nis_sperror, GLIBC_2_1)

@@ -24,9 +24,8 @@ include ../Makeconfig
 
 aux			:= nis_hash
 
-ifeq ($(link-obsolete-rpc),yes)
+ifeq ($(build-obsolete-nsl),yes)
 headers			:= $(wildcard rpcsvc/*.[hx])
-endif
 
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.
@@ -35,15 +34,21 @@ databases		= proto service hosts network grp pwd rpc ethers \
 
 # Specify rules for the nss_* modules.
 services		:= nis nisplus compat
+endif
 
-extra-libs		= libnsl $(services:%=libnss_%)
+extra-libs		= libnsl
+ifeq ($(build-obsolete-nsl),yes)
+extra-libs += $(services:%=libnss_%)
+endif
 # These libraries will be built in the `others' pass rather than
 # the `lib' pass, because they depend on libc.so being built already.
 extra-libs-others	= $(extra-libs)
 
+ifeq ($(build-obsolete-nsl),yes)
 # The sources are found in the appropriate subdir.
 subdir-dirs = $(services:%=nss_%)
 vpath %.c $(subdir-dirs)
+endif
 
 libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
 		  nis_subr nis_local_names nis_free nis_file \
@@ -57,6 +62,7 @@ libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
 		  nis_findserv nis_callback nis_clone_dir nis_clone_obj\
 		  nis_clone_res nss-default
 
+ifeq ($(build-obsolete-nsl),yes)
 libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd initgroups)
 libnss_compat-inhibit-o	= $(filter-out .os,$(object-suffixes))
 
@@ -67,14 +73,17 @@ libnss_nis-inhibit-o	= $(filter-out .os,$(object-suffixes))
 libnss_nisplus-routines	:= $(addprefix nisplus-,$(databases)) nisplus-parser \
 			   nss-nisplus nisplus-initgroups
 libnss_nisplus-inhibit-o = $(filter-out .os,$(object-suffixes))
+endif
 
 include ../Rules
 
 
+ifeq ($(build-obsolete-nsl),yes)
 $(objpfx)libnss_compat.so: $(objpfx)libnsl.so$(libnsl.so-version)
 $(objpfx)libnss_nis.so: $(objpfx)libnsl.so$(libnsl.so-version) \
 			$(common-objpfx)nss/libnss_files.so
 $(objpfx)libnss_nisplus.so: $(objpfx)libnsl.so$(libnsl.so-version)
+endif
 
 libnsl-libc = $(common-objpfx)linkobj/libc.so
 # Target-specific variable setting to link objects using deprecated
@@ -87,5 +96,7 @@ $(services:%=$(objpfx)libnss_%.so) $(objpfx)libnsl.so: \
 ifeq ($(build-shared),yes)
 $(others:%=$(objpfx)%): $(objpfx)libnsl.so$(libnsl.so-version)
 else
+ifeq ($(build-obsolete-nsl),yes)
 $(others:%=$(objpfx)%): $(objpfx)libnsl.a
+endif
 endif

@@ -320,7 +320,7 @@ _xdr_nis_result (XDR *xdrs, nis_result *objp)
     }
   return res;
 }
-libnsl_hidden_def (_xdr_nis_result)
+libnsl_hidden_nolink_def (_xdr_nis_result, GLIBC_PRIVATE)
 
 bool_t
 _xdr_ns_request (XDR *xdrs, ns_request *objp)
@@ -370,7 +370,7 @@ _xdr_ib_request (XDR *xdrs, ib_request *objp)
     }
   return res;
 }
-libnsl_hidden_def (_xdr_ib_request)
+libnsl_hidden_nolink_def (_xdr_ib_request, GLIBC_PRIVATE)
 
 bool_t
 _xdr_ping_args (XDR *xdrs, ping_args *objp)
@@ -447,7 +447,7 @@ xdr_obj_p (XDR *xdrs, obj_p *objp)
   return xdr_pointer (xdrs, (char **)objp, sizeof (nis_object),
 		      (xdrproc_t)_xdr_nis_object);
 }
-libnsl_hidden_def (xdr_obj_p)
+libnsl_hidden_nolink_def (xdr_obj_p, GLIBC_2_1)
 
 bool_t
 xdr_cback_data (XDR *xdrs, cback_data *objp)
@@ -456,4 +456,4 @@ xdr_cback_data (XDR *xdrs, cback_data *objp)
 		    &objp->entries.entries_len, ~0,
 		    sizeof (obj_p), (xdrproc_t) xdr_obj_p);
 }
-libnsl_hidden_def (xdr_cback_data)
+libnsl_hidden_nolink_def (xdr_cback_data, GLIBC_2_1)

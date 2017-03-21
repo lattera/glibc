@@ -49,7 +49,7 @@ nis_local_group (void)
 
   return __nisgroup;
 }
-libnsl_hidden_def (nis_local_group)
+libnsl_hidden_nolink_def (nis_local_group, GLIBC_2_1)
 
 nis_name
 nis_local_directory (void)
@@ -75,7 +75,7 @@ nis_local_directory (void)
 
   return __nisdomainname;
 }
-libnsl_hidden_def (nis_local_directory)
+libnsl_hidden_nolink_def (nis_local_directory, GLIBC_2_1)
 
 nis_name
 nis_local_principal (void)
@@ -140,7 +140,7 @@ LOCAL entry for UID %d in directory %s not unique\n"),
     }
   return __principal;
 }
-libnsl_hidden_def (nis_local_principal)
+libnsl_hidden_nolink_def (nis_local_principal, GLIBC_2_1)
 
 nis_name
 nis_local_host (void)
@@ -174,4 +174,4 @@ nis_local_host (void)
 
   return __nishostname;
 }
-libnsl_hidden_def (nis_local_host)
+libnsl_hidden_nolink_def (nis_local_host, GLIBC_2_1)

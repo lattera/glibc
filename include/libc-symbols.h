@@ -663,6 +663,12 @@ for linking")
 # define libnsl_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libnsl_hidden_tls_proto(name, attrs...) \
   hidden_tls_proto (name, ##attrs)
+# ifdef LINK_OBSOLETE_NSL
+   /* libnsl_hidden_nolink should only get used in libnsl code.  */
+#  define libnsl_hidden_nolink_def(name, version) libnsl_hidden_def (name)
+# else
+#  define libnsl_hidden_nolink_def(name, version) hidden_nolink (name, libnsl, version)
+# endif
 # define libnsl_hidden_def(name) hidden_def (name)
 # define libnsl_hidden_weak(name) hidden_weak (name)
 # define libnsl_hidden_ver(local, name) hidden_ver (local, name)

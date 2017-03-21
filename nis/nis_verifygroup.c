@@ -48,3 +48,4 @@ nis_verifygroup (const_nis_name group)
   else
     return NIS_FAIL;
 }
+libnsl_hidden_nolink_def (nis_verifygroup, GLIBC_2_1)

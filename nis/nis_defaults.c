@@ -375,7 +375,7 @@ __nis_default_owner (char *defaults)
 
   return strdup (default_owner ?: nis_local_principal ());
 }
-libnsl_hidden_def (__nis_default_owner)
+libnsl_hidden_nolink_def (__nis_default_owner, GLIBC_2_1)
 
 
 nis_name
@@ -402,7 +402,7 @@ __nis_default_group (char *defaults)
 
   return strdup (default_group ?: nis_local_group ());
 }
-libnsl_hidden_def (__nis_default_group)
+libnsl_hidden_nolink_def (__nis_default_group, GLIBC_2_1)
 
 
 uint32_t
@@ -452,4 +452,4 @@ __nis_default_access (char *param, unsigned int defaults)
 
   return result;
 }
-libnsl_hidden_def (__nis_default_access)
+libnsl_hidden_nolink_def (__nis_default_access, GLIBC_2_1)

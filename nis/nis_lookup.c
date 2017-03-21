@@ -215,4 +215,4 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 
   return res;
 }
-libnsl_hidden_def (nis_lookup)
+libnsl_hidden_nolink_def (nis_lookup, GLIBC_2_1)

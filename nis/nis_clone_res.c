@@ -71,3 +71,4 @@ nis_clone_result (const nis_result *src, nis_result *dest)
 
   return res;
 }
+libnsl_hidden_nolink_def (nis_clone_result, GLIBC_2_1)
