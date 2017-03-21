@@ -20,17 +20,17 @@
 #define _ARGZ_H	1
 
 #include <features.h>
-
-#define __need_error_t
 #include <errno.h>
 #include <string.h>		/* Need size_t, and strchr is called below.  */
 
+__BEGIN_DECLS
+
+/* error_t may or may not be available from errno.h, depending on the
+   operating system.  */
 #ifndef __error_t_defined
+# define __error_t_defined 1
 typedef int error_t;
 #endif
-
-
-__BEGIN_DECLS
 
 /* Make a '\0' separated arg vector from a unix argv vector, returning it in
    ARGZ, and the total length in LEN.  If a memory allocation error occurs,

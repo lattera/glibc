@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2017 Free Software Foundation, Inc.
+/* Error constants.  Generic version.
+   Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,20 +16,35 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This file defines the `errno' constants.  */
+/* This file defines the errno constants.  */
 
-#if !defined __Emath_defined && (defined _ERRNO_H || defined __need_Emath)
-#undef	__need_Emath
-#define	__Emath_defined	1
+#ifndef _BITS_ERRNO_H
+#define _BITS_ERRNO_H 1
 
-# define EDOM	XXX	<--- fill in what is actually needed
-# define EILSEQ	XXX	<--- fill in what is actually needed
-# define ERANGE	XXX	<--- fill in what is actually needed
+#if !defined _ERRNO_H
+# error "Never include <bits/errno.h> directly; use <errno.h> instead."
 #endif
 
-#ifdef	_ERRNO_H
-# error "Define here all the missing error messages for the port.  These"
-# error "must match the numbers of the kernel."
-# define Exxxx	XXX
-...
-#endif
+#error "Generic bits/errno.h included -- port is incomplete."
+
+/* Authors of new ports of the GNU C Library must override this file
+   with their own bits/errno.h in an appropriate subdirectory of
+   sysdeps/.  Its function is to define all of the error constants
+   from C2011 and POSIX.1-2008, with values appropriate to the
+   operating system, and any additional OS-specific error constants.
+
+   C2011 requires all error constants to be object-like macros that
+   expand to "integer constant expressions with type int, positive
+   values, and suitable for use in #if directives".  Moreover, all of
+   their names must begin with a capital E, followed immediately by
+   either another capital letter, or a digit.  It is OK to define
+   macros that are not error constants, but only in the implementation
+   namespace.
+
+   errno.h is sometimes included from assembly language.  Therefore,
+   when __ASSEMBLER__ is defined, bits/errno.h may only define macros;
+   it may not make any other kind of C declaration or definition.
+   Also, the error constants should, if at all possible, expand to
+   simple decimal or hexadecimal numbers.  */
+
+#endif /* bits/errno.h.  */

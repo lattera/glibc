@@ -16,17 +16,22 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef _ERRNO_H
+#ifndef _BITS_ERRNO_H
+#define _BITS_ERRNO_H 1
 
-# undef EDOM
-# undef EILSEQ
-# undef ERANGE
+#if !defined _ERRNO_H
+# error "Never include <bits/errno.h> directly; use <errno.h> instead."
+#endif
+
 # include <linux/errno.h>
 
-/* Linux also has no ECANCELED error code.  Since it is not used here
-   we define it to an invalid value.  */
+/* Older Linux headers do not define these constants.  */
+# ifndef ENOTSUP
+#  define ENOTSUP		EOPNOTSUPP
+# endif
+
 # ifndef ECANCELED
-#  define ECANCELED	ECANCELLED
+#  define ECANCELED		253
 # endif
 
 # ifndef EOWNERDEAD
@@ -45,22 +50,4 @@
 #  define EHWPOISON		257
 # endif
 
-# ifndef __ASSEMBLER__
-/* Function to get address of global `errno' variable.  */
-extern int *__errno_location (void) __THROW __attribute__ ((__const__));
-
-#  if !defined _LIBC || defined _LIBC_REENTRANT
-/* When using threads, errno is a per-thread value.  */
-#   define errno (*__errno_location ())
-#  endif
-# endif /* !__ASSEMBLER__ */
-#endif /* _ERRNO_H */
-
-#if !defined _ERRNO_H && defined __need_Emath
-/* This is ugly but the kernel header is not clean enough.  We must
-   define only the values EDOM, EILSEQ and ERANGE in case __need_Emath is
-   defined.  */
-# define EDOM	33	/* Math argument out of domain of function.  */
-# define EILSEQ	47	/* Illegal byte sequence.  */
-# define ERANGE	34	/* Math result not representable.  */
-#endif /* !_ERRNO_H && __need_Emath */
+#endif /* bits/errno.h.  */

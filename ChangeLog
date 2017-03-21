@@ -1,5 +1,40 @@
 2017-06-14  Zack Weinberg  <zackw@panix.com>
 
+	* stdlib/errno.h: Remove __need_Emath and __need_error_t logic.
+	Reorganize file.  Declare errno here.  When __ASSEMBLER__ is
+	defined, don't declare anything other than the E-constants.
+
+	* include/errno.h: Change conditional for exposing internal
+	declarations to (not _ISOMAC and not __ASSEMBLER__).
+	* bits/errno.h: Remove logic for __need_Emath.  Document
+	requirements for a port-specific bits/errno.h.
+
+	* sysdeps/unix/sysv/linux/bits/errno.h
+	* sysdeps/unix/sysv/linux/alpha/bits/errno.h
+	* sysdeps/unix/sysv/linux/hppa/bits/errno.h
+	* sysdeps/unix/sysv/linux/mips/bits/errno.h
+	* sysdeps/unix/sysv/linux/sparc/bits/errno.h:
+	Add multiple-include guard and check against improper inclusion.
+	Remove __need_Emath logic.  Don't declare errno here.  Ensure all
+	constants are defined as simple integer literals.  Consistent
+	formatting.
+	* sysdeps/mach/hurd/errnos.awk: Likewise.  Only define error_t and
+	enum __error_t_codes if __ASSEMBLER__ is not defined.
+	* sysdeps/mach/hurd/bits/errno.h: Regenerate.
+
+	* argp/argp.h, string/argz.h: Don't define __need_error_t before
+	including errno.h.
+	* sysdeps/i386/i686/fpu/multiarch/s_cosf-sse2.S
+	* sysdeps/i386/i686/fpu/multiarch/s_sincosf-sse2.S
+	* sysdeps/i386/i686/fpu/multiarch/s_sinf-sse2.S
+	* sysdeps/x86_64/fpu/s_cosf.S
+	* sysdeps/x86_64/fpu/s_sincosf.S
+	* sysdeps/x86_64/fpu/s_sinf.S:
+	Just include errno.h; don't define __need_Emath or include
+	bits/errno.h directly.
+
+2017-06-14  Zack Weinberg  <zackw@panix.com>
+
 	* bits/uio_lim.h, sysdeps/unix/sysv/linux/bits/uio_lim.h
 	* bits/uio-ext.h, sysdeps/unix/sysv/linux/bits/uio-ext.h: New file.
 	* bits/uio.h, sysdeps/unix/sysv/linux/bits/uio.h: Delete file.

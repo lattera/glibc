@@ -17,8 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#define __need_Emath
-#include <bits/errno.h>
+#include <errno.h>
 
 /* Short algorithm description:
  *
