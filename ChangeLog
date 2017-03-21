@@ -1,3 +1,7 @@
+2017-03-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* INSTALL: Regenerated.
+
 2017-03-21  Thorsten Kukuk  <kukuk@suse.com>
 
 	* config.h.in: Add LINK_OBSOLETE_NSL.
