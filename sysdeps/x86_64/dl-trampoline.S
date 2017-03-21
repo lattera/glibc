@@ -87,11 +87,9 @@
 #endif
 #define VEC(i)			zmm##i
 #define _dl_runtime_resolve	_dl_runtime_resolve_avx512
-#define _dl_runtime_resolve_opt	_dl_runtime_resolve_avx512_opt
 #define _dl_runtime_profile	_dl_runtime_profile_avx512
 #include "dl-trampoline.h"
 #undef _dl_runtime_resolve
-#undef _dl_runtime_resolve_opt
 #undef _dl_runtime_profile
 #undef VEC
 #undef VMOV
@@ -145,4 +143,5 @@
 # define VMOV			vmovdqu
 #endif
 #define _dl_runtime_resolve	_dl_runtime_resolve_sse_vex
+#define _dl_runtime_resolve_opt	_dl_runtime_resolve_avx512_opt
 #include "dl-trampoline.h"

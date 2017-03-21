@@ -1,3 +1,12 @@
+2017-03-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21258]
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_resolve_opt):
+	Define only if _dl_runtime_resolve is defined to
+	_dl_runtime_resolve_sse_vex.
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve_opt):
+	Fallthrough to _dl_runtime_resolve_sse_vex.
+
 2017-03-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* INSTALL: Regenerated.
