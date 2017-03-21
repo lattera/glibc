@@ -1,3 +1,8 @@
+2017-03-21  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* malloc/tst-interpose-aux.c (check_for_allocations):
+	Move compiler barrier before free.
+
 2017-03-20  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21279]
