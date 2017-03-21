@@ -113,11 +113,11 @@ check_for_allocations (void)
     {
       /* Make sure that malloc is called at least once from libc.  */
       void *volatile ptr = strdup ("ptr");
-      free (ptr);
       /* Compiler barrier.  The strdup function calls malloc, which
          updates allocation_index, but strdup is marked __THROW, so
          the compiler could optimize away the reload.  */
       __asm__ volatile ("" ::: "memory");
+      free (ptr);
       /* If the allocation count is still zero, it means we did not
          interpose malloc successfully.  */
       if (allocation_index == 0)
