@@ -1,4 +1,5 @@
-/* Copyright (C) 1994-2017 Free Software Foundation, Inc.
+/* Operating system-specific extensions to sys/uio.h - generic version.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,25 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_STDIO_LIM_H
-#define _BITS_STDIO_LIM_H 1
+#ifndef _BITS_UIO_EXT_H
+#define _BITS_UIO_EXT_H 1
 
-#ifndef _STDIO_H
-# error "Never include <bits/stdio_lim.h> directly; use <stdio.h> instead."
+#ifndef _SYS_UIO_H
+# error "Never include <bits/uio-ext.h> directly; use <sys/uio.h> instead."
 #endif
 
-#define L_tmpnam @L_tmpnam@
-#define TMP_MAX @TMP_MAX@
-#define FILENAME_MAX @FILENAME_MAX@
+/* This operating system does not extend sys/uio.h.  */
 
-#ifdef __USE_POSIX
-# define L_ctermid @L_ctermid@
-# if !defined __USE_XOPEN2K || defined __USE_GNU
-#  define L_cuserid @L_cuserid@
-# endif
-#endif
-
-#undef  FOPEN_MAX
-#define FOPEN_MAX @FOPEN_MAX@
-
-#endif /* bits/stdio_lim.h */
+#endif /* sys/uio_ext.h */

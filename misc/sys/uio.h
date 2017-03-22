@@ -19,14 +19,16 @@
 #define _SYS_UIO_H	1
 
 #include <features.h>
-
 #include <sys/types.h>
+#include <bits/types/struct_iovec.h>
+#include <bits/uio_lim.h>
+#ifdef __IOV_MAX
+# define UIO_MAXIOV __IOV_MAX
+#else
+# undef UIO_MAXIOV
+#endif
 
 __BEGIN_DECLS
-
-/* This file defines `struct iovec'.  */
-#include <bits/uio.h>
-
 
 /* Read data from file descriptor FD, and put the result in the
    buffers described by IOVEC, which is a vector of COUNT 'struct iovec's.
@@ -159,5 +161,11 @@ extern ssize_t pwritev64v2 (int __fd, const struct iovec *__iodev,
 #endif /* Use GNU.  */
 
 __END_DECLS
+
+/* Some operating systems provide system-specific extensions to this
+   header.  */
+#ifdef __USE_GNU
+# include <bits/uio-ext.h>
+#endif
 
 #endif /* sys/uio.h */

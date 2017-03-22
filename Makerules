@@ -1521,8 +1521,7 @@ $(stdio_lim:h=st): $(..)stdio-common/stdio_lim.h.in $(..)Rules \
 		   $(common-objpfx)config.make
 	$(make-target-directory)
 	{ echo '#include "$(..)posix/bits/posix1_lim.h"';		\
-	  echo '#define _LIBC 1';					\
-	  echo '#include "$(..)misc/sys/uio.h"'; } |			\
+	} |								\
 	$(CC) -E -dM -MD -MP -MF $(@:st=dT) -MT '$(@:st=h) $(@:st=d)' 	\
 	      $(CPPUNDEFS) $(+includes) -xc - -o $(@:st=hT)
 	sed $(sed-remove-objpfx) $(sed-remove-dotdot)			\
@@ -1530,21 +1529,14 @@ $(stdio_lim:h=st): $(..)stdio-common/stdio_lim.h.in $(..)Rules \
 	mv -f $(@:st=dt) $(@:st=d)
 	fopen_max=`sed -n 's/^#define OPEN_MAX //1p' $(@:st=hT)`; 	\
 	filename_max=`sed -n 's/^#define PATH_MAX //1p' $(@:st=hT)`;	\
-	iov_max=`sed -n 's/^#define UIO_MAXIOV //p' $(@:st=hT)`;	\
 	fopen_max=$${fopen_max:-16};					\
 	filename_max=$${filename_max:-1024};				\
-	if [ -z "$$iov_max" ]; then					\
-	  define_iov_max="# undef IOV_MAX";				\
-	else								\
-	  define_iov_max="# define IOV_MAX $$iov_max";			\
-	fi;								\
 	sed -e "s/@FOPEN_MAX@/$$fopen_max/"				\
 	    -e "s/@FILENAME_MAX@/$$filename_max/"			\
 	    -e "s/@L_tmpnam@/$(L_tmpnam)/"				\
 	    -e "s/@TMP_MAX@/$(TMP_MAX)/"				\
 	    -e "s/@L_ctermid@/$(L_ctermid)/"				\
 	    -e "s/@L_cuserid@/$(L_cuserid)/"				\
-	    -e "s/@define_IOV_MAX@/$$define_iov_max/"			\
 	    $< > $(@:st=h.new)
 	$(move-if-change) $(@:st=h.new) $(@:st=h)
 # Remove these last so that they can be examined if something went wrong.

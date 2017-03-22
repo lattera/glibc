@@ -1,3 +1,26 @@
+2017-06-14  Zack Weinberg  <zackw@panix.com>
+
+	* bits/uio_lim.h, sysdeps/unix/sysv/linux/bits/uio_lim.h
+	* bits/uio-ext.h, sysdeps/unix/sysv/linux/bits/uio-ext.h: New file.
+	* bits/uio.h, sysdeps/unix/sysv/linux/bits/uio.h: Delete file.
+
+	* include/bits/xopen_lim.h: Use bits/uio_lim.h to get the value
+	for IOV_MAX.
+	* misc/Makefile: Install bits/uio-ext.h and bits/uio_lim.h.
+	Don't install bits/uio.h.
+	* misc/sys/uio.h: Don't include bits/uio.h.  Do include
+	bits/types/struct_iovec.h and bits/uio_lim.h.  Set UIO_MAXIOV
+	based on __IOV_MAX. Under __USE_GNU, also include bits/uio-ext.h.
+
+	* stdio-common/stdio_lim.h.in: Remove logic for __need_FOPEN_MAX
+	and __need_IOV_MAX.  Don't define IOV_MAX at all.
+	* Makerules (stdio_lim.h): Remove logic for setting IOV_MAX.
+
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h:
+	Include bits/types/struct_iovec.h, not bits/uio.h.
+	Use __ssize_t, not ssize_t, in function prototypes.
+	Don't use hard TAB for double space after period in comments.
+
 2017-06-14  Alan Modra  <amodra@gmail.com>
 
 	* elf/elf.h (PPC64_OPT_LOCALENTRY): Define.

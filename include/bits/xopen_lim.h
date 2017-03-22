@@ -29,9 +29,6 @@
 #ifndef _XOPEN_LIM_H
 #define _XOPEN_LIM_H	1
 
-#define __need_IOV_MAX
-#include <bits/stdio_lim.h>
-
 /* We do not provide fixed values for
 
    ARG_MAX	Maximum length of argument to the `exec' function
@@ -60,10 +57,16 @@
 */
 
 
-/* Maximum number of `iovec' structures that one process has available
-   for use with `readv' or writev'.  */
+/* Maximum number of `iovec' structures that may be used in a single call
+   to `readv', `writev', etc.  */
 #define	_XOPEN_IOV_MAX	_POSIX_UIO_MAXIOV
 
+#include <bits/uio_lim.h>
+#ifdef __IOV_MAX
+# define IOV_MAX __IOV_MAX
+#else
+# undef IOV_MAX
+#endif
 
 /* Maximum value of `digit' in calls to the `printf' and `scanf'
    functions.  We have no limit, so return a reasonable value.  */

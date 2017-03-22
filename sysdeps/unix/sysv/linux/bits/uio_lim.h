@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-2017 Free Software Foundation, Inc.
+/* Implementation limits related to sys/uio.h - Linux version.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,9 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_UIO_H
-# error "Never include <bits/uio.h> directly; use <sys/uio.h> instead."
+#ifndef _BITS_UIO_LIM_H
+#define _BITS_UIO_LIM_H 1
+
+/* Maximum length of the 'struct iovec' array in a single call to
+   readv or writev.
+
+   This macro has different values in different kernel versions.  The
+   latest versions of the kernel use 1024 and this is good choice.  Since
+   the C library implementation of readv/writev is able to emulate the
+   functionality even if the currently running kernel does not support
+   this large value the readv/writev call will not fail because of this.  */
+#define __IOV_MAX	1024
+
 #endif
-
-
-#include <bits/types/struct_iovec.h>

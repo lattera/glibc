@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-2017 Free Software Foundation, Inc.
+/* Operating system-specific extensions to sys/uio.h - Linux version.
+   Copyright (C) 1996-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,38 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if !defined _SYS_UIO_H && !defined _FCNTL_H
-# error "Never include <bits/uio.h> directly; use <sys/uio.h> instead."
+#ifndef _BITS_UIO_EXT_H
+#define _BITS_UIO_EXT_H 1
+
+#ifndef _SYS_UIO_H
+# error "Never include <bits/uio-ext.h> directly; use <sys/uio.h> instead."
 #endif
-
-#ifndef _BITS_UIO_H
-#define _BITS_UIO_H	1
-
-#include <sys/types.h>
-
-
-/* We should normally use the Linux kernel header file to define this
-   type and macros but this calls for trouble because of the header
-   includes other kernel headers.  */
-
-/* Size of object which can be written atomically.
-
-   This macro has different values in different kernel versions.  The
-   latest versions of the kernel use 1024 and this is good choice.  Since
-   the C library implementation of readv/writev is able to emulate the
-   functionality even if the currently running kernel does not support
-   this large value the readv/writev call will not fail because of this.  */
-#define UIO_MAXIOV	1024
-
-
-#include <bits/types/struct_iovec.h>
-
-#endif
-
-
-#ifdef __USE_GNU
-# if defined _SYS_UIO_H && !defined _BITS_UIO_H_FOR_SYS_UIO_H
-#  define _BITS_UIO_H_FOR_SYS_UIO_H 1
 
 __BEGIN_DECLS
 
@@ -66,13 +41,12 @@ extern ssize_t process_vm_writev (pid_t __pid, const struct iovec *__lvec,
 				  unsigned long int __flags)
   __THROW;
 
-__END_DECLS
-
-# endif
 
 /* Flags for preadv2/pwritev2: */
 #define RWF_HIPRI	0x00000001 /* High priority request.  */
 #define RWF_DSYNC	0x00000002 /* per-IO O_DSYNC.  */
 #define RWF_SYNC	0x00000004 /* per-IO O_SYNC.  */
 
-#endif
+__END_DECLS
+
+#endif /* bits/uio-ext.h */
