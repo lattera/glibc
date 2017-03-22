@@ -37,7 +37,7 @@ run_test () {
     set -e
     echo "  exit status: $status"
     if test "$output" != "$expected_output" ; then
-	echo "error: unexpected ouput: $output"
+	echo "error: unexpected output: $output"
 	exit 1
     fi
     if test "$status" -ne "$expected_status" ; then
@@ -52,9 +52,9 @@ different_status () {
     run_test 1 "error: 1 test failures" $direct --status=1
     run_test 2 "error: 1 test failures" $direct --status=2
     run_test 1 "error: 1 test failures" $direct --status=77
-    run_test 2 "error: tst-support_record_failure.c:108: not true: false
+    run_test 2 "error: tst-support_record_failure.c:109: not true: false
 error: 1 test failures" $direct --test-verify
-    run_test 2 "error: tst-support_record_failure.c:108: not true: false
+    run_test 2 "error: tst-support_record_failure.c:109: not true: false
 info: execution passed failed TEST_VERIFY
 error: 1 test failures" $direct --test-verify --verbose
 }
@@ -62,8 +62,8 @@ error: 1 test failures" $direct --test-verify --verbose
 different_status
 different_status --direct
 
-run_test 1 "error: tst-support_record_failure.c:115: not true: false
+run_test 1 "error: tst-support_record_failure.c:116: not true: false
 error: 1 test failures" --test-verify-exit
 # --direct does not print the summary error message if exit is called.
-run_test 1 "error: tst-support_record_failure.c:115: not true: false" \
+run_test 1 "error: tst-support_record_failure.c:116: not true: false" \
 	 --direct --test-verify-exit

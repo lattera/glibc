@@ -1,3 +1,12 @@
+2017-03-22  Zack Weinberg  <zackw@panix.com>
+
+	* stdio-common/bug25.c: Include stdlib.h.
+	* support/tst-support_format_dns_packet.c: Include stdio.h,
+	stdlib.h, and string.h.
+	* support/tst-support_record_failure.c: Include string.h.
+	* support/tst-support_record_failure-2.sh: Adjust line number
+	expectations and correct a typo in an error message.
+
 2017-03-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21258]

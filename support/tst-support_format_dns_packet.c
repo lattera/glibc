@@ -20,6 +20,10 @@
 #include <support/format_nss.h>
 #include <support/run_diff.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 static void
 check_packet (const void *buffer, size_t length,
               const char *name, const char *expected)
