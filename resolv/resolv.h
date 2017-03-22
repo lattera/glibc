@@ -50,92 +50,30 @@
  */
 
 #ifndef _RESOLV_H_
+#define _RESOLV_H_
 
-/* These headers are needed for types used in the `struct res_state'
-   declaration.  */
+#include <sys/cdefs.h>
+#include <sys/param.h>
 #include <sys/types.h>
+#include <stdio.h>
 #include <netinet/in.h>
-
-#ifndef __need_res_state
-# define _RESOLV_H_
-
-# include <sys/param.h>
-# include <sys/cdefs.h>
-# include <stdio.h>
-# include <arpa/nameser.h>
-#endif
-
-#ifndef __res_state_defined
-# define __res_state_defined
+#include <arpa/nameser.h>
+#include <bits/types/res_state.h>
 
 /*
  * Global defines and variables for resolver stub.
  */
-# define MAXNS			3	/* max # name servers we'll track */
-# define MAXDFLSRCH		3	/* # default domain levels to try */
-# define MAXDNSRCH		6	/* max # domains in search path */
-# define LOCALDOMAINPARTS	2	/* min levels in name that is "local" */
+#define LOCALDOMAINPARTS	2	/* min levels in name that is "local" */
 
-# define RES_TIMEOUT		5	/* min. seconds between retries */
-# define MAXRESOLVSORT		10	/* number of net to sort on */
-# define RES_MAXNDOTS		15	/* should reflect bit field size */
-# define RES_MAXRETRANS		30	/* only for resolv.conf/RES_OPTIONS */
-# define RES_MAXRETRY		5	/* only for resolv.conf/RES_OPTIONS */
-# define RES_DFLRETRY		2	/* Default #/tries. */
-# define RES_MAXTIME		65535	/* Infinity, in milliseconds. */
+#define RES_TIMEOUT		5	/* min. seconds between retries */
+#define RES_MAXNDOTS		15	/* should reflect bit field size */
+#define RES_MAXRETRANS		30	/* only for resolv.conf/RES_OPTIONS */
+#define RES_MAXRETRY		5	/* only for resolv.conf/RES_OPTIONS */
+#define RES_DFLRETRY		2	/* Default #/tries. */
+#define RES_MAXTIME		65535	/* Infinity, in milliseconds. */
 
-struct __res_state {
-	int	retrans;		/* retransmition time interval */
-	int	retry;			/* number of times to retransmit */
-	unsigned long options;		/* option flags - see below. */
-	int	nscount;		/* number of name servers */
-	struct sockaddr_in
-		nsaddr_list[MAXNS];	/* address of name server */
-# define nsaddr	nsaddr_list[0]		/* for backward compatibility */
-	unsigned short id;		/* current message id */
-	/* 2 byte hole here.  */
-	char	*dnsrch[MAXDNSRCH+1];	/* components of domain to search */
-	char	defdname[256];		/* default domain (deprecated) */
-	unsigned long pfcode;		/* RES_PRF_ flags - see below. */
-	unsigned ndots:4;		/* threshold for initial abs. query */
-	unsigned nsort:4;		/* number of elements in sort_list[] */
-	unsigned ipv6_unavail:1;	/* connecting to IPv6 server failed */
-	unsigned unused:23;
-	struct {
-		struct in_addr	addr;
-		uint32_t	mask;
-	} sort_list[MAXRESOLVSORT];
-	/* 4 byte hole here on 64-bit architectures.  */
-	void * __glibc_unused_qhook;
-	void * __glibc_unused_rhook;
-	int	res_h_errno;		/* last one set for this context */
-	int	_vcsock;		/* PRIVATE: for res_send VC i/o */
-	unsigned int _flags;		/* PRIVATE: see below */
-	/* 4 byte hole here on 64-bit architectures.  */
-	union {
-		char	pad[52];	/* On an i386 this means 512b total. */
-		struct {
-			uint16_t		nscount;
-			uint16_t		nsmap[MAXNS];
-			int			nssocks[MAXNS];
-			uint16_t		nscount6;
-			uint16_t		nsinit;
-			struct sockaddr_in6	*nsaddrs[MAXNS];
-#ifdef _LIBC
-			unsigned long long int	initstamp
-			  __attribute__((packed));
-#else
-			unsigned int		_initstamp[2];
-#endif
-		} _ext;
-	} _u;
-};
+#define nsaddr	nsaddr_list[0]		/* for backward compatibility */
 
-typedef struct __res_state *res_state;
-# undef __need_res_state
-#endif
-
-#ifdef _RESOLV_H_
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
  * It can change every day so the right thing to do with it is use it
@@ -361,7 +299,7 @@ int		res_nmkquery (res_state, int, const char *, int, int,
 int		res_nsend (res_state, const unsigned char *, int,
 			   unsigned char *, int) __THROW;
 void		res_nclose (res_state) __THROW;
+
 __END_DECLS
-#endif
 
 #endif /* !_RESOLV_H_ */

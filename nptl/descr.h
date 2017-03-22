@@ -25,16 +25,14 @@
 #include <stdbool.h>
 #include <sys/types.h>
 #include <hp-timing.h>
-#define __need_list_t
-#include <list.h>
+#include <list_t.h>
 #include <lowlevellock.h>
 #include <pthreaddef.h>
 #include <dl-sysdep.h>
 #include "../nptl_db/thread_db.h"
 #include <tls.h>
 #include <unwind.h>
-#define __need_res_state
-#include <resolv.h>
+#include <bits/types/res_state.h>
 #include <kernel-features.h>
 
 #ifndef TCB_ALIGNMENT

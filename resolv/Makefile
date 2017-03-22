@@ -22,7 +22,7 @@ subdir	:= resolv
 
 include ../Makeconfig
 
-headers	:= resolv.h \
+headers	:= resolv.h bits/types/res_state.h \
 	   netdb.h bits/netdb.h \
 	   arpa/nameser.h arpa/nameser_compat.h \
 	   sys/bitypes.h

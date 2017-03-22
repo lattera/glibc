@@ -1,3 +1,17 @@
+2017-05-20  Zack Weinberg  <zackw@panix.com>
+
+	* resolv/resolv.h: Remove __need_res_state logic.
+	Move definition of res_state and related constants to ...
+	* resolv/bits/types/res_state.h: ...this new file.
+	* resolv/Makefile: Install bits/types/res_state.h.
+	* include/bits/types/res_state.h: New wrapper.
+	* include/list.h: Remove __need_list_t logic.
+	Move definition of list_t to ...
+	* include/list_t.h: ...this new file.
+
+	* nptl/descr.h: Include list_t.h and bits/types/res_state.h
+	instead of list.h and resolv.h.
+
 2017-05-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/rawmemchr.S (L(return_null)): Removed.
