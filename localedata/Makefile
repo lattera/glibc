@@ -37,7 +37,7 @@ test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch tst-trans \
 	     tst-ctype tst-langinfo tst-langinfo-static tst-numeric
 test-input := de_DE.ISO-8859-1 en_US.ISO-8859-1 da_DK.ISO-8859-1 \
 	      hr_HR.ISO-8859-2 sv_SE.ISO-8859-1 tr_TR.UTF-8 fr_FR.UTF-8 \
-	      si_LK.UTF-8 uk_UA.UTF-8
+	      si_LK.UTF-8 uk_UA.UTF-8 hu_HU.UTF-8
 test-input-data = $(addsuffix .in, $(basename $(test-input)))
 test-output := $(foreach s, .out .xout, \
 			 $(addsuffix $s, $(basename $(test-input))))
@@ -106,7 +106,7 @@ LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   hr_HR.ISO-8859-2 sv_SE.ISO-8859-1 ja_JP.SJIS fr_FR.ISO-8859-1 \
 	   nb_NO.ISO-8859-1 nn_NO.ISO-8859-1 tr_TR.UTF-8 cs_CZ.UTF-8 \
 	   zh_TW.EUC-TW fa_IR.UTF-8 fr_FR.UTF-8 ja_JP.UTF-8 si_LK.UTF-8 \
-	   tr_TR.ISO-8859-9 en_GB.UTF-8 uk_UA.UTF-8
+	   tr_TR.ISO-8859-9 en_GB.UTF-8 uk_UA.UTF-8 hu_HU.UTF-8
 include ../gen-locales.mk
 endif
 

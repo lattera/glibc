@@ -37,6 +37,10 @@ Version 2.26
   headers, and the NIS(+) name service modules, to be built and
   installed.  This option may be removed in a future release.
 
+* Extensive new collation tests for Hungarian locales based on
+  "The Rules of Hungarian Orthography, 12th edition" and the work of
+  Egmont Koblinger (Bug 18934).
+
 Security related changes:
 
   [Add security related changes here]

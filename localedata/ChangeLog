@@ -1,3 +1,10 @@
+2017-03-28  Egmont Koblinger  <egmont@gmail.com>
+
+	[BZ #18934]
+	* locales/hu_HU: Fix multiple collate bugs.
+	* hu_HU.in: New file.
+	* Makefile (test-input): Add hu_HU.UTF-8.
+
 2017-02-20  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #20313]
