@@ -1,3 +1,8 @@
+2017-03-23  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/Makefile (string-benchset): Add memcpy-random.
+	* benchtests/bench-memcpy-random.c: New file.
+
 2017-03-23  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* stdio-common/printf.h (register_printf_modifier): Change the
