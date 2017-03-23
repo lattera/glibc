@@ -31,7 +31,7 @@
 #include <fcntl.h>
 
 
-static int
+int
 do_test (void)
 {
   int status;
@@ -81,5 +81,4 @@ do_test (void)
   return status;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

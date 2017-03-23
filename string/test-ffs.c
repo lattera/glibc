@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 
-static int
+int
 do_test (void)
 {
   int failures = 0;
@@ -62,5 +62,4 @@ do_test (void)
   return failures;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

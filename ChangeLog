@@ -1,3 +1,56 @@
+2017-03-23  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
+
+	* string/test-string.h (TEST_FUNCTION): Use test_main instead of
+	test_main ().
+	(CMDLINE_PROCESS): Use function instead of defined macro.
+	* debug/test-strcpy_chk.c: Import support/test-driver.c and also
+	<suppport/support.h> to use set_fortify_handler().
+	* string/bug-envz1.c: Import support/test-driver.c instead of
+	test-skeleton.c.
+	* string/bug-strcoll2.c: Likewise.
+	* string/bug-strtok1.c: Likewise.
+	* string/stratcliff.c: Likewise.
+	* string/test-ffs.c: Likewise.
+	* string/test-memccpy.c: Likewise.
+	* string/test-memchr.c: Likewise.
+	* string/test-memcmp.c: Likewise.
+	* string/test-memcpy.c: Likewise.
+	* string/test-memmem.c: Likewise.
+	* string/test-memmove.c: Likewise.
+	* string/test-memrchr.c: Likewise.
+	* string/test-memset.c: Likewise.
+	* string/test-rawmemchr.c: Likewise.
+	* string/test-strcasecmp.c: Likewise.
+	* string/test-strcasestr.c: Likewise.
+	* string/test-strcat.c: Likewise.
+	* string/test-strchr.c: Likewise.
+	* string/test-strcmp.c: Likewise.
+	* string/test-strcpy.c: Likewise.
+	* string/test-string.h: Likewise.
+	* string/test-strlen.c: Likewise.
+	* string/test-strncasecmp.c: Likewise.
+	* string/test-strncat.c: Likewise.
+	* string/test-strncmp.c: Likewise.
+	* string/test-strncpy.c: Likewise.
+	* string/test-strnlen.c: Likewise.
+	* string/test-strpbrk.c: Likewise.
+	* string/test-strrchr.c: Likewise.
+	* string/test-strspn.c: Likewise.
+	* string/test-strstr.c: Likewise.
+	* string/tst-bswap.c: Likewise.
+	* string/tst-cmp.c: Likewise.
+	* string/tst-endian.c: Likewise.
+	* string/tst-inlcall.c: Likewise.
+	* string/tst-strcoll-overflow.c: Likewise.
+	* string/tst-strfry.c: Likewise.
+	* string/tst-strlen.c: Likewise.
+	* string/tst-strtok.c: Likewise.
+	* string/tst-strtok_r.c: Likewise.
+	* string/tst-strxfrm.c: Likewise.
+	* string/tst-strxfrm2.c: Likewise.
+	* string/tst-svc.c: Likewise.
+	* string/tst-svc2.c: Likewise.
+
 2017-03-22  Zack Weinberg  <zackw@panix.com>
 
 	* stdio-common/bug25.c: Include stdlib.h.

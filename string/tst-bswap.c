@@ -21,7 +21,7 @@
 
 extern unsigned long long int wash (unsigned long long int a);
 
-static int
+int
 do_test (void)
 {
   int result = 0;
@@ -72,5 +72,4 @@ wash (unsigned long long int a)
   return a + 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

@@ -35,4 +35,4 @@ test_main (void)
   return strcmp (tok, "udf") != 0;
 }
 
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

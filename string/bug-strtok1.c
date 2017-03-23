@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-static int
+int
 do_test (void)
 {
   const char str[] = "axaaba";
@@ -41,5 +41,4 @@ do_test (void)
   return result;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

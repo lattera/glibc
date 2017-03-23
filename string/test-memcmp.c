@@ -521,4 +521,5 @@ test_main (void)
   do_random_tests ();
   return ret;
 }
-#include "../test-skeleton.c"
+
+#include <support/test-driver.c>

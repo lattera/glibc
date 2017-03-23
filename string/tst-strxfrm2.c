@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-static int
+int
 do_test (void)
 {
   static const char test_locale[] = "de_DE.UTF-8";
@@ -81,5 +81,4 @@ do_test (void)
   return res;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

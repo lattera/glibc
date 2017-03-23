@@ -25,7 +25,7 @@ static const struct
 #define nstrs (sizeof (strs) / sizeof (strs[0]))
 
 
-static int
+int
 do_test (void)
 {
 
@@ -72,5 +72,4 @@ do_test (void)
   return result;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

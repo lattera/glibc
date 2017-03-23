@@ -107,7 +107,7 @@ strncasecmp_max (const char *left, const char *right)
   return strncasecmp (left, right, SIZE_MAX);
 }
 
-static int
+int
 do_test (void)
 {
   enum {
@@ -209,5 +209,4 @@ do_test (void)
    machines.  */
 #define TIMEOUT 300
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
