@@ -1,3 +1,9 @@
+2017-03-23  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* stdio-common/printf.h (register_printf_modifier): Change the
+	order of __wur and __THROW.
+	(register_printf_type): Likewise.
+
 2017-03-23  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
 	* string/test-string.h (TEST_FUNCTION): Use test_main instead of

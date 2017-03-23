@@ -111,13 +111,13 @@ extern int register_printf_function (int __spec, printf_function __func,
    it returns a positive value representing the bit set in the USER
    field in 'struct printf_info'.  */
 
-extern int register_printf_modifier (const wchar_t *__str) __wur __THROW;
+extern int register_printf_modifier (const wchar_t *__str) __THROW __wur;
 
 
 /* Register variable argument handler for user type.  The return value
    is to be used in ARGINFO functions to signal the use of the
    type.  */
-extern int register_printf_type (printf_va_arg_function __fct) __wur __THROW;
+extern int register_printf_type (printf_va_arg_function __fct) __THROW __wur;
 
 
 /* Parse FMT, and fill in N elements of ARGTYPES with the
