@@ -27,7 +27,7 @@
 # 	     		 removed so that child processes can't read it.
 # 	     SXID_IGNORE: Don't read for AT_SECURE binaries, but retained for
 # 	     		  non-AT_SECURE subprocesses.
-# 	     SXID_NONE: Read all the time.
+# 	     NONE: Read all the time.
 
 glibc {
   malloc {

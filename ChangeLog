@@ -1,3 +1,10 @@
+2017-03-24  Sunyeop Lee  <sunyeop97@gmail.com>
+
+	* README.tunables: Updated descriptions.
+	* elf/dl-tunables.list: Fixed typo: SXID_NONE -> NONE.
+	* scripts/gen-tunables.awk: Updated the code related to the
+	commit.
+
 2017-03-23  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/Makefile (string-benchset): Add memcpy-random.

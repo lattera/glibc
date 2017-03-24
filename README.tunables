@@ -58,13 +58,13 @@ The list of allowed attributes are:
 
 - env_alias:		An alias environment variable
 
-- is_secure:		Specify whether the tunable should be read for setuid
-			binaries.  True allows the tunable to be read for
-			setuid binaries while false disables it.  Note that
-			even if this is set as true and the value is read, it
-			may not be used if it does not validate against the
-			acceptable values or is not considered safe by the
-			module.
+- security_level:	Specify security level of the tunable.  Valid values:
+
+			SXID_ERASE: (default) Don't read for AT_SECURE binaries and
+				    removed so that child processes can't read it.
+			SXID_IGNORE: Don't read for AT_SECURE binaries, but retained for
+				     non-AT_SECURE subprocesses.
+			NONE: Read all the time.
 
 2. Call either the TUNABLE_SET_VALUE and pass into it the tunable name and a
    pointer to the variable that should be set with the tunable value.
