@@ -875,12 +875,10 @@ extern void funlockfile (FILE *__stream) __THROW;
 #endif /* POSIX */
 
 #if defined __USE_XOPEN && !defined __USE_XOPEN2K && !defined __USE_GNU
-/* The X/Open standard requires some functions and variables to be
-   declared here which do not belong into this header.  But we have to
-   follow.  In GNU mode we don't do this nonsense.  */
-# define __need_getopt
-# include <getopt.h>
-#endif	/* X/Open, but not issue 6 and not for GNU.  */
+/*  X/Open Issues 1-5 required getopt to be declared in this
+   header.  It was removed in Issue 6.  GNU follows Issue 6.  */
+# include <bits/getopt_posix.h>
+#endif
 
 /* If we are compiling with optimizing read this file.  It contains
    several optimizing inline functions and macros.  */

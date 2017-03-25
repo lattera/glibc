@@ -1,5 +1,18 @@
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
+	* posix/bits/getopt_core.h, posix/bits/getopt_ext.h:
+	New files, intended to be shared with gnulib.
+	* posix/bits/getopt_posix.h:
+	New file, not intended to be shared with gnulib.
+	* posix/getopt.h: Now just includes features.h,
+	bits/getopt_core.h, and bits/getopt_ext.h.  Will
+	no longer be shared with gnulib.
+	* include/bits/getopt_core.h, include/bits/getopt_ext.h
+	* include/bits/getopt_posix.h: New wrappers.
+	* posix/Makefile: Install new headers.
+	* posix/unistd.h, libio/stdio.h:
+	Include bits/getopt_posix.h instead of getopt.h.
+
 	* include/libc-symbols.h: For gnulib compatibility, define
 	_GL_UNUSED, _GL_UNUSED_LABEL, _GL_ATTRIBUTE_PURE, and
 	_GL_ATTRIBUTE_CONST.
