@@ -1,3 +1,11 @@
+2017-03-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21277]
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h (IUCLC): Define
+	unconditionally.
+	(IMAXBEL): Likewise.
+	(IUTF8): Likewise.
+
 2017-03-27  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Update.
