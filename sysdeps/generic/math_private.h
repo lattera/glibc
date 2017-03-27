@@ -319,26 +319,6 @@ extern void __kernel_sincosl (long double,long double,
 			      long double *,long double *, int);
 
 #ifndef NO_LONG_DOUBLE
-/* prototypes required to compile the ldbl-96 support without warnings */
-extern int __finitel (long double);
-extern int __ilogbl (long double);
-extern int __isinfl (long double);
-extern int __isnanl (long double);
-extern long double __atanl (long double);
-extern long double __copysignl (long double, long double);
-extern long double __expm1l (long double);
-extern long double __floorl (long double);
-extern long double __frexpl (long double, int *);
-extern long double __ldexpl (long double, int);
-extern long double __log1pl (long double);
-extern long double __nanl (const char *);
-extern long double __rintl (long double);
-extern long double __scalbnl (long double, int);
-extern long double __sqrtl (long double x);
-extern long double fabsl (long double x);
-extern void __sincosl (long double, long double *, long double *);
-extern long double __logbl (long double x);
-extern long double __significandl (long double x);
 
 extern inline long double __copysignl (long double x, long double y)
 { return __builtin_copysignl (x, y); }

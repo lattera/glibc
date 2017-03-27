@@ -58,6 +58,7 @@
     License along with this library; if not, see
     <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <math_private.h>
 
 /* log(1+x) = x - .5 x^2 + x^3 l(x)

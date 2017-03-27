@@ -1,3 +1,12 @@
+2017-04-10  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* sysdeps/generic/math_private.h: Remove declarations of
+	many functions that are already declared in math.h.
+	* sysdeps/ieee754/ldbl-128/e_logl.c: Include math.h to get the
+	declaration for __frexpl.
+	* sysdeps/ieee754/ldbl-128ibm/e_logl.c: Include math.h to get
+	the declarations for __scalbnl and fabsl.
+
 2017-04-09  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #20831]
