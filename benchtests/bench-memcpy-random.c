@@ -18,11 +18,11 @@
 
 #define MIN_PAGE_SIZE 131072
 #define TEST_MAIN
-#define TEST_NAME "memcpy-random"
+#define TEST_NAME "memcpy"
 #include "bench-string.h"
 #include <assert.h>
 
-IMPL (memcpy, 0)
+IMPL (memcpy, 1)
 
 #define NUM_COPIES 4096
 
