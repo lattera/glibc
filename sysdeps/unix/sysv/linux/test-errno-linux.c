@@ -147,7 +147,10 @@ do_test (void)
   fails |= test_wrp (EBADF, fdatasync, -1);
   fails |= test_wrp (EBADF, flock, -1, LOCK_SH);
   fails |= test_wrp (ESRCH, getpgid, -1);
-  fails |= test_wrp (EINVAL, inotify_add_watch, -1, "/", 0);
+  /* Linux v3.8 (676a0675c) removed the test to check at least one valid
+     bit in flags (to return EINVAL).  It was later added back in v3.9
+     (04df32fa1).  */
+  fails |= test_wrp2 (EINVAL, EBADF, inotify_add_watch, -1, "/", 0);
   fails |= test_wrp (EINVAL, mincore, (void *) -1, 0, vec);
   /* mlock fails if the result of the addition addr+len was less than addr
      (which indicates final address overflow), however on 32 bits binaries
@@ -157,7 +160,9 @@ do_test (void)
   fails |= test_wrp2 (EINVAL, ENOMEM, mlock, (void *) -1, 1);
   fails |= test_wrp (EINVAL, nanosleep, &ts, &ts);
   fails |= test_wrp (EINVAL, poll, &pollfd, -1, 0);
-  fails |= test_wrp (ENODEV, quotactl, Q_GETINFO, NULL, -1, (caddr_t) &dqblk);
+  /* quotactl returns ENOSYS for kernels not configured with CONFIG_QUOTA.  */
+  fails |= test_wrp2 (ENODEV, ENOSYS, quotactl, Q_GETINFO, NULL, -1,
+                     (caddr_t) &dqblk);
   fails |= test_wrp (EINVAL, sched_getparam, -1, &sch_param);
   fails |= test_wrp (EINVAL, sched_getscheduler, -1);
   fails |= test_wrp (EINVAL, sched_get_priority_max, -1);

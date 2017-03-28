@@ -1,3 +1,8 @@
+2017-03-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/test-errno-linux.c (do_test): Handle
+	non expected inotify_add_watch and quotactl return.
+
 2017-03-30  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/e_rem_pio2l.c (__ieee754_rem_pio2l): Change return type
