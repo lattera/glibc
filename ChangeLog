@@ -1,3 +1,11 @@
+2017-04-24  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* sysdeps/generic/math_private.h: Move the declaration of many
+	functions to sysdeps/generic/math_private_calls.h.
+	* sysdeps/generic/math_private_calls.h: New file with the
+	declarations of the functions removed from math_private.h
+	macroized by floating-point type.
+
 2017-04-21  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/multiarch/utf8-utf32-z9.c: New File.

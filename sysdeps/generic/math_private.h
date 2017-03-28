@@ -184,146 +184,33 @@ do {								\
 /* Get long double macros from a separate header.  */
 #include <math_ldbl.h>
 
-/* ieee style elementary functions */
-extern double __ieee754_sqrt (double);
-extern double __ieee754_acos (double);
-extern double __ieee754_acosh (double);
-extern double __ieee754_log (double);
-extern double __ieee754_atanh (double);
-extern double __ieee754_asin (double);
-extern double __ieee754_atan2 (double,double);
-extern double __ieee754_exp (double);
-extern double __ieee754_exp2 (double);
-extern double __ieee754_exp10 (double);
-extern double __ieee754_cosh (double);
-extern double __ieee754_fmod (double,double);
-extern double __ieee754_pow (double,double);
-extern double __ieee754_lgamma_r (double,int *);
-extern double __ieee754_gamma_r (double,int *);
-extern double __ieee754_lgamma (double);
-extern double __ieee754_gamma (double);
-extern double __ieee754_log10 (double);
-extern double __ieee754_log2 (double);
-extern double __ieee754_sinh (double);
-extern double __ieee754_hypot (double,double);
-extern double __ieee754_j0 (double);
-extern double __ieee754_j1 (double);
-extern double __ieee754_y0 (double);
-extern double __ieee754_y1 (double);
-extern double __ieee754_jn (int,double);
-extern double __ieee754_yn (int,double);
-extern double __ieee754_remainder (double,double);
-extern int32_t __ieee754_rem_pio2 (double,double*);
-extern double __ieee754_scalb (double,double);
-extern int __ieee754_ilogb (double);
+/* Include function declarations for each floating-point.  */
+#define _Mdouble_ double
+#define _MSUF_
+#include <math_private_calls.h>
+#undef _MSUF_
+#undef _Mdouble_
+
+#define _Mdouble_ float
+#define _MSUF_ f
+#define __MATH_DECLARING_FLOAT
+#include <math_private_calls.h>
+#undef __MATH_DECLARING_FLOAT
+#undef _MSUF_
+#undef _Mdouble_
+
+#define _Mdouble_ long double
+#define _MSUF_ l
+#define __MATH_DECLARING_LONG_DOUBLE
+#include <math_private_calls.h>
+#undef __MATH_DECLARING_LONG_DOUBLE
+#undef _MSUF_
+#undef _Mdouble_
 
 /* fdlibm kernel function */
 extern double __kernel_standard (double,double,int);
 extern float __kernel_standard_f (float,float,int);
 extern long double __kernel_standard_l (long double,long double,int);
-extern double __kernel_sin (double,double,int);
-extern double __kernel_cos (double,double);
-extern double __kernel_tan (double,double,int);
-extern int    __kernel_rem_pio2 (double*,double*,int,int,int, const int32_t*);
-
-/* internal functions.  */
-extern double __copysign (double x, double __y);
-
-extern inline double __copysign (double x, double y)
-{ return __builtin_copysign (x, y); }
-
-/* ieee style elementary float functions */
-extern float __ieee754_sqrtf (float);
-extern float __ieee754_acosf (float);
-extern float __ieee754_acoshf (float);
-extern float __ieee754_logf (float);
-extern float __ieee754_atanhf (float);
-extern float __ieee754_asinf (float);
-extern float __ieee754_atan2f (float,float);
-extern float __ieee754_expf (float);
-extern float __ieee754_exp2f (float);
-extern float __ieee754_exp10f (float);
-extern float __ieee754_coshf (float);
-extern float __ieee754_fmodf (float,float);
-extern float __ieee754_powf (float,float);
-extern float __ieee754_lgammaf_r (float,int *);
-extern float __ieee754_gammaf_r (float,int *);
-extern float __ieee754_lgammaf (float);
-extern float __ieee754_gammaf (float);
-extern float __ieee754_log10f (float);
-extern float __ieee754_log2f (float);
-extern float __ieee754_sinhf (float);
-extern float __ieee754_hypotf (float,float);
-extern float __ieee754_j0f (float);
-extern float __ieee754_j1f (float);
-extern float __ieee754_y0f (float);
-extern float __ieee754_y1f (float);
-extern float __ieee754_jnf (int,float);
-extern float __ieee754_ynf (int,float);
-extern float __ieee754_remainderf (float,float);
-extern int32_t __ieee754_rem_pio2f (float,float*);
-extern float __ieee754_scalbf (float,float);
-extern int __ieee754_ilogbf (float);
-
-
-/* float versions of fdlibm kernel functions */
-extern float __kernel_sinf (float,float,int);
-extern float __kernel_cosf (float,float);
-extern float __kernel_tanf (float,float,int);
-extern int   __kernel_rem_pio2f (float*,float*,int,int,int, const int32_t*);
-
-/* internal functions.  */
-extern float __copysignf (float x, float __y);
-
-extern inline float __copysignf (float x, float y)
-{ return __builtin_copysignf (x, y); }
-
-/* ieee style elementary long double functions */
-extern long double __ieee754_sqrtl (long double);
-extern long double __ieee754_acosl (long double);
-extern long double __ieee754_acoshl (long double);
-extern long double __ieee754_logl (long double);
-extern long double __ieee754_atanhl (long double);
-extern long double __ieee754_asinl (long double);
-extern long double __ieee754_atan2l (long double,long double);
-extern long double __ieee754_expl (long double);
-extern long double __ieee754_exp2l (long double);
-extern long double __ieee754_exp10l (long double);
-extern long double __ieee754_coshl (long double);
-extern long double __ieee754_fmodl (long double,long double);
-extern long double __ieee754_powl (long double,long double);
-extern long double __ieee754_lgammal_r (long double,int *);
-extern long double __ieee754_gammal_r (long double,int *);
-extern long double __ieee754_lgammal (long double);
-extern long double __ieee754_gammal (long double);
-extern long double __ieee754_log10l (long double);
-extern long double __ieee754_log2l (long double);
-extern long double __ieee754_sinhl (long double);
-extern long double __ieee754_hypotl (long double,long double);
-extern long double __ieee754_j0l (long double);
-extern long double __ieee754_j1l (long double);
-extern long double __ieee754_y0l (long double);
-extern long double __ieee754_y1l (long double);
-extern long double __ieee754_jnl (int,long double);
-extern long double __ieee754_ynl (int,long double);
-extern long double __ieee754_remainderl (long double,long double);
-extern int32_t __ieee754_rem_pio2l (long double,long double*);
-extern long double __ieee754_scalbl (long double,long double);
-extern int   __ieee754_ilogbl (long double);
-
-/* long double versions of fdlibm kernel functions */
-extern long double __kernel_sinl (long double,long double,int);
-extern long double __kernel_cosl (long double,long double);
-extern long double __kernel_tanl (long double,long double,int);
-extern void __kernel_sincosl (long double,long double,
-			      long double *,long double *, int);
-
-#ifndef NO_LONG_DOUBLE
-
-extern inline long double __copysignl (long double x, long double y)
-{ return __builtin_copysignl (x, y); }
-
-#endif
 
 /* Prototypes for functions of the IBM Accurate Mathematical Library.  */
 extern double __exp1 (double __x, double __xx, double __error);
@@ -341,41 +228,6 @@ extern double __mpcos (double __x, double __dx, bool __range_reduce);
 extern double __slowexp (double __x);
 extern double __slowpow (double __x, double __y, double __z);
 extern void __docos (double __x, double __dx, double __v[]);
-
-/* Return X^2 + Y^2 - 1, computed without large cancellation error.
-   It is given that 1 > X >= Y >= epsilon / 2, and that X^2 + Y^2 >=
-   0.5.  */
-extern float __x2y2m1f (float x, float y);
-extern double __x2y2m1 (double x, double y);
-extern long double __x2y2m1l (long double x, long double y);
-
-/* Compute the product of X + X_EPS, X + X_EPS + 1, ..., X + X_EPS + N
-   - 1, in the form R * (1 + *EPS) where the return value R is an
-   approximation to the product and *EPS is set to indicate the
-   approximate error in the return value.  X is such that all the
-   values X + 1, ..., X + N - 1 are exactly representable, and X_EPS /
-   X is small enough that factors quadratic in it can be
-   neglected.  */
-extern float __gamma_productf (float x, float x_eps, int n, float *eps);
-extern double __gamma_product (double x, double x_eps, int n, double *eps);
-extern long double __gamma_productl (long double x, long double x_eps,
-				     int n, long double *eps);
-
-/* Compute lgamma of a negative argument X, if it is in a range
-   (depending on the floating-point format) for which expansion around
-   zeros is used, setting *SIGNGAMP accordingly.  */
-extern float __lgamma_negf (float x, int *signgamp);
-extern double __lgamma_neg (double x, int *signgamp);
-extern long double __lgamma_negl (long double x, int *signgamp);
-
-/* Compute the product of 1 + (T / (X + X_EPS)), 1 + (T / (X + X_EPS +
-   1)), ..., 1 + (T / (X + X_EPS + N - 1)), minus 1.  X is such that
-   all the values X + 1, ..., X + N - 1 are exactly representable, and
-   X_EPS / X is small enough that factors quadratic in it can be
-   neglected.  */
-extern double __lgamma_product (double t, double x, double x_eps, int n);
-extern long double __lgamma_productl (long double t, long double x,
-				      long double x_eps, int n);
 
 #ifndef math_opt_barrier
 # define math_opt_barrier(x) \
