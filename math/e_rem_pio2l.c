@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <math_private.h>
 
-int
+int32_t
 __ieee754_rem_pio2l (long double x, long double *y)
 {
   fputs ("__ieee754_rem_pio2l not implemented\n", stderr);

@@ -1,5 +1,12 @@
 2017-03-30  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* math/e_rem_pio2l.c (__ieee754_rem_pio2l): Change return type
+	to int32_t.
+	* sysdeps/generic/math_private.h: Declare __ieee754_rem_pio2l
+	as returning int32_t.
+
+2017-03-30  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* math/math.h: Include bits/math-finite.h once per
 	floating-point type.
 	* math/bits/math-finite.h: Macroize all declarations by

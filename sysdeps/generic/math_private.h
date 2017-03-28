@@ -307,7 +307,7 @@ extern long double __ieee754_y1l (long double);
 extern long double __ieee754_jnl (int,long double);
 extern long double __ieee754_ynl (int,long double);
 extern long double __ieee754_remainderl (long double,long double);
-extern int   __ieee754_rem_pio2l (long double,long double*);
+extern int32_t __ieee754_rem_pio2l (long double,long double*);
 extern long double __ieee754_scalbl (long double,long double);
 extern int   __ieee754_ilogbl (long double);
 
