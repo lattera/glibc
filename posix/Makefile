@@ -45,7 +45,7 @@ routines :=								      \
 	pathconf sysconf fpathconf					      \
 	glob glob64 fnmatch regex					      \
 	confstr								      \
-	getopt getopt1 getopt_init					      \
+	getopt getopt1 							      \
 	sched_setp sched_getp sched_sets sched_gets sched_yield sched_primax  \
 	sched_primin sched_rr_gi sched_getaffinity sched_setaffinity	      \
 	getaddrinfo gai_strerror wordexp				      \

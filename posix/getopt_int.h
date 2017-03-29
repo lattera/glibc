@@ -98,11 +98,6 @@ struct _getopt_data
 
   int __first_nonopt;
   int __last_nonopt;
-
-#if defined _LIBC && defined USE_NONOPTION_FLAGS
-  int __nonoption_flags_max_len;
-  int __nonoption_flags_len;
-# endif
 };
 
 /* The initializer is necessary to set OPTIND and OPTERR to their

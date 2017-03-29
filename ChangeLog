@@ -1,3 +1,18 @@
+2017-04-07  Zack Weinberg  <zackw@panix.com>
+
+	* config.h.in (USE_NONOPTION_FLAGS): Remove.
+	* csu/init-first.c: Remove all #ifdef USE_NONOPTION_FLAGS blocks.
+	* sysdeps/mach/hurd/i386/init-first.c: Likewise.
+	* posix/getopt_int.h: Likewise.
+	* posix/getopt.c: Likewise. Also remove SWAP_FLAGS and the
+	__libc_argc and __libc_argv externs, which were only used by
+	#ifdef USE_NONOPTION_FLAGS blocks.
+	* posix/getopt_init.c: Remove file.
+	* posix/Makefile (routines): Remove getopt_init.
+	* include/getopt.h: Don't declare __getopt_initialize_environment.
+	* manual/getopt.texi: Remove mention of USE_NONOPTION_FLAGS in
+	a comment.
+
 2017-04-07  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/res_mkquery.c (res_nmkquery): Remove IQUERY support.

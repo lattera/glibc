@@ -33,9 +33,6 @@
 
 extern void __mach_init (void);
 extern void __init_misc (int, char **, char **);
-#ifdef USE_NONOPTION_FLAGS
-extern void __getopt_clean_environment (char **);
-#endif
 extern void __libc_global_ctors (void);
 
 unsigned int __hurd_threadvar_max;
@@ -87,11 +84,6 @@ posixland_init (int argc, char **argv, char **envp)
   _dl_non_dynamic_init ();
 #endif
   __init_misc (argc, argv, envp);
-
-#ifdef USE_NONOPTION_FLAGS
-  /* This is a hack to make the special getopt in GNU libc working.  */
-  __getopt_clean_environment (envp);
-#endif
 
   /* Initialize ctype data.  */
   __ctype_init ();

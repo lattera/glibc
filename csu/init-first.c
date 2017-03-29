@@ -51,9 +51,6 @@ attribute_hidden
 _init (int argc, char **argv, char **envp)
 {
 #endif
-#ifdef USE_NONOPTION_FLAGS
-  extern void __getopt_clean_environment (char **);
-#endif
 
   __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up;
 
@@ -82,11 +79,6 @@ _init (int argc, char **argv, char **envp)
 #endif
 
   __init_misc (argc, argv, envp);
-
-#ifdef USE_NONOPTION_FLAGS
-  /* This is a hack to make the special getopt in GNU libc working.  */
-  __getopt_clean_environment (envp);
-#endif
 
   /* Initialize ctype data.  */
   __ctype_init ();
