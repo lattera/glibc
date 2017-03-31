@@ -1,5 +1,9 @@
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
+	* posix/getopt.c, posix/getopt.h, posix/getopt1.c, posix/getopt_int.h:
+	Use '...' instead of `...' for quotation marks inside
+	comments and strings.
+
 	* config.h.in (USE_NONOPTION_FLAGS): Remove.
 	* csu/init-first.c: Remove all #ifdef USE_NONOPTION_FLAGS blocks.
 	* sysdeps/mach/hurd/i386/init-first.c: Likewise.

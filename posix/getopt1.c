@@ -34,7 +34,7 @@
    Library, but also included in many other GNU distributions.  Compiling
    and linking in this code is a waste when using the GNU C library
    (especially if it is a shared library).  Rather than having every GNU
-   program understand `configure --with-gnu-libc' and omit the object files,
+   program understand 'configure --with-gnu-libc' and omit the object files,
    it is simpler to just do this in the source for each such file.  */
 
 #define GETOPT_INTERFACE_VERSION 2
@@ -161,11 +161,11 @@ main (int argc, char **argv)
 	  break;
 
 	case 'c':
-	  printf ("option c with value `%s'\n", optarg);
+	  printf ("option c with value '%s'\n", optarg);
 	  break;
 
 	case 'd':
-	  printf ("option d with value `%s'\n", optarg);
+	  printf ("option d with value '%s'\n", optarg);
 	  break;
 
 	case '?':
