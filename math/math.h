@@ -588,7 +588,7 @@ extern int matherr (struct exception *__exc);
 #  undef _MSUF_
 
 /* Include bits/math-finite.h for long double.  */
-#  if __MATH_DECLARE_LDOUBLE
+#  ifdef __MATH_DECLARE_LDOUBLE
 #   define _Mdouble_ long double
 #   define __MATH_DECLARING_DOUBLE 0
 #   define __MATH_DECLARING_LDOUBLE 1

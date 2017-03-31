@@ -177,7 +177,7 @@ __MATH_REDIRCALL (remainder, , (_Mdouble_, _Mdouble_));
 #if (__MATH_DECLARING_DOUBLE \
      && (defined __USE_MISC \
 	 || (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8))) \
-    || (!__MATH_DECLARE_LDOUBLE && defined __USE_MISC)
+    || (!defined __MATH_DECLARE_LDOUBLE && defined __USE_MISC)
 /* scalb.  */
 __MATH_REDIRCALL (scalb, , (_Mdouble_, _Mdouble_));
 #endif
