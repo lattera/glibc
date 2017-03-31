@@ -19,14 +19,42 @@
 #ifndef _GETOPT_INT_H
 #define _GETOPT_INT_H	1
 
+#include <getopt.h>
+
 extern int _getopt_internal (int ___argc, char *const *___argv,
 			     const char *__shortopts,
-		             const struct option *__longopts, int *__longind,
-			     int __long_only, int posixly_correct);
+			     const struct option *__longopts, int *__longind,
+			     int __long_only, int __posixly_correct);
 
 
 /* Reentrant versions which can handle parsing multiple argument
    vectors at the same time.  */
+
+/* Describe how to deal with options that follow non-option ARGV-elements.
+
+   REQUIRE_ORDER means don't recognize them as options; stop option
+   processing when the first non-option is seen.  This is what POSIX
+   specifies should happen.
+
+   PERMUTE means permute the contents of ARGV as we scan, so that
+   eventually all the non-options are at the end.  This allows options
+   to be given in any order, even with programs that were not written
+   to expect this.
+
+   RETURN_IN_ORDER is an option available to programs that were
+   written to expect options and other ARGV-elements in any order
+   and that care about the ordering of the two.  We describe each
+   non-option ARGV-element as if it were the argument of an option
+   with character code 1.
+
+   The special argument '--' forces an end of option-scanning regardless
+   of the value of 'ordering'.  In the case of RETURN_IN_ORDER, only
+   '--' can cause 'getopt' to return -1 with 'optind' != ARGC.  */
+
+enum __ord
+  {
+    REQUIRE_ORDER, PERMUTE, RETURN_IN_ORDER
+  };
 
 /* Data type for reentrant functions.  */
 struct _getopt_data
@@ -52,41 +80,10 @@ struct _getopt_data
      by advancing to the next ARGV-element.  */
   char *__nextchar;
 
-  /* Describe how to deal with options that follow non-option ARGV-elements.
+  /* See __ord above.  */
+  enum __ord __ordering;
 
-     If the caller did not specify anything,
-     the default is REQUIRE_ORDER if the environment variable
-     POSIXLY_CORRECT is defined, PERMUTE otherwise.
-
-     REQUIRE_ORDER means don't recognize them as options;
-     stop option processing when the first non-option is seen.
-     This is what Unix does.
-     This mode of operation is selected by either setting the environment
-     variable POSIXLY_CORRECT, or using '+' as the first character
-     of the list of option characters.
-
-     PERMUTE is the default.  We permute the contents of ARGV as we
-     scan, so that eventually all the non-options are at the end.
-     This allows options to be given in any order, even with programs
-     that were not written to expect this.
-
-     RETURN_IN_ORDER is an option available to programs that were
-     written to expect options and other ARGV-elements in any order
-     and that care about the ordering of the two.  We describe each
-     non-option ARGV-element as if it were the argument of an option
-     with character code 1.  Using '-' as the first character of the
-     list of option characters selects this mode of operation.
-
-     The special argument '--' forces an end of option-scanning regardless
-     of the value of 'ordering'.  In the case of RETURN_IN_ORDER, only
-     '--' can cause 'getopt' to return -1 with 'optind' != ARGC.  */
-
-  enum
-    {
-      REQUIRE_ORDER, PERMUTE, RETURN_IN_ORDER
-    } __ordering;
-
-  /* If the POSIXLY_CORRECT environment variable is set.  */
+  /* True if behaving strictly as specified by POSIX.  */
   int __posixly_correct;
 
 
@@ -108,7 +105,7 @@ extern int _getopt_internal_r (int ___argc, char *const *___argv,
 			       const char *__shortopts,
 			       const struct option *__longopts, int *__longind,
 			       int __long_only, struct _getopt_data *__data,
-			       int posixly_correct);
+			       int __posixly_correct);
 
 extern int _getopt_long_r (int ___argc, char *const *___argv,
 			   const char *__shortopts,

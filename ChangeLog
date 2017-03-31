@@ -1,5 +1,17 @@
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
+	* posix/getopt_int.h: Include getopt.h.
+	Use impl-namespace names for all arguments to _getopt_internal and
+	_getopt_internal_r.
+	Declare __ordering enum outside the struct.
+	Harmonize comments with gnulib.
+	* posix/getopt1.c: Simplify #ifdeffage at top of file. Remove
+	ELIDE_CODE logic entirely.  Move inclusion of stdlib.h to
+	#ifdef TEST block and make unconditional.  Do not define NULL.
+	* posix/getopt.c: Partial merge from gnulib, covering the
+	initial includes and global declarations, commentary, and
+	a couple of semantically-neutral code changes.
+
 	* posix/getopt.c, posix/getopt.h, posix/getopt1.c, posix/getopt_int.h:
 	Use '...' instead of `...' for quotation marks inside
 	comments and strings.
