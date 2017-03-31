@@ -193,7 +193,7 @@ FTS	*__REDIRECT (fts_open, (char * const *, int,
 				int (*)(const FTSENT **, const FTSENT **)),
 		     fts64_open);
 FTSENT	*__REDIRECT (fts_read, (FTS *), fts64_read);
-int	 __REDIRECT (fts_set, (FTS *, FTSENT *, int), fts64_set) __THROW;
+int	 __REDIRECT_NTH (fts_set, (FTS *, FTSENT *, int), fts64_set);
 # else
 #  define fts_children fts64_children
 #  define fts_close fts64_close

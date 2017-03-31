@@ -1,3 +1,8 @@
+2017-03-31  Slava Barinov  <v.barinov@samsung.com>
+
+	[BZ #21289]
+	* io/fts.h (fts_set): Replace __REDIRECT with __REDIRECT_NTH.
+
 2017-03-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/test-errno-linux.c (do_test): Handle
