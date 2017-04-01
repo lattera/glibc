@@ -56,7 +56,7 @@ do_test (void)
   printf ("message = \"%s\"\n", line);
 
   static const char expected[] = "\
-program: option '--on' is ambiguous; possibilities: '--one' '--onto' '--one-one'\n";
+program: option '--on' is ambiguous; possibilities: '--one' '--one-one' '--onto'\n";
 
   return c != '?' || strcmp (line, expected) != 0;
 }

@@ -1,5 +1,12 @@
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
+	* posix/getopt.c: When used standalone, define __libc_use_alloca
+	as always false and alloca to abort if called.
+	(process_long_option): Rewrite handling of ambiguous long options
+	to use a single boolean vector, not a linked list; use
+	__libc_use_alloca to decide whether to allocate this using alloca.
+	* posix/tst-getopt_long1.c: Adjust text of expected error message.
+
 	* posix/getopt.c (process_long_option): New function split out
 	from _getopt_internal_r.
 	(_getopt_internal_r): Replace both copies of the long-option
