@@ -1,5 +1,12 @@
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
+	* posix/getopt.c (process_long_option): New function split out
+	from _getopt_internal_r.
+	(_getopt_internal_r): Replace both copies of the long-option
+	processing code with calls to process_long_option.
+	* posix/bug-getopt4.c (one_test): Print argv[0] in error messages.
+	(do_test): Differentiate argv[0] in the two subtests.
+
 	* posix/getopt_int.h (_getopt_data): Remove __posixly_correct field.
 	* posix/getopt.c (_getopt_internal_r): Move some initialization code...
 	(_getopt_initialize): ...here. Don't set d->__posixly_correct.
