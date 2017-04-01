@@ -4904,7 +4904,7 @@ __libc_mallopt (int param_number, int value)
 
     case M_ARENA_MAX:
       if (value > 0)
-	do_set_arena_test (value);
+	do_set_arena_max (value);
       break;
     }
   __libc_lock_unlock (av->mutex);

@@ -1,3 +1,9 @@
+2017-04-01  Wladimir van der Laan  <laanwj@gmail.com>
+
+	[BZ# 21338]
+	* malloc/malloc.c: Call do_set_arena_max for M_ARENA_MAX
+	instead of incorrect do_set_arena_test
+
 2017-03-31  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/math.h: Fix check for __MATH_DECLARE_LDOUBLE.
