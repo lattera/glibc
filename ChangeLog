@@ -1,5 +1,9 @@
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
+	* posix/getopt_int.h (_getopt_data): Remove __posixly_correct field.
+	* posix/getopt.c (_getopt_internal_r): Move some initialization code...
+	(_getopt_initialize): ...here. Don't set d->__posixly_correct.
+
 	* posix/getopt.h: Add backup definition of __nonnull for
 	consistency with gnulib.  Define __getopt_argv_const to const
 	if not already defined.

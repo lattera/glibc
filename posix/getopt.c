@@ -188,15 +188,13 @@ _getopt_initialize (int argc, char **argv, const char *optstring,
   /* Start processing options with ARGV-element 1 (since ARGV-element 0
      is the program name); the sequence of previously skipped
      non-option ARGV-elements is empty.  */
+  if (d->optind == 0)
+    d->optind = 1;
 
   d->__first_nonopt = d->__last_nonopt = d->optind;
-
   d->__nextchar = NULL;
 
-  d->__posixly_correct = posixly_correct || !!getenv ("POSIXLY_CORRECT");
-
   /* Determine how to handle the ordering of options and nonoptions.  */
-
   if (optstring[0] == '-')
     {
       d->__ordering = RETURN_IN_ORDER;
@@ -207,11 +205,12 @@ _getopt_initialize (int argc, char **argv, const char *optstring,
       d->__ordering = REQUIRE_ORDER;
       ++optstring;
     }
-  else if (d->__posixly_correct)
+  else if (posixly_correct || !!getenv ("POSIXLY_CORRECT"))
     d->__ordering = REQUIRE_ORDER;
   else
     d->__ordering = PERMUTE;
 
+  d->__initialized = 1;
   return optstring;
 }
 
@@ -284,15 +283,10 @@ _getopt_internal_r (int argc, char **argv, const char *optstring,
   d->optarg = NULL;
 
   if (d->optind == 0 || !d->__initialized)
-    {
-      if (d->optind == 0)
-	d->optind = 1;  /* Don't scan ARGV[0], the program name.  */
-      optstring = _getopt_initialize (argc, argv, optstring, d,
-				      posixly_correct);
-      d->__initialized = 1;
-    }
+    optstring = _getopt_initialize (argc, argv, optstring, d, posixly_correct);
   else if (optstring[0] == '-' || optstring[0] == '+')
     optstring++;
+
   if (optstring[0] == ':')
     print_errors = 0;
 

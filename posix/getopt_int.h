@@ -83,10 +83,6 @@ struct _getopt_data
   /* See __ord above.  */
   enum __ord __ordering;
 
-  /* True if behaving strictly as specified by POSIX.  */
-  int __posixly_correct;
-
-
   /* Handle permutation of arguments.  */
 
   /* Describe the part of ARGV that contains non-options that have
