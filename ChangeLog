@@ -1,5 +1,21 @@
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
+	* stdio-common/fxprintf.c (__fxprintf_nocancel): New function.
+	(locked_vfxprintf): New helper function. Handle arbitrary
+	multibyte strings, not just ASCII.
+	* include/stdio.h: Declare __fxprintf_nocancel.
+	* posix/getopt.c: When _LIBC is defined, define fprintf to
+	__fxprintf_nocancel, flockfile to _IO_flockfile, and funlockfile
+	to _IO_funlockfile.  When neither _LIBC nor
+	_POSIX_THREAD_SAFE_FUNCTIONS is defined, define flockfile and
+	funlockfile as no-ops.
+	(_getopt_internal_r): Remove all internal #ifdef _LIBC blocks;
+	the standalone error-printing code can now be used for libc as
+	well.  Add an flockfile/funlockfile pair around one case where
+	the error message is printed in several chunks.  Don't use fputc.
+	* posix/tst-getopt-cancel.c: New test.
+	* posix/Makefile: Run it.
+
 	* posix/getopt.c (_getopt_internal_r): Don't increment
 	d->optind a second time when reporting ambiguous -W options.
 

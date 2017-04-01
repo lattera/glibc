@@ -97,6 +97,9 @@ ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn tst-spawn2 tst-spawn3
 endif
+ifeq (yesyes,$(build-shared)$(have-thread-library))
+tests		+= tst-getopt-cancel
+endif
 tests-static	= tst-exec-static tst-spawn-static
 tests		+= $(tests-static)
 others		:= getconf
@@ -253,6 +256,8 @@ testcases.h: TESTS TESTS2C.sed
 ptestcases.h: PTESTS PTESTS2C.sed
 	LC_ALL=C sed -f PTESTS2C.sed < $< > $@T
 	mv -f $@T $@
+
+$(objpfx)tst-getopt-cancel: $(shared-thread-library)
 
 test-xfail-annexc = yes
 $(objpfx)annexc.out: $(objpfx)annexc

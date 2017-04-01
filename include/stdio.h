@@ -114,6 +114,8 @@ extern wint_t __getwc_unlocked (FILE *__fp);
 
 extern int __fxprintf (FILE *__fp, const char *__fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3)));
+extern int __fxprintf_nocancel (FILE *__fp, const char *__fmt, ...)
+     __attribute__ ((__format__ (__printf__, 2, 3)));
 
 extern const char *const _sys_errlist_internal[] attribute_hidden;
 extern int _sys_nerr_internal attribute_hidden;
