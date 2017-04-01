@@ -24,14 +24,15 @@
 #include "getopt_int.h"
 
 int
-getopt_long (int argc, char *const *argv, const char *options,
+getopt_long (int argc, char *__getopt_argv_const *argv, const char *options,
 	     const struct option *long_options, int *opt_index)
 {
-  return _getopt_internal (argc, argv, options, long_options, opt_index, 0, 0);
+  return _getopt_internal (argc, (char **) argv, options, long_options,
+			   opt_index, 0, 0);
 }
 
 int
-_getopt_long_r (int argc, char *const *argv, const char *options,
+_getopt_long_r (int argc, char **argv, const char *options,
 		const struct option *long_options, int *opt_index,
 		struct _getopt_data *d)
 {
@@ -45,14 +46,16 @@ _getopt_long_r (int argc, char *const *argv, const char *options,
    instead.  */
 
 int
-getopt_long_only (int argc, char *const *argv, const char *options,
+getopt_long_only (int argc, char *__getopt_argv_const *argv,
+		  const char *options,
 		  const struct option *long_options, int *opt_index)
 {
-  return _getopt_internal (argc, argv, options, long_options, opt_index, 1, 0);
+  return _getopt_internal (argc, (char **) argv, options, long_options,
+			   opt_index, 1, 0);
 }
 
 int
-_getopt_long_only_r (int argc, char *const *argv, const char *options,
+_getopt_long_only_r (int argc, char **argv, const char *options,
 		     const struct option *long_options, int *opt_index,
 		     struct _getopt_data *d)
 {
@@ -76,7 +79,7 @@ main (int argc, char **argv)
     {
       int this_option_optind = optind ? optind : 1;
       int option_index = 0;
-      static struct option long_options[] =
+      static const struct option long_options[] =
       {
 	{"add", 1, 0, 0},
 	{"append", 0, 0, 0},

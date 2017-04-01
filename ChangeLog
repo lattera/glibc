@@ -1,5 +1,29 @@
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
+	* posix/getopt.h: Add backup definition of __nonnull for
+	consistency with gnulib.  Define __getopt_argv_const to const
+	if not already defined.
+	(getopt): Update doc comment from gnulib.  Prototype
+	unconditionally.  Add __nonnull annotation.
+	(__posix_getopt): Add __nonnull annotation.
+	(getopt_long, getopt_long_only): Use __getopt_argv_const in
+	prototypes for consistency with gnulib.  Add __nonnull
+	annotations.
+	* posix/getopt.c (_getopt_initialize, _getopt_internal_r)
+	(getopt_internal): Change 'argv' argument to type 'char **'.
+	Remove now-unnecessary casts.
+	(getopt, __posix_getopt): Eliminate repetition with a macro.
+	Cast 'argv' to 'char **' when calling _getopt_internal.
+	* posix/getopt1.c (getopt_long, getopt_long_only):
+	Use __getopt_argv_const for consistency with gnulib.
+	Cast 'argv' to 'char **' when calling _getopt_internal.
+	(_getopt_long_r, _getopt_long_only_r):
+	Change 'argv' argument to type 'char **'.
+	(main): Constify 'long_options'.
+	* posix/getopt_int.h (getopt_internal, _getopt_internal_r)
+	(_getopt_long_r, _getopt_long_only_r):
+	Change 'argv' argument to type 'char **'.
+
 	* stdio-common/fxprintf.c (__fxprintf_nocancel): New function.
 	(locked_vfxprintf): New helper function. Handle arbitrary
 	multibyte strings, not just ASCII.

@@ -33,14 +33,23 @@
 # include <ctype.h>
 #endif
 
+#ifndef __GNUC_PREREQ
+# define __GNUC_PREREQ(maj, min) (0)
+#endif
+
 #ifndef __THROW
-# ifndef __GNUC_PREREQ
-#  define __GNUC_PREREQ(maj, min) (0)
-# endif
 # if defined __cplusplus && __GNUC_PREREQ (2,8)
 #  define __THROW	throw ()
 # else
 #  define __THROW
+# endif
+#endif
+
+#ifndef __nonnull
+# if __GNUC_PREREQ (3, 3)
+#  define __nonnull(params) __attribute__ ((__nonnull__ params))
+# else
+#  define __nonnull(params)
 # endif
 #endif
 
@@ -139,45 +148,55 @@ struct option
    scanning, explicitly telling 'getopt' that there are no more
    options.
 
-   If OPTS begins with '--', then non-option arguments are treated as
-   arguments to the option '\0'.  This behavior is specific to the GNU
-   'getopt'.  */
+   If OPTS begins with '-', then non-option arguments are treated as
+   arguments to the option '\1'.  This behavior is specific to the GNU
+   'getopt'.  If OPTS begins with '+', or POSIXLY_CORRECT is set in
+   the environment, then do not permute arguments.
 
-#ifdef __GNU_LIBRARY__
-/* Many other libraries have conflicting prototypes for getopt, with
-   differences in the consts, in stdlib.h.  To avoid compilation
-   errors, only prototype getopt for the GNU C library.  */
+   For standards compliance, the 'argv' argument has the type
+   char *const *, but this is inaccurate; if argument permutation is
+   enabled, the argv array (not the strings it points to) must be
+   writable.  */
+
 extern int getopt (int ___argc, char *const *___argv, const char *__shortopts)
-       __THROW;
+       __THROW __nonnull ((2, 3));
 
-# if defined __need_getopt && defined __USE_POSIX2 \
-  && !defined __USE_POSIX_IMPLICITLY && !defined __USE_GNU
+#if defined __need_getopt && defined __USE_POSIX2 \
+    && !defined __USE_POSIX_IMPLICITLY && !defined __USE_GNU
 /* The GNU getopt has more functionality than the standard version.  The
    additional functionality can be disable at runtime.  This redirection
    helps to also do this at runtime.  */
-#  ifdef __REDIRECT
+# ifdef __REDIRECT
   extern int __REDIRECT_NTH (getopt, (int ___argc, char *const *___argv,
 				      const char *__shortopts),
 			     __posix_getopt);
-#  else
+# else
 extern int __posix_getopt (int ___argc, char *const *___argv,
-			   const char *__shortopts) __THROW;
-#   define getopt __posix_getopt
-#  endif
+			   const char *__shortopts)
+  __THROW __nonnull ((2, 3));
+#  define getopt __posix_getopt
 # endif
-#else /* not __GNU_LIBRARY__ */
-extern int getopt ();
-#endif /* __GNU_LIBRARY__ */
+#endif
 
 #ifndef __need_getopt
-extern int getopt_long (int ___argc, char *const *___argv,
+
+/* The type of the 'argv' argument to getopt_long and getopt_long_only
+   is properly 'char **', since both functions may write to the array
+   (in order to move all the options to the beginning).  However, for
+   compatibility with old versions of LSB, glibc has to use 'char *const *'
+   instead.  */
+#ifndef __getopt_argv_const
+# define __getopt_argv_const const
+#endif
+
+extern int getopt_long (int ___argc, char *__getopt_argv_const *___argv,
 			const char *__shortopts,
 		        const struct option *__longopts, int *__longind)
-       __THROW;
-extern int getopt_long_only (int ___argc, char *const *___argv,
+  __THROW __nonnull ((2, 3));
+extern int getopt_long_only (int ___argc, char *__getopt_argv_const *___argv,
 			     const char *__shortopts,
 		             const struct option *__longopts, int *__longind)
-       __THROW;
+  __THROW __nonnull ((2, 3));
 
 #endif
 
