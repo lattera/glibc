@@ -1,5 +1,8 @@
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
+	* posix/getopt.c (_getopt_internal_r): Don't increment
+	d->optind a second time when reporting ambiguous -W options.
+
 	* posix/getopt_int.h: Include getopt.h.
 	Use impl-namespace names for all arguments to _getopt_internal and
 	_getopt_internal_r.
