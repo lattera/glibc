@@ -204,7 +204,7 @@ not here.
 2013-05-15  Guy Martin  <gmsoft@tuxicoman.be>
 	    Carlos O'Donell  <carlos@redhat.com>
 
-	[BZ# 15000]
+	[BZ #15000]
 	* ports/sysdeps/hppa/fpu/fpu_control.h (_FPU_GETCW): Set cw.
 	(_FPU_SETCW): Pass address to fldd.
 
@@ -235,7 +235,7 @@ not here.
 
 2013-01-08  Andreas Jaeger  <aj@suse.de>
 
-	[BZ# 14985]
+	[BZ #14985]
 	* sysdeps/unix/sysv/linux/hppa/sys/epoll.h (EPOLL_NONBLOCK):
 	Remove.
 

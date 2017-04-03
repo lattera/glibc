@@ -223,7 +223,7 @@ not here.
 
 2013-01-08  Andreas Jaeger  <aj@suse.de>
 
-	[BZ# 14985]
+	[BZ #14985]
 	* sysdeps/unix/sysv/linux/alpha/bits/epoll.h (EPOLL_NONBLOCK): Remove.
 
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>

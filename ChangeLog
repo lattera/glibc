@@ -6,7 +6,7 @@
 
 2017-04-01  Wladimir van der Laan  <laanwj@gmail.com>
 
-	[BZ# 21338]
+	[BZ #21338]
 	* malloc/malloc.c: Call do_set_arena_max for M_ARENA_MAX
 	instead of incorrect do_set_arena_test
 
@@ -41,7 +41,7 @@
 
 2017-03-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
-	[BZ# 21182]
+	[BZ #21182]
 	* string/test-memchr.c (do_test): Add BZ#21182 checks for address
 	near end of a page.
 	* sysdeps/i386/i686/multiarch/memchr-sse2.S (__memchr): Fix
@@ -5250,11 +5250,11 @@
 
 2016-12-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
-	[BZ# 19387]
+	[BZ #19387]
 	* sysdeps/x86_64/memchr.S (memchr): Avoid overflow in pointer
 	addition.
 	* string/test-memchr.c (do_test): Remove alignment limitation.
-	(test_main): Add test that trigger BZ# 19387.
+	(test_main): Add test that trigger BZ #19387.
 
 2016-12-26  Nick Alcock  <nick.alcock@oracle.com>
 
@@ -5906,7 +5906,7 @@
 
 2016-12-16  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
-	[BZ# 20971]
+	[BZ #20971]
 	* sysdeps/powerpc/powerpc64/power7/memchr.S (__memchr): Avoid
 	overflow in pointer addition.
 	* string/test-memchr.c (do_test): Add an argument to pass as
@@ -16404,7 +16404,7 @@
 
 2016-03-25  Florian Weimer  <fweimer@redhat.com>
 
-	[BZ# 19860]
+	[BZ #19860]
 	* sysdeps/x86_64/tst-audit10.c (avx512_enabled): Always return
 	zero if the compiler does not provide the AVX512F bit.
 
@@ -20113,7 +20113,7 @@
 
 2015-10-28  Florian Weimer  <fweimer@redhat.com>
 
-	[BZ# 19048]
+	[BZ #19048]
 	* malloc/malloc.c (struct malloc_state): Update comment.  Add
 	attached_threads member.
 	(main_arena): Initialize attached_threads.
@@ -26727,7 +26727,7 @@
 	* regexp.h: Add unconditional #warning stating that this header
 	will be removed soon.  Revise banner comment to match.
 	(compile): Consistently use ERROR instead of RETURN to report
-	errors (partial fix for bz#18681).
+	errors (partial fix for BZ #18681).
 	* regexp.c: Don't include regexp.h. Remove some unnecessary
 	declarations.
 
@@ -31092,12 +31092,12 @@
 
 2015-04-27  H.J. Lu  <hongjiu.lu@intel.com>
 
-	[BZ#18333]
+	[BZ #18333]
 	* time/tzset.c (__tzfile_read): Check tzspec_len == 0.
 
 2015-04-27  Florian Weimer  <fweimer@redhat.com>
 
-	[BZ#18333]
+	[BZ #18333]
 	* time/tzset.c (parse_tzname): Return error on memory allocation
 	failure.
 	* test-skeleton.c (struct temp_name_list): Change type of name
@@ -45912,7 +45912,7 @@
 
 2014-05-07  Steve Ellcey  <sellcey@mips.com>
 
-	[BZ# 16922]
+	[BZ #16922]
 	* sysdeps/mips/sys/asm.h (INT_SUB): Fix definition.
 	(LONG_SUB): Ditto.
 	(PTR_SUB): Ditto.
@@ -45938,7 +45938,7 @@
 
 2014-05-06  Aurelien Jarno  <aurelien@aurel32.net>
 
-	[BZ# 16916]
+	[BZ #16916]
 	* sysdeps/unix/sysv/linux/sparc/bits/eventfd.h (EFD_SEMAPHORE):
 	Define.
 
@@ -51132,7 +51132,7 @@
 
 2014-01-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
-	[BZ#16431]
+	[BZ #16431]
 	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c (__gettimeofday):
 	Adjust the vDSO correctly for internal calls.
 	* sysdeps/unix/sysv/linux/powerpc/time.c (time): Likewise.
@@ -51147,7 +51147,7 @@
 
 2014-01-16  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
-	[BZ#16430]
+	[BZ #16430]
 	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c
 	(__GI___gettimeofday): Alias for a different internal symbol to avoid
 	local calls issues by not having a PLT stub required for IFUNC calls.
@@ -65668,7 +65668,7 @@
 
 2013-01-08  Andreas Jaeger  <aj@suse.de>
 
-	[BZ# 14985]
+	[BZ #14985]
 	* sysdeps/unix/sysv/linux/sparc/bits/epoll.h (EPOLL_NONBLOCK):
 	Remove.
 	* sysdeps/unix/sysv/linux/bits/epoll.h (EPOLL_NONBLOCK): Likewise.
@@ -68609,7 +68609,7 @@
 
 2012-10-30  Andreas Jaeger  <aj@suse.de>
 
-	[BZ#14767]
+	[BZ #14767]
 	* elf/Makefile (tests): Remove conditional for have-initfini-array
 	since this is now always required and the variable does not exist
 	anymore.
@@ -70710,7 +70710,7 @@
 	Change conditional to require [$(build-nscd) = yes] as well.
 	* NEWS: Mention --disable-build-nscd in the --disable-nscd item.
 
-	[BZ# 13696]
+	[BZ #13696]
 	* configure.in (use_nscd): New substituted variable, set by
 	--disable-nscd.  If enabled, define USE_NSCD.
 	* configure: Regenerated.
@@ -71581,7 +71581,7 @@
 
 2012-08-02  Marek Polacek  <polacek@redhat.com>
 
-	[BZ# 14150]
+	[BZ #14150]
 	* configure.in (libc_cv_asm_type_prefix): Remove test.  Replace
 	libc_cv_asm_type_prefix with %.
 	* configure: Regenerated.
@@ -77806,7 +77806,7 @@
 
 2012-04-18  Andreas Jaeger  <aj@suse.de>
 
-	[BZ# 6794]
+	[BZ #6794]
 	* sysdeps/ieee754/ldbl-96/s_ilogbl.c: Moved to ...
 	* sysdeps/ieee754/ldbl-96/e_ilogbl.c: ... here.
 	Rename __ilogbl to __ieee754_ilogbl and remove weak_alias.
@@ -86135,7 +86135,7 @@
 
 2011-07-05  Andreas Jaeger  <aj@suse.de>
 
-	[BZ#9696]
+	[BZ #9696]
 	* stdlib/tst-strtod.c: Add testcase.
 
 2011-07-07  Ulrich Drepper  <drepper@gmail.com>
