@@ -1,5 +1,11 @@
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
+	* include/libc-symbols.h: For gnulib compatibility, define
+	_GL_UNUSED, _GL_UNUSED_LABEL, _GL_ATTRIBUTE_PURE, and
+	_GL_ATTRIBUTE_CONST.
+	* posix/getopt.c (_getopt_initialize): Mark argc and argv
+	parameters with _GL_UNUSED.
+
 	* posix/getopt.c: When used standalone, define __libc_use_alloca
 	as always false and alloca to abort if called.
 	(process_long_option): Rewrite handling of ambiguous long options
