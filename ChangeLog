@@ -1,5 +1,11 @@
 2017-04-04  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/tst-resolv-canonname.c: New file.
+	* resolv/Makefile (tests): Add tst-resolv-canonname.
+	(tst-resolv-canonname): Link with -ldl, -lresolv, -lpthread.
+
+2017-04-04  Florian Weimer  <fweimer@redhat.com>
+
 	* include/arpa/nameser.h (__ns_name_ntop, __ns_name_unpack):
 	Declare.
 	* resolv/nss_dns/dns-network.c: Include <arpa/nameser.h>.

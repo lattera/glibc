@@ -50,6 +50,13 @@ tests += \
   tst-resolv-network \
   tst-resolv-search \
 
+# These tests need libdl.
+ifeq (yes,$(build-shared))
+tests += \
+  tst-resolv-canonname \
+
+endif
+
 # This test sends millions of packets and is rather slow.
 xtests += tst-resolv-qtypes
 endif
@@ -128,6 +135,8 @@ $(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-network: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-canonname: \
+  $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
 
 $(objpfx)tst-ns_name: $(objpfx)libresolv.so
 $(objpfx)tst-ns_name.out: tst-ns_name.data
