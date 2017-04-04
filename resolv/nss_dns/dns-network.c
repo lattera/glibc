@@ -324,11 +324,8 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 
   while (--answer_count >= 0 && cp < end_of_message)
     {
-      int n = dn_expand (answer->buf, end_of_message, cp, bp, linebuflen);
-      int type, class;
-
-      n = __ns_name_unpack (answer->buf, end_of_message, cp,
-			    packtmp, sizeof packtmp);
+      int n = __ns_name_unpack (answer->buf, end_of_message, cp,
+				packtmp, sizeof packtmp);
       if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
 	{
 	  if (errno == EMSGSIZE)
@@ -350,6 +347,7 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 	  return NSS_STATUS_UNAVAIL;
 	}
 
+      int type, class;
       GETSHORT (type, cp);
       GETSHORT (class, cp);
       cp += INT32SZ;		/* TTL */

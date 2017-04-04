@@ -1,5 +1,10 @@
 2017-04-04  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/nss_dns/dns-network.c (getanswer_r): Remove __dn_expand
+	call whose result is not used.
+
+2017-04-04  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/tst-ns_name.c, resolv/tst-ns_name.data: New file.
 	* resolv/Makefile (tests): Add tst-ns_name.
 	(tst-ns_name): Link with -lresolv.
