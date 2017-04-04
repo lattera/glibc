@@ -1,3 +1,15 @@
+2017-04-04  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
+
+	* wcsmbs/tst-btowc.c: Import support/test-driver.c and remove
+	the TEST_FUNCTION macro definition.
+	* wcsmbs/tst-mbrtowc2.c: Likewise.
+	* wcsmbs/tst-mbsrtowcs.c: Likewise.
+	* wcsmbs/tst-wchar-h.c: Likewise.
+	* wcsmbs/tst-wcpncpy.c: Likewise.
+	* wcsmbs/tst-wcrtomb.c: Likewise.
+	* wcsmbs/tst-wcsnlen.c: Likewise.
+	* wcsmbs/tst-wcstof.c: Likewise.
+
 2017-04-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/pthread_create.c (START_THREAD_DEFN): Remove

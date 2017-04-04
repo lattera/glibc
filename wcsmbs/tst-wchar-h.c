@@ -8,5 +8,4 @@ do_test (void)
   return sizeof (x) - sizeof (mbstate_t);
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

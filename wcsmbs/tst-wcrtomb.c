@@ -93,5 +93,4 @@ check_ascii (const char *locname)
   return res != 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
