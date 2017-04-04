@@ -1,3 +1,17 @@
+2017-04-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/pthreadP.h (USE_REQUEUE_PI): Remove ununsed macro.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_REQUEUE_PI): Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_REQUEUE_PI): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_REQUEUE_PI): Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	(__ASSUME_REQUEUE_PI): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h
+	(__ASSUME_REQUEUE_PI): Likewise.
+
 2017-04-04  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/tst-resolv-canonname.c: New file.

@@ -101,11 +101,6 @@
 #define __ASSUME_PREADV	1
 #define __ASSUME_PWRITEV	1
 
-/* Support for FUTEX_*_REQUEUE_PI was added in 2.6.31 (but some
-   architectures lack futex_atomic_cmpxchg_inatomic in some
-   configurations).  */
-#define __ASSUME_REQUEUE_PI	1
-
 /* Support for recvmmsg functionality was added in 2.6.33.  The macros
    defined correspond to those for accept4.  */
 #if __LINUX_KERNEL_VERSION >= 0x020621
