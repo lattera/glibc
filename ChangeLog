@@ -1,3 +1,8 @@
+2017-04-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/s390-32/tls-macros.h (TLS_LD, TLS_GD):
+	Clobber also r14.
+
 2017-04-03  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #21253]
