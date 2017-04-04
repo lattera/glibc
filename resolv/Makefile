@@ -43,6 +43,7 @@ routines += gai_sigqueue
 tests += \
   tst-bug18665 \
   tst-bug18665-tcp \
+  tst-ns_name \
   tst-res_hconf_reorder \
   tst-res_use_inet6 \
   tst-resolv-basic \
@@ -127,6 +128,10 @@ $(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-network: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
+
+$(objpfx)tst-ns_name: $(objpfx)libresolv.so
+$(objpfx)tst-ns_name.out: tst-ns_name.data
+
 
 # This test case uses the deprecated RES_USE_INET6 resolver option.
 CFLAGS-tst-res_use_inet6.c += -Wno-error

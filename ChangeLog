@@ -1,3 +1,10 @@
+2017-04-04  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/tst-ns_name.c, resolv/tst-ns_name.data: New file.
+	* resolv/Makefile (tests): Add tst-ns_name.
+	(tst-ns_name): Link with -lresolv.
+	(tst-ns_name.out): Depend on the input data file.
+
 2017-04-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/s390-32/tls-macros.h (TLS_LD, TLS_GD):
