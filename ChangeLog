@@ -1,5 +1,16 @@
 2017-04-04  Florian Weimer  <fweimer@redhat.com>
 
+	* include/arpa/nameser.h (__ns_name_ntop, __ns_name_unpack):
+	Declare.
+	* resolv/nss_dns/dns-network.c: Include <arpa/nameser.h>.
+	(NS_MAXCDNAME): Remove definition.
+	(__ns_name_ntop, __ns_name_unpack): Remove declaration.
+	* resolv/nss_dns/dns-host.c: Include <arpa/nameser.h>.
+	(NS_MAXCDNAME): Remove definition.
+	(__ns_name_ntop, __ns_name_unpack): Remove declaration.
+
+2017-04-04  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/nss_dns/dns-network.c (getanswer_r): Remove __dn_expand
 	call whose result is not used.
 

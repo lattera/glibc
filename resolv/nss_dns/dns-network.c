@@ -66,6 +66,7 @@
 
 #include "nsswitch.h"
 #include <arpa/inet.h>
+#include <arpa/nameser.h>
 
 /* Maximum number of aliases we allow.  */
 #define MAX_NR_ALIASES	48
@@ -91,13 +92,6 @@ typedef union querybuf
   HEADER hdr;
   u_char buf[MAXPACKET];
 } querybuf;
-
-/* These functions are defined in res_comp.c.  */
-#define NS_MAXCDNAME	255	/* maximum compressed domain name */
-extern int __ns_name_ntop (const u_char *, char *, size_t) __THROW;
-extern int __ns_name_unpack (const u_char *, const u_char *,
-			     const u_char *, u_char *, size_t) __THROW;
-
 
 /* Prototypes for local functions.  */
 static enum nss_status getanswer_r (const querybuf *answer, int anslen,

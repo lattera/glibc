@@ -80,6 +80,7 @@
 #include <string.h>
 
 #include "nsswitch.h"
+#include <arpa/nameser.h>
 
 /* Get implementeation for some internal functions.  */
 #include <resolv/resolv-internal.h>
@@ -105,13 +106,6 @@ typedef union querybuf
   HEADER hdr;
   u_char buf[MAXPACKET];
 } querybuf;
-
-/* These functions are defined in res_comp.c.  */
-#define NS_MAXCDNAME	255	/* maximum compressed domain name */
-extern int __ns_name_ntop (const u_char *, char *, size_t);
-extern int __ns_name_unpack (const u_char *, const u_char *,
-			     const u_char *, u_char *, size_t);
-
 
 static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 				    const char *qname, int qtype,

@@ -51,6 +51,9 @@ extern const struct _ns_flagdata _ns_flagdata[] attribute_hidden;
 
 extern unsigned int	__ns_get16 (const unsigned char *) __THROW;
 extern unsigned long	__ns_get32 (const unsigned char *) __THROW;
+int __ns_name_ntop (const unsigned char *, char *, size_t) __THROW;
+int __ns_name_unpack (const unsigned char *, const unsigned char *,
+		      const unsigned char *, unsigned char *, size_t) __THROW;
 
 #define ns_msg_getflag(handle, flag) \
   (((handle)._flags & _ns_flagdata[flag].mask) >> _ns_flagdata[flag].shift)
