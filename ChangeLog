@@ -1,3 +1,43 @@
+2017-05-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* posix/Makefile (headers): Add pthreadtypes-arch.h and
+	thread-shared-types.h.
+	* sysdeps/aarch64/nptl/bits/pthreadtypes-arch.h: New file: arch
+	specific thread definition.
+	* sysdeps/alpha/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/arm/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/hppa/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/ia64/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/m68k/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/microblaze/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/mips/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/nios2/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/powerpc/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/s390/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/sh/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/sparc/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/tile/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/x86/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/nptl/bits/thread-shared-types.h: New file: shared
+	thread definition between POSIX and C11.
+	* sysdeps/aarch64/nptl/bits/pthreadtypes.h.: Remove file.
+	* sysdeps/alpha/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/arm/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/hppa/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/m68k/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/microblaze/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/mips/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/nios2/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/ia64/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/powerpc/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/s390/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/sh/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/sparc/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/tile/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/x86/nptl/bits/pthreadtypes.h: Likewise.
+	* sysdeps/nptl/bits/pthreadtypes.h: New file: common thread
+	definitions shared across all architectures.
+
 2017-05-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h

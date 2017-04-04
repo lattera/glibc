@@ -26,6 +26,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   glob.h regex.h wordexp.h fnmatch.h 				      \
 	   getopt.h bits/getopt_core.h bits/getopt_ext.h bits/getopt_posix.h  \
 	   bits/types.h bits/typesizes.h bits/pthreadtypes.h		      \
+	   bits/pthreadtypes-arch.h bits/thread-shared-types.h		      \
 	   bits/posix1_lim.h bits/posix2_lim.h bits/posix_opt.h		      \
 	   bits/local_lim.h tar.h bits/utsname.h bits/confname.h	      \
 	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
