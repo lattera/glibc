@@ -1,3 +1,13 @@
+2017-04-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/x86/Implies: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h: Move to ...
+	* sysdeps/alpha/nptl/bits/pthreadtypes.h: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Move to ...
+	* sysdeps/powerpc/nptl/bits/pthreadtypes.h: ... here.
+	* sysdeps/x86/bits/pthreadtypes.h: Move to ...
+	* sysdeps/x86/nptl/bits/pthreadtypes.h: ... here.
+
 2017-04-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/dl-procinfo.c: Include
