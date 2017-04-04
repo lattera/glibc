@@ -326,18 +326,6 @@ typedef struct
 	      abort (); })
 
 
-# define CALL_THREAD_FCT(descr) \
-  ({ void *__res;							      \
-     asm volatile ("movq %%fs:%P2, %%rdi\n\t"				      \
-		   "callq *%%fs:%P1"					      \
-		   : "=a" (__res)					      \
-		   : "i" (offsetof (struct pthread, start_routine)),	      \
-		     "i" (offsetof (struct pthread, arg))		      \
-		   : "di", "si", "cx", "dx", "r8", "r9", "r10", "r11",	      \
-		     "memory", "cc");					      \
-     __res; })
-
-
 /* Set the stack guard field in TCB head.  */
 # define THREAD_SET_STACK_GUARD(value) \
     THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)

@@ -1,5 +1,11 @@
 2017-04-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/pthread_create.c (START_THREAD_DEFN): Remove
+	CALL_THREAD_FCT macro usage.
+	* sysdeps/i386/nptl/tls.h (CALL_THREAD_FCT): Remove definition.
+	* sysdeps/x86_64/nptl/tls.h (CALL_THREAD_FCT): Likewise.
+	* sysdeps/x86_64/32/nptl/tls.h: Remove file.
+
 	* nptl/pthreadP.h (USE_REQUEUE_PI): Remove ununsed macro.
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h
 	(__ASSUME_REQUEUE_PI): Likewise.

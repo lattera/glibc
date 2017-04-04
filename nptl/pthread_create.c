@@ -452,11 +452,7 @@ START_THREAD_DEFN
       LIBC_PROBE (pthread_start, 3, (pthread_t) pd, pd->start_routine, pd->arg);
 
       /* Run the code the user provided.  */
-#ifdef CALL_THREAD_FCT
-      THREAD_SETMEM (pd, result, CALL_THREAD_FCT (pd));
-#else
       THREAD_SETMEM (pd, result, pd->start_routine (pd->arg));
-#endif
     }
 
   /* Call destructors for the thread_local TLS variables.  */
