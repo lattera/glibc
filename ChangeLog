@@ -1,5 +1,13 @@
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
+	* posix/bits/getopt_core.h, posix/bits/getopt_ext.h
+	* posix/getopt.c, posix/getopt1.c, posix/getopt_int.h:
+	Mention in top-of-file boilerplate that these files are shared
+	with gnulib.
+	* posix/getopt.h, posix/bits/getopt_posix.h:
+	Mention in top-of-file boilerplate that these files are NOT shared
+	with gnulib, unlike the rest of the getopt implementation.
+
 	* posix/bits/getopt_core.h, posix/bits/getopt_ext.h:
 	New files, intended to be shared with gnulib.
 	* posix/bits/getopt_posix.h:

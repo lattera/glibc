@@ -1,6 +1,7 @@
 /* Declarations for getopt (basic, portable features only).
    Copyright (C) 1989-2017 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+   This file is part of the GNU C Library and is also part of gnulib.
+   Patches to this file should be submitted to both projects.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

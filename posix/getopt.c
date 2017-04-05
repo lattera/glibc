@@ -1,9 +1,7 @@
 /* Getopt for GNU.
-   NOTE: getopt is part of the C library, so if you don't know what
-   "Keep this file name-space clean" means, talk to drepper@gnu.org
-   before changing it!
    Copyright (C) 1987-2017 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+   This file is part of the GNU C Library and is also part of gnulib.
+   Patches to this file should be submitted to both projects.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

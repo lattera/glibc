@@ -1,6 +1,7 @@
 /* Declarations for getopt (POSIX compatibility shim).
    Copyright (C) 1989-2017 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+   Unlike the bulk of the getopt implementation, this file is NOT part
+   of gnulib.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
