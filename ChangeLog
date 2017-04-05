@@ -1,3 +1,15 @@
+2017-04-05  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
+	    Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile
+	(sysdep_routines): Add strnlen-power8.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(strnlen): Add __strnlen_power8 to list of strnlen functions.
+	* sysdeps/powerpc/powerpc64/multiarch/strnlen-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strnlen.c
+	(__strnlen): Add __strnlen_power8 to ifunc list.
+	* sysdeps/powerpc/powerpc64/power8/strnlen.S: New file.
+
 2017-04-04  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
 	* wcsmbs/tst-btowc.c: Import support/test-driver.c and remove
