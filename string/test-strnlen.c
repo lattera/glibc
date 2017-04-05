@@ -143,6 +143,59 @@ do_random_tests (void)
     }
 }
 
+/* Tests meant to unveil fail on implementation that does not access bytes
+   around the page boundary accordingly.  */
+static void
+do_page_tests (void)
+{
+  size_t i, exp_len, start_offset, offset;
+  /* Calculate the null character offset.  */
+  size_t last_offset = (page_size / sizeof (CHAR)) - 1;
+
+  CHAR *s = (CHAR *) buf2;
+  memset (s, 65, (last_offset - 1));
+  s[last_offset] = 0;
+
+  /* Place short strings ending at page boundary.  */
+  offset = last_offset;
+  for (i = 0; i < 128; i++)
+    {
+      /* Decrease offset to stress several sizes and alignments.  */
+      offset--;
+      exp_len = last_offset - offset;
+      FOR_EACH_IMPL (impl, 0)
+        {
+          /* Varies maxlen value to cover the cases where it is:
+               - larger than length;
+               - slightly greater than length;
+               - equal to length;
+               - slightly less than length.  */
+          do_one_test (impl, (CHAR *) (s + offset), page_size, exp_len);
+          do_one_test (impl, (CHAR *) (s + offset), exp_len + 1, exp_len);
+          do_one_test (impl, (CHAR *) (s + offset), exp_len, exp_len);
+          if (exp_len > 0)
+            do_one_test (impl, (CHAR *) (s + offset), exp_len - 1, exp_len - 1);
+        }
+    }
+
+  /* Place long strings ending at page boundary.  */
+  start_offset = (last_offset + 1) / 2;
+  for (i = 0; i < 64; ++i)
+    {
+      /* Increase offset to stress several alignments.  */
+      offset = start_offset + i;
+      if (offset >= (last_offset + 1))
+        break;
+      exp_len = last_offset - offset;
+      FOR_EACH_IMPL (impl, 0)
+        {
+          /* Checks only for maxlen much larger than length because smaller
+             values are already covered in do_random_tests function.  */
+          do_one_test (impl, (CHAR *) (s + offset), page_size, exp_len);
+        }
+    }
+}
+
 int
 test_main (void)
 {
@@ -188,6 +241,7 @@ test_main (void)
     }
 
   do_random_tests ();
+  do_page_tests ();
   return ret;
 }
 

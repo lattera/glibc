@@ -1,4 +1,10 @@
 2017-04-05  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
+
+	* string/test-strnlen.c (do_page_tests): New function
+	to check length of strings ending at the page boundary.
+	(test_main): Added call to the do_page_tests function.
+
+2017-04-05  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 	    Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile
