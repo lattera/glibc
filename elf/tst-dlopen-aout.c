@@ -63,5 +63,5 @@ do_test (int argc, char *argv[])
   return 0;
 }
 
-#define TEST_FUNCTION do_test (argc, argv)
+#define TEST_FUNCTION_ARGV do_test
 #include <support/test-driver.c>

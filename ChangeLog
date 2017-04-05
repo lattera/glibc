@@ -1,3 +1,8 @@
+2017-04-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/tst-dlopen-aout.c (TEST_FUNCTION): Removed.
+	(TEST_FUNCTION_ARGV): New.
+
 2017-04-05  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
 	* elf/next.c: Import support/test-driver.c instead of
