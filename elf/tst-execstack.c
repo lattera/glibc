@@ -233,5 +233,4 @@ deeper (void (*f) (void))
 }
 
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

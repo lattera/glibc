@@ -42,6 +42,11 @@ void *references[] =
     &getaddrinfo_a,             /* libanl */
   };
 
-/* This is a link-time test.  There is nothing to run here.  */
-#define TEST_FUNCTION 0
-#include "../test-skeleton.c"
+static int
+do_test (void)
+{
+  /* This is a link-time test.  There is nothing to run here.  */
+  return 0;
+}
+
+#include <support/test-driver.c>

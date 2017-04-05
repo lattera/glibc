@@ -22,5 +22,4 @@ do_test (void)
 	     && strcmp (i.dli_sname, "_IO_printf") != 0);
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

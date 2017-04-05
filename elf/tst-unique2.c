@@ -24,5 +24,4 @@ do_test (void)
   return f (&var);
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

@@ -16,5 +16,4 @@ do_test (void)
   exit (0);
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

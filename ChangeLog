@@ -1,5 +1,85 @@
 2017-04-05  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
+	* elf/next.c: Import support/test-driver.c instead of
+	test-skeleton.c and delete TEST_FUNCTION macro definition.
+	* elf/nodelete.c: Likewise.
+	* elf/order2.c: Likewise.
+	* elf/tst-_dl_addr_inside_object.c: Likewise.
+	* elf/tst-addr1.c: Likewise.
+	* elf/tst-align.c: Likewise.
+	* elf/tst-align2.c: Likewise.
+	* elf/tst-audit11.c: Likewise.
+	* elf/tst-audit12.c: Likewise.
+	* elf/tst-audit2.c: Likewise.
+	* elf/tst-audit9.c: Likewise.
+	* elf/tst-auxv.c: Likewise and define TEST_FUNCTION_ARGV macro.
+	* elf/tst-deep1.c: Likewise.
+	* elf/tst-dl-iter-static.c: Likewise.
+	* elf/tst-dlmodcount.c: Likewise.
+	* elf/tst-dlmopen1.c: Likewise.
+	* elf/tst-dlmopen2.c: Likewise.
+	* elf/tst-dlmopen3.c: Likewise.
+	* elf/tst-dlopen-aout.c: Likewise.
+	* elf/tst-dlopenrpath.c: Likewise.
+	* elf/tst-dlsym-error.c: Likewise.
+	* elf/tst-execstack-needed.c: Likewise.
+	* elf/tst-execstack-prog.c: Likewise.
+	* elf/tst-execstack.c: Likewise.
+	* elf/tst-global1.c: Likewise.
+	* elf/tst-gnu2-tls1.c: Likewise.
+	* elf/tst-latepthread.c: Likewise.
+	* elf/tst-leaks1.c: Likewise.
+	* elf/tst-linkall-static.c: Likewise.
+	(do_test): New function.
+	* elf/tst-nodelete-opened.c: Likewise.
+	* elf/tst-nodelete.cc: Likewise.
+	* elf/tst-nodelete2.c: Likewise.
+	* elf/tst-noload.c: Likewise.
+	* elf/tst-null-argv.c: Likewise and define TEST_FUNCTION_ARGV marcro.
+	* elf/tst-order-main.c: Likewise.
+	* elf/tst-pathopt.c: Likewise.
+	* elf/tst-pie2.c: Likewise.
+	* elf/tst-piemod1.c: Likewise.
+	* elf/tst-prelink.c: Likewise.
+	* elf/tst-protected1a.c: Likewise.
+	* elf/tst-protected1b.c: Likewise.
+	* elf/tst-ptrguard1.c: Likewise, import getopt.h,
+	and define _GNU_SOURCE macro.
+	(cmdline_process_function): New function.
+	* elf/tst-relsort1.c: Likewise.
+	* elf/tst-stackguard1.c: Likewise, import getopt.h,
+	and define _GNU_SOURCE macro.
+	(cmdline_process_function): New function.
+	* elf/tst-thrlock.c: Likewise.
+	* elf/tst-tls-dlinfo.c: Likewise.
+	* elf/tst-tls-manydynamic.c: Likewise and import support/xthread.h.
+	* elf/tst-tls1.c: Likewise.
+	* elf/tst-tls10.c: Likewise.
+	* elf/tst-tls11.c: Likewise.
+	* elf/tst-tls12.c: Likewise.
+	* elf/tst-tls13.c: Likewise.
+	* elf/tst-tls14.c: Likewise.
+	* elf/tst-tls15.c: Likewise.
+	* elf/tst-tls16.c: Likewise.
+	* elf/tst-tls17.c: Likewise.
+	* elf/tst-tls18.c: Likewise.
+	* elf/tst-tls19.c: Likewise.
+	* elf/tst-tls2.c: Likewise.
+	* elf/tst-tls3.c: Likewise.
+	* elf/tst-tls4.c: Likewise.
+	* elf/tst-tls5.c: Likewise.
+	* elf/tst-tls6.c: Likewise.
+	* elf/tst-tls7.c: Likewise.
+	* elf/tst-tls8.c: Likewise.
+	* elf/tst-tls9.c: Likewise.
+	* elf/tst-tlsalign-extern.c: Likewise.
+	* elf/tst-tlsalign.c: Likewise.
+	* elf/tst-unique1.c: Likewise.
+	* elf/tst-unique2.c: Likewise.
+	* elf/vismain.c: Likewise.
+
+2017-04-05  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
+
 	* string/test-strnlen.c (do_page_tests): New function
 	to check length of strings ending at the page boundary.
 	(test_main): Added call to the do_page_tests function.

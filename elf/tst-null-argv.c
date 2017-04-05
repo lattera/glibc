@@ -32,4 +32,5 @@ do_test (int argc, char **argv)
   return 0;
 }
 
-#include <test-skeleton.c>
+#define TEST_FUNCTION_ARGV do_test
+#include <support/test-driver.c>

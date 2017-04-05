@@ -34,8 +34,7 @@ do_test (void)
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
 
 static void
 __attribute__ ((destructor))

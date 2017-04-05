@@ -64,4 +64,4 @@ do_test (int argc, char *argv[])
 }
 
 #define TEST_FUNCTION do_test (argc, argv)
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
