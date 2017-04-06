@@ -17,6 +17,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef MMAP_X86_64_INTERNAL_H
+#define MMAP_X86_64_INTERNAL_H
+
 #include <ldsodefs.h>
 
 /* If the Prefer_MAP_32BIT_EXEC bit is set, try to map executable pages
@@ -26,7 +29,7 @@
       && ((prot) & PROT_EXEC) != 0					\
       && HAS_ARCH_FEATURE (Prefer_MAP_32BIT_EXEC))			\
     {									\
-      __ptr_t ret = (__ptr_t) INLINE_SYSCALL (mmap, 6, (addr), (len),	\
+      void *ret = (void*) INLINE_SYSCALL_CALL (mmap, (addr), (len),	\
 					      (prot),			\
 					      (flags) | MAP_32BIT,	\
 					      (fd), (offset));		\
@@ -34,4 +37,6 @@
 	return ret;							\
     }
 
-#include <sysdeps/unix/sysv/linux/wordsize-64/mmap.c>
+#include_next <mmap_internal.h>
+
+#endif

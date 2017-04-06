@@ -1,7 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
-
 readahead	-	readahead	i:iii	__readahead	readahead
 
 prlimit		EXTRA	prlimit64	i:iipp	prlimit		prlimit64

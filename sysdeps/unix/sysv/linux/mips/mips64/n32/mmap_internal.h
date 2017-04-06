@@ -1,4 +1,5 @@
-/* Copyright (C) 2015-2017 Free Software Foundation, Inc.
+/* Common mmap definition for Linux implementation.  MIPS n32 version.
+   Copyright (C) 2016-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -12,25 +13,16 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
-#include <errno.h>
-#include <sysdep.h>
+#ifndef MMAP_MIPS_N32_INTERNAL_H
+#define MMAP_MIPS_N32_INTERNAL_H
 
-#ifndef MMAP_PAGE_UNIT
-# define MMAP_PAGE_UNIT 4096UL
+/* To handle negative offsets consistently with other architectures,
+   the offset must be zero-extended to 64-bit.  */
+#define MMAP_ADJUST_OFFSET(offset) (uint64_t) (uint32_t) offset
+
+#include_next <mmap_internal.h>
+
 #endif
-
-__ptr_t
-__mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
-{
-  if (offset & (MMAP_PAGE_UNIT - 1))
-    return (__ptr_t) INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-  return (__ptr_t) INLINE_SYSCALL (mmap2, 6, addr, len, prot, flags, fd,
-                                   offset / MMAP_PAGE_UNIT);
-}
-
-weak_alias (__mmap, mmap)

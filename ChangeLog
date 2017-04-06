@@ -1,5 +1,39 @@
 2017-04-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #21270]
+	* posix/tst-mmap-offset.c (do_prepare): New function.
+	(do_test): Rename to do_test_bz18877 and use FAIL_RET.
+	(do_test_bz21270): New function.
+	* sysdeps/unix/sysv/linux/aarch64/mmap.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/mmap.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/mmap.c: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/mmap.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/mmap64.c: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/mmap.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/mmap.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/mmap64.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/mmap64.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/mmap.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/mmap64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/mmap.c: Likewise.
+	* sysdeps/unix/sysv/linux/mmap_internal.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/mmap_internal.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/mmap_internal.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/mmap_internal.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/mmap_internal.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list: Remove mmap
+	from auto-generation list.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mmap.c: New file.
+	* sysdeps/unix/sysv/linux/mmap64.c (__mmap64): Add check for invalid
+	offsets and support for mmap2 syscall.
+
 	* posix/globtest.sh: Add cleanup routine on trap 0.
 
 2017-04-11  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>

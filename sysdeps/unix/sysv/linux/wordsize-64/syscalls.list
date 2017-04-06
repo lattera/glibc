@@ -2,7 +2,6 @@
 
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
 statfs		-	statfs		i:sp	__statfs	statfs statfs64
-mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
 readahead	-	readahead	i:iii	__readahead	readahead
 sendfile	-	sendfile	i:iipi	sendfile	sendfile64
 sync_file_range	-	sync_file_range	Ci:iiii	sync_file_range

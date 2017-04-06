@@ -1,5 +1,5 @@
-/* mmap for MIPS n32.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* Common mmap definition for Linux implementation.  Linux/m68k version.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,23 +13,17 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
-#include <errno.h>
-#include <stdint.h>
-#include <sysdep.h>
+#ifndef MMAP_M68K_INTERNAL_LINUX_H
+#define MMAP_M68K_INTERNAL_LINUX_H
 
-__ptr_t
-__mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
-{
-  /* To handle negative offsets consistently with other architectures,
-     the offset must be zero-extended to 64-bit.  */
-  uint64_t offset_adj = (uint64_t) (uint32_t) offset;
-  return (__ptr_t) INLINE_SYSCALL (mmap, 6, addr, len, prot, flags, fd,
-				   offset_adj);
-}
+/* ColdFire and Sun 3 kernels have PAGE_SHIFT set to 13 and expect
+   mmap2 offset to be provided in 8K pages.  Determine the shift
+   dynamically with getpagesize.  */
+#define MMAP2_PAGE_SHIFT -1
 
-weak_alias (__mmap, mmap)
+#include_next <mmap_internal.h>
+
+#endif
