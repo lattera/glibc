@@ -18,7 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef _LIBC
-#include "config.h"
+# include <config.h>
 #endif
 
 #include "getopt.h"

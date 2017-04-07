@@ -1,3 +1,7 @@
+2017-04-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/getopt1.c: Include <config.h>, not "config.h".
+
 2017-04-07  Zack Weinberg  <zackw@panix.com>
 
 	* posix/bits/getopt_core.h, posix/bits/getopt_ext.h
