@@ -39,7 +39,7 @@ __setfpucw (fpu_control_t set)
   __asm__ ("fldcw %0" : : "m" (*&cw));
 
   /* If the CPU supports SSE, we set the MXCSR as well.  */
-  if ((GLRO(dl_hwcap) & HWCAP_I386_XMM) != 0)
+  if (HAS_CPU_FEATURE (SSE))
     {
       unsigned int xnew_exc;
 

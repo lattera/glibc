@@ -34,7 +34,7 @@ __fegetexceptflag (fexcept_t *flagp, int excepts)
   *flagp = temp & excepts & FE_ALL_EXCEPT;
 
   /* If the CPU supports SSE, we clear the MXCSR as well.  */
-  if ((GLRO(dl_hwcap) & HWCAP_I386_XMM) != 0)
+  if (HAS_CPU_FEATURE (SSE))
     {
       unsigned int sse_exc;
 

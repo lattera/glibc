@@ -35,7 +35,7 @@ fesetmode (const femode_t *modep)
   else
     cw = modep->__control_word;
   _FPU_SETCW (cw);
-  if ((GLRO(dl_hwcap) & HWCAP_I386_XMM) != 0)
+  if (HAS_CPU_FEATURE (SSE))
     {
       unsigned int mxcsr;
       __asm__ ("stmxcsr %0" : "=m" (mxcsr));

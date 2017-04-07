@@ -45,6 +45,7 @@
 /* COMMON_CPUID_INDEX_1.  */
 #define bit_cpu_CX8		(1 << 8)
 #define bit_cpu_CMOV		(1 << 15)
+#define bit_cpu_SSE		(1 << 25)
 #define bit_cpu_SSE2		(1 << 26)
 #define bit_cpu_SSSE3		(1 << 9)
 #define bit_cpu_SSE4_1		(1 << 19)
@@ -82,6 +83,7 @@
 
 # define index_cpu_CX8	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
 # define index_cpu_CMOV	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
+# define index_cpu_SSE	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
 # define index_cpu_SSE2	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
 # define index_cpu_SSSE3 COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
 # define index_cpu_SSE4_1 COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
@@ -228,6 +230,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 
 # define index_cpu_CX8		COMMON_CPUID_INDEX_1
 # define index_cpu_CMOV		COMMON_CPUID_INDEX_1
+# define index_cpu_SSE		COMMON_CPUID_INDEX_1
 # define index_cpu_SSE2		COMMON_CPUID_INDEX_1
 # define index_cpu_SSSE3	COMMON_CPUID_INDEX_1
 # define index_cpu_SSE4_1	COMMON_CPUID_INDEX_1
@@ -246,6 +249,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 
 # define reg_CX8		edx
 # define reg_CMOV		edx
+# define reg_SSE		edx
 # define reg_SSE2		edx
 # define reg_SSSE3		ecx
 # define reg_SSE4_1		ecx

@@ -1,3 +1,24 @@
+2017-04-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/fpu/fclrexcpt.c (__feclearexcept): Use
+	HAS_CPU_FEATURE to check for SSE.
+	* sysdeps/i386/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
+	* sysdeps/i386/fpu/feenablxcpt.c (feenableexcept): Likewise.
+	* sysdeps/i386/fpu/fegetenv.c (__fegetenv): Likewise.
+	* sysdeps/i386/fpu/fegetmode.c (fegetmode): Likewise.
+	* sysdeps/i386/fpu/feholdexcpt.c (__feholdexcept): Likewise.
+	* sysdeps/i386/fpu/fesetenv.c (__fesetenv): Likewise.
+	* sysdeps/i386/fpu/fesetmode.c (fesetmode): Likewise.
+	* sysdeps/i386/fpu/fesetround.c (__fesetround): Likewise.
+	* sysdeps/i386/fpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/i386/fpu/fgetexcptflg.c (__fegetexceptflag): Likewise.
+	* sysdeps/i386/fpu/fsetexcptflg.c (__fesetexceptflag): Likewise.
+	* sysdeps/i386/fpu/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/i386/setfpucw.c (__setfpucw): Likewise.
+	* sysdeps/x86/cpu-features.h (bit_cpu_SSE): New.
+	(index_cpu_SSE): Likewise.
+	(reg_SSE): Likewise.
+
 2017-04-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* posix/getopt1.c: Include <config.h>, not "config.h".
