@@ -1,3 +1,7 @@
+2017-04-07  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/res_mkquery.c (res_nmkquery): Remove IQUERY support.
+
 2017-04-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/sparc32/Makefile (libc.so-gnulib): New rule.

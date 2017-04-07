@@ -188,24 +188,6 @@ res_nmkquery(res_state statp,
 		hp->arcount = htons(1);
 		break;
 
-	case IQUERY:
-		/*
-		 * Initialize answer section
-		 */
-		if (__glibc_unlikely (buflen < 1 + RRFIXEDSZ + datalen))
-			return (-1);
-		*cp++ = '\0';	/* no domain name */
-		NS_PUT16 (type, cp);
-		NS_PUT16 (class, cp);
-		NS_PUT32 (0, cp);
-		NS_PUT16 (datalen, cp);
-		if (datalen) {
-			memcpy(cp, data, datalen);
-			cp += datalen;
-		}
-		hp->ancount = htons(1);
-		break;
-
 	default:
 		return (-1);
 	}

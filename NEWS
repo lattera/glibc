@@ -41,6 +41,9 @@ Version 2.26
   "The Rules of Hungarian Orthography, 12th edition" and the work of
   Egmont Koblinger (Bug 18934).
 
+* res_mkquery and res_nmkquery no longer support the IQUERY opcode.  DNS
+  servers have not supported this opcode for a long time.
+
 Security related changes:
 
   [Add security related changes here]
