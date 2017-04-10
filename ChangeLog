@@ -1,3 +1,10 @@
+2017-04-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/dl-procinfo.c: Include
+	<sysdeps/x86/dl-procinfo.c>.
+	* sysdeps/x86_64/dl-procinfo.c: Likewise.
+	* sysdeps/x86/dl-procinfo.c: New file.
+
 2017-04-10  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* sysdeps/generic/math_private.h: Remove declarations of
