@@ -18,21 +18,7 @@
 
 #include <sysdep.h>
 
-#undef EALIGN
-#define EALIGN(name, alignt, words)				\
-  .section ".text";						\
-  ENTRY_2(__strcpy_power8)					\
-  .align ALIGNARG(alignt);					\
-  EALIGN_W_##words;						\
-  BODY_LABEL(__strcpy_power8):					\
-  cfi_startproc;						\
-  LOCALENTRY(__strcpy_power8)
-
-#undef END
-#define END(name)						\
-  cfi_endproc;							\
-  TRACEBACK(__strcpy_power8)					\
-  END_2(__strcpy_power8)
+#define STRCPY __strcpy_power8
 
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)

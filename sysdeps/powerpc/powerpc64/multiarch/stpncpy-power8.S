@@ -20,21 +20,7 @@
 
 #define USE_AS_STPNCPY
 
-#undef EALIGN
-#define EALIGN(name, alignt, words)				\
-  .section ".text";						\
-  ENTRY_2(__stpncpy_power8)					\
-  .align ALIGNARG(alignt);					\
-  EALIGN_W_##words;						\
-  BODY_LABEL(__stpncpy_power8):					\
-  cfi_startproc;						\
-  LOCALENTRY(__stpncpy_power8)
-
-#undef END
-#define END(name)						\
-  cfi_endproc;							\
-  TRACEBACK(__stpncpy_power8)					\
-  END_2(__stpncpy_power8)
+#define STPNCPY __stpncpy_power8
 
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)

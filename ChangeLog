@@ -1,3 +1,18 @@
+2017-04-11  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy-power8.S: Define the
+	implementation-specific function name and remove unneeded macros
+	definition.
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strncpy.S: Set a default
+	function name if not defined.
+	* sysdeps/powerpc/powerpc64/power8/strcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Likewise.
+
 2017-04-11  Paul Clarke  <pc@us.ibm.com>
 
 	* elf/elf.h (AT_L1I_CACHESIZE, AT_L1I_CACHEGEOMETRY, AT_L1D_CACHESIZE,
