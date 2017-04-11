@@ -1,3 +1,7 @@
+2017-04-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* posix/globtest.sh: Add cleanup routine on trap 0.
+
 2017-04-11  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/memcmp-power4.S: Define the
