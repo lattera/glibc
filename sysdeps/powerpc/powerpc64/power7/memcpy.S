@@ -23,12 +23,16 @@
 /* __ptr_t [r3] memcpy (__ptr_t dst [r3], __ptr_t src [r4], size_t len [r5]);
    Returns 'dst'.  */
 
+#ifndef MEMCPY
+# define MEMCPY memcpy
+#endif
+
 #define dst 11		/* Use r11 so r3 kept unchanged.  */
 #define src 4
 #define cnt 5
 
 	.machine power7
-EALIGN (memcpy, 5, 0)
+EALIGN (MEMCPY, 5, 0)
 	CALL_MCOUNT 3
 
 	cmpldi	cr1,cnt,31
@@ -422,5 +426,5 @@ L(end_unaligned_loop):
 	/* Return original DST pointer.  */
 	blr
 
-END_GEN_TB (memcpy,TB_TOCLESS)
+END_GEN_TB (MEMCPY,TB_TOCLESS)
 libc_hidden_builtin_def (memcpy)

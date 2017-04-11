@@ -19,21 +19,7 @@
 #include <sysdep.h>
 
 #if defined SHARED && IS_IN (libc)
-# undef EALIGN
-# define EALIGN(name, alignt, words)				\
-  .section ".text";						\
-  ENTRY_2(__memcpy_ppc)						\
-  .align ALIGNARG(alignt);					\
-  EALIGN_W_##words;						\
-  BODY_LABEL(__memcpy_ppc):					\
-  cfi_startproc;						\
-  LOCALENTRY(__memcpy_ppc)
-
-# undef END_GEN_TB
-# define END_GEN_TB(name, mask)					\
-   cfi_endproc;							\
-   TRACEBACK_MASK(__memcpy_ppc,mask)				\
-   END_2(__memcpy_ppc)
+# define MEMCPY __memcpy_ppc
 
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name)

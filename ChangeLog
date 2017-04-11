@@ -1,5 +1,23 @@
 2017-04-11  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-a2.S: Define the
+	implementation-specific function name and remove unneeded
+	macros definition.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-cell.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-power4.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-power6.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/mempcpy-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/a2/memcpy.S: Set a default function
+	name if not defined and pass as parameter to macros accordingly.
+	* sysdeps/powerpc/powerpc64/cell/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/mempcpy.S: Likewise.
+
 	* sysdeps/powerpc/powerpc64/multiarch/memchr-power7.S: Define the
 	implementation-specific function name and remove unneeded macros
 	definition.

@@ -18,21 +18,7 @@
 
 #include <sysdep.h>
 
-#undef EALIGN
-#define EALIGN(name, alignt, words)				\
-  .section ".text";						\
-  ENTRY_2(__memcpy_a2)						\
-  .align ALIGNARG(alignt);					\
-  EALIGN_W_##words;						\
-  BODY_LABEL(__memcpy_a2):					\
-  cfi_startproc;						\
-  LOCALENTRY(__memcpy_a2)
-
-#undef END_GEN_TB
-#define END_GEN_TB(name, mask)					\
-  cfi_endproc;							\
-  TRACEBACK_MASK(__memcpy_a2,mask)				\
-  END_2(__memcpy_a2)
+#define MEMCPY __memcpy_a2
 
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
