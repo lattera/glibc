@@ -1,5 +1,15 @@
 2017-04-11  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp-power4.S: Define the
+	implementation-specific function name and remove unneeded
+	macros definition.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memmove-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memcmp.S: Set a default function
+	name if not defined and pass as parameter to macros accordingly.
+	* sysdeps/powerpc/powerpc64/power7/memcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memmove.S: Likewise.
+
 	* sysdeps/powerpc/powerpc64/multiarch/memcpy-a2.S: Define the
 	implementation-specific function name and remove unneeded
 	macros definition.
