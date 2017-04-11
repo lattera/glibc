@@ -22,8 +22,11 @@
 /* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
    Returns 's'.  */
 
+#ifndef MEMSET
+# define MEMSET memset
+#endif
 	.machine power7
-EALIGN (memset, 5, 0)
+EALIGN (MEMSET, 5, 0)
 	CALL_MCOUNT 3
 
 L(_memset):
@@ -380,7 +383,7 @@ L(small):
 	stw	4,4(10)
 	blr
 
-END_GEN_TB (memset,TB_TOCLESS)
+END_GEN_TB (MEMSET,TB_TOCLESS)
 libc_hidden_builtin_def (memset)
 
 /* Copied from bzero.S to prevent the linker from inserting a stub
