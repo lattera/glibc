@@ -478,7 +478,7 @@ symbols are declared in the header file @file{dirent.h}.
 @comment dirent.h
 @comment POSIX.1
 @deftypefun {struct dirent *} readdir (DIR *@var{dirstream})
-@safety{@prelim{}@mtunsafe{@mtasurace{:dirstream}}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c This function holds dirstream's non-recursive lock, which brings
 @c about the usual issues with locks and async signals and cancellation,
 @c but the lock taking is not enough to make the returned value safe to
@@ -507,13 +507,24 @@ must set @code{errno} to zero before calling @code{readdir}.  To avoid
 entering an infinite loop, you should stop reading from the directory
 after the first error.
 
-In POSIX.1-2008, @code{readdir} is not thread-safe.  In @theglibc{}
-implementation, it is safe to call @code{readdir} concurrently on
-different @var{dirstream}s, but multiple threads accessing the same
-@var{dirstream} result in undefined behavior.  @code{readdir_r} is a
-fully thread-safe alternative, but suffers from poor portability (see
-below).  It is recommended that you use @code{readdir}, with external
-locking if multiple threads access the same @var{dirstream}.
+@strong{Caution:} The pointer returned by @code{readdir} points to
+a buffer within the @code{DIR} object.  The data in that buffer will
+be overwritten by the next call to @code{readdir}.  You must take care,
+for instance, to copy the @code{d_name} string if you need it later.
+
+Because of this, it is not safe to share a @code{DIR} object among
+multiple threads, unless you use your own locking to ensure that
+no thread calls @code{readdir} while another thread is still using the
+data from the previous call.  In @theglibc{}, it is safe to call
+@code{readdir} from multiple threads as long as each thread uses
+its own @code{DIR} object.  POSIX.1-2008 does not require this to
+be safe, but we are not aware of any operating systems where it
+does not work.
+
+@code{readdir_r} allows you to provide your own buffer for the
+@code{struct dirent}, but it is less portable than @code{readdir}, and
+has problems with very long filenames (see below).  We recommend
+you use @code{readdir}, but do not share @code{DIR} objects.
 @end deftypefun
 
 @comment dirent.h
@@ -592,7 +603,7 @@ of the last two functions.
 @comment dirent.h
 @comment LFS
 @deftypefun {struct dirent64 *} readdir64 (DIR *@var{dirstream})
-@safety{@prelim{}@mtunsafe{@mtasurace{:dirstream}}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 The @code{readdir64} function is just like the @code{readdir} function
 except that it returns a pointer to a record of type @code{struct
 dirent64}.  Some of the members of this data type (notably @code{d_ino})
