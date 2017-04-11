@@ -25,6 +25,10 @@
 
 #define ITERATIONS	64
 
+#ifndef STRSTR
+# define STRSTR strstr
+#endif
+
 #ifndef STRLEN
 /* For builds with no IFUNC support, local calls should be made to internal
    GLIBC symbol (created by libc_hidden_builtin_def).  */
@@ -55,7 +59,7 @@
 
 #define	FRAMESIZE	(FRAME_MIN_SIZE+32)
 	.machine  power7
-EALIGN (strstr, 4, 0)
+EALIGN (STRSTR, 4, 0)
 	CALL_MCOUNT 2
 	mflr	r0			/* Load link register LR to r0.  */
 	std	r31, -8(r1)		/* Save callers register r31.  */
@@ -513,5 +517,5 @@ L(end):
 	ld	r31, -8(r1)	/* Restore callers save register r31.  */
 	mtlr	r0		/* Branch to link register.  */
 	blr
-END (strstr)
+END (STRSTR)
 libc_hidden_builtin_def (strstr)

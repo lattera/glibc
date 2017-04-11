@@ -1,5 +1,13 @@
 2017-04-11  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/strcasestr-power8.S: Define the
+	strcasestr implementation name and remove unneeded macros definition.
+	* sysdeps/powerpc/powerpc64/multiarch/strstr-power7.S: Define
+	strstr implementation name and remove unneeded macros definition.
+	* sysdeps/powerpc/powerpc64/power7/strstr.S: Set a default function
+	name if not defined and pass as parameter to macros accordingly.
+	* sysdeps/powerpc/powerpc64/power8/strcasestr.S: Likewise.
+
 	* sysdeps/powerpc/powerpc64/multiarch/strchr-power7.S: Define the
 	implementation-specific function name and remove unneeded macros
 	definition.
