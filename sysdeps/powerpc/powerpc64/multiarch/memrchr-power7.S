@@ -18,20 +18,7 @@
 
 #include <sysdep.h>
 
-#undef ENTRY
-#define ENTRY(name)						\
-  .section ".text";						\
-  ENTRY_2(__memrchr_power7)					\
-  .align ALIGNARG(2);						\
-  BODY_LABEL(__memrchr_power7):					\
-  cfi_startproc;						\
-  LOCALENTRY(__memrchr_power7)
-
-#undef END
-#define END(name)						\
-  cfi_endproc;							\
-  TRACEBACK(__memrchr_power7)					\
-  END_2(__memrchr_power7)
+#define MEMRCHR __memrchr_power7
 
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)

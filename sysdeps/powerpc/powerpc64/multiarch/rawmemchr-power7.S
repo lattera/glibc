@@ -18,19 +18,6 @@
 
 #include <sysdep.h>
 
-#undef ENTRY
-#define ENTRY(name)						\
-  .section ".text";						\
-  ENTRY_2(__rawmemchr_power7)					\
-  .align ALIGNARG(2);						\
-  BODY_LABEL(__rawmemchr_power7):				\
-  cfi_startproc;						\
-  LOCALENTRY(__rawmemchr_power7)
-
-#undef END
-#define END(name)						\
-  cfi_endproc;							\
-  TRACEBACK(__rawmemchr_power7)					\
-  END_2(__rawmemchr_power7)
+#define RAWMEMCHR __rawmemchr_power7
 
 #include <sysdeps/powerpc/powerpc64/power7/rawmemchr.S>

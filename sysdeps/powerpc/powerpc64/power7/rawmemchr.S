@@ -20,8 +20,12 @@
 #include <sysdep.h>
 
 /* int [r3] rawmemchr (void *s [r3], int c [r4])  */
+
+#ifndef RAWMEMCHR
+# define RAWMEMCHR __rawmemchr
+#endif
 	.machine  power7
-ENTRY (__rawmemchr)
+ENTRY (RAWMEMCHR)
 	CALL_MCOUNT 2
 	dcbt	0,r3
 	clrrdi	r8,r3,3	      /* Align the address to doubleword boundary.  */
@@ -106,6 +110,6 @@ L(done):
 	srdi	r0,r0,3	      /* Convert leading zeros to bytes.  */
 	add	r3,r8,r0      /* Return address of the matching char.  */
 	blr
-END (__rawmemchr)
+END (RAWMEMCHR)
 weak_alias (__rawmemchr,rawmemchr)
 libc_hidden_builtin_def (__rawmemchr)

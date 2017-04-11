@@ -1,5 +1,16 @@
 2017-04-11  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/memchr-power7.S: Define the
+	implementation-specific function name and remove unneeded macros
+	definition.
+	* sysdeps/powerpc/powerpc64/multiarch/memrchr-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/rawmemchr-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memchr.S: Set a default
+	function name if not defined and pass as parameter to macros
+	accordingly.
+	* sysdeps/powerpc/powerpc64/power7/memrchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/rawmemchr.S: Likewise.
+
 	* sysdeps/powerpc/powerpc64/multiarch/memset-power4.S: Define the
 	implementation-specific function name and remove unneeded macros
 	definition.
