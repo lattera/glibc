@@ -19,20 +19,7 @@
 #include <sysdep.h>
 
 #if defined SHARED && IS_IN (libc)
-# undef ENTRY
-# define ENTRY(name)						\
-  .section ".text";						\
-  ENTRY_2(__strlen_ppc)						\
-  .align ALIGNARG(2);						\
-  BODY_LABEL(__strlen_ppc):					\
-  cfi_startproc;						\
-  LOCALENTRY(__strlen_ppc)
-
-# undef END
-# define END(name)						\
-  cfi_endproc;							\
-  TRACEBACK(__strlen_ppc)					\
-  END_2(__strlen_ppc)
+# define STRLEN __strlen_ppc
 
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name)

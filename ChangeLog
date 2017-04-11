@@ -1,5 +1,17 @@
 2017-04-11  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/strlen-power7.S: Define
+	the strlen implementation name and remove unneeded macros definition.
+	* sysdeps/powerpc/powerpc64/multiarch/strlen-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strlen-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strnlen-power7.S: Define
+	the strnlen implementation name and remove unneeded macros definition.
+	* sysdeps/powerpc/powerpc64/power7/strlen.S: Set a default function
+	name if not defined and pass as parameter to macros accordingly.
+	* sysdeps/powerpc/powerpc64/power7/strnlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strlen.S: Likewise.
+
 	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp_l-power7.S: Define
 	the implementation-specific function name and remove unneeded
 	macros definition.

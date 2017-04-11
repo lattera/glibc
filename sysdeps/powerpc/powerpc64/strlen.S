@@ -80,7 +80,11 @@
 
 /* int [r3] strlen (char *s [r3])  */
 
-ENTRY (strlen)
+#ifndef STRLEN
+# define STRLEN strlen
+#endif
+
+ENTRY (STRLEN)
 	CALL_MCOUNT 1
 
 #define rTMP4	r0
@@ -195,5 +199,5 @@ L(done1):
 	blr
 #endif
 
-END (strlen)
+END (STRLEN)
 libc_hidden_builtin_def (strlen)
