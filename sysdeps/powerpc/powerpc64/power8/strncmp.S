@@ -18,6 +18,10 @@
 
 #include <sysdep.h>
 
+#ifndef STRNCMP
+# define STRNCMP strncmp
+#endif
+
 /* Implements the function
 
    int [r3] strncmp (const char *s1 [r3], const char *s2 [r4], size_t [r5] n)
@@ -28,7 +32,7 @@
    4k.  */
 
 	.machine  power7
-EALIGN (strncmp, 4, 0)
+EALIGN (STRNCMP, 4, 0)
 	/* Check if size is 0.  */
 	mr.	r10,r5
 	beq	cr0,L(ret0)
@@ -319,5 +323,5 @@ L(byte_ne_4):
 	extsw	r10,r9
 	mr	r9,r8
 	b	L(size_reached_1)
-END(strncmp)
+END(STRNCMP)
 libc_hidden_builtin_def(strncmp)

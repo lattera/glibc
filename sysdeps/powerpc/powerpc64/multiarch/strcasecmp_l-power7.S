@@ -18,20 +18,7 @@
 
 #include <sysdep.h>
 
-#undef ENTRY
-#define ENTRY(name)						\
-  .section ".text";						\
-  ENTRY_2(__strcasecmp_l_power7)				\
-  .align ALIGNARG(2);						\
-  BODY_LABEL(__strcasecmp_l_power7):				\
-  cfi_startproc;						\
-  LOCALENTRY(__strcasecmp_l_power7)
-
-#undef END
-#define END(name)						\
-  cfi_endproc;							\
-  TRACEBACK(__strcasecmp_l_power7)				\
-  END_2(__strcasecmp_l_power7)
+#define __strcasecmp __strcasecmp_l_power7
 
 #undef weak_alias
 #define weak_alias(name, alias)

@@ -17,22 +17,7 @@
 
 #include <sysdep.h>
 
-#undef EALIGN
-#define EALIGN(name,alignt,words)				\
-  .section ".text";						\
-  ENTRY_2(__strncmp_power9)					\
-  .align ALIGNARG(alignt);					\
-  EALIGN_W_##words;						\
-  BODY_LABEL(__strncmp_power9):					\
-  cfi_startproc;						\
-  LOCALENTRY(__strncmp_power9)
-
-#undef END
-#define END(name)						\
-  cfi_endproc;							\
-  TRACEBACK(__strncmp_power9)					\
-  END_2(__strncmp_power9)
-
+#define STRNCMP __strncmp_power9
 
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)

@@ -18,6 +18,10 @@
 #ifdef __LITTLE_ENDIAN__
 #include <sysdep.h>
 
+#ifndef STRCMP
+# define STRCMP strcmp
+#endif
+
 /* Implements the function
 
    int [r3] strcmp (const char *s1 [r3], const char *s2 [r4])
@@ -62,7 +66,7 @@
    allows it.  */
 
 	.machine  power7
-EALIGN (strcmp, 4, 0)
+EALIGN (STRCMP, 4, 0)
 	li	r0, 0
 
 	/* Check if [s1]+16 or [s2]+16 will cross a 4K page boundary using
@@ -257,7 +261,7 @@ L(pagecross_retdiff):
 L(pagecross_nullfound):
 	li	r3, 0
 	b	L(pagecross_retdiff)
-END (strcmp)
+END (STRCMP)
 libc_hidden_builtin_def (strcmp)
 #else
 #include <sysdeps/powerpc/powerpc64/power8/strcmp.S>

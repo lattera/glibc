@@ -1,5 +1,28 @@
 2017-04-11  Wainer dos Santos Moschetta  <wainersm@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp_l-power7.S: Define
+	the implementation-specific function name and remove unneeded
+	macros definition.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power8.S Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power9.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power4.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power9.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/strncmp.S: Set a default function
+	name if not defined and pass as parameter to macros accordingly.
+	* sysdeps/powerpc/powerpc64/power7/strcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power9/strcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power9/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strncmp.S: Likewise.
+
 	* sysdeps/powerpc/powerpc64/multiarch/stpcpy-power8.S: Define the
 	implementation-specific function name and remove unneeded macros
 	definition.

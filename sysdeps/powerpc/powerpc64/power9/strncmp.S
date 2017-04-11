@@ -26,6 +26,10 @@
    code paths depending of data alignment for first 32 bytes and uses
    vectorised loops after that.  */
 
+#ifndef STRNCMP
+# define STRNCMP strncmp
+#endif
+
 /* TODO: Change this to actual instructions when minimum binutils is upgraded
    to 2.27. Macros are defined below for these newer instructions in order
    to maintain compatibility.  */
@@ -64,7 +68,7 @@
 /* TODO: change this to .machine power9 when minimum binutils
    is upgraded to 2.27.  */
 	.machine  power7
-EALIGN (strncmp, 4, 0)
+EALIGN (STRNCMP, 4, 0)
 	/* Check if size is 0.  */
 	cmpdi	cr0, r5, 0
 	beq	cr0, L(ret0)
@@ -368,7 +372,7 @@ L(byte_ne_2):
 L(byte_ne_3):
 	extsw	r7, r7
 	b	L(byte_ne_1)
-END(strncmp)
+END(STRNCMP)
 libc_hidden_builtin_def(strncmp)
 #else
 #include <sysdeps/powerpc/powerpc64/power8/strncmp.S>
