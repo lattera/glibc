@@ -1,5 +1,17 @@
 2017-04-13  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #21369]
+	Remove EDNS fallback.
+	* resolv/res_query.c (__libc_res_nquery): Remove RES_F_EDNS0ERR
+	handling.
+	* resolv/res_send.c (send_dg): Likewise.
+	* resolv/tst-resolv-edns.c (response): Handle "formerr." and
+	"tcp." prefixes.
+	(do_test): Send a "formerr."-prefixed query in an attempt to
+	trigger EDNS fallback.
+
+2017-04-13  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #21361]
 	Limit EDNS buffer size to 1200 bytes.
 	* include/resolv.h (__res_nopt): Remove declaration.

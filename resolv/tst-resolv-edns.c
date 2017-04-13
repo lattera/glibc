@@ -115,8 +115,23 @@ response (const struct resolv_response_context *ctx,
 {
   TEST_VERIFY_EXIT (qname != NULL);
 
-  /* The "tcp." prefix can be used to request TCP fallback.  */
   const char *qname_compare = qname;
+
+  /* The "formerr." prefix can be used to request a FORMERR response on the
+     first server.  */
+  bool send_formerr;
+  if (strncmp ("formerr.", qname, strlen ("formerr.")) == 0)
+    {
+      send_formerr = true;
+      qname_compare = qname + strlen ("formerr.");
+    }
+  else
+    {
+      send_formerr = false;
+      qname_compare = qname;
+    }
+
+  /* The "tcp." prefix can be used to request TCP fallback.  */
   bool force_tcp;
   if (strncmp ("tcp.", qname_compare, strlen ("tcp.")) == 0)
     {
@@ -132,14 +147,20 @@ response (const struct resolv_response_context *ctx,
   else
     {
       support_record_failure ();
-      printf ("error: unexpected QNAME: %s\n", qname);
+      printf ("error: unexpected QNAME: %s (reduced: %s)\n",
+              qname, qname_compare);
       return;
     }
   TEST_VERIFY_EXIT (qclass == C_IN);
-  struct resolv_response_flags flags = {.tc = force_tcp && !ctx->tcp};
+  struct resolv_response_flags flags = { };
+  flags.tc = force_tcp && !ctx->tcp;
+  if (!flags.tc && send_formerr && ctx->server_index == 0)
+    /* Send a FORMERR for the first full response from the first
+       server.  */
+    flags.rcode = 1;          /* FORMERR */
   resolv_response_init (b, flags);
   resolv_response_add_question (b, qname, qclass, qtype);
-  if (flags.tc)
+  if (flags.tc || flags.rcode != 0)
     return;
 
   if (test_verbose)
@@ -466,33 +487,42 @@ do_test (void)
   for (int do_edns = 0; do_edns < 2; ++do_edns)
     for (int do_dnssec = 0; do_dnssec < 2; ++do_dnssec)
       for (int do_tcp = 0; do_tcp < 2; ++do_tcp)
-        {
-          struct resolv_test *aux = resolv_test_start
-            ((struct resolv_redirect_config)
-             {
-               .response_callback = response,
-                 });
+        for (int do_formerr = 0; do_formerr < 2; ++do_formerr)
+          {
+            struct resolv_test *aux = resolv_test_start
+              ((struct resolv_redirect_config)
+               {
+                 .response_callback = response,
+               });
 
-          use_edns = do_edns;
-          if (do_edns)
-            _res.options |= RES_USE_EDNS0;
-          use_dnssec = do_dnssec;
-          if (do_dnssec)
-            _res.options |= RES_USE_DNSSEC;
+            use_edns = do_edns;
+            if (do_edns)
+              _res.options |= RES_USE_EDNS0;
+            use_dnssec = do_dnssec;
+            if (do_dnssec)
+              _res.options |= RES_USE_DNSSEC;
 
-          char *probe_name = xstrdup (EDNS_PROBE_EXAMPLE);
-          if (do_tcp)
-            {
-              char *n = xasprintf ("tcp.%s", probe_name);
-              free (probe_name);
-              probe_name = n;
-            }
+            char *probe_name = xstrdup (EDNS_PROBE_EXAMPLE);
+            if (do_tcp)
+              {
+                char *n = xasprintf ("tcp.%s", probe_name);
+                free (probe_name);
+                probe_name = n;
+              }
+            if (do_formerr)
+              {
+                /* Send a garbage query in an attempt to trigger EDNS
+                   fallback.  */
+                char *n = xasprintf ("formerr.%s", probe_name);
+                gethostbyname (n);
+                free (n);
+              }
 
-          run_test (probe_name);
+            run_test (probe_name);
 
-          free (probe_name);
-          resolv_test_end (aux);
-        }
+            free (probe_name);
+            resolv_test_end (aux);
+          }
 
   free_response_data ();
   return 0;

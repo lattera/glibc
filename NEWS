@@ -41,6 +41,11 @@ Version 2.26
   "The Rules of Hungarian Orthography, 12th edition" and the work of
   Egmont Koblinger (Bug 18934).
 
+* The DNS stub resolver no longer performs EDNS fallback.  If EDNS or DNSSEC
+  support is enabled, the configured recursive resolver must support EDNS.
+  (Responding to EDNS-enabled queries with responses which are not
+  EDNS-enabled is fine, but FORMERR responses are not.)
+
 * res_mkquery and res_nmkquery no longer support the IQUERY opcode.  DNS
   servers have not supported this opcode for a long time.
 
