@@ -1,3 +1,13 @@
+2017-04-13  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile (sysdep_routines): Add
+	strncat-power8.
+	* sysdeps/powerpc/powerpc64/multiarch/strncat.c (strncat): Add
+	__strncat_power8 to ifunc list.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(strncat): Add __strncat_power8 to list of strncat functions.
+	* sysdeps/powerpc/powerpc64/multiarch/strncat-power8.c: New file.
+
 2017-04-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #21270]
