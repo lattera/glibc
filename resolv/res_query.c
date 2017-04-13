@@ -78,6 +78,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <resolv/resolv-internal.h>
 
 /* Options.  Leave them on. */
 /* #undef DEBUG */
@@ -147,7 +148,10 @@ __libc_res_nquery(res_state statp,
 		if ((oflags & RES_F_EDNS0ERR) == 0
 		    && (statp->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0)
 		  {
-		    n = __res_nopt(statp, n, query1, bufsize, anslen / 2);
+		    /* Use RESOLV_EDNS_BUFFER_SIZE because the receive
+		       buffer can be reallocated.  */
+		    n = __res_nopt (statp, n, query1, bufsize,
+				    RESOLV_EDNS_BUFFER_SIZE);
 		    if (n < 0)
 		      goto unspec_nomem;
 		  }
@@ -168,8 +172,10 @@ __libc_res_nquery(res_state statp,
 		if (n > 0
 		    && (oflags & RES_F_EDNS0ERR) == 0
 		    && (statp->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0)
-		  n = __res_nopt(statp, n, query2, bufsize - nused - n,
-				 anslen / 2);
+		  /* Use RESOLV_EDNS_BUFFER_SIZE because the receive
+		     buffer can be reallocated.  */
+		  n = __res_nopt (statp, n, query2, bufsize,
+				  RESOLV_EDNS_BUFFER_SIZE);
 		nquery2 = n;
 	      }
 
@@ -183,7 +189,16 @@ __libc_res_nquery(res_state statp,
 	    if (n > 0
 		&& (oflags & RES_F_EDNS0ERR) == 0
 		&& (statp->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0)
-	      n = __res_nopt(statp, n, query1, bufsize, anslen);
+	      {
+		/* Use RESOLV_EDNS_BUFFER_SIZE if the receive buffer
+		   can be reallocated.  */
+		size_t advertise;
+		if (answerp == NULL)
+		  advertise = anslen;
+		else
+		  advertise = RESOLV_EDNS_BUFFER_SIZE;
+		n = __res_nopt (statp, n, query1, bufsize, advertise);
+	      }
 
 	    nquery1 = n;
 	  }

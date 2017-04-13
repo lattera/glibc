@@ -46,7 +46,8 @@ Version 2.26
 
 Security related changes:
 
-  [Add security related changes here]
+* The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,
+  to avoid fragmentation-based spoofing attacks.
 
 The following bugs are resolved with this release:
 

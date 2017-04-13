@@ -38,4 +38,22 @@ res_use_inet6 (void)
   return _res.options & DEPRECATED_RES_USE_INET6;
 }
 
+enum
+  {
+    /* The advertized EDNS buffer size.  The value 1200 is derived
+       from the IPv6 minimum MTU (1280 bytes) minus some arbitrary
+       space for tunneling overhead.  If the DNS server does not react
+       to ICMP Fragmentation Needed But DF Set messages, this should
+       avoid all UDP fragments on current networks.  Avoiding UDP
+       fragments is desirable because it prevents fragmentation-based
+       spoofing attacks because the randomness in a DNS packet is
+       concentrated in the first fragment (with the headers) and does
+       not protect subsequent fragments.  */
+    RESOLV_EDNS_BUFFER_SIZE = 1200,
+  };
+
+/* Add an OPT record to a DNS query.  */
+int __res_nopt (res_state, int n0, unsigned char *buf, int buflen,
+                int anslen) attribute_hidden;
+
 #endif  /* _RESOLV_INTERNAL_H */

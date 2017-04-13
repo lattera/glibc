@@ -1,5 +1,26 @@
 2017-04-13  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #21361]
+	Limit EDNS buffer size to 1200 bytes.
+	* include/resolv.h (__res_nopt): Remove declaration.
+	* resolv/Makefile (tests): tst-resolv-edns.
+	(tst-resolv-edns): Link with -lresolv, -lpthread.
+	* resolv/res_mkquery.c (__res_ntop): Limit EDNS buffer size to the
+	interval [512, 1200].
+	* resolv/res_query.c (__libc_res_nquery): Use 1200 buffer size if
+	we can resize the buffer.
+	* resolv/resolv-internal.h (RESOLV_EDNS_BUFFER_SIZE): Define.
+	(__res_nopt): Declare.
+	* resolv/tst-resolv-edns.c: New file.
+	* resolv/resolv_test.h (struct resolv_edns_info): Define.
+	(struct resolv_response_context): Add edns member.
+	* resolv/resolv_test.c (struct query_info): Add edns member.
+	(parse_query): Extract EDNS information from the query.
+	(server_thread_udp_process_one): Propagate EDNS data.
+	(server_thread_tcp_client): Likewise.
+
+2017-04-13  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #21359]
 	* resolv/ns_name.c (ns_name_pack): Do not require an additional
 	byte in the destination buffer.  Avoid out-of-bounds pointer

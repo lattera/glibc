@@ -69,7 +69,7 @@
 #include <netinet/in.h>
 #include <arpa/nameser.h>
 #include <netdb.h>
-#include <resolv.h>
+#include <resolv/resolv-internal.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
@@ -225,7 +225,30 @@ __res_nopt(res_state statp,
 	*cp++ = 0;	/* "." */
 
 	NS_PUT16(T_OPT, cp);	/* TYPE */
-	NS_PUT16(MIN(anslen, 0xffff), cp);	/* CLASS = UDP payload size */
+
+	/* Lowering the advertised buffer size based on the actual
+	   answer buffer size is desirable because the server will
+	   minimize the reply to fit into the UDP packet (and A
+	   non-minimal response might not fit the buffer).
+
+	   The RESOLV_EDNS_BUFFER_SIZE limit could still result in TCP
+	   fallback and a non-minimal response which has to be
+	   hard-truncated in the stub resolver, but this is price to
+	   pay for avoiding fragmentation.  (This issue does not
+	   affect the nss_dns functions because they use the stub
+	   resolver in such a way that it allocates a properly sized
+	   response buffer.)  */
+	{
+	  uint16_t buffer_size;
+	  if (anslen < 512)
+	    buffer_size = 512;
+	  else if (anslen > RESOLV_EDNS_BUFFER_SIZE)
+	    buffer_size = RESOLV_EDNS_BUFFER_SIZE;
+	  else
+	    buffer_size = anslen;
+	  NS_PUT16 (buffer_size, cp);
+	}
+
 	*cp++ = NOERROR;	/* extended RCODE */
 	*cp++ = 0;		/* EDNS version */
 
@@ -243,4 +266,3 @@ __res_nopt(res_state statp,
 
 	return cp - buf;
 }
-libresolv_hidden_def (__res_nopt)

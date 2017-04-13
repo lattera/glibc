@@ -25,6 +25,16 @@
 
 __BEGIN_DECLS
 
+/* Information about EDNS properties of a DNS query.  */
+struct resolv_edns_info
+{
+  bool active;
+  uint8_t extended_rcode;
+  uint8_t version;
+  uint16_t flags;
+  uint16_t payload_size;
+};
+
 /* This struct provides context information when the response callback
    specified in struct resolv_redirect_config is invoked. */
 struct resolv_response_context
@@ -33,6 +43,7 @@ struct resolv_response_context
   size_t query_length;
   int server_index;
   bool tcp;
+  struct resolv_edns_info edns;
 };
 
 /* This opaque struct is used to construct responses from within the

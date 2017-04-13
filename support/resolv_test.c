@@ -429,6 +429,7 @@ struct query_info
   char qname[MAXDNAME];
   uint16_t qclass;
   uint16_t qtype;
+  struct resolv_edns_info edns;
 };
 
 /* Update *INFO from the specified DNS packet.  */
@@ -436,10 +437,26 @@ static void
 parse_query (struct query_info *info,
              const unsigned char *buffer, size_t length)
 {
-  if (length < 12)
+  HEADER hd;
+  _Static_assert (sizeof (hd) == 12, "DNS header size");
+  if (length < sizeof (hd))
     FAIL_EXIT1 ("malformed DNS query: too short: %zu bytes", length);
+  memcpy (&hd, buffer, sizeof (hd));
 
-  int ret = dn_expand (buffer, buffer + length, buffer + 12,
+  if (ntohs (hd.qdcount) != 1)
+    FAIL_EXIT1 ("malformed DNS query: wrong question count: %d",
+                (int) ntohs (hd.qdcount));
+  if (ntohs (hd.ancount) != 0)
+    FAIL_EXIT1 ("malformed DNS query: wrong answer count: %d",
+                (int) ntohs (hd.ancount));
+  if (ntohs (hd.nscount) != 0)
+    FAIL_EXIT1 ("malformed DNS query: wrong authority count: %d",
+                (int) ntohs (hd.nscount));
+  if (ntohs (hd.arcount) > 1)
+    FAIL_EXIT1 ("malformed DNS query: wrong additional count: %d",
+                (int) ntohs (hd.arcount));
+
+  int ret = dn_expand (buffer, buffer + length, buffer + sizeof (hd),
                        info->qname, sizeof (info->qname));
   if (ret < 0)
     FAIL_EXIT1 ("malformed DNS query: cannot uncompress QNAME");
@@ -457,6 +474,37 @@ parse_query (struct query_info *info,
   memcpy (&qtype_qclass, buffer + 12 + ret, sizeof (qtype_qclass));
   info->qclass = ntohs (qtype_qclass.qclass);
   info->qtype = ntohs (qtype_qclass.qtype);
+
+  memset (&info->edns, 0, sizeof (info->edns));
+  if (ntohs (hd.arcount) > 0)
+    {
+      /* Parse EDNS record.  */
+      struct __attribute__ ((packed, aligned (1)))
+      {
+        uint8_t root;
+        uint16_t rtype;
+        uint16_t payload;
+        uint8_t edns_extended_rcode;
+        uint8_t edns_version;
+        uint16_t flags;
+        uint16_t rdatalen;
+      } rr;
+      _Static_assert (sizeof (rr) == 11, "EDNS record size");
+
+      if (remaining < 4 + sizeof (rr))
+        FAIL_EXIT1 ("mailformed DNS query: no room for EDNS record");
+      memcpy (&rr, buffer + 12 + ret + 4, sizeof (rr));
+      if (rr.root != 0)
+        FAIL_EXIT1 ("malformed DNS query: invalid OPT RNAME: %d\n", rr.root);
+      if (rr.rtype != htons (41))
+        FAIL_EXIT1 ("malformed DNS query: invalid OPT type: %d\n",
+                    ntohs (rr.rtype));
+      info->edns.active = true;
+      info->edns.extended_rcode = rr.edns_extended_rcode;
+      info->edns.version = rr.edns_version;
+      info->edns.flags = ntohs (rr.flags);
+      info->edns.payload_size = ntohs (rr.payload);
+    }
 }
 
 
@@ -586,6 +634,7 @@ server_thread_udp_process_one (struct resolv_test *obj, int server_index)
       .query_length = length,
       .server_index = server_index,
       .tcp = false,
+      .edns = qinfo.edns,
     };
   struct resolv_response_builder *b = response_builder_allocate (query, length);
   obj->config.response_callback
@@ -821,6 +870,7 @@ server_thread_tcp_client (void *arg)
           .query_length = query_length,
           .server_index = closure->server_index,
           .tcp = true,
+          .edns = qinfo.edns,
         };
       struct resolv_response_builder *b = response_builder_allocate
         (query_buffer, query_length);
