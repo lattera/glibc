@@ -74,6 +74,7 @@
 #include <errno.h>
 #include <netdb.h>
 #include <resolv.h>
+#include <resolv/resolv-internal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -163,16 +163,6 @@ struct res_sym {
 };
 
 /*
- * Resolver flags (used to be discrete per-module statics ints).
- */
-#define	RES_F_VC	0x00000001	/* socket is TCP */
-#define	RES_F_CONN	0x00000002	/* socket is connected */
-#define RES_F_EDNS0ERR	0x00000004	/* EDNS0 caused errors */
-
-/* res_findzonecut() options */
-#define	RES_EXHAUSTIVE	0x00000001	/* always do all queries */
-
-/*
  * Resolver options (keep these in synch with res_debug.c, please)
  */
 #define RES_INIT	0x00000001	/* address initialized */
@@ -285,7 +275,6 @@ __END_DECLS
 #define p_fqnname		__p_fqnname
 #define p_option		__p_option
 #define p_secstodate		__p_secstodate
-#define p_section		__p_section
 #define p_time			__p_time
 #define p_type			__p_type
 #define p_rcode			__p_rcode
@@ -299,12 +288,10 @@ __END_DECLS
 #define res_nclose		__res_nclose
 #define res_ninit		__res_ninit
 #define res_nmkquery		__res_nmkquery
-#define res_npquery		__res_npquery
 #define res_nquery		__res_nquery
 #define res_nquerydomain	__res_nquerydomain
 #define res_nsearch		__res_nsearch
 #define res_nsend		__res_nsend
-#define res_nisourserver	__res_nisourserver
 #define res_ownok		__res_ownok
 #define res_queriesmatch	__res_queriesmatch
 #define res_randomid		__res_randomid
@@ -356,14 +343,9 @@ int		res_queriesmatch (const unsigned char *,
 				  const unsigned char *,
 				  const unsigned char *,
 				  const unsigned char *) __THROW;
-const char *	p_section (int __section, int __opcode) __THROW;
 /* Things involving a resolver context. */
 int		res_ninit (res_state) __THROW;
-int		res_nisourserver (const res_state,
-				  const struct sockaddr_in *) __THROW;
 void		fp_resstat (const res_state, FILE *) __THROW;
-void		res_npquery (const res_state, const unsigned char *, int,
-			     FILE *) __THROW;
 const char *	res_hostalias (const res_state, const char *, char *, size_t)
      __THROW;
 int		res_nquery (res_state, const char *, int, int,

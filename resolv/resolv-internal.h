@@ -22,6 +22,12 @@
 #include <resolv.h>
 #include <stdbool.h>
 
+/* Resolver flags.  Used for _flags in struct __res_state.  */
+#define RES_F_VC        0x00000001 /* Socket is TCP.  */
+#define RES_F_CONN      0x00000002 /* Socket is connected.  */
+#define RES_F_EDNS0ERR  0x00000004 /* EDNS0 caused errors.  */
+
+
 /* Internal version of RES_USE_INET6 which does not trigger a
    deprecation warning.  */
 #define DEPRECATED_RES_USE_INET6 0x00002000

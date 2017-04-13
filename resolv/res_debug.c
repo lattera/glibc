@@ -115,6 +115,8 @@
 
 extern const char *_res_sectioncodes[] attribute_hidden;
 
+static const char *p_section(int section, int opcode);
+
 /*
  * Print the current options.
  */
@@ -512,7 +514,7 @@ libresolv_hidden_def (p_type)
 /*
  * Return a string for the type.
  */
-const char *
+static const char *
 p_section(int section, int opcode) {
 	const struct res_sym *symbols;
 

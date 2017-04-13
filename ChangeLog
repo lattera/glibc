@@ -1,3 +1,16 @@
+2017-04-13  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/resolv.h (RES_EXHAUSTIVE, p_section, res_npquery)
+	(res_nisourserver): Remove definition.
+	(p_section, res_npquery, res_nisourserver): Remove declaration.
+	(RES_F_VC, RES_F_CONN, RES_F_EDNS0ERR): Move ...
+	* resolv/resolv-internal.h (RES_F_VC, RES_F_CONN, RES_F_EDNS0ERR):
+	... here.
+	* resolv/res_send.c: Include <resolv/resolv-internal.h> instead of
+	<resolv.h>.
+	* resolv/res_query.c: Likewise.
+	* resolv/res_debug.c (p_section): Define as static.
+
 2017-04-13  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile (sysdep_routines): Add

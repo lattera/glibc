@@ -101,7 +101,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <netdb.h>
-#include <resolv.h>
+#include <resolv/resolv-internal.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
