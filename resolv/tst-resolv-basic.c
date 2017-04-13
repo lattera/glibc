@@ -25,6 +25,12 @@
 #include <support/resolv_test.h>
 #include <support/support.h>
 
+#define LONG_NAME                                                       \
+  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaax."    \
+  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay."    \
+  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaz."    \
+  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaat"
+
 static void
 response (const struct resolv_response_context *ctx,
           struct resolv_response_builder *b,
@@ -43,13 +49,15 @@ response (const struct resolv_response_context *ctx,
     qname_compare = qname + 2;
   else
     qname_compare = qname;
-  enum {www, alias, nxdomain} requested_qname;
+  enum {www, alias, nxdomain, long_name} requested_qname;
   if (strcmp (qname_compare, "www.example") == 0)
     requested_qname = www;
   else if (strcmp (qname_compare, "alias.example") == 0)
     requested_qname = alias;
   else if (strcmp (qname_compare, "nxdomain.example") == 0)
     requested_qname = nxdomain;
+  else if (strcmp (qname_compare, LONG_NAME) == 0)
+    requested_qname = long_name;
   else
     {
       support_record_failure ();
@@ -69,6 +77,7 @@ response (const struct resolv_response_context *ctx,
   switch (requested_qname)
     {
     case www:
+    case long_name:
       resolv_response_open_record (b, qname, qclass, qtype, 0);
       break;
     case alias:
@@ -209,6 +218,10 @@ do_test (void)
            "name: www.example\n"
            "alias: alias.example\n"
            "address: 2001:db8::2\n");
+  check_h (LONG_NAME, AF_INET,
+           "name: " LONG_NAME "\n"
+           "address: 192.0.2.20\n");
+
   check_ai ("www.example", "80", AF_UNSPEC,
             "address: STREAM/TCP 192.0.2.17 80\n"
             "address: DGRAM/UDP 192.0.2.17 80\n"
@@ -223,6 +236,13 @@ do_test (void)
             "address: STREAM/TCP 2001:db8::2 80\n"
             "address: DGRAM/UDP 2001:db8::2 80\n"
             "address: RAW/IP 2001:db8::2 80\n");
+  check_ai (LONG_NAME, "80", AF_UNSPEC,
+            "address: STREAM/TCP 192.0.2.20 80\n"
+            "address: DGRAM/UDP 192.0.2.20 80\n"
+            "address: RAW/IP 192.0.2.20 80\n"
+            "address: STREAM/TCP 2001:db8::4 80\n"
+            "address: DGRAM/UDP 2001:db8::4 80\n"
+            "address: RAW/IP 2001:db8::4 80\n");
   check_ai ("www.example", "80", AF_INET,
             "address: STREAM/TCP 192.0.2.17 80\n"
             "address: DGRAM/UDP 192.0.2.17 80\n"
@@ -231,6 +251,10 @@ do_test (void)
             "address: STREAM/TCP 192.0.2.18 80\n"
             "address: DGRAM/UDP 192.0.2.18 80\n"
             "address: RAW/IP 192.0.2.18 80\n");
+  check_ai (LONG_NAME, "80", AF_INET,
+            "address: STREAM/TCP 192.0.2.20 80\n"
+            "address: DGRAM/UDP 192.0.2.20 80\n"
+            "address: RAW/IP 192.0.2.20 80\n");
   check_ai ("www.example", "80", AF_INET6,
             "address: STREAM/TCP 2001:db8::1 80\n"
             "address: DGRAM/UDP 2001:db8::1 80\n"
@@ -239,6 +263,10 @@ do_test (void)
             "address: STREAM/TCP 2001:db8::2 80\n"
             "address: DGRAM/UDP 2001:db8::2 80\n"
             "address: RAW/IP 2001:db8::2 80\n");
+  check_ai (LONG_NAME, "80", AF_INET6,
+            "address: STREAM/TCP 2001:db8::4 80\n"
+            "address: DGRAM/UDP 2001:db8::4 80\n"
+            "address: RAW/IP 2001:db8::4 80\n");
 
   check_h ("t.www.example", AF_INET,
            "name: t.www.example\n"

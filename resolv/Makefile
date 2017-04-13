@@ -44,6 +44,7 @@ tests += \
   tst-bug18665 \
   tst-bug18665-tcp \
   tst-ns_name \
+  tst-ns_name_compress \
   tst-res_hconf_reorder \
   tst-res_use_inet6 \
   tst-resolv-basic \
@@ -140,6 +141,7 @@ $(objpfx)tst-resolv-canonname: \
 
 $(objpfx)tst-ns_name: $(objpfx)libresolv.so
 $(objpfx)tst-ns_name.out: tst-ns_name.data
+$(objpfx)tst-ns_name_compress: $(objpfx)libresolv.so
 
 
 # This test case uses the deprecated RES_USE_INET6 resolver option.

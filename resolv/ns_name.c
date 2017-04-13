@@ -475,7 +475,7 @@ ns_name_pack(const u_char *src, u_char *dst, int dstsiz,
 			goto cleanup;
 		}
 		n = labellen(srcp);
-		if (dstp + 1 + n >= eob) {
+		if (n + 1 > eob - dstp) {
 			goto cleanup;
 		}
 		memcpy(dstp, srcp, n + 1);

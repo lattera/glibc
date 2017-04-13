@@ -1,5 +1,21 @@
 2017-04-13  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #21359]
+	* resolv/ns_name.c (ns_name_pack): Do not require an additional
+	byte in the destination buffer.  Avoid out-of-bounds pointer
+	arithmetic.
+	* resolv/Makefile (tests): Add tst-ns_name_compress.
+	(tst-ns_name_compress): Link with -lresolv.
+	* resolv/tst-ns_name_compress.c: New file.
+	* resolv/tst-resolv-basic.c (LONG_NAME): Define.
+	(response): Recognize LONG_NAME.
+	(do_test): Add LONG_NAME tests.
+	* resolv/tst-ns_name.c (run_test_case): Fix expected data check
+	for ns_name_unpack.  Add tests for ns_name_pton and
+	ns_name_compress.
+
+2017-04-13  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/resolv.h (RES_EXHAUSTIVE, p_section, res_npquery)
 	(res_nisourserver): Remove definition.
 	(p_section, res_npquery, res_nisourserver): Remove declaration.

@@ -195,6 +195,7 @@ print_hex (const char *label, struct buffer buffer)
 static void
 run_test_case (struct test_case *t)
 {
+  /* Test ns_name_unpack.  */
   unsigned char *unpacked = xmalloc (NS_MAXCDNAME);
   int consumed = ns_name_unpack
     (t->input.data, t->input.data + t->input.length,
@@ -211,16 +212,19 @@ run_test_case (struct test_case *t)
     }
   if (consumed != -1)
     {
-      if (memcmp (unpacked, t->unpack_output.data, consumed) != 0)
+      if (memcmp (unpacked, t->unpack_output.data,
+                  t->unpack_output.length) != 0)
         {
           support_record_failure ();
           printf ("%s:%zu: error: wrong data from ns_name_unpack\n",
                   t->path, t->lineno);
           print_hex ("expected:", t->unpack_output);
-          print_hex ("actual:  ", (struct buffer) { unpacked, consumed });
+          print_hex ("actual:  ",
+                     (struct buffer) { unpacked, t->unpack_output.length });
           return;
         }
 
+      /* Test ns_name_ntop.  */
       char *text = xmalloc (NS_MAXDNAME);
       int ret = ns_name_ntop (unpacked, text, NS_MAXDNAME);
       if (ret != t->ntop_result)
@@ -243,6 +247,137 @@ run_test_case (struct test_case *t)
               printf ("  actual:   \"%s\"\n", text);
               return;
             }
+
+          /* Test ns_name_pton.  Unpacking does not check the
+             NS_MAXCDNAME limit, but packing does, so we need to
+             adjust the expected result.  */
+          int expected;
+          if (t->unpack_output.length > NS_MAXCDNAME)
+            expected = -1;
+          else if (strcmp (text, ".") == 0)
+            /* The root domain is fully qualified.  */
+            expected = 1;
+          else
+            /* The domain name is never fully qualified.  */
+            expected = 0;
+          unsigned char *repacked = xmalloc (NS_MAXCDNAME);
+          ret = ns_name_pton (text, repacked, NS_MAXCDNAME);
+          if (ret != expected)
+            {
+              support_record_failure ();
+              printf ("%s:%zu: error: wrong result from ns_name_pton\n"
+                      "  expected: %d\n"
+                      "  actual:   %d\n",
+                      t->path, t->lineno, expected, ret);
+              return;
+            }
+          if (ret >= 0
+              && memcmp (repacked, unpacked, t->unpack_output.length) != 0)
+            {
+              support_record_failure ();
+              printf ("%s:%zu: error: wrong data from ns_name_pton\n",
+                      t->path, t->lineno);
+              print_hex ("expected:", t->unpack_output);
+              print_hex ("actual:  ",
+                         (struct buffer) { repacked, t->unpack_output.length });
+              return;
+            }
+
+          /* Test ns_name_compress, no compression case.  */
+          if (t->unpack_output.length > NS_MAXCDNAME)
+            expected = -1;
+          else
+            expected = t->unpack_output.length;
+          memset (repacked, '$', NS_MAXCDNAME);
+          {
+            enum { ptr_count = 5 };
+            const unsigned char *dnptrs[ptr_count] = { repacked, };
+            ret = ns_name_compress (text, repacked, NS_MAXCDNAME,
+                                    dnptrs, dnptrs + ptr_count);
+            if (ret != expected)
+              {
+                support_record_failure ();
+                printf ("%s:%zu: error: wrong result from ns_name_compress\n"
+                        "  expected: %d\n"
+                        "  actual:   %d\n",
+                        t->path, t->lineno, expected, ret);
+                return;
+              }
+            if (ret < 0)
+              {
+                TEST_VERIFY (dnptrs[0] == repacked);
+                TEST_VERIFY (dnptrs[1] == NULL);
+              }
+            else
+              {
+                if (memcmp (repacked, unpacked, t->unpack_output.length) != 0)
+                  {
+                    support_record_failure ();
+                    printf ("%s:%zu: error: wrong data from ns_name_compress\n",
+                            t->path, t->lineno);
+                    print_hex ("expected:", t->unpack_output);
+                    print_hex ("actual:  ", (struct buffer) { repacked, ret });
+                    return;
+                  }
+                TEST_VERIFY (dnptrs[0] == repacked);
+                if (unpacked[0] == '\0')
+                  /* The root domain is not a compression target.  */
+                  TEST_VERIFY (dnptrs[1] == NULL);
+                else
+                  {
+                    TEST_VERIFY (dnptrs[1] == repacked);
+                    TEST_VERIFY (dnptrs[2] == NULL);
+                  }
+              }
+          }
+
+          /* Test ns_name_compress, full compression case.  Skip this
+             test for invalid names and the root domain.  */
+          if (expected >= 0 && unpacked[0] != '\0')
+            {
+              /* The destination buffer needs additional room for the
+                 offset, the initial name, and the compression
+                 reference.  */
+              enum { name_offset = 259 };
+              size_t target_offset = name_offset + t->unpack_output.length;
+              size_t repacked_size = target_offset + 2;
+              repacked = xrealloc (repacked, repacked_size);
+              memset (repacked, '@', repacked_size);
+              memcpy (repacked + name_offset,
+                      t->unpack_output.data, t->unpack_output.length);
+              enum { ptr_count = 5 };
+              const unsigned char *dnptrs[ptr_count]
+                = { repacked, repacked + name_offset, };
+              ret = ns_name_compress
+                (text, repacked + target_offset, NS_MAXCDNAME,
+                 dnptrs, dnptrs + ptr_count);
+              if (ret != 2)
+                {
+                  support_record_failure ();
+                  printf ("%s:%zu: error: wrong result from ns_name_compress"
+                          " (2)\n"
+                          "  expected: 2\n"
+                          "  actual:   %d\n",
+                          t->path, t->lineno, ret);
+                  return;
+                }
+              if (memcmp (repacked + target_offset, "\xc1\x03", 2) != 0)
+                {
+                  support_record_failure ();
+                  printf ("%s:%zu: error: wrong data from ns_name_compress"
+                          " (2)\n"
+                          "  expected: C103\n",
+                          t->path, t->lineno);
+                  print_hex ("actual:  ",
+                             (struct buffer) { repacked + target_offset, ret });
+                  return;
+                }
+              TEST_VERIFY (dnptrs[0] == repacked);
+              TEST_VERIFY (dnptrs[1] == repacked + name_offset);
+              TEST_VERIFY (dnptrs[2] == NULL);
+            }
+
+          free (repacked);
         }
       free (text);
     }
