@@ -87,14 +87,10 @@ check_one_fd (int fd, int mode)
 void
 __libc_check_standard_fds (void)
 {
-  /* This is really paranoid but some people actually are.  If /dev/null
-     should happen to be a symlink to somewhere else and not the device
-     commonly known as "/dev/null" we bail out.  We can detect this with
-     the O_NOFOLLOW flag for open() but only on some system.  */
-#ifndef O_NOFOLLOW
-# define O_NOFOLLOW	0
-#endif
-  /* Check all three standard file descriptors.  */
+  /* Check all three standard file descriptors.  The O_NOFOLLOW flag
+     is really paranoid but some people actually are.  If /dev/null
+     should happen to be a symlink to somewhere else and not the
+     device commonly known as "/dev/null" we bail out.  */
   check_one_fd (STDIN_FILENO, O_WRONLY | O_NOFOLLOW);
   check_one_fd (STDOUT_FILENO, O_RDONLY | O_NOFOLLOW);
   check_one_fd (STDERR_FILENO, O_RDONLY | O_NOFOLLOW);

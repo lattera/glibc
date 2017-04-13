@@ -1,5 +1,15 @@
 2017-04-13  Florian Weimer  <fweimer@redhat.com>
 
+	* csu/check_fds.c (__libc_check_standard_fds): Assume O_NOFOLLOW
+	is defined.
+	* elf/rtld.c (process_envvars): Likewise.
+	* sysdeps/posix/shm_open.c (shm_open): Likewise.
+	* elf/dl-profile.c (EXTRA_FLAGS): Remove definition.  Use
+	O_NOFOLLOW directly.
+	* gmon/gmon.c (O_NOFOLLOW): Remove definition.
+
+2017-04-13  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #21369]
 	Remove EDNS fallback.
 	* resolv/res_query.c (__libc_res_nquery): Remove RES_F_EDNS0ERR

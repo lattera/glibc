@@ -336,10 +336,6 @@ write_gmon (void)
     int fd = -1;
     char *env;
 
-#ifndef O_NOFOLLOW
-# define O_NOFOLLOW	0
-#endif
-
     env = getenv ("GMON_OUT_PREFIX");
     if (env != NULL && !__libc_enable_secure)
       {

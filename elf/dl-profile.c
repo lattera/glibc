@@ -325,12 +325,7 @@ _dl_start_profile (void)
   *cp++ = '/';
   __stpcpy (__stpcpy (cp, GLRO(dl_profile)), ".profile");
 
-#ifdef O_NOFOLLOW
-# define EXTRA_FLAGS | O_NOFOLLOW
-#else
-# define EXTRA_FLAGS
-#endif
-  fd = __open (filename, O_RDWR | O_CREAT EXTRA_FLAGS, DEFFILEMODE);
+  fd = __open (filename, O_RDWR | O_CREAT | O_NOFOLLOW, DEFFILEMODE);
   if (fd == -1)
     {
       char buf[400];
