@@ -27,9 +27,9 @@ __ieee754_sqrt (double d)
 {
   double ret;
 # ifdef _IEEE_FP_INEXACT
-  asm ("sqrtt/suid %1,%0" : "=f"(ret) : "f"(d));
+  asm ("sqrtt/suid %1,%0" : "=&f"(ret) : "f"(d));
 # else
-  asm ("sqrtt/sud %1,%0" : "=f"(ret) : "f"(d));
+  asm ("sqrtt/sud %1,%0" : "=&f"(ret) : "f"(d));
 # endif
   return ret;
 }
@@ -39,9 +39,9 @@ __ieee754_sqrtf (float d)
 {
   float ret;
 # ifdef _IEEE_FP_INEXACT
-  asm ("sqrts/suid %1,%0" : "=f"(ret) : "f"(d));
+  asm ("sqrts/suid %1,%0" : "=&f"(ret) : "f"(d));
 # else
-  asm ("sqrts/sud %1,%0" : "=f"(ret) : "f"(d));
+  asm ("sqrts/sud %1,%0" : "=&f"(ret) : "f"(d));
 # endif
   return ret;
 }

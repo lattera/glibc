@@ -1,3 +1,9 @@
+2017-04-25  Uros Bizjak  <ubizjak@gmail.com>
+
+	* sysdeps/alpha/fpu/math_private.h (__ieee754_sqrt): Add
+	earlyclobber to output operand of sqrt insn.
+	(__ieee754_sqrtf): Ditto.
+
 2017-04-25  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21426]
