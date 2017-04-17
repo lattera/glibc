@@ -202,6 +202,7 @@ __deregister_frame_info_bases (void *begin)
 {
   struct object **p;
   struct object *ob = 0;
+  struct fde_vector *tofree = NULL;
 
   /* If .eh_frame is empty, we haven't registered.  */
   if (*(uword *) begin == 0)
@@ -225,7 +226,7 @@ __deregister_frame_info_bases (void *begin)
 	  {
 	    ob = *p;
 	    *p = ob->next;
-	    free (ob->u.sort);
+	    tofree = ob->u.sort;
 	    goto out;
 	  }
       }
@@ -244,6 +245,7 @@ __deregister_frame_info_bases (void *begin)
 
  out:
   __gthread_mutex_unlock (&object_mutex);
+  free (tofree);
   return (void *) ob;
 }
 hidden_def (__deregister_frame_info_bases)

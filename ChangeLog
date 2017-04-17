@@ -1,3 +1,9 @@
+2017-04-17  Rabin Vincent  <rabinv@axis.com>
+
+	[BZ #21357]
+	* sysdeps/generic/unwind-dw2-fde.c (__deregister_frame_info_bases):
+	Call free() outside of mutex.
+
 2017-04-13  Florian Weimer  <fweimer@redhat.com>
 
 	* csu/check_fds.c (__libc_check_standard_fds): Assume O_NOFOLLOW
