@@ -1,3 +1,8 @@
+2017-04-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* io/sys/stat.h: Use __USE_XOPEN2K8 insteaf of __USE_ATFILE for
+	struct timespec definition.
+
 2017-04-19  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/nss_dns/dns-host.c (getanswer_r): Fix parentheses.
