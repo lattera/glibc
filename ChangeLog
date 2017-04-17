@@ -1,5 +1,9 @@
 2017-06-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* elf/dl-tunables.list: Add glibc.tune.hwcap_mask.
+	* scripts/gen-tunables.awk: Include dl-procinfo.h.
+	* manual/tunables.texi: Document glibc.tune.hwcap_mask.
+
 	* elf/Versions (__tunable_set_val): Rename to __tunable_get_val.
 	* elf/dl-tunables.c: Likewise.
 	(do_tunable_update_val): New function.

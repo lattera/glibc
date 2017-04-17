@@ -31,6 +31,8 @@ their own namespace.
 @menu
 * Tunable names::  The structure of a tunable name
 * Memory Allocation Tunables::  Tunables in the memory allocation subsystem
+* Hardware Capability Tunables::  Tunables that modify the hardware
+				  capabilities seen by @theglibc{}
 @end menu
 
 @node Tunable names
@@ -189,4 +191,25 @@ The default value of this tunable is @code{0}, meaning that the limit on the
 number of arenas is determined by the number of CPU cores online.  For 32-bit
 systems the limit is twice the number of cores online and on 64-bit systems, it
 is 8 times the number of cores online.
+@end deftp
+
+@node Hardware Capability Tunables
+@section Hardware Capability Tunables
+@cindex hardware capability tunables
+@cindex hwcap tunables
+@cindex tunables, hwcap
+
+@deftp {Tunable namespace} glibc.tune
+Behavior of @theglibc{} can be tuned to assume specific hardware capabilities
+by setting the following tunables in the @code{tune} namespace:
+@end deftp
+
+@deftp Tunable glibc.tune.hwcap_mask
+This tunable supersedes the @env{LD_HWCAP_MASK} environment variable and is
+identical in features.
+
+The @code{AT_HWCAP} key in the Auxilliary Vector specifies instruction set
+extensions available in the processor at runtime for some architectures.  The
+@code{glibc.tune.hwcap_mask} tunable allows the user to mask out those
+capabilities at runtime, thus disabling use of those extensions.
 @end deftp

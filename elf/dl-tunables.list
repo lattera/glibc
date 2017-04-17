@@ -77,4 +77,11 @@ glibc {
       security_level: SXID_IGNORE
     }
   }
+  tune {
+    hwcap_mask {
+      type: UINT_64
+      env_alias: LD_HWCAP_MASK
+      default: HWCAP_IMPORTANT
+    }
+  }
 }
