@@ -1,5 +1,26 @@
 2017-04-18  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #21396]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set
+	Prefer_No_AVX512 if AVX512ER isn't available.
+	* sysdeps/x86/cpu-features.h (bit_arch_Prefer_No_AVX512): New.
+	(index_arch_Prefer_No_AVX512): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy.S (__new_memcpy): Don't use
+	AVX512 version if Prefer_No_AVX512 is set.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S (__memcpy_chk):
+	Likewise.
+	* sysdeps/x86_64/multiarch/memmove.S (__libc_memmove): Likewise.
+	* sysdeps/x86_64/multiarch/memmove_chk.S (__memmove_chk):
+	Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy.S (__mempcpy): Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S (__mempcpy_chk):
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset.S (memset): Likewise.
+	* sysdeps/x86_64/multiarch/memset_chk.S (__memset_chk):
+	Likewise.
+
+2017-04-18  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86/cpu-features.c (init_cpu_features): Set
 	Prefer_No_VZEROUPPER if AVX512ER is available.
 	* sysdeps/x86/cpu-features.h

@@ -30,6 +30,8 @@
 ENTRY(__memcpy_chk)
 	.type	__memcpy_chk, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
+	HAS_ARCH_FEATURE (Prefer_No_AVX512)
+	jnz	1f
 	HAS_ARCH_FEATURE (AVX512F_Usable)
 	jz	1f
 	lea	__memcpy_chk_avx512_no_vzeroupper(%rip), %RAX_LP

@@ -41,6 +41,8 @@ ENTRY(memset)
 	jnz	L(AVX512F)
 	lea	__memset_avx2_unaligned(%rip), %RAX_LP
 L(AVX512F):
+	HAS_ARCH_FEATURE (Prefer_No_AVX512)
+	jnz	2f
 	HAS_ARCH_FEATURE (AVX512F_Usable)
 	jz	2f
 	lea	__memset_avx512_no_vzeroupper(%rip), %RAX_LP

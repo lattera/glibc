@@ -224,10 +224,14 @@ init_cpu_features (struct cpu_features *cpu_features)
 	  |= bit_arch_AVX_Fast_Unaligned_Load;
 
       /* Since AVX512ER is unique to Xeon Phi, set Prefer_No_VZEROUPPER
-         if AVX512ER is available.  */
+         if AVX512ER is available.  Don't use AVX512 to avoid lower CPU
+	 frequency if AVX512ER isn't available.  */
       if (CPU_FEATURES_CPU_P (cpu_features, AVX512ER))
 	cpu_features->feature[index_arch_Prefer_No_VZEROUPPER]
 	  |= bit_arch_Prefer_No_VZEROUPPER;
+      else
+	cpu_features->feature[index_arch_Prefer_No_AVX512]
+	  |= bit_arch_Prefer_No_AVX512;
 
       /* To avoid SSE transition penalty, use _dl_runtime_resolve_slow.
          If XGETBV suports ECX == 1, use _dl_runtime_resolve_opt.  */

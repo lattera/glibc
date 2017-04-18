@@ -30,6 +30,8 @@ ENTRY(__libc_memmove)
 	lea	__memmove_erms(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (Prefer_ERMS)
 	jnz	2f
+	HAS_ARCH_FEATURE (Prefer_No_AVX512)
+	jnz	1f
 	HAS_ARCH_FEATURE (AVX512F_Usable)
 	jz	1f
 	lea	__memmove_avx512_no_vzeroupper(%rip), %RAX_LP
