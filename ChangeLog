@@ -1,5 +1,61 @@
 2017-04-18  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/dl-misc.c (_dl_sysdep_read_whole_file): Assume that
+	O_CLOEXEC is defined.
+	* include/fcntl.h (__have_o_cloexec): Remove declaration.
+	* io/Makefile (aux): Remove.
+	* io/have_o_cloexec.c: Remove file.
+	* libio/fileops.c (_IO_new_file_fopen): Assume that O_CLOEXEC is
+	defined and works.
+	* libio/iopopen.c (_IO_new_proc_open): Assume that O_CLOEXEC is
+	defined.
+	* login/utmp_file.c (O_flags): Remove definition.
+	(setutent_file): Use O_CLOEXEC instead of O_flags.  Assume that
+	O_CLOEXEC works.
+	(pututline_file): Likewise.
+	* malloc/mtrace.c: Assume that O_CLOEXEC works.
+	* nis/nss_compat/compat-grp.c (__compat_have_cloexec): Remove
+	definition.
+	(internal_setgrent): Assume that O_CLOEXEC works.
+	* nis/nss_compat/compat-initgroups.c (__compat_have_cloexec):
+	Remove definition.
+	(internal_setgrent): Assume that O_CLOEXEC works.
+	* nis/nss_compat/compat-pwd.c (__compat_have_cloexec): Remove
+	definition.
+	(internal_setpwent): Assume that O_CLOEXEC works.
+	* nis/nss_compat/compat-spwd.c (__compat_have_cloexec): Remove
+	definition.
+	(internal_setspent): Assume that O_CLOEXEC works.
+	* nscd/connections.c (EXTRA_O_FLAGS): Remove definition.
+	(nscd_init): Use O_CLOEXEC instead of EXTRA_O_FLAGS.  Assume that
+	O_CLOEXEC is defined and works.
+	* nss/Makefile (libnss_files-routines): Remove
+	files-have_o_cloexec.
+	* nss/nss_db/db-open.c (internal_setent): Assume that O_CLOEXEC is
+	defined.
+	* nss/nss_files/files-XXX.c (internal_setent): Assume that
+	O_CLOEXEC is defined and works.
+	* nss/nss_files/files-alias.c (internal_setent): Likewise.
+	* nss/nss_files/files-have_o_cloexec.c: Remove.
+	* posix/wordexp.c (exec_comm_child): Assume that O_CLOEXEC is
+	defined.
+	* shadow/lckpwdf.c (__lckpwdf): Assume that O_CLOEXEC is defined
+	and works.
+	* sysdeps/mach/hurd/kernel-features.h (__ASSUME_O_CLOEXEC): Remove
+	definition.
+	* sysdeps/nacl/kernel-features.h (__ASSUME_O_CLOEXEC): Likewise.
+	* sysdeps/posix/getcwd.c (__getcwd): Assume that O_CLOEXEC works.
+	* sysdeps/posix/opendir.c (opendir_oflags): Turn into enum constant.
+	(__opendirat, __opendir): Adjust opendir_oflags call.
+	(check_have_o_cloexec): Remove.
+	(__alloc_dir): Assume that O_CLOEXEC is defined and works.
+	* sysdeps/posix/shm_open.c (shm_open): Assume that O_CLOEXEC is
+	defined.
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_O_CLOEXEC):
+	Remove definition.
+
+2017-04-18  Florian Weimer  <fweimer@redhat.com>
+
 	* include/unistd.h (__have_dup3): Remove declaration.
 	* libio/freopen.c (freopen): Assume that O_CLOEXEC is defined and
 	dup3 is available.

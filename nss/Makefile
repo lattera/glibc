@@ -74,7 +74,7 @@ vpath %.c $(subdir-dirs) ../locale/programs ../intl
 
 
 libnss_files-routines	:= $(addprefix files-,$(databases)) \
-			   files-initgroups files-have_o_cloexec files-init
+			   files-initgroups files-init
 
 libnss_db-dbs		:= $(addprefix db-,\
 				       $(filter-out hosts network key alias,\

@@ -321,9 +321,7 @@ _IO_new_file_fopen (_IO_FILE *fp, const char *filename, const char *mode,
 	  fp->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 	  continue;
 	case 'e':
-#ifdef O_CLOEXEC
 	  oflags |= O_CLOEXEC;
-#endif
 	  fp->_flags2 |= _IO_FLAGS2_CLOEXEC;
 	  continue;
 	default:
@@ -338,20 +336,6 @@ _IO_new_file_fopen (_IO_FILE *fp, const char *filename, const char *mode,
 
   if (result != NULL)
     {
-#ifndef __ASSUME_O_CLOEXEC
-      if ((fp->_flags2 & _IO_FLAGS2_CLOEXEC) != 0 && __have_o_cloexec <= 0)
-	{
-	  int fd = _IO_fileno (fp);
-	  if (__have_o_cloexec == 0)
-	    {
-	      int flags = __fcntl (fd, F_GETFD);
-	      __have_o_cloexec = (flags & FD_CLOEXEC) == 0 ? -1 : 1;
-	    }
-	  if (__have_o_cloexec < 0)
-	    __fcntl (fd, F_SETFD, FD_CLOEXEC);
-	}
-#endif
-
       /* Test whether the mode string specifies the conversion.  */
       cs = strstr (last_recognized + 1, ",ccs=");
       if (cs != NULL)

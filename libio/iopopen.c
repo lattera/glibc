@@ -173,12 +173,10 @@ _IO_new_proc_open (_IO_FILE *fp, const char *command, const char *mode)
 
       if (child_end != child_std_end)
 	_IO_dup2 (child_end, child_std_end);
-#ifdef O_CLOEXEC
       else
 	/* The descriptor is already the one we will use.  But it must
 	   not be marked close-on-exec.  Undo the effects.  */
 	__fcntl (child_end, F_SETFD, 0);
-#endif
       /* POSIX.2:  "popen() shall ensure that any streams from previous
          popen() calls that remain open in the parent process are closed
 	 in the new child process." */

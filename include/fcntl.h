@@ -36,10 +36,6 @@ extern int __openat64_2 (int __fd, const char *__path, int __oflag);
 
 /* Flag determining whether the *at system calls are available.  */
 extern int __have_atfcts attribute_hidden;
-
-#ifdef O_CLOEXEC
-extern int __have_o_cloexec attribute_hidden;
-#endif
 #endif
 
 #endif

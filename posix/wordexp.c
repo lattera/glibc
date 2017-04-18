@@ -833,12 +833,8 @@ exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
       __close (fildes[1]);
     }
   else
-    {
-#ifdef O_CLOEXEC
-      /* Reset the close-on-exec flag (if necessary).  */
-      __fcntl (fildes[1], F_SETFD, 0);
-#endif
-    }
+    /* Reset the close-on-exec flag (if necessary).  */
+    __fcntl (fildes[1], F_SETFD, 0);
 
   /* Redirect stderr to /dev/null if we have to.  */
   if (showerr == 0)

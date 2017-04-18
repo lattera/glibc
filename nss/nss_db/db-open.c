@@ -36,11 +36,7 @@ internal_setent (const char *file, struct nss_db_map *mapping)
 {
   enum nss_status status = NSS_STATUS_UNAVAIL;
 
-  int mode = O_RDONLY | O_LARGEFILE;
-#ifdef O_CLOEXEC
-  mode |= O_CLOEXEC;
-#endif
-  int fd = open_not_cancel_2 (file, mode);
+  int fd = open_not_cancel_2 (file, O_RDONLY | O_LARGEFILE | O_CLOEXEC);
   if (fd != -1)
     {
       struct nss_db_header header;

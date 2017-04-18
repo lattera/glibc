@@ -20,8 +20,6 @@
    Almost none of these are used outside of sysdeps/unix/sysv/linux code.
    But those referring to POSIX-level features like O_* flags can be.  */
 
-#define __ASSUME_O_CLOEXEC	1
-
 /*
 #define __ASSUME_ACCEPT4	1
 */

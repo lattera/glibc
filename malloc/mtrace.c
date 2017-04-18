@@ -300,15 +300,6 @@ mtrace (void)
       mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "wce");
       if (mallstream != NULL)
         {
-#ifndef __ASSUME_O_CLOEXEC
-          /* Make sure we close the file descriptor on exec.  */
-          int flags = __fcntl (fileno (mallstream), F_GETFD, 0);
-          if (flags >= 0)
-            {
-              flags |= FD_CLOEXEC;
-              __fcntl (fileno (mallstream), F_SETFD, flags);
-            }
-#endif
           /* Be sure it doesn't malloc its buffer!  */
           malloc_trace_buffer = mtb;
           setvbuf (mallstream, malloc_trace_buffer, _IOFBF, TRACE_BUFFER_SIZE);

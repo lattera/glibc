@@ -96,38 +96,11 @@ __lckpwdf (void)
   /* Prevent problems caused by multiple threads.  */
   __libc_lock_lock (lock);
 
-  int oflags = O_WRONLY | O_CREAT;
-#ifdef O_CLOEXEC
-  oflags |= O_CLOEXEC;
-#endif
+  int oflags = O_WRONLY | O_CREAT | O_CLOEXEC;
   lock_fd = __open (PWD_LOCKFILE, oflags, 0600);
   if (lock_fd == -1)
     /* Cannot create lock file.  */
     RETURN_CLOSE_FD (-1);
-
-#ifndef __ASSUME_O_CLOEXEC
-# ifdef O_CLOEXEC
-  if (__have_o_cloexec <= 0)
-# endif
-    {
-      /* Make sure file gets correctly closed when process finished.  */
-      int flags = __fcntl (lock_fd, F_GETFD, 0);
-      if (flags == -1)
-	/* Cannot get file flags.  */
-	RETURN_CLOSE_FD (-1);
-# ifdef O_CLOEXEC
-      if (__have_o_cloexec == 0)
-	__have_o_cloexec = (flags & FD_CLOEXEC) == 0 ? -1 : 1;
-      if (__have_o_cloexec < 0)
-# endif
-	{
-	  flags |= FD_CLOEXEC;		/* Close on exit.  */
-	  if (__fcntl (lock_fd, F_SETFD, flags) < 0)
-	    /* Cannot set new flags.  */
-	    RETURN_CLOSE_FD (-1);
-	}
-    }
-#endif
 
   /* Now we have to get exclusive write access.  Since multiple
      process could try this we won't stop when it first fails.

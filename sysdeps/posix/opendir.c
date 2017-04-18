@@ -81,6 +81,9 @@ tryopen_o_directory (void)
 # define EXTRA_FLAGS 0
 #endif
 
+enum {
+  opendir_oflags = O_RDONLY|O_NDELAY|EXTRA_FLAGS|O_LARGEFILE|O_CLOEXEC
+};
 
 static bool
 invalid_name (const char *name)
@@ -109,18 +112,6 @@ need_isdir_precheck (void)
 #endif
   return true;
 }
-
-
-static int
-opendir_oflags (void)
-{
-  int flags = O_RDONLY|O_NDELAY|EXTRA_FLAGS|O_LARGEFILE;
-#ifdef O_CLOEXEC
-  flags |= O_CLOEXEC;
-#endif
-  return flags;
-}
-
 
 static DIR *
 opendir_tail (int fd)
@@ -170,7 +161,7 @@ __opendirat (int dfd, const char *name)
 	}
     }
 
-  return opendir_tail (openat_not_cancel_3 (dfd, name, opendir_oflags ()));
+  return opendir_tail (openat_not_cancel_3 (dfd, name, opendir_oflags));
 }
 #endif
 
@@ -197,39 +188,19 @@ __opendir (const char *name)
 	}
     }
 
-  return opendir_tail (open_not_cancel_2 (name, opendir_oflags ()));
+  return opendir_tail (open_not_cancel_2 (name, opendir_oflags));
 }
 weak_alias (__opendir, opendir)
-
-
-#ifdef __ASSUME_O_CLOEXEC
-# define check_have_o_cloexec(fd) 1
-#else
-static int
-check_have_o_cloexec (int fd)
-{
-  if (__have_o_cloexec == 0)
-    __have_o_cloexec = (__fcntl (fd, F_GETFD, 0) & FD_CLOEXEC) == 0 ? -1 : 1;
-  return __have_o_cloexec > 0;
-}
-#endif
-
 
 DIR *
 internal_function
 __alloc_dir (int fd, bool close_fd, int flags, const struct stat64 *statp)
 {
-  /* We always have to set the close-on-exit flag if the user provided
-     the file descriptor.  Otherwise only if we have no working
-     O_CLOEXEC support.  */
-#ifdef O_CLOEXEC
-  if ((! close_fd && (flags & O_CLOEXEC) == 0)
-      || ! check_have_o_cloexec (fd))
-#endif
-    {
-      if (__builtin_expect (__fcntl (fd, F_SETFD, FD_CLOEXEC), 0) < 0)
+  /* We have to set the close-on-exit flag if the user provided the
+     file descriptor.  */
+  if (!close_fd
+      && __builtin_expect (__fcntl (fd, F_SETFD, FD_CLOEXEC), 0) < 0)
 	goto lose;
-    }
 
   const size_t default_allocation = (4 * BUFSIZ < sizeof (struct dirent64)
 				     ? sizeof (struct dirent64) : 4 * BUFSIZ);

@@ -141,42 +141,11 @@ setutent_file (void)
 
       file_name = TRANSFORM_UTMP_FILE_NAME (__libc_utmp_file_name);
 
-#ifdef O_CLOEXEC
-# define O_flags O_LARGEFILE | O_CLOEXEC
-#else
-# define O_flags O_LARGEFILE
-#endif
       file_writable = false;
-      file_fd = open_not_cancel_2 (file_name, O_RDONLY | O_flags);
+      file_fd = open_not_cancel_2
+	(file_name, O_RDONLY | O_LARGEFILE | O_CLOEXEC);
       if (file_fd == -1)
 	return 0;
-
-#ifndef __ASSUME_O_CLOEXEC
-# ifdef O_CLOEXEC
-      if (__have_o_cloexec <= 0)
-# endif
-	{
-	  /* We have to make sure the file is `closed on exec'.  */
-	  int result = fcntl_not_cancel (file_fd, F_GETFD, 0);
-	  if (result >= 0)
-	    {
-# ifdef O_CLOEXEC
-	      if (__have_o_cloexec == 0)
-		__have_o_cloexec = (result & FD_CLOEXEC) ? 1 : -1;
-
-	      if (__have_o_cloexec < 0)
-# endif
-		result = fcntl_not_cancel (file_fd, F_SETFD,
-					   result | FD_CLOEXEC);
-	    }
-
-	  if (result == -1)
-	    {
-	      close_not_cancel_no_status (file_fd);
-	      return 0;
-	    }
-	}
-#endif
     }
 
   __lseek64 (file_fd, 0, SEEK_SET);
@@ -404,36 +373,10 @@ pututline_file (const struct utmp *data)
       /* We must make the file descriptor writable before going on.  */
       const char *file_name = TRANSFORM_UTMP_FILE_NAME (__libc_utmp_file_name);
 
-      int new_fd = open_not_cancel_2 (file_name, O_RDWR | O_flags);
+      int new_fd = open_not_cancel_2
+	(file_name, O_RDWR | O_LARGEFILE | O_CLOEXEC);
       if (new_fd == -1)
 	return NULL;
-
-#ifndef __ASSUME_O_CLOEXEC
-# ifdef O_CLOEXEC
-      if (__have_o_cloexec <= 0)
-# endif
-	{
-	  /* We have to make sure the file is `closed on exec'.  */
-	  int result = fcntl_not_cancel (file_fd, F_GETFD, 0);
-	  if (result >= 0)
-	    {
-# ifdef O_CLOEXEC
-	      if (__have_o_cloexec == 0)
-		__have_o_cloexec = (result & FD_CLOEXEC) ? 1 : -1;
-
-	      if (__have_o_cloexec < 0)
-# endif
-		result = fcntl_not_cancel (file_fd, F_SETFD,
-					   result | FD_CLOEXEC);
-	    }
-
-	  if (result == -1)
-	    {
-	      close_not_cancel_no_status (file_fd);
-	      return NULL;
-	    }
-	}
-#endif
 
       if (__lseek64 (new_fd, __lseek64 (file_fd, 0, SEEK_CUR), SEEK_SET) == -1
 	  || __dup2 (new_fd, file_fd) < 0)

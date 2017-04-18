@@ -499,13 +499,6 @@ fail:
 }
 
 
-#ifdef O_CLOEXEC
-# define EXTRA_O_FLAGS O_CLOEXEC
-#else
-# define EXTRA_O_FLAGS 0
-#endif
-
-
 /* Initialize database information structures.  */
 void
 nscd_init (void)
@@ -528,7 +521,7 @@ nscd_init (void)
 	if (dbs[cnt].persistent)
 	  {
 	    /* Try to open the appropriate file on disk.  */
-	    int fd = open (dbs[cnt].db_filename, O_RDWR | EXTRA_O_FLAGS);
+	    int fd = open (dbs[cnt].db_filename, O_RDWR | O_CLOEXEC);
 	    if (fd != -1)
 	      {
 		char *msg = NULL;
@@ -608,7 +601,7 @@ nscd_init (void)
 		    if (dbs[cnt].shared)
 		      {
 			dbs[cnt].ro_fd = open (dbs[cnt].db_filename,
-					       O_RDONLY | EXTRA_O_FLAGS);
+					       O_RDONLY | O_CLOEXEC);
 			if (dbs[cnt].ro_fd == -1)
 			  dbg_log (_("\
 cannot create read-only descriptor for \"%s\"; no mmap"),
@@ -648,23 +641,23 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 	    if (dbs[cnt].persistent)
 	      {
 		fd = open (dbs[cnt].db_filename,
-			   O_RDWR | O_CREAT | O_EXCL | O_TRUNC | EXTRA_O_FLAGS,
+			   O_RDWR | O_CREAT | O_EXCL | O_TRUNC | O_CLOEXEC,
 			   S_IRUSR | S_IWUSR);
 		if (fd != -1 && dbs[cnt].shared)
 		  ro_fd = open (dbs[cnt].db_filename,
-				O_RDONLY | EXTRA_O_FLAGS);
+				O_RDONLY | O_CLOEXEC);
 	      }
 	    else
 	      {
 		char fname[] = _PATH_NSCD_XYZ_DB_TMP;
-		fd = mkostemp (fname, EXTRA_O_FLAGS);
+		fd = mkostemp (fname, O_CLOEXEC);
 
 		/* We do not need the file name anymore after we
 		   opened another file descriptor in read-only mode.  */
 		if (fd != -1)
 		  {
 		    if (dbs[cnt].shared)
-		      ro_fd = open (fname, O_RDONLY | EXTRA_O_FLAGS);
+		      ro_fd = open (fname, O_RDONLY | O_CLOEXEC);
 
 		    unlink (fname);
 		  }
@@ -781,24 +774,6 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 		  close (ro_fd);
 	      }
 	  }
-
-#if !defined O_CLOEXEC || !defined __ASSUME_O_CLOEXEC
-	/* We do not check here whether the O_CLOEXEC provided to the
-	   open call was successful or not.  The two fcntl calls are
-	   only performed once each per process start-up and therefore
-	   is not noticeable at all.  */
-	if (paranoia
-	    && ((dbs[cnt].wr_fd != -1
-		 && fcntl (dbs[cnt].wr_fd, F_SETFD, FD_CLOEXEC) == -1)
-		|| (dbs[cnt].ro_fd != -1
-		    && fcntl (dbs[cnt].ro_fd, F_SETFD, FD_CLOEXEC) == -1)))
-	  {
-	    dbg_log (_("\
-cannot set socket to close on exec: %s; disabling paranoia mode"),
-		     strerror (errno));
-	    paranoia = 0;
-	  }
-#endif
 
 	if (dbs[cnt].head == NULL)
 	  {
