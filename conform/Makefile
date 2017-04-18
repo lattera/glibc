@@ -112,10 +112,8 @@ conformtest-header-base := $(foreach std,\
 					       $(std)/$(h)/conform.out))
 conformtest-header-tests := $(addprefix $(objpfx),$(conformtest-header-base))
 ifneq (yes,$(fast-check))
-ifeq (no,$(cross-compiling))
 tests-special += $(conformtest-header-tests)
 generated += $(conformtest-header-base)
-endif
 endif
 
 linknamespace-symlists-base := $(foreach std,$(conformtest-standards),\

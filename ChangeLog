@@ -1,5 +1,10 @@
 2017-04-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/Makefile (tests-special): Do not make addition of
+	$(conformtest-header-tests) conditional on [$(cross-compiling) = no].
+	(generated): Do not make addition of $(conformtest-header-base)
+	conditional on [$(cross-compiling) = no].
+
 	[BZ #21267]
 	* sysdeps/unix/sysv/linux/bits/socket.h (IOCSIZE_MASK): Undefine
 	if defined by <asm/socket.h> and not previously defined.
