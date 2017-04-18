@@ -61,32 +61,9 @@ freopen64 (const char *filename, const char *mode, FILE *fp)
 
       if (fd != -1)
 	{
-#ifdef O_CLOEXEC
-# ifndef __ASSUME_DUP3
-	  int newfd;
-	  if (__have_dup3 < 0)
-	    newfd = -1;
-	  else
-	    newfd =
-# endif
-	      __dup3 (_IO_fileno (result), fd,
-                      (result->_flags2 & _IO_FLAGS2_CLOEXEC) != 0
-                      ? O_CLOEXEC : 0);
-#else
-# define newfd 1
-#endif
-
-#ifndef __ASSUME_DUP3
-	  if (newfd < 0)
-	    {
-	      if (errno == ENOSYS)
-		__have_dup3 = -1;
-
-	      __dup2 (_IO_fileno (result), fd);
-	      if ((result->_flags2 & _IO_FLAGS2_CLOEXEC) != 0)
-		__fcntl (fd, F_SETFD, FD_CLOEXEC);
-	    }
-#endif
+	  __dup3 (_IO_fileno (result), fd,
+		  (result->_flags2 & _IO_FLAGS2_CLOEXEC) != 0
+		  ? O_CLOEXEC : 0);
 	  __close (_IO_fileno (result));
 	  _IO_fileno (result) = fd;
 	}

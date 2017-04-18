@@ -74,7 +74,6 @@
 /* Support for various CLOEXEC and NONBLOCK flags was added in
    2.6.27.  */
 #define __ASSUME_IN_NONBLOCK	1
-#define __ASSUME_DUP3		1
 
 /* Support for accept4 functionality was added in 2.6.28, but for some
    architectures using a separate syscall rather than socketcall that

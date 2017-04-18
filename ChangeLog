@@ -1,5 +1,19 @@
 2017-04-18  Florian Weimer  <fweimer@redhat.com>
 
+	* include/unistd.h (__have_dup3): Remove declaration.
+	* libio/freopen.c (freopen): Assume that O_CLOEXEC is defined and
+	dup3 is available.
+	* libio/freopen64.c (freopen64): Likewise.
+	* socket/Makefile (aux): Remove have_sock_cloexec.
+	* socket/have_sock_cloexec.c: Remove file.
+	* sysdeps/mach/hurd/kernel-features.h (__ASSUME_DUP3): Remove
+	definition.
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_DUP3):
+	Likewise.
+	* sysdeps/nacl/kernel-features.h: Update comment.
+
+2017-04-18  Florian Weimer  <fweimer@redhat.com>
+
 	* include/unistd.h (__have_pipe2): Remove declaration.
 	* socket/have_sock_cloexec.c (__have_pipe2): Remove definition.
 	* libio/iopopen.c (_IO_new_proc_open): Assume that pipe2 is
