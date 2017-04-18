@@ -140,29 +140,17 @@ _IO_new_proc_open (_IO_FILE *fp, const char *command, const char *mode)
   if (_IO_file_is_open (fp))
     return NULL;
 
-#ifdef O_CLOEXEC
-# ifndef __ASSUME_PIPE2
-  if (__have_pipe2 >= 0)
-# endif
-    {
-      int r = __pipe2 (pipe_fds, O_CLOEXEC);
-# ifndef __ASSUME_PIPE2
-      if (__have_pipe2 == 0)
-	__have_pipe2 = r != -1 || errno != ENOSYS ? 1 : -1;
-
-      if (__have_pipe2 > 0)
-# endif
-	if (r < 0)
-	  return NULL;
-    }
-#endif
-#ifndef __ASSUME_PIPE2
-# ifdef O_CLOEXEC
-  if (__have_pipe2 < 0)
-# endif
-    if (__pipe (pipe_fds) < 0)
-      return NULL;
-#endif
+  /* Atomically set the O_CLOEXEC flag for the pipe end used by the
+     child process (to avoid leaking the file descriptor in case of a
+     concurrent fork).  This is later reverted in the child process.
+     When popen returns, the parent pipe end can be O_CLOEXEC or not,
+     depending on the 'e' open mode, but there is only one flag which
+     controls both descriptors.  The parent end is adjusted below,
+     after creating the child process.  (In the child process, the
+     parent end should be closed on execve, so O_CLOEXEC remains set
+     there.)  */
+  if (__pipe2 (pipe_fds, O_CLOEXEC) < 0)
+    return NULL;
 
   if (do_read)
     {
@@ -183,27 +171,13 @@ _IO_new_proc_open (_IO_FILE *fp, const char *command, const char *mode)
       int child_std_end = do_read ? 1 : 0;
       struct _IO_proc_file *p;
 
-#ifndef __ASSUME_PIPE2
-      /* If we have pipe2 the descriptor is marked for close-on-exec.  */
-      _IO_close (parent_end);
-#endif
       if (child_end != child_std_end)
-	{
-	  _IO_dup2 (child_end, child_std_end);
-#ifndef __ASSUME_PIPE2
-	  _IO_close (child_end);
-#endif
-	}
+	_IO_dup2 (child_end, child_std_end);
 #ifdef O_CLOEXEC
       else
-	{
-	  /* The descriptor is already the one we will use.  But it must
-	     not be marked close-on-exec.  Undo the effects.  */
-# ifndef __ASSUME_PIPE2
-	  if (__have_pipe2 > 0)
-# endif
-	    __fcntl (child_end, F_SETFD, 0);
-	}
+	/* The descriptor is already the one we will use.  But it must
+	   not be marked close-on-exec.  Undo the effects.  */
+	__fcntl (child_end, F_SETFD, 0);
 #endif
       /* POSIX.2:  "popen() shall ensure that any streams from previous
          popen() calls that remain open in the parent process are closed
@@ -229,26 +203,10 @@ _IO_new_proc_open (_IO_FILE *fp, const char *command, const char *mode)
       return NULL;
     }
 
-  if (do_cloexec)
-    {
-#ifndef __ASSUME_PIPE2
-# ifdef O_CLOEXEC
-      if (__have_pipe2 < 0)
-# endif
-	__fcntl (parent_end, F_SETFD, FD_CLOEXEC);
-#endif
-    }
-  else
-    {
-#ifdef O_CLOEXEC
-      /* Undo the effects of the pipe2 call which set the
-	 close-on-exec flag.  */
-# ifndef __ASSUME_PIPE2
-      if (__have_pipe2 > 0)
-# endif
-	__fcntl (parent_end, F_SETFD, 0);
-#endif
-    }
+  if (!do_cloexec)
+    /* Undo the effects of the pipe2 call which set the
+       close-on-exec flag.  */
+    __fcntl (parent_end, F_SETFD, 0);
 
   _IO_fileno (fp) = parent_end;
 

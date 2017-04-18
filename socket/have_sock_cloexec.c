@@ -19,10 +19,6 @@
 #include <sys/socket.h>
 #include <kernel-features.h>
 
-#if defined O_CLOEXEC && !defined __ASSUME_PIPE2
-int __have_pipe2;
-#endif
-
 #if defined O_CLOEXEC && !defined __ASSUME_DUP3
 int __have_dup3;
 #endif
