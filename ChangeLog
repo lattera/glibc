@@ -1,3 +1,24 @@
+2017-04-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set
+	Prefer_No_VZEROUPPER if AVX512ER is available.
+	* sysdeps/x86/cpu-features.h
+	(bit_cpu_AVX512PF): New.
+	(bit_cpu_AVX512ER): Likewise.
+	(bit_cpu_AVX512CD): Likewise.
+	(bit_cpu_AVX512BW): Likewise.
+	(bit_cpu_AVX512VL): Likewise.
+	(index_cpu_AVX512PF): Likewise.
+	(index_cpu_AVX512ER): Likewise.
+	(index_cpu_AVX512CD): Likewise.
+	(index_cpu_AVX512BW): Likewise.
+	(index_cpu_AVX512VL): Likewise.
+	(reg_AVX512PF): Likewise.
+	(reg_AVX512ER): Likewise.
+	(reg_AVX512CD): Likewise.
+	(reg_AVX512BW): Likewise.
+	(reg_AVX512VL): Likewise.
+
 2017-04-18  Florian Weimer  <fweimer@redhat.com>
 
 	* elf/dl-misc.c (_dl_sysdep_read_whole_file): Assume that

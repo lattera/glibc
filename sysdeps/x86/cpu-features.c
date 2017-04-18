@@ -138,8 +138,6 @@ init_cpu_features (struct cpu_features *cpu_features)
 
 	    case 0x57:
 	      /* Knights Landing.  Enable Silvermont optimizations.  */
-	      cpu_features->feature[index_arch_Prefer_No_VZEROUPPER]
-		|= bit_arch_Prefer_No_VZEROUPPER;
 
 	    case 0x5c:
 	    case 0x5f:
@@ -224,6 +222,12 @@ init_cpu_features (struct cpu_features *cpu_features)
       if (CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable))
 	cpu_features->feature[index_arch_AVX_Fast_Unaligned_Load]
 	  |= bit_arch_AVX_Fast_Unaligned_Load;
+
+      /* Since AVX512ER is unique to Xeon Phi, set Prefer_No_VZEROUPPER
+         if AVX512ER is available.  */
+      if (CPU_FEATURES_CPU_P (cpu_features, AVX512ER))
+	cpu_features->feature[index_arch_Prefer_No_VZEROUPPER]
+	  |= bit_arch_Prefer_No_VZEROUPPER;
 
       /* To avoid SSE transition penalty, use _dl_runtime_resolve_slow.
          If XGETBV suports ECX == 1, use _dl_runtime_resolve_opt.  */
