@@ -25,11 +25,14 @@
 
 extern __typeof (strrchr) __strrchr_ppc attribute_hidden;
 extern __typeof (strrchr) __strrchr_power7 attribute_hidden;
+extern __typeof (strrchr) __strrchr_power8 attribute_hidden;
 #undef strrchr
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
 libc_ifunc_redirected (__redirect_strrchr, strrchr,
+		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+		       ? __strrchr_power8 :
 		       (hwcap & PPC_FEATURE_HAS_VSX)
 		       ? __strrchr_power7
 		       : __strrchr_ppc);

@@ -1,3 +1,14 @@
+2017-04-18  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile
+	(sysdep_routines): Add strrchr-power8.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(strrchr): Add __strrchr_power8 to list of strrchr functions.
+	* sysdeps/powerpc/powerpc64/multiarch/strrchr-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strrchr.c
+	(strrchr): Add __strrchr_power8 to ifunc list.
+	* sysdeps/powerpc/powerpc64/power8/strrchr.S: New file.
+
 2017-04-17  Rabin Vincent  <rabinv@axis.com>
 
 	[BZ #21357]
