@@ -365,6 +365,21 @@ struct ucred
 #  define __SYS_SOCKET_H_undef_SIOCSPGRP
 # endif
 #endif
+#ifndef IOCSIZE_MASK
+# define __SYS_SOCKET_H_undef_IOCSIZE_MASK
+#endif
+#ifndef IOCSIZE_SHIFT
+# define __SYS_SOCKET_H_undef_IOCSIZE_SHIFT
+#endif
+#ifndef IOC_IN
+# define __SYS_SOCKET_H_undef_IOC_IN
+#endif
+#ifndef IOC_INOUT
+# define __SYS_SOCKET_H_undef_IOC_INOUT
+#endif
+#ifndef IOC_OUT
+# define __SYS_SOCKET_H_undef_IOC_OUT
+#endif
 
 /* Get socket manipulation related informations from kernel headers.  */
 #include <asm/socket.h>
@@ -398,6 +413,26 @@ struct ucred
 #  undef __SYS_SOCKET_H_undef_SIOCSPGRP
 #  undef SIOCSPGRP
 # endif
+#endif
+#ifdef __SYS_SOCKET_H_undef_IOCSIZE_MASK
+# undef __SYS_SOCKET_H_undef_IOCSIZE_MASK
+# undef IOCSIZE_MASK
+#endif
+#ifdef __SYS_SOCKET_H_undef_IOCSIZE_SHIFT
+# undef __SYS_SOCKET_H_undef_IOCSIZE_SHIFT
+# undef IOCSIZE_SHIFT
+#endif
+#ifdef __SYS_SOCKET_H_undef_IOC_IN
+# undef __SYS_SOCKET_H_undef_IOC_IN
+# undef IOC_IN
+#endif
+#ifdef __SYS_SOCKET_H_undef_IOC_INOUT
+# undef __SYS_SOCKET_H_undef_IOC_INOUT
+# undef IOC_INOUT
+#endif
+#ifdef __SYS_SOCKET_H_undef_IOC_OUT
+# undef __SYS_SOCKET_H_undef_IOC_OUT
+# undef IOC_OUT
 #endif
 
 /* Structure used to manipulate the SO_LINGER option.  */

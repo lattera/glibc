@@ -1,3 +1,13 @@
+2017-04-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21267]
+	* sysdeps/unix/sysv/linux/bits/socket.h (IOCSIZE_MASK): Undefine
+	if defined by <asm/socket.h> and not previously defined.
+	(IOCSIZE_SHIFT): Likewise.
+	(IOC_IN): Likewise.
+	(IOC_INOUT): Likewise.
+	(IOC_OUT): Likewise.
+
 2017-04-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21396]
