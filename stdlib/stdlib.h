@@ -425,11 +425,6 @@ extern void *realloc (void *__ptr, size_t __size)
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free (void *__ptr) __THROW;
 
-#ifdef	__USE_MISC
-/* Free a block.  An alias for `free'.	(Sun Unices).  */
-extern void cfree (void *__ptr) __THROW;
-#endif /* Use misc.  */
-
 #ifdef __USE_MISC
 # include <alloca.h>
 #endif /* Use misc.  */

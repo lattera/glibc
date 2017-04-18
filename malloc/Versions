@@ -61,6 +61,8 @@ libc {
   GLIBC_2.16 {
     aligned_alloc;
   }
+  GLIBC_2.26 {
+  }
   GLIBC_PRIVATE {
     # Internal startup hook for libpthread.
     __libc_malloc_pthread_startup;

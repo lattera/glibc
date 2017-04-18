@@ -52,9 +52,6 @@ __THROW __attribute_warn_unused_result__;
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free (void *__ptr) __THROW;
 
-/* Free a block allocated by `calloc'. */
-extern void cfree (void *__ptr) __THROW;
-
 /* Allocate SIZE bytes allocated to ALIGNMENT bytes.  */
 extern void *memalign (size_t __alignment, size_t __size)
 __THROW __attribute_malloc__ __wur;

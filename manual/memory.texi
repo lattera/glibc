@@ -701,15 +701,6 @@ The @code{free} function deallocates the block of memory pointed at
 by @var{ptr}.
 @end deftypefun
 
-@comment stdlib.h
-@comment Sun
-@deftypefun void cfree (void *@var{ptr})
-@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
-@c alias to free
-This function does the same thing as @code{free}.  It's provided for
-backward compatibility with SunOS; you should use @code{free} instead.
-@end deftypefun
-
 Freeing a block alters the contents of the block.  @strong{Do not expect to
 find any data (such as a pointer to the next block in a chain of blocks) in
 the block after freeing it.}  Copy whatever you need out of the block before

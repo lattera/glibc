@@ -84,7 +84,6 @@
     independent_calloc(size_t n_elements, size_t size, void* chunks[]);
     independent_comalloc(size_t n_elements, size_t sizes[], void* chunks[]);
     pvalloc(size_t n);
-    cfree(void* p);
     malloc_trim(size_t pad);
     malloc_usable_size(void* p);
     malloc_stats();
@@ -5290,7 +5289,6 @@ weak_alias (__malloc_info, malloc_info)
 
 
 strong_alias (__libc_calloc, __calloc) weak_alias (__libc_calloc, calloc)
-strong_alias (__libc_free, __cfree) weak_alias (__libc_free, cfree)
 strong_alias (__libc_free, __free) strong_alias (__libc_free, free)
 strong_alias (__libc_malloc, __malloc) strong_alias (__libc_malloc, malloc)
 strong_alias (__libc_memalign, __memalign)
@@ -5306,6 +5304,9 @@ weak_alias (__malloc_stats, malloc_stats)
 weak_alias (__malloc_usable_size, malloc_usable_size)
 weak_alias (__malloc_trim, malloc_trim)
 
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_26)
+compat_symbol (libc, __libc_free, cfree, GLIBC_2_0);
+#endif
 
 /* ------------------------------------------------------------
    History:

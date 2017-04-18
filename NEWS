@@ -49,6 +49,9 @@ Version 2.26
 * res_mkquery and res_nmkquery no longer support the IQUERY opcode.  DNS
   servers have not supported this opcode for a long time.
 
+* The legacy cfree function has been removed.  Applications should use the
+  free function instead.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,
