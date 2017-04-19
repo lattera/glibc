@@ -2472,7 +2472,7 @@ getaddrinfo (const char *name, const char *service,
 		  close_retry:
 		    close_not_cancel_no_status (fd);
 		  af = q->ai_family;
-		  fd = __socket (af, SOCK_DGRAM, IPPROTO_IP);
+		  fd = __socket (af, SOCK_DGRAM | SOCK_CLOEXEC, IPPROTO_IP);
 		}
 	      else
 		{

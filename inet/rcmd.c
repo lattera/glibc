@@ -383,6 +383,7 @@ rresvport_af (int *alport, sa_family_t family)
 		__set_errno (EAFNOSUPPORT);
 		return -1;
 	}
+	/* NB: No SOCK_CLOXEC for backwards compatibility.  */
 	s = __socket(family, SOCK_STREAM, 0);
 	if (s < 0)
 		return -1;

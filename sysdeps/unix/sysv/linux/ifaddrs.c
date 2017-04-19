@@ -255,7 +255,7 @@ __netlink_open (struct netlink_handle *h)
 {
   struct sockaddr_nl nladdr;
 
-  h->fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+  h->fd = __socket (PF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, NETLINK_ROUTE);
   if (h->fd < 0)
     goto out;
 

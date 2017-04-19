@@ -41,7 +41,7 @@ void
 __check_native (uint32_t a1_index, int *a1_native,
 		uint32_t a2_index, int *a2_native)
 {
-  int fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+  int fd = __socket (PF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, NETLINK_ROUTE);
 
   struct sockaddr_nl nladdr;
   memset (&nladdr, '\0', sizeof (nladdr));

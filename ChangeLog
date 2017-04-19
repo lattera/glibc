@@ -1,5 +1,18 @@
 2017-04-19  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #15722]
+	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Create socket
+	with SOCK_CLOEXEC.
+	* resolv/res_send.c (send_vc, reopen): Likewise.
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Likewise.
+	* sysdeps/unix/sysv/linux/check_native.c (__check_native):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_open): Likewise.
+	* inet/rexec.c (rexec_af): Add comment.
+	* inet/rcmd.c (rresvport_af): Likewise.
+
+2017-04-19  Florian Weimer  <fweimer@redhat.com>
+
 	* nscd/connections.c (have_accept4): Removed definition.
 	(nscd_run_worker, main_loop_poll, main_loop_epolll): Assume that
 	accept4 works.

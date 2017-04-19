@@ -388,7 +388,7 @@ _res_hconf_reorder_addrs (struct hostent *hp)
       /* Initialize interface table.  */
 
       /* The SIOCGIFNETMASK ioctl will only work on an AF_INET socket.  */
-      sd = __socket (AF_INET, SOCK_DGRAM, 0);
+      sd = __socket (AF_INET, SOCK_DGRAM | SOCK_CLOEXEC, 0);
       if (sd < 0)
 	return;
 

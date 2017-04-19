@@ -692,7 +692,8 @@ send_vc(res_state statp,
 		if (statp->_vcsock >= 0)
 		  __res_iclose(statp, false);
 
-		statp->_vcsock = socket(nsap->sa_family, SOCK_STREAM, 0);
+		statp->_vcsock = socket
+		  (nsap->sa_family, SOCK_STREAM | SOCK_CLOEXEC, 0);
 		if (statp->_vcsock < 0) {
 			*terrno = errno;
 			Perror(statp, stderr, "socket(vc)", errno);
@@ -902,14 +903,16 @@ reopen (res_state statp, int *terrno, int ns)
 
 		/* only try IPv6 if IPv6 NS and if not failed before */
 		if (nsap->sa_family == AF_INET6 && !statp->ipv6_unavail) {
-			EXT(statp).nssocks[ns]
-				= socket(PF_INET6, SOCK_DGRAM|SOCK_NONBLOCK, 0);
+			EXT(statp).nssocks[ns] = socket
+			  (PF_INET6,
+			   SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC, 0);
 			if (EXT(statp).nssocks[ns] < 0)
 			    statp->ipv6_unavail = errno == EAFNOSUPPORT;
 			slen = sizeof (struct sockaddr_in6);
 		} else if (nsap->sa_family == AF_INET) {
-			EXT(statp).nssocks[ns]
-				= socket(PF_INET, SOCK_DGRAM|SOCK_NONBLOCK, 0);
+			EXT(statp).nssocks[ns] = socket
+			  (PF_INET,
+			   SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC, 0);
 			slen = sizeof (struct sockaddr_in);
 		}
 		if (EXT(statp).nssocks[ns] < 0) {
