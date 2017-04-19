@@ -1,3 +1,8 @@
+2017-04-19  Christopher Chittleborough  <cchittleborough@cluemail.com>
+
+	[BZ #21399]
+	* charmaps/CP1254: Fix U+00EC comment.
+
 2017-03-28  Egmont Koblinger  <egmont@gmail.com>
 
 	[BZ #18934]
