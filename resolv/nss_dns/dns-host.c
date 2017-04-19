@@ -633,7 +633,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 			packtmp, sizeof packtmp);
   if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
     {
-      if (__glibc_unlikely (errno) == EMSGSIZE)
+      if (__glibc_unlikely (errno == EMSGSIZE))
 	goto too_small;
 
       n = -1;

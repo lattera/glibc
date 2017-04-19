@@ -1,5 +1,9 @@
 2017-04-19  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/nss_dns/dns-host.c (getanswer_r): Fix parentheses.
+
+2017-04-19  Florian Weimer  <fweimer@redhat.com>
+
 	* inet/rcmd.c (rresvport_af): Fix typo in comment.
 	* inet/rexec.c (rexec_af): Likewise.
 
