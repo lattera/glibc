@@ -30,6 +30,7 @@ void xconnect (int, const struct sockaddr *, socklen_t);
 void xbind (int, const struct sockaddr *, socklen_t);
 void xlisten (int, int);
 int xaccept (int, struct sockaddr *, socklen_t *);
+int xaccept4 (int, struct sockaddr *, socklen_t *, int);
 void xsendto (int, const void *, size_t, int,
               const struct sockaddr *, socklen_t);
 size_t xrecvfrom (int, void *, size_t, int, struct sockaddr *, socklen_t *);

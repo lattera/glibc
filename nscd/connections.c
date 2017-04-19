@@ -257,10 +257,6 @@ int inotify_fd = -1;
 static int nl_status_fd = -1;
 #endif
 
-#ifndef __ASSUME_ACCEPT4
-static int have_accept4;
-#endif
-
 /* Number of times clients had to wait.  */
 unsigned long int client_queued;
 
@@ -1650,16 +1646,6 @@ nscd_run_worker (void *p)
       /* We are done with the list.  */
       pthread_mutex_unlock (&readylist_lock);
 
-#ifndef __ASSUME_ACCEPT4
-      if (have_accept4 < 0)
-	{
-	  /* We do not want to block on a short read or so.  */
-	  int fl = fcntl (fd, F_GETFL);
-	  if (fl == -1 || fcntl (fd, F_SETFL, fl | O_NONBLOCK) == -1)
-	    goto close_and_out;
-	}
-#endif
-
       /* Now read the request.  */
       request_header req;
       if (__builtin_expect (TEMP_FAILURE_RETRY (read (fd, &req, sizeof (req)))
@@ -2099,24 +2085,8 @@ main_loop_poll (void)
 	  if (conns[0].revents != 0)
 	    {
 	      /* We have a new incoming connection.  Accept the connection.  */
-	      int fd;
-
-#ifndef __ASSUME_ACCEPT4
-	      fd = -1;
-	      if (have_accept4 >= 0)
-#endif
-		{
-		  fd = TEMP_FAILURE_RETRY (accept4 (sock, NULL, NULL,
+	      int fd = TEMP_FAILURE_RETRY (accept4 (sock, NULL, NULL,
 						    SOCK_NONBLOCK));
-#ifndef __ASSUME_ACCEPT4
-		  if (have_accept4 == 0)
-		    have_accept4 = fd != -1 || errno != ENOSYS ? 1 : -1;
-#endif
-		}
-#ifndef __ASSUME_ACCEPT4
-	      if (have_accept4 < 0)
-		fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
-#endif
 
 	      /* Use the descriptor if we have not reached the limit.  */
 	      if (fd >= 0)
@@ -2284,24 +2254,8 @@ main_loop_epoll (int efd)
 	if (revs[cnt].data.fd == sock)
 	  {
 	    /* A new connection.  */
-	    int fd;
-
-# ifndef __ASSUME_ACCEPT4
-	    fd = -1;
-	    if (have_accept4 >= 0)
-# endif
-	      {
-		fd = TEMP_FAILURE_RETRY (accept4 (sock, NULL, NULL,
+	    int fd = TEMP_FAILURE_RETRY (accept4 (sock, NULL, NULL,
 						  SOCK_NONBLOCK));
-# ifndef __ASSUME_ACCEPT4
-		if (have_accept4 == 0)
-		  have_accept4 = fd != -1 || errno != ENOSYS ? 1 : -1;
-# endif
-	      }
-# ifndef __ASSUME_ACCEPT4
-	    if (have_accept4 < 0)
-	      fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
-# endif
 
 	    /* Use the descriptor if we have not reached the limit.  */
 	    if (fd >= 0)

@@ -501,13 +501,15 @@ Specific advice for GNU/Linux systems
 
 If you are installing the GNU C Library on GNU/Linux systems, you need
 to have the header files from a 3.2 or newer kernel around for
-reference.  These headers must be installed using 'make
-headers_install'; the headers present in the kernel source directory are
-not suitable for direct use by the GNU C Library.  You do not need to
-use that kernel, just have its headers installed where the GNU C Library
-can access them, referred to here as INSTALL-DIRECTORY.  The easiest way
-to do this is to unpack it in a directory such as
-'/usr/src/linux-VERSION'.  In that directory, run 'make headers_install
+reference.  (For the ia64 architecture, you need version 3.2.18 or newer
+because this is the first version with support for the 'accept4' system
+call.)  These headers must be installed using 'make headers_install';
+the headers present in the kernel source directory are not suitable for
+direct use by the GNU C Library.  You do not need to use that kernel,
+just have its headers installed where the GNU C Library can access them,
+referred to here as INSTALL-DIRECTORY.  The easiest way to do this is to
+unpack it in a directory such as '/usr/src/linux-VERSION'.  In that
+directory, run 'make headers_install
 INSTALL_HDR_PATH=INSTALL-DIRECTORY'.  Finally, configure the GNU C
 Library with the option '--with-headers=INSTALL-DIRECTORY/include'.  Use
 the most recent kernel you can get your hands on.  (If you are

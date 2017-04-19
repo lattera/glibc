@@ -1,5 +1,5 @@
-/* Set flags signalling availability of certain operating system features.
-   Copyright (C) 2012-2017 Free Software Foundation, Inc.
+/* accept4 with error checking.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This file can define __ASSUME_* macros checked by certain source files.
-   Almost none of these are used outside of sysdeps/unix/sysv/linux code.
-   But those referring to POSIX-level features like O_* flags can be.  */
+#include <support/xsocket.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <support/check.h>
+
+int
+xaccept4 (int fd, struct sockaddr *sa, socklen_t *salen, int flags)
+{
+  int clientfd = accept4 (fd, sa, salen, flags);
+  if (clientfd < 0)
+    FAIL_EXIT1 ("accept4 (%d, 0x%x): %m", fd, flags);
+  return clientfd;
+}

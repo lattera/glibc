@@ -1,3 +1,35 @@
+2017-04-19  Florian Weimer  <fweimer@redhat.com>
+
+	* nscd/connections.c (have_accept4): Removed definition.
+	(nscd_run_worker, main_loop_poll, main_loop_epolll): Assume that
+	accept4 works.
+	* manual/install.texi (Linux): Require at least kernel 3.2.18 for
+	ia64 because that was the first version with accept4 support.
+	* support/Makefile (libsupport-routines): Add xaccept4.
+	* support/xsocket.h (xaccept4): Declare.
+	* support/xaccept4.c: New file.
+	* socket/tst-accept4.c: New file.
+	* socket/Makefile (tests): Add tst-accept4.
+	* sysdeps/mach/hurd/kernel-features.h (__ASSUME_ACCEPT4): Remove
+	definition.
+	* sysdeps/nacl/kernel-features.h (__ASSUME_ACCEPT4): Remove
+	comment.
+	* sysdeps/unix/sysv/linux/accept4.c: Assume that an accept4
+	implementation is available.
+	(accept4): Use the system call if available, otherwise use the
+	socket call.
+	* sysdeps/unix/sysv/linux/ia64/configure.ac (arch_minimum_kernel):
+	Set to 3.2.18.
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL, __ASSUME_ACCEPT4): Do not undefine.
+	accept4 is unconditionally available in later 3.2 stable kernels.
+	(__ASSUME_ACCEPT4_SYSCALL): Define.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_ACCEPT4_SOCKETCALL, __ASSUME_ACCEPT4): Remove
+	definitions.
+	* sysdeps/unix/sysv/linux/i386/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Define for Linux 4.3 or later.
+
 2017-04-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/Makefile (tests-special): Do not make addition of

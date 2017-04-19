@@ -50,6 +50,7 @@ libsupport-routines = \
   temp_file \
   write_message \
   xaccept \
+  xaccept4 \
   xasprintf \
   xbind \
   xcalloc \

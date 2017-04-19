@@ -22,13 +22,8 @@
 
 #include_next <kernel-features.h>
 
-/* Support for the accept4 syscall was added in 3.3.  */
-#if __LINUX_KERNEL_VERSION < 0x030300
-# undef __ASSUME_ACCEPT4_SYSCALL
-# undef __ASSUME_ACCEPT4
-#endif
-
 #define __ASSUME_RECV_SYSCALL   	1
 #define __ASSUME_SEND_SYSCALL		1
+#define __ASSUME_ACCEPT4_SYSCALL	1
 
 #endif /* _KERNEL_FEATURES_H */

@@ -22,75 +22,20 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
+#include <socketcall.h>
 #include <kernel-features.h>
 
+int
+accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
+{
 /* Do not use the accept4 syscall on socketcall architectures unless
    it was added at the same time as the socketcall support or can be
    assumed to be present.  */
 #if defined __ASSUME_SOCKETCALL \
     && !defined __ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL \
     && !defined __ASSUME_ACCEPT4_SYSCALL
-# undef __NR_accept4
-#endif
-
-#ifdef __NR_accept4
-int
-accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
-{
-  return SYSCALL_CANCEL (accept4, fd, addr.__sockaddr__, addr_len, flags);
-}
-#elif defined __NR_socketcall
-# include <socketcall.h>
-# ifdef __ASSUME_ACCEPT4_SOCKETCALL
-int
-accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
-{
   return SOCKETCALL_CANCEL (accept4, fd, addr.__sockaddr__, addr_len, flags);
-}
-# else
-static int have_accept4;
-
-int
-accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
-{
-  if (__glibc_likely (have_accept4 >= 0))
-    {
-      int ret = SOCKETCALL_CANCEL (accept4, fd, addr.__sockaddr__, addr_len,
-				   flags);
-      /* The kernel returns -EINVAL for unknown socket operations.
-	 We need to convert that error to an ENOSYS error.  */
-      if (__builtin_expect (ret < 0, 0)
-	  && have_accept4 == 0
-	  && errno == EINVAL)
-	{
-	  /* Try another call, this time with the FLAGS parameter
-	     cleared and an invalid file descriptor.  This call will not
-	     cause any harm and it will return immediately.  */
-	  ret = SOCKETCALL_CANCEL (invalid, -1);
-	  if (errno == EINVAL)
-	    {
-	      have_accept4 = -1;
-	      __set_errno (ENOSYS);
-	    }
-	  else
-	    {
-	      have_accept4 = 1;
-	      __set_errno (EINVAL);
-	    }
-	  return -1;
-	}
-      return ret;
-    }
-  __set_errno (ENOSYS);
-  return -1;
-}
-# endif /* __ASSUME_ACCEPT4_SOCKETCALL  */
-#else /* __NR_socketcall   */
-int
-accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-stub_warning (accept4)
+#else
+  return SYSCALL_CANCEL (accept4, fd, addr.__sockaddr__, addr_len, flags);
 #endif
+}

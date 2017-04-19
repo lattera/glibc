@@ -75,18 +75,11 @@
    architectures using a separate syscall rather than socketcall that
    syscall was only added later, and some architectures first had
    socketcall support then a separate syscall.  Define
-   __ASSUME_ACCEPT4_SOCKETCALL if glibc uses socketcall on this
-   architecture and accept4 is available through socketcall,
    __ASSUME_ACCEPT4_SYSCALL if it is available through a separate
-   syscall, __ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL if it became
+   syscall, and __ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL if it became
    available through a separate syscall at the same time as through
-   socketcall, and __ASSUME_ACCEPT4 if the accept4 function is known
-   to work.  */
-#ifdef __ASSUME_SOCKETCALL
-# define __ASSUME_ACCEPT4_SOCKETCALL	1
-#endif
+   socketcall.  */
 #define __ASSUME_ACCEPT4_SYSCALL	1
-#define __ASSUME_ACCEPT4	1
 
 /* Support for the FUTEX_CLOCK_REALTIME flag was added in 2.6.29.  */
 #define __ASSUME_FUTEX_CLOCK_REALTIME	1
