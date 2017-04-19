@@ -1,3 +1,9 @@
+2017-04-19  Zack Weinberg  <zackw@panix.com>
+
+	* posix/tst-mmap-offset.c: Include stdint.h.
+	* resolv/tst-ns_name_compress.c: Include string.h.
+	* resolv/tst-resolv-edns.c: Include resolv.h.
+
 2017-04-19  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/gai_suspend.c (gai_suspend): Replace __builtin_expect
