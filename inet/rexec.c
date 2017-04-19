@@ -86,7 +86,7 @@ rexec_af (char **ahost, int rport, const char *name, const char *pass,
 	}
 	ruserpass(res0->ai_canonname, &name, &pass);
 retry:
-	/* NB: No SOCK_CLOXEC for backwards compatibility.  */
+	/* NB: No SOCK_CLOEXEC for backwards compatibility.  */
 	s = __socket(res0->ai_family, res0->ai_socktype, 0);
 	if (s < 0) {
 		perror("rexec: socket");
