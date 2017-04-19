@@ -1,5 +1,15 @@
 2017-04-19  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/gai_suspend.c (gai_suspend): Replace __builtin_expect
+	with __glibc_likely.
+	* resolv/nss_dns/dns-host.c (getanswer_r, gaih_getanswer_slice):
+	Replace __builtin_expect with __glibc_unlikely.
+	* resolv/res_init.c (__res_vinit): Likewise.
+	* resolv/res_query.c (__libc_res_nquery): Likewise.
+	* resolv/res_send.c (__libc_res_nsend): Likewise.
+
+2017-04-19  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #15722]
 	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Create socket
 	with SOCK_CLOEXEC.

@@ -199,7 +199,7 @@ __libc_res_nquery(res_state statp,
 	    nquery1 = n;
 	  }
 
-	if (__builtin_expect (n <= 0, 0) && !use_malloc) {
+	if (__glibc_unlikely (n <= 0) && !use_malloc) {
 		/* Retry just in case res_nmkquery failed because of too
 		   short buffer.  Shouldn't happen.  */
 		bufsize = (type == T_QUERY_A_AND_AAAA ? 2 : 1) * MAXPACKET;

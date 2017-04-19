@@ -424,7 +424,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 	 * Some resolvers want to even out the load on their nameservers.
 	 * Note that RES_BLAST overrides RES_ROTATE.
 	 */
-	if (__builtin_expect ((statp->options & RES_ROTATE) != 0, 0)) {
+	if (__glibc_unlikely ((statp->options & RES_ROTATE) != 0)) {
 		struct sockaddr_in ina;
 		struct sockaddr_in6 *inp;
 		int lastns = statp->nscount - 1;

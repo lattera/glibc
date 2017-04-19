@@ -619,7 +619,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   ancount = ntohs (hp->ancount);
   qdcount = ntohs (hp->qdcount);
   cp = answer->buf + HFIXEDSZ;
-  if (__builtin_expect (qdcount, 1) != 1)
+  if (__glibc_unlikely (qdcount != 1))
     {
       *h_errnop = NO_RECOVERY;
       return NSS_STATUS_UNAVAIL;
@@ -633,7 +633,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 			packtmp, sizeof packtmp);
   if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
     {
-      if (__builtin_expect (errno, 0) == EMSGSIZE)
+      if (__glibc_unlikely (errno) == EMSGSIZE)
 	goto too_small;
 
       n = -1;
@@ -642,10 +642,16 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   if (n > 0 && bp[0] == '.')
     bp[0] = '\0';
 
-  if (__builtin_expect (n < 0 || ((*name_ok) (bp) == 0 && (errno = EBADMSG)),
-			0))
+  if (__glibc_unlikely (n < 0))
     {
       *errnop = errno;
+      *h_errnop = NO_RECOVERY;
+      return NSS_STATUS_UNAVAIL;
+    }
+  if (__glibc_unlikely (name_ok (bp) == 0))
+    {
+      errno = EBADMSG;
+      *errnop = EBADMSG;
       *h_errnop = NO_RECOVERY;
       return NSS_STATUS_UNAVAIL;
     }
@@ -690,7 +696,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 			    packtmp, sizeof packtmp);
       if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
 	{
-	  if (__builtin_expect (errno, 0) == EMSGSIZE)
+	  if (__glibc_unlikely (errno == EMSGSIZE))
 	    goto too_small;
 
 	  n = -1;
@@ -750,7 +756,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  /* Store alias.  */
 	  *ap++ = bp;
 	  n = strlen (bp) + 1;		/* For the \0.  */
-	  if (__builtin_expect (n, 0) >= MAXHOSTNAMELEN)
+	  if (__glibc_unlikely (n >= MAXHOSTNAMELEN))
 	    {
 	      ++had_error;
 	      continue;
@@ -761,7 +767,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  n = strlen (tbuf) + 1;	/* For the \0.  */
 	  if (__glibc_unlikely (n > linebuflen))
 	    goto too_small;
-	  if (__builtin_expect (n, 0) >= MAXHOSTNAMELEN)
+	  if (__glibc_unlikely (n >= MAXHOSTNAMELEN))
 	    {
 	      ++had_error;
 	      continue;
@@ -789,7 +795,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  n = strlen (tbuf) + 1;   /* For the \0.  */
 	  if (__glibc_unlikely (n > linebuflen))
 	    goto too_small;
-	  if (__builtin_expect (n, 0) >= MAXHOSTNAMELEN)
+	  if (__glibc_unlikely (n >= MAXHOSTNAMELEN))
 	    {
 	      ++had_error;
 	      continue;
@@ -821,7 +827,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 				packtmp, sizeof packtmp);
 	  if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
 	    {
-	      if (__builtin_expect (errno, 0) == EMSGSIZE)
+	      if (__glibc_unlikely (errno == EMSGSIZE))
 		goto too_small;
 
 	      n = -1;
@@ -854,7 +860,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  return NSS_STATUS_SUCCESS;
 	case T_A:
 	case T_AAAA:
-	  if (__builtin_expect (strcasecmp (result->h_name, bp), 0) != 0)
+	  if (__glibc_unlikely (strcasecmp (result->h_name, bp) != 0))
 	    {
 	      cp += n;
 	      continue;			/* XXX - had_error++ ? */
@@ -975,7 +981,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
      it later.  */
   if (n != -1 && __ns_name_ntop (packtmp, buffer, buflen) == -1)
     {
-      if (__builtin_expect (errno, 0) == EMSGSIZE)
+      if (__glibc_unlikely (errno == EMSGSIZE))
 	{
 	too_small:
 	  *errnop = ERANGE;
@@ -986,10 +992,16 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
       n = -1;
     }
 
-  if (__builtin_expect (n < 0 || (res_hnok (buffer) == 0
-				  && (errno = EBADMSG)), 0))
+  if (__glibc_unlikely (n < 0))
     {
       *errnop = errno;
+      *h_errnop = NO_RECOVERY;
+      return NSS_STATUS_UNAVAIL;
+    }
+  if (__glibc_unlikely (res_hnok (buffer) == 0))
+    {
+      errno = EBADMSG;
+      *errnop = EBADMSG;
       *h_errnop = NO_RECOVERY;
       return NSS_STATUS_UNAVAIL;
     }
@@ -1014,7 +1026,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
       if (n != -1 &&
 	  (h_namelen = __ns_name_ntop (packtmp, buffer, buflen)) == -1)
 	{
-	  if (__builtin_expect (errno, 0) == EMSGSIZE)
+	  if (__glibc_unlikely (errno == EMSGSIZE))
 	    goto too_small;
 
 	  n = -1;
@@ -1128,8 +1140,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	  buffer += pad;
 	  buflen = buflen > pad ? buflen - pad : 0;
 
-	  if (__builtin_expect (buflen < sizeof (struct gaih_addrtuple),
-				0))
+	  if (__glibc_unlikely (buflen < sizeof (struct gaih_addrtuple)))
 	    goto too_small;
 
 	  *pat = (struct gaih_addrtuple *) buffer;

@@ -356,7 +356,7 @@ __res_vinit(res_state statp, int preinit) {
 	    statp->nsort = nsort;
 	    (void) fclose(fp);
 	}
-	if (__builtin_expect(statp->nscount == 0, 0)) {
+	if (__glibc_unlikely (statp->nscount == 0)) {
 	    statp->nsaddr.sin_addr = __inet_makeaddr(IN_LOOPBACKNET, 1);
 	    statp->nsaddr.sin_family = AF_INET;
 	    statp->nsaddr.sin_port = htons(NAMESERVER_PORT);
