@@ -1,3 +1,23 @@
+2017-04-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdlib/Versions (__strtod_internal): List explicitly, not as
+	wildcard.
+	(__strtof_internal): Likewise.
+	(__strtold_internal): Likewise.
+	(__strtol_internal): Likewise.
+	(__strtoll_internal): Likewise.
+	(__strtoul_internal): Likewise.
+	(__strtoull_internal): Likewise.
+	(__strtoq_internal): Likewise.
+	(__strtouq_internal): Likewise.
+	* wcsmbs/Versions (__wcstod_internal): Likewise.
+	(__wcstof_internal): Likewise.
+	(__wcstold_internal): Likewise.
+	(__wcstol_internal): Likewise.
+	(__wcstoll_internal): Likewise.
+	(__wcstoul_internal): Likewise.
+	(__wcstoull_internal): Likewise.
+
 2017-04-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* io/sys/stat.h: Use __USE_XOPEN2K8 insteaf of __USE_ATFILE for
