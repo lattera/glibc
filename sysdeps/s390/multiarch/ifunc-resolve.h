@@ -83,3 +83,8 @@
 	   ? RESOLVERFUNC##_vx						\
 	   : RESOLVERFUNC##_c,						\
 	   unsigned long int dl_hwcap, s390_vx_libc_ifunc_init);
+
+#define s390_libc_ifunc_expr_init()
+#define s390_libc_ifunc_expr(TYPE_FUNC, FUNC, EXPR)		\
+  __ifunc (TYPE_FUNC, FUNC, EXPR, unsigned long int hwcap,	\
+	   s390_libc_ifunc_expr_init);

@@ -40,8 +40,7 @@
    to translate between multiple generic characters and "1 byte UCS4"
    characters at once. The vector instructions are used to convert between
    the "1 byte UCS4" and UCS4.  */
-# include <unistd.h>
-# include <dl-procinfo.h>
+# include <ifunc-resolve.h>
 
 # undef FROM_LOOP
 # undef TO_LOOP
@@ -372,33 +371,17 @@
 
 
 /* Generate ifunc'ed loop function.  */
-__typeof(__from_generic_c)
-__attribute__ ((ifunc ("__from_generic_resolver")))
-__from_generic;
+s390_libc_ifunc_expr (__from_generic_c, __from_generic,
+		      (sizeof (from_ucs4) / sizeof (from_ucs4[0]) <= 256
+		       && hwcap & HWCAP_S390_VX)
+		      ? __from_generic_vx
+		      : __from_generic_c);
 
-static void *
-__from_generic_resolver (unsigned long int dl_hwcap)
-{
-  if (sizeof (from_ucs4) / sizeof (from_ucs4[0]) <= 256
-      && dl_hwcap & HWCAP_S390_VX)
-    return &__from_generic_vx;
-  else
-    return &__from_generic_c;
-}
-
-__typeof(__to_generic_c)
-__attribute__ ((ifunc ("__to_generic_resolver")))
-__to_generic;
-
-static void *
-__to_generic_resolver (unsigned long int dl_hwcap)
-{
-  if (sizeof (from_ucs4) / sizeof (from_ucs4[0]) <= 256
-      && dl_hwcap & HWCAP_S390_VX)
-    return &__to_generic_vx;
-  else
-    return &__to_generic_c;
-}
+s390_libc_ifunc_expr (__to_generic_c, __to_generic,
+		      (sizeof (from_ucs4) / sizeof (from_ucs4[0]) <= 256
+		       && hwcap & HWCAP_S390_VX)
+		      ? __to_generic_vx
+		      : __to_generic_c);
 
 strong_alias (__to_generic_c_single, __to_generic_single)
 
@@ -410,6 +393,6 @@ strong_alias (__to_generic_c_single, __to_generic_single)
 
 #else
 /* Generate this module without ifunc if build environment lacks vector
-   support. Instead the common 8bit-generic.c is used.  */
+   support.  Instead the common 8bit-generic.c is used.  */
 # include "iconvdata/8bit-generic.c"
 #endif /* !defined HAVE_S390_VX_ASM_SUPPORT */

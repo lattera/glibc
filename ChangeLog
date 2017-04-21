@@ -1,3 +1,11 @@
+2017-04-21  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/multiarch/ifunc-resolve.h
+	(s390_libc_ifunc_expr_init, s390_libc_ifunc_expr): New Define.
+	* sysdeps/s390/multiarch/8bit-generic.c
+	(__to_generic, __from_generic): Use s390_libc_ifunc_expr to
+	define ifunc resolvers.
+
 2017-04-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20424]
