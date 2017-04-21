@@ -1,4 +1,4 @@
-/* Conversion between UTF-16 and UTF-32 BE/internal.
+/* Conversion between UTF-8 and UTF-16 - s390 version.
 
    This module uses the Z9-109 variants of the Convert Unicode
    instructions.
@@ -27,8 +27,35 @@
 #include <dlfcn.h>
 #include <stdint.h>
 #include <unistd.h>
-#include <dl-procinfo.h>
 #include <gconv.h>
+#include <string.h>
+
+/* Select which versions should be defined depending on support
+   for multiarch, vector and used minimum architecture level.  */
+#ifdef HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT
+# define HAVE_FROM_C		0
+# define FROM_LOOP_DEFAULT	FROM_LOOP_CU
+#else
+# define HAVE_FROM_C		1
+# define FROM_LOOP_DEFAULT	FROM_LOOP_C
+#endif
+
+#define HAVE_TO_C		1
+#define TO_LOOP_DEFAULT		TO_LOOP_C
+
+#if defined HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT || defined USE_MULTIARCH
+# define HAVE_FROM_CU		1
+#else
+# define HAVE_FROM_CU		0
+#endif
+
+#if defined HAVE_S390_VX_ASM_SUPPORT && defined USE_MULTIARCH
+# define HAVE_FROM_VX		1
+# define HAVE_TO_VX		1
+#else
+# define HAVE_FROM_VX		0
+# define HAVE_TO_VX		0
+#endif
 
 #if defined HAVE_S390_VX_GCC_SUPPORT
 # define ASM_CLOBBER_VR(NR) , NR
@@ -49,8 +76,8 @@
 #define MAX_NEEDED_FROM		4
 #define MIN_NEEDED_TO		2
 #define MAX_NEEDED_TO		4
-#define FROM_LOOP		__from_utf8_loop
-#define TO_LOOP			__to_utf8_loop
+#define FROM_LOOP		FROM_LOOP_DEFAULT
+#define TO_LOOP			TO_LOOP_DEFAULT
 #define FROM_DIRECTION		(dir == from_utf8)
 #define ONE_DIRECTION           0
 
@@ -214,9 +241,8 @@ gconv_end (struct __gconv_step *data)
     STANDARD_FROM_LOOP_ERR_HANDLER (i);					\
   }
 
-#define BODY_FROM_ETF3EH BODY_FROM_HW (HARDWARE_CONVERT ("cu12 %0, %1, 1"))
-
-#define HW_FROM_VX							\
+#if HAVE_FROM_VX == 1
+# define HW_FROM_VX							\
   {									\
     register const unsigned char* pInput asm ("8") = inptr;		\
     register size_t inlen asm ("9") = inend - inptr;			\
@@ -291,11 +317,42 @@ gconv_end (struct __gconv_step *data)
     inptr = pInput;							\
     outptr = pOutput;							\
   }
-#define BODY_FROM_VX BODY_FROM_HW (HW_FROM_VX)
+# define BODY_FROM_VX BODY_FROM_HW (HW_FROM_VX)
 
+/* Generate loop-function with hardware vector and utf-convert instructions.  */
+# define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+# define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
+# define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+# define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
+# define FROM_LOOP_VX		__from_utf8_loop_vx
+# define LOOPFCT		FROM_LOOP_VX
+# define LOOP_NEED_FLAGS
+# define BODY			BODY_FROM_VX
+# include <iconv/loop.c>
+#else
+# define FROM_LOOP_VX		NULL
+#endif /* HAVE_FROM_VX != 1  */
 
+#if HAVE_FROM_CU == 1
+# define BODY_FROM_ETF3EH BODY_FROM_HW (HARDWARE_CONVERT ("cu12 %0, %1, 1"))
+
+/* Generate loop-function with hardware utf-convert instruction.  */
+# define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+# define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
+# define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+# define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
+# define FROM_LOOP_CU		__from_utf8_loop_etf3eh
+# define LOOPFCT		FROM_LOOP_CU
+# define LOOP_NEED_FLAGS
+# define BODY			BODY_FROM_ETF3EH
+# include <iconv/loop.c>
+#else
+# define FROM_LOOP_CU		NULL
+#endif /* HAVE_FROM_CU != 1  */
+
+#if HAVE_FROM_C == 1
 /* The software implementation is based on the code in gconv_simple.c.  */
-#define BODY_FROM_C							\
+# define BODY_FROM_C							\
   {									\
     /* Next input byte.  */						\
     uint16_t ch = *inptr;						\
@@ -443,66 +500,26 @@ gconv_end (struct __gconv_step *data)
   }
 
 /* Generate loop-function with software implementation.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
-#define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
-#define LOOPFCT			__from_utf8_loop_c
-#define LOOP_NEED_FLAGS
-#define BODY			BODY_FROM_C
-#include <iconv/loop.c>
-
-/* Generate loop-function with hardware utf-convert instruction.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
-#define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
-#define LOOPFCT			__from_utf8_loop_etf3eh
-#define LOOP_NEED_FLAGS
-#define BODY			BODY_FROM_ETF3EH
-#include <iconv/loop.c>
-
-#if defined HAVE_S390_VX_ASM_SUPPORT
-/* Generate loop-function with hardware vector and utf-convert instructions.  */
 # define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 # define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
 # define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 # define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
-# define LOOPFCT		__from_utf8_loop_vx
+# define FROM_LOOP_C		__from_utf8_loop_c
+# define LOOPFCT		FROM_LOOP_C
 # define LOOP_NEED_FLAGS
-# define BODY			BODY_FROM_VX
+# define BODY			BODY_FROM_C
 # include <iconv/loop.c>
-#endif
-
-
-/* Generate ifunc'ed loop function.  */
-__typeof(__from_utf8_loop_c)
-__attribute__ ((ifunc ("__from_utf8_loop_resolver")))
-__from_utf8_loop;
-
-static void *
-__from_utf8_loop_resolver (unsigned long int dl_hwcap)
-{
-#if defined HAVE_S390_VX_ASM_SUPPORT
-  if (dl_hwcap & HWCAP_S390_VX)
-    return __from_utf8_loop_vx;
-  else
-#endif
-  if (dl_hwcap & HWCAP_S390_ZARCH && dl_hwcap & HWCAP_S390_HIGH_GPRS
-      && dl_hwcap & HWCAP_S390_ETF3EH)
-    return __from_utf8_loop_etf3eh;
-  else
-    return __from_utf8_loop_c;
-}
-
-strong_alias (__from_utf8_loop_c_single, __from_utf8_loop_single)
+#else
+# define FROM_LOOP_C		NULL
+#endif /* HAVE_FROM_C != 1  */
 
 /* Conversion from UTF-16 to UTF-8.  */
 
+#if HAVE_TO_C == 1
 /* The software routine is based on the functionality of the S/390
    hardware instruction (cu21) as described in the Principles of
    Operation.  */
-#define BODY_TO_C							\
+# define BODY_TO_C							\
   {									\
     uint16_t c = get16 (inptr);						\
 									\
@@ -601,7 +618,22 @@ strong_alias (__from_utf8_loop_c_single, __from_utf8_loop_single)
     inptr += 2;								\
   }
 
-#define BODY_TO_VX							\
+/* Generate loop-function with software implementation.  */
+# define MIN_NEEDED_INPUT	MIN_NEEDED_TO
+# define MAX_NEEDED_INPUT	MAX_NEEDED_TO
+# define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
+# define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
+# define TO_LOOP_C		__to_utf8_loop_c
+# define LOOPFCT		TO_LOOP_C
+# define BODY                   BODY_TO_C
+# define LOOP_NEED_FLAGS
+# include <iconv/loop.c>
+#else
+# define TO_LOOP_C		NULL
+#endif /* HAVE_TO_C != 1  */
+
+#if HAVE_TO_VX == 1
+# define BODY_TO_VX							\
   {									\
     size_t inlen  = inend - inptr;					\
     size_t outlen  = outend - outptr;					\
@@ -771,48 +803,23 @@ strong_alias (__from_utf8_loop_c_single, __from_utf8_loop_single)
     STANDARD_TO_LOOP_ERR_HANDLER (2);					\
   }
 
-/* Generate loop-function with software implementation.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MAX_NEEDED_INPUT	MAX_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
-#if defined HAVE_S390_VX_ASM_SUPPORT
-# define LOOPFCT		__to_utf8_loop_c
-# define BODY                   BODY_TO_C
-# define LOOP_NEED_FLAGS
-# include <iconv/loop.c>
-
-/* Generate loop-function with software implementation.  */
+/* Generate loop-function with vector implementation.  */
 # define MIN_NEEDED_INPUT	MIN_NEEDED_TO
 # define MAX_NEEDED_INPUT	MAX_NEEDED_TO
 # define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
 # define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
-# define LOOPFCT		__to_utf8_loop_vx
+# define TO_LOOP_VX		__to_utf8_loop_vx
+# define LOOPFCT		TO_LOOP_VX
 # define BODY                   BODY_TO_VX
 # define LOOP_NEED_FLAGS
 # include <iconv/loop.c>
-
-/* Generate ifunc'ed loop function.  */
-__typeof(__to_utf8_loop_c)
-__attribute__ ((ifunc ("__to_utf8_loop_resolver")))
-__to_utf8_loop;
-
-static void *
-__to_utf8_loop_resolver (unsigned long int dl_hwcap)
-{
-  if (dl_hwcap & HWCAP_S390_VX)
-    return __to_utf8_loop_vx;
-  else
-    return __to_utf8_loop_c;
-}
-
-strong_alias (__to_utf8_loop_c_single, __to_utf8_loop_single)
-
 #else
-# define LOOPFCT		TO_LOOP
-# define BODY                   BODY_TO_C
-# define LOOP_NEED_FLAGS
-# include <iconv/loop.c>
-#endif /* !HAVE_S390_VX_ASM_SUPPORT  */
+# define TO_LOOP_VX		NULL
+#endif /* HAVE_TO_VX != 1  */
 
-#include <iconv/skeleton.c>
+/* This file also exists in sysdeps/s390/multiarch/ which
+   generates ifunc resolvers for FROM/TO_LOOP functions
+   and includes iconv/skeleton.c afterwards.  */
+#if ! defined USE_MULTIARCH
+# include <iconv/skeleton.c>
+#endif
