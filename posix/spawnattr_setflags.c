@@ -25,6 +25,7 @@
 		   | POSIX_SPAWN_SETSIGMASK				      \
 		   | POSIX_SPAWN_SETSCHEDPARAM				      \
 		   | POSIX_SPAWN_SETSCHEDULER				      \
+		   | POSIX_SPAWN_SETSID					      \
 		   | POSIX_SPAWN_USEVFORK)
 
 /* Store flags in the attribute structure.  */

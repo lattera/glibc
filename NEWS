@@ -52,6 +52,11 @@ Version 2.26
 * The legacy cfree function has been removed.  Applications should use the
   free function instead.
 
+* posix_spawnattr_setflags now supports POSIX_SPAWN_SETSID flag to create a
+  new session ID for the posix_spawn and posix_spawnp.  It is scheduled to
+  be added on next major revision of POSIX, so current support is enabled
+  with _GNU_SOURCE.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,

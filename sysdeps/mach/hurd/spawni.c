@@ -281,6 +281,9 @@ __spawni (pid_t *pid, const char *file,
     }
 #endif
 
+  if (!err && (flags & POSIX_SPAWN_SETSID) != 0)
+    err = __proc_setsid (proc);
+
   /* Set the process group ID.  */
   if (!err && (flags & POSIX_SPAWN_SETPGROUP) != 0)
     err = __proc_setpgrp (proc, new_pid, attrp->__pgrp);

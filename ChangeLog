@@ -1,3 +1,18 @@
+2017-04-24  Daurnimator  <quae@daurnimator.com>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21340]
+	* posix/Makefile (tests): Add tst-posix_spawn-setsid to list of tests.
+	* posix/spawn.h: define POSIX_SPAWN_SETSID flag.
+	* posix/spawnattr_setflags.c (ALL_FLAGS): Add POSIX_SPAWN_SETSID to
+	valid flags.
+	* posix/tst-posix_spawn-setsid.c: Add test for POSIX_SPAWN_SETSID.
+	* sysdeps/mach/hurd/spawni.c (__spawni): Implementation of
+	POSIX_SPAWN_SETSID.
+	* sysdeps/posix/spawni.c (__spawni): Likewise.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Likewise.
+	* NEWS: Add note about POSIX_SPAWN_SETSID support.
+
 2017-04-24  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* sysdeps/generic/math_private.h: Move the declaration of many

@@ -177,6 +177,10 @@ __spawni_child (void *arguments)
     }
 #endif
 
+  if ((attr->__flags & POSIX_SPAWN_SETSID) != 0
+      && __setsid () < 0)
+    goto fail;
+
   /* Set the process group ID.  */
   if ((attr->__flags & POSIX_SPAWN_SETPGROUP) != 0
       && (ret = __setpgid (0, attr->__pgrp)) != 0)
