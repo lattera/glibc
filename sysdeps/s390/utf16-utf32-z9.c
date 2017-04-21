@@ -27,8 +27,23 @@
 #include <dlfcn.h>
 #include <stdint.h>
 #include <unistd.h>
-#include <dl-procinfo.h>
 #include <gconv.h>
+#include <string.h>
+
+/* Select which versions should be defined depending on support
+   for multiarch, vector and used minimum architecture level.  */
+#define HAVE_FROM_C		1
+#define FROM_LOOP_DEFAULT	FROM_LOOP_C
+#define HAVE_TO_C		1
+#define TO_LOOP_DEFAULT		TO_LOOP_C
+
+#if defined HAVE_S390_VX_ASM_SUPPORT && defined USE_MULTIARCH
+# define HAVE_FROM_VX		1
+# define HAVE_TO_VX		1
+#else
+# define HAVE_FROM_VX		0
+# define HAVE_TO_VX		0
+#endif
 
 #if defined HAVE_S390_VX_GCC_SUPPORT
 # define ASM_CLOBBER_VR(NR) , NR
@@ -53,8 +68,8 @@
 #define MIN_NEEDED_FROM		2
 #define MAX_NEEDED_FROM		4
 #define MIN_NEEDED_TO		4
-#define FROM_LOOP		__from_utf16_loop
-#define TO_LOOP			__to_utf16_loop
+#define FROM_LOOP		FROM_LOOP_DEFAULT
+#define TO_LOOP			TO_LOOP_DEFAULT
 #define FROM_DIRECTION		(dir == from_utf16)
 #define ONE_DIRECTION           0
 
@@ -174,9 +189,10 @@ gconv_end (struct __gconv_step *data)
 
 /* Conversion function from UTF-16 to UTF-32 internal/BE.  */
 
+#if HAVE_FROM_C == 1
 /* The software routine is copied from utf-16.c (minus bytes
    swapping).  */
-#define BODY_FROM_C							\
+# define BODY_FROM_C							\
   {									\
     uint16_t u1 = get16 (inptr);					\
 									\
@@ -220,7 +236,22 @@ gconv_end (struct __gconv_step *data)
     outptr += 4;							\
   }
 
-#define BODY_FROM_VX							\
+
+/* Generate loop-function with software routing.  */
+# define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+# define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
+# define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+# define FROM_LOOP_C		__from_utf16_loop_c
+# define LOOPFCT		FROM_LOOP_C
+# define LOOP_NEED_FLAGS
+# define BODY			BODY_FROM_C
+# include <iconv/loop.c>
+#else
+# define FROM_LOOP_C		NULL
+#endif /* HAVE_FROM_C != 1  */
+
+#if HAVE_FROM_VX == 1
+# define BODY_FROM_VX							\
   {									\
     size_t inlen = inend - inptr;					\
     size_t outlen = outend - outptr;					\
@@ -255,7 +286,7 @@ gconv_end (struct __gconv_step *data)
 		  /* Setup to check for ch >= 0xd800 && ch <= 0xdfff. (v30, v31)  */ \
 		  "9:  .short 0xd800,0xdfff,0x0,0x0,0x0,0x0,0x0,0x0\n\t" \
 		  "    .short 0xa000,0xc000,0x0,0x0,0x0,0x0,0x0,0x0\n\t" \
-		  /* At least on uint16_t is in range of surrogates.	\
+		  /* At least one uint16_t is in range of surrogates.	\
 		     Store the preceding chars.  */			\
 		  "10: vlgvb %[R_TMP],%%v19,7\n\t"			\
 		  "    vuplhh %%v17,%%v16\n\t"				\
@@ -351,52 +382,26 @@ gconv_end (struct __gconv_step *data)
   }
 
 
-/* Generate loop-function with software routing.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
-#if defined HAVE_S390_VX_ASM_SUPPORT
-# define LOOPFCT		__from_utf16_loop_c
-# define LOOP_NEED_FLAGS
-# define BODY			BODY_FROM_C
-# include <iconv/loop.c>
-
 /* Generate loop-function with hardware vector instructions.  */
 # define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 # define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
 # define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
-# define LOOPFCT		__from_utf16_loop_vx
+# define FROM_LOOP_VX		__from_utf16_loop_vx
+# define LOOPFCT		FROM_LOOP_VX
 # define LOOP_NEED_FLAGS
 # define BODY			BODY_FROM_VX
 # include <iconv/loop.c>
-
-/* Generate ifunc'ed loop function.  */
-__typeof(__from_utf16_loop_c)
-__attribute__ ((ifunc ("__from_utf16_loop_resolver")))
-__from_utf16_loop;
-
-static void *
-__from_utf16_loop_resolver (unsigned long int dl_hwcap)
-{
-  if (dl_hwcap & HWCAP_S390_VX)
-    return __from_utf16_loop_vx;
-  else
-    return __from_utf16_loop_c;
-}
-
-strong_alias (__from_utf16_loop_c_single, __from_utf16_loop_single)
 #else
-# define LOOPFCT		FROM_LOOP
-# define LOOP_NEED_FLAGS
-# define BODY			BODY_FROM_C
-# include <iconv/loop.c>
-#endif
+# define FROM_LOOP_VX		NULL
+#endif /* HAVE_FROM_VX != 1  */
+
 
 /* Conversion from UTF-32 internal/BE to UTF-16.  */
 
+#if HAVE_TO_C == 1
 /* The software routine is copied from utf-16.c (minus bytes
    swapping).  */
-#define BODY_TO_C							\
+# define BODY_TO_C							\
   {									\
     uint32_t c = get32 (inptr);						\
 									\
@@ -439,7 +444,21 @@ strong_alias (__from_utf16_loop_c_single, __from_utf16_loop_single)
     inptr += 4;								\
   }
 
-#define BODY_TO_VX							\
+/* Generate loop-function with software routing.  */
+# define MIN_NEEDED_INPUT	MIN_NEEDED_TO
+# define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
+# define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
+# define TO_LOOP_C		__to_utf16_loop_c
+# define LOOPFCT		TO_LOOP_C
+# define LOOP_NEED_FLAGS
+# define BODY			BODY_TO_C
+# include <iconv/loop.c>
+#else
+# define TO_LOOP_C		NULL
+#endif /* HAVE_TO_C != 1  */
+
+#if HAVE_TO_VX == 1
+# define BODY_TO_VX							\
   {									\
     size_t inlen = inend - inptr;					\
     size_t outlen = outend - outptr;					\
@@ -563,43 +582,22 @@ strong_alias (__from_utf16_loop_c_single, __from_utf16_loop_single)
     STANDARD_TO_LOOP_ERR_HANDLER (4);					\
   }
 
-/* Generate loop-function with software routing.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
-#define LOOPFCT			__to_utf16_loop_c
-#define LOOP_NEED_FLAGS
-#define BODY			BODY_TO_C
-#include <iconv/loop.c>
-
-#if defined HAVE_S390_VX_ASM_SUPPORT
 /* Generate loop-function with hardware vector instructions.  */
 # define MIN_NEEDED_INPUT	MIN_NEEDED_TO
 # define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
 # define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
-# define LOOPFCT		__to_utf16_loop_vx
+# define TO_LOOP_VX		__to_utf16_loop_vx
+# define LOOPFCT		TO_LOOP_VX
 # define LOOP_NEED_FLAGS
 # define BODY			BODY_TO_VX
 # include <iconv/loop.c>
+#else
+# define TO_LOOP_VX		NULL
+#endif /* HAVE_TO_VX != 1  */
+
+/* This file also exists in sysdeps/s390/multiarch/ which
+   generates ifunc resolvers for FROM/TO_LOOP functions
+   and includes iconv/skeleton.c afterwards.  */
+#if ! defined USE_MULTIARCH
+# include <iconv/skeleton.c>
 #endif
-
-/* Generate ifunc'ed loop function.  */
-__typeof(__to_utf16_loop_c)
-__attribute__ ((ifunc ("__to_utf16_loop_resolver")))
-__to_utf16_loop;
-
-static void *
-__to_utf16_loop_resolver (unsigned long int dl_hwcap)
-{
-#if defined HAVE_S390_VX_ASM_SUPPORT
-  if (dl_hwcap & HWCAP_S390_VX)
-    return __to_utf16_loop_vx;
-  else
-#endif
-    return __to_utf16_loop_c;
-}
-
-strong_alias (__to_utf16_loop_c_single, __to_utf16_loop_single)
-
-
-#include <iconv/skeleton.c>
