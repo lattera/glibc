@@ -1,3 +1,10 @@
+2017-04-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20424]
+	* manual/memory.texi (Replacing malloc): New section.
+	(Allocating Storage For Program Data): Reference it.
+	(The GNU Allocator): Likewise.
+
 2017-04-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/Versions (__strtod_internal): List explicitly, not as
