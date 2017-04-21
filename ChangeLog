@@ -1,3 +1,9 @@
+2017-04-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* misc/tst-preadvwritev-common.c (do_prepare): Use libsupport
+	expected arguments.
+	(do_test): Adapt to use libsupport.
+
 2017-05-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/gnu/netinet/tcp.h (TCP_FASTOPEN_CONNECT): New macro.
