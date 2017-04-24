@@ -25,10 +25,11 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/resource.h>
+#include <fcntl.h>
+#include <paths.h>
 
-static int do_test (void);
-#define TEST_FUNCTION           do_test ()
-#include <test-skeleton.c>
+#include <support/check.h>
+#include <support/temp_file.h>
 
 static int
 do_test (void)
@@ -47,25 +48,20 @@ do_test (void)
 
   struct rlimit rl;
   int max_fd = 24;
+  int ret;
 
   /* Set maximum number of file descriptor to a low value to avoid open
      too many files in environments where RLIMIT_NOFILE is large and to
      limit the array size to track the opened file descriptors.  */
 
   if (getrlimit (RLIMIT_NOFILE, &rl) == -1)
-    {
-      printf ("error: getrlimit RLIMIT_NOFILE failed");
-      exit (EXIT_FAILURE);
-    }
+    FAIL_EXIT1 ("getrlimit (RLIMIT_NOFILE): %m");
 
   max_fd = (rl.rlim_cur < max_fd ? rl.rlim_cur : max_fd);
   rl.rlim_cur = max_fd;
 
   if (setrlimit (RLIMIT_NOFILE, &rl) == 1)
-    {
-      printf ("error: setrlimit RLIMIT_NOFILE to %u failed", max_fd);
-      exit (EXIT_FAILURE);
-    }
+    FAIL_EXIT1 ("setrlimit (RLIMIT_NOFILE): %m");
 
   /* Exhauste the file descriptor limit with temporary files.  */
   int files[max_fd];
@@ -76,11 +72,7 @@ do_test (void)
       if (fd == -1)
 	{
 	  if (errno != EMFILE)
-	    {
-	      printf ("error: create_temp_file returned -1 with "
-		      "errno != EMFILE\n");
-	      exit (EXIT_FAILURE);
-	    }
+	    FAIL_EXIT1 ("create_temp_file: %m");
 	  break;
 	}
       files[nfiles++] = fd;
@@ -88,25 +80,16 @@ do_test (void)
 
   posix_spawn_file_actions_t a;
   if (posix_spawn_file_actions_init (&a) != 0)
-    {
-      puts ("error: spawn_file_actions_init failed");
-      exit (EXIT_FAILURE);
-    }
+    FAIL_EXIT1 ("posix_spawn_file_actions_init");
 
   /* Executes a /bin/sh echo $$ 2>&1 > /tmp/tst-spawn3.pid .  */
   const char pidfile[] = "/tmp/tst-spawn3.pid";
   if (posix_spawn_file_actions_addopen (&a, STDOUT_FILENO, pidfile, O_WRONLY |
 					O_CREAT | O_TRUNC, 0644) != 0)
-    {
-      puts ("error: spawn_file_actions_addopen failed");
-      exit (EXIT_FAILURE);
-    }
+    FAIL_EXIT1 ("posix_spawn_file_actions_addopen");
 
   if (posix_spawn_file_actions_adddup2 (&a, STDOUT_FILENO, STDERR_FILENO) != 0)
-    {
-      puts ("error: spawn_file_actions_addclose");
-      exit (EXIT_FAILURE);
-    }
+    FAIL_EXIT1 ("posix_spawn_file_actions_adddup2");
 
   /* Since execve (called by posix_spawn) might require to open files to
      actually execute the shell script, setup to close the temporary file
@@ -114,54 +97,40 @@ do_test (void)
   for (int i=0; i<nfiles; i++)
     {
       if (posix_spawn_file_actions_addclose (&a, files[i]))
-	{
-          printf ("error: posix_spawn_file_actions_addclose failed");
-	  exit (EXIT_FAILURE);
-	}
+	FAIL_EXIT1 ("posix_spawn_file_actions_addclose");
     }
 
   char *spawn_argv[] = { (char *) _PATH_BSHELL, (char *) "-c",
 			 (char *) "echo $$", NULL };
   pid_t pid;
-  if (posix_spawn (&pid, _PATH_BSHELL, &a, NULL, spawn_argv, NULL) != 0)
+  if ((ret = posix_spawn (&pid, _PATH_BSHELL, &a, NULL, spawn_argv, NULL))
+       != 0)
     {
-      puts ("error: posix_spawn failed");
-      exit (EXIT_FAILURE);
+      errno = ret;
+      FAIL_EXIT1 ("posix_spawn: %m");
     }
 
   int status;
   int err = waitpid (pid, &status, 0);
   if (err != pid)
-    {
-      puts ("error: waitpid failed");
-      exit (EXIT_FAILURE);
-    }
+    FAIL_EXIT1 ("waitpid: %m");
 
   /* Close the temporary files descriptor so it can check posix_spawn
      output.  */
   for (int i=0; i<nfiles; i++)
     {
       if (close (files[i]))
-	{
-	  printf ("error: close failed\n");
-	  exit (EXIT_FAILURE);
-	}
+	FAIL_EXIT1 ("close: %m");
     }
 
   int pidfd = open (pidfile, O_RDONLY);
   if (pidfd == -1)
-    {
-      printf ("error: open pidfile failed\n");
-      exit (EXIT_FAILURE);
-    }
+    FAIL_EXIT1 ("open: %m");
 
   char buf[64];
   ssize_t n;
   if ((n = read (pidfd, buf, sizeof (buf))) < 0)
-    {
-      printf ("error: read pidfile failed\n");
-      exit (EXIT_FAILURE);
-    }
+    FAIL_EXIT1 ("read: %m");
 
   unlink (pidfile);
 
@@ -169,21 +138,14 @@ do_test (void)
   char *endp;
   long int rpid = strtol (buf, &endp, 10);
   if (*endp != '\n')
-    {
-      printf ("error: didn't parse whole line: \"%s\"\n", buf);
-      exit (EXIT_FAILURE);
-    }
+    FAIL_EXIT1 ("*endp != \'n\'");
   if (endp == buf)
-    {
-      puts ("error: read empty line");
-      exit (EXIT_FAILURE);
-    }
+    FAIL_EXIT1 ("read empty line");
 
   if (rpid != pid)
-    {
-      printf ("error: found \"%s\", expected PID %ld\n", buf, (long int) pid);
-      exit (EXIT_FAILURE);
-    }
+    FAIL_EXIT1 ("found \"%s\", expected pid %ld\n", buf, (long int) pid);
 
   return 0;
 }
+
+#include <support/test-driver.c>

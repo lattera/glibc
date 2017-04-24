@@ -1,3 +1,8 @@
+2017-06-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* posix/tst-spawn2.c (do_test): Use libsupport.
+	* posix/tst-spawn3.c (do_test): Likewise.
+
 2017-06-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-tgmath-tests.py (Tests.__init__): Define

@@ -23,11 +23,12 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
-
 #include <stdio.h>
 
+#include <support/check.h>
+
 int
-posix_spawn_test (void)
+do_test (void)
 {
   /* Check if posix_spawn correctly returns an error and an invalid pid
      by trying to spawn an invalid binary.  */
@@ -38,35 +39,40 @@ posix_spawn_test (void)
 
   int ret = posix_spawn (&pid, program, 0, 0, args, environ);
   if (ret != ENOENT)
-    error (EXIT_FAILURE, errno, "posix_spawn");
+    {
+      errno = ret;
+      FAIL_EXIT1 ("posix_spawn: %m");
+    }
 
   /* POSIX states the value returned on pid variable in case of an error
      is not specified.  GLIBC will update the value iff the child
      execution is successful.  */
   if (pid != -1)
-    error (EXIT_FAILURE, errno, "posix_spawn returned pid != -1");
+    FAIL_EXIT1 ("posix_spawn returned pid != -1 (%i)", (int) pid);
 
   /* Check if no child is actually created.  */
   ret = waitpid (-1, NULL, 0);
   if (ret != -1 || errno != ECHILD)
-    error (EXIT_FAILURE, errno, "waitpid");
+    FAIL_EXIT1 ("waitpid: %m)");
 
   /* Same as before, but with posix_spawnp.  */
   char *args2[] = { (char*) program, 0 };
 
   ret = posix_spawnp (&pid, args2[0], 0, 0, args2, environ);
   if (ret != ENOENT)
-    error (EXIT_FAILURE, errno, "posix_spawnp");
+    {
+      errno = ret;
+      FAIL_EXIT1 ("posix_spawnp: %m");
+    }
 
   if (pid != -1)
-    error (EXIT_FAILURE, errno, "posix_spawnp returned pid != -1");
+    FAIL_EXIT1 ("posix_spawnp returned pid != -1 (%i)", (int) pid);
 
   ret = waitpid (-1, NULL, 0);
   if (ret != -1 || errno != ECHILD)
-    error (EXIT_FAILURE, errno, "waitpid");
+    FAIL_EXIT1 ("waitpid: %m)");
 
   return 0;
 }
 
-#define TEST_FUNCTION  posix_spawn_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
