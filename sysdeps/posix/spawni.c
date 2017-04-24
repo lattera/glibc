@@ -16,20 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
+#include <spawn.h>
+#include <assert.h>
 #include <fcntl.h>
 #include <paths.h>
-#include <spawn.h>
-#include <stdbool.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <signal.h>
 #include <sys/resource.h>
-#include "spawn_int.h"
+#include <sys/wait.h>
+#include <sys/param.h>
+#include <sys/mman.h>
 #include <not-cancel.h>
 #include <local-setxid.h>
 #include <shlib-compat.h>
+#include <nptl/pthreadP.h>
+#include <dl-sysdep.h>
+#include <libc-pointer-arith.h>
+#include <ldsodefs.h>
+#include "spawn_int.h"
 
 
 /* The Unix standard contains a long explanation of the way to signal
@@ -39,94 +42,59 @@
    normal program exit with the exit code 127.  */
 #define SPAWN_ERROR	127
 
-
-/* The file is accessible but it is not an executable file.  Invoke
-   the shell to interpret it as a script.  */
-static void
-internal_function
-script_execute (const char *file, char *const argv[], char *const envp[])
+struct posix_spawn_args
 {
-  /* Count the arguments.  */
-  int argc = 0;
-  while (argv[argc++])
-    ;
+  sigset_t oldmask;
+  const char *file;
+  int (*exec) (const char *, char *const *, char *const *);
+  const posix_spawn_file_actions_t *fa;
+  const posix_spawnattr_t *restrict attr;
+  char *const *argv;
+  ptrdiff_t argc;
+  char *const *envp;
+  int xflags;
+  int pipe[2];
+};
 
-  /* Construct an argument list for the shell.  */
-  {
-    char *new_argv[argc + 1];
-    new_argv[0] = (char *) _PATH_BSHELL;
-    new_argv[1] = (char *) file;
-    while (argc > 1)
-      {
-	new_argv[argc] = argv[argc - 1];
-	--argc;
-      }
-
-    /* Execute the shell.  */
-    __execve (new_argv[0], new_argv, envp);
-  }
-}
-
-static inline void
-maybe_script_execute (const char *file, char *const argv[], char *const envp[],
-                      int xflags)
+/* Older version requires that shell script without shebang definition
+   to be called explicitly using /bin/sh (_PATH_BSHELL).  */
+static void
+maybe_script_execute (struct posix_spawn_args *args)
 {
   if (SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_15)
-      && (xflags & SPAWN_XFLAGS_TRY_SHELL)
-      && errno == ENOEXEC)
-    script_execute (file, argv, envp);
+      && (args->xflags & SPAWN_XFLAGS_TRY_SHELL) && errno == ENOEXEC)
+    {
+      char *const *argv = args->argv;
+      ptrdiff_t argc = args->argc;
+
+      /* Construct an argument list for the shell.  */
+      char *new_argv[argc + 1];
+      new_argv[0] = (char *) _PATH_BSHELL;
+      new_argv[1] = (char *) args->file;
+      if (argc > 1)
+	memcpy (new_argv + 2, argv + 1, argc * sizeof(char *));
+      else
+	new_argv[2] = NULL;
+
+      /* Execute the shell.  */
+      args->exec (new_argv[0], new_argv, args->envp);
+    }
 }
 
-/* Spawn a new process executing PATH with the attributes describes in *ATTRP.
-   Before running the process perform the actions described in FILE-ACTIONS. */
-int
-__spawni (pid_t *pid, const char *file,
-	  const posix_spawn_file_actions_t *file_actions,
-	  const posix_spawnattr_t *attrp, char *const argv[],
-	  char *const envp[], int xflags)
+/* Function used in the clone call to setup the signals mask, posix_spawn
+   attributes, and file actions.  */
+static int
+__spawni_child (void *arguments)
 {
-  pid_t new_pid;
-  char *path, *p, *name;
-  size_t len;
-  size_t pathlen;
+  struct posix_spawn_args *args = arguments;
+  const posix_spawnattr_t *restrict attr = args->attr;
+  const posix_spawn_file_actions_t *file_actions = args->fa;
+  int ret;
 
-  /* Do this once.  */
-  short int flags = attrp == NULL ? 0 : attrp->__flags;
-
-  /* Generate the new process.  */
-  if ((flags & POSIX_SPAWN_USEVFORK) != 0
-      /* If no major work is done, allow using vfork.  Note that we
-	 might perform the path searching.  But this would be done by
-	 a call to execvp(), too, and such a call must be OK according
-	 to POSIX.  */
-      || ((flags & (POSIX_SPAWN_SETSIGMASK | POSIX_SPAWN_SETSIGDEF
-		    | POSIX_SPAWN_SETSCHEDPARAM | POSIX_SPAWN_SETSCHEDULER
-		    | POSIX_SPAWN_SETPGROUP | POSIX_SPAWN_RESETIDS
-		    | POSIX_SPAWN_SETSID)) == 0
-	  && file_actions == NULL))
-    new_pid = __vfork ();
-  else
-    new_pid = __fork ();
-
-  if (new_pid != 0)
-    {
-      if (new_pid < 0)
-	return errno;
-
-      /* The call was successful.  Store the PID if necessary.  */
-      if (pid != NULL)
-	*pid = new_pid;
-
-      return 0;
-    }
-
-  /* Set signal mask.  */
-  if ((flags & POSIX_SPAWN_SETSIGMASK) != 0
-      && __sigprocmask (SIG_SETMASK, &attrp->__ss, NULL) != 0)
-    _exit (SPAWN_ERROR);
+  __close (args->pipe[0]);
 
   /* Set signal default action.  */
-  if ((flags & POSIX_SPAWN_SETSIGDEF) != 0)
+  if ((attr->__flags & POSIX_SPAWN_SETSIGDEF) != 0)
     {
       /* We have to iterate over all signals.  This could possibly be
 	 done better but it requires system specific solutions since
@@ -139,41 +107,41 @@ __spawni (pid_t *pid, const char *file,
       sa.sa_handler = SIG_DFL;
 
       for (sig = 1; sig <= _NSIG; ++sig)
-	if (__sigismember (&attrp->__sd, sig) != 0
+	if (__sigismember (&attr->__sd, sig) != 0
 	    && __sigaction (sig, &sa, NULL) != 0)
-	  _exit (SPAWN_ERROR);
-
+	  goto fail;
     }
 
 #ifdef _POSIX_PRIORITY_SCHEDULING
   /* Set the scheduling algorithm and parameters.  */
-  if ((flags & (POSIX_SPAWN_SETSCHEDPARAM | POSIX_SPAWN_SETSCHEDULER))
+  if ((attr->__flags & (POSIX_SPAWN_SETSCHEDPARAM | POSIX_SPAWN_SETSCHEDULER))
       == POSIX_SPAWN_SETSCHEDPARAM)
     {
-      if (__sched_setparam (0, &attrp->__sp) == -1)
-	_exit (SPAWN_ERROR);
+      if ((ret = __sched_setparam (0, &attr->__sp)) == -1)
+	goto fail;
     }
-  else if ((flags & POSIX_SPAWN_SETSCHEDULER) != 0)
+  else if ((attr->__flags & POSIX_SPAWN_SETSCHEDULER) != 0)
     {
-      if (__sched_setscheduler (0, attrp->__policy, &attrp->__sp) == -1)
-	_exit (SPAWN_ERROR);
+      if ((ret = __sched_setscheduler (0, attr->__policy, &attr->__sp) == -1))
+	goto fail;
     }
 #endif
 
-  if ((flags & POSIX_SPAWN_SETSID) != 0
-      && __setsid () < 0)
-    _exit (SPAWN_ERROR);
+  /* Set the process session ID.  */
+  if ((attr->__flags & POSIX_SPAWN_SETSID) != 0
+      && (ret = __setsid ()) < 0)
+    goto fail;
 
   /* Set the process group ID.  */
-  if ((flags & POSIX_SPAWN_SETPGROUP) != 0
-      && __setpgid (0, attrp->__pgrp) != 0)
-    _exit (SPAWN_ERROR);
+  if ((attr->__flags & POSIX_SPAWN_SETPGROUP) != 0
+      && (ret =__setpgid (0, attr->__pgrp)) != 0)
+    goto fail;
 
   /* Set the effective user and group IDs.  */
-  if ((flags & POSIX_SPAWN_RESETIDS) != 0
-      && (local_seteuid (__getuid ()) != 0
-	  || local_setegid (__getgid ()) != 0))
-    _exit (SPAWN_ERROR);
+  if ((attr->__flags & POSIX_SPAWN_RESETIDS) != 0
+      && ((ret = local_seteuid (__getuid ())) != 0
+	  || (ret = local_setegid (__getgid ())) != 0))
+    goto fail;
 
   /* Execute the file actions.  */
   if (file_actions != NULL)
@@ -191,7 +159,7 @@ __spawni (pid_t *pid, const char *file,
 	    case spawn_do_close:
 	      if (close_not_cancel (action->action.close_action.fd) != 0)
 		{
-		  if (! have_fdlimit)
+		  if (have_fdlimit == 0)
 		    {
 		      __getrlimit64 (RLIMIT_NOFILE, &fdlimit);
 		      have_fdlimit = true;
@@ -200,120 +168,148 @@ __spawni (pid_t *pid, const char *file,
 		  /* Only signal errors for file descriptors out of range.  */
 		  if (action->action.close_action.fd < 0
 		      || action->action.close_action.fd >= fdlimit.rlim_cur)
-		    /* Signal the error.  */
-		    _exit (SPAWN_ERROR);
+		    {
+		      ret = -1;
+		      goto fail;
+		    }
 		}
 	      break;
 
 	    case spawn_do_open:
 	      {
+		/* POSIX states that if fildes was already an open file descriptor,
+		   it shall be closed before the new file is opened.  This avoid
+		   pontential issues when posix_spawn plus addopen action is called
+		   with the process already at maximum number of file descriptor
+		   opened and also for multiple actions on single-open special
+		   paths (like /dev/watchdog).  */
+		close_not_cancel (action->action.open_action.fd);
+
 		int new_fd = open_not_cancel (action->action.open_action.path,
 					      action->action.open_action.oflag
 					      | O_LARGEFILE,
 					      action->action.open_action.mode);
 
-		if (new_fd == -1)
-		  /* The `open' call failed.  */
-		  _exit (SPAWN_ERROR);
+		if ((ret = new_fd) == -1)
+		  goto fail;
 
 		/* Make sure the desired file descriptor is used.  */
 		if (new_fd != action->action.open_action.fd)
 		  {
-		    if (__dup2 (new_fd, action->action.open_action.fd)
+		    if ((ret = __dup2 (new_fd, action->action.open_action.fd))
 			!= action->action.open_action.fd)
-		      /* The `dup2' call failed.  */
-		      _exit (SPAWN_ERROR);
+		      goto fail;
 
-		    if (close_not_cancel (new_fd) != 0)
-		      /* The `close' call failed.  */
-		      _exit (SPAWN_ERROR);
+		    if ((ret = close_not_cancel (new_fd) != 0))
+		      goto fail;
 		  }
 	      }
 	      break;
 
 	    case spawn_do_dup2:
-	      if (__dup2 (action->action.dup2_action.fd,
-			  action->action.dup2_action.newfd)
+	      if ((ret = __dup2 (action->action.dup2_action.fd,
+				 action->action.dup2_action.newfd))
 		  != action->action.dup2_action.newfd)
-		/* The `dup2' call failed.  */
-		_exit (SPAWN_ERROR);
+		goto fail;
 	      break;
 	    }
 	}
     }
 
-  if ((xflags & SPAWN_XFLAGS_USE_PATH) == 0 || strchr (file, '/') != NULL)
-    {
-      /* The FILE parameter is actually a path.  */
-      __execve (file, argv, envp);
+  /* Set the initial signal mask of the child if POSIX_SPAWN_SETSIGMASK
+     is set, otherwise restore the previous one.  */
+  __sigprocmask (SIG_SETMASK, (attr->__flags & POSIX_SPAWN_SETSIGMASK)
+		 ? &attr->__ss : &args->oldmask, 0);
 
-      maybe_script_execute (file, argv, envp, xflags);
+  args->exec (args->file, args->argv, args->envp);
 
-      /* Oh, oh.  `execve' returns.  This is bad.  */
-      _exit (SPAWN_ERROR);
-    }
+  /* This is compatibility function required to enable posix_spawn run
+     script without shebang definition for older posix_spawn versions
+     (2.15).  */
+  maybe_script_execute (args);
 
-  /* We have to search for FILE on the path.  */
-  path = getenv ("PATH");
-  if (path == NULL)
-    {
-      /* There is no `PATH' in the environment.
-	 The default search path is the current directory
-	 followed by the path `confstr' returns for `_CS_PATH'.  */
-      len = confstr (_CS_PATH, (char *) NULL, 0);
-      path = (char *) __alloca (1 + len);
-      path[0] = ':';
-      (void) confstr (_CS_PATH, path + 1, len);
-    }
+  ret = -errno;
 
-  len = strlen (file) + 1;
-  pathlen = strlen (path);
-  name = __alloca (pathlen + len + 1);
-  /* Copy the file name at the top.  */
-  name = (char *) memcpy (name + pathlen + 1, file, len);
-  /* And add the slash.  */
-  *--name = '/';
+fail:
+  /* Since sizeof errno < PIPE_BUF, the write is atomic. */
+  ret = -ret;
+  if (ret)
+    while (write_not_cancel (args->pipe[1], &ret, sizeof (ret)) < 0);
 
-  p = path;
-  do
-    {
-      char *startp;
-
-      path = p;
-      p = __strchrnul (path, ':');
-
-      if (p == path)
-	/* Two adjacent colons, or a colon at the beginning or the end
-	   of `PATH' means to search the current directory.  */
-	startp = name + 1;
-      else
-	startp = (char *) memcpy (name - (p - path), path, p - path);
-
-      /* Try to execute this name.  If it works, execv will not return.  */
-      __execve (startp, argv, envp);
-
-      maybe_script_execute (startp, argv, envp, xflags);
-
-      switch (errno)
-	{
-	case EACCES:
-	case ENOENT:
-	case ESTALE:
-	case ENOTDIR:
-	  /* Those errors indicate the file is missing or not executable
-	     by us, in which case we want to just try the next path
-	     directory.  */
-	  break;
-
-	default:
-	  /* Some other error means we found an executable file, but
-	     something went wrong executing it; return the error to our
-	     caller.  */
-	  _exit (SPAWN_ERROR);
-	    }
-    }
-  while (*p++ != '\0');
-
-  /* Return with an error.  */
   _exit (SPAWN_ERROR);
+}
+
+/* Spawn a new process executing PATH with the attributes describes in *ATTRP.
+   Before running the process perform the actions described in FILE-ACTIONS. */
+int
+__spawnix (pid_t *pid, const char *file,
+	   const posix_spawn_file_actions_t *file_actions,
+	   const posix_spawnattr_t *attrp, char *const argv[],
+	   char *const envp[], int xflags,
+	   int (*exec) (const char *, char *const *, char *const *))
+{
+  struct posix_spawn_args args;
+  int ec;
+
+  if (__pipe2 (args.pipe, O_CLOEXEC))
+    return errno;
+
+  /* Disable asynchronous cancellation.  */
+  int state;
+  __libc_ptf_call (__pthread_setcancelstate,
+                   (PTHREAD_CANCEL_DISABLE, &state), 0);
+
+  ptrdiff_t argc = 0;
+  ptrdiff_t limit = INT_MAX - 1;
+  while (argv[argc++] != NULL)
+    if (argc == limit)
+      {
+	errno = E2BIG;
+	return errno;
+      }
+
+  args.file = file;
+  args.exec = exec;
+  args.fa = file_actions;
+  args.attr = attrp ? attrp : &(const posix_spawnattr_t) { 0 };
+  args.argv = argv;
+  args.argc = argc;
+  args.envp = envp;
+  args.xflags = xflags;
+
+  /* Generate the new process.  */
+  pid_t new_pid = __fork ();
+
+  if (new_pid == 0)
+    __spawni_child (&args);
+  else if (new_pid > 0)
+    {
+      __close (args.pipe[1]);
+
+      if (__read (args.pipe[0], &ec, sizeof ec) != sizeof ec)
+	ec = 0;
+      else
+	__waitpid (new_pid, &(int) { 0 }, 0);
+    }
+  else
+    ec = -new_pid;
+
+  __close (args.pipe[0]);
+
+  if ((ec == 0) && (pid != NULL))
+    *pid = new_pid;
+
+  __libc_ptf_call (__pthread_setcancelstate, (state, NULL), 0);
+
+  return ec;
+}
+
+int
+__spawni (pid_t * pid, const char *file,
+	  const posix_spawn_file_actions_t * acts,
+	  const posix_spawnattr_t * attrp, char *const argv[],
+	  char *const envp[], int xflags)
+{
+  return __spawnix (pid, file, acts, attrp, argv, envp, xflags,
+		    xflags & SPAWN_XFLAGS_USE_PATH ? __execvpe : __execve);
 }

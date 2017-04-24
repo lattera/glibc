@@ -1,3 +1,8 @@
+2017-06-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/posix/spawni.c (__spawni_child): New function.
+	(__spawni): Rename to __spawnix.
+
 2017-06-29  Florian Weimer  <fweimer@redhat.com>
 
 	* stdio-common/vfprintf.c (group_number): Add front_ptr argument.
