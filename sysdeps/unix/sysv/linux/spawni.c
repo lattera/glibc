@@ -124,7 +124,6 @@ __spawni_child (void *arguments)
   struct posix_spawn_args *args = arguments;
   const posix_spawnattr_t *restrict attr = args->attr;
   const posix_spawn_file_actions_t *file_actions = args->fa;
-  int ret;
 
   /* The child must ensure that no signal handler are enabled because it shared
      memory with parent, so the signal disposition must be either SIG_DFL or
@@ -167,12 +166,12 @@ __spawni_child (void *arguments)
   if ((attr->__flags & (POSIX_SPAWN_SETSCHEDPARAM | POSIX_SPAWN_SETSCHEDULER))
       == POSIX_SPAWN_SETSCHEDPARAM)
     {
-      if ((ret = __sched_setparam (0, &attr->__sp)) == -1)
+      if (__sched_setparam (0, &attr->__sp) == -1)
 	goto fail;
     }
   else if ((attr->__flags & POSIX_SPAWN_SETSCHEDULER) != 0)
     {
-      if ((ret = __sched_setscheduler (0, attr->__policy, &attr->__sp)) == -1)
+      if (__sched_setscheduler (0, attr->__policy, &attr->__sp) == -1)
 	goto fail;
     }
 #endif
@@ -183,13 +182,13 @@ __spawni_child (void *arguments)
 
   /* Set the process group ID.  */
   if ((attr->__flags & POSIX_SPAWN_SETPGROUP) != 0
-      && (ret = __setpgid (0, attr->__pgrp)) != 0)
+      && __setpgid (0, attr->__pgrp) != 0)
     goto fail;
 
   /* Set the effective user and group IDs.  */
   if ((attr->__flags & POSIX_SPAWN_RESETIDS) != 0
-      && ((ret = local_seteuid (__getuid ())) != 0
-	  || (ret = local_setegid (__getgid ())) != 0))
+      && (local_seteuid (__getuid ()) != 0
+	  || local_setegid (__getgid ()) != 0))
     goto fail;
 
   /* Execute the file actions.  */
@@ -206,8 +205,7 @@ __spawni_child (void *arguments)
 	  switch (action->tag)
 	    {
 	    case spawn_do_close:
-	      if ((ret =
-		   close_not_cancel (action->action.close_action.fd)) != 0)
+	      if (close_not_cancel (action->action.close_action.fd) != 0)
 		{
 		  if (!have_fdlimit)
 		    {
@@ -232,10 +230,10 @@ __spawni_child (void *arguments)
 		   paths (like /dev/watchdog).  */
 		close_not_cancel (action->action.open_action.fd);
 
-		ret = open_not_cancel (action->action.open_action.path,
-				       action->action.
-				       open_action.oflag | O_LARGEFILE,
-				       action->action.open_action.mode);
+		int ret = open_not_cancel (action->action.open_action.path,
+					   action->action.
+					   open_action.oflag | O_LARGEFILE,
+					   action->action.open_action.mode);
 
 		if (ret == -1)
 		  goto fail;
@@ -245,19 +243,19 @@ __spawni_child (void *arguments)
 		/* Make sure the desired file descriptor is used.  */
 		if (ret != action->action.open_action.fd)
 		  {
-		    if ((ret = __dup2 (new_fd, action->action.open_action.fd))
+		    if (__dup2 (new_fd, action->action.open_action.fd)
 			!= action->action.open_action.fd)
 		      goto fail;
 
-		    if ((ret = close_not_cancel (new_fd)) != 0)
+		    if (close_not_cancel (new_fd) != 0)
 		      goto fail;
 		  }
 	      }
 	      break;
 
 	    case spawn_do_dup2:
-	      if ((ret = __dup2 (action->action.dup2_action.fd,
-				 action->action.dup2_action.newfd))
+	      if (__dup2 (action->action.dup2_action.fd,
+			  action->action.dup2_action.newfd)
 		  != action->action.dup2_action.newfd)
 		goto fail;
 	      break;

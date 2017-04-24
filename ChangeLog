@@ -1,3 +1,8 @@
+2017-04-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Remove ununsed
+	assignment.
+
 2017-04-24  Daurnimator  <quae@daurnimator.com>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
