@@ -1,5 +1,23 @@
 2017-04-25  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21426]
+	* misc/bits/types/struct_iovec.h: New file.
+	* misc/Makefile (headers): Add bits/types/struct_iovec.h.
+	* include/bits/types/struct_iovec.h: New file.
+	* bits/uio.h (struct iovec): Replace by inclusion of
+	<bits/types/struct_iovec.h>.
+	* sysdeps/unix/sysv/linux/bits/uio.h (struct iovec): Likewise.
+	* socket/sys/socket.h: Include <bits/types/struct_iovec.h> instead
+	of <sys/uio.h>.
+	* nptl/tst-cancel4.c: Include <sys/uio.h>
+	* posix/test-errno.c: Likewise.
+	* support/resolv_test.c: Likewise.
+	* conform/Makefile (test-xfail-POSIX2008/arpa/inet.h/conform):
+	Remove.
+	(test-xfail-POSIX2008/netdb.h/conform): Likewise.
+	(test-xfail-POSIX2008/netinet/in.h/conform): Likewise.
+	(test-xfail-POSIX2008/sys/socket.h/conform): Likewise.
+
 	* conform/data/sys/socket.h-data (*_t): Allow.
 
 2017-04-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>

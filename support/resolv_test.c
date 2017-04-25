@@ -33,6 +33,7 @@
 #include <support/xsocket.h>
 #include <support/xthread.h>
 #include <support/xunistd.h>
+#include <sys/uio.h>
 #include <unistd.h>
 
 /* Response builder.  */

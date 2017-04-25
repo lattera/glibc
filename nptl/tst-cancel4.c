@@ -38,6 +38,7 @@
 #include <sys/poll.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
+#include <sys/uio.h>
 
 
 /* Since STREAMS are not supported in the standard Linux kernel and
