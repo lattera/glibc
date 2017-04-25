@@ -48,7 +48,9 @@ pwritev64 (int fd, const struct iovec *vector, int count, off64_t offset)
 # define OFF_T off64_t
 # include <sysdeps/posix/pwritev_common.c>
 #endif
+libc_hidden_def (pwritev64)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
 strong_alias (pwritev64, pwritev)
+libc_hidden_def (pwritev)
 #endif

@@ -1,6 +1,6 @@
-/* Copyright (C) 1997-2017 Free Software Foundation, Inc.
+/* Default implementation of preadv2.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,25 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <unistd.h>
-#include <sysdep-cancel.h>
+#include <sys/uio.h>
 
-#ifndef __NR_pwrite64
-# define __NR_pwrite64 __NR_pwrite
-#endif
-
+/* Same as preadv but with an additional flags argument.  */
 ssize_t
-__libc_pwrite64 (int fd, const void *buf, size_t count, off64_t offset)
+preadv2 (int fd, const struct iovec *vector, int count, off_t offset,
+	 int flags)
 {
-  return SYSCALL_CANCEL (pwrite64, fd, buf, count, SYSCALL_LL64_PRW (offset));
+  __set_errno (ENOSYS);
+  return -1;
 }
 
-weak_alias (__libc_pwrite64, __pwrite64)
-libc_hidden_weak (__pwrite64)
-weak_alias (__libc_pwrite64, pwrite64)
-
-#ifdef __OFF_T_MATCHES_OFF64_T
-strong_alias (__libc_pwrite64, __libc_pwrite)
-weak_alias (__libc_pwrite64, __pwrite)
-weak_alias (__libc_pwrite64, pwrite)
-#endif
+stub_warning (preadv2)

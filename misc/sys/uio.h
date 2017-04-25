@@ -76,6 +76,7 @@ extern ssize_t preadv (int __fd, const struct iovec *__iovec, int __count,
    __THROW.  */
 extern ssize_t pwritev (int __fd, const struct iovec *__iovec, int __count,
 			__off_t __offset) __wur;
+
 # else
 #  ifdef __REDIRECT
 extern ssize_t __REDIRECT (preadv, (int __fd, const struct iovec *__iovec,
@@ -116,6 +117,46 @@ extern ssize_t pwritev64 (int __fd, const struct iovec *__iovec, int __count,
 			  __off64_t __offset) __wur;
 # endif
 #endif	/* Use misc.  */
+
+
+#ifdef __USE_GNU
+# ifndef __USE_FILE_OFFSET64
+/* Same as preadv but with an additional flag argumenti defined at uio.h.  */
+extern ssize_t preadv2 (int __fp, const struct iovec *__iovec, int __count,
+			__off_t __offset, int ___flags) __wur;
+
+/* Same as preadv but with an additional flag argument defined at uio.h.  */
+extern ssize_t pwritev2 (int __fd, const struct iovec *__iodev, int __count,
+			 __off_t __offset, int __flags) __wur;
+
+# else
+#  ifdef __REDIRECT
+extern ssize_t __REDIRECT (pwritev2, (int __fd, const struct iovec *__iovec,
+				      int __count, __off64_t __offset,
+				      int __flags),
+			   pwritev64v2) __wur;
+extern ssize_t __REDIRECT (preadv2, (int __fd, const struct iovec *__iovec,
+				     int __count, __off64_t __offset,
+				     int __flags),
+			   preadv64v2) __wur;
+#  else
+#   define preadv2 preadv64v2
+#   define pwritev2 pwritev64v2
+#  endif
+# endif
+
+# ifdef __USE_LARGEFILE64
+/* Same as preadv but with an additional flag argumenti defined at uio.h.  */
+extern ssize_t preadv64v2 (int __fp, const struct iovec *__iovec,
+			   int __count, __off64_t __offset,
+			   int ___flags) __wur;
+
+/* Same as preadv but with an additional flag argument defined at uio.h.  */
+extern ssize_t pwritev64v2 (int __fd, const struct iovec *__iodev,
+			    int __count, __off64_t __offset,
+			    int __flags) __wur;
+# endif
+#endif /* Use GNU.  */
 
 __END_DECLS
 

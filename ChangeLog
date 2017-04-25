@@ -1,3 +1,96 @@
+2017-05-31  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* NEWS: Add note about pwritev2 and preadv2 inclusion.
+	* misc/Makefile (routines): Add preadv2, preadv64v2, pwritev2, and
+	pwritev64v2.
+	(tests): Add tst-preadvwritev2 and tst-preadvwritev64v2.
+	* misc/Versions (GLIBC_2.26): Add preadv2, preadv64v2, pwritev2, and
+	pwritev64v2.
+	* misc/preadv2.c: New file.
+	* misc/preadv64v2.c: Likewise.
+	* misc/pwritev2.c: Likewise.
+	* misc/pwritev64v2.c: Likewise.
+	* misc/tst-preadvwritev2.c: Likewise.
+	* misc/tst-preadvwritev64v2.c: Likewise.
+	* manual/llio.texi: Add preadv2 and pwritev2 documentation.
+	* misc/sys/uio.h [__USE_GNU && !__USE_FILE_OFFSET64] (preadv2): New
+	prototype.
+	[__USE_GNU && !__USE_FILE_OFFSET64] (pwritev2):	Likewise.
+	[__USE_GNU && __USE_FILE_OFFSET64] (preadv64v2): Likewise.
+	[__USE_GNU && __USE_FILE_OFFSET64] (pwritev64v2): Likewise.
+	* misc/tst-preadvwritev-common.c (PREADV): Define if not defined.
+	(PWRITEV): Likewise.
+	(do_test_with_offset): Use PREADV and PWRITEV macros and check for
+	ENOSYS.
+	* nptl/tst-cancel4.c (tf_pwritev2): New test.
+	(tf_preadv2): Likewise.
+	(tf_fsync): Add tf_pwritev2 and tf_preadv2.
+	* sysdeps/posix/preadv2.c: Likewise.
+	* sysdeps/posix/preadv64v2.c: Likewise.
+	* sysdeps/posix/pwritev2.c: Likewise.
+	* sysdeps/posix/pwritev64v2.c: Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Add comment for syscall
+	support in kernel.
+	* sysdeps/unix/sysv/linux/preadv2.c: Likewise.
+	* sysdeps/unix/sysv/linux/preadv64v2.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwritev2.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64v2.c: Likewise.
+	* sysdeps/unix/sysv/linux/preadv.c (preadv): Add libc_hidden_def.
+	* sysdeps/unix/sysv/linux/preadv64.c (preadv64): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev.c (pwritev): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64.c (pwritev64): Likewise.
+	* sysdeps/unix/sysv/linux/bits/uio.h: Add supported preadv2/pwritev2
+	support flags on Linux.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist (GLIBC_2.26): Add
+	preadv2, preadv64v2, pwritev2, pwritev64v2.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist (GLIBC_2.26): Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist (GLIBC_2.26): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist (GLIBC_2.26): Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist (GLIBC_2.26): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist (GLIBC_2.26): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist (GLIBC_2.26): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
+	(GLIBC_2.26): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
+	(GLIBC_2.26): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist
+	(GLIBC_2.26): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist (GLIBC_2.26): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/sysv/linux/tile/tilegx/tilegx32/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/sysv/linux/tile/tilegx/tilegx64/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist (GLIBC_2.26):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist (GLIBC_2.26):
+	Likewise.
+
 2017-05-31  Andreas Schwab  <schwab@suse.de>
 
 	* nptl/tst-fork3.c: Include <support/test-driver.c>.

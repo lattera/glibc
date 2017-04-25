@@ -50,4 +50,6 @@ pwritev (int fd, const struct iovec *vector, int count, off_t offset)
 #  define OFF_T off_t
 #  include <sysdeps/posix/pwritev_common.c>
 # endif /* __ASSUME_PREADV  */
+
+libc_hidden_def (pwritev)
 #endif

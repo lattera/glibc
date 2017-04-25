@@ -1977,6 +1977,10 @@ GLIBC_2.25 strfromd F
 GLIBC_2.25 strfromf F
 GLIBC_2.25 strfroml F
 GLIBC_2.26 GLIBC_2.26 A
+GLIBC_2.26 preadv2 F
+GLIBC_2.26 preadv64v2 F
+GLIBC_2.26 pwritev2 F
+GLIBC_2.26 pwritev64v2 F
 GLIBC_2.26 reallocarray F
 GLIBC_2.3 GLIBC_2.3 A
 GLIBC_2.3 __ctype_b_loc F

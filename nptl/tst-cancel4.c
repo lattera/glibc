@@ -1079,6 +1079,75 @@ tf_pwritev (void *arg)
 }
 
 static void *
+tf_pwritev2 (void *arg)
+{
+  int fd;
+
+  if (arg == NULL)
+    /* XXX If somebody can provide a portable test case in which pwritev2
+       blocks we can enable this test to run in both rounds.  */
+    abort ();
+
+  errno = 0;
+
+  char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+  tempfd = fd = mkstemp (fname);
+  if (fd == -1)
+    FAIL_EXIT1 ("mkstemp: %m");
+  unlink (fname);
+
+  xpthread_barrier_wait (&b2);
+
+  xpthread_barrier_wait (&b2);
+
+  ssize_t s;
+  pthread_cleanup_push (cl, NULL);
+
+  char buf[WRITE_BUFFER_SIZE];
+  memset (buf, '\0', sizeof (buf));
+  struct iovec iov[1] = { [0] = { .iov_base = buf, .iov_len = sizeof (buf) } };
+  s = pwritev2 (fd, iov, 1, 0, 0);
+
+  pthread_cleanup_pop (0);
+
+  FAIL_EXIT1 ("pwritev2 returns with %zd", s);
+}
+
+static void *
+tf_preadv2 (void *arg)
+{
+  int fd;
+
+  if (arg == NULL)
+    /* XXX If somebody can provide a portable test case in which preadv2
+       blocks we can enable this test to run in both rounds.  */
+    abort ();
+
+  errno = 0;
+
+  char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+  tempfd = fd = mkstemp (fname);
+  if (fd == -1)
+    FAIL_EXIT1 ("mkstemp failed: %m");
+  unlink (fname);
+
+  xpthread_barrier_wait (&b2);
+
+  xpthread_barrier_wait (&b2);
+
+  ssize_t s;
+  pthread_cleanup_push (cl, NULL);
+
+  char buf[100];
+  struct iovec iov[1] = { [0] = { .iov_base = buf, .iov_len = sizeof (buf) } };
+  s = preadv2 (fd, iov, 1, 0, 0);
+
+  pthread_cleanup_pop (0);
+
+  FAIL_EXIT1 ("preadv2 returns with %zd", s);
+}
+
+static void *
 tf_fsync (void *arg)
 {
   if (arg == NULL)
@@ -1473,7 +1542,9 @@ struct cancel_tests tests[] =
   ADD_TEST (recvfrom, 2, 0),
   ADD_TEST (recvmsg, 2, 0),
   ADD_TEST (preadv, 2, 1),
+  ADD_TEST (preadv2, 2, 1),
   ADD_TEST (pwritev, 2, 1),
+  ADD_TEST (pwritev2, 2, 1),
   ADD_TEST (open, 2, 1),
   ADD_TEST (close, 2, 1),
   ADD_TEST (pread, 2, 1),

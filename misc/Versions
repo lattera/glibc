@@ -155,6 +155,9 @@ libc {
   GLIBC_2.25 {
     gnu_dev_major; gnu_dev_minor; gnu_dev_makedev;
   }
+  GLIBC_2.26 {
+    preadv2; preadv64v2; pwritev2; pwritev64v2;
+  }
   GLIBC_PRIVATE {
     __madvise;
     __mktemp;

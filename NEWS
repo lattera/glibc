@@ -70,6 +70,13 @@ Version 2.26
   replacement with a check for integer overflow when calculating total
   allocation size.
 
+* New preadv2 and pwritev2 has been added.  They are Linux extensions to
+  preadv and pwritev with an additional flag argument where it is possible
+  to set high priority or use O_DSYNC or O_SYNC for a specific IO operation.
+  For complete support it requires Linux kernel version 4.6, otherwise a
+  compat implementation will be used (which refuses all flags and routes it
+  to preadv or pwritev).
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,

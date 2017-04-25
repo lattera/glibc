@@ -50,4 +50,6 @@ preadv (int fd, const struct iovec *vector, int count, off_t offset)
 #  define OFF_T off_t
 #  include <sysdeps/posix/preadv_common.c>
 # endif /* __ASSUME_PREADV  */
+
+libc_hidden_def (preadv)
 #endif

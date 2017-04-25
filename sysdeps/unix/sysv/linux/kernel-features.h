@@ -97,3 +97,8 @@
 /* Support for SysV IPC through wired syscalls.  All supported architectures
    either support ipc syscall and/or all the ipc correspondent syscalls.  */
 #define __ASSUME_DIRECT_SYSVIPC_SYSCALLS	1
+
+/* Support for p{read,write}v2 was added in 4.6.  However Linux default
+   implementation does not assume the __ASSUME_* and instead use a fallback
+   implementation based on p{read,write}v and returning an error for
+   non supported flags.  */

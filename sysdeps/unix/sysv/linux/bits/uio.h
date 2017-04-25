@@ -69,4 +69,10 @@ extern ssize_t process_vm_writev (pid_t __pid, const struct iovec *__lvec,
 __END_DECLS
 
 # endif
+
+/* Flags for preadv2/pwritev2: */
+#define RWF_HIPRI	0x00000001 /* High priority request.  */
+#define RWF_DSYNC	0x00000002 /* per-IO O_DSYNC.  */
+#define RWF_SYNC	0x00000004 /* per-IO O_SYNC.  */
+
 #endif

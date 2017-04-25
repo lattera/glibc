@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <errno.h>
 #include <string.h>
 #include <sys/uio.h>
 #include <sys/stat.h>
@@ -39,6 +40,16 @@ do_prepare (int argc, char **argv)
 }
 #define PREPARE do_prepare
 
+#ifndef PREADV
+# define PREADV(__fd, __iov, __iovcnt, __offset) \
+  preadv (__fd, __iov, __iovcnt, __offset)
+#endif
+
+#ifndef PWRITEV
+# define PWRITEV(__fd, __iov, __iovcnt, __offset) \
+  pwritev (__fd, __iov, __iovcnt, __offset)
+#endif
+
 static int
 do_test_with_offset (off_t offset)
 {
@@ -58,13 +69,13 @@ do_test_with_offset (off_t offset)
   iov[1].iov_base = buf2;
   iov[1].iov_len = sizeof buf2;
 
-  ret = pwritev (temp_fd, iov, 2, offset);
+  ret = PWRITEV (temp_fd, iov, 2, offset);
   if (ret == -1)
     FAIL_RET ("first pwritev returned -1");
   if (ret != (sizeof buf1 + sizeof buf2))
     FAIL_RET ("first pwritev returned an unexpected value");
 
-  ret = pwritev (temp_fd, iov, 2, sizeof buf1 + sizeof buf2 + offset);
+  ret = PWRITEV (temp_fd, iov, 2, sizeof buf1 + sizeof buf2 + offset);
   if (ret == -1)
     FAIL_RET ("second pwritev returned -1");
   if (ret != (sizeof buf1 + sizeof buf2))
@@ -82,7 +93,7 @@ do_test_with_offset (off_t offset)
   iov[1].iov_len = sizeof buf4;
 
   /* Now read two buffer with 32 and 64 bytes respectively.  */
-  ret = preadv (temp_fd, iov, 2, offset);
+  ret = PREADV (temp_fd, iov, 2, offset);
   if (ret == -1)
     FAIL_RET ("first preadv returned -1");
   if (ret != (sizeof buf3 + sizeof buf4))
@@ -93,7 +104,7 @@ do_test_with_offset (off_t offset)
   if (memcmp (buf2, buf4, sizeof buf2) != 0)
     FAIL_RET ("second buffer from first preadv different than expected");
 
-  ret = preadv (temp_fd, iov, 2, sizeof buf3 + sizeof buf4 + offset);
+  ret = PREADV (temp_fd, iov, 2, sizeof buf3 + sizeof buf4 + offset);
   if (ret == -1)
     FAIL_RET ("second preadv returned -1");
   if (ret != (sizeof buf3 + sizeof buf4))

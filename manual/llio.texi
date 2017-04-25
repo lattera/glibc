@@ -764,6 +764,115 @@ When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
 @code{pwritev} and so transparently replaces the 32 bit interface.
 @end deftypefun
 
+@comment sys/uio.h
+@comment GNU
+@deftypefun ssize_t preadv2 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off_t @var{offset}, int @var{flags})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This is a syscall for Linux v4.6.  The sysdeps/posix fallback emulation
+@c is also MT-Safe since it calls preadv.
+
+This function is similar to the @code{preadv} function, with the difference
+it adds an extra @var{flags} parameter of type @code{int}.  The supported
+@var{flags} are dependent of the underlying system.  For Linux it supports:
+
+@vtable @code
+@item RWF_HIPRI
+High priority request.  This adds a flag that tells the file system that
+this is a high priority request for which it is worth to poll the hardware.
+The flag is purely advisory and can be ignored if not supported.  The
+@var{fd} must be opened using @code{O_DIRECT}.
+
+@item RWF_DSYNC
+Per-IO synchronization as if the file was opened with @code{O_DSYNC} flag.
+
+@item RWF_SYNC
+Per-IO synchronization as if the file was opened with @code{O_SYNC} flag.
+@end vtable
+
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
+@code{preadv2} function is in fact @code{preadv64v2} and the type
+@code{off_t} has 64 bits, which makes it possible to handle files up to
+@twoexp{63} bytes in length.
+
+The return value is a count of bytes (@emph{not} buffers) read, @math{0}
+indicating end-of-file, or @math{-1} indicating an error.  The possible
+errors are the same as in @code{preadv} with the addition of:
+
+@table @code
+
+@item EOPNOTSUPP
+
+@c The default sysdeps/posix code will return it for any flags value
+@c different than 0.
+An unsupported @var{flags} was used.
+
+@end table
+
+@end deftypefun
+
+@comment unistd.h
+@comment GNU
+@deftypefun ssize_t preadv64v2 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off64_t @var{offset}, int @var{flags})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This is a syscall for Linux v4.6.  The sysdeps/posix fallback emulation
+@c is also MT-Safe since it calls preadv.
+
+This function is similar to the @code{preadv2} function with the difference
+is that the @var{offset} parameter is of type @code{off64_t} instead of
+@code{off_t}.  It makes it possible on 32 bit machines to address
+files larger than @twoexp{31} bytes and up to @twoexp{63} bytes.  The
+file descriptor @code{filedes} must be opened using @code{open64} since
+otherwise the large offsets possible with @code{off64_t} will lead to
+errors with a descriptor in small file mode.
+
+When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
+32 bit machine this function is actually available under the name
+@code{preadv2} and so transparently replaces the 32 bit interface.
+@end deftypefun
+
+
+@comment sys/uio.h
+@comment GNU
+@deftypefun ssize_t pwritev2 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off_t @var{offset}, int @var{flags})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This is a syscall for Linux v4.6.  The sysdeps/posix fallback emulation
+@c is also MT-Safe since it calls pwritev.
+
+This function is similar to the @code{pwritev} function, with the difference
+it adds an extra @var{flags} parameter of type @code{int}.  The supported
+@var{flags} are dependent of the underlying system and for Linux it supports
+the same ones as for @code{preadv2}.
+
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
+@code{pwritev2} function is in fact @code{pwritev64v2} and the type
+@code{off_t} has 64 bits, which makes it possible to handle files up to
+@twoexp{63} bytes in length.
+
+The return value is a count of bytes (@emph{not} buffers) write, @math{0}
+indicating end-of-file, or @math{-1} indicating an error.  The possible
+errors are the same as in @code{preadv2}.
+@end deftypefun
+
+@comment unistd.h
+@comment GNU
+@deftypefun ssize_t pwritev64v2 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off64_t @var{offset}, int @var{flags})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This is a syscall for Linux v4.6.  The sysdeps/posix fallback emulation
+@c is also MT-Safe since it calls pwritev.
+
+This function is similar to the @code{pwritev2} function with the difference
+is that the @var{offset} parameter is of type @code{off64_t} instead of
+@code{off_t}.  It makes it possible on 32 bit machines to address
+files larger than @twoexp{31} bytes and up to @twoexp{63} bytes.  The
+file descriptor @code{filedes} must be opened using @code{open64} since
+otherwise the large offsets possible with @code{off64_t} will lead to
+errors with a descriptor in small file mode.
+
+When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
+32 bit machine this function is actually available under the name
+@code{pwritev2} and so transparently replaces the 32 bit interface.
+@end deftypefun
+
 
 @node File Position Primitive
 @section Setting the File Position of a Descriptor
