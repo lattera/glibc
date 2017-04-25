@@ -1,3 +1,7 @@
+2017-04-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/sys/socket.h-data (*_t): Allow.
+
 2017-04-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Remove ununsed
