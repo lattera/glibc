@@ -259,5 +259,4 @@ do_test (void)
 }
 
 #define TIMEOUT 60
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

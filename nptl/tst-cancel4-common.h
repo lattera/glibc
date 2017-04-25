@@ -19,6 +19,10 @@
 
 #include <pthread.h>
 
+#include <support/check.h>
+#include <support/xthread.h>
+#include <support/xunistd.h>
+
 /* Pipe descriptors.  */
 static int fds[2];
 

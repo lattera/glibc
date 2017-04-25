@@ -1,5 +1,51 @@
 2017-04-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/tst-cancel4-common.c: Use libsupport.
+	* nptl/tst-cancel4-common.h: Likewise.
+	* nptl/tst-cancel4.c (tf_read): Likewise.
+	(tf_readv): Likewise.
+	(tf_write): Likewise.
+	(tf_writev): Likewise.
+	(tf_sleep): Likewise.
+	(tf_usleep): Likewise.
+	(tf_nanosleep): Likewise.
+	(tf_select): Likewise.
+	(tf_pselect): Likewise.
+	(tf_poll): Likewise.
+	(tf_ppoll): Likewise.
+	(tf_wait): Likewise.
+	(tf_waitpid): Likewise.
+	(tf_waitid): Likewise.
+	(tf_sigpause): Likewise.
+	(tf_sigsuspend): Likewise.
+	(tf_sigwait): Likewise.
+	(tf_sigwaitinfo): Likewise.
+	(tf_sigtimedwait): Likewise.
+	(tf_pause): Likewise.
+	(tf_accept): Likewise.
+	(tf_send): Likewise.
+	(tf_recv): Likewise.
+	(tf_recvfrom): Likewise.
+	(tf_recvmsg): Likewise.
+	(tf_open): Likewise.
+	(tf_close): Likewise.
+	(tf_pread): Likewise.
+	(tf_pwrite): Likewise.
+	(tf_preadv): Likewise.
+	(tf_pwritev): Likewise.
+	(tf_fsync): Likewise.
+	(tf_fdatasync): Likewise.
+	(tf_msync): Likewise.
+	(tf_sendto): Likewise.
+	(tf_sendmsg): Likewise.
+	(tf_creat): Likewise.
+	(tf_connect): Likewise.
+	(tf_tcdrain): Likewise.
+	(tf_msgrcv): Likewise.
+	(tf_msgsnd): Likewise.
+	* nptl/tst-cancel4_1.c (tf_sendmmsg): Likewise.
+	* nptl/tst-cancel4_2.c (tf_recvmmsg): Likewise.
+
 	* misc/tst-preadvwritev-common.c (do_prepare): Use libsupport
 	expected arguments.
 	(do_test): Adapt to use libsupport.
