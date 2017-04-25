@@ -1,6 +1,6 @@
-/* Initialize CPU feature data.  AArch64 version.
-   This file is part of the GNU C Library.
+/* Processor capability information handling macros - aarch64 version.
    Copyright (C) 2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,22 +16,29 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <cpu-features.h>
+#ifndef _DL_PROCINFO_H
+#define _DL_PROCINFO_H	1
+
 #include <sys/auxv.h>
-#include <elf/dl-hwcaps.h>
 
-static inline void
-init_cpu_features (struct cpu_features *cpu_features)
-{
-  uint64_t hwcap_mask = GET_HWCAP_MASK();
-  uint64_t hwcap = GLRO (dl_hwcap) & hwcap_mask;
+/* We cannot provide a general printing function.  */
+#define _dl_procinfo(type, word) -1
 
-  if (hwcap & HWCAP_CPUID)
-    {
-      register uint64_t id = 0;
-      asm volatile ("mrs %0, midr_el1" : "=r"(id));
-      cpu_features->midr_el1 = id;
-    }
-  else
-    cpu_features->midr_el1 = 0;
-}
+/* There are no hardware capabilities defined.  */
+#define _dl_hwcap_string(idx) ""
+
+/* HWCAP_CPUID should be available by default to influence IFUNC as well as
+   library search.  */
+#define HWCAP_IMPORTANT HWCAP_CPUID
+
+/* There're no platforms to filter out.  */
+#define _DL_HWCAP_PLATFORM 0
+
+/* We don't have any hardware capabilities.  */
+#define _DL_HWCAP_COUNT 0
+
+#define _dl_string_hwcap(str) (-1)
+
+#define _dl_string_platform(str) (-1)
+
+#endif /* dl-procinfo.h */

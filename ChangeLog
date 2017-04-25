@@ -1,5 +1,9 @@
 2017-06-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c
+	(init_cpu_features): Use glibc.tune.hwcap_mask.
+	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.h: New file.
+
 	* elf/dl-hwcaps.h: New file.
 	* elf/dl-hwcaps.c: Include it.
 	(_dl_important_hwcaps)[HAVE_TUNABLES]: Read and update
