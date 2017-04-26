@@ -32,5 +32,6 @@ __libc_pread (int fd, void *buf, size_t count, off_t offset)
 }
 
 strong_alias (__libc_pread, __pread)
+libc_hidden_weak (__pread)
 weak_alias (__libc_pread, pread)
 #endif

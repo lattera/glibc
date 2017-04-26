@@ -1,5 +1,4 @@
 libc.so: __errno_location
-libc.so: __pread64
 libc.so: calloc
 libc.so: free
 libc.so: malloc

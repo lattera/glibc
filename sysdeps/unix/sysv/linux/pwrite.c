@@ -32,5 +32,6 @@ __libc_pwrite (int fd, const void *buf, size_t count, off_t offset)
 }
 
 strong_alias (__libc_pwrite, __pwrite)
+libc_hidden_weak (__pwrite)
 weak_alias (__libc_pwrite, pwrite)
 #endif

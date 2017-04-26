@@ -33,14 +33,17 @@ extern __off_t __libc_lseek (int __fd, __off_t __offset, int __whence);
 extern __off64_t __libc_lseek64 (int __fd, __off64_t __offset, int __whence);
 extern ssize_t __pread (int __fd, void *__buf, size_t __nbytes,
 			__off_t __offset);
+libc_hidden_proto (__pread);
 extern ssize_t __libc_pread (int __fd, void *__buf, size_t __nbytes,
 			     __off_t __offset);
 extern ssize_t __pread64 (int __fd, void *__buf, size_t __nbytes,
 			  __off64_t __offset);
+libc_hidden_proto (__pread64);
 extern ssize_t __libc_pread64 (int __fd, void *__buf, size_t __nbytes,
 			       __off64_t __offset);
 extern ssize_t __pwrite (int __fd, const void *__buf, size_t __n,
 			 __off_t __offset);
+libc_hidden_proto (__pwrite)
 extern ssize_t __libc_pwrite (int __fd, const void *__buf, size_t __n,
 			      __off_t __offset);
 extern ssize_t __pwrite64 (int __fd, const void *__buf, size_t __n,

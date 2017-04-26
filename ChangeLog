@@ -1,3 +1,14 @@
+2017-05-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* include/unistd.h (__pread): Add libc_hidden_proto.
+	(__pread64): Likewise.
+	(__pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/localplt.data [libc.so]
+	(__pread64): Remove.
+	* sysdeps/unix/sysv/linux/pread.c (__pread64): Add libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/pread64.c (__pread64): Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c (__pwrite): Likewise.
+
 2017-05-02  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
