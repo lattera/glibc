@@ -19,7 +19,7 @@ function {struct group*} getgrgid (gid_t)
 function {struct group*} getgrnam (const char*)
 function int getgrgid_r (gid_t, struct group*, char *, size_t, struct group**)
 function int getgrnam_r (const char *, struct group *, char *, size_t, struct group**)
-# if !defined XPG3 && !defined POSIX && !defined POSIX2008
+# if !defined XPG4 && !defined POSIX && !defined POSIX2008
 function {struct group*} getgrent (void)
 function void endgrent (void)
 function void setgrent (void)

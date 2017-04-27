@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined XPG3 && !defined XPG4
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined XPG4 && !defined XPG42
 # if defined POSIX || defined UNIX98
 #  include "time.h-data"
 # else

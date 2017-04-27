@@ -1,4 +1,4 @@
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 macro bool
 macro-int-constant true {int} == 1
 macro-int-constant false {int} == 0

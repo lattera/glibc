@@ -17,12 +17,12 @@ constant leaf
 function int hcreate (size_t)
 function void hdestroy (void)
 function {ENTRY*} hsearch (ENTRY, ACTION)
-#ifndef XPG3
+#ifndef XPG4
 function void insque (void*, void*)
 #endif
 function {void*} lfind (const void*, const void*, size_t*, size_t, int (*)(const void*, const void*))
 function {void*} lsearch (const void*, void*, size_t*, size_t, int (*)(const void*, const void*))
-#ifndef XPG3
+#ifndef XPG4
 function void remque (void*)
 #endif
 function {void*} tdelete (const void*, void**, int(*)(const void*, const void*))

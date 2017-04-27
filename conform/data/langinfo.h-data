@@ -55,7 +55,7 @@ constant YESEXPR
 constant NOEXPR
 constant CRNCYSTR
 
-# if defined XPG3 || defined XPG4 || defined UNIX98
+# if defined XPG4 || defined XPG42 || defined UNIX98
 constant YESSTR
 constant NOSTR
 # endif

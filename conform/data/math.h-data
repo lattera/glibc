@@ -1,7 +1,7 @@
 macro-constant HUGE_VAL {double}
 
 #if !defined ISO && !defined POSIX
-# if !defined XPG3 && !defined XPG4 && !defined UNIX98
+# if !defined XPG4 && !defined XPG42 && !defined UNIX98
 macro fpclassify
 macro isfinite
 macro isinf
@@ -17,7 +17,7 @@ macro isunordered
 type float_t
 type double_t
 # endif
-# if defined XPG3 || defined XPG4 || defined UNIX98
+# if defined XPG4 || defined XPG42 || defined UNIX98
 function int isnan (double)
 # endif
 
@@ -38,7 +38,7 @@ constant M_SQRT1_2
 
 constant MAXFLOAT
 # endif
-# if !defined XPG3 && !defined XPG4 && !defined UNIX98
+# if !defined XPG4 && !defined XPG42 && !defined UNIX98
 macro-constant HUGE_VALF {float}
 macro-constant HUGE_VALL {long double}
 macro-constant INFINITY {float}
@@ -69,13 +69,13 @@ function double asin (double)
 function double atan (double)
 function double atan2 (double, double)
 function double ceil (double)
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 function double copysign (double, double)
 #endif
 function double cos (double)
 function double cosh (double)
 function double exp (double)
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 function double exp2 (double)
 #endif
 function double fabs (double)
@@ -85,7 +85,7 @@ function double frexp (double, int*)
 function double ldexp (double, int)
 function double log (double)
 function double log10 (double)
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 function double log2 (double)
 #endif
 function double modf (double, double*)
@@ -99,7 +99,7 @@ function double tanh (double)
 function double erf (double)
 function double erfc (double)
 #endif
-#if defined XPG3 || defined XPG4 || defined UNIX98
+#if defined XPG4 || defined XPG42 || defined UNIX98
 function double gamma (double)
 #endif
 #if !defined ISO && !defined POSIX
@@ -110,7 +110,7 @@ function double j1 (double)
 function double jn (int, double)
 # endif
 function double lgamma (double)
-# if !defined XPG3 && !defined XPG4 && !defined UNIX98
+# if !defined XPG4 && !defined XPG42 && !defined UNIX98
 function double tgamma (double)
 # endif
 # if !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
@@ -118,7 +118,7 @@ function double y0 (double)
 function double y1 (double)
 function double yn (int, double)
 # endif
-# if !defined XPG3
+# if !defined XPG4
 function double acosh (double)
 function double asinh (double)
 function double atanh (double)
@@ -128,13 +128,13 @@ function int ilogb (double)
 function double log1p (double)
 function double logb (double)
 function double nextafter (double, double)
-#  if !defined XPG4 && !defined UNIX98
+#  if !defined XPG42 && !defined UNIX98
 function double nexttoward (double, long double)
 function double nearbyint (double)
 #  endif
 function double remainder (double, double)
 function double rint (double)
-#  if !defined XPG4 && !defined UNIX98
+#  if !defined XPG42 && !defined UNIX98
 function double round (double)
 function double trunc (double)
 function long lrint (double)
@@ -143,10 +143,10 @@ function long lround (double)
 function {long long} llround (double)
 function double remquo (double, double, int*)
 #  endif
-#  if defined XPG4 || defined UNIX98 || defined XOPEN2K
+#  if defined XPG42 || defined UNIX98 || defined XOPEN2K
 function double scalb (double, double)
 #  endif
-#  if !defined XPG4 && !defined UNIX98
+#  if !defined XPG42 && !defined UNIX98
 function double scalbn (double, int)
 function double scalbln (double, long)
 function double fdim (double, double)
@@ -163,7 +163,7 @@ allow signgam
 # endif
 #endif
 
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 function float acosf (float)
 function float asinf (float)
 function float atanf (float)
@@ -330,6 +330,6 @@ allow tanhl
 #if !defined ISO && !defined ISO99 && !defined ISO11
 allow *_t
 #endif
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 allow FP_[ABCDEFGHIJKLMNOPQRSTUVWXYZ]*
 #endif

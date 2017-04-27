@@ -1,4 +1,4 @@
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42
 type wchar_t
 type wint_t
 # if !defined ISO99 && !defined ISO11 && !defined POSIX2008

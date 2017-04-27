@@ -40,11 +40,11 @@ $extra_syms{"ISO11"} = ["errno", "math_errhandling", "setjmp", "va_end"];
 # The following lists may not be exhaustive.
 $extra_syms{"POSIX"} = ["errno", "setjmp", "va_end", "environ", "sigsetjmp",
 			"optarg", "optind", "opterr", "optopt", "tzname"];
-$extra_syms{"XPG3"} = ["errno", "setjmp", "va_end", "environ", "signgam",
+$extra_syms{"XPG4"} = ["errno", "setjmp", "va_end", "environ", "signgam",
 		       "loc1", "loc2", "locs", "sigsetjmp", "optarg",
 		       "optind", "opterr", "optopt", "daylight", "timezone",
 		       "tzname"];
-$extra_syms{"XPG4"} = ["errno", "setjmp", "va_end", "environ", "signgam",
+$extra_syms{"XPG42"} = ["errno", "setjmp", "va_end", "environ", "signgam",
 		       "loc1", "loc2", "locs", "sigsetjmp", "optarg",
 		       "optind", "opterr", "optopt", "daylight", "timezone",
 		       "tzname", "getdate_err", "h_errno"];

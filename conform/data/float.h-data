@@ -38,7 +38,7 @@ macro-constant FLT_MIN <= 1.0E-37
 macro-constant DBL_MIN <= 1.0E-37
 macro-constant LDBL_MIN <= 1.0E-37
 
-#if !defined ISO && !defined XPG3 && !defined XPG4 && !defined POSIX && !defined UNIX98
+#if !defined ISO && !defined XPG4 && !defined XPG42 && !defined POSIX && !defined UNIX98
 macro-int-constant DECIMAL_DIG >= 10
 macro-int-constant FLT_EVAL_METHOD
 #endif

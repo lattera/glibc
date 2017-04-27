@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined XPG3
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined XPG4
 constant PROT_READ
 constant PROT_WRITE
 constant PROT_EXEC
@@ -17,7 +17,7 @@ constant MCL_FUTURE
 
 constant MAP_FAILED
 
-# if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+# if !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 constant POSIX_MADV_NORMAL
 constant POSIX_MADV_SEQUENTIAL
 constant POSIX_MADV_RANDOM

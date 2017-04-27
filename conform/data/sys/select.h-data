@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 type time_t
 type suseconds_t
 
@@ -14,7 +14,7 @@ element {struct timespec} time_t tv_sec
 xfail[x86_64-x32-linux]-element {struct timespec} long tv_nsec
 
 type fd_set
-#if defined XPG3 || defined XPG4 || defined UNIX98
+#if defined XPG4 || defined XPG42 || defined UNIX98
 element fd_set long fds_bits []
 #endif
 

@@ -25,7 +25,7 @@ include ../Makeconfig
 conformtest-headers-data := $(wildcard data/*.h-data) \
 			    $(wildcard data/*/*.h-data)
 
-conformtest-standards := ISO ISO99 ISO11 POSIX XPG3 XPG4 UNIX98 XOPEN2K \
+conformtest-standards := ISO ISO99 ISO11 POSIX XPG4 XPG42 UNIX98 XOPEN2K \
 			 POSIX2008 XOPEN2K8
 
 conformtest-headers-ISO := assert.h ctype.h errno.h float.h limits.h locale.h \
@@ -43,17 +43,17 @@ conformtest-headers-POSIX := $(conformtest-headers-ISO) aio.h dirent.h \
 			     sys/mman.h sys/stat.h sys/times.h sys/types.h \
 			     sys/utsname.h sys/wait.h tar.h termios.h \
 			     unistd.h utime.h wordexp.h
-# Missing XPG3 expectations for: regexp.h wchar.h.
-conformtest-headers-XPG3 := $(conformtest-headers-ISO) cpio.h dirent.h \
+# Missing XPG4 expectations for: regexp.h wchar.h.
+conformtest-headers-XPG4 := $(conformtest-headers-ISO) cpio.h dirent.h \
 			    fcntl.h fnmatch.h ftw.h glob.h grp.h iconv.h \
 			    langinfo.h monetary.h nl_types.h pwd.h regex.h \
 			    search.h sys/ipc.h sys/msg.h sys/sem.h sys/shm.h \
 			    sys/stat.h sys/times.h sys/types.h sys/utsname.h \
 			    sys/wait.h tar.h termios.h ulimit.h unistd.h \
 			    utime.h varargs.h wordexp.h
-# Missing XPG4 expectations for: re_comp.h regexp.h wchar.h.
-# XPG4 includes XTI, but xti.h is outside the scope of these tests.
-conformtest-headers-XPG4 := $(conformtest-headers-XPG3) arpa/inet.h fmtmsg.h \
+# Missing XPG42 expectations for: re_comp.h regexp.h wchar.h.
+# XPG42 includes XTI, but xti.h is outside the scope of these tests.
+conformtest-headers-XPG42 := $(conformtest-headers-XPG4) arpa/inet.h fmtmsg.h \
 			    libgen.h ndbm.h netdb.h netinet/in.h poll.h \
 			    strings.h stropts.h sys/mman.h sys/resource.h \
 			    sys/socket.h sys/statvfs.h sys/time.h sys/timeb.h \
@@ -150,25 +150,25 @@ $(conformtest-header-list-tests): $(objpfx)header-list-%.out: \
 
 # Pre-standard C feature no longer supported by GCC (obsoleted in
 # newer POSIX standards).
-test-xfail-XPG3/varargs.h/conform = yes
 test-xfail-XPG4/varargs.h/conform = yes
+test-xfail-XPG42/varargs.h/conform = yes
 test-xfail-UNIX98/varargs.h/conform = yes
 
 # Header not provided by glibc.
-test-xfail-XPG4/ndbm.h/conform = yes
+test-xfail-XPG42/ndbm.h/conform = yes
 test-xfail-UNIX98/ndbm.h/conform = yes
 test-xfail-XOPEN2K/ndbm.h/conform = yes
 test-xfail-XOPEN2K8/ndbm.h/conform = yes
 
 # Unsorted expected failures.
-test-xfail-XPG3/signal.h/conform = yes
-test-xfail-XPG3/sys/wait.h/conform = yes
-test-xfail-XPG4/arpa/inet.h/conform = yes
-test-xfail-XPG4/netdb.h/conform = yes
-test-xfail-XPG4/netinet/in.h/conform = yes
 test-xfail-XPG4/signal.h/conform = yes
 test-xfail-XPG4/sys/wait.h/conform = yes
-test-xfail-XPG4/ucontext.h/conform = yes
+test-xfail-XPG42/arpa/inet.h/conform = yes
+test-xfail-XPG42/netdb.h/conform = yes
+test-xfail-XPG42/netinet/in.h/conform = yes
+test-xfail-XPG42/signal.h/conform = yes
+test-xfail-XPG42/sys/wait.h/conform = yes
+test-xfail-XPG42/ucontext.h/conform = yes
 test-xfail-POSIX/sys/wait.h/conform = yes
 test-xfail-UNIX98/arpa/inet.h/conform = yes
 test-xfail-UNIX98/netdb.h/conform = yes
@@ -223,9 +223,9 @@ linknamespace-libs-xsi = $(linknamespace-libs-posix) \
 linknamespace-libs-ISO = $(linknamespace-libs-isoc)
 linknamespace-libs-ISO99 = $(linknamespace-libs-isoc)
 linknamespace-libs-ISO11 = $(linknamespace-libs-isoc)
-linknamespace-libs-XPG3 = $(linknamespace-libs-isoc) \
+linknamespace-libs-XPG4 = $(linknamespace-libs-isoc) \
 			  $(common-objpfx)crypt/libcrypt.a
-linknamespace-libs-XPG4 = $(linknamespace-libs-XPG3)
+linknamespace-libs-XPG42 = $(linknamespace-libs-XPG4)
 linknamespace-libs-POSIX = $(linknamespace-libs-thr)
 linknamespace-libs-UNIX98 = $(linknamespace-libs-xsi)
 linknamespace-libs-XOPEN2K = $(linknamespace-libs-xsi)
@@ -255,12 +255,12 @@ $(linknamespace-header-tests): $(objpfx)%/linknamespace.out: \
 
 # Pre-standard C feature no longer supported by GCC (obsoleted in
 # newer POSIX standards).
-test-xfail-XPG3/varargs.h/linknamespace = yes
 test-xfail-XPG4/varargs.h/linknamespace = yes
+test-xfail-XPG42/varargs.h/linknamespace = yes
 test-xfail-UNIX98/varargs.h/linknamespace = yes
 
 # Header not provided by glibc.
-test-xfail-XPG4/ndbm.h/linknamespace = yes
+test-xfail-XPG42/ndbm.h/linknamespace = yes
 test-xfail-UNIX98/ndbm.h/linknamespace = yes
 test-xfail-XOPEN2K/ndbm.h/linknamespace = yes
 test-xfail-XOPEN2K8/ndbm.h/linknamespace = yes

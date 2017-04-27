@@ -12,7 +12,7 @@ function int isxdigit (int)
 function int tolower (int)
 function int toupper (int)
 
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 function int isblank (int)
 #endif
 

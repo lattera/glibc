@@ -1,11 +1,11 @@
 #if !defined ISO && !defined ISO99 && !defined ISO11
 #if !defined POSIX
-# if !defined XPG3 && !defined XPG4
+# if !defined XPG4 && !defined XPG42
 type blkcnt_t
 type blksize_t
 # endif
 type clock_t
-# if !defined XPG3 && !defined XPG4
+# if !defined XPG4 && !defined XPG42
 type clockid_t
 # endif
 #endif
@@ -26,7 +26,7 @@ type mode_t
 type nlink_t
 type off_t
 type pid_t
-#if !defined XPG3 && !defined XPG4
+#if !defined XPG4 && !defined XPG42
 type pthread_attr_t
 #if !defined POSIX && !defined UNIX98
 type pthread_barrier_t

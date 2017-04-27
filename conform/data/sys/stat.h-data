@@ -1,6 +1,6 @@
 #if !defined ISO && !defined ISO99 && !defined ISO11
 
-#if !defined POSIX && !defined POSIX2008 && !defined XPG3 && !defined XPG4
+#if !defined POSIX && !defined POSIX2008 && !defined XPG4 && !defined XPG42
 type blkcnt_t
 type blksize_t
 #endif
@@ -46,9 +46,9 @@ element {struct stat} {struct timespec} st_atim
 element {struct stat} {struct timespec} st_mtim
 element {struct stat} {struct timespec} st_ctim
 #endif
-#if !defined XPG3 && !defined POSIX && !defined POSIX2008
-# ifdef XPG4
-// The XPG4 use of "long" for these fields is not compatible with the
+#if !defined XPG4 && !defined POSIX && !defined POSIX2008
+# ifdef XPG42
+// The XPG42 use of "long" for these fields is not compatible with the
 // use of typedefs in future standards to support values outside the
 // range of "long".
 xfail-element {struct stat} long st_blksize
@@ -73,7 +73,7 @@ constant S_IFCHR
 constant S_IFIFO
 constant S_IFREG
 constant S_IFDIR
-# ifndef XPG3
+# ifndef XPG4
 constant S_IFLNK
 constant S_IFSOCK
 # endif
@@ -93,7 +93,7 @@ constant S_IWOTH
 constant S_IXOTH
 constant S_ISUID
 constant S_ISGID
-#if !defined XPG3 && !defined POSIX && !defined POSIX2008
+#if !defined XPG4 && !defined POSIX && !defined POSIX2008
 constant S_ISVTX
 #endif
 
@@ -102,7 +102,7 @@ macro S_ISCHR
 macro S_ISDIR
 macro S_ISFIFO
 macro S_ISREG
-#if !defined XPG3 && !defined POSIX
+#if !defined XPG4 && !defined POSIX
 macro S_ISLNK
 macro S_ISSOCK
 #endif
@@ -111,7 +111,7 @@ macro S_ISSOCK
 optional-macro S_TYPEISMQ
 optional-macro S_TYPEISSEM
 optional-macro S_TYPEISSHM
-# if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+# if !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 optional-macro S_TYPEISTMO
 # endif
 
@@ -121,7 +121,7 @@ constant UTIME_OMIT
 # endif
 
 function int chmod (const char*, mode_t)
-# ifndef XPG3
+# ifndef XPG4
 function int fchmod (int, mode_t)
 # endif
 # if defined XOPEN2K8 || defined POSIX2008
@@ -132,7 +132,7 @@ function int fstat (int, struct stat*)
 function int fstatat (int, const char*, struct stat*, int)
 function int futimens (int, const struct timespec[2])
 # endif
-#if !defined XPG3 && !defined POSIX
+#if !defined XPG4 && !defined POSIX
 function int lstat (const char*, struct stat*)
 #endif
 function int mkdir (const char*, mode_t)
@@ -143,7 +143,7 @@ function int mkfifo (const char*, mode_t)
 # if defined XOPEN2K8 || defined POSIX2008
 function int mkfifoat (int, const char*, mode_t)
 # endif
-# if !defined XPG3 && !defined POSIX && !defined POSIX2008
+# if !defined XPG4 && !defined POSIX && !defined POSIX2008
 function int mknod (const char*, mode_t, dev_t)
 # endif
 # ifdef XOPEN2K8

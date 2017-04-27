@@ -52,7 +52,7 @@ type ssize_t
 function void clearerr (FILE*)
 #if !defined ISO && !defined ISO99 && !defined ISO11
 function {char*} ctermid (char*)
-# if defined XPG3 || defined XPG4 || defined UNIX98
+# if defined XPG4 || defined XPG42 || defined UNIX98
 function {char*} cuserid (char*)
 # endif
 #endif
@@ -109,13 +109,13 @@ function int getchar_unlocked (void)
 function ssize_t getdelim (char**, size_t*, int, FILE*)
 function ssize_t getline (char**, size_t*, FILE*)
 #endif
-#if defined XPG3 || defined XPG4 || defined UNIX98
+#if defined XPG4 || defined XPG42 || defined UNIX98
 function int getopt (int, char *const[], const char *)
 #endif
 #if !defined ISO11
 function {char*} gets (char*)
 #endif
-#if defined XPG3 || defined XPG4 || defined UNIX98
+#if defined XPG4 || defined XPG42 || defined UNIX98
 function int getw (FILE*)
 #endif
 #if defined XOPEN2K8 || defined POSIX2008
@@ -136,7 +136,7 @@ function int putc_unlocked (int, FILE*)
 function int putchar_unlocked (int)
 #endif
 function int puts (const char*)
-#if defined XPG3 || defined XPG4 || defined UNIX98
+#if defined XPG4 || defined XPG42 || defined UNIX98
 function int putw (int, FILE*)
 #endif
 function int remove (const char*)
@@ -148,12 +148,12 @@ function void rewind (FILE*)
 function int scanf (const char*, ...)
 function void setbuf (FILE*, char*)
 function int setvbuf (FILE*, char*, int, size_t)
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42
 function int snprintf (char*, size_t, const char*, ...)
 #endif
 function int sprintf (char *, const char *, ...)
 function int sscanf (const char*, const char*, ...)
-#if defined XPG3 || defined XPG4 || defined UNIX98 || defined XOPEN2K || defined XOPEN2K8
+#if defined XPG4 || defined XPG42 || defined UNIX98 || defined XOPEN2K || defined XOPEN2K8
 function {char*} tempnam (const char*, const char*)
 #endif
 function {FILE*} tmpfile (void)
@@ -163,18 +163,18 @@ function int ungetc (int, FILE*)
 function int vdprintf (int, const char*, va_list)
 #endif
 function int vfprintf (FILE*, const char*, va_list)
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 function int vfscanf (FILE*, const char*, va_list)
 #endif
 function int vprintf (const char*, va_list)
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 function int vscanf (const char*, va_list)
 #endif
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42
 function int vsnprintf (char*, size_t, const char*, va_list)
 #endif
 function int vsprintf (char*, const char*, va_list)
-#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 function int vsscanf (const char*, const char*, va_list)
 #endif
 

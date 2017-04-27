@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined XPG3
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined XPG4
 # if !defined XOPEN2K8 && !defined POSIX2008
 function int bcmp (const void*, const void*, size_t)
 function void bcopy (const void*, void*, size_t)

@@ -81,18 +81,18 @@ macro-int-constant SIGSTOP {int} > 0
 macro-int-constant SIGTSTP {int} > 0
 macro-int-constant SIGTTIN {int} > 0
 macro-int-constant SIGTTOU {int} > 0
-# ifndef XPG3
+# ifndef XPG4
 macro-int-constant SIGBUS {int} > 0
 # endif
-# if !defined POSIX && !defined XPG3
+# if !defined POSIX && !defined XPG4
 macro-int-constant SIGPOLL {int} > 0
 macro-int-constant SIGPROF {int} > 0
 macro-int-constant SIGSYS {int} > 0
 # endif
-# if !defined POSIX && !defined XPG3 && !defined POSIX2008
+# if !defined POSIX && !defined XPG4 && !defined POSIX2008
 macro-int-constant SIGTRAP {int} > 0
 # endif
-# if !defined POSIX && !defined XPG3
+# if !defined POSIX && !defined XPG4
 macro-int-constant SIGURG {int} > 0
 macro-int-constant SIGVTALRM {int} > 0
 macro-int-constant SIGXCPU {int} > 0
@@ -147,7 +147,7 @@ element {struct sigstack} int ss_onstack
 element {struct sigstack} {void*} ss_sp
 # endif
 
-# ifndef XPG3
+# ifndef XPG4
 type siginfo_t
 
 element siginfo_t int si_signo
@@ -162,12 +162,12 @@ element siginfo_t {void*} si_addr
 element siginfo_t int si_status
 element siginfo_t long si_band
 #  endif
-#  ifndef XPG4
+#  ifndef XPG42
 element siginfo_t {union sigval} si_value
 #  endif
 # endif
 
-# if !defined POSIX && !defined XPG3
+# if !defined POSIX && !defined XPG4
 constant ILL_ILLOPC
 constant ILL_ILLOPN
 constant ILL_ILLADR
@@ -202,7 +202,7 @@ constant POLL_ERR
 constant POLL_PRI
 constant POLL_HUP
 # endif
-# if !defined POSIX && !defined XPG3 && !defined POSIX2008
+# if !defined POSIX && !defined XPG4 && !defined POSIX2008
 constant TRAP_BRKPT
 constant TRAP_TRACE
 # endif
@@ -219,7 +219,7 @@ function int kill (pid_t, int)
 # if !defined POSIX && !defined POSIX2008
 function int killpg (pid_t, int)
 # endif
-# if !defined XPG3 && !defined XPG4
+# if !defined XPG4 && !defined XPG42
 function int pthread_kill (pthread_t, int)
 function int pthread_sigmask (int, const sigset_t*, sigset_t*)
 # endif
@@ -242,7 +242,7 @@ function int sigpause (int)
 # endif
 function int sigpending (sigset_t*)
 function int sigprocmask (int, const sigset_t*, sigset_t*)
-# if !defined XPG3 && !defined XPG4
+# if !defined XPG4 && !defined XPG42
 function int sigqueue (pid_t, int, const union sigval)
 # endif
 # if !defined POSIX && !defined POSIX2008
@@ -253,11 +253,11 @@ function void (*sigset (int, void(*)(int)))(int)
 function int sigstack (struct sigstack*, struct sigstack*)
 # endif
 function int sigsuspend (const sigset_t*)
-# if !defined XPG3 && !defined XPG4
+# if !defined XPG4 && !defined XPG42
 function int sigtimedwait (const sigset_t*, siginfo_t*, const struct timespec*)
 # endif
 function int sigwait (const sigset_t*, int*)
-# if !defined XPG3 && !defined XPG4
+# if !defined XPG4 && !defined XPG42
 function int sigwaitinfo (const sigset_t*, siginfo_t*)
 # endif
 # if defined XOPEN2K8 || defined POSIX2008
@@ -269,19 +269,19 @@ function void psignal (int, const char*)
 // poorfnmatch implementation doesn't grok the right form.
 allow sa_*
 allow SA_*
-# ifndef XPG3
+# ifndef XPG4
 allow si_*
 allow SI_*
 # endif
-# if !defined XPG3 && !defined XPG4
+# if !defined XPG4 && !defined XPG42
 allow sigev_*
 allow SIGEV_*
 allow sival_*
 # endif
-# if !defined POSIX && !defined XPG3 && !defined XPG4
+# if !defined POSIX && !defined XPG4 && !defined XPG42
 allow uc_*
 # endif
-# if !defined POSIX && !defined XPG3
+# if !defined POSIX && !defined XPG4
 allow BUS_*
 allow CLD_*
 allow FPE_*
@@ -289,7 +289,7 @@ allow ILL_*
 allow POLL_*
 allow SEGV_*
 # endif
-# if !defined POSIX && !defined XPG3 && !defined POSIX2008
+# if !defined POSIX && !defined XPG4 && !defined POSIX2008
 allow SS_*
 allow SV_*
 allow TRAP_*

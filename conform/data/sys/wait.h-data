@@ -48,7 +48,7 @@ element siginfo_t long si_band
 element siginfo_t {union sigval} si_value
 #endif
 
-#if !defined POSIX && !defined XPG3 && !defined XOPEN2K8 && !defined POSIX2008
+#if !defined POSIX && !defined XPG4 && !defined XOPEN2K8 && !defined POSIX2008
 type {struct rusage}
 
 element {struct rusage} {struct timeval} ru_utime

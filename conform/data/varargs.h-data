@@ -1,4 +1,4 @@
-#if defined XPG3 || defined XPG4 || defined UNIX98
+#if defined XPG4 || defined XPG42 || defined UNIX98
 macro va_alist
 macro va_dcl
 type va_list

@@ -7,7 +7,7 @@ constant F_SETFL
 constant F_GETLK
 constant F_SETLK
 constant F_SETLKW
-#if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98
 constant F_GETOWN
 constant F_SETOWN
 #endif
@@ -36,7 +36,7 @@ constant O_TRUNC
 constant O_APPEND
 constant O_NONBLOCK
 constant O_SYNC
-#if !defined XPG3 && !defined XPG4
+#if !defined XPG4 && !defined XPG42
 constant O_DSYNC
 constant O_RSYNC
 #endif
