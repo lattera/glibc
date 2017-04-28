@@ -176,7 +176,6 @@ test-xfail-UNIX98/netinet/in.h/conform = yes
 test-xfail-UNIX98/signal.h/conform = yes
 test-xfail-UNIX98/sys/wait.h/conform = yes
 test-xfail-UNIX98/ucontext.h/conform = yes
-test-xfail-XOPEN2K/semaphore.h/conform = yes
 test-xfail-XOPEN2K/signal.h/conform = yes
 test-xfail-XOPEN2K/sys/wait.h/conform = yes
 test-xfail-XOPEN2K/ucontext.h/conform = yes

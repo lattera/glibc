@@ -1,3 +1,10 @@
+2017-04-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/semaphore.h-data [XOPEN2K] (time.h): Allow header
+	inclusion.
+	* conform/Makefile (test-xfail-XOPEN2K/semaphore.h/conform):
+	Remove.
+
 2017-04-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/GlibcConform.pm (XPG4): Rename standard to XPG42.

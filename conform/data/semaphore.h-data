@@ -20,7 +20,9 @@ allow-header fcntl.h
 # if !defined POSIX2008 && !defined XOPEN2K8
 allow-header sys/types.h
 # endif
-# if !defined POSIX && !defined UNIX98 && !defined XOPEN2K
+// Consider addition of this permission in POSIX.1:2008 as a bug fix,
+// so allow for POSIX.1:2001 as well since that includes sem_timedwait.
+# if !defined POSIX && !defined UNIX98
 allow-header time.h
 # endif
 
