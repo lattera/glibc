@@ -1,3 +1,8 @@
+2017-05-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
+	kernel version to 4.11.
+
 2017-04-28  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #21280]
