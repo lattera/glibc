@@ -1,5 +1,7 @@
 2017-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/gnu/netinet/tcp.h (TCP_FASTOPEN_CONNECT): New macro.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h (PF_SMC): New macro.
 	(PF_MAX): Set to 44.
 	(AF_SMC): New macro.
