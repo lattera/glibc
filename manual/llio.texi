@@ -620,6 +620,10 @@ is not written to the current position of the file descriptor
 position @var{offset}.  The position of the file descriptor itself is
 not affected by the operation.  The value is the same as before the call.
 
+However, on Linux, if a file is opened with @code{O_APPEND},  @code{pwrite}
+appends data to the end of the file, regardless of the value of
+@code{offset}.
+
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
 @code{pwrite} function is in fact @code{pwrite64} and the type
 @code{off_t} has 64 bits, which makes it possible to handle files up to
@@ -660,6 +664,104 @@ errors with a descriptor in small file mode.
 When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
 32 bit machine this function is actually available under the name
 @code{pwrite} and so transparently replaces the 32 bit interface.
+@end deftypefun
+
+@comment sys/uio.h
+@comment BSD
+@deftypefun ssize_t preadv (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off_t @var{offset})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This is a syscall for Linux 3.2 for all architectures but microblaze
+@c (which was added on 3.15).  The sysdeps/posix fallback emulation
+@c is also MT-Safe since it calls pread, and it is now a syscall on all
+@c targets.
+
+This function is similar to the @code{readv} function, with the difference
+it adds an extra @var{offset} parameter of type @code{off_t} similar to
+@code{pread}.  The data is written to the file starting at position
+@var{offset}.  The position of the file descriptor itself is not affected
+by the operation.  The value is the same as before the call.
+
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
+@code{preadv} function is in fact @code{preadv64} and the type
+@code{off_t} has 64 bits, which makes it possible to handle files up to
+@twoexp{63} bytes in length.
+
+The return value is a count of bytes (@emph{not} buffers) read, @math{0}
+indicating end-of-file, or @math{-1} indicating an error.  The possible
+errors are the same as in @code{readv} and @code{pread}.
+@end deftypefun
+
+@comment unistd.h
+@comment BSD
+@deftypefun ssize_t preadv64 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off64_t @var{offset})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This is a syscall for Linux 3.2 for all architectures but microblaze
+@c (which was added on 3.15).  The sysdeps/posix fallback emulation
+@c is also MT-Safe since it calls pread64, and it is now a syscall on all
+@c targets.
+
+This function is similar to the @code{preadv} function with the difference
+is that the @var{offset} parameter is of type @code{off64_t} instead of
+@code{off_t}.  It makes it possible on 32 bit machines to address
+files larger than @twoexp{31} bytes and up to @twoexp{63} bytes.  The
+file descriptor @code{filedes} must be opened using @code{open64} since
+otherwise the large offsets possible with @code{off64_t} will lead to
+errors with a descriptor in small file mode.
+
+When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
+32 bit machine this function is actually available under the name
+@code{preadv} and so transparently replaces the 32 bit interface.
+@end deftypefun
+
+@comment sys/uio.h
+@comment BSD
+@deftypefun ssize_t pwritev (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off_t @var{offset})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This is a syscall for Linux 3.2 for all architectures but microblaze
+@c (which was added on 3.15).  The sysdeps/posix fallback emulation
+@c is also MT-Safe since it calls pwrite, and it is now a syscall on all
+@c targets.
+
+This function is similar to the @code{writev} function, with the difference
+it adds an extra @var{offset} parameter of type @code{off_t} similar to
+@code{pwrite}.  The data is written to the file starting at position
+@var{offset}.  The position of the file descriptor itself is not affected
+by the operation.  The value is the same as before the call.
+
+However, on Linux, if a file is opened with @code{O_APPEND},  @code{pwrite}
+appends data to the end of the file, regardless of the value of
+@code{offset}.
+
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
+@code{pwritev} function is in fact @code{pwritev64} and the type
+@code{off_t} has 64 bits, which makes it possible to handle files up to
+@twoexp{63} bytes in length.
+
+The return value is a count of bytes (@emph{not} buffers) written, @math{0}
+indicating end-of-file, or @math{-1} indicating an error.  The possible
+errors are the same as in @code{writev} and @code{pwrite}.
+@end deftypefun
+
+@comment unistd.h
+@comment BSD
+@deftypefun ssize_t pwritev64 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off64_t @var{offset})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c This is a syscall for Linux 3.2 for all architectures but microblaze
+@c (which was added on 3.15).  The sysdeps/posix fallback emulation
+@c is also MT-Safe since it calls pwrite64, and it is now a syscall on all
+@c targets.
+
+This function is similar to the @code{pwritev} function with the difference
+is that the @var{offset} parameter is of type @code{off64_t} instead of
+@code{off_t}.  It makes it possible on 32 bit machines to address
+files larger than @twoexp{31} bytes and up to @twoexp{63} bytes.  The
+file descriptor @code{filedes} must be opened using @code{open64} since
+otherwise the large offsets possible with @code{off64_t} will lead to
+errors with a descriptor in small file mode.
+
+When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
+32 bit machine this function is actually available under the name
+@code{pwritev} and so transparently replaces the 32 bit interface.
 @end deftypefun
 
 
