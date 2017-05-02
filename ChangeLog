@@ -1,3 +1,9 @@
+2017-05-02  Vladimir Mezentsev <vladimir.mezentsev@oracle.com>
+
+	[BZ #21179]
+	* sysdeps/sparc/sparc64/dl-machine.h: Handle R_SPARC_DISP64 and
+	R_SPARC_REGISTER relocations.
+
 2017-05-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* include/unistd.h (__pread): Add libc_hidden_proto.

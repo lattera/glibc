@@ -537,6 +537,12 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
     case R_SPARC_DISP32:
       *(unsigned int *) reloc_addr = (value - (Elf64_Addr) reloc_addr);
       break;
+    case R_SPARC_DISP64:
+      *reloc_addr = (value - (Elf64_Addr) reloc_addr);
+      break;
+    case R_SPARC_REGISTER:
+      *reloc_addr = value;
+      break;
     case R_SPARC_WDISP30:
       *(unsigned int *) reloc_addr =
 	((*(unsigned int *)reloc_addr & 0xc0000000) |
