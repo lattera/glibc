@@ -1012,32 +1012,32 @@ ildouble: 4
 ldouble: 4
 
 Function: "cos":
-float: 1
-ifloat: 1
+float: 3
+ifloat: 3
 ildouble: 4
 ldouble: 4
 
 Function: "cos_downward":
 double: 1
-float: 2
+float: 4
 idouble: 1
-ifloat: 2
+ifloat: 4
 ildouble: 5
 ldouble: 5
 
 Function: "cos_towardzero":
 double: 1
-float: 1
+float: 3
 idouble: 1
-ifloat: 1
+ifloat: 3
 ildouble: 4
 ldouble: 4
 
 Function: "cos_upward":
 double: 1
-float: 2
+float: 3
 idouble: 1
-ifloat: 2
+ifloat: 3
 ildouble: 5
 ldouble: 5
 
@@ -2150,32 +2150,32 @@ ildouble: 1
 ldouble: 1
 
 Function: "tan":
-float: 1
-ifloat: 1
+float: 3
+ifloat: 3
 ildouble: 2
 ldouble: 2
 
 Function: "tan_downward":
 double: 1
-float: 2
+float: 3
 idouble: 1
-ifloat: 2
+ifloat: 3
 ildouble: 3
 ldouble: 3
 
 Function: "tan_towardzero":
 double: 1
-float: 1
+float: 3
 idouble: 1
-ifloat: 1
+ifloat: 3
 ildouble: 2
 ldouble: 2
 
 Function: "tan_upward":
 double: 1
-float: 1
+float: 3
 idouble: 1
-ifloat: 1
+ifloat: 3
 ildouble: 3
 ldouble: 3
 
