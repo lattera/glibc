@@ -48,6 +48,6 @@ pwritev (int fd, const struct iovec *vector, int count, off_t offset)
 #  define PWRITEV static internal_function __atomic_pwritev_replacement
 #  define PWRITE __pwrite
 #  define OFF_T off_t
-#  include <sysdeps/posix/pwritev.c>
+#  include <sysdeps/posix/pwritev_common.c>
 # endif /* __ASSUME_PREADV  */
 #endif

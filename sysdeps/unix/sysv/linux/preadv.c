@@ -48,6 +48,6 @@ preadv (int fd, const struct iovec *vector, int count, off_t offset)
 #  define PREADV static internal_function __atomic_preadv_replacement
 #  define PREAD __pread
 #  define OFF_T off_t
-#  include <sysdeps/posix/preadv.c>
+#  include <sysdeps/posix/preadv_common.c>
 # endif /* __ASSUME_PREADV  */
 #endif

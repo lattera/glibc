@@ -46,7 +46,7 @@ preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
 # define PREADV static internal_function __atomic_preadv64_replacement
 # define PREAD __pread64
 # define OFF_T off64_t
-# include <sysdeps/posix/preadv.c>
+# include <sysdeps/posix/preadv_common.c>
 #endif
 
 #ifdef __OFF_T_MATCHES_OFF64_T

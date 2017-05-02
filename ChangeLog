@@ -1,3 +1,16 @@
+2017-05-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/posix/preadv.c: Use sysdeps/posix/preadv_common.c.
+	* sysdeps/posix/preadv64.c: Likewise.
+	* sysdeps/unix/sysv/linux/preadv.c: Likewise.
+	* sysdeps/unix/sysv/linux/preadv64.c: Likewise.
+	* sysdeps/posix/pwritev.c: Use sysdeps/posix/pwritev_common.c.
+	* sysdeps/posix/pwritev64.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwritev.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64.c: Likewise.
+	* sysdeps/posix/preadv_common.c: New file.
+	* sysdeps/posix/pwritev_common.c: Likewise.
+
 2017-05-14  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* sysdeps/generic/math-type-macros-float128.h
