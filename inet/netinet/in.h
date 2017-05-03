@@ -275,10 +275,10 @@ struct ip_mreq_source
     /* IP multicast address of group.  */
     struct in_addr imr_multiaddr;
 
-    /* IP address of source.  */
+    /* IP address of interface.  */
     struct in_addr imr_interface;
 
-    /* IP address of interface.  */
+    /* IP address of source.  */
     struct in_addr imr_sourceaddr;
   };
 #endif

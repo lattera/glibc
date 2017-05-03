@@ -1,3 +1,8 @@
+2017-05-03  Phil Blundell  <pb@pbcl.net>
+
+	* inet/netinet/in.h (struct ip_mreq_source): Correct misplaced
+	comments.
+
 2017-05-03  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #20116]
