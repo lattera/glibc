@@ -514,9 +514,9 @@ void*  __libc_calloc(size_t, size_t);
   REALLOC_ZERO_BYTES_FREES is set, realloc with a size argument of
   zero (re)allocates a minimum-sized chunk.
 
-  Large chunks that were internally obtained via mmap will always
-  be reallocated using malloc-copy-free sequences unless
-  the system supports MREMAP (currently only linux).
+  Large chunks that were internally obtained via mmap will always be
+  grown using malloc-copy-free sequences unless the system supports
+  MREMAP (currently only linux).
 
   The old unix realloc convention of allowing the last-free'd chunk
   to be used as an argument to realloc is not supported.
