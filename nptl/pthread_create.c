@@ -94,8 +94,17 @@ unsigned int __nptl_nthreads = 1;
    exactly which of the four ownership states we are in and therefore
    what actions can be taken.  For example after (2) we cannot read or
    write from PD anymore since the thread may no longer exist and the
-   memory may be unmapped.  The most complicated cases happen during
-   thread startup:
+   memory may be unmapped.
+
+   It is important to point out that PD->lock is being used both
+   similar to a one-shot semaphore and subsequently as a mutex.  The
+   lock is taken in the parent to force the child to wait, and then the
+   child releases the lock.  However, this semaphore-like effect is used
+   only for synchronizing the parent and child.  After startup the lock
+   is used like a mutex to create a critical section during which a
+   single owner modifies the thread parameters.
+
+   The most complicated cases happen during thread startup:
 
    (a) If the created thread is in a detached (PTHREAD_CREATE_DETACHED),
        or joinable (default PTHREAD_CREATE_JOINABLE) state and

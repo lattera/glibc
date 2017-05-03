@@ -1,4 +1,10 @@
-2016-04-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+2017-05-03  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #20116]
+	* nptl/pthread_create.c: Expand comments to describe
+	semaphore-like and mutex-like uses of PD->lock.
+
+2017-04-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/epoll_wait.c: New file.
 	* sysdeps/unix/sysv/linux/generic/epoll_wait.c: Remove file.
