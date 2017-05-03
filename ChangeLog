@@ -1,3 +1,8 @@
+2017-05-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h (HWCAP_ASIMDRDM):
+	New macro.
+
 2017-05-02  Vladimir Mezentsev <vladimir.mezentsev@oracle.com>
 
 	[BZ #21179]
