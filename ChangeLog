@@ -1,3 +1,39 @@
+2017-05-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21391]
+	* sysdeps/i386/dl-machine.h (dl_platform_init) [IS_IN (rtld)]:
+	Only call init_cpu_features.
+	[!IS_IN (rtld)]: Only set GLRO(dl_platform) to NULL if needed.
+	* sysdeps/x86_64/dl-machine.h (dl_platform_init): Likewise.
+	* sysdeps/i386/dl-procinfo.h: Removed.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Don't include
+	<sysdeps/i386/dl-procinfo.h> nor <ldsodefs.h>.  Include
+	<sysdeps/x86/dl-procinfo.h>.
+	(_dl_procinfo): Replace _DL_HWCAP_COUNT with 32.
+	* sysdeps/unix/sysv/linux/x86_64/dl-procinfo.h [!IS_IN (ldconfig)]:
+	Include <sysdeps/x86/dl-procinfo.h> instead of
+	 <sysdeps/generic/dl-procinfo.h>.
+	* sysdeps/x86/cpu-features.c: Include <dl-hwcap.h>.
+	(init_cpu_features): Set dl_platform, dl_hwcap and dl_hwcap_mask.
+	* sysdeps/x86/cpu-features.h (bit_cpu_LZCNT): New.
+	(bit_cpu_MOVBE): Likewise.
+	(bit_cpu_BMI1): Likewise.
+	(bit_cpu_BMI2): Likewise.
+	(index_cpu_BMI1): Likewise.
+	(index_cpu_BMI2): Likewise.
+	(index_cpu_LZCNT): Likewise.
+	(index_cpu_MOVBE): Likewise.
+	(index_cpu_POPCNT): Likewise.
+	(reg_BMI1): Likewise.
+	(reg_BMI2): Likewise.
+	(reg_LZCNT): Likewise.
+	(reg_MOVBE): Likewise.
+	(reg_POPCNT): Likewise.
+	* sysdeps/x86/dl-hwcap.h: New file.
+	* sysdeps/x86/dl-procinfo.h: Likewise.
+	* sysdeps/x86/dl-procinfo.c (_dl_x86_hwcap_flags): New.
+	(_dl_x86_platforms): Likewise.
+
 2017-05-03  DJ Delorie  <dj@redhat.com>
 
 	[BZ #21411]

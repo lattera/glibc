@@ -57,8 +57,13 @@
 #define bit_cpu_FMA		(1 << 12)
 #define bit_cpu_FMA4		(1 << 16)
 #define bit_cpu_HTT		(1 << 28)
+#define bit_cpu_LZCNT		(1 << 5)
+#define bit_cpu_MOVBE		(1 << 22)
+#define bit_cpu_POPCNT		(1 << 23)
 
 /* COMMON_CPUID_INDEX_7.  */
+#define bit_cpu_BMI1		(1 << 3)
+#define bit_cpu_BMI2		(1 << 8)
 #define bit_cpu_ERMS		(1 << 9)
 #define bit_cpu_RTM		(1 << 11)
 #define bit_cpu_AVX2		(1 << 5)
@@ -258,6 +263,11 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_cpu_POPCOUNT	COMMON_CPUID_INDEX_1
 # define index_cpu_OSXSAVE	COMMON_CPUID_INDEX_1
 # define index_cpu_HTT		COMMON_CPUID_INDEX_1
+# define index_cpu_BMI1		COMMON_CPUID_INDEX_7
+# define index_cpu_BMI2		COMMON_CPUID_INDEX_7
+# define index_cpu_LZCNT	COMMON_CPUID_INDEX_1
+# define index_cpu_MOVBE	COMMON_CPUID_INDEX_1
+# define index_cpu_POPCNT	COMMON_CPUID_INDEX_1
 
 # define reg_CX8		edx
 # define reg_CMOV		edx
@@ -282,6 +292,11 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define reg_POPCOUNT		ecx
 # define reg_OSXSAVE		ecx
 # define reg_HTT		edx
+# define reg_BMI1		ebx
+# define reg_BMI2		ebx
+# define reg_LZCNT		ecx
+# define reg_MOVBE		ecx
+# define reg_POPCNT		ecx
 
 # define index_arch_Fast_Rep_String	FEATURE_INDEX_1
 # define index_arch_Fast_Copy_Backward	FEATURE_INDEX_1

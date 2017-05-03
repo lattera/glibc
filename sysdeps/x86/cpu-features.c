@@ -18,6 +18,7 @@
 
 #include <cpuid.h>
 #include <cpu-features.h>
+#include <dl-hwcap.h>
 
 static void
 get_common_indeces (struct cpu_features *cpu_features,
@@ -310,4 +311,51 @@ no_cpuid:
   cpu_features->family = family;
   cpu_features->model = model;
   cpu_features->kind = kind;
+
+#if IS_IN (rtld)
+  /* Reuse dl_platform, dl_hwcap and dl_hwcap_mask for x86.  */
+  GLRO(dl_platform) = NULL;
+  GLRO(dl_hwcap) = 0;
+  GLRO(dl_hwcap_mask) = HWCAP_IMPORTANT;
+
+# ifdef __x86_64__
+  if (cpu_features->kind == arch_kind_intel)
+    {
+      if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable)
+	  && CPU_FEATURES_CPU_P (cpu_features, AVX512CD))
+	{
+	  if (CPU_FEATURES_CPU_P (cpu_features, AVX512ER))
+	    {
+	      if (CPU_FEATURES_CPU_P (cpu_features, AVX512PF))
+		GLRO(dl_platform) = "xeon_phi";
+	    }
+	  else
+	    {
+	      if (CPU_FEATURES_CPU_P (cpu_features, AVX512BW)
+		  && CPU_FEATURES_CPU_P (cpu_features, AVX512DQ)
+		  && CPU_FEATURES_CPU_P (cpu_features, AVX512VL))
+		GLRO(dl_hwcap) |= HWCAP_X86_AVX512_1;
+	    }
+	}
+
+      if (GLRO(dl_platform) == NULL
+	  && CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable)
+	  && CPU_FEATURES_ARCH_P (cpu_features, FMA_Usable)
+	  && CPU_FEATURES_CPU_P (cpu_features, BMI1)
+	  && CPU_FEATURES_CPU_P (cpu_features, BMI2)
+	  && CPU_FEATURES_CPU_P (cpu_features, LZCNT)
+	  && CPU_FEATURES_CPU_P (cpu_features, MOVBE)
+	  && CPU_FEATURES_CPU_P (cpu_features, POPCNT))
+	GLRO(dl_platform) = "haswell";
+    }
+# else
+  if (CPU_FEATURES_CPU_P (cpu_features, SSE2))
+    GLRO(dl_hwcap) |= HWCAP_X86_SSE2;
+
+  if (CPU_FEATURES_ARCH_P (cpu_features, I686))
+    GLRO(dl_platform) = "i686";
+  else if (CPU_FEATURES_ARCH_P (cpu_features, I586))
+    GLRO(dl_platform) = "i586";
+# endif
+#endif
 }

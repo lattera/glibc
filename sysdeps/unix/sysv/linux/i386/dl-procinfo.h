@@ -17,9 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdeps/i386/dl-procinfo.h>
-#include <ldsodefs.h>
-
+#include <sysdeps/x86/dl-procinfo.h>
 
 #undef _dl_procinfo
 static inline int
@@ -36,7 +34,7 @@ _dl_procinfo (unsigned int type, unsigned long int word)
 
   _dl_printf ("AT_HWCAP:   ");
 
-  for (i = 0; i < _DL_HWCAP_COUNT; ++i)
+  for (i = 0; i < 32; ++i)
     if (word & (1 << i))
       _dl_printf (" %s", GLRO(dl_x86_cap_flags)[i]);
 

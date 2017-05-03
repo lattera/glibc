@@ -240,14 +240,14 @@ _dl_start_user:\n\
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (GLRO(dl_platform) != NULL && *GLRO(dl_platform) == '\0')
-    /* Avoid an empty string which would disturb us.  */
-    GLRO(dl_platform) = NULL;
-
-#ifdef SHARED
+#if IS_IN (rtld)
   /* init_cpu_features has been called early from __libc_start_main in
      static executable.  */
   init_cpu_features (&GLRO(dl_x86_cpu_features));
+#else
+  if (GLRO(dl_platform) != NULL && *GLRO(dl_platform) == '\0')
+    /* Avoid an empty string which would disturb us.  */
+    GLRO(dl_platform) = NULL;
 #endif
 }
 
