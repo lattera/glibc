@@ -1,3 +1,8 @@
+2017-05-03  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #20686]
+	* SUPPORTED: Add el_GR@euro/ISO-8859-7.
+
 2017-04-19  Christopher Chittleborough  <cchittleborough@cluemail.com>
 
 	[BZ #21399]
