@@ -1,3 +1,40 @@
+2017-05-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21455]
+	* bits/stdint-intn.h: New file.
+	* bits/stdint-uintn.h: Likewise.
+	* stdlib/Makefile (headers): Add bits/stdint-intn.h and
+	bits/stdint-uintn.h.
+	* inet/netinet/in.h: Include <bits/stdint-uintn.h> instead of
+	<stdint.h>.
+	* posix/sys/types.h: Include <bits/stdint-intn.h>.
+	(__int8_t_defined): Do not define here.
+	(int8_t): Likewise.
+	(int16_t): Likewise.
+	(int32_t): Likewise.
+	(int64_t): Likewise.
+	[__GNUC_PREREQ (2, 7)] (__intN_t): Likewise.
+	* resolv/netdb.h: Include <bits/stdint-uintn.h> instead of
+	<stdint.h>.
+	* include/netdb.h [_ISOMAC]: Do not include <stdint.h>.
+	* sysdeps/generic/stdint.h: Include <bits/stdint-intn.h> and
+	<bits/stdint-uintn.h>.
+	(int8_t): Do not define here.
+	(int16_t): Likewise.
+	(int32_t): Likewise.
+	(int64_t): Likewise.
+	(uint8_t): Likewise.
+	(uint16_t): Likewise.
+	(uint32_t): Likewise.
+	(uint64_t): Likewise.
+	* conform/Makefile (test-xfail-XPG42/arpa/inet.h/conform): Remove
+	variable.
+	(test-xfail-XPG42/netdb.h/conform): Likewise.
+	(test-xfail-XPG42/netinet/in.h/conform): Likewise.
+	(test-xfail-UNIX98/arpa/inet.h/conform): Likewise.
+	(test-xfail-UNIX98/netdb.h/conform): Likewise.
+	(test-xfail-UNIX98/netinet/in.h/conform): Likewise.
+
 2017-05-04  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/generic/math_private.h (mathx_hidden_def): New macro.

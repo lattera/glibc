@@ -1,8 +1,8 @@
 #ifndef	_NETDB_H
 #include <resolv/netdb.h>
-#include <stdint.h>
 
 #ifndef _ISOMAC
+# include <stdint.h>
 /* Macros for accessing h_errno from inside libc.  */
 # if IS_IN_LIB
 #  undef  h_errno

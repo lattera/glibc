@@ -19,7 +19,7 @@
 #define	_NETINET_IN_H	1
 
 #include <features.h>
-#include <stdint.h>
+#include <bits/stdint-uintn.h>
 #include <sys/socket.h>
 #include <bits/types.h>
 

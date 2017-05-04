@@ -25,7 +25,7 @@
 #include <features.h>
 
 #include <netinet/in.h>
-#include <stdint.h>
+#include <bits/stdint-uintn.h>
 #ifdef __USE_MISC
 /* This is necessary to make this include file properly replace the
    Sun version.  */

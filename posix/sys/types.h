@@ -153,22 +153,11 @@ typedef unsigned int uint;
 
 /* These size-specific names are used by some of the inet code.  */
 
+#include <bits/stdint-intn.h>
+
 #if !__GNUC_PREREQ (2, 7)
 
-/* These types are defined by the ISO C99 header <inttypes.h>. */
-# ifndef __int8_t_defined
-#  define __int8_t_defined
-typedef	char int8_t;
-typedef	short int int16_t;
-typedef	int int32_t;
-#  if __WORDSIZE == 64
-typedef long int int64_t;
-#  else
-__extension__ typedef long long int int64_t;
-#  endif
-# endif
-
-/* But these were defined by ISO C without the first `_'.  */
+/* These were defined by ISO C without the first `_'.  */
 typedef	unsigned char u_int8_t;
 typedef	unsigned short int u_int16_t;
 typedef	unsigned int u_int32_t;
@@ -183,18 +172,8 @@ typedef int register_t;
 #else
 
 /* For GCC 2.7 and later, we can use specific type-size attributes.  */
-# define __intN_t(N, MODE) \
-  typedef int int##N##_t __attribute__ ((__mode__ (MODE)))
 # define __u_intN_t(N, MODE) \
   typedef unsigned int u_int##N##_t __attribute__ ((__mode__ (MODE)))
-
-# ifndef __int8_t_defined
-#  define __int8_t_defined
-__intN_t (8, __QI__);
-__intN_t (16, __HI__);
-__intN_t (32, __SI__);
-__intN_t (64, __DI__);
-# endif
 
 __u_intN_t (8, __QI__);
 __u_intN_t (16, __HI__);

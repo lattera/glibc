@@ -163,16 +163,10 @@ test-xfail-XOPEN2K8/ndbm.h/conform = yes
 # Unsorted expected failures.
 test-xfail-XPG4/signal.h/conform = yes
 test-xfail-XPG4/sys/wait.h/conform = yes
-test-xfail-XPG42/arpa/inet.h/conform = yes
-test-xfail-XPG42/netdb.h/conform = yes
-test-xfail-XPG42/netinet/in.h/conform = yes
 test-xfail-XPG42/signal.h/conform = yes
 test-xfail-XPG42/sys/wait.h/conform = yes
 test-xfail-XPG42/ucontext.h/conform = yes
 test-xfail-POSIX/sys/wait.h/conform = yes
-test-xfail-UNIX98/arpa/inet.h/conform = yes
-test-xfail-UNIX98/netdb.h/conform = yes
-test-xfail-UNIX98/netinet/in.h/conform = yes
 test-xfail-UNIX98/signal.h/conform = yes
 test-xfail-UNIX98/sys/wait.h/conform = yes
 test-xfail-UNIX98/ucontext.h/conform = yes
