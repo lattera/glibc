@@ -1,3 +1,11 @@
+2017-05-04  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/generic/math_private.h (mathx_hidden_def): New macro.
+	* sysdeps/ieee754/ldbl-128/s_finitel.c: Replace hidden_def with
+	the above.
+	* sysdeps/ieee754/ldbl-128/s_isinfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isnanl.c: Likewise.
+
 2017-05-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21445]

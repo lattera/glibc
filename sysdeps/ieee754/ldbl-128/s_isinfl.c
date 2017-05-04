@@ -25,5 +25,5 @@ __isinfl (_Float128 x)
 	lx |= -lx;
 	return ~(lx >> 63) & (hx >> 62);
 }
-hidden_def (__isinfl)
+mathx_hidden_def (__isinfl)
 weak_alias (__isinfl, isinfl)

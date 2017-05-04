@@ -181,6 +181,10 @@ do {								\
 } while (0)
 #endif
 
+/* We need to guarantee an expansion of name when building
+   ldbl-128 files as another type (e.g _Float128).  */
+#define mathx_hidden_def(name) hidden_def(name)
+
 /* Get long double macros from a separate header.  */
 #include <math_ldbl.h>
 
