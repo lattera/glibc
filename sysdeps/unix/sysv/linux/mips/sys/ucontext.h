@@ -98,7 +98,7 @@ typedef struct
     unsigned int fpc_csr;
     unsigned int used_math;
     unsigned int dsp;
-    unsigned int reserved;
+    unsigned int __glibc_reserved1;
   } mcontext_t;
 #endif
 

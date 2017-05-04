@@ -1,3 +1,24 @@
+2017-05-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21457]
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h
+	[_MIPS_SIM != _ABIO32] (mcontext_t): Rename field reserved to
+	__glibc_reserved1.
+	* sysdeps/unix/sysv/linux/x86/bits/sigcontext.h
+	(struct _fpx_sw_bytes): Rename field padding to __glibc_reserved1.
+	(struct _fpxreg): Likewise.
+	[!__x86_64__] (struct _fpstate): Rename field reserved to
+	__glibc_reserved1.  Rename field padding to __glibc_reserved2.
+	[__x86_64__] (struct _fpstate): Rename field padding to
+	__glibc_reserved1.
+	(struct _xsave_hdr): Rename field reserved1 to __glibc_reserved1.
+	Rename field reserved2 to __glibc_reserved2.
+	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h
+	[__x86_64__] (struct _libc_fpxreg): Rename field padding to
+	__glibc_reserved1.
+	[__x86_64__] (struct _libc_fpstate): Rename field padding to
+	__glibc_reserved1.
+
 2017-05-03  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/strncat.c: Correct hwcap
