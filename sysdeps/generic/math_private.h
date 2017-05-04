@@ -23,6 +23,9 @@
 #include <float.h>
 #include <get-rounding-mode.h>
 
+/* Gather machine dependent _Floatn support.  */
+#include <bits/floatn.h>
+
 /* The original fdlibm code used statements like:
 	n0 = ((*(int*)&one)>>29)^1;		* index of high word *
 	ix0 = *(n0+(int*)&x);			* high word of x *
@@ -211,6 +214,41 @@ do {								\
 #undef _MSUF_
 #undef _Mdouble_
 
+#if __HAVE_DISTINCT_FLOAT128
+# define _Mdouble_ _Float128
+# define _MSUF_ f128
+# define __MATH_DECLARING_FLOATN
+# include <math_private_calls.h>
+# undef __MATH_DECLARING_FLOATN
+# undef _MSUF_
+# undef _Mdouble_
+#endif
+
+#if __HAVE_DISTINCT_FLOAT128
+
+/* __builtin_isinf_sign is broken in GCC < 7 for float128.  */
+# if ! __GNUC_PREREQ (7, 0)
+#  include <ieee754_float128.h>
+extern inline int
+__isinff128 (_Float128 x)
+{
+  int64_t hx, lx;
+  GET_FLOAT128_WORDS64 (hx, lx, x);
+  lx |= (hx & 0x7fffffffffffffffLL) ^ 0x7fff000000000000LL;
+  lx |= -lx;
+  return ~(lx >> 63) & (hx >> 62);
+}
+# endif
+
+extern inline _Float128
+fabsf128 (_Float128 x)
+{
+  return __builtin_fabsf128 (x);
+}
+#endif
+
+
+
 /* fdlibm kernel function */
 extern double __kernel_standard (double,double,int);
 extern float __kernel_standard_f (float,float,int);
@@ -263,13 +301,24 @@ extern void __docos (double __x, double __dx, double __v[]);
    })
 #endif
 
+#if __HAVE_DISTINCT_FLOAT128
+# define __EXPR_FLT128(x, yes, no)				\
+  __builtin_choose_expr (__builtin_types_compatible_p		\
+			 (__typeof (x), long double), no, yes)
+#else
+# define __EXPR_FLT128(x, yes, no) no
+#endif
+
+
 #define fabs_tg(x) __MATH_TG ((x), (__typeof (x)) __builtin_fabs, (x))
+
 #define min_of_type(type) __builtin_choose_expr		\
   (__builtin_types_compatible_p (type, float),		\
    FLT_MIN,						\
    __builtin_choose_expr				\
    (__builtin_types_compatible_p (type, double),	\
-    DBL_MIN, LDBL_MIN))
+    DBL_MIN,						\
+    __EXPR_FLT128 (x, FLT128_MIN, LDBL_MIN)))
 
 /* If X (which is not a NaN) is subnormal, force an underflow
    exception.  */

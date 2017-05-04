@@ -26,6 +26,12 @@ hidden_proto (__finitel)
 hidden_proto (__isinfl)
 hidden_proto (__isnanl)
 #  endif
+
+#  if __HAVE_DISTINCT_FLOAT128
+hidden_proto (__finitef128)
+hidden_proto (__isinff128)
+hidden_proto (__isnanf128)
+#  endif
 # endif
 
 libm_hidden_proto (__fpclassify)
@@ -41,6 +47,13 @@ libm_hidden_proto (__fpclassifyl)
 libm_hidden_proto (__issignalingl)
 libm_hidden_proto (__expl)
 libm_hidden_proto (__expm1l)
+# endif
+
+# if __HAVE_DISTINCT_FLOAT128
+libm_hidden_proto (__fpclassifyf128)
+libm_hidden_proto (__issignalingf128)
+libm_hidden_proto (__expf128)
+libm_hidden_proto (__expm1f128)
 # endif
 
 #endif

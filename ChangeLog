@@ -1,3 +1,37 @@
+2017-05-14  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* include/complex.h (__kernel_casinhf128): New declaration.
+	* include/float.h: New file.
+	* include/math.h (__finitef128): Add a hidden def.
+	(__isinff128): Likewise.
+	(__isnanf128): Likewise.
+	(__fpclassify): Likewise.
+	(__issignalling): Likewise.
+	(__expf128): Likewise.
+	(__expm1f128): Likewise.
+
+	* sysdeps/generic/fix-fp-int-convert-overflow.h:
+	(FIX_FLT128_LONG_CONVERT_OVERFLOW): New macro.
+	(FIX_FLT128_LLONG_CONVERT_OVERFLOW): Likewise.
+
+	* sysdeps/generic/math-type-macros-float128.h: New file.
+
+	* sysdeps/generic/math_private.h: Include bits/floatn.h and
+	math_private_calls.h for _Float128.
+	(__isinff128): New inline implementation used when GCC < 7.0,
+	since in this case __builtin_isinf_sign is broken.
+	(fabsf128): New inline implementation that calls the builtin.
+	(__EXPR_FLT128): New macro.
+	(min_of_type): Optionally include _Float128 types too.
+
+	* sysdeps/generic/math_private_calls.h (__kernel_sincos):
+	Declare for _Float128.
+	(__kernel_rem_pio2): Likewise.
+
+	* sysdeps/ieee754/ldbl-opt/s_sin.c:
+	(__DECL_SIMD_sincos_disablef128): New macro.
+
 2017-05-14  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/math.h: Include bits/math-finite.h for float128.

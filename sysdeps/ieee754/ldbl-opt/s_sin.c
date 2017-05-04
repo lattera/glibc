@@ -4,6 +4,7 @@
 #define __DECL_SIMD_sincos_disable
 #define __DECL_SIMD_sincos_disablef
 #define __DECL_SIMD_sincos_disablel
+#define __DECL_SIMD_sincos_disablef128
 #include <math_ldbl_opt.h>
 #undef NAN
 #undef sincos

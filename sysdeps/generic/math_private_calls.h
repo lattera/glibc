@@ -64,12 +64,12 @@ extern _Mdouble_ __MSUF (__kernel_sin) (_Mdouble_, _Mdouble_, int);
 extern _Mdouble_ __MSUF (__kernel_cos) (_Mdouble_, _Mdouble_);
 extern _Mdouble_ __MSUF (__kernel_tan) (_Mdouble_, _Mdouble_, int);
 
-#if defined __MATH_DECLARING_LONG_DOUBLE
+#if defined __MATH_DECLARING_LONG_DOUBLE || defined __MATH_DECLARING_FLOATN
 extern void __MSUF (__kernel_sincos) (_Mdouble_, _Mdouble_,
 				      _Mdouble_ *, _Mdouble_ *, int);
 #endif
 
-#if !defined __MATH_DECLARING_LONG_DOUBLE
+#if !defined __MATH_DECLARING_LONG_DOUBLE || defined __MATH_DECLARING_FLOATN
 extern int __MSUF (__kernel_rem_pio2) (_Mdouble_ *, _Mdouble_ *, int,
 				       int, int, const int32_t *);
 #endif
