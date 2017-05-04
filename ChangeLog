@@ -1,5 +1,8 @@
 2017-05-04  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21445]
+	* signal/signal.h [__USE_XOPEN2K8] (bsd_signal): Do not declare.
+
 	[BZ #21457]
 	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h
 	[_MIPS_SIM != _ABIO32] (mcontext_t): Rename field reserved to
