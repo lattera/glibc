@@ -316,7 +316,15 @@ actually done any output using the stream.)  Then the file named by
 and associated with the same stream object @var{stream}.
 
 If the operation fails, a null pointer is returned; otherwise,
-@code{freopen} returns @var{stream}.
+@code{freopen} returns @var{stream}.  On Linux, @code{freopen} may also
+fail and set @code{errno} to @code{EBUSY} when the kernel structure for
+the old file descriptor was not initialized completely before @code{freopen}
+was called.  This can only happen in multi-threaded programs, when two
+threads race to allocate the same file descriptor number.  To avoid the
+possibility of this race, do not use @code{close} to close the underlying
+file descriptor for a @code{FILE}; either use @code{freopen} while the
+file is still open, or use @code{open} and then @code{dup2} to install
+the new file descriptor.
 
 @code{freopen} has traditionally been used to connect a standard stream
 such as @code{stdin} with a file of your own choice.  This is useful in

@@ -59,17 +59,31 @@ freopen64 (const char *filename, const char *mode, FILE *fp)
       /* unbound stream orientation */
       result->_mode = 0;
 
-      if (fd != -1)
+      if (fd != -1 && _IO_fileno (result) != fd)
 	{
-	  __dup3 (_IO_fileno (result), fd,
-		  (result->_flags2 & _IO_FLAGS2_CLOEXEC) != 0
-		  ? O_CLOEXEC : 0);
+	  /* At this point we have both file descriptors already allocated,
+	     so __dup3 will not fail with EBADF, EINVAL, or EMFILE.  But
+	     we still need to check for EINVAL and, due Linux internal
+	     implementation, EBUSY.  It is because on how it internally opens
+	     the file by splitting the buffer allocation operation and VFS
+	     opening (a dup operation may run when a file is still pending
+	     'install' on VFS).  */
+	  if (__dup3 (_IO_fileno (result), fd,
+		      (result->_flags2 & _IO_FLAGS2_CLOEXEC) != 0
+		      ? O_CLOEXEC : 0) == -1)
+	    {
+	      _IO_file_close_it (result);
+	      result = NULL;
+	      goto end;
+	    }
 	  __close (_IO_fileno (result));
 	  _IO_fileno (result) = fd;
 	}
     }
   else if (fd != -1)
     __close (fd);
+
+end:
   if (filename == NULL)
     free ((char *) gfilename);
   _IO_release_lock (fp);

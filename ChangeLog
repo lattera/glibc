@@ -1,3 +1,14 @@
+2017-05-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21393]
+	* libio/freopen.c (freopen): Avoid dup already opened file descriptor
+	and add a check for dup3 failure.
+	* libio/freopen64.c (freopen64): Likewise.
+	* libio/tst-freopen.c (do_test): Rename to do_test_basic and use
+	libsupport.
+	(do_test_bz21398): New test.
+	* manual/stdio.texi (freopen): Add documentation of EBUSY failure.
+
 2017-05-22  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_matches_host):
