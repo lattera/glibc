@@ -17,11 +17,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* getcpu is a syscall for x86-64 since 3.1.  */
-#if __LINUX_KERNEL_VERSION >= 0x030100
-# define __ASSUME_GETCPU_SYSCALL	1
-#endif
-
 /* Define that x32 is a ILP32 ABI to set the correct interface to pass
    64-bits values through syscalls.  */
 #ifdef __ILP32__
