@@ -1,3 +1,9 @@
+2017-05-08  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Remove
+	sys/ultrasound.h.
+	* sysdeps/unix/sysv/linux/sys/ultrasound.h: Remove file.
+
 2017-05-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/i386/configure.ac (arch_minimum_kernel):
