@@ -25,7 +25,6 @@
 #include <support/support.h>
 
 #include <paths.h>
-#include <search.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,7 +32,7 @@
 /* List of temporary files.  */
 static struct temp_name_list
 {
-  struct qelem q;
+  struct temp_name_list *next;
   char *name;
 } *temp_name_list;
 
@@ -50,10 +49,8 @@ add_temp_file (const char *name)
   if (newname != NULL)
     {
       newp->name = newname;
-      if (temp_name_list == NULL)
-	temp_name_list = (struct temp_name_list *) &newp->q;
-      else
-	insque (newp, temp_name_list);
+      newp->next = temp_name_list;
+      temp_name_list = newp;
     }
   else
     free (newp);
@@ -105,8 +102,7 @@ support_delete_temp_files (void)
       (void) remove (temp_name_list->name);
       free (temp_name_list->name);
 
-      struct temp_name_list *next
-	= (struct temp_name_list *) temp_name_list->q.q_forw;
+      struct temp_name_list *next = temp_name_list->next;
       free (temp_name_list);
       temp_name_list = next;
     }
@@ -119,9 +115,7 @@ support_print_temp_files (FILE *f)
     {
       struct temp_name_list *n;
       fprintf (f, "temp_files=(\n");
-      for (n = temp_name_list;
-           n != NULL;
-           n = (struct temp_name_list *) n->q.q_forw)
+      for (n = temp_name_list; n != NULL; n = n->next)
         fprintf (f, "  '%s'\n", n->name);
       fprintf (f, ")\n");
     }

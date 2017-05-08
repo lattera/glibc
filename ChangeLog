@@ -1,5 +1,14 @@
 2017-05-08  Florian Weimer  <fweimer@redhat.com>
 
+	Delete temporary files in LIFO order.
+	* support/temp_file.c (struct temp_name_list): Replace q member
+	with next.
+	(add_temp_file): Add new file to front of linked list.
+	(support_delete_temp_files): Use next member.
+	(support_print_temp_files): Likewise.
+
+2017-05-08  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Remove
 	sys/ultrasound.h.
 	* sysdeps/unix/sysv/linux/sys/ultrasound.h: Remove file.
