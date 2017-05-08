@@ -1,8 +1,6 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/unix/sysv/linux/x86_64/64.
 
-arch_minimum_kernel=2.6.32
-
 test -n "$libc_cv_slibdir" ||
 case "$prefix" in
 /usr | /usr/)

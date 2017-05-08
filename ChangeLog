@@ -1,3 +1,13 @@
+2017-05-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/i386/configure.ac (arch_minimum_kernel):
+	Remove.
+	* sysdeps/unix/sysv/linux/i386/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/x86_64/64/configure.ac
+	(arch_minimum_kernel): Remove.
+	* sysdeps/unix/sysv/linux/x86_64/64/configure: Regenerated.
+	* README: Update statement about Linux kernel requirements.
+
 2017-05-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* manual/llio.texi: Add preadv and pwritev documentation.

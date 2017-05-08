@@ -57,6 +57,10 @@ Version 2.26
   be added on next major revision of POSIX, so current support is enabled
   with _GNU_SOURCE.
 
+* The minimum Linux kernel version that this version of the GNU C Library
+  can be used with on i[4567]86 and x86_64 is 3.2.  A Linux 3.2 or later
+  kernel was already required on all other architectures.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,

@@ -1,8 +1,6 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/unix/sysv/linux/i386.
 
-arch_minimum_kernel=2.6.32
-
 # Check if CFLAGS allows compiler to use ebp register in inline assembly.
 AC_CACHE_CHECK([if compiler flags allows ebp in inline assembly],
                 libc_cv_can_use_register_asm_ebp, [
