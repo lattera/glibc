@@ -1,5 +1,15 @@
 2016-05-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/powerpc32/backtrace.c (is_sigtramp_address): Use
+	void* for argument type and use VDSO_SYMBOL macro.
+	(is_sigtramp_address_rt): Likewise.
+	(__backtrace): Setup expected frame pointer address for signal
+	handling.
+	* sysdeps/powerpc/powerpc64/backtrace.c (is_sigtramp_address): Use
+	void* for argumetn type and use VSDO_SYMBOL macro.
+	(__backtrace): Setup expected frame pointer address for signal
+	handling.
+
 	* sysdeps/unix/sysv/linux/writev.c: New file.
 
 	* sysdeps/unix/sysv/linux/readv.c: New file.

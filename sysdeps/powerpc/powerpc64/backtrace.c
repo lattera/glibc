@@ -16,10 +16,12 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <http://www.gnu.org/licenses/>.  */
 
-#include <execinfo.h>
 #include <stddef.h>
 #include <string.h>
 #include <signal.h>
+#include <stdint.h>
+
+#include <execinfo.h>
 #include <libc-vdso.h>
 
 /* This is the stack layout we see with every stack frame.
@@ -37,7 +39,7 @@
 struct layout
 {
   struct layout *next;
-  long condition_register;
+  long int condition_register;
   void *return_address;
 };
 
@@ -47,16 +49,16 @@ struct layout
    dummy frame to make it look like it has a caller.  */
 struct signal_frame_64 {
 #define SIGNAL_FRAMESIZE 128
-  char            dummy[SIGNAL_FRAMESIZE];
+  char dummy[SIGNAL_FRAMESIZE];
   struct ucontext uc;
   /* We don't care about the rest, since the IP value is at 'uc' field.  */
 };
 
 static inline int
-is_sigtramp_address (unsigned long nip)
+is_sigtramp_address (void *nip)
 {
 #ifdef SHARED
-  if (nip == (unsigned long)__vdso_sigtramp_rt64)
+  if (nip == VDSO_SYMBOL (sigtramp_rt64))
     return 1;
 #endif
   return 0;
@@ -82,10 +84,11 @@ __backtrace (void **array, int size)
 
       /* Check if the symbol is the signal trampoline and get the interrupted
        * symbol address from the trampoline saved area.  */
-      if (is_sigtramp_address ((unsigned long)current->return_address))
+      if (is_sigtramp_address (current->return_address))
         {
 	  struct signal_frame_64 *sigframe = (struct signal_frame_64*) current;
-          array[++count] = (void*)sigframe->uc.uc_mcontext.gp_regs[PT_NIP];
+          array[++count] = (void*) sigframe->uc.uc_mcontext.gp_regs[PT_NIP];
+	  current = (void*) sigframe->uc.uc_mcontext.gp_regs[PT_R1];
 	}
     }
 

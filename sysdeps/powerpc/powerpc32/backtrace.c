@@ -52,10 +52,10 @@ struct signal_frame_32 {
 };
 
 static inline int
-is_sigtramp_address (unsigned int nip)
+is_sigtramp_address (void *nip)
 {
 #ifdef SHARED
-  if (nip == (unsigned int)__vdso_sigtramp32)
+  if (nip == VDSO_SYMBOL (sigtramp32))
     return 1;
 #endif
   return 0;
@@ -69,10 +69,10 @@ struct rt_signal_frame_32 {
 };
 
 static inline int
-is_sigtramp_address_rt (unsigned int nip)
+is_sigtramp_address_rt (void * nip)
 {
 #ifdef SHARED
-  if (nip == (unsigned int)__vdso_sigtramp_rt32)
+  if (nip == VDSO_SYMBOL (sigtramp_rt32))
     return 1;
 #endif
   return 0;
@@ -100,20 +100,23 @@ __backtrace (void **array, int size)
 
       /* Check if the symbol is the signal trampoline and get the interrupted
        * symbol address from the trampoline saved area.  */
-      if (is_sigtramp_address ((unsigned int)current->return_address))
+      if (is_sigtramp_address (current->return_address))
 	{
 	  struct signal_frame_32 *sigframe =
 	    (struct signal_frame_32*) current;
           gregset = &sigframe->mctx.gregs;
         }
-      else if (is_sigtramp_address_rt ((unsigned int)current->return_address))
+      else if (is_sigtramp_address_rt (current->return_address))
 	{
 	  struct rt_signal_frame_32 *sigframe =
             (struct rt_signal_frame_32*) current;
           gregset = &sigframe->uc.uc_mcontext.uc_regs->gregs;
         }
       if (gregset)
-	array[++count] = (void*)((*gregset)[PT_NIP]);
+	{
+	  array[++count] = (void*)((*gregset)[PT_NIP]);
+	  current = (void*)((*gregset)[PT_R1]);
+	}
     }
 
   /* It's possible the second-last stack frame can't return
