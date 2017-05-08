@@ -794,11 +794,9 @@ endif
 # The makefile may define $(modules-names) to build additional modules.
 # These are built with $(build-module), except any in $(modules-names-nobuild).
 ifdef modules-names
-# extra-lib.mk is included once for each extra lib to define rules
-# to build it, and to add its objects to the various variables.
-# During its evaluation, $(lib) is set to the name of the library.
-extra-modules-left := $(modules-names)
-include $(patsubst %,$(..)extra-modules.mk,$(modules-names))
+cpp-srcs-left := $(modules-names)
+lib = extramodules
+include $(patsubst %,$(..)libof-iterator.mk,$(modules-names))
 
 extra-modules-build := $(filter-out $(modules-names-nobuild),$(modules-names))
 $(extra-modules-build:%=$(objpfx)%.so): $(objpfx)%.so: \
@@ -1327,7 +1325,7 @@ all-nonlib = $(strip $(tests) $(xtests) $(test-srcs) $(test-extras) $(others))
 ifneq (,$(all-nonlib))
 cpp-srcs-left = $(all-nonlib)
 lib := nonlib
-include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 endif
 
 

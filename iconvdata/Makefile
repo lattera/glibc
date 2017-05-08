@@ -290,7 +290,7 @@ cpp-srcs-left := $(modules) $(generated-modules) $(libJIS-routines) \
 		 $(libKSC-routines) $(libGB-routines) $(libCNS-routines) \
 		 $(libISOIR165-routines) $(libJISX0213-routines)
 lib := iconvdata
-include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
 tst-loading-ENV = MALLOC_TRACE=$(objpfx)tst-loading.mtrace
 $(objpfx)mtrace-tst-loading.out: $(objpfx)tst-loading.out

@@ -92,7 +92,7 @@ endif
 # Set libof-nscd.
 cpp-srcs-left := $(nscd-modules)
 lib := nscd
-include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
 $(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)
 

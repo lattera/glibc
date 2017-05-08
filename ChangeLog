@@ -1,3 +1,18 @@
+2017-05-09  Zack Weinberg  <zackw@panix.com>
+
+	* extra-modules.mk: Delete file.
+	* cppflags-iterator.mk: Rename to ...
+	* libof-iterator.mk: ...this.  Adjust comments.
+
+	* Makerules, extra-lib.mk, benchtests/Makefile, elf/Makefile
+	* elf/rtld-Rules, iconv/Makefile, locale/Makefile, malloc/Makefile
+	* nscd/Makefile, sunrpc/Makefile, sysdeps/s390/Makefile:
+	Use libof-iterator.mk instead of cppflags-iterator.mk or
+	extra-modules.mk.
+
+	* benchtests/strcoll-inputs/filelist#en_US.UTF-8: Remove
+	extra-modules.mk and cppflags-iterator.mk, add libof-iterator.mk.
+
 2017-05-09  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.

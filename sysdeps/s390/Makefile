@@ -18,7 +18,7 @@ include extra-module.mk
 
 cpp-srcs-left := $(foreach mod,$(s390x-iconv-modules),$($(mod)-routines))
 lib := iconvdata
-include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
 extra-objs      += $(addsuffix .so, $(s390x-iconv-modules))
 install-others  += $(patsubst %, $(inst_gconvdir)/%.so, $(s390x-iconv-modules))

@@ -123,7 +123,7 @@ endif
 cpp-srcs-left := $(binaries-benchset:=.c) $(binaries-bench:=.c) \
 		 $(binaries-bench-malloc:=.c)
 lib := nonlib
-include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
 bench-extra-objs = json-lib.o
 

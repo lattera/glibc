@@ -108,5 +108,5 @@ endif
 # This will define `libof-ROUTINE := LIB' for each of the routines.
 cpp-srcs-left := $($(lib)-routines) $($(lib)-sysdep_routines)
 ifneq (,$(cpp-srcs-left))
-include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 endif

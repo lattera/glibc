@@ -183,7 +183,7 @@ $(objpfx)cross-rpcgen: $(cross-rpcgen-objs)
 # This makes sure -DIN_MODULE is passed for all these modules.
 cpp-srcs-left := $(rpcgen-objs:.o=.c)
 lib := nonlib
-include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
 # How we run rpcgen to generate sources and headers in the rules below.
 # Setting CPP tells it how to run the C preprocessor correctly.  Note
