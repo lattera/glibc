@@ -1,5 +1,11 @@
 2017-05-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_PROC_PID_TASK_COMM): Remove macro.
+	* sysdeps/unix/sysv/linux/tst-setgetname.c: Do not include
+	<kernel-features.h>.
+	(do_test) [!__ASSUME_PROC_PID_TASK_COMM]: Remove conditional code.
+
 	* sysdeps/unix/sysv/linux/x86_64/kernel-features.h
 	(__ASSUME_GETCPU_SYSCALL): Remove macro.
 
