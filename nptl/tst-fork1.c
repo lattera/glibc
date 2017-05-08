@@ -64,8 +64,8 @@ thread_function (void * arg)
 #define N 5
 static const int t[N] = { 7, 6, 5, 4, 3 };
 
-int
-main (void)
+static int
+do_test (void)
 {
   pthread_t th[N];
   int i;
@@ -117,3 +117,5 @@ main (void)
 
   return result;
 }
+
+#include <support/test-driver.c>

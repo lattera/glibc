@@ -1,3 +1,8 @@
+2017-05-10  Andreas Schwab  <schwab@suse.de>
+
+	* nptl/tst-fork1.c: Include <support/test-driver.c>.
+	(main): Rename to do_test and make static.
+
 2017-05-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* string/rawmemchr.c: Include <libc-diag.h>.
