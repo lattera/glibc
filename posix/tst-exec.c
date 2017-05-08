@@ -47,6 +47,10 @@ extern int do_test (int argc, char *argv[]);
 static char *name1;
 static char *name2;
 
+/* File descriptors for these temporary files.  */
+static int temp_fd1 = -1;
+static int temp_fd2 = -1;
+
 /* The contents of our files.  */
 static const char fd1string[] = "This file should get closed";
 static const char fd2string[] = "This file should stay opened";
@@ -56,18 +60,14 @@ static const char fd2string[] = "This file should stay opened";
 void
 do_prepare (int argc, char *argv[])
 {
-   size_t name_len;
+  /* We must not open any files in the restart case.  */
+  if (restart)
+    return;
 
-   name_len = strlen (test_dir);
-   name1 = xmalloc (name_len + sizeof ("/execXXXXXX"));
-   mempcpy (mempcpy (name1, test_dir, name_len),
-	    "/execXXXXXX", sizeof ("/execXXXXXX"));
-   add_temp_file (name1);
-
-   name2 = xmalloc (name_len + sizeof ("/execXXXXXX"));
-   mempcpy (mempcpy (name2, test_dir, name_len),
-	    "/execXXXXXX", sizeof ("/execXXXXXX"));
-   add_temp_file (name2);
+  temp_fd1 = create_temp_file ("exec", &name1);
+  temp_fd2 = create_temp_file ("exec", &name2);
+  if (temp_fd1 < 0 || temp_fd2 < 0)
+    exit (1);
 }
 
 
@@ -120,8 +120,6 @@ int
 do_test (int argc, char *argv[])
 {
   pid_t pid;
-  int fd1;
-  int fd2;
   int flags;
   int status;
 
@@ -151,26 +149,18 @@ do_test (int argc, char *argv[])
   /* Prepare the test.  We are creating two files: one which file descriptor
      will be marked with FD_CLOEXEC, another which is not.  */
 
-   /* Open our test files.   */
-   fd1 = mkstemp (name1);
-   if (fd1 == -1)
-     error (EXIT_FAILURE, errno, "cannot open test file `%s'", name1);
-   fd2 = mkstemp (name2);
-   if (fd2 == -1)
-     error (EXIT_FAILURE, errno, "cannot open test file `%s'", name2);
-
    /* Set the bit.  */
-   flags = fcntl (fd1, F_GETFD, 0);
+   flags = fcntl (temp_fd1, F_GETFD, 0);
    if (flags < 0)
      error (EXIT_FAILURE, errno, "cannot get flags");
    flags |= FD_CLOEXEC;
-   if (fcntl (fd1, F_SETFD, flags) < 0)
+   if (fcntl (temp_fd1, F_SETFD, flags) < 0)
      error (EXIT_FAILURE, errno, "cannot set flags");
 
    /* Write something in the files.  */
-   if (write (fd1, fd1string, strlen (fd1string)) != strlen (fd1string))
+   if (write (temp_fd1, fd1string, strlen (fd1string)) != strlen (fd1string))
      error (EXIT_FAILURE, errno, "cannot write to first file");
-   if (write (fd2, fd2string, strlen (fd2string)) != strlen (fd2string))
+   if (write (temp_fd2, fd2string, strlen (fd2string)) != strlen (fd2string))
      error (EXIT_FAILURE, errno, "cannot write to second file");
 
   /* We want to test the `exec' function.  To do this we restart the program
@@ -181,8 +171,8 @@ do_test (int argc, char *argv[])
       char fd1name[18];
       char fd2name[18];
 
-      snprintf (fd1name, sizeof fd1name, "%d", fd1);
-      snprintf (fd2name, sizeof fd2name, "%d", fd2);
+      snprintf (fd1name, sizeof fd1name, "%d", temp_fd1);
+      snprintf (fd2name, sizeof fd2name, "%d", temp_fd2);
 
       /* This is the child.  Construct the command line.  */
       if (argc == 5)
@@ -204,10 +194,6 @@ do_test (int argc, char *argv[])
   if (WTERMSIG (status) != 0)
     error (EXIT_FAILURE, 0, "Child terminated incorrectly");
   status = WEXITSTATUS (status);
-
-  /* Remove the test files.  */
-  unlink (name1);
-  unlink (name2);
 
   return status;
 }

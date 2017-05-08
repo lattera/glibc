@@ -159,11 +159,10 @@ do_prepare (void)
   strcpy (stpcpy (script1, tmpdirname), "/script1.sh");
   strcpy (stpcpy (script2, tmpdirname), "/script2.sh");
 
+  add_temp_file (tmpdirname);
   add_temp_file (script0);
   add_temp_file (script1);
   add_temp_file (script2);
-  /* Need to make sure tmpdirname is at the end of the linked list.  */
-  add_temp_file (tmpdirname);
 
   const char content0[] = "#!/bin/sh\necho empty\n";
   create_script (script0, content0, sizeof content0);

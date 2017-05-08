@@ -1,5 +1,27 @@
 2017-05-08  Florian Weimer  <fweimer@redhat.com>
 
+	Prevent multiple deletion of temporary files.
+	* support/temp_file.c (struct temp_name_list): Add owner member.
+	(add_temp_file): Record owner.
+	(support_delete_temp_files): Delete file only if owner matches.
+	* posix/tst-exec.c (temp_fd1, temp_fd2): Define.
+	(do_prepare): Use create_temp_file instead of add_temp_file.
+	Initialize temp_fd1, temp_fd2.
+	(do_test): Use global temp_fd1, temp_fd2 variables.  Let the test
+	framework remove the temporary files.
+	* posix/tst-exec.c (temp_fd1, temp_fd2, temp_fd3): Define.
+	(do_prepare): Use create_temp_file instead of add_temp_file.
+	Initialize temp_fd1, temp_fd2, temp_fd3.
+	(do_test): Use global temp_fd1, temp_fd2, temp_fd3 variables.  Let
+	the test framework remove the temporary files.
+	* posix/tst-vfork3.c (do_prepare): Adjust for LIFO order of file
+	deletion.
+	* posix/tst-pathconf.c (do_test): Do not call rmdir on the
+	temporary directory.  It is removed by the test framework.
+	* dirent/tst-scandir.c (do_test): Likewise.
+
+2017-05-08  Florian Weimer  <fweimer@redhat.com>
+
 	Delete temporary files in LIFO order.
 	* support/temp_file.c (struct temp_name_list): Replace q member
 	with next.

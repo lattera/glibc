@@ -28,12 +28,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /* List of temporary files.  */
 static struct temp_name_list
 {
   struct temp_name_list *next;
   char *name;
+  pid_t owner;
 } *temp_name_list;
 
 /* Location of the temporary files.  Set by the test skeleton via
@@ -50,6 +52,7 @@ add_temp_file (const char *name)
     {
       newp->name = newname;
       newp->next = temp_name_list;
+      newp->owner = getpid ();
       temp_name_list = newp;
     }
   else
@@ -94,12 +97,19 @@ support_set_test_dir (const char *path)
 void
 support_delete_temp_files (void)
 {
+  pid_t pid = getpid ();
   while (temp_name_list != NULL)
     {
-      /* For some tests, the temporary file removal runs multiple
-	 times (in the parent processes and the subprocess), so do not
-	 report a failed removal attempt.  */
-      (void) remove (temp_name_list->name);
+      /* Only perform the removal if the path was registed in the same
+	 process, as identified by the PID.  (This assumes that the
+	 parent process which registered the temporary file sticks
+	 around, to prevent PID reuse.)  */
+      if (temp_name_list->owner == pid)
+	{
+	  if (remove (temp_name_list->name) != 0)
+	    printf ("warning: could not remove temporary file: %s: %m\n",
+		    temp_name_list->name);
+	}
       free (temp_name_list->name);
 
       struct temp_name_list *next = temp_name_list->next;

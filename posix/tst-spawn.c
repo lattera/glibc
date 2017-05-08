@@ -50,6 +50,11 @@ static char *name1;
 static char *name2;
 static char *name3;
 
+/* Descriptors for the temporary files.  */
+static int temp_fd1 = -1;
+static int temp_fd2 = -1;
+static int temp_fd3 = -1;
+
 /* The contents of our files.  */
 static const char fd1string[] = "This file should get closed";
 static const char fd2string[] = "This file should stay opened";
@@ -60,23 +65,15 @@ static const char fd3string[] = "This file will be opened";
 void
 do_prepare (int argc, char *argv[])
 {
-   size_t name_len;
+  /* We must not open any files in the restart case.  */
+  if (restart)
+    return;
 
-   name_len = strlen (test_dir);
-   name1 = (char *) xmalloc (name_len + sizeof ("/spawnXXXXXX"));
-   mempcpy (mempcpy (name1, test_dir, name_len),
-	    "/spawnXXXXXX", sizeof ("/spawnXXXXXX"));
-   add_temp_file (name1);
-
-   name2 = (char *) xmalloc (name_len + sizeof ("/spawnXXXXXX"));
-   mempcpy (mempcpy (name2, test_dir, name_len),
-	    "/spawnXXXXXX", sizeof ("/spawnXXXXXX"));
-   add_temp_file (name2);
-
-   name3 = (char *) xmalloc (name_len + sizeof ("/spawnXXXXXX"));
-   mempcpy (mempcpy (name3, test_dir, name_len),
-	    "/spawnXXXXXX", sizeof ("/spawnXXXXXX"));
-   add_temp_file (name3);
+  temp_fd1 = create_temp_file ("spawn", &name1);
+  temp_fd2 = create_temp_file ("spawn", &name2);
+  temp_fd3 = create_temp_file ("spawn", &name3);
+  if (temp_fd1 < 0 || temp_fd2 < 0 || temp_fd3 < 0)
+    exit (1);
 }
 
 
@@ -158,9 +155,6 @@ int
 do_test (int argc, char *argv[])
 {
   pid_t pid;
-  int fd1;
-  int fd2;
-  int fd3;
   int fd4;
   int status;
   posix_spawn_file_actions_t actions;
@@ -194,53 +188,42 @@ do_test (int argc, char *argv[])
   /* Prepare the test.  We are creating two files: one which file descriptor
      will be marked with FD_CLOEXEC, another which is not.  */
 
-   /* Open our test files.   */
-   fd1 = mkstemp (name1);
-   if (fd1 == -1)
-     error (EXIT_FAILURE, errno, "cannot open test file `%s'", name1);
-   fd2 = mkstemp (name2);
-   if (fd2 == -1)
-     error (EXIT_FAILURE, errno, "cannot open test file `%s'", name2);
-   fd3 = mkstemp (name3);
-   if (fd3 == -1)
-     error (EXIT_FAILURE, errno, "cannot open test file `%s'", name3);
-
    /* Write something in the files.  */
-   if (write (fd1, fd1string, strlen (fd1string)) != strlen (fd1string))
+   if (write (temp_fd1, fd1string, strlen (fd1string)) != strlen (fd1string))
      error (EXIT_FAILURE, errno, "cannot write to first file");
-   if (write (fd2, fd2string, strlen (fd2string)) != strlen (fd2string))
+   if (write (temp_fd2, fd2string, strlen (fd2string)) != strlen (fd2string))
      error (EXIT_FAILURE, errno, "cannot write to second file");
-   if (write (fd3, fd3string, strlen (fd3string)) != strlen (fd3string))
+   if (write (temp_fd3, fd3string, strlen (fd3string)) != strlen (fd3string))
      error (EXIT_FAILURE, errno, "cannot write to third file");
 
    /* Close the third file.  It'll be opened by `spawn'.  */
-   close (fd3);
+   close (temp_fd3);
 
    /* Tell `spawn' what to do.  */
    if (posix_spawn_file_actions_init (&actions) != 0)
      error (EXIT_FAILURE, errno, "posix_spawn_file_actions_init");
-   /* Close `fd1'.  */
-   if (posix_spawn_file_actions_addclose (&actions, fd1) != 0)
+   /* Close `temp_fd1'.  */
+   if (posix_spawn_file_actions_addclose (&actions, temp_fd1) != 0)
      error (EXIT_FAILURE, errno, "posix_spawn_file_actions_addclose");
    /* We want to open the third file.  */
    name3_copy = strdup (name3);
    if (name3_copy == NULL)
      error (EXIT_FAILURE, errno, "strdup");
-   if (posix_spawn_file_actions_addopen (&actions, fd3, name3_copy,
+   if (posix_spawn_file_actions_addopen (&actions, temp_fd3, name3_copy,
 					 O_RDONLY, 0666) != 0)
      error (EXIT_FAILURE, errno, "posix_spawn_file_actions_addopen");
    /* Overwrite the name to check that a copy has been made.  */
    memset (name3_copy, 'X', strlen (name3_copy));
 
    /* We dup the second descriptor.  */
-   fd4 = MAX (2, MAX (fd1, MAX (fd2, fd3))) + 1;
-   if (posix_spawn_file_actions_adddup2 (&actions, fd2, fd4) != 0)
+   fd4 = MAX (2, MAX (temp_fd1, MAX (temp_fd2, temp_fd3))) + 1;
+   if (posix_spawn_file_actions_adddup2 (&actions, temp_fd2, fd4) != 0)
      error (EXIT_FAILURE, errno, "posix_spawn_file_actions_adddup2");
 
    /* Now spawn the process.  */
-   snprintf (fd1name, sizeof fd1name, "%d", fd1);
-   snprintf (fd2name, sizeof fd2name, "%d", fd2);
-   snprintf (fd3name, sizeof fd3name, "%d", fd3);
+   snprintf (fd1name, sizeof fd1name, "%d", temp_fd1);
+   snprintf (fd2name, sizeof fd2name, "%d", temp_fd2);
+   snprintf (fd3name, sizeof fd3name, "%d", temp_fd3);
    snprintf (fd4name, sizeof fd4name, "%d", fd4);
 
    for (i = 0; i < (argc == (restart ? 6 : 5) ? 4 : 1); i++)
@@ -273,11 +256,6 @@ do_test (int argc, char *argv[])
   if (WTERMSIG (status) != 0)
     error (EXIT_FAILURE, 0, "Child terminated incorrectly");
   status = WEXITSTATUS (status);
-
-  /* Remove the test files.  */
-  unlink (name1);
-  unlink (name2);
-  unlink (name3);
 
   return status;
 }

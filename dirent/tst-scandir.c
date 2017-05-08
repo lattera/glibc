@@ -293,7 +293,6 @@ do_test (void)
   remove_file (scandir_test_dir, "aa");
   remove_file (scandir_test_dir, "b");
   remove_file (scandir_test_dir, "a");
-  rmdir (scandir_test_dir);
 
   return 0;
 }

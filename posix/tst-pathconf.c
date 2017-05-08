@@ -162,11 +162,5 @@ out_nofifo:
       ret = 1;
     }
 
-  if (rmdir (dirbuf) != 0)
-    {
-      printf ("Could not remove directory (%s)\n", strerror (errno));
-      ret = 1;
-    }
-
   return ret;
 }
