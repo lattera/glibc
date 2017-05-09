@@ -20,12 +20,6 @@
 /* i386 uses socketcall.  */
 #define __ASSUME_SOCKETCALL		1
 
-/* The recvmmsg syscall was added for i386 in 2.6.33.  */
-#define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL	1
-
-/* The sendmmsg syscall was added for i386 in 3.0.  */
-#define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
-
 /* Direct socketcalls available with kernel 4.3.  */
 #if __LINUX_KERNEL_VERSION >= 0x040300
 # define __ASSUME_SOCKET_SYSCALL             1

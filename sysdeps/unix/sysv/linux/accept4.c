@@ -28,14 +28,9 @@
 int
 accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
 {
-/* Do not use the accept4 syscall on socketcall architectures unless
-   it was added at the same time as the socketcall support or can be
-   assumed to be present.  */
-#if defined __ASSUME_SOCKETCALL \
-    && !defined __ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL \
-    && !defined __ASSUME_ACCEPT4_SYSCALL
-  return SOCKETCALL_CANCEL (accept4, fd, addr.__sockaddr__, addr_len, flags);
-#else
+#ifdef __ASSUME_ACCEPT4_SYSCALL
   return SYSCALL_CANCEL (accept4, fd, addr.__sockaddr__, addr_len, flags);
+#else
+  return SOCKETCALL_CANCEL (accept4, fd, addr.__sockaddr__, addr_len, flags);
 #endif
 }

@@ -28,14 +28,9 @@ int
 recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
 	  struct timespec *tmo)
 {
-  /* Do not use the recvmmsg syscall on socketcall architectures unless
-     it was added at the same time as the socketcall support or can be
-     assumed to be present.  */
-#if defined __ASSUME_SOCKETCALL \
-    && !defined __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL \
-    && !defined __ASSUME_RECVMMSG_SYSCALL
-  return SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
-#else
+#ifdef __ASSUME_RECVMMSG_SYSCALL
   return SYSCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
+#else
+  return SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
 #endif
 }

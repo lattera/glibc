@@ -71,16 +71,6 @@
    2.6.27.  */
 #define __ASSUME_IN_NONBLOCK	1
 
-/* Support for accept4 functionality was added in 2.6.28, but for some
-   architectures using a separate syscall rather than socketcall that
-   syscall was only added later, and some architectures first had
-   socketcall support then a separate syscall.  Define
-   __ASSUME_ACCEPT4_SYSCALL if it is available through a separate
-   syscall, and __ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL if it became
-   available through a separate syscall at the same time as through
-   socketcall.  */
-#define __ASSUME_ACCEPT4_SYSCALL	1
-
 /* Support for the FUTEX_CLOCK_REALTIME flag was added in 2.6.29.  */
 #define __ASSUME_FUTEX_CLOCK_REALTIME	1
 
@@ -88,18 +78,12 @@
 #define __ASSUME_PREADV	1
 #define __ASSUME_PWRITEV	1
 
-/* Support for recvmmsg functionality was added in 2.6.33.  The macros
-   defined correspond to those for accept4.  */
-#define __ASSUME_RECVMMSG_SYSCALL	1
-
 /* statfs fills in f_flags since 2.6.36.  */
 #if __LINUX_KERNEL_VERSION >= 0x020624
 # define __ASSUME_STATFS_F_FLAGS	1
 #endif
 
-/* Support for sendmmsg functionality was added in 3.0.  The macros
-   defined correspond to those for accept4 and recvmmsg.  */
-#define __ASSUME_SENDMMSG_SYSCALL	1
+/* Support for sendmmsg functionality was added in 3.0.  */
 #define __ASSUME_SENDMMSG	1
 
 /* On most architectures, most socket syscalls are supported for all
@@ -111,6 +95,9 @@
 #define __ASSUME_CONNECT_SYSCALL	1
 #define __ASSUME_RECVFROM_SYSCALL	1
 #define __ASSUME_SENDTO_SYSCALL		1
+#define __ASSUME_ACCEPT4_SYSCALL	1
+#define __ASSUME_RECVMMSG_SYSCALL	1
+#define __ASSUME_SENDMMSG_SYSCALL	1
 
 /* Support for SysV IPC through wired syscalls.  All supported architectures
    either support ipc syscall and/or all the ipc correspondent syscalls.  */

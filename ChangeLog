@@ -1,3 +1,30 @@
+2017-05-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/accept4.c (accept4): Use syscall if
+	[__ASSUME_ACCEPT4_SYSCALL], otherwise socketcall.
+	* sysdeps/unix/sysv/linux/recvmmsg.c (recvmmsg): Use syscall if
+	[__ASSUME_RECVMMSG_SYSCALL], otherwise socketcall.
+	* sysdeps/unix/sysv/linux/sendmmsg.c (__sendmmsg): Use syscall if
+	[__ASSUME_SENDMMSG_SYSCALL], otherwise socketcall.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL): Move to general list of macros for
+	socket syscalls.
+	(__ASSUME_RECVMMSG_SYSCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/i386/kernel-features.h
+	(__ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL): Remove.
+	(__ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL): Remove.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	(__ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	(__ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h
+	(__ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL): Likewise.
+	(__ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL): Likewise.
+	(__ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL): Likewise.
+
 2017-05-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* posix/Makefile (headers): Add pthreadtypes-arch.h and

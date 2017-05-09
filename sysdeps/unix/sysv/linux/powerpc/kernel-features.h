@@ -34,9 +34,6 @@
 #define __ASSUME_GETSOCKOPT_SYSCALL	1
 #define __ASSUME_SETSOCKOPT_SYSCALL	1
 
-/* The sendmmsg syscall was added for PowerPC in 3.0.  */
-#define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
-
 /* Define this if your 32-bit syscall API requires 64-bit register
    pairs to start with an even-number register.  */
 #ifndef __powerpc64__

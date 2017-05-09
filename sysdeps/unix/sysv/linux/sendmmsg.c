@@ -27,15 +27,10 @@
 int
 __sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
 {
-  /* Do not use the sendmmsg syscall on socketcall architectures unless
-     it was added at the same time as the socketcall support or can be
-     assumed to be present.  */
-#if defined __ASSUME_SOCKETCALL \
-    && !defined __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL \
-    && !defined __ASSUME_SENDMMSG_SYSCALL
-  return SOCKETCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
-#else
+#ifdef __ASSUME_SENDMMSG_SYSCALL
   return SYSCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
+#else
+  return SOCKETCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
 #endif
 }
 libc_hidden_def (__sendmmsg)

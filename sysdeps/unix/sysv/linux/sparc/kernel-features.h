@@ -20,15 +20,6 @@
 /* SPARC uses socketcall.  */
 #define __ASSUME_SOCKETCALL		1
 
-/* The accept4 syscall was added for SPARC in 2.6.28.  */
-#define __ASSUME_ACCEPT4_SYSCALL_WITH_SOCKETCALL	1
-
-/* The recvmmsg syscall was added for SPARC in 2.6.33.  */
-#define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL	1
-
-/* The sendmmsg syscall was added for SPARC in 3.0.  */
-#define __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL	1
-
 #include_next <kernel-features.h>
 
 /* 32-bit SPARC kernels do not support
