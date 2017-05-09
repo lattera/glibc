@@ -1,3 +1,7 @@
+2017-05-09  Zack Weinberg  <zackw@panix.com>
+
+	* sunrpc/tst-xdrmem2.c: Include stdint.h.
+
 2017-05-09  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21474]

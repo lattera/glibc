@@ -22,6 +22,7 @@
 #include <rpc/rpc.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <stdint.h>
 
 static int
 do_test (void)
