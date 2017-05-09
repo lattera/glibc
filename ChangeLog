@@ -1,3 +1,7 @@
+2017-05-09  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
+
 2017-05-08  Carlos O'Donell  <carlos@redhat.com>
 
 	* stdio-common/vfprintf.c (EXTSIZ): Define.
