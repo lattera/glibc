@@ -1,5 +1,9 @@
 2017-05-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips32/accept4.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/mips32/recvmmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/sendmmsg.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/accept4.c (accept4): Use syscall if
 	[__ASSUME_ACCEPT4_SYSCALL], otherwise socketcall.
 	* sysdeps/unix/sysv/linux/recvmmsg.c (recvmmsg): Use syscall if
