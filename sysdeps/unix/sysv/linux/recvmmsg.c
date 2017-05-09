@@ -21,73 +21,21 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
+#include <socketcall.h>
 #include <kernel-features.h>
 
-/* Do not use the recvmmsg syscall on socketcall architectures unless
-   it was added at the same time as the socketcall support or can be
-   assumed to be present.  */
+int
+recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
+	  struct timespec *tmo)
+{
+  /* Do not use the recvmmsg syscall on socketcall architectures unless
+     it was added at the same time as the socketcall support or can be
+     assumed to be present.  */
 #if defined __ASSUME_SOCKETCALL \
     && !defined __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL \
     && !defined __ASSUME_RECVMMSG_SYSCALL
-# undef __NR_recvmmsg
-#endif
-
-#ifdef __NR_recvmmsg
-int
-recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
-	  struct timespec *tmo)
-{
-  return SYSCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
-}
-#elif defined __NR_socketcall
-# include <socketcall.h>
-# ifdef __ASSUME_RECVMMSG_SOCKETCALL
-int
-recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
-	  struct timespec *tmo)
-{
   return SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
-}
-# else
-static int have_recvmmsg;
-
-int
-recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
-	  struct timespec *tmo)
-{
-  if (__glibc_likely (have_recvmmsg >= 0))
-    {
-      int ret = SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags,
-				   tmo);
-      /* The kernel returns -EINVAL for unknown socket operations.
-	 We need to convert that error to an ENOSYS error.  */
-      if (__builtin_expect (ret < 0, 0)
-	  && have_recvmmsg == 0
-	  && errno == EINVAL)
-	{
-	  /* Try another call, this time with an invalid file
-	     descriptor and all other parameters cleared.  This call
-	     will not cause any harm and it will return
-	     immediately.  */
-	  ret = SOCKETCALL_CANCEL (invalid, -1);
-	  if (errno == EINVAL)
-	    {
-	      have_recvmmsg = -1;
-	      __set_errno (ENOSYS);
-	    }
-	  else
-	    {
-	      have_recvmmsg = 1;
-	      __set_errno (EINVAL);
-	    }
-	  return -1;
-	}
-      return ret;
-    }
-  __set_errno (ENOSYS);
-  return -1;
-}
-# endif /* __ASSUME_RECVMMSG_SOCKETCALL  */
 #else
-# include <socket/recvmmsg.c>
+  return SYSCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
 #endif
+}

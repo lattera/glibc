@@ -90,13 +90,7 @@
 
 /* Support for recvmmsg functionality was added in 2.6.33.  The macros
    defined correspond to those for accept4.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
-# ifdef __ASSUME_SOCKETCALL
-#  define __ASSUME_RECVMMSG_SOCKETCALL	1
-# endif
-# define __ASSUME_RECVMMSG_SYSCALL	1
-# define __ASSUME_RECVMMSG	1
-#endif
+#define __ASSUME_RECVMMSG_SYSCALL	1
 
 /* statfs fills in f_flags since 2.6.36.  */
 #if __LINUX_KERNEL_VERSION >= 0x020624

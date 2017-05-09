@@ -1,3 +1,13 @@
+2017-05-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_RECVMMSG_SYSCALL): Define unconditionally.
+	(__ASSUME_RECVMMSG_SOCKETCALL): Remove macro.
+	(__ASSUME_RECVMMSG): Likewise.
+	* sysdeps/unix/sysv/linux/recvmmsg.c (recvmmsg): Define using
+	recvmmsg syscall if it can be assumed to be present, socketcall
+	otherwise, with no fallback for runtime failure.
+
 2017-05-09  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
