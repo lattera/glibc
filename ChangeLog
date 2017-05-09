@@ -1,3 +1,16 @@
+2017-05-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PRLIMIT64):
+	Remove macro.
+	* sysdeps/unix/sysv/linux/getrlimit64.c (__getrlimit64): Assume
+	prlimit64 is always available and does not give an ENOSYS error.
+	* sysdeps/unix/sysv/linux/prlimit.c [__NR_prlimit64]: Make code
+	unconditional.
+	[!__NR_prlimit64]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/setrlimit.c (__setrlimit): Assume
+	prlimit64 is always available and does not give an ENOSYS error.
+	* sysdeps/unix/sysv/linux/setrlimit64.c (__setrlimit64): Likewise.
+
 2017-05-09  Zack Weinberg  <zackw@panix.com>
 
 	* sunrpc/tst-xdrmem2.c: Include stdint.h.

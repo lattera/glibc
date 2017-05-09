@@ -34,7 +34,6 @@
 int
 __setrlimit (enum __rlimit_resource resource, const struct rlimit *rlim)
 {
-# ifdef __NR_prlimit64
   struct rlimit64 rlim64;
 
   if (rlim->rlim_cur == RLIM_INFINITY)
@@ -46,11 +45,7 @@ __setrlimit (enum __rlimit_resource resource, const struct rlimit *rlim)
   else
     rlim64.rlim_max = rlim->rlim_max;
 
-  int res = INLINE_SYSCALL_CALL (prlimit64, 0, resource, &rlim64, NULL);
-  if (res == 0 || errno != ENOSYS)
-    return res;
-# endif
-  return INLINE_SYSCALL_CALL (setrlimit, resource, rlim);
+  return INLINE_SYSCALL_CALL (prlimit64, 0, resource, &rlim64, NULL);
 }
 
 # if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)

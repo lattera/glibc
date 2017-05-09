@@ -20,7 +20,6 @@
 #include <sys/syscall.h>
 
 
-#ifdef __NR_prlimit64
 int
 prlimit (__pid_t pid, enum __rlimit_resource resource,
 	 const struct rlimit *new_rlimit, struct rlimit *old_rlimit)
@@ -73,12 +72,3 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
 
   return res;
 }
-#else
-int
-prlimit (__pid_t pid, enum __rlimit_resource resource,
-	 const struct rlimit *new_rlimit, struct rlimit *old_rlimit)
-{
-  return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOSYS);
-}
-stub_warning (prlimit)
-#endif

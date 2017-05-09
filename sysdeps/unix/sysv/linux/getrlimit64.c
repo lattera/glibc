@@ -35,40 +35,7 @@
 int
 __getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
 {
-#ifdef __NR_prlimit64
-  int res = INLINE_SYSCALL_CALL (prlimit64, 0, resource, NULL, rlimits);
-  if (res == 0 || errno != ENOSYS)
-    return res;
-#endif
-
-/* The fallback code only makes sense if the platform supports either
-   __NR_ugetrlimit and/or __NR_getrlimit.  */
-#if defined (__NR_ugetrlimit) || defined (__NR_getrlimit)
-# ifndef __NR_ugetrlimit
-#  define __NR_ugetrlimit __NR_getrlimit
-# endif
-# if __RLIM_T_MATCHES_RLIM64_T
-#  define rlimits32 (*rlimits)
-# else
-  struct rlimit rlimits32;
-# endif
-
-  if (INLINE_SYSCALL_CALL (ugetrlimit, resource, &rlimits32) < 0)
-    return -1;
-
-# if !__RLIM_T_MATCHES_RLIM64_T
-  if (rlimits32.rlim_cur == RLIM_INFINITY)
-    rlimits->rlim_cur = RLIM64_INFINITY;
-  else
-    rlimits->rlim_cur = rlimits32.rlim_cur;
-  if (rlimits32.rlim_max == RLIM_INFINITY)
-    rlimits->rlim_max = RLIM64_INFINITY;
-  else
-    rlimits->rlim_max = rlimits32.rlim_max;
-# endif /* !__RLIM_T_MATCHES_RLIM64_T */
-#endif /* defined (__NR_ugetrlimit) || defined (__NR_getrlimit)  */
-
-  return 0;
+  return INLINE_SYSCALL_CALL (prlimit64, 0, resource, NULL, rlimits);
 }
 libc_hidden_def (__getrlimit64)
 
