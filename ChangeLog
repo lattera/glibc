@@ -1,6 +1,14 @@
 2017-05-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_SENDMMSG_SYSCALL): Define unconditionally.
+	(__ASSUME_SENDMMSG): Likewise.
+	(__ASSUME_SENDMMSG_SOCKETCALL): Remove macro.
+	* sysdeps/unix/sysv/linux/sendmmsg.c (__sendmmsg): Define using
+	sendmmsg syscall if that can be assumed to be present, socketcall
+	otherwise, with no fallback for runtime failure.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
 	(__ASSUME_RECVMMSG_SYSCALL): Define unconditionally.
 	(__ASSUME_RECVMMSG_SOCKETCALL): Remove macro.
 	(__ASSUME_RECVMMSG): Likewise.

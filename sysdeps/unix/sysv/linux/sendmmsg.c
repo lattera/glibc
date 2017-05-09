@@ -21,73 +21,22 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
+#include <socketcall.h>
 #include <kernel-features.h>
 
-/* Do not use the sendmmsg syscall on socketcall architectures unless
-   it was added at the same time as the socketcall support or can be
-   assumed to be present.  */
+int
+__sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
+{
+  /* Do not use the sendmmsg syscall on socketcall architectures unless
+     it was added at the same time as the socketcall support or can be
+     assumed to be present.  */
 #if defined __ASSUME_SOCKETCALL \
     && !defined __ASSUME_SENDMMSG_SYSCALL_WITH_SOCKETCALL \
     && !defined __ASSUME_SENDMMSG_SYSCALL
-# undef __NR_sendmmsg
-#endif
-
-#ifdef __NR_sendmmsg
-int
-__sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
-{
-  return SYSCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
-}
-libc_hidden_def (__sendmmsg)
-weak_alias (__sendmmsg, sendmmsg)
-#elif defined __NR_socketcall
-# include <socketcall.h>
-# ifdef __ASSUME_SENDMMSG_SOCKETCALL
-int
-__sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
-{
   return SOCKETCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
+#else
+  return SYSCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
+#endif
 }
-# else
-static int have_sendmmsg;
-
-int
-__sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
-{
-  if (__glibc_likely (have_sendmmsg >= 0))
-    {
-      int ret = SOCKETCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
-      /* The kernel returns -EINVAL for unknown socket operations.
-	 We need to convert that error to an ENOSYS error.  */
-      if (__builtin_expect (ret < 0, 0)
-	  && have_sendmmsg == 0
-	  && errno == EINVAL)
-	{
-	  /* Try another call, this time with an invalid file
-	     descriptor and all other parameters cleared.  This call
-	     will not cause any harm and it will return
-	     immediately.  */
-	  ret = SOCKETCALL_CANCEL (invalid, -1);
-	  if (errno == EINVAL)
-	    {
-	      have_sendmmsg = -1;
-	      __set_errno (ENOSYS);
-	    }
-	  else
-	    {
-	      have_sendmmsg = 1;
-	      __set_errno (EINVAL);
-	    }
-	  return -1;
-	}
-      return ret;
-    }
-  __set_errno (ENOSYS);
-  return -1;
-}
-# endif /* __ASSUME_SENDMMSG_SOCKETCALL  */
 libc_hidden_def (__sendmmsg)
 weak_alias (__sendmmsg, sendmmsg)
-#else
-# include <socket/sendmmsg.c>
-#endif

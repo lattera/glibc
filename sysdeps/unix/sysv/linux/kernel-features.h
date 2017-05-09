@@ -99,13 +99,8 @@
 
 /* Support for sendmmsg functionality was added in 3.0.  The macros
    defined correspond to those for accept4 and recvmmsg.  */
-#if __LINUX_KERNEL_VERSION >= 0x030000
-# ifdef __ASSUME_SOCKETCALL
-#  define __ASSUME_SENDMMSG_SOCKETCALL	1
-# endif
-# define __ASSUME_SENDMMSG_SYSCALL	1
-# define __ASSUME_SENDMMSG	1
-#endif
+#define __ASSUME_SENDMMSG_SYSCALL	1
+#define __ASSUME_SENDMMSG	1
 
 /* On most architectures, most socket syscalls are supported for all
    supported kernel versions, but on some socketcall architectures
