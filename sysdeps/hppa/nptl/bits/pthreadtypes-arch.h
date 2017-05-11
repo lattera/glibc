@@ -82,7 +82,7 @@ struct __pthread_rwlock_arch_t
   int __reserved2;
   int __reserved3;
   int __reserved4;
-} __data;
+};
 
 #define __PTHREAD_RWLOCK_ELISION_EXTRA 0
 

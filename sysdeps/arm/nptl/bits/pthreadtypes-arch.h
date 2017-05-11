@@ -62,7 +62,7 @@ struct __pthread_rwlock_arch_t
   unsigned char __pad2;
 #endif
   int __cur_writer;
-} __data;
+};
 
 #define __PTHREAD_RWLOCK_ELISION_EXTRA 0
 

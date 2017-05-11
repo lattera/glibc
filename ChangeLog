@@ -1,3 +1,10 @@
+2017-05-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/arm/nptl/bits/pthreadtypes-arch.h
+	(__pthread_rwlock_arch_t): Remove __data definition.
+	* sysdeps/hppa/nptl/bits/pthreadtypes-arch.h
+	(__pthread_rwlock_arch_t): Likewise.
+
 2017-05-11  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/inet_pton.c: Reformat in GNU style.  Remove
