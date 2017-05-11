@@ -1,3 +1,8 @@
+2017-05-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* scripts/gen-tunables.awk: Add attribute_relro to
+	tunable_list.
+
 2017-05-11  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21457]

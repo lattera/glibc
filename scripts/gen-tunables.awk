@@ -141,7 +141,7 @@ END {
 
   # Finally, the tunable list.
   print "\n#ifdef TUNABLES_INTERNAL"
-  print "static tunable_t tunable_list[] = {"
+  print "static tunable_t tunable_list[] attribute_relro = {"
   for (t in types) {
     for (n in types[t]) {
       for (m in types[t][n]) {
