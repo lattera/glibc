@@ -1,5 +1,10 @@
 2017-05-11  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/inet_pton.c: Reformat in GNU style.  Remove
+	internal_function on static functions.
+
+2017-05-11  Florian Weimer  <fweimer@redhat.com>
+
 	* support/support_format_addrinfo.c (format_ai_flags_1): Renamed
 	from format_ai_flags.
 	(format_ai_flags): New function.  Incorporate flag formatting code
