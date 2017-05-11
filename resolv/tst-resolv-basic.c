@@ -182,17 +182,26 @@ check_h (const char *name, int family, const char *expected)
 }
 
 static void
-check_ai (const char *name, const char *service,
-          int family, const char *expected)
+check_ai_hints (const char *name, const char *service,
+                struct addrinfo hints, const char *expected)
 {
-  struct addrinfo hints = {.ai_family = family};
   struct addrinfo *ai;
-  char *query = xasprintf ("%s:%s [%d]", name, service, family);
+  char *query = xasprintf ("%s:%s [%d]/0x%x", name, service,
+                           hints.ai_family, hints.ai_flags);
   int ret = getaddrinfo (name, service, &hints, &ai);
   check_addrinfo (query, ai, ret, expected);
   if (ret == 0)
     freeaddrinfo (ai);
   free (query);
+}
+
+static void
+check_ai (const char *name, const char *service,
+          int family, const char *expected)
+{
+  return check_ai_hints (name, service,
+                         (struct addrinfo) { .ai_family = family, },
+                         expected);
 }
 
 static int
@@ -229,6 +238,17 @@ do_test (void)
             "address: STREAM/TCP 2001:db8::1 80\n"
             "address: DGRAM/UDP 2001:db8::1 80\n"
             "address: RAW/IP 2001:db8::1 80\n");
+  check_ai_hints ("www.example", "80",
+                  (struct addrinfo) { .ai_family = AF_UNSPEC,
+                      .ai_flags = AI_CANONNAME, },
+                  "flags: AI_CANONNAME\n"
+                  "canonname: www.example\n"
+                  "address: STREAM/TCP 192.0.2.17 80\n"
+                  "address: DGRAM/UDP 192.0.2.17 80\n"
+                  "address: RAW/IP 192.0.2.17 80\n"
+                  "address: STREAM/TCP 2001:db8::1 80\n"
+                  "address: DGRAM/UDP 2001:db8::1 80\n"
+                  "address: RAW/IP 2001:db8::1 80\n");
   check_ai ("alias.example", "80", AF_UNSPEC,
             "address: STREAM/TCP 192.0.2.18 80\n"
             "address: DGRAM/UDP 192.0.2.18 80\n"
@@ -236,6 +256,17 @@ do_test (void)
             "address: STREAM/TCP 2001:db8::2 80\n"
             "address: DGRAM/UDP 2001:db8::2 80\n"
             "address: RAW/IP 2001:db8::2 80\n");
+  check_ai_hints ("alias.example", "80",
+                  (struct addrinfo) { .ai_family = AF_UNSPEC,
+                      .ai_flags = AI_CANONNAME, },
+                  "flags: AI_CANONNAME\n"
+                  "canonname: www.example\n"
+                  "address: STREAM/TCP 192.0.2.18 80\n"
+                  "address: DGRAM/UDP 192.0.2.18 80\n"
+                  "address: RAW/IP 192.0.2.18 80\n"
+                  "address: STREAM/TCP 2001:db8::2 80\n"
+                  "address: DGRAM/UDP 2001:db8::2 80\n"
+                  "address: RAW/IP 2001:db8::2 80\n");
   check_ai (LONG_NAME, "80", AF_UNSPEC,
             "address: STREAM/TCP 192.0.2.20 80\n"
             "address: DGRAM/UDP 192.0.2.20 80\n"
@@ -247,10 +278,26 @@ do_test (void)
             "address: STREAM/TCP 192.0.2.17 80\n"
             "address: DGRAM/UDP 192.0.2.17 80\n"
             "address: RAW/IP 192.0.2.17 80\n");
+  check_ai_hints ("www.example", "80",
+                  (struct addrinfo) { .ai_family = AF_INET,
+                      .ai_flags = AI_CANONNAME, },
+                  "flags: AI_CANONNAME\n"
+                  "canonname: www.example\n"
+                  "address: STREAM/TCP 192.0.2.17 80\n"
+                  "address: DGRAM/UDP 192.0.2.17 80\n"
+                  "address: RAW/IP 192.0.2.17 80\n");
   check_ai ("alias.example", "80", AF_INET,
             "address: STREAM/TCP 192.0.2.18 80\n"
             "address: DGRAM/UDP 192.0.2.18 80\n"
             "address: RAW/IP 192.0.2.18 80\n");
+  check_ai_hints ("alias.example", "80",
+                  (struct addrinfo) { .ai_family = AF_INET,
+                      .ai_flags = AI_CANONNAME, },
+                  "flags: AI_CANONNAME\n"
+                  "canonname: www.example\n"
+                  "address: STREAM/TCP 192.0.2.18 80\n"
+                  "address: DGRAM/UDP 192.0.2.18 80\n"
+                  "address: RAW/IP 192.0.2.18 80\n");
   check_ai (LONG_NAME, "80", AF_INET,
             "address: STREAM/TCP 192.0.2.20 80\n"
             "address: DGRAM/UDP 192.0.2.20 80\n"
@@ -259,10 +306,26 @@ do_test (void)
             "address: STREAM/TCP 2001:db8::1 80\n"
             "address: DGRAM/UDP 2001:db8::1 80\n"
             "address: RAW/IP 2001:db8::1 80\n");
+  check_ai_hints ("www.example", "80",
+                  (struct addrinfo) { .ai_family = AF_INET6,
+                      .ai_flags = AI_CANONNAME, },
+                  "flags: AI_CANONNAME\n"
+                  "canonname: www.example\n"
+                  "address: STREAM/TCP 2001:db8::1 80\n"
+                  "address: DGRAM/UDP 2001:db8::1 80\n"
+                  "address: RAW/IP 2001:db8::1 80\n");
   check_ai ("alias.example", "80", AF_INET6,
             "address: STREAM/TCP 2001:db8::2 80\n"
             "address: DGRAM/UDP 2001:db8::2 80\n"
             "address: RAW/IP 2001:db8::2 80\n");
+  check_ai_hints ("alias.example", "80",
+                  (struct addrinfo) { .ai_family = AF_INET6,
+                      .ai_flags = AI_CANONNAME, },
+                  "flags: AI_CANONNAME\n"
+                  "canonname: www.example\n"
+                  "address: STREAM/TCP 2001:db8::2 80\n"
+                  "address: DGRAM/UDP 2001:db8::2 80\n"
+                  "address: RAW/IP 2001:db8::2 80\n");
   check_ai (LONG_NAME, "80", AF_INET6,
             "address: STREAM/TCP 2001:db8::4 80\n"
             "address: DGRAM/UDP 2001:db8::4 80\n"

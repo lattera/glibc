@@ -1,5 +1,21 @@
 2017-05-11  Florian Weimer  <fweimer@redhat.com>
 
+	* support/support_format_addrinfo.c (format_ai_flags_1): Renamed
+	from format_ai_flags.
+	(format_ai_flags): New function.  Incorporate flag formatting code
+	from format_ai_one.
+	(format_ai_canonname): New function.
+	(format_ai_one): Remove flags parameter.
+	(format_ai_family): Likewise.
+	(support_format_addrinfo): Call format_ai_flags,
+	format_ai_canonname.
+	* resolv/tst-resolv-basic.c (check_ai_hints): Extracted from
+	check_ai.
+	(check_ai): Call check_ai_hints.
+	(do_test): Add AI_CANONNAME tests.
+
+2017-05-11  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/posix/getaddrinfo.c (gethosts): Remove malloc_addrmem.
 	(gaih_inet): Likewise.
 

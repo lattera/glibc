@@ -39,8 +39,8 @@ socket_address_length (int family)
 }
 
 static void
-format_ai_flags (FILE *out, struct addrinfo *ai, int flag, const char *name,
-                 int * flags_printed)
+format_ai_flags_1 (FILE *out, struct addrinfo *ai, int flag, const char *name,
+                   int * flags_printed)
 {
   if ((ai->ai_flags & flag) != 0)
     fprintf (out, " %s", name);
@@ -48,14 +48,16 @@ format_ai_flags (FILE *out, struct addrinfo *ai, int flag, const char *name,
 }
 
 static void
-format_ai_one (FILE *out, struct addrinfo *ai, int *flags)
+format_ai_flags (FILE *out, struct addrinfo *ai)
 {
-  /* ai_flags */
-  if (ai->ai_flags != *flags)
+  if (ai == NULL)
+    return;
+
+  if (ai->ai_flags != 0)
     {
       fprintf (out, "flags:");
       int flags_printed = 0;
-#define FLAG(flag) format_ai_flags (out, ai, flag, #flag, &flags_printed)
+#define FLAG(flag) format_ai_flags_1 (out, ai, flag, #flag, &flags_printed)
       FLAG (AI_PASSIVE);
       FLAG (AI_CANONNAME);
       FLAG (AI_NUMERICHOST);
@@ -72,9 +74,47 @@ format_ai_one (FILE *out, struct addrinfo *ai, int *flags)
       if (remaining != 0)
         fprintf (out, " %08x", remaining);
       fprintf (out, "\n");
-      *flags = ai->ai_flags;
     }
 
+  /* Report flag mismatches within the list.  */
+  int flags = ai->ai_flags;
+  int index = 1;
+  ai = ai->ai_next;
+  while (ai != NULL)
+    {
+      if (ai->ai_flags != flags)
+        fprintf (out, "error: flags at %d: 0x%x expected, 0x%x actual\n",
+                 index, flags, ai->ai_flags);
+      ai = ai->ai_next;
+      ++index;
+    }
+}
+
+static void
+format_ai_canonname (FILE *out, struct addrinfo *ai)
+{
+  if (ai == NULL)
+    return;
+  if (ai->ai_canonname != NULL)
+    fprintf (out, "canonname: %s\n", ai->ai_canonname);
+
+  /* Report incorrectly set ai_canonname fields on subsequent list
+     entries.  */
+  int index = 1;
+  ai = ai->ai_next;
+  while (ai != NULL)
+    {
+      if (ai->ai_canonname != NULL)
+        fprintf (out, "error: canonname set at %d: %s\n",
+                 index, ai->ai_canonname);
+      ai = ai->ai_next;
+      ++index;
+    }
+}
+
+static void
+format_ai_one (FILE *out, struct addrinfo *ai)
+{
   {
     char type_buf[32];
     const char *type_str;
@@ -156,20 +196,16 @@ format_ai_one (FILE *out, struct addrinfo *ai, int *flags)
     else
       fprintf (out, " %s %u\n", buf, ntohs (port));
   }
-
-  /* ai_canonname */
-  if (ai->ai_canonname != NULL)
-    fprintf (out, "canonname: %s\n", ai->ai_canonname);
 }
 
 /* Format all the addresses in one address family.  */
 static void
-format_ai_family (FILE *out, struct addrinfo *ai, int family, int *flags)
+format_ai_family (FILE *out, struct addrinfo *ai, int family)
 {
   while (ai)
     {
       if (ai->ai_family == family)
-        format_ai_one (out, ai, flags);
+        format_ai_one (out, ai);
       ai = ai->ai_next;
     }
 }
@@ -192,9 +228,10 @@ support_format_addrinfo (struct addrinfo *ai, int ret)
     }
   else
     {
-      int flags = 0;
-      format_ai_family (mem.out, ai, AF_INET, &flags);
-      format_ai_family (mem.out, ai, AF_INET6, &flags);
+      format_ai_flags (mem.out, ai);
+      format_ai_canonname (mem.out, ai);
+      format_ai_family (mem.out, ai, AF_INET);
+      format_ai_family (mem.out, ai, AF_INET6);
     }
 
   xfclose_memstream (&mem);
