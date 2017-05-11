@@ -1,3 +1,7 @@
+2017-05-11  DJ Delorie  <dj@redhat.com>
+
+	* MAINTAINERS: New.  Points to wiki.
+
 2017-05-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* scripts/gen-tunables.awk: Add attribute_relro to
