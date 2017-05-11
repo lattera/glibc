@@ -278,9 +278,6 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
     }									      \
   else if (h != NULL)							      \
     {									      \
-      /* Make sure that addrmem can be freed.  */			      \
-      if (!malloc_addrmem)						      \
-	addrmem = NULL;							      \
       if (!convert_hostent_to_gaih_addrtuple (req, _family,h, &addrmem))      \
 	{								      \
 	  _res.options |= old_res_options & DEPRECATED_RES_USE_INET6;	      \
@@ -288,8 +285,6 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 	  goto free_and_return;						      \
 	}								      \
       *pat = addrmem;							      \
-      /* The conversion uses malloc unconditionally.  */		      \
-      malloc_addrmem = true;						      \
 									      \
       if (localcanon !=	NULL && canon == NULL)				      \
 	canon = strdupa (localcanon);					      \
@@ -447,7 +442,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
     }
 
   bool malloc_name = false;
-  bool malloc_addrmem = false;
   struct gaih_addrtuple *addrmem = NULL;
   bool malloc_canonbuf = false;
   char *canonbuf = NULL;
@@ -633,8 +627,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			  goto free_and_return;
 			}
 		      *pat = addrmem;
-		      /* The conversion uses malloc unconditionally.  */
-		      malloc_addrmem = true;
 		    }
 		}
 	      else
@@ -675,21 +667,11 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  bool added_canon = (req->ai_flags & AI_CANONNAME) == 0;
 		  char *addrs = air->addrs;
 
-		  if (__libc_use_alloca (alloca_used
-					 + air->naddrs * sizeof (struct gaih_addrtuple)))
-		    addrmem = alloca_account (air->naddrs
-					      * sizeof (struct gaih_addrtuple),
-					      alloca_used);
-		  else
+		  addrmem = calloc (air->naddrs, sizeof (*addrmem));
+		  if (addrmem == NULL)
 		    {
-		      addrmem = malloc (air->naddrs
-					* sizeof (struct gaih_addrtuple));
-		      if (addrmem == NULL)
-			{
-			  result = -EAI_MEMORY;
-			  goto free_and_return;
-			}
-		      malloc_addrmem = true;
+		      result = -EAI_MEMORY;
+		      goto free_and_return;
 		    }
 
 		  struct gaih_addrtuple *addrfree = addrmem;
@@ -1232,8 +1214,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
  free_and_return:
   if (malloc_name)
     free ((char *) name);
-  if (malloc_addrmem)
-    free (addrmem);
+  free (addrmem);
   if (malloc_canonbuf)
     free (canonbuf);
 

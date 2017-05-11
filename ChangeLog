@@ -1,3 +1,8 @@
+2017-05-11  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gethosts): Remove malloc_addrmem.
+	(gaih_inet): Likewise.
+
 2017-05-10  Andreas Schwab  <schwab@suse.de>
 
 	* nptl/tst-fork1.c: Include <support/test-driver.c>.
