@@ -29,7 +29,8 @@
 #include <bits/sigcontext.h>
 #include <bits/sigstack.h>
 
-#include <sys/procfs.h>
+#ifdef __USE_MISC
+# include <sys/procfs.h>
 
 
 typedef elf_greg_t greg_t;
@@ -39,6 +40,7 @@ typedef elf_gregset_t gregset_t;
 
 /* Structure to describe FPU registers.  */
 typedef elf_fpregset_t	fpregset_t;
+#endif
 
 /* Context to describe whole processor state.  This only describes
    the core registers; coprocessor registers get saved elsewhere

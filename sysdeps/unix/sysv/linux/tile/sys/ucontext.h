@@ -27,18 +27,20 @@
 #include <bits/sigcontext.h>
 #include <bits/sigstack.h>
 
+#ifdef __USE_MISC
 /* Get register type and register names. */
-#include <arch/abi.h>
+# include <arch/abi.h>
 
 
 /* Type for general register.  */
 typedef uint_reg_t greg_t;
 
 /* Number of general registers.  Must agree with <asm/ptrace.h>. */
-#define NGREG	64
+# define NGREG	64
 
 /* Container for all general registers.  */
 typedef greg_t gregset_t[NGREG];
+#endif
 
 #ifdef __USE_GNU
 /* Names for interesting registers in the `gregset_t' array.  */

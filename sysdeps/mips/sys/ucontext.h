@@ -44,82 +44,84 @@ typedef __uint64_t greg_t;
 /* Container for all general registers.  */
 typedef greg_t gregset_t[NGREG];
 
+#ifdef __USE_MISC
 /* Number of each register is the `gregset_t' array.  */
 enum
 {
   CTX_R0 = 0,
-#define CTX_R0	CTX_R0
+# define CTX_R0	CTX_R0
   CTX_AT = 1,
-#define CTX_AT	CTX_AT
+# define CTX_AT	CTX_AT
   CTX_V0 = 2,
-#define CTX_V0	CTX_V0
+# define CTX_V0	CTX_V0
   CTX_V1 = 3,
-#define CTX_V1	CTX_V1
+# define CTX_V1	CTX_V1
   CTX_A0 = 4,
-#define CTX_A0	CTX_A0
+# define CTX_A0	CTX_A0
   CTX_A1 = 5,
-#define CTX_A1	CTX_A1
+# define CTX_A1	CTX_A1
   CTX_A2 = 6,
-#define CTX_A2	CTX_A2
+# define CTX_A2	CTX_A2
   CTX_A3 = 7,
-#define CTX_A3	CTX_A3
+# define CTX_A3	CTX_A3
   CTX_T0 = 8,
-#define CTX_T0	CTX_T0
+# define CTX_T0	CTX_T0
   CTX_T1 = 9,
-#define CTX_T1	CTX_T1
+# define CTX_T1	CTX_T1
   CTX_T2 = 10,
-#define CTX_T2	CTX_T2
+# define CTX_T2	CTX_T2
   CTX_T3 = 11,
-#define CTX_T3	CTX_T3
+# define CTX_T3	CTX_T3
   CTX_T4 = 12,
-#define CTX_T4	CTX_T4
+# define CTX_T4	CTX_T4
   CTX_T5 = 13,
-#define CTX_T5	CTX_T5
+# define CTX_T5	CTX_T5
   CTX_T6 = 14,
-#define CTX_T6	CTX_T6
+# define CTX_T6	CTX_T6
   CTX_T7 = 15,
-#define CTX_T7	CTX_T7
+# define CTX_T7	CTX_T7
   CTX_S0 = 16,
-#define CTX_S0	CTX_S0
+# define CTX_S0	CTX_S0
   CTX_S1 = 17,
-#define CTX_S1	CTX_S1
+# define CTX_S1	CTX_S1
   CTX_S2 = 18,
-#define CTX_S2	CTX_S2
+# define CTX_S2	CTX_S2
   CTX_S3 = 19,
-#define CTX_S3	CTX_S3
+# define CTX_S3	CTX_S3
   CTX_S4 = 20,
-#define CTX_S4	CTX_S4
+# define CTX_S4	CTX_S4
   CTX_S5 = 21,
-#define CTX_S5	CTX_S5
+# define CTX_S5	CTX_S5
   CTX_S6 = 22,
-#define CTX_S6	CTX_S6
+# define CTX_S6	CTX_S6
   CTX_S7 = 23,
-#define CTX_S7	CTX_S7
+# define CTX_S7	CTX_S7
   CTX_T8 = 24,
-#define CTX_T8	CTX_T8
+# define CTX_T8	CTX_T8
   CTX_T9 = 25,
-#define CTX_T9	CTX_T9
+# define CTX_T9	CTX_T9
   CTX_K0 = 26,
-#define CTX_K0	CTX_K0
+# define CTX_K0	CTX_K0
   CTX_K1 = 27,
-#define CTX_K1	CTX_K1
+# define CTX_K1	CTX_K1
   CTX_GP = 28,
-#define CTX_GP	CTX_GP
+# define CTX_GP	CTX_GP
   CTX_SP = 29,
-#define CTX_SP	CTX_SP
+# define CTX_SP	CTX_SP
   CTX_S8 = 30,
-#define CTX_S8	CTX_S8
+# define CTX_S8	CTX_S8
   CTX_RA = 31,
-#define CTX_RA	CTX_RA
+# define CTX_RA	CTX_RA
   CTX_MDLO = 32,
-#define CTX_MDLO	CTX_MDLO
+# define CTX_MDLO	CTX_MDLO
   CTX_MDHI = 33,
-#define CTX_MDHI	CTX_MDHI
+# define CTX_MDHI	CTX_MDHI
   CTX_CAUSE = 34,
-#define CTX_CAUSE	CTX_CAUSE
+# define CTX_CAUSE	CTX_CAUSE
   CTX_EPC = 35,
-#define CTX_EPC	CTX_EPC
+# define CTX_EPC	CTX_EPC
 };
+#endif
 
 /* Structure to describe FPU registers.  */
 typedef struct fpregset

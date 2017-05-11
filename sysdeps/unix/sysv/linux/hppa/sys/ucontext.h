@@ -29,12 +29,13 @@
 #include <bits/sigstack.h>
 
 
+#ifdef __USE_MISC
 /* Type for general register.  */
 typedef unsigned long int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	80
-#define NFPREG	32
+# define NGREG	80
+# define NFPREG	32
 
 /* Container for all general registers.  */
 typedef struct gregset
@@ -50,6 +51,7 @@ typedef struct fpregset
   {
     double fp_dregs[32];
   } fpregset_t;
+#endif
 
 /* Context to describe whole processor state.  */
 typedef struct sigcontext mcontext_t;

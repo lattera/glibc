@@ -1,3 +1,173 @@
+2017-05-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21457]
+	* sysdeps/arm/sys/ucontext.h (R0): Condition on [__USE_MISC].
+	(R1): Likewise.
+	(R2): Likewise.
+	(R3): Likewise.
+	(R4): Likewise.
+	(R5): Likewise.
+	(R6): Likewise.
+	(R7): Likewise.
+	(R8): Likewise.
+	(R9): Likewise.
+	(R10): Likewise.
+	(R11): Likewise.
+	(R12): Likewise.
+	(R13): Likewise.
+	(R14): Likewise.
+	(R15): Likewise.
+	* sysdeps/i386/sys/ucontext.h (REG_GS): Likewise.
+	(REG_FS): Likewise.
+	(REG_ES): Likewise.
+	(REG_DS): Likewise.
+	(REG_EDI): Likewise.
+	(REG_ESI): Likewise.
+	(REG_EBP): Likewise.
+	(REG_ESP): Likewise.
+	(REG_EBX): Likewise.
+	(REG_EDX): Likewise.
+	(REG_ECX): Likewise.
+	(REG_EAX): Likewise.
+	(REG_TRAPNO): Likewise.
+	(REG_ERR): Likewise.
+	(REG_EIP): Likewise.
+	(REG_CS): Likewise.
+	(REG_EFL): Likewise.
+	(REG_UESP): Likewise.
+	(REG_SS): Likewise.
+	* sysdeps/m68k/sys/ucontext.h (R_D0): Likewise.
+	(R_D1): Likewise.
+	(R_D2): Likewise.
+	(R_D3): Likewise.
+	(R_D4): Likewise.
+	(R_D5): Likewise.
+	(R_D6): Likewise.
+	(R_D7): Likewise.
+	(R_A0): Likewise.
+	(R_A1): Likewise.
+	(R_A2): Likewise.
+	(R_A3): Likewise.
+	(R_A4): Likewise.
+	(R_A5): Likewise.
+	(R_A6): Likewise.
+	(R_A7): Likewise.
+	(R_SP): Likewise.
+	(R_PC): Likewise.
+	(R_PS): Likewise.
+	(fpregset_t): Likewise.
+	(MCONTEXT_VERSION): Likewise.
+	* sysdeps/mips/sys/ucontext.h (CTX_R0): Likewise.
+	(CTX_AT): Likewise.
+	(CTX_V0): Likewise.
+	(CTX_V1): Likewise.
+	(CTX_A0): Likewise.
+	(CTX_A1): Likewise.
+	(CTX_A2): Likewise.
+	(CTX_A3): Likewise.
+	(CTX_T0): Likewise.
+	(CTX_T1): Likewise.
+	(CTX_T2): Likewise.
+	(CTX_T3): Likewise.
+	(CTX_T4): Likewise.
+	(CTX_T5): Likewise.
+	(CTX_T6): Likewise.
+	(CTX_T7): Likewise.
+	(CTX_S0): Likewise.
+	(CTX_S1): Likewise.
+	(CTX_S2): Likewise.
+	(CTX_S3): Likewise.
+	(CTX_S4): Likewise.
+	(CTX_S5): Likewise.
+	(CTX_S6): Likewise.
+	(CTX_S7): Likewise.
+	(CTX_T8): Likewise.
+	(CTX_T9): Likewise.
+	(CTX_K0): Likewise.
+	(CTX_K1): Likewise.
+	(CTX_GP): Likewise.
+	(CTX_SP): Likewise.
+	(CTX_S8): Likewise.
+	(CTX_RA): Likewise.
+	(CTX_MDLO): Likewise.
+	(CTX_MDHI): Likewise.
+	(CTX_CAUSE): Likewise.
+	(CTX_EPC): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sys/ucontext.h: Condition
+	inclusion of <sys/procfs.h> on [__USE_MISC].
+	(greg_t): Condition on [__USE_MISC].
+	(gregset_t): Likewise.
+	(fpregset_t): Likewise.
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h (greg_t): Likewise.
+	(NGREG): Likewise.
+	(gregset_t): Likewise.
+	(REG_R0): Likewise.
+	(REG_R1): Likewise.
+	(REG_R2): Likewise.
+	(REG_R3): Likewise.
+	(REG_R4): Likewise.
+	(REG_R5): Likewise.
+	(REG_R6): Likewise.
+	(REG_R7): Likewise.
+	(REG_R8): Likewise.
+	(REG_R9): Likewise.
+	(REG_R10): Likewise.
+	(REG_R11): Likewise.
+	(REG_R12): Likewise.
+	(REG_R13): Likewise.
+	(REG_R14): Likewise.
+	(REG_R15): Likewise.
+	(struct _libc_fpstate): Likewise.
+	(fpregset_t): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h (NGREG): Likewise.
+	(NFPREG): Likewise.
+	(gregset_t): Likewise.
+	(fpregset_t): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h (R_D0): Likewise.
+	(R_D1): Likewise.
+	(R_D2): Likewise.
+	(R_D3): Likewise.
+	(R_D4): Likewise.
+	(R_D5): Likewise.
+	(R_D6): Likewise.
+	(R_D7): Likewise.
+	(R_A0): Likewise.
+	(R_A1): Likewise.
+	(R_A2): Likewise.
+	(R_A3): Likewise.
+	(R_A4): Likewise.
+	(R_A5): Likewise.
+	(R_A6): Likewise.
+	(R_A7): Likewise.
+	(R_SP): Likewise.
+	(R_PC): Likewise.
+	(R_PS): Likewise.
+	(fpregset_t): Likewise.
+	(MCONTEXT_VERSION): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/sys/ucontext.h (MCONTEXT_VERSION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h (REG_R0): Likewise.
+	(REG_R1): Likewise.
+	(REG_R2): Likewise.
+	(REG_R3): Likewise.
+	(REG_R4): Likewise.
+	(REG_R5): Likewise.
+	(REG_R6): Likewise.
+	(REG_R7): Likewise.
+	(REG_R8): Likewise.
+	(REG_R9): Likewise.
+	(REG_R10): Likewise.
+	(REG_R11): Likewise.
+	(REG_R12): Likewise.
+	(REG_R13): Likewise.
+	(REG_R14): Likewise.
+	(REG_R15): Likewise.
+	* sysdeps/unix/sysv/linux/tile/sys/ucontext.h: Condition inclusion
+	of <arch/abi.h> on [__USE_MISC].
+	(greg_t): Condition on [__USE_MISC].
+	(NGREG): Likewise.
+	(gregset_t): Likewise.
+
 2017-05-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/arm/nptl/bits/pthreadtypes-arch.h

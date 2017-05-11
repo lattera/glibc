@@ -32,7 +32,9 @@
 
 /* These definitions must be in sync with the kernel.  */
 
-#define MCONTEXT_VERSION 2
+#ifdef __USE_MISC
+# define MCONTEXT_VERSION 2
+#endif
 
 /* Context to describe whole processor state.  */
 typedef struct mcontext
