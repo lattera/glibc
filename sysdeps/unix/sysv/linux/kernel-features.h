@@ -78,11 +78,6 @@
 #define __ASSUME_PREADV	1
 #define __ASSUME_PWRITEV	1
 
-/* statfs fills in f_flags since 2.6.36.  */
-#if __LINUX_KERNEL_VERSION >= 0x020624
-# define __ASSUME_STATFS_F_FLAGS	1
-#endif
-
 /* Support for sendmmsg functionality was added in 3.0.  */
 #define __ASSUME_SENDMMSG	1
 

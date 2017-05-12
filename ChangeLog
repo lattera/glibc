@@ -1,3 +1,10 @@
+2017-05-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_STATFS_F_FLAGS): Remove macro.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c
+	[!__ASSUME_STATFS_F_FLAGS]: Remove conditional code.
+
 2017-05-11  Zack Weinberg  <zackw@panix.com>
 
 	* Makerules: New subdir configuration variables 'tests-internal'
