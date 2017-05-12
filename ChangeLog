@@ -1,3 +1,16 @@
+2017-05-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/sparc/sparc32/fpu/s_signbit.S (signbit): Remove alias.
+	(signbitf): Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbit.S (signbit):
+	Likewise.
+	(signbitl): Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbitf.S (signbitf):
+	Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_signbit.S (signbit): Likewise.
+	(signbitl): Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_signbitf.S (signbitf): Likewise.
+
 2017-05-12  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21386]

@@ -24,4 +24,3 @@ ENTRY (__signbitf)
 	retl
 	 srl	%o0, 31, %o0
 END (__signbitf)
-weak_alias (__signbitf, signbitf)

@@ -2,8 +2,6 @@
 
 SPARC_ASM_VIS3_IFUNC(signbitf)
 
-weak_alias (__signbitf, signbitf)
-
 # undef weak_alias
 # define weak_alias(a, b)
 

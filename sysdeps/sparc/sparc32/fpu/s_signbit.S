@@ -22,11 +22,9 @@ ENTRY (__signbit)
 	retl
 	 srl	%o0, 31, %o0
 END (__signbit)
-weak_alias (__signbit, signbit)
 
 /* On 32-bit the double version will also always work for
    single-precision since in both cases the word with the
    sign bit in it is passed always in register %o0.  */
 strong_alias (__signbit, __signbitf)
 hidden_def (__signbitf)
-weak_alias (__signbitf, signbitf)
