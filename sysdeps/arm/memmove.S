@@ -87,7 +87,7 @@ ENTRY(memmove)
 		subs	r2, r2, #4
 		blt	8f
 		ands	ip, r0, #3
-	PLD(	sfi_pld	r1, #-4			)
+	PLD(	pld	[r1, #-4]		)
 		bne	9f
 		ands	ip, r1, #3
 		bne	10f
@@ -113,19 +113,17 @@ ENTRY(memmove)
 	CALGN(	bx	r4			)
 #endif
 
-	PLD(	sfi_pld	r1, #-4			)
+	PLD(	pld	[r1, #-4]		)
 2:	PLD(	subs	r2, r2, #96		)
-	PLD(	sfi_pld	r1, #-32		)
+	PLD(	pld	[r1, #-32]		)
 	PLD(	blt	4f			)
-	PLD(	sfi_pld	r1, #-64		)
-	PLD(	sfi_pld	r1, #-96		)
+	PLD(	pld	[r1, #-64]		)
+	PLD(	pld	[r1, #-96]		)
 
-3:	PLD(	sfi_pld	r1, #-128		)
-4:		sfi_breg r1, \
-		ldmdb	\B!, {r3, r4, r5, r6, r7, r8, ip, lr}
+3:	PLD(	pld	[r1, #-128]		)
+4:		ldmdb	r1!, {r3, r4, r5, r6, r7, r8, ip, lr}
 		subs	r2, r2, #32
-		sfi_breg r0, \
-		stmdb	\B!, {r3, r4, r5, r6, r7, r8, ip, lr}
+		stmdb	r0!, {r3, r4, r5, r6, r7, r8, ip, lr}
 		bge	3b
 	PLD(	cmn	r2, #96			)
 	PLD(	bge	4b			)
@@ -152,26 +150,19 @@ ENTRY(memmove)
 		.p2align ARM_BX_ALIGN_LOG2
 6:		nop
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r1, \
-		ldr	r3, [\B, #-4]!
+		ldr	r3, [r1, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r1, \
-		ldr	r4, [\B, #-4]!
+		ldr	r4, [r1, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r1, \
-		ldr	r5, [\B, #-4]!
+		ldr	r5, [r1, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r1, \
-		ldr	r6, [\B, #-4]!
+		ldr	r6, [r1, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r1, \
-		ldr	r7, [\B, #-4]!
+		ldr	r7, [r1, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r1, \
-		ldr	r8, [\B, #-4]!
+		ldr	r8, [r1, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r1, \
-		ldr	lr, [\B, #-4]!
+		ldr	lr, [r1, #-4]!
 
 #ifndef ARM_ALWAYS_BX
 		add	pc, pc, ip, lsl #(ARM_BX_ALIGN_LOG2 - 2)
@@ -188,26 +179,19 @@ ENTRY(memmove)
 		.p2align ARM_BX_ALIGN_LOG2
 66:		nop
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r0, \
-		str	r3, [\B, #-4]!
+		str	r3, [r0, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r0, \
-		str	r4, [\B, #-4]!
+		str	r4, [r0, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r0, \
-		str	r5, [\B, #-4]!
+		str	r5, [r0, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r0, \
-		str	r6, [\B, #-4]!
+		str	r6, [r0, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r0, \
-		str	r7, [\B, #-4]!
+		str	r7, [r0, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r0, \
-		str	r8, [\B, #-4]!
+		str	r8, [r0, #-4]!
 		.p2align ARM_BX_ALIGN_LOG2
-		sfi_breg r0, \
-		str	lr, [\B, #-4]!
+		str	lr, [r0, #-4]!
 
 #ifdef ARM_ALWAYS_BX
 		pop	{r10}
@@ -225,18 +209,12 @@ ENTRY(memmove)
 		cfi_restore (r8)
 
 8:		movs	r2, r2, lsl #31
-		sfi_breg r1, \
-		ldrbne	r3, [\B, #-1]!
-		sfi_breg r1, \
-		ldrbcs	r4, [\B, #-1]!
-		sfi_breg r1, \
-		ldrbcs	ip, [\B, #-1]
-		sfi_breg r0, \
-		strbne	r3, [\B, #-1]!
-		sfi_breg r0, \
-		strbcs	r4, [\B, #-1]!
-		sfi_breg r0, \
-		strbcs	ip, [\B, #-1]
+		ldrbne	r3, [r1, #-1]!
+		ldrbcs	r4, [r1, #-1]!
+		ldrbcs	ip, [r1, #-1]
+		strbne	r3, [r0, #-1]!
+		strbcs	r4, [r0, #-1]!
+		strbcs	ip, [r0, #-1]
 
 #if ((defined (__ARM_ARCH_4T__) && defined (__THUMB_INTERWORK__)) \
      || defined (ARM_ALWAYS_BX))
@@ -252,27 +230,20 @@ ENTRY(memmove)
 		cfi_restore_state
 
 9:		cmp	ip, #2
-		sfi_breg r1, \
-		ldrbgt	r3, [\B, #-1]!
-		sfi_breg r1, \
-		ldrbge	r4, [\B, #-1]!
-		sfi_breg r1, \
-		ldrb	lr, [\B, #-1]!
-		sfi_breg r0, \
-		strbgt	r3, [\B, #-1]!
-		sfi_breg r0, \
-		strbge	r4, [\B, #-1]!
+		ldrbgt	r3, [r1, #-1]!
+		ldrbge	r4, [r1, #-1]!
+		ldrb	lr, [r1, #-1]!
+		strbgt	r3, [r0, #-1]!
+		strbge	r4, [r0, #-1]!
 		subs	r2, r2, ip
-		sfi_breg r0, \
-		strb	lr, [\B, #-1]!
+		strb	lr, [r0, #-1]!
 		blt	8b
 		ands	ip, r1, #3
 		beq	1b
 
 10:		bic	r1, r1, #3
 		cmp	ip, #2
-		sfi_breg r1, \
-		ldr	r3, [\B, #0]
+		ldr	r3, [r1, #0]
 		beq	17f
 		blt	18f
 
@@ -296,20 +267,18 @@ ENTRY(memmove)
 		cfi_rel_offset (r8, 12)
 		cfi_rel_offset (r10, 16)
 
-	PLD(	sfi_pld	r1, #-4			)
+	PLD(	pld	[r1, #-4]		)
 	PLD(	subs	r2, r2, #96		)
-	PLD(	sfi_pld	r1, #-32		)
+	PLD(	pld	[r1, #-32]		)
 	PLD(	blt	13f			)
-	PLD(	sfi_pld	r1, #-64		)
-	PLD(	sfi_pld	r1, #-96		)
+	PLD(	pld	[r1, #-64]		)
+	PLD(	pld	[r1, #-96]		)
 
-12:	PLD(	sfi_pld	r1, #-128		)
-13:		sfi_breg r1, \
-		ldmdb   \B!, {r7, r8, r10, ip}
+12:	PLD(	pld	[r1, #-128]		)
+13:		ldmdb   r1!, {r7, r8, r10, ip}
 		mov     lr, r3, PUSH #\push
 		subs    r2, r2, #32
-		sfi_breg r1, \
-		ldmdb   \B!, {r3, r4, r5, r6}
+		ldmdb   r1!, {r3, r4, r5, r6}
 		orr     lr, lr, ip, PULL #\pull
 		mov     ip, ip, PUSH #\push
 		orr     ip, ip, r10, PULL #\pull
@@ -325,8 +294,7 @@ ENTRY(memmove)
 		orr     r5, r5, r4, PULL #\pull
 		mov     r4, r4, PUSH #\push
 		orr     r4, r4, r3, PULL #\pull
-		sfi_breg r0, \
-		stmdb   \B!, {r4 - r8, r10, ip, lr}
+		stmdb   r0!, {r4 - r8, r10, ip, lr}
 		bge	12b
 	PLD(	cmn	r2, #96			)
 	PLD(	bge	13b			)
@@ -343,12 +311,10 @@ ENTRY(memmove)
 		beq	16f
 
 15:		mov     lr, r3, PUSH #\push
-		sfi_breg r1, \
-		ldr	r3, [\B, #-4]!
+		ldr	r3, [r1, #-4]!
 		subs	ip, ip, #4
 		orr	lr, lr, r3, PULL #\pull
-		sfi_breg r0, \
-		str	lr, [\B, #-4]!
+		str	lr, [r0, #-4]!
 		bgt	15b
 	CALGN(	cmp	r2, #0			)
 	CALGN(	bge	11b			)

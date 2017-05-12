@@ -65,8 +65,7 @@ ENTRY(memchr)
 
 	@ Work up to an aligned point
 5:
-	sfi_breg r0, \
-	ldrb	r3, [\B],#1
+	ldrb	r3, [r0],#1
 	subs	r2, r2, #1
 	cmp	r3, r1
 	beq	50f		@ If it matches exit found
@@ -91,8 +90,7 @@ ENTRY(memchr)
 	movs	r3, #0
 
 15:
-	sfi_breg r0, \
-	ldrd 	r4,r5, [\B],#8
+	ldrd 	r4,r5, [r0],#8
 #ifndef NO_THUMB
 	subs	r6, r6, #8
 #endif
@@ -130,8 +128,7 @@ ENTRY(memchr)
 #endif
 
 21:  @ Post aligned section, or just a short call
-	sfi_breg r0, \
-	ldrb	r3,[\B],#1
+	ldrb	r3,[r0],#1
 #ifndef NO_THUMB
 	subs	r2,r2,#1
 	eor	r3,r3,r1	@ r3 = 0 if match - doesn't break flags from sub

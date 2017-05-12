@@ -23,8 +23,7 @@
 
 ENTRY (strlen)
 	@ r0 = start of string
-	sfi_breg r0, \
-	ldrb	r2, [\B]		@ load the first byte asap
+	ldrb	r2, [r0]		@ load the first byte asap
 
 	@ To cater to long strings, we want to search through a few
 	@ characters until we reach an aligned pointer.  To cater to
@@ -39,8 +38,7 @@ ENTRY (strlen)
 	beq	99f
 
 	@ Loop until we find ...
-1:	sfi_breg r0, \
-	ldrb	r2, [\B, #1]!
+1:	ldrb	r2, [r0, #1]!
 	subs	r3, r3, #1		@ ... the aligment point
 	it	ne
 	cmpne	r2, #0			@ ... or EOS
@@ -52,15 +50,14 @@ ENTRY (strlen)
 	add	r0, r0, #1
 
 	@ So now we're aligned.
-	sfi_breg r0, \
-	ldrd	r2, r3, [\B], #8
+	ldrd	r2, r3, [r0], #8
 #ifdef ARCH_HAS_T2
 	movw	ip, #0x0101
-	sfi_pld	r0, #64
+	pld	[r0, #64]
 	movt	ip, #0x0101
 #else
 	ldr	ip, =0x01010101
-	sfi_pld	r0, #64
+	pld	[r0, #64]
 #endif
 
 	@ Loop searching for EOS, 8 bytes at a time.
@@ -70,11 +67,10 @@ ENTRY (strlen)
 	.balign	16
 2:	uqsub8	r2, ip, r2		@ Find EOS
 	uqsub8	r3, ip, r3
-	sfi_pld	r0, #128		@ Prefetch 2 lines ahead
+	pld	[r0, #128]		@ Prefetch 2 lines ahead
 	orrs	r3, r3, r2		@ Combine the two words
 	it	eq
-	sfi_breg r0, \
-	ldrdeq	r2, r3, [\B], #8
+	ldrdeq	r2, r3, [r0], #8
 	beq	2b
 
 	@ Found something.  Disambiguate between first and second words.

@@ -32,8 +32,7 @@
 	eabi_fnstart
 	.align 2
 _dl_tlsdesc_return:
-	sfi_breg r0, \
-	ldr	r0, [\B]
+	ldr	r0, [r0]
 	BX	(lr)
 	eabi_fnend
 	cfi_endproc
@@ -92,30 +91,23 @@ _dl_tlsdesc_dynamic:
 	cfi_rel_offset (r3,4)
 	cfi_rel_offset (r4,8)
 	cfi_rel_offset (lr,12)
-	sfi_breg r0, \
-	ldr	r1, [\B] /* td */
+	ldr	r1, [r0] /* td */
 	GET_TLS (lr)
 	mov	r4, r0 /* r4 = tp */
-	sfi_breg r0, \
-	ldr	r0, [\B]
-	sfi_breg r1, \
-	ldr	r2, [\B, #8] /* gen_count */
-	sfi_breg r0, \
-	ldr	r3, [\B]
+	ldr	r0, [r0]
+	ldr	r2, [r1, #8] /* gen_count */
+	ldr	r3, [r0]
 	cmp	r2, r3
 	bhi	1f
-	sfi_breg r1, \
-	ldr	r3, [\B]
+	ldr	r3, [r1]
 #ifndef ARM_NO_INDEX_REGISTER
 	ldr	r2, [r0, r3, lsl #3]
 #else
 	add	lr, r0, r3, lsl #3
-	sfi_breg lr, \
-	ldr	r2, [\B]
+	ldr	r2, [lr]
 #endif
 	cmn	r2, #1
 	ittt	ne
-	sfi_breg r1, \
 	ldrne	r3, [r1, #4]
 	addne	r3, r2, r3
 	rsbne	r0, r4, r3
@@ -178,8 +170,7 @@ _dl_tlsdesc_lazy_resolver:
 	pop	{r2}
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (r2)
-	sfi_breg r0, \
-	ldr	r1, [\B, #4]
+	ldr	r1, [r0, #4]
 	BX	(r1)
 	eabi_fnend
 	cfi_endproc
@@ -220,8 +211,7 @@ _dl_tlsdesc_resolve_hold:
 	cfi_restore (r2)
 	cfi_restore (r1)
 	cfi_restore (r0)
-	sfi_breg r0, \
-	ldr     r1, [\B, #4]
+	ldr     r1, [r0, #4]
 	BX      (r1)
 	eabi_fnend
 	cfi_endproc

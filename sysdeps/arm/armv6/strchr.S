@@ -25,8 +25,7 @@ ENTRY (strchr)
 	@ r0 = start of string
 	@ r1 = character to match
 	@ returns NULL for no match, or a pointer to the match
-	sfi_breg r0, \
-	ldrb	r2, [\B]		@ load the first byte asap
+	ldrb	r2, [r0]		@ load the first byte asap
 	uxtb	r1, r1
 
 	@ To cater to long strings, we want to search through a few
@@ -43,8 +42,7 @@ ENTRY (strchr)
 	beq	99f
 
 	@ Loop until we find ...
-1:	sfi_breg r0, \
-	ldrb	r2, [\B, #1]!
+1:	ldrb	r2, [r0, #1]!
 	subs	r3, r3, #1		@ ... the aligment point
 	it	ne
 	cmpne	r2, r1			@ ... or the character
@@ -67,16 +65,15 @@ ENTRY (strchr)
 	cfi_rel_offset (r6, 8)
 	cfi_rel_offset (r7, 12)
 
-	sfi_breg r0, \
-	ldrd	r2, r3, [\B], #8
+	ldrd	r2, r3, [r0], #8
 	orr	r1, r1, r1, lsl #8	@ Replicate C to all bytes
 #ifdef ARCH_HAS_T2
 	movw	ip, #0x0101
-	sfi_pld	r0, #64
+	pld	[r0, #64]
 	movt	ip, #0x0101
 #else
 	ldr	ip, =0x01010101
-	sfi_pld	r0, #64
+	pld	[r0, #64]
 #endif
 	orr	r1, r1, r1, lsl #16
 
@@ -90,14 +87,13 @@ ENTRY (strchr)
 	uqsub8	r5, ip, r3
 	eor	r7, r3, r1
 	uqsub8	r6, ip, r6		@ Find C
-	sfi_pld	r0, #128		@ Prefetch 2 lines ahead
+	pld	[r0, #128]		@ Prefetch 2 lines ahead
 	uqsub8	r7, ip, r7
 	orr	r4, r4, r6		@ Combine found for EOS and C
 	orr	r5, r5, r7
 	orrs	r6, r4, r5		@ Combine the two words
 	it	eq
-	sfi_breg r0, \
-	ldrdeq	r2, r3, [\B], #8
+	ldrdeq	r2, r3, [r0], #8
 	beq	2b
 
 	@ Found something.  Disambiguate between first and second words.

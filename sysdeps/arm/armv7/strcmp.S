@@ -178,10 +178,8 @@
 #endif
 ENTRY (strcmp)
 #if STRCMP_PRECHECK == 1
-	sfi_breg src1, \
-	ldrb	r2, [\B]
-	sfi_breg src2, \
-	ldrb	r3, [\B]
+	ldrb	r2, [src1]
+	ldrb	r3, [src2]
 	cmp	r2, #1
 	it	cs
 	cmpcs	r2, r3
@@ -211,11 +209,9 @@ ENTRY (strcmp)
 	and	tmp2, tmp1, #3
 	bic	src2, src2, #7
 	lsl	tmp2, tmp2, #3	/* Bytes -> bits.  */
-	sfi_breg src1, \
-	ldrd	data1a, data1b, [\B], #16
+	ldrd	data1a, data1b, [src1], #16
 	tst	tmp1, #4
-	sfi_breg src2, \
-	ldrd	data2a, data2b, [\B], #16
+	ldrd	data2a, data2b, [src2], #16
 	prepare_mask tmp1, tmp2
 	apply_mask data1a, tmp1
 	apply_mask data2a, tmp1
@@ -231,10 +227,8 @@ ENTRY (strcmp)
 	.p2align 5,,12  /* Don't start in the tail bytes of a cache line.  */
 	.p2align 2	/* Always word aligned.  */
 .Lloop_aligned8:
-	sfi_breg src1, \
-	ldrd	data1a, data1b, [\B], #16
-	sfi_breg src2, \
-	ldrd	data2a, data2b, [\B], #16
+	ldrd	data1a, data1b, [src1], #16
+	ldrd	data2a, data2b, [src2], #16
 .Lstart_realigned8:
 	uadd8	syndrome_b, data1a, const_m1	/* Only want GE bits,  */
 	eor	syndrome_a, data1a, data2a
@@ -245,10 +239,8 @@ ENTRY (strcmp)
 	sel	syndrome_b, syndrome_b, const_m1
 	cbnz	syndrome_b, .Ldiff_in_b
 
-	sfi_breg src1, \
-	ldrd	data1a, data1b, [\B, #-8]
-	sfi_breg src2, \
-	ldrd	data2a, data2b, [\B, #-8]
+	ldrd	data1a, data1b, [src1, #-8]
+	ldrd	data2a, data2b, [src2, #-8]
 	uadd8	syndrome_b, data1a, const_m1	/* Only want GE bits,  */
 	eor	syndrome_a, data1a, data2a
 	sel	syndrome_a, syndrome_a, const_m1
@@ -279,19 +271,15 @@ ENTRY (strcmp)
 	/* Unrolled by a factor of 2, to reduce the number of post-increment
 	   operations.  */
 .Lloop_aligned4:
-	sfi_breg src1, \
-	ldr	data1, [\B], #8
-	sfi_breg src2, \
-	ldr	data2, [\B], #8
+	ldr	data1, [src1], #8
+	ldr	data2, [src2], #8
 .Lstart_realigned4:
 	uadd8	syndrome, data1, const_m1	/* Only need GE bits.  */
 	eor	syndrome, data1, data2
 	sel	syndrome, syndrome, const_m1
 	cbnz	syndrome, .Laligned4_done
-	sfi_breg src1, \
-	ldr	data1, [\B, #-4]
-	sfi_breg src2, \
-	ldr	data2, [\B, #-4]
+	ldr	data1, [src1, #-4]
+	ldr	data2, [src2, #-4]
 	uadd8	syndrome, data1, const_m1
 	eor	syndrome, data1, data2
 	sel	syndrome, syndrome, const_m1
@@ -307,11 +295,9 @@ ENTRY (strcmp)
 	   masking off the unwanted loaded data to prevent a difference.  */
 	lsl	tmp1, tmp1, #3	/* Bytes -> bits.  */
 	bic	src1, src1, #3
-	sfi_breg src1, \
-	ldr	data1, [\B], #8
+	ldr	data1, [src1], #8
 	bic	src2, src2, #3
-	sfi_breg src2, \
-	ldr	data2, [\B], #8
+	ldr	data2, [src2], #8
 
 	prepare_mask tmp1, tmp1
 	apply_mask data1, tmp1
@@ -324,30 +310,26 @@ ENTRY (strcmp)
 	sub	src2, src2, tmp1
 	bic	src1, src1, #3
 	lsls	tmp1, tmp1, #31
-	sfi_breg src1, \
-	ldr	data1, [\B], #4
+	ldr	data1, [src1], #4
 	beq	.Laligned_m2
 	bcs	.Laligned_m1
 
 #if STRCMP_PRECHECK == 0
-	sfi_breg src2, \
-	ldrb	data2, [\B, #1]
+	ldrb	data2, [src2, #1]
 	uxtb	tmp1, data1, ror #BYTE1_OFFSET
 	subs	tmp1, tmp1, data2
 	bne	.Lmisaligned_exit
 	cbz	data2, .Lmisaligned_exit
 
 .Laligned_m2:
-	sfi_breg src2, \
-	ldrb	data2, [\B, #2]
+	ldrb	data2, [src2, #2]
 	uxtb	tmp1, data1, ror #BYTE2_OFFSET
 	subs	tmp1, tmp1, data2
 	bne	.Lmisaligned_exit
 	cbz	data2, .Lmisaligned_exit
 
 .Laligned_m1:
-	sfi_breg src2, \
-	ldrb	data2, [\B, #3]
+	ldrb	data2, [src2, #3]
 	uxtb	tmp1, data1, ror #BYTE3_OFFSET
 	subs	tmp1, tmp1, data2
 	bne	.Lmisaligned_exit
@@ -356,16 +338,14 @@ ENTRY (strcmp)
 #else  /* STRCMP_PRECHECK */
 	/* If we've done the pre-check, then we don't need to check the
 	   first byte again here.  */
-	sfi_breg src2, \
-	ldrb	data2, [\B, #2]
+	ldrb	data2, [src2, #2]
 	uxtb	tmp1, data1, ror #BYTE2_OFFSET
 	subs	tmp1, tmp1, data2
 	bne	.Lmisaligned_exit
 	cbz	data2, .Lmisaligned_exit
 
 .Laligned_m2:
-	sfi_breg src2, \
-	ldrb	data2, [\B, #3]
+	ldrb	data2, [src2, #3]
 	uxtb	tmp1, data1, ror #BYTE3_OFFSET
 	subs	tmp1, tmp1, data2
 	bne	.Lmisaligned_exit
@@ -391,13 +371,11 @@ ENTRY (strcmp)
 	cfi_restore_state
 	/* src1 is word aligned, but src2 has no common alignment
 	   with it.  */
-	sfi_breg src1, \
-	ldr	data1, [\B], #4
+	ldr	data1, [src1], #4
 	lsls	tmp1, src2, #31		/* C=src2[1], Z=src2[0].  */
 
 	bic	src2, src2, #3
-	sfi_breg src2, \
-	ldr	data2, [\B], #4
+	ldr	data2, [src2], #4
 	bhi	.Loverlap1		/* C=1, Z=0 => src2[1:0] = 0b11.  */
 	bcs	.Loverlap2		/* C=1, Z=1 => src2[1:0] = 0b10.  */
 
@@ -409,13 +387,11 @@ ENTRY (strcmp)
 	sel	syndrome, syndrome, const_m1
 	bne	4f
 	cbnz	syndrome, 5f
-	sfi_breg src2, \
-	ldr	data2, [\B], #4
+	ldr	data2, [src2], #4
 	eor	tmp1, tmp1, data1
 	cmp	tmp1, data2, S2HI #24
 	bne	6f
-	sfi_breg src1, \
-	ldr	data1, [\B], #4
+	ldr	data1, [src1], #4
 	b	.Loverlap3
 4:
 	S2LO	data2, data2, #8
@@ -427,8 +403,7 @@ ENTRY (strcmp)
 
 	/* We can only get here if the MSB of data1 contains 0, so
 	   fast-path the exit.  */
-	sfi_breg src2, \
-	ldrb	result, [\B]
+	ldrb	result, [src2]
 	ldrd	r4, r5, [sp], #16
 	cfi_remember_state
 	cfi_def_cfa_offset (0)
@@ -454,13 +429,11 @@ ENTRY (strcmp)
 	sel	syndrome, syndrome, const_m1
 	bne	4f
 	cbnz	syndrome, 5f
-	sfi_breg src2, \
-	ldr	data2, [\B], #4
+	ldr	data2, [src2], #4
 	eor	tmp1, tmp1, data1
 	cmp	tmp1, data2, S2HI #16
 	bne	6f
-	sfi_breg src1, \
-	ldr	data1, [\B], #4
+	ldr	data1, [src1], #4
 	b	.Loverlap2
 4:
 	S2LO	data2, data2, #16
@@ -469,8 +442,7 @@ ENTRY (strcmp)
 	ands	syndrome, syndrome, const_m1, S2LO #16
 	bne	.Lstrcmp_done_equal
 
-	sfi_breg src2, \
-	ldrh	data2, [\B]
+	ldrh	data2, [src2]
 	S2LO	data1, data1, #16
 #ifdef __ARM_BIG_ENDIAN
 	lsl	data2, data2, #16
@@ -490,13 +462,11 @@ ENTRY (strcmp)
 	sel	syndrome, syndrome, const_m1
 	bne	4f
 	cbnz	syndrome, 5f
-	sfi_breg src2, \
-	ldr	data2, [\B], #4
+	ldr	data2, [src2], #4
 	eor	tmp1, tmp1, data1
 	cmp	tmp1, data2, S2HI #8
 	bne	6f
-	sfi_breg src1, \
-	ldr	data1, [\B], #4
+	ldr	data1, [src1], #4
 	b	.Loverlap1
 4:
 	S2LO	data2, data2, #24
@@ -504,8 +474,7 @@ ENTRY (strcmp)
 5:
 	tst	syndrome, #LSB
 	bne	.Lstrcmp_done_equal
-	sfi_breg src2, \
-	ldr	data2, [\B]
+	ldr	data2, [src2]
 6:
 	S2LO	data1, data1, #8
 	bic	data2, data2, #MSB

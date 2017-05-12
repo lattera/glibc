@@ -44,8 +44,8 @@ ENTRY (strcpy)
 	@ Signal strcpy with DEST in IP.
 	mov	ip, r0
 0:
-	sfi_pld	r0
-	sfi_pld	r1
+	pld	[r0, #0]
+	pld	[r1, #0]
 
 	@ To cater to long strings, we want 8 byte alignment in the source.
 	@ To cater to small strings, we don't want to start that right away.
@@ -54,11 +54,9 @@ ENTRY (strcpy)
 	rsb	r3, r3, #16
 
 	@ Loop until we find ...
-1:	sfi_breg r1, \
-	ldrb	r2, [\B], #1
+1:	ldrb	r2, [r1], #1
 	subs	r3, r3, #1		@ ... the alignment point
-	sfi_breg r0, \
-	strb	r2, [\B], #1
+	strb	r2, [r0], #1
 	it	ne
 	cmpne	r2, #0			@ ... or EOS
 	bne	1b
@@ -68,10 +66,9 @@ ENTRY (strcpy)
 	beq	.Lreturn
 
 	@ Load the next two words asap
-	sfi_breg r1, \
-	ldrd	r2, r3, [\B], #8
-	sfi_pld	r0, #64
-	sfi_pld	r1, #64
+	ldrd	r2, r3, [r1], #8
+	pld	[r0, #64]
+	pld	[r1, #64]
 
 	@ For longer strings, we actaully need a stack frame.
 	push	{ r4, r5, r6, r7 }
@@ -99,18 +96,15 @@ ENTRY (strcpy)
 	.balign	16
 2:	uqsub8	r4, r7, r2		@ Find EOS
 	uqsub8	r5, r7, r3
-	sfi_pld	r1, #128
+	pld	[r1, #128]
 	cmp	r4, #0			@ EOS in first word?
-	sfi_pld	r0, #128
+	pld	[r0, #128]
 	bne	3f
-	sfi_breg r0, \
-	str	r2, [\B], #4
+	str	r2, [r0], #4
 	cmp	r5, #0			@ EOS in second word?
 	bne	4f
-	sfi_breg r0, \
-	str	r3, [\B], #4
-	sfi_breg r1, \
-	ldrd	r2, r3, [\B], #8
+	str	r3, [r0], #4
+	ldrd	r2, r3, [r1], #8
 	b	2b
 
 3:	sub	r1, r1, #4		@ backup to first word
@@ -120,11 +114,9 @@ ENTRY (strcpy)
 	@ Note that we generally back up and re-read source bytes,
 	@ but we'll not re-write dest bytes.
 .Lbyte_loop:
-	sfi_breg r1, \
-	ldrb	r2, [\B], #1
+	ldrb	r2, [r1], #1
 	cmp	r2, #0
-	sfi_breg r0, \
-	strb	r2, [\B], #1
+	strb	r2, [r0], #1
 	bne	.Lbyte_loop
 
 	pop	{ r4, r5, r6, r7 }
@@ -169,8 +161,7 @@ ENTRY (strcpy)
 	@ Store a few bytes from the first word.
 	@ At the same time we align r0 and shift out bytes from r2.
 .rept	4-\unalign
-	sfi_breg r0, \
-	strb	r2, [\B], #1
+	strb	r2, [r0], #1
 	lsr	r2, r2, #8
 .endr
 #ifdef __ARMEB__
@@ -185,23 +176,20 @@ ENTRY (strcpy)
 	orr	r2, r2, r3, lsh_gt #(\unalign*8)
 	@ Save leftover bytes from the two words
 	lsh_ls	r6, r3, #((4-\unalign)*8)
-	sfi_breg r0, \
-	str	r2, [\B], #4
+	str	r2, [r0], #4
 	@ The "real" start of the unaligned copy loop.
-	sfi_breg r1, \
-	ldrd	r2, r3, [\B], #8	@ Load 8 more bytes
+	ldrd	r2, r3, [r1], #8	@ Load 8 more bytes
 	uqsub8	r4, r7, r2		@ Find EOS
-	sfi_pld	r1, #128
+	pld	[r1, #128]
 	uqsub8	r5, r7, r3
-	sfi_pld	r0, #128
+	pld	[r0, #128]
 	cmp	r4, #0			@ EOS in first word?
 	bne	3f
 	@ Combine the leftover and the first word
 	orr	r6, r6, r2, lsh_gt #(\unalign*8)
 	@ Discard used bytes from the first word.
 	lsh_ls	r2, r2, #((4-\unalign)*8)
-	sfi_breg r0, \
-	str	r6, [\B], #4
+	str	r6, [r0], #4
 	b	1b
 	@ Found EOS in one of the words; adjust backward
 3:	sub	r1, r1, #4
@@ -212,8 +200,7 @@ ENTRY (strcpy)
 	rev	r2, r2
 #endif
 .rept	\unalign
-	sfi_breg r0, \
-	strb	r2, [\B], #1
+	strb	r2, [r0], #1
 	lsr	r2, r2, #8
 .endr
 	b	.Lbyte_loop

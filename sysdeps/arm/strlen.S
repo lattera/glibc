@@ -30,8 +30,7 @@
 
 ENTRY(strlen)
 	bic     r1, r0, $3              @ addr of word containing first byte
-	sfi_breg r1, \
-	ldr     r2, [\B], $4            @ get the first word
+	ldr     r2, [r1], $4            @ get the first word
 	ands    r3, r0, $3              @ how many bytes are duff?
 	rsb     r0, r3, $0              @ get - that number into counter.
 	beq     Laligned                @ skip into main check routine if no
@@ -55,8 +54,7 @@ Laligned:				@ here, we have a word in r2.  Does it
 	tstne   r2, $0x00ff0000         @
 	tstne   r2, $0xff000000         @
 	addne   r0, r0, $4              @ if not, the string is 4 bytes longer
-	sfi_breg r1, \
-	ldrne   r2, [\B], $4            @ and we continue to the next word
+	ldrne   r2, [r1], $4            @ and we continue to the next word
 	bne     Laligned                @
 Llastword:				@ drop through to here once we find a
 #ifdef __ARMEB__
