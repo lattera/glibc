@@ -1,7 +1,0 @@
-GLIBC_2.22 GLIBC_2.22 A
-GLIBC_2.22 forkpty F
-GLIBC_2.22 login F
-GLIBC_2.22 login_tty F
-GLIBC_2.22 logout F
-GLIBC_2.22 logwtmp F
-GLIBC_2.22 openpty F

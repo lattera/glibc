@@ -63,6 +63,9 @@ Version 2.26
 
 * The obsolete <sys/ultrasound.h> header file has been removed.
 
+* The port to Native Client running on ARMv7-A (--host=arm-nacl) has been
+  removed.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,

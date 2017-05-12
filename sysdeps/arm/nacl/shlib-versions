@@ -1,4 +1,0 @@
-# Library=version		Earliest symbol set (optional)
-# ---------------		------------------------------
-
-ld=ld-nacl-arm.so.1
