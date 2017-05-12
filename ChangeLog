@@ -1,3 +1,10 @@
+2017-05-12  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21386]
+	* sysdeps/nptl/fork.c (__libc_fork): Remove assertions on the
+	parent PID.  The assertion in the child is incorrect with PID
+	namespaces.
+
 2017-05-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h

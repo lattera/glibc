@@ -131,10 +131,6 @@ __libc_fork (void)
       call_function_static_weak (__malloc_fork_lock_parent);
     }
 
-#ifndef NDEBUG
-  pid_t ppid = THREAD_GETMEM (THREAD_SELF, tid);
-#endif
-
 #ifdef ARCH_FORK
   pid = ARCH_FORK ();
 #else
@@ -146,8 +142,6 @@ __libc_fork (void)
   if (pid == 0)
     {
       struct pthread *self = THREAD_SELF;
-
-      assert (THREAD_GETMEM (self, tid) != ppid);
 
       /* See __pthread_once.  */
       if (__fork_generation_pointer != NULL)
@@ -230,8 +224,6 @@ __libc_fork (void)
     }
   else
     {
-      assert (THREAD_GETMEM (THREAD_SELF, tid) == ppid);
-
       /* Release acquired locks in the multi-threaded case.  */
       if (multiple_threads)
 	{
