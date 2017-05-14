@@ -716,7 +716,7 @@ entries in a directory, possibly sort them and get a list of names as
 the result.
 
 @comment dirent.h
-@comment BSD/SVID
+@comment BSD, SVID
 @deftypefun int scandir (const char *@var{dir}, struct dirent ***@var{namelist}, int (*@var{selector}) (const struct dirent *), int (*@var{cmp}) (const struct dirent **, const struct dirent **))
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
 @c The scandir function calls __opendirat, __readdir, and __closedir to
@@ -759,7 +759,7 @@ programmer @theglibc{} contains implementations of functions which
 are very helpful for this purpose.
 
 @comment dirent.h
-@comment BSD/SVID
+@comment BSD, SVID
 @deftypefun int alphasort (const struct dirent **@var{a}, const struct dirent **@var{b})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 @c Calls strcoll.
@@ -1315,8 +1315,8 @@ The directory or file system cannot be extended to make the new link.
 @item EIO
 A hardware error occurred while reading or writing data on the disk.
 
-@ignore
 @comment not sure about these
+@ignore
 @item ELOOP
 There are too many levels of indirection.  This can be the result of
 circular symbolic links to directories.
@@ -3543,9 +3543,9 @@ opening the file you should use the @code{O_EXCL} flag.  Using
 @end deftypefun
 @cindex TMPDIR environment variable
 
+@c !!! are we putting SVID/GNU/POSIX.1/BSD in here or not??
 @comment stdio.h
 @comment SVID
-@c !!! are we putting SVID/GNU/POSIX.1/BSD in here or not??
 @deftypevr {SVID Macro} {char *} P_tmpdir
 This macro is the name of the default directory for temporary files.
 @end deftypevr

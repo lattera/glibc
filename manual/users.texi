@@ -1655,8 +1655,7 @@ You can translate between a traditional @code{struct utmp} and an XPG
 these functions are merely copies, since the two structures are
 identical.
 
-@comment utmpx.h
-@comment utmp.h
+@comment utmp.h utmpx.h
 @comment GNU
 @deftypefun int getutmp (const struct utmpx *@var{utmpx}, struct utmp *@var{utmp})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
@@ -1664,8 +1663,7 @@ identical.
 compatible, from @var{utmpx} to @var{utmp}.
 @end deftypefun
 
-@comment utmpx.h
-@comment utmp.h
+@comment utmp.h utmpx.h
 @comment GNU
 @deftypefun int getutmpx (const struct utmp *@var{utmp}, struct utmpx *@var{utmpx})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}

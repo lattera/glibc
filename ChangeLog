@@ -1,3 +1,15 @@
+2017-05-18  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/crypt.texi: Move a comment out of an @*x list.
+	* manual/filesys.texi: Refactor some comments, one of which looks
+	like a standard.  Fix incorrectly separated standards.
+	* manual/locale.texi: Invert an annotation.
+	* manual/resource.texi: Fix incorrectly separated standards.
+	* manual/time.texi: Refactor a @vtable that obscures an
+	annotation.
+	* manual/users.texi: Refactor multiple headers to occupy a single
+	@comment.
+
 2017-05-18  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile

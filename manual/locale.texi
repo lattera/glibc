@@ -1406,8 +1406,8 @@ English.
 @Theglibc{} contains @code{rpmatch} to give applications easy
 access to the corresponding locale definitions.
 
-@comment GNU
 @comment stdlib.h
+@comment GNU
 @deftypefun int rpmatch (const char *@var{response})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c Calls nl_langinfo with YESEXPR and NOEXPR, triggering @mtslocale but

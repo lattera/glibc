@@ -290,10 +290,10 @@ stored in a @code{char}, but there are no parity bits in @var{block}.
 @comment crypt.h
 @comment GNU
 @deftypefun void setkey_r (const char *@var{key}, {struct crypt_data *} @var{data})
-@c @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @asulock{}}@acunsafe{@aculock{}}}
 @comment crypt.h
 @comment GNU
 @deftypefunx void encrypt_r (char *@var{block}, int @var{edflag}, {struct crypt_data *} @var{data})
+@c setkey_r: @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @asulock{}}@acunsafe{@aculock{}}}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @asulock{}}@acunsafe{@aculock{}}}
 
 These are reentrant versions of @code{setkey} and @code{encrypt}.  The

@@ -1161,7 +1161,7 @@ The highest valid nice value.
 @end vtable
 
 @comment sys/resource.h
-@comment BSD,POSIX
+@comment BSD, POSIX
 @deftypefun int getpriority (int @var{class}, int @var{id})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall on UNIX.  On HURD, calls _hurd_priority_which_map.
@@ -1190,7 +1190,7 @@ afterward as the criterion for failure.
 @end deftypefun
 
 @comment sys/resource.h
-@comment BSD,POSIX
+@comment BSD, POSIX
 @deftypefun int setpriority (int @var{class}, int @var{id}, int @var{niceval})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall on UNIX.  On HURD, calls _hurd_priority_which_map.

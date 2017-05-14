@@ -2740,9 +2740,9 @@ by @var{which} in the structure pointed at by @var{old}.
 The return value and error conditions are the same as for @code{setitimer}.
 @end deftypefun
 
+@vtable @code
 @comment sys/time.h
 @comment BSD
-@vtable @code
 @item ITIMER_REAL
 This constant can be used as the @var{which} argument to the
 @code{setitimer} and @code{getitimer} functions to specify the real-time
