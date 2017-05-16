@@ -78,6 +78,7 @@
 #define __M_CONCATX(a,b) __M_CONCAT(a,b)
 
 #define M_NAN M_SUF (__builtin_nan) ("")
+#define M_MIN_EXP __M_CONCATX (M_PFX, _MIN_EXP)
 #define M_MAX_EXP __M_CONCATX (M_PFX, _MAX_EXP)
 #define M_MIN __M_CONCATX (M_PFX, _MIN)
 #define M_MAX __M_CONCATX (M_PFX, _MAX)

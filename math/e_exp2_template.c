@@ -20,29 +20,28 @@
 #include <math_private.h>
 #include <float.h>
 
-/* To avoid spurious underflows, use this definition to treat IBM long
-   double as approximating an IEEE-style format.  */
-#if LDBL_MANT_DIG == 106
-# undef LDBL_EPSILON
-# define LDBL_EPSILON 0x1p-106L
-#endif
+#define declare_mgen_finite_alias_x(from, to) \
+	strong_alias (from, to ## _finite)
+#define declare_mgen_finite_alias_s(from,to) \
+	declare_mgen_finite_alias_x (from, to)
+#define declare_mgen_finite_alias(from, to) \
+	declare_mgen_finite_alias_s (M_SUF (from), M_SUF (to))
 
-long double
-__ieee754_exp2l (long double x)
+FLOAT
+M_DECL_FUNC (__ieee754_exp2) (FLOAT x)
 {
-  if (__glibc_likely (isless (x, (long double) LDBL_MAX_EXP)))
+  if (__glibc_likely (isless (x, (FLOAT) M_MAX_EXP)))
     {
-      if (__builtin_expect (isgreaterequal (x, (long double) (LDBL_MIN_EXP
-							      - LDBL_MANT_DIG
-							      - 1)), 1))
+      if (__builtin_expect (isgreaterequal (x, (FLOAT) (M_MIN_EXP - M_MANT_DIG
+							- 1)), 1))
 	{
 	  int intx = (int) x;
-	  long double fractx = x - intx;
-	  long double result;
-	  if (fabsl (fractx) < LDBL_EPSILON / 4.0L)
-	    result = __scalbnl (1.0L + fractx, intx);
+	  FLOAT fractx = x - intx;
+	  FLOAT result;
+	  if (M_FABS (fractx) < M_EPSILON / 4)
+	    result = M_SCALBN (1 + fractx, intx);
 	  else
-	    result = __scalbnl (__ieee754_expl (M_LN2l * fractx), intx);
+	    result = M_SCALBN (M_EXP (M_SUF (M_LN2) * fractx), intx);
 	  math_check_force_underflow_nonneg (result);
 	  return result;
 	}
@@ -52,11 +51,11 @@ __ieee754_exp2l (long double x)
 	  if (isinf (x))
 	    return 0;
 	  else
-	    return LDBL_MIN * LDBL_MIN;
+	    return M_MIN * M_MIN;
 	}
     }
   else
     /* Infinity, NaN or overflow.  */
-    return LDBL_MAX * x;
+    return M_MAX * x;
 }
-strong_alias (__ieee754_exp2l, __exp2l_finite)
+declare_mgen_finite_alias (__ieee754_exp2, __exp2)

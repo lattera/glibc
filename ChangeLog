@@ -1,3 +1,12 @@
+2017-05-17  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* math/Makefile (libm-calls): Move e_exp2F to gen-libm-calls.
+	(gen-libm-calls): Add e_exp2F to use the template.
+	* math/e_exp2l.c: Rename to math/e_exp2_template.c.
+	* math/e_exp2_template.c: New file, renamed from
+	math/e_exp2l.c, and made into a template.
+	* sysdeps/generic/math-type-macros.h (M_MIN_EXP): New macro.
+
 2017-05-17  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* elf/dl-tunable-types.h (tunable_type_code_t): New type
