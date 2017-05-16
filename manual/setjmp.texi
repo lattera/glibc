@@ -294,6 +294,11 @@ the content of the registers, the signal mask, and the current stack.
 Executing the contents would start at the point where the
 @code{getcontext} call just returned.
 
+@strong{Compatibility Note:} Depending on the operating system,
+information about the current context's stack may be in the
+@code{uc_stack} field of @var{ucp}, or it may instead be in
+architecture-specific subfields of the @code{uc_mcontext} field.
+
 The function returns @code{0} if successful.  Otherwise it returns
 @code{-1} and sets @var{errno} accordingly.
 @end deftypefun

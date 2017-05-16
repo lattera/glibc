@@ -1,3 +1,9 @@
+2017-08-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #759]
+	* manual/setjmp.texi (getcontex): Document uc_stack value
+	compatibility differences.
+
 2017-08-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* malloc/mcheck.c (old_free_hook): Use void * instead of __ptr_t.
