@@ -1,5 +1,14 @@
 2017-05-18  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/conf.texi: Convert @tables of annotated @items to
+	@vtables.
+	* manual/lang.texi: Likewise.
+	* manual/pattern.texi: Likewise.
+	* manual/resource.texi: Likewise.
+	* manual/socket.texi: Likewise.
+
+2017-05-18  Rical Jasan  <ricaljasan@pacific.net>
+
 	* manual/crypt.texi: Move a comment out of an @*x list.
 	* manual/filesys.texi: Refactor some comments, one of which looks
 	like a standard.  Fix incorrectly separated standards.

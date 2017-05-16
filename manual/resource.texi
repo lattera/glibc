@@ -32,7 +32,7 @@ This function reports resource usage totals for processes specified by
 
 In most systems, @var{processes} has only two valid values:
 
-@table @code
+@vtable @code
 @comment sys/resource.h
 @comment BSD
 @item RUSAGE_SELF
@@ -42,7 +42,7 @@ Just the current process.
 @comment BSD
 @item RUSAGE_CHILDREN
 All child processes (direct and indirect) that have already terminated.
-@end table
+@end vtable
 
 The return value of @code{getrusage} is zero for success, and @code{-1}
 for failure.

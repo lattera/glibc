@@ -3483,7 +3483,7 @@ this section.
 Here is a table of socket-level option names; all are defined in the
 header file @file{sys/socket.h}.
 
-@table @code
+@vtable @code
 @comment sys/socket.h
 @comment BSD
 @item SO_DEBUG
@@ -3596,7 +3596,7 @@ This option can be used with @code{getsockopt} only.  It is used to reset
 the error status of the socket.  The value is an @code{int}, which represents
 the previous error status.
 @c !!! what is "socket error status"?  this is never defined.
-@end table
+@end vtable
 
 @node Networks Database
 @section Networks Database

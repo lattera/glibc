@@ -661,7 +661,7 @@ of value and sign bits); these macros can also be used in @code{#if}
 preprocessor directives, whereas @code{sizeof} cannot.  The following
 macros are defined in @file{limits.h}.
 
-@table @code
+@vtable @code
 @comment limits.h
 @comment ISO
 @item CHAR_WIDTH
@@ -701,13 +701,13 @@ These are the widths of the types @code{char}, @code{signed char},
 @code{int}, @code{unsigned int}, @code{long int}, @code{unsigned long
 int}, @code{long long int} and @code{unsigned long long int},
 respectively.
-@end table
+@end vtable
 
 Further such macros are defined in @file{stdint.h}.  Apart from those
 for types specified by width (@pxref{Integers}), the following are
 defined.
 
-@table @code
+@vtable @code
 @comment stdint.h
 @comment ISO
 @item INTPTR_WIDTH
@@ -733,7 +733,7 @@ defined.
 These are the widths of the types @code{intptr_t}, @code{uintptr_t},
 @code{ptrdiff_t}, @code{sig_atomic_t}, @code{size_t}, @code{wchar_t}
 and @code{wint_t}, respectively.
-@end table
+@end vtable
 
 @node Range of Type
 @subsection Range of an Integer Type

@@ -74,7 +74,7 @@ returning nonzero values that are not equal to @code{FNM_NOMATCH}.
 
 These are the available flags for the @var{flags} argument:
 
-@table @code
+@vtable @code
 @comment fnmatch.h
 @comment GNU
 @item FNM_FILE_NAME
@@ -160,7 +160,7 @@ the @var{pattern-list} allows matching the input string.
 The pattern matches if the input string cannot be matched with any of
 the patterns in the @var{pattern-list}.
 @end table
-@end table
+@end vtable
 
 @node Globbing
 @section Globbing
@@ -1143,7 +1143,7 @@ describing the reason for a nonzero value; see @ref{Regexp Cleanup}.
 
 Here are the possible nonzero values that @code{regcomp} can return:
 
-@table @code
+@vtable @code
 @comment regex.h
 @comment POSIX.2
 @item REG_BADBR
@@ -1210,7 +1210,7 @@ One of the endpoints in a range expression was invalid.
 @comment POSIX.2
 @item REG_ESPACE
 @code{regcomp} ran out of memory.
-@end table
+@end vtable
 
 @node Flags for POSIX Regexps
 @subsection Flags for POSIX Regular Expressions
@@ -1218,7 +1218,7 @@ One of the endpoints in a range expression was invalid.
 These are the bit flags that you can use in the @var{cflags} operand when
 compiling a regular expression with @code{regcomp}.
 
-@table @code
+@vtable @code
 @comment regex.h
 @comment POSIX.2
 @item REG_EXTENDED
@@ -1244,7 +1244,7 @@ match after.  Also, don't permit @samp{.} to match a newline, and don't
 permit @samp{[^@dots{}]} to match a newline.
 
 Otherwise, newline acts like any other ordinary character.
-@end table
+@end vtable
 
 @node Matching POSIX Regexps
 @subsection Matching a Compiled POSIX Regular Expression
@@ -1524,7 +1524,7 @@ locales that were in effect when you compiled the regular expression.
 The function @code{regexec} accepts the following flags in the
 @var{eflags} argument:
 
-@table @code
+@vtable @code
 @comment regex.h
 @comment POSIX.2
 @item REG_NOTBOL
@@ -1537,11 +1537,11 @@ precede it.
 @item REG_NOTEOL
 Do not regard the end of the specified string as the end of a line; more
 generally, don't make any assumptions about what text might follow it.
-@end table
+@end vtable
 
 Here are the possible nonzero values that @code{regexec} can return:
 
-@table @code
+@vtable @code
 @comment regex.h
 @comment POSIX.2
 @item REG_NOMATCH
@@ -1551,7 +1551,7 @@ The pattern didn't match the string.  This isn't really an error.
 @comment POSIX.2
 @item REG_ESPACE
 @code{regexec} ran out of memory.
-@end table
+@end vtable
 
 @node Regexp Subexpressions
 @subsection Match Results with Subexpressions
@@ -2013,7 +2013,7 @@ into @code{*@var{word-vector-ptr}}.
 If @code{wordexp} succeeds, it returns 0.  Otherwise, it returns one
 of these error codes:
 
-@table @code
+@vtable @code
 @comment wordexp.h
 @comment POSIX.2
 @item WRDE_BADCHAR
@@ -2045,7 +2045,7 @@ allocate room for.
 There was a syntax error in the input string.  For example, an unmatched
 quoting character is a syntax error.  This error code is also used to
 signal division by zero and overflow in arithmetic expansion.
-@end table
+@end vtable
 @end deftypefun
 
 @comment wordexp.h
@@ -2067,7 +2067,7 @@ This section describes the flags that you can specify in the
 @var{flags} argument to @code{wordexp}.  Choose the flags you want,
 and combine them with the C operator @code{|}.
 
-@table @code
+@vtable @code
 @comment wordexp.h
 @comment POSIX.2
 @item WRDE_APPEND
@@ -2117,7 +2117,7 @@ commands a standard error stream that discards all output.
 @item WRDE_UNDEF
 If the input refers to a shell variable that is not defined, report an
 error.
-@end table
+@end vtable
 
 @node Wordexp Example
 @subsection @code{wordexp} Example
