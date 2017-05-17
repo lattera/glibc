@@ -105,10 +105,10 @@ get_next_env (char **envp, char **name, size_t *namelen, char **val,
 /* A stripped down strtoul-like implementation for very early use.  It does not
    set errno if the result is outside bounds because it gets called before
    errno may have been set up.  */
-static unsigned long int
+static uint64_t
 tunables_strtoul (const char *nptr)
 {
-  unsigned long int result = 0;
+  uint64_t result = 0;
   long int sign = 1;
   unsigned max_digit;
 
@@ -144,7 +144,7 @@ tunables_strtoul (const char *nptr)
 
   while (1)
     {
-      unsigned long int digval;
+      int digval;
       if (*nptr >= '0' && *nptr <= '0' + max_digit)
         digval = *nptr - '0';
       else if (base == 16)
@@ -159,9 +159,8 @@ tunables_strtoul (const char *nptr)
       else
         break;
 
-      if (result > ULONG_MAX / base
-	  || (result == ULONG_MAX / base && digval > ULONG_MAX % base))
-	return ULONG_MAX;
+      if (result >= (UINT64_MAX - digval) / base)
+	return UINT64_MAX;
       result *= base;
       result += digval;
       ++nptr;
@@ -170,68 +169,50 @@ tunables_strtoul (const char *nptr)
   return result * sign;
 }
 
-/* Initialize the internal type if the value validates either using the
-   explicit constraints of the tunable or with the implicit constraints of its
-   type.  */
-static void
-tunable_set_val_if_valid_range_signed (tunable_t *cur, const char *strval,
-				int64_t default_min, int64_t default_max)
-{
-  int64_t val = (int64_t) tunables_strtoul (strval);
-
-  int64_t min = cur->type.min;
-  int64_t max = cur->type.max;
-
-  if (min == max)
-    {
-      min = default_min;
-      max = default_max;
-    }
-
-  if (val >= min && val <= max)
-    {
-      cur->val.numval = val;
-      cur->strval = strval;
-    }
-}
-
-static void
-tunable_set_val_if_valid_range_unsigned (tunable_t *cur, const char *strval,
-					 uint64_t default_min, uint64_t default_max)
-{
-  uint64_t val = (uint64_t) tunables_strtoul (strval);
-
-  uint64_t min = cur->type.min;
-  uint64_t max = cur->type.max;
-
-  if (min == max)
-    {
-      min = default_min;
-      max = default_max;
-    }
-
-  if (val >= min && val <= max)
-    {
-      cur->val.numval = val;
-      cur->strval = strval;
-    }
-}
+#define TUNABLE_SET_VAL_IF_VALID_RANGE(__cur, __val, __type, __default_min, \
+				       __default_max)			      \
+({									      \
+  __type min = (__cur)->type.min;					      \
+  __type max = (__cur)->type.max;					      \
+									      \
+  if (min == max)							      \
+    {									      \
+      min = __default_min;						      \
+      max = __default_max;						      \
+    }									      \
+									      \
+  if ((__type) (__val) >= min && (__type) (val) <= max)			      \
+    {									      \
+      (__cur)->val.numval = val;					      \
+      (__cur)->strval = strval;						      \
+    }									      \
+})
 
 /* Validate range of the input value and initialize the tunable CUR if it looks
    good.  */
 static void
 tunable_initialize (tunable_t *cur, const char *strval)
 {
+  uint64_t val;
+
+  if (cur->type.type_code != TUNABLE_TYPE_STRING)
+    val = tunables_strtoul (strval);
+
   switch (cur->type.type_code)
     {
     case TUNABLE_TYPE_INT_32:
 	{
-	  tunable_set_val_if_valid_range_signed (cur, strval, INT32_MIN, INT32_MAX);
+	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, int64_t, INT32_MIN, INT32_MAX);
+	  break;
+	}
+    case TUNABLE_TYPE_UINT_64:
+	{
+	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, uint64_t, 0, UINT64_MAX);
 	  break;
 	}
     case TUNABLE_TYPE_SIZE_T:
 	{
-	  tunable_set_val_if_valid_range_unsigned (cur, strval, 0, SIZE_MAX);
+	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, uint64_t, 0, SIZE_MAX);
 	  break;
 	}
     case TUNABLE_TYPE_STRING:
@@ -461,6 +442,11 @@ __tunable_set_val (tunable_id_t id, void *valp, tunable_callback_t callback)
 
   switch (cur->type.type_code)
     {
+    case TUNABLE_TYPE_UINT_64:
+	{
+	  *((uint64_t *) valp) = (uint64_t) cur->val.numval;
+	  break;
+	}
     case TUNABLE_TYPE_INT_32:
 	{
 	  *((int32_t *) valp) = (int32_t) cur->val.numval;

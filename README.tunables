@@ -48,7 +48,8 @@ TOP_NAMESPACE {
 The list of allowed attributes are:
 
 - type:			Data type.  Defaults to STRING.  Allowed types are:
-			INT_32, SIZE_T and STRING.
+			INT_32, UINT_64, SIZE_T and STRING.  Numeric types may
+			be in octal or hexadecimal format too.
 
 - minval:		Optional minimum acceptable value.  For a string type
 			this is the minimum length of the value.

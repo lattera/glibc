@@ -1,5 +1,17 @@
 2017-05-17  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* elf/dl-tunable-types.h (tunable_type_code_t): New type
+	TUNABLE_TYPE_UINT_64.
+	* elf/dl-tunables.c (tunables_strtoul): Return uint64_t.
+	Simplify computation of overflow.
+	(tunable_set_val_if_valid_range_signed,
+	tunable_set_val_if_valid_range_unsigned): Remove and replace
+	with this...
+	(TUNABLE_SET_VAL_IF_VALID_RANGE): ... New macro.
+	(tunable_initialize): Adjust.  Add uint64_t support.
+	(__tunable_set_val): Add uint64_t support.
+	* README.tunables: Document it.
+
 	* scripts/gen-tunables.awk: Recognize 'default' keyword in
 	dl-tunables.list.
 	* README.tunables: Document it.

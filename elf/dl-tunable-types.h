@@ -24,6 +24,7 @@
 typedef enum
 {
   TUNABLE_TYPE_INT_32,
+  TUNABLE_TYPE_UINT_64,
   TUNABLE_TYPE_SIZE_T,
   TUNABLE_TYPE_STRING
 } tunable_type_code_t;
