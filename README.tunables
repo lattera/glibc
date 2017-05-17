@@ -56,6 +56,8 @@ The list of allowed attributes are:
 - maxval:		Optional maximum acceptable value.  For a string type
 			this is the maximum length of the value.
 
+- default:		Specify an optional default value for the tunable.
+
 - env_alias:		An alias environment variable
 
 - security_level:	Specify security level of the tunable.  Valid values:

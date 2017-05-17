@@ -1,3 +1,9 @@
+2017-05-17  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* scripts/gen-tunables.awk: Recognize 'default' keyword in
+	dl-tunables.list.
+	* README.tunables: Document it.
+
 2017-05-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/posix/preadv.c: Use sysdeps/posix/preadv_common.c.

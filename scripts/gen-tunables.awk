@@ -113,6 +113,14 @@ $1 == "}" {
       exit 1
     }
   }
+  else if (attr == "default") {
+    if (types[top_ns][ns][tunable] == "STRING") {
+      default_val[top_ns][ns][tunable] = sprintf(".strval = \"%s\"", val);
+    }
+    else {
+      default_val[top_ns][ns][tunable] = sprintf(".numval = %s", val)
+    }
+  }
 }
 
 END {
@@ -146,9 +154,9 @@ END {
     for (n in types[t]) {
       for (m in types[t][n]) {
         printf ("  {TUNABLE_NAME_S(%s, %s, %s)", t, n, m)
-        printf (", {TUNABLE_TYPE_%s, %s, %s}, {.numval = 0}, NULL, TUNABLE_SECLEVEL_%s, %s},\n",
+        printf (", {TUNABLE_TYPE_%s, %s, %s}, {%s}, NULL, TUNABLE_SECLEVEL_%s, %s},\n",
 		types[t][n][m], minvals[t][n][m], maxvals[t][n][m],
-		security_level[t][n][m], env_alias[t][n][m]);
+		default_val[t][n][m], security_level[t][n][m], env_alias[t][n][m]);
       }
     }
   }
