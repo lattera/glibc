@@ -1,3 +1,13 @@
+2017-05-17  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	[$(subdir) = math] (libm-sysdep_routines): Add s_cosf-power8 and
+	s_cosf-ppc64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_cosf-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_cosf-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_cosf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_cosf.S: Likewise.
+
 2017-05-17  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/Makefile (libm-calls): Move e_exp2F to gen-libm-calls.
