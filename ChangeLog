@@ -1,3 +1,8 @@
+2017-05-18  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* elf/Makefile (tst-env-setuid-ENV): Reduce value of
+	LD_HWCAP_MASK.
+
 2017-05-18  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/conf.texi: Convert @tables of annotated @items to
