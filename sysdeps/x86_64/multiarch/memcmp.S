@@ -56,9 +56,9 @@ END(memcmp)
 
 # ifdef SHARED
 #  undef libc_hidden_builtin_def
-/* IFUNC doesn't work with the hidden functions in shared library since
-   they will be called without setting up EBX needed for PLT which is
-   used by IFUNC.  */
+/* It doesn't make sense to send libc-internal memcmp calls through a PLT.
+   The speedup we get from using SSE4 instructions is likely eaten away
+   by the indirect call in the PLT.  */
 #  define libc_hidden_builtin_def(name) \
 	.globl __GI_memcmp; __GI_memcmp = __memcmp_sse2
 # endif
