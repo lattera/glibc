@@ -87,8 +87,8 @@ tf1 (void *arg)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   initial_pid = getpid ();
 
@@ -104,3 +104,5 @@ main (void)
 
   return 1;
 }
+
+#include <support/test-driver.c>
