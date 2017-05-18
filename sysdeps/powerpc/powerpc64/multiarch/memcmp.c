@@ -26,11 +26,14 @@
 extern __typeof (memcmp) __memcmp_ppc attribute_hidden;
 extern __typeof (memcmp) __memcmp_power4 attribute_hidden;
 extern __typeof (memcmp) __memcmp_power7 attribute_hidden;
+extern __typeof (memcmp) __memcmp_power8 attribute_hidden;
 # undef memcmp
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
 libc_ifunc_redirected (__redirect_memcmp, memcmp,
+		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+		       ? __memcmp_power8 :
 		       (hwcap & PPC_FEATURE_HAS_VSX)
 		       ? __memcmp_power7
 		       : (hwcap & PPC_FEATURE_POWER4)

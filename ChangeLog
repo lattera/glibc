@@ -1,3 +1,14 @@
+2017-05-18  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile
+	(sysdep_routines): Add memcmp-power8.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(memcmp): Add __memcmp_power8 to list of memcmp functions.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp.c
+	(memcmp): Add __memcmp_power8 to ifunc list.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/power8/memcmp.S: New file.
+
 2017-05-17  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
