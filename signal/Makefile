@@ -24,7 +24,8 @@ include ../Makeconfig
 
 headers	:= signal.h sys/signal.h bits/signum.h bits/sigcontext.h \
 	   bits/sigaction.h bits/sigset.h bits/siginfo.h bits/sigstack.h \
-	   bits/sigthread.h
+	   bits/sigthread.h bits/types/struct_sigstack.h bits/types/stack_t.h \
+	   bits/ss_flags.h
 
 routines	:= signal raise killpg \
 		   sigaction sigprocmask kill \

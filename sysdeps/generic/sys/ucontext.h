@@ -29,6 +29,9 @@
    by <signal.h>.  */
 #include <bits/sigcontext.h>
 #include <bits/sigstack.h>
+#include <bits/types/struct_sigstack.h>
+#include <bits/types/stack_t.h>
+#include <bits/ss_flags.h>
 
 
 typedef struct sigcontext mcontext_t;

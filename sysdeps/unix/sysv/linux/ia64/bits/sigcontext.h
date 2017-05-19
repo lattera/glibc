@@ -26,6 +26,9 @@
 #define __need_size_t
 #include <stddef.h>
 #include <bits/sigstack.h>
+#include <bits/types/struct_sigstack.h>
+#include <bits/types/stack_t.h>
+#include <bits/ss_flags.h>
 
 struct __ia64_fpreg
   {

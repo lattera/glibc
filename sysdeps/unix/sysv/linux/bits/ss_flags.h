@@ -1,4 +1,4 @@
-/* sigstack, sigaltstack definitions.
+/* ss_flags values for stack_t.  Linux version.
    Copyright (C) 1998-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,17 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_SIGSTACK_H
-#define _BITS_SIGSTACK_H 1
+#ifndef _BITS_SS_FLAGS_H
+#define _BITS_SS_FLAGS_H 1
 
 #if !defined _SIGNAL_H && !defined _SYS_UCONTEXT_H
 # error "Never include this file directly.  Use <signal.h> instead"
 #endif
 
-/* Minumum stack size for a signal handler.  */
-#define MINSIGSTKSZ	8192
+/* Possible values for `ss_flags'.  */
+enum
+{
+  SS_ONSTACK = 1,
+#define SS_ONSTACK	SS_ONSTACK
+  SS_DISABLE
+#define SS_DISABLE	SS_DISABLE
+};
 
-/* System default stack size.  */
-#define SIGSTKSZ	(MINSIGSTKSZ + 32768)
-
-#endif /* bits/sigstack.h */
+#endif /* bits/ss_flags.h */

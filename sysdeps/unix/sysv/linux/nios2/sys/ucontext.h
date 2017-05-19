@@ -28,6 +28,9 @@
    by <signal.h>.  */
 #include <bits/sigcontext.h>
 #include <bits/sigstack.h>
+#include <bits/types/struct_sigstack.h>
+#include <bits/types/stack_t.h>
+#include <bits/ss_flags.h>
 
 
 /* These definitions must be in sync with the kernel.  */

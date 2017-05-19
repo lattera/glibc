@@ -314,6 +314,9 @@ extern int sigreturn (struct sigcontext *__scp) __THROW;
 extern int siginterrupt (int __sig, int __interrupt) __THROW;
 
 # include <bits/sigstack.h>
+# include <bits/types/struct_sigstack.h>
+# include <bits/types/stack_t.h>
+# include <bits/ss_flags.h>
 # if defined __USE_XOPEN || defined __USE_XOPEN2K8
 /* This will define `ucontext_t' and `mcontext_t'.  */
 #  include <sys/ucontext.h>
