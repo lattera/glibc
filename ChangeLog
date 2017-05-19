@@ -1,3 +1,12 @@
+2017-05-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* misc/Makefile (CFLAGS-vmsplice.c): Remove rule.
+	(CFLAGS-splice.c): Likewise.
+	(CFLAGS-open_by_handle_at.c): Likewise.
+	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-vmsplice.c): New rule.
+	(CFLAGS-splice.c): Likewise.
+	(CFLAGS-open_by_handle_at.c): Likewise.
+
 2017-05-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/versions.awk: Generate ldbl-compat-choose.h.

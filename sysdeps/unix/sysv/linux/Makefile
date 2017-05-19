@@ -22,6 +22,9 @@ sysdep_routines += clone umount umount2 readahead \
 
 CFLAGS-gethostid.c = -fexceptions
 CFLAGS-tee.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-vmsplice.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-splice.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-open_by_handle_at.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=(0x80000000-sysconf(_SC_PAGESIZE))"
 
 # Note that bits/mman-linux.h is listed here though the file lives in the
