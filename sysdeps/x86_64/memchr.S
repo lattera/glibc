@@ -76,14 +76,12 @@ L(crosscache):
 
 	.p2align 4
 L(unaligned_no_match):
-        /* Calculate the last acceptable address and check for possible
-           addition overflow by using satured math:
-           rdx = rcx + rdx
-           rdx |= -(rdx < rcx)  */
-	add	%rcx, %rdx
-	sbb	%rax, %rax
-	or	%rax, %rdx
-	sub	$16, %rdx
+        /* "rcx" is less than 16.  Calculate "rdx + rcx - 16" by using
+	   "rdx - (16 - rcx)" instead of "(rdx + rcx) - 16" to void
+	   possible addition overflow.  */
+	neg	%rcx
+	add	$16, %rcx
+	sub	%rcx, %rdx
 	jbe	L(return_null)
 	add	$16, %rdi
 	sub	$64, %rdx

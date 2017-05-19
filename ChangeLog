@@ -1,3 +1,9 @@
+2017-05-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/memchr-sse2.S (MEMCHR): Use
+	"edx + ecx - 16" to avoid possible addition overflow.
+	* sysdeps/x86_64/memchr.S (memchr): Likewise.
+
 2017-05-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* misc/Makefile (CFLAGS-vmsplice.c): Remove rule.
