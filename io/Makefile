@@ -99,7 +99,6 @@ CFLAGS-posix_fallocate.c = -fexceptions
 CFLAGS-posix_fallocate64.c = -fexceptions
 CFLAGS-fallocate.c = -fexceptions
 CFLAGS-fallocate64.c = -fexceptions
-CFLAGS-sync_file_range.c = -fexceptions
 CFLAGS-read.c = -fexceptions
 CFLAGS-write.c = -fexceptions
 

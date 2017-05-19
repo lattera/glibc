@@ -1,5 +1,11 @@
 2017-06-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* io/Makefile (CFLAGS-sync_file_range.c): Remove rule.
+	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-sync_file_range.c): New
+	rule.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Remove
+	sync_file_range.
+
 	 * support/support_test_main.c (support_test_main):  Use optstring
 	 member for option string in getopt_long.
 	 * support/test-driver.c: Add comment about CMDLINE_OPTSTRING.
