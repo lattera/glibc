@@ -1,3 +1,47 @@
+2017-05-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/versions.awk: Generate first-versions.h.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h: Include
+	<first-versions.h>.
+	(LDOUBLE_cabsl_libm_version): Remove macro.
+	(LDOUBLE_cargl_libm_version): Likewise.
+	(LDOUBLE_cimagl_libm_version): Likewise.
+	(LDOUBLE_conjl_libm_version): Likewise.
+	(LDOUBLE_creall_libm_version): Likewise.
+	(LDOUBLE_cacosl_libm_version): Likewise.
+	(LDOUBLE_cacoshl_libm_version): Likewise.
+	(LDOUBLE_ccosl_libm_version): Likewise.
+	(LDOUBLE_ccoshl_libm_version): Likewise.
+	(LDOUBLE_casinl_libm_version): Likewise.
+	(LDOUBLE_csinl_libm_version): Likewise.
+	(LDOUBLE_casinhl_libm_version): Likewise.
+	(LDOUBLE_csinhl_libm_version): Likewise.
+	(LDOUBLE_catanl_libm_version): Likewise.
+	(LDOUBLE_catanhl_libm_version): Likewise.
+	(LDOUBLE_ctanl_libm_version): Likewise.
+	(LDOUBLE_ctanhl_libm_version): Likewise.
+	(LDOUBLE_cexpl_libm_version): Likewise.
+	(LDOUBLE_clogl_libm_version): Likewise.
+	(LDOUBLE_cprojl_libm_version): Likewise.
+	(LDOUBLE_csqrtl_libm_version): Likewise.
+	(LDOUBLE_cpowl_libm_version): Likewise.
+	(LDOUBLE_clog10l_libm_version): Likewise.
+	(LDOUBLE___clog10l_libm_version): Likewise.
+	(LDOUBLE_fdiml_libm_version): Likewise.
+	(LDOUBLE_fmaxl_libm_version): Likewise.
+	(LDOUBLE_fminl_libm_version): Likewise.
+	(LDOUBLE_ilogbl_libm_version): Likewise.
+	(LDOUBLE_nanl_libm_version): Likewise.
+	[!M_LIBM_NEED_COMPAT] (M_LIBM_NEED_COMPAT): Use
+	FIRST_VERSION_libm_* macros.
+	[!declare_mgen_libm_compat] (declare_mgen_libm_compat): Likewise.
+	* Makerules [$(build-shared) = yes && !avoid-generated]
+	(before-compile): Add $(common-objpfx)first-versions.h.
+	[$(build-shared) = yes && !avoid-generated]
+	($(common-objpfx)first-versions.h): New target.
+	($(common-objpfx)sysd-versions): Depend on and change to rule for
+	building $(common-objpfx)versions.stmp.
+
 2017-05-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* rt/Makefile (CFLAGS-mq_timedsend.c): New flag.

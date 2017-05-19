@@ -101,6 +101,10 @@ END {
 
   oldlib = "";
   oldver = "";
+  real_first_ver_header = buildroot "first-versions.h"
+  first_ver_header = real_first_ver_header "T"
+  printf("#ifndef _FIRST_VERSIONS_H\n") > first_ver_header;
+  printf("#define _FIRST_VERSIONS_H\n") > first_ver_header;
   printf("version-maps =");
   while (getline < tmpfile) {
     if ($1 != oldlib) {
@@ -127,11 +131,24 @@ END {
     printf("   ") > outfile;
     for (n = 3; n <= NF; ++n) {
       printf(" %s", $n) > outfile;
+      sym = $n;
+      sub(";", "", sym);
+      first_ver_macro = "FIRST_VERSION_" oldlib "_" sym;
+      if (!(first_ver_macro in first_ver_seen) \
+	  && oldver ~ "^GLIBC_[0-9]" \
+	  && sym ~ "^[A-Za-z0-9_]*$") {
+	ver_val = oldver;
+	gsub("\\.", "_", ver_val);
+	printf("#define %s %s\n", first_ver_macro, ver_val) > first_ver_header;
+	first_ver_seen[first_ver_macro] = 1;
+      }
     }
     printf("\n") > outfile;
   }
   printf("\n");
+  printf("#endif /* first-versions.h */\n") > first_ver_header;
   closeversion(oldver, veryoldver);
   close_and_move(outfile, real_outfile);
+  close_and_move(first_ver_header, real_first_ver_header);
   #system("rm -f " tmpfile);
 }
