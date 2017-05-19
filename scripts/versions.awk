@@ -105,6 +105,13 @@ END {
   first_ver_header = real_first_ver_header "T"
   printf("#ifndef _FIRST_VERSIONS_H\n") > first_ver_header;
   printf("#define _FIRST_VERSIONS_H\n") > first_ver_header;
+  real_ldbl_compat_header = buildroot "ldbl-compat-choose.h"
+  ldbl_compat_header = real_ldbl_compat_header "T"
+  printf("#ifndef _LDBL_COMPAT_CHOOSE_H\n") > ldbl_compat_header;
+  printf("#define _LDBL_COMPAT_CHOOSE_H\n") > ldbl_compat_header;
+  printf("#ifndef LONG_DOUBLE_COMPAT\n") > ldbl_compat_header;
+  printf("# error LONG_DOUBLE_COMPAT not defined\n") > ldbl_compat_header;
+  printf("#endif\n") > ldbl_compat_header;
   printf("version-maps =");
   while (getline < tmpfile) {
     if ($1 != oldlib) {
@@ -141,14 +148,26 @@ END {
 	gsub("\\.", "_", ver_val);
 	printf("#define %s %s\n", first_ver_macro, ver_val) > first_ver_header;
 	first_ver_seen[first_ver_macro] = 1;
+	if (oldlib == "libc" || oldlib == "libm") {
+	  printf("#if LONG_DOUBLE_COMPAT (%s, %s)\n",
+		 oldlib, ver_val) > ldbl_compat_header;
+	  printf("# define LONG_DOUBLE_COMPAT_CHOOSE_%s_%s(a, b) a\n",
+		 oldlib, sym) > ldbl_compat_header;
+	  printf("#else\n") > ldbl_compat_header;
+	  printf("# define LONG_DOUBLE_COMPAT_CHOOSE_%s_%s(a, b) b\n",
+		 oldlib, sym) > ldbl_compat_header;
+	  printf("#endif\n") > ldbl_compat_header;
+	}
       }
     }
     printf("\n") > outfile;
   }
   printf("\n");
   printf("#endif /* first-versions.h */\n") > first_ver_header;
+  printf("#endif /* ldbl-compat-choose.h */\n") > ldbl_compat_header;
   closeversion(oldver, veryoldver);
   close_and_move(outfile, real_outfile);
   close_and_move(first_ver_header, real_first_ver_header);
+  close_and_move(ldbl_compat_header, real_ldbl_compat_header);
   #system("rm -f " tmpfile);
 }

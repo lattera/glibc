@@ -106,10 +106,12 @@ $(common-objpfx)%.latest: $(common-objpfx)abi-versions.h
 	    $(common-objpfx)abi-versions.h > $@T
 	mv -f $@T $@
 
-# first-versions.h provides macros used in various symbol versioning
-# macro calls.
-before-compile := $(common-objpfx)first-versions.h $(before-compile)
+# first-versions.h and ldbl-compat-choose.h provide macros used in
+# various symbol versioning macro calls.
+before-compile := $(common-objpfx)first-versions.h \
+		  $(common-objpfx)ldbl-compat-choose.h $(before-compile)
 $(common-objpfx)first-versions.h: $(common-objpfx)versions.stmp
+$(common-objpfx)ldbl-compat-choose.h: $(common-objpfx)versions.stmp
 endif # avoid-generated
 endif # $(build-shared) = yes
 

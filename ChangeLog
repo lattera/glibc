@@ -1,5 +1,21 @@
 2017-05-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/versions.awk: Generate ldbl-compat-choose.h.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-ldouble.h: Include
+	<ldbl-compat-choose.h>.
+	(maybe_long_double_symbol): New macro.
+	[!declare_mgen_alias] (declare_mgen_alias): Use
+	maybe_long_double_symbol.
+	* sysdeps/ieee754/ldbl-opt/s_canonicalizel.c: Remove.
+	* sysdeps/ieee754/ldbl-opt/s_fmaxmagl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_fminmagl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_nextdownl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_llogbl.c: Likewise.
+	* Makerules [$(build-shared) = yes && !avoid-generated]
+	(before-compile): Add $(common-objpfx)ldbl-compat-choose.h.
+	[$(build-shared) = yes && !avoid-generated]
+	($(common-objpfx)ldbl-compat-choose.h): New target.
+
 	* scripts/versions.awk: Generate first-versions.h.
 	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h: Include
 	<first-versions.h>.

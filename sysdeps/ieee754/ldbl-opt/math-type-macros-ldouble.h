@@ -19,12 +19,19 @@
 #ifndef _MATH_TYPE_MACROS_LDOUBLE
 
 #include <math_ldbl_opt.h>
+#include <ldbl-compat-choose.h>
+
+#define maybe_long_double_symbol(lib, from, to)				\
+  LONG_DOUBLE_COMPAT_CHOOSE_ ## lib ## _ ## to (long_double_symbol (lib, \
+								    from, \
+								    to), \
+						weak_alias (from, to))
 
 /* Use properly versioned symbols for long double on platforms where
    it was not always a distinct type.  */
 #if !defined declare_mgen_alias
 # define declare_mgen_alias(from, to) \
-  long_double_symbol (libm, from ## l, to ## l);
+  maybe_long_double_symbol (libm, from ## l, to ## l);
 #endif
 
 #include_next <math-type-macros-ldouble.h>
