@@ -1,3 +1,7 @@
+2017-05-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/rawmemchr.S (L(return_null)): Removed.
+
 2017-05-20  Zack Weinberg  <zackw@panix.com>
 
 	* sysdeps/arm/sysdep.h

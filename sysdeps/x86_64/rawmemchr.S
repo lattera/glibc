@@ -196,11 +196,6 @@ L(matches32):
 	lea	32(%rax, %rdi), %rax
 	ret
 
-	.p2align 4
-L(return_null):
-	xor	%rax, %rax
-	ret
-
 END (__rawmemchr)
 
 weak_alias (__rawmemchr, rawmemchr)
