@@ -16,10 +16,8 @@
 # <http://www.gnu.org/licenses/>.
 
 # errno.texi contains lines like:
-# @comment errno.h
-# @comment POSIX.1: Function not implemented
 # @deftypevr Macro int ENOSYS
-# @comment errno 78
+# @errno{ENOSYS, 78, Function not implemented}
 # Descriptive paragraph...
 # @end deftypevr
 
@@ -61,22 +59,14 @@ BEGIN {
     print "    [0] = N_(\"Success\"),"
   }
 
-$1 == "@comment" && $2 == "errno.h" { errnoh=1; next }
-errnoh == 1 && $1 == "@comment" \
+/^@errno\{/ \
   {
-    ++errnoh;
     etext = $3;
     for (i = 4; i <= NF; ++i)
       etext = etext " " $i;
-    next;
-  }
-errnoh == 2 && $1 == "@deftypevr" && $2 == "Macro" && $3 == "int" \
-  {
-    e = $4; errnoh++; next;
-  }
-errnoh == 3 && $1 == "@comment" && $2 == "errno" \
-  {
-    errno = $3 + 0;
+    etext = substr(etext, 1, length(etext)-1)
+    e = substr($1, 8, length($1)-8)
+    errno = substr($2, 1, length($2)-1) + 0
     if (alias[e])
       printf "#if defined (%s) && %s != %s\n", e, e, alias[e];
     else
@@ -102,7 +92,6 @@ errnoh == 4 \
     # This magic tag in C comments gets them copied into libc.pot.
     desc = desc "\nTRANS" ($0 != "" ? " " : "") $0; next
   }
-{ errnoh=0 }
 END {
   print "  };";
   print "";

@@ -267,4 +267,10 @@ cwd\comments\
 @end macro
 @end ifnottex
 
+@c Used by errlist.awk and errnos.awk to generate other files.
+@c Note that error values have ABI implications for the Hurd.
+@macro errno {err, val, str}
+@cindex \str\
+@end macro
+
 @end ifclear
