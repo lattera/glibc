@@ -39,11 +39,13 @@ typedef __pid_t pid_t;
 # define __pid_t_defined
 #endif
 
-
 /* Get system specific constant and data structure definitions.  */
 #include <bits/sched.h>
-/* Define the real names for the elements of `struct sched_param'.  */
-#define sched_priority	__sched_priority
+#include <bits/cpu-set.h>
+
+/* Backward compatibility.  */
+#define sched_priority    sched_priority
+#define __sched_priority  sched_priority
 
 
 __BEGIN_DECLS

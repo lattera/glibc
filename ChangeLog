@@ -1,3 +1,21 @@
+2017-06-12  Zack Weinberg  <zackw@panix.com>
+
+	* bits/sched.h: Remove __need_schedparam logic and replace with a
+	normal multiple-include guard.  Change field name in struct
+	sched_param from __sched_priority to sched_priority.  Delete
+	everything under #ifndef __cpu_set_t_defined.
+	* sysdeps/unix/sysv/linux/bits/sched.h: Likewise.  Also sync with
+	kernel sched.h, adding SCHED_ISO and SCHED_DEADLINE constants.
+
+	* posix/sched.h: Include bits/cpu-set.h as well as bits/sched.h.
+	For compatibility, #define sched_priority to itself, and #define
+	__sched_priority as sched_priority.
+	* posix/bits/cpu-set.h: New file containing, verbatim, the code
+	that was under #ifndef __cpu_set_t_defined in
+	sysdeps/unix/sysv/linux/bits/sched.h.
+	* include/bits/cpu-set.h: New wrapper.
+	* posix/Makefile: Install bits/cpu-set.h.
+
 2017-06-12  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
