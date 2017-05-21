@@ -1,3 +1,7 @@
+2017-05-21  Zack Weinberg  <zackw@panix.com>
+
+	* signal/Makefile (headers): Add bits/types/sigval_t.h.
+
 2017-05-20  Zack Weinberg  <zackw@panix.com>
 
 	* bits/sigevent-consts.h
