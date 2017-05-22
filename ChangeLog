@@ -1,5 +1,11 @@
 2017-06-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* elf/dl-hwcaps.h [HAVE_TUNABLES]: Always read hwcap_mask.
+	* sysdeps/sparc/sparc32/dl-machine.h [HAVE_TUNABLES]:
+	Likewise.
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Always set
+	up hwcap and hwcap_mask.
+
 	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c
 	(init_cpu_features): Use glibc.tune.hwcap_mask.
 	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.h: New file.

@@ -312,17 +312,16 @@ no_cpuid:
   cpu_features->model = model;
   cpu_features->kind = kind;
 
-#if IS_IN (rtld)
   /* Reuse dl_platform, dl_hwcap and dl_hwcap_mask for x86.  */
   GLRO(dl_platform) = NULL;
   GLRO(dl_hwcap) = 0;
-#if !HAVE_TUNABLES
+#if !HAVE_TUNABLES && defined SHARED
   /* The glibc.tune.hwcap_mask tunable is initialized already, so no need to do
      this.  */
   GLRO(dl_hwcap_mask) = HWCAP_IMPORTANT;
 #endif
 
-# ifdef __x86_64__
+#ifdef __x86_64__
   if (cpu_features->kind == arch_kind_intel)
     {
       if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable)
@@ -352,7 +351,7 @@ no_cpuid:
 	  && CPU_FEATURES_CPU_P (cpu_features, POPCNT))
 	GLRO(dl_platform) = "haswell";
     }
-# else
+#else
   if (CPU_FEATURES_CPU_P (cpu_features, SSE2))
     GLRO(dl_hwcap) |= HWCAP_X86_SSE2;
 
@@ -360,6 +359,5 @@ no_cpuid:
     GLRO(dl_platform) = "i686";
   else if (CPU_FEATURES_ARCH_P (cpu_features, I586))
     GLRO(dl_platform) = "i586";
-# endif
 #endif
 }

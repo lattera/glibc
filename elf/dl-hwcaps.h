@@ -18,14 +18,13 @@
 
 #include <elf/dl-tunables.h>
 
-#ifdef SHARED
-# if HAVE_TUNABLES
-#  define GET_HWCAP_MASK() \
-  TUNABLE_GET (glibc, tune, hwcap_mask, uint64_t, NULL)
-# else
-#  define GET_HWCAP_MASK() GLRO(dl_hwcap_mask)
-# endif
+#if HAVE_TUNABLES
+# define GET_HWCAP_MASK() TUNABLE_GET (glibc, tune, hwcap_mask, uint64_t, NULL)
 #else
-/* HWCAP_MASK is ignored in static binaries.  */
-# define GET_HWCAP_MASK() (0)
+# ifdef SHARED
+#   define GET_HWCAP_MASK() GLRO(dl_hwcap_mask)
+# else
+/* HWCAP_MASK is ignored in static binaries when built without tunables.  */
+#  define GET_HWCAP_MASK() (0)
+# endif
 #endif
