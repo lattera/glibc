@@ -1,3 +1,8 @@
+2017-05-22  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_matches_host):
+	Remove invalid comment.
+
 2017-05-21  Zack Weinberg  <zackw@panix.com>
 
 	* signal/Makefile (headers): Add bits/types/sigval_t.h.

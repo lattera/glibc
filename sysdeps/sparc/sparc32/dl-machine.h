@@ -36,8 +36,6 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
     return 1;
   else if (ehdr->e_machine == EM_SPARC32PLUS)
     {
-      /* XXX The following is wrong!  Dave Miller rejected to implement it
-	 correctly.  If this causes problems shoot *him*!  */
 #ifdef SHARED
       return GLRO(dl_hwcap) & GLRO(dl_hwcap_mask) & HWCAP_SPARC_V9;
 #else
