@@ -141,10 +141,12 @@ element stack_t {void*} ss_sp
 element stack_t size_t ss_size
 element stack_t int ss_flags
 
+#  if !defined XOPEN2K8 && !defined POSIX2008
 type {struct sigstack}
 
 element {struct sigstack} int ss_onstack
 element {struct sigstack} {void*} ss_sp
+#  endif
 # endif
 
 # ifndef XPG4
@@ -249,7 +251,7 @@ function int sigqueue (pid_t, int, const union sigval)
 function int sigrelse (int)
 function void (*sigset (int, void(*)(int)))(int)
 # endif
-# if !defined POSIX
+# if defined XPG42 || defined UNIX98
 function int sigstack (struct sigstack*, struct sigstack*)
 # endif
 function int sigsuspend (const sigset_t*)

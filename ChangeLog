@@ -1,5 +1,14 @@
 2017-05-23  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21511]
+	* signal/signal.h: Include <bits/types/struct_sigstack.h> only if
+	[(__USE_XOPEN_EXTENDED && !__USE_XOPEN2K8) || __USE_MISC].
+	(sigstack): Declare only if [(__USE_XOPEN_EXTENDED &&
+	!__USE_XOPEN2K) || __USE_MISC].
+	* conform/data/signal.h-data (struct sigstack): Expect type only
+	if [!XOPEN2K8 && !POSIX2008].
+	(sigstack): Expect function only if [XPG42 || UNIX98].
+
 	[BZ #21457]
 	* sysdeps/arm/sys/ucontext.h: Do not include <signal.h>,
 	<bits/sigstack.h>, <bits/types/struct_sigstack.h> or
