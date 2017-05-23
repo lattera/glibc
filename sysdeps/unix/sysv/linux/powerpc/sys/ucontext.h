@@ -20,14 +20,9 @@
 
 #include <features.h>
 
-/* We need the signal context definitions even if they are not exposed
-   by <signal.h>.  */
 #include <bits/sigcontext.h>
-#include <bits/sigstack.h>
 #include <bits/types/sigset_t.h>
-#include <bits/types/struct_sigstack.h>
 #include <bits/types/stack_t.h>
-#include <bits/ss_flags.h>
 
 
 #if __WORDSIZE == 32

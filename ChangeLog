@@ -1,3 +1,100 @@
+2017-05-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21457]
+	* sysdeps/arm/sys/ucontext.h: Do not include <signal.h>,
+	<bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/generic/sys/ucontext.h: Do not include <signal.h>,
+	<bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/i386/sys/ucontext.h: Do not include <signal.h>,
+	<bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/m68k/sys/ucontext.h: Do not include <signal.h>,
+	<bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/mips/sys/ucontext.h: Do not include <signal.h>,
+	<bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/aarch64/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/alpha/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h>.
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/nios2/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Do not include
+	<bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/tile/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+	* sysdeps/unix/sysv/linux/x86/bits/sigcontext.h: Include
+	<bits/types.h>.
+	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h: Do not include
+	<signal.h>, <bits/sigstack.h>, <bits/types/struct_sigstack.h> or
+	<bits/ss_flags.h>.  Include <bits/types/sigset_t.h> instead of
+	<bits/types/__sigset_t.h>.
+	(ucontext_t): Use sigset_t instead of __sigset_t.
+
 2017-05-22  Zack Weinberg  <zackw@panix.com>
 
 	* sysdeps/unix/sysv/linux/bits/siginfo-consts.h

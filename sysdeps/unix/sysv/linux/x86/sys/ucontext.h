@@ -19,16 +19,10 @@
 #define _SYS_UCONTEXT_H	1
 
 #include <features.h>
-#include <signal.h>
 
-/* We need the signal context definitions even if they are not exposed
-   by <signal.h>.  */
-#include <bits/types/__sigset_t.h>
+#include <bits/types/sigset_t.h>
 #include <bits/sigcontext.h>
-#include <bits/sigstack.h>
-#include <bits/types/struct_sigstack.h>
 #include <bits/types/stack_t.h>
-#include <bits/ss_flags.h>
 
 
 #ifdef __x86_64__
@@ -142,7 +136,7 @@ typedef struct ucontext
     struct ucontext *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
-    __sigset_t uc_sigmask;
+    sigset_t uc_sigmask;
     struct _libc_fpstate __fpregs_mem;
   } ucontext_t;
 
@@ -243,7 +237,7 @@ typedef struct ucontext
     struct ucontext *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
-    __sigset_t uc_sigmask;
+    sigset_t uc_sigmask;
     struct _libc_fpstate __fpregs_mem;
   } ucontext_t;
 
