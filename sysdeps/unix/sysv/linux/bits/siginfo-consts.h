@@ -25,8 +25,10 @@
 
 /* Most of these constants are uniform across all architectures, but there
    is one exception.  */
-#define __SI_ASYNCIO_AFTER_SIGIO 1
 #include <bits/siginfo-arch.h>
+#ifndef __SI_ASYNCIO_AFTER_SIGIO
+# define __SI_ASYNCIO_AFTER_SIGIO 1
+#endif
 
 /* Values for `si_code'.  Positive values are reserved for kernel-generated
    signals.  */

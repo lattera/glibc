@@ -1,3 +1,20 @@
+2017-05-22  Zack Weinberg  <zackw@panix.com>
+
+	* sysdeps/unix/sysv/linux/bits/siginfo-consts.h
+	(__SI_ASYNCIO_AFTER_SIGIO): Define default after including
+	bits/siginfo-arch.h, only if not already defined.
+	* sysdeps/unix/sysv/linux/bits/types/siginfo_t.h
+	(__SI_ALIGNMENT, __SI_BAND_TYPE, __SI_CLOCK_T)
+	(__SI_ERRNO_THEN_CODE, __SI_HAVE_SIGSYS, __SI_SEGFAULT_ADDL):
+	Likewise.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo-arch.h
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo-arch.h
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo-arch.h
+	* sysdeps/unix/sysv/linux/tile/bits/siginfo-arch.h
+	* sysdeps/unix/sysv/linux/x86/bits/siginfo-arch.h:
+	Unconditionally define __SI_* macros.
+
 2017-05-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #21393]

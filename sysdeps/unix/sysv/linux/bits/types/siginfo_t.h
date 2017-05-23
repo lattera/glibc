@@ -13,13 +13,25 @@
 #endif
 
 /* Some fields of siginfo_t have architecture-specific variations.  */
-#define __SI_ALIGNMENT		/* nothing */
-#define __SI_BAND_TYPE		long int
-#define __SI_CLOCK_T		__clock_t
-#define __SI_ERRNO_THEN_CODE	1
-#define __SI_HAVE_SIGSYS	1
-#define __SI_SIGFAULT_ADDL	/* nothing */
 #include <bits/siginfo-arch.h>
+#ifndef __SI_ALIGNMENT
+# define __SI_ALIGNMENT		/* nothing */
+#endif
+#ifndef __SI_BAND_TYPE
+# define __SI_BAND_TYPE		long int
+#endif
+#ifndef __SI_CLOCK_T
+# define __SI_CLOCK_T		__clock_t
+#endif
+#ifndef __SI_ERRNO_THEN_CODE
+# define __SI_ERRNO_THEN_CODE	1
+#endif
+#ifndef __SI_HAVE_SIGSYS
+# define __SI_HAVE_SIGSYS	1
+#endif
+#ifndef __SI_SIGFAULT_ADDL
+# define __SI_SIGFAULT_ADDL	/* nothing */
+#endif
 
 typedef struct
   {

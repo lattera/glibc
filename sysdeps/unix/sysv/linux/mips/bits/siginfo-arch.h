@@ -4,12 +4,10 @@
 
 /* MIPS has the si_code and si_errno fields in the opposite order from
    all other architectures.  */
-#undef __SI_ERRNO_THEN_CODE
 #define __SI_ERRNO_THEN_CODE 0
 
 /* MIPS also has different values for SI_ASYNCIO, SI_MESGQ, and SI_TIMER
    than all other architectures.  */
-#undef __SI_ASYNCIO_AFTER_SIGIO
 #define __SI_ASYNCIO_AFTER_SIGIO 0
 
 #endif

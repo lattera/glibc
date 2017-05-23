@@ -10,9 +10,7 @@
    attribute would be ignored if it were put in __SI_CLOCK_T instead
    of encapsulated in a typedef.  */
 typedef __clock_t __attribute__ ((__aligned__ (4))) __sigchld_clock_t;
-# undef  __SI_ALIGNMENT
 # define __SI_ALIGNMENT __attribute__ ((__aligned__ (8)))
-# undef  __SI_CLOCK_T
 # define __SI_CLOCK_T __sigchld_clock_t
 #endif
 

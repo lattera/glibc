@@ -2,10 +2,8 @@
 #ifndef _BITS_SIGINFO_ARCH_H
 #define _BITS_SIGINFO_ARCH_H 1
 
-#undef __SI_BAND_TYPE
 #define __SI_BAND_TYPE int
 
-#undef __SI_SIGFAULT_ADDL
 #define __SI_SIGFAULT_ADDL \
   int _si_trapno;
 
