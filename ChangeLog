@@ -1,3 +1,17 @@
+2017-05-24  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/aarch64/memcpy.S (MEMMOVE, MEMCPY): New macros.
+	(memmove): Use MEMMOVE for name.
+	(memcpy): Use MEMCPY for name.  Change internal labels
+	to external labels.
+	* sysdeps/aarch64/multiarch/Makefile: New file.
+	* sysdeps/aarch64/multiarch/ifunc-impl-list.c: Likewise.
+	* sysdeps/aarch64/multiarch/init-arch.h: Likewise.
+	* sysdeps/aarch64/multiarch/memcpy.c: Likewise.
+	* sysdeps/aarch64/multiarch/memcpy_generic.S: Likewise.
+	* sysdeps/aarch64/multiarch/memcpy_thunderx.S: Likewise.
+	* sysdeps/aarch64/multiarch/memmove.c: Likewise.
+
 2017-05-24  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c

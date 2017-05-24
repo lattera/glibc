@@ -1,4 +1,5 @@
-/* Copyright (C) 2012-2017 Free Software Foundation, Inc.
+/* A Thunderx Optimized memcpy implementation for AARCH64.
+   Copyright (C) 2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -13,8 +14,13 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
+
+/* The actual code in this memcpy and memmove should be identical to the
+   generic version except for the code under '#ifdef THUNDERX'.  This is
+   to make is easier to keep this version and the generic version in sync
+   for changes that are not specific to thunderx.  */
 
 #include <sysdep.h>
 
@@ -65,6 +71,14 @@
 #ifndef MEMCPY
 # define MEMCPY memcpy
 #endif
+
+#if IS_IN (libc)
+
+# undef MEMCPY
+# define MEMCPY __memcpy_thunderx
+# undef MEMMOVE
+# define MEMMOVE __memmove_thunderx
+# define USE_THUNDERX
 
 ENTRY_ALIGN (MEMMOVE, 6)
 
@@ -165,6 +179,49 @@ L(copy96):
 
 	.p2align 4
 L(copy_long):
+
+# ifdef USE_THUNDERX
+
+	/* On thunderx, large memcpy's are helped by software prefetching.
+	   This loop is identical to the one below it but with prefetching
+	   instructions included.  For loops that are less than 32768 bytes,
+	   the prefetching does not help and slow the code down so we only
+	   use the prefetching loop for the largest memcpys.  */
+
+	cmp	count, #32768
+	b.lo	L(copy_long_without_prefetch)
+	and	tmp1, dstin, 15
+	bic	dst, dstin, 15
+	ldp	D_l, D_h, [src]
+	sub	src, src, tmp1
+	prfm	pldl1strm, [src, 384]
+	add	count, count, tmp1	/* Count is now 16 too large.  */
+	ldp	A_l, A_h, [src, 16]
+	stp	D_l, D_h, [dstin]
+	ldp	B_l, B_h, [src, 32]
+	ldp	C_l, C_h, [src, 48]
+	ldp	D_l, D_h, [src, 64]!
+	subs	count, count, 128 + 16	/* Test and readjust count.  */
+
+L(prefetch_loop64):
+	tbz	src, #6, 1f
+	prfm	pldl1strm, [src, 512]
+1:
+	stp	A_l, A_h, [dst, 16]
+	ldp	A_l, A_h, [src, 16]
+	stp	B_l, B_h, [dst, 32]
+	ldp	B_l, B_h, [src, 32]
+	stp	C_l, C_h, [dst, 48]
+	ldp	C_l, C_h, [src, 48]
+	stp	D_l, D_h, [dst, 64]!
+	ldp	D_l, D_h, [src, 64]!
+	subs	count, count, 64
+	b.hi	L(prefetch_loop64)
+	b	L(last64)
+
+L(copy_long_without_prefetch):
+# endif
+
 	and	tmp1, dstin, 15
 	bic	dst, dstin, 15
 	ldp	D_l, D_h, [src]
@@ -265,3 +322,5 @@ L(move_long):
 
 END (MEMCPY)
 libc_hidden_builtin_def (MEMCPY)
+
+#endif
