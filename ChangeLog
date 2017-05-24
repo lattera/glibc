@@ -1,5 +1,9 @@
 2017-05-24  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86/cacheinfo.c: Skip if not in libc.
+
+2017-05-24  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86/cacheinfo.c (is_intel): Removed.
 	(is_amd): Likewise.
 	(max_cpuid): Likewise.

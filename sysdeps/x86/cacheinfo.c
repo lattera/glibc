@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#if IS_IN (libc)
+
 #include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -768,3 +770,5 @@ intel_bug_no_cache_info:
      store becomes faster.  */
   __x86_shared_non_temporal_threshold = __x86_shared_cache_size * 6;
 }
+
+#endif
