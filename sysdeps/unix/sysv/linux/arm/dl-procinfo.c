@@ -46,7 +46,7 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_arm_cap_flags
 #else
-PROCINFO_CLASS const char _dl_arm_cap_flags[37][10]
+PROCINFO_CLASS const char _dl_arm_cap_flags[27][10]
 #endif
 #ifndef PROCINFO_DECL
 = {

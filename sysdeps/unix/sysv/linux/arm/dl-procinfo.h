@@ -23,7 +23,7 @@
 #include <ldsodefs.h>
 #include <sysdep.h>
 
-#define _DL_HWCAP_COUNT 37
+#define _DL_HWCAP_COUNT 27
 
 /* Low 22 bits are allocated in HWCAP.  */
 #define _DL_HWCAP_LAST		21
