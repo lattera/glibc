@@ -35,6 +35,7 @@ struct test_config
   int expected_status;   /* Expected exit status.  */
   int expected_signal;   /* If non-zero, expect termination by signal.  */
   char no_mallopt;       /* Boolean flag to disable mallopt.  */
+  const char *optstring; /* Short command line options.  */
 };
 
 enum

@@ -93,6 +93,10 @@
    has this type:
 
      void CMDLINE_PROCESS (int);
+
+   If the program also to process custom default short command line
+   argument (similar to getopt) it must define CMDLINE_OPTSTRING
+   with the expected options (for instance "vb").
 */
 
 #include <support/test-driver.h>
@@ -150,6 +154,11 @@ main (int argc, char **argv)
 #endif
 #ifdef CMDLINE_PROCESS
   test_config.cmdline_function = CMDLINE_PROCESS;
+#endif
+#ifdef CMDLINE_OPTSTRING
+  test_config.optstring = "+" CMDLINE_OPTSTRING;
+#else
+  test_config.optstring = "+";
 #endif
 
   return support_test_main (argc, argv, &test_config);

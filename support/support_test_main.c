@@ -211,7 +211,8 @@ support_test_main (int argc, char **argv, const struct test_config *config)
         mallopt (M_PERTURB, 42);
     }
 
-  while ((opt = getopt_long (argc, argv, "+", options, NULL)) != -1)
+  while ((opt = getopt_long (argc, argv, config->optstring, options, NULL))
+	 != -1)
     switch (opt)
       {
       case '?':
