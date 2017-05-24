@@ -1,3 +1,11 @@
+2017-05-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cacheinfo.c (is_intel): Removed.
+	(is_amd): Likewise.
+	(max_cpuid): Likewise.
+	(__cache_sysconf): Use __get_cpu_features to get cpu_features.
+	(init_cacheinfo): Likewise.
+
 2017-05-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21511]
