@@ -1,3 +1,7 @@
+2017-05-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* string/test-memchr.c (test_main): Add tests for n == 0.
+
 2017-05-25  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* nptl/Makefile (tests): Move nptl/tst-mutex8, nptl/tst-mutex8-static,
