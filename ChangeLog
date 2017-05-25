@@ -1,3 +1,8 @@
+2017-05-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makeconfig ($(common-objpfx)dl-tunable-list.h): Also check
+	dl-tunables.list in subdirectories.
+
 2017-05-25  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>

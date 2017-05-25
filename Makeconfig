@@ -1127,7 +1127,9 @@ ifneq (no,$(have-tunables))
 before-compile += $(common-objpfx)dl-tunable-list.h
 
 $(common-objpfx)dl-tunable-list.h: $(..)scripts/gen-tunables.awk \
-				   $(..)elf/dl-tunables.list
+				   $(..)elf/dl-tunables.list \
+				   $(wildcard $(subdirs:%=$(..)%/dl-tunables.list)) \
+				   $(wildcard $(sysdirs:%=%/dl-tunables.list))
 	$(AWK) -f $^ > $@.tmp
 	mv $@.tmp $@
 endif
