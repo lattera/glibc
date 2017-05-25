@@ -1,5 +1,11 @@
 2017-06-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.c
+	(_dl_aarch64_cap_flags): New array.
+	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.h
+	(_dl_hwcap_string, _dl_string_hwcap, _dl_procinfo): Implement
+	functions.
+
 	* elf/dl-hwcaps.h [HAVE_TUNABLES]: Always read hwcap_mask.
 	* sysdeps/sparc/sparc32/dl-machine.h [HAVE_TUNABLES]:
 	Likewise.
