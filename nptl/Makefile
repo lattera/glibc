@@ -230,9 +230,9 @@ LDLIBS-tst-thread_local1 = -lstdc++
 
 tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
-	tst-mutex7 tst-mutex8 tst-mutex9 tst-mutex5a tst-mutex7a \
+	tst-mutex7 tst-mutex9 tst-mutex5a tst-mutex7a \
 	tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 tst-mutexpi5 \
-	tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a tst-mutexpi8 \
+	tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a \
 	tst-mutexpi9 \
 	tst-spin1 tst-spin2 tst-spin3 tst-spin4 \
 	tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
@@ -305,7 +305,8 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-robust-fork tst-create-detached
 
 tests-internal := tst-typesizes tst-rwlock19 tst-sem11 tst-sem12 tst-sem13 \
-		  tst-barrier5 tst-signal7
+		  tst-barrier5 tst-signal7 tst-mutex8 tst-mutex8-static \
+		  tst-mutexpi8 tst-mutexpi8-static
 
 xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
 	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10
@@ -433,7 +434,7 @@ tests-static += tst-locale1 tst-locale2 tst-stackguard1-static \
 		tst-mutex8-static tst-mutexpi8-static tst-sem11-static \
 		tst-sem12-static
 tests += tst-cancel21-static tst-cancel24-static \
-	 tst-cond8-static tst-mutex8-static tst-mutexpi8-static
+	 tst-cond8-static
 tests-internal += tst-sem11-static tst-sem12-static tst-stackguard1-static
 xtests-static += tst-setuid1-static
 

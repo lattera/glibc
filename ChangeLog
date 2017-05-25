@@ -1,3 +1,9 @@
+2017-05-25  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* nptl/Makefile (tests): Move nptl/tst-mutex8, nptl/tst-mutex8-static,
+	nptl/tst-mutexpi8 and nptl/tst-mutexpi8-static to...
+	(tests-internal): ... here.
+
 2017-05-25   Siddhesh Poyarekar  <siddhesh@sourceware.org>
 	     H.J. Lu  <hongjiu.lu@intel.com>
 
