@@ -1,3 +1,10 @@
+2017-05-25   Siddhesh Poyarekar  <siddhesh@sourceware.org>
+	     H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/dl-tunables.c (__tunable_set_val): Make a hidden alias.
+	* elf/dl-tunables.h (__tunables_init): Mark it hidden in rtld.
+	(__tunable_set_val): Likewise.
+
 2017-05-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makeconfig ($(common-objpfx)dl-tunable-list.h): Also check

@@ -470,3 +470,5 @@ cb:
   if (callback)
     callback (&cur->val);
 }
+
+rtld_hidden_def (__tunable_set_val)

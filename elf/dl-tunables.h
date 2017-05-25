@@ -69,6 +69,9 @@ typedef struct _tunable tunable_t;
 extern void __tunables_init (char **);
 extern void __tunable_set_val (tunable_id_t, void *, tunable_callback_t);
 
+rtld_hidden_proto (__tunables_init)
+rtld_hidden_proto (__tunable_set_val)
+
 /* Check if the tunable has been set to a non-default value and if it is, copy
    it over into __VAL.  */
 # define TUNABLE_SET_VAL(__id,__val) \
