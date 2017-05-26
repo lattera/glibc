@@ -1,3 +1,8 @@
+2017-06-01  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* stdlib/gmp-impl.h: Include sys/param.h instead of redefining the
+	macros MAX and MIN.
+
 2017-06-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/signal.h-data (sa_sigaction): Do not expect for

@@ -64,12 +64,8 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 #define inline			/* Empty */
 #endif
 
-#ifndef MIN
-#define MIN(l,o) ((l) < (o) ? (l) : (o))
-#endif
-#ifndef MAX
-#define MAX(h,i) ((h) > (i) ? (h) : (i))
-#endif
+/* Get MAX/MIN macros.  */
+#include <sys/param.h>
 
 /* Field access macros.  */
 #define SIZ(x) ((x)->_mp_size)
