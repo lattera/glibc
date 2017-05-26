@@ -1,3 +1,21 @@
+2017-06-16  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/argp.texi (ARGP_HELP_USAGE): Add missing header and
+	standard annotation.
+	(ARGP_HELP_SHORT_USAGE): Likewise.
+	(ARGP_HELP_SEE): Likewise.
+	(ARGP_HELP_LONG): Likewise.
+	(ARGP_HELP_PRE_DOC): Likewise.
+	(ARGP_HELP_POST_DOC): Likewise.
+	(ARGP_HELP_DOC): Likewise.
+	(ARGP_HELP_BUG_ADDR): Likewise.
+	(ARGP_HELP_LONG_ONLY): Likewise.
+	(ARGP_HELP_EXIT_ERR): Likewise.
+	(ARGP_HELP_EXIT_OK): Likewise.
+	(ARGP_HELP_STD_ERR): Likewise.
+	(ARGP_HELP_STD_USAGE): Likewise.
+	(ARGP_HELP_STD_HELP): Likewise.
+
 2017-06-15  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/Makefile: Generate summary.texi with summary.pl.  Force

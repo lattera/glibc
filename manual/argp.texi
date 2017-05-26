@@ -1092,35 +1092,44 @@ the following flags, or'd together:
 
 @vtable @code
 @item ARGP_HELP_USAGE
+@standards{GNU, argp.h}
 A unix @samp{Usage:} message that explicitly lists all options.
 
 @item ARGP_HELP_SHORT_USAGE
+@standards{GNU, argp.h}
 A unix @samp{Usage:} message that displays an appropriate placeholder to
 indicate where the options go; useful for showing the non-option
 argument syntax.
 
 @item ARGP_HELP_SEE
+@standards{GNU, argp.h}
 A @samp{Try @dots{} for more help} message; @samp{@dots{}} contains the
 program name and @samp{--help}.
 
 @item ARGP_HELP_LONG
+@standards{GNU, argp.h}
 A verbose option help message that gives each option available along
 with its documentation string.
 
 @item ARGP_HELP_PRE_DOC
+@standards{GNU, argp.h}
 The part of the argp parser doc string preceding the verbose option help.
 
 @item ARGP_HELP_POST_DOC
+@standards{GNU, argp.h}
 The part of the argp parser doc string that following the verbose option help.
 
 @item ARGP_HELP_DOC
+@standards{GNU, argp.h}
 @code{(ARGP_HELP_PRE_DOC | ARGP_HELP_POST_DOC)}
 
 @item ARGP_HELP_BUG_ADDR
+@standards{GNU, argp.h}
 A message that prints where to report bugs for this program, if the
 @code{argp_program_bug_address} variable contains this information.
 
 @item ARGP_HELP_LONG_ONLY
+@standards{GNU, argp.h}
 This will modify any output to reflect the @code{ARGP_LONG_ONLY} mode.
 @end vtable
 
@@ -1130,9 +1139,11 @@ printing its output, or terminates the program:
 
 @vtable @code
 @item ARGP_HELP_EXIT_ERR
+@standards{GNU, argp.h}
 This will terminate the program with @code{exit (argp_err_exit_status)}.
 
 @item ARGP_HELP_EXIT_OK
+@standards{GNU, argp.h}
 This will terminate the program with @code{exit (0)}.
 @end vtable
 
@@ -1141,16 +1152,19 @@ standard messages:
 
 @vtable @code
 @item ARGP_HELP_STD_ERR
+@standards{GNU, argp.h}
 Assuming that an error message for a parsing error has printed, this
 prints a message on how to get help, and terminates the program with an
 error.
 
 @item ARGP_HELP_STD_USAGE
+@standards{GNU, argp.h}
 This prints a standard usage message and terminates the program with an
 error.  This is used when no other specific error messages are
 appropriate or available.
 
 @item ARGP_HELP_STD_HELP
+@standards{GNU, argp.h}
 This prints the standard response for a @samp{--help} option, and
 terminates the program successfully.
 @end vtable
