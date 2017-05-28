@@ -1,3 +1,8 @@
+2017-05-29  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/Makefile (ASFLAGS-.o) [$(subdir) = csu &&
+	$(build-pie-default) = yes]: Define.
+
 2017-05-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* string/test-memchr.c (test_main): Add tests for n == 0.
