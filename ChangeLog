@@ -1,5 +1,11 @@
 2017-06-07  Arjun Shankar  <arjun.is@lostca.se>
 
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_internal):
+	Remove check for NULL 'buf'.
+	* login/tst-ptsname.c (do_test): Remove test with NULL 'buf'.
+
+2017-06-07  Arjun Shankar  <arjun.is@lostca.se>
+
 	* sysdeps/unix/sysv/linux/tst-clone2.c: Do not
 	include test-skeleton.c.
 	Include support/check.h and support/test-driver.c.

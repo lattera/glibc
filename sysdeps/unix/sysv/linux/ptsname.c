@@ -72,12 +72,6 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
   int save_errno = errno;
   unsigned int ptyno;
 
-  if (buf == NULL)
-    {
-      __set_errno (EINVAL);
-      return EINVAL;
-    }
-
   if (!__isatty (fd))
     {
       __set_errno (ENOTTY);

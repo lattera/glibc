@@ -70,7 +70,6 @@ do_test (void)
   if (fd != -1)
     {
       result |= do_single_test (fd, buf, sizeof (buf), 0);
-      result |= do_single_test (fd, NULL, sizeof (buf), EINVAL);
       result |= do_single_test (fd, buf, 1, ERANGE);
       close (fd);
     }
