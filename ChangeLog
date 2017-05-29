@@ -1,5 +1,14 @@
 2017-06-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* stdio-common/printf_fp.c (PRINTF_FP_FETCH): New macro.
+	(__printf_fp_l): Use the new macro to avoid duplicating code.
+	* stdio-common/printf_fphex.c (PRINTF_FPHEX_FETCH): New macro.
+	(__printf_fphex): Use the new macro to avoid duplicating code.
+	* stdio-common/printf_size.c (PRINTF_SIZE_FETCH): New macro.
+	(__printf_size): Use the new macro to avoid duplicating code.
+
+2017-06-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* include/gmp.h: Include bits/floatn.h
 	(__mpn_extract_float128): Declare when __HAVE_DISTINCT_FLOAT128 is 1.
 	* stdlib/gmp-impl.h: Also check if alloca is not defined before

@@ -118,57 +118,40 @@ __printf_size (FILE *fp, const struct printf_info *info,
   int done = 0;
   int wide = info->wide;
 
+#define PRINTF_SIZE_FETCH(FLOAT, VAR)					\
+  {									\
+    (VAR) = *(const FLOAT *) args[0];					\
+									\
+    /* Check for special values: not a number or infinity.  */		\
+    if (isnan (VAR))							\
+      {									\
+	special = "nan";						\
+	wspecial = L"nan";						\
+	/* is_neg = 0; Already zero */					\
+      }									\
+    else if (isinf (VAR))						\
+      {									\
+	is_neg = signbit (VAR);						\
+	special = "inf";						\
+	wspecial = L"inf";						\
+      }									\
+    else								\
+      while ((VAR) >= divisor && tag[1] != '\0')			\
+	{								\
+	  (VAR) /= divisor;						\
+	  ++tag;							\
+	}								\
+  }
+
   /* Fetch the argument value.	*/
 #ifndef __NO_LONG_DOUBLE_MATH
   if (info->is_long_double && sizeof (long double) > sizeof (double))
-    {
-      fpnum.ldbl = *(const long double *) args[0];
-
-      /* Check for special values: not a number or infinity.  */
-      if (isnan (fpnum.ldbl))
-	{
-	  special = "nan";
-	  wspecial = L"nan";
-	  // is_neg = 0;	Already zero
-	}
-      else if (isinf (fpnum.ldbl))
-	{
-	  is_neg = signbit (fpnum.ldbl);
-	  special = "inf";
-	  wspecial = L"inf";
-	}
-      else
-	while (fpnum.ldbl >= divisor && tag[1] != '\0')
-	  {
-	    fpnum.ldbl /= divisor;
-	    ++tag;
-	  }
-    }
+    PRINTF_SIZE_FETCH (long double, fpnum.ldbl)
   else
-#endif	/* no long double */
-    {
-      fpnum.dbl.d = *(const double *) args[0];
+#endif
+    PRINTF_SIZE_FETCH (double, fpnum.dbl.d)
 
-      /* Check for special values: not a number or infinity.  */
-      if (isnan (fpnum.dbl.d))
-	{
-	  special = "nan";
-	  wspecial = L"nan";
-	  // is_neg = 0;	Already zero
-	}
-      else if (isinf (fpnum.dbl.d))
-	{
-	  is_neg = signbit (fpnum.dbl.d);
-	  special = "inf";
-	  wspecial = L"inf";
-	}
-      else
-	while (fpnum.dbl.d >= divisor && tag[1] != '\0')
-	  {
-	    fpnum.dbl.d /= divisor;
-	    ++tag;
-	  }
-    }
+#undef PRINTF_SIZE_FETCH
 
   if (special)
     {

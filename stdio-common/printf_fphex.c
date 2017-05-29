@@ -157,82 +157,52 @@ __printf_fphex (FILE *fp,
   /* The decimal point character must never be zero.  */
   assert (*decimal != '\0' && decimalwc != L'\0');
 
+#define PRINTF_FPHEX_FETCH(FLOAT, VAR)					\
+  {									\
+    (VAR) = *(const FLOAT *) args[0];					\
+									\
+    /* Check for special values: not a number or infinity.  */		\
+    if (isnan (VAR))							\
+      {									\
+	if (isupper (info->spec))					\
+	  {								\
+	    special = "NAN";						\
+	    wspecial = L"NAN";						\
+	  }								\
+	else								\
+	  {								\
+	    special = "nan";						\
+	    wspecial = L"nan";						\
+	  }								\
+      }									\
+    else								\
+      {									\
+	if (isinf (VAR))						\
+	  {								\
+	    if (isupper (info->spec))					\
+	      {								\
+		special = "INF";					\
+		wspecial = L"INF";					\
+	      }								\
+	    else							\
+	      {								\
+		special = "inf";					\
+		wspecial = L"inf";					\
+	      }								\
+	  }								\
+      }									\
+    negative = signbit (VAR);						\
+  }
 
   /* Fetch the argument value.	*/
 #ifndef __NO_LONG_DOUBLE_MATH
   if (info->is_long_double && sizeof (long double) > sizeof (double))
-    {
-      fpnum.ldbl = *(const long double *) args[0];
-
-      /* Check for special values: not a number or infinity.  */
-      if (isnan (fpnum.ldbl))
-	{
-	  if (isupper (info->spec))
-	    {
-	      special = "NAN";
-	      wspecial = L"NAN";
-	    }
-	  else
-	    {
-	      special = "nan";
-	      wspecial = L"nan";
-	    }
-	}
-      else
-	{
-	  if (isinf (fpnum.ldbl))
-	    {
-	      if (isupper (info->spec))
-		{
-		  special = "INF";
-		  wspecial = L"INF";
-		}
-	      else
-		{
-		  special = "inf";
-		  wspecial = L"inf";
-		}
-	    }
-	}
-      negative = signbit (fpnum.ldbl);
-    }
+    PRINTF_FPHEX_FETCH (long double, fpnum.ldbl)
   else
-#endif	/* no long double */
-    {
-      fpnum.dbl.d = *(const double *) args[0];
+#endif
+    PRINTF_FPHEX_FETCH (double, fpnum.dbl.d)
 
-      /* Check for special values: not a number or infinity.  */
-      if (isnan (fpnum.dbl.d))
-	{
-	  if (isupper (info->spec))
-	    {
-	      special = "NAN";
-	      wspecial = L"NAN";
-	    }
-	  else
-	    {
-	      special = "nan";
-	      wspecial = L"nan";
-	    }
-	}
-      else
-	{
-	  if (isinf (fpnum.dbl.d))
-	    {
-	      if (isupper (info->spec))
-		{
-		  special = "INF";
-		  wspecial = L"INF";
-		}
-	      else
-		{
-		  special = "inf";
-		  wspecial = L"inf";
-		}
-	    }
-	}
-      negative = signbit (fpnum.dbl.d);
-    }
+#undef PRINTF_FPHEX_FETCH
 
   if (special)
     {

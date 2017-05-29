@@ -327,94 +327,58 @@ __printf_fp_l (FILE *fp, locale_t loc,
   else
     grouping = NULL;
 
+#define PRINTF_FP_FETCH(FLOAT, VAR, SUFFIX, MANT_DIG)			\
+  {									\
+    (VAR) = *(const FLOAT *) args[0];					\
+									\
+    /* Check for special values: not a number or infinity.  */		\
+    if (isnan (VAR))							\
+      {									\
+	is_neg = signbit (VAR);						\
+	if (isupper (info->spec))					\
+	  {								\
+	    special = "NAN";						\
+	    wspecial = L"NAN";						\
+	  }								\
+	else								\
+	  {								\
+	    special = "nan";						\
+	    wspecial = L"nan";						\
+	  }								\
+      }									\
+    else if (isinf (VAR))						\
+      {									\
+	is_neg = signbit (VAR);						\
+	if (isupper (info->spec))					\
+	  {								\
+	    special = "INF";						\
+	    wspecial = L"INF";						\
+	  }								\
+	else								\
+	  {								\
+	    special = "inf";						\
+	    wspecial = L"inf";						\
+	  }								\
+      }									\
+    else								\
+      {									\
+	p.fracsize = __mpn_extract_##SUFFIX				\
+		     (fp_input,						\
+		      (sizeof (fp_input) / sizeof (fp_input[0])),	\
+		      &p.exponent, &is_neg, VAR);			\
+	to_shift = 1 + p.fracsize * BITS_PER_MP_LIMB - MANT_DIG;	\
+      }									\
+  }
+
   /* Fetch the argument value.	*/
 #ifndef __NO_LONG_DOUBLE_MATH
   if (info->is_long_double && sizeof (long double) > sizeof (double))
-    {
-      fpnum.ldbl = *(const long double *) args[0];
-
-      /* Check for special values: not a number or infinity.  */
-      if (isnan (fpnum.ldbl))
-	{
-	  is_neg = signbit (fpnum.ldbl);
-	  if (isupper (info->spec))
-	    {
-	      special = "NAN";
-	      wspecial = L"NAN";
-	    }
-	    else
-	      {
-		special = "nan";
-		wspecial = L"nan";
-	      }
-	}
-      else if (isinf (fpnum.ldbl))
-	{
-	  is_neg = signbit (fpnum.ldbl);
-	  if (isupper (info->spec))
-	    {
-	      special = "INF";
-	      wspecial = L"INF";
-	    }
-	  else
-	    {
-	      special = "inf";
-	      wspecial = L"inf";
-	    }
-	}
-      else
-	{
-	  p.fracsize = __mpn_extract_long_double (fp_input,
-						(sizeof (fp_input) /
-						 sizeof (fp_input[0])),
-						&p.exponent, &is_neg,
-						fpnum.ldbl);
-	  to_shift = 1 + p.fracsize * BITS_PER_MP_LIMB - LDBL_MANT_DIG;
-	}
-    }
+    PRINTF_FP_FETCH (long double, fpnum.ldbl, long_double, LDBL_MANT_DIG)
   else
-#endif	/* no long double */
-    {
-      fpnum.dbl = *(const double *) args[0];
+#endif
+    PRINTF_FP_FETCH (double, fpnum.dbl, double, DBL_MANT_DIG)
 
-      /* Check for special values: not a number or infinity.  */
-      if (isnan (fpnum.dbl))
-	{
-	  is_neg = signbit (fpnum.dbl);
-	  if (isupper (info->spec))
-	    {
-	      special = "NAN";
-	      wspecial = L"NAN";
-	    }
-	  else
-	    {
-	      special = "nan";
-	      wspecial = L"nan";
-	    }
-	}
-      else if (isinf (fpnum.dbl))
-	{
-	  is_neg = signbit (fpnum.dbl);
-	  if (isupper (info->spec))
-	    {
-	      special = "INF";
-	      wspecial = L"INF";
-	    }
-	  else
-	    {
-	      special = "inf";
-	      wspecial = L"inf";
-	    }
-	}
-      else
-	{
-	  p.fracsize = __mpn_extract_double (fp_input,
-					   (sizeof (fp_input)
-					    / sizeof (fp_input[0])),
-					   &p.exponent, &is_neg, fpnum.dbl);
-	  to_shift = 1 + p.fracsize * BITS_PER_MP_LIMB - DBL_MANT_DIG;
-	}
-    }
+#undef PRINTF_FP_FETCH
 
   if (special)
     {
