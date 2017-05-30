@@ -751,8 +751,8 @@ be a buffer that you use to hold a line being read from a file; no matter
 how long you make the buffer initially, you may encounter a line that is
 longer.
 
-You can make the block longer by calling @code{realloc}.  This function
-is declared in @file{stdlib.h}.
+You can make the block longer by calling @code{realloc} or
+@code{reallocarray}.  These functions are declared in @file{stdlib.h}.
 @pindex stdlib.h
 
 @comment malloc.h stdlib.h
@@ -816,9 +816,29 @@ behavior, and will probably crash when @code{realloc} is passed a null
 pointer.
 @end deftypefun
 
-Like @code{malloc}, @code{realloc} may return a null pointer if no
-memory space is available to make the block bigger.  When this happens,
-the original block is untouched; it has not been modified or relocated.
+@comment malloc.h stdlib.h
+@comment BSD
+@deftypefun {void *} reallocarray (void *@var{ptr}, size_t @var{nmemb}, size_t @var{size})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
+
+The @code{reallocarray} function changes the size of the block whose address
+is @var{ptr} to be long enough to contain a vector of @var{nmemb} elements,
+each of size @var{size}.  It is equivalent to @samp{realloc (@var{ptr},
+@var{nmemb} * @var{size})}, except that @code{reallocarray} fails safely if
+the multiplication overflows, by setting @code{errno} to @code{ENOMEM},
+returning a null pointer, and leaving the original block unchanged.
+
+@code{reallocarray} should be used instead of @code{realloc} when the new size
+of the allocated block is the result of a multiplication that might overflow.
+
+@strong{Portability Note:} This function is not part of any standard.  It was
+first introduced in OpenBSD 5.6.
+@end deftypefun
+
+Like @code{malloc}, @code{realloc} and @code{reallocarray} may return a null
+pointer if no memory space is available to make the block bigger.  When this
+happens, the original block is untouched; it has not been modified or
+relocated.
 
 In most cases it makes no difference what happens to the original block
 when @code{realloc} fails, because the application program cannot continue
@@ -838,16 +858,17 @@ xrealloc (void *ptr, size_t size)
 @}
 @end smallexample
 
-You can also use @code{realloc} to make a block smaller.  The reason you
-would do this is to avoid tying up a lot of memory space when only a little
-is needed.
+You can also use @code{realloc} or @code{reallocarray} to make a block
+smaller.  The reason you would do this is to avoid tying up a lot of memory
+space when only a little is needed.
 @comment The following is no longer true with the new malloc.
 @comment But it seems wise to keep the warning for other implementations.
 In several allocation implementations, making a block smaller sometimes
 necessitates copying it, so it can fail if no other space is available.
 
-If the new size you specify is the same as the old size, @code{realloc}
-is guaranteed to change nothing and return the same address that you gave.
+If the new size you specify is the same as the old size, @code{realloc} and
+@code{reallocarray} are guaranteed to change nothing and return the same
+address that you gave.
 
 @node Allocating Cleared Space
 @subsubsection Allocating Cleared Space
@@ -1587,6 +1608,11 @@ Malloc}.
 @item void *realloc (void *@var{addr}, size_t @var{size})
 Make a block previously allocated by @code{malloc} larger or smaller,
 possibly by copying it to a new location.  @xref{Changing Block Size}.
+
+@item void *reallocarray (void *@var{ptr}, size_t @var{nmemb}, size_t @var{size})
+Change the size of a block previously allocated by @code{malloc} to
+@code{@var{nmemb} * @var{size}} bytes as with @code{realloc}.  @xref{Changing
+Block Size}.
 
 @item void *calloc (size_t @var{count}, size_t @var{eltsize})
 Allocate a block of @var{count} * @var{eltsize} bytes using

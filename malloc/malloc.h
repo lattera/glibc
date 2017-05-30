@@ -49,6 +49,14 @@ __THROW __attribute_malloc__ __wur;
 extern void *realloc (void *__ptr, size_t __size)
 __THROW __attribute_warn_unused_result__;
 
+/* Re-allocate the previously allocated block in PTR, making the new
+   block large enough for NMEMB elements of SIZE bytes each.  */
+/* __attribute_malloc__ is not used, because if reallocarray returns
+   the same pointer that was passed to it, aliasing needs to be allowed
+   between objects pointed by the old and new pointers.  */
+extern void *reallocarray (void *__ptr, size_t __nmemb, size_t __size)
+__THROW __attribute_warn_unused_result__;
+
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free (void *__ptr) __THROW;
 

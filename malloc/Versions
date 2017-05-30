@@ -62,6 +62,7 @@ libc {
     aligned_alloc;
   }
   GLIBC_2.26 {
+    reallocarray;
   }
   GLIBC_PRIVATE {
     # Internal startup hook for libpthread.
@@ -74,5 +75,8 @@ libc {
     __libc_scratch_buffer_grow;
     __libc_scratch_buffer_grow_preserve;
     __libc_scratch_buffer_set_array_size;
+
+    # Internal name for reallocarray
+    __libc_reallocarray;
   }
 }

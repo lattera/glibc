@@ -1,3 +1,48 @@
+2017-05-30  Dennis Wölfing  <denniswoelfing@gmx.de>
+	    Rüdiger Sonderfeld  <ruediger@c-plusplus.de>
+
+	* include/stdlib.h (__libc_reallocarray): New declaration.
+	* malloc/Makefile (routines): Add reallocarray.
+	(tests): Add tst-reallocarray.c.
+	* malloc/Versions: Add reallocarray and __libc_reallocarray.
+	* malloc/malloc-internal.h (check_mul_overflow_size_t): New inline
+	function.
+	* malloc/malloc.h (reallocarray): New declaration.
+	* stdlib/stdlib.h (reallocarray): Likewise.
+	* malloc/reallocarray.c: New file.
+	* malloc/tst-reallocarray.c: New test file.
+	* manual/memory.texi: Document reallocarray.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist: Add reallocarray.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tilepro/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise.
+
 2017-05-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/memchr.S (memchr): Use 32-bit registers for

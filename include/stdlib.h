@@ -110,6 +110,10 @@ extern int __posix_memalign (void **memptr, size_t alignment, size_t size);
 extern void *__libc_memalign (size_t alignment, size_t size)
      __attribute_malloc__;
 
+extern void *__libc_reallocarray (void *__ptr, size_t __nmemb, size_t __size)
+     __THROW __attribute_warn_unused_result__;
+libc_hidden_proto (__libc_reallocarray)
+
 extern int __libc_system (const char *line);
 
 
