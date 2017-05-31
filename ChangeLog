@@ -1,3 +1,11 @@
+2017-06-01  Zack Weinberg  <zackw@panix.com>
+
+	* sysdeps/unix/sysv/linux/microblaze/pt-vfork.S: Don't include
+	alpha/pt-vfork.S.  Provide own compat shim for vfork and __vfork.
+	* sysdeps/unix/sysv/linux/microblaze/vfork.S: Add __libc_vfork alias.
+	* sysdeps/unix/sysv/linux/microblaze/localplt.data:
+	libpthread.so no longer references __errno_location.
+
 2017-05-31  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* NEWS: Add note about pwritev2 and preadv2 inclusion.

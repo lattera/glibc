@@ -5,7 +5,6 @@ libc.so: malloc
 libc.so: memalign
 libc.so: realloc
 libm.so: matherr
-libpthread.so: __errno_location
 # The dynamic loader needs __tls_get_addr for TLS.
 ld.so: __tls_get_addr ?
 # The main malloc is interposed into the dynamic linker, for
