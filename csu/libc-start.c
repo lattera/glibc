@@ -104,6 +104,10 @@ apply_irel (void)
 # define MAIN_AUXVEC_PARAM
 #endif
 
+#ifndef ARCH_INIT_CPU_FEATURES
+# define ARCH_INIT_CPU_FEATURES()
+#endif
+
 STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
 					 MAIN_AUXVEC_DECL),
 			    int argc,
@@ -181,6 +185,8 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   __libc_init_secure ();
 
   __tunables_init (__environ);
+
+  ARCH_INIT_CPU_FEATURES ();
 
   /* Perform IREL{,A} relocations.  */
   apply_irel ();

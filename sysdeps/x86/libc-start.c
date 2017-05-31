@@ -15,27 +15,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef SHARED
-# include <csu/libc-start.c>
-# else
-/* The main work is done in the generic function.  */
-# define LIBC_START_DISABLE_INLINE
-# define LIBC_START_MAIN generic_start_main
-# include <csu/libc-start.c>
+#ifndef SHARED
+#include <ldsodefs.h>
 # include <cpu-features.h>
 # include <cpu-features.c>
 
 extern struct cpu_features _dl_x86_cpu_features;
 
-int
-__libc_start_main (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
-		   int argc, char **argv,
-		   __typeof (main) init,
-		   void (*fini) (void),
-		   void (*rtld_fini) (void), void *stack_end)
-{
-  init_cpu_features (&_dl_x86_cpu_features);
-  return generic_start_main (main, argc, argv, init, fini, rtld_fini,
-			     stack_end);
-}
+#define ARCH_INIT_CPU_FEATURES() init_cpu_features (&_dl_x86_cpu_features)
+
 #endif
+# include <csu/libc-start.c>

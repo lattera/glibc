@@ -1,3 +1,14 @@
+2017-05-31  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* csu/libc-start.c [!ARCH_INIT_CPU_FEATURES]: Define
+	ARCH_INIT_CPU_FEATURES.
+	(LIBC_START_MAIN): Call it.
+	* sysdeps/unix/sysv/linux/aarch64/libc-start.c
+	(__libc_start_main): Remove.
+	(ARCH_INIT_CPU_FEATURES): New macro.
+	* sysdeps/x86/libc-start.c (__libc_start_main): Remove.
+	(ARCH_INIT_CPU_FEATURES): New macro.
+
 2017-05-30  Dennis Wölfing  <denniswoelfing@gmx.de>
 	    Rüdiger Sonderfeld  <ruediger@c-plusplus.de>
 
