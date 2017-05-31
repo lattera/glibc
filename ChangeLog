@@ -1,3 +1,9 @@
+2017-06-22  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #21533]
+	* include/stdc-predef.h (__STDC_ISO_10646__): Update to
+	201706L for Unicode 10.0.
+
 2017-06-21  Benjamin Cama  <b.cama@kerlink.fr>
 
 	[BZ #21657]

@@ -49,12 +49,13 @@
 # define __STDC_IEC_559_COMPLEX__	1
 #endif
 
-/* wchar_t uses Unicode 9.0.0.  Version 9.0 of the Unicode Standard is
-   synchronized with ISO/IEC 10646:2014, fourth edition, plus
-   Amd. 1  and Amd. 2 and 273 characters from forthcoming  10646, fifth edition.
-   (Amd. 2 was published 2016-05-01,
-   see https://www.iso.org/obp/ui/#iso:std:iso-iec:10646:ed-4:v1:amd:2:v1:en) */
-#define __STDC_ISO_10646__		201605L
+/* wchar_t uses Unicode 10.0.0.  Version 10.0 of the Unicode Standard is
+   synchronized with ISO/IEC 10646:2017, fifth edition, plus
+   the following additions from Amendment 1 to the fifth edition:
+   - 56 emoji characters
+   - 285 hentaigana
+   - 3 additional Zanabazar Square characters */
+#define __STDC_ISO_10646__		201706L
 
 /* We do not support C11 <threads.h>.  */
 #define __STDC_NO_THREADS__		1
