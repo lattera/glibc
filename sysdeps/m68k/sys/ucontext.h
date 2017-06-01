@@ -31,10 +31,13 @@
 typedef int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	18
+#define __NGREG	18
+#ifdef __USE_MISC
+# define NGREG	__NGREG
+#endif
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
+typedef greg_t gregset_t[__NGREG];
 
 #ifdef __USE_MISC
 /* Number of each register is the `gregset_t' array.  */
@@ -90,12 +93,20 @@ typedef struct fpregset
 } fpregset_t;
 #endif
 
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
+
 /* Context to describe whole processor state.  */
 typedef struct
 {
-  int version;
-  gregset_t gregs;
+  int __ctx(version);
+  gregset_t __ctx(gregs);
 } mcontext_t;
+
+#undef __ctx
 
 #ifdef __USE_MISC
 # define MCONTEXT_VERSION 1

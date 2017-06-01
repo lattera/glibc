@@ -1,3 +1,99 @@
+2017-06-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21457]
+	* sysdeps/arm/sys/ucontext.h (NGREG): Rename to __NGREG and define
+	NGREG to __NGREG if [__USE_MISC].
+	(gregset_t): Define using __NGREG.
+	(__ctx): New macro.
+	(mcontext_t): Use __ctx in defining fields.
+	* sysdeps/i386/sys/ucontext.h (NGREG): Rename to __NGREG and
+	define NGREG to __NGREG if [__USE_MISC].
+	(gregset_t): Define using __NGREG.
+	(__ctx): New macro.
+	(__ctxt): Likewise.
+	(fpregset_t): Use __ctx and __ctxt in defining fields.
+	(mcontext_t): Likewise.
+	* sysdeps/m68k/sys/ucontext.h (NGREG): Rename to __NGREG and
+	define NGREG to __NGREG if [__USE_MISC].
+	(gregset_t): Define using __NGREG.
+	(__ctx): New macro.
+	(mcontext_t): Use __ctx in defining fields.
+	* sysdeps/mips/sys/ucontext.h (NGREG): Rename to __NGREG and
+	define NGREG to __NGREG if [__USE_MISC].
+	(gregset_t): Define using __NGREG.
+	(__ctx): New macro.
+	(fpregset_t): Use __ctx in defining fields.
+	(mcontext_t): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sys/ucontext.h (NGREG): Rename to
+	__NGREG and define NGREG to __NGREG if [__USE_MISC].
+	(gregset_t): Define using __NGREG.
+	(NFPREG): Rename to __NFPREG and define NFPREG to __NFPREG if
+	[__USE_MISC].
+	(fpregset_t): Define using __NFPREG.
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h (NGREG): Rename to
+	__NGREG and define NGREG to __NGREG if [__USE_MISC].
+	(gregset_t): Define using __NGREG.
+	(__ctx): New macro.
+	(fpregset_t): Use __ctx in defining fields.
+	(mcontext_t): Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h (NGREG): Rename to
+	__NGREG and define NGREG to __NGREG if [__USE_MISC].
+	(NFPREG): Rename to __NFPREG and define NFPREG to __NFPREG if
+	[__USE_MISC].
+	(gregset_t): Define using __NGREG.
+	(__ctx): New macro.
+	(fpregset_t): Use __ctx in defining fields.
+	(mcontext_t): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/sys/ucontext.h (__ctx): New macro.
+	(mcontext_t): Use __ctx in defining fields.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h (__ctx): New
+	macro.
+	[__WORDSIZE == 32] (NGREG): Rename to __NGREG and define NGREG to
+	__NGREG if [__USE_MISC].
+	[__WORDSIZE == 32] (gregset_t): Define using __NGREG.
+	[__WORDSIZE == 32] (fpregset_t): Use __ctx in defining fields.
+	(mcontext_t): Likewise.
+	[__WORDSIZE != 32] (NGREG): Rename to __NGREG and define NGREG to
+	__NGREG if [__USE_MISC].
+	[__WORDSIZE != 32] (NFPREG): Rename to __NFPREG and define NFPREG
+	to __NFPREG if [__USE_MISC].
+	[__WORDSIZE != 32] (NVRREG): Rename to __NVRREG and define NVRREG
+	to __NVRREG if [__USE_MISC].
+	[__WORDSIZE != 32] (gregset_t): Define using __NGREG.
+	[__WORDSIZE != 32] (fpregset_t): Define using __NFPREG.
+	[__WORDSIZE != 32] (vscr_t): Use __ctx in defining fields.
+	[__WORDSIZE != 32] (vrregset_t): Likewise.
+	[__WORDSIZE != 32] (mcontext_t): Likewise.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h (__ctx): New macro.
+	(__psw_t): Use __ctx in defining fields.
+	(NGREG): Rename to __NGREG and define NGREG to __NGREG if
+	[__USE_MISC].
+	(gregset_t): Define using __NGREG.
+	(fpreg_t): Use __ctx in defining fields.
+	(fpregset_t): Likewise.
+	(mcontext_t): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h (NGREG): Rename to
+	__NGREG and define NGREG to __NGREG if [__USE_MISC].
+	(gregset_t): Define using __NGREG.
+	(NFPREG): Rename to __NFPREG and define NFPREG to __NFPREG if
+	[__USE_MISC].
+	(fpregset_t): Define using __NFPREG.
+	(__ctx): New macro.
+	(mcontext_t): Use __ctx in defining fields.
+	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h (__ctx): New macro.
+	[__x86_64__] (NGREG): Rename to __NGREG and define NGREG to
+	__NGREG if [__USE_MISC].
+	[__x86_64__] (gregset_t): Define using __NGREG.
+	[__x86_64__] (struct _libc_fpxreg): Use __ctx in defining fields.
+	[__x86_64__] (struct _libc_fpstate): Likewise.
+	[__x86_64__] (mcontext_t): Likewise.
+	[!__x86_64__] (NGREG): Rename to __NGREG and define NGREG to
+	__NGREG if [__USE_MISC].
+	[!__x86_64__] (gregset_t): Define using __NGREG.
+	[!__x86_64__] (struct _libc_fpreg): Use __ctx in defining fields.
+	[!__x86_64__] (struct _libc_fpstate): Likewise.
+	[!__x86_64__] (mcontext_t): Likewise.
+
 2017-06-01  Zack Weinberg  <zackw@panix.com>
 
 	* sysdeps/unix/sysv/linux/microblaze/pt-vfork.S: Don't include

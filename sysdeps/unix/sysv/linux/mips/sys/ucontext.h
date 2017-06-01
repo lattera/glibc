@@ -33,21 +33,31 @@
 __extension__ typedef unsigned long long int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	32
-#define NFPREG	32
+#define __NGREG	32
+#define __NFPREG	32
+#ifdef __USE_MISC
+# define NGREG	__NGREG
+# define NFPREG	__NFPREG
+#endif
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
+typedef greg_t gregset_t[__NGREG];
+
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
 
 /* Container for all FPU registers.  */
 typedef struct fpregset {
 	union {
-		double	fp_dregs[NFPREG];
+		double	__ctx(fp_dregs)[__NFPREG];
 		struct {
 			float		_fp_fregs;
 			unsigned int	_fp_pad;
-		} fp_fregs[NFPREG];
-	} fp_r;
+		} __ctx(fp_fregs)[__NFPREG];
+	} __ctx(fp_r);
 } fpregset_t;
 
 
@@ -60,45 +70,47 @@ typedef struct fpregset {
    still be rectified.  */
 typedef struct
   {
-    unsigned int regmask;
-    unsigned int status;
-    greg_t pc;
-    gregset_t gregs;
-    fpregset_t fpregs;
-    unsigned int fp_owned;
-    unsigned int fpc_csr;
-    unsigned int fpc_eir;
-    unsigned int used_math;
-    unsigned int dsp;
-    greg_t mdhi;
-    greg_t mdlo;
-    unsigned long hi1;
-    unsigned long lo1;
-    unsigned long hi2;
-    unsigned long lo2;
-    unsigned long hi3;
-    unsigned long lo3;
+    unsigned int __ctx(regmask);
+    unsigned int __ctx(status);
+    greg_t __ctx(pc);
+    gregset_t __ctx(gregs);
+    fpregset_t __ctx(fpregs);
+    unsigned int __ctx(fp_owned);
+    unsigned int __ctx(fpc_csr);
+    unsigned int __ctx(fpc_eir);
+    unsigned int __ctx(used_math);
+    unsigned int __ctx(dsp);
+    greg_t __ctx(mdhi);
+    greg_t __ctx(mdlo);
+    unsigned long __ctx(hi1);
+    unsigned long __ctx(lo1);
+    unsigned long __ctx(hi2);
+    unsigned long __ctx(lo2);
+    unsigned long __ctx(hi3);
+    unsigned long __ctx(lo3);
   } mcontext_t;
 #else
 typedef struct
   {
-    gregset_t gregs;
-    fpregset_t fpregs;
-    greg_t mdhi;
-    greg_t hi1;
-    greg_t hi2;
-    greg_t hi3;
-    greg_t mdlo;
-    greg_t lo1;
-    greg_t lo2;
-    greg_t lo3;
-    greg_t pc;
-    unsigned int fpc_csr;
-    unsigned int used_math;
-    unsigned int dsp;
+    gregset_t __ctx(gregs);
+    fpregset_t __ctx(fpregs);
+    greg_t __ctx(mdhi);
+    greg_t __ctx(hi1);
+    greg_t __ctx(hi2);
+    greg_t __ctx(hi3);
+    greg_t __ctx(mdlo);
+    greg_t __ctx(lo1);
+    greg_t __ctx(lo2);
+    greg_t __ctx(lo3);
+    greg_t __ctx(pc);
+    unsigned int __ctx(fpc_csr);
+    unsigned int __ctx(used_math);
+    unsigned int __ctx(dsp);
     unsigned int __glibc_reserved1;
   } mcontext_t;
 #endif
+
+#undef __ctx
 
 /* Userlevel context.  */
 typedef struct ucontext

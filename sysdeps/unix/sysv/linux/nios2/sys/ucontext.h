@@ -34,12 +34,20 @@
 # define MCONTEXT_VERSION 2
 #endif
 
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
+
 /* Context to describe whole processor state.  */
 typedef struct mcontext
   {
-    int version;
-    unsigned long regs[32];
+    int __ctx(version);
+    unsigned long __ctx(regs)[32];
   } mcontext_t;
+
+#undef __ctx
 
 /* Userlevel context.  */
 typedef struct ucontext

@@ -37,10 +37,13 @@ typedef __uint64_t greg_t;
 #endif
 
 /* Number of general registers.  */
-#define NGREG	36
+#define __NGREG	36
+#ifdef __USE_MISC
+# define NGREG	__NGREG
+#endif
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
+typedef greg_t gregset_t[__NGREG];
 
 #ifdef __USE_MISC
 /* Number of each register is the `gregset_t' array.  */
@@ -121,31 +124,39 @@ enum
 };
 #endif
 
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
+
 /* Structure to describe FPU registers.  */
 typedef struct fpregset
 {
   union
   {
 #if _MIPS_SIM == _ABIO32
-    double fp_dregs[16];
-    float fp_fregs[32];
-    unsigned int fp_regs[32];
+    double __ctx(fp_dregs)[16];
+    float __ctx(fp_fregs)[32];
+    unsigned int __ctx(fp_regs)[32];
 #else
-    double fp_dregs[32];
-    /* float fp_fregs[32]; */
-    __uint64_t fp_regs[32];
+    double __ctx(fp_dregs)[32];
+    /* float __ctx(fp_fregs)[32]; */
+    __uint64_t __ctx(fp_regs)[32];
 #endif
-  } fp_r;
-  unsigned int fp_csr;
-  unsigned int fp_pad;
+  } __ctx(fp_r);
+  unsigned int __ctx(fp_csr);
+  unsigned int __ctx(fp_pad);
 } fpregset_t;
 
 /* Context to describe whole processor state.  */
 typedef struct
 {
-  gregset_t gpregs;
-  fpregset_t fpregs;
+  gregset_t __ctx(gpregs);
+  fpregset_t __ctx(fpregs);
 } mcontext_t;
+
+#undef __ctx
 
 /* Userlevel context.  */
 typedef struct ucontext

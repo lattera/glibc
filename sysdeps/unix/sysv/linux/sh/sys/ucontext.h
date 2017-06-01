@@ -30,10 +30,13 @@
 typedef int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	16
+#define __NGREG	16
+#ifdef __USE_MISC
+# define NGREG	__NGREG
+#endif
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
+typedef greg_t gregset_t[__NGREG];
 
 #ifdef __USE_MISC
 /* Number of each register is the `gregset_t' array.  */
@@ -77,28 +80,39 @@ enum
 typedef int freg_t;
 
 /* Number of FPU registers.  */
-#define NFPREG	16
+#define __NFPREG	16
+#ifdef __USE_MISC
+# define NFPREG	__NFPREG
+#endif
 
 /* Structure to describe FPU registers.  */
-typedef freg_t fpregset_t[NFPREG];
+typedef freg_t fpregset_t[__NFPREG];
+
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
 
 /* Context to describe whole processor state.  */
 typedef struct
   {
-    unsigned int oldmask;
-    gregset_t gregs;
-    unsigned int pc;
-    unsigned int pr;
-    unsigned int sr;
-    unsigned int gbr;
-    unsigned int mach;
-    unsigned int macl;
-    fpregset_t fpregs;
-    fpregset_t xfpregs;
-    unsigned int fpscr;
-    unsigned int fpul;
-    unsigned int ownedfp;
+    unsigned int __ctx(oldmask);
+    gregset_t __ctx(gregs);
+    unsigned int __ctx(pc);
+    unsigned int __ctx(pr);
+    unsigned int __ctx(sr);
+    unsigned int __ctx(gbr);
+    unsigned int __ctx(mach);
+    unsigned int __ctx(macl);
+    fpregset_t __ctx(fpregs);
+    fpregset_t __ctx(xfpregs);
+    unsigned int __ctx(fpscr);
+    unsigned int __ctx(fpul);
+    unsigned int __ctx(ownedfp);
   } mcontext_t;
+
+#undef __ctx
 
 /* Userlevel context.  */
 typedef struct ucontext

@@ -31,10 +31,13 @@
 typedef int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	19
+#define __NGREG	19
+#ifdef __USE_MISC
+# define NGREG	__NGREG
+#endif
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
+typedef greg_t gregset_t[__NGREG];
 
 #ifdef __USE_MISC
 /* Number of each register is the `gregset_t' array.  */
@@ -81,35 +84,46 @@ enum
 };
 #endif
 
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+# define __ctxt(tag) tag
+#else
+# define __ctx(fld) __ ## fld
+# define __ctxt(tag) /* Empty.  */
+#endif
+
 /* Structure to describe FPU registers.  */
 typedef struct fpregset
   {
     union
       {
-	struct fpchip_state
+	struct __ctxt(fpchip_state)
 	  {
-	    int state[27];
-	    int status;
-	  } fpchip_state;
+	    int __ctx(state)[27];
+	    int __ctx(status);
+	  } __ctx(fpchip_state);
 
-	struct fp_emul_space
+	struct __ctxt(fp_emul_space)
 	  {
-	    char fp_emul[246];
-	    char fp_epad[2];
-	  } fp_emul_space;
+	    char __ctx(fp_emul)[246];
+	    char __ctx(fp_epad)[2];
+	  } __ctx(fp_emul_space);
 
-	int f_fpregs[62];
-      } fp_reg_set;
+	int __ctx(f_fpregs)[62];
+      } __ctx(fp_reg_set);
 
-    long int f_wregs[33];
+    long int __ctx(f_wregs)[33];
   } fpregset_t;
 
 /* Context to describe whole processor state.  */
 typedef struct
   {
-    gregset_t gregs;
-    fpregset_t fpregs;
+    gregset_t __ctx(gregs);
+    fpregset_t __ctx(fpregs);
   } mcontext_t;
+
+#undef __ctx
+#undef __ctxt
 
 /* Userlevel context.  */
 typedef struct ucontext

@@ -25,16 +25,25 @@
 #include <bits/types/stack_t.h>
 
 
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
+
 #ifdef __x86_64__
 
 /* Type for general register.  */
 __extension__ typedef long long int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	23
+#define __NGREG	23
+#ifdef __USE_MISC
+# define NGREG	__NGREG
+#endif
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
+typedef greg_t gregset_t[__NGREG];
 
 #ifdef __USE_GNU
 /* Number of each register in the `gregset_t' array.  */
@@ -91,8 +100,8 @@ enum
 
 struct _libc_fpxreg
 {
-  unsigned short int significand[4];
-  unsigned short int exponent;
+  unsigned short int __ctx(significand)[4];
+  unsigned short int __ctx(exponent);
   unsigned short int __glibc_reserved1[3];
 };
 
@@ -104,14 +113,14 @@ struct _libc_xmmreg
 struct _libc_fpstate
 {
   /* 64-bit FXSAVE format.  */
-  __uint16_t		cwd;
-  __uint16_t		swd;
-  __uint16_t		ftw;
-  __uint16_t		fop;
-  __uint64_t		rip;
-  __uint64_t		rdp;
-  __uint32_t		mxcsr;
-  __uint32_t		mxcr_mask;
+  __uint16_t		__ctx(cwd);
+  __uint16_t		__ctx(swd);
+  __uint16_t		__ctx(ftw);
+  __uint16_t		__ctx(fop);
+  __uint64_t		__ctx(rip);
+  __uint64_t		__ctx(rdp);
+  __uint32_t		__ctx(mxcsr);
+  __uint32_t		__ctx(mxcr_mask);
   struct _libc_fpxreg	_st[8];
   struct _libc_xmmreg	_xmm[16];
   __uint32_t		__glibc_reserved1[24];
@@ -123,9 +132,9 @@ typedef struct _libc_fpstate *fpregset_t;
 /* Context to describe whole processor state.  */
 typedef struct
   {
-    gregset_t gregs;
+    gregset_t __ctx(gregs);
     /* Note that fpregs is a pointer.  */
-    fpregset_t fpregs;
+    fpregset_t __ctx(fpregs);
     __extension__ unsigned long long __reserved1 [8];
 } mcontext_t;
 
@@ -146,10 +155,13 @@ typedef struct ucontext
 typedef int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	19
+#define __NGREG	19
+#ifdef __USE_MISC
+# define NGREG	__NGREG
+#endif
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
+typedef greg_t gregset_t[__NGREG];
 
 #ifdef __USE_GNU
 /* Number of each register is the `gregset_t' array.  */
@@ -199,21 +211,21 @@ enum
 /* Definitions taken from the kernel headers.  */
 struct _libc_fpreg
 {
-  unsigned short int significand[4];
-  unsigned short int exponent;
+  unsigned short int __ctx(significand)[4];
+  unsigned short int __ctx(exponent);
 };
 
 struct _libc_fpstate
 {
-  unsigned long int cw;
-  unsigned long int sw;
-  unsigned long int tag;
-  unsigned long int ipoff;
-  unsigned long int cssel;
-  unsigned long int dataoff;
-  unsigned long int datasel;
+  unsigned long int __ctx(cw);
+  unsigned long int __ctx(sw);
+  unsigned long int __ctx(tag);
+  unsigned long int __ctx(ipoff);
+  unsigned long int __ctx(cssel);
+  unsigned long int __ctx(dataoff);
+  unsigned long int __ctx(datasel);
   struct _libc_fpreg _st[8];
-  unsigned long int status;
+  unsigned long int __ctx(status);
 };
 
 /* Structure to describe FPU registers.  */
@@ -222,12 +234,12 @@ typedef struct _libc_fpstate *fpregset_t;
 /* Context to describe whole processor state.  */
 typedef struct
   {
-    gregset_t gregs;
+    gregset_t __ctx(gregs);
     /* Due to Linux's history we have to use a pointer here.  The SysV/i386
        ABI requires a struct with the values.  */
-    fpregset_t fpregs;
-    unsigned long int oldmask;
-    unsigned long int cr2;
+    fpregset_t __ctx(fpregs);
+    unsigned long int __ctx(oldmask);
+    unsigned long int __ctx(cr2);
   } mcontext_t;
 
 /* Userlevel context.  */
@@ -242,5 +254,7 @@ typedef struct ucontext
   } ucontext_t;
 
 #endif /* !__x86_64__ */
+
+#undef __ctx
 
 #endif /* sys/ucontext.h */

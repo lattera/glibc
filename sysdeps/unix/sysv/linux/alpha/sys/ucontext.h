@@ -29,19 +29,25 @@
 typedef long int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	33
+#define __NGREG	33
+#ifdef __USE_MISC
+# define NGREG	__NGREG
+#endif
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
+typedef greg_t gregset_t[__NGREG];
 
 /* Type for floating-point register.  */
 typedef long int fpreg_t;
 
 /* Number of general registers.  */
-#define NFPREG	32
+#define __NFPREG	32
+#ifdef __USE_MISC
+# define NFPREG	__NFPREG
+#endif
 
 /* Container for all general registers.  */
-typedef fpreg_t fpregset_t[NFPREG];
+typedef fpreg_t fpregset_t[__NFPREG];
 
 
 /* A machine context is exactly a sigcontext.  */

@@ -30,10 +30,13 @@
 typedef int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	16
+#define __NGREG	16
+#ifdef __USE_MISC
+# define NGREG	__NGREG
+#endif
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
+typedef greg_t gregset_t[__NGREG];
 
 #ifdef __USE_MISC
 /* Number of each register is the `gregset_t' array.  */
@@ -74,6 +77,12 @@ enum
 };
 #endif
 
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
+
 /* Structure to describe FPU registers.  */
 typedef struct fpregset
   {
@@ -82,9 +91,11 @@ typedef struct fpregset
 /* Context to describe whole processor state.  */
 typedef struct
   {
-    gregset_t gregs;
-    fpregset_t fpregs;
+    gregset_t __ctx(gregs);
+    fpregset_t __ctx(fpregs);
   } mcontext_t;
+
+#undef __ctx
 
 /* Userlevel context.  */
 typedef struct ucontext
