@@ -104,30 +104,34 @@ type {struct sigaction}
 element {struct sigaction} {void(*} sa_handler )(int)
 element {struct sigaction} sigset_t sa_mask
 element {struct sigaction} int sa_flags
+# ifndef XPG4
 element {struct sigaction} {void(*} sa_sigaction )(int, siginfo_t*, void*)
+# endif
 
 constant SA_NOCLDSTOP
+# ifndef XPG4
 constant SA_SIGINFO
+# endif
 constant SIG_BLOCK
 constant SIG_UNBLOCK
 constant SIG_SETMASK
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG4 && !defined POSIX && !defined POSIX2008
 constant SA_ONSTACK
 # endif
-# if !defined POSIX
+# if !defined XPG4 && !defined POSIX
 constant SA_RESETHAND
 constant SA_RESTART
 constant SA_NOCLDWAIT
 constant SA_NODEFER
 # endif
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG4 && !defined POSIX && !defined POSIX2008
 constant SS_ONSTACK
 constant SS_DISABLE
 constant MINSIGSTKSZ
 constant SIGSTKSZ
 # endif
 
-# if !defined POSIX
+# if !defined XPG4 && !defined POSIX
 type ucontext_t
 
 element ucontext_t {ucontext_t*} uc_link
@@ -208,17 +212,19 @@ constant POLL_HUP
 constant TRAP_BRKPT
 constant TRAP_TRACE
 # endif
+# if !defined XPG4 && !defined XPG42
 constant SI_USER
 constant SI_QUEUE
 constant SI_TIMER
 constant SI_ASYNCIO
 constant SI_MESGQ
+# endif
 
-# if !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
+# if !defined XPG4 && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function void (*bsd_signal (int, void(*)(int)))(int)
 # endif
 function int kill (pid_t, int)
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG4 && !defined POSIX && !defined POSIX2008
 function int killpg (pid_t, int)
 # endif
 # if !defined XPG4 && !defined XPG42
@@ -227,19 +233,19 @@ function int pthread_sigmask (int, const sigset_t*, sigset_t*)
 # endif
 function int sigaction (int, const struct sigaction*, struct sigaction*)
 function int sigaddset (sigset_t*, int)
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG4 && !defined POSIX && !defined POSIX2008
 function int sigaltstack (const stack_t*, stack_t*)
 # endif
 function int sigdelset (sigset_t*, int)
 function int sigemptyset (sigset_t*)
 function int sigfillset (sigset_t*)
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG4 && !defined POSIX && !defined POSIX2008
 function int sighold (int)
 function int sigignore (int)
 function int siginterrupt (int, int)
 # endif
 function int sigismember (const sigset_t*, int)
-#if !defined POSIX && !defined POSIX2008
+#if !defined XPG4 && !defined POSIX && !defined POSIX2008
 function int sigpause (int)
 # endif
 function int sigpending (sigset_t*)
@@ -247,7 +253,7 @@ function int sigprocmask (int, const sigset_t*, sigset_t*)
 # if !defined XPG4 && !defined XPG42
 function int sigqueue (pid_t, int, const union sigval)
 # endif
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG4 && !defined POSIX && !defined POSIX2008
 function int sigrelse (int)
 function void (*sigset (int, void(*)(int)))(int)
 # endif
@@ -258,8 +264,8 @@ function int sigsuspend (const sigset_t*)
 # if !defined XPG4 && !defined XPG42
 function int sigtimedwait (const sigset_t*, siginfo_t*, const struct timespec*)
 # endif
-function int sigwait (const sigset_t*, int*)
 # if !defined XPG4 && !defined XPG42
+function int sigwait (const sigset_t*, int*)
 function int sigwaitinfo (const sigset_t*, siginfo_t*)
 # endif
 # if defined XOPEN2K8 || defined POSIX2008

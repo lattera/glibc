@@ -1,3 +1,36 @@
+2017-06-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/signal.h-data (sa_sigaction): Do not expect for
+	[XPG4].
+	(SA_SIGINFO): Likewise.
+	(SA_ONSTACK): Likewise.
+	(SA_RESETHAND): Likewise.
+	(SA_RESTART): Likewise.
+	(SA_NOCLDWAIT): Likewise.
+	(SA_NODEFER): Likewise.
+	(SS_ONSTACK): Likewise.
+	(SS_DISABLE): Likewise.
+	(MINSIGSTKSZ): Likewise.
+	(SIGSTKSZ): Likewise.
+	(ucontext_t): Likewise.
+	(stack_t): Likewise.
+	(struct sigstack): Likewise.
+	(SI_USER): Do not expect for [XPG4 || XPG42].
+	(SI_QUEUE): Likewise.
+	(SI_TIMER): Likewise.
+	(SI_ASYNCIO): Likewise.
+	(SI_MESGQ): Likewise.
+	(bsd_signal): Do not expect for [XPG4].
+	(killpg): Likewise.
+	(sigaltstack): Likewise.
+	(sighold): Likewise.
+	(sigignore): Likewise.
+	(siginterrupt): Likewise.
+	(sigpause): Likewise.
+	(sigrelse): Likewise.
+	(sigset): Likewise.
+	(sigwait): Do not expect for [XPG4 || XPG42].
+
 2017-06-01  Zack Weinberg  <zackw@panix.com>
 
 	[BZ #21514]
