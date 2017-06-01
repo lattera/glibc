@@ -122,7 +122,7 @@ on other systems.
 @comment POSIX.1
 @deftypevr Macro int EPERM
 @errno{EPERM, 1, Operation not permitted}
-Operation not permitted; only the owner of the file (or other resource)
+Only the owner of the file (or other resource)
 or processes with special privileges can perform the operation.
 @end deftypevr
 
@@ -130,7 +130,7 @@ or processes with special privileges can perform the operation.
 @comment POSIX.1
 @deftypevr Macro int ENOENT
 @errno{ENOENT, 2, No such file or directory}
-No such file or directory.  This is a ``file doesn't exist'' error
+This is a ``file doesn't exist'' error
 for ordinary files that are referenced in contexts where they are
 expected to already exist.
 @end deftypevr
@@ -146,7 +146,7 @@ No process matches the specified process ID.
 @comment POSIX.1
 @deftypevr Macro int EINTR
 @errno{EINTR, 4, Interrupted system call}
-Interrupted function call; an asynchronous signal occurred and prevented
+An asynchronous signal occurred and prevented
 completion of the call.  When this happens, you should try the call
 again.
 
@@ -159,14 +159,14 @@ Primitives}.
 @comment POSIX.1
 @deftypevr Macro int EIO
 @errno{EIO, 5, Input/output error}
-Input/output error; usually used for physical read or write errors.
+Usually used for physical read or write errors.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
 @deftypevr Macro int ENXIO
 @errno{ENXIO, 6, No such device or address}
-No such device or address.  The system tried to use the device
+The system tried to use the device
 represented by a file you specified, and it couldn't find the device.
 This can mean that the device file was installed incorrectly, or that
 the physical device is missing or not correctly attached to the
@@ -177,7 +177,7 @@ computer.
 @comment POSIX.1
 @deftypevr Macro int E2BIG
 @errno{E2BIG, 7, Argument list too long}
-Argument list too long; used when the arguments passed to a new program
+Used when the arguments passed to a new program
 being executed with one of the @code{exec} functions (@pxref{Executing a
 File}) occupy too much memory space.  This condition never arises on
 @gnuhurdsystems{}.
@@ -195,7 +195,7 @@ Invalid executable file format.  This condition is detected by the
 @comment POSIX.1
 @deftypevr Macro int EBADF
 @errno{EBADF, 9, Bad file descriptor}
-Bad file descriptor; for example, I/O on a descriptor that has been
+For example, I/O on a descriptor that has been
 closed or reading from a descriptor open only for writing (or vice
 versa).
 @end deftypevr
@@ -204,7 +204,7 @@ versa).
 @comment POSIX.1
 @deftypevr Macro int ECHILD
 @errno{ECHILD, 10, No child processes}
-There are no child processes.  This error happens on operations that are
+This error happens on operations that are
 supposed to manipulate child processes, when there aren't any processes
 to manipulate.
 @end deftypevr
@@ -213,7 +213,7 @@ to manipulate.
 @comment POSIX.1
 @deftypevr Macro int EDEADLK
 @errno{EDEADLK, 11, Resource deadlock avoided}
-Deadlock avoided; allocating a system resource would have resulted in a
+Allocating a system resource would have resulted in a
 deadlock situation.  The system does not guarantee that it will notice
 all such situations.  This error means you got lucky and the system
 noticed; it might just hang.  @xref{File Locks}, for an example.
@@ -223,7 +223,7 @@ noticed; it might just hang.  @xref{File Locks}, for an example.
 @comment POSIX.1
 @deftypevr Macro int ENOMEM
 @errno{ENOMEM, 12, Cannot allocate memory}
-No memory available.  The system cannot allocate more virtual memory
+The system cannot allocate more virtual memory
 because its capacity is full.
 @end deftypevr
 
@@ -231,14 +231,14 @@ because its capacity is full.
 @comment POSIX.1
 @deftypevr Macro int EACCES
 @errno{EACCES, 13, Permission denied}
-Permission denied; the file permissions do not allow the attempted operation.
+The file permissions do not allow the attempted operation.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
 @deftypevr Macro int EFAULT
 @errno{EFAULT, 14, Bad address}
-Bad address; an invalid pointer was detected.
+An invalid pointer was detected.
 On @gnuhurdsystems{}, this error never happens; you get a signal instead.
 @end deftypevr
 
@@ -255,7 +255,7 @@ system in Unix gives this error.
 @comment POSIX.1
 @deftypevr Macro int EBUSY
 @errno{EBUSY, 16, Device or resource busy}
-Resource busy; a system resource that can't be shared is already in use.
+A system resource that can't be shared is already in use.
 For example, if you try to delete a file that is the root of a currently
 mounted filesystem, you get this error.
 @end deftypevr
@@ -264,7 +264,7 @@ mounted filesystem, you get this error.
 @comment POSIX.1
 @deftypevr Macro int EEXIST
 @errno{EEXIST, 17, File exists}
-File exists; an existing file was specified in a context where it only
+An existing file was specified in a context where it only
 makes sense to specify a new file.
 @end deftypevr
 
@@ -296,7 +296,7 @@ A file that isn't a directory was specified when a directory is required.
 @comment POSIX.1
 @deftypevr Macro int EISDIR
 @errno{EISDIR, 21, Is a directory}
-File is a directory; you cannot open a directory for writing,
+You cannot open a directory for writing,
 or create or remove hard links to it.
 @end deftypevr
 
@@ -304,7 +304,7 @@ or create or remove hard links to it.
 @comment POSIX.1
 @deftypevr Macro int EINVAL
 @errno{EINVAL, 22, Invalid argument}
-Invalid argument.  This is used to indicate various kinds of problems
+This is used to indicate various kinds of problems
 with passing the wrong argument to a library function.
 @end deftypevr
 
@@ -353,14 +353,14 @@ is not an error on @gnuhurdsystems{}; the text is copied as necessary.
 @comment POSIX.1
 @deftypevr Macro int EFBIG
 @errno{EFBIG, 27, File too large}
-File too big; the size of a file would be larger than allowed by the system.
+The size of a file would be larger than allowed by the system.
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
 @deftypevr Macro int ENOSPC
 @errno{ENOSPC, 28, No space left on device}
-No space left on device; write operation on a file failed because the
+Write operation on a file failed because the
 disk is full.
 @end deftypevr
 
@@ -382,7 +382,7 @@ An attempt was made to modify something on a read-only file system.
 @comment POSIX.1
 @deftypevr Macro int EMLINK
 @errno{EMLINK, 31, Too many links}
-Too many links; the link count of a single file would become too large.
+The link count of a single file would become too large.
 @code{rename} can cause this error if the file being renamed already has
 as many links as it can take (@pxref{Renaming Files}).
 @end deftypevr
@@ -391,7 +391,7 @@ as many links as it can take (@pxref{Renaming Files}).
 @comment POSIX.1
 @deftypevr Macro int EPIPE
 @errno{EPIPE, 32, Broken pipe}
-Broken pipe; there is no process reading from the other end of a pipe.
+There is no process reading from the other end of a pipe.
 Every library function that returns this error code also generates a
 @code{SIGPIPE} signal; this signal terminates the program if not handled
 or blocked.  Thus, your program will never actually see @code{EPIPE}
@@ -402,7 +402,7 @@ unless it has handled or blocked @code{SIGPIPE}.
 @comment ISO
 @deftypevr Macro int EDOM
 @errno{EDOM, 33, Numerical argument out of domain}
-Domain error; used by mathematical functions when an argument value does
+Used by mathematical functions when an argument value does
 not fall into the domain over which the function is defined.
 @end deftypevr
 
@@ -410,7 +410,7 @@ not fall into the domain over which the function is defined.
 @comment ISO
 @deftypevr Macro int ERANGE
 @errno{ERANGE, 34, Numerical result out of range}
-Range error; used by mathematical functions when the result value is
+Used by mathematical functions when the result value is
 not representable because of overflow or underflow.
 @end deftypevr
 
@@ -418,7 +418,7 @@ not representable because of overflow or underflow.
 @comment POSIX.1
 @deftypevr Macro int EAGAIN
 @errno{EAGAIN, 35, Resource temporarily unavailable}
-Resource temporarily unavailable; the call might work if you try again
+The call might work if you try again
 later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
 they are always the same in @theglibc{}.
 
@@ -656,7 +656,6 @@ The socket has already been shut down.
 @comment BSD
 @deftypevr Macro int ETOOMANYREFS
 @errno{ETOOMANYREFS, 59, Too many references: cannot splice}
-???
 @end deftypevr
 
 @comment errno.h
@@ -742,7 +741,7 @@ The user's disk quota was exceeded.
 @comment BSD
 @deftypevr Macro int ESTALE
 @errno{ESTALE, 70, Stale file handle}
-Stale file handle.  This indicates an internal confusion in the
+This indicates an internal confusion in the
 file system which is due to file system rearrangements on the server host
 for NFS file systems or corruption in other file systems.
 Repairing this condition usually requires unmounting, possibly repairing
@@ -763,42 +762,37 @@ properly on @gnuhurdsystems{}, making this error code impossible.)
 @comment BSD
 @deftypevr Macro int EBADRPC
 @errno{EBADRPC, 72, RPC struct is bad}
-???
 @end deftypevr
 
 @comment errno.h
 @comment BSD
 @deftypevr Macro int ERPCMISMATCH
 @errno{ERPCMISMATCH, 73, RPC version wrong}
-???
 @end deftypevr
 
 @comment errno.h
 @comment BSD
 @deftypevr Macro int EPROGUNAVAIL
 @errno{EPROGUNAVAIL, 74, RPC program not available}
-???
 @end deftypevr
 
 @comment errno.h
 @comment BSD
 @deftypevr Macro int EPROGMISMATCH
 @errno{EPROGMISMATCH, 75, RPC program version wrong}
-???
 @end deftypevr
 
 @comment errno.h
 @comment BSD
 @deftypevr Macro int EPROCUNAVAIL
 @errno{EPROCUNAVAIL, 76, RPC bad procedure for program}
-???
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
 @deftypevr Macro int ENOLCK
 @errno{ENOLCK, 77, No locks available}
-No locks available.  This is used by the file locking facilities; see
+This is used by the file locking facilities; see
 @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 it can result from an operation to an NFS server running another
 operating system.
@@ -808,7 +802,7 @@ operating system.
 @comment BSD
 @deftypevr Macro int EFTYPE
 @errno{EFTYPE, 79, Inappropriate file type or format}
-Inappropriate file type or format.  The file was the wrong type for the
+The file was the wrong type for the
 operation, or a data file had the wrong format.
 
 On some systems @code{chmod} returns this error if you try to set the
@@ -819,21 +813,19 @@ sticky bit on a non-directory file; @pxref{Setting Permissions}.
 @comment BSD
 @deftypevr Macro int EAUTH
 @errno{EAUTH, 80, Authentication error}
-???
 @end deftypevr
 
 @comment errno.h
 @comment BSD
 @deftypevr Macro int ENEEDAUTH
 @errno{ENEEDAUTH, 81, Need authenticator}
-???
 @end deftypevr
 
 @comment errno.h
 @comment POSIX.1
 @deftypevr Macro int ENOSYS
 @errno{ENOSYS, 78, Function not implemented}
-Function not implemented.  This indicates that the function called is
+This indicates that the function called is
 not implemented at all, either in the C library itself or in the
 operating system.  When you get this error, you can be sure that this
 particular function will always fail with @code{ENOSYS} unless you
@@ -844,7 +836,7 @@ install a new version of the C library or the operating system.
 @comment POSIX.1
 @deftypevr Macro int ENOTSUP
 @errno{ENOTSUP, 118, Not supported}
-Not supported.  A function returns this error when certain parameter
+A function returns this error when certain parameter
 values are valid, but the functionality they request is not available.
 This can mean that the function does not implement a particular command
 or option value or flag bit at all.  For functions that operate on some
@@ -987,7 +979,7 @@ This error code has no purpose.
 @comment POSIX.1
 @deftypevr Macro int ECANCELED
 @errno{ECANCELED, 119, Operation canceled}
-Operation canceled; an asynchronous operation was canceled before it
+An asynchronous operation was canceled before it
 completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 the normal result is for the operations affected to complete with this
 error; @pxref{Cancel AIO Operations}.

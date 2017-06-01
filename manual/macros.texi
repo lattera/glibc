@@ -271,6 +271,7 @@ cwd\comments\
 @c Note that error values have ABI implications for the Hurd.
 @macro errno {err, val, str}
 @cindex \str\
+``\str\.''
 @end macro
 
 @end ifclear

@@ -1,3 +1,9 @@
+2017-06-02  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/errno.texi: Remove redundant error strings.
+	* manual/macros.texi (@errno): Render the error string in every
+	description.
+
 2017-06-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21543]
