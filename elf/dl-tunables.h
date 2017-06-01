@@ -39,8 +39,8 @@ struct _tunable
   const char *name;			/* Internal name of the tunable.  */
   tunable_type_t type;			/* Data type of the tunable.  */
   tunable_val_t val;			/* The value.  */
-  const char *strval;			/* The string containing the value,
-					   points into envp.  */
+  bool initialized;			/* Flag to indicate that the tunable is
+					   initialized.  */
   tunable_seclevel_t security_level;	/* Specify the security level for the
 					   tunable with respect to AT_SECURE
 					   programs.  See description of
@@ -61,37 +61,52 @@ typedef struct _tunable tunable_t;
 /* Full name for a tunable is top_ns.tunable_ns.id.  */
 # define TUNABLE_NAME_S(top,ns,id) #top "." #ns "." #id
 
-# define TUNABLE_ENUM_NAME(top,ns,id) TUNABLE_ENUM_NAME1 (top,ns,id)
-# define TUNABLE_ENUM_NAME1(top,ns,id) top ## _ ## ns ## _ ## id
+# define TUNABLE_ENUM_NAME(__top,__ns,__id) TUNABLE_ENUM_NAME1 (__top,__ns,__id)
+# define TUNABLE_ENUM_NAME1(__top,__ns,__id) __top ## _ ## __ns ## _ ## __id
 
 # include "dl-tunable-list.h"
 
 extern void __tunables_init (char **);
-extern void __tunable_set_val (tunable_id_t, void *, tunable_callback_t);
-
+extern void __tunable_get_val (tunable_id_t, void *, tunable_callback_t);
+extern void __tunable_set_val (tunable_id_t, void *);
 rtld_hidden_proto (__tunables_init)
-rtld_hidden_proto (__tunable_set_val)
+rtld_hidden_proto (__tunable_get_val)
 
-/* Check if the tunable has been set to a non-default value and if it is, copy
-   it over into __VAL.  */
-# define TUNABLE_SET_VAL(__id,__val) \
+/* Define TUNABLE_GET and TUNABLE_SET in short form if TOP_NAMESPACE and
+   TUNABLE_NAMESPACE are defined.  This is useful shorthand to get and set
+   tunables within a module.  */
+#if defined TOP_NAMESPACE && defined TUNABLE_NAMESPACE
+# define TUNABLE_GET(__id, __type, __cb) \
+  TUNABLE_GET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __type, __cb)
+# define TUNABLE_SET(__id, __type, __val) \
+  TUNABLE_SET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __type, __val)
+#else
+# define TUNABLE_GET(__top, __ns, __id, __type, __cb) \
+  TUNABLE_GET_FULL (__top, __ns, __id, __type, __cb)
+# define TUNABLE_SET(__top, __ns, __id, __type, __val) \
+  TUNABLE_SET_FULL (__top, __ns, __id, __type, __val)
+#endif
+
+/* Get and return a tunable value.  If the tunable was set externally and __CB
+   is defined then call __CB before returning the value.  */
+# define TUNABLE_GET_FULL(__top, __ns, __id, __type, __cb) \
 ({									      \
-  __tunable_set_val							      \
-   (TUNABLE_ENUM_NAME (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id), (__val),      \
-    NULL);								      \
+  tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);		      \
+  __type ret;								      \
+  __tunable_get_val (id, &ret, __cb);					      \
+  ret;									      \
 })
 
-/* Same as TUNABLE_SET_VAL, but also call the callback function __CB.  */
-# define TUNABLE_SET_VAL_WITH_CALLBACK(__id,__val,__cb) \
+/* Set a tunable value.  */
+# define TUNABLE_SET_FULL(__top, __ns, __id, __type, __val) \
 ({									      \
-  __tunable_set_val							      \
-   (TUNABLE_ENUM_NAME (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id), (__val),      \
-    DL_TUNABLE_CALLBACK (__cb));					      \
+  __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),		      \
+			& (__type) {__val});				      \
 })
 
 /* Namespace sanity for callback functions.  Use this macro to keep the
    namespace of the modules clean.  */
-# define DL_TUNABLE_CALLBACK(__name) _dl_tunable_ ## __name
+# define TUNABLE_CALLBACK(__name) _dl_tunable_ ## __name
 
 # define TUNABLES_FRONTEND_valstring 1
 /* The default value for TUNABLES_FRONTEND.  */

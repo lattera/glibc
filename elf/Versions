@@ -72,6 +72,6 @@ ld {
     _dl_signal_error; _dl_catch_error;
 
     # Set value of a tunable.
-    __tunable_set_val;
+    __tunable_get_val;
   }
 }

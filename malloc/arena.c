@@ -212,7 +212,7 @@ __malloc_fork_unlock_child (void)
 #if HAVE_TUNABLES
 static inline int do_set_mallopt_check (int32_t value);
 void
-DL_TUNABLE_CALLBACK (set_mallopt_check) (tunable_val_t *valp)
+TUNABLE_CALLBACK (set_mallopt_check) (tunable_val_t *valp)
 {
   int32_t value = (int32_t) valp->numval;
   do_set_mallopt_check (value);
@@ -220,22 +220,22 @@ DL_TUNABLE_CALLBACK (set_mallopt_check) (tunable_val_t *valp)
     __malloc_check_init ();
 }
 
-# define DL_TUNABLE_CALLBACK_FNDECL(__name, __type) \
+# define TUNABLE_CALLBACK_FNDECL(__name, __type) \
 static inline int do_ ## __name (__type value);				      \
 void									      \
-DL_TUNABLE_CALLBACK (__name) (tunable_val_t *valp)			      \
+TUNABLE_CALLBACK (__name) (tunable_val_t *valp)				      \
 {									      \
   __type value = (__type) (valp)->numval;				      \
   do_ ## __name (value);						      \
 }
 
-DL_TUNABLE_CALLBACK_FNDECL (set_mmap_threshold, size_t)
-DL_TUNABLE_CALLBACK_FNDECL (set_mmaps_max, int32_t)
-DL_TUNABLE_CALLBACK_FNDECL (set_top_pad, size_t)
-DL_TUNABLE_CALLBACK_FNDECL (set_perturb_byte, int32_t)
-DL_TUNABLE_CALLBACK_FNDECL (set_trim_threshold, size_t)
-DL_TUNABLE_CALLBACK_FNDECL (set_arena_max, size_t)
-DL_TUNABLE_CALLBACK_FNDECL (set_arena_test, size_t)
+TUNABLE_CALLBACK_FNDECL (set_mmap_threshold, size_t)
+TUNABLE_CALLBACK_FNDECL (set_mmaps_max, int32_t)
+TUNABLE_CALLBACK_FNDECL (set_top_pad, size_t)
+TUNABLE_CALLBACK_FNDECL (set_perturb_byte, int32_t)
+TUNABLE_CALLBACK_FNDECL (set_trim_threshold, size_t)
+TUNABLE_CALLBACK_FNDECL (set_arena_max, size_t)
+TUNABLE_CALLBACK_FNDECL (set_arena_test, size_t)
 #else
 /* Initialization routine. */
 #include <string.h>
@@ -314,14 +314,14 @@ ptmalloc_init (void)
   __libc_lock_lock (main_arena.mutex);
   malloc_consolidate (&main_arena);
 
-  TUNABLE_SET_VAL_WITH_CALLBACK (check, NULL, set_mallopt_check);
-  TUNABLE_SET_VAL_WITH_CALLBACK (top_pad, NULL, set_top_pad);
-  TUNABLE_SET_VAL_WITH_CALLBACK (perturb, NULL, set_perturb_byte);
-  TUNABLE_SET_VAL_WITH_CALLBACK (mmap_threshold, NULL, set_mmap_threshold);
-  TUNABLE_SET_VAL_WITH_CALLBACK (trim_threshold, NULL, set_trim_threshold);
-  TUNABLE_SET_VAL_WITH_CALLBACK (mmap_max, NULL, set_mmaps_max);
-  TUNABLE_SET_VAL_WITH_CALLBACK (arena_max, NULL, set_arena_max);
-  TUNABLE_SET_VAL_WITH_CALLBACK (arena_test, NULL, set_arena_test);
+  TUNABLE_GET (check, int32_t, TUNABLE_CALLBACK (set_mallopt_check));
+  TUNABLE_GET (top_pad, size_t, TUNABLE_CALLBACK (set_top_pad));
+  TUNABLE_GET (perturb, int32_t, TUNABLE_CALLBACK (set_perturb_byte));
+  TUNABLE_GET (mmap_threshold, size_t, TUNABLE_CALLBACK (set_mmap_threshold));
+  TUNABLE_GET (trim_threshold, size_t, TUNABLE_CALLBACK (set_trim_threshold));
+  TUNABLE_GET (mmap_max, int32_t, TUNABLE_CALLBACK (set_mmaps_max));
+  TUNABLE_GET (arena_max, size_t, TUNABLE_CALLBACK (set_arena_max));
+  TUNABLE_GET (arena_test, size_t, TUNABLE_CALLBACK (set_arena_test));
   __libc_lock_unlock (main_arena.mutex);
 #else
   const char *s = NULL;

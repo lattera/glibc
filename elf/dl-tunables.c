@@ -184,19 +184,17 @@ tunables_strtoul (const char *nptr)
   if ((__type) (__val) >= min && (__type) (val) <= max)			      \
     {									      \
       (__cur)->val.numval = val;					      \
-      (__cur)->strval = strval;						      \
+      (__cur)->initialized = true;					      \
     }									      \
 })
 
-/* Validate range of the input value and initialize the tunable CUR if it looks
-   good.  */
 static void
-tunable_initialize (tunable_t *cur, const char *strval)
+do_tunable_update_val (tunable_t *cur, const void *valp)
 {
   uint64_t val;
 
   if (cur->type.type_code != TUNABLE_TYPE_STRING)
-    val = tunables_strtoul (strval);
+    val = *((int64_t *) valp);
 
   switch (cur->type.type_code)
     {
@@ -217,12 +215,41 @@ tunable_initialize (tunable_t *cur, const char *strval)
 	}
     case TUNABLE_TYPE_STRING:
 	{
-	  cur->val.strval = cur->strval = strval;
+	  cur->val.strval = valp;
 	  break;
 	}
     default:
       __builtin_unreachable ();
     }
+}
+
+/* Validate range of the input value and initialize the tunable CUR if it looks
+   good.  */
+static void
+tunable_initialize (tunable_t *cur, const char *strval)
+{
+  uint64_t val;
+  const void *valp;
+
+  if (cur->type.type_code != TUNABLE_TYPE_STRING)
+    {
+      val = tunables_strtoul (strval);
+      valp = &val;
+    }
+  else
+    {
+      cur->initialized = true;
+      valp = strval;
+    }
+  do_tunable_update_val (cur, valp);
+}
+
+void
+__tunable_set_val (tunable_id_t id, void *valp)
+{
+  tunable_t *cur = &tunable_list[id];
+
+  do_tunable_update_val (cur, valp);
 }
 
 #if TUNABLES_FRONTEND == TUNABLES_FRONTEND_valstring
@@ -375,7 +402,7 @@ __tunables_init (char **envp)
 
 	  /* Skip over tunables that have either been set already or should be
 	     skipped.  */
-	  if (cur->strval != NULL || cur->env_alias == NULL)
+	  if (cur->initialized || cur->env_alias == NULL)
 	    continue;
 
 	  const char *name = cur->env_alias;
@@ -426,19 +453,9 @@ __tunables_init (char **envp)
 /* Set the tunable value.  This is called by the module that the tunable exists
    in. */
 void
-__tunable_set_val (tunable_id_t id, void *valp, tunable_callback_t callback)
+__tunable_get_val (tunable_id_t id, void *valp, tunable_callback_t callback)
 {
   tunable_t *cur = &tunable_list[id];
-
-  /* Don't do anything if our tunable was not set during initialization or if
-     it failed validation.  */
-  if (cur->strval == NULL)
-    return;
-
-  /* Caller does not need the value, just call the callback with our tunable
-     value.  */
-  if (valp == NULL)
-    goto cb;
 
   switch (cur->type.type_code)
     {
@@ -466,9 +483,8 @@ __tunable_set_val (tunable_id_t id, void *valp, tunable_callback_t callback)
       __builtin_unreachable ();
     }
 
-cb:
-  if (callback)
+  if (cur->initialized && callback != NULL)
     callback (&cur->val);
 }
 
-rtld_hidden_def (__tunable_set_val)
+rtld_hidden_def (__tunable_get_val)

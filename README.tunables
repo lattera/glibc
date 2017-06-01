@@ -20,14 +20,12 @@ namespace by overriding the TOP_NAMESPACE macro for that tunable.  Downstream
 implementations are discouraged from using the 'glibc' top namespace for
 tunables they don't already have consensus to push upstream.
 
-There are two steps to adding a tunable:
+There are three steps to adding a tunable:
 
-1. Add a tunable ID:
+1. Add a tunable to the list and fully specify its properties:
 
-Modules that wish to use the tunables interface must define the
-TUNABLE_NAMESPACE macro.  Following this, for each tunable you want to
-add, make an entry in elf/dl-tunables.list.  The format of the file is as
-follows:
+For each tunable you want to add, make an entry in elf/dl-tunables.list.  The
+format of the file is as follows:
 
 TOP_NAMESPACE {
   NAMESPACE1 {
@@ -69,11 +67,60 @@ The list of allowed attributes are:
 				     non-AT_SECURE subprocesses.
 			NONE: Read all the time.
 
-2. Call either the TUNABLE_SET_VALUE and pass into it the tunable name and a
-   pointer to the variable that should be set with the tunable value.
-   If additional work needs to be done after setting the value, use the
-   TUNABLE_SET_VALUE_WITH_CALLBACK instead and additionally pass a pointer to
-   the function that should be called if the tunable value has been set.
+2. Use TUNABLE_GET/TUNABLE_SET to get and set tunables.
+
+3. OPTIONAL: If tunables in a namespace are being used multiple times within a
+   specific module, set the TUNABLE_NAMESPACE macro to reduce the amount of
+   typing.
+
+GETTING AND SETTING TUNABLES
+----------------------------
+
+When the TUNABLE_NAMESPACE macro is defined, one may get tunables in that
+module using the TUNABLE_GET macro as follows:
+
+  val = TUNABLE_GET (check, int32_t, TUNABLE_CALLBACK (check_callback))
+
+where 'check' is the tunable name, 'int32_t' is the C type of the tunable and
+'check_callback' is the function to call if the tunable got initialized to a
+non-default value.  The macro returns the value as type 'int32_t'.
+
+The callback function should be defined as follows:
+
+  void
+  TUNABLE_CALLBACK (check_callback) (int32_t *valp)
+  {
+  ...
+  }
+
+where it can expect the tunable value to be passed in VALP.
+
+Tunables in the module can be updated using:
+
+  TUNABLE_SET (check, int32_t, val)
+
+where 'check' is the tunable name, 'int32_t' is the C type of the tunable and
+'val' is a value of same type.
+
+To get and set tunables in a different namespace from that module, use the full
+form of the macros as follows:
+
+  val = TUNABLE_GET_FULL (glibc, tune, hwcap_mask, uint64_t, NULL)
+
+  TUNABLE_SET_FULL (glibc, tune, hwcap_mask, uint64_t, val)
+
+where 'glibc' is the top namespace, 'tune' is the tunable namespace and the
+remaining arguments are the same as the short form macros.
+
+When TUNABLE_NAMESPACE is not defined in a module, TUNABLE_GET is equivalent to
+TUNABLE_GET_FULL, so you will need to provide full namespace information for
+both macros.  Likewise for TUNABLE_SET and TUNABLE_SET_FULL.
+
+** IMPORTANT NOTE **
+
+The tunable list is set as read-only after the dynamic linker relocates itself,
+so setting tunable values must be limited only to tunables within the dynamic
+linker, that too before relocation.
 
 FUTURE WORK
 -----------

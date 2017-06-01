@@ -1,3 +1,23 @@
+2017-06-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* elf/Versions (__tunable_set_val): Rename to __tunable_get_val.
+	* elf/dl-tunables.c: Likewise.
+	(do_tunable_update_val): New function.
+	(__tunable_set_val): New function.
+	(__tunable_get_val): Call CB only if the tunable was externally
+	initialized.
+	(tunables_strtoul): Replace strval with initialized.
+	* elf/dl-tunables.h (strval): Replace with a bool initialized.
+	(TUNABLE_ENUM_NAME, TUNABLE_ENUM_NAME1): Adjust names to
+	prevent collision.
+	(__tunable_set_val): New function.
+	(TUNABLE_GET, TUNABLE_GET_FULL): New macros.
+	(TUNABLE_SET, TUNABLE_SET_FULL): Likewise.
+	(TUNABLE_SET_VAL): Remove.
+	(TUNABLE_SET_VAL_WITH_CALLBACK): Likewise.
+	* README.tunables: Document the new macros.
+	* malloc/arena.c (ptmalloc_init): Adjust.
+
 2017-06-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
