@@ -1,5 +1,23 @@
 2017-06-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* elf/dl-hwcaps.h: New file.
+	* elf/dl-hwcaps.c: Include it.
+	(_dl_important_hwcaps)[HAVE_TUNABLES]: Read and update
+	glibc.tune.hwcap_mask.
+	* elf/dl-cache.c: Include dl-hwcaps.h.
+	(_dl_load_cache_lookup)[HAVE_TUNABLES]: Read
+	glibc.tune.hwcap_mask.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* elf/dl-support.c (_dl_hwcap2)[HAVE_TUNABLES]: Drop
+	_dl_hwcap_mask.
+	* elf/rtld.c (rtld_global_ro)[HAVE_TUNABLES]: Drop
+	_dl_hwcap_mask.
+	(process_envvars)[HAVE_TUNABLES]: Likewise.
+	* sysdeps/generic/ldsodefs.h (rtld_global_ro)[HAVE_TUNABLES]:
+	Likewise.
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Don't
+	initialize dl_hwcap_mask when tunables are enabled.
+
 	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Add include
 	guard.
 	* sysdeps/unix/sysv/linux/s390/dl-procinfo.h: Likewise.

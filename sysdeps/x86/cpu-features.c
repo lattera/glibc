@@ -316,7 +316,11 @@ no_cpuid:
   /* Reuse dl_platform, dl_hwcap and dl_hwcap_mask for x86.  */
   GLRO(dl_platform) = NULL;
   GLRO(dl_hwcap) = 0;
+#if !HAVE_TUNABLES
+  /* The glibc.tune.hwcap_mask tunable is initialized already, so no need to do
+     this.  */
   GLRO(dl_hwcap_mask) = HWCAP_IMPORTANT;
+#endif
 
 # ifdef __x86_64__
   if (cpu_features->kind == arch_kind_intel)

@@ -159,7 +159,9 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_debug_fd = STDERR_FILENO,
     ._dl_use_load_bias = -2,
     ._dl_correct_cache_id = _DL_CACHE_DEFAULT_ID,
+#if !HAVE_TUNABLES
     ._dl_hwcap_mask = HWCAP_IMPORTANT,
+#endif
     ._dl_lazy = 1,
     ._dl_fpu_control = _FPU_DEFAULT,
     ._dl_pagesize = EXEC_PAGESIZE,
@@ -2402,6 +2404,7 @@ process_envvars (enum mode *modep)
 	    _dl_show_auxv ();
 	  break;
 
+#if !HAVE_TUNABLES
 	case 10:
 	  /* Mask for the important hardware capabilities.  */
 	  if (!__libc_enable_secure
@@ -2409,6 +2412,7 @@ process_envvars (enum mode *modep)
 	    GLRO(dl_hwcap_mask) = __strtoul_internal (&envline[11], NULL,
 						      0, 0);
 	  break;
+#endif
 
 	case 11:
 	  /* Path where the binary is found.  */

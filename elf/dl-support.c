@@ -164,6 +164,7 @@ uint64_t _dl_hwcap2 __attribute__ ((nocommon));
 /* The value of the FPU control word the kernel will preset in hardware.  */
 fpu_control_t _dl_fpu_control = _FPU_DEFAULT;
 
+#if !HAVE_TUNABLES
 /* This is not initialized to HWCAP_IMPORTANT, matching the definition
    of _dl_important_hwcaps, below, where no hwcap strings are ever
    used.  This mask is still used to mediate the lookups in the cache
@@ -171,6 +172,7 @@ fpu_control_t _dl_fpu_control = _FPU_DEFAULT;
    LD_HWCAP_MASK environment variable here), there is no real point in
    setting _dl_hwcap nonzero below, but we do anyway.  */
 uint64_t _dl_hwcap_mask __attribute__ ((nocommon));
+#endif
 
 /* Prevailing state of the stack.  Generally this includes PF_X, indicating it's
  * executable but this isn't true for all platforms.  */

@@ -27,6 +27,7 @@
 #include <sysdep.h>
 #include <tls.h>
 #include <dl-plt.h>
+#include <elf/dl-hwcaps.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
@@ -37,7 +38,8 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
   else if (ehdr->e_machine == EM_SPARC32PLUS)
     {
 #ifdef SHARED
-      return GLRO(dl_hwcap) & GLRO(dl_hwcap_mask) & HWCAP_SPARC_V9;
+      uint64_t hwcap_mask = GET_HWCAP_MASK();
+      return GLRO(dl_hwcap) & hwcap_mask & HWCAP_SPARC_V9;
 #else
       return GLRO(dl_hwcap) & HWCAP_SPARC_V9;
 #endif
