@@ -1,5 +1,14 @@
 2017-06-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* sysdeps/ieee754/ldbl-128/printf_fphex.c: Include
+	ldbl-128/printf_fphex_macros.h for the definition of PRINT_FPHEX.
+	(PRINT_FPHEX_LONG_DOUBLE): Define based on PRINT_FPHEX.
+	* sysdeps/ieee754/ldbl-128/printf_fphex_macros.h
+	(PRINT_FPHEX): New function-like macro that can be used for long
+	double, as well as for _Float128
+
+2017-06-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* stdio-common/printf_fp.c (PRINTF_FP_FETCH): New macro.
 	(__printf_fp_l): Use the new macro to avoid duplicating code.
 	* stdio-common/printf_fphex.c (PRINTF_FPHEX_FETCH): New macro.
