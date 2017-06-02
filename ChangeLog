@@ -1,3 +1,9 @@
+2017-06-02  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gethosts): Eliminate another
+	strdupa.
+	(getcanonname): Use __strdup instead of strdup.
+
 2017-06-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* misc/Makefile (CFLAGS-preadv2.c): New rule.

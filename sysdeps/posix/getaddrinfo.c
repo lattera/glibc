@@ -286,9 +286,16 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 	}								      \
       *pat = addrmem;							      \
 									      \
-      if (localcanon !=	NULL && canon == NULL)				      \
-	canon = strdupa (localcanon);					      \
-									      \
+      if (localcanon != NULL && canon == NULL)				      \
+	{								      \
+	  canonbuf = __strdup (localcanon);				      \
+	  if (canonbuf == NULL)						      \
+	    {								      \
+	      result = -EAI_SYSTEM;					      \
+	      goto free_and_return;					      \
+	    }								      \
+	  canon = canonbuf;						      \
+	}								      \
       if (_family == AF_INET6 && *pat != NULL)				      \
 	got_ipv6 = true;						      \
     }									      \
@@ -330,7 +337,7 @@ getcanonname (service_user *nip, struct gaih_addrtuple *at, const char *name)
 	   string.  */
 	s = (char *) name;
     }
-  return strdup (name);
+  return __strdup (name);
 }
 
 static int
