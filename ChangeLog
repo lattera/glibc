@@ -1,5 +1,11 @@
 2017-06-12  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* include/float.h: Allow the definition of macros prefixed with
+	FLT128 even if _ISOMAC is defined, but provided that
+	__STDC_WANT_IEC_60559_TYPES_EXT__ is defined as a macro.
+
+2017-06-12  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* manual/math.texi (Mathematics): Add description for _FloatN and
 	_FloatNx types and mentions that they are not support in glibc for
 	any architecture, so far.
