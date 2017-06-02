@@ -35,6 +35,13 @@ __BEGIN_DECLS
    single-threaded processes.  */
 bool support_become_root (void);
 
+/* Return true if this process can perform a chroot operation.  In
+   general, this is only possible if support_become_root has been
+   called.  Note that the actual test is performed in a subprocess,
+   after fork, so that the file system root of the original process is
+   not changed.  */
+bool support_can_chroot (void);
+
 /* Enter a network namespace (and a UTS namespace if possible) and
    configure the loopback interface.  Return true if a network
    namespace could be created.  Print diagnostics to standard output.
@@ -47,6 +54,11 @@ bool support_enter_network_namespace (void);
 /* Return true if support_enter_network_namespace managed to enter a
    UTS namespace.  */
 bool support_in_uts_namespace (void);
+
+/* Invoke CALLBACK (CLOSURE) in a subprocess created using fork.
+   Terminate the calling process if the subprocess exits with a
+   non-zero exit status.  */
+void support_isolate_in_subprocess (void (*callback) (void *), void *closure);
 
 __END_DECLS
 

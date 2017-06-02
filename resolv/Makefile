@@ -57,6 +57,11 @@ ifeq (yes,$(build-shared))
 tests += \
   tst-resolv-canonname \
 
+# uses DEPRECATED_RES_USE_INET6 from <resolv-internal.h>.
+tests-internal += \
+  tst-resolv-res_init \
+  tst-resolv-res_init-thread \
+
 endif
 
 # This test sends millions of packets and is rather slow.
@@ -136,6 +141,9 @@ $(objpfx)tst-res_use_inet6: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-edns: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-network: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-res_init: $(libdl) $(objpfx)libresolv.so
+$(objpfx)tst-resolv-res_init-thread: $(libdl) $(objpfx)libresolv.so \
+  $(shared-thread-library)
 $(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-canonname: \

@@ -44,6 +44,21 @@ void set_fortify_handler (void (*handler) (int sig));
 void oom_error (const char *function, size_t size)
   __attribute__ ((nonnull (1)));
 
+/* Return a pointer to a memory region of SIZE bytes.  The memory is
+   initialized to zero and will be shared with subprocesses (across
+   fork).  The returned pointer must be freed using
+   support_shared_free; it is not compatible with the malloc
+   functions.  */
+void *support_shared_allocate (size_t size);
+
+/* Deallocate a pointer returned by support_shared_allocate.  */
+void support_shared_free (void *);
+
+/* Write CONTENTS to the file PATH.  Create or truncate the file as
+   needed.  The file mode is 0666 masked by the umask.  Terminate the
+   process on error.  */
+void support_write_file_string (const char *path, const char *contents);
+
 /* Error-checking wrapper functions which terminate the process on
    error.  */
 

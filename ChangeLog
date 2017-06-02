@@ -1,5 +1,37 @@
 2017-06-02  Florian Weimer  <fweimer@redhat.com>
 
+	Test res_init with several configuration files.
+	* resolv/Makefile [build-shared] (tests-internal): Add
+	tst-resolv-res_init, tst-resolv-res_init-thread.
+	(tst-resolv-res_init): Link against libdl, libresolv.
+	(tst-resolv-res_init-thread): Link against libdl, libresolv,
+	libpthread.
+	* resolv/tst-resolv-res_init.c: New file.
+	* resolv/tst-resolv-res_init-skeleton.c: Likewise.
+	* resolv/tst-resolv-res_init-thread.c: Likewise.
+	* support/Makefile (libsupport-routines): Add support-xstat,
+	support_can_chroot, support_capture_subprocess_check,
+	support_isolate_in_subprocess, support_shared_allocate,
+	support_write_file_string, xchroot, xmkdir, xopen.
+	* support/capture_subprocess.h (enum support_capture_allow): Define.
+	(support_capture_subprocess_check): Declare.
+	* support/namespace.h (support_can_chroot)
+	(support_isolate_in_subprocess): Declare.
+	* support/support-xstat.c: New file.
+	* support/support.h (support_shared_allocate, support_shared_free)
+	(support_write_file_string): Declare.
+	* support/support_can_chroot.c: New file.
+	* support/support_capture_subprocess_check.c: Likewise.
+	* support/support_isolate_in_subprocess.c: Likewise.
+	* support/support_shared_allocate.c: Likewise.
+	* support/support_write_file_string.c: Likewise.
+	* support/xchroot.c: Likwise.
+	* support/xmkdir.c: Likwise.
+	* support/xopen.c: Likwise.
+	* support/xunistd.h (xopen, xstat, xmkdir, xchroot): Declare.
+
+2017-06-02  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/posix/getaddrinfo.c (getcanonname): New function.
 	(gaih_inet): Remove malloc_canonbuf variable.  Call getcanonname.
 

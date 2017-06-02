@@ -22,15 +22,22 @@
 #ifndef SUPPORT_XUNISTD_H
 #define SUPPORT_XUNISTD_H
 
-#include <unistd.h>
 #include <sys/cdefs.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 __BEGIN_DECLS
+
+struct stat64;
 
 pid_t xfork (void);
 pid_t xwaitpid (pid_t, int *status, int flags);
 void xpipe (int[2]);
 void xdup2 (int, int);
+int xopen (const char *path, int flags, mode_t);
+void xstat (const char *path, struct stat64 *);
+void xmkdir (const char *path, mode_t);
+void xchroot (const char *path);
 
 /* Close the file descriptor.  Ignore EINTR errors, but terminate the
    process on other errors.  */

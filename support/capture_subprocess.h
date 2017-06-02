@@ -39,4 +39,23 @@ struct support_capture_subprocess support_capture_subprocess
    support_capture_subprocess.  */
 void support_capture_subprocess_free (struct support_capture_subprocess *);
 
+enum support_capture_allow
+{
+  /* No output is allowed.  */
+  sc_allow_none = 0x01,
+  /* Output to stdout is permitted.  */
+  sc_allow_stdout = 0x02,
+  /* Output to standard error is permitted.  */
+  sc_allow_stderr = 0x04,
+};
+
+/* Check that the subprocess exited with STATUS and that only the
+   allowed outputs happened.  ALLOWED is a combination of
+   support_capture_allow flags.  Report errors under the CONTEXT
+   message.  */
+void support_capture_subprocess_check (struct support_capture_subprocess *,
+                                       const char *context, int status,
+                                       int allowed)
+  __attribute__ ((nonnull (1, 2)));
+
 #endif /* SUPPORT_CAPTURE_SUBPROCESS_H */
