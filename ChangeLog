@@ -1,3 +1,10 @@
+2017-06-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21543]
+	* signal/signal.h: Only include <bits/types/sigevent_t.h> and
+	<bits/sigevent-consts.h> if [__USE_POSIX199309], not if
+	[__USE_XOPEN_EXTENDED].
+
 2017-06-02  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gethosts): Eliminate another

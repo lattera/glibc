@@ -55,8 +55,11 @@ typedef __uid_t uid_t;
 
 #if defined __USE_POSIX199309 || defined __USE_XOPEN_EXTENDED
 # include <bits/types/siginfo_t.h>
-# include <bits/types/sigevent_t.h>
 # include <bits/siginfo-consts.h>
+#endif
+
+#ifdef __USE_POSIX199309
+# include <bits/types/sigevent_t.h>
 # include <bits/sigevent-consts.h>
 #endif
 
