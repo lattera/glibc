@@ -1,3 +1,10 @@
+2017-06-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* misc/Makefile (CFLAGS-preadv2.c): New rule.
+	(CFLAGS-preadv64v2.c): Likewise.
+	(CFLAGS-pwritev2.c): Likewise.
+	(CFLAGS-pwritev64v2.c): Likewise.
+
 2017-06-02  Florian Weimer  <fweimer@redhat.com>
 
 	Test res_init with several configuration files.
