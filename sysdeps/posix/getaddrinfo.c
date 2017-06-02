@@ -308,6 +308,30 @@ typedef enum nss_status (*nss_getcanonname_r)
    int *errnop, int *h_errnop);
 extern service_user *__nss_hosts_database attribute_hidden;
 
+/* This function is called if a canonical name is requested, but if
+   the service function did not provide it.  It tries to obtain the
+   name using getcanonname_r from the same service NIP.  If the name
+   cannot be canonicalized, return a copy of NAME.  Return NULL on
+   memory allocation failure.  The returned string is allocated on the
+   heap; the caller has to free it.  */
+static char *
+getcanonname (service_user *nip, struct gaih_addrtuple *at, const char *name)
+{
+  nss_getcanonname_r cfct = __nss_lookup_function (nip, "getcanonname_r");
+  char *s = (char *) name;
+  if (cfct != NULL)
+    {
+      char buf[256];
+      int herrno;
+      int rc;
+      if (DL_CALL_FCT (cfct, (at->name ?: name, buf, sizeof (buf),
+			      &s, &rc, &herrno)) != NSS_STATUS_SUCCESS)
+	/* If the canonical name cannot be determined, use the passed
+	   string.  */
+	s = (char *) name;
+    }
+  return strdup (name);
+}
 
 static int
 gaih_inet (const char *name, const struct gaih_service *service,
@@ -443,7 +467,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
   bool malloc_name = false;
   struct gaih_addrtuple *addrmem = NULL;
-  bool malloc_canonbuf = false;
   char *canonbuf = NULL;
   int result = 0;
 
@@ -702,22 +725,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			(*pat)->name = NULL;
 		      else if (canonbuf == NULL)
 			{
-			  size_t canonlen = strlen (air->canon) + 1;
-			  if ((req->ai_flags & AI_CANONIDN) != 0
-			      && __libc_use_alloca (alloca_used + canonlen))
-			    canonbuf = alloca_account (canonlen, alloca_used);
-			  else
+			  canonbuf = strdup (air->canon);
+			  if (canonbuf == NULL)
 			    {
-			      canonbuf = malloc (canonlen);
-			      if (canonbuf == NULL)
-				{
-				  result = -EAI_MEMORY;
-				  goto free_and_return;
-				}
-			      malloc_canonbuf = true;
+			      result = -EAI_MEMORY;
+			      goto free_and_return;
 			    }
-			  canon = (*pat)->name = memcpy (canonbuf, air->canon,
-							 canonlen);
+			  canon = (*pat)->name = canonbuf;
 			}
 
 		      if (air->family[i] == AF_INET
@@ -924,55 +938,16 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			  if ((req->ai_flags & AI_CANONNAME) != 0
 			      && canon == NULL)
 			    {
-			      /* If we need the canonical name, get it
-				 from the same service as the result.  */
-			      nss_getcanonname_r cfct;
-			      int herrno;
-
-			      cfct = __nss_lookup_function (nip,
-							    "getcanonname_r");
-			      if (cfct != NULL)
+			      canonbuf = getcanonname (nip, at, name);
+			      if (canonbuf == NULL)
 				{
-				  const size_t max_fqdn_len = 256;
-				  if ((req->ai_flags & AI_CANONIDN) != 0
-				      && __libc_use_alloca (alloca_used
-							    + max_fqdn_len))
-				    canonbuf = alloca_account (max_fqdn_len,
-							       alloca_used);
-				  else
-				    {
-				      canonbuf = malloc (max_fqdn_len);
-				      if (canonbuf == NULL)
-					{
-					  _res.options
-					    |= old_res_options
-					       & DEPRECATED_RES_USE_INET6;
-					  result = -EAI_MEMORY;
-					  goto free_and_return;
-					}
-				      malloc_canonbuf = true;
-				    }
-				  char *s;
-
-				  if (DL_CALL_FCT (cfct, (at->name ?: name,
-							  canonbuf,
-							  max_fqdn_len,
-							  &s, &rc, &herrno))
-				      == NSS_STATUS_SUCCESS)
-				    canon = s;
-				  else
-				    {
-				      /* If the canonical name cannot be
-					 determined, use the passed in
-					 string.  */
-				      if (malloc_canonbuf)
-					{
-					  free (canonbuf);
-					  malloc_canonbuf = false;
-					}
-				      canon = name;
-				    }
+				  _res.options
+				    |= old_res_options
+				    & DEPRECATED_RES_USE_INET6;
+				  result = -EAI_MEMORY;
+				  goto free_and_return;
 				}
+			      canon = canonbuf;
 			    }
 			  status = NSS_STATUS_SUCCESS;
 			}
@@ -1118,9 +1093,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 #ifdef HAVE_LIBIDN
 	      make_copy:
 #endif
-		if (malloc_canonbuf)
-		  /* We already allocated the string using malloc.  */
-		  malloc_canonbuf = false;
+		if (canonbuf != NULL)
+		  /* We already allocated the string using malloc, but
+		     the buffer is now owned by canon.  */
+		  canonbuf = NULL;
 		else
 		  {
 		    canon = __strdup (canon);
@@ -1215,8 +1191,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
   if (malloc_name)
     free ((char *) name);
   free (addrmem);
-  if (malloc_canonbuf)
-    free (canonbuf);
+  free (canonbuf);
 
   return result;
 }

@@ -1,5 +1,10 @@
 2017-06-02  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (getcanonname): New function.
+	(gaih_inet): Remove malloc_canonbuf variable.  Call getcanonname.
+
+2017-06-02  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/Makefile (routines): Add dynarray_at_failure,
 	dynarray_emplace_enlarge, dynarray_finalize.
 	(tests-internal): Add tst-dynarray, tst-dynarray-fail,
