@@ -36,6 +36,7 @@ libsupport-routines = \
   resolv_test \
   set_fortify_handler \
   support_become_root \
+  support_capture_subprocess \
   support_enter_network_namespace \
   support_format_address_family \
   support_format_addrinfo \
@@ -56,6 +57,7 @@ libsupport-routines = \
   xcalloc \
   xclose \
   xconnect \
+  xdup2 \
   xfclose \
   xfopen \
   xfork \
@@ -65,6 +67,7 @@ libsupport-routines = \
   xmemstream \
   xmmap \
   xmunmap \
+  xpipe \
   xpoll \
   xpthread_attr_destroy \
   xpthread_attr_init \
@@ -113,6 +116,7 @@ endif
 tests = \
   README-testing \
   tst-support-namespace \
+  tst-support_capture_subprocess \
   tst-support_format_dns_packet \
   tst-support_record_failure \
 

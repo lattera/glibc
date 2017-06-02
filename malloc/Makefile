@@ -41,17 +41,28 @@ tests-static := \
 
 tests-internal := tst-mallocstate tst-scratch_buffer
 
+# The dynarray framework is only available inside glibc.
+tests-internal += \
+	 tst-dynarray \
+	 tst-dynarray-fail \
+	 tst-dynarray-at-fail \
+
 ifneq (no,$(have-tunables))
 tests += tst-malloc-usable-tunables
 tests-static += tst-malloc-usable-static-tunables
 endif
 
 tests += $(tests-static)
-test-srcs = tst-mtrace
+test-srcs = tst-mtrace tst-dynarray tst-dynarray-fail
 
 routines = malloc morecore mcheck mtrace obstack reallocarray \
   scratch_buffer_grow scratch_buffer_grow_preserve \
-  scratch_buffer_set_array_size
+  scratch_buffer_set_array_size \
+  dynarray_at_failure \
+  dynarray_emplace_enlarge \
+  dynarray_finalize \
+  dynarray_resize \
+  dynarray_resize_clear \
 
 install-lib := libmcheck.a
 non-lib.a := libmcheck.a
@@ -137,6 +148,8 @@ ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
 ifneq ($(PERL),no)
 tests-special += $(objpfx)tst-mtrace.out
+tests-special += $(objpfx)tst-dynarray-mem.out
+tests-special += $(objpfx)tst-dynarray-fail-mem.out
 endif
 endif
 endif
@@ -208,3 +221,13 @@ $(objpfx)tst-interpose-thread: \
 $(objpfx)tst-interpose-static-nothread: $(objpfx)tst-interpose-aux-nothread.o
 $(objpfx)tst-interpose-static-thread: \
   $(objpfx)tst-interpose-aux-thread.o $(static-thread-library)
+
+tst-dynarray-ENV = MALLOC_TRACE=$(objpfx)tst-dynarray.mtrace
+$(objpfx)tst-dynarray-mem.out: $(objpfx)tst-dynarray.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-dynarray.mtrace > $@; \
+	$(evaluate-test)
+
+tst-dynarray-fail-ENV = MALLOC_TRACE=$(objpfx)tst-dynarray-fail.mtrace
+$(objpfx)tst-dynarray-fail-mem.out: $(objpfx)tst-dynarray-fail.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-dynarray-fail.mtrace > $@; \
+	$(evaluate-test)

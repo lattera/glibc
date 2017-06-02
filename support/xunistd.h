@@ -29,6 +29,8 @@ __BEGIN_DECLS
 
 pid_t xfork (void);
 pid_t xwaitpid (pid_t, int *status, int flags);
+void xpipe (int[2]);
+void xdup2 (int, int);
 
 /* Close the file descriptor.  Ignore EINTR errors, but terminate the
    process on other errors.  */

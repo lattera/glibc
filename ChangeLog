@@ -1,3 +1,40 @@
+2017-06-02  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/Makefile (routines): Add dynarray_at_failure,
+	dynarray_emplace_enlarge, dynarray_finalize.
+	(tests-internal): Add tst-dynarray, tst-dynarray-fail,
+	tst-dynarray-at-fail.
+	(tests-srcs): Add tst-dynarray, tst-dynarray-fail.
+	(tests-special): Add tst-dynarray-mem.out,
+	tst-dynarray-mem-fail.out.
+	(tst-dynarray-ENV, tst-dynarray-fail-ENV): Set.
+	(tst-dynarray-mem.out, tst-dynarray-fail-mem.out): Generate using
+	mtrace.
+	* malloc/Versions (__libc_dynarray_at_failure)
+	(__libc_dynarray_emplace_enlarge, __libc_dynarray_finalize)
+	(__libc_dynarray_resize, __libc_dynarray_resize_clear): Export as
+	GLIBC_PRIVATE.
+	* malloc/dynarray.h: New file.
+	* malloc/dynarray-skeleton.c: Likewise.
+	* malloc/dynarray_at_failure.c: Likewise.
+	* malloc/dynarray_emplace_enlarge.c: Likewise.
+	* malloc/dynarray_finalize.c: Likewise.
+	* malloc/dynarray_resize.c: Likewise.
+	* malloc/dynarray_resize_clear.c: Likewise.
+	* malloc/tst-dynarray.c: Likewise.
+	* malloc/tst-dynarray-fail.c: Likewise.
+	* malloc/tst-dynarray-at-fail.c: Likewise.
+	* malloc/tst-dynarray-shared.h: Likewise.
+	* support/Makefile (libsupport-routines): Add
+	support_capture_subprocess, xdup2, xpipe.
+	(tests): Add tst-support_capture_subprocess.
+	* support/capture_subprocess.h: New file.
+	* support/support_capture_subprocess.c: Likewise.
+	* support/tst-support_capture_subprocess.c: Likewise.
+	* support/xdup2.c: Likewise.
+	* support/xpipe.c: Likewise.
+	* support/xunistd.h (xdup2, xpipe): Declare.
+
 2017-06-01  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* stdlib/gmp-impl.h: Include sys/param.h instead of redefining the
