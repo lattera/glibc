@@ -1,5 +1,30 @@
 2017-06-20  Zack Weinberg  <zackw@panix.com>
 
+	* bits/signum-generic.h: Renamed from bits/signum.h.
+	Add proper multiple include guard and misuse check.
+	Define __SIGRTMIN = __SIGRTMAX = 32, and define _NSIG = __SIGRTMAX+1.
+	Move definition of SIGIO to "archaic names for compatibility" section.
+	* bits/signum.h: New file which just includes bits/signum-generic.h.
+	* sysdeps/unix/bsd/bits/signum.h
+	* sysdeps/unix/sysv/linux/bits/signum.h
+	* sysdeps/unix/sysv/linux/alpha/bits/signum.h
+	* sysdeps/unix/sysv/linux/hppa/bits/signum.h
+	* sysdeps/unix/sysv/linux/mips/bits/signum.h
+	* sysdeps/unix/sysv/linux/sparc/bits/signum.h
+	Just include <bits/signum-generic.h> and then add or adjust
+	signal constants.  Do not define SIGUNUSED, SIGRTMIN, or SIGRTMAX.
+
+	* signal/Makefile: Install bits/signum-generic.h.
+	* signal/signal.h: Define SIGRTMIN and SIGRTMAX here.
+
+	* sysdeps/generic/siglist.h: SIGSYS and SIGWINCH are
+	universal.  Prefer SIGPOLL to SIGIO. Simplify #ifdeffage.
+
+	* sysdeps/unix/sysv/linux/tst-signal-numbers.sh: New test.
+	* sysdeps/unix/sysv/linux/Makefile: Run it.
+
+2017-06-20  Zack Weinberg  <zackw@panix.com>
+
 	* locale/xlocale.h: Rename to...
 	* locale/bits/types/__locale_t.h: ...here.  Adjust commentary.
 	Only define struct __locale_struct and __locale_t, not locale_t.

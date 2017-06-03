@@ -16,66 +16,25 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef	_SIGNAL_H
+#ifndef _BITS_SIGNUM_H
+#define _BITS_SIGNUM_H 1
 
-/* Fake signal functions.  */
-#define SIG_ERR ((__sighandler_t) -1) /* Error return.  */
-#define SIG_DFL ((__sighandler_t) 0) /* Default action.  */
-#define SIG_IGN ((__sighandler_t) 1) /* Ignore signal.  */
-
-#ifdef __USE_XOPEN
-# define SIG_HOLD	((__sighandler_t) 2)	/* Add signal to hold mask.  */
+#ifndef _SIGNAL_H
+#error "Never include <bits/signum.h> directly; use <signal.h> instead."
 #endif
 
-/*
- * Linux/AXP has different signal numbers that Linux/i386: I'm trying
- * to make it OSF/1 binary compatible, at least for normal binaries.
- */
-#define SIGHUP		 1
-#define SIGINT		 2
-#define SIGQUIT		 3
-#define SIGILL		 4
-#define SIGTRAP		 5
-#define SIGABRT		 6
-#define SIGEMT		 7
-#define SIGFPE		 8
-#define SIGKILL		 9
-#define SIGBUS		10
-#define SIGSEGV		11
-#define SIGSYS		12
-#define SIGPIPE		13
-#define SIGALRM		14
-#define SIGTERM		15
-#define SIGURG		16
-#define SIGSTOP		17
-#define SIGTSTP		18
-#define SIGCONT		19
-#define SIGCHLD		20
-#define SIGCLD          SIGCHLD
-#define SIGTTIN		21
-#define SIGTTOU		22
-#define SIGIO		23
-#define SIGXCPU		24
-#define SIGXFSZ		25
-#define SIGVTALRM	26
-#define SIGPROF		27
-#define SIGWINCH	28
-#define SIGINFO		29
-#define SIGUSR1		30
-#define SIGUSR2		31
+#include <bits/signum-generic.h>
 
-#define SIGPOLL	SIGIO
-#define SIGPWR	SIGINFO
-#define SIGIOT	SIGABRT
+/* Adjustments and additions to the signal number constants for
+   Linux/Alpha.  Signal values on this platform were chosen for OSF/1
+   binary compatibility, and are therefore almost identical to the
+   BSD-derived defaults.  */
 
-#define	_NSIG		65	/* Biggest signal number + 1.  */
+#define SIGEMT		 7	/* Emulator trap (4.2 BSD).  */
+#define SIGINFO		29	/* Information request (BSD).  */
+#define SIGPWR		SIGINFO	/* Power failure imminent (System V).  */
 
-#define SIGRTMIN	(__libc_current_sigrtmin ())
-#define SIGRTMAX	(__libc_current_sigrtmax ())
-
-/* These are the hard limits of the kernel.  These values should not be
-   used directly at user level.  */
-#define __SIGRTMIN	32
-#define __SIGRTMAX	(_NSIG - 1)
+#undef	__SIGRTMAX
+#define __SIGRTMAX	64
 
 #endif	/* <signal.h> included.  */

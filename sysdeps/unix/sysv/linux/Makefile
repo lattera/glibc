@@ -128,6 +128,20 @@ sysdep_headers += sys/timex.h bits/timex.h
 sysdep_routines += ntp_gettime ntp_gettimex
 endif
 
+ifeq ($(subdir),signal)
+tests-special += $(objpfx)tst-signal-numbers.out
+# Depending on signal.o* is a hack.  What we actually want is a dependency
+# on signal.h and everything it includes.  That's impractical to write
+# in this context, but signal.c includes signal.h and not much else so it'll
+# be conservatively correct.
+$(objpfx)tst-signal-numbers.out: \
+		../sysdeps/unix/sysv/linux/tst-signal-numbers.sh \
+		$(objpfx)signal.o*
+	AWK=$(AWK) $(SHELL) ../sysdeps/unix/sysv/linux/tst-signal-numbers.sh \
+	$(CC) $(patsubst -DMODULE_NAME=%,-DMODULE_NAME=testsuite,$(CPPFLAGS)) \
+	< /dev/null > $@; $(evaluate-test)
+endif
+
 ifeq ($(subdir),socket)
 sysdep_headers += net/if_ppp.h net/ppp-comp.h \
 		  net/ppp_defs.h net/if_arp.h net/route.h net/ethernet.h \

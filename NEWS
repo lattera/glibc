@@ -78,6 +78,8 @@ Version 2.26
   use <locale.h> instead.  If you have a specific need for the definition
   of locale_t with no other declarations, please talk to us.
 
+* The obsolete signal constant SIGUNUSED is no longer defined by <signal.h>.
+
 * The reallocarray function has been added to libc.  It is a realloc
   replacement with a check for integer overflow when calculating total
   allocation size.

@@ -16,58 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef	_SIGNAL_H
+#ifndef _BITS_SIGNUM_H
+#define _BITS_SIGNUM_H 1
 
-/* This file defines the fake signal functions and signal
-   number constants for 4.2 or 4.3 BSD-derived Unix system.  */
-
-/* Fake signal functions.  */
-#define	SIG_ERR	((__sighandler_t) -1) /* Error return.  */
-#define	SIG_DFL	((__sighandler_t) 0) /* Default action.  */
-#define	SIG_IGN	((__sighandler_t) 1) /* Ignore signal.  */
-
-#ifdef __USE_XOPEN
-# define SIG_HOLD      ((__sighandler_t) 2)    /* Add signal to hold mask.  */
+#ifndef _SIGNAL_H
+#error "Never include <bits/signum.h> directly; use <signal.h> instead."
 #endif
 
+#include <bits/signum-generic.h>
 
-/* Signals.  */
-#define	SIGHUP		1	/* Hangup (POSIX).  */
-#define	SIGINT		2	/* Interrupt (ANSI).  */
-#define	SIGQUIT		3	/* Quit (POSIX).  */
-#define	SIGILL		4	/* Illegal instruction (ANSI).  */
-#define	SIGABRT		SIGIOT	/* Abort (ANSI).  */
-#define	SIGTRAP		5	/* Trace trap (POSIX).  */
-#define	SIGIOT		6	/* IOT trap (4.2 BSD).  */
-#define	SIGEMT		7	/* EMT trap (4.2 BSD).  */
-#define	SIGFPE		8	/* Floating-point exception (ANSI).  */
-#define	SIGKILL		9	/* Kill, unblockable (POSIX).  */
-#define	SIGBUS		10	/* Bus error (4.2 BSD).  */
-#define	SIGSEGV		11	/* Segmentation violation (ANSI).  */
-#define	SIGSYS		12	/* Bad argument to system call (4.2 BSD).  */
-#define	SIGPIPE		13	/* Broken pipe (POSIX).  */
-#define	SIGALRM		14	/* Alarm clock (POSIX).  */
-#define	SIGTERM		15	/* Termination (ANSI).  */
-#define	SIGURG		16	/* Urgent condition on socket (4.2 BSD).  */
-#define	SIGSTOP		17	/* Stop, unblockable (POSIX).  */
-#define	SIGTSTP		18	/* Keyboard stop (POSIX).  */
-#define	SIGCONT		19	/* Continue (POSIX).  */
-#define	SIGCHLD		20	/* Child status has changed (POSIX).  */
-#define	SIGCLD		SIGCHLD	/* Same as SIGCHLD (System V).  */
-#define	SIGTTIN		21	/* Background read from tty (POSIX).  */
-#define	SIGTTOU		22	/* Background write to tty (POSIX).  */
-#define	SIGIO		23	/* I/O now possible (4.2 BSD).  */
-#define	SIGPOLL		SIGIO	/* Same as SIGIO? (SVID).  */
-#define	SIGXCPU		24	/* CPU limit exceeded (4.2 BSD).  */
-#define	SIGXFSZ		25	/* File size limit exceeded (4.2 BSD).  */
-#define	SIGVTALRM	26	/* Virtual alarm clock (4.2 BSD).  */
-#define	SIGPROF		27	/* Profiling alarm clock (4.2 BSD).  */
-#define	SIGWINCH	28	/* Window size change (4.3 BSD, Sun).  */
+/* Adjustments and additions to the signal number constants for
+   4.2 or 4.3 BSD-derived Unix systems.  */
+
+#define SIGEMT		 7	/* Emulator trap (4.2 BSD).  */
 #define SIGINFO		29	/* Information request (4.4 BSD).  */
-#define	SIGUSR1		30	/* User-defined signal 1 (POSIX).  */
-#define	SIGUSR2		31	/* User-defined signal 2 (POSIX).  */
 #define SIGLOST		32	/* Resource lost (Sun); server died (GNU).  */
 
-#endif	/* <signal.h> included.  */
-
-#define	_NSIG		33	/* Biggest signal number + 1.  */
+#endif /* bits/signum.h.  */

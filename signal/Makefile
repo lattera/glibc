@@ -23,7 +23,8 @@ subdir	:= signal
 include ../Makeconfig
 
 headers := signal.h sys/signal.h \
-	   bits/signum.h bits/sigcontext.h bits/sigaction.h \
+	   bits/signum.h bits/signum-generic.h \
+	   bits/sigcontext.h bits/sigaction.h \
 	   bits/sigevent-consts.h bits/siginfo-consts.h \
 	   bits/sigstack.h bits/sigthread.h bits/ss_flags.h \
 	   bits/types/__sigset_t.h bits/types/sig_atomic_t.h \
