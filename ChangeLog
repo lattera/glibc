@@ -1,3 +1,8 @@
+2017-06-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cacheinfo.c (__x86_shared_non_temporal_threshold):
+	Set to the 3/4 of the total shared cache size.
+
 2017-06-02  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/errno.texi: Remove redundant error strings.
