@@ -732,7 +732,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			(*pat)->name = NULL;
 		      else if (canonbuf == NULL)
 			{
-			  canonbuf = strdup (air->canon);
+			  canonbuf = __strdup (air->canon);
 			  if (canonbuf == NULL)
 			    {
 			      result = -EAI_MEMORY;
