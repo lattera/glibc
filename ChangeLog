@@ -1,3 +1,42 @@
+2017-06-04  Zack Weinberg  <zackw@panix.com>
+
+	* nis/nis_add.c, nis/nis_addmember.c, nis/nis_call.c
+	* nis/nis_checkpoint.c, nis/nis_clone_dir.c, nis/nis_clone_obj.c
+	* nis/nis_clone_res.c, nis/nis_creategroup.c, nis/nis_defaults.c
+	* nis/nis_destroygroup.c, nis/nis_domain_of.c
+	* nis/nis_domain_of_r.c, nis/nis_error.c, nis/nis_file.c
+	* nis/nis_free.c, nis/nis_getservlist.c, nis/nis_ismember.c
+	* nis/nis_local_names.c, nis/nis_lookup.c, nis/nis_mkdir.c
+	* nis/nis_modify.c, nis/nis_ping.c, nis/nis_print.c
+	* nis/nis_print_group_entry.c, nis/nis_remove.c
+	* nis/nis_removemember.c, nis/nis_rmdir.c, nis/nis_server.c
+	* nis/nis_subr.c, nis/nis_table.c, nis/nis_util.c
+	* nis/nis_verifygroup.c, nis/nis_xdr.c, nis/yp_xdr.c
+	* nis/ypclnt.c, nis/ypupdate_xdr.c, sunrpc/auth_des.c
+	* sunrpc/auth_none.c, sunrpc/auth_unix.c, sunrpc/authdes_prot.c
+	* sunrpc/authuxprot.c, sunrpc/clnt_gen.c, sunrpc/clnt_perr.c
+	* sunrpc/clnt_raw.c, sunrpc/clnt_simp.c, sunrpc/clnt_tcp.c
+	* sunrpc/clnt_udp.c, sunrpc/clnt_unix.c, sunrpc/des_crypt.c
+	* sunrpc/des_soft.c, sunrpc/get_myaddr.c, sunrpc/key_call.c
+	* sunrpc/key_prot.c, sunrpc/netname.c, sunrpc/pm_getmaps.c
+	* sunrpc/pm_getport.c, sunrpc/pmap_clnt.c, sunrpc/pmap_prot.c
+	* sunrpc/pmap_prot2.c, sunrpc/pmap_rmt.c, sunrpc/publickey.c
+	* sunrpc/rpc_cmsg.c, sunrpc/rpc_dtable.c, sunrpc/rpc_prot.c
+	* sunrpc/rpc_thread.c, sunrpc/rtime.c, sunrpc/svc.c
+	* sunrpc/svc_auth.c, sunrpc/svc_raw.c, sunrpc/svc_run.c
+	* sunrpc/svc_tcp.c, sunrpc/svc_udp.c, sunrpc/svc_unix.c
+	* sunrpc/svcauth_des.c, sunrpc/xdr.c, sunrpc/xdr_array.c
+	* sunrpc/xdr_float.c, sunrpc/xdr_intXX_t.c, sunrpc/xdr_mem.c
+	* sunrpc/xdr_rec.c, sunrpc/xdr_ref.c, sunrpc/xdr_sizeof.c
+	* sunrpc/xdr_stdio.c: Include shlib-compat.h.
+
+	* sunrpc/des_crypt.c, sunrpc/des_soft.c: No need to include
+	abi-versions.h as well as shlib-compat.h.
+	* sunrpc/get_myaddr.c: Remove obsolete comment.
+	* sunrpc/pmap_rmt.c: Remove obsolete comment and #undef.
+	* sunrpc/rpc_thread.c: Include libc-lock.h only once.
+	* resolv/res_libc.c: Include shlib-compat.h only once.
+
 2017-06-03  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Call __strdup instead
