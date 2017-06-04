@@ -21,7 +21,7 @@ const char *const _sys_errlist_internal[ERRLIST_SIZE] =
     [0] = N_("Success"),
 #ifdef EPERM
 /*
-TRANS Operation not permitted; only the owner of the file (or other resource)
+TRANS Only the owner of the file (or other resource)
 TRANS or processes with special privileges can perform the operation. */
     [ERR_REMAP (EPERM)] = N_("Operation not permitted"),
 # if EPERM > ERR_MAX
@@ -31,7 +31,7 @@ TRANS or processes with special privileges can perform the operation. */
 #endif
 #ifdef ENOENT
 /*
-TRANS No such file or directory.  This is a ``file doesn't exist'' error
+TRANS This is a ``file doesn't exist'' error
 TRANS for ordinary files that are referenced in contexts where they are
 TRANS expected to already exist. */
     [ERR_REMAP (ENOENT)] = N_("No such file or directory"),
@@ -51,7 +51,7 @@ TRANS No process matches the specified process ID. */
 #endif
 #ifdef EINTR
 /*
-TRANS Interrupted function call; an asynchronous signal occurred and prevented
+TRANS An asynchronous signal occurred and prevented
 TRANS completion of the call.  When this happens, you should try the call
 TRANS again.
 TRANS
@@ -66,7 +66,7 @@ TRANS Primitives}. */
 #endif
 #ifdef EIO
 /*
-TRANS Input/output error; usually used for physical read or write errors. */
+TRANS Usually used for physical read or write errors. */
     [ERR_REMAP (EIO)] = N_("Input/output error"),
 # if EIO > ERR_MAX
 # undef ERR_MAX
@@ -75,7 +75,7 @@ TRANS Input/output error; usually used for physical read or write errors. */
 #endif
 #ifdef ENXIO
 /*
-TRANS No such device or address.  The system tried to use the device
+TRANS The system tried to use the device
 TRANS represented by a file you specified, and it couldn't find the device.
 TRANS This can mean that the device file was installed incorrectly, or that
 TRANS the physical device is missing or not correctly attached to the
@@ -88,7 +88,7 @@ TRANS computer. */
 #endif
 #ifdef E2BIG
 /*
-TRANS Argument list too long; used when the arguments passed to a new program
+TRANS Used when the arguments passed to a new program
 TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 TRANS File}) occupy too much memory space.  This condition never arises on
 TRANS @gnuhurdsystems{}. */
@@ -110,7 +110,7 @@ TRANS @code{exec} functions; see @ref{Executing a File}. */
 #endif
 #ifdef EBADF
 /*
-TRANS Bad file descriptor; for example, I/O on a descriptor that has been
+TRANS For example, I/O on a descriptor that has been
 TRANS closed or reading from a descriptor open only for writing (or vice
 TRANS versa). */
     [ERR_REMAP (EBADF)] = N_("Bad file descriptor"),
@@ -121,7 +121,7 @@ TRANS versa). */
 #endif
 #ifdef ECHILD
 /*
-TRANS There are no child processes.  This error happens on operations that are
+TRANS This error happens on operations that are
 TRANS supposed to manipulate child processes, when there aren't any processes
 TRANS to manipulate. */
     [ERR_REMAP (ECHILD)] = N_("No child processes"),
@@ -132,7 +132,7 @@ TRANS to manipulate. */
 #endif
 #ifdef EDEADLK
 /*
-TRANS Deadlock avoided; allocating a system resource would have resulted in a
+TRANS Allocating a system resource would have resulted in a
 TRANS deadlock situation.  The system does not guarantee that it will notice
 TRANS all such situations.  This error means you got lucky and the system
 TRANS noticed; it might just hang.  @xref{File Locks}, for an example. */
@@ -144,7 +144,7 @@ TRANS noticed; it might just hang.  @xref{File Locks}, for an example. */
 #endif
 #ifdef ENOMEM
 /*
-TRANS No memory available.  The system cannot allocate more virtual memory
+TRANS The system cannot allocate more virtual memory
 TRANS because its capacity is full. */
     [ERR_REMAP (ENOMEM)] = N_("Cannot allocate memory"),
 # if ENOMEM > ERR_MAX
@@ -154,7 +154,7 @@ TRANS because its capacity is full. */
 #endif
 #ifdef EACCES
 /*
-TRANS Permission denied; the file permissions do not allow the attempted operation. */
+TRANS The file permissions do not allow the attempted operation. */
     [ERR_REMAP (EACCES)] = N_("Permission denied"),
 # if EACCES > ERR_MAX
 # undef ERR_MAX
@@ -163,7 +163,7 @@ TRANS Permission denied; the file permissions do not allow the attempted operati
 #endif
 #ifdef EFAULT
 /*
-TRANS Bad address; an invalid pointer was detected.
+TRANS An invalid pointer was detected.
 TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead. */
     [ERR_REMAP (EFAULT)] = N_("Bad address"),
 # if EFAULT > ERR_MAX
@@ -184,7 +184,7 @@ TRANS system in Unix gives this error. */
 #endif
 #ifdef EBUSY
 /*
-TRANS Resource busy; a system resource that can't be shared is already in use.
+TRANS A system resource that can't be shared is already in use.
 TRANS For example, if you try to delete a file that is the root of a currently
 TRANS mounted filesystem, you get this error. */
     [ERR_REMAP (EBUSY)] = N_("Device or resource busy"),
@@ -195,7 +195,7 @@ TRANS mounted filesystem, you get this error. */
 #endif
 #ifdef EEXIST
 /*
-TRANS File exists; an existing file was specified in a context where it only
+TRANS An existing file was specified in a context where it only
 TRANS makes sense to specify a new file. */
     [ERR_REMAP (EEXIST)] = N_("File exists"),
 # if EEXIST > ERR_MAX
@@ -235,7 +235,7 @@ TRANS A file that isn't a directory was specified when a directory is required. 
 #endif
 #ifdef EISDIR
 /*
-TRANS File is a directory; you cannot open a directory for writing,
+TRANS You cannot open a directory for writing,
 TRANS or create or remove hard links to it. */
     [ERR_REMAP (EISDIR)] = N_("Is a directory"),
 # if EISDIR > ERR_MAX
@@ -245,7 +245,7 @@ TRANS or create or remove hard links to it. */
 #endif
 #ifdef EINVAL
 /*
-TRANS Invalid argument.  This is used to indicate various kinds of problems
+TRANS This is used to indicate various kinds of problems
 TRANS with passing the wrong argument to a library function. */
     [ERR_REMAP (EINVAL)] = N_("Invalid argument"),
 # if EINVAL > ERR_MAX
@@ -304,7 +304,7 @@ TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary. */
 #endif
 #ifdef EFBIG
 /*
-TRANS File too big; the size of a file would be larger than allowed by the system. */
+TRANS The size of a file would be larger than allowed by the system. */
     [ERR_REMAP (EFBIG)] = N_("File too large"),
 # if EFBIG > ERR_MAX
 # undef ERR_MAX
@@ -313,7 +313,7 @@ TRANS File too big; the size of a file would be larger than allowed by the syste
 #endif
 #ifdef ENOSPC
 /*
-TRANS No space left on device; write operation on a file failed because the
+TRANS Write operation on a file failed because the
 TRANS disk is full. */
     [ERR_REMAP (ENOSPC)] = N_("No space left on device"),
 # if ENOSPC > ERR_MAX
@@ -341,7 +341,7 @@ TRANS An attempt was made to modify something on a read-only file system. */
 #endif
 #ifdef EMLINK
 /*
-TRANS Too many links; the link count of a single file would become too large.
+TRANS The link count of a single file would become too large.
 TRANS @code{rename} can cause this error if the file being renamed already has
 TRANS as many links as it can take (@pxref{Renaming Files}). */
     [ERR_REMAP (EMLINK)] = N_("Too many links"),
@@ -352,7 +352,7 @@ TRANS as many links as it can take (@pxref{Renaming Files}). */
 #endif
 #ifdef EPIPE
 /*
-TRANS Broken pipe; there is no process reading from the other end of a pipe.
+TRANS There is no process reading from the other end of a pipe.
 TRANS Every library function that returns this error code also generates a
 TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
@@ -365,7 +365,7 @@ TRANS unless it has handled or blocked @code{SIGPIPE}. */
 #endif
 #ifdef EDOM
 /*
-TRANS Domain error; used by mathematical functions when an argument value does
+TRANS Used by mathematical functions when an argument value does
 TRANS not fall into the domain over which the function is defined. */
     [ERR_REMAP (EDOM)] = N_("Numerical argument out of domain"),
 # if EDOM > ERR_MAX
@@ -375,7 +375,7 @@ TRANS not fall into the domain over which the function is defined. */
 #endif
 #ifdef ERANGE
 /*
-TRANS Range error; used by mathematical functions when the result value is
+TRANS Used by mathematical functions when the result value is
 TRANS not representable because of overflow or underflow. */
     [ERR_REMAP (ERANGE)] = N_("Numerical result out of range"),
 # if ERANGE > ERR_MAX
@@ -385,7 +385,7 @@ TRANS not representable because of overflow or underflow. */
 #endif
 #ifdef EAGAIN
 /*
-TRANS Resource temporarily unavailable; the call might work if you try again
+TRANS The call might work if you try again
 TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
 TRANS they are always the same in @theglibc{}.
 TRANS
@@ -672,8 +672,7 @@ TRANS The socket has already been shut down. */
 # endif
 #endif
 #ifdef ETOOMANYREFS
-/*
-TRANS ??? */
+/* */
     [ERR_REMAP (ETOOMANYREFS)] = N_("Too many references: cannot splice"),
 # if ETOOMANYREFS > ERR_MAX
 # undef ERR_MAX
@@ -781,7 +780,7 @@ TRANS The user's disk quota was exceeded. */
 #endif
 #ifdef ESTALE
 /*
-TRANS Stale file handle.  This indicates an internal confusion in the
+TRANS This indicates an internal confusion in the
 TRANS file system which is due to file system rearrangements on the server host
 TRANS for NFS file systems or corruption in other file systems.
 TRANS Repairing this condition usually requires unmounting, possibly repairing
@@ -805,8 +804,7 @@ TRANS properly on @gnuhurdsystems{}, making this error code impossible.) */
 # endif
 #endif
 #ifdef EBADRPC
-/*
-TRANS ??? */
+/* */
     [ERR_REMAP (EBADRPC)] = N_("RPC struct is bad"),
 # if EBADRPC > ERR_MAX
 # undef ERR_MAX
@@ -814,8 +812,7 @@ TRANS ??? */
 # endif
 #endif
 #ifdef ERPCMISMATCH
-/*
-TRANS ??? */
+/* */
     [ERR_REMAP (ERPCMISMATCH)] = N_("RPC version wrong"),
 # if ERPCMISMATCH > ERR_MAX
 # undef ERR_MAX
@@ -823,8 +820,7 @@ TRANS ??? */
 # endif
 #endif
 #ifdef EPROGUNAVAIL
-/*
-TRANS ??? */
+/* */
     [ERR_REMAP (EPROGUNAVAIL)] = N_("RPC program not available"),
 # if EPROGUNAVAIL > ERR_MAX
 # undef ERR_MAX
@@ -832,8 +828,7 @@ TRANS ??? */
 # endif
 #endif
 #ifdef EPROGMISMATCH
-/*
-TRANS ??? */
+/* */
     [ERR_REMAP (EPROGMISMATCH)] = N_("RPC program version wrong"),
 # if EPROGMISMATCH > ERR_MAX
 # undef ERR_MAX
@@ -841,8 +836,7 @@ TRANS ??? */
 # endif
 #endif
 #ifdef EPROCUNAVAIL
-/*
-TRANS ??? */
+/* */
     [ERR_REMAP (EPROCUNAVAIL)] = N_("RPC bad procedure for program"),
 # if EPROCUNAVAIL > ERR_MAX
 # undef ERR_MAX
@@ -851,7 +845,7 @@ TRANS ??? */
 #endif
 #ifdef ENOLCK
 /*
-TRANS No locks available.  This is used by the file locking facilities; see
+TRANS This is used by the file locking facilities; see
 TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 TRANS it can result from an operation to an NFS server running another
 TRANS operating system. */
@@ -863,7 +857,7 @@ TRANS operating system. */
 #endif
 #ifdef EFTYPE
 /*
-TRANS Inappropriate file type or format.  The file was the wrong type for the
+TRANS The file was the wrong type for the
 TRANS operation, or a data file had the wrong format.
 TRANS
 TRANS On some systems @code{chmod} returns this error if you try to set the
@@ -875,8 +869,7 @@ TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}. */
 # endif
 #endif
 #ifdef EAUTH
-/*
-TRANS ??? */
+/* */
     [ERR_REMAP (EAUTH)] = N_("Authentication error"),
 # if EAUTH > ERR_MAX
 # undef ERR_MAX
@@ -884,8 +877,7 @@ TRANS ??? */
 # endif
 #endif
 #ifdef ENEEDAUTH
-/*
-TRANS ??? */
+/* */
     [ERR_REMAP (ENEEDAUTH)] = N_("Need authenticator"),
 # if ENEEDAUTH > ERR_MAX
 # undef ERR_MAX
@@ -894,7 +886,7 @@ TRANS ??? */
 #endif
 #ifdef ENOSYS
 /*
-TRANS Function not implemented.  This indicates that the function called is
+TRANS This indicates that the function called is
 TRANS not implemented at all, either in the C library itself or in the
 TRANS operating system.  When you get this error, you can be sure that this
 TRANS particular function will always fail with @code{ENOSYS} unless you
@@ -907,7 +899,7 @@ TRANS install a new version of the C library or the operating system. */
 #endif
 #if defined (ENOTSUP) && ENOTSUP != EOPNOTSUPP
 /*
-TRANS Not supported.  A function returns this error when certain parameter
+TRANS A function returns this error when certain parameter
 TRANS values are valid, but the functionality they request is not available.
 TRANS This can mean that the function does not implement a particular command
 TRANS or option value or flag bit at all.  For functions that operate on some
@@ -1088,7 +1080,7 @@ TRANS This error code has no purpose. */
 #endif
 #ifdef ECANCELED
 /*
-TRANS Operation canceled; an asynchronous operation was canceled before it
+TRANS An asynchronous operation was canceled before it
 TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 TRANS the normal result is for the operations affected to complete with this
 TRANS error; @pxref{Cancel AIO Operations}. */
