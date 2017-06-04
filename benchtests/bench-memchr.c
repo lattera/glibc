@@ -117,7 +117,8 @@ do_test (size_t align, size_t pos, size_t len, int seek_char)
       buf[align + len] = seek_char;
     }
 
-  printf ("Length %4zd, alignment %2zd:", pos, align);
+  printf ("Length %4zd, position %4zd, alignment %2zd:",
+	  len, pos, align);
 
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, (CHAR *) (buf + align), seek_char, len, result);
@@ -143,11 +144,25 @@ test_main (void)
       do_test (i, 64, 256, 23);
       do_test (0, 16 << i, 2048, 0);
       do_test (i, 64, 256, 0);
+#ifdef USE_AS_MEMRCHR
+      /* Also test the position close to the beginning for memrchr.  */
+      do_test (0, i, 256, 23);
+      do_test (0, i, 256, 0);
+      do_test (i, i, 256, 23);
+      do_test (i, i, 256, 0);
+#endif
     }
   for (i = 1; i < 32; ++i)
     {
       do_test (0, i, i + 1, 23);
       do_test (0, i, i + 1, 0);
+      do_test (i, i, i + 1, 23);
+      do_test (i, i, i + 1, 0);
+#ifdef USE_AS_MEMRCHR
+      /* Also test the position close to the beginning for memrchr.  */
+      do_test (0, 1, i + 1, 23);
+      do_test (0, 2, i + 1, 0);
+#endif
     }
 
   return ret;
