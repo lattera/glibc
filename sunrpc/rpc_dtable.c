@@ -31,6 +31,7 @@
 
 #include <unistd.h>
 #include <rpc/clnt.h>
+#include <shlib-compat.h>
 
 /*
  * Cache the result of getdtablesize(), so we don't have to do an

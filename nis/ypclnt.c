@@ -29,6 +29,7 @@
 #include <sys/socket.h>
 #include <sys/uio.h>
 #include <libc-lock.h>
+#include <shlib-compat.h>
 
 /* This should only be defined on systems with a BSD compatible ypbind */
 #ifndef BINDINGDIR

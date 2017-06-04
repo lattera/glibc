@@ -39,8 +39,8 @@
  */
 
 #include <sys/param.h>
-
 #include <rpc/rpc.h>
+#include <shlib-compat.h>
 
 /* * * * * * * * * * * * * * XDR Authentication * * * * * * * * * * * */
 

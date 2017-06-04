@@ -38,6 +38,7 @@
 #include <rpc/xdr.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <shlib-compat.h>
 
 /* ARGSUSED */
 static bool_t

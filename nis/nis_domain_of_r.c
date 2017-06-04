@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
+#include <shlib-compat.h>
 
 nis_name
 nis_domain_of_r (const_nis_name name, char *buffer, size_t buflen)

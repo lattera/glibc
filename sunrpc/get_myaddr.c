@@ -42,9 +42,9 @@
 #include <net/if.h>
 #include <ifaddrs.h>
 #include <sys/ioctl.h>
-/* Order of following two #includes reversed by roland@gnu */
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <shlib-compat.h>
 
 /*
  * don't use gethostbyname, which would invoke yellow pages

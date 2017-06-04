@@ -32,7 +32,8 @@ static char sccsid[] = "@(#)des_soft.c	2.2 88/08/10 4.0 RPCSRC; from 1.13 88/02/
  */
 
 #include <rpc/des_crypt.h>
-#include <abi-versions.h>
+#include <shlib-compat.h>
+
 /*
  * Table giving odd parity in the low bit for ASCII characters
  */

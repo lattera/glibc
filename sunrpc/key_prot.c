@@ -29,6 +29,7 @@
  */
 
 #include <rpc/key_prot.h>
+#include <shlib-compat.h>
 
 bool_t
 xdr_keystatus (XDR * xdrs, keystatus * objp)

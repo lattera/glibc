@@ -38,6 +38,7 @@
 #include <string.h>
 #include <limits.h>
 #include <rpc/rpc.h>
+#include <shlib-compat.h>
 
 static bool_t xdrmem_getlong (XDR *, long *);
 static bool_t xdrmem_putlong (XDR *, const long *);

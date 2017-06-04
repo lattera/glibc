@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <rpc/rpc.h>
+#include <shlib-compat.h>
 
 #include "nsswitch.h"
 

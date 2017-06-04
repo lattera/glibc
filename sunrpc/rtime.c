@@ -49,6 +49,7 @@
 #include <rpc/auth_des.h>
 #include <errno.h>
 #include <netinet/in.h>
+#include <shlib-compat.h>
 
 #define NYEARS	(u_long)(1970 - 1900)
 #define TOFFSET (u_long)(60*60*24*(365*NYEARS + (NYEARS/4)))

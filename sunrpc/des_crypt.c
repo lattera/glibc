@@ -32,7 +32,7 @@
 
 #include <sys/types.h>
 #include <rpc/des_crypt.h>
-#include <abi-versions.h>
+#include <shlib-compat.h>
 #include "des.h"
 
 extern int _des_crypt (char *, unsigned, struct desparams *);

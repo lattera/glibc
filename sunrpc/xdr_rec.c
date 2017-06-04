@@ -50,6 +50,7 @@
 #include <libintl.h>
 #include <wchar.h>
 #include <libio/iolibio.h>
+#include <shlib-compat.h>
 
 static bool_t xdrrec_getlong (XDR *, long *);
 static bool_t xdrrec_putlong (XDR *, const long *);

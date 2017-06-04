@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include <libc-lock.h>
 #include <rpc/rpc.h>
 #include <assert.h>
 
 #include <libc-lock.h>
 #include <libc-tsd.h>
+#include <shlib-compat.h>
 
 #ifdef _RPC_THREAD_SAFE_
 

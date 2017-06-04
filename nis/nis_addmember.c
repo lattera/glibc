@@ -19,6 +19,7 @@
 #include <assert.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
+#include <shlib-compat.h>
 
 nis_error
 nis_addmember (const_nis_name member, const_nis_name group)

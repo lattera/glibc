@@ -36,6 +36,7 @@
 
 #include <rpc/rpc.h>
 #include <rpc/svc.h>
+#include <shlib-compat.h>
 
 /*
  * This is the "network" that we will be moving data over

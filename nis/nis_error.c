@@ -21,6 +21,7 @@
 #include <string.h>
 #include <libintl.h>
 #include <rpcsvc/nis.h>
+#include <shlib-compat.h>
 
 
 #define MF(line) MF1 (line)

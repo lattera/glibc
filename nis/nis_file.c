@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
+#include <shlib-compat.h>
 #include "nis_xdr.h"
 
 typedef bool_t (*iofct_t) (XDR *, void *);

@@ -34,6 +34,7 @@
 #include <string.h>
 #include <sys/param.h>
 #include <rpc/rpc.h>
+#include <shlib-compat.h>
 
 /*
  * XDR a call message

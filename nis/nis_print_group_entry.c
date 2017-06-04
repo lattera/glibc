@@ -20,6 +20,7 @@
 #include <string.h>
 #include <libintl.h>
 #include <rpcsvc/nis.h>
+#include <shlib-compat.h>
 
 void
 nis_print_group_entry (const_nis_name group)

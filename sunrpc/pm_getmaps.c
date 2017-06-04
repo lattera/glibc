@@ -44,6 +44,7 @@
 #include <libintl.h>
 #include <unistd.h>
 #include <not-cancel.h>
+#include <shlib-compat.h>
 
 
 /*

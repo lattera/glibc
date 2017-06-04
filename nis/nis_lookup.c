@@ -21,6 +21,7 @@
 #include "nis_xdr.h"
 #include "nis_intern.h"
 #include <libnsl.h>
+#include <shlib-compat.h>
 
 
 nis_result *

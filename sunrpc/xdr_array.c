@@ -41,6 +41,7 @@
 #include <libintl.h>
 #include <limits.h>
 #include <wchar.h>
+#include <shlib-compat.h>
 
 #define LASTUNSIGNED	((u_int)0-1)
 

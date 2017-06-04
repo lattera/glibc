@@ -127,14 +127,13 @@ __thread struct __res_state *__resp = &_res;
 extern __thread struct __res_state *__libc_resp
   __attribute__ ((alias ("__resp"))) attribute_hidden;
 
+#include <shlib-compat.h>
+
 /* We declare this with compat_symbol so that it's not
    visible at link time.  Programs must use the accessor functions.  */
 #ifdef SHARED
-# include <shlib-compat.h>
 compat_symbol (libc, _res, _res, GLIBC_2_0);
 #endif
-
-#include <shlib-compat.h>
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_2)
 # undef res_init

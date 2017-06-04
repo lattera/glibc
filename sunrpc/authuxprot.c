@@ -37,6 +37,7 @@
 #include <rpc/xdr.h>
 #include <rpc/auth.h>
 #include <rpc/auth_unix.h>
+#include <shlib-compat.h>
 
 /*
  * XDR for unix authentication parameters.

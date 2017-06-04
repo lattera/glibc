@@ -45,6 +45,7 @@
 #include <rpc/rpc.h>
 #include <rpc/pmap_prot.h>
 #include <rpc/pmap_clnt.h>
+#include <shlib-compat.h>
 
 /*
  * Same as get_myaddress, but we try to use the loopback

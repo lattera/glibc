@@ -40,6 +40,7 @@
 
 #include <rpc/types.h>
 #include <rpc/xdr.h>
+#include <shlib-compat.h>
 
 /*
  * NB: Not portable.

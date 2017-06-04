@@ -54,6 +54,7 @@
 #include <sys/socket.h>
 #include <rpc/pmap_clnt.h>
 #include <wchar.h>
+#include <shlib-compat.h>
 
 extern u_long _create_xid (void);
 

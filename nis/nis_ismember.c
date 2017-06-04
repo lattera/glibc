@@ -18,6 +18,7 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
+#include <shlib-compat.h>
 
 /* internal_nis_ismember ()
    return codes: -1 principal is in -group

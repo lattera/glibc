@@ -31,6 +31,7 @@
 
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
+#include <shlib-compat.h>
 
 /* The NIS v2 protocol suggests 1024 bytes as a maximum length of all fields.
    Current Linux systems don't use this limit. To remain compatible with

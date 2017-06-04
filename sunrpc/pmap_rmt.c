@@ -44,12 +44,13 @@
 #include <sys/socket.h>
 #include <stdio.h>
 #include <errno.h>
-#undef	 _POSIX_SOURCE		/* Ultrix <sys/param.h> needs --roland@gnu */
-#include <sys/param.h>		/* Ultrix needs before net/if --roland@gnu */
+#include <sys/param.h>
 #include <net/if.h>
 #include <ifaddrs.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
+#include <shlib-compat.h>
+
 #define MAX_BROADCAST_SIZE 1400
 
 extern u_long _create_xid (void);

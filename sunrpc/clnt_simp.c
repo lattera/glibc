@@ -40,6 +40,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <string.h>
+#include <shlib-compat.h>
 
 struct callrpc_private_s
   {

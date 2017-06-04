@@ -35,6 +35,7 @@
 #include <rpc/types.h>
 #include <rpc/xdr.h>
 #include <rpc/pmap_prot.h>
+#include <shlib-compat.h>
 
 
 bool_t

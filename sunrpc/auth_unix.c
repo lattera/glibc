@@ -46,6 +46,7 @@
 #include <libintl.h>
 #include <sys/param.h>
 #include <wchar.h>
+#include <shlib-compat.h>
 
 #include <rpc/types.h>
 #include <rpc/xdr.h>

@@ -35,6 +35,7 @@
 #include <rpc/rpc.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <shlib-compat.h>
 
 /*
  * Generic client creation: takes (hostname, program-number, protocol) and

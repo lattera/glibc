@@ -40,6 +40,8 @@
 #include <rpc/xdr.h>
 
 #include <libio/iolibio.h>
+#include <shlib-compat.h>
+
 #define fflush(s) _IO_fflush (s)
 #define fread(p, m, n, s) _IO_fread (p, m, n, s)
 #define ftell(s) _IO_ftell (s)

@@ -53,6 +53,7 @@
 #include <rpc/svc_auth.h>
 #include <rpc/svc.h>
 #include <rpc/des_crypt.h>
+#include <shlib-compat.h>
 
 #define debug(msg)		/*printf("svcauth_des: %s\n", msg) */
 

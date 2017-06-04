@@ -20,6 +20,7 @@
 #include <string.h>
 #include <rpcsvc/nis.h>
 #include <libc-diag.h>
+#include <shlib-compat.h>
 
 #include "nis_xdr.h"
 #include "nis_intern.h"

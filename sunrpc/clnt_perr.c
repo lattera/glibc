@@ -36,6 +36,7 @@
 #include <rpc/rpc.h>
 #include <wchar.h>
 #include <libio/iolibio.h>
+#include <shlib-compat.h>
 
 static char *auth_errmsg (enum auth_stat stat) internal_function;
 

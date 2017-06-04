@@ -64,6 +64,7 @@
 
 #include <wchar.h>
 #include <libio/iolibio.h>
+#include <shlib-compat.h>
 
 /*
  * Ops vector for TCP/IP based rpc service handle

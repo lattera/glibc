@@ -19,6 +19,7 @@
 #include <stdint.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/nis_callback.h> /* for "official" Solaris xdr functions */
+#include <shlib-compat.h>
 
 /* This functions do exist without beginning "_" under Solaris 2.x, but
    we have no prototypes for them. To avoid the same problems as with the

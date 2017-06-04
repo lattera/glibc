@@ -40,6 +40,7 @@
 #include <rpc/svc.h>
 #include <rpc/xdr.h>
 #include <libintl.h>
+#include <shlib-compat.h>
 
 #define MCALL_MSG_SIZE 24
 

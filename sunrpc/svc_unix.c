@@ -64,6 +64,7 @@
 #include <stdlib.h>
 #include <libintl.h>
 #include <wchar.h>
+#include <shlib-compat.h>
 
 /*
  * Ops vector for AF_UNIX based rpc service handle

@@ -34,6 +34,7 @@
 #include <rpc/rpc.h>
 #include <rpc/svc.h>
 #include <rpc/svc_auth.h>
+#include <shlib-compat.h>
 
 /*
  * svcauthsw is the bdevsw of server side authentication.

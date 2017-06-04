@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <rpc/netdb.h>
 #include <rpc/auth_des.h>
+#include <shlib-compat.h>
 
 #include "nsswitch.h"
 

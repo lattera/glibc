@@ -49,6 +49,7 @@
 #include <sys/socket.h>
 #include <rpc/key_prot.h>
 #include <libc-lock.h>
+#include <shlib-compat.h>
 
 #define KEY_TIMEOUT	5	/* per-try timeout in seconds */
 #define KEY_NRETRY	12	/* number of retries */

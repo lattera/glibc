@@ -30,6 +30,7 @@
  */
 
 #include <rpcsvc/ypupd.h>
+#include <shlib-compat.h>
 
 bool_t
 xdr_yp_buf (XDR *xdrs, yp_buf *objp)

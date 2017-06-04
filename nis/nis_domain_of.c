@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <rpcsvc/nis.h>
+#include <shlib-compat.h>
 
 nis_name
 nis_domain_of (const_nis_name name)

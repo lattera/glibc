@@ -36,6 +36,7 @@
 #include <libintl.h>
 #include <sys/poll.h>
 #include <rpc/rpc.h>
+#include <shlib-compat.h>
 
 /* This function can be used as a signal handler to terminate the
    server loop.  */

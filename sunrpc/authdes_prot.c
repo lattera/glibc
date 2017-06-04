@@ -36,6 +36,7 @@
 #include <rpc/xdr.h>
 #include <rpc/auth.h>
 #include <rpc/auth_des.h>
+#include <shlib-compat.h>
 
 #define ATTEMPT(xdr_op) if (!(xdr_op)) return (FALSE)
 

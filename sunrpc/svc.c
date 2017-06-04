@@ -59,6 +59,7 @@
 #include <rpc/pmap_clnt.h>
 #include <sys/poll.h>
 #include <time.h>
+#include <shlib-compat.h>
 
 #ifdef _RPC_THREAD_SAFE_
 #define xports RPC_THREAD_VARIABLE(svc_xports_s)

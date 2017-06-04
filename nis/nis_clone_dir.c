@@ -19,6 +19,7 @@
 #include <string.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/nis.h>
+#include <shlib-compat.h>
 
 #include "nis_xdr.h"
 

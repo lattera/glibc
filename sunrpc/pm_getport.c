@@ -38,6 +38,7 @@
 #include <rpc/pmap_prot.h>
 #include <rpc/pmap_clnt.h>
 #include <sys/socket.h>
+#include <shlib-compat.h>
 
 /*
  * Create a socket that is locally bound to a non-reserve port. For

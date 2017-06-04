@@ -22,6 +22,7 @@
 #include <stdint.h>
 
 #include <rpcsvc/nis.h>
+#include <shlib-compat.h>
 
 static const char *
 nis_nstype2str (const nstype type)

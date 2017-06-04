@@ -33,6 +33,7 @@
 #include "nis_xdr.h"
 #include "nis_intern.h"
 #include <libnsl.h>
+#include <shlib-compat.h>
 
 static const struct timeval RPCTIMEOUT = {10, 0};
 static const struct timeval UDPTIMEOUT = {5, 0};

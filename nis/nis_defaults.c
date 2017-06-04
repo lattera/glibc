@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/nis.h>
+#include <shlib-compat.h>
 
 #define DEFAULT_TTL 43200
 

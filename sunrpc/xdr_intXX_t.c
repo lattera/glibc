@@ -22,6 +22,7 @@
 #include <rpc/xdr.h>
 
 #include <stdint.h>
+#include <shlib-compat.h>
 
 /* XDR 64bit integers */
 bool_t

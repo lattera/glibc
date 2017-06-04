@@ -41,6 +41,7 @@
 #include <rpc/xdr.h>
 #include <netinet/in.h>		/* XXX: just to get htonl() and ntohl() */
 #include <sys/socket.h>
+#include <shlib-compat.h>
 
 #define MILLION		1000000L
 #define RTIME_TIMEOUT 5		/* seconds to wait for sync */
