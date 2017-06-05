@@ -22,4 +22,8 @@
 #include <sysdeps/unix/sysv/linux/x86_64/sysdep.h>
 #include <sysdeps/x86_64/x32/sysdep.h>
 
+/* How to pass the off{64}_t argument on p{readv,writev}{64}.  */
+#undef LO_HI_LONG
+#define LO_HI_LONG(val) (val)
+
 #endif /* linux/x86_64/x32/sysdep.h */
