@@ -1,5 +1,15 @@
 2017-06-05  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86/cacheinfo.c (intel_check_word): Accept cpu_features
+	and use it instead of dl_x86_cpu_features.
+	(handle_intel): Replace maxidx with cpu_features.  Pass
+	cpu_features to intel_check_word.
+	(__cache_sysconf): Pass cpu_features to handle_intel.
+	(init_cacheinfo): Likewise.  Use cpu_features instead of
+	dl_x86_cpu_features.
+
+2017-06-05  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86/cpu-features.h (index_cpu_MOVBE): New.
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
 	memcmp-avx2 and wmemcmp-avx2.

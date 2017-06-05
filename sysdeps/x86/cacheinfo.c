@@ -126,7 +126,8 @@ intel_02_known_compare (const void *p1, const void *p2)
 static long int
 __attribute__ ((noinline))
 intel_check_word (int name, unsigned int value, bool *has_level_2,
-		  bool *no_level_2_or_3)
+		  bool *no_level_2_or_3,
+		  const struct cpu_features *cpu_features)
 {
   if ((value & 0x80000000) != 0)
     /* The register value is reserved.  */
@@ -204,8 +205,8 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 	      /* Intel reused this value.  For family 15, model 6 it
 		 specifies the 3rd level cache.  Otherwise the 2nd
 		 level cache.  */
-	      unsigned int family = GLRO(dl_x86_cpu_features).family;
-	      unsigned int model = GLRO(dl_x86_cpu_features).model;
+	      unsigned int family = cpu_features->family;
+	      unsigned int model = cpu_features->model;
 
 	      if (family == 15 && model == 6)
 		{
@@ -255,8 +256,10 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 
 
 static long int __attribute__ ((noinline))
-handle_intel (int name, unsigned int maxidx)
+handle_intel (int name, const struct cpu_features *cpu_features)
 {
+  unsigned int maxidx = cpu_features->max_cpuid;
+
   /* Return -1 for older CPUs.  */
   if (maxidx < 2)
     return -1;
@@ -287,19 +290,23 @@ handle_intel (int name, unsigned int maxidx)
 	}
 
       /* Process the individual registers' value.  */
-      result = intel_check_word (name, eax, &has_level_2, &no_level_2_or_3);
+      result = intel_check_word (name, eax, &has_level_2,
+				 &no_level_2_or_3, cpu_features);
       if (result != 0)
 	return result;
 
-      result = intel_check_word (name, ebx, &has_level_2, &no_level_2_or_3);
+      result = intel_check_word (name, ebx, &has_level_2,
+				 &no_level_2_or_3, cpu_features);
       if (result != 0)
 	return result;
 
-      result = intel_check_word (name, ecx, &has_level_2, &no_level_2_or_3);
+      result = intel_check_word (name, ecx, &has_level_2,
+				 &no_level_2_or_3, cpu_features);
       if (result != 0)
 	return result;
 
-      result = intel_check_word (name, edx, &has_level_2, &no_level_2_or_3);
+      result = intel_check_word (name, edx, &has_level_2,
+				 &no_level_2_or_3, cpu_features);
       if (result != 0)
 	return result;
     }
@@ -437,7 +444,7 @@ __cache_sysconf (int name)
   const struct cpu_features *cpu_features = __get_cpu_features ();
 
   if (cpu_features->kind == arch_kind_intel)
-    return handle_intel (name, cpu_features->max_cpuid);
+    return handle_intel (name, cpu_features);
 
   if (cpu_features->kind == arch_kind_amd)
     return handle_amd (name);
@@ -494,14 +501,14 @@ init_cacheinfo (void)
 
   if (cpu_features->kind == arch_kind_intel)
     {
-      data = handle_intel (_SC_LEVEL1_DCACHE_SIZE, max_cpuid);
+      data = handle_intel (_SC_LEVEL1_DCACHE_SIZE, cpu_features);
 
-      long int core = handle_intel (_SC_LEVEL2_CACHE_SIZE, max_cpuid);
+      long int core = handle_intel (_SC_LEVEL2_CACHE_SIZE, cpu_features);
       bool inclusive_cache = true;
 
       /* Try L3 first.  */
       level  = 3;
-      shared = handle_intel (_SC_LEVEL3_CACHE_SIZE, max_cpuid);
+      shared = handle_intel (_SC_LEVEL3_CACHE_SIZE, cpu_features);
 
       /* Number of logical processors sharing L2 cache.  */
       int threads_l2;
@@ -531,8 +538,8 @@ init_cacheinfo (void)
 	     highest cache level.  */
 	  if (max_cpuid >= 4)
 	    {
-	      unsigned int family = GLRO(dl_x86_cpu_features).family;
-	      unsigned int model = GLRO(dl_x86_cpu_features).model;
+	      unsigned int family = cpu_features->family;
+	      unsigned int model = cpu_features->model;
 
 	      int i = 0;
 
@@ -675,7 +682,7 @@ intel_bug_no_cache_info:
 		 level.  */
 
 	      threads
-		= ((GLRO(dl_x86_cpu_features).cpuid[COMMON_CPUID_INDEX_1].ebx
+		= ((cpu_features->cpuid[COMMON_CPUID_INDEX_1].ebx
 		    >> 16) & 0xff);
 	    }
 
