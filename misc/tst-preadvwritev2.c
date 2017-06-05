@@ -23,9 +23,12 @@
   pwritev2 (__fd, __iov, __iovcnt, __offset, 0)
 
 #include "tst-preadvwritev-common.c"
+#include "tst-preadvwritev2-common.c"
 
 static int
 do_test (void)
 {
+  do_test_with_invalid_flags ();
+
   return do_test_with_offset (0);
 }

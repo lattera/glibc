@@ -1,3 +1,9 @@
+2017-06-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* misc/tst-preadvwritev2-common.c: New file.
+	* misc/tst-preadvwritev2.c (do_test): Add test for invalid flag.
+	* misc/tst-preadvwritev64v2.c (do_test): Likewise.
+
 2017-06-21  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/dl-machine.h (RTLD_START_1): Change _dl_argv to the
