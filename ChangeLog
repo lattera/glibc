@@ -1,4 +1,9 @@
 2017-06-26  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64le/configure.ac: Check for POWER8.
+	* sysdeps/powerpc/powerpc64le/configure: Update.
+
+2017-06-26  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* INSTALL: Regenerate.
