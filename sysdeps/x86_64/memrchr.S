@@ -22,7 +22,7 @@
 
 	.text
 ENTRY (__memrchr)
-	movd	%rsi, %xmm1
+	movd	%esi, %xmm1
 
 	sub	$16, %rdx
 	jbe	L(length_less16)
@@ -42,8 +42,8 @@ ENTRY (__memrchr)
 	jnz	L(matches0)
 
 	sub	$64, %rdi
-	mov	%rdi, %rcx
-	and	$15, %rcx
+	mov	%edi, %ecx
+	and	$15, %ecx
 	jz	L(loop_prolog)
 
 	add	$16, %rdi
@@ -108,8 +108,8 @@ L(loop_prolog):
 	test	%eax, %eax
 	jnz	L(matches0)
 
-	mov	%rdi, %rcx
-	and	$63, %rcx
+	mov	%edi, %ecx
+	and	$63, %ecx
 	jz	L(align64_loop)
 
 	add	$64, %rdi
@@ -166,8 +166,8 @@ L(align64_loop):
 
 	.p2align 4
 L(exit_loop):
-	add	$64, %rdx
-	cmp	$32, %rdx
+	add	$64, %edx
+	cmp	$32, %edx
 	jbe	L(exit_loop_32)
 
 	movdqa	48(%rdi), %xmm0
@@ -187,7 +187,7 @@ L(exit_loop):
 	pmovmskb	%xmm3, %eax
 	test	%eax, %eax
 	jnz	L(matches16_1)
-	cmp	$48, %rdx
+	cmp	$48, %edx
 	jbe	L(return_null)
 
 	pcmpeqb	(%rdi), %xmm1
@@ -204,7 +204,7 @@ L(exit_loop_32):
 	pmovmskb	%xmm0, %eax
 	test	%eax, %eax
 	jnz	L(matches48_1)
-	cmp	$16, %rdx
+	cmp	$16, %edx
 	jbe	L(return_null)
 
 	pcmpeqb	32(%rdi), %xmm1
@@ -276,7 +276,7 @@ L(matches48_1):
 
 	.p2align 4
 L(return_null):
-	xor	%rax, %rax
+	xor	%eax, %eax
 	ret
 
 	.p2align 4
@@ -306,18 +306,16 @@ L(length_less16):
 	punpcklbw	%xmm1, %xmm1
 	punpcklbw	%xmm1, %xmm1
 
-	add	$16, %rdx
+	add	$16, %edx
 
 	pshufd	$0, %xmm1, %xmm1
 
-	mov	%rdi, %rcx
-	and	$15, %rcx
+	mov	%edi, %ecx
+	and	$15, %ecx
 	jz	L(length_less16_offset0)
 
-	mov	%rdi, %rcx
-	and	$15, %rcx
 	mov	%cl, %dh
-	mov	%rcx, %r8
+	mov	%ecx, %esi
 	add	%dl, %dh
 	and	$-16, %rdi
 
@@ -340,7 +338,7 @@ L(length_less16):
 
 	bsr	%eax, %eax
 	add	%rdi, %rax
-	add	%r8, %rax
+	add	%rsi, %rax
 	ret
 
 	.p2align 4
@@ -362,14 +360,14 @@ L(length_less16_part2):
 	pcmpeqb	(%rdi), %xmm1
 	pmovmskb	%xmm1, %eax
 
-	mov	%r8, %rcx
+	mov	%esi, %ecx
 	sar	%cl, %eax
 	test	%eax, %eax
 	jz	L(return_null)
 
 	bsr	%eax, %eax
 	add	%rdi, %rax
-	add	%r8, %rax
+	add	%rsi, %rax
 	ret
 
 	.p2align 4
