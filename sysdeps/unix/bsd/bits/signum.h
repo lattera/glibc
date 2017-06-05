@@ -26,7 +26,7 @@
 #define	SIG_DFL	((__sighandler_t) 0) /* Default action.  */
 #define	SIG_IGN	((__sighandler_t) 1) /* Ignore signal.  */
 
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN
 # define SIG_HOLD      ((__sighandler_t) 2)    /* Add signal to hold mask.  */
 #endif
 

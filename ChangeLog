@@ -1,5 +1,17 @@
 2017-06-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21538]
+	* bits/signum.h (SIG_HOLD): Define if [__USE_XOPEN], not
+	[__USE_UNIX98].
+	* sysdeps/unix/bsd/bits/signum.h (SIG_HOLD): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/signum.h (SIG_HOLD):
+	Likewise.
+	* sysdeps/unix/sysv/linux/bits/signum.h (SIG_HOLD): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/signum.h (SIG_HOLD): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/signum.h (SIG_HOLD): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/signum.h (SIG_HOLD):
+	Likewise.
+
 	[BZ #21517]
 	* bits/types/stack_t.h (stack_t): Remove struct tag.
 	* sysdeps/unix/sysv/linux/bits/types/stack_t.h (stack_t):
