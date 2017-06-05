@@ -27,7 +27,18 @@
 ENTRY(wmemcmp)
 	.type	wmemcmp, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
-	HAS_CPU_FEATURE (SSSE3)
+	HAS_ARCH_FEATURE (Prefer_No_VZEROUPPER)
+	jnz	1f
+	HAS_ARCH_FEATURE (AVX2_Usable)
+	jz	1f
+	HAS_CPU_FEATURE (MOVBE)
+	jz	1f
+	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
+	jz	1f
+	leaq	__wmemcmp_avx2_movbe(%rip), %rax
+	ret
+
+1:	HAS_CPU_FEATURE (SSSE3)
 	jnz	2f
 	leaq	__wmemcmp_sse2(%rip), %rax
 	ret

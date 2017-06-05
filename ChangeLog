@@ -1,5 +1,21 @@
 2017-06-05  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86/cpu-features.h (index_cpu_MOVBE): New.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memcmp-avx2 and wmemcmp-avx2.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Test __memcmp_avx2 and __wmemcmp_avx2.
+	* sysdeps/x86_64/multiarch/memcmp-avx2.S: New file.
+	* sysdeps/x86_64/multiarch/wmemcmp-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcmp.S: Use __memcmp_avx2 on AVX
+	2 machines if AVX unaligned load is fast and vzeroupper is
+	preferred.
+	* sysdeps/x86_64/multiarch/wmemcmp.S: Use __wmemcmp_avx2 on AVX
+	2 machines if AVX unaligned load is fast and vzeroupper is
+	preferred.
+
+2017-06-05  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* include/wchar.h (__wmemset_chk): New.
 	* sysdeps/x86_64/memset.S (VDUP_TO_VEC0_AND_SET_RETURN): Renamed
 	to MEMSET_VDUP_TO_VEC0_AND_SET_RETURN.

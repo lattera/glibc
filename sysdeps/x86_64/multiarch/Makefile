@@ -6,6 +6,7 @@ ifeq ($(subdir),string)
 
 sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strcmp-sse2-unaligned strncmp-ssse3 \
+		   memcmp-avx2-movbe \
 		   memcmp-sse4 memcpy-ssse3 \
 		   memmove-ssse3 \
 		   memcpy-ssse3-back \
@@ -30,7 +31,9 @@ CFLAGS-strspn-c.c += -msse4
 endif
 
 ifeq ($(subdir),wcsmbs)
-sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c wcscpy-ssse3 wcscpy-c
+sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c \
+		   wmemcmp-avx2-movbe \
+		   wcscpy-ssse3 wcscpy-c
 endif
 
 ifeq ($(subdir),debug)
