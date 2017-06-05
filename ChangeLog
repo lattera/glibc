@@ -1,3 +1,14 @@
+2017-06-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/init-arch.h (PASTER1): New.
+	(EVALUATOR1): Likewise.
+	(PASTER2): Likewise.
+	(EVALUATOR2): Likewise.
+	(REDIRECT_NAME): Likewise.
+	(OPTIMIZE): Likewise.
+	(IFUNC_SELECTOR): Likewise.
+
 2017-06-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/strlen.S (PMINU): New.
