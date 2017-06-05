@@ -1,4 +1,4 @@
-/* SSE2 version of strlen.
+/* SSE2 version of strlen/wcslen.
    Copyright (C) 2012-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,6 +18,16 @@
 
 #include <sysdep.h>
 
+#ifdef AS_WCSLEN
+# define PMINU		pminud
+# define PCMPEQ		pcmpeqd
+# define SHIFT_RETURN	shrq $2, %rax
+#else
+# define PMINU		pminub
+# define PCMPEQ		pcmpeqb
+# define SHIFT_RETURN
+#endif
+
 /* Long lived register in strlen(s), strnlen(s, n) are:
 
 	%xmm3 - zero
@@ -32,10 +42,10 @@ ENTRY(strlen)
 
 /* Test 64 bytes from %rax for zero. Save result as bitmask in %rdx.  */
 #define FIND_ZERO	\
-	pcmpeqb	(%rax), %xmm0;	\
-	pcmpeqb	16(%rax), %xmm1;	\
-	pcmpeqb	32(%rax), %xmm2;	\
-	pcmpeqb	48(%rax), %xmm3;	\
+	PCMPEQ	(%rax), %xmm0;	\
+	PCMPEQ	16(%rax), %xmm1;	\
+	PCMPEQ	32(%rax), %xmm2;	\
+	PCMPEQ	48(%rax), %xmm3;	\
 	pmovmskb	%xmm0, %esi;	\
 	pmovmskb	%xmm1, %edx;	\
 	pmovmskb	%xmm2, %r8d;	\
@@ -54,6 +64,9 @@ ENTRY(strlen)
 	xor	%rax, %rax
 	ret
 L(n_nonzero):
+# ifdef AS_WCSLEN
+	shlq	$2, %rsi
+# endif
 
 /* Initialize long lived registers.  */
 
@@ -96,6 +109,7 @@ L(n_nonzero):
 	test	%rdx, %rdx;	\
 	je	L(lab);	\
 	bsfq	%rdx, %rax;	\
+	SHIFT_RETURN;		\
 	ret
 
 #ifdef AS_STRNLEN
@@ -104,19 +118,20 @@ L(n_nonzero):
 #else
 	/* Test first 16 bytes unaligned.  */
 	movdqu	(%rax), %xmm4
-	pcmpeqb	%xmm0, %xmm4
+	PCMPEQ	%xmm0, %xmm4
 	pmovmskb	%xmm4, %edx
 	test	%edx, %edx
 	je 	L(next48_bytes)
 	bsf	%edx, %eax /* If eax is zeroed 16bit bsf can be used.  */
+	SHIFT_RETURN
 	ret
 
 L(next48_bytes):
 /* Same as FIND_ZERO except we do not check first 16 bytes.  */
 	andq	$-16, %rax
-	pcmpeqb 16(%rax), %xmm1
-	pcmpeqb 32(%rax), %xmm2
-	pcmpeqb 48(%rax), %xmm3
+	PCMPEQ 16(%rax), %xmm1
+	PCMPEQ 32(%rax), %xmm2
+	PCMPEQ 48(%rax), %xmm3
 	pmovmskb	%xmm1, %edx
 	pmovmskb	%xmm2, %r8d
 	pmovmskb	%xmm3, %ecx
@@ -145,6 +160,7 @@ L(strnlen_ret):
 	test	%rdx, %rdx
 	je	L(loop_init)
 	bsfq	%rdx, %rax
+	SHIFT_RETURN
 	ret
 #endif
 	.p2align 4
@@ -161,10 +177,10 @@ L(loop):
 	je	L(exit_end)
 
 	movdqa	(%rax), %xmm0
-	pminub	16(%rax), %xmm0
-	pminub	32(%rax), %xmm0
-	pminub	48(%rax), %xmm0
-	pcmpeqb	%xmm3, %xmm0
+	PMINU	16(%rax), %xmm0
+	PMINU	32(%rax), %xmm0
+	PMINU	48(%rax), %xmm0
+	PCMPEQ	%xmm3, %xmm0
 	pmovmskb	%xmm0, %edx
 	testl	%edx, %edx
 	jne	L(exit)
@@ -182,6 +198,7 @@ L(first):
 	bsfq	%rdx, %rdx
 	addq	%rdx, %rax
 	subq	%rdi, %rax
+	SHIFT_RETURN
 	ret
 
 	.p2align 4
@@ -192,6 +209,7 @@ L(exit):
 	bsfq	%rdx, %rdx
 	addq	%rdx, %rax
 	subq	%rdi, %rax
+	SHIFT_RETURN
 	ret
 
 #else
@@ -201,10 +219,10 @@ L(exit):
 L(loop):
 
 	movdqa	64(%rax), %xmm0
-	pminub	80(%rax), %xmm0
-	pminub	96(%rax), %xmm0
-	pminub	112(%rax), %xmm0
-	pcmpeqb	%xmm3, %xmm0
+	PMINU	80(%rax), %xmm0
+	PMINU	96(%rax), %xmm0
+	PMINU	112(%rax), %xmm0
+	PCMPEQ	%xmm3, %xmm0
 	pmovmskb	%xmm0, %edx
 	testl	%edx, %edx
 	jne	L(exit64)
@@ -212,10 +230,10 @@ L(loop):
 	subq	$-128, %rax
 
 	movdqa	(%rax), %xmm0
-	pminub	16(%rax), %xmm0
-	pminub	32(%rax), %xmm0
-	pminub	48(%rax), %xmm0
-	pcmpeqb	%xmm3, %xmm0
+	PMINU	16(%rax), %xmm0
+	PMINU	32(%rax), %xmm0
+	PMINU	48(%rax), %xmm0
+	PCMPEQ	%xmm3, %xmm0
 	pmovmskb	%xmm0, %edx
 	testl	%edx, %edx
 	jne	L(exit0)
@@ -231,6 +249,7 @@ L(exit0):
 	bsfq	%rdx, %rdx
 	addq	%rdx, %rax
 	subq	%rdi, %rax
+	SHIFT_RETURN
 	ret
 
 #endif

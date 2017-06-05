@@ -1,5 +1,15 @@
 2017-06-05  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/strlen.S (PMINU): New.
+	(PCMPEQ): Likewise.
+	(SHIFT_RETURN): Likewise.
+	(FIND_ZERO): Replace pcmpeqb with PCMPEQ.
+	(strlen): Add SHIFT_RETURN before ret.  Replace pcmpeqb and
+	pminub with PCMPEQ and PMINU.
+	* sysdeps/x86_64/wcsnlen.S: New file.
+
+2017-06-05  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/memrchr.S (__memrchr): Use 32-bit registers for
 	the lower 32 bits.  Remove redundant instructions.
 
