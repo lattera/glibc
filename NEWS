@@ -77,6 +77,9 @@ Version 2.26
   compat implementation will be used (which refuses all flags and routes it
   to preadv or pwritev).
 
+* The stack_t type no longer has the name struct sigaltstack.  This changes
+  the C++ name mangling for interfaces involving this type.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,

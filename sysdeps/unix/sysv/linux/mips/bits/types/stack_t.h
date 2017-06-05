@@ -23,7 +23,7 @@
 #include <stddef.h>
 
 /* Structure describing a signal stack.  */
-typedef struct sigaltstack
+typedef struct
   {
     void *ss_sp;
     size_t ss_size;

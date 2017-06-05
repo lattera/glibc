@@ -71,7 +71,7 @@ struct elf_prstatus
     unsigned long int pr_sigpend;	/* Set of pending signals.  */
     unsigned long int pr_sighold;	/* Set of held signals.  */
 #if 0
-    struct sigaltstack pr_altstack;	/* Alternate stack info.  */
+    stack_t pr_altstack;		/* Alternate stack info.  */
     struct sigaction pr_action;		/* Signal action for current sig.  */
 #endif
     __pid_t pr_pid;

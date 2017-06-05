@@ -1,3 +1,39 @@
+2017-06-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21517]
+	* bits/types/stack_t.h (stack_t): Remove struct tag.
+	* sysdeps/unix/sysv/linux/bits/types/stack_t.h (stack_t):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types/stack_t.h (stack_t):
+	Likewise.
+	* debug/segfault.c (install_handler): Use stack_t instead of
+	struct sigaltstack.
+	* hurd/hurd/signal.h (struct hurd_sigstate): Likewise.
+	* hurd/trampoline.c (_hurd_setup_sighandler): Likewise.
+	* include/signal.h (__sigaltstack): Likwise.
+	* signal/sigaltstack.c (__sigaltstack): Likewise.
+	* signal/signal.h (sigaltstack): Likewise.
+	* sysdeps/mach/hurd/i386/signal-defines.sym
+	(SIGALTSTACK__SS_SP__OFFSET): Likewise.
+	(SIGALTSTACK__SS_SIZE__OFFSET): Likewise.
+	(SIGALTSTACK__SS_FLAGS__OFFSET): Likewise.
+	* sysdeps/mach/hurd/sigaltstack.c (__sigaltstack): Likewise.
+	* sysdeps/mach/hurd/sigstack.c (sigstack): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h (struct
+	elf_prstatus): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/____longjmp_chk.c (CHECK_SP):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sys/procfs.h (struct elf_prstatus):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/____longjmp_chk.c (CHECK_SP):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h (struct
+	elf_prstatus): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sys/procfs.h (struct elf_prstatus):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sys/procfs.h (struct elf_prstatus):
+	Likewise.
+
 2017-06-04  Zack Weinberg  <zackw@panix.com>
 
 	* sysdeps/gnu/errlist.c: Regenerate.

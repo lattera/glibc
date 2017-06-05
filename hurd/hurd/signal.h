@@ -70,7 +70,7 @@ struct hurd_sigstate
     sigset_t blocked;		/* What signals are blocked.  */
     sigset_t pending;		/* Pending signals, possibly blocked.  */
     struct sigaction actions[NSIG];
-    struct sigaltstack sigaltstack;
+    stack_t sigaltstack;
 
     /* Chain of thread-local signal preemptors; see <hurd/sigpreempt.h>.
        Each element of this chain is in local stack storage, and the chain

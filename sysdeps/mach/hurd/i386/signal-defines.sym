@@ -5,6 +5,6 @@
 
 HURD_SIGSTATE__SIGALTSTACK__OFFSET	offsetof(struct hurd_sigstate, sigaltstack)
 
-SIGALTSTACK__SS_SP__OFFSET		offsetof(struct sigaltstack, ss_sp)
-SIGALTSTACK__SS_SIZE__OFFSET		offsetof(struct sigaltstack, ss_size)
-SIGALTSTACK__SS_FLAGS__OFFSET		offsetof(struct sigaltstack, ss_flags)
+SIGALTSTACK__SS_SP__OFFSET		offsetof(stack_t, ss_sp)
+SIGALTSTACK__SS_SIZE__OFFSET		offsetof(stack_t, ss_size)
+SIGALTSTACK__SS_FLAGS__OFFSET		offsetof(stack_t, ss_flags)

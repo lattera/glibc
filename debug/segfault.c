@@ -156,7 +156,7 @@ install_handler (void)
   if (getenv ("SEGFAULT_USE_ALTSTACK") != 0)
     {
       void *stack_mem = malloc (2 * SIGSTKSZ);
-      struct sigaltstack ss;
+      stack_t ss;
 
       if (stack_mem != NULL)
 	{

@@ -24,7 +24,7 @@
 int
 sigstack (struct sigstack *ss, struct sigstack *oss)
 {
-  struct sigaltstack as, oas;
+  stack_t as, oas;
 
   as.ss_sp = ss->ss_sp;
   as.ss_size = 0;

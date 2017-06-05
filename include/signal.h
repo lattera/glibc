@@ -41,8 +41,8 @@ extern int __sigqueue (__pid_t __pid, int __sig,
 #ifdef __USE_MISC
 extern int __sigreturn (struct sigcontext *__scp);
 #endif
-extern int __sigaltstack (const struct sigaltstack *__ss,
-			  struct sigaltstack *__oss);
+extern int __sigaltstack (const stack_t *__ss,
+			  stack_t *__oss);
 extern int __libc_sigaction (int sig, const struct sigaction *act,
 			     struct sigaction *oact);
 libc_hidden_proto (__libc_sigaction)

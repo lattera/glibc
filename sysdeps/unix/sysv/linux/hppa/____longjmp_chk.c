@@ -27,7 +27,7 @@
        destroyed must all have stack values higher than ours.  */	\
     if ((unsigned long) (sp) > this_sp)					\
       {									\
-        struct sigaltstack oss;						\
+        stack_t oss;							\
         INTERNAL_SYSCALL_DECL (err);					\
         int result = INTERNAL_SYSCALL (sigaltstack, err, 2, NULL, &oss);\
 	/* If we aren't using an alternate stack then we have already	\

@@ -28,7 +28,7 @@
 struct sigcontext *
 _hurd_setup_sighandler (int flags,
 			__sighandler_t handler,
-			struct sigaltstack *sigaltstack,
+			stack_t *sigaltstack,
 			int signo, int sigcode,
 			void *state)
 {

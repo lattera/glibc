@@ -309,8 +309,8 @@ extern int siginterrupt (int __sig, int __interrupt) __THROW;
 
 /* Alternate signal handler stack interface.
    This interface should always be preferred over `sigstack'.  */
-extern int sigaltstack (const struct sigaltstack *__restrict __ss,
-			struct sigaltstack *__restrict __oss) __THROW;
+extern int sigaltstack (const stack_t *__restrict __ss,
+			stack_t *__restrict __oss) __THROW;
 
 #endif /* Use POSIX.1-2008 or X/Open Unix.  */
 
