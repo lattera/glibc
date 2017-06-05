@@ -32,3 +32,7 @@ endif
 ifeq ($(subdir),wcsmbs)
 sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c wcscpy-ssse3 wcscpy-c
 endif
+
+ifeq ($(subdir),debug)
+sysdep_routines += wmemset_chk-nonshared
+endif

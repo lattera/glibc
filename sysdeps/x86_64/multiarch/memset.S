@@ -58,15 +58,22 @@ END(memset)
 
 #if IS_IN (libc)
 # define MEMSET_SYMBOL(p,s)	p##_sse2_##s
+# define WMEMSET_SYMBOL(p,s)	p##_sse2_##s
 
 # ifdef SHARED
-# undef libc_hidden_builtin_def
+#  undef libc_hidden_builtin_def
 /* It doesn't make sense to send libc-internal memset calls through a PLT.
    The speedup we get from using SSE2 instructions is likely eaten away
    by the indirect call in the PLT.  */
-# define libc_hidden_builtin_def(name) \
-	.globl __GI_memset; __GI_memset = __memset_sse2_unaligned
+#  define libc_hidden_builtin_def(name) \
+	.globl __GI_memset; __GI_memset = __memset_sse2_unaligned; \
+	.globl __GI_wmemset; __GI_wmemset = __wmemset_sse2_unaligned; \
+	.globl __GI___wmemset; __GI___wmemset = __wmemset_sse2_unaligned
 # endif
+
+# undef weak_alias
+# define weak_alias(original, alias) \
+	.weak bzero; bzero = __bzero
 
 # undef strong_alias
 # define strong_alias(original, alias)

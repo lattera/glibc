@@ -157,6 +157,9 @@ extern wchar_t *__wmemmove (wchar_t *__s1, const wchar_t *__s2,
 extern wchar_t *__wcschrnul (const wchar_t *__s, wchar_t __wc)
      __attribute_pure__;
 
+extern wchar_t *__wmemset_chk (wchar_t *__s, wchar_t __c, size_t __n,
+			       size_t __ns) __THROW;
+
 extern int __vfwscanf (__FILE *__restrict __s,
 		       const wchar_t *__restrict __format,
 		       __gnuc_va_list __arg)

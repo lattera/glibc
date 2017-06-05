@@ -1,3 +1,45 @@
+2017-06-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* include/wchar.h (__wmemset_chk): New.
+	* sysdeps/x86_64/memset.S (VDUP_TO_VEC0_AND_SET_RETURN): Renamed
+	to MEMSET_VDUP_TO_VEC0_AND_SET_RETURN.
+	(WMEMSET_VDUP_TO_VEC0_AND_SET_RETURN): New.
+	(WMEMSET_CHK_SYMBOL): Likewise.
+	(WMEMSET_SYMBOL): Likewise.
+	(__wmemset): Add hidden definition.
+	(wmemset): Add weak hidden definition.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	wmemset_chk-nonshared.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add __wmemset_sse2_unaligned,
+	__wmemset_avx2_unaligned, __wmemset_avx512_unaligned,
+	__wmemset_chk_sse2_unaligned, __wmemset_chk_avx2_unaligned
+	and __wmemset_chk_avx512_unaligned.
+	* sysdeps/x86_64/multiarch/memset-avx2-unaligned-erms.S
+	(VDUP_TO_VEC0_AND_SET_RETURN): Renamed to ...
+	(MEMSET_VDUP_TO_VEC0_AND_SET_RETURN): This.
+	(WMEMSET_VDUP_TO_VEC0_AND_SET_RETURN): New.
+	(WMEMSET_SYMBOL): Likewise.
+	* sysdeps/x86_64/multiarch/memset-avx512-unaligned-erms.S
+	(VDUP_TO_VEC0_AND_SET_RETURN): Renamed to ...
+	(MEMSET_VDUP_TO_VEC0_AND_SET_RETURN): This.
+	(WMEMSET_VDUP_TO_VEC0_AND_SET_RETURN): New.
+	(WMEMSET_SYMBOL): Likewise.
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S: Updated.
+	(WMEMSET_CHK_SYMBOL): New.
+	(WMEMSET_CHK_SYMBOL (__wmemset_chk, unaligned)): Likewise.
+	(WMEMSET_SYMBOL (__wmemset, unaligned)): Likewise.
+	* sysdeps/x86_64/multiarch/memset.S (WMEMSET_SYMBOL): New.
+	(libc_hidden_builtin_def): Also define __GI_wmemset and
+	__GI___wmemset.
+	(weak_alias): New.
+	* sysdeps/x86_64/multiarch/wmemset.c: New file.
+	* sysdeps/x86_64/multiarch/wmemset.h: Likewise.
+	* sysdeps/x86_64/multiarch/wmemset_chk-nonshared.S: Likewise.
+	* sysdeps/x86_64/multiarch/wmemset_chk.c: Likewise.
+	* sysdeps/x86_64/wmemset.c: Likewise.
+	* sysdeps/x86_64/wmemset_chk.c: Likewise.
+
 2017-06-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 

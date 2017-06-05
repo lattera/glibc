@@ -4,13 +4,19 @@
 # define VMOVU		vmovdqu
 # define VMOVA		vmovdqa
 
-# define VDUP_TO_VEC0_AND_SET_RETURN(d, r) \
+# define MEMSET_VDUP_TO_VEC0_AND_SET_RETURN(d, r) \
   vmovd d, %xmm0; \
   movq r, %rax; \
   vpbroadcastb %xmm0, %ymm0
 
+# define WMEMSET_VDUP_TO_VEC0_AND_SET_RETURN(d, r) \
+  vmovd d, %xmm0; \
+  movq r, %rax; \
+  vpbroadcastd %xmm0, %ymm0
+
 # define SECTION(p)		p##.avx
 # define MEMSET_SYMBOL(p,s)	p##_avx2_##s
+# define WMEMSET_SYMBOL(p,s)	p##_avx2_##s
 
 # include "memset-vec-unaligned-erms.S"
 #endif
