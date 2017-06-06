@@ -1,5 +1,12 @@
 2017-06-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/nptl/pthread_spin_init.c: Delete File.
+	* sysdeps/s390/nptl/pthread_spin_lock.c: Likewise.
+	* sysdeps/s390/nptl/pthread_spin_trylock.c: Likewise.
+	* sysdeps/s390/nptl/pthread_spin_unlock.c: Likewise.
+
+2017-06-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* NEWS: Mention new spinlock implementation.
 	* include/atomic.h:
 	(__atomic_val_bysize): Cast type to omit volatile qualifier.
