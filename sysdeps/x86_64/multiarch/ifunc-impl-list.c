@@ -296,6 +296,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __wcscpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, wcscpy, 1, __wcscpy_sse2))
 
+  /* Support sysdeps/x86_64/multiarch/wcsnlen.c.  */
+  IFUNC_IMPL (i, name, wcsnlen,
+	      IFUNC_IMPL_ADD (array, i, wcsnlen,
+			      HAS_CPU_FEATURE (SSE4_1),
+			      __wcsnlen_sse4_1)
+	      IFUNC_IMPL_ADD (array, i, wcsnlen, 1, __wcsnlen_sse2))
+
   /* Support sysdeps/x86_64/multiarch/wmemcmp.S.  */
   IFUNC_IMPL (i, name, wmemcmp,
 	      IFUNC_IMPL_ADD (array, i, wmemcmp,

@@ -33,7 +33,8 @@ endif
 ifeq ($(subdir),wcsmbs)
 sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c \
 		   wmemcmp-avx2-movbe \
-		   wcscpy-ssse3 wcscpy-c
+		   wcscpy-ssse3 wcscpy-c \
+		   wcsnlen-sse4_1 wcsnlen-c
 endif
 
 ifeq ($(subdir),debug)

@@ -1,3 +1,16 @@
+2017-06-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	wcsnlen-sse4_1 and wcsnlen-c.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Test __wcsnlen_sse4_1 and
+	__wcsnlen_sse2.
+	* sysdeps/x86_64/multiarch/ifunc-sse4_1.h: New file.
+	* sysdeps/x86_64/multiarch/wcsnlen-c.c: Likewise.
+	* sysdeps/x86_64/multiarch/wcsnlen-sse4_1.S: Likewise.
+	* sysdeps/x86_64/multiarch/wcsnlen.c: Likewise.
+	* sysdeps/x86_64/wcsnlen.S: Removed.
+
 2017-06-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/nptl/pthread_spin_init.c: Delete File.
