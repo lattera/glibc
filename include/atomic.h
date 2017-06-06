@@ -54,7 +54,7 @@
    and following args.  */
 #define __atomic_val_bysize(pre, post, mem, ...)			      \
   ({									      \
-    __typeof (*mem) __atg1_result;					      \
+    __typeof ((__typeof (*(mem))) *(mem)) __atg1_result;		      \
     if (sizeof (*mem) == 1)						      \
       __atg1_result = pre##_8_##post (mem, __VA_ARGS__);		      \
     else if (sizeof (*mem) == 2)					      \
@@ -162,9 +162,9 @@
 /* Store NEWVALUE in *MEM and return the old value.  */
 #ifndef atomic_exchange_acq
 # define atomic_exchange_acq(mem, newvalue) \
-  ({ __typeof (*(mem)) __atg5_oldval;					      \
+  ({ __typeof ((__typeof (*(mem))) *(mem)) __atg5_oldval;		      \
      __typeof (mem) __atg5_memp = (mem);				      \
-     __typeof (*(mem)) __atg5_value = (newvalue);			      \
+     __typeof ((__typeof (*(mem))) *(mem)) __atg5_value = (newvalue);	      \
 									      \
      do									      \
        __atg5_oldval = *__atg5_memp;					      \
@@ -668,7 +668,7 @@ void __atomic_link_error (void);
 
 # ifndef atomic_load_relaxed
 #  define atomic_load_relaxed(mem) \
-   ({ __typeof (*(mem)) __atg100_val;					      \
+   ({ __typeof ((__typeof (*(mem))) *(mem)) __atg100_val;		      \
    __asm ("" : "=r" (__atg100_val) : "0" (*(mem)));			      \
    __atg100_val; })
 # endif
@@ -816,6 +816,14 @@ void __atomic_link_error (void);
    in the body of a spin loop to potentially improve its efficiency.  */
 #ifndef atomic_spin_nop
 # define atomic_spin_nop() do { /* nothing */ } while (0)
+#endif
+
+/* ATOMIC_EXCHANGE_USES_CAS is non-zero if atomic_exchange operations
+   are implemented based on a CAS loop; otherwise, this is zero and we assume
+   that the atomic_exchange operations could provide better performance
+   than a CAS loop.  */
+#ifndef ATOMIC_EXCHANGE_USES_CAS
+# error ATOMIC_EXCHANGE_USES_CAS has to be defined.
 #endif
 
 #endif	/* atomic.h */

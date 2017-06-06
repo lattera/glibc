@@ -22,6 +22,7 @@
 int
 pthread_spin_init (pthread_spinlock_t *lock, int pshared)
 {
-  *lock = 0;
+  /* Relaxed MO is fine because this is an initializing store.  */
+  atomic_store_relaxed (lock, 0);
   return 0;
 }

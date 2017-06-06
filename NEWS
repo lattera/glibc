@@ -80,6 +80,17 @@ Version 2.26
 * The stack_t type no longer has the name struct sigaltstack.  This changes
   the C++ name mangling for interfaces involving this type.
 
+* The synchronization that pthread_spin_unlock performs has been changed
+  to now be equivalent to a C11 atomic store with release memory order to
+  the spin lock's memory location.  This ensures correct synchronization
+  for the spin lock's operations and critical sections protected by a spin
+  lock.  Previously, several (but not all) architectures used stronger
+  synchronization (e.g., containing what is often called a full barrier).
+  This change can improve performance, but may affect odd fringe uses of
+  spin locks that depend on the previous behavior (e.g., using spin locks
+  as atomic variables to try to implement Dekker's mutual exclusion
+  algorithm).
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,

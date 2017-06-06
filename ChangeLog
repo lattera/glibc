@@ -1,3 +1,49 @@
+2017-06-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* NEWS: Mention new spinlock implementation.
+	* include/atomic.h:
+	(__atomic_val_bysize): Cast type to omit volatile qualifier.
+	(atomic_exchange_acq): Likewise.
+	(atomic_load_relaxed): Likewise.
+	(ATOMIC_EXCHANGE_USES_CAS): Check definition.
+	* nptl/pthread_spin_init.c (pthread_spin_init):
+	Use atomic_store_relaxed.
+	* nptl/pthread_spin_lock.c (pthread_spin_lock):
+	Use C11-like atomic macros.
+	* nptl/pthread_spin_trylock.c (pthread_spin_trylock):
+	Likewise.
+	* nptl/pthread_spin_unlock.c (pthread_spin_unlock):
+	Use atomic_store_release.
+	* sysdeps/aarch64/nptl/pthread_spin_lock.c: Delete File.
+	* sysdeps/arm/nptl/pthread_spin_lock.c: Likewise.
+	* sysdeps/hppa/nptl/pthread_spin_lock.c: Likewise.
+	* sysdeps/m68k/nptl/pthread_spin_lock.c: Likewise.
+	* sysdeps/microblaze/nptl/pthread_spin_lock.c: Likewise.
+	* sysdeps/mips/nptl/pthread_spin_lock.c: Likewise.
+	* sysdeps/nios2/nptl/pthread_spin_lock.c: Likewise.
+	* sysdeps/aarch64/atomic-machine.h (ATOMIC_EXCHANGE_USES_CAS): Define.
+	* sysdeps/alpha/atomic-machine.h: Likewise.
+	* sysdeps/arm/atomic-machine.h: Likewise.
+	* sysdeps/i386/atomic-machine.h: Likewise.
+	* sysdeps/ia64/atomic-machine.h: Likewise.
+	* sysdeps/m68k/coldfire/atomic-machine.h: Likewise.
+	* sysdeps/m68k/m680x0/m68020/atomic-machine.h: Likewise.
+	* sysdeps/microblaze/atomic-machine.h: Likewise.
+	* sysdeps/mips/atomic-machine.h: Likewise.
+	* sysdeps/powerpc/powerpc32/atomic-machine.h: Likewise.
+	* sysdeps/powerpc/powerpc64/atomic-machine.h: Likewise.
+	* sysdeps/s390/atomic-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/atomic-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/atomic-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/atomic-machine.h: Likewise.
+	* sysdeps/tile/tilegx/atomic-machine.h: Likewise.
+	* sysdeps/tile/tilepro/atomic-machine.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/atomic-machine.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/atomic-machine.h: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/atomic-machine.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/atomic-machine.h: Likewise.
+	* sysdeps/x86_64/atomic-machine.h: Likewise.
+
 2017-06-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cacheinfo.c (intel_check_word): Accept cpu_features

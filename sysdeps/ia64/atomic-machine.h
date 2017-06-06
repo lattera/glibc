@@ -46,6 +46,9 @@ typedef uintmax_t uatomic_max_t;
 #define __HAVE_64B_ATOMICS 1
 #define USE_ATOMIC_COMPILER_BUILTINS 0
 
+/* XXX Is this actually correct?  */
+#define ATOMIC_EXCHANGE_USES_CAS 0
+
 
 #define __arch_compare_and_exchange_bool_8_acq(mem, newval, oldval) \
   (abort (), 0)

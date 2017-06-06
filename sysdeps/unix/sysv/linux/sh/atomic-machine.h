@@ -47,6 +47,9 @@ typedef uintmax_t uatomic_max_t;
 #define __HAVE_64B_ATOMICS 0
 #define USE_ATOMIC_COMPILER_BUILTINS 0
 
+/* XXX Is this actually correct?  */
+#define ATOMIC_EXCHANGE_USES_CAS 1
+
 /* SH kernel has implemented a gUSA ("g" User Space Atomicity) support
    for the user space atomicity. The atomicity macros use this scheme.
 

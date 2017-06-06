@@ -39,6 +39,9 @@ typedef uintmax_t uatomic_max_t;
 #define __HAVE_64B_ATOMICS 0
 #define USE_ATOMIC_COMPILER_BUILTINS 0
 
+/* XXX Is this actually correct?  */
+#define ATOMIC_EXCHANGE_USES_CAS 1
+
 /* The only basic operation needed is compare and exchange.  */
 /* For ColdFire we'll have to trap into the kernel mode anyway,
    so trap from the library rather then from the kernel wrapper.  */

@@ -67,6 +67,8 @@ typedef uintmax_t uatomic_max_t;
 # define __HAVE_64B_ATOMICS 0
 #endif
 
+#define ATOMIC_EXCHANGE_USES_CAS 1
+
 /* Implement some of the non-C11 atomic macros from include/atomic.h
    with help of the C11 atomic builtins.  The other non-C11 atomic macros
    are using the macros defined here.  */

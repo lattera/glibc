@@ -23,6 +23,7 @@
 
 #define __HAVE_64B_ATOMICS 0
 #define USE_ATOMIC_COMPILER_BUILTINS 0
+#define ATOMIC_EXCHANGE_USES_CAS 0
 
 /* 32-bit integer compare-and-exchange. */
 static __inline __attribute__ ((always_inline))

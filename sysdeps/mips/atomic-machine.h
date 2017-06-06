@@ -92,7 +92,15 @@ typedef uintmax_t uatomic_max_t;
    have no assembly alternative available and want to avoid the __sync_*
    builtins if at all possible.  */
 
-#define USE_ATOMIC_COMPILER_BUILTINS 1
+# define USE_ATOMIC_COMPILER_BUILTINS 1
+
+/* MIPS is an LL/SC machine.  However, XLP has a direct atomic exchange
+   instruction which will be used by __atomic_exchange_n.  */
+# ifdef _MIPS_ARCH_XLP
+#  define ATOMIC_EXCHANGE_USES_CAS 0
+# else
+#  define ATOMIC_EXCHANGE_USES_CAS 1
+# endif
 
 /* Compare and exchange.
    For all "bool" routines, we return FALSE if exchange succesful.  */
@@ -213,7 +221,8 @@ typedef uintmax_t uatomic_max_t;
 /* This implementation using inline assembly will be removed once glibc
    requires GCC 4.8 or later to build.  */
 
-#define USE_ATOMIC_COMPILER_BUILTINS 0
+# define USE_ATOMIC_COMPILER_BUILTINS 0
+# define ATOMIC_EXCHANGE_USES_CAS 1
 
 /* Compare and exchange.  For all of the "xxx" routines, we expect a
    "__prev" and a "__cmp" variable to be provided by the enclosing scope,
