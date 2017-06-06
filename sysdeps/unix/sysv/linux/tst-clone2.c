@@ -32,10 +32,7 @@
 
 #include <stackinfo.h>  /* For _STACK_GROWS_{UP,DOWN}.  */
 
-static int do_test (void);
-
-#define TEST_FUNCTION do_test ()
-#include <test-skeleton.c>
+#include <support/check.h>
 
 static int sig;
 static int pipefd[2];
@@ -145,3 +142,5 @@ do_test (void)
 
   return ret;
 }
+
+#include <support/test-driver.c>

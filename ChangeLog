@@ -1,3 +1,9 @@
+2017-06-07  Arjun Shankar  <arjun.is@lostca.se>
+
+	* sysdeps/unix/sysv/linux/tst-clone2.c: Do not
+	include test-skeleton.c.
+	Include support/check.h and support/test-driver.c.
+
 2017-06-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.c
