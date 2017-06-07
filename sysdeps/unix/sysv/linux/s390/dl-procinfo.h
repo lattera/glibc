@@ -17,6 +17,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _DL_S390_PROCINFO_H
+#define _DL_S390_PROCINFO_H	1
 #include <sysdeps/s390/dl-procinfo.h>
 #include <ldsodefs.h>
 
@@ -44,3 +46,4 @@ _dl_procinfo (unsigned int type, unsigned long int word)
 
   return 0;
 }
+#endif

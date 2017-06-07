@@ -1,5 +1,9 @@
 2017-06-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Add include
+	guard.
+	* sysdeps/unix/sysv/linux/s390/dl-procinfo.h: Likewise.
+
 	* elf/dl-tunables.list: Add glibc.tune.hwcap_mask.
 	* scripts/gen-tunables.awk: Include dl-procinfo.h.
 	* manual/tunables.texi: Document glibc.tune.hwcap_mask.

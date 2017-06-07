@@ -17,6 +17,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _DL_I386_PROCINFO_H
+#define _DL_I386_PROCINFO_H	1
 #include <sysdeps/x86/dl-procinfo.h>
 
 #undef _dl_procinfo
@@ -42,3 +44,4 @@ _dl_procinfo (unsigned int type, unsigned long int word)
 
   return 0;
 }
+#endif
