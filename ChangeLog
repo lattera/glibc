@@ -1,5 +1,18 @@
 2017-06-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* include/bits/types/clock_t.h: Use #include <path> instead of
+	#include "../../path".
+	* include/bits/types/clockid_t.h: Likewise.
+	* include/bits/types/struct_iovec.h: Likewise.
+	* include/bits/types/struct_itimerspec.h: Likewise.
+	* include/bits/types/struct_osockaddr.h: Likewise.
+	* include/bits/types/struct_sigstack.h: Likewise.
+	* include/bits/types/struct_timespec.h: Likewise.
+	* include/bits/types/struct_timeval.h: Likewise.
+	* include/bits/types/struct_tm.h: Likewise.
+	* include/bits/types/time_t.h: Likewise.
+	* include/bits/types/timer_t.h: Likewise.
+
 	[BZ #14096]
 	* timezone/Makefile ($(objpfx)tst-timezone.out): Depend on
 	America/New_York.

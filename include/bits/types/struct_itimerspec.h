@@ -1,1 +1,1 @@
-#include "../../time/bits/types/struct_itimerspec.h"
+#include <time/bits/types/struct_itimerspec.h>

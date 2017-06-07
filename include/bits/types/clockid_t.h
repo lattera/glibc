@@ -1,1 +1,1 @@
-#include "../../time/bits/types/clockid_t.h"
+#include <time/bits/types/clockid_t.h>

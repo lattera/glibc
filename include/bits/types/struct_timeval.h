@@ -1,1 +1,1 @@
-#include "../../time/bits/types/struct_timeval.h"
+#include <time/bits/types/struct_timeval.h>
