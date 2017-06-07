@@ -79,6 +79,7 @@ $(objpfx)test-tz.out: $(addprefix $(testdata)/, America/New_York Etc/UTC UTC)
 $(objpfx)tst-timezone.out: $(addprefix $(testdata)/, \
 				       Europe/Berlin Universal \
 				       Australia/Melbourne \
+				       America/New_York \
 				       America/Sao_Paulo Asia/Tokyo \
 				       Europe/London)
 $(objpfx)tst-tzset.out: $(addprefix $(testdata)/XT, 1 2 3 4)
