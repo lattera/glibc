@@ -1,3 +1,13 @@
+2017-06-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Update
+	comments.
+	* sysdeps/x86_64/multiarch/wmemset.c: Include ifunc-wmemset.h
+	instead of wmemset.h.
+	* sysdeps/x86_64/multiarch/wmemset_chk.c: Likewise.
+	* sysdeps/x86_64/multiarch/wmemset.h: Renamed to ...
+	* sysdeps/x86_64/multiarch/ifunc-wmemset.h: This.
+
 2017-06-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* stdio-common/printf-parsemb.c (__parse_one_specmb): Initialize

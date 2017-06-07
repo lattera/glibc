@@ -26,7 +26,7 @@
 # undef __wmemset
 
 # define SYMBOL_NAME wmemset
-# include "wmemset.h"
+# include "ifunc-wmemset.h"
 
 libc_ifunc_redirected (__redirect_wmemset, __wmemset, IFUNC_SELECTOR ());
 weak_alias (__wmemset, wmemset)

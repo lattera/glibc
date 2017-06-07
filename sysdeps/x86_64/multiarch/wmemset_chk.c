@@ -24,7 +24,7 @@
 # undef __wmemset_chk
 
 # define SYMBOL_NAME wmemset_chk
-# include "wmemset.h"
+# include "ifunc-wmemset.h"
 
 libc_ifunc_redirected (__redirect_wmemset_chk, __wmemset_chk,
 		       IFUNC_SELECTOR ());

@@ -315,7 +315,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __wmemcmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, wmemcmp, 1, __wmemcmp_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/wmemset.S.  */
+  /* Support sysdeps/x86_64/multiarch/wmemset.c.  */
   IFUNC_IMPL (i, name, wmemset,
 	      IFUNC_IMPL_ADD (array, i, wmemset, 1,
 			      __wmemset_sse2_unaligned)
@@ -444,7 +444,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strncmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strncmp, 1, __strncmp_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/wmemset_chk.S.  */
+  /* Support sysdeps/x86_64/multiarch/wmemset_chk.c.  */
   IFUNC_IMPL (i, name, __wmemset_chk,
 	      IFUNC_IMPL_ADD (array, i, __wmemset_chk, 1,
 			      __wmemset_chk_sse2_unaligned)
