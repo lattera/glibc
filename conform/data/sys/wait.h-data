@@ -7,7 +7,7 @@ constant WNOHANG
 constant WUNTRACED
 
 macro WEXITSTATUS
-# if !defined POSIX && !defined POSIX2008
+# if !defined XPG4 && !defined POSIX && !defined POSIX2008
 macro WIFCONTINUED
 # endif
 macro WIFEXITED
@@ -16,7 +16,7 @@ macro WIFSTOPPED
 macro WSTOPSIG
 macro WTERMSIG
 
-# ifndef POSIX
+# if !defined XPG4 && !defined POSIX
 constant WEXITED
 constant WSTOPPED
 #  ifndef POSIX2008
@@ -26,7 +26,7 @@ constant WNOHANG
 constant WNOWAIT
 # endif
 
-#if !defined POSIX
+#if !defined XPG4 && !defined POSIX
 type idtype_t
 
 constant P_ALL
@@ -60,15 +60,15 @@ type pid_t
 #endif
 
 function pid_t wait (int*)
-#if !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
+#if !defined XPG4 && !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 function pid_t wait3 (int*, int, struct rusage*)
 #endif
-#if !defined POSIX
+#if !defined XPG4 && !defined POSIX
 function int waitid (idtype_t, id_t, siginfo_t*, int)
 #endif
 function pid_t waitpid (pid_t, int*, int)
 
-#if !defined POSIX
+#if !defined XPG4 && !defined POSIX
 allow-header signal.h
 allow-header sys/resource.h
 

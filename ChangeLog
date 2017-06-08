@@ -1,3 +1,36 @@
+2017-06-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/sys/wait.h-data (WIFCONTINUED): Do not expect for
+	[XPG4].
+	(WEXITED): Likewise.
+	(WSTOPPED): Likewise.
+	(WCONTINUED): Likewise.
+	(WNOHANG): Likewise.
+	(WNOWAIT): Likewise.
+	(idtype_t): Likewise.
+	(P_ALL): Likewise.
+	(P_PID): Likewise.
+	(P_PGID): Likewise.
+	(id_t): Likewise.
+	(siginfo_t): Likewise.
+	(wait3): Likewise.
+	(waitid): Likewise.
+	(signal.h): Do not allow header for [XPG4].
+	(sys/resource.h): Likewise.
+	(si_*): Do not allow for [XPG4].
+	(W*): Likewise.
+	(P_*): Likewise.
+	(BUS_): Likewise.
+	(CLD_): Likewise.
+	(FPE_): Likewise.
+	(ILL_): Likewise.
+	(POLL_): Likewise.
+	(SEGV_): Likewise.
+	(SI_): Likewise.
+	(TRAP_): Likewise.
+	* conform/Makefile (test-xfail-XPG4/stdlib.h/conform): New
+	variable.
+
 2017-06-08  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21528]
