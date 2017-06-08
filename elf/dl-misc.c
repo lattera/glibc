@@ -360,3 +360,87 @@ _dl_higher_prime_number (unsigned long int n)
 
   return *low;
 }
+
+/* A stripped down strtoul-like implementation for very early use.  It
+   does not set errno if the result is outside bounds because it may get
+   called before errno may have been set up.  */
+
+uint64_t
+internal_function
+_dl_strtoul (const char *nptr, char **endptr)
+{
+  uint64_t result = 0;
+  bool positive = true;
+  unsigned max_digit;
+
+  while (*nptr == ' ' || *nptr == '\t')
+    ++nptr;
+
+  if (*nptr == '-')
+    {
+      positive = false;
+      ++nptr;
+    }
+  else if (*nptr == '+')
+    ++nptr;
+
+  if (*nptr < '0' || *nptr > '9')
+    {
+      if (endptr != NULL)
+	*endptr = (char *) nptr;
+      return 0UL;
+    }
+
+  int base = 10;
+  max_digit = 9;
+  if (*nptr == '0')
+    {
+      if (nptr[1] == 'x' || nptr[1] == 'X')
+	{
+	  base = 16;
+	  nptr += 2;
+	}
+      else
+	{
+	  base = 8;
+	  max_digit = 7;
+	}
+    }
+
+  while (1)
+    {
+      int digval;
+      if (*nptr >= '0' && *nptr <= '0' + max_digit)
+        digval = *nptr - '0';
+      else if (base == 16)
+        {
+	  if (*nptr >= 'a' && *nptr <= 'f')
+	    digval = *nptr - 'a' + 10;
+	  else if (*nptr >= 'A' && *nptr <= 'F')
+	    digval = *nptr - 'A' + 10;
+	  else
+	    break;
+	}
+      else
+        break;
+
+      if (result >= (UINT64_MAX - digval) / base)
+	{
+	  if (endptr != NULL)
+	    *endptr = (char *) nptr;
+	  return UINT64_MAX;
+	}
+      result *= base;
+      result += digval;
+      ++nptr;
+    }
+
+  if (endptr != NULL)
+    *endptr = (char *) nptr;
+
+  /* Avoid 64-bit multiplication.  */
+  if (!positive)
+    result = -result;
+
+  return result;
+}

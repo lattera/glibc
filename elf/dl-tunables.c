@@ -102,73 +102,6 @@ get_next_env (char **envp, char **name, size_t *namelen, char **val,
   return NULL;
 }
 
-/* A stripped down strtoul-like implementation for very early use.  It does not
-   set errno if the result is outside bounds because it gets called before
-   errno may have been set up.  */
-static uint64_t
-tunables_strtoul (const char *nptr)
-{
-  uint64_t result = 0;
-  long int sign = 1;
-  unsigned max_digit;
-
-  while (*nptr == ' ' || *nptr == '\t')
-    ++nptr;
-
-  if (*nptr == '-')
-    {
-      sign = -1;
-      ++nptr;
-    }
-  else if (*nptr == '+')
-    ++nptr;
-
-  if (*nptr < '0' || *nptr > '9')
-    return 0UL;
-
-  int base = 10;
-  max_digit = 9;
-  if (*nptr == '0')
-    {
-      if (nptr[1] == 'x' || nptr[1] == 'X')
-	{
-	  base = 16;
-	  nptr += 2;
-	}
-      else
-	{
-	  base = 8;
-	  max_digit = 7;
-	}
-    }
-
-  while (1)
-    {
-      int digval;
-      if (*nptr >= '0' && *nptr <= '0' + max_digit)
-        digval = *nptr - '0';
-      else if (base == 16)
-        {
-	  if (*nptr >= 'a' && *nptr <= 'f')
-	    digval = *nptr - 'a' + 10;
-	  else if (*nptr >= 'A' && *nptr <= 'F')
-	    digval = *nptr - 'A' + 10;
-	  else
-	    break;
-	}
-      else
-        break;
-
-      if (result >= (UINT64_MAX - digval) / base)
-	return UINT64_MAX;
-      result *= base;
-      result += digval;
-      ++nptr;
-    }
-
-  return result * sign;
-}
-
 #define TUNABLE_SET_VAL_IF_VALID_RANGE(__cur, __val, __type, __default_min, \
 				       __default_max)			      \
 ({									      \
@@ -233,7 +166,7 @@ tunable_initialize (tunable_t *cur, const char *strval)
 
   if (cur->type.type_code != TUNABLE_TYPE_STRING)
     {
-      val = tunables_strtoul (strval);
+      val = _dl_strtoul (strval, NULL);
       valp = &val;
     }
   else

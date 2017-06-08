@@ -1,3 +1,16 @@
+2017-06-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21528]
+	* elf/dl-minimal.c (__strtoul_internal): Removed.
+	(strtoul): Likewise.
+	* elf/dl-misc.c (_dl_strtoul): New function.
+	* elf/dl-tunables.c (tunables_strtoul): Removed.
+	(tunable_initialize): Replace tunables_strtoul with _dl_strtoul.
+	* elf/rtld.c (process_envvars): Likewise.
+	* sysdeps/unix/sysv/linux/dl-librecon.h (_dl_osversion_init):
+	Likewise.
+	* sysdeps/generic/ldsodefs.h (_dl_strtoul): New prototype.
+
 2017-06-08  Zack Weinberg  <zackw@panix.com>
 
 	* libio/bits/types/FILE.h, libio/bits/types/__FILE.h

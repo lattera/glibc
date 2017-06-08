@@ -28,7 +28,7 @@ _dl_osversion_init (char *assume_kernel)
 
   for (i = 0; i < 3; i++, p = q + 1)
     {
-      j = __strtoul_internal (p, &q, 0, 0);
+      j = _dl_strtoul (p, &q);
       if (j >= 255 || p == q || (i < 2 && *q && *q != '.'))
 	{
 	  osversion = 0;

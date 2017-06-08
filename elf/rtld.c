@@ -2409,8 +2409,7 @@ process_envvars (enum mode *modep)
 	  /* Mask for the important hardware capabilities.  */
 	  if (!__libc_enable_secure
 	      && memcmp (envline, "HWCAP_MASK", 10) == 0)
-	    GLRO(dl_hwcap_mask) = __strtoul_internal (&envline[11], NULL,
-						      0, 0);
+	    GLRO(dl_hwcap_mask) = _dl_strtoul (&envline[11], NULL);
 	  break;
 #endif
 

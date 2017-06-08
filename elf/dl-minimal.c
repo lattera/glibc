@@ -41,12 +41,6 @@ static void *alloc_ptr, *alloc_end, *alloc_last_block;
 /* Declarations of global functions.  */
 extern void weak_function free (void *ptr);
 extern void * weak_function realloc (void *ptr, size_t n);
-extern unsigned long int weak_function __strtoul_internal (const char *nptr,
-							   char **endptr,
-							   int base,
-							   int group);
-extern unsigned long int weak_function strtoul (const char *nptr,
-						char **endptr, int base);
 
 
 /* Allocate an aligned memory block.  */
@@ -236,84 +230,6 @@ Inconsistency detected by ld.so: %s: %u: %s%sUnexpected error: %s.\n",
 rtld_hidden_weak (__assert_perror_fail)
 #endif
 
-unsigned long int weak_function
-__strtoul_internal (const char *nptr, char **endptr, int base, int group)
-{
-  unsigned long int result = 0;
-  long int sign = 1;
-  unsigned max_digit;
-
-  while (*nptr == ' ' || *nptr == '\t')
-    ++nptr;
-
-  if (*nptr == '-')
-    {
-      sign = -1;
-      ++nptr;
-    }
-  else if (*nptr == '+')
-    ++nptr;
-
-  if (*nptr < '0' || *nptr > '9')
-    {
-      if (endptr != NULL)
-	*endptr = (char *) nptr;
-      return 0UL;
-    }
-
-  assert (base == 0);
-  base = 10;
-  max_digit = 9;
-  if (*nptr == '0')
-    {
-      if (nptr[1] == 'x' || nptr[1] == 'X')
-	{
-	  base = 16;
-	  nptr += 2;
-	}
-      else
-	{
-	  base = 8;
-	  max_digit = 7;
-	}
-    }
-
-  while (1)
-    {
-      unsigned long int digval;
-      if (*nptr >= '0' && *nptr <= '0' + max_digit)
-        digval = *nptr - '0';
-      else if (base == 16)
-        {
-	  if (*nptr >= 'a' && *nptr <= 'f')
-	    digval = *nptr - 'a' + 10;
-	  else if (*nptr >= 'A' && *nptr <= 'F')
-	    digval = *nptr - 'A' + 10;
-	  else
-	    break;
-	}
-      else
-        break;
-
-      if (result > ULONG_MAX / base
-	  || (result == ULONG_MAX / base && digval > ULONG_MAX % base))
-	{
-	  errno = ERANGE;
-	  if (endptr != NULL)
-	    *endptr = (char *) nptr;
-	  return ULONG_MAX;
-	}
-      result *= base;
-      result += digval;
-      ++nptr;
-    }
-
-  if (endptr != NULL)
-    *endptr = (char *) nptr;
-  return result * sign;
-}
-
-
 #undef _itoa
 /* We always use _itoa instead of _itoa_word in ld.so since the former
    also has to be present and it is never about speed when these
