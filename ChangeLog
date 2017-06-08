@@ -1,3 +1,9 @@
+2017-06-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* string/test-memrchr.c (test_main): Add tests for len == 0
+	and tests for positions close to the beginning, which are
+	equivalent to positions close to the end for memchr.
+
 2017-06-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Update

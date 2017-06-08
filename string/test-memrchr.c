@@ -151,15 +151,32 @@ test_main (void)
 
   for (i = 1; i < 8; ++i)
     {
+      /* Test len == 0.  */
+      do_test (i, i, 0, 0);
+      do_test (i, i, 0, 23);
+
       do_test (0, 16 << i, 2048, 23);
       do_test (i, 64, 256, 23);
       do_test (0, 16 << i, 2048, 0);
       do_test (i, 64, 256, 0);
+
+      do_test (0, i, 256, 23);
+      do_test (0, i, 256, 0);
+      do_test (i, i, 256, 23);
+      do_test (i, i, 256, 0);
+
     }
   for (i = 1; i < 32; ++i)
     {
       do_test (0, i, i + 1, 23);
       do_test (0, i, i + 1, 0);
+      do_test (i, i, i + 1, 23);
+      do_test (i, i, i + 1, 0);
+
+      do_test (0, 1, i + 1, 23);
+      do_test (0, 2, i + 1, 0);
+      do_test (i, 1, i + 1, 23);
+      do_test (i, 2, i + 1, 0);
     }
 
   do_random_tests ();
