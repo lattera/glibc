@@ -1,3 +1,14 @@
+2017-06-09  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/sysconf.c: New file.
+	Add powerpc-specific overrides for L1, L2, L3 CACHE_SIZEs,
+	CACHE_ASSOCs, and CACHE_LINESIZEs, retrieving from auxv.
+	* sysdeps/unix/sysv/linux/powerpc/test-powerpc-linux-sysconf.c:
+	New file.  Invoke newly supported sysconf values for powerpc,
+	and report results.  If none are supported, report so.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile (tests):  Add new test,
+	tst-sysconf.
+
 2017-06-09  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* include/sys/auxv.h (__getauxval): Add a prototype and its
