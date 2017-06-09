@@ -1,3 +1,11 @@
+2017-06-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21560]
+	* posix/sys/wait.h: Condition include of <signal.h> on
+	[__USE_XOPEN_EXTENDED || __USE_XOPEN2K8].  Include <bits/types.h>
+	unconditionally.
+	[!__pid_t_defined] (pid_t): Define typedef.
+
 2017-06-09  Zack Weinberg  <zackw@panix.com>
 
 	* include/errno.h (__errno_location): Use __attribute_const__
