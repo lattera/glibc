@@ -1,3 +1,9 @@
+2017-06-09  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* include/sys/auxv.h (__getauxval): Add a prototype and its
+	libc_hidden_proto.
+	* misc/getauxval.c (__getauxval): Use libc_hidden_def.
+
 2017-06-09  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21561]

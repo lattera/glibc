@@ -43,3 +43,4 @@ __getauxval (unsigned long int type)
 }
 
 weak_alias (__getauxval, getauxval)
+libc_hidden_def (__getauxval)
