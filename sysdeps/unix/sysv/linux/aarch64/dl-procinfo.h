@@ -40,7 +40,7 @@ _dl_procinfo (unsigned int type, unsigned long int word)
   _dl_printf ("AT_HWCAP:   ");
 
   for (i = 0; i < 32; ++i)
-    if (word & (1 << i))
+    if ((word >> i) & 1)
       _dl_printf (" %s", GLRO(dl_aarch64_cap_flags)[i]);
 
   _dl_printf ("\n");
@@ -56,10 +56,10 @@ _dl_hwcap_string (int idx)
 };
 
 
-/* 13 HWCAP bits set.  */
+/* Number of HWCAP bits set.  */
 #define _DL_HWCAP_COUNT 13
 
-/* Low 13 bits are allocated in HWCAP.  */
+/* Offset of the last bit allocated in HWCAP.  */
 #define _DL_HWCAP_LAST 12
 
 /* HWCAP_CPUID should be available by default to influence IFUNC as well as

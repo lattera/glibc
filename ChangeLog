@@ -1,3 +1,9 @@
+2017-06-09  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.h: Remove
+	mention of magic numbers in comments.
+	(_dl_procinfo): Fix undefined behavior
+
 2017-06-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/sys/wait.h-data (WIFCONTINUED): Do not expect for
