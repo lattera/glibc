@@ -1,5 +1,28 @@
 2017-06-09  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strlen-sse2, strnlen-sse2, strlen-avx2, strnlen-avx2,
+	wcslen-sse2, wcslen-avx2 and wcsnlen-avx2.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add tests for __strlen_avx2,
+	__strlen_sse2, __strnlen_avx2, __strnlen_sse2, __wcslen_avx2,
+	__wcslen_sse2 and __wcsnlen_avx2.
+	* sysdeps/x86_64/multiarch/strlen-avx2.S: New file.
+	* sysdeps/x86_64/multiarch/strlen-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strlen.c: Likewise.
+	* sysdeps/x86_64/multiarch/strnlen-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strnlen-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strnlen.c: Likewise.
+	* sysdeps/x86_64/multiarch/wcslen-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/wcslen-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/wcslen.c: Likewise.
+	* sysdeps/x86_64/multiarch/wcsnlen-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/wcsnlen.c (OPTIMIZE (avx2)): New.
+	(IFUNC_SELECTOR): Return OPTIMIZE (avx2) on AVX2 machines where
+	vzeroupper is preferred and AVX unaligned load is fast.
+
+2017-06-09  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/memchr.S (MEMCHR): New.  Depending on if
 	USE_AS_WMEMCHR is defined.
 	(PCMPEQ): Likewise.
