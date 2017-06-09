@@ -18,17 +18,31 @@
 
 #include <sysdep.h>
 
+#ifdef USE_AS_WMEMCHR
+# define MEMCHR		wmemchr
+# define PCMPEQ		pcmpeqd
+#else
+# define MEMCHR		memchr
+# define PCMPEQ		pcmpeqb
+#endif
+
 /* fast SSE2 version with using pmaxub and 64 byte loop */
 
 	.text
-ENTRY(memchr)
+ENTRY(MEMCHR)
 	movd	%esi, %xmm1
 	mov	%edi, %ecx
 
+#ifdef USE_AS_WMEMCHR
+	test	%rdx, %rdx
+	jz	L(return_null)
+	shl	$2, %rdx
+#else
 	punpcklbw %xmm1, %xmm1
 	test	%rdx, %rdx
 	jz	L(return_null)
 	punpcklbw %xmm1, %xmm1
+#endif
 
 	and	$63, %ecx
 	pshufd	$0, %xmm1, %xmm1
@@ -37,7 +51,7 @@ ENTRY(memchr)
 	ja	L(crosscache)
 
 	movdqu	(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
+	PCMPEQ	%xmm1, %xmm0
 	pmovmskb %xmm0, %eax
 	test	%eax, %eax
 
@@ -58,7 +72,7 @@ L(crosscache):
 	and	$-16, %rdi
 	movdqa	(%rdi), %xmm0
 
-	pcmpeqb	%xmm1, %xmm0
+	PCMPEQ	%xmm1, %xmm0
 /* Check if there is a match.  */
 	pmovmskb %xmm0, %eax
 /* Remove the leading bytes.  */
@@ -90,25 +104,25 @@ L(unaligned_no_match):
 	.p2align 4
 L(loop_prolog):
 	movdqa	(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
+	PCMPEQ	%xmm1, %xmm0
 	pmovmskb %xmm0, %eax
 	test	%eax, %eax
 	jnz	L(matches)
 
 	movdqa	16(%rdi), %xmm2
-	pcmpeqb	%xmm1, %xmm2
+	PCMPEQ	%xmm1, %xmm2
 	pmovmskb %xmm2, %eax
 	test	%eax, %eax
 	jnz	L(matches16)
 
 	movdqa	32(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
+	PCMPEQ	%xmm1, %xmm3
 	pmovmskb %xmm3, %eax
 	test	%eax, %eax
 	jnz	L(matches32)
 
 	movdqa	48(%rdi), %xmm4
-	pcmpeqb	%xmm1, %xmm4
+	PCMPEQ	%xmm1, %xmm4
 	add	$64, %rdi
 	pmovmskb %xmm4, %eax
 	test	%eax, %eax
@@ -121,25 +135,25 @@ L(loop_prolog):
 	jbe	L(exit_loop)
 
 	movdqa	(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
+	PCMPEQ	%xmm1, %xmm0
 	pmovmskb %xmm0, %eax
 	test	%eax, %eax
 	jnz	L(matches)
 
 	movdqa	16(%rdi), %xmm2
-	pcmpeqb	%xmm1, %xmm2
+	PCMPEQ	%xmm1, %xmm2
 	pmovmskb %xmm2, %eax
 	test	%eax, %eax
 	jnz	L(matches16)
 
 	movdqa	32(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
+	PCMPEQ	%xmm1, %xmm3
 	pmovmskb %xmm3, %eax
 	test	%eax, %eax
 	jnz	L(matches32)
 
 	movdqa	48(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
+	PCMPEQ	%xmm1, %xmm3
 	pmovmskb %xmm3, %eax
 
 	add	$64, %rdi
@@ -160,10 +174,10 @@ L(align64_loop):
 	movdqa	32(%rdi), %xmm3
 	movdqa	48(%rdi), %xmm4
 
-	pcmpeqb	%xmm1, %xmm0
-	pcmpeqb	%xmm1, %xmm2
-	pcmpeqb	%xmm1, %xmm3
-	pcmpeqb	%xmm1, %xmm4
+	PCMPEQ	%xmm1, %xmm0
+	PCMPEQ	%xmm1, %xmm2
+	PCMPEQ	%xmm1, %xmm3
+	PCMPEQ	%xmm1, %xmm4
 
 	pmaxub	%xmm0, %xmm3
 	pmaxub	%xmm2, %xmm4
@@ -186,9 +200,9 @@ L(align64_loop):
 	jnz	L(matches16)
 
 	movdqa	32(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
+	PCMPEQ	%xmm1, %xmm3
 
-	pcmpeqb	48(%rdi), %xmm1
+	PCMPEQ	48(%rdi), %xmm1
 	pmovmskb %xmm3, %eax
 	test	%eax, %eax
 	jnz	L(matches32)
@@ -204,26 +218,26 @@ L(exit_loop):
 	jle	L(exit_loop_32)
 
 	movdqa	(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
+	PCMPEQ	%xmm1, %xmm0
 	pmovmskb %xmm0, %eax
 	test	%eax, %eax
 	jnz	L(matches)
 
 	movdqa	16(%rdi), %xmm2
-	pcmpeqb	%xmm1, %xmm2
+	PCMPEQ	%xmm1, %xmm2
 	pmovmskb %xmm2, %eax
 	test	%eax, %eax
 	jnz	L(matches16)
 
 	movdqa	32(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
+	PCMPEQ	%xmm1, %xmm3
 	pmovmskb %xmm3, %eax
 	test	%eax, %eax
 	jnz	L(matches32_1)
 	sub	$16, %edx
 	jle	L(return_null)
 
-	pcmpeqb	48(%rdi), %xmm1
+	PCMPEQ	48(%rdi), %xmm1
 	pmovmskb %xmm1, %eax
 	test	%eax, %eax
 	jnz	L(matches48_1)
@@ -234,14 +248,14 @@ L(exit_loop):
 L(exit_loop_32):
 	add	$32, %edx
 	movdqa	(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
+	PCMPEQ	%xmm1, %xmm0
 	pmovmskb %xmm0, %eax
 	test	%eax, %eax
 	jnz	L(matches_1)
 	sub	$16, %edx
 	jbe	L(return_null)
 
-	pcmpeqb	16(%rdi), %xmm1
+	PCMPEQ	16(%rdi), %xmm1
 	pmovmskb %xmm1, %eax
 	test	%eax, %eax
 	jnz	L(matches16_1)
@@ -308,8 +322,9 @@ L(matches48_1):
 L(return_null):
 	xor	%eax, %eax
 	ret
-END(memchr)
+END(MEMCHR)
 
+#ifndef USE_AS_WMEMCHR
 strong_alias (memchr, __memchr)
-
 libc_hidden_builtin_def(memchr)
+#endif

@@ -1,3 +1,29 @@
+2017-06-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/memchr.S (MEMCHR): New.  Depending on if
+	USE_AS_WMEMCHR is defined.
+	(PCMPEQ): Likewise.
+	(memchr): Renamed to ...
+	(MEMCHR): This.  Support wmemchr if USE_AS_WMEMCHR is defined.
+	Replace pcmpeqb with PCMPEQ.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memchr-sse2, rawmemchr-sse2, memchr-avx2, rawmemchr-avx2,
+	wmemchr-sse4_1, wmemchr-avx2 and wmemchr-c.
+	* sysdeps/x86_64/multiarch/ifunc-avx2.h: New file.
+	* sysdeps/x86_64/multiarch/memchr-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/memchr-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/memchr.c: Likewise.
+	* sysdeps/x86_64/multiarch/rawmemchr-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/rawmemchr-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/rawmemchr.c: Likewise.
+	* sysdeps/x86_64/multiarch/wmemchr-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/wmemchr-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/wmemchr.c: Likewise.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Test __memchr_avx2, __memchr_sse2,
+	__rawmemchr_avx2, __rawmemchr_sse2, __wmemchr_avx2 and
+	__wmemchr_sse2.
+
 2017-06-09  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/Makefile (test-srcs): Remove tst-dynarray,
