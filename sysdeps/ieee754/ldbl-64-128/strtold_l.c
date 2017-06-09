@@ -18,7 +18,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <wchar.h>
-#include <xlocale.h>
 
 /* The actual implementation for all floating point sizes is in strtod.c.
    These macros tell it to produce the `long double' version, `strtold'.  */

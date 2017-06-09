@@ -22,7 +22,8 @@ subdir	:= locale
 
 include ../Makeconfig
 
-headers		= locale.h bits/locale.h langinfo.h xlocale.h
+headers		= langinfo.h locale.h bits/locale.h \
+		  bits/types/locale_t.h bits/types/__locale_t.h
 routines	= setlocale findlocale loadlocale loadarchive \
 		  localeconv nl_langinfo nl_langinfo_l mb_cur_max \
 		  newlocale duplocale freelocale uselocale

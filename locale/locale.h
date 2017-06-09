@@ -126,19 +126,13 @@ extern struct lconv *localeconv (void) __THROW;
 
 
 #ifdef	__USE_XOPEN2K8
-/* The concept of one static locale per category is not very well
-   thought out.  Many applications will need to process its data using
-   information from several different locales.  Another application is
-   the implementation of the internationalization handling in the
-   upcoming ISO C++ standard library.  To support this another set of
-   the functions using locale data exist which have an additional
-   argument.
-
-   Attention: all these functions are *not* standardized in any form.
-   This is a proof-of-concept implementation.  */
-
-/* Get locale datatype definition.  */
-# include <xlocale.h>
+/* POSIX.1-2008 extends the locale interface with functions for
+   explicit creation and manipulation of 'locale_t' objects
+   representing locale contexts, and a set of parallel
+   locale-sensitive text processing functions that take a locale_t
+   argument.  This enables applications to work with data from
+   multiple locales simultaneously and thread-safely.  */
+# include <bits/types/locale_t.h>
 
 /* Return a reference to a data structure representing a set of locale
    datasets.  Unlike for the CATEGORY parameter for `setlocale' the

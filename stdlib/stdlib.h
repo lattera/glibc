@@ -193,23 +193,11 @@ extern int strfromf128 (char *__dest, size_t __size, const char * __format,
 
 
 #ifdef __USE_GNU
-/* The concept of one static locale per category is not very well
-   thought out.  Many applications will need to process its data using
-   information from several different locales.  Another problem is
-   the implementation of the internationalization handling in the
-   ISO C++ standard library.  To support this another set of
-   the functions using locale data exist which take an additional
-   argument.
+/* Parallel versions of the functions above which take the locale to
+   use as an additional parameter.  These are GNU extensions inspired
+   by the POSIX.1-2008 extended locale API.  */
+# include <bits/types/locale_t.h>
 
-   Attention: even though several *_l interfaces are part of POSIX:2008,
-   these are not.  */
-
-/* Structure for reentrant locale using functions.  This is an
-   (almost) opaque type for the user level programs.  */
-# include <xlocale.h>
-
-/* Special versions of the functions above which take the locale to
-   use as an additional parameter.  */
 extern long int strtol_l (const char *__restrict __nptr,
 			  char **__restrict __endptr, int __base,
 			  __locale_t __loc) __THROW __nonnull ((1, 4));

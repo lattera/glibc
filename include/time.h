@@ -2,7 +2,7 @@
 #include <time/time.h>
 
 #ifndef _ISOMAC
-# include <xlocale.h>
+# include <bits/types/locale_t.h>
 
 extern __typeof (strftime_l) __strftime_l;
 libc_hidden_proto (__strftime_l)

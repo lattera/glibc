@@ -45,6 +45,9 @@
 #if defined __USE_UNIX98 || defined __USE_XOPEN2K
 # include <bits/types/FILE.h>
 #endif
+#ifdef __USE_XOPEN2K8
+# include <bits/types/locale_t.h>
+#endif
 
 /* Tell the caller that we provide correct C++ prototypes.  */
 #if defined __cplusplus && __GNUC_PREREQ (4, 4)
@@ -116,8 +119,6 @@ extern int wcsncasecmp (const wchar_t *__s1, const wchar_t *__s2,
 
 /* Similar to the two functions above but take the information from
    the provided locale and not the global locale.  */
-# include <xlocale.h>
-
 extern int wcscasecmp_l (const wchar_t *__s1, const wchar_t *__s2,
 			 __locale_t __loc) __THROW;
 
@@ -435,23 +436,9 @@ extern unsigned long long int wcstouq (const wchar_t *__restrict __nptr,
 #endif /* Use GNU.  */
 
 #ifdef __USE_GNU
-/* The concept of one static locale per category is not very well
-   thought out.  Many applications will need to process its data using
-   information from several different locales.  Another application is
-   the implementation of the internationalization handling in the
-   upcoming ISO C++ standard library.  To support this another set of
-   the functions using locale data exist which have an additional
-   argument.
-
-   Attention: all these functions are *not* standardized in any form.
-   This is a proof-of-concept implementation.  */
-
-/* Structure for reentrant locale using functions.  This is an
-   (almost) opaque type for the user level programs.  */
-# include <xlocale.h>
-
-/* Special versions of the functions above which take the locale to
-   use as an additional parameter.  */
+/* Parallel versions of the functions above which take the locale to
+   use as an additional parameter.  These are GNU extensions inspired
+   by the POSIX.1-2008 extended locale API.  */
 extern long int wcstol_l (const wchar_t *__restrict __nptr,
 			  wchar_t **__restrict __endptr, int __base,
 			  __locale_t __loc) __THROW;
@@ -783,8 +770,6 @@ extern size_t wcsftime (wchar_t *__restrict __s, size_t __maxsize,
 			const struct tm *__restrict __tp) __THROW;
 
 # ifdef __USE_GNU
-# include <xlocale.h>
-
 /* Similar to `wcsftime' but takes the information from
    the provided locale and not the global locale.  */
 extern size_t wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,

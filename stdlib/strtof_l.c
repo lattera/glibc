@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <xlocale.h>
+#include <locale.h>
 
 extern float ____strtof_l_internal (const char *, char **, int, __locale_t);
 

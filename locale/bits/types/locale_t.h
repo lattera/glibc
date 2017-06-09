@@ -1,7 +1,6 @@
-/* Convert string representing a number to integer value, using given locale.
-   Copyright (C) 1997-2017 Free Software Foundation, Inc.
+/* Definition of locale_t.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,11 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define QUAD	1
+#ifndef _BITS_TYPES_LOCALE_T_H
+#define _BITS_TYPES_LOCALE_T_H 1
 
-#include <locale.h>
+#include <bits/types/__locale_t.h>
 
-extern long long int ____strtoll_l_internal (const char *, char **, int, int,
-					     __locale_t);
+typedef __locale_t locale_t;
 
-#include <strtol_l.c>
+#endif /* bits/types/locale_t.h */

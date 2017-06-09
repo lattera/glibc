@@ -4,7 +4,7 @@
 
 # ifndef _ISOMAC
 
-#include <xlocale.h>
+#include <bits/types/locale_t.h>
 
 /* Now define the internal interfaces.  */
 extern int __printf_fphex (FILE *, const struct printf_info *,

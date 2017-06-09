@@ -148,7 +148,8 @@ extern size_t strxfrm (char *__restrict __dest,
      __THROW __nonnull ((2));
 
 #ifdef __USE_XOPEN2K8
-# include <xlocale.h>
+/* POSIX.1-2008 extended locale interface (see locale.h).  */
+# include <bits/types/locale_t.h>
 
 /* Compare the collated forms of S1 and S2, using sorting rules from L.  */
 extern int strcoll_l (const char *__s1, const char *__s2, __locale_t __l)

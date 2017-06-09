@@ -584,11 +584,8 @@ extern char *nl_langinfo (nl_item __item) __THROW;
 
 
 #ifdef __USE_XOPEN2K8
-/* This interface is for the extended locale model.  See <locale.h> for
-   more information.  */
-
-/* Get locale datatype definition.  */
-# include <xlocale.h>
+/* POSIX.1-2008 extended locale interface (see locale.h).  */
+# include <bits/types/locale_t.h>
 
 /* Just like nl_langinfo but get the information from the locale object L.  */
 extern char *nl_langinfo_l (nl_item __item, __locale_t __l);

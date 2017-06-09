@@ -55,8 +55,8 @@ extern wctrans_t wctrans (const char *__property) __THROW;
 extern wint_t towctrans (wint_t __wc, wctrans_t __desc) __THROW;
 
 # ifdef __USE_XOPEN2K8
-/* Declare the interface to extended locale model.  */
-#  include <xlocale.h>
+/* POSIX.1-2008 extended locale interface (see locale.h).  */
+#  include <bits/types/locale_t.h>
 
 /* Test for any wide character for which `iswalpha' or `iswdigit' is
    true.  */

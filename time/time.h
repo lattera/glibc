@@ -57,7 +57,7 @@ typedef __pid_t pid_t;
 #endif
 
 #ifdef __USE_XOPEN2K8
-# include <xlocale.h>
+# include <bits/types/locale_t.h>
 #endif
 
 #ifdef __USE_ISOC11

@@ -1,3 +1,32 @@
+2017-06-20  Zack Weinberg  <zackw@panix.com>
+
+        * locale/xlocale.h: Rename to...
+	* locale/bits/types/__locale_t.h: ...here.  Adjust commentary.
+	Only define struct __locale_struct and __locale_t, not locale_t.
+        * locale/bits/types/locale_t.h: New file; define locale_t here.
+        * locale/Makefile (headers): Update to match.
+
+        * include/xlocale.h: Delete wrapper.
+        * include/bits/types/__locale_t.h: New wrapper.
+        * include/bits/types/locale_t.h: New wrapper.
+
+        * ctype/ctype.h, include/printf.h, include/time.h
+        * locale/langinfo.h, locale/locale.h, stdlib/monetary.h
+        * stdlib/stdlib.h, string/string.h, string/strings.h, time/time.h
+        * wcsmbs/wchar.h, wctype/wctype.h: Use bits/types/locale_t.h.
+        Correct outdated comments regarding the standardization status of
+        the functions that take locale_t arguments.
+
+        * stdlib/strtod_l.c, stdlib/strtof_l.c, stdlib/strtol_l.c
+        * stdlib/strtold_l.c, stdlib/strtoul_l.c, stdlib/strtoull_l.c
+        * sysdeps/ieee754/ldbl-128ibm/strtold_l.c
+        * sysdeps/ieee754/ldbl-64-128/strtold_l.c
+        * wcsmbs/wcstod.c, wcsmbs/wcstod_l.c, wcsmbs/wcstof.c
+        * wcsmbs/wcstof_l.c, wcsmbs/wcstold.c, wcsmbs/wcstold_l.c:
+        Don't include xlocale.h. If necessary, include locale.h instead.
+
+        * stdlib/strtold_l.c: Unconditionally include wchar.h.
+
 2017-06-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/openat.c (__libc_openat): Build only

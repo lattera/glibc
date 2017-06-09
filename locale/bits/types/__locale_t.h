@@ -1,4 +1,4 @@
-/* Definition of locale datatype.
+/* Definition of struct __locale_struct and __locale_t.
    Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -17,14 +17,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _XLOCALE_H
-#define _XLOCALE_H	1
+#ifndef _BITS_TYPES___LOCALE_T_H
+#define _BITS_TYPES___LOCALE_T_H 1
 
-/* Structure for reentrant locale using functions.  This is an
-   (almost) opaque type for the user level programs.  The file and
-   this data structure is not standardized.  Don't rely on it.  It can
-   go away without warning.  */
-typedef struct __locale_struct
+/* POSIX.1-2008: the locale_t type, representing a locale context
+   (implementation-namespace version).  This type should be treated
+   as opaque by applications; some details are exposed for the sake of
+   efficiency in e.g. ctype functions.  */
+
+struct __locale_struct
 {
   /* Note: LC_ALL is not a valid index into this array.  */
   struct __locale_data *__locales[13]; /* 13 = __LC_LAST. */
@@ -36,9 +37,8 @@ typedef struct __locale_struct
 
   /* Note: LC_ALL is not a valid index into this array.  */
   const char *__names[13];
-} *__locale_t;
+};
 
-/* POSIX 2008 makes locale_t official.  */
-typedef __locale_t locale_t;
+typedef struct __locale_struct *__locale_t;
 
-#endif /* xlocale.h */
+#endif /* bits/types/__locale_t.h */

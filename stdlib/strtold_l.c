@@ -17,11 +17,7 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include <xlocale.h>
-
-#if defined _LIBC || defined HAVE_WCHAR_H
-# include <wchar.h>
-#endif
+#include <wchar.h>
 
 #ifdef USE_WIDE_CHAR
 # define STRING_TYPE	wchar_t

@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <xlocale.h>
+#include <locale.h>
 
 extern double ____strtod_l_internal (const char *, char **, int, __locale_t);
 
@@ -46,7 +46,6 @@ extern double ____strtod_l_internal (const char *, char **, int, __locale_t);
 #include <errno.h>
 #include <float.h>
 #include "../locale/localeinfo.h"
-#include <locale.h>
 #include <math.h>
 #include <math_private.h>
 #include <stdlib.h>
