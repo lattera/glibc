@@ -142,7 +142,7 @@ extern void psiginfo (const siginfo_t *__pinfo, const char *__s);
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 
-#ifdef __USE_XOPEN
+#ifdef __USE_XOPEN_EXTENDED
 # ifdef __GNUC__
 extern int sigpause (int __sig) __asm__ ("__xpg_sigpause");
 # else

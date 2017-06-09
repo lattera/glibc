@@ -1,5 +1,9 @@
 2017-06-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21554]
+	* signal/signal.h (sigpause):: Declare if [__USE_XOPEN_EXTENDED],
+	not [__USE_XOPEN].
+
 	[BZ #21560]
 	* posix/sys/wait.h: Condition include of <signal.h> on
 	[__USE_XOPEN_EXTENDED || __USE_XOPEN2K8].  Include <bits/types.h>
