@@ -3,6 +3,7 @@ libc.so: _Q_cmp ?
 libc.so: _Q_div ?
 libc.so: _Q_feq ?
 libc.so: _Q_fge ?
+libc.so: _Q_fgt ?
 libc.so: _Q_fle ?
 libc.so: _Q_flt ?
 libc.so: _Q_fne ?

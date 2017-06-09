@@ -1,5 +1,13 @@
 2017-06-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/nios2/localplt.data (__gtdf2): Mark
+	libc.so PLT entry optional.
+	(__gtsf2): Likewise.
+	(__unorddf2): Likewise.
+	(__unordsf2): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/localplt.data (_Q_fgt):
+	New optional libc.so PLT entry.
+
 	[BZ #21554]
 	* signal/signal.h (sigpause):: Declare if [__USE_XOPEN_EXTENDED],
 	not [__USE_XOPEN].
