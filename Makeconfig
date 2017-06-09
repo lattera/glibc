@@ -1107,6 +1107,7 @@ postclean-generated += soversions.mk soversions.i \
 		       shlib-versions.v shlib-versions.v.i
 
 before-compile += $(common-objpfx)libc-modules.h
+common-generated += libc-modules.h libc-modules.stmp
 ifeq ($(soversions.mk-done),t)
 # Generate a header with macro definitions for use with the IS_IN macro.
 # These are the possible values for the MODULE_NAME macro defined when building
@@ -1125,16 +1126,18 @@ endif
 # glibc.
 ifneq (no,$(have-tunables))
 before-compile += $(common-objpfx)dl-tunable-list.h
+common-generated += dl-tunable-list.h dl-tunable-list.stmp
 
-$(common-objpfx)dl-tunable-list.h: $(..)scripts/gen-tunables.awk \
-				   $(..)elf/dl-tunables.list \
-				   $(wildcard $(subdirs:%=$(..)%/dl-tunables.list)) \
-				   $(wildcard $(sysdirs:%=%/dl-tunables.list))
-	$(AWK) -f $^ > $@.tmp
-	mv $@.tmp $@
+$(common-objpfx)dl-tunable-list.h: $(common-objpfx)dl-tunable-list.stmp; @:
+$(common-objpfx)dl-tunable-list.stmp: \
+		$(..)scripts/gen-tunables.awk \
+		$(..)elf/dl-tunables.list \
+		$(wildcard $(subdirs:%=$(..)%/dl-tunables.list)) \
+		$(wildcard $(sysdirs:%=%/dl-tunables.list))
+	$(AWK) -f $^ > ${@:stmp=T}
+	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
+	touch $@
 endif
-
-common-generated += libc-modules.h libc-modules.stmp
 
 # The name under which the run-time dynamic linker is installed.
 # We are currently going for the convention that `/lib/ld.so.1'
