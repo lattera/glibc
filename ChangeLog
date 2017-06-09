@@ -1,3 +1,15 @@
+2017-06-09  Florian Weimer  <fweimer@redhat.com>
+
+	Expose TEST_VERIFY_EXIT process termination to GCC optimizers.
+	* support/support_test_verify_impl.c
+	(support_test_verify_exit_impl): Split from
+	support_test_verify_impl.
+	* support/check.h (TEST_VERIFY): Drop status argument from
+	support_test_verify_impl call.
+	(TEST_VERIFY_EXIT): Call support_test_verify_exit_impl.
+	(support_test_verify_impl): Remove status argument.
+	(support_test_verify_exit_impl): Declare.
+
 2017-06-09  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.h: Remove

@@ -51,7 +51,7 @@ __BEGIN_DECLS
     if (expr)                                                   \
       ;                                                         \
     else                                                        \
-      support_test_verify_impl (-1, __FILE__, __LINE__, #expr); \
+      support_test_verify_impl (__FILE__, __LINE__, #expr);     \
   })
 
 /* Record a test failure and exit if EXPR evaluates to false.  */
@@ -60,7 +60,8 @@ __BEGIN_DECLS
     if (expr)                                                   \
       ;                                                         \
     else                                                        \
-      support_test_verify_impl (1, __FILE__, __LINE__, #expr);  \
+      support_test_verify_exit_impl                             \
+        (1, __FILE__, __LINE__, #expr);                         \
   })
 
 int support_print_failure_impl (const char *file, int line,
@@ -70,8 +71,11 @@ void support_exit_failure_impl (int exit_status,
                                 const char *file, int line,
                                 const char *format, ...)
   __attribute__ ((noreturn, nonnull (2), format (printf, 4, 5)));
-void support_test_verify_impl (int status, const char *file, int line,
+void support_test_verify_impl (const char *file, int line,
                                const char *expr);
+void support_test_verify_exit_impl (int status, const char *file, int line,
+                                    const char *expr)
+  __attribute__ ((noreturn));
 
 /* Record a test failure.  This function returns and does not
    terminate the process.  The failure counter is stored in a shared

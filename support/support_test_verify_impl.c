@@ -22,12 +22,16 @@
 #include <stdlib.h>
 
 void
-support_test_verify_impl (int status, const char *file, int line,
-                          const char *expr)
+support_test_verify_impl (const char *file, int line, const char *expr)
 {
   support_record_failure ();
   printf ("error: %s:%d: not true: %s\n", file, line, expr);
-  if (status >= 0)
-    exit (status);
+}
 
+void
+support_test_verify_exit_impl (int status, const char *file, int line,
+                               const char *expr)
+{
+  support_test_verify_impl (file, line, expr);
+  exit (status);
 }
