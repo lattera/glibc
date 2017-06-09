@@ -1,6 +1,17 @@
 2017-06-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memrchr-sse2 and memrchr-avx2.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add tests for __memrchr_avx2 and
+	__memrchr_sse2.
+	* sysdeps/x86_64/multiarch/memrchr-avx2.S: New file.
+	* sysdeps/x86_64/multiarch/memrchr-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/memrchr.c: Likewise.
+
+2017-06-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
 	strchr-sse2, strchrnul-sse2, strchr-avx2, strchrnul-avx2,
 	wcschr-sse2 and wcschr-avx2.
 	* sysdeps/x86_64/multiarch/ifunc-impl-list.c

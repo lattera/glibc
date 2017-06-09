@@ -112,6 +112,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memmove, 1,
 			      __memmove_sse2_unaligned_erms))
 
+  /* Support sysdeps/x86_64/multiarch/memrchr.S.  */
+  IFUNC_IMPL (i, name, memrchr,
+	      IFUNC_IMPL_ADD (array, i, memrchr,
+			      HAS_ARCH_FEATURE (AVX2_Usable),
+			      __memrchr_avx2)
+	      IFUNC_IMPL_ADD (array, i, memrchr, 1, __memrchr_sse2))
+
   /* Support sysdeps/x86_64/multiarch/memset_chk.S.  */
   IFUNC_IMPL (i, name, __memset_chk,
 	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
