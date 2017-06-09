@@ -64,7 +64,7 @@ typedef __pid_t pid_t;
 #endif
 
 /* The following values are used by the `waitid' function.  */
-#if defined __USE_XOPEN || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 typedef enum
 {
   P_ALL,		/* Wait for any child.  */
@@ -104,7 +104,7 @@ extern __pid_t wait (int *__stat_loc);
    __THROW.  */
 extern __pid_t waitpid (__pid_t __pid, int *__stat_loc, int __options);
 
-#if defined __USE_XOPEN || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 # ifndef __id_t_defined
 typedef __id_t id_t;
 #  define __id_t_defined
