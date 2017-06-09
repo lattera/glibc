@@ -1,5 +1,10 @@
 2017-06-09  Zack Weinberg  <zackw@panix.com>
 
+	* include/errno.h (__errno_location): Use __attribute_const__
+	instead of bare __attribute__.
+
+2017-06-09  Zack Weinberg  <zackw@panix.com>
+
 	* Makeconfig (dl-tunable-list.h): Generate using a stamp file.
 	(common-generated): Add libc-modules.h and libc-modules.stmp in a
 	more appropriate location. Also add dl-tunable-list.h and

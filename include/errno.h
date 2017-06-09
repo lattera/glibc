@@ -39,7 +39,7 @@ extern __thread int errno attribute_tls_model_ie;
 # define __set_errno(val) (errno = (val))
 
 # ifndef __ASSEMBLER__
-extern int *__errno_location (void) __THROW __attribute__ ((__const__))
+extern int *__errno_location (void) __THROW __attribute_const__
 #  if RTLD_PRIVATE_ERRNO
      attribute_hidden
 #  endif
