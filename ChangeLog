@@ -1,5 +1,10 @@
 2017-06-09  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/Makefile (test-srcs): Remove tst-dynarray,
+	tst-dynarray-fail.
+
+2017-06-09  Florian Weimer  <fweimer@redhat.com>
+
 	Expose TEST_VERIFY_EXIT process termination to GCC optimizers.
 	* support/support_test_verify_impl.c
 	(support_test_verify_exit_impl): Split from

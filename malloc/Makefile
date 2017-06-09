@@ -53,7 +53,7 @@ tests-static += tst-malloc-usable-static-tunables
 endif
 
 tests += $(tests-static)
-test-srcs = tst-mtrace tst-dynarray tst-dynarray-fail
+test-srcs = tst-mtrace
 
 routines = malloc morecore mcheck mtrace obstack reallocarray \
   scratch_buffer_grow scratch_buffer_grow_preserve \
