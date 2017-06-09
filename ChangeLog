@@ -1,6 +1,26 @@
 2017-06-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strchr-sse2, strchrnul-sse2, strchr-avx2, strchrnul-avx2,
+	wcschr-sse2 and wcschr-avx2.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add tests for __strchr_avx2,
+	__strchrnul_avx2, __strchrnul_sse2, __wcschr_avx2 and
+	__wcschr_sse2.
+	* sysdeps/x86_64/multiarch/strchr-avx2.S: New file.
+	* sysdeps/x86_64/multiarch/strchr-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strchr.c: Likewise.
+	* sysdeps/x86_64/multiarch/strchrnul-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strchrnul-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strchrnul.c: Likewise.
+	* sysdeps/x86_64/multiarch/wcschr-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/wcschr-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/wcschr.c: Likewise.
+	* sysdeps/x86_64/multiarch/strchr.S: Removed.
+
+2017-06-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
 	strlen-sse2, strnlen-sse2, strlen-avx2, strnlen-avx2,
 	wcslen-sse2, wcslen-avx2 and wcsnlen-avx2.
 	* sysdeps/x86_64/multiarch/ifunc-impl-list.c

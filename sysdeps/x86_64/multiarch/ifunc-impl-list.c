@@ -229,10 +229,20 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcat, 1, __strcat_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strcat, 1, __strcat_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strchr.S.  */
+  /* Support sysdeps/x86_64/multiarch/strchr.c.  */
   IFUNC_IMPL (i, name, strchr,
+	      IFUNC_IMPL_ADD (array, i, strchr,
+			      HAS_ARCH_FEATURE (AVX2_Usable),
+			      __strchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, strchr, 1, __strchr_sse2_no_bsf)
 	      IFUNC_IMPL_ADD (array, i, strchr, 1, __strchr_sse2))
+
+  /* Support sysdeps/x86_64/multiarch/strchrnul.c.  */
+  IFUNC_IMPL (i, name, strchrnul,
+	      IFUNC_IMPL_ADD (array, i, strchrnul,
+			      HAS_ARCH_FEATURE (AVX2_Usable),
+			      __strchrnul_avx2)
+	      IFUNC_IMPL_ADD (array, i, strchrnul, 1, __strchrnul_sse2))
 
   /* Support sysdeps/x86_64/multiarch/strcmp.S.  */
   IFUNC_IMPL (i, name, strcmp,
@@ -317,6 +327,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_IMPL (i, name, strstr,
 	      IFUNC_IMPL_ADD (array, i, strstr, 1, __strstr_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strstr, 1, __strstr_sse2))
+
+  /* Support sysdeps/x86_64/multiarch/wcschr.c.  */
+  IFUNC_IMPL (i, name, wcschr,
+	      IFUNC_IMPL_ADD (array, i, wcschr,
+			      HAS_ARCH_FEATURE (AVX2_Usable),
+			      __wcschr_avx2)
+	      IFUNC_IMPL_ADD (array, i, wcschr, 1, __wcschr_sse2))
 
   /* Support sysdeps/x86_64/multiarch/wcscpy.S.  */
   IFUNC_IMPL (i, name, wcscpy,
