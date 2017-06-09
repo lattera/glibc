@@ -38,7 +38,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   size_t i = 0;
 
-  /* Support sysdeps/x86_64/multiarch/memchr.S.  */
+  /* Support sysdeps/x86_64/multiarch/memchr.c.  */
   IFUNC_IMPL (i, name, memchr,
 	      IFUNC_IMPL_ADD (array, i, memchr,
 			      HAS_ARCH_FEATURE (AVX2_Usable),
@@ -57,7 +57,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/memmove_chk.c.  */
+  /* Support sysdeps/x86_64/multiarch/memmove_chk.S.  */
   IFUNC_IMPL (i, name, __memmove_chk,
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
@@ -112,7 +112,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memmove, 1,
 			      __memmove_sse2_unaligned_erms))
 
-  /* Support sysdeps/x86_64/multiarch/memrchr.S.  */
+  /* Support sysdeps/x86_64/multiarch/memrchr.c.  */
   IFUNC_IMPL (i, name, memrchr,
 	      IFUNC_IMPL_ADD (array, i, memrchr,
 			      HAS_ARCH_FEATURE (AVX2_Usable),
@@ -166,21 +166,21 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memset_avx512_no_vzeroupper)
 	     )
 
-  /* Support sysdeps/x86_64/multiarch/rawmemchr.S.  */
+  /* Support sysdeps/x86_64/multiarch/rawmemchr.c.  */
   IFUNC_IMPL (i, name, rawmemchr,
 	      IFUNC_IMPL_ADD (array, i, rawmemchr,
 			      HAS_ARCH_FEATURE (AVX2_Usable),
 			      __rawmemchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, rawmemchr, 1, __rawmemchr_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strlen.S.  */
+  /* Support sysdeps/x86_64/multiarch/strlen.c.  */
   IFUNC_IMPL (i, name, strlen,
 	      IFUNC_IMPL_ADD (array, i, strlen,
 			      HAS_ARCH_FEATURE (AVX2_Usable),
 			      __strlen_avx2)
 	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strnlen.S.  */
+  /* Support sysdeps/x86_64/multiarch/strnlen.c.  */
   IFUNC_IMPL (i, name, strnlen,
 	      IFUNC_IMPL_ADD (array, i, strnlen,
 			      HAS_ARCH_FEATURE (AVX2_Usable),

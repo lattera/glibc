@@ -1,5 +1,9 @@
 2017-06-09  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Correct comments.
+
+2017-06-09  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
 	strrchr-sse2, strrchr-avx2, wcsrchr-sse2 and wcsrchr-avx2.
 	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
