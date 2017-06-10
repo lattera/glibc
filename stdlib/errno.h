@@ -50,7 +50,7 @@ extern int errno;
 
 /* The full and simple forms of the name with which the program was
    invoked.  These variables are set up automatically at startup based on
-   the value of ARGV[0] (this works only if you use GNU ld).  */
+   the value of argv[0].  */
 extern char *program_invocation_name, *program_invocation_short_name;
 #endif /* __USE_GNU */
 #endif /* _ERRNO_H */

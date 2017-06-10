@@ -1,3 +1,7 @@
+2017-06-10  Zack Weinberg  <zackw@panix.com>
+
+	* stdlib/errno.h: Correct an outdated comment.
+
 2017-06-09  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/sysconf.c: New file.
