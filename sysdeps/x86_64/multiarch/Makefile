@@ -18,6 +18,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strrchr-sse2 strrchr-avx2 \
 		   strlen-sse2 strnlen-sse2 strlen-avx2 strnlen-avx2 \
 		   strncase_l-ssse3 strcat-ssse3 strncat-ssse3\
+		   strcpy-sse2 stpcpy-sse2 \
 		   strcpy-ssse3 strncpy-ssse3 stpcpy-ssse3 stpncpy-ssse3 \
 		   strcpy-sse2-unaligned strncpy-sse2-unaligned \
 		   stpcpy-sse2-unaligned stpncpy-sse2-unaligned \
