@@ -15,9 +15,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/*  <bits/string.h> and <bits/string2.h> declare some extern inline
-    functions.  These functions are declared additionally here if
-    inlining is not possible.  */
+/*  <bits/string.h> may declare some extern inline functions.
+    These functions are defined here if inlining is not possible.  */
 
 #undef __USE_STRING_INLINES
 #define __USE_STRING_INLINES
@@ -31,8 +30,6 @@
 
 #undef __NO_INLINE__
 #include <bits/string.h>
-#include <bits/string2.h>
-
 #include "shlib-compat.h"
 
 #if SHLIB_COMPAT (libc, GLIBC_2_1_1, GLIBC_2_25)

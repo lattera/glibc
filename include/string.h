@@ -162,6 +162,11 @@ extern __typeof (mempcpy) mempcpy __asm__ ("__mempcpy");
 extern __typeof (stpcpy) stpcpy __asm__ ("__stpcpy");
 #endif
 
+/* Redirect internal calls to builtins.  */
+#ifndef __stpcpy
+# define __stpcpy(dest, src) __builtin_stpcpy (dest, src)
+#endif
+
 extern void *__memcpy_chk (void *__restrict __dest,
 			   const void *__restrict __src, size_t __len,
 			   size_t __destlen) __THROW;

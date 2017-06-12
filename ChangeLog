@@ -1,5 +1,15 @@
 2017-06-12  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	[BZ #15105]
+	[BZ #19463]
+	* include/string.h: Add internal redirect for __stpcpy.
+	* string/Makefile: Remove bits/string2.h.
+	* string/string.h: Update comment.
+	* string/string-inlines.c: Remove bits/string2.h include and comment.
+	* string/bits/string2.h: Remove file.
+
+2017-06-12  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sunrpc/bindrsvprt.c (bindresvport): Change __bzero to memset.
 	* sunrpc/clnt_gen.c (clnt_create): Likewise.
 	* sunrpc/des_impl.c (_des_crypt): Likewise.

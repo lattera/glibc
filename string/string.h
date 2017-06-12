@@ -501,19 +501,11 @@ extern char *basename (const char *__filename) __THROW __nonnull ((1));
 	__USE_STRING_INLINES
      is defined before including this header.
 
-   - machine-independent optimizations which do not increase the
-     code size significantly and which optimize mainly situations
-     where one or more arguments are compile-time constants.
-     These optimizations are used always when the compiler is
-     taught to optimize.
-
    One can inhibit all optimizations by defining __NO_STRING_INLINES.  */
 
 /* Get the machine-dependent optimizations (if any).  */
 #  include <bits/string.h>
 
-/* These are generic optimizations which do not add too much inline code.  */
-#  include <bits/string2.h>
 # endif
 
 # if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
