@@ -240,12 +240,14 @@ extern int sigaction (int __sig, const struct sigaction *__restrict __act,
 extern int sigpending (sigset_t *__set) __THROW __nonnull ((1));
 
 
+# ifdef __USE_POSIX199506
 /* Select any of pending signals from SET or wait for any to arrive.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern int sigwait (const sigset_t *__restrict __set, int *__restrict __sig)
      __nonnull ((1, 2));
+# endif /* Use POSIX 1995.  */
 
 # ifdef __USE_POSIX199309
 /* Select any of pending signals from SET and place information in INFO.
