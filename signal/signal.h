@@ -94,7 +94,7 @@ extern __sighandler_t __REDIRECT_NTH (signal,
 # endif
 #endif
 
-#if defined __USE_XOPEN && !defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8
 /* The X/Open definition of `signal' conflicts with the BSD version.
    So they defined another function `bsd_signal'.  */
 extern __sighandler_t bsd_signal (int __sig, __sighandler_t __handler)

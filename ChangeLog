@@ -1,5 +1,10 @@
 2017-06-12  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21552]
+	* signal/signal.h (bsd_signal): Declare if [__USE_XOPEN_EXTENDED],
+	not [__USE_XOPEN].
+	* conform/Makefile (test-xfail-XPG4/signal.h/conform): Remove.
+
 	[BZ #21550]
 	* signal/signal.h (sigwait): Only declare if [__USE_POSIX199506].
 

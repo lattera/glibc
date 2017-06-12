@@ -161,7 +161,6 @@ test-xfail-XOPEN2K/ndbm.h/conform = yes
 test-xfail-XOPEN2K8/ndbm.h/conform = yes
 
 # Unsorted expected failures.
-test-xfail-XPG4/signal.h/conform = yes
 test-xfail-XPG42/signal.h/conform = yes
 test-xfail-XPG42/sys/wait.h/conform = yes
 test-xfail-XPG42/ucontext.h/conform = yes
