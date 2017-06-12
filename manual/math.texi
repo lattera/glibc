@@ -59,7 +59,11 @@ On some machines, @theglibc{} also provides @code{_Float@var{N}} and
 are not machine-dependent.  When such a type, such as @code{_Float128},
 is supported by @theglibc{}, extra variants for most of the mathematical
 functions provided for @code{double}, @code{float}, and @code{long
-double} are also provided for the supported type.
+double} are also provided for the supported type.  Throughout this
+manual, the @code{_Float@var{N}} and @code{_Float@var{N}x} variants of
+these functions are described along with the @code{double},
+@code{float}, and @code{long double} variants and they come from
+@w{ISO/IEC TS 18661-3}, unless explicitly stated otherwise.
 
 Currently, support for @code{_Float@var{N}} or @code{_Float@var{N}x}
 types is not provided for any machine.
@@ -128,6 +132,13 @@ also defines these constants with type @code{long double}.  The
 names: @code{M_El}, @code{M_PIl}, and so forth.  These are only
 available if @code{_GNU_SOURCE} is defined.
 
+Likewise, @theglibc{} also defines these constants with the types
+@code{_Float@var{N}} and @code{_Float@var{N}x} for the machines that
+have support for such types enabled (@pxref{Mathematics}) and if
+@code{_GNU_SOURCE} is defined.  When available, the macros names are
+appended with @samp{f@var{N}} or @samp{f@var{N}x}, such as @samp{f128}
+for the type @code{_Float128}.
+
 @vindex PI
 @emph{Note:} Some programs use a constant named @code{PI} which has the
 same value as @code{M_PI}.  This constant is not standard; it may have
@@ -162,7 +173,11 @@ You can also compute the value of pi with the expression @code{acos
 @deftypefun double sin (double @var{x})
 @deftypefunx float sinf (float @var{x})
 @deftypefunx {long double} sinl (long double @var{x})
+@deftypefunx _FloatN sinfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx sinfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{sinfN, TS 18661-3:2015, math.h}
+@standardsx{sinfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the sine of @var{x}, where @var{x} is given in
 radians.  The return value is in the range @code{-1} to @code{1}.
@@ -171,7 +186,11 @@ radians.  The return value is in the range @code{-1} to @code{1}.
 @deftypefun double cos (double @var{x})
 @deftypefunx float cosf (float @var{x})
 @deftypefunx {long double} cosl (long double @var{x})
+@deftypefunx _FloatN cosfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx cosfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{cosfN, TS 18661-3:2015, math.h}
+@standardsx{cosfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the cosine of @var{x}, where @var{x} is given in
 radians.  The return value is in the range @code{-1} to @code{1}.
@@ -180,7 +199,11 @@ radians.  The return value is in the range @code{-1} to @code{1}.
 @deftypefun double tan (double @var{x})
 @deftypefunx float tanf (float @var{x})
 @deftypefunx {long double} tanl (long double @var{x})
+@deftypefunx _FloatN tanfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx tanfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{tanfN, TS 18661-3:2015, math.h}
+@standardsx{tanfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the tangent of @var{x}, where @var{x} is given in
 radians.
@@ -198,6 +221,8 @@ function to do that.
 @deftypefun void sincos (double @var{x}, double *@var{sinx}, double *@var{cosx})
 @deftypefunx void sincosf (float @var{x}, float *@var{sinx}, float *@var{cosx})
 @deftypefunx void sincosl (long double @var{x}, long double *@var{sinx}, long double *@var{cosx})
+@deftypefunx _FloatN sincosfN (_Float@var{N} @var{x}, _Float@var{N} *@var{sinx}, _Float@var{N} *@var{cosx})
+@deftypefunx _FloatNx sincosfNx (_Float@var{N}x @var{x}, _Float@var{N}x *@var{sinx}, _Float@var{N}x *@var{cosx})
 @standards{GNU, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the sine of @var{x} in @code{*@var{sinx}} and the
@@ -205,8 +230,9 @@ cosine of @var{x} in @code{*@var{cosx}}, where @var{x} is given in
 radians.  Both values, @code{*@var{sinx}} and @code{*@var{cosx}}, are in
 the range of @code{-1} to @code{1}.
 
-This function is a GNU extension.  Portable programs should be prepared
-to cope with its absence.
+All these functions, including the @code{_Float@var{N}} and
+@code{_Float@var{N}x} variants, are GNU extensions.  Portable programs
+should be prepared to cope with its absence.
 @end deftypefun
 
 @cindex complex trigonometric functions
@@ -222,7 +248,11 @@ the implementation.)
 @deftypefun {complex double} csin (complex double @var{z})
 @deftypefunx {complex float} csinf (complex float @var{z})
 @deftypefunx {complex long double} csinl (complex long double @var{z})
+@deftypefunx {complex _FloatN} csinfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} csinfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{csinfN, TS 18661-3:2015, complex.h}
+@standardsx{csinfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c There are calls to nan* that could trigger @mtslocale if they didn't get
 @c empty strings.
@@ -240,7 +270,11 @@ $$\sin(z) = {1\over 2i} (e^{zi} - e^{-zi})$$
 @deftypefun {complex double} ccos (complex double @var{z})
 @deftypefunx {complex float} ccosf (complex float @var{z})
 @deftypefunx {complex long double} ccosl (complex long double @var{z})
+@deftypefunx {complex _FloatN} ccosfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} ccosfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{ccosfN, TS 18661-3:2015, complex.h}
+@standardsx{ccosfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex cosine of @var{z}.
 The mathematical definition of the complex cosine is
@@ -256,7 +290,11 @@ $$\cos(z) = {1\over 2} (e^{zi} + e^{-zi})$$
 @deftypefun {complex double} ctan (complex double @var{z})
 @deftypefunx {complex float} ctanf (complex float @var{z})
 @deftypefunx {complex long double} ctanl (complex long double @var{z})
+@deftypefunx {complex _FloatN} ctanfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} ctanfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{ctanfN, TS 18661-3:2015, complex.h}
+@standardsx{ctanfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex tangent of @var{z}.
 The mathematical definition of the complex tangent is
@@ -286,7 +324,11 @@ respectively.
 @deftypefun double asin (double @var{x})
 @deftypefunx float asinf (float @var{x})
 @deftypefunx {long double} asinl (long double @var{x})
+@deftypefunx _FloatN asinfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx asinfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{asinfN, TS 18661-3:2015, math.h}
+@standardsx{asinfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the arcsine of @var{x}---that is, the value whose
 sine is @var{x}.  The value is in units of radians.  Mathematically,
@@ -301,7 +343,11 @@ domain, @code{asin} signals a domain error.
 @deftypefun double acos (double @var{x})
 @deftypefunx float acosf (float @var{x})
 @deftypefunx {long double} acosl (long double @var{x})
+@deftypefunx _FloatN acosfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx acosfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{acosfN, TS 18661-3:2015, math.h}
+@standardsx{acosfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the arccosine of @var{x}---that is, the value
 whose cosine is @var{x}.  The value is in units of radians.
@@ -316,7 +362,11 @@ domain, @code{acos} signals a domain error.
 @deftypefun double atan (double @var{x})
 @deftypefunx float atanf (float @var{x})
 @deftypefunx {long double} atanl (long double @var{x})
+@deftypefunx _FloatN atanfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx atanfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{atanfN, TS 18661-3:2015, math.h}
+@standardsx{atanfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the arctangent of @var{x}---that is, the value
 whose tangent is @var{x}.  The value is in units of radians.
@@ -327,7 +377,11 @@ returned is the one between @code{-pi/2} and @code{pi/2} (inclusive).
 @deftypefun double atan2 (double @var{y}, double @var{x})
 @deftypefunx float atan2f (float @var{y}, float @var{x})
 @deftypefunx {long double} atan2l (long double @var{y}, long double @var{x})
+@deftypefunx _FloatN atan2fN (_Float@var{N} @var{y}, _Float@var{N} @var{x})
+@deftypefunx _FloatNx atan2fNx (_Float@var{N}x @var{y}, _Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{atan2fN, TS 18661-3:2015, math.h}
+@standardsx{atan2fNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function computes the arctangent of @var{y}/@var{x}, but the signs
 of both arguments are used to determine the quadrant of the result, and
@@ -351,7 +405,11 @@ If both @var{x} and @var{y} are zero, @code{atan2} returns zero.
 @deftypefun {complex double} casin (complex double @var{z})
 @deftypefunx {complex float} casinf (complex float @var{z})
 @deftypefunx {complex long double} casinl (complex long double @var{z})
+@deftypefunx {complex _FloatN} casinfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} casinfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{casinfN, TS 18661-3:2015, complex.h}
+@standardsx{casinfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the complex arcsine of @var{z}---that is, the
 value whose sine is @var{z}.  The value returned is in radians.
@@ -363,7 +421,11 @@ values of @var{z}.
 @deftypefun {complex double} cacos (complex double @var{z})
 @deftypefunx {complex float} cacosf (complex float @var{z})
 @deftypefunx {complex long double} cacosl (complex long double @var{z})
+@deftypefunx {complex _FloatN} cacosfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} cacosfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{cacosfN, TS 18661-3:2015, complex.h}
+@standardsx{cacosfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the complex arccosine of @var{z}---that is, the
 value whose cosine is @var{z}.  The value returned is in radians.
@@ -376,7 +438,11 @@ values of @var{z}.
 @deftypefun {complex double} catan (complex double @var{z})
 @deftypefunx {complex float} catanf (complex float @var{z})
 @deftypefunx {complex long double} catanl (complex long double @var{z})
+@deftypefunx {complex _FloatN} catanfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} catanfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{catanfN, TS 18661-3:2015, complex.h}
+@standardsx{catanfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the complex arctangent of @var{z}---that is,
 the value whose tangent is @var{z}.  The value is in units of radians.
@@ -392,7 +458,11 @@ the value whose tangent is @var{z}.  The value is in units of radians.
 @deftypefun double exp (double @var{x})
 @deftypefunx float expf (float @var{x})
 @deftypefunx {long double} expl (long double @var{x})
+@deftypefunx _FloatN expfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx expfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{expfN, TS 18661-3:2015, math.h}
+@standardsx{expfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute @code{e} (the base of natural logarithms) raised
 to the power @var{x}.
@@ -404,7 +474,11 @@ If the magnitude of the result is too large to be representable,
 @deftypefun double exp2 (double @var{x})
 @deftypefunx float exp2f (float @var{x})
 @deftypefunx {long double} exp2l (long double @var{x})
+@deftypefunx _FloatN exp2fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx exp2fNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{exp2fN, TS 18661-3:2015, math.h}
+@standardsx{exp2fNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute @code{2} raised to the power @var{x}.
 Mathematically, @code{exp2 (x)} is the same as @code{exp (x * log (2))}.
@@ -413,10 +487,14 @@ Mathematically, @code{exp2 (x)} is the same as @code{exp (x * log (2))}.
 @deftypefun double exp10 (double @var{x})
 @deftypefunx float exp10f (float @var{x})
 @deftypefunx {long double} exp10l (long double @var{x})
+@deftypefunx _FloatN exp10fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx exp10fNx (_Float@var{N}x @var{x})
 @deftypefunx double pow10 (double @var{x})
 @deftypefunx float pow10f (float @var{x})
 @deftypefunx {long double} pow10l (long double @var{x})
 @standards{ISO, math.h}
+@standardsx{exp10fN, TS 18661-4:2015, math.h}
+@standardsx{exp10fNx, TS 18661-4:2015, math.h}
 @standardsx{pow10, GNU, math.h}
 @standardsx{pow10f, GNU, math.h}
 @standardsx{pow10l, GNU, math.h}
@@ -433,7 +511,11 @@ preferred, since it is analogous to @code{exp} and @code{exp2}.
 @deftypefun double log (double @var{x})
 @deftypefunx float logf (float @var{x})
 @deftypefunx {long double} logl (long double @var{x})
+@deftypefunx _FloatN logfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx logfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{logfN, TS 18661-3:2015, math.h}
+@standardsx{logfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the natural logarithm of @var{x}.  @code{exp (log
 (@var{x}))} equals @var{x}, exactly in mathematics and approximately in
@@ -447,7 +529,11 @@ it may signal overflow.
 @deftypefun double log10 (double @var{x})
 @deftypefunx float log10f (float @var{x})
 @deftypefunx {long double} log10l (long double @var{x})
+@deftypefunx _FloatN log10fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx log10fNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{log10fN, TS 18661-3:2015, math.h}
+@standardsx{log10fNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the base-10 logarithm of @var{x}.
 @code{log10 (@var{x})} equals @code{log (@var{x}) / log (10)}.
@@ -457,7 +543,11 @@ These functions return the base-10 logarithm of @var{x}.
 @deftypefun double log2 (double @var{x})
 @deftypefunx float log2f (float @var{x})
 @deftypefunx {long double} log2l (long double @var{x})
+@deftypefunx _FloatN log2fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx log2fNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{log2fN, TS 18661-3:2015, math.h}
+@standardsx{log2fNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the base-2 logarithm of @var{x}.
 @code{log2 (@var{x})} equals @code{log (@var{x}) / log (2)}.
@@ -466,7 +556,11 @@ These functions return the base-2 logarithm of @var{x}.
 @deftypefun double logb (double @var{x})
 @deftypefunx float logbf (float @var{x})
 @deftypefunx {long double} logbl (long double @var{x})
+@deftypefunx _FloatN logbfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx logbfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{logbfN, TS 18661-3:2015, math.h}
+@standardsx{logbfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions extract the exponent of @var{x} and return it as a
 floating-point value.  If @code{FLT_RADIX} is two, @code{logb} is equal
@@ -481,15 +575,25 @@ negative), @code{logb} returns @math{@infinity{}}.  If @var{x} is zero,
 @deftypefun int ilogb (double @var{x})
 @deftypefunx int ilogbf (float @var{x})
 @deftypefunx int ilogbl (long double @var{x})
+@deftypefunx int ilogbfN (_Float@var{N} @var{x})
+@deftypefunx int ilogbfNx (_Float@var{N}x @var{x})
 @deftypefunx {long int} llogb (double @var{x})
 @deftypefunx {long int} llogbf (float @var{x})
 @deftypefunx {long int} llogbl (long double @var{x})
+@deftypefunx {long int} llogbfN (_Float@var{N} @var{x})
+@deftypefunx {long int} llogbfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{ilogbfN, TS 18661-3:2015, math.h}
+@standardsx{ilogbfNx, TS 18661-3:2015, math.h}
+@standardsx{llogbfN, TS 18661-3:2015, math.h}
+@standardsx{llogbfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are equivalent to the corresponding @code{logb}
 functions except that they return signed integer values.  The
-@code{ilogb} functions are from ISO C99; the @code{llogb} functions
-are from TS 18661-1:2014.
+@code{ilogb}, @code{ilogbf}, and @code{ilogbl} functions are from ISO
+C99; the @code{llogb}, @code{llogbf}, @code{llogbl} functions are from
+TS 18661-1:2014; the @code{ilogbfN}, @code{ilogbfNx}, @code{llogbfN},
+and @code{llogbfNx} functions are from TS 18661-3:2015.
 @end deftypefun
 
 @noindent
@@ -555,7 +659,11 @@ if (i == FP_ILOGB0 || i == FP_ILOGBNAN)
 @deftypefun double pow (double @var{base}, double @var{power})
 @deftypefunx float powf (float @var{base}, float @var{power})
 @deftypefunx {long double} powl (long double @var{base}, long double @var{power})
+@deftypefunx _FloatN powfN (_Float@var{N} @var{base}, _Float@var{N} @var{power})
+@deftypefunx _FloatNx powfNx (_Float@var{N}x @var{base}, _Float@var{N}x @var{power})
 @standards{ISO, math.h}
+@standardsx{powfN, TS 18661-3:2015, math.h}
+@standardsx{powfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These are general exponentiation functions, returning @var{base} raised
 to @var{power}.
@@ -570,7 +678,11 @@ underflow or overflow the destination type.
 @deftypefun double sqrt (double @var{x})
 @deftypefunx float sqrtf (float @var{x})
 @deftypefunx {long double} sqrtl (long double @var{x})
+@deftypefunx _FloatN sqrtfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx sqrtfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{sqrtfN, TS 18661-3:2015, math.h}
+@standardsx{sqrtfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the nonnegative square root of @var{x}.
 
@@ -582,7 +694,11 @@ Mathematically, it should return a complex number.
 @deftypefun double cbrt (double @var{x})
 @deftypefunx float cbrtf (float @var{x})
 @deftypefunx {long double} cbrtl (long double @var{x})
+@deftypefunx _FloatN cbrtfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx cbrtfNx (_Float@var{N}x @var{x})
 @standards{BSD, math.h}
+@standardsx{cbrtfN, TS 18661-3:2015, math.h}
+@standardsx{cbrtfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the cube root of @var{x}.  They cannot
 fail; every representable real value has a representable real cube root.
@@ -591,7 +707,11 @@ fail; every representable real value has a representable real cube root.
 @deftypefun double hypot (double @var{x}, double @var{y})
 @deftypefunx float hypotf (float @var{x}, float @var{y})
 @deftypefunx {long double} hypotl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN hypotfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx hypotfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
 @standards{ISO, math.h}
+@standardsx{hypotfN, TS 18661-3:2015, math.h}
+@standardsx{hypotfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return @code{sqrt (@var{x}*@var{x} +
 @var{y}*@var{y})}.  This is the length of the hypotenuse of a right
@@ -604,7 +724,11 @@ much smaller.  See also the function @code{cabs} in @ref{Absolute Value}.
 @deftypefun double expm1 (double @var{x})
 @deftypefunx float expm1f (float @var{x})
 @deftypefunx {long double} expm1l (long double @var{x})
+@deftypefunx _FloatN expm1fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx expm1fNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{expm1fN, TS 18661-3:2015, math.h}
+@standardsx{expm1fNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return a value equivalent to @code{exp (@var{x}) - 1}.
 They are computed in a way that is accurate even if @var{x} is
@@ -615,7 +739,11 @@ to subtraction of two numbers that are nearly equal.
 @deftypefun double log1p (double @var{x})
 @deftypefunx float log1pf (float @var{x})
 @deftypefunx {long double} log1pl (long double @var{x})
+@deftypefunx _FloatN log1pfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx log1pfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{log1pfN, TS 18661-3:2015, math.h}
+@standardsx{log1pfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return a value equivalent to @w{@code{log (1 + @var{x})}}.
 They are computed in a way that is accurate even if @var{x} is
@@ -631,7 +759,11 @@ logarithm functions.
 @deftypefun {complex double} cexp (complex double @var{z})
 @deftypefunx {complex float} cexpf (complex float @var{z})
 @deftypefunx {complex long double} cexpl (complex long double @var{z})
+@deftypefunx {complex _FloatN} cexpfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} cexpfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{cexpfN, TS 18661-3:2015, complex.h}
+@standardsx{cexpfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return @code{e} (the base of natural
 logarithms) raised to the power of @var{z}.
@@ -648,7 +780,11 @@ $$\exp(z) = e^z = e^{{\rm Re}\,z} (\cos ({\rm Im}\,z) + i \sin ({\rm Im}\,z))$$
 @deftypefun {complex double} clog (complex double @var{z})
 @deftypefunx {complex float} clogf (complex float @var{z})
 @deftypefunx {complex long double} clogl (complex long double @var{z})
+@deftypefunx {complex _FloatN} clogfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} clogfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{clogfN, TS 18661-3:2015, complex.h}
+@standardsx{clogfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the natural logarithm of @var{z}.
 Mathematically, this corresponds to the value
@@ -670,6 +806,8 @@ or is very close to 0.  It is well-defined for all other values of
 @deftypefun {complex double} clog10 (complex double @var{z})
 @deftypefunx {complex float} clog10f (complex float @var{z})
 @deftypefunx {complex long double} clog10l (complex long double @var{z})
+@deftypefunx {complex _FloatN} clog10fN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} clog10fNx (complex _Float@var{N}x @var{z})
 @standards{GNU, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the base 10 logarithm of the complex value
@@ -682,13 +820,18 @@ These functions return the base 10 logarithm of the complex value
 $$\log_{10}(z) = \log_{10}|z| + i \arg z / \log (10)$$
 @end tex
 
-These functions are GNU extensions.
+All these functions, including the @code{_Float@var{N}} and
+@code{_Float@var{N}x} variants, are GNU extensions.
 @end deftypefun
 
 @deftypefun {complex double} csqrt (complex double @var{z})
 @deftypefunx {complex float} csqrtf (complex float @var{z})
 @deftypefunx {complex long double} csqrtl (complex long double @var{z})
+@deftypefunx {complex _FloatN} csqrtfN (_Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} csqrtfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{csqrtfN, TS 18661-3:2015, complex.h}
+@standardsx{csqrtfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex square root of the argument @var{z}.  Unlike
 the real-valued functions, they are defined for all values of @var{z}.
@@ -697,7 +840,11 @@ the real-valued functions, they are defined for all values of @var{z}.
 @deftypefun {complex double} cpow (complex double @var{base}, complex double @var{power})
 @deftypefunx {complex float} cpowf (complex float @var{base}, complex float @var{power})
 @deftypefunx {complex long double} cpowl (complex long double @var{base}, complex long double @var{power})
+@deftypefunx {complex _FloatN} cpowfN (complex _Float@var{N} @var{base}, complex _Float@var{N} @var{power})
+@deftypefunx {complex _FloatNx} cpowfNx (complex _Float@var{N}x @var{base}, complex _Float@var{N}x @var{power})
 @standards{ISO, complex.h}
+@standardsx{cpowfN, TS 18661-3:2015, complex.h}
+@standardsx{cpowfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return @var{base} raised to the power of
 @var{power}.  This is equivalent to @w{@code{cexp (y * clog (x))}}
@@ -713,7 +860,11 @@ see @ref{Exponents and Logarithms}.
 @deftypefun double sinh (double @var{x})
 @deftypefunx float sinhf (float @var{x})
 @deftypefunx {long double} sinhl (long double @var{x})
+@deftypefunx _FloatN sinhfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx sinhfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{sinhfN, TS 18661-3:2015, math.h}
+@standardsx{sinhfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the hyperbolic sine of @var{x}, defined
 mathematically as @w{@code{(exp (@var{x}) - exp (-@var{x})) / 2}}.  They
@@ -723,7 +874,11 @@ may signal overflow if @var{x} is too large.
 @deftypefun double cosh (double @var{x})
 @deftypefunx float coshf (float @var{x})
 @deftypefunx {long double} coshl (long double @var{x})
+@deftypefunx _FloatN coshfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx coshfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{coshfN, TS 18661-3:2015, math.h}
+@standardsx{coshfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the hyperbolic cosine of @var{x},
 defined mathematically as @w{@code{(exp (@var{x}) + exp (-@var{x})) / 2}}.
@@ -733,7 +888,11 @@ They may signal overflow if @var{x} is too large.
 @deftypefun double tanh (double @var{x})
 @deftypefunx float tanhf (float @var{x})
 @deftypefunx {long double} tanhl (long double @var{x})
+@deftypefunx _FloatN tanhfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx tanhfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{tanhfN, TS 18661-3:2015, math.h}
+@standardsx{tanhfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the hyperbolic tangent of @var{x},
 defined mathematically as @w{@code{sinh (@var{x}) / cosh (@var{x})}}.
@@ -748,7 +907,11 @@ complex arguments.
 @deftypefun {complex double} csinh (complex double @var{z})
 @deftypefunx {complex float} csinhf (complex float @var{z})
 @deftypefunx {complex long double} csinhl (complex long double @var{z})
+@deftypefunx {complex _FloatN} csinhfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} csinhfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{csinhfN, TS 18661-3:2015, complex.h}
+@standardsx{csinhfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex hyperbolic sine of @var{z}, defined
 mathematically as @w{@code{(exp (@var{z}) - exp (-@var{z})) / 2}}.
@@ -757,7 +920,11 @@ mathematically as @w{@code{(exp (@var{z}) - exp (-@var{z})) / 2}}.
 @deftypefun {complex double} ccosh (complex double @var{z})
 @deftypefunx {complex float} ccoshf (complex float @var{z})
 @deftypefunx {complex long double} ccoshl (complex long double @var{z})
+@deftypefunx {complex _FloatN} ccoshfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} ccoshfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{ccoshfN, TS 18661-3:2015, complex.h}
+@standardsx{ccoshfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex hyperbolic cosine of @var{z}, defined
 mathematically as @w{@code{(exp (@var{z}) + exp (-@var{z})) / 2}}.
@@ -766,7 +933,11 @@ mathematically as @w{@code{(exp (@var{z}) + exp (-@var{z})) / 2}}.
 @deftypefun {complex double} ctanh (complex double @var{z})
 @deftypefunx {complex float} ctanhf (complex float @var{z})
 @deftypefunx {complex long double} ctanhl (complex long double @var{z})
+@deftypefunx {complex _FloatN} ctanhfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} ctanhfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{ctanhfN, TS 18661-3:2015, complex.h}
+@standardsx{ctanhfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the complex hyperbolic tangent of @var{z},
 defined mathematically as @w{@code{csinh (@var{z}) / ccosh (@var{z})}}.
@@ -778,7 +949,11 @@ defined mathematically as @w{@code{csinh (@var{z}) / ccosh (@var{z})}}.
 @deftypefun double asinh (double @var{x})
 @deftypefunx float asinhf (float @var{x})
 @deftypefunx {long double} asinhl (long double @var{x})
+@deftypefunx _FloatN asinhfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx asinhfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{asinhfN, TS 18661-3:2015, math.h}
+@standardsx{asinhfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse hyperbolic sine of @var{x}---the
 value whose hyperbolic sine is @var{x}.
@@ -787,7 +962,11 @@ value whose hyperbolic sine is @var{x}.
 @deftypefun double acosh (double @var{x})
 @deftypefunx float acoshf (float @var{x})
 @deftypefunx {long double} acoshl (long double @var{x})
+@deftypefunx _FloatN acoshfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx acoshfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{acoshfN, TS 18661-3:2015, math.h}
+@standardsx{acoshfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse hyperbolic cosine of @var{x}---the
 value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
@@ -797,7 +976,11 @@ value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
 @deftypefun double atanh (double @var{x})
 @deftypefunx float atanhf (float @var{x})
 @deftypefunx {long double} atanhl (long double @var{x})
+@deftypefunx _FloatN atanhfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx atanhfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{atanhfN, TS 18661-3:2015, math.h}
+@standardsx{atanhfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse hyperbolic tangent of @var{x}---the
 value whose hyperbolic tangent is @var{x}.  If the absolute value of
@@ -810,7 +993,11 @@ if it is equal to 1, @code{atanh} returns infinity.
 @deftypefun {complex double} casinh (complex double @var{z})
 @deftypefunx {complex float} casinhf (complex float @var{z})
 @deftypefunx {complex long double} casinhl (complex long double @var{z})
+@deftypefunx {complex _FloatN} casinhfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} casinhfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{casinhfN, TS 18661-3:2015, complex.h}
+@standardsx{casinhfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse complex hyperbolic sine of
 @var{z}---the value whose complex hyperbolic sine is @var{z}.
@@ -819,7 +1006,11 @@ These functions return the inverse complex hyperbolic sine of
 @deftypefun {complex double} cacosh (complex double @var{z})
 @deftypefunx {complex float} cacoshf (complex float @var{z})
 @deftypefunx {complex long double} cacoshl (complex long double @var{z})
+@deftypefunx {complex _FloatN} cacoshfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} cacoshfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{cacoshfN, TS 18661-3:2015, complex.h}
+@standardsx{cacoshfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse complex hyperbolic cosine of
 @var{z}---the value whose complex hyperbolic cosine is @var{z}.  Unlike
@@ -829,7 +1020,11 @@ the real-valued functions, there are no restrictions on the value of @var{z}.
 @deftypefun {complex double} catanh (complex double @var{z})
 @deftypefunx {complex float} catanhf (complex float @var{z})
 @deftypefunx {complex long double} catanhl (complex long double @var{z})
+@deftypefunx {complex _FloatN} catanhfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} catanhfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{catanhfN, TS 18661-3:2015, complex.h}
+@standardsx{catanhfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the inverse complex hyperbolic tangent of
 @var{z}---the value whose complex hyperbolic tangent is @var{z}.  Unlike
@@ -849,7 +1044,11 @@ useful.  Currently they only have real-valued versions.
 @deftypefun double erf (double @var{x})
 @deftypefunx float erff (float @var{x})
 @deftypefunx {long double} erfl (long double @var{x})
+@deftypefunx _FloatN erffN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx erffNx (_Float@var{N}x @var{x})
 @standards{SVID, math.h}
+@standardsx{erffN, TS 18661-3:2015, math.h}
+@standardsx{erffNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{erf} returns the error function of @var{x}.  The error
 function is defined as
@@ -866,7 +1065,11 @@ erf (x) = 2/sqrt(pi) * integral from 0 to x of exp(-t^2) dt
 @deftypefun double erfc (double @var{x})
 @deftypefunx float erfcf (float @var{x})
 @deftypefunx {long double} erfcl (long double @var{x})
+@deftypefunx _FloatN erfcfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx erfcfNx (_Float@var{N}x @var{x})
 @standards{SVID, math.h}
+@standardsx{erfcfN, TS 18661-3:2015, math.h}
+@standardsx{erfcfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{erfc} returns @code{1.0 - erf(@var{x})}, but computed in a
 fashion that avoids round-off error when @var{x} is large.
@@ -875,7 +1078,11 @@ fashion that avoids round-off error when @var{x} is large.
 @deftypefun double lgamma (double @var{x})
 @deftypefunx float lgammaf (float @var{x})
 @deftypefunx {long double} lgammal (long double @var{x})
+@deftypefunx _FloatN lgammafN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx lgammafNx (_Float@var{N}x @var{x})
 @standards{SVID, math.h}
+@standardsx{lgammafN, TS 18661-3:2015, math.h}
+@standardsx{lgammafNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:signgam}}@asunsafe{}@acsafe{}}
 @code{lgamma} returns the natural logarithm of the absolute value of
 the gamma function of @var{x}.  The gamma function is defined as
@@ -909,11 +1116,18 @@ singularity.
 @deftypefun double lgamma_r (double @var{x}, int *@var{signp})
 @deftypefunx float lgammaf_r (float @var{x}, int *@var{signp})
 @deftypefunx {long double} lgammal_r (long double @var{x}, int *@var{signp})
+@deftypefunx _FloatN lgammafN_r (_Float@var{N} @var{x}, int *@var{signp})
+@deftypefunx _FloatNx lgammafNx_r (_Float@var{N}x @var{x}, int *@var{signp})
 @standards{XPG, math.h}
+@standardsx{lgammafN_r, GNU, math.h}
+@standardsx{lgammafNx_r, GNU, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{lgamma_r} is just like @code{lgamma}, but it stores the sign of
 the intermediate result in the variable pointed to by @var{signp}
 instead of in the @var{signgam} global.  This means it is reentrant.
+
+The @code{lgammaf@var{N}_r} and @code{lgammaf@var{N}x_r} functions are
+GNU extensions.
 @end deftypefun
 
 @deftypefun double gamma (double @var{x})
@@ -930,12 +1144,16 @@ standardized in @w{ISO C99} while @code{gamma} is not.
 @deftypefun double tgamma (double @var{x})
 @deftypefunx float tgammaf (float @var{x})
 @deftypefunx {long double} tgammal (long double @var{x})
+@deftypefunx _FloatN tgammafN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx tgammafNx (_Float@var{N}x @var{x})
 @standardsx{tgamma, XPG, math.h}
 @standardsx{tgamma, ISO, math.h}
 @standardsx{tgammaf, XPG, math.h}
 @standardsx{tgammaf, ISO, math.h}
 @standardsx{tgammal, XPG, math.h}
 @standardsx{tgammal, ISO, math.h}
+@standardsx{tgammafN, TS 18661-3:2015, math.h}
+@standardsx{tgammafNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{tgamma} applies the gamma function to @var{x}.  The gamma
 function is defined as
@@ -948,67 +1166,111 @@ gamma (x) = integral from 0 to @infinity{} of t^(x-1) e^-t dt
 @end smallexample
 @end ifnottex
 
-This function was introduced in @w{ISO C99}.
+This function was introduced in @w{ISO C99}.  The @code{_Float@var{N}}
+and @code{_Float@var{N}x} variants were introduced in @w{ISO/IEC TS
+18661-3}.
 @end deftypefun
 
 @deftypefun double j0 (double @var{x})
 @deftypefunx float j0f (float @var{x})
 @deftypefunx {long double} j0l (long double @var{x})
+@deftypefunx _FloatN j0fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx j0fNx (_Float@var{N}x @var{x})
 @standards{SVID, math.h}
+@standardsx{j0fN, GNU, math.h}
+@standardsx{j0fNx, GNU, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{j0} returns the Bessel function of the first kind of order 0 of
 @var{x}.  It may signal underflow if @var{x} is too large.
+
+The @code{_Float@var{N}} and @code{_Float@var{N}x} variants are GNU
+extensions.
 @end deftypefun
 
 @deftypefun double j1 (double @var{x})
 @deftypefunx float j1f (float @var{x})
 @deftypefunx {long double} j1l (long double @var{x})
+@deftypefunx _FloatN j1fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx j1fNx (_Float@var{N}x @var{x})
 @standards{SVID, math.h}
+@standardsx{j1fN, GNU, math.h}
+@standardsx{j1fNx, GNU, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{j1} returns the Bessel function of the first kind of order 1 of
 @var{x}.  It may signal underflow if @var{x} is too large.
+
+The @code{_Float@var{N}} and @code{_Float@var{N}x} variants are GNU
+extensions.
 @end deftypefun
 
 @deftypefun double jn (int @var{n}, double @var{x})
 @deftypefunx float jnf (int @var{n}, float @var{x})
 @deftypefunx {long double} jnl (int @var{n}, long double @var{x})
+@deftypefunx _FloatN jnfN (int @var{n}, _Float@var{N} @var{x})
+@deftypefunx _FloatNx jnfNx (int @var{n}, _Float@var{N}x @var{x})
 @standards{SVID, math.h}
+@standardsx{jnfN, GNU, math.h}
+@standardsx{jnfNx, GNU, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{jn} returns the Bessel function of the first kind of order
 @var{n} of @var{x}.  It may signal underflow if @var{x} is too large.
+
+The @code{_Float@var{N}} and @code{_Float@var{N}x} variants are GNU
+extensions.
 @end deftypefun
 
 @deftypefun double y0 (double @var{x})
 @deftypefunx float y0f (float @var{x})
 @deftypefunx {long double} y0l (long double @var{x})
+@deftypefunx _FloatN y0fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx y0fNx (_Float@var{N}x @var{x})
 @standards{SVID, math.h}
+@standardsx{y0fN, GNU, math.h}
+@standardsx{y0fNx, GNU, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{y0} returns the Bessel function of the second kind of order 0 of
 @var{x}.  It may signal underflow if @var{x} is too large.  If @var{x}
 is negative, @code{y0} signals a domain error; if it is zero,
 @code{y0} signals overflow and returns @math{-@infinity}.
+
+The @code{_Float@var{N}} and @code{_Float@var{N}x} variants are GNU
+extensions.
 @end deftypefun
 
 @deftypefun double y1 (double @var{x})
 @deftypefunx float y1f (float @var{x})
 @deftypefunx {long double} y1l (long double @var{x})
+@deftypefunx _FloatN y1fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx y1fNx (_Float@var{N}x @var{x})
 @standards{SVID, math.h}
+@standardsx{y1fN, GNU, math.h}
+@standardsx{y1fNx, GNU, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{y1} returns the Bessel function of the second kind of order 1 of
 @var{x}.  It may signal underflow if @var{x} is too large.  If @var{x}
 is negative, @code{y1} signals a domain error; if it is zero,
 @code{y1} signals overflow and returns @math{-@infinity}.
+
+The @code{_Float@var{N}} and @code{_Float@var{N}x} variants are GNU
+extensions.
 @end deftypefun
 
 @deftypefun double yn (int @var{n}, double @var{x})
 @deftypefunx float ynf (int @var{n}, float @var{x})
 @deftypefunx {long double} ynl (int @var{n}, long double @var{x})
+@deftypefunx _FloatN ynfN (int @var{n}, _Float@var{N} @var{x})
+@deftypefunx _FloatNx ynfNx (int @var{n}, _Float@var{N}x @var{x})
 @standards{SVID, math.h}
+@standardsx{ynfN, GNU, math.h}
+@standardsx{ynfNx, GNU, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{yn} returns the Bessel function of the second kind of order @var{n} of
 @var{x}.  It may signal underflow if @var{x} is too large.  If @var{x}
 is negative, @code{yn} signals a domain error; if it is zero,
 @code{yn} signals overflow and returns @math{-@infinity}.
+
+The @code{_Float@var{N}} and @code{_Float@var{N}x} variants are GNU
+extensions.
 @end deftypefun
 
 @node Errors in Math Functions

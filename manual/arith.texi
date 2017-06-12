@@ -686,9 +686,13 @@ such as by defining @code{_GNU_SOURCE}, and then you must include
 @deftypevr Macro float SNANF
 @deftypevrx Macro double SNAN
 @deftypevrx Macro {long double} SNANL
+@deftypevrx Macro _FloatN SNANFN
+@deftypevrx Macro _FloatNx SNANFNx
 @standards{TS 18661-1:2014, math.h}
-These macros, defined by TS 18661-1:2014, are constant expressions for
-signaling NaNs.
+@standardsx{SNANFN, TS 18661-3:2015, math.h}
+@standardsx{SNANFNx, TS 18661-3:2015, math.h}
+These macros, defined by TS 18661-1:2014 and TS 18661-3:2015, are
+constant expressions for signaling NaNs.
 @end deftypevr
 
 @deftypevr Macro int FE_SNANS_ALWAYS_SIGNAL
@@ -917,7 +921,11 @@ to test for overflow on both old and new hardware.
 @deftypevr Macro double HUGE_VAL
 @deftypevrx Macro float HUGE_VALF
 @deftypevrx Macro {long double} HUGE_VALL
+@deftypevrx Macro _FloatN HUGE_VAL_FN
+@deftypevrx Macro _FloatNx HUGE_VAL_FNx
 @standards{ISO, math.h}
+@standardsx{HUGE_VAL_FN, TS 18661-3:2015, math.h}
+@standardsx{HUGE_VAL_FNx, TS 18661-3:2015, math.h}
 An expression representing a particular very large number.  On machines
 that use @w{IEEE 754} floating point format, @code{HUGE_VAL} is infinity.
 On other machines, it's typically the largest positive number that can
@@ -1229,8 +1237,8 @@ whose imaginary part is @var{y}, the absolute value is @w{@code{sqrt
 @pindex stdlib.h
 Prototypes for @code{abs}, @code{labs} and @code{llabs} are in @file{stdlib.h};
 @code{imaxabs} is declared in @file{inttypes.h};
-@code{fabs}, @code{fabsf} and @code{fabsl} are declared in @file{math.h}.
-@code{cabs}, @code{cabsf} and @code{cabsl} are declared in @file{complex.h}.
+the @code{fabs} functions are declared in @file{math.h};
+the @code{cabs} functions are declared in @file{complex.h}.
 
 @deftypefun int abs (int @var{number})
 @deftypefunx {long int} labs (long int @var{number})
@@ -1254,7 +1262,11 @@ See @ref{Integers} for a description of the @code{intmax_t} type.
 @deftypefun double fabs (double @var{number})
 @deftypefunx float fabsf (float @var{number})
 @deftypefunx {long double} fabsl (long double @var{number})
+@deftypefunx _FloatN fabsfN (_Float@var{N} @var{number})
+@deftypefunx _FloatNx fabsfNx (_Float@var{N}x @var{number})
 @standards{ISO, math.h}
+@standardsx{fabsfN, TS 18661-3:2015, math.h}
+@standardsx{fabsfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function returns the absolute value of the floating-point number
 @var{number}.
@@ -1263,7 +1275,11 @@ This function returns the absolute value of the floating-point number
 @deftypefun double cabs (complex double @var{z})
 @deftypefunx float cabsf (complex float @var{z})
 @deftypefunx {long double} cabsl (complex long double @var{z})
+@deftypefunx _FloatN cabsfN (complex _Float@var{N} @var{z})
+@deftypefunx _FloatNx cabsfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{cabsfN, TS 18661-3:2015, complex.h}
+@standardsx{cabsfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the absolute  value of the complex number @var{z}
 (@pxref{Complex Numbers}).  The absolute value of a complex number is:
@@ -1296,7 +1312,11 @@ All these functions are declared in @file{math.h}.
 @deftypefun double frexp (double @var{value}, int *@var{exponent})
 @deftypefunx float frexpf (float @var{value}, int *@var{exponent})
 @deftypefunx {long double} frexpl (long double @var{value}, int *@var{exponent})
+@deftypefunx _FloatN frexpfN (_Float@var{N} @var{value}, int *@var{exponent})
+@deftypefunx _FloatNx frexpfNx (_Float@var{N}x @var{value}, int *@var{exponent})
 @standards{ISO, math.h}
+@standardsx{frexpfN, TS 18661-3:2015, math.h}
+@standardsx{frexpfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are used to split the number @var{value}
 into a normalized fraction and an exponent.
@@ -1317,7 +1337,11 @@ zero is stored in @code{*@var{exponent}}.
 @deftypefun double ldexp (double @var{value}, int @var{exponent})
 @deftypefunx float ldexpf (float @var{value}, int @var{exponent})
 @deftypefunx {long double} ldexpl (long double @var{value}, int @var{exponent})
+@deftypefunx _FloatN ldexpfN (_Float@var{N} @var{value}, int @var{exponent})
+@deftypefunx _FloatNx ldexpfNx (_Float@var{N}x @var{value}, int @var{exponent})
 @standards{ISO, math.h}
+@standardsx{ldexpfN, TS 18661-3:2015, math.h}
+@standardsx{ldexpfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the result of multiplying the floating-point
 number @var{value} by 2 raised to the power @var{exponent}.  (It can
@@ -1330,6 +1354,8 @@ For example, @code{ldexp (0.8, 4)} returns @code{12.8}.
 The following functions, which come from BSD, provide facilities
 equivalent to those of @code{ldexp} and @code{frexp}.  See also the
 @w{ISO C} function @code{logb} which originally also appeared in BSD.
+The @code{_Float@var{N}} and @code{_Float@var{N}} variants of the
+following functions come from TS 18661-3:2015.
 
 @deftypefun double scalb (double @var{value}, double @var{exponent})
 @deftypefunx float scalbf (float @var{value}, float @var{exponent})
@@ -1342,7 +1368,11 @@ The @code{scalb} function is the BSD name for @code{ldexp}.
 @deftypefun double scalbn (double @var{x}, int @var{n})
 @deftypefunx float scalbnf (float @var{x}, int @var{n})
 @deftypefunx {long double} scalbnl (long double @var{x}, int @var{n})
+@deftypefunx _FloatN scalbnfN (_Float@var{N} @var{x}, int @var{n})
+@deftypefunx _FloatNx scalbnfNx (_Float@var{N}x @var{x}, int @var{n})
 @standards{BSD, math.h}
+@standardsx{scalbnfN, TS 18661-3:2015, math.h}
+@standardsx{scalbnfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{scalbn} is identical to @code{scalb}, except that the exponent
 @var{n} is an @code{int} instead of a floating-point number.
@@ -1351,7 +1381,11 @@ The @code{scalb} function is the BSD name for @code{ldexp}.
 @deftypefun double scalbln (double @var{x}, long int @var{n})
 @deftypefunx float scalblnf (float @var{x}, long int @var{n})
 @deftypefunx {long double} scalblnl (long double @var{x}, long int @var{n})
+@deftypefunx _FloatN scalblnfN (_Float@var{N} @var{x}, long int @var{n})
+@deftypefunx _FloatNx scalblnfNx (_Float@var{N}x @var{x}, long int @var{n})
 @standards{BSD, math.h}
+@standardsx{scalblnfN, TS 18661-3:2015, math.h}
+@standardsx{scalblnfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{scalbln} is identical to @code{scalb}, except that the exponent
 @var{n} is a @code{long int} instead of a floating-point number.
@@ -1416,7 +1450,11 @@ Round to nearest, ties round to even.
 @deftypefun double ceil (double @var{x})
 @deftypefunx float ceilf (float @var{x})
 @deftypefunx {long double} ceill (long double @var{x})
+@deftypefunx _FloatN ceilfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx ceilfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{ceilfN, TS 18661-3:2015, math.h}
+@standardsx{ceilfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions round @var{x} upwards to the nearest integer,
 returning that value as a @code{double}.  Thus, @code{ceil (1.5)}
@@ -1426,7 +1464,11 @@ is @code{2.0}.
 @deftypefun double floor (double @var{x})
 @deftypefunx float floorf (float @var{x})
 @deftypefunx {long double} floorl (long double @var{x})
+@deftypefunx _FloatN floorfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx floorfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{floorfN, TS 18661-3:2015, math.h}
+@standardsx{floorfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions round @var{x} downwards to the nearest
 integer, returning that value as a @code{double}.  Thus, @code{floor
@@ -1436,7 +1478,11 @@ integer, returning that value as a @code{double}.  Thus, @code{floor
 @deftypefun double trunc (double @var{x})
 @deftypefunx float truncf (float @var{x})
 @deftypefunx {long double} truncl (long double @var{x})
+@deftypefunx _FloatN truncfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx truncfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{truncfN, TS 18661-3:2015, math.h}
+@standardsx{truncfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{trunc} functions round @var{x} towards zero to the nearest
 integer (returned in floating-point format).  Thus, @code{trunc (1.5)}
@@ -1446,7 +1492,11 @@ is @code{1.0} and @code{trunc (-1.5)} is @code{-1.0}.
 @deftypefun double rint (double @var{x})
 @deftypefunx float rintf (float @var{x})
 @deftypefunx {long double} rintl (long double @var{x})
+@deftypefunx _FloatN rintfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx rintfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{rintfN, TS 18661-3:2015, math.h}
+@standardsx{rintfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions round @var{x} to an integer value according to the
 current rounding mode.  @xref{Floating Point Parameters}, for
@@ -1462,7 +1512,11 @@ inexact exception.
 @deftypefun double nearbyint (double @var{x})
 @deftypefunx float nearbyintf (float @var{x})
 @deftypefunx {long double} nearbyintl (long double @var{x})
+@deftypefunx _FloatN nearbyintfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx nearbyintfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{nearbyintfN, TS 18661-3:2015, math.h}
+@standardsx{nearbyintfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the same value as the @code{rint} functions, but
 do not raise the inexact exception if @var{x} is not an integer.
@@ -1471,7 +1525,11 @@ do not raise the inexact exception if @var{x} is not an integer.
 @deftypefun double round (double @var{x})
 @deftypefunx float roundf (float @var{x})
 @deftypefunx {long double} roundl (long double @var{x})
+@deftypefunx _FloatN roundfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx roundfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{roundfN, TS 18661-3:2015, math.h}
+@standardsx{roundfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are similar to @code{rint}, but they round halfway
 cases away from zero instead of to the nearest integer (or other
@@ -1481,16 +1539,25 @@ current rounding mode).
 @deftypefun double roundeven (double @var{x})
 @deftypefunx float roundevenf (float @var{x})
 @deftypefunx {long double} roundevenl (long double @var{x})
+@deftypefunx _FloatN roundevenfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx roundevenfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{roundevenfN, TS 18661-3:2015, math.h}
+@standardsx{roundevenfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions, from TS 18661-1:2014, are similar to @code{round},
-but they round halfway cases to even instead of away from zero.
+These functions, from TS 18661-1:2014 and TS 18661-3:2015, are similar
+to @code{round}, but they round halfway cases to even instead of away
+from zero.
 @end deftypefun
 
 @deftypefun {long int} lrint (double @var{x})
 @deftypefunx {long int} lrintf (float @var{x})
 @deftypefunx {long int} lrintl (long double @var{x})
+@deftypefunx {long int} lrintfN (_Float@var{N} @var{x})
+@deftypefunx {long int} lrintfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{lrintfN, TS 18661-3:2015, math.h}
+@standardsx{lrintfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are just like @code{rint}, but they return a
 @code{long int} instead of a floating-point number.
@@ -1499,7 +1566,11 @@ These functions are just like @code{rint}, but they return a
 @deftypefun {long long int} llrint (double @var{x})
 @deftypefunx {long long int} llrintf (float @var{x})
 @deftypefunx {long long int} llrintl (long double @var{x})
+@deftypefunx {long long int} llrintfN (_Float@var{N} @var{x})
+@deftypefunx {long long int} llrintfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{llrintfN, TS 18661-3:2015, math.h}
+@standardsx{llrintfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are just like @code{rint}, but they return a
 @code{long long int} instead of a floating-point number.
@@ -1508,7 +1579,11 @@ These functions are just like @code{rint}, but they return a
 @deftypefun {long int} lround (double @var{x})
 @deftypefunx {long int} lroundf (float @var{x})
 @deftypefunx {long int} lroundl (long double @var{x})
+@deftypefunx {long int} lroundfN (_Float@var{N} @var{x})
+@deftypefunx {long int} lroundfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{lroundfN, TS 18661-3:2015, math.h}
+@standardsx{lroundfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are just like @code{round}, but they return a
 @code{long int} instead of a floating-point number.
@@ -1517,7 +1592,11 @@ These functions are just like @code{round}, but they return a
 @deftypefun {long long int} llround (double @var{x})
 @deftypefunx {long long int} llroundf (float @var{x})
 @deftypefunx {long long int} llroundl (long double @var{x})
+@deftypefunx {long long int} llroundfN (_Float@var{N} @var{x})
+@deftypefunx {long long int} llroundfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{llroundfN, TS 18661-3:2015, math.h}
+@standardsx{llroundfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are just like @code{round}, but they return a
 @code{long long int} instead of a floating-point number.
@@ -1526,27 +1605,43 @@ These functions are just like @code{round}, but they return a
 @deftypefun intmax_t fromfp (double @var{x}, int @var{round}, unsigned int @var{width})
 @deftypefunx intmax_t fromfpf (float @var{x}, int @var{round}, unsigned int @var{width})
 @deftypefunx intmax_t fromfpl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx intmax_t fromfpfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx intmax_t fromfpfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
 @deftypefunx uintmax_t ufromfp (double @var{x}, int @var{round}, unsigned int @var{width})
 @deftypefunx uintmax_t ufromfpf (float @var{x}, int @var{round}, unsigned int @var{width})
 @deftypefunx uintmax_t ufromfpl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx uintmax_t ufromfpfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx uintmax_t ufromfpfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
 @deftypefunx intmax_t fromfpx (double @var{x}, int @var{round}, unsigned int @var{width})
 @deftypefunx intmax_t fromfpxf (float @var{x}, int @var{round}, unsigned int @var{width})
 @deftypefunx intmax_t fromfpxl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx intmax_t fromfpxfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx intmax_t fromfpxfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
 @deftypefunx uintmax_t ufromfpx (double @var{x}, int @var{round}, unsigned int @var{width})
 @deftypefunx uintmax_t ufromfpxf (float @var{x}, int @var{round}, unsigned int @var{width})
 @deftypefunx uintmax_t ufromfpxl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx uintmax_t ufromfpxfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx uintmax_t ufromfpxfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
 @standards{ISO, math.h}
+@standardsx{fromfpfN, TS 18661-3:2015, math.h}
+@standardsx{fromfpfNx, TS 18661-3:2015, math.h}
+@standardsx{ufromfpfN, TS 18661-3:2015, math.h}
+@standardsx{ufromfpfNx, TS 18661-3:2015, math.h}
+@standardsx{fromfpxfN, TS 18661-3:2015, math.h}
+@standardsx{fromfpxfNx, TS 18661-3:2015, math.h}
+@standardsx{ufromfpxfN, TS 18661-3:2015, math.h}
+@standardsx{ufromfpxfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions, from TS 18661-1:2014, convert a floating-point number
-to an integer according to the rounding direction @var{round} (one of
-the @code{FP_INT_*} macros).  If the integer is outside the range of a
-signed or unsigned (depending on the return type of the function) type
-of width @var{width} bits (or outside the range of the return type, if
-@var{width} is larger), or if @var{x} is infinite or NaN, or if
-@var{width} is zero, a domain error occurs and an unspecified value is
-returned.  The functions with an @samp{x} in their names raise the
-inexact exception when a domain error does not occur and the argument
-is not an integer; the other functions do not raise the inexact
+These functions, from TS 18661-1:2014 and TS 18661-3:2015, convert a
+floating-point number to an integer according to the rounding direction
+@var{round} (one of the @code{FP_INT_*} macros).  If the integer is
+outside the range of a signed or unsigned (depending on the return type
+of the function) type of width @var{width} bits (or outside the range of
+the return type, if @var{width} is larger), or if @var{x} is infinite or
+NaN, or if @var{width} is zero, a domain error occurs and an unspecified
+value is returned.  The functions with an @samp{x} in their names raise
+the inexact exception when a domain error does not occur and the
+argument is not an integer; the other functions do not raise the inexact
 exception.
 @end deftypefun
 
@@ -1554,7 +1649,11 @@ exception.
 @deftypefun double modf (double @var{value}, double *@var{integer-part})
 @deftypefunx float modff (float @var{value}, float *@var{integer-part})
 @deftypefunx {long double} modfl (long double @var{value}, long double *@var{integer-part})
+@deftypefunx _FloatN modffN (_Float@var{N} @var{value}, _Float@var{N} *@var{integer-part})
+@deftypefunx _FloatNx modffNx (_Float@var{N}x @var{value}, _Float@var{N}x *@var{integer-part})
 @standards{ISO, math.h}
+@standardsx{modffN, TS 18661-3:2015, math.h}
+@standardsx{modffNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions break the argument @var{value} into an integer part and a
 fractional part (between @code{-1} and @code{1}, exclusive).  Their sum
@@ -1576,7 +1675,11 @@ suits your problem.
 @deftypefun double fmod (double @var{numerator}, double @var{denominator})
 @deftypefunx float fmodf (float @var{numerator}, float @var{denominator})
 @deftypefunx {long double} fmodl (long double @var{numerator}, long double @var{denominator})
+@deftypefunx _FloatN fmodfN (_Float@var{N} @var{numerator}, _Float@var{N} @var{denominator})
+@deftypefunx _FloatNx fmodfNx (_Float@var{N}x @var{numerator}, _Float@var{N}x @var{denominator})
 @standards{ISO, math.h}
+@standardsx{fmodfN, TS 18661-3:2015, math.h}
+@standardsx{fmodfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute the remainder from the division of
 @var{numerator} by @var{denominator}.  Specifically, the return value is
@@ -1594,7 +1697,11 @@ If @var{denominator} is zero, @code{fmod} signals a domain error.
 @deftypefun double remainder (double @var{numerator}, double @var{denominator})
 @deftypefunx float remainderf (float @var{numerator}, float @var{denominator})
 @deftypefunx {long double} remainderl (long double @var{numerator}, long double @var{denominator})
+@deftypefunx _FloatN remainderfN (_Float@var{N} @var{numerator}, _Float@var{N} @var{denominator})
+@deftypefunx _FloatNx remainderfNx (_Float@var{N}x @var{numerator}, _Float@var{N}x @var{denominator})
 @standards{ISO, math.h}
+@standardsx{remainderfN, TS 18661-3:2015, math.h}
+@standardsx{remainderfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are like @code{fmod} except that they round the
 internal quotient @var{n} to the nearest integer instead of towards zero
@@ -1630,7 +1737,11 @@ bits.
 @deftypefun double copysign (double @var{x}, double @var{y})
 @deftypefunx float copysignf (float @var{x}, float @var{y})
 @deftypefunx {long double} copysignl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN copysignfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx copysignfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
 @standards{ISO, math.h}
+@standardsx{copysignfN, TS 18661-3:2015, math.h}
+@standardsx{copysignfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return @var{x} but with the sign of @var{y}.  They work
 even if @var{x} or @var{y} are NaN or zero.  Both of these can carry a
@@ -1659,7 +1770,11 @@ false, but @code{signbit (-0.0)} will return a nonzero value.
 @deftypefun double nextafter (double @var{x}, double @var{y})
 @deftypefunx float nextafterf (float @var{x}, float @var{y})
 @deftypefunx {long double} nextafterl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN nextafterfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx nextafterfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
 @standards{ISO, math.h}
+@standardsx{nextafterfN, TS 18661-3:2015, math.h}
+@standardsx{nextafterfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{nextafter} function returns the next representable neighbor of
 @var{x} in the direction towards @var{y}.  The size of the step between
@@ -1688,7 +1803,11 @@ double}.
 @deftypefun double nextup (double @var{x})
 @deftypefunx float nextupf (float @var{x})
 @deftypefunx {long double} nextupl (long double @var{x})
+@deftypefunx _FloatN nextupfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx nextupfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{nextupfN, TS 18661-3:2015, math.h}
+@standardsx{nextupfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{nextup} function returns the next representable neighbor of @var{x}
 in the direction of positive infinity.  If @var{x} is the smallest negative
@@ -1696,14 +1815,18 @@ subnormal number in the type of @var{x} the function returns @code{-0}.  If
 @math{@var{x} = @code{0}} the function returns the smallest positive subnormal
 number in the type of @var{x}.  If @var{x} is NaN, NaN is returned.
 If @var{x} is @math{+@infinity{}}, @math{+@infinity{}} is returned.
-@code{nextup} is from TS 18661-1:2014.
+@code{nextup} is from TS 18661-1:2014 and TS 18661-3:2015.
 @code{nextup} never raises an exception except for signaling NaNs.
 @end deftypefun
 
 @deftypefun double nextdown (double @var{x})
 @deftypefunx float nextdownf (float @var{x})
 @deftypefunx {long double} nextdownl (long double @var{x})
+@deftypefunx _FloatN nextdownfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx nextdownfNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
+@standardsx{nextdownfN, TS 18661-3:2015, math.h}
+@standardsx{nextdownfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{nextdown} function returns the next representable neighbor of @var{x}
 in the direction of negative infinity.  If @var{x} is the smallest positive
@@ -1711,7 +1834,7 @@ subnormal number in the type of @var{x} the function returns @code{+0}.  If
 @math{@var{x} = @code{0}} the function returns the smallest negative subnormal
 number in the type of @var{x}.  If @var{x} is NaN, NaN is returned.
 If @var{x} is @math{-@infinity{}}, @math{-@infinity{}} is returned.
-@code{nextdown} is from TS 18661-1:2014.
+@code{nextdown} is from TS 18661-1:2014 and TS 18661-3:2015.
 @code{nextdown} never raises an exception except for signaling NaNs.
 @end deftypefun
 
@@ -1719,7 +1842,11 @@ If @var{x} is @math{-@infinity{}}, @math{-@infinity{}} is returned.
 @deftypefun double nan (const char *@var{tagp})
 @deftypefunx float nanf (const char *@var{tagp})
 @deftypefunx {long double} nanl (const char *@var{tagp})
+@deftypefunx _FloatN nanfN (const char *@var{tagp})
+@deftypefunx _FloatNx nanfNx (const char *@var{tagp})
 @standards{ISO, math.h}
+@standardsx{nanfN, TS 18661-3:2015, math.h}
+@standardsx{nanfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 @c The unsafe-but-ruled-safe locale use comes from strtod.
 The @code{nan} function returns a representation of NaN, provided that
@@ -1735,13 +1862,17 @@ selects one.  On other systems it may do nothing.
 @deftypefun int canonicalize (double *@var{cx}, const double *@var{x})
 @deftypefunx int canonicalizef (float *@var{cx}, const float *@var{x})
 @deftypefunx int canonicalizel (long double *@var{cx}, const long double *@var{x})
+@deftypefunx int canonicalizefN (_Float@var{N} *@var{cx}, const _Float@var{N} *@var{x})
+@deftypefunx int canonicalizefNx (_Float@var{N}x *@var{cx}, const _Float@var{N}x *@var{x})
 @standards{ISO, math.h}
+@standardsx{canonicalizefN, TS 18661-3:2015, math.h}
+@standardsx{canonicalizefNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 In some floating-point formats, some values have canonical (preferred)
 and noncanonical encodings (for IEEE interchange binary formats, all
 encodings are canonical).  These functions, defined by TS
-18661-1:2014, attempt to produce a canonical version of the
-floating-point value pointed to by @var{x}; if that value is a
+18661-1:2014 and TS 18661-3:2015, attempt to produce a canonical version
+of the floating-point value pointed to by @var{x}; if that value is a
 signaling NaN, they raise the invalid exception and produce a quiet
 NaN.  If a canonical value is produced, it is stored in the object
 pointed to by @var{cx}, and these functions return zero.  Otherwise
@@ -1760,42 +1891,56 @@ produced as output.
 @deftypefun double getpayload (const double *@var{x})
 @deftypefunx float getpayloadf (const float *@var{x})
 @deftypefunx {long double} getpayloadl (const long double *@var{x})
+@deftypefunx _FloatN getpayloadfN (const _Float@var{N} *@var{x})
+@deftypefunx _FloatNx getpayloadfNx (const _Float@var{N}x *@var{x})
 @standards{ISO, math.h}
+@standardsx{getpayloadfN, TS 18661-3:2015, math.h}
+@standardsx{getpayloadfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 IEEE 754 defines the @dfn{payload} of a NaN to be an integer value
 encoded in the representation of the NaN.  Payloads are typically
 propagated from NaN inputs to the result of a floating-point
-operation.  These functions, defined by TS 18661-1:2014, return the
-payload of the NaN pointed to by @var{x} (returned as a positive
-integer, or positive zero, represented as a floating-point number); if
-@var{x} is not a NaN, they return an unspecified value.  They raise no
-floating-point exceptions even for signaling NaNs.
+operation.  These functions, defined by TS 18661-1:2014 and TS
+18661-3:2015, return the payload of the NaN pointed to by @var{x}
+(returned as a positive integer, or positive zero, represented as a
+floating-point number); if @var{x} is not a NaN, they return an
+unspecified value.  They raise no floating-point exceptions even for
+signaling NaNs.
 @end deftypefun
 
 @deftypefun int setpayload (double *@var{x}, double @var{payload})
 @deftypefunx int setpayloadf (float *@var{x}, float @var{payload})
 @deftypefunx int setpayloadl (long double *@var{x}, long double @var{payload})
+@deftypefunx int setpayloadfN (_Float@var{N} *@var{x}, _Float@var{N} @var{payload})
+@deftypefunx int setpayloadfNx (_Float@var{N}x *@var{x}, _Float@var{N}x @var{payload})
 @standards{ISO, math.h}
+@standardsx{setpayloadfN, TS 18661-3:2015, math.h}
+@standardsx{setpayloadfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions, defined by TS 18661-1:2014, set the object pointed to
-by @var{x} to a quiet NaN with payload @var{payload} and a zero sign
-bit and return zero.  If @var{payload} is not a positive-signed
-integer that is a valid payload for a quiet NaN of the given type, the
-object pointed to by @var{x} is set to positive zero and a nonzero
-value is returned.  They raise no floating-point exceptions.
+These functions, defined by TS 18661-1:2014 and TS 18661-3:2015, set the
+object pointed to by @var{x} to a quiet NaN with payload @var{payload}
+and a zero sign bit and return zero.  If @var{payload} is not a
+positive-signed integer that is a valid payload for a quiet NaN of the
+given type, the object pointed to by @var{x} is set to positive zero and
+a nonzero value is returned.  They raise no floating-point exceptions.
 @end deftypefun
 
 @deftypefun int setpayloadsig (double *@var{x}, double @var{payload})
 @deftypefunx int setpayloadsigf (float *@var{x}, float @var{payload})
 @deftypefunx int setpayloadsigl (long double *@var{x}, long double @var{payload})
+@deftypefunx int setpayloadsigfN (_Float@var{N} *@var{x}, _Float@var{N} @var{payload})
+@deftypefunx int setpayloadsigfNx (_Float@var{N}x *@var{x}, _Float@var{N}x @var{payload})
 @standards{ISO, math.h}
+@standardsx{setpayloadsigfN, TS 18661-3:2015, math.h}
+@standardsx{setpayloadsigfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions, defined by TS 18661-1:2014, set the object pointed to
-by @var{x} to a signaling NaN with payload @var{payload} and a zero
-sign bit and return zero.  If @var{payload} is not a positive-signed
-integer that is a valid payload for a signaling NaN of the given type,
-the object pointed to by @var{x} is set to positive zero and a nonzero
-value is returned.  They raise no floating-point exceptions.
+These functions, defined by TS 18661-1:2014 and TS 18661-3:2015, set the
+object pointed to by @var{x} to a signaling NaN with payload
+@var{payload} and a zero sign bit and return zero.  If @var{payload} is
+not a positive-signed integer that is a valid payload for a signaling
+NaN of the given type, the object pointed to by @var{x} is set to
+positive zero and a nonzero value is returned.  They raise no
+floating-point exceptions.
 @end deftypefun
 
 @node FP Comparison Functions
@@ -1886,7 +2031,11 @@ NaN.
 @deftypefun int totalorder (double @var{x}, double @var{y})
 @deftypefunx int totalorderf (float @var{x}, float @var{y})
 @deftypefunx int totalorderl (long double @var{x}, long double @var{y})
+@deftypefunx int totalorderfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx int totalorderfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
 @standards{TS 18661-1:2014, math.h}
+@standardsx{totalorderfN, TS 18661-3:2015, math.h}
+@standardsx{totalorderfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions determine whether the total order relationship,
 defined in IEEE 754-2008, is true for @var{x} and @var{y}, returning
@@ -1905,7 +2054,11 @@ payload.
 @deftypefun int totalordermag (double @var{x}, double @var{y})
 @deftypefunx int totalordermagf (float @var{x}, float @var{y})
 @deftypefunx int totalordermagl (long double @var{x}, long double @var{y})
+@deftypefunx int totalordermagfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx int totalordermagfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
 @standards{TS 18661-1:2014, math.h}
+@standardsx{totalordermagfN, TS 18661-3:2015, math.h}
+@standardsx{totalordermagfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions determine whether the total order relationship,
 defined in IEEE 754-2008, is true for the absolute values of @var{x}
@@ -1936,7 +2089,11 @@ perform these operations faster than the equivalent C code.
 @deftypefun double fmin (double @var{x}, double @var{y})
 @deftypefunx float fminf (float @var{x}, float @var{y})
 @deftypefunx {long double} fminl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fminfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fminfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
 @standards{ISO, math.h}
+@standardsx{fminfN, TS 18661-3:2015, math.h}
+@standardsx{fminfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fmin} function returns the lesser of the two values @var{x}
 and @var{y}.  It is similar to the expression
@@ -1952,7 +2109,11 @@ are NaN, NaN is returned.
 @deftypefun double fmax (double @var{x}, double @var{y})
 @deftypefunx float fmaxf (float @var{x}, float @var{y})
 @deftypefunx {long double} fmaxl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fmaxfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fmaxfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
 @standards{ISO, math.h}
+@standardsx{fmaxfN, TS 18661-3:2015, math.h}
+@standardsx{fmaxfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fmax} function returns the greater of the two values @var{x}
 and @var{y}.
@@ -1964,18 +2125,26 @@ are NaN, NaN is returned.
 @deftypefun double fminmag (double @var{x}, double @var{y})
 @deftypefunx float fminmagf (float @var{x}, float @var{y})
 @deftypefunx {long double} fminmagl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fminmagfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fminmagfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
 @standards{ISO, math.h}
+@standardsx{fminmagfN, TS 18661-3:2015, math.h}
+@standardsx{fminmagfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions, from TS 18661-1:2014, return whichever of the two
-values @var{x} and @var{y} has the smaller absolute value.  If both
-have the same absolute value, or either is NaN, they behave the same
-as the @code{fmin} functions.
+These functions, from TS 18661-1:2014 and TS 18661-3:2015, return
+whichever of the two values @var{x} and @var{y} has the smaller absolute
+value.  If both have the same absolute value, or either is NaN, they
+behave the same as the @code{fmin} functions.
 @end deftypefun
 
 @deftypefun double fmaxmag (double @var{x}, double @var{y})
 @deftypefunx float fmaxmagf (float @var{x}, float @var{y})
 @deftypefunx {long double} fmaxmagl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fmaxmagfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fmaxmagfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
 @standards{ISO, math.h}
+@standardsx{fmaxmagfN, TS 18661-3:2015, math.h}
+@standardsx{fmaxmagfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions, from TS 18661-1:2014, return whichever of the two
 values @var{x} and @var{y} has the greater absolute value.  If both
@@ -1986,7 +2155,11 @@ as the @code{fmax} functions.
 @deftypefun double fdim (double @var{x}, double @var{y})
 @deftypefunx float fdimf (float @var{x}, float @var{y})
 @deftypefunx {long double} fdiml (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fdimfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fdimfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
 @standards{ISO, math.h}
+@standardsx{fdimfN, TS 18661-3:2015, math.h}
+@standardsx{fdimfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fdim} function returns the positive difference between
 @var{x} and @var{y}.  The positive difference is @math{@var{x} -
@@ -1998,7 +2171,11 @@ If @var{x}, @var{y}, or both are NaN, NaN is returned.
 @deftypefun double fma (double @var{x}, double @var{y}, double @var{z})
 @deftypefunx float fmaf (float @var{x}, float @var{y}, float @var{z})
 @deftypefunx {long double} fmal (long double @var{x}, long double @var{y}, long double @var{z})
+@deftypefunx _FloatN fmafN (_Float@var{N} @var{x}, _Float@var{N} @var{y}, _Float@var{N} @var{z})
+@deftypefunx _FloatNx fmafNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y}, _Float@var{N}x @var{z})
 @standards{ISO, math.h}
+@standardsx{fmafN, TS 18661-3:2015, math.h}
+@standardsx{fmafNx, TS 18661-3:2015, math.h}
 @cindex butterfly
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fma} function performs floating-point multiply-add.  This is
@@ -2032,6 +2209,11 @@ with a new type qualifier, @code{complex}.  It is a keyword if and only
 if @file{complex.h} has been included.  There are three complex types,
 corresponding to the three real types:  @code{float complex},
 @code{double complex}, and @code{long double complex}.
+
+Likewise, on machines that have support for @code{_Float@var{N}} or
+@code{_Float@var{N}x} enabled, the complex types @code{_Float@var{N}
+complex} and @code{_Float@var{N}x complex} are also available if
+@file{complex.h} has been included; @pxref{Mathematics}.
 
 To construct complex numbers you need a way to indicate the imaginary
 part of a number.  There is no standard notation for an imaginary
@@ -2126,7 +2308,11 @@ available in three variants, one for each of the three complex types.
 @deftypefun double creal (complex double @var{z})
 @deftypefunx float crealf (complex float @var{z})
 @deftypefunx {long double} creall (complex long double @var{z})
+@deftypefunx _FloatN crealfN (complex _Float@var{N} @var{z})
+@deftypefunx _FloatNx crealfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{crealfN, TS 18661-3:2015, complex.h}
+@standardsx{crealfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the real part of the complex number @var{z}.
 @end deftypefun
@@ -2134,7 +2320,11 @@ These functions return the real part of the complex number @var{z}.
 @deftypefun double cimag (complex double @var{z})
 @deftypefunx float cimagf (complex float @var{z})
 @deftypefunx {long double} cimagl (complex long double @var{z})
+@deftypefunx _FloatN cimagfN (complex _Float@var{N} @var{z})
+@deftypefunx _FloatNx cimagfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{cimagfN, TS 18661-3:2015, complex.h}
+@standardsx{cimagfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the imaginary part of the complex number @var{z}.
 @end deftypefun
@@ -2142,7 +2332,11 @@ These functions return the imaginary part of the complex number @var{z}.
 @deftypefun {complex double} conj (complex double @var{z})
 @deftypefunx {complex float} conjf (complex float @var{z})
 @deftypefunx {complex long double} conjl (complex long double @var{z})
+@deftypefunx {complex _FloatN} conjfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} conjfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{conjfN, TS 18661-3:2015, complex.h}
+@standardsx{conjfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the conjugate value of the complex number
 @var{z}.  The conjugate of a complex number has the same real part and a
@@ -2152,7 +2346,11 @@ negated imaginary part.  In other words, @samp{conj(a + bi) = a + -bi}.
 @deftypefun double carg (complex double @var{z})
 @deftypefunx float cargf (complex float @var{z})
 @deftypefunx {long double} cargl (complex long double @var{z})
+@deftypefunx _FloatN cargfN (complex _Float@var{N} @var{z})
+@deftypefunx _FloatNx cargfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{cargfN, TS 18661-3:2015, complex.h}
+@standardsx{cargfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the argument of the complex number @var{z}.
 The argument of a complex number is the angle in the complex plane
@@ -2166,7 +2364,11 @@ number.  This angle is measured in the usual fashion and ranges from
 @deftypefun {complex double} cproj (complex double @var{z})
 @deftypefunx {complex float} cprojf (complex float @var{z})
 @deftypefunx {complex long double} cprojl (complex long double @var{z})
+@deftypefunx {complex _FloatN} cprojfN (complex _Float@var{N} @var{z})
+@deftypefunx {complex _FloatNx} cprojfNx (complex _Float@var{N}x @var{z})
 @standards{ISO, complex.h}
+@standardsx{cprojfN, TS 18661-3:2015, complex.h}
+@standardsx{cprojfNx, TS 18661-3:2015, complex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the projection of the complex value @var{z} onto
 the Riemann sphere.  Values with an infinite imaginary part are projected

@@ -1,3 +1,66 @@
+2017-06-23  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* manual/arith.texi (Infinity and NaN): Document SNANFN and SNANFNx.
+	(Error Reporting by Mathematical Functions): Document HUGE_VAL_FN
+	and HUGE_VAL_FNx.
+	(Absolute Value): Document fabsfN, fabsfNx, cabsfN, cabsfNx.
+	Rephrase the paragraph that mentions that fabs, fabsf, and fabsl
+	are in math.h, to avoid having to list the _FloatN and _FloatNx
+	variants as well.  Likewise for the cabs functions.
+	(Normalization Functions): Document frexpfN, frexpfNx, ldexpfN,
+	ldexpfNx, scalbnfN, scalbnfNx, scalblnfN, scalblnfNx.
+	Mention that _FloatN and _FloatNx variants of scalbn and scalbln
+	come from TS 18661-3, since this section explicitly states that
+	these functions come from BSD.
+	(Rounding Functions): Document ceilfN, ceilfNx, floorfN, floorfNx,
+	truncfN, truncfNx, rintfN, rintfNx, nearbyintfN, nearbyintfNx,
+	roundfN, roundfNx, roundevenfN, roundevenfNx, lrintfN, lrintfNx,
+	llrintfN, llrintfNx, lroundfN, lroundfNx, llroundfN, llroundfNx,
+	fromfpfN, fromfpfNx, ufromfpfN, ufromfpfNx, fromfpxfN, fromfpxfNx,
+	ufromfpxfN, ufromfpxfNx, modffN, modffNx.
+	(Remainder Functions): Document fmodfN, fmodfNx, remainderfN,
+	remainderfNx.
+	(Setting and modifying single bits of FP values): Document
+	copysignfN, copysignfNx, nextafterfN, nextafterfNx, nextupfN,
+	nextupfNx, nextdownfN, nextdownfNx, nanfN, nanfNx, canonicalizefN,
+	canonicalizefNx, getpayloadfN, getpayloadfNx, setpayloadfN,
+	setpayloadfNx, setpayloadsigfN, setpayloadsigfNx.
+	(Floating-Point Comparison Functions): Document totalorderfN,
+	totalorderfNx, totalordermagfN, totalordermagfNx.
+	(Miscellaneous FP arithmetic functions): Document fminfN, fminfNx,
+	fmaxfN, fmaxfNx, fminmagfN, fminmagfNx, fmaxmagfN, fmaxmagfNx,
+	fdimfN, fdimfNx, fmafN, fmafNx.
+	(Complex Numbers): Document the complex types: _FloatN complex and
+	_FloatNx complex.
+	(rojections, Conjugates, and Decomposing of Complex Numbers):
+	Document crealfN, crealfNx, cimagfN, cimagfNx, conjfN, conjfNx,
+	cargfN, cargfNx, cprojfN, cprojfNx.
+	* manual/math.texi (Mathematics): Mention that the _FloatN and
+	_FloatNx variants of the math functions come from TS 18661-3,
+	unless otherwise stated.
+	(Predefined Mathematical Constants): Document the _FloatN and
+	_FloatNx variants of the macros prefixed with M_.
+	(Trigonometric Functions): Document sinfN, sinfNx, cosfN, cosfNx,
+	tanfN, tanfNx, sincosfN, sincosfNx, csinfN, csinfNx, ccosfN,
+	ccosfNx, ctanfN, ctanfNx.
+	(Inverse Trigonometric Functions): Document asinfN, asinfNx,
+	acosfN, acosfNx, atanfN, atanfNx, atan2fN, atan2fNx.
+	(Exponentiation and Logarithms): Document expfN, expfNx, exp2fN,
+	exp2fNx, exp10fN, exp10fNx, logfN, logfNx, log10fN, log10fNx,
+	log2fN, log2fNx, logbfN, logbfNx, ilogbfN, ilogbfNx, llogbfN,
+	llogbfNx, powfN, powfNx, sqrtfN, sqrtfNx, cbrtfN, cbrtfNx, hypotfN,
+	hypotfNx, expm1fN, expm1fNx, log1pfN, log1pfNx, cexpfN, cexpfNx,
+	clogfN, clogfNx, clog10fN, clog10fNx, csqrtfN, csqrtfNx, cpowfN,
+	cpowfNx.
+	(Hyperbolic Functions): sinhfN, sinhfNx, coshfN, coshfNx, tanhfN,
+	tanhfNx, csinhfN, csinhfNx, ccoshfN, ccoshfNx, ctanhfN, ctanhfNx,
+	asinhfN, asinhfNx, acoshfN, acoshfNx, atanhfN, atanhfNx, casinhfN,
+	casinhfNx, cacoshfN, cacoshfNx, catanhfN, catanhfNx.
+	(Special Functions): Document erffN, erffNx, erfcfN, erfcfNx,
+	lgammafN, lgammafNx, lgammarfN_r, lgammafNx_r, tgammafN, tgammafNx,
+	j0fN, j0fNx, j1fN, j1fNx, jnfN, jnfNx, y0fN, y0fNx, y1fN, y1fNx,
+	ynfN, ynfNx.
+
 2017-06-23  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S (between_2_3): Fix typo in comment.
