@@ -17,12 +17,12 @@
 
 #include <string.h>
 
-/* Clear memory.  Can't alias to bzero because it's not defined in the
-   same translation unit.  */
+/* Set memory like memset, but different argument order and no return
+   value required.  Also only integer caller-saves may be used.  */
 void
 __aeabi_memclr (void *dest, size_t n)
 {
-  __bzero (dest, n);
+  memset (dest, 0, n);
 }
 
 /* Versions of the above which may assume memory alignment.  */

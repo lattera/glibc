@@ -257,7 +257,7 @@ clnt_broadcast (/* program number */
   fd.fd = sock;
   fd.events = POLLIN;
   nets = getbroadcastnets (addrs, sizeof (addrs) / sizeof (addrs[0]));
-  __bzero ((char *) &baddr, sizeof (baddr));
+  memset ((char *) &baddr, 0, sizeof (baddr));
   baddr.sin_family = AF_INET;
   baddr.sin_port = htons (PMAPPORT);
   baddr.sin_addr.s_addr = htonl (INADDR_ANY);

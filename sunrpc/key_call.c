@@ -219,7 +219,7 @@ key_gendes (des_block *key)
   sin.sin_family = AF_INET;
   sin.sin_port = 0;
   sin.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
-  __bzero (sin.sin_zero, sizeof (sin.sin_zero));
+  memset (sin.sin_zero, 0, sizeof (sin.sin_zero));
   socket = RPC_ANYSOCK;
   client = clntudp_bufcreate (&sin, (u_long) KEY_PROG, (u_long) KEY_VERS,
 			      trytimeout, &socket, RPCSMALLMSGSIZE,

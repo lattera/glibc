@@ -57,7 +57,7 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
 
   if (strcmp (proto, "unix") == 0)
     {
-      __bzero ((char *)&sun, sizeof (sun));
+      memset ((char *)&sun, 0, sizeof (sun));
       sun.sun_family = AF_UNIX;
       strcpy (sun.sun_path, hostname);
       sock = RPC_ANYSOCK;

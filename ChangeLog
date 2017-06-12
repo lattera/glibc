@@ -1,3 +1,15 @@
+2017-06-12  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sunrpc/bindrsvprt.c (bindresvport): Change __bzero to memset.
+	* sunrpc/clnt_gen.c (clnt_create): Likewise.
+	* sunrpc/des_impl.c (_des_crypt): Likewise.
+	* sunrpc/key_call.c (key_gendes): Likewise.
+	* sunrpc/pmap_rmt.c (clnt_broadcast): Likewise.
+	* sunrpc/svc_simple.c (universal): Likewise.
+	* sunrpc/svc_tcp.c (svctcp_create): Likewise.
+	* sunrpc/svc_udp.c (svcudp_bufcreate): Likewise.
+	* sysdeps/arm/aeabi_memclr.c (__aeabi_memclr): Likewise.
+
 2017-06-10  Zack Weinberg  <zackw@panix.com>
 
 	* stdlib/errno.h: Correct an outdated comment.

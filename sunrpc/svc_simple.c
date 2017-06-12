@@ -154,7 +154,7 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
     if (pl->p_prognum == prog && pl->p_procnum == proc)
       {
 	/* decode arguments into a CLEAN buffer */
-	__bzero (xdrbuf, sizeof (xdrbuf));	/* required ! */
+	memset (xdrbuf, 0, sizeof (xdrbuf));	/* required ! */
 	if (!svc_getargs (transp_l, pl->p_inproc, xdrbuf))
 	  {
 	    svcerr_decode (transp_l);
