@@ -27,6 +27,7 @@
 #include <string.h>
 #undef index
 #undef rindex
+#undef __stpcpy
 
 #undef __NO_INLINE__
 #include <bits/string.h>

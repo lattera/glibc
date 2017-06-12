@@ -124,6 +124,10 @@
 
 2017-06-12  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* string/string-inlines.c: Add undef of __stpcpy to fix build issue.
+
+2017-06-12  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	[BZ #15105]
 	[BZ #19463]
 	* include/string.h: Add internal redirect for __stpcpy.
