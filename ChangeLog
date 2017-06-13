@@ -1,3 +1,8 @@
+2017-06-13  Zack Weinberg  <zackw@panix.com>
+
+	* posix/bits/cpu-set.h: Correct indentation of preprocessor
+	directives.
+
 2017-06-12  Zack Weinberg  <zackw@panix.com>
 
 	* bits/sched.h: Remove __need_schedparam logic and replace with a
