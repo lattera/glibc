@@ -111,6 +111,13 @@ test_int (void)
                 }
               TEST_VERIFY_EXIT (dynarray_int_size (&dyn) == count);
               TEST_VERIFY_EXIT (count <= dyn.dynarray_header.allocated);
+              if (count > 0)
+                {
+                  TEST_VERIFY (dynarray_int_begin (&dyn)
+                               == dynarray_int_at (&dyn, 0));
+                  TEST_VERIFY (dynarray_int_end (&dyn)
+                               == dynarray_int_at (&dyn, count - 1) + 1);
+                }
               unsigned final_count;
               bool heap_array = dyn.dynarray_header.array != dyn.scratch;
               if (do_remove_last)
@@ -123,6 +130,13 @@ test_int (void)
                 }
               else
                 final_count = count;
+              if (final_count > 0)
+                {
+                  TEST_VERIFY (dynarray_int_begin (&dyn)
+                               == dynarray_int_at (&dyn, 0));
+                  TEST_VERIFY (dynarray_int_end (&dyn)
+                               == dynarray_int_at (&dyn, final_count - 1) + 1);
+                }
               if (do_clear)
                 {
                   dynarray_int_clear (&dyn);
@@ -225,6 +239,13 @@ test_str (void)
                 }
               TEST_VERIFY_EXIT (dynarray_str_size (&dyn) == count);
               TEST_VERIFY_EXIT (count <= dyn.dynarray_header.allocated);
+              if (count > 0)
+                {
+                  TEST_VERIFY (dynarray_str_begin (&dyn)
+                               == dynarray_str_at (&dyn, 0));
+                  TEST_VERIFY (dynarray_str_end (&dyn)
+                               == dynarray_str_at (&dyn, count - 1) + 1);
+                }
               unsigned final_count;
               bool heap_array = dyn.dynarray_header.array != dyn.scratch;
               if (do_remove_last)
@@ -237,6 +258,13 @@ test_str (void)
                 }
               else
                 final_count = count;
+              if (final_count > 0)
+                {
+                  TEST_VERIFY (dynarray_str_begin (&dyn)
+                               == dynarray_str_at (&dyn, 0));
+                  TEST_VERIFY (dynarray_str_end (&dyn)
+                               == dynarray_str_at (&dyn, final_count - 1) + 1);
+                }
               if (do_clear)
                 {
                   dynarray_str_clear (&dyn);

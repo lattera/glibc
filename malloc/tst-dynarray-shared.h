@@ -73,5 +73,8 @@ struct str_array
     TEST_VERIFY_EXIT (dynarray_##type##_emplace (dyn) == NULL);      \
     dynarray_##type##_free (dyn);                                    \
     CHECK_INIT_STATE (type, (dyn));                                  \
+    /* These functions should not assert.  */                        \
+    dynarray_##type##_begin (dyn);                                   \
+    dynarray_##type##_end (dyn);                                     \
     (void) 0;                                                        \
   })

@@ -65,6 +65,8 @@
      bool DYNARRAY_PREFIX##has_failed (const struct DYNARRAY_STRUCT *);
      void DYNARRAY_PREFIX##mark_failed (struct DYNARRAY_STRUCT *);
      size_t DYNARRAY_PREFIX##size (const struct DYNARRAY_STRUCT *);
+     DYNARRAY_ELEMENT *DYNARRAY_PREFIX##begin (const struct DYNARRAY_STRUCT *);
+     DYNARRAY_ELEMENT *DYNARRAY_PREFIX##end (const struct DYNARRAY_STRUCT *);
      DYNARRAY_ELEMENT *DYNARRAY_PREFIX##at (struct DYNARRAY_STRUCT *, size_t);
      void DYNARRAY_PREFIX##add (struct DYNARRAY_STRUCT *, DYNARRAY_ELEMENT);
      DYNARRAY_ELEMENT *DYNARRAY_PREFIX##emplace (struct DYNARRAY_STRUCT *);
@@ -246,6 +248,26 @@ DYNARRAY_NAME (at) (struct DYNARRAY_STRUCT *list, size_t index)
   if (__glibc_unlikely (index >= DYNARRAY_NAME (size) (list)))
     __libc_dynarray_at_failure (DYNARRAY_NAME (size) (list), index);
   return list->dynarray_header.array + index;
+}
+
+/* Return a pointer to the first array element, if any.  For a
+   zero-length array, the pointer can be NULL even though the dynamic
+   array has not entered the failure state.  */
+__attribute__ ((nonnull (1)))
+static inline DYNARRAY_ELEMENT *
+DYNARRAY_NAME (begin) (struct DYNARRAY_STRUCT *list)
+{
+  return list->dynarray_header.array;
+}
+
+/* Return a pointer one element past the last array element.  For a
+   zero-length array, the pointer can be NULL even though the dynamic
+   array has not entered the failure state.  */
+__attribute__ ((nonnull (1)))
+static inline DYNARRAY_ELEMENT *
+DYNARRAY_NAME (end) (struct DYNARRAY_STRUCT *list)
+{
+  return list->dynarray_header.array + list->dynarray_header.used;
 }
 
 /* Internal function.  Slow path for the add function below.  */

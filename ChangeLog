@@ -1,3 +1,13 @@
+2017-06-13  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/dynarray-skeleton.c: List begin/end as defined functions.
+	(DYNARRAY_PREFIX##begin, DYNARRAY_PREFIX##end): New functions.
+	* malloc/tst-dynarray-shared.h (CHECK_EMPTY): Add tests for
+	begin/end.
+	* malloc/tst-dynarray.c (test_int): Test dynarray_int_begin,
+	dynarray_int_end.
+	(test_str): Test dynarray_str_begin, dynarray_str_end.
+
 2017-06-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21573]
