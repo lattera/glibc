@@ -134,6 +134,14 @@ $(common-objpfx)cstdlib: $(c++-cstdlib-header)
 $(common-objpfx)cmath: $(c++-cmath-header)
 	$(INSTALL_DATA) $< $@T
 	$(move-if-change) $@T $@
+ifneq (,$(c++-bits-std_abs-h))
+# Also make a copy of <bits/std_abs.h> from GCC 7 to prevent it from
+# including /usr/include/stdlib.h.
+before-compile := $(common-objpfx)bits/std_abs.h $(before-compile)
+$(common-objpfx)bits/std_abs.h: $(c++-bits-std_abs-h)
+	$(INSTALL_DATA) $< $@T
+	$(move-if-change) $@T $@
+endif
 endif
 
 before-compile := $(common-objpfx)libc-abis.h $(before-compile)

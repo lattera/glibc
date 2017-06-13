@@ -1187,13 +1187,15 @@ AC_SUBST(CXX_SYSINCLUDES)
 # copy of those headers in Makerules.
 if test -n "$CXX"; then
   find_cxx_header () {
-    echo "#include <$1>" | $CXX -M -MP -x c++ - | sed -n "/$1:/{s/:\$//;p}"
+    echo "#include <$1>" | $CXX -M -MP -x c++ - | sed -n "\,$1:,{s/:\$//;p}"
   }
   CXX_CSTDLIB_HEADER="$(find_cxx_header cstdlib)"
   CXX_CMATH_HEADER="$(find_cxx_header cmath)"
+  CXX_BITS_STD_ABS_H="$(find_cxx_header bits/std_abs.h)"
 fi
 AC_SUBST(CXX_CSTDLIB_HEADER)
 AC_SUBST(CXX_CMATH_HEADER)
+AC_SUBST(CXX_BITS_STD_ABS_H)
 
 # Test if LD_LIBRARY_PATH contains the notation for the current directory
 # since this would lead to problems installing/building glibc.

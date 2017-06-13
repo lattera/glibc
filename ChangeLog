@@ -1,3 +1,16 @@
+2017-06-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21573]
+	* Makerules [$(c++-bits-std_abs-h) != ""] (before-compile): Add
+	$(common-objpfx)bits/std_abs.h.
+	[$(c++-bits-std_abs-h) != ""] ($(common-objpfx)bits/std_abs.h):
+	New target.
+	* config.make.in (c++-bits-std_abs-h): New.
+	* configure.ac (find_cxx_header): Use "\,$1," with sed.
+	(CXX_BITS_STD_ABS_H): New.
+	(AC_SUBST(CXX_BITS_STD_ABS_H)): Likewise.
+	* configure: Regenerated.
+
 2017-06-13  Zack Weinberg  <zackw@panix.com>
 
 	* posix/bits/cpu-set.h: Correct indentation of preprocessor

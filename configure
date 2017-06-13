@@ -634,6 +634,7 @@ BISON
 INSTALL_INFO
 PERL
 BASH_SHELL
+CXX_BITS_STD_ABS_H
 CXX_CMATH_HEADER
 CXX_CSTDLIB_HEADER
 CXX_SYSINCLUDES
@@ -5336,11 +5337,13 @@ fi
 # copy of those headers in Makerules.
 if test -n "$CXX"; then
   find_cxx_header () {
-    echo "#include <$1>" | $CXX -M -MP -x c++ - | sed -n "/$1:/{s/:\$//;p}"
+    echo "#include <$1>" | $CXX -M -MP -x c++ - | sed -n "\,$1:,{s/:\$//;p}"
   }
   CXX_CSTDLIB_HEADER="$(find_cxx_header cstdlib)"
   CXX_CMATH_HEADER="$(find_cxx_header cmath)"
+  CXX_BITS_STD_ABS_H="$(find_cxx_header bits/std_abs.h)"
 fi
+
 
 
 
