@@ -1,3 +1,17 @@
+2017-06-13  Gordana Cmiljanovic  <gordana.cmiljanovic@imgtec.com>
+
+	[BZ #21548]
+	* sysdeps/unix/sysv/linux/mips/getcontext.S: Define MCONTEXT_SZGREG as
+	8 and use it when copying general purpose registers.
+	* sysdeps/unix/sysv/linux/mips/makecontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/Makefile: Include new test for
+	mips o32.
+	* sysdeps/unix/sysv/linux/mips/mips32/bug-getcontext-mips-gp.c: Added
+	new test for mips o32.
+	* sysdeps/unix/sysv/linux/mips/setcontext.S: Define MCONTEXT_SZGREG as
+	8 and use it when copying general purpose registers.
+	* sysdeps/unix/sysv/linux/mips/swapcontext.S: Likewise.
+
 2017-06-13  Florian Weimer  <fweimer@redhat.com>
 
 	* configure.ac (find_cxx_header): Suppress compiler error message.

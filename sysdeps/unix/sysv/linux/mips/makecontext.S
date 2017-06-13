@@ -53,6 +53,12 @@ NARGREGS = 8
 A3OFF = FRAMESZ + (3 * SZREG)				/* caller-allocated */
 NARGREGS = 4
 #endif
+MCONTEXT_GREGSZ = 8
+#if _MIPS_SIM == _ABIO32 && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+MCONTEXT_GREGOFF = 4
+#else
+MCONTEXT_GREGOFF = 0
+#endif
 
 NESTED (__makecontext, FRAMESZ, ra)
 	.mask	MASK, -(ARGSZ * SZREG)
@@ -89,7 +95,8 @@ NESTED (__makecontext, FRAMESZ, ra)
 
 	/* Store a magic flag.  */
 	li	v1, 1
-	REG_S	v1, (0 * SZREG + MCONTEXT_GREGS)(a0)	/* zero */
+	/* zero */
+	REG_S	v1, (MCONTEXT_GREGOFF + 0 * MCONTEXT_GREGSZ + MCONTEXT_GREGS)(a0)
 
 	/* Set up the stack.  */
 	PTR_L	t0, STACK_SP(a0)
@@ -100,14 +107,14 @@ NESTED (__makecontext, FRAMESZ, ra)
 	blez	a2, 2f					/* no arguments */
 
 	/* Store register arguments.  */
-	PTR_ADDIU t2, a0, MCONTEXT_GREGS + 4 * SZREG
+	PTR_ADDIU t2, a0, MCONTEXT_GREGS + 4 * MCONTEXT_GREGSZ + MCONTEXT_GREGOFF
 	move	t3, zero
 0:
 	addiu	t3, 1
 	REG_L	v1, (t1)
 	PTR_ADDIU t1, SZREG
 	REG_S	v1, (t2)
-	PTR_ADDIU t2, SZREG
+	PTR_ADDIU t2, MCONTEXT_GREGSZ
 	bgeu	t3, a2, 2f				/* all done */
 	bltu	t3, NARGREGS, 0b			/* next */
 
@@ -138,13 +145,17 @@ NESTED (__makecontext, FRAMESZ, ra)
 #else
 	PTR_LA	t9, 99f
 #endif
-	REG_S	t0, (29 * SZREG + MCONTEXT_GREGS)(a0)	/* sp */
-	REG_S	v1, (16 * SZREG + MCONTEXT_GREGS)(a0)	/* s0 */
+	/* sp */
+	REG_S	t0, (MCONTEXT_GREGOFF + 29 * MCONTEXT_GREGSZ + MCONTEXT_GREGS)(a0)
+	/* s0 */
+	REG_S	v1, (MCONTEXT_GREGOFF + 16 * MCONTEXT_GREGSZ + MCONTEXT_GREGS)(a0)
 #ifdef __PIC__
-	REG_S	gp, (17 * SZREG + MCONTEXT_GREGS)(a0)	/* s1 */
+	/* s1 */
+	REG_S	gp, (MCONTEXT_GREGOFF + 17 * MCONTEXT_GREGSZ + MCONTEXT_GREGS)(a0)
 #endif
-	REG_S	t9, (31 * SZREG + MCONTEXT_GREGS)(a0)	/* ra */
-	REG_S	a1, MCONTEXT_PC(a0)
+	/* ra */
+	REG_S	t9, (MCONTEXT_GREGOFF + 31 * MCONTEXT_GREGSZ + MCONTEXT_GREGS)(a0)
+	REG_S	a1, (MCONTEXT_GREGOFF + MCONTEXT_PC)(a0)
 
 #ifdef __PIC__
 	RESTORE_GP64_STACK
