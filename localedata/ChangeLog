@@ -1,3 +1,35 @@
+2017-06-13  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	* localedata/locales/mag_IN (abday, day): Consistently use
+	uppercase hexadecimal in <Uxxxx> notation.
+	* localedata/locales/so_DJ (mon): Use "<U0020>" instead of " ".
+	* localedata/locales/so_ET (mon): Likewise.
+	* localedata/locales/so_KE (mon): Likewise.
+	* localedata/locales/so_SO (mon): Likewise.
+
+	[BZ #20275]
+	* localedata/locales/anp_IN (abday, day): Remove trailing spaces.
+	* localedata/locales/bho_IN (abday, day): Likewise.
+	* localedata/locales/doi_IN (abday, day): Likewise.
+	* localedata/locales/hi_IN (day, abday): Likewise.
+	* localedata/locales/hne_IN (abday, day): Likewise.
+	* localedata/locales/mag_IN (abday, day): Likewise.
+	* localedata/locales/ne_NP (abday, day): Likewise.
+	* localedata/locales/pa_IN (abday, day): Likewise.
+	* localedata/locales/raj_IN (abday, day): Likewise.
+	* localedata/locales/the_NP (abday, day): Likewise.
+	* localedata/locales/sq_AL (abday, day): Likewise.
+	* localedata/locales/ln_CD (name_ms): Likewise.
+	* localedata/locales/quz_PE (lang_name): Likewise.
+	* localedata/locales/ta_IN (name_mr, name_mrs, name_miss): Likewise.
+	* localedata/locales/te_IN (name_mr, name_mrs, name_miss): Likewise.
+
+	* localedata/locales/ht_HT (abday, day): Remove trailing space
+	after "len" and "lendi".
+
+	* localedata/locales/mt_MT (mon): Remove trailing space after
+	"Diċembru".
+
 2017-06-11  Santhosh Thottingal  <santhosh.thottingal@gmail.com>
 
 	[BZ #19922]

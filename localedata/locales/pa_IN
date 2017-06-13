@@ -103,22 +103,22 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-abday       "<U0A10><U0A24><U0020>";/
-            "<U0A38><U0A4B><U0A2E><U0020>";/
-            "<U0A2E><U0A70><U0A17><U0A32><U0020>";/
-            "<U0A2C><U0A41><U0A71><U0A27><U0020>";/
-            "<U0A35><U0A40><U0A30><U0020>";/
-            "<U0A36><U0A41><U0A71><U0A15><U0A30><U0020>";/
-            "<U0A36><U0A28><U0A3F><U0A71><U0A1A><U0A30><U0020>"
+abday       "<U0A10><U0A24>";/
+            "<U0A38><U0A4B><U0A2E>";/
+            "<U0A2E><U0A70><U0A17><U0A32>";/
+            "<U0A2C><U0A41><U0A71><U0A27>";/
+            "<U0A35><U0A40><U0A30>";/
+            "<U0A36><U0A41><U0A71><U0A15><U0A30>";/
+            "<U0A36><U0A28><U0A3F><U0A71><U0A1A><U0A30>"
 %
 % Full weekday names (%A)
-day       "<U0A10><U0A24><U0A35><U0A3E><U0A30><U0020>";/
-            "<U0A38><U0A4B><U0A2E><U0A35><U0A3E><U0A30><U0020>";/
-            "<U0A2E><U0A70><U0A17><U0A32><U0A35><U0A3E><U0A30><U0020>";/
-            "<U0A2C><U0A41><U0A71><U0A27><U0A35><U0A3E><U0A30><U0020>";/
-            "<U0A35><U0A40><U0A30><U0A35><U0A3E><U0A30><U0020>";/
-            "<U0A36><U0A41><U0A71><U0A15><U0A30><U0A35><U0A3E><U0A30><U0020>";/
-            "<U0A36><U0A28><U0A3F><U0A71><U0A1A><U0A30><U0A35><U0A3E><U0A30><U0020>"
+day         "<U0A10><U0A24><U0A35><U0A3E><U0A30>";/
+            "<U0A38><U0A4B><U0A2E><U0A35><U0A3E><U0A30>";/
+            "<U0A2E><U0A70><U0A17><U0A32><U0A35><U0A3E><U0A30>";/
+            "<U0A2C><U0A41><U0A71><U0A27><U0A35><U0A3E><U0A30>";/
+            "<U0A35><U0A40><U0A30><U0A35><U0A3E><U0A30>";/
+            "<U0A36><U0A41><U0A71><U0A15><U0A30><U0A35><U0A3E><U0A30>";/
+            "<U0A36><U0A28><U0A3F><U0A71><U0A1A><U0A30><U0A35><U0A3E><U0A30>"
 
 
 % Abbreviated month names (%b)
