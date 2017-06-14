@@ -1,3 +1,8 @@
+2017-06-14  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/powerpc64/sysdep.h: (call_mcount_parm_offset): Delete.
+	(SAVE_ARG, REST_ARG, CFI_SAVE_ARG): Correct.
+
 2017-06-13  Gordana Cmiljanovic  <gordana.cmiljanovic@imgtec.com>
 
 	[BZ #21548]

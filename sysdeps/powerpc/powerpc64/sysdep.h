@@ -58,29 +58,24 @@
 #endif
 
 /* Support macros for CALL_MCOUNT.  */
-#if _CALL_ELF == 2
-#define call_mcount_parm_offset (-64)
-#else
-#define call_mcount_parm_offset FRAME_PARM_SAVE
-#endif
 	.macro SAVE_ARG NARG
 	.if \NARG
 	SAVE_ARG \NARG-1
-	std	2+\NARG,call_mcount_parm_offset-8+8*(\NARG)(1)
+	std	2+\NARG,-FRAME_MIN_SIZE_PARM+FRAME_PARM_SAVE-8+8*(\NARG)(1)
 	.endif
 	.endm
 
 	.macro REST_ARG NARG
 	.if \NARG
 	REST_ARG \NARG-1
-	ld	2+\NARG,FRAME_MIN_SIZE_PARM+call_mcount_parm_offset-8+8*(\NARG)(1)
+	ld	2+\NARG,FRAME_PARM_SAVE-8+8*(\NARG)(1)
 	.endif
 	.endm
 
 	.macro CFI_SAVE_ARG NARG
 	.if \NARG
 	CFI_SAVE_ARG \NARG-1
-	cfi_offset(2+\NARG,call_mcount_parm_offset-8+8*(\NARG))
+	cfi_offset(2+\NARG,-FRAME_MIN_SIZE_PARM+FRAME_PARM_SAVE-8+8*(\NARG))
 	.endif
 	.endm
 
