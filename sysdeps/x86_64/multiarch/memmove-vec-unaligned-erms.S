@@ -152,6 +152,11 @@ END (MEMMOVE_SYMBOL (__memmove, unaligned))
 
 # if VEC_SIZE == 16
 #  if defined SHARED
+ENTRY (__mempcpy_chk_erms)
+	cmpq	%rdx, %rcx
+	jb	HIDDEN_JUMPTARGET (__chk_fail)
+END (__mempcpy_chk_erms)
+
 /* Only used to measure performance of REP MOVSB.  */
 ENTRY (__mempcpy_erms)
 	movq	%rdi, %rax
@@ -159,6 +164,11 @@ ENTRY (__mempcpy_erms)
 	jmp	L(start_movsb)
 END (__mempcpy_erms)
 #  endif
+
+ENTRY (__memmove_chk_erms)
+	cmpq	%rdx, %rcx
+	jb	HIDDEN_JUMPTARGET (__chk_fail)
+END (__memmove_chk_erms)
 
 ENTRY (__memmove_erms)
 	movq	%rdi, %rax
@@ -185,6 +195,7 @@ L(movsb_backward):
 END (__memmove_erms)
 #  if defined SHARED
 strong_alias (__memmove_erms, __memcpy_erms)
+strong_alias (__memmove_chk_erms, __memcpy_chk_erms)
 #  endif
 # endif
 

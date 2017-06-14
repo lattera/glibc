@@ -57,7 +57,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/memmove_chk.S.  */
+  /* Support sysdeps/x86_64/multiarch/memmove_chk.c.  */
   IFUNC_IMPL (i, name, __memmove_chk,
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
@@ -83,9 +83,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
 			      __memmove_chk_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
-			      __memmove_chk_sse2_unaligned_erms))
+			      __memmove_chk_sse2_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
+			      __memmove_chk_erms))
 
-  /* Support sysdeps/x86_64/multiarch/memmove.S.  */
+  /* Support sysdeps/x86_64/multiarch/memmove.c.  */
   IFUNC_IMPL (i, name, memmove,
 	      IFUNC_IMPL_ADD (array, i, memmove,
 			      HAS_ARCH_FEATURE (AVX_Usable),
@@ -410,7 +412,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __wmemset_avx512_unaligned))
 
 #ifdef SHARED
-  /* Support sysdeps/x86_64/multiarch/memcpy_chk.S.  */
+  /* Support sysdeps/x86_64/multiarch/memcpy_chk.c.  */
   IFUNC_IMPL (i, name, __memcpy_chk,
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
@@ -436,9 +438,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
 			      __memcpy_chk_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
-			      __memcpy_chk_sse2_unaligned_erms))
+			      __memcpy_chk_sse2_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
+			      __memcpy_chk_erms))
 
-  /* Support sysdeps/x86_64/multiarch/memcpy.S.  */
+  /* Support sysdeps/x86_64/multiarch/memcpy.c.  */
   IFUNC_IMPL (i, name, memcpy,
 	      IFUNC_IMPL_ADD (array, i, memcpy,
 			      HAS_ARCH_FEATURE (AVX_Usable),
@@ -464,7 +468,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcpy_sse2_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_erms))
 
-  /* Support sysdeps/x86_64/multiarch/mempcpy_chk.S.  */
+  /* Support sysdeps/x86_64/multiarch/mempcpy_chk.c.  */
   IFUNC_IMPL (i, name, __mempcpy_chk,
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
@@ -490,9 +494,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
 			      __mempcpy_chk_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
-			      __mempcpy_chk_sse2_unaligned_erms))
+			      __mempcpy_chk_sse2_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
+			      __mempcpy_chk_erms))
 
-  /* Support sysdeps/x86_64/multiarch/mempcpy.S.  */
+  /* Support sysdeps/x86_64/multiarch/mempcpy.c.  */
   IFUNC_IMPL (i, name, mempcpy,
 	      IFUNC_IMPL_ADD (array, i, mempcpy,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),

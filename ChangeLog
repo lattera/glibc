@@ -1,3 +1,35 @@
+2017-06-14  H.J. Lu  <hongjiu.lu@intel.com>
+	    Erich Elsen  <eriche@google.com>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memmove-sse2-unaligned-erms, memcpy_chk-nonshared,
+	mempcpy_chk-nonshared and memmove_chk-nonshared.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add tests for __memmove_chk_erms,
+	__memcpy_chk_erms and __mempcpy_chk_erms.  Update comments.
+	* sysdeps/x86_64/multiarch/ifunc-memmove.h: New file.
+	* sysdeps/x86_64/multiarch/memcpy.c: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy_chk-nonshared.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy_chk.c: Likewise.
+	* sysdeps/x86_64/multiarch/memmove-sse2-unaligned-erms.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove.c: Likewise.
+	* sysdeps/x86_64/multiarch/memmove_chk-nonshared.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove_chk.c: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy.c: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy_chk-nonshared.S: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.c: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy.S: Removed.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+	(__mempcpy_chk_erms): New function.
+	(__memmove_chk_erms): Likewise.
+	(__memcpy_chk_erms): New alias.
+
 2017-06-14  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/i386/i686/multiarch/strcspn-c.c: Add IS_IN (libc) guard.

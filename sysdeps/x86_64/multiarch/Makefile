@@ -26,6 +26,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strchr-sse2-no-bsf memcmp-ssse3 strstr-sse2-unaligned \
 		   strcspn-c strpbrk-c strspn-c varshift \
 		   memset-avx512-no-vzeroupper \
+		   memmove-sse2-unaligned-erms \
 		   memmove-avx-unaligned-erms \
 		   memmove-avx512-unaligned-erms \
 		   memset-avx2-unaligned-erms \
@@ -48,5 +49,7 @@ sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c \
 endif
 
 ifeq ($(subdir),debug)
-sysdep_routines += wmemset_chk-nonshared
+sysdep_routines += memcpy_chk-nonshared mempcpy_chk-nonshared \
+		   memmove_chk-nonshared \
+		   wmemset_chk-nonshared
 endif
