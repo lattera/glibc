@@ -1,3 +1,8 @@
+2017-06-14  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/strcspn-c.c: Add IS_IN (libc) guard.
+	* sysdeps/i386/i686/multiarch/varshift.c: Likewise.
+
 2017-06-14  Zack Weinberg  <zackw@panix.com>
 
 	* stdlib/errno.h: Remove __need_Emath and __need_error_t logic.
