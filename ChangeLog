@@ -1,5 +1,15 @@
 2017-06-14  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/sysdep.h: (FRAME_BACKCHAIN,
+	FRAME_CR_SAVE, FRAME_LR_SAVE): Move out of conditional.
+	(FRAME_PARM1_SAVE, FRAME_PARM2_SAVE, FRAME_PARM3_SAVE,
+	FRAME_PARM4_SAVE, FRAME_PARM5_SAVE, FRAME_PARM6_SAVE,
+	FRAME_PARM7_SAVE, FRAME_PARM8_SAVE, FRAME_PARM9_SAVE): Delete.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S: Replace
+	uses of FRAME_PARM[1-9]_SAVE with FRAME_PARM_SAVE plus offset.
+
+2017-06-14  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/sysdep.h: (call_mcount_parm_offset): Delete.
 	(SAVE_ARG, REST_ARG, CFI_SAVE_ARG): Correct.
 

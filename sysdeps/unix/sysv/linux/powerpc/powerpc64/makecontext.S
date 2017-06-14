@@ -23,20 +23,20 @@
 #include "ucontext_i.h"
 #include <asm/errno.h>
 
-ENTRY(__makecontext)
+ENTRY (__makecontext)
 	CALL_MCOUNT 3
   /* Save parameters into the parameter save area of callers frame.  */
-  std  r3,FRAME_PARM1_SAVE(r1) /* ucontext_t *ucp  */
-  std  r4,FRAME_PARM2_SAVE(r1) /* void (*func)(void)  */
-  std  r5,FRAME_PARM3_SAVE(r1) /* int argc  */
-  std  r6,FRAME_PARM4_SAVE(r1) /* ... */
-  std  r7,FRAME_PARM5_SAVE(r1)
-  std  r8,FRAME_PARM6_SAVE(r1)
-  std  r9,FRAME_PARM7_SAVE(r1)
-  std  r10,FRAME_PARM8_SAVE(r1)
+  std  r3,FRAME_PARM_SAVE+0(r1) /* ucontext_t *ucp  */
+  std  r4,FRAME_PARM_SAVE+8(r1) /* void (*func)(void)  */
+  std  r5,FRAME_PARM_SAVE+16(r1) /* int argc  */
+  std  r6,FRAME_PARM_SAVE+24(r1) /* ... */
+  std  r7,FRAME_PARM_SAVE+32(r1)
+  std  r8,FRAME_PARM_SAVE+40(r1)
+  std  r9,FRAME_PARM_SAVE+48(r1)
+  std  r10,FRAME_PARM_SAVE+56(r1)
   mflr  r0
   /* Get the address of the target functions first parameter.  */
-  addi  r6,r1,FRAME_PARM4_SAVE
+  addi  r6,r1,FRAME_PARM_SAVE+24
   std   r0,FRAME_LR_SAVE(r1)
   cfi_offset (lr, FRAME_LR_SAVE)
   stdu  r1,-128(r1)
@@ -55,7 +55,7 @@ ENTRY(__makecontext)
   clrrdi  r7,r7,4
   li    r0,0
   stdu  r0,-64(r7)
-  std   r3,FRAME_PARM1_SAVE(r7) /* Store context in dummy parm1.  */
+  std   r3,FRAME_PARM_SAVE(r7) /* Store context in dummy parm1.  */
   mflr  r0
   std   r2,FRAME_TOC_SAVE(r7)  /* Store the TOC pointer for later.  */
   std   r0,FRAME_LR_SAVE(r7)
@@ -102,7 +102,7 @@ L(parmloop2):
   addi  r0,r5,-8
   ble   cr1,L(noparms)
   mtctr r0
-  addi  r9,r8,FRAME_PARM9_SAVE-8
+  addi  r9,r8,FRAME_PARM_SAVE+64-8
 L(parmloop):
   ldu   r0,8(r7)
   stdu  r0,8(r9)
@@ -148,7 +148,7 @@ L(noparms):
 L(exitcode):
 	/* Recover the ucontext and TOC from the dummy frame.  */
 	ld    r1,FRAME_BACKCHAIN(r1)  /* Unstack the parameter save area frame.  */
-	ld    r3,FRAME_PARM1_SAVE(r1)
+	ld    r3,FRAME_PARM_SAVE(r1)
 	ld    r2,FRAME_TOC_SAVE(r1)
 	ld    r3,UCONTEXT_LINK(r3)  /* Load the resume context.  */
 	cmpdi r3,0

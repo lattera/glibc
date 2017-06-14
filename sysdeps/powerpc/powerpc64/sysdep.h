@@ -21,40 +21,19 @@
 #ifdef __ASSEMBLER__
 
 /* Stack frame offsets.  */
+#define FRAME_BACKCHAIN		0
+#define FRAME_CR_SAVE		8
+#define FRAME_LR_SAVE		16
 #if _CALL_ELF != 2
 #define FRAME_MIN_SIZE		112
 #define FRAME_MIN_SIZE_PARM	112
-#define FRAME_BACKCHAIN		0
-#define FRAME_CR_SAVE		8
-#define FRAME_LR_SAVE		16
 #define FRAME_TOC_SAVE		40
 #define FRAME_PARM_SAVE		48
-#define FRAME_PARM1_SAVE	48
-#define FRAME_PARM2_SAVE	56
-#define FRAME_PARM3_SAVE	64
-#define FRAME_PARM4_SAVE	72
-#define FRAME_PARM5_SAVE	80
-#define FRAME_PARM6_SAVE	88
-#define FRAME_PARM7_SAVE	96
-#define FRAME_PARM8_SAVE	104
-#define FRAME_PARM9_SAVE	112
 #else
 #define FRAME_MIN_SIZE		32
 #define FRAME_MIN_SIZE_PARM	96
-#define FRAME_BACKCHAIN		0
-#define FRAME_CR_SAVE		8
-#define FRAME_LR_SAVE		16
 #define FRAME_TOC_SAVE		24
 #define FRAME_PARM_SAVE		32
-#define FRAME_PARM1_SAVE	32
-#define FRAME_PARM2_SAVE	40
-#define FRAME_PARM3_SAVE	48
-#define FRAME_PARM4_SAVE	56
-#define FRAME_PARM5_SAVE	64
-#define FRAME_PARM6_SAVE	72
-#define FRAME_PARM7_SAVE	80
-#define FRAME_PARM8_SAVE	88
-#define FRAME_PARM9_SAVE	96
 #endif
 
 /* Support macros for CALL_MCOUNT.  */
