@@ -44,7 +44,7 @@
 /* TODO: change this to .machine power8 when the minimum required binutils
    allows it.  */
 	.machine  power7
-ENTRY (FUNC_NAME)
+ENTRY_TOCLESS (FUNC_NAME)
 	CALL_MCOUNT 2
 	dcbt	0,r3
 	clrrdi	r8,r3,3	      /* Align the address to doubleword boundary.  */

@@ -32,7 +32,7 @@
    4k.  */
 
 	.machine  power7
-EALIGN (STRNCMP, 4, 0)
+ENTRY_TOCLESS (STRNCMP, 4)
 	/* Check if size is 0.  */
 	mr.	r10,r5
 	beq	cr0,L(ret0)

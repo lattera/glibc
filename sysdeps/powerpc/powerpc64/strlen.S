@@ -84,7 +84,7 @@
 # define STRLEN strlen
 #endif
 
-ENTRY (STRLEN)
+ENTRY_TOCLESS (STRLEN)
 	CALL_MCOUNT 1
 
 #define rTMP4	r0

@@ -19,7 +19,7 @@
 #include <sysdep.h>
 
 	.machine	"power5"
-EALIGN (__truncf, 4, 0)
+ENTRY_TOCLESS (__truncf, 4)
 	CALL_MCOUNT 0
 	friz	fp1, fp1	/* The rounding instructions are double.  */
 	frsp	fp1, fp1	/* But we need to set ooverflow for float.  */

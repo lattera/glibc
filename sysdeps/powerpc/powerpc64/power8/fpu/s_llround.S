@@ -24,7 +24,7 @@
 
 /* long long [r3] llround (float x [fp1])  */
 
-ENTRY (__llround)
+ENTRY_TOCLESS (__llround)
 	CALL_MCOUNT 0
 	frin	fp1,fp1	/* Round to nearest +-0.5.  */
 	fctidz	fp1,fp1	/* Convert To Integer DW round toward 0.  */

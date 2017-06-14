@@ -20,7 +20,7 @@
 #include <math_ldbl_opt.h>
 
 	.machine	"power5"
-EALIGN (__floor, 4, 0)
+ENTRY_TOCLESS (__floor, 4)
 	CALL_MCOUNT 0
 	frim	fp1, fp1
 	blr

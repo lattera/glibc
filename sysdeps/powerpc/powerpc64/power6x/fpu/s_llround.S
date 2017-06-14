@@ -30,7 +30,7 @@
    round to zero instruction.  */
 
 	.machine	"power6"
-ENTRY (__llround)
+ENTRY_TOCLESS (__llround)
 	CALL_MCOUNT 0
 	frin	fp2,fp1	/* Round to nearest +-0.5.  */
 	fctidz	fp3,fp2	/* Convert To Integer DW round toward 0.  */

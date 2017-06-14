@@ -43,7 +43,7 @@
 
 .align  7
 
-EALIGN (MEMCPY, 5, 0)
+ENTRY_TOCLESS (MEMCPY, 5)
 	CALL_MCOUNT 3
 
 	dcbt	0,r4		/* Prefetch ONE SRC cacheline  */

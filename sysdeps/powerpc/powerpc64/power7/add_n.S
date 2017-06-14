@@ -36,7 +36,7 @@
 #define VP  r5
 #define N   r6
 
-EALIGN(FUNC, 5, 0)
+ENTRY_TOCLESS (FUNC, 5)
 #ifdef USE_AS_SUB
 	addic	r0, r0, 0
 #else

@@ -68,7 +68,7 @@
 /* TODO: change this to .machine power9 when minimum binutils
    is upgraded to 2.27.  */
 	.machine  power7
-EALIGN (STRNCMP, 4, 0)
+ENTRY_TOCLESS (STRNCMP, 4)
 	/* Check if size is 0.  */
 	cmpdi	cr0, r5, 0
 	beq	cr0, L(ret0)

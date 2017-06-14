@@ -26,7 +26,7 @@
 
 /* int [r3] strncmp (const char *s1 [r3], const char *s2 [r4], size_t size [r5])  */
 
-EALIGN (STRNCMP, 4, 0)
+ENTRY_TOCLESS (STRNCMP, 4)
 	CALL_MCOUNT 3
 
 #define rTMP2	r0

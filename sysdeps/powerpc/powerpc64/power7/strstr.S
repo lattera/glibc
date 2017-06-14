@@ -62,7 +62,8 @@
 
 #define	FRAMESIZE	(FRAME_MIN_SIZE+32)
 	.machine  power7
-EALIGN (STRSTR, 4, 0)
+/* Can't be ENTRY_TOCLESS due to calling __strstr_ppc which uses r2.  */
+ENTRY (STRSTR, 4)
 	CALL_MCOUNT 2
 	mflr	r0			/* Load link register LR to r0.  */
 	std	r31, -8(r1)		/* Save callers register r31.  */

@@ -23,7 +23,7 @@
 
 /* int [r3] __isnan([f1] x)  */
 
-EALIGN (__isnan, 4, 0)
+ENTRY_TOCLESS (__isnan, 4)
 	CALL_MCOUNT 0
 	MFVSRD_R3_V1
 	lis     r9,0x7ff0

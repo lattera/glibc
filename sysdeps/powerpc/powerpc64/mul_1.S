@@ -24,7 +24,7 @@
 #define N   r5
 #define VL  r6
 
-EALIGN(__mpn_mul_1, 5, 0)
+ENTRY_TOCLESS (__mpn_mul_1, 5)
 	std	r27, -40(r1)
 	std	r26, -48(r1)
 	li	r12, 0

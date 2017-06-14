@@ -24,13 +24,15 @@
 ENTRY(_mcount)
 	mflr		 r4
 	ld		 r11, 0(r1)
+	std		 r4, FRAME_LR_SAVE(r1)
 	stdu		 r1,-FRAME_MIN_SIZE(r1)
 	cfi_adjust_cfa_offset (FRAME_MIN_SIZE)
-	std		 r4, FRAME_MIN_SIZE+FRAME_LR_SAVE(r1)
 	cfi_offset (lr, FRAME_LR_SAVE)
 	ld		 r3, FRAME_LR_SAVE(r11)
 	bl		 JUMPTARGET(__mcount_internal)
+#ifndef SHARED
 	nop
+#endif
 	ld		 r0, FRAME_MIN_SIZE+FRAME_LR_SAVE(r1)
 	mtlr		 r0
 	addi		 r1,r1,FRAME_MIN_SIZE

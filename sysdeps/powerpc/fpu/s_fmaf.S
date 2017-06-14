@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 
-ENTRY(__fmaf)
+ENTRY_TOCLESS(__fmaf)
 /* float [f1] fmaf (float [f1] x, float [f2] y, float [f3] z); */
 	fmadds	fp1,fp1,fp2,fp3
 	blr

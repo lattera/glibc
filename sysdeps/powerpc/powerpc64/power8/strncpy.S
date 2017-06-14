@@ -61,7 +61,11 @@
    4k.  */
 
 	.machine  power7
-EALIGN (FUNC_NAME, 4, 0)
+#ifdef MEMSET_is_local
+ENTRY_TOCLESS (FUNC_NAME, 4)
+#else
+ENTRY (FUNC_NAME, 4)
+#endif
 	CALL_MCOUNT 3
 
         /* Check if the [src]+15 will cross a 4K page by checking if the bit

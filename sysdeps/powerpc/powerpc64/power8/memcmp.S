@@ -29,7 +29,7 @@
 # define MEMCMP memcmp
 #endif
 	.machine power7
-EALIGN (MEMCMP, 4, 0)
+ENTRY_TOCLESS (MEMCMP, 4)
 	CALL_MCOUNT 3
 
 #define rRTN		r3

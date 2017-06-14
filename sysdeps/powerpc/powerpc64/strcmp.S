@@ -26,7 +26,7 @@
 # define STRCMP strcmp
 #endif
 
-EALIGN (STRCMP, 4, 0)
+ENTRY_TOCLESS (STRCMP, 4)
 	CALL_MCOUNT 2
 
 #define rTMP2	r0

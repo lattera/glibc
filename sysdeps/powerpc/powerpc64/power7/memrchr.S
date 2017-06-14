@@ -25,7 +25,7 @@
 # define MEMRCHR __memrchr
 #endif
 	.machine  power7
-ENTRY (MEMRCHR)
+ENTRY_TOCLESS (MEMRCHR)
 	CALL_MCOUNT 3
 	add	r7,r3,r5      /* Calculate the last acceptable address.  */
 	neg	r0,r7

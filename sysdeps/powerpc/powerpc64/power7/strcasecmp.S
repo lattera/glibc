@@ -31,10 +31,11 @@
 # define STRCMP   strcasecmp
 #endif
 
-ENTRY (__STRCMP)
 #ifndef USE_IN_EXTENDED_LOCALE_MODEL
+ENTRY (__STRCMP)
 	CALL_MCOUNT 2
 #else
+ENTRY_TOCLESS (__STRCMP)
 	CALL_MCOUNT 3
 #endif
 

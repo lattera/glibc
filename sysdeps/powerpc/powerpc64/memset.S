@@ -35,7 +35,7 @@
 # define MEMSET memset
 #endif
 
-EALIGN (MEMSET, 5, 0)
+ENTRY (MEMSET, 5)
 	CALL_MCOUNT 3
 
 #define rTMP	r0

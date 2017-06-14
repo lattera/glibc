@@ -59,7 +59,7 @@
 /* int [r3] strnlen (char *s [r3], size_t maxlen [r4])  */
 /* TODO: change to power8 when minimum required binutils allows it.  */
 	.machine  power7
-ENTRY (__strnlen)
+ENTRY_TOCLESS (__strnlen)
 	CALL_MCOUNT 2
 	dcbt	0,r3
 

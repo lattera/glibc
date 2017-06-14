@@ -1,5 +1,119 @@
 2017-06-14  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/sysdep.h: Formatting.
+	(NOPS, ENTRY_3): New macros.
+	(ENTRY): Rewrite.
+	(ENTRY_TOCLESS): Define.
+	(EALIGN, EALIGN_W_0, EALIGN_W_1, EALIGN_W_2, EALIGN_W_4, EALIGN_W_5,
+	EALIGN_W_6, EALIGN_W_7, EALIGN_W_8): Delete.
+	* sysdeps/powerpc/powerpc64/a2/memcpy.S: Replace EALIGN with ENTRY.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceil.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceilf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_floor.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_floorf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyintf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_rint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_round.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_roundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_truncf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_finite.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isinf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isnan.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strstr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/e_expf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_cosf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_sinf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strcasestr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/addmul_1.S: Use ENTRY_TOCLESS.
+	* sysdeps/powerpc/powerpc64/cell/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysignl.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_fabsl.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_isnan.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/lshift.S: Likewise.
+	* sysdeps/powerpc/powerpc64/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/mul_1.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceil.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceilf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floor.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floorf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_round.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_roundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_truncf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5/fpu/s_isnan.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_isnan.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_isnan.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llrint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/add_n.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memmove.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/mempcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memrchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/rawmemchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strcasecmp.S (strcasecmp_l):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strchrnul.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strncpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strnlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strrchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_finite.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_isinf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_isnan.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llrint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/memcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strnlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strrchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strspn.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power9/strcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power9/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/ppc-mcount.S: Store LR earlier.  Don't
+	add nop when SHARED.
+	* sysdeps/powerpc/powerpc64/start.S: Fix comment.
+	* sysdeps/powerpc/powerpc64/multiarch/strrchr-power8.S (ENTRY): Don't
+	define.
+	(ENTRY_TOCLESS): Define.
+	* sysdeps/powerpc/powerpc32/sysdep.h (ENTRY_TOCLESS): Define.
+	* sysdeps/powerpc/fpu/s_fma.S: Use ENTRY_TOCLESS.
+	* sysdeps/powerpc/fpu/s_fmaf.S: Likewise.
+
+2017-06-14  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/strncpy-power7.S: Define
 	MEMSET_is_local.
 	* sysdeps/powerpc/powerpc64/multiarch/strncpy-power8.S: Likewise.

@@ -68,7 +68,7 @@
 	/* This can be updated to power8 once the minimum version of
 	   binutils supports power8 and the above instructions.  */
 	.machine power7
-EALIGN(STRSPN, 4, 0)
+ENTRY_TOCLESS (STRSPN, 4)
 	CALL_MCOUNT 2
 
 	/* Generate useful constants for later on.  */

@@ -85,7 +85,7 @@
 /* TODO: change this to .machine power8 when the minimum required binutils
    allows it.  */
 	.machine  power7
-EALIGN (STRCASESTR, 4, 0)
+ENTRY (STRCASESTR, 4)
 	CALL_MCOUNT 2
 	mflr	r0			/* Load link register LR to r0.  */
 	std	r31, -8(r1)		/* Save callers register r31.  */

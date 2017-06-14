@@ -21,7 +21,7 @@
 
 /* int __isnan(x)  */
 	.machine power5
-EALIGN (__isnan, 4, 0)
+ENTRY_TOCLESS (__isnan, 4)
 	CALL_MCOUNT 0
 	stfd	fp1,-8(r1)	/* copy FPR to GPR */
 	lis	r0,0x7ff0

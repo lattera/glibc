@@ -18,14 +18,17 @@
 
 #include <sysdep.h>
 
-#undef ENTRY
-#define ENTRY(name)						\
-  .section ".text";						\
-  ENTRY_2(__strrchr_power8);					\
-  .align ALIGNARG(2);						\
-  BODY_LABEL(__strrchr_power8):					\
-  cfi_startproc;						\
-  LOCALENTRY(__strrchr_power8)
+#undef ENTRY_TOCLESS
+#ifndef PROF
+#define ENTRY_TOCLESS(name, ...)				\
+	ENTRY_3 __strrchr_power8, ## __VA_ARGS__;		\
+	cfi_startproc
+#else
+#define ENTRY_TOCLESS(name, ...)				\
+	ENTRY_3 __strrchr_power8, ## __VA_ARGS__;		\
+	cfi_startproc;						\
+	LOCALENTRY(__strrchr_power8)
+#endif
 
 #undef END
 #define END(name)						\

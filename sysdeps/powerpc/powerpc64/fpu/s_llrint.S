@@ -20,7 +20,7 @@
 #include <math_ldbl_opt.h>
 
 /* long long int[r3] __llrint (double x[fp1])  */
-ENTRY (__llrint)
+ENTRY_TOCLESS (__llrint)
 	CALL_MCOUNT 0
 	fctid	fp13,fp1
 	stfd	fp13,-16(r1)

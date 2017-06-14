@@ -25,7 +25,7 @@
 # define STRLEN strlen
 #endif
 	.machine  power7
-ENTRY (STRLEN)
+ENTRY_TOCLESS (STRLEN)
 	CALL_MCOUNT 1
 	dcbt	0,r3
 	clrrdi	r4,r3,3	      /* Align the address to doubleword boundary.  */

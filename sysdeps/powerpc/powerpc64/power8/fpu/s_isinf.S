@@ -23,7 +23,7 @@
 
 /* int [r3] __isinf([fp1] x)  */
 
-EALIGN (__isinf, 4, 0)
+ENTRY_TOCLESS (__isinf, 4)
 	CALL_MCOUNT 0
 	MFVSRD_R3_V1
 	lis     r9,0x7ff0     /* r9 = 0x7ff0  */

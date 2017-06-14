@@ -34,7 +34,7 @@
 
 
 	.machine  a2
-EALIGN (MEMCPY, 5, 0)
+ENTRY (MEMCPY, 5)
 	CALL_MCOUNT 3
 
 	dcbt    0,r4            /* Prefetch ONE SRC cacheline  */

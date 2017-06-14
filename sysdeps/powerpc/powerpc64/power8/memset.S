@@ -31,7 +31,7 @@
 	   handled by the define.  It avoid breakage on binutils
 	   that does not support this machine specifier.  */
 	.machine power7
-EALIGN (MEMSET, 5, 0)
+ENTRY_TOCLESS (MEMSET, 5)
 	CALL_MCOUNT 3
 
 L(_memset):
@@ -447,7 +447,7 @@ libc_hidden_builtin_def (memset)
 
 /* Copied from bzero.S to prevent the linker from inserting a stub
    between bzero and memset.  */
-ENTRY (__bzero)
+ENTRY_TOCLESS (__bzero)
 	CALL_MCOUNT 3
 	mr	r5,r4
 	li	r4,0

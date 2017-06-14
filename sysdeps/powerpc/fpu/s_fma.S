@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 
-ENTRY(__fma)
+ENTRY_TOCLESS(__fma)
 /* double [f1] fma (double [f1] x, double [f2] y, double [f3] z); */
 	fmadd	fp1,fp1,fp2,fp3
 	blr

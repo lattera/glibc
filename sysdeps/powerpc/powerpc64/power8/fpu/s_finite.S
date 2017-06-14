@@ -23,7 +23,7 @@
 
 /* int [r3] __finite ([fp1] x)  */
 
-EALIGN (__finite, 4, 0)
+ENTRY_TOCLESS (__finite, 4)
 	CALL_MCOUNT 0
 	MFVSRD_R3_V1
 	lis     r9,0x8010

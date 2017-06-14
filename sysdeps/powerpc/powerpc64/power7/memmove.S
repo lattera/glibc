@@ -31,7 +31,7 @@
 # define MEMMOVE memmove
 #endif
 	.machine power7
-EALIGN (MEMMOVE, 5, 0)
+ENTRY_TOCLESS (MEMMOVE, 5)
 	CALL_MCOUNT 3
 
 L(_memmove):
@@ -826,7 +826,7 @@ libc_hidden_builtin_def (memmove)
 /* void bcopy(const void *src [r3], void *dest [r4], size_t n [r5])
    Implemented in this file to avoid linker create a stub function call
    in the branch to '_memmove'.  */
-ENTRY (__bcopy)
+ENTRY_TOCLESS (__bcopy)
 	mr	r6,r3
 	mr	r3,r4
 	mr	r4,r6

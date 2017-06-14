@@ -28,7 +28,7 @@
 #define U1      r31
 #define RETVAL   r5
 
-EALIGN(__mpn_lshift, 5, 0)
+ENTRY_TOCLESS (__mpn_lshift, 5)
 	std	U1, -8(r1)
 	std	U0, -16(r1)
 	subfic	TNC, CNT, 64

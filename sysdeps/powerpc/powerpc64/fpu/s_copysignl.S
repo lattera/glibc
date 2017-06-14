@@ -20,7 +20,7 @@
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
 
-ENTRY(__copysignl)
+ENTRY_TOCLESS (__copysignl)
 /* long double [f1,f2] copysign (long double [f1,f2] x, long double [f3,f4] y);
    copysign(x,y) returns a value with the magnitude of x and
    with the sign bit of y.  */

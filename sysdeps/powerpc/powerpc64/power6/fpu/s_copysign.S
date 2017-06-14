@@ -27,7 +27,7 @@
 	.section    ".text"
 	.type	    __copysign, @function
 	.machine    power6
-EALIGN (__copysign, 4, 0)
+ENTRY_TOCLESS (__copysign, 4)
 	CALL_MCOUNT 0
 	fcpsgn	fp1,fp2,fp1
 	blr

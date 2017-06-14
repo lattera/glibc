@@ -77,7 +77,7 @@
 	vsumsws	v2, v2, v0;
 #endif	/* !__LITTLE_ENDIAN__  */
 	.machine  power7
-ENTRY (strrchr)
+ENTRY_TOCLESS (strrchr)
 	CALL_MCOUNT 2
 	dcbt	0,r3
 	clrrdi	r8,r3,3	      /* Align the address to doubleword boundary.  */

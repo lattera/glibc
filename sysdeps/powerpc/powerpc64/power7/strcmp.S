@@ -30,7 +30,7 @@
 /* int [r3] strcmp (const char *s1 [r3], const char *s2 [r4])  */
 
 	.machine	power7
-EALIGN (STRCMP, 4, 0)
+ENTRY_TOCLESS (STRCMP, 4)
 	CALL_MCOUNT 2
 
 	or r9, r3, r4

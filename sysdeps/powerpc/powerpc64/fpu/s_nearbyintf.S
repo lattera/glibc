@@ -32,7 +32,7 @@
 	.long 0x0
 	.section	".text"
 
-EALIGN (__nearbyintf, 4, 0)
+ENTRY (__nearbyintf, 4)
 	CALL_MCOUNT 0
 	fabs	fp0,fp1
 	lfs	fp13,.LC0@toc(2)

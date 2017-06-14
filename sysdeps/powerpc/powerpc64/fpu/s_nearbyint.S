@@ -31,7 +31,7 @@
 	.tc FD_43300000_0[TC],0x4330000000000000
 	.section	".text"
 
-EALIGN (__nearbyint, 4, 0)
+ENTRY (__nearbyint, 4)
 	CALL_MCOUNT 0
 	fabs	fp0,fp1
 	lfd	fp13,.LC0@toc(2)

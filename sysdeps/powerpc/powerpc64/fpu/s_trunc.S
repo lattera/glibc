@@ -31,7 +31,7 @@
    We set "round toward Zero" mode and trunc by adding +-2**52 then
    subtracting +-2**52.  */
 
-EALIGN (__trunc, 4, 0)
+ENTRY (__trunc, 4)
 	CALL_MCOUNT 0
 	lfd	fp13,.LC0@toc(2)
 	fabs	fp0,fp1

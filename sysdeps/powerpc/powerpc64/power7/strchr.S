@@ -25,7 +25,7 @@
 
 /* int [r3] strchr (char *s [r3], int c [r4])  */
 	.machine  power7
-ENTRY (STRCHR)
+ENTRY_TOCLESS (STRCHR)
 	CALL_MCOUNT 2
 	dcbt	0,r3
 	clrrdi	r8,r3,3	      /* Align the address to doubleword boundary.  */

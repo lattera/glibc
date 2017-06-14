@@ -27,7 +27,7 @@
 # define MEMPCPY __mempcpy
 #endif
 	.machine  power7
-EALIGN (MEMPCPY, 5, 0)
+ENTRY_TOCLESS (MEMPCPY, 5)
 	CALL_MCOUNT 3
 
 	cmpldi	cr1,5,31

@@ -67,7 +67,11 @@
 #endif
 
 	.machine  power7
-EALIGN(FUNC_NAME, 4, 0)
+#ifdef MEMSET_is_local
+ENTRY_TOCLESS (FUNC_NAME, 4)
+#else
+ENTRY (FUNC_NAME, 4)
+#endif
 	CALL_MCOUNT 3
 
 	mflr r0			/* load link register LR to r0  */

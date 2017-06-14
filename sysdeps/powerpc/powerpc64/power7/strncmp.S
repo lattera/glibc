@@ -28,7 +28,7 @@
 		     const char *s2 [r4],
 		     size_t size [r5])  */
 
-EALIGN (STRNCMP,5,0)
+ENTRY_TOCLESS (STRNCMP, 5)
 	CALL_MCOUNT 3
 
 #define rTMP2	r0

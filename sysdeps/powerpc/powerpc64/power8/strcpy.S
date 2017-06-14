@@ -48,7 +48,7 @@
    4k.  */
 
 	.machine  power7
-EALIGN (FUNC_NAME, 4, 0)
+ENTRY_TOCLESS (FUNC_NAME, 4)
         li      r0,0          /* Doubleword with null chars to use
                                  with cmpb.  */
 

@@ -43,6 +43,8 @@
   cfi_startproc;							      \
   CALL_MCOUNT
 
+#define ENTRY_TOCLESS(name) ENTRY(name)
+
 /* helper macro for accessing the 32-bit powerpc GOT. */
 
 #define	SETUP_GOT_ACCESS(regname,GOT_LABEL)				      \

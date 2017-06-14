@@ -32,7 +32,7 @@
 #define cnt 5
 
 	.machine power7
-EALIGN (MEMCPY, 5, 0)
+ENTRY_TOCLESS (MEMCPY, 5)
 	CALL_MCOUNT 3
 
 	cmpldi	cr1,cnt,31

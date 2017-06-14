@@ -33,7 +33,7 @@
    a function that makes no calls except for __tls_get_addr and we
    might be here resolving the __tls_get_addr call.  */
 #define INT_PARMS FRAME_MIN_SIZE
-EALIGN(_dl_runtime_resolve, 4, 0)
+ENTRY (_dl_runtime_resolve, 4)
 	stdu	r1,-FRAME_SIZE(r1)
 	cfi_adjust_cfa_offset (FRAME_SIZE)
 	std	r3,INT_PARMS+0(r1)
@@ -195,7 +195,7 @@ END(_dl_runtime_resolve)
    parm1 (r3) and the index (r0) needs to be converted to an offset
    (index * 24) in parm2 (r4).  */
 #ifndef PROF
-EALIGN(_dl_profile_resolve, 4, 0)
+ENTRY (_dl_profile_resolve, 4)
 /* Spill r30, r31 to preserve the link_map* and reloc_addr, in case we
    need to call _dl_call_pltexit.  */
 	std	r31,-8(r1)

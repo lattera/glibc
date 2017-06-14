@@ -27,7 +27,7 @@
 	.section    ".text"
 	.type	    __isinf, @function
 	.machine    power7
-EALIGN (__isinf, 4, 0)
+ENTRY (__isinf, 4)
 	CALL_MCOUNT 0
 	lfd	fp0,.LC0@toc(r2)
 	ftdiv	cr7,fp1,fp0

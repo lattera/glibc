@@ -36,7 +36,7 @@
    "Round toward Zero" mode and round by adding +-0.5 before rounding
    to the integer value.  */
 
-EALIGN (__round, 4, 0)
+ENTRY (__round, 4)
 	CALL_MCOUNT 0
 	lfd	fp13,.LC0@toc(2)
 	fabs	fp0,fp1

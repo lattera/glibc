@@ -146,33 +146,50 @@
 
 #endif /* _CALL_ELF */
 
-#define ENTRY(name)	\
-	.section	".text";		\
-	ENTRY_2(name);				\
-	.align ALIGNARG(2);			\
-BODY_LABEL(name):				\
+	.macro NOPS NARG
+	.if \NARG
+	NOPS \NARG-1
+	nop
+	.endif
+	.endm
+
+	.macro ENTRY_3 name, alignp2=2, nopwords=0
+	.text
+	ENTRY_2(\name)
+	.p2align \alignp2
+	NOPS \nopwords
+BODY_LABEL(\name):
+	.endm
+
+/* Use ENTRY_TOCLESS for functions that make no use of r2 and
+   guarantee r2 is unchanged on exit.  Any function that has @toc or
+   @got relocs uses r2.  Functions that call other functions via the
+   PLT use r2.  Use ENTRY for functions that may use or change r2.
+   The first argument is the function name.
+   The optional second argument specifies alignment of the function's
+   code, as the logarithm base two of the byte alignment.  For
+   example, a value of four aligns to a sixteen byte boundary.
+   The optional third argument specifies the number of NOPs to emit
+   before the start of the function's code.   */
+#ifndef PROF
+#define ENTRY_TOCLESS(name, ...)		\
+	ENTRY_3 name, ## __VA_ARGS__;		\
+	cfi_startproc
+
+#define ENTRY(name, ...)			\
+	ENTRY_TOCLESS(name, ## __VA_ARGS__);	\
+	LOCALENTRY(name)
+#else
+/* The call to _mcount is potentially via the plt, so profiling code
+   is never free of an r2 use.  */
+#define ENTRY_TOCLESS(name, ...)		\
+	ENTRY_3 name, ## __VA_ARGS__;		\
 	cfi_startproc;				\
 	LOCALENTRY(name)
 
-#define EALIGN_W_0  /* No words to insert.  */
-#define EALIGN_W_1  nop
-#define EALIGN_W_2  nop;nop
-#define EALIGN_W_3  nop;nop;nop
-#define EALIGN_W_4  EALIGN_W_3;nop
-#define EALIGN_W_5  EALIGN_W_4;nop
-#define EALIGN_W_6  EALIGN_W_5;nop
-#define EALIGN_W_7  EALIGN_W_6;nop
-
-/* EALIGN is like ENTRY, but does alignment to 'words'*4 bytes
-   past a 2^alignt boundary.  */
-#define EALIGN(name, alignt, words) \
-	.section	".text";		\
-	ENTRY_2(name);				\
-	.align ALIGNARG(alignt);		\
-	EALIGN_W_##words;			\
-BODY_LABEL(name):				\
-	cfi_startproc;				\
-	LOCALENTRY(name)
+#define ENTRY(name, ...)			\
+	ENTRY_TOCLESS(name, ## __VA_ARGS__)
+#endif
 
 /* Local labels stripped out by the linker.  */
 #undef L

@@ -26,7 +26,7 @@
 # define STRCHR strchr
 #endif
 
-ENTRY (STRCHR)
+ENTRY_TOCLESS (STRCHR)
 	CALL_MCOUNT 2
 
 #define rTMP1	r0

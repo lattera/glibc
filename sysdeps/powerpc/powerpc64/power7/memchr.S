@@ -25,7 +25,7 @@
 # define MEMCHR __memchr
 #endif
 	.machine  power7
-ENTRY (MEMCHR)
+ENTRY_TOCLESS (MEMCHR)
 	CALL_MCOUNT 3
 	dcbt	0,r3
 	clrrdi  r8,r3,3

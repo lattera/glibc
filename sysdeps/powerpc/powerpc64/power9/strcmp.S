@@ -66,7 +66,7 @@
    allows it.  */
 
 	.machine  power7
-EALIGN (STRCMP, 4, 0)
+ENTRY_TOCLESS (STRCMP, 4)
 	li	r0, 0
 
 	/* Check if [s1]+16 or [s2]+16 will cross a 4K page boundary using

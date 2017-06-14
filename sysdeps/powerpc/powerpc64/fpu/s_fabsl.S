@@ -20,7 +20,7 @@
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
 
-ENTRY(__fabsl)
+ENTRY_TOCLESS (__fabsl)
 /* long double [f1,f2] fabs (long double [f1,f2] x);
    fabs(x,y) returns a value with the magnitude of x and
    with the sign bit of y.  */

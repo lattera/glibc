@@ -39,7 +39,7 @@
 	   float [fp1] cosf (float [fp1] x)  */
 
 	.machine power8
-EALIGN(__cosf, 4, 0)
+ENTRY (__cosf, 4)
 	addis	r9,r2,L(anchor)@toc@ha
 	addi	r9,r9,L(anchor)@toc@l
 

@@ -19,7 +19,7 @@
 #include <sysdep.h>
 
 /* long long int[r3] __llrintf (float x[fp1])  */
-ENTRY (__llrintf)
+ENTRY_TOCLESS (__llrintf)
 	CALL_MCOUNT 0
 	fctid	fp13,fp1
 	stfd	fp13,-16(r1)

@@ -34,7 +34,7 @@
 #define N   r5
 #define VL  r6
 
-EALIGN(FUNC, 5, 0)
+ENTRY_TOCLESS (FUNC, 5)
 	std	r31, -8(r1)
 	rldicl.	r0, N, 0, 62
 	std	r30, -16(r1)
