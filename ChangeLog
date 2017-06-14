@@ -1,5 +1,22 @@
 2017-06-14  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy-power7.S: Define
+	MEMSET_is_local.
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy-power8.S: Likewise.
+	Define MEMSET.
+	* sysdeps/powerpc/powerpc64/multiarch/strstr-power7.S: Define
+	STRLEN_is_local, STRNLEN_is_local, and STRCHR_is_local.
+	* sysdeps/powerpc/powerpc64/power7/strstr.S: Likewise.  Don't add
+	nop after local calls.
+	* sysdeps/powerpc/powerpc64/power7/strncpy.S: Define MEMSET_is_local.
+	Don't add nop after local call.
+	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Likewise.  Add missing
+	CALL_MCOUNT.
+
+2017-06-14  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/sysdep.h: Formatting.
 	(FUNC_LABEL): Rename from DOT_LABEL.
 	(ENTRY_1): Use FUNC_LABEL and remove leading space from label.

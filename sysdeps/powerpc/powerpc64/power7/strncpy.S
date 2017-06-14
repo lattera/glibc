@@ -59,6 +59,7 @@
 /* For builds with no IFUNC support, local calls should be made to internal
    GLIBC symbol (created by libc_hidden_builtin_def).  */
 # ifdef SHARED
+#  define MEMSET_is_local
 #  define MEMSET   __GI_memset
 # else
 #  define MEMSET   memset
@@ -223,7 +224,9 @@ L(zeroFill):
 	li r4, 0		/* zero fill buffer  */
 	mr r5, r8		/* how many bytes to fill buffer with  */
 	bl MEMSET		/* call optimized memset  */
+#ifndef MEMSET_is_local
 	nop
+#endif
 
 L(update3return):
 #ifdef USE_AS_STPNCPY

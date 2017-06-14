@@ -25,5 +25,8 @@
 
 /* memset is used to pad the end of the string.  */
 #define MEMSET __memset_power8
+#ifdef SHARED
+#define MEMSET_is_local
+#endif
 
 #include <sysdeps/powerpc/powerpc64/power8/strncpy.S>

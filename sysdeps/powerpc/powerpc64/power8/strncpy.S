@@ -36,6 +36,7 @@
 /* For builds without IFUNC support, local calls should be made to internal
    GLIBC symbol (created by libc_hidden_builtin_def).  */
 # ifdef SHARED
+#  define MEMSET_is_local
 #  define MEMSET   __GI_memset
 # else
 #  define MEMSET   memset
@@ -61,6 +62,7 @@
 
 	.machine  power7
 EALIGN (FUNC_NAME, 4, 0)
+	CALL_MCOUNT 3
 
         /* Check if the [src]+15 will cross a 4K page by checking if the bit
            indicating the page size changes.  Basically:
@@ -242,7 +244,9 @@ L(zero_pad_start_1):
 	cfi_adjust_cfa_offset(FRAMESIZE)
 
 	bl	MEMSET
+#ifndef MEMSET_is_local
 	nop
+#endif
 
 	/* Restore the stack frame.  */
 	addi	r1,r1,FRAMESIZE

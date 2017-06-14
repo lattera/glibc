@@ -26,5 +26,10 @@
 #define STRLEN __strlen_power7
 #define STRNLEN __strnlen_power7
 #define STRCHR __strchr_power7
+#ifdef SHARED
+#define STRLEN_is_local
+#define STRNLEN_is_local
+#define STRCHR_is_local
+#endif
 
 #include <sysdeps/powerpc/powerpc64/power7/strstr.S>

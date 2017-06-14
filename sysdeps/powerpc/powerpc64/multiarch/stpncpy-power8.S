@@ -25,4 +25,9 @@
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 
+#define MEMSET __memset_power8
+#ifdef SHARED
+#define MEMSET_is_local
+#endif
+
 #include <sysdeps/powerpc/powerpc64/power8/stpncpy.S>
