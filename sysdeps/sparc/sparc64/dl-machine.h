@@ -85,6 +85,7 @@ elf_machine_load_address (void)
 
 static inline Elf64_Addr __attribute__ ((always_inline))
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const ElfW(Sym) *refsym, const ElfW(Sym) *sym,
 		       const Elf64_Rela *reloc,
 		       Elf64_Addr *reloc_addr, Elf64_Addr value)
 {

@@ -1,5 +1,42 @@
 2017-06-14  Alan Modra  <amodra@gmail.com>
 
+	* elf/elf.h (PPC64_OPT_LOCALENTRY): Define.
+	* sysdeps/alpha/dl-machine.h (elf_machine_fixup_plt): Add
+	refsym and sym parameters.  Adjust callers.
+	* sysdeps/aarch64/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/arm/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/generic/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/hppa/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/ia64/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/m68k/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/microblaze/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/nios2/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_fixup_plt):
+	Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/sh/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/tile/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.c (_dl_error_localentry): New.
+	(_dl_reloc_overflow): Increase buffser size.  Formatting.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (ppc64_local_entry_offset):
+	Delete reloc param, add refsym and sym.  Check optimized plt
+	call stubs for localentry:0 functions.  Adjust callers.
+	(elf_machine_fixup_plt, elf_machine_plt_conflict): Add refsym
+	and sym parameters.  Adjust callers.
+	(_dl_reloc_overflow): Move attribute.
+	(_dl_error_localentry): Declare.
+	* elf/dl-runtime.c (_dl_fixup): Save original sym.  Pass
+	refsym and sym to elf_machine_fixup_plt.
+	* elf/testobj6.c (preload): Call printf.
+
+2017-06-14  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/sysdep.h: Formatting.
 	(NOPS, ENTRY_3): New macros.
 	(ENTRY): Rewrite.

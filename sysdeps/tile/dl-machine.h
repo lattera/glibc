@@ -239,6 +239,7 @@ dl_platform_init (void)
 
 static inline ElfW(Addr)
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const ElfW(Sym) *refsym, const ElfW(Sym) *sym,
 		       const ElfW(Rela) *reloc,
 		       ElfW(Addr) *reloc_addr, ElfW(Addr) value)
 {
@@ -569,7 +570,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
   switch (r_type)
     {
     case R_TILE(JMP_SLOT):
-      elf_machine_fixup_plt (map, 0, reloc, reloc_addr,
+      elf_machine_fixup_plt (map, 0, 0, 0, reloc, reloc_addr,
                              value + reloc->r_addend);
       return;
 

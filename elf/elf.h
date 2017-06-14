@@ -2544,9 +2544,10 @@ enum
 #define DT_PPC64_OPT	(DT_LOPROC + 3)
 #define DT_PPC64_NUM    4
 
-/* PowerPC64 specific values for the DT_PPC64_OPT Dyn entry.  */
+/* PowerPC64 specific bits in the DT_PPC64_OPT Dyn entry.  */
 #define PPC64_OPT_TLS		1
 #define PPC64_OPT_MULTI_TOC	2
+#define PPC64_OPT_LOCALENTRY	4
 
 /* PowerPC64 specific values for the Elf64_Sym st_other field.  */
 #define STO_PPC64_LOCAL_BIT	5

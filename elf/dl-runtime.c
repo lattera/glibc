@@ -71,6 +71,7 @@ _dl_fixup (
   const PLTREL *const reloc
     = (const void *) (D_PTR (l, l_info[DT_JMPREL]) + reloc_offset);
   const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
+  const ElfW(Sym) *refsym = sym;
   void *const rel_addr = (void *)(l->l_addr + reloc->r_offset);
   lookup_t result;
   DL_FIXUP_VALUE_TYPE value;
@@ -145,7 +146,7 @@ _dl_fixup (
   if (__glibc_unlikely (GLRO(dl_bind_not)))
     return value;
 
-  return elf_machine_fixup_plt (l, result, reloc, rel_addr, value);
+  return elf_machine_fixup_plt (l, result, refsym, sym, reloc, rel_addr, value);
 }
 
 #ifndef PROF

@@ -235,6 +235,7 @@ extern Elf32_Addr __elf_machine_fixup_plt (struct link_map *map,
 
 static inline Elf32_Addr
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const ElfW(Sym) *refsym, const ElfW(Sym) *sym,
 		       const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, Elf64_Addr finaladdr)
 {

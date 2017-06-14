@@ -112,6 +112,7 @@ elf_machine_load_address (void)
 /* Fixup a PLT entry to bounce directly to the function at VALUE. */
 static inline struct fdesc __attribute__ ((always_inline))
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const ElfW(Sym) *refsym, const ElfW(Sym) *sym,
 		       const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, struct fdesc value)
 {
@@ -652,13 +653,13 @@ elf_machine_rela (struct link_map *map,
     case R_PARISC_IPLT:
       if (__builtin_expect (sym_map != NULL, 1))
 	{
-	  elf_machine_fixup_plt (NULL, sym_map, reloc, reloc_addr,
+	  elf_machine_fixup_plt (NULL, sym_map, NULL, NULL reloc, reloc_addr,
 				 DL_FIXUP_MAKE_VALUE(sym_map, value));
 	}
       else
 	{
 	  /* If we get here, it's a (weak) undefined sym.  */
-	  elf_machine_fixup_plt (NULL, map, reloc, reloc_addr,
+	  elf_machine_fixup_plt (NULL, map, NULL, NULL, reloc, reloc_addr,
 				 DL_FIXUP_MAKE_VALUE(map, value));
 	}
       return;

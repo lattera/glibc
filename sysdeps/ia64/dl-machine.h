@@ -333,6 +333,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 /* Fixup a PLT entry to bounce directly to the function at VALUE.  */
 static inline struct fdesc __attribute__ ((always_inline))
 elf_machine_fixup_plt (struct link_map *l, lookup_t t,
+		       const ElfW(Sym) *refsym, const ElfW(Sym) *sym,
 		       const Elf64_Rela *reloc,
 		       Elf64_Addr *reloc_addr, struct fdesc value)
 {
@@ -424,7 +425,7 @@ elf_machine_rela (struct link_map *map,
 	    ;/* No adjustment.  */
 	  else if (r_type == R_IA64_IPLTLSB)
 	    {
-	      elf_machine_fixup_plt (NULL, NULL, reloc, reloc_addr,
+	      elf_machine_fixup_plt (NULL, NULL, NULL, NULL, reloc, reloc_addr,
 				     DL_FIXUP_MAKE_VALUE (sym_map, value));
 	      return;
 	    }

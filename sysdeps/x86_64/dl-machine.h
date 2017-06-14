@@ -253,6 +253,7 @@ dl_platform_init (void)
 
 static inline ElfW(Addr)
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const ElfW(Sym) *refsym, const ElfW(Sym) *sym,
 		       const ElfW(Rela) *reloc,
 		       ElfW(Addr) *reloc_addr, ElfW(Addr) value)
 {

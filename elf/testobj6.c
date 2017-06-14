@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "testobj.h"
 
 int
@@ -15,5 +17,6 @@ obj6func2 (int a)
 int
 preload (int a)
 {
+  printf ("testobj6 preload\n");
   return a;
 }
