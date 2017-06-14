@@ -1,5 +1,20 @@
 2017-06-14  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/sysdep.h: Formatting.
+	(FUNC_LABEL): Rename from DOT_LABEL.
+	(ENTRY_1): Use FUNC_LABEL and remove leading space from label.
+	Use .p2align rather than .align.
+	(TRACEBACK, TRACEBACK_MASK): Use .p2align rather than .align.
+	(ABORT_TRANSACTION): Likewise.
+	(ENTRY_1, ENTRY_2, END_2, LOCALENTRY): Remove unnecessary semicolons,
+	particularly at end.  Add semicolon at invocation as necessary.
+	(TRACEBACK, TRACEBACK_MASK, PSEUDO, PSEUDO_NOERRNO): Likewise.
+	(PSEUDO_ERRVAL, PPC64_LOAD_FUNCPTR, OPD_ENT): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strrchr-power8.S (ENTRY,
+	END): Adjust to suit.
+
+2017-06-14  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/sysdep.h: (FRAME_BACKCHAIN,
 	FRAME_CR_SAVE, FRAME_LR_SAVE): Move out of conditional.
 	(FRAME_PARM1_SAVE, FRAME_PARM2_SAVE, FRAME_PARM3_SAVE,

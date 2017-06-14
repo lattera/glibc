@@ -106,25 +106,25 @@
 # define OPD_ENT(name)	.quad BODY_LABEL (name), .TOC.@tocbase, 0
 #endif
 
-#define ENTRY_1(name)	\
+#define ENTRY_1(name)				\
 	.type BODY_LABEL(name),@function;	\
 	.globl name;				\
 	.section ".opd","aw";			\
-	.align 3;				\
-name##: OPD_ENT (name);				\
-	.previous;
+	.p2align 3;FUNC_LABEL(name):		\
+	OPD_ENT (name);				\
+	.previous
 
-#define DOT_LABEL(X) X
+#define FUNC_LABEL(X) X
 #define BODY_LABEL(X) .LY##X
-#define ENTRY_2(name)	\
+#define ENTRY_2(name)				\
 	.type name,@function;			\
 	ENTRY_1(name)
-#define END_2(name)	\
+#define END_2(name)				\
 	.size name,.-BODY_LABEL(name);		\
-	.size BODY_LABEL(name),.-BODY_LABEL(name);
+	.size BODY_LABEL(name),.-BODY_LABEL(name)
 #define LOCALENTRY(name)
 
-#else /* _CALL_ELF */
+#else /* _CALL_ELF == 2 */
 
 /* Macro to prepare for calling via a function pointer.  */
 	.macro PPC64_LOAD_FUNCPTR PTR
@@ -132,23 +132,23 @@ name##: OPD_ENT (name);				\
 	mtctr   r12
 	.endm
 
-#define DOT_LABEL(X) X
+#define FUNC_LABEL(X) X
 #define BODY_LABEL(X) X
-#define ENTRY_2(name)	\
+#define ENTRY_2(name)				\
 	.globl name;				\
-	.type name,@function;
-#define END_2(name)	\
-	.size name,.-name;
-#define LOCALENTRY(name)	\
-1:      addis	r2,r12,.TOC.-1b@ha; \
-        addi	r2,r2,.TOC.-1b@l; \
-	.localentry name,.-name;
+	.type name,@function
+#define END_2(name)				\
+	.size name,.-name
+#define LOCALENTRY(name)			\
+1:      addis	r2,r12,.TOC.-1b@ha;		\
+        addi	r2,r2,.TOC.-1b@l;		\
+	.localentry name,.-name
 
 #endif /* _CALL_ELF */
 
 #define ENTRY(name)	\
 	.section	".text";		\
-	ENTRY_2(name)				\
+	ENTRY_2(name);				\
 	.align ALIGNARG(2);			\
 BODY_LABEL(name):				\
 	cfi_startproc;				\
@@ -167,7 +167,7 @@ BODY_LABEL(name):				\
    past a 2^alignt boundary.  */
 #define EALIGN(name, alignt, words) \
 	.section	".text";		\
-	ENTRY_2(name)				\
+	ENTRY_2(name);				\
 	.align ALIGNARG(alignt);		\
 	EALIGN_W_##words;			\
 BODY_LABEL(name):				\
@@ -220,7 +220,7 @@ LT_LABEL(name): ; \
 LT_LABELSUFFIX(name,_name_start): ;\
 	.ascii	stringify(name) ; \
 LT_LABELSUFFIX(name,_name_end): ; \
-	.align	2 ;
+	.p2align 2
 
 #define TRACEBACK_MASK(name,mask) \
 LT_LABEL(name): ; \
@@ -231,19 +231,19 @@ LT_LABEL(name): ; \
 LT_LABELSUFFIX(name,_name_start): ;\
 	.ascii	stringify(name) ; \
 LT_LABELSUFFIX(name,_name_end): ; \
-	.align	2 ;
+	.p2align 2
 
 /* END generates Traceback tables */
 #undef	END
 #define END(name) \
   cfi_endproc;			\
-  TRACEBACK(name)		\
+  TRACEBACK(name);		\
   END_2(name)
 
 /* This form supports more informative traceback tables */
 #define END_GEN_TB(name,mask)	\
   cfi_endproc;			\
-  TRACEBACK_MASK(name,mask)	\
+  TRACEBACK_MASK(name,mask);	\
   END_2(name)
 
 #if !IS_IN(rtld) && defined (ENABLE_LOCK_ELISION)
@@ -255,7 +255,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
     beq	     1f;		\
     li       11,_ABORT_SYSCALL;	\
     tabort.  11;		\
-    .align 4;                   \
+    .p2align 4;			\
 1:
 #else
 # define ABORT_TRANSACTION
@@ -268,12 +268,12 @@ LT_LABELSUFFIX(name,_name_end): ; \
 
 /* ppc64 is always PIC */
 #undef JUMPTARGET
-#define JUMPTARGET(name) DOT_LABEL(name)
+#define JUMPTARGET(name) FUNC_LABEL(name)
 
 #define PSEUDO(name, syscall_name, args) \
-  .section ".text";	\
-  ENTRY (name) \
-  DO_CALL (SYS_ify (syscall_name));
+  .section ".text";				\
+  ENTRY (name);					\
+  DO_CALL (SYS_ify (syscall_name))
 
 #ifdef SHARED
 #define TAIL_CALL_SYSCALL_ERROR \
@@ -314,9 +314,9 @@ LT_LABELSUFFIX(name,_name_end): ; \
   END (name)
 
 #define PSEUDO_NOERRNO(name, syscall_name, args) \
-  .section ".text";	\
-  ENTRY (name) \
-  DO_CALL (SYS_ify (syscall_name));
+  .section ".text";					\
+  ENTRY (name);						\
+  DO_CALL (SYS_ify (syscall_name))
 
 #define PSEUDO_RET_NOERRNO \
     blr
@@ -328,9 +328,9 @@ LT_LABELSUFFIX(name,_name_end): ; \
   END (name)
 
 #define PSEUDO_ERRVAL(name, syscall_name, args) \
-  .section ".text";	\
-  ENTRY (name) \
-  DO_CALL (SYS_ify (syscall_name));
+  .section ".text";					\
+  ENTRY (name);						\
+  DO_CALL (SYS_ify (syscall_name))
 
 #define PSEUDO_RET_ERRVAL \
     blr
@@ -346,53 +346,53 @@ LT_LABELSUFFIX(name,_name_end): ; \
 #if _CALL_ELF != 2
 
 #define PPC64_LOAD_FUNCPTR(ptr) \
-	"ld 	12,0(" #ptr ");\n"					\
-	"ld	2,8(" #ptr ");\n"					\
-	"mtctr	12;\n"							\
-	"ld	11,16(" #ptr ");"
+	"ld 	12,0(" #ptr ")\n"					\
+	"ld	2,8(" #ptr ")\n"					\
+	"mtctr	12\n"							\
+	"ld	11,16(" #ptr ")"
 
 #ifdef USE_PPC64_OVERLAPPING_OPD
-# define OPD_ENT(name)	".quad " BODY_PREFIX #name ", .TOC.@tocbase;"
+# define OPD_ENT(name)	".quad " BODY_PREFIX #name ", .TOC.@tocbase"
 #else
-# define OPD_ENT(name)	".quad " BODY_PREFIX #name ", .TOC.@tocbase, 0;"
+# define OPD_ENT(name)	".quad " BODY_PREFIX #name ", .TOC.@tocbase, 0"
 #endif
 
 #define ENTRY_1(name)	\
-	".type   " BODY_PREFIX #name ",@function;\n"			\
-	".globl " #name ";\n"						\
-	".pushsection \".opd\",\"aw\";\n"				\
-	".align  3;\n"							\
+	".type   " BODY_PREFIX #name ",@function\n"			\
+	".globl " #name "\n"						\
+	".pushsection \".opd\",\"aw\"\n"				\
+	".p2align 3\n"							\
 #name ":\n"								\
 	OPD_ENT (name) "\n"						\
-	".popsection;"
+	".popsection"
 
 #define DOT_PREFIX ""
 #define BODY_PREFIX ".LY"
 #define ENTRY_2(name)	\
-	".type " #name ",@function;\n"					\
+	".type " #name ",@function\n"					\
 	ENTRY_1(name)
 #define END_2(name)	\
-	".size " #name ",.-" BODY_PREFIX #name ";\n"			\
-	".size " BODY_PREFIX #name ",.-" BODY_PREFIX #name ";"
+	".size " #name ",.-" BODY_PREFIX #name "\n"			\
+	".size " BODY_PREFIX #name ",.-" BODY_PREFIX #name
 #define LOCALENTRY(name)
 
 #else /* _CALL_ELF */
 
 #define PPC64_LOAD_FUNCPTR(ptr) \
-	"mr	12," #ptr ";\n"						\
-	"mtctr 	12;"
+	"mr	12," #ptr "\n"						\
+	"mtctr 	12"
 
 #define DOT_PREFIX ""
 #define BODY_PREFIX ""
 #define ENTRY_2(name)	\
-	".type " #name ",@function;\n"					\
-	".globl " #name ";"
+	".type " #name ",@function\n"					\
+	".globl " #name
 #define END_2(name)	\
-	".size " #name ",.-" #name ";"
+	".size " #name ",.-" #name
 #define LOCALENTRY(name)	\
-	"1: addis 2,12,.TOC.-1b@ha;\n"					\
-	"addi	2,2,.TOC.-1b@l;\n"					\
-	".localentry " #name ",.-" #name ";"
+	"1: addis 2,12,.TOC.-1b@ha\n"					\
+	"addi	2,2,.TOC.-1b@l\n"					\
+	".localentry " #name ",.-" #name
 
 #endif /* _CALL_ELF */
 

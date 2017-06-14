@@ -21,7 +21,7 @@
 #undef ENTRY
 #define ENTRY(name)						\
   .section ".text";						\
-  ENTRY_2(__strrchr_power8)					\
+  ENTRY_2(__strrchr_power8);					\
   .align ALIGNARG(2);						\
   BODY_LABEL(__strrchr_power8):					\
   cfi_startproc;						\
@@ -30,7 +30,7 @@
 #undef END
 #define END(name)						\
   cfi_endproc;							\
-  TRACEBACK(__strrchr_power8)					\
+  TRACEBACK(__strrchr_power8);					\
   END_2(__strrchr_power8)
 
 #undef libc_hidden_builtin_def
