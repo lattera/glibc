@@ -1,7 +1,6 @@
-/* Multiple versions of strspn
+/* Multiple versions of strcspn.
    All versions must be listed in ifunc-impl-list.c.
-   Copyright (C) 2009-2017 Free Software Foundation, Inc.
-   Contributed by Intel Corporation.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,33 +17,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <config.h>
-#include <sysdep.h>
-#include <init-arch.h>
-
 /* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-	.text
-ENTRY(strspn)
-	.type	strspn, @gnu_indirect_function
-	LOAD_RTLD_GLOBAL_RO_RDX
-	leaq	__strspn_sse2(%rip), %rax
-	HAS_CPU_FEATURE (SSE4_2)
-	jz	2f
-	leaq	__strspn_sse42(%rip), %rax
-2:	ret
-END(strspn)
+# define _HAVE_STRING_ARCH_strcspn 1
+# define strcspn __redirect_strcspn
+# include <string.h>
+# undef strcspn
 
-# undef ENTRY
-# define ENTRY(name) \
-	.type __strspn_sse2, @function; \
-	.globl __strspn_sse2; \
-	.align 16; \
-	__strspn_sse2: cfi_startproc; \
-	CALL_MCOUNT
-# undef END
-# define END(name) \
-	cfi_endproc; .size __strspn_sse2, .-__strspn_sse2
+# define SYMBOL_NAME strcspn
+# include "ifunc-sse4_2.h"
+
+libc_ifunc_redirected (__redirect_strcspn, strcspn, IFUNC_SELECTOR ());
+
+# ifdef SHARED
+__hidden_ver1 (strcspn, __GI_strcspn, __redirect_strcspn)
+  __attribute__ ((visibility ("hidden")));
+# endif
 #endif
-
-#include "../strspn.S"

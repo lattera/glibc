@@ -26,6 +26,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strcat-sse2 \
 		   strcat-sse2-unaligned strncat-sse2-unaligned \
 		   strchr-sse2-no-bsf memcmp-ssse3 strstr-sse2-unaligned \
+		   strcspn-sse2 strpbrk-sse2 strspn-sse2 \
 		   strcspn-c strpbrk-c strspn-c varshift \
 		   memset-avx512-no-vzeroupper \
 		   memmove-sse2-unaligned-erms \

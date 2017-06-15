@@ -1,5 +1,25 @@
 2017-06-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strcspn-sse2, strpbrk-sse2 and strspn-sse2.
+	* sysdeps/x86_64/strcspn.S (STRPBRK_P): Removed.
+	Check USE_AS_STRPBRK instead of STRPBRK_P.
+	* sysdeps/x86_64/strpbrk.S (USE_AS_STRPBRK): New.
+	* sysdeps/x86_64/multiarch/ifunc-sse4_2.h: New file.
+	* sysdeps/x86_64/multiarch/strcspn-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcspn.c: Likewise.
+	* sysdeps/x86_64/multiarch/strpbrk-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strpbrk.c: Likewise.
+	* sysdeps/x86_64/multiarch/strspn-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strspn.c: Likewise.
+	* sysdeps/x86_64/multiarch/strcspn.S: Removed.
+	* sysdeps/x86_64/multiarch/strpbrk.S: Likewise.
+	* sysdeps/x86_64/multiarch/strspn.S: Likewise.
+	* sysdeps/x86_64/multiarch/strpbrk-c.c: Remove "#ifdef SHARED"
+	and "#endif".
+
+2017-06-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/multiarch/wcscpy.S: Removed.
 	* sysdeps/x86_64/multiarch/wcscpy.c: New file.
 
