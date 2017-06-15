@@ -121,6 +121,11 @@ L(entry_from_bzero):
 END (MEMSET_SYMBOL (__memset, unaligned))
 
 # if VEC_SIZE == 16
+ENTRY (__memset_chk_erms)
+	cmpq	%rdx, %rcx
+	jb	HIDDEN_JUMPTARGET (__chk_fail)
+END (__memset_chk_erms)
+
 /* Only used to measure performance of REP STOSB.  */
 ENTRY (__memset_erms)
 # else

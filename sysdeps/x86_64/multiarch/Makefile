@@ -29,6 +29,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   memmove-sse2-unaligned-erms \
 		   memmove-avx-unaligned-erms \
 		   memmove-avx512-unaligned-erms \
+		   memset-sse2-unaligned-erms \
 		   memset-avx2-unaligned-erms \
 		   memset-avx512-unaligned-erms
 CFLAGS-varshift.c += -msse4
@@ -50,6 +51,6 @@ endif
 
 ifeq ($(subdir),debug)
 sysdep_routines += memcpy_chk-nonshared mempcpy_chk-nonshared \
-		   memmove_chk-nonshared \
+		   memmove_chk-nonshared memset_chk-nonshared \
 		   wmemset_chk-nonshared
 endif

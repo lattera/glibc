@@ -1,4 +1,5 @@
-/* Non-shared version of wmemset_chk for x86-64.
+/* Multiple versions of __memset_chk
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,6 +17,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc) && !defined SHARED
-# include <sysdeps/x86_64/wmemset_chk.S>
+/* Define multiple versions only for the definition in libc.so. */
+#if IS_IN (libc) && defined SHARED
+# define __memset_chk __redirect_memset_chk
+# include <string.h>
+# undef __memset_chk
+
+# define SYMBOL_NAME memset_chk
+# include "ifunc-memset.h"
+
+libc_ifunc_redirected (__redirect_memset_chk, __memset_chk,
+		       IFUNC_SELECTOR ());
 #endif

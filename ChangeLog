@@ -1,3 +1,21 @@
+2017-06-15  H.J. Lu  <hongjiu.lu@intel.com>
+	    Erich Elsen  <eriche@google.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memset-sse2-unaligned-erms, and memset_chk-nonshared.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add test for __memset_chk_erms.
+	Update comments.
+	* sysdeps/x86_64/multiarch/ifunc-memset.h: New file.
+	* sysdeps/x86_64/multiarch/memset-sse2-unaligned-erms.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset.c: Likewise.
+	* sysdeps/x86_64/multiarch/memset_chk-nonshared.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset_chk.c: Likewise.
+	* sysdeps/x86_64/multiarch/memset.S: Removed.
+	* sysdeps/x86_64/multiarch/memset_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
+	(__memset_chk_erms): New function.
+
 2017-06-15  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* configure.ac(--enable-tunables): Enable by default.

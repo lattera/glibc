@@ -1,4 +1,4 @@
-/* Non-shared version of wmemset_chk for x86-64.
+/* Non-shared version of memcpy_chk for x86-64.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,5 +17,5 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc) && !defined SHARED
-# include <sysdeps/x86_64/wmemset_chk.S>
+# include <sysdeps/x86_64/memset_chk.S>
 #endif

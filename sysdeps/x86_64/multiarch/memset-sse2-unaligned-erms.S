@@ -1,5 +1,6 @@
-/* Non-shared version of wmemset_chk for x86-64.
-   Copyright (C) 2017 Free Software Foundation, Inc.
+/* memset with SSE2.
+   All versions must be listed in ifunc-impl-list.c.
+   Copyright (C) 2014-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +17,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc) && !defined SHARED
-# include <sysdeps/x86_64/wmemset_chk.S>
+#include <sysdep.h>
+#include <shlib-compat.h>
+#include <init-arch.h>
+
+#if IS_IN (libc)
+# define MEMSET_SYMBOL(p,s)	p##_sse2_##s
+# define WMEMSET_SYMBOL(p,s)	p##_sse2_##s
+
+# ifdef SHARED
+#  undef libc_hidden_builtin_def
+#  define libc_hidden_builtin_def(name)
+# endif
+
+# undef weak_alias
+# define weak_alias(original, alias) \
+	.weak bzero; bzero = __bzero
+
+# undef strong_alias
+# define strong_alias(ignored1, ignored2)
 #endif
+
+#include <sysdeps/x86_64/memset.S>

@@ -1,4 +1,5 @@
-/* Non-shared version of wmemset_chk for x86-64.
+/* Multiple versions of memset.
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,6 +17,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc) && !defined SHARED
-# include <sysdeps/x86_64/wmemset_chk.S>
+/* Define multiple versions only for the definition in lib and for
+   DSO.  In static binaries we need memset before the initialization
+   happened.  */
+#if IS_IN (libc)
+# define memset __redirect_memset
+# include <string.h>
+# undef memset
+
+# define SYMBOL_NAME memset
+# include "ifunc-memset.h"
+
+libc_ifunc_redirected (__redirect_memset, memset, IFUNC_SELECTOR ());
+
+# ifdef SHARED
+__hidden_ver1 (memset, __GI_memset, __redirect_memset)
+  __attribute__ ((visibility ("hidden")));
+# endif
 #endif

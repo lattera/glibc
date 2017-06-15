@@ -121,8 +121,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memrchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, memrchr, 1, __memrchr_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/memset_chk.S.  */
+  /* Support sysdeps/x86_64/multiarch/memset_chk.c.  */
   IFUNC_IMPL (i, name, __memset_chk,
+	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
+			      __memset_chk_erms)
 	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
 			      __memset_chk_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
@@ -144,7 +146,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memset_chk_avx512_no_vzeroupper)
 	      )
 
-  /* Support sysdeps/x86_64/multiarch/memset.S.  */
+  /* Support sysdeps/x86_64/multiarch/memset.c.  */
   IFUNC_IMPL (i, name, memset,
 	      IFUNC_IMPL_ADD (array, i, memset, 1,
 			      __memset_sse2_unaligned)
