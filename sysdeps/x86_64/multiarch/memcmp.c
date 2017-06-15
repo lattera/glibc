@@ -1,7 +1,6 @@
-/* Multiple versions of wmemcmp
+/* Multiple versions of memcmp.
    All versions must be listed in ifunc-impl-list.c.
-   Copyright (C) 2011-2017 Free Software Foundation, Inc.
-   Contributed by Intel Corporation.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,38 +17,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <init-arch.h>
-
-/* Define multiple versions only for the definition in libc. */
+/* Define multiple versions only for the definition in lib and for
+   DSO.  */
 #if IS_IN (libc)
-	.text
-ENTRY(wmemcmp)
-	.type	wmemcmp, @gnu_indirect_function
-	LOAD_RTLD_GLOBAL_RO_RDX
-	HAS_ARCH_FEATURE (Prefer_No_VZEROUPPER)
-	jnz	1f
-	HAS_ARCH_FEATURE (AVX2_Usable)
-	jz	1f
-	HAS_CPU_FEATURE (MOVBE)
-	jz	1f
-	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
-	jz	1f
-	leaq	__wmemcmp_avx2_movbe(%rip), %rax
-	ret
+# define memcmp __redirect_memcmp
+# include <string.h>
+# undef memcmp
 
-1:	HAS_CPU_FEATURE (SSSE3)
-	jnz	2f
-	leaq	__wmemcmp_sse2(%rip), %rax
-	ret
+# define SYMBOL_NAME memcmp
+# include "ifunc-memcmp.h"
 
-2:	HAS_CPU_FEATURE (SSE4_1)
-	jz	3f
-	leaq	__wmemcmp_sse4_1(%rip), %rax
-	ret
+libc_ifunc_redirected (__redirect_memcmp, memcmp, IFUNC_SELECTOR ());
+# undef bcmp
+weak_alias (memcmp, bcmp)
 
-3:	leaq	__wmemcmp_ssse3(%rip), %rax
-	ret
-
-END(wmemcmp)
+# ifdef SHARED
+__hidden_ver1 (memcmp, __GI_memcmp, __redirect_memcmp)
+  __attribute__ ((visibility ("hidden")));
+# endif
 #endif

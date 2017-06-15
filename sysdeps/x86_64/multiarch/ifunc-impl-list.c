@@ -45,7 +45,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, memchr, 1, __memchr_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/memcmp.S.  */
+  /* Support sysdeps/x86_64/multiarch/memcmp.c.  */
   IFUNC_IMPL (i, name, memcmp,
 	      IFUNC_IMPL_ADD (array, i, memcmp,
 			      (HAS_ARCH_FEATURE (AVX2_Usable)
@@ -390,7 +390,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __wmemchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, wmemchr, 1, __wmemchr_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/wmemcmp.S.  */
+  /* Support sysdeps/x86_64/multiarch/wmemcmp.c.  */
   IFUNC_IMPL (i, name, wmemcmp,
 	      IFUNC_IMPL_ADD (array, i, wmemcmp,
 			      (HAS_ARCH_FEATURE (AVX2_Usable)

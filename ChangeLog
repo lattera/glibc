@@ -2,6 +2,18 @@
 	    Erich Elsen  <eriche@google.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memcmp-sse2.
+	* sysdeps/x86_64/multiarch/ifunc-memcmp.h: New file.
+	* sysdeps/x86_64/multiarch/memcmp-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcmp.c: Likewise.
+	* sysdeps/x86_64/multiarch/wmemcmp.c: Likewise.
+	* sysdeps/x86_64/multiarch/memcmp.S: Removed.
+	* sysdeps/x86_64/multiarch/wmemcmp.S: Likewise.
+
+2017-06-15  H.J. Lu  <hongjiu.lu@intel.com>
+	    Erich Elsen  <eriche@google.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
 	memset-sse2-unaligned-erms, and memset_chk-nonshared.
 	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
 	(__libc_ifunc_impl_list): Add test for __memset_chk_erms.
