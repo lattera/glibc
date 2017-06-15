@@ -1,3 +1,11 @@
+2017-06-15  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* configure.ac(--enable-tunables): Enable by default.
+	* configure: Regenerate.
+	* NEWS: Mention change.
+	* manual/install.texi (enable-tunables): Adjust documentation.
+	* INSTALL: Regenerate.
+
 2017-06-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #18988]

@@ -436,7 +436,7 @@ AC_ARG_ENABLE([tunables],
 	      [AS_HELP_STRING([--enable-tunables],
 	       [Enable tunables support. Known values are 'yes', 'no' and 'valstring'])],
 	      [have_tunables=$enableval],
-	      [have_tunables=no])
+	      [have_tunables=yes])
 AC_SUBST(have_tunables)
 if test "$have_tunables" = yes; then
   AC_DEFINE(HAVE_TUNABLES)
