@@ -1,7 +1,6 @@
-/* Multiple versions of wcscpy
+/* Multiple versions of wcscpy.
    All versions must be listed in ifunc-impl-list.c.
-   Copyright (C) 2011-2017 Free Software Foundation, Inc.
-   Contributed by Intel Corporation.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,23 +17,28 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <init-arch.h>
-
 /* Define multiple versions only for the definition in libc. */
 #if IS_IN (libc)
+# define wcscpy __redirect_wcscpy
+# include <wchar.h>
+# undef wcscpy
 
-	.text
-ENTRY(wcscpy)
-	.type	wcscpy, @gnu_indirect_function
-	LOAD_RTLD_GLOBAL_RO_RDX
-	HAS_CPU_FEATURE (SSSE3)
-	jnz	2f
-	leaq	__wcscpy_sse2(%rip), %rax
-	ret
+# define SYMBOL_NAME wcscpy
+# include <init-arch.h>
 
-2:	leaq	__wcscpy_ssse3(%rip), %rax
-	ret
+extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (ssse3) attribute_hidden;
 
-END(wcscpy)
+static inline void *
+IFUNC_SELECTOR (void)
+{
+  const struct cpu_features* cpu_features = __get_cpu_features ();
+
+  if (CPU_FEATURES_CPU_P (cpu_features, SSSE3))
+    return OPTIMIZE (ssse3);
+
+  return OPTIMIZE (sse2);
+}
+
+libc_ifunc_redirected (__redirect_wcscpy, wcscpy, IFUNC_SELECTOR ());
 #endif
