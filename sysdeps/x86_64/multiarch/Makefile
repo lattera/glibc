@@ -23,6 +23,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strcpy-ssse3 strncpy-ssse3 stpcpy-ssse3 stpncpy-ssse3 \
 		   strcpy-sse2-unaligned strncpy-sse2-unaligned \
 		   stpcpy-sse2-unaligned stpncpy-sse2-unaligned \
+		   strcat-sse2 \
 		   strcat-sse2-unaligned strncat-sse2-unaligned \
 		   strchr-sse2-no-bsf memcmp-ssse3 strstr-sse2-unaligned \
 		   strcspn-c strpbrk-c strspn-c varshift \

@@ -1,4 +1,14 @@
 2017-06-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strcat-sse2.
+	* sysdeps/x86_64/multiarch/strcat-sse2.S: New file.
+	* sysdeps/x86_64/multiarch/strcat.c: Likewise.
+	* sysdeps/x86_64/multiarch/strncat.c: Likewise.
+	* sysdeps/x86_64/multiarch/strcat.S: Removed.
+	* sysdeps/x86_64/multiarch/strncat.S: Likewise.
+
+2017-06-15  H.J. Lu  <hongjiu.lu@intel.com>
 	    Erich Elsen  <eriche@google.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
