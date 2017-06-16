@@ -27,6 +27,8 @@
 
 #include <timezone/tzfile.h>
 
+#define SECSPERDAY 86400
+
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
 int __daylight = 0;
 long int __timezone = 0L;

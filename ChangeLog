@@ -1,3 +1,14 @@
+2017-06-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* timezone/private.h: Update from tzcode 2017b.
+	* timezone/tzfile.h: Likewise.
+	* timezone/tzselect.ksh: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+	* timezone/Makefile (tz-cflags): Add -D_ISOMAC
+	-DTZ_DOMAIN='"libc"' -include $(common-objpfx)config.h.
+	* time/tzset.c (SECSPERDAY): New macro.
+
 2017-06-16  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/string.texi (strdup): Complete header and standards

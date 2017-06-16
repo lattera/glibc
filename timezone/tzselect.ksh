@@ -7,7 +7,7 @@ REPORT_BUGS_TO=tz@iana.org
 # Ask the user about the time zone, and output the resulting TZ value to stdout.
 # Interact with the user via stderr and stdin.
 
-# Contributed by Paul Eggert.
+# Contributed by Paul Eggert.  This file is in the public domain.
 
 # Porting notes:
 #
@@ -346,11 +346,14 @@ while
 				'that is 10 hours ahead (east) of UTC.'
 			read TZ
 			$AWK -v TZ="$TZ" 'BEGIN {
-				tzname = "[^-+,0-9][^-+,0-9][^-+,0-9]+"
-				time = "[0-2]?[0-9](:[0-5][0-9](:[0-5][0-9])?)?"
+				tzname = "(<[[:alnum:]+-]{3,}>|[[:alpha:]]{3,})"
+				time = "(2[0-4]|[0-1]?[0-9])" \
+				  "(:[0-5][0-9](:[0-5][0-9])?)?"
 				offset = "[-+]?" time
-				date = "(J?[0-9]+|M[0-9]+\\.[0-9]+\\.[0-9]+)"
-				datetime = "," date "(/" time ")?"
+				mdate = "M([1-9]|1[0-2])\\.[1-5]\\.[0-6]"
+				jdate = "((J[1-9]|[0-9]|J?[1-9][0-9]" \
+				  "|J?[1-2][0-9][0-9])|J?3[0-5][0-9]|J?36[0-5])"
+				datetime = ",(" mdate "|" jdate ")(/" time ")?"
 				tzpattern = "^(:.*|" tzname offset "(" tzname \
 				  "(" offset ")?(" datetime datetime ")?)?)$"
 				if (TZ ~ tzpattern) exit 1
@@ -509,7 +512,7 @@ while
 		case $TZsec in
 		$UTsec)
 			extra_info="
-Local time is now:	$TZdate.
+Selected time is now:	$TZdate.
 Universal Time is now:	$UTdate."
 			break
 		esac
@@ -545,7 +548,7 @@ case $SHELL in
 *) file=.profile line="TZ='$TZ'; export TZ"
 esac
 
-say >&2 "
+test -t 1 && say >&2 "
 You can make this change permanent for yourself by appending the line
 	$line
 to the file '$file' in your home directory; then log out and log in again.
