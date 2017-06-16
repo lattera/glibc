@@ -83,11 +83,10 @@ $(objpfx)libc/index.html: $(addprefix $(objpfx),$(libc-texi-generated))
 
 # Generate the summary from the Texinfo source files for each chapter.
 $(objpfx)summary.texi: $(objpfx)stamp-summary ;
-$(objpfx)stamp-summary: summary.awk $(filter-out $(objpfx)summary.texi, \
+$(objpfx)stamp-summary: summary.pl $(filter-out $(objpfx)summary.texi, \
 					$(texis-path))
 	$(SHELL) ./check-safety.sh $(filter-out $(objpfx)%, $(texis-path))
-	$(AWK) -f $^ | sort -t'' -df -k 1,1 | tr '\014' '\012' \
-		> $(objpfx)summary-tmp
+	LC_ALL=C $(PERL) $^ > $(objpfx)summary-tmp
 	$(move-if-change) $(objpfx)summary-tmp $(objpfx)summary.texi
 	touch $@
 
@@ -154,7 +153,7 @@ $(objpfx)%.pdf: %.texinfo
 
 
 # Distribution.
-minimal-dist = summary.awk texis.awk tsort.awk libc-texinfo.sh libc.texinfo \
+minimal-dist = summary.pl texis.awk tsort.awk libc-texinfo.sh libc.texinfo \
 	       libm-err.texi stamp-libm-err check-safety.sh		    \
 	       $(filter-out summary.texi, $(nonexamples))		    \
 	       $(patsubst %.c.texi,examples/%.c, $(examples))
@@ -173,7 +172,7 @@ include ../Rules
 
 .PHONY: install subdir_install install-data
 install-data subdir_install: install
-# libm-err.texi generation requires perl.
+# Generated files requiring perl: libm-err.texi, summary.texi
 ifneq ($(PERL),no)
 ifneq ($(strip $(MAKEINFO)),:)
 install: $(inst_infodir)/libc.info

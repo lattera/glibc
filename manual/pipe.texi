@@ -53,9 +53,8 @@ The @code{pipe} function is declared in the header file
 @file{unistd.h}.
 @pindex unistd.h
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int pipe (int @var{filedes}@t{[2]})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 @c On Linux, syscall pipe2.  On HURD, call socketpair.
 The @code{pipe} function creates a pipe and puts the file descriptors
@@ -107,9 +106,10 @@ The advantage of using @code{popen} and @code{pclose} is that the
 interface is much simpler and easier to use.  But it doesn't offer as
 much flexibility as using the low-level functions directly.
 
-@comment stdio.h
-@comment POSIX.2, SVID, BSD
 @deftypefun {FILE *} popen (const char *@var{command}, const char *@var{mode})
+@standards{POSIX.2, stdio.h}
+@standards{SVID, stdio.h}
+@standards{BSD, stdio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c popen @ascuheap @asucorrupt @acucorrupt @aculock @acsfd @acsmem
 @c  malloc dup @ascuheap @acsmem
@@ -165,9 +165,10 @@ might happen if the pipe or stream cannot be created, if the subprocess
 cannot be forked, or if the program cannot be executed.
 @end deftypefun
 
-@comment stdio.h
-@comment POSIX.2, SVID, BSD
 @deftypefun int pclose (FILE *@var{stream})
+@standards{POSIX.2, stdio.h}
+@standards{SVID, stdio.h}
+@standards{BSD, stdio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @ascuplugin{} @asucorrupt{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c Although the stream cannot be used after the call, even in case of
 @c async cancellation, because the stream must not be used after pclose
@@ -273,9 +274,8 @@ The @code{mkfifo} function is declared in the header file
 @file{sys/stat.h}.
 @pindex sys/stat.h
 
-@comment sys/stat.h
-@comment POSIX.1
 @deftypefun int mkfifo (const char *@var{filename}, mode_t @var{mode})
+@standards{POSIX.1, sys/stat.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c On generic Posix, calls xmknod.
 The @code{mkfifo} function makes a FIFO special file with name

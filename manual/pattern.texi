@@ -25,9 +25,8 @@ particular string.  The result is a yes or no answer: does the
 string fit the pattern or not.  The symbols described here are all
 declared in @file{fnmatch.h}.
 
-@comment fnmatch.h
-@comment POSIX.2
 @deftypefun int fnmatch (const char *@var{pattern}, const char *@var{string}, int @var{flags})
+@standards{POSIX.2, fnmatch.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 @c fnmatch @mtsenv @mtslocale @ascuheap @acsmem
 @c  strnlen dup ok
@@ -75,24 +74,21 @@ returning nonzero values that are not equal to @code{FNM_NOMATCH}.
 These are the available flags for the @var{flags} argument:
 
 @vtable @code
-@comment fnmatch.h
-@comment GNU
 @item FNM_FILE_NAME
+@standards{GNU, fnmatch.h}
 Treat the @samp{/} character specially, for matching file names.  If
 this flag is set, wildcard constructs in @var{pattern} cannot match
 @samp{/} in @var{string}.  Thus, the only way to match @samp{/} is with
 an explicit @samp{/} in @var{pattern}.
 
-@comment fnmatch.h
-@comment POSIX.2
 @item FNM_PATHNAME
+@standards{POSIX.2, fnmatch.h}
 This is an alias for @code{FNM_FILE_NAME}; it comes from POSIX.2.  We
 don't recommend this name because we don't use the term ``pathname'' for
 file names.
 
-@comment fnmatch.h
-@comment POSIX.2
 @item FNM_PERIOD
+@standards{POSIX.2, fnmatch.h}
 Treat the @samp{.} character specially if it appears at the beginning of
 @var{string}.  If this flag is set, wildcard constructs in @var{pattern}
 cannot match @samp{.} as the first character of @var{string}.
@@ -103,9 +99,8 @@ special treatment applies to @samp{.} following @samp{/} as well as to
 @code{FNM_PERIOD} and @code{FNM_FILE_NAME} flags together for matching
 file names.)
 
-@comment fnmatch.h
-@comment POSIX.2
 @item FNM_NOESCAPE
+@standards{POSIX.2, fnmatch.h}
 Don't treat the @samp{\} character specially in patterns.  Normally,
 @samp{\} quotes the following character, turning off its special meaning
 (if any) so that it matches only itself.  When quoting is enabled, the
@@ -114,9 +109,8 @@ mark in the pattern acts like an ordinary character.
 
 If you use @code{FNM_NOESCAPE}, then @samp{\} is an ordinary character.
 
-@comment fnmatch.h
-@comment GNU
 @item FNM_LEADING_DIR
+@standards{GNU, fnmatch.h}
 Ignore a trailing sequence of characters starting with a @samp{/} in
 @var{string}; that is to say, test whether @var{string} starts with a
 directory name that @var{pattern} matches.
@@ -124,14 +118,12 @@ directory name that @var{pattern} matches.
 If this flag is set, either @samp{foo*} or @samp{foobar} as a pattern
 would match the string @samp{foobar/frobozz}.
 
-@comment fnmatch.h
-@comment GNU
 @item FNM_CASEFOLD
+@standards{GNU, fnmatch.h}
 Ignore case in comparing @var{string} to @var{pattern}.
 
-@comment fnmatch.h
-@comment GNU
 @item FNM_EXTMATCH
+@standards{GNU, fnmatch.h}
 @cindex Korn Shell
 @pindex ksh
 Besides the normal patterns, also recognize the extended patterns
@@ -193,9 +185,8 @@ this vector, @code{glob} uses a special data type, @code{glob_t}, which
 is a structure.  You pass @code{glob} the address of the structure, and
 it fills in the structure's fields to tell you about the results.
 
-@comment glob.h
-@comment POSIX.2
 @deftp {Data Type} glob_t
+@standards{POSIX.2, glob.h}
 This data type holds a pointer to a word vector.  More precisely, it
 records both the address of the word vector and its size.  The GNU
 implementation contains some more fields which are non-standard
@@ -314,9 +305,8 @@ definition for a very similar type.  @code{glob64_t} differs from
 @code{glob_t} only in the types of the members @code{gl_readdir},
 @code{gl_stat}, and @code{gl_lstat}.
 
-@comment glob.h
-@comment GNU
 @deftp {Data Type} glob64_t
+@standards{GNU, glob.h}
 This data type holds a pointer to a word vector.  More precisely, it
 records both the address of the word vector and its size.  The GNU
 implementation contains some more fields which are non-standard
@@ -393,9 +383,8 @@ This is a GNU extension.
 @end table
 @end deftp
 
-@comment glob.h
-@comment POSIX.2
 @deftypefun int glob (const char *@var{pattern}, int @var{flags}, int (*@var{errfunc}) (const char *@var{filename}, int @var{error-code}), glob_t *@var{vector-ptr})
+@standards{POSIX.2, glob.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtsenv{} @mtascusig{:ALRM} @mtascutimer{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c glob @mtasurace:utent @mtsenv @mtascusig:ALRM @mtascutimer @mtslocale @ascudlopen @ascuplugin @asucorrupt @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  strlen dup ok
@@ -480,9 +469,8 @@ If @code{glob} succeeds, it returns 0.  Otherwise, it returns one
 of these error codes:
 
 @vtable @code
-@comment glob.h
-@comment POSIX.2
 @item GLOB_ABORTED
+@standards{POSIX.2, glob.h}
 There was an error opening a directory, and you used the flag
 @code{GLOB_ERR} or your specified @var{errfunc} returned a nonzero
 value.
@@ -494,17 +482,15 @@ See below
 @end ifinfo
 for an explanation of the @code{GLOB_ERR} flag and @var{errfunc}.
 
-@comment glob.h
-@comment POSIX.2
 @item GLOB_NOMATCH
+@standards{POSIX.2, glob.h}
 The pattern didn't match any existing files.  If you use the
 @code{GLOB_NOCHECK} flag, then you never get this error code, because
 that flag tells @code{glob} to @emph{pretend} that the pattern matched
 at least one file.
 
-@comment glob.h
-@comment POSIX.2
 @item GLOB_NOSPACE
+@standards{POSIX.2, glob.h}
 It was impossible to allocate memory to hold the result.
 @end vtable
 
@@ -521,9 +507,8 @@ bit.  If these callback functions are used and a large file or directory
 is encountered @code{glob} @emph{can} fail.
 @end deftypefun
 
-@comment glob.h
-@comment GNU
 @deftypefun int glob64 (const char *@var{pattern}, int @var{flags}, int (*@var{errfunc}) (const char *@var{filename}, int @var{error-code}), glob64_t *@var{vector-ptr})
+@standards{GNU, glob.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtsenv{} @mtascusig{:ALRM} @mtascutimer{} @mtslocale{}}@asunsafe{@ascudlopen{} @asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c Same code as glob, but with glob64_t #defined as glob_t.
 The @code{glob64} function was added as part of the Large File Summit
@@ -552,9 +537,8 @@ and combine them with the C bitwise OR operator @code{|}.
 Note that there are @ref{More Flags for Globbing} available as GNU extensions.
 
 @vtable @code
-@comment glob.h
-@comment POSIX.2
 @item GLOB_APPEND
+@standards{POSIX.2, glob.h}
 Append the words from this expansion to the vector of words produced by
 previous calls to @code{glob}.  This way you can effectively expand
 several words as if they were concatenated with spaces between them.
@@ -570,16 +554,14 @@ have relocated the vector.  So always fetch @code{gl_pathv} from the
 @code{glob_t} structure after each @code{glob} call; @strong{never} save
 the pointer across calls.
 
-@comment glob.h
-@comment POSIX.2
 @item GLOB_DOOFFS
+@standards{POSIX.2, glob.h}
 Leave blank slots at the beginning of the vector of words.
 The @code{gl_offs} field says how many slots to leave.
 The blank slots contain null pointers.
 
-@comment glob.h
-@comment POSIX.2
 @item GLOB_ERR
+@standards{POSIX.2, glob.h}
 Give up right away and report an error if there is any difficulty
 reading the directories that must be read in order to expand @var{pattern}
 fully.  Such difficulties might include a directory in which you don't
@@ -604,23 +586,20 @@ The argument @var{filename} is the name of the directory that
 If the error handler function returns nonzero, then @code{glob} gives up
 right away.  Otherwise, it continues.
 
-@comment glob.h
-@comment POSIX.2
 @item GLOB_MARK
+@standards{POSIX.2, glob.h}
 If the pattern matches the name of a directory, append @samp{/} to the
 directory's name when returning it.
 
-@comment glob.h
-@comment POSIX.2
 @item GLOB_NOCHECK
+@standards{POSIX.2, glob.h}
 If the pattern doesn't match any file names, return the pattern itself
 as if it were a file name that had been matched.  (Normally, when the
 pattern doesn't match anything, @code{glob} returns that there were no
 matches.)
 
-@comment glob.h
-@comment POSIX.2
 @item GLOB_NOESCAPE
+@standards{POSIX.2, glob.h}
 Don't treat the @samp{\} character specially in patterns.  Normally,
 @samp{\} quotes the following character, turning off its special meaning
 (if any) so that it matches only itself.  When quoting is enabled, the
@@ -633,9 +612,8 @@ If you use @code{GLOB_NOESCAPE}, then @samp{\} is an ordinary character.
 repeatedly.  It handles the flag @code{GLOB_NOESCAPE} by turning on the
 @code{FNM_NOESCAPE} flag in calls to @code{fnmatch}.
 
-@comment glob.h
-@comment POSIX.2
 @item GLOB_NOSORT
+@standards{POSIX.2, glob.h}
 Don't sort the file names; return them in no particular order.
 (In practice, the order will depend on the order of the entries in
 the directory.)  The only reason @emph{not} to sort is to save time.
@@ -650,23 +628,20 @@ Beside the flags described in the last section, the GNU implementation of
 which is available in modern shell implementations.
 
 @vtable @code
-@comment glob.h
-@comment GNU
 @item GLOB_PERIOD
+@standards{GNU, glob.h}
 The @code{.} character (period) is treated special.  It cannot be
 matched by wildcards.  @xref{Wildcard Matching}, @code{FNM_PERIOD}.
 
-@comment glob.h
-@comment GNU
 @item GLOB_MAGCHAR
+@standards{GNU, glob.h}
 The @code{GLOB_MAGCHAR} value is not to be given to @code{glob} in the
 @var{flags} parameter.  Instead, @code{glob} sets this bit in the
 @var{gl_flags} element of the @var{glob_t} structure provided as the
 result if the pattern used for matching contains any wildcard character.
 
-@comment glob.h
-@comment GNU
 @item GLOB_ALTDIRFUNC
+@standards{GNU, glob.h}
 Instead of using the normal functions for accessing the
 filesystem the @code{glob} implementation uses the user-supplied
 functions specified in the structure pointed to by @var{pglob}
@@ -674,9 +649,8 @@ parameter.  For more information about the functions refer to the
 sections about directory handling see @ref{Accessing Directories}, and
 @ref{Reading Attributes}.
 
-@comment glob.h
-@comment GNU
 @item GLOB_BRACE
+@standards{GNU, glob.h}
 If this flag is given, the handling of braces in the pattern is changed.
 It is now required that braces appear correctly grouped.  I.e., for each
 opening brace there must be a closing one.  Braces can be used
@@ -710,15 +684,13 @@ glob ("baz", GLOB_BRACE|GLOB_APPEND, NULL, &result)
 @noindent
 if we leave aside error handling.
 
-@comment glob.h
-@comment GNU
 @item GLOB_NOMAGIC
+@standards{GNU, glob.h}
 If the pattern contains no wildcard constructs (it is a literal file name),
 return it as the sole ``matching'' word, even if no file exists by that name.
 
-@comment glob.h
-@comment GNU
 @item GLOB_TILDE
+@standards{GNU, glob.h}
 If this flag is used the character @code{~} (tilde) is handled specially
 if it appears at the beginning of the pattern.  Instead of being taken
 verbatim it is used to represent the home directory of a known user.
@@ -753,9 +725,8 @@ looking for a directory named @code{~homer}.
 This functionality is equivalent to what is available in C-shells if the
 @code{nonomatch} flag is set.
 
-@comment glob.h
-@comment GNU
 @item GLOB_TILDE_CHECK
+@standards{GNU, glob.h}
 If this flag is used @code{glob} behaves as if @code{GLOB_TILDE} is
 given.  The only difference is that if the user name is not available or
 the home directory cannot be determined for other reasons this leads to
@@ -765,9 +736,8 @@ the pattern itself as the name.
 This functionality is equivalent to what is available in C-shells if
 the @code{nonomatch} flag is not set.
 
-@comment glob.h
-@comment GNU
 @item GLOB_ONLYDIR
+@standards{GNU, glob.h}
 If this flag is used the globbing function takes this as a
 @strong{hint} that the caller is only interested in directories
 matching the pattern.  If the information about the type of the file
@@ -787,9 +757,8 @@ type @code{glob_t} is used in multiple call to @code{glob} the resources
 are freed or reused so that no leaks appear.  But this does not include
 the time when all @code{glob} calls are done.
 
-@comment glob.h
-@comment POSIX.2
 @deftypefun void globfree (glob_t *@var{pglob})
+@standards{POSIX.2, glob.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c globfree dup @asucorrupt @ascuheap @acucorrupt @acsmem
 @c  free dup @ascuheap @acsmem
@@ -799,9 +768,8 @@ calls to @code{glob} associated with the object pointed to by
 @code{glob_t} typed object isn't used anymore.
 @end deftypefun
 
-@comment glob.h
-@comment GNU
 @deftypefun void globfree64 (glob64_t *@var{pglob})
+@standards{GNU, glob.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 This function is equivalent to @code{globfree} but it frees records of
 type @code{glob64_t} which were allocated by @code{glob64}.
@@ -842,9 +810,8 @@ compiled regular expression for matching.)
 
 There is a special data type for compiled regular expressions:
 
-@comment regex.h
-@comment POSIX.2
 @deftp {Data Type} regex_t
+@standards{POSIX.2, regex.h}
 This type of object holds a compiled regular expression.
 It is actually a structure.  It has just one field that your programs
 should look at:
@@ -862,9 +829,8 @@ only the functions in the library should use them.
 After you create a @code{regex_t} object, you can compile a regular
 expression into it by calling @code{regcomp}.
 
-@comment regex.h
-@comment POSIX.2
 @deftypefun int regcomp (regex_t *restrict @var{compiled}, const char *restrict @var{pattern}, int @var{cflags})
+@standards{POSIX.2, regex.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c All of the issues have to do with memory allocation and multi-byte
 @c character handling present in the input string, or implied by ranges
@@ -1144,71 +1110,59 @@ describing the reason for a nonzero value; see @ref{Regexp Cleanup}.
 Here are the possible nonzero values that @code{regcomp} can return:
 
 @vtable @code
-@comment regex.h
-@comment POSIX.2
 @item REG_BADBR
+@standards{POSIX.2, regex.h}
 There was an invalid @samp{\@{@dots{}\@}} construct in the regular
 expression.  A valid @samp{\@{@dots{}\@}} construct must contain either
 a single number, or two numbers in increasing order separated by a
 comma.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_BADPAT
+@standards{POSIX.2, regex.h}
 There was a syntax error in the regular expression.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_BADRPT
+@standards{POSIX.2, regex.h}
 A repetition operator such as @samp{?} or @samp{*} appeared in a bad
 position (with no preceding subexpression to act on).
 
-@comment regex.h
-@comment POSIX.2
 @item REG_ECOLLATE
+@standards{POSIX.2, regex.h}
 The regular expression referred to an invalid collating element (one not
 defined in the current locale for string collation).  @xref{Locale
 Categories}.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_ECTYPE
+@standards{POSIX.2, regex.h}
 The regular expression referred to an invalid character class name.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_EESCAPE
+@standards{POSIX.2, regex.h}
 The regular expression ended with @samp{\}.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_ESUBREG
+@standards{POSIX.2, regex.h}
 There was an invalid number in the @samp{\@var{digit}} construct.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_EBRACK
+@standards{POSIX.2, regex.h}
 There were unbalanced square brackets in the regular expression.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_EPAREN
+@standards{POSIX.2, regex.h}
 An extended regular expression had unbalanced parentheses,
 or a basic regular expression had unbalanced @samp{\(} and @samp{\)}.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_EBRACE
+@standards{POSIX.2, regex.h}
 The regular expression had unbalanced @samp{\@{} and @samp{\@}}.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_ERANGE
+@standards{POSIX.2, regex.h}
 One of the endpoints in a range expression was invalid.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_ESPACE
+@standards{POSIX.2, regex.h}
 @code{regcomp} ran out of memory.
 @end vtable
 
@@ -1219,25 +1173,21 @@ These are the bit flags that you can use in the @var{cflags} operand when
 compiling a regular expression with @code{regcomp}.
 
 @vtable @code
-@comment regex.h
-@comment POSIX.2
 @item REG_EXTENDED
+@standards{POSIX.2, regex.h}
 Treat the pattern as an extended regular expression, rather than as a
 basic regular expression.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_ICASE
+@standards{POSIX.2, regex.h}
 Ignore case when matching letters.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_NOSUB
+@standards{POSIX.2, regex.h}
 Don't bother storing the contents of the @var{matchptr} array.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_NEWLINE
+@standards{POSIX.2, regex.h}
 Treat a newline in @var{string} as dividing @var{string} into multiple
 lines, so that @samp{$} can match before the newline and @samp{^} can
 match after.  Also, don't permit @samp{.} to match a newline, and don't
@@ -1255,9 +1205,8 @@ Regexp Compilation}, you can match it against strings using
 unless the regular expression contains anchor characters (@samp{^} or
 @samp{$}).
 
-@comment regex.h
-@comment POSIX.2
 @deftypefun int regexec (const regex_t *restrict @var{compiled}, const char *restrict @var{string}, size_t @var{nmatch}, regmatch_t @var{matchptr}[restrict], int @var{eflags})
+@standards{POSIX.2, regex.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c libc_lock_lock @asulock @aculock
 @c re_search_internal @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
@@ -1525,16 +1474,14 @@ The function @code{regexec} accepts the following flags in the
 @var{eflags} argument:
 
 @vtable @code
-@comment regex.h
-@comment POSIX.2
 @item REG_NOTBOL
+@standards{POSIX.2, regex.h}
 Do not regard the beginning of the specified string as the beginning of
 a line; more generally, don't make any assumptions about what text might
 precede it.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_NOTEOL
+@standards{POSIX.2, regex.h}
 Do not regard the end of the specified string as the end of a line; more
 generally, don't make any assumptions about what text might follow it.
 @end vtable
@@ -1542,14 +1489,12 @@ generally, don't make any assumptions about what text might follow it.
 Here are the possible nonzero values that @code{regexec} can return:
 
 @vtable @code
-@comment regex.h
-@comment POSIX.2
 @item REG_NOMATCH
+@standards{POSIX.2, regex.h}
 The pattern didn't match the string.  This isn't really an error.
 
-@comment regex.h
-@comment POSIX.2
 @item REG_ESPACE
+@standards{POSIX.2, regex.h}
 @code{regexec} ran out of memory.
 @end vtable
 
@@ -1565,9 +1510,8 @@ the entire regular expression.  Each other element of the array records
 the beginning and end of the part that matched a single parenthetical
 subexpression.
 
-@comment regex.h
-@comment POSIX.2
 @deftp {Data Type} regmatch_t
+@standards{POSIX.2, regex.h}
 This is the data type of the @var{matchptr} array that you pass to
 @code{regexec}.  It contains two structure fields, as follows:
 
@@ -1581,9 +1525,8 @@ The offset in @var{string} of the end of the substring.
 @end table
 @end deftp
 
-@comment regex.h
-@comment POSIX.2
 @deftp {Data Type} regoff_t
+@standards{POSIX.2, regex.h}
 @code{regoff_t} is an alias for another signed integer type.
 The fields of @code{regmatch_t} have type @code{regoff_t}.
 @end deftp
@@ -1658,9 +1601,8 @@ reports nonuse of the ``na'' subexpression.
 When you are finished using a compiled regular expression, you can
 free the storage it uses by calling @code{regfree}.
 
-@comment regex.h
-@comment POSIX.2
 @deftypefun void regfree (regex_t *@var{compiled})
+@standards{POSIX.2, regex.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 @c (re_)free dup @ascuheap @acsmem
 @c free_dfa_content dup @ascuheap @acsmem
@@ -1678,9 +1620,8 @@ expression.
 When @code{regcomp} or @code{regexec} reports an error, you can use
 the function @code{regerror} to turn it into an error message string.
 
-@comment regex.h
-@comment POSIX.2
 @deftypefun size_t regerror (int @var{errcode}, const regex_t *restrict @var{compiled}, char *restrict @var{buffer}, size_t @var{length})
+@standards{POSIX.2, regex.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c regerror calls gettext, strcmp and mempcpy or memcpy.
 This function produces an error message string for the error code
@@ -1816,9 +1757,8 @@ vector, @code{wordexp} uses a special data type, @code{wordexp_t}, which
 is a structure.  You pass @code{wordexp} the address of the structure,
 and it fills in the structure's fields to tell you about the results.
 
-@comment wordexp.h
-@comment POSIX.2
 @deftp {Data Type} {wordexp_t}
+@standards{POSIX.2, wordexp.h}
 This data type holds a pointer to a word vector.  More precisely, it
 records both the address of the word vector and its size.
 
@@ -1845,9 +1785,8 @@ the beginning of the vector.
 @end table
 @end deftp
 
-@comment wordexp.h
-@comment POSIX.2
 @deftypefun int wordexp (const char *@var{words}, wordexp_t *@var{word-vector-ptr}, int @var{flags})
+@standards{POSIX.2, wordexp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtasuconst{:@mtsenv{}} @mtsenv{} @mtascusig{:ALRM} @mtascutimer{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuintl{} @ascuheap{} @asucorrupt{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c wordexp @mtasurace:utent @mtasuconst:@mtsenv @mtsenv @mtascusig:ALRM @mtascutimer @mtslocale @ascudlopen @ascuplugin @ascuintl @ascuheap @asucorrupt @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  w_newword ok
@@ -2014,43 +1953,37 @@ If @code{wordexp} succeeds, it returns 0.  Otherwise, it returns one
 of these error codes:
 
 @vtable @code
-@comment wordexp.h
-@comment POSIX.2
 @item WRDE_BADCHAR
+@standards{POSIX.2, wordexp.h}
 The input string @var{words} contains an unquoted invalid character such
 as @samp{|}.
 
-@comment wordexp.h
-@comment POSIX.2
 @item WRDE_BADVAL
+@standards{POSIX.2, wordexp.h}
 The input string refers to an undefined shell variable, and you used the flag
 @code{WRDE_UNDEF} to forbid such references.
 
-@comment wordexp.h
-@comment POSIX.2
 @item WRDE_CMDSUB
+@standards{POSIX.2, wordexp.h}
 The input string uses command substitution, and you used the flag
 @code{WRDE_NOCMD} to forbid command substitution.
 
-@comment wordexp.h
-@comment POSIX.2
 @item WRDE_NOSPACE
+@standards{POSIX.2, wordexp.h}
 It was impossible to allocate memory to hold the result.  In this case,
 @code{wordexp} can store part of the results---as much as it could
 allocate room for.
 
-@comment wordexp.h
-@comment POSIX.2
 @item WRDE_SYNTAX
+@standards{POSIX.2, wordexp.h}
 There was a syntax error in the input string.  For example, an unmatched
 quoting character is a syntax error.  This error code is also used to
 signal division by zero and overflow in arithmetic expansion.
 @end vtable
 @end deftypefun
 
-@comment wordexp.h
-@comment POSIX.2
 @deftypefun void wordfree (wordexp_t *@var{word-vector-ptr})
+@standards{POSIX.2, wordexp.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c wordfree dup @asucorrupt @ascuheap @acucorrupt @acsmem
 @c  free dup @ascuheap @acsmem
@@ -2068,9 +2001,8 @@ This section describes the flags that you can specify in the
 and combine them with the C operator @code{|}.
 
 @vtable @code
-@comment wordexp.h
-@comment POSIX.2
 @item WRDE_APPEND
+@standards{POSIX.2, wordexp.h}
 Append the words from this expansion to the vector of words produced by
 previous calls to @code{wordexp}.  This way you can effectively expand
 several words as if they were concatenated with spaces between them.
@@ -2080,22 +2012,19 @@ word vector structure between calls to @code{wordexp}.  And, if you set
 @code{WRDE_DOOFFS} in the first call to @code{wordexp}, you must also
 set it when you append to the results.
 
-@comment wordexp.h
-@comment POSIX.2
 @item WRDE_DOOFFS
+@standards{POSIX.2, wordexp.h}
 Leave blank slots at the beginning of the vector of words.
 The @code{we_offs} field says how many slots to leave.
 The blank slots contain null pointers.
 
-@comment wordexp.h
-@comment POSIX.2
 @item WRDE_NOCMD
+@standards{POSIX.2, wordexp.h}
 Don't do command substitution; if the input requests command substitution,
 report an error.
 
-@comment wordexp.h
-@comment POSIX.2
 @item WRDE_REUSE
+@standards{POSIX.2, wordexp.h}
 Reuse a word vector made by a previous call to @code{wordexp}.
 Instead of allocating a new vector of words, this call to @code{wordexp}
 will use the vector that already exists (making it larger if necessary).
@@ -2104,17 +2033,15 @@ Note that the vector may move, so it is not safe to save an old pointer
 and use it again after calling @code{wordexp}.  You must fetch
 @code{we_pathv} anew after each call.
 
-@comment wordexp.h
-@comment POSIX.2
 @item WRDE_SHOWERR
+@standards{POSIX.2, wordexp.h}
 Do show any error messages printed by commands run by command substitution.
 More precisely, allow these commands to inherit the standard error output
 stream of the current process.  By default, @code{wordexp} gives these
 commands a standard error stream that discards all output.
 
-@comment wordexp.h
-@comment POSIX.2
 @item WRDE_UNDEF
+@standards{POSIX.2, wordexp.h}
 If the input refers to a shell variable that is not defined, report an
 error.
 @end vtable

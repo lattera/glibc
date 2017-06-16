@@ -33,9 +33,8 @@ cases, calling @code{argp_parse} is the only argument-parsing code
 needed in @code{main}.
 @xref{Program Arguments}.
 
-@comment argp.h
-@comment GNU
 @deftypefun {error_t} argp_parse (const struct argp *@var{argp}, int @var{argc}, char **@var{argv}, unsigned @var{flags}, int *@var{arg_index}, void *@var{input})
+@standards{GNU, argp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:argpbuf} @mtslocale{} @mtsenv{}}@asunsafe{@ascuheap{} @ascuintl{} @asulock{} @asucorrupt{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 @c Optionally alloca()tes standard help options, initializes the parser,
 @c then parses individual args in a loop, and then finalizes.
@@ -108,18 +107,16 @@ These variables make it easy for user programs to implement the
 @samp{--version} option and provide a bug-reporting address in the
 @samp{--help} output.  These are implemented in argp by default.
 
-@comment argp.h
-@comment GNU
 @deftypevar {const char *} argp_program_version
+@standards{GNU, argp.h}
 If defined or set by the user program to a non-zero value, then a
 @samp{--version} option is added when parsing with @code{argp_parse},
 which will print the @samp{--version} string followed by a newline and
 exit.  The exception to this is if the @code{ARGP_NO_EXIT} flag is used.
 @end deftypevar
 
-@comment argp.h
-@comment GNU
 @deftypevar {const char *} argp_program_bug_address
+@standards{GNU, argp.h}
 If defined or set by the user program to a non-zero value,
 @code{argp_program_bug_address} should point to a string that will be
 printed at the end of the standard output for the @samp{--help} option,
@@ -127,9 +124,8 @@ embedded in a sentence that says @samp{Report bugs to @var{address}.}.
 @end deftypevar
 
 @need 1500
-@comment argp.h
-@comment GNU
 @defvar argp_program_version_hook
+@standards{GNU, argp.h}
 If defined or set by the user program to a non-zero value, a
 @samp{--version} option is added when parsing with @code{arg_parse},
 which prints the program version and exits with a status of zero.  This
@@ -152,9 +148,8 @@ useful if a program has version information not easily expressed in a
 simple string.
 @end defvar
 
-@comment argp.h
-@comment GNU
 @deftypevar error_t argp_err_exit_status
+@standards{GNU, argp.h}
 This is the exit status used when argp exits due to a parsing error.  If
 not defined or set by the user program, this defaults to:
 @code{EX_USAGE} from @file{<sysexits.h>}.
@@ -166,9 +161,8 @@ not defined or set by the user program, this defaults to:
 The first argument to the @code{argp_parse} function is a pointer to a
 @code{struct argp}, which is known as an @dfn{argp parser}:
 
-@comment argp.h
-@comment GNU
 @deftp {Data Type} {struct argp}
+@standards{GNU, argp.h}
 This structure specifies how to parse a given set of options and
 arguments, perhaps in conjunction with other argp parsers.  It has the
 following fields:
@@ -243,9 +237,8 @@ option provided it has multiple names.  This should be terminated by an
 entry with zero in all fields.  Note that when using an initialized C
 array for options, writing @code{@{ 0 @}} is enough to achieve this.
 
-@comment argp.h
-@comment GNU
 @deftp {Data Type} {struct argp_option}
+@standards{GNU, argp.h}
 This structure specifies a single option that an argp parser
 understands, as well as how to parse and document that option.  It has
 the following fields:
@@ -317,28 +310,24 @@ that option is parsed or displayed in help messages:
 
 
 @vtable @code
-@comment argp.h
-@comment GNU
 @item OPTION_ARG_OPTIONAL
+@standards{GNU, argp.h}
 The argument associated with this option is optional.
 
-@comment argp.h
-@comment GNU
 @item OPTION_HIDDEN
+@standards{GNU, argp.h}
 This option isn't displayed in any help messages.
 
-@comment argp.h
-@comment GNU
 @item OPTION_ALIAS
+@standards{GNU, argp.h}
 This option is an alias for the closest previous non-alias option.  This
 means that it will be displayed in the same help entry, and will inherit
 fields other than @code{name} and @code{key} from the option being
 aliased.
 
 
-@comment argp.h
-@comment GNU
 @item OPTION_DOC
+@standards{GNU, argp.h}
 This option isn't actually an option and should be ignored by the actual
 option parser.  It is an arbitrary section of documentation that should
 be displayed in much the same manner as the options.  This is known as a
@@ -353,9 +342,8 @@ first non-whitespace character is @samp{-}.  This entry is displayed
 after all options, after @code{OPTION_DOC} entries with a leading
 @samp{-}, in the same group.
 
-@comment argp.h
-@comment GNU
 @item OPTION_NO_USAGE
+@standards{GNU, argp.h}
 This option shouldn't be included in `long' usage messages, but should
 still be included in other help messages.  This is intended for options
 that are completely documented in an argp's @code{args_doc}
@@ -417,9 +405,8 @@ appropriate for @var{key}, and return @code{0} for success,
 parser function, or a unix error code if a real error
 occurred.  @xref{Error Codes}.
 
-@comment argp.h
-@comment GNU
 @deftypevr Macro int ARGP_ERR_UNKNOWN
+@standards{GNU, argp.h}
 Argp parser functions should return @code{ARGP_ERR_UNKNOWN} for any
 @var{key} value they do not recognize, or for non-option arguments
 (@code{@var{key} == ARGP_KEY_ARG}) that they are not equipped to handle.
@@ -460,9 +447,8 @@ values.  In the following example @var{arg} and @var{state} refer to
 parser function arguments.  @xref{Argp Parser Functions}.
 
 @vtable @code
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_ARG
+@standards{GNU, argp.h}
 This is not an option at all, but rather a command line argument, whose
 value is pointed to by @var{arg}.
 
@@ -480,9 +466,8 @@ decrements the @code{next} field of its @var{state} argument, the option
 won't be considered processed; this is to allow you to actually modify
 the argument, perhaps into an option, and have it processed again.
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_ARGS
+@standards{GNU, argp.h}
 If a parser function returns @code{ARGP_ERR_UNKNOWN} for
 @code{ARGP_KEY_ARG}, it is immediately called again with the key
 @code{ARGP_KEY_ARGS}, which has a similar meaning, but is slightly more
@@ -511,45 +496,39 @@ case ARGP_KEY_ARGS:
   break;
 @end smallexample
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_END
+@standards{GNU, argp.h}
 This indicates that there are no more command line arguments.  Parser
 functions are called in a different order, children first.  This allows
 each parser to clean up its state for the parent.
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_NO_ARGS
+@standards{GNU, argp.h}
 Because it's common to do some special processing if there aren't any
 non-option args, parser functions are called with this key if they
 didn't successfully process any non-option arguments.  This is called
 just before @code{ARGP_KEY_END}, where more general validity checks on
 previously parsed arguments take place.
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_INIT
+@standards{GNU, argp.h}
 This is passed in before any parsing is done.  Afterwards, the values of
 each element of the @code{child_input} field of @var{state}, if any, are
 copied to each child's state to be the initial value of the @code{input}
 when @emph{their} parsers are called.
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_SUCCESS
+@standards{GNU, argp.h}
 Passed in when parsing has successfully been completed, even if
 arguments remain.
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_ERROR
+@standards{GNU, argp.h}
 Passed in if an error has occurred and parsing is terminated.  In this
 case a call with a key of @code{ARGP_KEY_SUCCESS} is never made.
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_FINI
+@standards{GNU, argp.h}
 The final key ever seen by any parser, even after
 @code{ARGP_KEY_SUCCESS} and @code{ARGP_KEY_ERROR}.  Any resources
 allocated by @code{ARGP_KEY_INIT} may be freed here.  At times, certain
@@ -597,9 +576,8 @@ The third argument to argp parser functions (@pxref{Argp Parser
 Functions}) is a pointer to a @code{struct argp_state}, which contains
 information about the state of the option parsing.
 
-@comment argp.h
-@comment GNU
 @deftp {Data Type} {struct argp_state}
+@standards{GNU, argp.h}
 This structure has the following fields, which may be modified as noted:
 
 @table @code
@@ -686,9 +664,8 @@ parser function.  @xref{Argp Parsing State}.
 
 
 @cindex usage messages, in argp
-@comment argp.h
-@comment GNU
 @deftypefun void argp_usage (const struct argp_state *@var{state})
+@standards{GNU, argp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:argpbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @ascuintl{} @asucorrupt{}}@acunsafe{@acsmem{} @acucorrupt{} @aculock{}}}
 @c Just calls argp_state_help with stderr and ARGP_HELP_STD_USAGE.
 Outputs the standard usage message for the argp parser referred to by
@@ -697,9 +674,8 @@ with @code{exit (argp_err_exit_status)}.  @xref{Argp Global Variables}.
 @end deftypefun
 
 @cindex syntax error messages, in argp
-@comment argp.h
-@comment GNU
 @deftypefun void argp_error (const struct argp_state *@var{state}, const char *@var{fmt}, @dots{})
+@standards{GNU, argp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:argpbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @ascuintl{} @asucorrupt{}}@acunsafe{@acsmem{} @acucorrupt{} @aculock{}}}
 @c Lock stream, vasprintf the formatted message into a buffer, print the
 @c buffer prefixed by the short program name (in libc,
@@ -714,9 +690,8 @@ by the program name and @samp{:}, and followed by a @w{@samp{Try @dots{}
 @end deftypefun
 
 @cindex error messages, in argp
-@comment argp.h
-@comment GNU
 @deftypefun void argp_failure (const struct argp_state *@var{state}, int @var{status}, int @var{errnum}, const char *@var{fmt}, @dots{})
+@standards{GNU, argp.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{}}}
 @c Lock stream, write out the short program name, vasprintf the optional
 @c formatted message to a buffer, print the buffer prefixed by colon and
@@ -736,9 +711,8 @@ don't reflect a syntactic problem with the input, such as illegal values
 for options, bad phase of the moon, etc.
 @end deftypefun
 
-@comment argp.h
-@comment GNU
 @deftypefun void argp_state_help (const struct argp_state *@var{state}, FILE *@var{stream}, unsigned @var{flags})
+@standards{GNU, argp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:argpbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @ascuintl{} @asucorrupt{}}@acunsafe{@acsmem{} @acucorrupt{} @aculock{}}}
 @c Just calls _help with the short program name and optionally exit.
 @c The main problems in _help, besides the usual issues with stream I/O
@@ -920,9 +894,8 @@ option with the same name, the parser conflicts are resolved in favor of
 the parent argp parser(s), or the earlier of the argp parsers in the
 list of children.
 
-@comment argp.h
-@comment GNU
 @deftp {Data Type} {struct argp_child}
+@standards{GNU, argp.h}
 An entry in the list of subsidiary argp parsers pointed to by the
 @code{children} field in a @code{struct argp}.  The fields are as
 follows:
@@ -963,62 +936,54 @@ modify these defaults, the following flags may be or'd together in the
 @var{flags} argument to @code{argp_parse}:
 
 @vtable @code
-@comment argp.h
-@comment GNU
 @item ARGP_PARSE_ARGV0
+@standards{GNU, argp.h}
 Don't ignore the first element of the @var{argv} argument to
 @code{argp_parse}.  Unless @code{ARGP_NO_ERRS} is set, the first element
 of the argument vector is skipped for option parsing purposes, as it
 corresponds to the program name in a command line.
 
-@comment argp.h
-@comment GNU
 @item ARGP_NO_ERRS
+@standards{GNU, argp.h}
 Don't print error messages for unknown options to @code{stderr}; unless
 this flag is set, @code{ARGP_PARSE_ARGV0} is ignored, as @code{argv[0]}
 is used as the program name in the error messages.  This flag implies
 @code{ARGP_NO_EXIT}.  This is based on the assumption that silent exiting
 upon errors is bad behavior.
 
-@comment argp.h
-@comment GNU
 @item ARGP_NO_ARGS
+@standards{GNU, argp.h}
 Don't parse any non-option args.  Normally these are parsed by calling
 the parse functions with a key of @code{ARGP_KEY_ARG}, the actual
 argument being the value.  This flag needn't normally be set, as the
 default behavior is to stop parsing as soon as an argument fails to be
 parsed.  @xref{Argp Parser Functions}.
 
-@comment argp.h
-@comment GNU
 @item ARGP_IN_ORDER
+@standards{GNU, argp.h}
 Parse options and arguments in the same order they occur on the command
 line.  Normally they're rearranged so that all options come first.
 
-@comment argp.h
-@comment GNU
 @item ARGP_NO_HELP
+@standards{GNU, argp.h}
 Don't provide the standard long option @samp{--help}, which ordinarily
 causes usage and option help information to be output to @code{stdout}
 and @code{exit (0)}.
 
-@comment argp.h
-@comment GNU
 @item ARGP_NO_EXIT
+@standards{GNU, argp.h}
 Don't exit on errors, although they may still result in error messages.
 
-@comment argp.h
-@comment GNU
 @item ARGP_LONG_ONLY
+@standards{GNU, argp.h}
 Use the GNU getopt `long-only' rules for parsing arguments.  This allows
 long-options to be recognized with only a single @samp{-}
 (i.e., @samp{-help}).  This results in a less useful interface, and its
 use is discouraged as it conflicts with the way most GNU programs work
 as well as the GNU coding standards.
 
-@comment argp.h
-@comment GNU
 @item ARGP_SILENT
+@standards{GNU, argp.h}
 Turns off any message-printing/exiting options, specifically
 @code{ARGP_NO_EXIT}, @code{ARGP_NO_ERRS}, and @code{ARGP_NO_HELP}.
 @end vtable
@@ -1063,34 +1028,28 @@ function as the first argument in addition to key values for user
 options.  They specify which help text the @var{text} argument contains:
 
 @vtable @code
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_HELP_PRE_DOC
+@standards{GNU, argp.h}
 The help text preceding options.
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_HELP_POST_DOC
+@standards{GNU, argp.h}
 The help text following options.
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_HELP_HEADER
+@standards{GNU, argp.h}
 The option header string.
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_HELP_EXTRA
+@standards{GNU, argp.h}
 This is used after all other documentation; @var{text} is zero for this key.
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_HELP_DUP_ARGS_NOTE
+@standards{GNU, argp.h}
 The explanatory note printed when duplicate option arguments have been suppressed.
 
-@comment argp.h
-@comment GNU
 @item ARGP_KEY_HELP_ARGS_DOC
+@standards{GNU, argp.h}
 The argument doc string; formally the @code{args_doc} field from the argp parser.  @xref{Argp Parsers}.
 @end vtable
 
@@ -1105,9 +1064,8 @@ cases can be handled using @code{argp_usage} and
 desirable to print a help message in some context other than parsing the
 program options, argp offers the @code{argp_help} interface.
 
-@comment argp.h
-@comment GNU
 @deftypefun void argp_help (const struct argp *@var{argp}, FILE *@var{stream}, unsigned @var{flags}, char *@var{name})
+@standards{GNU, argp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:argpbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @ascuintl{} @asucorrupt{}}@acunsafe{@acsmem{} @acucorrupt{} @aculock{}}}
 @c Just calls _help.
 This outputs a help message for the argp parser @var{argp} to

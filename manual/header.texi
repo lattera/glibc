@@ -14,7 +14,7 @@ it.
 @end iftex
 @table @code
 @comment summary.texi is generated from the other Texinfo files.
-@comment See the Makefile and summary.awk for the details.
+@comment See the Makefile and summary.pl for the details.
 @include summary.texi
 @end table
 @iftex

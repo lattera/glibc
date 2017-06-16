@@ -76,9 +76,8 @@ One way to represent an elapsed time is with a simple arithmetic data
 type, as with the following function to compute the elapsed time between
 two calendar times.  This function is declared in @file{time.h}.
 
-@comment time.h
-@comment ISO
 @deftypefun double difftime (time_t @var{time1}, time_t @var{time0})
+@standards{ISO, time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{difftime} function returns the number of seconds of elapsed
 time between calendar time @var{time1} and calendar time @var{time0}, as
@@ -96,9 +95,8 @@ you can use them for your own purposes too.  They're exactly the same
 except that one has a resolution in microseconds, and the other, newer
 one, is in nanoseconds.
 
-@comment sys/time.h
-@comment BSD
 @deftp {Data Type} {struct timeval}
+@standards{BSD, sys/time.h}
 @cindex timeval
 The @code{struct timeval} structure represents an elapsed time.  It is
 declared in @file{sys/time.h} and has the following members:
@@ -115,9 +113,8 @@ million.
 @end table
 @end deftp
 
-@comment sys/time.h
-@comment POSIX.1
 @deftp {Data Type} {struct timespec}
+@standards{POSIX.1, sys/time.h}
 @cindex timespec
 The @code{struct timespec} structure represents an elapsed time.  It is
 declared in @file{time.h} and has the following members:
@@ -229,24 +226,21 @@ track of CPU time.  It's common for the internal processor clock
 to have a resolution somewhere between a hundredth and millionth of a
 second.
 
-@comment time.h
-@comment ISO
 @deftypevr Macro int CLOCKS_PER_SEC
+@standards{ISO, time.h}
 The value of this macro is the number of clock ticks per second measured
 by the @code{clock} function.  POSIX requires that this value be one
 million independent of the actual resolution.
 @end deftypevr
 
-@comment time.h
-@comment ISO
 @deftp {Data Type} clock_t
+@standards{ISO, time.h}
 This is the type of the value returned by the @code{clock} function.
 Values of type @code{clock_t} are numbers of clock ticks.
 @end deftp
 
-@comment time.h
-@comment ISO
 @deftypefun clock_t clock (void)
+@standards{ISO, time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c On Hurd, this calls task_info twice and adds user and system time
 @c from both basic and thread time info structs.  On generic posix,
@@ -270,9 +264,8 @@ include the header file @file{sys/times.h} to use this facility.
 @cindex CPU time
 @pindex sys/times.h
 
-@comment sys/times.h
-@comment POSIX.1
 @deftp {Data Type} {struct tms}
+@standards{POSIX.1, sys/times.h}
 The @code{tms} structure is used to return information about process
 times.  It contains at least the following members:
 
@@ -307,16 +300,14 @@ these are the actual amounts of time; not relative to any event.
 @xref{Creating a Process}.
 @end deftp
 
-@comment time.h
-@comment POSIX.1
 @deftypevr Macro int CLK_TCK
+@standards{POSIX.1, time.h}
 This is an obsolete name for the number of clock ticks per second.  Use
 @code{sysconf (_SC_CLK_TCK)} instead.
 @end deftypevr
 
-@comment sys/times.h
-@comment POSIX.1
 @deftypefun clock_t times (struct tms *@var{buffer})
+@standards{POSIX.1, sys/times.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c On HURD, this calls task_info twice, for basic and thread times info,
 @c adding user and system times into tms, and then gettimeofday, to
@@ -395,9 +386,8 @@ These facilities are declared in the header file @file{time.h}.
 @pindex time.h
 
 @cindex epoch
-@comment time.h
-@comment ISO
 @deftp {Data Type} time_t
+@standards{ISO, time.h}
 This is the data type used to represent simple time.  Sometimes, it also
 represents an elapsed time.  When interpreted as a calendar time value,
 it represents the number of seconds elapsed since 00:00:00 on January 1,
@@ -419,9 +409,8 @@ The function @code{difftime} tells you the elapsed time between two
 simple calendar times, which is not always as easy to compute as just
 subtracting.  @xref{Elapsed Time}.
 
-@comment time.h
-@comment ISO
 @deftypefun time_t time (time_t *@var{result})
+@standards{ISO, time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{time} function returns the current calendar time as a value of
 type @code{time_t}.  If the argument @var{result} is not a null pointer,
@@ -432,9 +421,9 @@ current calendar time is not available, the value
 
 @c The GNU C library implements stime() with a call to settimeofday() on
 @c Linux.
-@comment time.h
-@comment SVID, XPG
 @deftypefun int stime (const time_t *@var{newtime})
+@standards{SVID, time.h}
+@standards{XPG, time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c On unix, this is implemented in terms of settimeofday.
 @code{stime} sets the system clock, i.e., it tells the system that the
@@ -470,9 +459,8 @@ functions and the associated data types described in this section are
 declared in @file{sys/time.h}.
 @pindex sys/time.h
 
-@comment sys/time.h
-@comment BSD
 @deftp {Data Type} {struct timezone}
+@standards{BSD, sys/time.h}
 The @code{struct timezone} structure is used to hold minimal information
 about the local time zone.  It has the following members:
 
@@ -488,9 +476,8 @@ The @code{struct timezone} type is obsolete and should never be used.
 Instead, use the facilities described in @ref{Time Zone Functions}.
 @end deftp
 
-@comment sys/time.h
-@comment BSD
 @deftypefun int gettimeofday (struct timeval *@var{tp}, struct timezone *@var{tzp})
+@standards{BSD, sys/time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c On most GNU/Linux systems this is a direct syscall, but the posix/
 @c implementation (not used on GNU/Linux or GNU/Hurd) relies on time and
@@ -517,9 +504,8 @@ Instead, use the facilities described in @ref{Time Zone Functions}.
 @end table
 @end deftypefun
 
-@comment sys/time.h
-@comment BSD
 @deftypefun int settimeofday (const struct timeval *@var{tp}, const struct timezone *@var{tzp})
+@standards{BSD, sys/time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c On HURD, it calls host_set_time with a privileged port.  On other
 @c unix systems, it's a syscall.
@@ -561,9 +547,8 @@ The operating system does not support setting time zone information, and
 @end deftypefun
 
 @c On Linux, GNU libc implements adjtime() as a call to adjtimex().
-@comment sys/time.h
-@comment BSD
 @deftypefun int adjtime (const struct timeval *@var{delta}, struct timeval *@var{olddelta})
+@standards{BSD, sys/time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c On hurd and mach, call host_adjust_time with a privileged port.  On
 @c Linux, it's implemented in terms of adjtimex.  On other unixen, it's
@@ -603,9 +588,8 @@ and @code{adjtime} functions are derived from BSD.
 
 Symbols for the following function are declared in @file{sys/timex.h}.
 
-@comment sys/timex.h
-@comment GNU
 @deftypefun int adjtimex (struct timex *@var{timex})
+@standards{GNU, sys/timex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c It's a syscall, only available on linux.
 
@@ -634,9 +618,8 @@ zone, and it also indicates which time zone that is.
 
 The symbols in this section are declared in the header file @file{time.h}.
 
-@comment time.h
-@comment ISO
 @deftp {Data Type} {struct tm}
+@standards{ISO, time.h}
 This is the data type used to represent a broken-down time.  The structure
 contains at least the following members, which can appear in any order.
 
@@ -702,9 +685,8 @@ GNU extension, and is not visible in a strict @w{ISO C} environment.
 @end deftp
 
 
-@comment time.h
-@comment ISO
 @deftypefun {struct tm *} localtime (const time_t *@var{time})
+@standards{ISO, time.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:tmbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c Calls tz_convert with a static buffer.
 @c localtime @mtasurace:tmbuf @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
@@ -730,9 +712,8 @@ Using the @code{localtime} function is a big problem in multi-threaded
 programs.  The result is returned in a static buffer and this is used in
 all threads.  POSIX.1c introduced a variant of this function.
 
-@comment time.h
-@comment POSIX.1c
 @deftypefun {struct tm *} localtime_r (const time_t *@var{time}, struct tm *@var{resultp})
+@standards{POSIX.1c, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c localtime_r @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
 @c  tz_convert(use_localtime) @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
@@ -827,9 +808,8 @@ object the result was written into, i.e., it returns @var{resultp}.
 @end deftypefun
 
 
-@comment time.h
-@comment ISO
 @deftypefun {struct tm *} gmtime (const time_t *@var{time})
+@standards{ISO, time.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:tmbuf} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c gmtime @mtasurace:tmbuf @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
 @c  tz_convert dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
@@ -843,9 +823,8 @@ As for the @code{localtime} function we have the problem that the result
 is placed in a static variable.  POSIX.1c also provides a replacement for
 @code{gmtime}.
 
-@comment time.h
-@comment POSIX.1c
 @deftypefun {struct tm *} gmtime_r (const time_t *@var{time}, struct tm *@var{resultp})
+@standards{POSIX.1c, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c You'd think tz_convert could avoid some safety issues with
 @c !use_localtime, but no such luck: tzset_internal will always bring
@@ -863,9 +842,8 @@ object the result was written into, i.e., it returns @var{resultp}.
 @end deftypefun
 
 
-@comment time.h
-@comment ISO
 @deftypefun time_t mktime (struct tm *@var{brokentime})
+@standards{ISO, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c mktime @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
 @c   passes a static localtime_offset to mktime_internal; it is read
@@ -913,9 +891,8 @@ of @var{brokentime}'s initial @code{tm_gmtoff} and @code{tm_zone}
 members.  @xref{Time Zone Functions}.
 @end deftypefun
 
-@comment time.h
-@comment ???
 @deftypefun time_t timelocal (struct tm *@var{brokentime})
+@standards{???, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c Alias to mktime.
 
@@ -928,9 +905,8 @@ available.  @code{timelocal} is rather rare.
 
 @end deftypefun
 
-@comment time.h
-@comment ???
 @deftypefun time_t timegm (struct tm *@var{brokentime})
+@standards{???, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c timegm @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
 @c   gmtime_offset triggers the same caveats as localtime_offset in mktime.
@@ -1002,9 +978,8 @@ system clock from the true calendar time.
 @end table
 @end deftp
 
-@comment sys/timex.h
-@comment GNU
 @deftypefun int ntp_gettime (struct ntptimeval *@var{tptr})
+@standards{GNU, sys/timex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Wrapper for adjtimex.
 The @code{ntp_gettime} function sets the structure pointed to by
@@ -1121,9 +1096,8 @@ exceeded the threshold.
 @end table
 @end deftp
 
-@comment sys/timex.h
-@comment GNU
 @deftypefun int ntp_adjtime (struct timex *@var{tptr})
+@standards{GNU, sys/timex.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Alias to adjtimex syscall.
 The @code{ntp_adjtime} function sets the structure specified by
@@ -1177,9 +1151,8 @@ The functions described in this section format calendar time values as
 strings.  These functions are declared in the header file @file{time.h}.
 @pindex time.h
 
-@comment time.h
-@comment ISO
 @deftypefun {char *} asctime (const struct tm *@var{brokentime})
+@standards{ISO, time.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:asctime} @mtslocale{}}@asunsafe{}@acsafe{}}
 @c asctime @mtasurace:asctime @mtslocale
 @c   Uses a static buffer.
@@ -1207,9 +1180,8 @@ overwritten by subsequent calls to @code{asctime} or @code{ctime}.
 string.)
 @end deftypefun
 
-@comment time.h
-@comment POSIX.1c
 @deftypefun {char *} asctime_r (const struct tm *@var{brokentime}, char *@var{buffer})
+@standards{POSIX.1c, time.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 @c asctime_r @mtslocale
 @c  asctime_internal dup @mtslocale
@@ -1224,9 +1196,8 @@ it returns @code{NULL}.
 @end deftypefun
 
 
-@comment time.h
-@comment ISO
 @deftypefun {char *} ctime (const time_t *@var{time})
+@standards{ISO, time.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:tmbuf} @mtasurace{:asctime} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c ctime @mtasurace:tmbuf @mtasurace:asctime @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
 @c  localtime dup @mtasurace:tmbuf @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
@@ -1243,9 +1214,8 @@ Calling @code{ctime} also sets the current time zone as if
 @code{tzset} were called.  @xref{Time Zone Functions}.
 @end deftypefun
 
-@comment time.h
-@comment POSIX.1c
 @deftypefun {char *} ctime_r (const time_t *@var{time}, char *@var{buffer})
+@standards{POSIX.1c, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c ctime_r @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
 @c  localtime_r dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
@@ -1264,9 +1234,8 @@ it returns @code{NULL}.
 @end deftypefun
 
 
-@comment time.h
-@comment ISO
 @deftypefun size_t strftime (char *@var{s}, size_t @var{size}, const char *@var{template}, const struct tm *@var{brokentime})
+@standards{ISO, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c strftime @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
 @c  strftime_l @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
@@ -1648,9 +1617,8 @@ members.  @xref{Time Zone Functions}.
 For an example of @code{strftime}, see @ref{Time Functions Example}.
 @end deftypefun
 
-@comment time.h
-@comment ISO/Amend1
 @deftypefun size_t wcsftime (wchar_t *@var{s}, size_t @var{size}, const wchar_t *@var{template}, const struct tm *@var{brokentime})
+@standards{ISO/Amend1, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c wcsftime @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
 @c  wcsftime_l @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
@@ -1745,9 +1713,8 @@ used in software since it is better known.  Its interface and
 implementation are heavily influenced by the @code{getdate} function,
 which is defined and implemented in terms of calls to @code{strptime}.
 
-@comment time.h
-@comment XPG4
 @deftypefun {char *} strptime (const char *@var{s}, const char *@var{fmt}, struct tm *@var{tp})
+@standards{XPG4, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c strptime @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
 @c  strptime_internal @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
@@ -2155,9 +2122,8 @@ in multi-threaded programs or libraries, since it returns a pointer to
 a static variable, and uses a global variable and global state (an
 environment variable).
 
-@comment time.h
-@comment Unix98
 @defvar getdate_err
+@standards{Unix98, time.h}
 This variable of type @code{int} contains the error code of the last
 unsuccessful call to @code{getdate}.  Defined values are:
 
@@ -2184,9 +2150,8 @@ in a @code{time_t} variable.
 @end table
 @end defvar
 
-@comment time.h
-@comment Unix98
 @deftypefun {struct tm *} getdate (const char *@var{string})
+@standards{Unix98, time.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:getdate} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c getdate @mtasurace:getdate @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
 @c  getdate_r dup @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
@@ -2298,9 +2263,8 @@ any arbitrary file and chances are high that with some bogus input
 (such as a binary file) the program will crash.
 @end deftypefun
 
-@comment time.h
-@comment GNU
 @deftypefun int getdate_r (const char *@var{string}, struct tm *@var{tp})
+@standards{GNU, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c getdate_r @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
 @c  getenv dup @mtsenv
@@ -2528,9 +2492,8 @@ community of volunteers and put in the public domain.
 @node Time Zone Functions
 @subsection Functions and Variables for Time Zones
 
-@comment time.h
-@comment POSIX.1
 @deftypevar {char *} tzname [2]
+@standards{POSIX.1, time.h}
 The array @code{tzname} contains two strings, which are the standard
 names of the pair of time zones (standard and Daylight
 Saving) that the user has selected.  @code{tzname[0]} is the name of
@@ -2558,9 +2521,8 @@ lead to trouble.
 
 @end deftypevar
 
-@comment time.h
-@comment POSIX.1
 @deftypefun void tzset (void)
+@standards{POSIX.1, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c tzset @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
 @c  libc_lock_lock dup @asulock @aculock
@@ -2577,9 +2539,8 @@ The following variables are defined for compatibility with System V
 Unix.  Like @code{tzname}, these variables are set by calling
 @code{tzset} or the other time conversion functions.
 
-@comment time.h
-@comment SVID
 @deftypevar {long int} timezone
+@standards{SVID, time.h}
 This contains the difference between UTC and the latest local standard
 time, in seconds west of UTC.  For example, in the U.S. Eastern time
 zone, the value is @code{5*60*60}.  Unlike the @code{tm_gmtoff} member
@@ -2589,9 +2550,8 @@ to use @code{tm_gmtoff}, since it contains the correct offset even when
 it is not the latest one.
 @end deftypevar
 
-@comment time.h
-@comment SVID
 @deftypevar int daylight
+@standards{SVID, time.h}
 This variable has a nonzero value if Daylight Saving Time rules apply.
 A nonzero value does not necessarily mean that Daylight Saving Time is
 now in effect; it means only that Daylight Saving Time is sometimes in
@@ -2683,9 +2643,8 @@ simpler interface for setting the real-time timer.
 @pindex unistd.h
 @pindex sys/time.h
 
-@comment sys/time.h
-@comment BSD
 @deftp {Data Type} {struct itimerval}
+@standards{BSD, sys/time.h}
 This structure is used to specify when a timer should expire.  It contains
 the following members:
 @table @code
@@ -2701,9 +2660,8 @@ the alarm is disabled.
 The @code{struct timeval} data type is described in @ref{Elapsed Time}.
 @end deftp
 
-@comment sys/time.h
-@comment BSD
 @deftypefun int setitimer (int @var{which}, const struct itimerval *@var{new}, struct itimerval *@var{old})
+@standards{BSD, sys/time.h}
 @safety{@prelim{}@mtsafe{@mtstimer{}}@assafe{}@acsafe{}}
 @c This function is marked with @mtstimer because the same set of timers
 @c is shared by all threads of a process, so calling it in one thread
@@ -2730,9 +2688,8 @@ The timer period is too large.
 @end table
 @end deftypefun
 
-@comment sys/time.h
-@comment BSD
 @deftypefun int getitimer (int @var{which}, struct itimerval *@var{old})
+@standards{BSD, sys/time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{getitimer} function stores information about the timer specified
 by @var{which} in the structure pointed at by @var{old}.
@@ -2741,31 +2698,27 @@ The return value and error conditions are the same as for @code{setitimer}.
 @end deftypefun
 
 @vtable @code
-@comment sys/time.h
-@comment BSD
 @item ITIMER_REAL
+@standards{BSD, sys/time.h}
 This constant can be used as the @var{which} argument to the
 @code{setitimer} and @code{getitimer} functions to specify the real-time
 timer.
 
-@comment sys/time.h
-@comment BSD
 @item ITIMER_VIRTUAL
+@standards{BSD, sys/time.h}
 This constant can be used as the @var{which} argument to the
 @code{setitimer} and @code{getitimer} functions to specify the virtual
 timer.
 
-@comment sys/time.h
-@comment BSD
 @item ITIMER_PROF
+@standards{BSD, sys/time.h}
 This constant can be used as the @var{which} argument to the
 @code{setitimer} and @code{getitimer} functions to specify the profiling
 timer.
 @end vtable
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun {unsigned int} alarm (unsigned int @var{seconds})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{@mtstimer{}}@assafe{}@acsafe{}}
 @c Wrapper for setitimer.
 The @code{alarm} function sets the real-time timer to expire in
@@ -2824,9 +2777,8 @@ signals, use @code{select} (@pxref{Waiting for I/O}) and don't specify
 any descriptors to wait for.
 @c !!! select can get EINTR; using SA_RESTART makes sleep win too.
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun {unsigned int} sleep (unsigned int @var{seconds})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtunsafe{@mtascusig{:SIGCHLD/linux}}@asunsafe{}@acunsafe{}}
 @c On Mach, it uses ports and calls time.  On generic posix, it calls
 @c nanosleep.  On Linux, it temporarily blocks SIGCHLD, which is MT- and
@@ -2872,9 +2824,8 @@ On @gnusystems{}, it is safe to use @code{sleep} and @code{SIGALRM} in
 the same program, because @code{sleep} does not work by means of
 @code{SIGALRM}.
 
-@comment time.h
-@comment POSIX.1
 @deftypefun int nanosleep (const struct timespec *@var{requested_time}, struct timespec *@var{remaining})
+@standards{POSIX.1, time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c On Linux, it's a syscall.  On Mach, it calls gettimeofday and uses
 @c ports.

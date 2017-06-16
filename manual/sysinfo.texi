@@ -88,9 +88,8 @@ Prototypes for these functions appear in @file{unistd.h}.
 The programs @code{hostname}, @code{hostid}, and @code{domainname} work
 by calling these functions.
 
-@comment unistd.h
-@comment BSD
 @deftypefun int gethostname (char *@var{name}, size_t @var{size})
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall on unix; implemented in terms of uname on posix and of
 @c hurd_get_host_config on hurd.
@@ -121,9 +120,8 @@ truncated host name is good enough.  If it is, you can ignore the
 error code.
 @end deftypefun
 
-@comment unistd.h
-@comment BSD
 @deftypefun int sethostname (const char *@var{name}, size_t @var{length})
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall on unix; implemented in terms of hurd_set_host_config
 @c on hurd.
@@ -148,9 +146,8 @@ This process cannot set the host name because it is not privileged.
 @end table
 @end deftypefun
 
-@comment unistd.h
-@comment ???
 @deftypefun int getdomainnname (char *@var{name}, size_t @var{length})
+@standards{???, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Syscalls uname, then strlen and memcpy.
 @cindex NIS domain name
@@ -164,9 +161,8 @@ The specifics of this function are analogous to @code{gethostname}, above.
 
 @end deftypefun
 
-@comment unistd.h
-@comment ???
 @deftypefun int setdomainname (const char *@var{name}, size_t @var{length})
+@standards{???, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall.
 @cindex NIS domain name
@@ -180,9 +176,8 @@ The specifics of this function are analogous to @code{sethostname}, above.
 
 @end deftypefun
 
-@comment unistd.h
-@comment BSD
 @deftypefun {long int} gethostid (void)
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtsafe{@mtshostid{} @mtsenv{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{} @acsfd{}}}
 @c On HURD, calls _hurd_get_host_config and strtol.  On Linux, open
 @c HOSTIDFILE, reads an int32_t and closes; if that fails, it calls
@@ -201,9 +196,8 @@ on the results of @code{gethostname}.  For more information on IP addresses,
 @xref{Host Addresses}.
 @end deftypefun
 
-@comment unistd.h
-@comment BSD
 @deftypefun int sethostid (long int @var{id})
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtunsafe{@mtasuconst{:@mtshostid{}}}@asunsafe{}@acunsafe{@acucorrupt{} @acsfd{}}}
 The @code{sethostid} function sets the ``host ID'' of the host machine
 to @var{id}.  Only privileged processes are permitted to do this.  Usually
@@ -245,9 +239,8 @@ which you can get with functions targeted to this purpose described in
 @ref{Host Identification}.
 
 
-@comment sys/utsname.h
-@comment POSIX.1
 @deftp {Data Type} {struct utsname}
+@standards{POSIX.1, sys/utsname.h}
 The @code{utsname} structure is used to hold information returned
 by the @code{uname} function.  It has the following members:
 
@@ -308,9 +301,8 @@ use of the rest of the structure.
 @end table
 @end deftp
 
-@comment sys/utsname.h
-@comment POSIX.1
 @deftypefun int uname (struct utsname *@var{info})
+@standards{POSIX.1, sys/utsname.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall on unix; the posix fallback is to call gethostname and
 @c then fills in the other fields with constants; on HURD, it calls
@@ -413,9 +405,8 @@ The names @code{_PATH_MNTTAB} and @code{_PATH_MOUNTED} should always be used.
 The internal representation for entries of the file is @w{@code{struct
 fstab}}, defined in @file{fstab.h}.
 
-@comment fstab.h
-@comment BSD
 @deftp {Data Type} {struct fstab}
+@standards{BSD, fstab.h}
 This structure is used with the @code{getfsent}, @code{getfsspec}, and
 @code{getfsfile} functions.
 
@@ -487,9 +478,8 @@ related to the @code{dump} utility used on Unix systems.
 To read the entire content of the of the @file{fstab} file @theglibc{}
 contains a set of three functions which are designed in the usual way.
 
-@comment fstab.h
-@comment BSD
 @deftypefun int setfsent (void)
+@standards{BSD, fstab.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:fsent}}@asunsafe{@ascuheap{} @asucorrupt{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c setfsent @mtasurace:fsent @ascuheap @asucorrupt @asulock @acucorrupt @aculock @acsmem @acsfd
 @c  fstab_init(1) @mtasurace:fsent @ascuheap @asucorrupt @asulock @acucorrupt @aculock @acsmem @acsfd
@@ -508,9 +498,8 @@ and the @code{getfs*} functions can be used to read the entries of the
 file.
 @end deftypefun
 
-@comment fstab.h
-@comment BSD
 @deftypefun void endfsent (void)
+@standards{BSD, fstab.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:fsent}}@asunsafe{@ascuheap{} @asucorrupt{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c endfsent @mtasurace:fsent @ascuheap @asucorrupt @asulock @acucorrupt @aculock @acsmem @acsfd
 @c  endmntent dup @ascuheap @asulock @aculock @acsmem @acsfd
@@ -519,9 +508,8 @@ This function makes sure that all resources acquired by a prior call to
 freed.
 @end deftypefun
 
-@comment fstab.h
-@comment BSD
 @deftypefun {struct fstab *} getfsent (void)
+@standards{BSD, fstab.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:fsent} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
 @c getfsent @mtasurace:fsent @mtslocale @asucorrupt @ascuheap @asulock @acucorrupt @aculock @acsmem
 @c  fstab_init(0) dup @mtasurace:fsent @ascuheap @asucorrupt @asulock @acucorrupt @aculock @acsmem @acsfd
@@ -540,9 +528,8 @@ function is not thread-safe.  If an error occurred @code{getfsent}
 returns a @code{NULL} pointer.
 @end deftypefun
 
-@comment fstab.h
-@comment BSD
 @deftypefun {struct fstab *} getfsspec (const char *@var{name})
+@standards{BSD, fstab.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:fsent} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
 @c getffsspec @mtasurace:fsent @mtslocale @asucorrupt @ascuheap @asulock @acucorrupt @aculock @acsmem
 @c  fstab_init(1) dup @mtasurace:fsent @ascuheap @asucorrupt @asulock @acucorrupt @aculock @acsmem @acsfd
@@ -563,9 +550,8 @@ function is not thread-safe.  If an error occurred @code{getfsent}
 returns a @code{NULL} pointer.
 @end deftypefun
 
-@comment fstab.h
-@comment BSD
 @deftypefun {struct fstab *} getfsfile (const char *@var{name})
+@standards{BSD, fstab.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:fsent} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
 @c getffsfile @mtasurace:fsent @mtslocale @asucorrupt @ascuheap @asulock @acucorrupt @aculock @acsmem
 @c  fstab_init(1) dup @mtasurace:fsent @ascuheap @asucorrupt @asulock @acucorrupt @aculock @acsmem @acsfd
@@ -591,9 +577,8 @@ returns a @code{NULL} pointer.
 @subsubsection The @file{mtab} file
 The following functions and data structure access the @file{mtab} file.
 
-@comment mntent.h
-@comment BSD
 @deftp {Data Type} {struct mntent}
+@standards{BSD, mntent.h}
 This structure is used with the @code{getmntent}, @code{getmntent_r},
 @code{addmntent}, and @code{hasmntopt} functions.
 
@@ -684,9 +669,8 @@ handle @file{fstab} these functions do not access a fixed file and there
 is even a thread safe variant of the get function.  Besides this @theglibc{}
 contains functions to alter the file and test for specific options.
 
-@comment mntent.h
-@comment BSD
 @deftypefun {FILE *} setmntent (const char *@var{file}, const char *@var{mode})
+@standards{BSD, mntent.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acsmem{} @acsfd{} @aculock{}}}
 @c setmntent @ascuheap @asulock @acsmem @acsfd @aculock
 @c  strlen dup ok
@@ -706,9 +690,8 @@ handle for future use.  Otherwise the return value is @code{NULL}
 and @code{errno} is set accordingly.
 @end deftypefun
 
-@comment mntent.h
-@comment BSD
 @deftypefun int endmntent (FILE *@var{stream})
+@standards{BSD, mntent.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c endmntent @ascuheap @asulock @aculock @acsmem @acsfd
 @c  fclose dup @ascuheap @asulock @aculock @acsmem @acsfd
@@ -720,9 +703,8 @@ The return value is @math{1} unless an error occurred in which case it
 is @math{0}.
 @end deftypefun
 
-@comment mntent.h
-@comment BSD
 @deftypefun {struct mntent *} getmntent (FILE *@var{stream})
+@standards{BSD, mntent.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:mntentbuf} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asuinit{}}@acunsafe{@acuinit{} @acucorrupt{} @aculock{} @acsmem{}}}
 @c getmntent @mtasurace:mntentbuf @mtslocale @asucorrupt @ascuheap @asuinit @acuinit @acucorrupt @aculock @acsmem
 @c  libc_once @ascuheap @asuinit @acuinit @acsmem
@@ -752,9 +734,8 @@ a pointer to the same static variable.  @code{getmntent_r} should be
 used in situations where multiple threads access the file.
 @end deftypefun
 
-@comment mntent.h
-@comment BSD
 @deftypefun {struct mntent *} getmntent_r (FILE *@var{stream}, struct mntent *@var{result}, char *@var{buffer}, int @var{bufsize})
+@standards{BSD, mntent.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
 @c getmntent_r @mtslocale @asucorrupt @ascuheap @acucorrupt @aculock @acsmem
 @c  flockfile dup @aculock
@@ -787,9 +768,8 @@ end of file reached,
 @end itemize
 @end deftypefun
 
-@comment mntent.h
-@comment BSD
 @deftypefun int addmntent (FILE *@var{stream}, const struct mntent *@var{mnt})
+@standards{BSD, mntent.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:stream} @mtslocale{}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 @c addmntent @mtasurace:stream @mtslocale @asucorrupt @acucorrupt
 @c  fseek dup @asucorrupt @acucorrupt [no @aculock]
@@ -816,9 +796,8 @@ Otherwise the return value is @math{1} and @code{errno} is set
 appropriately.
 @end deftypefun
 
-@comment mntent.h
-@comment BSD
 @deftypefun {char *} hasmntopt (const struct mntent *@var{mnt}, const char *@var{opt})
+@standards{BSD, mntent.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c hasmntopt ok
 @c  strlen dup ok
@@ -859,9 +838,9 @@ should maintain and use these separately.  @xref{Mount Information}.
 
 The symbols in this section are declared in @file{sys/mount.h}.
 
-@comment sys/mount.h
-@comment SVID, BSD
 @deftypefun {int} mount (const char *@var{special_file}, const char *@var{dir}, const char *@var{fstype}, unsigned long int @var{options}, const void *@var{data})
+@standards{SVID, sys/mount.h}
+@standards{BSD, sys/mount.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall.
 
@@ -1051,9 +1030,8 @@ not one that uses a device.
 @end deftypefun
 
 
-@comment sys/mount.h
-@comment GNU
 @deftypefun {int} umount2 (const char *@var{file}, int @var{flags})
+@standards{GNU, sys/mount.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall.
 
@@ -1118,9 +1096,9 @@ point nor a device special file of a currently mounted filesystem.
 This function is not available on all systems.
 @end deftypefun
 
-@comment sys/mount.h
-@comment SVID, GNU
 @deftypefun {int} umount (const char *@var{file})
+@standards{SVID, sys/mount.h}
+@standards{GNU, sys/mount.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall or wrapper for umount2.
 
@@ -1140,9 +1118,8 @@ a variety of system parameters.
 
 The symbols used in this section are declared in the file @file{sys/sysctl.h}.
 
-@comment sys/sysctl.h
-@comment BSD
 @deftypefun int sysctl (int *@var{names}, int @var{nlen}, void *@var{oldval}, size_t *@var{oldlenp}, void *@var{newval}, size_t @var{newlen})
+@standards{BSD, sys/sysctl.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall, Linux only.
 

@@ -204,53 +204,46 @@ facilities, you must include the header files @file{sys/types.h} and
 @pindex unistd.h
 @pindex sys/types.h
 
-@comment sys/types.h
-@comment POSIX.1
 @deftp {Data Type} uid_t
+@standards{POSIX.1, sys/types.h}
 This is an integer data type used to represent user IDs.  In
 @theglibc{}, this is an alias for @code{unsigned int}.
 @end deftp
 
-@comment sys/types.h
-@comment POSIX.1
 @deftp {Data Type} gid_t
+@standards{POSIX.1, sys/types.h}
 This is an integer data type used to represent group IDs.  In
 @theglibc{}, this is an alias for @code{unsigned int}.
 @end deftp
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun uid_t getuid (void)
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Atomic syscall, except on hurd, where it takes a lock within a hurd
 @c critical section.
 The @code{getuid} function returns the real user ID of the process.
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun gid_t getgid (void)
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{getgid} function returns the real group ID of the process.
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun uid_t geteuid (void)
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{geteuid} function returns the effective user ID of the process.
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun gid_t getegid (void)
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{getegid} function returns the effective group ID of the process.
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int getgroups (int @var{count}, gid_t *@var{groups})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{getgroups} function is used to inquire about the supplementary
 group IDs of the process.  Up to @var{count} of these group IDs are
@@ -295,9 +288,8 @@ include the header files @file{sys/types.h} and @file{unistd.h}.
 @pindex unistd.h
 @pindex sys/types.h
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int seteuid (uid_t @var{neweuid})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c seteuid @asulock @aculock
 @c  INLINE_SETXID_SYSCALL @asulock @aculock
@@ -350,9 +342,8 @@ Older systems (those without the @code{_POSIX_SAVED_IDS} feature) do not
 have this function.
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int setuid (uid_t @var{newuid})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c setuid @asulock @aculock
 @c  INLINE_SETXID_SYSCALL dup @asulock @aculock
@@ -369,9 +360,8 @@ If the process is not privileged, and the system supports the
 The return values and error conditions are the same as for @code{seteuid}.
 @end deftypefun
 
-@comment unistd.h
-@comment BSD
 @deftypefun int setreuid (uid_t @var{ruid}, uid_t @var{euid})
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c setreuid @asulock @aculock
 @c  INLINE_SETXID_SYSCALL dup @asulock @aculock
@@ -407,9 +397,8 @@ the header files @file{sys/types.h} and @file{unistd.h}.
 @pindex unistd.h
 @pindex sys/types.h
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int setegid (gid_t @var{newgid})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c setegid @asulock @aculock
 @c  INLINE_SETXID_SYSCALL dup @asulock @aculock
@@ -429,9 +418,8 @@ as those for @code{seteuid}.
 This function is only present if @code{_POSIX_SAVED_IDS} is defined.
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int setgid (gid_t @var{newgid})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c setgid @asulock @aculock
 @c  INLINE_SETXID_SYSCALL dup @asulock @aculock
@@ -446,9 +434,8 @@ The return values and error conditions for @code{setgid} are the same
 as those for @code{seteuid}.
 @end deftypefun
 
-@comment unistd.h
-@comment BSD
 @deftypefun int setregid (gid_t @var{rgid}, gid_t @var{egid})
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c setregid @asulock @aculock
 @c  INLINE_SETXID_SYSCALL dup @asulock @aculock
@@ -485,9 +472,8 @@ group IDs.  To use @code{setgroups} or @code{initgroups}, your programs
 should include the header file @file{grp.h}.
 @pindex grp.h
 
-@comment grp.h
-@comment BSD
 @deftypefun int setgroups (size_t @var{count}, const gid_t *@var{groups})
+@standards{BSD, grp.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c setgroups @asulock @aculock
 @c  INLINE_SETXID_SYSCALL dup @asulock @aculock
@@ -505,9 +491,8 @@ The calling process is not privileged.
 @end table
 @end deftypefun
 
-@comment grp.h
-@comment BSD
 @deftypefun int initgroups (const char *@var{user}, gid_t @var{group})
+@standards{BSD, grp.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @acsmem{} @acsfd{} @aculock{}}}
 @c initgroups @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  sysconf(_SC_NGROUPS_MAX) dup @acsfd
@@ -556,9 +541,8 @@ not want to change the process's supplementary group IDs, you can use
 include the header file @file{grp.h}.
 @pindex grp.h
 
-@comment grp.h
-@comment BSD
 @deftypefun int getgrouplist (const char *@var{user}, gid_t @var{group}, gid_t *@var{groups}, int *@var{ngroups})
+@standards{BSD, grp.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @acsmem{} @acsfd{} @aculock{}}}
 @c getgrouplist @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  MAX dup ok
@@ -879,9 +863,8 @@ The @code{getlogin} function is declared in @file{unistd.h}, while
 @pindex stdio.h
 @pindex unistd.h
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun {char *} getlogin (void)
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:getlogin} @mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getlogin (linux) @mtasurace:getlogin @mtasurace:utent @mtascusig:ALRM @mtascutimer @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  getlogin_r_loginuid dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
@@ -924,9 +907,8 @@ is statically allocated and might be overwritten on subsequent calls to
 this function or to @code{cuserid}.
 @end deftypefun
 
-@comment stdio.h
-@comment POSIX.1
 @deftypefun {char *} cuserid (char *@var{string})
+@standards{POSIX.1, stdio.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:cuserid/!string} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c cuserid @mtasurace:cuserid/!string @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c   if string is NULL, cuserid will overwrite and return a static buffer
@@ -946,9 +928,8 @@ withdrawn in XPG4.2 and has already been removed from newer revisions of
 POSIX.1.
 @end deftypefun
 
-@comment stdio.h
-@comment POSIX.1
 @deftypevr Macro int L_cuserid
+@standards{POSIX.1, stdio.h}
 An integer constant that indicates how long an array you might need to
 store a user name.
 @end deftypevr
@@ -997,9 +978,8 @@ These functions and the corresponding data structures are declared in
 the header file @file{utmp.h}.
 @pindex utmp.h
 
-@comment utmp.h
-@comment SVID
 @deftp {Data Type} {struct exit_status}
+@standards{SVID, utmp.h}
 The @code{exit_status} data structure is used to hold information about
 the exit status of processes marked as @code{DEAD_PROCESS} in the user
 accounting database.
@@ -1070,55 +1050,45 @@ The following macros are defined for use as values for the
 integer constants.
 
 @vtable @code
-@comment utmp.h
-@comment SVID
 @item EMPTY
+@standards{SVID, utmp.h}
 This macro is used to indicate that the entry contains no valid user
 accounting information.
 
-@comment utmp.h
-@comment SVID
 @item RUN_LVL
+@standards{SVID, utmp.h}
 This macro is used to identify the system's runlevel.
 
-@comment utmp.h
-@comment SVID
 @item BOOT_TIME
+@standards{SVID, utmp.h}
 This macro is used to identify the time of system boot.
 
-@comment utmp.h
-@comment SVID
 @item OLD_TIME
+@standards{SVID, utmp.h}
 This macro is used to identify the time when the system clock changed.
 
-@comment utmp.h
-@comment SVID
 @item NEW_TIME
+@standards{SVID, utmp.h}
 This macro is used to identify the time after the system clock changed.
 
-@comment utmp.h
-@comment SVID
 @item INIT_PROCESS
+@standards{SVID, utmp.h}
 This macro is used to identify a process spawned by the init process.
 
-@comment utmp.h
-@comment SVID
 @item LOGIN_PROCESS
+@standards{SVID, utmp.h}
 This macro is used to identify the session leader of a logged in user.
 
-@comment utmp.h
-@comment SVID
 @item USER_PROCESS
+@standards{SVID, utmp.h}
 This macro is used to identify a user process.
 
-@comment utmp.h
-@comment SVID
 @item DEAD_PROCESS
+@standards{SVID, utmp.h}
 This macro is used to identify a terminated process.
 
-@comment utmp.h
-@comment SVID
 @item ACCOUNTING
+@standards{SVID, utmp.h}
 ???
 @end vtable
 
@@ -1131,9 +1101,8 @@ the time associated with the entry.  Therefore, for backwards
 compatibility only, @file{utmp.h} defines @code{ut_time} as an alias for
 @code{ut_tv.tv_sec}.
 
-@comment utmp.h
-@comment SVID
 @deftypefun void setutent (void)
+@standards{SVID, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c Besides the static variables in utmp_file.c, there's the jump_table.
 @c They're both modified while holding a lock, but other threads may
@@ -1158,9 +1127,8 @@ If the database is already open, it resets the input to the beginning of
 the database.
 @end deftypefun
 
-@comment utmp.h
-@comment SVID
 @deftypefun {struct utmp *} getutent (void)
+@standards{SVID, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtuinit{} @mtasurace{:utent} @mtasurace{:utentbuf} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c The static buffer that holds results is allocated with malloc at
 @c the first call; the test is not thread-safe, so multiple concurrent
@@ -1179,9 +1147,8 @@ function which stores the data in a user-provided buffer.
 A null pointer is returned in case no further entry is available.
 @end deftypefun
 
-@comment utmp.h
-@comment SVID
 @deftypefun void endutent (void)
+@standards{SVID, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c endutent @mtasurace:utent @asulock @aculock @acsfd
 @c  libc_lock_lock dup @asulock @aculock
@@ -1193,9 +1160,8 @@ A null pointer is returned in case no further entry is available.
 This function closes the user accounting database.
 @end deftypefun
 
-@comment utmp.h
-@comment SVID
 @deftypefun {struct utmp *} getutid (const struct utmp *@var{id})
+@standards{SVID, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtuinit{} @mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c Same caveats as getutline.
 @c
@@ -1230,9 +1196,8 @@ is necessary to zero out the static data after each call.  Otherwise
 over again.
 @end deftypefun
 
-@comment utmp.h
-@comment SVID
 @deftypefun {struct utmp *} getutline (const struct utmp *@var{line})
+@standards{SVID, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtuinit{} @mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c The static buffer that holds results is allocated with malloc at
 @c the first call; the test is not thread-safe, so multiple concurrent
@@ -1260,9 +1225,8 @@ is necessary to zero out the static data after each call.  Otherwise
 over again.
 @end deftypefun
 
-@comment utmp.h
-@comment SVID
 @deftypefun {struct utmp *} pututline (const struct utmp *@var{utmp})
+@standards{SVID, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c pututline @mtasurace:utent @mtascusig:ALRM @mtascutimer @asulock @aculock @acsfd
 @c  libc_lock_lock dup @asulock @aculock
@@ -1313,9 +1277,8 @@ return value data in another thread.  Therefore @theglibc{}
 provides as extensions three more functions which return the data in a
 user-provided buffer.
 
-@comment utmp.h
-@comment GNU
 @deftypefun int getutent_r (struct utmp *@var{buffer}, struct utmp **@var{result})
+@standards{GNU, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c getutent_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @asulock @aculock @acsfd
 @c  libc_lock_lock dup @asulock @aculock
@@ -1351,9 +1314,8 @@ execution of @code{getutent_r} the function returns @code{-1}.
 This function is a GNU extension.
 @end deftypefun
 
-@comment utmp.h
-@comment GNU
 @deftypefun int getutid_r (const struct utmp *@var{id}, struct utmp *@var{buffer}, struct utmp **@var{result})
+@standards{GNU, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c getutid_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @asulock @aculock @acsfd
 @c  libc_lock_lock dup @asulock @aculock
@@ -1382,9 +1344,8 @@ successful the function return @code{-1}.
 This function is a GNU extension.
 @end deftypefun
 
-@comment utmp.h
-@comment GNU
 @deftypefun int getutline_r (const struct utmp *@var{line}, struct utmp *@var{buffer}, struct utmp **@var{result})
+@standards{GNU, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c getutline_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @asulock @aculock @acsfd
 @c  libc_lock_lock dup @asulock @aculock
@@ -1427,9 +1388,8 @@ previous logins (usually in @file{/etc/wtmp} or @file{/var/log/wtmp}).
 For specifying which database to examine, the following function should
 be used.
 
-@comment utmp.h
-@comment SVID
 @deftypefun int utmpname (const char *@var{file})
+@standards{SVID, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent}}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 @c utmpname @mtasurace:utent @asulock @ascuheap @aculock @acsmem
 @c  libc_lock_lock dup @asulock @aculock
@@ -1463,9 +1423,8 @@ database can be successfully opened.
 Specially for maintaining log-like databases @theglibc{} provides
 the following function:
 
-@comment utmp.h
-@comment SVID
 @deftypefun void updwtmp (const char *@var{wtmp_file}, const struct utmp *@var{utmp})
+@standards{SVID, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtascusig{:ALRM} @mtascutimer{}}@asunsafe{}@acunsafe{@acsfd{}}}
 @c updwtmp @mtascusig:ALRM @mtascutimer @acsfd
 @c  TRANSFORM_UTMP_FILE_NAME dup ok
@@ -1538,102 +1497,87 @@ integer constants and are, in @theglibc{}, identical to the
 definitions in @file{utmp.h}.
 
 @vtable @code
-@comment utmpx.h
-@comment XPG4.2
 @item EMPTY
+@standards{XPG4.2, utmpx.h}
 This macro is used to indicate that the entry contains no valid user
 accounting information.
 
-@comment utmpx.h
-@comment XPG4.2
 @item RUN_LVL
+@standards{XPG4.2, utmpx.h}
 This macro is used to identify the system's runlevel.
 
-@comment utmpx.h
-@comment XPG4.2
 @item BOOT_TIME
+@standards{XPG4.2, utmpx.h}
 This macro is used to identify the time of system boot.
 
-@comment utmpx.h
-@comment XPG4.2
 @item OLD_TIME
+@standards{XPG4.2, utmpx.h}
 This macro is used to identify the time when the system clock changed.
 
-@comment utmpx.h
-@comment XPG4.2
 @item NEW_TIME
+@standards{XPG4.2, utmpx.h}
 This macro is used to identify the time after the system clock changed.
 
-@comment utmpx.h
-@comment XPG4.2
 @item INIT_PROCESS
+@standards{XPG4.2, utmpx.h}
 This macro is used to identify a process spawned by the init process.
 
-@comment utmpx.h
-@comment XPG4.2
 @item LOGIN_PROCESS
+@standards{XPG4.2, utmpx.h}
 This macro is used to identify the session leader of a logged in user.
 
-@comment utmpx.h
-@comment XPG4.2
 @item USER_PROCESS
+@standards{XPG4.2, utmpx.h}
 This macro is used to identify a user process.
 
-@comment utmpx.h
-@comment XPG4.2
 @item DEAD_PROCESS
+@standards{XPG4.2, utmpx.h}
 This macro is used to identify a terminated process.
 @end vtable
 
 The size of the @code{ut_line}, @code{ut_id} and @code{ut_user} arrays
 can be found using the @code{sizeof} operator.
 
-@comment utmpx.h
-@comment XPG4.2
 @deftypefun void setutxent (void)
+@standards{XPG4.2, utmpx.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 This function is similar to @code{setutent}.  In @theglibc{} it is
 simply an alias for @code{setutent}.
 @end deftypefun
 
-@comment utmpx.h
-@comment XPG4.2
 @deftypefun {struct utmpx *} getutxent (void)
+@standards{XPG4.2, utmpx.h}
 @safety{@prelim{}@mtunsafe{@mtuinit{} @mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 The @code{getutxent} function is similar to @code{getutent}, but returns
 a pointer to a @code{struct utmpx} instead of @code{struct utmp}.  In
 @theglibc{} it simply is an alias for @code{getutent}.
 @end deftypefun
 
-@comment utmpx.h
-@comment XPG4.2
 @deftypefun void endutxent (void)
+@standards{XPG4.2, utmpx.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent}}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 This function is similar to @code{endutent}.  In @theglibc{} it is
 simply an alias for @code{endutent}.
 @end deftypefun
 
-@comment utmpx.h
-@comment XPG4.2
 @deftypefun {struct utmpx *} getutxid (const struct utmpx *@var{id})
+@standards{XPG4.2, utmpx.h}
 @safety{@prelim{}@mtunsafe{@mtuinit{} @mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 This function is similar to @code{getutid}, but uses @code{struct utmpx}
 instead of @code{struct utmp}.  In @theglibc{} it is simply an alias
 for @code{getutid}.
 @end deftypefun
 
-@comment utmpx.h
-@comment XPG4.2
 @deftypefun {struct utmpx *} getutxline (const struct utmpx *@var{line})
+@standards{XPG4.2, utmpx.h}
 @safety{@prelim{}@mtunsafe{@mtuinit{} @mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 This function is similar to @code{getutid}, but uses @code{struct utmpx}
 instead of @code{struct utmp}.  In @theglibc{} it is simply an alias
 for @code{getutline}.
 @end deftypefun
 
-@comment utmpx.h
-@comment XPG4.2
 @deftypefun {struct utmpx *} pututxline (const struct utmpx *@var{utmp})
+@standards{XPG4.2, utmpx.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 The @code{pututxline} function is functionally identical to
 @code{pututline}, but uses @code{struct utmpx} instead of @code{struct
@@ -1641,9 +1585,8 @@ utmp}.  In @theglibc{}, @code{pututxline} is simply an alias for
 @code{pututline}.
 @end deftypefun
 
-@comment utmpx.h
-@comment XPG4.2
 @deftypefun int utmpxname (const char *@var{file})
+@standards{XPG4.2, utmpx.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent}}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 The @code{utmpxname} function is functionally identical to
 @code{utmpname}.  In @theglibc{}, @code{utmpxname} is simply an
@@ -1655,17 +1598,17 @@ You can translate between a traditional @code{struct utmp} and an XPG
 these functions are merely copies, since the two structures are
 identical.
 
-@comment utmp.h utmpx.h
-@comment GNU
 @deftypefun int getutmp (const struct utmpx *@var{utmpx}, struct utmp *@var{utmp})
+@standards{GNU, utmp.h}
+@standards{GNU, utmpx.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{getutmp} copies the information, insofar as the structures are
 compatible, from @var{utmpx} to @var{utmp}.
 @end deftypefun
 
-@comment utmp.h utmpx.h
-@comment GNU
 @deftypefun int getutmpx (const struct utmp *@var{utmp}, struct utmpx *@var{utmpx})
+@standards{GNU, utmp.h}
+@standards{GNU, utmpx.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{getutmpx} copies the information, insofar as the structures are
 compatible, from @var{utmp} to @var{utmpx}.
@@ -1683,9 +1626,8 @@ Note that the @code{ut_user} member of @code{struct utmp} is called
 @code{ut_name} in BSD.  Therefore, @code{ut_name} is defined as an alias
 for @code{ut_user} in @file{utmp.h}.
 
-@comment utmp.h
-@comment BSD
 @deftypefun int login_tty (int @var{filedes})
+@standards{BSD, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:ttyname}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c If this function is canceled, it may have succeeded in redirecting
 @c only some of the standard streams to the newly opened terminal.
@@ -1705,9 +1647,8 @@ This function returns @code{0} on successful completion, and @code{-1}
 on error.
 @end deftypefun
 
-@comment utmp.h
-@comment BSD
 @deftypefun void login (const struct utmp *@var{entry})
+@standards{BSD, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acucorrupt{} @acsfd{} @acsmem{}}}
 @c login @mtasurace:utent @mtascusig:ALRM @mtascutimer @asulock @ascuheap @aculock @acucorrupt @acsfd @acsmem
 @c  getpid dup ok
@@ -1738,9 +1679,8 @@ process.  The remaining entries are copied from @var{entry}.
 A copy of the entry is written to the user accounting log file.
 @end deftypefun
 
-@comment utmp.h
-@comment BSD
 @deftypefun int logout (const char *@var{ut_line})
+@standards{BSD, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c logout @mtasurace:utent @mtascusig:ALRM @mtascutimer @asulock @ascuheap @aculock @acsfd @acsmem
 @c  utmpname dup @mtasurace:utent @asulock @ascuheap @aculock @acsmem
@@ -1759,9 +1699,8 @@ The @code{logout} function returns @code{1} if the entry was successfully
 written to the database, or @code{0} on error.
 @end deftypefun
 
-@comment utmp.h
-@comment BSD
 @deftypefun void logwtmp (const char *@var{ut_line}, const char *@var{ut_name}, const char *@var{ut_host})
+@standards{BSD, utmp.h}
 @safety{@prelim{}@mtunsafe{@mtascusig{:ALRM} @mtascutimer{}}@asunsafe{}@acunsafe{@acsfd{}}}
 @c logwtmp @mtascusig:ALRM @mtascutimer @acsfd
 @c  memset dup ok
@@ -1805,9 +1744,8 @@ The functions and data structures for accessing the system user database
 are declared in the header file @file{pwd.h}.
 @pindex pwd.h
 
-@comment pwd.h
-@comment POSIX.1
 @deftp {Data Type} {struct passwd}
+@standards{POSIX.1, pwd.h}
 The @code{passwd} data structure is used to hold information about
 entries in the system user data base.  It has at least the following members:
 
@@ -1848,9 +1786,8 @@ You can search the system user database for information about a
 specific user using @code{getpwuid} or @code{getpwnam}.  These
 functions are declared in @file{pwd.h}.
 
-@comment pwd.h
-@comment POSIX.1
 @deftypefun {struct passwd *} getpwuid (uid_t @var{uid})
+@standards{POSIX.1, pwd.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:pwuid} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getpwuid @mtasurace:pwuid @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  libc_lock_lock dup @asulock @aculock
@@ -1867,9 +1804,8 @@ A null pointer value indicates there is no user in the data base with
 user ID @var{uid}.
 @end deftypefun
 
-@comment pwd.h
-@comment POSIX.1c
 @deftypefun int getpwuid_r (uid_t @var{uid}, struct passwd *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct passwd **@var{result})
+@standards{POSIX.1c, pwd.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getpwuid_r @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  nscd_getpwuid_r @ascuheap @acsfd @acsmem
@@ -2091,9 +2027,8 @@ error code @code{ERANGE} is returned and @var{errno} is set to
 @end deftypefun
 
 
-@comment pwd.h
-@comment POSIX.1
 @deftypefun {struct passwd *} getpwnam (const char *@var{name})
+@standards{POSIX.1, pwd.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:pwnam} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getpwnam @mtasurace:pwnam @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  libc_lock_lock dup @asulock @aculock
@@ -2110,9 +2045,8 @@ This structure may be overwritten on subsequent calls to
 A null pointer return indicates there is no user named @var{name}.
 @end deftypefun
 
-@comment pwd.h
-@comment POSIX.1c
 @deftypefun int getpwnam_r (const char *@var{name}, struct passwd *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct passwd **@var{result})
+@standards{POSIX.1c, pwd.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getpwnam_r @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  nscd_getpwnam_r @ascuheap @asulock @aculock @acsfd @acsmem
@@ -2153,9 +2087,8 @@ declared in @file{pwd.h}.
 You can use the @code{fgetpwent} function to read user entries from a
 particular file.
 
-@comment pwd.h
-@comment SVID
 @deftypefun {struct passwd *} fgetpwent (FILE *@var{stream})
+@standards{SVID, pwd.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:fpwent}}@asunsafe{@asucorrupt{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{}}}
 @c fgetpwent @mtasurace:fpwent @asucorrupt @asulock @acucorrupt @aculock
 @c  fgetpos dup @asucorrupt @aculock @acucorrupt
@@ -2175,9 +2108,8 @@ The stream must correspond to a file in the same format as the standard
 password database file.
 @end deftypefun
 
-@comment pwd.h
-@comment GNU
 @deftypefun int fgetpwent_r (FILE *@var{stream}, struct passwd *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct passwd **@var{result})
+@standards{GNU, pwd.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 @c fgetpwent_r @asucorrupt @acucorrupt @aculock
 @c  flockfile dup @aculock
@@ -2205,9 +2137,9 @@ pointer.
 The way to scan all the entries in the user database is with
 @code{setpwent}, @code{getpwent}, and @code{endpwent}.
 
-@comment pwd.h
-@comment SVID, BSD
 @deftypefun void setpwent (void)
+@standards{SVID, pwd.h}
+@standards{BSD, pwd.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:pwent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c setpwent @mtasurace:pwent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  libc_lock_lock @asulock @aculock
@@ -2223,9 +2155,8 @@ This function initializes a stream which @code{getpwent} and
 @code{getpwent_r} use to read the user database.
 @end deftypefun
 
-@comment pwd.h
-@comment POSIX.1
 @deftypefun {struct passwd *} getpwent (void)
+@standards{POSIX.1, pwd.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:pwent} @mtasurace{:pwentbuf} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getpwent @mtasurace:pwent @mtasurace:pwentbuf @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  libc_lock_lock dup @asulock @aculock
@@ -2244,9 +2175,8 @@ wish to save the information.
 A null pointer is returned when no more entries are available.
 @end deftypefun
 
-@comment pwd.h
-@comment GNU
 @deftypefun int getpwent_r (struct passwd *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct passwd **@var{result})
+@standards{GNU, pwd.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:pwent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c The static buffer here is not the result_buf, but rather the
 @c variables that keep track of what nss backend we've last used, and
@@ -2270,9 +2200,9 @@ The return values are the same as for @code{fgetpwent_r}.
 
 @end deftypefun
 
-@comment pwd.h
-@comment SVID, BSD
 @deftypefun void endpwent (void)
+@standards{SVID, pwd.h}
+@standards{BSD, pwd.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:pwent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c endpwent @mtasurace:pwent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  libc_lock_lock @asulock @aculock
@@ -2289,9 +2219,8 @@ This function closes the internal stream used by @code{getpwent} or
 @node Writing a User Entry
 @subsection Writing a User Entry
 
-@comment pwd.h
-@comment SVID
 @deftypefun int putpwent (const struct passwd *@var{p}, FILE *@var{stream})
+@standards{SVID, pwd.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 @c putpwent @mtslocale @asucorrupt @aculock @acucorrupt
 @c  fprintf dup @mtslocale @asucorrupt @aculock @acucorrupt [no @ascuheap @acsmem]
@@ -2336,9 +2265,8 @@ The functions and data structures for accessing the system group
 database are declared in the header file @file{grp.h}.
 @pindex grp.h
 
-@comment grp.h
-@comment POSIX.1
 @deftp {Data Type} {struct group}
+@standards{POSIX.1, grp.h}
 The @code{group} structure is used to hold information about an entry in
 the system group database.  It has at least the following members:
 
@@ -2365,9 +2293,8 @@ You can search the group database for information about a specific
 group using @code{getgrgid} or @code{getgrnam}.  These functions are
 declared in @file{grp.h}.
 
-@comment grp.h
-@comment POSIX.1
 @deftypefun {struct group *} getgrgid (gid_t @var{gid})
+@standards{POSIX.1, grp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:grgid} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getgrgid =~ getpwuid dup @mtasurace:grgid @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  getgrgid_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
@@ -2379,9 +2306,8 @@ This structure may be overwritten by subsequent calls to
 A null pointer indicates there is no group with ID @var{gid}.
 @end deftypefun
 
-@comment grp.h
-@comment POSIX.1c
 @deftypefun int getgrgid_r (gid_t @var{gid}, struct group *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct group **@var{result})
+@standards{POSIX.1c, grp.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getgrgid_r =~ getpwuid_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  nscd_getgrgid_r @ascuheap @acsfd @acsmem
@@ -2420,9 +2346,9 @@ error code @code{ERANGE} is returned and @var{errno} is set to
 @code{ERANGE}.
 @end deftypefun
 
-@comment grp.h
-@comment SVID, BSD
 @deftypefun {struct group *} getgrnam (const char *@var{name})
+@standards{SVID, grp.h}
+@standards{BSD, grp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:grnam} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getgrnam =~ getpwnam dup @mtasurace:grnam @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  getgrnam_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
@@ -2434,9 +2360,8 @@ This structure may be overwritten by subsequent calls to
 A null pointer indicates there is no group named @var{name}.
 @end deftypefun
 
-@comment grp.h
-@comment POSIX.1c
 @deftypefun int getgrnam_r (const char *@var{name}, struct group *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct group **@var{result})
+@standards{POSIX.1c, grp.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getgrnam_r =~ getpwnam_r dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  nscd_getgrnam_r @ascuheap @asulock @aculock @acsfd @acsmem
@@ -2464,9 +2389,8 @@ declared in @file{grp.h}.
 You can use the @code{fgetgrent} function to read group entries from a
 particular file.
 
-@comment grp.h
-@comment SVID
 @deftypefun {struct group *} fgetgrent (FILE *@var{stream})
+@standards{SVID, grp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:fgrent}}@asunsafe{@asucorrupt{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{}}}
 @c fgetgrent @mtasurace:fgrent @asucorrupt @asulock @acucorrupt @aculock
 @c  fgetpos dup @asucorrupt @aculock @acucorrupt
@@ -2487,9 +2411,8 @@ The stream must correspond to a file in the same format as the standard
 group database file.
 @end deftypefun
 
-@comment grp.h
-@comment GNU
 @deftypefun int fgetgrent_r (FILE *@var{stream}, struct group *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct group **@var{result})
+@standards{GNU, grp.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 @c fgetgrent_r @asucorrupt @acucorrupt @aculock
 @c  flockfile dup @aculock
@@ -2517,9 +2440,9 @@ pointer.
 The way to scan all the entries in the group database is with
 @code{setgrent}, @code{getgrent}, and @code{endgrent}.
 
-@comment grp.h
-@comment SVID, BSD
 @deftypefun void setgrent (void)
+@standards{SVID, grp.h}
+@standards{BSD, grp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:grent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c setgrent =~ setpwent dup @mtasurace:grent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c ...*lookup_fct = nss_group_lookup2 dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
@@ -2527,9 +2450,9 @@ This function initializes a stream for reading from the group data base.
 You use this stream by calling @code{getgrent} or @code{getgrent_r}.
 @end deftypefun
 
-@comment grp.h
-@comment SVID, BSD
 @deftypefun {struct group *} getgrent (void)
+@standards{SVID, grp.h}
+@standards{BSD, grp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:grent} @mtasurace{:grentbuf} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getgrent =~ getpwent dup @mtasurace:grent @mtasurace:grentbuf @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c   *func = getgrent_r dup @mtasurace:grent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
@@ -2540,9 +2463,8 @@ to @code{getgrent}.  You must copy the contents of the structure if you
 wish to save the information.
 @end deftypefun
 
-@comment grp.h
-@comment GNU
 @deftypefun int getgrent_r (struct group *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct group **@var{result})
+@standards{GNU, grp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:grent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getgrent_r =~ getpwent_r dup @mtasurace:grent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 This function is similar to @code{getgrent} in that it returns the next
@@ -2555,9 +2477,9 @@ If the function returns zero @var{result} contains a pointer to the data
 value is non-zero and @var{result} contains a null pointer.
 @end deftypefun
 
-@comment grp.h
-@comment SVID, BSD
 @deftypefun void endgrent (void)
+@standards{SVID, grp.h}
+@standards{BSD, grp.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:grent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c endgrent =~ endpwent dup @mtasurace:grent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 This function closes the internal stream used by @code{getgrent} or
@@ -2641,9 +2563,8 @@ many entries a two-step process is needed.  First a single netgroup is
 selected and then one can iterate over all entries in this netgroup.
 These functions are declared in @file{netdb.h}.
 
-@comment netdb.h
-@comment BSD
 @deftypefun int setnetgrent (const char *@var{netgroup})
+@standards{BSD, netdb.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:netgrent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c setnetgrent @mtasurace:netgrent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  libc_lock_lock dup @asulock @aculock
@@ -2700,9 +2621,8 @@ Some other functions also use the netgroups state.  Currently these are
 the @code{innetgr} function and parts of the implementation of the
 @code{compat} service part of the NSS implementation.
 
-@comment netdb.h
-@comment BSD
 @deftypefun int getnetgrent (char **@var{hostp}, char **@var{userp}, char **@var{domainp})
+@standards{BSD, netdb.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:netgrent} @mtasurace{:netgrentbuf} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getnetgrent @mtasurace:netgrent @mtasurace:netgrentbuf @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c   uses unsafely a static buffer allocated within a libc_once call
@@ -2721,9 +2641,8 @@ The return value is @code{1} if the next entry was successfully read.  A
 value of @code{0} means no further entries exist or internal errors occurred.
 @end deftypefun
 
-@comment netdb.h
-@comment GNU
 @deftypefun int getnetgrent_r (char **@var{hostp}, char **@var{userp}, char **@var{domainp}, char *@var{buffer}, size_t @var{buflen})
+@standards{GNU, netdb.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:netgrent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c getnetgrent_r @mtasurace:netgrent @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  libc_lock_lock dup @asulock @aculock
@@ -2752,9 +2671,8 @@ This function is a GNU extension.  The original implementation in the
 SunOS libc does not provide this function.
 @end deftypefun
 
-@comment netdb.h
-@comment BSD
 @deftypefun void endnetgrent (void)
+@standards{BSD, netdb.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:netgrent}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c endnetgrent @mtasurace:netgrent @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  libc_lock_lock dup @asulock @aculock
@@ -2774,9 +2692,8 @@ It is often not necessary to scan the whole netgroup since often the
 only interesting question is whether a given entry is part of the
 selected netgroup.
 
-@comment netdb.h
-@comment BSD
 @deftypefun int innetgr (const char *@var{netgroup}, const char *@var{host}, const char *@var{user}, const char *@var{domain})
+@standards{BSD, netdb.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:netgrent} @mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c This function does not use the static data structure that the
 @c *netgrent* ones do, but since each nss must maintains internal state

@@ -48,9 +48,8 @@ checking is good no matter who is running the program.  A wise user
 would rather have a program crash, visibly, than have it return nonsense
 without indicating anything might be wrong.
 
-@comment assert.h
-@comment ISO
 @deftypefn Macro void assert (int @var{expression})
+@standards{ISO, assert.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asucorrupt{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 @c assert_fail_base calls asprintf, and fflushes stderr.
 Verify the programmer's belief that @var{expression} is nonzero at
@@ -90,9 +89,8 @@ return from an operating system function.  Then it is useful to display
 not only where the program crashes, but also what error was returned.
 The @code{assert_perror} macro makes this easy.
 
-@comment assert.h
-@comment GNU
 @deftypefn Macro void assert_perror (int @var{errnum})
+@standards{GNU, assert.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asucorrupt{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 @c assert_fail_base calls asprintf, and fflushes stderr.
 Similar to @code{assert}, but verifies that @var{errnum} is zero.
@@ -418,15 +416,13 @@ Here are descriptions of the macros used to retrieve variable arguments.
 These macros are defined in the header file @file{stdarg.h}.
 @pindex stdarg.h
 
-@comment stdarg.h
-@comment ISO
 @deftp {Data Type} va_list
+@standards{ISO, stdarg.h}
 The type @code{va_list} is used for argument pointer variables.
 @end deftp
 
-@comment stdarg.h
-@comment ISO
 @deftypefn {Macro} void va_start (va_list @var{ap}, @var{last-required})
+@standards{ISO, stdarg.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is no longer provided by glibc, but rather by the compiler.
 This macro initializes the argument pointer variable @var{ap} to point
@@ -434,9 +430,8 @@ to the first of the optional arguments of the current function;
 @var{last-required} must be the last required argument to the function.
 @end deftypefn
 
-@comment stdarg.h
-@comment ISO
 @deftypefn {Macro} @var{type} va_arg (va_list @var{ap}, @var{type})
+@standards{ISO, stdarg.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:ap}}@assafe{}@acunsafe{@acucorrupt{}}}
 @c This is no longer provided by glibc, but rather by the compiler.
 @c Unlike the other va_ macros, that either start/end the lifetime of
@@ -453,9 +448,8 @@ specified in the call.  @var{type} must be a self-promoting type (not
 of the actual argument.
 @end deftypefn
 
-@comment stdarg.h
-@comment ISO
 @deftypefn {Macro} void va_end (va_list @var{ap})
+@standards{ISO, stdarg.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is no longer provided by glibc, but rather by the compiler.
 This ends the use of @var{ap}.  After a @code{va_end} call, further
@@ -475,10 +469,9 @@ argument.  But @code{va_list} is an opaque type and one cannot necessarily
 assign the value of one variable of type @code{va_list} to another variable
 of the same type.
 
-@comment stdarg.h
-@comment ISO
 @deftypefn {Macro} void va_copy (va_list @var{dest}, va_list @var{src})
 @deftypefnx {Macro} void __va_copy (va_list @var{dest}, va_list @var{src})
+@standardsx{va_copy, ISO, stdarg.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is no longer provided by glibc, but rather by the compiler.
 The @code{va_copy} macro allows copying of objects of type
@@ -536,9 +529,8 @@ You can assign it to any pointer variable since it has type @code{void
 *}.  The preferred way to write a null pointer constant is with
 @code{NULL}.
 
-@comment stddef.h
-@comment ISO
 @deftypevr Macro {void *} NULL
+@standards{ISO, stddef.h}
 This is a null pointer constant.
 @end deftypevr
 
@@ -565,9 +557,8 @@ them in a portable fashion.  They are defined in the header file
 @file{stddef.h}.
 @pindex stddef.h
 
-@comment stddef.h
-@comment ISO
 @deftp {Data Type} ptrdiff_t
+@standards{ISO, stddef.h}
 This is the signed integer type of the result of subtracting two
 pointers.  For example, with the declaration @code{char *p1, *p2;}, the
 expression @code{p2 - p1} is of type @code{ptrdiff_t}.  This will
@@ -576,9 +567,8 @@ int}}, @code{int} or @w{@code{long int}}), but might be a nonstandard
 type that exists only for this purpose.
 @end deftp
 
-@comment stddef.h
-@comment ISO
 @deftp {Data Type} size_t
+@standards{ISO, stddef.h}
 This is an unsigned integer type used to represent the sizes of objects.
 The result of the @code{sizeof} operator is of this type, and functions
 such as @code{malloc} (@pxref{Unconstrained Allocation}) and
@@ -639,9 +629,8 @@ bits in an integer data type.  But you can compute it from the macro
 @code{CHAR_BIT}, defined in the header file @file{limits.h}.
 
 @table @code
-@comment limits.h
-@comment ISO
 @item CHAR_BIT
+@standards{ISO, limits.h}
 This is the number of bits in a @code{char}---eight, on most systems.
 The value has type @code{int}.
 
@@ -662,39 +651,18 @@ preprocessor directives, whereas @code{sizeof} cannot.  The following
 macros are defined in @file{limits.h}.
 
 @vtable @code
-@comment limits.h
-@comment ISO
 @item CHAR_WIDTH
-@comment limits.h
-@comment ISO
 @itemx SCHAR_WIDTH
-@comment limits.h
-@comment ISO
 @itemx UCHAR_WIDTH
-@comment limits.h
-@comment ISO
 @itemx SHRT_WIDTH
-@comment limits.h
-@comment ISO
 @itemx USHRT_WIDTH
-@comment limits.h
-@comment ISO
 @itemx INT_WIDTH
-@comment limits.h
-@comment ISO
 @itemx UINT_WIDTH
-@comment limits.h
-@comment ISO
 @itemx LONG_WIDTH
-@comment limits.h
-@comment ISO
 @itemx ULONG_WIDTH
-@comment limits.h
-@comment ISO
 @itemx LLONG_WIDTH
-@comment limits.h
-@comment ISO
 @itemx ULLONG_WIDTH
+@standards{ISO, limits.h}
 
 These are the widths of the types @code{char}, @code{signed char},
 @code{unsigned char}, @code{short int}, @code{unsigned short int},
@@ -708,27 +676,14 @@ for types specified by width (@pxref{Integers}), the following are
 defined.
 
 @vtable @code
-@comment stdint.h
-@comment ISO
 @item INTPTR_WIDTH
-@comment stdint.h
-@comment ISO
 @itemx UINTPTR_WIDTH
-@comment stdint.h
-@comment ISO
 @itemx PTRDIFF_WIDTH
-@comment stdint.h
-@comment ISO
 @itemx SIG_ATOMIC_WIDTH
-@comment stdint.h
-@comment ISO
 @itemx SIZE_WIDTH
-@comment stdint.h
-@comment ISO
 @itemx WCHAR_WIDTH
-@comment stdint.h
-@comment ISO
 @itemx WINT_WIDTH
+@standards{ISO, stdint.h}
 
 These are the widths of the types @code{intptr_t}, @code{uintptr_t},
 @code{ptrdiff_t}, @code{sig_atomic_t}, @code{size_t}, @code{wchar_t}
@@ -761,128 +716,100 @@ described by the macro---thus, @code{ULONG_MAX} has type
 
 @comment Extra blank lines make it look better.
 @vtable @code
-@comment limits.h
-@comment ISO
 @item SCHAR_MIN
+@standards{ISO, limits.h}
 
 This is the minimum value that can be represented by a @w{@code{signed char}}.
 
-@comment limits.h
-@comment ISO
 @item SCHAR_MAX
-@comment limits.h
-@comment ISO
 @itemx UCHAR_MAX
+@standards{ISO, limits.h}
 
 These are the maximum values that can be represented by a
 @w{@code{signed char}} and @w{@code{unsigned char}}, respectively.
 
-@comment limits.h
-@comment ISO
 @item CHAR_MIN
+@standards{ISO, limits.h}
 
 This is the minimum value that can be represented by a @code{char}.
 It's equal to @code{SCHAR_MIN} if @code{char} is signed, or zero
 otherwise.
 
-@comment limits.h
-@comment ISO
 @item CHAR_MAX
+@standards{ISO, limits.h}
 
 This is the maximum value that can be represented by a @code{char}.
 It's equal to @code{SCHAR_MAX} if @code{char} is signed, or
 @code{UCHAR_MAX} otherwise.
 
-@comment limits.h
-@comment ISO
 @item SHRT_MIN
+@standards{ISO, limits.h}
 
 This is the minimum value that can be represented by a @w{@code{signed
 short int}}.  On most machines that @theglibc{} runs on,
 @code{short} integers are 16-bit quantities.
 
-@comment limits.h
-@comment ISO
 @item SHRT_MAX
-@comment limits.h
-@comment ISO
 @itemx USHRT_MAX
+@standards{ISO, limits.h}
 
 These are the maximum values that can be represented by a
 @w{@code{signed short int}} and @w{@code{unsigned short int}},
 respectively.
 
-@comment limits.h
-@comment ISO
 @item INT_MIN
+@standards{ISO, limits.h}
 
 This is the minimum value that can be represented by a @w{@code{signed
 int}}.  On most machines that @theglibc{} runs on, an @code{int} is
 a 32-bit quantity.
 
-@comment limits.h
-@comment ISO
 @item INT_MAX
-@comment limits.h
-@comment ISO
 @itemx UINT_MAX
+@standards{ISO, limits.h}
 
 These are the maximum values that can be represented by, respectively,
 the type @w{@code{signed int}} and the type @w{@code{unsigned int}}.
 
-@comment limits.h
-@comment ISO
 @item LONG_MIN
+@standards{ISO, limits.h}
 
 This is the minimum value that can be represented by a @w{@code{signed
 long int}}.  On most machines that @theglibc{} runs on, @code{long}
 integers are 32-bit quantities, the same size as @code{int}.
 
-@comment limits.h
-@comment ISO
 @item LONG_MAX
-@comment limits.h
-@comment ISO
 @itemx ULONG_MAX
+@standards{ISO, limits.h}
 
 These are the maximum values that can be represented by a
 @w{@code{signed long int}} and @code{unsigned long int}, respectively.
 
-@comment limits.h
-@comment ISO
 @item LLONG_MIN
+@standards{ISO, limits.h}
 
 This is the minimum value that can be represented by a @w{@code{signed
 long long int}}.  On most machines that @theglibc{} runs on,
 @w{@code{long long}} integers are 64-bit quantities.
 
-@comment limits.h
-@comment ISO
 @item LLONG_MAX
-@comment limits.h
-@comment ISO
 @itemx ULLONG_MAX
+@standards{ISO, limits.h}
 
 These are the maximum values that can be represented by a @code{signed
 long long int} and @code{unsigned long long int}, respectively.
 
-@comment limits.h
-@comment GNU
 @item LONG_LONG_MIN
-@comment limits.h
-@comment GNU
 @itemx LONG_LONG_MAX
-@comment limits.h
-@comment GNU
 @itemx ULONG_LONG_MAX
+@standards{GNU, limits.h}
 These are obsolete names for @code{LLONG_MIN}, @code{LLONG_MAX}, and
 @code{ULLONG_MAX}.  They are only available if @code{_GNU_SOURCE} is
 defined (@pxref{Feature Test Macros}).  In GCC versions prior to 3.0,
 these were the only names available.
 
-@comment limits.h
-@comment GNU
 @item WCHAR_MAX
+@standards{GNU, limits.h}
 
 This is the maximum value that can be represented by a @code{wchar_t}.
 @xref{Extended Char Intro}.
@@ -1041,9 +968,8 @@ target machine is suitable.  In practice, all the machines currently
 supported are suitable.
 
 @vtable @code
-@comment float.h
-@comment ISO
 @item FLT_ROUNDS
+@standards{ISO, float.h}
 This value characterizes the rounding mode for floating point addition.
 The following values indicate standard rounding modes:
 
@@ -1081,17 +1007,15 @@ the IEEE single-precision standard.
 -1.00000007   -1.0   -1.00000012   -1.0          -1.00000012
 @end smallexample
 
-@comment float.h
-@comment ISO
 @item FLT_RADIX
+@standards{ISO, float.h}
 This is the value of the base, or radix, of the exponent representation.
 This is guaranteed to be a constant expression, unlike the other macros
 described in this section.  The value is 2 on all machines we know of
 except the IBM 360 and derivatives.
 
-@comment float.h
-@comment ISO
 @item FLT_MANT_DIG
+@standards{ISO, float.h}
 This is the number of base-@code{FLT_RADIX} digits in the floating point
 mantissa for the @code{float} data type.  The following expression
 yields @code{1.0} (even though mathematically it should not) due to the
@@ -1106,18 +1030,16 @@ float radix = FLT_RADIX;
 @noindent
 where @code{radix} appears @code{FLT_MANT_DIG} times.
 
-@comment float.h
-@comment ISO
 @item DBL_MANT_DIG
 @itemx LDBL_MANT_DIG
+@standardsx{DBL_MANT_DIG, ISO, float.h}
 This is the number of base-@code{FLT_RADIX} digits in the floating point
 mantissa for the data types @code{double} and @code{long double},
 respectively.
 
 @comment Extra blank lines make it look better.
-@comment float.h
-@comment ISO
 @item FLT_DIG
+@standards{ISO, float.h}
 
 This is the number of decimal digits of precision for the @code{float}
 data type.  Technically, if @var{p} and @var{b} are the precision and
@@ -1130,77 +1052,67 @@ change to the @var{q} decimal digits.
 The value of this macro is supposed to be at least @code{6}, to satisfy
 @w{ISO C}.
 
-@comment float.h
-@comment ISO
 @item DBL_DIG
 @itemx LDBL_DIG
+@standardsx{DBL_DIG, ISO, float.h}
 
 These are similar to @code{FLT_DIG}, but for the data types
 @code{double} and @code{long double}, respectively.  The values of these
 macros are supposed to be at least @code{10}.
 
-@comment float.h
-@comment ISO
 @item FLT_MIN_EXP
+@standards{ISO, float.h}
 This is the smallest possible exponent value for type @code{float}.
 More precisely, it is the minimum negative integer such that the value
 @code{FLT_RADIX} raised to this power minus 1 can be represented as a
 normalized floating point number of type @code{float}.
 
-@comment float.h
-@comment ISO
 @item DBL_MIN_EXP
 @itemx LDBL_MIN_EXP
+@standardsx{DBL_MIN_EXP, ISO, float.h}
 
 These are similar to @code{FLT_MIN_EXP}, but for the data types
 @code{double} and @code{long double}, respectively.
 
-@comment float.h
-@comment ISO
 @item FLT_MIN_10_EXP
+@standards{ISO, float.h}
 This is the minimum negative integer such that @code{10} raised to this
 power minus 1 can be represented as a normalized floating point number
 of type @code{float}.  This is supposed to be @code{-37} or even less.
 
-@comment float.h
-@comment ISO
 @item DBL_MIN_10_EXP
 @itemx LDBL_MIN_10_EXP
+@standardsx{DBL_MIN_10_EXP, ISO, float.h}
 These are similar to @code{FLT_MIN_10_EXP}, but for the data types
 @code{double} and @code{long double}, respectively.
 
-@comment float.h
-@comment ISO
 @item FLT_MAX_EXP
+@standards{ISO, float.h}
 This is the largest possible exponent value for type @code{float}.  More
 precisely, this is the maximum positive integer such that value
 @code{FLT_RADIX} raised to this power minus 1 can be represented as a
 floating point number of type @code{float}.
 
-@comment float.h
-@comment ISO
 @item DBL_MAX_EXP
 @itemx LDBL_MAX_EXP
+@standardsx{DBL_MAX_EXP, ISO, float.h}
 These are similar to @code{FLT_MAX_EXP}, but for the data types
 @code{double} and @code{long double}, respectively.
 
-@comment float.h
-@comment ISO
 @item FLT_MAX_10_EXP
+@standards{ISO, float.h}
 This is the maximum positive integer such that @code{10} raised to this
 power minus 1 can be represented as a normalized floating point number
 of type @code{float}.  This is supposed to be at least @code{37}.
 
-@comment float.h
-@comment ISO
 @item DBL_MAX_10_EXP
 @itemx LDBL_MAX_10_EXP
+@standardsx{DBL_MAX_10_EXP, ISO, float.h}
 These are similar to @code{FLT_MAX_10_EXP}, but for the data types
 @code{double} and @code{long double}, respectively.
 
-@comment float.h
-@comment ISO
 @item FLT_MAX
+@standards{ISO, float.h}
 
 The value of this macro is the maximum number representable in type
 @code{float}.  It is supposed to be at least @code{1E+37}.  The value
@@ -1208,44 +1120,39 @@ has type @code{float}.
 
 The smallest representable number is @code{- FLT_MAX}.
 
-@comment float.h
-@comment ISO
 @item DBL_MAX
 @itemx LDBL_MAX
+@standardsx{DBL_MAX, ISO, float.h}
 
 These are similar to @code{FLT_MAX}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
 macro's value is the same as the type it describes.
 
-@comment float.h
-@comment ISO
 @item FLT_MIN
+@standards{ISO, float.h}
 
 The value of this macro is the minimum normalized positive floating
 point number that is representable in type @code{float}.  It is supposed
 to be no more than @code{1E-37}.
 
-@comment float.h
-@comment ISO
 @item DBL_MIN
 @itemx LDBL_MIN
+@standardsx{DBL_MIN, ISO, float.h}
 
 These are similar to @code{FLT_MIN}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
 macro's value is the same as the type it describes.
 
-@comment float.h
-@comment ISO
 @item FLT_EPSILON
+@standards{ISO, float.h}
 
 This is the difference between 1 and the smallest floating point
 number of type @code{float} that is greater than 1.  It's supposed to
 be no greater than @code{1E-5}.
 
-@comment float.h
-@comment ISO
 @item DBL_EPSILON
 @itemx LDBL_EPSILON
+@standardsx{DBL_EPSILON, ISO, float.h}
 
 These are similar to @code{FLT_EPSILON}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
@@ -1306,9 +1213,8 @@ DBL_EPSILON     2.2204460492503131E-016
 You can use @code{offsetof} to measure the location within a structure
 type of a particular structure member.
 
-@comment stddef.h
-@comment ISO
 @deftypefn {Macro} size_t offsetof (@var{type}, @var{member})
+@standards{ISO, stddef.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is no longer provided by glibc, but rather by the compiler.
 This expands to an integer constant expression that is the offset of the

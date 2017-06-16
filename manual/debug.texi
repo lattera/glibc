@@ -33,9 +33,8 @@ The header file @file{execinfo.h} declares three functions that obtain
 and manipulate backtraces of the current thread.
 @pindex execinfo.h
 
-@comment execinfo.h
-@comment GNU
 @deftypefun int backtrace (void **@var{buffer}, int @var{size})
+@standards{GNU, execinfo.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asuinit{} @ascuheap{} @ascudlopen{} @ascuplugin{} @asulock{}}@acunsafe{@acuinit{} @acsmem{} @aculock{} @acsfd{}}}
 @c The generic implementation just does pointer chasing within the local
 @c stack, without any guarantees that this will handle signal frames
@@ -63,9 +62,8 @@ another; frame pointer elimination will stop @code{backtrace} from
 interpreting the stack contents correctly.
 @end deftypefun
 
-@comment execinfo.h
-@comment GNU
 @deftypefun {char **} backtrace_symbols (void *const *@var{buffer}, int @var{size})
+@standards{GNU, execinfo.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @aculock{}}}
 @c Collects info returned by _dl_addr in an auto array, allocates memory
 @c for the whole return buffer with malloc then sprintfs into it storing
@@ -106,9 +104,8 @@ The return value is @code{NULL} if sufficient memory for the strings
 cannot be obtained.
 @end deftypefun
 
-@comment execinfo.h
-@comment GNU
 @deftypefun void backtrace_symbols_fd (void *const *@var{buffer}, int @var{size}, int @var{fd})
+@standards{GNU, execinfo.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@aculock{}}}
 @c Single loop of _dl_addr over addresses, collecting info into an iovec
 @c written out with a writev call per iteration.  Addresses and offsets

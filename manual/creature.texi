@@ -33,9 +33,8 @@ standard.  It is insufficient for this purpose, as it will not protect you
 from including header files outside the standard, or relying on semantics
 undefined within the standard.
 
-@comment (none)
-@comment POSIX.1
 @defvr Macro _POSIX_SOURCE
+@standards{POSIX.1, (none)}
 If you define this macro, then the functionality from the POSIX.1
 standard (IEEE Standard 1003.1) is available, as well as all of the
 @w{ISO C} facilities.
@@ -44,9 +43,8 @@ The state of @code{_POSIX_SOURCE} is irrelevant if you define the
 macro @code{_POSIX_C_SOURCE} to a positive integer.
 @end defvr
 
-@comment (none)
-@comment POSIX.2
 @defvr Macro _POSIX_C_SOURCE
+@standards{POSIX.2, (none)}
 Define this macro to a positive integer to control which POSIX
 functionality is made available.  The greater the value of this macro,
 the more functionality is made available.
@@ -72,12 +70,9 @@ or equal to @code{199506L}, then the functionality from the 1996
 edition is made available.
 @end defvr
 
-@comment (none)
-@comment X/Open
 @defvr Macro _XOPEN_SOURCE
-@comment (none)
-@comment X/Open
 @defvrx Macro _XOPEN_SOURCE_EXTENDED
+@standards{X/Open, (none)}
 If you define this macro, functionality described in the X/Open
 Portability Guide is included.  This is a superset of the POSIX.1 and
 POSIX.2 functionality and in fact @code{_POSIX_SOURCE} and
@@ -95,9 +90,8 @@ all functionality described so far plus some new definitions from the
 Single Unix Specification, @w{version 2}.
 @end defvr
 
-@comment (NONE)
-@comment X/Open
 @defvr Macro _LARGEFILE_SOURCE
+@standards{X/Open, (NONE)}
 If this macro is defined some extra functions are available which
 rectify a few shortcomings in all previous standards.  Specifically,
 the functions @code{fseeko} and @code{ftello} are available.  Without
@@ -108,9 +102,8 @@ these functions the difference between the @w{ISO C} interface
 This macro was introduced as part of the Large File Support extension (LFS).
 @end defvr
 
-@comment (NONE)
-@comment X/Open
 @defvr Macro _LARGEFILE64_SOURCE
+@standards{X/Open, (NONE)}
 If you define this macro an additional set of functions is made available
 which enables @w{32 bit} systems to use files of sizes beyond
 the usual limit of 2GB.  This interface is not available if the system
@@ -128,9 +121,8 @@ This macro was introduced as part of the Large File Support extension
 offsets are not generally used (see @code{_FILE_OFFSET_BITS}).
 @end defvr
 
-@comment (NONE)
-@comment X/Open
 @defvr Macro _FILE_OFFSET_BITS
+@standards{X/Open, (NONE)}
 This macro determines which file system interface shall be used, one
 replacing the other.  Whereas @code{_LARGEFILE64_SOURCE} makes the @w{64
 bit} interface available as an additional interface,
@@ -156,62 +148,55 @@ This macro was introduced as part of the Large File Support extension
 (LFS).
 @end defvr
 
-@comment (none)
-@comment GNU
 @defvr Macro _ISOC99_SOURCE
+@standards{GNU, (none)}
 Until the revised @w{ISO C} standard is widely adopted the new features
 are not automatically enabled.  @Theglibc{} nevertheless has a complete
 implementation of the new standard and to enable the new features the
 macro @code{_ISOC99_SOURCE} should be defined.
 @end defvr
 
-@comment (none)
-@comment ISO
 @defvr Macro __STDC_WANT_LIB_EXT2__
+@standards{ISO, (none)}
 If you define this macro to the value @code{1}, features from ISO/IEC
 TR 24731-2:2010 (Dynamic Allocation Functions) are enabled.  Only some
 of the features from this TR are supported by @theglibc{}.
 @end defvr
 
-@comment (none)
-@comment ISO
 @defvr Macro __STDC_WANT_IEC_60559_BFP_EXT__
+@standards{ISO, (none)}
 If you define this macro, features from ISO/IEC TS 18661-1:2014
 (Floating-point extensions for C: Binary floating-point arithmetic)
 are enabled.  Only some of the features from this TS are supported by
 @theglibc{}.
 @end defvr
 
-@comment (none)
-@comment ISO
 @defvr Macro __STDC_WANT_IEC_60559_FUNCS_EXT__
+@standards{ISO, (none)}
 If you define this macro, features from ISO/IEC TS 18661-4:2015
 (Floating-point extensions for C: Supplementary functions) are
 enabled.  Only some of the features from this TS are supported by
 @theglibc{}.
 @end defvr
 
-@comment (none)
-@comment ISO
 @defvr Macro __STDC_WANT_IEC_60559_TYPES_EXT__
+@standards{ISO, (none)}
 If you define this macro, features from ISO/IEC TS 18661-3:2015
 (Floating-point extensions for C: Interchange and extended types) are
 enabled.  Only some of the features from this TS are supported by
 @theglibc{}.
 @end defvr
 
-@comment (none)
-@comment GNU
 @defvr Macro _GNU_SOURCE
+@standards{GNU, (none)}
 If you define this macro, everything is included: @w{ISO C89}, @w{ISO
 C99}, POSIX.1, POSIX.2, BSD, SVID, X/Open, LFS, and GNU extensions.  In
 the cases where POSIX.1 conflicts with BSD, the POSIX definitions take
 precedence.
 @end defvr
 
-@comment (none)
-@comment GNU
 @defvr Macro _DEFAULT_SOURCE
+@standards{GNU, (none)}
 If you define this macro, most features are included apart from
 X/Open, LFS and GNU extensions: the effect is to enable features from
 the 2008 edition of POSIX, as well as certain BSD and SVID features
@@ -224,10 +209,9 @@ enables those features even when the other options would otherwise
 cause them to be disabled.
 @end defvr
 
-@comment (none)
-@comment GNU
 @defvr Macro _REENTRANT
 @defvrx Macro _THREAD_SAFE
+@standardsx{_REENTRANT, GNU, (none)}
 These macros are obsolete.  They have the same effect as defining
 @code{_POSIX_C_SOURCE} with the value @code{199506L}.
 

@@ -41,9 +41,8 @@ function.
 Prototypes for the functions in this section are declared in the header
 file @file{unistd.h}.
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int isatty (int @var{filedes})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c isatty ok
 @c  tcgetattr dup ok
@@ -55,9 +54,8 @@ If a file descriptor is associated with a terminal, you can get its
 associated file name using the @code{ttyname} function.  See also the
 @code{ctermid} function, described in @ref{Identifying the Terminal}.
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun {char *} ttyname (int @var{filedes})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:ttyname}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c ttyname @mtasurace:ttyname @ascuheap @asulock @aculock @acsmem @acsfd
 @c  isatty dup ok
@@ -79,9 +77,8 @@ the terminal file.  The value is a null pointer if the file descriptor
 isn't associated with a terminal, or the file name cannot be determined.
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int ttyname_r (int @var{filedes}, char *@var{buf}, size_t @var{len})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
 @c ttyname_r @ascuheap @acsmem @acsfd
 @c  isatty dup ok
@@ -232,9 +229,8 @@ structure of type @code{struct termios}.  This structure is used
 with the functions @code{tcgetattr} and @code{tcsetattr} to read
 and set the attributes.
 
-@comment termios.h
-@comment POSIX.1
 @deftp {Data Type} {struct termios}
+@standards{POSIX.1, termios.h}
 A @code{struct termios} records all the I/O attributes of a terminal.  The
 structure includes at least the following members:
 
@@ -265,23 +261,20 @@ speed values.
 The following sections describe the details of the members of the
 @code{struct termios} structure.
 
-@comment termios.h
-@comment POSIX.1
 @deftp {Data Type} tcflag_t
+@standards{POSIX.1, termios.h}
 This is an unsigned integer type used to represent the various
 bit masks for terminal flags.
 @end deftp
 
-@comment termios.h
-@comment POSIX.1
 @deftp {Data Type} cc_t
+@standards{POSIX.1, termios.h}
 This is an unsigned integer type used to represent characters associated
 with various terminal control functions.
 @end deftp
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int NCCS
+@standards{POSIX.1, termios.h}
 The value of this macro is the number of elements in the @code{c_cc}
 array.
 @end deftypevr
@@ -290,9 +283,8 @@ array.
 @subsection Terminal Mode Functions
 @cindex terminal mode functions
 
-@comment termios.h
-@comment POSIX.1
 @deftypefun int tcgetattr (int @var{filedes}, struct termios *@var{termios-p})
+@standards{POSIX.1, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Converting the kernel-returned termios data structure to the userland
 @c format does not ensure atomic or consistent writing.
@@ -313,9 +305,8 @@ The @var{filedes} is not associated with a terminal.
 @end table
 @end deftypefun
 
-@comment termios.h
-@comment POSIX.1
 @deftypefun int tcsetattr (int @var{filedes}, int @var{when}, const struct termios *@var{termios-p})
+@standards{POSIX.1, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Converting the incoming termios data structure to the kernel format
 @c does not ensure atomic or consistent reading.
@@ -327,26 +318,22 @@ The @var{when} argument specifies how to deal with input and output
 already queued.  It can be one of the following values:
 
 @vtable @code
-@comment termios.h
-@comment POSIX.1
 @item TCSANOW
+@standards{POSIX.1, termios.h}
 Make the change immediately.
 
-@comment termios.h
-@comment POSIX.1
 @item TCSADRAIN
+@standards{POSIX.1, termios.h}
 Make the change after waiting until all queued output has been written.
 You should usually use this option when changing parameters that affect
 output.
 
-@comment termios.h
-@comment POSIX.1
 @item TCSAFLUSH
+@standards{POSIX.1, termios.h}
 This is like @code{TCSADRAIN}, but also discards any queued input.
 
-@comment termios.h
-@comment BSD
 @item TCSASOFT
+@standards{BSD, termios.h}
 This is a flag bit that you can add to any of the above alternatives.
 Its meaning is to inhibit alteration of the state of the terminal
 hardware.  It is a BSD extension; it is only supported on BSD systems
@@ -476,9 +463,8 @@ try to specify the entire value for @code{c_iflag}---instead, change
 only specific flags and leave the rest untouched (@pxref{Setting
 Modes}).
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t INPCK
+@standards{POSIX.1, termios.h}
 @cindex parity checking
 If this bit is set, input parity checking is enabled.  If it is not set,
 no checking at all is done for parity errors on input; the
@@ -496,16 +482,14 @@ of these bits are set, a byte with a parity error is passed to the
 application as a @code{'\0'} character.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t IGNPAR
+@standards{POSIX.1, termios.h}
 If this bit is set, any byte with a framing or parity error is ignored.
 This is only useful if @code{INPCK} is also set.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t PARMRK
+@standards{POSIX.1, termios.h}
 If this bit is set, input bytes with parity or framing errors are marked
 when passed to the program.  This bit is meaningful only when
 @code{INPCK} is set and @code{IGNPAR} is not set.
@@ -520,16 +504,14 @@ parity error.  So a valid byte @code{0377} is passed to the program as
 two bytes, @code{0377} @code{0377}, in this case.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t ISTRIP
+@standards{POSIX.1, termios.h}
 If this bit is set, valid input bytes are stripped to seven bits;
 otherwise, all eight bits are available for programs to read.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t IGNBRK
+@standards{POSIX.1, termios.h}
 If this bit is set, break conditions are ignored.
 
 @cindex break condition, detecting
@@ -538,9 +520,8 @@ serial data transmission as a series of zero-value bits longer than a
 single byte.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t BRKINT
+@standards{POSIX.1, termios.h}
 If this bit is set and @code{IGNBRK} is not set, a break condition
 clears the terminal input and output queues and raises a @code{SIGINT}
 signal for the foreground process group associated with the terminal.
@@ -551,33 +532,29 @@ passed to the application as a single @code{'\0'} character if
 @code{'\377'}, @code{'\0'}, @code{'\0'}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t IGNCR
+@standards{POSIX.1, termios.h}
 If this bit is set, carriage return characters (@code{'\r'}) are
 discarded on input.  Discarding carriage return may be useful on
 terminals that send both carriage return and linefeed when you type the
 @key{RET} key.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t ICRNL
+@standards{POSIX.1, termios.h}
 If this bit is set and @code{IGNCR} is not set, carriage return characters
 (@code{'\r'}) received as input are passed to the application as newline
 characters (@code{'\n'}).
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t INLCR
+@standards{POSIX.1, termios.h}
 If this bit is set, newline characters (@code{'\n'}) received as input
 are passed to the application as carriage return characters (@code{'\r'}).
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t IXOFF
+@standards{POSIX.1, termios.h}
 If this bit is set, start/stop control on input is enabled.  In other
 words, the computer sends STOP and START characters as necessary to
 prevent input from coming in faster than programs are reading it.  The
@@ -586,9 +563,8 @@ data responds to a STOP character by suspending transmission, and to a
 START character by resuming transmission.  @xref{Start/Stop Characters}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t IXON
+@standards{POSIX.1, termios.h}
 If this bit is set, start/stop control on output is enabled.  In other
 words, if the computer receives a STOP character, it suspends output
 until a START character is received.  In this case, the STOP and START
@@ -598,9 +574,8 @@ not set, then START and STOP can be read as ordinary characters.
 @c !!! mention this interferes with using C-s and C-q for programs like emacs
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t IXANY
+@standards{BSD, termios.h}
 If this bit is set, any input character restarts output when output has
 been suspended with the STOP character.  Otherwise, only the START
 character restarts output.
@@ -609,9 +584,8 @@ This is a BSD extension; it exists only on BSD systems and
 @gnulinuxhurdsystems{}.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t IMAXBEL
+@standards{BSD, termios.h}
 If this bit is set, then filling up the terminal input buffer sends a
 BEL character (code @code{007}) to the terminal to ring the bell.
 
@@ -632,9 +606,8 @@ try to specify the entire value for @code{c_oflag}---instead, change
 only specific flags and leave the rest untouched (@pxref{Setting
 Modes}).
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t OPOST
+@standards{POSIX.1, termios.h}
 If this bit is set, output data is processed in some unspecified way so
 that it is displayed appropriately on the terminal device.  This
 typically includes mapping newline characters (@code{'\n'}) onto
@@ -645,25 +618,22 @@ If this bit isn't set, the characters are transmitted as-is.
 
 The following three bits are effective only if @code{OPOST} is set.
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t ONLCR
+@standards{POSIX.1, termios.h}
 If this bit is set, convert the newline character on output into a pair
 of characters, carriage return followed by linefeed.
 @end deftypevr
 
-@comment termios.h (optional)
-@comment BSD
 @deftypevr Macro tcflag_t OXTABS
+@standards{BSD, termios.h (optional)}
 If this bit is set, convert tab characters on output into the appropriate
 number of spaces to emulate a tab stop every eight columns.  This bit
 exists only on BSD systems and @gnuhurdsystems{}; on
 @gnulinuxsystems{} it is available as @code{XTABS}.
 @end deftypevr
 
-@comment termios.h (optional)
-@comment BSD
 @deftypevr Macro tcflag_t ONOEOT
+@standards{BSD, termios.h (optional)}
 If this bit is set, discard @kbd{C-d} characters (code @code{004}) on
 output.  These characters cause many dial-up terminals to disconnect.
 This bit exists only on BSD systems and @gnuhurdsystems{}.
@@ -685,9 +655,8 @@ try to specify the entire value for @code{c_cflag}---instead, change
 only specific flags and leave the rest untouched (@pxref{Setting
 Modes}).
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t CLOCAL
+@standards{POSIX.1, termios.h}
 If this bit is set, it indicates that the terminal is connected
 ``locally'' and that the modem status lines (such as carrier detect)
 should be ignored.
@@ -708,30 +677,26 @@ clear the condition.
 @cindex modem disconnect
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t HUPCL
+@standards{POSIX.1, termios.h}
 If this bit is set, a modem disconnect is generated when all processes
 that have the terminal device open have either closed the file or exited.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t CREAD
+@standards{POSIX.1, termios.h}
 If this bit is set, input can be read from the terminal.  Otherwise,
 input is discarded when it arrives.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t CSTOPB
+@standards{POSIX.1, termios.h}
 If this bit is set, two stop bits are used.  Otherwise, only one stop bit
 is used.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t PARENB
+@standards{POSIX.1, termios.h}
 If this bit is set, generation and detection of a parity bit are enabled.
 @xref{Input Modes}, for information on how input parity errors are handled.
 
@@ -739,9 +704,8 @@ If this bit is not set, no parity bit is added to output characters, and
 input characters are not checked for correct parity.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t PARODD
+@standards{POSIX.1, termios.h}
 This bit is only useful if @code{PARENB} is set.  If @code{PARODD} is set,
 odd parity is used, otherwise even parity is used.
 @end deftypevr
@@ -750,62 +714,53 @@ The control mode flags also includes a field for the number of bits per
 character.  You can use the @code{CSIZE} macro as a mask to extract the
 value, like this: @code{settings.c_cflag & CSIZE}.
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t CSIZE
+@standards{POSIX.1, termios.h}
 This is a mask for the number of bits per character.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t CS5
+@standards{POSIX.1, termios.h}
 This specifies five bits per byte.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t CS6
+@standards{POSIX.1, termios.h}
 This specifies six bits per byte.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t CS7
+@standards{POSIX.1, termios.h}
 This specifies seven bits per byte.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t CS8
+@standards{POSIX.1, termios.h}
 This specifies eight bits per byte.
 @end deftypevr
 
 The following four bits are BSD extensions; these exist only on BSD
 systems and @gnuhurdsystems{}.
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t CCTS_OFLOW
+@standards{BSD, termios.h}
 If this bit is set, enable flow control of output based on the CTS wire
 (RS232 protocol).
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t CRTS_IFLOW
+@standards{BSD, termios.h}
 If this bit is set, enable flow control of input based on the RTS wire
 (RS232 protocol).
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t MDMBUF
+@standards{BSD, termios.h}
 If this bit is set, enable carrier-based flow control of output.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t CIGNORE
+@standards{BSD, termios.h}
 If this bit is set, it says to ignore the control modes and line speed
 values entirely.  This is only meaningful in a call to @code{tcsetattr}.
 
@@ -834,24 +789,21 @@ try to specify the entire value for @code{c_lflag}---instead, change
 only specific flags and leave the rest untouched (@pxref{Setting
 Modes}).
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t ICANON
+@standards{POSIX.1, termios.h}
 This bit, if set, enables canonical input processing mode.  Otherwise,
 input is processed in noncanonical mode.  @xref{Canonical or Not}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t ECHO
+@standards{POSIX.1, termios.h}
 If this bit is set, echoing of input characters back to the terminal
 is enabled.
 @cindex echo of terminal input
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t ECHOE
+@standards{POSIX.1, termios.h}
 If this bit is set, echoing indicates erasure of input with the ERASE
 character by erasing the last character in the current line from the
 screen.  Otherwise, the character erased is re-echoed to show what has
@@ -862,9 +814,8 @@ itself controls actual recognition of the ERASE character and erasure of
 input, without which @code{ECHOE} is simply irrelevant.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t ECHOPRT
+@standards{BSD, termios.h}
 This bit, like @code{ECHOE}, enables display of the ERASE character in
 a way that is geared to a hardcopy terminal.  When you type the ERASE
 character, a @samp{\} character is printed followed by the first
@@ -876,9 +827,8 @@ This is a BSD extension, and exists only in BSD systems and
 @gnulinuxhurdsystems{}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t ECHOK
+@standards{POSIX.1, termios.h}
 This bit enables special display of the KILL character by moving to a
 new line after echoing the KILL character normally.  The behavior of
 @code{ECHOKE} (below) is nicer to look at.
@@ -893,26 +843,23 @@ itself controls actual recognition of the KILL character and erasure of
 input, without which @code{ECHOK} is simply irrelevant.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t ECHOKE
+@standards{BSD, termios.h}
 This bit is similar to @code{ECHOK}.  It enables special display of the
 KILL character by erasing on the screen the entire line that has been
 killed.  This is a BSD extension, and exists only in BSD systems and
 @gnulinuxhurdsystems{}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t ECHONL
+@standards{POSIX.1, termios.h}
 If this bit is set and the @code{ICANON} bit is also set, then the
 newline (@code{'\n'}) character is echoed even if the @code{ECHO} bit
 is not set.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t ECHOCTL
+@standards{BSD, termios.h}
 If this bit is set and the @code{ECHO} bit is also set, echo control
 characters with @samp{^} followed by the corresponding text character.
 Thus, control-A echoes as @samp{^A}.  This is usually the preferred mode
@@ -923,9 +870,8 @@ This is a BSD extension, and exists only in BSD systems and
 @gnulinuxhurdsystems{}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t ISIG
+@standards{POSIX.1, termios.h}
 This bit controls whether the INTR, QUIT, and SUSP characters are
 recognized.  The functions associated with these characters are performed
 if and only if this bit is set.  Being in canonical or noncanonical
@@ -941,9 +887,8 @@ signals associated with these characters, or to escape from the program.
 @xref{Signal Characters}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t IEXTEN
+@standards{POSIX.1, termios.h}
 POSIX.1 gives @code{IEXTEN} implementation-defined meaning,
 so you cannot rely on this interpretation on all systems.
 
@@ -952,17 +897,15 @@ DISCARD characters.
 @xref{Other Special}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t NOFLSH
+@standards{POSIX.1, termios.h}
 Normally, the INTR, QUIT, and SUSP characters cause input and output
 queues for the terminal to be cleared.  If this bit is set, the queues
 are not cleared.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro tcflag_t TOSTOP
+@standards{POSIX.1, termios.h}
 If this bit is set and the system supports job control, then
 @code{SIGTTOU} signals are generated by background processes that
 attempt to write to the terminal.  @xref{Access to the Terminal}.
@@ -971,9 +914,8 @@ attempt to write to the terminal.  @xref{Access to the Terminal}.
 The following bits are BSD extensions; they exist only on BSD systems
 and @gnuhurdsystems{}.
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t ALTWERASE
+@standards{BSD, termios.h}
 This bit determines how far the WERASE character should erase.  The
 WERASE character erases back to the beginning of a word; the question
 is, where do words begin?
@@ -986,23 +928,20 @@ a character which is none of those.
 @xref{Editing Characters}, for more information about the WERASE character.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t FLUSHO
+@standards{BSD, termios.h}
 This is the bit that toggles when the user types the DISCARD character.
 While this bit is set, all output is discarded.  @xref{Other Special}.
 @end deftypevr
 
-@comment termios.h (optional)
-@comment BSD
 @deftypevr Macro tcflag_t NOKERNINFO
+@standards{BSD, termios.h (optional)}
 Setting this bit disables handling of the STATUS character.
 @xref{Other Special}.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro tcflag_t PENDIN
+@standards{BSD, termios.h}
 If this bit is set, it indicates that there is a line of input that
 needs to be reprinted.  Typing the REPRINT character sets this bit; the
 bit remains set until reprinting is finished.  @xref{Editing Characters}.
@@ -1044,9 +983,8 @@ don't try to access them in the @code{struct termios} structure
 directly.  Instead, you should use the following functions to read and
 store them:
 
-@comment termios.h
-@comment POSIX.1
 @deftypefun speed_t cfgetospeed (const struct termios *@var{termios-p})
+@standards{POSIX.1, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct access to a single termios field, except on Linux, where
 @c multiple accesses may take place.  No worries either way, callers
@@ -1055,17 +993,15 @@ This function returns the output line speed stored in the structure
 @code{*@var{termios-p}}.
 @end deftypefun
 
-@comment termios.h
-@comment POSIX.1
 @deftypefun speed_t cfgetispeed (const struct termios *@var{termios-p})
+@standards{POSIX.1, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function returns the input line speed stored in the structure
 @code{*@var{termios-p}}.
 @end deftypefun
 
-@comment termios.h
-@comment POSIX.1
 @deftypefun int cfsetospeed (struct termios *@var{termios-p}, speed_t @var{speed})
+@standards{POSIX.1, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function stores @var{speed} in @code{*@var{termios-p}} as the output
 speed.  The normal return value is @math{0}; a value of @math{-1}
@@ -1073,9 +1009,8 @@ indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
 returns @math{-1}.
 @end deftypefun
 
-@comment termios.h
-@comment POSIX.1
 @deftypefun int cfsetispeed (struct termios *@var{termios-p}, speed_t @var{speed})
+@standards{POSIX.1, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function stores @var{speed} in @code{*@var{termios-p}} as the input
 speed.  The normal return value is @math{0}; a value of @math{-1}
@@ -1083,9 +1018,8 @@ indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
 returns @math{-1}.
 @end deftypefun
 
-@comment termios.h
-@comment BSD
 @deftypefun int cfsetspeed (struct termios *@var{termios-p}, speed_t @var{speed})
+@standards{BSD, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c There's no guarantee that the two calls are atomic, but since this is
 @c not an opaque type, callers ought to ensure mutual exclusion to the
@@ -1101,9 +1035,8 @@ of @math{-1} indicates an error.  If @var{speed} is not a speed,
 4.4 BSD.
 @end deftypefun
 
-@comment termios.h
-@comment POSIX.1
 @deftp {Data Type} speed_t
+@standards{POSIX.1, termios.h}
 The @code{speed_t} type is an unsigned integer data type used to
 represent line speeds.
 @end deftp
@@ -1243,9 +1176,8 @@ system you are using supports @code{_POSIX_VDISABLE}.
 These special characters are active only in canonical input mode.
 @xref{Canonical or Not}.
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int VEOF
+@standards{POSIX.1, termios.h}
 @cindex EOF character
 This is the subscript for the EOF character in the special control
 character array.  @code{@var{termios}.c_cc[VEOF]} holds the character
@@ -1260,9 +1192,8 @@ character itself is discarded.
 Usually, the EOF character is @kbd{C-d}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int VEOL
+@standards{POSIX.1, termios.h}
 @cindex EOL character
 This is the subscript for the EOL character in the special control
 character array.  @code{@var{termios}.c_cc[VEOL]} holds the character
@@ -1280,9 +1211,8 @@ Just set the ICRNL flag.  In fact, this is the default state of
 affairs.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro int VEOL2
+@standards{BSD, termios.h}
 @cindex EOL2 character
 This is the subscript for the EOL2 character in the special control
 character array.  @code{@var{termios}.c_cc[VEOL2]} holds the character
@@ -1297,9 +1227,8 @@ The EOL2 character is a BSD extension; it exists only on BSD systems
 and @gnulinuxhurdsystems{}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int VERASE
+@standards{POSIX.1, termios.h}
 @cindex ERASE character
 This is the subscript for the ERASE character in the special control
 character array.  @code{@var{termios}.c_cc[VERASE]} holds the
@@ -1316,9 +1245,8 @@ The ERASE character itself is discarded.
 Usually, the ERASE character is @key{DEL}.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro int VWERASE
+@standards{BSD, termios.h}
 @cindex WERASE character
 This is the subscript for the WERASE character in the special control
 character array.  @code{@var{termios}.c_cc[VWERASE]} holds the character
@@ -1343,9 +1271,8 @@ The WERASE character is usually @kbd{C-w}.
 This is a BSD extension.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int VKILL
+@standards{POSIX.1, termios.h}
 @cindex KILL character
 This is the subscript for the KILL character in the special control
 character array.  @code{@var{termios}.c_cc[VKILL]} holds the character
@@ -1358,9 +1285,8 @@ of input are discarded.  The kill character itself is discarded too.
 The KILL character is usually @kbd{C-u}.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro int VREPRINT
+@standards{BSD, termios.h}
 @cindex REPRINT character
 This is the subscript for the REPRINT character in the special control
 character array.  @code{@var{termios}.c_cc[VREPRINT]} holds the character
@@ -1382,9 +1308,8 @@ These special characters may be active in either canonical or noncanonical
 input mode, but only when the @code{ISIG} flag is set (@pxref{Local
 Modes}).
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int VINTR
+@standards{POSIX.1, termios.h}
 @cindex INTR character
 @cindex interrupt character
 This is the subscript for the INTR character in the special control
@@ -1399,9 +1324,8 @@ information about signals.
 Typically, the INTR character is @kbd{C-c}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int VQUIT
+@standards{POSIX.1, termios.h}
 @cindex QUIT character
 This is the subscript for the QUIT character in the special control
 character array.  @code{@var{termios}.c_cc[VQUIT]} holds the character
@@ -1415,9 +1339,8 @@ about signals.
 Typically, the QUIT character is @kbd{C-\}.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int VSUSP
+@standards{POSIX.1, termios.h}
 @cindex SUSP character
 @cindex suspend character
 This is the subscript for the SUSP character in the special control
@@ -1440,9 +1363,8 @@ mechanism, the program should send a @code{SIGTSTP} signal to the
 process group of the process, not just to the process itself.
 @xref{Signaling Another Process}.
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro int VDSUSP
+@standards{BSD, termios.h}
 @cindex DSUSP character
 @cindex delayed suspend character
 This is the subscript for the DSUSP character in the special control
@@ -1467,9 +1389,8 @@ These special characters may be active in either canonical or noncanonical
 input mode, but their use is controlled by the flags @code{IXON} and
 @code{IXOFF} (@pxref{Input Modes}).
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int VSTART
+@standards{POSIX.1, termios.h}
 @cindex START character
 This is the subscript for the START character in the special control
 character array.  @code{@var{termios}.c_cc[VSTART]} holds the
@@ -1488,9 +1409,8 @@ able to change this value---the hardware may insist on using @kbd{C-q}
 regardless of what you specify.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int VSTOP
+@standards{POSIX.1, termios.h}
 @cindex STOP character
 This is the subscript for the STOP character in the special control
 character array.  @code{@var{termios}.c_cc[VSTOP]} holds the character
@@ -1510,9 +1430,8 @@ regardless of what you specify.
 @node Other Special
 @subsubsection Other Special Characters
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro int VLNEXT
+@standards{BSD, termios.h}
 @cindex LNEXT character
 This is the subscript for the LNEXT character in the special control
 character array.  @code{@var{termios}.c_cc[VLNEXT]} holds the character
@@ -1530,9 +1449,8 @@ The LNEXT character is usually @kbd{C-v}.
 This character is available on BSD systems and @gnulinuxhurdsystems{}.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro int VDISCARD
+@standards{BSD, termios.h}
 @cindex DISCARD character
 This is the subscript for the DISCARD character in the special control
 character array.  @code{@var{termios}.c_cc[VDISCARD]} holds the character
@@ -1547,9 +1465,8 @@ output buffer.  Typing any other character resets the flag.
 This character is available on BSD systems and @gnulinuxhurdsystems{}.
 @end deftypevr
 
-@comment termios.h
-@comment BSD
 @deftypevr Macro int VSTATUS
+@standards{BSD, termios.h}
 @cindex STATUS character
 This is the subscript for the STATUS character in the special control
 character array.  @code{@var{termios}.c_cc[VSTATUS]} holds the character
@@ -1587,9 +1504,8 @@ constant that stands for the index of that element.  @code{VMIN} and
 @code{VTIME} are the names for the indices in the array of the MIN and
 TIME slots.
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int VMIN
+@standards{POSIX.1, termios.h}
 @cindex MIN termios slot
 This is the subscript for the MIN slot in the @code{c_cc} array.  Thus,
 @code{@var{termios}.c_cc[VMIN]} is the value itself.
@@ -1599,9 +1515,8 @@ specifies the minimum number of bytes that must be available in the
 input queue in order for @code{read} to return.
 @end deftypevr
 
-@comment termios.h
-@comment POSIX.1
 @deftypevr Macro int VTIME
+@standards{POSIX.1, termios.h}
 @cindex TIME termios slot
 This is the subscript for the TIME slot in the @code{c_cc} array.  Thus,
 @code{@var{termios}.c_cc[VTIME]} is the value itself.
@@ -1668,9 +1583,8 @@ input and the EOF and EOL slots are used only in canonical input, but it
 isn't very clean.  @Theglibc{} allocates separate slots for these
 uses.
 
-@comment termios.h
-@comment BSD
 @deftypefun void cfmakeraw (struct termios *@var{termios-p})
+@standards{BSD, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c There's no guarantee the changes are atomic, but since this is not an
 @c opaque type, callers ought to ensure mutual exclusion to the termios
@@ -1705,9 +1619,8 @@ kernels, including Linux.
 
 The symbols used in this section are declared in @file{sgtty.h}.
 
-@comment termios.h
-@comment BSD
 @deftp {Data Type} {struct sgttyb}
+@standards{BSD, termios.h}
 This structure is an input or output parameter list for @code{gtty} and
 @code{stty}.
 
@@ -1725,9 +1638,8 @@ Various flags
 @end table
 @end deftp
 
-@comment sgtty.h
-@comment BSD
 @deftypefun int gtty (int @var{filedes}, struct sgttyb *@var{attributes})
+@standards{BSD, sgtty.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct ioctl, BSD only.
 This function gets the attributes of a terminal.
@@ -1736,9 +1648,8 @@ This function gets the attributes of a terminal.
 of the terminal which is open with file descriptor @var{filedes}.
 @end deftypefun
 
-@comment sgtty.h
-@comment BSD
 @deftypefun int stty (int @var{filedes}, const struct sgttyb *@var{attributes})
+@standards{BSD, sgtty.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct ioctl, BSD only.
 
@@ -1761,9 +1672,8 @@ itself is ignoring or blocking @code{SIGTTOU} signals, in which case the
 operation is performed and no signal is sent.  @xref{Job Control}.
 
 @cindex break condition, generating
-@comment termios.h
-@comment POSIX.1
 @deftypefun int tcsendbreak (int @var{filedes}, int @var{duration})
+@standards{POSIX.1, termios.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:tcattr(filedes)/bsd}}@asunsafe{}@acunsafe{@acucorrupt{/bsd}}}
 @c On Linux, this calls just one out of two ioctls; on BSD, it's two
 @c ioctls with a select (for the delay only) in between, the first
@@ -1795,9 +1705,8 @@ The @var{filedes} is not associated with a terminal device.
 
 @cindex flushing terminal output queue
 @cindex terminal output queue, flushing
-@comment termios.h
-@comment POSIX.1
 @deftypefun int tcdrain (int @var{filedes})
+@standards{POSIX.1, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct ioctl.
 The @code{tcdrain} function waits until all queued
@@ -1831,9 +1740,8 @@ The operation was interrupted by delivery of a signal.
 
 @cindex clearing terminal input queue
 @cindex terminal input queue, clearing
-@comment termios.h
-@comment POSIX.1
 @deftypefun int tcflush (int @var{filedes}, int @var{queue})
+@standards{POSIX.1, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct ioctl.
 The @code{tcflush} function is used to clear the input and/or output
@@ -1880,9 +1788,8 @@ from POSIX and we cannot change it.
 
 @cindex flow control, terminal
 @cindex terminal flow control
-@comment termios.h
-@comment POSIX.1
 @deftypefun int tcflow (int @var{filedes}, int @var{action})
+@standards{POSIX.1, termios.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:tcattr(filedes)/bsd}}@asunsafe{}@acsafe{}}
 @c Direct ioctl on Linux.  On BSD, the TCO* actions are a single ioctl,
 @c whereas the TCI actions first call tcgetattr and then write to the fd
@@ -1990,9 +1897,8 @@ This subsection describes functions for allocating a pseudo-terminal,
 and for making this pseudo-terminal available for actual use.  These
 functions are declared in the header file @file{stdlib.h}.
 
-@comment stdlib.h
-@comment GNU
 @deftypefun int getpt (void)
+@standards{GNU, stdlib.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 @c On BSD, tries to open multiple potential pty names, returning on the
 @c first success.  On Linux, try posix_openpt first, then fallback to
@@ -2015,9 +1921,9 @@ There are no free master pseudo-terminals available.
 This function is a GNU extension.
 @end deftypefun
 
-@comment stdlib.h
-@comment SVID, XPG4.2
 @deftypefun int grantpt (int @var{filedes})
+@standards{SVID, stdlib.h}
+@standards{XPG4.2, stdlib.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c grantpt @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  unix/grantpt:pts_name @acsuheap @acsmem
@@ -2078,9 +1984,9 @@ with @var{filedes} could not be accessed.
 
 @end deftypefun
 
-@comment stdlib.h
-@comment SVID, XPG4.2
 @deftypefun int unlockpt (int @var{filedes})
+@standards{SVID, stdlib.h}
+@standards{XPG4.2, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{/bsd}}@acunsafe{@acsmem{} @acsfd{}}}
 @c unlockpt @ascuheap/bsd @acsmem @acsfd
 @c /bsd
@@ -2108,9 +2014,9 @@ device.
 @end table
 @end deftypefun
 
-@comment stdlib.h
-@comment SVID, XPG4.2
 @deftypefun {char *} ptsname (int @var{filedes})
+@standards{SVID, stdlib.h}
+@standards{XPG4.2, stdlib.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:ptsname}}@asunsafe{@ascuheap{/bsd}}@acunsafe{@acsmem{} @acsfd{}}}
 @c ptsname @mtasurace:ptsname @ascuheap/bsd @acsmem @acsfd
 @c  ptsname_r dup @ascuheap/bsd @acsmem @acsfd
@@ -2121,9 +2027,8 @@ file name of the associated slave pseudo-terminal file.  This string
 might be overwritten by subsequent calls to @code{ptsname}.
 @end deftypefun
 
-@comment stdlib.h
-@comment GNU
 @deftypefun int ptsname_r (int @var{filedes}, char *@var{buf}, size_t @var{len})
+@standards{GNU, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{/bsd}}@acunsafe{@acsmem{} @acsfd{}}}
 @c ptsname_r @ascuheap/bsd @acsmem @acsfd
 @c /hurd
@@ -2217,9 +2122,8 @@ close_master:
 These functions, derived from BSD, are available in the separate
 @file{libutil} library, and declared in @file{pty.h}.
 
-@comment pty.h
-@comment BSD
 @deftypefun int openpty (int *@var{amaster}, int *@var{aslave}, char *@var{name}, const struct termios *@var{termp}, const struct winsize *@var{winp})
+@standards{BSD, pty.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c openpty @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  getpt @acsfd
@@ -2264,9 +2168,8 @@ the @code{ttyname} function on the file descriptor returned in
 device instead.
 @end deftypefun
 
-@comment pty.h
-@comment BSD
 @deftypefun int forkpty (int *@var{amaster}, char *@var{name}, const struct termios *@var{termp}, const struct winsize *@var{winp})
+@standards{BSD, pty.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascudlopen{} @ascuplugin{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c forkpty @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  openpty dup @mtslocale @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem

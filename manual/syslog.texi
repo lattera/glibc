@@ -144,9 +144,8 @@ system, use the socket I/O functions to write a UDP datagram to the
 The symbols referred to in this section are declared in the file
 @file{syslog.h}.
 
-@comment syslog.h
-@comment BSD
 @deftypefun void openlog (const char *@var{ident}, int @var{option}, int @var{facility})
+@standards{BSD, syslog.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c openlog @asulock @aculock @acsfd
 @c  libc_lock_lock @asulock @aculock
@@ -284,9 +283,8 @@ The symbols referred to in this section are declared in the file
 @file{syslog.h}.
 
 @c syslog() is implemented as a call to vsyslog().
-@comment syslog.h
-@comment BSD
 @deftypefun void syslog (int @var{facility_priority}, const char *@var{format}, @dots{})
+@standards{BSD, syslog.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c syslog @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
 @c  va_start dup ok
@@ -444,9 +442,8 @@ syslog (LOG_MAKEPRI(LOG_LOCAL1, LOG_ERROR),
 @end deftypefun
 
 
-@comment syslog.h
-@comment BSD
 @deftypefun void vsyslog (int @var{facility_priority}, const char *@var{format}, va_list @var{arglist})
+@standards{BSD, syslog.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c vsyslog @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
 @c  vsyslog_chk dup @mtsenv @mtslocale @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsmem @acsfd
@@ -463,9 +460,8 @@ length argument.
 The symbols referred to in this section are declared in the file
 @file{syslog.h}.
 
-@comment syslog.h
-@comment BSD
 @deftypefun void closelog (void)
+@standards{BSD, syslog.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c closelog @asulock @aculock @acsfd
 @c  libc_lock_lock @asulock @aculock
@@ -500,9 +496,8 @@ Syslog connections are automatically closed on exec or exit.
 The symbols referred to in this section are declared in the file
 @file{syslog.h}.
 
-@comment syslog.h
-@comment BSD
 @deftypefun int setlogmask (int @var{mask})
+@standards{BSD, syslog.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:LogMask}}@asunsafe{}@acsafe{}}
 @c Read and modify are not guarded by syslog_lock, so concurrent changes
 @c or even uses are undefined.  This should use an atomic swap instead,

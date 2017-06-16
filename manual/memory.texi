@@ -342,9 +342,9 @@ To allocate a block of memory, call @code{malloc}.  The prototype for
 this function is in @file{stdlib.h}.
 @pindex stdlib.h
 
-@comment malloc.h stdlib.h
-@comment ISO
 @deftypefun {void *} malloc (size_t @var{size})
+@standards{ISO, malloc.h}
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c Malloc hooks and __morecore pointers, as well as such parameters as
 @c max_n_mmaps and max_mmapped_mem, are accessed without guards, so they
@@ -683,9 +683,9 @@ function @code{free} to make the block available to be allocated again.
 The prototype for this function is in @file{stdlib.h}.
 @pindex stdlib.h
 
-@comment malloc.h stdlib.h
-@comment ISO
 @deftypefun void free (void *@var{ptr})
+@standards{ISO, malloc.h}
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c __libc_free @asulock @aculock @acsfd @acsmem
 @c   releasing memory into fastbins modifies the arena without taking
@@ -755,9 +755,9 @@ You can make the block longer by calling @code{realloc} or
 @code{reallocarray}.  These functions are declared in @file{stdlib.h}.
 @pindex stdlib.h
 
-@comment malloc.h stdlib.h
-@comment ISO
 @deftypefun {void *} realloc (void *@var{ptr}, size_t @var{newsize})
+@standards{ISO, malloc.h}
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c It may call the implementations of malloc and free, so all of their
 @c issues arise, plus the realloc hook, also accessed without guards.
@@ -816,9 +816,9 @@ behavior, and will probably crash when @code{realloc} is passed a null
 pointer.
 @end deftypefun
 
-@comment malloc.h stdlib.h
-@comment BSD
 @deftypefun {void *} reallocarray (void *@var{ptr}, size_t @var{nmemb}, size_t @var{size})
+@standards{BSD, malloc.h}
+@standards{BSD, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 
 The @code{reallocarray} function changes the size of the block whose address
@@ -877,9 +877,9 @@ The function @code{calloc} allocates memory and clears it to zero.  It
 is declared in @file{stdlib.h}.
 @pindex stdlib.h
 
-@comment malloc.h stdlib.h
-@comment ISO
 @deftypefun {void *} calloc (size_t @var{count}, size_t @var{eltsize})
+@standards{ISO, malloc.h}
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c Same caveats as malloc.
 
@@ -935,8 +935,8 @@ power of two than that, use @code{aligned_alloc} or @code{posix_memalign}.
 @code{aligned_alloc} and @code{posix_memalign} are declared in
 @file{stdlib.h}.
 
-@comment stdlib.h
 @deftypefun {void *} aligned_alloc (size_t @var{alignment}, size_t @var{size})
+@standards{???, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c Alias to memalign.
 The @code{aligned_alloc} function allocates a block of @var{size} bytes whose
@@ -959,9 +959,8 @@ portability to modern non-POSIX systems than @code{posix_memalign}.
 
 @end deftypefun
 
-@comment malloc.h
-@comment BSD
 @deftypefun {void *} memalign (size_t @var{boundary}, size_t @var{size})
+@standards{BSD, malloc.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c Same issues as malloc.  The padding bytes are safely freed in
 @c _int_memalign, with the arena still locked.
@@ -1007,9 +1006,8 @@ The @code{memalign} function is obsolete and @code{aligned_alloc} or
 @code{posix_memalign} should be used instead.
 @end deftypefun
 
-@comment stdlib.h
-@comment POSIX
 @deftypefun int posix_memalign (void **@var{memptr}, size_t @var{alignment}, size_t @var{size})
+@standards{POSIX, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c Calls memalign unless the requirements are not met (powerof2 macro is
 @c safe given an automatic variable as an argument) or there's a
@@ -1039,9 +1037,9 @@ superseded by @code{aligned_alloc}, it is more portable to older POSIX
 systems that do not support @w{ISO C11}.
 @end deftypefun
 
-@comment malloc.h stdlib.h
-@comment BSD
 @deftypefun {void *} valloc (size_t @var{size})
+@standards{BSD, malloc.h}
+@standards{BSD, stdlib.h}
 @safety{@prelim{}@mtunsafe{@mtuinit{}}@asunsafe{@asuinit{} @asulock{}}@acunsafe{@acuinit{} @aculock{} @acsfd{} @acsmem{}}}
 @c __libc_valloc @mtuinit @asuinit @asulock @aculock @acsfd @acsmem
 @c  ptmalloc_init (once) @mtsenv @asulock @aculock @acsfd @acsmem
@@ -1208,9 +1206,8 @@ using the @code{mcheck} function.  This function is a GNU extension,
 declared in @file{mcheck.h}.
 @pindex mcheck.h
 
-@comment mcheck.h
-@comment GNU
 @deftypefun int mcheck (void (*@var{abortfn}) (enum mcheck_status @var{status}))
+@standards{GNU, mcheck.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:mcheck} @mtasuconst{:malloc_hooks}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 @c The hooks must be set up before malloc is first used, which sort of
 @c implies @mtuinit/@asuinit but since the function is a no-op if malloc
@@ -1351,9 +1348,8 @@ dynamic memory allocation, for example.
 The hook variables are declared in @file{malloc.h}.
 @pindex malloc.h
 
-@comment malloc.h
-@comment GNU
 @defvar __malloc_hook
+@standards{GNU, malloc.h}
 The value of this variable is a pointer to the function that
 @code{malloc} uses whenever it is called.  You should define this
 function to look like @code{malloc}; that is, like:
@@ -1367,9 +1363,8 @@ the @code{malloc} function was called.  This value allows you to trace
 the memory consumption of the program.
 @end defvar
 
-@comment malloc.h
-@comment GNU
 @defvar __realloc_hook
+@standards{GNU, malloc.h}
 The value of this variable is a pointer to function that @code{realloc}
 uses whenever it is called.  You should define this function to look
 like @code{realloc}; that is, like:
@@ -1383,9 +1378,8 @@ the @code{realloc} function was called.  This value allows you to trace the
 memory consumption of the program.
 @end defvar
 
-@comment malloc.h
-@comment GNU
 @defvar __free_hook
+@standards{GNU, malloc.h}
 The value of this variable is a pointer to function that @code{free}
 uses whenever it is called.  You should define this function to look
 like @code{free}; that is, like:
@@ -1399,9 +1393,8 @@ the @code{free} function was called.  This value allows you to trace the
 memory consumption of the program.
 @end defvar
 
-@comment malloc.h
-@comment GNU
 @defvar __memalign_hook
+@standards{GNU, malloc.h}
 The value of this variable is a pointer to function that @code{aligned_alloc},
 @code{memalign}, @code{posix_memalign} and @code{valloc} use whenever they
 are called.  You should define this function to look like @code{aligned_alloc};
@@ -1520,9 +1513,8 @@ are declared in @file{malloc.h}; they are an extension of the standard
 SVID/XPG version.
 @pindex malloc.h
 
-@comment malloc.h
-@comment GNU
 @deftp {Data Type} {struct mallinfo}
+@standards{GNU, malloc.h}
 This structure type is used to return information about the dynamic
 memory allocator.  It contains the following members:
 
@@ -1567,9 +1559,8 @@ space's data segment).
 @end table
 @end deftp
 
-@comment malloc.h
-@comment SVID
 @deftypefun {struct mallinfo} mallinfo (void)
+@standards{SVID, malloc.h}
 @safety{@prelim{}@mtunsafe{@mtuinit{} @mtasuconst{:mallopt}}@asunsafe{@asuinit{} @asulock{}}@acunsafe{@acuinit{} @aculock{}}}
 @c Accessing mp_.n_mmaps and mp_.max_mmapped_mem, modified with atomics
 @c but non-atomically elsewhere, may get us inconsistent results.  We
@@ -1688,9 +1679,8 @@ penalties for the program if the debugging mode is not enabled.
 @node Tracing malloc
 @subsubsection How to install the tracing functionality
 
-@comment mcheck.h
-@comment GNU
 @deftypefun void mtrace (void)
+@standards{GNU, mcheck.h}
 @safety{@prelim{}@mtunsafe{@mtsenv{} @mtasurace{:mtrace} @mtasuconst{:malloc_hooks} @mtuinit{}}@asunsafe{@asuinit{} @ascuheap{} @asucorrupt{} @asulock{}}@acunsafe{@acuinit{} @acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c Like the mcheck hooks, these are not designed with thread safety in
 @c mind, because the hook pointers are temporarily modified without
@@ -1725,9 +1715,8 @@ This function is a GNU extension and generally not available on other
 systems.  The prototype can be found in @file{mcheck.h}.
 @end deftypefun
 
-@comment mcheck.h
-@comment GNU
 @deftypefun void muntrace (void)
+@standards{GNU, mcheck.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:mtrace} @mtasuconst{:malloc_hooks} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{} @aculock{} @acsfd{}}}
 
 @c muntrace @mtasurace:mtrace @mtslocale @asucorrupt @ascuheap @acucorrupt @acsmem @aculock @acsfd
@@ -2030,9 +2019,8 @@ The utilities for manipulating obstacks are declared in the header
 file @file{obstack.h}.
 @pindex obstack.h
 
-@comment obstack.h
-@comment GNU
 @deftp {Data Type} {struct obstack}
+@standards{GNU, obstack.h}
 An obstack is represented by a data structure of type @code{struct
 obstack}.  This structure has a small fixed size; it records the status
 of the obstack and how to find the space in which objects are allocated.
@@ -2102,9 +2090,8 @@ At run time, before the program can use a @code{struct obstack} object
 as an obstack, it must initialize the obstack by calling
 @code{obstack_init}.
 
-@comment obstack.h
-@comment GNU
 @deftypefun int obstack_init (struct obstack *@var{obstack-ptr})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acsafe{@acsmem{}}}
 @c obstack_init @mtsrace:obstack-ptr @acsmem
 @c  _obstack_begin @acsmem
@@ -2146,9 +2133,8 @@ struct obstack *myobstack_ptr
 obstack_init (myobstack_ptr);
 @end smallexample
 
-@comment obstack.h
-@comment GNU
 @defvar obstack_alloc_failed_handler
+@standards{GNU, obstack.h}
 The value of this variable is a pointer to a function that
 @code{obstack} uses when @code{obstack_chunk_alloc} fails to allocate
 memory.  The default action is to print a message and abort.
@@ -2171,9 +2157,8 @@ obstack_alloc_failed_handler = &my_obstack_alloc_failed;
 The most direct way to allocate an object in an obstack is with
 @code{obstack_alloc}, which is invoked almost like @code{malloc}.
 
-@comment obstack.h
-@comment GNU
 @deftypefun {void *} obstack_alloc (struct obstack *@var{obstack-ptr}, int @var{size})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c obstack_alloc @mtsrace:obstack-ptr @acucorrupt @acsmem
 @c  obstack_blank dup @mtsrace:obstack-ptr @acucorrupt @acsmem
@@ -2209,9 +2194,8 @@ copystring (char *string)
 To allocate a block with specified contents, use the function
 @code{obstack_copy}, declared like this:
 
-@comment obstack.h
-@comment GNU
 @deftypefun {void *} obstack_copy (struct obstack *@var{obstack-ptr}, void *@var{address}, int @var{size})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c obstack_copy @mtsrace:obstack-ptr @acucorrupt @acsmem
 @c  obstack_grow dup @mtsrace:obstack-ptr @acucorrupt @acsmem
@@ -2222,9 +2206,8 @@ bytes of data starting at @var{address}.  It calls
 @code{obstack_chunk_alloc} failed.
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun {void *} obstack_copy0 (struct obstack *@var{obstack-ptr}, void *@var{address}, int @var{size})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c obstack_copy0 @mtsrace:obstack-ptr @acucorrupt @acsmem
 @c  obstack_grow0 dup @mtsrace:obstack-ptr @acucorrupt @acsmem
@@ -2258,9 +2241,8 @@ To free an object allocated in an obstack, use the function
 one object automatically frees all other objects allocated more recently
 in the same obstack.
 
-@comment obstack.h
-@comment GNU
 @deftypefun void obstack_free (struct obstack *@var{obstack-ptr}, void *@var{object})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{}}}
 @c obstack_free @mtsrace:obstack-ptr @acucorrupt
 @c  (obstack_free) @mtsrace:obstack-ptr @acucorrupt
@@ -2366,9 +2348,8 @@ While the obstack is in use for a growing object, you cannot use it for
 ordinary allocation of another object.  If you try to do so, the space
 already added to the growing object will become part of the other object.
 
-@comment obstack.h
-@comment GNU
 @deftypefun void obstack_blank (struct obstack *@var{obstack-ptr}, int @var{size})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c obstack_blank @mtsrace:obstack-ptr @acucorrupt @acsmem
 @c  _obstack_newchunk @mtsrace:obstack-ptr @acucorrupt @acsmem
@@ -2380,9 +2361,8 @@ The most basic function for adding to a growing object is
 @code{obstack_blank}, which adds space without initializing it.
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun void obstack_grow (struct obstack *@var{obstack-ptr}, void *@var{data}, int @var{size})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c obstack_grow @mtsrace:obstack-ptr @acucorrupt @acsmem
 @c  _obstack_newchunk dup @mtsrace:obstack-ptr @acucorrupt @acsmem
@@ -2393,9 +2373,8 @@ bytes of data to the growing object, copying the contents from
 @var{data}.
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun void obstack_grow0 (struct obstack *@var{obstack-ptr}, void *@var{data}, int @var{size})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c obstack_grow0 @mtsrace:obstack-ptr @acucorrupt @acsmem
 @c   (no sequence point between storing NUL and incrementing next_free)
@@ -2407,9 +2386,8 @@ This is the growing-object analogue of @code{obstack_copy0}.  It adds
 character.
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun void obstack_1grow (struct obstack *@var{obstack-ptr}, char @var{c})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c obstack_1grow @mtsrace:obstack-ptr @acucorrupt @acsmem
 @c  _obstack_newchunk dup @mtsrace:obstack-ptr @acucorrupt @acsmem
@@ -2418,9 +2396,8 @@ To add one character at a time, use the function @code{obstack_1grow}.
 It adds a single byte containing @var{c} to the growing object.
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun void obstack_ptr_grow (struct obstack *@var{obstack-ptr}, void *@var{data})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c obstack_ptr_grow @mtsrace:obstack-ptr @acucorrupt @acsmem
 @c  _obstack_newchunk dup @mtsrace:obstack-ptr @acucorrupt @acsmem
@@ -2430,9 +2407,8 @@ Adding the value of a pointer one can use the function
 containing the value of @var{data}.
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun void obstack_int_grow (struct obstack *@var{obstack-ptr}, int @var{data})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c obstack_int_grow @mtsrace:obstack-ptr @acucorrupt @acsmem
 @c  _obstack_newchunk dup @mtsrace:obstack-ptr @acucorrupt @acsmem
@@ -2442,9 +2418,8 @@ A single value of type @code{int} can be added by using the
 the growing object and initializes them with the value of @var{data}.
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun {void *} obstack_finish (struct obstack *@var{obstack-ptr})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{}}}
 @c obstack_finish @mtsrace:obstack-ptr @acucorrupt
 When you are finished growing the object, use the function
@@ -2463,9 +2438,8 @@ the object, because you can find out the length from the obstack just
 before finishing the object with the function @code{obstack_object_size},
 declared as follows:
 
-@comment obstack.h
-@comment GNU
 @deftypefun int obstack_object_size (struct obstack *@var{obstack-ptr})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acsafe{}}
 This function returns the current size of the growing object, in bytes.
 Remember to call this function @emph{before} finishing the object.
@@ -2507,9 +2481,8 @@ more efficiently, then you make the program faster.
 The function @code{obstack_room} returns the amount of room available
 in the current chunk.  It is declared as follows:
 
-@comment obstack.h
-@comment GNU
 @deftypefun int obstack_room (struct obstack *@var{obstack-ptr})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acsafe{}}
 This returns the number of bytes that can be added safely to the current
 growing object (or to an object about to be started) in obstack
@@ -2519,9 +2492,8 @@ growing object (or to an object about to be started) in obstack
 While you know there is room, you can use these fast growth functions
 for adding data to a growing object:
 
-@comment obstack.h
-@comment GNU
 @deftypefun void obstack_1grow_fast (struct obstack *@var{obstack-ptr}, char @var{c})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c obstack_1grow_fast @mtsrace:obstack-ptr @acucorrupt @acsmem
 @c   (no sequence point between copying c and incrementing next_free)
@@ -2529,9 +2501,8 @@ The function @code{obstack_1grow_fast} adds one byte containing the
 character @var{c} to the growing object in obstack @var{obstack-ptr}.
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun void obstack_ptr_grow_fast (struct obstack *@var{obstack-ptr}, void *@var{data})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acsafe{}}
 @c obstack_ptr_grow_fast @mtsrace:obstack-ptr
 The function @code{obstack_ptr_grow_fast} adds @code{sizeof (void *)}
@@ -2539,9 +2510,8 @@ bytes containing the value of @var{data} to the growing object in
 obstack @var{obstack-ptr}.
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun void obstack_int_grow_fast (struct obstack *@var{obstack-ptr}, int @var{data})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acsafe{}}
 @c obstack_int_grow_fast @mtsrace:obstack-ptr
 The function @code{obstack_int_grow_fast} adds @code{sizeof (int)} bytes
@@ -2549,9 +2519,8 @@ containing the value of @var{data} to the growing object in obstack
 @var{obstack-ptr}.
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun void obstack_blank_fast (struct obstack *@var{obstack-ptr}, int @var{size})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acsafe{}}
 @c obstack_blank_fast @mtsrace:obstack-ptr
 The function @code{obstack_blank_fast} adds @var{size} bytes to the
@@ -2609,9 +2578,8 @@ Here are functions that provide information on the current status of
 allocation in an obstack.  You can use them to learn about an object while
 still growing it.
 
-@comment obstack.h
-@comment GNU
 @deftypefun {void *} obstack_base (struct obstack *@var{obstack-ptr})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acsafe{}}
 This function returns the tentative address of the beginning of the
 currently growing object in @var{obstack-ptr}.  If you finish the object
@@ -2623,9 +2591,8 @@ allocate will start (once again assuming it fits in the current
 chunk).
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun {void *} obstack_next_free (struct obstack *@var{obstack-ptr})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acsafe{}}
 This function returns the address of the first free byte in the current
 chunk of obstack @var{obstack-ptr}.  This is the end of the currently
@@ -2633,9 +2600,8 @@ growing object.  If no object is growing, @code{obstack_next_free}
 returns the same value as @code{obstack_base}.
 @end deftypefun
 
-@comment obstack.h
-@comment GNU
 @deftypefun int obstack_object_size (struct obstack *@var{obstack-ptr})
+@standards{GNU, obstack.h}
 @c dup
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acsafe{}}
 This function returns the size in bytes of the currently growing object.
@@ -2659,9 +2625,8 @@ To access an obstack's alignment boundary, use the macro
 @code{obstack_alignment_mask}, whose function prototype looks like
 this:
 
-@comment obstack.h
-@comment GNU
 @deftypefn Macro int obstack_alignment_mask (struct obstack *@var{obstack-ptr})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The value is a bit mask; a bit that is 1 indicates that the corresponding
 bit in the address of an object should be 0.  The mask value should be one
@@ -2727,9 +2692,8 @@ power of 2.  The default chunk size, 4096, was chosen because it is long
 enough to satisfy many typical requests on the obstack yet short enough
 not to waste too much memory in the portion of the last chunk not yet used.
 
-@comment obstack.h
-@comment GNU
 @deftypefn Macro int obstack_chunk_size (struct obstack *@var{obstack-ptr})
+@standards{GNU, obstack.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This returns the chunk size of the given obstack.
 @end deftypefn
@@ -2847,9 +2811,9 @@ The prototype for @code{alloca} is in @file{stdlib.h}.  This function is
 a BSD extension.
 @pindex stdlib.h
 
-@comment stdlib.h
-@comment GNU, BSD
 @deftypefun {void *} alloca (size_t @var{size})
+@standards{GNU, stdlib.h}
+@standards{BSD, stdlib.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The return value of @code{alloca} is the address of a block of @var{size}
 bytes of memory, allocated in the stack frame of the calling function.
@@ -3030,9 +2994,8 @@ are interfaces to a @glibcadj{} memory allocator that uses the
 functions below itself.  The functions below are simple interfaces to
 system calls.
 
-@comment unistd.h
-@comment BSD
 @deftypefun int brk (void *@var{addr})
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 @code{brk} sets the high end of the calling process' data segment to
@@ -3073,9 +3036,8 @@ exceed the process' data storage limit.
 @end deftypefun
 
 
-@comment unistd.h
-@comment BSD
 @deftypefun void *sbrk (ptrdiff_t @var{delta})
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 This function is the same as @code{brk} except that you specify the new
@@ -3214,9 +3176,8 @@ memory page in bytes.  It requires that when the @code{mlockall} and
 define the macro @code{_POSIX_MEMLOCK}.  @Theglibc{} conforms to
 this requirement.
 
-@comment sys/mman.h
-@comment POSIX.1b
 @deftypefun int mlock (const void *@var{addr}, size_t @var{len})
+@standards{POSIX.1b, sys/mman.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 @code{mlock} locks a range of the calling process' virtual pages.
@@ -3268,9 +3229,8 @@ wouldn't know what address to tell @code{mlock}.
 
 @end deftypefun
 
-@comment sys/mman.h
-@comment POSIX.1b
 @deftypefun int munlock (const void *@var{addr}, size_t @var{len})
+@standards{POSIX.1b, sys/mman.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 @code{munlock} unlocks a range of the calling process' virtual pages.
@@ -3281,9 +3241,8 @@ failure.
 
 @end deftypefun
 
-@comment sys/mman.h
-@comment POSIX.1b
 @deftypefun int mlockall (int @var{flags})
+@standards{POSIX.1b, sys/mman.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 @code{mlockall} locks all the pages in a process' virtual memory address
@@ -3358,9 +3317,8 @@ with @code{munlockall} and @code{munlock}.
 @end deftypefun
 
 
-@comment sys/mman.h
-@comment POSIX.1b
 @deftypefun int munlockall (void)
+@standards{POSIX.1b, sys/mman.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 @code{munlockall} unlocks every page in the calling process' virtual

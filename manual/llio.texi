@@ -79,9 +79,8 @@ declared in @file{unistd.h}.
 @pindex unistd.h
 @pindex fcntl.h
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypefun int open (const char *@var{filename}, int @var{flags}[, mode_t @var{mode}])
+@standards{POSIX.1, fcntl.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 The @code{open} function creates and returns a new file descriptor for
 the file named by @var{filename}.  Initially, the file position
@@ -166,9 +165,8 @@ The @code{open} function is the underlying primitive for the @code{fopen}
 and @code{freopen} functions, that create streams.
 @end deftypefun
 
-@comment fcntl.h
-@comment Unix98
 @deftypefun int open64 (const char *@var{filename}, int @var{flags}[, mode_t @var{mode}])
+@standards{Unix98, fcntl.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 This function is similar to @code{open}.  It returns a file descriptor
 which can be used to access the file named by @var{filename}.  The only
@@ -181,9 +179,8 @@ new, extended API using 64 bit file sizes and offsets transparently
 replaces the old API.
 @end deftypefun
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypefn {Obsolete function} int creat (const char *@var{filename}, mode_t @var{mode})
+@standards{POSIX.1, fcntl.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 This function is obsolete.  The call:
 
@@ -206,9 +203,8 @@ functions to use files up to @twoexp{63} in size and offset from
 since all of the low-level file handling functions are equally replaced.
 @end deftypefn
 
-@comment fcntl.h
-@comment Unix98
 @deftypefn {Obsolete function} int creat64 (const char *@var{filename}, mode_t @var{mode})
+@standards{Unix98, fcntl.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 This function is similar to @code{creat}.  It returns a file descriptor
 which can be used to access the file named by @var{filename}.  The only
@@ -224,9 +220,8 @@ new, extended API using 64 bit file sizes and offsets transparently
 replaces the old API.
 @end deftypefn
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int close (int @var{filedes})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 The function @code{close} closes the file descriptor @var{filedes}.
 Closing a file has the following consequences:
@@ -297,18 +292,16 @@ output operations on file descriptors: @code{read}, @code{write}, and
 @file{unistd.h}.
 @pindex unistd.h
 
-@comment unistd.h
-@comment POSIX.1
 @deftp {Data Type} ssize_t
+@standards{POSIX.1, unistd.h}
 This data type is used to represent the sizes of blocks that can be
 read or written in a single operation.  It is similar to @code{size_t},
 but must be a signed type.
 @end deftp
 
 @cindex reading from a file descriptor
-@comment unistd.h
-@comment POSIX.1
 @deftypefun ssize_t read (int @var{filedes}, void *@var{buffer}, size_t @var{size})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{read} function reads up to @var{size} bytes from the file
 with descriptor @var{filedes}, storing the results in the @var{buffer}.
@@ -402,9 +395,8 @@ The @code{read} function is the underlying primitive for all of the
 functions that read from streams, such as @code{fgetc}.
 @end deftypefun
 
-@comment unistd.h
-@comment Unix98
 @deftypefun ssize_t pread (int @var{filedes}, void *@var{buffer}, size_t @var{size}, off_t @var{offset})
+@standards{Unix98, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is usually a safe syscall.  The sysdeps/posix fallback emulation
 @c is not MT-Safe because it uses lseek, read and lseek back, but is it
@@ -441,9 +433,8 @@ The function is an extension defined in the Unix Single Specification
 version 2.
 @end deftypefun
 
-@comment unistd.h
-@comment Unix98
 @deftypefun ssize_t pread64 (int @var{filedes}, void *@var{buffer}, size_t @var{size}, off64_t @var{offset})
+@standards{Unix98, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is usually a safe syscall.  The sysdeps/posix fallback emulation
 @c is not MT-Safe because it uses lseek64, read and lseek64 back, but is
@@ -462,9 +453,8 @@ When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 @end deftypefun
 
 @cindex writing to a file descriptor
-@comment unistd.h
-@comment POSIX.1
 @deftypefun ssize_t write (int @var{filedes}, const void *@var{buffer}, size_t @var{size})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Some say write is thread-unsafe on Linux without O_APPEND.  In the VFS layer
 @c the vfs_write() does no locking around the acquisition of a file offset and
@@ -603,9 +593,8 @@ The @code{write} function is the underlying primitive for all of the
 functions that write to streams, such as @code{fputc}.
 @end deftypefun
 
-@comment unistd.h
-@comment Unix98
 @deftypefun ssize_t pwrite (int @var{filedes}, const void *@var{buffer}, size_t @var{size}, off_t @var{offset})
+@standards{Unix98, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is usually a safe syscall.  The sysdeps/posix fallback emulation
 @c is not MT-Safe because it uses lseek, write and lseek back, but is it
@@ -646,9 +635,8 @@ The function is an extension defined in the Unix Single Specification
 version 2.
 @end deftypefun
 
-@comment unistd.h
-@comment Unix98
 @deftypefun ssize_t pwrite64 (int @var{filedes}, const void *@var{buffer}, size_t @var{size}, off64_t @var{offset})
+@standards{Unix98, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is usually a safe syscall.  The sysdeps/posix fallback emulation
 @c is not MT-Safe because it uses lseek64, write and lseek64 back, but
@@ -666,9 +654,8 @@ When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
 @code{pwrite} and so transparently replaces the 32 bit interface.
 @end deftypefun
 
-@comment sys/uio.h
-@comment BSD
 @deftypefun ssize_t preadv (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off_t @var{offset})
+@standards{BSD, sys/uio.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is a syscall for Linux 3.2 for all architectures but microblaze
 @c (which was added on 3.15).  The sysdeps/posix fallback emulation
@@ -691,9 +678,8 @@ indicating end-of-file, or @math{-1} indicating an error.  The possible
 errors are the same as in @code{readv} and @code{pread}.
 @end deftypefun
 
-@comment unistd.h
-@comment BSD
 @deftypefun ssize_t preadv64 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off64_t @var{offset})
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is a syscall for Linux 3.2 for all architectures but microblaze
 @c (which was added on 3.15).  The sysdeps/posix fallback emulation
@@ -713,9 +699,8 @@ When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
 @code{preadv} and so transparently replaces the 32 bit interface.
 @end deftypefun
 
-@comment sys/uio.h
-@comment BSD
 @deftypefun ssize_t pwritev (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off_t @var{offset})
+@standards{BSD, sys/uio.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is a syscall for Linux 3.2 for all architectures but microblaze
 @c (which was added on 3.15).  The sysdeps/posix fallback emulation
@@ -742,9 +727,8 @@ indicating end-of-file, or @math{-1} indicating an error.  The possible
 errors are the same as in @code{writev} and @code{pwrite}.
 @end deftypefun
 
-@comment unistd.h
-@comment BSD
 @deftypefun ssize_t pwritev64 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off64_t @var{offset})
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is a syscall for Linux 3.2 for all architectures but microblaze
 @c (which was added on 3.15).  The sysdeps/posix fallback emulation
@@ -764,9 +748,8 @@ When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
 @code{pwritev} and so transparently replaces the 32 bit interface.
 @end deftypefun
 
-@comment sys/uio.h
-@comment GNU
 @deftypefun ssize_t preadv2 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off_t @var{offset}, int @var{flags})
+@standards{GNU, sys/uio.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is a syscall for Linux v4.6.  The sysdeps/posix fallback emulation
 @c is also MT-Safe since it calls preadv.
@@ -810,9 +793,8 @@ An unsupported @var{flags} was used.
 
 @end deftypefun
 
-@comment unistd.h
-@comment GNU
 @deftypefun ssize_t preadv64v2 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off64_t @var{offset}, int @var{flags})
+@standards{GNU, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is a syscall for Linux v4.6.  The sysdeps/posix fallback emulation
 @c is also MT-Safe since it calls preadv.
@@ -831,9 +813,8 @@ When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
 @end deftypefun
 
 
-@comment sys/uio.h
-@comment GNU
 @deftypefun ssize_t pwritev2 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off_t @var{offset}, int @var{flags})
+@standards{GNU, sys/uio.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is a syscall for Linux v4.6.  The sysdeps/posix fallback emulation
 @c is also MT-Safe since it calls pwritev.
@@ -853,9 +834,8 @@ indicating end-of-file, or @math{-1} indicating an error.  The possible
 errors are the same as in @code{preadv2}.
 @end deftypefun
 
-@comment unistd.h
-@comment GNU
 @deftypefun ssize_t pwritev64v2 (int @var{fd}, const struct iovec *@var{iov}, int @var{iovcnt}, off64_t @var{offset}, int @var{flags})
+@standards{GNU, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is a syscall for Linux v4.6.  The sysdeps/posix fallback emulation
 @c is also MT-Safe since it calls pwritev.
@@ -889,9 +869,8 @@ To read the current file position value from a descriptor, use
 @cindex file positioning on a file descriptor
 @cindex positioning a file descriptor
 @cindex seeking on a file descriptor
-@comment unistd.h
-@comment POSIX.1
 @deftypefun off_t lseek (int @var{filedes}, off_t @var{offset}, int @var{whence})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{lseek} function is used to change the file position of the
 file with descriptor @var{filedes}.
@@ -979,9 +958,8 @@ The @code{lseek} function is the underlying primitive for the
 descriptors.
 @end deftypefun
 
-@comment unistd.h
-@comment Unix98
 @deftypefun off64_t lseek64 (int @var{filedes}, off64_t @var{offset}, int @var{whence})
+@standards{Unix98, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to the @code{lseek} function.  The difference
 is that the @var{offset} parameter is of type @code{off64_t} instead of
@@ -1043,9 +1021,8 @@ will read four characters starting with the 1024'th character of
 @file{foo}, and then four more characters starting with the 1028'th
 character.
 
-@comment sys/types.h
-@comment POSIX.1
 @deftp {Data Type} off_t
+@standards{POSIX.1, sys/types.h}
 This is a signed integer type used to represent file sizes.  In
 @theglibc{}, this type is no narrower than @code{int}.
 
@@ -1053,9 +1030,8 @@ If the source is compiled with @code{_FILE_OFFSET_BITS == 64} this type
 is transparently replaced by @code{off64_t}.
 @end deftp
 
-@comment sys/types.h
-@comment Unix98
 @deftp {Data Type} off64_t
+@standards{Unix98, sys/types.h}
 This type is used similar to @code{off_t}.  The difference is that even
 on 32 bit machines, where the @code{off_t} type would have 32 bits,
 @code{off64_t} has 64 bits and so is able to address files up to
@@ -1092,9 +1068,8 @@ an existing stream with the @code{fileno} function.  These functions are
 declared in the header file @file{stdio.h}.
 @pindex stdio.h
 
-@comment stdio.h
-@comment POSIX.1
 @deftypefun {FILE *} fdopen (int @var{filedes}, const char *@var{opentype})
+@standards{POSIX.1, stdio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acsmem{} @aculock{}}}
 The @code{fdopen} function returns a new stream for the file descriptor
 @var{filedes}.
@@ -1121,9 +1096,8 @@ for file descriptors do not permit the access specified by
 For an example showing the use of the @code{fdopen} function,
 see @ref{Creating a Pipe}.
 
-@comment stdio.h
-@comment POSIX.1
 @deftypefun int fileno (FILE *@var{stream})
+@standards{POSIX.1, stdio.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function returns the file descriptor associated with the stream
 @var{stream}.  If an error is detected (for example, if the @var{stream}
@@ -1131,9 +1105,8 @@ is not valid) or if @var{stream} does not do I/O to a file,
 @code{fileno} returns @math{-1}.
 @end deftypefun
 
-@comment stdio.h
-@comment GNU
 @deftypefun int fileno_unlocked (FILE *@var{stream})
+@standards{GNU, stdio.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fileno_unlocked} function is equivalent to the @code{fileno}
 function except that it does not implicitly lock the stream if the state
@@ -1150,23 +1123,20 @@ file descriptors belonging to the standard streams @code{stdin},
 @pindex unistd.h
 
 @vtable @code
-@comment unistd.h
-@comment POSIX.1
 @item STDIN_FILENO
+@standards{POSIX.1, unistd.h}
 This macro has value @code{0}, which is the file descriptor for
 standard input.
 @cindex standard input file descriptor
 
-@comment unistd.h
-@comment POSIX.1
 @item STDOUT_FILENO
+@standards{POSIX.1, unistd.h}
 This macro has value @code{1}, which is the file descriptor for
 standard output.
 @cindex standard output file descriptor
 
-@comment unistd.h
-@comment POSIX.1
 @item STDERR_FILENO
+@standards{POSIX.1, unistd.h}
 This macro has value @code{2}, which is the file descriptor for
 standard error output.
 @end vtable
@@ -1321,9 +1291,8 @@ primitives, so they are not a portability threat.  They are defined in
 These functions are controlled with arrays of @code{iovec} structures,
 which describe the location and size of each buffer.
 
-@comment sys/uio.h
-@comment BSD
 @deftp {Data Type} {struct iovec}
+@standards{BSD, sys/uio.h}
 
 The @code{iovec} structure describes a buffer.  It contains two fields:
 
@@ -1338,9 +1307,8 @@ Contains the length of the buffer.
 @end table
 @end deftp
 
-@comment sys/uio.h
-@comment BSD
 @deftypefun ssize_t readv (int @var{filedes}, const struct iovec *@var{vector}, int @var{count})
+@standards{BSD, sys/uio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 @c The fallback sysdeps/posix implementation, used even on GNU/Linux
 @c with old kernels that lack a full readv/writev implementation, may
@@ -1361,9 +1329,8 @@ errors are the same as in @code{read}.
 
 @end deftypefun
 
-@comment sys/uio.h
-@comment BSD
 @deftypefun ssize_t writev (int @var{filedes}, const struct iovec *@var{vector}, int @var{count})
+@standards{BSD, sys/uio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 @c The fallback sysdeps/posix implementation, used even on GNU/Linux
 @c with old kernels that lack a full readv/writev implementation, may
@@ -1426,9 +1393,8 @@ size_t page_size = (size_t) sysconf (_SC_PAGESIZE);
 @noindent
 These functions are declared in @file{sys/mman.h}.
 
-@comment sys/mman.h
-@comment POSIX
 @deftypefun {void *} mmap (void *@var{address}, size_t @var{length}, int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
+@standards{POSIX, sys/mman.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 The @code{mmap} function creates a new mapping, connected to bytes
@@ -1546,9 +1512,8 @@ The file is on a filesystem that doesn't support mapping.
 
 @end deftypefun
 
-@comment sys/mman.h
-@comment LFS
 @deftypefun {void *} mmap64 (void *@var{address}, size_t @var{length}, int @var{protect}, int @var{flags}, int @var{filedes}, off64_t @var{offset})
+@standards{LFS, sys/mman.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c The page_shift auto detection when MMAP2_PAGE_SHIFT is -1 (it never
 @c is) would be thread-unsafe.
@@ -1565,9 +1530,8 @@ new, extended API using 64 bit file sizes and offsets transparently
 replaces the old API.
 @end deftypefun
 
-@comment sys/mman.h
-@comment POSIX
 @deftypefun int munmap (void *@var{addr}, size_t @var{length})
+@standards{POSIX, sys/mman.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 @code{munmap} removes any memory maps from (@var{addr}) to (@var{addr} +
@@ -1592,9 +1556,8 @@ aligned.
 
 @end deftypefun
 
-@comment sys/mman.h
-@comment POSIX
 @deftypefun int msync (void *@var{address}, size_t @var{length}, int @var{flags})
+@standards{POSIX, sys/mman.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 When using shared mappings, the kernel can write the file at any time
@@ -1640,9 +1603,8 @@ There is no existing mapping in at least part of the given region.
 
 @end deftypefun
 
-@comment sys/mman.h
-@comment GNU
 @deftypefun {void *} mremap (void *@var{address}, size_t @var{length}, size_t @var{new_length}, int @var{flag})
+@standards{GNU, sys/mman.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 This function can be used to change the size of an existing memory
@@ -1689,9 +1651,8 @@ not support mapping at all.  Thus, programs using @code{mmap} should
 have a fallback method to use should it fail. @xref{Mmap,,,standards,GNU
 Coding Standards}.
 
-@comment sys/mman.h
-@comment POSIX
 @deftypefun int madvise (void *@var{addr}, size_t @var{length}, int @var{advice})
+@standards{POSIX, sys/mman.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 This function can be used to provide the system with @var{advice} about
@@ -1759,9 +1720,8 @@ There is no existing mapping in at least part of the given region.
 @end table
 @end deftypefun
 
-@comment sys/mman.h
-@comment POSIX
 @deftypefn Function int shm_open (const char *@var{name}, int @var{oflag}, mode_t @var{mode})
+@standards{POSIX, sys/mman.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asuinit{} @ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c shm_open @mtslocale @asuinit @ascuheap @asulock @aculock @acsmem @acsfd
 @c  libc_once(where_is_shmfs) @mtslocale @asuinit @ascuheap @asulock @aculock @acsmem @acsfd
@@ -1848,16 +1808,14 @@ The file descriptor sets for the @code{select} function are specified
 as @code{fd_set} objects.  Here is the description of the data type
 and some macros for manipulating these objects.
 
-@comment sys/types.h
-@comment BSD
 @deftp {Data Type} fd_set
+@standards{BSD, sys/types.h}
 The @code{fd_set} data type represents file descriptor sets for the
 @code{select} function.  It is actually a bit array.
 @end deftp
 
-@comment sys/types.h
-@comment BSD
 @deftypevr Macro int FD_SETSIZE
+@standards{BSD, sys/types.h}
 The value of this macro is the maximum number of file descriptors that a
 @code{fd_set} object can hold information about.  On systems with a
 fixed maximum number, @code{FD_SETSIZE} is at least that number.  On
@@ -1868,17 +1826,15 @@ descriptor with a value as high as @code{FD_SETSIZE}, you cannot put
 that descriptor into an @code{fd_set}.
 @end deftypevr
 
-@comment sys/types.h
-@comment BSD
 @deftypefn Macro void FD_ZERO (fd_set *@var{set})
+@standards{BSD, sys/types.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:set}}@assafe{}@acsafe{}}
 This macro initializes the file descriptor set @var{set} to be the
 empty set.
 @end deftypefn
 
-@comment sys/types.h
-@comment BSD
 @deftypefn Macro void FD_SET (int @var{filedes}, fd_set *@var{set})
+@standards{BSD, sys/types.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:set}}@assafe{}@acsafe{}}
 @c Setting a bit isn't necessarily atomic, so there's a potential race
 @c here if set is not used exclusively.
@@ -1888,9 +1844,8 @@ The @var{filedes} parameter must not have side effects since it is
 evaluated more than once.
 @end deftypefn
 
-@comment sys/types.h
-@comment BSD
 @deftypefn Macro void FD_CLR (int @var{filedes}, fd_set *@var{set})
+@standards{BSD, sys/types.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:set}}@assafe{}@acsafe{}}
 @c Setting a bit isn't necessarily atomic, so there's a potential race
 @c here if set is not used exclusively.
@@ -1900,9 +1855,8 @@ The @var{filedes} parameter must not have side effects since it is
 evaluated more than once.
 @end deftypefn
 
-@comment sys/types.h
-@comment BSD
 @deftypefn Macro int FD_ISSET (int @var{filedes}, const fd_set *@var{set})
+@standards{BSD, sys/types.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:set}}@assafe{}@acsafe{}}
 This macro returns a nonzero value (true) if @var{filedes} is a member
 of the file descriptor set @var{set}, and zero (false) otherwise.
@@ -1913,9 +1867,8 @@ evaluated more than once.
 
 Next, here is the description of the @code{select} function itself.
 
-@comment sys/types.h
-@comment BSD
 @deftypefun int select (int @var{nfds}, fd_set *@var{read-fds}, fd_set *@var{write-fds}, fd_set *@var{except-fds}, struct timeval *@var{timeout})
+@standards{BSD, sys/types.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:read-fds} @mtsrace{:write-fds} @mtsrace{:except-fds}}@assafe{}@acsafe{}}
 @c The select syscall is preferred, but pselect6 may be used instead,
 @c which requires converting timeout to a timespec and back.  The
@@ -2019,9 +1972,8 @@ In situations where synchronization points are necessary, you can use
 special functions which ensure that all operations finish before
 they return.
 
-@comment unistd.h
-@comment X/Open
 @deftypefun void sync (void)
+@standards{X/Open, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 A call to this function will not return as long as there is data which
 has not been written to the device.  All dirty buffers in the kernel will
@@ -2035,9 +1987,8 @@ Programs more often want to ensure that data written to a given file is
 committed, rather than all data in the system.  For this, @code{sync} is overkill.
 
 
-@comment unistd.h
-@comment POSIX
 @deftypefun int fsync (int @var{fildes})
+@standards{POSIX, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fsync} function can be used to make sure all data associated with
 the open file @var{fildes} is written to the device associated with the
@@ -2073,9 +2024,8 @@ Meta-information, like the modification time etc., are not that important
 and leaving such information uncommitted does not prevent a successful
 recovery of the file in case of a problem.
 
-@comment unistd.h
-@comment POSIX
 @deftypefun int fdatasync (int @var{fildes})
+@standards{POSIX, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 When a call to the @code{fdatasync} function returns, it is ensured
 that all of the file data is written to the device.  For all pending I/O
@@ -2124,9 +2074,8 @@ asynchronous I/O operations are controlled using a data structure named
 @code{struct aiocb} (@dfn{AIO control block}).  It is defined in
 @file{aio.h} as follows.
 
-@comment aio.h
-@comment POSIX.1b
 @deftp {Data Type} {struct aiocb}
+@standards{POSIX.1b, aio.h}
 The POSIX.1b standard mandates that the @code{struct aiocb} structure
 contains at least the members described in the following table.  There
 might be more elements which are used by the implementation, but
@@ -2207,9 +2156,8 @@ defined which replaces the types of the appropriate members with larger
 types but otherwise is equivalent to @code{struct aiocb}.  Particularly,
 all member names are the same.
 
-@comment aio.h
-@comment POSIX.1b
 @deftp {Data Type} {struct aiocb64}
+@standards{POSIX.1b, aio.h}
 @table @code
 @item int aio_fildes
 This element specifies the file descriptor which is used for the
@@ -2275,9 +2223,8 @@ aiocb64}, since the LFS transparently replaces the old interface.
 @node Asynchronous Reads/Writes
 @subsection Asynchronous Read and Write Operations
 
-@comment aio.h
-@comment POSIX.1b
 @deftypefun int aio_read (struct aiocb *@var{aiocbp})
+@standards{POSIX.1b, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 @c Calls aio_enqueue_request.
 @c aio_enqueue_request @asulock @ascuheap @aculock @acsmem
@@ -2492,9 +2439,8 @@ function is in fact @code{aio_read64} since the LFS interface transparently
 replaces the normal implementation.
 @end deftypefun
 
-@comment aio.h
-@comment Unix98
 @deftypefun int aio_read64 (struct aiocb64 *@var{aiocbp})
+@standards{Unix98, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 This function is similar to the @code{aio_read} function.  The only
 difference is that on @w{32 bit} machines, the file descriptor should
@@ -2511,9 +2457,8 @@ replaces the interface for small files on 32 bit machines.
 To write data asynchronously to a file, there exists an equivalent pair
 of functions with a very similar interface.
 
-@comment aio.h
-@comment POSIX.1b
 @deftypefun int aio_write (struct aiocb *@var{aiocbp})
+@standards{POSIX.1b, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 This function initiates an asynchronous write operation.  The function
 call immediately returns after the operation was enqueued or if before
@@ -2578,9 +2523,8 @@ function is in fact @code{aio_write64} since the LFS interface transparently
 replaces the normal implementation.
 @end deftypefun
 
-@comment aio.h
-@comment Unix98
 @deftypefun int aio_write64 (struct aiocb64 *@var{aiocbp})
+@standards{Unix98, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 This function is similar to the @code{aio_write} function.  The only
 difference is that on @w{32 bit} machines the file descriptor should
@@ -2600,9 +2544,8 @@ operation at a time, and which can handle freely mixed read and write
 operations.  It is therefore similar to a combination of @code{readv} and
 @code{writev}.
 
-@comment aio.h
-@comment POSIX.1b
 @deftypefun int lio_listio (int @var{mode}, struct aiocb *const @var{list}[], int @var{nent}, struct sigevent *@var{sig})
+@standards{POSIX.1b, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 @c Call lio_listio_internal, that takes the aio_requests_mutex lock and
 @c enqueues each request.  Then, it waits for notification or prepares
@@ -2689,9 +2632,8 @@ function is in fact @code{lio_listio64} since the LFS interface
 transparently replaces the normal implementation.
 @end deftypefun
 
-@comment aio.h
-@comment Unix98
 @deftypefun int lio_listio64 (int @var{mode}, struct aiocb64 *const @var{list}[], int @var{nent}, struct sigevent *@var{sig})
+@standards{Unix98, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 This function is similar to the @code{lio_listio} function.  The only
 difference is that on @w{32 bit} machines, the file descriptor should
@@ -2718,9 +2660,8 @@ mode is @code{LIO_NOWAIT}), one sometimes needs to know whether a
 specific request already terminated and if so, what the result was.
 The following two functions allow you to get this kind of information.
 
-@comment aio.h
-@comment POSIX.1b
 @deftypefun int aio_error (const struct aiocb *@var{aiocbp})
+@standards{POSIX.1b, aio.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function determines the error state of the request described by the
 @code{struct aiocb} variable pointed to by @var{aiocbp}.  If the
@@ -2740,9 +2681,8 @@ function is in fact @code{aio_error64} since the LFS interface
 transparently replaces the normal implementation.
 @end deftypefun
 
-@comment aio.h
-@comment Unix98
 @deftypefun int aio_error64 (const struct aiocb64 *@var{aiocbp})
+@standards{Unix98, aio.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to @code{aio_error} with the only difference
 that the argument is a reference to a variable of type @code{struct
@@ -2754,9 +2694,8 @@ transparently replaces the interface for small files on 32 bit
 machines.
 @end deftypefun
 
-@comment aio.h
-@comment POSIX.1b
 @deftypefun ssize_t aio_return (struct aiocb *@var{aiocbp})
+@standards{POSIX.1b, aio.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function can be used to retrieve the return status of the operation
 carried out by the request described in the variable pointed to by
@@ -2778,9 +2717,8 @@ function is in fact @code{aio_return64} since the LFS interface
 transparently replaces the normal implementation.
 @end deftypefun
 
-@comment aio.h
-@comment Unix98
 @deftypefun ssize_t aio_return64 (struct aiocb64 *@var{aiocbp})
+@standards{Unix98, aio.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to @code{aio_return} with the only difference
 that the argument is a reference to a variable of type @code{struct
@@ -2807,9 +2745,8 @@ The @code{aio_fsync} and @code{aio_fsync64} functions are only available
 if the symbol @code{_POSIX_SYNCHRONIZED_IO} is defined in @file{unistd.h}.
 
 @cindex synchronizing
-@comment aio.h
-@comment POSIX.1b
 @deftypefun int aio_fsync (int @var{op}, struct aiocb *@var{aiocbp})
+@standards{POSIX.1b, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 @c After fcntl to check that the FD is open, it calls
 @c aio_enqueue_request.
@@ -2857,9 +2794,8 @@ function is in fact @code{aio_fsync64} since the LFS interface
 transparently replaces the normal implementation.
 @end deftypefun
 
-@comment aio.h
-@comment Unix98
 @deftypefun int aio_fsync64 (int @var{op}, struct aiocb64 *@var{aiocbp})
+@standards{Unix98, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 This function is similar to @code{aio_fsync} with the only difference
 that the argument is a reference to a variable of type @code{struct
@@ -2884,9 +2820,8 @@ interrupted by a notification since the new client will not be handled
 before the current client is served.  For situations like this
 @code{aio_suspend} should be used.
 
-@comment aio.h
-@comment POSIX.1b
 @deftypefun int aio_suspend (const struct aiocb *const @var{list}[], int @var{nent}, const struct timespec *@var{timeout})
+@standards{POSIX.1b, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c Take aio_requests_mutex, set up waitlist and requestlist, wait
 @c for completion or timeout, and release the mutex.
@@ -2925,9 +2860,8 @@ function is in fact @code{aio_suspend64} since the LFS interface
 transparently replaces the normal implementation.
 @end deftypefun
 
-@comment aio.h
-@comment Unix98
 @deftypefun int aio_suspend64 (const struct aiocb64 *const @var{list}[], int @var{nent}, const struct timespec *@var{timeout})
+@standards{Unix98, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 This function is similar to @code{aio_suspend} with the only difference
 that the argument is a reference to a variable of type @code{struct
@@ -2953,9 +2887,8 @@ is not capable of forcing the cancellation of the request.  It is up to the
 implementation to decide whether it is possible to cancel the operation
 or not.  Therefore using this function is merely a hint.
 
-@comment aio.h
-@comment POSIX.1b
 @deftypefun int aio_cancel (int @var{fildes}, struct aiocb *@var{aiocbp})
+@standards{POSIX.1b, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 @c After fcntl to check the fd is open, hold aio_requests_mutex, call
 @c aio_find_req_fd, aio_remove_request, then aio_notify and
@@ -3010,9 +2943,8 @@ function is in fact @code{aio_cancel64} since the LFS interface
 transparently replaces the normal implementation.
 @end deftypefun
 
-@comment aio.h
-@comment Unix98
 @deftypefun int aio_cancel64 (int @var{fildes}, struct aiocb64 *@var{aiocbp})
+@standards{Unix98, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 This function is similar to @code{aio_cancel} with the only difference
 that the argument is a reference to a variable of type @code{struct
@@ -3038,9 +2970,8 @@ limitations, hard limitations are something best avoided
 in @theglibc{}.  Therefore, @theglibc{} provides a means
 for tuning the AIO implementation according to the individual use.
 
-@comment aio.h
-@comment GNU
 @deftp {Data Type} {struct aioinit}
+@standards{GNU, aio.h}
 This data type is used to pass the configuration or tunable parameters
 to the implementation.  The program has to initialize the members of
 this struct and pass it to the implementation using the @code{aio_init}
@@ -3066,9 +2997,8 @@ Unused.
 @end table
 @end deftp
 
-@comment aio.h
-@comment GNU
 @deftypefun void aio_init (const struct aioinit *@var{init})
+@standards{GNU, aio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c All changes to global objects are guarded by aio_requests_mutex.
 This function must be called before any other AIO function.  Calling it
@@ -3102,9 +3032,8 @@ various flags that are used with it are declared in the header file
 function; see @ref{Opening and Closing Files}.
 @pindex fcntl.h
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypefun int fcntl (int @var{filedes}, int @var{command}, @dots{})
+@standards{POSIX.1, fcntl.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fcntl} function performs the operation specified by
 @var{command} on the file descriptor @var{filedes}.  Some commands
@@ -3197,18 +3126,16 @@ The @code{fcntl} function and flags are declared in @file{fcntl.h},
 while prototypes for @code{dup} and @code{dup2} are in the header file
 @file{unistd.h}.
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int dup (int @var{old})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function copies descriptor @var{old} to the first available
 descriptor number (the first number not currently open).  It is
 equivalent to @code{fcntl (@var{old}, F_DUPFD, 0)}.
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int dup2 (int @var{old}, int @var{new})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function copies the descriptor @var{old} to descriptor number
 @var{new}.
@@ -3231,9 +3158,8 @@ middle of calling @code{dup2} at which @var{new} is closed and not yet a
 duplicate of @var{old}.
 @end deftypefun
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int F_DUPFD
+@standards{POSIX.1, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
 copy the file descriptor given as the first argument.
 
@@ -3321,9 +3247,8 @@ The symbols in this section are defined in the header file
 @file{fcntl.h}.
 @pindex fcntl.h
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int F_GETFD
+@standards{POSIX.1, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should return the file descriptor flags associated
 with the @var{filedes} argument.
@@ -3342,9 +3267,8 @@ The @var{filedes} argument is invalid.
 @end deftypevr
 
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int F_SETFD
+@standards{POSIX.1, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set the file descriptor flags associated with the
 @var{filedes} argument.  This requires a third @code{int} argument to
@@ -3364,9 +3288,8 @@ The following macro is defined for use as a file descriptor flag with
 the @code{fcntl} function.  The value is an integer constant usable
 as a bit mask value.
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int FD_CLOEXEC
+@standards{POSIX.1, fcntl.h}
 @cindex close-on-exec (file descriptor flag)
 This flag specifies that the file descriptor should be closed when
 an @code{exec} function is invoked; see @ref{Executing a File}.  When
@@ -3453,21 +3376,18 @@ writing, or both.  (On @gnuhurdsystems{}, they can also allow none of these,
 and allow execution of the file as a program.)  The access modes are chosen
 when the file is opened, and never change.
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int O_RDONLY
+@standards{POSIX.1, fcntl.h}
 Open the file for read access.
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int O_WRONLY
+@standards{POSIX.1, fcntl.h}
 Open the file for write access.
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int O_RDWR
+@standards{POSIX.1, fcntl.h}
 Open the file for both reading and writing.
 @end deftypevr
 
@@ -3483,21 +3403,18 @@ access modes.  These names are preferred when writing GNU-specific code.
 But most programs will want to be portable to other POSIX.1 systems and
 should use the POSIX.1 names above instead.
 
-@comment fcntl.h (optional)
-@comment GNU
 @deftypevr Macro int O_READ
+@standards{GNU, fcntl.h (optional)}
 Open the file for reading.  Same as @code{O_RDONLY}; only defined on GNU.
 @end deftypevr
 
-@comment fcntl.h (optional)
-@comment GNU
 @deftypevr Macro int O_WRITE
+@standards{GNU, fcntl.h (optional)}
 Open the file for writing.  Same as @code{O_WRONLY}; only defined on GNU.
 @end deftypevr
 
-@comment fcntl.h (optional)
-@comment GNU
 @deftypevr Macro int O_EXEC
+@standards{GNU, fcntl.h (optional)}
 Open the file for executing.  Only defined on GNU.
 @end deftypevr
 
@@ -3509,9 +3426,8 @@ the flags word.  But in other POSIX.1 systems, reading and writing
 access modes are not stored as distinct bit flags.  The portable way to
 extract the file access mode bits is with @code{O_ACCMODE}.
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int O_ACCMODE
+@standards{POSIX.1, fcntl.h}
 This macro stands for a mask that can be bitwise-ANDed with the file
 status flag value to produce a value representing the file access mode.
 The mode will be @code{O_RDONLY}, @code{O_WRONLY}, or @code{O_RDWR}.
@@ -3546,25 +3462,22 @@ perform on the file once it is open.
 
 Here are the file name translation flags.
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int O_CREAT
+@standards{POSIX.1, fcntl.h}
 If set, the file will be created if it doesn't already exist.
 @c !!! mode arg, umask
 @cindex create on open (file status flag)
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int O_EXCL
+@standards{POSIX.1, fcntl.h}
 If both @code{O_CREAT} and @code{O_EXCL} are set, then @code{open} fails
 if the specified file already exists.  This is guaranteed to never
 clobber an existing file.
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int O_NONBLOCK
+@standards{POSIX.1, fcntl.h}
 @cindex non-blocking open
 This prevents @code{open} from blocking for a ``long time'' to open the
 file.  This is only meaningful for some kinds of files, usually devices
@@ -3581,9 +3494,8 @@ I/O that blocks, you must call @code{open} with @code{O_NONBLOCK} set and
 then call @code{fcntl} to turn the bit off.
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int O_NOCTTY
+@standards{POSIX.1, fcntl.h}
 If the named file is a terminal device, don't make it the controlling
 terminal for the process.  @xref{Job Control}, for information about
 what it means to be the controlling terminal.
@@ -3599,27 +3511,24 @@ to be portable, use @code{O_NOCTTY} when it is important to avoid this.
 The following three file name translation flags exist only on
 @gnuhurdsystems{}.
 
-@comment fcntl.h (optional)
-@comment GNU
 @deftypevr Macro int O_IGNORE_CTTY
+@standards{GNU, fcntl.h (optional)}
 Do not recognize the named file as the controlling terminal, even if it
 refers to the process's existing controlling terminal device.  Operations
 on the new file descriptor will never induce job control signals.
 @xref{Job Control}.
 @end deftypevr
 
-@comment fcntl.h (optional)
-@comment GNU
 @deftypevr Macro int O_NOLINK
+@standards{GNU, fcntl.h (optional)}
 If the named file is a symbolic link, open the link itself instead of
 the file it refers to.  (@code{fstat} on the new file descriptor will
 return the information returned by @code{lstat} on the link's name.)
 @cindex symbolic link, opening
 @end deftypevr
 
-@comment fcntl.h (optional)
-@comment GNU
 @deftypevr Macro int O_NOTRANS
+@standards{GNU, fcntl.h (optional)}
 If the named file is specially translated, do not invoke the translator.
 Open the bare file the translator itself sees.
 @end deftypevr
@@ -3630,9 +3539,8 @@ which are not really related to opening the file.  The reason to do them
 as part of @code{open} instead of in separate calls is that @code{open}
 can do them @i{atomically}.
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int O_TRUNC
+@standards{POSIX.1, fcntl.h}
 Truncate the file to zero length.  This option is only useful for
 regular files, not special files such as directories or FIFOs.  POSIX.1
 requires that you open the file for writing to use @code{O_TRUNC}.  In
@@ -3649,9 +3557,8 @@ compatibility.
 The remaining operating modes are BSD extensions.  They exist only
 on some systems.  On other systems, these macros are not defined.
 
-@comment fcntl.h (optional)
-@comment BSD
 @deftypevr Macro int O_SHLOCK
+@standards{BSD, fcntl.h (optional)}
 Acquire a shared lock on the file, as with @code{flock}.
 @xref{File Locks}.
 
@@ -3660,9 +3567,8 @@ creating the file.  You are guaranteed that no other process will get
 the lock on the new file first.
 @end deftypevr
 
-@comment fcntl.h (optional)
-@comment BSD
 @deftypevr Macro int O_EXLOCK
+@standards{BSD, fcntl.h (optional)}
 Acquire an exclusive lock on the file, as with @code{flock}.
 @xref{File Locks}.  This is atomic like @code{O_SHLOCK}.
 @end deftypevr
@@ -3674,9 +3580,8 @@ The operating modes affect how input and output operations using a file
 descriptor work.  These flags are set by @code{open} and can be fetched
 and changed with @code{fcntl}.
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int O_APPEND
+@standards{POSIX.1, fcntl.h}
 The bit that enables append mode for the file.  If set, then all
 @code{write} operations write the data at the end of the file, extending
 it, regardless of the current file position.  This is the only reliable
@@ -3688,9 +3593,8 @@ extend the file after you set the file position but before you write,
 resulting in your data appearing someplace before the real end of file.
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int O_NONBLOCK
+@standards{POSIX.1, fcntl.h}
 The bit that enables nonblocking mode for the file.  If this bit is set,
 @code{read} requests on the file can return immediately with a failure
 status if there is no input immediately available, instead of blocking.
@@ -3701,9 +3605,8 @@ Note that the @code{O_NONBLOCK} flag is overloaded as both an I/O
 operating mode and a file name translation flag; @pxref{Open-time Flags}.
 @end deftypevr
 
-@comment fcntl.h
-@comment BSD
 @deftypevr Macro int O_NDELAY
+@standards{BSD, fcntl.h}
 This is an obsolete name for @code{O_NONBLOCK}, provided for
 compatibility with BSD.  It is not defined by the POSIX.1 standard.
 @end deftypevr
@@ -3711,18 +3614,16 @@ compatibility with BSD.  It is not defined by the POSIX.1 standard.
 The remaining operating modes are BSD and GNU extensions.  They exist only
 on some systems.  On other systems, these macros are not defined.
 
-@comment fcntl.h
-@comment BSD
 @deftypevr Macro int O_ASYNC
+@standards{BSD, fcntl.h}
 The bit that enables asynchronous input mode.  If set, then @code{SIGIO}
 signals will be generated when input is available.  @xref{Interrupt Input}.
 
 Asynchronous input mode is a BSD feature.
 @end deftypevr
 
-@comment fcntl.h
-@comment BSD
 @deftypevr Macro int O_FSYNC
+@standards{BSD, fcntl.h}
 The bit that enables synchronous writing for the file.  If set, each
 @code{write} call will make sure the data is reliably stored on disk before
 returning. @c !!! xref fsync
@@ -3730,15 +3631,13 @@ returning. @c !!! xref fsync
 Synchronous writing is a BSD feature.
 @end deftypevr
 
-@comment fcntl.h
-@comment BSD
 @deftypevr Macro int O_SYNC
+@standards{BSD, fcntl.h}
 This is another name for @code{O_FSYNC}.  They have the same value.
 @end deftypevr
 
-@comment fcntl.h
-@comment GNU
 @deftypevr Macro int O_NOATIME
+@standards{GNU, fcntl.h}
 If this bit is set, @code{read} will not update the access time of the
 file.  @xref{File Times}.  This is used by programs that do backups, so
 that backing a file up does not count as reading it.
@@ -3752,9 +3651,8 @@ This is a GNU extension.
 
 The @code{fcntl} function can fetch or change file status flags.
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int F_GETFL
+@standards{POSIX.1, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
 read the file status flags for the open file with descriptor
 @var{filedes}.
@@ -3774,9 +3672,8 @@ The @var{filedes} argument is invalid.
 @end table
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int F_SETFL
+@standards{POSIX.1, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to set
 the file status flags for the open file corresponding to the
 @var{filedes} argument.  This command requires a third @code{int}
@@ -3870,9 +3767,8 @@ lock and where.  This data type and the associated macros for the
 @code{fcntl} function are declared in the header file @file{fcntl.h}.
 @pindex fcntl.h
 
-@comment fcntl.h
-@comment POSIX.1
 @deftp {Data Type} {struct flock}
+@standards{POSIX.1, fcntl.h}
 This structure is used with the @code{fcntl} function to describe a file
 lock.  It has these members:
 
@@ -3906,9 +3802,8 @@ conflicting lock is an open file description lock
 @end table
 @end deftp
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int F_GETLK
+@standards{POSIX.1, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should get information about a lock.  This command
 requires a third argument of type @w{@code{struct flock *}} to be passed
@@ -3950,9 +3845,8 @@ or the file associated with @var{filedes} doesn't support locks.
 @end table
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int F_SETLK
+@standards{POSIX.1, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set or clear a lock.  This command requires a
 third argument of type @w{@code{struct flock *}} to be passed to
@@ -4002,9 +3896,8 @@ to a file system on another machine.
 @end table
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int F_SETLKW
+@standards{POSIX.1, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set or clear a lock.  It is just like the
 @code{F_SETLK} command, but causes the process to block (or wait)
@@ -4036,19 +3929,16 @@ The following macros are defined for use as values for the @code{l_type}
 member of the @code{flock} structure.  The values are integer constants.
 
 @vtable @code
-@comment fcntl.h
-@comment POSIX.1
 @item F_RDLCK
+@standards{POSIX.1, fcntl.h}
 This macro is used to specify a read (or shared) lock.
 
-@comment fcntl.h
-@comment POSIX.1
 @item F_WRLCK
+@standards{POSIX.1, fcntl.h}
 This macro is used to specify a write (or exclusive) lock.
 
-@comment fcntl.h
-@comment POSIX.1
 @item F_UNLCK
+@standards{POSIX.1, fcntl.h}
 This macro is used to specify that the region is unlocked.
 @end vtable
 
@@ -4174,9 +4064,8 @@ associated with @var{filedes} doesn't support locks.
 @end table
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int F_OFD_SETLK
+@standards{POSIX.1, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set or clear a lock.  This command requires a
 third argument of type @w{@code{struct flock *}} to be passed to
@@ -4223,9 +4112,8 @@ to a file system on another machine.
 @end table
 @end deftypevr
 
-@comment fcntl.h
-@comment POSIX.1
 @deftypevr Macro int F_OFD_SETLKW
+@standards{POSIX.1, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set or clear a lock.  It is just like the
 @code{F_OFD_SETLK} command, but causes the process to wait until the request
@@ -4310,9 +4198,8 @@ signals are sent to the foreground process group of the terminal.
 The symbols in this section are defined in the header file
 @file{fcntl.h}.
 
-@comment fcntl.h
-@comment BSD
 @deftypevr Macro int F_GETOWN
+@standards{BSD, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should get information about the process or process
 group to which @code{SIGIO} signals are sent.  (For a terminal, this is
@@ -4330,9 +4217,8 @@ The @var{filedes} argument is invalid.
 @end table
 @end deftypevr
 
-@comment fcntl.h
-@comment BSD
 @deftypevr Macro int F_SETOWN
+@standards{BSD, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should set the process or process group to which
 @code{SIGIO} signals are sent.  This command requires a third argument
@@ -4401,9 +4287,8 @@ numbers and multiplexed through the @code{ioctl} function, defined in
 @code{sys/ioctl.h}.  The code numbers themselves are defined in many
 different headers.
 
-@comment sys/ioctl.h
-@comment BSD
 @deftypefun int ioctl (int @var{filedes}, int @var{command}, @dots{})
+@standards{BSD, sys/ioctl.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 The @code{ioctl} function performs the generic I/O operation

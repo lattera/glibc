@@ -219,8 +219,8 @@ argument which itself is a comma separated list of options.  To ease the
 programming of code like this the function @code{getsubopt} is
 available.
 
-@comment stdlib.h
 @deftypefun int getsubopt (char **@var{optionp}, char *const *@var{tokens}, char **@var{valuep})
+@standards{???, stdlib.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c getsubopt ok
 @c  strchrnul dup ok
@@ -324,9 +324,8 @@ Modifications of environment variables are not allowed in
 multi-threaded programs.  The @code{getenv} and @code{secure_getenv}
 functions can be safely used in multi-threaded programs.
 
-@comment stdlib.h
-@comment ISO
 @deftypefun {char *} getenv (const char *@var{name})
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@assafe{}@acsafe{}}
 @c Unguarded access to __environ.
 This function returns a string that is the value of the environment
@@ -337,9 +336,8 @@ environment variable @var{name} is not defined, the value is a null
 pointer.
 @end deftypefun
 
-@comment stdlib.h
-@comment GNU
 @deftypefun {char *} secure_getenv (const char *@var{name})
+@standards{GNU, stdlib.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@assafe{}@acsafe{}}
 @c Calls getenv unless secure mode is enabled.
 This function is similar to @code{getenv}, but it returns a null
@@ -352,9 +350,8 @@ This function is a GNU extension.
 @end deftypefun
 
 
-@comment stdlib.h
-@comment SVID
 @deftypefun int putenv (char *@var{string})
+@standards{SVID, stdlib.h}
 @safety{@prelim{}@mtunsafe{@mtasuconst{:@mtsenv{}}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
 @c putenv @mtasuconst:@mtsenv @ascuheap @asulock @acucorrupt @aculock @acsmem
 @c  strchr dup ok
@@ -384,9 +381,8 @@ This function is part of the extended Unix interface.  You should define
 @end deftypefun
 
 
-@comment stdlib.h
-@comment BSD
 @deftypefun int setenv (const char *@var{name}, const char *@var{value}, int @var{replace})
+@standards{BSD, stdlib.h}
 @safety{@prelim{}@mtunsafe{@mtasuconst{:@mtsenv{}}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
 @c setenv @mtasuconst:@mtsenv @ascuheap @asulock @acucorrupt @aculock @acsmem
 @c  add_to_environ @mtasuconst:@mtsenv @ascuheap @asulock @acucorrupt @aculock @acsmem
@@ -425,9 +421,8 @@ This function was originally part of the BSD library but is now part of
 the Unix standard.
 @end deftypefun
 
-@comment stdlib.h
-@comment BSD
 @deftypefun int unsetenv (const char *@var{name})
+@standards{BSD, stdlib.h}
 @safety{@prelim{}@mtunsafe{@mtasuconst{:@mtsenv{}}}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c unsetenv @mtasuconst:@mtsenv @asulock @aculock
 @c  strchr dup ok
@@ -455,9 +450,8 @@ function is said to be used in the POSIX.9 (POSIX bindings for Fortran
 never happened.  But we still provide this function as a GNU extension
 to enable writing standard compliant Fortran environments.
 
-@comment stdlib.h
-@comment GNU
 @deftypefun int clearenv (void)
+@standards{GNU, stdlib.h}
 @safety{@prelim{}@mtunsafe{@mtasuconst{:@mtsenv{}}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{}}}
 @c clearenv @mtasuconst:@mtsenv @ascuheap @asulock @aculock @acsmem
 @c  libc_lock_lock @asulock @aculock
@@ -477,9 +471,8 @@ objects to add more variables to the environment (for example, to
 communicate with another program you are about to execute;
 @pxref{Executing a File}).
 
-@comment unistd.h
-@comment POSIX.1
 @deftypevar {char **} environ
+@standards{POSIX.1, unistd.h}
 The environment is represented as an array of strings.  Each string is
 of the format @samp{@var{name}=@var{value}}.  The order in which
 strings appear in the environment is not significant, but the same
@@ -665,8 +658,8 @@ interfaces, such as @code{sysconf}.  However, on a platform-by-platform
 basis there may be information that is not available any other way.
 
 @subsection Definition of @code{getauxval}
-@comment sys/auxv.h
 @deftypefun {unsigned long int} getauxval (unsigned long int @var{type})
+@standards{???, sys/auxv.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Reads from hwcap or iterates over constant auxv.
 This function is used to inquire about the entries in the auxiliary
@@ -722,9 +715,8 @@ anyway.
 
 @code{syscall} is declared in @file{unistd.h}.
 
-@comment unistd.h
-@comment ???
 @deftypefun {long int} syscall (long int @var{sysno}, @dots{})
+@standards{???, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 @code{syscall} performs a generic system call.
@@ -828,9 +820,8 @@ calling @code{exit}.  Returning from @code{main} is equivalent to
 calling @code{exit}, and the value that @code{main} returns is used as
 the argument to @code{exit}.
 
-@comment stdlib.h
-@comment ISO
 @deftypefun void exit (int @var{status})
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:exit}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 @c Access to the atexit/on_exit list, the libc_atexit hook and tls dtors
 @c is not guarded.  Streams must be flushed, and that triggers the usual
@@ -905,9 +896,8 @@ conventional status value for success and failure, respectively.  They
 are declared in the file @file{stdlib.h}.
 @pindex stdlib.h
 
-@comment stdlib.h
-@comment ISO
 @deftypevr Macro int EXIT_SUCCESS
+@standards{ISO, stdlib.h}
 This macro can be used with the @code{exit} function to indicate
 successful program completion.
 
@@ -916,9 +906,8 @@ systems, the value might be some other (possibly non-constant) integer
 expression.
 @end deftypevr
 
-@comment stdlib.h
-@comment ISO
 @deftypevr Macro int EXIT_FAILURE
+@standards{ISO, stdlib.h}
 This macro can be used with the @code{exit} function to indicate
 unsuccessful program completion in a general sense.
 
@@ -948,9 +937,8 @@ exiting.  It is much more robust to make the cleanup invisible to the
 application, by setting up a cleanup function in the library itself
 using @code{atexit} or @code{on_exit}.
 
-@comment stdlib.h
-@comment ISO
 @deftypefun int atexit (void (*@var{function}) (void))
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{}}}
 @c atexit @ascuheap @asulock @aculock @acsmem
 @c  cxa_atexit @ascuheap @asulock @aculock @acsmem
@@ -968,9 +956,8 @@ The return value from @code{atexit} is zero on success and nonzero if
 the function cannot be registered.
 @end deftypefun
 
-@comment stdlib.h
-@comment SunOS
 @deftypefun int on_exit (void (*@var{function})(int @var{status}, void *@var{arg}), void *@var{arg})
+@standards{SunOS, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{}}}
 @c on_exit @ascuheap @asulock @aculock @acsmem
 @c  new_exitfn dup @ascuheap @asulock @aculock @acsmem
@@ -1003,9 +990,8 @@ You can abort your program using the @code{abort} function.  The prototype
 for this function is in @file{stdlib.h}.
 @pindex stdlib.h
 
-@comment stdlib.h
-@comment ISO
 @deftypefun void abort (void)
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
 @c The implementation takes a recursive lock and attempts to support
 @c calls from signal handlers, but if we're in the middle of flushing or
@@ -1034,9 +1020,8 @@ The @code{_exit} function is the primitive used for process termination
 by @code{exit}.  It is declared in the header file @file{unistd.h}.
 @pindex unistd.h
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun void _exit (int @var{status})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall (exit_group or exit); calls __task_terminate on hurd,
 @c and abort in the generic posix implementation.
@@ -1046,9 +1031,8 @@ execute cleanup functions registered with @code{atexit} or
 @code{on_exit}.
 @end deftypefun
 
-@comment stdlib.h
-@comment ISO
 @deftypefun void _Exit (int @var{status})
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Alias for _exit.
 The @code{_Exit} function is the @w{ISO C} equivalent to @code{_exit}.

@@ -96,17 +96,15 @@ performing non-local exits.  These facilities are declared in
 @file{setjmp.h}.
 @pindex setjmp.h
 
-@comment setjmp.h
-@comment ISO
 @deftp {Data Type} jmp_buf
+@standards{ISO, setjmp.h}
 Objects of type @code{jmp_buf} hold the state information to
 be restored by a non-local exit.  The contents of a @code{jmp_buf}
 identify a specific place to return to.
 @end deftp
 
-@comment setjmp.h
-@comment ISO
 @deftypefn Macro int setjmp (jmp_buf @var{state})
+@standards{ISO, setjmp.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c _setjmp ok
 @c  __sigsetjmp(!savemask) ok
@@ -117,9 +115,8 @@ execution state of the program in @var{state} and returns zero.  If
 @var{state}, @code{setjmp} returns a nonzero value.
 @end deftypefn
 
-@comment setjmp.h
-@comment ISO
 @deftypefun void longjmp (jmp_buf @var{state}, int @var{value})
+@standards{ISO, setjmp.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuplugin{} @asucorrupt{} @asulock{/hurd}}@acunsafe{@acucorrupt{} @aculock{/hurd}}}
 @c __libc_siglongjmp @ascuplugin @asucorrupt @asulock/hurd @acucorrupt @aculock/hurd
 @c  _longjmp_unwind @ascuplugin @asucorrupt @acucorrupt
@@ -207,16 +204,14 @@ The facilities in this section are declared in the header file
 @file{setjmp.h}.
 @pindex setjmp.h
 
-@comment setjmp.h
-@comment POSIX.1
 @deftp {Data Type} sigjmp_buf
+@standards{POSIX.1, setjmp.h}
 This is similar to @code{jmp_buf}, except that it can also store state
 information about the set of blocked signals.
 @end deftp
 
-@comment setjmp.h
-@comment POSIX.1
 @deftypefun int sigsetjmp (sigjmp_buf @var{state}, int @var{savesigs})
+@standards{POSIX.1, setjmp.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{/hurd}}@acunsafe{@aculock{/hurd}}}
 @c sigsetjmp @asulock/hurd @aculock/hurd
 @c  __sigsetjmp(savemask) @asulock/hurd @aculock/hurd
@@ -227,9 +222,8 @@ of blocked signals is saved in @var{state} and will be restored if a
 @code{siglongjmp} is later performed with this @var{state}.
 @end deftypefun
 
-@comment setjmp.h
-@comment POSIX.1
 @deftypefun void siglongjmp (sigjmp_buf @var{state}, int @var{value})
+@standards{POSIX.1, setjmp.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuplugin{} @asucorrupt{} @asulock{/hurd}}@acunsafe{@acucorrupt{} @aculock{/hurd}}}
 @c Alias to longjmp.
 This is similar to @code{longjmp} except for the type of its @var{state}
@@ -258,9 +252,8 @@ contained.  The type is also used in a few more places as we will see.
 The types and functions described in this section are all defined and
 declared respectively in the @file{ucontext.h} header file.
 
-@comment ucontext.h
-@comment SVID
 @deftp {Data Type} ucontext_t
+@standards{SVID, ucontext.h}
 
 The @code{ucontext_t} type is defined as a structure with at least the
 following elements:
@@ -289,9 +282,8 @@ applications less portable.
 Objects of this type have to be created by the user.  The initialization
 and modification happens through one of the following functions:
 
-@comment ucontext.h
-@comment SVID
 @deftypefun int getcontext (ucontext_t *@var{ucp})
+@standards{SVID, ucontext.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:ucp}}@assafe{}@acsafe{}}
 @c Linux-only implementations in assembly, including sigprocmask
 @c syscall.  A few cases call the sigprocmask function, but that's safe
@@ -318,9 +310,8 @@ Once the context variable is initialized it can be used as is or it can
 be modified using the @code{makecontext} function.  The latter is normally
 done when implementing co-routines or similar constructs.
 
-@comment ucontext.h
-@comment SVID
 @deftypefun void makecontext (ucontext_t *@var{ucp}, void (*@var{func}) (void), int @var{argc}, @dots{})
+@standards{SVID, ucontext.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:ucp}}@assafe{}@acsafe{}}
 @c Linux-only implementations mostly in assembly, nothing unsafe.
 
@@ -366,9 +357,8 @@ can, depending on the direction the stack grows, be different).  This
 difference makes the @code{makecontext} function hard to use and it
 requires detection of the platform at compile time.
 
-@comment ucontext.h
-@comment SVID
 @deftypefun int setcontext (const ucontext_t *@var{ucp})
+@standards{SVID, ucontext.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:ucp}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 @c Linux-only implementations mostly in assembly.  Some ports use
 @c sigreturn or swapcontext syscalls; others restore the signal mask
@@ -411,9 +401,8 @@ The @code{setcontext} function simply replaces the current context with
 the one described by the @var{ucp} parameter.  This is often useful but
 there are situations where the current context has to be preserved.
 
-@comment ucontext.h
-@comment SVID
 @deftypefun int swapcontext (ucontext_t *restrict @var{oucp}, const ucontext_t *restrict @var{ucp})
+@standards{SVID, ucontext.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:oucp} @mtsrace{:ucp}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 @c Linux-only implementations mostly in assembly.  Some ports call or
 @c inline getcontext and/or setcontext, adjusting the saved context in

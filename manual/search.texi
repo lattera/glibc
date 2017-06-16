@@ -69,9 +69,8 @@ potentially all elements must be checked.  @Theglibc{} contains
 functions to perform linear search.  The prototypes for the following
 two functions can be found in @file{search.h}.
 
-@comment search.h
-@comment SVID
 @deftypefun {void *} lfind (const void *@var{key}, const void *@var{base}, size_t *@var{nmemb}, size_t @var{size}, comparison_fn_t @var{compar})
+@standards{SVID, search.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{lfind} function searches in the array with @code{*@var{nmemb}}
 elements of @var{size} bytes pointed to by @var{base} for an element
@@ -88,9 +87,8 @@ the array in which case it might not be useful to sort the array before
 searching.
 @end deftypefun
 
-@comment search.h
-@comment SVID
 @deftypefun {void *} lsearch (const void *@var{key}, void *@var{base}, size_t *@var{nmemb}, size_t @var{size}, comparison_fn_t @var{compar})
+@standards{SVID, search.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c A signal handler that interrupted an insertion and performed an
 @c insertion itself would leave the array in a corrupt state (e.g. one
@@ -126,9 +124,8 @@ To search a sorted array for an element matching the key, use the
 the header file @file{stdlib.h}.
 @pindex stdlib.h
 
-@comment stdlib.h
-@comment ISO
 @deftypefun {void *} bsearch (const void *@var{key}, const void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{bsearch} function searches the sorted array @var{array} for an object
 that is equivalent to @var{key}.  The array contains @var{count} elements,
@@ -160,9 +157,8 @@ To sort an array using an arbitrary comparison function, use the
 @file{stdlib.h}.
 @pindex stdlib.h
 
-@comment stdlib.h
-@comment ISO
 @deftypefun void qsort (void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@acucorrupt{}}}
 The @code{qsort} function sorts the array @var{array}.  The array
 contains @var{count} elements, each of which is of size @var{size}.
@@ -272,9 +268,8 @@ which later should be searched.  The costs of insert, delete and search
 differ.  One possible implementation is using hashing tables.
 The following functions are declared in the header file @file{search.h}.
 
-@comment search.h
-@comment SVID
 @deftypefun int hcreate (size_t @var{nel})
+@standards{SVID, search.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:hsearch}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c hcreate @mtasurace:hsearch @ascuheap @acucorrupt @acsmem
 @c  hcreate_r dup @mtsrace:htab @ascuheap @acucorrupt @acsmem
@@ -304,9 +299,8 @@ something went wrong.  This could either mean there is already a hashing
 table in use or the program ran out of memory.
 @end deftypefun
 
-@comment search.h
-@comment SVID
 @deftypefun void hdestroy (void)
+@standards{SVID, search.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:hsearch}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c hdestroy @mtasurace:hsearch @ascuheap @acucorrupt @acsmem
 @c  hdestroy_r dup @mtsrace:htab @ascuheap @acucorrupt @acsmem
@@ -350,9 +344,8 @@ this element might stay undefined since it is not used.
 @end table
 @end deftp
 
-@comment search.h
-@comment SVID
 @deftypefun {ENTRY *} hsearch (ENTRY @var{item}, ACTION @var{action})
+@standards{SVID, search.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:hsearch}}@asunsafe{}@acunsafe{@acucorrupt{/action==ENTER}}}
 @c hsearch @mtasurace:hsearch @acucorrupt/action==ENTER
 @c  hsearch_r dup @mtsrace:htab @acucorrupt/action==ENTER
@@ -383,9 +376,8 @@ which is described by the content of an object of the type @code{struct
 hsearch_data}.  This type should be treated as opaque, none of its
 members should be changed directly.
 
-@comment search.h
-@comment GNU
 @deftypefun int hcreate_r (size_t @var{nel}, struct hsearch_data *@var{htab})
+@standards{GNU, search.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:htab}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c Unlike the lsearch array, the htab is (at least in part) opaque, so
 @c let's make it absolutely clear that ensuring exclusive access is a
@@ -419,9 +411,8 @@ return value is zero, something went wrong, which probably means the
 program ran out of memory.
 @end deftypefun
 
-@comment search.h
-@comment GNU
 @deftypefun void hdestroy_r (struct hsearch_data *@var{htab})
+@standards{GNU, search.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:htab}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c The table is released while the table pointer still points to it.
 @c Async cancellation is thus unsafe, but it already was because we call
@@ -438,9 +429,8 @@ The @code{hdestroy_r} function frees all resources allocated by the
 for the elements of the table.
 @end deftypefun
 
-@comment search.h
-@comment GNU
 @deftypefun int hsearch_r (ENTRY @var{item}, ACTION @var{action}, ENTRY **@var{retval}, struct hsearch_data *@var{htab})
+@standards{GNU, search.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:htab}}@assafe{}@acunsafe{@acucorrupt{/action==ENTER}}}
 @c Callers have to ensure mutual exclusion; insertion, if cancelled,
 @c leaves the table in a corrupt state.
@@ -496,9 +486,8 @@ initialize data structures is necessary.  A simple pointer of type
 extended or searched.  The prototypes for these functions can be found
 in the header file @file{search.h}.
 
-@comment search.h
-@comment SVID
 @deftypefun {void *} tsearch (const void *@var{key}, void **@var{rootp}, comparison_fn_t @var{compar})
+@standards{SVID, search.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:rootp}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c The tree is not modified in a thread-safe manner, and rotations may
 @c leave the tree in an inconsistent state that could be observed in an
@@ -531,9 +520,8 @@ fact @var{key}).  If an entry had to be created and the program ran out
 of space @code{NULL} is returned.
 @end deftypefun
 
-@comment search.h
-@comment SVID
 @deftypefun {void *} tfind (const void *@var{key}, void *const *@var{rootp}, comparison_fn_t @var{compar})
+@standards{SVID, search.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:rootp}}@assafe{}@acsafe{}}
 The @code{tfind} function is similar to the @code{tsearch} function.  It
 locates an element matching the one pointed to by @var{key} and returns
@@ -546,9 +534,8 @@ Another advantage of the @code{tsearch} functions in contrast to the
 @code{hsearch} functions is that there is an easy way to remove
 elements.
 
-@comment search.h
-@comment SVID
 @deftypefun {void *} tdelete (const void *@var{key}, void **@var{rootp}, comparison_fn_t @var{compar})
+@standards{SVID, search.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:rootp}}@asunsafe{@ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
 To remove a specific element matching @var{key} from the tree
 @code{tdelete} can be used.  It locates the matching element using the
@@ -560,9 +547,8 @@ is deleted @code{tdelete} returns some unspecified value not equal to
 @code{NULL}.
 @end deftypefun
 
-@comment search.h
-@comment GNU
 @deftypefun void tdestroy (void *@var{vroot}, __free_fn_t @var{freefct})
+@standards{GNU, search.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 If the complete search tree has to be removed one can use
 @code{tdestroy}.  It frees all resources allocated by the @code{tsearch}
@@ -615,9 +601,8 @@ The current node is a leaf.
 @end vtable
 @end deftp
 
-@comment search.h
-@comment SVID
 @deftypefun void twalk (const void *@var{root}, __action_fn_t @var{action})
+@standards{SVID, search.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:root}}@assafe{}@acsafe{}}
 For each node in the tree with a node pointed to by @var{root}, the
 @code{twalk} function calls the function provided by the parameter

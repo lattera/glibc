@@ -97,9 +97,8 @@ When reading in a password, it is desirable to avoid displaying it on
 the screen, to help keep it secret.  The following function handles this
 in a convenient way.
 
-@comment unistd.h
-@comment BSD
 @deftypefun {char *} getpass (const char *@var{prompt})
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtunsafe{@mtasuterm{}}@asunsafe{@ascuheap{} @asulock{} @asucorrupt{}}@acunsafe{@acuterm{} @aculock{} @acucorrupt{}}}
 @c This function will attempt to create a stream for terminal I/O, but
 @c will fallback to stdio/stderr.  It attempts to change the terminal
@@ -139,9 +138,9 @@ The substitute takes the same parameters as @code{getline}
 @node crypt
 @section Encrypting Passwords
 
-@comment crypt.h
-@comment BSD, SVID
 @deftypefun {char *} crypt (const char *@var{key}, const char *@var{salt})
+@standards{BSD, crypt.h}
+@standards{SVID, crypt.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:crypt}}@asunsafe{@asucorrupt{} @asulock{} @ascuheap{} @ascudlopen{}}@acunsafe{@aculock{} @acsmem{}}}
 @c Besides the obvious problem of returning a pointer into static
 @c storage, the DES initializer takes an internal lock with the usual
@@ -207,9 +206,8 @@ for a password and prints ``Access granted.'' if the user types
 @include testpass.c.texi
 @end smallexample
 
-@comment crypt.h
-@comment GNU
 @deftypefun {char *} crypt_r (const char *@var{key}, const char *@var{salt}, {struct crypt_data *} @var{data})
+@standards{GNU, crypt.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @asulock{} @ascuheap{} @ascudlopen{}}@acunsafe{@aculock{} @acsmem{}}}
 @c Compared with crypt, this function fixes the @mtasurace:crypt
 @c problem, but nothing else.
@@ -256,9 +254,9 @@ have odd parity; that is, out of bits 1 through 8, and 9 through 16, and
 so on, there must be an odd number of `1' bits, and this completely
 specifies the unused bits.
 
-@comment crypt.h
-@comment BSD, SVID
 @deftypefun void setkey (const char *@var{key})
+@standards{BSD, crypt.h}
+@standards{SVID, crypt.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:crypt}}@asunsafe{@asucorrupt{} @asulock{}}@acunsafe{@aculock{}}}
 @c The static buffer stores the key, making it fundamentally
 @c thread-unsafe.  The locking issues are only in the initialization
@@ -272,9 +270,9 @@ the 64th bit is @code{key[63]}.  The @var{key} should have the correct
 parity.
 @end deftypefun
 
-@comment crypt.h
-@comment BSD, SVID
 @deftypefun void encrypt (char *@var{block}, int @var{edflag})
+@standards{BSD, crypt.h}
+@standards{SVID, crypt.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:crypt}}@asunsafe{@asucorrupt{} @asulock{}}@acunsafe{@aculock{}}}
 @c Same issues as setkey.
 
@@ -287,12 +285,9 @@ Like @code{setkey}, @var{block} is specified as an array of 64 bits each
 stored in a @code{char}, but there are no parity bits in @var{block}.
 @end deftypefun
 
-@comment crypt.h
-@comment GNU
 @deftypefun void setkey_r (const char *@var{key}, {struct crypt_data *} @var{data})
-@comment crypt.h
-@comment GNU
 @deftypefunx void encrypt_r (char *@var{block}, int @var{edflag}, {struct crypt_data *} @var{data})
+@standards{GNU, crypt.h}
 @c setkey_r: @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @asulock{}}@acunsafe{@aculock{}}}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @asulock{}}@acunsafe{@aculock{}}}
 
@@ -306,9 +301,8 @@ The @code{setkey_r} and @code{encrypt_r} functions are GNU extensions.
 @code{setkey}, @code{encrypt}, @code{setkey_r}, and @code{encrypt_r} are
 defined in @file{crypt.h}.
 
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @deftypefun int ecb_crypt (char *@var{key}, char *@var{blocks}, unsigned int @var{len}, unsigned int @var{mode})
+@standards{SUNRPC, rpc/des_crypt.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 The function @code{ecb_crypt} encrypts or decrypts one or more blocks
@@ -329,28 +323,24 @@ The result of the encryption replaces the input in @var{blocks}.
 The @var{mode} parameter is the bitwise OR of two of the following:
 
 @vtable @code
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @item DES_ENCRYPT
+@standards{SUNRPC, rpc/des_crypt.h}
 This constant, used in the @var{mode} parameter, specifies that
 @var{blocks} is to be encrypted.
 
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @item DES_DECRYPT
+@standards{SUNRPC, rpc/des_crypt.h}
 This constant, used in the @var{mode} parameter, specifies that
 @var{blocks} is to be decrypted.
 
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @item DES_HW
+@standards{SUNRPC, rpc/des_crypt.h}
 This constant, used in the @var{mode} parameter, asks to use a hardware
 device.  If no hardware device is available, encryption happens anyway,
 but in software.
 
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @item DES_SW
+@standards{SUNRPC, rpc/des_crypt.h}
 This constant, used in the @var{mode} parameter, specifies that no
 hardware device is to be used.
 @end vtable
@@ -358,40 +348,34 @@ hardware device is to be used.
 The result of the function will be one of these values:
 
 @vtable @code
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @item DESERR_NONE
+@standards{SUNRPC, rpc/des_crypt.h}
 The encryption succeeded.
 
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @item DESERR_NOHWDEVICE
+@standards{SUNRPC, rpc/des_crypt.h}
 The encryption succeeded, but there was no hardware device available.
 
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @item DESERR_HWERROR
+@standards{SUNRPC, rpc/des_crypt.h}
 The encryption failed because of a hardware problem.
 
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @item DESERR_BADPARAM
+@standards{SUNRPC, rpc/des_crypt.h}
 The encryption failed because of a bad parameter, for instance @var{len}
 is not a multiple of 8 or @var{len} is larger than @code{DES_MAXDATA}.
 @end vtable
 @end deftypefun
 
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @deftypefun int DES_FAILED (int @var{err})
+@standards{SUNRPC, rpc/des_crypt.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns 1 if @var{err} is a `success' result code from
 @code{ecb_crypt} or @code{cbc_crypt}, and 0 otherwise.
 @end deftypefun
 
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @deftypefun int cbc_crypt (char *@var{key}, char *@var{blocks}, unsigned int @var{len}, unsigned int @var{mode}, char *@var{ivec})
+@standards{SUNRPC, rpc/des_crypt.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 The function @code{cbc_crypt} encrypts or decrypts one or more blocks
@@ -416,9 +400,8 @@ bytes.
 Otherwise, all the parameters are similar to those for @code{ecb_crypt}.
 @end deftypefun
 
-@comment rpc/des_crypt.h
-@comment SUNRPC
 @deftypefun void des_setparity (char *@var{key})
+@standards{SUNRPC, rpc/des_crypt.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 The function @code{des_setparity} changes the 64-bit @var{key}, stored
@@ -442,9 +425,8 @@ below internally to obtain randomness to seed the generator.  The
 @code{getrandom} function is intended for low-level applications which
 need additional control over the blocking behavior.
 
-@comment sys/random.h
-@comment GNU
 @deftypefun int getentropy (void *@var{buffer}, size_t @var{length})
+@standards{GNU, sys/random.h}
 @safety{@mtsafe{}@assafe{}@acsafe{}}
 
 This function writes @var{length} bytes of random data to the array
@@ -480,9 +462,8 @@ could not be overwritten with random data for an unspecified reason.
 
 @end deftypefun
 
-@comment sys/random.h
-@comment GNU
 @deftypefun ssize_t getrandom (void *@var{buffer}, size_t @var{length}, unsigned int @var{flags})
+@standards{GNU, sys/random.h}
 @safety{@mtsafe{}@assafe{}@acsafe{}}
 
 This function writes @var{length} bytes of random data to the array

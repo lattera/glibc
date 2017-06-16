@@ -20,9 +20,8 @@ The @glibcadj{} implements functions to allow users to create and manage
 data specific to a thread.  Such data may be destroyed at thread exit,
 if a destructor is provided.  The following functions are defined:
 
-@comment pthread.h
-@comment POSIX
 @deftypefun int pthread_key_create (pthread_key_t *@var{key}, void (*@var{destructor})(void*))
+@standards{POSIX, pthread.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c pthread_key_create ok
 @c  KEY_UNUSED ok
@@ -36,9 +35,8 @@ data destructors or even as members of the thread-specific data, since the
 latter is passed as an argument to the destructor function.
 @end deftypefun
 
-@comment pthread.h
-@comment POSIX
 @deftypefun int pthread_key_delete (pthread_key_t @var{key})
+@standards{POSIX, pthread.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c pthread_key_delete ok
 @c   This uses atomic compare and exchange to increment the seq number
@@ -49,18 +47,16 @@ destructor for the thread-specific data is not called during destruction, nor
 is it called during thread exit.
 @end deftypefun
 
-@comment pthread.h
-@comment POSIX
 @deftypefun void *pthread_getspecific (pthread_key_t @var{key})
+@standards{POSIX, pthread.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c pthread_getspecific ok
 Return the thread-specific data associated with @var{key} in the calling
 thread.
 @end deftypefun
 
-@comment pthread.h
-@comment POSIX
 @deftypefun int pthread_setspecific (pthread_key_t @var{key}, const void *@var{value})
+@standards{POSIX, pthread.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{}}}
 @c pthread_setspecific @asucorrupt @ascuheap @acucorrupt @acsmem
 @c   a level2 block may be allocated by a signal handler after
@@ -92,9 +88,8 @@ the standard.
 @Theglibc{} provides non-standard API functions to set and get the default
 attributes used in the creation of threads in a process.
 
-@comment pthread.h
-@comment GNU
 @deftypefun int pthread_getattr_default_np (pthread_attr_t *@var{attr})
+@standards{GNU, pthread.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c Takes lock around read from default_pthread_attr.
 Get the default attribute values and set @var{attr} to match.  This
@@ -102,9 +97,8 @@ function returns @math{0} on success and a non-zero error code on
 failure.
 @end deftypefun
 
-@comment pthread.h
-@comment GNU
 @deftypefun int pthread_setattr_default_np (pthread_attr_t *@var{attr})
+@standards{GNU, pthread.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{}}}
 @c pthread_setattr_default_np @ascuheap @asulock @aculock @acsmem
 @c  check_sched_policy_attr ok

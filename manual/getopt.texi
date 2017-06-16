@@ -20,9 +20,8 @@ use this facility, your program must include the header file
 @file{unistd.h}.
 @pindex unistd.h
 
-@comment unistd.h
-@comment POSIX.2
 @deftypevar int opterr
+@standards{POSIX.2, unistd.h}
 If the value of this variable is nonzero, then @code{getopt} prints an
 error message to the standard error stream if it encounters an unknown
 option character or an option with a missing required argument.  This is
@@ -31,18 +30,16 @@ does not print any messages, but it still returns the character @code{?}
 to indicate an error.
 @end deftypevar
 
-@comment unistd.h
-@comment POSIX.2
 @deftypevar int optopt
+@standards{POSIX.2, unistd.h}
 When @code{getopt} encounters an unknown option character or an option
 with a missing required argument, it stores that option character in
 this variable.  You can use this for providing your own diagnostic
 messages.
 @end deftypevar
 
-@comment unistd.h
-@comment POSIX.2
 @deftypevar int optind
+@standards{POSIX.2, unistd.h}
 This variable is set by @code{getopt} to the index of the next element
 of the @var{argv} array to be processed.  Once @code{getopt} has found
 all of the option arguments, you can use this variable to determine
@@ -50,16 +47,14 @@ where the remaining non-option arguments begin.  The initial value of
 this variable is @code{1}.
 @end deftypevar
 
-@comment unistd.h
-@comment POSIX.2
 @deftypevar {char *} optarg
+@standards{POSIX.2, unistd.h}
 This variable is set by @code{getopt} to point at the value of the
 option argument, for those options that accept arguments.
 @end deftypevar
 
-@comment unistd.h
-@comment POSIX.2
 @deftypefun int getopt (int @var{argc}, char *const *@var{argv}, const char *@var{options})
+@standards{POSIX.2, unistd.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:getopt} @mtsenv{}}@asunsafe{@ascuheap{} @ascuintl{} @asulock{} @asucorrupt{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 @c Swapping elements of passed-in argv may be partial in case of
 @c cancellation.  Gettext brings about a whole lot of AS and AC safety
@@ -207,9 +202,8 @@ declared in @file{getopt.h}, not @file{unistd.h}.  You should make every
 program accept long options if it uses any options, for this takes
 little extra work and helps beginners remember how to use the program.
 
-@comment getopt.h
-@comment GNU
 @deftp {Data Type} {struct option}
+@standards{GNU, getopt.h}
 This structure describes a single long option name for the sake of
 @code{getopt_long}.  The argument @var{longopts} must be an array of
 these structures, one for each long option.  Terminate the array with an
@@ -241,9 +235,8 @@ was seen.
 @end table
 @end deftp
 
-@comment getopt.h
-@comment GNU
 @deftypefun int getopt_long (int @var{argc}, char *const *@var{argv}, const char *@var{shortopts}, const struct option *@var{longopts}, int *@var{indexptr})
+@standards{GNU, getopt.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:getopt} @mtsenv{}}@asunsafe{@ascuheap{} @ascuintl{} @asulock{} @asucorrupt{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 @c Same issues as getopt.
 Decode options from the vector @var{argv} (whose length is @var{argc}).
@@ -296,9 +289,8 @@ to recognize options like @w{@samp{-option value}} instead of
 @w{@samp{--option value}}.  To enable these programs to use the GNU
 getopt functionality there is one more function available.
 
-@comment getopt.h
-@comment GNU
 @deftypefun int getopt_long_only (int @var{argc}, char *const *@var{argv}, const char *@var{shortopts}, const struct option *@var{longopts}, int *@var{indexptr})
+@standards{GNU, getopt.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:getopt} @mtsenv{}}@asunsafe{@ascuheap{} @ascuintl{} @asulock{} @asucorrupt{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
 @c Same issues as getopt.
 

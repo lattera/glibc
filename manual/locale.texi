@@ -138,55 +138,47 @@ argument to @code{setlocale}) has to be a valid locale name.
 @xref{Locale Names}.
 
 @vtable @code
-@comment locale.h
-@comment ISO
 @item LC_COLLATE
+@standards{ISO, locale.h}
 This category applies to collation of strings (functions @code{strcoll}
 and @code{strxfrm}); see @ref{Collation Functions}.
 
-@comment locale.h
-@comment ISO
 @item LC_CTYPE
+@standards{ISO, locale.h}
 This category applies to classification and conversion of characters,
 and to multibyte and wide characters;
 see @ref{Character Handling}, and @ref{Character Set Handling}.
 
-@comment locale.h
-@comment ISO
 @item LC_MONETARY
+@standards{ISO, locale.h}
 This category applies to formatting monetary values; see @ref{General Numeric}.
 
-@comment locale.h
-@comment ISO
 @item LC_NUMERIC
+@standards{ISO, locale.h}
 This category applies to formatting numeric values that are not
 monetary; see @ref{General Numeric}.
 
-@comment locale.h
-@comment ISO
 @item LC_TIME
+@standards{ISO, locale.h}
 This category applies to formatting date and time values; see
 @ref{Formatting Calendar Time}.
 
-@comment locale.h
-@comment XOPEN
 @item LC_MESSAGES
+@standards{XOPEN, locale.h}
 This category applies to selecting the language used in the user
 interface for message translation (@pxref{The Uniforum approach};
 @pxref{Message catalogs a la X/Open})  and contains regular expressions
 for affirmative and negative responses.
 
-@comment locale.h
-@comment ISO
 @item LC_ALL
+@standards{ISO, locale.h}
 This is not a category; it is only a macro that you can use
 with @code{setlocale} to set a single locale for all purposes.  Setting
 this environment variable overwrites all selections by the other
 @code{LC_*} variables or @code{LANG}.
 
-@comment locale.h
-@comment ISO
 @item LANG
+@standards{ISO, locale.h}
 If this environment variable is defined, its value specifies the locale
 to use for all purposes except as overridden by the variables above.
 @end vtable
@@ -228,9 +220,8 @@ general use or for a specific category.
 @pindex locale.h
 The symbols in this section are defined in the header file @file{locale.h}.
 
-@comment locale.h
-@comment ISO
 @deftypefun {char *} setlocale (int @var{category}, const char *@var{locale})
+@standards{ISO, locale.h}
 @safety{@prelim{}@mtunsafe{@mtasuconst{:@mtslocale{}} @mtsenv{}}@asunsafe{@asuinit{} @asulock{} @ascuheap{} @asucorrupt{}}@acunsafe{@acuinit{} @acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c Uses of the global locale object are unguarded in functions that
 @c ought to be MT-Safe, so we're ruling out the use of this function
@@ -623,9 +614,8 @@ according to the selected locale using this information.
 @cindex monetary value formatting
 @cindex numeric value formatting
 
-@comment locale.h
-@comment ISO
 @deftypefun {struct lconv *} localeconv (void)
+@standards{ISO, locale.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:localeconv} @mtslocale{}}@asunsafe{}@acsafe{}}
 @c This function reads from multiple components of the locale object,
 @c without synchronization, while writing to the static buffer it uses
@@ -640,9 +630,8 @@ be overwritten by subsequent calls to @code{localeconv}, or by calls to
 value.
 @end deftypefun
 
-@comment locale.h
-@comment ISO
 @deftp {Data Type} {struct lconv}
+@standards{ISO, locale.h}
 @code{localeconv}'s return value is of this data type.  Its elements are
 described in the following subsections.
 @end deftp
@@ -893,9 +882,8 @@ in the locale (as later specified in the POSIX.1 standard) requires more
 ways to access it.  Therefore the @code{nl_langinfo} function
 was introduced.
 
-@comment langinfo.h
-@comment XOPEN
 @deftypefun {char *} nl_langinfo (nl_item @var{item})
+@standards{XOPEN, langinfo.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 @c It calls _nl_langinfo_l with the current locale, which returns a
 @c pointer into constant strings defined in locale data structures.
@@ -1406,9 +1394,8 @@ English.
 @Theglibc{} contains @code{rpmatch} to give applications easy
 access to the corresponding locale definitions.
 
-@comment stdlib.h
-@comment GNU
 @deftypefun int rpmatch (const char *@var{response})
+@standards{GNU, stdlib.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c Calls nl_langinfo with YESEXPR and NOEXPR, triggering @mtslocale but
 @c it's regcomp and regexec that bring in all of the safety issues.

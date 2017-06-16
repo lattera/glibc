@@ -98,9 +98,8 @@ designed to keep one character of a wide character string.  To maintain
 the similarity there is also a type corresponding to @code{int} for
 those functions that take a single wide character.
 
-@comment stddef.h
-@comment ISO
 @deftp {Data type} wchar_t
+@standards{ISO, stddef.h}
 This data type is used as the base type for wide character strings.
 In other words, arrays of objects of this type are the equivalent of
 @code{char[]} for multibyte character strings.  The type is defined in
@@ -123,9 +122,8 @@ resorting to multi-wide-character encoding contradicts the purpose of the
 @code{wchar_t} type.
 @end deftp
 
-@comment wchar.h
-@comment ISO
 @deftp {Data type} wint_t
+@standards{ISO, wchar.h}
 @code{wint_t} is a data type used for parameters and variables that
 contain a single wide character.  As the name suggests this type is the
 equivalent of @code{int} when using the normal @code{char} strings.  The
@@ -143,18 +141,16 @@ As there are for the @code{char} data type macros are available for
 specifying the minimum and maximum value representable in an object of
 type @code{wchar_t}.
 
-@comment wchar.h
-@comment ISO
 @deftypevr Macro wint_t WCHAR_MIN
+@standards{ISO, wchar.h}
 The macro @code{WCHAR_MIN} evaluates to the minimum value representable
 by an object of type @code{wint_t}.
 
 This macro was introduced in @w{Amendment 1} to @w{ISO C90}.
 @end deftypevr
 
-@comment wchar.h
-@comment ISO
 @deftypevr Macro wint_t WCHAR_MAX
+@standards{ISO, wchar.h}
 The macro @code{WCHAR_MAX} evaluates to the maximum value representable
 by an object of type @code{wint_t}.
 
@@ -163,9 +159,8 @@ This macro was introduced in @w{Amendment 1} to @w{ISO C90}.
 
 Another special wide character value is the equivalent to @code{EOF}.
 
-@comment wchar.h
-@comment ISO
 @deftypevr Macro wint_t WEOF
+@standards{ISO, wchar.h}
 The macro @code{WEOF} evaluates to a constant expression of type
 @code{wint_t} whose value is different from any member of the extended
 character set.
@@ -402,18 +397,16 @@ conversion functions (as shown in the examples below).
 The @w{ISO C} standard defines two macros that provide this information.
 
 
-@comment limits.h
-@comment ISO
 @deftypevr Macro int MB_LEN_MAX
+@standards{ISO, limits.h}
 @code{MB_LEN_MAX} specifies the maximum number of bytes in the multibyte
 sequence for a single character in any of the supported locales.  It is
 a compile-time constant and is defined in @file{limits.h}.
 @pindex limits.h
 @end deftypevr
 
-@comment stdlib.h
-@comment ISO
 @deftypevr Macro int MB_CUR_MAX
+@standards{ISO, stdlib.h}
 @code{MB_CUR_MAX} expands into a positive integer expression that is the
 maximum number of bytes in a multibyte character in the current locale.
 The value is never greater than @code{MB_LEN_MAX}.  Unlike
@@ -463,9 +456,8 @@ Since the conversion functions allow converting a text in more than one
 step we must have a way to pass this information from one call of the
 functions to another.
 
-@comment wchar.h
-@comment ISO
 @deftp {Data type} mbstate_t
+@standards{ISO, wchar.h}
 @cindex shift state
 A variable of type @code{mbstate_t} can contain all the information
 about the @dfn{shift state} needed from one call to a conversion
@@ -501,9 +493,8 @@ state.  This is necessary, for example, to decide whether to emit
 escape sequences to set the state to the initial state at certain
 sequence points.  Communication protocols often require this.
 
-@comment wchar.h
-@comment ISO
 @deftypefun int mbsinit (const mbstate_t *@var{ps})
+@standards{ISO, wchar.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c ps is dereferenced once, unguarded.  This would call for @mtsrace:ps,
 @c but since a single word-sized field is (atomically) accessed, any
@@ -564,9 +555,8 @@ of the multibyte character set.  In such a scenario, each ASCII character
 stands for itself, and all other characters have at least a first byte
 that is beyond the range @math{0} to @math{127}.
 
-@comment wchar.h
-@comment ISO
 @deftypefun wint_t btowc (int @var{c})
+@standards{ISO, wchar.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c Calls btowc_fct or __fct; reads from locale, and from the
 @c get_gconv_fcts result multiple times.  get_gconv_fcts calls
@@ -628,9 +618,8 @@ this, using @code{btowc} is required.
 @noindent
 There is also a function for the conversion in the other direction.
 
-@comment wchar.h
-@comment ISO
 @deftypefun int wctob (wint_t @var{c})
+@standards{ISO, wchar.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 The @code{wctob} function (``wide character to byte'') takes as the
 parameter a valid wide character.  If the multibyte representation for
@@ -648,9 +637,8 @@ multibyte representation to wide characters and vice versa.  These
 functions pose no limit on the length of the multibyte representation
 and they also do not require it to be in the initial state.
 
-@comment wchar.h
-@comment ISO
 @deftypefun size_t mbrtowc (wchar_t *restrict @var{pwc}, const char *restrict @var{s}, size_t @var{n}, mbstate_t *restrict @var{ps})
+@standards{ISO, wchar.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:mbrtowc/!ps}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @cindex stateful
 The @code{mbrtowc} function (``multibyte restartable to wide
@@ -743,9 +731,8 @@ away.  Unfortunately there is no function to compute the length of the wide
 character string directly from the multibyte string.  There is, however, a
 function that does part of the work.
 
-@comment wchar.h
-@comment ISO
 @deftypefun size_t mbrlen (const char *restrict @var{s}, size_t @var{n}, mbstate_t *@var{ps})
+@standards{ISO, wchar.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:mbrlen/!ps}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 The @code{mbrlen} function (``multibyte restartable length'') computes
 the number of at most @var{n} bytes starting at @var{s}, which form the
@@ -827,9 +814,8 @@ this conversion might be quite expensive.  So it is necessary to think
 about the consequences of using the easier but imprecise method before
 doing the work twice.
 
-@comment wchar.h
-@comment ISO
 @deftypefun size_t wcrtomb (char *restrict @var{s}, wchar_t @var{wc}, mbstate_t *restrict @var{ps})
+@standards{ISO, wchar.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:wcrtomb/!ps}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c wcrtomb uses a static, non-thread-local unguarded state variable when
 @c PS is NULL.  When a state is passed in, and it's not used
@@ -1015,9 +1001,8 @@ defines conversions on entire strings.  However, the defined set of
 functions is quite limited; therefore, @theglibc{} contains a few
 extensions that can help in some important situations.
 
-@comment wchar.h
-@comment ISO
 @deftypefun size_t mbsrtowcs (wchar_t *restrict @var{dst}, const char **restrict @var{src}, size_t @var{len}, mbstate_t *restrict @var{ps})
+@standards{ISO, wchar.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:mbsrtowcs/!ps}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 The @code{mbsrtowcs} function (``multibyte string restartable to wide
 character string'') converts the NUL-terminated multibyte character
@@ -1100,9 +1085,8 @@ consumed from the input string.  This way the problem of
 @code{mbsrtowcs}'s example above could be solved by determining the line
 length and passing this length to the function.
 
-@comment wchar.h
-@comment ISO
 @deftypefun size_t wcsrtombs (char *restrict @var{dst}, const wchar_t **restrict @var{src}, size_t @var{len}, mbstate_t *restrict @var{ps})
+@standards{ISO, wchar.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:wcsrtombs/!ps}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 The @code{wcsrtombs} function (``wide character string restartable to
 multibyte string'') converts the NUL-terminated wide character string at
@@ -1146,9 +1130,8 @@ input characters.  One has to place the NUL wide character at the correct
 place or control the consumed input indirectly via the available output
 array size (the @var{len} parameter).
 
-@comment wchar.h
-@comment GNU
 @deftypefun size_t mbsnrtowcs (wchar_t *restrict @var{dst}, const char **restrict @var{src}, size_t @var{nmc}, size_t @var{len}, mbstate_t *restrict @var{ps})
+@standards{GNU, wchar.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:mbsnrtowcs/!ps}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 The @code{mbsnrtowcs} function is very similar to the @code{mbsrtowcs}
 function.  All the parameters are the same except for @var{nmc}, which is
@@ -1199,9 +1182,8 @@ Since we don't insert characters in the strings that were not in there
 right from the beginning and we use @var{state} only for the conversion
 of the given buffer, there is no problem with altering the state.
 
-@comment wchar.h
-@comment GNU
 @deftypefun size_t wcsnrtombs (char *restrict @var{dst}, const wchar_t **restrict @var{src}, size_t @var{nwc}, size_t @var{len}, mbstate_t *restrict @var{ps})
+@standards{GNU, wchar.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:wcsnrtombs/!ps}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 The @code{wcsnrtombs} function implements the conversion from wide
 character strings to multibyte character strings.  It is similar to
@@ -1344,9 +1326,8 @@ conversion functions.}
 @node Non-reentrant Character Conversion
 @subsection Non-reentrant Conversion of Single Characters
 
-@comment stdlib.h
-@comment ISO
 @deftypefun int mbtowc (wchar_t *restrict @var{result}, const char *restrict @var{string}, size_t @var{size})
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 The @code{mbtowc} (``multibyte to wide character'') function when called
 with non-null @var{string} converts the first multibyte character
@@ -1379,9 +1360,8 @@ returns nonzero if the multibyte character code in use actually has a
 shift state.  @xref{Shift State}.
 @end deftypefun
 
-@comment stdlib.h
-@comment ISO
 @deftypefun int wctomb (char *@var{string}, wchar_t @var{wchar})
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 The @code{wctomb} (``wide character to multibyte'') function converts
 the wide character code @var{wchar} to its corresponding multibyte
@@ -1419,9 +1399,8 @@ Similar to @code{mbrlen} there is also a non-reentrant function that
 computes the length of a multibyte character.  It can be defined in
 terms of @code{mbtowc}.
 
-@comment stdlib.h
-@comment ISO
 @deftypefun int mblen (const char *@var{string}, size_t @var{size})
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 The @code{mblen} function with a non-null @var{string} argument returns
 the number of bytes that make up the multibyte character beginning at
@@ -1458,9 +1437,8 @@ convert entire strings instead of single characters.  These functions
 suffer from the same problems as their reentrant counterparts from
 @w{Amendment 1} to @w{ISO C90}; see @ref{Converting Strings}.
 
-@comment stdlib.h
-@comment ISO
 @deftypefun size_t mbstowcs (wchar_t *@var{wstring}, const char *@var{string}, size_t @var{size})
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c Odd...  Although this was supposed to be non-reentrant, the internal
 @c state is not a static buffer, but an automatic variable.
@@ -1501,9 +1479,8 @@ mbstowcs_alloc (const char *string)
 
 @end deftypefun
 
-@comment stdlib.h
-@comment ISO
 @deftypefun size_t wcstombs (char *@var{string}, const wchar_t *@var{wstring}, size_t @var{size})
+@standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 The @code{wcstombs} (``wide character string to multibyte string'')
 function converts the null-terminated wide character array @var{wstring}
@@ -1674,9 +1651,8 @@ data type.  Just like other open--use--close interfaces the functions
 introduced here work using handles and the @file{iconv.h} header
 defines a special type for the handles used.
 
-@comment iconv.h
-@comment XPG2
 @deftp {Data Type} iconv_t
+@standards{XPG2, iconv.h}
 This data type is an abstract type defined in @file{iconv.h}.  The user
 must not assume anything about the definition of this type; it must be
 completely opaque.
@@ -1689,9 +1665,8 @@ the conversions for which the handles stand for have to.
 @noindent
 The first step is the function to create a handle.
 
-@comment iconv.h
-@comment XPG2
 @deftypefun iconv_t iconv_open (const char *@var{tocode}, const char *@var{fromcode})
+@standards{XPG2, iconv.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c Calls malloc if tocode and/or fromcode are too big for alloca.  Calls
 @c strip and upstr on both, then gconv_open.  strip and upstr call
@@ -1763,9 +1738,8 @@ the handle returned by @code{iconv_open}.  Therefore, it is crucial to
 free all the resources once all conversions are carried out and the
 conversion is not needed anymore.
 
-@comment iconv.h
-@comment XPG2
 @deftypefun int iconv_close (iconv_t @var{cd})
+@standards{XPG2, iconv.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{}}}
 @c Calls gconv_close to destruct and release each of the conversion
 @c steps, release the gconv_t object, then call gconv_close_transform.
@@ -1795,9 +1769,8 @@ therefore, the most general interface: it allows conversion from one
 buffer to another.  Conversion from a file to a buffer, vice versa, or
 even file to file can be implemented on top of it.
 
-@comment iconv.h
-@comment XPG2
 @deftypefun size_t iconv (iconv_t @var{cd}, char **@var{inbuf}, size_t *@var{inbytesleft}, char **@var{outbuf}, size_t *@var{outbytesleft})
+@standards{XPG2, iconv.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:cd}}@assafe{}@acunsafe{@acucorrupt{}}}
 @c Without guarding access to the iconv_t object pointed to by cd, call
 @c the conversion function to convert inbuf or flush the internal
@@ -2356,9 +2329,8 @@ conversion and the second describes the state etc.  There are really two
 type definitions like this in @file{gconv.h}.
 @pindex gconv.h
 
-@comment gconv.h
-@comment GNU
 @deftp {Data type} {struct __gconv_step}
+@standards{GNU, gconv.h}
 This data structure describes one conversion a module can perform.  For
 each function in a loaded module with conversion functions there is
 exactly one object of this type.  This object is shared by all users of
@@ -2424,9 +2396,8 @@ conversion function.
 @end table
 @end deftp
 
-@comment gconv.h
-@comment GNU
 @deftp {Data type} {struct __gconv_step_data}
+@standards{GNU, gconv.h}
 This is the data structure that contains the information specific to
 each use of the conversion functions.
 
@@ -2557,9 +2528,8 @@ this use of the conversion functions.
 There are three data types defined for the three module interface
 functions and these define the interface.
 
-@comment gconv.h
-@comment GNU
 @deftypevr {Data type} int {(*__gconv_init_fct)} (struct __gconv_step *)
+@standards{GNU, gconv.h}
 This specifies the interface of the initialization function of the
 module.  It is called exactly once for each conversion the module
 implements.
@@ -2714,9 +2684,8 @@ The function called before the module is unloaded is significantly
 easier.  It often has nothing at all to do; in which case it can be left
 out completely.
 
-@comment gconv.h
-@comment GNU
 @deftypevr {Data type} void {(*__gconv_end_fct)} (struct gconv_step *)
+@standards{GNU, gconv.h}
 The task of this function is to free all resources allocated in the
 initialization function.  Therefore only the @code{__data} element of
 the object pointed to by the argument is of interest.  Continuing the
@@ -2737,9 +2706,8 @@ get quite complicated for complex character sets.  But since this is not
 of interest here, we will only describe a possible skeleton for the
 conversion function.
 
-@comment gconv.h
-@comment GNU
 @deftypevr {Data type} int {(*__gconv_fct)} (struct __gconv_step *, struct __gconv_step_data *, const char **, const char *, size_t *, int)
+@standards{GNU, gconv.h}
 The conversion function can be called for two basic reasons: to convert
 text or to reset the state.  From the description of the @code{iconv}
 function it can be seen why the flushing mode is necessary.  What mode

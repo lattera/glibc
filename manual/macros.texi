@@ -275,6 +275,7 @@ cwd\comments\
 @end macro
 
 @c Dummy placeholder while converting annotations.
+@c For details on expected use, see `summary.pl --help'.
 @macro standards {standard, header}
 @end macro
 @c To be used for @*x lists of elements.

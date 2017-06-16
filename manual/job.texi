@@ -1036,9 +1036,8 @@ The function @code{ctermid} is declared in the header file
 @file{stdio.h}.
 @pindex stdio.h
 
-@comment stdio.h
-@comment POSIX.1
 @deftypefun {char *} ctermid (char *@var{string})
+@standards{POSIX.1, stdio.h}
 @safety{@prelim{}@mtsafe{@mtsposix{/!string}}@assafe{}@acsafe{}}
 @c This function is a stub by default; the actual implementation, for
 @c posix systems, returns a pointer to a string literal if passed a NULL
@@ -1057,9 +1056,8 @@ any reason.  Even if a file name is returned, access to the file it
 represents is not guaranteed.
 @end deftypefun
 
-@comment stdio.h
-@comment POSIX.1
 @deftypevr Macro int L_ctermid
+@standards{POSIX.1, stdio.h}
 The value of this macro is an integer constant expression that
 represents the size of a string large enough to hold the file name
 returned by @code{ctermid}.
@@ -1078,9 +1076,8 @@ Your program should include the header files @file{sys/types.h} and
 @pindex unistd.h
 @pindex sys/types.h
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun pid_t setsid (void)
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c This is usually a direct syscall, but if a syscall is not available,
 @c we use a stub, or Hurd- and BSD-specific implementations.  The former
@@ -1107,9 +1104,8 @@ already another process group around that has the same process group ID.
 @end table
 @end deftypefun
 
-@comment unistd.h
-@comment SVID
 @deftypefun pid_t getsid (pid_t @var{pid})
+@standards{SVID, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Stub or direct syscall, except on hurd, where it is equally safe.
 
@@ -1132,17 +1128,15 @@ from the calling process.
 @end table
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun pid_t getpgrp (void)
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{getpgrp} function returns the process group ID of
 the calling process.
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int getpgid (pid_t @var{pid})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Stub or direct syscall, except on hurd, where it is equally safe.
 
@@ -1164,9 +1158,8 @@ process.
 @end table
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int setpgid (pid_t @var{pid}, pid_t @var{pgid})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Stub or direct syscall, except on hurd, where it is equally safe.
 The @code{setpgid} function puts the process @var{pid} into the process
@@ -1203,9 +1196,8 @@ process or a child of the calling process.
 @end table
 @end deftypefun
 
-@comment unistd.h
-@comment BSD
 @deftypefun int setpgrp (pid_t @var{pid}, pid_t @var{pgid})
+@standards{BSD, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall or setpgid wrapper.
 This is the BSD Unix name for @code{setpgid}.  Both functions do exactly
@@ -1227,9 +1219,8 @@ Although these functions take a file descriptor argument to specify
 the terminal device, the foreground job is associated with the terminal
 file itself and not a particular open file descriptor.
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun pid_t tcgetpgrp (int @var{filedes})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Stub, or ioctl on BSD and GNU/Linux.
 This function returns the process group ID of the foreground process
@@ -1257,9 +1248,8 @@ controlling terminal of the calling process.
 @end table
 @end deftypefun
 
-@comment unistd.h
-@comment POSIX.1
 @deftypefun int tcsetpgrp (int @var{filedes}, pid_t @var{pgid})
+@standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Stub, or ioctl on BSD and GNU/Linux.
 This function is used to set a terminal's foreground process group ID.
@@ -1298,9 +1288,8 @@ process.
 @end table
 @end deftypefun
 
-@comment termios.h
-@comment Unix98
 @deftypefun pid_t tcgetsid (int @var{fildes})
+@standards{Unix98, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Ioctl call, if available, or tcgetpgrp followed by getsid.
 This function is used to obtain the process group ID of the session

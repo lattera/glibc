@@ -83,9 +83,8 @@ are defined/declared in the @file{nl_types.h} header file.
 @node The catgets Functions
 @subsection The @code{catgets} function family
 
-@comment nl_types.h
-@comment X/Open
 @deftypefun nl_catd catopen (const char *@var{cat_name}, int @var{flag})
+@standards{X/Open, nl_types.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 @c catopen @mtsenv @ascuheap @acsmem
 @c  strchr ok
@@ -830,9 +829,8 @@ the @file{libintl.h} header file.  On systems where these functions are
 not part of the C library they can be found in a separate library named
 @file{libintl.a} (or accordingly different for shared libraries).
 
-@comment libintl.h
-@comment GNU
 @deftypefun {char *} gettext (const char *@var{msgid})
+@standards{GNU, libintl.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c Wrapper for dcgettext.
 The @code{gettext} function searches the currently selected message
@@ -879,9 +877,8 @@ uses the @code{gettext} functions but since it must not depend on a
 currently selected default message catalog it must specify all ambiguous
 information.
 
-@comment libintl.h
-@comment GNU
 @deftypefun {char *} dgettext (const char *@var{domainname}, const char *@var{msgid})
+@standards{GNU, libintl.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c Wrapper for dcgettext.
 The @code{dgettext} function acts just like the @code{gettext}
@@ -895,9 +892,8 @@ As for @code{gettext} the return value type is @code{char *} which is an
 anachronism.  The returned string must never be modified.
 @end deftypefun
 
-@comment libintl.h
-@comment GNU
 @deftypefun {char *} dcgettext (const char *@var{domainname}, const char *@var{msgid}, int @var{category})
+@standards{GNU, libintl.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c dcgettext @mtsenv @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsfd @acsmem
 @c  dcigettext @mtsenv @asucorrupt @ascuheap @asulock @ascudlopen @acucorrupt @aculock @acsfd @acsmem
@@ -1115,9 +1111,8 @@ domain named @code{foo}.  The important point is that at any time
 exactly one domain is active.  This is controlled with the following
 function.
 
-@comment libintl.h
-@comment GNU
 @deftypefun {char *} textdomain (const char *@var{domainname})
+@standards{GNU, libintl.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 @c textdomain @asulock @ascuheap @aculock @acsmem
 @c  libc_rwlock_wrlock @asulock @aculock
@@ -1153,9 +1148,8 @@ This possibility is questionable to use since the domain @code{messages}
 really never should be used.
 @end deftypefun
 
-@comment libintl.h
-@comment GNU
 @deftypefun {char *} bindtextdomain (const char *@var{domainname}, const char *@var{dirname})
+@standards{GNU, libintl.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 @c bindtextdomain @ascuheap @acsmem
 @c  set_binding_values @ascuheap @acsmem
@@ -1276,9 +1270,8 @@ GNU package and the coding standards for the GNU project require programs
 to be written in English, this solution nevertheless fulfills its
 purpose.
 
-@comment libintl.h
-@comment GNU
 @deftypefun {char *} ngettext (const char *@var{msgid1}, const char *@var{msgid2}, unsigned long int @var{n})
+@standards{GNU, libintl.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c Wrapper for dcngettext.
 The @code{ngettext} function is similar to the @code{gettext} function
@@ -1301,9 +1294,8 @@ Please note that the numeric value @var{n} has to be passed to the
 @code{ngettext}.
 @end deftypefun
 
-@comment libintl.h
-@comment GNU
 @deftypefun {char *} dngettext (const char *@var{domain}, const char *@var{msgid1}, const char *@var{msgid2}, unsigned long int @var{n})
+@standards{GNU, libintl.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c Wrapper for dcngettext.
 The @code{dngettext} is similar to the @code{dgettext} function in the
@@ -1312,9 +1304,8 @@ two extra parameters to provide the correct plural form.  These two
 parameters are handled in the same way @code{ngettext} handles them.
 @end deftypefun
 
-@comment libintl.h
-@comment GNU
 @deftypefun {char *} dcngettext (const char *@var{domain}, const char *@var{msgid1}, const char *@var{msgid2}, unsigned long int @var{n}, int @var{category})
+@standards{GNU, libintl.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@asucorrupt{} @ascuheap{} @asulock{} @ascudlopen{}}@acunsafe{@acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c Wrapper for dcigettext.
 The @code{dcngettext} is similar to the @code{dcgettext} function in the
@@ -1570,9 +1561,8 @@ translation for @var{msgid}, it returns @var{msgid} unchanged --
 independently of the current output character set.  It is therefore
 recommended that all @var{msgid}s be US-ASCII strings.
 
-@comment libintl.h
-@comment GNU
 @deftypefun {char *} bind_textdomain_codeset (const char *@var{domainname}, const char *@var{codeset})
+@standards{GNU, libintl.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 @c bind_textdomain_codeset @ascuheap @acsmem
 @c  set_binding_values dup @ascuheap @acsmem
