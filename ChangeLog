@@ -1,5 +1,11 @@
 2017-06-16  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/string.texi (strdup): Complete header and standards
+	annotation.
+	(strncpy): Likewise.
+
+2017-06-16  Rical Jasan  <ricaljasan@pacific.net>
+
 	* manual/arith.texi (FP_NAN): Add or complete header and standard
 	annotations.
 	(FP_INFINITE): Likewise.

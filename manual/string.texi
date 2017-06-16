@@ -562,7 +562,7 @@ the strings overlap.  The return value is the value of @var{wto}.
 @end deftypefun
 
 @deftypefun {char *} strdup (const char *@var{s})
-@standards{SVID, ???}
+@standards{SVID, string.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This function copies the string @var{s} into a newly
 allocated string.  The string is allocated using @code{malloc}; see
@@ -863,7 +863,7 @@ in their header conventions.  @xref{Copying Strings and Arrays}.  The
 and the @samp{wc} functions are declared in the file @file{wchar.h}.
 
 @deftypefun {char *} strncpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
-@standards{???, string.h}
+@standards{C90, string.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is similar to @code{strcpy} but always copies exactly
 @var{size} bytes into @var{to}.
