@@ -1,3 +1,7 @@
+2017-06-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Versions (ld): Remove _dl_out_of_memory.
+
 2017-06-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* timezone/private.h: Update from tzcode 2017b.
