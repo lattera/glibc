@@ -126,10 +126,10 @@ is_sort_mask (char ch)
    deallocation and error handling.  Return true on success, false on
    failure.  */
 static bool
-res_vinit_1 (res_state statp, bool preinit, FILE *fp)
+res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
 {
   char *cp, **pp;
-  char buf[BUFSIZ];
+  size_t buffer_size = 0;
   int nserv = 0;    /* Number of nameservers read from file.  */
   bool have_serv6 = false;
   bool haveenv = false;
@@ -197,27 +197,38 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp)
     }
 
 #define MATCH(line, name)                       \
-  (!strncmp (line, name, sizeof (name) - 1)     \
-   && (line[sizeof (name) - 1] == ' '           \
-       || line[sizeof (name) - 1] == '\t'))
+  (!strncmp ((line), name, sizeof (name) - 1)     \
+   && ((line)[sizeof (name) - 1] == ' '           \
+       || (line)[sizeof (name) - 1] == '\t'))
 
   if (fp != NULL)
     {
       /* No threads use this stream.  */
       __fsetlocking (fp, FSETLOCKING_BYCALLER);
       /* Read the config file.  */
-      while (__fgets_unlocked (buf, sizeof (buf), fp) != NULL)
+      while (true)
         {
+          {
+            ssize_t ret = __getline (buffer, &buffer_size, fp);
+            if (ret <= 0)
+              {
+                if (_IO_ferror_unlocked (fp))
+                  return false;
+                else
+                  break;
+              }
+          }
+
           /* Skip comments.  */
-          if (*buf == ';' || *buf == '#')
+          if (**buffer == ';' || **buffer == '#')
             continue;
           /* Read default domain name.  */
-          if (MATCH (buf, "domain"))
+          if (MATCH (*buffer, "domain"))
             {
               if (haveenv)
                 /* LOCALDOMAIN overrides the configuration file.  */
                 continue;
-              cp = buf + sizeof ("domain") - 1;
+              cp = *buffer + sizeof ("domain") - 1;
               while (*cp == ' ' || *cp == '\t')
                 cp++;
               if ((*cp == '\0') || (*cp == '\n'))
@@ -230,12 +241,12 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp)
               continue;
             }
           /* Set search list.  */
-          if (MATCH (buf, "search"))
+          if (MATCH (*buffer, "search"))
             {
               if (haveenv)
                 /* LOCALDOMAIN overrides the configuration file.  */
                 continue;
-              cp = buf + sizeof ("search") - 1;
+              cp = *buffer + sizeof ("search") - 1;
               while (*cp == ' ' || *cp == '\t')
                 cp++;
               if ((*cp == '\0') || (*cp == '\n'))
@@ -271,11 +282,11 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp)
               continue;
             }
           /* Read nameservers to query.  */
-          if (MATCH (buf, "nameserver") && nserv < MAXNS)
+          if (MATCH (*buffer, "nameserver") && nserv < MAXNS)
             {
               struct in_addr a;
 
-              cp = buf + sizeof ("nameserver") - 1;
+              cp = *buffer + sizeof ("nameserver") - 1;
               while (*cp == ' ' || *cp == '\t')
                 cp++;
               if ((*cp != '\0') && (*cp != '\n') && __inet_aton (cp, &a))
@@ -300,7 +311,7 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp)
 
                       sa6 = malloc (sizeof (*sa6));
                       if (sa6 == NULL)
-                        return -1;
+                        return false;
 
                       sa6->sin6_family = AF_INET6;
                       sa6->sin6_port = htons (NAMESERVER_PORT);
@@ -323,11 +334,11 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp)
                 }
               continue;
             }
-          if (MATCH (buf, "sortlist"))
+          if (MATCH (*buffer, "sortlist"))
             {
               struct in_addr a;
 
-              cp = buf + sizeof ("sortlist") - 1;
+              cp = *buffer + sizeof ("sortlist") - 1;
               while (nsort < MAXRESOLVSORT)
                 {
                   while (*cp == ' ' || *cp == '\t')
@@ -367,9 +378,9 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp)
                 }
               continue;
             }
-          if (MATCH (buf, "options"))
+          if (MATCH (*buffer, "options"))
             {
-              res_setoptions (statp, buf + sizeof ("options") - 1, "conf");
+              res_setoptions (statp, *buffer + sizeof ("options") - 1, "conf");
               continue;
             }
         }
@@ -387,10 +398,13 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp)
       statp->nsaddr.sin_port = htons (NAMESERVER_PORT);
       statp->nscount = 1;
     }
-  if (statp->defdname[0] == 0
-      && __gethostname (buf, sizeof (statp->defdname) - 1) == 0
-      && (cp = strchr (buf, '.')) != NULL)
-    strcpy (statp->defdname, cp + 1);
+  if (statp->defdname[0] == 0)
+    {
+      char buf[sizeof (statp->defdname)];
+      if (__gethostname (buf, sizeof (statp->defdname) - 1) == 0
+          && (cp = strchr (buf, '.')) != NULL)
+        strcpy (statp->defdname, cp + 1);
+    }
 
   /* Find components of local domain that might be searched.  */
   if (!havesearch)
@@ -404,7 +418,7 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp)
   if ((cp = getenv ("RES_OPTIONS")) != NULL)
     res_setoptions (statp, cp, "env");
   statp->options |= RES_INIT;
-  return 0;
+  return true;
 }
 
 /* Set up default settings.  If the /etc/resolv.conf configuration
@@ -434,7 +448,12 @@ __res_vinit (res_state statp, int preinit)
            need to be handled by the application.  */
         return -1;
       }
-  if (!res_vinit_1 (statp, preinit, fp))
+
+  char *buffer = NULL;
+  bool ok = res_vinit_1 (statp, preinit, fp, &buffer);
+  free (buffer);
+
+  if (!ok)
     {
       /* Deallocate the name server addresses which have been
          allocated.  */
