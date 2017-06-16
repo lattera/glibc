@@ -323,22 +323,27 @@ which returns a value of type @code{int}.  The possible values are:
 
 @vtable @code
 @item FP_NAN
+@standards{C99, math.h}
 The floating-point number @var{x} is ``Not a Number'' (@pxref{Infinity
 and NaN})
 @item FP_INFINITE
+@standards{C99, math.h}
 The value of @var{x} is either plus or minus infinity (@pxref{Infinity
 and NaN})
 @item FP_ZERO
+@standards{C99, math.h}
 The value of @var{x} is zero.  In floating-point formats like @w{IEEE
 754}, where zero can be signed, this value is also returned if
 @var{x} is negative zero.
 @item FP_SUBNORMAL
+@standards{C99, math.h}
 Numbers whose absolute value is too small to be represented in the
 normal format are represented in an alternate, @dfn{denormalized} format
 (@pxref{Floating Point Concepts}).  This format is less precise but can
 represent values closer to zero.  @code{fpclassify} returns this value
 for values of @var{x} in this alternate format.
 @item FP_NORMAL
+@standards{C99, math.h}
 This value is returned for all other values of @var{x}.  It indicates
 that there is nothing special about the number.
 @end vtable
@@ -681,7 +686,7 @@ such as by defining @code{_GNU_SOURCE}, and then you must include
 @deftypevr Macro float SNANF
 @deftypevrx Macro double SNAN
 @deftypevrx Macro {long double} SNANL
-@standardsx{SNANF, ISO, math.h}
+@standards{TS 18661-1:2014, math.h}
 These macros, defined by TS 18661-1:2014, are constant expressions for
 signaling NaNs.
 @end deftypevr
@@ -1881,9 +1886,7 @@ NaN.
 @deftypefun int totalorder (double @var{x}, double @var{y})
 @deftypefunx int totalorderf (float @var{x}, float @var{y})
 @deftypefunx int totalorderl (long double @var{x}, long double @var{y})
-@standards{ISO, math.h}
-@standardsx{totalorderf, ISO, ???}
-@standardsx{totalorderl, ISO, ???}
+@standards{TS 18661-1:2014, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions determine whether the total order relationship,
 defined in IEEE 754-2008, is true for @var{x} and @var{y}, returning
@@ -1902,9 +1905,7 @@ payload.
 @deftypefun int totalordermag (double @var{x}, double @var{y})
 @deftypefunx int totalordermagf (float @var{x}, float @var{y})
 @deftypefunx int totalordermagl (long double @var{x}, long double @var{y})
-@standards{ISO, math.h}
-@standardsx{totalordermagf, ISO, ???}
-@standardsx{totalordermagl, ISO, ???}
+@standards{TS 18661-1:2014, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions determine whether the total order relationship,
 defined in IEEE 754-2008, is true for the absolute values of @var{x}
@@ -2038,6 +2039,7 @@ floating point constant.  Instead, @file{complex.h} defines two macros
 that can be used to create complex numbers.
 
 @deftypevr Macro {const float complex} _Complex_I
+@standards{C99, complex.h}
 This macro is a representation of the complex number ``@math{0+1i}''.
 Multiplying a real floating-point value by @code{_Complex_I} gives a
 complex number whose value is purely imaginary.  You can use this to
@@ -2086,6 +2088,7 @@ imaginary part -4.0.
 a shorter name for the same constant.
 
 @deftypevr Macro {const float complex} I
+@standards{C99, complex.h}
 This macro has exactly the same value as @code{_Complex_I}.  Most of the
 time it is preferable.  However, it causes problems if you want to use
 the identifier @code{I} for something else.  You can safely write

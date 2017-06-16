@@ -1,5 +1,22 @@
 2017-06-16  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/arith.texi (FP_NAN): Add or complete header and standard
+	annotations.
+	(FP_INFINITE): Likewise.
+	(FP_ZERO): Likewise.
+	(FP_SUBNORMAL): Likewise.
+	(FP_NORMAL): Likewise.
+	(SNAN): Likewise.
+	(SNANL): Likewise.
+	(totalorderf): Likewise.
+	(totalorderl): Likewise.
+	(totalordermagf): Likewise.
+	(totalordermagl): Likewise.
+	(_Complex_I): Likewise.
+	(I): Likewise.
+
+2017-06-16  Rical Jasan  <ricaljasan@pacific.net>
+
 	* manual/argp.texi (ARGP_HELP_USAGE): Add missing header and
 	standard annotation.
 	(ARGP_HELP_SHORT_USAGE): Likewise.
