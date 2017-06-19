@@ -1,5 +1,11 @@
 2017-06-19  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_randomid.c: New file.
+	* resolv/res_init.c (res_randomid): Remove definition.
+	* resolv/Makefile (routines): Add res_randomid.
+
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
 	* include/resolv.h (__res_vinit): Declare as hidden.
 	* resolv/res_init.c (res_ninit): Remove __res_vinit declaration.
 	* resolv/res_libc.c (res_init): Likewise.

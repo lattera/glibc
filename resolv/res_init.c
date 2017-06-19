@@ -479,13 +479,6 @@ net_mask (struct in_addr in)
 	return (htonl(IN_CLASSC_NET));
 }
 
-u_int
-res_randomid(void) {
-	return 0xffff & __getpid();
-}
-libc_hidden_def (__res_randomid)
-
-
 /*
  * This routine is for closing the socket if a virtual circuit is used and
  * the program wants to close it.  This provides support for endhostent()
