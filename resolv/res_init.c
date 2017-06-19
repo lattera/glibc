@@ -83,8 +83,6 @@
 #include <sys/types.h>
 #include <inet/net-internal.h>
 
-#include <not-cancel.h>
-
 /* Options.  Should all be left alone. */
 /* #undef DEBUG */
 
@@ -478,56 +476,3 @@ net_mask (struct in_addr in)
 		return (htonl(IN_CLASSB_NET));
 	return (htonl(IN_CLASSC_NET));
 }
-
-/*
- * This routine is for closing the socket if a virtual circuit is used and
- * the program wants to close it.  This provides support for endhostent()
- * which expects to close the socket.
- *
- * This routine is not expected to be user visible.
- */
-void
-__res_iclose(res_state statp, bool free_addr) {
-	int ns;
-
-	if (statp->_vcsock >= 0) {
-		close_not_cancel_no_status(statp->_vcsock);
-		statp->_vcsock = -1;
-		statp->_flags &= ~(RES_F_VC | RES_F_CONN);
-	}
-	for (ns = 0; ns < statp->nscount; ns++)
-		if (statp->_u._ext.nsaddrs[ns]) {
-			if (statp->_u._ext.nssocks[ns] != -1) {
-				close_not_cancel_no_status(statp->_u._ext.nssocks[ns]);
-				statp->_u._ext.nssocks[ns] = -1;
-			}
-			if (free_addr) {
-				free (statp->_u._ext.nsaddrs[ns]);
-				statp->_u._ext.nsaddrs[ns] = NULL;
-			}
-		}
-}
-libc_hidden_def (__res_iclose)
-
-void
-res_nclose(res_state statp)
-{
-  __res_iclose (statp, true);
-}
-libc_hidden_def (__res_nclose)
-
-/* This is called when a thread is exiting to free resources held in _res.  */
-static void __attribute__ ((section ("__libc_thread_freeres_fn")))
-res_thread_freeres (void)
-{
-  if (_res.nscount == 0)
-    /* Never called res_ninit.  */
-    return;
-
-  __res_iclose (&_res, true);		/* Close any VC sockets.  */
-
-  /* Make sure we do a full re-initialization the next time.  */
-  _res.options = 0;
-}
-text_set_element (__libc_thread_subfreeres, res_thread_freeres);
-text_set_element (__libc_subfreeres, res_thread_freeres);

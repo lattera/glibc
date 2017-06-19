@@ -1,5 +1,12 @@
 2017-06-19  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res-close.c: New file.
+	* resolv/res_init.c (__res_iclose, res_nclose)
+	(res_thread_freeres): Remove definitions.
+	* resolv/Makefile (routines): Add res-close.
+
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_randomid.c: New file.
 	* resolv/res_init.c (res_randomid): Remove definition.
 	* resolv/Makefile (routines): Add res_randomid.

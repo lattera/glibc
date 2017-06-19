@@ -28,7 +28,7 @@ headers	:= resolv.h bits/types/res_state.h \
 	   sys/bitypes.h
 
 routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init \
-	    res_hconf res_libc res-state res_randomid
+	    res_hconf res_libc res-state res_randomid res-close
 
 tests = tst-aton tst-leaks tst-inet_ntop
 xtests = tst-leaks2
