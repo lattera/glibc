@@ -551,7 +551,7 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
 #ifdef HAVE_PER_THREAD_LOCALE
 # ifndef IN_LIBGLOCALE
 #  ifdef _LIBC
-  localename = strdupa (__current_locale_name (category));
+  localename = __current_locale_name (category);
 #  else
   categoryname = category_to_name (category);
 #   define CATEGORYNAME_INITIALIZED

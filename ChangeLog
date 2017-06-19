@@ -1,5 +1,10 @@
 2017-06-19  Florian Weimer  <fweimer@redhat.com>
 
+	* intl/dcigettext.c (DCIGETTEXT): Do not make copy of localename.
+	It cannot change while __libc_setlocale_lock is acquired.
+
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
 	* elf/rtld.c (audit_list_string): New variable.
 	(audit_list): Update comment.
 	(struct audit_list_iter): Define.
