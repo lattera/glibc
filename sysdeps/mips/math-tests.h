@@ -19,19 +19,13 @@
 #include <features.h>
 #include <sgidefs.h>
 
-/* MIPS soft float does not support exceptions and rounding modes, and
-   before GCC 4.9 long double when wider than double is implemented
-   using fp-bit which does not integrate with hardware exceptions and
-   rounding modes.  */
+/* MIPS soft float does not support exceptions and rounding modes.  */
 #ifdef __mips_soft_float
 # define ROUNDING_TESTS_float(MODE)	((MODE) == FE_TONEAREST)
 # define ROUNDING_TESTS_double(MODE)	((MODE) == FE_TONEAREST)
 # define ROUNDING_TESTS_long_double(MODE)	((MODE) == FE_TONEAREST)
 # define EXCEPTION_TESTS_float	0
 # define EXCEPTION_TESTS_double	0
-# define EXCEPTION_TESTS_long_double	0
-#elif _MIPS_SIM != _ABIO32 && !__GNUC_PREREQ (4, 9)
-# define ROUNDING_TESTS_long_double(MODE)	((MODE) == FE_TONEAREST)
 # define EXCEPTION_TESTS_long_double	0
 #endif
 

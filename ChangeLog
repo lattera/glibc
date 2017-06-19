@@ -1,3 +1,12 @@
+2017-06-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/atomic-machine.h (R10K_BEQZ_INSN): Remove.
+	[__GNUC_PREREQ (4, 8) || __mips16]: Make code unconditional.
+	[!__GNUC_PREREQ (4, 8) && !__mips16]: Remove conditional code.
+	* sysdeps/mips/math-tests.h
+	[_MIPS_SIM != _ABIO32 && !__GNUC_PREREQ (4, 9)]: Remove
+	conditional code.
+
 2017-06-19  Florian Weimer  <fweimer@redhat.com>
 
 	* intl/dcigettext.c (DCIGETTEXT): Do not make copy of localename.
