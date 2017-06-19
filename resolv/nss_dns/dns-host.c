@@ -164,7 +164,11 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
   enum nss_status status;
 
   if (__res_maybe_init (&_res, 0) == -1)
-    return NSS_STATUS_UNAVAIL;
+    {
+      *errnop = errno;
+      *h_errnop = NETDB_INTERNAL;
+      return NSS_STATUS_UNAVAIL;
+    }
 
   switch (af) {
   case AF_INET:
@@ -289,7 +293,11 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 			   int *herrnop, int32_t *ttlp)
 {
   if (__res_maybe_init (&_res, 0) == -1)
-    return NSS_STATUS_UNAVAIL;
+    {
+      *errnop = errno;
+      *herrnop = NETDB_INTERNAL;
+      return NSS_STATUS_UNAVAIL;
+    }
 
   /*
    * if there aren't any dots, it could be a user-level alias.
@@ -416,7 +424,11 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
  host_data = (struct host_data *) buffer;
 
   if (__res_maybe_init (&_res, 0) == -1)
-    return NSS_STATUS_UNAVAIL;
+    {
+      *errnop = errno;
+      *h_errnop = NETDB_INTERNAL;
+      return NSS_STATUS_UNAVAIL;
+    }
 
   if (af == AF_INET6 && len == IN6ADDRSZ
       && (memcmp (uaddr, mapped, sizeof mapped) == 0

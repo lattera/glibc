@@ -1,5 +1,17 @@
 2017-06-19  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_init.c (res_vinit_1): New function.
+	(__res_vinit): Call it.  Handle file open and memory allocation
+	failures.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname3_r): Propagate
+	erno from __res_maybe_init failure.
+	(_nss_dns_gethostbyname4_r): Likewise.
+	(_nss_dns_gethostbyaddr2_r): Likewise.
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r): Likewise.
+	(_nss_dns_getnetbyaddr_r): Likewise.
+
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_init.c: Reformat to GNU style.
 
 2017-06-19  Florian Weimer  <fweimer@redhat.com>

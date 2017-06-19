@@ -116,7 +116,11 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
   enum nss_status status;
 
   if (__res_maybe_init (&_res, 0) == -1)
-    return NSS_STATUS_UNAVAIL;
+    {
+      *errnop = errno;
+      *herrnop = NETDB_INTERNAL;
+      return NSS_STATUS_UNAVAIL;
+    }
 
   net_buffer.buf = orig_net_buffer = (querybuf *) alloca (1024);
 
@@ -166,7 +170,11 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
     return NSS_STATUS_UNAVAIL;
 
   if (__res_maybe_init (&_res, 0) == -1)
-    return NSS_STATUS_UNAVAIL;
+    {
+      *errnop = errno;
+      *herrnop = NETDB_INTERNAL;
+      return NSS_STATUS_UNAVAIL;
+    }
 
   net2 = (u_int32_t) net;
   for (cnt = 4; net2 != 0; net2 >>= 8)

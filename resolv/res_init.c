@@ -100,6 +100,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <inet/net-internal.h>
+#include <errno.h>
 
 static void res_setoptions (res_state, const char *, const char *);
 static uint32_t net_mask (struct in_addr);
@@ -121,14 +122,11 @@ is_sort_mask (char ch)
   return ch == '/' || ch == '&';
 }
 
-/* Set up default settings.  If the /etc/resolv.conf configuration
-   file exist, the values there will have precedence.  Otherwise, the
-   server address is set to INADDR_LOOPBACK and the default domain
-   name comes from gethostname.  The RES_OPTIONS and LOCALDOMAIN
-   environment variables can be used to override some settings.
-   Return 0 if completes successfully, -1 on error.  */
-int
-__res_vinit (res_state statp, int preinit)
+/* Internal helper function for __res_vinit, to aid with resource
+   deallocation and error handling.  Return true on success, false on
+   failure.  */
+static bool
+res_vinit_1 (res_state statp, bool preinit, FILE *fp)
 {
   char *cp, **pp;
   char buf[BUFSIZ];
@@ -203,7 +201,6 @@ __res_vinit (res_state statp, int preinit)
    && (line[sizeof (name) - 1] == ' '           \
        || line[sizeof (name) - 1] == '\t'))
 
-  FILE *fp = fopen (_PATH_RESCONF, "rce");
   if (fp != NULL)
     {
       /* No threads use this stream.  */
@@ -302,26 +299,26 @@ __res_vinit (res_state statp, int preinit)
                       struct sockaddr_in6 *sa6;
 
                       sa6 = malloc (sizeof (*sa6));
-                      if (sa6 != NULL)
-                        {
-                          sa6->sin6_family = AF_INET6;
-                          sa6->sin6_port = htons (NAMESERVER_PORT);
-                          sa6->sin6_flowinfo = 0;
-                          sa6->sin6_addr = a6;
+                      if (sa6 == NULL)
+                        return -1;
 
-                          sa6->sin6_scope_id = 0;
-                          if (__glibc_likely (el != NULL))
-                            /* Ignore errors, for backwards
-                               compatibility.  */
-                            __inet6_scopeid_pton
-                              (&a6, el + 1, &sa6->sin6_scope_id);
+                      sa6->sin6_family = AF_INET6;
+                      sa6->sin6_port = htons (NAMESERVER_PORT);
+                      sa6->sin6_flowinfo = 0;
+                      sa6->sin6_addr = a6;
 
-                          statp->nsaddr_list[nserv].sin_family = 0;
-                          statp->_u._ext.nsaddrs[nserv] = sa6;
-                          statp->_u._ext.nssocks[nserv] = -1;
-                          have_serv6 = true;
-                          nserv++;
-                        }
+                      sa6->sin6_scope_id = 0;
+                      if (__glibc_likely (el != NULL))
+                        /* Ignore errors, for backwards
+                           compatibility.  */
+                        __inet6_scopeid_pton
+                          (&a6, el + 1, &sa6->sin6_scope_id);
+
+                      statp->nsaddr_list[nserv].sin_family = 0;
+                      statp->_u._ext.nsaddrs[nserv] = sa6;
+                      statp->_u._ext.nssocks[nserv] = -1;
+                      have_serv6 = true;
+                      nserv++;
                     }
                 }
               continue;
@@ -407,6 +404,44 @@ __res_vinit (res_state statp, int preinit)
   if ((cp = getenv ("RES_OPTIONS")) != NULL)
     res_setoptions (statp, cp, "env");
   statp->options |= RES_INIT;
+  return 0;
+}
+
+/* Set up default settings.  If the /etc/resolv.conf configuration
+   file exist, the values there will have precedence.  Otherwise, the
+   server address is set to INADDR_LOOPBACK and the default domain
+   name comes from gethostname.  The RES_OPTIONS and LOCALDOMAIN
+   environment variables can be used to override some settings.
+   Return 0 if completes successfully, -1 on error.  */
+int
+__res_vinit (res_state statp, int preinit)
+{
+  FILE *fp = fopen (_PATH_RESCONF, "rce");
+  if (fp == NULL)
+    switch (errno)
+      {
+      case EACCES:
+      case EISDIR:
+      case ELOOP:
+      case ENOENT:
+      case ENOTDIR:
+      case EPERM:
+        /* Ignore these errors.  They are persistent errors caused
+           by file system contents.  */
+        break;
+      default:
+        /* Other errors refer to resource allocation problems and
+           need to be handled by the application.  */
+        return -1;
+      }
+  if (!res_vinit_1 (statp, preinit, fp))
+    {
+      /* Deallocate the name server addresses which have been
+         allocated.  */
+      for (int n = 0; n < MAXNS; n++)
+        free (statp->_u._ext.nsaddrs[n]);
+      return -1;
+    }
   return 0;
 }
 
