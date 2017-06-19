@@ -1,5 +1,16 @@
 2017-06-19  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/rtld.c (audit_list_string): New variable.
+	(audit_list): Update comment.
+	(struct audit_list_iter): Define.
+	(audit_list_iter_init, audit_list_iter_next): New function.
+	(dl_main): Use struct audit_list_iter to process audit modules.
+	(process_dl_audit): Call dso_name_valid_for_suid.
+	(process_envvars): Set audit_list_string instead of calling
+	process_dl_audit.
+
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
 	* elf/rtld.c (SECURE_NAME_LIMIT, SECURE_PATH_LIMIT): Define.
 	(dso_name_valid_for_suid): New function.
 	(handle_ld_preload): Likewise.
