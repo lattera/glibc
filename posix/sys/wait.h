@@ -36,6 +36,12 @@ typedef __pid_t pid_t;
 # include <signal.h>
 #endif
 
+#if defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8
+/* Some older standards require the contents of struct rusage to be
+   defined here.  */
+# include <bits/types/struct_rusage.h>
+#endif
+
 /* These macros could also be defined in <stdlib.h>.  */
 #if !defined _STDLIB_H || (!defined __USE_XOPEN && !defined __USE_XOPEN2K8)
 /* This will define the `W*' macros for the flag

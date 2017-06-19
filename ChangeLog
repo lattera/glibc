@@ -1,3 +1,22 @@
+2017-06-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21575]
+	* resource/bits/types/struct_rusage.h: New file.
+	* include/bits/types/struct_rusage.h: Likewise.
+	* bits/resource.h (struct rusage): Include
+	<bits/types/struct_rusage.h> instead of defining here.
+	* sysdeps/unix/sysv/linux/bits/resource.h (struct rusage):
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h (struct rusage):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h (struct rusage):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h (struct rusage):
+	Likewise.
+	* resource/Makefile (headers): Add bits/types/struct_rusage.h.
+	* posix/sys/wait.h [__USE_XOPEN_EXTENDED && !__USE_XOPEN2K8]:
+	Include <bits/types/struct_rusage.h>
+
 2017-06-19  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/dynarray.h: Use libc_hidden_proto only for !_ISOMAC.
