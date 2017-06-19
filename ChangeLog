@@ -1,5 +1,11 @@
 2017-06-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21625]
+	* posix/sys/wait.h (strust rusage forward declaration): Change
+	[__USE_XOPEN_EXTENDED] conditional to [__USE_XOPEN_EXTENDED &&
+	!__USE_XOPEN2K].
+	(wait3): Likewise.
+
 	* configure.ac (libc_cv_compiler_ok): Require GCC 4.9 or later.
 	* configure: Regenerated.
 	* manual/install.texi (Tools for Compilation): Document

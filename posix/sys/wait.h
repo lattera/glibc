@@ -133,7 +133,8 @@ extern int waitid (idtype_t __idtype, __id_t __id, siginfo_t *__infop,
 		   int __options);
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC \
+    || (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K)
 /* This being here makes the prototypes valid whether or not
    we have already included <sys/resource.h> to define `struct rusage'.  */
 struct rusage;
