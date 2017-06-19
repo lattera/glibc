@@ -32,25 +32,18 @@ ENTRY(__makecontext_ret)
 	lr    %r2,%r8
 	br    %r9
 1:	lhi   %r2,0			/* EXIT return value.  */
-	basr	%r13,0
-2:
-#ifdef PIC
-	l       %r12,4f-2b(%r13)
-	la      %r12,0(%r12,%r13)	/* GOT pointer in r12 after this.  */
-	l       %r1,3f-2b(%r13)
-	bas     %r14,0(%r1,%r12)
-	.align  4
-3:
-	.long   HIDDEN_JUMPTARGET (exit)@GOTOFF
-4:
-	.long   _GLOBAL_OFFSET_TABLE_-2b
-#else
-	l	%r1,3f-2b(%r13)
-	basr	%r14,%r1
-	.align  4
-3:
-	.long   HIDDEN_JUMPTARGET (exit)
+#ifdef NO_HIDDEN
+	/* If SHARED and NO_HIDDEN is defined, we need to setup got pointer
+	   as HIDDEN_JUMPTARGET expands to JUMPTARGET which expands to
+	   exit@PLT.  Otherwise HIDDEN_JUMPTARGET expands to __GI_exit if
+	   SHARED is defined and to exit if SHARED is not defined.  */
+	SYSCALL_PIC_SETUP
 #endif
-	.align	2
+	basr	%r1,0
+2:
+	al	%r1,3f-2b(%r1)
+	basr	%r14,%r1		/* Call exit.  */
 	j	.+2			/* Trap if exit returns for some reason.  */
+3:
+	.long   HIDDEN_JUMPTARGET (exit) - 2b
 END(__makecontext_ret)

@@ -77,7 +77,7 @@ lose: SYSCALL_PIC_SETUP			\
   END (name)
 
 #undef JUMPTARGET
-#ifdef PIC
+#ifdef SHARED
 #define JUMPTARGET(name)	name##@PLT
 #define SYSCALL_PIC_SETUP \
     larl  %r12,_GLOBAL_OFFSET_TABLE_

@@ -82,14 +82,14 @@ lose: SYSCALL_PIC_SETUP				\
   END (name)
 
 #undef JUMPTARGET
-#ifdef PIC
+#ifdef SHARED
 #define JUMPTARGET(name)	name##@PLT
 #define SYSCALL_PIC_SETUP             \
-    bras  %r12,1f                     \
-0:  .long _GLOBAL_OFFSET_TABLE_-0b    \
+    bras  %r12,1f;		      \
+0:  .long _GLOBAL_OFFSET_TABLE_-0b;   \
 1:  al    %r12,0(%r12)
 #else
-#define JUMPTARGET(name)   	name
+#define JUMPTARGET(name)	name
 #define SYSCALL_PIC_SETUP	/* Nothing.  */
 #endif
 

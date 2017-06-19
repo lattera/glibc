@@ -1,3 +1,14 @@
+2017-06-19  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #21537]
+	* sysdeps/s390/s390-32/sysdep.h (JUMPTARGET, SYSCALL_PIC_SETUP):
+	Check SHARED instead of PIC.
+	(SYSCALL_PIC_SETUP): Add missing semicolons.
+	* sysdeps/s390/s390-64/sysdep.h (JUMPTARGET, SYSCALL_PIC_SETUP):
+	Check SHARED instead of PIC.
+	* sysdeps/unix/sysv/linux/s390/s390-32/__makecontext_ret.S
+	(__makecontext_ret): Adjust code to jump to exit.
+
 2017-06-19  Christian Borntraeger  <borntraeger@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/syscall.S (syscall):
