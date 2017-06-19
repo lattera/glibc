@@ -1,3 +1,10 @@
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/rtld.c (SECURE_NAME_LIMIT, SECURE_PATH_LIMIT): Define.
+	(dso_name_valid_for_suid): New function.
+	(handle_ld_preload): Likewise.
+	(dl_main): Call it.  Remove alloca.
+
 2017-06-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21625]
