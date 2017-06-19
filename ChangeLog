@@ -1,5 +1,10 @@
 2017-06-19  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_init.c (res_setoptions): Remove DEBUG preprocessor
+	conditionals.
+
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res-close.c: New file.
 	* resolv/res_init.c (__res_iclose, res_nclose)
 	(res_thread_freeres): Remove definitions.

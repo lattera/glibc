@@ -83,9 +83,6 @@
 #include <sys/types.h>
 #include <inet/net-internal.h>
 
-/* Options.  Should all be left alone. */
-/* #undef DEBUG */
-
 static void res_setoptions (res_state, const char *, const char *)
      internal_function;
 
@@ -383,11 +380,6 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 	const char *cp = options;
 	int i;
 
-#ifdef DEBUG
-	if (statp->options & RES_DEBUG)
-		printf(";; res_setoptions(\"%s\", \"%s\")...\n",
-		       options, source);
-#endif
 	while (*cp) {
 		/* skip leading and inner runs of spaces */
 		while (*cp == ' ' || *cp == '\t')
@@ -399,10 +391,6 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 				statp->ndots = i;
 			else
 				statp->ndots = RES_MAXNDOTS;
-#ifdef DEBUG
-			if (statp->options & RES_DEBUG)
-				printf(";;\tndots=%d\n", statp->ndots);
-#endif
 		} else if (!strncmp(cp, "timeout:", sizeof("timeout:") - 1)) {
 			i = atoi(cp + sizeof("timeout:") - 1);
 			if (i <= RES_MAXRETRANS)
@@ -415,15 +403,6 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 				statp->retry = i;
 			else
 				statp->retry = RES_MAXRETRY;
-		} else if (!strncmp(cp, "debug", sizeof("debug") - 1)) {
-#ifdef DEBUG
-			if (!(statp->options & RES_DEBUG)) {
-				printf(";; res_setoptions(\"%s\", \"%s\")..\n",
-				       options, source);
-				statp->options |= RES_DEBUG;
-			}
-			printf(";;\tdebug\n");
-#endif
 		} else {
 		  static const struct
 		  {
