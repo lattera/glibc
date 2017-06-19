@@ -1,5 +1,11 @@
 2017-06-19  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_init.c (sort_mask_chars, ISSORTMASK): Remove.
+	(is_sort_mask): New function.
+	(__res_vinit): Use it.
+
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_init.c (res_setoptions): Remove DEBUG preprocessor
 	conditionals.
 
