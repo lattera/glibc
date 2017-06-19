@@ -1,5 +1,12 @@
 2017-06-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21584]
+	* signal/signal.h: Make includes of <bits/sigstack.h> and
+	<bits/ss_flags.h> conditional on [__USE_XOPEN_EXTENDED ||
+	__USE_MISC].
+	(sigaltstack): Make declaration conditional on
+	[__USE_XOPEN_EXTENDED || __USE_MISC].
+
 	[BZ #21575]
 	* resource/bits/types/struct_rusage.h: New file.
 	* include/bits/types/struct_rusage.h: Likewise.

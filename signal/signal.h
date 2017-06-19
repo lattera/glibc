@@ -301,20 +301,22 @@ extern int sigreturn (struct sigcontext *__scp) __THROW;
    calls be restarted after signal SIG.  */
 extern int siginterrupt (int __sig, int __interrupt) __THROW;
 
-# include <bits/sigstack.h>
 # include <bits/types/stack_t.h>
-# include <bits/ss_flags.h>
 # if defined __USE_XOPEN || defined __USE_XOPEN2K8
 /* This will define `ucontext_t' and `mcontext_t'.  */
 #  include <sys/ucontext.h>
 # endif
+#endif /* Use POSIX.1-2008 or X/Open Unix.  */
+
+#if defined __USE_XOPEN_EXTENDED || defined __USE_MISC
+# include <bits/sigstack.h>
+# include <bits/ss_flags.h>
 
 /* Alternate signal handler stack interface.
    This interface should always be preferred over `sigstack'.  */
 extern int sigaltstack (const stack_t *__restrict __ss,
 			stack_t *__restrict __oss) __THROW;
-
-#endif /* Use POSIX.1-2008 or X/Open Unix.  */
+#endif /* __USE_XOPEN_EXTENDED || __USE_MISC */
 
 #if ((defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8)	\
      || defined __USE_MISC)
