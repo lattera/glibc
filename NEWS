@@ -107,6 +107,10 @@ Version 2.26
   PTRACE_DISABLE_TE and PTRACE_TE_ABORT_RAND were added as those are supported
   by the s390 kernel.
 
+* The minimum GCC version that can be used to build this version of the GNU
+  C Library is GCC 4.9.  Older GCC versions, and non-GNU compilers, can
+  still be used to compile programs using the GNU C Library.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,
