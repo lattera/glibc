@@ -49,20 +49,14 @@ ENTRY (syscall)
 	lg     %r6,320(%r15)	   /* Fifth parameter.	*/
 	lg     %r7,328(%r15)	   /* Sixth parameter.	*/
 
-	basr   %r8,0
-0:	clg    %r1,4f-0b(%r8)      /* svc number < 256? */
-	jl     2f
-1:	svc    0
-	j      3f
-2:	ex     %r1,1b-0b(%r8)      /* lsb of R1 is subsituted as SVC number */
-3:	lg     %r15,0(%r15)        /* load back chain */
+	svc    0
+	lg     %r15,0(%r15)        /* Load back chain.  */
 	cfi_adjust_cfa_offset (-160)
-	lmg	%r6,15,48(%r15)	   /* Load registers.  */
+	lmg    %r6,%r15,48(%r15)   /* Load registers.  */
 
 	lghi   %r0,-4095
 	clgr   %r2,%r0		   /* Check R2 for error.  */
 	jgnl   SYSCALL_ERROR_LABEL
 	br     %r14		   /* Return to caller.	 */
-4:	.quad  256
 PSEUDO_END (syscall)
 

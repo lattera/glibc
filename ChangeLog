@@ -1,3 +1,9 @@
+2017-06-19  Christian Borntraeger  <borntraeger@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscall.S (syscall):
+	Simplify code by always using SVC 0 instead of EX.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscall.S: Likewise.
+
 2017-06-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/Versions (ld): Remove _dl_out_of_memory.
