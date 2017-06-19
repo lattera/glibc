@@ -128,7 +128,6 @@ __dynarray_error (struct dynarray_header *list)
    Return false on failure, true on success.  */
 bool __libc_dynarray_emplace_enlarge (struct dynarray_header *,
                                       void *scratch, size_t element_size);
-libc_hidden_proto (__libc_dynarray_emplace_enlarge)
 
 /* Internal function.  Enlarge the dynamically allocated area of the
    array to make room for at least SIZE elements (which must be larger
@@ -138,13 +137,11 @@ libc_hidden_proto (__libc_dynarray_emplace_enlarge)
    Return false on failure, true on success.  */
 bool __libc_dynarray_resize (struct dynarray_header *, size_t size,
                              void *scratch, size_t element_size);
-libc_hidden_proto (__libc_dynarray_resize)
 
 /* Internal function.  Like __libc_dynarray_resize, but clear the new
    part of the dynamic array.  */
 bool __libc_dynarray_resize_clear (struct dynarray_header *, size_t size,
                                    void *scratch, size_t element_size);
-libc_hidden_proto (__libc_dynarray_resize_clear)
 
 /* Internal type.  */
 struct dynarray_finalize_result
@@ -163,7 +160,6 @@ struct dynarray_finalize_result
 bool __libc_dynarray_finalize (struct dynarray_header *list, void *scratch,
                                size_t element_size,
                                struct dynarray_finalize_result *result);
-libc_hidden_proto (__libc_dynarray_finalize)
 
 
 /* Internal function.  Terminate the process after an index error.
@@ -171,6 +167,13 @@ libc_hidden_proto (__libc_dynarray_finalize)
    lookup index which triggered the failure.  */
 void __libc_dynarray_at_failure (size_t size, size_t index)
   __attribute__ ((noreturn));
+
+#ifndef _ISOMAC
+libc_hidden_proto (__libc_dynarray_emplace_enlarge)
+libc_hidden_proto (__libc_dynarray_resize)
+libc_hidden_proto (__libc_dynarray_resize_clear)
+libc_hidden_proto (__libc_dynarray_finalize)
 libc_hidden_proto (__libc_dynarray_at_failure)
+#endif
 
 #endif /* _DYNARRAY_H */

@@ -1,3 +1,7 @@
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/dynarray.h: Use libc_hidden_proto only for !_ISOMAC.
+
 2017-06-19  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/x86_64/multiarch/rawmemchr-sse2.S: Fix typo.
