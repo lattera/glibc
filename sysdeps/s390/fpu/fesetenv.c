@@ -20,8 +20,6 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 #include <stddef.h>
-#include <asm/ptrace.h>
-#include <sys/ptrace.h>
 #include <unistd.h>
 
 int

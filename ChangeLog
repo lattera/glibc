@@ -1,3 +1,22 @@
+2017-06-19  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #21539]
+	* NEWS: Mention s390 ptrace request changes.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h
+	(PTRACE_GETREGS, PTRACE_SETREGS, PTRACE_GETFPREGS,
+	PTRACE_SETFPREGS): Remove enum constant.
+	(PT_GETREGS, PT_SETREGS, PT_GETFPREGS, T_SETFPREGS):
+	Remove defines.
+	(PTRACE_SINGLEBLOCK): New enum constant.
+	(PT_STEPBLOCK): New define.
+	(PTRACE_PEEKUSR_AREA, PTRACE_POKEUSR_AREA,
+	PTRACE_GET_LAST_BREAK, PTRACE_ENABLE_TE, PTRACE_DISABLE_TE,
+	PTRACE_TE_ABORT_RAND): New enum constant and define.
+	* sysdeps/s390/fpu/fesetenv.c: Remove ptrace.h includes.
+	* sysdeps/unix/sysv/linux/s390/tst-ptrace-singleblock.c:
+	New file.
+	* sysdeps/unix/sysv/linux/s390/Makefile: Add test.
+
 2017-06-16  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/res_init.c (res_vinit_1): Use getline to read from the

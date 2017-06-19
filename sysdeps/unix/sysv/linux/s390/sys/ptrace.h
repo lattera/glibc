@@ -89,25 +89,9 @@ enum __ptrace_request
   PTRACE_SINGLESTEP = 9,
 #define PT_STEP PTRACE_SINGLESTEP
 
-  /* Get all general purpose registers used by a processes.
-     This is not supported on all machines.  */
-   PTRACE_GETREGS = 12,
-#define PT_GETREGS PTRACE_GETREGS
-
-  /* Set all general purpose registers used by a processes.
-     This is not supported on all machines.  */
-   PTRACE_SETREGS = 13,
-#define PT_SETREGS PTRACE_SETREGS
-
-  /* Get all floating point registers used by a processes.
-     This is not supported on all machines.  */
-   PTRACE_GETFPREGS = 14,
-#define PT_GETFPREGS PTRACE_GETFPREGS
-
-  /* Set all floating point registers used by a processes.
-     This is not supported on all machines.  */
-   PTRACE_SETFPREGS = 15,
-#define PT_SETFPREGS PTRACE_SETFPREGS
+  /* Execute process until next taken branch.  */
+  PTRACE_SINGLEBLOCK = 12,
+#define PT_STEPBLOCK PTRACE_SINGLEBLOCK
 
   /* Attach to a process that is already running. */
   PTRACE_ATTACH = 16,
@@ -167,8 +151,26 @@ enum __ptrace_request
   PTRACE_SETSIGMASK = 0x420b,
 #define PTRACE_SETSIGMASK PTRACE_SETSIGMASK
 
-  PTRACE_SECCOMP_GET_FILTER = 0x420c
+  PTRACE_SECCOMP_GET_FILTER = 0x420c,
 #define PTRACE_SECCOMP_GET_FILTER PTRACE_SECCOMP_GET_FILTER
+
+  PTRACE_PEEKUSR_AREA = 0x5000,
+#define PTRACE_PEEKUSR_AREA PTRACE_PEEKUSR_AREA
+
+  PTRACE_POKEUSR_AREA = 0x5001,
+#define PTRACE_POKEUSR_AREA PTRACE_POKEUSR_AREA
+
+  PTRACE_GET_LAST_BREAK = 0x5006,
+#define PTRACE_GET_LAST_BREAK PTRACE_GET_LAST_BREAK
+
+  PTRACE_ENABLE_TE = 0x5009,
+#define PTRACE_ENABLE_TE PTRACE_ENABLE_TE
+
+  PTRACE_DISABLE_TE = 0x5010,
+#define PTRACE_DISABLE_TE PTRACE_DISABLE_TE
+
+  PTRACE_TE_ABORT_RAND = 0x5011
+#define PTRACE_TE_ABORT_RAND PTRACE_TE_ABORT_RAND
 };
 
 

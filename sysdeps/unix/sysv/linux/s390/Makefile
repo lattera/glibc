@@ -29,3 +29,7 @@ CFLAGS-elision-trylock.c = $(elision-CFLAGS)
 CFLAGS-elision-unlock.c = $(elision-CFLAGS)
 endif
 endif
+
+ifeq ($(subdir),misc)
+tests += tst-ptrace-singleblock
+endif

@@ -98,6 +98,15 @@ Version 2.26
 * The tunables feature is now enabled by default.  This allows users to tweak
   behavior of the GNU C Library using the GLIBC_TUNABLES environment variable.
 
+* The s390 specific ptrace requests are adjusted to the kernel ones.  Request 12
+  is now used for PTRACE_SINGLEBLOCK instead of PTRACE_GETREGS.  The requests
+  PTRACE_GETREGS, PTRACE_SETREGS, PTRACE_GETFPREGS and PTRACE_SETFPREGS were
+  removed as those are not supported by the s390 kernel.  The requests
+  PTRACE_SINGLEBLOCK, PTRACE_SECCOMP_GET_FILTER, PTRACE_PEEKUSR_AREA,
+  PTRACE_POKEUSR_AREA, PTRACE_GET_LAST_BREAK, PTRACE_ENABLE_TE,
+  PTRACE_DISABLE_TE and PTRACE_TE_ABORT_RAND were added as those are supported
+  by the s390 kernel.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,
