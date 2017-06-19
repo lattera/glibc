@@ -41,8 +41,6 @@ __libc_lock_define_initialized (static, lock);
 
 int
 res_init(void) {
-	extern int __res_vinit(res_state, int);
-
 	/*
 	 * These three fields used to be statically initialized.  This made
 	 * it hard to use this code in a shared library.  It is necessary,
