@@ -1,5 +1,9 @@
 2017-06-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21457]
+	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h [__x86_64__] (struct
+	_libc_xmmreg): Use __ctx in defining field.
+
 	[BZ #21597]
 	* signal/signal.h (siginterrupt): Make declaration conditional on
 	[__USE_XOPEN_EXTENDED || __USE_MISC].

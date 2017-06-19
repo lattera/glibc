@@ -107,7 +107,7 @@ struct _libc_fpxreg
 
 struct _libc_xmmreg
 {
-  __uint32_t	element[4];
+  __uint32_t	__ctx(element)[4];
 };
 
 struct _libc_fpstate
