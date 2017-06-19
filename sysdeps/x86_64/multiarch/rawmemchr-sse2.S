@@ -20,7 +20,7 @@
 #if IS_IN (libc)
 # define __rawmemchr __rawmemchr_sse2
 
-# undefine weak_alias
+# undef weak_alias
 # define weak_alias(__rawmemchr, rawmemchr)
 # undef libc_hidden_def
 # define libc_hidden_def(__rawmemchr)

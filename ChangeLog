@@ -1,3 +1,7 @@
+2017-06-19  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/x86_64/multiarch/rawmemchr-sse2.S: Fix typo.
+
 2017-06-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* scripts/gen-tunables.awk: Avoid multi-dimensional arrays.
