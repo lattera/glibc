@@ -1,3 +1,10 @@
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21624]
+	CVE-2017-1000366
+	* elf/rtld.c (process_envvars): Ignore LD_LIBRARY_PATH for
+	__libc_enable_secure.
+
 2017-06-19  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	[BZ #21539]
