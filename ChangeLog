@@ -1,3 +1,11 @@
+2017-06-20  Zack Weinberg  <zackw@panix.com>
+
+	* string/string.h (__mempcpy_inline): Delete.
+	* sysdeps/x86_64/multiarch/mempcpy.c
+	* sysdeps/x86_64/multiarch/stpcpy.c:
+	Define NO_MEMPCPY_STPCPY_REDIRECT and __NO_STRING_INLINES
+	before including string.h.
+
 2017-06-20  Paul A. Clarke  <pc@us.ibm.com>
 
 	* benchtests/Makefile (bench-math): Add powf.
