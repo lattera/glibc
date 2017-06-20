@@ -1,3 +1,11 @@
+2017-06-20  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21634]
+	* sysdeps/unix/sysv/linux/ia64/Makefile [$(subdir) = conform]
+	(conformtest-xfail-conds): New variable.
+	* conform/data/signal.h-data (uc_sigmask): XFAIL for ia64-linux.
+	* conform/data/ucontext.h-data (uc_sigmask): Likewise.
+
 2017-06-20  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/powf-inputs: Add reduced trace from wrf.
