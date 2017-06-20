@@ -15,31 +15,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/stat.h>
+
 #include <sysdep-cancel.h>
-#include <not-cancel.h>
 
-
-#ifndef OPENAT
-# define OPENAT openat
-#endif
-
-#define UNDERIZE(name) UNDERIZE_1 (name)
-#define UNDERIZE_1(name) __##name
-#define __OPENAT UNDERIZE (OPENAT)
-
+#ifndef __OFF_T_MATCHES_OFF64_T
 
 /* Open FILE with access OFLAG.  Interpret relative paths relative to
    the directory associated with FD.  If OFLAG includes O_CREAT or
    O_TMPFILE, a fourth argument is the file protection.  */
 int
-__OPENAT (int fd, const char *file, int oflag, ...)
+__libc_openat (int fd, const char *file, int oflag, ...)
 {
   mode_t mode = 0;
   if (__OPEN_NEEDS_MODE (oflag))
@@ -50,12 +37,10 @@ __OPENAT (int fd, const char *file, int oflag, ...)
       va_end (arg);
     }
 
-  /* We have to add the O_LARGEFILE flag for openat64.  */
-#ifdef MORE_OFLAGS
-  oflag |= MORE_OFLAGS;
-#endif
-
   return SYSCALL_CANCEL (openat, fd, file, oflag, mode);
 }
-libc_hidden_def (__OPENAT)
-weak_alias (__OPENAT, OPENAT)
+weak_alias (__libc_openat, __openat)
+libc_hidden_weak (__openat)
+weak_alias (__libc_openat, openat)
+
+#endif

@@ -1,3 +1,12 @@
+2017-06-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/openat.c (__libc_openat): Build only
+	for !__OFF_T_MATCHES_OFF64_T.
+	* sysdeps/unix/sysv/linux/openat64.c (__libc_openat64): New
+	implementation based on open64.
+	* sysdeps/unix/sysv/linux/wordsize-64/openat.c: Remove file.
+	* sysdeps/unix/sysv/linux/wordsize-64/openat64.c: Likewise.
+
 2017-06-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/dl-tunables.list: Move x86 specific tunables to ...
