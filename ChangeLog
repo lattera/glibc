@@ -1,5 +1,11 @@
 2017-07-27  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/lang.texi (CHAR_BIT): Convert from an @table to an
+	@deftypevr.  Change standard from ISO to C90.  Mention the
+	POSIX.1-2001 requirement of the value 8.
+
+2017-07-27  Rical Jasan  <ricaljasan@pacific.net>
+
 	* manual/creature.texi (_REENTRANT): Annotate as obsolete.
 	(_THREAD_SAFE): Likewise.
 

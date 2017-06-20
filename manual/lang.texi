@@ -628,11 +628,10 @@ There is no operator in the C language that can give you the number of
 bits in an integer data type.  But you can compute it from the macro
 @code{CHAR_BIT}, defined in the header file @file{limits.h}.
 
-@table @code
-@item CHAR_BIT
-@standards{ISO, limits.h}
-This is the number of bits in a @code{char}---eight, on most systems.
-The value has type @code{int}.
+@deftypevr Macro int CHAR_BIT
+@standards{C90, limits.h}
+This is the number of bits in a @code{char}.  POSIX.1-2001 requires
+this to be 8.
 
 You can compute the number of bits in any data type @var{type} like
 this:
@@ -640,7 +639,7 @@ this:
 @smallexample
 sizeof (@var{type}) * CHAR_BIT
 @end smallexample
-@end table
+@end deftypevr
 
 That expression includes padding bits as well as value and sign bits.
 On all systems supported by @theglibc{}, standard integer types other
