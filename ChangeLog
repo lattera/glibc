@@ -1,3 +1,28 @@
+2017-06-20  H.J. Lu  <hongjiu.lu@intel.com>
+	    Erich Elsen  <eriche@google.com>
+
+	* elf/dl-tunables.list (tune): Add ifunc,
+	x86_non_temporal_threshold,
+	x86_data_cache_size and x86_shared_cache_size.
+	* manual/tunables.texi: Document glibc.tune.ifunc,
+	glibc.tune.x86_data_cache_size, glibc.tune.x86_shared_cache_size
+	and glibc.tune.x86_non_temporal_threshold.
+	* sysdeps/unix/sysv/linux/x86/dl-sysdep.c: New file.
+	* sysdeps/x86/cpu-tunables.c: Likewise.
+	* sysdeps/x86/cacheinfo.c
+	(init_cacheinfo): Check and get data cache size, shared cache
+	size and non temporal threshold from cpu_features.
+	* sysdeps/x86/cpu-features.c [HAVE_TUNABLES] (TUNABLE_NAMESPACE):
+	New.
+	[HAVE_TUNABLES] Include <unistd.h>.
+	[HAVE_TUNABLES] Include <elf/dl-tunables.h>.
+	[HAVE_TUNABLES] (TUNABLE_CALLBACK (set_ifunc)): Likewise.
+	[HAVE_TUNABLES] (init_cpu_features): Use TUNABLE_GET to set
+	IFUNC selection, data cache size, shared cache size and non
+	temporal threshold.
+	* sysdeps/x86/cpu-features.h (cpu_features): Add data_cache_size,
+	shared_cache_size and non_temporal_threshold.
+
 2017-06-20  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/README: Describe workload feature.

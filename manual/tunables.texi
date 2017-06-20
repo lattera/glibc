@@ -198,6 +198,14 @@ is 8 times the number of cores online.
 @cindex hardware capability tunables
 @cindex hwcap tunables
 @cindex tunables, hwcap
+@cindex ifunc tunables
+@cindex tunables, ifunc
+@cindex data_cache_size tunables
+@cindex tunables, data_cache_size
+@cindex shared_cache_size tunables
+@cindex tunables, shared_cache_size
+@cindex non_temporal_threshold tunables
+@cindex tunables, non_temporal_threshold
 
 @deftp {Tunable namespace} glibc.tune
 Behavior of @theglibc{} can be tuned to assume specific hardware capabilities
@@ -212,4 +220,32 @@ The @code{AT_HWCAP} key in the Auxilliary Vector specifies instruction set
 extensions available in the processor at runtime for some architectures.  The
 @code{glibc.tune.hwcap_mask} tunable allows the user to mask out those
 capabilities at runtime, thus disabling use of those extensions.
+@end deftp
+
+@deftp Tunable glibc.tune.ifunc
+The @code{glibc.tune.ifunc=-xxx,yyy,-zzz...} tunable allows the user to
+enable CPU/ARCH feature @code{yyy}, disable CPU/ARCH feature @code{xxx}
+and @code{zzz} where the feature name is case-sensitive and has to match
+the ones in @code{sysdeps/x86/cpu-features.h}.
+
+This tunable is specific to i386 and x86-64.
+@end deftp
+
+@deftp Tunable glibc.tune.x86_data_cache_size
+The @code{glibc.tune.x86_data_cache_size} tunable allows the user to set
+data cache size in bytes for use in memory and string routines.
+
+This tunable is specific to i386 and x86-64.
+@end deftp
+
+@deftp Tunable glibc.tune.x86_shared_cache_size
+The @code{glibc.tune.x86_shared_cache_size} tunable allows the user to
+set shared cache size in bytes for use in memory and string routines.
+@end deftp
+
+@deftp Tunable glibc.tune.x86_non_temporal_threshold
+The @code{glibc.tune.x86_non_temporal_threshold} tunable allows the user
+to set threshold in bytes for non temporal store.
+
+This tunable is specific to i386 and x86-64.
 @end deftp

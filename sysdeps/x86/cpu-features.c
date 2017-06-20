@@ -20,6 +20,15 @@
 #include <cpu-features.h>
 #include <dl-hwcap.h>
 
+#if HAVE_TUNABLES
+# define TUNABLE_NAMESPACE tune
+# include <unistd.h>		/* Get STDOUT_FILENO for _dl_printf.  */
+# include <elf/dl-tunables.h>
+
+extern void TUNABLE_CALLBACK (set_ifunc) (tunable_val_t *)
+  attribute_hidden;
+#endif
+
 static void
 get_common_indeces (struct cpu_features *cpu_features,
 		    unsigned int *family, unsigned int *model,
@@ -311,6 +320,16 @@ no_cpuid:
   cpu_features->family = family;
   cpu_features->model = model;
   cpu_features->kind = kind;
+
+#if HAVE_TUNABLES
+  TUNABLE_GET (ifunc, tunable_val_t *, TUNABLE_CALLBACK (set_ifunc));
+  cpu_features->non_temporal_threshold
+    = TUNABLE_GET (x86_non_temporal_threshold, long int, NULL);
+  cpu_features->data_cache_size
+    = TUNABLE_GET (x86_data_cache_size, long int, NULL);
+  cpu_features->shared_cache_size
+    = TUNABLE_GET (x86_shared_cache_size, long int, NULL);
+#endif
 
   /* Reuse dl_platform, dl_hwcap and dl_hwcap_mask for x86.  */
   GLRO(dl_platform) = NULL;

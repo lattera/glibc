@@ -752,6 +752,9 @@ intel_bug_no_cache_info:
 #endif
     }
 
+  if (cpu_features->data_cache_size != 0)
+    data = cpu_features->data_cache_size;
+
   if (data > 0)
     {
       __x86_raw_data_cache_size_half = data / 2;
@@ -761,6 +764,9 @@ intel_bug_no_cache_info:
       __x86_data_cache_size_half = data / 2;
       __x86_data_cache_size = data;
     }
+
+  if (cpu_features->shared_cache_size != 0)
+    shared = cpu_features->shared_cache_size;
 
   if (shared > 0)
     {
@@ -777,7 +783,9 @@ intel_bug_no_cache_info:
      store becomes faster on a 8-core processor.  This is the 3/4 of the
      total shared cache size.  */
   __x86_shared_non_temporal_threshold
-    = __x86_shared_cache_size * threads * 3 / 4;
+    = (cpu_features->non_temporal_threshold != 0
+       ? cpu_features->non_temporal_threshold
+       : __x86_shared_cache_size * threads * 3 / 4);
 }
 
 #endif
