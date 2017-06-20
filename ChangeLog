@@ -1,3 +1,26 @@
+2017-06-20  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/lang.texi (LDBL_MANT_DIG): Add annotation.
+	(LDBL_DIG): Likewise.
+	(LDBL_MIN_EXP): Likewise.
+	(LDBL_MIN_10_EXP): Likewise.
+	(LDBL_MAX_EXP): Likewise.
+	(LDBL_MAX_10_EXP): Likewise.
+	(LDBL_MAX): Likewise.
+	(LDBL_MIN): Likewise.
+	(LDBL_EPSILON): Likewise.
+	(FLT_ROUNDS): Change standard from ISO to C90.
+	(FLT_RADIX): Likewise.
+	(FLT_MANT_DIG, DBL_MANT_DIG): Likewise.
+	(FLT_DIG, DBL_DIG): Likewise.
+	(FLT_MIN_EXP, DBL_MIN_EXP): Likewise.
+	(FLT_MIN_10_EXP, DBL_MIN_10_EXP): Likewise.
+	(FLT_MAX_EXP, DBL_MAX_EXP): Likewise.
+	(FLT_MAX_10_EXP, DBL_MAX_10_EXP): Likewise.
+	(FLT_MAX, DBL_MAX): Likewise.
+	(FLT_MIN, DBL_MIN): Likewise.
+	(FLT_EPSILON, DBL_EPSILON): Likewise.
+
 2017-06-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/atomic-machine.h (R10K_BEQZ_INSN): Remove.
