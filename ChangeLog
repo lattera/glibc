@@ -1,3 +1,8 @@
+2017-06-20  Paul A. Clarke  <pc@us.ibm.com>
+
+	* benchtests/Makefile (bench-math): Add powf.
+	* benchtests/powf-inputs: New file.
+
 2017-06-20  Zack Weinberg  <zackw@panix.com>
 
 	* bits/string.h, string/bits/string.h
