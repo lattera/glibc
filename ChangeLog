@@ -1,3 +1,9 @@
+2017-06-20  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/README: Describe workload feature.
+	* benchtests/bench-skeleton.c (main): Add support for
+	benchmarking traces from workloads.
+
 2017-06-20  Zack Weinberg  <zackw@panix.com>
 
 	* string/string.h (__mempcpy_inline): Delete.

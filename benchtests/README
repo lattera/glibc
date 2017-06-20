@@ -102,6 +102,12 @@ the same file by using the `name' directive that looks something like this:
 See the pow-inputs file for an example of what such a partitioned input file
 would look like.
 
+It is also possible to measure throughput of a (partial) trace extracted from
+a real workload.  In this case the whole trace is iterated over multiple times
+rather than repeating every input multiple times.  This can be done via:
+
+  ##name: workload-<name>
+
 Benchmark Sets:
 ==============
 
