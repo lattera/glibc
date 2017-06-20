@@ -200,42 +200,42 @@ extern int strfromf128 (char *__dest, size_t __size, const char * __format,
 
 extern long int strtol_l (const char *__restrict __nptr,
 			  char **__restrict __endptr, int __base,
-			  __locale_t __loc) __THROW __nonnull ((1, 4));
+			  locale_t __loc) __THROW __nonnull ((1, 4));
 
 extern unsigned long int strtoul_l (const char *__restrict __nptr,
 				    char **__restrict __endptr,
-				    int __base, __locale_t __loc)
+				    int __base, locale_t __loc)
      __THROW __nonnull ((1, 4));
 
 __extension__
 extern long long int strtoll_l (const char *__restrict __nptr,
 				char **__restrict __endptr, int __base,
-				__locale_t __loc)
+				locale_t __loc)
      __THROW __nonnull ((1, 4));
 
 __extension__
 extern unsigned long long int strtoull_l (const char *__restrict __nptr,
 					  char **__restrict __endptr,
-					  int __base, __locale_t __loc)
+					  int __base, locale_t __loc)
      __THROW __nonnull ((1, 4));
 
 extern double strtod_l (const char *__restrict __nptr,
-			char **__restrict __endptr, __locale_t __loc)
+			char **__restrict __endptr, locale_t __loc)
      __THROW __nonnull ((1, 3));
 
 extern float strtof_l (const char *__restrict __nptr,
-		       char **__restrict __endptr, __locale_t __loc)
+		       char **__restrict __endptr, locale_t __loc)
      __THROW __nonnull ((1, 3));
 
 extern long double strtold_l (const char *__restrict __nptr,
 			      char **__restrict __endptr,
-			      __locale_t __loc)
+			      locale_t __loc)
      __THROW __nonnull ((1, 3));
 
 # if __HAVE_FLOAT128
 extern _Float128 strtof128_l (const char *__restrict __nptr,
 			      char **__restrict __endptr,
-			      __locale_t __loc)
+			      locale_t __loc)
      __THROW __nonnull ((1, 3));
 # endif
 #endif /* GNU */

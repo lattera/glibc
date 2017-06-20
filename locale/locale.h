@@ -138,8 +138,8 @@ extern struct lconv *localeconv (void) __THROW;
    datasets.  Unlike for the CATEGORY parameter for `setlocale' the
    CATEGORY_MASK parameter here uses a single bit for each category,
    made by OR'ing together LC_*_MASK bits above.  */
-extern __locale_t newlocale (int __category_mask, const char *__locale,
-			     __locale_t __base) __THROW;
+extern locale_t newlocale (int __category_mask, const char *__locale,
+			   locale_t __base) __THROW;
 
 /* These are the bits that can be set in the CATEGORY_MASK argument to
    `newlocale'.  In the GNU implementation, LC_FOO_MASK has the value
@@ -173,22 +173,22 @@ extern __locale_t newlocale (int __category_mask, const char *__locale,
 
 /* Return a duplicate of the set of locale in DATASET.  All usage
    counters are increased if necessary.  */
-extern __locale_t duplocale (__locale_t __dataset) __THROW;
+extern locale_t duplocale (locale_t __dataset) __THROW;
 
 /* Free the data associated with a locale dataset previously returned
    by a call to `setlocale_r'.  */
-extern void freelocale (__locale_t __dataset) __THROW;
+extern void freelocale (locale_t __dataset) __THROW;
 
 /* Switch the current thread's locale to DATASET.
    If DATASET is null, instead just return the current setting.
    The special value LC_GLOBAL_LOCALE is the initial setting
    for all threads and can also be installed any time, meaning
    the thread uses the global settings controlled by `setlocale'.  */
-extern __locale_t uselocale (__locale_t __dataset) __THROW;
+extern locale_t uselocale (locale_t __dataset) __THROW;
 
 /* This value can be passed to `uselocale' and may be returned by it.
    Passing this value to any other function has undefined behavior.  */
-# define LC_GLOBAL_LOCALE	((__locale_t) -1L)
+# define LC_GLOBAL_LOCALE	((locale_t) -1L)
 
 #endif
 

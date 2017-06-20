@@ -22,7 +22,7 @@
 #include <bits/floatn.h>
 
 extern _Float128 ____strtof128_l_internal (const char *, char **,
-					   int, __locale_t);
+					   int, locale_t);
 
 #define	FLOAT		_Float128
 #define	FLT		FLT128

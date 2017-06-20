@@ -214,9 +214,9 @@ extern struct __locale_struct _nl_global_locale attribute_hidden;
 
 /* This fetches the thread-local locale_t pointer, either one set with
    uselocale or &_nl_global_locale.  */
-#define _NL_CURRENT_LOCALE	(__libc_tsd_get (__locale_t, LOCALE))
+#define _NL_CURRENT_LOCALE	(__libc_tsd_get (locale_t, LOCALE))
 #include <libc-tsd.h>
-__libc_tsd_define (extern, __locale_t, LOCALE)
+__libc_tsd_define (extern, locale_t, LOCALE)
 
 
 /* For static linking it is desireable to avoid always linking in the code

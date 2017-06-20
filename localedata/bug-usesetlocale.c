@@ -8,7 +8,7 @@
 static int
 do_test (void)
 {
-  __locale_t loc_new, loc_old;
+  locale_t loc_new, loc_old;
 
   int first = !!isalpha(0xE4);
 

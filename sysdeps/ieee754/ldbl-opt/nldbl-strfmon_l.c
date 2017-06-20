@@ -2,7 +2,7 @@
 
 ssize_t
 attribute_hidden
-__strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
+__strfmon_l (char *s, size_t maxsize, locale_t loc, const char *format, ...)
 {
   va_list ap;
   ssize_t res;

@@ -61,4 +61,4 @@ struct __locale_struct _nl_global_locale attribute_hidden =
 #include <tls.h>
 
 /* The tsd macros don't permit an initializer.  */
-__thread __locale_t __libc_tsd_LOCALE = &_nl_global_locale;
+__thread locale_t __libc_tsd_LOCALE = &_nl_global_locale;

@@ -92,7 +92,7 @@ extern int __getclktck (void);
 /* strptime support.  */
 extern char * __strptime_internal (const char *rp, const char *fmt,
 				   struct tm *tm, void *statep,
-				   __locale_t locparam)
+				   locale_t locparam)
      internal_function;
 
 extern double __difftime (time_t time1, time_t time0);

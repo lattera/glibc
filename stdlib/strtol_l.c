@@ -222,7 +222,7 @@ extern const unsigned char __strtol_ull_rem_tab[] attribute_hidden;
 
 INT
 INTERNAL (__strtol_l) (const STRING_TYPE *nptr, STRING_TYPE **endptr,
-		       int base, int group, __locale_t loc)
+		       int base, int group, locale_t loc)
 {
   int negative;
   unsigned LONG int cutoff;
@@ -542,7 +542,7 @@ INT
 weak_function
 #endif
 __strtol_l (const STRING_TYPE *nptr, STRING_TYPE **endptr,
-	    int base, __locale_t loc)
+	    int base, locale_t loc)
 {
   return INTERNAL (__strtol_l) (nptr, endptr, base, 0, loc);
 }

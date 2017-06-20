@@ -88,7 +88,7 @@
 
 
 extern INT INTERNAL (__strtol_l) (const STRING_TYPE *, STRING_TYPE **, int,
-				  int, __locale_t);
+				  int, locale_t);
 
 
 INT

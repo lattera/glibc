@@ -34,7 +34,7 @@ __uselocale (locale_t newloc)
     {
       const locale_t locobj
 	= newloc == LC_GLOBAL_LOCALE ? &_nl_global_locale : newloc;
-      __libc_tsd_set (__locale_t, LOCALE, locobj);
+      __libc_tsd_set (locale_t, LOCALE, locobj);
 
 #ifdef NL_CURRENT_INDIRECT
       /* Now we must update all the per-category thread-local variables to

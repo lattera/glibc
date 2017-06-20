@@ -81,7 +81,7 @@ extern unsigned int __guess_grouping (unsigned int intdig_max,
    too.  Some of the information contradicts the information which can
    be specified in format string.  */
 ssize_t
-__vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
+__vstrfmon_l (char *s, size_t maxsize, locale_t loc, const char *format,
 	      va_list ap)
 {
   struct __locale_data *current = loc->__locales[LC_MONETARY];
@@ -609,7 +609,7 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 }
 
 ssize_t
-___strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
+___strfmon_l (char *s, size_t maxsize, locale_t loc, const char *format, ...)
 {
   va_list ap;
 

@@ -152,12 +152,12 @@ extern size_t strxfrm (char *__restrict __dest,
 # include <bits/types/locale_t.h>
 
 /* Compare the collated forms of S1 and S2, using sorting rules from L.  */
-extern int strcoll_l (const char *__s1, const char *__s2, __locale_t __l)
+extern int strcoll_l (const char *__s1, const char *__s2, locale_t __l)
      __THROW __attribute_pure__ __nonnull ((1, 2, 3));
 /* Put a transformation of SRC into no more than N bytes of DEST,
    using sorting rules from L.  */
 extern size_t strxfrm_l (char *__dest, const char *__src, size_t __n,
-			 __locale_t __l) __THROW __nonnull ((2, 4));
+			 locale_t __l) __THROW __nonnull ((2, 4));
 #endif
 
 #if (defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8	\
@@ -424,7 +424,7 @@ extern char *strerror_r (int __errnum, char *__buf, size_t __buflen)
 
 #ifdef __USE_XOPEN2K8
 /* Translate error number to string according to the locale L.  */
-extern char *strerror_l (int __errnum, __locale_t __l) __THROW;
+extern char *strerror_l (int __errnum, locale_t __l) __THROW;
 #endif
 
 #ifdef __USE_MISC

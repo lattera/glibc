@@ -23,7 +23,7 @@
 #include <locale/localeinfo.h>
 
 wctype_t
-__wctype_l (const char *property, __locale_t locale)
+__wctype_l (const char *property, locale_t locale)
 {
   const char *names;
   unsigned int result;

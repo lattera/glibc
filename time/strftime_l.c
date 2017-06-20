@@ -284,7 +284,7 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 # undef _NL_CURRENT
 # define _NL_CURRENT(category, item) \
   (current->values[_NL_ITEM_INDEX (item)].string)
-# define LOCALE_PARAM , __locale_t loc
+# define LOCALE_PARAM , locale_t loc
 # define LOCALE_ARG , loc
 # define HELPER_LOCALE_ARG  , current
 #else

@@ -254,7 +254,7 @@ out:
 }
 
 int
-STRCOLL (const STRING_TYPE *s1, const STRING_TYPE *s2, __locale_t l)
+STRCOLL (const STRING_TYPE *s1, const STRING_TYPE *s2, locale_t l)
 {
   struct __locale_data *current = l->__locales[LC_COLLATE];
   uint_fast32_t nrules = current->values[_NL_ITEM_INDEX (_NL_COLLATE_NRULES)].word;

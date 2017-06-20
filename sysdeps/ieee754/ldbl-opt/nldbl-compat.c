@@ -790,7 +790,7 @@ __nldbl_strfmon (char *s, size_t maxsize, const char *format, ...)
 
 ssize_t
 attribute_compat_text_section
-__nldbl___strfmon_l (char *s, size_t maxsize, __locale_t loc,
+__nldbl___strfmon_l (char *s, size_t maxsize, locale_t loc,
 		     const char *format, ...)
 {
   va_list ap;
@@ -818,7 +818,7 @@ libc_hidden_def (__nldbl___vstrfmon)
 
 ssize_t
 attribute_compat_text_section
-__nldbl___vstrfmon_l (char *s, size_t maxsize, __locale_t loc,
+__nldbl___vstrfmon_l (char *s, size_t maxsize, locale_t loc,
 		      const char *format, va_list ap)
 {
   ssize_t res;

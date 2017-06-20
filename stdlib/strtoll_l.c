@@ -22,6 +22,6 @@
 #include <locale.h>
 
 extern long long int ____strtoll_l_internal (const char *, char **, int, int,
-					     __locale_t);
+					     locale_t);
 
 #include <strtol_l.c>

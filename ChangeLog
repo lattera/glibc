@@ -1,31 +1,67 @@
 2017-06-20  Zack Weinberg  <zackw@panix.com>
 
-        * locale/xlocale.h: Rename to...
+	* locale/xlocale.h: Rename to...
 	* locale/bits/types/__locale_t.h: ...here.  Adjust commentary.
 	Only define struct __locale_struct and __locale_t, not locale_t.
-        * locale/bits/types/locale_t.h: New file; define locale_t here.
-        * locale/Makefile (headers): Update to match.
+	* locale/bits/types/locale_t.h: New file; define locale_t here.
+	* locale/Makefile (headers): Update to match.
 
-        * include/xlocale.h: Delete wrapper.
-        * include/bits/types/__locale_t.h: New wrapper.
-        * include/bits/types/locale_t.h: New wrapper.
+	* include/xlocale.h: Delete wrapper.
+	* include/bits/types/__locale_t.h: New wrapper.
+	* include/bits/types/locale_t.h: New wrapper.
 
-        * ctype/ctype.h, include/printf.h, include/time.h
-        * locale/langinfo.h, locale/locale.h, stdlib/monetary.h
-        * stdlib/stdlib.h, string/string.h, string/strings.h, time/time.h
-        * wcsmbs/wchar.h, wctype/wctype.h: Use bits/types/locale_t.h.
-        Correct outdated comments regarding the standardization status of
-        the functions that take locale_t arguments.
+	* ctype/ctype.h, include/printf.h, include/time.h
+	* locale/langinfo.h, locale/locale.h, stdlib/monetary.h
+	* stdlib/stdlib.h, string/string.h, string/strings.h, time/time.h
+	* wcsmbs/wchar.h, wctype/wctype.h: Use bits/types/locale_t.h.
+	Correct outdated comments regarding the standardization status of
+	the functions that take locale_t arguments.
 
-        * stdlib/strtod_l.c, stdlib/strtof_l.c, stdlib/strtol_l.c
-        * stdlib/strtold_l.c, stdlib/strtoul_l.c, stdlib/strtoull_l.c
-        * sysdeps/ieee754/ldbl-128ibm/strtold_l.c
-        * sysdeps/ieee754/ldbl-64-128/strtold_l.c
-        * wcsmbs/wcstod.c, wcsmbs/wcstod_l.c, wcsmbs/wcstof.c
-        * wcsmbs/wcstof_l.c, wcsmbs/wcstold.c, wcsmbs/wcstold_l.c:
-        Don't include xlocale.h. If necessary, include locale.h instead.
+	* stdlib/strtod_l.c, stdlib/strtof_l.c, stdlib/strtol_l.c
+	* stdlib/strtold_l.c, stdlib/strtoul_l.c, stdlib/strtoull_l.c
+	* sysdeps/ieee754/ldbl-128ibm/strtold_l.c
+	* sysdeps/ieee754/ldbl-64-128/strtold_l.c
+	* wcsmbs/wcstod.c, wcsmbs/wcstod_l.c, wcsmbs/wcstof.c
+	* wcsmbs/wcstof_l.c, wcsmbs/wcstold.c, wcsmbs/wcstold_l.c:
+	Don't include xlocale.h. If necessary, include locale.h instead.
 
-        * stdlib/strtold_l.c: Unconditionally include wchar.h.
+	* stdlib/strtold_l.c: Unconditionally include wchar.h.
+
+	* ctype/ctype-c99_l.c, ctype/ctype.h, ctype/ctype_l.c
+	* include/monetary.h, include/stdlib.h, include/time.h
+	* include/wchar.h, locale/duplocale.c, locale/freelocale.c
+	* locale/global-locale.c, locale/langinfo.h, locale/locale.h
+	* locale/localeinfo.h, locale/newlocale.c
+	* locale/nl_langinfo_l.c, locale/uselocale.c
+	* localedata/bug-usesetlocale.c, localedata/tst-xlocale2.c
+	* stdio-common/vfscanf.c, stdlib/monetary.h, stdlib/stdlib.h
+	* stdlib/strfmon_l.c, stdlib/strtod_l.c, stdlib/strtof_l.c
+	* stdlib/strtol.c, stdlib/strtol_l.c, stdlib/strtold_l.c
+	* stdlib/strtoll_l.c, stdlib/strtoul_l.c, stdlib/strtoull_l.c
+	* string/strcasecmp.c, string/strcoll_l.c, string/string.h
+	* string/strings.h, string/strncase.c, string/strxfrm_l.c
+	* sysdeps/ieee754/float128/strtof128_l.c
+	* sysdeps/ieee754/float128/wcstof128.c
+	* sysdeps/ieee754/float128/wcstof128_l.c
+	* sysdeps/ieee754/ldbl-128ibm/strtold_l.c
+	* sysdeps/ieee754/ldbl-64-128/strtold_l.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-strfmon_l.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-strtold_l.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-wcstold_l.c
+	* sysdeps/powerpc/powerpc32/power7/strcasecmp.S
+	* sysdeps/powerpc/powerpc64/power7/strcasecmp.S
+	* sysdeps/x86_64/strcasecmp_l-nonascii.c
+	* sysdeps/x86_64/strncase_l-nonascii.c, time/strftime_l.c
+	* time/strptime_l.c, time/time.h, wcsmbs/mbsrtowcs_l.c
+	* wcsmbs/wchar.h, wcsmbs/wcscasecmp.c, wcsmbs/wcsncase.c
+	* wcsmbs/wcstod.c, wcsmbs/wcstod_l.c, wcsmbs/wcstof.c
+	* wcsmbs/wcstof_l.c, wcsmbs/wcstol_l.c, wcsmbs/wcstold.c
+	* wcsmbs/wcstold_l.c, wcsmbs/wcstoll_l.c, wcsmbs/wcstoul_l.c
+	* wcsmbs/wcstoull_l.c, wctype/iswctype_l.c
+	* wctype/towctrans_l.c, wctype/wcfuncs_l.c
+	* wctype/wctrans_l.c, wctype/wctype.h, wctype/wctype_l.c:
+	Change all uses of __locale_t to locale_t.
 
 2017-06-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 

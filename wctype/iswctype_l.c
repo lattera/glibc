@@ -24,7 +24,7 @@
 
 
 int
-__iswctype_l (wint_t wc, wctype_t desc, __locale_t locale)
+__iswctype_l (wint_t wc, wctype_t desc, locale_t locale)
 {
   /* If the user passes in an invalid DESC valid (the one returned from
      `__wctype_l' in case of an error) simply return 0.  */

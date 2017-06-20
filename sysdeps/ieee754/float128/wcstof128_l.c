@@ -25,6 +25,6 @@
 #include <bits/floatn.h>
 
 extern _Float128 ____wcstof128_l_internal (const wchar_t *, wchar_t **, int,
-					   __locale_t);
+					   locale_t);
 
 #include "strtof128_l.c"

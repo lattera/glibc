@@ -23,7 +23,7 @@
 #include "wchar-lookup.h"
 
 wint_t
-__towctrans_l (wint_t wc, wctrans_t desc, __locale_t locale)
+__towctrans_l (wint_t wc, wctrans_t desc, locale_t locale)
 {
   /* If the user passes in an invalid DESC valid (the one returned from
      `__wctrans_l' in case of an error) simply return the value.  */

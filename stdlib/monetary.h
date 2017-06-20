@@ -45,7 +45,7 @@ extern ssize_t strfmon (char *__restrict __s, size_t __maxsize,
 
 /* Formatting a monetary value according to the given locale.  */
 extern ssize_t strfmon_l (char *__restrict __s, size_t __maxsize,
-			  __locale_t __loc,
+			  locale_t __loc,
 			  const char *__restrict __format, ...)
      __THROW __attribute_format_strfmon__ (4, 5);
 #endif

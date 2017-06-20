@@ -8,11 +8,11 @@
 
 extern double
 __strtod_l (const char *__restrict __nptr, char **__restrict __endptr,
-	    __locale_t __loc);
+	    locale_t __loc);
 
 double
 attribute_hidden
-__strtold_l (const char *nptr, char **endptr, __locale_t loc)
+__strtold_l (const char *nptr, char **endptr, locale_t loc)
 {
   return __strtod_l (nptr, endptr, loc);
 }

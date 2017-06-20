@@ -21,7 +21,7 @@
 #include "../locale/localeinfo.h"
 
 wctrans_t
-__wctrans_l (const char *property, __locale_t locale)
+__wctrans_l (const char *property, locale_t locale)
 {
   const char *names;
   size_t cnt;

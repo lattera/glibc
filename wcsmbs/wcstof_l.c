@@ -24,6 +24,6 @@
 #define	USE_WIDE_CHAR	1
 
 extern float ____wcstof_l_internal (const wchar_t *, wchar_t **, int,
-				    __locale_t);
+				    locale_t);
 
 #include <stdlib/strtof_l.c>

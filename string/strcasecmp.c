@@ -34,7 +34,7 @@
 #endif
 
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
-# define LOCALE_PARAM , __locale_t loc
+# define LOCALE_PARAM , locale_t loc
 #else
 # define LOCALE_PARAM
 #endif
@@ -46,7 +46,7 @@ int
 __strcasecmp (const char *s1, const char *s2 LOCALE_PARAM)
 {
 #if defined _LIBC && !defined USE_IN_EXTENDED_LOCALE_MODEL
-  __locale_t loc = _NL_CURRENT_LOCALE;
+  locale_t loc = _NL_CURRENT_LOCALE;
 #endif
   const unsigned char *p1 = (const unsigned char *) s1;
   const unsigned char *p2 = (const unsigned char *) s2;

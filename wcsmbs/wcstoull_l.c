@@ -25,6 +25,6 @@
 
 extern unsigned long long int ____wcstoull_l_internal (const wchar_t *,
 						       wchar_t **, int, int,
-						       __locale_t);
+						       locale_t);
 
 #include <wcstoll_l.c>

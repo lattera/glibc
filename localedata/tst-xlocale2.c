@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 
-static int do_test (__locale_t l);
+static int do_test (locale_t l);
 
 int
 main (void)

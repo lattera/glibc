@@ -289,7 +289,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
   int flags;		/* Modifiers for current format element.  */
   int errval = 0;
 #ifndef COMPILE_WSCANF
-  __locale_t loc = _NL_CURRENT_LOCALE;
+  locale_t loc = _NL_CURRENT_LOCALE;
   struct __locale_data *const curctype = loc->__locales[LC_CTYPE];
 #endif
 

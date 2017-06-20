@@ -156,34 +156,34 @@ libc_hidden_proto (__strtoull_internal)
 
 extern double ____strtod_l_internal (const char *__restrict __nptr,
 				     char **__restrict __endptr, int __group,
-				     __locale_t __loc);
+				     locale_t __loc);
 extern float ____strtof_l_internal (const char *__restrict __nptr,
 				    char **__restrict __endptr, int __group,
-				    __locale_t __loc);
+				    locale_t __loc);
 extern long double ____strtold_l_internal (const char *__restrict __nptr,
 					   char **__restrict __endptr,
-					   int __group, __locale_t __loc);
+					   int __group, locale_t __loc);
 extern long int ____strtol_l_internal (const char *__restrict __nptr,
 				       char **__restrict __endptr,
 				       int __base, int __group,
-				       __locale_t __loc);
+				       locale_t __loc);
 extern unsigned long int ____strtoul_l_internal (const char *
 						 __restrict __nptr,
 						 char **__restrict __endptr,
 						 int __base, int __group,
-						 __locale_t __loc);
+						 locale_t __loc);
 __extension__
 extern long long int ____strtoll_l_internal (const char *__restrict __nptr,
 					     char **__restrict __endptr,
 					     int __base, int __group,
-					     __locale_t __loc);
+					     locale_t __loc);
 __extension__
 extern unsigned long long int ____strtoull_l_internal (const char *
 						       __restrict __nptr,
 						       char **
 						       __restrict __endptr,
 						       int __base, int __group,
-						       __locale_t __loc);
+						       locale_t __loc);
 
 libc_hidden_proto (____strtof_l_internal)
 libc_hidden_proto (____strtod_l_internal)
@@ -243,7 +243,7 @@ libc_hidden_proto (__strtof128_internal)
 
 extern _Float128 ____strtof128_l_internal (const char *__restrict __nptr,
 					   char **__restrict __endptr,
-					   int __group, __locale_t __loc);
+					   int __group, locale_t __loc);
 
 libc_hidden_proto (____strtof128_l_internal)
 #endif

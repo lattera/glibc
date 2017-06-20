@@ -25,13 +25,13 @@
 #define FLOAT		long double
 #define FLT		LDBL
 #ifdef USE_WIDE_CHAR
-extern long double ____new_wcstold_l (const wchar_t *, wchar_t **, __locale_t);
+extern long double ____new_wcstold_l (const wchar_t *, wchar_t **, locale_t);
 # define STRTOF		__new_wcstold_l
 # define __STRTOF	____new_wcstold_l
 # define ____STRTOF_INTERNAL ____wcstold_l_internal
 # define STRTOF_NAN	__wcstold_nan
 #else
-extern long double ____new_strtold_l (const char *, char **, __locale_t);
+extern long double ____new_strtold_l (const char *, char **, locale_t);
 # define STRTOF		__new_strtold_l
 # define __STRTOF	____new_strtold_l
 # define ____STRTOF_INTERNAL ____strtold_l_internal

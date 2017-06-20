@@ -104,13 +104,13 @@ extern char *strptime (const char *__restrict __s,
 extern size_t strftime_l (char *__restrict __s, size_t __maxsize,
 			  const char *__restrict __format,
 			  const struct tm *__restrict __tp,
-			  __locale_t __loc) __THROW;
+			  locale_t __loc) __THROW;
 #endif
 
 #ifdef __USE_GNU
 extern char *strptime_l (const char *__restrict __s,
 			 const char *__restrict __fmt, struct tm *__tp,
-			 __locale_t __loc) __THROW;
+			 locale_t __loc) __THROW;
 #endif
 
 

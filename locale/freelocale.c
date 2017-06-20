@@ -29,7 +29,7 @@ __libc_rwlock_define (extern , __libc_setlocale_lock attribute_hidden)
 
 
 void
-__freelocale (__locale_t dataset)
+__freelocale (locale_t dataset)
 {
   int cnt;
 

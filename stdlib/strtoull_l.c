@@ -23,6 +23,6 @@
 #include <locale.h>
 
 extern unsigned long long int ____strtoull_l_internal (const char *, char **,
-						       int, int, __locale_t);
+						       int, int, locale_t);
 
 #include <strtol_l.c>

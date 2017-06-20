@@ -120,10 +120,10 @@ extern int wcsncasecmp (const wchar_t *__s1, const wchar_t *__s2,
 /* Similar to the two functions above but take the information from
    the provided locale and not the global locale.  */
 extern int wcscasecmp_l (const wchar_t *__s1, const wchar_t *__s2,
-			 __locale_t __loc) __THROW;
+			 locale_t __loc) __THROW;
 
 extern int wcsncasecmp_l (const wchar_t *__s1, const wchar_t *__s2,
-			  size_t __n, __locale_t __loc) __THROW;
+			  size_t __n, locale_t __loc) __THROW;
 #endif
 
 /* Compare S1 and S2, both interpreted as appropriate to the
@@ -142,13 +142,13 @@ extern size_t wcsxfrm (wchar_t *__restrict __s1,
 /* Compare S1 and S2, both interpreted as appropriate to the
    LC_COLLATE category of the given locale.  */
 extern int wcscoll_l (const wchar_t *__s1, const wchar_t *__s2,
-		      __locale_t __loc) __THROW;
+		      locale_t __loc) __THROW;
 
 /* Transform S2 into array pointed to by S1 such that if wcscmp is
    applied to two transformed strings the result is the as applying
    `wcscoll' to the original strings.  */
 extern size_t wcsxfrm_l (wchar_t *__s1, const wchar_t *__s2,
-			 size_t __n, __locale_t __loc) __THROW;
+			 size_t __n, locale_t __loc) __THROW;
 
 /* Duplicate S, returning an identical malloc'd string.  */
 extern wchar_t *wcsdup (const wchar_t *__s) __THROW __attribute_malloc__;
@@ -441,39 +441,39 @@ extern unsigned long long int wcstouq (const wchar_t *__restrict __nptr,
    by the POSIX.1-2008 extended locale API.  */
 extern long int wcstol_l (const wchar_t *__restrict __nptr,
 			  wchar_t **__restrict __endptr, int __base,
-			  __locale_t __loc) __THROW;
+			  locale_t __loc) __THROW;
 
 extern unsigned long int wcstoul_l (const wchar_t *__restrict __nptr,
 				    wchar_t **__restrict __endptr,
-				    int __base, __locale_t __loc) __THROW;
+				    int __base, locale_t __loc) __THROW;
 
 __extension__
 extern long long int wcstoll_l (const wchar_t *__restrict __nptr,
 				wchar_t **__restrict __endptr,
-				int __base, __locale_t __loc) __THROW;
+				int __base, locale_t __loc) __THROW;
 
 __extension__
 extern unsigned long long int wcstoull_l (const wchar_t *__restrict __nptr,
 					  wchar_t **__restrict __endptr,
-					  int __base, __locale_t __loc)
+					  int __base, locale_t __loc)
      __THROW;
 
 extern double wcstod_l (const wchar_t *__restrict __nptr,
-			wchar_t **__restrict __endptr, __locale_t __loc)
+			wchar_t **__restrict __endptr, locale_t __loc)
      __THROW;
 
 extern float wcstof_l (const wchar_t *__restrict __nptr,
-		       wchar_t **__restrict __endptr, __locale_t __loc)
+		       wchar_t **__restrict __endptr, locale_t __loc)
      __THROW;
 
 extern long double wcstold_l (const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr,
-			      __locale_t __loc) __THROW;
+			      locale_t __loc) __THROW;
 
 # if __HAVE_FLOAT128
 extern _Float128 wcstof128_l (const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr,
-			      __locale_t __loc) __THROW;
+			      locale_t __loc) __THROW;
 # endif
 #endif	/* use GNU */
 
@@ -775,7 +775,7 @@ extern size_t wcsftime (wchar_t *__restrict __s, size_t __maxsize,
 extern size_t wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,
 			  const wchar_t *__restrict __format,
 			  const struct tm *__restrict __tp,
-			  __locale_t __loc) __THROW;
+			  locale_t __loc) __THROW;
 # endif
 
 /* Define some macros helping to catch buffer overflows.  */

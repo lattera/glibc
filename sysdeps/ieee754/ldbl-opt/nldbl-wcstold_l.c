@@ -6,7 +6,7 @@
 
 double
 attribute_hidden
-__wcstold_l (const wchar_t *nptr, wchar_t **endptr, __locale_t loc)
+__wcstold_l (const wchar_t *nptr, wchar_t **endptr, locale_t loc)
 {
   return __wcstod_l (nptr, endptr, loc);
 }

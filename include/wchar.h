@@ -54,7 +54,7 @@ extern unsigned long long int __wcstoull_internal (const wchar_t *
 						   int __group) __THROW;
 extern unsigned long long int ____wcstoull_l_internal (const wchar_t *,
 						       wchar_t **, int, int,
-						       __locale_t);
+						       locale_t);
 libc_hidden_proto (__wcstof_internal)
 libc_hidden_proto (__wcstod_internal)
 libc_hidden_proto (__wcstold_internal)
@@ -221,7 +221,7 @@ libc_hidden_proto (__isoc99_vfwscanf)
 
 /* Internal functions.  */
 extern size_t __mbsrtowcs_l (wchar_t *dst, const char **src, size_t len,
-			     mbstate_t *ps, __locale_t l) attribute_hidden;
+			     mbstate_t *ps, locale_t l) attribute_hidden;
 
 /* Special version.  We know that all uses of mbsinit inside the libc
    have a non-NULL parameter.  And certainly we can access the

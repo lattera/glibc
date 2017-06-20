@@ -20,7 +20,7 @@
 #include <ctype.h>
 
 int
-__isblank_l (int c, __locale_t l)
+__isblank_l (int c, locale_t l)
 {
   return __isctype_l (c, _ISblank, l);
 }

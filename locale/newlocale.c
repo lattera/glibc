@@ -39,13 +39,13 @@ __libc_rwlock_define (extern , __libc_setlocale_lock attribute_hidden)
   } while (0)
 
 
-__locale_t
-__newlocale (int category_mask, const char *locale, __locale_t base)
+locale_t
+__newlocale (int category_mask, const char *locale, locale_t base)
 {
   /* Intermediate memory for result.  */
   const char *newnames[__LC_LAST];
   struct __locale_struct result;
-  __locale_t result_ptr;
+  locale_t result_ptr;
   char *locale_path;
   size_t locale_path_len;
   const char *locpath_var;
@@ -86,7 +86,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
      dataset using the C locale data.  */
   if (category_mask == 0)
     {
-      result_ptr = (__locale_t) malloc (sizeof (struct __locale_struct));
+      result_ptr = (locale_t) malloc (sizeof (struct __locale_struct));
       if (result_ptr == NULL)
 	return NULL;
       *result_ptr = result;

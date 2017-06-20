@@ -35,12 +35,12 @@
 #define INTERNAL1(x) __##x##_internal
 
 extern double INTERNAL (__STRTOD) (const STRING_TYPE *, STRING_TYPE **,
-				   int, __locale_t);
+				   int, locale_t);
 
 /* There is no `long double' type, use the `double' implementations.  */
 long double
 INTERNAL (__STRTOLD) (const STRING_TYPE *nptr, STRING_TYPE **endptr,
-		      int group, __locale_t loc)
+		      int group, locale_t loc)
 {
   return INTERNAL (__STRTOD) (nptr, endptr, group, loc);
 }
@@ -50,7 +50,7 @@ libc_hidden_def (INTERNAL (__STRTOLD))
 
 long double
 weak_function
-__STRTOLD (const STRING_TYPE *nptr, STRING_TYPE **endptr, __locale_t loc)
+__STRTOLD (const STRING_TYPE *nptr, STRING_TYPE **endptr, locale_t loc)
 {
   return INTERNAL (__STRTOD) (nptr, endptr, 0, loc);
 }

@@ -242,7 +242,7 @@ __NTH (toupper (int __c))
   ((locale)->__ctype_b[(int) (c)] & (unsigned short int) type)
 
 # define __exctype_l(name) 						      \
-  extern int name (int, __locale_t) __THROW
+  extern int name (int, locale_t) __THROW
 
 /* The following names are all functions:
      int isCHARACTERISTIC(int c, locale_t *locale);
@@ -264,12 +264,12 @@ __exctype_l (isblank_l);
 
 
 /* Return the lowercase version of C in locale L.  */
-extern int __tolower_l (int __c, __locale_t __l) __THROW;
-extern int tolower_l (int __c, __locale_t __l) __THROW;
+extern int __tolower_l (int __c, locale_t __l) __THROW;
+extern int tolower_l (int __c, locale_t __l) __THROW;
 
 /* Return the uppercase version of C.  */
-extern int __toupper_l (int __c, __locale_t __l) __THROW;
-extern int toupper_l (int __c, __locale_t __l) __THROW;
+extern int __toupper_l (int __c, locale_t __l) __THROW;
+extern int toupper_l (int __c, locale_t __l) __THROW;
 
 # if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
 #  define __tolower_l(c, locale) \

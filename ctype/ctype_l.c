@@ -21,7 +21,7 @@
 /* Provide real-function versions of all the ctype macros.  */
 
 #define	func(name, type) \
-  int __##name (int c, __locale_t l) { return __isctype_l (c, type, l); } \
+  int __##name (int c, locale_t l) { return __isctype_l (c, type, l); } \
   weak_alias (__##name, name)
 
 func (isalnum_l, _ISalnum)
@@ -37,14 +37,14 @@ func (isupper_l, _ISupper)
 func (isxdigit_l, _ISxdigit)
 
 int
-(__tolower_l) (int c, __locale_t l)
+(__tolower_l) (int c, locale_t l)
 {
   return l->__ctype_tolower[c];
 }
 weak_alias (__tolower_l, tolower_l)
 
 int
-(__toupper_l) (int c, __locale_t l)
+(__toupper_l) (int c, locale_t l)
 {
   return l->__ctype_toupper[c];
 }
