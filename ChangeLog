@@ -1,3 +1,9 @@
+2017-08-10  Rical Jasan  <ricaljasan@pacific.net>
+
+	* lang.texi (va_copy): Change standard from ISO to C99.
+	(__va_copy): Add standard and header annotation.
+	Update description for clarity of origins and current use.
+
 2017-08-10  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	[BZ #21941]

@@ -471,18 +471,21 @@ of the same type.
 
 @deftypefn {Macro} void va_copy (va_list @var{dest}, va_list @var{src})
 @deftypefnx {Macro} void __va_copy (va_list @var{dest}, va_list @var{src})
-@standardsx{va_copy, ISO, stdarg.h}
+@standardsx{va_copy, C99, stdarg.h}
+@standardsx{__va_copy, GNU, stdarg.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-@c This is no longer provided by glibc, but rather by the compiler.
 The @code{va_copy} macro allows copying of objects of type
 @code{va_list} even if this is not an integral type.  The argument pointer
 in @var{dest} is initialized to point to the same argument as the
 pointer in @var{src}.
 
-This macro was added in ISO C99.  When building for strict conformance
-to ISO C90 (@samp{gcc -ansi}), it is not available.  The macro
-@code{__va_copy} is available as a GNU extension in any standards
-mode; before GCC 3.0, it was the only macro for this functionality.
+@code{va_copy} was added in ISO C99.  When building for strict
+conformance to ISO C90 (@samp{gcc -std=c90}), it is not available.
+GCC provides @code{__va_copy}, as an extension, in any standards mode;
+before GCC 3.0, it was the only macro for this functionality.
+
+These macros are no longer provided by @theglibc{}, but rather by the
+compiler.
 @end deftypefn
 
 If you want to use @code{va_copy} and be portable to pre-C99 systems,
