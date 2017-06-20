@@ -1,3 +1,7 @@
+2017-06-20  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/powf-inputs: Add reduced trace from wrf.
+
 2017-06-20  H.J. Lu  <hongjiu.lu@intel.com>
 	    Erich Elsen  <eriche@google.com>
 
