@@ -70,6 +70,10 @@ Version 2.26
 * The port to Native Client running on ARMv7-A (--host=arm-nacl) has been
   removed.
 
+* <string.h> no longer includes inline versions of any string functions,
+  as this kind of optimization is better done by the compiler.  The macros
+  __USE_STRING_INLINES and __NO_STRING_INLINES no longer have any effect.
+
 * The reallocarray function has been added to libc.  It is a realloc
   replacement with a check for integer overflow when calculating total
   allocation size.
