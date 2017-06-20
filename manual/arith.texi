@@ -1591,31 +1591,31 @@ less than the magnitude of the @var{denominator}.
 If @var{denominator} is zero, @code{fmod} signals a domain error.
 @end deftypefun
 
+@deftypefun double remainder (double @var{numerator}, double @var{denominator})
+@deftypefunx float remainderf (float @var{numerator}, float @var{denominator})
+@deftypefunx {long double} remainderl (long double @var{numerator}, long double @var{denominator})
+@standards{ISO, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions are like @code{fmod} except that they round the
+internal quotient @var{n} to the nearest integer instead of towards zero
+to an integer.  For example, @code{remainder (6.5, 2.3)} returns
+@code{-0.4}, which is @code{6.5} minus @code{6.9}.
+
+The absolute value of the result is less than or equal to half the
+absolute value of the @var{denominator}.  The difference between
+@code{fmod (@var{numerator}, @var{denominator})} and @code{remainder
+(@var{numerator}, @var{denominator})} is always either
+@var{denominator}, minus @var{denominator}, or zero.
+
+If @var{denominator} is zero, @code{remainder} signals a domain error.
+@end deftypefun
+
 @deftypefun double drem (double @var{numerator}, double @var{denominator})
 @deftypefunx float dremf (float @var{numerator}, float @var{denominator})
 @deftypefunx {long double} dreml (long double @var{numerator}, long double @var{denominator})
 @standards{BSD, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions are like @code{fmod} except that they round the
-internal quotient @var{n} to the nearest integer instead of towards zero
-to an integer.  For example, @code{drem (6.5, 2.3)} returns @code{-0.4},
-which is @code{6.5} minus @code{6.9}.
-
-The absolute value of the result is less than or equal to half the
-absolute value of the @var{denominator}.  The difference between
-@code{fmod (@var{numerator}, @var{denominator})} and @code{drem
-(@var{numerator}, @var{denominator})} is always either
-@var{denominator}, minus @var{denominator}, or zero.
-
-If @var{denominator} is zero, @code{drem} signals a domain error.
-@end deftypefun
-
-@deftypefun double remainder (double @var{numerator}, double @var{denominator})
-@deftypefunx float remainderf (float @var{numerator}, float @var{denominator})
-@deftypefunx {long double} remainderl (long double @var{numerator}, long double @var{denominator})
-@standards{BSD, math.h}
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function is another name for @code{drem}.
+This function is another name for @code{remainder}.
 @end deftypefun
 
 @node FP Bit Twiddling

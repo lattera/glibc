@@ -1,5 +1,11 @@
 2017-06-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* manual/arith.texi (Remainder Functions): Describe remainder as
+	primary and drem as an alternative name.  Change the comment on
+	remainder to ISO, since it is defined in ISO C99.
+
+2017-06-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* stdlib/tst-strtod.h (MMFUNC): New macro to provide an addition
 	macro expansion.
 	(GEN_TEST_STRTOD_FOREACH): Use MMFUNC for _Float128.
