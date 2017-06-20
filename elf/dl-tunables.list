@@ -87,17 +87,5 @@ glibc {
       type: STRING
       security_level: SXID_IGNORE
     }
-    x86_non_temporal_threshold {
-      type: SIZE_T
-      security_level: SXID_IGNORE
-    }
-    x86_data_cache_size {
-      type: SIZE_T
-      security_level: SXID_IGNORE
-    }
-    x86_shared_cache_size {
-      type: SIZE_T
-      security_level: SXID_IGNORE
-    }
   }
 }
