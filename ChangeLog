@@ -1,5 +1,12 @@
 2017-06-20  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21635]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Makefile
+	[$(subdir) = conform] (conformtest-xfail-conds): New variable.
+	* conform/data/signal.h-data (uc_mcontext): XFAIL for
+	powerpc32-linux.
+	* conform/data/ucontext.h-data (uc_mcontext): Likewise.
+
 	[BZ #21634]
 	* sysdeps/unix/sysv/linux/ia64/Makefile [$(subdir) = conform]
 	(conformtest-xfail-conds): New variable.

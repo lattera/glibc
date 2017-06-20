@@ -7,7 +7,8 @@ element ucontext_t {ucontext_t*} uc_link
 // Bug 21634: uc_sigmask has wrong type.
 xfail[ia64-linux]-element ucontext_t sigset_t uc_sigmask
 element ucontext_t stack_t uc_stack
-element ucontext_t mcontext_t uc_mcontext
+// Bug 21635: uc_mcontext has wrong type.
+xfail[powerpc32-linux]-element ucontext_t mcontext_t uc_mcontext
 
 type sigset_t
 type stack_t
