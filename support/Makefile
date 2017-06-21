@@ -74,6 +74,7 @@ libsupport-routines = \
   xmemstream \
   xmkdir \
   xmmap \
+  xmprotect \
   xmunmap \
   xopen \
   xpipe \

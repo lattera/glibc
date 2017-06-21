@@ -1,3 +1,20 @@
+/* Copyright (C) 1996-2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 /*
  * Copyright (c) 1996,1999 by Internet Software Consortium.
  *
@@ -15,58 +32,53 @@
  * SOFTWARE.
  */
 
-#include <sys/param.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
 #include <ctype.h>
-#include <string.h>
 #include <errno.h>
+#include <netinet/in.h>
+#include <resolv/resolv-internal.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 
-static int inet_pton4 (const char *src, unsigned char *dst);
-static int inet_pton6 (const char *src, unsigned char *dst);
+static int inet_pton4 (const char *src, const char *src_end, u_char *dst);
+static int inet_pton6 (const char *src, const char *src_end, u_char *dst);
 
-/* Convert from presentation format (which usually means ASCII printable)
- * to network format (which is usually some kind of binary format).
- *
- * return:
- *      1 if the address was valid for the specified address family
- *      0 if the address wasn't valid (`dst' is untouched in this case)
- *      -1 if some other error occurred (`dst' is untouched in this case, too)
- * author:
- *      Paul Vixie, 1996.
- */
 int
-__inet_pton (int af, const char *src, void *dst)
+__inet_pton_length (int af, const char *src, size_t srclen, void *dst)
 {
   switch (af)
     {
     case AF_INET:
-      return inet_pton4 (src, dst);
+      return inet_pton4 (src, src + srclen, dst);
     case AF_INET6:
-      return inet_pton6 (src, dst);
+      return inet_pton6 (src, src + srclen, dst);
     default:
       __set_errno (EAFNOSUPPORT);
       return -1;
     }
 }
+libc_hidden_def (__inet_pton_length)
+
+/* Like __inet_pton_length, but use strlen (SRC) as the length of
+   SRC.  */
+int
+__inet_pton (int af, const char *src, void *dst)
+{
+  return __inet_pton_length (af, src, strlen (src), dst);
+}
 libc_hidden_def (__inet_pton)
 weak_alias (__inet_pton, inet_pton)
 libc_hidden_weak (inet_pton)
 
-/* Like inet_atonbut without all the hexadecimal, octal and shorthand.
- *
- * return:
- *      1 if `src' is a valid dotted quad, else 0.
- * notice:
- *      does not touch `dst' unless it's returning 1.
- * author:
- *      Paul Vixie, 1996.
- */
+/* Like inet_aton but without all the hexadecimal, octal and shorthand
+   (and trailing garbage is not ignored).  Return 1 if SRC is a valid
+   dotted quad, else 0.  This function does not touch DST unless it's
+   returning 1.
+   Author: Paul Vixie, 1996.  */
 static int
-inet_pton4 (const char *src, unsigned char *dst)
+inet_pton4 (const char *src, const char *end, unsigned char *dst)
 {
   int saw_digit, octets, ch;
   unsigned char tmp[NS_INADDRSZ], *tp;
@@ -74,8 +86,9 @@ inet_pton4 (const char *src, unsigned char *dst)
   saw_digit = 0;
   octets = 0;
   *(tp = tmp) = 0;
-  while ((ch = *src++) != '\0')
+  while (src < end)
     {
+      ch = *src++;
       if (ch >= '0' && ch <= '9')
         {
           unsigned int new = *tp * 10 + (ch - '0');
@@ -108,22 +121,27 @@ inet_pton4 (const char *src, unsigned char *dst)
   return 1;
 }
 
-/* Cconvert presentation level address to network order binary form.
- *
- * return:
- *      1 if `src' is a valid [RFC1884 2.2] address, else 0.
- * notice:
- *      (1) does not touch `dst' unless it's returning 1.
- *      (2) :: in a full address is silently ignored.
- * credit:
- *      inspired by Mark Andrews.
- * author:
- *      Paul Vixie, 1996.
- */
+/* Return the value of CH as a hexademical digit, or -1 if it is a
+   different type of character.  */
 static int
-inet_pton6 (const char *src, unsigned char *dst)
+hex_digit_value (char ch)
 {
-  static const char xdigits[] = "0123456789abcdef";
+  if ('0' <= ch && ch <= '9')
+    return ch - '0';
+  if ('a' <= ch && ch <= 'f')
+    return ch - 'a' + 10;
+  if ('A' <= ch && ch <= 'F')
+    return ch - 'A' + 10;
+  return -1;
+}
+
+/* Convert presentation-level IPv6 address to network order binary
+   form.  Return 1 if SRC is a valid [RFC1884 2.2] address, else 0.
+   This function does not touch DST unless it's returning 1.
+   Author: Paul Vixie, 1996.  Inspired by Mark Andrews.  */
+static int
+inet_pton6 (const char *src, const char *src_endp, unsigned char *dst)
+{
   unsigned char tmp[NS_IN6ADDRSZ], *tp, *endp, *colonp;
   const char *curtok;
   int ch, saw_xdigit;
@@ -132,22 +150,28 @@ inet_pton6 (const char *src, unsigned char *dst)
   tp = memset (tmp, '\0', NS_IN6ADDRSZ);
   endp = tp + NS_IN6ADDRSZ;
   colonp = NULL;
+
   /* Leading :: requires some special handling.  */
+  if (src == src_endp)
+    return 0;
   if (*src == ':')
-    if (*++src != ':')
-      return 0;
+    {
+      ++src;
+      if (src == src_endp || *src != ':')
+        return 0;
+    }
+
   curtok = src;
   saw_xdigit = 0;
   val = 0;
-  while ((ch = tolower (*src++)) != '\0')
+  while (src < src_endp)
     {
-      const char *pch;
-
-      pch = strchr (xdigits, ch);
-      if (pch != NULL)
+      ch = *src++;
+      int digit = hex_digit_value (ch);
+      if (digit >= 0)
 	{
 	  val <<= 4;
-	  val |= (pch - xdigits);
+	  val |= digit;
 	  if (val > 0xffff)
 	    return 0;
 	  saw_xdigit = 1;
@@ -163,10 +187,8 @@ inet_pton6 (const char *src, unsigned char *dst)
 	      colonp = tp;
 	      continue;
 	    }
-	  else if (*src == '\0')
-	    {
-	      return 0;
-	    }
+	  else if (src == src_endp)
+            return 0;
 	  if (tp + NS_INT16SZ > endp)
 	    return 0;
 	  *tp++ = (unsigned char) (val >> 8) & 0xff;
@@ -175,8 +197,8 @@ inet_pton6 (const char *src, unsigned char *dst)
 	  val = 0;
 	  continue;
 	}
-      if (ch == '.' && ((tp + NS_INADDRSZ) <= endp) &&
-	  inet_pton4 (curtok, tp) > 0)
+      if (ch == '.' && ((tp + NS_INADDRSZ) <= endp)
+          && inet_pton4 (curtok, src_endp, tp) > 0)
 	{
 	  tp += NS_INADDRSZ;
 	  saw_xdigit = 0;
@@ -193,20 +215,13 @@ inet_pton6 (const char *src, unsigned char *dst)
     }
   if (colonp != NULL)
     {
-      /*
-       * Since some memmove's erroneously fail to handle
-       * overlapping regions, we'll do the shift by hand.
-       */
-      const int n = tp - colonp;
-      int i;
-
+      /* Replace :: with zeros.  */
       if (tp == endp)
-	return 0;
-      for (i = 1; i <= n; i++)
-	{
-	  endp[- i] = colonp[n - i];
-	  colonp[n - i] = 0;
-	}
+        /* :: would expand to a zero-width field.  */
+        return 0;
+      size_t n = tp - colonp;
+      memmove (endp - n, colonp, n);
+      memset (colonp, 0, endp - n - colonp);
       tp = endp;
     }
   if (tp != endp)

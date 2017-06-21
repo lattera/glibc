@@ -27,6 +27,7 @@ libc {
     __h_errno; __resp;
 
     __res_maybe_init; __res_iclose;
+    __inet_pton_length;
   }
 }
 

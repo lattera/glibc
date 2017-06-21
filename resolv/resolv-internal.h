@@ -56,4 +56,13 @@ enum
 int __res_nopt (res_state, int n0, unsigned char *buf, int buflen,
                 int anslen) attribute_hidden;
 
+/* Convert from presentation format (which usually means ASCII
+   printable) to network format (which is usually some kind of binary
+   format).  The input is in the range [SRC, SRC + SRCLEN).  The
+   output is written to DST (which has to be 4 or 16 bytes long,
+   depending on AF).  Return 0 for invalid input, 1 for success, -1
+   for an invalid address family.  */
+int __inet_pton_length (int af, const char *src, size_t srclen, void *);
+libc_hidden_proto (__inet_pton_length)
+
 #endif  /* _RESOLV_INTERNAL_H */

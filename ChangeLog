@@ -1,5 +1,23 @@
 2017-06-21  Florian Weimer  <fweimer@redhat.com>
 
+	Add the __inet_pton_length helper function.
+	* resolv/resolv-internal.h (__inet_pton_length): Declare.
+	* resolv/inet_pton (__inet_pton_length): Rename from __inet_pton.
+	Add length argument.
+	(__inet_pton): New function.
+	(inet_pton4): Add length argument.
+	(hex_digit_value): New function.
+	(inet_pton6): Add length argument.  Call hex_digit_value.  Use
+	memmove and memset to fill :: gap.
+	* resolv/Makefile (tests, tsts-static, tests-internal): Add
+	tst-inet_pton.
+	* resolv/tst-inet_pton.c: New file.
+	* support/Makefile (libsupport-routines): Add xmprotect.
+	* support/xunistd.h (xmprotect): Declare.
+	* support/xmprotect.c: New file.
+
+2017-06-21  Florian Weimer  <fweimer@redhat.com>
+
 	Add IPv6 getaddrinfo coverage to tst-inet6_scopeid_pton.c.
 	* inet/tst-inet6_scopeid_pton.c: Switch to <support/test-driver.c>.
 	(call_gai, check_ai): New functions.

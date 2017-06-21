@@ -48,7 +48,7 @@ void xwrite (int, const void *, size_t);
 
 /* Invoke mmap with a zero file offset.  */
 void *xmmap (void *addr, size_t length, int prot, int flags, int fd);
-
+void xmprotect (void *addr, size_t length, int prot);
 void xmunmap (void *addr, size_t length);
 
 __END_DECLS
