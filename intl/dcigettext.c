@@ -59,6 +59,7 @@ extern int errno;
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #if defined HAVE_UNISTD_H || defined _LIBC
@@ -495,6 +496,7 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
   const char *categoryname;
   const char *categoryvalue;
   const char *dirname;
+  char *xdirname = NULL;
   char *xdomainname;
   char *single_locale;
   char *retval;
@@ -624,35 +626,17 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
       if (!IS_ABSOLUTE_PATH (dirname))
 	{
 	  /* We have a relative path.  Make it absolute now.  */
-	  size_t dirname_len = strlen (dirname) + 1;
-	  size_t path_max;
-	  char *resolved_dirname;
-	  char *ret;
-
-	  path_max = (unsigned int) PATH_MAX;
-	  path_max += 2;		/* The getcwd docs say to do this.  */
-
-	  for (;;)
-	    {
-	      resolved_dirname = (char *) alloca (path_max + dirname_len);
-	      ADD_BLOCK (block_list, tmp_dirname);
-
-	      __set_errno (0);
-	      ret = getcwd (resolved_dirname, path_max);
-	      if (ret != NULL || errno != ERANGE)
-		break;
-
-	      path_max += path_max / 2;
-	      path_max += PATH_INCR;
-	    }
-
-	  if (ret == NULL)
-	    /* We cannot get the current working directory.  Don't signal an
-	       error but simply return the default string.  */
+	  char *cwd = getcwd (NULL, 0);
+	  if (cwd == NULL)
+	    /* We cannot get the current working directory.  Don't
+	       signal an error but simply return the default
+	       string.  */
 	    goto return_untranslated;
-
-	  stpcpy (stpcpy (strchr (resolved_dirname, '\0'), "/"), dirname);
-	  dirname = resolved_dirname;
+	  int ret = __asprintf (&xdirname, "%s/%s", cwd, dirname);
+	  free (cwd);
+	  if (ret < 0)
+	      return NULL;
+	  dirname = xdirname;
 	}
 #ifndef IN_LIBGLOCALE
     }
@@ -767,6 +751,7 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
 	    {
 	      /* Found the translation of MSGID1 in domain DOMAIN:
 		 starting at RETVAL, RETLEN bytes.  */
+	      free (xdirname);
 	      FREE_BLOCKS (block_list);
 	      if (foundp == NULL)
 		{
@@ -850,6 +835,7 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
 
  return_untranslated:
   /* Return the untranslated MSGID.  */
+  free (xdirname);
   FREE_BLOCKS (block_list);
   gl_rwlock_unlock (_nl_state_lock);
 #ifdef _LIBC

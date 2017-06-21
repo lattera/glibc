@@ -1,3 +1,8 @@
+2017-06-21  Florian Weimer  <fweimer@redhat.com>
+
+	* intl/dcigettext.c (DCIGETTEXT): Use getcwd (NULL, 0) and
+	asprintf to construct an absolute pathname.
+
 2017-06-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* misc/tst-preadvwritev2-common.c: New file.
