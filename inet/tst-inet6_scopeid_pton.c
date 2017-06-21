@@ -1,4 +1,4 @@
-/* Tests for __inet6_scopeid_pton.
+/* Tests for __inet6_scopeid_pton and IPv6 scopes in getaddrinfo.
    Copyright (C) 2016-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,8 +20,13 @@
 #include <inttypes.h>
 #include <net-internal.h>
 #include <net/if.h>
+#include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <support/check.h>
+#include <support/support.h>
+#include <support/test-driver.h>
 
 /* An interface which is known to the system.  */
 static const char *interface_name;
@@ -45,30 +50,103 @@ from_string (const char *address)
 {
   struct in6_addr addr;
   if (inet_pton (AF_INET6, address, &addr) != 1)
-    {
-      printf ("error: inet_pton (\"%s\") failed\n", address);
-      exit (1);
-    }
+    FAIL_EXIT1 ("inet_pton (\"%s\")", address);
   return addr;
+}
+
+/* Invoke getaddrinfo to parse ADDRESS%SCOPE.  Return true if
+   getaddrinfo was successful.  */
+static bool
+call_gai (int family, const char *address, const char *scope,
+          struct sockaddr_in6 *result)
+{
+  struct addrinfo hints =
+    {
+      .ai_family = family,
+      .ai_flags = AI_NUMERICHOST,
+      .ai_socktype = SOCK_DGRAM,
+      .ai_protocol = IPPROTO_UDP,
+    };
+  char *fulladdr = xasprintf ("%s%%%s", address, scope);
+  struct addrinfo *ai = NULL;
+  int ret = getaddrinfo (fulladdr, NULL, &hints, &ai);
+  if (ret == EAI_ADDRFAMILY || ret == EAI_NONAME)
+    {
+      if (test_verbose > 0)
+        printf ("info: getaddrinfo (\"%s\"): %s (%d)\n",
+                fulladdr, gai_strerror (ret), ret);
+      free (fulladdr);
+      return false;
+    }
+  if (ret != 0)
+    FAIL_EXIT1 ("getaddrinfo (\"%s\"): %s (%d)\n",
+                fulladdr, gai_strerror (ret), ret);
+  TEST_VERIFY_EXIT (ai != NULL);
+  TEST_VERIFY_EXIT (ai->ai_addrlen == sizeof (*result));
+  TEST_VERIFY (ai->ai_family == AF_INET6);
+  TEST_VERIFY (ai->ai_next == NULL);
+  memcpy (result, ai->ai_addr, sizeof (*result));
+  free (fulladdr);
+  freeaddrinfo (ai);
+  return true;
+}
+
+/* Verify that a successful call to getaddrinfo returned the expected
+   scope data.  */
+static void
+check_ai (const char *what, const char *addr_string, const char *scope_string,
+          const struct sockaddr_in6 *sa,
+          const struct in6_addr *addr, uint32_t scope)
+{
+  if (memcmp (addr, &sa->sin6_addr, sizeof (*addr)) != 0)
+    {
+      support_record_failure ();
+      printf ("error: getaddrinfo %s address mismatch for %s%%%s\n",
+              what, addr_string, scope_string);
+    }
+  if (sa->sin6_scope_id != scope)
+    {
+      support_record_failure ();
+      printf ("error: getaddrinfo %s scope mismatch for %s%%%s\n"
+              "  expected: %" PRIu32 "\n"
+              "  actual:   %" PRIu32 "\n",
+              what, addr_string, scope_string, scope, sa->sin6_scope_id);
+    }
 }
 
 /* Check a single address were we expected a failure.  */
 static void
 expect_failure (const char *address, const char *scope)
 {
+  if (test_verbose > 0)
+    printf ("info: expecting failure for %s%%%s\n", address, scope);
   struct in6_addr addr = from_string (address);
   uint32_t result = 1234;
   if (__inet6_scopeid_pton (&addr, scope, &result) == 0)
     {
+      support_record_failure ();
       printf ("error: unexpected success for %s%%%s\n",
               address, scope);
-      exit (1);
     }
   if (result != 1234)
     {
+      support_record_failure ();
       printf ("error: unexpected result update for %s%%%s\n",
               address, scope);
-      exit (1);
+    }
+
+  struct sockaddr_in6 sa;
+  if (call_gai (AF_UNSPEC, address, scope, &sa))
+    {
+      support_record_failure ();
+      printf ("error: unexpected getaddrinfo success for %s%%%s (AF_UNSPEC)\n",
+              address, scope);
+    }
+  if (call_gai (AF_INET6, address, scope, &sa))
+    {
+      support_record_failure ();
+      printf ("error: unexpected getaddrinfo success for %s%%%s (AF_INET6)\n",
+              address, scope);
     }
 }
 
@@ -76,21 +154,43 @@ expect_failure (const char *address, const char *scope)
 static void
 expect_success (const char *address, const char *scope, uint32_t expected)
 {
+  if (test_verbose > 0)
+    printf ("info: expecting success for %s%%%s\n", address, scope);
   struct in6_addr addr = from_string (address);
   uint32_t actual = expected + 1;
   if (__inet6_scopeid_pton (&addr, scope, &actual) != 0)
     {
+      support_record_failure ();
       printf ("error: unexpected failure for %s%%%s\n",
               address, scope);
-      exit (1);
     }
   if (actual != expected)
     {
+      support_record_failure ();
       printf ("error: unexpected result for for %s%%%s\n",
               address, scope);
       printf ("  expected: %" PRIu32 "\n", expected);
       printf ("  actual:   %" PRIu32 "\n", actual);
-      exit (1);
+    }
+
+  struct sockaddr_in6 sa;
+  memset (&sa, 0xc0, sizeof (sa));
+  if (call_gai (AF_UNSPEC, address, scope, &sa))
+    check_ai ("AF_UNSPEC", address, scope, &sa, &addr, expected);
+  else
+    {
+      support_record_failure ();
+      printf ("error: unexpected getaddrinfo failure for %s%%%s (AF_UNSPEC)\n",
+              address, scope);
+    }
+  memset (&sa, 0xc0, sizeof (sa));
+  if (call_gai (AF_INET6, address, scope, &sa))
+    check_ai ("AF_INET6", address, scope, &sa, &addr, expected);
+  else
+    {
+      support_record_failure ();
+      printf ("error: unexpected getaddrinfo failure for %s%%%s (AF_INET6)\n",
+              address, scope);
     }
 }
 
@@ -127,5 +227,4 @@ do_test (void)
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

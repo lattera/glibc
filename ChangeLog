@@ -1,3 +1,10 @@
+2017-06-21  Florian Weimer  <fweimer@redhat.com>
+
+	Add IPv6 getaddrinfo coverage to tst-inet6_scopeid_pton.c.
+	* inet/tst-inet6_scopeid_pton.c: Switch to <support/test-driver.c>.
+	(call_gai, check_ai): New functions.
+	(expect_failure, expect_success): Use them.  Add logging.
+
 2017-06-21  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile
