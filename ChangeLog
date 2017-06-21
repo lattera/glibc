@@ -1,3 +1,41 @@
+2017-06-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strcmp-sse2, strcmp-sse4_2, strncmp-sse2, strncmp-sse4_2,
+	strcasecmp_l-sse2, strcasecmp_l-sse4_2, strcasecmp_l-avx,
+	strncase_l-sse2, strncase_l-sse4_2 and strncase_l-avx.
+	* sysdeps/x86_64/multiarch/ifunc-strcasecmp.h: New file.
+	* sysdeps/x86_64/multiarch/strcasecmp.c: Likewise.
+	* sysdeps/x86_64/multiarch/strcasecmp_l-avx.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcasecmp_l-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcasecmp_l-sse4_2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcasecmp_l.c: Likewise.
+	* sysdeps/x86_64/multiarch/strcmp-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcmp-sse4_2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcmp.c: Likewise.
+	* sysdeps/x86_64/multiarch/strncase.c: Likewise.
+	* sysdeps/x86_64/multiarch/strncase_l-avx.S : Likewise.
+	* sysdeps/x86_64/multiarch/strncase_l-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncase_l-sse4_2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncase_l.c: Likewise.
+	* sysdeps/x86_64/multiarch/strncmp-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncmp-sse4_2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncmp.c: Likewise.
+	* sysdeps/x86_64/multiarch/strcasecmp_l.S: Removed.
+	* sysdeps/x86_64/multiarch/strcmp.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncase_l.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncmp.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcmp-sse42.S: Include <sysdep.h>.
+	(STRCMP_SSE42): New.  Defined to __strcmp_sse42 if not defined.
+	[USE_AS_STRCASECMP_L || USE_AS_STRNCASECMP_L]: Include
+	"locale-defines.h".
+	(UPDATE_STRNCMP_COUNTER): New.
+	(SECTION): Likewise.
+	(GLABEL): Likewise.
+	(LABEL): Likewise.
+	* sysdeps/x86_64/multiarch/strncmp-ssse3.S: Rewrite and enable
+	for libc.a.
+
 2017-06-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21622]

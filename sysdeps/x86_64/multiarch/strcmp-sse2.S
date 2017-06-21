@@ -1,4 +1,4 @@
-/* strcmp optimized with SSSE3.
+/* strcmp optimized with SSE2.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+#if IS_IN (libc)
+# include <sysdep.h>
 
-#define STRCMP __strncmp_ssse3
+# define STRCMP __strcmp_sse2
 
-#undef libc_hidden_builtin_def
-#define libc_hidden_builtin_def(strcmp)
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(strcmp)
+#endif
 
-#define USE_SSSE3 1
-#define USE_AS_STRNCMP
 #include <sysdeps/x86_64/strcmp.S>

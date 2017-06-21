@@ -1,4 +1,5 @@
-/* strcmp optimized with SSSE3.
+/* Multiple versions of strncasecmp.
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +17,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+/* Define multiple versions only for the definition in libc.  */
+#if IS_IN (libc)
+# define strncasecmp __redirect_strncasecmp
+# define __strncasecmp __redirect___strncasecmp
+# include <string.h>
+# undef strncasecmp
+# undef __strncasecmp
 
-#define STRCMP __strncmp_ssse3
+# define SYMBOL_NAME strncasecmp
+# include "ifunc-strcasecmp.h"
 
-#undef libc_hidden_builtin_def
-#define libc_hidden_builtin_def(strcmp)
+libc_ifunc_redirected (__redirect_strncasecmp, __strncasecmp,
+		       IFUNC_SELECTOR ());
 
-#define USE_SSSE3 1
-#define USE_AS_STRNCMP
-#include <sysdeps/x86_64/strcmp.S>
+weak_alias (__strncasecmp, strncasecmp)
+#endif

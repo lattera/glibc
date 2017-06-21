@@ -17,6 +17,40 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sysdep.h>
+
+#ifndef STRCMP_SSE42
+# define STRCMP_SSE42	__strcmp_sse42
+#endif
+
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# include "locale-defines.h"
+#endif
+
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+/* Since the counter, %r11, is unsigned, we branch to strcmp_exitz
+   if the new counter > the old one or is 0.  */
+# define UPDATE_STRNCMP_COUNTER				\
+	/* calculate left number to compare */		\
+	lea	-16(%rcx, %r11), %r9;			\
+	cmp	%r9, %r11;				\
+	jb	LABEL(strcmp_exitz);			\
+	test	%r9, %r9;				\
+	je	LABEL(strcmp_exitz);			\
+	mov	%r9, %r11
+#else
+# define UPDATE_STRNCMP_COUNTER
+#endif
+
+#ifdef USE_AVX
+# define SECTION	avx
+# define GLABEL(l)	l##_avx
+#else
+# define SECTION	sse4.2
+# define GLABEL(l)	l##_sse42
+#endif
+
+#define LABEL(l)	.L##l
 
 /* We use 0x1a:
 	_SIDD_SBYTE_OPS

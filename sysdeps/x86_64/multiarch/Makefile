@@ -4,8 +4,10 @@ endif
 
 ifeq ($(subdir),string)
 
-sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
-		   strcmp-sse2-unaligned strncmp-ssse3 \
+sysdep_routines += strncat-c stpncpy-c strncpy-c \
+		   strcmp-sse2 strcmp-sse2-unaligned strcmp-ssse3  \
+		   strcmp-sse4_2 \
+		   strncmp-sse2 strncmp-ssse3 strncmp-sse4_2 \
 		   memchr-sse2 rawmemchr-sse2 memchr-avx2 rawmemchr-avx2 \
 		   memrchr-sse2 memrchr-avx2 \
 		   memcmp-sse2 \
@@ -14,11 +16,15 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   memmove-ssse3 \
 		   memcpy-ssse3-back \
 		   memmove-ssse3-back \
-		   memmove-avx512-no-vzeroupper strcasecmp_l-ssse3 \
+		   memmove-avx512-no-vzeroupper \
+		   strcasecmp_l-sse2 strcasecmp_l-ssse3 \
+		   strcasecmp_l-sse4_2 strcasecmp_l-avx \
+		   strncase_l-sse2 strncase_l-ssse3 \
+		   strncase_l-sse4_2 strncase_l-avx \
 		   strchr-sse2 strchrnul-sse2 strchr-avx2 strchrnul-avx2 \
 		   strrchr-sse2 strrchr-avx2 \
 		   strlen-sse2 strnlen-sse2 strlen-avx2 strnlen-avx2 \
-		   strncase_l-ssse3 strcat-ssse3 strncat-ssse3\
+		   strcat-ssse3 strncat-ssse3\
 		   strcpy-sse2 stpcpy-sse2 \
 		   strcpy-ssse3 strncpy-ssse3 stpcpy-ssse3 stpncpy-ssse3 \
 		   strcpy-sse2-unaligned strncpy-sse2-unaligned \

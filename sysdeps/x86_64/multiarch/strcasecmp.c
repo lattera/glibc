@@ -1,4 +1,5 @@
-/* strcmp optimized with SSSE3.
+/* Multiple versions of strcasecmp.
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +17,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+/* Define multiple versions only for the definition in libc.  */
+#if IS_IN (libc)
+# define strcasecmp __redirect_strcasecmp
+# define __strcasecmp __redirect___strcasecmp
+# include <string.h>
+# undef strcasecmp
+# undef __strcasecmp
 
-#define STRCMP __strncmp_ssse3
+# define SYMBOL_NAME strcasecmp
+# include "ifunc-strcasecmp.h"
 
-#undef libc_hidden_builtin_def
-#define libc_hidden_builtin_def(strcmp)
+libc_ifunc_redirected (__redirect_strcasecmp, __strcasecmp,
+		       IFUNC_SELECTOR ());
 
-#define USE_SSSE3 1
-#define USE_AS_STRNCMP
-#include <sysdeps/x86_64/strcmp.S>
+weak_alias (__strcasecmp, strcasecmp)
+# ifdef SHARED
+__hidden_ver1 (__strcasecmp, __GI___strcasecmp, __redirect___strcasecmp)
+  __attribute__ ((visibility ("hidden")));
+# endif
+#endif

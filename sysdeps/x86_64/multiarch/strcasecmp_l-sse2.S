@@ -1,4 +1,4 @@
-/* strcmp optimized with SSSE3.
+/* strcasecmp_l optimized with SSE2.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
-#define STRCMP __strncmp_ssse3
-
-#undef libc_hidden_builtin_def
-#define libc_hidden_builtin_def(strcmp)
-
-#define USE_SSSE3 1
-#define USE_AS_STRNCMP
+#define STRCMP __strcasecmp_l_sse2
+#define USE_AS_STRCASECMP_L
+#define NO_NOLOCALE_ALIAS
+#define __strcasecmp __strcasecmp_sse2
 #include <sysdeps/x86_64/strcmp.S>
