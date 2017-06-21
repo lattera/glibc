@@ -1,3 +1,8 @@
+2017-06-21  Florian Weimer  <fweimer@redhat.com>
+
+	* intl/loadmsgcat.c: Remove alloca support.
+	(_nl_load_domain): Use calloc instead of alloca.
+
 2017-04-21  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/Makefile (tests-internal): Add tst-alloc_buffer.
