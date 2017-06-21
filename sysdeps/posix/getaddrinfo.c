@@ -539,46 +539,11 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	{
 	  char *scope_delim = strchr (name, SCOPE_DELIMITER);
 	  int e;
-
-	  {
-	    bool malloc_namebuf = false;
-	    char *namebuf = (char *) name;
-
-	    if (__glibc_unlikely (scope_delim != NULL))
-	      {
-		if (malloc_name)
-		  *scope_delim = '\0';
-		else
-		  {
-		    if (__libc_use_alloca (alloca_used
-					   + scope_delim - name + 1))
-		      {
-			namebuf = alloca_account (scope_delim - name + 1,
-						  alloca_used);
-			*((char *) __mempcpy (namebuf, name,
-					      scope_delim - name)) = '\0';
-		      }
-		    else
-		      {
-			namebuf = __strndup (name, scope_delim - name);
-			if (namebuf == NULL)
-			  {
-			    assert (!malloc_name);
-			    return -EAI_MEMORY;
-			  }
-			malloc_namebuf = true;
-		      }
-		  }
-	      }
-
-	    e = inet_pton (AF_INET6, namebuf, at->addr);
-
-	    if (malloc_namebuf)
-	      free (namebuf);
-	    else if (scope_delim != NULL && malloc_name)
-	      /* Undo what we did above.  */
-	      *scope_delim = SCOPE_DELIMITER;
-	  }
+	  if (scope_delim == NULL)
+	    e = inet_pton (AF_INET6, name, at->addr);
+	  else
+	    e = __inet_pton_length (AF_INET6, name, scope_delim - name,
+				    at->addr);
 	  if (e > 0)
 	    {
 	      if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)

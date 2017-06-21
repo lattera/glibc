@@ -1,5 +1,10 @@
 2017-06-21  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Call __inet_pton_length
+	to parse addresses with IPv6 scope IDs.
+
+2017-06-21  Florian Weimer  <fweimer@redhat.com>
+
 	Add the __inet_pton_length helper function.
 	* resolv/resolv-internal.h (__inet_pton_length): Declare.
 	* resolv/inet_pton (__inet_pton_length): Rename from __inet_pton.
