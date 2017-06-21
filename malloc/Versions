@@ -76,7 +76,6 @@ libc {
     __libc_scratch_buffer_grow_preserve;
     __libc_scratch_buffer_set_array_size;
 
-
     # Internal name for reallocarray
     __libc_reallocarray;
 
@@ -86,5 +85,12 @@ libc {
     __libc_dynarray_finalize;
     __libc_dynarray_resize;
     __libc_dynarray_resize_clear;
+
+    # struct alloc_buffer support
+    __libc_alloc_buffer_alloc_array;
+    __libc_alloc_buffer_allocate;
+    __libc_alloc_buffer_copy_bytes;
+    __libc_alloc_buffer_copy_string;
+    __libc_alloc_buffer_create_failure;
   }
 }

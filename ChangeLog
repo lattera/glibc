@@ -1,3 +1,20 @@
+2017-04-21  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/Makefile (tests-internal): Add tst-alloc_buffer.
+	(routines): Add alloc_buffer_alloc_array, alloc_buffer_allocate,
+	alloc_buffer_copy_bytes, alloc_buffer_copy_string,
+	alloc_buffer_create_failure.
+	* malloc/Versions (__libc_alloc_buffer_alloc_array)
+	(__libc_alloc_buffer_allocate, __libc_alloc_buffer_copy_bytes)
+	(__libc_alloc_buffer_copy_string)
+	(__libc_alloc_buffer_create_failure): Export as GLIBC_PRIVATE.
+	* malloc/alloc_buffer_alloc_array.c: New file.
+	* malloc/alloc_buffer_allocate.c: Likewise.
+	* malloc/alloc_buffer_copy_bytes.c: Likewise.
+	* malloc/alloc_buffer_copy_string.c: Likewise.
+	* malloc/alloc_buffer_create_failure.c: Likewise.
+	* malloc/tst-alloc_buffer.c: Likewise.
+
 2017-06-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
