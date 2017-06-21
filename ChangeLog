@@ -1,3 +1,9 @@
+2017-06-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* stdlib/tst-strtod.h (MMFUNC): New macro to provide an addition
+	macro expansion.
+	(GEN_TEST_STRTOD_FOREACH): Use MMFUNC for _Float128.
+
 2017-06-22  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #21533]

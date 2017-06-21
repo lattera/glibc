@@ -33,12 +33,16 @@
 # define IF_FLOAT128(x)
 #endif
 
+/* Provide an extra parameter expansion for mfunc.  */
+#define MMFUNC(mmfunc, ...) mmfunc (__VA_ARGS__)
+
 /* Splat n variants of the same test for the various strtod functions.  */
 #define GEN_TEST_STRTOD_FOREACH(mfunc, ...)				      \
   mfunc (  f,       float, strfromf, f, f, ##__VA_ARGS__)		      \
   mfunc (  d,      double, strfromd,  ,  , ##__VA_ARGS__)		      \
   mfunc ( ld, long double, strfroml, L, l, ##__VA_ARGS__)		      \
-  IF_FLOAT128 (mfunc (f128, _Float128, strfromf128, F128, f128, ##__VA_ARGS__))
+  IF_FLOAT128 (MMFUNC							      \
+   (mfunc, f128, _Float128, strfromf128, F128, f128, ##__VA_ARGS__))
 /* The arguments to the generated macros are:
    FSUF - Function suffix
    FTYPE - float type
