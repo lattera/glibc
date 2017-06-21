@@ -57,6 +57,8 @@ struct sigaction
 #if defined __USE_UNIX98 || defined __USE_MISC
 # define SA_NOPTRACE  0x02000000 /* Don't ptrace this signal. */
 # define SA_ONSTACK   0x08000000 /* Use signal stack by using `sa_restorer'. */
+#endif
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
 # define SA_RESTART   0x10000000 /* Restart syscall on signal return.  */
 # define SA_NODEFER   0x40000000 /* Don't automatically block the signal when
 				    its handler is being executed.  */

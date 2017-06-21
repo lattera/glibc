@@ -1,3 +1,12 @@
+2017-06-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21622]
+	* sysdeps/unix/sysv/linux/tile/bits/sigaction.h (SA_RESTART):
+	Define for [__USE_UNIX98 || __USE_XOPEN2K8], not [__USE_UNIX98 ||
+	__USE_MISC].
+	(SA_NODEFER): Likewise.
+	(SA_RESETHAND): Likewise.
+
 2017-06-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/dl-tunables.list (glibc.tune.ifunc): Removed.
