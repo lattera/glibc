@@ -1,3 +1,15 @@
+2017-06-21  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.S
+	(__llrintf): Define as strong alias of __llrint.
+	(llrintf):  Define as weak alias of __llrint.
+	(__lrintf): Define as strong alias of __llrint.
+	(lrintf):  Define as weak alias of __llrint.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llrint.S:  Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llrint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.S:  Remove file content.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrintf.c: New file.
+
 2017-06-20  Zack Weinberg  <zackw@panix.com>
 
 	* bits/signum-generic.h: Renamed from bits/signum.h.
