@@ -176,6 +176,8 @@ _dl_tlsdesc_dynamic:
 # define NSAVEXREGPAIRS 2
 	stp	x29, x30, [sp,#-(32+16*NSAVEXREGPAIRS)]!
 	cfi_adjust_cfa_offset (32+16*NSAVEXREGPAIRS)
+	cfi_rel_offset (x29, 0)
+	cfi_rel_offset (x30, 8)
 	mov	x29, sp
 	DELOUSE (0)
 
@@ -184,6 +186,10 @@ _dl_tlsdesc_dynamic:
 
 	stp	x1,  x2, [sp, #32+16*0]
 	stp	x3,  x4, [sp, #32+16*1]
+	cfi_rel_offset (x1, 32)
+	cfi_rel_offset (x2, 32+8)
+	cfi_rel_offset (x3, 32+16)
+	cfi_rel_offset (x4, 32+24)
 
 	mrs	x4, tpidr_el0
 	/* The ldar here happens after the load from [x0] at the call site
@@ -213,6 +219,8 @@ _dl_tlsdesc_dynamic:
 
 	ldp	x29, x30, [sp], #(32+16*NSAVEXREGPAIRS)
 	cfi_adjust_cfa_offset (-32-16*NSAVEXREGPAIRS)
+	cfi_restore (x29)
+	cfi_restore (x30)
 # undef NSAVEXREGPAIRS
 	RET
 2:
@@ -230,6 +238,20 @@ _dl_tlsdesc_dynamic:
 	stp	x13, x14, [sp, #16*4]
 	stp	x15, x16, [sp, #16*5]
 	stp	x17, x18, [sp, #16*6]
+	cfi_rel_offset (x5, 0)
+	cfi_rel_offset (x6, 8)
+	cfi_rel_offset (x7, 16)
+	cfi_rel_offset (x8, 16+8)
+	cfi_rel_offset (x9, 16*2)
+	cfi_rel_offset (x10, 16*2+8)
+	cfi_rel_offset (x11, 16*3)
+	cfi_rel_offset (x12, 16*3+8)
+	cfi_rel_offset (x13, 16*4)
+	cfi_rel_offset (x14, 16*4+8)
+	cfi_rel_offset (x15, 16*5)
+	cfi_rel_offset (x16, 16*5+8)
+	cfi_rel_offset (x17, 16*6)
+	cfi_rel_offset (x18, 16*6+8)
 
 	SAVE_Q_REGISTERS
 
@@ -268,8 +290,14 @@ _dl_tlsdesc_dynamic:
 	.align 2
 _dl_tlsdesc_resolve_rela:
 #define	NSAVEXREGPAIRS 9
+	/* The tlsdesc PLT entry pushes x2 and x3 to the stack.  */
+	cfi_adjust_cfa_offset (16)
+	cfi_rel_offset (x2, 0)
+	cfi_rel_offset (x3, 8)
 	stp	x29, x30, [sp, #-(32+16*NSAVEXREGPAIRS)]!
 	cfi_adjust_cfa_offset (32+16*NSAVEXREGPAIRS)
+	cfi_rel_offset (x29, 0)
+	cfi_rel_offset (x30, 8)
 	mov	x29, sp
 	stp	 x1,  x4, [sp, #32+16*0]
 	stp	 x5,  x6, [sp, #32+16*1]
@@ -280,6 +308,23 @@ _dl_tlsdesc_resolve_rela:
 	stp	x15, x16, [sp, #32+16*6]
 	stp	x17, x18, [sp, #32+16*7]
 	str	x0,       [sp, #32+16*8]
+	cfi_rel_offset (x1, 32)
+	cfi_rel_offset (x4, 32+8)
+	cfi_rel_offset (x5, 32+16)
+	cfi_rel_offset (x6, 32+16+8)
+	cfi_rel_offset (x7, 32+16*2)
+	cfi_rel_offset (x8, 32+16*2+8)
+	cfi_rel_offset (x9, 32+16*3)
+	cfi_rel_offset (x10, 32+16*3+8)
+	cfi_rel_offset (x11, 32+16*4)
+	cfi_rel_offset (x12, 32+16*4+8)
+	cfi_rel_offset (x13, 32+16*5)
+	cfi_rel_offset (x14, 32+16*5+8)
+	cfi_rel_offset (x15, 32+16*6)
+	cfi_rel_offset (x16, 32+16*6+8)
+	cfi_rel_offset (x17, 32+16*7)
+	cfi_rel_offset (x18, 32+16*7+8)
+	cfi_rel_offset (x0, 32+16*8)
 
 	SAVE_Q_REGISTERS
 
@@ -304,6 +349,8 @@ _dl_tlsdesc_resolve_rela:
 	ldp	x17, x18, [sp, #32+16*7]
 	ldp	x29, x30, [sp], #(32+16*NSAVEXREGPAIRS)
 	cfi_adjust_cfa_offset (-32-16*NSAVEXREGPAIRS)
+	cfi_restore (x29)
+	cfi_restore (x30)
 	ldp	x2, x3, [sp], #16
 	cfi_adjust_cfa_offset (-16)
 	RET
@@ -332,6 +379,8 @@ _dl_tlsdesc_resolve_hold:
 1:
 	stp	x29, x30, [sp, #-(32+16*NSAVEXREGPAIRS)]!
 	cfi_adjust_cfa_offset (32+16*NSAVEXREGPAIRS)
+	cfi_rel_offset (x29, 0)
+	cfi_rel_offset (x30, 8)
 	mov	x29, sp
 	stp	 x1,  x2, [sp, #32+16*0]
 	stp	 x3,  x4, [sp, #32+16*1]
@@ -343,6 +392,25 @@ _dl_tlsdesc_resolve_hold:
 	stp	x15, x16, [sp, #32+16*7]
 	stp	x17, x18, [sp, #32+16*8]
 	str	x0,       [sp, #32+16*9]
+	cfi_rel_offset (x1, 32)
+	cfi_rel_offset (x2, 32+8)
+	cfi_rel_offset (x3, 32+16)
+	cfi_rel_offset (x4, 32+16+8)
+	cfi_rel_offset (x5, 32+16*2)
+	cfi_rel_offset (x6, 32+16*2+8)
+	cfi_rel_offset (x7, 32+16*3)
+	cfi_rel_offset (x8, 32+16*3+8)
+	cfi_rel_offset (x9, 32+16*4)
+	cfi_rel_offset (x10, 32+16*4+8)
+	cfi_rel_offset (x11, 32+16*5)
+	cfi_rel_offset (x12, 32+16*5+8)
+	cfi_rel_offset (x13, 32+16*6)
+	cfi_rel_offset (x14, 32+16*6+8)
+	cfi_rel_offset (x15, 32+16*7)
+	cfi_rel_offset (x16, 32+16*7+8)
+	cfi_rel_offset (x17, 32+16*8)
+	cfi_rel_offset (x18, 32+16*8+8)
+	cfi_rel_offset (x0, 32+16*9)
 
 	SAVE_Q_REGISTERS
 
@@ -367,6 +435,8 @@ _dl_tlsdesc_resolve_hold:
 	ldp	x17, x18, [sp, #32+16*8]
 	ldp	x29, x30, [sp], #(32+16*NSAVEXREGPAIRS)
 	cfi_adjust_cfa_offset (-32-16*NSAVEXREGPAIRS)
+	cfi_restore (x29)
+	cfi_restore (x30)
 	RET
 	cfi_endproc
 	.size	_dl_tlsdesc_resolve_hold, .-_dl_tlsdesc_resolve_hold

@@ -6,6 +6,12 @@
 
 2017-06-21  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Add cfi
+	annotation.
+	(_dl_tlsdesc_resolve_rela, _dl_tlsdesc_resolve_hold): Likewise.
+
+2017-06-21  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* sysdeps/aarch64/dl-machine.h (RTLD_START_1): Change _dl_argv to the
 	hidden __GI__dl_argv symbol.
 
