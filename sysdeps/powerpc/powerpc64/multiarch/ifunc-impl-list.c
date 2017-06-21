@@ -183,6 +183,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/powerpc/powerpc64/multiarch/memchr.c.  */
   IFUNC_IMPL (i, name, memchr,
 	      IFUNC_IMPL_ADD (array, i, memchr,
+			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
+			      __memchr_power8)
+	      IFUNC_IMPL_ADD (array, i, memchr,
 			      hwcap & PPC_FEATURE_HAS_VSX,
 			      __memchr_power7)
 	      IFUNC_IMPL_ADD (array, i, memchr, 1,

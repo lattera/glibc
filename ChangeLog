@@ -1,5 +1,16 @@
 2017-06-21  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile
+	(sysdep_routines): Add memchr_power8.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(memchr): Add __memchr_power8 to list of memchr functions.
+	* sysdeps/powerpc/powerpc64/multiarch/memchr-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memchr.c
+	(memchr): Add __memchr_power8 to ifunc list.
+	* sysdeps/powerpc/powerpc64/power8/memchr.S: New file.
+
+2017-06-21  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/s_llrint.S
 	(__llrintf): Define as strong alias of __llrint.
 	(llrintf):  Define as weak alias of __llrint.
