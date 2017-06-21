@@ -83,9 +83,5 @@ glibc {
       env_alias: LD_HWCAP_MASK
       default: HWCAP_IMPORTANT
       }
-    ifunc {
-      type: STRING
-      security_level: SXID_IGNORE
-    }
   }
 }

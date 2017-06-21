@@ -198,8 +198,8 @@ is 8 times the number of cores online.
 @cindex hardware capability tunables
 @cindex hwcap tunables
 @cindex tunables, hwcap
-@cindex ifunc tunables
-@cindex tunables, ifunc
+@cindex hwcaps tunables
+@cindex tunables, hwcaps
 @cindex data_cache_size tunables
 @cindex tunables, data_cache_size
 @cindex shared_cache_size tunables
@@ -222,8 +222,8 @@ extensions available in the processor at runtime for some architectures.  The
 capabilities at runtime, thus disabling use of those extensions.
 @end deftp
 
-@deftp Tunable glibc.tune.ifunc
-The @code{glibc.tune.ifunc=-xxx,yyy,-zzz...} tunable allows the user to
+@deftp Tunable glibc.tune.hwcaps
+The @code{glibc.tune.hwcaps=-xxx,yyy,-zzz...} tunable allows the user to
 enable CPU/ARCH feature @code{yyy}, disable CPU/ARCH feature @code{xxx}
 and @code{zzz} where the feature name is case-sensitive and has to match
 the ones in @code{sysdeps/x86/cpu-features.h}.

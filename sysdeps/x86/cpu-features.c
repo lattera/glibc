@@ -25,7 +25,7 @@
 # include <unistd.h>		/* Get STDOUT_FILENO for _dl_printf.  */
 # include <elf/dl-tunables.h>
 
-extern void TUNABLE_CALLBACK (set_ifunc) (tunable_val_t *)
+extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
   attribute_hidden;
 #endif
 
@@ -322,7 +322,7 @@ no_cpuid:
   cpu_features->kind = kind;
 
 #if HAVE_TUNABLES
-  TUNABLE_GET (ifunc, tunable_val_t *, TUNABLE_CALLBACK (set_ifunc));
+  TUNABLE_GET (hwcaps, tunable_val_t *, TUNABLE_CALLBACK (set_hwcaps));
   cpu_features->non_temporal_threshold
     = TUNABLE_GET (x86_non_temporal_threshold, long int, NULL);
   cpu_features->data_cache_size

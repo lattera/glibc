@@ -31,16 +31,12 @@
 # if defined USE_MULTIARCH && !defined SHARED
 #  ifdef __x86_64__
 #   define DEFAULT_MEMCMP	__memcmp_sse2
-#   define DEFAULT_STRLEN	__strlen_sse2
 #  else
 #   define DEFAULT_MEMCMP	__memcmp_ia32
-#   define DEFAULT_STRLEN	strlen
 #  endif
 extern __typeof (memcmp) DEFAULT_MEMCMP;
-extern __typeof (strlen) DEFAULT_STRLEN;
 # else
 #  define DEFAULT_MEMCMP	memcmp
-#  define DEFAULT_STRLEN	strlen
 # endif
 
 # define CHECK_GLIBC_IFUNC_CPU_OFF(f, cpu_features, name, len)		\
@@ -112,30 +108,27 @@ extern __typeof (strlen) DEFAULT_STRLEN;
 
 attribute_hidden
 void
-TUNABLE_CALLBACK (set_ifunc) (tunable_val_t *valp)
+TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 {
   /* The current IFUNC selection is based on microbenchmarks in glibc.
      It should give the best performance for most workloads.  But other
      choices may have better performance for a particular workload or on
      the hardware which wasn't available when the selection was made.
-     The environment variable, GLIBC_IFUNC=-xxx,yyy,-zzz...., can be
-     used to enable CPU/ARCH feature yyy, disable CPU/ARCH feature yyy
-     and zzz, where the feature name is case-sensitive and has to match
-     the ones in cpu-features.h.  It can be used by glibc developers to
-     tune for a new processor or override the IFUNC selection to improve
-     performance for a particular workload.
+     The environment variable:
 
-     Since all CPU/ARCH features are hardware optimizations without
-     security implication, except for Prefer_MAP_32BIT_EXEC, which can
-     only be disabled, we check GLIBC_IFUNC for programs, including
-     set*id ones.
+     GLIBC_TUNABLES=glibc.tune.hwcaps=-xxx,yyy,-zzz,....
+
+     can be used to enable CPU/ARCH feature yyy, disable CPU/ARCH feature
+     yyy and zzz, where the feature name is case-sensitive and has to
+     match the ones in cpu-features.h.  It can be used by glibc developers
+     to tune for a new processor or override the IFUNC selection to
+     improve performance for a particular workload.
 
      NOTE: the IFUNC selection may change over time.  Please check all
      multiarch implementations when experimenting.  */
 
   const char *p = valp->strval;
   struct cpu_features *cpu_features = &GLRO(dl_x86_cpu_features);
-  const char *end = p + DEFAULT_STRLEN (p);
   size_t len;
 
   do
@@ -145,7 +138,7 @@ TUNABLE_CALLBACK (set_ifunc) (tunable_val_t *valp)
       size_t nl;
 
       for (c = p; *c != ','; c++)
-	if (c >= end)
+	if (*c == '\0')
 	  break;
 
       len = c - p;
@@ -325,6 +318,6 @@ TUNABLE_CALLBACK (set_ifunc) (tunable_val_t *valp)
 	}
       p += len + 1;
     }
-  while (p < end);
+  while (*p != '\0');
 }
 #endif

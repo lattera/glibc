@@ -217,12 +217,12 @@ struct cpu_features
   unsigned int feature[FEATURE_INDEX_MAX];
   /* Data cache size for use in memory and string routines, typically
      L1 size.  */
-  long int data_cache_size;
+  unsigned long int data_cache_size;
   /* Shared cache size for use in memory and string routines, typically
      L2 or L3 size.  */
-  long int shared_cache_size;
+  unsigned long int shared_cache_size;
   /* Threshold to use non temporal store.  */
-  long int non_temporal_threshold;
+  unsigned long int non_temporal_threshold;
 };
 
 /* Used from outside of glibc to get access to the CPU features

@@ -1,3 +1,21 @@
+2017-06-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/dl-tunables.list (glibc.tune.ifunc): Removed.
+	* sysdeps/x86/dl-tunables.list (glibc.tune.hwcaps): New.
+	Remove security_level on all fields.
+	* manual/tunables.texi: Replace ifunc with hwcaps.
+	* sysdeps/x86/cpu-features.c (TUNABLE_CALLBACK (set_ifunc)):
+	Renamed to ..
+	(TUNABLE_CALLBACK (set_hwcaps)): This.
+	(init_cpu_features): Updated.
+	* sysdeps/x86/cpu-features.h (cpu_features): Change type of
+	data_cache_size, data_cache_size and non_temporal_threshold to
+	unsigned long int.
+	* sysdeps/x86/cpu-tunables.c (DEFAULT_STRLEN): Removed.
+	(TUNABLE_CALLBACK (set_ifunc)): Renamed to ...
+	(TUNABLE_CALLBACK (set_hwcaps)): This.  Update comments.  Don't
+	use DEFAULT_STRLEN.
+
 2017-06-21  Florian Weimer  <fweimer@redhat.com>
 
 	* intl/dcigettext.c (DCIGETTEXT): Use getcwd (NULL, 0) and
