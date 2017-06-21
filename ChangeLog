@@ -1,3 +1,8 @@
+2017-06-21  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/dl-machine.h (RTLD_START_1): Change _dl_argv to the
+	hidden __GI__dl_argv symbol.
+
 2017-06-21  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Call __inet_pton_length
