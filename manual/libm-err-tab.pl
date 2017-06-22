@@ -40,11 +40,12 @@ use vars qw (%results @all_floats %suffices %all_functions);
 
 # all_floats is in output order and contains all recognised float types that
 # we're going to output
-@all_floats = ('float', 'double', 'ldouble');
+@all_floats = ('float', 'double', 'ldouble', 'float128');
 %suffices =
   ( 'float' => 'f',
     'double' => '',
-    'ldouble' => 'l'
+    'ldouble' => 'l',
+    'float128' => 'f128'
   );
 
 # Pretty description of platform
@@ -113,7 +114,7 @@ sub parse_ulps {
       $ignore_fn = 0;
       $all_functions{$test} = 1;
     }
-    if (/^i?(float|double|ldouble):/) {
+    if (/^i?(float|double|ldouble|float128):/) {
       ($float, $eps) = split /\s*:\s*/,$_,2;
       if ($ignore_fn) {
 	next;
