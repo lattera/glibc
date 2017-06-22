@@ -1,3 +1,28 @@
+2017-06-22  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* benchtests/scripts/benchout_strings.schema.json: New file.
+	* benchtests/scripts/compare_strings.py: New file.
+
+	* benchtests/bench-memcpy-large.c: Include json-lib.h.
+	(do_one_test): Print json.
+	(do_test): Likewise.
+	(test_main): Likewise.
+	* benchtests/bench-memcpy-random.c: Include json-lib.h.
+	(do_one_test): Print json.
+	(do_test): Likewise.
+	(test_main): Likewise.
+	* benchtests/bench-memcpy.c: Include json-lib.h.
+	(do_one_test): Print json.
+	(do_test): Likewise.
+	(test_main): Likewise.
+
+	* benchtests/json-lib.h: Include inttypes.h.
+	(json_attr_int, json_attr_int, json_element_string,
+	json_element_int, json_element_uint): New functions.
+	* benchtests/json-lib.c: (json_attr_int, json_attr_int,
+	json_element_string, json_element_int, json_element_uint): New
+	functions.
+
 2017-06-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* manual/arith.texi (Remainder Functions): Describe remainder as
