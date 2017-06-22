@@ -101,6 +101,32 @@ json_attr_string (json_ctx_t *ctx, const char *name, const char *s)
 }
 
 void
+json_attr_uint (json_ctx_t *ctx, const char *name, uint64_t d)
+{
+  if (!ctx->first_element)
+    fprintf (ctx->fp, ",\n");
+  else
+    ctx->first_element = false;
+
+  do_indent (ctx);
+
+  fprintf (ctx->fp, "\"%s\": %" PRIu64 , name, d);
+}
+
+void
+json_attr_int (json_ctx_t *ctx, const char *name, int64_t d)
+{
+  if (!ctx->first_element)
+    fprintf (ctx->fp, ",\n");
+  else
+    ctx->first_element = false;
+
+  do_indent (ctx);
+
+  fprintf (ctx->fp, "\"%s\": %" PRId64 , name, d);
+}
+
+void
 json_attr_double (json_ctx_t *ctx, const char *name, double d)
 {
   if (!ctx->first_element)
@@ -134,6 +160,42 @@ json_array_end (json_ctx_t *ctx)
   ctx->first_element = false;
 
   fputs ("]", ctx->fp);
+}
+
+void
+json_element_string (json_ctx_t *ctx, const char *s)
+{
+  if (!ctx->first_element)
+    fprintf (ctx->fp, ", \"%s\"", s);
+  else
+    {
+      fprintf (ctx->fp, "\"%s\"", s);
+      ctx->first_element = false;
+    }
+}
+
+void
+json_element_uint (json_ctx_t *ctx, uint64_t d)
+{
+  if (!ctx->first_element)
+    fprintf (ctx->fp, ", %" PRIu64, d);
+  else
+    {
+      fprintf (ctx->fp, "%" PRIu64, d);
+      ctx->first_element = false;
+    }
+}
+
+void
+json_element_int (json_ctx_t *ctx, int64_t d)
+{
+  if (!ctx->first_element)
+    fprintf (ctx->fp, ", %" PRId64, d);
+  else
+    {
+      fprintf (ctx->fp, "%" PRId64, d);
+      ctx->first_element = false;
+    }
 }
 
 void
