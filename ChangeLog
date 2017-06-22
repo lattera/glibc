@@ -1,5 +1,9 @@
 2017-06-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/float128/float128_private.h
+	[SET_RESTORE_ROUNDF128] (SET_RESTORE_ROUNDL): Take an argument and
+	pass it to SET_RESTORE_ROUNDF128.
+
 	* sysdeps/ieee754/float128/float128_private.h: Include
 	<ieee754.h>.
 
