@@ -218,9 +218,9 @@ do_test (void)
     {
       expect_success ("fe80::1", interface_name, interface_index);
       expect_success ("ff02::1", interface_name, interface_index);
+      expect_success ("ff01::1", interface_name, interface_index);
       expect_failure ("::", interface_name);
       expect_failure ("::1", interface_name);
-      expect_failure ("ff01::1", interface_name);
       expect_failure ("2001:db8::1", interface_name);
     }
 

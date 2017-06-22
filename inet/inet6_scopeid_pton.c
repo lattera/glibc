@@ -33,6 +33,7 @@ __inet6_scopeid_pton (const struct in6_addr *address, const char *scope,
                       uint32_t *result)
 {
   if (IN6_IS_ADDR_LINKLOCAL (address)
+      || IN6_IS_ADDR_MC_NODELOCAL (address)
       || IN6_IS_ADDR_MC_LINKLOCAL (address))
     {
       uint32_t number = __if_nametoindex (scope);
