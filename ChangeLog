@@ -1,5 +1,14 @@
 2017-06-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/generic/math-tests.h: Include <bits/floatn.h>.
+	(MATH_TESTS_TG): New macro.
+	(SNAN_TESTS_float128): Likewise.
+	(ROUNDING_TESTS_float128): Likewise.
+	(EXCEPTION_TESTS_float128): Likewise.
+	(SNAN_TESTS): Define using MATH_TESTS_TG.
+	(ROUNDING_TESTS): Likewise.
+	(EXCEPTION_TESTS): Likewise.
+
 	* sysdeps/ieee754/float128/float128_private.h
 	[SET_RESTORE_ROUNDF128] (SET_RESTORE_ROUNDL): Take an argument and
 	pass it to SET_RESTORE_ROUNDF128.
