@@ -1,5 +1,10 @@
 2017-06-23  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* sysdeps/ieee754/float128/Makefile (CFLAGS-strfromf128.c): Add
+	$(libio-mtsafe) to get the value of IO_MTSAFE_IO.
+
+2017-06-23  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* manual/libm-err-tab.pl (@all_floats, %suffices, parse_ulps):
 	Enable generation of float128 entries on the error table.
 
