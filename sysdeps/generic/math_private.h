@@ -304,7 +304,7 @@ extern void __docos (double __x, double __dx, double __v[]);
 #if __HAVE_DISTINCT_FLOAT128
 # define __EXPR_FLT128(x, yes, no)				\
   __builtin_choose_expr (__builtin_types_compatible_p		\
-			 (__typeof (x), long double), no, yes)
+			 (x, long double), no, yes)
 #else
 # define __EXPR_FLT128(x, yes, no) no
 #endif
@@ -318,7 +318,7 @@ extern void __docos (double __x, double __dx, double __v[]);
    __builtin_choose_expr				\
    (__builtin_types_compatible_p (type, double),	\
     DBL_MIN,						\
-    __EXPR_FLT128 (x, FLT128_MIN, LDBL_MIN)))
+    __EXPR_FLT128 (type, FLT128_MIN, LDBL_MIN)))
 
 /* If X (which is not a NaN) is subnormal, force an underflow
    exception.  */

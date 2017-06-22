@@ -1,5 +1,9 @@
 2017-06-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/generic/math_private.h (__EXPR_FLT128): Do not apply
+	typeof to argument passed to __builtin_types_compatible_p.
+	(min_of_type): Pass type argument, not x, to __EXPR_FLT128.
+
 	* math/w_acos_template.c [__USE_WRAPPER_TEMPLATE]: Include
 	<errno.h>.
 	* math/w_acosh_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
