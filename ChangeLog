@@ -1,3 +1,8 @@
+2017-06-23  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* include/float.h: Include libc-header-start.h to get the
+	definition of __GLIBC_USE.
+
 2017-06-23  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/ieee754/flt-32/e_powf.c: Optimized implementation utilizing

@@ -1,6 +1,9 @@
 #ifndef _LIBC_FLOAT_H
 #define _LIBC_FLOAT_H
 
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+#include <bits/libc-header-start.h>
+
 #ifndef _ISOMAC
 # define __STDC_WANT_IEC_60559_TYPES_EXT__
 #endif
