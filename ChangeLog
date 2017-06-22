@@ -1,5 +1,8 @@
 2017-06-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/ldbl-96/bits/iscanonical.h
+	[__HAVE_DISTINCT_FLOAT128] (__iscanonicalf128): New macro.
+
 	* sysdeps/generic/math-tests.h: Include <bits/floatn.h>.
 	(MATH_TESTS_TG): New macro.
 	(SNAN_TESTS_float128): Likewise.
