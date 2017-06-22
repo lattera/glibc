@@ -21,6 +21,7 @@
 #define TEST_NAME "memcpy"
 #include "bench-string.h"
 #include <assert.h>
+#include "json-lib.h"
 
 IMPL (memcpy, 1)
 
@@ -96,7 +97,8 @@ init_copy_distribution (void)
 
 
 static void
-do_one_test (impl_t *impl, char *dst, char *src, copy_t *copy, size_t n)
+do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, char *src,
+	     copy_t *copy, size_t n)
 {
   timing_t start, stop, cur;
   size_t iters = INNER_LOOP_ITERS * 20;
@@ -109,11 +111,11 @@ do_one_test (impl_t *impl, char *dst, char *src, copy_t *copy, size_t n)
 
   TIMING_DIFF (cur, start, stop);
 
-  TIMING_PRINT_MEAN ((double) cur, (double) iters);
+  json_element_double (json_ctx, (double) cur / (double) iters);
 }
 
 static void
-do_test (size_t max_size)
+do_test (json_ctx_t *json_ctx, size_t max_size)
 {
   for (int i = 0; i < max_size; i++)
     buf1[i] = i * 3;
@@ -129,27 +131,47 @@ do_test (size_t max_size)
       copy[i].len = size_arr[rand () & SIZE_MASK];
     }
 
-  printf ("Memory size %6zd:", max_size);
+  json_element_object_begin (json_ctx);
+  json_attr_uint (json_ctx, "max-size", (double) max_size);
+  json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (char *) buf2, (char *) buf1, copy, NUM_COPIES);
+    do_one_test (json_ctx, impl, (char *) buf2, (char *) buf1, copy, NUM_COPIES);
 
-  putchar ('\n');
+  json_array_end (json_ctx);
+  json_element_object_end (json_ctx);
 }
 
 int
 test_main (void)
 {
+  json_ctx_t json_ctx;
+
   test_init ();
   init_copy_distribution ();
 
-  printf ("%23s", "");
-  FOR_EACH_IMPL (impl, 0)
-    printf ("\t%s", impl->name);
-  putchar ('\n');
+  json_init (&json_ctx, 0, stdout);
 
+  json_document_begin (&json_ctx);
+  json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
+
+  json_attr_object_begin (&json_ctx, "functions");
+  json_attr_object_begin (&json_ctx, "memcpy");
+  json_attr_string (&json_ctx, "bench-variant", "random");
+
+  json_array_begin (&json_ctx, "ifuncs");
+  FOR_EACH_IMPL (impl, 0)
+    json_element_string (&json_ctx, impl->name);
+  json_array_end (&json_ctx);
+
+  json_array_begin (&json_ctx, "results");
   for (int i = 4; i <= 64; i = i * 2)
-    do_test (i * 1024);
+    do_test (&json_ctx, i * 1024);
+
+  json_array_end (&json_ctx);
+  json_attr_object_end (&json_ctx);
+  json_attr_object_end (&json_ctx);
+  json_document_end (&json_ctx);
 
   return ret;
 }
