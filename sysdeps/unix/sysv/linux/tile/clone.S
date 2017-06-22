@@ -168,10 +168,8 @@ ENTRY (__clone)
 	 move r0, r31
 	 jalr r32
 	}
-	{
-	 j HIDDEN_JUMPTARGET(_exit)
-	 info INFO_OP_CANNOT_BACKTRACE   /* Notify backtracer to stop. */
-	}
+	moveli TREG_SYSCALL_NR_NAME, __NR_exit
+	swint1
 PSEUDO_END (__clone)
 
 libc_hidden_def (__clone)

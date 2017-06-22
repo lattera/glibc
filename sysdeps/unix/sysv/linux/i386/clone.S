@@ -39,8 +39,6 @@
 #define __NR_clone 120
 #define SYS_clone 120
 
-#define CLONE_VM	0x00000100
-
         .text
 ENTRY (__clone)
 	/* Sanity check arguments.  */

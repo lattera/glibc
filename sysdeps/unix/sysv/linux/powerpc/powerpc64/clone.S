@@ -20,9 +20,6 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-#define CLONE_VM	0x00000100
-#define CLONE_THREAD	0x00010000
-
 /* This is the only really unusual system call in PPC linux, but not
    because of any weirdness in the system call itself; because of
    all the freaky stuff we have to do to make the call useful.  */
@@ -84,15 +81,11 @@ ENTRY (__clone)
 	mr	r3,r31
 	bctrl
 	ld	r2,FRAME_TOC_SAVE(r1)
-	/* Call _exit with result from procedure.  */
-#ifdef SHARED
-	b	JUMPTARGET(__GI__exit)
-#else
-	bl	JUMPTARGET(_exit)
+
+	DO_CALL(SYS_ify(exit))
 	/* We won't ever get here but provide a nop so that the linker
 	   will insert a toc adjusting stub if necessary.  */
 	nop
-#endif
 
 L(badargs):
 	cfi_startproc

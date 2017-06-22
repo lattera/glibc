@@ -24,8 +24,6 @@
 #include <tcb-offsets.h>
 #include <sysdep.h>
 
-#define CLONE_VM	0x00000100
-
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
 	     pid_t *ptid, void *tls, pid_t *ctid); */
 
@@ -81,7 +79,8 @@ __thread_start:
 	mov	%g0, %fp	/* terminate backtrace */
 	call	%g2
 	 mov	%g3,%o0
-	call	HIDDEN_JUMPTARGET(_exit),0
+	set	__NR_exit, %g1
+	ta	0x10
 	 nop
 
 	.size	__thread_start, .-__thread_start

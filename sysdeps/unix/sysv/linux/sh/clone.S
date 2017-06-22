@@ -73,25 +73,8 @@ ENTRY(__clone)
 	 mov.l	@(4,r15), r4
 
 	/* we are done, passing the return value through r0  */
-	mov.l	.L3, r1
-#ifdef SHARED
-	mov.l	r12, @-r15
-	sts.l	pr, @-r15
-	mov	r0, r4
-	mova	.LG, r0
-	mov.l	.LG, r12
-	add	r0, r12
-	mova	.L3, r0
-	add	r0, r1
-	jsr	@r1
-	 nop
-	lds.l	@r15+, pr
-	rts
-	 mov.l	@r15+, r12
-#else
-	jmp	@r1
-	 mov	r0, r4
-#endif
+	mov	#+SYS_ify(exit), r3
+	trapa	#0x15
 	.align	2
 .LG:
 	.long	_GLOBAL_OFFSET_TABLE_

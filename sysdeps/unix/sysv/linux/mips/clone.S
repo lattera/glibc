@@ -25,9 +25,6 @@
 #include <bits/errno.h>
 #include <tls.h>
 
-#define CLONE_VM      0x00000100
-#define CLONE_THREAD  0x00010000
-
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
 	     void *parent_tidptr, void *tls, void *child_tidptr) */
 
@@ -137,14 +134,9 @@ L(thread_start):
 	/* Call the user's function.  */
 	jal		t9
 
-	/* Call _exit rather than doing it inline for breakpoint purposes.  */
 	move		a0,v0
-#ifdef __PIC__
-	PTR_LA		t9,_exit
-	jalr		t9
-#else
-	jal		_exit
-#endif
+	li		v0,__NR_exit
+	syscall
 
 	END(__thread_start)
 

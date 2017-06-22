@@ -23,8 +23,6 @@
 #include <bits/errno.h>
 #include <asm-syntax.h>
 
-#define CLONE_VM	0x00000100
-
 /* The userland implementation is:
    int clone (int (*fn)(void *arg), void *child_stack, int flags, void *arg),
    the kernel entry is:
@@ -97,7 +95,8 @@ L(thread_start):
 	call	*%rax
 	/* Call exit with return value from function call. */
 	movq	%rax, %rdi
-	call	HIDDEN_JUMPTARGET (_exit)
+	movl	$SYS_ify(exit), %eax
+	syscall
 	cfi_endproc;
 
 	cfi_startproc;

@@ -49,8 +49,8 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/mman-linux.h \
 		  bits/siginfo-arch.h bits/siginfo-consts-arch.h
 
-tests += tst-clone tst-clone2 tst-fanotify tst-personality tst-quota \
-	 tst-sync_file_range test-errno-linux
+tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
+	 tst-quota tst-sync_file_range test-errno-linux
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 

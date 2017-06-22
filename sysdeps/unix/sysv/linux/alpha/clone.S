@@ -23,8 +23,6 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-#define CLONE_VM	0x00000100
-
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags,
 	     void *arg, pid_t *ptid, void *tls, pid_t *ctid);
 
@@ -100,13 +98,8 @@ thread_start:
 	jsr	ra, (pv)
 	ldgp	gp, 0(ra)
 
-	/* Call _exit rather than doing it inline for breakpoint purposes.  */
-	mov	v0, a0
-#ifdef PIC
-	bsr	ra, HIDDEN_JUMPTARGET(_exit)	!samegp
-#else
-	jsr	ra, HIDDEN_JUMPTARGET(_exit)
-#endif
+	ldiq	v0, __NR_exit
+	call_pal PAL_callsys
 
 	/* Die horribly.  */
 	.align	4

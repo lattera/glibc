@@ -1,3 +1,45 @@
+2017-06-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21512]
+	* sysdeps/unix/sysv/linux/aarch64/clone.S (__clone): Call exit
+	syscall instead of jump to _exit.
+	(CLONE_VM_BIT): Remove unused define.
+	(CLONE_VM): Likewise.
+	(CLONE_THREAD_BIT): Likewise.
+	(CLONE_THREAD): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/clone.S (__clone): Likewise.
+	(CLONE_VM): Remove unused define.
+	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Likewise.
+	(CLONE_VM): Remove unused define.
+	(CLONE_THREAD): Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S (CLONE_VM): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S (__clone2): Call exit
+	syscall instead of jump to _exit.
+	* sysdeps/unix/sysv/linux/hppa/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S (__clone): Likewise.
+	(CLONE_VM): Remove unused define.
+	(CLONE_THREAD): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/clone.S (__clone): Likewise.
+	(CLONE_VM): Remove unused define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S (__clone):
+	Likewise.
+	(CLONE_VM): Remove unused define.
+	(CLONE_THREAD): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone):
+	Likewise.
+	(CLONE_VM): Remove unused define.
+	(CLONE_THREAD): Likewise.
+	* sysdeps/unix/sysv/linux/sh/clone.S  (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone): Likewise.
+	(CLONE_VM): Remove unused define.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__clone): Likewise.
+	(CLONE_VM): Remove unused define.
+	* sysdeps/unix/sysv/linux/tile/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S (__clone): Likewise.
+	(CLONE_VM): Remove unused define.
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-clone3.
+	* sysdeps/unix/sysv/linux/tst-clone3.c: New file.
+
 2017-06-26  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 	    Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 

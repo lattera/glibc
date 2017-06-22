@@ -24,9 +24,6 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-#define CLONE_VM      0x00000100
-#define CLONE_THREAD  0x00010000
-
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
 	     pid_t *ptid, struct user_desc *tls, pid_t *ctid); */
 
@@ -76,7 +73,8 @@ PSEUDO_END (__clone)
 	BLX (ip)
 
 	@ and we are done, passing the return value through r0
-	b	PLTJMP(HIDDEN_JUMPTARGET(_exit))
+	ldr	r7, =SYS_ify(exit)
+	swi	0x0
 
 	.fnend
 

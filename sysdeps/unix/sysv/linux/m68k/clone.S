@@ -24,8 +24,6 @@
 #include <bits/errno.h>
 #include <tls.h>
 
-#define CLONE_VM      0x00000100
-
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
 	     void *parent_tidptr, void *tls, void *child_tidptr) */
 

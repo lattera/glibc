@@ -23,12 +23,6 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-#define CLONE_VM_BIT      8
-#define CLONE_VM          (1 << CLONE_VM_BIT)
-
-#define CLONE_THREAD_BIT  16
-#define CLONE_THREAD      (1 << CLONE_THREAD_BIT)
-
 /* int clone(int (*fn)(void *arg),            x0
 	     void *child_stack,               x1
 	     int flags,                       x2
@@ -84,7 +78,8 @@ thread_start:
 	blr	x10
 
 	/* We are done, pass the return value through x0.  */
-	b	HIDDEN_JUMPTARGET(_exit)
+	mov	x8, #SYS_ify(exit)
+	svc	0x0
 	cfi_endproc
 	.size thread_start, .-thread_start
 
