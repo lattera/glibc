@@ -1,5 +1,30 @@
 2017-06-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/w_acos_template.c [__USE_WRAPPER_TEMPLATE]: Include
+	<errno.h>.
+	* math/w_acosh_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_asin_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_atanh_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_cosh_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_exp10_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_exp2_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_exp_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_fmod_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_hypot_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_j0_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_j1_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_jn_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_lgamma_r_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_lgamma_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_log10_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_log2_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_log_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_pow_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_remainder_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_sinh_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_sqrt_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+	* math/w_tgamma_template.c [__USE_WRAPPER_TEMPLATE]: Likewise.
+
 	* sysdeps/ieee754/float128/strtof128_l.c: Include
 	<bits/types/locale_t.h> instead of <xlocale.h>.
 	* sysdeps/ieee754/float128/wcstof128.c: Likewise.

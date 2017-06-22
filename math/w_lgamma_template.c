@@ -21,6 +21,7 @@
    for each floating-point type.  */
 #if __USE_WRAPPER_TEMPLATE
 
+# include <errno.h>
 # include <fenv.h>
 # include <math.h>
 # include <math_private.h>
