@@ -23,6 +23,10 @@
 #define HUGE_VALL HUGE_VAL_F128
 #include <math/mul_splitl.h>
 
+/* This must be included before the renames of types and macros from
+   it.  */
+#include <ieee754.h>
+
 /* Renames derived from math_private.h.  */
 #include <math_private.h>
 #include <ieee754_float128.h>

@@ -1,5 +1,8 @@
 2017-06-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/float128/float128_private.h: Include
+	<ieee754.h>.
+
 	* sysdeps/generic/math_private.h (__EXPR_FLT128): Do not apply
 	typeof to argument passed to __builtin_types_compatible_p.
 	(min_of_type): Pass type argument, not x, to __EXPR_FLT128.
