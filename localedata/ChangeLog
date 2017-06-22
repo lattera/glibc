@@ -1,3 +1,8 @@
+2017-06-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	* locales/fur_IT (day, abday): reworded "Miarcus" to "Miercus"
+	and abbreviated "Mia" to "Mie".
+
 2017-06-13  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #21207]
