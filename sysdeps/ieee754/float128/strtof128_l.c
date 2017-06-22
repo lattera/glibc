@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <xlocale.h>
+#include <bits/types/locale_t.h>
 
 /* Bring in potential typedef for _Float128 early for declaration below.  */
 #include <bits/floatn.h>

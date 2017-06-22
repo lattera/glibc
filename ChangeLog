@@ -1,3 +1,10 @@
+2017-06-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/float128/strtof128_l.c: Include
+	<bits/types/locale_t.h> instead of <xlocale.h>.
+	* sysdeps/ieee754/float128/wcstof128.c: Likewise.
+	* sysdeps/ieee754/float128/wcstof128_l.c: Likewise.
+
 2017-06-22  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/scripts/benchout_strings.schema.json: New file.
