@@ -1,3 +1,8 @@
+2017-06-23  Rogerio A. Cardoso  <rcardoso@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_sinf-ppc64.c: Change
+	s_sinf.c from sysdeps/ieee754/flt-32/ to sysdeps/powerpc/fpu/.
+
 2017-06-23  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/sysconf.c: Remove references

@@ -23,4 +23,4 @@
 
 #define __sinf __sinf_ppc64
 
-#include <sysdeps/ieee754/flt-32/s_sinf.c>
+#include <sysdeps/powerpc/fpu/s_sinf.c>
