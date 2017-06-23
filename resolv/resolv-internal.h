@@ -65,4 +65,7 @@ int __res_nopt (res_state, int n0, unsigned char *buf, int buflen,
 int __inet_pton_length (int af, const char *src, size_t srclen, void *);
 libc_hidden_proto (__inet_pton_length)
 
+/* Used to propagate the effect of res_init calls across threads.  */
+extern unsigned long long int __res_initstamp attribute_hidden;
+
 #endif  /* _RESOLV_INTERNAL_H */

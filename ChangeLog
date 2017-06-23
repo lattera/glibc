@@ -1,5 +1,12 @@
 2017-06-23  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/resolv-internal.h (__res_initstamp): Declare.
+	* resolv/res_init.c (__res_initstamp): Remove hidden attribute.
+	It is implied by the declaration.
+	* resolv/res_libc.c (__res_initstamp): Remove declaration.
+
+2017-06-23  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #21662]
 	* sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S (between_2_3):
 	Use only 24 bits of the register before the subtraction.

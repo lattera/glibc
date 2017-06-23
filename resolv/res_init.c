@@ -105,7 +105,7 @@
 static void res_setoptions (res_state, const char *, const char *);
 static uint32_t net_mask (struct in_addr);
 
-unsigned long long int __res_initstamp attribute_hidden;
+unsigned long long int __res_initstamp;
 
 int
 res_ninit (res_state statp)

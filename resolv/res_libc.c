@@ -25,8 +25,8 @@
 #include <arpa/nameser.h>
 #include <resolv.h>
 #include <libc-lock.h>
+#include <resolv-internal.h>
 
-extern unsigned long long int __res_initstamp attribute_hidden;
 /* We have atomic increment operations on 64-bit platforms.  */
 #if __WORDSIZE == 64
 # define atomicinclock(lock) (void) 0
