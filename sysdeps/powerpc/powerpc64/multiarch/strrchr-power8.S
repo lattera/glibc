@@ -18,23 +18,7 @@
 
 #include <sysdep.h>
 
-#undef ENTRY_TOCLESS
-#ifndef PROF
-#define ENTRY_TOCLESS(name, ...)				\
-	ENTRY_3 __strrchr_power8, ## __VA_ARGS__;		\
-	cfi_startproc
-#else
-#define ENTRY_TOCLESS(name, ...)				\
-	ENTRY_3 __strrchr_power8, ## __VA_ARGS__;		\
-	cfi_startproc;						\
-	LOCALENTRY(__strrchr_power8)
-#endif
-
-#undef END
-#define END(name)						\
-  cfi_endproc;							\
-  TRACEBACK(__strrchr_power8);					\
-  END_2(__strrchr_power8)
+#define STRRCHR __strrchr_power8
 
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)

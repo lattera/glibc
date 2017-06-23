@@ -1,5 +1,14 @@
 2017-06-23  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/strchr-power8.S(STRRCHR): Define
+	the implementation-specific function name and remove unneeded macros
+	definition.
+	* sysdeps/powerpc/powerpc64/power8/strrchr.S(STRRCHR): Set a default
+	function name if not defined and pass as parameter to macros
+	accordingly.
+
+2017-06-23  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
 	(libm-sysdep_routines): Add s_llroundf-ppc64.
 	* sysdeps/powerpc/powerpc64/power5+fpu/s_llround.S

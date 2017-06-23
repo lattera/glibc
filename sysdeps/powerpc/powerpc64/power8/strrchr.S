@@ -76,8 +76,12 @@
 1: \
 	vsumsws	v2, v2, v0;
 #endif	/* !__LITTLE_ENDIAN__  */
+
+#ifndef STRRCHR
+# define STRRCHR strrchr
+#endif
 	.machine  power7
-ENTRY_TOCLESS (strrchr)
+ENTRY_TOCLESS (STRRCHR)
 	CALL_MCOUNT 2
 	dcbt	0,r3
 	clrrdi	r8,r3,3	      /* Align the address to doubleword boundary.  */
@@ -459,6 +463,6 @@ L(continue1):
 #endif
 	add	r3, r3, r6      /* Compute final length.  */
 	blr
-END (strrchr)
+END_GEN_TB (STRRCHR, TB_TOCLESS)
 weak_alias (strrchr, rindex)
 libc_hidden_builtin_def (strrchr)
