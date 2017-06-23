@@ -1,3 +1,20 @@
+2017-06-23  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Add s_llroundf-ppc64.
+	* sysdeps/powerpc/powerpc64/power5+fpu/s_llround.S
+	(__llroundf): Define as strong alias of __llround.
+	(llroundf):  Define as weak alias of __llround.
+	(__lroundf): Define as strong alias of __llround.
+	(lroundf):  Define as weak alias of __llround.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llround.S:  Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llroundf-ppc64.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llroundf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llroundf.S: Likewise.
+
 2017-06-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-96/bits/iscanonical.h

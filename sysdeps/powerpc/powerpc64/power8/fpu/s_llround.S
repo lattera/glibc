@@ -35,6 +35,13 @@ END (__llround)
 strong_alias (__llround, __lround)
 weak_alias (__llround, llround)
 weak_alias (__lround, lround)
+/* The double version also works for single-precision as both float and
+   double parameters are passed in 64bit FPRs and both versions are expected
+   to return [long] long type.  */
+strong_alias (__llround, __llroundf)
+weak_alias (__llround, llroundf)
+strong_alias (__lround, __lroundf)
+weak_alias (__lround, lroundf)
 
 #ifdef NO_LONG_DOUBLE
 weak_alias (__llround, llroundl)
