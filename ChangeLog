@@ -1,5 +1,14 @@
 2017-06-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* libm-test-support.c (check_float_internal): Clear exceptions at
+	end of function.
+	(check_int): Likewise.
+	(check_long): Likewise.
+	(check_bool): Likewise.
+	(check_longlong): Likewise.
+	(check_intmax_t): Likewise.
+	(check_uintmax_t): Likewise.
+
 	* sysdeps/x86/fpu/bits/fenv.h [_LIBC] (__feraiseexcept_renamed):
 	Do not declare.
 	* sysdeps/x86/fpu/include/bits/fenv.h [_LIBC &&

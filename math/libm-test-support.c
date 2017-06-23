@@ -718,6 +718,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 
  out:
   fpstack_test (test_name);
+  feclearexcept (FE_ALL_EXCEPT);
   errno = 0;
 }
 
@@ -795,6 +796,7 @@ check_int (const char *test_name, int computed, int expected,
   update_stats (ok);
  out:
   fpstack_test (test_name);
+  feclearexcept (FE_ALL_EXCEPT);
   errno = 0;
 }
 
@@ -828,6 +830,7 @@ check_long (const char *test_name, long int computed, long int expected,
   update_stats (ok);
  out:
   fpstack_test (test_name);
+  feclearexcept (FE_ALL_EXCEPT);
   errno = 0;
 }
 
@@ -861,6 +864,7 @@ check_bool (const char *test_name, int computed, int expected,
   update_stats (ok);
  out:
   fpstack_test (test_name);
+  feclearexcept (FE_ALL_EXCEPT);
   errno = 0;
 }
 
@@ -895,6 +899,7 @@ check_longlong (const char *test_name, long long int computed,
   update_stats (ok);
  out:
   fpstack_test (test_name);
+  feclearexcept (FE_ALL_EXCEPT);
   errno = 0;
 }
 
@@ -928,6 +933,7 @@ check_intmax_t (const char *test_name, intmax_t computed,
   update_stats (ok);
  out:
   fpstack_test (test_name);
+  feclearexcept (FE_ALL_EXCEPT);
   errno = 0;
 }
 
@@ -961,6 +967,7 @@ check_uintmax_t (const char *test_name, uintmax_t computed,
   update_stats (ok);
  out:
   fpstack_test (test_name);
+  feclearexcept (FE_ALL_EXCEPT);
   errno = 0;
 }
 
