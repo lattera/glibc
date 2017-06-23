@@ -1,5 +1,9 @@
 2017-06-23  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S (between_2_3): Fix typo in comment.
+
+2017-06-23  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_libc.c: Reformat to GNU style.
 
 2017-06-23  Florian Weimer  <fweimer@redhat.com>

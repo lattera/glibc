@@ -148,7 +148,7 @@ L(between_2_3):
 	movzbl	-1(%rsi, %rdx), %esi
 	orl	%edi, %eax
 	orl	%esi, %ecx
-	/* Subtraction is okay because the upper 8 bits a zero.  */
+	/* Subtraction is okay because the upper 8 bits are zero.  */
 	subl	%ecx, %eax
 	ret
 
