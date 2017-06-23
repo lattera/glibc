@@ -1,3 +1,11 @@
+2017-06-23  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #16637]
+	inet_pton: Reject invalid IPv6 addresses with many leading zeros.
+	* resolv/inet_pton.c (inet_pton6): Count number of hexadecimal
+	digits between colons.
+	* resolv/tst-inet_pton.c (test_cases): Adjust test expectations.
+
 2017-05-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Juan Manuel Torres Palma  <jmtorrespalma@gmail.com>
 

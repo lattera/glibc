@@ -144,7 +144,8 @@ inet_pton6 (const char *src, const char *src_endp, unsigned char *dst)
 {
   unsigned char tmp[NS_IN6ADDRSZ], *tp, *endp, *colonp;
   const char *curtok;
-  int ch, saw_xdigit;
+  int ch;
+  size_t xdigits_seen;	/* Number of hex digits since colon.  */
   unsigned int val;
 
   tp = memset (tmp, '\0', NS_IN6ADDRSZ);
@@ -162,7 +163,7 @@ inet_pton6 (const char *src, const char *src_endp, unsigned char *dst)
     }
 
   curtok = src;
-  saw_xdigit = 0;
+  xdigits_seen = 0;
   val = 0;
   while (src < src_endp)
     {
@@ -170,17 +171,19 @@ inet_pton6 (const char *src, const char *src_endp, unsigned char *dst)
       int digit = hex_digit_value (ch);
       if (digit >= 0)
 	{
+	  if (xdigits_seen == 4)
+	    return 0;
 	  val <<= 4;
 	  val |= digit;
 	  if (val > 0xffff)
 	    return 0;
-	  saw_xdigit = 1;
+	  ++xdigits_seen;
 	  continue;
 	}
       if (ch == ':')
 	{
 	  curtok = src;
-	  if (!saw_xdigit)
+	  if (xdigits_seen == 0)
 	    {
 	      if (colonp)
 		return 0;
@@ -193,7 +196,7 @@ inet_pton6 (const char *src, const char *src_endp, unsigned char *dst)
 	    return 0;
 	  *tp++ = (unsigned char) (val >> 8) & 0xff;
 	  *tp++ = (unsigned char) val & 0xff;
-	  saw_xdigit = 0;
+	  xdigits_seen = 0;
 	  val = 0;
 	  continue;
 	}
@@ -201,12 +204,12 @@ inet_pton6 (const char *src, const char *src_endp, unsigned char *dst)
           && inet_pton4 (curtok, src_endp, tp) > 0)
 	{
 	  tp += NS_INADDRSZ;
-	  saw_xdigit = 0;
+	  xdigits_seen = 0;
 	  break;  /* '\0' was seen by inet_pton4.  */
 	}
       return 0;
     }
-  if (saw_xdigit)
+  if (xdigits_seen > 0)
     {
       if (tp + NS_INT16SZ > endp)
 	return 0;

@@ -226,13 +226,7 @@ const struct test_case test_cases[] =
     },
     {.input = "2", },
     {.input = "2.", },
-    {.input = "2001:db8:00001::f",
-     .ipv6_ok = true,
-     .ipv6_expected = {
-       0x20, 0x1, 0xd, 0xb8, 0x0, 0x1, 0x0, 0x0,
-       0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xf
-     },
-    },
+    {.input = "2001:db8:00001::f", },
     {.input = "2001:db8:10000::f", },
     {.input = "2001:db8:1234:5678:abcd:ef01:2345:67",
      .ipv6_ok = true,
@@ -454,13 +448,7 @@ const struct test_case test_cases[] =
        0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0
      },
     },
-    {.input = "::00001",
-     .ipv6_ok = true,
-     .ipv6_expected = {
-       0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-       0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1
-     },
-    },
+    {.input = "::00001", },
     {.input = "::1",
      .ipv6_ok = true,
      .ipv6_expected = {
