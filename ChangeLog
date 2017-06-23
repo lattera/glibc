@@ -1,3 +1,11 @@
+2017-06-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86/fpu/bits/fenv.h [_LIBC] (__feraiseexcept_renamed):
+	Do not declare.
+	* sysdeps/x86/fpu/include/bits/fenv.h [_LIBC &&
+	__USE_EXTERN_INLINES] (__feraiseexcept_renamed): Declare here,
+	redirected to __GI_feraiseexcept if [SHARED && IS_IN (libm)].
+
 2017-06-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S (between_2_3):

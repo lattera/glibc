@@ -120,7 +120,9 @@ femode_t;
 __BEGIN_DECLS
 
 /* Optimized versions.  */
+#ifndef _LIBC
 extern int __REDIRECT_NTH (__feraiseexcept_renamed, (int), feraiseexcept);
+#endif
 __extern_always_inline void
 __NTH (__feraiseexcept_invalid_divbyzero (int __excepts))
 {

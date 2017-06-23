@@ -17,6 +17,15 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_FENV_H
+
+#if defined _LIBC && defined __USE_EXTERN_INLINES
+# if defined SHARED && IS_IN (libm)
+extern int __REDIRECT_NTH (__feraiseexcept_renamed, (int), __GI_feraiseexcept);
+# else
+extern int __REDIRECT_NTH (__feraiseexcept_renamed, (int), feraiseexcept);
+# endif
+#endif
+
 #include_next <bits/fenv.h>
 
 # ifndef _ISOMAC
