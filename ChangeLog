@@ -1,3 +1,10 @@
+2017-06-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21666]
+	* misc/regexp.c (loc1): Add __attribute__ ((nocommon));
+	(loc2): Likewise.
+	(locs): Likewise.
+
 2017-06-23  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #16637]
