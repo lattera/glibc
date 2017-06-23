@@ -62,7 +62,7 @@ PROCINFO_CLASS const char _dl_powerpc_cap_flags[64][10]
     "", "", "", "",
     "", "", "", "",
     "", "", "", "",
-    "", "", "ieee128", "arch_3_00",
+    "scv", "darn", "ieee128", "arch_3_00",
     "htm-nosc", "vcrypto", "tar", "isel",
     "ebb", "dscr", "htm", "arch_2_07",
   }

@@ -50,6 +50,7 @@
 #define PPC_FEATURE_ARCH_2_06	    0x00000100 /* ISA 2.06 */
 #define PPC_FEATURE_HAS_VSX	    0x00000080 /* P7 Vector Extension.  */
 #define PPC_FEATURE_PSERIES_PERFMON_COMPAT  0x00000040
+/* Reserved by the kernel.	    0x00000004  Do not use.  */
 #define PPC_FEATURE_TRUE_LE	    0x00000002
 #define PPC_FEATURE_PPC_LE	    0x00000001
 
@@ -69,3 +70,5 @@
 #define PPC_FEATURE2_ARCH_3_00	   0x00800000 /* ISA 3.0 */
 #define PPC_FEATURE2_HAS_IEEE128   0x00400000 /* VSX IEEE Binary Float
 						 128-bit */
+#define PPC_FEATURE2_DARN	   0x00200000 /* darn instruction.  */
+#define PPC_FEATURE2_SCV	   0x00100000 /* scv syscall.  */

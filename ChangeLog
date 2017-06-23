@@ -1,3 +1,10 @@
+2017-06-23  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/bits/hwcap.h: Add PPC_FEATURE2_DARN and
+	PPC_FEATURE2_SCV.
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags): Add scv
+	and darn.
+
 2017-06-23  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/strchr-power8.S(STRRCHR): Define
