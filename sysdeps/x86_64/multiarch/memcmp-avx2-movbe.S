@@ -144,10 +144,8 @@ L(between_2_3):
 	shll	$8, %ecx
 	bswap	%eax
 	bswap	%ecx
-	movzbl	-1(%rdi, %rdx), %edi
-	movzbl	-1(%rsi, %rdx), %esi
-	orl	%edi, %eax
-	orl	%esi, %ecx
+	movb	-1(%rdi, %rdx), %al
+	movb	-1(%rsi, %rdx), %cl
 	/* Subtraction is okay because the upper 8 bits are zero.  */
 	subl	%ecx, %eax
 	ret
