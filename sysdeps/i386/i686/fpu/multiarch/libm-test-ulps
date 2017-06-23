@@ -1631,9 +1631,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "j0":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 ildouble: 2
 ldouble: 2
@@ -1655,9 +1655,9 @@ ildouble: 5
 ldouble: 5
 
 Function: "j0_upward":
-double: 1
+double: 2
 float: 3
-idouble: 1
+idouble: 2
 ifloat: 3
 ildouble: 4
 ldouble: 4
@@ -1680,9 +1680,9 @@ ldouble: 4
 
 Function: "j1_towardzero":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 4
 ldouble: 4
 
@@ -2115,9 +2115,9 @@ ldouble: 5
 
 Function: "y0_upward":
 double: 1
-float: 2
+float: 3
 idouble: 1
-ifloat: 2
+ifloat: 3
 ildouble: 3
 ldouble: 3
 

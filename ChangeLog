@@ -1,5 +1,8 @@
 2017-06-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Likewise.
+
 	* libm-test-support.c (check_float_internal): Clear exceptions at
 	end of function.
 	(check_int): Likewise.
