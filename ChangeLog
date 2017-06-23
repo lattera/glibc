@@ -1,3 +1,8 @@
+2017-06-23  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/sysconf.c: Remove references
+	to errno, and simplify remaining related code.
+
 2017-06-23  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/bits/hwcap.h: Add PPC_FEATURE2_DARN and

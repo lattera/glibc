@@ -22,37 +22,16 @@
 
 static long linux_sysconf (int name);
 
-static long
-auxv2sysconf (unsigned long type)
-{
-  long rc;
-  rc = __getauxval (type);
-  if (rc == 0)
-  {
-    __set_errno (EINVAL);
-    rc = -1;
-  }
-  return rc;
-}
-
-static long
+static inline long
 auxv2sysconf_cache_associativity (unsigned long type)
 {
-  long rc;
-  rc = auxv2sysconf (type);
-  if (rc != -1)
-    rc = (rc & 0xffff0000) >> 16;
-  return rc;
+  return (__getauxval (type) & 0xffff0000) >> 16;
 }
 
-static long
+static inline long
 auxv2sysconf_cache_linesize (unsigned long type)
 {
-  long rc;
-  rc = auxv2sysconf (type);
-  if (rc != -1)
-    rc = rc & 0xffff;
-  return rc;
+  return __getauxval (type) & 0xffff;
 }
 
 /* Get the value of the system variable NAME.  */
@@ -62,25 +41,25 @@ __sysconf (int name)
   switch (name)
     {
       case _SC_LEVEL1_ICACHE_SIZE:
-	return auxv2sysconf (AT_L1I_CACHESIZE);
+	return __getauxval (AT_L1I_CACHESIZE);
       case _SC_LEVEL1_ICACHE_ASSOC:
 	return auxv2sysconf_cache_associativity (AT_L1I_CACHEGEOMETRY);
       case _SC_LEVEL1_ICACHE_LINESIZE:
 	return auxv2sysconf_cache_linesize (AT_L1I_CACHEGEOMETRY);
       case _SC_LEVEL1_DCACHE_SIZE:
-	return auxv2sysconf (AT_L1D_CACHESIZE);
+	return __getauxval (AT_L1D_CACHESIZE);
       case _SC_LEVEL1_DCACHE_ASSOC:
 	return auxv2sysconf_cache_associativity (AT_L1D_CACHEGEOMETRY);
       case _SC_LEVEL1_DCACHE_LINESIZE:
 	return auxv2sysconf_cache_linesize (AT_L1D_CACHEGEOMETRY);
       case _SC_LEVEL2_CACHE_SIZE:
-	return auxv2sysconf (AT_L2_CACHESIZE);
+	return __getauxval (AT_L2_CACHESIZE);
       case _SC_LEVEL2_CACHE_ASSOC:
 	return auxv2sysconf_cache_associativity (AT_L2_CACHEGEOMETRY);
       case _SC_LEVEL2_CACHE_LINESIZE:
 	return auxv2sysconf_cache_linesize (AT_L2_CACHEGEOMETRY);
       case _SC_LEVEL3_CACHE_SIZE:
-	return auxv2sysconf (AT_L3_CACHESIZE);
+	return __getauxval (AT_L3_CACHESIZE);
       case _SC_LEVEL3_CACHE_ASSOC:
 	return auxv2sysconf_cache_associativity (AT_L3_CACHEGEOMETRY);
       case _SC_LEVEL3_CACHE_LINESIZE:
