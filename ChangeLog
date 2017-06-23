@@ -1,3 +1,10 @@
+2017-06-23  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21662]
+	* sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S (between_2_3):
+	Use only 24 bits of the register before the subtraction.
+	* string/test-memcmp.c (check1): Check with different lengths.
+
 2017-06-23  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/float128/Makefile (CFLAGS-strfromf128.c): Add

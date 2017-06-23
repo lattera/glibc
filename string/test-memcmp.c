@@ -441,11 +441,12 @@ check1 (void)
 
   n = 116;
   for (size_t i = 0; i < n; i++)
-    {
-      exp_result = SIMPLE_MEMCMP (s1 + i, s2 + i, n - i);
-      FOR_EACH_IMPL (impl, 0)
-	check_result (impl, s1 + i, s2 + i, n - i, exp_result);
-    }
+    for (size_t len = 0; len <= n - i; ++len)
+      {
+	exp_result = SIMPLE_MEMCMP (s1 + i, s2 + i, len);
+	FOR_EACH_IMPL (impl, 0)
+	  check_result (impl, s1 + i, s2 + i, len, exp_result);
+      }
 }
 
 /* This test checks that memcmp doesn't overrun buffers.  */

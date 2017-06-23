@@ -137,18 +137,18 @@ L(exit):
 
 	.p2align 4
 L(between_2_3):
-	/* Load as big endian with overlapping loads and bswap to avoid
-	   branches.  */
-	movzwl	-2(%rdi, %rdx), %eax
-	movzwl	-2(%rsi, %rdx), %ecx
-	shll	$16, %eax
-	shll	$16, %ecx
-	movzwl	(%rdi), %edi
-	movzwl	(%rsi), %esi
-	orl	%edi, %eax
-	orl	%esi, %ecx
+	/* Load as big endian to avoid branches.  */
+	movzwl	(%rdi), %eax
+	movzwl	(%rsi), %ecx
+	shll	$8, %eax
+	shll	$8, %ecx
 	bswap	%eax
 	bswap	%ecx
+	movzbl	-1(%rdi, %rdx), %edi
+	movzbl	-1(%rsi, %rdx), %esi
+	orl	%edi, %eax
+	orl	%esi, %ecx
+	/* Subtraction is okay because the upper 8 bits a zero.  */
 	subl	%ecx, %eax
 	ret
 
