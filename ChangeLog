@@ -1,3 +1,8 @@
+2017-06-23  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/ieee754/flt-32/e_powf.c: Optimized implementation utilizing
+	rearranged code and doubles float types.
+
 2017-06-23  Rogerio A. Cardoso  <rcardoso@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_sinf-ppc64.c: Change
