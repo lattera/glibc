@@ -1,5 +1,9 @@
 2017-06-23  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_libc.c: Reformat to GNU style.
+
+2017-06-23  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/resolv-internal.h (__res_initstamp): Declare.
 	* resolv/res_init.c (__res_initstamp): Remove hidden attribute.
 	It is implied by the declaration.

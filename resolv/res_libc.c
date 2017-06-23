@@ -1,3 +1,21 @@
+/* Definitions related to res_init linked into libc instead of libresolv.
+   Copyright (C) 1995-2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 /*
  * Copyright (c) 1995-1999 by Internet Software Consortium.
  *
@@ -14,9 +32,6 @@
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
  * SOFTWARE.
  */
-
-/* This file contains the definitions related to res_init which are
-   linked into libc instead of libresolv.  */
 
 #include <atomic.h>
 #include <limits.h>
@@ -40,74 +55,78 @@ __libc_lock_define_initialized (static, lock);
 #endif
 
 int
-res_init(void) {
-	/*
-	 * These three fields used to be statically initialized.  This made
-	 * it hard to use this code in a shared library.  It is necessary,
-	 * now that we're doing dynamic initialization here, that we preserve
-	 * the old semantics: if an application modifies one of these three
-	 * fields of _res before res_init() is called, res_init() will not
-	 * alter them.  Of course, if an application is setting them to
-	 * _zero_ before calling res_init(), hoping to override what used
-	 * to be the static default, we can't detect it and unexpected results
-	 * will follow.  Zero for any of these fields would make no sense,
-	 * so one can safely assume that the applications were already getting
-	 * unexpected results.
-	 *
-	 * _res.options is tricky since some apps were known to diddle the bits
-	 * before res_init() was first called. We can't replicate that semantic
-	 * with dynamic initialization (they may have turned bits off that are
-	 * set in RES_DEFAULT).  Our solution is to declare such applications
-	 * "broken".  They could fool us by setting RES_INIT but none do (yet).
-	 */
-	if (!_res.retrans)
-		_res.retrans = RES_TIMEOUT;
-	if (!_res.retry)
-		_res.retry = RES_DFLRETRY;
-	if (!(_res.options & RES_INIT))
-		_res.options = RES_DEFAULT;
-	else if (_res.nscount > 0)
-		__res_iclose (&_res, true);	/* Close any VC sockets.  */
+res_init (void)
+{
+  /* These three fields used to be statically initialized.  This made
+     it hard to use this code in a shared library.  It is necessary,
+     now that we're doing dynamic initialization here, that we
+     preserve the old semantics: if an application modifies one of
+     these three fields of _res before res_init is called,
+     res_init will not alter them.  Of course, if an application is
+     setting them to _zero_ before calling res_init, hoping to
+     override what used to be the static default, we can't detect it
+     and unexpected results will follow.  Zero for any of these fields
+     would make no sense, so one can safely assume that the
+     applications were already getting unexpected results.
 
-	/*
-	 * This one used to initialize implicitly to zero, so unless the app
-	 * has set it to something in particular, we can randomize it now.
-	 */
-	if (!_res.id)
-		_res.id = res_randomid();
+     _res.options is tricky since some apps were known to diddle the
+     bits before res_init was first called. We can't replicate that
+     semantic with dynamic initialization (they may have turned bits
+     off that are set in RES_DEFAULT).  Our solution is to declare
+     such applications "broken".  They could fool us by setting
+     RES_INIT but none do (yet).  */
+  if (!_res.retrans)
+    _res.retrans = RES_TIMEOUT;
+  if (!_res.retry)
+    _res.retry = RES_DFLRETRY;
+  if (!(_res.options & RES_INIT))
+    _res.options = RES_DEFAULT;
+  else if (_res.nscount > 0)
+    __res_iclose (&_res, true); /* Close any VC sockets.  */
 
-	atomicinclock (lock);
-	/* Request all threads to re-initialize their resolver states,
-	   resolv.conf might have changed.  */
-	atomicinc (__res_initstamp);
-	atomicincunlock (lock);
+  /* This one used to initialize implicitly to zero, so unless the app
+     has set it to something in particular, we can randomize it *
+     now.  */
+  if (!_res.id)
+    _res.id = res_randomid ();
 
-	return (__res_vinit(&_res, 1));
+  atomicinclock (lock);
+  /* Request all threads to re-initialize their resolver states,
+     resolv.conf might have changed.  */
+  atomicinc (__res_initstamp);
+  atomicincunlock (lock);
+
+  return __res_vinit (&_res, 1);
 }
 
-/* Initialize resp if RES_INIT is not yet set or if res_init in some other
-   thread requested re-initializing.  */
+/* Initialize *RESP if RES_INIT is not yet set in RESP->options, or if
+   res_init in some other thread requested re-initializing.  */
 int
 __res_maybe_init (res_state resp, int preinit)
 {
-	if (resp->options & RES_INIT) {
-		if (__res_initstamp != resp->_u._ext.initstamp) {
-			if (resp->nscount > 0)
-				__res_iclose (resp, true);
-			return __res_vinit (resp, 1);
-		}
-		return 0;
-	} else if (preinit) {
-		if (!resp->retrans)
-			resp->retrans = RES_TIMEOUT;
-		if (!resp->retry)
-			resp->retry = RES_DFLRETRY;
-		resp->options = RES_DEFAULT;
-		if (!resp->id)
-			resp->id = res_randomid ();
-		return __res_vinit (resp, 1);
-	} else
-		return __res_ninit (resp);
+  if (resp->options & RES_INIT)
+    {
+      if (__res_initstamp != resp->_u._ext.initstamp)
+        {
+          if (resp->nscount > 0)
+            __res_iclose (resp, true);
+          return __res_vinit (resp, 1);
+        }
+      return 0;
+    }
+  else if (preinit)
+    {
+      if (!resp->retrans)
+        resp->retrans = RES_TIMEOUT;
+      if (!resp->retry)
+        resp->retry = RES_DFLRETRY;
+      resp->options = RES_DEFAULT;
+      if (!resp->id)
+        resp->id = res_randomid ();
+      return __res_vinit (resp, 1);
+    }
+  else
+    return __res_ninit (resp);
 }
 libc_hidden_def (__res_maybe_init)
 
@@ -133,7 +152,7 @@ extern __thread struct __res_state *__libc_resp
 compat_symbol (libc, _res, _res, GLIBC_2_0);
 #endif
 
-#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_2)
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 # undef res_init
 extern int __res_init_weak (void);
 weak_extern (__res_init_weak);
