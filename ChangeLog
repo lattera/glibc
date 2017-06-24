@@ -1,3 +1,8 @@
+2017-06-24  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21295]
+	* resolv/tst-resolv-basic.c (do_test): Add new test cases.
+
 2017-06-24  Dmitry Bilunov  <kmeaw@kmeaw.com>
 
 	[BZ #21295]

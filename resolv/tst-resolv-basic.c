@@ -398,6 +398,22 @@ do_test (void)
   check_ai ("t.nxdomain.example", "80", AF_INET6,
             "error: Name or service not known\n");
 
+  /* Test for bug 21295.  */
+  check_ai_hints ("www.example", "80",
+                  (struct addrinfo) { .ai_family = AF_INET6,
+                      .ai_socktype = SOCK_STREAM,
+                      .ai_flags = AI_V4MAPPED | AI_ALL, },
+                  "flags: AI_V4MAPPED AI_ALL\n"
+                  "address: STREAM/TCP 2001:db8::1 80\n"
+                  "address: STREAM/TCP ::ffff:192.0.2.17 80\n");
+  check_ai_hints ("t.www.example", "80",
+                  (struct addrinfo) { .ai_family = AF_INET6,
+                      .ai_socktype = SOCK_STREAM,
+                      .ai_flags = AI_V4MAPPED | AI_ALL, },
+                  "flags: AI_V4MAPPED AI_ALL\n"
+                  "address: STREAM/TCP 2001:db8::3 80\n"
+                  "address: STREAM/TCP ::ffff:192.0.2.19 80\n");
+
   resolv_test_end (aux);
 
   return 0;
