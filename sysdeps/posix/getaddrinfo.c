@@ -190,16 +190,16 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
 
 /* Convert struct hostent to a list of struct gaih_addrtuple objects.
    h_name is not copied, and the struct hostent object must not be
-   deallocated prematurely.  *RESULT must be NULL or a pointer to an
-   object allocated using malloc, which is freed.  */
+   deallocated prematurely.  *RESULT must be NULL or a pointer to a
+   linked-list.  The new addresses are appended at the end.  */
 static bool
 convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 				   int family,
 				   struct hostent *h,
 				   struct gaih_addrtuple **result)
 {
-  free (*result);
-  *result = NULL;
+  while (*result)
+    result = &(*result)->next;
 
   /* Count the number of addresses in h->h_addr_list.  */
   size_t count = 0;
