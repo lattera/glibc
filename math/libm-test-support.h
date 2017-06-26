@@ -115,6 +115,15 @@ extern const char doc[];
    appropriately for each rounding mode.  */
 #define XFAIL_IBM128_LIBGCC (TEST_COND_ibm128_libgcc ? XFAIL_TEST : 0)
 
+/* On some architectures, glibc can be built with compilers that do
+   not have suitable built-in functions for setting the payload of a
+   _Float128 NaN.  */
+#if (defined __x86_64__ || defined __i386__) && !__GNUC_PREREQ (7, 0)
+# define XFAIL_FLOAT128_PAYLOAD (TEST_COND_binary128 ? XFAIL_TEST : 0)
+#else
+# define XFAIL_FLOAT128_PAYLOAD 0
+#endif
+
 /* Number of bits in NaN payload.  */
 #if TEST_COND_ibm128
 # define PAYLOAD_DIG (DBL_MANT_DIG - 2)

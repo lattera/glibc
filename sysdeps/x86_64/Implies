@@ -1,4 +1,5 @@
 x86
+ieee754/float128
 ieee754/ldbl-96
 ieee754/dbl-64/wordsize-64
 ieee754/dbl-64

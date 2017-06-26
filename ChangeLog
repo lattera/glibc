@@ -1,3 +1,38 @@
+2017-06-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/i386/Implies: Add ieee754/float128.
+	* sysdeps/x86_64/Implies: Likewise.
+	* sysdeps/x86/bits/floatn.h: New file.
+	* sysdeps/x86/float128-abi.h: Likewise.
+	* manual/math.texi (Mathematics): Document support for _Float128
+	on x86_64 and x86.
+	* sysdeps/i386/fpu/fenv_private.h: Include <bits/floatn.h>.
+	(math_opt_barrier): Do not put _Float128 values in floating-point
+	registers.
+	(math_force_eval): Likewise.
+	[__x86_64__] (SET_RESTORE_ROUNDF128): New macro.
+	* sysdeps/x86/fpu/Makefile [$(subdir) = math] (CPPFLAGS): Append
+	to Makefile variable.
+	* sysdeps/x86/fpu/e_sqrtf128.c: New file.
+	* sysdeps/x86/fpu/sfp-machine.h: Likewise.  Based on libgcc.
+	* sysdeps/x86/math-tests.h: New file.
+	* math/libm-test-support.h (XFAIL_FLOAT128_PAYLOAD): New macro.
+	* math/libm-test-getpayload.inc (getpayload_test_data): Use
+	XFAIL_FLOAT128_PAYLOAD.
+	* math/libm-test-setpayload.inc (setpayload_test_data): Likewise.
+	* math/libm-test-totalorder.inc (totalorder_test_data): Likewise.
+	* math/libm-test-totalordermag.inc (totalordermag_test_data):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2017-06-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #21512]

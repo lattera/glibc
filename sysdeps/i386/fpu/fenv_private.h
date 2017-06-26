@@ -1,36 +1,46 @@
 #ifndef FENV_PRIVATE_H
 #define FENV_PRIVATE_H 1
 
+#include <bits/floatn.h>
 #include <fenv.h>
 #include <fpu_control.h>
 
 #ifdef __SSE2_MATH__
-# define math_opt_barrier(x) \
-  ({ __typeof(x) __x;					\
-     if (sizeof (x) <= sizeof (double))			\
-       __asm ("" : "=x" (__x) : "0" (x));		\
-     else						\
-       __asm ("" : "=t" (__x) : "0" (x));		\
+# define math_opt_barrier(x)						\
+  ({ __typeof(x) __x;							\
+     if (sizeof (x) <= sizeof (double)					\
+	|| __builtin_types_compatible_p (__typeof (x), _Float128))	\
+       __asm ("" : "=x" (__x) : "0" (x));				\
+     else								\
+       __asm ("" : "=t" (__x) : "0" (x));				\
      __x; })
-# define math_force_eval(x) \
-  do {							\
-    if (sizeof (x) <= sizeof (double))			\
-      __asm __volatile ("" : : "x" (x));		\
-    else						\
-      __asm __volatile ("" : : "f" (x));		\
+# define math_force_eval(x)						\
+  do {									\
+    if (sizeof (x) <= sizeof (double)					\
+	|| __builtin_types_compatible_p (__typeof (x), _Float128))	\
+      __asm __volatile ("" : : "x" (x));				\
+    else								\
+      __asm __volatile ("" : : "f" (x));				\
   } while (0)
 #else
-# define math_opt_barrier(x) \
-  ({ __typeof (x) __x;					\
-     __asm ("" : "=t" (__x) : "0" (x));			\
+# define math_opt_barrier(x)						\
+  ({ __typeof (x) __x;							\
+     if (__builtin_types_compatible_p (__typeof (x), _Float128))	\
+       {								\
+	 __x = (x);							\
+	 __asm ("" : "+m" (__x));					\
+       }								\
+     else								\
+       __asm ("" : "=t" (__x) : "0" (x));				\
      __x; })
-# define math_force_eval(x) \
-  do {							\
-    __typeof (x) __x = (x);				\
-    if (sizeof (x) <= sizeof (double))			\
-      __asm __volatile ("" : : "m" (__x));		\
-    else						\
-      __asm __volatile ("" : : "f" (__x));		\
+# define math_force_eval(x)						\
+  do {									\
+    __typeof (x) __x = (x);						\
+    if (sizeof (x) <= sizeof (double)					\
+	|| __builtin_types_compatible_p (__typeof (x), _Float128))	\
+      __asm __volatile ("" : : "m" (__x));				\
+    else								\
+      __asm __volatile ("" : : "f" (__x));				\
   } while (0)
 #endif
 
@@ -320,6 +330,13 @@ libc_feresetround_387 (fenv_t *e)
 #ifndef __SSE2_MATH__
 # define libc_feholdexcept_setround_53bit libc_feholdexcept_setround_387_53bit
 # define libc_feholdsetround_53bit	libc_feholdsetround_387_53bit
+#endif
+
+#ifdef __x86_64__
+/* The SSE rounding mode is used by soft-fp (libgcc and glibc) on
+   x86_64, so that must be set for float128 computations.  */
+# define SET_RESTORE_ROUNDF128(RM) \
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_sse, libc_feresetround_sse)
 #endif
 
 /* We have support for rounding mode context.  */

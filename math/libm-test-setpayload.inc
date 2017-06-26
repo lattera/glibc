@@ -25,21 +25,21 @@ static const struct test_Ff_b1_data setpayload_test_data[] =
 #else
     TEST_Ff_b1 (setpayload, plus_zero, 0, qnan_value_pl ("0x0"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
 #endif
-    TEST_Ff_b1 (setpayload, 0x1p0, 0, qnan_value_pl ("0x1"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
-    TEST_Ff_b1 (setpayload, 0x2p0, 0, qnan_value_pl ("0x2"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
-    TEST_Ff_b1 (setpayload, 0x3fffffp0, 0, qnan_value_pl ("0x3fffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+    TEST_Ff_b1 (setpayload, 0x1p0, 0, qnan_value_pl ("0x1"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD|XFAIL_FLOAT128_PAYLOAD),
+    TEST_Ff_b1 (setpayload, 0x2p0, 0, qnan_value_pl ("0x2"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD|XFAIL_FLOAT128_PAYLOAD),
+    TEST_Ff_b1 (setpayload, 0x3fffffp0, 0, qnan_value_pl ("0x3fffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD|XFAIL_FLOAT128_PAYLOAD),
 #if PAYLOAD_DIG >= 51
-    TEST_Ff_b1 (setpayload, 0x7ffffffffffffp0, 0, qnan_value_pl ("0x7ffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+    TEST_Ff_b1 (setpayload, 0x7ffffffffffffp0, 0, qnan_value_pl ("0x7ffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD|XFAIL_FLOAT128_PAYLOAD),
 #else
     TEST_Ff_b1 (setpayload, 0x7ffffffffffffp0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
 #if PAYLOAD_DIG >= 62
-    TEST_Ff_b1 (setpayload, 0x3fffffffffffffffp0, 0, qnan_value_pl ("0x3fffffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+    TEST_Ff_b1 (setpayload, 0x3fffffffffffffffp0, 0, qnan_value_pl ("0x3fffffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD|XFAIL_FLOAT128_PAYLOAD),
 #else
     TEST_Ff_b1 (setpayload, 0x3fffffffffffffffp0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
 #if PAYLOAD_DIG >= 111
-    TEST_Ff_b1 (setpayload, 0x7fffffffffffffffffffffffffffp0, 0, qnan_value_pl ("0x7fffffffffffffffffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+    TEST_Ff_b1 (setpayload, 0x7fffffffffffffffffffffffffffp0, 0, qnan_value_pl ("0x7fffffffffffffffffffffffffff"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD|XFAIL_FLOAT128_PAYLOAD),
 #else
     TEST_Ff_b1 (setpayload, 0x7fffffffffffffffffffffffffffp0, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
@@ -74,17 +74,17 @@ static const struct test_Ff_b1_data setpayload_test_data[] =
     TEST_Ff_b1 (setpayload, 0x1ffffffffffffffffffffffffffffp-1, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
 #if PAYLOAD_DIG >= 23
-    TEST_Ff_b1 (setpayload, 0x1p22, 0, qnan_value_pl ("0x400000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+    TEST_Ff_b1 (setpayload, 0x1p22, 0, qnan_value_pl ("0x400000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD|XFAIL_FLOAT128_PAYLOAD),
 #else
     TEST_Ff_b1 (setpayload, 0x1p22, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
 #if PAYLOAD_DIG >= 52
-    TEST_Ff_b1 (setpayload, 0x1p51, 0, qnan_value_pl ("0x8000000000000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+    TEST_Ff_b1 (setpayload, 0x1p51, 0, qnan_value_pl ("0x8000000000000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD|XFAIL_FLOAT128_PAYLOAD),
 #else
     TEST_Ff_b1 (setpayload, 0x1p51, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
 #if PAYLOAD_DIG >= 63
-    TEST_Ff_b1 (setpayload, 0x1p62, 0, qnan_value_pl ("0x4000000000000000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD),
+    TEST_Ff_b1 (setpayload, 0x1p62, 0, qnan_value_pl ("0x4000000000000000"), NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|TEST_NAN_SIGN|TEST_NAN_PAYLOAD|XFAIL_FLOAT128_PAYLOAD),
 #else
     TEST_Ff_b1 (setpayload, 0x1p62, 1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif

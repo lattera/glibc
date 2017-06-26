@@ -1,4 +1,7 @@
 ifeq ($(subdir),math)
+# sqrtf128 requires soft-fp.
+CPPFLAGS += -I../soft-fp
+
 libm-support += powl_helper
 tests += test-fenv-sse test-fenv-clear-sse test-fenv-x87 test-fenv-sse-2 \
 	 test-flt-eval-method-387 test-flt-eval-method-sse
