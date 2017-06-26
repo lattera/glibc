@@ -232,7 +232,7 @@ the range of @code{-1} to @code{1}.
 
 All these functions, including the @code{_Float@var{N}} and
 @code{_Float@var{N}x} variants, are GNU extensions.  Portable programs
-should be prepared to cope with its absence.
+should be prepared to cope with their absence.
 @end deftypefun
 
 @cindex complex trigonometric functions
