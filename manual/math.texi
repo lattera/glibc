@@ -67,7 +67,7 @@ these functions are described along with the @code{double},
 
 Currently, support for @code{_Float@var{N}} or @code{_Float@var{N}x}
 types is only provided for @code{_Float128} on powerpc64le (PowerPC
-64-bits little-endian), x86_64 and x86.
+64-bits little-endian), x86_64, x86 and ia64.
 
 @menu
 * Mathematical Constants::      Precise numeric values for often-used

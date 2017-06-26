@@ -1,6 +1,11 @@
 # The ia64 `long double' is a distinct type we support.
 long-double-fcts = yes
 
+ifeq ($(subdir),math)
+# sqrtf128 requires soft-fp.
+CPPFLAGS += -I../soft-fp
+endif
+
 ifeq ($(subdir),gmon)
 sysdep_routines += _mcount
 endif

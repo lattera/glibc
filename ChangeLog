@@ -1,5 +1,21 @@
 2017-06-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ia64/Implies: Add ieee754/float128.
+	* sysdeps/ia64/bits/floatn.h: New file.
+	* sysdeps/ia64/float128-abi.h: Likewise.
+	* manual/math.texi (Mathematics): Document support for _Float128
+	on ia64.
+	* sysdeps/ia64/Makefile [$(subdir) = math] (CPPFLAGS): Append to
+	Makefile variable.
+	* sysdeps/ia64/fpu/e_sqrtf128.c: New file.
+	* sysdeps/ia64/fpu/k_rem_pio2.c: Remove file.
+	* sysdeps/ia64/fpu/sfp-machine.h: New file.  Based on libgcc.
+	* sysdeps/ia64/math-tests.h: New file.
+	* math/libm-test-support.h (XFAIL_FLOAT128_PAYLOAD): Also define
+	based on TEST_COND_binary128 for [__ia64__].
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise,
+
 	[BZ #21457]
 	* sysdeps/arm/sys/ucontext.h (struct ucontext): Rename to struct
 	ucontext_t.

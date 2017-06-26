@@ -124,7 +124,7 @@ Version 2.26
   C Library is GCC 4.9.  Older GCC versions, and non-GNU compilers, can
   still be used to compile programs using the GNU C Library.
 
-* Support is added, on powerpc64le, x86_64 and x86, for interfaces
+* Support is added, on powerpc64le, x86_64, x86 and ia64, for interfaces
   supporting the _Float128 type from ISO/IEC TS 18661-3:2015.  Most of the
   interfaces are taken from TS 18661-3.  The type-generic macros in <math.h>
   support this type, but those in <tgmath.h> do not.  The GNU C Library now
