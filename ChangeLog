@@ -1,3 +1,14 @@
+2017-09-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Andreas Schwab  <schwab@suse.de>
+
+	[BZ #21530]
+	* include/stdio.h (__gen_tempfd): New function.
+	* stdio-common/Makefile (routines): Add gentempfd.
+	* stdio-common/gentempfd.c: New file.
+	* sysdeps/unix/sysv/linux/gentempfd.c: Likewise.
+	* stdio-common/tmpfile.c (tmpfile): First try to use a system specific
+	unnamed file first.
+
 2017-09-01  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21915]

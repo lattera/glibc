@@ -191,5 +191,8 @@ libc_hidden_proto (__obstack_vprintf_chk)
 extern FILE * __fmemopen (void *buf, size_t len, const char *mode);
 libc_hidden_proto (__fmemopen)
 
+extern int __gen_tempfd (int flags);
+libc_hidden_proto (__gen_tempfd)
+
 # endif /* not _ISOMAC */
 #endif /* stdio.h */
