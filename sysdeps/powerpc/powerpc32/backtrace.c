@@ -64,7 +64,7 @@ is_sigtramp_address (void *nip)
 struct rt_signal_frame_32 {
   char               dummy[SIGNAL_FRAMESIZE + 16];
   siginfo_t          info;
-  struct ucontext    uc;
+  ucontext_t         uc;
   /* We don't care about the rest, since IP value is at 'uc' field.  */
 };
 

@@ -64,7 +64,7 @@ hexvalue (unsigned long int value, char *buf, size_t len)
 }
 
 static void
-register_dump (int fd, struct ucontext *ctx)
+register_dump (int fd, ucontext_t *ctx)
 {
   char regs[25][16];
   char fpregs[30][8];

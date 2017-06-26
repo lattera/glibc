@@ -159,14 +159,14 @@ typedef struct
 #undef __ctx
 
 /* Userlevel context.  */
-typedef struct ucontext
+typedef struct ucontext_t
 {
 #if _MIPS_SIM == _ABIO32
   unsigned long int uc_flags;
 #else
   __uint64_t uc_flags;
 #endif
-  struct ucontext *uc_link;
+  struct ucontext_t *uc_link;
   sigset_t uc_sigmask;
   stack_t uc_stack;
   mcontext_t uc_mcontext;

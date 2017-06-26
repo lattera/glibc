@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define SIGCONTEXT int _code, struct ucontext *
+#define SIGCONTEXT int _code, ucontext_t *
 #define SIGCONTEXT_EXTRA_ARGS _code,
 #define GET_PC(ctx)    ((void *) (ctx)->uc_mcontext.regs.pc)
 #define GET_FRAME(ctx) ((void *) (ctx)->uc_mcontext.regs.sp)

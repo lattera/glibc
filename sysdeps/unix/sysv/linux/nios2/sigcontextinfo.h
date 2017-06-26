@@ -19,7 +19,7 @@
 #include <sys/ucontext.h>
 #include "kernel-features.h"
 
-#define SIGCONTEXT siginfo_t *_si, struct ucontext *
+#define SIGCONTEXT siginfo_t *_si, ucontext_t *
 #define GET_PC(ctx) ((void *) (ctx)->uc_mcontext.regs[27])
 
 /* There is no reliable way to get the sigcontext unless we use a

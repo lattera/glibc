@@ -18,7 +18,7 @@
 
 #include <sys/ucontext.h>
 
-#define SIGCONTEXT siginfo_t *_si, struct ucontext *
+#define SIGCONTEXT siginfo_t *_si, ucontext_t *
 #define SIGCONTEXT_EXTRA_ARGS _si,
 
 /* The sigcontext structure changed between 2.0 and 2.1 kernels.  On any

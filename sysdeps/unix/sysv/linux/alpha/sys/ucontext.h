@@ -54,10 +54,10 @@ typedef fpreg_t fpregset_t[__NFPREG];
 typedef struct sigcontext mcontext_t;
 
 /* Userlevel context.  */
-typedef struct ucontext
+typedef struct ucontext_t
   {
     unsigned long int uc_flags;
-    struct ucontext *uc_link;
+    struct ucontext_t *uc_link;
     unsigned long __uc_osf_sigmask;
     stack_t uc_stack;
     mcontext_t uc_mcontext;

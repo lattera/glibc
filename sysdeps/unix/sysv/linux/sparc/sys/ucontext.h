@@ -82,8 +82,8 @@ typedef struct {
 	mc_fpu_t	mc_fpregs;
 } mcontext_t;
 
-typedef struct ucontext {
-	struct ucontext		*uc_link;
+typedef struct ucontext_t {
+	struct ucontext_t	*uc_link;
 	unsigned long		uc_flags;
 	unsigned long		__uc_sigmask;
 	mcontext_t		uc_mcontext;
@@ -261,10 +261,10 @@ typedef struct
 
 
 /* Userlevel context.  */
-typedef struct ucontext
+typedef struct ucontext_t
   {
     unsigned long   uc_flags;
-    struct ucontext *uc_link;
+    struct ucontext_t *uc_link;
     sigset_t	    uc_sigmask;
     stack_t         uc_stack;
     mcontext_t      uc_mcontext;

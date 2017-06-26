@@ -44,7 +44,7 @@ hexvalue (unsigned long int value, char *buf, size_t len)
 }
 
 static void
-register_dump (int fd, const struct ucontext *ctx)
+register_dump (int fd, const ucontext_t *ctx)
 {
   char regs[21][8];
   struct iovec iov[97];

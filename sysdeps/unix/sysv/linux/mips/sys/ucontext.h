@@ -113,10 +113,10 @@ typedef struct
 #undef __ctx
 
 /* Userlevel context.  */
-typedef struct ucontext
+typedef struct ucontext_t
   {
     unsigned long int uc_flags;
-    struct ucontext *uc_link;
+    struct ucontext_t *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;

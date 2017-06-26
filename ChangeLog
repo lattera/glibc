@@ -1,5 +1,73 @@
 2017-06-26  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21457]
+	* sysdeps/arm/sys/ucontext.h (struct ucontext): Rename to struct
+	ucontext_t.
+	* sysdeps/generic/sys/ucontext.h (struct ucontext): Likewise.
+	* sysdeps/i386/sys/ucontext.h (struct ucontext): Likewise.
+	* sysdeps/m68k/sys/ucontext.h (struct ucontext): Likewise.
+	* sysdeps/mips/sys/ucontext.h (struct ucontext): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sys/ucontext.h (struct
+	ucontext): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/nios2/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h (struct
+	ucontext): Likewise.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h (struct ucontext):
+	Likewise.
+	* sysdeps/powerpc/powerpc32/backtrace.c (struct
+	rt_signal_frame_32): Likewise.
+	* sysdeps/powerpc/powerpc64/backtrace.c (struct signal_frame_64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/kernel_rt_sigframe.h (struct
+	kernel_rt_sigframe): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sigcontextinfo.h (SIGCONTEXT):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/register-dump.h (register_dump):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/sigcontextinfo.h (SIGCONTEXT):
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/profil-counter.h
+	(__profil_counter): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/sigcontextinfo.h
+	(SIGCONTEXT): Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel_rt_sigframe.h (struct
+	kernel_rt_sigframe): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/kernel_rt_sigframe.h (struct
+	kernel_rt_sigframe): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/sigcontextinfo.h (SIGCONTEXT):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/makecontext.S (__makecontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/makecontext.c
+	(__start_context): Likewise.
+	* sysdeps/unix/sysv/linux/tile/sigcontextinfo.h (SIGCONTEXT):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/register-dump.h (register_dump):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigcontextinfo.h (SIGCONTEXT):
+	Likewise.
+
 	* sysdeps/i386/Implies: Add ieee754/float128.
 	* sysdeps/x86_64/Implies: Likewise.
 	* sysdeps/x86/bits/floatn.h: New file.

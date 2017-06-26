@@ -50,7 +50,7 @@ struct layout
 struct signal_frame_64 {
 #define SIGNAL_FRAMESIZE 128
   char dummy[SIGNAL_FRAMESIZE];
-  struct ucontext uc;
+  ucontext_t uc;
   /* We don't care about the rest, since the IP value is at 'uc' field.  */
 };
 

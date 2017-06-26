@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 static void
-__profil_counter (int signr, siginfo_t *si, struct ucontext *uctx)
+__profil_counter (int signr, siginfo_t *si, ucontext_t *uctx)
 {
   unsigned long ip = uctx->uc_mcontext.sc_iaoq[0] & ~0x3;
   profil_count ((void *) ip);

@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <ucontext.h>
 
-extern void __start_context (struct ucontext *ucp);
+extern void __start_context (ucontext_t *ucp);
 
 void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)

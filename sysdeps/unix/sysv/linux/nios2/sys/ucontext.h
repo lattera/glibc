@@ -1,4 +1,4 @@
-/* struct ucontext definition, Nios II version.
+/* ucontext_t definition, Nios II version.
    Copyright (C) 2015-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -50,10 +50,10 @@ typedef struct mcontext
 #undef __ctx
 
 /* Userlevel context.  */
-typedef struct ucontext
+typedef struct ucontext_t
   {
     unsigned long uc_flags;
-    struct ucontext *uc_link;
+    struct ucontext_t *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;

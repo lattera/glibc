@@ -21,5 +21,5 @@
 struct kernel_rt_sigframe
 {
   siginfo_t info;
-  struct ucontext uc;
+  ucontext_t uc;
 };

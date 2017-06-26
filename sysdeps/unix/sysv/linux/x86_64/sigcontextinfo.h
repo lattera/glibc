@@ -17,7 +17,7 @@
 
 #include <stdint.h>
 
-#define SIGCONTEXT siginfo_t *_si, struct ucontext *
+#define SIGCONTEXT siginfo_t *_si, ucontext_t *
 #define SIGCONTEXT_EXTRA_ARGS _si,
 #define GET_PC(ctx)	\
   ((void *) (uintptr_t) (ctx)->uc_mcontext.gregs[REG_RIP])

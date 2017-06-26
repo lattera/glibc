@@ -94,6 +94,9 @@ Version 2.26
 * The stack_t type no longer has the name struct sigaltstack.  This changes
   the C++ name mangling for interfaces involving this type.
 
+* The ucontext_t type no longer has the name struct ucontext.  This changes
+  the C++ name mangling for interfaces involving this type.
+
 * The synchronization that pthread_spin_unlock performs has been changed
   to now be equivalent to a C11 atomic store with release memory order to
   the spin lock's memory location.  This ensures correct synchronization

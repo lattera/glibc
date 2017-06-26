@@ -43,7 +43,7 @@ typedef struct sigcontext mcontext_t;
 # define _SC_GR0_OFFSET	0xc8	/* pray that this is correct... */
 #endif
 
-typedef struct ucontext
+typedef struct ucontext_t
   {
     union
       {
@@ -51,7 +51,7 @@ typedef struct ucontext
 	struct
 	  {
 	    unsigned long _pad[_SC_GR0_OFFSET/8];
-	    struct ucontext *_link;	/* this should overlay sc_gr[0] */
+	    struct ucontext_t *_link;	/* this should overlay sc_gr[0] */
 	  }
 	_uc;
       }
