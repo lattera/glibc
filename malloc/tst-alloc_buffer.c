@@ -429,7 +429,7 @@ test_misaligned (char pad)
   }
 
   /* Verify that padding was not overwritten.  */
-  TEST_VERIFY (backing[0] == ~pad);
+  TEST_VERIFY (backing[0] == (char) ~pad);
   TEST_VERIFY (backing[SIZE + 1] == pad);
   free (backing);
 }

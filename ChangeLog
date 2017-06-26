@@ -1,3 +1,8 @@
+2017-06-26  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* malloc/tst-alloc_buffer.c (test_misaligned): Cast to char
+	before comparing with another char.
+
 2017-06-25  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/math.texi: Fix a grammatical error.
