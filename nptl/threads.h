@@ -60,6 +60,12 @@ typedef union
   long int __align __LOCK_ALIGNMENT;
 } mtx_t;
 
+typedef union
+{
+  char __size[__SIZEOF_PTHREAD_COND_T];
+  __extension__ long long int __align __LOCK_ALIGNMENT;
+} cnd_t;
+
 /* Threads functions.  */
 
 /* Create a new thread executing the function __FUNC.  Arguments for __FUNC
@@ -139,6 +145,34 @@ extern void mtx_destroy (mtx_t *__mutex);
 /* Call function __FUNC exactly once, even if invoked from several threads.
    All calls must be made with the same __FLAGS object.  */
 extern void call_once (once_flag *__flag, void (*__func)(void));
+
+
+/* Condition variable functions.  */
+
+/* Initialize new condition variable pointed by __COND.  */
+extern int cnd_init (cnd_t *__cond);
+
+/* Unblock one thread that currently waits on condition variable pointed
+   by __COND.  */
+extern int cnd_signal (cnd_t *__cond);
+
+/* Unblock all threads currently waiting on condition variable pointed by
+   __COND.  */
+extern int cnd_broadcast (cnd_t *__cond);
+
+/* Block current thread on the condition variable pointed by __COND.  */
+extern int cnd_wait (cnd_t *__cond, mtx_t *__mutex);
+
+/* Block current thread on the condition variable until condition variable
+   pointed by __COND is signaled or time pointed by __TIME_POINT is
+   reached.  */
+extern int cnd_timedwait (cnd_t *__restrict __cond,
+			  mtx_t *__restrict __mutex,
+			  const struct timespec *__restrict __time_point);
+
+/* Destroy condition variable pointed by __cond and free all of its
+   resources.  */
+extern void cnd_destroy (cnd_t *__COND);
 
 __END_DECLS
 

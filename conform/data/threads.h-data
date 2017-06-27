@@ -16,6 +16,7 @@ type thrd_t
 type thrd_start_t
 type mtx_t
 type once_flag
+type cnd_t
 
 function int thrd_create (thrd_t*, thrd_start_t, void*)
 function int thrd_equal (thrd_t, thrd_t)
@@ -34,6 +35,13 @@ function int mtx_unlock (mtx_t*)
 function void mtx_destroy (mtx_t*)
 
 function void call_once (once_flag*, void (*)(void))
+
+function int cnd_init (cnd_t*)
+function int cnd_signal (cnd_t*)
+function int cnd_broadcast (cnd_t*)
+function int cnd_wait (cnd_t*, mtx_t*)
+function int cnd_timedwait (cnd_t*, mtx_t*, const struct timespec*)
+function void cnd_destroy (cnd_t*)
 
 #include "time.h-data"
 

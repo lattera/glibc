@@ -1,6 +1,32 @@
 2018-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #14092]
+	* conform/data/threads.h-data (cnd_t): New type.
+	(cnd_init): New function.
+	(cnd_signal): Likewise.
+	(cnd_broadcast): Likewise.
+	(cnd_wait): Likewise.
+	(cnd_timedwait): Likewise.
+	(cnd_destroy): Likewise.
+	* nptl/Makefile (libpthread-routines): Add cnd_broadcast,
+	cnd_destroy, cnd_init, cnd_signal, cnd_timedwait, and cnd_wait
+	object.
+	* nptl/Versions (libpthread) [GLIBC_2.28]: Likewise.
+	* nptl/cnd_broadcast.c: New file.
+	* nptl/cnd_destroy.c: Likewise.
+	* nptl/cnd_init.c: Likewise.
+	* nptl/cnd_signal.c: Likewise.
+	* nptl/cnd_timedwait.c: Likewise.
+	* nptl/cnd_wait.c: Likewise.
+	* sysdeps/nptl/threads.h (cnd_t): New type.
+	(cnd_init): New prototype.
+	(cnd_signa): Likewise.
+	(cnd_broadcast): Likewise.
+	(cnd_wait): Likewise.
+	(cnd_timedwait): Likewise.
+	(cnd_destroy): Likewise.
+
+	[BZ #14092]
 	* conform/data/threads.h-data (ONCE_FLAG_INIT): New macro.
 	(once_flag): New type.
 	(call_once): New function.
