@@ -72,12 +72,16 @@ static const struct
 
 #define MAPS ((struct link_map *) _r_debug.r_map)
 
-#define OUT \
-  for (map = MAPS; map != NULL; map = map->l_next)		      \
-    if (map->l_type == lt_loaded)					      \
-      printf ("name = \"%s\", direct_opencount = %d\n",			      \
-	      map->l_name, (int) map->l_direct_opencount);		      \
-  fflush (stdout)
+#define OUT							\
+  do								\
+    {								\
+      for (map = MAPS; map != NULL; map = map->l_next)		\
+	if (map->l_type == lt_loaded)				\
+	  printf ("name = \"%s\", direct_opencount = %d\n",	\
+		  map->l_name, (int) map->l_direct_opencount);	\
+      fflush (stdout);						\
+    }								\
+  while (0)
 
 
 int

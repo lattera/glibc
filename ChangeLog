@@ -1,5 +1,7 @@
 2017-06-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* elf/loadtest.c (OUT): Define using do { } while (0).
+
 	* time/strftime_l.c (DO_NUMBER): Define using do { } while (0).
 	(DO_NUMBER_SPACEPAD): Likewise.
 
