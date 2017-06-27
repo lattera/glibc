@@ -2134,3 +2134,7 @@ GLIBC_2.27 wcstof64x_l F
 GLIBC_2.28 fcntl64 F
 GLIBC_2.28 renameat2 F
 GLIBC_2.28 statx F
+GLIBC_2.28 thrd_current F
+GLIBC_2.28 thrd_equal F
+GLIBC_2.28 thrd_sleep F
+GLIBC_2.28 thrd_yield F

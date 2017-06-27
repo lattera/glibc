@@ -119,6 +119,10 @@ GLIBC_2.28 fcntl F
 GLIBC_2.28 fcntl64 F
 GLIBC_2.28 renameat2 F
 GLIBC_2.28 statx F
+GLIBC_2.28 thrd_current F
+GLIBC_2.28 thrd_equal F
+GLIBC_2.28 thrd_sleep F
+GLIBC_2.28 thrd_yield F
 GLIBC_2.4 _Exit F
 GLIBC_2.4 _IO_2_1_stderr_ D 0xa0
 GLIBC_2.4 _IO_2_1_stdin_ D 0xa0
