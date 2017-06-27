@@ -25,9 +25,6 @@
 #ifdef USE_NSCD
 # include <nscd/nscd_proto.h>
 #endif
-#ifdef NEED__RES_HCONF
-# include <resolv/res_hconf.h>
-#endif
 #ifdef NEED__RES
 # include <resolv.h>
 #endif
@@ -273,9 +270,6 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	      return errno;
 	    }
 #endif /* need _res */
-#ifdef NEED__RES_HCONF
-	  _res_hconf_init ();
-#endif /* need _res_hconf */
 
 	  void *tmp_ptr = fct.l;
 #ifdef PTR_MANGLE

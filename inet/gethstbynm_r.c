@@ -22,7 +22,7 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
-
+#include <resolv/res_hconf.h>
 
 #define LOOKUP_TYPE	struct hostent
 #define FUNCTION_NAME	gethostbyname
@@ -30,7 +30,7 @@
 #define ADD_PARAMS	const char *name
 #define ADD_VARIABLES	name
 #define NEED_H_ERRNO	1
-#define NEED__RES_HCONF	1
+#define NEED__RES	1
 #define POSTPROCESS \
   if (status == NSS_STATUS_SUCCESS)					      \
     _res_hconf_reorder_addrs (resbuf);

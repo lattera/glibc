@@ -28,7 +28,6 @@
 #define EXTRA_VARIABLES , ttlp
 #define NEED_H_ERRNO	1
 #define NEED__RES	1
-#define NEED__RES_HCONF 1
 
 /* We are nscd, so we don't want to be talking to ourselves.  */
 #undef	USE_NSCD

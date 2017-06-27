@@ -85,6 +85,7 @@
 #include <ctype.h>
 #include <netdb.h>
 #include <resolv/resolv-internal.h>
+#include <res_hconf.h>
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
@@ -430,6 +431,9 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
 int
 __res_vinit (res_state statp, int preinit)
 {
+  /* Ensure that /etc/hosts.conf has been loaded (once).  */
+  _res_hconf_init ();
+
   FILE *fp = fopen (_PATH_RESCONF, "rce");
   if (fp == NULL)
     switch (errno)

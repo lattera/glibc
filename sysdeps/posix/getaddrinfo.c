@@ -80,7 +80,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <not-cancel.h>
 #include <nscd/nscd-client.h>
 #include <nscd/nscd_proto.h>
-#include <resolv/res_hconf.h>
 #include <scratch_buffer.h>
 #include <inet/net-internal.h>
 
@@ -767,7 +766,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  nip = __nss_hosts_database;
 
 	  /* Initialize configurations.  */
-	  _res_hconf_init ();
 	  if (__res_maybe_init (&_res, 0) == -1)
 	    no_more = 1;
 

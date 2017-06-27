@@ -26,7 +26,6 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <resolv/resolv-internal.h>
-#include <resolv/res_hconf.h>
 
 #include "dbg_log.h"
 #include "nscd.h"
@@ -102,7 +101,6 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
   nip = hosts_database;
 
   /* Initialize configurations.  */
-  _res_hconf_init ();
   if (__res_maybe_init (&_res, 0) == -1)
     no_more = 1;
 

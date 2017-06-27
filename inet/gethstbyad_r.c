@@ -18,7 +18,7 @@
 
 #include <netdb.h>
 #include <string.h>
-
+#include <resolv/res_hconf.h>
 
 #define LOOKUP_TYPE	struct hostent
 #define FUNCTION_NAME	gethostbyaddr
@@ -27,7 +27,6 @@
 #define ADD_VARIABLES	addr, len, type
 #define NEED_H_ERRNO	1
 #define NEED__RES	1
-#define NEED__RES_HCONF	1
 /* If the addr parameter is the IPv6 unspecified address no query must
    be performed.  */
 #define PREPROCESS \

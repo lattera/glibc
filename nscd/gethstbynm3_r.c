@@ -32,7 +32,7 @@
 #define ADD_VARIABLES	name, af
 #define EXTRA_VARIABLES	, ttlp, canonp
 #define NEED_H_ERRNO	1
-#define NEED__RES_HCONF 1
+#define NEED__RES       1
 
 #define HANDLE_DIGITS_DOTS	1
 #define HAVE_LOOKUP_BUFFER	1

@@ -1,3 +1,22 @@
+2017-06-27  Florian Weimer  <fweimer@redhat.com>
+
+	Call _res_hconf_init from __res_vinit.
+	* inet/gethstbyad_r.c (NEED__RES_HCONF): Remove.
+	* inet/gethstbynm2_r.c (NEED__RES_HCONF): Likewise.
+	(NEED__RES): Define.
+	* inet/gethstbynm_r.c (NEED__RES_HCONF): Remove.
+	(NEED__RES): Define.
+	* nscd/aicache.c (addhstaiX): Remove call to _res_hconf_init.
+	* nscd/gethstbyad_r.c (NEED__RES_HCONF): Remove.
+	* nscd/gethstbynm3_r.c (NEED__RES_HCONF): Likewise.
+	(NEED__RES): Define.
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Remove call to
+	_res_hconf_init.
+	* resolv/res_hconf.h (_res_hconf_init): Declare as hidden.
+	* resolv/res_init.c (__res_vinit): Call _res_hconf_init.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Remove call to
+	_res_hconf_init.
+
 2017-06-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ia64/Implies: Add ieee754/float128.
