@@ -1,5 +1,12 @@
 2017-06-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/utf8-utf32-z9.c (__to_utf8_loop_vx_cu):
+	Use vector and cu41 instruction.
+	* sysdeps/s390/multiarch/utf8-utf32-z9.c: Add __to_utf8_loop_vx_cu
+	in ifunc resolver.
+
+2017-06-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags):
 	Add vxd, vxe, gs flag.
 	* sysdeps/s390/dl-procinfo.h: Add HWCAP_S390_VXD, HWCAP_S390_VXE,

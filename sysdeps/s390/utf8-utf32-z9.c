@@ -52,9 +52,11 @@
 #if defined HAVE_S390_VX_ASM_SUPPORT && defined USE_MULTIARCH
 # define HAVE_FROM_VX		1
 # define HAVE_TO_VX		1
+# define HAVE_TO_VX_CU		1
 #else
 # define HAVE_FROM_VX		0
 # define HAVE_TO_VX		0
+# define HAVE_TO_VX_CU		0
 #endif
 
 #if defined HAVE_S390_VX_GCC_SUPPORT
@@ -862,6 +864,116 @@ gconv_end (struct __gconv_step *data)
 #else
 # define TO_LOOP_VX		NULL
 #endif /* HAVE_TO_VX != 1  */
+
+#if HAVE_TO_VX_CU == 1
+#define BODY_TO_VX_CU							\
+  {									\
+    register const unsigned char* pInput asm ("8") = inptr;		\
+    register size_t inlen asm ("9") = inend - inptr;			\
+    register unsigned char* pOutput asm ("10") = outptr;		\
+    register size_t outlen asm ("11") = outend - outptr;		\
+    unsigned long tmp, tmp2;						\
+    asm volatile (".machine push\n\t"					\
+		  ".machine \"z13\"\n\t"				\
+		  ".machinemode \"zarch_nohighgprs\"\n\t"		\
+		  "    vleif %%v20,127,0\n\t"   /* element 0: 127  */	\
+		  "    vzero %%v21\n\t"					\
+		  "    vleih %%v21,8192,0\n\t"  /* element 0:   >  */	\
+		  "    vleih %%v21,-8192,2\n\t" /* element 1: =<>  */	\
+		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
+		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
+		  /* Loop which handles UTF-32 chars <= 0x7f.  */	\
+		  "0:  clgijl %[R_INLEN],64,20f\n\t"			\
+		  "    clgijl %[R_OUTLEN],16,20f\n\t"			\
+		  "1:  vlm %%v16,%%v19,0(%[R_IN])\n\t"			\
+		  "    lghi %[R_TMP],0\n\t"				\
+		  /* Shorten to byte values.  */			\
+		  "    vpkf %%v23,%%v16,%%v17\n\t"			\
+		  "    vpkf %%v24,%%v18,%%v19\n\t"			\
+		  "    vpkh %%v23,%%v23,%%v24\n\t"			\
+		  /* Checking for values > 0x7f.  */			\
+		  "    vstrcfs %%v22,%%v16,%%v20,%%v21\n\t"		\
+		  "    jno 10f\n\t"					\
+		  "    vstrcfs %%v22,%%v17,%%v20,%%v21\n\t"		\
+		  "    jno 11f\n\t"					\
+		  "    vstrcfs %%v22,%%v18,%%v20,%%v21\n\t"		\
+		  "    jno 12f\n\t"					\
+		  "    vstrcfs %%v22,%%v19,%%v20,%%v21\n\t"		\
+		  "    jno 13f\n\t"					\
+		  /* Store 16bytes to outptr.  */			\
+		  "    vst %%v23,0(%[R_OUT])\n\t"			\
+		  "    aghi %[R_INLEN],-64\n\t"				\
+		  "    aghi %[R_OUTLEN],-16\n\t"			\
+		  "    la %[R_IN],64(%[R_IN])\n\t"			\
+		  "    la %[R_OUT],16(%[R_OUT])\n\t"			\
+		  "    clgijl %[R_INLEN],64,20f\n\t"			\
+		  "    clgijl %[R_OUTLEN],16,20f\n\t"			\
+		  "    j 1b\n\t"					\
+		  /* Found a value > 0x7f.  */				\
+		  "13: ahi %[R_TMP],4\n\t"				\
+		  "12: ahi %[R_TMP],4\n\t"				\
+		  "11: ahi %[R_TMP],4\n\t"				\
+		  "10: vlgvb %[R_I],%%v22,7\n\t"			\
+		  "    srlg %[R_I],%[R_I],2\n\t"			\
+		  "    agr %[R_I],%[R_TMP]\n\t"				\
+		  "    je 20f\n\t"					\
+		  /* Store characters before invalid one...  */		\
+		  "    slgr %[R_OUTLEN],%[R_I]\n\t"			\
+		  "15: aghi %[R_I],-1\n\t"				\
+		  "    vstl %%v23,%[R_I],0(%[R_OUT])\n\t"		\
+		  /* ... and update pointers.  */			\
+		  "    aghi %[R_I],1\n\t"				\
+		  "    la %[R_OUT],0(%[R_I],%[R_OUT])\n\t"		\
+		  "    sllg %[R_I],%[R_I],2\n\t"			\
+		  "    la %[R_IN],0(%[R_I],%[R_IN])\n\t"		\
+		  "    slgr %[R_INLEN],%[R_I]\n\t"			\
+		  /* Handle multibyte utf8-char with convert instruction. */ \
+		  "20: cu41 %[R_OUT],%[R_IN]\n\t"			\
+		  "    jo 0b\n\t" /* Try vector implemenation again.  */ \
+		  "    lochil %[R_RES],%[RES_OUT_FULL]\n\t" /* cc == 1.  */ \
+		  "    lochih %[R_RES],%[RES_IN_ILL]\n\t" /* cc == 2.  */ \
+		  ".machine pop"					\
+		  : /* outputs */ [R_IN] "+a" (pInput)			\
+		    , [R_INLEN] "+d" (inlen), [R_OUT] "+a" (pOutput)	\
+		    , [R_OUTLEN] "+d" (outlen), [R_TMP] "=d" (tmp)	\
+		    , [R_I] "=a" (tmp2)					\
+		    , [R_RES] "+d" (result)				\
+		  : /* inputs */					\
+		    [RES_OUT_FULL] "i" (__GCONV_FULL_OUTPUT)		\
+		    , [RES_IN_ILL] "i" (__GCONV_ILLEGAL_INPUT)		\
+		  : /* clobber list */ "memory", "cc"			\
+		    ASM_CLOBBER_VR ("v16") ASM_CLOBBER_VR ("v17")	\
+		    ASM_CLOBBER_VR ("v18") ASM_CLOBBER_VR ("v19")	\
+		    ASM_CLOBBER_VR ("v20") ASM_CLOBBER_VR ("v21")	\
+		    ASM_CLOBBER_VR ("v22") ASM_CLOBBER_VR ("v23")	\
+		    ASM_CLOBBER_VR ("v24")				\
+		  );							\
+    inptr = pInput;							\
+    outptr = pOutput;							\
+									\
+    if (__glibc_likely (inptr == inend)					\
+	|| result == __GCONV_FULL_OUTPUT)				\
+      break;								\
+    if (inptr + 4 > inend)						\
+      {									\
+	result = __GCONV_INCOMPLETE_INPUT;				\
+	break;								\
+      }									\
+    STANDARD_TO_LOOP_ERR_HANDLER (4);					\
+  }
+
+/* Generate loop-function with hardware vector and utf-convert instructions.  */
+# define MIN_NEEDED_INPUT	MIN_NEEDED_TO
+# define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
+# define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
+# define TO_LOOP_VX_CU		__to_utf8_loop_vx_cu
+# define LOOPFCT		TO_LOOP_VX_CU
+# define BODY			BODY_TO_VX_CU
+# define LOOP_NEED_FLAGS
+# include <iconv/loop.c>
+#else
+# define TO_LOOP_VX_CU		NULL
+#endif /* HAVE_TO_VX_CU != 1  */
 
 /* This file also exists in sysdeps/s390/multiarch/ which
    generates ifunc resolvers for FROM/TO_LOOP functions
