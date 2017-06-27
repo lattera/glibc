@@ -40,6 +40,48 @@
 	* locales/wae_CH (mon): reworded "Bráchet" to "Bráčet",
 	"Öigschte" to "Öigšte", "Herbschtmánet" to "Herbštmánet",
 	"Chrischtmánet" to "Chrištmánet".
+	* locales/ln_CD (mon): Months imported from CLDR, all changed:
+	"Yanwáli" to "sánzá ya yambo", "Febwáli" to "sánzá ya míbalé" and so on.
+	* locales/mn_MN (mon): reworded "Хулгана сарын" to "Нэгдүгээр сар",
+	"Үхэр сарын" to "Хоёрдугаар сар", and so on.
+	* locales/vi_VN (mon): reworded "Tháng một" to "Tháng 1", "Tháng hai"
+	to "Tháng 2", "Tháng ba" to "Tháng 3", and so on.
+	* locales/yo_NG (mon): reworded "Jánúárì" to "Oṣù Ṣẹ́rẹ́", "Fẹ́búárì"
+	to "Oṣù Èrèlè", "Máàṣì" to "Oṣù Ẹrẹ̀nà", and so on.
+	* locales/zu_ZA (mon): reworded "uMasingana" to "Januwari",
+	"uNhlolanja" to "Februwari", "uNdasa" to "Mashi", and so on.
+	* locales/ar_DZ (mon): Updated from CLDR.
+	* locales/ar_IQ (mon): Likewise.
+	* locales/ar_JO (mon): Likewise.
+	* locales/ar_LB (mon): Likewise.
+	* locales/ar_MA (mon): Likewise.
+	* locales/ar_SA (mon): Likewise.
+	* locales/ar_SY (mon): Likewise.
+	* locales/ar_TN (mon): Likewise.
+	* locales/ks_IN (mon): Likewise.
+	* locales/ps_AF (mon): Likewise.
+	* locales/ug_CN (mon): Likewise.
+	* locales/ur_IN (mon): Likewise.
+	* locales/ur_PK (mon): Likewise.
+	* locales/as_IN (mon): Likewise.
+	* locales/bn_BD (mon): Likewise.
+	* locales/bn_IN (mon): Likewise.
+	* locales/brx_IN (mon): Likewise.
+	* locales/hi_IN (mon): Likewise.
+	* locales/kok_IN (mon): Likewise.
+	* locales/mr_IN (mon): Likewise.
+	* locales/ne_NP (mon): Likewise.
+	* locales/gu_IN (mon): Likewise.
+	* locales/kn_IN (mon): Likewise.
+	* locales/ml_IN (mon): Likewise.
+	* locales/pa_IN (mon): Likewise.
+	* locales/te_IN (mon): Likewise.
+	* locales/am_ET (mon): Likewise.
+	* locales/km_KH (mon): Likewise.
+	* locales/lo_LA (mon): Likewise.
+	* locales/si_LK (mon): Likewise.
+	* locales/yi_US (mon): Likewise.
+	* locales/yue_HK (mon): Likewise.
 
 2017-06-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
