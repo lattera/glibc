@@ -1,5 +1,7 @@
 #if defined ISO11
 
+macro ONCE_FLAG_INIT
+
 constant thrd_success
 constant thrd_busy
 constant thrd_error
@@ -13,6 +15,7 @@ constant mtx_timed
 type thrd_t
 type thrd_start_t
 type mtx_t
+type once_flag
 
 function int thrd_create (thrd_t*, thrd_start_t, void*)
 function int thrd_equal (thrd_t, thrd_t)
@@ -29,6 +32,8 @@ function int mtx_timedlock (mtx_t*, const struct timespec*)
 function int mtx_trylock (mtx_t*)
 function int mtx_unlock (mtx_t*)
 function void mtx_destroy (mtx_t*)
+
+function void call_once (once_flag*, void (*)(void))
 
 #include "time.h-data"
 

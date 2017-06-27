@@ -48,6 +48,12 @@ enum
   mtx_timed     = 2
 };
 
+typedef struct
+{
+  int __data __ONCE_ALIGNMENT;
+} once_flag;
+#define ONCE_FLAG_INIT { 0 }
+
 typedef union
 {
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
@@ -128,6 +134,11 @@ extern int mtx_unlock (mtx_t *__mutex);
 
 /* Destroy the mutex object pointed by __MUTEX.  */
 extern void mtx_destroy (mtx_t *__mutex);
+
+
+/* Call function __FUNC exactly once, even if invoked from several threads.
+   All calls must be made with the same __FLAGS object.  */
+extern void call_once (once_flag *__flag, void (*__func)(void));
 
 __END_DECLS
 

@@ -1,6 +1,17 @@
 2018-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #14092]
+	* conform/data/threads.h-data (ONCE_FLAG_INIT): New macro.
+	(once_flag): New type.
+	(call_once): New function.
+	* nptl/Makefile (libpthread-routines): Add call_once object.
+	* nptl/Versions (libphread) [GLIBC_2.28]: Add call_once symbol.
+	* nptl/call_once.c: New file.
+	* sysdeps/nptl/threads.h (ONCE_FLAG_INIT): New define.
+	(once_flag): New type.
+	(call_once): New prototype.
+
+	[BZ #14092]
 	* conform/data/threads.h-data (mtx_plain): New constant.
 	(mtx_recursive): Likewise.
 	(mtx_timed): Likewise.
