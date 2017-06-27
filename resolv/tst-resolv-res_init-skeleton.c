@@ -21,6 +21,7 @@
    in.  */
 
 #include <arpa/inet.h>
+#include <errno.h>
 #include <gnu/lib-names.h>
 #include <netdb.h>
 #include <resolv/resolv-internal.h> /* For DEPRECATED_RES_USE_INET6.  */
@@ -33,6 +34,7 @@
 #include <support/support.h>
 #include <support/temp_file.h>
 #include <support/test-driver.h>
+#include <support/xsocket.h>
 #include <support/xstdio.h>
 #include <support/xunistd.h>
 
@@ -527,6 +529,73 @@ test_file_contents (const struct test_case *t)
       }
 }
 
+/* Dummy DNS server.  It ensures that the probe queries sent by
+   gethostbyname and getaddrinfo receive a reply even if the system
+   applies a very strict rate limit to localhost.  */
+static pid_t
+start_dummy_server (void)
+{
+  int server_socket = xsocket (AF_INET, SOCK_DGRAM, 0);
+  {
+    struct sockaddr_in sin =
+      {
+        .sin_family = AF_INET,
+        .sin_addr = { .s_addr = htonl (INADDR_LOOPBACK) },
+        .sin_port = htons (53),
+      };
+    int ret = bind (server_socket, (struct sockaddr *) &sin, sizeof (sin));
+    if (ret < 0)
+      {
+        if (errno == EACCES)
+          /* The port is reserved, which means we cannot start the
+             server.  */
+          return -1;
+        FAIL_EXIT1 ("cannot bind socket to port 53: %m");
+      }
+  }
+
+  pid_t pid = xfork ();
+  if (pid == 0)
+    {
+      /* Child process.  Echo back queries as SERVFAIL responses.  */
+      while (true)
+        {
+          union
+          {
+            HEADER header;
+            unsigned char bytes[512];
+          } packet;
+          struct sockaddr_in sin;
+          socklen_t sinlen = sizeof (sin);
+
+          ssize_t ret = recvfrom
+            (server_socket, &packet, sizeof (packet),
+             MSG_NOSIGNAL, (struct sockaddr *) &sin, &sinlen);
+          if (ret < 0)
+            FAIL_EXIT1 ("recvfrom on fake server socket: %m");
+          if (ret > sizeof (HEADER))
+            {
+              /* Turn the query into a SERVFAIL response.  */
+              packet.header.qr = 1;
+              packet.header.rcode = ns_r_servfail;
+
+              /* Send the response.  */
+              ret = sendto (server_socket, &packet, ret,
+                            MSG_NOSIGNAL, (struct sockaddr *) &sin, sinlen);
+              if (ret < 0)
+                /* The peer may have closed socket prematurely, so
+                   this is not an error.  */
+                printf ("warning: sending DNS server reply: %m\n");
+            }
+        }
+    }
+
+  /* In the parent, close the socket.  */
+  xclose (server_socket);
+
+  return pid;
+}
+
 static int
 do_test (void)
 {
@@ -551,6 +620,8 @@ do_test (void)
     support_capture_subprocess_check (&proc, "chroot", 0, sc_allow_none);
     support_capture_subprocess_free (&proc);
   }
+
+  pid_t server = start_dummy_server ();
 
   for (size_t i = 0; test_cases[i].name != NULL; ++i)
     {
@@ -588,6 +659,13 @@ do_test (void)
           TEST_VERIFY (unlink (path_resolv_conf) == 0);
           support_write_file_string (path_resolv_conf, "");
         }
+    }
+
+  if (server > 0)
+    {
+      if (kill (server, SIGTERM) < 0)
+        FAIL_EXIT1 ("could not terminate server process: %m");
+      xwaitpid (server, NULL, 0);
     }
 
   free (path_chroot);

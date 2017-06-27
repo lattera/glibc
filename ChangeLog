@@ -1,5 +1,12 @@
 2017-06-27  Florian Weimer  <fweimer@redhat.com>
 
+	Work around test timeouts with ICMP rate limiting on localhost.
+	* resolv/tst-resolv-res_init-skeleton.c (start_dummy_server): New
+	function.
+	(do_test): Call it.
+
+2017-06-27  Florian Weimer  <fweimer@redhat.com>
+
 	Call _res_hconf_init from __res_vinit.
 	* inet/gethstbyad_r.c (NEED__RES_HCONF): Remove.
 	* inet/gethstbynm2_r.c (NEED__RES_HCONF): Likewise.
