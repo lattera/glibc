@@ -1,3 +1,9 @@
+2017-07-11  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64le/Makefile: Use $(all-object-suffixes)
+	to iterate over all possible object suffixes.  Add a comment
+	explaining the use of sysdep-CFLAGS instead of CFLAGS.
+
 2017-07-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #12189]

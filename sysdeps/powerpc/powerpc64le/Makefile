@@ -8,14 +8,18 @@ CPPFLAGS += -I../soft-fp
 # float128 requires adding a handful of extra flags.
 $(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),%f128_r$(suf)): CFLAGS += -mfloat128
-$(objpfx)test-float128%.o $(objpfx)test-float128%.os: CFLAGS += -mfloat128
-$(objpfx)test-ifloat128%.o $(objpfx)test-ifloat128%.os: CFLAGS += -mfloat128
+$(foreach suf,$(all-object-suffixes),$(objpfx)test-float128%$(suf)): CFLAGS += -mfloat128
+$(foreach suf,$(all-object-suffixes),$(objpfx)test-ifloat128%$(suf)): CFLAGS += -mfloat128
 CFLAGS-libm-test-support-float128.c += -mfloat128
 endif
 
 # Append flags to string <-> _Float128 routines.
 ifneq ($(filter $(subdir),wcsmbs stdlib),)
-%f128.o %f128.os %f128_l.o %f128_l.os %f128_nan.o %f128_nan.os %float1282mpn.o %float1282mpn.os %mpn2float128.o %mpn2float128.os: CFLAGS += -mfloat128
+$(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += -mfloat128
+$(foreach suf,$(all-object-suffixes),%f128_l$(suf)): CFLAGS += -mfloat128
+$(foreach suf,$(all-object-suffixes),%f128_nan$(suf)): CFLAGS += -mfloat128
+$(foreach suf,$(all-object-suffixes),%float1282mpn$(suf)): CFLAGS += -mfloat128
+$(foreach suf,$(all-object-suffixes),%mpn2float128$(suf)): CFLAGS += -mfloat128
 CFLAGS-bug-strtod.c += -mfloat128
 CFLAGS-bug-strtod2.c += -mfloat128
 CFLAGS-tst-strtod-round.c += -mfloat128
@@ -26,7 +30,9 @@ CFLAGS-tst-strfrom-locale.c += -mfloat128
 CFLAGS-strfrom-skeleton.c += -mfloat128
 
 # When building glibc with support for _Float128, the powers of ten tables in
-# fpioconst.c and in the string conversion functions must be extended.
+# fpioconst.c and in the string conversion functions must be extended.  Some
+# Makefiles (e.g.: wcsmbs/Makefile) override CFLAGS defined by the Makefiles in
+# sysdeps.  This is avoided with the use sysdep-CFLAGS instead of CFLAGS.
 sysdep-CFLAGS += $(sysdep-CFLAGS-$(<F))
 sysdep-CFLAGS-fpioconst.c += -mfloat128
 sysdep-CFLAGS-strtod_l.c += -mfloat128
