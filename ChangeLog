@@ -1,3 +1,14 @@
+2017-06-27  Prakhar Bahuguna  <prakhar.bahuguna@arm.com>
+
+	* sysdeps/arm/armv7/multiarch/Makefile: Add memchr_neon to
+	sysdep_routines.
+	* sysdeps/arm/armv7/multiarch/ifunc-impl-list.c: Add define for
+	__memchr_neon.
+	Add ifunc definitions for __memchr_neon and __memchr_noneon.
+	* sysdeps/arm/armv7/multiarch/memchr.S: New file.
+	* sysdeps/arm/armv7/multiarch/memchr_impl.S: Likewise.
+	* sysdeps/arm/armv7/multiarch/memchr_neon.S: Likewise.
+
 2017-06-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/utf8-utf16-z9.c (__to_utf8_loop_vx_cu):

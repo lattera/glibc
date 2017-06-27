@@ -34,6 +34,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   bool use_neon = true;
 #ifdef __ARM_NEON__
 # define __memcpy_neon	memcpy
+# define __memchr_neon	memchr
 #else
   use_neon = (GLRO(dl_hwcap) & HWCAP_ARM_NEON) != 0;
 #endif
@@ -51,6 +52,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcpy, use_vfp, __memcpy_vfp)
 #endif
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_arm));
+
+  IFUNC_IMPL (i, name, memchr,
+	      IFUNC_IMPL_ADD (array, i, memchr, use_neon, __memchr_neon)
+	      IFUNC_IMPL_ADD (array, i, memchr, 1, __memchr_noneon));
 
   return i;
 }
