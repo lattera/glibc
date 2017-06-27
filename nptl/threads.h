@@ -24,6 +24,7 @@
 
 __BEGIN_DECLS
 
+#include <bits/pthreadtypes-arch.h>
 #include <bits/types/struct_timespec.h>
 
 typedef unsigned long int thrd_t;
@@ -38,6 +39,20 @@ enum
   thrd_nomem    = 3,
   thrd_timedout = 4
 };
+
+/* Mutex types.  */
+enum
+{
+  mtx_plain     = 0,
+  mtx_recursive = 1,
+  mtx_timed     = 2
+};
+
+typedef union
+{
+  char __size[__SIZEOF_PTHREAD_MUTEX_T];
+  long int __align __LOCK_ALIGNMENT;
+} mtx_t;
 
 /* Threads functions.  */
 
@@ -84,6 +99,35 @@ thrd_equal (thrd_t __thread1, thrd_t __thread2)
   return __thread1 == __thread2;
 }
 #endif
+
+
+/* Mutex functions.  */
+
+/* Creates a new mutex object with type __TYPE.  If successful the new
+   object is pointed by __MUTEX.  */
+extern int mtx_init (mtx_t *__mutex, int __type);
+
+/* Block the current thread until the mutex pointed to by __MUTEX is
+   unlocked.  In that case current thread will not be blocked.  */
+extern int mtx_lock (mtx_t *__mutex);
+
+/* Block the current thread until the mutex pointed by __MUTEX is unlocked
+   or time pointed by __TIME_POINT is reached.  In case the mutex is unlock,
+   the current thread will not be blocked.  */
+extern int mtx_timedlock (mtx_t *__restrict __mutex,
+			  const struct timespec *__restrict __time_point);
+
+/* Try to lock the mutex pointed by __MUTEX without blocking.  If the mutex
+   is free the current threads takes control of it, otherwise it returns
+   immediately.  */
+extern int mtx_trylock (mtx_t *__mutex);
+
+/* Unlock the mutex pointed by __MUTEX.  It may potentially awake other
+   threads waiting on this mutex.  */
+extern int mtx_unlock (mtx_t *__mutex);
+
+/* Destroy the mutex object pointed by __MUTEX.  */
+extern void mtx_destroy (mtx_t *__mutex);
 
 __END_DECLS
 

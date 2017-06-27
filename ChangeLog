@@ -1,6 +1,38 @@
 2018-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #14092]
+	* conform/data/threads.h-data (mtx_plain): New constant.
+	(mtx_recursive): Likewise.
+	(mtx_timed): Likewise.
+	(mtx_t): New type.
+	(mtx_init): New function.
+	(mtx_lock): Likewise.
+	(mtx_timedlock): Likewise.
+	(mtx_trylock): Likewise.
+	(mtx_unlock): Likewise.
+	(mtx_destroy): Likewise.
+	* nptl/Makefile (libpthread-routines): Add mtx_destroy, mtx_init,
+	mtx_lock, mtx_timedlock, mtx_trylock, and mtx_unlock object.
+	* nptl/Versions (libpthread) [GLIBC_2.28]): Add mtx_init, mtx_lock,
+	mtx_timedlock, mtx_trylock, mtx_unlock, and mtx_destroy.
+	* nptl/mtx_destroy.c: New file.
+	* nptl/mtx_init.c: Likewise.
+	* nptl/mtx_lock.c: Likewise.
+	* nptl/mtx_timedlock.c: Likewise.
+	* nptl/mtx_trylock.c: Likewise.
+	* nptl/mtx_unlock.c: Likewise.
+	* sysdeps/nptl/threads.h (mtx_plain): New enumeration.
+	(mtx_recursive): Likewise.
+	(mtx_timed): Likewise.
+	(mtx_t): New type.
+	(mtx_init): New prototype.
+	(mtx_lock): Likewise.
+	(mtx_timedlock): Likewise.
+	(mtx_trylock): Likewise.
+	(mtx_unlock): Likewise.
+	(mtx_destroy): Likewise.
+
+	[BZ #14092]
 	* conform/Makefile (conformtest-headers-ISO11): Add threads.h.
 	(linknamespace-libs-ISO11): Add libpthread.a.
 	* conform/data/threads.h-data: New file: add C11 thrd_* types and
