@@ -1,6 +1,31 @@
 2018-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #14092]
+	* conform/data/threads.h-data (thread_local): New macro.
+	(TSS_DTOR_ITERATIONS): Likewise.
+	(tss_t): New type.
+	(tss_dtor_t): Likewise.
+	(tss_create): New function.
+	(tss_get): Likewise.
+	(tss_set): Likewise.
+	(tss_delete): Likewise.
+	* nptl/Makefile (libpthread-routines): Add tss_create, tss_delete,
+	tss_get, and tss_set objects.
+	* nptl/Versions (libpthread) [GLIBC_2.28]: Likewise.
+	* nptl/tss_create.c: New file.
+	* nptl/tss_delete.c: Likewise.
+	* nptl/tss_get.c: Likewise.
+	* nptl/tss_set.c: Likewise.
+	* sysdeps/nptl/threads.h (thread_local): New define.
+	(TSS_DTOR_ITERATIONS): Likewise.
+	(tss_t): New typedef.
+	(tss_dtor_t): Likewise.
+	(tss_create): New prototype.
+	(tss_get): Likewise.
+	(tss_set): Likewise.
+	(tss_delete): Likewise.
+
+	[BZ #14092]
 	* conform/data/threads.h-data (cnd_t): New type.
 	(cnd_init): New function.
 	(cnd_signal): Likewise.

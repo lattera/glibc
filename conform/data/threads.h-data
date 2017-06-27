@@ -1,6 +1,8 @@
 #if defined ISO11
 
 macro ONCE_FLAG_INIT
+macro thread_local
+macro-int-constant TSS_DTOR_ITERATIONS
 
 constant thrd_success
 constant thrd_busy
@@ -17,6 +19,8 @@ type thrd_start_t
 type mtx_t
 type once_flag
 type cnd_t
+type tss_t
+type tss_dtor_t
 
 function int thrd_create (thrd_t*, thrd_start_t, void*)
 function int thrd_equal (thrd_t, thrd_t)
@@ -42,6 +46,11 @@ function int cnd_broadcast (cnd_t*)
 function int cnd_wait (cnd_t*, mtx_t*)
 function int cnd_timedwait (cnd_t*, mtx_t*, const struct timespec*)
 function void cnd_destroy (cnd_t*)
+
+function int tss_create (tss_t*, tss_dtor_t)
+function {void*} tss_get (tss_t)
+function int tss_set (tss_t, void*)
+function void tss_delete (tss_t)
 
 #include "time.h-data"
 
