@@ -62,9 +62,68 @@ ENTRY (MEMCMP)
 # endif
 	cmpq	$VEC_SIZE, %rdx
 	jb	L(less_vec)
-	cmpq	$(VEC_SIZE * 2), %rdx
-	ja	L(more_2x_vec)
 
+	/* From VEC to 2 * VEC.  No branch when size == VEC_SIZE.  */
+	vmovdqu	(%rsi), %ymm2
+	VPCMPEQ (%rdi), %ymm2, %ymm2
+	vpmovmskb %ymm2, %eax
+	subl    $VEC_MASK, %eax
+	jnz	L(first_vec)
+
+	cmpq	$(VEC_SIZE * 2), %rdx
+	jbe	L(last_vec)
+
+	VPCMPEQ	%ymm0, %ymm0, %ymm0
+	/* More than 2 * VEC.  */
+	cmpq	$(VEC_SIZE * 8), %rdx
+	ja	L(more_8x_vec)
+	cmpq	$(VEC_SIZE * 4), %rdx
+	jb	L(last_4x_vec)
+
+	/* From 4 * VEC to 8 * VEC, inclusively. */
+	vmovdqu	(%rsi), %ymm1
+	VPCMPEQ (%rdi), %ymm1, %ymm1
+
+	vmovdqu	VEC_SIZE(%rsi), %ymm2
+	VPCMPEQ VEC_SIZE(%rdi), %ymm2, %ymm2
+
+	vmovdqu	(VEC_SIZE * 2)(%rsi), %ymm3
+	VPCMPEQ (VEC_SIZE * 2)(%rdi), %ymm3, %ymm3
+
+	vmovdqu	(VEC_SIZE * 3)(%rsi), %ymm4
+	VPCMPEQ (VEC_SIZE * 3)(%rdi), %ymm4, %ymm4
+
+	vpand	%ymm1, %ymm2, %ymm5
+	vpand	%ymm3, %ymm4, %ymm6
+	vpand	%ymm5, %ymm6, %ymm5
+
+	vptest	%ymm0, %ymm5
+	jnc	L(4x_vec_end)
+
+	leaq	-(4 * VEC_SIZE)(%rdi, %rdx), %rdi
+	leaq	-(4 * VEC_SIZE)(%rsi, %rdx), %rsi
+	vmovdqu	(%rsi), %ymm1
+	VPCMPEQ (%rdi), %ymm1, %ymm1
+
+	vmovdqu	VEC_SIZE(%rsi), %ymm2
+	VPCMPEQ VEC_SIZE(%rdi), %ymm2, %ymm2
+	vpand	%ymm2, %ymm1, %ymm5
+
+	vmovdqu	(VEC_SIZE * 2)(%rsi), %ymm3
+	VPCMPEQ (VEC_SIZE * 2)(%rdi), %ymm3, %ymm3
+	vpand	%ymm3, %ymm5, %ymm5
+
+	vmovdqu	(VEC_SIZE * 3)(%rsi), %ymm4
+	VPCMPEQ (VEC_SIZE * 3)(%rdi), %ymm4, %ymm4
+	vpand	%ymm4, %ymm5, %ymm5
+
+	vptest	%ymm0, %ymm5
+	jnc	L(4x_vec_end)
+	xorl	%eax, %eax
+	VZEROUPPER
+	ret
+
+	.p2align 4
 L(last_2x_vec):
 	/* From VEC to 2 * VEC.  No branch when size == VEC_SIZE.  */
 	vmovdqu	(%rsi), %ymm2
@@ -219,58 +278,6 @@ L(between_16_31):
 	ret
 
 	.p2align 4
-L(more_2x_vec):
-	/* More than 2 * VEC.  */
-	cmpq	$(VEC_SIZE * 8), %rdx
-	ja	L(more_8x_vec)
-	cmpq	$(VEC_SIZE * 4), %rdx
-	jb	L(last_4x_vec)
-
-	/* From 4 * VEC to 8 * VEC, inclusively. */
-	vmovdqu	(%rsi), %ymm1
-	VPCMPEQ (%rdi), %ymm1, %ymm1
-
-	vmovdqu	VEC_SIZE(%rsi), %ymm2
-	VPCMPEQ VEC_SIZE(%rdi), %ymm2, %ymm2
-
-	vmovdqu	(VEC_SIZE * 2)(%rsi), %ymm3
-	VPCMPEQ (VEC_SIZE * 2)(%rdi), %ymm3, %ymm3
-
-	vmovdqu	(VEC_SIZE * 3)(%rsi), %ymm4
-	VPCMPEQ (VEC_SIZE * 3)(%rdi), %ymm4, %ymm4
-
-	vpand	%ymm1, %ymm2, %ymm5
-	vpand	%ymm3, %ymm4, %ymm6
-	vpand	%ymm5, %ymm6, %ymm5
-
-	vpmovmskb %ymm5, %eax
-	subl	$VEC_MASK, %eax
-	jnz	L(4x_vec_end)
-
-	leaq	-(4 * VEC_SIZE)(%rdi, %rdx), %rdi
-	leaq	-(4 * VEC_SIZE)(%rsi, %rdx), %rsi
-	vmovdqu	(%rsi), %ymm1
-	VPCMPEQ (%rdi), %ymm1, %ymm1
-
-	vmovdqu	VEC_SIZE(%rsi), %ymm2
-	VPCMPEQ VEC_SIZE(%rdi), %ymm2, %ymm2
-	vpand	%ymm2, %ymm1, %ymm5
-
-	vmovdqu	(VEC_SIZE * 2)(%rsi), %ymm3
-	VPCMPEQ (VEC_SIZE * 2)(%rdi), %ymm3, %ymm3
-	vpand	%ymm3, %ymm5, %ymm5
-
-	vmovdqu	(VEC_SIZE * 3)(%rsi), %ymm4
-	VPCMPEQ (VEC_SIZE * 3)(%rdi), %ymm4, %ymm4
-	vpand	%ymm4, %ymm5, %ymm5
-
-	vpmovmskb %ymm5, %eax
-	subl	$VEC_MASK, %eax
-	jnz	L(4x_vec_end)
-	VZEROUPPER
-	ret
-
-	.p2align 4
 L(more_8x_vec):
 	/* More than 8 * VEC.  Check the first VEC.  */
 	vmovdqu	(%rsi), %ymm2
@@ -309,9 +316,8 @@ L(loop_4x_vec):
 	VPCMPEQ (VEC_SIZE * 3)(%rdi), %ymm4, %ymm4
 	vpand	%ymm4, %ymm5, %ymm5
 
-	vpmovmskb %ymm5, %eax
-	subl	$VEC_MASK, %eax
-	jnz	L(4x_vec_end)
+	vptest	%ymm0, %ymm5
+	jnc	L(4x_vec_end)
 
 	addq	$(VEC_SIZE * 4), %rdi
 	addq	$(VEC_SIZE * 4), %rsi

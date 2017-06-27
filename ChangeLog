@@ -1,3 +1,9 @@
+2017-06-27  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S (MEMCMP): Check
+	the first 32 bytes before checking size when size >= 32 bytes.
+	Replace vpmovmskb/subl/jnz with vptest/jnc.
+
 2017-06-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/s390-32/tls-macros.h (TLS_IE): Use r12 for GOT address.
