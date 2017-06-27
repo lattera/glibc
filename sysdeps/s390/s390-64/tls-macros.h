@@ -8,13 +8,15 @@
 
 #ifdef PIC
 # define TLS_IE(x) \
-  ({ unsigned long __offset, __got;					      \
+  ({ unsigned long __offset, __save12;					      \
      __asm__ ("bras %0,0f\n\t"						      \
 	      ".quad " #x "@gotntpoff\n"				      \
-	      "0:\tlarl %1,_GLOBAL_OFFSET_TABLE_\n\t"			      \
+	      "0:\tlgr %1,%%r12\n\t"					      \
+	      "larl %%r12,_GLOBAL_OFFSET_TABLE_\n\t"			      \
 	      "lg %0,0(%0)\n\t"						      \
-	      "lg %0,0(%0,%1):tls_load:" #x	"\n"			      \
-	      : "=&a" (__offset), "=&a" (__got) : : "cc" );		      \
+	      "lg %0,0(%0,%%r12):tls_load:" #x	"\n\t"			      \
+	      "lgr %%r12,%1\n"						      \
+	      : "=&a" (__offset), "=&a" (__save12) : : "cc" );		      \
      (int *) (__builtin_thread_pointer() + __offset); })
 #else
 # define TLS_IE(x) \
