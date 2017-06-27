@@ -1,5 +1,10 @@
 2017-06-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/utf16-utf32-z9.c (__from_utf16_loop_vx_cu):
+	Use vector and cu24 instruction.
+
+2017-06-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* sysdeps/s390/utf16-utf32-z9.c (__to_utf16_loop_vx_cu):
 	Use vector and cu42 instruction.
 	* sysdeps/s390/multiarch/utf16-utf32-z9.c:

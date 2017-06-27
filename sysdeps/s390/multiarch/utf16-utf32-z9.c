@@ -32,9 +32,11 @@ strong_alias (SINGLE_NAME (TO_LOOP_DEFAULT), SINGLE_NAME (TO_LOOP))
 
 /* Generate ifunc'ed loop functions for FROM/TO_LOOP.  */
 s390_libc_ifunc_expr (FROM_LOOP_DEFAULT, FROM_LOOP,
-		      (HAVE_FROM_VX && (hwcap & HWCAP_S390_VX))
-		      ? FROM_LOOP_VX
-		      : FROM_LOOP_DEFAULT);
+		      (HAVE_FROM_VX_CU && (hwcap & HWCAP_S390_VXE))
+		      ? FROM_LOOP_VX_CU
+		      : (HAVE_FROM_VX && (hwcap & HWCAP_S390_VX))
+			? FROM_LOOP_VX
+			: FROM_LOOP_DEFAULT);
 
 s390_libc_ifunc_expr (TO_LOOP_DEFAULT, TO_LOOP,
 		      (HAVE_TO_VX_CU && (hwcap & HWCAP_S390_VXE))
