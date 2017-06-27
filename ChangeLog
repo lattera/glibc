@@ -1,3 +1,36 @@
+2018-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #14092]
+	* conform/Makefile (conformtest-headers-ISO11): Add threads.h.
+	(linknamespace-libs-ISO11): Add libpthread.a.
+	* conform/data/threads.h-data: New file: add C11 thrd_* types and
+	functions.
+	* include/stdc-predef.h (__STDC_NO_THREADS__): Remove definition.
+	* nptl/Makefile (headers): Add threads.h.
+	(libpthread-routines): Add new C11 thread thrd_create, thrd_current,
+	thrd_detach, thrd_equal, thrd_exit, thrd_join, thrd_sleep, and
+	thrd_yield.
+	* nptl/Versions (libpthread) [GLIBC_2.28]): Add new C11 thread
+	thrd_create, thrd_current, thrd_detach, thrd_equal, thrd_exit,
+	thrd_join, thrd_sleep, and thrd_yield symbols.
+	* nptl/descr.h (struct pthread): Add c11 field.
+	* nptl/pthreadP.h (ATTR_C11_THREAD): New define.
+	* nptl/pthread_create.c (START_THREAD_DEFN): Call C11 thread start
+	routine with expected function prototype.
+	(__pthread_create_2_1): Add C11 threads check based on attribute
+	value.
+	* sysdeps/unix/sysdep.h (INTERNAL_SYSCALL_CANCEL): New macro.
+	* nptl/thrd_create.c: New file.
+	* nptl/thrd_current.c: Likewise.
+	* nptl/thrd_detach.c: Likewise.
+	* nptl/thrd_equal.c: Likewise.
+	* nptl/thrd_exit.c: Likewise.
+	* nptl/thrd_join.c: Likewise.
+	* nptl/thrd_priv.h: Likewise.
+	* nptl/thrd_sleep.c: Likewise.
+	* nptl/thrd_yield.c: Likewise.
+	* include/threads.h: Likewise.
+
 2018-07-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* bits/indirect-return.h: New file.

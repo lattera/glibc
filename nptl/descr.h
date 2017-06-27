@@ -392,6 +392,9 @@ struct pthread
   /* Resolver state.  */
   struct __res_state res;
 
+  /* Indicates whether is a C11 thread created by thrd_creat.  */
+  bool c11;
+
   /* This member must be last.  */
   char end_padding[];
 

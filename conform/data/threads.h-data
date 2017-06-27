@@ -1,0 +1,23 @@
+#if defined ISO11
+
+constant thrd_success
+constant thrd_busy
+constant thrd_error
+constant thrd_nomem
+constant thrd_timedout
+
+type thrd_t
+type thrd_start_t
+
+function int thrd_create (thrd_t*, thrd_start_t, void*)
+function int thrd_equal (thrd_t, thrd_t)
+function thrd_t thrd_current (void)
+function int thrd_sleep (const struct timespec*, struct timespec*)
+function void thrd_exit (int)
+function int thrd_detach (thrd_t)
+function int thrd_join (thrd_t, int*)
+function void thrd_yield (void)
+
+#include "time.h-data"
+
+#endif

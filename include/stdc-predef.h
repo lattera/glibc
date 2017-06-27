@@ -57,7 +57,4 @@
    - 3 additional Zanabazar Square characters */
 #define __STDC_ISO_10646__		201706L
 
-/* We do not support C11 <threads.h>.  */
-#define __STDC_NO_THREADS__		1
-
 #endif

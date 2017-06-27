@@ -102,6 +102,22 @@
     sc_ret;								     \
   })
 
+/* Issue a syscall defined by syscall number plus any other argument
+   required.  Any error will be returned unmodified (including errno).  */
+#define INTERNAL_SYSCALL_CANCEL(...) \
+  ({									     \
+    long int sc_ret;							     \
+    if (SINGLE_THREAD_P) 						     \
+      sc_ret = INTERNAL_SYSCALL_CALL (__VA_ARGS__); 			     \
+    else								     \
+      {									     \
+	int sc_cancel_oldtype = LIBC_CANCEL_ASYNC ();			     \
+	sc_ret = INTERNAL_SYSCALL_CALL (__VA_ARGS__);			     \
+        LIBC_CANCEL_RESET (sc_cancel_oldtype);				     \
+      }									     \
+    sc_ret;								     \
+  })
+
 /* Machine-dependent sysdep.h files are expected to define the macro
    PSEUDO (function_name, syscall_name) to emit assembly code to define the
    C-callable function FUNCTION_NAME to do system call SYSCALL_NAME.

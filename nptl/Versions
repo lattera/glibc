@@ -28,6 +28,10 @@ libc {
     pthread_cond_wait; pthread_cond_signal;
     pthread_cond_broadcast; pthread_cond_timedwait;
   }
+  # C11 thread symbols.
+  GLIBC_2.28 {
+    thrd_current; thrd_equal; thrd_sleep; thrd_yield;
+  }
   GLIBC_PRIVATE {
     __libc_alloca_cutoff;
     # Internal libc interface to libpthread
@@ -263,6 +267,11 @@ libpthread {
   }
 
   GLIBC_2.22 {
+  }
+
+  # C11 thread symbols.
+  GLIBC_2.28 {
+    thrd_create; thrd_detach; thrd_exit; thrd_join;
   }
 
   GLIBC_PRIVATE {

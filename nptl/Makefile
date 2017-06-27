@@ -22,14 +22,15 @@ subdir	:= nptl
 
 include ../Makeconfig
 
-headers := pthread.h semaphore.h bits/semaphore.h
+headers := pthread.h semaphore.h bits/semaphore.h threads.h
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)
 
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   libc-cleanup libc_pthread_init libc_multiple_threads \
-	   register-atfork pthread_atfork pthread_self
+	   register-atfork pthread_atfork pthread_self thrd_current \
+	   thrd_equal thrd_sleep thrd_yield
 shared-only-routines = forward
 static-only-routines = pthread_atfork
 
@@ -139,7 +140,8 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_mutex_getprioceiling \
 		      pthread_mutex_setprioceiling \
 		      pthread_setname pthread_getname \
-		      pthread_setattr_default_np pthread_getattr_default_np
+		      pthread_setattr_default_np pthread_getattr_default_np \
+		      thrd_create thrd_detach thrd_exit thrd_join
 #		      pthread_setuid pthread_seteuid pthread_setreuid \
 #		      pthread_setresuid \
 #		      pthread_setgid pthread_setegid pthread_setregid \

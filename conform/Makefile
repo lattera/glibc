@@ -34,9 +34,9 @@ conformtest-headers-ISO := assert.h ctype.h errno.h float.h limits.h locale.h \
 conformtest-headers-ISO99 := $(conformtest-headers-ISO) complex.h fenv.h \
 			     inttypes.h iso646.h stdbool.h stdint.h tgmath.h \
 			     wchar.h wctype.h
-# Missing ISO11 expectations for: stdatomic.h threads.h.
+# Missing ISO11 expectations for: stdatomic.h
 conformtest-headers-ISO11 := $(conformtest-headers-ISO99) stdalign.h \
-			     stdnoreturn.h uchar.h
+			     stdnoreturn.h threads.h uchar.h
 conformtest-headers-POSIX := $(conformtest-headers-ISO) aio.h dirent.h \
 			     fcntl.h fnmatch.h glob.h grp.h mqueue.h \
 			     pthread.h pwd.h regex.h sched.h semaphore.h \
@@ -196,8 +196,10 @@ linknamespace-libs-posix = $(linknamespace-libs-thr) \
 linknamespace-libs-xsi = $(linknamespace-libs-posix)
 linknamespace-libs-ISO = $(linknamespace-libs-isoc)
 linknamespace-libs-ISO99 = $(linknamespace-libs-isoc)
-linknamespace-libs-ISO11 = $(linknamespace-libs-isoc)
-linknamespace-libs-XPG4 = $(linknamespace-libs-isoc)
+linknamespace-libs-ISO11 = $(linknamespace-libs-isoc) \
+			   $(common-objpfx)nptl/libpthread.a
+linknamespace-libs-XPG4 = $(linknamespace-libs-isoc) \
+			  $(common-objpfx)crypt/libcrypt.a
 linknamespace-libs-XPG42 = $(linknamespace-libs-XPG4)
 linknamespace-libs-POSIX = $(linknamespace-libs-thr)
 linknamespace-libs-UNIX98 = $(linknamespace-libs-xsi)

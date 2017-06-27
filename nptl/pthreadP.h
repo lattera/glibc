@@ -173,6 +173,9 @@ enum
 #define __PTHREAD_ONCE_DONE		2
 #define __PTHREAD_ONCE_FORK_GEN_INCR	4
 
+/* Attribute to indicate thread creation was issued from C11 thrd_create.  */
+#define ATTR_C11_THREAD ((void*)(uintptr_t)-1)
+
 
 /* Condition variable definitions.  See __pthread_cond_wait_common.
    Need to be defined here so there is one place from which
