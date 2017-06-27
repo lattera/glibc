@@ -715,12 +715,22 @@ __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
       format_char = *f;
       switch (format_char)
 	{
-#define DO_NUMBER(d, v) \
-	  digits = d > width ? d : width;				      \
-	  number_value = v; goto do_number
-#define DO_NUMBER_SPACEPAD(d, v) \
-	  digits = d > width ? d : width;				      \
-	  number_value = v; goto do_number_spacepad
+#define DO_NUMBER(d, v)				\
+	  do					\
+	    {					\
+	      digits = d > width ? d : width;	\
+	      number_value = v;			\
+	      goto do_number;			\
+	    }					\
+	  while (0)
+#define DO_NUMBER_SPACEPAD(d, v)		\
+	  do					\
+	    {					\
+	      digits = d > width ? d : width;	\
+	      number_value = v;			\
+	      goto do_number_spacepad;		\
+	    }					\
+	  while (0)
 
 	case L_('%'):
 	  if (modifier != 0)

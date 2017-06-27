@@ -1,3 +1,8 @@
+2017-06-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* time/strftime_l.c (DO_NUMBER): Define using do { } while (0).
+	(DO_NUMBER_SPACEPAD): Likewise.
+
 2017-06-27  Prakhar Bahuguna  <prakhar.bahuguna@arm.com>
 
 	* sysdeps/arm/armv7/multiarch/Makefile: Add memchr_neon to
