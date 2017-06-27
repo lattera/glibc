@@ -21,7 +21,7 @@
 #define _DL_PROCINFO_H	1
 #include <ldsodefs.h>
 
-#define _DL_HWCAP_COUNT 12
+#define _DL_HWCAP_COUNT 15
 
 #define _DL_PLATFORMS_COUNT	8
 
@@ -51,6 +51,9 @@ enum
   HWCAP_S390_HIGH_GPRS = 1 << 9,
   HWCAP_S390_TE = 1 << 10,
   HWCAP_S390_VX = 1 << 11,
+  HWCAP_S390_VXD = 1 << 12,
+  HWCAP_S390_VXE = 1 << 13,
+  HWCAP_S390_GS = 1 << 14,
 };
 
 #define HWCAP_IMPORTANT (HWCAP_S390_ZARCH | HWCAP_S390_LDISP \

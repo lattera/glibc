@@ -1,3 +1,12 @@
+2017-06-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags):
+	Add vxd, vxe, gs flag.
+	* sysdeps/s390/dl-procinfo.h: Add HWCAP_S390_VXD, HWCAP_S390_VXE,
+	HWCAP_S390_GS capability.
+	* sysdeps/unix/sysv/linux/s390/bits/hwcap.h
+	(HWCAP_S390_VXD, HWCAP_S390_VXE, HWCAP_S390_GS): Define.
+
 2017-06-27  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S (MEMCMP): Check

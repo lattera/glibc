@@ -36,3 +36,6 @@
 #define HWCAP_S390_HIGH_GPRS    512
 #define HWCAP_S390_TE           1024
 #define HWCAP_S390_VX           2048
+#define HWCAP_S390_VXD          4096
+#define HWCAP_S390_VXE          8192
+#define HWCAP_S390_GS           16384

@@ -46,11 +46,12 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_s390_cap_flags
 #else
-PROCINFO_CLASS const char _dl_s390_cap_flags[12][9]
+PROCINFO_CLASS const char _dl_s390_cap_flags[15][9]
 #endif
 #ifndef PROCINFO_DECL
 = {
-     "esan3", "zarch", "stfle", "msa", "ldisp", "eimm", "dfp", "edat", "etf3eh", "highgprs", "te", "vx"
+     "esan3", "zarch", "stfle", "msa", "ldisp", "eimm", "dfp", "edat", "etf3eh",
+     "highgprs", "te", "vx", "vxd", "vxe", "gs"
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL
