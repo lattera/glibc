@@ -1,5 +1,8 @@
 2017-06-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/gen-tgmath-tests.py (Tests.__init__): Define
+	__STDC_WANT_IEC_60559_TYPES_EXT__ at start of generated file.
+
 	* math/tgmath.h: Include <bits/libc-header-start.h> and
 	<bits/floatn.h>.
 	(__TGMATH_F128): New macro.

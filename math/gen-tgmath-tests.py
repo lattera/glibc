@@ -293,7 +293,8 @@ class Tests(object):
 
     def __init__(self):
         """Initialize a Tests object."""
-        self.header_list = ['#include <float.h>\n'
+        self.header_list = ['#define __STDC_WANT_IEC_60559_TYPES_EXT__\n'
+                            '#include <float.h>\n'
                             '#include <stdbool.h>\n'
                             '#include <stdint.h>\n'
                             '#include <stdio.h>\n'
