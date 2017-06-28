@@ -221,7 +221,6 @@ main (void)
       ++result;
     }
 
-#ifndef NO_LONG_DOUBLE
   long double li = INFINITY;
   long double lm = LDBL_MAX;
   feclearexcept (FE_ALL_EXCEPT);
@@ -321,7 +320,6 @@ main (void)
       puts ("nexttowardl- did not underflow");
       ++result;
     }
-#endif
 
   return result;
 }

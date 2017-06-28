@@ -57,9 +57,7 @@ do_test (void)
   while (0)
   NAN_TEST (float, nanf);
   NAN_TEST (double, nan);
-#ifndef NO_LONG_DOUBLE
   NAN_TEST (long double, nanl);
-#endif
   return result;
 }
 

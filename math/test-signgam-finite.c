@@ -54,10 +54,8 @@ do_test (void)
   RUN_TESTS (gammaf, float);
   RUN_TESTS (lgamma, double);
   RUN_TESTS (gamma, double);
-#ifndef NO_LONG_DOUBLE
   RUN_TESTS (lgammal, long double);
   RUN_TESTS (gammal, long double);
-#endif
   return result;
 }
 

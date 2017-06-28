@@ -21,6 +21,7 @@
 #ifndef HAVE_MAIN
 #undef __NO_MATH_INLINES
 #define __NO_MATH_INLINES 1
+#include <float.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -30,7 +31,7 @@
 
 static void compile_test (void);
 static void compile_testf (void);
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
 static void compile_testl (void);
 #endif
 
@@ -135,7 +136,7 @@ do_test (void)
       result = 1;
     }
 
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
   count_float = count_double = count_ldouble = 0;
   count_cfloat = count_cdouble = count_cldouble = 0;
   compile_testl ();
@@ -200,7 +201,7 @@ do_test (void)
 #define ccount count_cfloat
 #include "test-tgmath.c"
 
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
 #define F(name) name##l
 #define TYPE long double
 #define x lx

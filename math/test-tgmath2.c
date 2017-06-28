@@ -20,6 +20,7 @@
 #ifndef HAVE_MAIN
 #undef __NO_MATH_INLINES
 #define __NO_MATH_INLINES 1
+#include <float.h>
 #include <math.h>
 #include <complex.h>
 #include <stdio.h>
@@ -30,7 +31,7 @@
 
 typedef complex float cfloat;
 typedef complex double cdouble;
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
 typedef long double ldouble;
 typedef complex long double cldouble;
 #else
@@ -62,7 +63,7 @@ enum
     Tcfloat,
     Tdouble,
     Tcdouble,
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
     Tldouble,
     Tcldouble,
 #else
@@ -470,7 +471,7 @@ do_test (void)
 #define C Tcfloat
 #include "test-tgmath2.c"
 
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
 #define F(name) name##l
 #define TYPE ldouble
 #define CTYPE cldouble

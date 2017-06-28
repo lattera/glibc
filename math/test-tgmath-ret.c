@@ -47,12 +47,8 @@ our_error (const char *c)
   CHECK_RET_CONST_TYPE (func, rettype, fx, float, ## __VA_ARGS__)
 #define CHECK_RET_CONST_DOUBLE(func, rettype, ...)			\
   CHECK_RET_CONST_TYPE (func, rettype, dx, double, ## __VA_ARGS__)
-#ifdef NO_LONG_DOUBLE
-# define CHECK_RET_CONST_LDOUBLE(func, rettype, ...)
-#else
-# define CHECK_RET_CONST_LDOUBLE(func, rettype, ...)			\
+#define CHECK_RET_CONST_LDOUBLE(func, rettype, ...)			\
   CHECK_RET_CONST_TYPE (func, rettype, lx, long double, ## __VA_ARGS__)
-#endif
 
 #define CHECK_RET_CONST(func, rettype, ...)			\
 static void							\

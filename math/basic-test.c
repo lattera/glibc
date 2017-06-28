@@ -191,7 +191,7 @@ TEST_FUNC (float_test, float, f, FLT_EPSILON, HUGE_VALF)
 TEST_FUNC (double_test, double, , DBL_EPSILON, HUGE_VAL)
 TEST_CONVERT (convert_dfsf_test, float, double, )
 TEST_CONVERT (convert_sfdf_test, double, float, f)
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
 TEST_FUNC (ldouble_test, long double, l, LDBL_EPSILON, HUGE_VALL)
 TEST_CONVERT (convert_tfsf_test, float, long double, l)
 TEST_CONVERT (convert_sftf_test, long double, float, f)
@@ -207,7 +207,7 @@ do_test (void)
   convert_dfsf_test();
   convert_sfdf_test();
 
-#ifndef NO_LONG_DOUBLE
+#if LDBL_MANT_DIG > DBL_MANT_DIG
   ldouble_test ();
   convert_tfsf_test();
   convert_sftf_test();

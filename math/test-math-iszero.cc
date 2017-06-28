@@ -77,9 +77,7 @@ do_test (void)
 {
   check_type<float> ();
   check_type<double> ();
-#ifndef NO_LONG_DOUBLE
   check_type<long double> ();
-#endif
   return errors;
 }
 

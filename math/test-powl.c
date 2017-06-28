@@ -26,8 +26,7 @@ do_test (void)
 {
   int result = 0;
 
-#ifndef NO_LONG_DOUBLE
-# if LDBL_MANT_DIG == 64
+#if LDBL_MANT_DIG == 64
     {
       long double x = 1e-20;
       union ieee854_long_double u;
@@ -43,7 +42,6 @@ do_test (void)
 	  result = 1;
 	}
     }
-# endif
 #endif
 
   return result;

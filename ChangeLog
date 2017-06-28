@@ -1,5 +1,29 @@
 2017-06-28  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21607]
+	* math/basic-test.c [!NO_LONG_DOUBLE]: Change conditionals to
+	[LDBL_MANT_DIG > DBL_MANT_DIG].
+	* math/bug-nextafter.c [!NO_LONG_DOUBLE]: Remove conditionals.
+	* math/bug-nexttoward.c [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-math-isinff.cc [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-math-iszero.cc [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-nan-overflow.c [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-nan-payload.c [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-nearbyint-except-2.c [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-nearbyint-except.c [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-powl.c [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-signgam-finite-c99.c [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-signgam-finite.c [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-signgam-main.c [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-snan.c [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-tgmath-ret.c [!NO_LONG_DOUBLE]: Likewise.
+	* math/test-tgmath.c: Include <float.h>.
+	[!NO_LONG_DOUBLE]: Change conditionals to [LDBL_MANT_DIG >
+	DBL_MANT_DIG].
+	* math/test-tgmath2.c: Include <float.h>.
+	[!NO_LONG_DOUBLE]: Change conditionals to [LDBL_MANT_DIG >
+	DBL_MANT_DIG].
+
 	* math/gen-tgmath-tests.py: New file.
 	* math/Makefile [PYTHON] (tests): Add test-tgmath3.
 	[PYTHON] (generated): Add test-tgmath3.c.

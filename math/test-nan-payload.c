@@ -112,9 +112,7 @@ do_test (void)
   int result = 0;
   RUN_TESTS (float, strtof, nanf, FLT_MANT_DIG);
   RUN_TESTS (double, strtod, nan, DBL_MANT_DIG);
-#ifndef NO_LONG_DOUBLE
   RUN_TESTS (long double, strtold, nanl, LDBL_MANT_DIG);
-#endif
   return result;
 }
 
