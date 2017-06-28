@@ -91,7 +91,7 @@ enum
 #endif
 
 /* Structure to describe FPU registers.  */
-typedef struct fpregset
+typedef struct
 {
   int __ctx(f_pcr);
   int __ctx(f_psr);

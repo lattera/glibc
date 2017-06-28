@@ -41,7 +41,7 @@
 #endif
 
 /* Context to describe whole processor state.  */
-typedef struct mcontext
+typedef struct
   {
     int __ctx(version);
     unsigned long __ctx(regs)[32];

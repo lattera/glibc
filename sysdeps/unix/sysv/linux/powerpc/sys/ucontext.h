@@ -31,6 +31,8 @@
 # define __ctx(fld) __ ## fld
 #endif
 
+struct __ctx(pt_regs);
+
 #if __WORDSIZE == 32
 
 /* Number of general registers.  */
@@ -117,7 +119,7 @@ typedef struct {
 	int		__pad0;
 	unsigned long	__ctx(handler);
 	unsigned long	__ctx(oldmask);
-	struct pt_regs	*__ctx(regs);
+	struct __ctx(pt_regs)	*__ctx(regs);
 	gregset_t	__ctx(gp_regs);
 	fpregset_t	__ctx(fp_regs);
 /*
@@ -144,8 +146,6 @@ typedef struct {
 } mcontext_t;
 
 #endif
-
-#undef __ctx
 
 /* Userlevel context.  */
 typedef struct ucontext_t
@@ -179,7 +179,7 @@ typedef struct ucontext_t
      */
     int uc_pad[7];
     union uc_regs_ptr {
-      struct pt_regs *regs;
+      struct __ctx(pt_regs) *__ctx(regs);
       mcontext_t *uc_regs;
     } uc_mcontext;
     sigset_t    uc_sigmask;
@@ -189,5 +189,7 @@ typedef struct ucontext_t
     mcontext_t  uc_mcontext;  /* last for extensibility */
 #endif
   } ucontext_t;
+
+#undef __ctx
 
 #endif /* sys/ucontext.h */

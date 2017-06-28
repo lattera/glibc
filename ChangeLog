@@ -1,3 +1,19 @@
+2017-06-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21457]
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h (fpregset_t): Remove
+	struct tag.
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h (fpregset_t):
+	Likewise.
+	* sysdeps/unix/sysv/linux/nios2/sys/ucontext.h (mcontext_t):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h (pt_regs):
+	Declare struct type with __ctx.
+	[__WORDSIZE != 32] (mcontext_t): Use __ctx with pt_regs struct
+	tag.
+	(ucontext_t) [__WORDSIZE == 32]: Use __ctx with pt_regs struct tag
+	and regs field name.
+
 2017-06-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/loadtest.c (OUT): Define using do { } while (0).

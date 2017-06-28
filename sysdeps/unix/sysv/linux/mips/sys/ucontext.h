@@ -50,7 +50,7 @@ typedef greg_t gregset_t[__NGREG];
 #endif
 
 /* Container for all FPU registers.  */
-typedef struct fpregset {
+typedef struct {
 	union {
 		double	__ctx(fp_dregs)[__NFPREG];
 		struct {
