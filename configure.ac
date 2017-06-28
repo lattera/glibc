@@ -1076,10 +1076,19 @@ AC_CHECK_PROG_VER(AS, $AS, --version,
 		  [GNU assembler.* \([0-9]*\.[0-9.]*\)],
 		  [2.1[0-9][0-9]*|2.2[2-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
 		  AS=: critic_missing="$critic_missing as")
-AC_CHECK_PROG_VER(LD, $LD, --version,
-		  [GNU ld.* \([0-9][0-9]*\.[0-9.]*\)],
-		  [2.1[0-9][0-9]*|2.2[2-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
-		  LD=: critic_missing="$critic_missing ld")
+
+if test -n "`$LD --version | sed -n 's/^GNU \(gold\).*$/\1/p'`"; then
+  # Accept gold 1.14 or higher
+  AC_CHECK_PROG_VER(LD, $LD, --version,
+		    [GNU gold.* \([0-9][0-9]*\.[0-9.]*\)],
+		    [1.1[4-9]*|1.[2-9][0-9]*|1.1[0-9][0-9]*|[2-9].*|[1-9][0-9]*],
+		    LD=: critic_missing="$critic_missing GNU gold")
+else
+  AC_CHECK_PROG_VER(LD, $LD, --version,
+		    [GNU ld.* \([0-9][0-9]*\.[0-9.]*\)],
+		    [2.1[0-9][0-9]*|2.2[2-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
+		    LD=: critic_missing="$critic_missing GNU ld")
+fi
 
 # These programs are version sensitive.
 AC_CHECK_TOOL_PREFIX
