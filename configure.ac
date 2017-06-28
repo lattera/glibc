@@ -1086,7 +1086,7 @@ if test -n "`$LD --version | sed -n 's/^GNU \(gold\).*$/\1/p'`"; then
 else
   AC_CHECK_PROG_VER(LD, $LD, --version,
 		    [GNU ld.* \([0-9][0-9]*\.[0-9.]*\)],
-		    [2.1[0-9][0-9]*|2.2[2-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
+		    [2.1[0-9][0-9]*|2.2[5-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
 		    LD=: critic_missing="$critic_missing GNU ld")
 fi
 

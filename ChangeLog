@@ -1,3 +1,16 @@
+2017-06-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (AS): Require binutils 2.25 or later.
+	(LD): Likewise.
+	* configure: Regenerated.
+	* sysdeps/s390/configure.ac (AS): Remove version check.
+	* sysdeps/s390/configure: Regenerated.
+	* sysdeps/x86_64/configure.ac (AS): Remove version check.
+	* sysdeps/x86_64/configure: Regenerated.
+	* manual/install.texi (Tools for Compilation): Document
+	requirement for binutils 2.25 or later.
+	* INSTALL: Regenerated.
+
 2017-06-28  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14995]

@@ -1,12 +1,6 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/x86_64.
 
-dnl Accept as 2.24 or newer for AVX512 load and store.
-AC_CHECK_PROG_VER(AS, $AS, --version,
-		  [GNU assembler.* \([0-9]*\.[0-9.]*\)],
-		  [2.2[4-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
-		  critic_missing="$critic_missing The program AS is required in version >= 2.24 for target x86_64.")
-
 dnl Check if asm supports AVX512DQ.
 AC_CACHE_CHECK(for AVX512DQ support in assembler, libc_cv_asm_avx512dq, [dnl
 cat > conftest.s <<\EOF
