@@ -1,5 +1,19 @@
 2017-06-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/tgmath.h (__TGMATH_UNARY_REAL_RET_ONLY): Do not take or
+	cast to return type argument.
+	(__TGMATH_TERNARY_FIRST_REAL_RET_ONLY): Likewise.
+	(lrint): Update call to __TGMATH_UNARY_REAL_RET_ONLY.
+	(llrint): Likewise.
+	(lround): Likewise.
+	(llround): Likewise.
+	(ilogb): Likewise.
+	(llogb): Likewise.
+	(fromfp): Update call to __TGMATH_TERNARY_FIRST_REAL_RET_ONLY.
+	(ufromfp): Likewise.
+	(fromfpx): Likewise.
+	(ufromfpx): Likewise.
+
 	[BZ #21607]
 	* math/basic-test.c [!NO_LONG_DOUBLE]: Change conditionals to
 	[LDBL_MANT_DIG > DBL_MANT_DIG].

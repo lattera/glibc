@@ -78,13 +78,13 @@
 		     ? (__tgmath_real_type (Val)) Fct##f (Val)		      \
 		     : (__tgmath_real_type (Val)) __tgml(Fct) (Val)))
 
-# define __TGMATH_UNARY_REAL_RET_ONLY(Val, RetType, Fct) \
+# define __TGMATH_UNARY_REAL_RET_ONLY(Val, Fct) \
      (__extension__ ((sizeof (Val) == sizeof (double)			      \
 		      || __builtin_classify_type (Val) != 8)		      \
-		     ? (RetType) Fct (Val)				      \
+		     ? Fct (Val)					      \
 		     : (sizeof (Val) == sizeof (float))			      \
-		     ? (RetType) Fct##f (Val)				      \
-		     : (RetType) __tgml(Fct) (Val)))
+		     ? Fct##f (Val)					      \
+		     : __tgml(Fct) (Val)))
 
 # define __TGMATH_BINARY_FIRST_REAL_ONLY(Val1, Val2, Fct) \
      (__extension__ ((sizeof (Val1) == sizeof (double)			      \
@@ -155,13 +155,13 @@
 				   + (__tgmath_real_type (Val3)) 0))	      \
 		       Fct##f (Val1, Val2, Val3)))
 
-# define __TGMATH_TERNARY_FIRST_REAL_RET_ONLY(Val1, Val2, Val3, RetType, Fct) \
+# define __TGMATH_TERNARY_FIRST_REAL_RET_ONLY(Val1, Val2, Val3, Fct) \
      (__extension__ ((sizeof (Val1) == sizeof (double)			\
 		      || __builtin_classify_type (Val1) != 8)		\
-		     ? (RetType) Fct (Val1, Val2, Val3)			\
+		     ? Fct (Val1, Val2, Val3)				\
 		     : (sizeof (Val1) == sizeof (float))		\
-		     ? (RetType) Fct##f (Val1, Val2, Val3)		\
-		     : (RetType) __tgml(Fct) (Val1, Val2, Val3)))
+		     ? Fct##f (Val1, Val2, Val3)			\
+		     : __tgml(Fct) (Val1, Val2, Val3)))
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
@@ -377,13 +377,13 @@
 
 /* Round X to nearest integral value according to current rounding
    direction.  */
-#define lrint(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long int, lrint)
-#define llrint(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long long int, llrint)
+#define lrint(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, lrint)
+#define llrint(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, llrint)
 
 /* Round X to nearest integral value, rounding halfway cases away from
    zero.  */
-#define lround(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long int, lround)
-#define llround(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long long int, llround)
+#define lround(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, lround)
+#define llround(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, llround)
 
 
 /* Return X with its signed changed to Y's.  */
@@ -428,7 +428,7 @@
      __TGMATH_BINARY_FIRST_REAL_ONLY (Val1, Val2, scalbln)
 
 /* Return the binary exponent of X, which must be nonzero.  */
-#define ilogb(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, int, ilogb)
+#define ilogb(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, ilogb)
 
 
 /* Return positive difference between X and Y.  */
@@ -450,19 +450,19 @@
 # define roundeven(Val) __TGMATH_UNARY_REAL_ONLY (Val, roundeven)
 
 # define fromfp(Val1, Val2, Val3)					\
-  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __intmax_t, fromfp)
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, fromfp)
 
 # define ufromfp(Val1, Val2, Val3)					\
-  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __uintmax_t, ufromfp)
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, ufromfp)
 
 # define fromfpx(Val1, Val2, Val3)					\
-  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __intmax_t, fromfpx)
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, fromfpx)
 
 # define ufromfpx(Val1, Val2, Val3)					\
-  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __uintmax_t, ufromfpx)
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, ufromfpx)
 
 /* Like ilogb, but returning long int.  */
-# define llogb(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long int, llogb)
+# define llogb(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, llogb)
 
 /* Return value with maximum magnitude.  */
 # define fmaxmag(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmaxmag)
