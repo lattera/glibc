@@ -290,6 +290,15 @@ $(libm-test-c-auto-obj): $(objpfx)libm-test%.c: libm-test%.inc \
 libm-test-incs = $(foreach f,$(libm-test-funcs-all),libm-test-$(f).inc)
 endif
 
+ifdef PYTHON
+tests += test-tgmath3
+generated += test-tgmath3.c
+CFLAGS-test-tgmath3.c = -fno-builtin
+
+$(objpfx)test-tgmath3.c: gen-tgmath-tests.py
+	$(PYTHON) $< > $@
+endif
+
 libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH
 libm-test-vec-cflags = $(libm-test-fast-math-cflags) -fno-inline \
 		       -ffloat-store -D_OPENMP=201307 -Wno-unknown-pragmas

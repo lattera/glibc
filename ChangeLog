@@ -1,5 +1,11 @@
 2017-06-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/gen-tgmath-tests.py: New file.
+	* math/Makefile [PYTHON] (tests): Add test-tgmath3.
+	[PYTHON] (generated): Add test-tgmath3.c.
+	[PYTHON] (CFLAGS-test-tgmath3.c): New variable.
+	[PYTHON] ($(objpfx)test-tgmath3.c): New rule.
+
 	* configure.ac (AS): Require binutils 2.25 or later.
 	(LD): Likewise.
 	* configure: Regenerated.
