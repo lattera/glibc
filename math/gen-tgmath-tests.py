@@ -165,25 +165,25 @@ class Type(object):
         """Initialize all the known types."""
         Type.create_type('_Float16', 'f16', 'FLT16_MANT_DIG',
                          complex_name='__CFLOAT16',
-                         condition='0', order=(0, 0))
+                         condition='defined HUGE_VAL_F16', order=(0, 0))
         Type.create_type('float', 'f', 'FLT_MANT_DIG', order=(1, 1))
         Type.create_type('_Float32', 'f32', 'FLT32_MANT_DIG',
                          complex_name='__CFLOAT32',
-                         condition='0', order=(2, 2))
+                         condition='defined HUGE_VAL_F32', order=(2, 2))
         Type.create_type('_Float32x', 'f32x', 'FLT32X_MANT_DIG',
                          complex_name='__CFLOAT32X',
-                         condition='0', order=(3, 3))
+                         condition='defined HUGE_VAL_F32X', order=(3, 3))
         Type.create_type('double', '', 'DBL_MANT_DIG', order=(4, 4))
         Type.create_type('long double', 'l', 'LDBL_MANT_DIG', order=(5, 7))
         Type.create_type('_Float64', 'f64', 'FLT64_MANT_DIG',
                          complex_name='__CFLOAT64',
-                         condition='0', order=(6, 5))
+                         condition='defined HUGE_VAL_F64', order=(6, 5))
         Type.create_type('_Float64x', 'f64x', 'FLT64X_MANT_DIG',
                          complex_name='__CFLOAT64X',
-                         condition='0', order=(7, 6))
+                         condition='defined HUGE_VAL_F64X', order=(7, 6))
         Type.create_type('_Float128', 'f128', 'FLT128_MANT_DIG',
                          complex_name='__CFLOAT128',
-                         condition='0', order=(8, 8))
+                         condition='defined HUGE_VAL_F128', order=(8, 8))
         Type.create_type('char', integer=True)
         Type.create_type('signed char', integer=True)
         Type.create_type('unsigned char', integer=True)
@@ -202,10 +202,12 @@ class Type(object):
         # whether long double has the same format as double.
         Type.create_type('long_double_Float64', 'LDBL_MANT_DIG',
                          complex_name='complex_long_double_Float64',
-                         condition='0', order=(6, 7), internal=True)
+                         condition='defined HUGE_VAL_F64', order=(6, 7),
+                         internal=True)
         Type.create_type('long_double_Float64x', 'FLT64X_MANT_DIG',
                          complex_name='complex_long_double_Float64x',
-                         condition='0', order=(7, 7), internal=True)
+                         condition='defined HUGE_VAL_F64X', order=(7, 7),
+                         internal=True)
 
     @staticmethod
     def can_combine_types(types):

@@ -1,5 +1,28 @@
 2017-06-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/tgmath.h: Include <bits/libc-header-start.h> and
+	<bits/floatn.h>.
+	(__TGMATH_F128): New macro.
+	(__TGMATH_CF128): Likewise.
+	(__TGMATH_UNARY_REAL_ONLY): Use __TGMATH_F128.
+	(__TGMATH_UNARY_REAL_RET_ONLY): Likewise.
+	(__TGMATH_BINARY_FIRST_REAL_ONLY): Likewise.
+	(__TGMATH_BINARY_FIRST_REAL_STD_ONLY): New macro.
+	(__TGMATH_BINARY_REAL_ONLY): Use __TGMATH_F128.
+	(__TGMATH_BINARY_REAL_STD_ONLY): New macro.
+	(__TGMATH_BINARY_REAL_RET_ONLY): Use __TGMATH_F128.
+	(__TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY): Likewise.
+	(__TGMATH_TERNARY_REAL_ONLY): Likewise.
+	(__TGMATH_TERNARY_FIRST_REAL_RET_ONLY): Likewise.
+	(__TGMATH_UNARY_REAL_IMAG): Use __TGMATH_CF128.
+	(__TGMATH_UNARY_IMAG): Use __TGMATH_F128.
+	(__TGMATH_UNARY_REAL_IMAG_RET_REAL): Use __TGMATH_CF128.
+	(__TGMATH_BINARY_REAL_IMAG): Likewise.
+	(nexttoward): Use __TGMATH_BINARY_FIRST_REAL_STD_ONLY.
+	[__USE_MISC] (scalb): Use __TGMATH_BINARY_REAL_STD_ONLY.
+	* math/gen-tgmath-tests.py (Type.init_types): Enable _FloatN and
+	_FloatNx types if the corresponding HUGE_VAL macros are defined.
+
 	* math/tgmath.h [__USE_GNU] (log10): Use clog10 not __clog10.
 	* math/gen-tgmath-tests.py (Tests.add_all_tests): Test log10 for
 	complex arguments.
