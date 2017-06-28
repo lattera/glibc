@@ -497,7 +497,9 @@ class Tests(object):
         self.add_tests('lgamma', 'r', ['r'])
         self.add_tests('llrint', 'long long int', ['r'])
         self.add_tests('llround', 'long long int', ['r'])
-        self.add_tests('log10', 'r', ['r'])
+        # log10 is real-only in ISO C, but supports complex arguments
+        # as a GNU extension.
+        self.add_tests('log10', 'g', ['g'])
         self.add_tests('log1p', 'r', ['r'])
         self.add_tests('log2', 'r', ['r'])
         self.add_tests('logb', 'r', ['r'])

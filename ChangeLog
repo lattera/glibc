@@ -1,5 +1,9 @@
 2017-06-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/tgmath.h [__USE_GNU] (log10): Use clog10 not __clog10.
+	* math/gen-tgmath-tests.py (Tests.add_all_tests): Test log10 for
+	complex arguments.
+
 	[BZ #21687]
 	* math/tgmath.h (__TGMATH_BINARY_REAL_RET_ONLY): New macro.
 	(totalorder): Use it.

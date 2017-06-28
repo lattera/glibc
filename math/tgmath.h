@@ -319,7 +319,7 @@
 
 /* Base-ten logarithm of X.  */
 #ifdef __USE_GNU
-# define log10(Val) __TGMATH_UNARY_REAL_IMAG (Val, log10, __clog10)
+# define log10(Val) __TGMATH_UNARY_REAL_IMAG (Val, log10, clog10)
 #else
 # define log10(Val) __TGMATH_UNARY_REAL_ONLY (Val, log10)
 #endif
