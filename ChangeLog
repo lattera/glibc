@@ -1,5 +1,15 @@
 2017-06-28  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21687]
+	* math/tgmath.h (__TGMATH_BINARY_REAL_RET_ONLY): New macro.
+	(totalorder): Use it.
+	(totalordermag): Likewise.
+	* math/gen-tgmath-tests.py (Tests.add_all_tests): Enable tests of
+	totalorder and totalordermag.
+	* math/test-tgmath.c (F(compile_test)): Do not call totalorder or
+	totalordermag in arguments of calls to those functions.
+	(NCALLS): Change to 134.
+
 	* math/tgmath.h (__TGMATH_UNARY_REAL_RET_ONLY): Do not take or
 	cast to return type argument.
 	(__TGMATH_TERNARY_FIRST_REAL_RET_ONLY): Likewise.

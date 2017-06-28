@@ -52,7 +52,7 @@ int count_cdouble;
 int count_cfloat;
 int count_cldouble;
 
-#define NCALLS     138
+#define NCALLS     134
 #define NCALLS_INT 4
 #define NCCALLS    47
 
@@ -295,8 +295,8 @@ F(compile_test) (void)
   b = fmaxmag (fmaxmag (a, x), fmaxmag (c, b));
   a = fminmag (fminmag (x, a), fminmag (c, b));
   b = fma (sin (a), sin (x), sin (c));
-  a = totalorder (totalorder (x, b), totalorder (c, x));
-  b = totalordermag (totalordermag (x, a), totalordermag (c, x));
+  a = totalorder (x, b);
+  b = totalordermag (x, a);
 
 #ifdef TEST_INT
   a = atan2 (i, b);

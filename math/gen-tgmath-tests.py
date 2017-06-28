@@ -549,8 +549,8 @@ class Tests(object):
         self.add_tests('fromfpx', 'intmax_t', ['r', 'int', 'unsigned int'])
         self.add_tests('ufromfp', 'uintmax_t', ['r', 'int', 'unsigned int'])
         self.add_tests('ufromfpx', 'uintmax_t', ['r', 'int', 'unsigned int'])
-        #self.add_tests('totalorder', 'int', ['r', 'r'])
-        #self.add_tests('totalordermag', 'int', ['r', 'r'])
+        self.add_tests('totalorder', 'int', ['r', 'r'])
+        self.add_tests('totalordermag', 'int', ['r', 'r'])
         # The functions that round their result to a narrower type,
         # and the associated type-generic macros, are not yet
         # supported by this script or by glibc.
