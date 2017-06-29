@@ -1,3 +1,8 @@
+2017-06-29  Florian Weimer  <fweimer@redhat.com>
+
+	* stdio-common/tst-vfprintf-user-type.c: New file.
+	* stdio-common/Makefile (tests): Add tst-vfprintf-user-type.
+
 2017-06-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* posix/tst-spawn2.c (do_test): Use libsupport.
