@@ -60,6 +60,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 bug25 tst-printf-round bug23-2 bug23-3 bug23-4 bug26 tst-fmemopen3 \
 	 tst-printf-bz18872 tst-vfprintf-width-prec tst-fmemopen4 \
 	 tst-vfprintf-user-type \
+	 tst-vfprintf-mbs-prec \
 
 test-srcs = tst-unbputc tst-printf
 
