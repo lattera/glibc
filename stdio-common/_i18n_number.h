@@ -19,6 +19,7 @@
 #include <stdbool.h>
 #include <wchar.h>
 #include <wctype.h>
+#include <scratch_buffer.h>
 
 #include "../locale/outdigits.h"
 #include "../locale/outdigitswc.h"
@@ -65,17 +66,13 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr, CHAR_T *end)
 
   /* Copy existing string so that nothing gets overwritten.  */
   CHAR_T *src;
-  bool use_alloca = __libc_use_alloca ((rear_ptr - w) * sizeof (CHAR_T));
-  if (__builtin_expect (use_alloca, true))
-    src = (CHAR_T *) alloca ((rear_ptr - w) * sizeof (CHAR_T));
-  else
-    {
-      src = (CHAR_T *) malloc ((rear_ptr - w) * sizeof (CHAR_T));
-      if (src == NULL)
-	/* If we cannot allocate the memory don't rewrite the string.
-	   It is better than nothing.  */
-	return w;
-    }
+  struct scratch_buffer buffer;
+  scratch_buffer_init (&buffer);
+  if (!scratch_buffer_set_array_size (&buffer, rear_ptr - w, sizeof (CHAR_T)))
+    /* If we cannot allocate the memory don't rewrite the string.
+       It is better than nothing.  */
+    return w;
+  src = buffer.data;
 
   CHAR_T *s = (CHAR_T *) __mempcpy (src, w,
 				    (rear_ptr - w) * sizeof (CHAR_T));
@@ -110,8 +107,6 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr, CHAR_T *end)
 	}
     }
 
-  if (! use_alloca)
-    free (src);
-
+  scratch_buffer_free (&buffer);
   return w;
 }

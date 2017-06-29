@@ -1,5 +1,10 @@
 2017-06-29  Florian Weimer  <fweimer@redhat.com>
 
+	* stdio-common/_i18n_number.h (_i18n_number_rewrite): Use struct
+	scratch_buffer.
+
+2017-06-29  Florian Weimer  <fweimer@redhat.com>
+
 	* stdio-common/vfprintf.c (WORK_BUFFER_SIZE): Reduce size for
 	wchar_t builds.
 
