@@ -1,3 +1,13 @@
+2017-06-30  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* include/math.h (__signbitf128): Define as hidden.
+	* sysdeps/ieee754/float128/s_signbitf128.c (__signbitf128):
+	Reimplement without builtins.
+	* sysdeps/ia64/bits/floatn.h [!__GNUC_PREREQ (6, 0)]
+	(__builtin_signbitf128): Define to __signbitf128.
+	* sysdeps/powerpc/bits/floatn.h: Likewise.
+	* sysdeps/x86/bits/floatn.h: Likewise.
+
 2017-06-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/arm/fcntl.c: Remove file.

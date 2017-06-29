@@ -31,6 +31,7 @@ hidden_proto (__isnanl)
 hidden_proto (__finitef128)
 hidden_proto (__isinff128)
 hidden_proto (__isnanf128)
+hidden_proto (__signbitf128)
 #  endif
 # endif
 

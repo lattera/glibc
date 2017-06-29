@@ -87,6 +87,14 @@ typedef __float128 _Float128;
 #  define __builtin_nansf128 __builtin_nansq
 # endif
 
+/* In math/math.h, __MATH_TG will expand signbit to __builtin_signbit*,
+   e.g.: __builtin_signbitf128, before GCC 6.  However, there has never
+   been a __builtin_signbitf128 in GCC and the type-generic builtin is
+   only available since GCC 6.  */
+# if !__GNUC_PREREQ (6, 0)
+#  define __builtin_signbitf128 __signbitf128
+# endif
+
 #endif
 
 #endif /* _BITS_FLOATN_H */
