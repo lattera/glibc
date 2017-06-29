@@ -99,8 +99,12 @@ Version 2.26
 
 * On M68k GNU/Linux and MIPS GNU/Linux, the fpregset_t type no longer has
   the name struct fpregset.  On Nios II GNU/Linux, the mcontext_t type no
-  longer has the name struct mcontext.  This changes the C++ name mangling
-  for interfaces involving those types.
+  longer has the name struct mcontext.  On SPARC GNU/Linux, the struct
+  mc_fq, struct rwindow, struct fpq and struct fq types are no longer
+  defined in sys/ucontext.h, the mc_fpu_t type no longer has the name struct
+  mc_fpu, the gwindows_t type no longer has the name struct gwindows and the
+  fpregset_t type no longer has the name struct fpu.  This changes the C++
+  name mangling for interfaces involving those types.
 
 * The synchronization that pthread_spin_unlock performs has been changed
   to now be equivalent to a C11 atomic store with release memory order to

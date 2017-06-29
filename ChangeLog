@@ -1,3 +1,84 @@
+2017-06-29  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21457]
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h (__ctx): New macro.
+	[__WORDSIZE == 64] (MC_TSTATE): Define only for [__USE_MISC].
+	[__WORDSIZE == 64] (MC_PC): Likewise.
+	[__WORDSIZE == 64] (MC_NPC): Likewise.
+	[__WORDSIZE == 64] (MC_Y): Likewise.
+	[__WORDSIZE == 64] (MC_G1): Likewise.
+	[__WORDSIZE == 64] (MC_G2): Likewise.
+	[__WORDSIZE == 64] (MC_G3): Likewise.
+	[__WORDSIZE == 64] (MC_G4): Likewise.
+	[__WORDSIZE == 64] (MC_G5): Likewise.
+	[__WORDSIZE == 64] (MC_G6): Likewise.
+	[__WORDSIZE == 64] (MC_G7): Likewise.
+	[__WORDSIZE == 64] (MC_O0): Likewise.
+	[__WORDSIZE == 64] (MC_O1): Likewise.
+	[__WORDSIZE == 64] (MC_O2): Likewise.
+	[__WORDSIZE == 64] (MC_O3): Likewise.
+	[__WORDSIZE == 64] (MC_O4): Likewise.
+	[__WORDSIZE == 64] (MC_O5): Likewise.
+	[__WORDSIZE == 64] (MC_O6): Likewise.
+	[__WORDSIZE == 64] (MC_O7): Likewise.
+	[__WORDSIZE == 64] (MC_NGREG): Rename to __MC_NGREG and define to
+	__MC_NGREG if [__USE_MISC].
+	[__WORDSIZE == 64] (MC_MAXFPQ): Define only for [__USE_MISC].
+	[__WORDSIZE == 64] (mc_gregset_t): Define using __MC_NGREG.
+	[__WORDSIZE == 64] (struct mc_fq): Rename to struct __mc_fq.
+	Define fields using __ctx.
+	[__WORDSIZE == 64] (mc_fpu_t): Remove struct tag.  Define fields
+	using __ctx.
+	[__WORDSIZE == 64] (mcontext_t): Define fields using __ctx.
+	(REG_PSR): Define only for [__USE_MISC].
+	(REG_PC): Likewise.
+	(REG_nPC): Likewise.
+	(REG_Y): Likewise.
+	(REG_G1): Likewise.
+	(REG_G2): Likewise.
+	(REG_G3): Likewise.
+	(REG_G4): Likewise.
+	(REG_G5): Likewise.
+	(REG_G6): Likewise.
+	(REG_G7): Likewise.
+	(REG_O0): Likewise.
+	(REG_O1): Likewise.
+	(REG_O2): Likewise.
+	(REG_O3): Likewise.
+	(REG_O4): Likewise.
+	(REG_O5): Likewise.
+	(REG_O6): Likewise.
+	(REG_O7): Likewise.
+	[__WORDSIZE == 64] (REG_ASI): Define only for [__USE_MISC].
+	[__WORDSIZE == 64] (REG_FPRS): Likewise.
+	(NGREG): Rename to __NGREG and define to __NGREG if [__USE_MISC].
+	(gregset_t): Define using __NGREG.
+	(SPARC_MAXREGWINDOW): Rename to __SPARC_MAXREGWINDOW and define to
+	__SPARC_MAXREGWINDOW if [__USE_MISC].
+	(struct rwindow): Rename to struct __rwindow.  Define fields using
+	__ctx.
+	(rw_fp): Define only for [__USE_MISC].
+	(rw_rtn): Likewise.
+	(gwindows_t): Remove struct tag.  Define fields using __ctx and
+	__SPARC_MAXREGWINDOW.
+	(MAXFPQ): Define only for [__USE_MISC].
+	(struct fpq): Rename to struct __fpq.  Define fields using __ctx.
+	(struct fq): Rename to struct __fq.  Define fields using __ctx.
+	(FPU_REGS_TYPE): Define only for [__USE_MISC].
+	(FPU_DREGS_TYPE): Likewise.
+	(V7_FPU_FSR_TYPE): Likewise.
+	(V9_FPU_FSR_TYPE): Likewise.
+	(V9_FPU_FPRS_TYPE): Likewise.
+	[__WORDSIZE == 64] (fpregset_t): Remove struct tag.  Define fields
+	using __ctx.
+	[__WORDSIZE != 64] (fpregset_t): Likewise.
+	[__WORDSIZE != 64] (xrs_t): Define fields using __ctx.
+	[__WORDSIZE != 64] (XRS_ID): Define only for [__USE_MISC].
+	[__WORDSIZE != 64] (mcontext_t): Define fields using __ctx.
+	Rename field filler to __glibc_reserved1.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/ucontext_i.sym
+	(MC_FILLER): Remove.
+
 2017-06-29  Florian Weimer  <fweimer@redhat.com>
 
 	* stdio-common/tst-vfprintf-user-type.c (my_printf_function):
