@@ -1,5 +1,11 @@
 2017-06-29  Florian Weimer  <fweimer@redhat.com>
 
+	* stdio-common/vfprintf.c (group_number): Add front_ptr argument.
+	Use it to make the temporary copy at the start of the work buffer.
+	(process_arg): Adjust call to group_number.
+
+2017-06-29  Florian Weimer  <fweimer@redhat.com>
+
 	* stdio-common/vfprintf.c (printf_positional): Use struct
 	scratch_buffer to allocate backing storage for the args_value,
 	args_size, args_type arrays.

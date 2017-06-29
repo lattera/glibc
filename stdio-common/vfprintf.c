@@ -595,9 +595,8 @@ static const uint8_t jump_table[] =
 	      string = _itoa (number.longlong, workend, base,		      \
 			      spec == L_('X'));				      \
 	      if (group && grouping)					      \
-		string = group_number (string, workend, grouping,	      \
-				       thousands_sep);			      \
-									      \
+		string = group_number (work_buffer, string, workend,	      \
+				       grouping, thousands_sep);	      \
 	      if (use_outdigits && base == 10)				      \
 		string = _i18n_number_rewrite (string, workend, workend);     \
 	    }								      \
@@ -653,9 +652,8 @@ static const uint8_t jump_table[] =
 	      string = _itoa_word (number.word, workend, base,		      \
 				   spec == L_('X'));			      \
 	      if (group && grouping)					      \
-		string = group_number (string, workend, grouping,	      \
-				       thousands_sep);			      \
-									      \
+		string = group_number (work_buffer, string, workend,	      \
+				       grouping, thousands_sep);	      \
 	      if (use_outdigits && base == 10)				      \
 		string = _i18n_number_rewrite (string, workend, workend);     \
 	    }								      \
@@ -1237,8 +1235,8 @@ static int printf_unknown (FILE *, const struct printf_info *,
 			   const void *const *) __THROW;
 
 /* Group digits of number string.  */
-static CHAR_T *group_number (CHAR_T *, CHAR_T *, const char *, THOUSANDS_SEP_T)
-     __THROW internal_function;
+static CHAR_T *group_number (CHAR_T *, CHAR_T *, CHAR_T *, const char *,
+			     THOUSANDS_SEP_T);
 
 /* The function itself.  */
 int
@@ -2123,16 +2121,20 @@ printf_unknown (FILE *s, const struct printf_info *info,
   return done;
 }
 
-/* Group the digits according to the grouping rules of the current locale.
-   The interpretation of GROUPING is as in `struct lconv' from <locale.h>.  */
+/* Group the digits from W to REAR_PTR according to the grouping rules
+   of the current locale.  The interpretation of GROUPING is as in
+   `struct lconv' from <locale.h>.  The grouped number extends from
+   the returned pointer until REAR_PTR.  FRONT_PTR to W is used as a
+   scratch area.  */
 static CHAR_T *
-internal_function
-group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
-	      THOUSANDS_SEP_T thousands_sep)
+group_number (CHAR_T *front_ptr, CHAR_T *w, CHAR_T *rear_ptr,
+	      const char *grouping, THOUSANDS_SEP_T thousands_sep)
 {
+  /* Length of the current group.  */
   int len;
-  CHAR_T *src, *s;
 #ifndef COMPILE_WPRINTF
+  /* Length of the separator (in wide mode, the separator is always a
+     single wide character).  */
   int tlen = strlen (thousands_sep);
 #endif
 
@@ -2145,26 +2147,34 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
   len = *grouping++;
 
   /* Copy existing string so that nothing gets overwritten.  */
-  src = (CHAR_T *) alloca ((rear_ptr - w) * sizeof (CHAR_T));
-  s = (CHAR_T *) __mempcpy (src, w,
-			    (rear_ptr - w) * sizeof (CHAR_T));
+  memmove (front_ptr, w, (rear_ptr - w) * sizeof (CHAR_T));
+  CHAR_T *s = front_ptr + (rear_ptr - w);
+
   w = rear_ptr;
 
   /* Process all characters in the string.  */
-  while (s > src)
+  while (s > front_ptr)
     {
       *--w = *--s;
 
-      if (--len == 0 && s > src)
+      if (--len == 0 && s > front_ptr)
 	{
 	  /* A new group begins.  */
 #ifdef COMPILE_WPRINTF
-	  *--w = thousands_sep;
+	  if (w != s)
+	    *--w = thousands_sep;
+	  else
+	    /* Not enough room for the separator.  */
+	    goto copy_rest;
 #else
 	  int cnt = tlen;
-	  do
-	    *--w = thousands_sep[--cnt];
-	  while (cnt > 0);
+	  if (tlen < w - s)
+	    do
+	      *--w = thousands_sep[--cnt];
+	    while (cnt > 0);
+	  else
+	    /* Not enough room for the separator.  */
+	    goto copy_rest;
 #endif
 
 	  if (*grouping == CHAR_MAX
@@ -2173,17 +2183,16 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
 #endif
 		   )
 	    {
-	      /* No further grouping to be done.
-		 Copy the rest of the number.  */
-	      do
-		*--w = *--s;
-	      while (s > src);
+	    copy_rest:
+	      /* No further grouping to be done.  Copy the rest of the
+		 number.  */
+	      memmove (w, s, (front_ptr -s) * sizeof (CHAR_T));
 	      break;
 	    }
 	  else if (*grouping != '\0')
-	    /* The previous grouping repeats ad infinitum.  */
 	    len = *grouping++;
 	  else
+	    /* The previous grouping repeats ad infinitum.  */
 	    len = grouping[-1];
 	}
     }
