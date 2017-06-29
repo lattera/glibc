@@ -1,3 +1,8 @@
+2017-07-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ# 21697]
+	* sysdeps/posix/spawni.c (__spawni_child): Fix return value.
+
 2017-07-05  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/Makefile (tests-internal): Add tst-resolv-threads.

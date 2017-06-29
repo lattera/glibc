@@ -117,30 +117,30 @@ __spawni_child (void *arguments)
   if ((attr->__flags & (POSIX_SPAWN_SETSCHEDPARAM | POSIX_SPAWN_SETSCHEDULER))
       == POSIX_SPAWN_SETSCHEDPARAM)
     {
-      if ((ret = __sched_setparam (0, &attr->__sp)) == -1)
+      if (__sched_setparam (0, &attr->__sp) == -1)
 	goto fail;
     }
   else if ((attr->__flags & POSIX_SPAWN_SETSCHEDULER) != 0)
     {
-      if ((ret = __sched_setscheduler (0, attr->__policy, &attr->__sp) == -1))
+      if (__sched_setscheduler (0, attr->__policy, &attr->__sp) == -1)
 	goto fail;
     }
 #endif
 
   /* Set the process session ID.  */
   if ((attr->__flags & POSIX_SPAWN_SETSID) != 0
-      && (ret = __setsid ()) < 0)
+      && __setsid () < 0)
     goto fail;
 
   /* Set the process group ID.  */
   if ((attr->__flags & POSIX_SPAWN_SETPGROUP) != 0
-      && (ret =__setpgid (0, attr->__pgrp)) != 0)
+      && __setpgid (0, attr->__pgrp) != 0)
     goto fail;
 
   /* Set the effective user and group IDs.  */
   if ((attr->__flags & POSIX_SPAWN_RESETIDS) != 0
-      && ((ret = local_seteuid (__getuid ())) != 0
-	  || (ret = local_setegid (__getgid ())) != 0))
+      && (local_seteuid (__getuid ()) != 0
+	  || local_setegid (__getgid ())) != 0)
     goto fail;
 
   /* Execute the file actions.  */
@@ -168,10 +168,7 @@ __spawni_child (void *arguments)
 		  /* Only signal errors for file descriptors out of range.  */
 		  if (action->action.close_action.fd < 0
 		      || action->action.close_action.fd >= fdlimit.rlim_cur)
-		    {
-		      ret = -1;
-		      goto fail;
-		    }
+		    goto fail;
 		}
 	      break;
 
@@ -190,25 +187,25 @@ __spawni_child (void *arguments)
 					      | O_LARGEFILE,
 					      action->action.open_action.mode);
 
-		if ((ret = new_fd) == -1)
+		if (new_fd == -1)
 		  goto fail;
 
 		/* Make sure the desired file descriptor is used.  */
 		if (new_fd != action->action.open_action.fd)
 		  {
-		    if ((ret = __dup2 (new_fd, action->action.open_action.fd))
+		    if (__dup2 (new_fd, action->action.open_action.fd)
 			!= action->action.open_action.fd)
 		      goto fail;
 
-		    if ((ret = close_not_cancel (new_fd) != 0))
+		    if (close_not_cancel (new_fd) != 0)
 		      goto fail;
 		  }
 	      }
 	      break;
 
 	    case spawn_do_dup2:
-	      if ((ret = __dup2 (action->action.dup2_action.fd,
-				 action->action.dup2_action.newfd))
+	      if (__dup2 (action->action.dup2_action.fd,
+			  action->action.dup2_action.newfd)
 		  != action->action.dup2_action.newfd)
 		goto fail;
 	      break;
@@ -228,12 +225,15 @@ __spawni_child (void *arguments)
      (2.15).  */
   maybe_script_execute (args);
 
-  ret = -errno;
-
 fail:
-  /* Since sizeof errno < PIPE_BUF, the write is atomic. */
-  ret = -ret;
+  /* errno should have an appropriate non-zero value; otherwise,
+     there's a bug in glibc or the kernel.  For lack of an error code
+     (EINTERNALBUG) describing that, use ECHILD.  Another option would
+     be to set args->err to some negative sentinel and have the parent
+     abort(), but that seems needlessly harsh.  */
+  ret = errno ? : ECHILD;
   if (ret)
+    /* Since sizeof errno < PIPE_BUF, the write is atomic. */
     while (write_not_cancel (args->pipe[1], &ret, sizeof (ret)) < 0);
 
   _exit (SPAWN_ERROR);
@@ -292,7 +292,7 @@ __spawnix (pid_t *pid, const char *file,
 	__waitpid (new_pid, &(int) { 0 }, 0);
     }
   else
-    ec = -new_pid;
+    ec = errno;
 
   __close (args.pipe[0]);
 
