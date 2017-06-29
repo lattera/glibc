@@ -110,17 +110,17 @@ day         "<U0069><U0053><U006F><U006E><U0074><U006F>";/
             "<U0075><U004D><U0067><U0071><U0069><U0062><U0065><U006C><U006F>"
 
 % abmon - The abbreviations for the months
-% - Mas, Ola, Nda, Mba, Aba, Ang, Ntu, Ncw, Man, Mfu, Lwe, Zib
-abmon       "<U004D><U0061><U0073>";"<U004F><U006C><U0061>";/
-            "<U004E><U0064><U0061>";"<U004D><U0062><U0061>";/
-            "<U0041><U0062><U0061>";"<U0041><U006E><U0067>";/
-            "<U004E><U0074><U0075>";"<U004E><U0063><U0077>";/
-            "<U004D><U0061><U006E>";"<U004D><U0066><U0075>";/
-            "<U004C><U0077><U0065>";"<U005A><U0069><U0062>"
+% - Jan, Feb, Mas, Eph, Mey, Jun, Jul, Aga, Sep, Okt, Nov, Dis
+abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
+            "<U004D><U0061><U0073>";"<U0045><U0070><U0068>";/
+            "<U004D><U0065><U0079>";"<U004A><U0075><U006E>";/
+            "<U004A><U0075><U006C>";"<U0041><U0067><U0061>";/
+            "<U0053><U0065><U0070>";"<U004F><U006B><U0074>";/
+            "<U004E><U006F><U0076>";"<U0044><U0069><U0073>"
 
 % mon - The full names of the months -
-% - uMasingana, uNhlolanja, uNdasa, uMbasa, uNhlaba, uNhlangulana
-%   uNtulikazi, uNcwaba, uMandulo, uMfumfu, uLwezi, uZibandlela
+% - Januwari, Februwari, Mashi, Ephreli, Meyi, Juni
+%   Julayi, Agasti, Septhemba, Okthoba, Novemba, Disemba
 mon         "<U004A><U0061><U006E><U0075><U0077><U0061><U0072><U0069>";/
             "<U0046><U0065><U0062><U0072><U0075><U0077><U0061><U0072><U0069>";/
             "<U004D><U0061><U0073><U0068><U0069>";/

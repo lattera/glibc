@@ -1,3 +1,25 @@
+2017-06-30  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	* locales/br_FR (abmon): Reworded "Eve " to "Mezh".
+	* locales/fy_NL (abmon): Reworded "Maa" (March) to
+	"Mrt" and "Maa" (May) to "Mai".
+	* locales/lg_UG (abmon): Reworded "Jun" to "Juu".
+	* locales/ln_CD (abmon): "yan", "fbl", "msi",
+	and so on.
+	* locales/mn_MN (abmon): "1-р сар", "2-р сар",
+	"3-р сар", and so on.
+	* locales/vi_VN (abmon): Reworded "Th01" to "Thg 1",
+	"Th02" to "Thg 2" and so on.
+	* locales/yo_NG (abday): "Àìkú", "Ajé", "Ìsẹ́gun",
+	and so on, also comment updated to match the new content.
+	(day): "Ọjọ́ Àìkú", "Ọjọ́ Ajé", "Ọjọ́ Ìsẹ́gun", and so on.
+	(abmon): "Ṣẹ́rẹ́", "Èrèlè", "Ẹrẹ̀nà", and so on.
+	(mon): Comment updated to match the actual content.
+	(d_t_fmt): Changed "%A" to "%a" and "%B" to "%b".
+	* locales/zu_ZA (abmon): "Jan", "Feb", "Mas",
+	and so on, also comment updated to match the new content.
+	(mon): comment updated to match the actual content.
+
 2017-06-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* CLDRv29: update LC_ADDRESS.lang_name translations. This
