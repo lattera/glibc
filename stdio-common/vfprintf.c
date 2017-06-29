@@ -205,7 +205,7 @@ typedef wchar_t THOUSANDS_SEP_T;
 static const CHAR_T null[] = L_("(null)");
 
 /* Size of the work_buffer variable (in characters, not bytes.  */
-enum { WORK_BUFFER_SIZE = 1000 };
+enum { WORK_BUFFER_SIZE = 1000 / sizeof (CHAR_T) };
 
 /* This table maps a character into a number representing a class.  In
    each step there is a destination label for each class.  */
