@@ -29,6 +29,7 @@
 #include <support/check.h>
 #include <support/support.h>
 #include <support/test-driver.h>
+#include <wchar.h>
 
 /* Initialized by do_test using register_printf_type.  */
 static int user_type;
@@ -55,8 +56,9 @@ my_printf_function (FILE *fp, const struct printf_info *info,
                     const void *const *args)
 {
   if (test_verbose > 0)
-    printf ("info: %s (%p, %p, {%p}@%p) called for %%%c (prec %d)\n",
-            __func__, fp, info, args[0], args, info->spec, info->prec);
+    printf ("info: %s (%p, %p, {%p}@%p) called for %%%lc (prec %d)\n",
+            __func__, fp, info, args[0], args, (wint_t) info->spec,
+            info->prec);
 
   TEST_VERIFY (info->spec == 'P');
   size_t nargs;
@@ -109,8 +111,9 @@ my_arginfo_function (const struct printf_info *info,
   if (info->spec != 'P')
     return -1;
   if (test_verbose > 0)
-    printf ("info: %s (%p, %zu, %p, %p) called for %%%c (prec %d)\n",
-            __func__, info, n, argtypes, size, info->spec, info->prec);
+    printf ("info: %s (%p, %zu, %p, %p) called for %%%lc (prec %d)\n",
+            __func__, info, n, argtypes, size, (wint_t) info->spec,
+            info->prec);
 
   TEST_VERIFY_EXIT (n >= 1);
   size_t nargs;

@@ -1,3 +1,10 @@
+2017-06-29  Florian Weimer  <fweimer@redhat.com>
+
+	* stdio-common/tst-vfprintf-user-type.c (my_printf_function):
+	Adjust format string.
+	* stdio-common/Makefile (tst-vfprintf-mbs-prec.out): Add locale
+	dependency.
+
 2017-06-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/posix/spawni.c (__spawni_child): New function.
