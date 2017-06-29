@@ -1,5 +1,11 @@
 2017-06-29  Florian Weimer  <fweimer@redhat.com>
 
+	* stdio-common/vfprintf.c (printf_positional): Use struct
+	scratch_buffer to allocate backing storage for the args_value,
+	args_size, args_type arrays.
+
+2017-06-29  Florian Weimer  <fweimer@redhat.com>
+
 	* stdio-common/_i18n_number.h (_i18n_number_rewrite): Use struct
 	scratch_buffer.
 

@@ -1708,14 +1708,16 @@ printf_positional (_IO_FILE *s, const CHAR_T *format, int readonly_format,
 		   CHAR_T *work_buffer, int save_errno,
 		   const char *grouping, THOUSANDS_SEP_T thousands_sep)
 {
-  /* For the argument descriptions, which may be allocated on the heap.  */
-  void *args_malloced = NULL;
-
   /* For positional argument handling.  */
   struct scratch_buffer specsbuf;
   scratch_buffer_init (&specsbuf);
   struct printf_spec *specs = specsbuf.data;
   size_t specs_limit = specsbuf.length / sizeof (specs[0]);
+
+  /* Used as a backing store for args_value, args_size, args_type
+     below.  */
+  struct scratch_buffer argsbuf;
+  scratch_buffer_init (&argsbuf);
 
   /* Array with information about the needed arguments.  This has to
      be dynamically extensible.  */
@@ -1725,10 +1727,6 @@ printf_positional (_IO_FILE *s, const CHAR_T *format, int readonly_format,
      determine the size of the array needed to store the argument
      attributes.  */
   size_t nargs = 0;
-  size_t bytes_per_arg;
-  union printf_arg *args_value;
-  int *args_size;
-  int *args_type;
 
   /* Positional parameters refer to arguments directly.  This could
      also determine the maximum number of arguments.  Track the
@@ -1778,38 +1776,29 @@ printf_positional (_IO_FILE *s, const CHAR_T *format, int readonly_format,
 
   /* Determine the number of arguments the format string consumes.  */
   nargs = MAX (nargs, max_ref_arg);
-  /* Calculate total size needed to represent a single argument across
-     all three argument-related arrays.  */
-  bytes_per_arg = (sizeof (*args_value) + sizeof (*args_size)
-		   + sizeof (*args_type));
 
-  /* Check for potential integer overflow.  */
-  if (__glibc_unlikely (nargs > INT_MAX / bytes_per_arg))
-    {
-      __set_errno (EOVERFLOW);
-      done = -1;
-      goto all_done;
-    }
-
-  /* Allocate memory for all three argument arrays.  */
-  if (__libc_use_alloca (nargs * bytes_per_arg))
-    args_value = alloca (nargs * bytes_per_arg);
-  else
-    {
-      args_value = args_malloced = malloc (nargs * bytes_per_arg);
-      if (args_value == NULL)
-	{
-	  done = -1;
-	  goto all_done;
-	}
-    }
-
-  /* Set up the remaining two arrays to each point past the end of the
-     prior array, since space for all three has been allocated now.  */
-  args_size = &args_value[nargs].pa_int;
-  args_type = &args_size[nargs];
-  memset (args_type, s->_flags2 & _IO_FLAGS2_FORTIFY ? '\xff' : '\0',
-	  nargs * sizeof (*args_type));
+  union printf_arg *args_value;
+  int *args_size;
+  int *args_type;
+  {
+    /* Calculate total size needed to represent a single argument
+       across all three argument-related arrays.  */
+    size_t bytes_per_arg
+      = sizeof (*args_value) + sizeof (*args_size) + sizeof (*args_type);
+    if (!scratch_buffer_set_array_size (&argsbuf, nargs, bytes_per_arg))
+      {
+	done = -1;
+	goto all_done;
+      }
+    args_value = argsbuf.data;
+    /* Set up the remaining two arrays to each point past the end of
+       the prior array, since space for all three has been allocated
+       now.  */
+    args_size = &args_value[nargs].pa_int;
+    args_type = &args_size[nargs];
+    memset (args_type, s->_flags2 & _IO_FLAGS2_FORTIFY ? '\xff' : '\0',
+	    nargs * sizeof (*args_type));
+  }
 
   /* XXX Could do sanity check here: If any element in ARGS_TYPE is
      still zero after this loop, format is invalid.  For now we
@@ -2075,10 +2064,9 @@ printf_positional (_IO_FILE *s, const CHAR_T *format, int readonly_format,
 		 - specs[nspecs_done].end_of_fmt);
     }
  all_done:
-  if (__glibc_unlikely (args_malloced != NULL))
-    free (args_malloced);
   if (__glibc_unlikely (workstart != NULL))
     free (workstart);
+  scratch_buffer_free (&argsbuf);
   scratch_buffer_free (&specsbuf);
   return done;
 }
