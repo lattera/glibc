@@ -1,5 +1,10 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_data.c (res_mkquery): Move ...
+	* resolv/res_mkquery.c (res_mkquery): to here.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_mkquery.c: Reformat to GNU style.
 	(T_OPT): Remove definition.  It is present in the header file.
 

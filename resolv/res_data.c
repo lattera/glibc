@@ -73,25 +73,6 @@ fp_nquery(const u_char *msg, int len, FILE *file) {
 libresolv_hidden_def (fp_nquery)
 
 int
-res_mkquery(int op,			/* opcode of query */
-	    const char *dname,		/* domain name */
-	    int class, int type,	/* class and type of query */
-	    const u_char *data,		/* resource record data */
-	    int datalen,		/* length of data */
-	    const u_char *newrr_in,	/* new rr for modify or append */
-	    u_char *buf,		/* buffer to put query */
-	    int buflen)			/* size of buffer */
-{
-	if (__res_maybe_init (&_res, 1) == -1) {
-		RES_SET_H_ERRNO(&_res, NETDB_INTERNAL);
-		return (-1);
-	}
-	return (res_nmkquery(&_res, op, dname, class, type,
-			     data, datalen,
-			     newrr_in, buf, buflen));
-}
-
-int
 res_query(const char *name,	/* domain name */
 	  int class, int type,	/* class and type of query */
 	  u_char *answer,	/* buffer to put answer */
@@ -180,11 +161,9 @@ libresolv_hidden_def (hostalias)
 #include <shlib-compat.h>
 
 #if SHLIB_COMPAT(libresolv, GLIBC_2_0, GLIBC_2_2)
-# undef res_mkquery
 # undef res_query
 # undef res_querydomain
 # undef res_search
-weak_alias (__res_mkquery, res_mkquery);
 weak_alias (__res_query, res_query);
 weak_alias (__res_querydomain, res_querydomain);
 weak_alias (__res_search, res_search);

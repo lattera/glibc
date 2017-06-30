@@ -90,6 +90,7 @@
 #include <resolv/resolv-internal.h>
 #include <string.h>
 #include <sys/time.h>
+#include <shlib-compat.h>
 
 #include <hp-timing.h>
 #include <stdint.h>
@@ -202,6 +203,21 @@ res_nmkquery (res_state statp, int op, const char *dname,
 }
 libresolv_hidden_def (res_nmkquery)
 
+int
+res_mkquery (int op, const char *dname, int class, int type,
+             const unsigned char *data, int datalen,
+             const unsigned char *newrr_in,
+             unsigned char *buf, int buflen)
+{
+  if (__res_maybe_init (&_res, 1) == -1)
+    {
+      RES_SET_H_ERRNO (&_res, NETDB_INTERNAL);
+      return -1;
+    }
+  return res_nmkquery (&_res, op, dname, class, type,
+                       data, datalen, newrr_in, buf, buflen);
+}
+
 /* Create an OPT resource record.  Return the length of the final
    packet, or -1 on error.
 
@@ -262,3 +278,8 @@ __res_nopt (res_state statp, int n0, unsigned char *buf, int buflen,
 
   return cp - buf;
 }
+
+#if SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_2)
+# undef res_mkquery
+weak_alias (__res_mkquery, res_mkquery);
+#endif
