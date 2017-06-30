@@ -33,22 +33,6 @@
 # define GLIBC_TUNABLES "GLIBC_TUNABLES"
 #endif
 
-/* Compare environment or tunable names, bounded by the name hardcoded in
-   glibc.  */
-static bool
-is_name (const char *orig, const char *envname)
-{
-  for (;*orig != '\0' && *envname != '\0'; envname++, orig++)
-    if (*orig != *envname)
-      break;
-
-  /* The ENVNAME is immediately followed by a value.  */
-  if (*orig == '\0' && *envname == '=')
-    return true;
-  else
-    return false;
-}
-
 #if TUNABLES_FRONTEND == TUNABLES_FRONTEND_valstring
 static char *
 tunables_strdup (const char *in)
@@ -235,7 +219,7 @@ parse_tunables (char *tunestr, char *valstring)
 	{
 	  tunable_t *cur = &tunable_list[i];
 
-	  if (is_name (cur->name, name))
+	  if (tunable_is_name (cur->name, name))
 	    {
 	      /* If we are in a secure context (AT_SECURE) then ignore the tunable
 		 unless it is explicitly marked as secure.  Tunable values take
@@ -318,7 +302,7 @@ __tunables_init (char **envp)
 			       &prev_envp)) != NULL)
     {
 #if TUNABLES_FRONTEND == TUNABLES_FRONTEND_valstring
-      if (is_name (GLIBC_TUNABLES, envname))
+      if (tunable_is_name (GLIBC_TUNABLES, envname))
 	{
 	  char *new_env = tunables_strdup (envname);
 	  if (new_env != NULL)
@@ -341,7 +325,7 @@ __tunables_init (char **envp)
 	  const char *name = cur->env_alias;
 
 	  /* We have a match.  Initialize and move on to the next line.  */
-	  if (is_name (name, envname))
+	  if (tunable_is_name (name, envname))
 	    {
 	      /* For AT_SECURE binaries, we need to check the security settings of
 		 the tunable and decide whether we read the value and also whether
@@ -356,7 +340,7 @@ __tunables_init (char **envp)
 
 		      while (*ep != NULL)
 			{
-			  if (is_name (name, *ep))
+			  if (tunable_is_name (name, *ep))
 			    {
 			      char **dp = ep;
 

@@ -1,5 +1,16 @@
 2017-06-30  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* elf/dl-tunables.h (tunable_is_name): Move from...
+	* elf/dl-tunables.c (is_name): ... here.
+	(parse_tunables, __tunables_init): Adjust.
+	* manual/tunables.texi: Document glibc.tune.cpu.
+	* sysdeps/aarch64/dl-tunables.list: New file.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c (struct
+	cpu_list): New type.
+	(cpu_list): New list of CPU names and their MIDR.
+	(get_midr_from_mcpu): New function.
+	(init_cpu_features): Override MIDR if necessary.
+
 	* sysdeps/aarch64/multiarch/ifunc-impl-list.c
 	(__libc_ifunc_impl_list): Unconditionally select thunderx
 	routine for testing.

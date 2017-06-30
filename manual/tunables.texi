@@ -231,6 +231,14 @@ the ones in @code{sysdeps/x86/cpu-features.h}.
 This tunable is specific to i386 and x86-64.
 @end deftp
 
+@deftp Tunable glibc.tune.cpu
+The @code{glibc.tune.cpu=xxx} tunable allows the user to tell @theglibc{} to
+assume that the CPU is @code{xxx} where xxx may have one of these values:
+@code{generic}, @code{thunderxt88}.
+
+This tunable is specific to aarch64.
+@end deftp
+
 @deftp Tunable glibc.tune.x86_data_cache_size
 The @code{glibc.tune.x86_data_cache_size} tunable allows the user to set
 data cache size in bytes for use in memory and string routines.
