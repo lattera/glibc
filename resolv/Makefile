@@ -69,6 +69,9 @@ tests-internal += tst-inet_pton
 
 # This test sends millions of packets and is rather slow.
 xtests += tst-resolv-qtypes
+
+# This test has dropped packet tests and runs for a long time.
+xtests += tst-resolv-rotate
 endif
 extra-libs-others = $(extra-libs)
 libresolv-routines := res_comp res_debug \
@@ -148,6 +151,7 @@ $(objpfx)tst-resolv-res_init: $(libdl) $(objpfx)libresolv.so
 $(objpfx)tst-resolv-res_init-thread: $(libdl) $(objpfx)libresolv.so \
   $(shared-thread-library)
 $(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-rotate: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-canonname: \
   $(libdl) $(objpfx)libresolv.so $(shared-thread-library)

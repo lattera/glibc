@@ -109,6 +109,7 @@
 #include <unistd.h>
 #include <kernel-features.h>
 #include <libc-diag.h>
+#include <hp-timing.h>
 
 #if PACKETSZ > 65536
 #define MAXPACKET       PACKETSZ
@@ -188,7 +189,7 @@ evNowTime(struct timespec *res) {
 
 /* Forward. */
 
-static struct sockaddr *get_nsaddr (res_state, int);
+static struct sockaddr *get_nsaddr (res_state, unsigned int);
 static int		send_vc(res_state, const u_char *, int,
 				const u_char *, int,
 				u_char **, int *, int *, int, u_char **,
@@ -291,6 +292,62 @@ res_nameinquery(const char *name, int type, int class,
 }
 libresolv_hidden_def (res_nameinquery)
 
+/* Returns a shift value for the name server index.  Used to implement
+   RES_ROTATE.  */
+static unsigned int
+nameserver_offset (struct __res_state *statp)
+{
+  /* If we only have one name server or rotation is disabled, return
+     offset 0 (no rotation).  */
+  unsigned int nscount = statp->nscount;
+  if (nscount <= 1 || !(statp->options & RES_ROTATE))
+    return 0;
+
+  /* Global offset.  The lowest bit indicates whether the offset has
+     been initialized with a random value.  Use relaxed MO to access
+     global_offset because all we need is a sequence of roughly
+     sequential value.  */
+  static unsigned int global_offset;
+  unsigned int offset = atomic_fetch_add_relaxed (&global_offset, 2);
+  if ((offset & 1) == 0)
+    {
+      /* Initialization is required.  */
+#if HP_TIMING_AVAIL
+      uint64_t ticks;
+      HP_TIMING_NOW (ticks);
+      offset = ticks;
+#else
+      struct timeval tv;
+      __gettimeofday (&tv, NULL);
+      offset = ((tv.tv_sec << 8) ^ tv.tv_usec);
+#endif
+      /* The lowest bit is the most random.  Preserve it.  */
+      offset <<= 1;
+
+      /* Store the new starting value.  atomic_fetch_add_relaxed
+	 returns the old value, so emulate that by storing the new
+	 (incremented) value.  Concurrent initialization with
+	 different random values is harmless.  */
+      atomic_store_relaxed (&global_offset, (offset | 1) + 2);
+    }
+
+  /* Remove the initialization bit.  */
+  offset >>= 1;
+
+  /* Avoid the division in the most common cases.  */
+  switch (nscount)
+    {
+    case 2:
+      return offset & 1;
+    case 3:
+      return offset % 3;
+    case 4:
+      return offset & 3;
+    default:
+      return offset % nscount;
+    }
+}
+
 /* int
  * res_queriesmatch(buf1, eom1, buf2, eom2)
  *	is there a 1:1 mapping of (name,type,class)
@@ -352,7 +409,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		 u_char *ans, int anssiz, u_char **ansp, u_char **ansp2,
 		 int *nansp2, int *resplen2, int *ansp2_malloced)
 {
-  int gotsomewhere, terrno, try, v_circuit, resplen, ns, n;
+	int gotsomewhere, terrno, try, v_circuit, resplen, n;
 
 	if (statp->nscount == 0) {
 		__set_errno (ESRCH);
@@ -382,7 +439,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		if (EXT(statp).nscount != statp->nscount)
 			needclose++;
 		else
-			for (ns = 0; ns < statp->nscount; ns++) {
+			for (unsigned int ns = 0; ns < statp->nscount; ns++) {
 				if (statp->nsaddr_list[ns].sin_family != 0
 				    && !sock_eq((struct sockaddr_in6 *)
 						&statp->nsaddr_list[ns],
@@ -402,7 +459,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 	 * Maybe initialize our private copy of the ns_addr_list.
 	 */
 	if (EXT(statp).nscount == 0) {
-		for (ns = 0; ns < statp->nscount; ns++) {
+		for (unsigned int ns = 0; ns < statp->nscount; ns++) {
 			EXT(statp).nssocks[ns] = -1;
 			if (statp->nsaddr_list[ns].sin_family == 0)
 				continue;
@@ -420,35 +477,21 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		EXT(statp).nscount = statp->nscount;
 	}
 
-	/*
-	 * Some resolvers want to even out the load on their nameservers.
-	 * Note that RES_BLAST overrides RES_ROTATE.
-	 */
-	if (__glibc_unlikely ((statp->options & RES_ROTATE) != 0)) {
-		struct sockaddr_in ina;
-		struct sockaddr_in6 *inp;
-		int lastns = statp->nscount - 1;
-		int fd;
-
-		inp = EXT(statp).nsaddrs[0];
-		ina = statp->nsaddr_list[0];
-		fd = EXT(statp).nssocks[0];
-		for (ns = 0; ns < lastns; ns++) {
-		    EXT(statp).nsaddrs[ns] = EXT(statp).nsaddrs[ns + 1];
-		    statp->nsaddr_list[ns] = statp->nsaddr_list[ns + 1];
-		    EXT(statp).nssocks[ns] = EXT(statp).nssocks[ns + 1];
-		}
-		EXT(statp).nsaddrs[lastns] = inp;
-		statp->nsaddr_list[lastns] = ina;
-		EXT(statp).nssocks[lastns] = fd;
-	}
+	/* Name server index offset.  Used to implement
+	   RES_ROTATE.  */
+	unsigned int ns_offset = nameserver_offset (statp);
 
 	/*
 	 * Send request, RETRY times, or until successful.
 	 */
 	for (try = 0; try < statp->retry; try++) {
-	    for (ns = 0; ns < statp->nscount; ns++)
+	    for (unsigned ns_shift = 0; ns_shift < statp->nscount; ns_shift++)
 	    {
+		/* The actual name server index.  This implements
+		   RES_ROTATE.  */
+		unsigned int ns = ns_shift + ns_offset;
+		if (ns >= statp->nscount)
+			ns -= statp->nscount;
 #ifdef DEBUG
 		char tmpbuf[40];
 		struct sockaddr *nsap = get_nsaddr (statp, ns);
@@ -544,8 +587,9 @@ libresolv_hidden_def (res_nsend)
 /* Private */
 
 static struct sockaddr *
-get_nsaddr (res_state statp, int n)
+get_nsaddr (res_state statp, unsigned int n)
 {
+  assert (n < statp->nscount);
 
   if (statp->nsaddr_list[n].sin_family == 0 && EXT(statp).nsaddrs[n] != NULL)
     /* EXT(statp).nsaddrs[n] holds an address that is larger than

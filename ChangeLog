@@ -1,3 +1,14 @@
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19570]
+	* resolv/res_send.c (nameserver_offset): New function.
+	(__libc_res_nsend): Use it to implement RES_ROTATE.
+	(get_nsaddr): Add assert with name server
+	range check.
+	* resolv/Makefile (xtests): Add tst-resolv-rotate.
+	(tst-resolv-rotate): Link against libpthread.
+	* resolv/tst-resolv-rotate.c: New file.
+
 2017-06-29  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21457]
