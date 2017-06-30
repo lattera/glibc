@@ -88,6 +88,7 @@
 #include <arpa/nameser.h>
 #include <netdb.h>
 #include <resolv/resolv-internal.h>
+#include <resolv/resolv_context.h>
 #include <string.h>
 #include <sys/time.h>
 #include <shlib-compat.h>
@@ -98,22 +99,10 @@
 # define RANDOM_BITS(Var) { uint64_t v64; HP_TIMING_NOW (v64); Var = v64; }
 #endif
 
-/* Form all types of queries.  Returns the size of the result or -1 on
-   error.
-
-   STATP points to an initialized resolver state.  OP is the opcode of
-   the query.  DNAME is the domain.  CLASS and TYPE are the DNS query
-   class and type.  DATA can be NULL; otherwise, it is a pointer to a
-   domain name which is included in the generated packet (if op ==
-   NS_NOTIFY_OP).  BUF must point to the out buffer of BUFLEN bytes.
-
-   DATALEN and NEWRR_IN are currently ignored.  */
 int
-res_nmkquery (res_state statp, int op, const char *dname,
-              int class, int type,
-              const unsigned char *data, int datalen,
-              const unsigned char *newrr_in,
-              unsigned char *buf, int buflen)
+__res_context_mkquery (struct resolv_context *ctx, int op, const char *dname,
+                       int class, int type, const unsigned char *data,
+                       unsigned char *buf, int buflen)
 {
   HEADER *hp;
   unsigned char *cp;
@@ -132,22 +121,17 @@ res_nmkquery (res_state statp, int op, const char *dname,
      by one after the initial randomization which still predictable if
      the application does multiple requests.  */
   int randombits;
-  do
-    {
 #ifdef RANDOM_BITS
-      RANDOM_BITS (randombits);
+  RANDOM_BITS (randombits);
 #else
-      struct timeval tv;
-      __gettimeofday (&tv, NULL);
-      randombits = (tv.tv_sec << 8) ^ tv.tv_usec;
+  struct timeval tv;
+  __gettimeofday (&tv, NULL);
+  randombits = (tv.tv_sec << 8) ^ tv.tv_usec;
 #endif
-    }
-  while ((randombits & 0xffff) == 0);
 
-  statp->id = (statp->id + randombits) & 0xffff;
-  hp->id = statp->id;
+  hp->id = randombits;
   hp->opcode = op;
-  hp->rd = (statp->options & RES_RECURSE) != 0;
+  hp->rd = (ctx->resp->options & RES_RECURSE) != 0;
   hp->rcode = NOERROR;
   cp = buf + HFIXEDSZ;
   buflen -= HFIXEDSZ;
@@ -201,7 +185,45 @@ res_nmkquery (res_state statp, int op, const char *dname,
     }
   return cp - buf;
 }
-libresolv_hidden_def (res_nmkquery)
+
+/* Common part of res_nmkquery and res_mkquery.  */
+static int
+context_mkquery_common (struct resolv_context *ctx,
+                        int op, const char *dname, int class, int type,
+                        const unsigned char *data,
+                        unsigned char *buf, int buflen)
+{
+  if (ctx == NULL)
+    return -1;
+  int result = __res_context_mkquery
+    (ctx, op, dname, class, type, data, buf, buflen);
+  if (result >= 2)
+    memcpy (&ctx->resp->id, buf, 2);
+  __resolv_context_put (ctx);
+  return result;
+}
+
+/* Form all types of queries.  Returns the size of the result or -1 on
+   error.
+
+   STATP points to an initialized resolver state.  OP is the opcode of
+   the query.  DNAME is the domain.  CLASS and TYPE are the DNS query
+   class and type.  DATA can be NULL; otherwise, it is a pointer to a
+   domain name which is included in the generated packet (if op ==
+   NS_NOTIFY_OP).  BUF must point to the out buffer of BUFLEN bytes.
+
+   DATALEN and NEWRR_IN are currently ignored.  */
+int
+res_nmkquery (res_state statp, int op, const char *dname,
+              int class, int type,
+              const unsigned char *data, int datalen,
+              const unsigned char *newrr_in,
+              unsigned char *buf, int buflen)
+{
+  return context_mkquery_common
+    (__resolv_context_get_override (statp),
+     op, dname, class, type, data, buf, buflen);
+}
 
 int
 res_mkquery (int op, const char *dname, int class, int type,
@@ -209,13 +231,9 @@ res_mkquery (int op, const char *dname, int class, int type,
              const unsigned char *newrr_in,
              unsigned char *buf, int buflen)
 {
-  if (__res_maybe_init (&_res, 1) == -1)
-    {
-      RES_SET_H_ERRNO (&_res, NETDB_INTERNAL);
-      return -1;
-    }
-  return res_nmkquery (&_res, op, dname, class, type,
-                       data, datalen, newrr_in, buf, buflen);
+  return context_mkquery_common
+    (__resolv_context_get_preinit (),
+     op, dname, class, type, data, buf, buflen);
 }
 
 /* Create an OPT resource record.  Return the length of the final
@@ -227,8 +245,8 @@ res_mkquery (int op, const char *dname, int class, int type,
    pointers to must be BUFLEN bytes long.  ANSLEN is the advertised
    EDNS buffer size (to be included in the OPT resource record).  */
 int
-__res_nopt (res_state statp, int n0, unsigned char *buf, int buflen,
-            int anslen)
+__res_nopt (struct resolv_context *ctx,
+            int n0, unsigned char *buf, int buflen, int anslen)
 {
   uint16_t flags = 0;
   HEADER *hp = (HEADER *) buf;
@@ -269,7 +287,7 @@ __res_nopt (res_state statp, int n0, unsigned char *buf, int buflen,
   *cp++ = NOERROR;              /* Extended RCODE.  */
   *cp++ = 0;                    /* EDNS version.  */
 
-  if (statp->options & RES_USE_DNSSEC)
+  if (ctx->resp->options & RES_USE_DNSSEC)
     flags |= NS_OPT_DNSSEC_OK;
 
   NS_PUT16 (flags, cp);

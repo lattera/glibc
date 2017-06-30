@@ -98,37 +98,6 @@ res_init (void)
 
   return __res_vinit (&_res, 1);
 }
-
-/* Initialize *RESP if RES_INIT is not yet set in RESP->options, or if
-   res_init in some other thread requested re-initializing.  */
-int
-__res_maybe_init (res_state resp, int preinit)
-{
-  if (resp->options & RES_INIT)
-    {
-      if (__res_initstamp != resp->_u._ext.initstamp)
-        {
-          if (resp->nscount > 0)
-            __res_iclose (resp, true);
-          return __res_vinit (resp, 1);
-        }
-      return 0;
-    }
-  else if (preinit)
-    {
-      if (!resp->retrans)
-        resp->retrans = RES_TIMEOUT;
-      if (!resp->retry)
-        resp->retry = RES_DFLRETRY;
-      resp->options = RES_DEFAULT;
-      if (!resp->id)
-        resp->id = res_randomid ();
-      return __res_vinit (resp, 1);
-    }
-  else
-    return __res_ninit (resp);
-}
-libc_hidden_def (__res_maybe_init)
 
 /* This needs to be after the use of _res in res_init, above.  */
 #undef _res

@@ -26,6 +26,8 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <resolv/resolv-internal.h>
+#include <resolv/resolv_context.h>
+#include <resolv/res_use_inet6.h>
 
 #include "dbg_log.h"
 #include "nscd.h"
@@ -100,16 +102,14 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
     no_more = 0;
   nip = hosts_database;
 
-  /* Initialize configurations.  */
-  if (__res_maybe_init (&_res, 0) == -1)
+  /* Initialize configurations.  If we are looking for both IPv4 and
+     IPv6 address we don't want the lookup functions to automatically
+     promote IPv4 addresses to IPv6 addresses.  Therefore, use the
+     _no_inet6 variant.  */
+  struct resolv_context *ctx = __resolv_context_get ();
+  bool enable_inet6 = __resolv_context_disable_inet6 (ctx);
+  if (ctx == NULL)
     no_more = 1;
-
-  /* If we are looking for both IPv4 and IPv6 address we don't want
-     the lookup functions to automatically promote IPv4 addresses to
-     IPv6 addresses.  Currently this is decided by setting the
-     RES_USE_INET6 bit in _res.options.  */
-  int old_res_options = _res.options;
-  _res.options &= ~DEPRECATED_RES_USE_INET6;
 
   size_t tmpbuf6len = 1024;
   char *tmpbuf6 = alloca (tmpbuf6len);
@@ -534,7 +534,8 @@ next_nip:
    }
 
  out:
-  _res.options |= old_res_options & DEPRECATED_RES_USE_INET6;
+  __resolv_context_enable_inet6 (ctx, enable_inet6);
+  __resolv_context_put (ctx);
 
   if (dataset != NULL && !alloca_used)
     {

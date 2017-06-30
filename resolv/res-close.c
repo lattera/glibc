@@ -83,6 +83,7 @@
  */
 
 #include <resolv-internal.h>
+#include <resolv_context.h>
 #include <not-cancel.h>
 
 /* Close all open sockets.  If FREE_ADDR is true, deallocate any
@@ -124,6 +125,8 @@ libc_hidden_def (__res_nclose)
 static void __attribute__ ((section ("__libc_thread_freeres_fn")))
 res_thread_freeres (void)
 {
+  __resolv_context_freeres ();
+
   if (_res.nscount == 0)
     /* Never called res_ninit.  */
     return;

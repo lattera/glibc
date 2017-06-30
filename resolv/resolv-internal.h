@@ -52,9 +52,41 @@ enum
     RESOLV_EDNS_BUFFER_SIZE = 1200,
   };
 
+struct resolv_context;
+
+/* Internal function for implementing res_nmkquery and res_mkquery.
+   Also used by __res_context_query.  */
+int __res_context_mkquery (struct resolv_context *, int op, const char *dname,
+                           int class, int type, const unsigned char *data,
+                           unsigned char *buf, int buflen) attribute_hidden;
+
+/* Main resolver query function for use within glibc.  */
+int __res_context_search (struct resolv_context *, const char *, int, int,
+                          unsigned char *, int, unsigned char **,
+                          unsigned char **, int *, int *, int *);
+libresolv_hidden_proto (__res_context_search)
+
+/* Main resolver query function for use within glibc.  */
+int __res_context_query (struct resolv_context *, const char *, int, int,
+                         unsigned char *, int, unsigned char **,
+                         unsigned char **, int *, int *, int *);
+libresolv_hidden_proto (__res_context_query)
+
+/* Internal function used to implement the query and search
+   functions.  */
+int __res_context_send (struct resolv_context *, const unsigned char *, int,
+                        const unsigned char *, int, unsigned char *,
+                        int, unsigned char **, unsigned char **,
+                        int *, int *, int *) attribute_hidden;
+
+/* Internal function similar to res_hostalias.  */
+const char *__res_context_hostalias (struct resolv_context *,
+                                     const char *, char *, size_t);
+libresolv_hidden_proto (__res_context_hostalias);
+
 /* Add an OPT record to a DNS query.  */
-int __res_nopt (res_state, int n0, unsigned char *buf, int buflen,
-                int anslen) attribute_hidden;
+int __res_nopt (struct resolv_context *, int n0,
+                unsigned char *buf, int buflen, int anslen) attribute_hidden;
 
 /* Convert from presentation format (which usually means ASCII
    printable) to network format (which is usually some kind of binary

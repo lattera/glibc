@@ -23,6 +23,7 @@
 #include <ctype.h>
 #include <wctype.h>
 #include <resolv/resolv-internal.h>
+#include <resolv/resolv_context.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include "nsswitch.h"
@@ -38,11 +39,10 @@ __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
 			    size_t buflen, struct hostent **result,
 			    enum nss_status *status, int af, int *h_errnop)
 {
-  int save;
-
   /* We have to test for the use of IPv6 which can only be done by
      examining `_res'.  */
-  if (__res_maybe_init (&_res, 0) == -1)
+  struct resolv_context *ctx = __resolv_context_get ();
+  if (ctx == NULL)
     {
       if (h_errnop)
 	*h_errnop = NETDB_INTERNAL;
@@ -52,6 +52,21 @@ __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
 	*result = NULL;
       return -1;
     }
+  int ret = __nss_hostname_digits_dots_context
+    (ctx, name, resbuf, buffer, buffer_size, buflen,
+     result, status, af, h_errnop);
+  __resolv_context_put (ctx);
+  return ret;
+}
+
+int
+__nss_hostname_digits_dots_context (struct resolv_context *ctx,
+				    const char *name, struct hostent *resbuf,
+				    char **buffer, size_t *buffer_size,
+				    size_t buflen, struct hostent **result,
+				    enum nss_status *status, int af, int *h_errnop)
+{
+  int save;
 
   /*
    * disallow names consisting only of digits/dots, unless

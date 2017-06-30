@@ -1,3 +1,88 @@
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21668]
+	Introduce temporary resolver contexts (struct resolv_conf).
+	* resolv/resolv-internal.h (__res_context_mkquery)
+	(__res_context_searchl __res_context_query, __res_context_send)
+	(__res_context_hostalias): Declare.
+	(__res_nopt): Switch to struct resolv_context.
+	* resolv/res_use_inet6.h: New file.
+	* resolv/resolv_context.h: Likewise.
+	* resolv/resolv_context.c: Likewise.
+	* resolv/compat-gethnamaddr.c (res_gethostbyname2_context):
+	Renamed from res_gethostbyname2.  Use struct resolv_context.
+	(res_gethostbyname2): New function.  Implement using
+	res_gethostbyname2_context.
+	(res_gethostbyaddr_context): Renamed from res_gethostbyaddr.  Use
+	struct resolv_context.
+	(res_gethostbyaddr): New function.  Implement using
+	res_gethostbyaddr_context.
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Use struct
+	resolv_context.
+	* resolv/nss_dns/dns-host.c (gethostbyname3_context): Renamed from
+	_nss_dns_gethostbyname3_r.  Use struct resolv_context.
+	(_nss_dns_gethostbyname3_r): Implement using gethostbyname3_context.
+	(_nss_dns_gethostbyname_r, _nss_dns_gethostbyname4_r): Likewise.
+	(_nss_dns_gethostbyaddr2_r): Use struct resolv_context.
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r)
+	(_nss_dns_getnetbyaddr_r): Likewise.
+	* resolv/res-close.c (res_thread_freeres): Call
+	__resolv_context_freeres.
+	* resolv/res_libc.c (__res_maybe_init): Remove function.  Moved to
+	maybe_init in resolv/resolv_context.c.
+	* resolv/res_mkquery.c (__res_context_mkquery): Rename from
+	res_nmkquery.  Use struct resolv_context.
+	(context_mkquery_common): New function.
+	(res_nmkquery, res_mkquery): Use it.
+	(res_nopt): Switch to struct resolv_context.
+	* resolv/res_query.c (__res_context_querydomain): Renamed from
+	__libc_res_nquerydomain.  Use struct resolv_context.
+	(__res_context_query): Renamed from __libc_res_nquery.  Use struct
+	resolv_context.
+	(context_query_common): New function.
+	(res_nquery, res_query): Use it.
+	(__res_context_search): Renamed from __libc_res_nsearch.  Use
+	struct resolv_context.
+	(context_search_common): New function.
+	(res_nsearch, res_search): Use it.
+	(__res_context_querydomain): Rename from __libc_res_nquerydomain.
+	Use struct resolv_context.
+	(context_querydomain_common): New function.
+	(res_nquerydomain, res_querydomain): Use it.
+	(__res_context_hostalias): Rename from res_hostalias.  Use struct
+	resolv_context.
+	(context_hostalias_common): New function.
+	(res_hostalias, hostalias): Use it.
+	* resolv/res_send.c (__res_context_send): Renamed from
+	__libc_res_nsend.  Use struct resolv_context.
+	(context_send_common): New function.
+	(res_nsend, res_send): Use it.
+	* resolv/Makefile (routines): Add resolv_context.
+	* resolv/Versions (libc): Export __resolv_context_get,
+	__resolv_context_get_preinit, __resolv_context_get_override,
+	__resolv_context_put.  Remove __res_maybe_init.
+	(libresolv): Export __res_context_query, __res_context_search,
+	__res_context_hostalias.  Remove __libc_res_nquery,
+	__libc_res_nsearch.
+	* include/resolv.h (__res_maybe_init, __libc_res_nquery)
+	(__libc_res_nsearch, __libc_res_nsend): Remove declaration.
+	(__hostalias, __res_nmkquery, __res_nquery, __res_nquerydomain)
+	(__res_hostalias, __res_nsearch, __res_nsend): Remove hidden
+	prototypes.
+	* nss/nsswitch.h (__nss_hostname_digits_dots_context): Declare.
+	* nss/digits_dots.c (__nss_hostname_digits_dots_context): Renamed
+	from __nss_hostname_digits_dots.  Use struct resolv_context.
+	(__nss_hostname_digits_dots): New function.
+	* nss/getXXbyYY.c [HANDLE_DIGITS_DOTS] (FUNCTION_NAME): Acquire
+	struct resolv_context object.  Call new function
+	__nss_hostname_digits_dots_context.
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Use struct resolv_context.
+	* nss/getnssent_r.c (__nss_setent): Likewise.
+	* nscd/aicache.c (addhstaiX): Use struct resolv_context,
+	__resolv_context_disable_inet6 and __resolv_context_enable_inet6
+	instead of direct _res manipulation.
+	* sysdeps/posix/getaddrinfo.c (gethosts, gaih_inet): Likewise.
+
 2017-07-03  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/tst-resolv-res_init-skeleton.c

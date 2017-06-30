@@ -60,6 +60,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <netdb.h>
 #include <nss.h>
 #include <resolv/resolv-internal.h>
+#include <resolv/resolv_context.h>
+#include <resolv/res_use_inet6.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdio_ext.h>
@@ -266,7 +268,8 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
       if (herrno == NETDB_INTERNAL)					      \
 	{								      \
 	  __set_h_errno (herrno);					      \
-	  _res.options |= old_res_options & DEPRECATED_RES_USE_INET6;	      \
+	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
+	  __resolv_context_put (res_ctx);				      \
 	  result = -EAI_SYSTEM;						      \
 	  goto free_and_return;						      \
 	}								      \
@@ -279,7 +282,8 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
     {									      \
       if (!convert_hostent_to_gaih_addrtuple (req, _family,h, &addrmem))      \
 	{								      \
-	  _res.options |= old_res_options & DEPRECATED_RES_USE_INET6;	      \
+	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
+	  __resolv_context_put (res_ctx);				      \
 	  result = -EAI_SYSTEM;						      \
 	  goto free_and_return;						      \
 	}								      \
@@ -582,7 +586,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  enum nss_status inet6_status = NSS_STATUS_UNAVAIL;
 	  enum nss_status status = NSS_STATUS_UNAVAIL;
 	  int no_more;
-	  int old_res_options;
+	  struct resolv_context *res_ctx = NULL;
+	  bool res_enable_inet6 = false;
 
 	  /* If we do not have to look for IPv6 addresses or the canonical
 	     name, use the simple, old functions, which do not support
@@ -765,16 +770,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    no_more = 0;
 	  nip = __nss_hosts_database;
 
-	  /* Initialize configurations.  */
-	  if (__res_maybe_init (&_res, 0) == -1)
-	    no_more = 1;
-
 	  /* If we are looking for both IPv4 and IPv6 address we don't
 	     want the lookup functions to automatically promote IPv4
-	     addresses to IPv6 addresses.  Currently this is decided
-	     by setting the RES_USE_INET6 bit in _res.options.  */
-	  old_res_options = _res.options;
-	  _res.options &= ~DEPRECATED_RES_USE_INET6;
+	     addresses to IPv6 addresses, so we use the no_inet6
+	     function variant.  */
+	  res_ctx = __resolv_context_get ();
+	  res_enable_inet6 = __resolv_context_disable_inet6 (res_ctx);
+	  if (res_ctx == NULL)
+	    no_more = 1;
 
 	  while (!no_more)
 	    {
@@ -811,8 +814,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 		      if (!scratch_buffer_grow (tmpbuf))
 			{
-			  _res.options
-			    |= old_res_options & DEPRECATED_RES_USE_INET6;
+			  __resolv_context_enable_inet6
+			    (res_ctx, res_enable_inet6);
+			  __resolv_context_put (res_ctx);
 			  result = -EAI_MEMORY;
 			  goto free_and_return;
 			}
@@ -911,9 +915,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			      canonbuf = getcanonname (nip, at, name);
 			      if (canonbuf == NULL)
 				{
-				  _res.options
-				    |= old_res_options
-				    & DEPRECATED_RES_USE_INET6;
+				  __resolv_context_enable_inet6
+				    (res_ctx, res_enable_inet6);
+				  __resolv_context_put (res_ctx);
 				  result = -EAI_MEMORY;
 				  goto free_and_return;
 				}
@@ -953,7 +957,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		nip = nip->next;
 	    }
 
-	  _res.options |= old_res_options & DEPRECATED_RES_USE_INET6;
+	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);
+	  __resolv_context_put (res_ctx);
 
 	  if (h_errno == NETDB_INTERNAL)
 	    {

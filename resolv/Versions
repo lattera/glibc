@@ -26,8 +26,12 @@ libc {
 
     __h_errno; __resp;
 
-    __res_maybe_init; __res_iclose;
+    __res_iclose;
     __inet_pton_length;
+    __resolv_context_get;
+    __resolv_context_get_preinit;
+    __resolv_context_get_override;
+    __resolv_context_put;
   }
 }
 
@@ -79,7 +83,9 @@ libresolv {
     # Needed in libnss_dns.
     __ns_name_unpack; __ns_name_ntop;
     __ns_get16; __ns_get32;
-    __libc_res_nquery; __libc_res_nsearch;
+    __res_context_query;
+    __res_context_search;
+    __res_context_hostalias;
   }
 }
 

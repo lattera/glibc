@@ -102,6 +102,7 @@
 #include <fcntl.h>
 #include <netdb.h>
 #include <resolv/resolv-internal.h>
+#include <resolv/resolv_context.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
@@ -400,11 +401,14 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 libresolv_hidden_def (res_queriesmatch)
 
 int
-__libc_res_nsend(res_state statp, const u_char *buf, int buflen,
-		 const u_char *buf2, int buflen2,
-		 u_char *ans, int anssiz, u_char **ansp, u_char **ansp2,
-		 int *nansp2, int *resplen2, int *ansp2_malloced)
+__res_context_send (struct resolv_context *ctx,
+		    const unsigned char *buf, int buflen,
+		    const unsigned char *buf2, int buflen2,
+		    unsigned char *ans, int anssiz,
+		    unsigned char **ansp, unsigned char **ansp2,
+		    int *nansp2, int *resplen2, int *ansp2_malloced)
 {
+	struct __res_state *statp = ctx->resp;
 	int gotsomewhere, terrno, try, v_circuit, resplen, n;
 
 	if (statp->nscount == 0) {
@@ -541,22 +545,36 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 	return (-1);
 }
 
-int
-res_nsend(res_state statp,
-	  const u_char *buf, int buflen, u_char *ans, int anssiz)
+/* Common part of res_nsend and res_send.  */
+static int
+context_send_common (struct resolv_context *ctx,
+		     const unsigned char *buf, int buflen,
+		     unsigned char *ans, int anssiz)
 {
-  return __libc_res_nsend(statp, buf, buflen, NULL, 0, ans, anssiz,
-			  NULL, NULL, NULL, NULL, NULL);
+  if (ctx == NULL)
+    {
+      RES_SET_H_ERRNO (&_res, NETDB_INTERNAL);
+      return -1;
+    }
+  int result = __res_context_send (ctx, buf, buflen, NULL, 0, ans, anssiz,
+				   NULL, NULL, NULL, NULL, NULL);
+  __resolv_context_put (ctx);
+  return result;
 }
-libresolv_hidden_def (res_nsend)
+
+int
+res_nsend (res_state statp, const unsigned char *buf, int buflen,
+	   unsigned char *ans, int anssiz)
+{
+  return context_send_common
+    (__resolv_context_get_override (statp), buf, buflen, ans, anssiz);
+}
 
 int
 res_send (const unsigned char *buf, int buflen, unsigned char *ans, int anssiz)
 {
-  if (__res_maybe_init (&_res, 1) == -1)
-    /* errno should have been set by res_init in this case.  */
-    return -1;
-  return res_nsend (&_res, buf, buflen, ans, anssiz);
+  return context_send_common
+    (__resolv_context_get (), buf, buflen, ans, anssiz);
 }
 
 /* Private */

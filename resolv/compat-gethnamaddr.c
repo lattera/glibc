@@ -67,6 +67,7 @@
 # include <stdio.h>
 # include <netdb.h>
 # include <resolv/resolv-internal.h>
+# include <resolv/resolv_context.h>
 # include <ctype.h>
 # include <errno.h>
 # include <stdlib.h>
@@ -83,6 +84,9 @@ static char hostbuf[8*1024];
 static u_char host_addr[16];	/* IPv4 or IPv6 */
 static FILE *hostf = NULL;
 static int stayopen = 0;
+
+static struct hostent *res_gethostbyname2_context (struct resolv_context *,
+						   const char *name, int af);
 
 static void map_v4v6_address (const char *src, char *dst) __THROW;
 static void map_v4v6_hostent (struct hostent *hp, char **bp, int *len) __THROW;
@@ -428,23 +432,31 @@ libresolv_hidden_proto (res_gethostbyname2)
 struct hostent *
 res_gethostbyname (const char *name)
 {
-	struct hostent *hp;
+  struct resolv_context *ctx = __resolv_context_get ();
+  if (ctx == NULL)
+    {
+      __set_h_errno (NETDB_INTERNAL);
+      return NULL;
+    }
 
-	if (__res_maybe_init (&_res, 0) == -1) {
-		__set_h_errno (NETDB_INTERNAL);
-		return (NULL);
+  if (res_use_inet6 ())
+    {
+      struct hostent *hp = res_gethostbyname2_context (ctx, name, AF_INET6);
+      if (hp != NULL)
+	{
+	  __resolv_context_put (ctx);
+	  return hp;
 	}
-	if (res_use_inet6 ()) {
-		hp = res_gethostbyname2(name, AF_INET6);
-		if (hp)
-			return (hp);
-	}
-	return (res_gethostbyname2(name, AF_INET));
+    }
+  struct hostent *hp = res_gethostbyname2_context (ctx, name, AF_INET);
+  __resolv_context_put (ctx);
+  return hp;
 }
 compat_symbol (libresolv, res_gethostbyname, res_gethostbyname, GLIBC_2_0);
 
-struct hostent *
-res_gethostbyname2 (const char *name, int af)
+static struct hostent *
+res_gethostbyname2_context (struct resolv_context *ctx,
+			    const char *name, int af)
 {
 	union
 	{
@@ -456,11 +468,6 @@ res_gethostbyname2 (const char *name, int af)
 	char *bp;
 	int n, size, type, len;
 	struct hostent *ret;
-
-	if (__res_maybe_init (&_res, 0) == -1) {
-		__set_h_errno (NETDB_INTERNAL);
-		return (NULL);
-	}
 
 	switch (af) {
 	case AF_INET:
@@ -485,8 +492,10 @@ res_gethostbyname2 (const char *name, int af)
 	 * this is also done in res_query() since we are not the only
 	 * function that looks up host names.
 	 */
-	if (!strchr(name, '.') && (cp = __hostalias(name)))
-		name = cp;
+	char abuf[MAXDNAME];
+	if (strchr (name, '.') != NULL
+	    && (cp = __res_context_hostalias (ctx, name, abuf, sizeof (abuf))))
+	  name = cp;
 
 	/*
 	 * disallow names consisting only of digits/dots, unless
@@ -558,8 +567,9 @@ res_gethostbyname2 (const char *name, int af)
 
 	buf.buf = origbuf = (querybuf *) alloca (1024);
 
-	if ((n = __libc_res_nsearch(&_res, name, C_IN, type, buf.buf->buf, 1024,
-				    &buf.ptr, NULL, NULL, NULL, NULL)) < 0) {
+	if ((n = __res_context_search
+	     (ctx, name, C_IN, type, buf.buf->buf, 1024,
+	      &buf.ptr, NULL, NULL, NULL, NULL)) < 0) {
 		if (buf.buf != origbuf)
 			free (buf.buf);
 		Dprintf("res_nsearch failed (%d)\n", n);
@@ -572,11 +582,26 @@ res_gethostbyname2 (const char *name, int af)
 		free (buf.buf);
 	return ret;
 }
+
+struct hostent *
+res_gethostbyname2 (const char *name, int af)
+{
+  struct resolv_context *ctx = __resolv_context_get ();
+  if (ctx == NULL)
+    {
+      __set_h_errno (NETDB_INTERNAL);
+      return NULL;
+    }
+  struct hostent *hp = res_gethostbyname2_context (ctx, name, AF_INET);
+  __resolv_context_put (ctx);
+  return hp;
+}
 libresolv_hidden_def (res_gethostbyname2)
 compat_symbol (libresolv, res_gethostbyname2, res_gethostbyname2, GLIBC_2_0);
 
-struct hostent *
-res_gethostbyaddr (const void *addr, socklen_t len, int af)
+static struct hostent *
+res_gethostbyaddr_context (struct resolv_context *ctx,
+			   const void *addr, socklen_t len, int af)
 {
 	const u_char *uaddr = (const u_char *)addr;
 	static const u_char mapped[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0xff,0xff };
@@ -592,10 +617,6 @@ res_gethostbyaddr (const void *addr, socklen_t len, int af)
 	struct hostent *hp;
 	char qbuf[MAXDNAME+1], *qp = NULL;
 
-	if (__res_maybe_init (&_res, 0) == -1) {
-		__set_h_errno (NETDB_INTERNAL);
-		return (NULL);
-	}
 	if (af == AF_INET6 && len == IN6ADDRSZ &&
 	    (!memcmp(uaddr, mapped, sizeof mapped) ||
 	     !memcmp(uaddr, tunnelled, sizeof tunnelled))) {
@@ -645,8 +666,8 @@ res_gethostbyaddr (const void *addr, socklen_t len, int af)
 
 	buf.buf = orig_buf = (querybuf *) alloca (1024);
 
-	n = __libc_res_nquery(&_res, qbuf, C_IN, T_PTR, buf.buf->buf, 1024,
-			      &buf.ptr, NULL, NULL, NULL, NULL);
+	n = __res_context_query (ctx, qbuf, C_IN, T_PTR, buf.buf->buf, 1024,
+				 &buf.ptr, NULL, NULL, NULL, NULL);
 	if (n < 0) {
 		if (buf.buf != orig_buf)
 			free (buf.buf);
@@ -672,6 +693,20 @@ res_gethostbyaddr (const void *addr, socklen_t len, int af)
 	}
 	__set_h_errno (NETDB_SUCCESS);
 	return (hp);
+}
+
+struct hostent *
+res_gethostbyaddr (const void *addr, socklen_t len, int af)
+{
+  struct resolv_context *ctx = __resolv_context_get ();
+  if (ctx == NULL)
+    {
+      __set_h_errno (NETDB_INTERNAL);
+      return NULL;
+    }
+  struct hostent *hp = res_gethostbyaddr_context (ctx, addr, len, af);
+  __resolv_context_put (ctx);
+  return hp;
 }
 compat_symbol (libresolv, res_gethostbyaddr, res_gethostbyaddr, GLIBC_2_0);
 

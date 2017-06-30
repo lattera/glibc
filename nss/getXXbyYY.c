@@ -47,6 +47,11 @@
 |*								   *|
 \*******************************************************************/
 
+
+#ifdef HANDLE_DIGITS_DOTS
+# include <resolv/resolv_context.h>
+#endif
+
 /* To make the real sources a bit prettier.  */
 #define REENTRANT_NAME APPEND_R (FUNCTION_NAME)
 #define APPEND_R(name) APPEND_R1 (name)
@@ -93,6 +98,19 @@ FUNCTION_NAME (ADD_PARAMS)
   int h_errno_tmp = 0;
 #endif
 
+#ifdef HANDLE_DIGITS_DOTS
+  /* Wrap both __nss_hostname_digits_dots and the actual lookup
+     function call in the same context.  */
+  struct resolv_context *res_ctx = __resolv_context_get ();
+  if (res_ctx == NULL)
+    {
+# if NEED_H_ERRNO
+      __set_h_errno (NETDB_INTERNAL);
+# endif
+      return NULL;
+    }
+#endif
+
   /* Get lock.  */
   __libc_lock_lock (lock);
 
@@ -105,9 +123,9 @@ FUNCTION_NAME (ADD_PARAMS)
 #ifdef HANDLE_DIGITS_DOTS
   if (buffer != NULL)
     {
-      if (__nss_hostname_digits_dots (name, &resbuf, &buffer,
-				      &buffer_size, 0, &result, NULL, AF_VAL,
-				      H_ERRNO_VAR_P))
+      if (__nss_hostname_digits_dots_context
+	  (res_ctx, name, &resbuf, &buffer, &buffer_size, 0, &result, NULL,
+	   AF_VAL, H_ERRNO_VAR_P))
 	goto done;
     }
 #endif
@@ -142,6 +160,10 @@ done:
 #endif
   /* Release lock.  */
   __libc_lock_unlock (lock);
+
+#ifdef HANDLE_DIGITS_DOTS
+  __resolv_context_put (res_ctx);
+#endif
 
 #ifdef NEED_H_ERRNO
   if (h_errno_tmp != 0)
