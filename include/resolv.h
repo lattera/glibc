@@ -90,8 +90,5 @@ libresolv_hidden_proto (__b64_ntop)
 libresolv_hidden_proto (__dn_count_labels)
 libresolv_hidden_proto (__p_secstodate)
 
-extern const char *_res_opcodes[];
-libresolv_hidden_proto (_res_opcodes)
-
 # endif /* _RESOLV_H_ && !_ISOMAC */
 #endif

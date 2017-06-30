@@ -106,6 +106,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <shlib-compat.h>
 
 #ifdef SPRINTF_CHAR
 # define SPRINTF(x) strlen(sprintf/**/x)
@@ -115,7 +116,12 @@
 
 extern const char *_res_sectioncodes[] attribute_hidden;
 
-const char *_res_opcodes[] =
+/* _res_opcodes was exported by accident as a variable.  */
+#if SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_26)
+static const char *res_opcodes[] =
+#else
+static const char res_opcodes[][9] =
+#endif
   {
     "QUERY",
     "IQUERY",
@@ -134,7 +140,9 @@ const char *_res_opcodes[] =
     "ZONEINIT",
     "ZONEREF",
   };
-libresolv_hidden_data_def (_res_opcodes)
+#if SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_26)
+strong_alias (res_opcodes, _res_opcodes)
+#endif
 
 static const char *p_section(int section, int opcode);
 
@@ -259,7 +267,7 @@ fp_nquery (const unsigned char *msg, int len, FILE *file)
 	if ((!pfcode) || (pfcode & RES_PRF_HEADX) || rcode)
 		fprintf(file,
 			";; ->>HEADER<<- opcode: %s, status: %s, id: %d\n",
-			_res_opcodes[opcode], p_rcode(rcode), id);
+			res_opcodes[opcode], p_rcode(rcode), id);
 	if ((!pfcode) || (pfcode & RES_PRF_HEADX))
 		putc(';', file);
 	if ((!pfcode) || (pfcode & RES_PRF_HEAD2)) {

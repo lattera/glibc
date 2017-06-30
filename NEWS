@@ -234,6 +234,9 @@ Version 2.26
   will now randomly pick a name server from the configuration as a starting
   point.  (Previously, the second name server was always used.)
 
+* The _res_opcodes variable has been removed from libresolv.  It had been
+  exported by accident.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,
