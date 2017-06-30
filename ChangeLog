@@ -1,5 +1,10 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_debug.h: Remove file.
+	* resolv/README: Adjust.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_end.c (DEBUG): Remove macro and preprocessor
 	conditionals.
 	(Aerror, Perror): Remove function definitions.
