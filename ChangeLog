@@ -1,5 +1,10 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_data.c (res_isourserver, res_send): Move to ...
+	* resolv/res_send.c (res_isourserver, res_send): here.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_debug.c (_res_opcodes): Rename ...
 	(res_opcodes): ... as compatibility symbol.
 	(fp_nquery): Use res_opcodes.

@@ -243,6 +243,12 @@ res_ourserver_p(const res_state statp, const struct sockaddr_in6 *inp)
 	return (0);
 }
 
+int
+res_isourserver (const struct sockaddr_in *inp)
+{
+  return res_ourserver_p (&_res, (const struct sockaddr_in6 *) inp);
+}
+
 /* int
  * res_nameinquery(name, type, class, buf, eom)
  *	look for (name,type,class) in the query section of packet (buf,eom)
@@ -543,6 +549,15 @@ res_nsend(res_state statp,
 			  NULL, NULL, NULL, NULL, NULL);
 }
 libresolv_hidden_def (res_nsend)
+
+int
+res_send (const unsigned char *buf, int buflen, unsigned char *ans, int anssiz)
+{
+  if (__res_maybe_init (&_res, 1) == -1)
+    /* errno should have been set by res_init in this case.  */
+    return -1;
+  return res_nsend (&_res, buf, buflen, ans, anssiz);
+}
 
 /* Private */
 

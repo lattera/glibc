@@ -45,22 +45,6 @@ res_query(const char *name,	/* domain name */
 	return (res_nquery(&_res, name, class, type, answer, anslen));
 }
 
-int
-res_isourserver(const struct sockaddr_in *inp) {
-	return (res_ourserver_p(&_res, (const struct sockaddr_in6 *) inp));
-}
-
-int
-res_send(const u_char *buf, int buflen, u_char *ans, int anssiz) {
-	if (__res_maybe_init (&_res, 1) == -1) {
-		/* errno should have been set by res_init() in this case. */
-		return (-1);
-	}
-
-	return (res_nsend(&_res, buf, buflen, ans, anssiz));
-}
-
-
 void
 res_close(void) {
 	/*
