@@ -15,35 +15,7 @@
  * SOFTWARE.
  */
 
-#include <sys/types.h>
-#include <sys/param.h>
-#include <sys/socket.h>
-#include <sys/time.h>
-
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <arpa/nameser.h>
-
-#include <ctype.h>
-#include <netdb.h>
 #include <resolv.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-int
-res_query(const char *name,	/* domain name */
-	  int class, int type,	/* class and type of query */
-	  u_char *answer,	/* buffer to put answer */
-	  int anslen)		/* size of answer buffer */
-{
-	if (__res_maybe_init (&_res, 1) == -1) {
-		RES_SET_H_ERRNO(&_res, NETDB_INTERNAL);
-		return (-1);
-	}
-	return (res_nquery(&_res, name, class, type, answer, anslen));
-}
 
 void
 res_close(void) {
@@ -60,55 +32,3 @@ res_close(void) {
 	   did it and it would be done implicitly on shutdown.  */
 	__res_iclose(&_res, false);
 }
-
-int
-res_search(const char *name,	/* domain name */
-	   int class, int type,	/* class and type of query */
-	   u_char *answer,	/* buffer to put answer */
-	   int anslen)		/* size of answer */
-{
-	if (__res_maybe_init (&_res, 1) == -1) {
-		RES_SET_H_ERRNO(&_res, NETDB_INTERNAL);
-		return (-1);
-	}
-
-	return (res_nsearch(&_res, name, class, type, answer, anslen));
-}
-
-int
-res_querydomain(const char *name,
-		const char *domain,
-		int class, int type,	/* class and type of query */
-		u_char *answer,		/* buffer to put answer */
-		int anslen)		/* size of answer */
-{
-	if (__res_maybe_init (&_res, 1) == -1) {
-		RES_SET_H_ERRNO(&_res, NETDB_INTERNAL);
-		return (-1);
-	}
-
-	return (res_nquerydomain(&_res, name, domain,
-				 class, type,
-				 answer, anslen));
-}
-
-const char *
-hostalias(const char *name) {
-	static char abuf[MAXDNAME];
-
-	return (res_hostalias(&_res, name, abuf, sizeof abuf));
-}
-libresolv_hidden_def (hostalias)
-
-
-
-#include <shlib-compat.h>
-
-#if SHLIB_COMPAT(libresolv, GLIBC_2_0, GLIBC_2_2)
-# undef res_query
-# undef res_querydomain
-# undef res_search
-weak_alias (__res_query, res_query);
-weak_alias (__res_querydomain, res_querydomain);
-weak_alias (__res_search, res_search);
-#endif

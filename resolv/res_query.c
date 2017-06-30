@@ -78,7 +78,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <resolv/resolv-internal.h>
+#include <shlib-compat.h>
 
 /* Options.  Leave them on. */
 /* #undef DEBUG */
@@ -319,6 +319,18 @@ res_nquery(res_state statp,
 }
 libresolv_hidden_def (res_nquery)
 
+int
+res_query (const char *name, int class, int type,
+	   unsigned char *answer, int anslen)
+{
+  if (__res_maybe_init (&_res, 1) == -1)
+    {
+      RES_SET_H_ERRNO (&_res, NETDB_INTERNAL);
+      return -1;
+    }
+  return res_nquery (&_res, name, class, type, answer, anslen);
+}
+
 /*
  * Formulate a normal query, send, and retrieve answer in supplied buffer.
  * Return the size of the response on success, -1 on error.
@@ -545,6 +557,19 @@ res_nsearch(res_state statp,
 }
 libresolv_hidden_def (res_nsearch)
 
+int
+res_search (const char *name, int class, int type,
+	    unsigned char *answer, int anslen)
+{
+  if (__res_maybe_init (&_res, 1) == -1)
+    {
+      RES_SET_H_ERRNO (&_res, NETDB_INTERNAL);
+      return -1;
+    }
+
+  return res_nsearch (&_res, name, class, type, answer, anslen);
+}
+
 /*
  * Perform a call on res_query on the concatenation of name and domain.
  */
@@ -610,6 +635,19 @@ res_nquerydomain(res_state statp,
 }
 libresolv_hidden_def (res_nquerydomain)
 
+int
+res_querydomain (const char *name, const char *domain, int class, int type,
+		 unsigned char *answer, int anslen)
+{
+  if (__res_maybe_init (&_res, 1) == -1)
+    {
+      RES_SET_H_ERRNO (&_res, NETDB_INTERNAL);
+      return -1;
+    }
+
+  return res_nquerydomain (&_res, name, domain, class, type, answer, anslen);
+}
+
 const char *
 res_hostalias(const res_state statp, const char *name, char *dst, size_t siz) {
 	char *file, *cp1, *cp2;
@@ -647,3 +685,20 @@ res_hostalias(const res_state statp, const char *name, char *dst, size_t siz) {
 	return (NULL);
 }
 libresolv_hidden_def (res_hostalias)
+
+const char *
+hostalias (const char *name)
+{
+  static char abuf[MAXDNAME];
+  return res_hostalias (&_res, name, abuf, sizeof abuf);
+}
+libresolv_hidden_def (hostalias)
+
+#if SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_2)
+# undef res_query
+# undef res_querydomain
+# undef res_search
+weak_alias (__res_query, res_query);
+weak_alias (__res_querydomain, res_querydomain);
+weak_alias (__res_search, res_search);
+#endif
