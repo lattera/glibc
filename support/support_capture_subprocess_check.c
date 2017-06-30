@@ -48,7 +48,7 @@ support_capture_subprocess_check (struct support_capture_subprocess *proc,
     {
       print_context (context, &failed);
       printf ("error:   expected exit status: %d\n", status);
-      printf ("error:   actual exit status:   %d\n", status);
+      printf ("error:   actual exit status:   %d\n", proc->status);
     }
   if (!(allowed & sc_allow_stdout) && proc->out.length != 0)
     {

@@ -1,5 +1,10 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	* support/support_capture_subprocess_check.c
+	(support_capture_subprocess_check): Report actual exit status.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19570]
 	* resolv/res_send.c (nameserver_offset): New function.
 	(__libc_res_nsend): Use it to implement RES_ROTATE.
