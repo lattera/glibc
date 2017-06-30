@@ -257,6 +257,15 @@ enum test_init
   test_init_method_last = test_getaddrinfo
 };
 
+static const char *const test_init_names[] =
+  {
+    [test_init] = "res_init",
+    [test_ninit] = "res_init",
+    [test_mkquery] = "res_mkquery",
+    [test_gethostbyname] = "gethostbyname",
+    [test_getaddrinfo] = "getaddrinfo",
+  };
+
 /* Closure argument for run_res_init.  */
 struct test_context
 {
@@ -507,7 +516,8 @@ test_file_contents (const struct test_case *t)
          ++init_method)
       {
         if (test_verbose > 0)
-          printf ("info:  testing init method %d\n", init_method);
+          printf ("info:  testing init method %s\n",
+                  test_init_names[init_method]);
         struct test_context ctx = { .init = init_method, .t = t };
         void (*func) (void *) = run_res_init;
 #if TEST_THREAD
@@ -519,7 +529,8 @@ test_file_contents (const struct test_case *t)
         if (strcmp (proc.out.buffer, t->expected) != 0)
           {
             support_record_failure ();
-            printf ("error: output mismatch for %s\n", t->name);
+            printf ("error: output mismatch for %s (init method %s)\n",
+                    t->name, test_init_names[init_method]);
             support_run_diff ("expected", t->expected,
                               "actual", proc.out.buffer);
           }
