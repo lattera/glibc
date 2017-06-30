@@ -112,6 +112,67 @@ __resolv_context_search_list (const struct resolv_context *ctx, size_t index)
   return NULL;
 }
 
+/* Return the number of name servers.  */
+static __attribute__ ((nonnull (1), unused)) size_t
+__resolv_context_nameserver_count (const struct resolv_context *ctx)
+{
+  if (ctx->conf != NULL)
+    return ctx->conf->nameserver_list_size;
+  else
+    return ctx->resp->nscount;
+}
+
+/* Return a pointer to the socket address of the name server INDEX, or
+   NULL if the index is out of bounds.  */
+static __attribute__ ((nonnull (1), unused)) const struct sockaddr *
+__resolv_context_nameserver (const struct resolv_context *ctx, size_t index)
+{
+  if (ctx->conf != NULL)
+    {
+      if (index < ctx->conf->nameserver_list_size)
+        return ctx->conf->nameserver_list[index];
+    }
+  else
+    if (index < ctx->resp->nscount)
+      {
+        if (ctx->resp->nsaddr_list[index].sin_family != 0)
+          return (const struct sockaddr *) &ctx->resp->nsaddr_list[index];
+        else
+          return (const struct sockaddr *) &ctx->resp->_u._ext.nsaddrs[index];
+      }
+  return NULL;
+}
+
+/* Return the number of sort list entries.  */
+static __attribute__ ((nonnull (1), unused)) size_t
+__resolv_context_sort_count (const struct resolv_context *ctx)
+{
+  if (ctx->conf != NULL)
+    return ctx->conf->sort_list_size;
+  else
+    return ctx->resp->nsort;
+}
+
+/* Return the sort list entry at INDEX.  */
+static __attribute__ ((nonnull (1), unused)) struct resolv_sortlist_entry
+__resolv_context_sort_entry (const struct resolv_context *ctx, size_t index)
+{
+  if (ctx->conf != NULL)
+    {
+      if (index < ctx->conf->sort_list_size)
+        return ctx->conf->sort_list[index];
+      /* Fall through.  */
+    }
+  else if (index < ctx->resp->nsort)
+    return (struct resolv_sortlist_entry)
+      {
+        .addr = ctx->resp->sort_list[index].addr,
+        .mask = ctx->resp->sort_list[index].mask,
+      };
+
+  return (struct resolv_sortlist_entry) { .mask = 0, };
+}
+
 /* Called during thread shutdown to free the associated resolver
    context (mostly in response to cancellation, otherwise the
    __resolv_context_get/__resolv_context_put pairing will already have

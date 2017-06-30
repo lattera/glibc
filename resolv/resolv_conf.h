@@ -19,8 +19,16 @@
 #ifndef RESOLV_STATE_H
 #define RESOLV_STATE_H
 
+#include <netinet/in.h>
 #include <stdbool.h>
 #include <stddef.h>
+
+/* This type corresponds to members of the _res.sort_list array.  */
+struct resolv_sortlist_entry
+{
+  struct in_addr addr;
+  uint32_t mask;
+};
 
 /* Extended resolver state associated with res_state objects.  Client
    code can reach this state through a struct resolv_context
@@ -36,9 +44,24 @@ struct resolv_conf
      zero.  For internal use within resolv_conf only.  */
   size_t __refcount;
 
+  /* List of IPv4 and IPv6 name server addresses.  */
+  const struct sockaddr **nameserver_list;
+  size_t nameserver_list_size;
+
   /* The domain names forming the search list.  */
   const char *const *search_list;
   size_t search_list_size;
+
+  /* IPv4 address preference rules.  */
+  const struct resolv_sortlist_entry *sort_list;
+  size_t sort_list_size;
+
+  /* _res.options has type unsigned long, but we can only use 32 bits
+     for portability across all architectures.  */
+  unsigned int options;
+  unsigned int retrans;         /* Timeout.  */
+  unsigned int retry;           /* Number of times to retry.  */
+  unsigned int ndots; /* Dots needed for initial non-search query.  */
 };
 
 /* The functions below are for use by the res_init resolv.conf parser

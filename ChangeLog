@@ -1,5 +1,41 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	Mirror the entire resolver configuration in struct resolv_conf.
+	* resolv/resolv_context.h (__resolv_context_nameserver_count)
+	(__resolv_context_nameserver): New functions.
+	(__resolv_context_sort_count, __resolv_context_sort_entry):
+	Likewise.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Add struct
+	resolv_context parameter.
+	(gethostbyname3_context, _nss_dns_gethostbyaddr2_r): Adjust.
+	(addrsort): Switch to struct resolv_context.
+	* resolv/resolv_conf.h (struct resolv_sortlist_entry): Define.
+	(struct resolv_conf): Add nameserver_list, nameserver_list_size,
+	sort_list, sort_list_size, options, retrans, retry, ndots members.
+	* resolv/resolv_conf.c (same_address_v4, same_address_v6)
+	(same_address): New functions.
+	(resolv_conf_matches): Compare the new array members.
+	(__resolv_conf_allocate): Allocate and copy the new array members.
+	(update_from_conf): Copy the entire configuration.
+	* resolv/res_init.c (struct nameserver_list, struct sort_list):
+	Define using dynarray.
+	(struct resolv_conf_parser): Add nameserver_list, sort_list,
+	template members.
+	(resolv_conf_parser_init): Add preinit argument.  Initialize the
+	new members.
+	(resolv_conf_parser_free): Deallocate the new arrays.
+	(allocate_address_v4): New function.
+	(res_setoptions): Switch to struct resolv_conf_parser * parameter.
+	(res_vinit_1): Drop res_state parameter.  Write all parsed date to
+	the parser object instead.  Use allocate_address_v4 to allocate
+	IPv4 addresses.
+	(__res_vinit): Adjust.
+	* resolv/tst-resolv-res_init-skeleton.c (print_resp): Print the
+	extended name server list.
+	(test_cases): Adjust.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19569]
 	[BZ #21475]
 	Support an arbitrary number of search domains.

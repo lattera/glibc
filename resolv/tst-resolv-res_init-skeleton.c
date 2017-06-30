@@ -242,6 +242,46 @@ print_resp (FILE *fp, res_state resp)
         }
     }
 
+  /* The extended name server list.  */
+  {
+    size_t i = 0;
+    while (true)
+      {
+        const struct sockaddr *addr = __resolv_context_nameserver (ctx, i);
+        if (addr == NULL)
+          break;
+        size_t addrlen;
+        switch (addr->sa_family)
+          {
+          case AF_INET:
+            addrlen = sizeof (struct sockaddr_in);
+            break;
+          case AF_INET6:
+            addrlen = sizeof (struct sockaddr_in6);
+            break;
+          default:
+            FAIL_EXIT1 ("invalid address family %d", addr->sa_family);
+          }
+
+        char host[NI_MAXHOST];
+        char service[NI_MAXSERV];
+        int ret = getnameinfo (addr, addrlen,
+                               host, sizeof (host), service, sizeof (service),
+                               NI_NUMERICHOST | NI_NUMERICSERV);
+
+        if (ret != 0)
+          {
+            if (ret == EAI_SYSTEM)
+              fprintf (fp, "; error: getnameinfo: %m\n");
+            else
+              fprintf (fp, "; error: getnameinfo: %s\n", gai_strerror (ret));
+          }
+        else
+          fprintf (fp, "; nameserver[%zu]: [%s]:%s\n", i, host, service);
+        ++i;
+      }
+  }
+
   TEST_VERIFY (!ferror (fp));
 
   __resolv_context_put (ctx);
@@ -391,12 +431,14 @@ struct test_case test_cases[] =
      .expected = "search example.com\n"
      "; search[0]: example.com\n"
      "nameserver 127.0.0.1\n"
+     "; nameserver[0]: [127.0.0.1]:53\n"
     },
     {.name = "empty file with LOCALDOMAIN",
      .conf = "",
      .expected = "search example.net\n"
      "; search[0]: example.net\n"
-     "nameserver 127.0.0.1\n",
+     "nameserver 127.0.0.1\n"
+     "; nameserver[0]: [127.0.0.1]:53\n",
      .localdomain = "example.net",
     },
     {.name = "empty file with RES_OPTIONS",
@@ -404,7 +446,8 @@ struct test_case test_cases[] =
      .expected = "options attempts:5 edns0\n"
      "search example.com\n"
      "; search[0]: example.com\n"
-     "nameserver 127.0.0.1\n",
+     "nameserver 127.0.0.1\n"
+     "; nameserver[0]: [127.0.0.1]:53\n",
      .res_options = "edns0 attempts:5",
     },
     {.name = "empty file with RES_OPTIONS and LOCALDOMAIN",
@@ -412,7 +455,8 @@ struct test_case test_cases[] =
      .expected = "options attempts:5 edns0\n"
      "search example.org\n"
      "; search[0]: example.org\n"
-     "nameserver 127.0.0.1\n",
+     "nameserver 127.0.0.1\n"
+     "; nameserver[0]: [127.0.0.1]:53\n",
      .localdomain = "example.org",
      .res_options = "edns0 attempts:5",
     },
@@ -424,6 +468,7 @@ struct test_case test_cases[] =
      "; search[0]: corp.example.com\n"
      "; search[1]: example.com\n"
      "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
     },
     {.name = "whitespace",
      .conf = "# This test covers comment and whitespace processing "
@@ -440,6 +485,8 @@ struct test_case test_cases[] =
      "; search[1]: example.com\n"
      "nameserver 192.0.2.1\n"
      "nameserver 192.0.2.2\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
+     "; nameserver[1]: [192.0.2.2]:53\n"
     },
     {.name = "domain",
      .conf = "domain example.net\n"
@@ -447,6 +494,7 @@ struct test_case test_cases[] =
      .expected = "search example.net\n"
      "; search[0]: example.net\n"
      "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
     },
     {.name = "domain space",
      .conf = "domain example.net \n"
@@ -454,6 +502,7 @@ struct test_case test_cases[] =
      .expected = "search example.net\n"
      "; search[0]: example.net\n"
      "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
     },
     {.name = "domain tab",
      .conf = "domain example.net\t\n"
@@ -461,6 +510,7 @@ struct test_case test_cases[] =
      .expected = "search example.net\n"
      "; search[0]: example.net\n"
      "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
     },
     {.name = "domain override",
      .conf = "search example.com example.org\n"
@@ -469,6 +519,7 @@ struct test_case test_cases[] =
      .expected = "search example.net\n"
      "; search[0]: example.net\n"
      "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
     },
     {.name = "option values, multiple servers",
      .conf = "options\tinet6\tndots:3 edns0\tattempts:5\ttimeout:19\n"
@@ -485,6 +536,9 @@ struct test_case test_cases[] =
      "nameserver 192.0.2.1\n"
      "nameserver ::1\n"
      "nameserver 192.0.2.2\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
+     "; nameserver[1]: [::1]:53\n"
+     "; nameserver[2]: [192.0.2.2]:53\n"
     },
     {.name = "out-of-range option vales",
      .conf = "options use-vc timeout:999 attempts:999 ndots:99\n"
@@ -493,6 +547,7 @@ struct test_case test_cases[] =
      "search example.com\n"
      "; search[0]: example.com\n"
      "nameserver 127.0.0.1\n"
+     "; nameserver[0]: [127.0.0.1]:53\n"
     },
     {.name = "repeated directives",
      .conf = "options ndots:3 use-vc\n"
@@ -505,6 +560,7 @@ struct test_case test_cases[] =
      "search example.org\n"
      "; search[0]: example.org\n"
      "nameserver 127.0.0.1\n"
+     "; nameserver[0]: [127.0.0.1]:53\n"
     },
     {.name = "many name servers, sortlist",
      .conf = "options single-request\n"
@@ -528,6 +584,14 @@ struct test_case test_cases[] =
      "nameserver 192.0.2.1\n"
      "nameserver 192.0.2.2\n"
      "nameserver 192.0.2.3\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
+     "; nameserver[1]: [192.0.2.2]:53\n"
+     "; nameserver[2]: [192.0.2.3]:53\n"
+     "; nameserver[3]: [192.0.2.4]:53\n"
+     "; nameserver[4]: [192.0.2.5]:53\n"
+     "; nameserver[5]: [192.0.2.6]:53\n"
+     "; nameserver[6]: [192.0.2.7]:53\n"
+     "; nameserver[7]: [192.0.2.8]:53\n"
     },
     {.name = "IPv4 and IPv6 nameservers",
      .conf = "options single-request\n"
@@ -554,6 +618,14 @@ struct test_case test_cases[] =
      "nameserver 192.0.2.1\n"
      "nameserver 2001:db8::2\n"
      "nameserver 192.0.2.3\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
+     "; nameserver[1]: [2001:db8::2]:53\n"
+     "; nameserver[2]: [192.0.2.3]:53\n"
+     "; nameserver[3]: [2001:db8::4]:53\n"
+     "; nameserver[4]: [192.0.2.5]:53\n"
+     "; nameserver[5]: [2001:db8::6]:53\n"
+     "; nameserver[6]: [192.0.2.7]:53\n"
+     "; nameserver[7]: [2001:db8::8]:53\n",
     },
     {.name = "garbage after nameserver",
      .conf = "nameserver 192.0.2.1 garbage\n"
@@ -563,6 +635,8 @@ struct test_case test_cases[] =
      "; search[0]: example.com\n"
      "nameserver 192.0.2.1\n"
      "nameserver 192.0.2.3\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
+     "; nameserver[1]: [192.0.2.3]:53\n"
     },
     {.name = "RES_OPTIONS is cummulative",
      .conf = "options timeout:7 ndots:2 use-vc\n"
@@ -570,7 +644,8 @@ struct test_case test_cases[] =
      .expected = "options ndots:3 timeout:7 attempts:5 use-vc edns0\n"
      "search example.com\n"
      "; search[0]: example.com\n"
-     "nameserver 192.0.2.1\n",
+     "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n",
      .res_options = "attempts:5 ndots:3 edns0 ",
     },
     {.name = "many search list entries (bug 19569)",
@@ -588,7 +663,8 @@ struct test_case test_cases[] =
      "; search[5]: example.com\n"
      "; search[6]: example.org\n"
      "; search[7]: example.net\n"
-     "nameserver 192.0.2.1\n",
+     "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
     },
     {.name = "very long search list entries (bug 21475)",
      .conf = "nameserver 192.0.2.1\n"
@@ -603,7 +679,8 @@ struct test_case test_cases[] =
      "; search[2]: " H63 "." D63 ".example.net\n"
 #undef H63
 #undef D63
-     "nameserver 192.0.2.1\n",
+     "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
     },
     { NULL }
   };

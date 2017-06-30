@@ -108,7 +108,8 @@ typedef union querybuf
   u_char buf[MAXPACKET];
 } querybuf;
 
-static enum nss_status getanswer_r (const querybuf *answer, int anslen,
+static enum nss_status getanswer_r (struct resolv_context *ctx,
+				    const querybuf *answer, int anslen,
 				    const char *qname, int qtype,
 				    struct hostent *result, char *buffer,
 				    size_t buflen, int *errnop, int *h_errnop,
@@ -264,8 +265,9 @@ gethostbyname3_context (struct resolv_context *ctx,
       result->h_length = INADDRSZ;
     }
 
-  status = getanswer_r (host_buffer.buf, n, name, type, result, buffer, buflen,
-			errnop, h_errnop, map, ttlp, canonp);
+  status = getanswer_r
+    (ctx, host_buffer.buf, n, name, type, result, buffer, buflen,
+     errnop, h_errnop, map, ttlp, canonp);
   if (host_buffer.buf != orig_host_buffer)
     free (host_buffer.buf);
   return status;
@@ -522,8 +524,9 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
       return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
-  status = getanswer_r (host_buffer.buf, n, qbuf, T_PTR, result, buffer, buflen,
-			errnop, h_errnop, 0 /* XXX */, ttlp, NULL);
+  status = getanswer_r
+    (ctx, host_buffer.buf, n, qbuf, T_PTR, result, buffer, buflen,
+     errnop, h_errnop, 0 /* XXX */, ttlp, NULL);
   if (host_buffer.buf != orig_host_buffer)
     free (host_buffer.buf);
   if (status != NSS_STATUS_SUCCESS)
@@ -553,25 +556,27 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
 				    errnop, h_errnop, NULL);
 }
 
-static void addrsort (char **ap, int num);
-
 static void
-addrsort (char **ap, int num)
+addrsort (struct resolv_context *ctx, char **ap, int num)
 {
   int i, j;
   char **p;
   short aval[MAX_NR_ADDRS];
   int needsort = 0;
+  size_t nsort = __resolv_context_sort_count (ctx);
 
   p = ap;
   if (num > MAX_NR_ADDRS)
     num = MAX_NR_ADDRS;
   for (i = 0; i < num; i++, p++)
     {
-      for (j = 0 ; (unsigned)j < _res.nsort; j++)
-	if (_res.sort_list[j].addr.s_addr ==
-	    (((struct in_addr *)(*p))->s_addr & _res.sort_list[j].mask))
-	  break;
+      for (j = 0 ; (unsigned)j < nsort; j++)
+	{
+	  struct resolv_sortlist_entry e
+	    = __resolv_context_sort_entry (ctx, j);
+	  if (e.addr.s_addr == (((struct in_addr *)(*p))->s_addr & e.mask))
+	    break;
+	}
       aval[i] = j;
       if (needsort == 0 && i > 0 && j < aval[i-1])
 	needsort = i;
@@ -598,7 +603,8 @@ addrsort (char **ap, int num)
 }
 
 static enum nss_status
-getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
+getanswer_r (struct resolv_context *ctx,
+	     const querybuf *answer, int anslen, const char *qname, int qtype,
 	     struct hostent *result, char *buffer, size_t buflen,
 	     int *errnop, int *h_errnop, int map, int32_t *ttlp, char **canonp)
 {
@@ -961,8 +967,9 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
        * in its return structures - should give it the "best"
        * address in that case, not some random one
        */
-      if (_res.nsort && haveanswer > 1 && qtype == T_A)
-	addrsort (host_data->h_addr_ptrs, haveanswer);
+      if (haveanswer > 1 && qtype == T_A
+	  && __resolv_context_sort_count (ctx) > 0)
+	addrsort (ctx, host_data->h_addr_ptrs, haveanswer);
 
       if (result->h_name == NULL)
 	{

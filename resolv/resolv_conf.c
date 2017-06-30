@@ -128,11 +128,80 @@ resolv_conf_get_1 (const struct __res_state *resp)
   return conf;
 }
 
+/* Return true if both IPv4 addresses are equal.  */
+static bool
+same_address_v4 (const struct sockaddr_in *left,
+                 const struct sockaddr_in *right)
+{
+  return left->sin_addr.s_addr == right->sin_addr.s_addr
+    && left->sin_port == right->sin_port;
+}
+
+/* Return true if both IPv6 addresses are equal.  This ignores the
+   flow label.  */
+static bool
+same_address_v6 (const struct sockaddr_in6 *left,
+                 const struct sockaddr_in6 *right)
+{
+  return memcmp (&left->sin6_addr, &right->sin6_addr,
+                 sizeof (left->sin6_addr)) == 0
+    && left->sin6_port == right->sin6_port
+    && left->sin6_scope_id == right->sin6_scope_id;
+}
+
+static bool
+same_address (const struct sockaddr *left, const struct sockaddr *right)
+{
+  if (left->sa_family != right->sa_family)
+    return false;
+  switch (left->sa_family)
+    {
+    case AF_INET:
+      return same_address_v4 ((const struct sockaddr_in *) left,
+                              (const struct sockaddr_in *) right);
+    case AF_INET6:
+      return same_address_v6 ((const struct sockaddr_in6 *) left,
+                              (const struct sockaddr_in6 *) right);
+    }
+  return false;
+}
+
 /* Check that *RESP and CONF match.  Used by __resolv_conf_get.  */
 static bool
 resolv_conf_matches (const struct __res_state *resp,
                      const struct resolv_conf *conf)
 {
+  /* NB: Do not compare the options, retrans, retry, ndots.  These can
+     be changed by applicaiton.  */
+
+  /* Check that the name servers in *RESP have not been modified by
+     the application.  */
+  {
+    size_t nserv = conf->nameserver_list_size;
+    if (nserv > MAXNS)
+      nserv = MAXNS;
+    /* _ext.nscount is 0 until initialized by res_send.c.  */
+    if (resp->nscount != nserv
+        && (resp->_u._ext.nscount != 0 && resp->_u._ext.nscount != nserv))
+      return false;
+    for (size_t i = 0; i < nserv; ++i)
+      {
+        if (resp->nsaddr_list[i].sin_family == 0)
+          {
+            if (resp->_u._ext.nsaddrs[i]->sin6_family != AF_INET6)
+              return false;
+            if (!same_address ((struct sockaddr *) resp->_u._ext.nsaddrs[i],
+                               conf->nameserver_list[i]))
+              return false;
+          }
+        else if (resp->nsaddr_list[i].sin_family != AF_INET)
+          return false;
+        else if (!same_address ((struct sockaddr *) &resp->nsaddr_list[i],
+                                conf->nameserver_list[i]))
+          return false;
+      }
+  }
+
   /* Check that the search list in *RESP has not been modified by the
      application.  */
   {
@@ -161,6 +230,18 @@ resolv_conf_matches (const struct __res_state *resp,
           }
       }
   }
+
+  /* Check that the sort list has not been modified.  */
+  {
+    size_t nsort = conf->sort_list_size;
+    if (nsort > MAXRESOLVSORT)
+      nsort = MAXRESOLVSORT;
+    for (size_t i = 0; i < nsort; ++i)
+      if (resp->sort_list[i].addr.s_addr != conf->sort_list[i].addr.s_addr
+          || resp->sort_list[i].mask != conf->sort_list[i].mask)
+        return false;
+  }
+
   return true;
 }
 
@@ -190,7 +271,28 @@ __resolv_conf_put (struct resolv_conf *conf)
 struct resolv_conf *
 __resolv_conf_allocate (const struct resolv_conf *init)
 {
-  /* Space needed by the strings.  */
+  /* Allocate in decreasing order of alignment.  */
+  _Static_assert (__alignof__ (const char *const *)
+                  <= __alignof__ (struct resolv_conf), "alignment");
+  _Static_assert (__alignof__ (struct sockaddr_in6)
+                  <= __alignof__ (const char *const *), "alignment");
+  _Static_assert (__alignof__ (struct sockaddr_in)
+                  ==  __alignof__ (struct sockaddr_in6), "alignment");
+  _Static_assert (__alignof__ (struct resolv_sortlist_entry)
+                  <= __alignof__ (struct sockaddr_in), "alignment");
+
+  /* Space needed by the nameserver addresses.  */
+  size_t address_space = 0;
+  for (size_t i = 0; i < init->nameserver_list_size; ++i)
+    if (init->nameserver_list[i]->sa_family == AF_INET)
+      address_space += sizeof (struct sockaddr_in);
+    else
+      {
+        assert (init->nameserver_list[i]->sa_family == AF_INET6);
+        address_space += sizeof (struct sockaddr_in6);
+      }
+
+  /* Space needed by the search list strings.  */
   size_t string_space = 0;
   for (size_t i = 0; i < init->search_list_size; ++i)
     string_space += strlen (init->search_list[i]) + 1;
@@ -199,7 +301,10 @@ __resolv_conf_allocate (const struct resolv_conf *init)
   void *ptr;
   struct alloc_buffer buffer = alloc_buffer_allocate
     (sizeof (struct resolv_conf)
+     + init->nameserver_list_size * sizeof (init->nameserver_list[0])
+     + address_space
      + init->search_list_size * sizeof (init->search_list[0])
+     + init->sort_list_size * sizeof (init->sort_list[0])
      + string_space,
      &ptr);
   struct resolv_conf *conf
@@ -211,16 +316,57 @@ __resolv_conf_allocate (const struct resolv_conf *init)
 
   /* Initialize the contents.  */
   conf->__refcount = 1;
+  conf->retrans = init->retrans;
+  conf->retry = init->retry;
+  conf->options = init->options;
+  conf->ndots = init->ndots;
   conf->initstamp = __res_initstamp;
 
-  /* Allocate and fill the search list array.  */
+  /* Allocate the arrays with pointers.  These must come first because
+     they have the highets alignment.  */
+  conf->nameserver_list_size = init->nameserver_list_size;
+  const struct sockaddr **nameserver_array = alloc_buffer_alloc_array
+    (&buffer, const struct sockaddr *, init->nameserver_list_size);
+  conf->nameserver_list = nameserver_array;
+
+  conf->search_list_size = init->search_list_size;
+  const char **search_array = alloc_buffer_alloc_array
+    (&buffer, const char *, init->search_list_size);
+  conf->search_list = search_array;
+
+  /* Fill the name server list array.  */
+  for (size_t i = 0; i < init->nameserver_list_size; ++i)
+    if (init->nameserver_list[i]->sa_family == AF_INET)
+      {
+        struct sockaddr_in *sa = alloc_buffer_alloc
+          (&buffer, struct sockaddr_in);
+        *sa = *(struct sockaddr_in *) init->nameserver_list[i];
+        nameserver_array[i] = (struct sockaddr *) sa;
+      }
+    else
+      {
+        struct sockaddr_in6 *sa = alloc_buffer_alloc
+          (&buffer, struct sockaddr_in6);
+        *sa = *(struct sockaddr_in6 *) init->nameserver_list[i];
+        nameserver_array[i] = (struct sockaddr *) sa;
+      }
+
+  /* Allocate and fill the sort list array.  */
   {
-    conf->search_list_size = init->search_list_size;
-    const char **array = alloc_buffer_alloc_array
-      (&buffer, const char *, init->search_list_size);
-    conf->search_list = array;
+    conf->sort_list_size = init->sort_list_size;
+    struct resolv_sortlist_entry *array = alloc_buffer_alloc_array
+      (&buffer, struct resolv_sortlist_entry, init->sort_list_size);
+    conf->sort_list = array;
+    for (size_t i = 0; i < init->sort_list_size; ++i)
+      array[i] = init->sort_list[i];
+  }
+
+  /* Fill the search list array.  This must come last because the
+     strings are the least aligned part of the allocation.  */
+  {
     for (size_t i = 0; i < init->search_list_size; ++i)
-      array[i] = alloc_buffer_copy_string (&buffer, init->search_list[i]);
+      search_array[i] = alloc_buffer_copy_string
+        (&buffer, init->search_list[i]);
   }
 
   assert (!alloc_buffer_has_failed (&buffer));
@@ -231,6 +377,56 @@ __resolv_conf_allocate (const struct resolv_conf *init)
 static __attribute__ ((nonnull (1, 2), warn_unused_result)) bool
 update_from_conf (struct __res_state *resp, const struct resolv_conf *conf)
 {
+  resp->defdname[0] = '\0';
+  resp->pfcode = 0;
+  resp->_vcsock = -1;
+  resp->_flags = 0;
+  resp->ipv6_unavail = false;
+  resp->__glibc_unused_qhook = NULL;
+  resp->__glibc_unused_rhook = NULL;
+
+  resp->retrans = conf->retrans;
+  resp->retry = conf->retry;
+  resp->options = conf->options;
+  resp->ndots = conf->ndots;
+
+  /* Copy the name server addresses.  */
+  {
+    resp->nscount = 0;
+    resp->_u._ext.nscount = 0;
+    size_t nserv = conf->nameserver_list_size;
+    if (nserv > MAXNS)
+      nserv = MAXNS;
+    for (size_t i = 0; i < nserv; i++)
+      {
+        if (conf->nameserver_list[i]->sa_family == AF_INET)
+          {
+            resp->nsaddr_list[i]
+              = *(struct sockaddr_in *)conf->nameserver_list[i];
+            resp->_u._ext.nsaddrs[i] = NULL;
+          }
+        else
+          {
+            assert (conf->nameserver_list[i]->sa_family == AF_INET6);
+            resp->nsaddr_list[i].sin_family = 0;
+            /* Make a defensive copy of the name server address, in
+               case the application overwrites it.  */
+            struct sockaddr_in6 *sa = malloc (sizeof (*sa));
+            if (sa == NULL)
+              {
+                for (size_t j = 0; j < i; ++j)
+                  free (resp->_u._ext.nsaddrs[j]);
+                return false;
+              }
+            *sa = *(struct sockaddr_in6 *)conf->nameserver_list[i];
+            resp->_u._ext.nsaddrs[i] = sa;
+          }
+        resp->_u._ext.nssocks[i] = -1;
+      }
+    resp->nscount = nserv;
+    /* Leave resp->_u._ext.nscount at 0.  res_send.c handles this.  */
+  }
+
   /* Fill in the prefix of the search list.  It is truncated either at
      MAXDNSRCH, or if reps->defdname has insufficient space.  */
   {
@@ -247,6 +443,19 @@ update_from_conf (struct __res_state *resp, const struct resolv_conf *conf)
           break;
       }
     resp->dnsrch[i] = NULL;
+  }
+
+  /* Copy the sort list.  */
+  {
+    size_t nsort = conf->sort_list_size;
+    if (nsort > MAXRESOLVSORT)
+      nsort = MAXRESOLVSORT;
+    for (size_t i = 0; i < nsort; ++i)
+      {
+        resp->sort_list[i].addr = conf->sort_list[i].addr;
+        resp->sort_list[i].mask = conf->sort_list[i].mask;
+      }
+    resp->nsort = nsort;
   }
 
   /* The overlapping parts of both configurations should agree after
