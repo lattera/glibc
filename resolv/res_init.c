@@ -103,7 +103,7 @@
 #include <inet/net-internal.h>
 #include <errno.h>
 
-static void res_setoptions (res_state, const char *, const char *);
+static void res_setoptions (res_state, const char *);
 static uint32_t net_mask (struct in_addr);
 
 unsigned long long int __res_initstamp;
@@ -381,7 +381,7 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
             }
           if (MATCH (*buffer, "options"))
             {
-              res_setoptions (statp, *buffer + sizeof ("options") - 1, "conf");
+              res_setoptions (statp, *buffer + sizeof ("options") - 1);
               continue;
             }
         }
@@ -417,7 +417,7 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
     }
 
   if ((cp = getenv ("RES_OPTIONS")) != NULL)
-    res_setoptions (statp, cp, "env");
+    res_setoptions (statp, cp);
   statp->options |= RES_INIT;
   return true;
 }
@@ -469,7 +469,7 @@ __res_vinit (res_state statp, int preinit)
 }
 
 static void
-res_setoptions (res_state statp, const char *options, const char *source)
+res_setoptions (res_state statp, const char *options)
 {
   const char *cp = options;
 
