@@ -1,3 +1,21 @@
+/* Creation of DNS query packets.
+   Copyright (C) 1995-2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 /*
  * Copyright (c) 1985, 1993
  *    The Regents of the University of California.  All rights reserved.
@@ -70,12 +88,8 @@
 #include <arpa/nameser.h>
 #include <netdb.h>
 #include <resolv/resolv-internal.h>
-#include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
-
-/* Options.  Leave them on. */
-/* #define DEBUG */
 
 #include <hp-timing.h>
 #include <stdint.h>
@@ -107,11 +121,6 @@ res_nmkquery(res_state statp,
 	    || type < 0 || type > 65535)
 	  return -1;
 
-#ifdef DEBUG
-	if (statp->options & RES_DEBUG)
-		printf(";; res_nmkquery(%s, %s, %s, %s)\n",
-		       _res_opcodes[op], dname, p_class(class), p_type(type));
-#endif
 	/*
 	 * Initialize header fields.
 	 */
@@ -210,11 +219,6 @@ __res_nopt(res_state statp,
 {
 	u_int16_t flags = 0;
 
-#ifdef DEBUG
-	if ((statp->options & RES_DEBUG) != 0U)
-		printf(";; res_nopt()\n");
-#endif
-
 	HEADER *hp = (HEADER *) buf;
 	u_char *cp = buf + n0;
 	u_char *ep = buf + buflen;
@@ -253,10 +257,6 @@ __res_nopt(res_state statp,
 	*cp++ = 0;		/* EDNS version */
 
 	if (statp->options & RES_USE_DNSSEC) {
-#ifdef DEBUG
-		if (statp->options & RES_DEBUG)
-			printf(";; res_opt()... ENDS0 DNSSEC\n");
-#endif
 		flags |= NS_OPT_DNSSEC_OK;
 	}
 

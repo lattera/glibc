@@ -1,5 +1,10 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_mkquery.c (DEBUG): Remove macro and preprocessor
+	conditionals.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	* support/support_capture_subprocess_check.c
 	(support_capture_subprocess_check): Report actual exit status.
 
