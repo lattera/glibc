@@ -32,46 +32,6 @@
 #include <string.h>
 #include <unistd.h>
 
-const char *_res_opcodes[] = {
-	"QUERY",
-	"IQUERY",
-	"CQUERYM",
-	"CQUERYU",	/* experimental */
-	"NOTIFY",	/* experimental */
-	"UPDATE",
-	"6",
-	"7",
-	"8",
-	"9",
-	"10",
-	"11",
-	"12",
-	"13",
-	"ZONEINIT",
-	"ZONEREF",
-};
-libresolv_hidden_data_def (_res_opcodes)
-
-void
-p_query(const u_char *msg) {
-	fp_query(msg, stdout);
-}
-
-void
-fp_query(const u_char *msg, FILE *file) {
-	fp_nquery(msg, PACKETSZ, file);
-}
-libresolv_hidden_def (fp_query)
-
-void
-fp_nquery(const u_char *msg, int len, FILE *file) {
-	if (__res_maybe_init (&_res, 0) == -1)
-		return;
-
-	res_pquery(&_res, msg, len, file);
-}
-libresolv_hidden_def (fp_nquery)
-
 int
 res_query(const char *name,	/* domain name */
 	  int class, int type,	/* class and type of query */

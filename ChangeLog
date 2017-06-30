@@ -1,5 +1,18 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	* include/resolv.h (res_pquery): Remove declaration.
+	* resolv/res_data.c (fp_nquery, fp_query, p_query): Remove
+	functions.
+	(_res_opcodes): Remove variable.
+	* resolv/res_debug.c (do_section): Receive pfcode instead of
+	statp.
+	(res_pquery): Rename ...
+	(fp_nquery): to this function.  Skip unnecessary _res
+	initialization.
+	(fp_query, p_query, _res_opcodes): Copied from resolv/res_data.c.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_debug.h: Remove file.
 	* resolv/README: Adjust.
 
