@@ -1,5 +1,9 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_query.c (DEBUG): Remove preprocessor conditional.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_data.c: Reformat to GNU style.
 	(res_close): Update comments.
 

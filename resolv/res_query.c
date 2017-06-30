@@ -80,9 +80,6 @@
 #include <string.h>
 #include <shlib-compat.h>
 
-/* Options.  Leave them on. */
-/* #undef DEBUG */
-
 #if PACKETSZ > 65536
 #define MAXPACKET	PACKETSZ
 #else
@@ -132,11 +129,6 @@ __libc_res_nquery(res_state statp,
 
  again:
 	hp->rcode = NOERROR;	/* default */
-
-#ifdef DEBUG
-	if (statp->options & RES_DEBUG)
-		printf(";; res_query(%s, %d, %d)\n", name, class, type);
-#endif
 
 	if (type == T_QUERY_A_AND_AAAA)
 	  {
@@ -211,10 +203,6 @@ __libc_res_nquery(res_state statp,
 		}
 	}
 	if (__glibc_unlikely (n <= 0))       {
-#ifdef DEBUG
-		if (statp->options & RES_DEBUG)
-			printf(";; res_query: mkquery failed\n");
-#endif
 		RES_SET_H_ERRNO(statp, NO_RECOVERY);
 		if (use_malloc)
 			free (buf);
@@ -227,10 +215,6 @@ __libc_res_nquery(res_state statp,
 	if (use_malloc)
 		free (buf);
 	if (n < 0) {
-#ifdef DEBUG
-		if (statp->options & RES_DEBUG)
-			printf(";; res_query: send error\n");
-#endif
 		RES_SET_H_ERRNO(statp, TRY_AGAIN);
 		return (n);
 	}
@@ -260,15 +244,6 @@ __libc_res_nquery(res_state statp,
 
 	if ((hp->rcode != NOERROR || ntohs(hp->ancount) == 0)
 	    && (hp2->rcode != NOERROR || ntohs(hp2->ancount) == 0)) {
-#ifdef DEBUG
-		if (statp->options & RES_DEBUG) {
-			printf(";; rcode = %d, ancount=%d\n", hp->rcode,
-			    ntohs(hp->ancount));
-			if (hp != hp2)
-			  printf(";; rcode2 = %d, ancount2=%d\n", hp2->rcode,
-				 ntohs(hp2->ancount));
-		}
-#endif
 		switch (hp->rcode == NOERROR ? hp2->rcode : hp->rcode) {
 		case NXDOMAIN:
 			if ((hp->rcode == NOERROR && ntohs (hp->ancount) != 0)
@@ -373,12 +348,6 @@ __libc_res_nsearch(res_state statp,
 		return (__libc_res_nquery(statp, cp, class, type, answer,
 					  anslen, answerp, answerp2,
 					  nanswerp2, resplen2, answerp2_malloced));
-
-#ifdef DEBUG
-	if (statp->options & RES_DEBUG)
-		printf("dots=%d, statp->ndots=%d, trailing_dot=%d, name=%s\n",
-		       (int)dots,(int)statp->ndots,(int)trailing_dot,name);
-#endif
 
 	/*
 	 * If there are enough dots in the name, let's just give it a
@@ -590,11 +559,6 @@ __libc_res_nquerydomain(res_state statp,
 	const char *longname = nbuf;
 	size_t n, d;
 
-#ifdef DEBUG
-	if (statp->options & RES_DEBUG)
-		printf(";; res_nquerydomain(%s, %s, %d, %d)\n",
-		       name, domain?domain:"<Nil>", class, type);
-#endif
 	if (domain == NULL) {
 		n = strlen(name);
 
