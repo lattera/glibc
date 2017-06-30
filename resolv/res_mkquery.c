@@ -97,172 +97,168 @@
 # define RANDOM_BITS(Var) { uint64_t v64; HP_TIMING_NOW (v64); Var = v64; }
 #endif
 
-/*
- * Form all types of queries.
- * Returns the size of the result or -1.
- */
+/* Form all types of queries.  Returns the size of the result or -1 on
+   error.
+
+   STATP points to an initialized resolver state.  OP is the opcode of
+   the query.  DNAME is the domain.  CLASS and TYPE are the DNS query
+   class and type.  DATA can be NULL; otherwise, it is a pointer to a
+   domain name which is included in the generated packet (if op ==
+   NS_NOTIFY_OP).  BUF must point to the out buffer of BUFLEN bytes.
+
+   DATALEN and NEWRR_IN are currently ignored.  */
 int
-res_nmkquery(res_state statp,
-	     int op,			/* opcode of query */
-	     const char *dname,		/* domain name */
-	     int class, int type,	/* class and type of query */
-	     const u_char *data,	/* resource record data */
-	     int datalen,		/* length of data */
-	     const u_char *newrr_in,	/* new rr for modify or append */
-	     u_char *buf,		/* buffer to put query */
-	     int buflen)		/* size of buffer */
+res_nmkquery (res_state statp, int op, const char *dname,
+              int class, int type,
+              const unsigned char *data, int datalen,
+              const unsigned char *newrr_in,
+              unsigned char *buf, int buflen)
 {
-	HEADER *hp;
-	u_char *cp;
-	int n;
-	u_char *dnptrs[20], **dpp, **lastdnptr;
+  HEADER *hp;
+  unsigned char *cp;
+  int n;
+  unsigned char *dnptrs[20], **dpp, **lastdnptr;
 
-	if (class < 0 || class > 65535
-	    || type < 0 || type > 65535)
-	  return -1;
+  if (class < 0 || class > 65535 || type < 0 || type > 65535)
+    return -1;
 
-	/*
-	 * Initialize header fields.
-	 */
-	if ((buf == NULL) || (buflen < HFIXEDSZ))
-		return (-1);
-	memset(buf, 0, HFIXEDSZ);
-	hp = (HEADER *) buf;
-	/* We randomize the IDs every time.  The old code just
-	   incremented by one after the initial randomization which
-	   still predictable if the application does multiple
-	   requests.  */
-	int randombits;
-	do
-	  {
+  /* Initialize header fields.  */
+  if ((buf == NULL) || (buflen < HFIXEDSZ))
+    return -1;
+  memset (buf, 0, HFIXEDSZ);
+  hp = (HEADER *) buf;
+  /* We randomize the IDs every time.  The old code just incremented
+     by one after the initial randomization which still predictable if
+     the application does multiple requests.  */
+  int randombits;
+  do
+    {
 #ifdef RANDOM_BITS
-	    RANDOM_BITS (randombits);
+      RANDOM_BITS (randombits);
 #else
-	    struct timeval tv;
-	    __gettimeofday (&tv, NULL);
-	    randombits = (tv.tv_sec << 8) ^ tv.tv_usec;
+      struct timeval tv;
+      __gettimeofday (&tv, NULL);
+      randombits = (tv.tv_sec << 8) ^ tv.tv_usec;
 #endif
-	  }
-	while ((randombits & 0xffff) == 0);
-	statp->id = (statp->id + randombits) & 0xffff;
-	hp->id = statp->id;
-	hp->opcode = op;
-	hp->rd = (statp->options & RES_RECURSE) != 0;
-	hp->rcode = NOERROR;
-	cp = buf + HFIXEDSZ;
-	buflen -= HFIXEDSZ;
-	dpp = dnptrs;
-	*dpp++ = buf;
-	*dpp++ = NULL;
-	lastdnptr = dnptrs + sizeof dnptrs / sizeof dnptrs[0];
-	/*
-	 * perform opcode specific processing
-	 */
-	switch (op) {
-	case NS_NOTIFY_OP:
-		if ((buflen -= QFIXEDSZ + (data == NULL ? 0 : RRFIXEDSZ)) < 0)
-			return (-1);
-		goto compose;
+    }
+  while ((randombits & 0xffff) == 0);
 
-	case QUERY:
-		if ((buflen -= QFIXEDSZ) < 0)
-			return (-1);
-	compose:
-		n = ns_name_compress(dname, cp, buflen,
-				     (const u_char **) dnptrs,
-				     (const u_char **) lastdnptr);
-		if (n < 0)
-			return (-1);
-		cp += n;
-		buflen -= n;
-		NS_PUT16 (type, cp);
-		NS_PUT16 (class, cp);
-		hp->qdcount = htons(1);
-		if (op == QUERY || data == NULL)
-			break;
-		/*
-		 * Make an additional record for completion domain.
-		 */
-		n = ns_name_compress((char *)data, cp, buflen,
-				     (const u_char **) dnptrs,
-				     (const u_char **) lastdnptr);
-		if (__glibc_unlikely (n < 0))
-			return (-1);
-		cp += n;
-		buflen -= n;
-		NS_PUT16 (T_NULL, cp);
-		NS_PUT16 (class, cp);
-		NS_PUT32 (0, cp);
-		NS_PUT16 (0, cp);
-		hp->arcount = htons(1);
-		break;
+  statp->id = (statp->id + randombits) & 0xffff;
+  hp->id = statp->id;
+  hp->opcode = op;
+  hp->rd = (statp->options & RES_RECURSE) != 0;
+  hp->rcode = NOERROR;
+  cp = buf + HFIXEDSZ;
+  buflen -= HFIXEDSZ;
+  dpp = dnptrs;
+  *dpp++ = buf;
+  *dpp++ = NULL;
+  lastdnptr = dnptrs + sizeof dnptrs / sizeof dnptrs[0];
 
-	default:
-		return (-1);
-	}
-	return (cp - buf);
+  /* Perform opcode specific processing.  */
+  switch (op)
+    {
+    case NS_NOTIFY_OP:
+      if ((buflen -= QFIXEDSZ + (data == NULL ? 0 : RRFIXEDSZ)) < 0)
+        return -1;
+      goto compose;
+
+    case QUERY:
+      if ((buflen -= QFIXEDSZ) < 0)
+        return -1;
+    compose:
+      n = ns_name_compress (dname, cp, buflen,
+                            (const unsigned char **) dnptrs,
+                            (const unsigned char **) lastdnptr);
+      if (n < 0)
+        return -1;
+      cp += n;
+      buflen -= n;
+      NS_PUT16 (type, cp);
+      NS_PUT16 (class, cp);
+      hp->qdcount = htons (1);
+      if (op == QUERY || data == NULL)
+        break;
+
+      /* Make an additional record for completion domain.  */
+      n = ns_name_compress ((char *)data, cp, buflen,
+                            (const unsigned char **) dnptrs,
+                            (const unsigned char **) lastdnptr);
+      if (__glibc_unlikely (n < 0))
+        return -1;
+      cp += n;
+      buflen -= n;
+      NS_PUT16 (T_NULL, cp);
+      NS_PUT16 (class, cp);
+      NS_PUT32 (0, cp);
+      NS_PUT16 (0, cp);
+      hp->arcount = htons (1);
+      break;
+
+    default:
+      return -1;
+    }
+  return cp - buf;
 }
 libresolv_hidden_def (res_nmkquery)
 
+/* Create an OPT resource record.  Return the length of the final
+   packet, or -1 on error.
 
-/* attach OPT pseudo-RR, as documented in RFC2671 (EDNS0). */
-#ifndef T_OPT
-#define T_OPT   41
-#endif
-
+   STATP must be an initialized resolver state.  N0 is the current
+   number of bytes of the packet (already written to BUF by the
+   aller).  BUF is the packet being constructed.  The array it
+   pointers to must be BUFLEN bytes long.  ANSLEN is the advertised
+   EDNS buffer size (to be included in the OPT resource record).  */
 int
-__res_nopt(res_state statp,
-	   int n0,                /* current offset in buffer */
-	   u_char *buf,           /* buffer to put query */
-	   int buflen,            /* size of buffer */
-	   int anslen)            /* UDP answer buffer size */
+__res_nopt (res_state statp, int n0, unsigned char *buf, int buflen,
+            int anslen)
 {
-	u_int16_t flags = 0;
+  uint16_t flags = 0;
+  HEADER *hp = (HEADER *) buf;
+  unsigned char *cp = buf + n0;
+  unsigned char *ep = buf + buflen;
 
-	HEADER *hp = (HEADER *) buf;
-	u_char *cp = buf + n0;
-	u_char *ep = buf + buflen;
+  if ((ep - cp) < 1 + RRFIXEDSZ)
+    return -1;
 
-	if ((ep - cp) < 1 + RRFIXEDSZ)
-		return -1;
+  /* Add the root label.  */
+  *cp++ = 0;
 
-	*cp++ = 0;	/* "." */
+  NS_PUT16 (T_OPT, cp);         /* Record type.  */
 
-	NS_PUT16(T_OPT, cp);	/* TYPE */
+  /* Lowering the advertised buffer size based on the actual
+     answer buffer size is desirable because the server will
+     minimize the reply to fit into the UDP packet (and A
+     non-minimal response might not fit the buffer).
 
-	/* Lowering the advertised buffer size based on the actual
-	   answer buffer size is desirable because the server will
-	   minimize the reply to fit into the UDP packet (and A
-	   non-minimal response might not fit the buffer).
+     The RESOLV_EDNS_BUFFER_SIZE limit could still result in TCP
+     fallback and a non-minimal response which has to be
+     hard-truncated in the stub resolver, but this is price to
+     pay for avoiding fragmentation.  (This issue does not
+     affect the nss_dns functions because they use the stub
+     resolver in such a way that it allocates a properly sized
+     response buffer.)  */
+  {
+    uint16_t buffer_size;
+    if (anslen < 512)
+      buffer_size = 512;
+    else if (anslen > RESOLV_EDNS_BUFFER_SIZE)
+      buffer_size = RESOLV_EDNS_BUFFER_SIZE;
+    else
+      buffer_size = anslen;
+    NS_PUT16 (buffer_size, cp);
+  }
 
-	   The RESOLV_EDNS_BUFFER_SIZE limit could still result in TCP
-	   fallback and a non-minimal response which has to be
-	   hard-truncated in the stub resolver, but this is price to
-	   pay for avoiding fragmentation.  (This issue does not
-	   affect the nss_dns functions because they use the stub
-	   resolver in such a way that it allocates a properly sized
-	   response buffer.)  */
-	{
-	  uint16_t buffer_size;
-	  if (anslen < 512)
-	    buffer_size = 512;
-	  else if (anslen > RESOLV_EDNS_BUFFER_SIZE)
-	    buffer_size = RESOLV_EDNS_BUFFER_SIZE;
-	  else
-	    buffer_size = anslen;
-	  NS_PUT16 (buffer_size, cp);
-	}
+  *cp++ = NOERROR;              /* Extended RCODE.  */
+  *cp++ = 0;                    /* EDNS version.  */
 
-	*cp++ = NOERROR;	/* extended RCODE */
-	*cp++ = 0;		/* EDNS version */
+  if (statp->options & RES_USE_DNSSEC)
+    flags |= NS_OPT_DNSSEC_OK;
 
-	if (statp->options & RES_USE_DNSSEC) {
-		flags |= NS_OPT_DNSSEC_OK;
-	}
+  NS_PUT16 (flags, cp);
+  NS_PUT16 (0, cp);       /* RDATA length (no options are preent).  */
+  hp->arcount = htons (ntohs (hp->arcount) + 1);
 
-	NS_PUT16(flags, cp);
-	NS_PUT16(0, cp);	/* RDLEN */
-	hp->arcount = htons(ntohs(hp->arcount) + 1);
-
-	return cp - buf;
+  return cp - buf;
 }
