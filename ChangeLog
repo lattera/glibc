@@ -1,5 +1,11 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/res_end.c (DEBUG): Remove macro and preprocessor
+	conditionals.
+	(Aerror, Perror): Remove function definitions.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/res_data.c (res_mkquery): Move ...
 	* resolv/res_mkquery.c (res_mkquery): to here.
 

@@ -103,7 +103,6 @@
 #include <netdb.h>
 #include <resolv/resolv-internal.h>
 #include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -181,10 +180,6 @@ evNowTime(struct timespec *res) {
 }
 
 
-/* Options.  Leave them on. */
-/* #undef DEBUG */
-#include "res_debug.h"
-
 #define EXT(res) ((res)->_u._ext)
 
 /* Forward. */
@@ -199,11 +194,6 @@ static int		send_dg(res_state, const u_char *, int,
 				u_char **, int *, int *, int,
 				int *, int *, u_char **,
 				u_char **, int *, int *, int *);
-#ifdef DEBUG
-static void		Aerror(const res_state, FILE *, const char *, int,
-			       const struct sockaddr *);
-static void		Perror(const res_state, FILE *, const char *, int);
-#endif
 static int		sock_eq(struct sockaddr_in6 *, struct sockaddr_in6 *);
 
 /* Public. */
@@ -421,8 +411,6 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		return (-1);
 	}
 
-	DprintQ((statp->options & RES_DEBUG) || (statp->pfcode & RES_PRF_QUERY),
-		(stdout, ";; res_send()\n"), buf, buflen);
 	v_circuit = ((statp->options & RES_USEVC)
 		     || buflen > PACKETSZ
 		     || buflen2 > PACKETSZ);
@@ -492,20 +480,8 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		unsigned int ns = ns_shift + ns_offset;
 		if (ns >= statp->nscount)
 			ns -= statp->nscount;
-#ifdef DEBUG
-		char tmpbuf[40];
-		struct sockaddr *nsap = get_nsaddr (statp, ns);
-#endif
 
 	    same_ns:
-		Dprint(statp->options & RES_DEBUG,
-		       (stdout, ";; Querying server (# %d) address = %s\n",
-			ns + 1, inet_ntop(nsap->sa_family,
-					  (nsap->sa_family == AF_INET6
-					   ? (void *) &((struct sockaddr_in6 *) nsap)->sin6_addr
-					   : (void *) &((struct sockaddr_in *) nsap)->sin_addr),
-					  tmpbuf, sizeof (tmpbuf))));
-
 		if (__glibc_unlikely (v_circuit))       {
 			/* Use VC; at most one attempt per server. */
 			try = statp->retry;
@@ -534,22 +510,6 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		}
 
 		resplen = n;
-
-		Dprint((statp->options & RES_DEBUG) ||
-		       ((statp->pfcode & RES_PRF_REPLY) &&
-			(statp->pfcode & RES_PRF_HEAD1)),
-		       (stdout, ";; got answer:\n"));
-
-		DprintQ((statp->options & RES_DEBUG) ||
-			(statp->pfcode & RES_PRF_REPLY),
-			(stdout, "%s", ""),
-			ans, (resplen > anssiz) ? anssiz : resplen);
-		if (buf2 != NULL) {
-		  DprintQ((statp->options & RES_DEBUG) ||
-			  (statp->pfcode & RES_PRF_REPLY),
-			  (stdout, "%s", ""),
-			  *ansp2, (*resplen2 > *nansp2) ? *nansp2 : *resplen2);
-		}
 
 		/*
 		 * If we have temporarily opened a virtual circuit,
@@ -740,7 +700,6 @@ send_vc(res_state statp,
 		  (nsap->sa_family, SOCK_STREAM | SOCK_CLOEXEC, 0);
 		if (statp->_vcsock < 0) {
 			*terrno = errno;
-			Perror(statp, stderr, "socket(vc)", errno);
 			if (resplen2 != NULL)
 			  *resplen2 = 0;
 			return (-1);
@@ -751,7 +710,6 @@ send_vc(res_state statp,
 			    ? sizeof (struct sockaddr_in)
 			    : sizeof (struct sockaddr_in6)) < 0) {
 			*terrno = errno;
-			Aerror(statp, stderr, "connect/vc", errno, nsap);
 			return close_and_return_error (statp, resplen2);
 		}
 		statp->_flags |= RES_F_VC;
@@ -774,7 +732,6 @@ send_vc(res_state statp,
 	}
 	if (TEMP_FAILURE_RETRY (writev(statp->_vcsock, iov, niov)) != explen) {
 		*terrno = errno;
-		Perror(statp, stderr, "write failed", errno);
 		return close_and_return_error (statp, resplen2);
 	}
 	/*
@@ -796,7 +753,6 @@ send_vc(res_state statp,
 	}
 	if (n <= 0) {
 		*terrno = errno;
-		Perror(statp, stderr, "read failed", errno);
 		/*
 		 * A long running process might get its TCP
 		 * connection reset if the remote server was
@@ -859,9 +815,6 @@ send_vc(res_state statp,
 			   read RLEN bytes instead.  */
 			len = rlen;
 		} else {
-			Dprint(statp->options & RES_DEBUG,
-				(stdout, ";; response truncated\n")
-			);
 			truncating = 1;
 			len = *thisanssizp;
 		}
@@ -872,8 +825,6 @@ send_vc(res_state statp,
 		/*
 		 * Undersized message.
 		 */
-		Dprint(statp->options & RES_DEBUG,
-		       (stdout, ";; undersized: %d\n", len));
 		*terrno = EMSGSIZE;
 		return close_and_return_error (statp, resplen2);
 	}
@@ -885,7 +836,6 @@ send_vc(res_state statp,
 	}
 	if (__glibc_unlikely (n <= 0))       {
 		*terrno = errno;
-		Perror(statp, stderr, "read(vc)", errno);
 		return close_and_return_error (statp, resplen2);
 	}
 	if (__glibc_unlikely (truncating))       {
@@ -913,14 +863,8 @@ send_vc(res_state statp,
 	 * wait for the correct one.
 	 */
 	if ((recvresp1 || hp->id != anhp->id)
-	    && (recvresp2 || hp2->id != anhp->id)) {
-		DprintQ((statp->options & RES_DEBUG) ||
-			(statp->pfcode & RES_PRF_REPLY),
-			(stdout, ";; old answer (unexpected):\n"),
-			*thisansp,
-			(rlen > *thisanssizp) ? *thisanssizp: rlen);
+	    && (recvresp2 || hp2->id != anhp->id))
 		goto read_len;
-	}
 
 	/* Mark which reply we received.  */
 	if (recvresp1 == 0 && hp->id == anhp->id)
@@ -961,7 +905,6 @@ reopen (res_state statp, int *terrno, int ns)
 		}
 		if (EXT(statp).nssocks[ns] < 0) {
 			*terrno = errno;
-			Perror(statp, stderr, "socket(dg)", errno);
 			return (-1);
 		}
 
@@ -986,7 +929,6 @@ reopen (res_state statp, int *terrno, int ns)
 		DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
 		if (connect(EXT(statp).nssocks[ns], nsap, slen) < 0) {
 		DIAG_POP_NEEDS_COMMENT;
-			Aerror(statp, stderr, "connect(dg)", errno, nsap);
 			__res_iclose(statp, false);
 			return (0);
 		}
@@ -1111,7 +1053,6 @@ send_dg(res_state statp,
 		evNowTime(&now);
 		if (evCmpTime(finish, now) <= 0) {
 		poll_err_out:
-			Perror(statp, stderr, "poll", errno);
 			return close_and_return_error (statp, resplen2);
 		}
 		evSubTime(&timeout, &finish, &now);
@@ -1128,7 +1069,6 @@ send_dg(res_state statp,
 		need_recompute = 1;
 	}
 	if (n == 0) {
-		Dprint(statp->options & RES_DEBUG, (stdout, ";; timeout\n"));
 		if (resplen > 1 && (recvresp1 || (buf2 != NULL && recvresp2)))
 		  {
 		    /* There are quite a few broken name servers out
@@ -1228,7 +1168,6 @@ send_dg(res_state statp,
 #endif
 
 		      fail_sendmmsg:
-			Perror(statp, stderr, "sendmmsg", errno);
 			return close_and_return_error (statp, resplen2);
 		      }
 		  }
@@ -1246,7 +1185,6 @@ send_dg(res_state statp,
 		    if (sr != (nwritten != 0 ? buflen2 : buflen)) {
 		      if (errno == EINTR || errno == EAGAIN)
 			goto recompute_resend;
-		      Perror(statp, stderr, "send", errno);
 		      return close_and_return_error (statp, resplen2);
 		    }
 		  just_one:
@@ -1307,12 +1245,6 @@ send_dg(res_state statp,
 		   MSG_TRUNC which is only available on Linux.  We
 		   can abstract out the Linux-specific feature in the
 		   future to detect truncation.  */
-		if (__glibc_unlikely (*thisanssizp < *thisresplenp)) {
-			Dprint(statp->options & RES_DEBUG,
-			       (stdout, ";; response may be truncated (UDP)\n")
-			);
-		}
-
 		HEADER *anhp = (HEADER *) *thisansp;
 		socklen_t fromlen = sizeof(struct sockaddr_in6);
 		assert (sizeof(from) <= fromlen);
@@ -1324,7 +1256,6 @@ send_dg(res_state statp,
 				need_recompute = 1;
 				goto wait;
 			}
-			Perror(statp, stderr, "recvfrom", errno);
 			return close_and_return_error (statp, resplen2);
 		}
 		*gotsomewhere = 1;
@@ -1332,9 +1263,6 @@ send_dg(res_state statp,
 			/*
 			 * Undersized message.
 			 */
-			Dprint(statp->options & RES_DEBUG,
-			       (stdout, ";; undersized: %d\n",
-				*thisresplenp));
 			*terrno = EMSGSIZE;
 			return close_and_return_error (statp, resplen2);
 		}
@@ -1345,12 +1273,6 @@ send_dg(res_state statp,
 			 * XXX - potential security hazard could
 			 *	 be detected here.
 			 */
-			DprintQ((statp->options & RES_DEBUG) ||
-				(statp->pfcode & RES_PRF_REPLY),
-				(stdout, ";; old answer:\n"),
-				*thisansp,
-				(*thisresplenp > *thisanssizp)
-				? *thisanssizp : *thisresplenp);
 			goto wait;
 		}
 		if (!(statp->options & RES_INSECURE1) &&
@@ -1360,12 +1282,6 @@ send_dg(res_state statp,
 			 * XXX - potential security hazard could
 			 *	 be detected here.
 			 */
-			DprintQ((statp->options & RES_DEBUG) ||
-				(statp->pfcode & RES_PRF_REPLY),
-				(stdout, ";; not our server:\n"),
-				*thisansp,
-				(*thisresplenp > *thisanssizp)
-				? *thisanssizp : *thisresplenp);
 			goto wait;
 		}
 		if (!(statp->options & RES_INSECURE2)
@@ -1382,23 +1298,11 @@ send_dg(res_state statp,
 			 * XXX - potential security hazard could
 			 *	 be detected here.
 			 */
-			DprintQ((statp->options & RES_DEBUG) ||
-				(statp->pfcode & RES_PRF_REPLY),
-				(stdout, ";; wrong query name:\n"),
-				*thisansp,
-				(*thisresplenp > *thisanssizp)
-				? *thisanssizp : *thisresplenp);
 			goto wait;
 		}
 		if (anhp->rcode == SERVFAIL ||
 		    anhp->rcode == NOTIMP ||
 		    anhp->rcode == REFUSED) {
-			DprintQ(statp->options & RES_DEBUG,
-				(stdout, "server rejected query:\n"),
-				*thisansp,
-				(*thisresplenp > *thisanssizp)
-				? *thisanssizp : *thisresplenp);
-
 		next_ns:
 			if (recvresp1 || (buf2 != NULL && recvresp2)) {
 			  *resplen2 = 0;
@@ -1424,11 +1328,6 @@ send_dg(res_state statp,
 		}
 		if (anhp->rcode == NOERROR && anhp->ancount == 0
 		    && anhp->aa == 0 && anhp->ra == 0 && anhp->arcount == 0) {
-			DprintQ(statp->options & RES_DEBUG,
-				(stdout, "referred query:\n"),
-				*thisansp,
-				(*thisresplenp > *thisanssizp)
-				? *thisanssizp : *thisresplenp);
 			goto next_ns;
 		}
 		if (!(statp->options & RES_IGNTC) && anhp->tc) {
@@ -1436,8 +1335,6 @@ send_dg(res_state statp,
 			 * To get the rest of answer,
 			 * use TCP with same server.
 			 */
-			Dprint(statp->options & RES_DEBUG,
-			       (stdout, ";; truncated answer\n"));
 			*v_circuit = 1;
 			__res_iclose(statp, false);
 			// XXX if we have received one reply we could
@@ -1480,46 +1377,6 @@ send_dg(res_state statp,
 		abort ();
 	}
 }
-
-#ifdef DEBUG
-static void
-Aerror(const res_state statp, FILE *file, const char *string, int error,
-       const struct sockaddr *address)
-{
-	int save = errno;
-
-	if ((statp->options & RES_DEBUG) != 0) {
-		char tmp[sizeof "xxxx.xxxx.xxxx.255.255.255.255"];
-
-		fprintf(file, "res_send: %s ([%s].%u): %s\n",
-			string,
-			(address->sa_family == AF_INET
-			 ? inet_ntop(address->sa_family,
-				     &((const struct sockaddr_in *) address)->sin_addr,
-				     tmp, sizeof tmp)
-			 : inet_ntop(address->sa_family,
-				     &((const struct sockaddr_in6 *) address)->sin6_addr,
-				     tmp, sizeof tmp)),
-			(address->sa_family == AF_INET
-			 ? ntohs(((struct sockaddr_in *) address)->sin_port)
-			 : address->sa_family == AF_INET6
-			 ? ntohs(((struct sockaddr_in6 *) address)->sin6_port)
-			 : 0),
-			strerror(error));
-	}
-	__set_errno (save);
-}
-
-static void
-Perror(const res_state statp, FILE *file, const char *string, int error) {
-	int save = errno;
-
-	if ((statp->options & RES_DEBUG) != 0)
-		fprintf(file, "res_send: %s: %s\n",
-			string, strerror(error));
-	__set_errno (save);
-}
-#endif
 
 static int
 sock_eq(struct sockaddr_in6 *a1, struct sockaddr_in6 *a2) {
