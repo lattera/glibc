@@ -237,6 +237,14 @@ Version 2.26
 * The _res_opcodes variable has been removed from libresolv.  It had been
   exported by accident.
 
+* The glibc DNS stub resolver now supports an arbitary number of search
+  domains (configured using the “search” directive in /etc/resolv.conf).
+  Most applications will automatically benefit from this change, but for
+  backwards compatibility reasons, applications which directly modify _res
+  objects (which contain the resolver state, including the search list
+  array, which is limited to six entries) will only use the first six search
+  domains, as before.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,

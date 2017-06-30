@@ -124,18 +124,75 @@ is_sort_mask (char ch)
   return ch == '/' || ch == '&';
 }
 
+/* Array of strings for the search array.  The backing store is
+   managed separately.  */
+#define DYNARRAY_STRUCT search_list
+#define DYNARRAY_ELEMENT const char *
+#define DYNARRAY_INITIAL_SIZE 4
+#define DYNARRAY_PREFIX search_list_
+#include <malloc/dynarray-skeleton.c>
+
+/* resolv.conf parser state and results.  */
+struct resolv_conf_parser
+{
+  char *buffer;            /* Temporary buffer for reading lines.  */
+  char *search_list_store; /* Backing storage for search list entries.  */
+  struct search_list search_list; /* Points into search_list_store.  */
+};
+
+static void
+resolv_conf_parser_init (struct resolv_conf_parser *parser)
+{
+  parser->buffer = NULL;
+  parser->search_list_store = NULL;
+  search_list_init (&parser->search_list);
+}
+
+static void
+resolv_conf_parser_free (struct resolv_conf_parser *parser)
+{
+  free (parser->buffer);
+  free (parser->search_list_store);
+  search_list_free (&parser->search_list);
+}
+
+/* Try to obtain the domain name from the host name and store it in
+   *RESULT.  Return false on memory allocation failure.  If the domain
+   name cannot be determined for any other reason, write NULL to
+   *RESULT and return true.  */
+static bool
+domain_from_hostname (char **result)
+{
+  char buf[256];
+  /* gethostbyname may not terminate the buffer.  */
+  buf[sizeof (buf) - 1] = '\0';
+  if (__gethostname (buf, sizeof (buf) - 1) == 0)
+    {
+      char *dot = strchr (buf, '.');
+      if (dot != NULL)
+        {
+          *result = __strdup (dot + 1);
+          if (*result == NULL)
+            return false;
+          return true;
+        }
+    }
+  *result = NULL;
+  return true;
+}
+
 /* Internal helper function for __res_vinit, to aid with resource
    deallocation and error handling.  Return true on success, false on
    failure.  */
 static bool
-res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
+res_vinit_1 (res_state statp, bool preinit, FILE *fp,
+             struct resolv_conf_parser *parser)
 {
-  char *cp, **pp;
+  char *cp;
   size_t buffer_size = 0;
   int nserv = 0;    /* Number of nameservers read from file.  */
   bool have_serv6 = false;
   bool haveenv = false;
-  bool havesearch = false;
   int nsort = 0;
   char *net;
 
@@ -162,39 +219,40 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
   /* Allow user to override the local domain definition.  */
   if ((cp = getenv ("LOCALDOMAIN")) != NULL)
     {
-      strncpy (statp->defdname, cp, sizeof (statp->defdname) - 1);
-      statp->defdname[sizeof (statp->defdname) - 1] = '\0';
+      /* The code below splits the string in place.  */
+      cp = __strdup (cp);
+      if (cp == NULL)
+        return false;
+      free (parser->search_list_store);
+      parser->search_list_store = cp;
       haveenv = true;
+
+      /* The string will be truncated as needed below.  */
+      search_list_add (&parser->search_list, cp);
 
       /* Set search list to be blank-separated strings from rest of
          env value.  Permits users of LOCALDOMAIN to still have a
          search list, and anyone to set the one that they want to use
          as an individual (even more important now that the rfc1535
          stuff restricts searches).  */
-      cp = statp->defdname;
-      pp = statp->dnsrch;
-      *pp++ = cp;
-      for (int n = 0; *cp && pp < statp->dnsrch + MAXDNSRCH; cp++)
+      for (bool in_name = true; *cp != '\0'; cp++)
         {
           if (*cp == '\n')
-            break;
+            {
+              *cp = '\0';
+              break;
+            }
           else if (*cp == ' ' || *cp == '\t')
             {
-              *cp = 0;
-              n = 1;
+              *cp = '\0';
+              in_name = false;
             }
-          else if (n > 0)
+          else if (!in_name)
             {
-              *pp++ = cp;
-              n = 0;
-              havesearch = true;
+              search_list_add (&parser->search_list, cp);
+              in_name = true;
             }
         }
-      /* Null terminate last domain if there are excess.  */
-      while (*cp != '\0' && *cp != ' ' && *cp != '\t' && *cp != '\n')
-        cp++;
-      *cp = '\0';
-      *pp++ = 0;
     }
 
 #define MATCH(line, name)                       \
@@ -210,7 +268,7 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
       while (true)
         {
           {
-            ssize_t ret = __getline (buffer, &buffer_size, fp);
+            ssize_t ret = __getline (&parser->buffer, &buffer_size, fp);
             if (ret <= 0)
               {
                 if (_IO_ferror_unlocked (fp))
@@ -221,73 +279,82 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
           }
 
           /* Skip comments.  */
-          if (**buffer == ';' || **buffer == '#')
+          if (*parser->buffer == ';' || *parser->buffer == '#')
             continue;
           /* Read default domain name.  */
-          if (MATCH (*buffer, "domain"))
+          if (MATCH (parser->buffer, "domain"))
             {
               if (haveenv)
                 /* LOCALDOMAIN overrides the configuration file.  */
                 continue;
-              cp = *buffer + sizeof ("domain") - 1;
+              cp = parser->buffer + sizeof ("domain") - 1;
               while (*cp == ' ' || *cp == '\t')
                 cp++;
               if ((*cp == '\0') || (*cp == '\n'))
                 continue;
-              strncpy (statp->defdname, cp, sizeof (statp->defdname) - 1);
-              statp->defdname[sizeof (statp->defdname) - 1] = '\0';
-              if ((cp = strpbrk (statp->defdname, " \t\n")) != NULL)
+
+              cp = __strdup (cp);
+              if (cp == NULL)
+                return false;
+              free (parser->search_list_store);
+              parser->search_list_store = cp;
+              search_list_clear (&parser->search_list);
+              search_list_add (&parser->search_list, cp);
+              /* Replace trailing whitespace.  */
+              if ((cp = strpbrk (cp, " \t\n")) != NULL)
                 *cp = '\0';
-              havesearch = false;
               continue;
             }
           /* Set search list.  */
-          if (MATCH (*buffer, "search"))
+          if (MATCH (parser->buffer, "search"))
             {
               if (haveenv)
                 /* LOCALDOMAIN overrides the configuration file.  */
                 continue;
-              cp = *buffer + sizeof ("search") - 1;
+              cp = parser->buffer + sizeof ("search") - 1;
               while (*cp == ' ' || *cp == '\t')
                 cp++;
               if ((*cp == '\0') || (*cp == '\n'))
                 continue;
-              strncpy (statp->defdname, cp, sizeof (statp->defdname) - 1);
-              statp->defdname[sizeof (statp->defdname) - 1] = '\0';
-              if ((cp = strchr (statp->defdname, '\n')) != NULL)
-                *cp = '\0';
+
+              {
+                char *p = strchr (cp, '\n');
+                if (p != NULL)
+                  *p = '\0';
+              }
+              cp = __strdup (cp);
+              if (cp == NULL)
+                return false;
+              free (parser->search_list_store);
+              parser->search_list_store = cp;
+
+              /* The string is truncated below.  */
+              search_list_clear (&parser->search_list);
+              search_list_add (&parser->search_list, cp);
+
               /* Set search list to be blank-separated strings on rest
                  of line.  */
-              cp = statp->defdname;
-              pp = statp->dnsrch;
-              *pp++ = cp;
-              for (int n = 0; *cp && pp < statp->dnsrch + MAXDNSRCH; cp++)
+              for (bool in_name = true; *cp != '\0'; cp++)
                 {
                   if (*cp == ' ' || *cp == '\t')
                     {
-                      *cp = 0;
-                      n = 1;
+                      *cp = '\0';
+                      in_name = false;
                     }
-                  else if (n)
+                  else if (!in_name)
                     {
-                      *pp++ = cp;
-                      n = 0;
+                      search_list_add (&parser->search_list, cp);
+                      in_name = true;
                     }
                 }
-              /* Null terminate last domain if there are excess.  */
-              while (*cp != '\0' && *cp != ' ' && *cp != '\t')
-                cp++;
-              *cp = '\0';
-              *pp++ = 0;
-              havesearch = true;
               continue;
             }
           /* Read nameservers to query.  */
-          if (MATCH (*buffer, "nameserver") && nserv < MAXNS)
+          if (MATCH (parser->buffer, "nameserver") && nserv < MAXNS)
             {
               struct in_addr a;
 
-              cp = *buffer + sizeof ("nameserver") - 1;
+              cp = parser->buffer + sizeof ("nameserver") - 1;
               while (*cp == ' ' || *cp == '\t')
                 cp++;
               if ((*cp != '\0') && (*cp != '\n') && __inet_aton (cp, &a))
@@ -335,11 +402,11 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
                 }
               continue;
             }
-          if (MATCH (*buffer, "sortlist"))
+          if (MATCH (parser->buffer, "sortlist"))
             {
               struct in_addr a;
 
-              cp = *buffer + sizeof ("sortlist") - 1;
+              cp = parser->buffer + sizeof ("sortlist") - 1;
               while (nsort < MAXRESOLVSORT)
                 {
                   while (*cp == ' ' || *cp == '\t')
@@ -379,9 +446,9 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
                 }
               continue;
             }
-          if (MATCH (*buffer, "options"))
+          if (MATCH (parser->buffer, "options"))
             {
-              res_setoptions (statp, *buffer + sizeof ("options") - 1);
+              res_setoptions (statp, parser->buffer + sizeof ("options") - 1);
               continue;
             }
         }
@@ -399,25 +466,29 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
       statp->nsaddr.sin_port = htons (NAMESERVER_PORT);
       statp->nscount = 1;
     }
-  if (statp->defdname[0] == 0)
-    {
-      char buf[sizeof (statp->defdname)];
-      if (__gethostname (buf, sizeof (statp->defdname) - 1) == 0
-          && (cp = strchr (buf, '.')) != NULL)
-        strcpy (statp->defdname, cp + 1);
-    }
 
-  /* Find components of local domain that might be searched.  */
-  if (!havesearch)
+  if (search_list_size (&parser->search_list) == 0)
     {
-      pp = statp->dnsrch;
-      *pp++ = statp->defdname;
-      *pp = NULL;
-
+      char *domain;
+      if (!domain_from_hostname (&domain))
+        return false;
+      if (domain != NULL)
+        {
+          free (parser->search_list_store);
+          parser->search_list_store = domain;
+          search_list_add (&parser->search_list, domain);
+        }
     }
 
   if ((cp = getenv ("RES_OPTIONS")) != NULL)
     res_setoptions (statp, cp);
+
+  if (search_list_has_failed (&parser->search_list))
+    {
+      __set_errno (ENOMEM);
+      return false;
+    }
+
   statp->options |= RES_INIT;
   return true;
 }
@@ -453,13 +524,17 @@ __res_vinit (res_state statp, int preinit)
         return -1;
       }
 
-  char *buffer = NULL;
-  bool ok = res_vinit_1 (statp, preinit, fp, &buffer);
-  free (buffer);
+  struct resolv_conf_parser parser;
+  resolv_conf_parser_init (&parser);
+  bool ok = res_vinit_1 (statp, preinit, fp, &parser);
 
   if (ok)
     {
-      struct resolv_conf init = { 0 }; /* No data yet.  */
+      struct resolv_conf init =
+        {
+          .search_list = search_list_begin (&parser.search_list),
+          .search_list_size = search_list_size (&parser.search_list),
+        };
       struct resolv_conf *conf = __resolv_conf_allocate (&init);
       if (conf == NULL)
         ok = false;
@@ -469,6 +544,7 @@ __res_vinit (res_state statp, int preinit)
           __resolv_conf_put (conf);
         }
     }
+  resolv_conf_parser_free (&parser);
 
   if (!ok)
     {

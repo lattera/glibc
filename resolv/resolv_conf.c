@@ -133,6 +133,34 @@ static bool
 resolv_conf_matches (const struct __res_state *resp,
                      const struct resolv_conf *conf)
 {
+  /* Check that the search list in *RESP has not been modified by the
+     application.  */
+  {
+    if (!(resp->dnsrch[0] == resp->defdname
+          && resp->dnsrch[MAXDNSRCH] == NULL))
+      return false;
+    size_t search_list_size = 0;
+    for (size_t i = 0; i < conf->search_list_size; ++i)
+      {
+        if (resp->dnsrch[i] != NULL)
+          {
+            search_list_size += strlen (resp->dnsrch[i]) + 1;
+            if (strcmp (resp->dnsrch[i], conf->search_list[i]) != 0)
+              return false;
+          }
+        else
+          {
+            /* resp->dnsrch is truncated if the number of elements
+               exceeds MAXDNSRCH, or if the combined storage space for
+               the search list exceeds what can be stored in
+               resp->defdname.  */
+            if (i == MAXDNSRCH || search_list_size > sizeof (resp->dnsrch))
+              break;
+            /* Otherwise, a mismatch indicates a match failure.  */
+            return false;
+          }
+      }
+  }
   return true;
 }
 
@@ -162,10 +190,17 @@ __resolv_conf_put (struct resolv_conf *conf)
 struct resolv_conf *
 __resolv_conf_allocate (const struct resolv_conf *init)
 {
+  /* Space needed by the strings.  */
+  size_t string_space = 0;
+  for (size_t i = 0; i < init->search_list_size; ++i)
+    string_space += strlen (init->search_list[i]) + 1;
+
   /* Allocate the buffer.  */
   void *ptr;
   struct alloc_buffer buffer = alloc_buffer_allocate
-    (sizeof (struct resolv_conf),
+    (sizeof (struct resolv_conf)
+     + init->search_list_size * sizeof (init->search_list[0])
+     + string_space,
      &ptr);
   struct resolv_conf *conf
     = alloc_buffer_alloc (&buffer, struct resolv_conf);
@@ -178,6 +213,16 @@ __resolv_conf_allocate (const struct resolv_conf *init)
   conf->__refcount = 1;
   conf->initstamp = __res_initstamp;
 
+  /* Allocate and fill the search list array.  */
+  {
+    conf->search_list_size = init->search_list_size;
+    const char **array = alloc_buffer_alloc_array
+      (&buffer, const char *, init->search_list_size);
+    conf->search_list = array;
+    for (size_t i = 0; i < init->search_list_size; ++i)
+      array[i] = alloc_buffer_copy_string (&buffer, init->search_list[i]);
+  }
+
   assert (!alloc_buffer_has_failed (&buffer));
   return conf;
 }
@@ -186,6 +231,24 @@ __resolv_conf_allocate (const struct resolv_conf *init)
 static __attribute__ ((nonnull (1, 2), warn_unused_result)) bool
 update_from_conf (struct __res_state *resp, const struct resolv_conf *conf)
 {
+  /* Fill in the prefix of the search list.  It is truncated either at
+     MAXDNSRCH, or if reps->defdname has insufficient space.  */
+  {
+    struct alloc_buffer buffer
+      = alloc_buffer_create (resp->defdname, sizeof (resp->defdname));
+    size_t size = conf->search_list_size;
+    size_t i;
+    for (i = 0; i < size && i < MAXDNSRCH; ++i)
+      {
+        resp->dnsrch[i] = alloc_buffer_copy_string
+          (&buffer, conf->search_list[i]);
+        if (resp->dnsrch[i] == NULL)
+          /* No more space in resp->defdname.  Truncate.  */
+          break;
+      }
+    resp->dnsrch[i] = NULL;
+  }
+
   /* The overlapping parts of both configurations should agree after
      initialization.  */
   assert (resolv_conf_matches (resp, conf));

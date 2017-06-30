@@ -93,6 +93,25 @@ struct resolv_context *__resolv_context_get_override (struct __res_state *)
   __attribute__ ((nonnull (1), warn_unused_result));
 libc_hidden_proto (__resolv_context_get_override)
 
+/* Return the search path entry at INDEX, or NULL if there are fewer
+   than INDEX entries.  */
+static __attribute__ ((nonnull (1), unused)) const char *
+__resolv_context_search_list (const struct resolv_context *ctx, size_t index)
+{
+  if (ctx->conf != NULL)
+    {
+      if (index < ctx->conf->search_list_size)
+        return ctx->conf->search_list[index];
+      else
+        return NULL;
+    }
+  /* Fallback.  ctx->resp->dnsrch is a NULL-terminated array.  */
+  for (size_t i = 0; ctx->resp->dnsrch[i] != NULL && i < MAXDNSRCH; ++i)
+    if (i == index)
+      return ctx->resp->dnsrch[i];
+  return NULL;
+}
+
 /* Called during thread shutdown to free the associated resolver
    context (mostly in response to cancellation, otherwise the
    __resolv_context_get/__resolv_context_put pairing will already have

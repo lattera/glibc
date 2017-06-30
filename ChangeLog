@@ -1,5 +1,31 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19569]
+	[BZ #21475]
+	Support an arbitrary number of search domains.
+	* resolv/resolv_context.h (__resolv_context_search_list): New.
+	* resolv/resolv_conf.h (struct resolv_conf): Add search_list,
+	search_list_size members.
+	* resolv/resolv_conf.c (resolv_conf_matches): Compare search list.
+	(__resolv_conf_allocate): Allocate and and copy search list.
+	(update_from_conf): Copy the search list.
+	* resolv/res_init.c (struct search_list): Define using dynarray.
+	(struct resolv_conf_parser): Define.
+	(resolv_conf_parser_init, resolv_conf_parser_free)
+	(domain_from_hostname): New functions.
+	(res_vinit_1): Add struct resolv_conf_parser * parameter.  Use
+	struct search_list to collect search list entries.  Call
+	domain_from_hostname to obtain the fallback domain name.
+	(__res_vinit): Create and destroy parser object.  Pass search list
+	to __resolv_conf_allocate.
+	* resolv/res_query.c (__res_context_search): Use
+	__resolv_context_search_list to obtain search list entries.
+	* resolv/tst-resolv-res_init-skeleton.c (print_resp): Print data
+	from extended resolver context.
+	(test_cases): Update.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	Add extended resolver state/configuration (struct resolv_conf).
 	* resolv/resolv_conf.h, resolv/resolv_conf.c: New files.
 	* resolv/res-close.c (__res_iclose): Call __resolv_conf_detach.

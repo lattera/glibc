@@ -35,6 +35,10 @@ struct resolv_conf
   /* Reference counter.  The object is deallocated once it reaches
      zero.  For internal use within resolv_conf only.  */
   size_t __refcount;
+
+  /* The domain names forming the search list.  */
+  const char *const *search_list;
+  size_t search_list_size;
 };
 
 /* The functions below are for use by the res_init resolv.conf parser

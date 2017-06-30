@@ -326,7 +326,7 @@ __res_context_search (struct resolv_context *ctx,
 		      int *nanswerp2, int *resplen2, int *answerp2_malloced)
 {
 	struct __res_state *statp = ctx->resp;
-	const char *cp, * const *domain;
+	const char *cp;
 	HEADER *hp = (HEADER *) answer;
 	char tmp[NS_MAXDNAME];
 	u_int dots;
@@ -392,10 +392,11 @@ __res_context_search (struct resolv_context *ctx,
 	    (dots && !trailing_dot && (statp->options & RES_DNSRCH) != 0)) {
 		int done = 0;
 
-		for (domain = (const char * const *)statp->dnsrch;
-		     *domain && !done;
-		     domain++) {
-			const char *dname = domain[0];
+		for (size_t domain_index = 0; !done; ++domain_index) {
+			const char *dname = __resolv_context_search_list
+			  (ctx, domain_index);
+			if (dname == NULL)
+			  break;
 			searched = 1;
 
 			/* __res_context_querydoman concatenates name

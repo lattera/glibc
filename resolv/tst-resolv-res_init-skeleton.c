@@ -25,6 +25,7 @@
 #include <gnu/lib-names.h>
 #include <netdb.h>
 #include <resolv/resolv-internal.h> /* For DEPRECATED_RES_USE_INET6.  */
+#include <resolv/resolv_context.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <support/capture_subprocess.h>
@@ -116,6 +117,11 @@ print_option_flag (FILE *fp, int *options, int flag, const char *name)
 static void
 print_resp (FILE *fp, res_state resp)
 {
+  struct resolv_context *ctx = __resolv_context_get_override (resp);
+  TEST_VERIFY_EXIT (ctx != NULL);
+  if (ctx->conf == NULL)
+    fprintf (fp, "; extended resolver state missing\n");
+
   /* The options directive.  */
   {
     /* RES_INIT is used internally for tracking initialization.  */
@@ -164,6 +170,19 @@ print_resp (FILE *fp, res_state resp)
     }
   else if (resp->defdname[0] != '\0')
     fprintf (fp, "domain %s\n", resp->defdname);
+
+  /* The extended search path.  */
+  {
+    size_t i = 0;
+    while (true)
+      {
+        const char *name = __resolv_context_search_list (ctx, i);
+        if (name == NULL)
+          break;
+        fprintf (fp, "; search[%zu]: %s\n", i, name);
+        ++i;
+      }
+  }
 
   /* The sortlist directive.  */
   if (resp->nsort > 0)
@@ -224,6 +243,8 @@ print_resp (FILE *fp, res_state resp)
     }
 
   TEST_VERIFY (!ferror (fp));
+
+  __resolv_context_put (ctx);
 }
 
 /* Parameters of one test case.  */
@@ -368,11 +389,13 @@ struct test_case test_cases[] =
     {.name = "empty file",
      .conf = "",
      .expected = "search example.com\n"
+     "; search[0]: example.com\n"
      "nameserver 127.0.0.1\n"
     },
     {.name = "empty file with LOCALDOMAIN",
      .conf = "",
      .expected = "search example.net\n"
+     "; search[0]: example.net\n"
      "nameserver 127.0.0.1\n",
      .localdomain = "example.net",
     },
@@ -380,6 +403,7 @@ struct test_case test_cases[] =
      .conf = "",
      .expected = "options attempts:5 edns0\n"
      "search example.com\n"
+     "; search[0]: example.com\n"
      "nameserver 127.0.0.1\n",
      .res_options = "edns0 attempts:5",
     },
@@ -387,6 +411,7 @@ struct test_case test_cases[] =
      .conf = "",
      .expected = "options attempts:5 edns0\n"
      "search example.org\n"
+     "; search[0]: example.org\n"
      "nameserver 127.0.0.1\n",
      .localdomain = "example.org",
      .res_options = "edns0 attempts:5",
@@ -396,6 +421,8 @@ struct test_case test_cases[] =
      "search corp.example.com example.com\n"
      "nameserver 192.0.2.1\n",
      .expected = "search corp.example.com example.com\n"
+     "; search[0]: corp.example.com\n"
+     "; search[1]: example.com\n"
      "nameserver 192.0.2.1\n"
     },
     {.name = "whitespace",
@@ -403,15 +430,45 @@ struct test_case test_cases[] =
      " (trailing whitespace,\n"
      "# missing newline at end of file).\n"
      "\n"
-     "domain  example.net\n"
      ";search commented out\n"
-     "search corp.example.com\texample.com\n"
+     "search corp.example.com\texample.com \n"
      "#nameserver 192.0.2.3\n"
      "nameserver 192.0.2.1 \n"
      "nameserver 192.0.2.2",    /* No \n at end of file.  */
      .expected = "search corp.example.com example.com\n"
+     "; search[0]: corp.example.com\n"
+     "; search[1]: example.com\n"
      "nameserver 192.0.2.1\n"
      "nameserver 192.0.2.2\n"
+    },
+    {.name = "domain",
+     .conf = "domain example.net\n"
+     "nameserver 192.0.2.1\n",
+     .expected = "search example.net\n"
+     "; search[0]: example.net\n"
+     "nameserver 192.0.2.1\n"
+    },
+    {.name = "domain space",
+     .conf = "domain example.net \n"
+     "nameserver 192.0.2.1\n",
+     .expected = "search example.net\n"
+     "; search[0]: example.net\n"
+     "nameserver 192.0.2.1\n"
+    },
+    {.name = "domain tab",
+     .conf = "domain example.net\t\n"
+     "nameserver 192.0.2.1\n",
+     .expected = "search example.net\n"
+     "; search[0]: example.net\n"
+     "nameserver 192.0.2.1\n"
+    },
+    {.name = "domain override",
+     .conf = "search example.com example.org\n"
+     "nameserver 192.0.2.1\n"
+     "domain example.net",      /* No \n at end of file.  */
+     .expected = "search example.net\n"
+     "; search[0]: example.net\n"
+     "nameserver 192.0.2.1\n"
     },
     {.name = "option values, multiple servers",
      .conf = "options\tinet6\tndots:3 edns0\tattempts:5\ttimeout:19\n"
@@ -423,6 +480,8 @@ struct test_case test_cases[] =
      "nameserver 192.0.2.2\n",
      .expected = "options ndots:3 timeout:19 attempts:5 inet6 edns0\n"
      "search corp.example.com example.com\n"
+     "; search[0]: corp.example.com\n"
+     "; search[1]: example.com\n"
      "nameserver 192.0.2.1\n"
      "nameserver ::1\n"
      "nameserver 192.0.2.2\n"
@@ -432,6 +491,7 @@ struct test_case test_cases[] =
      "search example.com\n",
      .expected = "options ndots:15 timeout:30 attempts:5 use-vc\n"
      "search example.com\n"
+     "; search[0]: example.com\n"
      "nameserver 127.0.0.1\n"
     },
     {.name = "repeated directives",
@@ -443,6 +503,7 @@ struct test_case test_cases[] =
      "search\n",
      .expected = "options ndots:2 use-vc edns0\n"
      "search example.org\n"
+     "; search[0]: example.org\n"
      "nameserver 127.0.0.1\n"
     },
     {.name = "many name servers, sortlist",
@@ -459,6 +520,10 @@ struct test_case test_cases[] =
      "nameserver 192.0.2.8\n",
      .expected = "options single-request\n"
      "search example.org example.com example.net corp.example.com\n"
+     "; search[0]: example.org\n"
+     "; search[1]: example.com\n"
+     "; search[2]: example.net\n"
+     "; search[3]: corp.example.com\n"
      "sortlist 192.0.2.0/255.255.255.0\n"
      "nameserver 192.0.2.1\n"
      "nameserver 192.0.2.2\n"
@@ -480,6 +545,11 @@ struct test_case test_cases[] =
      .expected = "options single-request\n"
      "search example.org example.com example.net corp.example.com"
      " legacy.example.com\n"
+     "; search[0]: example.org\n"
+     "; search[1]: example.com\n"
+     "; search[2]: example.net\n"
+     "; search[3]: corp.example.com\n"
+     "; search[4]: legacy.example.com\n"
      "sortlist 192.0.2.0/255.255.255.0\n"
      "nameserver 192.0.2.1\n"
      "nameserver 2001:db8::2\n"
@@ -490,6 +560,7 @@ struct test_case test_cases[] =
      "nameserver 192.0.2.2:5353\n"
      "nameserver 192.0.2.3 5353\n",
      .expected = "search example.com\n"
+     "; search[0]: example.com\n"
      "nameserver 192.0.2.1\n"
      "nameserver 192.0.2.3\n"
     },
@@ -498,8 +569,41 @@ struct test_case test_cases[] =
      "nameserver 192.0.2.1\n",
      .expected = "options ndots:3 timeout:7 attempts:5 use-vc edns0\n"
      "search example.com\n"
+     "; search[0]: example.com\n"
      "nameserver 192.0.2.1\n",
      .res_options = "attempts:5 ndots:3 edns0 ",
+    },
+    {.name = "many search list entries (bug 19569)",
+     .conf = "nameserver 192.0.2.1\n"
+     "search corp.example.com support.example.com"
+     " community.example.org wan.example.net vpn.example.net"
+     " example.com example.org example.net\n",
+     .expected = "search corp.example.com support.example.com"
+     " community.example.org wan.example.net vpn.example.net example.com\n"
+     "; search[0]: corp.example.com\n"
+     "; search[1]: support.example.com\n"
+     "; search[2]: community.example.org\n"
+     "; search[3]: wan.example.net\n"
+     "; search[4]: vpn.example.net\n"
+     "; search[5]: example.com\n"
+     "; search[6]: example.org\n"
+     "; search[7]: example.net\n"
+     "nameserver 192.0.2.1\n",
+    },
+    {.name = "very long search list entries (bug 21475)",
+     .conf = "nameserver 192.0.2.1\n"
+     "search example.com "
+#define H63 "this-host-name-is-longer-than-yours-yes-I-really-really-mean-it"
+#define D63 "this-domain-name-is-as-long-as-the-previous-name--63-characters"
+     " " H63 "." D63 ".example.org"
+     " " H63 "." D63 ".example.net\n",
+     .expected = "search example.com " H63 "." D63 ".example.org\n"
+     "; search[0]: example.com\n"
+     "; search[1]: " H63 "." D63 ".example.org\n"
+     "; search[2]: " H63 "." D63 ".example.net\n"
+#undef H63
+#undef D63
+     "nameserver 192.0.2.1\n",
     },
     { NULL }
   };
