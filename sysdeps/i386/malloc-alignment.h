@@ -1,6 +1,5 @@
-/* Basic platform-independent macro definitions for mutexes,
-   thread-specific data and parameters for malloc.
-   Copyright (C) 2003-2017 Free Software Foundation, Inc.
+/* Define MALLOC_ALIGNMENT for malloc.  i386 version.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,26 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _GENERIC_MALLOC_MACHINE_H
-#define _GENERIC_MALLOC_MACHINE_H
+#ifndef _I386_MALLOC_ALIGNMENT_H
+#define _I386_MALLOC_ALIGNMENT_H
 
-#include <atomic.h>
-#include <malloc-alignment.h>
+#define MALLOC_ALIGNMENT 16
 
-#ifndef atomic_full_barrier
-# define atomic_full_barrier() __asm ("" ::: "memory")
-#endif
-
-#ifndef atomic_read_barrier
-# define atomic_read_barrier() atomic_full_barrier ()
-#endif
-
-#ifndef atomic_write_barrier
-# define atomic_write_barrier() atomic_full_barrier ()
-#endif
-
-#ifndef DEFAULT_TOP_PAD
-# define DEFAULT_TOP_PAD 131072
-#endif
-
-#endif /* !defined(_GENERIC_MALLOC_MACHINE_H) */
+#endif /* !defined(_I386_MALLOC_ALIGNMENT_H) */

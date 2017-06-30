@@ -58,16 +58,6 @@
 /* The corresponding word size.  */
 #define SIZE_SZ (sizeof (INTERNAL_SIZE_T))
 
-/* MALLOC_ALIGNMENT is the minimum alignment for malloc'ed chunks.  It
-   must be a power of two at least 2 * SIZE_SZ, even on machines for
-   which smaller alignments would suffice. It may be defined as larger
-   than this though. Note however that code and data structures are
-   optimized for the case of 8-byte alignment.  */
-#ifndef MALLOC_ALIGNMENT
-# define MALLOC_ALIGNMENT (2 * SIZE_SZ < __alignof__ (long double) \
-                           ? __alignof__ (long double) : 2 * SIZE_SZ)
-#endif
-
 /* The corresponding bit mask value.  */
 #define MALLOC_ALIGN_MASK (MALLOC_ALIGNMENT - 1)
 

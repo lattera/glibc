@@ -1,3 +1,11 @@
+2017-06-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21120]
+	* malloc/malloc-internal.h (MALLOC_ALIGNMENT): Moved to ...
+	* sysdeps/generic/malloc-alignment.h: Here.  New file.
+	* sysdeps/i386/malloc-alignment.h: Likewise.
+	* sysdeps/generic/malloc-machine.h: Include <malloc-alignment.h>.
+
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/tst-resolv-res_init-skeleton.c (test_init_names): New
