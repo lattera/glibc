@@ -1,3 +1,37 @@
+2017-07-06  Rafal Luzynski <digitalfreak@lingonborough.com>
+
+	Arabic scripts: More fixes after the recent import.
+
+	After the recent import of month names from CLDRv31 (bug 21217,
+	commit c853f14) more imports are also needed, mostly abbreviated month
+	names.
+
+	This patch also updates May (full month name) in ps_AF which was
+	skipped in the previous patch.
+
+	Incidentally, this import fixes bug 17225 (ar_SY) and partially
+	bug 19066 (ar_SA).
+
+	* locales/ar_DZ (abmon): Full import from CLDR, abmon
+	is no longer abbreviated.
+	* locales/ar_IQ (abmon): Likewise.
+	* locales/ar_MA (abmon): Likewise.
+	* locales/ar_TN (abmon): Likewise.
+	* locales/ps_AF (abmon): Likewise.
+	* locales/ug_CN (abmon): Likewise.
+	* locales/ar_SA (abmon): Likewise, partially fixes bug 19066.
+	* locales/ks_IN (abmon): A copy of mon.
+	* locales/ur_IN (abmon): Oct reworded "اكتوبر" to
+	"اکتوبر" (same change as mon).
+	* locales/ur_PK (abmon): Same changes as mon applied.
+	* locales/ps_AF (mon): May reworded "می" to "مۍ".
+
+	[BZ #17225]
+	* locales/ar_SY (abmon): May reworded "نوار" to
+	"أيار", this closes bug 17225.
+	* locales/ar_JO (abmon): Likewise.
+	* locales/ar_LB (abmon): Likewise.
+
 2017-07-06  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21711]
