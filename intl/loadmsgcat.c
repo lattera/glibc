@@ -447,7 +447,7 @@
    file and the name space must not be polluted.  */
 # define open(name, flags)	__open_nocancel (name, flags)
 # define close(fd)		close_not_cancel_no_status (fd)
-# define read(fd, buf, n)	read_not_cancel (fd, buf, n)
+# define read(fd, buf, n)	__read_nocancel (fd, buf, n)
 # define mmap(addr, len, prot, flags, fd, offset) \
   __mmap (addr, len, prot, flags, fd, offset)
 # define munmap(addr, len)	__munmap (addr, len)

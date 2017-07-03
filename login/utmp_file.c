@@ -187,7 +187,7 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
     }
 
   /* Read the next entry.  */
-  nbytes = read_not_cancel (file_fd, &last_entry, sizeof (struct utmp));
+  nbytes = __read_nocancel (file_fd, &last_entry, sizeof (struct utmp));
 
   UNLOCK_FILE (file_fd);
 
@@ -231,7 +231,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer,
       while (1)
 	{
 	  /* Read the next entry.  */
-	  if (read_not_cancel (file_fd, buffer, sizeof (struct utmp))
+	  if (__read_nocancel (file_fd, buffer, sizeof (struct utmp))
 	      != sizeof (struct utmp))
 	    {
 	      __set_errno (ESRCH);
@@ -253,7 +253,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer,
       while (1)
 	{
 	  /* Read the next entry.  */
-	  if (read_not_cancel (file_fd, buffer, sizeof (struct utmp))
+	  if (__read_nocancel (file_fd, buffer, sizeof (struct utmp))
 	      != sizeof (struct utmp))
 	    {
 	      __set_errno (ESRCH);
@@ -329,7 +329,7 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
   while (1)
     {
       /* Read the next entry.  */
-      if (read_not_cancel (file_fd, &last_entry, sizeof (struct utmp))
+      if (__read_nocancel (file_fd, &last_entry, sizeof (struct utmp))
 	  != sizeof (struct utmp))
 	{
 	  __set_errno (ESRCH);

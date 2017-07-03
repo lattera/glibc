@@ -43,7 +43,7 @@ is_smp_system (void)
       /* This was not successful.  Now try reading the /proc filesystem.  */
       int fd = __open_nocancel ("/proc/sys/kernel/version", O_RDONLY);
       if (__builtin_expect (fd, 0) == -1
-	  || read_not_cancel (fd, u.buf, sizeof (u.buf)) <= 0)
+	  || __read_nocancel (fd, u.buf, sizeof (u.buf)) <= 0)
 	/* This also didn't work.  We give up and say it's a UP machine.  */
 	u.buf[0] = '\0';
 

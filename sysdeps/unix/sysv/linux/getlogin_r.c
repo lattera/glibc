@@ -41,7 +41,7 @@ __getlogin_r_loginuid (char *name, size_t namesize)
   /* We are reading a 32-bit number.  12 bytes are enough for the text
      representation.  If not, something is wrong.  */
   char uidbuf[12];
-  ssize_t n = TEMP_FAILURE_RETRY (read_not_cancel (fd, uidbuf,
+  ssize_t n = TEMP_FAILURE_RETRY (__read_nocancel (fd, uidbuf,
 						   sizeof (uidbuf)));
   close_not_cancel_no_status (fd);
 

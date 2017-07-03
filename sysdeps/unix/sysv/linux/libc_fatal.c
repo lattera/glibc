@@ -56,7 +56,7 @@ backtrace_and_maps (int do_abort, bool written, int fd)
           int fd2 = __open_nocancel ("/proc/self/maps", O_RDONLY);
           char buf[1024];
           ssize_t n2;
-          while ((n2 = read_not_cancel (fd2, buf, sizeof (buf))) > 0)
+          while ((n2 = __read_nocancel (fd2, buf, sizeof (buf))) > 0)
             if (write_not_cancel (fd, buf, n2) != n2)
               break;
           close_not_cancel_no_status (fd2);

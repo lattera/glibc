@@ -34,9 +34,9 @@ libc_hidden_proto (__open_nocancel)
 __typeof (open64) __open64_nocancel;
 libc_hidden_proto (__open64_nocancel)
 
-/* Uncancelable read.  */
-#define __read_nocancel(fd, buf, len) \
-  INLINE_SYSCALL (read, 3, fd, buf, len)
+/* Non cancellable read syscall.  */
+__typeof (__read) __read_nocancel;
+libc_hidden_proto (__read_nocancel)
 
 /* Uncancelable write.  */
 #define __write_nocancel(fd, buf, len) \
@@ -60,10 +60,6 @@ libc_hidden_proto (__open64_nocancel)
 #define close_not_cancel_no_status(fd) \
   (void) ({ INTERNAL_SYSCALL_DECL (err);				      \
 	    INTERNAL_SYSCALL (close, err, 1, (fd)); })
-
-/* Uncancelable read.  */
-#define read_not_cancel(fd, buf, n) \
-  __read_nocancel (fd, buf, n)
 
 /* Uncancelable write.  */
 #define write_not_cancel(fd, buf, n) \

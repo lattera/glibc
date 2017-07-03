@@ -34,7 +34,7 @@
   __close (fd)
 #define close_not_cancel_no_status(fd) \
   (void) __close (fd)
-#define read_not_cancel(fd, buf, n) \
+#define __read_nocancel(fd, buf, n) \
   __read (fd, buf, n)
 #define write_not_cancel(fd, buf, n) \
   __write (fd, buf, n)

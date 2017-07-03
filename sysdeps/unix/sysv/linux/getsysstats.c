@@ -85,7 +85,7 @@ next_line (int fd, char *const buffer, char **cp, char **re,
 	      *re = buffer + (*re - *cp);
 	      *cp = buffer;
 
-	      ssize_t n = read_not_cancel (fd, *re, buffer_end - *re);
+	      ssize_t n = __read_nocancel (fd, *re, buffer_end - *re);
 	      if (n < 0)
 		return NULL;
 
@@ -96,7 +96,7 @@ next_line (int fd, char *const buffer, char **cp, char **re,
 		{
 		  /* Truncate too long lines.  */
 		  *re = buffer + 3 * (buffer_end - buffer) / 4;
-		  n = read_not_cancel (fd, *re, buffer_end - *re);
+		  n = __read_nocancel (fd, *re, buffer_end - *re);
 		  if (n < 0)
 		    return NULL;
 

@@ -37,7 +37,7 @@ has_cpuclock (void)
 	  /* We expect the file to contain a single digit followed by
 	     a newline.  If the format changes we better not rely on
 	     the file content.  */
-	  if (read_not_cancel (fd, buf, sizeof buf) != 2
+	  if (__read_nocancel (fd, buf, sizeof buf) != 2
 	      || buf[0] != '0' || buf[1] != '\n')
 	    newval = -1;
 

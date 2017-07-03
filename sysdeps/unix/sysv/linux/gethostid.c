@@ -80,7 +80,7 @@ gethostid (void)
   fd = __open_nocancel (HOSTIDFILE, O_RDONLY|O_LARGEFILE, 0);
   if (fd >= 0)
     {
-      ssize_t n = read_not_cancel (fd, &id, sizeof (id));
+      ssize_t n = __read_nocancel (fd, &id, sizeof (id));
 
       close_not_cancel_no_status (fd);
 

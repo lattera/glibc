@@ -42,7 +42,7 @@ getloadavg (double loadavg[], int nelem)
       ssize_t nread;
       int i;
 
-      nread = read_not_cancel (fd, buf, sizeof buf - 1);
+      nread = __read_nocancel (fd, buf, sizeof buf - 1);
       close_not_cancel_no_status (fd);
       if (nread <= 0)
 	return -1;

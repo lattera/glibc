@@ -238,7 +238,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 	      char *p = (char *) filedata;
 	      while (to_read > 0)
 		{
-		  nread = read_not_cancel (fd, p, to_read);
+		  nread = __read_nocancel (fd, p, to_read);
 		  if (__builtin_expect (nread, 1) <= 0)
 		    {
 		      free (filedata);

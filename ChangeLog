@@ -1,3 +1,38 @@
+2017-08-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/generic/not-cancel.h (read_not_cancel): Remove macro.
+	(__read_nocancel): New macro.
+	* sysdeps/unix/sysv/linux/Versions (libc) [GLIBC_PRIVATE]: Add
+	__read_nocancel.
+	* sysdeps/unix/sysv/linux/not-cancel.h (__read_nocancel): Remove
+	macro.
+	(__read_nocancel): New prototype.
+	* sysdeps/unix/sysv/linux/read.c (__read_nocancel): New function.
+	* catgets/open_catalog.c (__open_catalog): Replace read_not_cancel
+	with __read_nocancel.
+	* intl/loadmsgcat.c (read): Likewise.
+	* libio/fileops.c (_IO_file_read): Likewise.
+	* locale/loadlocale.c (_nl_load_locale): Likewise.
+	* login/utmp_file.c (getutent_r_file): Likewise.
+	(internal_getut_r): Likewise.
+	(getutline_r_file): Likewise.
+	* sysdeps/unix/sysv/linux/fips-private.h (fips_enable_p): Likewise.
+	* sysdeps/unix/sysv/linux/gethostid.c (gethostid): Likewise.
+	* sysdeps/unix/sysv/linux/getloadavg.c (getloadavg): Likewise.
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):
+	Likewise.
+	* sysdeps/unix/sysv/linux/getsysstats.c (next_line): Likewise.
+	* sysdeps/unix/sysv/linux/i386/smp.h (is_smp_system): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/has_cpuclock.c (has_cpuclock):
+	Likewise.
+	* sysdeps/unix/sysv/linux/libc_fatal.c (backtrace_and_maps):
+	Likewise.
+	* sysdeps/unix/sysv/linux/malloc-sysdep.h (check_may_shrink_heap):
+	Likewise.
+	* sysdeps/unix/sysv/linux/pthread_getname.c (pthread_getname_np):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Likewise.
+
 2017-08-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21966]

@@ -1204,7 +1204,7 @@ _IO_ssize_t
 _IO_file_read (_IO_FILE *fp, void *buf, _IO_ssize_t size)
 {
   return (__builtin_expect (fp->_flags2 & _IO_FLAGS2_NOTCANCEL, 0)
-	  ? read_not_cancel (fp->_fileno, buf, size)
+	  ? __read_nocancel (fp->_fileno, buf, size)
 	  : read (fp->_fileno, buf, size));
 }
 libc_hidden_def (_IO_file_read)

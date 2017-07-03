@@ -50,7 +50,7 @@ pthread_getname_np (pthread_t th, char *buf, size_t len)
     return errno;
 
   int res = 0;
-  ssize_t n = TEMP_FAILURE_RETRY (read_not_cancel (fd, buf, len));
+  ssize_t n = TEMP_FAILURE_RETRY (__read_nocancel (fd, buf, len));
   if (n < 0)
     res = errno;
   else
