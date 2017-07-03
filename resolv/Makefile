@@ -63,6 +63,9 @@ tests-internal += \
   tst-resolv-res_init \
   tst-resolv-res_init-thread \
 
+# Needs resolv_context.
+tests-internal += tst-resolv-res_ninit
+
 endif
 
 # This test accesses __inet_ntop_range, an internal libc function.
@@ -103,6 +106,7 @@ ifeq ($(run-built-tests),yes)
 ifneq (no,$(PERL))
 tests-special += $(objpfx)mtrace-tst-leaks.out
 xtests-special += $(objpfx)mtrace-tst-leaks2.out
+tests-special += $(objpfx)mtrace-tst-resolv-res_ninit.out
 endif
 endif
 
@@ -114,7 +118,8 @@ headers += rpc/netdb.h
 endif
 
 generated += mtrace-tst-leaks.out tst-leaks.mtrace \
-	     mtrace-tst-leaks2.out tst-leaks2.mtrace
+	     mtrace-tst-leaks2.out tst-leaks2.mtrace \
+	     mtrace-tst-resolv-res_ninit.out tst-resolv-res_ninit.mtrace \
 
 include ../Rules
 
@@ -141,6 +146,12 @@ tst-leaks2-ENV = MALLOC_TRACE=$(objpfx)tst-leaks2.mtrace
 $(objpfx)mtrace-tst-leaks2.out: $(objpfx)tst-leaks2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace > $@; \
 	$(evaluate-test)
+
+tst-resolv-res_ninit-ENV = MALLOC_TRACE=$(objpfx)tst-resolv-res_ninit.mtrace
+$(objpfx)mtrace-tst-resolv-res_ninit.out: $(objpfx)tst-resolv-res_ninit.out
+	$(common-objpfx)malloc/mtrace \
+	  $(objpfx)tst-resolv-res_ninit.mtrace > $@; \
+	  $(evaluate-test)
 
 $(objpfx)tst-bug18665-tcp: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-bug18665: $(objpfx)libresolv.so $(shared-thread-library)

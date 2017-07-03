@@ -1,3 +1,19 @@
+2017-07-03  Florian Weimer  <fweimer@redhat.com>
+
+	resolv: Introduce free list for resolv_conf index slosts.
+	* resolv/resolv_conf.c (struct resolv_conf_array): Change element
+	type to uintptr_t.
+	(struct resolv_conf_global): Add free_list_start member.
+	(resolv_conf_get_1): Check for free list entry.
+	(decrement_at_index): Put freed slot on the free list.
+	(__resolv_conf_attach): Obtain new slot from the free list.
+	* resolv/tst-resolv-res_ninit.c: New file.
+	* resolv/Makefile (tests-internal): Add tst-resolv-res_ninit.
+	(tests-special): Add mtrace-tst-resolv-res_ninit.out.
+	(generated): Add mtrace-tst-resolv-res_ninit.out,
+	tst-resolv-res_ninit.mtrace.
+	(mtrace-tst-resolv-res_ninit.out): Add target.
+
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #984]
