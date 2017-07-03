@@ -22,14 +22,10 @@
   __open (__VA_ARGS__)
 #define __open64_nocancel(...) \
   __open64 (__VA_ARGS__)
-#define openat_not_cancel(fd, name, flags, mode) \
-  __openat (fd, name, flags, mode)
-#define openat_not_cancel_3(fd, name, flags) \
-  __openat (fd, name, flags, 0)
-#define openat64_not_cancel(fd, name, flags, mode) \
-  __openat64 (fd, name, flags, mode)
-#define openat64_not_cancel_3(fd, name, flags) \
-  __openat64 (fd, name, flags, 0)
+#define __openat_nocancel(...) \
+  __openat (__VA_ARGS__)
+#define __openat64_nocancel(...) \
+  __openat64 (__VA_ARGS__)
 #define close_not_cancel(fd) \
   __close (fd)
 #define close_not_cancel_no_status(fd) \

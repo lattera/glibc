@@ -34,6 +34,14 @@ libc_hidden_proto (__open_nocancel)
 __typeof (open64) __open64_nocancel;
 libc_hidden_proto (__open64_nocancel)
 
+/* Non cancellable openat syscall.  */
+__typeof (openat) __openat_nocancel;
+libc_hidden_proto (__openat_nocancel)
+
+/* Non cacellable openat syscall (LFS version).  */
+__typeof (openat64) __openat64_nocancel;
+libc_hidden_proto (__openat64_nocancel)
+
 /* Non cancellable read syscall.  */
 __typeof (__read) __read_nocancel;
 libc_hidden_proto (__read_nocancel)
@@ -41,16 +49,6 @@ libc_hidden_proto (__read_nocancel)
 /* Uncancelable write.  */
 __typeof (__write) __write_nocancel;
 libc_hidden_proto (__write_nocancel)
-
-/* Uncancelable openat.  */
-#define openat_not_cancel(fd, fname, oflag, mode) \
-  INLINE_SYSCALL (openat, 4, fd, fname, oflag, mode)
-#define openat_not_cancel_3(fd, fname, oflag) \
-  INLINE_SYSCALL (openat, 3, fd, fname, oflag)
-#define openat64_not_cancel(fd, fname, oflag, mode) \
-  INLINE_SYSCALL (openat, 4, fd, fname, oflag | O_LARGEFILE, mode)
-#define openat64_not_cancel_3(fd, fname, oflag) \
-  INLINE_SYSCALL (openat, 3, fd, fname, oflag | O_LARGEFILE)
 
 /* Uncancelable close.  */
 #define __close_nocancel(fd) \

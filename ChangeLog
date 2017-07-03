@@ -1,3 +1,22 @@
+2017-08-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/generic/not-cancel.h (openat_not_cancel): Remove macro.
+	(openat_not_cancel_3): Likewise.
+	(openat64_not_cancel_3): Likewise).
+	(openat_not_cancel_3): Likewise).
+	* sysdeps/unix/sysv/linux/not-cancel.h (openat_not_cancel): Remove
+	macro.
+	(openat_not_cancel_3): Likewise.
+	(openat64_not_cancel): Likewise.
+	(openat64_not_cancel_3): Likewise.
+	* sysdeps/unix/sysv/linux/openat.c (__openat_nocancel): New function.
+	* sysdeps/unix/sysv/linux/openat64.c (__openat64_nocancel): Likewise.
+	* io/ftw.c (open_dir_stream): Replace openat{64}_not_cancel{_3} with
+	__open{64}_nocancel.
+	* sysdeps/mach/hurd/opendir.c (__opendirat): Likewise.
+	* sysdeps/posix/getcwd.c (__getcwd): Likewise.
+	* sysdeps/posix/opendir.c (__opendirat): Likewise.
+
 2017-08-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]

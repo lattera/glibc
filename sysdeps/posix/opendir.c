@@ -161,7 +161,7 @@ __opendirat (int dfd, const char *name)
 	}
     }
 
-  return opendir_tail (openat_not_cancel_3 (dfd, name, opendir_oflags));
+  return opendir_tail (__openat_nocancel (dfd, name, opendir_oflags));
 }
 #endif
 

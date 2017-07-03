@@ -175,7 +175,7 @@ extern char *alloca ();
 # include <not-cancel.h>
 # include <kernel-features.h>
 #else
-# define openat64_not_cancel_3(dfd, name, mode) openat64 (dfd, name, mode)
+# define __openat64_nocancel(dfd, name, mode) openat64 (dfd, name, mode)
 # define close_not_cancel_no_status(fd) close (fd)
 #endif
 
@@ -281,7 +281,7 @@ __getcwd (char *buf, size_t size)
   while (!(thisdev == rootdev && thisino == rootino))
     {
       if (__have_atfcts >= 0)
-	  fd = openat64_not_cancel_3 (fd, "..", O_RDONLY | O_CLOEXEC);
+	  fd = __openat64_nocancel (fd, "..", O_RDONLY | O_CLOEXEC);
       else
 	fd = -1;
       if (fd >= 0)

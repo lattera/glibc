@@ -337,8 +337,8 @@ open_dir_stream (int *dfdp, struct ftw_data *data, struct dir_data *dirp)
 
       if (dfdp != NULL && *dfdp != -1)
 	{
-	  int fd = openat64_not_cancel_3 (*dfdp, data->dirbuf + data->ftw.base,
-					  O_RDONLY | O_DIRECTORY | O_NDELAY);
+	  int fd = __openat64_nocancel (*dfdp, data->dirbuf + data->ftw.base,
+					O_RDONLY | O_DIRECTORY | O_NDELAY);
 	  dirp->stream = NULL;
 	  if (fd != -1 && (dirp->stream = __fdopendir (fd)) == NULL)
 	    close_not_cancel_no_status (fd);
