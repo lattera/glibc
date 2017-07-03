@@ -61,7 +61,7 @@ extern int _IO_dup2 (int fd, int fd2) __THROW;
 
 #ifndef _IO_waitpid
 #ifdef _LIBC
-#define _IO_waitpid waitpid_not_cancel
+#define _IO_waitpid __waitpid_nocancel
 #else
 #define _IO_waitpid waitpid
 #endif

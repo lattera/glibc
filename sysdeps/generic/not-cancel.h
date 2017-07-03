@@ -36,7 +36,7 @@
   __write (fd, buf, n)
 #define __writev_nocancel_nostatus(fd, iov, n) \
   (void) __writev (fd, iov, n)
-# define waitpid_not_cancel(pid, stat_loc, options) \
+# define __waitpid_nocancel(pid, stat_loc, options) \
   __waitpid (pid, stat_loc, options)
 #define pause_not_cancel() \
   __pause ()

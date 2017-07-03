@@ -1,5 +1,15 @@
 2017-08-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* libio/ioopen.c (_IO_waitpid): Replace waitpid_not_cancel with
+	__waitpid_nocancel.
+	* sysdeps/generic/not-cancel.h (waitpid_not_cancel): Remove macro.
+	(__waitpid_nocancel): New macro.
+	* sysdeps/unix/sysv/linux/not-cancel.h (waitpid_not_cancel): Remove
+	macro.
+	(__waitpid_nocancel): Replace macro with a function.
+	* sysdeps/unix/sysv/linux/waitpid.c (__waitpid_nocancel): New
+	function.
+
 	* login/utmp_file.c (timeout_handler): Replace fcntl_not_cancel with
 	__fcntl_nocancel.
 	* sysdeps/generic/not-cancel.h (fcntl_not_cancel): Remove macro.

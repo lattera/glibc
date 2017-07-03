@@ -25,6 +25,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/syscall.h>
+#include <sys/wait.h>
 
 /* Non cancellable open syscall.  */
 __typeof (open) __open_nocancel;
@@ -72,10 +73,8 @@ __writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
 }
 
 /* Uncancelable waitpid.  */
-#define __waitpid_nocancel(pid, stat_loc, options) \
-  INLINE_SYSCALL (wait4, 4, pid, stat_loc, options, NULL)
-#define waitpid_not_cancel(pid, stat_loc, options) \
-  __waitpid_nocancel(pid, stat_loc, options)
+__typeof (waitpid) __waitpid_nocancel;
+libc_hidden_proto (__waitpid_nocancel)
 
 /* Uncancelable pause.  */
 #define pause_not_cancel() \
