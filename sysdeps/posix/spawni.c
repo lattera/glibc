@@ -234,7 +234,7 @@ fail:
   ret = errno ? : ECHILD;
   if (ret)
     /* Since sizeof errno < PIPE_BUF, the write is atomic. */
-    while (write_not_cancel (args->pipe[1], &ret, sizeof (ret)) < 0);
+    while (__write_nocancel (args->pipe[1], &ret, sizeof (ret)) < 0);
 
   _exit (SPAWN_ERROR);
 }

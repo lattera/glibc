@@ -58,7 +58,7 @@ struct gmonparam _gmonparam attribute_hidden = { GMON_PROF_OFF };
 static int	s_scale;
 #define		SCALE_1_TO_1	0x10000L
 
-#define ERR(s) write_not_cancel (STDERR_FILENO, s, sizeof (s) - 1)
+#define ERR(s) __write_nocancel (STDERR_FILENO, s, sizeof (s) - 1)
 
 void moncontrol (int mode);
 void __moncontrol (int mode);
@@ -375,7 +375,7 @@ write_gmon (void)
     memcpy (&ghdr.cookie[0], GMON_MAGIC, sizeof (ghdr.cookie));
     ghdr.version = GMON_VERSION;
     memset (ghdr.spare, '\0', sizeof (ghdr.spare));
-    write_not_cancel (fd, &ghdr, sizeof (struct gmon_hdr));
+    __write_nocancel (fd, &ghdr, sizeof (struct gmon_hdr));
 
     /* write PC histogram: */
     write_hist (fd);

@@ -51,7 +51,7 @@ sethostid (long int id)
   if (fd < 0)
     return -1;
 
-  written = write_not_cancel (fd, &id32, sizeof (id32));
+  written = __write_nocancel (fd, &id32, sizeof (id32));
 
   close_not_cancel_no_status (fd);
 

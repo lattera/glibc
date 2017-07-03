@@ -1251,7 +1251,7 @@ _IO_new_file_write (_IO_FILE *f, const void *data, _IO_ssize_t n)
     {
       _IO_ssize_t count = (__builtin_expect (f->_flags2
 					     & _IO_FLAGS2_NOTCANCEL, 0)
-			   ? write_not_cancel (f->_fileno, data, to_do)
+			   ? __write_nocancel (f->_fileno, data, to_do)
 			   : write (f->_fileno, data, to_do));
       if (count < 0)
 	{

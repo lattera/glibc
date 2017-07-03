@@ -51,7 +51,7 @@ pthread_setname_np (pthread_t th, const char *name)
     return errno;
 
   int res = 0;
-  ssize_t n = TEMP_FAILURE_RETRY (write_not_cancel (fd, name, name_len));
+  ssize_t n = TEMP_FAILURE_RETRY (__write_nocancel (fd, name, name_len));
   if (n < 0)
     res = errno;
   else if (n != name_len)

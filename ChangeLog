@@ -1,5 +1,24 @@
 2017-08-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/generic/not-cancel.h (write_not_cancel): Remove macro.
+	(__write_nocancel): New macro.
+	* sysdeps/unix/sysv/linux/not-cancel.h (__write_nocancel):
+	Rewrite as a function prototype.
+	(write_not_cancel): Remove macro.
+	* sysdeps/unix/sysv/linux/write.c (__write_nocancel): New function.
+	* gmon/gmon.c (ERR): Replace write_not_cancel with __write_nocancel.
+	(write_gmon): Likewise.
+	* libio/fileops.c (_IO_new_file_write): Likewise.
+	* login/utmp_file.c (pututline_file): Likewise.
+	(updwtmp_file): Likewise.
+	* stdio-common/psiginfo.c (psiginfo): Likewise.
+	* sysdeps/posix/spawni.c (__spawni_child): Likewise.
+	* sysdeps/unix/sysv/linux/gethostid.c (sethostid): Likewise.
+	* sysdeps/unix/sysv/linux/libc_fatal.c (backtrace_and_maps):
+	Likewise.
+	* sysdeps/unix/sysv/linux/pthread_setname.c (pthread_setname_np):
+	Likewise.
+
 	* sysdeps/generic/not-cancel.h (read_not_cancel): Remove macro.
 	(__read_nocancel): New macro.
 	* sysdeps/unix/sysv/linux/Versions (libc) [GLIBC_PRIVATE]: Add

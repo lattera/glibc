@@ -444,7 +444,7 @@ pututline_file (const struct utmp *data)
     }
 
   /* Write the new data.  */
-  if (write_not_cancel (file_fd, data, sizeof (struct utmp))
+  if (__write_nocancel (file_fd, data, sizeof (struct utmp))
       != sizeof (struct utmp))
     {
       /* If we appended a new record this is only partially written.
@@ -505,7 +505,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   /* Write the entry.  If we can't write all the bytes, reset the file
      size back to the original size.  That way, no partial entries
      will remain.  */
-  if (write_not_cancel (fd, utmp, sizeof (struct utmp))
+  if (__write_nocancel (fd, utmp, sizeof (struct utmp))
       != sizeof (struct utmp))
     {
       __ftruncate64 (fd, offset);
