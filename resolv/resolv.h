@@ -134,6 +134,7 @@ struct res_sym {
 #define RES_USE_DNSSEC	0x00800000	/* use DNSSEC using OK bit in OPT */
 #define RES_NOTLDQUERY	0x01000000	/* Do not look up unqualified name
 					   as a TLD.  */
+#define RES_NORELOAD    0x02000000 /* No automatic configuration reload.  */
 
 #define RES_DEFAULT	(RES_RECURSE|RES_DEFNAMES|RES_DNSRCH)
 

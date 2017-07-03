@@ -35,11 +35,6 @@ struct resolv_sortlist_entry
    object.  */
 struct resolv_conf
 {
-  /* Used to propagate the effect of res_init across threads.  This
-     member is mutable and prevents sharing of the same struct
-     resolv_conf object among multiple struct __res_state objects.  */
-  unsigned long long int initstamp;
-
   /* Reference counter.  The object is deallocated once it reaches
      zero.  For internal use within resolv_conf only.  */
   size_t __refcount;
@@ -68,6 +63,18 @@ struct resolv_conf
    and the struct resolv_context facility.  */
 
 struct __res_state;
+
+/* Read /etc/resolv.conf and return a configuration object, or NULL if
+   /etc/resolv.conf cannot be read due to memory allocation errors.
+   If PREINIT is not NULL, some configuration values are taken from the
+   struct __res_state object.  */
+struct resolv_conf *__resolv_conf_load (struct __res_state *preinit)
+  attribute_hidden __attribute__ ((warn_unused_result));
+
+/* Return a configuration object for the current /etc/resolv.conf
+   settings, or NULL on failure.  The object is cached.  */
+struct resolv_conf *__resolv_conf_get_current (void)
+  attribute_hidden __attribute__ ((warn_unused_result));
 
 /* Return the extended resolver state for *RESP, or NULL if it cannot
    be determined.  A call to this function must be paired with a call

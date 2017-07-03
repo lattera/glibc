@@ -106,8 +106,6 @@
 
 static uint32_t net_mask (struct in_addr);
 
-unsigned long long int __res_initstamp;
-
 int
 res_ninit (res_state statp)
 {
@@ -163,6 +161,16 @@ struct resolv_conf_parser
      __resolv_conf_attach.  */
   struct resolv_conf template;
 };
+
+/* Return true if *PREINIT contains actual preinitialization.  */
+static bool
+has_preinit_values (const struct __res_state *preinit)
+{
+  return (preinit->retrans != 0 && preinit->retrans != RES_TIMEOUT)
+    || (preinit->retry != 0 && preinit->retry != RES_DFLRETRY)
+    || (preinit->options != 0
+        && (preinit->options & ~RES_INIT) != RES_DEFAULT);
+}
 
 static void
 resolv_conf_parser_init (struct resolv_conf_parser *parser,
@@ -531,14 +539,8 @@ res_vinit_1 (FILE *fp, struct resolv_conf_parser *parser)
   return true;
 }
 
-/* Set up default settings.  If the /etc/resolv.conf configuration
-   file exist, the values there will have precedence.  Otherwise, the
-   server address is set to INADDR_LOOPBACK and the default domain
-   name comes from gethostname.  The RES_OPTIONS and LOCALDOMAIN
-   environment variables can be used to override some settings.
-   Return 0 if completes successfully, -1 on error.  */
-int
-__res_vinit (res_state statp, int preinit)
+struct resolv_conf *
+__resolv_conf_load (struct __res_state *preinit)
 {
   /* Ensure that /etc/hosts.conf has been loaded (once).  */
   _res_hconf_init ();
@@ -559,20 +561,14 @@ __res_vinit (res_state statp, int preinit)
       default:
         /* Other errors refer to resource allocation problems and
            need to be handled by the application.  */
-        return -1;
+        return NULL;
       }
 
   struct resolv_conf_parser parser;
-  if (preinit)
-    {
-      resolv_conf_parser_init (&parser, statp);
-      statp->id = res_randomid ();
-    }
-  else
-    resolv_conf_parser_init (&parser, NULL);
+  resolv_conf_parser_init (&parser, preinit);
 
-  bool ok = res_vinit_1 (fp, &parser);
-  if (ok)
+  struct resolv_conf *conf = NULL;
+  if (res_vinit_1 (fp, &parser))
     {
       parser.template.nameserver_list
         = nameserver_list_begin (&parser.nameserver_list);
@@ -583,21 +579,42 @@ __res_vinit (res_state statp, int preinit)
         = search_list_size (&parser.search_list);
       parser.template.sort_list = sort_list_begin (&parser.sort_list);
       parser.template.sort_list_size = sort_list_size (&parser.sort_list);
-      struct resolv_conf *conf = __resolv_conf_allocate (&parser.template);
-      if (conf == NULL)
-        ok = false;
-      else
-        {
-          ok = __resolv_conf_attach (statp, conf);
-          __resolv_conf_put (conf);
-        }
+      conf = __resolv_conf_allocate (&parser.template);
     }
   resolv_conf_parser_free (&parser);
 
-  if (!ok)
-    return -1;
+  return conf;
+}
+
+/* Set up default settings.  If the /etc/resolv.conf configuration
+   file exist, the values there will have precedence.  Otherwise, the
+   server address is set to INADDR_LOOPBACK and the default domain
+   name comes from gethostname.  The RES_OPTIONS and LOCALDOMAIN
+   environment variables can be used to override some settings.
+   Return 0 if completes successfully, -1 on error.  */
+int
+__res_vinit (res_state statp, int preinit)
+{
+  struct resolv_conf *conf;
+  if (preinit && has_preinit_values (statp))
+    /* For the preinit case, we cannot use the cached configuration
+       because some settings could be different.  */
+    conf = __resolv_conf_load (statp);
   else
-    return 0;
+    conf = __resolv_conf_get_current ();
+  if (conf == NULL)
+    return -1;
+
+  bool ok = __resolv_conf_attach (statp, conf);
+  __resolv_conf_put (conf);
+  if (ok)
+    {
+      if (preinit)
+        statp->id = res_randomid ();
+      return 0;
+    }
+  else
+    return -1;
 }
 
 static void
@@ -652,6 +669,7 @@ res_setoptions (struct resolv_conf_parser *parser, const char *options)
             { STRnLEN ("single-request"), 0, RES_SNGLKUP },
             { STRnLEN ("no_tld_query"), 0, RES_NOTLDQUERY },
             { STRnLEN ("no-tld-query"), 0, RES_NOTLDQUERY },
+            { STRnLEN ("no-reload"), 0, RES_NORELOAD },
             { STRnLEN ("use-vc"), 0, RES_USEVC }
           };
 #define noptions (sizeof (options) / sizeof (options[0]))

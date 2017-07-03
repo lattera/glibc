@@ -245,6 +245,10 @@ Version 2.26
   array, which is limited to six entries) will only use the first six search
   domains, as before.
 
+* The glibc DNS stub resolver now automatically reloads /etc/resolv.conf,
+  to pick up changed configuration settings.  The new “no-reload”
+  (RES_NORELOAD) resolver option disables this behavior.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,

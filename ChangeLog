@@ -1,5 +1,38 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #984]
+	Reload /etc/resolv.conf if has been changed on disk.
+	* resolv/resolv_conf.h (resolv_conf): Remove initstamp member.
+	(__resolv_conf_load, __resolv_conf_get_current): Declare.
+	* resolv/resolv_conf.c (struct resolv_conf_global): Add
+	conf_current, conf_mtime, conf_ctime, conf_size, conf_ino members.
+	(__resolv_conf_get_current): New function.
+	(__resolv_conf_allocate): Do not initialize initstamp.
+	(freeres): Deallocate global->conf_current.
+	* resolv/resolv.h (RES_NORELOAD): Define.
+	* resolv/res_debug.c (p_option): Add RES_NORELOAD.
+	* resolv/resolv-internal.h (__res_initstamp): Remove declaration.
+	* resolv/resolv_context.c (replicated_configuration_matches): New.
+	(maybe_init): Call it.  Use __resolv_conf_get_current to obtain
+	the current configration.
+	* resolv/res_init.c (__res_initstamp): Remove variable definition.
+	(has_preinit_values): New function.
+	(__resolv_conf_load): Renamed from __res_vinit.  Drop res_state
+	parameter and do not call __resolv_conf_attach.
+	(__res_vinit): Reimplement based __resolv_conf_load.
+	(res_options): Handle no-reload.
+	* resolv/res_libc.c (atomicinclock, atomicincunlock, atomicinc)
+	(lock): Remove.
+	(res_int): Do not update __res_initstamp.
+	* resolv/tst-resolv-res_init-skeleton.c (print_resp): Handle
+	RES_NORELOAD.
+	(test_cases): Test no-reload.
+	(special_test_call_res_init): Remove.
+	(special_test_callback): Rely on automated reloading.  Add tests
+	for no-reload.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	Mirror the entire resolver configuration in struct resolv_conf.
 	* resolv/resolv_context.h (__resolv_context_nameserver_count)
 	(__resolv_context_nameserver): New functions.

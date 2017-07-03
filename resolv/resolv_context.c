@@ -51,6 +51,20 @@
    resolver state.  */
 static __thread struct resolv_context *current attribute_tls_model_ie;
 
+/* The resolv_conf handling will gives us a ctx->conf pointer even if
+   these fields do not match because a mis-match does not cause a loss
+   of state (_res objects can store the full information).  This
+   function checks to ensure that there is a full patch, to prevent
+   overwriting a patched configuration.  */
+static bool
+replicated_configuration_matches (const struct resolv_context *ctx)
+{
+  return ctx->resp->options == ctx->conf->options
+    && ctx->resp->retrans == ctx->conf->retrans
+    && ctx->resp->retry == ctx->conf->retry
+    && ctx->resp->ndots == ctx->conf->ndots;
+}
+
 /* Initialize *RESP if RES_INIT is not yet set in RESP->options, or if
    res_init in some other thread requested re-initializing.  */
 static __attribute__ ((warn_unused_result)) bool
@@ -59,27 +73,36 @@ maybe_init (struct resolv_context *ctx, bool preinit)
   struct __res_state *resp = ctx->resp;
   if (resp->options & RES_INIT)
     {
+      if (resp->options & RES_NORELOAD)
+        /* Configuration reloading was explicitly disabled.  */
+        return true;
+
       /* If there is no associated resolv_conf object despite the
          initialization, something modified *ctx->resp.  Do not
          override those changes.  */
-      if (ctx->conf != NULL && ctx->conf->initstamp != __res_initstamp)
+      if (ctx->conf != NULL && replicated_configuration_matches (ctx))
         {
-          if (resp->nscount > 0)
-            /* This call will detach the extended resolver state.  */
-            __res_iclose (resp, true);
-          /* And this call will attach it again.  */
-          if (__res_vinit (resp, 1) < 0)
+          struct resolv_conf *current = __resolv_conf_get_current ();
+          if (current == NULL)
+            return false;
+
+          /* Check if the configuration changed.  */
+          if (current != ctx->conf)
             {
-              /* The configuration no longer matches after failed
-                 initialization.  */
-              __resolv_conf_put (ctx->conf);
-              ctx->conf = NULL;
-              return false;
+              /* This call will detach the extended resolver state.  */
+              if (resp->nscount > 0)
+                __res_iclose (resp, true);
+              /* Reattach the current configuration.  */
+              if (__resolv_conf_attach (ctx->resp, current))
+                {
+                  __resolv_conf_put (ctx->conf);
+                  /* ctx takes ownership, so we do not release current.  */
+                  ctx->conf = current;
+                }
             }
-          /* Delay the release of the old configuration until this
-             point, so that __res_vinit can reuse it if possible.  */
-          __resolv_conf_put (ctx->conf);
-          ctx->conf = __resolv_conf_get (ctx->resp);
+          else
+            /* No change.  Drop the reference count for current.  */
+            __resolv_conf_put (current);
         }
       return true;
     }

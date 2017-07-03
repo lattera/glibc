@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <libc-lock.h>
 #include <resolv-internal.h>
+#include <sys/stat.h>
 
 /* _res._u._ext.__glibc_extension_index is used as an index into a
    struct resolv_conf_array object.  The intent of this construction
@@ -54,6 +55,15 @@ struct resolv_conf_global
      the array element is overwritten with NULL.  */
   struct resolv_conf_array array;
 
+  /* Cached current configuration object for /etc/resolv.conf.  */
+  struct resolv_conf *conf_current;
+
+  /* These properties of /etc/resolv.conf are used to check if the
+     configuration needs reloading.  */
+  struct timespec conf_mtime;
+  struct timespec conf_ctime;
+  off64_t conf_size;
+  ino64_t conf_ino;
 };
 
 /* Lazily allocated storage for struct resolv_conf_global.  */
@@ -98,6 +108,75 @@ conf_decrement (struct resolv_conf *conf)
   assert (conf->__refcount > 0);
   if (--conf->__refcount == 0)
     free (conf);
+}
+
+struct resolv_conf *
+__resolv_conf_get_current (void)
+{
+  struct stat64 st;
+  if (stat64 (_PATH_RESCONF, &st) != 0)
+    {
+    switch (errno)
+      {
+      case EACCES:
+      case EISDIR:
+      case ELOOP:
+      case ENOENT:
+      case ENOTDIR:
+      case EPERM:
+        /* Ignore errors due to file system contents.  */
+        memset (&st, 0, sizeof (st));
+        break;
+      default:
+        /* Other errors are fatal.  */
+        return NULL;
+      }
+    }
+
+  struct resolv_conf_global *global_copy = get_locked_global ();
+  if (global_copy == NULL)
+    return NULL;
+  struct resolv_conf *conf;
+  if (global_copy->conf_current != NULL
+      && (global_copy->conf_mtime.tv_sec == st.st_mtim.tv_sec
+          && global_copy->conf_mtime.tv_nsec == st.st_mtim.tv_nsec
+          && global_copy->conf_ctime.tv_sec == st.st_ctim.tv_sec
+          && global_copy->conf_ctime.tv_nsec == st.st_ctim.tv_nsec
+          && global_copy->conf_ino == st.st_ino
+          && global_copy->conf_size == st.st_size))
+    /* We can reuse the cached configuration object.  */
+    conf = global_copy->conf_current;
+  else
+    {
+      /* Parse configuration while holding the lock.  This avoids
+         duplicate work.  */
+      conf = __resolv_conf_load (NULL);
+      if (conf != NULL)
+        {
+          if (global_copy->conf_current != NULL)
+            conf_decrement (global_copy->conf_current);
+          global_copy->conf_current = conf; /* Takes ownership.  */
+
+          /* Update file modification stamps.  The configuration we
+             read could be a newer version of the file, but this does
+             not matter because this will lead to an extraneous reload
+             later.  */
+          global_copy->conf_mtime = st.st_mtim;
+          global_copy->conf_ctime = st.st_ctim;
+          global_copy->conf_ino = st.st_ino;
+          global_copy->conf_size = st.st_size;
+        }
+    }
+
+  if (conf != NULL)
+    {
+      /* Return an additional reference.  */
+      assert (conf->__refcount > 0);
+      ++conf->__refcount;
+      assert (conf->__refcount > 0);
+    }
+  put_locked_global (global_copy);
+  return conf;
 }
 
 /* Internal implementation of __resolv_conf_get, without validation
@@ -320,7 +399,6 @@ __resolv_conf_allocate (const struct resolv_conf *init)
   conf->retry = init->retry;
   conf->options = init->options;
   conf->ndots = init->ndots;
-  conf->initstamp = __res_initstamp;
 
   /* Allocate the arrays with pointers.  These must come first because
      they have the highets alignment.  */
@@ -579,6 +657,12 @@ freeres (void)
      the process has turned single-threaded.  */
   if (global == NULL)
     return;
+
+  if (global->conf_current != NULL)
+    {
+      conf_decrement (global->conf_current);
+      global->conf_current = NULL;
+    }
 
   /* Note that this frees only the array itself.  The pointed-to
      configuration objects should have been deallocated by res_nclose

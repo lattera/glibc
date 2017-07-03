@@ -151,6 +151,7 @@ print_resp (FILE *fp, res_state resp)
         print_option_flag (fp, &options, RES_SNGLKUPREOP,
                            "single-request-reopen");
         print_option_flag (fp, &options, RES_NOTLDQUERY, "no-tld-query");
+        print_option_flag (fp, &options, RES_NORELOAD, "no-reload");
         fputc ('\n', fp);
         if (options != 0)
           fprintf (fp, "; error: unresolved option bits: 0x%x\n", options);
@@ -470,6 +471,28 @@ struct test_case test_cases[] =
      "nameserver 192.0.2.1\n"
      "; nameserver[0]: [192.0.2.1]:53\n"
     },
+    {.name = "basic no-reload",
+     .conf = "options no-reload\n"
+     "search corp.example.com example.com\n"
+     "nameserver 192.0.2.1\n",
+     .expected = "options no-reload\n"
+     "search corp.example.com example.com\n"
+     "; search[0]: corp.example.com\n"
+     "; search[1]: example.com\n"
+     "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
+    },
+    {.name = "basic no-reload via RES_OPTIONS",
+     .conf = "search corp.example.com example.com\n"
+     "nameserver 192.0.2.1\n",
+     .expected = "options no-reload\n"
+     "search corp.example.com example.com\n"
+     "; search[0]: corp.example.com\n"
+     "; search[1]: example.com\n"
+     "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n",
+     .res_options = "no-reload"
+    },
     {.name = "whitespace",
      .conf = "# This test covers comment and whitespace processing "
      " (trailing whitespace,\n"
@@ -722,18 +745,7 @@ test_file_contents (const struct test_case *t)
 }
 
 /* Special tests which do not follow the general pattern.  */
-enum { special_tests_count = 7 };
-
-#if TEST_THREAD
-/* Called from test number 3-6 to trigger reloading of the
-   configuration.  */
-static void *
-special_test_call_res_init (void *closure)
-{
-  TEST_VERIFY (res_init () == 0);
-  return NULL;
-}
-#endif
+enum { special_tests_count = 11 };
 
 /* Implementation of special tests.  */
 static void
@@ -800,20 +812,29 @@ special_test_callback (void *closure)
     case 4:
     case 5:
     case 6:
-      /* Test res_init change broadcast.  This requires a second
-         thread to trigger the reload.  */
-#if TEST_THREAD
       support_write_file_string (_PATH_RESCONF,
                                  "options edns0\n"
                                  "nameserver 192.0.2.1\n");
+      goto reload_tests;
+    case 7: /* 7 and the following tests are with no-reload.  */
+    case 8:
+    case 9:
+    case 10:
+        support_write_file_string (_PATH_RESCONF,
+                                   "options edns0 no-reload\n"
+                                   "nameserver 192.0.2.1\n");
+        /* Fall through.  */
+    reload_tests:
       for (int iteration = 0; iteration < 2; ++iteration)
         {
           switch (test_index)
             {
             case 3:
+            case 7:
               TEST_VERIFY (res_init () == 0);
               break;
             case 4:
+            case 8:
               {
                 unsigned char buf[512];
                 TEST_VERIFY
@@ -822,37 +843,44 @@ special_test_callback (void *closure)
               }
               break;
             case 5:
+            case 9:
               gethostbyname (test_hostname);
               break;
             case 6:
+            case 10:
               {
                 struct addrinfo *ai;
                 (void) getaddrinfo (test_hostname, NULL, NULL, &ai);
               }
               break;
             }
-          if (iteration == 0)
+          /* test_index == 7 is res_init and performs a reload even
+             with no-reload.  */
+          if (iteration == 0 || test_index > 7)
             {
               TEST_VERIFY (_res.options & RES_USE_EDNS0);
               TEST_VERIFY (!(_res.options & RES_ROTATE));
+              if (test_index < 7)
+                TEST_VERIFY (!(_res.options & RES_NORELOAD));
+              else
+                TEST_VERIFY (_res.options & RES_NORELOAD);
               TEST_VERIFY (_res.nscount == 1);
+              /* File change triggers automatic reloading.  */
               support_write_file_string (_PATH_RESCONF,
                                          "options rotate\n"
                                          "nameserver 192.0.2.1\n"
                                          "nameserver 192.0.2.2\n");
-              xpthread_join (xpthread_create
-                             (NULL, special_test_call_res_init, NULL));
             }
           else
             {
-              /* edns0 was dropped, but the flag is not cleared.  See
-                 bug 21701.  */
-              /* TEST_VERIFY (!(_res.options & RES_USE_EDNS0)); */
+              if (test_index != 3 && test_index != 7)
+                /* test_index 3, 7 are res_init; this function does
+                   not reset flags.  See bug 21701.  */
+                TEST_VERIFY (!(_res.options & RES_USE_EDNS0));
               TEST_VERIFY (_res.options & RES_ROTATE);
               TEST_VERIFY (_res.nscount == 2);
             }
         }
-#endif
       break;
     }
 }

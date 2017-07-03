@@ -42,18 +42,6 @@
 #include <libc-lock.h>
 #include <resolv-internal.h>
 
-/* We have atomic increment operations on 64-bit platforms.  */
-#if __WORDSIZE == 64
-# define atomicinclock(lock) (void) 0
-# define atomicincunlock(lock) (void) 0
-# define atomicinc(var) catomic_increment (&(var))
-#else
-__libc_lock_define_initialized (static, lock);
-# define atomicinclock(lock) __libc_lock_lock (lock)
-# define atomicincunlock(lock) __libc_lock_unlock (lock)
-# define atomicinc(var) ++var
-#endif
-
 int
 res_init (void)
 {
@@ -89,12 +77,6 @@ res_init (void)
      now.  */
   if (!_res.id)
     _res.id = res_randomid ();
-
-  atomicinclock (lock);
-  /* Request all threads to re-initialize their resolver states,
-     resolv.conf might have changed.  */
-  atomicinc (__res_initstamp);
-  atomicincunlock (lock);
 
   return __res_vinit (&_res, 1);
 }
