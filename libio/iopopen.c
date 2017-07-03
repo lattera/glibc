@@ -76,7 +76,7 @@ extern int _IO_dup2 (int fd, int fd2) __THROW;
 
 #ifndef _IO_close
 #ifdef _LIBC
-#define _IO_close close_not_cancel
+#define _IO_close __close_nocancel
 #else
 #define _IO_close close
 #endif

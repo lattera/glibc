@@ -386,7 +386,7 @@ write_gmon (void)
     /* write basic-block execution counts: */
     write_bb_counts (fd);
 
-    close_not_cancel_no_status (fd);
+    __close_nocancel_nostatus (fd);
 }
 
 

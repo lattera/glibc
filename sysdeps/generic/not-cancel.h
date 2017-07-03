@@ -26,9 +26,9 @@
   __openat (__VA_ARGS__)
 #define __openat64_nocancel(...) \
   __openat64 (__VA_ARGS__)
-#define close_not_cancel(fd) \
+#define __close_nocancel(fd) \
   __close (fd)
-#define close_not_cancel_no_status(fd) \
+#define __close_nocancel_nostatus(fd) \
   (void) __close (fd)
 #define __read_nocancel(fd, buf, n) \
   __read (fd, buf, n)

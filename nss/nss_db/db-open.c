@@ -52,7 +52,7 @@ internal_setent (const char *file, struct nss_db_map *mapping)
 	    status = NSS_STATUS_TRYAGAIN;
 	}
 
-      close_not_cancel_no_status (fd);
+      __close_nocancel_nostatus (fd);
     }
 
   return status;

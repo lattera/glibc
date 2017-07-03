@@ -328,7 +328,7 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
 				&addr_len) == 0)
 	    data = make_request (fd, nladdr.nl_pid);
 
-	  close_not_cancel_no_status (fd);
+	  __close_nocancel_nostatus (fd);
 	}
 
       if (data != NULL)

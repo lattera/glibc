@@ -53,7 +53,7 @@ sethostid (long int id)
 
   written = __write_nocancel (fd, &id32, sizeof (id32));
 
-  close_not_cancel_no_status (fd);
+  __close_nocancel_nostatus (fd);
 
   return written != sizeof (id32) ? -1 : 0;
 }
@@ -82,7 +82,7 @@ gethostid (void)
     {
       ssize_t n = __read_nocancel (fd, &id, sizeof (id));
 
-      close_not_cancel_no_status (fd);
+      __close_nocancel_nostatus (fd);
 
       if (n == sizeof (id))
 	return id;

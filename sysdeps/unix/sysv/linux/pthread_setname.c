@@ -57,7 +57,7 @@ pthread_setname_np (pthread_t th, const char *name)
   else if (n != name_len)
     res = EIO;
 
-  close_not_cancel_no_status (fd);
+  __close_nocancel_nostatus (fd);
 
   return res;
 }

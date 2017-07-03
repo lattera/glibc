@@ -41,7 +41,7 @@ has_cpuclock (void)
 	      || buf[0] != '0' || buf[1] != '\n')
 	    newval = -1;
 
-	  close_not_cancel_no_status (fd);
+	  __close_nocancel_nostatus (fd);
 	}
 
       itc_usable = newval;

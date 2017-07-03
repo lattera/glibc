@@ -47,7 +47,7 @@ is_smp_system (void)
 	/* This also didn't work.  We give up and say it's a UP machine.  */
 	u.buf[0] = '\0';
 
-      close_not_cancel_no_status (fd);
+      __close_nocancel_nostatus (fd);
       cp = u.buf;
     }
 

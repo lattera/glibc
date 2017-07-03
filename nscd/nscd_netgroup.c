@@ -139,7 +139,7 @@ __nscd_setnetgrent (const char *group, struct __netgrent *datap)
 
  out_close:
   if (sock != -1)
-    close_not_cancel_no_status (sock);
+    __close_nocancel_nostatus (sock);
  out:
   if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0)
     {
@@ -263,7 +263,7 @@ __nscd_innetgr (const char *netgroup, const char *host, const char *user,
 
  out_close:
   if (sock != -1)
-    close_not_cancel_no_status (sock);
+    __close_nocancel_nostatus (sock);
  out:
   if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0)
     {

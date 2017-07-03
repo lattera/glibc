@@ -80,12 +80,12 @@ daemon (int nochdir, int noclose)
 			} else {
 				/* We must set an errno value since no
 				   function call actually failed.  */
-				close_not_cancel_no_status (fd);
+				__close_nocancel_nostatus (fd);
 				__set_errno (ENODEV);
 				return -1;
 			}
 		} else {
-			close_not_cancel_no_status (fd);
+			__close_nocancel_nostatus (fd);
 			return -1;
 		}
 	}

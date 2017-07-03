@@ -81,7 +81,7 @@ pmap_getmaps (struct sockaddr_in *address)
     }
   /* We only need to close the socket here if we opened  it.  */
   if (closeit)
-    close_not_cancel (socket);
+    __close_nocancel (socket);
   address->sin_port = 0;
   return head;
 }

@@ -122,7 +122,7 @@ __sysconf (int name)
 	  char buf[32];
 	  ssize_t n;
 	  n = TEMP_FAILURE_RETRY (__read_nocancel (fd, buf, sizeof (buf) - 1));
-	  close_not_cancel_no_status (fd);
+	  __close_nocancel_nostatus (fd);
 
 	  if (n > 0)
 	    {

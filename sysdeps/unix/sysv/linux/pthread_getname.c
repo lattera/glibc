@@ -63,7 +63,7 @@ pthread_getname_np (pthread_t th, char *buf, size_t len)
 	buf[n] = '\0';
     }
 
-  close_not_cancel_no_status (fd);
+  __close_nocancel_nostatus (fd);
 
   return res;
 }

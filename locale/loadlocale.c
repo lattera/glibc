@@ -181,7 +181,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) < 0)
     {
     puntfd:
-      close_not_cancel_no_status (fd);
+      __close_nocancel_nostatus (fd);
       return;
     }
   if (__glibc_unlikely (S_ISDIR (st.st_mode)))
@@ -191,7 +191,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       char *newp;
       size_t filenamelen;
 
-      close_not_cancel_no_status (fd);
+      __close_nocancel_nostatus (fd);
 
       filenamelen = strlen (file->filename);
       newp = (char *) alloca (filenamelen
@@ -257,7 +257,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 #endif	/* _POSIX_MAPPED_FILES */
 
   /* We have mapped the data, so we no longer need the descriptor.  */
-  close_not_cancel_no_status (fd);
+  __close_nocancel_nostatus (fd);
 
   if (__glibc_unlikely (filedata == NULL))
     /* We failed to map or read the data.  */

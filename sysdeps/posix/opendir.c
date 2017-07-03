@@ -65,7 +65,7 @@ tryopen_o_directory (void)
 
   if (x >= 0)
     {
-      close_not_cancel_no_status (x);
+      __close_nocancel_nostatus (x);
       o_directory_works = -1;
     }
   else if (errno != ENOTDIR)
@@ -129,7 +129,7 @@ opendir_tail (int fd)
     {
       __set_errno (ENOTDIR);
     lose:
-      close_not_cancel_no_status (fd);
+      __close_nocancel_nostatus (fd);
       return NULL;
     }
 
@@ -227,7 +227,7 @@ __alloc_dir (int fd, bool close_fd, int flags, const struct stat64 *statp)
 	  if (close_fd)
 	    {
 	      int save_errno = errno;
-	      close_not_cancel_no_status (fd);
+	      __close_nocancel_nostatus (fd);
 	      __set_errno (save_errno);
 	    }
 	  return NULL;

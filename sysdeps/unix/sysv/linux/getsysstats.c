@@ -180,7 +180,7 @@ __get_nprocs (void)
 	  }
 	while (l < re);
 
-      close_not_cancel_no_status (fd);
+      __close_nocancel_nostatus (fd);
 
       if (result > 0)
 	goto out;
@@ -207,7 +207,7 @@ __get_nprocs (void)
 	else if (isdigit (l[3]))
 	  ++result;
 
-      close_not_cancel_no_status (fd);
+      __close_nocancel_nostatus (fd);
     }
   else
     {
@@ -215,7 +215,7 @@ __get_nprocs (void)
       if (fd != -1)
 	{
 	  GET_NPROCS_PARSER (fd, buffer, cp, re, buffer_end, result);
-	  close_not_cancel_no_status (fd);
+	  __close_nocancel_nostatus (fd);
 	}
     }
 

@@ -167,7 +167,7 @@ __check_native (uint32_t a1_index, int *a1_native,
   while (! done);
 
  out:
-  close_not_cancel_no_status (fd);
+  __close_nocancel_nostatus (fd);
 
   return;
 

@@ -341,7 +341,7 @@ open_dir_stream (int *dfdp, struct ftw_data *data, struct dir_data *dirp)
 					O_RDONLY | O_DIRECTORY | O_NDELAY);
 	  dirp->stream = NULL;
 	  if (fd != -1 && (dirp->stream = __fdopendir (fd)) == NULL)
-	    close_not_cancel_no_status (fd);
+	    __close_nocancel_nostatus (fd);
 	}
       else
 	{
@@ -791,7 +791,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
     {
       int save_err = errno;
       __fchdir (cwdfd);
-      close_not_cancel_no_status (cwdfd);
+      __close_nocancel_nostatus (cwdfd);
       __set_errno (save_err);
     }
   else if (cwd != NULL)

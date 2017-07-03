@@ -49,7 +49,7 @@ check_may_shrink_heap (void)
 	  char val;
 	  ssize_t n = __read_nocancel (fd, &val, 1);
 	  may_shrink_heap = n > 0 && val == '2';
-	  close_not_cancel_no_status (fd);
+	  __close_nocancel_nostatus (fd);
 	}
     }
 

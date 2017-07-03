@@ -328,7 +328,7 @@ __open_catalog (const char *cat_name, const char *nlspath, const char *env_var,
 
   /* Release the lock again.  */
  close_unlock_return:
-  close_not_cancel_no_status (fd);
+  __close_nocancel_nostatus (fd);
   free (buf);
 
   return result;

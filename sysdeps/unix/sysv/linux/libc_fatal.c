@@ -59,7 +59,7 @@ backtrace_and_maps (int do_abort, bool written, int fd)
           while ((n2 = __read_nocancel (fd2, buf, sizeof (buf))) > 0)
             if (__write_nocancel (fd, buf, n2) != n2)
               break;
-          close_not_cancel_no_status (fd2);
+          __close_nocancel_nostatus (fd2);
         }
     }
 }

@@ -382,10 +382,10 @@ pututline_file (const struct utmp *data)
       if (__lseek64 (new_fd, __lseek64 (file_fd, 0, SEEK_CUR), SEEK_SET) == -1
 	  || __dup2 (new_fd, file_fd) < 0)
 	{
-	  close_not_cancel_no_status (new_fd);
+	  __close_nocancel_nostatus (new_fd);
 	  return NULL;
 	}
-      close_not_cancel_no_status (new_fd);
+      __close_nocancel_nostatus (new_fd);
       file_writable = true;
     }
 
@@ -471,7 +471,7 @@ endutent_file (void)
 {
   assert (file_fd >= 0);
 
-  close_not_cancel_no_status (file_fd);
+  __close_nocancel_nostatus (file_fd);
   file_fd = -1;
 }
 
@@ -518,7 +518,7 @@ unlock_return:
   UNLOCK_FILE (fd);
 
   /* Close WTMP file.  */
-  close_not_cancel_no_status (fd);
+  __close_nocancel_nostatus (fd);
 
   return result;
 }

@@ -43,7 +43,7 @@ __getlogin_r_loginuid (char *name, size_t namesize)
   char uidbuf[12];
   ssize_t n = TEMP_FAILURE_RETRY (__read_nocancel (fd, uidbuf,
 						   sizeof (uidbuf)));
-  close_not_cancel_no_status (fd);
+  __close_nocancel_nostatus (fd);
 
   uid_t uid;
   char *endp;

@@ -51,13 +51,16 @@ __typeof (__write) __write_nocancel;
 libc_hidden_proto (__write_nocancel)
 
 /* Uncancelable close.  */
-#define __close_nocancel(fd) \
-  INLINE_SYSCALL (close, 1, fd)
-#define close_not_cancel(fd) \
-  __close_nocancel (fd)
-#define close_not_cancel_no_status(fd) \
-  (void) ({ INTERNAL_SYSCALL_DECL (err);				      \
-	    INTERNAL_SYSCALL (close, err, 1, (fd)); })
+__typeof (__close) __close_nocancel;
+libc_hidden_proto (__close_nocancel)
+
+/* Non cancellable close syscall that does not also set errno in case of
+   failure.  */
+static inline void
+__close_nocancel_nostatus (int fd)
+{
+  __close_nocancel (fd);
+}
 
 /* Uncancelable writev.  */
 #define writev_not_cancel_no_status(fd, iov, n) \

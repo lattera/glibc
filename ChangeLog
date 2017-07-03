@@ -1,5 +1,78 @@
 2017-08-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/generic/not-cancel.h (close_not_cancel): Remove macro.
+	(close_not_cancel_no_status): Likewise.
+	(__close_nocancel): New macro.
+	(__close_nocancel_nostatus): Likewise.
+	* sysdeps/unix/sysv/linux/not-cancel.h (__close_nocancel): Remove
+	macro.
+	(close_not_cancel): Likewise.
+	(close_not_cancel_no_status): Likewise.
+	(__close_nocancel): New prototype.
+	(__close_nocancel_nostatus): New function.
+	* sysdeps/unix/sysv/linux/close.c (__close_nocancel): New function.
+	* catgets/open_catalog.c (__open_catalog): Replace
+	close_not_cancel{_no_status) with __close_nocancel{_nostatus}.
+	* gmon/gmon.c (write_gmon): Likewise.
+	* iconv/gconv_cache.c (__gconv_load_cache): Likewise.
+	* intl/loadmsgcat.c (close): Likewise.
+	* io/ftw.c (open_dir_stream): Likewise.
+	(ftw_startup): Likewise.
+	* libio/fileops.c (_IO_file_open): Likewise.
+	(_IO_file_close_mmap): Likewise.
+	(_IO_file_close): Likewise.
+	* libio/iopopen.c (_IO_dup2): Likewise.
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Likewise.
+	* locale/loadlocale.c (_nl_load_locale): Likewise.
+	* login/utmp_file.c (pututline_file): Likewise.
+	(endutent_file): Likewise.
+	* misc/daemon.c (daemon): Likewise.
+	* nscd/nscd_getai.c (__nscd_getai): Likewise.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Likewise.
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Likewise.
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Likewise.
+	* nscd/nscd_helper.c (open_socket): Likewise.
+	(__nscd_open_socket): Likewise.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Likewise.
+	* nscd/nscd_netgroup.c (__nscd_setnetgrent): Likewise.
+	(__nscd_innetgr): Likewise.
+	* nss/nss_db/db-open.c (internal_setent): Likewise.
+	* resolv/res-close.c (__res_iclose): Likewise.
+	* sunrpc/pm_getmaps.c (pmap_getmaps): Likewise.
+	* sysdeps/posix/closedir.c (__closedir): Likewise.
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Likewise.
+	* sysdeps/posix/getcwd.c (__getcwd): Likewise.
+	* sysdeps/posix/opendir.c (tryopen_o_directory): Likewise.
+	(opendir_tail): Likewise.
+	* sysdeps/posix/spawni.c (__spawni_child): Likewise.
+	* sysdeps/unix/sysv/linux/check_native.c (__check_native): Likewise.
+	* sysdeps/unix/sysv/linux/check_pf.c (__check_pf): Likewise.
+	* sysdeps/unix/sysv/linux/fips-private.h (fips_enabled_p): Likewise.
+	* sysdeps/unix/sysv/linux/gethostid.c (sethostid): Likewise.
+	(gethostid): Likewise.
+	* sysdeps/unix/sysv/linux/getloadavg.c (getloadavg): Likewise.
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):
+	Likewise.
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Likewise.
+	* sysdeps/unix/sysv/linux/grantpt.c (close_all_fds): Likewise.
+	* sysdeps/unix/sysv/linux/i386/smp.h (is_smp_system): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/has_cpuclock.c (has_cpuclock):
+	Likewise.
+	* sysdeps/unix/sysv/linux/if_index.c (__if_nametoindex): Likewise.
+	* sysdeps/unix/sysv/linux/libc_fatal.c (backtrace_and_maps): Likewise.
+	* sysdeps/unix/sysv/linux/malloc-sysdep.h (check_may_shrink_heap):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mq_notify.c (init_mq_netlink): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_getname.c (pthread_getname_np):
+	Likewise.
+	* sysdeps/unix/sysv/linux/pthread_setname.c (pthread_setname_np):
+	Likewise.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Likewise.
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Likewise.
+	* sysdeps/unix/sysv/linux/Versions (libc) [GLIBC_PRIVATE]: Add
+	__close_nocancel.
+
 	* sysdeps/generic/not-cancel.h (openat_not_cancel): Remove macro.
 	(openat_not_cancel_3): Likewise.
 	(openat64_not_cancel_3): Likewise).

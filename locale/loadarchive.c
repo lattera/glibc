@@ -213,7 +213,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  /* stat failed, very strange.  */
 	close_and_out:
 	  if (fd >= 0)
-	    close_not_cancel_no_status (fd);
+	    __close_nocancel_nostatus (fd);
 	  return NULL;
 	}
 
@@ -253,7 +253,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	{
 	  /* We've mapped the whole file already, so we can be
 	     sure we won't need this file descriptor later.  */
-	  close_not_cancel_no_status (fd);
+	  __close_nocancel_nostatus (fd);
 	  fd = -1;
 	}
 
@@ -452,7 +452,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 
   /* We don't need the file descriptor any longer.  */
   if (fd >= 0)
-    close_not_cancel_no_status (fd);
+    __close_nocancel_nostatus (fd);
   fd = -1;
 
   /* We succeeded in mapping all the necessary regions of the archive.

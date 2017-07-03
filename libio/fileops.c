@@ -242,7 +242,7 @@ _IO_file_open (_IO_FILE *fp, const char *filename, int posix_mode, int prot,
       _IO_off64_t new_pos = _IO_SYSSEEK (fp, 0, _IO_seek_end);
       if (new_pos == _IO_pos_BAD && errno != ESPIPE)
 	{
-	  close_not_cancel (fdesc);
+	  __close_nocancel (fdesc);
 	  return NULL;
 	}
     }
@@ -1231,7 +1231,7 @@ _IO_file_close_mmap (_IO_FILE *fp)
   fp->_IO_buf_base = fp->_IO_buf_end = NULL;
   /* Cancelling close should be avoided if possible since it leaves an
      unrecoverable state behind.  */
-  return close_not_cancel (fp->_fileno);
+  return __close_nocancel (fp->_fileno);
 }
 
 int
@@ -1239,7 +1239,7 @@ _IO_file_close (_IO_FILE *fp)
 {
   /* Cancelling close should be avoided if possible since it leaves an
      unrecoverable state behind.  */
-  return close_not_cancel (fp->_fileno);
+  return __close_nocancel (fp->_fileno);
 }
 libc_hidden_def (_IO_file_close)
 

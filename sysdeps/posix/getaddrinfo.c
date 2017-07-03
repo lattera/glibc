@@ -2399,7 +2399,7 @@ getaddrinfo (const char *name, const char *service,
 		{
 		  if (fd != -1)
 		  close_retry:
-		    close_not_cancel_no_status (fd);
+		    __close_nocancel_nostatus (fd);
 		  af = q->ai_family;
 		  fd = __socket (af, SOCK_DGRAM | SOCK_CLOEXEC, IPPROTO_IP);
 		}
@@ -2502,7 +2502,7 @@ getaddrinfo (const char *name, const char *service,
 	}
 
       if (fd != -1)
-	close_not_cancel_no_status (fd);
+	__close_nocancel_nostatus (fd);
 
       /* We got all the source addresses we can get, now sort using
 	 the information.  */

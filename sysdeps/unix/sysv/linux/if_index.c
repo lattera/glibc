@@ -47,12 +47,12 @@ __if_nametoindex (const char *ifname)
   if (__ioctl (fd, SIOCGIFINDEX, &ifr) < 0)
     {
       int saved_errno = errno;
-      close_not_cancel_no_status (fd);
+      __close_nocancel_nostatus (fd);
       if (saved_errno == EINVAL)
 	__set_errno (ENOSYS);
       return 0;
     }
-  close_not_cancel_no_status (fd);
+  __close_nocancel_nostatus (fd);
   return ifr.ifr_ifindex;
 #endif
 }
@@ -224,7 +224,7 @@ __if_indextoname (unsigned int ifindex, char *ifname)
   ifr.ifr_ifindex = ifindex;
   status = __ioctl (fd, SIOCGIFNAME, &ifr);
 
-  close_not_cancel_no_status (fd);
+  __close_nocancel_nostatus (fd);
 
   if (status  < 0)
     {
