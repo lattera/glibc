@@ -18,10 +18,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* By default we have none.  Map the name to the normal functions.  */
-#define open_not_cancel(name, flags, mode) \
-  __libc_open (name, flags, mode)
-#define open_not_cancel_2(name, flags) \
-  __libc_open (name, flags)
+#define __open_nocancel(...) \
+  __open (__VA_ARGS__)
+#define __open64_nocancel(...) \
+  __open64 (__VA_ARGS__)
 #define openat_not_cancel(fd, name, flags, mode) \
   __openat (fd, name, flags, mode)
 #define openat_not_cancel_3(fd, name, flags) \

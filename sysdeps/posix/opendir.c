@@ -61,7 +61,7 @@ static void
 tryopen_o_directory (void)
 {
   int serrno = errno;
-  int x = open_not_cancel_2 ("/dev/null", O_RDONLY|O_NDELAY|O_DIRECTORY);
+  int x = __open_nocancel ("/dev/null", O_RDONLY|O_NDELAY|O_DIRECTORY);
 
   if (x >= 0)
     {
@@ -188,7 +188,7 @@ __opendir (const char *name)
 	}
     }
 
-  return opendir_tail (open_not_cancel_2 (name, opendir_oflags));
+  return opendir_tail (__open_nocancel (name, opendir_oflags));
 }
 weak_alias (__opendir, opendir)
 

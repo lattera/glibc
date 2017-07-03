@@ -53,7 +53,7 @@ backtrace_and_maps (int do_abort, bool written, int fd)
           __backtrace_symbols_fd (addrs + 1, n - 1, fd);
 
           writestr (strnsize ("======= Memory map: ========\n"));
-          int fd2 = open_not_cancel_2 ("/proc/self/maps", O_RDONLY);
+          int fd2 = __open_nocancel ("/proc/self/maps", O_RDONLY);
           char buf[1024];
           ssize_t n2;
           while ((n2 = read_not_cancel (fd2, buf, sizeof (buf))) > 0)

@@ -203,7 +203,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
       archmapped = &headmap;
 
       /* The archive has never been opened.  */
-      fd = open_not_cancel_2 (archfname, O_RDONLY|O_LARGEFILE|O_CLOEXEC);
+      fd = __open_nocancel (archfname, O_RDONLY|O_LARGEFILE|O_CLOEXEC);
       if (fd < 0)
 	/* Cannot open the archive, for whatever reason.  */
 	return NULL;
@@ -398,8 +398,8 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  if (fd == -1)
 	    {
 	      struct stat64 st;
-	      fd = open_not_cancel_2 (archfname,
-				      O_RDONLY|O_LARGEFILE|O_CLOEXEC);
+	      fd = __open_nocancel (archfname,
+				    O_RDONLY|O_LARGEFILE|O_CLOEXEC);
 	      if (fd == -1)
 		/* Cannot open the archive, for whatever reason.  */
 		return NULL;

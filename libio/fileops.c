@@ -223,7 +223,7 @@ _IO_file_open (_IO_FILE *fp, const char *filename, int posix_mode, int prot,
   int fdesc;
 #ifdef _LIBC
   if (__glibc_unlikely (fp->_flags2 & _IO_FLAGS2_NOTCANCEL))
-    fdesc = open_not_cancel (filename,
+    fdesc = __open_nocancel (filename,
 			     posix_mode | (is32not64 ? 0 : O_LARGEFILE), prot);
   else
     fdesc = open (filename, posix_mode | (is32not64 ? 0 : O_LARGEFILE), prot);

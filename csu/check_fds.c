@@ -61,7 +61,7 @@ check_one_fd (int fd, int mode)
       /* Something is wrong with this descriptor, it's probably not
 	 opened.  Open /dev/null so that the SUID program we are
 	 about to start does not accidentally use this descriptor.  */
-      int nullfd = open_not_cancel (name, mode, 0);
+      int nullfd = __open_nocancel (name, mode, 0);
 
       /* We are very paranoid here.  With all means we try to ensure
 	 that we are actually opening the /dev/null device and nothing

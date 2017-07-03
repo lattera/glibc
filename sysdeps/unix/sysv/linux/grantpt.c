@@ -31,9 +31,9 @@ close_all_fds (void)
 
       __closedir (dir);
 
-      int nullfd = open_not_cancel_2 (_PATH_DEVNULL, O_RDONLY);
+      int nullfd = __open_nocancel (_PATH_DEVNULL, O_RDONLY);
       assert (nullfd == STDIN_FILENO);
-      nullfd = open_not_cancel_2 (_PATH_DEVNULL, O_WRONLY);
+      nullfd = __open_nocancel (_PATH_DEVNULL, O_WRONLY);
       assert (nullfd == STDOUT_FILENO);
       __dup2 (STDOUT_FILENO, STDERR_FILENO);
     }

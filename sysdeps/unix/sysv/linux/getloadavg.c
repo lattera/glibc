@@ -33,7 +33,7 @@ getloadavg (double loadavg[], int nelem)
 {
   int fd;
 
-  fd = open_not_cancel_2 ("/proc/loadavg", O_RDONLY);
+  fd = __open_nocancel ("/proc/loadavg", O_RDONLY);
   if (fd < 0)
     return -1;
   else

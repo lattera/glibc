@@ -34,7 +34,7 @@ int
 attribute_hidden
 __getlogin_r_loginuid (char *name, size_t namesize)
 {
-  int fd = open_not_cancel_2 ("/proc/self/loginuid", O_RDONLY);
+  int fd = __open_nocancel ("/proc/self/loginuid", O_RDONLY);
   if (fd == -1)
     return -1;
 

@@ -1,3 +1,58 @@
+2017-08-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/generic/not-cancel.h (open_not_cancel): Remove macro.
+	(open_not_cancel_2): Likewise.
+	(open_nocancel): New macro.
+	(open64_nocancel): Likewise.
+	* sysdeps/unix/sysv/linux/not-cancel.h (open_not_cancel): Remove macro.
+	(open_not_cancel_2): Likewise.
+	(__open_nocancel): New prototype.
+	(__open64_nocancel): Likewise.
+	* sysdeps/unix/sysv/linux/Versions (libc) [GLIBC_PRIVATE]: Add
+	__open_nocancel.
+	* sysdeps/unix/sysv/linux/open.c (__open_nocancel): New function.
+	* sysdeps/unix/sysv/linux/open64.c (__open64_nocancel): Likewise.
+	* catgets/open_catalog.c (__open_catalog): Replace open_not_cancel{_2}
+	with __open_nocancel.
+	* csu/check_fds.c (check_one_fd): Likewise.
+	* gmon/gmon.c (write_gmon): Likewise.
+	* iconv/gconv_cache.c (__gconv_load_cached): Likewise.
+	* intl/loadmsgcat.c (open): Likewise.
+	* libio/fileops.c (_IO_file_open): Likewise.
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Likewise.
+	* locale/loadlocale.c (_nl_load_locale): Likewise.
+	* login/utmp_file.c (setutent_file): Likewise.
+	* misc/daemon.c (daemon): Likewise.
+	* nss/nss_db/db-open.c (internal_setent): Likewise.
+	* sysdeps/mach/hurd/opendir.c (__opendirat): Likewise.
+	* sysdeps/posix/libc_fatal.c (__libc_message): Likewise.
+	* sysdeps/posix/opendir.c (tryopen_o_directory): Likewise.
+	(__opendir): Likewise.
+	* sysdeps/posix/spawni.c (__spawni_child): Likewise.
+	* sysdeps/unix/sysv/linux/fips-private.h (fips_enable_p): Likewise.
+	* sysdeps/unix/sysv/linux/gethostid.c (sethostid): Likewise.
+	(gethostid): Likewise.
+	* sysdeps/unix/sysv/linux/getloadavg.c (getloadavg): Likewise.
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):
+	Likewise.
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Likewise.
+	* sysdeps/unix/sysv/linux/grantpt.c (__close_all_fds): Likewise.
+	* sysdeps/unix/sysv/linux/i386/smp.h (is_smp_system): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/has_cpuclock.c (has_cpuclock):
+	Likewise.
+	* sysdeps/unix/sysv/linux/libc_fatal.c (backtrace_and_maps):
+	Likewise.
+	* sysdeps/unix/sysv/linux/malloc-sysdep.h (check_may_shrink_heap):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c (__get_clockfreq):
+	Likewise.
+	* sysdeps/unix/sysv/linux/pthread_getname.c (pthread_getname_np):
+	Likewise.
+	* sysdeps/unix/sysv/linux/pthread_setname.c (pthread_setname_np):
+	Likewise.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Likewise.
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Likewise.
+
 2017-08-17  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-skeleton.c (main): Add support for

@@ -42,7 +42,7 @@ fips_enabled_p (void)
 
   if (checked == FIPS_UNTESTED)
     {
-      int fd = open_not_cancel_2 ("/proc/sys/crypto/fips_enabled", O_RDONLY);
+      int fd = __open_nocancel ("/proc/sys/crypto/fips_enabled", O_RDONLY);
 
       if (fd != -1)
 	{

@@ -42,8 +42,8 @@ check_may_shrink_heap (void)
 
   if (__builtin_expect (may_shrink_heap == 0, 1))
     {
-      int fd = open_not_cancel_2 ("/proc/sys/vm/overcommit_memory",
-				  O_RDONLY | O_CLOEXEC);
+      int fd = __open_nocancel ("/proc/sys/vm/overcommit_memory",
+				O_RDONLY | O_CLOEXEC);
       if (fd >= 0)
 	{
 	  char val;

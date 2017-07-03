@@ -47,7 +47,7 @@ sethostid (long int id)
     }
 
   /* Open file for writing.  Everybody is allowed to read this file.  */
-  fd = open_not_cancel (HOSTIDFILE, O_CREAT|O_WRONLY|O_TRUNC, 0644);
+  fd = __open_nocancel (HOSTIDFILE, O_CREAT|O_WRONLY|O_TRUNC, 0644);
   if (fd < 0)
     return -1;
 
@@ -77,7 +77,7 @@ gethostid (void)
   int fd;
 
   /* First try to get the ID from a former invocation of sethostid.  */
-  fd = open_not_cancel (HOSTIDFILE, O_RDONLY|O_LARGEFILE, 0);
+  fd = __open_nocancel (HOSTIDFILE, O_RDONLY|O_LARGEFILE, 0);
   if (fd >= 0)
     {
       ssize_t n = read_not_cancel (fd, &id, sizeof (id));

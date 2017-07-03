@@ -143,7 +143,7 @@ __get_nprocs (void)
   char *re = buffer_end;
 
   const int flags = O_RDONLY | O_CLOEXEC;
-  int fd = open_not_cancel_2 ("/sys/devices/system/cpu/online", flags);
+  int fd = __open_nocancel ("/sys/devices/system/cpu/online", flags);
   char *l;
   int result = 0;
   if (fd != -1)
@@ -194,7 +194,7 @@ __get_nprocs (void)
   result = 2;
 
   /* The /proc/stat format is more uniform, use it by default.  */
-  fd = open_not_cancel_2 ("/proc/stat", flags);
+  fd = __open_nocancel ("/proc/stat", flags);
   if (fd != -1)
     {
       result = 0;
@@ -211,7 +211,7 @@ __get_nprocs (void)
     }
   else
     {
-      fd = open_not_cancel_2 ("/proc/cpuinfo", flags);
+      fd = __open_nocancel ("/proc/cpuinfo", flags);
       if (fd != -1)
 	{
 	  GET_NPROCS_PARSER (fd, buffer, cp, re, buffer_end, result);

@@ -182,7 +182,7 @@ __spawni_child (void *arguments)
 		   paths (like /dev/watchdog).  */
 		close_not_cancel (action->action.open_action.fd);
 
-		int new_fd = open_not_cancel (action->action.open_action.path,
+		int new_fd = __open_nocancel (action->action.open_action.path,
 					      action->action.open_action.oflag
 					      | O_LARGEFILE,
 					      action->action.open_action.mode);

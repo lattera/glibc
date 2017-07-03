@@ -45,7 +45,7 @@ pthread_getname_np (pthread_t th, char *buf, size_t len)
   char fname[sizeof (FMT) + 8];
   sprintf (fname, FMT, (unsigned int) pd->tid);
 
-  int fd = open_not_cancel_2 (fname, O_RDONLY);
+  int fd = __open_nocancel (fname, O_RDONLY);
   if (fd == -1)
     return errno;
 

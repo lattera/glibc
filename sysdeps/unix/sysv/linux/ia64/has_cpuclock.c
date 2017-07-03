@@ -30,7 +30,7 @@ has_cpuclock (void)
   if (__builtin_expect (itc_usable == 0, 0))
     {
       int newval = 1;
-      int fd = open_not_cancel_2 ("/proc/sal/itc_drift", O_RDONLY);
+      int fd = __open_nocancel ("/proc/sal/itc_drift", O_RDONLY);
       if (__builtin_expect (fd != -1, 1))
 	{
 	  char buf[16];

@@ -20,23 +20,19 @@
 #ifndef NOT_CANCEL_H
 # define NOT_CANCEL_H
 
+#include <fcntl.h>
 #include <sysdep.h>
 #include <errno.h>
 #include <unistd.h>
 #include <sys/syscall.h>
 
-/* Uncancelable open.  */
-#ifdef __NR_open
-# define open_not_cancel(name, flags, mode) \
-   INLINE_SYSCALL (open, 3, name, flags, mode)
-# define open_not_cancel_2(name, flags) \
-   INLINE_SYSCALL (open, 2, name, flags)
-#else
-# define open_not_cancel(name, flags, mode) \
-   INLINE_SYSCALL (openat, 4, AT_FDCWD, name, flags, mode)
-# define open_not_cancel_2(name, flags) \
-   INLINE_SYSCALL (openat, 3, AT_FDCWD, name, flags)
-#endif
+/* Non cancellable open syscall.  */
+__typeof (open) __open_nocancel;
+libc_hidden_proto (__open_nocancel)
+
+/* Non cancellable open syscall (LFS version).  */
+__typeof (open64) __open64_nocancel;
+libc_hidden_proto (__open64_nocancel)
 
 /* Uncancelable read.  */
 #define __read_nocancel(fd, buf, len) \

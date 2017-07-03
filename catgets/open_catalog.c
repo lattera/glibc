@@ -50,7 +50,7 @@ __open_catalog (const char *cat_name, const char *nlspath, const char *env_var,
   char *buf = NULL;
 
   if (strchr (cat_name, '/') != NULL || nlspath == NULL)
-    fd = open_not_cancel_2 (cat_name, O_RDONLY);
+    fd = __open_nocancel (cat_name, O_RDONLY);
   else
     {
       const char *run_nlspath = nlspath;
@@ -178,7 +178,7 @@ __open_catalog (const char *cat_name, const char *nlspath, const char *env_var,
 
 	  if (bufact != 0)
 	    {
-	      fd = open_not_cancel_2 (buf, O_RDONLY);
+	      fd = __open_nocancel (buf, O_RDONLY);
 	      if (fd >= 0)
 		break;
 	    }
