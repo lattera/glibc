@@ -40,15 +40,22 @@
 #ifndef _RESOLV_CONTEXT_H
 #define _RESOLV_CONTEXT_H
 
+#include <bits/types/res_state.h>
+#include <resolv/resolv_conf.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <bits/types/res_state.h>
 
 /* Temporary resolver state.  */
 struct resolv_context
 {
   struct __res_state *resp;     /* Backing resolver state.   */
 
+  /* Extended resolver state.  This is set to NULL if the
+     __resolv_context_get functions are unable to locate an associated
+     extended state.  In this case, the configuration data in *resp
+     has to be used; otherwise, the data from *conf should be
+     preferred (because it is a superset).  */
+  struct resolv_conf *conf;
 
   /* The following fields are for internal use within the
      resolv_context module.  */

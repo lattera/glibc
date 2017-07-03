@@ -47,10 +47,10 @@ struct __res_state {
 			uint16_t		nsinit;
 			struct sockaddr_in6	*nsaddrs[MAXNS];
 #ifdef _LIBC
-			unsigned long long int	initstamp
+			unsigned long long int __glibc_extension_index
 			  __attribute__((packed));
 #else
-			unsigned int		_initstamp[2];
+			unsigned int		__glibc_reserved[2];
 #endif
 		} _ext;
 	} _u;

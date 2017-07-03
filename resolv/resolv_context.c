@@ -17,9 +17,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <resolv_context.h>
+#include <resolv_conf.h>
 #include <resolv-internal.h>
 
 #include <assert.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -52,19 +54,37 @@ static __thread struct resolv_context *current attribute_tls_model_ie;
 /* Initialize *RESP if RES_INIT is not yet set in RESP->options, or if
    res_init in some other thread requested re-initializing.  */
 static __attribute__ ((warn_unused_result)) bool
-maybe_init (struct __res_state *resp, bool preinit)
+maybe_init (struct resolv_context *ctx, bool preinit)
 {
+  struct __res_state *resp = ctx->resp;
   if (resp->options & RES_INIT)
     {
-      if (__res_initstamp != resp->_u._ext.initstamp)
+      /* If there is no associated resolv_conf object despite the
+         initialization, something modified *ctx->resp.  Do not
+         override those changes.  */
+      if (ctx->conf != NULL && ctx->conf->initstamp != __res_initstamp)
         {
           if (resp->nscount > 0)
+            /* This call will detach the extended resolver state.  */
             __res_iclose (resp, true);
-          return __res_vinit (resp, 1) == 0;
+          /* And this call will attach it again.  */
+          if (__res_vinit (resp, 1) < 0)
+            {
+              /* The configuration no longer matches after failed
+                 initialization.  */
+              __resolv_conf_put (ctx->conf);
+              ctx->conf = NULL;
+              return false;
+            }
+          /* Delay the release of the old configuration until this
+             point, so that __res_vinit can reuse it if possible.  */
+          __resolv_conf_put (ctx->conf);
+          ctx->conf = __resolv_conf_get (ctx->resp);
         }
       return true;
     }
 
+  assert (ctx->conf == NULL);
   if (preinit)
     {
       if (!resp->retrans)
@@ -75,7 +95,11 @@ maybe_init (struct __res_state *resp, bool preinit)
       if (!resp->id)
         resp->id = res_randomid ();
     }
-  return __res_vinit (resp, preinit) == 0;
+
+  if (__res_vinit (resp, preinit) < 0)
+    return false;
+  ctx->conf = __resolv_conf_get (ctx->resp);
+  return true;
 }
 
 /* Allocate a new context object and initialize it.  The object is put
@@ -87,6 +111,7 @@ context_alloc (struct __res_state *resp)
   if (ctx == NULL)
     return NULL;
   ctx->resp = resp;
+  ctx->conf = __resolv_conf_get (resp);
   ctx->__refcount = 1;
   ctx->__from_res = true;
   ctx->__next = current;
@@ -98,8 +123,11 @@ context_alloc (struct __res_state *resp)
 static void
 context_free (struct resolv_context *ctx)
 {
+  int error_code = errno;
   current = ctx->__next;
+  __resolv_conf_put (ctx->conf);
   free (ctx);
+  __set_errno (error_code);
 }
 
 /* Reuse the current context object.  */
@@ -130,7 +158,7 @@ context_get (bool preinit)
   struct resolv_context *ctx = context_alloc (&_res);
   if (ctx == NULL)
     return NULL;
-  if (!maybe_init (ctx->resp, preinit))
+  if (!maybe_init (ctx, preinit))
     {
       context_free (ctx);
       return NULL;

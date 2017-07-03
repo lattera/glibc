@@ -102,6 +102,7 @@
 #include <sys/types.h>
 #include <inet/net-internal.h>
 #include <errno.h>
+#include <resolv_conf.h>
 
 static void res_setoptions (res_state, const char *);
 static uint32_t net_mask (struct in_addr);
@@ -137,7 +138,6 @@ res_vinit_1 (res_state statp, bool preinit, FILE *fp, char **buffer)
   bool havesearch = false;
   int nsort = 0;
   char *net;
-  statp->_u._ext.initstamp = __res_initstamp;
 
   if (!preinit)
     {
@@ -456,6 +456,19 @@ __res_vinit (res_state statp, int preinit)
   char *buffer = NULL;
   bool ok = res_vinit_1 (statp, preinit, fp, &buffer);
   free (buffer);
+
+  if (ok)
+    {
+      struct resolv_conf init = { 0 }; /* No data yet.  */
+      struct resolv_conf *conf = __resolv_conf_allocate (&init);
+      if (conf == NULL)
+        ok = false;
+      else
+        {
+          ok = __resolv_conf_attach (statp, conf);
+          __resolv_conf_put (conf);
+        }
+    }
 
   if (!ok)
     {

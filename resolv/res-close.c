@@ -84,6 +84,7 @@
 
 #include <resolv-internal.h>
 #include <resolv_context.h>
+#include <resolv_conf.h>
 #include <not-cancel.h>
 
 /* Close all open sockets.  If FREE_ADDR is true, deallocate any
@@ -111,6 +112,8 @@ __res_iclose (res_state statp, bool free_addr)
             statp->_u._ext.nsaddrs[ns] = NULL;
           }
       }
+  if (free_addr)
+    __resolv_conf_detach (statp);
 }
 libc_hidden_def (__res_iclose)
 

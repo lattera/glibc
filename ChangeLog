@@ -1,5 +1,23 @@
 2017-06-30  Florian Weimer  <fweimer@redhat.com>
 
+	Add extended resolver state/configuration (struct resolv_conf).
+	* resolv/resolv_conf.h, resolv/resolv_conf.c: New files.
+	* resolv/res-close.c (__res_iclose): Call __resolv_conf_detach.
+	* resolv/res_init.c (res_vinit_1): Do not initialize initstamp.
+	(__res_vinit): Call __resolv_conf_allocate and
+	__resolv_conf_attach.
+	* resolv/resolv_context.h (struct resolv_context): Add conf member
+	of type struct resolv_conf.
+	* resolv/resolv_context.c (maybe_init): Get initstamp from struct
+	resolv_conf.  Update conf member after initialization.
+	* resolv/Makefile (routines): Add resolv_conf.
+	* resolv/bits/types/res_state.h [_LIBC] (struct __res_state):
+	Rename _u._ext.initstamp to _u._ext.__glibc_extension_index.
+	[!_LIBC] (struct __res_state): Rename _u._ext._initstamp to
+	_u._ext.__glibc_reserved.
+
+2017-06-30  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #21668]
 	Introduce temporary resolver contexts (struct resolv_conf).
 	* resolv/resolv-internal.h (__res_context_mkquery)
