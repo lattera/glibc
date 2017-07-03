@@ -1,5 +1,10 @@
 2017-08-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* login/utmp_file.c (timeout_handler): Replace fcntl_not_cancel with
+	__fcntl_nocancel.
+	* sysdeps/generic/not-cancel.h (fcntl_not_cancel): Remove macro.
+	* sysdeps/unix/sysv/linux/not-cancel.h (fcntl_not_cancel): Likewise.
+
 	* gmon/gmon.c (write_hist): Replace writev_not_cancel_no_status with
 	__writev_nocancel_nostatus.
 	(write_call_graph): Likewise.

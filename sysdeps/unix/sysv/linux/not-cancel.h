@@ -71,10 +71,6 @@ __writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
   INTERNAL_SYSCALL_CALL (writev, err, fd, iov, iovcnt);
 }
 
-/* Uncancelable fcntl.  */
-#define fcntl_not_cancel(fd, cmd, val) \
-  __fcntl_nocancel (fd, cmd, val)
-
 /* Uncancelable waitpid.  */
 #define __waitpid_nocancel(pid, stat_loc, options) \
   INLINE_SYSCALL (wait4, 4, pid, stat_loc, options, NULL)
