@@ -89,7 +89,7 @@ herror(const char *s) {
 	v++;
 	v->iov_base = (char *) "\n";
 	v->iov_len = 1;
-	writev_not_cancel_no_status(STDERR_FILENO, iov, (v - iov) + 1);
+	__writev_nocancel_nostatus(STDERR_FILENO, iov, (v - iov) + 1);
 }
 
 /*

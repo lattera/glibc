@@ -62,10 +62,14 @@ __close_nocancel_nostatus (int fd)
   __close_nocancel (fd);
 }
 
-/* Uncancelable writev.  */
-#define writev_not_cancel_no_status(fd, iov, n) \
-  (void) ({ INTERNAL_SYSCALL_DECL (err);				      \
-	    INTERNAL_SYSCALL (writev, err, 3, (fd), (iov), (n)); })
+/* Non cancellable writev syscall that does not also set errno in case of
+   failure.  */
+static inline void
+__writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
+{
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL_CALL (writev, err, fd, iov, iovcnt);
+}
 
 /* Uncancelable fcntl.  */
 #define fcntl_not_cancel(fd, cmd, val) \

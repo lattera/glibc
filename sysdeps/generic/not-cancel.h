@@ -34,7 +34,7 @@
   __read (fd, buf, n)
 #define __write_nocancel(fd, buf, n) \
   __write (fd, buf, n)
-#define writev_not_cancel_no_status(fd, iov, n) \
+#define __writev_nocancel_nostatus(fd, iov, n) \
   (void) __writev (fd, iov, n)
 #define fcntl_not_cancel(fd, cmd, val) \
   __fcntl (fd, cmd, val)

@@ -1,3 +1,17 @@
+2017-08-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* gmon/gmon.c (write_hist): Replace writev_not_cancel_no_status with
+	__writev_nocancel_nostatus.
+	(write_call_graph): Likewise.
+	(write_bb_counts): Likewise.
+	* resolv/herror.c (herror): Likewise.
+	* sysdeps/generic/not-cancel.h (writev_not_cancel_no_status): Remove
+	macro.
+	(__writev_nocancel_nostatus): New macro.
+	* sysdeps/unix/sysv/linux/not-cancel.h (writev_not_cancel_no_status):
+	Remove macro.
+	(__writev_nocancel_nostatus): New function.
+
 2017-08-21  Joseph Myers  <joseph@codesourcery.com>
 
 	Revert:

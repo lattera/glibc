@@ -216,7 +216,7 @@ write_hist (int fd)
       strncpy (thdr.dimen, "seconds", sizeof (thdr.dimen));
       thdr.dimen_abbrev = 's';
 
-      writev_not_cancel_no_status (fd, iov, 3);
+      __writev_nocancel_nostatus (fd, iov, 3);
     }
 }
 
@@ -273,13 +273,13 @@ write_call_graph (int fd)
 
 	  if (++nfilled == NARCS_PER_WRITEV)
 	    {
-	      writev_not_cancel_no_status (fd, iov, 2 * nfilled);
+	      __writev_nocancel_nostatus (fd, iov, 2 * nfilled);
 	      nfilled = 0;
 	    }
 	}
     }
   if (nfilled > 0)
-    writev_not_cancel_no_status (fd, iov, 2 * nfilled);
+    __writev_nocancel_nostatus (fd, iov, 2 * nfilled);
 }
 
 
@@ -312,12 +312,12 @@ write_bb_counts (int fd)
   for (grp = __bb_head; grp; grp = grp->next)
     {
       ncounts = grp->ncounts;
-      writev_not_cancel_no_status (fd, bbhead, 2);
+      __writev_nocancel_nostatus (fd, bbhead, 2);
       for (nfilled = i = 0; i < ncounts; ++i)
 	{
 	  if (nfilled > (sizeof (bbbody) / sizeof (bbbody[0])) - 2)
 	    {
-	      writev_not_cancel_no_status (fd, bbbody, nfilled);
+	      __writev_nocancel_nostatus (fd, bbbody, nfilled);
 	      nfilled = 0;
 	    }
 
@@ -325,7 +325,7 @@ write_bb_counts (int fd)
 	  bbbody[nfilled++].iov_base = &grp->counts[i];
 	}
       if (nfilled > 0)
-	writev_not_cancel_no_status (fd, bbbody, nfilled);
+	__writev_nocancel_nostatus (fd, bbbody, nfilled);
     }
 }
 
