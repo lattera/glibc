@@ -1,5 +1,15 @@
 2017-08-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/pthread_mutex_timedlock.c (__pthread_mutex_timedlock): Replace
+	nanosleep_not_cancel with __nanosleep_nocancel.
+	* sysdeps/generic/not-cancel.h (nanosleep_not_cancel): Remove macro.
+	(__nanosleep_nocancel): New macro.
+	* sysdeps/unix/sysv/linux/nanosleep.c (__nanosleep_nocancel): New
+	function.
+	* sysdeps/unix/sysv/linux/not-cancel.h (nanosleep_not_cancel): Remove
+	macro.
+	(__nanosleep_nocancel): New prototype.
+
 	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock_full): Replace
 	pause_not_cancel with __pause_nocancel.
 	* sysdeps/generic/not-cancel.h (pause_not_cancel): Remove macro.

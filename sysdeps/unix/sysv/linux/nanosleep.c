@@ -18,6 +18,7 @@
 
 #include <time.h>
 #include <sysdep-cancel.h>
+#include <not-cancel.h>
 
 /* Pause execution for a number of nanoseconds.  */
 int
@@ -28,3 +29,11 @@ __nanosleep (const struct timespec *requested_time,
 }
 hidden_def (__nanosleep)
 weak_alias (__nanosleep, nanosleep)
+
+int
+__nanosleep_nocancel (const struct timespec *requested_time,
+		      struct timespec *remaining)
+{
+  return INLINE_SYSCALL_CALL (nanosleep, requested_time, remaining);
+}
+hidden_def (__nanosleep_nocancel)

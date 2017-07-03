@@ -432,7 +432,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 			--reltime.tv_sec;
 		      }
 		    if (reltime.tv_sec >= 0)
-		      while (nanosleep_not_cancel (&reltime, &reltime) != 0)
+		      while (__nanosleep_nocancel (&reltime, &reltime) != 0)
 			continue;
 
 		    return ETIMEDOUT;

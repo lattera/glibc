@@ -40,7 +40,7 @@
   __waitpid (pid, stat_loc, options)
 #define __pause_nocancel() \
   __pause ()
-#define nanosleep_not_cancel(requested_time, remaining) \
+#define __nanosleep_nocancel(requested_time, remaining) \
   __nanosleep (requested_time, remaining)
 #define sigsuspend_not_cancel(set) \
   __sigsuspend (set)

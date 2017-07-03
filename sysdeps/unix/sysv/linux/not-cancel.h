@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <sys/wait.h>
+#include <time.h>
 
 /* Non cancellable open syscall.  */
 __typeof (open) __open_nocancel;
@@ -81,8 +82,8 @@ __typeof (pause) __pause_nocancel;
 libc_hidden_proto (__pause_nocancel)
 
 /* Uncancelable nanosleep.  */
-#define nanosleep_not_cancel(requested_time, remaining) \
-  INLINE_SYSCALL (nanosleep, 2, requested_time, remaining)
+__typeof (__nanosleep) __nanosleep_nocancel;
+hidden_proto (__nanosleep_nocancel)
 
 /* Uncancelable sigsuspend.  */
 #define sigsuspend_not_cancel(set) \
