@@ -144,17 +144,6 @@ L(align64):
 	or	r5,r10,r11
 	cmpdi	cr7,r5,0
 	addi	r9,r9,16
-	bne	cr7,L(dword_zero)
-
-	andi.	r10,r9,63
-	beq	cr0,L(preloop)
-	ld	r6,8(r4)
-	ldu	r5,16(r4)
-	cmpb	r10,r6,r0
-	cmpb	r11,r5,r0
-	or	r5,r10,r11
-	cmpdi	cr7,r5,0
-	addi	r9,r9,16
 
 	/* At this point, we are necessarily 64-byte aligned.  If no zeroes were
 	   found, jump to the vectorized loop.  */

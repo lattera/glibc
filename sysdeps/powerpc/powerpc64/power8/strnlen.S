@@ -141,15 +141,7 @@ ENTRY_TOCLESS (__strnlen)
 	addi    r4,r4,-16		/* Decrement maxlen in 16 bytes. */
 	bne     cr6,L(found_aligning64B) /* If found null bytes.  */
 
-	/* Unroll 3x above code block until aligned or find null bytes.  */
-	andi.   r7,r5,63
-	beq     cr0,L(preloop_64B)
-	lvx     v1,r5,r6
-	vcmpequb.      v1,v1,v0
-	addi    r5,r5,16
-	addi    r4,r4,-16
-	bne     cr6,L(found_aligning64B)
-
+	/* Unroll 2x above code block until aligned or find null bytes.  */
 	andi.   r7,r5,63
 	beq     cr0,L(preloop_64B)
 	lvx     v1,r5,r6

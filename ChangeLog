@@ -1,3 +1,8 @@
+2017-07-03  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/strlen.S: Remove unreachable code.
+	* sysdeps/powerpc/powerpc64/power8/strnlen.S: Likewise.
+
 2017-07-01  Florian Weimer  <fweimer@redhat.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 
