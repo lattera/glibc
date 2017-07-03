@@ -260,7 +260,7 @@ enum test_init
 static const char *const test_init_names[] =
   {
     [test_init] = "res_init",
-    [test_ninit] = "res_init",
+    [test_ninit] = "res_ninit",
     [test_mkquery] = "res_mkquery",
     [test_gethostbyname] = "gethostbyname",
     [test_getaddrinfo] = "getaddrinfo",
@@ -540,6 +540,192 @@ test_file_contents (const struct test_case *t)
       }
 }
 
+/* Special tests which do not follow the general pattern.  */
+enum { special_tests_count = 7 };
+
+#if TEST_THREAD
+/* Called from test number 3-6 to trigger reloading of the
+   configuration.  */
+static void *
+special_test_call_res_init (void *closure)
+{
+  TEST_VERIFY (res_init () == 0);
+  return NULL;
+}
+#endif
+
+/* Implementation of special tests.  */
+static void
+special_test_callback (void *closure)
+{
+  unsigned int *test_indexp = closure;
+  unsigned test_index = *test_indexp;
+  TEST_VERIFY (test_index < special_tests_count);
+  if (test_verbose > 0)
+    printf ("info: special test %u\n", test_index);
+  xchroot (path_chroot);
+
+  switch (test_index)
+    {
+    case 0:
+    case 1:
+      /* Second res_init with missing or empty file preserves
+         flags.  */
+      if (test_index == 1)
+        TEST_VERIFY (unlink (_PATH_RESCONF) == 0);
+      _res.options = RES_USE_EDNS0;
+      TEST_VERIFY (res_init () == 0);
+      /* First res_init clears flag.  */
+      TEST_VERIFY (!(_res.options & RES_USE_EDNS0));
+      _res.options |= RES_USE_EDNS0;
+      TEST_VERIFY (res_init () == 0);
+      /* Second res_init preserves flag.  */
+      TEST_VERIFY (_res.options & RES_USE_EDNS0);
+      if (test_index == 1)
+        /* Restore empty file.  */
+        support_write_file_string (_PATH_RESCONF, "");
+      break;
+
+    case 2:
+      /* Second res_init is cumulative.  */
+      support_write_file_string (_PATH_RESCONF,
+                                 "options rotate\n"
+                                 "nameserver 192.0.2.1\n");
+      _res.options = RES_USE_EDNS0;
+      TEST_VERIFY (res_init () == 0);
+      /* First res_init clears flag.  */
+      TEST_VERIFY (!(_res.options & RES_USE_EDNS0));
+      /* And sets RES_ROTATE.  */
+      TEST_VERIFY (_res.options & RES_ROTATE);
+      _res.options |= RES_USE_EDNS0;
+      TEST_VERIFY (res_init () == 0);
+      /* Second res_init preserves flag.  */
+      TEST_VERIFY (_res.options & RES_USE_EDNS0);
+      TEST_VERIFY (_res.options & RES_ROTATE);
+      /* Reloading the configuration does not clear the explicitly set
+         flag.  */
+      support_write_file_string (_PATH_RESCONF,
+                                 "nameserver 192.0.2.1\n"
+                                 "nameserver 192.0.2.2\n");
+      TEST_VERIFY (res_init () == 0);
+      TEST_VERIFY (_res.nscount == 2);
+      TEST_VERIFY (_res.options & RES_USE_EDNS0);
+      /* Whether RES_ROTATE (originally in resolv.conf, now removed)
+         should be preserved is subject to debate.  See bug 21701.  */
+      /* TEST_VERIFY (!(_res.options & RES_ROTATE)); */
+      break;
+
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+      /* Test res_init change broadcast.  This requires a second
+         thread to trigger the reload.  */
+#if TEST_THREAD
+      support_write_file_string (_PATH_RESCONF,
+                                 "options edns0\n"
+                                 "nameserver 192.0.2.1\n");
+      for (int iteration = 0; iteration < 2; ++iteration)
+        {
+          switch (test_index)
+            {
+            case 3:
+              TEST_VERIFY (res_init () == 0);
+              break;
+            case 4:
+              {
+                unsigned char buf[512];
+                TEST_VERIFY
+                  (res_mkquery (QUERY, test_hostname, C_IN, T_A,
+                                NULL, 0, NULL, buf, sizeof (buf)) > 0);
+              }
+              break;
+            case 5:
+              gethostbyname (test_hostname);
+              break;
+            case 6:
+              {
+                struct addrinfo *ai;
+                (void) getaddrinfo (test_hostname, NULL, NULL, &ai);
+              }
+              break;
+            }
+          if (iteration == 0)
+            {
+              TEST_VERIFY (_res.options & RES_USE_EDNS0);
+              TEST_VERIFY (!(_res.options & RES_ROTATE));
+              TEST_VERIFY (_res.nscount == 1);
+              support_write_file_string (_PATH_RESCONF,
+                                         "options rotate\n"
+                                         "nameserver 192.0.2.1\n"
+                                         "nameserver 192.0.2.2\n");
+              xpthread_join (xpthread_create
+                             (NULL, special_test_call_res_init, NULL));
+            }
+          else
+            {
+              /* edns0 was dropped, but the flag is not cleared.  See
+                 bug 21701.  */
+              /* TEST_VERIFY (!(_res.options & RES_USE_EDNS0)); */
+              TEST_VERIFY (_res.options & RES_ROTATE);
+              TEST_VERIFY (_res.nscount == 2);
+            }
+        }
+#endif
+      break;
+    }
+}
+
+#if TEST_THREAD
+/* Helper function which calls special_test_callback from a
+   thread.  */
+static void *
+special_test_thread_func (void *closure)
+{
+  special_test_callback (closure);
+  return NULL;
+}
+
+/* Variant of special_test_callback which runs the function on a
+   non-main thread.  */
+static void
+run_special_test_on_thread (void *closure)
+{
+  xpthread_join (xpthread_create (NULL, special_test_thread_func, closure));
+}
+#endif /* TEST_THREAD */
+
+/* Perform the requested special test in a subprocess using
+   special_test_callback.  */
+static void
+special_test (unsigned int test_index)
+{
+#if TEST_THREAD
+  for (int do_thread = 0; do_thread < 2; ++do_thread)
+#endif
+    {
+      void (*func) (void *) = special_test_callback;
+#if TEST_THREAD
+      if (do_thread)
+        func = run_special_test_on_thread;
+#endif
+      struct support_capture_subprocess proc
+        = support_capture_subprocess (func, &test_index);
+      char *test_name = xasprintf ("special test %u", test_index);
+      if (strcmp (proc.out.buffer, "") != 0)
+        {
+          support_record_failure ();
+          printf ("error: output mismatch for %s\n", test_name);
+          support_run_diff ("expected", "",
+                            "actual", proc.out.buffer);
+        }
+      support_capture_subprocess_check (&proc, test_name, 0, sc_allow_stdout);
+      free (test_name);
+      support_capture_subprocess_free (&proc);
+    }
+}
+
+
 /* Dummy DNS server.  It ensures that the probe queries sent by
    gethostbyname and getaddrinfo receive a reply even if the system
    applies a very strict rate limit to localhost.  */
@@ -671,6 +857,11 @@ do_test (void)
           support_write_file_string (path_resolv_conf, "");
         }
     }
+
+  /* The tests which do not follow a regular pattern.  */
+  for (unsigned int test_index = 0;
+       test_index < special_tests_count; ++test_index)
+    special_test (test_index);
 
   if (server > 0)
     {
