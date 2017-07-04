@@ -272,7 +272,7 @@ resolv_conf_matches (const struct __res_state *resp,
       nserv = MAXNS;
     /* _ext.nscount is 0 until initialized by res_send.c.  */
     if (resp->nscount != nserv
-        && (resp->_u._ext.nscount != 0 && resp->_u._ext.nscount != nserv))
+        || (resp->_u._ext.nscount != 0 && resp->_u._ext.nscount != nserv))
       return false;
     for (size_t i = 0; i < nserv; ++i)
       {
@@ -295,9 +295,25 @@ resolv_conf_matches (const struct __res_state *resp,
   /* Check that the search list in *RESP has not been modified by the
      application.  */
   {
-    if (!(resp->dnsrch[0] == resp->defdname
-          && resp->dnsrch[MAXDNSRCH] == NULL))
+    if (resp->dnsrch[0] == NULL)
+      {
+        /* Empty search list.  No default domain name.  */
+        return conf->search_list_size == 0 && resp->defdname[0] == '\0';
+      }
+
+    if (resp->dnsrch[0] != resp->defdname)
+      /* If the search list is not empty, it must start with the
+         default domain name.  */
       return false;
+
+    size_t nsearch;
+    for (nsearch = 0; nsearch < MAXDNSRCH; ++nsearch)
+      if (resp->dnsrch[nsearch] == NULL)
+        break;
+    if (nsearch > MAXDNSRCH)
+      /* Search list is not null-terminated.  */
+      return false;
+
     size_t search_list_size = 0;
     for (size_t i = 0; i < conf->search_list_size; ++i)
       {
@@ -326,6 +342,8 @@ resolv_conf_matches (const struct __res_state *resp,
     size_t nsort = conf->sort_list_size;
     if (nsort > MAXRESOLVSORT)
       nsort = MAXRESOLVSORT;
+    if (resp->nsort != nsort)
+      return false;
     for (size_t i = 0; i < nsort; ++i)
       if (resp->sort_list[i].addr.s_addr != conf->sort_list[i].addr.s_addr
           || resp->sort_list[i].mask != conf->sort_list[i].mask)

@@ -307,6 +307,10 @@ struct test_case
   /* Setting for the RES_OPTIONS environment variable.  NULL if the
      variable is not to be set.  */
   const char *res_options;
+
+  /* Override the system host name.  NULL means that no change is made
+     and the default is used (test_hostname).  */
+  const char *hostname;
 };
 
 enum test_init
@@ -358,6 +362,14 @@ run_res_init (void *closure)
     setenv ("LOCALDOMAIN", ctx->t->localdomain, 1);
   if (ctx->t->res_options != NULL)
     setenv ("RES_OPTIONS", ctx->t->res_options, 1);
+  if (ctx->t->hostname != NULL)
+    {
+      /* This test needs its own namespace, to avoid changing the host
+         name for the parent, too.  */
+      TEST_VERIFY_EXIT (unshare (CLONE_NEWUTS) == 0);
+      if (sethostname (ctx->t->hostname, strlen (ctx->t->hostname)) != 0)
+        FAIL_EXIT1 ("sethostname (\"%s\"): %m", ctx->t->hostname);
+    }
 
   switch (ctx->init)
     {
@@ -434,6 +446,12 @@ struct test_case test_cases[] =
      "nameserver 127.0.0.1\n"
      "; nameserver[0]: [127.0.0.1]:53\n"
     },
+    {.name = "empty file, no-dot hostname",
+     .conf = "",
+     .expected = "nameserver 127.0.0.1\n"
+     "; nameserver[0]: [127.0.0.1]:53\n",
+     .hostname = "example",
+    },
     {.name = "empty file with LOCALDOMAIN",
      .conf = "",
      .expected = "search example.net\n"
@@ -462,14 +480,23 @@ struct test_case test_cases[] =
      .res_options = "edns0 attempts:5",
     },
     {.name = "basic",
-     .conf = "domain example.net\n"
-     "search corp.example.com example.com\n"
+     .conf =  "search corp.example.com example.com\n"
      "nameserver 192.0.2.1\n",
      .expected = "search corp.example.com example.com\n"
      "; search[0]: corp.example.com\n"
      "; search[1]: example.com\n"
      "nameserver 192.0.2.1\n"
      "; nameserver[0]: [192.0.2.1]:53\n"
+    },
+    {.name = "basic with no-dot hostname",
+     .conf = "search corp.example.com example.com\n"
+     "nameserver 192.0.2.1\n",
+     .expected = "search corp.example.com example.com\n"
+     "; search[0]: corp.example.com\n"
+     "; search[1]: example.com\n"
+     "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n",
+     .hostname = "example",
     },
     {.name = "basic no-reload",
      .conf = "options no-reload\n"

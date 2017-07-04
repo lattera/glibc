@@ -1,3 +1,14 @@
+2017-07-04  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/resolv_conf.c (resolv_conf_matches): Tighten check for name
+	server and sort list counts.  Fix improper check for empty search
+	path (completely missing domain name) leading to assertion failure
+	in update_from_conf.
+	* resolv/tst-resolv-res_init-skeleton.c (struct test_case): Add
+	hostname member.
+	(run_res_init): Set host name if requested.
+	(test_cases): Update.
+
 2017-07-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.checkout): Default
