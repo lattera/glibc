@@ -58,8 +58,10 @@ struct resolv_conf_global
      the array element is overwritten with NULL.  */
   struct resolv_conf_array array;
 
-  /* Start of the free list in the array.  The MSB is set if this
-     field has been initialized.  */
+  /* Start of the free list in the array.  Zero if the free list is
+     empty.  Otherwise, free_list_start >> 1 is the first element of
+     the free list (and the free list entries all have their LSB set
+     and are shifted one to the left).  */
   uintptr_t free_list_start;
 
   /* Cached current configuration object for /etc/resolv.conf.  */
@@ -567,11 +569,7 @@ decrement_at_index (struct resolv_conf_global *global_copy, size_t index)
           struct resolv_conf *conf = (struct resolv_conf *) *slot;
           conf_decrement (conf);
           /* Put the slot onto the free list.  */
-          if (global_copy->free_list_start == 0)
-            /* Not yet initialized.  */
-            *slot = 1;
-          else
-            *slot = global_copy->free_list_start;
+          *slot = global_copy->free_list_start;
           global_copy->free_list_start = (index << 1) | 1;
         }
     }
@@ -598,7 +596,8 @@ __resolv_conf_attach (struct __res_state *resp, struct resolv_conf *conf)
         index = global_copy->free_list_start >> 1;
         uintptr_t *slot = resolv_conf_array_at (&global_copy->array, index);
         global_copy->free_list_start = *slot;
-        assert (global_copy->free_list_start & 1);
+        assert (global_copy->free_list_start == 0
+                || global_copy->free_list_start & 1);
         /* Install the configuration pointer.  */
         *slot = (uintptr_t) conf;
       }

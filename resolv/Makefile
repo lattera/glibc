@@ -51,6 +51,7 @@ tests += \
   tst-resolv-basic \
   tst-resolv-edns \
   tst-resolv-network \
+  tst-resolv-res_init-multi \
   tst-resolv-search \
 
 # These tests need libdl.
@@ -160,6 +161,8 @@ $(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-edns: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-network: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-res_init: $(libdl) $(objpfx)libresolv.so
+$(objpfx)tst-resolv-res_init-multi: $(objpfx)libresolv.so \
+  $(shared-thread-library)
 $(objpfx)tst-resolv-res_init-thread: $(libdl) $(objpfx)libresolv.so \
   $(shared-thread-library)
 $(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)

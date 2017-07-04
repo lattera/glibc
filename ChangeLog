@@ -1,3 +1,12 @@
+2017-07-04  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/resolv_conf.c (struct resolv_conf_global): Clarify free
+	list management and the role of free_list_start.
+	(decrement_at_index): Put zero at the end of the free list.
+	(__resolv_conf_attach): Fix bogus assert.
+	* resolv/Makefile (tests): Add tst-resolv-res_init-multi.
+	(tst-resolv-res_init-multi): Link with -lresolv, -lpthread.
+
 2017-07-03  Florian Weimer  <fweimer@redhat.com>
 
 	resolv: Introduce free list for resolv_conf index slosts.
