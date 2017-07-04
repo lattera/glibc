@@ -33,6 +33,8 @@ _IO_ungetc (int c, _IO_FILE *fp)
   CHECK_FILE (fp, EOF);
   if (c == EOF)
     return EOF;
+  if (!_IO_need_lock (fp))
+    return _IO_sputbackc (fp, (unsigned char) c);
   _IO_acquire_lock (fp);
   result = _IO_sputbackc (fp, (unsigned char) c);
   _IO_release_lock (fp);

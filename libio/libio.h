@@ -119,6 +119,7 @@
 # define _IO_FLAGS2_SCANF_STD 16
 # define _IO_FLAGS2_NOCLOSE 32
 # define _IO_FLAGS2_CLOEXEC 64
+# define _IO_FLAGS2_NEED_LOCK 128
 #endif
 
 /* These are "formatting flags" matching the iostream fmtflags enum values. */
@@ -450,6 +451,9 @@ extern int _IO_ftrylockfile (_IO_FILE *) __THROW;
 #ifndef _IO_cleanup_region_end
 #define _IO_cleanup_region_end(_Doit) /**/
 #endif
+
+#define _IO_need_lock(_fp) \
+  (((_fp)->_flags2 & _IO_FLAGS2_NEED_LOCK) != 0)
 
 extern int _IO_vfscanf (_IO_FILE * __restrict, const char * __restrict,
 			_IO_va_list, int *__restrict);

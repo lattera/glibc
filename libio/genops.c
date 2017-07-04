@@ -570,11 +570,39 @@ _IO_init (_IO_FILE *fp, int flags)
   _IO_init_internal (fp, flags);
 }
 
+static int stdio_needs_locking;
+
+/* In a single-threaded process most stdio locks can be omitted.  After
+   _IO_enable_locks is called, locks are not optimized away any more.
+   It must be first called while the process is still single-threaded.
+
+   This lock optimization can be disabled on a per-file basis by setting
+   _IO_FLAGS2_NEED_LOCK, because a file can have user-defined callbacks
+   or can be locked with flockfile and then a thread may be created
+   between a lock and unlock, so omitting the lock is not valid.
+
+   Here we have to make sure that the flag is set on all existing files
+   and files created later.  */
+void
+_IO_enable_locks (void)
+{
+  _IO_ITER i;
+
+  if (stdio_needs_locking)
+    return;
+  stdio_needs_locking = 1;
+  for (i = _IO_iter_begin (); i != _IO_iter_end (); i = _IO_iter_next (i))
+    _IO_iter_file (i)->_flags2 |= _IO_FLAGS2_NEED_LOCK;
+}
+libc_hidden_def (_IO_enable_locks)
+
 void
 _IO_old_init (_IO_FILE *fp, int flags)
 {
   fp->_flags = _IO_MAGIC|flags;
   fp->_flags2 = 0;
+  if (stdio_needs_locking)
+    fp->_flags2 |= _IO_FLAGS2_NEED_LOCK;
   fp->_IO_buf_base = NULL;
   fp->_IO_buf_end = NULL;
   fp->_IO_read_base = NULL;

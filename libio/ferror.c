@@ -32,6 +32,8 @@ _IO_ferror (_IO_FILE *fp)
 {
   int result;
   CHECK_FILE (fp, EOF);
+  if (!_IO_need_lock (fp))
+    return _IO_ferror_unlocked (fp);
   _IO_flockfile (fp);
   result = _IO_ferror_unlocked (fp);
   _IO_funlockfile (fp);

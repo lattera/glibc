@@ -33,6 +33,8 @@ int
 getchar (void)
 {
   int result;
+  if (!_IO_need_lock (_IO_stdin))
+    return _IO_getc_unlocked (_IO_stdin);
   _IO_acquire_lock (_IO_stdin);
   result = _IO_getc_unlocked (_IO_stdin);
   _IO_release_lock (_IO_stdin);

@@ -155,5 +155,8 @@ libc {
   GLIBC_PRIVATE {
     # Used by NPTL and librt
     __libc_fatal;
+
+    # Used by NPTL
+    _IO_enable_locks;
   }
 }

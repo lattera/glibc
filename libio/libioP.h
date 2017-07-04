@@ -444,6 +444,8 @@ extern void _IO_list_unlock (void) __THROW;
 libc_hidden_proto (_IO_list_unlock)
 extern void _IO_list_resetlock (void) __THROW;
 libc_hidden_proto (_IO_list_resetlock)
+extern void _IO_enable_locks (void) __THROW;
+libc_hidden_proto (_IO_enable_locks)
 
 /* Default jumptable functions. */
 

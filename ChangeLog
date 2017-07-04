@@ -1,3 +1,21 @@
+2017-07-04  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* libio/libio.h (_IO_FLAGS2_NEED_LOCK, _IO_need_lock): Define.
+	* libio/libioP.h (_IO_enable_locks): Declare.
+	* libio/Versions (_IO_enable_locks): New symbol.
+	* libio/genops.c (_IO_enable_locks): Define.
+	(_IO_old_init): Initialize flags2.
+	* libio/feof.c.c (_IO_feof): Avoid locking when not needed.
+	* libio/ferror.c (_IO_ferror): Likewise.
+	* libio/fputc.c (fputc): Likewise.
+	* libio/putc.c (_IO_putc): Likewise.
+	* libio/getc.c (_IO_getc): Likewise.
+	* libio/getchar.c (getchar): Likewise.
+	* libio/ioungetc.c (_IO_ungetc): Likewise.
+	* nptl/pthread_create.c (__pthread_create_2_1): Enable stdio locks.
+	* libio/iofopncook.c (_IO_fopencookie): Enable locking for the file.
+	* sysdeps/pthread/flockfile.c (__flockfile): Likewise.
+
 2017-07-04  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21542]

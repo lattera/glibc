@@ -172,6 +172,8 @@ _IO_cookie_init (struct _IO_cookie_file *cfile, int read_write,
   _IO_mask_flags (&cfile->__fp.file, read_write,
 		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
+  cfile->__fp.file._flags2 |= _IO_FLAGS2_NEED_LOCK;
+
   /* We use a negative number different from -1 for _fileno to mark that
      this special stream is not associated with a real file, but still has
      to be treated as such.  */

@@ -32,6 +32,7 @@
 #include <exit-thread.h>
 #include <default-sched.h>
 #include <futex-internal.h>
+#include "libioP.h"
 
 #include <shlib-compat.h>
 
@@ -755,6 +756,9 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
           != (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
         collect_default_sched (pd);
     }
+
+  if (__glibc_unlikely (__nptl_nthreads == 1))
+    _IO_enable_locks ();
 
   /* Pass the descriptor to the caller.  */
   *newthread = (pthread_t) pd;
