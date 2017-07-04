@@ -1,5 +1,13 @@
 2017-07-04  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #21542]
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Default to
+	two if no accurate information is available.
+	* posix/tst-sysconf-empty-chroot.c: New file.
+	* posix/Makefile (tests): Add it.
+
+2017-07-04  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/resolv_conf.c (resolv_conf_matches): Tighten check for name
 	server and sort list counts.  Fix improper check for empty search
 	path (completely missing domain name) leading to assertion failure

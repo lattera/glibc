@@ -188,7 +188,10 @@ __get_nprocs (void)
 
   cp = buffer_end;
   re = buffer_end;
-  result = 1;
+
+  /* Default to an SMP system in case we cannot obtain an accurate
+     number.  */
+  result = 2;
 
   /* The /proc/stat format is more uniform, use it by default.  */
   fd = open_not_cancel_2 ("/proc/stat", flags);
