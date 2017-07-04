@@ -1,3 +1,8 @@
+2017-07-04  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21706]
+	* locales/br_FR (LC_MESSAGES): add yesstr and nostr
+
 2017-06-30  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	* locales/br_FR (abmon): Reworded "Eve " to "Mezh".
