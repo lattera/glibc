@@ -1,3 +1,8 @@
+2017-07-17  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h (HWCAP_FCMA): New macro.
+	(HWCAP_JSCVT, HWCAP_LRCPC): Likewise.
+
 2017-07-16  John David Anglin  <danglin@gcc.gnu.org>
 
 	* sysdeps/hppa/dl-trampoline.S (_dl_runtime_resolve): Return to caller
