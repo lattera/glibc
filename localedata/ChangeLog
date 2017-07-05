@@ -1,3 +1,8 @@
+2017-07-06  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21711]
+	* locales/ps_AF: Add yesstr and nostr.
+
 2017-07-05  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	Added tok-pisin language locale for Papua New Guinea.
