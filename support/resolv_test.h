@@ -93,6 +93,16 @@ struct resolv_redirect_config
      may results in more predictable ordering of queries and
      responses.  */
   bool single_thread_udp;
+
+  /* Do not rewrite the _res variable or change NSS defaults.  Use
+     server_address_overrides below to tell the testing framework on
+     which addresses to create the servers.  */
+  bool disable_redirect;
+
+  /* Use these addresses for creating the DNS servers.  The array must
+     have ns_count (or resolv_max_test_servers) sockaddr * elements if
+     not NULL.  */
+  const struct sockaddr *const *server_address_overrides;
 };
 
 /* Configure NSS to use, nss_dns only for aplicable databases, and try

@@ -1004,6 +1004,29 @@ make_server_sockets (struct resolv_test_server *server)
     }
 }
 
+/* Like make_server_sockets, but the caller supplies the address to
+   use.  */
+static void
+make_server_sockets_for_address (struct resolv_test_server *server,
+                                 const struct sockaddr *addr)
+{
+  server->socket_udp = xsocket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  server->socket_tcp = xsocket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+  if (addr->sa_family == AF_INET)
+    server->address = *(const struct sockaddr_in *) addr;
+  else
+    /* We cannot store the server address in the socket.  This should
+       not matter if disable_redirect is used.  */
+    server->address = (struct sockaddr_in) { .sin_family = 0, };
+
+  xbind (server->socket_udp,
+         (struct sockaddr *)&server->address, sizeof (server->address));
+  xbind (server->socket_tcp,
+         (struct sockaddr *)&server->address, sizeof (server->address));
+  xlisten (server->socket_tcp, 5);
+}
+
 /* One-time initialization of NSS.  */
 static void
 resolv_redirect_once (void)
@@ -1064,11 +1087,17 @@ resolv_test_start (struct resolv_redirect_config config)
     .lock = PTHREAD_MUTEX_INITIALIZER,
   };
 
-  resolv_test_init ();
+  if (!config.disable_redirect)
+    resolv_test_init ();
 
   /* Create all the servers, to reserve the necessary ports.  */
   for (int server_index = 0; server_index < config.nscount; ++server_index)
-    make_server_sockets (obj->servers + server_index);
+    if (config.disable_redirect && config.server_address_overrides != NULL)
+      make_server_sockets_for_address
+        (obj->servers + server_index,
+         config.server_address_overrides[server_index]);
+    else
+      make_server_sockets (obj->servers + server_index);
 
   /* Start server threads.  Disable the server ports, as
      requested.  */
@@ -1094,6 +1123,9 @@ resolv_test_start (struct resolv_redirect_config config)
     }
   if (config.single_thread_udp)
     start_server_thread_udp_single (obj);
+
+  if (config.disable_redirect)
+    return obj;
 
   int timeout = 1;
 
@@ -1129,6 +1161,7 @@ resolv_test_start (struct resolv_redirect_config config)
     }
   for (int server_index = 0; server_index < config.nscount; ++server_index)
     {
+      TEST_VERIFY_EXIT (obj->servers[server_index].address.sin_port != 0);
       _res.nsaddr_list[server_index] = obj->servers[server_index].address;
       if (test_verbose)
         {

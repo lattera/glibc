@@ -1,5 +1,20 @@
 2017-07-05  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/Makefile (tests-internal): Add tst-resolv-threads.
+	(tst-resolv-threads): Link with -ldl, -lresolv, -lpthread.
+	* resolv/tst-resolv-threads.c: New file.
+
+2017-07-05  Florian Weimer  <fweimer@redhat.com>
+
+	support: Add resolver testing mode which does not patch _res.
+	* support/resolv_test.h (struct resolv_redirect_config): Add
+	disable_redirect, server_address_overrides.
+	* support/resolv_test.c (make_server_sockets_for_address): New
+	function.
+	(resolv_test_start): Call it.
+
+2017-07-05  Florian Weimer  <fweimer@redhat.com>
+
 	* support/namespace.h (struct support_chroot_configuration)
 	(struct support_chroot): Define.
 	(support_chroot_create, support_chroot_free): New functions.

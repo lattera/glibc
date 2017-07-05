@@ -65,7 +65,9 @@ tests-internal += \
   tst-resolv-res_init-thread \
 
 # Needs resolv_context.
-tests-internal += tst-resolv-res_ninit
+tests-internal += \
+  tst-resolv-res_ninit \
+  tst-resolv-threads \
 
 endif
 
@@ -168,6 +170,8 @@ $(objpfx)tst-resolv-res_init-thread: $(libdl) $(objpfx)libresolv.so \
 $(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-rotate: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-threads: \
+  $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-canonname: \
   $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
 
