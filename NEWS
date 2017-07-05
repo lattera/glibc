@@ -19,19 +19,19 @@ Major new features:
 
 * Improvements to the DNS stub resolver, contributed by Florian Weimer:
 
-  - glibc will now detect when /etc/resolv.conf has been modified and reload
-    the changed configuration.  The new resolver option “no-reload”
-    (RES_NORELOAD) disables this behavior.
+  - The GNU C Library will now detect when /etc/resolv.conf has been
+    modified and reload the changed configuration.  The new resolver option
+    “no-reload” (RES_NORELOAD) disables this behavior.
 
-  - glibc now supports an arbitrary number of search domains (configured using
-    the “search” directive in /etc/resolv.conf); previously, there was a
-    hard limit of six domains.  For backward compatibility, applications
-    that directly modify the ‘_res’ global object are still limited to six
-    search domains.
+  - The GNU C Library now supports an arbitrary number of search domains
+    (configured using the “search” directive in /etc/resolv.conf);
+    previously, there was a hard limit of six domains.  For backward
+    compatibility, applications that directly modify the ‘_res’ global
+    object are still limited to six search domains.
 
-  - When the “rotate” (RES_ROTATE) resolver option is active, glibc will now
-    randomly pick a name server from the configuration as a starting point.
-    (Previously, the second name server was always used.)
+  - When the “rotate” (RES_ROTATE) resolver option is active, the GNU C
+    Library will now randomly pick a name server from the configuration as a
+    starting point.  (Previously, the second name server was always used.)
 
 * The tunables feature is now enabled by default.  This allows users to tweak
   behavior of the GNU C Library using the GLIBC_TUNABLES environment variable.
@@ -167,7 +167,7 @@ Deprecated and removed features, and other changes affecting compatibility:
   removed.
 
 * Sun RPC is deprecated.  The rpcgen program, librpcsvc, and Sun RPC headers
-  will only be built and installed when glibc is configured with
+  will only be built and installed when the GNU C Library is configured with
   --enable-obsolete-rpc.  This allows alternative RPC implementations, such
   as TIRPC or rpcsvc-proto, to be used.
 
@@ -178,8 +178,8 @@ Deprecated and removed features, and other changes affecting compatibility:
   The NIS(+) support library, libnsl, is also deprecated.  By default, a
   compatibility shared library will be built and installed, but not headers
   or development libraries. Only a few NIS-related programs require this
-  library.  (In particular, glibc has never required programs that use
-  'gethostbyname' to be linked with libnsl.)
+  library.  (In particular, the GNU C Library has never required programs
+  that use 'gethostbyname' to be linked with libnsl.)
 
   Replacement implementations based on TIRPC, which additionally support
   IPv6, are available from <https://github.com/thkukuk/>.  The configure
@@ -247,15 +247,15 @@ Changes to build and runtime requirements:
   supported by that kernel.  (This is a change from version 2.25 only for
   x86-32 and x86-64.)
 
-* GNU Binutils 2.25 or later is now required to build glibc.
+* GNU Binutils 2.25 or later is now required to build the GNU C Library.
 
-* On most architectures, GCC 4.9 or later is required to build glibc.  On
-  powerpc64le, GCC 6.2 or later is required.
+* On most architectures, GCC 4.9 or later is required to build the GNU C
+  Library.  On powerpc64le, GCC 6.2 or later is required.
 
   Older GCC versions and non-GNU compilers are still supported when
-  compiling programs that use glibc.  (We do not know exactly how old,
-  and some GNU extensions to C may be _de facto_ required.  If you are
-  interested in helping us make this statement less vague, please
+  compiling programs that use the GNU C Library.  (We do not know exactly
+  how old, and some GNU extensions to C may be _de facto_ required.  If you
+  are interested in helping us make this statement less vague, please
   contact libc-alpha@sourceware.org.)
 
 Security related changes:
