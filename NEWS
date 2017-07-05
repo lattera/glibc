@@ -56,101 +56,22 @@ Major new features:
   Exxxx constants, as preprocessor macros expanding to integer literals.
 
 * On ia64, powerpc64le, x86-32, and x86-64, the math library now implements
-  128-bit floating point as defined by IEEE 60559:2011 and ISO/IEC TS
-  18661-3:2015.  Support for more architectures will be added in future
-  releases.  Contributed by Paul E. Murphy, Gabriel F. T. Gomes, and Tulio
-  Magno Quites Machado Filho.
+  128-bit floating point as defined by ISO/IEC/IEEE 60559:2011 (IEEE
+  754-2008) and ISO/IEC TS 18661-3:2015.  Contributed by Paul E. Murphy,
+  Gabriel F. T. Gomes, Tulio Magno Quites Machado Filho, and Joseph Myers.
 
   To compile programs that use this feature, the compiler must support
-  128-bit floating point with the type name _Float128 (as defined by
-  TS 18661-3) or __float128 (the nonstandard name used by GCC prior to
-  version 7).
+  128-bit floating point with the type name _Float128 (as defined by TS
+  18661-3) or __float128 (the nonstandard name used by GCC for C++, and for
+  C prior to version 7).  _GNU_SOURCE or __STDC_WANT_IEC_60559_TYPES_EXT__
+  must be defined to make the new interfaces visible.
 
-  New <stdlib.h> functions from ISO/IEC TS 18661-3:
-
-    - String Conversion Functions: strfromf128 and strtof128.
-
-  New <math.h> features from ISO/IEC TS 18661-3:
-
-    - Very Large Number macro: HUGE_VAL_F128.
-
-    - Signaling NaN macro: SNANF128.
-
-    - Trigonometric Functions: acosf128, asinf128, atanf128, atan2f128,
-      cosf128, sinf128, tanf128.
-
-    - Hyperbolic Functions: acoshf128, asinhf128, atanhf128, coshf128,
-      sinhf128, tanhf128.
-
-    - Exponential and Logarithmic Functions: expf128, exp2f128, expm1f128,
-      frexpf128, ilogbf128, ldexpf128, llogbf128, logf128, log10f128,
-      log1pf128, log2f128, logbf128, modff128, scalbnf128, scalblnf128.
-
-    - Power and Absolute Functions: cbrtf128, fabsf128, hypotf128, powf128,
-      sqrtf128.
-
-    - Error and Gamma Functions: erff128, erfcf128, lgammaf128, tgammaf128.
-
-    - Nearest Integer Functions: ceilf128, floorf128, nearbyintf128,
-      rintf128, lrintf128, llrintf128, roundf128, lroundf128, llroundf128,
-      roundevenf128, truncf128, fromfpf128, ufromfpf128, fromfpxf128,
-      ufromfpxf128.
-
-    - Remainder Functions: fmodf128, remainderf128, remquof128.
-
-    - Manipulation Functions: copysignf128, nanf128, nextafterf128,
-      nextupf128, nextdownf128, canonicalizef128.
-
-    - Minimum, Maximum, and Positive Difference Functions: fdimf128,
-      fmaxf128, fminf128, fmaxmagf128, fminmagf128.
-
-    - Floating Multiply-Add Function: fmaf128.
-
-    - Total Order Functions: totalorderf128, totalordermagf128.
-
-    - Payload Functions: getpayloadf128, setpayloadf128, setpayloadsigf128.
-
-  New <complex.h> functions from ISO/IEC TS 18661-3:
-
-    - Trigonometric Functions: cacosf128, casinf128, catanf128, ccosf128,
-      csinf128, ctanf128.
-
-    - Hyperbolic Functions: cacoshf128, casinhf128, catanhf128, ccoshf128,
-      csinhf128, ctanhf128.
-
-    - Exponential and Logarithmic Functions: cexpf128, clogf128.
-
-    - Power and Absolute Functions: cabsf128, cpowf128, csqrtf128.
-
-    - Manipulation Functions: cargf128, cimagf128, CMPLXF128, conjf128,
-      cprojf128, crealf128.
-
-  The following <wchar.h> functions are added as GNU extensions:
-
-    - Wide String Conversion Functions: wsctof128, wcstof128_l.
-
-  The following <stdlib.h> function is added as a GNU extension:
-
-    - String Conversion Function: strtof128_l.
-
-  The following <math.h> features are added as GNU extensions:
-
-    - Predefined Mathematical Constants: M_Ef128, M_LOG2Ef128,
-      M_LOG10Ef128, M_LN2f128, M_LN10f128, M_PIf128, M_PI_2f128,
-      M_PI_4f128, M_1_PIf128, M_2_PIf128, M_2_SQRTPIf128, M_SQRT2f128,
-      M_SQRT1_2f128.
-
-    - Trigonometric Function: sincosf128.
-
-    - Exponential and Logarithmic Function: exp10f128.
-
-    - Error and Gamma Function: lgammaf128_r.
-
-    - Bessel Functions: j0f128, j1f128, jnf128, y0f128, y1f128, ynf128.
-
-  The following <complex.h> function is added as a GNU extension:
-
-    - Exponential and Logarithmic Function: clog10f128.
+  The new functions and macros correspond to those present for other
+  floating-point types (except for a few obsolescent interfaces not
+  supported for the new type), with F128 or f128 suffixes; for example,
+  strtof128, HUGE_VAL_F128 and cosf128.  Following TS 18661-3, there are no
+  printf or scanf formats for the new type; the strfromf128 and strtof128
+  interfaces should be used instead.
 
 Deprecated and removed features, and other changes affecting compatibility:
 
