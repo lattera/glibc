@@ -1,7 +1,10 @@
 2017-07-05  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	Added tok-pisin language locale for Papua New Guinea.
+
 	[BZ #21694]
-	* Added tok-pisin language locale for Papua New Guinea.
+	* locales/tpi_PG: New file.
+	* SUPPORTED: Add tpi_PG/UTF-8.
 
 2017-07-04  Akhilesh Kumar <akhilesh.k@samsung.com>
 
@@ -129,11 +132,11 @@
 2017-06-13  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #21207]
-        * locales/ce_RU (day): Updated (imported) from CLDR.  Uppercase letters
-        left unchanged.
-        * locales/ce_RU (abday): Minor updates to match (day): Latin uppercase
-        "I" replaced with Cyrillic "Ӏ" ("Palochka", Unicode: U04C0).  Trailing
-        spaces removed.
+	* locales/ce_RU (day): Updated (imported) from CLDR.  Uppercase letters
+	left unchanged.
+	* locales/ce_RU (abday): Minor updates to match (day): Latin uppercase
+	"I" replaced with Cyrillic "Ӏ" ("Palochka", Unicode: U04C0).  Trailing
+	spaces removed.
 
 2017-06-13  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
