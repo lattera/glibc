@@ -47,46 +47,23 @@
    res_init.  */
 static const char *const test_hostname = "www.example.com";
 
-/* Path to the test root directory.  */
-static char *path_chroot;
-
-/* Path to resolv.conf under path_chroot (outside the chroot).  */
-static char *path_resolv_conf;
+struct support_chroot *chroot_env;
 
 static void
 prepare (int argc, char **argv)
 {
-  path_chroot = xasprintf ("%s/tst-resolv-res_init-XXXXXX", test_dir);
-  if (mkdtemp (path_chroot) == NULL)
-    FAIL_EXIT1 ("mkdtemp (\"%s\"): %m", path_chroot);
-  add_temp_file (path_chroot);
-
-  /* Create the /etc directory in the chroot environment.  */
-  char *path_etc = xasprintf ("%s/etc", path_chroot);
-  xmkdir (path_etc, 0777);
-  add_temp_file (path_etc);
-
-  /* Create an empty resolv.conf file.  */
-  path_resolv_conf = xasprintf ("%s/resolv.conf", path_etc);
-  add_temp_file (path_resolv_conf);
-  support_write_file_string (path_resolv_conf, "");
-
-  free (path_etc);
-
-  /* valgrind needs a temporary directory in the chroot.  */
-  {
-    char *path_tmp = xasprintf ("%s/tmp", path_chroot);
-    xmkdir (path_tmp, 0777);
-    add_temp_file (path_tmp);
-    free (path_tmp);
-  }
+  chroot_env = support_chroot_create
+    ((struct support_chroot_configuration)
+     {
+       .resolv_conf = "",
+     });
 }
 
 /* Verify that the chroot environment has been set up.  */
 static void
 check_chroot_working (void *closure)
 {
-  xchroot (path_chroot);
+  xchroot (chroot_env->path_chroot);
   FILE *fp = xfopen (_PATH_RESCONF, "r");
   xfclose (fp);
 
@@ -345,7 +322,7 @@ setup_nss_dns_and_chroot (void)
   /* Load nss_dns outside of the chroot.  */
   if (dlopen (LIBNSS_DNS_SO, RTLD_LAZY) == NULL)
     FAIL_EXIT1 ("could not load " LIBNSS_DNS_SO ": %s", dlerror ());
-  xchroot (path_chroot);
+  xchroot (chroot_env->path_chroot);
   /* Force the use of nss_dns.  */
   __nss_configure_lookup ("hosts", "dns");
 }
@@ -374,13 +351,13 @@ run_res_init (void *closure)
   switch (ctx->init)
     {
     case test_init:
-      xchroot (path_chroot);
+      xchroot (chroot_env->path_chroot);
       TEST_VERIFY (res_init () == 0);
       print_resp (stdout, &_res);
       return;
 
     case test_ninit:
-      xchroot (path_chroot);
+      xchroot (chroot_env->path_chroot);
       res_state resp = xmalloc (sizeof (*resp));
       memset (resp, 0, sizeof (*resp));
       TEST_VERIFY (res_ninit (resp) == 0);
@@ -390,7 +367,7 @@ run_res_init (void *closure)
       return;
 
     case test_mkquery:
-      xchroot (path_chroot);
+      xchroot (chroot_env->path_chroot);
       unsigned char buf[512];
       TEST_VERIFY (res_mkquery (QUERY, "www.example",
                                 C_IN, ns_t_a, NULL, 0,
@@ -783,7 +760,7 @@ special_test_callback (void *closure)
   TEST_VERIFY (test_index < special_tests_count);
   if (test_verbose > 0)
     printf ("info: special test %u\n", test_index);
-  xchroot (path_chroot);
+  xchroot (chroot_env->path_chroot);
 
   switch (test_index)
     {
@@ -1063,7 +1040,8 @@ do_test (void)
       TEST_VERIFY (test_cases[i].conf != NULL);
       TEST_VERIFY (test_cases[i].expected != NULL);
 
-      support_write_file_string (path_resolv_conf, test_cases[i].conf);
+      support_write_file_string (chroot_env->path_resolv_conf,
+                                 test_cases[i].conf);
 
       test_file_contents (&test_cases[i]);
 
@@ -1073,24 +1051,24 @@ do_test (void)
         {
           if (test_verbose > 0)
             printf ("info:  special test: missing file\n");
-          TEST_VERIFY (unlink (path_resolv_conf) == 0);
+          TEST_VERIFY (unlink (chroot_env->path_resolv_conf) == 0);
           test_file_contents (&test_cases[i]);
 
           if (test_verbose > 0)
             printf ("info:  special test: dangling symbolic link\n");
-          TEST_VERIFY (symlink ("does-not-exist", path_resolv_conf) == 0);
+          TEST_VERIFY (symlink ("does-not-exist", chroot_env->path_resolv_conf) == 0);
           test_file_contents (&test_cases[i]);
-          TEST_VERIFY (unlink (path_resolv_conf) == 0);
+          TEST_VERIFY (unlink (chroot_env->path_resolv_conf) == 0);
 
           if (test_verbose > 0)
             printf ("info:  special test: unreadable file\n");
-          support_write_file_string (path_resolv_conf, "");
-          TEST_VERIFY (chmod (path_resolv_conf, 0) == 0);
+          support_write_file_string (chroot_env->path_resolv_conf, "");
+          TEST_VERIFY (chmod (chroot_env->path_resolv_conf, 0) == 0);
           test_file_contents (&test_cases[i]);
 
           /* Restore the empty file.  */
-          TEST_VERIFY (unlink (path_resolv_conf) == 0);
-          support_write_file_string (path_resolv_conf, "");
+          TEST_VERIFY (unlink (chroot_env->path_resolv_conf) == 0);
+          support_write_file_string (chroot_env->path_resolv_conf, "");
         }
     }
 
@@ -1106,10 +1084,7 @@ do_test (void)
       xwaitpid (server, NULL, 0);
     }
 
-  free (path_chroot);
-  path_chroot = NULL;
-  free (path_resolv_conf);
-  path_resolv_conf = NULL;
+  support_chroot_free (chroot_env);
   return 0;
 }
 

@@ -1,5 +1,19 @@
 2017-07-05  Florian Weimer  <fweimer@redhat.com>
 
+	* support/namespace.h (struct support_chroot_configuration)
+	(struct support_chroot): Define.
+	(support_chroot_create, support_chroot_free): New functions.
+	* support/support_chroot.c: New file.
+	* support/Makefile (libsupport-routines): Add support_chroot.
+	* resolv/tst-resolv-res_init-skeleton.c (path_chroot)
+	(path_resolv_conf): Remove definitions.
+	(chroot_env): New variable.
+	(prepare): Call support_chroot_create.
+	(check_chroot_working, setup_nss_dns_and_chroot, run_res_init)
+	(special_test_callback, do_test): Likewise.
+
+2017-07-05  Florian Weimer  <fweimer@redhat.com>
+
 	Add subtest to check isolation of multiple loopback addresses.
 	* support/tst-support-namespace.c (test_localhost_bind): New function.
 	(do_test): Call it.
