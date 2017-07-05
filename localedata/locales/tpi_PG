@@ -1,0 +1,217 @@
+comment_char %
+escape_char /
+
+% Tok Pisin language locale for Papua New Guinea.
+% Contributed by Akhilesh Kumar <akhilesh.k@samsung.com>.
+% Words translated from http://www.tok-pisin.com/
+
+LC_IDENTIFICATION
+title       "Tok Pisin language locale for Papua New Guinea"
+source      "Samsung Electronics Co., Ltd."
+address     ""
+contact     ""
+email       "akhilesh.k@samsung.com"
+tel         ""
+fax         ""
+language    "Tok Pisin"
+territory   "Papua New Guinea"
+revision    "0.1"
+date        "2017-03-21"
+
+category  "i18n:2012";LC_IDENTIFICATION
+category  "i18n:2012";LC_CTYPE
+category  "i18n:2012";LC_COLLATE
+category  "i18n:2012";LC_TIME
+category  "i18n:2012";LC_NUMERIC
+category  "i18n:2012";LC_MONETARY
+category  "i18n:2012";LC_PAPER
+category  "i18n:2012";LC_MEASUREMENT
+category  "i18n:2012";LC_MESSAGES
+category  "i18n:2012";LC_NAME
+category  "i18n:2012";LC_ADDRESS
+category  "i18n:2012";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+% Copy the template from ISO/IEC 3166
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+% Full month names
+% Month names from  http://www.tok-pisin.com, the month names from
+% http://wikitravel.org/en/Tok_Pisin_phrasebook differ a bit.
+% Janueri, Februeri, Mas, Epril, Me, Jun, Julai, Ogas, Septemba, Oktoba, Novemba, Desemba
+mon	"<U004A><U0061><U006E><U0075><U0065><U0072><U0069>";/
+	"<U0046><U0065><U0062><U0072><U0075><U0065><U0072><U0069>"
+	"<U004D><U0061><U0073>";/
+	"<U0045><U0070><U0072><U0069><U006C>";/
+	"<U004D><U0065>";/
+	"<U004A><U0075><U006E>";/
+	"<U004A><U0075><U006C><U0061><U0069>";/
+	"<U004F><U0067><U0061><U0073>";/
+	"<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0061>";/
+	"<U004F><U006B><U0074><U006F><U0062><U0061>";/
+	"<U004E><U006F><U0076><U0065><U006D><U0062><U0061>";/
+	"<U0044><U0065><U0073><U0065><U006D><U0062><U0061>"
+%
+% Abbreviated month names
+% Jan, Feb, Mar, Epr, Me, Jun, Jul, Oga, Sep, Okt, Nov, Des
+abmon	"<U004A><U0065><U006E>";/
+	"<U0046><U0065><U0062>";/
+	"<U004D><U0061><U0072>";/
+	"<U0045><U0070><U0072>";/
+	"<U004D><U0065>";/
+	"<U004A><U0075><U006E>";/
+	"<U004A><U0075><U006C>";/
+	"<U004F><U0067><U0061>";/
+	"<U0053><U0065><U0070>";/
+	"<U004F><U006B><U0074>";/
+	"<U004E><U006F><U0076>";/
+	"<U0044><U0065><U0073>"
+%
+% Full Weekday names
+% Sande, Mande, Tunde, Trinde, Fonde, Fraide, Sarere
+day	"<U0053><U0061><U006E><U0064><U0065>";/
+	"<U004D><U0061><U006E><U0064><U0065>";/
+	"<U0054><U0075><U006E><U0064><U0065>";/
+	"<U0054><U0072><U0069><U006E><U0064><U0065>";/
+	"<U0054><U006F><U0073><U0064><U0065>";/
+	"<U0046><U0072><U0061><U0069><U0064><U0065>";/
+	"<U0053><U0061><U0072><U0065><U0072><U0065>"
+%
+% Abbreviated Weekday names
+% San, Man, Tun, Tri, Fon, Fra, Sar
+abday	"<U0053><U0061><U006E>";/
+	"<U004D><U0061><U006E>";/
+	"<U0054><U0075><U006E>";/
+	"<U0054><U0072><U0069>";/
+	"<U0046><U006F><U006E>";/
+	"<U0046><U0072><U0061>";/
+	"<U0053><U0061><U0072>"
+%
+% Appropriate date and time representation
+% %a %d %b %Y %T %Z
+d_t_fmt	"<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+%
+% Appropriate date representation
+% https://en.wikipedia.org/wiki/Date_and_time_notation_in_Australia
+% %d/%m/%Y
+d_fmt	"<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+%
+% Appropriate time representation
+% %r
+t_fmt	"<U0025><U0072>"
+%
+% Equivalent of AM PM
+% AM -> biknait PM-> apinun (from http://wikitravel.org/en/Tok_Pisin_phrasebook)
+%
+am_pm	"<U0062><U0069><U006B><U006E><U0061><U0069><U0074>";/
+	"<U0061><U0070><U0069><U006E><U0075><U006E>"
+%
+% Appropriate 12 h time representation
+% %I:%M:%S %p %Z
+t_fmt_ampm    "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+END LC_TIME
+%
+LC_NUMERIC
+% .
+decimal_point "<U002E>"
+% ,
+thousands_sep "<U002C>"
+grouping      3
+END LC_NUMERIC
+%
+% https://en.wikipedia.org/wiki/Papua_New_Guinea
+% PGK
+% https://en.wikipedia.org/wiki/Papua_New_Guinean_kina
+% https://en.wikipedia.org/wiki/Currency_symbol
+% K
+LC_MONETARY
+currency_symbol		"<U004B>"
+int_curr_symbol		"<U0050><U0047><U004B><U0020>"
+mon_decimal_point	"<U002E>"
+mon_thousands_sep	"<U002C>"
+mon_grouping		3
+positive_sign		""
+negative_sign		"<U002D>"
+int_frac_digits		2
+frac_digits		2
+p_cs_precedes		1
+int_p_sep_by_space	1
+p_sep_by_space		1
+n_cs_precedes		1
+int_n_sep_by_space	1
+n_sep_by_space		1
+p_sign_posn		1
+n_sign_posn		1
+END LC_MONETARY
+
+LC_PAPER
+copy "i18n"
+END LC_PAPER
+
+LC_MEASUREMENT
+measurement 1
+END LC_MEASUREMENT
+
+LC_MESSAGES
+% ^[yY].*
+yesexpr "<U005E><U005B><U0079><U0059><U005D><U002E><U002A>"
+% ^[nN].*
+noexpr  "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
+% yes
+yesstr "<U0079><U0065><U0073>"
+% nogat
+nostr "<U006E><U006F><U0067><U0061><U0074>"
+END LC_MESSAGES
+
+LC_NAME
+copy "en_US"
+END LC_NAME
+
+LC_ADDRESS
+% http://www.addressexamples.com/papua-new-guinea-address-format/
+% %a%s%z%C
+postal_fmt    "<U0025><U0061><U0025><U0073><U0025><U007A><U0025><U0043>"
+% Papua New Guinea
+country_name "<U0050><U0061><U0070><U0075><U0061><U0020><U004E><U0065><U0077><U0020><U0047><U0075><U0069><U006E><U0065><U0061>"
+% No code
+country_post ""
+% http://laendercode.net/en/2-letter-list.html
+% PG
+country_ab2  "<U0050><U0047>"
+% PNG
+% http://laendercode.net/en/countries.html
+country_ab3  "<U0050><U004E><U0047>"
+country_car  "<U0050><U004E><U0047>"
+% https://en.wikipedia.org/wiki/ISO_3166-1_numeric
+country_num 598
+% Tok Pisin
+lang_name    "<U0054><U006F><U006B><U0020><U0050><U0069><U0073><U0069><U006E>"
+% https://en.wikipedia.org/wiki/Tok_Pisin
+% "", "tpi", "tpi"
+lang_ab      ""
+lang_term    "<U0074><U0070><U0069>"
+lang_lib     "<U0074><U0070><U0069>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+% https://www.howtocallabroad.com/papua/
+%
+% +%c %l
+tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U006C>"
+% 00
+int_select  "<U0030><U0030>"
+% http://www.nationsonline.org/oneworld/international-calling-codes.htm
+% 675
+int_prefix  "<U0036><U0037><U0035>"
+END LC_TELEPHONE

@@ -1,3 +1,8 @@
+2017-07-05  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21694]
+	* Added tok-pisin language locale for Papua New Guinea.
+
 2017-07-04  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21706]
