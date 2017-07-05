@@ -1,3 +1,9 @@
+2017-07-05  Florian Weimer  <fweimer@redhat.com>
+
+	Add subtest to check isolation of multiple loopback addresses.
+	* support/tst-support-namespace.c (test_localhost_bind): New function.
+	(do_test): Call it.
+
 2017-07-04  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* libio/libio.h (_IO_FLAGS2_NEED_LOCK, _IO_need_lock): Define.
