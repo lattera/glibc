@@ -7,142 +7,64 @@ using `glibc' in the "product" field.
 
 Version 2.26
 
+Major new features:
+
 * Unicode 10.0.0 Support: Character encoding, character type info, and
   transliteration tables are all updated to Unicode 10.0.0, using
   generator scripts contributed by Mike FABIAN (Red Hat).
+
+* Collation of Hungarian has been overhauled and is now consistent with "The
+  Rules of Hungarian Orthography, 12th edition" (Bug 18934).  Contributed by
+  Egmont Koblinger.
+
+* Improvements to the DNS stub resolver, contributed by Florian Weimer:
+
+  - glibc will now detect when /etc/resolv.conf has been modified and reload
+    the changed configuration.  The new resolver option “no-reload”
+    (RES_NORELOAD) disables this behavior.
+
+  - glibc now supports an arbitrary number of search domains (configured using
+    the “search” directive in /etc/resolv.conf); previously, there was a
+    hard limit of six domains.  For backward compatibility, applications
+    that directly modify the ‘_res’ global object are still limited to six
+    search domains.
+
+  - When the “rotate” (RES_ROTATE) resolver option is active, glibc will now
+    randomly pick a name server from the configuration as a starting point.
+    (Previously, the second name server was always used.)
+
+* The tunables feature is now enabled by default.  This allows users to tweak
+  behavior of the GNU C Library using the GLIBC_TUNABLES environment variable.
+
+* New function reallocarray, which resizes an allocated block (like realloc)
+  to the product of two sizes, with a guaranteed clean failure upon integer
+  overflow in the multiplication.  Originally from OpenBSD, contributed by
+  Dennis Wölfing and Rüdiger Sonderfeld.
+
+* New wrappers for the Linux-specific system calls preadv2 and pwritev2.
+  These are extended versions of preadv and pwritev, respectively, taking an
+  additional flags argument.  The set of supported flags depends on the
+  running kernel; full support currently requires kernel 4.7 or later.
+
+* posix_spawnattr_setflags now supports the flag POSIX_SPAWN_SETSID, to
+  create a new session ID for the spawned process.  This feature is
+  scheduled to be added to the next major revision of POSIX; for the time
+  being, it is available under _GNU_SOURCE.
 
 * errno.h is now safe to use from C-preprocessed assembly language on all
   supported operating systems.  In this context, it will only define the
   Exxxx constants, as preprocessor macros expanding to integer literals.
 
-* The rpcgen, librpcsvc and related headers will only be built and
-  installed when glibc is configured with --enable-obsolete-rpc.
-  This allows alternative RPC implementations, like TIRPC, to be used
-  by default. Applications needing features missing from TIRPC should
-  consider the rpcsvc-proto project developed by Thorsten Kukuk (SUSE).
+* On ia64, powerpc64le, x86-32, and x86-64, the math library now implements
+  128-bit floating point as defined by IEEE 60559:2011 and ISO/IEC TS
+  18661-3:2015.  Support for more architectures will be added in future
+  releases.  Contributed by Paul E. Murphy, Gabriel F. T. Gomes, and Tulio
+  Magno Quites Machado Filho.
 
-* The NIS(+) name service modules, libnss_nis, libnss_nisplus, and
-  libnss_compat, are deprecated, and will not be built or installed by
-  default.  Replacement implementations based on TIRPC, which
-  additionally support IPv6, are available from
-  <https://github.com/thkukuk/libnss_{compat,nis,nisplus}>.
-
-* The NIS(+) support library, libnsl, is deprecated.  By default, a
-  compatibility shared library will be built and installed, but not
-  headers or development libraries.
-
-  Only a few NIS-related programs require this library.
-  A replacement implementation based on TIRPC is available from
-  <https://github.com/thkukuk/libnsl>.  Like the replacement NIS(+)
-  name service modules, the replacement supports IPv6, and it can be
-  coinstalled with the compatibility shared library from glibc.
-
-* New configure option --enable-obsolete-nsl will cause libnsl's
-  headers, and the NIS(+) name service modules, to be built and
-  installed.  This option may be removed in a future release.
-
-* Extensive new collation tests for Hungarian locales based on
-  "The Rules of Hungarian Orthography, 12th edition" and the work of
-  Egmont Koblinger (Bug 18934).
-
-* The DNS stub resolver no longer performs EDNS fallback.  If EDNS or DNSSEC
-  support is enabled, the configured recursive resolver must support EDNS.
-  (Responding to EDNS-enabled queries with responses which are not
-  EDNS-enabled is fine, but FORMERR responses are not.)
-
-* res_mkquery and res_nmkquery no longer support the IQUERY opcode.  DNS
-  servers have not supported this opcode for a long time.
-
-* The legacy cfree function has been removed.  Applications should use the
-  free function instead.
-
-* posix_spawnattr_setflags now supports POSIX_SPAWN_SETSID flag to create a
-  new session ID for the posix_spawn and posix_spawnp.  It is scheduled to
-  be added on next major revision of POSIX, so current support is enabled
-  with _GNU_SOURCE.
-
-* The minimum Linux kernel version that this version of the GNU C Library
-  can be used with on i[4567]86 and x86_64 is 3.2.  A Linux 3.2 or later
-  kernel was already required on all other architectures.
-
-* The obsolete <sys/ultrasound.h> header file has been removed.
-
-* The port to Native Client running on ARMv7-A (--host=arm-nacl) has been
-  removed.
-
-* <string.h> no longer includes inline versions of any string functions,
-  as this kind of optimization is better done by the compiler.  The macros
-  __USE_STRING_INLINES and __NO_STRING_INLINES no longer have any effect.
-
-* The nonstandard header <xlocale.h> has been removed.  Most programs should
-  use <locale.h> instead.  If you have a specific need for the definition
-  of locale_t with no other declarations, please talk to us.
-
-* The obsolete signal constant SIGUNUSED is no longer defined by <signal.h>.
-
-* The reallocarray function has been added to libc.  It is a realloc
-  replacement with a check for integer overflow when calculating total
-  allocation size.
-
-* New preadv2 and pwritev2 has been added.  They are Linux extensions to
-  preadv and pwritev with an additional flag argument where it is possible
-  to set high priority or use O_DSYNC or O_SYNC for a specific IO operation.
-  For complete support it requires Linux kernel version 4.6, otherwise a
-  compat implementation will be used (which refuses all flags and routes it
-  to preadv or pwritev).
-
-* The stack_t type no longer has the name struct sigaltstack.  This changes
-  the C++ name mangling for interfaces involving this type.
-
-* The ucontext_t type no longer has the name struct ucontext.  This changes
-  the C++ name mangling for interfaces involving this type.
-
-* On M68k GNU/Linux and MIPS GNU/Linux, the fpregset_t type no longer has
-  the name struct fpregset.  On Nios II GNU/Linux, the mcontext_t type no
-  longer has the name struct mcontext.  On SPARC GNU/Linux, the struct
-  mc_fq, struct rwindow, struct fpq and struct fq types are no longer
-  defined in sys/ucontext.h, the mc_fpu_t type no longer has the name struct
-  mc_fpu, the gwindows_t type no longer has the name struct gwindows and the
-  fpregset_t type no longer has the name struct fpu.  This changes the C++
-  name mangling for interfaces involving those types.
-
-* The synchronization that pthread_spin_unlock performs has been changed
-  to now be equivalent to a C11 atomic store with release memory order to
-  the spin lock's memory location.  This ensures correct synchronization
-  for the spin lock's operations and critical sections protected by a spin
-  lock.  Previously, several (but not all) architectures used stronger
-  synchronization (e.g., containing what is often called a full barrier).
-  This change can improve performance, but may affect odd fringe uses of
-  spin locks that depend on the previous behavior (e.g., using spin locks
-  as atomic variables to try to implement Dekker's mutual exclusion
-  algorithm).
-
-* The tunables feature is now enabled by default.  This allows users to tweak
-  behavior of the GNU C Library using the GLIBC_TUNABLES environment variable.
-
-* The s390 specific ptrace requests are adjusted to the kernel ones.  Request 12
-  is now used for PTRACE_SINGLEBLOCK instead of PTRACE_GETREGS.  The requests
-  PTRACE_GETREGS, PTRACE_SETREGS, PTRACE_GETFPREGS and PTRACE_SETFPREGS were
-  removed as those are not supported by the s390 kernel.  The requests
-  PTRACE_SINGLEBLOCK, PTRACE_SECCOMP_GET_FILTER, PTRACE_PEEKUSR_AREA,
-  PTRACE_POKEUSR_AREA, PTRACE_GET_LAST_BREAK, PTRACE_ENABLE_TE,
-  PTRACE_DISABLE_TE and PTRACE_TE_ABORT_RAND were added as those are supported
-  by the s390 kernel.
-
-* The minimum GCC version that can be used to build this version of the GNU
-  C Library is GCC 4.9.  Older GCC versions, and non-GNU compilers, can
-  still be used to compile programs using the GNU C Library.
-
-* The minimum GNU Binutils version that can be used to build this version of
-  the GNU C Library is Binutils 2.25.
-
-* Support is added, on powerpc64le, x86_64, x86 and ia64, for interfaces
-  supporting the _Float128 type from ISO/IEC TS 18661-3:2015.  Most of the
-  interfaces are taken from TS 18661-3.  The type-generic macros in <math.h>
-  and <tgmath.h> support this type.  The GNU C Library now requires GCC 6.2
-  or later to build for powerpc64le.  When used with GCC versions before GCC
-  7, these interfaces may be used with the type under the non-standard name
-  __float128.
+  To compile programs that use this feature, the compiler must support
+  128-bit floating point with the type name _Float128 (as defined by
+  TS 18661-3) or __float128 (the nonstandard name used by GCC prior to
+  version 7).
 
   New <stdlib.h> functions from ISO/IEC TS 18661-3:
 
@@ -230,24 +152,111 @@ Version 2.26
 
     - Exponential and Logarithmic Function: clog10f128.
 
-* When the “rotate” (RES_ROTATE) DNS stub resolver option is active, glibc
-  will now randomly pick a name server from the configuration as a starting
-  point.  (Previously, the second name server was always used.)
+Deprecated and removed features, and other changes affecting compatibility:
+
+* The synchronization that pthread_spin_unlock performs has been changed to
+  now be equivalent to a C11 atomic store with release memory order to the
+  spin lock's memory location.  Previously, several (but not all)
+  architectures used stronger synchronization (e.g., containing what is
+  often called a full barrier).  This change can improve performance, but
+  may affect odd fringe uses of spin locks that depend on the previous
+  behavior (e.g., using spin locks as atomic variables to try to implement
+  Dekker's mutual exclusion algorithm).
+
+* The port to Native Client running on ARMv7-A (--host=arm-nacl) has been
+  removed.
+
+* Sun RPC is deprecated.  The rpcgen program, librpcsvc, and Sun RPC headers
+  will only be built and installed when glibc is configured with
+  --enable-obsolete-rpc.  This allows alternative RPC implementations, such
+  as TIRPC or rpcsvc-proto, to be used.
+
+* The NIS(+) name service modules, libnss_nis, libnss_nisplus, and
+  libnss_compat, are deprecated, and will not be built or installed by
+  default.
+
+  The NIS(+) support library, libnsl, is also deprecated.  By default, a
+  compatibility shared library will be built and installed, but not headers
+  or development libraries. Only a few NIS-related programs require this
+  library.  (In particular, glibc has never required programs that use
+  'gethostbyname' to be linked with libnsl.)
+
+  Replacement implementations based on TIRPC, which additionally support
+  IPv6, are available from <https://github.com/thkukuk/>.  The configure
+  option --enable-obsolete-nsl will cause libnsl's headers, and the NIS(+)
+  name service modules, to be built and installed.
+
+* The DNS stub resolver no longer performs EDNS fallback.  If EDNS or DNSSEC
+  support is enabled, the configured recursive resolver must support EDNS.
+  (Responding to EDNS-enabled queries with responses which are not
+  EDNS-enabled is fine, but FORMERR responses are not.)
+
+* res_mkquery and res_nmkquery no longer support the IQUERY opcode.  DNS
+  servers have not supported this opcode for a long time.
 
 * The _res_opcodes variable has been removed from libresolv.  It had been
   exported by accident.
 
-* The glibc DNS stub resolver now supports an arbitary number of search
-  domains (configured using the “search” directive in /etc/resolv.conf).
-  Most applications will automatically benefit from this change, but for
-  backwards compatibility reasons, applications which directly modify _res
-  objects (which contain the resolver state, including the search list
-  array, which is limited to six entries) will only use the first six search
-  domains, as before.
+* <string.h> no longer includes inline versions of any string functions,
+  as this kind of optimization is better done by the compiler.  The macros
+  __USE_STRING_INLINES and __NO_STRING_INLINES no longer have any effect.
 
-* The glibc DNS stub resolver now automatically reloads /etc/resolv.conf,
-  to pick up changed configuration settings.  The new “no-reload”
-  (RES_NORELOAD) resolver option disables this behavior.
+* The nonstandard header <xlocale.h> has been removed.  Most programs should
+  use <locale.h> instead.  If you have a specific need for the definition of
+  locale_t with no other declarations, please contact
+  libc-alpha@sourceware.org and explain.
+
+* The obsolete header <sys/ultrasound.h> has been removed.
+
+* The obsolete signal constant SIGUNUSED is no longer defined by <signal.h>.
+
+* The obsolete function cfree has been removed.  Applications should use
+  free instead.
+
+* The stack_t type no longer has the name struct sigaltstack.  This changes
+  the C++ name mangling for interfaces involving this type.
+
+* The ucontext_t type no longer has the name struct ucontext.  This changes
+  the C++ name mangling for interfaces involving this type.
+
+* On M68k GNU/Linux and MIPS GNU/Linux, the fpregset_t type no longer has
+  the name struct fpregset.  On Nios II GNU/Linux, the mcontext_t type no
+  longer has the name struct mcontext.  On SPARC GNU/Linux, the struct
+  mc_fq, struct rwindow, struct fpq and struct fq types are no longer
+  defined in sys/ucontext.h, the mc_fpu_t type no longer has the name struct
+  mc_fpu, the gwindows_t type no longer has the name struct gwindows and the
+  fpregset_t type no longer has the name struct fpu.  This changes the C++
+  name mangling for interfaces involving those types.
+
+* On S/390 GNU/Linux, the constants defined by <sys/ptrace.h> have been
+  synced with the kernel:
+
+    - PTRACE_GETREGS, PTRACE_SETREGS, PTRACE_GETFPREGS and PTRACE_SETFPREGS
+      are not supported on this architecture and have been removed.
+
+    - PTRACE_SINGLEBLOCK, PTRACE_SECCOMP_GET_FILTER, PTRACE_PEEKUSR_AREA,
+      PTRACE_POKEUSR_AREA, PTRACE_GET_LAST_BREAK, PTRACE_ENABLE_TE,
+      PTRACE_DISABLE_TE and PTRACE_TE_ABORT_RAND have been added.
+
+  Programs that assume the GET/SETREGS ptrace requests are universally
+  available will now fail to build, instead of malfunctioning at runtime.
+
+Changes to build and runtime requirements:
+
+* Linux kernel 3.2 or later is required at runtime, on all architectures
+  supported by that kernel.  (This is a change from version 2.25 only for
+  x86-32 and x86-64.)
+
+* GNU Binutils 2.25 or later is now required to build glibc.
+
+* On most architectures, GCC 4.9 or later is required to build glibc.  On
+  powerpc64le, GCC 6.2 or later is required.
+
+  Older GCC versions and non-GNU compilers are still supported when
+  compiling programs that use glibc.  (We do not know exactly how old,
+  and some GNU extensions to C may be _de facto_ required.  If you are
+  interested in helping us make this statement less vague, please
+  contact libc-alpha@sourceware.org.)
 
 Security related changes:
 
