@@ -1,3 +1,8 @@
+2017-07-07  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21721]
+	* locales/ks_IN@devanagari: Fix full weekday names, add yesstr and nostr
+
 2017-07-06  Rafal Luzynski <digitalfreak@lingonborough.com>
 
 	Arabic scripts: More fixes after the recent import.
