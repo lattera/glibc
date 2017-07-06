@@ -1,3 +1,12 @@
+2017-07-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* iconvdata/tst-loading.c (TIMEOUT): Define to 30.
+	* misc/tst-tsearch.c (TIMEOUT): Remove.
+	* nptl/tst-create-detached.c (TIMEOUT): Define to 100.
+	* nptl/tst-robust-fork.c (TIMEOUT): Likewise.
+	* nptl/tst-rwlock19.c (TIMEOUT): Likewise.
+	* string/tst-cmp.c (TIMEOUT): Define to 600.
+
 2017-07-06  Matthew Krupcale  <mkrupcale@matthewkrupcale.com>
 
 	[BZ #21715]

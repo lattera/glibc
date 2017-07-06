@@ -207,6 +207,6 @@ do_test (void)
 
 /* The nested loops need a long time to complete on slower
    machines.  */
-#define TIMEOUT 300
+#define TIMEOUT 600
 
 #include <support/test-driver.c>
