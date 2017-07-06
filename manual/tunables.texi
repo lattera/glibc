@@ -224,6 +224,7 @@ bounded, the user may set this tunable to limit the number of chunks
 that are scanned from the unsorted list while searching for chunks to
 pre-fill the per-thread cache with.  The default, or when set to zero,
 is no limit.
+@end deftp
 
 @node Hardware Capability Tunables
 @section Hardware Capability Tunables
