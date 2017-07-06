@@ -1,5 +1,10 @@
 2017-07-07  Peng Wu <pwu@redhat.com>
 
+	[BZ #21724]
+	* locales/xh_ZA (LC_MESSAGES): Add yesstr and nostr
+
+2017-07-07  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21723]
 	* locales/zh_CN (LC_MESSAGES): Add yesstr and nostr
 
