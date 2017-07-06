@@ -22,6 +22,7 @@
 #include <string.h>
 #include <support/check.h>
 #include <support/check_nss.h>
+#include <support/format_nss.h>
 #include <support/resolv_test.h>
 #include <support/support.h>
 
@@ -202,6 +203,68 @@ check_ai (const char *name, const char *service,
   return check_ai_hints (name, service,
                          (struct addrinfo) { .ai_family = family, },
                          expected);
+}
+
+/* Test for bug 21295: getaddrinfo used to discard address information
+   instead of merging it.  */
+static void
+test_bug_21295 (void)
+{
+  /* The address order is unpredictable.  There are two factors which
+     contribute to that: The stub resolver does not perform proper
+     response matching for A/AAAA queries (an A response could be
+     associated with an AAAA query and vice versa), and without
+     namespaces, system configuration could affect address
+     ordering.  */
+  for (int do_tcp = 0; do_tcp < 2; ++do_tcp)
+    {
+      const struct addrinfo hints =
+        {
+          .ai_family = AF_INET6,
+          .ai_socktype = SOCK_STREAM,
+          .ai_flags = AI_V4MAPPED | AI_ALL,
+        };
+      const char *qname;
+      if (do_tcp)
+        qname = "t.www.example";
+      else
+        qname = "www.example";
+      struct addrinfo *ai = NULL;
+      int ret = getaddrinfo (qname, "80", &hints, &ai);
+      TEST_VERIFY_EXIT (ret == 0);
+
+      const char *expected_a;
+      const char *expected_b;
+      if (do_tcp)
+        {
+          expected_a = "flags: AI_V4MAPPED AI_ALL\n"
+            "address: STREAM/TCP 2001:db8::3 80\n"
+            "address: STREAM/TCP ::ffff:192.0.2.19 80\n";
+          expected_b = "flags: AI_V4MAPPED AI_ALL\n"
+            "address: STREAM/TCP ::ffff:192.0.2.19 80\n"
+            "address: STREAM/TCP 2001:db8::3 80\n";
+        }
+      else
+        {
+          expected_a = "flags: AI_V4MAPPED AI_ALL\n"
+            "address: STREAM/TCP 2001:db8::1 80\n"
+            "address: STREAM/TCP ::ffff:192.0.2.17 80\n";
+          expected_b = "flags: AI_V4MAPPED AI_ALL\n"
+            "address: STREAM/TCP ::ffff:192.0.2.17 80\n"
+            "address: STREAM/TCP 2001:db8::1 80\n";
+        }
+
+      char *actual = support_format_addrinfo (ai, ret);
+      if (!(strcmp (actual, expected_a) == 0
+            || strcmp (actual, expected_b) == 0))
+        {
+          support_record_failure ();
+          printf ("error: %s: unexpected response (TCP: %d):\n%s\n",
+                  __func__, do_tcp, actual);
+        }
+      free (actual);
+      freeaddrinfo (ai);
+    }
 }
 
 static int
@@ -398,21 +461,7 @@ do_test (void)
   check_ai ("t.nxdomain.example", "80", AF_INET6,
             "error: Name or service not known\n");
 
-  /* Test for bug 21295.  */
-  check_ai_hints ("www.example", "80",
-                  (struct addrinfo) { .ai_family = AF_INET6,
-                      .ai_socktype = SOCK_STREAM,
-                      .ai_flags = AI_V4MAPPED | AI_ALL, },
-                  "flags: AI_V4MAPPED AI_ALL\n"
-                  "address: STREAM/TCP 2001:db8::1 80\n"
-                  "address: STREAM/TCP ::ffff:192.0.2.17 80\n");
-  check_ai_hints ("t.www.example", "80",
-                  (struct addrinfo) { .ai_family = AF_INET6,
-                      .ai_socktype = SOCK_STREAM,
-                      .ai_flags = AI_V4MAPPED | AI_ALL, },
-                  "flags: AI_V4MAPPED AI_ALL\n"
-                  "address: STREAM/TCP 2001:db8::3 80\n"
-                  "address: STREAM/TCP ::ffff:192.0.2.19 80\n");
+  test_bug_21295 ();
 
   resolv_test_end (aux);
 

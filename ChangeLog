@@ -1,3 +1,8 @@
+2017-07-06  Florian Weimer  <fw@deneb.enyo.de>
+
+	* resolv/tst-resolv-basic.c (test_bug_21295): New function.
+	(do_test): Call it.
+
 2017-07-06  DJ Delorie  <dj@delorie.com>
 
 	* config.make.in: Enable experimental malloc option.
