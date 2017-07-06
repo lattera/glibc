@@ -200,6 +200,12 @@ will be used, and CFLAGS sets optimization options for the compiler.
      libnss_nisplus are not built at all.  Use this option to enable
      libnsl with all depending NSS modules and header files.
 
+'--disable-experimental-malloc'
+     By default, a per-thread cache is enabled in 'malloc'.  While this
+     cache can be disabled on a per-application basis using tunables
+     (set glibc.malloc.tcache_count to zero), this option can be used to
+     remove it from the build completely.
+
 '--build=BUILD-SYSTEM'
 '--host=HOST-SYSTEM'
      These options are for cross-compiling.  If you specify both options

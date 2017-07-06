@@ -193,6 +193,38 @@ systems the limit is twice the number of cores online and on 64-bit systems, it
 is 8 times the number of cores online.
 @end deftp
 
+@deftp Tunable glibc.malloc.tcache_max
+The maximum size of a request (in bytes) which may be met via the
+per-thread cache.  The default (and maximum) value is 1032 bytes on
+64-bit systems and 516 bytes on 32-bit systems.
+@end deftp
+
+@deftp Tunable glibc.malloc.tcache_count
+The maximum number of chunks of each size to cache. The default is 7.
+There is no upper limit, other than available system memory.  If set
+to zero, the per-thread cache is effectively disabled.
+
+The approximate maximum overhead of the per-thread cache is thus equal
+to the number of bins times the chunk count in each bin times the size
+of each chunk.  With defaults, the approximate maximum overhead of the
+per-thread cache is approximately 236 KB on 64-bit systems and 118 KB
+on 32-bit systems.
+@end deftp
+
+@deftp Tunable glibc.malloc.tcache_unsorted_limit
+When the user requests memory and the request cannot be met via the
+per-thread cache, the arenas are used to meet the request.  At this
+time, additional chunks will be moved from existing arena lists to
+pre-fill the corresponding cache.  While copies from the fastbins,
+smallbins, and regular bins are bounded and predictable due to the bin
+sizes, copies from the unsorted bin are not bounded, and incur
+additional time penalties as they need to be sorted as they're
+scanned.  To make scanning the unsorted list more predictable and
+bounded, the user may set this tunable to limit the number of chunks
+that are scanned from the unsorted list while searching for chunks to
+pre-fill the per-thread cache with.  The default, or when set to zero,
+is no limit.
+
 @node Hardware Capability Tunables
 @section Hardware Capability Tunables
 @cindex hardware capability tunables

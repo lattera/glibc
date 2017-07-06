@@ -1,3 +1,31 @@
+2017-07-06  DJ Delorie  <dj@delorie.com>
+
+	* config.make.in: Enable experimental malloc option.
+	* configure.ac: Likewise.
+	* configure: Regenerate.
+	* manual/install.texi: Document it.
+	* INSTALL: Regenerate.
+	* malloc/Makefile: Likewise.
+	* malloc/malloc.c: Add per-thread cache (tcache).
+	(tcache_put): New.
+	(tcache_get): New.
+	(tcache_thread_freeres): New.
+	(tcache_init): New.
+	(__libc_malloc): Use cached chunks if available.
+	(__libc_free): Initialize tcache if needed.
+	(__libc_realloc): Likewise.
+	(__libc_calloc): Likewise.
+	(_int_malloc): Prefill tcache when appropriate.
+	(_int_free): Likewise.
+	(do_set_tcache_max): New.
+	(do_set_tcache_count): New.
+	(do_set_tcache_unsorted_limit): New.
+	* manual/probes.texi: Document new probes.
+	* malloc/arena.c: Add new tcache tunables.
+	* elf/dl-tunables.list: Likewise.
+	* manual/tunables.texi: Document them.
+	* NEWS: Mention the per-thread cache.
+
 2017-07-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* iconvdata/tst-loading.c (TIMEOUT): Define to 30.

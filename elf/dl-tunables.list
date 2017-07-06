@@ -76,6 +76,18 @@ glibc {
       minval: 1
       security_level: SXID_IGNORE
     }
+    tcache_max {
+      type: SIZE_T
+      security_level: SXID_ERASE
+    }
+    tcache_count {
+      type: SIZE_T
+      security_level: SXID_ERASE
+    }
+    tcache_unsorted_limit {
+      type: SIZE_T
+      security_level: SXID_ERASE
+    }
   }
   tune {
     hwcap_mask {

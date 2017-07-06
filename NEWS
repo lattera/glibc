@@ -9,6 +9,14 @@ Version 2.26
 
 Major new features:
 
+* A per-thread cache has been added to malloc. Access to the cache requires
+  no locks and therefore significantly accelerates the fast path to allocate
+  and free small amounts of memory. Refilling an empty cache requires locking
+  the underlying arena. Performance measurements show significant gains in a
+  wide variety of user workloads. Workloads were captured using a special
+  instrumented malloc and analyzed with a malloc simulator. Contributed by
+  DJ Delorie with the help of Florian Weimer, and Carlos O'Donell.
+
 * Unicode 10.0.0 Support: Character encoding, character type info, and
   transliteration tables are all updated to Unicode 10.0.0, using
   generator scripts contributed by Mike FABIAN (Red Hat).

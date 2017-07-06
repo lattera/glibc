@@ -189,6 +189,11 @@ tst-malloc-usable-static-ENV = $(tst-malloc-usable-ENV)
 tst-malloc-usable-tunables-ENV = GLIBC_TUNABLES=glibc.malloc.check=3
 tst-malloc-usable-static-tunables-ENV = $(tst-malloc-usable-tunables-ENV)
 
+ifeq ($(experimental-malloc),yes)
+CPPFLAGS-malloc.c += -DUSE_TCACHE=1
+else
+CPPFLAGS-malloc.c += -DUSE_TCACHE=0
+endif
 # Uncomment this for test releases.  For public releases it is too expensive.
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG=1
 

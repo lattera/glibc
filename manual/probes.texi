@@ -231,6 +231,25 @@ dynamic brk/mmap thresholds.  Argument @var{$arg1} and @var{$arg2} are
 the adjusted mmap and trim thresholds, respectively.
 @end deftp
 
+@deftp Probe memory_tunable_tcache_max_bytes (int @var{$arg1}, int @var{$arg2})
+This probe is triggered when the @code{glibc.malloc.tcache_max}
+tunable is set.  Argument @var{$arg1} is the requested value, and
+@var{$arg2} is the previous value of this tunable.
+@end deftp
+
+@deftp Probe memory_tunable_tcache_count (int @var{$arg1}, int @var{$arg2})
+This probe is triggered when the @code{glibc.malloc.tcache_count}
+tunable is set.  Argument @var{$arg1} is the requested value, and
+@var{$arg2} is the previous value of this tunable.
+@end deftp
+
+@deftp Probe memory_tunable_tcache_unsorted_limit (int @var{$arg1}, int @var{$arg2})
+This probe is triggered when the
+@code{glibc.malloc.tcache_unsorted_limit} tunable is set.  Argument
+@var{$arg1} is the requested value, and @var{$arg2} is the previous
+value of this tunable.
+@end deftp
+
 @node Mathematical Function Probes
 @section Mathematical Function Probes
 

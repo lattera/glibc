@@ -236,6 +236,11 @@ TUNABLE_CALLBACK_FNDECL (set_perturb_byte, int32_t)
 TUNABLE_CALLBACK_FNDECL (set_trim_threshold, size_t)
 TUNABLE_CALLBACK_FNDECL (set_arena_max, size_t)
 TUNABLE_CALLBACK_FNDECL (set_arena_test, size_t)
+#if USE_TCACHE
+TUNABLE_CALLBACK_FNDECL (set_tcache_max, size_t)
+TUNABLE_CALLBACK_FNDECL (set_tcache_count, size_t)
+TUNABLE_CALLBACK_FNDECL (set_tcache_unsorted_limit, size_t)
+#endif
 #else
 /* Initialization routine. */
 #include <string.h>
@@ -322,6 +327,12 @@ ptmalloc_init (void)
   TUNABLE_GET (mmap_max, int32_t, TUNABLE_CALLBACK (set_mmaps_max));
   TUNABLE_GET (arena_max, size_t, TUNABLE_CALLBACK (set_arena_max));
   TUNABLE_GET (arena_test, size_t, TUNABLE_CALLBACK (set_arena_test));
+#if USE_TCACHE
+  TUNABLE_GET (tcache_max, size_t, TUNABLE_CALLBACK (set_tcache_max));
+  TUNABLE_GET (tcache_count, size_t, TUNABLE_CALLBACK (set_tcache_count));
+  TUNABLE_GET (tcache_unsorted_limit, size_t,
+	       TUNABLE_CALLBACK (set_tcache_unsorted_limit));
+#endif
   __libc_lock_unlock (main_arena.mutex);
 #else
   const char *s = NULL;
