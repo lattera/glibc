@@ -1,3 +1,16 @@
+2017-07-06  Florian Weimer  <fweimer@redhat.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21609]
+	* sysdeps/x86_64/Makefile (sysdep-dl-routines): Add tls_get_addr.
+	(gen-as-const-headers): Add rtld-offsets.sym.
+	* sysdeps/x86_64/dl-tls.c: New file.
+	* sysdeps/x86_64/rtld-offsets.sym: Likwise.
+	* sysdeps/x86_64/tls_get_addr.S: Likewise.
+	* sysdeps/x86_64/dl-tls.h: Add multiple inclusion guards.
+	* sysdeps/x86_64/tlsdesc.sym (TI_MODULE_OFFSET): New.
+	(TI_OFFSET_OFFSET): Likwise.
+
 2017-07-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ# 21697]
