@@ -1,5 +1,10 @@
 2017-07-07  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21734]
+	* locales/kw_GB (LC_MESSAGES): Add yesstr and nostr
+
+2017-07-07  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21727]
 	* locales/ts_ZA (LC_MESSAGES): Add yesstr and nostr
 
