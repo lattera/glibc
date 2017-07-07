@@ -174,8 +174,13 @@ week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
+% http://www.xitsonga.org/dictionary/english?-=n
+% Yes -> Ina
+% No  -> Ee
 yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U005D>"
 noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
+yesstr  "<U0049><U006E><U0061>"
+nostr   "<U0045><U0065>"
 END LC_MESSAGES
 
 LC_PAPER
