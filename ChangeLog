@@ -1,3 +1,8 @@
+2017-07-08  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* scripts/build-many-glibcs.py (Glibc.build_glibc): Also build
+	profiled objects.
+
 2017-07-06  DJ Delorie  <dj@redhat.com>
 
 	* manual/tunables.texi: Add missing @end deftp.
