@@ -1,5 +1,7 @@
 2017-07-09  John David Anglin  <danglin@gcc.gnu.org>
 
+	* sysdeps/hppa/fpu/libm-test-ulps: Update.
+
 	[BZ #21016]
 	* sysdeps/nptl/bits/thread-shared-types.h (struct __pthread_mutex_s):
 	Fix typo.
