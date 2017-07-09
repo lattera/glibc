@@ -191,7 +191,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strnlen_avx2)
 	      IFUNC_IMPL_ADD (array, i, strnlen, 1, __strnlen_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/stpncpy.S.  */
+  /* Support sysdeps/x86_64/multiarch/stpncpy.c.  */
   IFUNC_IMPL (i, name, stpncpy,
 	      IFUNC_IMPL_ADD (array, i, stpncpy, HAS_CPU_FEATURE (SSSE3),
 			      __stpncpy_ssse3)
@@ -199,14 +199,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __stpncpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, stpncpy, 1, __stpncpy_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/stpcpy.S.  */
+  /* Support sysdeps/x86_64/multiarch/stpcpy.c.  */
   IFUNC_IMPL (i, name, stpcpy,
 	      IFUNC_IMPL_ADD (array, i, stpcpy, HAS_CPU_FEATURE (SSSE3),
 			      __stpcpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, stpcpy, 1, __stpcpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, stpcpy, 1, __stpcpy_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strcasecmp_l.S.  */
+  /* Support sysdeps/x86_64/multiarch/strcasecmp_l.c.  */
   IFUNC_IMPL (i, name, strcasecmp,
 	      IFUNC_IMPL_ADD (array, i, strcasecmp,
 			      HAS_ARCH_FEATURE (AVX_Usable),
@@ -219,7 +219,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strcasecmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strcasecmp, 1, __strcasecmp_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strcasecmp_l.S.  */
+  /* Support sysdeps/x86_64/multiarch/strcasecmp_l.c.  */
   IFUNC_IMPL (i, name, strcasecmp_l,
 	      IFUNC_IMPL_ADD (array, i, strcasecmp_l,
 			      HAS_ARCH_FEATURE (AVX_Usable),
@@ -233,7 +233,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcasecmp_l, 1,
 			      __strcasecmp_l_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strcat.S.  */
+  /* Support sysdeps/x86_64/multiarch/strcat.c.  */
   IFUNC_IMPL (i, name, strcat,
 	      IFUNC_IMPL_ADD (array, i, strcat, HAS_CPU_FEATURE (SSSE3),
 			      __strcat_ssse3)
@@ -262,7 +262,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strrchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, strrchr, 1, __strrchr_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strcmp.S.  */
+  /* Support sysdeps/x86_64/multiarch/strcmp.c.  */
   IFUNC_IMPL (i, name, strcmp,
 	      IFUNC_IMPL_ADD (array, i, strcmp, HAS_CPU_FEATURE (SSE4_2),
 			      __strcmp_sse42)
@@ -271,20 +271,20 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcmp, 1, __strcmp_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strcmp, 1, __strcmp_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strcpy.S.  */
+  /* Support sysdeps/x86_64/multiarch/strcpy.c.  */
   IFUNC_IMPL (i, name, strcpy,
 	      IFUNC_IMPL_ADD (array, i, strcpy, HAS_CPU_FEATURE (SSSE3),
 			      __strcpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strcpy, 1, __strcpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strcpy, 1, __strcpy_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strcspn.S.  */
+  /* Support sysdeps/x86_64/multiarch/strcspn.c.  */
   IFUNC_IMPL (i, name, strcspn,
 	      IFUNC_IMPL_ADD (array, i, strcspn, HAS_CPU_FEATURE (SSE4_2),
 			      __strcspn_sse42)
 	      IFUNC_IMPL_ADD (array, i, strcspn, 1, __strcspn_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strncase_l.S.  */
+  /* Support sysdeps/x86_64/multiarch/strncase_l.c.  */
   IFUNC_IMPL (i, name, strncasecmp,
 	      IFUNC_IMPL_ADD (array, i, strncasecmp,
 			      HAS_ARCH_FEATURE (AVX_Usable),
@@ -298,7 +298,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strncasecmp, 1,
 			      __strncasecmp_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strncase_l.S.  */
+  /* Support sysdeps/x86_64/multiarch/strncase_l.c.  */
   IFUNC_IMPL (i, name, strncasecmp_l,
 	      IFUNC_IMPL_ADD (array, i, strncasecmp_l,
 			      HAS_ARCH_FEATURE (AVX_Usable),
@@ -312,7 +312,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strncasecmp_l, 1,
 			      __strncasecmp_l_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strncat.S.  */
+  /* Support sysdeps/x86_64/multiarch/strncat.c.  */
   IFUNC_IMPL (i, name, strncat,
 	      IFUNC_IMPL_ADD (array, i, strncat, HAS_CPU_FEATURE (SSSE3),
 			      __strncat_ssse3)
@@ -320,7 +320,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strncat_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strncat, 1, __strncat_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strncpy.S.  */
+  /* Support sysdeps/x86_64/multiarch/strncpy.c.  */
   IFUNC_IMPL (i, name, strncpy,
 	      IFUNC_IMPL_ADD (array, i, strncpy, HAS_CPU_FEATURE (SSSE3),
 			      __strncpy_ssse3)
@@ -328,14 +328,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strncpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strncpy, 1, __strncpy_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strpbrk.S.  */
+  /* Support sysdeps/x86_64/multiarch/strpbrk.c.  */
   IFUNC_IMPL (i, name, strpbrk,
 	      IFUNC_IMPL_ADD (array, i, strpbrk, HAS_CPU_FEATURE (SSE4_2),
 			      __strpbrk_sse42)
 	      IFUNC_IMPL_ADD (array, i, strpbrk, 1, __strpbrk_sse2))
 
 
-  /* Support sysdeps/x86_64/multiarch/strspn.S.  */
+  /* Support sysdeps/x86_64/multiarch/strspn.c.  */
   IFUNC_IMPL (i, name, strspn,
 	      IFUNC_IMPL_ADD (array, i, strspn, HAS_CPU_FEATURE (SSE4_2),
 			      __strspn_sse42)
@@ -360,7 +360,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __wcsrchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, wcsrchr, 1, __wcsrchr_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/wcscpy.S.  */
+  /* Support sysdeps/x86_64/multiarch/wcscpy.c.  */
   IFUNC_IMPL (i, name, wcscpy,
 	      IFUNC_IMPL_ADD (array, i, wcscpy, HAS_CPU_FEATURE (SSSE3),
 			      __wcscpy_ssse3)
@@ -527,7 +527,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __mempcpy_sse2_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, __mempcpy_erms))
 
-  /* Support sysdeps/x86_64/multiarch/strncmp.S.  */
+  /* Support sysdeps/x86_64/multiarch/strncmp.c.  */
   IFUNC_IMPL (i, name, strncmp,
 	      IFUNC_IMPL_ADD (array, i, strncmp, HAS_CPU_FEATURE (SSE4_2),
 			      __strncmp_sse42)

@@ -1,3 +1,7 @@
+2017-07-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Update comments.
+
 2017-07-09  Helge Deller  <deller@gmx.de>
 
 	[BZ #21049]
