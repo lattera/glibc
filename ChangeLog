@@ -1,5 +1,24 @@
 2017-07-09  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/multiarch/memcmp.c: Update comments.
+	* sysdeps/x86_64/multiarch/memmove.c: Likewise.
+	* sysdeps/x86_64/multiarch/memrchr.c: Likewise.
+	* sysdeps/x86_64/multiarch/memset.c: Likewise.
+	* sysdeps/x86_64/multiarch/rawmemchr.c: Likewise.
+	* sysdeps/x86_64/multiarch/strchrnul.c: Likewise.
+	* sysdeps/x86_64/multiarch/strlen.c: Likewise.
+	* sysdeps/x86_64/multiarch/strnlen.c: Likewise.
+	* sysdeps/x86_64/multiarch/wcschr.c: Likewise.
+	* sysdeps/x86_64/multiarch/wcscpy.c: Likewise.
+	* sysdeps/x86_64/multiarch/wcslen.c: Likewise.
+	* sysdeps/x86_64/multiarch/wcsnlen.c: Likewise.
+	* sysdeps/x86_64/multiarch/wmemchr.c: Likewise.
+	* sysdeps/x86_64/multiarch/wmemcmp.c: Likewise.
+	* sysdeps/x86_64/multiarch/wmemset.c: Likewise.
+	* sysdeps/x86_64/multiarch/wmemset_chk.c: Likewise.
+
+2017-07-09  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Update comments.
 
 2017-07-09  Helge Deller  <deller@gmx.de>

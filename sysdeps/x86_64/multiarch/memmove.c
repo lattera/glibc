@@ -17,8 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Define multiple versions only for the definition in lib and for
-   DSO.  */
+/* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
 # define memmove __redirect_memmove
 # include <string.h>

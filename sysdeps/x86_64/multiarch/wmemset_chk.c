@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Define multiple versions only for the definition in libc.so. */
+/* Define multiple versions only for the definition in libc.so.  */
 #if IS_IN (libc) && defined SHARED
 # define __wmemset_chk __redirect_wmemset_chk
 # include <wchar.h>

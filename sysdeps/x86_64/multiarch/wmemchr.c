@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Define multiple versions only for the definition in libc. */
+/* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
 # define wmemchr __redirect_wmemchr
 # define __wmemchr __redirect___wmemchr

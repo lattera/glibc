@@ -17,9 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Define multiple versions only for the definition in lib and for
-   DSO.  In static binaries we need memset before the initialization
-   happened.  */
+/* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
 # define memset __redirect_memset
 # include <string.h>
