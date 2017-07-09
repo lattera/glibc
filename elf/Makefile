@@ -30,7 +30,7 @@ routines	= $(all-dl-routines) dl-support dl-iteratephdr \
 # profiled libraries.
 dl-routines	= $(addprefix dl-,load lookup object reloc deps hwcaps \
 				  runtime init fini debug misc \
-				  version profile conflict tls origin scope \
+				  version profile tls origin scope \
 				  execstack caller open close trampoline)
 ifeq (yes,$(use-ldconfig))
 dl-routines += dl-cache
@@ -57,7 +57,7 @@ shared-only-routines += dl-caller
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
 rtld-routines	= rtld $(all-dl-routines) dl-sysdep dl-environ dl-minimal \
-  dl-error-minimal
+  dl-error-minimal dl-conflict
 all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
