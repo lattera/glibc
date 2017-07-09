@@ -1,3 +1,25 @@
+2017-07-09  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ #21016]
+	* sysdeps/nptl/bits/thread-shared-types.h (struct __pthread_mutex_s):
+	Fix typo.
+	* sysdeps/unix/sysv/linux/hppa/pthread.h: Include
+	bits/types/struct_timespec.h.
+	(PTHREAD_MUTEX_INITIALIZER): Revise define.
+	(PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP): Likewise.
+	(PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP): Likewise.
+	(PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP): Likewise.
+	(PTHREAD_RWLOCK_INITIALIZER): Likewise.
+	(PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP): Likewise.
+	(PTHREAD_COND_INITIALIZER): Likewise.
+	Remove old definitions.
+	* sysdeps/unix/sysv/linux/hppa/internaltypes.h: Delete.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_broadcast.c: Delete.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_destroy.c: Delete.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_init.c: Delete.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_signal.c: Delete.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_wait.c: Delete.
+
 2017-07-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/memcmp.c: Update comments.

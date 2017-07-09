@@ -118,7 +118,7 @@ struct __pthread_mutex_s
   {
     __PTHREAD_SPINS_DATA;
     __pthread_slist_t __list;
-  }
+  };
 #endif
   __PTHREAD_COMPAT_PADDING_END;
 };

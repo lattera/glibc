@@ -26,6 +26,7 @@
 #include <bits/pthreadtypes.h>
 #include <bits/setjmp.h>
 #include <bits/wordsize.h>
+#include <bits/types/struct_timespec.h>
 
 
 /* Detach state.  */
@@ -82,32 +83,18 @@ enum
 #endif
 
 
-#ifdef __PTHREAD_MUTEX_HAVE_PREV
-# define PTHREAD_MUTEX_INITIALIZER \
-  { { 0, 0, 0, 0, 0, __PTHREAD_SPINS, { 0, 0 } } }
-# ifdef __USE_GNU
-#  define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, __PTHREAD_SPINS, { 0, 0 } } }
-#  define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP, __PTHREAD_SPINS, { 0, 0 } } }
-#  define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP, __PTHREAD_SPINS, { 0, 0 } } }
-#  define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP, __PTHREAD_SPINS, { 0, 0 } } }
-
-# endif
-#else
-# define PTHREAD_MUTEX_INITIALIZER \
-  { { 0, 0, 0, 0, 0, { __PTHREAD_SPINS } } }
-# ifdef __USE_GNU
-#  define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, 0, { __PTHREAD_SPINS } } }
-#  define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP, 0, { __PTHREAD_SPINS } } }
-#  define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP, 0, { __PTHREAD_SPINS } } }
-
-# endif
+#define PTHREAD_MUTEX_INITIALIZER \
+  { { 0, 0, 0, 0, { 0, 0, 0, 0 }, 0, { __PTHREAD_SPINS }, { 0, 0 } } }
+#ifdef __USE_GNU
+# define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
+  { { 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, { 0, 0, 0, 0 }, 0, \
+      { __PTHREAD_SPINS }, { 0, 0 } } }
+# define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
+  { { 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP, { 0, 0, 0, 0 }, 0, \
+      { __PTHREAD_SPINS }, { 0, 0 } } }
+# define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
+  { { 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP, { 0, 0, 0, 0 }, 0, \
+      { __PTHREAD_SPINS }, { 0, 0 } } }
 #endif
 
 
@@ -130,25 +117,14 @@ enum
 # endif
 #endif
 
+
 /* Read-write lock initializers.  */
 # define PTHREAD_RWLOCK_INITIALIZER \
-  { { 0, 0, 0, 0, 0, 0, 0, 0, __PTHREAD_RWLOCK_ELISION_EXTRA, 0, 0 } }
+  { { { 0, 0, 0, 0 }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 # ifdef __USE_GNU
-#  ifdef __PTHREAD_RWLOCK_INT_FLAGS_SHARED
-#   define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
-  { { 0, 0, 0, 0, 0, 0, 0, 0, __PTHREAD_RWLOCK_ELISION_EXTRA, 0,					      \
-	PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
-#  else
-#   if __BYTE_ORDER == __LITTLE_ENDIAN
-#    define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
-  { { 0, 0, 0, 0, 0, 0, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP, \
-      0, __PTHREAD_RWLOCK_ELISION_EXTRA, 0, 0 } }
-#   else
-#    define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
-  { { 0, 0, 0, 0, 0, 0, 0, 0, 0, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP,\
-      0 } }
-#   endif
-#  endif
+#  define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
+   { { { 0, 0, 0, 0 }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
+       PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP, 0, 0, 0 } }
 # endif
 #endif  /* Unix98 or XOpen2K */
 
@@ -183,9 +159,8 @@ enum
 };
 
 
-
 /* Conditional variable handling.  */
-#define PTHREAD_COND_INITIALIZER { { 0, 0, 0, 0, 0, (void *) 0, 0, 0 } }
+#define PTHREAD_COND_INITIALIZER { { {0}, {0}, {0, 0}, {0, 0}, 0, 0, {0, 0} } }
 
 
 /* Cleanup buffers */
@@ -1161,43 +1136,3 @@ __NTH (pthread_equal (pthread_t __thread1, pthread_t __thread2))
 __END_DECLS
 
 #endif	/* pthread.h */
-
-#ifndef _PTHREAD_H_HPPA_
-#define _PTHREAD_H_HPPA_ 1
-
-/* The pthread_cond_t initializer is compatible only with NPTL. We do not
-   want to be forwards compatible, we eventually want to drop the code
-   that has to clear the old LT initializer.  */
-#undef PTHREAD_COND_INITIALIZER
-#define PTHREAD_COND_INITIALIZER { { 0, 0, 0, (void *) 0, 0, 0, 0, 0, 0 } }
-
-/* The pthread_mutex_t and pthread_rwlock_t initializers are compatible
-   only with NPTL. NPTL assumes pthread_rwlock_t is all zero.  */
-#undef PTHREAD_MUTEX_INITIALIZER
-#undef PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
-#undef PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP
-#undef PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP
-/* Mutex initializers.  */
-#define PTHREAD_MUTEX_INITIALIZER \
-  { { 0, 0, 0, 0, { 0, 0, 0, 0 }, 0, { 0 }, 0, 0 } }
-#ifdef __USE_GNU
-# define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, { 0, 0, 0, 0 }, 0, { 0 }, 0, 0 } }
-# define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP, { 0, 0, 0, 0 }, 0, { 0 }, 0, 0 } }
-# define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP, { 0, 0, 0, 0 }, 0, { 0 }, 0, 0 } }
-#endif
-
-#undef PTHREAD_RWLOCK_INITIALIZER
-#undef PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP
-/* Read-write lock initializers.  */
-#define PTHREAD_RWLOCK_INITIALIZER \
-  { { { 0, 0, 0, 0 }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
-#ifdef __USE_GNU
-# define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
-  { { { 0, 0, 0, 0 }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP,\
-      0, 0, 0 } }
-#endif  /* Unix98 or XOpen2K */
-
-#endif
