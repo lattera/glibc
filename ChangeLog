@@ -1,3 +1,9 @@
+2017-07-09  Helge Deller  <deller@gmx.de>
+
+	[BZ #21049]
+	* sysdeps/hppa/__longjmp.c (__longjmp): Move call to CHECK_SP
+	up to avoid clobbering r26.
+
 2017-07-08  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* scripts/build-many-glibcs.py (Glibc.build_glibc): Also build
