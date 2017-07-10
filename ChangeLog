@@ -1,3 +1,11 @@
+2017-07-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21738]
+	* manual/llio.texi (RWF_NOWAIT): New item.
+	* misc/tst-preadvwritev2-common.c (do_test_with_invalid_flags):
+	Add RWF_NOWAIT check.
+	* sysdeps/unix/sysv/linux/bits/uio-ext.h (RWF_NOWAIT): New flag.
+
 2017-07-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/tst-ptrace-singleblock.c:

@@ -770,6 +770,10 @@ Per-IO synchronization as if the file was opened with @code{O_DSYNC} flag.
 
 @item RWF_SYNC
 Per-IO synchronization as if the file was opened with @code{O_SYNC} flag.
+
+@item RWF_NOWAIT
+Use nonblocking mode for this operation; that is, this call to @code{preadv2}
+will fail and set @code{errno} to @code{EAGAIN} if the operation would block.
 @end vtable
 
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the

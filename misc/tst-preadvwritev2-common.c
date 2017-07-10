@@ -16,21 +16,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <limits.h>
 #include <support/check.h>
 
 static void
 do_test_with_invalid_flags (void)
 {
-  int invalid_flag = 0x1;
-#ifdef RWF_HIPRI
-  invalid_flag <<= 1;
-#endif
-#ifdef RWF_DSYNC
-  invalid_flag <<= 1;
-#endif
-#ifdef RWF_SYNC
-  invalid_flag <<= 1;
-#endif
+#define RWF_SUPPORTED	(RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT)
+  /* Set the next bit from the mask of all supported flags.  */
+  int invalid_flag = __builtin_clz (RWF_SUPPORTED);
+  invalid_flag = 0x1 << ((sizeof (int) * CHAR_BIT) - invalid_flag);
 
   char buf[32];
   const struct iovec vec = { .iov_base = buf, .iov_len = sizeof (buf) };
