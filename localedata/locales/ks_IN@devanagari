@@ -63,13 +63,13 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-abday       "<U0906><U0925><U094D>";/
-            "<U091A><U0928><U094D><U0926><U0930><U094D>";/
-  	    "<U092C><U094B><U092E><U094D>";/
-            "<U092C><U094B><U0918>";/
-            "<U092C><U094D><U0930><U0938><U094D><U094D>";/
-            "<U091C><U0941><U092E>";/
-            "<U092C><U091F>"
+abday       "<U0906><U0925> ";/
+            "<U091A><U0945><U093C><U0926><U0941><U0930>";/
+            "<U092C><U094B><U092E>";/
+            "<U092C><U094D><U0935><U0926>";/
+            "<U092C><U094D><U0930><U0938>";/
+            "<U0936><U094B><U0915><U0941><U0930>";/
+            "<U092C><U091F><U0941>"
 %
 % Full weekday names (%A)
 % http://www.mkraina.com/PDF/3-Self-authored%20Works%20(English)/15.pdf
