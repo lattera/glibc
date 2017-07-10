@@ -1,3 +1,10 @@
+2017-07-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21741]
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Test memmove_chk and memset_chk only
+	in libc.so.
+
 2017-07-09  John David Anglin  <danglin@gcc.gnu.org>
 
 	* sysdeps/hppa/fpu/libm-test-ulps: Update.

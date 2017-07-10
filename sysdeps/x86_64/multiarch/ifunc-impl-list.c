@@ -57,6 +57,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_sse2))
 
+#ifdef SHARED
   /* Support sysdeps/x86_64/multiarch/memmove_chk.c.  */
   IFUNC_IMPL (i, name, __memmove_chk,
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
@@ -86,6 +87,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memmove_chk_sse2_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
 			      __memmove_chk_erms))
+#endif
 
   /* Support sysdeps/x86_64/multiarch/memmove.c.  */
   IFUNC_IMPL (i, name, memmove,
@@ -121,6 +123,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memrchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, memrchr, 1, __memrchr_sse2))
 
+#ifdef SHARED
   /* Support sysdeps/x86_64/multiarch/memset_chk.c.  */
   IFUNC_IMPL (i, name, __memset_chk,
 	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
@@ -145,6 +148,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
 			      __memset_chk_avx512_no_vzeroupper)
 	      )
+#endif
 
   /* Support sysdeps/x86_64/multiarch/memset.c.  */
   IFUNC_IMPL (i, name, memset,
