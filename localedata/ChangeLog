@@ -1,3 +1,7 @@
+2017-07-10  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/ts_ZA (LC_MESSAGES): add iI and eE to  yesexpr and noexpr
+
 2017-07-07  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21734]
