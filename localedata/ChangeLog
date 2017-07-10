@@ -1,5 +1,10 @@
 2017-07-10  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21733]
+	* locales/zh_HK (LC_MESSAGES): Add yesstr and nostr
+
+2017-07-10  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21743]
 	* locales/ks_IN@devanagari (LC_TIME): Fixed abday strings
 
