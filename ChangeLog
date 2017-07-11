@@ -1,3 +1,8 @@
+2017-10-27  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	* locale/loadlocale.c: Correct size of
+	_nl_value_type_LC_<category> arrays.
+
 2017-10-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h [__HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !_LIBC)]:

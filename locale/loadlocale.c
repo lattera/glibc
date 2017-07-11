@@ -44,8 +44,12 @@ static const size_t _nl_category_num_items[] =
 
 #define NO_PAREN(arg, rest...) arg, ##rest
 
+/* The size of the array must be specified explicitly because some of
+   the 'items' may be subarrays, which will cause the compiler to deduce
+   an incorrect size from the initializer.  */
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-static const enum value_type _nl_value_type_##category[] = { NO_PAREN items };
+static const enum value_type _nl_value_type_##category     \
+  [_NL_ITEM_INDEX (_NL_NUM_##category)] = { NO_PAREN items };
 #define DEFINE_ELEMENT(element, element_name, optstd, type, rest...) \
   [_NL_ITEM_INDEX (element)] = type,
 #include "categories.def"
