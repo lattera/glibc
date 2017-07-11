@@ -1,3 +1,8 @@
+2017-07-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* debug/Makefile (CFLAGS-tst-ssp-1.c): Set to
+	-fstack-protector-all.
+
 2017-07-11  Chris Leonard <cjl@sugarlabs.org>
 
 	[BZ #20496]
