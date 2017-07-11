@@ -1,3 +1,9 @@
+2017-07-12  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21207]
+	* locales/hif_FJ: New file.
+	* SUPPORTED: Add hif_FJ/UTF-8.
+
 2017-07-11  Chris Leonard <cjl@sugarlabs.org>
 
 	[BZ #20496]

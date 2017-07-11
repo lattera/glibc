@@ -1,0 +1,215 @@
+comment_char %
+escape_char /
+
+% Fiji Hindi language locale same as Hindi for Fiji.
+% Contributed by Akhilesh Kumar <akhilesh.k@samsung.com>.
+% Words translated from  https://en.wikipedia.org/wiki/Fiji_Hindi
+
+LC_IDENTIFICATION
+title       "Fiji Hindi (latin) language locale for Fiji"
+source      "Samsung Electronics Co., Ltd."
+address     ""
+contact     ""
+email       "akhilesh.k@samsung.com"
+tel         ""
+fax         ""
+language    "Fiji Hindi"
+territory   "Fiji"
+revision    "0.1"
+date        "2017-03-21"
+
+category  "i18n:2012";LC_IDENTIFICATION
+category  "i18n:2012";LC_CTYPE
+category  "i18n:2012";LC_COLLATE
+category  "i18n:2012";LC_TIME
+category  "i18n:2012";LC_NUMERIC
+category  "i18n:2012";LC_MONETARY
+category  "i18n:2012";LC_PAPER
+category  "i18n:2012";LC_MEASUREMENT
+category  "i18n:2012";LC_MESSAGES
+category  "i18n:2012";LC_NAME
+category  "i18n:2012";LC_ADDRESS
+category  "i18n:2012";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+% Copy the template from ISO/IEC 3166
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+% Sunday   -> Ravivar
+% Monday  -> Somvar
+% Tuesday  -> Mangalvar
+% Wednesday -> Budhvar
+% Thursday -> Guruvar
+% Friday   -> Shukravar
+% Saturday -> Shanivar
+abday  "<U0052><U0061><U0076><U0069>";/
+       "<U0053><U006F><U006D>";/
+       "<U004D><U0061><U006E><U0067><U0061><U006C>";/
+       "<U0042><U0075><U0064><U0068>";/
+       "<U0047><U0075><U0072><U0075>";/
+       "<U0053><U0068><U0075><U006B><U0072><U0061>";/
+       "<U0053><U0068><U0061><U006E><U0069>"
+%
+% Full weekday names
+day    "<U0052><U0061><U0076><U0069><U0076><U0061><U0072>";/
+       "<U0053><U006F><U006D><U0076><U0061><U0072>";/
+       "<U004D><U0061><U006E><U0067><U0061><U006C><U0076><U0061><U0072>";/
+       "<U0042><U0075><U0064><U0068><U0076><U0061><U0072>";/
+       "<U0047><U0075><U0072><U0075><U0076><U0061><U0072>";/
+       "<U0053><U0068><U0075><U006B><U0072><U0061><U0076><U0061><U0072>";/
+       "<U0053><U0068><U0061><U006E><U0069><U0076><U0061><U0072>"
+%
+% Abbreviated month names
+abmon   "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
+        "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
+        "<U004D><U0061><U0079>";"<U004A><U0075><U006E>";/
+        "<U004A><U0075><U006C>";"<U0041><U0075><U0067>";/
+        "<U0053><U0065><U0070>";"<U004F><U0063><U0074>";/
+        "<U004E><U006F><U0076>";"<U0044><U0065><U0063>"
+%
+% Full month names
+mon     "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/
+        "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0079>";/
+        "<U004D><U0061><U0072><U0063><U0068>";/
+        "<U0041><U0070><U0072><U0069><U006C>";/
+        "<U004D><U0061><U0079>";/
+        "<U004A><U0075><U006E><U0065>";/
+        "<U004A><U0075><U006C><U0079>";/
+        "<U0041><U0075><U0067><U0075><U0073><U0074>";/
+        "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
+        "<U004F><U0063><U0074><U006F><U0062><U0065><U0072>";/
+        "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
+        "<U0044><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
+
+% Equivalent of AM PM
+am_pm   "<U0050><U0075><U0072><U0076><U0061><U0068><U0061><U006E>";/
+        "<U0041><U0070><U0061><U0072><U0061><U0061><U0068><U006E><U0061>"
+%
+% Appropriate date and time representation
+% %A %d %b %Y%I:%M:%S %Z
+d_t_fmt "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0062>/
+         <U0020><U0025><U0059><U0020><U0025><U0049><U003A><U0025><U004D><U003A>/
+         <U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+%
+% Appropriate date representation
+% %A %d %b %Y
+d_fmt   "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059>"
+%
+% Appropriate time representation
+% %I:%M:%S %Z
+t_fmt   "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+%
+% Appropriate 12 h time representation (%r)
+t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>/
+	     <U0020><U0025><U0070><U0020><U0025><U005A>"
+END LC_TIME
+%
+LC_NUMERIC
+copy "hi_IN"
+END LC_NUMERIC
+
+%
+% https://en.wikipedia.org/wiki/Fijian_dollar
+% currency sign: FJ$, $; currency code: FJD)
+% FJ$ or FJD
+% $
+LC_MONETARY
+currency_symbol	"<U0046><U004A><U0024>"
+int_curr_symbol	"<U0046><U004A><U0044><U0020>"
+mon_decimal_point	"<U002E>"
+mon_thousands_sep	"<U002C>"
+mon_grouping		3
+positive_sign		""
+negative_sign		"<U002D>"
+int_frac_digits	2
+frac_digits		2
+p_cs_precedes		1
+int_p_sep_by_space	1
+p_sep_by_space		1
+n_cs_precedes		1
+int_n_sep_by_space	1
+n_sep_by_space		1
+p_sign_posn		1
+n_sign_posn		1
+END LC_MONETARY
+
+LC_PAPER
+copy "i18n"
+END LC_PAPER
+
+LC_MEASUREMENT
+copy "i18n"
+END LC_MEASUREMENT
+
+LC_MESSAGES
+% Yes -> Haan
+% No -> Nahi
+yesexpr "<U005E><U005B><U002B><U0031><U0068><U0048><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
+yesstr  "<U0048><U0061><U0061><U006E>"
+nostr   "<U004E><U0061><U0068><U0069>"
+END LC_MESSAGES
+
+LC_NAME
+% Mr 	-> Shree
+% Mrs  -> Shreematee
+% Miss -> Kumaaree
+% Ms   -> Sushree
+name_fmt    "<U0025><U0070><U0025><U0074><U0025><U0066><U0025><U0074>/
+	    <U0025><U0067>"
+name_gen    ""
+name_mr     "<U0053><U0068><U0072><U0065><U0065>"
+name_mrs    "<U0053><U0068><U0072><U0065><U0065><U006D><U0061><U0074><U0065><U0065>"
+name_miss   "<U004B><U0075><U006D><U0061><U0061><U0072><U0065><U0065>"
+name_ms     "<U0053><U0075><U0073><U0068><U0072><U0065><U0065>"
+
+END LC_NAME
+
+LC_ADDRESS
+% http://www.bitboost.com/ref/international-address-formats/fiji/
+% %a%N%h%t%s%N%l%N%T%c
+postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0068><U0025><U0074><U0025><U0073><U0025><U004E><U0025><U004E><U0025><U0054><U0025><U0063>"
+% Fiji
+country_name "<U0046><U0069><U006A><U0069>"
+% No code
+country_post ""
+% http://laendercode.net/en/2-letter-list.html
+% FJ
+country_ab2  "<U0046><U004A>"
+% FJI
+% http://laendercode.net/en/countries.html
+country_ab3  "<U0046><U004A><U0049>"
+country_car  "<U0046><U004A><U0049>"
+country_num 242
+% https://en.wikipedia.org/wiki/ISO_3166-1_numeric
+% https://en.wikipedia.org/wiki/Fiji_Hindi
+% Fiji Baat
+lang_name    "<U0046><U0069><U006A><U0069><U0020><U0042><U0061><U0061><U0074>"
+% iso-639-1 ""
+lang_ab      ""
+% iso-639-3 hif
+lang_term    "<U0068><U0069><U0066>"
+% iso-639-2 ""
+lang_lib     ""
+END LC_ADDRESS
+
+LC_TELEPHONE
+% https://www.howtocallabroad.com/fiji/
+% +%c %l
+tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U006C>"
+% 00
+int_select  "<U0030><U0030>"
+% 679
+int_prefix  "<U0036><U0037><U0039>"
+END LC_TELEPHONE

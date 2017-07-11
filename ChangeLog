@@ -1,3 +1,8 @@
+2017-07-12  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21207]
+	* locale/iso-639.def: Add Fiji Hindi (hif).
+
 2017-07-12  John David Anglin  <danglin@gcc.gnu.org>
 
 	* sysdeps/hppa/dl-machine.h (elf_machine_rela): Fix typo.
