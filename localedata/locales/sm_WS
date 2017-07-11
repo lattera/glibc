@@ -1,0 +1,223 @@
+comment_char %
+escape_char /
+
+% Samoan language locale for Samoa.
+% Contributed by Akhilesh Kumar <akhilesh.k@samsung.com>.
+% Words translated from  https://glosbe.com/sm/en/asu
+
+LC_IDENTIFICATION
+title       "Samoan language locale for Samoa"
+source      "Samsung Electronics Co., Ltd."
+address     ""
+contact     ""
+email       "akhilesh.k@samsung.com"
+tel         ""
+fax         ""
+language    "Samoan"
+territory   "Samoa"
+revision    "0.1"
+date        "2017-03-21"
+
+category  "i18n:2012";LC_IDENTIFICATION
+category  "i18n:2012";LC_CTYPE
+category  "i18n:2012";LC_COLLATE
+category  "i18n:2012";LC_TIME
+category  "i18n:2012";LC_NUMERIC
+category  "i18n:2012";LC_MONETARY
+category  "i18n:2012";LC_PAPER
+category  "i18n:2012";LC_MEASUREMENT
+category  "i18n:2012";LC_MESSAGES
+category  "i18n:2012";LC_NAME
+category  "i18n:2012";LC_ADDRESS
+category  "i18n:2012";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+% Copy the template from ISO/IEC 3166
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+% Full month names
+% Ianuari, Fepuari, Mati, Aperila, Me, Iuni, Iulai, Auguso, Setema,
+% Oketopa, Novema, Tesema
+% http://samoan.manuatele.net/times.html
+mon	"<U0049><U0061><U006E><U0075><U0061><U0072><U0069>";/
+	"<U0046><U0065><U0070><U0075><U0061><U0072><U0069>";/
+	"<U004D><U0061><U0074><U0069>";/
+	"<U0041><U0070><U0065><U0072><U0069><U006C><U0061>";/
+	"<U004D><U0065>";/
+	"<U0049><U0075><U006E><U0069>";/
+	"<U0049><U0075><U006C><U0061><U0069>";/
+	"<U0041><U0075><U0067><U0075><U0073><U006F>";/
+	"<U0053><U0065><U0074><U0065><U006D><U0061>";/
+	"<U004F><U006B><U0065><U0074><U006F><U0070><U0061>";/
+	"<U004E><U006F><U0076><U0065><U006D><U0061>";/
+	"<U0054><U0065><U0073><U0065><U006D><U0061>"
+
+% Abbreviated month names
+% Ian, Fep, Mat, Ape, Me, Iun, Iul, Aug, Set, Oke, Nov, Tes
+abmon	"<U0049><U0061><U006E>";/
+        "<U0046><U0065><U0070>";/
+        "<U004D><U0061><U0074>";/
+        "<U0041><U0070><U0065>";/
+        "<U004D><U0065>";/
+        "<U0049><U0075><U006E>";/
+        "<U0049><U0075><U006C>";/
+        "<U0041><U0075><U0067>";/
+        "<U0053><U0065><U0074>";/
+        "<U004F><U006B><U0065>";/
+        "<U004E><U006F><U0076>";/
+        "<U0054><U0065><U0073>"
+%
+% Full Weekday names
+% http://samoan.manuatele.net/times.html
+% Aso Sa, Aso Gafua, Aso Lua, Aso Lulu, Aso Tofi, Aso Faraile, Aso To'ana'i
+day	"<U0041><U0073><U006F><U0020><U0053><U0061>";/
+	"<U0041><U0073><U006F><U0020><U0047><U0061><U0066><U0075><U0061>";/
+	"<U0041><U0073><U006F><U0020><U004C><U0075><U0061>";/
+	"<U0041><U0073><U006F><U0020><U004C><U0075><U006C><U0075>";/
+	"<U0041><U0073><U006F><U0020><U0054><U006F><U0066><U0069>";/
+	"<U0041><U0073><U006F><U0020><U0046><U0061><U0072><U0061><U0069>/
+	<U006C>";/
+	"<U0041><U0073><U006F><U0020><U0054><U006F><U0027><U0061><U006E>/
+	<U0061><U0027><U0069>"
+%
+% Abbreviated Weekday names
+% Aso Sa, Aso Gaf, Aso Lua, Aso Lul, Aso Tof, Aso Far, Aso To'
+abday	"<U0041><U0073><U006F><U0020><U0053><U0061>";/
+        "<U0041><U0073><U006F><U0020><U0047><U0061><U0066>";/
+        "<U0041><U0073><U006F><U0020><U004C><U0075><U0061>";/
+        "<U0041><U0073><U006F><U0020><U004C><U0075><U006C>";/
+        "<U0041><U0073><U006F><U0020><U0054><U006F><U0066>";/
+        "<U0041><U0073><U006F><U0020><U0046><U0061><U0072>";/
+        "<U0041><U0073><U006F><U0020><U0054><U006F><U0027>"
+%
+% Appropriate date and time representation
+% %a %d %b %Y %T %Z
+d_t_fmt	"<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020>/
+<U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+%
+% Appropriate date representation
+% https://en.wikipedia.org/wiki/Date_and_time_notation_in_Australia
+% %d/%m/%Y
+d_fmt	"<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+%
+% Appropriate time representation
+% %r
+t_fmt	"<U0025><U0072>"
+%
+% am_pm and t_fmt_ampm - should be empty if using 24 hour time
+am_pm	"";""
+t_fmt_ampm    ""
+END LC_TIME
+%
+LC_NUMERIC
+% .
+decimal_point "<U002E>"
+% ,
+thousands_sep "<U002C>"
+grouping      3
+END LC_NUMERIC
+
+LC_MONETARY
+% https://en.wikipedia.org/wiki/ISO_4217
+% WST
+int_curr_symbol	"<U0057><U0053><U0054><U0020>"
+% https://en.wikipedia.org/wiki/Samoan_t%C4%81l%C4%81
+% WS$
+currency_symbol		"<U0057><U0053><U0024>"
+mon_decimal_point	"<U002E>"
+mon_thousands_sep	"<U002C>"
+mon_grouping		3
+positive_sign		""
+negative_sign		"<U002D>"
+int_frac_digits		2
+frac_digits		2
+p_cs_precedes		1
+int_p_sep_by_space	1
+p_sep_by_space		1
+n_cs_precedes		1
+int_n_sep_by_space	1
+n_sep_by_space		1
+p_sign_posn		1
+n_sign_posn		1
+END LC_MONETARY
+
+LC_PAPER
+copy "i18n"
+END LC_PAPER
+
+LC_MEASUREMENT
+copy "i18n"
+END LC_MEASUREMENT
+
+LC_MESSAGES
+% ^[yY].*
+yesexpr "<U005E><U005B><U002B><U0031><U0069><U0049><U0079><U0059><U005D>/
+<U002E><U002A>"
+% ^[nN].*
+noexpr  "<U005E><U005B><U002D><U0030><U006C><U004C><U006E><U004E><U005D>/
+<U002E><U002A>"
+% https://glosbe.com/en/sm/no
+% ioe
+yesstr "<U0069><U006F><U0065>"
+% leai
+nostr "<U006C><U0065><U0061><U0069>"
+END LC_MESSAGES
+
+LC_NAME
+copy "en_US"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0068>/
+<U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U0054><U002C><U0020><U0025><U0053><U0020><U0025><U007A><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+% Samoa
+country_name "<U0053><U0061><U006D><U006F><U0061>"
+% %a %N   %f %N   %d %N   %b %N   %h %s %e %r %N   %T, %c  %N
+country_post "<U0025><U0061><U0020><U0025><U004E><U0020><U0020><U0020><U0025>/
+<U0066><U0020><U0025><U004E><U0020><U0020><U0020><U0025><U0064><U0020><U0025>/
+<U004E><U0020><U0020><U0020><U0025><U0062><U0020><U0025><U004E><U0020><U0020>/
+<U0020><U0025><U0068><U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025>/
+<U0072><U0020><U0025><U004E><U0020><U0020><U0020><U0025><U0054><U002C><U0020>/
+<U0025><U0063><U0020><U0020><U0025><U004E>"
+% http://laendercode.net/en/2-letter-list.html
+% WS
+country_ab2  "<U0057><U0053>"
+% WSM
+% http://laendercode.net/en/countries.html
+country_ab3  "<U0057><U0053><U004D>"
+% locale/iso-3166.def
+country_num 882
+% http://www.nationsonline.org/oneworld/international-calling-codes.htm
+% Gagana faʻa Sāmoa
+lang_name    "<U0047><U0061><U0067><U0061><U006E><U0061><U0020><U0066><U0061>/
+<U02BB><U0061><U0020><U0053><U0101><U006D><U006F><U0061>"
+% https://en.wikipedia.org/wiki/Samoan_language
+% ISO 639-1 sm, ISO 639-2 smo, ISO 639-3 smo
+lang_ab      "<U0073><U006D>"
+lang_term    "<U0073><U006D><U006F>"
+lang_lib     "<U0073><U006D><U006F>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+% +%c %a %l
+tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
+% 00
+int_select  "<U0030><U0030>"
+% https://en.wikipedia.org/wiki/Samoa
+% 685
+int_prefix  "<U0036><U0038><U0035>"
+END LC_TELEPHONE

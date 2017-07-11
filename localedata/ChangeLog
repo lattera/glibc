@@ -1,5 +1,11 @@
 2017-07-11  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21710]
+	* locales/sm_WS: New file.
+	* SUPPORTED: Add sm_WS/UTF-8.
+
+2017-07-11  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21749]
 	* locales/ar_JO (LC_TIME): Fix abday
 	* locales/ar_LB (LC_TIME): Fix abday
