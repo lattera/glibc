@@ -26,6 +26,8 @@
 #include <elf.h>
 #include <support/xunistd.h>
 #include <support/check.h>
+#include <string.h>
+#include <errno.h>
 
 /* Ensure that we use the PTRACE_SINGLEBLOCK definition from glibc ptrace.h
    in tracer_func.  We need the kernel ptrace.h for structs ptrace_area
@@ -63,6 +65,10 @@ tracer_func (int pid)
   gregset_t regs2;
 
   int status;
+  int ret;
+#define MAX_CHARS_IN_BUF 4096
+  char buf[MAX_CHARS_IN_BUF + 1];
+  size_t buf_count;
 
   while (1)
     {
@@ -104,11 +110,55 @@ tracer_func (int pid)
 	 The s390 kernel has no support for PTRACE_GETREGS!
 	 Thus glibc ptrace.h is adjusted to match kernel ptrace.h.
 
+	 The glibc sys/ptrace.h header contains the identifier
+	 PTRACE_SINGLEBLOCK in enum __ptrace_request.  In contrast, the kernel
+	 asm/ptrace.h header defines PTRACE_SINGLEBLOCK.
+
 	 This test ensures, that PTRACE_SINGLEBLOCK defined in glibc
 	 works as expected.  If the kernel would interpret it as
 	 PTRACE_GETREGS, then the tracee will not make any progress
-	 and this testcase will time out.  */
-      TEST_VERIFY_EXIT (ptrace (req_singleblock, pid, NULL, NULL) == 0);
+	 and this testcase will time out or the ptrace call will fail with
+	 different errors.  */
+
+      /* Ptrace request 12 is first done with data argument pointing to
+	 a buffer:
+	 -If request 12 is interpreted as PTRACE_GETREGS, it will store the regs
+	 to buffer without an error.
+
+	 -If request 12 is interpreted as PTRACE_SINGLEBLOCK, it will fail
+	 as data argument is used as signal-number and the address of
+	 buf is no valid signal.
+
+	 -If request 12 is not implemented, it will also fail.
+
+	 Here the test expects that the buffer is untouched and an error is
+	 returned.  */
+      memset (buf, 'a', MAX_CHARS_IN_BUF);
+      ret = ptrace (req_singleblock, pid, NULL, buf);
+      buf [MAX_CHARS_IN_BUF] = '\0';
+      buf_count = strspn (buf, "a");
+      TEST_VERIFY_EXIT (buf_count == MAX_CHARS_IN_BUF);
+      TEST_VERIFY_EXIT (ret == -1);
+
+      /* If request 12 is interpreted as PTRACE_GETREGS, the first ptrace
+	 call will touch the buffer which is detected by this test.  */
+      errno = 0;
+      ret = ptrace (req_singleblock, pid, NULL, NULL);
+      if (ret == 0)
+	{
+	  /* The kernel has support for PTRACE_SINGLEBLOCK ptrace request. */
+	  TEST_VERIFY_EXIT (errno == 0);
+	}
+      else
+	{
+	  /* The kernel (< 3.15) has no support for PTRACE_SINGLEBLOCK ptrace
+	     request. */
+	  TEST_VERIFY_EXIT (errno == EIO);
+	  TEST_VERIFY_EXIT (ret == -1);
+
+	  /* Just continue tracee until it exits normally.  */
+	  TEST_VERIFY_EXIT (ptrace (PTRACE_CONT, pid, NULL, NULL) == 0);
+	}
     }
 }
 

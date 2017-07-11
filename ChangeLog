@@ -1,3 +1,8 @@
+2017-07-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/tst-ptrace-singleblock.c:
+	Support running on kernels without PTRACE_SINGLEBLOCK.
+
 2017-07-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21742]
