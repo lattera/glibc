@@ -139,11 +139,17 @@ LDFLAGS-tst-backtrace4 = -rdynamic
 LDFLAGS-tst-backtrace5 = -rdynamic
 LDFLAGS-tst-backtrace6 = -rdynamic
 
+CFLAGS-tst-ssp-1.c = -fstack-protector
+
 tests = backtrace-tst tst-longjmp_chk tst-chk1 tst-chk2 tst-chk3 \
 	tst-lfschk1 tst-lfschk2 tst-lfschk3 test-strcpy_chk test-stpcpy_chk \
 	tst-chk4 tst-chk5 tst-chk6 tst-lfschk4 tst-lfschk5 tst-lfschk6 \
 	tst-longjmp_chk2 tst-backtrace2 tst-backtrace3 tst-backtrace4 \
 	tst-backtrace5 tst-backtrace6
+
+ifeq ($(have-ssp),yes)
+tests += tst-ssp-1
+endif
 
 ifeq (,$(CXX))
 tests-unsupported = tst-chk4 tst-chk5 tst-chk6 \

@@ -1,3 +1,25 @@
+2017-07-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12189]
+	* debug/Makefile (CFLAGS-tst-ssp-1.c): New.
+	(tests): Add tst-ssp-1 if -fstack-protector works.
+	* debug/fortify_fail.c: Include <stdbool.h>.
+	(_fortify_fail_abort): New function.
+	(__fortify_fail): Call _fortify_fail_abort.
+	(__fortify_fail_abort): Add a hidden definition.
+	* debug/stack_chk_fail.c: Include <stdbool.h>.
+	(__stack_chk_fail): Call __fortify_fail_abort, instead of
+	__fortify_fail.
+	* debug/tst-ssp-1.c: New file.
+	* include/stdio.h (__libc_message_action): New enum.
+	(__libc_message): Replace int with enum __libc_message_action.
+	(__fortify_fail_abort): New hidden prototype.
+	* malloc/malloc.c (malloc_printerr): Update __libc_message calls.
+	* sysdeps/posix/libc_fatal.c (__libc_message): Replace int
+	with enum __libc_message_action.  Call BEFORE_ABORT only if
+	action includes do_backtrace.
+	(__libc_fatal): Update __libc_message call.
+
 2017-07-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #21738]

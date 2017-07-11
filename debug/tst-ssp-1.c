@@ -1,4 +1,5 @@
-/* Copyright (C) 2005-2017 Free Software Foundation, Inc.
+/* Verify that __stack_chk_fail won't segfault.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,18 +16,30 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
+/* Based on gcc.dg/ssp-1.c from GCC testsuite.  */
 
+#include <signal.h>
 
-extern char **__libc_argv attribute_hidden;
-
-void
-__attribute__ ((noreturn))
-__stack_chk_fail (void)
+static void
+__attribute__ ((noinline, noclone))
+test (char *foo)
 {
-  __fortify_fail_abort (false, "stack smashing detected");
+  int i;
+
+  /* smash stack */
+  for (i = 0; i <= 400; i++)
+    foo[i] = 42;
 }
 
-strong_alias (__stack_chk_fail, __stack_chk_fail_local)
+static int
+do_test (void)
+{
+  char foo[30];
+
+  test (foo);
+
+  return 1; /* fail */
+}
+
+#define EXPECTED_SIGNAL SIGABRT
+#include <support/test-driver.c>

@@ -64,7 +64,7 @@ struct str_list
 
 /* Abort with an error message.  */
 void
-__libc_message (int do_abort, const char *fmt, ...)
+__libc_message (enum __libc_message_action action, const char *fmt, ...)
 {
   va_list ap;
   int fd = -1;
@@ -140,7 +140,7 @@ __libc_message (int do_abort, const char *fmt, ...)
 
       written = WRITEV_FOR_FATAL (fd, iov, nlist, total);
 
-      if (do_abort)
+      if ((action & do_abort))
 	{
 	  total = ((total + 1 + GLRO(dl_pagesize) - 1)
 		   & ~(GLRO(dl_pagesize) - 1));
@@ -167,9 +167,10 @@ __libc_message (int do_abort, const char *fmt, ...)
 
   va_end (ap);
 
-  if (do_abort)
+  if ((action & do_abort))
     {
-      BEFORE_ABORT (do_abort, written, fd);
+      if ((action & do_backtrace))
+	BEFORE_ABORT (do_abort, written, fd);
 
       /* Kill the application.  */
       abort ();
@@ -182,6 +183,6 @@ __libc_fatal (const char *message)
 {
   /* The loop is added only to keep gcc happy.  */
   while (1)
-    __libc_message (1, "%s", message);
+    __libc_message (do_abort | do_backtrace, "%s", message);
 }
 libc_hidden_def (__libc_fatal)

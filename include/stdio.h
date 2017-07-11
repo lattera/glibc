@@ -86,13 +86,24 @@ extern int __gen_tempname (char *__tmpl, int __suffixlen, int __flags,
 #  define __GT_DIR	1	/* create a directory */
 #  define __GT_NOCREATE	2	/* just find a name not currently in use */
 
+enum __libc_message_action
+{
+  do_message	= 0,		/* Print message.  */
+  do_abort	= 1 << 0,	/* Abort.  */
+  do_backtrace	= 1 << 1	/* Backtrace.  */
+};
+
 /* Print out MESSAGE on the error output and abort.  */
 extern void __libc_fatal (const char *__message)
      __attribute__ ((__noreturn__));
-extern void __libc_message (int do_abort, const char *__fnt, ...);
+extern void __libc_message (enum __libc_message_action action,
+			    const char *__fnt, ...);
 extern void __fortify_fail (const char *msg)
      __attribute__ ((__noreturn__)) internal_function;
+extern void __fortify_fail_abort (_Bool, const char *msg)
+     __attribute__ ((__noreturn__)) internal_function;
 libc_hidden_proto (__fortify_fail)
+libc_hidden_proto (__fortify_fail_abort)
 
 /* Acquire ownership of STREAM.  */
 extern void __flockfile (FILE *__stream);
