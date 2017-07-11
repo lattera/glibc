@@ -1,5 +1,12 @@
 2017-07-11  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21749]
+	* locales/ar_JO (LC_TIME): Fix abday
+	* locales/ar_LB (LC_TIME): Fix abday
+	* locales/ar_SY (LC_TIME): Fix abday
+
+2017-07-11  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21748, BZ #19066]
 	* locales/ar_SA (LC_TIME): Fix abday
 
