@@ -1,3 +1,7 @@
+2017-07-12  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/om_ET (LC_MESSAGES): add yesstr and nostr.
+
 2017-07-12  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21756]

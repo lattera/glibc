@@ -109,7 +109,12 @@ END LC_TELEPHONE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_MESSAGES
-copy "ti_ET"
+yesexpr "<U005E><U005B><U002B><U0031><U0065><U0045><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006D><U004D><U006E><U004E><U005D>"
+% eeyyee
+yesstr  "<U0065><U0065><U0079><U0079><U0065><U0065>"
+% miti
+nostr   "<U006D><U0069><U0074><U0069>"
 END LC_MESSAGES
 
 
