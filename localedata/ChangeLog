@@ -1,5 +1,11 @@
 2017-07-12  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21760]
+	* locales/anp_IN (LC_MESSAGES): add yesstr and nostr.
+	* locales/anp_IN (LC_ADDRESS): add country_name
+
+2017-07-12  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21759]
 	* locales/ti_ET (LC_MESSAGES): Add yesstr and nostr.
 	* locales/ti_ER (LC_MESSAGES): Add yesstr and nostr.
