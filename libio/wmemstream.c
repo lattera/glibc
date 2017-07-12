@@ -98,6 +98,9 @@ open_wmemstream (wchar_t **bufloc, _IO_size_t *sizeloc)
   new_f->fp.bufloc = bufloc;
   new_f->fp.sizeloc = sizeloc;
 
+  /* Disable single thread optimization.  BZ 21735.  */
+  new_f->fp._sf._sbf._f._flags2 |= _IO_FLAGS2_NEED_LOCK;
+
   return (_IO_FILE *) &new_f->fp._sf._sbf;
 }
 

@@ -302,7 +302,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 			    c89 gnu89 c99 gnu99 c11 gnu11) \
 	tst-bad-schedattr \
 	tst-thread_local1 tst-mutex-errorcheck tst-robust10 \
-	tst-robust-fork tst-create-detached
+	tst-robust-fork tst-create-detached tst-memstream
 
 tests-internal := tst-typesizes tst-rwlock19 tst-sem11 tst-sem12 tst-sem13 \
 		  tst-barrier5 tst-signal7 tst-mutex8 tst-mutex8-static \
