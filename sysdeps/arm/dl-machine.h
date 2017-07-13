@@ -56,11 +56,19 @@ elf_machine_load_address (void)
   extern Elf32_Addr internal_function __dl_start (void *) asm ("_dl_start");
   Elf32_Addr got_addr = (Elf32_Addr) &__dl_start;
   Elf32_Addr pcrel_addr;
-#ifdef __thumb__
-  /* Clear the low bit of the funciton address.  */
-  got_addr &= ~(Elf32_Addr) 1;
-#endif
   asm ("adr %0, _dl_start" : "=r" (pcrel_addr));
+#ifdef __thumb__
+  /* Clear the low bit of the function address.
+
+     NOTE: got_addr is from GOT table whose lsb is always set by linker if it's
+     Thumb function address.  PCREL_ADDR comes from PC-relative calculation
+     which will finish during assembling.  GAS assembler before the fix for
+     PR gas/21458 was not setting the lsb but does after that.  Always do the
+     strip for both, so the code works with various combinations of glibc and
+     Binutils.  */
+  got_addr &= ~(Elf32_Addr) 1;
+  pcrel_addr &= ~(Elf32_Addr) 1;
+#endif
   return pcrel_addr - got_addr;
 }
 
