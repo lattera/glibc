@@ -653,7 +653,7 @@ elf_machine_rela (struct link_map *map,
     case R_PARISC_IPLT:
       if (__builtin_expect (sym_map != NULL, 1))
 	{
-	  elf_machine_fixup_plt (NULL, sym_map, NULL, NULL reloc, reloc_addr,
+	  elf_machine_fixup_plt (NULL, sym_map, NULL, NULL, reloc, reloc_addr,
 				 DL_FIXUP_MAKE_VALUE(sym_map, value));
 	}
       else
