@@ -1,0 +1,214 @@
+comment_char %
+escape_char /
+
+% Bislama language locale for Vanuatu.
+% Contributed by Akhilesh Kumar <akhilesh.k@samsung.com>, Maninder Singh <maninder1.s@samsung.com>.
+% Words translated from http://bislama.org/dbquery2.php
+% http://www.bislama.org/translate
+% http://wikitravel.org/en/Bislama_phrasebook
+
+LC_IDENTIFICATION
+title		"Bislama language locale for Vanuatu"
+source		"Samsung Electronics Co., Ltd."
+address	""
+contact	""
+email		"akhilesh.k@samsung.com & maninder1.s@samsung.com"
+tel		""
+fax		""
+language	"Bislama"
+territory	"Vanuatu"
+revision	"0.1"
+date		"2017-07-13"
+
+category  "i18n:2012";LC_IDENTIFICATION
+category  "i18n:2012";LC_CTYPE
+category  "i18n:2012";LC_COLLATE
+category  "i18n:2012";LC_TIME
+category  "i18n:2012";LC_NUMERIC
+category  "i18n:2012";LC_MONETARY
+category  "i18n:2012";LC_PAPER
+category  "i18n:2012";LC_MEASUREMENT
+category  "i18n:2012";LC_MESSAGES
+category  "i18n:2012";LC_NAME
+category  "i18n:2012";LC_ADDRESS
+category  "i18n:2012";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+% Jenuware, Febwari, Maj, Epril, Mei, Jun, Julae, Ogis, Septemba, Oktoba, Novemba, Disemba
+
+% Full month names (%B)
+mon   "<U004A><U0065><U006E><U0075><U0077><U0061><U0072><U0065>";/
+      "<U0046><U0065><U0062><U0077><U0061><U0072><U0069>";/
+      "<U004D><U0061><U006A>";/
+      "<U0045><U0070><U0072><U0069><U006C>";/
+      "<U004D><U0065><U0069>";/
+      "<U004A><U0075><U006E>";/
+      "<U004A><U0075><U006C><U0061><U0065>";/
+      "<U004F><U0067><U0069><U0073>";/
+      "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0061>";/
+      "<U004F><U006B><U0074><U006F><U0062><U0061>";/
+      "<U004E><U006F><U0076><U0065><U006D><U0062><U0061>";/
+      "<U0044><U0069><U0073><U0065><U006D><U0062><U0061>"
+%
+% Abbreviated month names
+% Jan, Feb, Maj, Epr, Mei, Jun, Jul, Ogs, Sep, Okt, Nov, Dis
+abmon	"<U004A><U0061><U006E>";/
+	"<U0046><U0065><U0062>";/
+	"<U004D><U0061><U006A>";/
+	"<U0045><U0070><U0072>";/
+	"<U004D><U0065><U0069>";/
+	"<U004A><U0075><U006E>";/
+	"<U004A><U0075><U006C>";/
+	"<U004F><U0067><U0073>";/
+	"<U0053><U0065><U0070>";/
+	"<U004F><U006B><U0074>";/
+	"<U004E><U006F><U0076>";/
+	"<U0044><U0069><U0073>"
+%
+% Full Weekday names
+% Sande, Mande, Tusde, Wenesde, Tosde, Fraede, Sarere
+day	"<U0053><U0061><U006E><U0064><U0065>";/
+	"<U004D><U0061><U006E><U0064><U0065>";/
+	"<U0054><U0075><U0073><U0064><U0065>";/
+	"<U0057><U0065><U006E><U0065><U0073><U0064><U0065>";/
+	"<U0054><U006F><U0073><U0064><U0065>";/
+	"<U0046><U0072><U0061><U0065><U0064><U0065>";/
+	"<U0053><U0061><U0072><U0065><U0072><U0065>"
+%
+% Abbreviated Weekday names
+% San, Man, Tus, Wen, Tas, Fra, Sar
+abday	"<U0053><U0061><U006E>";/
+	"<U004D><U0061><U006E>";/
+	"<U0054><U0075><U0073>";/
+	"<U0057><U0065><U006E>";/
+	"<U0054><U0061><U0073>";/
+	"<U0046><U0072><U0061>";/
+	"<U0053><U0061><U0072>"
+%
+% Appropriate date and time representation
+% %A %d %b %Y%I:%M:%S %Z
+d_t_fmt     "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0062>/
+<U0020><U0025><U0059><U0020><U0025><U0049><U003A><U0025><U004D><U003A>/
+<U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+%
+% Appropriate date representation
+% %A %d %b %Y
+d_fmt       "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059>"
+%
+% Appropriate time representation
+% %I:%M:%S %Z
+t_fmt       "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+% Equivalent of AM PM
+am_pm	"<U0041><U004D>";"<U0050><U004D>"
+%
+% Appropriate 12 h time representation (%r)
+% %I:%M:%S %p %Z
+t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+END LC_TIME
+%
+LC_NUMERIC
+% .
+decimal_point "<U002E>"
+% ,
+thousands_sep "<U002C>"
+grouping      3
+END LC_NUMERIC
+
+% https://en.wikipedia.org/wiki/Currency_symbol
+% VUV
+% https://en.wikipedia.org/wiki/ISO_4217
+% VT
+LC_MONETARY
+
+currency_symbol		"<U0056><U0054>"
+int_curr_symbol		"<U0056><U0055><U0056><U0020>"
+mon_decimal_point	"<U002E>"
+mon_thousands_sep	"<U002C>"
+mon_grouping		3
+positive_sign		""
+negative_sign		"<U002D>"
+int_frac_digits		2
+frac_digits			2
+p_cs_precedes		1
+int_p_sep_by_space	1
+p_sep_by_space		0
+n_cs_precedes		1
+int_n_sep_by_space	1
+n_sep_by_space		0
+p_sign_posn			1
+n_sign_posn			1
+END LC_MONETARY
+
+LC_PAPER
+copy "i18n"
+END LC_PAPER
+
+LC_MEASUREMENT
+copy "i18n"
+END LC_MEASUREMENT
+
+LC_MESSAGES
+
+% ^[yY].*
+% ^[nN].*
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
+% http://www.pentecostisland.net/languages/bislama/englishtobislama.pdf
+yesstr "<U0059><U0065><U0073>"
+nostr  "<U004E><U006F>"
+END LC_MESSAGES
+
+
+LC_NAME
+copy "en_US"
+END LC_NAME
+
+LC_ADDRESS
+% %a%b%s%c
+postal_fmt   "<U0025><U0061><U0025><U0062><U0025><U0073><U0025><U0063>"
+% Vanuatu
+country_name "<U0056><U0061><U006E><U0075><U0061><U0074><U0075>"
+% No code
+% https://en.wikipedia.org/wiki/Bislama
+% VU
+country_ab2  "<U0056><U0055>"
+% VUT
+country_ab3  "<U0056><U0055><U0054>"
+% https://en.wikipedia.org/wiki/List_of_international_vehicle_registration_codes
+% VU
+country_car  "<U0056><U0055>"
+% https://en.wikipedia.org/wiki/ISO_3166-1_numeric
+country_num  548
+% https://en.wikipedia.org/wiki/Bislama
+% Bislama
+lang_name    "<U0042><U0069><U0073><U006C><U0061><U006D><U0061>"
+% iso-639-1 "bi"
+lang_ab      "<U0062><U0069>"
+% iso-639-3 "bis"
+lang_term    "<U0062><U0069><U0073>"
+% iso-639-2 "bis"
+lang_lib     "<U0062><U0069><U0073>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+% https://www.howtocallabroad.com/vanuatu/
+% +%c %l
+tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U006C>"
+% 00
+int_select  "<U0030><U0030>"
+% 678
+int_prefix  "<U0036><U0037><U0038>"
+END LC_TELEPHONE
