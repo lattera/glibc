@@ -236,6 +236,18 @@ def process_width(outfile, ulines, elines):
             width_dict[int(fields[0], 16)] = unicode_utils.ucs_symbol(
                 int(fields[0], 16)) + '\t0'
 
+    # handle special cases for compatibility
+    for key in list(range(0x1160, 0x1200)) + list(range(0x3248, 0x3250)) + \
+               list(range(0x4DC0, 0x4E00)) + list((0x00AD,)):
+        if key in width_dict:
+            del width_dict[key]
+    width_dict[0x1160] = '{:s}...{:s}\t0'.format(
+      unicode_utils.ucs_symbol(0x1160), unicode_utils.ucs_symbol(0x11FF))
+    width_dict[0x3248] = '{:s}...{:s}\t2'.format(
+      unicode_utils.ucs_symbol(0x3248), unicode_utils.ucs_symbol(0x324F))
+    width_dict[0x4DC0] = '{:s}...{:s}\t2'.format(
+      unicode_utils.ucs_symbol(0x4DC0), unicode_utils.ucs_symbol(0x4DFF))
+
     for key in sorted(width_dict):
         outfile.write(width_dict[key]+'\n')
 
