@@ -232,7 +232,7 @@ def process_width(outfile, ulines, elines):
             width_dict[key] = unicode_utils.ucs_symbol(key) + '\t2'
     for line in ulines:
         fields = line.split(";")
-        if fields[4] == "NSM" or fields[2] == "Cf":
+        if fields[4] == "NSM" or fields[2] in ("Cf", "Me", "Mn"):
             width_dict[int(fields[0], 16)] = unicode_utils.ucs_symbol(
                 int(fields[0], 16)) + '\t0'
 
