@@ -221,28 +221,20 @@ def process_width(outfile, ulines, elines):
 
     '''
     width_dict = {}
+    for line in elines:
+        fields = line.split(";")
+        if not '..' in fields[0]:
+            code_points = (fields[0], fields[0])
+        else:
+            code_points = fields[0].split("..")
+        for key in range(int(code_points[0], 16),
+                         int(code_points[1], 16)+1):
+            width_dict[key] = unicode_utils.ucs_symbol(key) + '\t2'
     for line in ulines:
         fields = line.split(";")
         if fields[4] == "NSM" or fields[2] == "Cf":
             width_dict[int(fields[0], 16)] = unicode_utils.ucs_symbol(
                 int(fields[0], 16)) + '\t0'
-
-    for line in elines:
-        # If an entry in EastAsianWidth.txt is found, it overrides entries in
-        # UnicodeData.txt:
-        fields = line.split(";")
-        if not '..' in fields[0]:
-            width_dict[int(fields[0], 16)] = unicode_utils.ucs_symbol(
-                int(fields[0], 16)) + '\t2'
-        else:
-            code_points = fields[0].split("..")
-            for key in range(int(code_points[0], 16),
-                             int(code_points[1], 16)+1):
-                if  key in width_dict:
-                    del width_dict[key]
-            width_dict[int(code_points[0], 16)] = '{:s}...{:s}\t2'.format(
-                unicode_utils.ucs_symbol(int(code_points[0], 16)),
-                unicode_utils.ucs_symbol(int(code_points[1], 16)))
 
     for key in sorted(width_dict):
         outfile.write(width_dict[key]+'\n')
