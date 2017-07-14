@@ -1,3 +1,17 @@
+2017-07-14  Thorsten Glaser  <tg@mirbsd.de>
+
+	[BZ #21750]
+	* charmaps/UTF-8: Refresh.
+	* unicode-gen/utf8_gen.py (U+00AD): Set width to 1.
+	* unicode-gen/utf8_gen.py (U+1160..U+11FF): Set width to 0.
+	* unicode-gen/utf8_gen.py (U+3248..U+324F): Set width to 2.
+	* unicode-gen/utf8_gen.py (U+4DC0..U+4DFF): Likewise.
+	* unicode-gen/utf8_gen.py: Treat category Me and Mn as combining.
+	[BZ #19852]
+	* unicode-gen/utf8_gen.py: Process EastAsianWidth lines before
+	UnicodeData lines so the latter have precedence; remove hack
+	to group output by EastAsianWidth ranges.
+
 2017-08-14  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #14925]
