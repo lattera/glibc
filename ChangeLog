@@ -1,5 +1,8 @@
 2017-07-15  John David Anglin  <danglin@gcc.gnu.org>
 
+	[BZ locale/19838]
+	* sysdeps/unix/sysv/linux/hppa/bits/shm.h (SHMLBA): Set to page size.
+
 	* nptl/allocatestack.c (allocate_stack): Align old and new guard
 	addresses to page boundaries when the stack grows up.
 

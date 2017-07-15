@@ -37,7 +37,7 @@
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
 
 /* Segment low boundary address multiple.  */
-#define SHMLBA 0x00400000		/* address needs to be 4 Mb aligned */
+#define SHMLBA		0x1000
 
 /* Type to count number of attaches.  */
 typedef unsigned long int shmatt_t;
