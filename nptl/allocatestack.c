@@ -697,8 +697,14 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 			prot) != 0)
 	    goto mprot_error;
 #elif _STACK_GROWS_UP
-	  if (__mprotect ((char *) pd - pd->guardsize,
-			pd->guardsize - guardsize, prot) != 0)
+         char *new_guard = (char *)(((uintptr_t) pd - guardsize)
+                                    & ~pagesize_m1);
+         char *old_guard = (char *)(((uintptr_t) pd - pd->guardsize)
+                                    & ~pagesize_m1);
+         /* The guard size difference might be > 0, but once rounded
+            to the nearest page the size difference might be zero.  */
+         if (new_guard > old_guard
+             && mprotect (old_guard, new_guard - old_guard, prot) != 0)
 	    goto mprot_error;
 #endif
 

@@ -1,5 +1,8 @@
 2017-07-15  John David Anglin  <danglin@gcc.gnu.org>
 
+	* nptl/allocatestack.c (allocate_stack): Align old and new guard
+	addresses to page boundaries when the stack grows up.
+
 	* sysdeps/hppa/math-tests.h: New.
 
 2017-07-14  DJ Delorie  <dj@redhat.com>
