@@ -1,3 +1,10 @@
+2017-07-14  DJ Delorie  <dj@redhat.com>
+
+	[BZ #21654]
+	* grp/grp_merge.c (__copy_grp): Align char** to minimum pointer
+	alignment not char alignment.
+	(__merge_grp): Likewise.
+
 2017-07-14  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 	    Florian Weimer  <fweimer@redhat.com>
 

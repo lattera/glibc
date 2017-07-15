@@ -85,6 +85,14 @@ __copy_grp (const struct group srcgrp, const size_t buflen,
     }
   members[i] = NULL;
 
+  /* Align for pointers.  We can't simply align C because we need to
+     align destbuf[c].  */
+  if ((((uintptr_t)destbuf + c) & (__alignof__(char **) - 1)) != 0)
+    {
+      uintptr_t mis_align = ((uintptr_t)destbuf + c) & (__alignof__(char **) - 1);
+      c += __alignof__(char **) - mis_align;
+    }
+
   /* Copy the pointers from the members array into the buffer and assign them
      to the gr_mem member of destgrp.  */
   destgrp->gr_mem = (char **) &destbuf[c];
@@ -167,6 +175,14 @@ __merge_grp (struct group *savedgrp, char *savedbuf, char *savedend,
     }
   /* Add the NULL-terminator.  */
   members[savedmemcount + memcount] = NULL;
+
+  /* Align for pointers.  We can't simply align C because we need to
+     align savedbuf[c].  */
+  if ((((uintptr_t)savedbuf + c) & (__alignof__(char **) - 1)) != 0)
+    {
+      uintptr_t mis_align = ((uintptr_t)savedbuf + c) & (__alignof__(char **) - 1);
+      c += __alignof__(char **) - mis_align;
+    }
 
   /* Copy the member array back into the buffer after the member list and free
      the member array.  */
