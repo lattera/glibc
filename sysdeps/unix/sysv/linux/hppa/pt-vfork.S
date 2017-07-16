@@ -58,7 +58,10 @@ ENTRY(__vfork)
 	   that there is no child now, so it's safe to create
 	   a frame.  */
 	stw	%rp, -20(%sp)
+	.cfi_offset 2, -20
 	stwm	%r3, 64(%sp)
+	.cfi_def_cfa_offset -64
+	.cfi_offset 3, 0
 	stw	%sp, -4(%sp)
 
 	sub	%r0,%ret0,%r3

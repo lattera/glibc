@@ -26,8 +26,11 @@
 ENTRY(__setcontext)
 	/* Prologue */
 	stwm	%r3, 64(%sp)
+	.cfi_def_cfa_offset -64
+	.cfi_offset 3, 0
 #ifdef PIC
 	stw	%r19, -32(%sp)
+	.cfi_offset 19, 32
 #endif
 
 	/* Save ucp.  */
