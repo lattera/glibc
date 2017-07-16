@@ -141,7 +141,7 @@ ENTRY(__setcontext)
 
 	/* No further context available. Exit now.  */
 	bl	HIDDEN_JUMPTARGET(exit), %r2
-	ldi	-1, %r26
+	ldi	0, %r26
 
 
 .Lerror:

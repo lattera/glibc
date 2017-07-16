@@ -1,5 +1,7 @@
 2017-07-16  John David Anglin  <danglin@gcc.gnu.org>
 
+	* sysdeps/unix/sysv/linux/hppa/setcontext.S (__setcontext): Return 0.
+
 	* sysdeps/unix/sysv/linux/hppa/sysdep-cancel.h (PSEUDO): Fix CFA offset.
 	Use .cfi_def_cfa_offset instead of .cfi_offset.  Don't record stack
 	pointer offset.  Correct PIC register offset.  Don't mention frame
