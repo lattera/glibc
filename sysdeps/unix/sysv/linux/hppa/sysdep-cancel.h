@@ -62,12 +62,11 @@
 	ENTRY (__##syscall_name##_nocancel)				\
 	DOARGS_##args					ASM_LINE_SEP	\
 	stwm TREG, 64(%sp)				ASM_LINE_SEP	\
+	.cfi_def_cfa_offset -64				ASM_LINE_SEP	\
 	.cfi_offset TREG, 0				ASM_LINE_SEP	\
-	.cfi_adjust_cfa_offset 64			ASM_LINE_SEP	\
 	stw %sp, -4(%sp)				ASM_LINE_SEP	\
-	.cfi_offset 30, -4				ASM_LINE_SEP	\
 	stw %r19, -32(%sp)				ASM_LINE_SEP	\
-	.cfi_offset 19, -32				ASM_LINE_SEP	\
+	.cfi_offset 19, 32				ASM_LINE_SEP	\
 	/* Save r19 */					ASM_LINE_SEP	\
 	SAVE_PIC(TREG)					ASM_LINE_SEP	\
 	/* Do syscall, delay loads # */			ASM_LINE_SEP	\
@@ -91,21 +90,19 @@ L(pre_nc_end):						ASM_LINE_SEP	\
 	/* No need to LOAD_PIC */			ASM_LINE_SEP	\
 	/* Undo frame */				ASM_LINE_SEP	\
 	ldwm -64(%sp),TREG				ASM_LINE_SEP	\
-	.cfi_adjust_cfa_offset -64			ASM_LINE_SEP	\
 	/* Restore rp before exit */			ASM_LINE_SEP	\
 	ldw -20(%sp), %rp				ASM_LINE_SEP	\
-	.cfi_restore 2					ASM_LINE_SEP	\
 	ret						ASM_LINE_SEP	\
 	END(__##syscall_name##_nocancel)		ASM_LINE_SEP	\
 	/**********************************************/ASM_LINE_SEP	\
 	ENTRY (name)							\
 	DOARGS_##args					ASM_LINE_SEP	\
 	stwm TREG, 64(%sp)				ASM_LINE_SEP	\
-	.cfi_adjust_cfa_offset 64			ASM_LINE_SEP	\
+	.cfi_def_cfa_offset -64				ASM_LINE_SEP	\
+	.cfi_offset TREG, 0				ASM_LINE_SEP	\
 	stw %sp, -4(%sp)				ASM_LINE_SEP	\
-	.cfi_offset 30, -4				ASM_LINE_SEP	\
 	stw %r19, -32(%sp)				ASM_LINE_SEP	\
-	.cfi_offset 19, -32				ASM_LINE_SEP	\
+	.cfi_offset 19, 32				ASM_LINE_SEP	\
 	/* Done setting up frame, continue... */	ASM_LINE_SEP	\
 	SINGLE_THREAD_P					ASM_LINE_SEP	\
 	cmpib,<>,n 0,%ret0,L(pseudo_cancel)		ASM_LINE_SEP	\
@@ -168,40 +165,32 @@ L(pre_end):						ASM_LINE_SEP	\
 	/* No need to LOAD_PIC */			ASM_LINE_SEP	\
 	/* Undo frame */				ASM_LINE_SEP	\
 	ldwm -64(%sp),TREG				ASM_LINE_SEP	\
-	.cfi_adjust_cfa_offset -64			ASM_LINE_SEP	\
 	/* Restore rp before exit */			ASM_LINE_SEP	\
-	ldw -20(%sp), %rp				ASM_LINE_SEP	\
-	.cfi_restore 2					ASM_LINE_SEP
+	ldw -20(%sp), %rp				ASM_LINE_SEP
 
 /* Save arguments into our frame */
 # define PUSHARGS_0	/* nothing to do */
 # define PUSHARGS_1	PUSHARGS_0 stw %r26, -36(%sr0,%sp)	ASM_LINE_SEP	\
-			.cfi_offset 26, -36			ASM_LINE_SEP
+			.cfi_offset 26, 28			ASM_LINE_SEP
 # define PUSHARGS_2	PUSHARGS_1 stw %r25, -40(%sr0,%sp)	ASM_LINE_SEP	\
-			.cfi_offset 25, -40			ASM_LINE_SEP
+			.cfi_offset 25, 24			ASM_LINE_SEP
 # define PUSHARGS_3	PUSHARGS_2 stw %r24, -44(%sr0,%sp)	ASM_LINE_SEP	\
-			.cfi_offset 24, -44			ASM_LINE_SEP
+			.cfi_offset 24, 20			ASM_LINE_SEP
 # define PUSHARGS_4	PUSHARGS_3 stw %r23, -48(%sr0,%sp)	ASM_LINE_SEP	\
-			.cfi_offset 23, -48			ASM_LINE_SEP
+			.cfi_offset 23, 16			ASM_LINE_SEP
 # define PUSHARGS_5	PUSHARGS_4 stw %r22, -52(%sr0,%sp)	ASM_LINE_SEP	\
-			.cfi_offset 22, -52			ASM_LINE_SEP
+			.cfi_offset 22, 12			ASM_LINE_SEP
 # define PUSHARGS_6	PUSHARGS_5 stw %r21, -56(%sr0,%sp)	ASM_LINE_SEP	\
-			.cfi_offset 21, -56			ASM_LINE_SEP
+			.cfi_offset 21, 8			ASM_LINE_SEP
 
 /* Bring them back from the stack */
 # define POPARGS_0	/* nothing to do */
-# define POPARGS_1	POPARGS_0 ldw -36(%sr0,%sp), %r26	ASM_LINE_SEP	\
-			.cfi_restore 26				ASM_LINE_SEP
-# define POPARGS_2	POPARGS_1 ldw -40(%sr0,%sp), %r25	ASM_LINE_SEP	\
-			.cfi_restore 25				ASM_LINE_SEP
-# define POPARGS_3	POPARGS_2 ldw -44(%sr0,%sp), %r24	ASM_LINE_SEP	\
-			.cfi_restore 24				ASM_LINE_SEP
-# define POPARGS_4	POPARGS_3 ldw -48(%sr0,%sp), %r23	ASM_LINE_SEP	\
-			.cfi_restore 23				ASM_LINE_SEP
-# define POPARGS_5	POPARGS_4 ldw -52(%sr0,%sp), %r22	ASM_LINE_SEP	\
-			.cfi_restore 22				ASM_LINE_SEP
-# define POPARGS_6	POPARGS_5 ldw -56(%sr0,%sp), %r21	ASM_LINE_SEP	\
-			.cfi_restore 21				ASM_LINE_SEP
+# define POPARGS_1	POPARGS_0 ldw -36(%sr0,%sp), %r26	ASM_LINE_SEP
+# define POPARGS_2	POPARGS_1 ldw -40(%sr0,%sp), %r25	ASM_LINE_SEP
+# define POPARGS_3	POPARGS_2 ldw -44(%sr0,%sp), %r24	ASM_LINE_SEP
+# define POPARGS_4	POPARGS_3 ldw -48(%sr0,%sp), %r23	ASM_LINE_SEP
+# define POPARGS_5	POPARGS_4 ldw -52(%sr0,%sp), %r22	ASM_LINE_SEP
+# define POPARGS_6	POPARGS_5 ldw -56(%sr0,%sp), %r21	ASM_LINE_SEP
 
 # if IS_IN (libpthread)
 #  ifdef PIC

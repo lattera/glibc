@@ -1,5 +1,28 @@
 2017-07-16  John David Anglin  <danglin@gcc.gnu.org>
 
+	* sysdeps/unix/sysv/linux/hppa/sysdep-cancel.h (PSEUDO): Fix CFA offset.
+	Use .cfi_def_cfa_offset instead of .cfi_offset.  Don't record stack
+	pointer offset.  Correct PIC register offset.  Don't mention frame
+	related instructions in epilogue.
+	(PUSHARGS_1): Correct offset.
+	(PUSHARGS_2): Likewise.
+	(PUSHARGS_3): Likewise.
+	(PUSHARGS_4): Likewise.
+	(PUSHARGS_5): Likewise.
+	(PUSHARGS_6): Likewise.
+	(POPARGS_1): Don't mention register restore.
+	(POPARGS_2): Likewise.
+	(POPARGS_3): Likewise.
+	(POPARGS_4): Likewise.
+	(POPARGS_5): Likewise.
+	(POPARGS_6): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h (SAVE_PIC): Don't mention
+	copy of PIC register.
+	(LOAD_PIC): Likewise don't mention restore.
+	(DO_CALL): Fix CFA offset.  Use .cfi_def_cfa_offset instead of
+	.cfi_offset.  Don't record stack pointer offset.  Correct PIC register
+	offset.  Don't mention frame related instructions in epilogue.
+
 	* sysdeps/unix/sysv/linux/hppa/localplt.data: Remove _exit entry.
 
 	* sysdeps/hppa/__longjmp.c (__longjmp): Remove extra braces.
