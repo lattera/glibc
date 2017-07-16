@@ -82,6 +82,11 @@ _dl_runtime_resolve:
 	bl	_dl_fixup,%rp
 	copy	%r21,%r19		/* set fixup func ltp */
 
+	/* Sometimes a final executable may attempt to call an undefined
+	   weak function (e.g., __gmon_start__).  Return if the function
+	   was not resolved by _dl_fixup */
+	comib,=	0,%r28,1f
+
 	/* Load up the returned func descriptor */
 	copy	%r28, %r22
 	copy	%r29, %r19
@@ -107,6 +112,13 @@ _dl_runtime_resolve:
 	/* Jump to new function, but return to previous function */
 	bv	%r0(%r22)
 	ldw	-20(%sp),%rp
+
+1:
+	/* Return to previous function */
+	ldw	-148(%sp),%rp
+	bv	%r0(%rp)
+	ldo	-128(%sp),%sp
+
         .EXIT
         .PROCEND
 	cfi_endproc

@@ -1,5 +1,8 @@
 2017-07-16  John David Anglin  <danglin@gcc.gnu.org>
 
+	* sysdeps/hppa/dl-trampoline.S (_dl_runtime_resolve): Return to caller
+	if _dl_fixup fails.
+
 	* sysdeps/unix/sysv/linux/hppa/clone.S (__clone): Add .cfi annotation.
 	* sysdeps/unix/sysv/linux/hppa/getcontext.S (__getcontext): Likewise.
 	* sysdeps/unix/sysv/linux/hppa/pt-vfork.S (__vfork): Likewise.
