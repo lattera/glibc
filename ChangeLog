@@ -1,5 +1,7 @@
 2017-07-16  John David Anglin  <danglin@gcc.gnu.org>
 
+	* sysdeps/unix/sysv/linux/hppa/localplt.data: Remove _exit entry.
+
 	* sysdeps/hppa/__longjmp.c (__longjmp): Remove extra braces.
 
 	[BZ 20098]

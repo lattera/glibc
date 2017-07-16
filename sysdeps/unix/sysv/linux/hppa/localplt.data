@@ -6,7 +6,6 @@ libc.so: free
 libc.so: malloc
 libc.so: memalign
 libc.so: realloc
-libc.so: _exit
 libc.so: __sigsetjmp
 libc.so: _IO_funlockfile
 libc.so: sigprocmask
