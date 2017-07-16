@@ -28,7 +28,6 @@ __longjmp (__jmp_buf env, int val)
   CHECK_SP (env[0].__jmp_buf.__sp);
 #endif
 
-  {
   /* We must use one of the non-callee saves registers
      for env.  */
   register unsigned long r26 asm ("r26") = (unsigned long)&env[0];
@@ -80,7 +79,6 @@ __longjmp (__jmp_buf env, int val)
 	: /* No outputs.  */
 	: "r" (r25), "r" (r26)
 	: /* No point in clobbers.  */ );
-  }
 
   /* Avoid `volatile function does return' warnings.  */
   for (;;);

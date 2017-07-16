@@ -1,5 +1,7 @@
 2017-07-16  John David Anglin  <danglin@gcc.gnu.org>
 
+	* sysdeps/hppa/__longjmp.c (__longjmp): Remove extra braces.
+
 	[BZ 20098]
 	* sysdeps/hppa/dl-fptr.c (_dl_read_access_allowed): New.
 	(_dl_lookup_address): Return address if it is not consistent with
