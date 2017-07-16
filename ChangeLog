@@ -1,3 +1,11 @@
+2017-07-16  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ 20098]
+	* sysdeps/hppa/dl-fptr.c (_dl_read_access_allowed): New.
+	(_dl_lookup_address): Return address if it is not consistent with
+	being a linker defined function pointer.  Likewise, return address
+	if address and function descriptor addresses are not accessible.
+
 2017-07-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* po/libc.pot: Regenerate.
