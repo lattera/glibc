@@ -156,7 +156,7 @@ ENTRY(__getcontext)
 	/* Epilogue */
 	ldw	-84(%sp), %r2
 #ifdef PIC
-	ldw	-96(%sp), %r19
+	ldw	-32(%sp), %r19
 #endif
 	bv	%r0(%r2)
 	ldwm	-64(%sp), %r4
