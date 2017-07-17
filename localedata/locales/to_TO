@@ -162,10 +162,10 @@ LC_MESSAGES
 yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U005D>"
 % ^[-0nN]
 noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
-% Yes -> 'Io
-yesstr  "<U0027><U0049><U006F>"
-% NO -> 'Ikai
-nostr   "<U0027><U0049><U006B><U0061><U0069>"
+% Yes -> ʻIo
+yesstr  "<U02BB><U0049><U006F>"
+% NO -> ʻIkai
+nostr   "<U02BB><U0049><U006B><U0061><U0069>"
 END LC_MESSAGES
 
 
