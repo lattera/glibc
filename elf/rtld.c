@@ -2208,7 +2208,9 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 
   /* Now that we have completed relocation, the initializer data
      for the TLS blocks has its final values and we can copy them
-     into the main thread's TLS area, which we allocated above.  */
+     into the main thread's TLS area, which we allocated above.
+     Note: thread-local variables must only be accessed after completing
+     the next step.  */
   _dl_allocate_tls_init (tcbp);
 
   /* And finally install it for the main thread.  */

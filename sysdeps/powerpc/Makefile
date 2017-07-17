@@ -11,7 +11,15 @@ sysdep-rtld-routines += dl-machine hwcapinfo
 # Don't optimize GD tls sequence to LE.
 LDFLAGS-tst-tlsopt-powerpc += -Wl,--no-tls-optimize
 tests += tst-tlsopt-powerpc
-endif
+
+ifneq (no,$(multi-arch))
+tests-static += tst-tlsifunc-static
+tests-internal += tst-tlsifunc-static
+ifeq (yes,$(build-shared))
+tests-internal += tst-tlsifunc
+endif # build-shared
+endif # multi-arch
+endif # subdir = elf
 
 ifeq ($(subdir),setjmp)
 ifeq (yes,$(build-shared))

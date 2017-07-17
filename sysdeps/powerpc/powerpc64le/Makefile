@@ -1,6 +1,11 @@
 # When building float128 we need to ensure -mfloat128 is
 # passed to all such object files.
 
+# libgcc requires __tcb_parse_hwcap_and_convert_at_platform when built with
+# a binary128 type.  That symbol is provided by the loader on dynamically
+# linked executables, forcing to link the loader after libgcc link.
+f128-loader-link = $(as-needed) $(elf-objpfx)ld.so $(no-as-needed)
+
 ifeq ($(subdir),math)
 # sqrtf128 requires emulation before POWER9.
 CPPFLAGS += -I../soft-fp
@@ -11,6 +16,8 @@ $(foreach suf,$(all-object-suffixes),%f128_r$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-float128%$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-ifloat128%$(suf)): CFLAGS += -mfloat128
 CFLAGS-libm-test-support-float128.c += -mfloat128
+$(objpfx)test-float128% $(objpfx)test-ifloat128%: \
+  gnulib-tests += $(f128-loader-link)
 endif
 
 # Append flags to string <-> _Float128 routines.
@@ -28,6 +35,9 @@ CFLAGS-tst-strtod6.c += -mfloat128
 CFLAGS-tst-strfrom.c += -mfloat128
 CFLAGS-tst-strfrom-locale.c += -mfloat128
 CFLAGS-strfrom-skeleton.c += -mfloat128
+$(foreach test,bug-strtod bug-strtod2 bug-strtod2 tst-strtod-round \
+tst-wcstod-round tst-strtod6 tst-strrom tst-strfrom-locale \
+strfrom-skeleton,$(objpfx)$(test)): gnulib-tests += $(f128-loader-link)
 
 # When building glibc with support for _Float128, the powers of ten tables in
 # fpioconst.c and in the string conversion functions must be extended.  Some

@@ -1,3 +1,30 @@
+2017-07-17  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #21707]
+	* csu/libc-start.c (LIBC_START_MAIN): Perform IREL{,A}
+	relocations before or after initializing the TCB on statically
+	linked executables.  That's a per-architecture definition.
+	* elf/rtld.c (dl_main): Add a comment about thread-local
+	variables initialization.
+	* sysdeps/generic/libc-start.h: New file.  Define
+	ARCH_APPLY_IREL and ARCH_SETUP_IREL.
+	* sysdeps/powerpc/Makefile:
+	[$(subdir) = elf && $(multi-arch) != no] (tests-static-internal): Add
+	tst-tlsifunc-static.
+	[$(subdir) = elf && $(multi-arch) != no && $(build-shared) == yes]
+	(tests-internal): Add tst-tlsifunc.
+	* sysdeps/powerpc/tst-tlsifunc.c: New file.
+	* sysdeps/powerpc/tst-tlsifunc-static.c: Likewise.
+	* sysdeps/powerpc/powerpc64le/Makefile (f128-loader-link): New
+	variable.
+	[$(subdir) = math] (test-float128% test-ifloat128%): Force
+	linking to the loader after linking to libgcc.
+	[$(subdir) = wcsmbs || $(subdir) = stdlib] (bug-strtod bug-strtod2)
+	(bug-strtod2 tst-strtod-round tst-wcstod-round tst-strtod6 tst-strrom)
+	(tst-strfrom-locale strfrom-skeleton): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.h: New file.  Define
+	ARCH_APPLY_IREL and ARCH_SETUP_IREL.
+
 2017-07-17  DJ Delorie  <dj@redhat.com>
 
 	* nss/nss_test.h: New.
