@@ -1,3 +1,18 @@
+2017-07-17  DJ Delorie  <dj@redhat.com>
+
+	* nss/nss_test.h: New.
+	* nss/nss_test1.h: Rewrite to use test-provided data.  Add group
+	tests.  Parameterize to allow multiple instances.
+	* nss/nss_test2.h: New.  Second instance.
+	* nss/nss_test.ver: New.
+	* nss/nss_test1.c: Update to use new framework.
+	* nss/nss_test2.c: New.
+	* nss/nss_test3.c: New.
+	* nss/nss_test4.c: New.
+	* nss/nss_test5.c: New.
+	* nss/Makefile: Build new tests.
+	* shlib-versions: Add libnss_test2.
+
 2017-07-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #21512]

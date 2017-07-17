@@ -52,6 +52,7 @@ libnss_db=2
 # Tests for NSS.  They must have the same NSS_SHLIB_REVISION number as
 # the rest.
 libnss_test1=2
+libnss_test2=2
 
 # Version for libnsl with YP and NIS+ functions.
 libnsl=1
