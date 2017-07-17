@@ -30,7 +30,7 @@ preadv64v2 (int fd, const struct iovec *vector, int count, off64_t offset,
 #ifdef __NR_preadv64v2
   ssize_t result = SYSCALL_CANCEL (preadv64v2, fd, vector, count,
 				   LO_HI_LONG (offset), flags);
-  if (result >= 0 || errno != ENOSYS)
+  if (result >= 0)
     return result;
 #endif
   /* Trying to emulate the preadv2 syscall flags is troublesome:
@@ -44,7 +44,7 @@ preadv64v2 (int fd, const struct iovec *vector, int count, off64_t offset,
 
   if (flags != 0)
     {
-      __set_errno (EOPNOTSUPP);
+      __set_errno (ENOTSUP);
       return -1;
     }
   return preadv64 (fd, vector, count, offset);

@@ -1,3 +1,16 @@
+2017-08-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21780]
+	* sysdeps/posix/preadv2.c (preadv2): Use ENOTSUP instead of
+	EOPNOTSUPP.
+	* sysdeps/posix/preadv64v2.c (preadv64v2): Likewise.
+	* sysdeps/posix/pwritev2.c (pwritev2): Likewise.
+	* sysdeps/posix/pwritev64v2.c (pwritev64v2): Likewise.
+	* sysdeps/unix/sysv/linux/preadv2.c (preadv2): Likewise.
+	* sysdeps/unix/sysv/linux/preadv64v2.c (preadv64v2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev2.c (pwritev2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64v2.c (pwritev64v2): Likewise.
+
 2017-08-07  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21899]

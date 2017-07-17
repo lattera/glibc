@@ -26,7 +26,7 @@ pwritev64v2 (int fd, const struct iovec *vector, int count, OFF_T offset,
 {
   if (flags != 0)
     {
-      __set_errno (EOPNOTSUPP);
+      __set_errno (ENOTSUP);
       return -1;
     }
 
