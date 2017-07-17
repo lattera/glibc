@@ -1,3 +1,8 @@
+2017-07-18  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.h (_dl_procinfo): Revert.
+	(_dl_hwcap_string): Check range.
+
 2017-07-17  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #21707]

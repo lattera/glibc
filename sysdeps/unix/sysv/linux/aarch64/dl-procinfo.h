@@ -25,36 +25,7 @@
 #include <sysdep.h>
 
 /* We cannot provide a general printing function.  */
-static inline int
-__attribute__ ((unused))
-_dl_procinfo (unsigned int type, unsigned long int word)
-{
-  /* This table should match the information from arch/arm64/kernel/cpuinfo.c
-     in the kernel sources.  */
-  int i;
-
-  /* Fallback to unknown output mechanism.  */
-  if (type == AT_HWCAP2)
-    return -1;
-
-  _dl_printf ("AT_HWCAP:   ");
-
-  for (i = 0; i < 32; ++i)
-    if ((word >> i) & 1)
-      _dl_printf (" %s", GLRO(dl_aarch64_cap_flags)[i]);
-
-  _dl_printf ("\n");
-
-  return 0;
-}
-
-static inline const char *
-__attribute__ ((unused))
-_dl_hwcap_string (int idx)
-{
-  return GLRO(dl_aarch64_cap_flags)[idx];
-};
-
+#define _dl_procinfo(type, word) -1
 
 /* Number of HWCAP bits set.  */
 #define _DL_HWCAP_COUNT 13
@@ -65,6 +36,13 @@ _dl_hwcap_string (int idx)
 /* HWCAP_CPUID should be available by default to influence IFUNC as well as
    library search.  */
 #define HWCAP_IMPORTANT HWCAP_CPUID
+
+static inline const char *
+__attribute__ ((unused))
+_dl_hwcap_string (int idx)
+{
+  return (unsigned)idx < _DL_HWCAP_COUNT ? GLRO(dl_aarch64_cap_flags)[idx] : "";
+};
 
 static inline int
 __attribute__ ((unused))
