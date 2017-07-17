@@ -150,7 +150,7 @@ ENTRY(__clone)
 #ifdef PIC
 	copy	%r4, %r19
 #endif
-	/* The call to _exit needs saved r19.  */
+	copy	%r28, %r26
 	ble     0x100(%sr2, %r0)
 	ldi	__NR_exit, %r20
 
