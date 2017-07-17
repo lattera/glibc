@@ -1,3 +1,13 @@
+2017-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21744]
+	* elf/dl-tunables.c: Include not-errno.h header.
+	* include/unistd.h (__access_noerrno): Remove definition.
+	* sysdeps/unix/sysv/linux/access.c (__access_noerrno): Likewise.
+	* sysdeps/generic/not-errno.h: New file.
+	* sysdeps/unix/sysv/linux/not-errno.h: Likewise.
+
 2017-07-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21752]

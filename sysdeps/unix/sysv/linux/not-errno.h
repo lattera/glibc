@@ -1,5 +1,5 @@
-/* Linux implementation for access function.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* Syscall wrapper that do not set errno.  Linux version.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,20 +13,23 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fcntl.h>
-#include <unistd.h>
-#include <sysdep-cancel.h>
-
-int
-__access (const char *file, int type)
+/* This function is used on maybe_enable_malloc_check (elf/dl-tunables.c)
+   and to avoid having to build/use multiple versions if stack protection
+   in enabled it is defined as inline.  */
+static inline int
+__access_noerrno (const char *pathname, int mode)
 {
+  int res;
+  INTERNAL_SYSCALL_DECL (err);
 #ifdef __NR_access
-  return INLINE_SYSCALL_CALL (access, file, type);
+  res = INTERNAL_SYSCALL_CALL (access, err, pathname, mode);
 #else
-  return INLINE_SYSCALL_CALL (faccessat, AT_FDCWD, file, type);
+  res = INTERNAL_SYSCALL_CALL (faccessat, err, AT_FDCWD, pathname, mode);
 #endif
+  if (INTERNAL_SYSCALL_ERROR_P (res, err))
+    return INTERNAL_SYSCALL_ERRNO (res, err);
+  return 0;
 }
-weak_alias (__access, access)

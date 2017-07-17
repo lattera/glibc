@@ -1,5 +1,5 @@
-/* Linux implementation for access function.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* Syscall wrapper that do not set errno.  Generic version.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,20 +13,7 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fcntl.h>
-#include <unistd.h>
-#include <sysdep-cancel.h>
-
-int
-__access (const char *file, int type)
-{
-#ifdef __NR_access
-  return INLINE_SYSCALL_CALL (access, file, type);
-#else
-  return INLINE_SYSCALL_CALL (faccessat, AT_FDCWD, file, type);
-#endif
-}
-weak_alias (__access, access)
+extern __typeof (__access) __access_noerrno attribute_hidden;

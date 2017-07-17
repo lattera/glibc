@@ -29,6 +29,8 @@
 #define TUNABLES_INTERNAL 1
 #include "dl-tunables.h"
 
+#include <not-errno.h>
+
 #if TUNABLES_FRONTEND == TUNABLES_FRONTEND_valstring
 # define GLIBC_TUNABLES "GLIBC_TUNABLES"
 #endif
