@@ -6,7 +6,7 @@ escape_char /
 % Words translated from  https://en.wikipedia.org/wiki/Fiji_Hindi
 
 LC_IDENTIFICATION
-title       "Fiji Hindi (latin) language locale for Fiji"
+title       "Fiji Hindi (Latin) language locale for Fiji"
 source      "Samsung Electronics Co., Ltd."
 address     ""
 contact     ""

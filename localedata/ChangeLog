@@ -1,3 +1,7 @@
+2017-07-17  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/hif_FJ: Write "Latin" in title case in "title"
+
 2017-07-14  Mike FABIAN  <mfabian@redhat.com>
 
 	* locales/li_BE: Fix country name and encoding problem in abday.
