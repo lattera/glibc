@@ -1,3 +1,8 @@
+2017-07-17  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21770]
+	* locales/li_NL: Fix country_name.
+
 2017-07-17  Mike FABIAN  <mfabian@redhat.com>
 
 	* locales/to_TO (LC_MESSAGES): Use U+02BB instead of U+0027 in yesstr and nostr
