@@ -1,3 +1,16 @@
+2017-07-19  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21783 ]
+	* locales/ar_AE (LC_TELEPHONE): Add int_select.
+	* locales/ar_BH (LC_TELEPHONE): Fix int_select.
+	* locales/ar_IQ (LC_TELEPHONE): Add int_select.
+	* locales/es_CU (LC_TELEPHONE): Add int_select.
+	* locales/ja_JP (LC_TELEPHONE): Add int_select.
+	* locales/lg_UG (LC_TELEPHONE): Fix int_select.
+	* locales/mn_MN (LC_TELEPHONE): Fix int_select.
+	* locales/om_KE (LC_TELEPHONE): Add int_select.
+	* locales/sm_WS (LC_TELEPHONE): Fix int_select.
+
 2017-07-17  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21770]

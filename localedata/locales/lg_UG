@@ -235,8 +235,8 @@ tel_dom_fmt    "<U0025><U0061><U0020><U0025><U006C>"
 % Represntation of telephone number for domestic use -
 % "%a %l", which is
 % "area code, local number".
-%
-int_select     "<U0030><U0030>"
+% 000
+int_select   "<U0030><U0030><U0030>"
 % Digits used in Uganda to dial international - "00".
 %
 int_prefix     "<U0032><U0035><U0036>"
