@@ -1,3 +1,14 @@
+2017-08-09  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #21928]
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (enum __ptrace_flags,
+	PTRACE_SEIZE_DEVEL): Remove.
+	* sysdeps/unix/sysv/linux/aarch64/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h: Likewise.
+
 2017-08-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* posix/bits/types.h (__qaddr_t): Remove.

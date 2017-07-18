@@ -13,7 +13,8 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* On GNU/Linux, the obsolete Linux constant PTRACE_SEIZE_DEVEL is no longer
+  defined by <sys/ptrace.h>.
 
 Changes to build and runtime requirements:
 

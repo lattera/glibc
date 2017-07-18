@@ -146,12 +146,6 @@ enum __ptrace_request
 };
 
 
-/* Flag for PTRACE_LISTEN.  */
-enum __ptrace_flags
-{
-  PTRACE_SEIZE_DEVEL = 0x80000000
-};
-
 /* pt_all_user_regs is used for PTRACE_GETREGS/PTRACE_SETREGS.  */
 struct __pt_all_user_regs
   {
