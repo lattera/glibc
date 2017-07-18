@@ -28,10 +28,10 @@
 #define _dl_procinfo(type, word) -1
 
 /* Number of HWCAP bits set.  */
-#define _DL_HWCAP_COUNT 13
+#define _DL_HWCAP_COUNT 16
 
 /* Offset of the last bit allocated in HWCAP.  */
-#define _DL_HWCAP_LAST 12
+#define _DL_HWCAP_LAST 15
 
 /* HWCAP_CPUID should be available by default to influence IFUNC as well as
    library search.  */
