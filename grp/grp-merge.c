@@ -137,7 +137,7 @@ __merge_grp (struct group *savedgrp, char *savedbuf, char *savedend,
 
   /* Get the count of group members from the last sizeof (size_t) bytes in the
      mergegrp buffer.  */
-  savedmemcount = (size_t) *(savedend - sizeof (size_t));
+  savedmemcount = *(size_t *) (savedend - sizeof (size_t));
 
   /* Get the count of new members to add.  */
   for (memcount = 0; mergegrp->gr_mem[memcount]; memcount++)
