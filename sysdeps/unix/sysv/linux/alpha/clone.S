@@ -98,6 +98,7 @@ thread_start:
 	jsr	ra, (pv)
 	ldgp	gp, 0(ra)
 
+	mov     v0, a0
 	ldiq	v0, __NR_exit
 	call_pal PAL_callsys
 
