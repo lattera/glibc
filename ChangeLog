@@ -1,5 +1,7 @@
 2017-07-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 	* sysdeps/unix/sysv/linux/alpha/clone.S (__clone): Fix argument
 	passing to syscall exit.
 
