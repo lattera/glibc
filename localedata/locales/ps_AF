@@ -262,7 +262,7 @@ postal_fmt	"<U0025><U0061><U0025><U004E><U0025><U0066><U0025>/
 <U0025><U004E><U0025><U0063><U0025><U004E>"
 country_name	"<U0627><U0641><U063A><U0627><U0646>/
 <U0633><U062A><U0627><U0646>"
-%country_post	"<U0041><U0046><U0047>" % FIXME: Not confirmed.
+country_post	"<U0041><U0046>"
 country_ab2	"<U0041><U0046>"
 country_ab3	"<U0041><U0046><U0047>"
 country_num	004

@@ -1,5 +1,17 @@
 2017-07-19  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21788]
+	* locales/cy_GB (LC_ADDRESS): Add country_post.
+	* locales/hy_AM (LC_ADDRESS): Add country_post.
+	* locales/iu_CA (LC_ADDRESS): Add country_post.
+	* locales/nan_TW@latin (LC_ADDRESS): Add country_post.
+	* locales/ps_AF (LC_ADDRESS): Add country_post.
+	* locales/sr_RS (LC_ADDRESS): Fix country_post.
+	* locales/sr_RS@latin (LC_ADDRESS): Fix country_post.
+	* locales/zh_TW (LC_ADDRESS): Fix country_post.
+
+2017-07-19  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21784]
 	* locales/bo_CN (LC_ADDRESS): Fix inconsistency in country_isbn.
 	* locales/fa_IR (LC_ADDRESS): Fix inconsistency in country_isbn.
