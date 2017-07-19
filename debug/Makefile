@@ -53,6 +53,10 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    $(static-only-routines)
 static-only-routines := warning-nop stack_chk_fail_local
 
+# Don't add stack_chk_fail_local.o to libc.a since __stack_chk_fail_local
+# is an alias of __stack_chk_fail in stack_chk_fail.o.
+elide-routines.o := stack_chk_fail_local
+
 # Building the stack-protector failure routines with stack protection
 # makes no sense.
 
