@@ -1,5 +1,19 @@
 2017-07-19  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21784]
+	* locales/bo_CN (LC_ADDRESS): Fix inconsistency in country_isbn.
+	* locales/fa_IR (LC_ADDRESS): Fix inconsistency in country_isbn.
+	* locales/nan_TW@latin (LC_ADDRESS): Fix inconsistency in country_isbn.
+	* locales/nr_ZA (LC_ADDRESS): Add country_num.
+	* locales/sr_RS (LC_ADDRESS): Fix inconsistency in country_isbn.
+	* locales/sr_RS@latin (LC_ADDRESS): Fix inconsistency in country_isbn.
+	* locales/ug_CN (LC_ADDRESS): Fix inconsistency in country_isbn.
+	* locales/yue_HK (LC_ADDRESS): Fix inconsistency in country_isbn.
+	* locales/zh_CN (LC_ADDRESS): Fix inconsistency in country_isbn.
+	* locales/zh_TW (LC_ADDRESS): Fix inconsistency in country_isbn.
+
+2017-07-19  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21783 ]
 	* locales/ar_AE (LC_TELEPHONE): Add int_select.
 	* locales/ar_BH (LC_TELEPHONE): Fix int_select.
