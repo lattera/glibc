@@ -1,3 +1,7 @@
+2017-07-19  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/iu_CA (LC_ADDRESS): Add country_name.
+
 2017-07-19  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21788]

@@ -43,7 +43,8 @@ postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
 <U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U0054><U0020><U0025><U007A><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
-% FIXME country_name "Canada" in inuktitut ?
+% "Canada" in Inuktitut: ᑲᓇᑕ (https://iu.wikipedia.org/wiki/%E1%91%B2%E1%93%87%E1%91%95)
+country_name "<U1472><U14C7><U1455>"
 country_post "<U0043><U0041>"
 country_ab2 "<U0043><U0041>"
 country_ab3 "<U0043><U0041><U004E>"
