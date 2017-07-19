@@ -1,5 +1,124 @@
 2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	bcopy-ia32, bzero-ia32, rawmemchr-ia32 memchr-ia32,
+	memcmp-ia32, memcpy-ia32, memmove-ia32, mempcpy-ia32,
+	memset-ia32, strcat-ia32, strchr-ia32, strrchr-ia32,
+	strcpy-ia32, strcmp-ia32, strcspn-ia32, strpbrk-ia32,
+	strspn-ia32, strlen-ia32, stpcpy-ia32, stpncpy-ia32,
+	memcpy_chk-nonshared, mempcpy_chk-nonshared,
+	memmove_chk-nonshared and memset_chk-nonshared
+	* sysdeps/i386/i686/multiarch/bcopy-ia32.S: New file.
+	* sysdeps/i386/i686/multiarch/bcopy.c: Likewise.
+	* sysdeps/i386/i686/multiarch/bzero-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/bzero.c: Likewise.
+	* sysdeps/i386/i686/multiarch/ifunc-memmove.h: Likewise.
+	* sysdeps/i386/i686/multiarch/ifunc-memset.h: Likewise.
+	* sysdeps/i386/i686/multiarch/ifunc-sse2-bsf.h: Likewise.
+	* sysdeps/i386/i686/multiarch/ifunc-sse2-ssse3.h: Likewise.
+	* sysdeps/i386/i686/multiarch/ifunc-sse2.h: Likewise.
+	* sysdeps/i386/i686/multiarch/ifunc-sse4_2.h: Likewise.
+	* sysdeps/i386/i686/multiarch/ifunc-ssse3-sse4_2.h: Likewise.
+	* sysdeps/i386/i686/multiarch/memchr-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memchr.c: Likewise.
+	* sysdeps/i386/i686/multiarch/memcmp-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcmp.c: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy.c: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy_chk-nonshared.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy_chk.c: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove.c: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove_chk-nonshared.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove_chk.c: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy.c: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy_chk-nonshared.S: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy_chk.c: Likewise.
+	* sysdeps/i386/i686/multiarch/memrchr.c: Likewise.
+	* sysdeps/i386/i686/multiarch/memset-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memset.c: Likewise.
+	* sysdeps/i386/i686/multiarch/memset_chk-nonshared.S: Likewise.
+	* sysdeps/i386/i686/multiarch/rawmemchr-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/rawmemchr.c: Likewise.
+	* sysdeps/i386/i686/multiarch/stpcpy-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/stpcpy-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/stpcpy.c: Likewise.
+	* sysdeps/i386/i686/multiarch/stpncpy-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/stpncpy.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasecmp.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasecmp_l.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strcat-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcat.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strchr-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strchr.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strcmp-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcmp.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strcpy-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcpy.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strcspn-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcspn.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strlen-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strlen.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strncase.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strncase_l.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strncat.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strncmp.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strncpy.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strnlen.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strpbrk-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strpbrk.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strrchr-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strrchr.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strspn-ia32.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strspn.c: Likewise.
+	* sysdeps/i386/i686/multiarch/wcschr.c: Likewise.
+	* sysdeps/i386/i686/multiarch/wcscmp.c: Likewise.
+	* sysdeps/i386/i686/multiarch/wcscpy.c: Likewise.
+	* sysdeps/i386/i686/multiarch/wcslen.c: Likewise.
+	* sysdeps/i386/i686/multiarch/wcsrchr.c: Likewise.
+	* sysdeps/i386/i686/multiarch/wmemcmp.c: Likewise.
+	* sysdeps/i386/i686/multiarch/bcopy.S: Removed.
+	* sysdeps/i386/i686/multiarch/bzero.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memrchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memset.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memset_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/rawmemchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/stpcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/stpncpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasecmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasecmp_l.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcat.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcspn.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strlen.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncase.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncase_l.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncat.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strnlen.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strpbrk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strrchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strspn.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcschr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcscmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcscpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcslen.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcsrchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wmemcmp.S: Likewise.
+
+2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines)
 	Add svml_d_cos2_core-sse2, svml_d_cos4_core-sse,
 	svml_d_cos8_core-avx2, svml_d_exp2_core-sse2,
