@@ -1,5 +1,12 @@
 2017-07-19  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #21741]
+	* sysdeps/i386/i686/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Test memmove_chk and memset_chk only
+	in libc.so.
+
+2017-07-19  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #21740]
 	* debug/Makefile (elide-routines.o): New.
 

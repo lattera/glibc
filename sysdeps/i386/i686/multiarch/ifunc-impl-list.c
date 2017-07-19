@@ -70,6 +70,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_ia32))
 
+#ifdef SHARED
   /* Support sysdeps/i386/i686/multiarch/memmove_chk.S.  */
   IFUNC_IMPL (i, name, __memmove_chk,
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
@@ -83,6 +84,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memmove_chk_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
 			      __memmove_chk_ia32))
+#endif
 
   /* Support sysdeps/i386/i686/multiarch/memmove.S.  */
   IFUNC_IMPL (i, name, memmove,
@@ -102,6 +104,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memrchr_sse2)
 	      IFUNC_IMPL_ADD (array, i, memrchr, 1, __memrchr_ia32))
 
+#ifdef SHARED
   /* Support sysdeps/i386/i686/multiarch/memset_chk.S.  */
   IFUNC_IMPL (i, name, __memset_chk,
 	      IFUNC_IMPL_ADD (array, i, __memset_chk,
@@ -112,6 +115,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memset_chk_sse2)
 	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
 			      __memset_chk_ia32))
+#endif
 
   /* Support sysdeps/i386/i686/multiarch/memset.S.  */
   IFUNC_IMPL (i, name, memset,
