@@ -1,3 +1,17 @@
+2017-07-20  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21799]
+	* locales/ar_KW (LC_TELEPHONE): Add int_select.
+	* locales/ar_LY (LC_TELEPHONE): Add int_select.
+	* locales/ar_QA (LC_TELEPHONE): Add int_select.
+	* locales/ar_SA (LC_TELEPHONE): Add int_select.
+	* locales/ar_SS (LC_TELEPHONE): Add int_select.
+	* locales/ar_SY (LC_TELEPHONE): Add int_select.
+	* locales/ar_TN (LC_TELEPHONE): Add int_select.
+	* locales/ar_YE (LC_TELEPHONE): Add int_select.
+	* locales/ca_AD (LC_TELEPHONE): Add int_select.
+	* locales/es_MX (LC_TELEPHONE): Add int_select.
+
 2017-07-19  Mike FABIAN  <mfabian@redhat.com>
 
 	* locales/iu_CA (LC_ADDRESS): Add country_name.
