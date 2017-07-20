@@ -1,5 +1,14 @@
 2017-07-21  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21795]
+	* locales/br_FR (LC_ADDRESS): Add country_isbn.
+	* locales/ca_FR (LC_ADDRESS): Add country_isbn.
+	* locales/fr_FR (LC_ADDRESS): Add country_isbn.
+	* locales/ia_FR (LC_ADDRESS): Fix country_isbn.
+	* locales/oc_FR (LC_ADDRESS): Fix country_isbn.
+
+2017-07-21  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21807]
 	[BZ #21808]
 	* locales/pap_AW (LC_ADDRESS): Add country_name and country_post.
