@@ -6220,6 +6220,7 @@ tel_dom_fmt    "<U0028><U0025><U0041><U0029><U0020><U0025><U006C>"
 %    "%A-%l"  : areacode-local_number
 %tel_dom_fmt    "<U0025><U0041><U002D><U0020><U0025><U006C>"
 int_prefix     "<U0038><U0032>"
+int_select     "<U0030><U0030><U0031>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT

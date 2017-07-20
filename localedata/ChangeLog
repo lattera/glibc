@@ -1,3 +1,58 @@
+2017-07-20  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/ar_JO (LC_TELEPHONE): Add int_select.
+	* locales/ar_LB (LC_TELEPHONE): Add int_select.
+	* locales/ar_MA (LC_TELEPHONE): Add int_select.
+	* locales/ar_OM (LC_TELEPHONE): Add int_select.
+	* locales/ber_DZ (LC_TELEPHONE): Add int_select.
+	* locales/ber_MA (LC_TELEPHONE): Add int_select.
+	* locales/ca_ES (LC_TELEPHONE): Add int_select.
+	* locales/crh_UA (LC_TELEPHONE): Add int_select.
+	* locales/de_CH (LC_TELEPHONE): Add int_select.
+	* locales/de_LI (LC_TELEPHONE): Add int_select.
+	* locales/de_LU (LC_TELEPHONE): Add int_select.
+	* locales/dz_BT (LC_TELEPHONE): Add int_select.
+	* locales/en_HK (LC_TELEPHONE): Add int_select.
+	* locales/en_IE (LC_TELEPHONE): Add int_select.
+	* locales/en_NZ (LC_TELEPHONE): Add int_select.
+	* locales/en_PH (LC_TELEPHONE): Add int_select.
+	* locales/en_SG (LC_TELEPHONE): Add int_select.
+	* locales/es_ES (LC_TELEPHONE): Add int_select.
+	* locales/es_PA (LC_TELEPHONE): Add int_select.
+	* locales/es_US (LC_TELEPHONE): Add int_select.
+	* locales/es_UY (LC_TELEPHONE): Add int_select.
+	* locales/eu_ES (LC_TELEPHONE): Add int_select.
+	* locales/he_IL (LC_TELEPHONE): Add int_select.
+	* locales/id_ID (LC_TELEPHONE): Add int_select.
+	* locales/it_CH (LC_TELEPHONE): Add int_select.
+	* locales/it_CH (LC_TELEPHONE): Add int_select.
+	* locales/it_IT (LC_TELEPHONE): Add int_select.
+	* locales/kl_GL (LC_TELEPHONE): Add int_select.
+	* locales/ko_KR (LC_TELEPHONE): Add int_select.
+	* locales/kw_GB (LC_TELEPHONE): Add int_select.
+	* locales/ky_KG (LC_TELEPHONE): Add int_select.
+	* locales/lij_IT (LC_TELEPHONE): Add int_select.
+	* locales/lt_LT (LC_TELEPHONE): Add int_select.
+	* locales/lv_LV (LC_TELEPHONE): Add int_select.
+	* locales/mi_NZ (LC_TELEPHONE): Add int_select.
+	* locales/ms_MY (LC_TELEPHONE): Add int_select.
+	* locales/mt_MT (LC_TELEPHONE): Add int_select.
+	* locales/ne_NP (LC_TELEPHONE): Add int_select.
+	* locales/niu_NU (LC_TELEPHONE): Add int_select.
+	* locales/nl_NL (LC_TELEPHONE): Add int_select.
+	* locales/pl_PL (LC_TELEPHONE): Add int_select.
+	* locales/ro_RO (LC_TELEPHONE): Add int_select.
+	* locales/ru_UA (LC_TELEPHONE): Add int_select.
+	* locales/rw_RW (LC_TELEPHONE): Add int_select.
+	* locales/sk_SK (LC_TELEPHONE): Add int_select.
+	* locales/sl_SI (LC_TELEPHONE): Add int_select.
+	* locales/so_SO (LC_TELEPHONE): Add int_select.
+	* locales/the_NP (LC_TELEPHONE): Add int_select.
+	* locales/tk_TM (LC_TELEPHONE): Add int_select.
+	* locales/uz_UZ (LC_TELEPHONE): Add int_select.
+	* locales/uz_UZ@cyrillic (LC_TELEPHONE): Add int_select.
+	* locales/zh_SG (LC_TELEPHONE): Add int_select.
+
 2017-07-20  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ # 21801]

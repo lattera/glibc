@@ -454,4 +454,6 @@ LC_TELEPHONE
 % TODO: complete me
 tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
 int_prefix "<U0039><U0039><U0033>"
+% dial "8 pause 10" (after dialing 8 pause for a new dial tone,then dial 10
+int_select "<U0038><U00A0><U0031><U0030>"
 END LC_TELEPHONE
