@@ -1,5 +1,9 @@
 2017-07-21  Steve Ellcey  <sellcey@cavium.com>
 
+	* nss/nss_test1.c (default_npwd_data): Fix definition.
+
+2017-07-21  Steve Ellcey  <sellcey@cavium.com>
+
 	* sysdeps/ieee754/ldbl-128/e_expl.c (__ieee754_expl): Call
 	math_force_eval.
 

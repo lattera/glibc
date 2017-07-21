@@ -57,7 +57,8 @@ static struct passwd default_pwd_data[] =
     PWD (60),
     PWD (20000)
   };
-#define default_npwd_data (sizeof (pwd_data) / sizeof (pwd_data[0]))
+#define default_npwd_data \
+  (sizeof (default_pwd_data) / sizeof (default_pwd_data[0]))
 
 static struct passwd *pwd_data = default_pwd_data;
 static int npwd_data = default_npwd_data;
