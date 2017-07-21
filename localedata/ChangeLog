@@ -1,3 +1,13 @@
+2017-07-24  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21794]
+	* locales/ca_IT (LC_ADDRESS): Add country_isbn.
+	* locales/de_IT (LC_ADDRESS): Add country_isbn.
+	* locales/fur_IT (LC_ADDRESS): Add country_isbn.
+	* locales/it_IT (LC_ADDRESS): Add country_isbn.
+	* locales/lij_IT (LC_ADDRESS): Add country_isbn.
+	* locales/sc_IT (LC_ADDRESS): Add country_isbn.
+
 2017-07-21  Massimeddu Cireddu <massimeddu@gmail.com>
 
 	[BZ #12068]
