@@ -45,8 +45,10 @@ LC_ADDRESS
 postal_fmt "<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E>/
 <U0025><U0073><U0020><U0025><U0068><U0020><U0035><U0065><U0020><U0025><U0072><U0025><U004E>/
 <U0025><U0043><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
-% FIXME country_name for Antilles in Paplamento
-% FIXME country_post MAIL_CEPTCODE for Nederland Antilles, AN?
+% https://pap.wikipedia.org/wiki/Aruba
+country_name "<U0041><U0072><U0075><U0062><U0061>"
+% AW
+country_post "<U0041><U0057>"
 % AW
 country_ab2  "<U0041><U0057>"
 % ABW
