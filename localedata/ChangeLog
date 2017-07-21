@@ -1,3 +1,10 @@
+2017-07-21  Massimeddu Cireddu <massimeddu@gmail.com>
+
+	[BZ #12068]
+	* locales/sc_IT (LC_MESSAGES): Fix yesexpr and add yesstr and nostr.
+	* locales/sc_IT (LC_TIME): Fix mispelled day/abday/mon/abmon and
+	fix date_fmt.
+
 2017-07-21  Rafal Luzynski <digitalfreak@lingonborough.com>
 
 	[BZ #21783]
