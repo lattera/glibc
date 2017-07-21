@@ -1,5 +1,13 @@
 2017-07-21  Steve Ellcey  <sellcey@cavium.com>
 
+	* localedata/Makefile (CFLAGS-tst_iswalnum.c, CFLAGS-tst_iswalpha.c
+	CFLAGS-tst_iswcntrl.c, CFLAGS-tst_iswdigit.c, CFLAGS-tst_iswgraph.c,
+	CFLAGS-tst_iswlower.c, CFLAGS-tst_iswprint.c, CFLAGS-tst_iswpunct.c,
+	CFLAGS-tst_iswspace.c, CFLAGS-tst_iswupper.c, CFLAGS-tst_iswxdigit.c,
+	CFLAGS-tst_towlower.c, CFLAGS-tst_towupper.c): New macros.
+
+2017-07-21  Steve Ellcey  <sellcey@cavium.com>
+
 	* nss/nss_test1.c (default_npwd_data): Fix definition.
 
 2017-07-21  Steve Ellcey  <sellcey@cavium.com>

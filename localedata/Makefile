@@ -122,6 +122,21 @@ $(inst_i18ndir)/charmaps/%.gz: charmaps/% $(+force)
 # Install the locale source files in the appropriate directory.
 $(inst_i18ndir)/locales/%: locales/% $(+force); $(do-install)
 
+# These tests use multistatement macros from tests-mbwc/tst_funcs.h
+# and will not compile with GCC 8.1 without the warning turned off.
+CFLAGS-tst_iswalnum.c  = -Wno-multistatement-macros
+CFLAGS-tst_iswalpha.c  = -Wno-multistatement-macros
+CFLAGS-tst_iswcntrl.c  = -Wno-multistatement-macros
+CFLAGS-tst_iswdigit.c  = -Wno-multistatement-macros
+CFLAGS-tst_iswgraph.c  = -Wno-multistatement-macros
+CFLAGS-tst_iswlower.c  = -Wno-multistatement-macros
+CFLAGS-tst_iswprint.c  = -Wno-multistatement-macros
+CFLAGS-tst_iswpunct.c  = -Wno-multistatement-macros
+CFLAGS-tst_iswspace.c  = -Wno-multistatement-macros
+CFLAGS-tst_iswupper.c  = -Wno-multistatement-macros
+CFLAGS-tst_iswxdigit.c = -Wno-multistatement-macros
+CFLAGS-tst_towlower.c  = -Wno-multistatement-macros
+CFLAGS-tst_towupper.c  = -Wno-multistatement-macros
 
 ifeq ($(run-built-tests),yes)
 generated-dirs += $(LOCALES)
