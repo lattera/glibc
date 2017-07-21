@@ -1,3 +1,8 @@
+2017-07-21  Steve Ellcey  <sellcey@cavium.com>
+
+	* sysdeps/ieee754/ldbl-128/e_expl.c (__ieee754_expl): Call
+	math_force_eval.
+
 2017-07-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.

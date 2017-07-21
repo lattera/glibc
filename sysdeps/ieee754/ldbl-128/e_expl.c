@@ -192,6 +192,7 @@ __ieee754_expl (_Float128 x)
 	 with maximum error in [-2^-16-2^-53,2^-16+2^-53]
 	 less than 4.8e-39.  */
       x22 = x + x*x*(P1+x*(P2+x*(P3+x*(P4+x*(P5+x*P6)))));
+      math_force_eval (x22);
 
       /* Return result.  */
       fesetenv (&oldenv);
