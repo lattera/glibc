@@ -223,25 +223,25 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
 % Representation of telephone number for international use -
 % "+%c %a %l", which is
 % "+country code",
 % "area code without the prefix (often 0)",
 % "local number".
-%
-tel_dom_fmt    "<U0025><U0061><U0020><U0025><U006C>"
-% Represntation of telephone number for domestic use -
+tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
+<U006C>"
+
+% Representation of telephone number for domestic use -
 % "%a %l", which is
 % "area code, local number".
-% 000
+tel_dom_fmt    "<U0025><U0061><U0020><U0025><U006C>"
+
+% Digits used in Uganda to dial international - "000".
 int_select   "<U0030><U0030><U0030>"
-% Digits used in Uganda to dial international - "00".
-%
-int_prefix     "<U0032><U0035><U0036>"
+
 % International prefix for Uganda - "256"
-%
+int_prefix     "<U0032><U0035><U0036>"
+
 END LC_TELEPHONE
 
 LC_MEASUREMENT
