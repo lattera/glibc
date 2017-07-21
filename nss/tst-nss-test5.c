@@ -65,7 +65,7 @@ do_test (void)
   int i;
   struct passwd *p;
 
-  __nss_configure_lookup ("passwd", "test1 test2");
+  __nss_configure_lookup ("passwd", "test1");
 
   setpwent ();
 
