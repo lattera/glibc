@@ -1,3 +1,10 @@
+2017-07-23  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h [_LINUX_PTRACE_H ||
+	_S390_PTRACE_H]: Undefine all PTRACE_* macro constants defined
+	later as enum constants, except PTRACE_PEEKUSER, PTRACE_POKEUSER,
+	and PTRACE_SEIZE_DEVEL that are not defined by Linux headers.
+
 2017-07-23  John David Anglin  <danglin@gcc.gnu.org>
 
 	[BZ 19170]
