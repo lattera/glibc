@@ -1,3 +1,8 @@
+2017-07-23  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ 19170]
+	* sysdeps/hppa/dl-trampoline.S (_dl_runtime_resolve): Revise comment.
+
 2017-07-21  DJ Delorie  <dj@redhat.com>
 
 	* nss/tst-nss-test5.c: Correct test configuration.
