@@ -1,3 +1,8 @@
+2017-07-25  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21822]
+	* locales/mai_IN (LC_TIME): Fix abday, day, mon etc...
+
 2017-07-24  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21821]
