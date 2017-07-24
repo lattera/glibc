@@ -1,3 +1,15 @@
+2017-07-24  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #21804]
+	* sysdeps/nptl/bits/thread-shared-types.h (__PTHREAD_SPINS_DATA)
+	[__PTHREAD_MUTEX_LOCK_ELISION && __WORDSIZE == 64]: Remove
+	trailing semicolon.
+	(struct __pthread_mutex_s): Remove semicolon after
+	__PTHREAD_COMPAT_PADDING_MID and __PTHREAD_COMPAT_PADDING_END.
+	* sysdeps/hppa/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_COMPAT_PADDING_MID, __PTHREAD_COMPAT_PADDING_END): Add
+	semicolon.
+
 2017-07-23  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h [_LINUX_PTRACE_H ||

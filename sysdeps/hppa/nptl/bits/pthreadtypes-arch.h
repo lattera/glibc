@@ -43,10 +43,10 @@
 /* The old 4-word 16-byte aligned lock. This is initalized
    to all ones by the Linuxthreads PTHREAD_MUTEX_INITIALIZER.
    Unused in NPTL.  */
-#define __PTHREAD_COMPAT_PADDING_MID  int __compat_padding[4]
+#define __PTHREAD_COMPAT_PADDING_MID  int __compat_padding[4];
 /* Two more words are left before the NPTL
    pthread_mutex_t is larger than Linuxthreads.  */
-#define __PTHREAD_COMPAT_PADDING_END  int __reserved[2]
+#define __PTHREAD_COMPAT_PADDING_END  int __reserved[2];
 #define __PTHREAD_MUTEX_LOCK_ELISION    0
 
 #define __LOCK_ALIGNMENT __attribute__ ((__aligned__(16)))

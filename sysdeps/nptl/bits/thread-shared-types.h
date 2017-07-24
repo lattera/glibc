@@ -77,7 +77,7 @@ typedef struct __pthread_internal_slist
 # if __WORDSIZE == 64
 #  define __PTHREAD_SPINS_DATA	\
   short __spins;		\
-  short __elision;
+  short __elision
 #  define __PTHREAD_SPINS             0, 0
 # else
 #  define __PTHREAD_SPINS_DATA	\
@@ -107,7 +107,7 @@ struct __pthread_mutex_s
   /* KIND must stay at this position in the structure to maintain
      binary compatibility with static initializers.  */
   int __kind;
-  __PTHREAD_COMPAT_PADDING_MID;
+  __PTHREAD_COMPAT_PADDING_MID
 #if __WORDSIZE == 64
   __PTHREAD_SPINS_DATA;
   __pthread_list_t __list;
@@ -120,7 +120,7 @@ struct __pthread_mutex_s
     __pthread_slist_t __list;
   };
 #endif
-  __PTHREAD_COMPAT_PADDING_END;
+  __PTHREAD_COMPAT_PADDING_END
 };
 
 
