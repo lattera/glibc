@@ -24,13 +24,17 @@ extern char **__libc_argv attribute_hidden;
 
 void
 __attribute__ ((noreturn)) internal_function
-__fortify_fail_abort (_Bool do_backtrace, const char *msg)
+__fortify_fail_abort (_Bool need_backtrace, const char *msg)
 {
-  /* The loop is added only to keep gcc happy.  */
+  /* The loop is added only to keep gcc happy.  Don't pass down
+     __libc_argv[0] if we aren't doing backtrace since __libc_argv[0]
+     may point to the corrupted stack.  */
   while (1)
-    __libc_message (do_backtrace ? (do_abort | do_backtrace) : do_abort,
+    __libc_message (need_backtrace ? (do_abort | do_backtrace) : do_abort,
 		    "*** %s ***: %s terminated\n",
-		    msg, __libc_argv[0] ?: "<unknown>");
+		    msg,
+		    (need_backtrace && __libc_argv[0] != NULL
+		     ? __libc_argv[0] : "<unknown>"));
 }
 
 void

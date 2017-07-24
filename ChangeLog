@@ -1,3 +1,12 @@
+2017-07-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21752]
+	* debug/fortify_fail.c (__fortify_fail_abort): Don't pass down
+	__libc_argv[0] if we aren't doing backtrace.  Rename do_backtrace
+	to need_backtrace.
+	* sysdeps/posix/libc_fatal.c (__libc_message): Don't call
+	__libc_secure_getenv if we aren't doing backtrace.
+
 2017-07-24  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #21804]
