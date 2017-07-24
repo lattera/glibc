@@ -321,6 +321,10 @@ END LC_NAME
 LC_ADDRESS
 % FIXME
 postal_fmt "???"
+% https://tt.wikipedia.org/wiki/%D0%A0%D1%83%D1%81%D0%B8%D1%8F : Русия
+country_name "<U0420><U0443><U0441><U0438><U044F>"
+country_ab2 "<U0052><U0055>"
+country_ab3 "<U0052><U0055><U0053>"
 country_num 643
 % RUS
 country_car    "<U0052><U0055><U0053>"

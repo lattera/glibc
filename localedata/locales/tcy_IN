@@ -177,6 +177,8 @@ LC_ADDRESS
 % LC_ADDRESS
 postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 <U0025><U0062><U0025><U0065><U0025><U0072>"
+% https://tcy.wikipedia.org/wiki/%E0%B2%AD%E0%B2%BE%E0%B2%B0%E0%B2%A4 : "ಭಾರತ"
+country_name "<U0CAD><U0CBE><U0CB0><U0CA4>"
 country_ab2 "<U0049><U004E>"
 country_ab3 "<U0049><U004E><U0044>"
 country_car "<U0049><U004E><U0044>"

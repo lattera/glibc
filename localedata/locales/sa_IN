@@ -232,6 +232,8 @@ LC_ADDRESS
 % LC_ADDRESS
 postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 <U0025><U0062><U0025><U0065><U0025><U0072>"
+% https://sa.wikipedia.org/wiki/%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%E0%A4%AE%E0%A5%8D : "भारतम्"
+country_name "<U092D><U093E><U0930><U0924><U092E><U094D>"
 country_ab2 "<U0049><U004E>"
 country_ab3 "<U0049><U004E><U0044>"
 country_num 356

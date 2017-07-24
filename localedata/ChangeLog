@@ -1,3 +1,27 @@
+2017-07-24  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/an_ES (LC_ADDRESS): Add country_name.
+	* locales/ayc_PE (LC_ADDRESS): Add country_name.
+	* locales/be_BY@latin (LC_ADDRESS): Add country_name.
+	* locales/dv_MV (LC_ADDRESS): Add country_name,
+	country_ab2, and country_ab3
+	* locales/ia_FR (LC_ADDRESS): Add country_name.
+	* locales/ik_CA (LC_ADDRESS): Add country_name.
+	* locales/lij_IT (LC_ADDRESS): Add country_name.
+	* locales/mi_NZ (LC_ADDRESS): Add country_name.
+	* locales/nds_DE (LC_ADDRESS): Add country_name.
+	* locales/nds_NL (LC_ADDRESS): Add country_name.
+	* locales/oc_FR (LC_ADDRESS): Add country_name.
+	* locales/sa_IN (LC_ADDRESS): Add country_name.
+	* locales/sc_IT (LC_ADDRESS): Add country_name.
+	* locales/sd_IN (LC_ADDRESS): Add country_name.
+	* locales/tcy_IN (LC_ADDRESS): Add country_name.
+	* locales/tg_TJ (LC_ADDRESS): Add country_name.
+	* locales/tl_PH (LC_ADDRESS): Add country_name.
+	* locales/tt_RU (LC_ADDRESS): Add country_name.
+	* locales/wo_SN (LC_ADDRESS): Add country_name.
+	* locales/zh_SG (LC_ADDRESS): Add country_name.
+
 2017-07-25  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21825]
