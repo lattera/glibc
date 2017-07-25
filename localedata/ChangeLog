@@ -1,3 +1,24 @@
+2017-07-21  Rafal Luzynski <digitalfreak@lingonborough.com>
+
+	Indian scripts: abmon imported from CLDRv31 (related with
+	BZ#21217).
+
+	* locales/as_IN (abmon): Update from CLDR.
+	* locales/bn_BD (abmon): Likewise.
+	* locales/bn_IN (abmon): Likewise.
+	* locales/gu_IN (abmon): Likewise.
+	* locales/hi_IN (abmon): Likewise.
+	* locales/kn_IN (abmon): Likewise.
+	* locales/ml_IN (abmon): Likewise.
+	* locales/mr_IN (abmon): Likewise.
+	* locales/ne_NP (abmon): Likewise.
+	* locales/or_IN (abmon): Likewise.
+	* locales/pa_IN (abmon): Likewise.
+	* locales/ta_IN (abmon): Likewise.
+	* locales/te_IN (abmon): Likewise.
+
+	* locales/kok_IN (abmon): Likewise but copied from mon.
+
 2017-07-26  Mike FABIAN  <mfabian@redhat.com>
 
 	* localedata/locales/mai_NP: Use POSIX Portable Character Set.

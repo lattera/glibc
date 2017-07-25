@@ -89,8 +89,8 @@ day         "<U09B0><U09AC><U09BF><U09AC><U09BE><U09B0>";"<U09B8><U09CB><U09AE><
 
 %
 % Abbreviated month names (%b)
-abmon       "<U099C><U09BE><U09A8><U09C1><U09DF><U09BE><U09B0><U09BF>";/
-            "<U09AB><U09C7><U09AC><U09CD><U09B0><U09C1><U09DF><U09BE><U09B0><U09BF>";/
+abmon       "<U099C><U09BE><U09A8><U09C1>";/
+            "<U09AB><U09C7><U09AC>";/
             "<U09AE><U09BE><U09B0><U09CD><U099A>";"<U098F><U09AA><U09CD><U09B0><U09BF><U09B2>";/
             "<U09AE><U09C7>";"<U099C><U09C1><U09A8>";/
             "<U099C><U09C1><U09B2><U09BE><U0987>";"<U0986><U0997><U09B8><U09CD><U099F>";/

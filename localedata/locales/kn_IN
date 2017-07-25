@@ -110,18 +110,18 @@ day      "<U0CB0><U0CB5><U0CBF><U0CB5><U0CBE><U0CB0>";/
 
 %
 % Abbreviated month names (%b)
-abmon       	"<U0C9C>";/
-	"<U0CAB><U0CC6>";/
-	"<U0CAE><U0CBE>";/
-	"<U0C8F>";/
+abmon       	"<U0C9C><U0CA8>";/
+	"<U0CAB><U0CC6><U0CAC><U0CCD><U0CB0>";/
+	"<U0CAE><U0CBE><U0CB0><U0CCD><U0C9A><U0CCD>";/
+	"<U0C8F><U0CAA><U0CCD><U0CB0><U0CBF>";/
 	"<U0CAE><U0CC7>";/
-	"<U0C9C><U0CC2>";/
-	"<U0C9C><U0CC1>";/
+	"<U0C9C><U0CC2><U0CA8><U0CCD>";/
+	"<U0C9C><U0CC1><U0CB2><U0CC8>";/
 	"<U0C86>";/
-	"<U0CB8><U0CC6>";/
-	"<U0C85>";/
-	"<U0CA8>";/
-	"<U0CA6>"
+	"<U0CB8><U0CC6><U0CAA><U0CCD><U0C9F><U0CC6><U0C82>";/
+	"<U0C85><U0C95><U0CCD><U0C9F><U0CCB>";/
+	"<U0CA8><U0CB5><U0CC6><U0C82>";/
+	"<U0CA1><U0CBF><U0CB8><U0CC6><U0C82>"
 
 %
 % Full month names (%B)

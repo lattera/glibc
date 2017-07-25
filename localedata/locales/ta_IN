@@ -108,12 +108,12 @@ day         "<U0B9E><U0BBE><U0BAF><U0BBF><U0BB1><U0BC1>";"<U0BA4><U0BBF><U0B99><
             "<U0B9A><U0BA9><U0BBF>"
 %
 % Abbreviated month names (%b)
-abmon       "<U0B9C><U0BA9>";"<U0BAA><U0BBF><U0BAA><U0BCD>";/
-            "<U0BAE><U0BBE><U0BB0><U0BCD>";"<U0B8F><U0BAA><U0BCD>";/
+abmon       "<U0B9C><U0BA9><U002E>";"<U0BAA><U0BBF><U0BAA><U0BCD><U002E>";/
+            "<U0BAE><U0BBE><U0BB0><U0BCD><U002E>";"<U0B8F><U0BAA><U0BCD><U002E>";/
             "<U0BAE><U0BC7>";"<U0B9C><U0BC2><U0BA9><U0BCD>";/
-            "<U0B9C><U0BC2><U0BB2><U0BC8>";"<U0B86><U0B95>";/
-            "<U0B9A><U0BC6><U0BAA><U0BCD>";"<U0B85><U0B95><U0BCD>";/
-            "<U0BA8><U0BB5>";"<U0B9F><U0BBF><U0B9A>"
+            "<U0B9C><U0BC2><U0BB2><U0BC8>";"<U0B86><U0B95><U002E>";/
+            "<U0B9A><U0BC6><U0BAA><U0BCD><U002E>";"<U0B85><U0B95><U0BCD><U002E>";/
+            "<U0BA8><U0BB5><U002E>";"<U0B9F><U0BBF><U0B9A><U002E>"
 %
 % Full month names (%B)
 mon         "<U0B9C><U0BA9><U0BB5><U0BB0><U0BBF>";"<U0BAA><U0BBF><U0BAA><U0BCD><U0BB0><U0BB5><U0BB0><U0BBF>";/
