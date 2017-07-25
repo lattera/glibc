@@ -46,9 +46,10 @@ typedef int_fast64_t	zic_t;
 static ptrdiff_t const PTRDIFF_MAX = MAXVAL(ptrdiff_t, TYPE_BIT(ptrdiff_t));
 #endif
 
-/* The type and printf format for line numbers.  */
+/* The type for line numbers.  Use PRIdMAX to format them; formerly
+   there was also "#define PRIdLINENO PRIdMAX" and formats used
+   PRIdLINENO, but xgettext cannot grok that.  */
 typedef intmax_t lineno;
-#define PRIdLINENO PRIdMAX
 
 struct rule {
 	const char *	r_filename;
@@ -484,10 +485,10 @@ verror(const char *const string, va_list args)
 	** on BSD systems.
 	*/
 	if (filename)
-	  fprintf(stderr, _("\"%s\", line %"PRIdLINENO": "), filename, linenum);
+	  fprintf(stderr, _("\"%s\", line %"PRIdMAX": "), filename, linenum);
 	vfprintf(stderr, string, args);
 	if (rfilename != NULL)
-		fprintf(stderr, _(" (rule from \"%s\", line %"PRIdLINENO")"),
+		fprintf(stderr, _(" (rule from \"%s\", line %"PRIdMAX")"),
 			rfilename, rlinenum);
 	fprintf(stderr, "\n");
 }
@@ -1250,7 +1251,7 @@ _("\"Zone %s\" line and -p option are mutually exclusive"),
 		if (zones[i].z_name != NULL &&
 			strcmp(zones[i].z_name, fields[ZF_NAME]) == 0) {
 				error(_("duplicate zone name %s"
-					" (file \"%s\", line %"PRIdLINENO")"),
+					" (file \"%s\", line %"PRIdMAX")"),
 					fields[ZF_NAME],
 					zones[i].z_filename,
 					zones[i].z_linenum);

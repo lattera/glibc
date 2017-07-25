@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.25.90\n"
-"POT-Creation-Date: 2017-07-16 15:25+0530\n"
+"POT-Creation-Date: 2017-07-25 12:32+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -452,15 +452,15 @@ msgstr ""
 msgid "error while loading shared libraries"
 msgstr ""
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:94
+#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:95
 msgid "cannot map pages for fdesc table"
 msgstr ""
 
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:207
+#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:213
 msgid "cannot map pages for fptr table"
 msgstr ""
 
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:236
+#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:242
 msgid "internal error: symidx out of range of fptr table"
 msgstr ""
 
@@ -4915,7 +4915,7 @@ msgstr ""
 msgid "Input message available"
 msgstr ""
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:381 timezone/zic.c:519
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:381 timezone/zic.c:520
 msgid "I/O error"
 msgstr ""
 
@@ -6646,33 +6646,35 @@ msgstr ""
 msgid "%s: wild -t argument %s\n"
 msgstr ""
 
-#: timezone/zic.c:397
+#: timezone/zic.c:398
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr ""
 
-#: timezone/zic.c:405
+#: timezone/zic.c:406
 msgid "size overflow"
 msgstr ""
 
-#: timezone/zic.c:453
+#: timezone/zic.c:454
 msgid "integer overflow"
 msgstr ""
 
-#: timezone/zic.c:487
-msgid "\"%s\", line %"
+#: timezone/zic.c:488
+#, c-format
+msgid "\"%s\", line %<PRIdMAX>: "
 msgstr ""
 
-#: timezone/zic.c:490
-msgid " (rule from \"%s\", line %"
+#: timezone/zic.c:491
+#, c-format
+msgid " (rule from \"%s\", line %<PRIdMAX>)"
 msgstr ""
 
-#: timezone/zic.c:509
+#: timezone/zic.c:510
 #, c-format
 msgid "warning: "
 msgstr ""
 
-#: timezone/zic.c:534
+#: timezone/zic.c:535
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
@@ -6682,383 +6684,384 @@ msgid ""
 "Report bugs to %s.\n"
 msgstr ""
 
-#: timezone/zic.c:557
+#: timezone/zic.c:558
 #, c-format
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:589
+#: timezone/zic.c:590
 msgid "wild compilation-time specification of zic_t"
 msgstr ""
 
-#: timezone/zic.c:609
+#: timezone/zic.c:610
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr ""
 
-#: timezone/zic.c:619
+#: timezone/zic.c:620
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr ""
 
-#: timezone/zic.c:629
+#: timezone/zic.c:630
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr ""
 
-#: timezone/zic.c:639
+#: timezone/zic.c:640
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr ""
 
-#: timezone/zic.c:649
+#: timezone/zic.c:650
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr ""
 
-#: timezone/zic.c:658
+#: timezone/zic.c:659
 msgid "-s ignored"
 msgstr ""
 
-#: timezone/zic.c:697
+#: timezone/zic.c:698
 msgid "link to link"
 msgstr ""
 
-#: timezone/zic.c:700 timezone/zic.c:704
+#: timezone/zic.c:701 timezone/zic.c:705
 msgid "command line"
 msgstr ""
 
-#: timezone/zic.c:720
+#: timezone/zic.c:721
 msgid "empty file name"
 msgstr ""
 
-#: timezone/zic.c:723
+#: timezone/zic.c:724
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr ""
 
-#: timezone/zic.c:733
+#: timezone/zic.c:734
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr ""
 
-#: timezone/zic.c:739
+#: timezone/zic.c:740
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr ""
 
-#: timezone/zic.c:742
+#: timezone/zic.c:743
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr ""
 
-#: timezone/zic.c:770
+#: timezone/zic.c:771
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr ""
 
-#: timezone/zic.c:771
+#: timezone/zic.c:772
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr ""
 
-#: timezone/zic.c:841
+#: timezone/zic.c:842
 #, c-format
 msgid "%s: link from %s/%s failed: %s\n"
 msgstr ""
 
-#: timezone/zic.c:851 timezone/zic.c:1814
+#: timezone/zic.c:852 timezone/zic.c:1815
 #, c-format
 msgid "%s: Can't remove %s/%s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:873
+#: timezone/zic.c:874
 #, c-format
 msgid "symbolic link used because hard link failed: %s"
 msgstr ""
 
-#: timezone/zic.c:881
+#: timezone/zic.c:882
 #, c-format
 msgid "%s: Can't read %s/%s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:888 timezone/zic.c:1827
+#: timezone/zic.c:889 timezone/zic.c:1828
 #, c-format
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:897
+#: timezone/zic.c:898
 #, c-format
 msgid "copy used because hard link failed: %s"
 msgstr ""
 
-#: timezone/zic.c:900
+#: timezone/zic.c:901
 #, c-format
 msgid "copy used because symbolic link failed: %s"
 msgstr ""
 
-#: timezone/zic.c:1012 timezone/zic.c:1014
+#: timezone/zic.c:1013 timezone/zic.c:1015
 msgid "same rule name in multiple files"
 msgstr ""
 
-#: timezone/zic.c:1055
+#: timezone/zic.c:1056
 msgid "unruly zone"
 msgstr ""
 
-#: timezone/zic.c:1062
+#: timezone/zic.c:1063
 #, c-format
 msgid "%s in ruleless zone"
 msgstr ""
 
-#: timezone/zic.c:1082
+#: timezone/zic.c:1083
 msgid "standard input"
 msgstr ""
 
-#: timezone/zic.c:1087
+#: timezone/zic.c:1088
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:1098
+#: timezone/zic.c:1099
 msgid "line too long"
 msgstr ""
 
-#: timezone/zic.c:1118
+#: timezone/zic.c:1119
 msgid "input line of unknown type"
 msgstr ""
 
-#: timezone/zic.c:1133
+#: timezone/zic.c:1134
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s"
 msgstr ""
 
-#: timezone/zic.c:1141 timezone/zic.c:1546 timezone/zic.c:1568
+#: timezone/zic.c:1142 timezone/zic.c:1547 timezone/zic.c:1569
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr ""
 
-#: timezone/zic.c:1150
+#: timezone/zic.c:1151
 msgid "expected continuation line not found"
 msgstr ""
 
-#: timezone/zic.c:1192 timezone/zic.c:2975
+#: timezone/zic.c:1193 timezone/zic.c:2976
 msgid "time overflow"
 msgstr ""
 
-#: timezone/zic.c:1197
+#: timezone/zic.c:1198
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr ""
 
-#: timezone/zic.c:1208
+#: timezone/zic.c:1209
 msgid "wrong number of fields on Rule line"
 msgstr ""
 
-#: timezone/zic.c:1212
+#: timezone/zic.c:1213
 msgid "nameless rule"
 msgstr ""
 
-#: timezone/zic.c:1217
+#: timezone/zic.c:1218
 msgid "invalid saved time"
 msgstr ""
 
-#: timezone/zic.c:1234
+#: timezone/zic.c:1235
 msgid "wrong number of fields on Zone line"
 msgstr ""
 
-#: timezone/zic.c:1239
+#: timezone/zic.c:1240
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr ""
 
-#: timezone/zic.c:1245
+#: timezone/zic.c:1246
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr ""
 
-#: timezone/zic.c:1252
-msgid "duplicate zone name %s (file \"%s\", line %"
+#: timezone/zic.c:1253
+#, c-format
+msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr ""
 
-#: timezone/zic.c:1266
+#: timezone/zic.c:1267
 msgid "wrong number of fields on Zone continuation line"
 msgstr ""
 
-#: timezone/zic.c:1306
+#: timezone/zic.c:1307
 msgid "invalid UT offset"
 msgstr ""
 
-#: timezone/zic.c:1310
+#: timezone/zic.c:1311
 msgid "invalid abbreviation format"
 msgstr ""
 
-#: timezone/zic.c:1319
+#: timezone/zic.c:1320
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr ""
 
-#: timezone/zic.c:1346
+#: timezone/zic.c:1347
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 
-#: timezone/zic.c:1373
+#: timezone/zic.c:1374
 msgid "wrong number of fields on Leap line"
 msgstr ""
 
-#: timezone/zic.c:1382
+#: timezone/zic.c:1383
 msgid "invalid leaping year"
 msgstr ""
 
-#: timezone/zic.c:1402 timezone/zic.c:1500
+#: timezone/zic.c:1403 timezone/zic.c:1501
 msgid "invalid month name"
 msgstr ""
 
-#: timezone/zic.c:1415 timezone/zic.c:1613 timezone/zic.c:1627
+#: timezone/zic.c:1416 timezone/zic.c:1614 timezone/zic.c:1628
 msgid "invalid day of month"
 msgstr ""
 
-#: timezone/zic.c:1420
+#: timezone/zic.c:1421
 msgid "time too small"
 msgstr ""
 
-#: timezone/zic.c:1424
+#: timezone/zic.c:1425
 msgid "time too large"
 msgstr ""
 
-#: timezone/zic.c:1428 timezone/zic.c:1529
+#: timezone/zic.c:1429 timezone/zic.c:1530
 msgid "invalid time of day"
 msgstr ""
 
-#: timezone/zic.c:1447
+#: timezone/zic.c:1448
 msgid "illegal CORRECTION field on Leap line"
 msgstr ""
 
-#: timezone/zic.c:1452
+#: timezone/zic.c:1453
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr ""
 
-#: timezone/zic.c:1458
+#: timezone/zic.c:1459
 msgid "leap second precedes Big Bang"
 msgstr ""
 
-#: timezone/zic.c:1471
+#: timezone/zic.c:1472
 msgid "wrong number of fields on Link line"
 msgstr ""
 
-#: timezone/zic.c:1475
+#: timezone/zic.c:1476
 msgid "blank FROM field on Link line"
 msgstr ""
 
-#: timezone/zic.c:1550
+#: timezone/zic.c:1551
 msgid "invalid starting year"
 msgstr ""
 
-#: timezone/zic.c:1572
+#: timezone/zic.c:1573
 msgid "invalid ending year"
 msgstr ""
 
-#: timezone/zic.c:1576
+#: timezone/zic.c:1577
 msgid "starting year greater than ending year"
 msgstr ""
 
-#: timezone/zic.c:1583
+#: timezone/zic.c:1584
 msgid "typed single year"
 msgstr ""
 
-#: timezone/zic.c:1618
+#: timezone/zic.c:1619
 msgid "invalid weekday name"
 msgstr ""
 
-#: timezone/zic.c:1742
+#: timezone/zic.c:1743
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
 msgstr ""
 
-#: timezone/zic.c:1746
+#: timezone/zic.c:1747
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr ""
 
-#: timezone/zic.c:1857
+#: timezone/zic.c:1858
 msgid "too many transition times"
 msgstr ""
 
-#: timezone/zic.c:2046
+#: timezone/zic.c:2047
 #, c-format
 msgid "%%z UTC offset magnitude exceeds 99:59:59"
 msgstr ""
 
-#: timezone/zic.c:2423
+#: timezone/zic.c:2424
 msgid "no POSIX environment variable for zone"
 msgstr ""
 
-#: timezone/zic.c:2429
+#: timezone/zic.c:2430
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr ""
 
-#: timezone/zic.c:2565
+#: timezone/zic.c:2566
 msgid "two rules for same instant"
 msgstr ""
 
-#: timezone/zic.c:2626
+#: timezone/zic.c:2627
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 
-#: timezone/zic.c:2724
+#: timezone/zic.c:2725
 msgid "too many local time types"
 msgstr ""
 
-#: timezone/zic.c:2728
+#: timezone/zic.c:2729
 msgid "UT offset out of range"
 msgstr ""
 
-#: timezone/zic.c:2752
+#: timezone/zic.c:2753
 msgid "too many leap seconds"
 msgstr ""
 
-#: timezone/zic.c:2758
+#: timezone/zic.c:2759
 msgid "repeated leap second moment"
 msgstr ""
 
-#: timezone/zic.c:2829
+#: timezone/zic.c:2830
 msgid "Wild result from command execution"
 msgstr ""
 
-#: timezone/zic.c:2830
+#: timezone/zic.c:2831
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr ""
 
-#: timezone/zic.c:2960
+#: timezone/zic.c:2961
 msgid "Odd number of quotation marks"
 msgstr ""
 
-#: timezone/zic.c:3045
+#: timezone/zic.c:3046
 msgid "use of 2/29 in non leap-year"
 msgstr ""
 
-#: timezone/zic.c:3080
+#: timezone/zic.c:3081
 msgid ""
 "rule goes past start/end of month; will not work with pre-2004 versions of "
 "zic"
 msgstr ""
 
-#: timezone/zic.c:3107
+#: timezone/zic.c:3108
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr ""
 
-#: timezone/zic.c:3109
+#: timezone/zic.c:3110
 msgid "time zone abbreviation has too many characters"
 msgstr ""
 
-#: timezone/zic.c:3111
+#: timezone/zic.c:3112
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr ""
 
-#: timezone/zic.c:3117
+#: timezone/zic.c:3118
 msgid "too many, or too long, time zone abbreviations"
 msgstr ""
 
-#: timezone/zic.c:3160
+#: timezone/zic.c:3161
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr ""
