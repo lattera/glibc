@@ -1,5 +1,6 @@
 2017-07-26  Mike FABIAN  <mfabian@redhat.com>
 
+	[BZ #21828]
 	* NEWS: Mention that the Unicode 10.0.0 update causes user visible changes.
 
 2017-07-26  Siddhesh Poyarekar  <siddhesh@sourceware.org>
