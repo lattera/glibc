@@ -97,10 +97,7 @@ am_pm   "<U0050><U0075><U0072><U0076><U0061><U0068><U0061><U006E>";/
         "<U0041><U0070><U0061><U0072><U0061><U0061><U0068><U006E><U0061>"
 %
 % Appropriate date and time representation
-% %A %d %b %Y%I:%M:%S %Z
-d_t_fmt "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0062>/
-         <U0020><U0025><U0059><U0020><U0025><U0049><U003A><U0025><U004D><U003A>/
-         <U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+d_t_fmt "%A %d %b %Y %I:%M:%S %Z"
 %
 % Appropriate date representation
 % %A %d %b %Y
