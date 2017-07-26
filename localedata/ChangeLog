@@ -1,3 +1,27 @@
+2017-07-26  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/aa_DJ (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/aa_ER (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/aa_ET (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/ak_GH (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/bn_BD (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/de_IT (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/es_CU (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/gd_GB (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/gl_ES (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/he_IL (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/hr_HR (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/ht_HT (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/hy_AM (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/lg_UG (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/mai_IN (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/mg_MG (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/pl_PL (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/quz_PE (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/se_NO (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/sl_SI (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+	* locales/ta_LK (LC_IDENTIFICATION): Fix inappropriate escape sequence.
+
 2017-07-21  Rafal Luzynski <digitalfreak@lingonborough.com>
 
 	Indian scripts: abmon imported from CLDRv31 (related with

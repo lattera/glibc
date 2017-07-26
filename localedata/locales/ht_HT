@@ -29,7 +29,7 @@ escape_char /
 
 LC_IDENTIFICATION
 title        "Kreyol locale for Haiti"
-source       "Sugar Labs / OLPC"
+source       "Sugar Labs // OLPC"
 address      ""
 contact      "sugarlabs.org"
 email        "libc-alpha@sourceware.org"

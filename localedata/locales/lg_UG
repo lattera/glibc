@@ -26,7 +26,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Luganda locale for Uganda"
 source     "Akademe ya Luganda"
-address    "c/o P.O. Box 5190 Kampala, Uganda"
+address    "c//o P.O. Box 5190 Kampala, Uganda"
 contact    "Kizito Birabwa"
 email      "kompyuta@kizito.uklinux.net"
 tel        ""

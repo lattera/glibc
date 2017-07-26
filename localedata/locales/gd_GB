@@ -20,7 +20,7 @@ escape_char /
 LC_IDENTIFICATION
 title        "Scots Gaelic language locale for Great Britain"
 source       "Akerbeltz"
-address      "1/2, 47 Wilton Street, Glasgow G20 6RT, UK"
+address      "1//2, 47 Wilton Street, Glasgow G20 6RT, UK"
 contact      "Michael Bauer"
 email        "fios@akerbeltz.org"
 tel          ""

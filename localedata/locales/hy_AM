@@ -12,7 +12,7 @@ escape_char /
 
 LC_IDENTIFICATION
 title "Armenian language locale for Armenia"
-source "http://www.freenet.am/armscii"
+source "http:////www.freenet.am//armscii"
 %	Eugene Sevinian <sevinian@crdlx2.yerphi.am> completed
 %	LC_MONETARY and LC_TIME
 address ""

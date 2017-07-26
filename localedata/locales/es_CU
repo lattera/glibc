@@ -25,7 +25,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Spanish locale for Cuba"
 source     ""
-address    "San Antonio de los Ba<U00F8>os Highway, Kilometer 1 1/2, University of Informatic Sciences "
+address    "San Antonio de los Ba<U00F8>os Highway, Kilometer 1 1//2, University of Informatic Sciences "
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""

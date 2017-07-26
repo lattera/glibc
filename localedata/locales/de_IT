@@ -23,7 +23,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "German language locale for Italy"
 source     ""
-address    "I-39100 Bolzano/Bozen"
+address    "I-39100 Bolzano//Bozen"
 contact    "Matthias Dieter Wallno:fer"
 email      "libc-locales@sourceware.org"
 tel        ""

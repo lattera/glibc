@@ -27,7 +27,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Galician locale for Spain"
 source     "GPUL"
-address    "Facultade de Informática, Campus de Elvin~a, s/n, 15071 A Corun~a, Spain"
+address    "Facultade de Inform<U00E1>tica, Campus de Elvi<U00F1>a, s//n, 15071 A Coru<U00F1>a, Spain"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""

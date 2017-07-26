@@ -22,7 +22,7 @@ escape_char /
 
 LC_IDENTIFICATION
 title      "Malagasy locale for Madagascar"
-source     "The Debian Project modified by GNU/Linux Malagasy"
+source     "The Debian Project modified by GNU//Linux Malagasy"
 address    ""
 contact    "Rado Ramarotafika,Do-Risika RAFIEFERANTSIARONJY"
 email      "rado@linuxmg.org,dourix@free.fr"

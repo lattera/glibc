@@ -26,7 +26,7 @@ escape_char /
 
 LC_IDENTIFICATION
 title      "Slovenian locale for Slovenia"
-source     "USM/MZT"
+source     "USM//MZT"
 address    "Kotnikova 6,, Ljubljana, Slovenia"
 contact    ""
 email      "bug-glibc-locales@gnu.org"

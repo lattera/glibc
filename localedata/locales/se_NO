@@ -22,7 +22,7 @@ escape_char /
 
 LC_IDENTIFICATION
 title "Northern Saami language locale for Norway"
-source "http://www.hum.uit.no/a/trond/loc.html"
+source "http:////www.hum.uit.no//a//trond//loc.html"
 address ""
 contact "Børre Gaup"
 email "boerre.gaup@pc.nu"

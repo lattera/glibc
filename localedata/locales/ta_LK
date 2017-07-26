@@ -20,8 +20,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Tamil language locale for Sri Lanka"
 source     "J.Yogaraj"
-address    "30/36Q -2/1,Charles Apartments, De Silva Cross Rd,/
-	    Kalubowila,Dehiwela,SriLanka."
+address    "30//36Q -2//1,Charles Apartments, De Silva Cross Rd, Kalubowila, Dehiwela, SriLanka."
 contact    "94-777-315206"
 email      "yogaraj.ubuntu@gmail.com"
 tel        ""
