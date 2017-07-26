@@ -39,39 +39,15 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
-
-translit_start
-include  "translit_combining";""
-translit_end
+copy "ne_NP"
 END LC_CTYPE
 
 LC_COLLATE
-% Copy the template from ISO/IEC 14651
-copy "iso14651_t1"
+copy "ne_NP"
 END LC_COLLATE
 
 LC_MONETARY
-% This is the POSIX Locale definition the LC_MONETARY category.
-% These are generated based on XML base Locale definition file
-% for IBM Class for Unicode/Java
-%
-int_curr_symbol       "<U004E><U0050><U0052><U0020>"
-currency_symbol       "<U0930><U0942>"
-mon_decimal_point     "<U002E>"
-mon_thousands_sep     "<U002C>"
-mon_grouping          3
-positive_sign         ""
-negative_sign         "<U002D>"
-int_frac_digits       2
-frac_digits           2
-p_cs_precedes         1
-p_sep_by_space        1
-n_cs_precedes         1
-n_sep_by_space        1
-p_sign_posn           1
-n_sign_posn           1
-%
+copy "ne_NP"
 END LC_MONETARY
 
 
@@ -205,12 +181,7 @@ END LC_ADDRESS
 
 
 LC_TELEPHONE
-% This is the ISO_IEC TR14652 Locale definition for the
-%
-tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020>/
-<U003B><U0025><U006C>"
-int_prefix     "<U0039><U0037><U0037>"
-int_select     "<U0030><U0030>"
+copy "ne_NP"
 END LC_TELEPHONE
 
 
