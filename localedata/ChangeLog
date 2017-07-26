@@ -1,3 +1,7 @@
+2017-07-26  Mike FABIAN  <mfabian@redhat.com>
+
+	* localedata/locales/mai_NP: Use POSIX Portable Character Set.
+
 2017-07-26  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21835]
