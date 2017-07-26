@@ -58,7 +58,7 @@ END LC_COLLATE
 
 
 LC_MONETARY
-copy "hi_IN"
+copy "ar_IN"
 END LC_MONETARY
 
 

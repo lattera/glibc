@@ -614,7 +614,27 @@ END LC_NUMERIC
 
 %%%%%%%%%%%%%
 LC_MONETARY
-copy "hi_IN"
+int_curr_symbol       "<U0049><U004E><U0052><U0020>"
+currency_symbol       "<U20B9>"
+mon_decimal_point     "<U002E>"
+mon_thousands_sep     "<U002C>"
+mon_grouping          3;2
+positive_sign         ""
+negative_sign         "<U002D>"
+int_frac_digits       2
+frac_digits           2
+p_cs_precedes         1
+p_sep_by_space        1
+n_cs_precedes         1
+n_sep_by_space        1
+p_sign_posn           1
+n_sign_posn           1
+int_p_cs_precedes     1
+int_p_sep_by_space    1
+int_n_cs_precedes     1
+int_n_sep_by_space    1
+int_p_sign_posn       1
+int_n_sign_posn       1
 END LC_MONETARY
 
 %%%%%%%%%%%%%
