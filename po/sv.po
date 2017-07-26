@@ -5,12 +5,12 @@
 # Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003, 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015.
 # Göran Uddeborg <goeran@uddeborg.se>, 2016, 2017.
 #
-# $Revision: 1.6 $
+# $Revision: 1.7 $
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.25-pre1\n"
 "POT-Creation-Date: 2017-01-11 17:27+0530\n"
-"PO-Revision-Date: 2017-01-17 16:21+0100\n"
+"PO-Revision-Date: 2017-05-30 12:14+0200\n"
 "Last-Translator: Göran Uddeborg <goeran@uddeborg.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -2040,7 +2040,7 @@ msgstr "för många fel, ger upp"
 #: locale/programs/ld-collate.c:2518 locale/programs/ld-collate.c:3906
 #, c-format
 msgid "%s: nested conditionals not supported"
-msgstr "%s: nästlade villkor stöds inte"
+msgstr "%s: nästlade villkor stödjs ej"
 
 #: locale/programs/ld-collate.c:2536
 #, c-format
@@ -4593,7 +4593,7 @@ msgstr "Hämta poster från den administrativa databasen."
 #: nss/getent.c:148 nss/getent.c:441 nss/getent.c:486
 #, c-format
 msgid "Enumeration not supported on %s\n"
-msgstr "Uppräkning stöds inte på %s\n"
+msgstr "Uppräkning stödjs ej på %s\n"
 
 #: nss/getent.c:861
 #, c-format
@@ -5003,7 +5003,7 @@ msgstr "Ogiltig flyttalsoperation"
 
 #: stdio-common/psiginfo-data.h:19
 msgid "Subscript out of range"
-msgstr "Index utanför giltigt område"
+msgstr "Index utanför giltigt intervall"
 
 #: stdio-common/psiginfo-data.h:22
 msgid "Address not mapped to object"
@@ -5917,7 +5917,7 @@ msgstr "Felaktig adress"
 #. TRANS system in Unix gives this error.
 #: sysdeps/gnu/errlist.c:179
 msgid "Block device required"
-msgstr "Blockspecialfil krävs"
+msgstr "Blockenhet krävs"
 
 #. TRANS Resource busy; a system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
@@ -5984,7 +5984,7 @@ msgstr "För många öppna filer i systemet"
 #. TRANS modes on an ordinary file.
 #: sysdeps/gnu/errlist.c:286
 msgid "Inappropriate ioctl for device"
-msgstr "Olämplig \"ioctl\" för enhet"
+msgstr "Olämplig ioctl för enheten"
 
 #. TRANS An attempt to execute a file that is currently open for writing, or
 #. TRANS write to a file that is currently being executed.  Often using a
@@ -6014,7 +6014,7 @@ msgstr "Otillåten sökning"
 #. TRANS An attempt was made to modify something on a read-only file system.
 #: sysdeps/gnu/errlist.c:336
 msgid "Read-only file system"
-msgstr "Filsystemet endast läsbart"
+msgstr "Skrivskyddat filsystem"
 
 #. TRANS Too many links; the link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
@@ -6033,7 +6033,7 @@ msgstr "Numeriskt argument är utanför området"
 #. TRANS not representable because of overflow or underflow.
 #: sysdeps/gnu/errlist.c:380
 msgid "Numerical result out of range"
-msgstr "Numeriskt resultat är utanför giltigt område"
+msgstr "Numeriskt resultat är utanför giltigt intervall"
 
 #. TRANS Resource temporarily unavailable; the call might work if you try again
 #. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
@@ -6181,7 +6181,7 @@ msgstr "Nätverket tog bort förbindelsen vid omstart"
 #. TRANS A network connection was aborted locally.
 #: sysdeps/gnu/errlist.c:604
 msgid "Software caused connection abort"
-msgstr "Mjukvara orsakade förbindelsebrott"
+msgstr "Programvaran orsakade ett förbindelsebrott"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
@@ -6232,13 +6232,13 @@ msgstr "För många referenser: kan inte skarva"
 #. TRANS the timeout period.
 #: sysdeps/gnu/errlist.c:687
 msgid "Connection timed out"
-msgstr "Förbindelsen dog ut (timeout)"
+msgstr "Förbindelsens tidsgräns löpte ut"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
 #: sysdeps/gnu/errlist.c:697
 msgid "Connection refused"
-msgstr "Förbindelse vägras"
+msgstr "Förbindelsen förvägrad"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
@@ -6307,12 +6307,12 @@ msgstr "Är ett fjärrobjekt"
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:810
 msgid "RPC struct is bad"
-msgstr "RPC-struktur dålig"
+msgstr "RPC-strukturen är felaktig"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:819
 msgid "RPC version wrong"
-msgstr "RPC-version fel"
+msgstr "RPC-versionen är felaktig"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:828
@@ -6322,12 +6322,12 @@ msgstr "RPC-programmet inte tillgängligt"
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:837
 msgid "RPC program version wrong"
-msgstr "RPC-programversion fel"
+msgstr "RPC-programversionen är felaktig"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:846
 msgid "RPC bad procedure for program"
-msgstr "RPC dålig procedur för program"
+msgstr "Felaktig RPC-procedur för programmet"
 
 #. TRANS No locks available.  This is used by the file locking facilities; see
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
@@ -6349,12 +6349,12 @@ msgstr "Filtyp eller format olämplig"
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:880
 msgid "Authentication error"
-msgstr "Äkthetskontroll misslyckades"
+msgstr "Autentiseringsfel"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:889
 msgid "Need authenticator"
-msgstr "Behöver äkthetsintygare"
+msgstr "Behöver autentiserare"
 
 #. TRANS Function not implemented.  This indicates that the function called is
 #. TRANS not implemented at all, either in the C library itself or in the
@@ -6385,7 +6385,7 @@ msgstr "Stöds ej"
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
 #: sysdeps/gnu/errlist.c:932
 msgid "Invalid or incomplete multibyte or wide character"
-msgstr "Ogiltig eller inte komplett flerbyte- eller brett tecken"
+msgstr "Ogiltigt eller ofullständigt flerbyte- eller brett tecken"
 
 #. TRANS On @gnuhurdsystems{}, servers supporting the @code{term} protocol return
 #. TRANS this error for certain operations when the caller is not in the
@@ -6500,7 +6500,7 @@ msgstr "Nivå 3 omstartad"
 
 #: sysdeps/gnu/errlist.c:1143
 msgid "Link number out of range"
-msgstr "Länkantal utanför giltigt område"
+msgstr "Länkantal utanför giltigt intervall"
 
 #: sysdeps/gnu/errlist.c:1151
 msgid "Protocol driver not attached"
@@ -6520,7 +6520,7 @@ msgstr "Ogiltig växel"
 
 #: sysdeps/gnu/errlist.c:1183
 msgid "Invalid request descriptor"
-msgstr "Ogiltig frågedeskriptor"
+msgstr "Ogiltig begärandeidendiferare"
 
 #: sysdeps/gnu/errlist.c:1191
 msgid "Exchange full"
@@ -6532,7 +6532,7 @@ msgstr "Ingen anod"
 
 #: sysdeps/gnu/errlist.c:1207
 msgid "Invalid request code"
-msgstr "Ogiltig åtkomstkod"
+msgstr "Ogiltig begärandekod"
 
 #: sysdeps/gnu/errlist.c:1215
 msgid "Invalid slot"
@@ -6632,7 +6632,7 @@ msgstr "Inget medium funnet"
 
 #: sysdeps/gnu/errlist.c:1407
 msgid "Wrong medium type"
-msgstr "Fel typ på mediet"
+msgstr "Fel medietyp"
 
 #: sysdeps/gnu/errlist.c:1415
 msgid "Required key not available"
@@ -6656,7 +6656,7 @@ msgstr "Ägaren dog"
 
 #: sysdeps/gnu/errlist.c:1455
 msgid "State not recoverable"
-msgstr "Tillståndet kan inte återskapas"
+msgstr "Det går inte att återhämta från tillståndet"
 
 #: sysdeps/gnu/errlist.c:1463
 msgid "Operation not possible due to RF-kill"
@@ -6684,7 +6684,7 @@ msgstr "Otillåtet värde för ai_flags"
 
 #: sysdeps/posix/gai_strerror-strs.h:4
 msgid "Non-recoverable failure in name resolution"
-msgstr "Oreparerbart fel i namnuppslagning"
+msgstr "Icke återhämtningsbart fel i namnuppslagningen"
 
 #: sysdeps/posix/gai_strerror-strs.h:5
 msgid "ai_family not supported"
@@ -6704,7 +6704,7 @@ msgstr "Namn eller tjänst okänd"
 
 #: sysdeps/posix/gai_strerror-strs.h:9
 msgid "Servname not supported for ai_socktype"
-msgstr "Servname stöds inte för ai_socktype"
+msgstr "Servname stödjs ej för ai_socktype"
 
 #: sysdeps/posix/gai_strerror-strs.h:10
 msgid "ai_socktype not supported"
