@@ -1,5 +1,17 @@
 2017-07-26  Mike FABIAN  <mfabian@redhat.com>
 
+	* locales/agr_PE (LC_IDENTIFICATION): Fix inappropriate character.
+	* locales/an_ES (LC_IDENTIFICATION): Fix inappropriate character.
+	* locales/gv_GB (LC_IDENTIFICATION): Fix inappropriate character.
+	* locales/kw_GB (LC_IDENTIFICATION): Fix inappropriate character.
+	* locales/ln_CD (LC_IDENTIFICATION): Fix inappropriate character.
+	* locales/nb_NO (LC_IDENTIFICATION): Fix inappropriate character.
+	* locales/pap_CW (LC_IDENTIFICATION): Fix inappropriate character.
+	* locales/se_NO (LC_IDENTIFICATION): Fix inappropriate character.
+	* locales/sgs_LT (LC_IDENTIFICATION): Fix inappropriate character.
+
+2017-07-26  Mike FABIAN  <mfabian@redhat.com>
+
 	* locales/aa_DJ (LC_IDENTIFICATION): Fix inappropriate escape sequence.
 	* locales/aa_ER (LC_IDENTIFICATION): Fix inappropriate escape sequence.
 	* locales/aa_ET (LC_IDENTIFICATION): Fix inappropriate escape sequence.

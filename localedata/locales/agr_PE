@@ -31,7 +31,7 @@ escape_char /
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_IDENTIFICATION
-title        "Awajún (agr) locale for Peru"
+title        "Awaj<U00FA>n (agr) locale for Peru"
 source       "somosazucar.org"
 address      ""
 contact      ""

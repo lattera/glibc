@@ -29,7 +29,7 @@ LC_IDENTIFICATION
 title      "Aragonese locale for Spain"
 source     ""
 address    ""
-contact    "Jordi Mallach Pérez"
+contact    "Jordi Mallach P<U00E9>rez"
 email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""

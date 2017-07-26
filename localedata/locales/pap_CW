@@ -16,7 +16,7 @@ escape_char /
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_IDENTIFICATION
-title "Papiamento language for Curaçao"
+title "Papiamento language for Cura<U00E7>ao"
 source "information from native speaker"
 address ""
 contact "Pablo Saratxaga"
@@ -24,7 +24,7 @@ email "pablo@mandrakesoft.com"
 tel ""
 fax ""
 language "Papiamento"
-territory "Curaçao"
+territory "Cura<U00E7>ao"
 revision "1.0"
 date "2013-09-27"
 

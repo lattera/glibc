@@ -28,7 +28,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Manx Gaelic locale for Britain"
 source     "Alastair McKinstry"
-address    "Croí Lár, Ballinahalla, Maigh Cuilinn,, Co. Gaillimh, Ireland"
+address    "Cro<U00ED> L<U00E1>r, Ballinahalla, Maigh Cuilinn,, Co. Gaillimh, Ireland"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""

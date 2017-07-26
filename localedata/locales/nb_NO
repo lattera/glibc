@@ -24,14 +24,14 @@ escape_char /
 % Users: general
 
 LC_IDENTIFICATION
-title      "Norwegian (Bokmal) locale for Norway"
+title      "Norwegian (Bokm<U00E5>l) locale for Norway"
 source     "Norsk Standardiseringsforbund"
 address    "University Library, Drammensveien 41, N-9242 Oslo, Norge"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
-language   "Norwegian Bokmål"
+language   "Norwegian Bokm<U00E5>l"
 territory  "Norway"
 revision   "1.0"
 date       "2000-06-29"
