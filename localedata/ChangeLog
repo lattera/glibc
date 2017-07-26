@@ -1,5 +1,11 @@
 2017-07-26  Mike FABIAN  <mfabian@redhat.com>
 
+	* locales/et_EE (LC_ADDRESS): Remove tabs in postal_fmt.
+	* locales/hif_FJ (LC_TIME): Remove tabs in t_fmt_ampm.
+	* locales/hif_FJ (LC_NAME): Remove tabs in name_fmt.
+
+2017-07-26  Mike FABIAN  <mfabian@redhat.com>
+
 	* locales/agr_PE (LC_IDENTIFICATION): Fix inappropriate character.
 	* locales/an_ES (LC_IDENTIFICATION): Fix inappropriate character.
 	* locales/gv_GB (LC_IDENTIFICATION): Fix inappropriate character.
