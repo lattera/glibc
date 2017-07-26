@@ -1,3 +1,12 @@
+2017-07-26  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* po/bg.po: Update translations.
+	* po/cs.po: Likewise.
+	* po/de.po: Likewise.
+	* po/pl.po: Likewise.
+	* po/uk.po: Likewise.
+	* po/vi.po: Likewise.
+
 2017-07-26  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #21828]

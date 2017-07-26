@@ -6,10 +6,10 @@
 # Volodymyr M. Lisivka <lvm@mystery.lviv.net>, 2013.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.25-pre1\n"
-"POT-Creation-Date: 2017-01-11 17:27+0530\n"
-"PO-Revision-Date: 2017-01-11 15:58+0200\n"
-"Last-Translator: Volodymyr M. Lisivka <lvm@mystery.lviv.net>\n"
+"Project-Id-Version: libc 2.25.90\n"
+"POT-Creation-Date: 2017-07-25 12:32+0530\n"
+"PO-Revision-Date: 2017-07-26 10:19+0200\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 2.0\n"
 
 #: argp/argp-help.c:227
 #, c-format
@@ -472,19 +472,19 @@ msgstr "ВАДА ДИНАМІЧНОГО КОМПОНУВАЛЬНИКА!!!"
 msgid "error while loading shared libraries"
 msgstr "помилка під час спроби завантажити бібліотеки спільного використання"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:94
+#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:95
 msgid "cannot map pages for fdesc table"
 msgstr "не можна відображати сторінки для таблиці fdesc"
 
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:207
+#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:213
 msgid "cannot map pages for fptr table"
 msgstr "не можна відображати сторінки для таблиці fptr"
 
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:236
+#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:242
 msgid "internal error: symidx out of range of fptr table"
 msgstr "внутрішня помилка: symidx перебуває поза межами таблиці fptr"
 
-#: elf/dl-hwcaps.c:184 elf/dl-hwcaps.c:196
+#: elf/dl-hwcaps.c:191 elf/dl-hwcaps.c:203
 msgid "cannot create capability list"
 msgstr "не вдалося створити список можливостей"
 
@@ -664,20 +664,20 @@ msgstr "некоректний простір назв призначення у
 msgid "cannot allocate memory in static TLS block"
 msgstr "не вдалося отримати область пам’яті у статичному блоці TLS"
 
-#: elf/dl-reloc.c:212
+#: elf/dl-reloc.c:206
 msgid "cannot make segment writable for relocation"
 msgstr "не вдалося створити сегмент придатний до запису для пересування"
 
-#: elf/dl-reloc.c:283
+#: elf/dl-reloc.c:277
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: не вистачає пам’яті для зберігання результатів пересування для %s\n"
 
-#: elf/dl-reloc.c:299
+#: elf/dl-reloc.c:293
 msgid "cannot restore segment prot after reloc"
 msgstr "не вдалося відновити захист сегмент після пересування"
 
-#: elf/dl-reloc.c:330
+#: elf/dl-reloc.c:324
 msgid "cannot apply additional memory protection after relocation"
 msgstr "не вдалося застосувати додатковий захист пам’яті після пересування"
 
@@ -953,14 +953,14 @@ msgstr "Спробуйте «ldd --help» для отримання доклад
 msgid "missing file arguments"
 msgstr "не вказано аргументів-назв файл"
 
-#. TRANS No such file or directory.  This is a ``file doesn't exist'' error
+#. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
 #: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:37
 msgid "No such file or directory"
 msgstr "Немає такого файла або каталогу"
 
-#: elf/ldd.bash.in:150 inet/rcmd.c:475
+#: elf/ldd.bash.in:150 inet/rcmd.c:480
 msgid "not regular file"
 msgstr "не є звичайним файлом"
 
@@ -1533,68 +1533,68 @@ msgstr "під час вставлення до дерева пошуку"
 msgid "cannot generate output file"
 msgstr "не вдалося створити файл результату"
 
-#: inet/rcmd.c:155
+#: inet/rcmd.c:157
 msgid "rcmd: Cannot allocate memory\n"
 msgstr "rcmd: не вдалося отримати область пам’яті\n"
 
-#: inet/rcmd.c:170
+#: inet/rcmd.c:174
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: використано усі порти\n"
 
-#: inet/rcmd.c:198
+#: inet/rcmd.c:202
 #, c-format
 msgid "connect to address %s: "
 msgstr "встановлення з’єднання з адресою %s: "
 
-#: inet/rcmd.c:211
+#: inet/rcmd.c:215
 #, c-format
 msgid "Trying %s...\n"
 msgstr "Перевіряємо %s...\n"
 
-#: inet/rcmd.c:247
+#: inet/rcmd.c:251
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write (налаштовування stderr): %m\n"
 
-#: inet/rcmd.c:263
+#: inet/rcmd.c:267
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (налаштовування stderr): %m\n"
 
-#: inet/rcmd.c:266
+#: inet/rcmd.c:270
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: помилка протоколу у налаштуванні ланцюжка\n"
 
-#: inet/rcmd.c:298
+#: inet/rcmd.c:302
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: помилка протоколу у налаштуванні ланцюжка\n"
 
-#: inet/rcmd.c:322
+#: inet/rcmd.c:326
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: неповне читання"
 
-#: inet/rcmd.c:473
+#: inet/rcmd.c:478
 msgid "lstat failed"
 msgstr "помилка lstat"
 
-#: inet/rcmd.c:480
+#: inet/rcmd.c:485
 msgid "cannot open"
 msgstr "не вдалося відкрити"
 
-#: inet/rcmd.c:482
+#: inet/rcmd.c:487
 msgid "fstat failed"
 msgstr "помилка fstat"
 
-#: inet/rcmd.c:484
+#: inet/rcmd.c:489
 msgid "bad owner"
 msgstr "некоректний власник"
 
-#: inet/rcmd.c:486
+#: inet/rcmd.c:491
 msgid "writeable by other than owner"
 msgstr "є придатним до запису іншими користувачами, окрім власника"
 
-#: inet/rcmd.c:488
+#: inet/rcmd.c:493
 msgid "hard linked somewhere"
 msgstr "має жорстке посилання"
 
@@ -3135,7 +3135,7 @@ msgstr "Невідома системна помилка"
 msgid "unable to free arguments"
 msgstr "не вдалося звільнити аргументи"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:817 nis/ypclnt.c:905 posix/regcomp.c:137
+#: nis/nis_error.h:1 nis/ypclnt.c:824 nis/ypclnt.c:913 posix/regcomp.c:137
 #: sysdeps/gnu/errlist.c:21
 msgid "Success"
 msgstr "Успіх"
@@ -3176,8 +3176,8 @@ msgstr "Загальна помилка системи"
 msgid "First/next chain broken"
 msgstr "Розірвано ланцюжок перший-наступний"
 
-#. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:862 sysdeps/gnu/errlist.c:158
+#. TRANS The file permissions do not allow the attempted operation.
+#: nis/nis_error.h:11 nis/ypclnt.c:869 sysdeps/gnu/errlist.c:158
 msgid "Permission denied"
 msgstr "Відмовлено у доступі"
 
@@ -3329,128 +3329,128 @@ msgstr "Не вдалося створити процес на сервері"
 msgid "Master server busy, full dump rescheduled."
 msgstr "Основний сервер зайнято, виконано повторне планування створення повного дампу."
 
-#: nis/nis_local_names.c:121
+#: nis/nis_local_names.c:122
 #, c-format
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
 msgstr "Запис LOCAL для UID %d у каталозі %s не є унікальним\n"
 
-#: nis/nis_print.c:51
+#: nis/nis_print.c:52
 msgid "UNKNOWN"
 msgstr "НЕВІДОМО"
 
-#: nis/nis_print.c:109
+#: nis/nis_print.c:110
 msgid "BOGUS OBJECT\n"
 msgstr "ФІКТИВНИЙ ОБ’ЄКТ\n"
 
-#: nis/nis_print.c:112
+#: nis/nis_print.c:113
 msgid "NO OBJECT\n"
 msgstr "НЕМАЄ ОБ'ЄКТА\n"
 
-#: nis/nis_print.c:115
+#: nis/nis_print.c:116
 msgid "DIRECTORY\n"
 msgstr "КАТАЛОГ\n"
 
-#: nis/nis_print.c:118
+#: nis/nis_print.c:119
 msgid "GROUP\n"
 msgstr "ГРУПА\n"
 
-#: nis/nis_print.c:121
+#: nis/nis_print.c:122
 msgid "TABLE\n"
 msgstr "ТАБЛИЦЯ\n"
 
-#: nis/nis_print.c:124
+#: nis/nis_print.c:125
 msgid "ENTRY\n"
 msgstr "ЗАПИС\n"
 
-#: nis/nis_print.c:127
+#: nis/nis_print.c:128
 msgid "LINK\n"
 msgstr "ПОСИЛАННЯ\n"
 
-#: nis/nis_print.c:130
+#: nis/nis_print.c:131
 msgid "PRIVATE\n"
 msgstr "ПРИВАТНИЙ\n"
 
-#: nis/nis_print.c:133
+#: nis/nis_print.c:134
 msgid "(Unknown object)\n"
 msgstr "(Невідомий об’єкт)\n"
 
-#: nis/nis_print.c:167
+#: nis/nis_print.c:168
 #, c-format
 msgid "Name : `%s'\n"
 msgstr "Назва: «%s»\n"
 
-#: nis/nis_print.c:168
+#: nis/nis_print.c:169
 #, c-format
 msgid "Type : %s\n"
 msgstr "Тип: %s\n"
 
-#: nis/nis_print.c:173
+#: nis/nis_print.c:174
 msgid "Master Server :\n"
 msgstr "Основний сервер:\n"
 
-#: nis/nis_print.c:175
+#: nis/nis_print.c:176
 msgid "Replicate :\n"
 msgstr "Репліка:\n"
 
-#: nis/nis_print.c:176
+#: nis/nis_print.c:177
 #, c-format
 msgid "\tName       : %s\n"
 msgstr "\tНазва      : %s\n"
 
-#: nis/nis_print.c:177
+#: nis/nis_print.c:178
 msgid "\tPublic Key : "
 msgstr "\tВідкритий ключ: "
 
-#: nis/nis_print.c:181
+#: nis/nis_print.c:182
 msgid "None.\n"
 msgstr "Немає.\n"
 
-#: nis/nis_print.c:184
+#: nis/nis_print.c:185
 #, c-format
 msgid "Diffie-Hellmann (%d bits)\n"
 msgstr "Діффі-Геллман (%d біт)\n"
 
-#: nis/nis_print.c:189
+#: nis/nis_print.c:190
 #, c-format
 msgid "RSA (%d bits)\n"
 msgstr "RSA (%d-бітовий)\n"
 
-#: nis/nis_print.c:192
+#: nis/nis_print.c:193
 msgid "Kerberos.\n"
 msgstr "Kerberos.\n"
 
-#: nis/nis_print.c:195
+#: nis/nis_print.c:196
 #, c-format
 msgid "Unknown (type = %d, bits = %d)\n"
 msgstr "Невідомо (тип = %d, к-ть бітів = %d)\n"
 
-#: nis/nis_print.c:206
+#: nis/nis_print.c:207
 #, c-format
 msgid "\tUniversal addresses (%u)\n"
 msgstr "\tУніверсальні адреси (%u)\n"
 
-#: nis/nis_print.c:228
+#: nis/nis_print.c:229
 msgid "Time to live : "
 msgstr "Строк дії   : "
 
-#: nis/nis_print.c:230
+#: nis/nis_print.c:231
 msgid "Default Access rights :\n"
 msgstr "Типові права доступу  :\n"
 
-#: nis/nis_print.c:239
+#: nis/nis_print.c:240
 #, c-format
 msgid "\tType         : %s\n"
 msgstr "\tТип          : %s\n"
 
-#: nis/nis_print.c:240
+#: nis/nis_print.c:241
 msgid "\tAccess rights: "
 msgstr "\tПрава доступу: "
 
-#: nis/nis_print.c:254
+#: nis/nis_print.c:255
 msgid "Group Flags :"
 msgstr "Прапорці групи:"
 
-#: nis/nis_print.c:257
+#: nis/nis_print.c:258
 msgid ""
 "\n"
 "Group Members :\n"
@@ -3458,95 +3458,95 @@ msgstr ""
 "\n"
 "Учасники групи:\n"
 
-#: nis/nis_print.c:269
+#: nis/nis_print.c:270
 #, c-format
 msgid "Table Type          : %s\n"
 msgstr "Тип таблиці         : %s\n"
 
-#: nis/nis_print.c:270
+#: nis/nis_print.c:271
 #, c-format
 msgid "Number of Columns   : %d\n"
 msgstr "Кількість стовпчиків: %d\n"
 
-#: nis/nis_print.c:271
+#: nis/nis_print.c:272
 #, c-format
 msgid "Character Separator : %c\n"
 msgstr "Роздільник символів : %c\n"
 
-#: nis/nis_print.c:272
+#: nis/nis_print.c:273
 #, c-format
 msgid "Search Path         : %s\n"
 msgstr "Шлях для пошуку     : %s\n"
 
-#: nis/nis_print.c:273
+#: nis/nis_print.c:274
 msgid "Columns             :\n"
 msgstr "Стовпчики           :\n"
 
-#: nis/nis_print.c:276
+#: nis/nis_print.c:277
 #, c-format
 msgid "\t[%d]\tName          : %s\n"
 msgstr "\t[%d]\tНазва         : %s\n"
 
-#: nis/nis_print.c:278
+#: nis/nis_print.c:279
 msgid "\t\tAttributes    : "
 msgstr "\t\tАтрибути      : "
 
-#: nis/nis_print.c:280
+#: nis/nis_print.c:281
 msgid "\t\tAccess Rights : "
 msgstr "\t\tПрава доступу: "
 
-#: nis/nis_print.c:290
+#: nis/nis_print.c:291
 msgid "Linked Object Type : "
 msgstr "Тип пов’язаного об’єкта: "
 
-#: nis/nis_print.c:292
+#: nis/nis_print.c:293
 #, c-format
 msgid "Linked to : %s\n"
 msgstr "Пов’язано з: %s\n"
 
-#: nis/nis_print.c:302
+#: nis/nis_print.c:303
 #, c-format
 msgid "\tEntry data of type %s\n"
 msgstr "\tДані запису типу %s\n"
 
-#: nis/nis_print.c:305
+#: nis/nis_print.c:306
 #, c-format
 msgid "\t[%u] - [%u bytes] "
 msgstr "\t[%u] - [%u байт] "
 
-#: nis/nis_print.c:308
+#: nis/nis_print.c:309
 msgid "Encrypted data\n"
 msgstr "Зашифровані дані\n"
 
-#: nis/nis_print.c:310
+#: nis/nis_print.c:311
 msgid "Binary data\n"
 msgstr "Двійкові дані\n"
 
-#: nis/nis_print.c:326
+#: nis/nis_print.c:327
 #, c-format
 msgid "Object Name   : %s\n"
 msgstr "Назва об’єкта  : %s\n"
 
-#: nis/nis_print.c:327
+#: nis/nis_print.c:328
 #, c-format
 msgid "Directory     : %s\n"
 msgstr "Каталог      : %s\n"
 
-#: nis/nis_print.c:328
+#: nis/nis_print.c:329
 #, c-format
 msgid "Owner         : %s\n"
 msgstr "Власник       : %s\n"
 
-#: nis/nis_print.c:329
+#: nis/nis_print.c:330
 #, c-format
 msgid "Group         : %s\n"
 msgstr "Група         : %s\n"
 
-#: nis/nis_print.c:330
+#: nis/nis_print.c:331
 msgid "Access Rights : "
 msgstr "Права доступу: "
 
-#: nis/nis_print.c:332
+#: nis/nis_print.c:333
 #, c-format
 msgid ""
 "\n"
@@ -3555,90 +3555,90 @@ msgstr ""
 "\n"
 "Строк дії     : "
 
-#: nis/nis_print.c:335
+#: nis/nis_print.c:336
 #, c-format
 msgid "Creation Time : %s"
 msgstr "Час створення : %s"
 
-#: nis/nis_print.c:337
+#: nis/nis_print.c:338
 #, c-format
 msgid "Mod. Time     : %s"
 msgstr "Час модифікації: %s"
 
-#: nis/nis_print.c:338
+#: nis/nis_print.c:339
 msgid "Object Type   : "
 msgstr "Тип об’єкта   : "
 
-#: nis/nis_print.c:358
+#: nis/nis_print.c:359
 #, c-format
 msgid "    Data Length = %u\n"
 msgstr "    Довжина даних = %u\n"
 
-#: nis/nis_print.c:372
+#: nis/nis_print.c:373
 #, c-format
 msgid "Status            : %s\n"
 msgstr "Стан              : %s\n"
 
-#: nis/nis_print.c:373
+#: nis/nis_print.c:374
 #, c-format
 msgid "Number of objects : %u\n"
 msgstr "Кількість об’єктів: %u\n"
 
-#: nis/nis_print.c:377
+#: nis/nis_print.c:378
 #, c-format
 msgid "Object #%d:\n"
 msgstr "Об’єкт %d:\n"
 
-#: nis/nis_print_group_entry.c:116
+#: nis/nis_print_group_entry.c:117
 #, c-format
 msgid "Group entry for \"%s.%s\" group:\n"
 msgstr "Запис групи для групи «%s.%s»:\n"
 
-#: nis/nis_print_group_entry.c:124
+#: nis/nis_print_group_entry.c:125
 msgid "    Explicit members:\n"
 msgstr "    Явні учасники:\n"
 
-#: nis/nis_print_group_entry.c:129
+#: nis/nis_print_group_entry.c:130
 msgid "    No explicit members\n"
 msgstr "    Немає явних учасників\n"
 
-#: nis/nis_print_group_entry.c:132
+#: nis/nis_print_group_entry.c:133
 msgid "    Implicit members:\n"
 msgstr "    Неявні учасники:\n"
 
-#: nis/nis_print_group_entry.c:137
+#: nis/nis_print_group_entry.c:138
 msgid "    No implicit members\n"
 msgstr "    Немає неявних учасників\n"
 
-#: nis/nis_print_group_entry.c:140
+#: nis/nis_print_group_entry.c:141
 msgid "    Recursive members:\n"
 msgstr "    Рекурсивні учасники:\n"
 
-#: nis/nis_print_group_entry.c:145
+#: nis/nis_print_group_entry.c:146
 msgid "    No recursive members\n"
 msgstr "    Немає рекурсивних учасників\n"
 
-#: nis/nis_print_group_entry.c:148
+#: nis/nis_print_group_entry.c:149
 msgid "    Explicit nonmembers:\n"
 msgstr "    Явні неучасники:\n"
 
-#: nis/nis_print_group_entry.c:153
+#: nis/nis_print_group_entry.c:154
 msgid "    No explicit nonmembers\n"
 msgstr "    Немає неявних неучасників\n"
 
-#: nis/nis_print_group_entry.c:156
+#: nis/nis_print_group_entry.c:157
 msgid "    Implicit nonmembers:\n"
 msgstr "    Неявні неучасники:\n"
 
-#: nis/nis_print_group_entry.c:161
+#: nis/nis_print_group_entry.c:162
 msgid "    No implicit nonmembers\n"
 msgstr "    Немає неявних неучасників\n"
 
-#: nis/nis_print_group_entry.c:164
+#: nis/nis_print_group_entry.c:165
 msgid "    Recursive nonmembers:\n"
 msgstr "    Рекурсивні неучасники:\n"
 
-#: nis/nis_print_group_entry.c:169
+#: nis/nis_print_group_entry.c:170
 msgid "    No recursive nonmembers\n"
 msgstr "    Немає рекурсивних неучасників\n"
 
@@ -3680,100 +3680,100 @@ msgstr "netname2user: запис LOCAL для %s у каталозі %s не є 
 msgid "netname2user: should not have uid 0"
 msgstr "netname2user: не можна використовувати UID 0"
 
-#: nis/ypclnt.c:820
+#: nis/ypclnt.c:827
 msgid "Request arguments bad"
 msgstr "Помилка у аргументах запиту"
 
-#: nis/ypclnt.c:823
+#: nis/ypclnt.c:830
 msgid "RPC failure on NIS operation"
 msgstr "Помилка RPC під час виконання дії NIS"
 
-#: nis/ypclnt.c:826
+#: nis/ypclnt.c:833
 msgid "Can't bind to server which serves this domain"
 msgstr "Не вдалося прив’язатися до сервера, який обслуговує цей домен"
 
-#: nis/ypclnt.c:829
+#: nis/ypclnt.c:836
 msgid "No such map in server's domain"
 msgstr "У домені сервера немає такої прив’язки"
 
-#: nis/ypclnt.c:832
+#: nis/ypclnt.c:839
 msgid "No such key in map"
 msgstr "У прив’язці немає такого ключа"
 
-#: nis/ypclnt.c:835
+#: nis/ypclnt.c:842
 msgid "Internal NIS error"
 msgstr "Внутрішня помилка NIS"
 
-#: nis/ypclnt.c:838
+#: nis/ypclnt.c:845
 msgid "Local resource allocation failure"
 msgstr "Помилка розміщення локального ресурсу"
 
-#: nis/ypclnt.c:841
+#: nis/ypclnt.c:848
 msgid "No more records in map database"
 msgstr "У базі даних прив’язок немає більше записів"
 
-#: nis/ypclnt.c:844
+#: nis/ypclnt.c:851
 msgid "Can't communicate with portmapper"
 msgstr "Не вдалося обмінятися даними з portmapper"
 
-#: nis/ypclnt.c:847
+#: nis/ypclnt.c:854
 msgid "Can't communicate with ypbind"
 msgstr "Не вдалося обмінятися даними з ypbind"
 
-#: nis/ypclnt.c:850
+#: nis/ypclnt.c:857
 msgid "Can't communicate with ypserv"
 msgstr "Не вдалося обмінятися даними з ypserv"
 
-#: nis/ypclnt.c:853
+#: nis/ypclnt.c:860
 msgid "Local domain name not set"
 msgstr "Не встановлено назви локального домену"
 
-#: nis/ypclnt.c:856
+#: nis/ypclnt.c:863
 msgid "NIS map database is bad"
 msgstr "Помилкова база даних прив’язок NIS"
 
-#: nis/ypclnt.c:859
+#: nis/ypclnt.c:866
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "Не збігаються між собою версії клієнта і сервера NIS: служба не зможе працювати"
 
-#: nis/ypclnt.c:865
+#: nis/ypclnt.c:872
 msgid "Database is busy"
 msgstr "Базу даних зайнято виконанням завдання"
 
-#: nis/ypclnt.c:868
+#: nis/ypclnt.c:875
 msgid "Unknown NIS error code"
 msgstr "Невідомий код помилки NIS"
 
-#: nis/ypclnt.c:908
+#: nis/ypclnt.c:916
 msgid "Internal ypbind error"
 msgstr "Внутрішня помилка ypbind"
 
-#: nis/ypclnt.c:911
+#: nis/ypclnt.c:919
 msgid "Domain not bound"
 msgstr "Домен не пов’язано"
 
-#: nis/ypclnt.c:914
+#: nis/ypclnt.c:922
 msgid "System resource allocation failure"
 msgstr "Помилка під час розміщення системного ресурсу"
 
-#: nis/ypclnt.c:917
+#: nis/ypclnt.c:925
 msgid "Unknown ypbind error"
 msgstr "Невідома помилка ypbind"
 
-#: nis/ypclnt.c:958
+#: nis/ypclnt.c:966
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: не вдалося перетворити адресу вузла на назву у мережі\n"
 
-#: nis/ypclnt.c:976
+#: nis/ypclnt.c:984
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: не вдалося отримати адресу сервера\n"
 
-#: nscd/aicache.c:84 nscd/hstcache.c:485
+#: nscd/aicache.c:85 nscd/hstcache.c:485
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Не вдалося знайти «%s» у кеші вузлів!"
 
-#: nscd/aicache.c:86 nscd/hstcache.c:487
+#: nscd/aicache.c:87 nscd/hstcache.c:487
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "Перезавантажуємо «%s» у кеші вузлів!"
@@ -3807,269 +3807,264 @@ msgstr "спорожнюємо кеш %s; час — %ld"
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "обробляємо запис %s «%s», час очікування %<PRIu64>"
 
-#: nscd/connections.c:548
+#: nscd/connections.c:537
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "некоректний файл постійної бази даних «%s»: %s"
 
-#: nscd/connections.c:556
+#: nscd/connections.c:545
 msgid "uninitialized header"
 msgstr "неініціалізований заголовок"
 
-#: nscd/connections.c:561
+#: nscd/connections.c:550
 msgid "header size does not match"
 msgstr "розмір заголовка є невідповідним"
 
-#: nscd/connections.c:571
+#: nscd/connections.c:560
 msgid "file size does not match"
 msgstr "розмір файла є невідповідним"
 
-#: nscd/connections.c:588
+#: nscd/connections.c:577
 msgid "verification failed"
 msgstr "спроба перевірки зазнала невдачі"
 
-#: nscd/connections.c:602
+#: nscd/connections.c:591
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "пропонований розмір таблиці для бази даних %s є більшим за таблицю сталої бази даних"
 
-#: nscd/connections.c:613 nscd/connections.c:697
+#: nscd/connections.c:602 nscd/connections.c:686
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "не вдалося створити придатний лише для читання дескриптор для «%s»; немає mmap"
 
-#: nscd/connections.c:629
+#: nscd/connections.c:618
 #, c-format
 msgid "cannot access '%s'"
 msgstr "не вдалося отримати доступ до «%s»"
 
-#: nscd/connections.c:677
+#: nscd/connections.c:666
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "базу даних для %s пошкоджено або ця база використовується спільно з іншою програмою; вилучіть %s вручну, якщо потрібно, і перезапустіть програму"
 
-#: nscd/connections.c:683
+#: nscd/connections.c:672
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "не вдалося створити %s; не використано жодної постійної бази даних"
 
-#: nscd/connections.c:686
+#: nscd/connections.c:675
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "не вдалося створити %s; спільне використання неможливе"
 
-#: nscd/connections.c:757
+#: nscd/connections.c:746
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "не вдалося виконати запис до файла бази даних %s: %s"
 
-#: nscd/connections.c:796
-#, c-format
-msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
-msgstr "не вдалося перевести сокет у режим закриття після виконання: %s; вимикаємо параноїдальний режим"
-
-#: nscd/connections.c:831
+#: nscd/connections.c:802
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "не вдалося відкрити сокет: %s"
 
-#: nscd/connections.c:850
+#: nscd/connections.c:821
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "не вдалося увімкнути сокет для прийняття з’єднань: %s"
 
-#: nscd/connections.c:907
+#: nscd/connections.c:878
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "вимкнено стеження на основі inotify за файлом «%s»: %s"
 
-#: nscd/connections.c:911
+#: nscd/connections.c:882
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "спостерігаємо за файлом «%s» (%d)"
 
-#: nscd/connections.c:924
+#: nscd/connections.c:895
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "вимкнено спостереження на основі inotify за каталогом «%s»: %s"
 
-#: nscd/connections.c:928
+#: nscd/connections.c:899
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "ведемо спостереження за каталогом «%s» (%d)"
 
-#: nscd/connections.c:956
+#: nscd/connections.c:927
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "ведемо спостереження за файлом %s щодо бази даних %s"
 
-#: nscd/connections.c:966
+#: nscd/connections.c:937
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "не вдалося отримати статистичні дані щодо файла «%s»; спробуємо пізніше: %s"
 
-#: nscd/connections.c:1085
+#: nscd/connections.c:1056
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "надати доступ до файлового дескриптора %d для %s"
 
-#: nscd/connections.c:1097
+#: nscd/connections.c:1068
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "обробка застарілої версії запиту %d неможлива; поточною версією є %d"
 
-#: nscd/connections.c:1119
+#: nscd/connections.c:1090
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "запит від %ld не оброблено через недостатні права доступу"
 
-#: nscd/connections.c:1124
+#: nscd/connections.c:1095
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "запит від «%s» [%ld] не оброблено через недостатні права доступу"
 
-#: nscd/connections.c:1129
+#: nscd/connections.c:1100
 msgid "request not handled due to missing permission"
 msgstr "запит не оброблено через недостатні права доступу"
 
-#: nscd/connections.c:1167 nscd/connections.c:1220
+#: nscd/connections.c:1138 nscd/connections.c:1191
 #, c-format
 msgid "cannot write result: %s"
 msgstr "не вдалося записати результат: %s"
 
-#: nscd/connections.c:1311
+#: nscd/connections.c:1282
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "помилка під час спроби отримати ідентифікатор виклику: %s"
 
-#: nscd/connections.c:1371
+#: nscd/connections.c:1342
 #, c-format
 msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr "не вдалося відкрити /proc/self/cmdline: %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1385
+#: nscd/connections.c:1356
 #, c-format
 msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
 msgstr "не вдалося прочитати /proc/self/cmdline: %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1425
+#: nscd/connections.c:1396
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "не вдалося змінити старий UID: %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1435
+#: nscd/connections.c:1406
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "не вдалося змінити старий GID: %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1448
+#: nscd/connections.c:1419
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "не вдалося змінити старий робочий каталог: %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1494
+#: nscd/connections.c:1465
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "не вдалося повторно виконати %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1503
+#: nscd/connections.c:1474
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "не вдалося змінити поточний робочий каталог на «/»: %s"
 
-#: nscd/connections.c:1696
+#: nscd/connections.c:1657
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "неповний зчитаний блок під час читання запиту: %s"
 
-#: nscd/connections.c:1729
+#: nscd/connections.c:1690
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "надто довгий ключ у запиті: %d"
 
-#: nscd/connections.c:1742
+#: nscd/connections.c:1703
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "неповний зчитаний блок під час читання ключа запиту: %s"
 
-#: nscd/connections.c:1752
+#: nscd/connections.c:1713
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: отримано запит (версія = %d) від PID %ld"
 
-#: nscd/connections.c:1757
+#: nscd/connections.c:1718
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: отримано запит (версія = %d)"
 
-#: nscd/connections.c:1897
+#: nscd/connections.c:1858
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "проігноровано подію inotify щодо «%s» (файл вже існує)"
 
-#: nscd/connections.c:1902
+#: nscd/connections.c:1863
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "файл, за яким ведеться спостереження, «%s» було %s, знімаємо спостереження"
 
-#: nscd/connections.c:1910 nscd/connections.c:1952
+#: nscd/connections.c:1871 nscd/connections.c:1913
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "не вдалося зняти спостереження за файлом «%s»: %s"
 
-#: nscd/connections.c:1925
+#: nscd/connections.c:1886
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "файл, за яким ведеться спостереження, %s», було записано до"
 
-#: nscd/connections.c:1949
+#: nscd/connections.c:1910
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "батьківський каталог, за яким ведеться спостереження, «%s» було %s, вилучаємо спостереження за «%s»"
 
-#: nscd/connections.c:1975
+#: nscd/connections.c:1936
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "файл, за яким ведеться спостереження, «%s» було %s, додаємо спостереження"
 
-#: nscd/connections.c:1987
+#: nscd/connections.c:1948
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "не вдалося додати спостереження за файлом «%s»: %s"
 
-#: nscd/connections.c:2181 nscd/connections.c:2362
+#: nscd/connections.c:2126 nscd/connections.c:2291
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "спостереження за файлом на основі inotify вимкнено після помилки читання %d"
 
-#: nscd/connections.c:2477
+#: nscd/connections.c:2406
 msgid "could not initialize conditional variable"
 msgstr "не вдалося ініціалізувати змінну умови"
 
-#: nscd/connections.c:2485
+#: nscd/connections.c:2414
 msgid "could not start clean-up thread; terminating"
 msgstr "не вдалося розпочати нитку спорожнення; перериваємо обробку"
 
-#: nscd/connections.c:2499
+#: nscd/connections.c:2428
 msgid "could not start any worker thread; terminating"
 msgstr "не вдалося запустити будь-яку нитку обробки; перериваємо обробку"
 
-#: nscd/connections.c:2554 nscd/connections.c:2556 nscd/connections.c:2572
-#: nscd/connections.c:2582 nscd/connections.c:2600 nscd/connections.c:2611
-#: nscd/connections.c:2621
+#: nscd/connections.c:2483 nscd/connections.c:2485 nscd/connections.c:2501
+#: nscd/connections.c:2511 nscd/connections.c:2529 nscd/connections.c:2540
+#: nscd/connections.c:2550
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Не вдалося запустити nscd від імені користувача «%s»"
 
-#: nscd/connections.c:2574
+#: nscd/connections.c:2503
 msgid "initial getgrouplist failed"
 msgstr "помилка початкового getgrouplist"
 
-#: nscd/connections.c:2583
+#: nscd/connections.c:2512
 msgid "getgrouplist failed"
 msgstr "помилка getgrouplist"
 
-#: nscd/connections.c:2601
+#: nscd/connections.c:2530
 msgid "setgroups failed"
 msgstr "помилка setgroups"
 
@@ -4752,61 +4747,40 @@ msgstr "невизначено"
 msgid "Unrecognized variable `%s'"
 msgstr "Нерозпізнана змінна «%s»"
 
-#: posix/getopt.c:592 posix/getopt.c:621
+#: posix/getopt.c:277
 #, c-format
-msgid "%s: option '%s' is ambiguous; possibilities:"
-msgstr "%s: неоднозначний параметр «%s»; можливі варіанти:"
+msgid "%s: option '%s%s' is ambiguous\n"
+msgstr "%s: параметр «%s%s» не є однозначним\n"
 
-#: posix/getopt.c:662 posix/getopt.c:666
+#: posix/getopt.c:283
 #, c-format
-msgid "%s: option '--%s' doesn't allow an argument\n"
-msgstr "%s: додавання аргументів до параметра «--%s» не передбачено\n"
+msgid "%s: option '%s%s' is ambiguous; possibilities:"
+msgstr "%s: неоднозначний параметр «%s%s»; можливі варіанти:"
 
-#: posix/getopt.c:675 posix/getopt.c:680
+#: posix/getopt.c:318
 #, c-format
-msgid "%s: option '%c%s' doesn't allow an argument\n"
-msgstr "%s: додавання аргументів до параметра «%c%s» не передбачено\n"
+msgid "%s: unrecognized option '%s%s'\n"
+msgstr "%s: невідомий параметр «%s%s»\n"
 
-#: posix/getopt.c:723 posix/getopt.c:742
+#: posix/getopt.c:344
 #, c-format
-msgid "%s: option '--%s' requires an argument\n"
-msgstr "%s: до параметра «--%s» слід додати аргумент\n"
+msgid "%s: option '%s%s' doesn't allow an argument\n"
+msgstr "%s: додавання аргументів до параметра «%s%s» не передбачено\n"
 
-#: posix/getopt.c:780 posix/getopt.c:783
+#: posix/getopt.c:359
 #, c-format
-msgid "%s: unrecognized option '--%s'\n"
-msgstr "%s: невідомий параметр «--%s»\n"
+msgid "%s: option '%s%s' requires an argument\n"
+msgstr "%s: до параметра «%s/%s» слід додати аргумент\n"
 
-#: posix/getopt.c:791 posix/getopt.c:794
-#, c-format
-msgid "%s: unrecognized option '%c%s'\n"
-msgstr "%s: невідомий параметр «%c%s»\n"
-
-#: posix/getopt.c:843 posix/getopt.c:846
+#: posix/getopt.c:620
 #, c-format
 msgid "%s: invalid option -- '%c'\n"
 msgstr "%s: некоректний параметр — «%c»\n"
 
-#: posix/getopt.c:899 posix/getopt.c:916 posix/getopt.c:1126
-#: posix/getopt.c:1144
+#: posix/getopt.c:635 posix/getopt.c:681
 #, c-format
 msgid "%s: option requires an argument -- '%c'\n"
 msgstr "%s: до параметра слід додати аргумент — «%c»\n"
-
-#: posix/getopt.c:972 posix/getopt.c:988
-#, c-format
-msgid "%s: option '-W %s' is ambiguous\n"
-msgstr "%s: параметр «-W %s» не є однозначним\n"
-
-#: posix/getopt.c:1012 posix/getopt.c:1030
-#, c-format
-msgid "%s: option '-W %s' doesn't allow an argument\n"
-msgstr "%s: додавання аргументів до параметра «-W %s» не передбачено\n"
-
-#: posix/getopt.c:1051 posix/getopt.c:1069
-#, c-format
-msgid "%s: option '-W %s' requires an argument\n"
-msgstr "%s: до параметра «-W %s» слід додати аргумент\n"
 
 #: posix/regcomp.c:140
 msgid "No match"
@@ -4876,7 +4850,7 @@ msgstr "Неврівноважена послідовність ) або \\)"
 msgid "No previous regular expression"
 msgstr "Не виявлено попереднього формального виразу"
 
-#: posix/wordexp.c:1852
+#: posix/wordexp.c:1822
 msgid "parameter null or not set"
 msgstr "параметр нульової довжини або його значення не вказано"
 
@@ -5061,7 +5035,7 @@ msgstr "Доступні буфери виведення даних"
 msgid "Input message available"
 msgstr "Доступне вхідне повідомлення"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:541 timezone/zic.c:483
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:381 timezone/zic.c:520
 msgid "I/O error"
 msgstr "помилка вводу/виводу"
 
@@ -5141,170 +5115,170 @@ msgstr "Сигнал реального часу %d"
 msgid "Unknown signal %d"
 msgstr "Невідомий сигнал %d"
 
-#: sunrpc/auth_unix.c:111 sunrpc/clnt_tcp.c:123 sunrpc/clnt_udp.c:135
-#: sunrpc/clnt_unix.c:124 sunrpc/svc_tcp.c:188 sunrpc/svc_tcp.c:233
-#: sunrpc/svc_udp.c:160 sunrpc/svc_unix.c:188 sunrpc/svc_unix.c:229
-#: sunrpc/xdr.c:627 sunrpc/xdr.c:787 sunrpc/xdr_array.c:101
-#: sunrpc/xdr_rec.c:152 sunrpc/xdr_ref.c:78
+#: sunrpc/auth_unix.c:112 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:139
+#: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:234
+#: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:230
+#: sunrpc/xdr.c:628 sunrpc/xdr.c:788 sunrpc/xdr_array.c:102
+#: sunrpc/xdr_rec.c:153 sunrpc/xdr_ref.c:79
 msgid "out of memory\n"
 msgstr "не вистачає пам'яті\n"
 
-#: sunrpc/auth_unix.c:349
+#: sunrpc/auth_unix.c:350
 msgid "auth_unix.c: Fatal marshalling problem"
 msgstr "auth_unix.c: критична помилка упорядкування (marshalling)"
 
-#: sunrpc/clnt_perr.c:95 sunrpc/clnt_perr.c:111
+#: sunrpc/clnt_perr.c:96 sunrpc/clnt_perr.c:112
 #, c-format
 msgid "%s: %s; low version = %lu, high version = %lu"
 msgstr "%s: %s; нижня версія = %lu, верхня версія = %lu"
 
-#: sunrpc/clnt_perr.c:102
+#: sunrpc/clnt_perr.c:103
 #, c-format
 msgid "%s: %s; why = %s\n"
 msgstr "%s: %s; причина = %s\n"
 
-#: sunrpc/clnt_perr.c:104
+#: sunrpc/clnt_perr.c:105
 #, c-format
 msgid "%s: %s; why = (unknown authentication error - %d)\n"
 msgstr "%s: %s; причина = (невідома помилка розпізнавання - %d)\n"
 
-#: sunrpc/clnt_perr.c:153
+#: sunrpc/clnt_perr.c:154
 msgid "RPC: Success"
 msgstr "RPC: виконано"
 
-#: sunrpc/clnt_perr.c:156
+#: sunrpc/clnt_perr.c:157
 msgid "RPC: Can't encode arguments"
 msgstr "RPC: не вдалося закодувати аргументи"
 
-#: sunrpc/clnt_perr.c:160
+#: sunrpc/clnt_perr.c:161
 msgid "RPC: Can't decode result"
 msgstr "RPC: не вдалося декодувати результат"
 
-#: sunrpc/clnt_perr.c:164
+#: sunrpc/clnt_perr.c:165
 msgid "RPC: Unable to send"
 msgstr "RPC: не вдалося надіслати"
 
-#: sunrpc/clnt_perr.c:168
+#: sunrpc/clnt_perr.c:169
 msgid "RPC: Unable to receive"
 msgstr "RPC: не вдалося отримати"
 
-#: sunrpc/clnt_perr.c:172
+#: sunrpc/clnt_perr.c:173
 msgid "RPC: Timed out"
 msgstr "RPC: вичерпано час очікування на відповідь"
 
-#: sunrpc/clnt_perr.c:176
+#: sunrpc/clnt_perr.c:177
 msgid "RPC: Incompatible versions of RPC"
 msgstr "RPC: несумісні версії RPC"
 
-#: sunrpc/clnt_perr.c:180
+#: sunrpc/clnt_perr.c:181
 msgid "RPC: Authentication error"
 msgstr "RPC: помилка розпізнавання"
 
-#: sunrpc/clnt_perr.c:184
+#: sunrpc/clnt_perr.c:185
 msgid "RPC: Program unavailable"
 msgstr "RPC: програма недоступна"
 
-#: sunrpc/clnt_perr.c:188
+#: sunrpc/clnt_perr.c:189
 msgid "RPC: Program/version mismatch"
 msgstr "RPC: невідповідність програми або версії"
 
-#: sunrpc/clnt_perr.c:192
+#: sunrpc/clnt_perr.c:193
 msgid "RPC: Procedure unavailable"
 msgstr "RPC: процедура недоступна"
 
-#: sunrpc/clnt_perr.c:196
+#: sunrpc/clnt_perr.c:197
 msgid "RPC: Server can't decode arguments"
 msgstr "RPC: серверу не вдалося декодувати аргументи"
 
-#: sunrpc/clnt_perr.c:200
+#: sunrpc/clnt_perr.c:201
 msgid "RPC: Remote system error"
 msgstr "RPC: помилка на віддаленій системі"
 
-#: sunrpc/clnt_perr.c:204
+#: sunrpc/clnt_perr.c:205
 msgid "RPC: Unknown host"
 msgstr "RPC: невідомий вузол мережі"
 
-#: sunrpc/clnt_perr.c:208
+#: sunrpc/clnt_perr.c:209
 msgid "RPC: Unknown protocol"
 msgstr "RPC: невідомий протокол"
 
-#: sunrpc/clnt_perr.c:212
+#: sunrpc/clnt_perr.c:213
 msgid "RPC: Port mapper failure"
 msgstr "RPC: помилка засобу пов’язування портів"
 
-#: sunrpc/clnt_perr.c:216
+#: sunrpc/clnt_perr.c:217
 msgid "RPC: Program not registered"
 msgstr "RPC: програму не зареєстровано"
 
-#: sunrpc/clnt_perr.c:220
+#: sunrpc/clnt_perr.c:221
 msgid "RPC: Failed (unspecified error)"
 msgstr "RPC: невизначена помилка"
 
-#: sunrpc/clnt_perr.c:261
+#: sunrpc/clnt_perr.c:262
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (невідомий код помилки)"
 
-#: sunrpc/clnt_perr.c:333
+#: sunrpc/clnt_perr.c:334
 msgid "Authentication OK"
 msgstr "Розпізнавання пройдено"
 
-#: sunrpc/clnt_perr.c:336
+#: sunrpc/clnt_perr.c:337
 msgid "Invalid client credential"
 msgstr "Некоректні реєстраційні дані клієнта"
 
-#: sunrpc/clnt_perr.c:340
+#: sunrpc/clnt_perr.c:341
 msgid "Server rejected credential"
 msgstr "Сервером відмовлено у розпізнаванні"
 
-#: sunrpc/clnt_perr.c:344
+#: sunrpc/clnt_perr.c:345
 msgid "Invalid client verifier"
 msgstr "Некоректний засіб перевірки клієнта"
 
-#: sunrpc/clnt_perr.c:348
+#: sunrpc/clnt_perr.c:349
 msgid "Server rejected verifier"
 msgstr "Сервером відмовлено у засобі перевірки"
 
-#: sunrpc/clnt_perr.c:352
+#: sunrpc/clnt_perr.c:353
 msgid "Client credential too weak"
 msgstr "Захист реєстраційних даних клієнта є нестійким до зламу"
 
-#: sunrpc/clnt_perr.c:356
+#: sunrpc/clnt_perr.c:357
 msgid "Invalid server verifier"
 msgstr "Некоректний засіб перевірки сервера"
 
-#: sunrpc/clnt_perr.c:360
+#: sunrpc/clnt_perr.c:361
 msgid "Failed (unspecified error)"
 msgstr "Невизначена помилка"
 
-#: sunrpc/clnt_raw.c:115
+#: sunrpc/clnt_raw.c:116
 msgid "clnt_raw.c: fatal header serialization error"
 msgstr "clnt_raw.c: критична помилка під час перетворення заголовка у послідовну форму"
 
-#: sunrpc/pm_getmaps.c:77
+#: sunrpc/pm_getmaps.c:78
 msgid "pmap_getmaps.c: rpc problem"
 msgstr "pmap_getmaps.c: проблема rpc"
 
-#: sunrpc/pmap_clnt.c:127
+#: sunrpc/pmap_clnt.c:128
 msgid "Cannot register service"
 msgstr "Не вдалося зареєструвати службу"
 
-#: sunrpc/pmap_rmt.c:244
+#: sunrpc/pmap_rmt.c:245
 msgid "Cannot create socket for broadcast rpc"
 msgstr "Не вдалося створити сокет для трансляції rpc"
 
-#: sunrpc/pmap_rmt.c:251
+#: sunrpc/pmap_rmt.c:252
 msgid "Cannot set socket option SO_BROADCAST"
 msgstr "Не вдалося встановити параметр сокета SO_BROADCAST"
 
-#: sunrpc/pmap_rmt.c:303
+#: sunrpc/pmap_rmt.c:304
 msgid "Cannot send broadcast packet"
 msgstr "Не вдалося надіслати трансляційний пакет"
 
-#: sunrpc/pmap_rmt.c:328
+#: sunrpc/pmap_rmt.c:329
 msgid "Broadcast poll problem"
 msgstr "Проблема з трансляційним опитуванням"
 
-#: sunrpc/pmap_rmt.c:341
+#: sunrpc/pmap_rmt.c:342
 msgid "Cannot receive reply to broadcast"
 msgstr "Не вдалося отримати відповідь на трансляцію даних"
 
@@ -5586,11 +5560,11 @@ msgstr "порожній рядок символів"
 msgid "preprocessor error"
 msgstr "помилка препроцесора"
 
-#: sunrpc/svc_run.c:71
+#: sunrpc/svc_run.c:72
 msgid "svc_run: - out of memory"
 msgstr "svc_run: - нестача пам’яті"
 
-#: sunrpc/svc_run.c:91
+#: sunrpc/svc_run.c:92
 msgid "svc_run: - poll failed"
 msgstr "svc_run: - помилка опитування"
 
@@ -5622,204 +5596,204 @@ msgstr "проблеми з відповіддю програмі %d\n"
 msgid "never registered prog %d\n"
 msgstr "незареєстрована програма %d\n"
 
-#: sunrpc/svc_tcp.c:164
+#: sunrpc/svc_tcp.c:165
 msgid "svc_tcp.c - tcp socket creation problem"
 msgstr "svc_tcp.c - проблема зі створенням сокета tcp"
 
-#: sunrpc/svc_tcp.c:179
+#: sunrpc/svc_tcp.c:180
 msgid "svc_tcp.c - cannot getsockname or listen"
 msgstr "svc_tcp.c - не вдалося виконати getsockname або listen"
 
-#: sunrpc/svc_udp.c:135
+#: sunrpc/svc_udp.c:136
 msgid "svcudp_create: socket creation problem"
 msgstr "svcudp_create: проблема зі створенням сокета"
 
-#: sunrpc/svc_udp.c:149
+#: sunrpc/svc_udp.c:150
 msgid "svcudp_create - cannot getsockname"
 msgstr "svcudp_create - не вдалося виконати getsockname"
 
-#: sunrpc/svc_udp.c:181
+#: sunrpc/svc_udp.c:182
 msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
 msgstr "svcudp_create: xp_pad є надто малим для IP_PKTINFO\n"
 
-#: sunrpc/svc_udp.c:480
+#: sunrpc/svc_udp.c:481
 msgid "enablecache: cache already enabled"
 msgstr "enablecache: кешування вже увімкнено"
 
-#: sunrpc/svc_udp.c:486
+#: sunrpc/svc_udp.c:487
 msgid "enablecache: could not allocate cache"
 msgstr "enablecache: не вдалося розмістити кеш"
 
-#: sunrpc/svc_udp.c:495
+#: sunrpc/svc_udp.c:496
 msgid "enablecache: could not allocate cache data"
 msgstr "enablecache: не вдалося розмістити кешовані дані"
 
-#: sunrpc/svc_udp.c:503
+#: sunrpc/svc_udp.c:504
 msgid "enablecache: could not allocate cache fifo"
 msgstr "enablecache: не вдалося розмістити кеш fifo"
 
-#: sunrpc/svc_udp.c:539
+#: sunrpc/svc_udp.c:540
 msgid "cache_set: victim not found"
 msgstr "cache_set: жертву не знайдено"
 
-#: sunrpc/svc_udp.c:550
+#: sunrpc/svc_udp.c:551
 msgid "cache_set: victim alloc failed"
 msgstr "cache_set: не вдалося отримати пам’ять для жертви"
 
-#: sunrpc/svc_udp.c:557
+#: sunrpc/svc_udp.c:558
 msgid "cache_set: could not allocate new rpc_buffer"
 msgstr "cache_set: не вдалося розмістити новий rpc_buffer"
 
-#: sunrpc/svc_unix.c:162
+#: sunrpc/svc_unix.c:163
 msgid "svc_unix.c - AF_UNIX socket creation problem"
 msgstr "svc_unix.c - проблема зі створенням сокета AF_UNIX"
 
-#: sunrpc/svc_unix.c:178
+#: sunrpc/svc_unix.c:179
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c - не вдалося виконати getsockname або listen"
 
-#: sysdeps/generic/siglist.h:28
+#: sysdeps/generic/siglist.h:29
 msgid "Hangup"
 msgstr "Від’єднання"
 
-#: sysdeps/generic/siglist.h:29
+#: sysdeps/generic/siglist.h:30
 msgid "Interrupt"
 msgstr "Перервати"
 
-#: sysdeps/generic/siglist.h:30
+#: sysdeps/generic/siglist.h:31
 msgid "Quit"
 msgstr "Вихід"
 
-#: sysdeps/generic/siglist.h:31
+#: sysdeps/generic/siglist.h:32
 msgid "Illegal instruction"
 msgstr "Помилкова інструкція"
 
-#: sysdeps/generic/siglist.h:32
+#: sysdeps/generic/siglist.h:33
 msgid "Trace/breakpoint trap"
 msgstr "Переривання на точці зупину"
 
-#: sysdeps/generic/siglist.h:33
+#: sysdeps/generic/siglist.h:34
 msgid "Aborted"
 msgstr "Перервано"
 
-#: sysdeps/generic/siglist.h:34
+#: sysdeps/generic/siglist.h:35
 msgid "Floating point exception"
 msgstr "Помилка обчислень з рухомою комою"
 
-#: sysdeps/generic/siglist.h:35
+#: sysdeps/generic/siglist.h:36
 msgid "Killed"
 msgstr "Вбито"
 
-#: sysdeps/generic/siglist.h:36
+#: sysdeps/generic/siglist.h:37
 msgid "Bus error"
 msgstr "Помилка каналу обміну даними"
 
-#: sysdeps/generic/siglist.h:37
+#: sysdeps/generic/siglist.h:38
+msgid "Bad system call"
+msgstr "Помилковий системний виклик"
+
+#: sysdeps/generic/siglist.h:39
 msgid "Segmentation fault"
 msgstr "Помилка адресування"
 
-#. TRANS Broken pipe; there is no process reading from the other end of a pipe.
+#. TRANS There is no process reading from the other end of a pipe.
 #. TRANS Every library function that returns this error code also generates a
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:38 sysdeps/gnu/errlist.c:360
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.c:360
 msgid "Broken pipe"
 msgstr "Канал обірвано"
 
-#: sysdeps/generic/siglist.h:39
+#: sysdeps/generic/siglist.h:41
 msgid "Alarm clock"
 msgstr "Сигнал таймера"
 
-#: sysdeps/generic/siglist.h:40
+#: sysdeps/generic/siglist.h:42
 msgid "Terminated"
 msgstr "Припинено"
 
-#: sysdeps/generic/siglist.h:41
+#: sysdeps/generic/siglist.h:43
 msgid "Urgent I/O condition"
 msgstr "Термінова дія з введення-виведення"
 
-#: sysdeps/generic/siglist.h:42
+#: sysdeps/generic/siglist.h:44
 msgid "Stopped (signal)"
 msgstr "Зупинено (сигнал)"
 
-#: sysdeps/generic/siglist.h:43
+#: sysdeps/generic/siglist.h:45
 msgid "Stopped"
 msgstr "Зупинено"
 
-#: sysdeps/generic/siglist.h:44
+#: sysdeps/generic/siglist.h:46
 msgid "Continued"
 msgstr "Поновлено"
 
-#: sysdeps/generic/siglist.h:45
+#: sysdeps/generic/siglist.h:47
 msgid "Child exited"
 msgstr "Дочірній процес завершив роботу"
 
-#: sysdeps/generic/siglist.h:46
+#: sysdeps/generic/siglist.h:48
 msgid "Stopped (tty input)"
 msgstr "Зупинено (ввід з термінала)"
 
-#: sysdeps/generic/siglist.h:47
+#: sysdeps/generic/siglist.h:49
 msgid "Stopped (tty output)"
 msgstr "Зупинено (вивід на термінал)"
 
-#: sysdeps/generic/siglist.h:48
+#: sysdeps/generic/siglist.h:50
 msgid "I/O possible"
 msgstr "Можливе введення-виведення"
 
-#: sysdeps/generic/siglist.h:49
+#: sysdeps/generic/siglist.h:51
 msgid "CPU time limit exceeded"
 msgstr "Перевищено обмеження часу використання процесора"
 
-#: sysdeps/generic/siglist.h:50
+#: sysdeps/generic/siglist.h:52
 msgid "File size limit exceeded"
 msgstr "Перевищено обмеження на розмір файла"
 
-#: sysdeps/generic/siglist.h:51
+#: sysdeps/generic/siglist.h:53
 msgid "Virtual timer expired"
 msgstr "Збіг час на віртуальному таймері"
 
-#: sysdeps/generic/siglist.h:52
+#: sysdeps/generic/siglist.h:54
 msgid "Profiling timer expired"
 msgstr "Збіг час профілювання"
 
-#: sysdeps/generic/siglist.h:53
+#: sysdeps/generic/siglist.h:55
 msgid "User defined signal 1"
 msgstr "Визначений користувачем сигнал 1"
 
-#: sysdeps/generic/siglist.h:54
+#: sysdeps/generic/siglist.h:56
 msgid "User defined signal 2"
 msgstr "Визначений користувачем сигнал 2"
 
-#: sysdeps/generic/siglist.h:58
-msgid "EMT trap"
-msgstr "Пастка емулятора"
+#: sysdeps/generic/siglist.h:57
+msgid "Window changed"
+msgstr "Зміна вікна"
 
 #: sysdeps/generic/siglist.h:61
-msgid "Bad system call"
-msgstr "Помилковий системний виклик"
+msgid "EMT trap"
+msgstr "Пастка емулятора"
 
 #: sysdeps/generic/siglist.h:64
 msgid "Stack fault"
 msgstr "Помилка роботи зі стеком"
 
 #: sysdeps/generic/siglist.h:67
-msgid "Information request"
-msgstr "Інформаційний запит"
-
-#: sysdeps/generic/siglist.h:69
 msgid "Power failure"
 msgstr "Відмова живлення"
 
-#: sysdeps/generic/siglist.h:72
+#: sysdeps/generic/siglist.h:70
+msgid "Information request"
+msgstr "Інформаційний запит"
+
+#: sysdeps/generic/siglist.h:73
 msgid "Resource lost"
 msgstr "Втрачено ресурс"
 
-#: sysdeps/generic/siglist.h:75
-msgid "Window changed"
-msgstr "Зміна вікна"
-
-#. TRANS Operation not permitted; only the owner of the file (or other resource)
+#. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
 #: sysdeps/gnu/errlist.c:26
 msgid "Operation not permitted"
@@ -5830,7 +5804,7 @@ msgstr "Дію заборонено"
 msgid "No such process"
 msgstr "Немає такого процесу"
 
-#. TRANS Interrupted function call; an asynchronous signal occurred and prevented
+#. TRANS An asynchronous signal occurred and prevented
 #. TRANS completion of the call.  When this happens, you should try the call
 #. TRANS again.
 #. TRANS
@@ -5841,12 +5815,12 @@ msgstr "Немає такого процесу"
 msgid "Interrupted system call"
 msgstr "Перерваний системний виклик"
 
-#. TRANS Input/output error; usually used for physical read or write errors.
+#. TRANS Usually used for physical read or write errors.
 #: sysdeps/gnu/errlist.c:70
 msgid "Input/output error"
 msgstr "Помилка введення-виведення"
 
-#. TRANS No such device or address.  The system tried to use the device
+#. TRANS The system tried to use the device
 #. TRANS represented by a file you specified, and it couldn't find the device.
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
@@ -5855,7 +5829,7 @@ msgstr "Помилка введення-виведення"
 msgid "No such device or address"
 msgstr "Немає такого пристрою чи адреси"
 
-#. TRANS Argument list too long; used when the arguments passed to a new program
+#. TRANS Used when the arguments passed to a new program
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
@@ -5869,21 +5843,21 @@ msgstr "Занадто довгий список аргументів"
 msgid "Exec format error"
 msgstr "Помилка, пов’язана з форматом виконуваних файлів"
 
-#. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
+#. TRANS For example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
 #: sysdeps/gnu/errlist.c:116
 msgid "Bad file descriptor"
 msgstr "Помилковий дескриптор файла"
 
-#. TRANS There are no child processes.  This error happens on operations that are
+#. TRANS This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
 #: sysdeps/gnu/errlist.c:127
 msgid "No child processes"
 msgstr "Немає дочірніх процесів"
 
-#. TRANS Deadlock avoided; allocating a system resource would have resulted in a
+#. TRANS Allocating a system resource would have resulted in a
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
@@ -5891,13 +5865,13 @@ msgstr "Немає дочірніх процесів"
 msgid "Resource deadlock avoided"
 msgstr "Уникнено взаємне блокування ресурсу"
 
-#. TRANS No memory available.  The system cannot allocate more virtual memory
+#. TRANS The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
 #: sysdeps/gnu/errlist.c:149
 msgid "Cannot allocate memory"
 msgstr "Не вдалося розподілити пам’ять"
 
-#. TRANS Bad address; an invalid pointer was detected.
+#. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
 #: sysdeps/gnu/errlist.c:168
 msgid "Bad address"
@@ -5910,14 +5884,14 @@ msgstr "Неправильна адреса"
 msgid "Block device required"
 msgstr "Потрібен блоковий пристрій"
 
-#. TRANS Resource busy; a system resource that can't be shared is already in use.
+#. TRANS A system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
 #: sysdeps/gnu/errlist.c:190
 msgid "Device or resource busy"
 msgstr "Пристрій або ресурс зайнято"
 
-#. TRANS File exists; an existing file was specified in a context where it only
+#. TRANS An existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
 #: sysdeps/gnu/errlist.c:200
 msgid "File exists"
@@ -5941,13 +5915,13 @@ msgstr "Пристрою не знайдено"
 msgid "Not a directory"
 msgstr "Не є каталогом"
 
-#. TRANS File is a directory; you cannot open a directory for writing,
+#. TRANS You cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
 #: sysdeps/gnu/errlist.c:240
 msgid "Is a directory"
 msgstr "Є каталогом"
 
-#. TRANS Invalid argument.  This is used to indicate various kinds of problems
+#. TRANS This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
 #: sysdeps/gnu/errlist.c:250
 msgid "Invalid argument"
@@ -5986,12 +5960,12 @@ msgstr "Неналежна дія з керування введенням-ви�
 msgid "Text file busy"
 msgstr "Текстовий файл зайнято"
 
-#. TRANS File too big; the size of a file would be larger than allowed by the system.
+#. TRANS The size of a file would be larger than allowed by the system.
 #: sysdeps/gnu/errlist.c:308
 msgid "File too large"
 msgstr "Файл є надто великим"
 
-#. TRANS No space left on device; write operation on a file failed because the
+#. TRANS Write operation on a file failed because the
 #. TRANS disk is full.
 #: sysdeps/gnu/errlist.c:318
 msgid "No space left on device"
@@ -6007,26 +5981,26 @@ msgstr "Некоректне позиціювання"
 msgid "Read-only file system"
 msgstr "Файлова система тільки для зчитування"
 
-#. TRANS Too many links; the link count of a single file would become too large.
+#. TRANS The link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
 #: sysdeps/gnu/errlist.c:347
 msgid "Too many links"
 msgstr "Забагато посилань"
 
-#. TRANS Domain error; used by mathematical functions when an argument value does
+#. TRANS Used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
 #: sysdeps/gnu/errlist.c:370
 msgid "Numerical argument out of domain"
 msgstr "Числовий аргумент поза доменом"
 
-#. TRANS Range error; used by mathematical functions when the result value is
+#. TRANS Used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
 #: sysdeps/gnu/errlist.c:380
 msgid "Numerical result out of range"
 msgstr "Числовий результат поза дозволеним діапазоном"
 
-#. TRANS Resource temporarily unavailable; the call might work if you try again
+#. TRANS The call might work if you try again
 #. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
 #. TRANS they are always the same in @theglibc{}.
 #. TRANS
@@ -6214,76 +6188,75 @@ msgstr "Слід вказати адресу призначення"
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "Надсилання неможливе після завершення роботи кінцевої точки каналу зв’язку"
 
-#. TRANS ???
-#: sysdeps/gnu/errlist.c:677
+#: sysdeps/gnu/errlist.c:676
 msgid "Too many references: cannot splice"
 msgstr "Забагато посилань: не вдалося об’єднати"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.c:687
+#: sysdeps/gnu/errlist.c:686
 msgid "Connection timed out"
 msgstr "Перевищено інтервал очікування з'єднання"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.c:697
+#: sysdeps/gnu/errlist.c:696
 msgid "Connection refused"
 msgstr "У з'єднанні відмовлено"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.c:707
+#: sysdeps/gnu/errlist.c:706
 msgid "Too many levels of symbolic links"
 msgstr "Забагато рівнів символічних посилань"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.c:718
+#: sysdeps/gnu/errlist.c:717
 msgid "File name too long"
 msgstr "Файл є занадто великим"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.c:727
+#: sysdeps/gnu/errlist.c:726
 msgid "Host is down"
 msgstr "Вузол вимкнено"
 
 #. TRANS The remote host for a requested network connection is not reachable.
-#: sysdeps/gnu/errlist.c:736
+#: sysdeps/gnu/errlist.c:735
 msgid "No route to host"
 msgstr "Немає маршруту до вузла"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.c:746
+#: sysdeps/gnu/errlist.c:745
 msgid "Directory not empty"
 msgstr "Каталог непорожній"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.c:757
+#: sysdeps/gnu/errlist.c:756
 msgid "Too many processes"
 msgstr "Забагато процесів"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.c:767
+#: sysdeps/gnu/errlist.c:766
 msgid "Too many users"
 msgstr "Забагато користувачів"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.c:776
+#: sysdeps/gnu/errlist.c:775
 msgid "Disk quota exceeded"
 msgstr "Перевищено квоту диска"
 
-#. TRANS Stale file handle.  This indicates an internal confusion in the
+#. TRANS This indicates an internal confusion in the
 #. TRANS file system which is due to file system rearrangements on the server host
 #. TRANS for NFS file systems or corruption in other file systems.
 #. TRANS Repairing this condition usually requires unmounting, possibly repairing
 #. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.c:789
+#: sysdeps/gnu/errlist.c:788
 msgid "Stale file handle"
 msgstr "Застарілий дескриптор файла"
 
@@ -6291,72 +6264,65 @@ msgstr "Застарілий дескриптор файла"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.c:801
+#: sysdeps/gnu/errlist.c:800
 msgid "Object is remote"
 msgstr "Об’єкт є віддаленим"
 
-#. TRANS ???
-#: sysdeps/gnu/errlist.c:810
+#: sysdeps/gnu/errlist.c:808
 msgid "RPC struct is bad"
 msgstr "помилкова структура RPC"
 
-#. TRANS ???
-#: sysdeps/gnu/errlist.c:819
+#: sysdeps/gnu/errlist.c:816
 msgid "RPC version wrong"
 msgstr "помилкова версія RPC"
 
-#. TRANS ???
-#: sysdeps/gnu/errlist.c:828
+#: sysdeps/gnu/errlist.c:824
 msgid "RPC program not available"
 msgstr "програма RPC недоступна"
 
-#. TRANS ???
-#: sysdeps/gnu/errlist.c:837
+#: sysdeps/gnu/errlist.c:832
 msgid "RPC program version wrong"
 msgstr "помилкова версія програми RPC"
 
-#. TRANS ???
-#: sysdeps/gnu/errlist.c:846
+#: sysdeps/gnu/errlist.c:840
 msgid "RPC bad procedure for program"
 msgstr "Помилкова процедура RPC для програми"
 
-#. TRANS No locks available.  This is used by the file locking facilities; see
+#. TRANS This is used by the file locking facilities; see
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.c:858
+#: sysdeps/gnu/errlist.c:852
 msgid "No locks available"
 msgstr "Блокування недоступні"
 
-#. TRANS Inappropriate file type or format.  The file was the wrong type for the
+#. TRANS The file was the wrong type for the
 #. TRANS operation, or a data file had the wrong format.
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.c:871
+#: sysdeps/gnu/errlist.c:865
 msgid "Inappropriate file type or format"
 msgstr "Неналежний тип або формат файла"
 
-#. TRANS ???
-#: sysdeps/gnu/errlist.c:880
+#: sysdeps/gnu/errlist.c:873
 msgid "Authentication error"
 msgstr "Помилка розпізнавання"
 
-#. TRANS ???
-#: sysdeps/gnu/errlist.c:889
+#: sysdeps/gnu/errlist.c:881
 msgid "Need authenticator"
 msgstr "Потрібен запис розпізнавання"
 
-#. TRANS Function not implemented.  This indicates that the function called is
+#. TRANS This indicates that the function called is
 #. TRANS not implemented at all, either in the C library itself or in the
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.c:902
+#: sysdeps/gnu/errlist.c:894
 msgid "Function not implemented"
 msgstr "Функцію не реалізовано"
 
-#. TRANS Not supported.  A function returns this error when certain parameter
+#. TRANS A function returns this error when certain parameter
 #. TRANS values are valid, but the functionality they request is not available.
 #. TRANS This can mean that the function does not implement a particular command
 #. TRANS or option value or flag bit at all.  For functions that operate on some
@@ -6368,13 +6334,13 @@ msgstr "Функцію не реалізовано"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.c:922
+#: sysdeps/gnu/errlist.c:914
 msgid "Not supported"
 msgstr "Не підтримується"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.c:932
+#: sysdeps/gnu/errlist.c:924
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Некоректний або неповний багатобайтовий або широкий символ"
 
@@ -6384,276 +6350,276 @@ msgstr "Некоректний або неповний багатобайтов�
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.c:946
+#: sysdeps/gnu/errlist.c:938
 msgid "Inappropriate operation for background process"
 msgstr "Невідповідна дія для фонового процесу"
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.c:957
+#: sysdeps/gnu/errlist.c:949
 msgid "Translator died"
 msgstr "Транслятор несподівано завершив роботу"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.c:968
+#: sysdeps/gnu/errlist.c:960
 msgid "?"
 msgstr "?"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.c:977
+#: sysdeps/gnu/errlist.c:969
 msgid "You really blew it this time"
 msgstr "Цього разу ви просто знищили усіх"
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
-#: sysdeps/gnu/errlist.c:986
+#: sysdeps/gnu/errlist.c:978
 msgid "Computer bought the farm"
 msgstr "Комп’ютеру капець"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.c:995
+#: sysdeps/gnu/errlist.c:987
 msgid "Gratuitous error"
 msgstr "Безпричинна помилка"
 
-#: sysdeps/gnu/errlist.c:1003
+#: sysdeps/gnu/errlist.c:995
 msgid "Bad message"
 msgstr "Помилкове повідомлення"
 
-#: sysdeps/gnu/errlist.c:1011
+#: sysdeps/gnu/errlist.c:1003
 msgid "Identifier removed"
 msgstr "Ідентифікатор вилучено"
 
-#: sysdeps/gnu/errlist.c:1019
+#: sysdeps/gnu/errlist.c:1011
 msgid "Multihop attempted"
 msgstr "Спроба кратного переходу"
 
-#: sysdeps/gnu/errlist.c:1027
+#: sysdeps/gnu/errlist.c:1019
 msgid "No data available"
 msgstr "Не виявлено даних"
 
-#: sysdeps/gnu/errlist.c:1035
+#: sysdeps/gnu/errlist.c:1027
 msgid "Link has been severed"
 msgstr "Зв’язок розірвано"
 
-#: sysdeps/gnu/errlist.c:1043
+#: sysdeps/gnu/errlist.c:1035
 msgid "No message of desired type"
 msgstr "Немає повідомлення бажаного типу"
 
-#: sysdeps/gnu/errlist.c:1051
+#: sysdeps/gnu/errlist.c:1043
 msgid "Out of streams resources"
 msgstr "Не вистачає ресурсів потоків"
 
-#: sysdeps/gnu/errlist.c:1059
+#: sysdeps/gnu/errlist.c:1051
 msgid "Device not a stream"
 msgstr "Пристрій не є потоковим"
 
-#: sysdeps/gnu/errlist.c:1067
+#: sysdeps/gnu/errlist.c:1059
 msgid "Value too large for defined data type"
 msgstr "Значення є надто великим для визначеного типу даних"
 
-#: sysdeps/gnu/errlist.c:1075
+#: sysdeps/gnu/errlist.c:1067
 msgid "Protocol error"
 msgstr "Помилка протоколу"
 
-#: sysdeps/gnu/errlist.c:1083
+#: sysdeps/gnu/errlist.c:1075
 msgid "Timer expired"
 msgstr "Відлік на таймері завершено"
 
-#. TRANS Operation canceled; an asynchronous operation was canceled before it
+#. TRANS An asynchronous operation was canceled before it
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.c:1095
+#: sysdeps/gnu/errlist.c:1087
 msgid "Operation canceled"
 msgstr "Дію скасовано"
 
-#: sysdeps/gnu/errlist.c:1103
+#: sysdeps/gnu/errlist.c:1095
 msgid "Interrupted system call should be restarted"
 msgstr "Перерваний системний виклик має бути перезапущено"
 
-#: sysdeps/gnu/errlist.c:1111
+#: sysdeps/gnu/errlist.c:1103
 msgid "Channel number out of range"
 msgstr "Номер каналу лежить поза припустимим діапазоном"
 
-#: sysdeps/gnu/errlist.c:1119
+#: sysdeps/gnu/errlist.c:1111
 msgid "Level 2 not synchronized"
 msgstr "Рівень 2 не синхронізовано"
 
-#: sysdeps/gnu/errlist.c:1127
+#: sysdeps/gnu/errlist.c:1119
 msgid "Level 3 halted"
 msgstr "Рівень 3 перервано"
 
-#: sysdeps/gnu/errlist.c:1135
+#: sysdeps/gnu/errlist.c:1127
 msgid "Level 3 reset"
 msgstr "Рівень 3 скинуто"
 
-#: sysdeps/gnu/errlist.c:1143
+#: sysdeps/gnu/errlist.c:1135
 msgid "Link number out of range"
 msgstr "Кількість зв’язків поза припустимим діапазоном"
 
-#: sysdeps/gnu/errlist.c:1151
+#: sysdeps/gnu/errlist.c:1143
 msgid "Protocol driver not attached"
 msgstr "Драйвер протоколу не долучено"
 
-#: sysdeps/gnu/errlist.c:1159
+#: sysdeps/gnu/errlist.c:1151
 msgid "No CSI structure available"
 msgstr "Структура CSI недоступна"
 
-#: sysdeps/gnu/errlist.c:1167
+#: sysdeps/gnu/errlist.c:1159
 msgid "Level 2 halted"
 msgstr "Рівень 2 перервано"
 
-#: sysdeps/gnu/errlist.c:1175
+#: sysdeps/gnu/errlist.c:1167
 msgid "Invalid exchange"
 msgstr "Некоректний обмін"
 
-#: sysdeps/gnu/errlist.c:1183
+#: sysdeps/gnu/errlist.c:1175
 msgid "Invalid request descriptor"
 msgstr "Некоректний дескриптор запиту"
 
-#: sysdeps/gnu/errlist.c:1191
+#: sysdeps/gnu/errlist.c:1183
 msgid "Exchange full"
 msgstr "Повний обмін"
 
-#: sysdeps/gnu/errlist.c:1199
+#: sysdeps/gnu/errlist.c:1191
 msgid "No anode"
 msgstr "Немає anode"
 
-#: sysdeps/gnu/errlist.c:1207
+#: sysdeps/gnu/errlist.c:1199
 msgid "Invalid request code"
 msgstr "Некоректний код запиту"
 
-#: sysdeps/gnu/errlist.c:1215
+#: sysdeps/gnu/errlist.c:1207
 msgid "Invalid slot"
 msgstr "Некоректний слот"
 
-#: sysdeps/gnu/errlist.c:1223
+#: sysdeps/gnu/errlist.c:1215
 msgid "File locking deadlock error"
 msgstr "Помилка взаємного блокування файла"
 
-#: sysdeps/gnu/errlist.c:1231
+#: sysdeps/gnu/errlist.c:1223
 msgid "Bad font file format"
 msgstr "Помилковий формат файла шрифту"
 
-#: sysdeps/gnu/errlist.c:1239
+#: sysdeps/gnu/errlist.c:1231
 msgid "Machine is not on the network"
 msgstr "Комп’ютер не перебуває у мережі"
 
-#: sysdeps/gnu/errlist.c:1247
+#: sysdeps/gnu/errlist.c:1239
 msgid "Package not installed"
 msgstr "Пакунок не встановлено"
 
-#: sysdeps/gnu/errlist.c:1255
+#: sysdeps/gnu/errlist.c:1247
 msgid "Advertise error"
 msgstr "Помилка під час оголошення"
 
-#: sysdeps/gnu/errlist.c:1263
+#: sysdeps/gnu/errlist.c:1255
 msgid "Srmount error"
 msgstr "Помилка srmount"
 
-#: sysdeps/gnu/errlist.c:1271
+#: sysdeps/gnu/errlist.c:1263
 msgid "Communication error on send"
 msgstr "Помилка обміну даними під час надсилання"
 
-#: sysdeps/gnu/errlist.c:1279
+#: sysdeps/gnu/errlist.c:1271
 msgid "RFS specific error"
 msgstr "Специфічна для RFS помилка"
 
-#: sysdeps/gnu/errlist.c:1287
+#: sysdeps/gnu/errlist.c:1279
 msgid "Name not unique on network"
 msgstr "Назва не є унікальною у мережі"
 
-#: sysdeps/gnu/errlist.c:1295
+#: sysdeps/gnu/errlist.c:1287
 msgid "File descriptor in bad state"
 msgstr "Файловий дескриптор у помилковому стані"
 
-#: sysdeps/gnu/errlist.c:1303
+#: sysdeps/gnu/errlist.c:1295
 msgid "Remote address changed"
 msgstr "Віддалену адресу змінено"
 
-#: sysdeps/gnu/errlist.c:1311
+#: sysdeps/gnu/errlist.c:1303
 msgid "Can not access a needed shared library"
 msgstr "Не вдалося отримати доступ до потрібної бібліотеки спільного використання"
 
-#: sysdeps/gnu/errlist.c:1319
+#: sysdeps/gnu/errlist.c:1311
 msgid "Accessing a corrupted shared library"
 msgstr "Доступ до пошкодженої бібліотеки спільного використання"
 
-#: sysdeps/gnu/errlist.c:1327
+#: sysdeps/gnu/errlist.c:1319
 msgid ".lib section in a.out corrupted"
 msgstr "Розділ .lib у a.out пошкоджено"
 
-#: sysdeps/gnu/errlist.c:1335
+#: sysdeps/gnu/errlist.c:1327
 msgid "Attempting to link in too many shared libraries"
 msgstr "Спроба компонування надто великої кількості бібліотек спільного використання"
 
-#: sysdeps/gnu/errlist.c:1343
+#: sysdeps/gnu/errlist.c:1335
 msgid "Cannot exec a shared library directly"
 msgstr "Не можна виконувати бібліотеку спільного використання безпосередньо"
 
-#: sysdeps/gnu/errlist.c:1351
+#: sysdeps/gnu/errlist.c:1343
 msgid "Streams pipe error"
 msgstr "Помилка каналу потоків"
 
-#: sysdeps/gnu/errlist.c:1359
+#: sysdeps/gnu/errlist.c:1351
 msgid "Structure needs cleaning"
 msgstr "Структура потребує чищення"
 
-#: sysdeps/gnu/errlist.c:1367
+#: sysdeps/gnu/errlist.c:1359
 msgid "Not a XENIX named type file"
 msgstr "Не є файлом іменованих типів XENIX"
 
-#: sysdeps/gnu/errlist.c:1375
+#: sysdeps/gnu/errlist.c:1367
 msgid "No XENIX semaphores available"
 msgstr "Семафори XENIX недоступні"
 
-#: sysdeps/gnu/errlist.c:1383
+#: sysdeps/gnu/errlist.c:1375
 msgid "Is a named type file"
 msgstr "Є файлом іменованих типів"
 
-#: sysdeps/gnu/errlist.c:1391
+#: sysdeps/gnu/errlist.c:1383
 msgid "Remote I/O error"
 msgstr "Помилка під час віддаленого введення-виведення"
 
-#: sysdeps/gnu/errlist.c:1399
+#: sysdeps/gnu/errlist.c:1391
 msgid "No medium found"
 msgstr "Не знайдено носія"
 
-#: sysdeps/gnu/errlist.c:1407
+#: sysdeps/gnu/errlist.c:1399
 msgid "Wrong medium type"
 msgstr "Помилковий тип носія"
 
-#: sysdeps/gnu/errlist.c:1415
+#: sysdeps/gnu/errlist.c:1407
 msgid "Required key not available"
 msgstr "Потрібний ключ недоступний"
 
-#: sysdeps/gnu/errlist.c:1423
+#: sysdeps/gnu/errlist.c:1415
 msgid "Key has expired"
 msgstr "Строк дії ключа вичерпано"
 
-#: sysdeps/gnu/errlist.c:1431
+#: sysdeps/gnu/errlist.c:1423
 msgid "Key has been revoked"
 msgstr "Ключ було відкликано"
 
-#: sysdeps/gnu/errlist.c:1439
+#: sysdeps/gnu/errlist.c:1431
 msgid "Key was rejected by service"
 msgstr "Служба відмовилася прийняти ключ"
 
-#: sysdeps/gnu/errlist.c:1447
+#: sysdeps/gnu/errlist.c:1439
 msgid "Owner died"
 msgstr "Власник завершив роботу"
 
-#: sysdeps/gnu/errlist.c:1455
+#: sysdeps/gnu/errlist.c:1447
 msgid "State not recoverable"
 msgstr "Невідновлюваний стан"
 
-#: sysdeps/gnu/errlist.c:1463
+#: sysdeps/gnu/errlist.c:1455
 msgid "Operation not possible due to RF-kill"
 msgstr "Дію не може бути виконано через RF-kill"
 
-#: sysdeps/gnu/errlist.c:1471
+#: sysdeps/gnu/errlist.c:1463
 msgid "Memory page has hardware error"
 msgstr "На сторінці пам’яті виявлено апаратну помилку"
 
@@ -6758,73 +6724,89 @@ msgstr "не вдалося відкрити «%s»"
 msgid "cannot read header from `%s'"
 msgstr "не вдалося прочитати заголовок з «%s»"
 
-#: timezone/zdump.c:494
+#: timezone/zdump.c:338
 msgid "has fewer than 3 characters"
 msgstr "складається з менше ніж 3 символів"
 
-#: timezone/zdump.c:496
+#: timezone/zdump.c:340
 msgid "has more than 6 characters"
 msgstr "складається з понад 6 символів"
 
-#: timezone/zdump.c:498
+#: timezone/zdump.c:342
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr "містить символи, які не є літерами або цифрами ASCII, символами «-» або «+»"
 
-#: timezone/zdump.c:503
+#: timezone/zdump.c:347
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: попередження: скорочення зони «%s» «%s» %s\n"
 
-#: timezone/zdump.c:553
+#: timezone/zdump.c:393
 #, c-format
 msgid ""
-"%s: usage: %s [--version] [--help] [-{vV}] [-{ct} [lo,]hi] zonename ...\n"
+"%s: usage: %s OPTIONS ZONENAME ...\n"
+"Options include:\n"
+"  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
+"  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
+"  -i         List transitions briefly (format is experimental)\n"
+"  -v         List transitions verbosely\n"
+"  -V         List transitions a bit less verbosely\n"
+"  --help     Output this help\n"
+"  --version  Output version info\n"
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
-"%s: користування: %s [ --version ] [ --help ] [ -v ] [ -(ct) [початковий рік,]кінцевий рік ] назва_поясу ...\n"
+"%s: користування: %s ПАРАМЕТРИ НАЗВА_ЗОНИ ...\n"
+"Параметри:\n"
+"  -c [L,]U   почати з року L (типово -500), завершити до року U (типово 2500)\n"
+"  -t [L,]U   почати з часу L, завершити до часу U (у секундах з 1970 року)\n"
+"  -i         вивести скорочений список переведень (експериментальний формат)\n"
+"  -v         вивести список переведень\n"
+"  -V         вивести дещо скорочений список переведень\n"
+"  --help     вивести ці довідкові дані\n"
+"  --version  вивести дані щодо версії\n"
 "\n"
-"Про вади повідомляйте за адресою %s.\n"
+"Про вади слід повідомляти на адресу %s.\n"
 
-#: timezone/zdump.c:635
+#: timezone/zdump.c:479
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: помилковий аргумент -c %s\n"
 
-#: timezone/zdump.c:668
+#: timezone/zdump.c:512
 #, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: помилковий аргумент -t %s\n"
 
-#: timezone/zic.c:361
+#: timezone/zic.c:398
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: вичерпано пам’ять: %s\n"
 
-#: timezone/zic.c:369
+#: timezone/zic.c:406
 msgid "size overflow"
 msgstr "переповнення розміру"
 
-#: timezone/zic.c:416
-msgid "int overflow"
-msgstr "переповнення цілого типу"
-
-#: timezone/zic.c:451
-#, c-format
-msgid "\"%s\", line %d: "
-msgstr "\"%s\", рядок %d: "
-
 #: timezone/zic.c:454
-#, c-format
-msgid " (rule from \"%s\", line %d)"
-msgstr " (правило з «%s», рядок %d)"
+msgid "integer overflow"
+msgstr "переповнення типу цілого значення"
 
-#: timezone/zic.c:473
+#: timezone/zic.c:488
+#, c-format
+msgid "\"%s\", line %<PRIdMAX>: "
+msgstr "\"%s\", рядок %<PRIdMAX>: "
+
+#: timezone/zic.c:491
+#, c-format
+msgid " (rule from \"%s\", line %<PRIdMAX>)"
+msgstr " (правило з «%s», рядок %<PRIdMAX>)"
+
+#: timezone/zic.c:510
 #, c-format
 msgid "warning: "
 msgstr "попередження: "
 
-#: timezone/zic.c:498
+#: timezone/zic.c:535
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
@@ -6839,364 +6821,418 @@ msgstr ""
 "\n"
 "Про вади повідомляйте за адресою %s.\n"
 
-#: timezone/zic.c:534
+#: timezone/zic.c:558
+#, c-format
+msgid "%s: Can't chdir to %s: %s\n"
+msgstr "%s: не вдалося змінити каталог на %s: %s\n"
+
+#: timezone/zic.c:590
 msgid "wild compilation-time specification of zic_t"
 msgstr "помилкова специфікації під час збирання для zic_t"
 
-#: timezone/zic.c:554
+#: timezone/zic.c:610
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: вказано декілька параметрів -d\n"
 
-#: timezone/zic.c:564
+#: timezone/zic.c:620
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: вказано декілька параметрів -l\n"
 
-#: timezone/zic.c:574
+#: timezone/zic.c:630
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: вказано декілька параметрів -p\n"
 
-#: timezone/zic.c:584
+#: timezone/zic.c:640
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: вказано декілька параметрів -y\n"
 
-#: timezone/zic.c:594
+#: timezone/zic.c:650
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: вказано декілька параметрів -L\n"
 
-#: timezone/zic.c:603
+#: timezone/zic.c:659
 msgid "-s ignored"
 msgstr "-s проігноровано"
 
-#: timezone/zic.c:641
+#: timezone/zic.c:698
 msgid "link to link"
 msgstr "посилання на посилання"
 
-#: timezone/zic.c:644 timezone/zic.c:648
+#: timezone/zic.c:701 timezone/zic.c:705
 msgid "command line"
 msgstr "командний рядок"
 
-#: timezone/zic.c:664
+#: timezone/zic.c:721
 msgid "empty file name"
 msgstr "порожня назва файла"
 
-#: timezone/zic.c:667
+#: timezone/zic.c:724
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr "назва файла «%s» починається з «/»"
 
-#: timezone/zic.c:676
+#: timezone/zic.c:734
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr "назва файла «%s» містить компонент «%.*s»"
 
-#: timezone/zic.c:682
+#: timezone/zic.c:740
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr "компонента назви файла «%s» містить початковий символ «-»"
 
-#: timezone/zic.c:685
+#: timezone/zic.c:743
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr "назва файла «%s» містить надто довгий компонент «%.*s...»"
 
-#: timezone/zic.c:713
+#: timezone/zic.c:771
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr "назва файла «%s» містить байт «%c»"
 
-#: timezone/zic.c:714
+#: timezone/zic.c:772
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr "назва файла «%s» містить байт «\\%o»"
 
-#: timezone/zic.c:757
+#: timezone/zic.c:842
 #, c-format
-msgid "%s: link from %s failed: %s"
-msgstr "%s: помилка посилання з %s: %s"
+msgid "%s: link from %s/%s failed: %s\n"
+msgstr "%s: помилка посилання з %s/%s: %s\n"
 
-#: timezone/zic.c:792
-msgid "hard link failed, symbolic link used"
-msgstr "створення жорсткого посилання зазнало невдачі, використано символічне посилання"
-
-#: timezone/zic.c:802
+#: timezone/zic.c:852 timezone/zic.c:1815
 #, c-format
-msgid "%s: Can't read %s: %s\n"
-msgstr "%s: не вдалося прочитати %s: %s\n"
+msgid "%s: Can't remove %s/%s: %s\n"
+msgstr "%s: не вдалося вилучити %s/%s: %s\n"
 
-#: timezone/zic.c:810 timezone/zic.c:1701
+#: timezone/zic.c:874
 #, c-format
-msgid "%s: Can't create %s: %s\n"
-msgstr "%s: не вдалося створити %s: %s\n"
+msgid "symbolic link used because hard link failed: %s"
+msgstr "використано символічне посилання, оскільки не вдалося використати жорстке посилання: %s"
 
-#: timezone/zic.c:818
-msgid "link failed, copy used"
-msgstr "створення посилання зазнало невдачі, використано копіювання"
+#: timezone/zic.c:882
+#, c-format
+msgid "%s: Can't read %s/%s: %s\n"
+msgstr "%s: не вдалося прочитати %s/%s: %s\n"
 
-#: timezone/zic.c:913 timezone/zic.c:915
+#: timezone/zic.c:889 timezone/zic.c:1828
+#, c-format
+msgid "%s: Can't create %s/%s: %s\n"
+msgstr "%s: не вдалося створити %s/%s: %s\n"
+
+#: timezone/zic.c:898
+#, c-format
+msgid "copy used because hard link failed: %s"
+msgstr "використано копіювання, оскільки не вдалося використати жорстке посилання: %s"
+
+#: timezone/zic.c:901
+#, c-format
+msgid "copy used because symbolic link failed: %s"
+msgstr "використано копіювання, оскільки не вдалося використати символічне посилання: %s"
+
+#: timezone/zic.c:1013 timezone/zic.c:1015
 msgid "same rule name in multiple files"
 msgstr "правило з однією назвою зберігається у декількох файлах"
 
-#: timezone/zic.c:956
+#: timezone/zic.c:1056
 msgid "unruly zone"
 msgstr "зона без правил"
 
-#: timezone/zic.c:963
+#: timezone/zic.c:1063
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s у зоні без правил"
 
-#: timezone/zic.c:983
+#: timezone/zic.c:1083
 msgid "standard input"
 msgstr "стандартне джерело даних"
 
-#: timezone/zic.c:988
+#: timezone/zic.c:1088
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: не вдалося відкрити %s: %s\n"
 
-#: timezone/zic.c:999
+#: timezone/zic.c:1099
 msgid "line too long"
 msgstr "рядок надто довгий"
 
-#: timezone/zic.c:1019
+#: timezone/zic.c:1119
 msgid "input line of unknown type"
 msgstr "рядок вхідних даних невідомого типу"
 
-#: timezone/zic.c:1034
+#: timezone/zic.c:1134
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s"
 msgstr "%s: високосний рядок у файлі без високосних секунд %s"
 
-#: timezone/zic.c:1042 timezone/zic.c:1447 timezone/zic.c:1469
+#: timezone/zic.c:1142 timezone/zic.c:1547 timezone/zic.c:1569
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: паніка: некоректне значення l_value %d\n"
 
-#: timezone/zic.c:1051
+#: timezone/zic.c:1151
 msgid "expected continuation line not found"
 msgstr "очікуваного рядка продовження не знайдено"
 
-#: timezone/zic.c:1093 timezone/zic.c:2826
+#: timezone/zic.c:1193 timezone/zic.c:2976
 msgid "time overflow"
 msgstr "переповнення запису часу"
 
-#: timezone/zic.c:1098
+#: timezone/zic.c:1198
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "значення, більші за 24 годин не обробляються версіями zic до 2007 року"
 
-#: timezone/zic.c:1109
+#: timezone/zic.c:1209
 msgid "wrong number of fields on Rule line"
 msgstr "помилкова кількість полів у рядку Rule"
 
-#: timezone/zic.c:1113
+#: timezone/zic.c:1213
 msgid "nameless rule"
 msgstr "правило без назви"
 
-#: timezone/zic.c:1118
+#: timezone/zic.c:1218
 msgid "invalid saved time"
 msgstr "помилковий літній час"
 
-#: timezone/zic.c:1135
+#: timezone/zic.c:1235
 msgid "wrong number of fields on Zone line"
 msgstr "помилкова кількість полів у рядку Zone"
 
-#: timezone/zic.c:1140
+#: timezone/zic.c:1240
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "Рядок «Zone %s» і параметр -l не можна використовувати разом"
 
-#: timezone/zic.c:1146
+#: timezone/zic.c:1246
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "Рядок «Zone %s» і параметр -p не можна використовувати разом"
 
-#: timezone/zic.c:1154
+#: timezone/zic.c:1253
 #, c-format
-msgid "duplicate zone name %s (file \"%s\", line %d)"
-msgstr "дублювання назв поясів %s (файл «%s», рядок %d)"
+msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
+msgstr "дублювання назв поясів %s (файл «%s», рядок %<PRIdMAX>)"
 
-#: timezone/zic.c:1167
+#: timezone/zic.c:1267
 msgid "wrong number of fields on Zone continuation line"
 msgstr "помилкова кількість полів у рядку продовження Zone"
 
-#: timezone/zic.c:1207
+#: timezone/zic.c:1307
 msgid "invalid UT offset"
 msgstr "некоректне значення різниці з Грінвичем"
 
-#: timezone/zic.c:1211
+#: timezone/zic.c:1311
 msgid "invalid abbreviation format"
 msgstr "некоректний формат абревіатури"
 
-#: timezone/zic.c:1220
+#: timezone/zic.c:1320
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr "у zic до 2015 року не передбачено підтримки формату «%s»"
 
-#: timezone/zic.c:1247
+#: timezone/zic.c:1347
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "кінцевий час у рядку продовження Zone не перевищує кінцевого часу у попередньому рядку"
 
-#: timezone/zic.c:1274
+#: timezone/zic.c:1374
 msgid "wrong number of fields on Leap line"
 msgstr "помилкова кількість полів у рядку Leap"
 
-#: timezone/zic.c:1283
+#: timezone/zic.c:1383
 msgid "invalid leaping year"
 msgstr "некоректний високосний рік"
 
-#: timezone/zic.c:1303 timezone/zic.c:1401
+#: timezone/zic.c:1403 timezone/zic.c:1501
 msgid "invalid month name"
 msgstr "некоректна назва місяця"
 
-#: timezone/zic.c:1316 timezone/zic.c:1514 timezone/zic.c:1528
+#: timezone/zic.c:1416 timezone/zic.c:1614 timezone/zic.c:1628
 msgid "invalid day of month"
 msgstr "некоректний день місяця"
 
-#: timezone/zic.c:1321
+#: timezone/zic.c:1421
 msgid "time too small"
 msgstr "надто малий час"
 
-#: timezone/zic.c:1325
+#: timezone/zic.c:1425
 msgid "time too large"
 msgstr "надто великий час"
 
-#: timezone/zic.c:1329 timezone/zic.c:1430
+#: timezone/zic.c:1429 timezone/zic.c:1530
 msgid "invalid time of day"
 msgstr "некоректний час доби"
 
-#: timezone/zic.c:1348
+#: timezone/zic.c:1448
 msgid "illegal CORRECTION field on Leap line"
 msgstr "некоректне поле CORRECTION у рядку Leap"
 
-#: timezone/zic.c:1353
+#: timezone/zic.c:1453
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "некоректне поле Rolling/Stationary у рядку Leap"
 
-#: timezone/zic.c:1359
+#: timezone/zic.c:1459
 msgid "leap second precedes Big Bang"
 msgstr "високосна секунда до Великого вибуху"
 
-#: timezone/zic.c:1372
+#: timezone/zic.c:1472
 msgid "wrong number of fields on Link line"
 msgstr "помилкова кількість полів у рядку Link"
 
-#: timezone/zic.c:1376
+#: timezone/zic.c:1476
 msgid "blank FROM field on Link line"
 msgstr "порожнє поле FROM у рядку Link"
 
-#: timezone/zic.c:1451
+#: timezone/zic.c:1551
 msgid "invalid starting year"
 msgstr "некоректний рік початку"
 
-#: timezone/zic.c:1473
+#: timezone/zic.c:1573
 msgid "invalid ending year"
 msgstr "некоректний рік завершення"
 
-#: timezone/zic.c:1477
+#: timezone/zic.c:1577
 msgid "starting year greater than ending year"
 msgstr "значення початкового року перевищує значення кінцевого року"
 
-#: timezone/zic.c:1484
+#: timezone/zic.c:1584
 msgid "typed single year"
 msgstr "типізований одинарний рік"
 
-#: timezone/zic.c:1519
+#: timezone/zic.c:1619
 msgid "invalid weekday name"
 msgstr "некоректна назва дня тижня"
 
-#: timezone/zic.c:1638
-msgid "pre-2014 clients may mishandle more than 1200 transition times"
-msgstr "клієнтські частини до версії 2014 можуть обробляти часи перетворення, що перевищують 1200, з помилками"
-
-#: timezone/zic.c:1691
+#: timezone/zic.c:1743
 #, c-format
-msgid "%s: Can't remove %s: %s\n"
-msgstr "%s: не вдалося вилучити %s: %s\n"
+msgid "reference clients mishandle more than %d transition times"
+msgstr "еталонні клієнтські частини обробляють переведення часу, кількість яких перевищує %d, з помилками"
 
-#: timezone/zic.c:1918
+#: timezone/zic.c:1747
+msgid "pre-2014 clients may mishandle more than 1200 transition times"
+msgstr "клієнтські частини до версії 2014 можуть обробляти переведення часу, що перевищують за величиною 1200, з помилками"
+
+#: timezone/zic.c:1858
+msgid "too many transition times"
+msgstr "забагато переведень часу"
+
+#: timezone/zic.c:2047
 #, c-format
 msgid "%%z UTC offset magnitude exceeds 99:59:59"
 msgstr "Величина зсуву щодо UTC %%z перевищує 99:59:59"
 
-#: timezone/zic.c:2291
+#: timezone/zic.c:2424
 msgid "no POSIX environment variable for zone"
 msgstr "немає змінної середовища POSIX для часового поясу"
 
-#: timezone/zic.c:2297
+#: timezone/zic.c:2430
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: клієнтські частини до версії %d можуть обробляти віддалені часові позначки з помилками"
 
-#: timezone/zic.c:2428
+#: timezone/zic.c:2566
 msgid "two rules for same instant"
 msgstr "одночасно два правила для одного випадку"
 
-#: timezone/zic.c:2485
+#: timezone/zic.c:2627
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "не вдалося визначити скорочення часового поясу, яким слід скористатися безпосередньо після часу завершення"
 
-#: timezone/zic.c:2531 timezone/zic.c:2593
+#: timezone/zic.c:2725
 msgid "too many local time types"
 msgstr "забагато типів місцевого часу"
 
-#: timezone/zic.c:2597
+#: timezone/zic.c:2729
 msgid "UT offset out of range"
 msgstr "зсув відносно часу за Грівичем поза межами припустимого діапазону"
 
-#: timezone/zic.c:2621
+#: timezone/zic.c:2753
 msgid "too many leap seconds"
 msgstr "забагато високосних секунд"
 
-#: timezone/zic.c:2627
+#: timezone/zic.c:2759
 msgid "repeated leap second moment"
 msgstr "повторюваний момент високосної секунди"
 
-#: timezone/zic.c:2677
+#: timezone/zic.c:2830
 msgid "Wild result from command execution"
 msgstr "Неочікуваний результат виконання команди"
 
-#: timezone/zic.c:2678
+#: timezone/zic.c:2831
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: команда — «%s», результат — %d\n"
 
-#: timezone/zic.c:2810
+#: timezone/zic.c:2961
 msgid "Odd number of quotation marks"
 msgstr "Непарна кількість лапок"
 
-#: timezone/zic.c:2896
+#: timezone/zic.c:3046
 msgid "use of 2/29 in non leap-year"
 msgstr "використання 29 лютого у невисокосному році"
 
-#: timezone/zic.c:2931
+#: timezone/zic.c:3081
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "правило виходить за межі початку або кінця місяця; це не працюватиме з версіями zic до 2004 року"
 
-#: timezone/zic.c:2958
+#: timezone/zic.c:3108
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "скорочення назви часового поясу складається з менше ніж 3 символів"
 
-#: timezone/zic.c:2960
+#: timezone/zic.c:3110
 msgid "time zone abbreviation has too many characters"
 msgstr "скорочення назви часового поясу складається з надто великої кількості символів"
 
-#: timezone/zic.c:2962
+#: timezone/zic.c:3112
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "скорочення назви часового поясу суперечить стандарту POSIX"
 
-#: timezone/zic.c:2968
+#: timezone/zic.c:3118
 msgid "too many, or too long, time zone abbreviations"
 msgstr "забагато скорочень назв часових поясів або вони є надто довгими"
 
-#: timezone/zic.c:3004
+#: timezone/zic.c:3161
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: не вдалося створити каталог %s: %s"
+
+#~ msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
+#~ msgstr "не вдалося перевести сокет у режим закриття після виконання: %s; вимикаємо параноїдальний режим"
+
+#~ msgid "%s: option '--%s' doesn't allow an argument\n"
+#~ msgstr "%s: додавання аргументів до параметра «--%s» не передбачено\n"
+
+#~ msgid "%s: unrecognized option '--%s'\n"
+#~ msgstr "%s: невідомий параметр «--%s»\n"
+
+#~ msgid "%s: option '-W %s' doesn't allow an argument\n"
+#~ msgstr "%s: додавання аргументів до параметра «-W %s» не передбачено\n"
+
+#~ msgid "%s: option '-W %s' requires an argument\n"
+#~ msgstr "%s: до параметра «-W %s» слід додати аргумент\n"
+
+#~ msgid ""
+#~ "%s: usage: %s [--version] [--help] [-{vV}] [-{ct} [lo,]hi] zonename ...\n"
+#~ "\n"
+#~ "Report bugs to %s.\n"
+#~ msgstr ""
+#~ "%s: користування: %s [ --version ] [ --help ] [ -v ] [ -(ct) [початковий рік,]кінцевий рік ] назва_поясу ...\n"
+#~ "\n"
+#~ "Про вади повідомляйте за адресою %s.\n"
+
+#~ msgid "int overflow"
+#~ msgstr "переповнення цілого типу"
+
+#~ msgid "hard link failed, symbolic link used"
+#~ msgstr "створення жорсткого посилання зазнало невдачі, використано символічне посилання"
+
+#~ msgid "link failed, copy used"
+#~ msgstr "створення посилання зазнало невдачі, використано копіювання"
 
 #~ msgid "cannot allocate TLS data structures for initial thread"
 #~ msgstr "не вдалося розмістити структури даних TLS для початкового потоку обробки"
@@ -7314,9 +7350,6 @@ msgstr "%s: не вдалося створити каталог %s: %s"
 
 #~ msgid "time before zero"
 #~ msgstr "час до нульового"
-
-#~ msgid "too many transitions?!"
-#~ msgstr "забагато переходів?!"
 
 #~ msgid "%s: use of -v on system with floating time_t other than float or double\n"
 #~ msgstr "%s: використання -v у системі з числом з рухомою крапкою time_t, відмінним від типу float або double\n"
