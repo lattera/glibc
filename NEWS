@@ -20,6 +20,10 @@ Major new features:
 * Unicode 10.0.0 Support: Character encoding, character type info, and
   transliteration tables are all updated to Unicode 10.0.0, using
   generator scripts contributed by Mike FABIAN (Red Hat).
+  These updates cause user visible changes, especially the changes in
+  wcwidth for many emoji characters cause problems when emoji sequences
+  are rendered with pango, see for example:
+  https://bugzilla.gnome.org/show_bug.cgi?id=780669#c5
 
 * Collation of Hungarian has been overhauled and is now consistent with "The
   Rules of Hungarian Orthography, 12th edition" (Bug 18934).  Contributed by
