@@ -1,5 +1,11 @@
 2017-07-26  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21835]
+	* localedata/locales/mai_NP: New file.
+	* localedata/SUPPORTED: Add mai_NP/UTF-8.
+
+2017-07-26  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21838]
 	* locales/the_NP (LC_CTYPE): copy "ne_NP"
 	* locales/the_NP (LC_COLLATE): copy "ne_NP"
