@@ -1,3 +1,28 @@
+2017-07-26  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+    Remove redundant data for LC_MONETARY
+
+	[BZ #21836]
+	* locales/ar_IN (LC_MONETARY): copy "hi_IN"
+	* locales/as_IN (LC_MONETARY): copy "hi_IN"
+	* locales/bhb_IN (LC_MONETARY): copy "hi_IN"
+	* locales/bn_IN (LC_MONETARY): copy "hi_IN"
+	* locales/en_IN (LC_MONETARY): copy "hi_IN"
+	* locales/gu_IN (LC_MONETARY): copy "hi_IN"
+	* locales/kn_IN (LC_MONETARY): copy "hi_IN"
+	* locales/kok_IN (LC_MONETARY): copy "hi_IN"
+	* locales/ks_IN (LC_MONETARY): copy "hi_IN"
+	* locales/ml_IN (LC_MONETARY): copy "hi_IN"
+	* locales/mr_IN (LC_MONETARY): copy "hi_IN"
+	* locales/or_IN (LC_MONETARY): copy "hi_IN"
+	* locales/pa_IN (LC_MONETARY): copy "hi_IN"
+	* locales/sa_IN (LC_MONETARY): copy "hi_IN"
+	* locales/sd_IN (LC_MONETARY): copy "hi_IN"
+	* locales/ta_IN (LC_MONETARY): copy "hi_IN"
+	* locales/tcy_IN (LC_MONETARY): copy "hi_IN"
+	* locales/te_IN (LC_MONETARY): copy "hi_IN"
+	* locales/ur_IN (LC_MONETARY): copy "hi_IN"
+
 2017-07-25  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21797]
