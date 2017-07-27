@@ -1,3 +1,7 @@
+2017-07-27  Ihar Hrachyshka <ihrachys@redhat.com>
+
+	* locales/be_BY@latin (LC_ADDRESS): Improve country_name.
+
 2017-07-27  Mike FABIAN  <mfabian@redhat.com>
 
 	* locales/az_IR (LC_MESSAGES): Improve yesexpr and noexpr.
