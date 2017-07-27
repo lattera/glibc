@@ -57,7 +57,7 @@ copy "ta_IN"
 END LC_MESSAGES
 
 LC_MONETARY
-copy "ta_IN"
+copy "si_LK"
 END LC_MONETARY
 
 LC_NUMERIC

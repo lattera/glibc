@@ -1,3 +1,8 @@
+2017-07-27  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21839]
+	* locales/ta_LK (LC_MONETARY): copy "si_LK"
+
 2017-07-27  Mike FABIAN  <mfabian@redhat.com>
 
 	* locales/nds_NL (LC_ADDRESS): Fix country name.
