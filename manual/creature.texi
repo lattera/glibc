@@ -211,7 +211,7 @@ cause them to be disabled.
 
 @defvr Macro _REENTRANT
 @defvrx Macro _THREAD_SAFE
-@standardsx{_REENTRANT, GNU, (none)}
+@standards{Obsolete, (none)}
 These macros are obsolete.  They have the same effect as defining
 @code{_POSIX_C_SOURCE} with the value @code{199506L}.
 

@@ -1,3 +1,8 @@
+2017-07-27  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/creature.texi (_REENTRANT): Annotate as obsolete.
+	(_THREAD_SAFE): Likewise.
+
 2017-07-26  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* po/bg.po: Update translations.
