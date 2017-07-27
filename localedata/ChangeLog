@@ -1,3 +1,8 @@
+2017-07-27  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21848]
+	* locales/mai_NP (LC_IDENTIFICATION): Fix country name in title.
+
 2017-07-27  Ihar Hrachyshka <ihrachys@redhat.com>
 
 	* locales/be_BY@latin (LC_ADDRESS): Improve country_name.
