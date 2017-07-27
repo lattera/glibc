@@ -85,10 +85,10 @@ copy "fa_IR"
 END LC_CTYPE
 
 LC_MESSAGES
-% This is "^[yY<HEH><BEH>].*"
-yesexpr "<U005E><U005B><U0079><U0059><U0647><U0628><U005D><U002E><U002A>"
-% This is "^[nN<YEH><KHEH>].*"
-noexpr  "<U005E><U005B><U006E><U004E><U06CC><U062E><U005D><U002E><U002A>"
+% This is "^[+1yY<HEH><BEH>]"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0647><U0628><U005D>"
+% This is "^[-0nN<YEH><KHEH>]"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U06CC><U062E><U005D>"
 % This is "Hen":
 yesstr  "<U0647><U0646>"
 % This is "Yox":
@@ -252,7 +252,7 @@ copy "fa_IR"
 END LC_MEASUREMENT
 
 LC_ADDRESS
-% NOTE: Copied from "fr_IR", it should be checked and reconsidered if necessary:
+% NOTE: Copied from "fa_IR", it should be checked and reconsidered if necessary:
 postal_fmt "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
@@ -269,7 +269,9 @@ country_isbn "964"
 % Turkce
 lang_name "<U062A><U06C6><U0631><U06A9><U062C><U0647>"
 lang_ab "az"
-lang_term "aze"
+% iso-639-3
+lang_term "azb"
+% iso-639-2
 lang_lib "aze"
 END LC_ADDRESS
 
@@ -285,6 +287,5 @@ name_ms "<U062E><U0627><U0646><U06CC><U0645>"
 name_mrs "<U062E><U0627><U0646><U06CC><U0645>"
 % Agha
 name_mr "<U0622><U063A><U0627>"
-name_fmt "<U0025><U0064><U0025><U0074><U0025><U0073><U0025><U0074>/
-<U0025><U0067><U0025><U0074><U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt "%d%t%s%t%g%t%m%t%f"
 END LC_NAME

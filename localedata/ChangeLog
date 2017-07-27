@@ -1,3 +1,11 @@
+2017-07-27  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/az_IR (LC_MESSAGES): Improve yesexpr and noexpr.
+	* locales/az_IR (LC_ADDRESS): Fix typo in comment  and
+	use the individual iso-639-3 code for South Azerbaijani
+	"azb" in lang_term.
+	* locales/az_IR (LC_NAME): Improve readability of name_fmt in source.
+
 2017-07-27  Mousa Moradi <mousamk@gmail.com>
 
 	[BZ #14172]

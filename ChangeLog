@@ -1,3 +1,7 @@
+2017-07-27  Mike FABIAN  <mfabian@redhat.com>
+
+	* locale/iso-639.def: add North and South Azerbaijani.
+
 2017-07-27  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/lang.texi (CHAR_BIT): Convert from an @table to an
