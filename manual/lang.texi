@@ -609,48 +609,17 @@ which give you this information in full detail.
 @end menu
 
 @node Width of Type
-@subsection Computing the Width of an Integer Data Type
+@subsection Width of an Integer Type
 @cindex integer type width
 @cindex width of integer type
 @cindex type measurements, integer
-
-The most common reason that a program needs to know how many bits are in
-an integer type is for using an array of @code{long int} as a bit vector.
-You can access the bit at index @var{n} with
-
-@smallexample
-vector[@var{n} / LONGBITS] & (1 << (@var{n} % LONGBITS))
-@end smallexample
-
-@noindent
-provided you define @code{LONGBITS} as the number of bits in a
-@code{long int}.
-
 @pindex limits.h
-There is no operator in the C language that can give you the number of
-bits in an integer data type.  But you can compute it from the macro
-@code{CHAR_BIT}, defined in the header file @file{limits.h}.
 
-@deftypevr Macro int CHAR_BIT
-@standards{C90, limits.h}
-This is the number of bits in a @code{char}.  POSIX.1-2001 requires
-this to be 8.
-
-You can compute the number of bits in any data type @var{type} like
-this:
-
-@smallexample
-sizeof (@var{type}) * CHAR_BIT
-@end smallexample
-@end deftypevr
-
-That expression includes padding bits as well as value and sign bits.
-On all systems supported by @theglibc{}, standard integer types other
-than @code{_Bool} do not have any padding bits.  TS 18661-1:2014
-defines additional macros for the width of integer types (the number
-of value and sign bits); these macros can also be used in @code{#if}
-preprocessor directives, whereas @code{sizeof} cannot.  The following
-macros are defined in @file{limits.h}.
+TS 18661-1:2014 defines macros for the width of integer types (the
+number of value and sign bits).  One benefit of these macros is they
+can be used in @code{#if} preprocessor directives, whereas
+@code{sizeof} cannot.  The following macros are defined in
+@file{limits.h}.
 
 @vtable @code
 @item CHAR_WIDTH
@@ -665,7 +634,6 @@ macros are defined in @file{limits.h}.
 @itemx LLONG_WIDTH
 @itemx ULLONG_WIDTH
 @standards{ISO, limits.h}
-
 These are the widths of the types @code{char}, @code{signed char},
 @code{unsigned char}, @code{short int}, @code{unsigned short int},
 @code{int}, @code{unsigned int}, @code{long int}, @code{unsigned long
@@ -675,7 +643,7 @@ respectively.
 
 Further such macros are defined in @file{stdint.h}.  Apart from those
 for types specified by width (@pxref{Integers}), the following are
-defined.
+defined:
 
 @vtable @code
 @item INTPTR_WIDTH
@@ -686,11 +654,42 @@ defined.
 @itemx WCHAR_WIDTH
 @itemx WINT_WIDTH
 @standards{ISO, stdint.h}
-
 These are the widths of the types @code{intptr_t}, @code{uintptr_t},
 @code{ptrdiff_t}, @code{sig_atomic_t}, @code{size_t}, @code{wchar_t}
 and @code{wint_t}, respectively.
 @end vtable
+
+A common reason that a program needs to know how many bits are in an
+integer type is for using an array of @code{unsigned long int} as a
+bit vector.  You can access the bit at index @var{n} with:
+
+@smallexample
+vector[@var{n} / ULONG_WIDTH] & (1UL << (@var{n} % ULONG_WIDTH))
+@end smallexample
+
+Before @code{ULONG_WIDTH} was a part of the C language,
+@code{CHAR_BIT} was used to compute the number of bits in an integer
+data type.
+
+@deftypevr Macro int CHAR_BIT
+@standards{C90, limits.h}
+This is the number of bits in a @code{char}.  POSIX.1-2001 requires
+this to be 8.
+@end deftypevr
+
+The number of bits in any data type @var{type} can be computed like
+this:
+
+@smallexample
+sizeof (@var{type}) * CHAR_BIT
+@end smallexample
+
+That expression includes padding bits as well as value and sign bits.
+On all systems supported by @theglibc{}, standard integer types other
+than @code{_Bool} do not have any padding bits.
+
+@strong{Portability Note:} One cannot actually easily compute the
+number of usable bits in a portable manner.
 
 @node Range of Type
 @subsection Range of an Integer Type

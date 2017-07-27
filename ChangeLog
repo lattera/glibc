@@ -1,5 +1,14 @@
 2017-08-10  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/lang.texi
+	(Computing the Width of an Integer Data Type): Rename section to
+	"Width of an Integer Type".  Remove inaccurate statement regarding
+	lack of C language facilities for determining width of integer
+	types, and reorder content to improve flow and context of
+	discussion.
+
+2017-08-10  Rical Jasan  <ricaljasan@pacific.net>
+
 	* lang.texi (va_copy): Change standard from ISO to C99.
 	(__va_copy): Add standard and header annotation.
 	Update description for clarity of origins and current use.
