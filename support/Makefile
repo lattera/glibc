@@ -106,6 +106,12 @@ libsupport-routines = \
   xpthread_mutexattr_setrobust \
   xpthread_mutexattr_settype \
   xpthread_once \
+  xpthread_rwlock_init \
+  xpthread_rwlock_rdlock \
+  xpthread_rwlock_wrlock \
+  xpthread_rwlock_unlock \
+  xpthread_rwlockattr_init \
+  xpthread_rwlockattr_setkind_np \
   xpthread_sigmask \
   xpthread_spin_lock \
   xpthread_spin_unlock \

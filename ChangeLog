@@ -1,3 +1,27 @@
+2017-07-28  Torvald Riegel  <triegel@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #21298]
+	* nptl/Makefile (tests-internal): Add tst-rwlock20.
+	* nptl/pthread_rwlock_common.c (__pthread_rwlock_rdlock_full): Fix
+	explicit hand-over.
+	(__pthread_rwlock_wrlock_full): Likewise.
+	* nptl/tst-rwlock20.c: New file.
+	* support/Makefile (libsupport-routines): Add xpthread_rwlock_init,
+	xpthread_rwlock_rdlock, xpthread_rwlock_unlock,
+	xpthread_rwlock_wrlock, xpthread_rwlockattr_init, and
+	xpthread_rwlockattr_setkind_np.
+	* support/xpthread_rwlock_init.c: New file.
+	* support/xpthread_rwlock_rdlock.c: New file.
+	* support/xpthread_rwlock_unlock.c: New file.
+	* support/xpthread_rwlock_wrlock.c: New file.
+	* support/xpthread_rwlockattr_init.c: New file.
+	* support/xpthread_rwlockattr_setkind_np.c: New file.
+	* support/xthread.h: Add xpthread_rwlock_init, xpthread_rwlock_rdlock,
+	xpthread_rwlock_unlock, xpthread_rwlock_wrlock,
+	xpthread_rwlockattr_init, and xpthread_rwlockattr_setkind_np
+	prototypes.
+
 2017-07-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/alpha/fpu/libm-test-ulps: Update.

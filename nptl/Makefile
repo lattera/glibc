@@ -304,7 +304,9 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-thread_local1 tst-mutex-errorcheck tst-robust10 \
 	tst-robust-fork tst-create-detached tst-memstream
 
-tests-internal := tst-typesizes tst-rwlock19 tst-sem11 tst-sem12 tst-sem13 \
+tests-internal := tst-typesizes \
+		  tst-rwlock19 tst-rwlock20 \
+		  tst-sem11 tst-sem12 tst-sem13 \
 		  tst-barrier5 tst-signal7 tst-mutex8 tst-mutex8-static \
 		  tst-mutexpi8 tst-mutexpi8-static
 

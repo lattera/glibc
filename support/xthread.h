@@ -74,6 +74,14 @@ void xpthread_attr_setguardsize (pthread_attr_t *attr,
    PTHREAD_BARRIER_SERIAL_THREAD.  */
 int xpthread_barrier_wait (pthread_barrier_t *barrier);
 
+void xpthread_rwlock_init (pthread_rwlock_t *rwlock,
+			  const pthread_rwlockattr_t *attr);
+void xpthread_rwlockattr_init (pthread_rwlockattr_t *attr);
+void xpthread_rwlockattr_setkind_np (pthread_rwlockattr_t *attr, int pref);
+void xpthread_rwlock_wrlock (pthread_rwlock_t *rwlock);
+void xpthread_rwlock_rdlock (pthread_rwlock_t *rwlock);
+void xpthread_rwlock_unlock (pthread_rwlock_t *rwlock);
+
 __END_DECLS
 
 #endif /* SUPPORT_THREAD_H */
