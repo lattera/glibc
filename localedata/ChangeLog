@@ -1,3 +1,9 @@
+2017-08-04  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21854]
+	* locales/en_SC: New file.
+	* localedata/SUPPORTED : Add en_SC/UTF-8.
+
 2017-08-07  Andreas Schwab  <schwab@suse.de>
 
 	* Makefile ($(objpfx)tst-trans.out)
