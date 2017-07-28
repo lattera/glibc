@@ -1,3 +1,8 @@
+2017-08-02  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21853]
+	* locales/zh_SG (LC_TIME): Fix abday
+
 2017-07-27  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21848]

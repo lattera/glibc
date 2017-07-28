@@ -93,10 +93,7 @@ LC_TIME
 % for IBM Class for Unicode.
 %
 % Abbreviated weekday names (%a)
-abday       "<U661F><U671F><U65E5>";"<U661F><U671F><U4E00>";/
-            "<U661F><U671F><U4E8C>";"<U661F><U671F><U4E09>";/
-            "<U661F><U671F><U56DB>";"<U661F><U671F><U4E94>";/
-            "<U661F><U671F><U516D>"
+abday "<U65E5>";"<U4E00>";"<U4E8C>";"<U4E09>";"<U56DB>";"<U4E94>";"<U516D>"
 %
 % Full weekday names (%A)
 day         "<U661F><U671F><U65E5>";"<U661F><U671F><U4E00>";/
