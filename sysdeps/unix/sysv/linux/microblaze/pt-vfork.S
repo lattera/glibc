@@ -34,7 +34,7 @@
        || SHLIB_COMPAT (libpthread, GLIBC_2_1_2, GLIBC_2_20))
 
 ENTRY (vfork_compat)
-	bri	__libc_vfork
+	bri	__libc_vfork@PLT
 END (vfork_compat)
 
 #endif

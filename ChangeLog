@@ -1,5 +1,8 @@
 2017-07-23  Nathan Rossi  <nathan@nathanrossi.com>
 
+	[BZ #21779]
+	* sysdeps/unix/sysv/linux/microblaze/pt-vfork.S: Branch using PLT.
+
 	* sysdeps/microblaze/libm-test-ulps: Update.
 
 2017-07-28  Chung-Lin Tang  <cltang@codesourcery.com>
