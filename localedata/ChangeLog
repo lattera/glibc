@@ -1,5 +1,11 @@
 2017-08-02  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21845]
+	* locales/bho_NP: New file, Bhojpuri locale for Nepal.
+	* SUPPORTED: Add bho_NP/UTF-8
+
+2017-08-02  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21867]
 	* locales/en_DK (LC_MESSAGES): Fix yesexpr
 
