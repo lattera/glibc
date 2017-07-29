@@ -1,4 +1,17 @@
-2017-07-23  Nathan Rossi  <nathan@nathanrossi.com>
+2017-07-29  Torvald Riegel  <triegel@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ 21778]
+	* nptl/pthread_mutex_timedlock.c (__pthread_mutex_timedlock): Update
+	oldval if the CAS fails.
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock_full): Likewise.
+	* nptl/tst-mutex7.c: Add comments explaining template test.
+	(ROBUST, DELAY_NSEC, ROUNDS, N): New.
+	(tf, do_test): Use them.
+	* nptl/tst-mutex7robust.c: New file.
+	* nptl/Makefile (tests): Add new test.
+
+2017-07-28  Nathan Rossi  <nathan@nathanrossi.com>
 
 	[BZ #21779]
 	* sysdeps/unix/sysv/linux/microblaze/pt-vfork.S: Branch using PLT.

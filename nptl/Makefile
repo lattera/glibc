@@ -230,7 +230,7 @@ LDLIBS-tst-thread_local1 = -lstdc++
 
 tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
-	tst-mutex7 tst-mutex9 tst-mutex5a tst-mutex7a \
+	tst-mutex7 tst-mutex9 tst-mutex5a tst-mutex7a tst-mutex7robust \
 	tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 tst-mutexpi5 \
 	tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a \
 	tst-mutexpi9 \
