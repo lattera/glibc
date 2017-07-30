@@ -38,6 +38,7 @@ tests-special += $(objpfx)tst-catgets-mem.out
 endif
 
 gencat-modules	= xmalloc
+others-extras   = $(gencat-modules)
 
 # To find xmalloc.c
 vpath %.c ../locale/programs

@@ -112,6 +112,7 @@ install-rootsbin += ldconfig
 
 ldconfig-modules := cache readlib xmalloc xstrdup chroot_canon static-stubs
 extra-objs	+= $(ldconfig-modules:=.o)
+others-extras   = $(ldconfig-modules)
 endif
 endif
 

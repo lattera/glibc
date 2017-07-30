@@ -1359,7 +1359,8 @@ lib := testsuite
 include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 endif
 
-all-nonlib := $(strip $(tests-internal) $(test-internal-extras) $(others))
+all-nonlib := $(strip $(tests-internal) $(test-internal-extras) \
+		      $(others) $(others-extras))
 ifneq (,$(all-nonlib))
 cpp-srcs-left = $(all-nonlib)
 lib := nonlib
