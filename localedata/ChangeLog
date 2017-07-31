@@ -1,5 +1,10 @@
 2017-08-02  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21867]
+	* locales/en_DK (LC_MESSAGES): Fix yesexpr
+
+2017-08-02  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21853]
 	* locales/zh_SG (LC_TIME): Fix abday
 
