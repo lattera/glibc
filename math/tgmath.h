@@ -129,8 +129,7 @@
 		     : (__tgmath_real_type (Val1)) __tgml(Fct) (Val1, Val2)))
 
 # define __TGMATH_BINARY_REAL_ONLY(Val1, Val2, Fct) \
-     (__extension__ (((sizeof (+(Val1)) > sizeof (double)		      \
-		       || sizeof (+(Val2)) > sizeof (double))		      \
+     (__extension__ ((sizeof ((Val1) + (Val2)) > sizeof (double)	      \
 		      && __builtin_classify_type ((Val1) + (Val2)) == 8)      \
 		     ? __TGMATH_F128 ((Val1) + (Val2),			      \
 				      (__typeof				      \
@@ -152,8 +151,7 @@
 		       Fct##f (Val1, Val2)))
 
 # define __TGMATH_BINARY_REAL_STD_ONLY(Val1, Val2, Fct) \
-     (__extension__ (((sizeof (+(Val1)) > sizeof (double)		      \
-		       || sizeof (+(Val2)) > sizeof (double))		      \
+     (__extension__ ((sizeof ((Val1) + (Val2)) > sizeof (double)	      \
 		      && __builtin_classify_type ((Val1) + (Val2)) == 8)      \
 		     ? (__typeof ((__tgmath_real_type (Val1)) 0		      \
 				  + (__tgmath_real_type (Val2)) 0))	      \
@@ -170,8 +168,7 @@
 		       Fct##f (Val1, Val2)))
 
 # define __TGMATH_BINARY_REAL_RET_ONLY(Val1, Val2, Fct) \
-     (__extension__ (((sizeof (+(Val1)) > sizeof (double)		      \
-		       || sizeof (+(Val2)) > sizeof (double))		      \
+     (__extension__ ((sizeof ((Val1) + (Val2)) > sizeof (double)	      \
 		      && __builtin_classify_type ((Val1) + (Val2)) == 8)      \
 		     ? __TGMATH_F128 ((Val1) + (Val2), Fct, (Val1, Val2))     \
 		     __tgml(Fct) (Val1, Val2)				      \
@@ -183,8 +180,7 @@
 		     : Fct##f (Val1, Val2)))
 
 # define __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY(Val1, Val2, Val3, Fct) \
-     (__extension__ (((sizeof (+(Val1)) > sizeof (double)		      \
-		       || sizeof (+(Val2)) > sizeof (double))		      \
+     (__extension__ ((sizeof ((Val1) + (Val2)) > sizeof (double)	      \
 		      && __builtin_classify_type ((Val1) + (Val2)) == 8)      \
 		     ? __TGMATH_F128 ((Val1) + (Val2),			      \
 				      (__typeof				      \
@@ -206,9 +202,7 @@
 		       Fct##f (Val1, Val2, Val3)))
 
 # define __TGMATH_TERNARY_REAL_ONLY(Val1, Val2, Val3, Fct) \
-     (__extension__ (((sizeof (+(Val1)) > sizeof (double)		      \
-		       || sizeof (+(Val2)) > sizeof (double)		      \
-		       || sizeof (+(Val3)) > sizeof (double))		      \
+     (__extension__ ((sizeof ((Val1) + (Val2) + (Val3)) > sizeof (double)     \
 		      && __builtin_classify_type ((Val1) + (Val2) + (Val3))   \
 			 == 8)						      \
 		     ? __TGMATH_F128 ((Val1) + (Val2) + (Val3),		      \
@@ -312,8 +306,8 @@
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
 # define __TGMATH_BINARY_REAL_IMAG(Val1, Val2, Fct, Cfct) \
-     (__extension__ (((sizeof (+__real__ (Val1)) > sizeof (double)	      \
-		       || sizeof (+__real__ (Val2)) > sizeof (double))	      \
+     (__extension__ ((sizeof (__real__ (Val1)				      \
+			      + __real__ (Val2)) > sizeof (double)	      \
 		      && __builtin_classify_type (__real__ (Val1)	      \
 						  + __real__ (Val2)) == 8)    \
 		     ? __TGMATH_CF128 ((Val1) + (Val2),			      \

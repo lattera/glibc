@@ -1,3 +1,16 @@
+2017-08-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21686]
+	* math/tgmath.h (__TGMATH_BINARY_REAL_ONLY): Add arguments before
+	comparing size with that of double.
+	(__TGMATH_BINARY_REAL_STD_ONLY): Likewise.
+	(__TGMATH_BINARY_REAL_RET_ONLY): Likewise.
+	(__TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY): Likewise.
+	(__TGMATH_TERNARY_REAL_ONLY): Likewise.
+	(__TGMATH_BINARY_REAL_IMAG): Likewise.
+	* math/gen-tgmath-tests.py (Type.init_types): Create __int128 and
+	unsigned __int128 types.
+
 2017-08-02  Steve Ellcey  <sellcey@cavium.com>
 
 	* localedata/Makefile (CFLAGS-tst_iswalnum.c, CFLAGS-tst_iswalpha.c

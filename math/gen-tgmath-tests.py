@@ -195,6 +195,10 @@ class Type(object):
         Type.create_type('unsigned long int', integer=True)
         Type.create_type('long long int', integer=True)
         Type.create_type('unsigned long long int', integer=True)
+        Type.create_type('__int128', integer=True,
+                         condition='defined __SIZEOF_INT128__')
+        Type.create_type('unsigned __int128', integer=True,
+                         condition='defined __SIZEOF_INT128__')
         Type.create_type('enum e', integer=True, complex_ok=False)
         Type.create_type('_Bool', integer=True, complex_ok=False)
         Type.create_type('bit_field', integer=True, complex_ok=False)
