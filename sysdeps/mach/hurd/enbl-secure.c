@@ -21,3 +21,10 @@
    In the shared library, the `__libc_enable_secure' variable is defined
    by the dynamic linker in dl-sysdep.c and set there.
    In the static library, it is defined in init-first.c and set there.  */
+
+#include <libc-internal.h>
+
+void
+__libc_init_secure (void)
+{
+}

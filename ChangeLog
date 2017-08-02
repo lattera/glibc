@@ -1,3 +1,8 @@
+2017-08-02  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/enbl-secure.c (__libc_init_secure): Define
+	function.
+
 2017-08-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21686]
