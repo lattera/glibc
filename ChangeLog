@@ -1,5 +1,9 @@
 2017-08-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* version.h (RELEASE): Set to "stable"
+	(VERSION): Set to 2.26.
+	* include/features.h (__GLIBC_MINOR__): Set to 26.
+
 	* manual/contrib.texi: Update contributors.
 	* manual/install.texi: Update latest tested versions of gcc and
 	binutils.
