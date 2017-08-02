@@ -197,6 +197,7 @@ class Type(object):
         Type.create_type('unsigned long long int', integer=True)
         Type.create_type('enum e', integer=True, complex_ok=False)
         Type.create_type('_Bool', integer=True, complex_ok=False)
+        Type.create_type('bit_field', integer=True, complex_ok=False)
         # Internal types represent the combination of long double with
         # _Float64 or _Float64x, for which the ordering depends on
         # whether long double has the same format as double.
@@ -273,6 +274,11 @@ def vol_var_for_type(name):
 
 def define_vars_for_type(name):
     """Return the definitions of variables with a given type (name)."""
+    if name == 'bit_field':
+        struct_vars = define_vars_for_type('struct s');
+        return '%s#define %s %s.bf\n' % (struct_vars,
+                                         vol_var_for_type(name),
+                                         vol_var_for_type('struct s'))
     return ('%s %s __attribute__ ((unused));\n'
             '%s volatile %s __attribute__ ((unused));\n'
             % (name, var_for_type(name), name, vol_var_for_type(name)))
@@ -311,7 +317,11 @@ class Tests(object):
                             'int num_pass, num_fail;\n'
                             'volatile int called_mant_dig;\n'
                             'const char *volatile called_func_name;\n'
-                            'enum e { E, F };\n']
+                            'enum e { E, F };\n'
+                            'struct s\n'
+                            '  {\n'
+                            '    int bf:2;\n'
+                            '  };\n']
         float64_text = ('# if LDBL_MANT_DIG == DBL_MANT_DIG\n'
                         'typedef _Float64 long_double_Float64;\n'
                         'typedef __CFLOAT64 complex_long_double_Float64;\n'

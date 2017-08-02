@@ -1,3 +1,31 @@
+2017-08-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21685]
+	* math/tgmath.h (__tgmath_real_type): Use unary + on potentially
+	bit-field expressions passed to sizeof or typeof.
+	[__HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(__TGMATH_F128): Likewise.
+	[__HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(__TGMATH_CF128): Likewise.
+	(__TGMATH_UNARY_REAL_ONLY): Likewise.
+	(__TGMATH_UNARY_REAL_RET_ONLY): Likewise.
+	(__TGMATH_BINARY_FIRST_REAL_ONLY): Likewise.
+	(__TGMATH_BINARY_FIRST_REAL_STD_ONLY): Likewise.
+	(__TGMATH_BINARY_REAL_ONLY): Likewise.
+	(__TGMATH_BINARY_REAL_STD_ONLY): Likewise.
+	(__TGMATH_BINARY_REAL_RET_ONLY): Likewise.
+	(__TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY): Likewise.
+	(__TGMATH_TERNARY_REAL_ONLY): Likewise.
+	(__TGMATH_TERNARY_FIRST_REAL_RET_ONLY): Likewise.
+	(__TGMATH_UNARY_REAL_IMAG): Likewise.
+	(__TGMATH_UNARY_IMAG): Likewise.
+	(__TGMATH_UNARY_REAL_IMAG_RET_REAL): Likewise.
+	(__TGMATH_BINARY_REAL_IMAG): Likewise.
+	* math/gen-tgmath-tests.py (Type.init_types): Create bit_field
+	type.
+	(define_vars_for_type): Handle bit_field type specially.
+	(Tests.__init__): Declare structure with bit-field element.
+
 2017-08-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21791]
