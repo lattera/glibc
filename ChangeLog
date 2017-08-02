@@ -20532,7 +20532,7 @@
 	New functions.
 	(add_temp_file): Use them.
 
-2016-06-09  Samuel Thibault  <samuel.thibault@ens-lyon.org
+2016-06-09  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* mach/mach/mach_traps.h (mach_print): Add syscall declaration.
 
@@ -22828,7 +22828,7 @@
 	* sysdeps/unix/sysv/linux/nios2/setcontext.S (__startcontext):
 	Add nop before __startcontext, add explaining comments.
 
-2016-04-25  Samuel thibault  <samuel.thibault@ens-lyon.org>
+2016-04-25  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	RFC2292 macros were obsoleted by RFC3542, and should not be exposed
 	any more. Notably since IPV6_PKTINFO has been reintroduced with a
@@ -23775,7 +23775,7 @@
 	* posix/tst-spawn.c (do_test): Add posix_spawn null pid argument for
 	success case.
 
-2016-03-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>:
+2016-03-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/i386/c++-types.data: New file.
 
@@ -24039,7 +24039,7 @@
 	* timezone/README: Remove mention of checktab.awk. Mention wiki
 	SharedSourceFiles.
 
-2016-03-13  Samuel Thibault  <samuel.thibault@ens-lyon.org
+2016-03-13  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/posix/waitid.c (OUR_WAITID): Test against WSTOPPED instead of
 	WUNTRACED.
@@ -38893,7 +38893,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
 	Likewise.
 
-2015-03-21  Samuel Thibault  <samuel.thibault@ens-lyon.org
+2015-03-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/Makefile ($(common-objpfx)errnos.d): Depend on
 	libc-modules.h
@@ -39464,11 +39464,11 @@
 	* sysdeps/i386/fpu/libm-test-ulps: Update.
 	* sysdeps/x86_64/fpu/libm-test-ulp: Likewise.
 
-2015-02-27  Wilco Dijkstra  wdijkstr@arm.com
+2015-02-27  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* string/bcopy.c (bcopy): Call memmove for performance.
 
-2015-02-27  Wilco Dijkstra  wdijkstr@arm.com
+2015-02-27  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* string/bzero.c (__bzero): Call memset for performance.
 
@@ -46798,7 +46798,7 @@
 	* version.h (RELEASE): Set to "development".
 	(VERSION): Set to "2.20.90"
 
-2014-09-07  Allan McRae  <allan@archlinux.org
+2014-09-07  Allan McRae  <allan@archlinux.org>
 
 	* version.h (RELEASE): Set to "stable".
 	(VERSION): Set to "2.20"
@@ -62142,7 +62142,7 @@
 	Allow copysignl PLT reference to be missing.
 
 2013-10-18  Richard Sandiford  <richard@codesourcery.com>
-	    Joseph Myers  <joseph@codesourcery.com
+	    Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15948]
 	* locale/programs/ld-collate.c (new_element): Handle <U0000> as a
