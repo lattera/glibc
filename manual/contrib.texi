@@ -16,6 +16,9 @@ Nick Alcock for contributing fixes to allow @theglibc{} to be built with the
 stack smashing protector enabled.
 
 @item
+John David Anglin for various fixes to the hppa port.
+
+@item
 Ryan S. Arnold for his improvements for Linux on PowerPC and his direction
 as FSF Project Steward for @theglibc{}.
 
@@ -57,6 +60,9 @@ committee.
 
 @item
 Thomas Bushnell for his contributions to Hurd.
+
+@item
+DJ Delorie for various fixes.
 
 @item
 Wilco Dijkstra for various fixes.
@@ -101,6 +107,10 @@ part of @theglibc{} steering committee.
 
 @item
 Steve Ellcey for various fixes.
+
+@item
+
+Mike FABIAN for various fixes to locales.
 
 @item
 Tulio Magno Quites Machado Filho for adding a new class of installed
@@ -196,6 +206,9 @@ securelevel 0, 1 and 2 and for the implementation for a caching daemon
 for NSS (@file{nscd}).
 
 @item
+Akhilesh Kumar for various fixes to locales.
+
+@item
 Jeff Law for various fixes.
 
 @item
@@ -214,6 +227,9 @@ Hongjiu Lu for providing the support for a Linux 32-bit runtime
 environment under x86-64 (x32), for porting to Linux on IA64, for
 improved string functions, a framework for testing IFUNC
 implementations, and many bug fixes.
+
+@item
+Rafal Luzynski for various fixes to locales.
 
 @item
 Luis Machado for optimized functions on PowerPC.
@@ -255,6 +271,9 @@ David Mosberger-Tang for contributing the port to Linux/Alpha
 (@code{alpha-@var{anything}-linux}).
 
 @item
+Wainer dos Santos Moschetta for various fixes to powerpc.
+
+@item
 Stephen Moshier for implementing some 128-bit long double format math
 functions.
 
@@ -273,6 +292,9 @@ cross-compilation and cross-testing of @theglibc{}, expanded
 coverage of conformtest, merging the ports/ subdirectory
 into the @glibcadj{} main repository and his direction as FSF Project
 Steward for @theglibc{}.
+
+@item
+Marko Myllynen for various fixes.
 
 @item
 Szabolcs Nagy for various fixes.
@@ -364,11 +386,17 @@ Richard Stallman for his contribution to the @code{getopt} function.
 Alfred M. Szmidt for various fixes.
 
 @item
+Chung-Lin Tang for contributing the Nios II port.
+
+@item
 Ian Lance Taylor for contributing the port to the MIPS DECStation
 running Ultrix 4 (@code{mips-dec-ultrix4}).
 
 @item
 Samuel Thibault for improving the Hurd port.
+
+@item
+Pino Toscano for various fixes.
 
 @item
 Tim Waugh for the implementation of the POSIX.2 @code{wordexp}

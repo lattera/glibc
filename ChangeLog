@@ -1,5 +1,10 @@
 2017-08-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* manual/contrib.texi: Update contributors.
+	* manual/install.texi: Update latest tested versions of gcc and
+	binutils.
+	* INSTALL: Regenerate.
+
 	* NEWS: Add bugs fixed.
 
 	* po/fr.po: Update translations.

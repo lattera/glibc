@@ -431,7 +431,7 @@ build the GNU C Library:
      GCC 4.9 or higher is required.  In general it is recommended to use
      the newest version of the compiler that is known to work for
      building the GNU C Library, as newer compilers usually produce
-     better code.  As of release time, GCC 6.3 is the newest compiler
+     better code.  As of release time, GCC 7.1 is the newest compiler
      verified to work to build the GNU C Library.
 
      For PowerPC 64-bits little-endian (powerpc64le), GCC 6.2 or higher
@@ -458,7 +458,7 @@ build the GNU C Library:
 
      You must use GNU 'binutils' (as and ld) to build the GNU C Library.
      No other assembler or linker has the necessary functionality at the
-     moment.  As of release time, GNU 'binutils' 2.25 is the newest
+     moment.  As of release time, GNU 'binutils' 2.27 is the newest
      verified to work to build the GNU C Library.
 
    * GNU 'texinfo' 4.7 or later
