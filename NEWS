@@ -194,7 +194,17 @@ Changes to build and runtime requirements:
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,
-  to avoid fragmentation-based spoofing attacks.
+  to avoid fragmentation-based spoofing attacks (CVE-2017-12132).
+
+* LD_LIBRARY_PATH is now ignored in binaries running in privileged AT_SECURE
+  mode to guard against local privilege escalation attacks (CVE-2017-1000366).
+
+* Avoid printing a backtrace from the __stack_chk_fail function since it is
+  called on a corrupt stack and a backtrace is unreliable on a corrupt stack
+  (CVE-2010-3192).
+
+* A use-after-free vulnerability in clntudp_call in the Sun RPC system has been
+  fixed (CVE-2017-12133).
 
 The following bugs are resolved with this release:
 
