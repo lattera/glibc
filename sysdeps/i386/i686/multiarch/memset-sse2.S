@@ -44,7 +44,7 @@
 # define SETRTNVAL	movl DEST(%esp), %eax
 #endif
 
-#ifdef SHARED
+#ifdef PIC
 # define ENTRANCE	PUSH (%ebx);
 # define RETURN_END	POP (%ebx); ret
 # define RETURN		RETURN_END; CFI_PUSH (%ebx)
@@ -261,7 +261,7 @@ L(128bytesormore):
 	PUSH (%ebx)
 	mov	$SHARED_CACHE_SIZE, %ebx
 #else
-# ifdef SHARED
+# ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	mov	__x86_shared_cache_size@GOTOFF(%ebx), %ebx
@@ -279,7 +279,7 @@ L(128bytesormore):
 # define RESTORE_EBX_STATE CFI_PUSH (%ebx)
 	cmp	$DATA_CACHE_SIZE, %ecx
 #else
-# ifdef SHARED
+# ifdef PIC
 #  define RESTORE_EBX_STATE
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
@@ -380,7 +380,7 @@ L(128bytesormore_nt):
 	jae	L(128bytesormore_nt)
 	sfence
 L(shared_cache_loop_end):
-#if defined DATA_CACHE_SIZE || !defined SHARED
+#if defined DATA_CACHE_SIZE || !defined PIC
 	POP (%ebx)
 #endif
 	BRANCH_TO_JMPTBL_ENTRY (L(table_16_128bytes))

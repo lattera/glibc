@@ -51,7 +51,7 @@
 # define PUSH(REG)	pushl REG; CFI_PUSH (REG)
 # define POP(REG)	popl REG; CFI_POP (REG)
 
-# ifdef SHARED
+# ifdef PIC
 #  define PARMS		8		/* Preserve EBX.  */
 #  define ENTRANCE	PUSH (%ebx);
 #  define RETURN_END	POP (%ebx); ret
@@ -157,7 +157,7 @@ L(48bytesormore):
 # ifdef SHARED_CACHE_SIZE_HALF
 	cmp	$SHARED_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_shared_cache_size_half@GOTOFF(%ebx), %ecx
@@ -231,7 +231,7 @@ L(shl_0_gobble):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -390,7 +390,7 @@ L(shl_1):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -494,7 +494,7 @@ L(shl_2):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -598,7 +598,7 @@ L(shl_3):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -704,7 +704,7 @@ L(shl_4):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -810,7 +810,7 @@ L(shl_5):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -916,7 +916,7 @@ L(shl_6):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -1022,7 +1022,7 @@ L(shl_7):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -1126,7 +1126,7 @@ L(shl_8):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -1230,7 +1230,7 @@ L(shl_9):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -1335,7 +1335,7 @@ L(shl_10):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -1440,7 +1440,7 @@ L(shl_11):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -1545,7 +1545,7 @@ L(shl_12):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -1650,7 +1650,7 @@ L(shl_13):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -1755,7 +1755,7 @@ L(shl_14):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
@@ -1860,7 +1860,7 @@ L(shl_15):
 # ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx

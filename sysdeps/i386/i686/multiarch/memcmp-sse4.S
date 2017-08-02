@@ -43,7 +43,7 @@
 # define RETURN	POP (%ebx); ret; CFI_PUSH (%ebx)
 
 
-# ifdef SHARED
+# ifdef PIC
 #  define JMPTBL(I, B)	I - B
 
 /* Load an entry in a jump table into EBX and branch to it.  TABLE is a

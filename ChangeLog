@@ -1,3 +1,15 @@
+2017-08-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/memcmp-sse4.S: Check PIC instead
+	of SHARED.
+	* sysdeps/i386/i686/multiarch/memcpy-sse2-unaligned.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memset-sse2-rep.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memset-sse2.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcat-sse2.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcpy-sse2.S: Likewise.
+
 2017-08-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21685]

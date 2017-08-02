@@ -157,7 +157,7 @@ L(mm_len_128_or_more_backward):
 # ifdef SHARED_CACHE_SIZE_HALF
 	cmp	$SHARED_CACHE_SIZE_HALF, %edi
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	PUSH (%ebx)
 	SETUP_PIC_REG (bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
@@ -351,7 +351,7 @@ L(mm_len_128_or_more_forward):
 # ifdef SHARED_CACHE_SIZE_HALF
 	cmp	$SHARED_CACHE_SIZE_HALF, %edi
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	PUSH (%ebx)
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
@@ -469,7 +469,7 @@ L(forward):
 # ifdef SHARED_CACHE_SIZE_HALF
 	cmp	$SHARED_CACHE_SIZE_HALF, %ecx
 # else
-#  ifdef SHARED
+#  ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_shared_cache_size_half@GOTOFF(%ebx), %ecx

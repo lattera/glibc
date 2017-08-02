@@ -44,7 +44,7 @@
 # define SETRTNVAL	movl DEST(%esp), %eax
 #endif
 
-#ifdef SHARED
+#ifdef PIC
 # define ENTRANCE	PUSH (%ebx);
 # define RETURN_END	POP (%ebx); ret
 # define RETURN		RETURN_END; CFI_PUSH (%ebx)
@@ -262,7 +262,7 @@ L(128bytesormore):
 	PUSH (%ebx)
 	mov	$DATA_CACHE_SIZE, %ebx
 #else
-# ifdef SHARED
+# ifdef PIC
 	SETUP_PIC_REG(bx)
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	mov	__x86_data_cache_size@GOTOFF(%ebx), %ebx
@@ -274,7 +274,7 @@ L(128bytesormore):
 	mov	%ebx, %edi
 	shr	$4, %ebx
 	sub	%ebx, %edi
-#if defined DATA_CACHE_SIZE || !defined SHARED
+#if defined DATA_CACHE_SIZE || !defined PIC
 	POP (%ebx)
 #endif
 /*
