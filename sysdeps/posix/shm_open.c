@@ -25,6 +25,7 @@
 #else
 
 # include <fcntl.h>
+# include <pthread.h>
 # include <shm-directory.h>
 
 

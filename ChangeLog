@@ -2,6 +2,7 @@
 
 	* sysdeps/mach/hurd/enbl-secure.c (__libc_init_secure): Define
 	function.
+	* sysdeps/posix/shm_open.c: Include <pthread.h>.
 
 2017-08-02  Joseph Myers  <joseph@codesourcery.com>
 
