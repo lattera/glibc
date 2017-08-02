@@ -96,7 +96,7 @@ ENTRY (_start)
 	   which grow downwards).  */
 	pushq %rsp
 
-#ifdef SHARED
+#ifdef PIC
 	/* Pass address of our own entry points to .fini and .init.  */
 	mov __libc_csu_fini@GOTPCREL(%rip), %R8_LP
 	mov __libc_csu_init@GOTPCREL(%rip), %RCX_LP
