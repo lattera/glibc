@@ -1,2 +1,11 @@
+2017-08-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21791]
+	* sysdeps/i386/i686/multiarch/memcpy-sse2-unaligned.S
+	(MEMCPY_CHK): Define only if SHARED is defined.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S (MEMCPY_CHK):
+	Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S (MEMCPY_CHK):
+	Likewise.
 
 See ChangeLog.18 for earlier changes.

@@ -100,7 +100,7 @@
 #endif
 
 	.section .text.ssse3,"ax",@progbits
-#if !defined USE_AS_BCOPY
+#if !defined USE_AS_BCOPY && defined SHARED
 ENTRY (MEMCPY_CHK)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
