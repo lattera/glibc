@@ -23,7 +23,7 @@
 int
 __issignalingl (long double x)
 {
-  u_int32_t exi, hxi, lxi;
+  uint32_t exi, hxi, lxi;
   GET_LDOUBLE_WORDS (exi, hxi, lxi, x);
 #if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
 # error not implemented

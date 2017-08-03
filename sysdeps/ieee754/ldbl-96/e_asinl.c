@@ -96,7 +96,7 @@ __ieee754_asinl (long double x)
 {
   long double t, w, p, q, c, r, s;
   int32_t ix;
-  u_int32_t se, i0, i1, k;
+  uint32_t se, i0, i1, k;
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;

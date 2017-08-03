@@ -23,8 +23,8 @@
 long double
 __nextupl (long double x)
 {
-  u_int32_t hx, ix;
-  u_int32_t lx;
+  uint32_t hx, ix;
+  uint32_t lx;
   int32_t esx;
 
   GET_LDOUBLE_WORDS (esx, hx, lx, x);

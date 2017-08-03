@@ -27,7 +27,7 @@ _Float128
 __truncl (_Float128 x)
 {
   int32_t j0;
-  u_int64_t i0, i1, sx;
+  uint64_t i0, i1, sx;
 
   GET_LDOUBLE_WORDS64 (i0, i1, x);
   sx = i0 & 0x8000000000000000ULL;

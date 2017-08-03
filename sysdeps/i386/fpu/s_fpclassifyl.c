@@ -25,7 +25,7 @@
 int
 __fpclassifyl (long double x)
 {
-  u_int32_t ex, hx, lx;
+  uint32_t ex, hx, lx;
   int retval = FP_NORMAL;
 
   GET_LDOUBLE_WORDS (ex, hx, lx, x);

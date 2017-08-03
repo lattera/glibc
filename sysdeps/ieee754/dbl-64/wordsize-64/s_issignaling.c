@@ -23,7 +23,7 @@
 int
 __issignaling (double x)
 {
-  u_int64_t xi;
+  uint64_t xi;
   EXTRACT_WORDS64 (xi, x);
 #if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
   /* We only have to care about the high-order bit of x's significand, because

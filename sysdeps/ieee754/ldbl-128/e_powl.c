@@ -151,7 +151,7 @@ __ieee754_powl (_Float128 x, _Float128 y)
   _Float128 y1, t1, t2, r, s, sgn, t, u, v, w;
   _Float128 s2, s_h, s_l, t_h, t_l, ay;
   int32_t i, j, k, yisint, n;
-  u_int32_t ix, iy;
+  uint32_t ix, iy;
   int32_t hx, hy;
   ieee854_long_double_shape_type o, p, q;
 
@@ -260,12 +260,12 @@ __ieee754_powl (_Float128 x, _Float128 y)
     }
 
   /* (x<0)**(non-int) is NaN */
-  if (((((u_int32_t) hx >> 31) - 1) | yisint) == 0)
+  if (((((uint32_t) hx >> 31) - 1) | yisint) == 0)
     return (x - x) / (x - x);
 
   /* sgn (sign of result -ve**odd) = -1 else = 1 */
   sgn = one;
-  if (((((u_int32_t) hx >> 31) - 1) | (yisint - 1)) == 0)
+  if (((((uint32_t) hx >> 31) - 1) | (yisint - 1)) == 0)
     sgn = -one;			/* (-ve)**(odd int) */
 
   /* |y| is huge.

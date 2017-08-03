@@ -35,7 +35,7 @@ static const _Float128 one = 1.0;
 _Float128 __modfl(_Float128 x, _Float128 *iptr)
 {
 	int64_t i0,i1,j0;
-	u_int64_t i;
+	uint64_t i;
 	GET_LDOUBLE_WORDS64(i0,i1,x);
 	j0 = ((i0>>48)&0x7fff)-0x3fff;	/* exponent of x */
 	if(j0<48) {			/* integer part in high x */

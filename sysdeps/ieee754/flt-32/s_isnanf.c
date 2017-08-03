@@ -32,7 +32,7 @@ int __isnanf(float x)
 	GET_FLOAT_WORD(ix,x);
 	ix &= 0x7fffffff;
 	ix = 0x7f800000 - ix;
-	return (int)(((u_int32_t)(ix))>>31);
+	return (int)(((uint32_t)(ix))>>31);
 }
 hidden_def (__isnanf)
 weak_alias (__isnanf, isnanf)

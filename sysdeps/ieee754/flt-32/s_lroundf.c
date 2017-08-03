@@ -29,7 +29,7 @@ long int
 __lroundf (float x)
 {
   int32_t j0;
-  u_int32_t i;
+  uint32_t i;
   long int result;
   int sign;
 

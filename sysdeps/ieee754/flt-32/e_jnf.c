@@ -186,7 +186,7 @@ __ieee754_ynf(int n, float x)
     float ret;
     {
 	int32_t i,hx,ix;
-	u_int32_t ib;
+	uint32_t ib;
 	int32_t sign;
 	float a, b, temp;
 

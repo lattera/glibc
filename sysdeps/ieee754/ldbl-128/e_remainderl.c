@@ -31,7 +31,7 @@ _Float128
 __ieee754_remainderl(_Float128 x, _Float128 p)
 {
 	int64_t hx,hp;
-	u_int64_t sx,lx,lp;
+	uint64_t sx,lx,lp;
 	_Float128 p_half;
 
 	GET_LDOUBLE_WORDS64(hx,lx,x);

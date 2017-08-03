@@ -208,7 +208,7 @@ sin_pi (long double x)
 {
   long double y, z;
   int n, ix;
-  u_int32_t se, i0, i1;
+  uint32_t se, i0, i1;
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
@@ -275,7 +275,7 @@ __ieee754_lgammal_r (long double x, int *signgamp)
 {
   long double t, y, z, nadj, p, p1, p2, q, r, w;
   int i, ix;
-  u_int32_t se, i0, i1;
+  uint32_t se, i0, i1;
 
   *signgamp = 1;
   GET_LDOUBLE_WORDS (se, i0, i1, x);

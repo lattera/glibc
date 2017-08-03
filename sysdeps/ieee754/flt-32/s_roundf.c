@@ -39,7 +39,7 @@ __roundf (float x)
 	}
       else
 	{
-	  u_int32_t i = 0x007fffff >> j0;
+	  uint32_t i = 0x007fffff >> j0;
 	  if ((i0 & i) == 0)
 	    /* X is integral.  */
 	    return x;

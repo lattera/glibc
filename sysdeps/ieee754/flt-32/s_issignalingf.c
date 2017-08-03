@@ -23,7 +23,7 @@
 int
 __issignalingf (float x)
 {
-  u_int32_t xi;
+  uint32_t xi;
   GET_FLOAT_WORD (xi, x);
 #if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
   /* We only have to care about the high-order bit of x's significand, because

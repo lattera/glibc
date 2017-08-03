@@ -112,7 +112,7 @@ __ieee754_j1l (long double x)
 {
   long double z, c, r, s, ss, cc, u, v, y;
   int32_t ix;
-  u_int32_t se;
+  uint32_t se;
 
   GET_LDOUBLE_EXP (se, x);
   ix = se & 0x7fff;
@@ -195,7 +195,7 @@ __ieee754_y1l (long double x)
 {
   long double z, s, c, ss, cc, u, v;
   int32_t ix;
-  u_int32_t se, i0, i1;
+  uint32_t se, i0, i1;
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
@@ -362,7 +362,7 @@ pone (long double x)
   const long double *p, *q;
   long double z, r, s;
   int32_t ix;
-  u_int32_t se, i0, i1;
+  uint32_t se, i0, i1;
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
@@ -509,7 +509,7 @@ qone (long double x)
   const long double *p, *q;
   static long double s, r, z;
   int32_t ix;
-  u_int32_t se, i0, i1;
+  uint32_t se, i0, i1;
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;

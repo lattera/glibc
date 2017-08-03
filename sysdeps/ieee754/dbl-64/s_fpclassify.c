@@ -25,7 +25,7 @@
 int
 __fpclassify (double x)
 {
-  u_int32_t hx, lx;
+  uint32_t hx, lx;
   int retval = FP_NORMAL;
 
   EXTRACT_WORDS (hx, lx, x);

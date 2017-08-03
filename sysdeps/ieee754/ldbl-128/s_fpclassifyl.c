@@ -26,7 +26,7 @@
 int
 __fpclassifyl (_Float128 x)
 {
-  u_int64_t hx, lx;
+  uint64_t hx, lx;
   int retval = FP_NORMAL;
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);

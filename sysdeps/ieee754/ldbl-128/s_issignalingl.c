@@ -23,7 +23,7 @@
 int
 __issignalingl (_Float128 x)
 {
-  u_int64_t hxi, lxi __attribute__ ((unused));
+  uint64_t hxi, lxi __attribute__ ((unused));
   GET_LDOUBLE_WORDS64 (hxi, lxi, x);
 #if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
   /* We only have to care about the high-order bit of x's significand, because

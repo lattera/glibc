@@ -36,7 +36,7 @@ long int
 __lrint (double x)
 {
   int32_t j0;
-  u_int32_t i0, i1;
+  uint32_t i0, i1;
   double w;
   double t;
   long int result;

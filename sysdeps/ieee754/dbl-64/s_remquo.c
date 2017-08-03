@@ -29,7 +29,7 @@ double
 __remquo (double x, double y, int *quo)
 {
   int32_t hx, hy;
-  u_int32_t sx, lx, ly;
+  uint32_t sx, lx, ly;
   int cquo, qs;
 
   EXTRACT_WORDS (hx, lx, x);

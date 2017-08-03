@@ -104,7 +104,7 @@ float __erff(float x)
 	GET_FLOAT_WORD(hx,x);
 	ix = hx&0x7fffffff;
 	if(ix>=0x7f800000) {		/* erf(nan)=nan */
-	    i = ((u_int32_t)hx>>31)<<1;
+	    i = ((uint32_t)hx>>31)<<1;
 	    return (float)(1-i)+one/x;	/* erf(+-inf)=+-1 */
 	}
 
@@ -162,7 +162,7 @@ float __erfcf(float x)
 	ix = hx&0x7fffffff;
 	if(ix>=0x7f800000) {			/* erfc(nan)=nan */
 						/* erfc(+-inf)=0,2 */
-	    float ret = (float)(((u_int32_t)hx>>31)<<1)+one/x;
+	    float ret = (float)(((uint32_t)hx>>31)<<1)+one/x;
 	    if (FIX_INT_FP_CONVERT_ZERO && ret == 0.0f)
 	      return 0.0f;
 	    return ret;

@@ -36,7 +36,7 @@ long int
 __lrintl (_Float128 x)
 {
   int32_t j0;
-  u_int64_t i0,i1;
+  uint64_t i0,i1;
   _Float128 w;
   _Float128 t;
   long int result;

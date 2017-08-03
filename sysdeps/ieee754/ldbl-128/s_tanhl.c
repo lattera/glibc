@@ -51,7 +51,7 @@ _Float128
 __tanhl (_Float128 x)
 {
   _Float128 t, z;
-  u_int32_t jx, ix;
+  uint32_t jx, ix;
   ieee854_long_double_shape_type u;
 
   /* Words of |x|. */

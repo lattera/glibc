@@ -46,7 +46,7 @@ long double
 __ieee754_sinhl(long double x)
 {
 	long double t,w,h;
-	u_int32_t jx,ix,i0,i1;
+	uint32_t jx,ix,i0,i1;
 
     /* Words of |x|. */
 	GET_LDOUBLE_WORDS(jx,i0,i1,x);

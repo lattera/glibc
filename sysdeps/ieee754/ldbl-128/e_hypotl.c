@@ -65,7 +65,7 @@ __ieee754_hypotl(_Float128 x, _Float128 y)
 	k=0;
 	if(ha > 0x5f3f000000000000LL) {	/* a>2**8000 */
 	   if(ha >= 0x7fff000000000000LL) {	/* Inf or NaN */
-	       u_int64_t low;
+	       uint64_t low;
 	       w = a+b;			/* for sNaN */
 	       if (issignaling (a) || issignaling (b))
 		 return w;
@@ -83,7 +83,7 @@ __ieee754_hypotl(_Float128 x, _Float128 y)
 	}
 	if(hb < 0x20bf000000000000LL) {	/* b < 2**-8000 */
 	    if(hb <= 0x0000ffffffffffffLL) {	/* subnormal b or 0 */
-		u_int64_t low;
+		uint64_t low;
 		GET_LDOUBLE_LSW64(low,b);
 		if((hb|low)==0) return a;
 		t1=0;
@@ -128,7 +128,7 @@ __ieee754_hypotl(_Float128 x, _Float128 y)
 	    w  = __ieee754_sqrtl(t1*y1-(w*(-w)-(t1*y2+t2*b)));
 	}
 	if(k!=0) {
-	    u_int64_t high;
+	    uint64_t high;
 	    t1 = 1;
 	    GET_LDOUBLE_MSW64(high,t1);
 	    SET_LDOUBLE_MSW64(t1,high+(k<<48));

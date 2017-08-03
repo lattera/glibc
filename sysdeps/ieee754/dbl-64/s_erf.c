@@ -201,7 +201,7 @@ __erf (double x)
   ix = hx & 0x7fffffff;
   if (ix >= 0x7ff00000)                 /* erf(nan)=nan */
     {
-      i = ((u_int32_t) hx >> 31) << 1;
+      i = ((uint32_t) hx >> 31) << 1;
       return (double) (1 - i) + one / x; /* erf(+-inf)=+-1 */
     }
 
@@ -309,7 +309,7 @@ __erfc (double x)
   ix = hx & 0x7fffffff;
   if (ix >= 0x7ff00000)                         /* erfc(nan)=nan */
     {                                           /* erfc(+-inf)=0,2 */
-      double ret = (double) (((u_int32_t) hx >> 31) << 1) + one / x;
+      double ret = (double) (((uint32_t) hx >> 31) << 1) + one / x;
       if (FIX_INT_FP_CONVERT_ZERO && ret == 0.0)
 	return 0.0;
       return ret;

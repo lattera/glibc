@@ -35,9 +35,9 @@ int __isnanl(long double x)
 	   extended format has the normally implicit 1 explicit
 	   present.  Sigh!  */
 	lx |= hx & 0x7fffffff;
-	se |= (u_int32_t)(lx|(-lx))>>31;
+	se |= (uint32_t)(lx|(-lx))>>31;
 	se = 0xfffe - se;
-	return (int)((u_int32_t)(se))>>16;
+	return (int)((uint32_t)(se))>>16;
 }
 hidden_def (__isnanl)
 weak_alias (__isnanl, isnanl)

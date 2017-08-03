@@ -36,7 +36,7 @@ __ieee754_acosh (double x)
 {
   double t;
   int32_t hx;
-  u_int32_t lx;
+  uint32_t lx;
   EXTRACT_WORDS (hx, lx, x);
   if (hx < 0x3ff00000)                  /* x < 1 */
     {

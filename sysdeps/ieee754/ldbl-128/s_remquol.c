@@ -30,7 +30,7 @@ _Float128
 __remquol (_Float128 x, _Float128 y, int *quo)
 {
   int64_t hx,hy;
-  u_int64_t sx,lx,ly,qs;
+  uint64_t sx,lx,ly,qs;
   int cquo;
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);

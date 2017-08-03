@@ -36,7 +36,7 @@ long long int
 __llrintf (float x)
 {
   int32_t j0;
-  u_int32_t i0;
+  uint32_t i0;
   float w;
   float t;
   long long int result;

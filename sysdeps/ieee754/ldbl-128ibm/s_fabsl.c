@@ -28,7 +28,7 @@ static char rcsid[] = "$NetBSD: $";
 
 long double __fabsl(long double x)
 {
-	u_int64_t hx, lx;
+	uint64_t hx, lx;
 	double xhi, xlo;
 
 	ldbl_unpack (x, &xhi, &xlo);

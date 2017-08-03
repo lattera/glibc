@@ -81,9 +81,9 @@ __kernel_cosl(_Float128 x, _Float128 y)
 {
   _Float128 h, l, z, sin_l, cos_l_m1;
   int64_t ix;
-  u_int32_t tix, hix, index;
+  uint32_t tix, hix, index;
   GET_LDOUBLE_MSW64 (ix, x);
-  tix = ((u_int64_t)ix) >> 32;
+  tix = ((uint64_t)ix) >> 32;
   tix &= ~0x80000000;			/* tix = |x|'s high 32 bits */
   if (tix < 0x3ffc3000)			/* |x| < 0.1484375 */
     {
@@ -118,7 +118,7 @@ __kernel_cosl(_Float128 x, _Float128 y)
 	case 2: index = (hix - 0x3ffc3000) >> 10; break;
 	}
 
-      SET_LDOUBLE_WORDS64(h, ((u_int64_t)hix) << 32, 0);
+      SET_LDOUBLE_WORDS64(h, ((uint64_t)hix) << 32, 0);
       l = y - (h - x);
       z = l * l;
       sin_l = l*(ONE+z*(SSIN1+z*(SSIN2+z*(SSIN3+z*(SSIN4+z*SSIN5)))));

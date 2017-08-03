@@ -69,7 +69,7 @@ static const long double zero = 0.0L;
 long double
 __ieee754_jnl (int n, long double x)
 {
-  u_int32_t se, i0, i1;
+  uint32_t se, i0, i1;
   int32_t i, ix, sgn;
   long double a, b, temp, di, ret;
   long double z, w;
@@ -302,7 +302,7 @@ strong_alias (__ieee754_jnl, __jnl_finite)
 long double
 __ieee754_ynl (int n, long double x)
 {
-  u_int32_t se, i0, i1;
+  uint32_t se, i0, i1;
   int32_t i, ix;
   int32_t sign;
   long double a, b, temp, ret;

@@ -1,3 +1,205 @@
+2017-08-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/s_nextafter.c (__nextafter): Use uintN_t instead of
+	u_intN_t.
+	* math/s_nexttowardf.c (__nexttowardf): Likewise.
+	* sysdeps/generic/math_private.h (ieee_double_shape_type):
+	Likewise.
+	(ieee_float_shape_type): Likewise.
+	* sysdeps/i386/fpu/s_fpclassifyl.c (__fpclassifyl): Likewise.
+	* sysdeps/i386/fpu/s_isnanl.c (__isnanl): Likewise.
+	* sysdeps/i386/fpu/s_nextafterl.c (__nextafterl): Likewise.
+	* sysdeps/i386/fpu/s_nexttoward.c (__nexttoward): Likewise.
+	* sysdeps/i386/fpu/s_nexttowardf.c (__nexttowardf): Likewise.
+	* sysdeps/ieee754/dbl-64/e_acosh.c (__ieee754_acosh): Likewise.
+	* sysdeps/ieee754/dbl-64/e_cosh.c (__ieee754_cosh): Likewise.
+	* sysdeps/ieee754/dbl-64/e_fmod.c (__ieee754_fmod): Likewise.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c (__ieee754_gamma_r):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/e_hypot.c (__ieee754_hypot): Likewise.
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_jn): Likewise.
+	(__ieee754_yn): Likewise.
+	* sysdeps/ieee754/dbl-64/e_log10.c (__ieee754_log10): Likewise.
+	* sysdeps/ieee754/dbl-64/e_log2.c (__ieee754_log2): Likewise.
+	* sysdeps/ieee754/dbl-64/e_rem_pio2.c (__ieee754_rem_pio2):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/e_sinh.c (__ieee754_sinh): Likewise.
+	* sysdeps/ieee754/dbl-64/s_ceil.c (__ceil): Likewise.
+	* sysdeps/ieee754/dbl-64/s_copysign.c (__copysign): Likewise.
+	* sysdeps/ieee754/dbl-64/s_erf.c (__erf): Likewise.
+	(__erfc): Likewise.
+	* sysdeps/ieee754/dbl-64/s_expm1.c (__expm1): Likewise.
+	* sysdeps/ieee754/dbl-64/s_finite.c (FINITE): Likewise.
+	* sysdeps/ieee754/dbl-64/s_floor.c (__floor): Likewise.
+	* sysdeps/ieee754/dbl-64/s_fpclassify.c (__fpclassify): Likewise.
+	* sysdeps/ieee754/dbl-64/s_isnan.c (__isnan): Likewise.
+	* sysdeps/ieee754/dbl-64/s_issignaling.c (__issignaling):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/s_llrint.c (__llrint): Likewise.
+	* sysdeps/ieee754/dbl-64/s_llround.c (__llround): Likewise.
+	* sysdeps/ieee754/dbl-64/s_lrint.c (__lrint): Likewise.
+	* sysdeps/ieee754/dbl-64/s_lround.c (__lround): Likewise.
+	* sysdeps/ieee754/dbl-64/s_modf.c (__modf): Likewise.
+	* sysdeps/ieee754/dbl-64/s_nextup.c (__nextup): Likewise.
+	* sysdeps/ieee754/dbl-64/s_remquo.c (__remquo): Likewise.
+	* sysdeps/ieee754/dbl-64/s_round.c (__round): Likewise.
+	* sysdeps/ieee754/dbl-64/s_trunc.c (__trunc): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_issignaling.c
+	(__issignaling): Likewise.
+	* sysdeps/ieee754/flt-32/e_atan2f.c (__ieee754_atan2f): Likewise.
+	* sysdeps/ieee754/flt-32/e_fmodf.c (__ieee754_fmodf): Likewise.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c (__ieee754_gammaf_r):
+	Likewise.
+	* sysdeps/ieee754/flt-32/e_jnf.c (__ieee754_ynf): Likewise.
+	* sysdeps/ieee754/flt-32/e_log10f.c (__ieee754_log10f): Likewise.
+	* sysdeps/ieee754/flt-32/e_powf.c (__ieee754_powf): Likewise.
+	* sysdeps/ieee754/flt-32/e_rem_pio2f.c (__ieee754_rem_pio2f):
+	Likewise.
+	* sysdeps/ieee754/flt-32/e_remainderf.c (__ieee754_remainderf):
+	Likewise.
+	* sysdeps/ieee754/flt-32/e_sqrtf.c (__ieee754_sqrtf): Likewise.
+	* sysdeps/ieee754/flt-32/s_ceilf.c (__ceilf): Likewise.
+	* sysdeps/ieee754/flt-32/s_copysignf.c (__copysignf): Likewise.
+	* sysdeps/ieee754/flt-32/s_erff.c (__erff): Likewise.
+	(__erfcf): Likewise.
+	* sysdeps/ieee754/flt-32/s_expm1f.c (__expm1f): Likewise.
+	* sysdeps/ieee754/flt-32/s_finitef.c (FINITEF): Likewise.
+	* sysdeps/ieee754/flt-32/s_floorf.c (__floorf): Likewise.
+	* sysdeps/ieee754/flt-32/s_fpclassifyf.c (__fpclassifyf):
+	Likewise.
+	* sysdeps/ieee754/flt-32/s_isnanf.c (__isnanf): Likewise.
+	* sysdeps/ieee754/flt-32/s_issignalingf.c (__issignalingf):
+	Likewise.
+	* sysdeps/ieee754/flt-32/s_llrintf.c (__llrintf): Likewise.
+	* sysdeps/ieee754/flt-32/s_llroundf.c (__llroundf): Likewise.
+	* sysdeps/ieee754/flt-32/s_lrintf.c (__lrintf): Likewise.
+	* sysdeps/ieee754/flt-32/s_lroundf.c (__lroundf): Likewise.
+	* sysdeps/ieee754/flt-32/s_modff.c (__modff): Likewise.
+	* sysdeps/ieee754/flt-32/s_remquof.c (__remquof): Likewise.
+	* sysdeps/ieee754/flt-32/s_roundf.c (__roundf): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_acoshl.c (__ieee754_acoshl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atan2l.c (__ieee754_atan2l):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atanhl.c (__ieee754_atanhl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_fmodl.c (__ieee754_fmodl): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c (__ieee754_gammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c (__ieee754_hypotl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c (__ieee754_jnl): Likewise.
+	(__ieee754_ynl): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_powl.c (__ieee754_powl): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_rem_pio2l.c (__ieee754_rem_pio2l):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_remainderl.c (__ieee754_remainderl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_sinhl.c (__ieee754_sinhl): Likewise.
+	* sysdeps/ieee754/ldbl-128/k_cosl.c (__kernel_cosl): Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sincosl.c (__kernel_sincosl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sinl.c (__kernel_sinl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_ceill.c (__ceill): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_copysignl.c (__copysignl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c (__erfcl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fabsl.c (__fabsl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_finitel.c (__finitel): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_floorl.c (__floorl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fpclassifyl.c (__fpclassifyl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/s_frexpl.c (__frexpl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isnanl.c (__isnanl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_issignalingl.c (__issignalingl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c (__llrintl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llroundl.c (__llroundl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c (__lrintl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lroundl.c (__lroundl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_modfl.c (__modfl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c (__nearbyintl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c (__nextafterl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttoward.c (__nexttoward):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttowardf.c (__nexttowardf):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextupl.c (__nextupl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_remquol.c (__remquol): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_rintl.c (__rintl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_roundl.c (__roundl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanhl.c (__tanhl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_truncl.c (__truncl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c (__ieee754_gammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c (__ieee754_powl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c (__ieee754_rem_pio2l):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_remainderl.c
+	(__ieee754_remainderl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_cosl.c (__kernel_cosl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_sinl.c (__kernel_sinl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fabsl.c (__fabsl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fpclassifyl.c (___fpclassifyl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_modfl.c (__modfl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c (__nexttowardf):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_remquol.c (__remquol): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_acoshl.c (__ieee754_acoshl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_asinl.c (__ieee754_asinl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_atanhl.c (__ieee754_atanhl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_coshl.c (__ieee754_coshl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c (__ieee754_gammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/e_hypotl.c (__ieee754_hypotl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j0l.c (__ieee754_j0l): Likewise.
+	(__ieee754_y0l): Likewise.
+	(pzero): Likewise.
+	(qzero): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j1l.c (__ieee754_j1l): Likewise.
+	(__ieee754_y1l): Likewise.
+	(pone): Likewise.
+	(qone): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_jnl): Likewise.
+	(__ieee754_ynl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c (sin_pi): Likewise.
+	(__ieee754_lgammal_r): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_rem_pio2l.c (__ieee754_rem_pio2l):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/e_sinhl.c (__ieee754_sinhl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_copysignl.c (__copysignl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_erfl.c (__erfl): Likewise.
+	(__erfcl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_frexpl.c (__frexpl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_issignalingl.c (__issignalingl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/s_llrintl.c (__llrintl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_llroundl.c (__llroundl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_lrintl.c (__lrintl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_lroundl.c (__lroundl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_modfl.c (__modfl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c (__nexttoward): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttowardf.c (__nexttowardf):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nextupl.c (__nextupl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_remquol.c (__remquol): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_roundl.c (__roundl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_tanhl.c (__tanhl): Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_nexttowardfd.c (__nldbl_nexttowardf):
+	Likewise.
+	* sysdeps/m68k/m680x0/fpu/e_pow.c (s(__ieee754_pow)): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_fpclassifyl.c (__fpclassifyl):
+	Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_llrint.c (__llrint): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_llrintf.c (__llrintf): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_llrintl.c (__llrintl): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_nextafterl.c (__nextafterl): Likewise.
+	* sysdeps/x86/fpu/powl_helper.c (__powl_helper): Likewise.
+
 2017-08-03  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21885]

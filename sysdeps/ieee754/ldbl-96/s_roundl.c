@@ -26,7 +26,7 @@ long double
 __roundl (long double x)
 {
   int32_t j0;
-  u_int32_t se, i1, i0;
+  uint32_t se, i1, i0;
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   j0 = (se & 0x7fff) - 0x3fff;
@@ -44,12 +44,12 @@ __roundl (long double x)
 	}
       else
 	{
-	  u_int32_t i = 0x7fffffff >> j0;
+	  uint32_t i = 0x7fffffff >> j0;
 	  if (((i0 & i) | i1) == 0)
 	    /* X is integral.  */
 	    return x;
 
-	  u_int32_t j = i0 + (0x40000000 >> j0);
+	  uint32_t j = i0 + (0x40000000 >> j0);
 	  if (j < i0)
 	    se += 1;
 	  i0 = (j & ~i) | 0x80000000;
@@ -66,15 +66,15 @@ __roundl (long double x)
     }
   else
     {
-      u_int32_t i = 0xffffffff >> (j0 - 31);
+      uint32_t i = 0xffffffff >> (j0 - 31);
       if ((i1 & i) == 0)
 	/* X is integral.  */
 	return x;
 
-      u_int32_t j = i1 + (1 << (62 - j0));
+      uint32_t j = i1 + (1 << (62 - j0));
       if (j < i1)
 	{
-	  u_int32_t k = i0 + 1;
+	  uint32_t k = i0 + 1;
 	  if (k < i0)
 	    {
 	      se += 1;

@@ -118,7 +118,7 @@ __ieee754_gammaf_r (float x, int *signgamp)
       return 1.0 / x;
     }
   if (__builtin_expect (hx < 0, 0)
-      && (u_int32_t) hx < 0xff800000 && __rintf (x) == x)
+      && (uint32_t) hx < 0xff800000 && __rintf (x) == x)
     {
       /* Return value for integer x < 0 is NaN with invalid exception.  */
       *signgamp = 0;

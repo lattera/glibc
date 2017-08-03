@@ -26,7 +26,7 @@ double
 __trunc (double x)
 {
   int32_t i0, j0;
-  u_int32_t i1;
+  uint32_t i1;
   int sx;
 
   EXTRACT_WORDS (i0, i1, x);

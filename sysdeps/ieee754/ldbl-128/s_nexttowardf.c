@@ -26,7 +26,7 @@ float __nexttowardf(float x, long double y)
 {
 	int32_t hx,ix;
 	int64_t hy,iy;
-	u_int64_t ly;
+	uint64_t ly;
 
 	GET_FLOAT_WORD(hx,x);
 	GET_LDOUBLE_WORDS64(hy,ly,y);
@@ -40,7 +40,7 @@ float __nexttowardf(float x, long double y)
 	if((long double) x==y) return y;	/* x=y, return y */
 	if(ix==0) {				/* x == 0 */
 	    float u;
-	    SET_FLOAT_WORD(x,(u_int32_t)((hy>>32)&0x80000000)|1);/* return +-minsub*/
+	    SET_FLOAT_WORD(x,(uint32_t)((hy>>32)&0x80000000)|1);/* return +-minsub*/
 	    u = math_opt_barrier (x);
 	    u = u * u;
 	    math_force_eval (u);		/* raise underflow flag */

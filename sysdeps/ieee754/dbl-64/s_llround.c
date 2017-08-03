@@ -29,7 +29,7 @@ long long int
 __llround (double x)
 {
   int32_t j0;
-  u_int32_t i1, i0;
+  uint32_t i1, i0;
   long long int result;
   int sign;
 
@@ -56,7 +56,7 @@ __llround (double x)
 	result = (((long long int) i0 << 32) | i1) << (j0 - 52);
       else
 	{
-	  u_int32_t j = i1 + (0x80000000 >> (j0 - 20));
+	  uint32_t j = i1 + (0x80000000 >> (j0 - 20));
 	  if (j < i1)
 	    ++i0;
 

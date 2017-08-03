@@ -26,7 +26,7 @@ long long int
 __llrintf (float x)
 {
   int32_t e;
-  u_int32_t i, s;
+  uint32_t i, s;
   long long int result;
 
   x = __m81_u(__rintf) (x);

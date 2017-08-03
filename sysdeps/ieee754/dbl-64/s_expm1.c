@@ -132,7 +132,7 @@ __expm1 (double x)
 {
   double y, hi, lo, c, t, e, hxs, hfx, r1, h2, h4, R1, R2, R3;
   int32_t k, xsb;
-  u_int32_t hx;
+  uint32_t hx;
 
   GET_HIGH_WORD (hx, x);
   xsb = hx & 0x80000000;                /* sign bit of x */
@@ -149,7 +149,7 @@ __expm1 (double x)
 	{
 	  if (hx >= 0x7ff00000)
 	    {
-	      u_int32_t low;
+	      uint32_t low;
 	      GET_LOW_WORD (low, x);
 	      if (((hx & 0xfffff) | low) != 0)
 		return x + x;            /* NaN */
@@ -228,7 +228,7 @@ __expm1 (double x)
 	}
       if (k <= -2 || k > 56)         /* suffice to return exp(x)-1 */
 	{
-	  u_int32_t high;
+	  uint32_t high;
 	  y = one - (e - x);
 	  GET_HIGH_WORD (high, y);
 	  SET_HIGH_WORD (y, high + (k << 20));  /* add k to y's exponent */
@@ -237,7 +237,7 @@ __expm1 (double x)
       t = one;
       if (k < 20)
 	{
-	  u_int32_t high;
+	  uint32_t high;
 	  SET_HIGH_WORD (t, 0x3ff00000 - (0x200000 >> k));    /* t=1-2^-k */
 	  y = t - (e - x);
 	  GET_HIGH_WORD (high, y);
@@ -245,7 +245,7 @@ __expm1 (double x)
 	}
       else
 	{
-	  u_int32_t high;
+	  uint32_t high;
 	  SET_HIGH_WORD (t, ((0x3ff - k) << 20));       /* 2^-k */
 	  y = x - (e + t);
 	  y += one;

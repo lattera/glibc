@@ -42,7 +42,7 @@ two65 =  3.68934881474191032320e+19L; /* 0x4040, 0x80000000, 0x00000000 */
 
 long double __frexpl(long double x, int *eptr)
 {
-	u_int32_t se, hx, ix, lx;
+	uint32_t se, hx, ix, lx;
 	GET_LDOUBLE_WORDS(se,hx,lx,x);
 	ix = 0x7fff&se;
 	*eptr = 0;

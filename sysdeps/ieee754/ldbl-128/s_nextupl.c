@@ -24,7 +24,7 @@ _Float128
 __nextupl (_Float128 x)
 {
   int64_t hx, ix;
-  u_int64_t lx;
+  uint64_t lx;
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);
   ix = hx & 0x7fffffffffffffffLL;

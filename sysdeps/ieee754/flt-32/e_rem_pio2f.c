@@ -131,7 +131,7 @@ int32_t __ieee754_rem_pio2f(float x, float *y)
 	    if(n<32&&(int32_t)(ix&0xffffff00)!=npio2_hw[n-1]) {
 		y[0] = r-w;	/* quick check no cancellation */
 	    } else {
-	        u_int32_t high;
+	        uint32_t high;
 	        j  = ix>>23;
 	        y[0] = r-w;
 		GET_FLOAT_WORD(high,y[0]);

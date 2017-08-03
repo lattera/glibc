@@ -819,7 +819,7 @@ __erfcl (_Float128 x)
   if (ix >= 0x7fff0000)
     {				/* erfc(nan)=nan */
       /* erfc(+-inf)=0,2 */
-      return (_Float128) (((u_int32_t) sign >> 31) << 1) + one / x;
+      return (_Float128) (((uint32_t) sign >> 31) << 1) + one / x;
     }
 
   if (ix < 0x3ffd0000) /* |x| <1/4 */

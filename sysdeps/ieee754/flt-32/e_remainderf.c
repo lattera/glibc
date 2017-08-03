@@ -23,7 +23,7 @@ float
 __ieee754_remainderf(float x, float p)
 {
 	int32_t hx,hp;
-	u_int32_t sx;
+	uint32_t sx;
 	float p_half;
 
 	GET_FLOAT_WORD(hx,x);

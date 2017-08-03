@@ -35,7 +35,7 @@ int FINITEF(float x)
 {
 	int32_t ix;
 	GET_FLOAT_WORD(ix,x);
-	return (int)((u_int32_t)((ix&0x7f800000)-0x7f800000)>>31);
+	return (int)((uint32_t)((ix&0x7f800000)-0x7f800000)>>31);
 }
 hidden_def (__finitef)
 weak_alias (__finitef, finitef)

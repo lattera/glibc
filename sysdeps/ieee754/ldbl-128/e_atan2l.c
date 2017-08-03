@@ -56,7 +56,7 @@ __ieee754_atan2l(_Float128 y, _Float128 x)
 {
 	_Float128 z;
 	int64_t k,m,hx,hy,ix,iy;
-	u_int64_t lx,ly;
+	uint64_t lx,ly;
 
 	GET_LDOUBLE_WORDS64(hx,lx,x);
 	ix = hx&0x7fffffffffffffffLL;
@@ -109,7 +109,7 @@ __ieee754_atan2l(_Float128 y, _Float128 x)
 	switch (m) {
 	    case 0: return       z  ;	/* atan(+,+) */
 	    case 1: {
-		      u_int64_t zh;
+		      uint64_t zh;
 		      GET_LDOUBLE_MSW64(zh,z);
 		      SET_LDOUBLE_MSW64(z,zh ^ 0x8000000000000000ULL);
 		    }

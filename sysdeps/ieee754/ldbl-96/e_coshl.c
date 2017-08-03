@@ -44,7 +44,7 @@ __ieee754_coshl (long double x)
 {
 	long double t,w;
 	int32_t ex;
-	u_int32_t mx,lx;
+	uint32_t mx,lx;
 
     /* High word of |x|. */
 	GET_LDOUBLE_WORDS(ex,mx,lx,x);

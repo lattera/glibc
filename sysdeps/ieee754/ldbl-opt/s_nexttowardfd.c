@@ -31,7 +31,7 @@ float __nldbl_nexttowardf(float x, double y);
 float __nldbl_nexttowardf(float x, double y)
 {
 	int32_t hx,hy,ix,iy;
-	u_int32_t ly;
+	uint32_t ly;
 
 	GET_FLOAT_WORD(hx,x);
 	EXTRACT_WORDS(hy,ly,y);
@@ -44,7 +44,7 @@ float __nldbl_nexttowardf(float x, double y)
 	if((double) x==y) return y;		/* x=y, return y */
 	if(ix==0) {				/* x == 0 */
 	    float u;
-	    SET_FLOAT_WORD(x,(u_int32_t)(hy&0x80000000)|1);/* return +-minsub*/
+	    SET_FLOAT_WORD(x,(uint32_t)(hy&0x80000000)|1);/* return +-minsub*/
 	    u = math_opt_barrier (x);
 	    u = u * u;
 	    math_force_eval (u);		/* raise underflow flag */

@@ -25,7 +25,7 @@
 int
 __fpclassifyf (float x)
 {
-  u_int32_t wx;
+  uint32_t wx;
   int retval = FP_NORMAL;
 
   GET_FLOAT_WORD (wx, x);

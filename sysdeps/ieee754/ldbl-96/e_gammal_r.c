@@ -115,7 +115,7 @@ gammal_positive (long double x, int *exp2_adj)
 long double
 __ieee754_gammal_r (long double x, int *signgamp)
 {
-  u_int32_t es, hx, lx;
+  uint32_t es, hx, lx;
   long double ret;
 
   GET_LDOUBLE_WORDS (es, hx, lx, x);

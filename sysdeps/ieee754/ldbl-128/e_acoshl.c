@@ -38,7 +38,7 @@ _Float128
 __ieee754_acoshl(_Float128 x)
 {
 	_Float128 t;
-	u_int64_t lx;
+	uint64_t lx;
 	int64_t hx;
 	GET_LDOUBLE_WORDS64(hx,lx,x);
 	if(hx<0x3fff000000000000LL) {		/* x < 1 */

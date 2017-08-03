@@ -36,7 +36,7 @@ static const long double one = 1.0;
 long double __modfl(long double x, long double *iptr)
 {
 	int64_t i0,i1,j0;
-	u_int64_t i;
+	uint64_t i;
 	double xhi, xlo;
 
 	ldbl_unpack (x, &xhi, &xlo);

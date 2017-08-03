@@ -44,7 +44,7 @@
 int
 ___fpclassifyl (long double x)
 {
-  u_int64_t hx, lx;
+  uint64_t hx, lx;
   int retval = FP_NORMAL;
   double xhi, xlo;
 

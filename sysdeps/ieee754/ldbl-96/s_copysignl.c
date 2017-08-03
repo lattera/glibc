@@ -29,7 +29,7 @@ static char rcsid[] = "$NetBSD: $";
 
 long double __copysignl(long double x, long double y)
 {
-	u_int32_t es1,es2;
+	uint32_t es1,es2;
 	GET_LDOUBLE_EXP(es1,x);
 	GET_LDOUBLE_EXP(es2,y);
 	SET_LDOUBLE_EXP(x,(es1&0x7fff)|(es2&0x8000));

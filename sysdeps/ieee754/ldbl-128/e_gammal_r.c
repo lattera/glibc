@@ -123,7 +123,7 @@ _Float128
 __ieee754_gammal_r (_Float128 x, int *signgamp)
 {
   int64_t hx;
-  u_int64_t lx;
+  uint64_t lx;
   _Float128 ret;
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);
@@ -134,7 +134,7 @@ __ieee754_gammal_r (_Float128 x, int *signgamp)
       *signgamp = 0;
       return 1.0 / x;
     }
-  if (hx < 0 && (u_int64_t) hx < 0xffff000000000000ULL && __rintl (x) == x)
+  if (hx < 0 && (uint64_t) hx < 0xffff000000000000ULL && __rintl (x) == x)
     {
       /* Return value for integer x < 0 is NaN with invalid exception.  */
       *signgamp = 0;

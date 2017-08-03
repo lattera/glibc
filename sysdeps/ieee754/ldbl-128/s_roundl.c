@@ -27,7 +27,7 @@ _Float128
 __roundl (_Float128 x)
 {
   int32_t j0;
-  u_int64_t i1, i0;
+  uint64_t i1, i0;
 
   GET_LDOUBLE_WORDS64 (i0, i1, x);
   j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;
@@ -42,7 +42,7 @@ __roundl (_Float128 x)
 	}
       else
 	{
-	  u_int64_t i = 0x0000ffffffffffffLL >> j0;
+	  uint64_t i = 0x0000ffffffffffffLL >> j0;
 	  if (((i0 & i) | i1) == 0)
 	    /* X is integral.  */
 	    return x;
@@ -62,12 +62,12 @@ __roundl (_Float128 x)
     }
   else
     {
-      u_int64_t i = -1ULL >> (j0 - 48);
+      uint64_t i = -1ULL >> (j0 - 48);
       if ((i1 & i) == 0)
 	/* X is integral.  */
 	return x;
 
-      u_int64_t j = i1 + (1LL << (111 - j0));
+      uint64_t j = i1 + (1LL << (111 - j0));
       if (j < i1)
 	i0 += 1;
       i1 = j;

@@ -200,7 +200,7 @@ int32_t __ieee754_rem_pio2l(long double x, long double *y)
   double tx[8];
   int exp;
   int64_t n, ix, hx, ixd;
-  u_int64_t lxd;
+  uint64_t lxd;
   double xhi;
 
   xhi = ldbl_high (x);

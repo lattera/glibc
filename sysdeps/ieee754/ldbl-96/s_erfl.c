@@ -254,7 +254,7 @@ __erfl (long double x)
 {
   long double R, S, P, Q, s, y, z, r;
   int32_t ix, i;
-  u_int32_t se, i0, i1;
+  uint32_t se, i0, i1;
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
@@ -341,7 +341,7 @@ __erfcl (long double x)
 {
   int32_t hx, ix;
   long double R, S, P, Q, s, y, z, r;
-  u_int32_t se, i0, i1;
+  uint32_t se, i0, i1;
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;

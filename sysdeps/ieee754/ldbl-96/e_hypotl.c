@@ -52,7 +52,7 @@
 long double __ieee754_hypotl(long double x, long double y)
 {
 	long double a,b,t1,t2,y1,y2,w;
-	u_int32_t j,k,ea,eb;
+	uint32_t j,k,ea,eb;
 
 	GET_LDOUBLE_EXP(ea,x);
 	ea &= 0x7fff;
@@ -65,8 +65,8 @@ long double __ieee754_hypotl(long double x, long double y)
 	k=0;
 	if(__builtin_expect(ea > 0x5f3f,0)) {	/* a>2**8000 */
 	   if(ea == 0x7fff) {	/* Inf or NaN */
-	       u_int32_t exp __attribute__ ((unused));
-	       u_int32_t high,low;
+	       uint32_t exp __attribute__ ((unused));
+	       uint32_t high,low;
 	       w = a+b;			/* for sNaN */
 	       if (issignaling (a) || issignaling (b))
 		 return w;
@@ -83,8 +83,8 @@ long double __ieee754_hypotl(long double x, long double y)
 	}
 	if(__builtin_expect(eb < 0x20bf, 0)) {	/* b < 2**-8000 */
 	    if(eb == 0) {	/* subnormal b or 0 */
-		u_int32_t exp __attribute__ ((unused));
-		u_int32_t high,low;
+		uint32_t exp __attribute__ ((unused));
+		uint32_t high,low;
 		GET_LDOUBLE_WORDS(exp,high,low,b);
 		if((high|low)==0) return a;
 		SET_LDOUBLE_WORDS(t1, 0x7ffd, 0x80000000, 0); /* t1=2^16382 */
@@ -113,13 +113,13 @@ long double __ieee754_hypotl(long double x, long double y)
     /* medium size a and b */
 	w = a-b;
 	if (w>b) {
-	    u_int32_t high;
+	    uint32_t high;
 	    GET_LDOUBLE_MSW(high,a);
 	    SET_LDOUBLE_WORDS(t1,ea,high,0);
 	    t2 = a-t1;
 	    w  = __ieee754_sqrtl(t1*t1-(b*(-b)-t2*(a+t1)));
 	} else {
-	    u_int32_t high;
+	    uint32_t high;
 	    GET_LDOUBLE_MSW(high,b);
 	    a  = a+a;
 	    SET_LDOUBLE_WORDS(y1,eb,high,0);
@@ -130,7 +130,7 @@ long double __ieee754_hypotl(long double x, long double y)
 	    w  = __ieee754_sqrtl(t1*y1-(w*(-w)-(t1*y2+t2*b)));
 	}
 	if(k!=0) {
-	    u_int32_t exp;
+	    uint32_t exp;
 	    t1 = 1.0;
 	    GET_LDOUBLE_EXP(exp,t1);
 	    SET_LDOUBLE_EXP(t1,exp+k);

@@ -31,7 +31,7 @@ long double
 __remquol (long double x, long double y, int *quo)
 {
   int64_t hx,hy;
-  u_int64_t sx,lx,ly,qs;
+  uint64_t sx,lx,ly,qs;
   int cquo;
   double xhi, xlo, yhi, ylo;
 

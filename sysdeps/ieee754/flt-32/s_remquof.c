@@ -29,7 +29,7 @@ float
 __remquof (float x, float y, int *quo)
 {
   int32_t hx,hy;
-  u_int32_t sx;
+  uint32_t sx;
   int cquo, qs;
 
   GET_FLOAT_WORD (hx, x);

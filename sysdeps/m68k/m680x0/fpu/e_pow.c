@@ -106,7 +106,7 @@ s(__ieee754_pow) (float_type x, float_type y)
 	     this format and rounding won't change the result.  */
 	  {
 	    int32_t exponent;
-	    u_int32_t i0, i1;
+	    uint32_t i0, i1;
 	    GET_LDOUBLE_WORDS (exponent, i0, i1, y);
 	    exponent = (exponent & 0x7fff) - 0x3fff;
 	    if (exponent <= 31

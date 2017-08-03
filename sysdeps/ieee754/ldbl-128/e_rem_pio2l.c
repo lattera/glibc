@@ -198,7 +198,7 @@ int32_t __ieee754_rem_pio2l(_Float128 x, _Float128 *y)
   _Float128 z, w, t;
   double tx[8];
   int64_t exp, n, ix, hx;
-  u_int64_t lx;
+  uint64_t lx;
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);
   ix = hx & 0x7fffffffffffffffLL;

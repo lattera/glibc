@@ -39,7 +39,7 @@ long double
 __ieee754_acoshl(long double x)
 {
 	long double t;
-	u_int32_t se,i0,i1;
+	uint32_t se,i0,i1;
 	GET_LDOUBLE_WORDS(se,i0,i1,x);
 	if(se<0x3fff || se & 0x8000) {	/* x < 1 */
 	    return (x-x)/(x-x);

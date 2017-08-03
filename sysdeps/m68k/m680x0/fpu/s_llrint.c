@@ -26,7 +26,7 @@ long long int
 __llrint (double x)
 {
   int32_t e;
-  u_int32_t h, l, s;
+  uint32_t h, l, s;
   long long int result;
 
   x = __m81_u(__rint) (x);

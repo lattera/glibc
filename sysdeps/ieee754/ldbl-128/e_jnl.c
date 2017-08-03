@@ -71,7 +71,7 @@ static const _Float128
 _Float128
 __ieee754_jnl (int n, _Float128 x)
 {
-  u_int32_t se;
+  uint32_t se;
   int32_t i, ix, sgn;
   _Float128 a, b, temp, di, ret;
   _Float128 z, w;
@@ -309,7 +309,7 @@ strong_alias (__ieee754_jnl, __jnl_finite)
 _Float128
 __ieee754_ynl (int n, _Float128 x)
 {
-  u_int32_t se;
+  uint32_t se;
   int32_t i, ix;
   int32_t sign;
   _Float128 a, b, temp, ret;

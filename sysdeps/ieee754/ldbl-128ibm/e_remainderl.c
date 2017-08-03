@@ -31,7 +31,7 @@ long double
 __ieee754_remainderl(long double x, long double p)
 {
 	int64_t hx,hp;
-	u_int64_t sx,lx,lp;
+	uint64_t sx,lx,lp;
 	long double p_half;
 	double xhi, xlo, phi, plo;
 

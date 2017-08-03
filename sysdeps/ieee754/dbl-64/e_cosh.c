@@ -41,7 +41,7 @@ __ieee754_cosh (double x)
 {
   double t, w;
   int32_t ix;
-  u_int32_t lx;
+  uint32_t lx;
 
   /* High word of |x|. */
   GET_HIGH_WORD (ix, x);
@@ -71,7 +71,7 @@ __ieee754_cosh (double x)
 
   /* |x| in [log(maxdouble), overflowthresold] */
   GET_LOW_WORD (lx, x);
-  if (ix < 0x408633ce || ((ix == 0x408633ce) && (lx <= (u_int32_t) 0x8fb9f87d)))
+  if (ix < 0x408633ce || ((ix == 0x408633ce) && (lx <= (uint32_t) 0x8fb9f87d)))
     {
       w = __ieee754_exp (half * fabs (x));
       t = half * w;

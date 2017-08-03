@@ -260,12 +260,12 @@ __ieee754_powl (long double x, long double y)
     }
 
   /* (x<0)**(non-int) is NaN */
-  if (((((u_int32_t) hx >> 31) - 1) | yisint) == 0)
+  if (((((uint32_t) hx >> 31) - 1) | yisint) == 0)
     return (x - x) / (x - x);
 
   /* sgn (sign of result -ve**odd) = -1 else = 1 */
   sgn = one;
-  if (((((u_int32_t) hx >> 31) - 1) | (yisint - 1)) == 0)
+  if (((((uint32_t) hx >> 31) - 1) | (yisint - 1)) == 0)
     sgn = -one;			/* (-ve)**(odd int) */
 
   /* |y| is huge.

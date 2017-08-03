@@ -134,7 +134,7 @@ __ieee754_powf(float x, float y)
 	}
 
     /* (x<0)**(non-int) is NaN */
-	if(__builtin_expect(((((u_int32_t)hx>>31)-1)|yisint)==0, 0))
+	if(__builtin_expect(((((uint32_t)hx>>31)-1)|yisint)==0, 0))
 	    return (x-x)/(x-x);
 
     /* |y| is huge */
@@ -177,7 +177,7 @@ __ieee754_powf(float x, float y)
 	}
 
 	s = one; /* s (sign of result -ve**odd) = -1 else = 1 */
-	if(((((u_int32_t)hx>>31)-1)|(yisint-1))==0)
+	if(((((uint32_t)hx>>31)-1)|(yisint-1))==0)
 	    s = -one;	/* (-ve)**(odd int) */
 
     /* compute y * d2 */
@@ -191,7 +191,7 @@ __ieee754_powf(float x, float y)
 	}
 	else if (__builtin_expect((j&0x7fffffff)>0x43160000, 0))/* z <= -150 */
 	    return s*tiny*tiny;				/* underflow */
-	else if (__builtin_expect((u_int32_t) j==0xc3160000, 0)){/* z == -150*/
+	else if (__builtin_expect((uint32_t) j==0xc3160000, 0)){/* z == -150*/
 	    if(0.0<=(z-d1)) return s*tiny*tiny;		/* underflow */
 	}
     /*

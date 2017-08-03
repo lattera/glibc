@@ -28,7 +28,7 @@ static char rcsid[] = "$NetBSD: $";
 
 _Float128 __copysignl(_Float128 x, _Float128 y)
 {
-	u_int64_t hx,hy;
+	uint64_t hx,hy;
 	GET_LDOUBLE_MSW64(hx,x);
 	GET_LDOUBLE_MSW64(hy,y);
 	SET_LDOUBLE_MSW64(x,(hx&0x7fffffffffffffffULL)

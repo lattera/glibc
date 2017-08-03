@@ -26,7 +26,7 @@ double
 __round (double x)
 {
   int32_t i0, j0;
-  u_int32_t i1;
+  uint32_t i1;
 
   EXTRACT_WORDS (i0, i1, x);
   j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
@@ -41,7 +41,7 @@ __round (double x)
 	}
       else
 	{
-	  u_int32_t i = 0x000fffff >> j0;
+	  uint32_t i = 0x000fffff >> j0;
 	  if (((i0 & i) | i1) == 0)
 	    /* X is integral.  */
 	    return x;
@@ -61,12 +61,12 @@ __round (double x)
     }
   else
     {
-      u_int32_t i = 0xffffffff >> (j0 - 20);
+      uint32_t i = 0xffffffff >> (j0 - 20);
       if ((i1 & i) == 0)
 	/* X is integral.  */
 	return x;
 
-      u_int32_t j = i1 + (1 << (51 - j0));
+      uint32_t j = i1 + (1 << (51 - j0));
       if (j < i1)
 	i0 += 1;
       i1 = j;

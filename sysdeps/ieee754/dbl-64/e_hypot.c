@@ -74,7 +74,7 @@ __ieee754_hypot (double x, double y)
     {
       if (ha >= 0x7ff00000)             /* Inf or NaN */
 	{
-	  u_int32_t low;
+	  uint32_t low;
 	  w = a + b;                    /* for sNaN */
 	  if (issignaling (a) || issignaling (b))
 	    return w;
@@ -95,7 +95,7 @@ __ieee754_hypot (double x, double y)
     {
       if (hb <= 0x000fffff)             /* subnormal b or 0 */
 	{
-	  u_int32_t low;
+	  uint32_t low;
 	  GET_LOW_WORD (low, b);
 	  if ((hb | low) == 0)
 	    return a;
@@ -147,7 +147,7 @@ __ieee754_hypot (double x, double y)
     }
   if (k != 0)
     {
-      u_int32_t high;
+      uint32_t high;
       t1 = 1.0;
       GET_HIGH_WORD (high, t1);
       SET_HIGH_WORD (t1, high + (k << 20));

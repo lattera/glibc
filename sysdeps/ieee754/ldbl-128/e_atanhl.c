@@ -44,7 +44,7 @@ _Float128
 __ieee754_atanhl(_Float128 x)
 {
 	_Float128 t;
-	u_int32_t jx, ix;
+	uint32_t jx, ix;
 	ieee854_long_double_shape_type u;
 
 	u.value = x;

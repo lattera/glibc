@@ -52,7 +52,7 @@ long double __tanhl(long double x)
 {
 	long double t,z;
 	int32_t se;
-	u_int32_t j0,j1,ix;
+	uint32_t j0,j1,ix;
 
     /* High word of |x|. */
 	GET_LDOUBLE_WORDS(se,j0,j1,x);
