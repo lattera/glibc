@@ -255,6 +255,8 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
       break;								      \
     if (!scratch_buffer_grow (tmpbuf))					      \
       {									      \
+	__resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
+	__resolv_context_put (res_ctx);					      \
 	result = -EAI_MEMORY;						      \
 	goto free_and_return;						      \
       }									      \

@@ -1,3 +1,9 @@
+2017-08-03  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21885]
+	* sysdeps/posix/getaddrinfo.c (gethosts): Release resolver context
+	on memory allocation failure.
+
 2017-08-03  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/powerpc/mod-tlsopt-powerpc.c: Extract from
