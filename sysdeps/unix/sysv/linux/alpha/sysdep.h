@@ -70,6 +70,8 @@
 # define __NR_pwrite __NR_pwrite64
 #endif
 
+#define SINGLE_THREAD_BY_GLOBAL 1
+
 /*
  * In order to get the hidden arguments for rt_sigaction set up
  * properly, we need to call the assembly version.  This shouldn't

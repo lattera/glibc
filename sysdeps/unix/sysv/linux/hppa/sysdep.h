@@ -504,4 +504,6 @@ L(pre_end):					ASM_LINE_SEP	\
 #define PTR_MANGLE(var) (void) (var)
 #define PTR_DEMANGLE(var) (void) (var)
 
+#define SINGLE_THREAD_BY_GLOBAL	1
+
 #endif /* _LINUX_HPPA_SYSDEP_H */

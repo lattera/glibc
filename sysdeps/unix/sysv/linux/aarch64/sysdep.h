@@ -161,6 +161,8 @@
    which lead in a non existent __send symbol in libc.so.  */
 # undef HAVE_INTERNAL_SEND_SYMBOL
 
+# define SINGLE_THREAD_BY_GLOBAL		1
+
 /* Define a macro which expands into the inline wrapper code for a system
    call.  */
 # undef INLINE_SYSCALL

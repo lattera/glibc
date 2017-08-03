@@ -376,6 +376,8 @@
 # define HAVE_GETTIMEOFDAY_VSYSCALL     1
 # define HAVE_GETCPU_VSYSCALL		1
 
+# define SINGLE_THREAD_BY_GLOBAL		1
+
 #endif	/* __ASSEMBLER__ */
 
 
