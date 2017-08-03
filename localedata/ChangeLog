@@ -1,5 +1,13 @@
 2017-08-03  Mike FABIAN  <mfabian@redhat.com>
 
+	Revert “Fix yesexpr in en_DK locale”.
+
+	* locales/en_DK (LC_MESSAGES): Restore original yesexpr, noexpr,
+	yesstr, nostr. Convert them to ASCII and add a comment why
+	we want to have them like this.
+
+2017-08-03  Mike FABIAN  <mfabian@redhat.com>
+
 	* locales/km_KH (LC_MESSAGES): drop redundant ([eE][sS])? and [oO]?
 	from yesexpr and noexpr
 

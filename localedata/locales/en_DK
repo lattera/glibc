@@ -128,7 +128,19 @@ first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
-copy "en_US"
+% en_DK is used outside Denmark, as some sort of generic continental
+% European English locale. Therefore, it makes sense to have matches
+% for more than just English in yesexpr:
+% + is ised in many applications for yes (- for no)
+% 1 is common yes, 0 is common no, - langage neutral
+% Jj is Danish/German/Swedish/Norwegian/Dutch "ja"
+% sS is Spanish/Italian "si"
+% yY is English "yes"
+% oO is French "oui"
+yesexpr "^[+1yYjJsSoO]"
+noexpr  "^[-0nN]"
+yesstr  "yes"
+nostr   "no"
 END LC_MESSAGES
 
 LC_PAPER
