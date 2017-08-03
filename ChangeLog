@@ -1,5 +1,9 @@
 2017-08-03  Aurelien Jarno  <aurelien@aurel32.net>
 
+	* stdlib/getentropy.c (getentropy): Change return type to int.
+
+2017-08-03  Aurelien Jarno  <aurelien@aurel32.net>
+
 	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Regenerated.
 
 2017-08-03  Joseph Myers  <joseph@codesourcery.com>

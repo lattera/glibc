@@ -21,7 +21,7 @@
 
 /* Write LENGTH bytes of randomness starting at BUFFER.  Return 0 on
    success and -1 on failure.  */
-ssize_t
+int
 getentropy (void *buffer, size_t length)
 {
   __set_errno (ENOSYS);
