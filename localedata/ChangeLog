@@ -1,5 +1,17 @@
 2017-08-03  Mike FABIAN  <mfabian@redhat.com>
 
+	For the locales doi_IN,  kok_IN, and sat_IN, the words for
+	“yes” and “no” were apparently in yesexpr and noexpr.
+	Copy them from there to add yesstr and nostr.
+	Also make yesexpr and noexpr more readable by using
+	the POSIX portable character set.
+
+	* locales/doi_IN (LC_MESSAGES): Add yesstr and nostr.
+	* locales/kok_IN (LC_MESSAGES): Add yesstr and nostr.
+	* locales/sat_IN (LC_MESSAGES): Add yesstr and nostr.
+
+2017-08-03  Mike FABIAN  <mfabian@redhat.com>
+
 	Revert “Fix yesexpr in en_DK locale”.
 
 	* locales/en_DK (LC_MESSAGES): Restore original yesexpr, noexpr,
