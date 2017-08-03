@@ -1,3 +1,16 @@
+2017-08-03  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/mod-tlsopt-powerpc.c: Extract from
+	tst-tlsopt-powerpc.c with function name change and no test harness.
+	* sysdeps/powerpc/tst-tlsopt-powerpc.c: Remove body of test.
+	Call tls_get_addr_opt_test.
+	* sysdeps/powerpc/Makefile (LDFLAGS-tst-tlsopt-powerpc): Don't define.
+	(modules-names): Add mod-tlsopt-powerpc.
+	(mod-tlsopt-powerpc.so-no-z-defs): Define.
+	(tst-tlsopt-powerpc): Depend on .so.
+	* sysdeps/powerpc/powerpc64/tls-macros.h (__TLS_GET_ADDR): Don't
+	define.  Expand use in TLS_GD and TLS_LD.
+
 2017-08-02  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/enbl-secure.c (__libc_init_secure): Define

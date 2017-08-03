@@ -18,13 +18,11 @@
      __result;								      \
   })
 
-#define __TLS_GET_ADDR "__tls_get_addr"
-
 /* PowerPC64 Local Dynamic TLS access.  */
 #define TLS_LD(x)							      \
   ({ int * __result;							      \
      asm ("addi  3,2," #x "@got@tlsld\n\t"				      \
-	  "bl    " __TLS_GET_ADDR "\n\t"				      \
+	  "bl    __tls_get_addr\n\t"					      \
 	  "nop   \n\t"							      \
 	  "addis %0,3," #x "@dtprel@ha\n\t"				      \
 	  "addi  %0,%0," #x "@dtprel@l"					      \
@@ -36,7 +34,7 @@
 #define TLS_GD(x)							      \
   ({ register int *__result __asm__ ("r3");				      \
      asm ("addi  3,2," #x "@got@tlsgd\n\t"				      \
-	  "bl    " __TLS_GET_ADDR "\n\t"				      \
+	  "bl    __tls_get_addr\n\t"					      \
 	  "nop   "							      \
 	  : "=r" (__result) :						      \
 	  : __TLS_CALL_CLOBBERS);					      \
