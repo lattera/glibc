@@ -58,7 +58,7 @@ double: 1
 float128: 2
 idouble: 1
 ifloat128: 2
-ildouble: 4
+ildouble: 5
 ldouble: 3
 
 Function: "asin":
@@ -1154,8 +1154,8 @@ float128: 4
 idouble: 3
 ifloat: 3
 ifloat128: 4
-ildouble: 7
-ldouble: 7
+ildouble: 8
+ldouble: 8
 
 Function: Imaginary part of "clog10_upward":
 double: 1
@@ -2013,8 +2013,8 @@ double: 3
 float: 4
 idouble: 3
 ifloat: 4
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "hypot":
 double: 1
@@ -2205,8 +2205,8 @@ float128: 8
 idouble: 3
 ifloat: 4
 ifloat128: 8
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "log":
 double: 1
