@@ -1824,8 +1824,8 @@ week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "^[+1yY]([eE][sS])?"
-noexpr  "^[-0nN][oO]?"
+yesexpr "^[+1yY]"
+noexpr  "^[-0nN]"
 yesstr  "<U1794><U17B6><U1791><U002F><U1785><U17B6><U179F><U200B><U17D6><U0020><U0079>"
 nostr   "<U1791><U17C1><U200B><U17D6><U0020><U006E>"
 END LC_MESSAGES
