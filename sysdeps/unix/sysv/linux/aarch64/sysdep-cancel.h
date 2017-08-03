@@ -41,7 +41,6 @@ extern int __local_multiple_threads attribute_hidden;
 
 /* For rtld, et cetera.  */
 # define SINGLE_THREAD_P 1
-# define NO_CANCELLATION 1
 
 #endif
 

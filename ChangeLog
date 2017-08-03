@@ -1,3 +1,45 @@
+2017-08-31  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/generic/not-cancel.h (NO_CANCELLATION): Remove macro.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/sysdep-cancel.h
+	(NO_CANCELLATION): Likewise.
+	* sysdeps/unix/sysv/linux/mips/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/nios2/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h
+	(NO_CANCELLATION): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h
+	(NO_CANCELLATION): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise
+	* sysdeps/unix/sysv/linux/sparc/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h (NO_CANCELLATION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/not-cancel.h (__fcntl_nocancel): Add
+	hidden prototype.
+	* sysdeps/unix/sysv/linux/fcntl.c (__fcntl_nocancel): Define only
+	for !IS_IN (rtld) and remove NO_CANCELLATION usage.
+
 2017-08-31  Steve Ellcey  <sellcey@cavium.com>
 
 	* sysdeps/aarch64/dl-irel.h: (elf_ifunc_invoke): Change argument type

@@ -28,7 +28,6 @@
 #else
 
 # define SINGLE_THREAD_P (1)
-# define NO_CANCELLATION 1
 
 #endif
 

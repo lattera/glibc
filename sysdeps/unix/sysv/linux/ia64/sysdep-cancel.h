@@ -25,7 +25,6 @@
   __glibc_likely (THREAD_GETMEM (THREAD_SELF, header.multiple_threads) == 0)
 #else
 # define SINGLE_THREAD_P (1)
-# define NO_CANCELLATION 1
 #endif
 
 #define RTLD_SINGLE_THREAD_P \

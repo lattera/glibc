@@ -19,6 +19,7 @@
 #include <stdarg.h>
 #include <errno.h>
 #include <sysdep-cancel.h>
+#include <not-cancel.h>
 
 #ifndef __NR_fcntl64
 # define __NR_fcntl64 __NR_fcntl
@@ -46,21 +47,6 @@ fcntl_common (int fd, int cmd, void *arg)
   return INLINE_SYSCALL_CALL (fcntl64, fd, cmd, (void *) arg);
 }
 
-#ifndef NO_CANCELLATION
-int
-__fcntl_nocancel (int fd, int cmd, ...)
-{
-  va_list ap;
-  void *arg;
-
-  va_start (ap, cmd);
-  arg = va_arg (ap, void *);
-  va_end (ap);
-
-  return fcntl_common (fd, cmd, arg);
-}
-#endif
-
 int
 __libc_fcntl (int fd, int cmd, ...)
 {
@@ -79,6 +65,24 @@ __libc_fcntl (int fd, int cmd, ...)
   return fcntl_common (fd, cmd, arg);
 }
 libc_hidden_def (__libc_fcntl)
+
+#if !IS_IN (rtld)
+int
+__fcntl_nocancel (int fd, int cmd, ...)
+{
+  va_list ap;
+  void *arg;
+
+  va_start (ap, cmd);
+  arg = va_arg (ap, void *);
+  va_end (ap);
+
+  return fcntl_common (fd, cmd, arg);
+}
+#else
+strong_alias (__libc_fcntl, __fcntl_nocancel)
+#endif
+libc_hidden_def (__fcntl_nocancel)
 
 weak_alias (__libc_fcntl, __fcntl)
 libc_hidden_weak (__fcntl)
