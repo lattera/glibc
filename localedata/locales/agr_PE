@@ -170,14 +170,10 @@ copy "es_PE"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-% ^[+1eEsSyY].*
-yesexpr "<U005E><U005B><U002B><U0031><U0065><U0045><U0073><U0053><U0079><U0059><U005D><U002E><U002A>"
-% ^[-0aAnN].*
-noexpr  "<U005E><U005B><U002D><U0030><U0061><U0041><U006E><U004E><U005D><U002E><U002A>"
-% ehe
-yesstr  "<U0065><U0068><U0065>"
-% atsa
-nostr   "<U0061><U0074><U0073><U0061>"
+yesexpr "^[+1eEsSyY]"
+noexpr  "^[-0aAnN]"
+yesstr  "ehe"
+nostr   "atsa"
 END LC_MESSAGES
 
 LC_NAME

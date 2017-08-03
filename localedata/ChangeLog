@@ -1,3 +1,7 @@
+2017-08-03  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/agr_PE (LC_MESSAGES): drop .* from yesexpr and noexpr
+
 2017-08-02  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21845]
