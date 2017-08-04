@@ -1,5 +1,10 @@
 2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/start.S (_start): Check Check PIC instead of
+	SHARED.  Avoid dynamic relocation against main in static PIE.
+
+2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #21815]
 	* elf/Makefile (CFLAGS-tst-prelink.c): New.
 	(LDFLAGS-tst-prelink): Likewise.

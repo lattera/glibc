@@ -81,7 +81,7 @@ _start:
 	pushl %edx		/* Push address of the shared library
 				   termination function.  */
 
-#ifdef SHARED
+#ifdef PIC
 	/* Load PIC register.  */
 	call 1f
 	addl $_GLOBAL_OFFSET_TABLE_, %ebx
@@ -95,7 +95,14 @@ _start:
 	pushl %ecx		/* Push second argument: argv.  */
 	pushl %esi		/* Push first argument: argc.  */
 
+# ifdef SHARED
 	pushl main@GOT(%ebx)
+# else
+	/* Avoid relocation in static PIE since _start is called before
+	   it is relocated.  */
+	leal main@GOTOFF(%ebx), %eax
+	pushl %eax
+# endif
 
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.    */
@@ -117,7 +124,7 @@ _start:
 
 	hlt			/* Crash if somehow `exit' does return.  */
 
-#ifdef SHARED
+#ifdef PIC
 1:	movl	(%esp), %ebx
 	ret
 #endif
