@@ -37,11 +37,7 @@ ENTRY(__memset_chk)
 2:	ret
 END(__memset_chk)
 
-# ifdef SHARED
-strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
-	.section .gnu.warning.__memset_zero_constant_len_parameter
-	.string "memset used with constant zero length parameter; this could be due to transposed parameters"
-# else
+# ifndef SHARED
 	.text
 	.type __memset_chk_sse2, @function
 	.p2align 4;

@@ -1,3 +1,15 @@
+2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21790]
+	* sysdeps/i386/i586/memset.S
+	(__memset_zero_constant_len_parameter): Removed.
+	* sysdeps/i386/i686/memset.S
+	(__memset_zero_constant_len_parameter): Likewise.
+	* sysdeps/i386/i686/multiarch/memset_chk.S
+	(__memset_zero_constant_len_parameter): Likewise.
+	* sysdeps/x86_64/memset.S (__memset_zero_constant_len_parameter):
+	Likewise.
+
 2017-08-03  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* stdlib/getentropy.c (getentropy): Change return type to int.

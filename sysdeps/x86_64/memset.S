@@ -59,9 +59,3 @@ libc_hidden_def (__wmemset)
 weak_alias (__wmemset, wmemset)
 libc_hidden_weak (wmemset)
 #endif
-
-#if defined SHARED && IS_IN (libc) && !defined USE_MULTIARCH
-strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
-	.section .gnu.warning.__memset_zero_constant_len_parameter
-	.string "memset used with constant zero length parameter; this could be due to transposed parameters"
-#endif

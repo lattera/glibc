@@ -91,10 +91,3 @@ ENTRY (memset)
 	ret
 END (memset)
 libc_hidden_builtin_def (memset)
-
-#if defined SHARED && IS_IN (libc) && !defined __memset_chk \
-    && !defined USE_AS_BZERO
-strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
-	.section .gnu.warning.__memset_zero_constant_len_parameter
-	.string "memset used with constant zero length parameter; this could be due to transposed parameters"
-#endif
