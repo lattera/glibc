@@ -1,5 +1,17 @@
 2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (I386_USE_SYSENTER):
+	Define to I386_USE_SYSENTER to 0 or 1 if not defined.
+	(ENTER_KERNEL): Check if I386_USE_SYSENTER is 1 and check PIC.
+	(INTERNAL_SYSCALL_MAIN_INLINE): Likewise.
+	(INTERNAL_SYSCALL_NCS): Likewise.
+	(LOADARGS_1): Likewise.
+	(LOADARGS_5): Likewise.
+	(RESTOREARGS_1): Likewise.
+	(RESTOREARGS_5): Likewise.
+
+2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/memmove.S (MEMCPY_SYMBOL): Don't check SHARED.
 	(MEMPCPY_SYMBOL): Likewise.
 	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
