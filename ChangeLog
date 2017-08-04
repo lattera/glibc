@@ -1,5 +1,11 @@
 2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #21815]
+	* elf/Makefile (CFLAGS-tst-prelink.c): New.
+	(LDFLAGS-tst-prelink): Likewise.
+
+2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (I386_USE_SYSENTER):
 	Define to I386_USE_SYSENTER to 0 or 1 if not defined.
 	(ENTER_KERNEL): Check if I386_USE_SYSENTER is 1 and check PIC.

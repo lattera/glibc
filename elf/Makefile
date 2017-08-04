@@ -358,6 +358,9 @@ update-all-abi: update-all-abi-ld
 
 ifeq ($(have-glob-dat-reloc),yes)
 tests += tst-prelink
+# Don't compile tst-prelink.c with PIE for GLOB_DAT relocation.
+CFLAGS-tst-prelink.c += -fno-pie
+LDFLAGS-tst-prelink = $(no-pie-ldflag)
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-prelink-cmp.out
 endif
