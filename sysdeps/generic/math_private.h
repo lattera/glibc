@@ -301,24 +301,14 @@ extern void __docos (double __x, double __dx, double __v[]);
    })
 #endif
 
-#if __HAVE_DISTINCT_FLOAT128
-# define __EXPR_FLT128(x, yes, no)				\
-  __builtin_choose_expr (__builtin_types_compatible_p		\
-			 (x, long double), no, yes)
-#else
-# define __EXPR_FLT128(x, yes, no) no
-#endif
-
-
 #define fabs_tg(x) __MATH_TG ((x), (__typeof (x)) __builtin_fabs, (x))
 
-#define min_of_type(type) __builtin_choose_expr		\
-  (__builtin_types_compatible_p (type, float),		\
-   FLT_MIN,						\
-   __builtin_choose_expr				\
-   (__builtin_types_compatible_p (type, double),	\
-    DBL_MIN,						\
-    __EXPR_FLT128 (type, FLT128_MIN, LDBL_MIN)))
+#define min_of_type_f FLT_MIN
+#define min_of_type_ DBL_MIN
+#define min_of_type_l LDBL_MIN
+#define min_of_type_f128 FLT128_MIN
+
+#define min_of_type(x) __MATH_TG ((x), (__typeof (x)) min_of_type_, )
 
 /* If X (which is not a NaN) is subnormal, force an underflow
    exception.  */
@@ -327,7 +317,7 @@ extern void __docos (double __x, double __dx, double __v[]);
     {								\
       __typeof (x) force_underflow_tmp = (x);			\
       if (fabs_tg (force_underflow_tmp)				\
-	  < min_of_type (__typeof (force_underflow_tmp)))	\
+	  < min_of_type (force_underflow_tmp))			\
 	{							\
 	  __typeof (force_underflow_tmp) force_underflow_tmp2	\
 	    = force_underflow_tmp * force_underflow_tmp;	\
@@ -341,7 +331,7 @@ extern void __docos (double __x, double __dx, double __v[]);
     {								\
       __typeof (x) force_underflow_tmp = (x);			\
       if (force_underflow_tmp					\
-	  < min_of_type (__typeof (force_underflow_tmp)))	\
+	  < min_of_type (force_underflow_tmp))			\
 	{							\
 	  __typeof (force_underflow_tmp) force_underflow_tmp2	\
 	    = force_underflow_tmp * force_underflow_tmp;	\

@@ -1,3 +1,16 @@
+2017-08-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math_private.h (__EXPR_FLT128): Remove macro.
+	(min_of_type_f): New macro.
+	(min_of_type_): Likewise.
+	(min_of_type_l): Likewise.
+	(min_of_type_f128): Likewise.
+	(min_of_type): Define using __MATH_TG and taking an expression
+	argument.
+	(math_check_force_underflow): Pass expression instead of type to
+	min_of_type.
+	(math_check_force_underflow_nonneg): Likewise.
+
 2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.h [__ASSEMBLER__]
