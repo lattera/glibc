@@ -289,9 +289,11 @@ ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
 tests += tst-pie1 tst-pie2
 tests-pie += tst-pie1 tst-pie2
+ifeq (yes,$(have-protected-data))
 tests += vismain
 tests-pie += vismain
 CFLAGS-vismain.c = $(PIE-ccflag)
+endif
 endif
 modules-execstack-yes = tst-execstack-mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
