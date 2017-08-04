@@ -244,10 +244,13 @@ init_cpu_features (struct cpu_features *cpu_features)
 	  |= bit_arch_Prefer_No_AVX512;
 
       /* To avoid SSE transition penalty, use _dl_runtime_resolve_slow.
-         If XGETBV suports ECX == 1, use _dl_runtime_resolve_opt.  */
+         If XGETBV suports ECX == 1, use _dl_runtime_resolve_opt.
+	 Use _dl_runtime_resolve_opt only with AVX512F since it is
+	 slower than _dl_runtime_resolve_slow with AVX.  */
       cpu_features->feature[index_arch_Use_dl_runtime_resolve_slow]
 	|= bit_arch_Use_dl_runtime_resolve_slow;
-      if (cpu_features->max_cpuid >= 0xd)
+      if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable)
+	  && cpu_features->max_cpuid >= 0xd)
 	{
 	  unsigned int eax;
 
