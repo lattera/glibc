@@ -629,6 +629,7 @@ libc_cv_z_execstack
 libc_cv_z_combreloc
 ASFLAGS_config
 libc_cv_cc_with_libunwind
+libc_cv_insert
 libc_cv_protected_data
 BISON
 INSTALL_INFO
@@ -5714,6 +5715,38 @@ EOF
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_protected_data" >&5
 $as_echo "$libc_cv_protected_data" >&6; }
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking linker support for INSERT in linker script" >&5
+$as_echo_n "checking linker support for INSERT in linker script... " >&6; }
+if ${libc_cv_insert+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+		const int __attribute__ ((section(".bar"))) bar = 0x12345678;
+		int test (void) { return bar; }
+EOF
+		cat > conftest.t <<EOF
+		SECTIONS
+		{
+		  .bar : { *(.bar) }
+		}
+		INSERT AFTER .rela.dyn;
+EOF
+		libc_cv_insert=no
+		if { ac_try='${CC-cc} -nostdlib -nostartfiles $no_ssp -fPIC -shared conftest.c -Wl,-T,conftest.t -o conftest.so'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+		  libc_cv_insert=yes
+		fi
+		rm -f conftest.*
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_insert" >&5
+$as_echo "$libc_cv_insert" >&6; }
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for broken __attribute__((alias()))" >&5

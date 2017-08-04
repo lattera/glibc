@@ -59,9 +59,11 @@ test-extras += tst-audit4-aux tst-audit10-aux \
 extra-test-objs += tst-audit4-aux.o tst-audit10-aux.o \
 		   tst-avx-aux.o tst-avx512-aux.o
 
+ifeq ($(have-insert),yes)
 tests += tst-split-dynreloc
 LDFLAGS-tst-split-dynreloc = -Wl,-T,$(..)sysdeps/x86_64/tst-split-dynreloc.lds
 tst-split-dynreloc-ENV = LD_BIND_NOW=1
+endif
 
 modules-names += tst-auditmod3a tst-auditmod3b \
 		tst-auditmod4a tst-auditmod4b \

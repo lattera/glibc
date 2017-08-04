@@ -1298,6 +1298,27 @@ EOF
 	       ])
 AC_SUBST(libc_cv_protected_data)
 
+AC_CACHE_CHECK(linker support for INSERT in linker script,
+	       libc_cv_insert,
+	       [cat > conftest.c <<EOF
+		const int __attribute__ ((section(".bar"))) bar = 0x12345678;
+		int test (void) { return bar; }
+EOF
+		cat > conftest.t <<EOF
+		SECTIONS
+		{
+		  .bar : { *(.bar) }
+		}
+		INSERT AFTER .rela.dyn;
+EOF
+		libc_cv_insert=no
+		if AC_TRY_COMMAND([${CC-cc} -nostdlib -nostartfiles $no_ssp -fPIC -shared conftest.c -Wl,-T,conftest.t -o conftest.so]); then
+		  libc_cv_insert=yes
+		fi
+		rm -f conftest.*
+	       ])
+AC_SUBST(libc_cv_insert)
+
 AC_CACHE_CHECK(for broken __attribute__((alias())),
 	       libc_cv_broken_alias_attribute,
 	       [cat > conftest.c <<EOF

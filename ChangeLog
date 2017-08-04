@@ -1,5 +1,15 @@
 2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* config.make.in (have-insert): New.
+	* configure.ac (libc_cv_insert): New.  Set to yes if linker
+	supports INSERT in linker script.
+	(AC_SUBST(libc_cv_insert): New.
+	* configure: Regenerated.
+	* sysdeps/x86_64/Makefile (tests): Add tst-split-dynreloc only
+	if $(have-insert) == yes.
+
+2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* elf/Makefile (tests): Add vismain only if
 	$(have-protected-data) == yes.
 	(tests-pie): Likewise.
