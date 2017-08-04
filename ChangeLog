@@ -1,5 +1,246 @@
 2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libmvec-sysdep_routines)
+	Add svml_d_cos2_core-sse2, svml_d_cos4_core-sse,
+	svml_d_cos8_core-avx2, svml_d_exp2_core-sse2,
+	svml_d_exp4_core-sse, svml_d_exp8_core-avx2,
+	svml_d_log2_core-sse2, svml_d_log4_core-sse,
+	svml_d_log8_core-avx2, svml_d_pow2_core-sse2,
+	svml_d_pow4_core-sse, svml_d_pow8_core-avx2
+	svml_d_sin2_core-sse2, svml_d_sin4_core-sse,
+	svml_d_sin8_core-avx2, svml_d_sincos2_core-sse2,
+	svml_d_sincos4_core-sse, svml_d_sincos8_core-avx2,
+	svml_s_cosf16_core-avx2, svml_s_cosf4_core-sse2,
+	svml_s_cosf8_core-sse, svml_s_expf16_core-avx2,
+	svml_s_expf4_core-sse2, svml_s_expf8_core-sse,
+	svml_s_logf16_core-avx2, svml_s_logf4_core-sse2,
+	svml_s_logf8_core-sse, svml_s_powf16_core-avx2,
+	svml_s_powf4_core-sse2, svml_s_powf8_core-sse,
+	svml_s_sincosf16_core-avx2, svml_s_sincosf4_core-sse2,
+	svml_s_sincosf8_core-sse, svml_s_sinf16_core-avx2,
+	svml_s_sinf4_core-sse2 and svml_s_sinf8_core-sse.
+	* sysdeps/x86_64/fpu/multiarch/ifunc-mathvec-avx2.h: New file.
+	* sysdeps/x86_64/fpu/multiarch/ifunc-mathvec-avx512.h: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/ifunc-mathvec-sse4_1.h: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos2_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp2_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log2_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow2_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin2_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos2_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cosf16_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cosf4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cosf8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_expf16_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_expf4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_expf8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_logf16_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_logf4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_logf8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_powf16_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_powf4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_powf8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincosf16_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincosf4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincosf8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sinf16_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sinf4_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sinf8_core.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos2_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos2_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN2v_cos): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos4_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVdN4v_cos): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cos8_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVeN8v_cos): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp2_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp2_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN2v_exp): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp4_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVdN4v_exp): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_exp8_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVeN8v_exp): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log2_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log2_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN2v_log): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log4_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVdN4v_log): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_log8_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVeN8v_log): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow2_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow2_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN2vv_pow): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow4_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVdN4vv_pow): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_pow8_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVeN8vv_pow): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin2_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin2_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN2v_sin): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin4_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN4v_sin): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin8_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN8v_sin): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos2_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos2_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN2vvv_sincos): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos4_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVdN4vvv_sincos): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos8_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVeN8vvv_sincos): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cosf16_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cosf16_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVeN16v_cosf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cosf4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cosf4_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN4v_cosf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cosf8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_cosf8_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVdN8v_cosf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_expf16_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_expf16_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVeN16v_expf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_expf4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_expf4_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN4v_expf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_expf8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_expf8_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVdN8v_expf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_logf16_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_logf16_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVeN16v_logf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_logf4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_logf4_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN4v_logf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_logf8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_logf8_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVdN8v_logf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_powf16_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_powf16_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVeN16vv_powf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_powf4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_powf4_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN4vv_powf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_powf8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_powf8_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVdN8vv_powf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincosf16_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincosf16_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVeN16vvv_sincosf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincosf4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincosf4_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN4vvv_sincosf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincosf8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincosf8_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVdN8vvv_sincosf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sinf16_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sinf16_core-avx2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVeN16v_sinf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sinf4_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sinf4_core-sse2.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVbN4v_sinf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sinf8_core.S:  Renamed to
+	...
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sinf8_core-sse.S: This.
+	Don't include <sysdep.h> nor <init-arch.h>.
+	(_ZGVdN8v_sinf): Removed.
+
+2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
 	Add s_ceil-sse4_1, s_ceilf-sse4_1, s_floor-sse4_1,
 	s_floorf-sse4_1, s_nearbyint-sse4_1, s_nearbyintf-sse4_1,
