@@ -16,23 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <machine/asm.h>
-#include <init-arch.h>
+#include <sysdep.h>
 
-
-ENTRY(__floorf)
-	.type	__floorf, @gnu_indirect_function
-	LOAD_RTLD_GLOBAL_RO_RDX
-	leaq	__floorf_sse41(%rip), %rax
-	HAS_CPU_FEATURE (SSE4_1)
-	jnz	2f
-	leaq	__floorf_c(%rip), %rax
-2:	ret
-END(__floorf)
-weak_alias (__floorf, floorf)
-
-
-ENTRY(__floorf_sse41)
-	roundss	$9, %xmm0, %xmm0
+	.section .text.sse4.1,"ax",@progbits
+ENTRY(__nearbyintf_sse41)
+	roundss	$0xc, %xmm0, %xmm0
 	ret
-END(__floorf_sse41)
+END(__nearbyintf_sse41)

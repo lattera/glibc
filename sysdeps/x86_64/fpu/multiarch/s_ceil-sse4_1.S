@@ -16,22 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <machine/asm.h>
-#include <init-arch.h>
+#include <sysdep.h>
 
-
-ENTRY(__ceil)
-	.type	__ceil, @gnu_indirect_function
-	LOAD_RTLD_GLOBAL_RO_RDX
-	leaq	__ceil_sse41(%rip), %rax
-	HAS_CPU_FEATURE (SSE4_1)
-	jnz	2f
-	leaq	__ceil_c(%rip), %rax
-2:	ret
-END(__ceil)
-weak_alias (__ceil, ceil)
-
-
+	.section .text.sse4.1,"ax",@progbits
 ENTRY(__ceil_sse41)
 	roundsd	$10, %xmm0, %xmm0
 	ret

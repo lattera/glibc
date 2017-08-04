@@ -1,5 +1,53 @@
 2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Add s_ceil-sse4_1, s_ceilf-sse4_1, s_floor-sse4_1,
+	s_floorf-sse4_1, s_nearbyint-sse4_1, s_nearbyintf-sse4_1,
+	s_rint-sse4_1 and s_rintf-sse4_1.
+	* sysdeps/x86_64/fpu/multiarch/ifunc-sse4_1.h: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_ceil.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_ceilf.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_floor.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_floorf.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyint.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyintf.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_rint.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_rintf.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_ceil.S: Renamed to ...
+	* sysdeps/x86_64/fpu/multiarch/s_ceil-sse4_1.S: This.  Don't
+	include <machine/asm.h> nor <init-arch.h>.  Include <sysdep.h>.
+	(__ceil): Removed.
+	* sysdeps/x86_64/fpu/multiarch/s_ceilf.S: Renamed to ...
+	* sysdeps/x86_64/fpu/multiarch/s_ceilf-sse4_1.S: This.  Don't
+	include <machine/asm.h> nor <init-arch.h>.  Include <sysdep.h>.
+	(__ceilf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/s_floor.S: Renamed to ...
+	* sysdeps/x86_64/fpu/multiarch/s_floor-sse4_1.S: This.  Don't
+	include <machine/asm.h> nor <init-arch.h>.  Include <sysdep.h>.
+	(__floor): Removed.
+	* sysdeps/x86_64/fpu/multiarch/s_floorf.S: Renamed to ...
+	* sysdeps/x86_64/fpu/multiarch/s_floorf-sse4_1.S: This.  Don't
+	include <machine/asm.h> nor <init-arch.h>.  Include <sysdep.h>.
+	(__floorf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyint.S: Renamed to ...
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyint-sse4_1.S: This.  Don't
+	include <machine/asm.h> nor <init-arch.h>.  Include <sysdep.h>.
+	(__nearbyint): Removed.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyintf.S: Renamed to ...
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyintf-sse4_1.S: This.  Don't
+	include <machine/asm.h> nor <init-arch.h>.  Include <sysdep.h>.
+	(__nearbyintf): Removed.
+	* sysdeps/x86_64/fpu/multiarch/s_rint.S: Renamed to ...
+	* sysdeps/x86_64/fpu/multiarch/s_rint-sse4_1.S: This.  Don't
+	include <machine/asm.h> nor <init-arch.h>.  Include <sysdep.h>.
+	(__rint): Removed.
+	* sysdeps/x86_64/fpu/multiarch/s_rintf.S: Renamed to ...
+	* sysdeps/x86_64/fpu/multiarch/s_rintf-sse4_1.S: This.  Don't
+	include <machine/asm.h> nor <init-arch.h>.  Include <sysdep.h>.
+	(__rintf): Removed.
+
+2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/start.S (_start): Check Check PIC instead of
 	SHARED.  Avoid dynamic relocation against main in static PIE.
 

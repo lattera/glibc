@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
+/* Multiple versions of __ceilf.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gmail.come>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,23 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <machine/asm.h>
-#include <init-arch.h>
+#define ceilf __redirect_ceilf
+#define __ceilf __redirect___ceilf
+#include <math.h>
+#undef ceilf
+#undef __ceilf
 
+#define SYMBOL_NAME ceilf
+#include "ifunc-sse4_1.h"
 
-ENTRY(__nearbyint)
-	.type	__nearbyint, @gnu_indirect_function
-	LOAD_RTLD_GLOBAL_RO_RDX
-	leaq	__nearbyint_sse41(%rip), %rax
-	HAS_CPU_FEATURE (SSE4_1)
-	jnz	2f
-	leaq	__nearbyint_c(%rip), %rax
-2:	ret
-END(__nearbyint)
-weak_alias (__nearbyint, nearbyint)
-
-
-ENTRY(__nearbyint_sse41)
-	roundsd	$0xc, %xmm0, %xmm0
-	ret
-END(__nearbyint_sse41)
+libc_ifunc_redirected (__redirect_ceilf, __ceilf, IFUNC_SELECTOR ());
+weak_alias (__ceilf, ceilf)

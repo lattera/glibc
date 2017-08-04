@@ -16,23 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <machine/asm.h>
-#include <init-arch.h>
+#include <sysdep.h>
 
-
-ENTRY(__ceilf)
-	.type	__ceilf, @gnu_indirect_function
-	LOAD_RTLD_GLOBAL_RO_RDX
-	leaq	__ceilf_sse41(%rip), %rax
-	HAS_CPU_FEATURE (SSE4_1)
-	jnz	2f
-	leaq	__ceilf_c(%rip), %rax
-2:	ret
-END(__ceilf)
-weak_alias (__ceilf, ceilf)
-
-
-ENTRY(__ceilf_sse41)
-	roundss	$10, %xmm0, %xmm0
+	.section .text.sse4.1,"ax",@progbits
+ENTRY(__floor_sse41)
+	roundsd	$9, %xmm0, %xmm0
 	ret
-END(__ceilf_sse41)
+END(__floor_sse41)

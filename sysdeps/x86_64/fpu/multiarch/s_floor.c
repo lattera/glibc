@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
+/* Multiple versions of __floor.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gmail.come>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,23 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <machine/asm.h>
-#include <init-arch.h>
+#define floor __redirect_floor
+#define __floor __redirect___floor
+#include <math.h>
+#undef floor
+#undef __floor
 
+#define SYMBOL_NAME floor
+#include "ifunc-sse4_1.h"
 
-ENTRY(__rintf)
-	.type	__rintf, @gnu_indirect_function
-	LOAD_RTLD_GLOBAL_RO_RDX
-	leaq	__rintf_sse41(%rip), %rax
-	HAS_CPU_FEATURE (SSE4_1)
-	jnz	2f
-	leaq	__rintf_c(%rip), %rax
-2:	ret
-END(__rintf)
-weak_alias (__rintf, rintf)
-
-
-ENTRY(__rintf_sse41)
-	roundss	$4, %xmm0, %xmm0
-	ret
-END(__rintf_sse41)
+libc_ifunc_redirected (__redirect_floor, __floor, IFUNC_SELECTOR ());
+weak_alias (__floor, floor)
