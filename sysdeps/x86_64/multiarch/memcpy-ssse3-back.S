@@ -19,10 +19,7 @@
 
 #include <sysdep.h>
 
-#if IS_IN (libc) \
-    && (defined SHARED \
-        || defined USE_AS_MEMMOVE \
-	|| !defined USE_MULTIARCH)
+#if IS_IN (libc)
 
 #include "asm-syntax.h"
 

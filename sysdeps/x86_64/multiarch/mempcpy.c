@@ -17,10 +17,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Define multiple versions only for the definition in lib and for
-   DSO.  In static binaries we need mempcpy before the initialization
-   happened.  */
-#if defined SHARED && IS_IN (libc)
+/* Define multiple versions only for the definition in libc.  */
+#if IS_IN (libc)
 # define mempcpy __redirect_mempcpy
 # define __mempcpy __redirect___mempcpy
 # define NO_MEMPCPY_STPCPY_REDIRECT
@@ -35,8 +33,10 @@
 libc_ifunc_redirected (__redirect_mempcpy, __mempcpy, IFUNC_SELECTOR ());
 
 weak_alias (__mempcpy, mempcpy)
+# ifdef SHARED
 __hidden_ver1 (__mempcpy, __GI___mempcpy, __redirect___mempcpy)
   __attribute__ ((visibility ("hidden")));
 __hidden_ver1 (mempcpy, __GI_mempcpy, __redirect_mempcpy)
   __attribute__ ((visibility ("hidden")));
+# endif
 #endif

@@ -18,9 +18,7 @@
 
 #if IS_IN (libc)
 # define MEMMOVE_SYMBOL(p,s)	p##_sse2_##s
-#endif
-
-#if !defined SHARED || !IS_IN (libc)
+#else
 weak_alias (__mempcpy, mempcpy)
 #endif
 

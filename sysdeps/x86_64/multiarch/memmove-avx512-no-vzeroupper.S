@@ -23,7 +23,6 @@
 # include "asm-syntax.h"
 
 	.section .text.avx512,"ax",@progbits
-# if defined SHARED && !defined USE_AS_MEMPCPY && !defined USE_AS_MEMMOVE
 ENTRY (__mempcpy_chk_avx512_no_vzeroupper)
 	cmpq	%rdx, %rcx
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
@@ -34,14 +33,11 @@ ENTRY (__mempcpy_avx512_no_vzeroupper)
 	addq	%rdx, %rax
 	jmp	L(start)
 END (__mempcpy_avx512_no_vzeroupper)
-# endif
 
-# ifdef SHARED
 ENTRY (__memmove_chk_avx512_no_vzeroupper)
 	cmpq	%rdx, %rcx
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (__memmove_chk_avx512_no_vzeroupper)
-# endif
 
 ENTRY (__memmove_avx512_no_vzeroupper)
 	mov	%rdi, %rax
@@ -413,8 +409,6 @@ L(gobble_256bytes_nt_loop_bkw):
 	jmp	L(check)
 END (__memmove_avx512_no_vzeroupper)
 
-# ifdef SHARED
 strong_alias (__memmove_avx512_no_vzeroupper, __memcpy_avx512_no_vzeroupper)
 strong_alias (__memmove_chk_avx512_no_vzeroupper, __memcpy_chk_avx512_no_vzeroupper)
-# endif
 #endif

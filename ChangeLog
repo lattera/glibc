@@ -1,5 +1,25 @@
 2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/memmove.S (MEMCPY_SYMBOL): Don't check SHARED.
+	(MEMPCPY_SYMBOL): Likewise.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Test memcpy and mempcpy in libc.a.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S: Also include
+	in libc.a.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove-avx512-no-vzeroupper.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memcpy.c: Also include in libc.a.
+	(__hidden_ver1): Don't use in libc.a.
+	* sysdeps/x86_64/multiarch/memmove-sse2-unaligned-erms.S
+	(__mempcpy): Don't create a weak alias in libc.a.
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S: Support
+	libc.a.
+	* sysdeps/x86_64/multiarch/mempcpy.c: Also include in libc.a.
+	(__hidden_ver1): Don't use in libc.a.
+
+2017-08-04  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* config.make.in (have-insert): New.
 	* configure.ac (libc_cv_insert): New.  Set to yes if linker
 	supports INSERT in linker script.

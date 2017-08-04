@@ -29,7 +29,7 @@
 #define SECTION(p)		p
 
 #ifdef USE_MULTIARCH
-# if !defined SHARED || !IS_IN (libc)
+# if !IS_IN (libc)
 #  define MEMCPY_SYMBOL(p,s)		memcpy
 # endif
 #else
@@ -39,7 +39,7 @@
 #  define MEMCPY_SYMBOL(p,s)		memcpy
 # endif
 #endif
-#if !defined SHARED || !defined USE_MULTIARCH || !IS_IN (libc)
+#if !defined USE_MULTIARCH || !IS_IN (libc)
 # define MEMPCPY_SYMBOL(p,s)		__mempcpy
 #endif
 #ifndef MEMMOVE_SYMBOL

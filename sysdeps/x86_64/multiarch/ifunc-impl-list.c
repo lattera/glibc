@@ -447,6 +447,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcpy_chk_sse2_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
 			      __memcpy_chk_erms))
+#endif
 
   /* Support sysdeps/x86_64/multiarch/memcpy.c.  */
   IFUNC_IMPL (i, name, memcpy,
@@ -474,6 +475,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcpy_sse2_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_erms))
 
+#ifdef SHARED
   /* Support sysdeps/x86_64/multiarch/mempcpy_chk.c.  */
   IFUNC_IMPL (i, name, __mempcpy_chk,
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
@@ -503,6 +505,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __mempcpy_chk_sse2_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
 			      __mempcpy_chk_erms))
+#endif
 
   /* Support sysdeps/x86_64/multiarch/mempcpy.c.  */
   IFUNC_IMPL (i, name, mempcpy,
@@ -539,6 +542,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strncmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strncmp, 1, __strncmp_sse2))
 
+#ifdef SHARED
   /* Support sysdeps/x86_64/multiarch/wmemset_chk.c.  */
   IFUNC_IMPL (i, name, __wmemset_chk,
 	      IFUNC_IMPL_ADD (array, i, __wmemset_chk, 1,
