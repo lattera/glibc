@@ -1,4 +1,4 @@
-/* Common mmap definition for Linux implementation.  Linux/m68k version.
+/* Common mmap definition for Linux implementation.  Linux/ia64 version.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef MMAP_M68K_INTERNAL_LINUX_H
-#define MMAP_M68K_INTERNAL_LINUX_H
+#ifndef MMAP_IA64_INTERNAL_LINUX_H
+#define MMAP_IA64_INTERNAL_LINUX_H
 
-/* ColdFire and Sun 3 kernels have PAGE_SHIFT set to 13 and expect
-   mmap2 offset to be provided in 8K pages.  Determine the shift
-   dynamically with getpagesize.  */
+/* Linux allows PAGE_SHIFT in range of [12-16] and expect
+   mmap2 offset to be provided in based on the configured pagesize.
+   Determine the shift dynamically with getpagesize.  */
 #define MMAP2_PAGE_UNIT -1
 
 #include_next <mmap_internal.h>

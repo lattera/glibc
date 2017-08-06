@@ -1,3 +1,16 @@
+2017-08-14 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Sergei Trofimovich  <slyfox@inbox.ru>
+
+	[BZ #21908]
+	* sysdeps/unix/sysv/linux/m68k/mmap_internal.h (MMAP2_PAGE_SHIFT):
+	Rename to MMAP2_PAGE_UNIT.
+	* sysdeps/unix/sysv/linux/mmap.c: Include mmap_internal iff
+	__OFF_T_MATCHES_OFF64_T is not defined.
+	* sysdeps/unix/sysv/linux/mmap_internal.h (page_unit): Declare as
+	uint64_t.
+	(MMAP2_PAGE_UNIT) [MMAP2_PAGE_UNIT == -1]: Redefine to page_unit.
+	(page_unit) [MMAP2_PAGE_UNIT != -1]: Remove definition.
+
 2017-08-14  Florian Weimer  <fweimer@redhat.com>
 
 	i386: Do not set internal_function.
