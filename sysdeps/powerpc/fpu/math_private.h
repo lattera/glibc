@@ -30,7 +30,7 @@ extern __always_inline _Float128
 __ieee754_sqrtf128 (_Float128 __x)
 {
   _Float128 __z;
-  asm ("xssqrtqp %0,%1" : "=wq" (__z) : "wq" (__x));
+  asm ("xssqrtqp %0,%1" : "=v" (__z) : "v" (__x));
   return __z;
 }
 #endif

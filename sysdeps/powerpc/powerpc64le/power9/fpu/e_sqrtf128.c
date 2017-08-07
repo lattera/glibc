@@ -30,7 +30,7 @@ __float128
 __ieee754_sqrtf128 (__float128 a)
 {
   __float128 z;
-  asm ("xssqrtqp %0,%1" : "=wq" (z) : "wq" (a));
+  asm ("xssqrtqp %0,%1" : "=v" (z) : "v" (a));
   return z;
 }
 strong_alias (__ieee754_sqrtf128, __sqrtf128_finite)

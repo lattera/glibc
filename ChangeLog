@@ -1,3 +1,12 @@
+2017-08-10  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	[BZ #21941]
+	* sysdeps/powerpc/fpu/math_private.h (__ieee754_sqrtf128): Since
+	xssqrtqp requires operands to be in Vector Registers
+	(Altivec/VMX), replace the register constraint 'wq' with 'v'.
+	* sysdeps/powerpc/powerpc64le/power9/fpu/e_sqrtf128.c
+	(__ieee754_sqrtf128): Likewise.
+
 2017-08-10  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/memcmp.S (memcmp):
