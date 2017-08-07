@@ -21,6 +21,7 @@ Given a string benchmark result file, print a table with comparisons with a
 baseline.  The baseline is the first function, which typically is the builtin
 function.
 """
+
 import sys
 import os
 import json
@@ -74,7 +75,7 @@ def draw_graph(f, v, ifuncs, results):
     pylab.savefig('%s-%s.png' % (f, v), bbox_inches='tight')
 
 
-def process_results(results, attrs):
+def process_results(results, attrs, base_func):
     """ Process results and print them
 
     Args:
@@ -84,6 +85,10 @@ def process_results(results, attrs):
 
     for f in results['functions'].keys():
         print('Function: %s' % f)
+        base_index = 0
+        if base_func:
+            base_index = results['functions'][f]['ifuncs'].index(base_func)
+
         print('\t'.join(results['functions'][f]['ifuncs']))
         v = results['functions'][f]['bench-variant']
         print('Variant: %s' % v)
@@ -91,19 +96,17 @@ def process_results(results, attrs):
         graph_res = {}
         for res in results['functions'][f]['results']:
             attr_list = ['%s=%s' % (a, res[a]) for a in attrs]
-            first = True
+            i = 0
             key = ','.join(attr_list)
             sys.stdout.write('%s: \t' % key)
             graph_res[key] = res['timings']
             for t in res['timings']:
                 sys.stdout.write ('%.2f' % t)
-                if first:
-                    first = False
-                else:
-                    diff = (res['timings'][0] - t) * 100 / res['timings'][0]
-
+                if i != base_index:
+                    diff = (res['timings'][base_index] - t) * 100 / res['timings'][base_index]
                     sys.stdout.write (' (%.2f%%)' % diff)
                 sys.stdout.write('\t')
+                i = i + 1
             print('')
         draw_graph(f, v, results['functions'][f]['ifuncs'], graph_res)
 
@@ -114,15 +117,20 @@ def main(args):
     Take a string benchmark output file and compare timings.
     """
     if len(args) < 3:
-        print('Usage: %s <input file> <schema file> attr1 [attr2 ...]' % sys.argv[0])
+        print('Usage: %s <input file> <schema file> [-base=ifunc_name] attr1 [attr2 ...]' % sys.argv[0])
         sys.exit(os.EX_USAGE)
 
+    base_func = None
     filename = args[0]
     schema_filename = args[1]
-    attrs = args[2:]
+    if args[2].find('-base=') == 0:
+        base_func = args[2][6:]
+        attrs = args[3:]
+    else:
+        attrs = args[2:]
 
     results = parse_file(filename, schema_filename)
-    process_results(results, attrs)
+    process_results(results, attrs, base_func)
 
 
 if __name__ == '__main__':

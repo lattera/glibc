@@ -1,5 +1,9 @@
 2017-08-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/scripts/compare_strings.py (main): Add an
+	optional -base option.
+	(process_results): New argument base_func.
+
 	* benchtests/bench-memcpy.c (test_main): Use TEST_NAME instead of
 	hardcoding memcpy.
 	* benchtests/bench-memcpy-large.c (test_name): Likewise.
