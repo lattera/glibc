@@ -102,7 +102,7 @@ typedef struct rec_strm
     caddr_t out_base;		/* output buffer (points to frag header) */
     caddr_t out_finger;		/* next output position */
     caddr_t out_boundry;	/* data cannot up to this address */
-    u_int32_t *frag_header;	/* beginning of curren fragment */
+    uint32_t *frag_header;	/* beginning of curren fragment */
     bool_t frag_sent;		/* true if buffer sent in middle of record */
     /*
      * in-coming bits
@@ -181,7 +181,7 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
   rstrm->readit = readit;
   rstrm->writeit = writeit;
   rstrm->out_finger = rstrm->out_boundry = rstrm->out_base;
-  rstrm->frag_header = (u_int32_t *) rstrm->out_base;
+  rstrm->frag_header = (uint32_t *) rstrm->out_base;
   rstrm->out_finger += 4;
   rstrm->out_boundry += sendsize;
   rstrm->frag_sent = FALSE;
@@ -526,7 +526,7 @@ xdrrec_endofrecord (XDR *xdrs, bool_t sendnow)
   len = (rstrm->out_finger - (char *) rstrm->frag_header
 	 - BYTES_PER_XDR_UNIT);
   *rstrm->frag_header = htonl ((u_long) len | LAST_FRAG);
-  rstrm->frag_header = (u_int32_t *) rstrm->out_finger;
+  rstrm->frag_header = (uint32_t *) rstrm->out_finger;
   rstrm->out_finger += BYTES_PER_XDR_UNIT;
   return TRUE;
 }
@@ -549,7 +549,7 @@ flush_out (RECSTREAM *rstrm, bool_t eor)
   if ((*(rstrm->writeit)) (rstrm->tcp_handle, rstrm->out_base, (int) len)
       != (int) len)
     return FALSE;
-  rstrm->frag_header = (u_int32_t *) rstrm->out_base;
+  rstrm->frag_header = (uint32_t *) rstrm->out_base;
   rstrm->out_finger = (caddr_t) rstrm->out_base + BYTES_PER_XDR_UNIT;
   return TRUE;
 }

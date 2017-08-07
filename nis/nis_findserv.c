@@ -63,7 +63,7 @@ __pmap_getnisport (struct sockaddr_in *address, u_long program,
 struct findserv_req
 {
   struct sockaddr_in sin;
-  u_int32_t xid;
+  uint32_t xid;
   u_int server_nr;
   u_int server_ep;
 };
@@ -77,7 +77,7 @@ __nis_findfastest_with_timeout (dir_binding *bind,
   struct findserv_req *pings;
   struct sockaddr_in sin, saved_sin;
   int found = -1;
-  u_int32_t xid_seed;
+  uint32_t xid_seed;
   int sock, dontblock = 1;
   CLIENT *clnt;
   u_long i, j, pings_count, pings_max, fastest = -1;
@@ -87,7 +87,7 @@ __nis_findfastest_with_timeout (dir_binding *bind,
 					   for multihomed hosts */
   pings_count = 0;
   pings = malloc (sizeof (struct findserv_req) * pings_max);
-  xid_seed = (u_int32_t) (time (NULL) ^ getpid ());
+  xid_seed = (uint32_t) (time (NULL) ^ getpid ());
 
   if (__glibc_unlikely (pings == NULL))
     return -1;
@@ -158,7 +158,7 @@ __nis_findfastest_with_timeout (dir_binding *bind,
   for (i = 0; i < pings_count; ++i)
     {
       /* clntudp_call() will increment, subtract one */
-      *((u_int32_t *) (cu->cu_outbuf)) = pings[i].xid - 1;
+      *((uint32_t *) (cu->cu_outbuf)) = pings[i].xid - 1;
       memcpy ((char *) &cu->cu_raddr, (char *) &pings[i].sin,
 	      sizeof (struct sockaddr_in));
       /* Transmit to NULLPROC, return immediately. */
@@ -174,8 +174,8 @@ __nis_findfastest_with_timeout (dir_binding *bind,
 			(xdrproc_t) xdr_void, (caddr_t) 0,
 			*timeout);
     if (RPC_SUCCESS == rc) {
-      u_int32_t val;
-      memcpy (&val, cu->cu_inbuf, sizeof (u_int32_t));
+      uint32_t val;
+      memcpy (&val, cu->cu_inbuf, sizeof (uint32_t));
       fastest = val - xid_seed;
       if (fastest < pings_count) {
 	bind->server_used = pings[fastest].server_nr;

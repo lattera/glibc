@@ -1,5 +1,55 @@
 2017-08-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* catgets/catgets.c (catgets): Use uintN_t instead of u_intN_t.
+	* catgets/catgetsinfo.h (struct catalog_obj): Likewise.
+	(struct catalog_info): Likewise.
+	* inet/htontest.c (lo): Likewise.
+	(foo): Likewise.
+	* inet/inet_lnaof.c (inet_lnaof): Likewise.
+	* inet/inet_net.c (inet_network): Likewise.
+	* inet/inet_netof.c (inet_netof): Likewise.
+	* inet/rcmd.c (__ivaliduser): Likewise.
+	(iruserok): Likewise.
+	* locale/loadlocale.c (_nl_intern_locale_data): Likewise.
+	* locale/programs/locale-spec.c (locale_special): Likewise.
+	* nis/nis_findserv.c (struct findserv_req): Likewise.
+	(__nis_findfastest_with_timeout): Likewise.
+	* nss/test-netdb.c (test_network): Likewise.
+	* resolv/inet_neta.c (inet_neta): Likewise.
+	* resolv/ns_date.c (ns_datetosecs): Likewise.
+	(SECS_PER_DAY): Likewise.
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyaddr_r):
+	Likewise.
+	* resolv/res_comp.c (__putlong): Likewise.
+	(__putshort): Likewise.
+	(_getlong): Likewise.
+	(_getshort): Likewise.
+	* resolv/res_debug.c (p_time): Likewise.
+	(precsize_ntoa): Likewise.
+	(precsize_aton): Likewise.
+	(latlon2ul): Likewise.
+	(loc_aton): Likewise.
+	(loc_ntoa): Likewise.
+	* resolv/res_hconf.c (struct netaddr): Likewise.
+	(_res_hconf_reorder_addrs): Likewise.
+	* sunrpc/clnt_tcp.c (clnttcp_call): Likewise.
+	(clnttcp_control): Likewise.
+	* sunrpc/clnt_udp.c (clntudp_call): Likewise.
+	(clntudp_control): Likewise.
+	* sunrpc/clnt_unix.c (clntunix_call): Likewise.
+	(clntunix_control): Likewise.
+	* sunrpc/pmap_rmt.c (clnt_broadcast): Likewise.
+	* sunrpc/rpc/auth.h (union des_block): Likewise.
+	* sunrpc/tst-udp-nonblocking.c (do_test): Likewise.
+	* sunrpc/xdr_rec.c (struct rec_strm): Likewise.
+	(xdrrec_create): Likewise.
+	(xdrrec_endofrecord): Likewise.
+	(flush_out): Likewise.
+	* sunrpc/xdr_stdio.c (xdrstdio_getlong): Likewise.
+	(xdrstdio_putlong): Likewise.
+	* sysdeps/unix/sysv/linux/errqueue.h (struct sock_extended_err):
+	Likewise.
+
 	* misc/sys/cdefs.h (__long_double_t): Remove.
 	* stdio-common/printf_fp.c (__printf_fp_l): Use long double
 	instead of __long_double_t,

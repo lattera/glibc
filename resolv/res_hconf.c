@@ -339,8 +339,8 @@ static struct netaddr
   {
     struct
     {
-      u_int32_t	addr;
-      u_int32_t	mask;
+      uint32_t	addr;
+      uint32_t	mask;
     } ipv4;
   } u;
 } *ifaddrs);
@@ -509,8 +509,8 @@ _res_hconf_reorder_addrs (struct hostent *hp)
 
       for (j = 0; j < num_ifs_local; ++j)
 	{
-	  u_int32_t if_addr    = ifaddrs[j].u.ipv4.addr;
-	  u_int32_t if_netmask = ifaddrs[j].u.ipv4.mask;
+	  uint32_t if_addr    = ifaddrs[j].u.ipv4.addr;
+	  uint32_t if_netmask = ifaddrs[j].u.ipv4.mask;
 
 	  if (((haddr->s_addr ^ if_addr) & if_netmask) == 0)
 	    {

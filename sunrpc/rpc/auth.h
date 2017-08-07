@@ -68,8 +68,8 @@ enum auth_stat {
 
 union des_block {
 	struct {
-		u_int32_t high;
-		u_int32_t low;
+		uint32_t high;
+		uint32_t low;
 	} key;
 	char c[8];
 };

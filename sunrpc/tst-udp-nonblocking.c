@@ -249,7 +249,7 @@ do_test (void)
       /* Reset the xid because it is changed by each invocation of
          clnt_call.  Subtract one to compensate for the xid update
          during the call.  */
-      *((u_int32_t *) (cu->cu_outbuf)) = servers[i].xid - 1;
+      *((uint32_t *) (cu->cu_outbuf)) = servers[i].xid - 1;
       cu->cu_raddr = servers[i].address;
 
       struct test_query query = { .a = 100, .b = i + 1 };

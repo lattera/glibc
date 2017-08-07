@@ -232,7 +232,7 @@ static void
 test_network (void)
 {
   struct netent *nptr;
-  u_int32_t ip;
+  uint32_t ip;
 
   /*
      This test needs the following line in /etc/networks:

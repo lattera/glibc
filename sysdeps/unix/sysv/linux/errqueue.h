@@ -25,13 +25,13 @@
 
 struct sock_extended_err
   {
-    u_int32_t ee_errno;
-    u_int8_t ee_origin;
-    u_int8_t ee_type;
-    u_int8_t ee_code;
-    u_int8_t ee_pad;
-    u_int32_t ee_info;
-    u_int32_t ee_data;
+    uint32_t ee_errno;
+    uint8_t ee_origin;
+    uint8_t ee_type;
+    uint8_t ee_code;
+    uint8_t ee_pad;
+    uint32_t ee_info;
+    uint32_t ee_data;
   };
 
 #define SO_EE_ORIGIN_NONE  0

@@ -53,7 +53,7 @@ locale_special (const char *name, int show_category_name,
 	  size_t cnt;
 
 	  for (cnt = 0; cnt < nelem; ++cnt)
-	    if (__collate_element_hash[2 * cnt] != (~((u_int32_t) 0)))
+	    if (__collate_element_hash[2 * cnt] != (~((uint32_t) 0)))
 	      {
 		size_t idx = __collate_element_hash[2 * cnt];
 

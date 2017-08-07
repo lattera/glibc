@@ -236,12 +236,12 @@ libresolv_hidden_def (res_dnok)
  *	__getshort
  * Note that one _ comes from C and the others come from us.
  */
-void __putlong(u_int32_t src, u_char *dst) { ns_put32(src, dst); }
+void __putlong(uint32_t src, u_char *dst) { ns_put32(src, dst); }
 libresolv_hidden_def (__putlong)
-void __putshort(u_int16_t src, u_char *dst) { ns_put16(src, dst); }
+void __putshort(uint16_t src, u_char *dst) { ns_put16(src, dst); }
 libresolv_hidden_def (__putshort)
-u_int32_t _getlong(const u_char *src) { return (ns_get32(src)); }
-u_int16_t _getshort(const u_char *src) { return (ns_get16(src)); }
+uint32_t _getlong(const u_char *src) { return (ns_get32(src)); }
+uint16_t _getshort(const u_char *src) { return (ns_get16(src)); }
 
 
 #include <shlib-compat.h>

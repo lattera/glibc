@@ -465,7 +465,7 @@ send_again:
       if (inlen >= 4
 	  && (xargs == NULL
 	      || memcmp (cu->cu_inbuf, cu->cu_outbuf,
-			 sizeof (u_int32_t)) == 0))
+			 sizeof (uint32_t)) == 0))
 	break;
 
     next_response:
@@ -543,7 +543,7 @@ clntudp_control (CLIENT *cl, int request, char *info)
 {
   struct cu_data *cu = (struct cu_data *) cl->cl_private;
   u_long ul;
-  u_int32_t ui32;
+  uint32_t ui32;
 
   switch (request)
     {

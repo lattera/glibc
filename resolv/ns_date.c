@@ -39,10 +39,10 @@ static int	datepart(const char *, int, int, int, int *);
  * digits required, no spaces allowed.
  */
 
-u_int32_t
+uint32_t
 ns_datetosecs(const char *cp, int *errp) {
 	struct tm time;
-	u_int32_t result;
+	uint32_t result;
 	int mdays, i;
 	static const int days_per_month[12] =
 		{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -68,7 +68,7 @@ ns_datetosecs(const char *cp, int *errp) {
 	 * we will do it by hand.  Roll up sleeves, curse the gods, begin!
 	 */
 
-#define SECS_PER_DAY    ((u_int32_t)24*60*60)
+#define SECS_PER_DAY    ((uint32_t)24*60*60)
 #define isleap(y) ((((y) % 4) == 0 && ((y) % 100) != 0) || ((y) % 400) == 0)
 
 	result  = time.tm_sec;				/*%< Seconds */

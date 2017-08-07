@@ -625,7 +625,7 @@ libresolv_hidden_def (p_option)
  * Return a mnemonic for a time to live.
  */
 const char *
-p_time(u_int32_t value) {
+p_time(uint32_t value) {
 	static char nbuf[40];		/* XXX nonreentrant */
 
 	if (ns_format_ttl(value, nbuf, sizeof nbuf) < 0)
@@ -654,7 +654,7 @@ static const unsigned int poweroften[10]=
 
 /* takes an XeY precision/size value, returns a string representation. */
 static const char *
-precsize_ntoa (u_int8_t prec)
+precsize_ntoa (uint8_t prec)
 {
 	static char retbuf[sizeof "90000000.00"];	/* XXX nonreentrant */
 	unsigned long val;
@@ -670,11 +670,11 @@ precsize_ntoa (u_int8_t prec)
 }
 
 /* converts ascii size/precision X * 10**Y(cm) to 0xXY.  moves pointer. */
-static u_int8_t
+static uint8_t
 precsize_aton (const char **strptr)
 {
 	unsigned int mval = 0, cmval = 0;
-	u_int8_t retval = 0;
+	uint8_t retval = 0;
 	const char *cp;
 	int exponent;
 	int mantissa;
@@ -711,11 +711,11 @@ precsize_aton (const char **strptr)
 }
 
 /* converts ascii lat/lon to unsigned encoded 32-bit number.  moves pointer. */
-static u_int32_t
+static uint32_t
 latlon2ul (const char **latlonstrptr, int *which)
 {
 	const char *cp;
-	u_int32_t retval;
+	uint32_t retval;
 	int deg = 0, min = 0, secs = 0, secsfrac = 0;
 
 	cp = *latlonstrptr;
@@ -814,12 +814,12 @@ loc_aton (const char *ascii, u_char *binary)
 	const char *cp, *maxcp;
 	u_char *bcp;
 
-	u_int32_t latit = 0, longit = 0, alt = 0;
-	u_int32_t lltemp1 = 0, lltemp2 = 0;
+	uint32_t latit = 0, longit = 0, alt = 0;
+	uint32_t lltemp1 = 0, lltemp2 = 0;
 	int altmeters = 0, altfrac = 0, altsign = 1;
-	u_int8_t hp = 0x16;	/* default = 1e6 cm = 10000.00m = 10km */
-	u_int8_t vp = 0x13;	/* default = 1e3 cm = 10.00m */
-	u_int8_t siz = 0x12;	/* default = 1e2 cm = 1.00m */
+	uint8_t hp = 0x16;	/* default = 1e6 cm = 10000.00m = 10km */
+	uint8_t vp = 0x13;	/* default = 1e3 cm = 10.00m */
+	uint8_t siz = 0x12;	/* default = 1e2 cm = 1.00m */
 	int which1 = 0, which2 = 0;
 
 	cp = ascii;
@@ -905,7 +905,7 @@ loc_aton (const char *ascii, u_char *binary)
  defaults:
 
 	bcp = binary;
-	*bcp++ = (u_int8_t) 0;	/* version byte */
+	*bcp++ = (uint8_t) 0;	/* version byte */
 	*bcp++ = siz;
 	*bcp++ = hp;
 	*bcp++ = vp;
@@ -930,11 +930,11 @@ loc_ntoa (const u_char *binary, char *ascii)
 	char northsouth, eastwest;
 	int altmeters, altfrac, altsign;
 
-	const u_int32_t referencealt = 100000 * 100;
+	const uint32_t referencealt = 100000 * 100;
 
 	int32_t latval, longval, altval;
-	u_int32_t templ;
-	u_int8_t sizeval, hpval, vpval, versionval;
+	uint32_t templ;
+	uint8_t sizeval, hpval, vpval, versionval;
 
 	char *sizestr, *hpstr, *vpstr;
 

@@ -152,7 +152,7 @@ _nl_intern_locale_data (int category, const void *data, size_t datasize)
 	  if (!LOCFILE_ALIGNED_P (idx))
 	    goto puntdata;
 	  newdata->values[cnt].word =
-	    *((const u_int32_t *) (newdata->filedata + idx));
+	    *((const uint32_t *) (newdata->filedata + idx));
 	}
     }
 

@@ -81,7 +81,7 @@
 #include <sigsetops.h>
 
 
-int __ivaliduser (FILE *, u_int32_t, const char *, const char *);
+int __ivaliduser (FILE *, uint32_t, const char *, const char *);
 static int __validuser2_sa (FILE *, struct sockaddr *, size_t,
 			    const char *, const char *, const char *);
 static int ruserok2_sa (struct sockaddr *ra, size_t ralen,
@@ -92,7 +92,7 @@ static int ruserok_sa (struct sockaddr *ra, size_t ralen,
 			const char *luser);
 int iruserok_af (const void *raddr, int superuser, const char *ruser,
 		 const char *luser, sa_family_t af);
-int iruserok (u_int32_t raddr, int superuser, const char *ruser,
+int iruserok (uint32_t raddr, int superuser, const char *ruser,
 	      const char *luser);
 
 libc_hidden_proto (iruserok_af)
@@ -615,7 +615,7 @@ iruserok_af (const void *raddr, int superuser, const char *ruser,
 libc_hidden_def (iruserok_af)
 
 int
-iruserok (u_int32_t raddr, int superuser, const char *ruser, const char *luser)
+iruserok (uint32_t raddr, int superuser, const char *ruser, const char *luser)
 {
   return iruserok_af (&raddr, superuser, ruser, luser, AF_INET);
 }
@@ -632,7 +632,7 @@ iruserok (u_int32_t raddr, int superuser, const char *ruser, const char *luser)
  * Returns 0 if ok, -1 if not ok.
  */
 int
-__ivaliduser (FILE *hostf, u_int32_t raddr, const char *luser,
+__ivaliduser (FILE *hostf, uint32_t raddr, const char *luser,
 	      const char *ruser)
 {
 	struct sockaddr_in ra;

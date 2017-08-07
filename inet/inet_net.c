@@ -54,12 +54,12 @@
  * The library routines call this routine to interpret
  * network numbers.
  */
-u_int32_t
+uint32_t
 inet_network (const char *cp)
 {
-	u_int32_t val, base, n, i;
+	uint32_t val, base, n, i;
 	char c;
-	u_int32_t parts[4], *pp = parts;
+	uint32_t parts[4], *pp = parts;
 	int digit;
 
 again:

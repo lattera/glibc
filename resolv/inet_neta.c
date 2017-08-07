@@ -42,7 +42,7 @@
  *	Paul Vixie (ISC), July 1996
  */
 char *
-inet_neta (u_int32_t src, char *dst, size_t size)
+inet_neta (uint32_t src, char *dst, size_t size)
 {
 	char *odst = dst;
 	char *tp;

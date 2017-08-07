@@ -38,8 +38,8 @@
 # error "Bah, what kind of system do you use?"
 #endif
 
-u_int32_t lo = 0x67452301;
-u_int16_t foo = 0x1234;
+uint32_t lo = 0x67452301;
+uint16_t foo = 0x1234;
 
 int
 main (void)
