@@ -11,7 +11,6 @@ escape_char /
 % Macedonian language locale for Macedonia
 % Damjan Georgievski { gdamjan %% gmail.com }
 % Revision: 2.2 (2006-09-12)
-% Charsets: UTF-8, ISO-8859-5, CP1251
 
 LC_IDENTIFICATION
 title      "Macedonian locale for Macedonia"

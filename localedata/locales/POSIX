@@ -26,7 +26,6 @@ escape_char /
 % Date: 1997-03-15
 % Application: general
 % Users: general
-% Charset: ISO646:1993
 
 LC_CTYPE
 % The following is the POSIX Locale LC_CTYPE.

@@ -18,7 +18,6 @@ escape_char /
 % Date: 2004-06-26
 % Application: general
 % Users: general
-% Charset: UTF-8
 
 LC_IDENTIFICATION
 title "Amazigh language locale for Morocco (tifinagh)"

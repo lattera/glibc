@@ -10,7 +10,6 @@ escape_char /
 
 % Chechen locale for RUSSIAN FEDERATION.
 % Contributed by Kentaroh Noji  Arslanbek Astemirov <s-o-f-t AT mail DOT ru>
-% Charset: UTF-8
 LC_IDENTIFICATION
 title      "Chechen locale for RUSSIAN FEDERATION"
 source       "ANCHR"

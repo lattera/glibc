@@ -34,7 +34,6 @@ escape_char /
 % Date: 2001-01-29
 % Application: general
 % Users: general
-% Charset: ISO-8859-2
 
 LC_IDENTIFICATION
 title      "Hungarian locale for Hungary"

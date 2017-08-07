@@ -12,8 +12,6 @@ escape_char /
 %
 % Awajún / Aguaruna (agr) language locale for Peru
 %
-% Charset: UTF-8
-%
 % Prepared and contributed to glibc by Chris Leonard <cjl@sugarlabs.org> and
 % Sebastian Silva <sebastian@fuentelibre.org>
 %

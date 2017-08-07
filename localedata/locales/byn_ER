@@ -12,8 +12,6 @@ escape_char /
 %
 % Blin language locale for Eritrea.
 %
-% Charset: UTF-8
-%
 % Blin terms are provided by Tekie Alibekit with coordination of the
 % Blin Language and Culture Association in Norway.  Prepared and contributed
 % to glibc by Daniel Yacob <locales@geez.org>

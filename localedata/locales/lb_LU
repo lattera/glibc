@@ -10,7 +10,6 @@ escape_char /
 
 % Locale for Luxembourgish locale in Luxembourg
 % Contributed by Pit Wenkin <pit@wenkin.lu>, 2011
-% Charset UTF-8
 
 LC_IDENTIFICATION
 title      "Luxembourgish locale for Luxembourg"

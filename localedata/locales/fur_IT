@@ -14,7 +14,6 @@ escape_char /
 % Revision: 0.3
 % Date: 2004-04-26
 % Users: general
-% Charset: ISO-8859-1
 
 LC_IDENTIFICATION
 title      "Furlan locale for Italy"

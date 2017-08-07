@@ -18,7 +18,6 @@ escape_char /
 % Revision: 1.0
 % Date: 2004-09-08
 % Users: general
-% Charset: ISO-8859-15
 
 LC_IDENTIFICATION
 title      "Malagasy locale for Madagascar"

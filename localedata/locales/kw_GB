@@ -24,7 +24,6 @@ escape_char /
 % Revision: 1.0
 % Date: 1999-08-09
 % Users: general
-% Charset: ISO-8859-1
 
 LC_IDENTIFICATION
 title      "Cornish locale for Britain"

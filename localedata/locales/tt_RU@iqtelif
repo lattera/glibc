@@ -18,7 +18,6 @@ escape_char /
 % Date:		2006-10-12
 % Application:	general
 % Users:	general
-% Charset:	ISO-8859-9
 
 LC_IDENTIFICATION
 title		"Tatar language locale using IQTElif alphabet; for Tatarstan, Russian Federation"

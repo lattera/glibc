@@ -11,7 +11,6 @@ escape_char /
 % Mongolian language (cyrillic) locale for Mongolia
 % Sanlig Badral <badral@chinggis.com>
 % Revision: 1.0 (2005-5-21)
-% Charsets: UTF-8
 
 LC_IDENTIFICATION
 title      "Mongolian locale for Mongolia"

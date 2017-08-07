@@ -17,7 +17,6 @@ escape_char /
 % Revision: 0.2
 % Date: 2001-01-28
 % Users: general
-% Charset: ISO-8859-1
 
 LC_IDENTIFICATION
 title "Tagalog language locale for Philippines"

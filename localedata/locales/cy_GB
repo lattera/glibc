@@ -8,8 +8,6 @@ escape_char /
 % exempt you from the conditions of the license if your use would
 % otherwise be governed by that license.
 
-% charset "ISO-8859-14"
-
 LC_IDENTIFICATION
 title "Welsh language locale for Great Britain"
 source "thanks to Dafydd Tomos (dafydd@imaginet.co.uk)"

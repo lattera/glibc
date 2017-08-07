@@ -14,7 +14,6 @@ escape_char /
 % Option: euro
 % Date: 2000-08-20
 % Users: general
-% Charset: ISO-8859-15
 
 LC_IDENTIFICATION
 title      "French locale for France with Euro"

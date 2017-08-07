@@ -12,8 +12,6 @@ escape_char /
 %
 % Ge'ez language locale for Ethiopia with Abegede collation.
 %
-% Charset: UTF-8
-%
 % Prepared and contributed to glibc by Daniel Yacob <locales@geez.org>.
 %
 % This locale data has been developed under the Yeha Project:

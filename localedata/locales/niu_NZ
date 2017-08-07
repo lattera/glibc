@@ -12,8 +12,6 @@ escape_char /
 %
 % Niuean, Vagahau Niue language locale for New Zealand
 %
-% Charset: UTF-8
-%
 % Niuean terms provided by Emani Fakaotimanava-Lui <emani@niue.nu>
 %
 % Prepared and contributed to glibc by Chris Leonard <cjl@sugarlabs.org> and

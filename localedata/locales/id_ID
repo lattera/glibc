@@ -21,7 +21,6 @@ escape_char /
 % Date: 1999-09-08
 % Application: general
 % Users: general
-% Charset: ISO-8859-1
 
 LC_IDENTIFICATION
 title      "Indonesian locale for Indonesia"

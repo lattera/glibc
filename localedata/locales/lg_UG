@@ -21,7 +21,6 @@ escape_char /
 % Revision: 1.0
 % Date: 2001-11-04
 % Users: general
-% Charset: ISO-8859-10
 
 LC_IDENTIFICATION
 title      "Luganda locale for Uganda"

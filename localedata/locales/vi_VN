@@ -20,7 +20,6 @@ escape_char /
 % Revision: 1.1
 % Date: 2004-01-09
 % Users: general
-% Charset: UTF-8
 
 LC_IDENTIFICATION
 title      "Vietnamese language locale for Vietnam"

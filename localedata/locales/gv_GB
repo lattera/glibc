@@ -23,7 +23,6 @@ escape_char /
 % Revision: 4.3
 % Date: 1999-07-06
 % Users: general
-% Charset: ISO-8859-1
 
 LC_IDENTIFICATION
 title      "Manx Gaelic locale for Britain"

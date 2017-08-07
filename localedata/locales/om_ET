@@ -12,8 +12,6 @@ escape_char /
 %
 % Oromo language locale for Ethiopia.
 %
-% Charset: UTF-8 (Under Qubee conventions)
-%
 % Oromo terms are provided by Mahdi Hamid Muudee of Sagalee Oromoo
 % Publishing Co. Inc and formatted in this locale by Daniel Yacob of
 % the Ge'ez Frontier Foundation.  The Oromo language terms used here

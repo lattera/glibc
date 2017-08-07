@@ -12,8 +12,6 @@ escape_char /
 %
 % Afar language locale for Eritrea (Saaho Dialect).
 %
-% Charset: UTF-8
-%
 % Afar terms provided by Mohamed Obakar <loubak@6sens.com> of the
 % Afar Civilization Researcher, Melka Werer Research Center.
 % Prepared and contributed to glibc by Daniel Yacob <locales@geez.org>.

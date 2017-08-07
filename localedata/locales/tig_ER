@@ -12,8 +12,6 @@ escape_char /
 %
 % Tigre language locale for Eritrea.
 %
-% Charset: UTF-8
-%
 % Tigre terms are provided by Mussie Bekit with coordination by the
 % Shimagale Team <http://www.shimagle.com/>.  Prepared and contributed
 % to glibc by Daniel Yacob <locales@geez.org>

@@ -8,8 +8,6 @@ escape_char /
 % exempt you from the conditions of the license if your use would
 % otherwise be governed by that license.
 
-% charset "ISO_8859-1:1987"
-
 LC_IDENTIFICATION
 title "Sater Frisian and North Frisian Locale for Germany"
 source "information from Kenneth Christiansen"

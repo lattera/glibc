@@ -18,7 +18,6 @@ escape_char /
 % Date: 1998-05-03
 % Application: general
 % Users: general
-% Charset: KOI8-U
 
 LC_IDENTIFICATION
 title      "Russian locale for Ukraine"
