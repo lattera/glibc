@@ -102,7 +102,6 @@
 
 /* This is not a typedef so `const __ptr_t' does the right thing.  */
 #define __ptr_t void *
-#define __long_double_t  long double
 
 
 /* C++ needs to know that types and declarations are C, not C++.  */

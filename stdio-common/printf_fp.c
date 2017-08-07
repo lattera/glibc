@@ -217,7 +217,7 @@ __printf_fp_l (FILE *fp, locale_t loc,
   union
     {
       double dbl;
-      __long_double_t ldbl;
+      long double ldbl;
 #if __HAVE_DISTINCT_FLOAT128
       _Float128 f128;
 #endif

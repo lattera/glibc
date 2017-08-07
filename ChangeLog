@@ -1,3 +1,10 @@
+2017-08-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* misc/sys/cdefs.h (__long_double_t): Remove.
+	* stdio-common/printf_fp.c (__printf_fp_l): Use long double
+	instead of __long_double_t,
+	* stdlib/strfmon_l.c (__vstrfmon_l): Likewise.
+
 2017-08-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/scripts/compare_strings.py: Avoid display error when

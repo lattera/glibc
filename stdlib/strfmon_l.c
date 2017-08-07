@@ -100,7 +100,7 @@ __vstrfmon_l (char *s, size_t maxsize, locale_t loc, const char *format,
       union
       {
 	double dbl;
-	__long_double_t ldbl;
+	long double ldbl;
       }
       fpnum;
       int int_format;
