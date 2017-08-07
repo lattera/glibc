@@ -95,11 +95,11 @@ tst-vfprintf-width-prec-ENV = \
   MALLOC_TRACE=$(objpfx)tst-vfprintf-width-prec.mtrace
 
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
-	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)' > $@; \
 	$(evaluate-test)
 
 $(objpfx)tst-printf.out: tst-printf.sh $(objpfx)tst-printf
-	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)' > $@; \
 	$(evaluate-test)
 
 # We generate this source because it requires a printf invocation with

@@ -203,7 +203,7 @@ endif
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'	\
-	$(common-objpfx)libio/; \
+	$(common-objpfx)libio/ > $@; \
 	$(evaluate-test)
 
 $(objpfx)tst-fopenloc-cmp.out: ../iconvdata/testdata/ISO-8859-1..UTF8 \

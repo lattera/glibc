@@ -1,3 +1,20 @@
+2017-08-07  Andreas Schwab  <schwab@suse.de>
+
+	* elf/Makefile ($(objpfx)tst-pathopt.out): Redirect output to target.
+	* grp/Makefile ($(objpfx)tst_fgetgrent.out): Likewise.
+	* intl/Makefile ($(objpfx)tst-gettext.out)
+	($(objpfx)tst-translit.out, $(objpfx)tst-gettext2.out)
+	($(objpfx)tst-gettext4.out, $(objpfx)tst-gettext6.out): Likewise.
+	* libio/Makefile ($(objpfx)test-freopen.out): Likewise.
+	* malloc/Makefile ($(objpfx)tst-mtrace.out): Likewise.
+	* nptl/Makefile ($(objpfx)tst-tls6.out): Likewise.
+	* posix/Makefile ($(objpfx)globtest.out)
+	($(objpfx)wordexp-tst.out, $(objpfx)tst-getconf.out): Likewise.
+	* stdio-common/Makefile ($(objpfx)tst-unbputc.out)
+	($(objpfx)tst-printf.out): Likewise.
+	* stdlib/Makefile ($(objpfx)tst-fmtmsg.out)
+	($(objpfx)tst-setcontext3.out): Likewise.
+
 2017-08-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):

@@ -1,3 +1,8 @@
+2017-08-07  Andreas Schwab  <schwab@suse.de>
+
+	* Makefile ($(objpfx)tst-trans.out)
+	($(objpfx)tst-ctype.out): Redirect output to target.
+
 2017-08-03  Mike FABIAN  <mfabian@redhat.com>
 
 	For the locales doi_IN,  kok_IN, and sat_IN, the words for

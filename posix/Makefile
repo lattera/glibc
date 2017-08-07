@@ -152,11 +152,11 @@ ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
 $(objpfx)globtest.out: globtest.sh $(objpfx)globtest
 	$(SHELL) $< $(common-objpfx) '$(test-via-rtld-prefix)' \
-		'$(test-program-prefix)' '$(test-wrapper-env)'; \
+		'$(test-program-prefix)' '$(test-wrapper-env)' > $@; \
 	$(evaluate-test)
 $(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix-before-env)' \
-		 '$(run-program-env)' '$(test-program-prefix-after-env)'; \
+		 '$(run-program-env)' '$(test-program-prefix-after-env)' > $@; \
 	$(evaluate-test)
 endif
 
@@ -335,7 +335,7 @@ $(objpfx)tst-boost-mem.out: $(objpfx)tst-boost.out
 	$(evaluate-test)
 
 $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
-	$(SHELL) $< $(common-objpfx) '$(built-program-cmd)'; \
+	$(SHELL) $< $(common-objpfx) '$(built-program-cmd)' > $@; \
 	$(evaluate-test)
 
 $(objpfx)bug-ga2-mem.out: $(objpfx)bug-ga2.out

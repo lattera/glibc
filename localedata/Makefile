@@ -164,13 +164,13 @@ $(objpfx)tst-trans.out: tst-trans.sh $(objpfx)tst-trans \
 	$(SHELL) $< $(common-objpfx) '$(run-program-prefix-before-env)' \
 		 '$(run-program-env)' '$(run-program-prefix-after-env)' \
 		 '$(test-program-prefix-before-env)' \
-		 '$(test-program-prefix-after-env)'; \
+		 '$(test-program-prefix-after-env)' > $@; \
 	$(evaluate-test)
 $(objpfx)tst-ctype.out: tst-ctype.sh $(objpfx)tst-ctype \
 			$(objpfx)sort-test.out \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
 	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
-		 '$(run-program-env)' '$(test-program-cmd-after-env)'; \
+		 '$(run-program-env)' '$(test-program-cmd-after-env)' > $@; \
 	$(evaluate-test)
 $(objpfx)tst-langinfo.out: tst-langinfo.sh $(objpfx)tst-langinfo \
 			$(objpfx)sort-test.out \
