@@ -1,5 +1,8 @@
 2017-08-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/scripts/compare_strings.py: Avoid display error when
+	running on a text terminal.
+
 	* benchtests/scripts/compare_strings.py (main): Add an
 	optional -base option.
 	(process_results): New argument base_func.

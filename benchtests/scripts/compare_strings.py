@@ -21,6 +21,8 @@ Given a string benchmark result file, print a table with comparisons with a
 baseline.  The baseline is the first function, which typically is the builtin
 function.
 """
+import matplotlib as mpl
+mpl.use('Agg')
 
 import sys
 import os
