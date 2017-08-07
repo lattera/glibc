@@ -1,15 +1,27 @@
-#include <init-arch.h>
-#include <math.h>
+/* Multiple versions of tan.
+   Copyright (C) 2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-extern double __tan_sse2 (double);
-extern double __tan_avx (double);
-extern double __tan_fma4 (double);
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-libm_ifunc (tan, (HAS_ARCH_FEATURE (FMA4_Usable) ? __tan_fma4 :
-		  HAS_ARCH_FEATURE (AVX_Usable)
-		  ? __tan_avx : __tan_sse2));
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+extern double __redirect_tan (double);
+
+#define SYMBOL_NAME tan
+#include "ifunc-avx-fma4.h"
+
+libc_ifunc_redirected (__redirect_tan, tan, IFUNC_SELECTOR ());
 
 #define tan __tan_sse2
-
-
 #include <sysdeps/ieee754/dbl-64/s_tan.c>

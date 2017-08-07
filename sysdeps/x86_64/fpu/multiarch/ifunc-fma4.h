@@ -1,4 +1,5 @@
-/* Multiple versions of IEEE 754 pow.
+/* Common definition for ifunc selections optimized with AVX2/FMA and
+   FMA4.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,14 +17,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-extern double __redirect_ieee754_pow (double, double);
+#include <init-arch.h>
 
-#define SYMBOL_NAME ieee754_pow
-#include "ifunc-fma4.h"
+extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (fma) attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (fma4) attribute_hidden;
 
-libc_ifunc_redirected (__redirect_ieee754_pow,
-		       __ieee754_pow, IFUNC_SELECTOR ());
-strong_alias (__ieee754_pow, __pow_finite)
+static inline void *
+IFUNC_SELECTOR (void)
+{
+  const struct cpu_features* cpu_features = __get_cpu_features ();
 
-#define __ieee754_pow __ieee754_pow_sse2
-#include <sysdeps/ieee754/dbl-64/e_pow.c>
+  if (CPU_FEATURES_ARCH_P (cpu_features, FMA_Usable)
+      && CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable))
+    return OPTIMIZE (fma);
+
+  if (CPU_FEATURES_ARCH_P (cpu_features, FMA4_Usable))
+    return OPTIMIZE (fma4);
+
+  return OPTIMIZE (sse2);
+}

@@ -1,3 +1,64 @@
+2017-08-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Add e_exp-fma, e_log-fma, e_pow-fma, s_atan-fma, e_asin-fma,
+	e_atan2-fma, s_sin-fma, s_tan-fma, mplog-fma, mpa-fma,
+	slowexp-fma, slowpow-fma, sincos32-fma, doasin-fma, dosincos-fma,
+	halfulp-fma, mpexp-fma, mpatan2-fma, mpatan-fma, mpsqrt-fma,
+	and mptan-fma.
+	(CFLAGS-doasin-fma.c): New.
+	(CFLAGS-dosincos-fma.c): Likewise.
+	(CFLAGS-e_asin-fma.c): Likewise.
+	(CFLAGS-e_atan2-fma.c): Likewise.
+	(CFLAGS-e_exp-fma.c): Likewise.
+	(CFLAGS-e_log-fma.c): Likewise.
+	(CFLAGS-e_pow-fma.c): Likewise.
+	(CFLAGS-halfulp-fma.c): Likewise.
+	(CFLAGS-mpa-fma.c): Likewise.
+	(CFLAGS-mpatan-fma.c): Likewise.
+	(CFLAGS-mpatan2-fma.c): Likewise.
+	(CFLAGS-mpexp-fma.c): Likewise.
+	(CFLAGS-mplog-fma.c): Likewise.
+	(CFLAGS-mpsqrt-fma.c): Likewise.
+	(CFLAGS-mptan-fma.c): Likewise.
+	(CFLAGS-s_atan-fma.c): Likewise.
+	(CFLAGS-sincos32-fma.c): Likewise.
+	(CFLAGS-slowexp-fma.c): Likewise.
+	(CFLAGS-slowpow-fma.c): Likewise.
+	(CFLAGS-s_sin-fma.c): Likewise.
+	(CFLAGS-s_tan-fma.c): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/doasin-fma.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/dosincos-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_asin-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_exp-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_log-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_pow-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/halfulp-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/ifunc-avx-fma4.h: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/ifunc-fma4.h: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpa-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpatan-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpatan2-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpexp-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mplog-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpsqrt-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mptan-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_atan-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_sin-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_tan-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/sincos32-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/slowexp-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/slowpow-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_asin.c: Rewrite.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_exp.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_log.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_pow.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_atan.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_sin.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_tan.c: Likewise.
+
 2017-08-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/math_private.h (__EXPR_FLT128): Remove macro.

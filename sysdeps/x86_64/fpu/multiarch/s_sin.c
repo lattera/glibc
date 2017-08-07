@@ -1,26 +1,37 @@
-#include <init-arch.h>
-#include <math.h>
-#undef NAN
+/* Multiple versions of sin and cos.
+   Copyright (C) 2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-extern double __cos_sse2 (double);
-extern double __sin_sse2 (double);
-extern double __cos_avx (double);
-extern double __sin_avx (double);
-extern double __cos_fma4 (double);
-extern double __sin_fma4 (double);
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-libm_ifunc (__cos, (HAS_ARCH_FEATURE (FMA4_Usable) ? __cos_fma4 :
-		    HAS_ARCH_FEATURE (AVX_Usable)
-		    ? __cos_avx : __cos_sse2));
-weak_alias (__cos, cos)
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-libm_ifunc (__sin, (HAS_ARCH_FEATURE (FMA4_Usable) ? __sin_fma4 :
-		    HAS_ARCH_FEATURE (AVX_Usable)
-		    ? __sin_avx : __sin_sse2));
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+extern double __redirect_sin (double);
+extern double __redirect_cos (double);
+
+#define SYMBOL_NAME sin
+#include "ifunc-avx-fma4.h"
+
+libc_ifunc_redirected (__redirect_sin, __sin, IFUNC_SELECTOR ());
 weak_alias (__sin, sin)
+
+#undef SYMBOL_NAME
+#define SYMBOL_NAME cos
+#include "ifunc-avx-fma4.h"
+
+libc_ifunc_redirected (__redirect_cos, __cos, IFUNC_SELECTOR ());
+weak_alias (__cos, cos)
 
 #define __cos __cos_sse2
 #define __sin __sin_sse2
-
-
 #include <sysdeps/ieee754/dbl-64/s_sin.c>

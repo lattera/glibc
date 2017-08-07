@@ -6,6 +6,35 @@ libm-sysdep_routines += s_ceil-sse4_1 s_ceilf-sse4_1 s_floor-sse4_1 \
 			s_floorf-sse4_1 s_nearbyint-sse4_1 \
 			s_nearbyintf-sse4_1 s_rint-sse4_1 s_rintf-sse4_1
 
+libm-sysdep_routines += e_exp-fma e_log-fma e_pow-fma s_atan-fma \
+			e_asin-fma e_atan2-fma s_sin-fma s_tan-fma \
+			mplog-fma mpa-fma slowexp-fma slowpow-fma \
+			sincos32-fma doasin-fma dosincos-fma \
+			halfulp-fma mpexp-fma \
+			mpatan2-fma mpatan-fma mpsqrt-fma mptan-fma
+
+CFLAGS-doasin-fma.c = -mfma -mavx2
+CFLAGS-dosincos-fma.c = -mfma -mavx2
+CFLAGS-e_asin-fma.c = -mfma -mavx2
+CFLAGS-e_atan2-fma.c = -mfma -mavx2
+CFLAGS-e_exp-fma.c = -mfma -mavx2
+CFLAGS-e_log-fma.c = -mfma -mavx2
+CFLAGS-e_pow-fma.c = -mfma -mavx2 $(config-cflags-nofma)
+CFLAGS-halfulp-fma.c = -mfma -mavx2
+CFLAGS-mpa-fma.c = -mfma -mavx2
+CFLAGS-mpatan-fma.c = -mfma -mavx2
+CFLAGS-mpatan2-fma.c = -mfma -mavx2
+CFLAGS-mpexp-fma.c = -mfma -mavx2
+CFLAGS-mplog-fma.c = -mfma -mavx2
+CFLAGS-mpsqrt-fma.c = -mfma -mavx2
+CFLAGS-mptan-fma.c = -mfma -mavx2
+CFLAGS-s_atan-fma.c = -mfma -mavx2
+CFLAGS-sincos32-fma.c = -mfma -mavx2
+CFLAGS-slowexp-fma.c = -mfma -mavx2
+CFLAGS-slowpow-fma.c = -mfma -mavx2
+CFLAGS-s_sin-fma.c = -mfma -mavx2
+CFLAGS-s_tan-fma.c = -mfma -mavx2
+
 libm-sysdep_routines += e_exp-fma4 e_log-fma4 e_pow-fma4 s_atan-fma4 \
 			e_asin-fma4 e_atan2-fma4 s_sin-fma4 s_tan-fma4 \
 			mplog-fma4 mpa-fma4 slowexp-fma4 slowpow-fma4 \
