@@ -118,7 +118,7 @@ test_main (void)
   json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
 
   json_attr_object_begin (&json_ctx, "functions");
-  json_attr_object_begin (&json_ctx, "memcpy");
+  json_attr_object_begin (&json_ctx, TEST_NAME);
   json_attr_string (&json_ctx, "bench-variant", "large");
 
   json_array_begin (&json_ctx, "ifuncs");
