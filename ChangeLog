@@ -1,5 +1,84 @@
 2017-08-07  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21899]
+	* bits/sigaction.h (struct sigaction): Define sa_handler and
+	sa_sigaction using union also for [__USE_XOPEN_EXTENDED].
+	(SA_ONSTACK): Change [__USE_UNIX98] condition to
+	[__USE_XOPEN_EXTENDED].
+	(SA_RESTART): Likewise.
+	(SA_NODEFER): Likewise.
+	(SA_RESETHAND): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/sigaction.h
+	(struct sigaction): Define sa_handler and sa_sigaction using union
+	also for [__USE_XOPEN_EXTENDED].
+	(SA_ONSTACK): Change [__USE_UNIX98] condition to
+	[__USE_XOPEN_EXTENDED].
+	(SA_RESTART): Likewise.
+	(SA_NODEFER): Likewise.
+	(SA_RESETHAND): Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigaction.h
+	(struct sigaction): Define sa_handler and sa_sigaction using union
+	also for [__USE_XOPEN_EXTENDED].
+	(SA_ONSTACK): Change [__USE_UNIX98] condition to
+	[__USE_XOPEN_EXTENDED].
+	(SA_RESTART): Likewise.
+	(SA_NODEFER): Likewise.
+	(SA_RESETHAND): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/sigaction.h
+	(struct sigaction): Define sa_handler and sa_sigaction using union
+	also for [__USE_XOPEN_EXTENDED].
+	(SA_ONSTACK): Change [__USE_UNIX98] condition to
+	[__USE_XOPEN_EXTENDED].
+	(SA_RESTART): Likewise.
+	(SA_NODEFER): Likewise.
+	(SA_RESETHAND): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/sigaction.h
+	(struct sigaction): Define sa_handler and sa_sigaction using union
+	also for [__USE_XOPEN_EXTENDED].
+	(SA_ONSTACK): Change [__USE_UNIX98] condition to
+	[__USE_XOPEN_EXTENDED].
+	(SA_RESTART): Likewise.
+	(SA_NODEFER): Likewise.
+	(SA_RESETHAND): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h
+	(struct sigaction): Define sa_handler and sa_sigaction using union
+	also for [__USE_XOPEN_EXTENDED].
+	(SA_ONSTACK): Change [__USE_UNIX98] condition to
+	[__USE_XOPEN_EXTENDED].
+	(SA_RESTART): Likewise.
+	(SA_NODEFER): Likewise.
+	(SA_RESETHAND): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/sigaction.h
+	(struct sigaction): Define sa_handler and sa_sigaction using union
+	also for [__USE_XOPEN_EXTENDED].
+	(SA_ONSTACK): Change [__USE_UNIX98] condition to
+	[__USE_XOPEN_EXTENDED].
+	(SA_RESTART): Likewise.
+	(SA_NODEFER): Likewise.
+	(SA_RESETHAND): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h
+	(struct sigaction): Define sa_handler and sa_sigaction using union
+	also for [__USE_XOPEN_EXTENDED].
+	(SA_ONSTACK): Change [__USE_UNIX98] condition to
+	[__USE_XOPEN_EXTENDED].
+	(SA_RESTART): Likewise.
+	(SA_NODEFER): Likewise.  Define directly rather than as alias.
+	(SA_RESETHAND): Likewise.
+	(SA_INTERRUPT): Define only for [__USE_MISC].
+	(SA_NOMASK): Define as alias of SA_NODEFER, only for [__USE_MISC].
+	(SA_ONESHOT): Define as alias of SA_RESETHAND, only for
+	[__USE_MISC].
+	(SA_STACK): Define only for [__USE_MISC].
+	* sysdeps/unix/sysv/linux/tile/bits/sigaction.h
+	(struct sigaction): Define sa_handler and sa_sigaction using union
+	also for [__USE_XOPEN_EXTENDED].
+	(SA_ONSTACK): Change [__USE_UNIX98] condition to
+	[__USE_XOPEN_EXTENDED].
+	(SA_RESTART): Likewise.
+	(SA_NODEFER): Likewise.
+	(SA_RESETHAND): Likewise.
+	(SA_NOPTRACE): Define only for [__USE_MISC].
+
 	* catgets/catgets.c (catgets): Use uintN_t instead of u_intN_t.
 	* catgets/catgetsinfo.h (struct catalog_obj): Likewise.
 	(struct catalog_info): Likewise.

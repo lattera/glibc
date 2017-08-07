@@ -26,7 +26,7 @@
 struct sigaction
   {
     /* Signal handler. */
-#ifdef __USE_POSIX199309
+#if defined __USE_POSIX199309 || defined __USE_XOPEN_EXTENDED
     union
       {
 	/* Used if SA_SIGINFO is not set.  */
@@ -60,19 +60,21 @@ struct sigaction
 #define SA_NOCLDWAIT 0x00000100  /* Don't create zombie on child death.  */
 #define SA_SIGINFO   0x00000200  /* Invoke signal-catching function with
 				    three arguments instead of one.  */
-#if defined __USE_UNIX98 || defined __USE_MISC
+#if defined __USE_XOPEN_EXTENDED || defined __USE_MISC
 # define SA_ONSTACK   0x00000001 /* Use signal stack by using `sa_restorer'. */
 #endif
-#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 # define SA_RESTART   0x00000002 /* Restart syscall on signal return.  */
-# define SA_INTERRUPT 0x00000010 /* Historical no-op.  */
-# define SA_NOMASK    0x00000020 /* Don't automatically block the signal when
+# define SA_NODEFER   0x00000020 /* Don't automatically block the signal when
 				    its handler is being executed.  */
-# define SA_ONESHOT   0x00000004 /* Reset to SIG_DFL on entry to handler.  */
+# define SA_RESETHAND 0x00000004 /* Reset to SIG_DFL on entry to handler.  */
+#endif
+#ifdef __USE_MISC
+# define SA_INTERRUPT 0x00000010 /* Historical no-op.  */
 
 /* Some aliases for the SA_ constants.  */
-# define SA_NODEFER   SA_NOMASK
-# define SA_RESETHAND SA_ONESHOT
+# define SA_NOMASK    SA_NODEFER
+# define SA_ONESHOT   SA_RESETHAND
 # define SA_STACK     SA_ONSTACK
 #endif
 

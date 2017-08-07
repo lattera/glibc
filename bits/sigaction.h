@@ -29,7 +29,7 @@
 struct sigaction
   {
     /* Signal handler.  */
-#ifdef __USE_POSIX199309
+#if defined __USE_POSIX199309 || defined __USE_XOPEN_EXTENDED
     union
       {
 	/* Used if SA_SIGINFO is not set.  */
@@ -52,10 +52,10 @@ struct sigaction
   };
 
 /* Bits in `sa_flags'.  */
-#if defined __USE_UNIX98 || defined __USE_MISC
+#if defined __USE_XOPEN_EXTENDED || defined __USE_MISC
 # define SA_ONSTACK	0x0001	/* Take signal on signal stack.  */
 #endif
-#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 # define SA_RESTART	0x0002	/* Restart syscall on signal return.  */
 # define SA_NODEFER	0x0010	/* Don't automatically block the signal when
 				    its handler is being executed.  */

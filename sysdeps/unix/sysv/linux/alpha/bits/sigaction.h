@@ -24,7 +24,7 @@
 struct sigaction
   {
     /* Signal handler.  */
-#ifdef __USE_POSIX199309
+#if defined __USE_POSIX199309 || defined __USE_XOPEN_EXTENDED
     union
       {
 	/* Used if SA_SIGINFO is not set.  */
@@ -51,10 +51,10 @@ struct sigaction
 #define SA_NOCLDWAIT  0x00000020 /* Don't create zombie on child death.  */
 #define SA_SIGINFO    0x00000040 /* Invoke signal-catching function with
 				    three arguments instead of one.  */
-#if defined __USE_UNIX98 || defined __USE_MISC
+#if defined __USE_XOPEN_EXTENDED || defined __USE_MISC
 # define SA_ONSTACK   0x00000001 /* Use signal stack by using `sa_restorer'. */
 #endif
-#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 # define SA_RESTART   0x00000002 /* Restart syscall on signal return.  */
 # define SA_NODEFER   0x00000008 /* Don't automatically block the signal
 				    when its handler is being executed.  */
