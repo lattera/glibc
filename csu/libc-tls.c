@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <startup.h>
 #include <errno.h>
 #include <ldsodefs.h>
 #include <tls.h>
@@ -193,7 +194,7 @@ __libc_setup_tls (void)
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif
   if (__builtin_expect (lossage != NULL, 0))
-    __libc_fatal (lossage);
+    _startup_fatal (lossage);
 
   /* Update the executable's link map with enough information to make
      the TLS routines happy.  */

@@ -18,6 +18,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <startup.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <unistd.h>

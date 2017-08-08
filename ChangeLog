@@ -1,3 +1,15 @@
+2017-08-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21913]
+	* csu/libc-tls.c: Include <startup.h> first.
+	(__libc_setup_tls): Call _startup_fatal instead of __libc_fatal.
+	* elf/dl-tunables.c: Include <startup.h> first.
+	* include/libc-symbols.h (BUILD_PIE_DEFAULT): New.
+	* sysdeps/generic/startup.h: New file.
+	* sysdeps/unix/sysv/linux/i386/startup.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/brk.c [BUILD_PIE_DEFAULT != 0]
+	(I386_USE_SYSENTER): New.  Defined to 0.
+
 2017-08-08  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #21041]

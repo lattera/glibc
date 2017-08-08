@@ -84,6 +84,14 @@
 
 #include <config.h>
 
+/* When PIC is defined and SHARED isn't defined, we are building PIE
+   by default.  */
+#if defined PIC && !defined SHARED
+# define BUILD_PIE_DEFAULT 1
+#else
+# define BUILD_PIE_DEFAULT 0
+#endif
+
 /* Define this for the benefit of portable GNU code that wants to check it.
    Code that checks with #if will not #include <config.h> again, since we've
    already done it (and this file is implicitly included in every compile,
