@@ -420,13 +420,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    alloca_account (sizeof (struct gaih_servtuple),
 				    alloca_used);
 
-		  if ((rc = gaih_inet_serv (service->name,
-					    tp, req, newp, tmpbuf)))
-		    {
-		      if (rc)
-			continue;
-		      return rc;
-		    }
+		  if (gaih_inet_serv (service->name,
+				      tp, req, newp, tmpbuf) != 0)
+		    continue;
 
 		  *pst = newp;
 		  pst = &(newp->next);
