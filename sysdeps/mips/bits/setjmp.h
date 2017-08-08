@@ -29,19 +29,19 @@ typedef struct __jmp_buf_internal_tag
   {
 #if _MIPS_SIM == _ABIO32
     /* Program counter.  */
-    __ptr_t __pc;
+    void *__pc;
 
     /* Stack pointer.  */
-    __ptr_t __sp;
+    void *__sp;
 
     /* Callee-saved registers s0 through s7.  */
     int __regs[8];
 
     /* The frame pointer.  */
-    __ptr_t __fp;
+    void *__fp;
 
     /* The global pointer.  */
-    __ptr_t __gp;
+    void *__gp;
 #else
     /* Program counter.  */
     __extension__ long long __pc;

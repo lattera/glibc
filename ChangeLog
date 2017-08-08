@@ -1,3 +1,75 @@
+2017-08-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* malloc/mcheck.c (old_free_hook): Use void * instead of __ptr_t.
+	(old_malloc_hook): Likewise.
+	(old_memalign_hook): Likewise.
+	(old_realloc_hook): Likewise.
+	(struct hdr): Likewise.
+	(flood): Likewise.
+	(freehook): Likewise.
+	(mallochook): Likewise.
+	(memalignhook): Likewise.
+	(reallochook): Likewise.
+	(mprobe): Likewise.
+	* malloc/mtrace.c (mallwatch): Likewise.
+	(tr_old_free_hook): Likewise.
+	(tr_old_malloc_hook): Likewise.
+	(tr_old_realloc_hook): Likewise.
+	(tr_old_memalign_hook): Likewise.
+	(tr_where): Likewise.
+	(lock_and_info): Likewise.
+	(tr_freehook): Likewise.
+	(tr_mallochook): Likewise.
+	(tr_reallochook): Likewise.
+	(tr_memalignhook): Likewise.
+	* misc/err.h [!__GNUC_VA_LIST] (__gnuc_va_list): Likewise.
+	* misc/mmap.c (__mmap): Likewise.
+	* misc/mmap64.c (__mmap64): Likewise.
+	* misc/mprotect.c (__mprotect): Likewise.
+	* misc/msync.c (msync): Likewise.
+	* misc/munmap.c (__munmap): Likewise.
+	* posix/posix_madvise.c (posix_madvise): Likewise.
+	* socket/send.c (__send): Likewise.
+	* socket/sendto.c (__sendto): Likewise.
+	* socket/setsockopt.c (__setsockopt): Likewise.
+	* string/memcmp.c (__ptr_t): Remove macro.
+	(MEMCMP): Use void * instead of ptr_t.
+	* string/memrchr.c (__ptr_t): Remove macro.
+	(__memrchr): Use void * instead of ptr_t.
+	* sysdeps/mach/hurd/dl-sysdep.c (__mmap): Likewise.
+	* sysdeps/mach/hurd/mmap.c (__mmap): Likewise.
+	* sysdeps/mach/hurd/mmap64.c (__mmap64): Likewise.
+	* sysdeps/mach/mprotect.c (__mprotect): Likewise.
+	* sysdeps/mach/msync.c (msync): Likewise.
+	* sysdeps/mach/munmap.c (__munmap): Likewise.
+	* sysdeps/mips/bits/setjmp.h (struct __jmp_buf_internal_tag):
+	Likewise.
+	* sysdeps/posix/getcwd.c (__getcwd): Likewise.
+	* sysdeps/powerpc/powerpc32/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc32/power4/memcpy.S (memcpy): Likewise.
+	* sysdeps/powerpc/powerpc32/power4/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S (memcpy): Likewise.
+	* sysdeps/powerpc/powerpc32/power6/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/memcpy.S (memcpy): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/mempcpy.S (__mempcpy):
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power7/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc64/memcpy.S (memcpy): Likewise.
+	* sysdeps/powerpc/powerpc64/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memcpy.S (memcpy): Likewise.
+	* sysdeps/powerpc/powerpc64/power4/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc64/power6/memcpy.S (memcpy): Likewise.
+	* sysdeps/powerpc/powerpc64/power6/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S (memcpy): Likewise.
+	* sysdeps/powerpc/powerpc64/power7/mempcpy.S (__mempcpy):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power7/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc64/power8/memset.S (memset): Likewise.
+	* sysdeps/tile/memcmp.c (__ptr_t): Remove macro.
+	(MEMCMP): Use void * instead of ptr_t.
+	* sysdeps/unix/sysv/linux/alpha/oldglob.c (old_glob_t): Likewise.
+	* sysdeps/unix/sysv/linux/mmap.c (__mmap): Likewise.
+
 2017-08-08  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Remove unreachable

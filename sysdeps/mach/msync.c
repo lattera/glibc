@@ -33,7 +33,7 @@
    unpredictable before this is done.  */
 
 int
-msync (__ptr_t addr, size_t len, int flags)
+msync (void *addr, size_t len, int flags)
 {
   vm_sync_t sync_flags = 0;
   kern_return_t err;

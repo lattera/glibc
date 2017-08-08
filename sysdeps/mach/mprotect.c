@@ -25,7 +25,7 @@
    (and sets errno).  */
 
 int
-__mprotect (__ptr_t addr, size_t len, int prot)
+__mprotect (void *addr, size_t len, int prot)
 {
   kern_return_t err;
   vm_prot_t vmprot;

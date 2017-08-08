@@ -453,8 +453,8 @@ __libc_lseek64 (int fd, off64_t offset, int whence)
   return offset;
 }
 
-__ptr_t weak_function
-__mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
+void *weak_function
+__mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   error_t err;
   vm_prot_t vmprot;
@@ -512,7 +512,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 
   if (err)
     return __hurd_fail (err), MAP_FAILED;
-  return (__ptr_t) mapaddr;
+  return (void *) mapaddr;
 }
 
 int weak_function

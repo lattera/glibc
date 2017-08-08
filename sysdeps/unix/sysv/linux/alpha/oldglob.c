@@ -36,7 +36,7 @@ typedef struct
        are used instead of the normal file access functions.  */
     void (*gl_closedir) (void *);
     struct dirent *(*gl_readdir) (void *);
-    __ptr_t (*gl_opendir) (const char *);
+    void *(*gl_opendir) (const char *);
     int (*gl_lstat) (const char *, struct stat *);
     int (*gl_stat) (const char *, struct stat *);
   } old_glob_t;

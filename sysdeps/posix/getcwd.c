@@ -318,7 +318,7 @@ __getcwd (char *buf, size_t size)
 		}
 	      else
 		{
-		  new = realloc ((__ptr_t) dotlist, dotsize * 2 + 1);
+		  new = realloc ((void *) dotlist, dotsize * 2 + 1);
 		  if (new == NULL)
 		    goto lose;
 		  dotp = &new[dotsize];
@@ -492,7 +492,7 @@ __getcwd (char *buf, size_t size)
 
 #ifndef __ASSUME_ATFCTS
   if (dotlist != dots)
-    free ((__ptr_t) dotlist);
+    free ((void *) dotlist);
 #endif
 
   size_t used = path + allocated - pathp;
@@ -516,7 +516,7 @@ __getcwd (char *buf, size_t size)
   int save_errno = errno;
 #ifndef __ASSUME_ATFCTS
   if (dotlist != dots)
-    free ((__ptr_t) dotlist);
+    free ((void *) dotlist);
 #endif
   if (dirstream != NULL)
     __closedir (dirstream);

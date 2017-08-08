@@ -26,12 +26,12 @@
    is nonzero, it is the desired mapping address.  If the MAP_FIXED bit is
    set in FLAGS, the mapping will be at ADDR exactly (which must be
    page-aligned); otherwise the system chooses a convenient nearby address.
-   The return value is the actual mapping address chosen or (__ptr_t) -1
+   The return value is the actual mapping address chosen or (void *) -1
    for errors (in which case `errno' is set).  A successful `mmap' call
    deallocates any previous mapping for the affected region.  */
 
-__ptr_t
-__mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
+void *
+__mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   error_t err;
   vm_prot_t vmprot;
@@ -42,7 +42,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 
   /* ADDR and OFFSET must be page-aligned.  */
   if ((mapaddr & (__vm_page_size - 1)) || (offset & (__vm_page_size - 1)))
-    return (__ptr_t) (long int) __hurd_fail (EINVAL);
+    return (void *) (long int) __hurd_fail (EINVAL);
 
   if ((flags & (MAP_TYPE|MAP_INHERIT)) == MAP_ANON
       && prot == (PROT_READ|PROT_WRITE)) /* cf VM_PROT_DEFAULT */
@@ -64,7 +64,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	    err = __vm_allocate (__mach_task_self (), &mapaddr, len, 1);
 	}
 
-      return err ? (__ptr_t) (long int) __hurd_fail (err) : (__ptr_t) mapaddr;
+      return err ? (void *) (long int) __hurd_fail (err) : (void *) mapaddr;
     }
 
   vmprot = VM_PROT_NONE;
@@ -78,7 +78,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   switch (flags & MAP_TYPE)
     {
     default:
-      return (__ptr_t) (long int) __hurd_fail (EINVAL);
+      return (void *) (long int) __hurd_fail (EINVAL);
 
     case MAP_ANON:
       memobj = MACH_PORT_NULL;
@@ -92,7 +92,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	  {
 	    if (err == MIG_BAD_ID || err == EOPNOTSUPP || err == ENOSYS)
 	      err = ENODEV;	/* File descriptor doesn't support mmap.  */
-	    return (__ptr_t) (long int) __hurd_dfail (fd, err);
+	    return (void *) (long int) __hurd_dfail (fd, err);
 	  }
 	switch (prot & (PROT_READ|PROT_WRITE))
 	  {
@@ -129,7 +129,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	    else
 	      {
 		__mach_port_deallocate (__mach_task_self (), wobj);
-		return (__ptr_t) (long int) __hurd_fail (EACCES);
+		return (void *) (long int) __hurd_fail (EACCES);
 	      }
 	    break;
 	  default:
@@ -180,9 +180,9 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
     __mach_port_deallocate (__mach_task_self (), memobj);
 
   if (err)
-    return (__ptr_t) (long int) __hurd_fail (err);
+    return (void *) (long int) __hurd_fail (err);
 
-  return (__ptr_t) mapaddr;
+  return (void *) mapaddr;
 }
 
 weak_alias (__mmap, mmap)

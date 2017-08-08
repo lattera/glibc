@@ -23,7 +23,7 @@
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
 
 int
-__munmap (__ptr_t addr, size_t len)
+__munmap (void *addr, size_t len)
 {
   __set_errno (ENOSYS);
   return -1;

@@ -20,7 +20,7 @@
 
 #define MTVSRD_V1_R4  .long 0x7c240166     /* mtvsrd  v1,r4  */
 
-/* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
+/* void * [r3] memset (void *s [r3], int c [r4], size_t n [r5]));
    Returns 's'.  */
 
 #ifndef MEMSET

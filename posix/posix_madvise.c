@@ -23,7 +23,7 @@
    for the region starting at ADDR and extending LEN bytes.  */
 
 int
-posix_madvise (__ptr_t addr, size_t len, int advice)
+posix_madvise (void *addr, size_t len, int advice)
 {
   return ENOSYS;
 }

@@ -27,9 +27,6 @@
 # include <config.h>
 #endif
 
-#undef __ptr_t
-#define __ptr_t void *
-
 #if defined _LIBC
 # include <string.h>
 # include <memcopy.h>
@@ -55,13 +52,13 @@
 #endif
 
 /* Search no more than N bytes of S for C.  */
-__ptr_t
+void *
 #ifndef MEMRCHR
 __memrchr
 #else
 MEMRCHR
 #endif
-     (const __ptr_t s, int c_in, size_t n)
+     (const void *s, int c_in, size_t n)
 {
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;
@@ -77,7 +74,7 @@ MEMRCHR
 		 & (sizeof (longword) - 1)) != 0;
        --n)
     if (*--char_ptr == c)
-      return (__ptr_t) char_ptr;
+      return (void *) char_ptr;
 
   /* All these elucidatory comments refer to 4-byte longwords,
      but the theory applies equally well to 8-byte longwords.  */
@@ -162,22 +159,22 @@ MEMRCHR
 
 #if LONG_MAX > 2147483647
 	  if (cp[7] == c)
-	    return (__ptr_t) &cp[7];
+	    return (void *) &cp[7];
 	  if (cp[6] == c)
-	    return (__ptr_t) &cp[6];
+	    return (void *) &cp[6];
 	  if (cp[5] == c)
-	    return (__ptr_t) &cp[5];
+	    return (void *) &cp[5];
 	  if (cp[4] == c)
-	    return (__ptr_t) &cp[4];
+	    return (void *) &cp[4];
 #endif
 	  if (cp[3] == c)
-	    return (__ptr_t) &cp[3];
+	    return (void *) &cp[3];
 	  if (cp[2] == c)
-	    return (__ptr_t) &cp[2];
+	    return (void *) &cp[2];
 	  if (cp[1] == c)
-	    return (__ptr_t) &cp[1];
+	    return (void *) &cp[1];
 	  if (cp[0] == c)
-	    return (__ptr_t) cp;
+	    return (void *) cp;
 	}
 
       n -= sizeof (longword);
@@ -188,7 +185,7 @@ MEMRCHR
   while (n-- > 0)
     {
       if (*--char_ptr == c)
-	return (__ptr_t) char_ptr;
+	return (void *) char_ptr;
     }
 
   return 0;

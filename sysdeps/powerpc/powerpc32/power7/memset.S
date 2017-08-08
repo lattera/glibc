@@ -19,7 +19,7 @@
 
 #include <sysdep.h>
 
-/* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
+/* void * [r3] memset (void *s [r3], int c [r4], size_t n [r5]));
    Returns 's'.  */
 
 	.machine  power7
