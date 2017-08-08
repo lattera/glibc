@@ -1,3 +1,8 @@
+2017-08-08  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21920]
+	* locales/mt_MT (LC_MONETARY): Fix p_cs_precedes/n_cs_precedes.
+
 2017-08-08  Mike FABIAN  <mfabian@redhat.com>
 
 	Remove “% Charset: ...” comments from locale sources.
