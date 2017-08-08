@@ -25,29 +25,21 @@
    libpthread, but the historical ABI requires it.  For static linking,
    there is no need to provide anything here--the libc version will be
    linked in.  For shared library ABI compatibility, there must be a
-   'system' symbol in libpthread.so; so we define it using IFUNC to
-   redirect to the libc function.  */
+   'system' symbol in libpthread.so.
+
+   With an IFUNC resolver, it would be possible to avoid the indirection,
+   but the IFUNC resolver might run before the __libc_system symbol has
+   been relocated, in which case the IFUNC resolver would not be able to
+   provide the correct address.  */
 
 #if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_22)
-
-# if HAVE_IFUNC
-
-extern __typeof(system) system_ifunc;
-#  undef INIT_ARCH
-#  define INIT_ARCH()
-libc_ifunc (system_ifunc, &__libc_system)
-
-# else  /* !HAVE_IFUNC */
 
 static int __attribute__ ((used))
 system_compat (const char *line)
 {
   return __libc_system (line);
 }
-strong_alias (system_compat, system_ifunc)
-
-# endif  /* HAVE_IFUNC */
-
-compat_symbol (libpthread, system_ifunc, system, GLIBC_2_0);
+strong_alias (system_compat, system_alias)
+compat_symbol (libpthread, system_alias, system, GLIBC_2_0);
 
 #endif

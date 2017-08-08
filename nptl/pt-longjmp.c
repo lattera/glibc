@@ -25,21 +25,14 @@
    symbol in libpthread, but the historical ABI requires it.  For static
    linking, there is no need to provide anything here--the libc version
    will be linked in.  For shared library ABI compatibility, there must be
-   longjmp and siglongjmp symbols in libpthread.so; so we define them using
-   IFUNC to redirect to the libc function.  */
+   longjmp and siglongjmp symbols in libpthread.so.
+
+   With an IFUNC resolver, it would be possible to avoid the indirection,
+   but the IFUNC resolver might run before the __libc_longjmp symbol has
+   been relocated, in which case the IFUNC resolver would not be able to
+   provide the correct address.  */
 
 #if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_22)
-
-# if HAVE_IFUNC
-
-#  undef INIT_ARCH
-#  define INIT_ARCH()
-#  define DEFINE_LONGJMP(name) libc_ifunc (name, &__libc_longjmp)
-
-extern __typeof(longjmp) longjmp_ifunc;
-extern __typeof(siglongjmp) siglongjmp_ifunc;
-
-# else  /* !HAVE_IFUNC */
 
 static void __attribute__ ((noreturn, used))
 longjmp_compat (jmp_buf env, int val)
@@ -47,14 +40,10 @@ longjmp_compat (jmp_buf env, int val)
   __libc_longjmp (env, val);
 }
 
-# define DEFINE_LONGJMP(name) strong_alias (longjmp_compat, name)
+strong_alias (longjmp_compat, longjmp_alias)
+compat_symbol (libpthread, longjmp_alias, longjmp, GLIBC_2_0);
 
-# endif  /* HAVE_IFUNC */
-
-DEFINE_LONGJMP (longjmp_ifunc)
-compat_symbol (libpthread, longjmp_ifunc, longjmp, GLIBC_2_0);
-
-strong_alias (longjmp_ifunc, siglongjmp_ifunc)
-compat_symbol (libpthread, siglongjmp_ifunc, siglongjmp, GLIBC_2_0);
+strong_alias (longjmp_alias, siglongjmp_alias)
+compat_symbol (libpthread, siglongjmp_alias, siglongjmp, GLIBC_2_0);
 
 #endif
