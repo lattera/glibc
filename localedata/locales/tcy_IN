@@ -52,7 +52,7 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_MONETARY
-copy "kn_IN"
+copy "hi_IN"
 END LC_MONETARY
 
 
