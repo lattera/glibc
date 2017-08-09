@@ -1,5 +1,7 @@
 2017-08-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* posix/bits/types.h (__qaddr_t): Remove.
+
 	[BZ #21457]
 	* sysdeps/arm/sys/ucontext.h (__ctx): Move undefine further down.
 	(ucontext_t): Use __ctx with uc_flags.  Rename uc_filler to
