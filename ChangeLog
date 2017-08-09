@@ -1,3 +1,18 @@
+2017-08-09  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* manual/tunables.texi (Tunable glibc.tune.cpu): Add falkor.
+	* sysdeps/aarch64/multiarch/Makefile (sysdep_routines): Add
+	memcpy_falkor.
+	* sysdeps/aarch64/multiarch/ifunc-impl-list.c (MAX_IFUNC):
+	Bump.
+	(__libc_ifunc_impl_list): Add __memcpy_falkor.
+	* sysdeps/aarch64/multiarch/memcpy.c: Likewise.
+	* sysdeps/aarch64/multiarch/memcpy_falkor.S: New file.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c (cpu_list):
+	Add falkor.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.h (IS_FALKOR):
+	New macro.
+
 2017-08-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #759]

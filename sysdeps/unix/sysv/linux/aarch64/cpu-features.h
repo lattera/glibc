@@ -41,6 +41,9 @@
 #define IS_THUNDERX(midr) (MIDR_IMPLEMENTOR(midr) == 'C'	\
 			   && MIDR_PARTNUM(midr) == 0x0a1)
 
+#define IS_FALKOR(midr) (MIDR_IMPLEMENTOR(midr) == 'Q'			      \
+                        && MIDR_PARTNUM(midr) == 0xc00)
+
 struct cpu_features
 {
   uint64_t midr_el1;
