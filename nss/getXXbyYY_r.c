@@ -234,6 +234,9 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 				      H_ERRNO_VAR_P))
     {
     case -1:
+# ifdef NEED__RES
+      __resolv_context_put (res_ctx);
+# endif
       return errno;
     case 1:
 #ifdef NEED_H_ERRNO
@@ -253,7 +256,12 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
       nscd_status = NSCD_NAME (ADD_VARIABLES, resbuf, buffer, buflen, result
 			       H_ERRNO_VAR);
       if (nscd_status >= 0)
-	return nscd_status;
+	{
+# ifdef NEED__RES
+	  __resolv_context_put (res_ctx);
+# endif
+	  return nscd_status;
+	}
     }
 #endif
 
