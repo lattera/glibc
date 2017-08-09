@@ -20,10 +20,8 @@
 #include <sysdep.h>
 
 /* Assumptions:
- *
- * ARMv8-a, AArch64, falkor, unaligned accesses.
- *
- */
+
+   ARMv8-a, AArch64, falkor, unaligned accesses.  */
 
 #define dstin	x0
 #define src	x1
@@ -53,14 +51,13 @@
    conditionals, since the former would unnecessarily break across multiple
    issue groups.  The medium copy group has been enlarged to 128 bytes since
    bumping up the small copies up to 32 bytes allows us to do that without
-   cost and also allows us the reduce the size of the prep code before loop64.
+   cost and also allows us to reduce the size of the prep code before loop64.
 
    All copies are done only via two registers r6 and r7.  This is to ensure
    that all loads hit a single hardware prefetcher which can get correctly
    trained to prefetch a single stream.
 
-   The non-temporal stores help optimize cache utilization.
-*/
+   The non-temporal stores help optimize cache utilization.  */
 
 #if IS_IN (libc)
 ENTRY_ALIGN (__memcpy_falkor, 6)
