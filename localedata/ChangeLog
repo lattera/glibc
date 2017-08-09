@@ -1,3 +1,13 @@
+2017-08-09  Wei-Lun Chao <bluebat@member.fsf.org>
+
+	[BZ #17563]
+	[BZ #16905]
+	* locales/cmn_TW (LC_COLLATE): Use cns11643_stroke file for sorting.
+	* locales/cmn_TW (LC_TIME): Improve time and date formats.
+	* locales/cmn_TW (LC_MESSAGES): Add  yesstr and nostr.
+	* locales/cns11643_stroke: New file, stroke count collation for
+	traditional Chinese.
+
 2017-08-08  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21920]
