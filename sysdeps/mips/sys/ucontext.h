@@ -156,21 +156,21 @@ typedef struct
   fpregset_t __ctx(fpregs);
 } mcontext_t;
 
-#undef __ctx
-
 /* Userlevel context.  */
 typedef struct ucontext_t
 {
 #if _MIPS_SIM == _ABIO32
-  unsigned long int uc_flags;
+  unsigned long int __ctx(uc_flags);
 #else
-  __uint64_t uc_flags;
+  __uint64_t __ctx(uc_flags);
 #endif
   struct ucontext_t *uc_link;
   sigset_t uc_sigmask;
   stack_t uc_stack;
   mcontext_t uc_mcontext;
-  int uc_filler[48];
+  int __glibc_reserved1[48];
 } ucontext_t;
+
+#undef __ctx
 
 #endif /* sys/ucontext.h */

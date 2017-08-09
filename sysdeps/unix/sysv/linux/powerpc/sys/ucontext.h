@@ -150,7 +150,7 @@ typedef struct {
 /* Userlevel context.  */
 typedef struct ucontext_t
   {
-    unsigned long int uc_flags;
+    unsigned long int __ctx(uc_flags);
     struct ucontext_t *uc_link;
     stack_t uc_stack;
 #if __WORDSIZE == 32
@@ -177,13 +177,14 @@ typedef struct ucontext_t
      * old ucontext_t; it ensures that uc_mcontext.regs and uc_sigmask
      * are at the same offset as previously.
      */
-    int uc_pad[7];
-    union uc_regs_ptr {
+    int __glibc_reserved1[7];
+    union __ctx(uc_regs_ptr) {
       struct __ctx(pt_regs) *__ctx(regs);
-      mcontext_t *uc_regs;
+      mcontext_t *__ctx(uc_regs);
     } uc_mcontext;
     sigset_t    uc_sigmask;
-    char uc_reg_space[sizeof(mcontext_t) + 12];  /* last for extensibility */
+    /* last for extensibility */
+    char __ctx(uc_reg_space)[sizeof(mcontext_t) + 12];
 #else /* 64-bit */
     sigset_t    uc_sigmask;
     mcontext_t  uc_mcontext;  /* last for extensibility */

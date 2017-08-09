@@ -94,7 +94,7 @@ typedef struct {
 
 typedef struct ucontext_t {
 	struct ucontext_t	*uc_link;
-	unsigned long		uc_flags;
+	unsigned long		__ctx(uc_flags);
 	unsigned long		__uc_sigmask;
 	mcontext_t		uc_mcontext;
 	stack_t			uc_stack;
@@ -294,7 +294,7 @@ typedef struct
 /* Userlevel context.  */
 typedef struct ucontext_t
   {
-    unsigned long   uc_flags;
+    unsigned long   __ctx(uc_flags);
     struct ucontext_t *uc_link;
     sigset_t	    uc_sigmask;
     stack_t         uc_stack;

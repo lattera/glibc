@@ -100,15 +100,23 @@ typedef struct _libc_fpstate fpregset_t;
    during non-RT signal handlers).  */
 typedef struct sigcontext mcontext_t;
 
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
+
 /* Userlevel context.  */
 typedef struct ucontext_t
   {
-    unsigned long uc_flags;
+    unsigned long __ctx(uc_flags);
     struct ucontext_t *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;
-    unsigned long uc_regspace[128] __attribute__((__aligned__(8)));
+    unsigned long __ctx(uc_regspace)[128] __attribute__((__aligned__(8)));
   } ucontext_t;
+
+#undef __ctx
 
 #endif /* sys/ucontext.h */

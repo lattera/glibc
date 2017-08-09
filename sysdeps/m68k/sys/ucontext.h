@@ -106,8 +106,6 @@ typedef struct
   gregset_t __ctx(gregs);
 } mcontext_t;
 
-#undef __ctx
-
 #ifdef __USE_MISC
 # define MCONTEXT_VERSION 1
 #endif
@@ -115,12 +113,14 @@ typedef struct
 /* Userlevel context.  */
 typedef struct ucontext_t
 {
-  unsigned long int uc_flags;
+  unsigned long int __ctx(uc_flags);
   struct ucontext_t *uc_link;
   sigset_t uc_sigmask;
   stack_t uc_stack;
   mcontext_t uc_mcontext;
-  long int uc_filler[201];
+  long int __glibc_reserved1[201];
 } ucontext_t;
+
+#undef __ctx
 
 #endif /* sys/ucontext.h */

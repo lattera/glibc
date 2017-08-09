@@ -1,3 +1,56 @@
+2017-08-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21457]
+	* sysdeps/arm/sys/ucontext.h (__ctx): Move undefine further down.
+	(ucontext_t): Use __ctx with uc_flags.  Rename uc_filler to
+	__glibc_reserved1.
+	* sysdeps/generic/sys/ucontext.h (__ctx): New macro.
+	(ucontext_t): Use __ctx with uc_flags.
+	* sysdeps/i386/sys/ucontext.h (__ctx): Move undefine further down.
+	(__ctxt): Likewise.
+	(ucontext_t): Use __ctx with uc_flags.  Rename uc_filler to
+	__glibc_reserved1.
+	* sysdeps/m68k/sys/ucontext.h (__ctx): Move undefine further down.
+	(ucontext_t): Use __ctx with uc_flags.  Rename uc_filler to
+	__glibc_reserved1.
+	* sysdeps/mips/sys/ucontext.h (__ctx): Move undefine further down.
+	(ucontext_t): Use __ctx with uc_flags.  Rename uc_filler to
+	__glibc_reserved1.
+	* sysdeps/unix/sysv/linux/aarch64/sys/ucontext.h (__ctx): New
+	macro.
+	(ucontext_t): Use __ctx with uc_flags.
+	* sysdeps/unix/sysv/linux/alpha/sys/ucontext.h (__ctx): New macro.
+	(ucontext_t): Use __ctx with uc_flags.
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h (__ctx): New macro.
+	(ucontext_t): Use __ctx with uc_flags and uc_regspace.
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h (__ctx): New macro.
+	(ucontext_t): Use __ctx with uc_flags.
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h (__ctx): Move
+	undefine further down.
+	(ucontext_t): Use __ctx with uc_flags.  Rename uc_filler to
+	__glibc_reserved1.
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h (__ctx): Move
+	undefine further down.
+	(ucontext_t): Use __ctx with uc_flags.
+	* sysdeps/unix/sysv/linux/nios2/sys/ucontext.h (__ctx): Move
+	undefine further down.
+	(ucontext_t): Use __ctx with uc_flags.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h (ucontext_t): Use
+	__ctx with uc_flags, uc_regs_ptr, uc_regs and uc_reg_space.
+	Rename uc_pad to __glibc_reserved1.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h (__ctx): Move
+	undefine further down.
+	(ucontext_t): Use __ctx with uc_flags.
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h (__ctx): Move undefine
+	further down.
+	(ucontext_t): Use __ctx with uc_flags.
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h (ucontext_t): Use
+	__ctx with uc_flags.
+	* sysdeps/unix/sysv/linux/tile/sys/ucontext.h (__ctx): New macro.
+	(ucontext_t): Use __ctx with uc_flags.
+	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h (ucontext_t): Use
+	__ctx with uc_flags.
+
 2017-08-09  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21932]
