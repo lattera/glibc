@@ -1,5 +1,8 @@
 2017-08-09  Dmitry V. Levin  <ldv@altlinux.org>
 
+	* sysdeps/unix/sysv/linux/aarch64/sys/ptrace.h (enum __ptrace_request):
+	Fix typo in comment.
+
 	[BZ #21928]
 	* sysdeps/unix/sysv/linux/sys/ptrace.h (enum __ptrace_flags,
 	PTRACE_SEIZE_DEVEL): Remove.

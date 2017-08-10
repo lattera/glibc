@@ -119,7 +119,7 @@ enum __ptrace_request
   PTRACE_SEIZE = 0x4206,
 #define PTRACE_SEIZE PTRACE_SEIZE
 
-  /* Trap seized trace.  */
+  /* Trap seized tracee.  */
   PTRACE_INTERRUPT = 0x4207,
 #define PTRACE_INTERRUPT PTRACE_INTERRUPT
 
