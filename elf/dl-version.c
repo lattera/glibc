@@ -27,25 +27,6 @@
 
 #include <assert.h>
 
-
-#define make_string(string, rest...) \
-  ({									      \
-    const char *all[] = { string, ## rest };				      \
-    size_t len, cnt;							      \
-    char *result, *cp;							      \
-									      \
-    len = 1;								      \
-    for (cnt = 0; cnt < sizeof (all) / sizeof (all[0]); ++cnt)		      \
-      len += strlen (all[cnt]);						      \
-									      \
-    cp = result = alloca (len);						      \
-    for (cnt = 0; cnt < sizeof (all) / sizeof (all[0]); ++cnt)		      \
-      cp = __stpcpy (cp, all[cnt]);					      \
-									      \
-    result;								      \
-  })
-
-
 static inline struct link_map *
 __attribute ((always_inline))
 find_needed (const char *name, struct link_map *map)
@@ -78,8 +59,8 @@ match_symbol (const char *name, Lmid_t ns, ElfW(Word) hash, const char *string,
   ElfW(Addr) def_offset;
   ElfW(Verdef) *def;
   /* Initialize to make the compiler happy.  */
-  const char *errstring = NULL;
   int result = 0;
+  struct dl_exception exception;
 
   /* Display information about what we are doing while debugging.  */
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_VERSIONS))
@@ -96,8 +77,9 @@ checking for version `%s' in file %s [%lu] required by file %s [%lu]\n",
       if (verbose)
 	{
 	  /* XXX We cannot translate the messages.  */
-	  errstring = make_string ("\
-no version information available (required by ", name, ")");
+	  _dl_exception_create_format
+	    (&exception, DSO_FILENAME (map->l_name),
+	     "no version information available (required by %s)", name);
 	  goto call_cerror;
 	}
       return 0;
@@ -116,10 +98,10 @@ no version information available (required by ", name, ")");
 	  char buf[20];
 	  buf[sizeof (buf) - 1] = '\0';
 	  /* XXX We cannot translate the message.  */
-	  errstring = make_string ("unsupported version ",
-				   _itoa (def->vd_version,
-					  &buf[sizeof (buf) - 1], 10, 0),
-				   " of Verdef record");
+	  _dl_exception_create_format
+	    (&exception, DSO_FILENAME (map->l_name),
+	     "unsupported version %s of Verdef record",
+	     _itoa (def->vd_version, &buf[sizeof (buf) - 1], 10, 0));
 	  result = 1;
 	  goto call_cerror;
 	}
@@ -150,20 +132,22 @@ no version information available (required by ", name, ")");
       if (verbose)
 	{
 	  /* XXX We cannot translate the message.  */
-	  errstring = make_string ("weak version `", string,
-				   "' not found (required by ", name, ")");
+	  _dl_exception_create_format
+	    (&exception, DSO_FILENAME (map->l_name),
+	     "weak version `%s' not found (required by %s)", string, name);
 	  goto call_cerror;
 	}
       return 0;
     }
 
   /* XXX We cannot translate the message.  */
-  errstring = make_string ("version `", string, "' not found (required by ",
-			   name, ")");
+  _dl_exception_create_format
+    (&exception, DSO_FILENAME (map->l_name),
+     "version `%s' not found (required by %s)", string, name);
   result = 1;
  call_cerror:
-  _dl_signal_cerror (0, DSO_FILENAME (map->l_name),
-		     N_("version lookup error"), errstring);
+  _dl_signal_cexception (0, &exception, N_("version lookup error"));
+  _dl_exception_free (&exception);
   return result;
 }
 
@@ -181,8 +165,8 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
   /* We need to find out which is the highest version index used
     in a dependecy.  */
   unsigned int ndx_high = 0;
+  struct dl_exception exception;
   /* Initialize to make the compiler happy.  */
-  const char *errstring = NULL;
   int errval = 0;
 
   /* If we don't have a string table, we must be ok.  */
@@ -205,13 +189,12 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	  char buf[20];
 	  buf[sizeof (buf) - 1] = '\0';
 	  /* XXX We cannot translate the message.  */
-	  errstring = make_string ("unsupported version ",
-				   _itoa (ent->vn_version,
-					  &buf[sizeof (buf) - 1], 10, 0),
-				   " of Verneed record\n");
+	  _dl_exception_create_format
+	    (&exception, DSO_FILENAME (map->l_name),
+	     "unsupported version %s of Verneed record",
+	     _itoa (ent->vn_version, &buf[sizeof (buf) - 1], 10, 0));
 	call_error:
-	  _dl_signal_error (errval, DSO_FILENAME (map->l_name),
-			    NULL, errstring);
+	  _dl_signal_exception (errval, &exception, NULL);
 	}
 
       while (1)
@@ -293,7 +276,9 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	calloc (ndx_high + 1, sizeof (*map->l_versions));
       if (__glibc_unlikely (map->l_versions == NULL))
 	{
-	  errstring = N_("cannot allocate version reference table");
+	  _dl_exception_create
+	    (&exception, DSO_FILENAME (map->l_name),
+	     N_("cannot allocate version reference table"));
 	  errval = ENOMEM;
 	  goto call_error;
 	}

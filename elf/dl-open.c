@@ -643,11 +643,8 @@ no more namespaces available for dlmopen()"));
   args.argv = argv;
   args.env = env;
 
-  const char *objname;
-  const char *errstring;
-  bool malloced;
-  int errcode = _dl_catch_error (&objname, &errstring, &malloced,
-				 dl_open_worker, &args);
+  struct dl_exception exception;
+  int errcode = _dl_catch_exception (&exception, dl_open_worker, &args);
 
 #if defined USE_LDCONFIG && !defined MAP_COPY
   /* We must unmap the cache file.  */
@@ -655,7 +652,7 @@ no more namespaces available for dlmopen()"));
 #endif
 
   /* See if an error occurred during loading.  */
-  if (__glibc_unlikely (errstring != NULL))
+  if (__glibc_unlikely (exception.errstring != NULL))
     {
       /* Remove the object from memory.  It may be in an inconsistent
 	 state if relocation failed, for example.  */
@@ -679,28 +676,8 @@ no more namespaces available for dlmopen()"));
       /* Release the lock.  */
       __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
-      /* Make a local copy of the error string so that we can release the
-	 memory allocated for it.  */
-      size_t len_errstring = strlen (errstring) + 1;
-      char *local_errstring;
-      if (objname == errstring + len_errstring)
-	{
-	  size_t total_len = len_errstring + strlen (objname) + 1;
-	  local_errstring = alloca (total_len);
-	  memcpy (local_errstring, errstring, total_len);
-	  objname = local_errstring + len_errstring;
-	}
-      else
-	{
-	  local_errstring = alloca (len_errstring);
-	  memcpy (local_errstring, errstring, len_errstring);
-	}
-
-      if (malloced)
-	free ((char *) errstring);
-
       /* Reraise the error.  */
-      _dl_signal_error (errcode, objname, NULL, local_errstring);
+      _dl_signal_exception (errcode, &exception, NULL);
     }
 
   assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);

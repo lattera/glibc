@@ -1,5 +1,65 @@
 2017-08-10  Florian Weimer  <fweimer@redhat.com>
 
+	Introduce ld.so exceptions.
+	* sysdeps/generic/ldsodefs.h (struct dl_exception): Define.
+	(_dl_exception_create, _dl_exception_create_format)
+	(_dl_exception_free, _dl_signal_exception, _dl_signal_cexception)
+	(_dl_catch_exception): Declare.
+	(_dl_catch_error): Update comment.
+	* elf/dl-error-skeleton.c (struct catch): Replace objname,
+	errstring, malloced members with exception member.
+	(_dl_out_of_memory): Remove.
+	(fatal_error): New function, extracted from _dl_signal_error.
+	(_dl_signal_exception, _dl_signal_cexception): New functions.
+	(_dl_signal_error): Call _dl_exception_create to allocate an
+	exception object.
+	(_dl_catch_exception): New function, based on _dl_catch_error.
+	(_dl_catch_error): Implement using _dl_catch_exception.
+	* elf/dl-exception.c: New file.
+	* elf/Makefile (dl-routines): Add dl-exception.
+	(elide-routines.os): Likewise.
+	* elf/Version (ld/GLIBC_PRIVATE): Add _dl_exception_create,
+	_dl_exception_create_format, _dl_exception_free.
+	* elf/dl-deps.c (_dl_map_object_deps): Use _dl_catch_exception and
+	_dl_signal_exception.
+	* elf/dl-lookup.c (make_string): Remove.
+	(_dl_lookup_symbol_x): Use _dl_exception_create_format,
+	_dl_signal_cexception, _dl_exception_free.
+	* elf/dl-open.c (_dl_open): Use _dl_catch_exception and
+	_dl_signal_exception.
+	* elf/dl-sym.c (do_sym): Likewise.
+	* elf/dl-version.c (make_string): Remove.
+	(match_symbol): Use _dl_exception_create_format,
+	_dl_signal_cexception, _dl_exception_free.
+	(_dl_check_map_versions): Likewise.
+	* sysdeps/generic/localplt.data (ld.so): Add _dl_signal_exception,
+	_dl_catch_exception.
+	* sysdeps/unix/sysv/linux/aarch64/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/arm/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/i386/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/localplt.data (ld.so):
+	Likewise.
+	* sysdeps/unix/sysv/linux/nios2/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/localplt.data
+	(ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/localplt.data
+	(ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/localplt.data (ld.so):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/sh/localplt.data (ld.so): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/localplt.data (ld.so):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/localplt.data (ld.so):
+	Likewise.
+	* sysdeps/x86_64/localplt.data (ld.so): Likewise.
+
+2017-08-10  Florian Weimer  <fweimer@redhat.com>
+
 	* inet/net-internal.h (__inet6_scopeid_pton): Remove
 	attribute_hidden, internal_function.
 	* inet/inet6_scopeid_pton.c (__inet6_scopeid_pton): Remove

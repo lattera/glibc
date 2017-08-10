@@ -165,8 +165,7 @@ _dl_map_object_deps (struct link_map *map,
   const char *name;
   int errno_saved;
   int errno_reason;
-  const char *errstring;
-  const char *objname;
+  struct dl_exception exception;
 
   /* No loaded object so far.  */
   nlist = 0;
@@ -200,7 +199,6 @@ _dl_map_object_deps (struct link_map *map,
      alloca means we cannot use recursive function calls.  */
   errno_saved = errno;
   errno_reason = 0;
-  errstring = NULL;
   errno = 0;
   name = NULL;
   for (runp = known; runp; )
@@ -250,17 +248,9 @@ _dl_map_object_deps (struct link_map *map,
 		/* Store the tag in the argument structure.  */
 		args.name = name;
 
-		bool malloced;
-		int err = _dl_catch_error (&objname, &errstring, &malloced,
-					   openaux, &args);
-		if (__glibc_unlikely (errstring != NULL))
+		int err = _dl_catch_exception (&exception, openaux, &args);
+		if (__glibc_unlikely (exception.errstring != NULL))
 		  {
-		    char *new_errstring = strdupa (errstring);
-		    objname = strdupa (objname);
-		    if (malloced)
-		      free ((char *) errstring);
-		    errstring = new_errstring;
-
 		    if (err)
 		      errno_reason = err;
 		    else
@@ -313,31 +303,18 @@ _dl_map_object_deps (struct link_map *map,
 		/* We must be prepared that the addressed shared
 		   object is not available.  For filter objects the dependency
 		   must be available.  */
-		bool malloced;
-		int err = _dl_catch_error (&objname, &errstring, &malloced,
-					openaux, &args);
-
-		if (__glibc_unlikely (errstring != NULL))
+		int err = _dl_catch_exception (&exception, openaux, &args);
+		if (__glibc_unlikely (exception.errstring != NULL))
 		  {
 		    if (d->d_tag == DT_AUXILIARY)
 		      {
 			/* We are not interested in the error message.  */
-			assert (errstring != NULL);
-			if (malloced)
-			  free ((char *) errstring);
-
+			_dl_exception_free (&exception);
 			/* Simply ignore this error and continue the work.  */
 			continue;
 		      }
 		    else
 		      {
-
-			char *new_errstring = strdupa (errstring);
-			objname = strdupa (objname);
-			if (malloced)
-			  free ((char *) errstring);
-			errstring = new_errstring;
-
 			if (err)
 			  errno_reason = err;
 			else
@@ -683,6 +660,6 @@ Filters not supported with LD_TRACE_PRELINKING"));
     _dl_scope_free (old_l_initfini);
 
   if (errno_reason)
-    _dl_signal_error (errno_reason == -1 ? 0 : errno_reason, objname,
-		      NULL, errstring);
+    _dl_signal_exception (errno_reason == -1 ? 0 : errno_reason,
+			  &exception, NULL);
 }

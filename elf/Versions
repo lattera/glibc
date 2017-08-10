@@ -28,6 +28,7 @@ libc {
     __libc_dlclose; __libc_dlopen_mode; __libc_dlsym;
 
     # Internal error handling support.  Interposes the functions in ld.so.
+    _dl_signal_exception; _dl_catch_exception;
     _dl_signal_error; _dl_catch_error;
   }
 }
@@ -68,7 +69,11 @@ ld {
     # Pointer protection.
     __pointer_chk_guard;
 
+    # Internal error handling support.
+    _dl_exception_create; _dl_exception_create_format; _dl_exception_free;
+
     # Internal error handling support.  Interposed by libc.so.
+    _dl_signal_exception; _dl_catch_exception;
     _dl_signal_error; _dl_catch_error;
 
     # Set value of a tunable.

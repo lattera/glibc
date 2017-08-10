@@ -47,23 +47,6 @@ struct sym_val
   };
 
 
-#define make_string(string, rest...) \
-  ({									      \
-    const char *all[] = { string, ## rest };				      \
-    size_t len, cnt;							      \
-    char *result, *cp;							      \
-									      \
-    len = 1;								      \
-    for (cnt = 0; cnt < sizeof (all) / sizeof (all[0]); ++cnt)		      \
-      len += strlen (all[cnt]);						      \
-									      \
-    cp = result = alloca (len);						      \
-    for (cnt = 0; cnt < sizeof (all) / sizeof (all[0]); ++cnt)		      \
-      cp = __stpcpy (cp, all[cnt]);					      \
-									      \
-    result;								      \
-  })
-
 /* Statistics function.  */
 #ifdef SHARED
 # define bump_num_relocations() ++GL(dl_num_relocations)
@@ -843,17 +826,16 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	     for unversioned lookups.  */
 	  assert (version != NULL);
 	  const char *reference_name = undef_map ? undef_map->l_name : "";
-
+	  struct dl_exception exception;
 	  /* XXX We cannot translate the message.  */
-	  _dl_signal_cerror (0, DSO_FILENAME (reference_name),
-			     N_("relocation error"),
-			     make_string ("symbol ", undef_name, ", version ",
-					  version->name,
-					  " not defined in file ",
-					  version->filename,
-					  " with link time reference",
-					  res == -2
-					  ? " (no version symbols)" : ""));
+	  _dl_exception_create_format
+	    (&exception, DSO_FILENAME (reference_name),
+	     "symbol %s version %s not defined in file %s"
+	     " with link time reference%s",
+	     undef_name, version->name, version->filename,
+	     res == -2 ? " (no version symbols)" : "");
+	  _dl_signal_cexception (0, &exception, N_("relocation error"));
+	  _dl_exception_free (&exception);
 	  *ref = NULL;
 	  return 0;
 	}
@@ -869,12 +851,14 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	  const char *versionstr = version ? ", version " : "";
 	  const char *versionname = (version && version->name
 				     ? version->name : "");
-
+	  struct dl_exception exception;
 	  /* XXX We cannot translate the message.  */
-	  _dl_signal_cerror (0, DSO_FILENAME (reference_name),
-			     N_("symbol lookup error"),
-			     make_string ("undefined symbol: ", undef_name,
-					  versionstr, versionname));
+	  _dl_exception_create_format
+	    (&exception, DSO_FILENAME (reference_name),
+	     "undefined symbol: %s%s%s",
+	     undef_name, versionstr, versionname);
+	  _dl_signal_cexception (0, &exception, N_("symbol lookup error"));
+	  _dl_exception_free (&exception);
 	}
       *ref = NULL;
       return 0;

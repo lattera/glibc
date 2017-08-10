@@ -35,3 +35,5 @@ ld.so: free + RELA R_ALPHA_GLOB_DAT
 # The TLS-enabled version of these functions is interposed from libc.so.
 ld.so: _dl_signal_error + RELA R_ALPHA_GLOB_DAT
 ld.so: _dl_catch_error + RELA R_ALPHA_GLOB_DAT
+ld.so: _dl_signal_exception + RELA R_ALPHA_GLOB_DAT
+ld.so: _dl_catch_exception + RELA R_ALPHA_GLOB_DAT

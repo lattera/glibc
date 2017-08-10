@@ -732,31 +732,88 @@ _dl_dprintf (int fd, const char *fmt, ...)
   while (1)
 
 
-/* This function is called by all the internal dynamic linker functions
-   when they encounter an error.  ERRCODE is either an `errno' code or
-   zero; OBJECT is the name of the problematical shared object, or null if
-   it is a general problem; ERRSTRING is a string describing the specific
-   problem.  */
+/* An exception raised by the _dl_signal_error function family and
+   caught by _dl_catch_error function family.  Exceptions themselves
+   are copied as part of the raise operation, but the strings are
+   not.  */
+struct dl_exception
+{
+  const char *objname;
+  const char *errstring;
+
+  /* This buffer typically stores both objname and errstring
+     above.  */
+  char *message_buffer;
+};
+
+/* Creates a new exception.  This calls malloc; if allocation fails,
+   dummy values are inserted.  OBJECT is the name of the problematical
+   shared object, or null if its a general problem.  ERRSTRING is a
+   string describing the specific problem.  */
+void _dl_exception_create (struct dl_exception *, const char *object,
+			   const char *errstring)
+  __attribute__ ((nonnull (1, 3)));
+rtld_hidden_proto (_dl_exception_create)
+
+/* Like _dl_exception_create, but create errstring from a format
+   string FMT.  Currently, only "%s" and "%%" are supported as format
+   directives.  */
+void _dl_exception_create_format (struct dl_exception *, const char *objname,
+				  const char *fmt, ...)
+  __attribute__ ((nonnull (1, 3), format (printf, 3, 4)));
+rtld_hidden_proto (_dl_exception_create_format)
+
+/* Deallocate the exception, freeing allocated buffers (if
+   possible).  */
+void _dl_exception_free (struct dl_exception *)
+  __attribute__ ((nonnull (1)));
+rtld_hidden_proto (_dl_exception_free)
+
+/* This function is called by all the internal dynamic linker
+   functions when they encounter an error.  ERRCODE is either an
+   `errno' code or zero; it specifies the return value of
+   _dl_catch_error.  OCCASION is included in the error message if the
+   process is terminated immediately.  */
+void _dl_signal_exception (int errcode, struct dl_exception *,
+			   const char *occasion)
+  __attribute__ ((__noreturn__));
+libc_hidden_proto (_dl_signal_exception)
+
+/* Like _dl_signal_exception, but creates the exception first.  */
 extern void _dl_signal_error (int errcode, const char *object,
-			      const char *occurred, const char *errstring)
+			      const char *occasion, const char *errstring)
      internal_function __attribute__ ((__noreturn__));
 libc_hidden_proto (_dl_signal_error)
 
-/* Like _dl_signal_error, but may return when called in the context of
-   _dl_receive_error.  This is only used during ld.so bootstrap.  In
-   static and profiled builds, this is equivalent to
-   _dl_signal_error.  */
+/* Like _dl_signal_exception, but may return when called in the
+   context of _dl_receive_error.  This is only used during ld.so
+   bootstrap.  In static and profiled builds, this is equivalent to
+   _dl_signal_exception.  */
+#if IS_IN (rtld)
+extern void _dl_signal_cexception (int errcode, struct dl_exception *,
+				   const char *occasion) attribute_hidden;
+#else
+__attribute__ ((always_inline))
+static inline void
+_dl_signal_cexception (int errcode, struct dl_exception *exception,
+		       const char *occasion)
+{
+  _dl_signal_exception (errcode, exception, occasion);
+}
+#endif
+
+/* See _dl_signal_cexception above.  */
 #if IS_IN (rtld)
 extern void _dl_signal_cerror (int errcode, const char *object,
-			       const char *occation, const char *errstring)
+			       const char *occasion, const char *errstring)
      internal_function attribute_hidden;
 #else
 __attribute__ ((always_inline))
 static inline void
 _dl_signal_cerror (int errcode, const char *object,
-			       const char *occation, const char *errstring)
+			       const char *occasion, const char *errstring)
 {
-  _dl_signal_error (errcode, object, occation, errstring);
+  _dl_signal_error (errcode, object, occasion, errstring);
 }
 #endif
 
@@ -768,19 +825,27 @@ extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
 			       void *args)
      internal_function attribute_hidden;
 
-/* Call OPERATE, catching errors from `dl_signal_error'.  If there is no
-   error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING is
-   set to a string constructed from the strings passed to _dl_signal_error,
-   and the error code passed is the return value and *OBJNAME is set to
-   the object name which experienced the problems.  ERRSTRING if nonzero
-   points to a malloc'ed string which the caller has to free after use.
-   ARGS is passed as argument to OPERATE.  MALLOCEDP is set to true only
-   if the returned string is allocated using the libc's malloc.  */
+/* Call OPERATE, catching errors from `_dl_signal_error' and related
+   functions.  If there is no error, *ERRSTRING is set to null.  If
+   there is an error, *ERRSTRING is set to a string constructed from
+   the strings passed to _dl_signal_error, and the error code passed
+   is the return value and *OBJNAME is set to the object name which
+   experienced the problems.  ERRSTRING if nonzero points to a
+   malloc'ed string which the caller has to free after use.  ARGS is
+   passed as argument to OPERATE.  MALLOCEDP is set to true only if
+   the returned string is allocated using the libc's malloc.  */
 extern int _dl_catch_error (const char **objname, const char **errstring,
 			    bool *mallocedp, void (*operate) (void *),
 			    void *args)
      internal_function;
 libc_hidden_proto (_dl_catch_error)
+
+/* Call OPERATE (ARGS).  If no error occurs, set *EXCEPTION to zero.
+   Otherwise, store a copy of the raised exception in *EXCEPTION,
+   which has to be freed by _dl_exception_free.  */
+int _dl_catch_exception (struct dl_exception *exception,
+			 void (*operate) (void *), void *args);
+libc_hidden_proto (_dl_catch_exception)
 
 /* Open the shared object NAME and map in its segments.
    LOADER's DT_RPATH is used in searching for NAME.

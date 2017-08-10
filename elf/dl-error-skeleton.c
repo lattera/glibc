@@ -39,10 +39,7 @@
    _dl_signal_error.  */
 struct catch
   {
-    const char **objname;	/* Object/File name.  */
-    const char **errstring;	/* Error detail filled in here.  */
-    bool *malloced;		/* Nonzero if the string is malloced
-				   by the libc malloc.  */
+    struct dl_exception *exception; /* The exception data is stored there.  */
     volatile int *errcode;	/* Return value of _dl_signal_error.  */
     jmp_buf env;		/* longjmp here on error.  */
   };
@@ -60,11 +57,6 @@ static __thread struct catch *catch_hook attribute_tls_model_ie;
 static struct catch *catch_hook;
 #endif
 
-/* This message we return as a last resort.  We define the string in a
-   variable since we have to avoid freeing it and so have to enable
-   a pointer comparison.  See below and in dlfcn/dlerror.c.  */
-static const char _dl_out_of_memory[] = "out of memory";
-
 #if DL_ERROR_BOOTSTRAP
 /* This points to a function which is called when an continuable error is
    received.  Unlike the handling of `catch' this function may return.
@@ -76,6 +68,41 @@ static const char _dl_out_of_memory[] = "out of memory";
 static receiver_fct receiver;
 #endif /* DL_ERROR_BOOTSTRAP */
 
+/* Lossage while resolving the program's own symbols is always fatal.  */
+static void
+__attribute__ ((noreturn))
+fatal_error (int errcode, const char *objname, const char *occasion,
+	     const char *errstring)
+{
+  char buffer[1024];
+  _dl_fatal_printf ("%s: %s: %s%s%s%s%s\n",
+		    RTLD_PROGNAME,
+		    occasion ?: N_("error while loading shared libraries"),
+		    objname, *objname ? ": " : "",
+		    errstring, errcode ? ": " : "",
+		    (errcode
+		     ? __strerror_r (errcode, buffer, sizeof buffer)
+		     : ""));
+}
+
+void
+_dl_signal_exception (int errcode, struct dl_exception *exception,
+		      const char *occasion)
+{
+  struct catch *lcatch = catch_hook;
+  if (lcatch != NULL)
+    {
+      *lcatch->exception = *exception;
+      *lcatch->errcode = errcode;
+
+      /* We do not restore the signal mask because none was saved.  */
+      __longjmp (lcatch->env[0].__jmpbuf, 1);
+    }
+  else
+    fatal_error (errcode, exception->objname, occasion, exception->errstring);
+}
+libc_hidden_def (_dl_signal_exception)
+
 void
 internal_function
 _dl_signal_error (int errcode, const char *objname, const char *occation,
@@ -86,65 +113,42 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
   if (! errstring)
     errstring = N_("DYNAMIC LINKER BUG!!!");
 
-  if (objname == NULL)
-    objname = "";
   if (lcatch != NULL)
     {
-      /* We are inside _dl_catch_error.  Return to it.  We have to
-	 duplicate the error string since it might be allocated on the
-	 stack.  The object name is always a string constant.  */
-      size_t len_objname = strlen (objname) + 1;
-      size_t len_errstring = strlen (errstring) + 1;
-
-      char *errstring_copy = malloc (len_objname + len_errstring);
-      if (errstring_copy != NULL)
-	{
-	  /* Make a copy of the object file name and the error string.  */
-	  *lcatch->objname = memcpy (__mempcpy (errstring_copy,
-						errstring, len_errstring),
-				     objname, len_objname);
-	  *lcatch->errstring = errstring_copy;
-
-	  /* If the main executable is relocated it means the libc's malloc
-	     is used.  */
-          bool malloced = true;
-#ifdef SHARED
-	  malloced = (GL(dl_ns)[LM_ID_BASE]._ns_loaded != NULL
-                      && (GL(dl_ns)[LM_ID_BASE]._ns_loaded->l_relocated != 0));
-#endif
-	  *lcatch->malloced = malloced;
-	}
-      else
-	{
-	  /* This is better than nothing.  */
-	  *lcatch->objname = "";
-	  *lcatch->errstring = _dl_out_of_memory;
-	  *lcatch->malloced = false;
-	}
-
+      _dl_exception_create (lcatch->exception, objname, errstring);
       *lcatch->errcode = errcode;
 
       /* We do not restore the signal mask because none was saved.  */
       __longjmp (lcatch->env[0].__jmpbuf, 1);
     }
   else
-    {
-      /* Lossage while resolving the program's own symbols is always fatal.  */
-      char buffer[1024];
-      _dl_fatal_printf ("%s: %s: %s%s%s%s%s\n",
-			RTLD_PROGNAME,
-			occation ?: N_("error while loading shared libraries"),
-			objname, *objname ? ": " : "",
-			errstring, errcode ? ": " : "",
-			(errcode
-			 ? __strerror_r (errcode, buffer, sizeof buffer)
-			 : ""));
-    }
+    fatal_error (errcode, objname, occation, errstring);
 }
 libc_hidden_def (_dl_signal_error)
 
 
 #if DL_ERROR_BOOTSTRAP
+void
+_dl_signal_cexception (int errcode, struct dl_exception *exception,
+		       const char *occasion)
+{
+  if (__builtin_expect (GLRO(dl_debug_mask)
+			& ~(DL_DEBUG_STATISTICS|DL_DEBUG_PRELINK), 0))
+    _dl_debug_printf ("%s: error: %s: %s (%s)\n",
+		      exception->objname, occasion,
+		      exception->errstring, receiver ? "continued" : "fatal");
+
+  if (receiver)
+    {
+      /* We are inside _dl_receive_error.  Call the user supplied
+	 handler and resume the work.  The receiver will still be
+	 installed.  */
+      (*receiver) (errcode, exception->objname, exception->errstring);
+    }
+  else
+    _dl_signal_exception (errcode, exception, occasion);
+}
+
 void
 internal_function
 _dl_signal_cerror (int errcode, const char *objname, const char *occation,
@@ -167,11 +171,9 @@ _dl_signal_cerror (int errcode, const char *objname, const char *occation,
 }
 #endif /* DL_ERROR_BOOTSTRAP */
 
-
 int
-internal_function
-_dl_catch_error (const char **objname, const char **errstring,
-		 bool *mallocedp, void (*operate) (void *), void *args)
+_dl_catch_exception (struct dl_exception *exception,
+		     void (*operate) (void *), void *args)
 {
   /* We need not handle `receiver' since setting a `catch' is handled
      before it.  */
@@ -184,9 +186,7 @@ _dl_catch_error (const char **objname, const char **errstring,
 
   struct catch c;
   /* Don't use an initializer since we don't need to clear C.env.  */
-  c.objname = objname;
-  c.errstring = errstring;
-  c.malloced = mallocedp;
+  c.exception = exception;
   c.errcode = &errcode;
 
   struct catch *const old = catch_hook;
@@ -197,16 +197,29 @@ _dl_catch_error (const char **objname, const char **errstring,
     {
       (*operate) (args);
       catch_hook = old;
-      *objname = NULL;
-      *errstring = NULL;
-      *mallocedp = false;
+      *exception = (struct dl_exception) { NULL };
       return 0;
     }
 
-  /* We get here only if we longjmp'd out of OPERATE.  _dl_signal_error has
-     already stored values into *OBJNAME, *ERRSTRING, and *MALLOCEDP.  */
+  /* We get here only if we longjmp'd out of OPERATE.
+     _dl_signal_exception has already stored values into
+     *EXCEPTION.  */
   catch_hook = old;
   return errcode;
+}
+libc_hidden_def (_dl_catch_exception)
+
+int
+internal_function
+_dl_catch_error (const char **objname, const char **errstring,
+		 bool *mallocedp, void (*operate) (void *), void *args)
+{
+  struct dl_exception exception;
+  int errorcode = _dl_catch_exception (&exception, operate, args);
+  *objname = exception.objname;
+  *errstring = exception.errstring;
+  *mallocedp = exception.message_buffer == exception.errstring;
+  return errorcode;
 }
 libc_hidden_def (_dl_catch_error)
 
