@@ -28,7 +28,7 @@
 
 /* Parse SOURCE as a scope ID for ADDRESS.  Return 0 on success and -1
    on error.  */
-internal_function int
+int
 __inet6_scopeid_pton (const struct in6_addr *address, const char *scope,
                       uint32_t *result)
 {

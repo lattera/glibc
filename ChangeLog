@@ -1,5 +1,12 @@
 2017-08-10  Florian Weimer  <fweimer@redhat.com>
 
+	* inet/net-internal.h (__inet6_scopeid_pton): Remove
+	attribute_hidden, internal_function.
+	* inet/inet6_scopeid_pton.c (__inet6_scopeid_pton): Remove
+	internal_function.
+
+2017-08-10  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/malloc.c (get_max_fast): Reimplement as an inline
 	function which calls __builtin_unreachable.
 

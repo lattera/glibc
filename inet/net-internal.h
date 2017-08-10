@@ -25,8 +25,7 @@
 #include <sys/time.h>
 
 int __inet6_scopeid_pton (const struct in6_addr *address,
-                          const char *scope, uint32_t *result)
-  internal_function attribute_hidden;
+                          const char *scope, uint32_t *result);
 libc_hidden_proto (__inet6_scopeid_pton)
 
 
