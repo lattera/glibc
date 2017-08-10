@@ -153,7 +153,7 @@ include ../Rules
 
 ifeq ($(run-built-tests),yes)
 LOCALES := cs_CZ.UTF-8 de_DE.UTF-8 en_US.ISO-8859-1 tr_TR.UTF-8 \
-	   tr_TR.ISO-8859-9 tg_TJ.UTF-8 te_IN.UTF-8 bn_IN.UTF-8 \
+	   tr_TR.ISO-8859-9 tg_TJ.UTF-8 hr_HR.UTF-8 hi_IN.UTF-8 \
 	   el_GR.UTF-8
 include ../gen-locales.mk
 
