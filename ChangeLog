@@ -1,3 +1,8 @@
+2017-08-10  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/memcmp.S (memcmp):
+	Rewrite of optimized memcmp.
+
 2017-08-10  Florian Weimer  <fweimer@redhat.com>
 
 	Introduce ld.so exceptions.
