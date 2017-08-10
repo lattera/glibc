@@ -1,3 +1,8 @@
+2017-08-10  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (get_max_fast): Reimplement as an inline
+	function which calls __builtin_unreachable.
+
 2017-08-10  Mike FABIAN  <mfabian@redhat.com>
 
 	* stdlib/tst-strfmon_l.c: Fix test cases to agree with the changes in

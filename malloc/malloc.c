@@ -1658,6 +1658,9 @@ typedef struct malloc_chunk *mfastbinptr;
 #define arena_is_corrupt(A)	(((A)->flags & ARENA_CORRUPTION_BIT))
 #define set_arena_corrupt(A)	((A)->flags |= ARENA_CORRUPTION_BIT)
 
+/* Maximum size of memory handled in fastbins.  */
+static INTERNAL_SIZE_T global_max_fast;
+
 /*
    Set value of max_fast.
    Use impossibly small value if 0.
@@ -1668,8 +1671,20 @@ typedef struct malloc_chunk *mfastbinptr;
 #define set_max_fast(s) \
   global_max_fast = (((s) == 0)						      \
                      ? SMALLBIN_WIDTH : ((s + SIZE_SZ) & ~MALLOC_ALIGN_MASK))
-#define get_max_fast() global_max_fast
 
+static inline INTERNAL_SIZE_T
+get_max_fast (void)
+{
+  /* Tell the GCC optimizers that global_max_fast is never larger
+     than MAX_FAST_SIZE.  This avoids out-of-bounds array accesses in
+     _int_malloc after constant propagation of the size parameter.
+     (The code never executes because malloc preserves the
+     global_max_fast invariant, but the optimizers may not recognize
+     this.)  */
+  if (global_max_fast > MAX_FAST_SIZE)
+    __builtin_unreachable ();
+  return global_max_fast;
+}
 
 /*
    ----------- Internal state representation and initialization -----------
@@ -1796,9 +1811,6 @@ static struct malloc_par mp_ =
   .tcache_unsorted_limit = 0 /* No limit.  */
 #endif
 };
-
-/* Maximum size of memory handled in fastbins.  */
-static INTERNAL_SIZE_T global_max_fast;
 
 /*
    Initialize a malloc_state struct.
