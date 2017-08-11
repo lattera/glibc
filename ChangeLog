@@ -1,5 +1,9 @@
 2017-08-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/bench-memmove-large.c: Print output in JSON
+	format.
+	* benchtests/bench-memmove.c: Likewise.
+
 	* benchtests/bench-memccpy.c (do_one_test): Remove checks.
 	* benchtests/bench-memchr.c (do_one_test): Likewise.
 	* benchtests/bench-memcpy-large.c (do_one_test): Likewise.
