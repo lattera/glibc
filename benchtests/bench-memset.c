@@ -98,22 +98,6 @@ do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
 {
   size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
-  CHAR tstbuf[n];
-#ifdef TEST_BZERO
-  simple_bzero (tstbuf, n);
-  CALL (impl, s, n);
-  if (memcmp (s, tstbuf, n) != 0)
-#else
-  CHAR *res = CALL (impl, s, c, n);
-  if (res != s
-      || SIMPLE_MEMSET (tstbuf, c, n) != tstbuf
-      || MEMCMP (s, tstbuf, n) != 0)
-#endif /* !TEST_BZERO */
-    {
-      error (0, 0, "Wrong result in function %s", impl->name);
-      ret = 1;
-      return;
-    }
 
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)

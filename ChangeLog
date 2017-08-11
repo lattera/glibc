@@ -1,3 +1,15 @@
+2017-08-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* benchtests/bench-memccpy.c (do_one_test): Remove checks.
+	* benchtests/bench-memchr.c (do_one_test): Likewise.
+	* benchtests/bench-memcpy-large.c (do_one_test): Likewise.
+	* benchtests/bench-memcpy.c (do_one_test): Likewise.
+	* benchtests/bench-memmove-large.c (do_one_test): Likewise.
+	* benchtests/bench-memmove.c (do_one_test): Likewise.
+	* benchtests/bench-memset-large.c (do_one_test): Likewise.
+	* benchtests/bench-memset.c (do_one_test): Likewise.
+	* benchtests/bench-string.h (test_init): Remove memsets.
+
 2017-08-10  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/lang.texi

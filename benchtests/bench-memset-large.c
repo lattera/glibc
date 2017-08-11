@@ -61,23 +61,6 @@ do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
 {
   size_t i, iters = 16;
   timing_t start, stop, cur;
-  CHAR *tstbuf = malloc (n * sizeof (*s));
-  assert (tstbuf != NULL);
-
-  /* Must clear the destination buffer updated by the previous run.  */
-  for (i = 0; i < n; i++)
-    s[i] = 0;
-
-  CHAR *res = CALL (impl, s, c, n);
-  if (res != s
-      || SIMPLE_MEMSET (tstbuf, c, n) != tstbuf
-      || MEMCMP (s, tstbuf, n) != 0)
-    {
-      error (0, 0, "Wrong result in function %s", impl->name);
-      ret = 1;
-      free (tstbuf);
-      return;
-    }
 
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)
@@ -89,8 +72,6 @@ do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
   TIMING_DIFF (cur, start, stop);
 
   TIMING_PRINT_MEAN ((double) cur, (double) iters);
-
-  free (tstbuf);
 }
 
 static void

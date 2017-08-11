@@ -59,19 +59,10 @@ SIMPLE_MEMCHR (const CHAR *s, int c, size_t n)
 #endif /* !USE_AS_MEMRCHR */
 
 static void
-do_one_test (impl_t *impl, const CHAR *s, int c, size_t n, CHAR *exp_res)
+do_one_test (impl_t *impl, const CHAR *s, int c, size_t n)
 {
-  CHAR *res = CALL (impl, s, c, n);
   size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
-
-  if (res != exp_res)
-    {
-      error (0, 0, "Wrong result in function %s %p %p", impl->name,
-	     res, exp_res);
-      ret = 1;
-      return;
-    }
 
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)
@@ -89,7 +80,6 @@ static void
 do_test (size_t align, size_t pos, size_t len, int seek_char)
 {
   size_t i;
-  CHAR *result;
 
   align &= 7;
   if ((align + len) * sizeof (CHAR) >= page_size)
@@ -109,11 +99,9 @@ do_test (size_t align, size_t pos, size_t len, int seek_char)
     {
       buf[align + pos] = seek_char;
       buf[align + len] = -seek_char;
-      result = (CHAR *) (buf + align + pos);
     }
   else
     {
-      result = NULL;
       buf[align + len] = seek_char;
     }
 
@@ -121,7 +109,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char)
 	  len, pos, align);
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (CHAR *) (buf + align), seek_char, len, result);
+    do_one_test (impl, (CHAR *) (buf + align), seek_char, len);
 
   putchar ('\n');
 }

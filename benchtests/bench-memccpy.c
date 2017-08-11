@@ -58,24 +58,8 @@ static void
 do_one_test (impl_t *impl, void *dst, const void *src, int c, size_t len,
 	     size_t n)
 {
-  void *expect = len > n ? NULL : (char *) dst + len;
   size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
-
-  if (CALL (impl, dst, src, c, n) != expect)
-    {
-      error (0, 0, "Wrong result in function %s %p %p", impl->name,
-	     CALL (impl, dst, src, c, n), expect);
-      ret = 1;
-      return;
-    }
-
-  if (memcmp (dst, src, len > n ? n : len) != 0)
-    {
-      error (0, 0, "Wrong result in function %s", impl->name);
-      ret = 1;
-      return;
-    }
 
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)

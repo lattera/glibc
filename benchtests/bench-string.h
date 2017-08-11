@@ -203,9 +203,6 @@ test_init (void)
       printf ("Setting seed to 0x%x\n", seed);
       srandom (seed);
     }
-
-  memset (buf1, 0xa5, BUF1PAGES * page_size);
-  memset (buf2, 0x5a, page_size);
 }
 
 #endif /* TEST_MAIN */

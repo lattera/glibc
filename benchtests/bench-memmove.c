@@ -70,31 +70,6 @@ do_one_test (impl_t *impl, char *dst, char *src, const char *orig_src,
   size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
 
-  /* This also clears the destination buffer set by the previous run.  */
-  memcpy (src, orig_src, len);
-#ifdef TEST_BCOPY
-  CALL (impl, src, dst, len);
-#else
-  char *res;
-
-  res = CALL (impl, dst, src, len);
-  if (res != dst)
-    {
-      error (0, 0, "Wrong result in function %s %p %p", impl->name,
-	     res, dst);
-      ret = 1;
-      return;
-    }
-#endif
-
-  if (memcmp (dst, orig_src, len) != 0)
-    {
-      error (0, 0, "Wrong result in function %s dst \"%s\" src \"%s\"",
-	     impl->name, dst, src);
-      ret = 1;
-      return;
-    }
-
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)
     {
