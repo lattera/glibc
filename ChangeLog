@@ -1,3 +1,9 @@
+2017-08-18  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	[BZ #21930]
+	* math/math.h (isinf): Check if in C or C++ mode before using
+	__builtin_types_compatible_p, since this is a C mode feature.
+
 2017-08-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/generic/not-cancel.h (write_not_cancel): Remove macro.
