@@ -1,3 +1,10 @@
+2017-08-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21242]
+	* assert/assert.h [__GNUC__ && !__STRICT_ANSI__] (assert):
+	Suppress pedantic warning resulting from statement expression.
+	(__ASSERT_FUNCTION): Add missing __extension__.
+
 2017-08-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/bench-memmove-large.c: Print output in JSON
