@@ -82,7 +82,7 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point        "<U002E>"
-thousands_sep        "<U2009>"
+thousands_sep        "<U202F>"
 grouping             3;3
 END LC_NUMERIC
 

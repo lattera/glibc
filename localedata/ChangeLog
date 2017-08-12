@@ -1,3 +1,7 @@
+2017-08-12  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/es_MX (LC_NUMERIC): Replace thin space with NNBSP as thousands separator.
+
 2017-08-12  Stanislav Brabec <sbrabec@suse.cz>
 
 	[BZ #20756]
