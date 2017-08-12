@@ -289,7 +289,7 @@ fr_FR.ISO-8859-1     D_T_FMT     "%a %d %b %Y %T %Z"
 fr_FR.ISO-8859-1     D_FMT       "%d/%m/%Y"
 fr_FR.ISO-8859-1     T_FMT       "%T"
 fr_FR.ISO-8859-1     RADIXCHAR   ,
-fr_FR.ISO-8859-1     THOUSEP     " "
+fr_FR.ISO-8859-1     THOUSEP     " "
 fr_FR.ISO-8859-1     YESEXPR     ^[+1oOyY]
 fr_FR.ISO-8859-1     NOEXPR      ^[-0nN]
 ja_JP.EUC-JP         ABDAY_1     Æü

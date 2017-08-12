@@ -1,3 +1,14 @@
+2017-08-12  Mike FABIAN  <mfabian@redhat.com>
+
+	Adapt test case data to the changes in the thousands
+	separators.
+
+	[BZ #20756]
+	* localedata/tst-langinfo.sh: Adapt test case data.
+	* stdlib/tst-strfmon_l.c: Likewise.
+	* stdlib/tst-strtod4.c: Likewise.
+	* stdlib/tst-strtod5i.c: Likewise.
+
 2017-08-11  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21242]

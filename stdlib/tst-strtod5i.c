@@ -22,7 +22,7 @@
 #include <string.h>
 #include <math.h>
 
-#define NBSP "\xc2\xa0"
+#define NNBSP "\xe2\x80\xaf"
 
 static const struct
 {
@@ -57,8 +57,8 @@ static const struct
     { "-0e-10", 1, -0.0 },
     { "0e-1000000", 1, 0.0 },
     { "-0e-1000000", 1, -0.0 },
-    { "000"NBSP"000"NBSP"000", 1, 0.0 },
-    { "-000"NBSP"000"NBSP"000", 1, -0.0 }
+    { "000"NNBSP"000"NNBSP"000", 1, 0.0 },
+    { "-000"NNBSP"000"NNBSP"000", 1, -0.0 }
   };
 #define NTESTS (sizeof (tests) / sizeof (tests[0]))
 

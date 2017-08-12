@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NBSP "\xc2\xa0"
+#define NNBSP "\xe2\x80\xaf"
 
 static const struct
 {
@@ -12,8 +12,8 @@ static const struct
   double expected;
 } tests[] =
   {
-    { "000"NBSP"000"NBSP"000", "", 0.0 },
-    { "1"NBSP"000"NBSP"000,5x", "x", 1000000.5 }
+    { "000"NNBSP"000"NNBSP"000", "", 0.0 },
+    { "1"NNBSP"000"NNBSP"000,5x", "x", 1000000.5 }
   };
 #define NTESTS (sizeof (tests) / sizeof (tests[0]))
 
