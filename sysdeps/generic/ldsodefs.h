@@ -377,7 +377,7 @@ struct rtld_global
   /* If loading a shared object requires that we make the stack executable
      when it was not, we do it by calling this function.
      It returns an errno code or zero on success.  */
-  EXTERN int (*_dl_make_stack_executable_hook) (void **) internal_function;
+  EXTERN int (*_dl_make_stack_executable_hook) (void **);
 
   /* Prevailing state of the stack, PF_X indicating it's executable.  */
   EXTERN ElfW(Word) _dl_stack_flags;
@@ -632,7 +632,7 @@ extern size_t _dl_phnum;
 
 /* This is the initial value of GL(dl_make_stack_executable_hook).
    A threads library can change it.  */
-extern int _dl_make_stack_executable (void **stack_endp) internal_function;
+extern int _dl_make_stack_executable (void **stack_endp);
 rtld_hidden_proto (_dl_make_stack_executable)
 
 /* Variable pointing to the end of the stack (or close to it).  This value

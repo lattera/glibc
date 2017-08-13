@@ -356,8 +356,7 @@ extern void __deallocate_stack (struct pthread *pd)
 extern void __reclaim_stacks (void) attribute_hidden;
 
 /* Make all threads's stacks executable.  */
-extern int __make_stacks_executable (void **stack_endp)
-     internal_function attribute_hidden;
+extern int __make_stacks_executable (void **stack_endp) attribute_hidden;
 
 /* longjmp handling.  */
 extern void __pthread_cleanup_upto (__jmp_buf target, char *targetframe);

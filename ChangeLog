@@ -1,5 +1,19 @@
 2017-08-13  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/dl-support.c (_dl_make_stack_executable_hook): Remove
+	internal_function.
+	* nptl/allocatestack.c (__make_stacks_executable): Likewise.
+	* nptl/pthreadP.h (__make_stacks_executable): Likewise.
+	* sysdeps/generic/ldsodefs.h (_rtld_global): Remove
+	internal_function from _dl_make_stack_executable_hook member.
+	(_dl_make_stack_executable): Remove internal_function.
+	* sysdeps/mach/hurd/dl-execstack.c (_dl_make_stack_executable):
+	Likewise.
+	* sysdeps/unix/sysv/linux/dl-execstack.c
+	(_dl_make_stack_executable): Likewise.
+
+2017-08-13  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/unix/sysv/linux/netlinkaccess.h
 	(__netlink_assert_response): Remove internal_function.
 	* sysdeps/unix/sysv/linux/netlink_assert_response.c

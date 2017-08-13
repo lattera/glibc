@@ -26,7 +26,6 @@ extern struct hurd_startup_data *_dl_hurd_data attribute_hidden;
    so as to mprotect it.  */
 
 int
-internal_function
 _dl_make_stack_executable (void **stack_endp)
 {
   /* Challenge the caller.  */

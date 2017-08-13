@@ -181,8 +181,7 @@ ElfW(Word) _dl_stack_flags = DEFAULT_STACK_PERMS;
 /* If loading a shared object requires that we make the stack executable
    when it was not, we do it by calling this function.
    It returns an errno code or zero on success.  */
-int (*_dl_make_stack_executable_hook) (void **) internal_function
-  = _dl_make_stack_executable;
+int (*_dl_make_stack_executable_hook) (void **) = _dl_make_stack_executable;
 
 
 /* Function in libpthread to wait for termination of lookups.  */

@@ -784,7 +784,6 @@ __deallocate_stack (struct pthread *pd)
 
 
 int
-internal_function
 __make_stacks_executable (void **stack_endp)
 {
   /* First the main thread's stack.  */
