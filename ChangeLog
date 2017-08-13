@@ -1,5 +1,11 @@
 2017-08-13  Florian Weimer  <fweimer@redhat.com>
 
+	* include/rpc/pmap_clnt.h (__libc_rpc_getport): Remove
+	internal_function.
+	* sunrpoc/pm_getport.c (__libc_rpc_getport): Likewise.
+
+2017-08-13  Florian Weimer  <fweimer@redhat.com>
+
 	* grp/grp-merge.h (__copy_grp, __merge_grp): Remove
 	internal_function.
 	* grp/grp-merge.c (__copy_grp, __merge_grp): Likewise.

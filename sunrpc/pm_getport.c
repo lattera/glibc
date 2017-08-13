@@ -82,7 +82,6 @@ __get_socket (struct sockaddr_in *saddr)
  * Returns 0 if no map exists.
  */
 u_short
-internal_function
 __libc_rpc_getport (struct sockaddr_in *address, u_long program,
 		    u_long version, u_int protocol, time_t timeout_sec,
 		    time_t tottimeout_sec)
