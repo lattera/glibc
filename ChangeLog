@@ -1,5 +1,12 @@
 2017-08-13  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/unix/sysv/linux/netlinkaccess.h
+	(__netlink_assert_response): Remove internal_function.
+	* sysdeps/unix/sysv/linux/netlink_assert_response.c
+	(__netlink_assert_response): Likewise.
+
+2017-08-13  Florian Weimer  <fweimer@redhat.com>
+
 	* include/rpc/pmap_clnt.h (__libc_rpc_getport): Remove
 	internal_function.
 	* sunrpoc/pm_getport.c (__libc_rpc_getport): Likewise.

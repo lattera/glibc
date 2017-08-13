@@ -39,7 +39,6 @@ get_address_family (int fd)
 }
 
 void
-internal_function
 __netlink_assert_response (int fd, ssize_t result)
 {
   if (result < 0)
