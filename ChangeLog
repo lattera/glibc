@@ -1,3 +1,13 @@
+2017-08-13  Florian Weimer  <fweimer@redhat.com>
+
+	* debug/fortify_fail.c (__fortify_fail, __fortify_fail_abort):
+	Remove internal_function.
+	* include/stdio.h (__fortify_fail, __fortify_fail_abort): Likewise.
+	* sysdeps/mach/hurd/i386/____longjmp_chk.S (CALL_FAIL): Pass
+	message argument on the stack.
+	* sysdeps/unix/sysv/linux/i386/____longjmp_chk.S (CALL_FAIL):
+	Likeweise.
+
 2017-08-12  Mike FABIAN  <mfabian@redhat.com>
 
 	Adapt test case data to the changes in the thousands

@@ -36,9 +36,11 @@ longjmp_msg:
 			cfi_register(%ebx,%ecx);			      \
 			LOAD_PIC_REG (bx);				      \
 			leal	longjmp_msg@GOTOFF(%ebx), %eax;		      \
+			movl	%eax, (%esp);				      \
 			call	HIDDEN_JUMPTARGET(__fortify_fail)
 #else
 # define CALL_FAIL	movl	$longjmp_msg, %eax;			      \
+			movl	%eax, (%esp);				      \
 			call	HIDDEN_JUMPTARGET(__fortify_fail)
 #endif
 
