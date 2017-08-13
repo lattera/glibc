@@ -29,7 +29,6 @@
    return a default NAN.  If ENDPTR is not NULL, set *ENDPTR to point
    to the character after the initial n-char-sequence.  */
 
-internal_function
 FLOAT
 STRTOD_NAN (const STRING_TYPE *str, STRING_TYPE **endptr, STRING_TYPE endc)
 {

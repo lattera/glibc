@@ -1,5 +1,12 @@
 2017-08-13  Florian Weimer  <fweimer@redhat.com>
 
+	* include/stdlib.h: (__strtof_nan, __strtod_nan, __strtold_nan)
+	(__wcstof_nan, __wcstod_nan, __wcstold_nan): Remove
+	internal_function.
+	* stdlib/sttod_nan_main.c (STRTOD_NAN): Likewise.
+
+2017-08-13  Florian Weimer  <fweimer@redhat.com>
+
 	* elf/dl-support.c (_dl_make_stack_executable_hook): Remove
 	internal_function.
 	* nptl/allocatestack.c (__make_stacks_executable): Likewise.
