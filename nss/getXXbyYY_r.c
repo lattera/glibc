@@ -180,8 +180,7 @@ typedef enum nss_status (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *,
 
 /* The lookup function for the first entry of this service.  */
 extern int DB_LOOKUP_FCT (service_user **nip, const char *name,
-			  const char *name2, void **fctp)
-     internal_function;
+			  const char *name2, void **fctp);
 libc_hidden_proto (DB_LOOKUP_FCT)
 
 

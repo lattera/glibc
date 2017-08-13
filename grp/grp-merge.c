@@ -36,7 +36,6 @@
   })
 
 int
-internal_function
 __copy_grp (const struct group srcgrp, const size_t buflen,
 	    struct group *destgrp, char *destbuf, char **endptr)
 {
@@ -117,7 +116,6 @@ libc_hidden_def (__copy_grp)
 /* Check that the name, GID and passwd fields match, then
    copy in the gr_mem array.  */
 int
-internal_function
 __merge_grp (struct group *savedgrp, char *savedbuf, char *savedend,
 	     size_t buflen, struct group *mergegrp, char *mergebuf)
 {

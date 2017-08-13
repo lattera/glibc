@@ -56,12 +56,10 @@
 service_user *DATABASE_NAME_SYMBOL attribute_hidden;
 
 extern int DB_LOOKUP_FCT (service_user **ni, const char *fct_name,
-			  const char *fct2_name, void **fctp)
-  internal_function;
+			  const char *fct2_name, void **fctp);
 libc_hidden_proto (DB_LOOKUP_FCT)
 
 int
-internal_function
 DB_LOOKUP_FCT (service_user **ni, const char *fct_name, const char *fct2_name,
 	       void **fctp)
 {
@@ -79,7 +77,7 @@ libc_hidden_def (DB_LOOKUP_FCT)
 
 #ifndef NO_COMPAT
 int
-internal_function attribute_compat_text_section
+attribute_compat_text_section
 DB_COMPAT_FCT (service_user **ni, const char *fct_name, void **fctp)
 {
   return DB_LOOKUP_FCT (ni, fct_name, NULL, fctp);

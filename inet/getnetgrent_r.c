@@ -172,7 +172,6 @@ __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
 }
 
 int
-internal_function
 __internal_setnetgrent (const char *group, struct __netgrent *datap)
 {
   /* Free list of all netgroup names from last run.  */
@@ -214,7 +213,6 @@ setnetgrent (const char *group)
 }
 
 void
-internal_function
 __internal_endnetgrent (struct __netgrent *datap)
 {
   endnetgrent_hook (datap);
@@ -263,7 +261,6 @@ nscd_getnetgrent (struct __netgrent *datap, char *buffer, size_t buflen,
 #endif
 
 int
-internal_function
 __internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 			  struct __netgrent *datap,
 			  char *buffer, size_t buflen, int *errnop)
