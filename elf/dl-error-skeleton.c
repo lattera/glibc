@@ -104,7 +104,6 @@ _dl_signal_exception (int errcode, struct dl_exception *exception,
 libc_hidden_def (_dl_signal_exception)
 
 void
-internal_function
 _dl_signal_error (int errcode, const char *objname, const char *occation,
 		  const char *errstring)
 {
@@ -150,7 +149,6 @@ _dl_signal_cexception (int errcode, struct dl_exception *exception,
 }
 
 void
-internal_function
 _dl_signal_cerror (int errcode, const char *objname, const char *occation,
 		   const char *errstring)
 {
@@ -210,7 +208,6 @@ _dl_catch_exception (struct dl_exception *exception,
 libc_hidden_def (_dl_catch_exception)
 
 int
-internal_function
 _dl_catch_error (const char **objname, const char **errstring,
 		 bool *mallocedp, void (*operate) (void *), void *args)
 {
@@ -225,7 +222,6 @@ libc_hidden_def (_dl_catch_error)
 
 #if DL_ERROR_BOOTSTRAP
 void
-internal_function
 _dl_receive_error (receiver_fct fct, void (*operate) (void *), void *args)
 {
   struct catch *old_catch = catch_hook;

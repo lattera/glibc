@@ -121,7 +121,6 @@ determine_info (const ElfW(Addr) addr, struct link_map *match, Dl_info *info,
 
 
 int
-internal_function
 _dl_addr (const void *address, Dl_info *info,
 	  struct link_map **mapp, const ElfW(Sym) **symbolp)
 {

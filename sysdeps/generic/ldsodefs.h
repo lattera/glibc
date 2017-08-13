@@ -782,7 +782,7 @@ libc_hidden_proto (_dl_signal_exception)
 /* Like _dl_signal_exception, but creates the exception first.  */
 extern void _dl_signal_error (int errcode, const char *object,
 			      const char *occasion, const char *errstring)
-     internal_function __attribute__ ((__noreturn__));
+     __attribute__ ((__noreturn__));
 libc_hidden_proto (_dl_signal_error)
 
 /* Like _dl_signal_exception, but may return when called in the
@@ -806,7 +806,7 @@ _dl_signal_cexception (int errcode, struct dl_exception *exception,
 #if IS_IN (rtld)
 extern void _dl_signal_cerror (int errcode, const char *object,
 			       const char *occasion, const char *errstring)
-     internal_function attribute_hidden;
+     attribute_hidden;
 #else
 __attribute__ ((always_inline))
 static inline void
@@ -822,8 +822,7 @@ _dl_signal_cerror (int errcode, const char *object,
    function returns.
    ARGS is passed as argument to OPERATE.  */
 extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
-			       void *args)
-     internal_function attribute_hidden;
+			       void *args) attribute_hidden;
 
 /* Call OPERATE, catching errors from `_dl_signal_error' and related
    functions.  If there is no error, *ERRSTRING is set to null.  If
@@ -836,8 +835,7 @@ extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
    the returned string is allocated using the libc's malloc.  */
 extern int _dl_catch_error (const char **objname, const char **errstring,
 			    bool *mallocedp, void (*operate) (void *),
-			    void *args)
-     internal_function;
+			    void *args);
 libc_hidden_proto (_dl_catch_error)
 
 /* Call OPERATE (ARGS).  If no error occurs, set *EXCEPTION to zero.
@@ -1077,7 +1075,7 @@ void __pthread_initialize_minimal (void) weak_function;
 #endif
 
 /* Allocate memory for static TLS block (unless MEM is nonzero) and dtv.  */
-extern void *_dl_allocate_tls (void *mem) internal_function;
+extern void *_dl_allocate_tls (void *mem);
 rtld_hidden_proto (_dl_allocate_tls)
 
 /* Get size and alignment requirements of the static TLS block.  */
@@ -1091,11 +1089,11 @@ extern void _dl_allocate_static_tls (struct link_map *map)
    only used within rtld.c itself at startup time.  */
 extern void *_dl_allocate_tls_storage (void)
      internal_function attribute_hidden;
-extern void *_dl_allocate_tls_init (void *) internal_function;
+extern void *_dl_allocate_tls_init (void *);
 rtld_hidden_proto (_dl_allocate_tls_init)
 
 /* Deallocate memory allocated with _dl_allocate_tls.  */
-extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb) internal_function;
+extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb);
 rtld_hidden_proto (_dl_deallocate_tls)
 
 extern void _dl_nothread_init_static_tls (struct link_map *) attribute_hidden;
@@ -1145,8 +1143,7 @@ extern int _dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
 extern void _dl_show_scope (struct link_map *new, int from)
      attribute_hidden;
 
-extern struct link_map *_dl_find_dso_for_object (const ElfW(Addr) addr)
-     internal_function;
+extern struct link_map *_dl_find_dso_for_object (const ElfW(Addr) addr);
 rtld_hidden_proto (_dl_find_dso_for_object)
 
 /* Initialization which is normally done by the dynamic linker.  */

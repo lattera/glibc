@@ -439,7 +439,6 @@ _dl_resize_dtv (dtv_t *dtv)
 
 
 void *
-internal_function
 _dl_allocate_tls_init (void *result)
 {
   if (result == NULL)
@@ -532,7 +531,6 @@ _dl_allocate_tls_init (void *result)
 rtld_hidden_def (_dl_allocate_tls_init)
 
 void *
-internal_function
 _dl_allocate_tls (void *mem)
 {
   return _dl_allocate_tls_init (mem == NULL
@@ -543,7 +541,6 @@ rtld_hidden_def (_dl_allocate_tls)
 
 
 void
-internal_function
 _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
 {
   dtv_t *dtv = GET_DTV (tcb);

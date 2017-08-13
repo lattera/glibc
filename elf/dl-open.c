@@ -162,7 +162,6 @@ add_to_global (struct link_map *new)
    address ADDR.  Returns the pointer to the link map of the matching DSO, or
    NULL if a match is not found.  */
 struct link_map *
-internal_function
 _dl_find_dso_for_object (const ElfW(Addr) addr)
 {
   struct link_map *l;

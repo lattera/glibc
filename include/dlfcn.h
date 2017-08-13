@@ -43,8 +43,7 @@ libc_hidden_proto (__libc_dlclose)
 /* Locate shared object containing the given address.  */
 #ifdef ElfW
 extern int _dl_addr (const void *address, Dl_info *info,
-		     struct link_map **mapp, const ElfW(Sym) **symbolp)
-     internal_function;
+		     struct link_map **mapp, const ElfW(Sym) **symbolp);
 libc_hidden_proto (_dl_addr)
 #endif
 

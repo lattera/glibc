@@ -1,5 +1,19 @@
 2017-08-13  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/dl-addr.c (_dl_addr): Remove internal_function.
+	* elf/dl-error-skeleton.c (_dl_signal_error, _dl_signal_cerror)
+	(_dl_catch_error, _dl_receive_error): Likewise.
+	* elf/dl-open.c (_dl_find_dso_for_object): Likewise.
+	* elf/dl-tls.c (_dl_allocate_tls_init, _dl_allocate_tls)
+	(_dl_deallocate_tls): Likewise.
+	* include/dlfcn.h (_dl_addr): Likewise.
+	* sysdeps/generic/ldsodefs.h (_dl_signal_error, _dl_signal_cerror)
+	(_dl_catch_error, _dl_receive_error, _dl_find_dso_for_object)
+	(_dl_allocate_tls_init, _dl_allocate_tls, _dl_deallocate_tls):
+	Likewise.
+
+2017-08-13  Florian Weimer  <fweimer@redhat.com>
+
 	* include/stdlib.h: (__strtof_nan, __strtod_nan, __strtold_nan)
 	(__wcstof_nan, __wcstod_nan, __wcstold_nan): Remove
 	internal_function.
