@@ -1,5 +1,10 @@
 2017-08-14  Mike FABIAN  <mfabian@redhat.com>
 
+	[BZ #20008]
+	* locales/km_KH (LC_CTYPE): Use “copy "i18n"”.
+
+2017-08-14  Mike FABIAN  <mfabian@redhat.com>
+
 	[BZ #20482]
 	* locales/de_AT (LC_TIME): Use 2 letter abbreviations in abday.
 	* locales/de_BE (LC_TIME): Use 2 letter abbreviations in abday.
