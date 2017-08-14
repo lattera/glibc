@@ -474,7 +474,24 @@ enum
 # include <bits/iscanonical.h>
 
 /* Return nonzero value if X is a signaling NaN.  */
-# define issignaling(x) __MATH_TG ((x), __issignaling, (x))
+# ifndef __cplusplus
+#  define issignaling(x) __MATH_TG ((x), __issignaling, (x))
+# else
+   /* In C++ mode, __MATH_TG cannot be used, because it relies on
+      __builtin_types_compatible_p, which is a C-only builtin.  On the
+      other hand, overloading provides the means to distinguish between
+      the floating-point types.  The overloading resolution will match
+      the correct parameter (regardless of type qualifiers (i.e.: const
+      and volatile).  */
+extern "C++" {
+inline int issignaling (float __val) { return __issignalingf (__val); }
+inline int issignaling (double __val) { return __issignaling (__val); }
+inline int issignaling (long double __val) { return __issignalingl (__val); }
+#  if __HAVE_DISTINCT_FLOAT128
+inline int issignaling (_Float128 __val) { return __issignalingf128 (__val); }
+#  endif
+} /* extern C++ */
+# endif
 
 /* Return nonzero value if X is subnormal.  */
 # define issubnormal(x) (fpclassify (x) == FP_SUBNORMAL)

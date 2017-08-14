@@ -1,3 +1,17 @@
+2017-08-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* math/math.h [defined __cplusplus] (issignaling): Provide a C++
+	definition for issignaling that does not rely on __MATH_TG,
+	since __MATH_TG uses __builtin_types_compatible_p, which is only
+	available in C mode.
+	(CFLAGS-test-math-issignaling.cc): New variable.
+	* math/Makefile [CXX] (tests): Add test-math-issignaling.
+	* math/test-math-issignaling.cc: New test for C++ implementation
+	of type-generic issignaling.
+	* sysdeps/powerpc/powerpc64le/Makefile [subdir == math]
+	(CXXFLAGS-test-math-issignaling.cc): Add -mfloat128 to the build
+	options of test-math-issignaling on powerpc64le.
+
 2017-08-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* include/libc-symbols.h (__hidden_proto_hiddenattr): New for

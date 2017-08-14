@@ -208,7 +208,7 @@ tests-internal = test-matherr test-matherr-2
 tests-static += atest-exp atest-sincos atest-exp2
 
 ifneq (,$(CXX))
-tests += test-math-isinff test-math-iszero
+tests += test-math-isinff test-math-iszero test-math-issignaling
 endif
 
 ifneq (no,$(PERL))
@@ -355,6 +355,7 @@ CFLAGS-test-signgam-ullong-init-static.c = -std=c99
 
 CFLAGS-test-math-isinff.cc = -std=gnu++11
 CFLAGS-test-math-iszero.cc = -std=gnu++11
+CFLAGS-test-math-issignaling.cc = -std=gnu++11
 
 CFLAGS-test-iszero-excess-precision.c = -fexcess-precision=standard
 CFLAGS-test-iseqsig-excess-precision.c = -fexcess-precision=standard
