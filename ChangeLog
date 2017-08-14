@@ -1,3 +1,8 @@
+2017-08-14  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #19982]
+	* po/fr.po: Fix spelling mistake.
+
 2017-08-13  Florian Weimer  <fweimer@redhat.com>
 
 	* elf/dl-addr.c (_dl_addr): Remove internal_function.
