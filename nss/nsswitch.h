@@ -219,4 +219,12 @@ libc_hidden_proto (__nss_hostname_digits_dots)
 #define MAX_NR_ALIASES  48
 #define MAX_NR_ADDRS    48
 
+/* Prototypes for __nss_*_lookup2 functions.  */
+#define DEFINE_DATABASE(arg)				    \
+  int __nss_##arg##_lookup2 (service_user **, const char *, \
+			     const char *, void **);	    \
+  libc_hidden_proto (__nss_##arg##_lookup2)
+#include "databases.def"
+#undef DEFINE_DATABASE
+
 #endif	/* nsswitch.h */

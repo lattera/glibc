@@ -27,11 +27,6 @@
 typedef int (*lookup_function) (const char *, struct etherent *, char *, int,
 				int *);
 
-/* The lookup function for the first entry of this service.  */
-extern int __nss_ethers_lookup (service_user **nip, const char *name,
-				void **fctp) internal_function;
-
-
 int
 ether_hostton (const char *hostname, struct ether_addr *addr)
 {
@@ -49,7 +44,7 @@ ether_hostton (const char *hostname, struct ether_addr *addr)
 
   if (startp == NULL)
     {
-      no_more = __nss_ethers_lookup (&nip, "gethostton_r", &fct.ptr);
+      no_more = __nss_ethers_lookup2 (&nip, "gethostton_r", NULL, &fct.ptr);
       if (no_more)
 	startp = (service_user *) -1;
       else

@@ -28,11 +28,6 @@
 typedef int (*lookup_function) (const struct ether_addr *, struct etherent *,
 				char *, size_t, int *);
 
-/* The lookup function for the first entry of this service.  */
-extern int __nss_ethers_lookup (service_user **nip, const char *name,
-				void **fctp) internal_function;
-
-
 int
 ether_ntohost (char *hostname, const struct ether_addr *addr)
 {
@@ -50,7 +45,7 @@ ether_ntohost (char *hostname, const struct ether_addr *addr)
 
   if (startp == NULL)
     {
-      no_more = __nss_ethers_lookup (&nip, "getntohost_r", &fct.ptr);
+      no_more = __nss_ethers_lookup2 (&nip, "getntohost_r", NULL, &fct.ptr);
       if (no_more)
 	startp = (service_user *) -1;
       else

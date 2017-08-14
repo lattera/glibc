@@ -36,10 +36,6 @@ __libc_lock_define_initialized (static, lock)
    kept in this structure.  */
 static struct __netgrent dataset;
 
-/* The lookup function for the first entry of this service.  */
-extern int __nss_netgroup_lookup (service_user **nipp, const char *name,
-				  void **fctp) internal_function;
-
 /* Set up NIP to run through the services.  Return nonzero if there are no
    services (left).  */
 static int
@@ -54,7 +50,7 @@ setup (void **fctp, service_user **nipp)
     {
       /* Executing this more than once at the same time must yield the
 	 same result every time.  So we need no locking.  */
-      no_more = __nss_netgroup_lookup (nipp, "setnetgrent", fctp);
+      no_more = __nss_netgroup_lookup2 (nipp, "setnetgrent", NULL, fctp);
       startp = no_more ? (service_user *) -1 : *nipp;
 #ifdef PTR_MANGLE
       PTR_MANGLE (startp);

@@ -17,6 +17,5 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define DATABASE_NAME services
-#define NO_COMPAT
 
 #include "XXX-lookup.c"

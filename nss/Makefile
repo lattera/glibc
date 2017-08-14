@@ -27,7 +27,8 @@ headers			:= nss.h
 # This is the trivial part which goes into libc itself.
 routines		= nsswitch getnssent getnssent_r digits_dots \
 			  valid_field valid_list_field rewrite_field \
-			  $(addsuffix -lookup,$(databases))
+			  $(addsuffix -lookup,$(databases)) \
+			  compat-lookup
 
 # These are the databases that go through nss dispatch.
 # Caution: if you add a database here, you must add its real name

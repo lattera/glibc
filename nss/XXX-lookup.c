@@ -34,7 +34,6 @@
 \*******************************************************************/
 
 #define DB_LOOKUP_FCT CONCAT3_1 (__nss_, DATABASE_NAME, _lookup2)
-#define DB_COMPAT_FCT CONCAT3_1 (__nss_, DATABASE_NAME, _lookup)
 #define CONCAT3_1(Pre, Name, Post) CONCAT3_2 (Pre, Name, Post)
 #define CONCAT3_2(Pre, Name, Post) Pre##Name##Post
 
@@ -55,10 +54,6 @@
 
 service_user *DATABASE_NAME_SYMBOL attribute_hidden;
 
-extern int DB_LOOKUP_FCT (service_user **ni, const char *fct_name,
-			  const char *fct2_name, void **fctp);
-libc_hidden_proto (DB_LOOKUP_FCT)
-
 int
 DB_LOOKUP_FCT (service_user **ni, const char *fct_name, const char *fct2_name,
 	       void **fctp)
@@ -73,13 +68,3 @@ DB_LOOKUP_FCT (service_user **ni, const char *fct_name, const char *fct2_name,
   return __nss_lookup (ni, fct_name, fct2_name, fctp);
 }
 libc_hidden_def (DB_LOOKUP_FCT)
-
-
-#ifndef NO_COMPAT
-int
-attribute_compat_text_section
-DB_COMPAT_FCT (service_user **ni, const char *fct_name, void **fctp)
-{
-  return DB_LOOKUP_FCT (ni, fct_name, NULL, fctp);
-}
-#endif

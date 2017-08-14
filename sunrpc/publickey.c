@@ -31,11 +31,6 @@ typedef int (*public_function) (const char *, char *, int *);
 /* Type of the lookup function for the secret key.  */
 typedef int (*secret_function) (const char *, char *, const char *, int *);
 
-/* The lookup function for the first entry of this service.  */
-extern int __nss_publickey_lookup (service_user **nip, const char *name,
-				   void **fctp) internal_function;
-
-
 int
 getpublickey (const char *name, char *key)
 {
@@ -52,7 +47,7 @@ getpublickey (const char *name, char *key)
 
   if (startp == NULL)
     {
-      no_more = __nss_publickey_lookup (&nip, "getpublickey", &fct.ptr);
+      no_more = __nss_publickey_lookup2 (&nip, "getpublickey", NULL, &fct.ptr);
       if (no_more)
 	startp = (service_user *) -1;
       else
@@ -95,7 +90,7 @@ getsecretkey (const char *name, char *key, const char *passwd)
 
   if (startp == NULL)
     {
-      no_more = __nss_publickey_lookup (&nip, "getsecretkey", &fct.ptr);
+      no_more = __nss_publickey_lookup2 (&nip, "getsecretkey", NULL, &fct.ptr);
       if (no_more)
 	startp = (service_user *) -1;
       else

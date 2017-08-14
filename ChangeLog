@@ -1,3 +1,29 @@
+2017-08-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21962]
+	NSS: Create stubs for accidentally exported lookup functions.
+	* grp/initgroups.c (__nss_group_lookup, __nss_lookup_function):
+	Remove declaration.
+	* inet/ether_hton.c (__nss_ethers_lookup): Likewise.
+	(ether_hostton): Call __nss_ethers_lookup2 instead.
+	* inet/ether_ntoh.c (__nss_ethers_lookup): Remove declaration.
+	(ether_ntohost): Call __nss_ethers_lookup2 instead.
+	* inet/getnetgrent_r.c (__nss_netgroup_lookup): Remove declaration.
+	(setup): Call __nss_netgroup_lookup2 instead.
+	* nss/Makefile (routines): Add compat-lookup.
+	* nss/Versions (GLIBC_2.27): Add symbol version.
+	* nss/XXX-lookup (DB_LOOKUP_FCT): Remove declaration.  Now provided by <nsswitch.h>.
+	(DB_COMPAT_FCT): Remove.
+	* nss/compat-lookup.c: New file.
+	* nss/nsswitch.h: Generate __nss_*_lookup2 function prototypes
+	from databases.def.
+	* nss/service-lookup.c (NO_COMPAT): Remove definition.
+	* sunrpc/netname.c (__nss_publickey_lookup): Remove declaration.
+	(netname2user): Call __nss_publickey_lookup2 instead.
+	* sunrpc/publickey.c (__nss_publickey_lookup): Remove declaration.
+	(getpublickey, getsecretkey): Call __nss_publickey_lookup2
+	instead.
+
 2017-08-14 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Sergei Trofimovich  <slyfox@inbox.ru>
 

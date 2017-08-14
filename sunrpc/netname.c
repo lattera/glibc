@@ -140,9 +140,6 @@ libc_hidden_nolink_sunrpc (getnetname, GLIBC_2_1)
 /* Type of the lookup function for netname2user.  */
 typedef int (*netname2user_function) (const char netname[MAXNETNAMELEN + 1],
 				      uid_t *, gid_t *, int *, gid_t *);
-/* The lookup function for the first entry of this service.  */
-extern int __nss_publickey_lookup (service_user ** nip, const char *name,
-				   void **fctp) internal_function;
 
 int
 netname2user (const char netname[MAXNETNAMELEN + 1], uid_t * uidp, gid_t * gidp,
@@ -161,7 +158,7 @@ netname2user (const char netname[MAXNETNAMELEN + 1], uid_t * uidp, gid_t * gidp,
 
   if (startp == NULL)
     {
-      no_more = __nss_publickey_lookup (&nip, "netname2user", &fct.ptr);
+      no_more = __nss_publickey_lookup2 (&nip, "netname2user", NULL, &fct.ptr);
       if (no_more)
 	startp = (service_user *) - 1;
       else
