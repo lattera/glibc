@@ -1,5 +1,11 @@
 2017-08-14  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/rtld.c (_dl_start): Remove internal_function.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Adjust call to
+	_dl_start.
+
+2017-08-14  Florian Weimer  <fweimer@redhat.com>
+
 	* elf/dl-fini.c (_dl_fini): Remove internal_function
 	* sysdeps/generic/ldsodefs.h (_dl_fini): Likewise.
 

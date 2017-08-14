@@ -150,9 +150,11 @@ extern ElfW(Addr) _dl_profile_fixup (struct link_map *l,
 .globl _start\n\
 .globl _dl_start_user\n\
 _start:\n\
-	# Note that _dl_start gets the parameter in %eax.\n\
 	movl %esp, %eax\n\
+        subl $12, %esp\n\
+        pushl %eax\n\
 	call _dl_start\n\
+        addl $16, %esp\n\
 _dl_start_user:\n\
 	# Save the user entry point address in %edi.\n\
 	movl %eax, %edi\n\
