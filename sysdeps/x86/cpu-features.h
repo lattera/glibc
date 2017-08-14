@@ -74,6 +74,8 @@
 #define bit_cpu_AVX512CD	(1 << 28)
 #define bit_cpu_AVX512BW	(1 << 30)
 #define bit_cpu_AVX512VL	(1u << 31)
+#define bit_cpu_IBT		(1u << 20)
+#define bit_cpu_SHSTK		(1u << 7)
 
 /* XCR0 Feature flags.  */
 #define bit_XMM_state		(1 << 1)
@@ -103,6 +105,8 @@
 # define index_cpu_AVX2	COMMON_CPUID_INDEX_7*CPUID_SIZE+CPUID_EBX_OFFSET
 # define index_cpu_ERMS	COMMON_CPUID_INDEX_7*CPUID_SIZE+CPUID_EBX_OFFSET
 # define index_cpu_MOVBE COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
+# define index_cpu_IBT	COMMON_CPUID_INDEX_7*CPUID_SIZE+CPUID_EDX_OFFSET
+# define index_cpu_SHSTK COMMON_CPUID_INDEX_7*CPUID_SIZE+CPUID_ECX_OFFSET
 
 # define index_arch_Fast_Rep_String	FEATURE_INDEX_1*FEATURE_SIZE
 # define index_arch_Fast_Copy_Backward	FEATURE_INDEX_1*FEATURE_SIZE
@@ -220,6 +224,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_cpu_LZCNT	COMMON_CPUID_INDEX_1
 # define index_cpu_MOVBE	COMMON_CPUID_INDEX_1
 # define index_cpu_POPCNT	COMMON_CPUID_INDEX_1
+# define index_cpu_IBT		COMMON_CPUID_INDEX_7
+# define index_cpu_SHSTK	COMMON_CPUID_INDEX_7
 
 # define reg_CX8		edx
 # define reg_CMOV		edx
@@ -249,6 +255,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define reg_LZCNT		ecx
 # define reg_MOVBE		ecx
 # define reg_POPCNT		ecx
+# define reg_IBT		edx
+# define reg_SHSTK		ecx
 
 # define index_arch_Fast_Rep_String	FEATURE_INDEX_1
 # define index_arch_Fast_Copy_Backward	FEATURE_INDEX_1

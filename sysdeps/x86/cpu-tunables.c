@@ -164,6 +164,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, CX8, 3);
 	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, FMA, 3);
 	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, HTT, 3);
+	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, IBT, 3);
 	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, RTM, 3);
 	    }
 	  break;
@@ -186,6 +187,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	    {
 	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, LZCNT, 5);
 	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, MOVBE, 5);
+	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, SHSTK, 5);
 	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, SSSE3, 5);
 	    }
 	  break;

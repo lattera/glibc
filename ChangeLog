@@ -1,3 +1,14 @@
+2017-08-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.h (bit_cpu_BIT): New.
+	(bit_cpu_SHSTK): Likewise.
+	(index_cpu_IBT): Likewise.
+	(index_cpu_SHSTK): Likewise.
+	(reg_IBT): Likewise.
+	(reg_SHSTK): Likewise.
+	* sysdeps/x86/cpu-tunables.c (TUNABLE_CALLBACK (set_hwcaps)):
+	Handle index_cpu_IBT and index_cpu_SHSTK.
+
 2017-08-14  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #19982]
