@@ -1,3 +1,13 @@
+2017-08-14  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #20482]
+	* locales/de_AT (LC_TIME): Use 2 letter abbreviations in abday.
+	* locales/de_BE (LC_TIME): Use 2 letter abbreviations in abday.
+	* locales/de_CH (LC_TIME): Use 2 letter abbreviations in abday.
+	* locales/de_DE (LC_TIME): Use readable ASCII in abday.
+	* locales/de_IT (LC_TIME): Use readable ASCII in abday.
+	* locales/de_LU (LC_TIME): Use 2 letter abbreviations in abday.
+
 2017-08-14  Julen Ruiz Aizpuru <julenx@gmail.com>
 
 	[BZ #12349]
