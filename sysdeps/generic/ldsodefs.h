@@ -968,7 +968,7 @@ extern void _dl_init (struct link_map *main_map, int argc, char **argv,
 
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */
-extern void _dl_fini (void) internal_function;
+extern void _dl_fini (void);
 
 /* Sort array MAPS according to dependencies of the contained objects.  */
 extern void _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used,

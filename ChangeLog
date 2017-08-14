@@ -1,3 +1,8 @@
+2017-08-14  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/dl-fini.c (_dl_fini): Remove internal_function
+	* sysdeps/generic/ldsodefs.h (_dl_fini): Likewise.
+
 2017-08-14  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.h (bit_cpu_BIT): New.

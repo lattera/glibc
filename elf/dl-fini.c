@@ -125,7 +125,6 @@ _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
 
 
 void
-internal_function
 _dl_fini (void)
 {
   /* Lots of fun ahead.  We have to call the destructors for all still
