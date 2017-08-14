@@ -1,5 +1,12 @@
 2017-08-14  Mike FABIAN  <mfabian@redhat.com>
 
+	[BZ #14925]
+	* locales/bn_BD (LC_IDENTIFICATION): Change language name in
+	“title” and “language” from Bengali to Bangla.
+	* locales/bn_IN (LC_IDENTIFICATION): Likewise.
+
+2017-08-14  Mike FABIAN  <mfabian@redhat.com>
+
 	[BZ #20008]
 	* locales/km_KH (LC_CTYPE): Use “copy "i18n"”.
 

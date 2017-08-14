@@ -11,14 +11,14 @@ escape_char /
 %	This is the locale defination file for Bangladeshi Bengali
 
 LC_IDENTIFICATION
-title      "Bengali//Bangla language locale for Bangladesh"
+title      "Bangla language locale for Bangladesh"
 source     "Ankur Group, http:////www.ankurbangla.org, http:////www.bengalinux.org"
 address    "Dhaka, Bangladesh"
 contact    "Taneem Ahmed, Jamil Ahmed"
 email      "taneem@bengalinux.org, jamil@bengalinux.org"
 tel        ""
 fax        ""
-language   "Bengali"
+language   "Bangla"
 territory  "Bangladesh"
 revision   "0.5"
 date       "2007-01-10"
