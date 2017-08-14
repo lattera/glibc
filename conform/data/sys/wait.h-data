@@ -45,7 +45,9 @@ element siginfo_t uid_t si_uid
 element siginfo_t {void*} si_addr
 element siginfo_t int si_status
 element siginfo_t long si_band
+# ifndef XPG42
 element siginfo_t {union sigval} si_value
+# endif
 #endif
 
 #if !defined POSIX && !defined XPG4 && !defined XOPEN2K8 && !defined POSIX2008

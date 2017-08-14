@@ -1,3 +1,8 @@
+2017-08-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/sys/wait.h-data (si_value): Do not expect for
+	XPG42.
+
 2017-08-14  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21962]
