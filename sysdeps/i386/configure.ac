@@ -45,8 +45,6 @@ if test $libc_cv_asm_mpx = yes; then
   AC_DEFINE(HAVE_MPX_SUPPORT)
 fi
 
-AC_DEFINE(USE_REGPARMS)
-
 dnl It is always possible to access static and hidden symbols in an
 dnl position independent way.
 AC_DEFINE(PI_STATIC_AND_HIDDEN)

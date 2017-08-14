@@ -1,5 +1,12 @@
 2017-08-14  Florian Weimer  <fweimer@redhat.com>
 
+	i386: Do not set internal_function.
+	* config.h.in (USE_REGPARMS, internal_function): Remove.
+	* sysdeps/i386/configure.ac (USE_REGPARMS): Likewise.
+	* sysdeps/i386/configure (USE_REGPARMS): Likewise.
+
+2017-08-14  Florian Weimer  <fweimer@redhat.com>
+
 	* elf/dl-init.c (_dl_init): Remove internal_function.
 	* sysdeps/generic/ldsodefs.h (_dl_init): Likewise.
 	* sysdeps/i386/dl-machine.h (RTLD_START): Adjust call to _dl_init.
