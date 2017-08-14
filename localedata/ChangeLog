@@ -1,3 +1,9 @@
+2017-08-14  Julen Ruiz Aizpuru <julenx@gmail.com>
+
+	[BZ #12349]
+	* locales/eu_ES (LC_NUMERIC): Fix thousands_sep and grouping
+	and use readable ASCII for decimal_point.
+
 2017-08-12  Mike FABIAN  <mfabian@redhat.com>
 
 	* locales/es_MX (LC_NUMERIC): Replace thin space with NNBSP as thousands separator.

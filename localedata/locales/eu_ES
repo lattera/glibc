@@ -88,9 +88,9 @@ n_sign_posn          1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point        "<U002C>"
-thousands_sep        ""
-grouping             0;0
+decimal_point        ","
+thousands_sep        "."
+grouping             3;3
 END LC_NUMERIC
 
 LC_TIME
