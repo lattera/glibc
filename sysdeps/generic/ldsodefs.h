@@ -964,7 +964,7 @@ extern int _dl_check_map_versions (struct link_map *map, int verbose,
 /* Initialize the object in SCOPE by calling the constructors with
    ARGC, ARGV, and ENV as the parameters.  */
 extern void _dl_init (struct link_map *main_map, int argc, char **argv,
-		      char **env) internal_function attribute_hidden;
+		      char **env) attribute_hidden;
 
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */

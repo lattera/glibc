@@ -177,17 +177,20 @@ _dl_start_user:\n\
 	# switch stacks if it moves these contents over.\n\
 " RTLD_START_SPECIAL_INIT "\n\
 	# Load the parameters again.\n\
-	# (eax, edx, ecx, *--esp) = (_dl_loaded, argc, argv, envp)\n\
+	# (eax, edx, ecx, esi) = (_dl_loaded, argc, argv, envp)\n\
 	movl _rtld_local@GOTOFF(%ebx), %eax\n\
 	leal 8(%esp,%edx,4), %esi\n\
 	leal 4(%esp), %ecx\n\
 	movl %esp, %ebp\n\
 	# Make sure _dl_init is run with 16 byte aligned stack.\n\
 	andl $-16, %esp\n\
-	pushl %eax\n\
-	pushl %eax\n\
+        subl $12, %esp\n\
 	pushl %ebp\n\
+        # Arguments for _dl_init.\n\
 	pushl %esi\n\
+	pushl %ecx\n\
+	pushl %edx\n\
+	pushl %eax\n\
 	# Clear %ebp, so that even constructors have terminated backchain.\n\
 	xorl %ebp, %ebp\n\
 	# Call the function to run the initializers.\n\
@@ -195,7 +198,7 @@ _dl_start_user:\n\
 	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
 	leal _dl_fini@GOTOFF(%ebx), %edx\n\
 	# Restore %esp _start expects.\n\
-	movl (%esp), %esp\n\
+	movl 16(%esp), %esp\n\
 	# Jump to the user's entry point.\n\
 	jmp *%edi\n\
 	.previous\n\
