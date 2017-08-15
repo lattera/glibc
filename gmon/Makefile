@@ -42,7 +42,9 @@ CFLAGS-tst-gmon.c := -pg
 LDFLAGS-tst-gmon := $(no-pie-ldflag)
 CRT-tst-gmon := $(csu-objpfx)gcrt1.o
 tst-gmon-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon.data
+ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-gmon-gprof.out
+endif
 
 include ../Rules
 

@@ -1,5 +1,10 @@
 2017-08-15  Florian Weimer  <fweimer@redhat.com>
 
+	* gmon/Makefile (tests-special): Add tst-gmon-prof only if
+	run-built-tests.
+
+2017-08-15  Florian Weimer  <fweimer@redhat.com>
+
 	Remove BROKEN_THREAD_SIGNALS support for LinuxThreads.
 	* sysdeps/pthread/aio_misc.c (__aio_enqueue_request): Remove
 	BROKEN_THREAD_SIGNALS code.
