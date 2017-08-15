@@ -1,3 +1,9 @@
+2017-08-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21955]
+	* sysdeps/x86_64/fpu/e_expf.S (L(SP_RANGE)): Aligned to 8 bytes.
+	(L(SP_INF_0)): Likewise.
+
 2017-08-15  Florian Weimer  <fweimer@redhat.com>
 
 	* gmon/Makefile (tests-special): Add tst-gmon-prof only if

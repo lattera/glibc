@@ -297,14 +297,14 @@ L(DP_P0): /* double precision polynomial coefficient P0 */
 	.type L(DP_P0), @object
 	ASM_SIZE_DIRECTIVE(L(DP_P0))
 
-	.p2align 2
+	.p2align 3
 L(SP_RANGE): /* single precision overflow/underflow bounds */
 	.long	0x42b17217	/* if x>this bound, then result overflows */
 	.long	0x42cff1b4	/* if x<this bound, then result underflows */
 	.type L(SP_RANGE), @object
 	ASM_SIZE_DIRECTIVE(L(SP_RANGE))
 
-	.p2align 2
+	.p2align 3
 L(SP_INF_0):
 	.long	0x7f800000	/* single precision Inf */
 	.long	0		/* single precision zero */
