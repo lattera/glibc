@@ -59,7 +59,6 @@ static const struct builtin_map
 
 
 void
-internal_function
 __gconv_get_builtin_trans (const char *name, struct __gconv_step *step)
 {
   size_t cnt;

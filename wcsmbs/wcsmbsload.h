@@ -37,20 +37,16 @@ struct gconv_fcts
 extern const struct gconv_fcts __wcsmbs_gconv_fcts_c attribute_hidden;
 
 /* Load conversion functions for the currently selected locale.  */
-extern void __wcsmbs_load_conv (struct __locale_data *new_category)
-     internal_function;
+extern void __wcsmbs_load_conv (struct __locale_data *new_category);
 
 /* Clone the current `__wcsmbs_load_conv' value.  */
-extern void __wcsmbs_clone_conv (struct gconv_fcts *copy)
-     internal_function;
+extern void __wcsmbs_clone_conv (struct gconv_fcts *copy);
 
 /* Find the conversion functions for converting to and from NAME.  */
-extern int __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
-     internal_function;
+extern int __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name);
 
 /* Function used for the `private.cleanup' hook.  */
-extern void _nl_cleanup_ctype (struct __locale_data *)
-     internal_function attribute_hidden;
+extern void _nl_cleanup_ctype (struct __locale_data *) attribute_hidden;
 
 
 #include <iconv/gconv_int.h>

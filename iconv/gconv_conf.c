@@ -99,7 +99,6 @@ const char *__gconv_path_envvar;
 
 /* Test whether there is already a matching module known.  */
 static int
-internal_function
 detect_conflict (const char *alias)
 {
   struct gconv_module *node = __gconv_modules_db;
@@ -183,7 +182,6 @@ add_alias (char *rp, void *modules)
 
 /* Insert a data structure for a new module in the search tree.  */
 static void
-internal_function
 insert_module (struct gconv_module *newp, int tobefreed)
 {
   struct gconv_module **rootp = &__gconv_modules_db;
@@ -242,7 +240,6 @@ insert_module (struct gconv_module *newp, int tobefreed)
 
 /* Add new module.  */
 static void
-internal_function
 add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 	    size_t *nmodules, int modcounter)
 {
@@ -357,7 +354,6 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 
 /* Read the next configuration file.  */
 static void
-internal_function
 read_conf_file (const char *filename, const char *directory, size_t dir_len,
 		void **modules, size_t *nmodules)
 {
@@ -425,7 +421,6 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 
 /* Determine the directories we are looking for data in.  */
 void
-internal_function
 __gconv_get_path (void)
 {
   struct path_elem *result;

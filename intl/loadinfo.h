@@ -30,10 +30,6 @@
    in gettextP.h.
  */
 
-#ifndef internal_function
-# define internal_function
-#endif
-
 #ifndef LIBINTL_DLL_EXPORTED
 # define LIBINTL_DLL_EXPORTED
 #endif

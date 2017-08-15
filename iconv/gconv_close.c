@@ -23,7 +23,6 @@
 
 
 int
-internal_function
 __gconv_close (__gconv_t cd)
 {
   struct __gconv_step *srunp;

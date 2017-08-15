@@ -99,7 +99,6 @@ valid_locale_name (const char *name)
 }
 
 struct __locale_data *
-internal_function
 _nl_find_locale (const char *locale_path, size_t locale_path_len,
 		 int category, const char **name)
 {
@@ -332,7 +331,6 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 /* Calling this function assumes the lock for handling global locale data
    is acquired.  */
 void
-internal_function
 _nl_remove_locale (int locale, struct __locale_data *data)
 {
   if (--data->usage_count == 0)

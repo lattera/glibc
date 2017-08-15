@@ -27,7 +27,6 @@
 
 
 int
-internal_function
 __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	      int flags)
 {

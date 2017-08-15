@@ -61,7 +61,7 @@ extern char *__bind_textdomain_codeset (const char *__domainname,
 					const char *__codeset);
 extern void _nl_finddomain_subfreeres (void) attribute_hidden;
 extern void _nl_unload_domain (struct loaded_domain *__domain)
-     internal_function attribute_hidden;
+     attribute_hidden;
 #else
 /* Declare the exported libintl_* functions, in a way that allows us to
    call them under their real name.  */
@@ -88,10 +88,6 @@ extern char *libintl_dcigettext (const char *__domainname,
 #include "gmo.h"		/* Get nls_uint32.  */
 
 /* @@ end of prolog @@ */
-
-#ifndef internal_function
-# define internal_function
-#endif
 
 #ifndef attribute_hidden
 # define attribute_hidden
@@ -255,23 +251,19 @@ extern const char *_nl_locale_name_default (void);
 
 struct loaded_l10nfile *_nl_find_domain (const char *__dirname, char *__locale,
 					 const char *__domainname,
-					 struct binding *__domainbinding)
-     internal_function;
+					 struct binding *__domainbinding);
 void _nl_load_domain (struct loaded_l10nfile *__domain,
-		      struct binding *__domainbinding)
-     internal_function;
+		      struct binding *__domainbinding);
 
 #ifdef IN_LIBGLOCALE
 char *_nl_find_msg (struct loaded_l10nfile *domain_file,
 		    struct binding *domainbinding, const char *encoding,
 		    const char *msgid,
-		    size_t *lengthp)
-     internal_function;
+		    size_t *lengthp);
 #else
 char *_nl_find_msg (struct loaded_l10nfile *domain_file,
 		    struct binding *domainbinding, const char *msgid,
-		    int convert, size_t *lengthp)
-     internal_function;
+		    int convert, size_t *lengthp);
 #endif
 
 /* The internal variables in the standalone libintl.a must have different

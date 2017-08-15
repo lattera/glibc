@@ -207,7 +207,6 @@ exp:	  exp '?' exp ':' exp
 %%
 
 void
-internal_function
 FREE_EXPRESSION (struct expression *exp)
 {
   if (exp == NULL)

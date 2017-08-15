@@ -121,7 +121,6 @@ static void *known_derivations;
 
 /* Look up whether given transformation was already requested before.  */
 static int
-internal_function
 derivation_lookup (const char *fromset, const char *toset,
 		   struct __gconv_step **handle, size_t *nsteps)
 {
@@ -143,7 +142,6 @@ derivation_lookup (const char *fromset, const char *toset,
 
 /* Add new derivation to list of known ones.  */
 static void
-internal_function
 add_derivation (const char *fromset, const char *toset,
 		struct __gconv_step *handle, size_t nsteps)
 {
@@ -204,7 +202,6 @@ free_derivation (void *p)
 
 /* Decrement the reference count for a single step in a steps array.  */
 void
-internal_function
 __gconv_release_step (struct __gconv_step *step)
 {
   /* Skip builtin modules; they are not reference counted.  */
@@ -230,7 +227,6 @@ __gconv_release_step (struct __gconv_step *step)
 }
 
 static int
-internal_function
 gen_steps (struct derivation_step *best, const char *toset,
 	   const char *fromset, struct __gconv_step **handle, size_t *nsteps)
 {
@@ -370,7 +366,6 @@ gen_steps (struct derivation_step *best, const char *toset,
 
 #ifndef STATIC_GCONV
 static int
-internal_function
 increment_counter (struct __gconv_step *steps, size_t nsteps)
 {
   /* Increment the user counter.  */
@@ -430,7 +425,6 @@ increment_counter (struct __gconv_step *steps, size_t nsteps)
 /* The main function: find a possible derivation from the `fromset' (either
    the given name or the alias) to the `toset' (again with alias).  */
 static int
-internal_function
 find_derivation (const char *toset, const char *toset_expand,
 		 const char *fromset, const char *fromset_expand,
 		 struct __gconv_step **handle, size_t *nsteps)
@@ -710,7 +704,6 @@ do_lookup_alias (const char *name)
 
 
 int
-internal_function
 __gconv_compare_alias (const char *name1, const char *name2)
 {
   int result;
@@ -727,7 +720,6 @@ __gconv_compare_alias (const char *name1, const char *name2)
 
 
 int
-internal_function
 __gconv_find_transform (const char *toset, const char *fromset,
 			struct __gconv_step **handle, size_t *nsteps,
 			int flags)
@@ -793,7 +785,6 @@ __gconv_find_transform (const char *toset, const char *fromset,
 
 /* Release the entries of the modules list.  */
 int
-internal_function
 __gconv_close_transform (struct __gconv_step *steps, size_t nsteps)
 {
   int result = __GCONV_OK;
@@ -822,7 +813,7 @@ __gconv_close_transform (struct __gconv_step *steps, size_t nsteps)
 
 /* Free the modules mentioned.  */
 static void
-internal_function __libc_freeres_fn_section
+__libc_freeres_fn_section
 free_modules_db (struct gconv_module *node)
 {
   if (node->left != NULL)

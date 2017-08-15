@@ -61,7 +61,6 @@ static const enum value_type *const _nl_value_types[] =
 
 
 struct __locale_data *
-internal_function
 _nl_intern_locale_data (int category, const void *data, size_t datasize)
 {
   const struct
@@ -160,7 +159,6 @@ _nl_intern_locale_data (int category, const void *data, size_t datasize)
 }
 
 void
-internal_function
 _nl_load_locale (struct loaded_l10nfile *file, int category)
 {
   int fd;
@@ -282,7 +280,6 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 }
 
 void
-internal_function
 _nl_unload_locale (struct __locale_data *locale)
 {
   if (locale->private.cleanup)

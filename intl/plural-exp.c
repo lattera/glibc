@@ -94,7 +94,6 @@ init_germanic_plural (void)
 #endif
 
 void
-internal_function
 EXTRACT_PLURAL_EXPRESSION (const char *nullentry,
 			   const struct expression **pluralp,
 			   unsigned long int *npluralsp)

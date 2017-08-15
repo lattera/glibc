@@ -1,5 +1,71 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* iconv/gconv.c (__gconv): Remove internal_function.
+	* iconv/gconv_builtin.c (__gconv_get_builtin_trans): Likewise.
+	* iconv/gconv_cache.c (__gconv_load_cache, find_module_idx)
+	(find_module, __gconv_compare_alias_cache, __gconv_lookup_cache)
+	(__gconv_release_cache): Likewise.
+	* iconv/gconv_close.c (__gconv_close): Likewise.
+	* iconv/gconv_conf.c (detect_conflict, insert_module, add_module)
+	(read_conf_file, __gconv_get_path): Likewise.
+	* iconv/gconv_db.c (derivation_lookup, add_derivation)
+	(__gconv_release_step, gen_steps, increment_counter)
+	(find_derivation, __gconv_compare_alias, __gconv_find_transform)
+	(__gconv_close_transform, free_modules_db): Likewise.
+	* iconv/gconv_dl.c (__gconv_find_shlib, __gconv_release_shlib):
+	Likewise.
+	* iconv/gconv_int.h (__gconv_open, __gconv_close, __gconv)
+	(__gconv_find_transform, __gconv_lookup_cache)
+	(__gconv_release_step, __gconv_load_cache, __gconv_get_path)
+	(__gconv_close_transform, __gconv_release_cache)
+	(__gconv_loaded_object, __gconv_release_shlib)
+	(__gconv_compare_alias): Likewise.
+	* iconv/gconv_open.c (__gconv_open): Likewise.
+	* iconv/iconv_prog.c (print_known_names, add_known_names): Likewise.
+	* iconv/iconvconfig.c (add_module): Likewise.
+	* intl/dcigettext.c (plural_lookup, guess_category_value)
+	(category_to_name, get_output_charset, _nl_find_msg): Likewise.
+	* intl/eval-plural.h (plural_eval): Likewise.
+	* intl/finddomain.c (_nl_find_domain): Likewise.
+	* intl/gettextP.h (_nl_unload_domain, _nl_find_domain)
+	(_nl_load_domain, _nl_find_msg): Likewise.
+	(internal_function): Remove definition.
+	* intl/loadinfo.h (internal_function): Likewise.
+	* intl/loadmsgcat.c (_nl_load_domain, _nl_unload_domain): Remove
+	internal_function.
+	* intl/localealias.c (internal_function): Remove definition.
+	(read_alias_file): Remove internal_function.
+	* intl/plural-exp.c (EXTRACT_PLURAL_EXPRESSION): Likewise.
+	* intl/plural-exp.h (internal_function): Remove definition.
+	(FREE_EXPRESSION, EXTRACT_PLURAL_EXPRESSION): Remove
+	internal_function.
+	* intl/plural.c: Regenerate.
+	* intl/plural.y (FREE_EXPRESSION): Remove internal_function.
+	* locale/coll-lookup.c (__collidx_table_lookup)
+	(__collseq_table_lookup): Likewise.
+	* locale/coll-lookup.h (__collidx_table_lookup)
+	(__collseq_table_lookup): Likewise.
+	* locale/findlocale.c (_nl_find_locale, _nl_remove_locale): Likewise.
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Likewise.
+	* locale/loadlocale.c (_nl_intern_locale_data, _nl_load_locale)
+	(_nl_unload_locale): Likewise.
+	* locale/localeinfo.h (struct __locale_data): Remove
+	internal_function from cleanup member.
+	(_nl_find_locale, _nl_load_locale, _nl_unload_locale)
+	(_nl_remove_locale, _nl_load_locale_from_archive)
+	(_nl_intern_locale_data, _nl_get_era_entry, _nl_select_era_entry)
+	(_nl_get_alt_digit, _nl_get_walt_digit, _nl_parse_alt_digit)
+	(_nl_cleanup_time): Remove internal_function.
+	* time/alt_digit.c (_nl_get_alt_digit, _nl_get_walt_digit)
+	(_nl_parse_alt_digit): Likewise.
+	* time/era.c (_nl_init_era_entries, _nl_get_era_entry)
+	(_nl_select_era_entry): Likewise.
+	* time/lc-time-cleanup.c (_nl_cleanup_time): Likewise.
+	* wcsmbs/wcsmbsload.c (__wcsmbs_load_conv, __wcsmbs_clone_conv)
+	(__wcsmbs_named_conv, _nl_cleanup_ctype): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* rt/aio_sigqueue.c (__aio_sigqueue): Remove internal_function.
 	* sysdeps/generic/aio_misc.h (__aio_sigqueue): Likewise.
 	* sysdeps/pthread/aio_misc.c (__aio_free_request, __aio_find_req)

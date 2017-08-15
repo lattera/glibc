@@ -113,7 +113,7 @@ static int process_fd (iconv_t cd, int fd, FILE **output,
 		       const char *output_file);
 static int process_file (iconv_t cd, FILE *input, FILE **output,
 			 const char *output_file);
-static void print_known_names (void) internal_function;
+static void print_known_names (void);
 
 
 int
@@ -712,7 +712,6 @@ do_print  (const void *nodep, VISIT value, int level)
 }
 
 static void
-internal_function
 add_known_names (struct gconv_module *node)
 {
   if (node->left != NULL)
@@ -756,7 +755,6 @@ insert_cache (void)
 
 
 static void
-internal_function
 print_known_names (void)
 {
   iconv_t h;

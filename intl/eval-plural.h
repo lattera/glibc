@@ -21,7 +21,6 @@
 /* Evaluate the plural expression and return an index value.  */
 STATIC
 unsigned long int
-internal_function
 plural_eval (const struct expression *pexp, unsigned long int n)
 {
   switch (pexp->nargs)

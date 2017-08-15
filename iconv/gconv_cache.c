@@ -45,7 +45,6 @@ __gconv_get_cache (void)
 
 
 int
-internal_function
 __gconv_load_cache (void)
 {
   int fd;
@@ -142,7 +141,6 @@ __gconv_load_cache (void)
 
 
 static int
-internal_function
 find_module_idx (const char *str, size_t *idxp)
 {
   unsigned int idx;
@@ -181,7 +179,6 @@ find_module_idx (const char *str, size_t *idxp)
 
 #ifndef STATIC_GCONV
 static int
-internal_function
 find_module (const char *directory, const char *filename,
 	     struct __gconv_step *result)
 {
@@ -227,7 +224,6 @@ find_module (const char *directory, const char *filename,
 
 
 int
-internal_function
 __gconv_compare_alias_cache (const char *name1, const char *name2, int *result)
 {
   size_t name1_idx;
@@ -247,7 +243,6 @@ __gconv_compare_alias_cache (const char *name1, const char *name2, int *result)
 
 
 int
-internal_function
 __gconv_lookup_cache (const char *toset, const char *fromset,
 		      struct __gconv_step **handle, size_t *nsteps, int flags)
 {
@@ -449,7 +444,6 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
 
 /* Free memory allocated for the transformation record.  */
 void
-internal_function
 __gconv_release_cache (struct __gconv_step *steps, size_t nsteps)
 {
   if (gconv_cache != NULL)

@@ -148,7 +148,6 @@ __libc_rwlock_define (extern, __libc_setlocale_lock attribute_hidden)
 
 /* Load conversion functions for the currently selected locale.  */
 void
-internal_function
 __wcsmbs_load_conv (struct __locale_data *new_category)
 {
   /* Acquire the lock.  */
@@ -215,7 +214,6 @@ __wcsmbs_load_conv (struct __locale_data *new_category)
 
 /* Clone the current conversion function set.  */
 void
-internal_function
 __wcsmbs_clone_conv (struct gconv_fcts *copy)
 {
   const struct gconv_fcts *orig;
@@ -236,7 +234,6 @@ __wcsmbs_clone_conv (struct gconv_fcts *copy)
 
 /* Get converters for named charset.  */
 int
-internal_function
 __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
 {
   copy->towc = __wcsmbs_getfct ("INTERNAL", name, &copy->towc_nsteps);
@@ -253,7 +250,7 @@ __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
   return 0;
 }
 
-void internal_function
+void
 _nl_cleanup_ctype (struct __locale_data *locale)
 {
   const struct gconv_fcts *const data = locale->private.ctype;

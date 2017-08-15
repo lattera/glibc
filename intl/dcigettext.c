@@ -347,18 +347,15 @@ struct binding *_nl_domain_bindings;
 /* Prototypes for local functions.  */
 static char *plural_lookup (struct loaded_l10nfile *domain,
 			    unsigned long int n,
-			    const char *translation, size_t translation_len)
-     internal_function;
+			    const char *translation, size_t translation_len);
 
 #ifdef IN_LIBGLOCALE
 static const char *guess_category_value (int category,
 					 const char *categoryname,
-					 const char *localename)
-     internal_function;
+					 const char *localename);
 #else
 static const char *guess_category_value (int category,
-					 const char *categoryname)
-     internal_function;
+					 const char *categoryname);
 #endif
 
 #ifdef _LIBC
@@ -366,11 +363,10 @@ static const char *guess_category_value (int category,
 # define category_to_name(category) \
   _nl_category_names.str + _nl_category_name_idxs[category]
 #else
-static const char *category_to_name (int category) internal_function;
+static const char *category_to_name (int category);
 #endif
 #if (defined _LIBC || HAVE_ICONV) && !defined IN_LIBGLOCALE
-static const char *get_output_charset (struct binding *domainbinding)
-     internal_function;
+static const char *get_output_charset (struct binding *domainbinding);
 #endif
 
 
@@ -868,7 +864,6 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
    in case of a memory allocation failure during conversion (only if
    ENCODING != NULL resp. CONVERT == true).  */
 char *
-internal_function
 #ifdef IN_LIBGLOCALE
 _nl_find_msg (struct loaded_l10nfile *domain_file,
 	      struct binding *domainbinding, const char *encoding,
@@ -1401,7 +1396,6 @@ _nl_find_msg (struct loaded_l10nfile *domain_file,
 
 /* Look up a plural variant.  */
 static char *
-internal_function
 plural_lookup (struct loaded_l10nfile *domain, unsigned long int n,
 	       const char *translation, size_t translation_len)
 {
@@ -1439,7 +1433,6 @@ plural_lookup (struct loaded_l10nfile *domain, unsigned long int n,
 #ifndef _LIBC
 /* Return string representation of locale CATEGORY.  */
 static const char *
-internal_function
 category_to_name (int category)
 {
   const char *retval;
@@ -1500,7 +1493,6 @@ category_to_name (int category)
 /* Guess value of current locale from value of the environment variables
    or system-dependent defaults.  */
 static const char *
-internal_function
 #ifdef IN_LIBGLOCALE
 guess_category_value (int category, const char *categoryname,
 		      const char *locale)
@@ -1591,7 +1583,6 @@ guess_category_value (int category, const char *categoryname)
 #if (defined _LIBC || HAVE_ICONV) && !defined IN_LIBGLOCALE
 /* Returns the output charset.  */
 static const char *
-internal_function
 get_output_charset (struct binding *domainbinding)
 {
   /* The output charset should normally be determined by the locale.  But

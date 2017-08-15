@@ -566,7 +566,6 @@ new_module (const char *fromname, size_t fromlen, const char *toname,
 
 /* Add new module.  */
 static void
-internal_function
 add_module (char *rp, const char *directory)
 {
   /* We expect now

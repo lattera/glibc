@@ -19,7 +19,7 @@
 #include "../locale/localeinfo.h"
 #include <stdlib.h>
 
-void internal_function
+void
 _nl_cleanup_time (struct __locale_data *locale)
 {
   struct lc_time_data *const data = locale->private.time;

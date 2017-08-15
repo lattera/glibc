@@ -64,7 +64,6 @@ known_compare (const void *p1, const void *p2)
 /* Open the gconv database if necessary.  A non-negative return value
    means success.  */
 struct __gconv_loaded_object *
-internal_function
 __gconv_find_shlib (const char *name)
 {
   struct __gconv_loaded_object *found;
@@ -183,7 +182,6 @@ do_release_shlib (void *nodep, VISIT value, int level)
 
 /* Notify system that a shared object is not longer needed.  */
 void
-internal_function
 __gconv_release_shlib (struct __gconv_loaded_object *handle)
 {
   /* Urgh, this is ugly but we have no other possibility.  */

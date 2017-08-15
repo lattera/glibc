@@ -130,7 +130,6 @@ calculate_head_size (const struct locarhead *h)
    structure.  If successful, sets *NAMEP to point directly into the mapped
    archive string table; that way, the next call can short-circuit strcmp.  */
 struct __locale_data *
-internal_function
 _nl_load_locale_from_archive (int category, const char **namep)
 {
   const char *name = *namep;

@@ -63,7 +63,7 @@ struct __locale_data
      the data.  */
   struct
   {
-    void (*cleanup) (struct __locale_data *) internal_function;
+    void (*cleanup) (struct __locale_data *);
     union
     {
       void *data;
@@ -336,19 +336,18 @@ extern const char _nl_default_locale_path[] attribute_hidden;
 extern struct __locale_data *_nl_find_locale (const char *locale_path,
 					      size_t locale_path_len,
 					      int category, const char **name)
-     internal_function attribute_hidden;
+     attribute_hidden;
 
 /* Try to load the file described by FILE.  */
 extern void _nl_load_locale (struct loaded_l10nfile *file, int category)
-     internal_function attribute_hidden;
+     attribute_hidden;
 
 /* Free all resource.  */
-extern void _nl_unload_locale (struct __locale_data *locale)
-     internal_function attribute_hidden;
+extern void _nl_unload_locale (struct __locale_data *locale) attribute_hidden;
 
 /* Free the locale and give back all memory if the usage count is one.  */
 extern void _nl_remove_locale (int locale, struct __locale_data *data)
-     internal_function attribute_hidden;
+     attribute_hidden;
 
 /* Find the locale *NAMEP in the locale archive, and return the
    internalized data structure for its CATEGORY data.  If this locale has
@@ -357,7 +356,7 @@ extern void _nl_remove_locale (int locale, struct __locale_data *data)
    archive string table; that way, the next call can short-circuit strcmp.  */
 extern struct __locale_data *_nl_load_locale_from_archive (int category,
 							   const char **namep)
-     internal_function attribute_hidden;
+     attribute_hidden;
 
 /* Subroutine of setlocale's __libc_subfreeres hook.  */
 extern void _nl_archive_subfreeres (void) attribute_hidden;
@@ -373,40 +372,39 @@ extern void _nl_locale_subfreeres (void) attribute_hidden;
 extern struct __locale_data *_nl_intern_locale_data (int category,
 						     const void *data,
 						     size_t datasize)
-     internal_function attribute_hidden;
+     attribute_hidden;
 
 
 /* Return `era' entry which corresponds to TP.  Used in strftime.  */
 extern struct era_entry *_nl_get_era_entry (const struct tm *tp,
 					    struct __locale_data *lc_time)
-     internal_function attribute_hidden;
+     attribute_hidden;
 
 /* Return `era' cnt'th entry .  Used in strptime.  */
 extern struct era_entry *_nl_select_era_entry (int cnt,
 					       struct __locale_data *lc_time)
-	  internal_function attribute_hidden;
+	  attribute_hidden;
 
 /* Return `alt_digit' which corresponds to NUMBER.  Used in strftime.  */
 extern const char *_nl_get_alt_digit (unsigned int number,
 				      struct __locale_data *lc_time)
-	  internal_function attribute_hidden;
+	  attribute_hidden;
 
 /* Similar, but now for wide characters.  */
 extern const wchar_t *_nl_get_walt_digit (unsigned int number,
 					  struct __locale_data *lc_time)
-     internal_function attribute_hidden;
+     attribute_hidden;
 
 /* Parse string as alternative digit and return numeric value.  */
 extern int _nl_parse_alt_digit (const char **strp,
 				struct __locale_data *lc_time)
-     internal_function attribute_hidden;
+     attribute_hidden;
 
 /* Postload processing.  */
 extern void _nl_postload_ctype (void);
 
 /* Functions used for the `private.cleanup' hook.  */
-extern void _nl_cleanup_time (struct __locale_data *)
-     internal_function attribute_hidden;
+extern void _nl_cleanup_time (struct __locale_data *) attribute_hidden;
 
 
 #endif	/* localeinfo.h */
