@@ -145,9 +145,6 @@ aio_suspend (const struct aiocb *const list[], int nent,
 		waitlist[cnt].next = requestlist[cnt]->waiting;
 		waitlist[cnt].counterp = &cntr;
 		waitlist[cnt].sigevp = NULL;
-#ifdef BROKEN_THREAD_SIGNALS
-		waitlist[cnt].caller_pid = 0;	/* Not needed.  */
-#endif
 		requestlist[cnt]->waiting = &waitlist[cnt];
 		any = true;
 	      }

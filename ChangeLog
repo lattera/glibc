@@ -1,5 +1,19 @@
 2017-08-15  Florian Weimer  <fweimer@redhat.com>
 
+	Remove BROKEN_THREAD_SIGNALS support for LinuxThreads.
+	* sysdeps/pthread/aio_misc.c (__aio_enqueue_request): Remove
+	BROKEN_THREAD_SIGNALS code.
+	* sysdeps/ppthread/aio_misc.h (struct waitlist, struct
+	request_list): Remove caller_pid member used for
+	BROKEN_THREAD_SIGNALS.
+	[BROKEN_THREAD_SIGNALS] (__aio_notify_only): Remove declaration.
+	* sysdeps/pthread/aio_notify.c (__aio_notify_only, __aio_notify):
+	Remove BROKEN_THREAD_SIGNALS support.
+	* sysdeps/pthread/aio_suspend.c (aio_suspend): Likewise.
+	* sysdeps/pthread/lio_listio.c (lio_listio_internal): Likewise.
+
+2017-08-15  Florian Weimer  <fweimer@redhat.com>
+
 	* gmon/Makefile (tests): Add tst-gmon.
 	(CFLAGS-tst-gmon.c, LDFLAGS-tst-gmon, CRT-tst-gmon, tst-gmon-ENV):
 	Set.

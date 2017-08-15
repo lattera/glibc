@@ -107,14 +107,7 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
       pthread_mutex_unlock (&__aio_requests_mutex);
 
       if (LIO_MODE (mode) == LIO_NOWAIT)
-	{
-#ifdef BROKEN_THREAD_SIGNALS
-	__aio_notify_only (sig,
-			   sig->sigev_notify == SIGEV_SIGNAL ? getpid () : 0);
-#else
 	__aio_notify_only (sig);
-#endif
-	}
 
       return result;
     }
@@ -140,9 +133,6 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
 	      waitlist[cnt].next = requests[cnt]->waiting;
 	      waitlist[cnt].counterp = &total;
 	      waitlist[cnt].sigevp = NULL;
-#ifdef BROKEN_THREAD_SIGNALS
-	      waitlist[cnt].caller_pid = 0;	/* Not needed.  */
-#endif
 	      requests[cnt]->waiting = &waitlist[cnt];
 	      ++total;
 	    }
@@ -190,9 +180,6 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
 	}
       else
 	{
-#ifdef BROKEN_THREAD_SIGNALS
-	  pid_t caller_pid = sig->sigev_notify == SIGEV_SIGNAL ? getpid () : 0;
-#endif
 	  total = 0;
 
 	  for (cnt = 0; cnt < nent; ++cnt)
@@ -209,9 +196,6 @@ lio_listio_internal (int mode, struct aiocb *const list[], int nent,
 		  waitlist->list[cnt].next = requests[cnt]->waiting;
 		  waitlist->list[cnt].counterp = &waitlist->counter;
 		  waitlist->list[cnt].sigevp = &waitlist->sigev;
-#ifdef BROKEN_THREAD_SIGNALS
-		  waitlist->list[cnt].caller_pid = caller_pid;
-#endif
 		  requests[cnt]->waiting = &waitlist->list[cnt];
 		  ++total;
 		}
