@@ -1,3 +1,19 @@
+2017-08-15  Gustavo Romero  <gromero@linux.vnet.ibm.com>
+
+	* elf/elf.h A (NT_PPC_TAR): New macro.
+	(NT_PPC_PPR): Likewise.
+	(NT_PPC_DSCR): Likewise.
+	(NT_PPC_EBB): Likewise.
+	(NT_PPC_PMU): Likewise.
+	(NT_PPC_TM_CGPR): Likewise.
+	(NT_PPC_TM_CFPR): Likewise.
+	(NT_PPC_TM_CVMX): Likewise.
+	(NT_PPC_TM_CVSX): Likewise.
+	(NT_PPC_TM_SPR): Likewise.
+	(NT_PPC_TM_CTAR): Likewise.
+	(NT_PPC_TM_CPPR): Likewise.
+	(NT_PPC_TM_CDSCR): Likewise.
+
 2017-08-15  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/i386/machine-gmon.h (mcount_internal): Declare with
