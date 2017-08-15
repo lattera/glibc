@@ -121,6 +121,8 @@ OBJDUMP=`$CC -print-prog-name=objdump`
 AC_SUBST(OBJDUMP)
 OBJCOPY=`$CC -print-prog-name=objcopy`
 AC_SUBST(OBJCOPY)
+GPROF=`$CC -print-prog-name=gprof`
+AC_SUBST(GPROF)
 
 # Determine whether we are using GNU binutils.
 AC_CACHE_CHECK(whether $AS is GNU as, libc_cv_prog_as_gnu,

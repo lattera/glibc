@@ -27,7 +27,7 @@ routines := gmon mcount profil sprofil bb_init_func bb_exit_func prof-freq
 
 elide-routines.os = bb_init_func bb_exit_func
 
-tests	= tst-sprofil
+tests	= tst-sprofil tst-gmon
 ifeq ($(build-profile),yes)
 tests	+= tst-profile-static
 tests-static	+= tst-profile-static
@@ -37,6 +37,12 @@ endif
 
 # The mcount code won't work without a frame pointer.
 CFLAGS-mcount.c := -fno-omit-frame-pointer
+
+CFLAGS-tst-gmon.c := -pg
+LDFLAGS-tst-gmon := $(no-pie-ldflag)
+CRT-tst-gmon := $(csu-objpfx)gcrt1.o
+tst-gmon-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon.data
+tests-special += $(objpfx)tst-gmon-gprof.out
 
 include ../Rules
 
@@ -53,3 +59,13 @@ endif
 $(noprof:%=$(objpfx)%.op): %.op: %.o
 	rm -f $@
 	ln $< $@
+
+# GMON_OUTPUT_PREFIX only sets the output prefix.  The actual file
+# name contains the PID as well.
+$(objpfx)tst-gmon.out: clean-tst-gmon-data
+clean-tst-gmon-data:
+	rm -f $(objpfx)tst-gmon.data.*
+
+$(objpfx)tst-gmon-gprof.out: tst-gmon-gprof.sh $(objpfx)tst-gmon.out
+	$(SHELL) $< $(GPROF) $(objpfx)tst-gmon $(objpfx)tst-gmon.data.* > $@; \
+	$(evaluate-test)

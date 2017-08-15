@@ -651,6 +651,7 @@ MSGFMT
 MAKE
 LD
 AS
+GPROF
 OBJCOPY
 OBJDUMP
 AR
@@ -4571,6 +4572,8 @@ AR=`$CC -print-prog-name=ar`
 OBJDUMP=`$CC -print-prog-name=objdump`
 
 OBJCOPY=`$CC -print-prog-name=objcopy`
+
+GPROF=`$CC -print-prog-name=gprof`
 
 
 # Determine whether we are using GNU binutils.

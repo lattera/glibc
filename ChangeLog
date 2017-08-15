@@ -1,3 +1,18 @@
+2017-08-15  Florian Weimer  <fweimer@redhat.com>
+
+	* gmon/Makefile (tests): Add tst-gmon.
+	(CFLAGS-tst-gmon.c, LDFLAGS-tst-gmon, CRT-tst-gmon, tst-gmon-ENV):
+	Set.
+	(tests-special): Add tst-gmon-prof.out.
+	(tst-gmon.out): Depend on clean-tst-gmon-data.
+	(clean-tst-gmon-data, tst-gmon-gprof.out): New targets.
+	* gmon/tst-gmon.c, gmon/tst-gmon-gprof.sh: New files.
+	* Makeconfig (+link-before-libc): Add CRT-* hook to override the
+	startup object.
+	* aclocal.m4 (GPROF): Set and substitute.
+	* config.amke.in (GPROF): Set.
+	* configure: Regenerate.
+
 2017-08-15  Gustavo Romero  <gromero@linux.vnet.ibm.com>
 
 	* elf/elf.h A (NT_PPC_TAR): New macro.
