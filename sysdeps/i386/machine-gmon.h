@@ -29,10 +29,12 @@
 /* We must not pollute the global namespace.  */
 #define mcount_internal __mcount_internal
 
-extern void mcount_internal (u_long frompc, u_long selfpc) internal_function;
+extern void mcount_internal (u_long frompc, u_long selfpc)
+  __attribute__ ((regparm (2)));
 
-#define _MCOUNT_DECL(frompc, selfpc) \
-void internal_function mcount_internal (u_long frompc, u_long selfpc)
+#define _MCOUNT_DECL(frompc, selfpc)                \
+  __attribute__ ((regparm (2)))			    \
+void mcount_internal (u_long frompc, u_long selfpc)
 
 
 /* Define MCOUNT as empty since we have the implementation in another

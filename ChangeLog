@@ -1,3 +1,9 @@
+2017-08-15  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/i386/machine-gmon.h (mcount_internal): Declare with
+	regparm (2) instead of internal_function.
+	(_MCOUNT_DECL): Adjust.
+
 2017-08-15  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): Add z14.
