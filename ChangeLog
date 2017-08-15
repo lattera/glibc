@@ -1,3 +1,8 @@
+2017-08-15  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): Add z14.
+	* sysdeps/s390/dl-procinfo.h (_DL_PLATFORMS_COUNT): Increased.
+
 2017-08-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/sys/wait.h-data (si_value): Do not expect for
