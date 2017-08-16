@@ -22,7 +22,11 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
-  [Add security related changes here]
+  CVE-2009-5064: The ldd script would sometimes run the program under
+  examination directly, without preventing code execution through the
+  dynamic linker.  (The glibc project disputes that this is a security
+  vulnerability; only trusted binaries must be examined using the ldd
+  script.)
 
 The following bugs are resolved with this release:
 
