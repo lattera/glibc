@@ -1,5 +1,10 @@
 2017-08-17  Akhilesh Kumar <akhilesh.k@samsung.com>
 
+	[BZ #21960]
+	* locales/bem_ZM (LC_TIME): Fix abmon, make it agree with CLDR.
+
+2017-08-17  Akhilesh Kumar <akhilesh.k@samsung.com>
+
 	[BZ #21959]
 	* locales/xh_ZA (LC_ADDRESS): Fix country name.
 
