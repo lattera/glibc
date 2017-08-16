@@ -1,3 +1,25 @@
+2017-08-16  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21944]
+	* signal/bits/types/__sigval_t.h: New file.
+	* signal/Makefile (headers): Add bits/types/__sigval_t.h.
+	* signal/bits/types/sigval_t.h: Include <bits/types/__sigval_t.h>
+	and define sigval_t using __sigval_t.
+	* include/bits/types/__sigval_t.h: New file.
+	* bits/types/sigevent_t.h: Include <bits/types/__sigval_t.h>
+	instead of <bits/types/__sigval_t.h>.
+	(struct sigevent): Use __sigval_t instead of sigval_t.
+	* bits/types/siginfo_t.h: Include <bits/types/__sigval_t.h>
+	instead of <bits/types/__sigval_t.h>.
+	(siginfo_t): Use __sigval_t instead of sigval_t.
+	* sysdeps/unix/sysv/linux/bits/types/sigevent_t.h: Include
+	<bits/types/__sigval_t.h> instead of <bits/types/__sigval_t.h>.
+	(struct sigevent): Use __sigval_t instead of sigval_t.
+	* sysdeps/unix/sysv/linux/bits/types/siginfo_t.h: Include
+	<bits/types/__sigval_t.h> instead of <bits/types/__sigval_t.h>.
+	(siginfo_t): Use __sigval_t instead of sigval_t.
+	* signal/signal.h [__USE_MISC]: Include <bits/types/sigval_t.h>.
+
 2017-08-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* NEWS: Remove "[Add new features here]" for 2.27.

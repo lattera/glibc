@@ -3,7 +3,7 @@
 
 #include <bits/wordsize.h>
 #include <bits/types.h>
-#include <bits/types/sigval_t.h>
+#include <bits/types/__sigval_t.h>
 
 #define __SIGEV_MAX_SIZE	64
 #if __WORDSIZE == 64
@@ -21,7 +21,7 @@ typedef union pthread_attr_t pthread_attr_t;
 /* Structure to transport application-defined values with signals.  */
 typedef struct sigevent
   {
-    sigval_t sigev_value;
+    __sigval_t sigev_value;
     int sigev_signo;
     int sigev_notify;
 
@@ -35,7 +35,7 @@ typedef struct sigevent
 
 	struct
 	  {
-	    void (*_function) (sigval_t);	/* Function to start.  */
+	    void (*_function) (__sigval_t);	/* Function to start.  */
 	    pthread_attr_t *_attribute;		/* Thread attributes.  */
 	  } _sigev_thread;
       } _sigev_un;

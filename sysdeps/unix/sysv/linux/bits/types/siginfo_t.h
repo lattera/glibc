@@ -3,7 +3,7 @@
 
 #include <bits/wordsize.h>
 #include <bits/types.h>
-#include <bits/types/sigval_t.h>
+#include <bits/types/__sigval_t.h>
 
 #define __SI_MAX_SIZE	128
 #if __WORDSIZE == 64
@@ -64,7 +64,7 @@ typedef struct
 	  {
 	    int si_tid;		/* Timer ID.  */
 	    int si_overrun;	/* Overrun count.  */
-	    sigval_t si_sigval;	/* Signal value.  */
+	    __sigval_t si_sigval;	/* Signal value.  */
 	  } _timer;
 
 	/* POSIX.1b signals.  */
@@ -72,7 +72,7 @@ typedef struct
 	  {
 	    __pid_t si_pid;	/* Sending process ID.  */
 	    __uid_t si_uid;	/* Real user ID of sending process.  */
-	    sigval_t si_sigval;	/* Signal value.  */
+	    __sigval_t si_sigval;	/* Signal value.  */
 	  } _rt;
 
 	/* SIGCHLD.  */

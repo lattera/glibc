@@ -58,6 +58,10 @@ typedef __uid_t uid_t;
 # include <bits/siginfo-consts.h>
 #endif
 
+#ifdef __USE_MISC
+# include <bits/types/sigval_t.h>
+#endif
+
 #ifdef __USE_POSIX199309
 # include <bits/types/sigevent_t.h>
 # include <bits/sigevent-consts.h>

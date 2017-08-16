@@ -2,7 +2,7 @@
 #define __siginfo_t_defined 1
 
 #include <bits/types.h>
-#include <bits/types/sigval_t.h>
+#include <bits/types/__sigval_t.h>
 
 typedef struct siginfo
   {
@@ -15,7 +15,7 @@ typedef struct siginfo
     void *si_addr;		/* Address of faulting instruction.  */
     int si_status;		/* Exit value or signal.  */
     long int si_band;		/* Band event for SIGPOLL.  */
-    sigval_t si_value;		/* Signal value.  */
+    __sigval_t si_value;	/* Signal value.  */
   } siginfo_t;
 
 #endif
