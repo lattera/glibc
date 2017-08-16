@@ -1,3 +1,12 @@
+2017-08-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21912]
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Add e_expf-fma.
+	* sysdeps/x86_64/fpu/multiarch/e_expf-fma.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_expf.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/ifunc-fma.h: Likewise.
+
 2017-08-16  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16750]
