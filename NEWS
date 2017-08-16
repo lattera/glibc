@@ -11,6 +11,9 @@ Major new features:
 
   [Add new features here]
 
+* Optimized x86-64 asin, atan2, exp, expf, log, pow, atan, sin and tan
+  with FMA, contributed by Arjan van de Ven and H.J. Lu from Intel.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On GNU/Linux, the obsolete Linux constant PTRACE_SEIZE_DEVEL is no longer

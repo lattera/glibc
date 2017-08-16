@@ -1,5 +1,9 @@
 2017-08-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* NEWS: Mention x86-64 FMA optimization.
+
+2017-08-16  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #21912]
 	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
 	Add e_expf-fma.
