@@ -164,18 +164,6 @@ warning: you do not have execution permission for" "\`$file'" >&2
       fi
     done
     case $ret in
-    0)
-      # If the program exits with exit code 5, it means the process has been
-      # invoked with __libc_enable_secure.  Fall back to running it through
-      # the dynamic linker.
-      try_trace "$file"
-      rc=$?
-      if [ $rc = 5 ]; then
-	try_trace "$RTLD" "$file"
-	rc=$?
-      fi
-      [ $rc = 0 ] || result=1
-      ;;
     1)
       # This can be a non-ELF binary or no binary at all.
       nonelf "$file" || {
@@ -183,7 +171,7 @@ warning: you do not have execution permission for" "\`$file'" >&2
 	result=1
       }
       ;;
-    2)
+    0|2)
       try_trace "$RTLD" "$file" || result=1
       ;;
     *)
