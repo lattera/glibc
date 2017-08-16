@@ -217,9 +217,8 @@ name_ms     ""
 END LC_NAME
 
 LC_ADDRESS
-% Country name in Xhosa - "Mzantsi Afrika"
-country_name "<U004D><U007A><U0061><U006E><U0074><U0073><U0069><U0020>/
-<U0041><U0066><U0072><U0069><U006B><U0061>"
+% https://xh.wikipedia.org/wiki/UMzantsi_Afrika
+country_name "UMzantsi Afrika"
 %
 % Abbreviated country postal name - "ZA"
 country_post "<U005A><U0041>"

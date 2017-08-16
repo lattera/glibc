@@ -1,3 +1,8 @@
+2017-08-17  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21959]
+	* locales/xh_ZA (LC_ADDRESS): Fix country name.
+
 2017-07-14  Thorsten Glaser  <tg@mirbsd.de>
 
 	[BZ #21750]
