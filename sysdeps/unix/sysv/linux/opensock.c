@@ -24,7 +24,7 @@
 
 /* Return a socket of any type.  The socket can be used in subsequent
    ioctl calls to talk to the kernel.  */
-int internal_function
+int
 __opensock (void)
 {
   static int last_family;	/* Available socket family we will use.  */

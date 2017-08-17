@@ -20,7 +20,7 @@ extern int __socketpair (int __domain, int __type, int __protocol,
 
 /* Return a socket of any type.  The socket can be used in subsequent
    ioctl calls to talk to the kernel.  */
-extern int __opensock (void) internal_function attribute_hidden;
+extern int __opensock (void) attribute_hidden;
 
 /* Put the address of the peer connected to socket FD into *ADDR
    (which is *LEN bytes long), and its actual length into *LEN.  */

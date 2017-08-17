@@ -21,7 +21,7 @@
 
 /* Return a socket of any type.  The socket can be used in subsequent
    ioctl calls to talk to the kernel.  */
-int internal_function
+int
 __opensock (void)
 {
   /* Cache the last AF that worked, to avoid many redundant calls to
