@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <support/support.h>
+
 #include "nss_test.h"
 
 static int hook_called = 0;
@@ -120,5 +122,4 @@ do_test (void)
   return retval;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

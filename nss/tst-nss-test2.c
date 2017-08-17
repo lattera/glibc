@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <support/support.h>
+
 #include "nss_test.h"
 
 /* The data in these tables is arbitrary, but the merged data based on
@@ -132,5 +134,4 @@ do_test (void)
   return retval;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

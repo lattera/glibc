@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <support/support.h>
+
 static bool errors;
 
 static void
@@ -97,5 +99,4 @@ do_test (void)
   return errors;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

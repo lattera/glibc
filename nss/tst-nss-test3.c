@@ -20,7 +20,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/signal.h>
+
+#include <support/support.h>
 
 #include "nss_test.h"
 
@@ -146,5 +147,4 @@ do_test (void)
     }
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

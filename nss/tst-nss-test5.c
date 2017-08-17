@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <support/support.h>
+
 #include "nss_test.h"
 
 /* The specific values and names used here are arbitrary, other than
@@ -104,5 +106,4 @@ do_test (void)
     }
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

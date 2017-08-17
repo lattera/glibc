@@ -1,3 +1,17 @@
+2017-08-17  DJ Delorie  <dj@redhat.com>
+
+	* bug17079.c: Update to new test harness.
+	* test-digits-dots.c: Likewise.
+	* test-netdb.c: Likewise.
+	* tst-field.c: Likewise.
+	* tst-nss-getpwent.c: Likewise.
+	* tst-nss-static.c: Likewise.
+	* tst-nss-test1.c: Likewise.
+	* tst-nss-test2.c: Likewise.
+	* tst-nss-test3.c: Likewise.
+	* tst-nss-test4.c: Likewise.
+	* tst-nss-test5.c: Likewise.
+
 2017-08-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/generic/not-cancel.h (open_not_cancel): Remove macro.

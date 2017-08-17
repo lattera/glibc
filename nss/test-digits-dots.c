@@ -21,6 +21,8 @@
 #include <netdb.h>
 #include <errno.h>
 
+#include <support/support.h>
+
 static int
 do_test (void)
 {
@@ -34,5 +36,4 @@ do_test (void)
   return err == ERANGE && h_err == NETDB_INTERNAL ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

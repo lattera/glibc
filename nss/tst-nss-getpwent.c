@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <support/support.h>
+
 int
 do_test (void)
 {
@@ -37,22 +39,12 @@ do_test (void)
     {
       if (first_name == NULL)
 	{
-	  first_name = strdup (pw->pw_name);
-	  if (first_name == NULL)
-	    {
-	      printf ("strdup: %m\n");
-	      return 1;
-	    }
+	  first_name = xstrdup (pw->pw_name);
 	  first_uid = pw->pw_uid;
 	}
 
       free (last_name);
-      last_name = strdup (pw->pw_name);
-      if (last_name == NULL)
-	{
-	  printf ("strdup: %m\n");
-	  return 1;
-	}
+      last_name = xstrdup (pw->pw_name);
       last_uid = pw->pw_uid;
       ++count;
     }
@@ -115,5 +107,4 @@ do_test (void)
 }
 
 #define TIMEOUT 300
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

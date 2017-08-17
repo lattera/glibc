@@ -1,7 +1,8 @@
 /* glibc test for static NSS.  */
 #include <stdio.h>
 
-#define TEST_FUNCTION do_test ()
+#include <support/support.h>
+
 static int
 do_test (void)
 {
@@ -12,4 +13,4 @@ do_test (void)
 }
 
 
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
