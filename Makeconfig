@@ -409,7 +409,7 @@ ifndef +link-pie
 +link-pie-before-libc = $(CC) -pie -Wl,-O1 -nostdlib -nostartfiles -o $@ \
 	     $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	     $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
-	     $(addprefix $(csu-objpfx),S$(start-installed-name)) \
+	     $(firstword $(CRT-$(@F)) $(csu-objpfx)S$(start-installed-name)) \
 	     $(+preinit) $(+prectorS) \
 	     $(filter-out $(addprefix $(csu-objpfx),start.o \
 						    S$(start-installed-name))\

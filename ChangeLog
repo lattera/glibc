@@ -1,3 +1,8 @@
+2017-08-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makeconfig (+link-pie-before-libc): Add CRT-* hook to override
+	the startup object.
+
 2017-08-17  Florian Weimer  <fweimer@redhat.com>
 
 	* include/sys/socket.h (__opensock): Remove internal_function.
