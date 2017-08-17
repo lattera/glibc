@@ -71,8 +71,10 @@ main (int argc, char **argv)
       bool is_bench = strncmp (VARIANT (v), "workload-", 9) == 0;
       double d_total_i = 0;
       timing_t total = 0, max = 0, min = 0x7fffffffffffffff;
+      timing_t throughput = 0, latency = 0;
       int64_t c = 0;
       uint64_t cur;
+      BENCH_VARS;
       while (1)
 	{
 	  if (is_bench)
@@ -86,7 +88,16 @@ main (int argc, char **argv)
 		  BENCH_FUNC (v, i);
 	      TIMING_NOW (end);
 	      TIMING_DIFF (cur, start, end);
-	      TIMING_ACCUM (total, cur);
+	      TIMING_ACCUM (throughput, cur);
+
+	      TIMING_NOW (start);
+	      for (k = 0; k < iters; k++)
+		for (i = 0; i < NUM_SAMPLES (v); i++)
+		  BENCH_FUNC_LAT (v, i);
+	      TIMING_NOW (end);
+	      TIMING_DIFF (cur, start, end);
+	      TIMING_ACCUM (latency, cur);
+
 	      d_total_i += iters * NUM_SAMPLES (v);
 	    }
 	  else
@@ -131,12 +142,20 @@ main (int argc, char **argv)
       /* Begin variant.  */
       json_attr_object_begin (&json_ctx, VARIANT (v));
 
-      json_attr_double (&json_ctx, "duration", d_total_s);
-      json_attr_double (&json_ctx, "iterations", d_total_i);
       if (is_bench)
-	json_attr_double (&json_ctx, "throughput", d_total_s / d_total_i);
+	{
+	  json_attr_double (&json_ctx, "reciprocal-throughput",
+			    throughput / d_total_i);
+	  json_attr_double (&json_ctx, "latency", latency / d_total_i);
+	  json_attr_double (&json_ctx, "max-throughput",
+			    d_total_i / throughput * 1000000000.0);
+	  json_attr_double (&json_ctx, "min-throughput",
+			    d_total_i / latency * 1000000000.0);
+	}
       else
 	{
+	  json_attr_double (&json_ctx, "duration", d_total_s);
+	  json_attr_double (&json_ctx, "iterations", d_total_i);
 	  json_attr_double (&json_ctx, "max", max / d_iters);
 	  json_attr_double (&json_ctx, "min", min / d_iters);
 	  json_attr_double (&json_ctx, "mean", d_total_s / d_total_i);

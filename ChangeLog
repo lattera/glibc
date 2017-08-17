@@ -1,3 +1,9 @@
+2017-08-17  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-skeleton.c (main): Add support for
+	latency benchmarking.
+	* benchtests/scripts/bench.py: Add support for latency benchmarking.
+
 2017-08-17  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makeconfig (+link-pie-before-libc): Add CRT-* hook to override
