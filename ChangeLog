@@ -1,3 +1,10 @@
+2017-09-06  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #21750]
+	* localedata/unicode-gen/utf8_gen.py: Improve the script to
+	use the range notation for all ranges of neighbouring characters
+	with the same width.
+
 2017-09-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/math-type-macros-double.h: Include

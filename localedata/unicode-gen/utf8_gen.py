@@ -199,7 +199,7 @@ def write_header_charmap(outfile):
 
 def write_header_width(outfile):
     '''Writes the header on top of the WIDTH section to the output file'''
-    outfile.write('% Character width according to Unicode 7.0.0.\n')
+    outfile.write('% Character width according to Unicode 10.0.0.\n')
     outfile.write('% - Default width is 1.\n')
     outfile.write('% - Double-width characters have width 2; generated from\n')
     outfile.write('%        "grep \'^[^;]*;[WF]\' EastAsianWidth.txt"\n')
@@ -229,27 +229,52 @@ def process_width(outfile, ulines, elines):
             code_points = fields[0].split("..")
         for key in range(int(code_points[0], 16),
                          int(code_points[1], 16)+1):
-            width_dict[key] = unicode_utils.ucs_symbol(key) + '\t2'
+            width_dict[key] = 2
     for line in ulines:
         fields = line.split(";")
         if fields[4] == "NSM" or fields[2] in ("Cf", "Me", "Mn"):
-            width_dict[int(fields[0], 16)] = unicode_utils.ucs_symbol(
-                int(fields[0], 16)) + '\t0'
+            width_dict[int(fields[0], 16)] = 0
 
     # handle special cases for compatibility
-    for key in list(range(0x1160, 0x1200)) + list(range(0x3248, 0x3250)) + \
-               list(range(0x4DC0, 0x4E00)) + list((0x00AD,)):
+    for key in list((0x00AD,)):
+        # https://www.cs.tut.fi/~jkorpela/shy.html
         if key in width_dict:
             del width_dict[key]
-    width_dict[0x1160] = '{:s}...{:s}\t0'.format(
-      unicode_utils.ucs_symbol(0x1160), unicode_utils.ucs_symbol(0x11FF))
-    width_dict[0x3248] = '{:s}...{:s}\t2'.format(
-      unicode_utils.ucs_symbol(0x3248), unicode_utils.ucs_symbol(0x324F))
-    width_dict[0x4DC0] = '{:s}...{:s}\t2'.format(
-      unicode_utils.ucs_symbol(0x4DC0), unicode_utils.ucs_symbol(0x4DFF))
+    for key in list(range(0x1160, 0x1200)):
+        width_dict[key] = 0
+    for key in list(range(0x3248, 0x3250)):
+        # These are “A” which means we can decide whether to treat them
+        # as “W” or “N” based on context:
+        # http://www.unicode.org/mail-arch/unicode-ml/y2017-m08/0023.html
+        # For us, “W” seems better.
+        width_dict[key] = 2
+    for key in list(range(0x4DC0, 0x4E00)):
+        width_dict[key] = 2
 
+    same_width_lists = []
+    current_width_list = []
     for key in sorted(width_dict):
-        outfile.write(width_dict[key]+'\n')
+        if not current_width_list:
+            current_width_list = [key]
+        elif (key == current_width_list[-1] + 1
+              and width_dict[key] == width_dict[current_width_list[0]]):
+            current_width_list.append(key)
+        else:
+            same_width_lists.append(current_width_list)
+            current_width_list = [key]
+    if current_width_list:
+        same_width_lists.append(current_width_list)
+
+    for same_width_list in same_width_lists:
+        if len(same_width_list) == 1:
+            outfile.write('{:s}\t{:d}\n'.format(
+                unicode_utils.ucs_symbol(same_width_list[0]),
+                width_dict[same_width_list[0]]))
+        else:
+            outfile.write('{:s}...{:s}\t{:d}\n'.format(
+                unicode_utils.ucs_symbol(same_width_list[0]),
+                unicode_utils.ucs_symbol(same_width_list[-1]),
+                width_dict[same_width_list[0]]))
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
