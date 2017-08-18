@@ -44,9 +44,6 @@ extern error_t argz_create (char *const __argv[], char **__restrict __argz,
    STRING, returning it in ARGZ, and the total length in LEN.  If a
    memory allocation error occurs, ENOMEM is returned, otherwise 0.
    The result can be destroyed using free.  */
-extern error_t __argz_create_sep (const char *__restrict __string,
-				  int __sep, char **__restrict __argz,
-				  size_t *__restrict __len) __THROW;
 extern error_t argz_create_sep (const char *__restrict __string,
 				int __sep, char **__restrict __argz,
 				size_t *__restrict __len) __THROW;
@@ -70,38 +67,24 @@ extern void __argz_stringify (char *__argz, size_t __len, int __sep) __THROW;
 extern void argz_stringify (char *__argz, size_t __len, int __sep) __THROW;
 
 /* Append BUF, of length BUF_LEN to the argz vector in ARGZ & ARGZ_LEN.  */
-extern error_t __argz_append (char **__restrict __argz,
-			      size_t *__restrict __argz_len,
-			      const char *__restrict __buf, size_t __buf_len)
-     __THROW;
 extern error_t argz_append (char **__restrict __argz,
 			    size_t *__restrict __argz_len,
 			    const char *__restrict __buf, size_t __buf_len)
      __THROW;
 
 /* Append STR to the argz vector in ARGZ & ARGZ_LEN.  */
-extern error_t __argz_add (char **__restrict __argz,
-			   size_t *__restrict __argz_len,
-			   const char *__restrict __str) __THROW;
 extern error_t argz_add (char **__restrict __argz,
 			 size_t *__restrict __argz_len,
 			 const char *__restrict __str) __THROW;
 
 /* Append SEP separated list in STRING to the argz vector in ARGZ &
    ARGZ_LEN.  */
-extern error_t __argz_add_sep (char **__restrict __argz,
-			       size_t *__restrict __argz_len,
-			       const char *__restrict __string, int __delim)
-     __THROW;
 extern error_t argz_add_sep (char **__restrict __argz,
 			     size_t *__restrict __argz_len,
 			     const char *__restrict __string, int __delim)
      __THROW;
 
 /* Delete ENTRY from ARGZ & ARGZ_LEN, if it appears there.  */
-extern void __argz_delete (char **__restrict __argz,
-			   size_t *__restrict __argz_len,
-			   char *__restrict __entry) __THROW;
 extern void argz_delete (char **__restrict __argz,
 			 size_t *__restrict __argz_len,
 			 char *__restrict __entry) __THROW;
@@ -112,10 +95,6 @@ extern void argz_delete (char **__restrict __argz,
    ARGZ, ENTRY) will insert ENTRY at the beginning of ARGZ.  If BEFORE is not
    in ARGZ, EINVAL is returned, else if memory can't be allocated for the new
    ARGZ, ENOMEM is returned, else 0.  */
-extern error_t __argz_insert (char **__restrict __argz,
-			      size_t *__restrict __argz_len,
-			      char *__restrict __before,
-			      const char *__restrict __entry) __THROW;
 extern error_t argz_insert (char **__restrict __argz,
 			    size_t *__restrict __argz_len,
 			    char *__restrict __before,
@@ -124,11 +103,6 @@ extern error_t argz_insert (char **__restrict __argz,
 /* Replace any occurrences of the string STR in ARGZ with WITH, reallocating
    ARGZ as necessary.  If REPLACE_COUNT is non-zero, *REPLACE_COUNT will be
    incremented by number of replacements performed.  */
-extern error_t __argz_replace (char **__restrict __argz,
-			       size_t *__restrict __argz_len,
-			       const char *__restrict __str,
-			       const char *__restrict __with,
-			       unsigned int *__restrict __replace_count);
 extern error_t argz_replace (char **__restrict __argz,
 			     size_t *__restrict __argz_len,
 			     const char *__restrict __str,
