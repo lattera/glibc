@@ -1,3 +1,9 @@
+2017-08-18  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #21750]
+	* charmaps/UTF-8: Use the range notation for all ranges
+	of neighbouring characters with the same width.
+
 2017-08-17  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21960]
