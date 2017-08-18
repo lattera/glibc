@@ -1,3 +1,10 @@
+2017-08-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21966]
+	* sysdeps/x86_64/fpu/multiarch/ifunc-mathvec-avx2.h
+	(IFUNC_SELECTOR): Don't use the AVX2 version if FMA isn't
+	usable.
+
 2017-08-17  DJ Delorie  <dj@redhat.com>
 
 	* bug17079.c: Update to new test harness.
