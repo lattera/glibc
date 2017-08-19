@@ -52,7 +52,7 @@
 
    We exit from the loop for case 1.  */
 
-extern size_t __strspn_sse2 (const char *, const char *);
+extern size_t __strspn_sse2 (const char *, const char *) attribute_hidden;
 
 
 size_t

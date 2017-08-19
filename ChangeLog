@@ -1,3 +1,10 @@
+2017-08-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
+	* sysdeps/x86_64/multiarch/strcspn-c.c (STRCSPN_SSE2): Add
+	attribute_hidden.
+	(__strspn_sse2): Likewise.
+
 2017-08-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/generic/not-cancel.h (close_not_cancel): Remove macro.

@@ -70,7 +70,7 @@ char *
 #else
 size_t
 #endif
-STRCSPN_SSE2 (const char *, const char *);
+STRCSPN_SSE2 (const char *, const char *) attribute_hidden;
 
 
 #ifdef USE_AS_STRPBRK
