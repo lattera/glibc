@@ -53,6 +53,7 @@ libc_hidden_ver (__glob64, glob64)
 int __old_glob64 (const char *__pattern, int __flags,
 		  int (*__errfunc) (const char *, int),
 		  glob64_t *__pglob);
+libc_hidden_proto (__old_glob64);
 
 #undef dirent
 #define dirent __old_dirent64
@@ -71,6 +72,8 @@ int __old_glob64 (const char *__pattern, int __flags,
 #define GLOB_ONLY_P 1
 
 #include <posix/glob.c>
+
+libc_hidden_def (__old_glob64);
 
 compat_symbol (libc, __old_glob64, glob64, GLIBC_2_1);
 #endif

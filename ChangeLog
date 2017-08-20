@@ -1,6 +1,12 @@
 2017-08-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* sysdeps/unix/sysv/linux/i386/glob64.c (__old_glob64): Add
+	libc_hidden_proto and libc_hidden_def.
+
+2017-08-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* sysdeps/unix/sysv/linux/i386/olddirent.h (__old_readdir64):
 	Add libc_hidden_proto.
 	* sysdeps/unix/sysv/linux/i386/readdir64.c (__old_readdir64):
