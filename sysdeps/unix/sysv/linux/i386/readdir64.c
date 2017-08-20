@@ -39,5 +39,7 @@ versioned_symbol (libc, __readdir64, readdir64, GLIBC_2_2);
 
 #include <sysdeps/posix/readdir.c>
 
+libc_hidden_def (__old_readdir64)
+
 compat_symbol (libc, __old_readdir64, readdir64, GLIBC_2_1);
 #endif
