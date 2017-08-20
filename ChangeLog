@@ -1,5 +1,15 @@
 2017-08-20  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #21974]
+	* gmon/Makefile (routines): Remove bb_init_func and
+	bb_exit_func.
+	(elide-routines.os): Removed.
+	* include/sys/gmon.h (__bb): Likewise.
+	(__bb_init_func): Likewise.
+	(__bb_exit_func): Likewise.
+
+2017-08-20  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* debug/longjmp_chk.c (____longjmp_chk): Moved to ...
 	* include/setjmp.h (____longjmp_chk): Here.  Add
 	attribute_hidden.

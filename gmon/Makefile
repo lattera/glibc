@@ -23,9 +23,7 @@ subdir	:= gmon
 include ../Makeconfig
 
 headers	:= sys/gmon.h sys/gmon_out.h sys/profil.h
-routines := gmon mcount profil sprofil bb_init_func bb_exit_func prof-freq
-
-elide-routines.os = bb_init_func bb_exit_func
+routines := gmon mcount profil sprofil prof-freq
 
 tests	= tst-sprofil tst-gmon
 ifeq ($(build-profile),yes)
