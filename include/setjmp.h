@@ -8,6 +8,9 @@
 extern void __longjmp (__jmp_buf __env, int __val)
      __attribute__ ((__noreturn__)) attribute_hidden;
 
+extern void ____longjmp_chk (__jmp_buf __env, int __val)
+     __attribute__ ((__noreturn__)) attribute_hidden;
+
 /* Internal function to possibly save the current mask of blocked signals
    in ENV, and always set the flag saying whether or not it was saved.
    This is used by the machine-dependent definition of `__sigsetjmp'.
