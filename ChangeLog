@@ -4,6 +4,8 @@
 	* gmon/Makefile (routines): Remove bb_init_func and
 	bb_exit_func.
 	(elide-routines.os): Removed.
+	* gmon/bb_exit_func.c: Likewise.
+	* gmon/bb_init_func.c: Likewise.
 	* include/sys/gmon.h (__bb): Likewise.
 	(__bb_init_func): Likewise.
 	(__bb_exit_func): Likewise.
