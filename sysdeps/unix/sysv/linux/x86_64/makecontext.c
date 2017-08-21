@@ -51,7 +51,7 @@
 void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
-  extern void __start_context (void);
+  extern void __start_context (void) attribute_hidden;
   greg_t *sp;
   unsigned int idx_uc_link;
   va_list ap;

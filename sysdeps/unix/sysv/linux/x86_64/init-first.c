@@ -27,7 +27,7 @@ long int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *)
 long int (*VDSO_SYMBOL(getcpu)) (unsigned *, unsigned *, void *)
   attribute_hidden;
 
-extern long int __syscall_clock_gettime (clockid_t, struct timespec *);
+extern __typeof (clock_gettime) __syscall_clock_gettime attribute_hidden;
 
 
 static inline void

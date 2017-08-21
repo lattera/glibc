@@ -1,5 +1,13 @@
 2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #18822]
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c
+	(__syscall_clock_gettime): Add attribute_hidden.
+	* sysdeps/unix/sysv/linux/x86_64/makecontext.c
+	(__start_context): Likewise.
+
+2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* include/libc-symbols.h (__hidden_proto_hiddenattr): New for
 	building libc.a.
 	(hidden_proto): Likewise.
