@@ -1,5 +1,10 @@
 2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* include/libc-symbols.h (attribute_hidden): Enable hidden
+	visibility in libc.a compiled with PIE.
+
+2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #18822]
 	* sysdeps/unix/sysv/linux/x86/libc-vdso.h (VDSO_SYMBOL(getcpu)):
 	Add attribute_hidden.

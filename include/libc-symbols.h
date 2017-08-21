@@ -363,7 +363,8 @@ for linking")
   strong_alias(real, name)
 #endif
 
-#if defined SHARED || defined LIBC_NONSHARED
+#if defined SHARED || defined LIBC_NONSHARED \
+  || (BUILD_PIE_DEFAULT && IS_IN (libc))
 # define attribute_hidden __attribute__ ((visibility ("hidden")))
 #else
 # define attribute_hidden
