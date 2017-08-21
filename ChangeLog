@@ -1,5 +1,14 @@
 2017-08-21  Joseph Myers  <joseph@codesourcery.com>
 
+	Revert:
+	2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* include/libc-symbols.h (__hidden_proto_hiddenattr): New for
+	building libc.a.
+	(hidden_proto): Likewise.
+	(hidden_tls_proto): Likewise.
+	(__hidden_proto): Likewise.
+
 	[BZ #21973]
 	* sysdeps/sparc/sparc32/fpu/w_sqrt_compat.S: Remove file.
 	* sysdeps/sparc/sparc32/fpu/w_sqrtf_compat.S: Likewise.
