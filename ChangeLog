@@ -1,6 +1,20 @@
 2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* sysdeps/unix/sysv/linux/x86/libc-vdso.h (VDSO_SYMBOL(getcpu)):
+	Add attribute_hidden.
+
+2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21864]
+	* Makerules (all-nonlib): Add $(others-extras).
+	* catgets/Makefile (others-extras): New.
+	* elf/Makefile (others-extras): Likewise.
+	* nss/Makefile (others-extras): Likewise.
+
+2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* csu/libc-start.c (__libc_multiple_libcs): Removed.
 	* elf/dl-open.c: Include <libc-internal.h>.
 	(__libc_multiple_libcs): Removed.
