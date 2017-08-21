@@ -1,3 +1,28 @@
+2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
+	* grp/initgroups.c (__nss_group_database): Removed.
+	(__nss_initgroups_database): Likewise.
+	* nscd/gai.c (__nss_hosts_database): Likewise.
+	* nss/XXX-lookup.c (DATABASE_NAME_SYMBOL): Likewise.
+	* posix/tst-rfc3484-2.c (__nss_hosts_database): Likewise.
+	* posix/tst-rfc3484-3.c (__nss_hosts_database): Likewise.
+	* posix/tst-rfc3484.c (__nss_hosts_database): Likewise.
+	* sysdeps/posix/getaddrinfo.c (__nss_hosts_database): Likewise.
+	* nss/getXXent.c (INTERNAL (REENTRANT_GETNAME)): Add
+	attribute_hidden.
+	* nss/nsswitch.c (__nss_database_custom): Define only if
+	USE_NSCD is defined.
+	(__nss_configure_lookup): Use __nss_database_custom only if
+	USE_NSCD is defined.
+	* nss/nsswitch.h (__nss_database_custom): Declare only if
+	USE_NSCD is defined.  Add attribute_hidden.
+	(__nss_setent): Add attribute_hidden.
+	(__nss_endent): Likewise.
+	(__nss_getent_r): Likewise.
+	(__nss_getent): Likewise.
+	(DEFINE_DATABASE): Declare __nss_##arg##_database.
+
 2017-08-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]

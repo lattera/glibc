@@ -56,7 +56,7 @@
 /* Prototype of the reentrant version.  */
 extern int INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer,
 					 size_t buflen, LOOKUP_TYPE **result
-					 H_ERRNO_PARM);
+					 H_ERRNO_PARM) attribute_hidden;
 
 /* We need to protect the dynamic buffer handling.  */
 __libc_lock_define_initialized (static, lock);

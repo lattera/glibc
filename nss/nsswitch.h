@@ -96,17 +96,19 @@ typedef struct name_database
 } name_database;
 
 
+#ifdef USE_NSCD
 /* Indices into DATABASES in nsswitch.c and __NSS_DATABASE_CUSTOM.  */
 enum
   {
-#define DEFINE_DATABASE(arg) NSS_DBSIDX_##arg,
-#include "databases.def"
-#undef DEFINE_DATABASE
+# define DEFINE_DATABASE(arg) NSS_DBSIDX_##arg,
+# include "databases.def"
+# undef DEFINE_DATABASE
     NSS_DBSIDX_max
   };
 
 /* Flags whether custom rules for database is set.  */
-extern bool __nss_database_custom[NSS_DBSIDX_max];
+extern bool __nss_database_custom[NSS_DBSIDX_max] attribute_hidden;
+#endif
 
 /* Warning for NSS functions, which don't require dlopen if glibc
    was built with --enable-static-nss.  */
@@ -180,11 +182,13 @@ extern void __nss_setent (const char *func_name,
 			  db_lookup_function lookup_fct,
 			  service_user **nip, service_user **startp,
 			  service_user **last_nip, int stayon,
-			  int *stayon_tmp, int res);
+			  int *stayon_tmp, int res)
+     attribute_hidden;
 extern void __nss_endent (const char *func_name,
 			  db_lookup_function lookup_fct,
 			  service_user **nip, service_user **startp,
-			  service_user **last_nip, int res);
+			  service_user **last_nip, int res)
+     attribute_hidden;
 extern int __nss_getent_r (const char *getent_func_name,
 			   const char *setent_func_name,
 			   db_lookup_function lookup_fct,
@@ -192,10 +196,12 @@ extern int __nss_getent_r (const char *getent_func_name,
 			   service_user **last_nip, int *stayon_tmp,
 			   int res,
 			   void *resbuf, char *buffer, size_t buflen,
-			   void **result, int *h_errnop);
+			   void **result, int *h_errnop)
+     attribute_hidden;
 extern void *__nss_getent (getent_r_function func,
 			   void **resbuf, char **buffer, size_t buflen,
-			   size_t *buffer_size, int *h_errnop);
+			   size_t *buffer_size, int *h_errnop)
+     attribute_hidden;
 struct resolv_context;
 struct hostent;
 extern int __nss_hostname_digits_dots_context (struct resolv_context *,
@@ -221,6 +227,7 @@ libc_hidden_proto (__nss_hostname_digits_dots)
 
 /* Prototypes for __nss_*_lookup2 functions.  */
 #define DEFINE_DATABASE(arg)				    \
+  service_user *__nss_##arg##_database attribute_hidden;    \
   int __nss_##arg##_lookup2 (service_user **, const char *, \
 			     const char *, void **);	    \
   libc_hidden_proto (__nss_##arg##_lookup2)

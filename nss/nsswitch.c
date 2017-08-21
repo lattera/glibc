@@ -73,8 +73,10 @@ static const struct
 };
 #define ndatabases (sizeof (databases) / sizeof (databases[0]))
 
+#ifdef USE_NSCD
 /* Flags whether custom rules for database is set.  */
 bool __nss_database_custom[NSS_DBSIDX_max];
+#endif
 
 
 __libc_lock_define_initialized (static, lock)
@@ -304,7 +306,9 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
 
   /* Install new rules.  */
   *databases[cnt].dbp = new_db;
+#ifdef USE_NSCD
   __nss_database_custom[cnt] = true;
+#endif
 
   __libc_lock_unlock (lock);
 

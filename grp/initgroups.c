@@ -36,8 +36,6 @@ typedef enum nss_status (*initgroups_dyn_function) (const char *, gid_t,
 						    long int *, long int *,
 						    gid_t **, long int, int *);
 
-extern service_user *__nss_group_database attribute_hidden;
-service_user *__nss_initgroups_database;
 static bool use_initgroups_entry;
 
 

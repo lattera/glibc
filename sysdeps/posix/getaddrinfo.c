@@ -318,7 +318,6 @@ typedef enum nss_status (*nss_gethostbyname3_r)
 typedef enum nss_status (*nss_getcanonname_r)
   (const char *name, char *buffer, size_t buflen, char **result,
    int *errnop, int *h_errnop);
-extern service_user *__nss_hosts_database attribute_hidden;
 
 /* This function is called if a canonical name is requested, but if
    the service function did not provide it.  It tries to obtain the

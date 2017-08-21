@@ -52,8 +52,6 @@
 #define DEFAULT_CONFIG NULL
 #endif
 
-service_user *DATABASE_NAME_SYMBOL attribute_hidden;
-
 int
 DB_LOOKUP_FCT (service_user **ni, const char *fct_name, const char *fct2_name,
 	       void **fctp)
