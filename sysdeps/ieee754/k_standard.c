@@ -939,6 +939,9 @@ __kernel_standard(double x, double y, int type)
 		break;
 
 		/* #### Last used is 50/150/250 ### */
+
+	    default:
+		__builtin_unreachable ();
 	}
 	return exc.retval;
 }

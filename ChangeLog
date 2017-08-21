@@ -1,3 +1,8 @@
+2017-08-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Add default
+	case calling __builtin_unreachable.
+
 2017-08-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* libio/ioopen.c (_IO_waitpid): Replace waitpid_not_cancel with
