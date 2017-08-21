@@ -1,3 +1,14 @@
+2017-08-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21972]
+	* assert/assert.h (assert): Use static_cast (bool) for C++.
+	Use the ternary operator in the warning branch for GNU C.
+	* assert/Makefile (tests): Add tst-assert-c++, tst-assert-g++.
+	(CFLAGS-tst-assert-c++.o): Compile in C++11 mode.
+	(CFLAGS-tst-assert-g++.o): Compile in GnU C++11 mode.
+	(LDLIBS-tst-assert-c++, LDLIBS-tst-assert-g++): Link with libstdc++.
+	* assert/tst-assert-c++.cc, assert/tst-assert-g++.cc: New files.
+
 2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]

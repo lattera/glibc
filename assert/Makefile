@@ -25,6 +25,15 @@ include ../Makeconfig
 headers	:= assert.h
 
 routines := assert assert-perr __assert
-tests := test-assert test-assert-perr
+tests := test-assert test-assert-perr tst-assert-c++ tst-assert-g++
 
 include ../Rules
+
+ifeq ($(have-cxx-thread_local),yes)
+CFLAGS-tst-assert-c++.o = -std=c++11
+LDLIBS-tst-assert-c++ = -lstdc++
+CFLAGS-tst-assert-g++.o = -std=gnu++11
+LDLIBS-tst-assert-g++ = -lstdc++
+else
+tests-unsupported += tst-assert-c++ tst-assert-g++
+endif
