@@ -36,10 +36,6 @@
 static _IO_lock_t list_all_lock = _IO_lock_initializer;
 #endif
 
-/* Used to signal modifications to the list of FILE decriptors.  */
-static int _IO_list_all_stamp;
-
-
 static _IO_FILE *run_fp;
 
 #ifdef _IO_MTSAFE_IO
@@ -67,16 +63,12 @@ _IO_un_link (struct _IO_FILE_plus *fp)
       if (_IO_list_all == NULL)
 	;
       else if (fp == _IO_list_all)
-	{
-	  _IO_list_all = (struct _IO_FILE_plus *) _IO_list_all->file._chain;
-	  ++_IO_list_all_stamp;
-	}
+	_IO_list_all = (struct _IO_FILE_plus *) _IO_list_all->file._chain;
       else
 	for (f = &_IO_list_all->file._chain; *f; f = &(*f)->_chain)
 	  if (*f == (_IO_FILE *) fp)
 	    {
 	      *f = fp->file._chain;
-	      ++_IO_list_all_stamp;
 	      break;
 	    }
       fp->file._flags &= ~_IO_LINKED;
@@ -104,7 +96,6 @@ _IO_link_in (struct _IO_FILE_plus *fp)
 #endif
       fp->file._chain = (_IO_FILE *) _IO_list_all;
       _IO_list_all = fp;
-      ++_IO_list_all_stamp;
 #ifdef _IO_MTSAFE_IO
       _IO_funlockfile ((_IO_FILE *) fp);
       run_fp = NULL;
@@ -758,17 +749,13 @@ _IO_flush_all_lockp (int do_lock)
 {
   int result = 0;
   struct _IO_FILE *fp;
-  int last_stamp;
 
 #ifdef _IO_MTSAFE_IO
-  __libc_cleanup_region_start (do_lock, flush_cleanup, NULL);
-  if (do_lock)
-    _IO_lock_lock (list_all_lock);
+  _IO_cleanup_region_start_noarg (flush_cleanup);
+  _IO_lock_lock (list_all_lock);
 #endif
 
-  last_stamp = _IO_list_all_stamp;
-  fp = (_IO_FILE *) _IO_list_all;
-  while (fp != NULL)
+  for (fp = (_IO_FILE *) _IO_list_all; fp != NULL; fp = fp->_chain)
     {
       run_fp = fp;
       if (do_lock)
@@ -785,21 +772,11 @@ _IO_flush_all_lockp (int do_lock)
       if (do_lock)
 	_IO_funlockfile (fp);
       run_fp = NULL;
-
-      if (last_stamp != _IO_list_all_stamp)
-	{
-	  /* Something was added to the list.  Start all over again.  */
-	  fp = (_IO_FILE *) _IO_list_all;
-	  last_stamp = _IO_list_all_stamp;
-	}
-      else
-	fp = fp->_chain;
     }
 
 #ifdef _IO_MTSAFE_IO
-  if (do_lock)
-    _IO_lock_unlock (list_all_lock);
-  __libc_cleanup_region_end (0);
+  _IO_lock_unlock (list_all_lock);
+  _IO_cleanup_region_end (0);
 #endif
 
   return result;
@@ -818,16 +795,13 @@ void
 _IO_flush_all_linebuffered (void)
 {
   struct _IO_FILE *fp;
-  int last_stamp;
 
 #ifdef _IO_MTSAFE_IO
   _IO_cleanup_region_start_noarg (flush_cleanup);
   _IO_lock_lock (list_all_lock);
 #endif
 
-  last_stamp = _IO_list_all_stamp;
-  fp = (_IO_FILE *) _IO_list_all;
-  while (fp != NULL)
+  for (fp = (_IO_FILE *) _IO_list_all; fp != NULL; fp = fp->_chain)
     {
       run_fp = fp;
       _IO_flockfile (fp);
@@ -837,15 +811,6 @@ _IO_flush_all_linebuffered (void)
 
       _IO_funlockfile (fp);
       run_fp = NULL;
-
-      if (last_stamp != _IO_list_all_stamp)
-	{
-	  /* Something was added to the list.  Start all over again.  */
-	  fp = (_IO_FILE *) _IO_list_all;
-	  last_stamp = _IO_list_all_stamp;
-	}
-      else
-	fp = fp->_chain;
     }
 
 #ifdef _IO_MTSAFE_IO
@@ -879,6 +844,12 @@ static void
 _IO_unbuffer_all (void)
 {
   struct _IO_FILE *fp;
+
+#ifdef _IO_MTSAFE_IO
+  _IO_cleanup_region_start_noarg (flush_cleanup);
+  _IO_lock_lock (list_all_lock);
+#endif
+
   for (fp = (_IO_FILE *) _IO_list_all; fp; fp = fp->_chain)
     {
       if (! (fp->_flags & _IO_UNBUFFERED)
@@ -921,6 +892,11 @@ _IO_unbuffer_all (void)
 	 used.  */
       fp->_mode = -1;
     }
+
+#ifdef _IO_MTSAFE_IO
+  _IO_lock_unlock (list_all_lock);
+  _IO_cleanup_region_end (0);
+#endif
 }
 
 

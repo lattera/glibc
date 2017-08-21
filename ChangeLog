@@ -1,3 +1,11 @@
+2017-10-05  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15142]
+	* libio/genops.c (_IO_list_all_stamp): Delete.  All uses removed.
+	(_IO_flush_all_lockp): Always lock list_all_lock.
+	(_IO_flush_all_linebuffered): Likewise.
+	(_IO_unbuffer_all): Likewise.
+
 2017-10-05  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #15436]
