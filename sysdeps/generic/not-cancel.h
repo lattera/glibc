@@ -38,7 +38,7 @@
   (void) __writev (fd, iov, n)
 # define __waitpid_nocancel(pid, stat_loc, options) \
   __waitpid (pid, stat_loc, options)
-#define pause_not_cancel() \
+#define __pause_nocancel() \
   __pause ()
 #define nanosleep_not_cancel(requested_time, remaining) \
   __nanosleep (requested_time, remaining)

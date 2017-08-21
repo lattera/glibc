@@ -77,14 +77,8 @@ __typeof (waitpid) __waitpid_nocancel;
 libc_hidden_proto (__waitpid_nocancel)
 
 /* Uncancelable pause.  */
-#define pause_not_cancel() \
-  ({ sigset_t set; 							     \
-     int __rc = INLINE_SYSCALL (rt_sigprocmask, 4, SIG_BLOCK, NULL, &set,    \
-				_NSIG / 8);				     \
-     if (__rc == 0)							     \
-       __rc = INLINE_SYSCALL (rt_sigsuspend, 2, &set, _NSIG / 8);	     \
-     __rc;								     \
-  })
+__typeof (pause) __pause_nocancel;
+libc_hidden_proto (__pause_nocancel)
 
 /* Uncancelable nanosleep.  */
 #define nanosleep_not_cancel(requested_time, remaining) \

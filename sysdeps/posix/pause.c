@@ -39,18 +39,3 @@ __libc_pause (void)
 weak_alias (__libc_pause, pause)
 
 LIBC_CANCEL_HANDLED ();		/* sigsuspend handles our cancellation.  */
-
-#ifndef NO_CANCELLATION
-# include <not-cancel.h>
-
-int
-__pause_nocancel (void)
-{
-  sigset_t set;
-
-  __sigemptyset (&set);
-  __sigprocmask (SIG_BLOCK, NULL, &set);
-
-  return sigsuspend_not_cancel (&set);
-}
-#endif

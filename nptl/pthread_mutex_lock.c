@@ -428,7 +428,7 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 
 		/* Delay the thread indefinitely.  */
 		while (1)
-		  pause_not_cancel ();
+		  __pause_nocancel ();
 	      }
 
 	    oldval = mutex->__data.__lock;

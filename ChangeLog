@@ -1,3 +1,14 @@
+2017-08-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock_full): Replace
+	pause_not_cancel with __pause_nocancel.
+	* sysdeps/generic/not-cancel.h (pause_not_cancel): Remove macro.
+	(__pause_nocancel): New macro.
+	* sysdeps/unix/sysv/linux/not-cancel.h (pause_not_cancel): Remove
+	macro.
+	(__pause_nocancel): New prototype.
+	* sysdeps/unix/sysv/linux/pause.c (__pause_nocancel): New function.
+
 2017-08-22  Martin Sebor  <msebor@redhat.com>
 
 	* include/libc-symbols.h (__ifunc_resolver): Declare resolver
