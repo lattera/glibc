@@ -1,5 +1,12 @@
 2017-08-21  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #21864]
+	Do not compile benchmark helper objects with -DMODULE_NAME=libc.
+	* benchtests/Makefile (others-extras): Set to $(bench-extra-objs).
+	Move before inclusion of ../Rules.
+
+2017-08-21  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #21972]
 	* assert/assert.h (assert): Use static_cast (bool) for C++.
 	Use the ternary operator in the warning branch for GNU C.

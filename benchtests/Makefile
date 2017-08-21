@@ -93,6 +93,11 @@ $(objpfx)bench-malloc-thread: $(shared-thread-library)
 # affect their performance.
 .NOTPARALLEL:
 
+bench-extra-objs = json-lib.o
+
+extra-objs += $(bench-extra-objs)
+others-extras = $(bench-extra-objs)
+
 include ../Rules
 
 binaries-bench := $(addprefix $(objpfx)bench-,$(bench))
@@ -124,10 +129,6 @@ cpp-srcs-left := $(binaries-benchset:=.c) $(binaries-bench:=.c) \
 		 $(binaries-bench-malloc:=.c)
 lib := nonlib
 include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
-
-bench-extra-objs = json-lib.o
-
-extra-objs += $(bench-extra-objs)
 
 bench-deps := bench-skeleton.c bench-timing.h Makefile
 
