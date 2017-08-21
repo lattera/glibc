@@ -137,6 +137,7 @@ GLIBC_2.0 sinhl F
 GLIBC_2.0 sinl F
 GLIBC_2.0 sqrt F
 GLIBC_2.0 sqrtf F
+GLIBC_2.0 sqrtl F
 GLIBC_2.0 tan F
 GLIBC_2.0 tanf F
 GLIBC_2.0 tanh F

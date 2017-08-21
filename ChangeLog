@@ -1,5 +1,23 @@
 2017-08-21  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21973]
+	* sysdeps/sparc/sparc32/fpu/w_sqrt_compat.S: Remove file.
+	* sysdeps/sparc/sparc32/fpu/w_sqrtf_compat.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrt_compat-vis3.S:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrt_compat.S:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrtf_compat-vis3.S:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrtf_compat.S:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrt_compat.S : Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrtf_compat.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/w_sqrt_compat.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/w_sqrtf_compat.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Add
+	GLIBC_2.0 sqrtl symbol.
+
 	* math/math.h [__USE_MISC] (_LIB_VERSION_TYPE): Remove.
 	[__USE_MISC] (_LIB_VERSION): Likewise.
 	[__USE_MISC] (struct exception): Likewise.
