@@ -989,13 +989,6 @@ enable_test (int exceptions)
   return 1;
 }
 
-/* This is to prevent messages from the SVID libm emulation.  */
-int
-matherr (struct exception *x __attribute__ ((unused)))
-{
-  return 1;
-}
-
 static void
 initialize (void)
 {

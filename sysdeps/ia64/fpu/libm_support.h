@@ -83,6 +83,8 @@
 #ifndef __LIBM_SUPPORT_H_INCLUDED__
 #define __LIBM_SUPPORT_H_INCLUDED__
 
+#include <math-svid-compat.h>
+
 #ifndef _LIBC
 #if !(defined(_WIN32) || defined(_WIN64))
 # pragma const_seg(".rodata") /* place constant data in text (code) section */
@@ -156,35 +158,7 @@ struct exceptionl
 #endif
 
 extern int MATHERR_F(struct exceptionf*);
-extern int MATHERR_D(struct EXC_DECL_D*);
 extern int matherrl(struct exceptionl*);
-
-#ifndef _LIBC
-// Add code to support _LIB_VERSIONIMF
-typedef enum
-{
-    _IEEE_ = -1, // IEEE-like behavior
-    _SVID_,      // SysV, Rel. 4 behavior
-    _XOPEN_,     // Unix98
-    _POSIX_,     // Posix
-    _ISOC_       // ISO C9X
-} _LIB_VERSION_TYPE;
-#endif
-
-// This is a run-time variable and may affect
-// floating point behavior of the libm functions
-
-#if !defined( LIBM_BUILD )
-#if defined( _DLL )
-extern _LIB_VERSION_TYPE __declspec(dllimport) _LIB_VERSIONIMF;
-#else
-extern _LIB_VERSION_TYPE _LIB_VERSIONIMF;
-#endif  /* _DLL */
-#else
-extern int (*pmatherrf)(struct exceptionf*);
-extern int (*pmatherr)(struct EXC_DECL_D*);
-extern int (*pmatherrl)(struct exceptionl*);
-#endif  /* LIBM_BUILD */
 
 /* memory format definitions (LITTLE_ENDIAN only) */
 
@@ -1030,15 +1004,6 @@ struct ker80 {
     }
 #endif
 
-
-/* error codes */
-
-#define DOMAIN     1   /* argument domain error */
-#define SING       2   /* argument singularity */
-#define OVERFLOW   3   /* overflow range error */
-#define UNDERFLOW  4   /* underflow range error */
-#define TLOSS      5   /* total loss of precision */
-#define PLOSS      6   /* partial loss of precision */
 
 /* */
 

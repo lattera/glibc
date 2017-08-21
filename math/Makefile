@@ -181,7 +181,7 @@ $(inst_libdir)/libm.a: $(common-objpfx)format.lds \
 endif
 
 # Rules for the test suite.
-tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
+tests = test-matherr-3 test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-misc test-fpucw test-fpucw-ieee tst-definitions test-tgmath \
 	test-tgmath-ret bug-nextafter bug-nexttoward bug-tgmath1 \
 	test-tgmath-int test-tgmath2 test-powl tst-CMPLX tst-CMPLX2 test-snan \
@@ -201,6 +201,7 @@ tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
 	       test-signgam-ullong-static test-signgam-ullong-init-static
+tests-internal = test-matherr test-matherr-2
 
 ifneq (,$(CXX))
 tests += test-math-isinff test-math-iszero
@@ -356,12 +357,6 @@ CFLAGS-test-iseqsig-excess-precision.c = -fexcess-precision=standard
 CFLAGS-test-flt-eval-method.c = -fexcess-precision=standard
 
 CFLAGS-test-fe-snans-always-signal.c = -fsignaling-nans
-
-# The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
-# for error handling in the -lm functions.
-install-lib += libieee.a
-non-lib.a += libieee.a
-extra-objs += libieee.a ieee-math.o
 
 include ../Rules
 
@@ -542,10 +537,6 @@ endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 
-# This file defines the default _LIB_VERSION variable that controls
-# the error return conventions for the math functions.
-CPPFLAGS-s_lib_version.c := -D_POSIX_MODE
-
 # We don't want the fdlibm code to use the inline math functions,
 # only the fdlibm code.
 math-CPPFLAGS += -D__NO_MATH_INLINES -D__LIBC_INTERNAL_MATH_INLINES
@@ -566,17 +557,9 @@ CFLAGS-s_modff.c += -fsignaling-nans
 CFLAGS-s_modfl.c += -fsignaling-nans
 CFLAGS-s_modff128.c += -fsignaling-nans
 
-# The -lieee library is actually an object file.
-# The module just defines the _LIB_VERSION_ variable.
-# It's not a library to make sure it is linked in instead of s_lib_version.o.
-$(objpfx)libieee.a: $(objpfx)ieee-math.o
-	rm -f $@
-	$(patsubst %/,cd % &&,$(objpfx)) \
-	$(LN_S) $(<F) $(@F)
-
 $(addprefix $(objpfx),\
 	    $(filter-out $(tests-static) $(libm-tests-vector),\
-			 $(tests))): $(libm)
+			 $(tests) $(tests-internal))): $(libm)
 $(addprefix $(objpfx),$(tests-static)): $(objpfx)libm.a
 define o-iterator-doit
 $(foreach f,$($(o)-funcs),\

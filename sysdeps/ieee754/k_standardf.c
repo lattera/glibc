@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-svid-compat.h>
 
 
 /* Handle errors for a libm function as specified by TYPE (see

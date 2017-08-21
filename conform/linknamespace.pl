@@ -47,11 +47,7 @@ close (STDSYMS) || die ("close $stdsyms_file: $!\n");
 # * Bug 18442: re_syntax_options wrongly brought in by regcomp and
 # used by re_comp.
 #
-# * False positive: matherr only used conditionally.  matherrf/matherrl are used
-# by IA64 too for the same reason.
-#
-@whitelist = qw(stdin stdout stderr re_syntax_options matherr matherrf
-		matherrl);
+@whitelist = qw(stdin stdout stderr re_syntax_options);
 foreach my $sym (@whitelist) {
   $stdsyms{$sym} = 1;
 }
@@ -134,7 +130,7 @@ foreach my $sym (@sym_data) {
 # possible that (a) any standard library definition is weak, so can be
 # overridden by the user's definition, and (b) the symbol is only used
 # conditionally and not if the program is limited to standard
-# functionality.  (matherr is an example of such a false positive.)
+# functionality.
 #
 # * If a symbol reference is only brought in by the user using a data
 # symbol rather than a function from the standard library, this will

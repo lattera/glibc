@@ -501,70 +501,10 @@ iszero (__T __val)
 # endif	/* __cplusplus */
 #endif /* Use IEC_60559_BFP_EXT.  */
 
-#ifdef	__USE_MISC
-/* Support for various different standard error handling behaviors.  */
-typedef enum
-{
-  _IEEE_ = -1,	/* According to IEEE 754/IEEE 854.  */
-  _SVID_,	/* According to System V, release 4.  */
-  _XOPEN_,	/* Nowadays also Unix98.  */
-  _POSIX_,
-  _ISOC_	/* Actually this is ISO C99.  */
-} _LIB_VERSION_TYPE;
-
-/* This variable can be changed at run-time to any of the values above to
-   affect floating point error handling behavior (it may also be necessary
-   to change the hardware FPU exception settings).  */
-extern _LIB_VERSION_TYPE _LIB_VERSION;
-#endif
-
-
-#ifdef __USE_MISC
-/* In SVID error handling, `matherr' is called with this description
-   of the exceptional condition.
-
-   We have a problem when using C++ since `exception' is a reserved
-   name in C++.  */
-# ifdef __cplusplus
-struct __exception
-# else
-struct exception
-# endif
-  {
-    int type;
-    char *name;
-    double arg1;
-    double arg2;
-    double retval;
-  };
-
-# ifdef __cplusplus
-extern int matherr (struct __exception *__exc) throw ();
-# else
-extern int matherr (struct exception *__exc);
-# endif
-
-# define X_TLOSS	1.41484755040568800000e+16
-
-/* Types of exceptions in the `type' field.  */
-# define DOMAIN		1
-# define SING		2
-# define OVERFLOW	3
-# define UNDERFLOW	4
-# define TLOSS		5
-# define PLOSS		6
-
-/* SVID mode specifies returning this large value instead of infinity.  */
-# define HUGE		3.40282347e+38F
-
-#else	/* !Misc.  */
-
-# ifdef __USE_XOPEN
+#ifdef __USE_XOPEN
 /* X/Open wants another strange constant.  */
-#  define MAXFLOAT	3.40282347e+38F
-# endif
-
-#endif	/* Misc.  */
+# define MAXFLOAT	3.40282347e+38F
+#endif
 
 
 /* Some useful constants.  */

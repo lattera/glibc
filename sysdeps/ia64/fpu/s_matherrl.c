@@ -13,8 +13,10 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-svid-compat.h>
 #include "libm_support.h"
 
+#if LIBM_SVID_COMPAT
 int
 weak_function
 __matherrl(struct exceptionl *x)
@@ -23,4 +25,5 @@ __matherrl(struct exceptionl *x)
 	if(x->arg1!=x->arg1) return 0;
 	return n;
 }
-weak_alias (__matherrl, matherrl)
+compat_symbol (libm, __matherrl, matherrl, GLIBC_2_2_3);
+#endif

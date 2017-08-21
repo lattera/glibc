@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-svid-compat.h>
 
 double
 __exp2 (double x)

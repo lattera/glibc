@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-svid-compat.h>
 
 long double
 __tgammal(long double x)

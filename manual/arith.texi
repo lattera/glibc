@@ -514,14 +514,6 @@ signal.  The default action for this signal is to terminate the
 program.  @xref{Signal Handling}, for how you can change the effect of
 the signal.
 
-@findex matherr
-In the System V math library, the user-defined function @code{matherr}
-is called when certain exceptions occur inside math library functions.
-However, the Unix98 standard deprecates this interface.  We support it
-for historical compatibility, but recommend that you do not use it in
-new programs.  When this interface is used, exceptions may not be
-raised.
-
 @noindent
 The exceptions defined in @w{IEEE 754} are:
 

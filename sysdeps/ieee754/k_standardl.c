@@ -32,6 +32,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-svid-compat.h>
 #include <fenv.h>
 #include <float.h>
 #include <errno.h>

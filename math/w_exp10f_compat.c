@@ -23,6 +23,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-svid-compat.h>
 
 float
 __exp10f (float x)

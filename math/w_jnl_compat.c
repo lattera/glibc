@@ -46,6 +46,7 @@ static char rcsid[] = "$NetBSD: $";
 
 #include <math.h>
 #include <math_private.h>
+#include <math-svid-compat.h>
 
 long double __jnl(int n, long double x)	/* wrapper jnl */
 {

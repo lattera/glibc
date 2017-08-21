@@ -17,6 +17,14 @@ Deprecated and removed features, and other changes affecting compatibility:
 * On GNU/Linux, the obsolete Linux constant PTRACE_SEIZE_DEVEL is no longer
   defined by <sys/ptrace.h>.
 
+* libm no longer supports SVID error handling (calling a user-provided
+  matherr function on error) or the _LIB_VERSION variable to control error
+  handling.  (SVID error handling and the _LIB_VERSION variable still work
+  for binaries linked against older versions of the GNU C Library.)  The
+  libieee.a library is no longer provided.  math.h no longer defines struct
+  exception, or the macros X_TLOSS, DOMAIN, SING, OVERFLOW, UNDERFLOW,
+  TLOSS, PLOSS and HUGE.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

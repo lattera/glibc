@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <math-svid-compat.h>
 
 ENTRY (__sqrtf)
 	st	%o0, [%sp + 72]

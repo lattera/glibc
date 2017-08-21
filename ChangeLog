@@ -1,3 +1,175 @@
+2017-08-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__USE_MISC] (_LIB_VERSION_TYPE): Remove.
+	[__USE_MISC] (_LIB_VERSION): Likewise.
+	[__USE_MISC] (struct exception): Likewise.
+	[__USE_MISC] (matherr): Likewise.
+	[__USE_MISC] (DOMAIN): Likewise.
+	[__USE_MISC] (SING): Likewise.
+	[__USE_MISC] (OVERFLOW): Likewise.
+	[__USE_MISC] (UNDERFLOW): Likewise.
+	[__USE_MISC] (TLOSS): Likewise.
+	[__USE_MISC] (PLOSS): Likewise.
+	[__USE_MISC] (HUGE): Likewise.
+	[__USE_XOPEN] (MAXFLOAT): Define even if [__USE_MISC].
+	* math/math-svid-compat.h: New file.
+	* conform/linknamespace.pl (@whitelist): Remove matherr, matherrf
+	and matherrl.
+	* include/math.h [!_ISOMAC] (__matherr): Remove.
+	* manual/arith.texi (FP Exceptions): Do not document matherr.
+	* math/Makefile (tests): Change test-matherr to test-matherr-3.
+	(tests-internal): New variable.
+	(install-lib): Do not add libieee.a.
+	(non-lib.a): Likewise.
+	(extra-objs): Do not add libieee.a and ieee-math.o.
+	(CPPFLAGS-s_lib_version.c): Remove variable.
+	($(objpfx)libieee.a): Remove rule.
+	($(addprefix $(objpfx), $(tests-internal)): Depend on $(libm).
+	* math/ieee-math.c: Remove.
+	* math/libm-test-support.c (matherr): Remove.
+	* math/test-matherr.c: Use <support/test-driver.c>.  Add copyright
+	and license notices.  Include <math-svid-compat.h> and
+	<shlib-compat.h>.
+	(matherr): Undefine as macro.  Use compat_symbol_reference.
+	(_LIB_VERSION): Likewise.
+	* math/test-matherr-2.c: New file.
+	* math/test-matherr-3.c: Likewise.
+	* sysdeps/generic/math_private.h (__kernel_standard): Remove
+	declaration.
+	(__kernel_standard_f): Likewise.
+	(__kernel_standard_l): Likewise.
+	* sysdeps/ieee754/s_lib_version.c: Do not include <math.h> or
+	<math_private.h>.  Include <math-svid-compat.h>.
+	(_LIB_VERSION): Undefine as macro.
+	(_LIB_VERSION_INTERNAL): Always initialize to _POSIX_.  Define
+	only if [LIBM_SVID_COMPAT || !defined SHARED].  If
+	[LIBM_SVID_COMPAT], use compat_symbol.
+	* sysdeps/ieee754/s_matherr.c: Do not include <math.h> or
+	<math_private.h>.  Include <math-svid-compat.h>.
+	(matherr): Undefine as macro.
+	(__matherr): Define only if [LIBM_SVID_COMPAT].  Use
+	compat_symbol.
+	* sysdeps/ia64/fpu/libm_error.c: Include <math-svid-compat.h>.
+	[_LIBC && LIBM_SVID_COMPAT] (matherrf): Use
+	compat_symbol_reference.
+	[_LIBC && LIBM_SVID_COMPAT] (matherrl): Likewise.
+	[_LIBC && !LIBM_SVID_COMPAT] (matherrf): Define as macro.
+	[_LIBC && !LIBM_SVID_COMPAT] (matherrl): Likewise.
+	* sysdeps/ia64/fpu/libm_support.h: Include <math-svid-compat.h>.
+	(MATHERR_D): Remove declaration.
+	[!_LIBC] (_LIB_VERSION_TYPE): Likewise
+	[!LIBM_BUILD] (_LIB_VERSIONIMF): Likewise.
+	[LIBM_BUILD] (pmatherrf): Likewise.
+	[LIBM_BUILD] (pmatherr): Likewise.
+	[LIBM_BUILD] (pmatherrl): Likewise.
+	(DOMAIN): Likewise.
+	(SING): Likewise.
+	(OVERFLOW): Likewise.
+	(UNDERFLOW): Likewise.
+	(TLOSS): Likewise.
+	(PLOSS): Likewise.
+	* sysdeps/ia64/fpu/s_matherrf.c: Include <math-svid-compat.h>.
+	(__matherrf): Define only if [LIBM_SVID_COMPAT].  Use
+	compat_symbol.
+	* sysdeps/ia64/fpu/s_matherrl.c: Include <math-svid-compat.h>.
+	(__matherrl): Define only if [LIBM_SVID_COMPAT].  Use
+	compat_symbol.
+	* math/lgamma-compat.h: Include <math-svid-compat.h>.
+	* math/w_acos_compat.c: Likewise.
+	* math/w_acosf_compat.c: Likewise.
+	* math/w_acosh_compat.c: Likewise.
+	* math/w_acoshf_compat.c: Likewise.
+	* math/w_acoshl_compat.c: Likewise.
+	* math/w_acosl_compat.c: Likewise.
+	* math/w_asin_compat.c: Likewise.
+	* math/w_asinf_compat.c: Likewise.
+	* math/w_asinl_compat.c: Likewise.
+	* math/w_atan2_compat.c: Likewise.
+	* math/w_atan2f_compat.c: Likewise.
+	* math/w_atan2l_compat.c: Likewise.
+	* math/w_atanh_compat.c: Likewise.
+	* math/w_atanhf_compat.c: Likewise.
+	* math/w_atanhl_compat.c: Likewise.
+	* math/w_cosh_compat.c: Likewise.
+	* math/w_coshf_compat.c: Likewise.
+	* math/w_coshl_compat.c: Likewise.
+	* math/w_exp10_compat.c: Likewise.
+	* math/w_exp10f_compat.c: Likewise.
+	* math/w_exp10l_compat.c: Likewise.
+	* math/w_exp2_compat.c: Likewise.
+	* math/w_exp2f_compat.c: Likewise.
+	* math/w_exp2l_compat.c: Likewise.
+	* math/w_fmod_compat.c: Likewise.
+	* math/w_fmodf_compat.c: Likewise.
+	* math/w_fmodl_compat.c: Likewise.
+	* math/w_hypot_compat.c: Likewise.
+	* math/w_hypotf_compat.c: Likewise.
+	* math/w_hypotl_compat.c: Likewise.
+	* math/w_j0_compat.c: Likewise.
+	* math/w_j0f_compat.c: Likewise.
+	* math/w_j0l_compat.c: Likewise.
+	* math/w_j1_compat.c: Likewise.
+	* math/w_j1f_compat.c: Likewise.
+	* math/w_j1l_compat.c: Likewise.
+	* math/w_jn_compat.c: Likewise.
+	* math/w_jnf_compat.c: Likewise.
+	* math/w_jnl_compat.c: Likewise.
+	* math/w_lgamma_main.c: Likewise.
+	* math/w_lgamma_r_compat.c: Likewise.
+	* math/w_lgammaf_main.c: Likewise.
+	* math/w_lgammaf_r_compat.c: Likewise.
+	* math/w_lgammal_main.c: Likewise.
+	* math/w_lgammal_r_compat.c: Likewise.
+	* math/w_log10_compat.c: Likewise.
+	* math/w_log10f_compat.c: Likewise.
+	* math/w_log10l_compat.c: Likewise.
+	* math/w_log2_compat.c: Likewise.
+	* math/w_log2f_compat.c: Likewise.
+	* math/w_log2l_compat.c: Likewise.
+	* math/w_log_compat.c: Likewise.
+	* math/w_logf_compat.c: Likewise.
+	* math/w_logl_compat.c: Likewise.
+	* math/w_pow_compat.c: Likewise.
+	* math/w_powf_compat.c: Likewise.
+	* math/w_powl_compat.c: Likewise.
+	* math/w_remainder_compat.c: Likewise.
+	* math/w_remainderf_compat.c: Likewise.
+	* math/w_remainderl_compat.c: Likewise.
+	* math/w_scalb_compat.c: Likewise.
+	* math/w_scalbf_compat.c: Likewise.
+	* math/w_scalbl_compat.c: Likewise.
+	* math/w_sinh_compat.c: Likewise.
+	* math/w_sinhf_compat.c: Likewise.
+	* math/w_sinhl_compat.c: Likewise.
+	* math/w_sqrt_compat.c: Likewise.
+	* math/w_sqrtf_compat.c: Likewise.
+	* math/w_sqrtl_compat.c: Likewise.
+	* math/w_tgamma_compat.c: Likewise.
+	* math/w_tgammaf_compat.c: Likewise.
+	* math/w_tgammal_compat.c: Likewise.
+	* sysdeps/ieee754/dbl-64/w_exp_compat.c: Likewise.
+	* sysdeps/ieee754/flt-32/w_expf_compat.c: Likewise.
+	* sysdeps/ieee754/k_standard.c: Likewise.
+	* sysdeps/ieee754/k_standardf.c: Likewise.
+	* sysdeps/ieee754/k_standardl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/w_expl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/w_expl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/w_expl_compat.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt_compat.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrtf_compat.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrt_compat.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrtf_compat.S: Likewise.
+	* sysdeps/sparc/sparc32/fpu/w_sqrt_compat.S: Likewise.
+	* sysdeps/sparc/sparc32/fpu/w_sqrtf_compat.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrt_compat-vis3.S:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrtf_compat-vis3.S:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrt_compat.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrtf_compat.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/w_sqrt_compat.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/w_sqrtf_compat.S: Likewise.
+
 2017-08-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21864]

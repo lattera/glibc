@@ -19,6 +19,7 @@
 #ifndef LGAMMA_COMPAT_H
 #define LGAMMA_COMPAT_H 1
 
+#include <math-svid-compat.h>
 #include <shlib-compat.h>
 
 /* XSI POSIX requires lgamma to set signgam, but ISO C does not permit

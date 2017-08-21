@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
+/* Test matherr not supported for new binaries.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,30 +16,29 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fenv.h>
 #include <math.h>
-#include <math_private.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <math-svid-compat.h>
 
+_LIB_VERSION_TYPE _LIB_VERSION = _SVID_;
 
-/* wrapper log10l(x) */
-long double
-__log10l (long double x)
+static int fail = 0;
+
+int
+matherr (struct exception *s)
 {
-  if (__builtin_expect (islessequal (x, 0.0L), 0) && _LIB_VERSION != _IEEE_)
-    {
-      if (x == 0.0L)
-	{
-	  feraiseexcept (FE_DIVBYZERO);
-	  return __kernel_standard_l (x, x, 218); /* log10(0) */
-	}
-      else
-	{
-	  feraiseexcept (FE_INVALID);
-	  return __kernel_standard_l (x, x, 219); /* log10(x<0) */
-	}
-    }
-
-  return  __ieee754_log10l (x);
+  printf ("matherr is working, but should not be\n");
+  fail = 1;
+  return 1;
 }
-weak_alias (__log10l, log10l)
+
+static int
+do_test (void)
+{
+  acos (2.0);
+  return fail;
+}
+
+#include <support/test-driver.c>

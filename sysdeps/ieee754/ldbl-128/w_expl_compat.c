@@ -24,6 +24,7 @@ static char rcsid[] = "$NetBSD: $";
 
 #include <math.h>
 #include <math_private.h>
+#include <math-svid-compat.h>
 
 long double __expl(long double x)	/* wrapper exp */
 {

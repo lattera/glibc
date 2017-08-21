@@ -91,11 +91,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "libm_support.h"
+#include <math-svid-compat.h>
 
 #ifdef _LIBC
 # define pmatherr matherr
 # define pmatherrf matherrf
 # define pmatherrl matherrl
+# if LIBM_SVID_COMPAT
+compat_symbol_reference (libm, matherrf, matherrf, GLIBC_2_2_3);
+compat_symbol_reference (libm, matherrl, matherrl, GLIBC_2_2_3);
+# else
+#  define matherrf(EXC) ((void) (EXC), 0)
+#  define matherrl(EXC) ((void) (EXC), 0)
+# endif
 #else
 _LIB_VERSION_TYPE
 #if defined( __POSIX__ )

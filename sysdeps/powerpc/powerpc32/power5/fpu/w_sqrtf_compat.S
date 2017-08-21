@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <math-svid-compat.h>
 
 /* float [fp1] sqrts (float x [fp1])
    Power4 (ISA V2.0) and above implement sqrt in hardware (not optional).

@@ -18,24 +18,18 @@ static char rcsid[] = "$NetBSD: s_lib_version.c,v 1.6 1995/05/10 20:47:44 jtc Ex
  * MACRO for standards
  */
 
-#include <math.h>
-#include <math_private.h>
+#include <math-svid-compat.h>
 
 /*
  * define and initialize _LIB_VERSION
  */
-#ifdef _POSIX_MODE
+#undef _LIB_VERSION
+#if LIBM_SVID_COMPAT || !defined SHARED
 _LIB_VERSION_TYPE _LIB_VERSION_INTERNAL = _POSIX_;
-#else
-#ifdef _XOPEN_MODE
-_LIB_VERSION_TYPE _LIB_VERSION_INTERNAL = _XOPEN_;
-#else
-#ifdef _SVID3_MODE
-_LIB_VERSION_TYPE _LIB_VERSION_INTERNAL = _SVID_;
-#else					/* default _IEEE_MODE */
-_LIB_VERSION_TYPE _LIB_VERSION_INTERNAL = _IEEE_;
 #endif
-#endif
-#endif
-
+#if LIBM_SVID_COMPAT
+compat_symbol (libm, _LIB_VERSION_INTERNAL, _LIB_VERSION, GLIBC_2_0);
+#elif !defined SHARED
+/* For use in .S wrappers.  */
 weak_alias (_LIB_VERSION_INTERNAL, _LIB_VERSION)
+#endif

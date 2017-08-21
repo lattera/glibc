@@ -249,11 +249,6 @@ fabsf128 (_Float128 x)
 
 
 
-/* fdlibm kernel function */
-extern double __kernel_standard (double,double,int);
-extern float __kernel_standard_f (float,float,int);
-extern long double __kernel_standard_l (long double,long double,int);
-
 /* Prototypes for functions of the IBM Accurate Mathematical Library.  */
 extern double __exp1 (double __x, double __xx, double __error);
 extern double __sin (double __x);

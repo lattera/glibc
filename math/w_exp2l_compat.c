@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-svid-compat.h>
 
 long double
 __exp2l (long double x)

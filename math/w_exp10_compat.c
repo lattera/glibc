@@ -23,6 +23,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-svid-compat.h>
 
 double
 __exp10 (double x)

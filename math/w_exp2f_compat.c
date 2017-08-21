@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-svid-compat.h>
 
 float
 __exp2f (float x)
