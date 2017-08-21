@@ -33,11 +33,10 @@
 #include <tls.h>
 #include <stap-probe.h>
 #include <atomic.h>
+#include <libc-internal.h>
 
 #include <dl-dst.h>
 
-
-extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
 /* We must be careful not to leave us in an inconsistent state.  Thus we
    catch any error and re-raise it after cleaning up.  */

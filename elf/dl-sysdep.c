@@ -41,7 +41,7 @@
 #include <dl-machine.h>
 #include <dl-procinfo.h>
 #include <dl-osinfo.h>
-#include <hp-timing.h>
+#include <libc-internal.h>
 #include <tls.h>
 
 #include <dl-tunables.h>

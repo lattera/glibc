@@ -53,4 +53,6 @@ extern void __init_misc (int, char **, char **);
 extern __typeof (__profile_frequency) __profile_frequency attribute_hidden;
 # endif
 
+extern int __libc_multiple_libcs attribute_hidden;
+
 #endif /* _LIBC_INTERNAL  */

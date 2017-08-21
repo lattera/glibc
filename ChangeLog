@@ -1,6 +1,18 @@
 2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* csu/libc-start.c (__libc_multiple_libcs): Removed.
+	* elf/dl-open.c: Include <libc-internal.h>.
+	(__libc_multiple_libcs): Removed.
+	* elf/dl-sysdep.c: Include <libc-internal.h> instead of
+	<hp-timing.h>.
+	* include/libc-internal.h (__libc_multiple_libcs): New.
+	* misc/sbrk.c: Include <libc-internal.h>.
+	(__libc_multiple_libcs): Removed.
+
+2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* grp/initgroups.c (__nss_group_database): Removed.
 	(__nss_initgroups_database): Likewise.
 	* nscd/gai.c (__nss_hosts_database): Likewise.

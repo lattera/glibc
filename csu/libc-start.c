@@ -27,8 +27,6 @@
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
 
-extern int __libc_multiple_libcs;
-
 #include <tls.h>
 #ifndef SHARED
 # include <dl-osinfo.h>
