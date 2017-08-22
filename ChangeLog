@@ -1,5 +1,13 @@
 2017-08-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #21987]
+	* sysdeps/unix/sysv/linux/sparc/bits/long-double.h: Remove file
+	and copy to ...
+	* sysdeps/unix/sysv/linux/sparc/sparc32/bits/long-double.h:
+	... here.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/long-double.h:
+	... and here.
+
 	* assert/Makefile [$(have-cxx-thread_local)]: Move conditional
 	variable definitions above inclusion of ../Rules.
 
