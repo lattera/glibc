@@ -1,3 +1,12 @@
+2017-08-22  Florian Weimer  <fweimer@redhat.com>
+
+	math: Statically link tests of internal functionality.
+	* math/Makefile (tests): Remove atest-exp, atest-sincos,
+	atest-exp2.
+	(tests-static): Add atest-exp, atest-sincos, atest-exp2.
+	(gmp-objs): Remove assignment.
+	(atest-exp, atest-sincos, atest-exp2): Remove targets.
+
 2017-08-22  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #21987]

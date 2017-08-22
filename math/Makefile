@@ -181,7 +181,7 @@ $(inst_libdir)/libm.a: $(common-objpfx)format.lds \
 endif
 
 # Rules for the test suite.
-tests = test-matherr-3 test-fenv atest-exp atest-sincos atest-exp2 basic-test \
+tests = test-matherr-3 test-fenv basic-test \
 	test-misc test-fpucw test-fpucw-ieee tst-definitions test-tgmath \
 	test-tgmath-ret bug-nextafter bug-nexttoward bug-tgmath1 \
 	test-tgmath-int test-tgmath2 test-powl tst-CMPLX tst-CMPLX2 test-snan \
@@ -202,6 +202,10 @@ tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
 	       test-signgam-ullong-static test-signgam-ullong-init-static
 tests-internal = test-matherr test-matherr-2
+
+# These tests use internal (unexported) GMP functions and are linked
+# statically to obtain access to these functions.
+tests-static += atest-exp atest-sincos atest-exp2
 
 ifneq (,$(CXX))
 tests += test-math-isinff test-math-iszero
@@ -569,11 +573,4 @@ endef
 object-suffixes-left := $(libmvec-tests)
 include $(o-iterator)
 
-gmp-objs = $(patsubst %,$(common-objpfx)stdlib/%.o,\
-		      add_n sub_n cmp addmul_1 mul_1 mul_n divmod_1 \
-		      lshift rshift mp_clz_tab udiv_qrnnd inlines \
-		      $(gmp-sysdep_routines))
-$(objpfx)atest-exp: $(gmp-objs)
-$(objpfx)atest-sincos: $(gmp-objs)
-$(objpfx)atest-exp2: $(gmp-objs)
 $(objpfx)test-fenv-tls: $(shared-thread-library)
