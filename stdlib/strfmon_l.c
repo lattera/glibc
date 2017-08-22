@@ -68,11 +68,6 @@
 #define _NL_CURRENT(category, item) \
   (current->values[_NL_ITEM_INDEX (item)].string)
 
-/* This function determines the number of digit groups in the output.
-   The definition is in printf_fp.c.  */
-extern unsigned int __guess_grouping (unsigned int intdig_max,
-				      const char *grouping, wchar_t sepchar);
-
 
 /* We have to overcome some problems with this implementation.  On the
    one hand the strfmon() function is specified in XPG4 and of course
@@ -324,9 +319,7 @@ __vstrfmon_l (char *s, size_t maxsize, locale_t loc, const char *format,
 	 extra characters this means.  */
       if (group && left_prec != -1)
 	left_prec += __guess_grouping (left_prec,
-				       _NL_CURRENT (LC_MONETARY, MON_GROUPING),
-				       *_NL_CURRENT (LC_MONETARY,
-						     MON_THOUSANDS_SEP));
+				       _NL_CURRENT (LC_MONETARY, MON_GROUPING));
 
       /* Now it's time to get the value.  */
       if (is_long_double == 1)

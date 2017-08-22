@@ -1,3 +1,16 @@
+2017-08-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
+	[BZ #21986]
+	* include/printf.h (__printf_fphex): Add attribute_hidden.
+	(__guess_grouping): New prototype.
+	* stdio-common/printf_fp.c (__guess_grouping): Removed.
+	* stdio-common/reg-printf.c (__register_printf_specifier): Add
+	libc_hidden_proto and libc_hidden_def.
+	* stdlib/strfmon_l.c (__guess_grouping): Removed.
+	(__vstrfmon_l): Remove the third argument passed to
+	__guess_grouping.
+
 2017-08-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/math.h [defined __cplusplus] (issignaling): Provide a C++

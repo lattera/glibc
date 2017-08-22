@@ -32,6 +32,7 @@ __libc_lock_define_initialized (static, lock)
 
 int __register_printf_specifier (int, printf_function,
 				 printf_arginfo_size_function);
+libc_hidden_proto (__register_printf_specifier)
 int __register_printf_function (int, printf_function,
 				printf_arginfo_function);
 
@@ -72,6 +73,7 @@ __register_printf_specifier (int spec, printf_function converter,
 
   return result;
 }
+libc_hidden_def (__register_printf_specifier)
 weak_alias (__register_printf_specifier, register_printf_specifier)
 
 

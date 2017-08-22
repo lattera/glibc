@@ -139,8 +139,6 @@ extern mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 extern mp_size_t __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 					    int *expt, int *is_neg,
 					    long double value);
-extern unsigned int __guess_grouping (unsigned int intdig_max,
-				      const char *grouping);
 
 
 static wchar_t *group_number (wchar_t *buf, wchar_t *bufend,
