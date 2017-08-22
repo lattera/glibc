@@ -513,15 +513,40 @@ inline int issignaling (_Float128 __val) { return __issignalingf128 (__val); }
 #  endif
 # else	/* __cplusplus */
 extern "C++" {
+#  ifdef __SUPPORT_SNAN__
+inline int
+iszero (float __val)
+{
+  return __fpclassifyf (__val) == FP_ZERO;
+}
+inline int
+iszero (double __val)
+{
+  return __fpclassify (__val) == FP_ZERO;
+}
+inline int
+iszero (long double __val)
+{
+#   ifdef __NO_LONG_DOUBLE_MATH
+  return __fpclassify (__val) == FP_ZERO;
+#   else
+  return __fpclassifyl (__val) == FP_ZERO;
+#   endif
+}
+#   if __HAVE_DISTINCT_FLOAT128
+inline int
+iszero (_Float128 __val)
+{
+  return __fpclassifyf128 (__val) == FP_ZERO;
+}
+#   endif
+#  else
 template <class __T> inline bool
 iszero (__T __val)
 {
-#  ifdef __SUPPORT_SNAN__
-  return fpclassify (__val) == FP_ZERO;
-#  else
   return __val == 0;
-#  endif
 }
+#  endif
 } /* extern C++ */
 # endif	/* __cplusplus */
 #endif /* Use IEC_60559_BFP_EXT.  */
