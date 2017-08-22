@@ -1,3 +1,11 @@
+2017-08-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* include/libc-symbols.h (__hidden_proto_hiddenattr): New for
+	building libc.a.
+	(hidden_proto): Likewise.
+	(hidden_tls_proto): Likewise.
+	(__hidden_proto): Likewise.
+
 2017-08-22  Florian Weimer  <fweimer@redhat.com>
 
 	math: Statically link tests of internal functionality.
