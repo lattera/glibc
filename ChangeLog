@@ -1,3 +1,9 @@
+2017-08-22  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+	    Steve Ellcey  <sellcey@cavium.com>
+
+	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_dynamic):
+	Use PTR_REG macro in cmp instruction.
+
 2017-08-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* include/libc-symbols.h: [!defined HAVE_GCC_IFUNC] (__ifunc):

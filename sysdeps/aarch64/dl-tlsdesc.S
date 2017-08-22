@@ -208,7 +208,7 @@ _dl_tlsdesc_dynamic:
 	ldr	PTR_REG (2), [x1,#TLSDESC_MODID]
 	add	PTR_REG (0), PTR_REG (0), PTR_REG (2), lsl #(PTR_LOG_SIZE + 1)
 	ldr	PTR_REG (0), [x0] /* Load val member of DTV entry.  */
-	cmp	x0, #TLS_DTV_UNALLOCATED
+	cmp	PTR_REG (0), #TLS_DTV_UNALLOCATED
 	b.eq	2f
 	ldr	PTR_REG (1), [x1,#TLSDESC_MODOFF]
 	add	PTR_REG (0), PTR_REG (0), PTR_REG (1)
