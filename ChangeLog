@@ -1,5 +1,12 @@
 2017-08-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
+	* math/w_remainder_compat.c: Remove duplicate inclusion of
+	math-svid-compat.h.
+	* math/w_remainderf_compat.c: Likewise.
+	* math/w_remainderl_compat.c: Likewise.
+
+2017-08-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
 
 2017-08-22  Joseph Myers  <joseph@codesourcery.com>
