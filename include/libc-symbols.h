@@ -803,7 +803,8 @@ for linking")
 
 /* Helper / base  macros for indirect function symbols.  */
 #define __ifunc_resolver(type_name, name, expr, arg, init, classifier)	\
-  classifier inhibit_stack_protector void *name##_ifunc (arg)					\
+  classifier inhibit_stack_protector					\
+  __typeof (type_name) *name##_ifunc (arg)				\
   {									\
     init ();								\
     __typeof (type_name) *res = expr;					\
