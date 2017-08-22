@@ -831,7 +831,7 @@ for linking")
 
 # define __ifunc(type_name, name, expr, arg, init)			\
   extern __typeof (type_name) name;					\
-  void *name##_ifunc (arg) __asm__ (#name);				\
+  __typeof (type_name) *name##_ifunc (arg) __asm__ (#name);		\
   __ifunc_resolver (type_name, name, expr, arg, init,)			\
  __asm__ (".type " #name ", %gnu_indirect_function");
 
