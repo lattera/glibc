@@ -48,19 +48,43 @@
 /* This is ugly but unless gcc gets appropriate builtins we have to do
    something like this.  Don't ask how it works.  */
 
-/* 1 if 'type' is a floating type, 0 if 'type' is an integer type.
-   Allows for _Bool.  Expands to an integer constant expression.  */
+/* __floating_type expands to 1 if TYPE is a floating type (including
+   complex floating types), 0 if TYPE is an integer type (including
+   complex integer types).  __real_integer_type expands to 1 if TYPE
+   is a real integer type.  __complex_integer_type expands to 1 if
+   TYPE is a complex integer type.  All these macros expand to integer
+   constant expressions.  All these macros can assume their argument
+   has an arithmetic type (not vector, decimal floating-point or
+   fixed-point), valid to pass to tgmath.h macros.  */
 # if __GNUC_PREREQ (3, 1)
-#  define __floating_type(type) \
-  (__builtin_classify_type ((type) 0) == 8 \
-   || (__builtin_classify_type ((type) 0) == 9 \
-       && __builtin_classify_type (__real__ ((type) 0)) == 8))
+/* __builtin_classify_type expands to an integer constant expression
+   in GCC 3.1 and later.  Default conversions applied to the argument
+   of __builtin_classify_type mean it always returns 1 for real
+   integer types rather than ever returning different values for
+   character, boolean or enumerated types.  */
+#  define __floating_type(type)				\
+  (__builtin_classify_type (__real__ ((type) 0)) == 8)
+#  define __real_integer_type(type)		\
+  (__builtin_classify_type ((type) 0) == 1)
+#  define __complex_integer_type(type)				\
+  (__builtin_classify_type ((type) 0) == 9			\
+   && __builtin_classify_type (__real__ ((type) 0)) == 1)
 # else
-#  define __floating_type(type) (((type) 0.25) && ((type) 0.25 - 1))
+/* GCC versions predating __builtin_classify_type are also looser on
+   what counts as an integer constant expression.  */
+#  define __floating_type(type) (((type) 1.25) != 1)
+#  define __real_integer_type(type) (((type) (1.25 + _Complex_I)) == 1)
+#  define __complex_integer_type(type)			\
+  (((type) (1.25 + _Complex_I)) == (1 + _Complex_I))
 # endif
 
-/* The tgmath real type for T, where E is 0 if T is an integer type and
-   1 for a floating type.  */
+/* Whether an expression (of arithmetic type) has a real type.  */
+# define __expr_is_real(E) (__builtin_classify_type (E) != 9)
+
+/* The tgmath real type for T, where E is 0 if T is an integer type
+   and 1 for a floating type.  If T has a complex type, it is
+   unspecified whether the return type is real or complex (but it has
+   the correct corresponding real type).  */
 # define __tgmath_real_type_sub(T, E) \
   __typeof__ (*(0 ? (__typeof__ (0 ? (double *) 0 : (void *) (E))) 0	      \
 		  : (__typeof__ (0 ? (T *) 0 : (void *) (!(E)))) 0))
@@ -69,6 +93,27 @@
 # define __tgmath_real_type(expr) \
   __tgmath_real_type_sub (__typeof__ ((__typeof__ (+(expr))) 0),	      \
 			  __floating_type (__typeof__ (+(expr))))
+
+/* The tgmath complex type for T, where E1 is 1 if T has a floating
+   type and 0 otherwise, E2 is 1 if T has a real integer type and 0
+   otherwise, and E3 is 1 if T has a complex type and 0 otherwise.  */
+# define __tgmath_complex_type_sub(T, E1, E2, E3)			\
+  __typeof__ (*(0							\
+		? (__typeof__ (0 ? (T *) 0 : (void *) (!(E1)))) 0	\
+		: (__typeof__ (0					\
+			       ? (__typeof__ (0				\
+					      ? (double *) 0		\
+					      : (void *) (!(E2)))) 0	\
+			       : (__typeof__ (0				\
+					      ? (_Complex double *) 0	\
+					      : (void *) (!(E3)))) 0)) 0))
+
+/* The tgmath complex type of EXPR.  */
+# define __tgmath_complex_type(expr)					\
+  __tgmath_complex_type_sub (__typeof__ ((__typeof__ (+(expr))) 0),	\
+			     __floating_type (__typeof__ (+(expr))),	\
+			     __real_integer_type (__typeof__ (+(expr))), \
+			     __complex_integer_type (__typeof__ (+(expr))))
 
 /* Expand to text that checks if ARG_COMB has type _Float128, and if
    so calls the appropriately suffixed FCT (which may include a cast),
@@ -79,7 +124,7 @@
   ? fct ## f128 arg_call :
 #  define __TGMATH_CF128(arg_comb, fct, cfct, arg_call)			\
   __builtin_types_compatible_p (__typeof (+__real__ (arg_comb)), _Float128) \
-  ? (sizeof (+__real__ (arg_comb)) == sizeof (+(arg_comb))		\
+  ? (__expr_is_real (arg_comb)						\
      ? fct ## f128 arg_call						\
      : cfct ## f128 arg_call) :
 # else
@@ -244,19 +289,20 @@
 # define __TGMATH_UNARY_REAL_IMAG(Val, Fct, Cfct) \
      (__extension__ ((sizeof (+__real__ (Val)) == sizeof (double)	      \
 		      || __builtin_classify_type (__real__ (Val)) != 8)	      \
-		     ? ((sizeof (+__real__ (Val)) == sizeof (+(Val)))	      \
-			? (__tgmath_real_type (Val)) Fct (Val)		      \
-			: (__tgmath_real_type (Val)) Cfct (Val))	      \
+		     ? (__expr_is_real (Val)				      \
+			? (__tgmath_complex_type (Val)) Fct (Val)	      \
+			: (__tgmath_complex_type (Val)) Cfct (Val))	      \
 		     : (sizeof (+__real__ (Val)) == sizeof (float))	      \
-		     ? ((sizeof (+__real__ (Val)) == sizeof (+(Val)))	      \
-			? (__tgmath_real_type (Val)) Fct##f (Val)	      \
-			: (__tgmath_real_type (Val)) Cfct##f (Val))	      \
-		     : __TGMATH_CF128 ((Val), (__tgmath_real_type (Val)) Fct, \
-				       (__tgmath_real_type (Val)) Cfct,       \
+		     ? (__expr_is_real (Val)				      \
+			? (__tgmath_complex_type (Val)) Fct##f (Val)	      \
+			: (__tgmath_complex_type (Val)) Cfct##f (Val))	      \
+		     : __TGMATH_CF128 ((Val),				      \
+				       (__tgmath_complex_type (Val)) Fct,     \
+				       (__tgmath_complex_type (Val)) Cfct,    \
 				       (Val))				      \
-		     ((sizeof (+__real__ (Val)) == sizeof (+(Val)))	      \
-		      ? (__tgmath_real_type (Val)) __tgml(Fct) (Val)	      \
-		      : (__tgmath_real_type (Val)) __tgml(Cfct) (Val))))
+		     (__expr_is_real (Val)				      \
+		      ? (__tgmath_complex_type (Val)) __tgml(Fct) (Val)	      \
+		      : (__tgmath_complex_type (Val)) __tgml(Cfct) (Val))))
 
 # define __TGMATH_UNARY_IMAG(Val, Cfct) \
      (__extension__ ((sizeof (+__real__ (Val)) == sizeof (double)	      \
@@ -278,13 +324,13 @@
 # define __TGMATH_UNARY_REAL_IMAG_RET_REAL(Val, Fct, Cfct) \
      (__extension__ ((sizeof (+__real__ (Val)) == sizeof (double)	      \
 		      || __builtin_classify_type (__real__ (Val)) != 8)	      \
-		     ? ((sizeof (+__real__ (Val)) == sizeof (+(Val)))	      \
+		     ? (__expr_is_real (Val)				      \
 			? (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))\
 			  Fct (Val)					      \
 			: (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))\
 			  Cfct (Val))					      \
 		     : (sizeof (+__real__ (Val)) == sizeof (float))	      \
-		     ? ((sizeof (+__real__ (Val)) == sizeof (+(Val)))	      \
+		     ? (__expr_is_real (Val)				      \
 			? (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))\
 			  Fct##f (Val)					      \
 			: (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))\
@@ -297,7 +343,7 @@
 					(__real__			      \
 					 (__tgmath_real_type (Val)) 0)) Cfct, \
 				       (Val))				      \
-		     ((sizeof (+__real__ (Val)) == sizeof (+(Val)))	      \
+		     (__expr_is_real (Val)				      \
 		      ? (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))  \
 		      __tgml(Fct) (Val)					      \
 		      : (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))  \
@@ -312,41 +358,38 @@
 						  + __real__ (Val2)) == 8)    \
 		     ? __TGMATH_CF128 ((Val1) + (Val2),			      \
 				       (__typeof			      \
-					((__tgmath_real_type (Val1)) 0	      \
-					 + (__tgmath_real_type (Val2)) 0))    \
+					((__tgmath_complex_type (Val1)) 0     \
+					 + (__tgmath_complex_type (Val2)) 0)) \
 				       Fct,				      \
 				       (__typeof			      \
-					((__tgmath_real_type (Val1)) 0	      \
-					 + (__tgmath_real_type (Val2)) 0))    \
+					((__tgmath_complex_type (Val1)) 0     \
+					 + (__tgmath_complex_type (Val2)) 0)) \
 				       Cfct,				      \
 				       (Val1, Val2))			      \
-		     ((sizeof (+__real__ (Val1)) == sizeof (+(Val1))	      \
-		       && sizeof (+__real__ (Val2)) == sizeof (+(Val2)))      \
-		      ? (__typeof ((__tgmath_real_type (Val1)) 0	      \
-				   + (__tgmath_real_type (Val2)) 0))	      \
+		     (__expr_is_real ((Val1) + (Val2))			      \
+		      ? (__typeof ((__tgmath_complex_type (Val1)) 0	      \
+				   + (__tgmath_complex_type (Val2)) 0))	      \
 		      __tgml(Fct) (Val1, Val2)				      \
-		      : (__typeof ((__tgmath_real_type (Val1)) 0	      \
-				   + (__tgmath_real_type (Val2)) 0))	      \
+		      : (__typeof ((__tgmath_complex_type (Val1)) 0	      \
+				   + (__tgmath_complex_type (Val2)) 0))	      \
 		      __tgml(Cfct) (Val1, Val2))			      \
 		     : (sizeof (+__real__ (Val1)) == sizeof (double)	      \
 			|| sizeof (+__real__ (Val2)) == sizeof (double)	      \
 			|| __builtin_classify_type (__real__ (Val1)) != 8     \
 			|| __builtin_classify_type (__real__ (Val2)) != 8)    \
-		     ? ((sizeof (+__real__ (Val1)) == sizeof (+(Val1))	      \
-			 && sizeof (+__real__ (Val2)) == sizeof (+(Val2)))    \
-			? (__typeof ((__tgmath_real_type (Val1)) 0	      \
-				   + (__tgmath_real_type (Val2)) 0))	      \
+		     ? (__expr_is_real ((Val1) + (Val2))		      \
+			? (__typeof ((__tgmath_complex_type (Val1)) 0	      \
+				   + (__tgmath_complex_type (Val2)) 0))	      \
 			  Fct (Val1, Val2)				      \
-			: (__typeof ((__tgmath_real_type (Val1)) 0	      \
-				   + (__tgmath_real_type (Val2)) 0))	      \
+			: (__typeof ((__tgmath_complex_type (Val1)) 0	      \
+				   + (__tgmath_complex_type (Val2)) 0))	      \
 			  Cfct (Val1, Val2))				      \
-		     : ((sizeof (+__real__ (Val1)) == sizeof (+(Val1))	      \
-			 && sizeof (+__real__ (Val2)) == sizeof (+(Val2)))    \
-			? (__typeof ((__tgmath_real_type (Val1)) 0	      \
-				   + (__tgmath_real_type (Val2)) 0))	      \
+		     : (__expr_is_real ((Val1) + (Val2))		      \
+			? (__typeof ((__tgmath_complex_type (Val1)) 0	      \
+				   + (__tgmath_complex_type (Val2)) 0))	      \
 			  Fct##f (Val1, Val2)				      \
-			: (__typeof ((__tgmath_real_type (Val1)) 0	      \
-				   + (__tgmath_real_type (Val2)) 0))	      \
+			: (__typeof ((__tgmath_complex_type (Val1)) 0	      \
+				   + (__tgmath_complex_type (Val2)) 0))	      \
 			  Cfct##f (Val1, Val2))))
 #else
 # error "Unsupported compiler; you cannot use <tgmath.h>"

@@ -1,3 +1,23 @@
+2017-08-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21684]
+	* math/tgmath.h (__floating_type): Simplify definitions.
+	(__real_integer_type): New macro.
+	(__complex_integer_type): Likewise.
+	(__expr_is_real): Likewise.
+	(__tgmath_real_type_sub): Update comment to describe handling of
+	complex types.
+	(__tgmath_complex_type_sub): New macro.
+	(__tgmath_complex_type): Likewise.
+	[__HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(__TGMATH_CF128): Use __expr_is_real.
+	(__TGMATH_UNARY_REAL_IMAG): Use __tgmath_complex_type and
+	__expr_is_real.
+	(__TGMATH_BINARY_REAL_IMAG): Likewise.
+	(__TGMATH_UNARY_REAL_IMAG_RET_REAL): Use __expr_is_real.
+	* math/gen-tgmath-tests.py (Type.create_type): Create complex
+	integer types.
+
 2017-08-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/generic/not-cancel.h (sigsuspend_not_cancel): Remove

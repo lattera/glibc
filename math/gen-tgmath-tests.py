@@ -128,9 +128,7 @@ class Type(object):
         real_type = Type(name, suffix=suffix, mant_dig=mant_dig,
                          condition=condition, order=order, integer=integer,
                          complex=False)
-        # Complex integer types currently disabled because of problems
-        # in tgmath.h.
-        if complex_ok and not integer:
+        if complex_ok:
             if complex_name is None:
                 complex_name = '_Complex %s' % name
             complex_type = Type(complex_name, condition=condition,
