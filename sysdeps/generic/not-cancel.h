@@ -42,7 +42,5 @@
   __pause ()
 #define __nanosleep_nocancel(requested_time, remaining) \
   __nanosleep (requested_time, remaining)
-#define sigsuspend_not_cancel(set) \
-  __sigsuspend (set)
 
 #define NO_CANCELLATION 1

@@ -85,8 +85,4 @@ libc_hidden_proto (__pause_nocancel)
 __typeof (__nanosleep) __nanosleep_nocancel;
 hidden_proto (__nanosleep_nocancel)
 
-/* Uncancelable sigsuspend.  */
-#define sigsuspend_not_cancel(set) \
-  INLINE_SYSCALL (rt_sigsuspend, 2, set, _NSIG / 8)
-
 #endif /* NOT_CANCEL_H  */

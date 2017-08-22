@@ -79,5 +79,4 @@ __sigsuspend (const sigset_t *set)
   return -1;
 }
 libc_hidden_def (__sigsuspend)
-strong_alias (__sigsuspend, sigsuspend_not_cancel)
 weak_alias (__sigsuspend, sigsuspend)
