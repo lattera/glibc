@@ -599,24 +599,9 @@ libmvec_hidden_def(_ZGVeN8vl8l8_sincos_skx)
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $256, %rsp
-        /* Encoding for vmovups %zmm1, 128(%rsp).  */
-        .byte 0x62
-        .byte 0xf1
-        .byte 0x7c
-        .byte 0x48
-        .byte 0x11
-        .byte 0x4c
-        .byte 0x24
-        .byte 0x02
+        vmovups   %zmm1, 128(%rsp)
         lea       (%rsp), %rdi
-        /* Encoding for vmovups %zmm2, 192(%rdi).  */
-        .byte 0x62
-        .byte 0xf1
-        .byte 0x7c
-        .byte 0x48
-        .byte 0x11
-        .byte 0x57
-        .byte 0x03
+        vmovups   %zmm2, 192(%rdi)
         lea       64(%rsp), %rsi
         call      HIDDEN_JUMPTARGET(\callee)
         movq      128(%rsp), %rdx

@@ -35,32 +35,10 @@ END (_ZGVeN8vl8l8_sincos)
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $320, %rsp
-        /* Encoding for vmovups %zmm0, 256(%rsp).  */
-        .byte 0x62
-        .byte 0xf1
-        .byte 0x7c
-        .byte 0x48
-        .byte 0x11
-        .byte 0x44
-        .byte 0x24
-        .byte 0x04
+        vmovups    %zmm0, 256(%rsp)
         lea       (%rsp), %rdi
-        /* Encoding for vmovups %zmm1, 128(%rdi).  */
-        .byte 0x62
-        .byte 0xf1
-        .byte 0x7c
-        .byte 0x48
-        .byte 0x11
-        .byte 0x4f
-        .byte 0x02
-        /* Encoding for vmovups %zmm2, 192(%rdi).  */
-        .byte 0x62
-        .byte 0xf1
-        .byte 0x7c
-        .byte 0x48
-        .byte 0x11
-        .byte 0x57
-        .byte 0x03
+        vmovups   %zmm1, 128(%rdi)
+        vmovups   %zmm2, 192(%rdi)
         lea       64(%rsp), %rsi
         call      HIDDEN_JUMPTARGET(\callee)
         vmovdqu   288(%rsp), %ymm0
@@ -142,18 +120,7 @@ END (_ZGVeN8vl8l8_sincos)
         subl    $280, %esp
         vmovdqa %ymm1, -208(%ebp)
         vmovdqa %ymm2, -240(%ebp)
-        /* Encoding for vmovapd %zmm0, -304(%ebp).  */
-        .byte 0x67
-        .byte 0x62
-        .byte 0xf1
-        .byte 0xfd
-        .byte 0x48
-        .byte 0x29
-        .byte 0x85
-        .byte 0xd0
-        .byte 0xfe
-        .byte 0xff
-        .byte 0xff
+        vmovapd %zmm0, -304(%ebp)
         call    HIDDEN_JUMPTARGET(\callee)
         leal    32(%r12), %esi
         vmovupd -272(%ebp), %ymm0

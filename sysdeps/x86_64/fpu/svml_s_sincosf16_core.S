@@ -35,48 +35,12 @@ END (_ZGVeN16vl4l4_sincosf)
         cfi_def_cfa_register (%rbp)
         andq      $-64, %rsp
         subq      $448, %rsp
-        /* Encoding for vmovups %zmm0, 384(%rsp).  */
-        .byte 0x62
-        .byte 0xf1
-        .byte 0x7c
-        .byte 0x48
-        .byte 0x11
-        .byte 0x44
-        .byte 0x24
-        .byte 0x06
+        vmovups   %zmm0, 384(%rsp)
         lea       (%rsp), %rdi
-        /* Encoding for vmovups %zmm1, 128(%rdi).  */
-        .byte 0x62
-        .byte 0xf1
-        .byte 0x7c
-        .byte 0x48
-        .byte 0x11
-        .byte 0x4f
-        .byte 0x02
-        /* Encoding for vmovups %zmm2, 192(%rdi).  */
-        .byte 0x62
-        .byte 0xf1
-        .byte 0x7c
-        .byte 0x48
-        .byte 0x11
-        .byte 0x57
-        .byte 0x03
-        /* Encoding for vmovups %zmm3, 256(%rdi).  */
-        .byte 0x62
-        .byte 0xf1
-        .byte 0x7c
-        .byte 0x48
-        .byte 0x11
-        .byte 0x5f
-        .byte 0x04
-        /* Encoding for vmovups %zmm4, 320(%rdi).  */
-        .byte 0x62
-        .byte 0xf1
-        .byte 0x7c
-        .byte 0x48
-        .byte 0x11
-        .byte 0x67
-        .byte 0x05
+        vmovups   %zmm1, 128(%rdi)
+        vmovups   %zmm2, 192(%rdi)
+        vmovups   %zmm3, 256(%rdi)
+        vmovups   %zmm4, 320(%rdi)
         lea       64(%rsp), %rsi
         call      HIDDEN_JUMPTARGET(\callee)
         vmovdqu   416(%rsp), %ymm0
@@ -204,42 +168,9 @@ END (_ZGVeN16vl4l4_sincosf)
         .cfi_escape 0x10,0x3,0x2,0x76,0x68
         movq    %rdi, %rbx
         subl    $344, %esp
-        /* Encoding for vmovdqa64 %zmm1, -240(%ebp).  */
-        .byte 0x67
-        .byte 0x62
-        .byte 0xf1
-        .byte 0xfd
-        .byte 0x48
-        .byte 0x7f
-        .byte 0x8d
-        .byte 0x10
-        .byte 0xff
-        .byte 0xff
-        .byte 0xff
-        /* Encoding for vmovdqa64 %zmm2, -304(%ebp).  */
-        .byte 0x67
-        .byte 0x62
-        .byte 0xf1
-        .byte 0xfd
-        .byte 0x48
-        .byte 0x7f
-        .byte 0x95
-        .byte 0xd0
-        .byte 0xfe
-        .byte 0xff
-        .byte 0xff
-        /* Encoding for vmovaps %zmm0, -368(%ebp).  */
-        .byte 0x67
-        .byte 0x62
-        .byte 0xf1
-        .byte 0x7c
-        .byte 0x48
-        .byte 0x29
-        .byte 0x85
-        .byte 0x90
-        .byte 0xfe
-        .byte 0xff
-        .byte 0xff
+        vmovdqa64 %zmm1, -240(%ebp)
+        vmovdqa64 %zmm2, -304(%ebp)
+        vmovaps   %zmm0, -368(%ebp)
         call    HIDDEN_JUMPTARGET(\callee)
         leal    32(%r12), %esi
         vmovups -336(%ebp), %ymm0

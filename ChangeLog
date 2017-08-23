@@ -1,3 +1,15 @@
+2017-08-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/fpu/svml_d_sincos8_core.S: Replace AVX512F
+	.byte sequences with AVX512F instructions.
+	* sysdeps/x86_64/fpu/svml_d_wrapper_impl.h: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_sincosf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_wrapper_impl.h: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos8_core_avx512.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf16_core_avx512.S:
+	Likewise.
+
 2017-08-22  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 	    Steve Ellcey  <sellcey@cavium.com>
 
