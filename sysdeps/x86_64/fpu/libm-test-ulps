@@ -1305,7 +1305,7 @@ Function: "cos_vlen4_avx2":
 double: 2
 
 Function: "cos_vlen8":
-double: 1
+double: 2
 float: 1
 
 Function: "cos_vlen8_avx2":
@@ -2645,7 +2645,7 @@ Function: "sincos_vlen4_avx2":
 double: 2
 
 Function: "sincos_vlen8":
-double: 1
+double: 2
 float: 1
 
 Function: "sincos_vlen8_avx2":

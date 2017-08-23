@@ -1,5 +1,9 @@
 2017-08-23  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
+
+2017-08-23  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #21982]
 	* string/stratcliff.c (do_test): Declare size, nchars, inner,
 	middle and outer with size_t instead of int.  Repleace %d and
