@@ -1,3 +1,9 @@
+2017-08-29  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21971]
+	* localedata/SUPPORTED: Add mfe_MU/UTF-8.
+	* localedata/locales/mfe_MU: New File.
+
 2017-08-29  Mike FABIAN  <mfabian@redhat.com>
 
 	* locales/sgs_LT (LC_TIME): Use NFC for the strings in “day”.

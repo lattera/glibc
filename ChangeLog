@@ -1,3 +1,8 @@
+2017-08-29  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21971]
+	* locale/iso-639.def: add Morisyen.
+
 2017-08-28  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	[BZ #21930]
