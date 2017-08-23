@@ -486,7 +486,15 @@ enum
 extern "C++" {
 inline int issignaling (float __val) { return __issignalingf (__val); }
 inline int issignaling (double __val) { return __issignaling (__val); }
-inline int issignaling (long double __val) { return __issignalingl (__val); }
+inline int
+issignaling (long double __val)
+{
+#  ifdef __NO_LONG_DOUBLE_MATH
+  return __issignaling (__val);
+#  else
+  return __issignalingl (__val);
+#  endif
+}
 #  if __HAVE_DISTINCT_FLOAT128
 inline int issignaling (_Float128 __val) { return __issignalingf128 (__val); }
 #  endif

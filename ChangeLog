@@ -1,3 +1,9 @@
+2017-08-24  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* math/math.h [defined __cplusplus] (issignaling): In the long
+	double case, call __issignalingl only if __NO_LONG_DOUBLE_MATH
+	is not defined.  Call __issignaling, otherwise.
+
 2017-08-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/make-syscalls.sh: Remove cancellable tagging for
