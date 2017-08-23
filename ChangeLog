@@ -1,3 +1,12 @@
+2017-08-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21982]
+	* string/stratcliff.c (do_test): Declare size, nchars, inner,
+	middle and outer with size_t instead of int.  Repleace %d and
+	%Zd with %zu in printf.  Update "MAX (0, nchars - 128)" and
+	"MAX (outer, nchars - 64)" to support unsigned outer and
+	nchars.  Also exit loop when outer == 0.
+
 2017-08-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* include/fcntl.h (__fcntl_nocancel): Remove definition.
