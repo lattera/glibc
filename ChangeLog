@@ -1,3 +1,13 @@
+2017-08-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* include/fcntl.h (__fcntl_nocancel): Remove definition.
+	* include/signal.h (__sigsuspend_nocancel): Likewise.
+	* include/time.h (__nanosleep_nocancel): Likewise.
+	* sysdeps/generic/not-cancel.h (__fcntl_nocancel): New macro.
+	* login/utmp_file.c: Include non cancellable syscall header.
+	* sysdeps/unix/sysv/linux/not-cancel.h (__fcntl_nocancel): New
+	prototype.
+
 2017-08-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/fpu/svml_d_sincos8_core.S: Replace AVX512F

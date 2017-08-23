@@ -85,4 +85,7 @@ libc_hidden_proto (__pause_nocancel)
 __typeof (__nanosleep) __nanosleep_nocancel;
 hidden_proto (__nanosleep_nocancel)
 
+/* Uncancelable fcntl.  */
+__typeof (__fcntl) __fcntl_nocancel attribute_hidden;
+
 #endif /* NOT_CANCEL_H  */

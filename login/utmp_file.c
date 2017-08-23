@@ -29,6 +29,7 @@
 #include <not-cancel.h>
 #include <kernel-features.h>
 #include <sigsetops.h>
+#include <not-cancel.h>
 
 #include "utmp-private.h"
 #include "utmp-equal.h"

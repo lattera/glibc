@@ -42,5 +42,7 @@
   __pause ()
 #define __nanosleep_nocancel(requested_time, remaining) \
   __nanosleep (requested_time, remaining)
+#define __fcntl_nocancel(fd, cmd, ...) \
+  __fcntl (fd, cmd, __VA_ARGS__)
 
 #define NO_CANCELLATION 1

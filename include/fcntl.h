@@ -9,10 +9,7 @@ extern int __libc_open64 (const char *file, int oflag, ...);
 extern int __libc_open (const char *file, int oflag, ...);
 libc_hidden_proto (__libc_open)
 extern int __libc_fcntl (int fd, int cmd, ...) attribute_hidden;
-#ifndef NO_CANCELLATION
-extern int __fcntl_nocancel (int fd, int cmd, ...) attribute_hidden;
 libc_hidden_proto (__libc_fcntl)
-#endif
 extern int __open (const char *__file, int __oflag, ...);
 libc_hidden_proto (__open)
 extern int __fcntl (int __fd, int __cmd, ...);
