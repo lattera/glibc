@@ -1,3 +1,26 @@
+2017-08-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrt_compat-power5.S:
+	Remove file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrt_compat-ppc32.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrt_compat.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrtf_compat-power5.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrtf_compat-ppc32.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrtf_compat.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt_compat.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrtf_compat.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrt_compat.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrtf_compat.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile
+	(libm-sysdep-routines): Remove w_sqrt_compat-power5,
+	w_sqrt_compat-ppc32, w_sqrtf_compat-power5 and
+	w_sqrtf_compat-ppc32.
+
 2017-08-24  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	* math/math.h [defined __cplusplus] (issignaling): In the long
