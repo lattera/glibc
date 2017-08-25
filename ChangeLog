@@ -1,5 +1,8 @@
 2017-08-25  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/tgmath.h [__HAVE_FLOAT128]: Change conditional to
+	[__HAVE_DISTINCT_FLOAT128].
+
 	* math/math.h (_MSUFTO_): Define and undefine for each inclusion
 	of <bits/math-finite.h>.
 	(__MATH_DECLARING_LDOUBLE): Do not define and undefine for each

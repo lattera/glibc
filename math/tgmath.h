@@ -118,7 +118,7 @@
 /* Expand to text that checks if ARG_COMB has type _Float128, and if
    so calls the appropriately suffixed FCT (which may include a cast),
    or FCT and CFCT for complex functions, with arguments ARG_CALL.  */
-# if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# if __HAVE_DISTINCT_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
 #  define __TGMATH_F128(arg_comb, fct, arg_call) \
   __builtin_types_compatible_p (__typeof (+(arg_comb)), _Float128)	\
   ? fct ## f128 arg_call :
