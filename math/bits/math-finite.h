@@ -24,15 +24,8 @@
   function ## suffix ## reentrant
 #define __REDIRFROM(...) __REDIRFROM_X(__VA_ARGS__)
 
-/* Redirect long double versions of the functions to the corresponding
-   double version if __NO_LONG_DOUBLE_MATH is defined.  */
-#if __MATH_DECLARING_LDOUBLE && defined __NO_LONG_DOUBLE_MATH
-# define __REDIRTO_X(function, reentrant, suffix) \
-   __ ## function ## reentrant ## _finite
-#else
-# define __REDIRTO_X(function, reentrant, suffix) \
+#define __REDIRTO_X(function, reentrant, suffix) \
    __ ## function ## suffix ## reentrant ## _finite
-#endif
 #define __REDIRTO(...) __REDIRTO_X(__VA_ARGS__)
 
 #define __MATH_REDIRCALL_X(from, args, to) \
@@ -40,17 +33,17 @@
 #define __MATH_REDIRCALL(function, reentrant, args) \
   __MATH_REDIRCALL_X \
    (__REDIRFROM (function, reentrant, _MSUF_), args, \
-    __REDIRTO (function, reentrant, _MSUF_))
+    __REDIRTO (function, reentrant, _MSUFTO_))
 #define __MATH_REDIRCALL_2(from, reentrant, args, to) \
   __MATH_REDIRCALL_X \
    (__REDIRFROM (from, reentrant, _MSUF_), args, \
-    __REDIRTO (to, reentrant, _MSUF_))
+    __REDIRTO (to, reentrant, _MSUFTO_))
 
 #define __MATH_REDIRCALL_INTERNAL(function, reentrant, args) \
   __MATH_REDIRCALL_X \
    (__REDIRFROM (__CONCAT (__, function), \
 		 __CONCAT (reentrant, _finite), _MSUF_), \
-    args, __REDIRTO (function, _r, _MSUF_))
+    args, __REDIRTO (function, _r, _MSUFTO_))
 
 
 /* acos.  */
@@ -139,10 +132,10 @@ __extern_always_inline _Mdouble_
 __NTH (__REDIRFROM (lgamma, , _MSUF_) (_Mdouble_ __d))
 {
 # if defined __USE_MISC || defined __USE_XOPEN
-  return __REDIRTO (lgamma, _r, _MSUF_) (__d, &signgam);
+  return __REDIRTO (lgamma, _r, _MSUFTO_) (__d, &signgam);
 # else
   int __local_signgam = 0;
-  return __REDIRTO (lgamma, _r, _MSUF_) (__d, &__local_signgam);
+  return __REDIRTO (lgamma, _r, _MSUFTO_) (__d, &__local_signgam);
 # endif
 }
 #endif
@@ -153,7 +146,7 @@ __NTH (__REDIRFROM (lgamma, , _MSUF_) (_Mdouble_ __d))
 __extern_always_inline _Mdouble_
 __NTH (__REDIRFROM (gamma, , _MSUF_) (_Mdouble_ __d))
 {
-  return __REDIRTO (lgamma, _r, _MSUF_) (__d, &signgam);
+  return __REDIRTO (lgamma, _r, _MSUFTO_) (__d, &signgam);
 }
 #endif
 
@@ -200,7 +193,7 @@ __extern_always_inline _Mdouble_
 __NTH (__REDIRFROM (tgamma, , _MSUF_) (_Mdouble_ __d))
 {
   int __local_signgam = 0;
-  _Mdouble_ __res = __REDIRTO (gamma, _r, _MSUF_) (__d, &__local_signgam);
+  _Mdouble_ __res = __REDIRTO (gamma, _r, _MSUFTO_) (__d, &__local_signgam);
   return __local_signgam < 0 ? -__res : __res;
 }
 #endif

@@ -1,5 +1,19 @@
 2017-08-25  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/math.h (_MSUFTO_): Define and undefine for each inclusion
+	of <bits/math-finite.h>.
+	(__MATH_DECLARING_LDOUBLE): Do not define and undefine for each
+	inclusion of <bits/math-finite.h>.
+	* math/bits/math-finite.h (__REDIRTO_X): Do not define
+	conditionally on [__MATH_DECLARING_LDOUBLE && defined
+	__NO_LONG_DOUBLE_MATH].
+	(__MATH_REDIRCALL): Use _MSUFTO_ in __REDIRTO call.
+	(__MATH_REDIRCALL_2): Likewise.
+	(__MATH_REDIRCALL_INTERNAL): Likewise.
+	(__REDIRFROM (lgamma, , _MSUF_)): Likewise.
+	(__REDIRFROM (gamma, , _MSUF_)): Likewise.
+	(__REDIRFROM (tgamma, , _MSUF_)): Likewise.
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrt_compat-power5.S:
 	Remove file.
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/w_sqrt_compat-ppc32.S:

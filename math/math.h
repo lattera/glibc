@@ -618,15 +618,15 @@ iszero (__T __val)
 /* Include bits/math-finite.h for double.  */
 # define _Mdouble_ double
 # define __MATH_DECLARING_DOUBLE 1
-# define __MATH_DECLARING_LDOUBLE 0
 # define __MATH_DECLARING_FLOATN 0
 # define _MSUF_
+# define _MSUFTO_
 # include <bits/math-finite.h>
 # undef _Mdouble_
 # undef __MATH_DECLARING_DOUBLE
-# undef __MATH_DECLARING_LDOUBLE
 # undef __MATH_DECLARING_FLOATN
 # undef _MSUF_
+# undef _MSUFTO_
 
 /* When __USE_ISOC99 is defined, include math-finite for float and
    long double, as well.  */
@@ -635,29 +635,33 @@ iszero (__T __val)
 /* Include bits/math-finite.h for float.  */
 #  define _Mdouble_ float
 #  define __MATH_DECLARING_DOUBLE 0
-#  define __MATH_DECLARING_LDOUBLE 0
 #  define __MATH_DECLARING_FLOATN 0
 #  define _MSUF_ f
+#  define _MSUFTO_ f
 #  include <bits/math-finite.h>
 #  undef _Mdouble_
 #  undef __MATH_DECLARING_DOUBLE
-#  undef __MATH_DECLARING_LDOUBLE
 #  undef __MATH_DECLARING_FLOATN
 #  undef _MSUF_
+#  undef _MSUFTO_
 
 /* Include bits/math-finite.h for long double.  */
 #  ifdef __MATH_DECLARE_LDOUBLE
 #   define _Mdouble_ long double
 #   define __MATH_DECLARING_DOUBLE 0
-#   define __MATH_DECLARING_LDOUBLE 1
 #   define __MATH_DECLARING_FLOATN 0
 #   define _MSUF_ l
+#   ifdef __NO_LONG_DOUBLE_MATH
+#    define _MSUFTO_
+#   else
+#    define _MSUFTO_ l
+#   endif
 #   include <bits/math-finite.h>
 #   undef _Mdouble_
 #   undef __MATH_DECLARING_DOUBLE
-#   undef __MATH_DECLARING_LDOUBLE
 #   undef __MATH_DECLARING_FLOATN
 #   undef _MSUF_
+#   undef _MSUFTO_
 #  endif
 
 # endif /* __USE_ISOC99.  */
@@ -667,15 +671,19 @@ iszero (__T __val)
       && __GLIBC_USE (IEC_60559_TYPES_EXT)
 #  define _Mdouble_ _Float128
 #  define __MATH_DECLARING_DOUBLE 0
-#  define __MATH_DECLARING_LDOUBLE 0
 #  define __MATH_DECLARING_FLOATN 1
 #  define _MSUF_ f128
+#  if __HAVE_DISTINCT_FLOAT128
+#   define _MSUFTO_ f128
+#  else
+#   define _MSUFTO_ l
+#  endif
 #  include <bits/math-finite.h>
 #  undef _Mdouble_
 #  undef __MATH_DECLARING_DOUBLE
-#  undef __MATH_DECLARING_LDOUBLE
 #  undef __MATH_DECLARING_FLOATN
 #  undef _MSUF_
+#  undef _MSUFTO_
 # endif
 #endif /* __FINITE_MATH_ONLY__ > 0.  */
 
