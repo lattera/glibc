@@ -90,48 +90,7 @@
 /* The current maximum size of the feature integer bit array.  */
 #define FEATURE_INDEX_MAX 1
 
-#ifdef	__ASSEMBLER__
-
-# include <cpu-features-offsets.h>
-
-# define index_cpu_CX8	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
-# define index_cpu_CMOV	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
-# define index_cpu_SSE	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
-# define index_cpu_SSE2	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
-# define index_cpu_SSSE3 COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
-# define index_cpu_SSE4_1 COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
-# define index_cpu_SSE4_2 COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
-# define index_cpu_AVX	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
-# define index_cpu_AVX2	COMMON_CPUID_INDEX_7*CPUID_SIZE+CPUID_EBX_OFFSET
-# define index_cpu_ERMS	COMMON_CPUID_INDEX_7*CPUID_SIZE+CPUID_EBX_OFFSET
-# define index_cpu_MOVBE COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
-# define index_cpu_IBT	COMMON_CPUID_INDEX_7*CPUID_SIZE+CPUID_EDX_OFFSET
-# define index_cpu_SHSTK COMMON_CPUID_INDEX_7*CPUID_SIZE+CPUID_ECX_OFFSET
-
-# define index_arch_Fast_Rep_String	FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Fast_Copy_Backward	FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Slow_BSF		FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Fast_Unaligned_Load	FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Prefer_PMINUB_for_stringop FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_AVX_Usable		FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_FMA_Usable		FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_FMA4_Usable		FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Slow_SSE4_2		FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_AVX2_Usable		FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_AVX_Fast_Unaligned_Load FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_AVX512F_Usable	FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_AVX512DQ_Usable	FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_I586		FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_I686		FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Prefer_MAP_32BIT_EXEC FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Prefer_No_VZEROUPPER FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Fast_Unaligned_Copy	FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Prefer_ERMS		FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Use_dl_runtime_resolve_opt FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Use_dl_runtime_resolve_slow FEATURE_INDEX_1*FEATURE_SIZE
-# define index_arch_Prefer_No_AVX512	FEATURE_INDEX_1*FEATURE_SIZE
-
-#else	/* __ASSEMBLER__ */
+#ifndef	__ASSEMBLER__
 
 enum
   {

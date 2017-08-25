@@ -1,3 +1,8 @@
+2017-08-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.h [__ASSEMBLER__]
+	(index_cpu_*, index_arch_*): Removed.
+
 2017-08-25  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/sys/procfs.h (elf_greg_t):
