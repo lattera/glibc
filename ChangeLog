@@ -1,3 +1,8 @@
+2017-08-25  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/sys/procfs.h (elf_greg_t):
+	Use uint64_t instead of unsigned long.
+
 2017-08-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/tgmath.h [__HAVE_FLOAT128]: Change conditional to

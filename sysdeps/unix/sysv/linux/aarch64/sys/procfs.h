@@ -32,11 +32,12 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/user.h>
+#include <stdint.h>
 
 __BEGIN_DECLS
 
 /* Type for a general-purpose register.  */
-typedef unsigned long elf_greg_t;
+typedef uint64_t elf_greg_t;
 
 /* And the whole bunch of them.  We could have used `struct
    pt_regs' directly in the typedef, but tradition says that
