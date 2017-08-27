@@ -1,3 +1,7 @@
+2017-08-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/bits/sysmacros.h: New file.
+
 2017-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.h [__ASSEMBLER__]
