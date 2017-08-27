@@ -54,6 +54,10 @@ libc {
     # This was always there, but not exported as it should have been.
     mig_strncpy;
   }
+  GLIBC_2.4 {
+    # functions used by RPC stubs
+    __stack_chk_fail
+  }
   GLIBC_2.23 {
     __mach_host_self_;
   }

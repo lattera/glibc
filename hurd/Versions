@@ -129,6 +129,10 @@ libc {
     # functions used in macros & inline functions
     __errno_location;
   }
+  GLIBC_2.4 {
+    # functions used by RPC stubs
+    __stack_chk_fail
+  }
 
   HURD_CTHREADS_0.3 {
     # weak refs to libthreads functions that libc calls iff libthreads in use

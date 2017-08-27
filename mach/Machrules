@@ -221,7 +221,7 @@ endif
 
 ifdef interface-library
 
-$(interface-library)-routines = $(interface-routines)
+$(interface-library)-routines = $(interface-routines) stack_chk_fail_local
 extra-libs += $(interface-library)
 extra-libs-others += $(interface-library)
 

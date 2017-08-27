@@ -1,6 +1,12 @@
 2017-08-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/bits/sysmacros.h: New file.
+	* mach/stack_chk_fail_local.c: New file.
+	* hurd/stack_chk_fail_local.c: New file.
+	* mach/Machrules ($(interface-library)-routines): Add
+	stack_chk_fail_local.
+	* mach/Versions (GLIBC_2.4): Add __stack_chk_fail.
+	* hurd/Versions (GLIBC_2.4): Add __stack_chk_fail.
 
 2017-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
