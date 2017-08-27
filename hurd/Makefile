@@ -81,6 +81,10 @@ $(inlines:%=$(objpfx)%.c): $(objpfx)%-inlines.c: %.h
 	 echo '#include "$<"') > $@-new
 	mv -f $@-new $@
 generated += $(inlines:=.c)
+
+# Avoid ssp before TLS is initialized.
+CFLAGS-hurdstartup.o = $(no-stack-protector)
+CFLAGS-RPC_exec_startup_get_info.o = $(no-stack-protector)
 
 include ../mach/Machrules
 include ../Rules

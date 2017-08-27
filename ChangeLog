@@ -7,6 +7,12 @@
 	stack_chk_fail_local.
 	* mach/Versions (GLIBC_2.4): Add __stack_chk_fail.
 	* hurd/Versions (GLIBC_2.4): Add __stack_chk_fail.
+	* mach/Makefile (CFLAGS-mach_init.o, CFLAGS-RPC_vm_statistics.o,
+	CFLAGS-RPC_vm_map.o, CFLAGS-RPC_vm_protect.o,
+	CFLAGS-RPC_i386_set_gdt.o, CFLAGS-RPC_i386_set_ldt.o,
+	CFLAGS-RPC_task_get_special_port.o): Add $(no-stack-protector).
+	* hurd/Makefile (CFLAGS-hurdstartup.o,
+	CFLAGS-RPC_exec_startup_get_info.o): Add $(no-stack-protector).
 
 2017-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
