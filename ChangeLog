@@ -1,3 +1,25 @@
+2017-08-28  Florian Weimer  <fweimer@redhat.com>
+
+	Store supported list of SYS_* system calls in the source tree.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = misc]
+	(bits/syscall.h): Generate from list file.
+	[$(subdir) = misc] (before-compile): Add bits/syscall.h.
+	[$(subdir) = misc] (tests): Add tst-syscall-list.
+	[$(subdir) = misc] (tests-special): Add tst-syscall-list.out
+	[$(subdir) = misc] (tst-syscall-list-macros.list)
+	[$(subdir) = misc] (tst-syscall-list-nr.list)
+	(tst-syscall-list-sys.list): Helper targets for new
+	tst-syscall-list test.
+	[$(subdir) = misc] (tst-syscall-list.out): Run test script
+	tst-syscall-list.sh.
+	[$(subdir) = misc] (bits/syscall%h, bits/syscall%d): Remove
+	target. Do not include bits/syscall.d.
+	[$(subdir) = misc] (generated): Do not update.
+	* sysdeps/unix/sysv/linux/syscall-names.list: New file.
+	* sysdeps/unix/sysv/linux/gen-syscall-h.awk: Likewise.
+	* sysdeps/unix/sysv/linux/filter-nr-syscalls.awk: Likewise.
+	* sysdeps/unix/sysv/linux/tst-syscall-list.sh: Likewise.
+
 2017-08-27  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* stdlib/Makefile (tst-atexit, tst-at_quick_exit): New tests.
