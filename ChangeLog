@@ -1,5 +1,29 @@
 2017-08-28  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/unix/sysv/linux/aarch64/Makefile (abi-lp64-options)
+	(abi-lp64_be-options): Remove.
+	* sysdeps/unix/sysv/linux/arm/Makefile (abi-soft-options)
+	(abi-hard-options): Likewise.
+	* sysdeps/unix/sysv/linux/mips/Makefile(abi-o32_soft-options)
+	(abi-o32_hard-options, abi-o32_soft_2008-options)
+	(abi-o32_hard_2008-options, abi-n32_soft-options)
+	(abi-n32_hard-options, abi-n32_soft_2008-options)
+	(abi-n32_hard_2008-options, abi-n64_soft-options)
+	(abi-n64_hard-options, abi-n64_soft_2008-options)
+	(abi-n64_hard_2008-options): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile (abi-32-options)
+	(abi-64-v1-options, abi-64-v2-options): Likewise.
+	* sysdeps/unix/sysv/linux/s390/Makefile (abi-32-options)
+	(abi-64-options): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/Makefile (abi-32-options)
+	(abi-64-options): Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/Makefile (abi-32-options)
+	(abi-64-options): Likewise.
+	* sysdeps/unix/sysv/linux/x86/Makefile (abi-32-options)
+	(abi-64-options, abi-x32-options): Likewise.
+
+2017-08-28  Florian Weimer  <fweimer@redhat.com>
+
 	Store supported list of SYS_* system calls in the source tree.
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = misc]
 	(bits/syscall.h): Generate from list file.

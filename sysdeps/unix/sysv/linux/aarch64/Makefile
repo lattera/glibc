@@ -28,8 +28,5 @@ ifeq (,$(filter $(default-abi),$(abi-variants)))
 Unknown ABI, must be one of $(abi-variants)
 endif
 
-abi-lp64-options := -U__AARCH64EB__
 abi-lp64-condition := !defined __AARCH64EB__
-
-abi-lp64_be-options := -D__AARCH64EB__
 abi-lp64_be-condition := defined __AARCH64EB__
