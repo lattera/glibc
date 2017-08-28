@@ -1,3 +1,10 @@
+2017-08-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math-svid-compat.h [!__ASSEMBLER__]: Make code
+	unconditional.
+	* sysdeps/ieee754/s_lib_version.c [!defined SHARED]: Remove
+	conditional code; define contents only for [LIBM_SVID_COMPAT].
+
 2017-08-28  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/Makefile (abi-lp64-options)

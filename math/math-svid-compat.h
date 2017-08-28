@@ -19,7 +19,6 @@
 #ifndef	_MATH_SVID_COMPAT_H
 #define	_MATH_SVID_COMPAT_H	1
 
-#ifndef __ASSEMBLER__
 /* Support for various different standard error handling behaviors.  */
 typedef enum
 {
@@ -49,37 +48,34 @@ struct exception
 extern int matherr (struct exception *__exc);
 extern int __matherr (struct exception *__exc);
 
-# define X_TLOSS	1.41484755040568800000e+16
+#define X_TLOSS	1.41484755040568800000e+16
 
 /* Types of exceptions in the `type' field.  */
-# define DOMAIN		1
-# define SING		2
-# define OVERFLOW	3
-# define UNDERFLOW	4
-# define TLOSS		5
-# define PLOSS		6
+#define DOMAIN		1
+#define SING		2
+#define OVERFLOW	3
+#define UNDERFLOW	4
+#define TLOSS		5
+#define PLOSS		6
 
 /* SVID mode specifies returning this large value instead of infinity.  */
-# define HUGE		3.40282347e+38F
-#endif
+#define HUGE		3.40282347e+38F
 
 /* The above definitions may be used in testcases.  The following code
    is only used in the implementation.  */
 
 #ifdef _LIBC
-# ifndef __ASSEMBLER__
 /* fdlibm kernel function */
 extern double __kernel_standard (double, double, int);
 extern float __kernel_standard_f (float, float, int);
 extern long double __kernel_standard_l (long double, long double, int);
-# endif
 
 # include <shlib-compat.h>
 # define LIBM_SVID_COMPAT SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_27)
 # if LIBM_SVID_COMPAT
 compat_symbol_reference (libm, matherr, matherr, GLIBC_2_0);
 compat_symbol_reference (libm, _LIB_VERSION, _LIB_VERSION, GLIBC_2_0);
-# elif !defined __ASSEMBLER__
+# else
 /* Except when building compat code, optimize out references to
    _LIB_VERSION and matherr.  */
 #  define _LIB_VERSION _POSIX_
