@@ -207,8 +207,7 @@ name_ms     ""
 END LC_NAME
 
 LC_ADDRESS
-country_name "<U0069><U002D><U0053><U006F><U0075><U0074><U0068><U0020><U0041><U0066><U0072><U0069><U0063><U0061>"
-% Country name in Zulu - "Mzansi Afrika"
+country_name "iNingizimu Afrika"
 %
 country_post "<U005A><U0041>"
 % Abbreviated country postal name - "ZA"

@@ -1,3 +1,8 @@
+2017-08-28  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #21959]
+	* locales/zu_ZA (LC_ADDRESS): Fix country name to agree with CLDR.
+
 2017-08-18  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #21750]
