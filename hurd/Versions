@@ -131,7 +131,7 @@ libc {
   }
   GLIBC_2.4 {
     # functions used by RPC stubs
-    __stack_chk_fail
+    __stack_chk_fail;
   }
 
   HURD_CTHREADS_0.3 {

@@ -56,7 +56,7 @@ libc {
   }
   GLIBC_2.4 {
     # functions used by RPC stubs
-    __stack_chk_fail
+    __stack_chk_fail;
   }
   GLIBC_2.23 {
     __mach_host_self_;
