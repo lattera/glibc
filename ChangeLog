@@ -1,3 +1,15 @@
+2017-08-27  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* stdlib/Makefile (tst-atexit, tst-at_quick_exit): New tests.
+	(tst-cxa_atexit, tst-on_exit): Likewise.
+	* stdlib/Makefile (tests): Add tst-atexit, tst-at_quick_exit,
+	tst-cxa_atexit, and tst-on_exit.
+	* stdlib/tst-atexit-common.c: New file.
+	* stdlib/tst-atexit.c: New file.
+	* stdlib/tst-at_quick_exit.c: New file.
+	* stdlib/tst-cxa_atexit.c: New file.
+	* stdlib/tst-on_exit.c: New file.
+
 2017-08-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/bits/sysmacros.h: New file.
