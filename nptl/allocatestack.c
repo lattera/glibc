@@ -356,7 +356,7 @@ setup_stack_prot (char *mem, size_t size, char *guard, size_t guardsize,
 		  const int prot)
 {
   char *guardend = guard + guardsize;
-#if _STACK_GROWS_DOWN
+#if _STACK_GROWS_DOWN && !defined(NEED_SEPARATE_REGISTER_STACK)
   /* As defined at guard_position, for architectures with downward stack
      the guard page is always at start of the allocated area.  */
   if (__mprotect (guardend, size - guardsize, prot) != 0)
@@ -370,6 +370,33 @@ setup_stack_prot (char *mem, size_t size, char *guard, size_t guardsize,
     return errno;
 #endif
   return 0;
+}
+
+/* Mark the memory of the stack as usable to the kernel.  It frees everything
+   except for the space used for the TCB itself.  */
+static inline void
+__always_inline
+advise_stack_range (void *mem, size_t size, uintptr_t pd, size_t guardsize)
+{
+  uintptr_t sp = (uintptr_t) CURRENT_STACK_FRAME;
+  size_t pagesize_m1 = __getpagesize () - 1;
+#if _STACK_GROWS_DOWN && !defined(NEED_SEPARATE_REGISTER_STACK)
+  size_t freesize = (sp - (uintptr_t) mem) & ~pagesize_m1;
+  assert (freesize < size);
+  if (freesize > PTHREAD_STACK_MIN)
+    __madvise (mem, freesize - PTHREAD_STACK_MIN, MADV_DONTNEED);
+#else
+  /* Page aligned start of memory to free (higher than or equal
+     to current sp plus the minimum stack size).  */
+  uintptr_t freeblock = (sp + PTHREAD_STACK_MIN + pagesize_m1) & ~pagesize_m1;
+  uintptr_t free_end = (pd - guardsize) & ~pagesize_m1;
+  if (free_end > freeblock)
+    {
+      size_t freesize = free_end - freeblock;
+      assert (freesize < size);
+      __madvise ((void*) freeblock, freesize, MADV_DONTNEED);
+    }
+#endif
 }
 
 /* Returns a usable stack for a new thread either by allocating a

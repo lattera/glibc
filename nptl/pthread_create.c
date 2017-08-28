@@ -551,31 +551,8 @@ START_THREAD_DEFN
     }
 #endif
 
-  /* Mark the memory of the stack as usable to the kernel.  We free
-     everything except for the space used for the TCB itself.  */
-  size_t pagesize_m1 = __getpagesize () - 1;
-#ifdef _STACK_GROWS_DOWN
-  char *sp = CURRENT_STACK_FRAME;
-  size_t freesize = (sp - (char *) pd->stackblock) & ~pagesize_m1;
-  assert (freesize < pd->stackblock_size);
-  if (freesize > PTHREAD_STACK_MIN)
-    __madvise (pd->stackblock, freesize - PTHREAD_STACK_MIN, MADV_DONTNEED);
-#else
-  /* Page aligned start of memory to free (higher than or equal
-     to current sp plus the minimum stack size).  */
-  void *freeblock = (void*)((size_t)(CURRENT_STACK_FRAME
-				     + PTHREAD_STACK_MIN
-				     + pagesize_m1)
-				    & ~pagesize_m1);
-  char *free_end = (char *) (((uintptr_t) pd - pd->guardsize) & ~pagesize_m1);
-  /* Is there any space to free?  */
-  if (free_end > (char *)freeblock)
-    {
-      size_t freesize = (size_t)(free_end - (char *)freeblock);
-      assert (freesize < pd->stackblock_size);
-      __madvise (freeblock, freesize, MADV_DONTNEED);
-    }
-#endif
+  advise_stack_range (pd->stackblock, pd->stackblock_size, (uintptr_t) pd,
+		      pd->guardsize);
 
   /* If the thread is detached free the TCB.  */
   if (IS_DETACHED (pd))

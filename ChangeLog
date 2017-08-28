@@ -1,3 +1,12 @@
+2017-08-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21672]
+	* nptl/allocatestack.c [_STACK_GROWS_DOWN] (setup_stack_prot):
+	Set to use !NEED_SEPARATE_REGISTER_STACK as well.
+	(advise_stack_range): New function.
+	* nptl/pthread_create.c (START_THREAD_DEFN): Move logic to mark
+	stack non required to advise_stack_range at allocatestack.c
+
 2017-08-29  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/sys/procfs.h: Use __uint64_t.
