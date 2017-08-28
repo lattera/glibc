@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-extern double __redirect_ieee754_expf (double);
+extern float __redirect_ieee754_expf (float);
 
 #define SYMBOL_NAME ieee754_expf
 #include "ifunc-fma.h"
