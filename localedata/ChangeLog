@@ -1,3 +1,13 @@
+2017-08-29  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #13805]
+	* locales/ru_RU (LC_MONETARY): Use “,” for mon_decimal_point
+	(to agree with CLDR).
+	* locales/ru_RU (LC_NUMERIC): Write mon_decimal_point in ASCII
+	for readability.
+	* locales/os_RU (LC_MONETARY): Copy from ru_RU,
+	makes it agree with CLDR.
+
 2017-08-29  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21971]

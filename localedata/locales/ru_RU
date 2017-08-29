@@ -86,7 +86,7 @@ END LC_MESSAGES
 LC_MONETARY
 int_curr_symbol           "<U0052><U0055><U0042><U0020>"
 currency_symbol           "<U20BD>"
-mon_decimal_point         "<U002E>"
+mon_decimal_point         ","
 mon_thousands_sep         "<U202F>"
 mon_grouping              3;3
 positive_sign             ""
@@ -102,7 +102,7 @@ n_sign_posn               1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<U002C>"
+decimal_point             ","
 thousands_sep             "<U202F>"
 grouping                  3;3
 END LC_NUMERIC
