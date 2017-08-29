@@ -65,80 +65,8 @@ LC_COLLATE
 copy "iso14651_t1"
 END LC_COLLATE
 
-
 LC_TIME
-
-% Ianuali, Fepuali, Masi, Apelila, Me, Iuni, Iulai, Aokuso, Sepetema,
-% Oketopa, Novema, Tesemo
-mon           "<U0049><U0061><U006E><U0075><U0061><U006C><U0069>";/
-     "<U0046><U0065><U0070><U0075><U0061><U006C><U0069>";/
-     "<U004D><U0061><U0073><U0069>";/
-     "<U0041><U0070><U0065><U006C><U0069><U006C><U0061>";/
-     "<U004D><U0065>";/
-     "<U0049><U0075><U006E><U0069>";/
-     "<U0049><U0075><U006C><U0061><U0069>";/
-     "<U0041><U006F><U006B><U0075><U0073><U006F>";/
-     "<U0053><U0065><U0070><U0065><U0074><U0065><U006D><U0061>";/
-     "<U004F><U006B><U0065><U0074><U006F><U0070><U0061>";/
-     "<U004E><U006F><U0076><U0065><U006D><U0061>";/
-     "<U0054><U0065><U0073><U0065><U006D><U006F>"
-
-% Ian, Fep, Mas, Ape, Me, Iun, Iul, Aok, Sep, Oke, Nov, Tes
-abmon         "<U0049><U0061><U006E>";/
-       "<U0046><U0065><U0070>";/
-       "<U004D><U0061><U0073>";/
-       "<U0041><U0070><U0065>";/
-       "<U004D><U0065>";/
-       "<U0049><U0075><U006E>";/
-       "<U0049><U0075><U006C>";/
-       "<U0041><U006F><U006B>";/
-       "<U0053><U0065><U0070>";/
-       "<U004F><U006B><U0065>";/
-       "<U004E><U006F><U0076>";/
-       "<U0054><U0065><U0073>"
-
-% Aho Tapu, Aho Gofua, Aho Ua, Aho Lotu, Aho Tuloto, Aho Falaile, Aho Faiumu
-day           "<U0041><U0068><U006F><U0020><U0054><U0061><U0070><U0075>";/
-     "<U0041><U0068><U006F><U0020><U0047><U006F><U0066><U0075><U0061>";/
-     "<U0041><U0068><U006F><U0020><U0055><U0061>";/
-     "<U0041><U0068><U006F><U0020><U004C><U006F><U0074><U0075>";/
-     "<U0041><U0068><U006F><U0020><U0054><U0075><U006C><U006F><U0074><U006F>";/
-     "<U0041><U0068><U006F><U0020><U0046><U0061><U006C><U0061><U0069><U006C><U0065>";/
-     "<U0041><U0068><U006F><U0020><U0046><U0061><U0069><U0075><U006D><U0075>"
-
-% Tapu, Gofua, Ua, Lotu, Tuloto, Falaile, Faiumu
-abday         "<U0054><U0061><U0070><U0075>";/
-       "<U0047><U006F><U0066><U0075><U0061>";/
-       "<U0055><U0061>";/
-       "<U004C><U006F><U0074><U0075>";/
-       "<U0054><U0075><U006C><U006F><U0074><U006F>";/
-       "<U0046><U0061><U006C><U0061><U0069><U006C><U0065>";/
-       "<U0046><U0061><U0069><U0075><U006D><U0075>"
-
-% Abbreviated date and time representation to be referenced by the "%c" field descriptor -
-%
-% "%a" (short weekday name),
-% "%d" (day of month as a decimal number),
-% "%b" (short month name),
-% "%Y" (year with century as a decimal number),
-% "%T" (24-hour clock time in format HH:MM:SS),
-% "%Z" (Time zone name)
-% %a %d %b %Y %T %Z
-d_t_fmt       "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-
-% Date representation to be referenced by the "%x" field descriptor -
-% "%d/%m/%Y", day/month/year as decimal numbers (01/01/2000).
-d_fmt         "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-
-% Time representation to be referenced by the "%X" field descriptor -
-% "%T" (24-hour clock time in format HH:MM:SS)
-t_fmt         "<U0025><U0054>"
-
-am_pm       "<U0041><U004D>";"<U0050><U004D>"
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U0070>"
-
-week 7;19971130;1
+copy "niu_NU"
 END LC_TIME
 
 LC_NUMERIC
@@ -158,12 +86,8 @@ copy "en_NZ"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U002B><U0031><U0113><U0112><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
-yesstr  "<U0054><U0061><U006C><U0069><U0061>"
-nostr   "<U004E><U0061><U006B><U0061><U0069>"
+copy "niu_NU"
 END LC_MESSAGES
-
 
 LC_NAME
 copy "en_NZ"
