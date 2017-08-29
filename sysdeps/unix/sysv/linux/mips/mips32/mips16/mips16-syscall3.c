@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <mips16-syscall.h>
 
 #undef __mips16_syscall3
 
@@ -25,7 +24,7 @@ long long __nomips16
 __mips16_syscall3 (long a0, long a1, long a2,
 		   long number)
 {
-  union __mips16_syscall_return ret;
+  union __mips_syscall_return ret;
   ret.reg.v0 = INTERNAL_SYSCALL_MIPS16 (number, ret.reg.v1, 3,
 					a0, a1, a2);
   return ret.val;

@@ -1,4 +1,65 @@
 2017-08-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Aurelien Jarno  <aurelien@aurel32.net>
+	    Maciej W. Rozycki  <macro@imgtec.com>
+
+	[BZ #21956]
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/Makefile
+	[subdir = misc] (sysdep_routines): Remove `mips16-syscall5',
+	`mips16-syscall6' and `mips16-syscall7'.
+	(CFLAGS-mips16-syscall5.c, CFLAGS-mips16-syscall6.c)
+	(CFLAGS-mips16-syscall7.c): Remove.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/Versions (libc):
+	Remove `__mips16_syscall5', `__mips16_syscall6' and
+	`__mips16_syscall7'.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall0.c
+	(__mips16_syscall0): Rename `__mips16_syscall_return' to
+	`__mips_syscall_return'.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall1.c
+	(__mips16_syscall1): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall2.c
+	(__mips16_syscall2): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall3.c
+	(__mips16_syscall3): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall4.c
+	(__mips16_syscall4): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall5.c:
+	Remove.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall6.c:
+	Remove.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall7.c:
+	Remove.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall.h
+	(__mips16_syscall5): Expand to `__mips_syscall5' rather than
+	`__mips16_syscall5'.  Remove prototype.
+	(__mips16_syscall6): Expand to `__mips_syscall6' rather than
+	`__mips16_syscall6'.  Remove prototype.
+	(__mips16_syscall7): Expand to `__mips_syscall7' rather than
+	`__mips16_syscall7'.  Remove prototype.
+	(__nomips16, __mips16_syscall_return): Move to...
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
+	(__nomips16, __mips_syscall_return): ... here.
+	[__mips16] (INTERNAL_SYSCALL_NCS): Rename
+	`__mips16_syscall_return' to `__mips_syscall_return'.
+	[__mips16] (INTERNAL_SYSCALL_MIPS16): Pass `number' to
+	`internal_syscall##nr'.
+	[!__mips16] (INTERNAL_SYSCALL): Pass `SYS_ify (name)' to
+	`internal_syscall##nr'.
+	(FORCE_FRAME_POINTER): Remove.
+	(__mips_syscall5): New prototype.
+	(internal_syscall5): Rewrite to call `__mips_syscall5'.
+	(__mips_syscall6): New prototype.
+	(internal_syscall6): Rewrite to call `__mips_syscall6'.
+	(__mips_syscall7): New prototype.
+	(internal_syscall7): Rewrite to call `__mips_syscall7'.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips-syscall5.S: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips-syscall6.S: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips-syscall7.S: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/Makefile [subdir = misc]
+	(sysdep_routines): Add libc-do-syscall.
+	* sysdeps/unix/sysv/linux/mips/mips32/Versions (libc): Add
+	`__mips_syscall5', `__mips_syscall6' and `__mips_syscall7'.
+
+2017-08-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #21672]
 	* nptl/allocatestack.c [_STACK_GROWS_DOWN] (setup_stack_prot):

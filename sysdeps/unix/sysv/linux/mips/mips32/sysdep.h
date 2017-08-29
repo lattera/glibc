@@ -98,6 +98,19 @@
 #undef INTERNAL_SYSCALL
 #undef INTERNAL_SYSCALL_NCS
 
+#define __nomips16 __attribute__ ((nomips16))
+
+union __mips_syscall_return
+  {
+    long long val;
+    struct
+      {
+	long v0;
+	long v1;
+      }
+    reg;
+  };
+
 #ifdef __mips16
 /* There's no MIPS16 syscall instruction, so we go through out-of-line
    standard MIPS wrappers.  These do use inline snippets below though,
@@ -112,7 +125,7 @@
 
 # define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
 ({									\
-	union __mips16_syscall_return _sc_ret;				\
+	union __mips_syscall_return _sc_ret;				\
 	_sc_ret.val = __mips16_syscall##nr (args, number);		\
 	err = _sc_ret.reg.v1;						\
 	_sc_ret.reg.v0;							\
@@ -121,13 +134,13 @@
 # define INTERNAL_SYSCALL_MIPS16(number, err, nr, args...)		\
 	internal_syscall##nr ("lw\t%0, %2\n\t",				\
 			      "R" (number),				\
-			      0, err, args)
+			      number, err, args)
 
 #else /* !__mips16 */
 # define INTERNAL_SYSCALL(name, err, nr, args...)			\
 	internal_syscall##nr ("li\t%0, %2\t\t\t# " #name "\n\t",	\
 			      "IK" (SYS_ify (name)),			\
-			      0, err, args)
+			      SYS_ify (name), err, args)
 
 # define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
 	internal_syscall##nr (MOVE32 "\t%0, %2\n\t",			\
@@ -262,110 +275,74 @@
 	_sys_result;							\
 })
 
-/* We need to use a frame pointer for the functions in which we
-   adjust $sp around the syscall, or debug information and unwind
-   information will be $sp relative and thus wrong during the syscall.  As
-   of GCC 4.7, this is sufficient.  */
-#define FORCE_FRAME_POINTER						\
-  void *volatile __fp_force __attribute__ ((unused)) = alloca (4)
+/* Standalone MIPS wrappers used for 5, 6, and 7 argument syscalls,
+   which require stack arguments.  We rely on the compiler arranging
+   wrapper's arguments according to the MIPS o32 function calling
+   convention, which is reused by syscalls, except for the syscall
+   number passed and the error flag returned (taken care of in the
+   wrapper called).  This relieves us from relying on non-guaranteed
+   compiler specifics required for the stack arguments to be pushed,
+   which would be the case if these syscalls were inlined.  */
+
+long long __nomips16 __mips_syscall5 (long arg1, long arg2, long arg3,
+				      long arg4, long arg5,
+				      long number);
+libc_hidden_proto (__mips_syscall5, nomips16)
 
 #define internal_syscall5(v0_init, input, number, err,			\
 			  arg1, arg2, arg3, arg4, arg5)			\
 ({									\
-	long _sys_result;						\
-									\
-	FORCE_FRAME_POINTER;						\
-	{								\
-	register long __s0 asm ("$16") __attribute__ ((unused))		\
-	  = (number);							\
-	register long __v0 asm ("$2");					\
-	register long __a0 asm ("$4") = (long) (arg1);			\
-	register long __a1 asm ("$5") = (long) (arg2);			\
-	register long __a2 asm ("$6") = (long) (arg3);			\
-	register long __a3 asm ("$7") = (long) (arg4);			\
-	__asm__ volatile (						\
-	".set\tnoreorder\n\t"						\
-	"subu\t$29, 32\n\t"						\
-	"sw\t%6, 16($29)\n\t"						\
-	v0_init								\
-	"syscall\n\t"							\
-	"addiu\t$29, 32\n\t"						\
-	".set\treorder"							\
-	: "=r" (__v0), "+r" (__a3)					\
-	: input, "r" (__a0), "r" (__a1), "r" (__a2),			\
-	  "r" ((long) (arg5))						\
-	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
-	}								\
-	_sys_result;							\
+	union __mips_syscall_return _sc_ret;				\
+	_sc_ret.val = __mips_syscall5 ((long) (arg1),			\
+				       (long) (arg2),			\
+				       (long) (arg3),			\
+				       (long) (arg4),			\
+				       (long) (arg5),			\
+				       (long) (number));		\
+	err = _sc_ret.reg.v1;						\
+	_sc_ret.reg.v0;							\
 })
+
+long long __nomips16 __mips_syscall6 (long arg1, long arg2, long arg3,
+				      long arg4, long arg5, long arg6,
+				      long number);
+libc_hidden_proto (__mips_syscall6, nomips16)
 
 #define internal_syscall6(v0_init, input, number, err,			\
 			  arg1, arg2, arg3, arg4, arg5, arg6)		\
 ({									\
-	long _sys_result;						\
-									\
-	FORCE_FRAME_POINTER;						\
-	{								\
-	register long __s0 asm ("$16") __attribute__ ((unused))		\
-	  = (number);							\
-	register long __v0 asm ("$2");					\
-	register long __a0 asm ("$4") = (long) (arg1);			\
-	register long __a1 asm ("$5") = (long) (arg2);			\
-	register long __a2 asm ("$6") = (long) (arg3);			\
-	register long __a3 asm ("$7") = (long) (arg4);			\
-	__asm__ volatile (						\
-	".set\tnoreorder\n\t"						\
-	"subu\t$29, 32\n\t"						\
-	"sw\t%6, 16($29)\n\t"						\
-	"sw\t%7, 20($29)\n\t"						\
-	v0_init								\
-	"syscall\n\t"							\
-	"addiu\t$29, 32\n\t"						\
-	".set\treorder"							\
-	: "=r" (__v0), "+r" (__a3)					\
-	: input, "r" (__a0), "r" (__a1), "r" (__a2),			\
-	  "r" ((long) (arg5)), "r" ((long) (arg6))			\
-	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
-	}								\
-	_sys_result;							\
+	union __mips_syscall_return _sc_ret;				\
+	_sc_ret.val = __mips_syscall6 ((long) (arg1),			\
+				       (long) (arg2),			\
+				       (long) (arg3),			\
+				       (long) (arg4),			\
+				       (long) (arg5),			\
+				       (long) (arg6),			\
+				       (long) (number));		\
+	err = _sc_ret.reg.v1;						\
+	_sc_ret.reg.v0;							\
 })
+
+long long __nomips16 __mips_syscall7 (long arg1, long arg2, long arg3,
+				      long arg4, long arg5, long arg6,
+				      long arg7,
+				      long number);
+libc_hidden_proto (__mips_syscall7, nomips16)
 
 #define internal_syscall7(v0_init, input, number, err,			\
 			  arg1, arg2, arg3, arg4, arg5, arg6, arg7)	\
 ({									\
-	long _sys_result;						\
-									\
-	FORCE_FRAME_POINTER;						\
-	{								\
-	register long __s0 asm ("$16") __attribute__ ((unused))		\
-	  = (number);							\
-	register long __v0 asm ("$2");					\
-	register long __a0 asm ("$4") = (long) (arg1);			\
-	register long __a1 asm ("$5") = (long) (arg2);			\
-	register long __a2 asm ("$6") = (long) (arg3);			\
-	register long __a3 asm ("$7") = (long) (arg4);			\
-	__asm__ volatile (						\
-	".set\tnoreorder\n\t"						\
-	"subu\t$29, 32\n\t"						\
-	"sw\t%6, 16($29)\n\t"						\
-	"sw\t%7, 20($29)\n\t"						\
-	"sw\t%8, 24($29)\n\t"						\
-	v0_init								\
-	"syscall\n\t"							\
-	"addiu\t$29, 32\n\t"						\
-	".set\treorder"							\
-	: "=r" (__v0), "+r" (__a3)					\
-	: input, "r" (__a0), "r" (__a1), "r" (__a2),			\
-	  "r" ((long) (arg5)), "r" ((long) (arg6)), "r" ((long) (arg7))	\
-	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
-	}								\
-	_sys_result;							\
+	union __mips_syscall_return _sc_ret;				\
+	_sc_ret.val = __mips_syscall7 ((long) (arg1),			\
+				       (long) (arg2),			\
+				       (long) (arg3),			\
+				       (long) (arg4),			\
+				       (long) (arg5),			\
+				       (long) (arg6),			\
+				       (long) (arg7),			\
+				       (long) (number));		\
+	err = _sc_ret.reg.v1;						\
+	_sc_ret.reg.v0;							\
 })
 
 #define __SYSCALL_CLOBBERS "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13", \
