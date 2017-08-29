@@ -179,8 +179,8 @@ free_derivation (void *p)
   size_t cnt;
 
   for (cnt = 0; cnt < deriv->nsteps; ++cnt)
-    if ((deriv->steps[cnt].__counter > 0)
-	&& (deriv->steps[cnt].__shlib_handle != NULL))
+    if (deriv->steps[cnt].__counter > 0
+	&& deriv->steps[cnt].__shlib_handle != NULL)
       {
 	__gconv_end_fct end_fct = deriv->steps[cnt].__end_fct;
 #ifdef PTR_DEMANGLE
@@ -323,11 +323,10 @@ gen_steps (struct derivation_step *best, const char *toset,
 		      result[step_cnt].__end_fct = NULL;
 		      break;
 		    }
-
-# ifdef PTR_MANGLE
-		  PTR_MANGLE (result[step_cnt].__btowc_fct);
-# endif
 		}
+# ifdef PTR_MANGLE
+	      PTR_MANGLE (result[step_cnt].__btowc_fct);
+# endif
 	    }
 	  else
 #endif
@@ -403,16 +402,14 @@ increment_counter (struct __gconv_step *steps, size_t nsteps)
 
 	      /* These settings can be overridden by the init function.  */
 	      step->__btowc_fct = NULL;
-	    }
 
-	  /* Call the init function.  */
-	  __gconv_init_fct init_fct = step->__init_fct;
+	      /* Call the init function.  */
+	      __gconv_init_fct init_fct = step->__init_fct;
 #ifdef PTR_DEMANGLE
-	  PTR_DEMANGLE (init_fct);
+	      PTR_DEMANGLE (init_fct);
 #endif
-	  if (init_fct != NULL)
-	    {
-	      DL_CALL_FCT (init_fct, (step));
+	      if (init_fct != NULL)
+		DL_CALL_FCT (init_fct, (step));
 
 #ifdef PTR_MANGLE
 	      PTR_MANGLE (step->__btowc_fct);
