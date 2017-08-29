@@ -196,7 +196,7 @@ tests = test-matherr-3 test-fenv basic-test \
 	test-femode-traps test-iszero-excess-precision \
 	test-iseqsig-excess-precision test-flt-eval-method \
 	test-fp-ilogb-constants test-fp-llogb-constants \
-	test-fe-snans-always-signal $(tests-static)
+	test-fe-snans-always-signal test-finite-macros $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
@@ -362,6 +362,8 @@ CFLAGS-test-iseqsig-excess-precision.c = -fexcess-precision=standard
 CFLAGS-test-flt-eval-method.c = -fexcess-precision=standard
 
 CFLAGS-test-fe-snans-always-signal.c = -fsignaling-nans
+
+CFLAGS-test-finite-macros.c = -ffinite-math-only
 
 include ../Rules
 

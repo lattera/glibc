@@ -20,30 +20,26 @@
 # error "Never use <bits/math-finite.h> directly; include <math.h> instead."
 #endif
 
-#define __REDIRFROM_X(function, reentrant, suffix) \
-  function ## suffix ## reentrant
 #define __REDIRFROM(...) __REDIRFROM_X(__VA_ARGS__)
 
-#define __REDIRTO_X(function, reentrant, suffix) \
-   __ ## function ## suffix ## reentrant ## _finite
 #define __REDIRTO(...) __REDIRTO_X(__VA_ARGS__)
 
 #define __MATH_REDIRCALL_X(from, args, to) \
   extern _Mdouble_ __REDIRECT_NTH (from, args, to)
 #define __MATH_REDIRCALL(function, reentrant, args) \
   __MATH_REDIRCALL_X \
-   (__REDIRFROM (function, reentrant, _MSUF_), args, \
-    __REDIRTO (function, reentrant, _MSUFTO_))
+   (__REDIRFROM (function, reentrant), args, \
+    __REDIRTO (function, reentrant))
 #define __MATH_REDIRCALL_2(from, reentrant, args, to) \
   __MATH_REDIRCALL_X \
-   (__REDIRFROM (from, reentrant, _MSUF_), args, \
-    __REDIRTO (to, reentrant, _MSUFTO_))
+   (__REDIRFROM (from, reentrant), args, \
+    __REDIRTO (to, reentrant))
 
 #define __MATH_REDIRCALL_INTERNAL(function, reentrant, args) \
   __MATH_REDIRCALL_X \
    (__REDIRFROM (__CONCAT (__, function), \
-		 __CONCAT (reentrant, _finite), _MSUF_), \
-    args, __REDIRTO (function, _r, _MSUFTO_))
+		 __CONCAT (reentrant, _finite)), \
+    args, __REDIRTO (function, _r))
 
 
 /* acos.  */
@@ -129,13 +125,13 @@ __MATH_REDIRCALL_INTERNAL (lgamma, _r, (_Mdouble_, int *));
      && defined __extern_always_inline)
 /* lgamma.  */
 __extern_always_inline _Mdouble_
-__NTH (__REDIRFROM (lgamma, , _MSUF_) (_Mdouble_ __d))
+__NTH (__REDIRFROM (lgamma, ) (_Mdouble_ __d))
 {
 # if defined __USE_MISC || defined __USE_XOPEN
-  return __REDIRTO (lgamma, _r, _MSUFTO_) (__d, &signgam);
+  return __REDIRTO (lgamma, _r) (__d, &signgam);
 # else
   int __local_signgam = 0;
-  return __REDIRTO (lgamma, _r, _MSUFTO_) (__d, &__local_signgam);
+  return __REDIRTO (lgamma, _r) (__d, &__local_signgam);
 # endif
 }
 #endif
@@ -144,9 +140,9 @@ __NTH (__REDIRFROM (lgamma, , _MSUF_) (_Mdouble_ __d))
      && defined __extern_always_inline) && !__MATH_DECLARING_FLOATN
 /* gamma.  */
 __extern_always_inline _Mdouble_
-__NTH (__REDIRFROM (gamma, , _MSUF_) (_Mdouble_ __d))
+__NTH (__REDIRFROM (gamma, ) (_Mdouble_ __d))
 {
-  return __REDIRTO (lgamma, _r, _MSUFTO_) (__d, &signgam);
+  return __REDIRTO (lgamma, _r) (__d, &signgam);
 }
 #endif
 
@@ -187,21 +183,19 @@ __MATH_REDIRCALL (sqrt, , (_Mdouble_));
 #if defined __USE_ISOC99 && defined __extern_always_inline
 /* tgamma.  */
 extern _Mdouble_
-__REDIRFROM (__gamma, _r_finite, _MSUF_) (_Mdouble_, int *);
+__REDIRFROM (__gamma, _r_finite) (_Mdouble_, int *);
 
 __extern_always_inline _Mdouble_
-__NTH (__REDIRFROM (tgamma, , _MSUF_) (_Mdouble_ __d))
+__NTH (__REDIRFROM (tgamma, ) (_Mdouble_ __d))
 {
   int __local_signgam = 0;
-  _Mdouble_ __res = __REDIRTO (gamma, _r, _MSUFTO_) (__d, &__local_signgam);
+  _Mdouble_ __res = __REDIRTO (gamma, _r) (__d, &__local_signgam);
   return __local_signgam < 0 ? -__res : __res;
 }
 #endif
 
 #undef __REDIRFROM
-#undef __REDIRFROM_X
 #undef __REDIRTO
-#undef __REDIRTO_X
 #undef __MATH_REDIRCALL
 #undef __MATH_REDIRCALL_2
 #undef __MATH_REDIRCALL_INTERNAL

@@ -1,3 +1,28 @@
+2017-08-29  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22028]
+	* math/math.h [__FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0]
+	(_MSUF_): Remove macro.
+	[__FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0] (_MSUFTO_):
+	Likewise.
+	[__FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0]
+	(__REDIRFROM_X): New macro.
+	[__FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0] (__REDIRTO_X):
+	Likewise.
+	* math/bits/math-finite.h (__REDIRFROM_X): Remove macro.
+	(__REDIRTO_X): Likewise.
+	(__MATH_REDIRCALL): Do not pass _MSUF_ or _MSUFTO_ macro
+	arguments.
+	(__MATH_REDIRCALL_2): Likewise.
+	(__MATH_REDIRCALL_INTERNAL): Likewise.
+	(__REDIRFROM (lgamma, , _MSUF_)): Likewise.
+	(__REDIRFROM (gamma, , _MSUF_)): Likweise.
+	(__REDIRFROM (__gamma, _r_finite, _MSUF_)): Likewise.
+	(__REDIRFROM (tgamma, , _MSUF_)): Likewise.
+	* math/test-finite-macros.c: New file.
+	* math/Makefile (tests): Add test-finite-macros.
+	(CFLAGS-test-finite-macros.c): New variable.
+
 2017-08-29  Patsy Franklin  <pfrankli@redhat.com>
 	    Jeff Law  <law@redhat.com>
 
