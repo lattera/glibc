@@ -1,3 +1,8 @@
+2017-08-29  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* stdlib/tst-atexit-common.c (do_test): Test handler inheritance
+	by child.
+
 2017-08-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Aurelien Jarno  <aurelien@aurel32.net>
 	    Maciej W. Rozycki  <macro@imgtec.com>
