@@ -1,3 +1,8 @@
+2017-08-29  Mike FABIAN  <mfabian@redhat.com>
+
+	* locales/sgs_LT (LC_TIME): Use NFC for the strings in “day”.
+	* locales/sgs_LT (LC_MESSAGES): Use NFC for “yesstr” and “nostr”.
+
 2017-08-28  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21959]
