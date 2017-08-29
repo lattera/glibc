@@ -46,15 +46,15 @@ __btowc (int c)
   /* Get the conversion functions.  */
   fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
   __gconv_btowc_fct btowc_fct = fcts->towc->__btowc_fct;
+#ifdef PTR_DEMANGLE
+  if (fcts->towc->__shlib_handle != NULL)
+    PTR_DEMANGLE (btowc_fct);
+#endif
 
   if (__builtin_expect (fcts->towc_nsteps == 1, 1)
       && __builtin_expect (btowc_fct != NULL, 1))
     {
       /* Use the shortcut function.  */
-#ifdef PTR_DEMANGLE
-      if (fcts->towc->__shlib_handle != NULL)
-	PTR_DEMANGLE (btowc_fct);
-#endif
       return DL_CALL_FCT (btowc_fct, (fcts->towc, (unsigned char) c));
     }
   else

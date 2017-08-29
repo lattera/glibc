@@ -131,10 +131,8 @@ __gconv_find_shlib (const char *name)
 
 #ifdef PTR_MANGLE
 		  PTR_MANGLE (found->fct);
-		  if (found->init_fct != NULL)
-		    PTR_MANGLE (found->init_fct);
-		  if (found->end_fct !=  NULL)
-		    PTR_MANGLE (found->end_fct);
+		  PTR_MANGLE (found->init_fct);
+		  PTR_MANGLE (found->end_fct);
 #endif
 
 		  /* We have succeeded in loading the shared object.  */

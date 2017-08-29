@@ -179,16 +179,15 @@ free_derivation (void *p)
   size_t cnt;
 
   for (cnt = 0; cnt < deriv->nsteps; ++cnt)
-    if (deriv->steps[cnt].__counter > 0
-	&& deriv->steps[cnt].__end_fct != NULL)
+    if ((deriv->steps[cnt].__counter > 0)
+	&& (deriv->steps[cnt].__shlib_handle != NULL))
       {
-	assert (deriv->steps[cnt].__shlib_handle != NULL);
-
 	__gconv_end_fct end_fct = deriv->steps[cnt].__end_fct;
 #ifdef PTR_DEMANGLE
 	PTR_DEMANGLE (end_fct);
 #endif
-	DL_CALL_FCT (end_fct, (&deriv->steps[cnt]));
+	if (end_fct != NULL)
+	  DL_CALL_FCT (end_fct, (&deriv->steps[cnt]));
       }
 
   /* Free the name strings.  */
@@ -212,16 +211,12 @@ __gconv_release_step (struct __gconv_step *step)
   if (step->__shlib_handle != NULL && --step->__counter == 0)
     {
       /* Call the destructor.  */
-      if (step->__end_fct != NULL)
-	{
-	  assert (step->__shlib_handle != NULL);
-
-	  __gconv_end_fct end_fct = step->__end_fct;
+	__gconv_end_fct end_fct = step->__end_fct;
 #ifdef PTR_DEMANGLE
-	  PTR_DEMANGLE (end_fct);
+	PTR_DEMANGLE (end_fct);
 #endif
-	  DL_CALL_FCT (end_fct, (step));
-	}
+      if (end_fct != NULL)
+	DL_CALL_FCT (end_fct, (step));
 
 #ifndef STATIC_GCONV
       /* Release the loaded module.  */
@@ -313,13 +308,11 @@ gen_steps (struct derivation_step *best, const char *toset,
 
 	      /* Call the init function.  */
 	      __gconv_init_fct init_fct = result[step_cnt].__init_fct;
+# ifdef PTR_DEMANGLE
+	      PTR_DEMANGLE (init_fct);
+# endif
 	      if (init_fct != NULL)
 		{
-		  assert (result[step_cnt].__shlib_handle != NULL);
-
-# ifdef PTR_DEMANGLE
-		  PTR_DEMANGLE (init_fct);
-# endif
 		  status = DL_CALL_FCT (init_fct, (&result[step_cnt]));
 
 		  if (__builtin_expect (status, __GCONV_OK) != __GCONV_OK)
@@ -332,8 +325,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 		    }
 
 # ifdef PTR_MANGLE
-		  if (result[step_cnt].__btowc_fct != NULL)
-		    PTR_MANGLE (result[step_cnt].__btowc_fct);
+		  PTR_MANGLE (result[step_cnt].__btowc_fct);
 # endif
 		}
 	    }
@@ -415,16 +407,15 @@ increment_counter (struct __gconv_step *steps, size_t nsteps)
 
 	  /* Call the init function.  */
 	  __gconv_init_fct init_fct = step->__init_fct;
+#ifdef PTR_DEMANGLE
+	  PTR_DEMANGLE (init_fct);
+#endif
 	  if (init_fct != NULL)
 	    {
-#ifdef PTR_DEMANGLE
-	      PTR_DEMANGLE (init_fct);
-#endif
 	      DL_CALL_FCT (init_fct, (step));
 
 #ifdef PTR_MANGLE
-	      if (step->__btowc_fct != NULL)
-		PTR_MANGLE (step->__btowc_fct);
+	      PTR_MANGLE (step->__btowc_fct);
 #endif
 	    }
 	}

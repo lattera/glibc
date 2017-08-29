@@ -1,3 +1,23 @@
+2017-08-29  Patsy Franklin  <pfrankli@redhat.com>
+	    Jeff Law  <law@redhat.com>
+
+	[BZ #22025]
+	Mangle NULL pointers in iconv/gconv.
+	* iconv/gconv_cache.c (find_module): Demangle init_fct before
+	checking for NULL. Mangle __btowc_fct if init_fct is non-NULL.
+	* iconv/gconv_db.c (free_derivation): Check that __shlib_handle
+	is non-NULL before demangling the end_fct.  Check for NULL
+	end_fct after demangling.
+	(__gconv_release_step): Demangle the end_fct before checking
+	it for NULL.   Remove assert on __shlibc_handle != NULL.
+	(gen_steps): Don't check btowc_fct for NULL before mangling.
+	Demangle init_fct before checking for NULL.
+	(increment_counter): Likewise.
+	* gconv_dl.c (__gconv_find_shlib): Don't check init_fct or
+	end_fct for NULL before mangling.
+	* wcsmbs/btowc.c (__btowc): Demangle btowc_fct before checking
+	for NULL.
+
 2017-08-29  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #21971]

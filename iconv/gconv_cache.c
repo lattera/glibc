@@ -207,17 +207,16 @@ find_module (const char *directory, const char *filename,
       result->__data = NULL;
 
       /* Call the init function.  */
-      if (result->__init_fct != NULL)
-	{
-	  __gconv_init_fct init_fct = result->__init_fct;
+      __gconv_init_fct init_fct = result->__init_fct;
 #ifdef PTR_DEMANGLE
-	  PTR_DEMANGLE (init_fct);
+      PTR_DEMANGLE (init_fct);
 #endif
+      if (init_fct != NULL)
+	{
 	  status = DL_CALL_FCT (init_fct, (result));
 
 #ifdef PTR_MANGLE
-	  if (result->__btowc_fct != NULL)
-	    PTR_MANGLE (result->__btowc_fct);
+	  PTR_MANGLE (result->__btowc_fct);
 #endif
 	}
     }
