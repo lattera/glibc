@@ -1,3 +1,9 @@
+2017-08-09  Wei-Lun Chao <bluebat@member.fsf.org>
+
+	[BZ #21951]
+	* locales/cns11643_stroke: Update hanzi collation by stroke
+	(Add license declaration, use strokes by component).
+
 2017-08-29  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #13805]
