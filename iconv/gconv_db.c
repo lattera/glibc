@@ -318,9 +318,14 @@ gen_steps (struct derivation_step *best, const char *toset,
 		  if (__builtin_expect (status, __GCONV_OK) != __GCONV_OK)
 		    {
 		      failed = 1;
-		      /* Make sure we unload this modules.  */
-		      --step_cnt;
+		      /* Do not call the end function because the init
+			 function has failed.  */
 		      result[step_cnt].__end_fct = NULL;
+# ifdef PTR_MANGLE
+		      PTR_MANGLE (result[step_cnt].__end_fct);
+# endif
+		      /* Make sure we unload this module.  */
+		      --step_cnt;
 		      break;
 		    }
 		}

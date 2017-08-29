@@ -1,5 +1,21 @@
 2017-08-29  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22026]
+	* iconv/gconv_db.c (gen_steps): Decrement step_cnt after resetting
+	__end_fct.  Mangle __end_fct after setting it to NULL.
+	* iconv/Makefile (tests): Add tst-gconv-init-failure.
+	(modules-names, modules-names-tests): Add
+	tst-gconv-init-failure-mod.
+	(gconv-modules): New target.
+	(tst-gconv-init-failure-mod.so): Link against libsupport.
+	(tst-gconv-init-failure): Depend on gconv-modules,
+	tst-gconv-init-failure-mod.so.
+	* iconv/tst-gconv-init-failure-mod.c: New file.
+	* iconv/tst-gconv-init-failure.c: Likewise.
+	* iconv/test-gconv-modules: Likewise.
+
+2017-08-29  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22025]
 	* iconv/gconv_db.c (free_derivation): Remove redundant
 	parentheses.

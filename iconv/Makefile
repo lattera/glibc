@@ -61,6 +61,20 @@ ifeq ($(run-built-tests),yes)
 xtests-special += $(objpfx)test-iconvconfig.out
 endif
 
+# Make a copy of the file because gconv module names are constructed
+# relative to the path of the configuration file.
+$(objpfx)gconv-modules: test-gconv-modules
+	cp $< $@
+
+ifeq (yes,$(build-shared))
+tests += tst-gconv-init-failure
+modules-names += tst-gconv-init-failure-mod
+modules-names-tests += tst-gconv-init-failure-mod
+$(objpfx)tst-gconv-init-failure-mod.so: $(libsupport)
+$(objpfx)tst-gconv-init-failure.out: \
+ $(objpfx)gconv-modules $(objpfx)tst-gconv-init-failure-mod.so
+endif
+
 include ../Rules
 
 $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
