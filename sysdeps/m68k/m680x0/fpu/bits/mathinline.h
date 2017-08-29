@@ -195,11 +195,11 @@ __inline_mathop(trunc, intrz)
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 
 /* This macro contains the definition for the rest of the inline
-   functions, using FLOAT_TYPE as the domain type and S as the suffix
-   for the function names.  */
+   functions, using FLOAT_TYPE as the domain type and M as a macro
+   that adds the suffix for the function names.  */
 
-#define __inline_functions(float_type, s)				  \
-__m81_defun (float_type, __CONCAT(__floor,s), (float_type __x))	  \
+#define __inline_functions(float_type, m)				  \
+__m81_defun (float_type, m(__floor), (float_type __x))			  \
 {									  \
   float_type __result;							  \
   unsigned long int __ctrl_reg;						  \
@@ -215,7 +215,7 @@ __m81_defun (float_type, __CONCAT(__floor,s), (float_type __x))	  \
   return __result;							  \
 }									  \
 									  \
-__m81_defun (float_type, __CONCAT(__ceil,s), (float_type __x))	  	  \
+__m81_defun (float_type, m(__ceil), (float_type __x))			  \
 {									  \
   float_type __result;							  \
   unsigned long int __ctrl_reg;						  \
@@ -231,17 +231,20 @@ __m81_defun (float_type, __CONCAT(__ceil,s), (float_type __x))	  	  \
   return __result;							  \
 }
 
-__inline_functions(double,)
+#define __CONCAT_d(arg) arg
+#define __CONCAT_f(arg) arg ## f
+#define __CONCAT_l(arg) arg ## l
+__inline_functions(double, __CONCAT_d)
 #ifdef __USE_ISOC99
-__inline_functions(float,f)
-__inline_functions(long double,l)
+__inline_functions(float, __CONCAT_f)
+__inline_functions(long double, __CONCAT_l)
 #endif
 #undef __inline_functions
 
 #ifdef __USE_MISC
 
-# define __inline_functions(float_type, s)				  \
-__m81_defun (int, __CONCAT(__isinf,s), (float_type __value))	  	  \
+# define __inline_functions(float_type, m)				  \
+__m81_defun (int, m(__isinf), (float_type __value))			  \
 {									  \
   /* There is no branch-condition for infinity,				  \
      so we must extract and examine the condition codes manually.  */	  \
@@ -251,7 +254,7 @@ __m81_defun (int, __CONCAT(__isinf,s), (float_type __value))	  	  \
   return (__fpsr & (2 << 24)) ? (__fpsr & (8 << 24) ? -1 : 1) : 0;	  \
 }									  \
 									  \
-__m81_defun (int, __CONCAT(__finite,s), (float_type __value))	  	  \
+__m81_defun (int, m(__finite), (float_type __value))			  \
 {									  \
   /* There is no branch-condition for infinity, so we must extract and	  \
      examine the condition codes manually.  */				  \
@@ -261,7 +264,7 @@ __m81_defun (int, __CONCAT(__finite,s), (float_type __value))	  	  \
   return (__fpsr & (3 << 24)) == 0;					  \
 }									  \
 									  \
-__m81_defun (float_type, __CONCAT(__scalbn,s),				  \
+__m81_defun (float_type, m(__scalbn),					  \
 	     (float_type __x, int __n))					  \
 {									  \
   float_type __result;							  \
@@ -270,17 +273,17 @@ __m81_defun (float_type, __CONCAT(__scalbn,s),				  \
   return __result;							  \
 }
 
-__inline_functions(double,)
-__inline_functions(float,f)
-__inline_functions(long double,l)
+__inline_functions(double, __CONCAT_d)
+__inline_functions(float, __CONCAT_f)
+__inline_functions(long double, __CONCAT_l)
 # undef __inline_functions
 
 #endif /* Use misc.  */
 
 #if defined __USE_MISC || defined __USE_XOPEN
 
-# define __inline_functions(float_type, s)				  \
-__m81_defun (int, __CONCAT(__isnan,s), (float_type __value))	  	  \
+# define __inline_functions(float_type, m)				  \
+__m81_defun (int, m(__isnan), (float_type __value))		  	  \
 {									  \
   char __result;							  \
   __asm ("ftst%.x %1\n"							  \
@@ -288,10 +291,10 @@ __m81_defun (int, __CONCAT(__isnan,s), (float_type __value))	  	  \
   return __result;							  \
 }
 
-__inline_functions(double,)
+__inline_functions(double, __CONCAT_d)
 # ifdef __USE_MISC
-__inline_functions(float,f)
-__inline_functions(long double,l)
+__inline_functions(float, __CONCAT_f)
+__inline_functions(long double, __CONCAT_l)
 # endif
 # undef __inline_functions
 
@@ -299,14 +302,14 @@ __inline_functions(long double,l)
 
 #ifdef __USE_ISOC99
 
-# define __inline_functions(float_type, s)				  \
-__m81_defun (float_type, __CONCAT(__scalbln,s),			  \
+# define __inline_functions(float_type, m)				  \
+__m81_defun (float_type, m(__scalbln),					  \
 	     (float_type __x, long int __n))				  \
 {									  \
-  return __CONCAT(__scalbn,s) (__x, __n);				  \
+  return m(__scalbn) (__x, __n);					  \
 }									  \
 									  \
-__m81_defun (float_type, __CONCAT(__nearbyint,s), (float_type __x))	  \
+__m81_defun (float_type, m(__nearbyint), (float_type __x))		  \
 {									  \
   float_type __result;							  \
   unsigned long int __ctrl_reg;						  \
@@ -320,37 +323,41 @@ __m81_defun (float_type, __CONCAT(__nearbyint,s), (float_type __x))	  \
   return __result;							  \
 }									  \
 									  \
-__m81_defun (long int, __CONCAT(__lrint,s), (float_type __x))		  \
+__m81_defun (long int, m(__lrint), (float_type __x))			  \
 {									  \
   long int __result;							  \
   __asm __volatile__ ("fmove%.l %1, %0" : "=dm" (__result) : "f" (__x));  \
   return __result;							  \
 }
 
-__inline_functions (double,)
-__inline_functions (float,f)
-__inline_functions (long double,l)
+__inline_functions (double, __CONCAT_d)
+__inline_functions (float, __CONCAT_f)
+__inline_functions (long double, __CONCAT_l)
 # undef __inline_functions
 
 #endif /* Use ISO C9x */
 
 #ifdef __USE_GNU
 
-# define __inline_functions(float_type, s)				\
+# define __inline_functions(float_type, m)				\
 __m81_inline void							\
-__m81_nth (__m81_u(__CONCAT(__sincos,s))				\
+__m81_nth (__m81_u(m(__sincos))						\
 	   (float_type __x, float_type *__sinx, float_type *__cosx))	\
 {									\
   __asm __volatile__ ("fsincos%.x %2,%1:%0"				\
 		      : "=f" (*__sinx), "=f" (*__cosx) : "f" (__x));	\
 }
 
-__inline_functions (double,)
-__inline_functions (float,f)
-__inline_functions (long double,l)
+__inline_functions (double, __CONCAT_d)
+__inline_functions (float, __CONCAT_f)
+__inline_functions (long double, __CONCAT_l)
 # undef __inline_functions
 
 #endif
+
+#undef __CONCAT_d
+#undef __CONCAT_f
+#undef __CONCAT_l
 
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 

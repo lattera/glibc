@@ -1,3 +1,13 @@
+2017-08-29  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22035]
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h (__inline_functions):
+	Define to take a second argument that is a macro that
+	concatentates a suffix, not the suffix itself.
+	(__CONCAT_d): New macro.
+	(__CONCAT_f): Likewise.
+	(__CONCAT_l): Likewise.
+
 2017-08-29  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* stdlib/tst-atexit-common.c (do_test): Test handler inheritance
