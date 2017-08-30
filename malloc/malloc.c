@@ -1647,15 +1647,6 @@ typedef struct malloc_chunk *mfastbinptr;
 #define set_noncontiguous(M)   ((M)->flags |= NONCONTIGUOUS_BIT)
 #define set_contiguous(M)      ((M)->flags &= ~NONCONTIGUOUS_BIT)
 
-/* ARENA_CORRUPTION_BIT is set if a memory corruption was detected on the
-   arena.  Such an arena is no longer used to allocate chunks.  Chunks
-   allocated in that arena before detecting corruption are not freed.  */
-
-#define ARENA_CORRUPTION_BIT (4U)
-
-#define arena_is_corrupt(A)	(((A)->flags & ARENA_CORRUPTION_BIT))
-#define set_arena_corrupt(A)	((A)->flags |= ARENA_CORRUPTION_BIT)
-
 /* Maximum size of memory handled in fastbins.  */
 static INTERNAL_SIZE_T global_max_fast;
 
@@ -4727,10 +4718,6 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
 static int
 mtrim (mstate av, size_t pad)
 {
-  /* Don't touch corrupt arenas.  */
-  if (arena_is_corrupt (av))
-    return 0;
-
   /* Ensure initialization/consolidation */
   malloc_consolidate (av);
 

@@ -116,7 +116,7 @@ int __malloc_initialized = -1;
   } while (0)
 
 #define arena_lock(ptr, size) do {					      \
-      if (ptr && !arena_is_corrupt (ptr))				      \
+      if (ptr)								      \
         __libc_lock_lock (ptr->mutex);					      \
       else								      \
         ptr = arena_get2 ((size), NULL);				      \
@@ -832,7 +832,7 @@ reused_arena (mstate avoid_arena)
   result = next_to_use;
   do
     {
-      if (!arena_is_corrupt (result) && !__libc_lock_trylock (result->mutex))
+      if (!__libc_lock_trylock (result->mutex))
         goto out;
 
       /* FIXME: This is a data race, see _int_new_arena.  */
@@ -844,18 +844,6 @@ reused_arena (mstate avoid_arena)
      in that arena and it is currently locked.   */
   if (result == avoid_arena)
     result = result->next;
-
-  /* Make sure that the arena we get is not corrupted.  */
-  mstate begin = result;
-  while (arena_is_corrupt (result) || result == avoid_arena)
-    {
-      result = result->next;
-      if (result == begin)
-	/* We looped around the arena list.  We could not find any
-	   arena that was either not corrupted or not the one we
-	   wanted to avoid.  */
-	return NULL;
-    }
 
   /* No arena available without contention.  Wait for the next in line.  */
   LIBC_PROBE (memory_arena_reuse_wait, 3, &result->mutex, result, avoid_arena);
@@ -953,10 +941,6 @@ arena_get_retry (mstate ar_ptr, size_t bytes)
   if (ar_ptr != &main_arena)
     {
       __libc_lock_unlock (ar_ptr->mutex);
-      /* Don't touch the main arena if it is corrupt.  */
-      if (arena_is_corrupt (&main_arena))
-	return NULL;
-
       ar_ptr = &main_arena;
       __libc_lock_lock (ar_ptr->mutex);
     }

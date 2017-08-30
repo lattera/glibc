@@ -1,5 +1,13 @@
 2017-08-30  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/malloc.c (ARENA_CORRUPTION_BIT, arena_is_corrupt)
+	(set_arena_corrupt): Remove definitions.
+	(mtrim): Do not check for corrupt arena.
+	* malloc/arena.c (arena_lock, reused_arena, arena_get_retry):
+	Likewise.
+
+2017-08-30  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #21754]
 	* malloc/arena.c (TUNABLE_CALLBACK set_mallopt_check): Do not set
 	check_action.
