@@ -42,18 +42,18 @@ void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
   extern void __startcontext (void);
-  unsigned long int *sp;
+  uint64_t *sp;
   va_list ap;
   int i;
 
-  sp = (unsigned long int *)
+  sp = (uint64_t *)
     ((uintptr_t) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
 
   /* Allocate stack arguments.  */
   sp -= argc < 8 ? 0 : argc - 8;
 
   /* Keep the stack aligned.  */
-  sp = (unsigned long int *) (((uintptr_t) sp) & -16L);
+  sp = (uint64_t *) (((uintptr_t) sp) & -16L);
 
   ucp->uc_mcontext.regs[19] = (uintptr_t) ucp->uc_link;
   ucp->uc_mcontext.sp = (uintptr_t) sp;
@@ -64,9 +64,9 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   va_start (ap, argc);
   for (i = 0; i < argc; ++i)
     if (i < 8)
-      ucp->uc_mcontext.regs[i] = va_arg (ap, unsigned long int);
+      ucp->uc_mcontext.regs[i] = va_arg (ap, uint64_t);
     else
-      sp[i - 8] = va_arg (ap, unsigned long int);
+      sp[i - 8] = va_arg (ap, uint64_t);
 
   va_end (ap);
 }

@@ -1,3 +1,8 @@
+2017-08-30  Steve Ellcey  <sellcey@cavium.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/makecontext.c (__makecontext):
+	Use pointer to uint64_t instead of long int for sp.
+
 2017-08-30  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21754]
