@@ -71,27 +71,13 @@ following tunables in the @code{malloc} namespace:
 This tunable supersedes the @env{MALLOC_CHECK_} environment variable and is
 identical in features.
 
-Setting this tunable enables a special (less efficient) memory allocator for
-the malloc family of functions that is designed to be tolerant against simple
-errors such as double calls of free with the same argument, or overruns of a
-single byte (off-by-one bugs). Not all such errors can be protected against,
-however, and memory leaks can result.  The following list describes the values
-that this tunable can take and the effect they have on malloc functionality:
-
-@itemize @bullet
-@item @code{0} Ignore all errors.  The default allocator continues to be in
-use, but all errors are silently ignored.
-@item @code{1} Report errors.  The alternate allocator is selected and heap
-corruption, if detected, is reported as diagnostic messages to @code{stderr}
-and the program continues execution.
-@item @code{2} Abort on errors.  The alternate allocator is selected and if
-heap corruption is detected, the program is ended immediately by calling
-@code{abort}.
-@item @code{3} Fully enabled.  The alternate allocator is selected and is fully
-functional.  That is, if heap corruption is detected, a verbose diagnostic
-message is printed to @code{stderr} and the program is ended by calling
-@code{abort}.
-@end itemize
+Setting this tunable to a non-zero value enables a special (less
+efficient) memory allocator for the malloc family of functions that is
+designed to be tolerant against simple errors such as double calls of
+free with the same argument, or overruns of a single byte (off-by-one
+bugs). Not all such errors can be protected against, however, and memory
+leaks can result.  Any detected heap corruption results in immediate
+termination of the process.
 
 Like @env{MALLOC_CHECK_}, @code{glibc.malloc.check} has a problem in that it
 diverges from normal program behavior by writing to @code{stderr}, which could

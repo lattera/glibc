@@ -12,6 +12,14 @@ Major new features:
 * Optimized x86-64 asin, atan2, exp, expf, log, pow, atan, sin and tan
   with FMA, contributed by Arjan van de Ven and H.J. Lu from Intel.
 
+* In order to support faster and safer process termination the malloc API
+  family of functions will no longer print a failure address and stack
+  backtrace after detecting heap corruption.  The goal is to minimize the
+  amount of work done after corruption is detected and to avoid potential
+  security issues in continued process execution.  Reducing shutdown time
+  leads to lower overall process restart latency, so there is benefit both
+  from a security and performance perspective.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On GNU/Linux, the obsolete Linux constant PTRACE_SEIZE_DEVEL is no longer

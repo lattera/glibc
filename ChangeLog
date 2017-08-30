@@ -1,5 +1,14 @@
 2017-08-30  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #21754]
+	* malloc/malloc.c (malloc_printerr): Always terminate the process,
+	without printing a backtrace.  Do not leak any information in the
+	error message.
+	* manual/memory.texi (Heap Consistency Checking): Update.
+	* manual/tunables.texi (Memory Allocation Tunables): Likewise.
+
+2017-08-30  Florian Weimer  <fweimer@redhat.com>
+
 	Do not scale NPTL tests with available number of CPUs.
 	* nptl/tst-cond16.c (count): Set to constant value of 8.
 	* nptl/tst-cond18.c (count): Likewise.
