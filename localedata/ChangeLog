@@ -1,3 +1,8 @@
+2017-08-30  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #22022]
+	* locales/mni_IN (LC_ADDRESS): Add country_name.
+
 2017-08-30  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #22038]
