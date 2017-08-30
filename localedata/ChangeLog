@@ -1,3 +1,12 @@
+2017-08-30  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #22038]
+	* locales/so_DJ (LC_TIME): Fix abday, abmon and
+	make t_fmt in the comment agree with the value of t_fmt.
+	* locales/so_ET (LC_TIME): Fix abday (From Axa to Axd)
+	* locales/so_KE (LC_TIME): Fix abday (From Axa to Axd)
+	* locales/so_SO (LC_TIME): Fix abday (From Axa to Axd)
+
 2017-08-09  Wei-Lun Chao <bluebat@member.fsf.org>
 
 	[BZ #21951]
