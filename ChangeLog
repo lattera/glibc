@@ -1,3 +1,30 @@
+2017-08-30  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21754]
+	* malloc/arena.c (TUNABLE_CALLBACK set_mallopt_check): Do not set
+	check_action.
+	(ptmalloc_init): Do not set or use check_action.
+	* malloc/hooks.c (malloc_check_get_size, realloc_check): Adjust
+	call to malloc_printerr.  Remove return statement.
+	(free_check): Likewise.  Remove arena unlock.
+	(top_check): Update comment.  Adjust call to malloc_printerr.
+	Remove heap repair code.
+	* malloc/malloc.c (unlink): Adjust calls to malloc_printerr.
+	(DEFAULT_CHECK_ACTION, check_action): Remove definitions.
+	(sysmalloc): Adjust call to malloc_printerr.
+	(munmap_chunk, __libc_realloc): Likewise.  Remove return
+	statement.
+	(_int_malloc, int_realloc): Likewise.  Remove errstr variable.
+	Remove errout label and corresponding gotos.
+	(_int_free): Likewise.  Remove arena unlock.
+	(do_set_mallopt_check): Do not set check_action.
+	(malloc_printerr): Adjust parameter list.  Do not mark arena as
+	corrupt.
+	* manual/memory.texi (Malloc Tunable Parameters): Remove TODO
+	comment.
+	* manual/probes.texi (Memory Allocation Probes): Remove
+	memory_mallopt_check_action.
+
 2017-08-30  Steve Ellcey  <sellcey@cavium.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/makecontext.c (__makecontext):

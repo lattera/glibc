@@ -195,13 +195,6 @@ this @code{malloc} parameter, and @var{$arg3} is nonzero if dynamic
 threshold adjustment was already disabled.
 @end deftp
 
-@deftp Probe memory_mallopt_check_action (int @var{$arg1}, int @var{$arg2})
-This probe is triggered shortly after the @code{memory_mallopt} probe,
-when the parameter to be changed is @code{M_CHECK_ACTION}.  Argument
-@var{$arg1} is the requested value, and @var{$arg2} is the previous
-value of this @code{malloc} parameter.
-@end deftp
-
 @deftp Probe memory_mallopt_perturb (int @var{$arg1}, int @var{$arg2})
 This probe is triggered shortly after the @code{memory_mallopt} probe,
 when the parameter to be changed is @code{M_PERTURB}.  Argument

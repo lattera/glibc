@@ -1019,8 +1019,7 @@ static void*  _int_realloc(mstate, mchunkptr, INTERNAL_SIZE_T,
 static void*  _int_memalign(mstate, size_t, size_t);
 static void*  _mid_memalign(size_t, size_t, void *);
 
-static void malloc_printerr(int action, const char *str, void *ptr, mstate av)
-  __attribute__ ((noreturn));
+static void malloc_printerr(const char *str) __attribute__ ((noreturn));
 
 static void* internal_function mem2mem_check(void *p, size_t sz);
 static int internal_function top_check(void);
@@ -1404,11 +1403,11 @@ typedef struct malloc_chunk *mbinptr;
 /* Take a chunk off a bin list */
 #define unlink(AV, P, BK, FD) {                                            \
     if (__builtin_expect (chunksize(P) != prev_size (next_chunk(P)), 0))      \
-      malloc_printerr (check_action, "corrupted size vs. prev_size", P, AV);  \
+      malloc_printerr ("corrupted size vs. prev_size");			      \
     FD = P->fd;								      \
     BK = P->bk;								      \
     if (__builtin_expect (FD->bk != P || BK->fd != P, 0))		      \
-      malloc_printerr (check_action, "corrupted double-linked list", P, AV);  \
+      malloc_printerr ("corrupted double-linked list");			      \
     else {								      \
         FD->bk = BK;							      \
         BK->fd = FD;							      \
@@ -1416,9 +1415,7 @@ typedef struct malloc_chunk *mbinptr;
             && __builtin_expect (P->fd_nextsize != NULL, 0)) {		      \
 	    if (__builtin_expect (P->fd_nextsize->bk_nextsize != P, 0)	      \
 		|| __builtin_expect (P->bk_nextsize->fd_nextsize != P, 0))    \
-	      malloc_printerr (check_action,				      \
-			       "corrupted double-linked list (not small)",    \
-			       P, AV);					      \
+	      malloc_printerr ("corrupted double-linked list (not small)");   \
             if (FD->fd_nextsize == NULL) {				      \
                 if (P->fd_nextsize == P)				      \
                   FD->fd_nextsize = FD->bk_nextsize = FD;		      \
@@ -1891,15 +1888,6 @@ void *weak_variable (*__memalign_hook)
   (size_t __alignment, size_t __size, const void *)
   = memalign_hook_ini;
 void weak_variable (*__after_morecore_hook) (void) = NULL;
-
-
-/* ---------------- Error behavior ------------------------------------ */
-
-#ifndef DEFAULT_CHECK_ACTION
-# define DEFAULT_CHECK_ACTION 3
-#endif
-
-static int check_action = DEFAULT_CHECK_ACTION;
 
 
 /* ------------------ Testing support ----------------------------------*/
@@ -2579,11 +2567,8 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
             set_head (old_top, (size + old_size) | PREV_INUSE);
 
           else if (contiguous (av) && old_size && brk < old_end)
-            {
-              /* Oops!  Someone else killed our space..  Can't touch anything.  */
-              malloc_printerr (3, "break adjusted to free malloc space", brk,
-			       av);
-            }
+	    /* Oops!  Someone else killed our space..  Can't touch anything.  */
+	    malloc_printerr ("break adjusted to free malloc space");
 
           /*
              Otherwise, make adjustments:
@@ -2874,11 +2859,7 @@ munmap_chunk (mchunkptr p)
      (in the moment at least) so we combine the two values into one before
      the bit test.  */
   if (__builtin_expect (((block | total_size) & (GLRO (dl_pagesize) - 1)) != 0, 0))
-    {
-      malloc_printerr (check_action, "munmap_chunk(): invalid pointer",
-                       chunk2mem (p), NULL);
-      return;
-    }
+    malloc_printerr ("munmap_chunk(): invalid pointer");
 
   atomic_decrement (&mp_.n_mmaps);
   atomic_add (&mp_.mmapped_mem, -total_size);
@@ -3190,11 +3171,7 @@ __libc_realloc (void *oldmem, size_t bytes)
   if ((__builtin_expect ((uintptr_t) oldp > (uintptr_t) -oldsize, 0)
        || __builtin_expect (misaligned_chunk (oldp), 0))
       && !DUMPED_MAIN_ARENA_CHUNK (oldp))
-    {
-      malloc_printerr (check_action, "realloc(): invalid pointer", oldmem,
-		       ar_ptr);
-      return NULL;
-    }
+      malloc_printerr ("realloc(): invalid pointer");
 
   checked_request2size (bytes, nb);
 
@@ -3540,8 +3517,6 @@ _int_malloc (mstate av, size_t bytes)
   size_t tcache_unsorted_count;	    /* count of unsorted chunks processed */
 #endif
 
-  const char *errstr = NULL;
-
   /*
      Convert request size to internal form by adding SIZE_SZ bytes
      overhead plus possibly more to obtain necessary alignment and/or
@@ -3588,12 +3563,7 @@ _int_malloc (mstate av, size_t bytes)
       if (victim != 0)
         {
           if (__builtin_expect (fastbin_index (chunksize (victim)) != idx, 0))
-            {
-              errstr = "malloc(): memory corruption (fast)";
-            errout:
-              malloc_printerr (check_action, errstr, chunk2mem (victim), av);
-              return NULL;
-            }
+	    malloc_printerr ("malloc(): memory corruption (fast)");
           check_remalloced_chunk (av, victim, nb);
 #if USE_TCACHE
 	  /* While we're here, if we see other chunks of the same size,
@@ -3641,11 +3611,9 @@ _int_malloc (mstate av, size_t bytes)
           else
             {
               bck = victim->bk;
-	if (__glibc_unlikely (bck->fd != victim))
-                {
-                  errstr = "malloc(): smallbin double linked list corrupted";
-                  goto errout;
-                }
+	      if (__glibc_unlikely (bck->fd != victim))
+		malloc_printerr
+		  ("malloc(): smallbin double linked list corrupted");
               set_inuse_bit_at_offset (victim, nb);
               bin->bk = bck;
               bck->fd = bin;
@@ -3736,8 +3704,7 @@ _int_malloc (mstate av, size_t bytes)
           if (__builtin_expect (chunksize_nomask (victim) <= 2 * SIZE_SZ, 0)
               || __builtin_expect (chunksize_nomask (victim)
 				   > av->system_mem, 0))
-            malloc_printerr (check_action, "malloc(): memory corruption",
-                             chunk2mem (victim), av);
+            malloc_printerr ("malloc(): memory corruption");
           size = chunksize (victim);
 
           /*
@@ -3942,11 +3909,8 @@ _int_malloc (mstate av, size_t bytes)
                      have to perform a complete insert here.  */
                   bck = unsorted_chunks (av);
                   fwd = bck->fd;
-	  if (__glibc_unlikely (fwd->bk != bck))
-                    {
-                      errstr = "malloc(): corrupted unsorted chunks";
-                      goto errout;
-                    }
+		  if (__glibc_unlikely (fwd->bk != bck))
+		    malloc_printerr ("malloc(): corrupted unsorted chunks");
                   remainder->bk = bck;
                   remainder->fd = fwd;
                   bck->fd = remainder;
@@ -4049,11 +4013,8 @@ _int_malloc (mstate av, size_t bytes)
                      have to perform a complete insert here.  */
                   bck = unsorted_chunks (av);
                   fwd = bck->fd;
-	  if (__glibc_unlikely (fwd->bk != bck))
-                    {
-                      errstr = "malloc(): corrupted unsorted chunks 2";
-                      goto errout;
-                    }
+		  if (__glibc_unlikely (fwd->bk != bck))
+		    malloc_printerr ("malloc(): corrupted unsorted chunks 2");
                   remainder->bk = bck;
                   remainder->fd = fwd;
                   bck->fd = remainder;
@@ -4154,7 +4115,6 @@ _int_free (mstate av, mchunkptr p, int have_lock)
   mchunkptr bck;               /* misc temp for linking */
   mchunkptr fwd;               /* misc temp for linking */
 
-  const char *errstr = NULL;
   int locked = 0;
 
   size = chunksize (p);
@@ -4165,21 +4125,11 @@ _int_free (mstate av, mchunkptr p, int have_lock)
      here by accident or by "design" from some intruder.  */
   if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0)
       || __builtin_expect (misaligned_chunk (p), 0))
-    {
-      errstr = "free(): invalid pointer";
-    errout:
-      if (!have_lock && locked)
-        __libc_lock_unlock (av->mutex);
-      malloc_printerr (check_action, errstr, chunk2mem (p), av);
-      return;
-    }
+    malloc_printerr ("free(): invalid pointer");
   /* We know that each chunk is at least MINSIZE bytes in size or a
      multiple of MALLOC_ALIGNMENT.  */
   if (__glibc_unlikely (size < MINSIZE || !aligned_OK (size)))
-    {
-      errstr = "free(): invalid size";
-      goto errout;
-    }
+    malloc_printerr ("free(): invalid size");
 
   check_inuse_chunk(av, p);
 
@@ -4228,10 +4178,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 		  chunksize_nomask (chunk_at_offset (p, size)) <= 2 * SIZE_SZ
 		    || chunksize (chunk_at_offset (p, size)) >= av->system_mem;
 	      }))
-	  {
-	    errstr = "free(): invalid next size (fast)";
-	    goto errout;
-	  }
+	  malloc_printerr ("free(): invalid next size (fast)");
 	if (! have_lock)
 	  {
 	    __libc_lock_unlock (av->mutex);
@@ -4253,10 +4200,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	/* Check that the top of the bin is not the record we are going to add
 	   (i.e., double free).  */
 	if (__builtin_expect (old == p, 0))
-	  {
-	    errstr = "double free or corruption (fasttop)";
-	    goto errout;
-	  }
+	  malloc_printerr ("double free or corruption (fasttop)");
 	/* Check that size of fastbin chunk at the top is the same as
 	   size of the chunk that we are adding.  We can dereference OLD
 	   only if we have the lock, otherwise it might have already been
@@ -4268,10 +4212,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
     while ((old = catomic_compare_and_exchange_val_rel (fb, p, old2)) != old2);
 
     if (have_lock && old != NULL && __builtin_expect (old_idx != idx, 0))
-      {
-	errstr = "invalid fastbin entry (free)";
-	goto errout;
-      }
+      malloc_printerr ("invalid fastbin entry (free)");
   }
 
   /*
@@ -4289,32 +4230,20 @@ _int_free (mstate av, mchunkptr p, int have_lock)
     /* Lightweight tests: check whether the block is already the
        top block.  */
     if (__glibc_unlikely (p == av->top))
-      {
-	errstr = "double free or corruption (top)";
-	goto errout;
-      }
+      malloc_printerr ("double free or corruption (top)");
     /* Or whether the next chunk is beyond the boundaries of the arena.  */
     if (__builtin_expect (contiguous (av)
 			  && (char *) nextchunk
 			  >= ((char *) av->top + chunksize(av->top)), 0))
-      {
-	errstr = "double free or corruption (out)";
-	goto errout;
-      }
+	malloc_printerr ("double free or corruption (out)");
     /* Or whether the block is actually not marked used.  */
     if (__glibc_unlikely (!prev_inuse(nextchunk)))
-      {
-	errstr = "double free or corruption (!prev)";
-	goto errout;
-      }
+      malloc_printerr ("double free or corruption (!prev)");
 
     nextsize = chunksize(nextchunk);
     if (__builtin_expect (chunksize_nomask (nextchunk) <= 2 * SIZE_SZ, 0)
 	|| __builtin_expect (nextsize >= av->system_mem, 0))
-      {
-	errstr = "free(): invalid next size (normal)";
-	goto errout;
-      }
+      malloc_printerr ("free(): invalid next size (normal)");
 
     free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
 
@@ -4346,10 +4275,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
       bck = unsorted_chunks(av);
       fwd = bck->fd;
       if (__glibc_unlikely (fwd->bk != bck))
-	{
-	  errstr = "free(): corrupted unsorted chunks";
-	  goto errout;
-	}
+	malloc_printerr ("free(): corrupted unsorted chunks");
       p->fd = fwd;
       p->bk = bck;
       if (!in_smallbin_range(size))
@@ -4562,17 +4488,10 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
   INTERNAL_SIZE_T* s;               /* copy source */
   INTERNAL_SIZE_T* d;               /* copy destination */
 
-  const char *errstr = NULL;
-
   /* oldmem size */
   if (__builtin_expect (chunksize_nomask (oldp) <= 2 * SIZE_SZ, 0)
       || __builtin_expect (oldsize >= av->system_mem, 0))
-    {
-      errstr = "realloc(): invalid old size";
-    errout:
-      malloc_printerr (check_action, errstr, chunk2mem (oldp), av);
-      return NULL;
-    }
+    malloc_printerr ("realloc(): invalid old size");
 
   check_inuse_chunk (av, oldp);
 
@@ -4583,10 +4502,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
   INTERNAL_SIZE_T nextsize = chunksize (next);
   if (__builtin_expect (chunksize_nomask (next) <= 2 * SIZE_SZ, 0)
       || __builtin_expect (nextsize >= av->system_mem, 0))
-    {
-      errstr = "realloc(): invalid next size";
-      goto errout;
-    }
+    malloc_printerr ("realloc(): invalid next size");
 
   if ((unsigned long) (oldsize) >= (unsigned long) (nb))
     {
@@ -5126,8 +5042,6 @@ static inline int
 __always_inline
 do_set_mallopt_check (int32_t value)
 {
-  LIBC_PROBE (memory_mallopt_check_action, 2, value, check_action);
-  check_action = value;
   return 1;
 }
 
@@ -5401,14 +5315,8 @@ libc_hidden_def (__libc_mallopt)
 extern char **__libc_argv attribute_hidden;
 
 static void
-malloc_printerr (int action, const char *str, void *ptr, mstate ar_ptr)
+malloc_printerr (const char *str)
 {
-  /* Avoid using this arena in future.  We do not attempt to synchronize this
-     with anything else because we minimally want to ensure that __libc_message
-     gets its resources safely without stumbling on the current corruption.  */
-  if (ar_ptr)
-    set_arena_corrupt (ar_ptr);
-
   __libc_message (do_abort, "%s\n", str);
   __builtin_unreachable ();
 }

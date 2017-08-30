@@ -1104,7 +1104,6 @@ When calling @code{mallopt}, the @var{param} argument specifies the
 parameter to be set, and @var{value} the new value to be set.  Possible
 choices for @var{param}, as defined in @file{malloc.h}, are:
 
-@comment TODO: @item M_CHECK_ACTION
 @vtable @code
 @item M_MMAP_MAX
 The maximum number of chunks to allocate with @code{mmap}.  Setting this
