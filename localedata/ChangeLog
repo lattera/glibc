@@ -1,3 +1,8 @@
+2017-08-31  Akhilesh Kumar <akhilesh.k@samsung.com>
+
+	[BZ #22044]
+	* locales/li_BE (LC_TIME): copy "li_NL".
+
 2017-08-30  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #16148]
