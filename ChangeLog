@@ -1,3 +1,88 @@
+2017-08-30  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21457]
+	* sysdeps/arm/sys/ucontext.h: Do not include <bits/sigcontext.h>.
+	* sysdeps/generic/sys/ucontext.h: Add comment about use of struct
+	sigcontext and namespace requirements.
+	* sysdeps/i386/sys/ucontext.h: Do not include <bits/sigcontext.h>.
+	* sysdeps/m68k/sys/ucontext.h: Likewise.
+	* sysdeps/mips/sys/ucontext.h: Likewise.  Include <bits/types.h>.
+	* sysdeps/unix/sysv/linux/aarch64/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	(__ctx): Define earlier.
+	(mcontext_t): Define structure contents rather than using struct
+	sigcontext.
+	* sysdeps/unix/sysv/linux/aarch64/ucontext_i.sym (oEXTENSION): Use
+	__glibc_reserved1 instead of __reserved.
+	* sysdeps/unix/sysv/linux/alpha/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	(__ctx): Define earlier.
+	(mcontext_t): Define structure contents rather than using struct
+	sigcontext.
+	* sysdeps/unix/sysv/linux/alpha/ucontext-offsets.sym: Use
+	mcontext_t instead of struct sigcontext.
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	(__ctx): Define earlier.
+	(mcontext_t): Define structure contents rather than using struct
+	sigcontext.
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	(__ctx): Define earlier.
+	(mcontext_t): Define structure contents rather than using struct
+	sigcontext.
+	* sysdeps/unix/sysv/linux/ia64/makecontext.c (__makecontext): Use
+	mcontext_t instead of struct sigcontext.
+	* sysdeps/unix/sysv/linux/ia64/sigcontext-offsets.sym: Use
+	mcontext_t instead of struct sigcontext.
+	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	(__ctx): New macro.
+	(struct __ia64_fpreg_mcontext): New type.
+	(mcontext_t): Define structure contents rather than using struct
+	sigcontext.
+	(_SC_GR0_OFFSET): Use mcontext_t instead of struct sigcontext.
+	(uc_sigmask): Define using __ctx.
+	(uc_stack): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sys/procfs.h: Include
+	<bits/sigcontext.h>.
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	* sysdeps/unix/sysv/linux/microblaze/sys/ucontext.h: New file.
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	* sysdeps/unix/sysv/linux/nios2/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	* sysdeps/unix/sysv/linux/tile/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.
+	(__ctx): Define earlier.
+	(mcontext_t): Define structure contents rather than using struct
+	sigcontext.
+	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h: Do not include
+	<bits/sigcontext.h>.  Include <bits/types.h>.
+	* conform/Makefile (test-xfail-XPG42/signal.h/conform): Remove.
+	(test-xfail-XPG42/sys/wait.h/conform): Likewise.
+	(test-xfail-XPG42/ucontext.h/conform): Likewise.
+	(test-xfail-UNIX98/signal.h/conform): Likewise.
+	(test-xfail-UNIX98/sys/wait.h/conform): Likewise.
+	(test-xfail-UNIX98/ucontext.h/conform): Likewise.
+	(test-xfail-XOPEN2K/signal.h/conform): Likewise.
+	(test-xfail-XOPEN2K/sys/wait.h/conform): Likewise.
+	(test-xfail-XOPEN2K/ucontext.h/conform): Likewise.
+	(test-xfail-POSIX2008/signal.h/conform): Likewise.
+	(test-xfail-POSIX2008/sys/wait.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/signal.h/conform): Likewise.
+	(test-xfail-XOPEN2K8/sys/wait.h/conform): Likewise.
+
 2017-08-30  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/dynarray_emplace_enlarge.c

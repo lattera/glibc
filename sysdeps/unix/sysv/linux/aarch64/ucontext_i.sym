@@ -38,7 +38,7 @@ oX0				mcontext (regs)
 oSP				mcontext (sp)
 oPC				mcontext (pc)
 oPSTATE				mcontext (pstate)
-oEXTENSION                      mcontext (__reserved)
+oEXTENSION                      mcontext (__glibc_reserved1)
 
 #define fpsimd_context(member)  offsetof (struct fpsimd_context, member)
 

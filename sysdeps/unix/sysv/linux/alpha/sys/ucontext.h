@@ -21,9 +21,14 @@
 #include <features.h>
 
 #include <bits/types/sigset_t.h>
-#include <bits/sigcontext.h>
 #include <bits/types/stack_t.h>
 
+
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
 
 /* Type for general register.  */
 typedef long int greg_t;
@@ -51,13 +56,27 @@ typedef fpreg_t fpregset_t[__NFPREG];
 
 
 /* A machine context is exactly a sigcontext.  */
-typedef struct sigcontext mcontext_t;
-
-#ifdef __USE_MISC
-# define __ctx(fld) fld
-#else
-# define __ctx(fld) __ ## fld
-#endif
+typedef struct
+  {
+    long int __ctx(sc_onstack);
+    long int __ctx(sc_mask);
+    long int __ctx(sc_pc);
+    long int __ctx(sc_ps);
+    long int __ctx(sc_regs)[32];
+    long int __ctx(sc_ownedfp);
+    long int __ctx(sc_fpregs)[32];
+    unsigned long int __ctx(sc_fpcr);
+    unsigned long int __ctx(sc_fp_control);
+    unsigned long int __glibc_reserved1, __glibc_reserved2;
+    unsigned long int __ctx(sc_ssize);
+    char *__ctx(sc_sbase);
+    unsigned long int __ctx(sc_traparg_a0);
+    unsigned long int __ctx(sc_traparg_a1);
+    unsigned long int __ctx(sc_traparg_a2);
+    unsigned long int __ctx(sc_fp_trap_pc);
+    unsigned long int __ctx(sc_fp_trigger_sum);
+    unsigned long int __ctx(sc_fp_trigger_inst);
+  } mcontext_t;
 
 /* Userlevel context.  */
 typedef struct ucontext_t

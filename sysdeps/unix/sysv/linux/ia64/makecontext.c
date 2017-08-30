@@ -40,7 +40,7 @@ do {						\
 void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
-  struct sigcontext *sc = &ucp->uc_mcontext;
+  mcontext_t *sc = &ucp->uc_mcontext;
   extern void __start_context (ucontext_t *link, long gp, ...);
   unsigned long stack_start, stack_end;
   va_list ap;

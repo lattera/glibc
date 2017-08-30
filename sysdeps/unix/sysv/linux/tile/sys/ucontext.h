@@ -22,8 +22,13 @@
 #include <features.h>
 
 #include <bits/types/sigset_t.h>
-#include <bits/sigcontext.h>
 #include <bits/types/stack_t.h>
+
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
 
 #ifdef __USE_MISC
 /* Get register type and register names. */
@@ -56,14 +61,28 @@ enum
 };
 #endif
 
-/* A machine context is exactly a sigcontext.  */
-typedef struct sigcontext mcontext_t;
+#define __need_int_reg_t
+#include <arch/abi.h>
 
-#ifdef __USE_MISC
-# define __ctx(fld) fld
-#else
-# define __ctx(fld) __ ## fld
-#endif
+/* A machine context is exactly a sigcontext.  */
+typedef struct
+  {
+    __extension__ union
+      {
+	__uint_reg_t __ctx(gregs)[56];
+	__extension__ struct
+	  {
+	    __uint_reg_t __ctx(__gregs)[53];
+	    __uint_reg_t __ctx(tp);
+	    __uint_reg_t __ctx(sp);
+	    __uint_reg_t __ctx(lr);
+	  };
+      };
+    __uint_reg_t __ctx(pc);
+    __uint_reg_t __ctx(ics);
+    __uint_reg_t __ctx(faultnum);
+    __uint_reg_t __glibc_reserved1[5];
+  } mcontext_t;
 
 /* Userlevel context.  */
 typedef struct ucontext_t

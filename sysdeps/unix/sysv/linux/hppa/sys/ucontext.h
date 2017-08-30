@@ -23,9 +23,14 @@
 #include <features.h>
 
 #include <bits/types/sigset_t.h>
-#include <bits/sigcontext.h>
 #include <bits/types/stack_t.h>
 
+
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
 
 #ifdef __USE_MISC
 /* Type for general register.  */
@@ -52,13 +57,15 @@ typedef struct fpregset
 #endif
 
 /* Context to describe whole processor state.  */
-typedef struct sigcontext mcontext_t;
-
-#ifdef __USE_MISC
-# define __ctx(fld) fld
-#else
-# define __ctx(fld) __ ## fld
-#endif
+typedef struct
+  {
+    unsigned long int __ctx(sc_flags);
+    unsigned long int __ctx(sc_gr)[32];
+    unsigned long long int __ctx(sc_fr)[32];
+    unsigned long int __ctx(sc_iasq)[2];
+    unsigned long int __ctx(sc_iaoq)[2];
+    unsigned long int __ctx(sc_sar);
+  } mcontext_t;
 
 /* Userlevel context.  */
 typedef struct ucontext_t

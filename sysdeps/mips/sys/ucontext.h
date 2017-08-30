@@ -22,8 +22,8 @@
 
 #include <features.h>
 
+#include <bits/types.h>
 #include <bits/types/sigset_t.h>
-#include <bits/sigcontext.h>
 #include <bits/types/stack_t.h>
 
 #include <sgidefs.h>

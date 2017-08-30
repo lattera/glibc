@@ -17,7 +17,9 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* This file's definitions suffice for any platform where all
-   the machine-specific state is described in `struct sigcontext'.  */
+   the machine-specific state is described in `struct sigcontext', but
+   use of struct sigcontext does not conform to POSIX namespace
+   requirements.  */
 
 #ifndef _SYS_UCONTEXT_H
 #define _SYS_UCONTEXT_H	1

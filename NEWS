@@ -33,6 +33,10 @@ Deprecated and removed features, and other changes affecting compatibility:
   exception, or the macros X_TLOSS, DOMAIN, SING, OVERFLOW, UNDERFLOW,
   TLOSS, PLOSS and HUGE.
 
+* The mcontext_t type is no longer the same as struct sigcontext.  On
+  platforms where it was previously the same, this changes the C++ name
+  mangling for interfaces involving this type.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

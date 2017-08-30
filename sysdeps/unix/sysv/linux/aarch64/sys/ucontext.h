@@ -24,8 +24,13 @@
 #include <features.h>
 
 #include <bits/types/sigset_t.h>
-#include <bits/sigcontext.h>
 #include <bits/types/stack_t.h>
+
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
 
 #ifdef __USE_MISC
 # include <sys/procfs.h>
@@ -44,13 +49,15 @@ typedef elf_fpregset_t	fpregset_t;
    the core registers; coprocessor registers get saved elsewhere
    (e.g. in uc_regspace, or somewhere unspecified on the stack
    during non-RT signal handlers).  */
-typedef struct sigcontext mcontext_t;
-
-#ifdef __USE_MISC
-# define __ctx(fld) fld
-#else
-# define __ctx(fld) __ ## fld
-#endif
+typedef struct
+  {
+    unsigned long long int __ctx(fault_address);
+    unsigned long long int __ctx(regs)[31];
+    unsigned long long int __ctx(sp);
+    unsigned long long int __ctx(pc);
+    unsigned long long int __ctx(pstate);
+    unsigned char __glibc_reserved1[4096] __attribute__ ((__aligned__ (16)));
+  } mcontext_t;
 
 /* Userlevel context.  */
 typedef struct ucontext_t

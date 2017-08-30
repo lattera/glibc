@@ -23,9 +23,14 @@
 #include <features.h>
 
 #include <bits/types/sigset_t.h>
-#include <bits/sigcontext.h>
 #include <bits/types/stack_t.h>
 
+
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
 
 #ifdef __USE_MISC
 typedef int greg_t;
@@ -98,13 +103,30 @@ typedef struct _libc_fpstate fpregset_t;
    the core registers; coprocessor registers get saved elsewhere
    (e.g. in uc_regspace, or somewhere unspecified on the stack
    during non-RT signal handlers).  */
-typedef struct sigcontext mcontext_t;
-
-#ifdef __USE_MISC
-# define __ctx(fld) fld
-#else
-# define __ctx(fld) __ ## fld
-#endif
+typedef struct
+  {
+    unsigned long int __ctx(trap_no);
+    unsigned long int __ctx(error_code);
+    unsigned long int __ctx(oldmask);
+    unsigned long int __ctx(arm_r0);
+    unsigned long int __ctx(arm_r1);
+    unsigned long int __ctx(arm_r2);
+    unsigned long int __ctx(arm_r3);
+    unsigned long int __ctx(arm_r4);
+    unsigned long int __ctx(arm_r5);
+    unsigned long int __ctx(arm_r6);
+    unsigned long int __ctx(arm_r7);
+    unsigned long int __ctx(arm_r8);
+    unsigned long int __ctx(arm_r9);
+    unsigned long int __ctx(arm_r10);
+    unsigned long int __ctx(arm_fp);
+    unsigned long int __ctx(arm_ip);
+    unsigned long int __ctx(arm_sp);
+    unsigned long int __ctx(arm_lr);
+    unsigned long int __ctx(arm_pc);
+    unsigned long int __ctx(arm_cpsr);
+    unsigned long int __ctx(fault_address);
+  } mcontext_t;
 
 /* Userlevel context.  */
 typedef struct ucontext_t

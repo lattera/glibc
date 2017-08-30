@@ -21,6 +21,7 @@
 
 #include <features.h>
 #include <sys/ucontext.h>
+#include <bits/sigcontext.h>
 #include <bits/types.h>
 
 __BEGIN_DECLS
