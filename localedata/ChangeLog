@@ -1,5 +1,11 @@
 2017-08-30  Mike FABIAN  <mfabian@redhat.com>
 
+	[BZ #16148]
+	* locales/ca_ES (LC_NUMERIC): Use “.” in thousands_sep.
+	And make it more readable by using ASCII.
+
+2017-08-30  Mike FABIAN  <mfabian@redhat.com>
+
 	[BZ #22022]
 	* locales/mni_IN (LC_ADDRESS): Add country_name.
 
