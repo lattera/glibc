@@ -28,7 +28,7 @@ pthread_cond_t cv = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 bool n, exiting;
 FILE *f;
-int count;
+enum { count = 8 };		/* Number of worker threads.  */
 
 void *
 tf (void *dummy)
@@ -70,11 +70,6 @@ do_test (void)
       printf ("couldn't open /dev/null, %m\n");
       return 1;
     }
-
-  count = sysconf (_SC_NPROCESSORS_ONLN);
-  if (count <= 0)
-    count = 1;
-  count *= 4;
 
   pthread_t th[count];
   pthread_attr_t attr;

@@ -1,3 +1,9 @@
+2017-08-30  Florian Weimer  <fweimer@redhat.com>
+
+	Do not scale NPTL tests with available number of CPUs.
+	* nptl/tst-cond16.c (count): Set to constant value of 8.
+	* nptl/tst-cond18.c (count): Likewise.
+
 2017-08-29  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22035]
