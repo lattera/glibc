@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <dynarray.h>
+#include <errno.h>
 #include <malloc-internal.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,8 +44,11 @@ __libc_dynarray_emplace_enlarge (struct dynarray_header *list,
     {
       new_allocated = list->allocated + list->allocated / 2 + 1;
       if (new_allocated <= list->allocated)
-        /* Overflow.  */
-        return false;
+        {
+          /* Overflow.  */
+          __set_errno (ENOMEM);
+          return false;
+        }
     }
 
   size_t new_size;

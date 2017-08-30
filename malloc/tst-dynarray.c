@@ -18,6 +18,9 @@
 
 #include "tst-dynarray-shared.h"
 
+#include <errno.h>
+#include <stdint.h>
+
 #define DYNARRAY_STRUCT dynarray_long
 #define DYNARRAY_ELEMENT long
 #define DYNARRAY_PREFIX dynarray_long_
@@ -463,6 +466,31 @@ test_long_init (void)
   }
 }
 
+/* Test overflow in resize.  */
+static void
+test_long_overflow (void)
+{
+  {
+    struct dynarray_long dyn;
+    dynarray_long_init (&dyn);
+    errno = EINVAL;
+    TEST_VERIFY (!dynarray_long_resize
+                 (&dyn, (SIZE_MAX / sizeof (long)) + 1));
+    TEST_VERIFY (errno == ENOMEM);
+    TEST_VERIFY (dynarray_long_has_failed (&dyn));
+  }
+
+  {
+    struct dynarray_long_noscratch dyn;
+    dynarray_long_noscratch_init (&dyn);
+    errno = EINVAL;
+    TEST_VERIFY (!dynarray_long_noscratch_resize
+                 (&dyn, (SIZE_MAX / sizeof (long)) + 1));
+    TEST_VERIFY (errno == ENOMEM);
+    TEST_VERIFY (dynarray_long_noscratch_has_failed (&dyn));
+  }
+}
+
 /* Test NUL-terminated string construction with the add function and
    the simple finalize function.  */
 static void
@@ -538,6 +566,7 @@ do_test (void)
   test_int ();
   test_str ();
   test_long_init ();
+  test_long_overflow ();
   test_zstr ();
   return 0;
 }

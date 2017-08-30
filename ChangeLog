@@ -1,5 +1,13 @@
 2017-08-30  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/dynarray_emplace_enlarge.c
+	(__libc_dynarray_emplace_enlarge): Set errno on overflow.
+	* malloc/dynarray_resize.c (__libc_dynarray_resize): Likewise.
+	* malloc/tst-dynarray.c (test_long_overflow): New function.
+	(do_test): Call it.
+
+2017-08-30  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/malloc.c (ARENA_CORRUPTION_BIT, arena_is_corrupt)
 	(set_arena_corrupt): Remove definitions.
 	(mtrim): Do not check for corrupt arena.
