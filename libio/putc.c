@@ -36,11 +36,9 @@ libc_hidden_def (_IO_putc)
 
 #undef putc
 
-#ifdef weak_alias
 weak_alias (_IO_putc, putc)
 
 #ifndef _IO_MTSAFE_IO
 #undef putc_unlocked
 weak_alias (_IO_putc, putc_unlocked)
-#endif
 #endif

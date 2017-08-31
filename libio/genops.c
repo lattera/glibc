@@ -30,9 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#ifdef _LIBC
 #include <sched.h>
-#endif
 
 #ifdef _IO_MTSAFE_IO
 static _IO_lock_t list_all_lock = _IO_lock_initializer;
@@ -233,16 +231,7 @@ __overflow (_IO_FILE *f, int ch)
 }
 libc_hidden_def (__overflow)
 
-static int save_for_backup (_IO_FILE *fp, char *end_p)
-#ifdef _LIBC
-     internal_function
-#endif
-     ;
-
 static int
-#ifdef _LIBC
-internal_function
-#endif
 save_for_backup (_IO_FILE *fp, char *end_p)
 {
   /* Append [_IO_read_base..end_p] to backup area. */
@@ -263,20 +252,11 @@ save_for_backup (_IO_FILE *fp, char *end_p)
 	return EOF;		/* FIXME */
       if (least_mark < 0)
 	{
-#ifdef _LIBC
 	  __mempcpy (__mempcpy (new_buffer + avail,
 				fp->_IO_save_end + least_mark,
 				-least_mark),
 		     fp->_IO_read_base,
 		     end_p - fp->_IO_read_base);
-#else
-	  memcpy (new_buffer + avail,
-		  fp->_IO_save_end + least_mark,
-		  -least_mark);
-	  memcpy (new_buffer + avail - least_mark,
-		  fp->_IO_read_base,
-		  end_p - fp->_IO_read_base);
-#endif
 	}
       else
 	memcpy (new_buffer + avail,
@@ -314,10 +294,8 @@ save_for_backup (_IO_FILE *fp, char *end_p)
 int
 __underflow (_IO_FILE *fp)
 {
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   if (_IO_vtable_offset (fp) == 0 && _IO_fwide (fp, -1) != -1)
     return EOF;
-#endif
 
   if (fp->_mode == 0)
     _IO_fwide (fp, -1);
@@ -346,10 +324,8 @@ libc_hidden_def (__underflow)
 int
 __uflow (_IO_FILE *fp)
 {
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   if (_IO_vtable_offset (fp) == 0 && _IO_fwide (fp, -1) != -1)
     return EOF;
-#endif
 
   if (fp->_mode == 0)
     _IO_fwide (fp, -1);
@@ -434,12 +410,7 @@ _IO_default_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
 	    count = more;
 	  if (count > 20)
 	    {
-#ifdef _LIBC
 	      f->_IO_write_ptr = __mempcpy (f->_IO_write_ptr, s, count);
-#else
-	      memcpy (f->_IO_write_ptr, s, count);
-	      f->_IO_write_ptr += count;
-#endif
 	      s += count;
 	    }
 	  else if (count)
@@ -483,12 +454,7 @@ _IO_default_xsgetn (_IO_FILE *fp, void *data, _IO_size_t n)
 	    count = more;
 	  if (count > 20)
 	    {
-#ifdef _LIBC
 	      s = __mempcpy (s, fp->_IO_read_ptr, count);
-#else
-	      memcpy (s, fp->_IO_read_ptr, count);
-	      s += count;
-#endif
 	      fp->_IO_read_ptr += count;
 	    }
 	  else if (count)
@@ -633,7 +599,6 @@ _IO_no_init (_IO_FILE *fp, int flags, int orientation,
 {
   _IO_old_init (fp, flags);
   fp->_mode = orientation;
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   if (orientation >= 0)
     {
       fp->_wide_data = wd;
@@ -655,7 +620,6 @@ _IO_no_init (_IO_FILE *fp, int flags, int orientation,
     /* Cause predictable crash when a wide function is called on a byte
        stream.  */
     fp->_wide_data = (struct _IO_wide_data *) -1L;
-#endif
   fp->_freeres_list = NULL;
 }
 
@@ -811,11 +775,9 @@ _IO_flush_all_lockp (int do_lock)
 	_IO_flockfile (fp);
 
       if (((fp->_mode <= 0 && fp->_IO_write_ptr > fp->_IO_write_base)
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 	   || (_IO_vtable_offset (fp) == 0
 	       && fp->_mode > 0 && (fp->_wide_data->_IO_write_ptr
 				    > fp->_wide_data->_IO_write_base))
-#endif
 	   )
 	  && _IO_OVERFLOW (fp, EOF) == EOF)
 	result = EOF;
@@ -892,9 +854,7 @@ _IO_flush_all_linebuffered (void)
 #endif
 }
 libc_hidden_def (_IO_flush_all_linebuffered)
-#ifdef _LIBC
 weak_alias (_IO_flush_all_linebuffered, _flushlbf)
-#endif
 
 
 /* The following is a bit tricky.  In general, we want to unbuffer the

@@ -28,11 +28,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stddef.h>
-#ifdef _LIBC
-# include <shlib-compat.h>
-#else
-# define _IO_new_fopen fopen
-#endif
+#include <shlib-compat.h>
 
 _IO_FILE *
 __fopen_maybe_mmap (_IO_FILE *fp)
@@ -73,11 +69,7 @@ __fopen_internal (const char *filename, const char *mode, int is32)
 #ifdef _IO_MTSAFE_IO
   new_f->fp.file._lock = &new_f->lock;
 #endif
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &_IO_wfile_jumps);
-#else
-  _IO_no_init (&new_f->fp.file, 1, 0, NULL, NULL);
-#endif
   _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
   _IO_new_file_init_internal (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
@@ -97,7 +89,6 @@ _IO_new_fopen (const char *filename, const char *mode)
   return __fopen_internal (filename, mode, 1);
 }
 
-#ifdef _LIBC
 strong_alias (_IO_new_fopen, __new_fopen)
 versioned_symbol (libc, _IO_new_fopen, _IO_fopen, GLIBC_2_1);
 versioned_symbol (libc, __new_fopen, fopen, GLIBC_2_1);
@@ -106,4 +97,3 @@ versioned_symbol (libc, __new_fopen, fopen, GLIBC_2_1);
 weak_alias (_IO_new_fopen, _IO_fopen64)
 weak_alias (_IO_new_fopen, fopen64)
 # endif
-#endif

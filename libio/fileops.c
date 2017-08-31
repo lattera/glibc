@@ -26,9 +26,6 @@
    in files containing the exception.  */
 
 
-#ifndef _POSIX_SOURCE
-# define _POSIX_SOURCE
-#endif
 #include "libioP.h"
 #include <assert.h>
 #include <fcntl.h>
@@ -40,48 +37,14 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
-#if _LIBC
-# include "../wcsmbs/wcsmbsload.h"
-# include "../iconv/gconv_charset.h"
-# include "../iconv/gconv_int.h"
-# include <shlib-compat.h>
-# include <not-cancel.h>
-# include <kernel-features.h>
-#endif
-#ifndef errno
-extern int errno;
-#endif
-#ifndef __set_errno
-# define __set_errno(Val) errno = (Val)
-#endif
+#include "../wcsmbs/wcsmbsload.h"
+#include "../iconv/gconv_charset.h"
+#include "../iconv/gconv_int.h"
+#include <shlib-compat.h>
+#include <not-cancel.h>
+#include <kernel-features.h>
 
-
-#ifdef _LIBC
-# define open(Name, Flags, Prot) __open (Name, Flags, Prot)
-# define lseek(FD, Offset, Whence) __lseek (FD, Offset, Whence)
-# define read(FD, Buf, NBytes) __read (FD, Buf, NBytes)
-# define write(FD, Buf, NBytes) __write (FD, Buf, NBytes)
-#else
-# define _IO_new_do_write _IO_do_write
-# define _IO_new_file_attach _IO_file_attach
-# define _IO_new_file_close_it _IO_file_close_it
-# define _IO_new_file_finish _IO_file_finish
-# define _IO_new_file_fopen _IO_file_fopen
-# define _IO_new_file_init _IO_file_init
-# define _IO_new_file_setbuf _IO_file_setbuf
-# define _IO_new_file_sync _IO_file_sync
-# define _IO_new_file_overflow _IO_file_overflow
-# define _IO_new_file_seekoff _IO_file_seekoff
-# define _IO_new_file_underflow _IO_file_underflow
-# define _IO_new_file_write _IO_file_write
-# define _IO_new_file_xsputn _IO_file_xsputn
-#endif
-
-
-#ifdef _LIBC
 extern struct __gconv_trans_data __libio_translit attribute_hidden;
-#endif
-
 
 /* An fstream can be in at most one of put mode, get mode, or putback mode.
    Putback mode is a variant of get mode.
@@ -180,7 +143,6 @@ _IO_new_file_close_it (_IO_FILE *fp)
 		      ? _IO_SYSCLOSE (fp) : 0);
 
   /* Free buffer. */
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   if (fp->_mode > 0)
     {
       if (_IO_have_wbackup (fp))
@@ -189,7 +151,6 @@ _IO_new_file_close_it (_IO_FILE *fp)
       _IO_wsetg (fp, NULL, NULL, NULL);
       _IO_wsetp (fp, NULL, NULL);
     }
-#endif
   _IO_setb (fp, NULL, NULL, 0);
   _IO_setg (fp, NULL, NULL, NULL);
   _IO_setp (fp, NULL, NULL);
@@ -221,15 +182,11 @@ _IO_file_open (_IO_FILE *fp, const char *filename, int posix_mode, int prot,
 	       int read_write, int is32not64)
 {
   int fdesc;
-#ifdef _LIBC
   if (__glibc_unlikely (fp->_flags2 & _IO_FLAGS2_NOTCANCEL))
     fdesc = __open_nocancel (filename,
 			     posix_mode | (is32not64 ? 0 : O_LARGEFILE), prot);
   else
-    fdesc = open (filename, posix_mode | (is32not64 ? 0 : O_LARGEFILE), prot);
-#else
-  fdesc = open (filename, posix_mode, prot);
-#endif
+    fdesc = __open (filename, posix_mode | (is32not64 ? 0 : O_LARGEFILE), prot);
   if (fdesc < 0)
     return NULL;
   fp->_fileno = fdesc;
@@ -260,10 +217,8 @@ _IO_new_file_fopen (_IO_FILE *fp, const char *filename, const char *mode,
   int oprot = 0666;
   int i;
   _IO_FILE *result;
-#ifdef _LIBC
   const char *cs;
   const char *last_recognized;
-#endif
 
   if (_IO_file_is_open (fp))
     return 0;
@@ -287,9 +242,7 @@ _IO_new_file_fopen (_IO_FILE *fp, const char *filename, const char *mode,
       __set_errno (EINVAL);
       return NULL;
     }
-#ifdef _LIBC
   last_recognized = mode;
-#endif
   for (i = 1; i < 7; ++i)
     {
       switch (*++mode)
@@ -299,20 +252,14 @@ _IO_new_file_fopen (_IO_FILE *fp, const char *filename, const char *mode,
 	case '+':
 	  omode = O_RDWR;
 	  read_write &= _IO_IS_APPENDING;
-#ifdef _LIBC
 	  last_recognized = mode;
-#endif
 	  continue;
 	case 'x':
 	  oflags |= O_EXCL;
-#ifdef _LIBC
 	  last_recognized = mode;
-#endif
 	  continue;
 	case 'b':
-#ifdef _LIBC
 	  last_recognized = mode;
-#endif
 	  continue;
 	case 'm':
 	  fp->_flags2 |= _IO_FLAGS2_MMAP;
@@ -874,10 +821,8 @@ _IO_new_file_sync (_IO_FILE *fp)
       _IO_off64_t new_pos = _IO_SYSSEEK (fp, delta, 1);
       if (new_pos != (_IO_off64_t) EOF)
 	fp->_IO_read_end = fp->_IO_read_ptr;
-#ifdef ESPIPE
       else if (errno == ESPIPE)
 	; /* Ignore error from unseekable devices. */
-#endif
       else
 	retval = EOF;
     }
@@ -1205,7 +1150,7 @@ _IO_file_read (_IO_FILE *fp, void *buf, _IO_ssize_t size)
 {
   return (__builtin_expect (fp->_flags2 & _IO_FLAGS2_NOTCANCEL, 0)
 	  ? __read_nocancel (fp->_fileno, buf, size)
-	  : read (fp->_fileno, buf, size));
+	  : __read (fp->_fileno, buf, size));
 }
 libc_hidden_def (_IO_file_read)
 
@@ -1252,7 +1197,7 @@ _IO_new_file_write (_IO_FILE *f, const void *data, _IO_ssize_t n)
       _IO_ssize_t count = (__builtin_expect (f->_flags2
 					     & _IO_FLAGS2_NOTCANCEL, 0)
 			   ? __write_nocancel (f->_fileno, data, to_do)
-			   : write (f->_fileno, data, to_do));
+			   : __write (f->_fileno, data, to_do));
       if (count < 0)
 	{
 	  f->_flags |= _IO_ERR_SEEN;
@@ -1307,12 +1252,7 @@ _IO_new_file_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
     {
       if (count > to_do)
 	count = to_do;
-#ifdef _LIBC
       f->_IO_write_ptr = __mempcpy (f->_IO_write_ptr, s, count);
-#else
-      memcpy (f->_IO_write_ptr, s, count);
-      f->_IO_write_ptr += count;
-#endif
       s += count;
       to_do -= count;
     }
@@ -1380,12 +1320,7 @@ _IO_file_xsgetn (_IO_FILE *fp, void *data, _IO_size_t n)
 	{
 	  if (have > 0)
 	    {
-#ifdef _LIBC
 	      s = __mempcpy (s, fp->_IO_read_ptr, have);
-#else
-	      memcpy (s, fp->_IO_read_ptr, have);
-	      s += have;
-#endif
 	      want -= have;
 	      fp->_IO_read_ptr += have;
 	    }
@@ -1458,12 +1393,7 @@ _IO_file_xsgetn_mmap (_IO_FILE *fp, void *data, _IO_size_t n)
     {
       if (__glibc_unlikely (_IO_in_backup (fp)))
 	{
-#ifdef _LIBC
 	  s = __mempcpy (s, read_ptr, have);
-#else
-	  memcpy (s, read_ptr, have);
-	  s += have;
-#endif
 	  n -= have;
 	  _IO_switch_to_main_get_area (fp);
 	  read_ptr = fp->_IO_read_ptr;
@@ -1488,12 +1418,7 @@ _IO_file_xsgetn_mmap (_IO_FILE *fp, void *data, _IO_size_t n)
   if (have != 0)
     {
       have = MIN (have, n);
-#ifdef _LIBC
       s = __mempcpy (s, read_ptr, have);
-#else
-      memcpy (s, read_ptr, have);
-      s += have;
-#endif
       fp->_IO_read_ptr = read_ptr + have;
     }
 
@@ -1510,7 +1435,6 @@ _IO_file_xsgetn_maybe_mmap (_IO_FILE *fp, void *data, _IO_size_t n)
   return _IO_XSGETN (fp, data, n);
 }
 
-#ifdef _LIBC
 versioned_symbol (libc, _IO_new_do_write, _IO_do_write, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_attach, _IO_file_attach, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_close_it, _IO_file_close_it, GLIBC_2_1);
@@ -1524,7 +1448,6 @@ versioned_symbol (libc, _IO_new_file_seekoff, _IO_file_seekoff, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_underflow, _IO_file_underflow, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_write, _IO_file_write, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_xsputn, _IO_file_xsputn, GLIBC_2_1);
-#endif
 
 const struct _IO_jump_t _IO_file_jumps libio_vtable =
 {

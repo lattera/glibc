@@ -95,6 +95,4 @@ unlock_return:
 }
 libc_hidden_def (_IO_setvbuf)
 
-#ifdef weak_alias
 weak_alias (_IO_setvbuf, setvbuf)
-#endif

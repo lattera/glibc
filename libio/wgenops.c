@@ -34,16 +34,7 @@
 #include <wchar.h>
 
 
-#ifndef _LIBC
-# define __wmemcpy(dst, src, n) wmemcpy (dst, src, n)
-#endif
-
-
-static int save_for_wbackup (_IO_FILE *fp, wchar_t *end_p) __THROW
-#ifdef _LIBC
-     internal_function
-#endif
-     ;
+static int save_for_wbackup (_IO_FILE *fp, wchar_t *end_p) __THROW;
 
 /* Return minimum _pos markers
    Assumes the current get area is the main get area. */
@@ -307,13 +298,8 @@ _IO_wdefault_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
 	    count = more;
 	  if (count > 20)
 	    {
-#ifdef _LIBC
 	      f->_wide_data->_IO_write_ptr =
 		__wmempcpy (f->_wide_data->_IO_write_ptr, s, count);
-#else
-	      memcpy (f->_wide_data->_IO_write_ptr, s, count);
-	      f->_wide_data->_IO_write_ptr += count;
-#endif
 	      s += count;
             }
 	  else if (count <= 0)
@@ -353,12 +339,7 @@ _IO_wdefault_xsgetn (_IO_FILE *fp, void *data, _IO_size_t n)
 	    count = more;
 	  if (count > 20)
 	    {
-#ifdef _LIBC
 	      s = __wmempcpy (s, fp->_wide_data->_IO_read_ptr, count);
-#else
-	      memcpy (s, fp->_wide_data->_IO_read_ptr, count);
-	      s += count;
-#endif
 	      fp->_wide_data->_IO_read_ptr += count;
 	    }
 	  else if (count <= 0)
@@ -466,9 +447,6 @@ _IO_switch_to_wput_mode (_IO_FILE *fp)
 
 
 static int
-#ifdef _LIBC
-internal_function
-#endif
 save_for_wbackup (_IO_FILE *fp, wchar_t *end_p)
 {
   /* Append [_IO_read_base..end_p] to backup area. */
@@ -492,32 +470,17 @@ save_for_wbackup (_IO_FILE *fp, wchar_t *end_p)
 	return EOF;		/* FIXME */
       if (least_mark < 0)
 	{
-#ifdef _LIBC
 	  __wmempcpy (__wmempcpy (new_buffer + avail,
 				  fp->_wide_data->_IO_save_end + least_mark,
 				  -least_mark),
 		      fp->_wide_data->_IO_read_base,
 		      end_p - fp->_wide_data->_IO_read_base);
-#else
-	  memcpy (new_buffer + avail,
-		  fp->_wide_data->_IO_save_end + least_mark,
-		  -least_mark * sizeof (wchar_t));
-	  memcpy (new_buffer + avail - least_mark,
-		  fp->_wide_data->_IO_read_base,
-		  (end_p - fp->_wide_data->_IO_read_base) * sizeof (wchar_t));
-#endif
 	}
       else
 	{
-#ifdef _LIBC
 	  __wmemcpy (new_buffer + avail,
 		     fp->_wide_data->_IO_read_base + least_mark,
 		     needed_size);
-#else
-	  memcpy (new_buffer + avail,
-		  fp->_wide_data->_IO_read_base + least_mark,
-		  needed_size * sizeof (wchar_t));
-#endif
 	}
       free (fp->_wide_data->_IO_save_base);
       fp->_wide_data->_IO_save_base = new_buffer;
@@ -528,32 +491,17 @@ save_for_wbackup (_IO_FILE *fp, wchar_t *end_p)
       avail = current_Bsize - needed_size;
       if (least_mark < 0)
 	{
-#ifdef _LIBC
 	  __wmemmove (fp->_wide_data->_IO_save_base + avail,
 		      fp->_wide_data->_IO_save_end + least_mark,
 		      -least_mark);
 	  __wmemcpy (fp->_wide_data->_IO_save_base + avail - least_mark,
 		     fp->_wide_data->_IO_read_base,
 		     end_p - fp->_wide_data->_IO_read_base);
-#else
-	  memmove (fp->_wide_data->_IO_save_base + avail,
-		   fp->_wide_data->_IO_save_end + least_mark,
-		   -least_mark * sizeof (wchar_t));
-	  memcpy (fp->_wide_data->_IO_save_base + avail - least_mark,
-		  fp->_wide_data->_IO_read_base,
-		  (end_p - fp->_wide_data->_IO_read_base) * sizeof (wchar_t));
-#endif
 	}
       else if (needed_size > 0)
-#ifdef _LIBC
 	__wmemcpy (fp->_wide_data->_IO_save_base + avail,
 		   fp->_wide_data->_IO_read_base + least_mark,
 		   needed_size);
-#else
-	memcpy (fp->_wide_data->_IO_save_base + avail,
-		fp->_wide_data->_IO_read_base + least_mark,
-		needed_size * sizeof (wchar_t));
-#endif
     }
   fp->_wide_data->_IO_backup_base = fp->_wide_data->_IO_save_base + avail;
   /* Adjust all the streammarkers. */

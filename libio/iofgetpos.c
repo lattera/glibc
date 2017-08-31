@@ -56,17 +56,13 @@ _IO_new_fgetpos (_IO_FILE *fp, _IO_fpos_t *posp)
     {
       /* ANSI explicitly requires setting errno to a positive value on
 	 failure.  */
-#ifdef EIO
       if (errno == 0)
 	__set_errno (EIO);
-#endif
       result = EOF;
     }
   else if ((_IO_off64_t) (__typeof (posp->__pos)) pos != pos)
     {
-#ifdef EOVERFLOW
       __set_errno (EOVERFLOW);
-#endif
       result = EOF;
     }
   else

@@ -25,22 +25,18 @@
    in files containing the exception.  */
 
 #include <libioP.h>
-#ifdef _LIBC
-# include <dlfcn.h>
-# include <wchar.h>
-#endif
+#include <dlfcn.h>
+#include <wchar.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef _LIBC
-# include <langinfo.h>
-# include <locale/localeinfo.h>
-# include <wcsmbs/wcsmbsload.h>
-# include <iconv/gconv_int.h>
-# include <shlib-compat.h>
-# include <sysdep.h>
-#endif
+#include <langinfo.h>
+#include <locale/localeinfo.h>
+#include <wcsmbs/wcsmbsload.h>
+#include <iconv/gconv_int.h>
+#include <shlib-compat.h>
+#include <sysdep.h>
 
 
 /* Prototypes of libio's codecvt functions.  */
@@ -90,8 +86,7 @@ _IO_fwide (_IO_FILE *fp, int mode)
   /* Normalize the value.  */
   mode = mode < 0 ? -1 : (mode == 0 ? 0 : 1);
 
-#if defined SHARED && defined _LIBC \
-    && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
   if (__builtin_expect (&_IO_stdin_used == NULL, 0)
       && (fp == _IO_stdin || fp == _IO_stdout || fp == _IO_stderr))
     /* This is for a stream in the glibc 2.0 format.  */
@@ -114,7 +109,6 @@ _IO_fwide (_IO_FILE *fp, int mode)
 
       /* Get the character conversion functions based on the currently
 	 selected locale for LC_CTYPE.  */
-#ifdef _LIBC
       {
 	/* Clear the state.  We start all over again.  */
 	memset (&fp->_wide_data->_IO_state, '\0', sizeof (__mbstate_t));
@@ -145,41 +139,6 @@ _IO_fwide (_IO_FILE *fp, int mode)
 	  = __GCONV_IS_LAST | __GCONV_TRANSLIT;
 	cc->__cd_out.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
       }
-#else
-# ifdef _GLIBCPP_USE_WCHAR_T
-      {
-	/* Determine internal and external character sets.
-
-	   XXX For now we make our life easy: we assume a fixed internal
-	   encoding (as most sane systems have; hi HP/UX!).  If somebody
-	   cares about systems which changing internal charsets they
-	   should come up with a solution for the determination of the
-	   currently used internal character set.  */
-	const char *internal_ccs = _G_INTERNAL_CCS;
-	const char *external_ccs = NULL;
-
-#  ifdef HAVE_NL_LANGINFO
-	external_ccs = nl_langinfo (CODESET);
-#  endif
-	if (external_ccs == NULL)
-	  external_ccs = "ISO-8859-1";
-
-	cc->__cd_in = iconv_open (internal_ccs, external_ccs);
-	if (cc->__cd_in != (iconv_t) -1)
-	  cc->__cd_out = iconv_open (external_ccs, internal_ccs);
-
-	if (cc->__cd_in == (iconv_t) -1 || cc->__cd_out == (iconv_t) -1)
-	  {
-	    if (cc->__cd_in != (iconv_t) -1)
-	      iconv_close (cc->__cd_in);
-	    /* XXX */
-	    abort ();
-	  }
-      }
-# else
-#  error "somehow determine this from LC_CTYPE"
-# endif
-#endif
 
       /* From now on use the wide character callback functions.  */
       _IO_JUMPS_FILE_plus (fp) = fp->_wide_data->_wide_vtable;
@@ -200,7 +159,6 @@ do_out (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 {
   enum __codecvt_result result;
 
-#ifdef _LIBC
   struct __gconv_step *gs = codecvt->__cd_out.__cd.__steps;
   int status;
   size_t dummy;
@@ -240,28 +198,6 @@ do_out (struct _IO_codecvt *codecvt, __mbstate_t *statep,
       result = __codecvt_error;
       break;
     }
-#else
-# ifdef _GLIBCPP_USE_WCHAR_T
-  size_t res;
-  const char *from_start_copy = (const char *) from_start;
-  size_t from_len = from_end - from_start;
-  char *to_start_copy = to_start;
-  size_t to_len = to_end - to_start;
-  res = iconv (codecvt->__cd_out, &from_start_copy, &from_len,
-	       &to_start_copy, &to_len);
-
-  if (res == 0 || from_len == 0)
-    result = __codecvt_ok;
-  else if (to_len < codecvt->__codecvt_do_max_length (codecvt))
-    result = __codecvt_partial;
-  else
-    result = __codecvt_error;
-
-# else
-  /* Decide what to do.  */
-  result = __codecvt_error;
-# endif
-#endif
 
   return result;
 }
@@ -273,7 +209,6 @@ do_unshift (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 {
   enum __codecvt_result result;
 
-#ifdef _LIBC
   struct __gconv_step *gs = codecvt->__cd_out.__cd.__steps;
   int status;
   size_t dummy;
@@ -310,25 +245,6 @@ do_unshift (struct _IO_codecvt *codecvt, __mbstate_t *statep,
       result = __codecvt_error;
       break;
     }
-#else
-# ifdef _GLIBCPP_USE_WCHAR_T
-  size_t res;
-  char *to_start_copy = (char *) to_start;
-  size_t to_len = to_end - to_start;
-
-  res = iconv (codecvt->__cd_out, NULL, NULL, &to_start_copy, &to_len);
-
-  if (res == 0)
-    result = __codecvt_ok;
-  else if (to_len < codecvt->__codecvt_do_max_length (codecvt))
-    result = __codecvt_partial;
-  else
-    result = __codecvt_error;
-# else
-  /* Decide what to do.  */
-  result = __codecvt_error;
-# endif
-#endif
 
   return result;
 }
@@ -341,7 +257,6 @@ do_in (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 {
   enum __codecvt_result result;
 
-#ifdef _LIBC
   struct __gconv_step *gs = codecvt->__cd_in.__cd.__steps;
   int status;
   size_t dummy;
@@ -381,30 +296,6 @@ do_in (struct _IO_codecvt *codecvt, __mbstate_t *statep,
       result = __codecvt_error;
       break;
     }
-#else
-# ifdef _GLIBCPP_USE_WCHAR_T
-  size_t res;
-  const char *from_start_copy = (const char *) from_start;
-  size_t from_len = from_end - from_start;
-  char *to_start_copy = (char *) from_start;
-  size_t to_len = to_end - to_start;
-
-  res = iconv (codecvt->__cd_in, &from_start_copy, &from_len,
-	       &to_start_copy, &to_len);
-
-  if (res == 0)
-    result = __codecvt_ok;
-  else if (to_len == 0)
-    result = __codecvt_partial;
-  else if (from_len < codecvt->__codecvt_do_max_length (codecvt))
-    result = __codecvt_partial;
-  else
-    result = __codecvt_error;
-# else
-  /* Decide what to do.  */
-  result = __codecvt_error;
-# endif
-#endif
 
   return result;
 }
@@ -413,7 +304,6 @@ do_in (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 static int
 do_encoding (struct _IO_codecvt *codecvt)
 {
-#ifdef _LIBC
   /* See whether the encoding is stateful.  */
   if (codecvt->__cd_in.__cd.__steps[0].__stateful)
     return -1;
@@ -425,10 +315,6 @@ do_encoding (struct _IO_codecvt *codecvt)
     return 0;
 
   return codecvt->__cd_in.__cd.__steps[0].__min_needed_from;
-#else
-  /* Worst case scenario.  */
-  return -1;
-#endif
 }
 
 
@@ -444,7 +330,6 @@ do_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 	   const char *from_start, const char *from_end, _IO_size_t max)
 {
   int result;
-#ifdef _LIBC
   const unsigned char *cp = (const unsigned char *) from_start;
   wchar_t to_buf[max];
   struct __gconv_step *gs = codecvt->__cd_in.__cd.__steps;
@@ -466,23 +351,6 @@ do_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 		&dummy, 0, 0));
 
   result = cp - (const unsigned char *) from_start;
-#else
-# ifdef _GLIBCPP_USE_WCHAR_T
-  const char *from_start_copy = (const char *) from_start;
-  size_t from_len = from_end - from_start;
-  wchar_t to_buf[max];
-  size_t res;
-  char *to_start = (char *) to_buf;
-
-  res = iconv (codecvt->__cd_in, &from_start_copy, &from_len,
-	       &to_start, &max);
-
-  result = from_start_copy - (char *) from_start;
-# else
-  /* Decide what to do.  */
-  result = 0;
-# endif
-#endif
 
   return result;
 }
@@ -491,9 +359,5 @@ do_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 static int
 do_max_length (struct _IO_codecvt *codecvt)
 {
-#ifdef _LIBC
   return codecvt->__cd_in.__cd.__steps[0].__max_needed_from;
-#else
-  return MB_CUR_MAX;
-#endif
 }

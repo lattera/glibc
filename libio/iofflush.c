@@ -44,7 +44,6 @@ _IO_fflush (_IO_FILE *fp)
 }
 libc_hidden_def (_IO_fflush)
 
-#ifdef weak_alias
 weak_alias (_IO_fflush, fflush)
 libc_hidden_weak (fflush)
 
@@ -53,5 +52,4 @@ strong_alias (_IO_fflush, __fflush_unlocked)
 libc_hidden_def (__fflush_unlocked)
 weak_alias (_IO_fflush, fflush_unlocked)
 libc_hidden_weak (fflush_unlocked)
-#endif
 #endif

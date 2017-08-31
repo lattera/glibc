@@ -44,7 +44,6 @@ _IO_getc (FILE *fp)
 
 #undef getc
 
-#ifdef weak_alias
 weak_alias (_IO_getc, getc)
 weak_alias (_IO_getc, fgetc)
 
@@ -52,5 +51,4 @@ weak_alias (_IO_getc, fgetc)
 #undef getc_unlocked
 weak_alias (_IO_getc, getc_unlocked)
 weak_alias (_IO_getc, fgetc_unlocked)
-#endif
 #endif

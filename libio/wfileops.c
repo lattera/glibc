@@ -33,24 +33,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-#ifndef _LIBC
-# define _IO_new_do_write _IO_do_write
-# define _IO_new_file_attach _IO_file_attach
-# define _IO_new_file_close_it _IO_file_close_it
-# define _IO_new_file_finish _IO_file_finish
-# define _IO_new_file_fopen _IO_file_fopen
-# define _IO_new_file_init _IO_file_init
-# define _IO_new_file_setbuf _IO_file_setbuf
-# define _IO_new_file_sync _IO_file_sync
-# define _IO_new_file_overflow _IO_file_overflow
-# define _IO_new_file_seekoff _IO_file_seekoff
-# define _IO_new_file_underflow _IO_file_underflow
-# define _IO_new_file_write _IO_file_write
-# define _IO_new_file_xsputn _IO_file_xsputn
-#endif
-
-
 /* Convert TO_DO wide character from DATA to FP.
    Then mark FP as having empty buffers. */
 int
@@ -541,10 +523,8 @@ _IO_wfile_sync (_IO_FILE *fp)
 	  fp->_wide_data->_IO_read_end = fp->_wide_data->_IO_read_ptr;
 	  fp->_IO_read_end = fp->_IO_read_ptr;
 	}
-#ifdef ESPIPE
       else if (errno == ESPIPE)
 	; /* Ignore error from unseekable devices. */
-#endif
       else
 	retval = WEOF;
     }
@@ -1010,13 +990,8 @@ _IO_wfile_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
 	count = to_do;
       if (count > 20)
 	{
-#ifdef _LIBC
 	  f->_wide_data->_IO_write_ptr =
 	    __wmempcpy (f->_wide_data->_IO_write_ptr, s, count);
-#else
-	  wmemcpy (f->_wide_data->_IO_write_ptr, s, count);
-	  f->_wide_data->_IO_write_ptr += count;
-#endif
 	  s += count;
 	}
       else

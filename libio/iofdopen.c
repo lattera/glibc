@@ -28,17 +28,7 @@
 #include "libioP.h"
 #include <fcntl.h>
 
-#ifdef _LIBC
-# include <shlib-compat.h>
-#endif
-
-#ifndef _IO_fcntl
-#ifdef _LIBC
-#define _IO_fcntl __fcntl
-#else
-#define _IO_fcntl fcntl
-#endif
-#endif
+#include <shlib-compat.h>
 
 _IO_FILE *
 _IO_new_fdopen (int fd, const char *mode)
@@ -95,11 +85,7 @@ _IO_new_fdopen (int fd, const char *mode)
 	}
       break;
     }
-#ifdef F_GETFL
-  int fd_flags = _IO_fcntl (fd, F_GETFL);
-#ifndef O_ACCMODE
-#define O_ACCMODE (O_RDONLY|O_WRONLY|O_RDWR)
-#endif
+  int fd_flags = __fcntl (fd, F_GETFL);
   if (fd_flags == -1)
     return NULL;
 
@@ -129,12 +115,9 @@ _IO_new_fdopen (int fd, const char *mode)
   if ((read_write & _IO_IS_APPENDING) && !(fd_flags & O_APPEND))
     {
       do_seek = true;
-#ifdef F_SETFL
-      if (_IO_fcntl (fd, F_SETFL, fd_flags | O_APPEND) == -1)
-#endif
+      if (__fcntl (fd, F_SETFL, fd_flags | O_APPEND) == -1)
 	return NULL;
     }
-#endif
 
   new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
   if (new_f == NULL)

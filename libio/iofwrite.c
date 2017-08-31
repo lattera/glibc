@@ -49,7 +49,6 @@ _IO_fwrite (const void *buf, _IO_size_t size, _IO_size_t count, _IO_FILE *fp)
 }
 libc_hidden_def (_IO_fwrite)
 
-#ifdef weak_alias
 # include <stdio.h>
 weak_alias (_IO_fwrite, fwrite)
 libc_hidden_weak (fwrite)
@@ -57,4 +56,3 @@ libc_hidden_weak (fwrite)
 weak_alias (_IO_fwrite, fwrite_unlocked)
 libc_hidden_weak (fwrite_unlocked)
 # endif
-#endif

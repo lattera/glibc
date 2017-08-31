@@ -67,10 +67,6 @@ unlock_return:
   return retval;
 }
 
-#ifdef weak_alias
 weak_alias (_IO_gets, gets)
-#endif
 
-#ifdef _LIBC
 link_warning (gets, "the `gets' function is dangerous and should not be used.")
-#endif

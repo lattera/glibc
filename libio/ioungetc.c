@@ -41,6 +41,4 @@ _IO_ungetc (int c, _IO_FILE *fp)
   return result;
 }
 
-#ifdef weak_alias
 weak_alias (_IO_ungetc, ungetc)
-#endif

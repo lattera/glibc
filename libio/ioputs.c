@@ -45,6 +45,4 @@ _IO_puts (const char *str)
   return result;
 }
 
-#ifdef weak_alias
 weak_alias (_IO_puts, puts)
-#endif

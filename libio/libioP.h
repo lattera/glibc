@@ -35,30 +35,11 @@
 #include <stddef.h>
 
 #include <errno.h>
-#ifndef __set_errno
-# define __set_errno(Val) errno = (Val)
-#endif
-#if defined __GLIBC__ && __GLIBC__ >= 2
-# include <libc-lock.h>
-#else
-/*# include <comthread.h>*/
-#endif
+#include <libc-lock.h>
 
 #include <math_ldbl_opt.h>
 
 #include "iolibio.h"
-
-/* Control of exported symbols.  Used in glibc.  By default we don't
-   do anything.  */
-#ifndef libc_hidden_proto
-# define libc_hidden_proto(name)
-#endif
-#ifndef libc_hidden_def
-# define libc_hidden_def(name)
-#endif
-#ifndef libc_hidden_weak
-# define libc_hidden_weak(name)
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -89,14 +70,12 @@ extern "C" {
  * object being acted on (i.e. the 'this' parameter).
  */
 
-#ifdef _LIBC
-# include <shlib-compat.h>
-# if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-   /* Setting this macro disables the use of the _vtable_offset
-      bias in _IO_JUMPS_FUNCS, below.  That is only needed if we
-      want to support old binaries (see oldfileops.c).  */
-#  define _G_IO_NO_BACKWARD_COMPAT 1
-# endif
+#include <shlib-compat.h>
+#if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+  /* Setting this macro disables the use of the _vtable_offset bias in
+     _IO_JUMPS_FUNCS, below.  That is only needed if we want to
+     support old binaries (see oldfileops.c).  */
+# define _G_IO_NO_BACKWARD_COMPAT 1
 #endif
 
 #if (!defined _IO_USE_OLD_IO_FILE \
@@ -524,19 +503,13 @@ extern int _IO_old_fsetpos64 (_IO_FILE *, const _IO_fpos64_t *);
 extern void _IO_old_init (_IO_FILE *fp, int flags) __THROW;
 
 
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-# define _IO_do_flush(_f) \
+#define _IO_do_flush(_f) \
   ((_f)->_mode <= 0							      \
    ? _IO_do_write(_f, (_f)->_IO_write_base,				      \
 		  (_f)->_IO_write_ptr-(_f)->_IO_write_base)		      \
    : _IO_wdo_write(_f, (_f)->_wide_data->_IO_write_base,		      \
 		   ((_f)->_wide_data->_IO_write_ptr			      \
 		    - (_f)->_wide_data->_IO_write_base)))
-#else
-# define _IO_do_flush(_f) \
-  _IO_do_write(_f, (_f)->_IO_write_base,				      \
-	       (_f)->_IO_write_ptr-(_f)->_IO_write_base)
-#endif
 #define _IO_old_do_flush(_f) \
   _IO_old_do_write(_f, (_f)->_IO_write_base, \
 		   (_f)->_IO_write_ptr-(_f)->_IO_write_base)
@@ -719,18 +692,6 @@ extern _IO_off64_t _IO_seekpos_unlocked (_IO_FILE *, _IO_off64_t, int)
 #ifndef EOF
 # define EOF (-1)
 #endif
-#ifndef NULL
-# if defined __GNUG__ && \
-    (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 8))
-#  define NULL (__null)
-# else
-#  if !defined(__cplusplus)
-#   define NULL ((void*)0)
-#  else
-#   define NULL (0)
-#  endif
-# endif
-#endif
 
 #if _G_HAVE_MMAP
 
@@ -750,19 +711,6 @@ extern _IO_off64_t _IO_seekpos_unlocked (_IO_FILE *, _IO_off64_t, int)
 
 #endif /* _G_HAVE_MMAP */
 
-#if _G_HAVE_MMAP
-
-# ifdef _LIBC
-/* When using this code in the GNU libc we must not pollute the name space.  */
-#  define mmap __mmap
-#  define munmap __munmap
-#  define ftruncate __ftruncate
-# endif
-#endif /* _G_HAVE_MMAP */
-
-#ifndef OS_FSTAT
-# define OS_FSTAT fstat
-#endif
 extern int _IO_vscanf (const char *, _IO_va_list) __THROW;
 
 /* _IO_pos_BAD is an _IO_off64_t value indicating error, unknown, or EOF. */
@@ -790,19 +738,11 @@ extern int _IO_vscanf (const char *, _IO_va_list) __THROW;
 	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock }
 # else
-#  if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-#   define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
+#  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
 	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock, _IO_pos_BAD,\
 	 NULL, WDP, 0 }
-#  else
-#   define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
-       { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
-	 0, _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock, _IO_pos_BAD,\
-	 0 }
-#  endif
 # endif
 #else
 # ifdef _IO_USE_OLD_IO_FILE
@@ -811,19 +751,11 @@ extern int _IO_vscanf (const char *, _IO_va_list) __THROW;
 	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD }
 # else
-#  if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-#   define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
+#  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
 	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD, 0, 0, { 0 }, 0, _IO_pos_BAD, \
 	 NULL, WDP, 0 }
-#  else
-#   define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
-       { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
-	 0, _IO_pos_BAD, 0, 0, { 0 }, 0, _IO_pos_BAD, \
-	 0 }
-#  endif
 # endif
 #endif
 

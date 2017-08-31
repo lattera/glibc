@@ -41,10 +41,8 @@ _IO_new_fsetpos64 (_IO_FILE *fp, const _IO_fpos64_t *posp)
     {
       /* ANSI explicitly requires setting errno to a positive value on
 	 failure.  */
-#ifdef EIO
       if (errno == 0)
 	__set_errno (EIO);
-#endif
       result = EOF;
     }
   else

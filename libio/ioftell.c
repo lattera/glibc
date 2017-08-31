@@ -44,23 +44,17 @@ _IO_ftell (_IO_FILE *fp)
   _IO_release_lock (fp);
   if (pos == _IO_pos_BAD)
     {
-#ifdef EIO
       if (errno == 0)
 	__set_errno (EIO);
-#endif
       return -1L;
     }
   if ((_IO_off64_t) (long int) pos != pos)
     {
-#ifdef EOVERFLOW
       __set_errno (EOVERFLOW);
-#endif
       return -1L;
     }
   return pos;
 }
 libc_hidden_def (_IO_ftell)
 
-#ifdef weak_alias
 weak_alias (_IO_ftell, ftell)
-#endif

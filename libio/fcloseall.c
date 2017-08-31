@@ -34,6 +34,4 @@ __fcloseall (void)
   return _IO_cleanup ();
 }
 
-#ifdef weak_alias
 weak_alias (__fcloseall, fcloseall)
-#endif

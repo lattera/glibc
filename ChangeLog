@@ -1,5 +1,98 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* libio/fcloseall.c: Assume weak_alias is defined.
+	* libio/feof.c: Likewise.
+	* libio/fileno.c: Likewise.
+	* libio/fileops.c: Assume _LIBC, errno, __set_errno are defined.
+	(_POSIX_SOURCE, open, lseek, read, write): Remove macro
+	definitions.
+	(_IO_file_open): Call __open directly.
+	(_IO_new_file_sync): Assume ESPIPE is defined.
+	(_IO_file_seekoff_maybe_mmap): Call __read directly.
+	(_IO_new_file_write): Call __write directly.
+	* libio/ftello.c (__ftello): Assume EIO, EOVERFLOW are defined.
+	* libio/ftello64.c (__ftello64): Assume EIO is defined.
+	* libio/genops.c: Assume _LIBC is defined.
+	(save_for_backup): Remove internal_function.
+	* libio/getc.c: Assume weak_alias is defined.
+	* libio/getwc.c: Likewise.
+	* libio/iofclose.c: Assume _LIBC is defined.
+	* libio/iofdopen.c: Likewise.
+	(_IO_fcntl): Remove macro definition.
+	(_IO_new_fdopen): Assume F_GETFL, F_SETFL, O_ACCMODE are defined.
+	Call __fcntl directly.
+	* libio/iofflush.c: Assume weak_alias is defined.
+	* libio/iofgetpos.c (_IO_new_fgetpos): Assume EIO, EOVERFLOW are
+	defined.
+	* libio/iofgetpos64.c (_IO_new_fgetpos64): Assume EIO is defined.
+	* libio/iofgets.c: Likewise.
+	* libio/iofopen.c: Assume _LIBC is defined.
+	* libio/iofopen64.c: Assume _LIBC, weak_alias are defined.
+	* libio/iofputs.c: Assume weak_alias is defined.
+	* libio/iofread.c: Likewise.
+	* libio/iofsetpos.c (_IO_new_fsetpos): Assume EIO is defined.
+	* libio/iofsetpos64.c (_IO_new_fsetpos64): Likewise.
+	* libio/ioftell.c: Assume weak_alias is defined.
+	(_IO_ftell): Assume EIO, EOVERFLOW are defined.
+	* libio/iofwide.c: Assume _LIBC is defined.
+	(_IO_fwide): Drop SHARED conditional because it is implied by
+	SHLIB_COMPAT.
+	* libio/iofwrite.c: Assume weak_alias is defined.
+	* libio/iogetdelim.c: Likewise.
+	* libio/iogets.c: Assume _LIBC, weak_alias are defined.
+	* libio/iogetwline.c (wmemcpy): Remove macro definition.
+	(_IO_getwline): Call __wmemcpy directly.
+	* libio/iopopen.c: Assume _LIBC is defined.
+	(_POSIX_SOURCE, _IO_fork, _IO_dup2, _IO_waitpid, _IO_execl)
+	(_IO_close): Remove macro definitions.
+	(_IO_new_proc_open): Call __fork, __dup2, __close_nocancel, execl,
+	_exit directly.
+	(_IO_new_proc_close): Call __close_nocancel, __waitpid_nocancel
+	directly.
+	* libio/ioputs.c: Assume weak_alias is defined.
+	* libio/ioseekoff.c: Assume errno, __set_errno are defined.
+	* libio/iosetbuffer.c: Assume weak_alias is defined.
+	* libio/iosetvbuf.c: Likewise.
+	* libio/ioungetc.c: Likewise.
+	* libio/libioP.h: Assume _LIBC, __GLIBC__, libc_hidden_proto,
+	libc_hidden_def, libc_hidden_weak, NULL are defined.
+	(mmap, munmap, ftruncate, OS_FSTAT): Remove macro definitions.
+	* libio/oldfilepos.c: Assume _LIBC, errno, __set_errno are
+	defined.
+	(_POSIX_SOURCE, open, lseek, read, write): Remove macro
+	definitions.
+	(_IO_old_file_init_internal): Drop SHARED conditional because it
+	is implied by SHLIB_COMPAT.
+	(_IO_old_file_fopen): Call __open directly.
+	(_IO_old_file_sync): Assume ESPIPE is defined.
+	(_IO_old_file_write): Call __write directly.
+	* libio/oldfdopen.c (_IO_fcntl): Remove macro definition.
+	(_IO_old_fdopen): Assume F_GETFL, O_ACCMODE, F_SETFL are defined.
+	Call __fcntl directly.
+	* libio/oldiofgetpos.c: Assume weak_alias is defined.
+	(_IO_old_fgetpos): Assume EIO is defined.
+	* libio/oldiofgetpos64.c: Assume weak_alias is defined.
+	(_IO_old_fgetpos64): Assume EIO is defined.
+	* libio/oldiofsetpos.c: Assume weak_alias is defined.
+	(_IO_old_fsetpos): Assume EIO is defined.
+	* libio/oldiofsetpos64.c: Assume weak_alias is defined.
+	(_IO_old_fsetpos64): Assume EIO is defined.
+	* libio/oldiopopen.c:  Assume _LIBC is defined.
+	(_POSIX_SOURCE, _IO_fork, _IO_dup2, _IO_waitpid, _IO_execl)
+	(_IO_close): Remove macro definitions.
+	(_IO_old_proc_open): Call __pipe, __close, __dup2, execl, _exit
+	directly.
+	(_IO_old_proc_close): Call __close, __waitpid directly.
+	* libio/put.c: Assume weak_alias is defined.
+	* libio/stdfiles.c: Assume _LIBC is defined.
+	* libio/stdio.c: Likewise.
+	* libio/wfileops.c: Likewise.
+	(_IO_wfile_sync): Assume ESPIPE is defined.
+	* libio/wgenops.c: Assume _LIBC is defined.
+	(save_for_wbackup): Remove internal_function.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/malloc.c (top_check): Change return type to void.  Remove
 	internal_function.
 	* malloc/hooks.c (top_check): Likewise.

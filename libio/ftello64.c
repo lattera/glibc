@@ -46,10 +46,8 @@ ftello64 (_IO_FILE *fp)
   _IO_release_lock (fp);
   if (pos == _IO_pos_BAD)
     {
-#ifdef EIO
       if (errno == 0)
 	__set_errno (EIO);
-#endif
       return -1L;
     }
   return pos;

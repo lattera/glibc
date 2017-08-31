@@ -26,71 +26,16 @@
    in files containing the exception.  */
 
 #define _IO_USE_OLD_IO_FILE
-#ifndef _POSIX_SOURCE
-# define _POSIX_SOURCE
-#endif
 #include "libioP.h"
 #include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
-#ifdef _LIBC
-# include <unistd.h>
-#endif
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#ifndef _IO_fork
-#ifdef _LIBC
-#define _IO_fork __fork
-#else
-#define _IO_fork fork /* defined in libiberty, if needed */
-#endif
-extern _IO_pid_t _IO_fork (void) __THROW;
-#endif
-
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-
-#ifndef _IO_pipe
-#ifdef _LIBC
-#define _IO_pipe __pipe
-#else
-#define _IO_pipe pipe
-#endif
-extern int _IO_pipe (int des[2]) __THROW;
-#endif
-
-#ifndef _IO_dup2
-#ifdef _LIBC
-#define _IO_dup2 __dup2
-#else
-#define _IO_dup2 dup2
-#endif
-extern int _IO_dup2 (int fd, int fd2) __THROW;
-#endif
-
-#ifndef _IO_waitpid
-#ifdef _LIBC
-#define _IO_waitpid __waitpid
-#else
-#define _IO_waitpid waitpid
-#endif
-#endif
-
-#ifndef _IO_execl
-#define _IO_execl execl
-#endif
-#ifndef _IO__exit
-#define _IO__exit _exit
-#endif
-
-#ifndef _IO_close
-#ifdef _LIBC
-#define _IO_close __close
-#else
-#define _IO_close close
-#endif
-#endif
 
 struct _IO_proc_file
 {
@@ -123,7 +68,7 @@ _IO_old_proc_open (_IO_FILE *fp, const char *command, const char *mode)
   _IO_pid_t child_pid;
   if (_IO_file_is_open (fp))
     return NULL;
-  if (_IO_pipe (pipe_fds) < 0)
+  if (__pipe (pipe_fds) < 0)
     return NULL;
   if (mode[0] == 'r' && mode[1] == '\0')
     {
@@ -139,36 +84,36 @@ _IO_old_proc_open (_IO_FILE *fp, const char *command, const char *mode)
     }
   else
     {
-      _IO_close (pipe_fds[0]);
-      _IO_close (pipe_fds[1]);
+      __close (pipe_fds[0]);
+      __close (pipe_fds[1]);
       __set_errno (EINVAL);
       return NULL;
     }
-  ((_IO_proc_file *) fp)->pid = child_pid = _IO_fork ();
+  ((_IO_proc_file *) fp)->pid = child_pid = __fork ();
   if (child_pid == 0)
     {
       int child_std_end = mode[0] == 'r' ? 1 : 0;
       struct _IO_proc_file *p;
 
-      _IO_close (parent_end);
+      __close (parent_end);
       if (child_end != child_std_end)
 	{
-	  _IO_dup2 (child_end, child_std_end);
-	  _IO_close (child_end);
+	  __dup2 (child_end, child_std_end);
+	  __close (child_end);
 	}
       /* POSIX.2:  "popen() shall ensure that any streams from previous
          popen() calls that remain open in the parent process are closed
 	 in the new child process." */
       for (p = old_proc_file_chain; p; p = p->next)
-	_IO_close (_IO_fileno ((_IO_FILE *) p));
+	__close (_IO_fileno ((_IO_FILE *) p));
 
-      _IO_execl ("/bin/sh", "sh", "-c", command, (char *) 0);
-      _IO__exit (127);
+      execl ("/bin/sh", "sh", "-c", command, (char *) 0);
+      _exit (127);
     }
-  _IO_close (child_end);
+  __close (child_end);
   if (child_pid < 0)
     {
-      _IO_close (parent_end);
+      __close (parent_end);
       return NULL;
     }
   _IO_fileno (fp) = parent_end;
@@ -251,7 +196,7 @@ _IO_old_proc_close (_IO_FILE *fp)
   _IO_cleanup_region_end (0);
 #endif
 
-  if (status < 0 || _IO_close (_IO_fileno(fp)) < 0)
+  if (status < 0 || __close (_IO_fileno(fp)) < 0)
     return -1;
   /* POSIX.2 Rationale:  "Some historical implementations either block
      or ignore the signals SIGINT, SIGQUIT, and SIGHUP while waiting
@@ -259,7 +204,7 @@ _IO_old_proc_close (_IO_FILE *fp)
      described in POSIX.2, such implementations are not conforming." */
   do
     {
-      wait_pid = _IO_waitpid (((_IO_proc_file *) fp)->pid, &wstatus, 0);
+      wait_pid = __waitpid (((_IO_proc_file *) fp)->pid, &wstatus, 0);
     }
   while (wait_pid == -1 && errno == EINTR);
   if (wait_pid == -1)

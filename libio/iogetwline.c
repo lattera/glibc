@@ -28,10 +28,6 @@
 #include <string.h>
 #include <wchar.h>
 
-#ifdef _LIBC
-# define wmemcpy __wmemcpy
-#endif
-
 _IO_size_t
 _IO_getwline (_IO_FILE *fp, wchar_t *buf, _IO_size_t n, wint_t delim,
 	      int extract_delim)
@@ -98,12 +94,12 @@ _IO_getwline_info (_IO_FILE *fp, wchar_t *buf, _IO_size_t n, wint_t delim,
 		  if (extract_delim > 0)
 		    ++len;
 		}
-	      wmemcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr,
-		       len);
+	      __wmemcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr,
+			 len);
 	      fp->_wide_data->_IO_read_ptr = t;
 	      return old_len + len;
 	    }
-	  wmemcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr, len);
+	  __wmemcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr, len);
 	  fp->_wide_data->_IO_read_ptr += len;
 	  ptr += len;
 	  n -= len;

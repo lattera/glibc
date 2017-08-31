@@ -45,20 +45,16 @@ _IO_old_fgetpos (_IO_FILE *fp, _IO_fpos_t *posp)
     {
       /* ANSI explicitly requires setting errno to a positive value on
 	 failure.  */
-#ifdef EIO
       if (errno == 0)
 	__set_errno (EIO);
-#endif
       return EOF;
     }
   posp->__pos = pos;
   return 0;
 }
 
-#ifdef weak_alias
 compat_symbol (libc, _IO_old_fgetpos, _IO_fgetpos, GLIBC_2_0);
 strong_alias (_IO_old_fgetpos, __old_fgetpos)
 compat_symbol (libc, __old_fgetpos, fgetpos, GLIBC_2_0);
-#endif
 
 #endif

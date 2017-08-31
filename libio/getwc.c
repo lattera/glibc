@@ -43,7 +43,5 @@ _IO_getwc (FILE *fp)
 
 #undef getwc
 
-#ifdef weak_alias
 weak_alias (_IO_getwc, getwc)
 weak_alias (_IO_getwc, fgetwc)
-#endif

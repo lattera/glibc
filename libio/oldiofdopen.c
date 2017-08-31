@@ -32,10 +32,6 @@
 #include "libioP.h"
 #include <fcntl.h>
 
-#ifndef _IO_fcntl
-# define _IO_fcntl __fcntl
-#endif
-
 _IO_FILE *
 attribute_compat_text_section
 _IO_old_fdopen (int fd, const char *mode)
@@ -69,11 +65,7 @@ _IO_old_fdopen (int fd, const char *mode)
   }
   if (mode[0] == '+' || (mode[0] == 'b' && mode[1] == '+'))
     read_write &= _IO_IS_APPENDING;
-#ifdef F_GETFL
-  fd_flags = _IO_fcntl (fd, F_GETFL);
-#ifndef O_ACCMODE
-#define O_ACCMODE (O_RDONLY|O_WRONLY|O_RDWR)
-#endif
+  fd_flags = __fcntl (fd, F_GETFL);
   if (fd_flags == -1
       || ((fd_flags & O_ACCMODE) == O_RDONLY && !(read_write & _IO_NO_WRITES))
       || ((fd_flags & O_ACCMODE) == O_WRONLY && !(read_write & _IO_NO_READS)))
@@ -97,12 +89,9 @@ _IO_old_fdopen (int fd, const char *mode)
      */
   if ((posix_mode & O_APPEND) && !(fd_flags & O_APPEND))
     {
-#ifdef F_SETFL
-      if (_IO_fcntl (fd, F_SETFL, fd_flags | O_APPEND) == -1)
-#endif
+      if (__fcntl (fd, F_SETFL, fd_flags | O_APPEND) == -1)
 	return NULL;
     }
-#endif
 
   new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
   if (new_f == NULL)

@@ -30,9 +30,6 @@
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
-#ifndef _POSIX_SOURCE
-# define _POSIX_SOURCE
-#endif
 #define _IO_USE_OLD_IO_FILE
 #include "libioP.h"
 #include <fcntl.h>
@@ -42,21 +39,6 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
-#ifndef errno
-extern int errno;
-#endif
-#ifndef __set_errno
-# define __set_errno(Val) errno = (Val)
-#endif
-
-
-#ifdef _LIBC
-# define open(Name, Flags, Prot) __open (Name, Flags, Prot)
-# define close(FD) __close (FD)
-# define lseek(FD, Offset, Whence) __lseek (FD, Offset, Whence)
-# define read(FD, Buf, NBytes) __read (FD, Buf, NBytes)
-# define write(FD, Buf, NBytes) __write (FD, Buf, NBytes)
-#endif
 
 /* An fstream can be in at most one of put mode, get mode, or putback mode.
    Putback mode is a variant of get mode.
@@ -127,7 +109,6 @@ _IO_old_file_init_internal (struct _IO_FILE_plus *fp)
 			     - (int) sizeof (struct _IO_FILE_complete));
   fp->file._fileno = -1;
 
-#if defined SHARED && defined _LIBC
   if (__builtin_expect (&_IO_stdin_used != NULL, 1)
       || (fp != (struct _IO_FILE_plus *) _IO_stdin
 	  && fp != (struct _IO_FILE_plus *) _IO_stdout
@@ -135,7 +116,6 @@ _IO_old_file_init_internal (struct _IO_FILE_plus *fp)
     /* The object is dynamically allocated and large enough.  Initialize
        the _mode element as well.  */
     ((struct _IO_FILE_complete *) fp)->_mode = -1;
-#endif
 }
 
 void
@@ -221,7 +201,7 @@ _IO_old_file_fopen (_IO_FILE *fp, const char *filename, const char *mode)
       omode = O_RDWR;
       read_write &= _IO_IS_APPENDING;
     }
-  fdesc = open (filename, omode|oflags, oprot);
+  fdesc = __open (filename, omode|oflags, oprot);
   if (fdesc < 0)
     return NULL;
   fp->_fileno = fdesc;
@@ -443,10 +423,8 @@ _IO_old_file_sync (_IO_FILE *fp)
       _IO_off_t new_pos = _IO_SYSSEEK (fp, delta, 1);
       if (new_pos != (_IO_off_t) EOF)
 	fp->_IO_read_end = fp->_IO_read_ptr;
-#ifdef ESPIPE
       else if (errno == ESPIPE)
 	; /* Ignore error from unseekable devices. */
-#endif
       else
 	retval = EOF;
     }
@@ -647,7 +625,7 @@ _IO_old_file_write (_IO_FILE *f, const void *data, _IO_ssize_t n)
   _IO_ssize_t to_do = n;
   while (to_do > 0)
     {
-      _IO_ssize_t count = write (f->_fileno, data, to_do);
+      _IO_ssize_t count = __write (f->_fileno, data, to_do);
       if (count == EOF)
 	{
 	  f->_flags |= _IO_ERR_SEEN;
@@ -705,12 +683,7 @@ _IO_old_file_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
 	count = to_do;
       if (count > 20)
 	{
-#ifdef _LIBC
 	  f->_IO_write_ptr = __mempcpy (f->_IO_write_ptr, s, count);
-#else
-	  memcpy (f->_IO_write_ptr, s, count);
-	  f->_IO_write_ptr += count;
-#endif
 	  s += count;
 	}
       else

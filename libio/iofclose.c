@@ -26,13 +26,8 @@
 
 #include "libioP.h"
 #include <stdlib.h>
-#if _LIBC
-# include "../iconv/gconv_int.h"
-# include <shlib-compat.h>
-#else
-# define SHLIB_COMPAT(a, b, c) 0
-# define _IO_new_fclose fclose
-#endif
+#include "../iconv/gconv_int.h"
+#include <shlib-compat.h>
 
 int
 _IO_new_fclose (_IO_FILE *fp)
@@ -62,7 +57,6 @@ _IO_new_fclose (_IO_FILE *fp)
   _IO_FINISH (fp);
   if (fp->_mode > 0)
     {
-#if _LIBC
       /* This stream has a wide orientation.  This means we have to free
 	 the conversion functions.  */
       struct _IO_codecvt *cc = fp->_codecvt;
@@ -71,7 +65,6 @@ _IO_new_fclose (_IO_FILE *fp)
       __gconv_release_step (cc->__cd_in.__cd.__steps);
       __gconv_release_step (cc->__cd_out.__cd.__steps);
       __libc_lock_unlock (__gconv_lock);
-#endif
     }
   else
     {
@@ -87,8 +80,6 @@ _IO_new_fclose (_IO_FILE *fp)
   return status;
 }
 
-#ifdef _LIBC
 versioned_symbol (libc, _IO_new_fclose, _IO_fclose, GLIBC_2_1);
 strong_alias (_IO_new_fclose, __new_fclose)
 versioned_symbol (libc, __new_fclose, fclose, GLIBC_2_1);
-#endif
