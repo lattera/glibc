@@ -28,7 +28,6 @@
 # define DIRENT_TYPE	struct dirent
 #endif
 
-internal_function
 int
 SCANDIR_TAIL (DIR *dp,
               DIRENT_TYPE ***namelist,

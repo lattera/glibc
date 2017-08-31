@@ -76,7 +76,6 @@ struct kernel_dirent64
    reset the file descriptor.  In practice the kernel is limiting the
    amount of data returned much more then the reduced buffer size.  */
 ssize_t
-internal_function
 __GETDENTS (int fd, char *buf, size_t nbytes)
 {
   ssize_t retval;

@@ -69,7 +69,6 @@ _hurd_fd_opendir (struct hurd_fd *d)
 
 
 DIR *
-internal_function
 __opendirat (int dfd, const char *name)
 {
   if (name[0] == '\0')

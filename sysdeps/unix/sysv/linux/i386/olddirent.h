@@ -34,8 +34,7 @@ extern struct __old_dirent64 *__old_readdir64 (DIR *__dirp);
 libc_hidden_proto (__old_readdir64);
 extern int __old_readdir64_r (DIR *__dirp, struct __old_dirent64 *__entry,
 			  struct __old_dirent64 **__result);
-extern __ssize_t __old_getdents64 (int __fd, char *__buf, size_t __nbytes)
-	internal_function;
+extern __ssize_t __old_getdents64 (int __fd, char *__buf, size_t __nbytes);
 int __old_scandir64 (const char * __dir,
 		     struct __old_dirent64 *** __namelist,
 		     int (*__selector) (const struct __old_dirent64 *),

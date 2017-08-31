@@ -139,7 +139,6 @@ opendir_tail (int fd)
 
 #if IS_IN (libc)
 DIR *
-internal_function
 __opendirat (int dfd, const char *name)
 {
   if (__glibc_unlikely (invalid_name (name)))
@@ -193,7 +192,6 @@ __opendir (const char *name)
 weak_alias (__opendir, opendir)
 
 DIR *
-internal_function
 __alloc_dir (int fd, bool close_fd, int flags, const struct stat64 *statp)
 {
   /* We have to set the close-on-exit flag if the user provided the

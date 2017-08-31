@@ -1,5 +1,16 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* dirent/scandir-tail.c (SCANDIR_TAIL): Remove internal_function.
+	* include/dirent.h (__opendirat, __getdents, __getdents64)
+	(__alloc_dir, __scandir_tail, __scandir64_tail): Likewise.
+	* sysdeps/posix/opendir.c (__opendirat, __alloc_dir): Likewise.
+	* sysdeps/mach/hurd/opendir.c (__opendirat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/olddirent.h (__old_getdents64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/unix/sysv/linux/getcwd.c (generic_getcwd): Remove
 	internal_function.
 	(GETCWD_RETURN_TYPE): Likewise.
