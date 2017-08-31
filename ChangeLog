@@ -1,3 +1,10 @@
+2017-09-05  Chris Leonard <cjlhomeaddress@gmail.com>
+
+	[BZ #20498]
+	* locale/iso-639.def: add Miskito.
+	* localedata/SUPPORTED: Add miq_NI/UTF-8.
+	* localedata/locales/miq_NI: New file.
+
 2017-09-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
