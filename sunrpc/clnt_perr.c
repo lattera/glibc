@@ -38,7 +38,7 @@
 #include <libio/iolibio.h>
 #include <shlib-compat.h>
 
-static char *auth_errmsg (enum auth_stat stat) internal_function;
+static char *auth_errmsg (enum auth_stat stat);
 
 #ifdef _RPC_THREAD_SAFE_
 /*
@@ -374,7 +374,6 @@ static const struct auth_errtab auth_errlist[] =
 };
 
 static char *
-internal_function
 auth_errmsg (enum auth_stat stat)
 {
   size_t i;

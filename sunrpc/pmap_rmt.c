@@ -165,7 +165,6 @@ libc_hidden_nolink_sunrpc (xdr_rmtcallres, GLIBC_2_0)
  */
 
 static int
-internal_function
 getbroadcastnets (struct in_addr *addrs, int naddrs)
 {
   struct ifaddrs *ifa;

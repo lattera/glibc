@@ -63,11 +63,11 @@ static const char hex[16] =
    : ({	int upp = toupper (c);						      \
 	upp >= 'A' && upp <= 'Z' ? upp - 'A' + 10 : -1; }))
 #else
-static char hexval (char) internal_function;
+static char hexval (char);
 #endif
 
-static void hex2bin (int, char *, char *) internal_function;
-static void bin2hex (int, unsigned char *, char *) internal_function;
+static void hex2bin (int, char *, char *);
+static void bin2hex (int, unsigned char *, char *);
 void passwd2des_internal (char *pw, char *key);
 #ifdef _LIBC
 libc_hidden_proto (passwd2des_internal)
@@ -171,7 +171,6 @@ libc_hidden_nolink_sunrpc (xdecrypt, GLIBC_2_1)
  * Hex to binary conversion
  */
 static void
-internal_function
 hex2bin (int len, char *hexnum, char *binnum)
 {
   int i;
@@ -184,7 +183,6 @@ hex2bin (int len, char *hexnum, char *binnum)
  * Binary to hex conversion
  */
 static void
-internal_function
 bin2hex (int len, unsigned char *binnum, char *hexnum)
 {
   int i;

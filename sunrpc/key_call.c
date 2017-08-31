@@ -61,7 +61,7 @@ extern int _openchild (const char *command, FILE **fto, FILE **ffrom);
 #endif
 
 static int key_call (u_long, xdrproc_t xdr_arg, char *,
-		     xdrproc_t xdr_rslt, char *) internal_function;
+		     xdrproc_t xdr_rslt, char *);
 
 static const struct timeval trytimeout = {KEY_TIMEOUT, 0};
 static const struct timeval tottimeout = {KEY_TIMEOUT *KEY_NRETRY, 0};
@@ -296,7 +296,6 @@ des_block *(*__key_gendes_LOCAL) (uid_t, char *);
 
 #ifndef SO_PASSCRED
 static int
-internal_function
 key_call_keyenvoy (u_long proc, xdrproc_t xdr_arg, char *arg,
 		   xdrproc_t xdr_rslt, char *rslt)
 {
@@ -481,7 +480,6 @@ getkeyserv_handle (int vers)
 
 /* returns  0 on failure, 1 on success */
 static int
-internal_function
 key_call_socket (u_long proc, xdrproc_t xdr_arg, char *arg,
 	       xdrproc_t xdr_rslt, char *rslt)
 {
@@ -515,7 +513,6 @@ key_call_socket (u_long proc, xdrproc_t xdr_arg, char *arg,
 
 /* returns 0 on failure, 1 on success */
 static int
-internal_function
 key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
 	  xdrproc_t xdr_rslt, char *rslt)
 {

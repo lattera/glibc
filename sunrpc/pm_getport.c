@@ -46,7 +46,6 @@
  * create the socket.
  */
 int
-internal_function
 __get_socket (struct sockaddr_in *saddr)
 {
   int so = __socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);

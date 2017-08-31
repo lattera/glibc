@@ -1,5 +1,25 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* include/rpc/pmap_clnt.h (__get_socket): Remove
+	internal_function.
+	* sunrpc/auth_des.c (synchronize): Likewise.
+	* sunrpc/auth_unix.c (marshal_new_auth): Likewise.
+	* sunrpc/clnt_perr.c (auth_errmsg): Likewise.
+	* sunrpc/des_impl.c (des_encrypt, des_set_key): Likewise.
+	* sunrpc/key_call.c (key_call_keyenvoy, key_call_socket)
+	(key_call): Likewise.
+	* sunrpc/pm_getport.c (__get_socket): Likewise.
+	* sunrpc/pmap_rmt.c (getbroadcastnets): Likewise.
+	* sunrpc/svc_unix.c (makefd_xprt): Likewise.
+	* sunrpc/svc_tcp.c (makefd_xprt): Likewise.
+	* sunrpc/svcauth_des.c (cache_init, cache_spot, cache_ref)
+	(invalidate): Likewise.
+	* sunrpc/xcrypt.c (hexval, hex2bin, bin2hex): Likewise.
+	* sunrpc/xdr_rec.c (fix_buf_size, skip_input_bytes, flush_out)
+	(set_input_fragment, get_input_bytes): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/malloc.c (_int_free): Remove locked variable and related
 	asserts.
 

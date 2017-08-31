@@ -370,13 +370,11 @@ static const uint32_t des_skb[8][64] =
 static const char shifts2[16] =
 {0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0};
 
-static void des_set_key (unsigned char *, unsigned long *) internal_function;
-static void des_encrypt (unsigned long *, unsigned long *, int)
-     internal_function;
+static void des_set_key (unsigned char *, unsigned long *);
+static void des_encrypt (unsigned long *, unsigned long *, int);
 int _des_crypt (char *, unsigned, struct desparams *);
 
 static void
-internal_function
 des_set_key (unsigned char *key, unsigned long *schedule)
 {
   register unsigned long c, d, t, s;
@@ -439,7 +437,6 @@ des_set_key (unsigned char *key, unsigned long *schedule)
 
 
 static void
-internal_function
 des_encrypt (unsigned long *buf, unsigned long *schedule, int encrypt)
 {
   register unsigned long l, r, t, u;

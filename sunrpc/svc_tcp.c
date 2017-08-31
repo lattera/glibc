@@ -113,7 +113,7 @@ static const struct xp_ops svctcp_rendezvous_op =
 
 static int readtcp (char*, char *, int);
 static int writetcp (char *, char *, int);
-static SVCXPRT *makefd_xprt (int, u_int, u_int) internal_function;
+static SVCXPRT *makefd_xprt (int, u_int, u_int);
 
 struct tcp_rendezvous
   {				/* kept in xprt->xp_p1 */
@@ -220,7 +220,6 @@ svcfd_create (int fd, u_int sendsize, u_int recvsize)
 libc_hidden_nolink_sunrpc (svcfd_create, GLIBC_2_0)
 
 static SVCXPRT *
-internal_function
 makefd_xprt (int fd, u_int sendsize, u_int recvsize)
 {
   SVCXPRT *xprt;
