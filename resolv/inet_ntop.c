@@ -38,10 +38,8 @@
  * sizeof(int) < 4.  sizeof(int) > 4 is fine; all the world's not a VAX.
  */
 
-static const char *inet_ntop4 (const u_char *src, char *dst, socklen_t size)
-     internal_function;
-static const char *inet_ntop6 (const u_char *src, char *dst, socklen_t size)
-     internal_function;
+static const char *inet_ntop4 (const u_char *src, char *dst, socklen_t size);
+static const char *inet_ntop6 (const u_char *src, char *dst, socklen_t size);
 
 /* char *
  * inet_ntop(af, src, dst, size)
@@ -79,7 +77,6 @@ libc_hidden_def (inet_ntop)
  *	Paul Vixie, 1996.
  */
 static const char *
-internal_function
 inet_ntop4 (const u_char *src, char *dst, socklen_t size)
 {
 	static const char fmt[] = "%u.%u.%u.%u";
@@ -99,7 +96,6 @@ inet_ntop4 (const u_char *src, char *dst, socklen_t size)
  *	Paul Vixie, 1996.
  */
 static const char *
-internal_function
 inet_ntop6 (const u_char *src, char *dst, socklen_t size)
 {
 	/*

@@ -42,7 +42,6 @@ notify_func_wrapper (void *arg)
 
 
 int
-internal_function
 __gai_notify_only (struct sigevent *sigev, pid_t caller_pid)
 {
   int result = 0;
@@ -94,7 +93,6 @@ __gai_notify_only (struct sigevent *sigev, pid_t caller_pid)
 
 
 void
-internal_function
 __gai_notify (struct requestlist *req)
 {
   struct waitlist *waitlist;

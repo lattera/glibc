@@ -1,5 +1,18 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/gai_misc.c (__gai_find_request, __gai_remove_request)
+	(__gai_enqueue_request): Remove internal_function.
+	* resolv/gai_misc.h (__gai_enqueue_request, __gai_find_request)
+	(__gai_remove_request, __gai_notify, __gai_notify_only)
+	(__gai_sigqueue): Likewise.
+	* resolv/gai_notify.c (__gai_notify_only, __gai_notify): Likewise.
+	* resolv/gai_sigqueue.c (__gai_sigqueue): Likewise.
+	* resolv/inet_ntop.c (inet_ntop4, inet_ntop6): Likewise.
+	* sysdeps/unix/sysv/linux/gai_sigqueue.c (__gai_sigqueue):
+	Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* dirent/scandir-tail.c (SCANDIR_TAIL): Remove internal_function.
 	* include/dirent.h (__opendirat, __getdents, __getdents64)
 	(__alloc_dir, __scandir_tail, __scandir64_tail): Likewise.
