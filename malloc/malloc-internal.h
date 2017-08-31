@@ -63,13 +63,13 @@
 
 
 /* Called in the parent process before a fork.  */
-void __malloc_fork_lock_parent (void) internal_function attribute_hidden;
+void __malloc_fork_lock_parent (void) attribute_hidden;
 
 /* Called in the parent process after a fork.  */
-void __malloc_fork_unlock_parent (void) internal_function attribute_hidden;
+void __malloc_fork_unlock_parent (void) attribute_hidden;
 
 /* Called in the child process after a fork.  */
-void __malloc_fork_unlock_child (void) internal_function attribute_hidden;
+void __malloc_fork_unlock_child (void) attribute_hidden;
 
 /* Set *RESULT to LEFT * RIGHT.  Return true if the multiplication
    overflowed.  */

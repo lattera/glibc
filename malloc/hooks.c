@@ -132,7 +132,6 @@ malloc_check_get_size (mchunkptr p)
    into a user pointer with requested size req_sz. */
 
 static void *
-internal_function
 mem2mem_check (void *ptr, size_t req_sz)
 {
   mchunkptr p;
@@ -166,7 +165,6 @@ mem2mem_check (void *ptr, size_t req_sz)
    pointer.  If the provided pointer is not valid, return NULL. */
 
 static mchunkptr
-internal_function
 mem2chunk_check (void *mem, unsigned char **magic_p)
 {
   mchunkptr p;

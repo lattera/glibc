@@ -1,5 +1,20 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/arena.c (__malloc_fork_lock_parent)
+	(__malloc_fork_unlock_parent, __malloc_fork_unlock_child)
+	(next_env_entry, new_heap, heap_trim, arena_get2): Remove
+	internal_function from defintions.
+	* malloc/hooks.c (mem2mem_check, mem2chunk_check): Likewise.
+	* malloc/malloc-internal.h (__malloc_fork_lock_parent)
+	(__malloc_fork_unlock_parent, __malloc_fork_unlock_child): Remove
+	internal_function from declarations.
+	* malloc/malloc.c (internal_function): Do not define.
+	(mem2mem_check): Remove internal_function from declaration.
+	(munmap_chunk, mremap_chunk): Remove internal_function.
+	* malloc/mtrace.c (tr_where): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* include/rpc/pmap_clnt.h (__get_socket): Remove
 	internal_function.
 	* sunrpc/auth_des.c (synchronize): Likewise.

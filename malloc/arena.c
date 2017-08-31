@@ -141,7 +141,6 @@ int __malloc_initialized = -1;
    subsystem.  */
 
 void
-internal_function
 __malloc_fork_lock_parent (void)
 {
   if (__malloc_initialized < 1)
@@ -162,7 +161,6 @@ __malloc_fork_lock_parent (void)
 }
 
 void
-internal_function
 __malloc_fork_unlock_parent (void)
 {
   if (__malloc_initialized < 1)
@@ -179,7 +177,6 @@ __malloc_fork_unlock_parent (void)
 }
 
 void
-internal_function
 __malloc_fork_unlock_child (void)
 {
   if (__malloc_initialized < 1)
@@ -246,7 +243,6 @@ TUNABLE_CALLBACK_FNDECL (set_tcache_unsorted_limit, size_t)
 extern char **_environ;
 
 static char *
-internal_function
 next_env_entry (char ***position)
 {
   char **current = *position;
@@ -458,7 +454,6 @@ static char *aligned_heap_area;
    of the page size. */
 
 static heap_info *
-internal_function
 new_heap (size_t size, size_t top_pad)
 {
   size_t pagesize = GLRO (dl_pagesize);
@@ -602,7 +597,6 @@ shrink_heap (heap_info *h, long diff)
     } while (0)
 
 static int
-internal_function
 heap_trim (heap_info *heap, size_t pad)
 {
   mstate ar_ptr = heap->ar_ptr;
@@ -880,7 +874,6 @@ out:
 }
 
 static mstate
-internal_function
 arena_get2 (size_t size, mstate avoid_arena)
 {
   mstate a;

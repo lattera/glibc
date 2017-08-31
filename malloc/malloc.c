@@ -999,13 +999,6 @@ int      __posix_memalign(void **, size_t, size_t);
 #define RETURN_ADDRESS(X_) (NULL)
 #endif
 
-/* On some platforms we can compile internal, not exported functions better.
-   Let the environment provide a macro and define it to be empty if it
-   is not available.  */
-#ifndef internal_function
-# define internal_function
-#endif
-
 /* Forward declarations.  */
 struct malloc_chunk;
 typedef struct malloc_chunk* mchunkptr;
@@ -1021,11 +1014,11 @@ static void*  _mid_memalign(size_t, size_t, void *);
 
 static void malloc_printerr(const char *str) __attribute__ ((noreturn));
 
-static void* internal_function mem2mem_check(void *p, size_t sz);
-static void top_check (void);
-static void internal_function munmap_chunk(mchunkptr p);
+static void* mem2mem_check(void *p, size_t sz);
+static void top_check(void);
+static void munmap_chunk(mchunkptr p);
 #if HAVE_MREMAP
-static mchunkptr internal_function mremap_chunk(mchunkptr p, size_t new_size);
+static mchunkptr mremap_chunk(mchunkptr p, size_t new_size);
 #endif
 
 static void*   malloc_check(size_t sz, const void *caller);
@@ -2830,7 +2823,6 @@ systrim (size_t pad, mstate av)
 }
 
 static void
-internal_function
 munmap_chunk (mchunkptr p)
 {
   INTERNAL_SIZE_T size = chunksize (p);
@@ -2864,7 +2856,6 @@ munmap_chunk (mchunkptr p)
 #if HAVE_MREMAP
 
 static mchunkptr
-internal_function
 mremap_chunk (mchunkptr p, size_t new_size)
 {
   size_t pagesize = GLRO (dl_pagesize);

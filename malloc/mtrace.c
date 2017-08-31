@@ -73,7 +73,7 @@ tr_break (void)
 }
 libc_hidden_def (tr_break)
 
-static void internal_function
+static void
 tr_where (const void *caller, Dl_info *info)
 {
   if (caller != NULL)
