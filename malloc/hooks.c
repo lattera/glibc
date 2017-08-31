@@ -228,8 +228,7 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
 }
 
 /* Check for corruption of the top chunk.  */
-static int
-internal_function
+static void
 top_check (void)
 {
   mchunkptr t = top (&main_arena);
@@ -240,7 +239,7 @@ top_check (void)
        prev_inuse (t) &&
        (!contiguous (&main_arena) ||
         (char *) t + chunksize (t) == mp_.sbrk_base + main_arena.system_mem)))
-    return 0;
+    return;
 
   malloc_printerr ("malloc: top chunk is corrupt");
 }
@@ -257,7 +256,8 @@ malloc_check (size_t sz, const void *caller)
     }
 
   __libc_lock_lock (main_arena.mutex);
-  victim = (top_check () >= 0) ? _int_malloc (&main_arena, sz + 1) : NULL;
+  top_check ();
+  victim = _int_malloc (&main_arena, sz + 1);
   __libc_lock_unlock (main_arena.mutex);
   return mem2mem_check (victim, sz);
 }
@@ -329,8 +329,8 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
         else
           {
             /* Must alloc, copy, free. */
-            if (top_check () >= 0)
-              newmem = _int_malloc (&main_arena, bytes + 1);
+	    top_check ();
+	    newmem = _int_malloc (&main_arena, bytes + 1);
             if (newmem)
               {
                 memcpy (newmem, oldmem, oldsize - 2 * SIZE_SZ);
@@ -341,12 +341,10 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
     }
   else
     {
-      if (top_check () >= 0)
-        {
-          INTERNAL_SIZE_T nb;
-          checked_request2size (bytes + 1, nb);
-          newmem = _int_realloc (&main_arena, oldp, oldsize, nb);
-        }
+      top_check ();
+      INTERNAL_SIZE_T nb;
+      checked_request2size (bytes + 1, nb);
+      newmem = _int_realloc (&main_arena, oldp, oldsize, nb);
     }
 
   /* mem2chunk_check changed the magic byte in the old chunk.
@@ -396,8 +394,8 @@ memalign_check (size_t alignment, size_t bytes, const void *caller)
     }
 
   __libc_lock_lock (main_arena.mutex);
-  mem = (top_check () >= 0) ? _int_memalign (&main_arena, alignment, bytes + 1) :
-        NULL;
+  top_check ();
+  mem = _int_memalign (&main_arena, alignment, bytes + 1);
   __libc_lock_unlock (main_arena.mutex);
   return mem2mem_check (mem, bytes);
 }

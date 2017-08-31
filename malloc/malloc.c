@@ -1022,7 +1022,7 @@ static void*  _mid_memalign(size_t, size_t, void *);
 static void malloc_printerr(const char *str) __attribute__ ((noreturn));
 
 static void* internal_function mem2mem_check(void *p, size_t sz);
-static int internal_function top_check(void);
+static void top_check (void);
 static void internal_function munmap_chunk(mchunkptr p);
 #if HAVE_MREMAP
 static mchunkptr internal_function mremap_chunk(mchunkptr p, size_t new_size);
