@@ -21,7 +21,6 @@
 #include <unistd.h>
 
 bool
-internal_function
 __spawn_valid_fd (int fd)
 {
   long maxfd = __sysconf (_SC_OPEN_MAX);

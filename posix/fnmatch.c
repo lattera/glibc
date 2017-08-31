@@ -186,12 +186,6 @@ __wcschrnul (const wchar_t *s, wint_t c)
 }
 # endif
 
-# ifndef internal_function
-/* Inside GNU libc we mark some function in a special way.  In other
-   environments simply ignore the marking.  */
-#  define internal_function
-# endif
-
 /* Note that this evaluates C many times.  */
 # ifdef _LIBC
 #  define FOLD(c) ((flags & FNM_CASEFOLD) ? tolower (c) : (c))

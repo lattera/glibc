@@ -36,14 +36,12 @@ char *__ttyname;
 #endif
 
 static char *getttyname (const char *dev, dev_t mydev,
-			 ino64_t myino, int save, int *dostat)
-     internal_function;
-
+			 ino64_t myino, int save, int *dostat);
 
 libc_freeres_ptr (static char *getttyname_name);
 
 static char *
-internal_function attribute_compat_text_section
+attribute_compat_text_section
 getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
 {
   static size_t namelen;

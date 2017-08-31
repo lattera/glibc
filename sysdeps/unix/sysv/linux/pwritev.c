@@ -33,7 +33,7 @@ pwritev (int fd, const struct iovec *vector, int count, off_t offset)
 }
 # else
 static ssize_t __atomic_pwritev_replacement (int, const struct iovec *,
-					     int, off_t) internal_function;
+					     int, off_t);
 ssize_t
 pwritev (int fd, const struct iovec *vector, int count, off_t offset)
 {
@@ -45,7 +45,7 @@ pwritev (int fd, const struct iovec *vector, int count, off_t offset)
 #  endif
   return __atomic_pwritev_replacement (fd, vector, count, offset);
 }
-#  define PWRITEV static internal_function __atomic_pwritev_replacement
+#  define PWRITEV static __atomic_pwritev_replacement
 #  define PWRITE __pwrite
 #  define OFF_T off_t
 #  include <sysdeps/posix/pwritev_common.c>

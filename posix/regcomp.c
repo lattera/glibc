@@ -61,7 +61,7 @@ static reg_errcode_t calc_inveclosure (re_dfa_t *dfa);
 static int fetch_number (re_string_t *input, re_token_t *token,
 			 reg_syntax_t syntax);
 static int peek_token (re_token_t *token, re_string_t *input,
-			reg_syntax_t syntax) internal_function;
+			reg_syntax_t syntax);
 static bin_tree_t *parse (re_string_t *regexp, regex_t *preg,
 			  reg_syntax_t syntax, reg_errcode_t *err);
 static bin_tree_t *parse_reg_exp (re_string_t *regexp, regex_t *preg,
@@ -916,7 +916,6 @@ init_dfa (re_dfa_t *dfa, size_t pat_len)
    character used by some operators like "\<", "\>", etc.  */
 
 static void
-internal_function
 init_word_char (re_dfa_t *dfa)
 {
   dfa->word_ops_used = 1;
@@ -1460,7 +1459,6 @@ link_nfa_nodes (void *extra, bin_tree_t *node)
    to their own constraint.  */
 
 static reg_errcode_t
-internal_function
 duplicate_node_closure (re_dfa_t *dfa, int top_org_node, int top_clone_node,
 			int root_node, unsigned int init_constraint)
 {
@@ -1749,7 +1747,6 @@ calc_eclosure_iter (re_node_set *new_set, re_dfa_t *dfa, int node, int root)
    We must not use this function inside bracket expressions.  */
 
 static void
-internal_function
 fetch_token (re_token_t *result, re_string_t *input, reg_syntax_t syntax)
 {
   re_string_skip_bytes (input, peek_token (result, input, syntax));
@@ -1759,7 +1756,6 @@ fetch_token (re_token_t *result, re_string_t *input, reg_syntax_t syntax)
    We must not use this function inside bracket expressions.  */
 
 static int
-internal_function
 peek_token (re_token_t *token, re_string_t *input, reg_syntax_t syntax)
 {
   unsigned char c;
@@ -1998,7 +1994,6 @@ peek_token (re_token_t *token, re_string_t *input, reg_syntax_t syntax)
    We must not use this function out of bracket expressions.  */
 
 static int
-internal_function
 peek_token_bracket (re_token_t *token, re_string_t *input, reg_syntax_t syntax)
 {
   unsigned char c;
@@ -2626,7 +2621,6 @@ parse_dup_op (bin_tree_t *elem, re_string_t *regexp, re_dfa_t *dfa,
      update it.  */
 
 static reg_errcode_t
-internal_function
 # ifdef RE_ENABLE_I18N
 build_range_exp (bitset_t sbcset, re_charset_t *mbcset, int *range_alloc,
 		 bracket_elem_t *start_elem, bracket_elem_t *end_elem)
@@ -2747,7 +2741,6 @@ build_range_exp (bitset_t sbcset, bracket_elem_t *start_elem,
    pointer argument since we may update it.  */
 
 static reg_errcode_t
-internal_function
 # ifdef RE_ENABLE_I18N
 build_collating_symbol (bitset_t sbcset, re_charset_t *mbcset,
 			int *coll_sym_alloc, const unsigned char *name)

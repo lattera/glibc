@@ -33,10 +33,9 @@ static const char dev[] = "/dev";
 
 static int getttyname_r (int fd, char *buf, size_t buflen,
 			 dev_t mydev, ino_t myino, int save,
-			 int *dostat) __THROW internal_function;
+			 int *dostat) __THROW;
 
 static int
-internal_function
 getttyname_r (int fd, char *buf, size_t buflen, dev_t mydev, ino_t myino,
 	      int save, int *dostat)
 {

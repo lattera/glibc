@@ -64,19 +64,16 @@ extern char **__libc_argv attribute_hidden;
 static int parse_dollars (char **word, size_t *word_length, size_t *max_length,
 			  const char *words, size_t *offset, int flags,
 			  wordexp_t *pwordexp, const char *ifs,
-			  const char *ifs_white, int quoted)
-     internal_function;
+			  const char *ifs_white, int quoted);
 static int parse_backtick (char **word, size_t *word_length,
 			   size_t *max_length, const char *words,
 			   size_t *offset, int flags, wordexp_t *pwordexp,
-			   const char *ifs, const char *ifs_white)
-     internal_function;
+			   const char *ifs, const char *ifs_white);
 static int parse_dquote (char **word, size_t *word_length, size_t *max_length,
 			 const char *words, size_t *offset, int flags,
 			 wordexp_t *pwordexp, const char *ifs,
-			 const char *ifs_white)
-     internal_function;
-static int eval_expr (char *expr, long int *result) internal_function;
+			 const char *ifs_white);
+static int eval_expr (char *expr, long int *result);
 
 /* The w_*() functions manipulate word lists. */
 
@@ -117,7 +114,6 @@ w_addchar (char *buffer, size_t *actlen, size_t *maxlen, char ch)
 }
 
 static char *
-internal_function
 w_addmem (char *buffer, size_t *actlen, size_t *maxlen, const char *str,
 	  size_t len)
 {
@@ -144,7 +140,6 @@ w_addmem (char *buffer, size_t *actlen, size_t *maxlen, const char *str,
 }
 
 static char *
-internal_function
 w_addstr (char *buffer, size_t *actlen, size_t *maxlen, const char *str)
      /* (lengths exclude trailing zero) */
 {
@@ -159,7 +154,6 @@ w_addstr (char *buffer, size_t *actlen, size_t *maxlen, const char *str)
 }
 
 static int
-internal_function
 w_addword (wordexp_t *pwordexp, char *word)
 {
   /* Add a word to the wordlist */
@@ -200,7 +194,6 @@ no_space:
  */
 
 static int
-internal_function
 parse_backslash (char **word, size_t *word_length, size_t *max_length,
 		 const char *words, size_t *offset)
 {
@@ -229,7 +222,6 @@ parse_backslash (char **word, size_t *word_length, size_t *max_length,
 }
 
 static int
-internal_function
 parse_qtd_backslash (char **word, size_t *word_length, size_t *max_length,
 		     const char *words, size_t *offset)
 {
@@ -272,7 +264,6 @@ parse_qtd_backslash (char **word, size_t *word_length, size_t *max_length,
 }
 
 static int
-internal_function
 parse_tilde (char **word, size_t *word_length, size_t *max_length,
 	     const char *words, size_t *offset, size_t wordc)
 {
@@ -379,7 +370,6 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
 
 
 static int
-internal_function
 do_parse_glob (const char *glob_word, char **word, size_t *word_length,
 	       size_t *max_length, wordexp_t *pwordexp, const char *ifs,
 	       const char *ifs_white)
@@ -436,7 +426,6 @@ do_parse_glob (const char *glob_word, char **word, size_t *word_length,
 }
 
 static int
-internal_function
 parse_glob (char **word, size_t *word_length, size_t *max_length,
 	    const char *words, size_t *offset, int flags,
 	    wordexp_t *pwordexp, const char *ifs, const char *ifs_white)
@@ -532,7 +521,6 @@ tidy_up:
 }
 
 static int
-internal_function
 parse_squote (char **word, size_t *word_length, size_t *max_length,
 	      const char *words, size_t *offset)
 {
@@ -554,7 +542,6 @@ parse_squote (char **word, size_t *word_length, size_t *max_length,
 
 /* Functions to evaluate an arithmetic expression */
 static int
-internal_function
 eval_expr_val (char **expr, long int *result)
 {
   char *digit;
@@ -589,7 +576,6 @@ eval_expr_val (char **expr, long int *result)
 }
 
 static int
-internal_function
 eval_expr_multdiv (char **expr, long int *result)
 {
   long int arg;
@@ -630,7 +616,6 @@ eval_expr_multdiv (char **expr, long int *result)
 }
 
 static int
-internal_function
 eval_expr (char *expr, long int *result)
 {
   long int arg;
@@ -667,7 +652,6 @@ eval_expr (char *expr, long int *result)
 }
 
 static int
-internal_function
 parse_arith (char **word, size_t *word_length, size_t *max_length,
 	     const char *words, size_t *offset, int flags, int bracket)
 {
@@ -817,7 +801,7 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 
 /* Function called by child process in exec_comm() */
 static inline void
-internal_function __attribute__ ((always_inline))
+__attribute__ ((always_inline))
 exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
 {
   const char *args[4] = { _PATH_BSHELL, "-c", comm, NULL };
@@ -875,7 +859,6 @@ exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
 /* Function to execute a command and retrieve the results */
 /* pwordexp contains NULL if field-splitting is forbidden */
 static int
-internal_function
 exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 	   int flags, wordexp_t *pwordexp, const char *ifs,
 	   const char *ifs_white)
@@ -1109,7 +1092,6 @@ no_space:
 }
 
 static int
-internal_function
 parse_comm (char **word, size_t *word_length, size_t *max_length,
 	    const char *words, size_t *offset, int flags, wordexp_t *pwordexp,
 	    const char *ifs, const char *ifs_white)
@@ -1197,7 +1179,6 @@ parse_comm (char **word, size_t *word_length, size_t *max_length,
   (memchr (char_set "", ch, sizeof (char_set) - 1) != NULL)
 
 static int
-internal_function
 parse_param (char **word, size_t *word_length, size_t *max_length,
 	     const char *words, size_t *offset, int flags, wordexp_t *pwordexp,
 	     const char *ifs, const char *ifs_white, int quoted)
@@ -2026,7 +2007,6 @@ do_error:
 #undef CHAR_IN_SET
 
 static int
-internal_function
 parse_dollars (char **word, size_t *word_length, size_t *max_length,
 	       const char *words, size_t *offset, int flags,
 	       wordexp_t *pwordexp, const char *ifs, const char *ifs_white,
@@ -2085,7 +2065,6 @@ parse_dollars (char **word, size_t *word_length, size_t *max_length,
 }
 
 static int
-internal_function
 parse_backtick (char **word, size_t *word_length, size_t *max_length,
 		const char *words, size_t *offset, int flags,
 		wordexp_t *pwordexp, const char *ifs, const char *ifs_white)
@@ -2149,7 +2128,6 @@ parse_backtick (char **word, size_t *word_length, size_t *max_length,
 }
 
 static int
-internal_function
 parse_dquote (char **word, size_t *word_length, size_t *max_length,
 	      const char *words, size_t *offset, int flags,
 	      wordexp_t *pwordexp, const char * ifs, const char * ifs_white)

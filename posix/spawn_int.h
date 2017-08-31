@@ -66,6 +66,6 @@ extern int __spawni (pid_t *pid, const char *path,
 
 /* Return true if FD falls into the range valid for file descriptors.
    The check in this form is mandated by POSIX.  */
-bool __spawn_valid_fd (int fd) internal_function attribute_hidden;
+bool __spawn_valid_fd (int fd) attribute_hidden;
 
 #endif /* _SPAWN_INT_H */

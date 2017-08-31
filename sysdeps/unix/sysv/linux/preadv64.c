@@ -31,7 +31,7 @@ preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
 }
 #else
 static ssize_t __atomic_preadv64_replacement (int, const struct iovec *,
-					      int, off64_t) internal_function;
+					      int, off64_t);
 ssize_t
 preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
 {
@@ -43,7 +43,7 @@ preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
 #endif
   return __atomic_preadv64_replacement (fd, vector, count, offset);
 }
-# define PREADV static internal_function __atomic_preadv64_replacement
+# define PREADV static __atomic_preadv64_replacement
 # define PREAD __pread64
 # define OFF_T off64_t
 # include <sysdeps/posix/preadv_common.c>

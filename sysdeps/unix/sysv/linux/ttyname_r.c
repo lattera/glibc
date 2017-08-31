@@ -32,10 +32,10 @@
 
 static int getttyname_r (char *buf, size_t buflen,
 			 dev_t mydev, ino64_t myino, int save,
-			 int *dostat) internal_function;
+			 int *dostat);
 
 static int
-internal_function attribute_compat_text_section
+attribute_compat_text_section
 getttyname_r (char *buf, size_t buflen, dev_t mydev, ino64_t myino,
 	      int save, int *dostat)
 {

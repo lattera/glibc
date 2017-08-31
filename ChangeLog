@@ -1,5 +1,74 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* posix/fnmatch.c (internal_function): Remove definition.
+	* posix/fnmatch_loop.c (FCT, EXT, END): Remove internal_function.
+	* posix/regcomp.c (peek_token, init_word_char)
+	(duplicate_node_closure, fetch_token, peek_token)
+	(peek_token_bracket, build_range_exp, build_collating_symbol):
+	Likewise.
+	* posix/regex_internal.c (re_string_construct_common)
+	(create_ci_newstate, create_cd_newstate, re_string_allocate)
+	(re_string_construct, re_string_realloc_buffers, build_wcs_buffer)
+	(build_wcs_upper_buffer, re_string_skip_chars, build_upper_buffer)
+	(re_string_translate_buffer, re_string_reconstruct)
+	(re_string_peek_byte_case, re_string_fetch_byte_case)
+	(re_string_destruct, re_string_context_at, re_node_set_alloc)
+	(re_node_set_init_1, re_node_set_init_2, re_node_set_init_copy)
+	(re_node_set_add_intersect, re_node_set_init_union)
+	(re_node_set_merge, re_node_set_insert, re_node_set_insert_last)
+	(re_node_set_compare, re_node_set_contains, re_node_set_remove_at)
+	(re_dfa_add_node, calc_state_hash, re_acquire_state)
+	(re_acquire_state_context): Likewise.
+	* posix/regex_internal.h (internal_function): Remove definition.
+	(re_string_realloc_buffers, build_wcs_buffer)
+	(build_wcs_upper_buffer, build_upper_buffer)
+	(re_string_translate_buffer, re_string_context_at)
+	(re_string_char_size_at, re_string_wchar_at)
+	(re_string_elem_size_at): Likewise.
+	* posix/regexec.c (match_ctx_init, match_ctx_clean)
+	(match_ctx_free, match_ctx_add_entry, search_cur_bkref_entry)
+	(match_ctx_add_subtop, match_ctx_add_sublast, sift_ctx_init)
+	(re_search_internal, re_search_2_stub, re_search_stub)
+	(re_copy_regs, prune_impossible_nodes, check_matching)
+	(check_halt_state_context, update_regs, push_fail_stack, set_regs)
+	(free_fail_stack_return, sift_states_iter_mb)
+	(sift_states_backward, build_sifted_states)
+	(update_cur_sifted_state, add_epsilon_src_nodes, check_dst_limits)
+	(check_dst_limits_calc_pos_1, check_dst_limits_calc_pos)
+	(check_subexp_limits, sift_states_bkref, merge_state_array)
+	(find_recover_state, transit_state, merge_state_with_log)
+	(check_subexp_matching_top, transit_state_sb, transit_state_sb)
+	(transit_state_mb, transit_state_bkref, get_subexp)
+	(get_subexp_sub, find_subexp_node, check_arrival)
+	(check_arrival_add_next_nodes, check_arrival_expand_ecl)
+	(check_arrival_expand_ecl_sub, expand_bkref_cache, build_trtable)
+	(check_node_accept_bytes, find_collation_sequence_value)
+	(group_nodes_into_DFAstates, check_node_accept, extend_buffers)
+	(acquire_init_state_context, check_halt_node_context)
+	(proceed_next_node, pop_fail_stack, clean_state_log_if_needed)
+	(sub_epsilon_src_nodes): Likewise.
+	* posix/spawn_int.h (__spawn_valid_fd): Likewise.
+	* posix/spawn_valid_fd (__spawn_valid_fd): Likewise.
+	* posix/wordexp.c (parse_dollars, parse_backtick, parse_dquote)
+	(eval_expr, w_addmem, w_addstr, w_addword, parse_backslash)
+	(parse_qtd_backslash, parse_tilde, do_parse_glob, parse_glob)
+	(parse_squote, eval_expr_val, eval_expr_multdiv, parse_arith)
+	(exec_comm_child, exec_comm, parse_comm, parse_param): Likewise.
+	* sysdeps/posix/ttyname.c (getttyname): Likewise.
+	* sysdeps/posix/ttyname_r.c (getttyname_r): Likewise.
+	* sysdeps/unix/sysv/linux/preadv.c (__atomic_preadv_replacement)
+	(PREADV): Likewise.
+	* sysdeps/unix/sysv/linux/preadv64.c (__atomic_preadv64_replacement)
+	(PREADV): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev.c (__atomic_pwritev_replacement)
+	(PWRITEV): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64.c (__atomic_pwritev64_replacement)
+	(PWRITEV): Likewise.
+	* sysdeps/unix/sysv/linux/ttyname.c (getttyname): Likewise.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (getttyname_r): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* nptl/allocatestack.c (change_stack_perm, __deallocate_stack)
 	(setxid_mark_thread, setxid_unmark_thread, setxid_signal_thread):
 	Remove internal_function.

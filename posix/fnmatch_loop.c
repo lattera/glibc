@@ -28,16 +28,13 @@ struct STRUCT
    it matches, nonzero if not.  */
 static int FCT (const CHAR *pattern, const CHAR *string,
 		const CHAR *string_end, int no_leading_period, int flags,
-		struct STRUCT *ends, size_t alloca_used)
-     internal_function;
+		struct STRUCT *ends, size_t alloca_used);
 static int EXT (INT opt, const CHAR *pattern, const CHAR *string,
 		const CHAR *string_end, int no_leading_period, int flags,
-		size_t alloca_used)
-     internal_function;
-static const CHAR *END (const CHAR *patternp) internal_function;
+		size_t alloca_used);
+static const CHAR *END (const CHAR *patternp);
 
 static int
-internal_function
 FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
      int no_leading_period, int flags, struct STRUCT *ends, size_t alloca_used)
 {
@@ -1000,7 +997,6 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 
 
 static const CHAR *
-internal_function
 END (const CHAR *pattern)
 {
   const CHAR *p = pattern;
@@ -1044,7 +1040,6 @@ END (const CHAR *pattern)
 
 
 static int
-internal_function
 EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
      int no_leading_period, int flags, size_t alloca_used)
 {
