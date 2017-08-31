@@ -1,5 +1,11 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/unix/sysv/linux/getcwd.c (generic_getcwd): Remove
+	internal_function.
+	(GETCWD_RETURN_TYPE): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* include/time.h (__tz_compute, __strptime_internal): Remove
 	internal_function.
 	* time/strptime_l.c (__strptime_internal): Likewise.
