@@ -1,5 +1,11 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* stdio-common/printf_fp.c (group_number): Remove
+	internal_function.
+	* stdio-common/vfprintf.c (buffered_vfprintf): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* posix/fnmatch.c (internal_function): Remove definition.
 	* posix/fnmatch_loop.c (FCT, EXT, END): Remove internal_function.
 	* posix/regcomp.c (peek_token, init_word_char)

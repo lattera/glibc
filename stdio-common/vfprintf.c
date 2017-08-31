@@ -1220,7 +1220,7 @@ static const uint8_t jump_table[] =
 
 /* Helper function to provide temporary buffering for unbuffered streams.  */
 static int buffered_vfprintf (FILE *stream, const CHAR_T *fmt, va_list)
-     __THROW __attribute__ ((noinline)) internal_function;
+     __THROW __attribute__ ((noinline));
 
 /* Handle positional format specifiers.  */
 static int printf_positional (_IO_FILE *s,
@@ -2291,7 +2291,6 @@ static const struct _IO_jump_t _IO_helper_jumps libio_vtable =
 #endif
 
 static int
-internal_function
 buffered_vfprintf (_IO_FILE *s, const CHAR_T *format,
 		   _IO_va_list args)
 {

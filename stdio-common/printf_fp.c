@@ -143,8 +143,7 @@ extern mp_size_t __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 
 static wchar_t *group_number (wchar_t *buf, wchar_t *bufend,
 			      unsigned int intdig_no, const char *grouping,
-			      wchar_t thousands_sep, int ngroups)
-     internal_function;
+			      wchar_t thousands_sep, int ngroups);
 
 struct hack_digit_param
 {
@@ -1319,7 +1318,6 @@ __guess_grouping (unsigned int intdig_max, const char *grouping)
    Return the new end of buffer.  */
 
 static wchar_t *
-internal_function
 group_number (wchar_t *buf, wchar_t *bufend, unsigned int intdig_no,
 	      const char *grouping, wchar_t thousands_sep, int ngroups)
 {
