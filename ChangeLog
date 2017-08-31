@@ -1,5 +1,14 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* gmon/gmon.c (write_hist, write_call_graph, write_bb_counts):
+	Remove internal_function.
+	* sysdeps/arm/machine-gmon.h (mcount_internal, _MCOUNT_DECL):
+	Likewise.
+	* sysdeps/sparc/machine-gmon.h (mcount_internal, _MCOUNT_DECL):
+	Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* dlfcn/dlerror.c (_dlerror_run): Remove internal_function.
 	* elf/dl-sym.c (_dl_vsym, _dl_sym): Likewise.
 	* include/dlfcn.h (_dl_sym, _dl_vsym, _dlerror_run): Likewise.

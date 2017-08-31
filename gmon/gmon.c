@@ -62,9 +62,9 @@ static int	s_scale;
 
 void moncontrol (int mode);
 void __moncontrol (int mode);
-static void write_hist (int fd) internal_function;
-static void write_call_graph (int fd) internal_function;
-static void write_bb_counts (int fd) internal_function;
+static void write_hist (int fd);
+static void write_call_graph (int fd);
+static void write_bb_counts (int fd);
 
 /*
  * Control profiling
@@ -171,7 +171,6 @@ weak_alias (__monstartup, monstartup)
 
 
 static void
-internal_function
 write_hist (int fd)
 {
   u_char tag = GMON_TAG_TIME_HIST;
@@ -222,7 +221,6 @@ write_hist (int fd)
 
 
 static void
-internal_function
 write_call_graph (int fd)
 {
 #define NARCS_PER_WRITEV	32
@@ -284,7 +282,6 @@ write_call_graph (int fd)
 
 
 static void
-internal_function
 write_bb_counts (int fd)
 {
   struct __bb *grp;
