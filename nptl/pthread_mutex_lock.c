@@ -607,7 +607,6 @@ hidden_def (__pthread_mutex_lock)
 
 #ifdef NO_INCR
 void
-internal_function
 __pthread_mutex_cond_lock_adjust (pthread_mutex_t *mutex)
 {
   assert ((mutex->__data.__kind & PTHREAD_MUTEX_PRIO_INHERIT_NP) != 0);

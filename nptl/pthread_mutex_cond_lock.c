@@ -14,7 +14,7 @@
 /* We need to assume that there are other threads blocked on the futex.
    See __pthread_mutex_lock_full for further details.  */
 #define LLL_ROBUST_MUTEX_LOCK_MODIFIER FUTEX_WAITERS
-#define __pthread_mutex_lock internal_function __pthread_mutex_cond_lock
+#define __pthread_mutex_lock  __pthread_mutex_cond_lock
 #define __pthread_mutex_lock_full __pthread_mutex_cond_lock_full
 #define NO_INCR
 

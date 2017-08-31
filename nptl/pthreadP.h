@@ -341,15 +341,14 @@ __do_cancel (void)
 
 /* Thread list handling.  */
 extern struct pthread *__find_in_stack_list (struct pthread *pd)
-     attribute_hidden internal_function;
+     attribute_hidden;
 
 /* Deallocate a thread's stack after optionally making sure the thread
    descriptor is still valid.  */
-extern void __free_tcb (struct pthread *pd) attribute_hidden internal_function;
+extern void __free_tcb (struct pthread *pd) attribute_hidden;
 
 /* Free allocated stack.  */
-extern void __deallocate_stack (struct pthread *pd)
-     attribute_hidden internal_function;
+extern void __deallocate_stack (struct pthread *pd) attribute_hidden;
 
 /* Mark all the stacks except for the current one as available.  This
    function also re-initializes the lock for the stack cache.  */
@@ -386,13 +385,11 @@ hidden_proto (__nptl_death_event)
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
 extern void __libc_pthread_init (unsigned long int *ptr,
 				 void (*reclaim) (void),
-				 const struct pthread_functions *functions)
-     internal_function;
+				 const struct pthread_functions *functions);
 #else
 extern int *__libc_pthread_init (unsigned long int *ptr,
 				 void (*reclaim) (void),
-				 const struct pthread_functions *functions)
-     internal_function;
+				 const struct pthread_functions *functions);
 
 /* Variable set to a nonzero value either if more than one thread runs or ran,
    or if a single-threaded process is trying to cancel itself.  See
@@ -430,13 +427,12 @@ extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
      const struct timespec *__abstime);
 extern int __pthread_mutex_cond_lock (pthread_mutex_t *__mutex)
-     attribute_hidden internal_function;
+     attribute_hidden;
 extern void __pthread_mutex_cond_lock_adjust (pthread_mutex_t *__mutex)
-     attribute_hidden internal_function;
+     attribute_hidden;
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_unlock_usercnt (pthread_mutex_t *__mutex,
-					   int __decr)
-     attribute_hidden internal_function;
+					   int __decr) attribute_hidden;
 extern int __pthread_mutexattr_init (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);
@@ -508,8 +504,7 @@ extern void __pthread_exit (void *value) __attribute__ ((__noreturn__));
 extern int __pthread_join (pthread_t threadid, void **thread_return);
 extern int __pthread_setcanceltype (int type, int *oldtype);
 extern int __pthread_enable_asynccancel (void) attribute_hidden;
-extern void __pthread_disable_asynccancel (int oldtype)
-     internal_function attribute_hidden;
+extern void __pthread_disable_asynccancel (int oldtype) attribute_hidden;
 extern void __pthread_testcancel (void);
 
 #if IS_IN (libpthread)
@@ -547,14 +542,12 @@ extern int __pthread_getaffinity_np (pthread_t th, size_t cpusetsize,
 
 /* The two functions are in libc.so and not exported.  */
 extern int __libc_enable_asynccancel (void) attribute_hidden;
-extern void __libc_disable_asynccancel (int oldtype)
-     internal_function attribute_hidden;
+extern void __libc_disable_asynccancel (int oldtype) attribute_hidden;
 
 
 /* The two functions are in librt.so and not exported.  */
 extern int __librt_enable_asynccancel (void) attribute_hidden;
-extern void __librt_disable_asynccancel (int oldtype)
-     internal_function attribute_hidden;
+extern void __librt_disable_asynccancel (int oldtype) attribute_hidden;
 
 #if IS_IN (libpthread)
 /* Special versions which use non-exported functions.  */

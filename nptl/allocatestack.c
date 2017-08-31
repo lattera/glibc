@@ -307,7 +307,6 @@ queue_stack (struct pthread *stack)
 
 
 static int
-internal_function
 change_stack_perm (struct pthread *pd
 #ifdef NEED_SEPARATE_REGISTER_STACK
 		   , size_t pagemask
@@ -787,7 +786,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 
 void
-internal_function
 __deallocate_stack (struct pthread *pd)
 {
   lll_lock (stack_cache_lock, LLL_PRIVATE);
@@ -1016,7 +1014,6 @@ __find_thread_by_id (pid_t tid)
 
 #ifdef SIGSETXID
 static void
-internal_function
 setxid_mark_thread (struct xid_command *cmdp, struct pthread *t)
 {
   int ch;
@@ -1054,7 +1051,6 @@ setxid_mark_thread (struct xid_command *cmdp, struct pthread *t)
 
 
 static void
-internal_function
 setxid_unmark_thread (struct xid_command *cmdp, struct pthread *t)
 {
   int ch;
@@ -1075,7 +1071,6 @@ setxid_unmark_thread (struct xid_command *cmdp, struct pthread *t)
 
 
 static int
-internal_function
 setxid_signal_thread (struct xid_command *cmdp, struct pthread *t)
 {
   if ((t->cancelhandling & SETXID_BITMASK) == 0)

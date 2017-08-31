@@ -205,7 +205,6 @@ static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
 
 
 struct pthread *
-internal_function
 __find_in_stack_list (struct pthread *pd)
 {
   list_t *entry;
@@ -341,7 +340,6 @@ __nptl_deallocate_tsd (void)
 /* Deallocate a thread's stack after optionally making sure the thread
    descriptor is still valid.  */
 void
-internal_function
 __free_tcb (struct pthread *pd)
 {
   /* The thread is exiting now.  */

@@ -38,7 +38,6 @@ extern int __libc_multiple_threads attribute_hidden;
 
 int *
 #endif
-internal_function
 __libc_pthread_init (unsigned long int *ptr, void (*reclaim) (void),
 		     const struct pthread_functions *functions)
 {

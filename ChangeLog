@@ -1,5 +1,25 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* nptl/allocatestack.c (change_stack_perm, __deallocate_stack)
+	(setxid_mark_thread, setxid_unmark_thread, setxid_signal_thread):
+	Remove internal_function.
+	* nptl/cancellation.c (__pthread_disable_asynccancel): Likewise.
+	* nptl/libc_pthread_init.c (__libc_pthread_init): Likewise.
+	* nptl/pthreadP.h (__find_in_stack_list, __free_tcb)
+	(__deallocate_stack, __libc_pthread_init)
+	(__pthread_mutex_cond_lock, __pthread_mutex_cond_lock_adjust)
+	(__pthread_mutex_unlock_usercnt, __pthread_disable_asynccancel)
+	(__libc_disable_asynccancel, __librt_disable_asynccancel):
+	Likewise.
+	* nptl/pthread_create.c (__find_in_stack_list, __free_tcb): Likewise.
+	* nptl/pthread_mutex_cond_lock.c (__pthread_mutex_lock): Likewise.
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_cond_lock_adjust):
+	Likewise.
+	* nptl/pthread_mutex_unlock.c (__pthread_mutex_unlock_full)
+	(__pthread_mutex_unlock_usercnt): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* io/fts.c (fts_alloc, fts_build, fts_lfree, fts_load)
 	(fts_maxarglen, fts_padjust, fts_palloc, fts_sort, fts_stat)
 	(fts_safe_changedir): Remove internal_function.

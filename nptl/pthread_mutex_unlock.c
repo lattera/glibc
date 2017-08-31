@@ -28,12 +28,11 @@
 #endif
 
 static int
-internal_function
 __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
      __attribute_noinline__;
 
 int
-internal_function attribute_hidden
+attribute_hidden
 __pthread_mutex_unlock_usercnt (pthread_mutex_t *mutex, int decr)
 {
   int type = PTHREAD_MUTEX_TYPE_ELISION (mutex);
@@ -92,7 +91,6 @@ __pthread_mutex_unlock_usercnt (pthread_mutex_t *mutex, int decr)
 
 
 static int
-internal_function
 __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 {
   int newowner = 0;
