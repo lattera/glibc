@@ -1,5 +1,18 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* include/nss.h (__nss_valid_field, __nss_valid_list_field)
+	(__nss_rewrite_field): Remove internal_function.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Likewise.
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Likewise.
+	* nss/nsswitch.c (nss_parse_file, nss_getline)
+	(nss_parse_service_list, nss_new_service): Likewise.
+	* nss/rewrite_field.c (__nss_rewrite_field): Likewise.
+	* nss/valid_field.c (__nss_valid_field): Likewise.
+	* nss/valid_list_field.c (__nss_valid_list_field): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/arena.c (__malloc_fork_lock_parent)
 	(__malloc_fork_unlock_parent, __malloc_fork_unlock_child)
 	(next_env_entry, new_heap, heap_trim, arena_get2): Remove

@@ -38,8 +38,7 @@ int __nss_not_use_nscd_passwd;
 
 static int nscd_getpw_r (const char *key, size_t keylen, request_type type,
 			 struct passwd *resultbuf, char *buffer,
-			 size_t buflen, struct passwd **result)
-     internal_function;
+			 size_t buflen, struct passwd **result);
 
 int
 __nscd_getpwnam_r (const char *name, struct passwd *resultbuf, char *buffer,
@@ -81,7 +80,6 @@ libc_freeres_fn (pw_map_free)
 
 
 static int
-internal_function
 nscd_getpw_r (const char *key, size_t keylen, request_type type,
 	      struct passwd *resultbuf, char *buffer, size_t buflen,
 	      struct passwd **result)

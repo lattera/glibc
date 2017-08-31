@@ -40,8 +40,7 @@ int __nss_not_use_nscd_group;
 
 static int nscd_getgr_r (const char *key, size_t keylen, request_type type,
 			 struct group *resultbuf, char *buffer,
-			 size_t buflen, struct group **result)
-     internal_function;
+			 size_t buflen, struct group **result);
 
 
 int
@@ -82,7 +81,6 @@ libc_freeres_fn (gr_map_free)
 
 
 static int
-internal_function
 nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	      struct group *resultbuf, char *buffer, size_t buflen,
 	      struct group **result)
