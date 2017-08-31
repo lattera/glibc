@@ -48,7 +48,6 @@ notify_func_wrapper (void *arg)
 
 
 int
-internal_function
 __aio_notify_only (struct sigevent *sigev)
 {
   int result = 0;
@@ -109,7 +108,6 @@ __aio_notify_only (struct sigevent *sigev)
 
 
 void
-internal_function
 __aio_notify (struct requestlist *req)
 {
   struct waitlist *waitlist;

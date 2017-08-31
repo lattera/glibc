@@ -1,5 +1,19 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* rt/aio_sigqueue.c (__aio_sigqueue): Remove internal_function.
+	* sysdeps/generic/aio_misc.h (__aio_sigqueue): Likewise.
+	* sysdeps/pthread/aio_misc.c (__aio_free_request, __aio_find_req)
+	(__aio_find_req_fd, __aio_remove_request, __aio_enqueue_request):
+	Likewise.
+	* sysdeps/pthread/aio_misc.h (__aio_enqueue_request)
+	(__aio_find_req, __aio_find_req_fd, __aio_free_request)
+	(__aio_notify, __aio_notify_only, __aio_sigqueue): Likewise.
+	* sysdeps/pthread/aio_notify.c (__aio_notify_only, __aio_notify):
+	Likewise.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c (__aio_sigqueue): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* misc/getttyent.c (skip, value): Remove internal_function.
 	* misc/syslog.c (openlog_internal): Likewise.
 	* misc/tsearch.c (trecurse, tdestroy_recurse): Likewise.

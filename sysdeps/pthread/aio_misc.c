@@ -159,7 +159,6 @@ get_elem (void)
 
 
 void
-internal_function
 __aio_free_request (struct requestlist *elem)
 {
   elem->running = no;
@@ -169,7 +168,6 @@ __aio_free_request (struct requestlist *elem)
 
 
 struct requestlist *
-internal_function
 __aio_find_req (aiocb_union *elem)
 {
   struct requestlist *runp = requests;
@@ -192,7 +190,6 @@ __aio_find_req (aiocb_union *elem)
 
 
 struct requestlist *
-internal_function
 __aio_find_req_fd (int fildes)
 {
   struct requestlist *runp = requests;
@@ -206,7 +203,6 @@ __aio_find_req_fd (int fildes)
 
 
 void
-internal_function
 __aio_remove_request (struct requestlist *last, struct requestlist *req,
 		      int all)
 {
@@ -299,7 +295,6 @@ weak_alias (__aio_init, aio_init)
 /* The main function of the async I/O handling.  It enqueues requests
    and if necessary starts and handles threads.  */
 struct requestlist *
-internal_function
 __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 {
   int result = 0;

@@ -40,8 +40,7 @@ typedef union
 
 
 /* Send the signal.  */
-extern int __aio_sigqueue (int sig, const union sigval val, pid_t caller_pid)
-     internal_function;
+extern int __aio_sigqueue (int sig, const union sigval val, pid_t caller_pid);
 
 
 #endif /* aio_misc.h */
