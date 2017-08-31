@@ -4106,8 +4106,6 @@ _int_free (mstate av, mchunkptr p, int have_lock)
   mchunkptr bck;               /* misc temp for linking */
   mchunkptr fwd;               /* misc temp for linking */
 
-  int locked = 0;
-
   size = chunksize (p);
 
   /* Little security check which won't hurt performance: the
@@ -4162,19 +4160,14 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	/* We might not have a lock at this point and concurrent modifications
 	   of system_mem might have let to a false positive.  Redo the test
 	   after getting the lock.  */
-	if (have_lock
-	    || ({ assert (locked == 0);
-		  __libc_lock_lock (av->mutex);
-		  locked = 1;
+	if (!have_lock
+	    || ({ __libc_lock_lock (av->mutex);
 		  chunksize_nomask (chunk_at_offset (p, size)) <= 2 * SIZE_SZ
-		    || chunksize (chunk_at_offset (p, size)) >= av->system_mem;
-	      }))
+		  || chunksize (chunk_at_offset (p, size)) >= av->system_mem;
+	        }))
 	  malloc_printerr ("free(): invalid next size (fast)");
 	if (! have_lock)
-	  {
-	    __libc_lock_unlock (av->mutex);
-	    locked = 0;
-	  }
+	  __libc_lock_unlock (av->mutex);
       }
 
     free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
@@ -4211,10 +4204,8 @@ _int_free (mstate av, mchunkptr p, int have_lock)
   */
 
   else if (!chunk_is_mmapped(p)) {
-    if (! have_lock) {
+    if (!have_lock)
       __libc_lock_lock (av->mutex);
-      locked = 1;
-    }
 
     nextchunk = chunk_at_offset(p, size);
 
@@ -4328,10 +4319,8 @@ _int_free (mstate av, mchunkptr p, int have_lock)
       }
     }
 
-    if (! have_lock) {
-      assert (locked);
+    if (!have_lock)
       __libc_lock_unlock (av->mutex);
-    }
   }
   /*
     If the chunk was allocated via mmap, release via munmap().

@@ -1,3 +1,8 @@
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (_int_free): Remove locked variable and related
+	asserts.
+
 2017-08-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22051]
