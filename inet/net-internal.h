@@ -53,8 +53,7 @@ struct deadline_current_time
 
 /* Return the current time.  Terminates the process if the current
    time is not available.  */
-struct deadline_current_time __deadline_current_time (void)
-  internal_function attribute_hidden;
+struct deadline_current_time __deadline_current_time (void) attribute_hidden;
 
 /* Computed absolute deadline.  */
 struct deadline
@@ -97,15 +96,14 @@ __deadline_first (struct deadline left, struct deadline right)
 /* Add TV to the current time and return it.  Returns a special
    infinite absolute deadline on overflow.  */
 struct deadline __deadline_from_timeval (struct deadline_current_time,
-                                         struct timeval tv)
-  internal_function attribute_hidden;
+                                         struct timeval tv) attribute_hidden;
 
 /* Compute the number of milliseconds until the specified deadline,
    from the current time in the argument.  The result is mainly for
    use with poll.  If the deadline has already passed, return 0.  If
    the result would overflow an int, return INT_MAX.  */
 int __deadline_to_ms (struct deadline_current_time, struct deadline)
-  internal_function attribute_hidden;
+  attribute_hidden;
 
 /* Return true if TV.tv_sec is non-negative and TV.tv_usec is in the
    interval [0, 999999].  */

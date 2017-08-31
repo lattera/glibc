@@ -187,7 +187,6 @@ libc_hidden_weak (if_indextoname)
 
 #if 0
 void
-internal_function
 __protocol_available (int *have_inet, int *have_inet6)
 {
   *have_inet = _hurd_socket_server (PF_INET, 0) != MACH_PORT_NULL;

@@ -646,7 +646,6 @@ __ivaliduser (FILE *hostf, uint32_t raddr, const char *luser,
 
 /* Returns 1 on positive match, 0 on no match, -1 on negative match.  */
 static int
-internal_function
 __checkhost_sa (struct sockaddr *ra, size_t ralen, char *lhost,
 		const char *rhost)
 {
@@ -700,7 +699,6 @@ __checkhost_sa (struct sockaddr *ra, size_t ralen, char *lhost,
 
 /* Returns 1 on positive match, 0 on no match, -1 on negative match.  */
 static int
-internal_function
 __icheckuser (const char *luser, const char *ruser)
 {
     /*

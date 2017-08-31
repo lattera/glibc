@@ -286,7 +286,6 @@ __netlink_open (struct netlink_handle *h)
    Since we get at first all RTM_NEWLINK entries, it can never happen
    that a RTM_NEWADDR index is not known to this map.  */
 static int
-internal_function
 map_newlink (int index, struct ifaddrs_storage *ifas, int *map, int max)
 {
   int i;

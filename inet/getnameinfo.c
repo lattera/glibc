@@ -86,7 +86,6 @@ libc_freeres_ptr (static char *domain);
 
 
 static char *
-internal_function
 nrl_domainname (void)
 {
   static int not_first;

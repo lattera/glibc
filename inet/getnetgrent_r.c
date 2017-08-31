@@ -110,7 +110,6 @@ endnetgrent_hook (struct __netgrent *datap)
 }
 
 static int
-internal_function
 __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
 			      int *errnop)
 {

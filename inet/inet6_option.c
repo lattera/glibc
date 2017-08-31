@@ -24,7 +24,6 @@
 
 
 static void
-internal_function
 add_pad (struct cmsghdr *cmsg, int len)
 {
   unsigned char *p = CMSG_DATA (cmsg) + cmsg->cmsg_len - CMSG_LEN (0);

@@ -1,3 +1,17 @@
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
+	* inet/deadline.c (__deadline_current_time)
+	(__deadline_from_timeval, __deadline_to_ms): Remove
+	internal_function.
+	* inet/getnameinfo.c (nrl_domainname): Likewise.
+	* inet/getnetgrent_r.c (__internal_setnetgrent_reuse): Likewise.
+	* inet/inet6_option.c (add_pad): Likewise.
+	* inet/net-internal.h (__deadline_current_time)
+	(__deadline_from_timeval, __deadline_to_ms): Likewise.
+	* inet/rcmd.c (__checkhost_sa, __icheckuser): Likewise.
+	* sysdeps/mach/hurd/if_index.c (__protocol_available): Likewise.
+	* sysdeps/unix/sysv/linux/ifaddrs.c (map_newlink): Likewise.
+
 2017-08-31  Joseph Myers  <joseph@codesourcery.com>
 
 	*  math/math.h [__USE_ISOC99] (NAN): Define directly here.  Do not
