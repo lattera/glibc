@@ -1,3 +1,11 @@
+2017-08-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22051]
+	* Makerules (build-module-helper-objlist): Filter out
+	$(elf-objpfx)sofini.os.
+	(build-shlib-objlist): Append $(elf-objpfx)sofini.os if it is
+	needed.
+
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
 	* libio/fcloseall.c: Assume weak_alias is defined.
