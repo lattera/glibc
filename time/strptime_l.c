@@ -231,7 +231,6 @@ day_of_the_year (struct tm *tm)
 
 #ifdef _LIBC
 char *
-internal_function
 #else
 static char *
 #endif

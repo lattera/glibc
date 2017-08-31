@@ -1,5 +1,12 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* include/time.h (__tz_compute, __strptime_internal): Remove
+	internal_function.
+	* time/strptime_l.c (__strptime_internal): Likewise.
+	* time/tzset.c (compute_change, update_vars, __tz_compute): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* iconv/gconv.c (__gconv): Remove internal_function.
 	* iconv/gconv_builtin.c (__gconv_get_builtin_trans): Likewise.
 	* iconv/gconv_cache.c (__gconv_load_cache, find_module_idx)
@@ -62,6 +69,8 @@
 	(_nl_select_era_entry): Likewise.
 	* time/lc-time-cleanup.c (_nl_cleanup_time): Likewise.
 	* wcsmbs/wcsmbsload.c (__wcsmbs_load_conv, __wcsmbs_clone_conv)
+	(__wcsmbs_named_conv, _nl_cleanup_ctype): Likewise.
+	* wcsmbs/wcsmbsload.h (__wcsmbs_load_conv, __wcsmbs_clone_conv)
 	(__wcsmbs_named_conv, _nl_cleanup_ctype): Likewise.
 
 2017-08-31  Florian Weimer  <fweimer@redhat.com>

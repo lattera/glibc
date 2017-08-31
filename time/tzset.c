@@ -63,7 +63,7 @@ typedef struct
 static tz_rule tz_rules[2];
 
 
-static void compute_change (tz_rule *rule, int year) __THROW internal_function;
+static void compute_change (tz_rule *rule, int year) __THROW;
 static void tzset_internal (int always);
 
 /* List of buffers containing time zone strings. */
@@ -125,7 +125,6 @@ __tzstring (const char *s)
 static char *old_tz;
 
 static void
-internal_function
 update_vars (void)
 {
   __daylight = tz_rules[0].offset != tz_rules[1].offset;
@@ -429,7 +428,6 @@ tzset_internal (int always)
    when the change described by RULE will occur and
    put it in RULE->change, saving YEAR in RULE->computed_for.  */
 static void
-internal_function
 compute_change (tz_rule *rule, int year)
 {
   time_t t;
@@ -518,7 +516,6 @@ compute_change (tz_rule *rule, int year)
 /* Figure out the correct timezone for TM and set `__tzname',
    `__timezone', and `__daylight' accordingly.  */
 void
-internal_function
 __tz_compute (time_t timer, struct tm *tm, int use_localtime)
 {
   compute_change (&tz_rules[0], 1900 + tm->tm_year);
