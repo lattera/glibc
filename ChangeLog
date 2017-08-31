@@ -1,5 +1,11 @@
 2017-08-31  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/math.h [__USE_ISOC99] (INFINITY): Define directly here.  Do
+	not include <bits/inf.h>.
+	* math/Makefile (headers): Remove bits/inf.h.
+	* bits/inf.h: Remove.
+	* sysdeps/ieee754/bits/inf.h: Likewise.
+
 	* math/math.h: Do not include bits/huge_val.h, bits/huge_valf.h,
 	bits/huge_vall.h or bits/huge_val_flt128.h.
 	(HUGE_VAL): Define directly here.

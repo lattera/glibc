@@ -58,8 +58,12 @@ __BEGIN_DECLS
 #endif
 
 #ifdef __USE_ISOC99
-/* Get machine-dependent INFINITY value.  */
-# include <bits/inf.h>
+/* IEEE positive infinity.  */
+# if __GNUC_PREREQ (3, 3)
+#  define INFINITY (__builtin_inff ())
+# else
+#  define INFINITY HUGE_VALF
+# endif
 
 /* Get machine-dependent NAN value (returned for some domain errors).  */
 # include <bits/nan.h>
