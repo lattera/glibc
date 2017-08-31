@@ -1,5 +1,10 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* stdlib/fmtmsg.c (internal_addseverity): Remove
+	internal_function.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* stdio-common/printf_fp.c (group_number): Remove
 	internal_function.
 	* stdio-common/vfprintf.c (buffered_vfprintf): Likewise.
