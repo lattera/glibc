@@ -85,17 +85,16 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 # define LSTAT lstat
 #endif
 
-static FTSENTRY	*fts_alloc (FTSOBJ *, const char *, size_t) internal_function;
-static FTSENTRY	*fts_build (FTSOBJ *, int) internal_function;
-static void	 fts_lfree (FTSENTRY *) internal_function;
-static void	 fts_load (FTSOBJ *, FTSENTRY *) internal_function;
-static size_t	 fts_maxarglen (char * const *) internal_function;
-static void	 fts_padjust (FTSOBJ *, FTSENTRY *) internal_function;
-static int	 fts_palloc (FTSOBJ *, size_t) internal_function;
-static FTSENTRY	*fts_sort (FTSOBJ *, FTSENTRY *, int) internal_function;
-static u_short	 fts_stat (FTSOBJ *, FTSENTRY *, int) internal_function;
-static int      fts_safe_changedir (FTSOBJ *, FTSENTRY *, int, const char *)
-     internal_function;
+static FTSENTRY	*fts_alloc (FTSOBJ *, const char *, size_t);
+static FTSENTRY	*fts_build (FTSOBJ *, int);
+static void	 fts_lfree (FTSENTRY *);
+static void	 fts_load (FTSOBJ *, FTSENTRY *);
+static size_t	 fts_maxarglen (char * const *);
+static void	 fts_padjust (FTSOBJ *, FTSENTRY *);
+static int	 fts_palloc (FTSOBJ *, size_t);
+static FTSENTRY	*fts_sort (FTSOBJ *, FTSENTRY *, int);
+static u_short	 fts_stat (FTSOBJ *, FTSENTRY *, int);
+static int      fts_safe_changedir (FTSOBJ *, FTSENTRY *, int, const char *);
 
 #ifndef MAX
 #define MAX(a, b)	({ __typeof__ (a) _a = (a); \
@@ -231,7 +230,6 @@ mem1:	free(sp);
 }
 
 static void
-internal_function
 fts_load (FTSOBJ *sp, FTSENTRY *p)
 {
 	int len;
@@ -607,7 +605,6 @@ dirent_not_directory(const struct dirent *dp)
  * been found, cutting the stat calls by about 2/3.
  */
 static FTSENTRY *
-internal_function
 fts_build (FTSOBJ *sp, int type)
 {
 	struct dirent *dp;
@@ -870,7 +867,6 @@ mem1:				saved_errno = errno;
 }
 
 static u_short
-internal_function
 fts_stat (FTSOBJ *sp, FTSENTRY *p, int follow)
 {
 	FTSENTRY *t;
@@ -951,7 +947,6 @@ err:		memset(sbp, 0, sizeof(struct STAT));
 }
 
 static FTSENTRY *
-internal_function
 fts_sort (FTSOBJ *sp, FTSENTRY *head, int nitems)
 {
 	FTSENTRY **ap, *p;
@@ -986,7 +981,6 @@ fts_sort (FTSOBJ *sp, FTSENTRY *head, int nitems)
 }
 
 static FTSENTRY *
-internal_function
 fts_alloc (FTSOBJ *sp, const char *name, size_t namelen)
 {
 	FTSENTRY *p;
@@ -1023,7 +1017,6 @@ fts_alloc (FTSOBJ *sp, const char *name, size_t namelen)
 }
 
 static void
-internal_function
 fts_lfree (FTSENTRY *head)
 {
 	FTSENTRY *p;
@@ -1042,7 +1035,6 @@ fts_lfree (FTSENTRY *head)
  * plus 256 bytes so don't realloc the path 2 bytes at a time.
  */
 static int
-internal_function
 fts_palloc (FTSOBJ *sp, size_t more)
 {
 	char *p;
@@ -1074,7 +1066,6 @@ fts_palloc (FTSOBJ *sp, size_t more)
  * already returned.
  */
 static void
-internal_function
 fts_padjust (FTSOBJ *sp, FTSENTRY *head)
 {
 	FTSENTRY *p;
@@ -1099,7 +1090,6 @@ fts_padjust (FTSOBJ *sp, FTSENTRY *head)
 }
 
 static size_t
-internal_function
 fts_maxarglen (char * const *argv)
 {
 	size_t len, max;
@@ -1116,7 +1106,6 @@ fts_maxarglen (char * const *argv)
  * Assumes p->fts_dev and p->fts_ino are filled in.
  */
 static int
-internal_function
 fts_safe_changedir (FTSOBJ *sp, FTSENTRY *p, int fd, const char *path)
 {
 	int ret, oerrno, newfd;

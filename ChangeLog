@@ -1,5 +1,13 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* io/fts.c (fts_alloc, fts_build, fts_lfree, fts_load)
+	(fts_maxarglen, fts_padjust, fts_palloc, fts_sort, fts_stat)
+	(fts_safe_changedir): Remove internal_function.
+	* io/ftw.c (internal_function): Remove definition.
+	(ftw_dir, process_entry, ftw_startup): Remove internal_function.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* inet/deadline.c (__deadline_current_time)
 	(__deadline_from_timeval, __deadline_to_ms): Remove
 	internal_function.

@@ -109,8 +109,6 @@ extern char *xgetcwd (void);
 # define __tfind tfind
 # undef __tsearch
 # define __tsearch tsearch
-# undef internal_function
-# define internal_function /* empty */
 # undef dirent64
 # define dirent64 dirent
 # undef MAX
@@ -222,7 +220,7 @@ static const int ftw_arr[] =
 
 /* Forward declarations of local functions.  */
 static int ftw_dir (struct ftw_data *data, struct STAT *st,
-		    struct dir_data *old_dir) internal_function;
+		    struct dir_data *old_dir);
 
 
 static int
@@ -377,7 +375,6 @@ open_dir_stream (int *dfdp, struct ftw_data *data, struct dir_data *dirp)
 
 
 static int
-internal_function
 process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 	       size_t namlen, int d_type)
 {
@@ -477,7 +474,6 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 
 static int
 __attribute ((noinline))
-internal_function
 ftw_dir (struct ftw_data *data, struct STAT *st, struct dir_data *old_dir)
 {
   struct dir_data dir;
@@ -628,7 +624,6 @@ fail:
 
 static int
 __attribute ((noinline))
-internal_function
 ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 	     int flags)
 {
