@@ -1,3 +1,11 @@
+2017-08-31  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #15332]
+	* locales/es_CU (LC_MONETARY): use “,” for mon_decimal_point
+	and “.” for mon_thousands_sep (to agree with CLDR)
+	* locales/es_CU (LC_NUMERIC): Likewise for decimal_point and
+	thousands_sep.
+
 2017-08-31  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #22044]
