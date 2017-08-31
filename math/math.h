@@ -65,8 +65,15 @@ __BEGIN_DECLS
 #  define INFINITY HUGE_VALF
 # endif
 
-/* Get machine-dependent NAN value (returned for some domain errors).  */
-# include <bits/nan.h>
+/* IEEE Not A Number.  */
+# if __GNUC_PREREQ (3, 3)
+#  define NAN (__builtin_nanf (""))
+# else
+/* This will raise an "invalid" exception outside static initializers,
+   but is the best that can be done in ISO C while remaining a
+   constant expression.  */
+#  define NAN (0.0f / 0.0f)
+# endif
 #endif /* __USE_ISOC99 */
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT)

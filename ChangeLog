@@ -1,5 +1,12 @@
 2017-08-31  Joseph Myers  <joseph@codesourcery.com>
 
+	*  math/math.h [__USE_ISOC99] (NAN): Define directly here.  Do not
+	include <bits/nan.h>.
+	* math/Makefile (headers): Remove bits/nan.h.
+	* bits/nan.h: Remove.
+	* sysdeps/ieee754/bits/nan.h: Likewise.
+	* sysdeps/mips/bits/nan.h: Likewise.
+
 	* math/math.h [__USE_ISOC99] (INFINITY): Define directly here.  Do
 	not include <bits/inf.h>.
 	* math/Makefile (headers): Remove bits/inf.h.
