@@ -1,5 +1,9 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* include/libc-symbols.h (internal_function): Remove.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* stdlib/fmtmsg.c (internal_addseverity): Remove
 	internal_function.
 
