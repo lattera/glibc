@@ -37,18 +37,27 @@ __BEGIN_DECLS
 /* Gather machine dependent type support.  */
 #include <bits/floatn.h>
 
-/* Get machine-dependent HUGE_VAL value (returned on overflow).
-   On all IEEE754 machines, this is +Infinity.  */
-#include <bits/huge_val.h>
-
+/* Value returned on overflow.  On all IEEE754 machines, this is
+   +Infinity.  */
+#if __GNUC_PREREQ (3, 3)
+# define HUGE_VAL (__builtin_huge_val ())
+#else
+# define HUGE_VAL 1e10000
+#endif
+#ifdef __USE_ISOC99
+# if __GNUC_PREREQ (3, 3)
+#  define HUGE_VALF (__builtin_huge_valf ())
+#  define HUGE_VALL (__builtin_huge_vall ())
+# else
+#  define HUGE_VALF 1e10000f
+#  define HUGE_VALL 1e10000L
+# endif
+#endif
 #if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
-# include <bits/huge_val_flt128.h>
+# define HUGE_VAL_F128 (__builtin_huge_valf128 ())
 #endif
 
 #ifdef __USE_ISOC99
-# include <bits/huge_valf.h>
-# include <bits/huge_vall.h>
-
 /* Get machine-dependent INFINITY value.  */
 # include <bits/inf.h>
 

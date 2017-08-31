@@ -1,3 +1,26 @@
+2017-08-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h: Do not include bits/huge_val.h, bits/huge_valf.h,
+	bits/huge_vall.h or bits/huge_val_flt128.h.
+	(HUGE_VAL): Define directly here.
+	[__USE_ISOC99] (HUGE_VALF): Likewise.
+	[__USE_ISOC99] (HUGE_VALL): Likewise.
+	[__HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(HUGE_VAL_F128): Likewise.
+	* math/Makefile (headers): Remove bits/huge_val.h,
+	bits/huge_valf.h, bits/huge_vall.h and bits/huge_val_flt128.h.
+	* bits/huge_val.h: Remove.
+	* bits/huge_val_flt128.h: Likewise.
+	* bits/huge_valf.h: Likewise.
+	* bits/huge_vall.h: Likewise.
+	* sysdeps/ia64/bits/huge_vall.h: Likewise.
+	* sysdeps/ieee754/bits/huge_val.h: Likewise.
+	* sysdeps/ieee754/bits/huge_valf.h: Likewise.
+	* sysdeps/m68k/m680x0/bits/huge_vall.h: Likewise.
+	* sysdeps/sh/bits/huge_val.h: Likewise.
+	* sysdeps/sparc/bits/huge_vall.h: Likewise.
+	* sysdeps/x86/bits/huge_vall.h: Likewise.
+
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
 	* elf/dl-addr-obj.c (_dl_addr_inside_object): Remove
