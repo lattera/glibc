@@ -19,7 +19,6 @@
 #include <elf/dl-init.c>
 
 unsigned int
-internal_function
 _dl_nios2_get_gp_value (struct link_map *main_map)
 {
   ElfW(Dyn) *dyn = main_map->l_ld;

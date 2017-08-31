@@ -180,7 +180,6 @@ static unsigned int log_hashfraction;
 /* Set up profiling data to profile object desribed by MAP.  The output
    file is found (or created) in OUTPUT_DIR.  */
 void
-internal_function
 _dl_start_profile (void)
 {
   char *filename;

@@ -277,7 +277,6 @@ fmh();				/* XXX */
 }
 
 void
-internal_function
 _dl_sysdep_start_cleanup (void)
 {
   /* Deallocate the reply port and task port rights acquired by
@@ -645,7 +644,6 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 
 
 void
-internal_function
 _dl_show_auxv (void)
 {
   /* There is nothing to print.  Hurd has no auxiliary vector.  */

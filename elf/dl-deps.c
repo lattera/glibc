@@ -68,7 +68,6 @@ openaux (void *a)
 }
 
 static ptrdiff_t
-internal_function
 _dl_build_local_scope (struct link_map **list, struct link_map *map)
 {
   struct link_map **p = list;
@@ -153,7 +152,6 @@ preload (struct list *known, unsigned int *nlist, struct link_map *map)
 }
 
 void
-internal_function
 _dl_map_object_deps (struct link_map *map,
 		     struct link_map **preloads, unsigned int npreloads,
 		     int trace_mode, int open_mode)

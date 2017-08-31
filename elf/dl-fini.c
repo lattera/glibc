@@ -26,7 +26,6 @@ typedef void (*fini_t) (void);
 
 
 void
-internal_function
 _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
 {
   /* A list of one element need not be sorted.  */

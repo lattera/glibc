@@ -42,7 +42,6 @@ struct r_debug _r_debug;
    _r_debug.r_ldbase.  Returns the address of _r_debug.  */
 
 struct r_debug *
-internal_function
 _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
 {
   struct r_debug *r;

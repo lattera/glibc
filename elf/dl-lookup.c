@@ -560,7 +560,6 @@ dl_new_hash (const char *s)
 
 /* Add extra dependency on MAP to UNDEF_MAP.  */
 static int
-internal_function
 add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 {
   struct link_map *runp;
@@ -770,7 +769,6 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 }
 
 static void
-internal_function
 _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 		    const ElfW(Sym) **ref, struct sym_val *value,
 		    const struct r_found_version *version, int type_class,
@@ -784,7 +782,6 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
    or in any function which gets called.  If this would happen the audit
    code might create a thread which can throw off all the scope locking.  */
 lookup_t
-internal_function
 _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 		     const ElfW(Sym) **ref,
 		     struct r_scope_elem *symbol_scope[],
@@ -935,7 +932,6 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 /* Cache the location of MAP's hash table.  */
 
 void
-internal_function
 _dl_setup_hash (struct link_map *map)
 {
   Elf_Symndx *hash;
@@ -979,7 +975,6 @@ _dl_setup_hash (struct link_map *map)
 
 
 static void
-internal_function
 _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 		    const ElfW(Sym) **ref, struct sym_val *value,
 		    const struct r_found_version *version, int type_class,

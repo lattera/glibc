@@ -134,7 +134,6 @@ while (0)
 
 
 int
-internal_function
 _dl_cache_libcmp (const char *p1, const char *p2)
 {
   while (*p1 != '\0')
@@ -181,7 +180,6 @@ _dl_cache_libcmp (const char *p1, const char *p2)
    this function must take care that it does not return references to
    any data in the mapping.  */
 char *
-internal_function
 _dl_load_cache_lookup (const char *name)
 {
   int left, right, middle;

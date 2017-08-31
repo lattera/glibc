@@ -22,6 +22,6 @@
 
 struct link_map;
 
-void internal_function _dl_unmap (struct link_map *map);
+void _dl_unmap (struct link_map *map);
 
 #define DL_UNMAP(map) _dl_unmap (map)

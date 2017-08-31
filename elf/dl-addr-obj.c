@@ -61,7 +61,6 @@
 
 */
 int
-internal_function
 _dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
 {
   int n = l->l_phnum;

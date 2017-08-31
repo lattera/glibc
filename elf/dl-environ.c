@@ -24,7 +24,6 @@
 /* Walk through the environment of the process and return all entries
    starting with `LD_'.  */
 char *
-internal_function
 _dl_next_ld_env_entry (char ***position)
 {
   char **current = *position;

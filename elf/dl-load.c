@@ -392,7 +392,6 @@ expand_dynamic_string_token (struct link_map *l, const char *s, int is_path)
    be freed if the shared object already has this name.
    Returns false if the object already had this name.  */
 static void
-internal_function
 add_name_to_object (struct link_map *l, const char *name)
 {
   struct libname_list *lnp, *lastp;
@@ -536,7 +535,6 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 
 
 static bool
-internal_function
 decompose_rpath (struct r_search_path_struct *sps,
 		 const char *rpath, struct link_map *l, const char *what)
 {
@@ -656,7 +654,6 @@ cache_rpath (struct link_map *l,
 
 
 void
-internal_function
 _dl_init_paths (const char *llp)
 {
   size_t idx;
@@ -1887,7 +1884,6 @@ open_path (const char *name, size_t namelen, int mode,
 /* Map in the shared object file NAME.  */
 
 struct link_map *
-internal_function
 _dl_map_object (struct link_map *loader, const char *name,
 		int type, int trace_mode, int mode, Lmid_t nsid)
 {
@@ -2241,7 +2237,6 @@ add_path (struct add_path_state *p, const struct r_search_path_struct *sps,
 }
 
 void
-internal_function
 _dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
 {
   if (counting)

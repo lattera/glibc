@@ -26,7 +26,6 @@
 
 struct link_map;
 
-extern void _dl_unmap (struct link_map *map)
-  internal_function attribute_hidden;
+extern void _dl_unmap (struct link_map *map) attribute_hidden;
 
 #define DL_UNMAP(map) _dl_unmap (map)

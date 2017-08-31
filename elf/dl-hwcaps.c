@@ -34,7 +34,6 @@
 
 /* Return an array of useful/necessary hardware capability names.  */
 const struct r_strlenpair *
-internal_function
 _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 		      size_t *max_capstrlen)
 {

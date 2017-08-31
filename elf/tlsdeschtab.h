@@ -79,7 +79,6 @@ map_generation (struct link_map *map)
 }
 
 void *
-internal_function
 _dl_make_tlsdesc_dynamic (struct link_map *map, size_t ti_offset)
 {
   struct hashtab *ht;

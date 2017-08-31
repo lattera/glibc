@@ -100,5 +100,4 @@ struct cache_file_new
 (((addr) + __alignof__ (struct cache_file_new) -1)	\
  & (~(__alignof__ (struct cache_file_new) - 1)))
 
-extern int _dl_cache_libcmp (const char *p1, const char *p2)
-     internal_function attribute_hidden;
+extern int _dl_cache_libcmp (const char *p1, const char *p2) attribute_hidden;

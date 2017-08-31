@@ -36,7 +36,6 @@ extern char **__environ;
    Much of this code came from gconv_dl.c with slight modifications. */
 
 static int
-internal_function
 dlerror_run (void (*operate) (void *), void *args)
 {
   const char *objname;

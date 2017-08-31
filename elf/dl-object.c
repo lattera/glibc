@@ -27,7 +27,6 @@
 
 /* Add the new link_map NEW to the end of the namespace list.  */
 void
-internal_function
 _dl_add_to_namespace_list (struct link_map *new, Lmid_t nsid)
 {
   /* We modify the list of loaded objects.  */
@@ -55,7 +54,6 @@ _dl_add_to_namespace_list (struct link_map *new, Lmid_t nsid)
 /* Allocate a `struct link_map' for a new object being loaded,
    and enter it into the _dl_loaded list.  */
 struct link_map *
-internal_function
 _dl_new_object (char *realname, const char *libname, int type,
 		struct link_map *loader, int mode, Lmid_t nsid)
 {

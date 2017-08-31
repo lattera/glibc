@@ -41,7 +41,6 @@
 /* Return the symbol address given the map of the module it is in and
    the symbol record.  This is used in dl-sym.c.  */
 static void *
-internal_function
 _dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
 {
 # ifndef DONT_USE_TLS_INDEX
@@ -83,7 +82,6 @@ call_dl_lookup (void *ptr)
 
 
 static void *
-internal_function
 do_sym (void *handle, const char *name, void *who,
 	struct r_found_version *vers, int flags)
 {

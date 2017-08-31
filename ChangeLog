@@ -1,5 +1,80 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/dl-addr-obj.c (_dl_addr_inside_object): Remove
+	internal_function.
+	* elf/dl-cache.c (_dl_cache_libcmp, _dl_load_cache_lookup):
+	Likewise.
+	* elf/dl-debug.c (_dl_debug_initialize): Likewise.
+	* elf/dl-deps.c (_dl_build_local_scope, _dl_map_object_deps): Likewise.
+	* elf/dl-environ.c (_dl_next_ld_env_entry): Likewise.
+	* elf/dl-execstack.c (_dl_make_stack_executable): Likewise.
+	* elf/dl-fini.c (_dl_sort_fini): Likewise.
+	* elf/dl-hwcaps.c (_dl_important_hwcaps): Likewise.
+	* elf/dl-libc.c (dlerror_run): Likewise.
+	* elf/dl-load.c (add_name_to_object, decompose_rpath)
+	(_dl_init_paths, _dl_map_object, _dl_rtld_di_serinfo): Likewise.
+	* elf/dl-lookup.c (add_dependency, _dl_debug_bindings)
+	(_dl_lookup_symbol_x, _dl_setup_hash, _dl_debug_bindings):
+	Likewise.
+	* elf/dl-misc.c (_dl_sysdep_read_whole_file, _dl_name_match_p)
+	(_dl_higher_prime_number, _dl_strtoul): Likewise.
+	* elf/dl-object.c (_dl_add_to_namespace_list, _dl_new_object): Likewise.
+	* elf/dl-profile.c (_dl_start_profile): Likewise.
+	* elf/dl-reloc.c (_dl_try_allocate_static_tls)
+	(_dl_allocate_static_tls, _dl_protect_relro, _dl_reloc_bad_type):
+	Likewise.
+	* elf/dl-support.c (_dl_aux_init, _dl_non_dynamic_init): Likewise.
+	* elf/dl-sym.c (_dl_tls_symaddr, do_sym): Likewise.
+	* elf/dl-sysdep.c (_dl_sysdep_start_cleanup, _dl_show_auxv): Likewise.
+	* elf/dl-tls.c (_dl_next_tls_modid, _dl_count_modids)
+	(_dl_determine_tlsoffset, allocate_dtv, _dl_get_tls_static_info)
+	(_dl_allocate_tls_storage): Likewise.
+	* elf/dl-version.c (match_symbol, _dl_check_map_versions)
+	(_dl_check_all_versions): Likewise.
+	* elf/dynamic-link.h (_dl_try_allocate_static_tls): Likewise.
+	* elf/tlsdeschtab.h (_dl_make_tlsdesc_dynamic): Likewise.
+	* elf/tst-_dl_addr_inside_object.c (_dl_addr_inside_object): Likewise.
+	* sysdeps/aarch64/dl-tlsdesc.h (_dl_make_tlsdesc_dynamic): Likewise.
+	* sysdeps/aarch64/tlsdesc.c (_dl_unmap): Likewise.
+	* sysdeps/arm/dl-lookupcfg.h (_dl_unmap): Likewise.
+	* sysdeps/arm/dl-machine.h (elf_machine_load_address): Remove
+	internal_function from __dl_start.
+	* sysdeps/arm/dl-tlsdesc.h (_dl_unmap): Remove internal_function.
+	* sysdeps/generic/dl-cache.h (_dl_cache_libcmp): Likewise.
+	* sysdeps/generic/ldsodefs.h (_dl_name_match_p)
+	(_dl_higher_prime_number, _dl_strtoul, _dl_map_object)
+	(_dl_map_object_deps, _dl_setup_hash, _dl_rtld_di_serinfo)
+	(_dl_lookup_symbol_x, _dl_add_to_namespace_list, _dl_new_object)
+	(_dl_protect_relro, _dl_reloc_bad_type, _dl_check_all_versions)
+	(_dl_check_map_versions, _dl_sort_fini, _dl_debug_initialize)
+	(_dl_init_paths, _dl_start_profile, _dl_show_auxv)
+	(_dl_next_ld_env_entry, _dl_important_hwcaps)
+	(_dl_load_cache_lookup, _dl_sysdep_read_whole_file)
+	(_dl_sysdep_start_cleanup, _dl_next_tls_modid, _dl_count_modids)
+	(_dl_determine_tlsoffset, _dl_get_tls_static_info)
+	(_dl_allocate_static_tls, _dl_allocate_tls_storage)
+	(_dl_addr_inside_object, _dl_non_dynamic_init, _dl_aux_init):
+	Likewise.
+	(struct rtld_global_ro): Remove internal_function from the
+	_dl_lookup_symbol_x member.
+	(_dl_symbol_value): Remove.  No longer defined anywhere.
+	* sysdeps/i386/dl-lookupcfg.h (_dl_unmap): Remove
+	internal_function.
+	* sysdeps/i386/dl-tlsdesc.h (_dl_make_tlsdesc_dynamic): Likewise.
+	* sysdeps/i386/tlsdesc.c (_dl_unmap): Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_show_auxv): Likewise.
+	* sysdeps/nios2/dl-init.c (_dl_nios2_get_gp_value): Likewise.
+	* sysdeps/tile/dl-lookupcfg.h (_dl_unmap): Likewise.
+	* sysdeps/tile/dl-machine.h (_dl_after_load): Likewise.
+	* sysdeps/tile/dl-runtime.c (_dl_after_load, _dl_unmap): Likewise.
+	* sysdeps/unix/sysv/linux/dl-vdso.c (_dl_vdso_vsym): Likewise.
+	* sysdeps/unix/sysv/linux/dl-vdso.h (_dl_vdso_vsym): Likewise.
+	* sysdeps/x86_64/dl-lookupcfg.h (_dl_unmap): Likewise.
+	* sysdeps/x86_64/dl-tlsdesc.h (_dl_make_tlsdesc_dynamic): Likewise.
+	* sysdeps/x86_64/tlsdesc.c (_dl_unmap): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* gmon/gmon.c (write_hist, write_call_graph, write_bb_counts):
 	Remove internal_function.
 	* sysdeps/arm/machine-gmon.h (mcount_internal, _MCOUNT_DECL):

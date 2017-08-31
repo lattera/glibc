@@ -62,7 +62,7 @@ extern ptrdiff_t attribute_hidden
 # ifdef SHARED
 extern void *_dl_make_tlsdesc_dynamic (struct link_map *map,
 				       size_t ti_offset)
-  internal_function attribute_hidden;
+  attribute_hidden;
 
 extern ptrdiff_t attribute_hidden _dl_tlsdesc_dynamic(struct tlsdesc *);
 # endif

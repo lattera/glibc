@@ -42,8 +42,7 @@
      && (__builtin_expect ((sym_map)->l_tls_offset != NO_TLS_OFFSET, 1)	\
 	 || _dl_try_allocate_static_tls (sym_map) == 0))
 
-int internal_function attribute_hidden
-  _dl_try_allocate_static_tls (struct link_map *map);
+int _dl_try_allocate_static_tls (struct link_map *map) attribute_hidden;
 
 #include <elf.h>
 

@@ -22,8 +22,7 @@
 #include <elf.h>
 #include <libc-symbols.h>
 
-extern int internal_function _dl_addr_inside_object (struct link_map *l,
-						     const ElfW(Addr) addr);
+extern int _dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr);
 
 static int
 do_test (void)

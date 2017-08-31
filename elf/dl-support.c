@@ -221,7 +221,6 @@ __rtld_lock_define_initialized_recursive (, _dl_load_write_lock)
 int _dl_clktck;
 
 void
-internal_function
 _dl_aux_init (ElfW(auxv_t) *av)
 {
   int seen = 0;
@@ -305,7 +304,6 @@ _dl_aux_init (ElfW(auxv_t) *av)
 
 
 void
-internal_function
 _dl_non_dynamic_init (void)
 {
   _dl_main_map.l_origin = _dl_get_origin ();

@@ -48,6 +48,6 @@
 /* Functions for resolving symbols in the VDSO link map.  */
 extern void *_dl_vdso_vsym (const char *name,
 			    const struct r_found_version *version)
-     internal_function attribute_hidden;
+      attribute_hidden;
 
 #endif /* dl-vdso.h */

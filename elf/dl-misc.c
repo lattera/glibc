@@ -40,7 +40,6 @@
    is returned.  */
 
 void *
-internal_function
 _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 {
   void *result = MAP_FAILED;
@@ -279,7 +278,6 @@ _dl_dprintf (int fd, const char *fmt, ...)
 
 /* Test whether given NAME matches any of the names of the given object.  */
 int
-internal_function
 _dl_name_match_p (const char *name, const struct link_map *map)
 {
   if (strcmp (name, map->l_name) == 0)
@@ -298,7 +296,6 @@ _dl_name_match_p (const char *name, const struct link_map *map)
 
 
 unsigned long int
-internal_function
 _dl_higher_prime_number (unsigned long int n)
 {
   /* These are primes that are near, but slightly smaller than, a
@@ -366,7 +363,6 @@ _dl_higher_prime_number (unsigned long int n)
    called before errno may have been set up.  */
 
 uint64_t
-internal_function
 _dl_strtoul (const char *nptr, char **endptr)
 {
   uint64_t result = 0;

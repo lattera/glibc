@@ -154,7 +154,6 @@ _dl_tlsdesc_resolve_hold_fixup (struct tlsdesc *td, void *caller)
    if there is one.  */
 
 void
-internal_function
 _dl_unmap (struct link_map *map)
 {
   _dl_unmap_segments (map);
