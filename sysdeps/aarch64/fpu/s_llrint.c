@@ -18,4 +18,5 @@
 
 #define FUNC llrint
 #define OTYPE long long int
+#define OREG_SIZE 64
 #include <s_lrint.c>

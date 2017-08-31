@@ -24,18 +24,37 @@
 
 #ifndef ITYPE
 # define ITYPE double
-# define IREGS "d"
+# define IREG_SIZE 64
 #else
-# ifndef IREGS
-#  error IREGS not defined
+# ifndef IREG_SIZE
+#  error IREG_SIZE not defined
 # endif
 #endif
 
 #ifndef OTYPE
 # define OTYPE long int
+# ifdef __ILP32__
+#  define OREG_SIZE 32
+# else
+#  define OREG_SIZE 64
+# endif
+#else
+# ifndef OREG_SIZE
+#  error OREG_SIZE not defined
+# endif
 #endif
 
-#define OREGS "x"
+#if IREG_SIZE == 32
+# define IREGS "s"
+#else
+# define IREGS "d"
+#endif
+
+#if OREG_SIZE == 32
+# define OREGS "w"
+#else
+# define OREGS "x"
+#endif
 
 #define __CONCATX(a,b) __CONCAT(a,b)
 

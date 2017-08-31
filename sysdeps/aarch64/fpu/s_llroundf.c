@@ -18,6 +18,7 @@
 
 #define FUNC llroundf
 #define ITYPE float
-#define IREGS "s"
+#define IREG_SIZE 32
 #define OTYPE long long int
+#define OREG_SIZE 64
 #include <s_lround.c>

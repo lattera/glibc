@@ -1,3 +1,26 @@
+2017-08-31  Steve Ellcey  <sellcey@cavium.com>
+	    Richard Henderson <rth@twiddle.net>
+
+	* sysdeps/aarch64/fpu/s_llrint.c (OREG_SIZE): New macro.
+	* sysdeps/aarch64/fpu/s_llround.c (OREG_SIZE): Likewise.
+	* sysdeps/aarch64/fpu/s_llrintf.c (OREGS, IREGS): Remove.
+	(IREG_SIZE, OREG_SIZE): New macros.
+	* sysdeps/aarch64/fpu/s_llroundf.c: (OREGS, IREGS): Remove.
+	(IREG_SIZE, OREG_SIZE): New macros.
+	* sysdeps/aarch64/fpu/s_lrintf.c (IREGS): Remove.
+	(IREG_SIZE): New macro.
+	* sysdeps/aarch64/fpu/s_lroundf.c (IREGS): Remove.
+	(IREG_SIZE): New macro.
+	* sysdeps/aarch64/fpu/s_lrint.c (get-rounding-mode.h, stdint.h):
+	New includes.
+	(IREG_SIZE, OREG_SIZE): Initialize if not already set.
+	(OREGS, IREGS): Set based on IREG_SIZE and OREG_SIZE.
+	(__CONCATX): Handle exceptions correctly on large values that may
+	set FE_INVALID.
+	* sysdeps/aarch64/fpu/s_lround.c (IREG_SIZE, OREG_SIZE):
+	Initialize if not already set.
+        (OREGS, IREGS): Set based on IREG_SIZE and OREG_SIZE.
+
 2017-08-31  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/generic/not-cancel.h (NO_CANCELLATION): Remove macro.

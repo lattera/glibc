@@ -18,5 +18,5 @@
 
 #define FUNC lrintf
 #define ITYPE float
-#define IREGS "s"
+#define IREG_SIZE 32
 #include <s_lrint.c>
