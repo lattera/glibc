@@ -57,8 +57,8 @@ __getttynam (const char *tty)
 }
 weak_alias (__getttynam, getttynam)
 
-static char *skip (char *) __THROW internal_function;
-static char *value (char *) __THROW internal_function;
+static char *skip (char *) __THROW;
+static char *value (char *) __THROW;
 
 struct ttyent *
 __getttyent (void)
@@ -141,7 +141,6 @@ weak_alias (__getttyent, getttyent)
  * the next field.
  */
 static char *
-internal_function
 skip (char *p)
 {
 	char *t;
@@ -175,7 +174,6 @@ skip (char *p)
 }
 
 static char *
-internal_function
 value (char *p)
 {
 

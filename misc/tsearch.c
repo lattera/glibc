@@ -684,7 +684,6 @@ weak_alias (__tdelete, tdelete)
    ROOT is the root of the tree to be walked, ACTION the function to be
    called at each node.  LEVEL is the level of ROOT in the whole tree.  */
 static void
-internal_function
 trecurse (const void *vroot, __action_fn_t action, int level)
 {
   const_node root = (const_node) vroot;
@@ -725,7 +724,6 @@ weak_alias (__twalk, twalk)
 /* The standardized functions miss an important functionality: the
    tree cannot be removed easily.  We provide a function to do this.  */
 static void
-internal_function
 tdestroy_recurse (node root, __free_fn_t freefct)
 {
   if (LEFT(root) != NULL)

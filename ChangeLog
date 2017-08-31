@@ -1,5 +1,11 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* misc/getttyent.c (skip, value): Remove internal_function.
+	* misc/syslog.c (openlog_internal): Likewise.
+	* misc/tsearch.c (trecurse, tdestroy_recurse): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* include/nss.h (__nss_valid_field, __nss_valid_list_field)
 	(__nss_rewrite_field): Remove internal_function.
 	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.

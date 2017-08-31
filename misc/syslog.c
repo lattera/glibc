@@ -72,7 +72,7 @@ extern char	*__progname;		/* Program name, from crt0. */
 /* Define the lock.  */
 __libc_lock_define_initialized (static, syslog_lock)
 
-static void openlog_internal(const char *, int, int) internal_function;
+static void openlog_internal(const char *, int, int);
 static void closelog_internal(void);
 #ifndef NO_SIGPIPE
 static void sigpipe_handler (int);
@@ -330,7 +330,6 @@ static struct sockaddr_un SyslogAddr;	/* AF_UNIX address of local logger */
 
 
 static void
-internal_function
 openlog_internal(const char *ident, int logstat, int logfac)
 {
 	if (ident != NULL)
