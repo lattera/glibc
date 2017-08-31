@@ -31,7 +31,7 @@ static inline ElfW(Addr)
 __attribute ((always_inline))
 elf_ifunc_invoke (ElfW(Addr) addr)
 {
-  return ((ElfW(Addr) (*) (unsigned long int)) (addr)) (GLRO(dl_hwcap));
+  return ((ElfW(Addr) (*) (uint64_t)) (addr)) (GLRO(dl_hwcap));
 }
 
 static inline void
