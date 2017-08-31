@@ -235,7 +235,6 @@ RTLD_NEXT used in code not dynamically loaded"));
 
 
 void *
-internal_function
 _dl_vsym (void *handle, const char *name, const char *version, void *who)
 {
   struct r_found_version vers;
@@ -252,7 +251,6 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 
 
 void *
-internal_function
 _dl_sym (void *handle, const char *name, void *who)
 {
   return do_sym (handle, name, who, NULL, DL_LOOKUP_RETURN_NEWEST);

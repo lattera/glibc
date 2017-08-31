@@ -1,5 +1,11 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* dlfcn/dlerror.c (_dlerror_run): Remove internal_function.
+	* elf/dl-sym.c (_dl_vsym, _dl_sym): Likewise.
+	* include/dlfcn.h (_dl_sym, _dl_vsym, _dlerror_run): Likewise.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/gai_misc.c (__gai_find_request, __gai_remove_request)
 	(__gai_enqueue_request): Remove internal_function.
 	* resolv/gai_misc.h (__gai_enqueue_request, __gai_find_request)

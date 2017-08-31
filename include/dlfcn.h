@@ -59,23 +59,20 @@ extern void _dl_close_worker (struct link_map *map, bool force)
 /* Look up NAME in shared object HANDLE (which may be RTLD_DEFAULT or
    RTLD_NEXT).  WHO is the calling function, for RTLD_NEXT.  Returns
    the symbol value, which may be NULL.  */
-extern void *_dl_sym (void *handle, const char *name, void *who)
-    internal_function;
+extern void *_dl_sym (void *handle, const char *name, void *who);
 
 /* Look up version VERSION of symbol NAME in shared object HANDLE
    (which may be RTLD_DEFAULT or RTLD_NEXT).  WHO is the calling
    function, for RTLD_NEXT.  Returns the symbol value, which may be
    NULL.  */
 extern void *_dl_vsym (void *handle, const char *name, const char *version,
-		       void *who)
-    internal_function;
+		       void *who);
 
 /* Helper function for <dlfcn.h> functions.  Runs the OPERATE function via
    _dl_catch_error.  Returns zero for success, nonzero for failure; and
    arranges for `dlerror' to return the error details.
    ARGS is passed as argument to OPERATE.  */
-extern int _dlerror_run (void (*operate) (void *), void *args)
-     internal_function;
+extern int _dlerror_run (void (*operate) (void *), void *args);
 
 #ifdef SHARED
 # define DL_CALLER_DECL /* Nothing */

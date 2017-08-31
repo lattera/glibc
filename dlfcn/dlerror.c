@@ -120,7 +120,6 @@ strong_alias (__dlerror, dlerror)
 # endif
 
 int
-internal_function
 _dlerror_run (void (*operate) (void *), void *args)
 {
   struct dl_action_result *result;
