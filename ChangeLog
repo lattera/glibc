@@ -1,3 +1,8 @@
+2017-09-01  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* stdlib/tst-atexit-common.c (do_test): Test support for at least
+	32 atexit handlers.
+
 2017-09-01  Zack Weinberg  <zackw@panix.com>
 
 	* math/math.h (HUGE_VAL): Improve commentary.

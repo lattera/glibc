@@ -23,7 +23,13 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define MAX_ATEXIT 20  /* Large enough for current set of invocations.  */
+/* http://pubs.opengroup.org/onlinepubs/000095399/functions/atexit.html
+   requires that we support at least 32 atexit handlers.
+
+   The number we actually support is limited by memory. Here we simply
+   check that we support at least the minimum required.  */
+#define MAX_ATEXIT 32
+
 static char crumbs[MAX_ATEXIT];
 static int next_slot = 0;
 
@@ -66,7 +72,7 @@ static void
 fn_final (void)
 {
   /* Arbitrary sequence matching current registrations.  */
-  const char expected[] = "3021121130211";
+  const char expected[] = "00000000000000000000000003021121130211";
 
   if (strcmp (crumbs, expected) == 0)
     _exit_with_flush (0);
@@ -76,25 +82,26 @@ fn_final (void)
   _exit_with_flush (1);
 }
 
-/* This is currently just a basic test to verify that exit handlers execute
-   in LIFO order, even when the handlers register additional new handlers.
-
-   TODO: Additional tests that we should do:
-   1. POSIX says we need to support at least ATEXIT_MAX
-   2. ...  */
-
 static int
 do_test (void)
 {
-  /* Register this first so it can verify expected order of the rest.  */
-  ATEXIT (fn_final);
+  int slots_remaining = MAX_ATEXIT;
 
-  ATEXIT (fn1);
-  ATEXIT (fn3);
-  ATEXIT (fn1);
-  ATEXIT (fn2);
-  ATEXIT (fn1);
-  ATEXIT (fn3);
+  /* Register this first so it can verify expected order of the rest.  */
+  ATEXIT (fn_final); --slots_remaining;
+
+  ATEXIT (fn1); --slots_remaining;
+  ATEXIT (fn3); --slots_remaining;
+  ATEXIT (fn1); --slots_remaining;
+  ATEXIT (fn2); --slots_remaining;
+  ATEXIT (fn1); --slots_remaining;
+  ATEXIT (fn3); --slots_remaining;
+
+  /* Fill the rest of available slots with fn0.  */
+  while (slots_remaining > 0)
+    {
+      ATEXIT (fn0); --slots_remaining;
+    }
 
   /* Verify that handlers registered above are inherited across fork.  */
   const pid_t child = fork ();
