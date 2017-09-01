@@ -75,6 +75,7 @@ x86.
 Ulrich Drepper for his many contributions in almost all parts of
 @theglibc{}, including:
 @itemize @bullet
+@item writing most of the POSIX Threads Library originally.
 @item internationalization support, including the @code{locale} and
 @code{localedef} utilities.
 @item Linux i386/ELF support

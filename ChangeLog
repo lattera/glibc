@@ -1,3 +1,8 @@
+2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* manual/contrib.texi: Credit Ulrich Drepper for the POSIX
+	Threads Library.
+
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/gentempfd.c: Include <string.h>.
