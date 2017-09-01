@@ -30,7 +30,10 @@
    check that we support at least the minimum required.  */
 #define MAX_ATEXIT 32
 
-static char crumbs[MAX_ATEXIT];
+/* Arbitrary sequence matching current registrations.  */
+const char expected[] = "00000000000000000000000003021121130211";
+
+static char crumbs[sizeof (expected)];
 static int next_slot = 0;
 
 /* Helper: flush stdout and _exit.  */
@@ -71,9 +74,6 @@ fn3 (void)
 static void
 fn_final (void)
 {
-  /* Arbitrary sequence matching current registrations.  */
-  const char expected[] = "00000000000000000000000003021121130211";
-
   if (strcmp (crumbs, expected) == 0)
     _exit_with_flush (0);
 
