@@ -37,11 +37,16 @@ __BEGIN_DECLS
 /* Gather machine dependent type support.  */
 #include <bits/floatn.h>
 
-/* Value returned on overflow.  On all IEEE754 machines, this is
-   +Infinity.  */
+/* Value returned on overflow.  With IEEE 754 floating point, this is
+   +Infinity, otherwise the largest representable positive value.  */
 #if __GNUC_PREREQ (3, 3)
 # define HUGE_VAL (__builtin_huge_val ())
 #else
+/* This may provoke compiler warnings, and may not be rounded to
+   +Infinity in all IEEE 754 rounding modes, but is the best that can
+   be done in ISO C while remaining a constant expression.  10,000 is
+   greater than the maximum (decimal) exponent for all supported
+   floating-point formats and widths.  */
 # define HUGE_VAL 1e10000
 #endif
 #ifdef __USE_ISOC99
