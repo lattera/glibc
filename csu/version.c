@@ -24,7 +24,7 @@ static const char __libc_release[] = RELEASE;
 static const char __libc_version[] = VERSION;
 
 static const char banner[] =
-"GNU C Library "PKGVERSION RELEASE" release version "VERSION", by Roland McGrath et al.\n\
+"GNU C Library "PKGVERSION RELEASE" release version "VERSION".\n\
 Copyright (C) 2017 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\

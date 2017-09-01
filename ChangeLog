@@ -1,3 +1,8 @@
+2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* csu/version.c (banner): Remove "by Roland McGrath et al.".
+	* nptl/Banner: Remove "by Ulrich Drepper et al.".
+
 2017-09-01  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* stdlib/tst-atexit-common.c (do_test): Test support for at least
