@@ -241,7 +241,6 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 
 #define gethosts(_family, _type) \
  {									      \
-  int herrno;								      \
   struct hostent th;							      \
   struct hostent *h;							      \
   char *localcanon = NULL;						      \
@@ -249,8 +248,8 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
   while (1) {								      \
     status = DL_CALL_FCT (fct, (name, _family, &th,			      \
 				tmpbuf->data, tmpbuf->length,		      \
-				&errno, &herrno, NULL, &localcanon));	      \
-    if (errno != ERANGE || herrno != NETDB_INTERNAL)			      \
+				&errno, &h_errno, NULL, &localcanon));	      \
+    if (errno != ERANGE || h_errno != NETDB_INTERNAL)			      \
       break;								      \
     if (!scratch_buffer_grow (tmpbuf))					      \
       {									      \
@@ -266,18 +265,17 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
     h = NULL;								      \
   if (errno != 0)							      \
     {									      \
-      if (herrno == NETDB_INTERNAL)					      \
+      if (h_errno == NETDB_INTERNAL)					      \
 	{								      \
-	  __set_h_errno (herrno);					      \
 	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
 	  __resolv_context_put (res_ctx);				      \
 	  result = -EAI_SYSTEM;						      \
 	  goto free_and_return;						      \
 	}								      \
-      if (herrno == TRY_AGAIN)						      \
+      if (h_errno == TRY_AGAIN)						      \
 	no_data = EAI_AGAIN;						      \
       else								      \
-	no_data = herrno == NO_DATA;					      \
+	no_data = h_errno == NO_DATA;					      \
     }									      \
   else if (h != NULL)							      \
     {									      \
@@ -332,9 +330,8 @@ getcanonname (service_user *nip, struct gaih_addrtuple *at, const char *name)
   if (cfct != NULL)
     {
       char buf[256];
-      int herrno;
       if (DL_CALL_FCT (cfct, (at->name ?: name, buf, sizeof (buf),
-			      &s, &errno, &herrno)) != NSS_STATUS_SUCCESS)
+			      &s, &errno, &h_errno)) != NSS_STATUS_SUCCESS)
 	/* If the canonical name cannot be determined, use the passed
 	   string.  */
 	s = (char *) name;
@@ -593,14 +590,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      int rc;
 	      struct hostent th;
 	      struct hostent *h;
-	      int herrno;
 
 	      while (1)
 		{
 		  rc = __gethostbyname2_r (name, AF_INET, &th,
 					   tmpbuf->data, tmpbuf->length,
-					   &h, &herrno);
-		  if (rc != ERANGE || herrno != NETDB_INTERNAL)
+					   &h, &h_errno);
+		  if (rc != ERANGE || h_errno != NETDB_INTERNAL)
 		    break;
 		  if (!scratch_buffer_grow (tmpbuf))
 		    {
@@ -625,12 +621,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		}
 	      else
 		{
-		  if (herrno == NETDB_INTERNAL)
-		    {
-		      __set_h_errno (herrno);
-		      result = -EAI_SYSTEM;
-		    }
-		  else if (herrno == TRY_AGAIN)
+		  if (h_errno == NETDB_INTERNAL)
+		    result = -EAI_SYSTEM;
+		  else if (h_errno == TRY_AGAIN)
 		    result = -EAI_AGAIN;
 		  else
 		    /* We made requests but they turned out no data.
@@ -653,8 +646,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    {
 	      /* Try to use nscd.  */
 	      struct nscd_ai_result *air = NULL;
-	      int herrno;
-	      int err = __nscd_getai (name, &air, &herrno);
+	      int err = __nscd_getai (name, &air, &h_errno);
 	      if (air != NULL)
 		{
 		  /* Transform into gaih_addrtuple list.  */
@@ -745,9 +737,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		goto free_and_return;
 	      else if (__nss_not_use_nscd_hosts == 0)
 		{
-		  if (herrno == NETDB_INTERNAL && errno == ENOMEM)
+		  if (h_errno == NETDB_INTERNAL && errno == ENOMEM)
 		    result = -EAI_MEMORY;
-		  else if (herrno == TRY_AGAIN)
+		  else if (h_errno == TRY_AGAIN)
 		    result = -EAI_AGAIN;
 		  else
 		    result = -EAI_SYSTEM;
@@ -786,23 +778,21 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	      if (fct4 != NULL)
 		{
-		  int herrno;
-
 		  while (1)
 		    {
 		      status = DL_CALL_FCT (fct4, (name, pat,
 						   tmpbuf->data, tmpbuf->length,
-						   &errno, &herrno,
+						   &errno, &h_errno,
 						   NULL));
 		      if (status == NSS_STATUS_SUCCESS)
 			break;
 		      if (status != NSS_STATUS_TRYAGAIN
-			  || errno != ERANGE || herrno != NETDB_INTERNAL)
+			  || errno != ERANGE || h_errno != NETDB_INTERNAL)
 			{
-			  if (herrno == TRY_AGAIN)
+			  if (h_errno == TRY_AGAIN)
 			    no_data = EAI_AGAIN;
 			  else
-			    no_data = herrno == NO_DATA;
+			    no_data = h_errno == NO_DATA;
 			  break;
 			}
 

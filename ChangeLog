@@ -1,5 +1,11 @@
 2017-09-01  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gethosts): Use h_errno directly.
+	(getcanonname): Likewise.
+	(gaih_inet): Likewise.
+
+2017-09-01  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/posix/getaddrinfo.c (gethosts): Use errno directly.
 	(getcanonname): Likewise.
 	(gaih_inet): Likewise.
