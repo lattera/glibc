@@ -1,5 +1,12 @@
 2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* posix/tst-regex.c (do_test): Replace "../ChangeLog.8" with
+	"../ChangeLog.old/ChangeLog.8".
+	* posix/tst-regex2.c (do_test): Replace "../ChangeLog.14" with
+	"../ChangeLog.old/ChangeLog.14".
+
+2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* manual/contrib.texi: Credit Ulrich Drepper for the POSIX
 	Threads Library.
 
