@@ -948,7 +948,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);
 	  __resolv_context_put (res_ctx);
 
-	  if (h_errno == NETDB_INTERNAL)
+	  /* If we have a failure which sets errno, report it using
+	     EAI_SYSTEM.  */
+	  if ((status == NSS_STATUS_TRYAGAIN || status == NSS_STATUS_UNAVAIL)
+	      && h_errno == NETDB_INTERNAL)
 	    {
 	      result = -EAI_SYSTEM;
 	      goto free_and_return;

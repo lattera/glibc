@@ -1,5 +1,10 @@
 2017-09-01  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only use h_errno if
+	status indicates it is set.
+
+2017-09-01  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Make reporting of NSS
 	function lookup failures more reliable.
 
