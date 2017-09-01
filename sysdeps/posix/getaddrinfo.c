@@ -922,13 +922,17 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    }
 		  else
 		    {
+		      /* Could not locate any of the lookup functions.
+			 The NSS lookup code does not consistently set
+			 errno, so we need to supply our own error
+			 code here.  The root cause could either be a
+			 resource allocation failure, or a missing
+			 service function in the DSO (so it should not
+			 be listed in /etc/nsswitch.conf).  Assume the
+			 former, and return EBUSY.  */
 		      status = NSS_STATUS_UNAVAIL;
-		      /* Could not load any of the lookup functions.  Indicate
-		         an internal error if the failure was due to a system
-			 error other than the file not being found.  We use the
-			 errno from the last failed callback.  */
-		      if (errno != 0 && errno != ENOENT)
-			__set_h_errno (NETDB_INTERNAL);
+		     __set_h_errno (NETDB_INTERNAL);
+		     __set_errno (EBUSY);
 		    }
 		}
 
