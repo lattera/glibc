@@ -242,28 +242,26 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 #define gethosts(_family, _type) \
  {									      \
   struct hostent th;							      \
-  struct hostent *h;							      \
   char *localcanon = NULL;						      \
   no_data = 0;								      \
-  while (1) {								      \
-    status = DL_CALL_FCT (fct, (name, _family, &th,			      \
-				tmpbuf->data, tmpbuf->length,		      \
-				&errno, &h_errno, NULL, &localcanon));	      \
-    if (errno != ERANGE || h_errno != NETDB_INTERNAL)			      \
-      break;								      \
-    if (!scratch_buffer_grow (tmpbuf))					      \
-      {									      \
-	__resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
-	__resolv_context_put (res_ctx);					      \
-	result = -EAI_MEMORY;						      \
-	goto free_and_return;						      \
-      }									      \
-  }									      \
-  if (status == NSS_STATUS_SUCCESS && errno == 0)			      \
-    h = &th;								      \
-  else									      \
-    h = NULL;								      \
-  if (errno != 0)							      \
+  while (1)								      \
+    {									      \
+      status = DL_CALL_FCT (fct, (name, _family, &th,			      \
+				  tmpbuf->data, tmpbuf->length,		      \
+				  &errno, &h_errno, NULL, &localcanon));      \
+      if (status != NSS_STATUS_TRYAGAIN || h_errno != NETDB_INTERNAL	      \
+	  || errno != ERANGE)						      \
+	break;								      \
+      if (!scratch_buffer_grow (tmpbuf))				      \
+	{								      \
+	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
+	  __resolv_context_put (res_ctx);				      \
+	  result = -EAI_MEMORY;						      \
+	  goto free_and_return;						      \
+	}								      \
+    }									      \
+  if (status == NSS_STATUS_NOTFOUND					      \
+      || status == NSS_STATUS_TRYAGAIN || status == NSS_STATUS_UNAVAIL)	      \
     {									      \
       if (h_errno == NETDB_INTERNAL)					      \
 	{								      \
@@ -277,9 +275,9 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
       else								      \
 	no_data = h_errno == NO_DATA;					      \
     }									      \
-  else if (h != NULL)							      \
+  else if (status == NSS_STATUS_SUCCESS)				      \
     {									      \
-      if (!convert_hostent_to_gaih_addrtuple (req, _family,h, &addrmem))      \
+      if (!convert_hostent_to_gaih_addrtuple (req, _family, &th, &addrmem))   \
 	{								      \
 	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
 	  __resolv_context_put (res_ctx);				      \

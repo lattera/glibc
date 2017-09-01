@@ -1,5 +1,19 @@
 2017-09-01  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #21915]
+	[BZ #21922]
+	* sysdeps/posix/getaddrinfo.c (gethosts): Look at NSS function
+	result to determine success or failure, not the errno value.
+	* nss/Makefile (tests): Add tst-nss-files-hosts-erange.
+	(tst-nss-files-hosts-erange): Link with -ldl.
+	* nss/tst-nss-files-hosts-erange.c: New file.
+	* nss/tst-resolv-basic.c (response): Handle nodata.example.
+	(do_test): Add NO_DATA tests.
+	* resolv/tst-resolv-basic.c (test_nodata_nxdomain): New function.
+	(do_test): Call it.
+
+2017-09-01  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #21922]
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Report EAI_NODATA error
 	coming from gethostbyname2_r.

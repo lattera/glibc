@@ -50,7 +50,7 @@ response (const struct resolv_response_context *ctx,
     qname_compare = qname + 2;
   else
     qname_compare = qname;
-  enum {www, alias, nxdomain, long_name} requested_qname;
+  enum {www, alias, nxdomain, long_name, nodata} requested_qname;
   if (strcmp (qname_compare, "www.example") == 0)
     requested_qname = www;
   else if (strcmp (qname_compare, "alias.example") == 0)
@@ -59,6 +59,8 @@ response (const struct resolv_response_context *ctx,
     requested_qname = nxdomain;
   else if (strcmp (qname_compare, LONG_NAME) == 0)
     requested_qname = long_name;
+  else if (strcmp (qname_compare, "nodata.example") == 0)
+    requested_qname = nodata;
   else
     {
       support_record_failure ();
@@ -87,6 +89,8 @@ response (const struct resolv_response_context *ctx,
       resolv_response_close_record (b);
       resolv_response_open_record (b, "www.example", qclass, qtype, 0);
       break;
+    case nodata:
+      return;
     case nxdomain:
       FAIL_EXIT1 ("unreachable");
     }
@@ -267,6 +271,55 @@ test_bug_21295 (void)
     }
 }
 
+/* Run tests which do not expect any data.  */
+static void
+test_nodata_nxdomain (void)
+{
+  /* Iterate through different address families.  */
+  int families[] = { AF_UNSPEC, AF_INET, AF_INET6, -1 };
+  for (int i = 0; families[i] >= 0; ++i)
+    /* If do_tcp, prepend "t." to the name to trigger TCP
+       fallback.  */
+    for (int do_tcp = 0; do_tcp < 2; ++do_tcp)
+      /* If do_nxdomain, trigger an NXDOMAIN error (DNS failure),
+         otherwise use a NODATA response (empty but successful
+         answer).  */
+      for (int do_nxdomain = 0; do_nxdomain < 2; ++do_nxdomain)
+        {
+          int family = families[i];
+          char *name = xasprintf ("%s%s.example",
+                                  do_tcp ? "t." : "",
+                                  do_nxdomain ? "nxdomain" : "nodata");
+
+          if (family != AF_UNSPEC)
+            {
+              if (do_nxdomain)
+                check_h (name, family, "error: HOST_NOT_FOUND\n");
+              else
+                check_h (name, family, "error: NO_ADDRESS\n");
+            }
+
+          const char *expected;
+          if (do_nxdomain)
+            expected = "error: Name or service not known\n";
+          else
+            expected = "error: No address associated with hostname\n";
+
+          check_ai (name, "80", family, expected);
+
+          struct addrinfo hints =
+            {
+              .ai_family = family,
+              .ai_flags = AI_V4MAPPED | AI_ALL,
+            };
+          check_ai_hints (name, "80", hints, expected);
+          hints.ai_flags |= AI_CANONNAME;
+          check_ai_hints (name, "80", hints, expected);
+
+          free (name);
+        }
+}
+
 static int
 do_test (void)
 {
@@ -439,29 +492,8 @@ do_test (void)
             "address: DGRAM/UDP 2001:db8::4 80\n"
             "address: RAW/IP 2001:db8::4 80\n");
 
-  check_h ("nxdomain.example", AF_INET,
-           "error: HOST_NOT_FOUND\n");
-  check_h ("nxdomain.example", AF_INET6,
-           "error: HOST_NOT_FOUND\n");
-  check_ai ("nxdomain.example", "80", AF_UNSPEC,
-            "error: Name or service not known\n");
-  check_ai ("nxdomain.example", "80", AF_INET,
-            "error: Name or service not known\n");
-  check_ai ("nxdomain.example", "80", AF_INET6,
-            "error: Name or service not known\n");
-
-  check_h ("t.nxdomain.example", AF_INET,
-           "error: HOST_NOT_FOUND\n");
-  check_h ("t.nxdomain.example", AF_INET6,
-           "error: HOST_NOT_FOUND\n");
-  check_ai ("t.nxdomain.example", "80", AF_UNSPEC,
-            "error: Name or service not known\n");
-  check_ai ("t.nxdomain.example", "80", AF_INET,
-            "error: Name or service not known\n");
-  check_ai ("t.nxdomain.example", "80", AF_INET6,
-            "error: Name or service not known\n");
-
   test_bug_21295 ();
+  test_nodata_nxdomain ();
 
   resolv_test_end (aux);
 
