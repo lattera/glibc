@@ -618,6 +618,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			}
 		      *pat = addrmem;
 		    }
+		  else
+		    {
+		      if (h_errno == NO_DATA)
+			result = -EAI_NODATA;
+		      else
+			result = -EAI_NONAME;
+		      goto free_and_return;
+		    }
 		}
 	      else
 		{

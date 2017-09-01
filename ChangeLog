@@ -1,5 +1,11 @@
 2017-09-01  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #21922]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Report EAI_NODATA error
+	coming from gethostbyname2_r.
+
+2017-09-01  Florian Weimer  <fweimer@redhat.com>
+
 	* support/namespace.h (struct support_chroot_configuration): Add
 	hosts, host_conf.
 	(struct support_chroot): Add path_hosts, path_host_conf.
