@@ -1,5 +1,15 @@
 2017-09-01  Florian Weimer  <fweimer@redhat.com>
 
+	* support/namespace.h (struct support_chroot_configuration): Add
+	hosts, host_conf.
+	(struct support_chroot): Add path_hosts, path_host_conf.
+	* support/support_chroot.c (write_file): New function.
+	(support_chroot_create): Call it to process /etc/resolv.conf,
+	/etc/hosts, /etc/host.conf.
+	(support_chroot_free): Update.
+
+2017-09-01  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only use h_errno if
 	status indicates it is set.
 

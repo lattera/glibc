@@ -66,7 +66,9 @@ struct support_chroot_configuration
 {
   /* File contents.  The files are not created if the field is
      NULL.  */
-  const char *resolv_conf;
+  const char *resolv_conf;      /* /etc/resolv.conf.  */
+  const char *hosts;            /* /etc/hosts.  */
+  const char *host_conf;        /* /etc/host.conf.  */
 };
 
 /* The result of the creation of a chroot.  */
@@ -78,8 +80,11 @@ struct support_chroot
   /* Path to the chroot directory.  */
   char *path_chroot;
 
-  /* Path to the /etc/resolv.conf file.  */
-  char *path_resolv_conf;
+  /* Paths to files in the chroot.  These are absolute and outside of
+     the chroot.  */
+  char *path_resolv_conf;       /* /etc/resolv.conf.  */
+  char *path_hosts;             /* /etc/hosts.  */
+  char *path_host_conf;         /* /etc/host.conf.  */
 };
 
 /* Create a chroot environment.  The returned data should be freed

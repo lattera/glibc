@@ -24,6 +24,23 @@
 #include <support/test-driver.h>
 #include <support/xunistd.h>
 
+/* If CONTENTS is not NULL, write it to the file at DIRECTORY/RELPATH,
+   and store the name in *ABSPATH.  If CONTENTS is NULL, store NULL in
+   *ABSPATH.  */
+static void
+write_file (const char *directory, const char *relpath, const char *contents,
+            char **abspath)
+{
+  if (contents != NULL)
+    {
+      *abspath = xasprintf ("%s/%s", directory, relpath);
+      add_temp_file (*abspath);
+      support_write_file_string (*abspath, contents);
+    }
+  else
+    *abspath = NULL;
+}
+
 struct support_chroot *
 support_chroot_create (struct support_chroot_configuration conf)
 {
@@ -39,15 +56,10 @@ support_chroot_create (struct support_chroot_configuration conf)
   xmkdir (path_etc, 0777);
   add_temp_file (path_etc);
 
-  if (conf.resolv_conf != NULL)
-    {
-      /* Create an empty resolv.conf file.  */
-      chroot->path_resolv_conf = xasprintf ("%s/resolv.conf", path_etc);
-      add_temp_file (chroot->path_resolv_conf);
-      support_write_file_string (chroot->path_resolv_conf, conf.resolv_conf);
-    }
-  else
-    chroot->path_resolv_conf = NULL;
+  write_file (path_etc, "resolv.conf", conf.resolv_conf,
+              &chroot->path_resolv_conf);
+  write_file (path_etc, "hosts", conf.hosts, &chroot->path_hosts);
+  write_file (path_etc, "host.conf", conf.host_conf, &chroot->path_host_conf);
 
   free (path_etc);
 
@@ -67,5 +79,7 @@ support_chroot_free (struct support_chroot *chroot)
 {
   free (chroot->path_chroot);
   free (chroot->path_resolv_conf);
+  free (chroot->path_hosts);
+  free (chroot->path_host_conf);
   free (chroot);
 }
