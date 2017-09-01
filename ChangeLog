@@ -1,3 +1,49 @@
+2017-09-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/math.texi (pow10): Do not document.
+	(pow10f): Likewise.
+	(pow10l): Likewise.
+	* math/bits/mathcalls.h [__USE_GNU] (pow10): Do not declare.
+	* math/bits/math-finite.h [__USE_GNU] (pow10): Likewise.
+	* math/libm-test-exp10.inc (pow10_test): Remove.
+	(do_test): Do not call pow10.
+	* math/w_exp10_compat.c (pow10): Make into compat symbol.
+	[NO_LONG_DOUBLE] (pow10l): Likewise.
+	* math/w_exp10f_compat.c (pow10f): Likewise.
+	* math/w_exp10l_compat.c (pow10l): Likewise.
+	* sysdeps/ia64/fpu/e_exp10.S: Include <shlib-compat.h>.
+	(pow10): Make into compat symbol.
+	* sysdeps/ia64/fpu/e_exp10f.S: Include <shlib-compat.h>.
+	(pow10f): Make into compat symbol.
+	* sysdeps/ia64/fpu/e_exp10l.S: Include <shlib-compat.h>.
+	(pow10l): Make into compat symbol.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Remove
+	pow10.
+	(CFLAGS-nldbl-pow10.c): Remove variable..
+	* sysdeps/ieee754/ldbl-opt/nldbl-pow10.c: Remove file.
+	* sysdeps/ieee754/ldbl-opt/w_exp10_compat.c (pow10l): Condition on
+	[SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_27)].
+	* sysdeps/ieee754/ldbl-opt/w_exp10l_compat.c (compat_symbol):
+	Undefine and redefine.
+	(pow10l): Make into compat symbol.
+	* sysdeps/aarch64/libm-test-ulps: Remove pow10 ulps.
+	* sysdeps/alpha/fpu/libm-test-ulps: Likewise.
+	* sysdeps/arm/libm-test-ulps: Likewise.
+	* sysdeps/hppa/fpu/libm-test-ulps: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Likewise.
+	* sysdeps/microblaze/libm-test-ulps: Likewise.
+	* sysdeps/mips/mips32/libm-test-ulps: Likewise.
+	* sysdeps/mips/mips64/libm-test-ulps: Likewise.
+	* sysdeps/nios2/libm-test-ulps: Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/powerpc/nofpu/libm-test-ulps: Likewise.
+	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sh/libm-test-ulps: Likewise.
+	* sysdeps/sparc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/tile/libm-test-ulps: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2017-09-01  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* stdlib/tst-atexit-common.c (crumbs): Ensure correct size.

@@ -85,6 +85,8 @@
 // p6-p8, p11-p14
 //
 
+#include <shlib-compat.h>
+
 
        FR_X        = f10
        FR_Y        = f1
@@ -747,7 +749,9 @@ OUT_RANGE_EXP10:
 ;;
 
 GLOBAL_IEEE754_END(exp10l)
-weak_alias (exp10l, pow10l)
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_27)
+compat_symbol (libm, exp10l, pow10l, GLIBC_2_2)
+#endif
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

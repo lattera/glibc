@@ -70,11 +70,6 @@ __MATH_REDIRCALL (exp, , (_Mdouble_));
 #ifdef __USE_GNU
 /* exp10.  */
 __MATH_REDIRCALL (exp10, , (_Mdouble_));
-
-/* pow10.  */
-# if !__MATH_DECLARING_FLOATN
-__MATH_REDIRCALL_2 (pow10, , (_Mdouble_), exp10);
-# endif
 #endif
 
 #ifdef __USE_ISOC99

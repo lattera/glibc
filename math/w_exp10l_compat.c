@@ -37,5 +37,7 @@ __exp10l (long double x)
   return z;
 }
 weak_alias (__exp10l, exp10l)
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_27)
 strong_alias (__exp10l, __pow10l)
-weak_alias (__pow10l, pow10l)
+compat_symbol (libm, __pow10l, pow10l, GLIBC_2_1);
+#endif

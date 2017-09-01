@@ -113,12 +113,6 @@ __MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr)) __nonnull ((2));
 /* Compute exponent to base ten.  */
 __MATHCALL (exp10,, (_Mdouble_ __x));
 #endif
-#ifdef __USE_GNU
-/* Another name occasionally used.  */
-# if !__MATH_DECLARING_FLOATN
-__MATHCALL (pow10,, (_Mdouble_ __x));
-# endif
-#endif
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Return exp(X) - 1.  */

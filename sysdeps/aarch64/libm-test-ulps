@@ -1937,36 +1937,6 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 
-Function: "pow10":
-double: 2
-idouble: 2
-ildouble: 2
-ldouble: 2
-
-Function: "pow10_downward":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 3
-ldouble: 3
-
-Function: "pow10_towardzero":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 3
-ldouble: 3
-
-Function: "pow10_upward":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 3
-ldouble: 3
-
 Function: "pow_downward":
 double: 1
 float: 1

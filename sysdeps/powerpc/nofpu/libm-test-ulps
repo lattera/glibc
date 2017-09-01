@@ -1985,36 +1985,6 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
-Function: "pow10":
-double: 2
-idouble: 2
-ildouble: 1
-ldouble: 1
-
-Function: "pow10_downward":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 9
-ldouble: 9
-
-Function: "pow10_towardzero":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 9
-ldouble: 9
-
-Function: "pow10_upward":
-double: 2
-float: 1
-idouble: 2
-ifloat: 1
-ildouble: 4
-ldouble: 4
-
 Function: "pow_downward":
 double: 1
 float: 1

@@ -29,7 +29,7 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 qecvt qfcvt qgcvt qecvt_r qfcvt_r \
 		 isinf isnan finite signbit scalb log2 lgamma_r ceil \
 		 significand acos asin atan atan2 cos sin tan cosh sinh \
-		 tanh acosh asinh atanh exp log log10 exp10 pow10 expm1 \
+		 tanh acosh asinh atanh exp log log10 exp10 expm1 \
 		 log1p logb exp2 sqrt cbrt fabs floor j0 j1 y0 y1 erf erfc \
 		 lgamma tgamma gamma rint nearbyint round trunc \
 		 copysign fdim fmax fmin nextafter pow hypot fmod \
@@ -136,7 +136,6 @@ CFLAGS-nldbl-nexttoward.c = -fno-builtin-nexttoward -fno-builtin-nexttowardl
 CFLAGS-nldbl-nexttowardf.c = -fno-builtin-nexttowardf
 CFLAGS-nldbl-nextup.c = -fno-builtin-nextupl
 CFLAGS-nldbl-pow.c = -fno-builtin-powl
-CFLAGS-nldbl-pow10.c = -fno-builtin-pow10l
 CFLAGS-nldbl-remainder.c = -fno-builtin-remainderl -fno-builtin-dreml
 CFLAGS-nldbl-remquo.c = -fno-builtin-remquol
 CFLAGS-nldbl-rint.c = -fno-builtin-rintl

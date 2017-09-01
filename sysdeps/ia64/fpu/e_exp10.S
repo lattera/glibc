@@ -87,6 +87,8 @@
 // p6-p12
 //
 
+#include <shlib-compat.h>
+
 
 GR_TBL_START        = r2
 GR_LOG_TBL          = r3
@@ -534,7 +536,9 @@ OUT_RANGE_exp10:
 ;;
 
 GLOBAL_IEEE754_END(exp10)
-weak_alias (exp10, pow10)
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_27)
+compat_symbol (libm, exp10, pow10, GLIBC_2_2)
+#endif
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

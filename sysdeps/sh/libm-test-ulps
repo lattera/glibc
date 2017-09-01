@@ -358,10 +358,6 @@ Function: "pow":
 float: 1
 ifloat: 1
 
-Function: "pow10":
-double: 1
-idouble: 1
-
 Function: "pow_towardzero":
 float: 1
 ifloat: 1

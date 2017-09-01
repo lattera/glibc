@@ -343,10 +343,6 @@ Function: "pow":
 float: 3
 ifloat: 3
 
-Function: "pow10":
-double: 2
-idouble: 2
-
 Function: "sin":
 float: 1
 ifloat: 1

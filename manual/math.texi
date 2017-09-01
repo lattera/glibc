@@ -490,22 +490,14 @@ Mathematically, @code{exp2 (x)} is the same as @code{exp (x * log (2))}.
 @deftypefunx {long double} exp10l (long double @var{x})
 @deftypefunx _FloatN exp10fN (_Float@var{N} @var{x})
 @deftypefunx _FloatNx exp10fNx (_Float@var{N}x @var{x})
-@deftypefunx double pow10 (double @var{x})
-@deftypefunx float pow10f (float @var{x})
-@deftypefunx {long double} pow10l (long double @var{x})
 @standards{ISO, math.h}
 @standardsx{exp10fN, TS 18661-4:2015, math.h}
 @standardsx{exp10fNx, TS 18661-4:2015, math.h}
-@standardsx{pow10, GNU, math.h}
-@standardsx{pow10f, GNU, math.h}
-@standardsx{pow10l, GNU, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions compute @code{10} raised to the power @var{x}.
 Mathematically, @code{exp10 (x)} is the same as @code{exp (x * log (10))}.
 
-The @code{exp10} functions are from TS 18661-4:2015; the @code{pow10}
-names are GNU extensions.  The name @code{exp10} is
-preferred, since it is analogous to @code{exp} and @code{exp2}.
+The @code{exp10} functions are from TS 18661-4:2015.
 @end deftypefun
 
 
