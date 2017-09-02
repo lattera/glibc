@@ -56,20 +56,20 @@
 # define __sigismember(set, sig)		\
   (__extension__ ({				\
     __sigset_t __mask = __sigmask (sig);	\
-    (set) & __mask ? 1 : 0;			\
+    *(set) & __mask ? 1 : 0;			\
   }))
 
 # define __sigaddset(set, sig)			\
   (__extension__ ({				\
     __sigset_t __mask = __sigmask (sig);	\
-    (set) |= __mask;				\
+    *(set) |= __mask;				\
     (void)0;					\
   }))
 
 # define __sigdelset(set, sig)			\
   (__extension__ ({				\
     __sigset_t __mask = __sigmask (sig);	\
-    (set) &= ~__mask;				\
+    *(set) &= ~__mask;				\
     (void)0;					\
   }))
 

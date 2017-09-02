@@ -1,6 +1,8 @@
 2017-09-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/generic/sigsetops.h: Remove spurious #endif.
+	(__sigismember, __sigaddset, __sigdelset): Fix referencing set
+	parameter.
 
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 
