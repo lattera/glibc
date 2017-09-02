@@ -50,7 +50,6 @@
     *(dest) = *(left) | *(right);		\
     (void)0;					\
   }))
-#endif
 
 /* These macros needn't check for a bogus signal number;
    checking is done in the non-__ versions.  */

@@ -1,3 +1,7 @@
+2017-09-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/generic/sigsetops.h: Remove spurious #endif.
+
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/math.texi (pow10): Do not document.
