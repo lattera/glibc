@@ -35,6 +35,8 @@
 	RWF_NOWAIT): Define to 0 if undefined already.
 	(do_test_with_invalid_flags): Set invalid_flag to 2 if RWF_SUPPORTED
 	boils down to 0.
+	* resolv/tst-resolv-res_init-skeleton.c (run_res_init)
+	[!CLONE_NEWUTS]: Fail as unsupported if hostname is not NULL.
 
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 
