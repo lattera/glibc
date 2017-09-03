@@ -18,7 +18,8 @@
 	Fix <unistd.h> inclusion.
 	* sysdeps/posix/pwritev2.c: Include <errno.h>.
 	* sysdeps/posix/pwritev64v2.c: Include <errno.h>.
-	* sysdeps/mach/hurd/dl-sysdep.c (__access_noerrno): New function.
+	* sysdeps/mach/hurd/dl-sysdep.c (__access_noerrno, __sbrk): New
+	functions.
 
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 

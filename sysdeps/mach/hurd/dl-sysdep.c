@@ -591,6 +591,16 @@ __getcwd (char *buf, size_t size)
   return NULL;
 }
 
+/* This is used by dl-tunables.c to strdup strings.  We can just make this a
+   mere allocation.  */
+void *
+__sbrk (intptr_t increment)
+{
+  vm_address_t addr;
+  __vm_allocate (__mach_task_self (), &addr, increment, 1);
+  return (void *) addr;
+}
+
 void weak_function attribute_hidden
 _exit (int status)
 {
