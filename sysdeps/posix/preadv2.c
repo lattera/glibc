@@ -23,7 +23,7 @@
 
 /* Since we define no flags for preadv2 just route to preadv.  */
 ssize_t
-preadv2 (int fd, const struct iovec *vector, int count, OFF_T offset,
+preadv2 (int fd, const struct iovec *vector, int count, off_t offset,
 	 int flags)
 {
   if (flags != 0)

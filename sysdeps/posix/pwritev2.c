@@ -23,7 +23,7 @@
 
 /* Since we define no flags for pwritev2 just route to pwritev.  */
 ssize_t
-pwritev2 (int fd, const struct iovec *vector, int count, OFF_T offset,
+pwritev2 (int fd, const struct iovec *vector, int count, off_t offset,
 	  int flags)
 {
   if (flags != 0)
