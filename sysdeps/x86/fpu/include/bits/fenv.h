@@ -19,7 +19,7 @@
 #ifndef _BITS_FENV_H
 
 #if defined _LIBC && defined __USE_EXTERN_INLINES
-# if defined SHARED && IS_IN (libm)
+# if defined SHARED && !defined NO_HIDDEN && IS_IN (libm)
 extern int __REDIRECT_NTH (__feraiseexcept_renamed, (int), __GI_feraiseexcept);
 # else
 extern int __REDIRECT_NTH (__feraiseexcept_renamed, (int), feraiseexcept);

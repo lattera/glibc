@@ -26,6 +26,9 @@
 	[$(subdir) = csu] (sysdep_routines): New rule: divdi3 object.
 	[$(subdir) = csu] (sysdep-only-routines): Likewise.
 	[$(subdir) = csu] (CFLAGS-divdi3.c): Likewise.
+	* sysdeps/x86/fpu/include/bits/fenv.h [NO_HIDDEN]: Redirect
+	__feraiseexcept_renamed to feraiseexcept instead of
+	__GI_feraiseexcept.
 
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 
