@@ -9,6 +9,15 @@
 	* sysdeps/posix/preadv64v2.c: Use off64_t instead of OFF_T.
 	* sysdeps/posix/pwritev2.c: Use off_t instead of OFF_T.
 	* sysdeps/posix/pwritev64v2.c: Use off64_t instead of OFF_T.
+	* misc/preadv2.c: Include <errno.h>.
+	* misc/preadv64v2.c: Include <errno.h>.
+	* misc/pwritev2.c: Include <errno.h>.
+	* misc/pwritev64v2.c: Include <errno.h>.
+	* sysdeps/posix/preadv2.c: Include <errno.h>.
+	* sysdeps/posix/preadv64v2.c: Include <errno.h>.
+	Fix <unistd.h> inclusion.
+	* sysdeps/posix/pwritev2.c: Include <errno.h>.
+	* sysdeps/posix/pwritev64v2.c: Include <errno.h>.
 
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 

@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <unistd.>
+#include <errno.h>
+#include <unistd.h>
 #include <sys/uio.h>
 
 ssize_t

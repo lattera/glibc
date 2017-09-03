@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <sys/uio.h>
 
 /* Same as preadv but with an additional flags argument.  */
