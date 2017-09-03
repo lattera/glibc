@@ -30,6 +30,7 @@
 	__feraiseexcept_renamed to feraiseexcept instead of
 	__GI_feraiseexcept.
 	* sysdeps/mach/hurd/i386/Implies: Add mach/hurd/x86.
+	* sysdeps/mach/hurd/x86/dl-sysdep.c: New file.
 
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 
