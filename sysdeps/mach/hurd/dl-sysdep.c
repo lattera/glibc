@@ -557,6 +557,12 @@ __access (const char *file, int type)
   errno = ENOSYS;
   return -1;
 }
+int weak_function
+__access_noerrno (const char *file, int type)
+{
+  errno = ENOSYS;
+  return -1;
+}
 
 pid_t weak_function
 __getpid (void)
