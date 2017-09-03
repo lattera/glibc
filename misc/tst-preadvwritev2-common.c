@@ -22,9 +22,21 @@
 static void
 do_test_with_invalid_flags (void)
 {
+#ifndef RWF_HIPRI
+# define RWF_HIPRI 0
+#endif
+#ifndef RWF_DSYNC
+# define RWF_DSYNC 0
+#endif
+#ifndef RWF_SYNC
+# define RWF_SYNC 0
+#endif
+#ifndef RWF_NOWAIT
+# define RWF_NOWAIT 0
+#endif
 #define RWF_SUPPORTED	(RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT)
   /* Set the next bit from the mask of all supported flags.  */
-  int invalid_flag = __builtin_clz (RWF_SUPPORTED);
+  int invalid_flag = RWF_SUPPORTED != 0 ? __builtin_clz (RWF_SUPPORTED) : 2;
   invalid_flag = 0x1 << ((sizeof (int) * CHAR_BIT) - invalid_flag);
 
   char buf[32];

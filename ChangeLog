@@ -31,6 +31,10 @@
 	__GI_feraiseexcept.
 	* sysdeps/mach/hurd/i386/Implies: Add mach/hurd/x86.
 	* sysdeps/mach/hurd/x86/dl-sysdep.c: New file.
+	* misc/tst-preadvwritev2-common.c (RWF_HIPRI, RWF_DSYNC, RWF_SYNC,
+	RWF_NOWAIT): Define to 0 if undefined already.
+	(do_test_with_invalid_flags): Set invalid_flag to 2 if RWF_SUPPORTED
+	boils down to 0.
 
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 
