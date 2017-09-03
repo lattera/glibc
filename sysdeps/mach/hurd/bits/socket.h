@@ -29,7 +29,7 @@
 #include <stddef.h>
 
 #include <limits.h>		/* XXX Is this allowed?  */
-#include <bits/types.h>
+#include <sys/types.h>
 
 /* Type for length arguments in socket calls.  */
 #ifndef __socklen_t_defined

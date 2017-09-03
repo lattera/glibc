@@ -3,6 +3,8 @@
 	* sysdeps/generic/sigsetops.h: Remove spurious #endif.
 	(__sigismember, __sigaddset, __sigdelset): Fix referencing set
 	parameter.
+	* sysdeps/mach/hurd/bits/socket.h: Include <sys/types.h> instead of
+	just <bits/types.h>.
 
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 
