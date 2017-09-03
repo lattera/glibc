@@ -22,6 +22,10 @@
 	functions.
 	* sysdeps/posix/pause.c: Include <sigsetops.h>.
 	* sysdeps/posix/system.c: Include <sigsetops.h>.
+	* sysdeps/mach/hurd/i386/Makefile
+	[$(subdir) = csu] (sysdep_routines): New rule: divdi3 object.
+	[$(subdir) = csu] (sysdep-only-routines): Likewise.
+	[$(subdir) = csu] (CFLAGS-divdi3.c): Likewise.
 
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 
