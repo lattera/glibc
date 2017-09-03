@@ -602,6 +602,15 @@ __sbrk (intptr_t increment)
   return (void *) addr;
 }
 
+unsigned long int
+weak_function
+__strtoul_internal (const char *nptr, char **endptr, int base, int group)
+{
+  assert (base == 0 || base == 10);
+  assert (group == 0);
+  return _dl_strtoul (nptr, endptr);
+}
+
 void weak_function attribute_hidden
 _exit (int status)
 {

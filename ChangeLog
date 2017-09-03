@@ -18,8 +18,8 @@
 	Fix <unistd.h> inclusion.
 	* sysdeps/posix/pwritev2.c: Include <errno.h>.
 	* sysdeps/posix/pwritev64v2.c: Include <errno.h>.
-	* sysdeps/mach/hurd/dl-sysdep.c (__access_noerrno, __sbrk): New
-	functions.
+	* sysdeps/mach/hurd/dl-sysdep.c (__access_noerrno, __sbrk,
+	__strtoul_internal): New functions.
 	* sysdeps/posix/pause.c: Include <sigsetops.h>.
 	* sysdeps/posix/system.c: Include <sigsetops.h>.
 	* sysdeps/mach/hurd/i386/Makefile
