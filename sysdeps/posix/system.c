@@ -24,6 +24,7 @@
 #include <sys/wait.h>
 #include <libc-lock.h>
 #include <sysdep-cancel.h>
+#include <sigsetops.h>
 
 
 #define	SHELL_PATH	"/bin/sh"	/* Path of the shell.  */
