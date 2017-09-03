@@ -594,6 +594,7 @@ __getcwd (char *buf, size_t size)
 /* This is used by dl-tunables.c to strdup strings.  We can just make this a
    mere allocation.  */
 void *
+weak_function
 __sbrk (intptr_t increment)
 {
   vm_address_t addr;
