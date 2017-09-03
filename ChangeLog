@@ -6,9 +6,9 @@
 	* sysdeps/mach/hurd/bits/socket.h: Include <sys/types.h> instead of
 	just <bits/types.h>.
 	* sysdeps/posix/preadv2.c: Use off_t instead of OFF_T.
-	* sysdeps/posix/preadv64v2.c: Use off_t instead of OFF_T.
+	* sysdeps/posix/preadv64v2.c: Use off64_t instead of OFF_T.
 	* sysdeps/posix/pwritev2.c: Use off_t instead of OFF_T.
-	* sysdeps/posix/pwritev64v2.c: Use off_t instead of OFF_T.
+	* sysdeps/posix/pwritev64v2.c: Use off64_t instead of OFF_T.
 
 2017-09-01  Joseph Myers  <joseph@codesourcery.com>
 

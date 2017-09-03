@@ -20,7 +20,7 @@
 #include <sys/uio.h>
 
 ssize_t
-preadv64v2 (int fd, const struct iovec *vector, int count, off_t offset,
+preadv64v2 (int fd, const struct iovec *vector, int count, off64_t offset,
 	    int flags)
 {
   if (flags != 0)
