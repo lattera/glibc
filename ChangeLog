@@ -1,5 +1,15 @@
 2017-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #866]
+	[BZ #1062]
+	* posix/Makefile (tests): Remove bug-glob1 and tst-glob_symlinks.
+	* posix/bug-glob1.c: Remove file.
+	* posix/tst-glob_symlinks.c: New file.
+	* posix/glob.c (__lstat64): New macro.
+	(is_dir): New function.
+	(glob, glob_in_dir): Match symlinks even if they are dangling.
+	(link_stat, link_exists_p): Remove.  All uses removed.
+
 	[BZ #1062]
 	[BZ #19971]
 	* posix/glob.c (struct readdir_result): Remove skip_entry member.

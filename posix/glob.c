@@ -57,6 +57,9 @@
 # define readdir(str) __readdir64 (str)
 # define getpwnam_r(name, bufp, buf, len, res) \
     __getpwnam_r (name, bufp, buf, len, res)
+# ifndef __lstat64
+#  define __lstat64(fname, buf) __lxstat64 (_STAT_VER, fname, buf)
+# endif
 # ifndef __stat64
 #  define __stat64(fname, buf) __xstat64 (_STAT_VER, fname, buf)
 # endif
@@ -64,6 +67,7 @@
 # define FLEXIBLE_ARRAY_MEMBER
 #else /* !_LIBC */
 # define __getlogin_r(buf, len) getlogin_r (buf, len)
+# define __lstat64(fname, buf)  lstat (fname, buf)
 # define __stat64(fname, buf)   stat (fname, buf)
 # define __fxstatat64(_, d, f, st, flag) fstatat (d, f, st, flag)
 # define struct_stat64          struct stat
@@ -225,6 +229,18 @@ extern int __glob_pattern_type (const char *pattern, int quote)
 static int prefix_array (const char *prefix, char **array, size_t n) __THROWNL;
 static int collated_compare (const void *, const void *) __THROWNL;
 
+
+/* Return true if FILENAME is a directory or a symbolic link to a directory.
+   Use FLAGS and PGLOB to resolve the filename.  */
+static bool
+is_dir (char const *filename, int flags, glob_t const *pglob)
+{
+  struct stat st;
+  struct_stat64 st64;
+  return (__glibc_unlikely (flags & GLOB_ALTDIRFUNC)
+          ? pglob->gl_stat (filename, &st) == 0 && S_ISDIR (st.st_mode)
+          : __stat64 (filename, &st64) == 0 && S_ISDIR (st64.st_mode));
+}
 
 /* Find the end of the sub-pattern in a brace expression.  */
 static const char *
@@ -975,68 +991,53 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
      can give the answer now.  */
   if (filename == NULL)
     {
-      struct stat st;
-      struct_stat64 st64;
+	size_t newcount = pglob->gl_pathc + pglob->gl_offs;
+	char **new_gl_pathv;
 
-      /* Return the directory if we don't check for error or if it exists.  */
-      if ((flags & GLOB_NOCHECK)
-	  || (((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0))
-	       ? ((*pglob->gl_stat) (dirname, &st) == 0
-		  && S_ISDIR (st.st_mode))
-	       : (__stat64 (dirname, &st64) == 0 && S_ISDIR (st64.st_mode)))))
-	{
-	  size_t newcount = pglob->gl_pathc + pglob->gl_offs;
-	  char **new_gl_pathv;
+	if (newcount > SIZE_MAX / sizeof (char *) - 2)
+	  {
+	  nospace:
+	    free (pglob->gl_pathv);
+	    pglob->gl_pathv = NULL;
+	    pglob->gl_pathc = 0;
+	    retval = GLOB_NOSPACE;
+	    goto out;
+	  }
 
-	  if (newcount > SIZE_MAX / sizeof (char *) - 2)
-	    {
-	    nospace:
-	      free (pglob->gl_pathv);
-	      pglob->gl_pathv = NULL;
-	      pglob->gl_pathc = 0;
-	      retval = GLOB_NOSPACE;
-	      goto out;
-	    }
+	new_gl_pathv = realloc (pglob->gl_pathv,
+				(newcount + 2) * sizeof (char *));
+	if (new_gl_pathv == NULL)
+	  goto nospace;
+	pglob->gl_pathv = new_gl_pathv;
 
-	  new_gl_pathv = realloc (pglob->gl_pathv,
-				  (newcount + 2) * sizeof (char *));
-	  if (new_gl_pathv == NULL)
-	    goto nospace;
-	  pglob->gl_pathv = new_gl_pathv;
+	if (flags & GLOB_MARK && is_dir (dirname, flags, pglob))
+	  {
+	    char *p;
+	    pglob->gl_pathv[newcount] = malloc (dirlen + 2);
+	    if (pglob->gl_pathv[newcount] == NULL)
+	      goto nospace;
+	    p = mempcpy (pglob->gl_pathv[newcount], dirname, dirlen);
+	    p[0] = '/';
+	    p[1] = '\0';
+	    if (__glibc_unlikely (malloc_dirname))
+	      free (dirname);
+	  }
+	else
+	  {
+	    if (__glibc_unlikely (malloc_dirname))
+	      pglob->gl_pathv[newcount] = dirname;
+	    else
+	      {
+		pglob->gl_pathv[newcount] = strdup (dirname);
+		if (pglob->gl_pathv[newcount] == NULL)
+		  goto nospace;
+	      }
+	  }
+	pglob->gl_pathv[++newcount] = NULL;
+	++pglob->gl_pathc;
+	pglob->gl_flags = flags;
 
-	  if (flags & GLOB_MARK)
-	    {
-	      char *p;
-	      pglob->gl_pathv[newcount] = malloc (dirlen + 2);
-	      if (pglob->gl_pathv[newcount] == NULL)
-		goto nospace;
-	      p = mempcpy (pglob->gl_pathv[newcount], dirname, dirlen);
-	      p[0] = '/';
-	      p[1] = '\0';
-	      if (__glibc_unlikely (malloc_dirname))
-		free (dirname);
-	    }
-	  else
-	    {
-	      if (__glibc_unlikely (malloc_dirname))
-		pglob->gl_pathv[newcount] = dirname;
-	      else
-		{
-		  pglob->gl_pathv[newcount] = strdup (dirname);
-		  if (pglob->gl_pathv[newcount] == NULL)
-		    goto nospace;
-		}
-	    }
-	  pglob->gl_pathv[++newcount] = NULL;
-	  ++pglob->gl_pathc;
-	  pglob->gl_flags = flags;
-
-	  return 0;
-	}
-
-      /* Not found.  */
-      retval = GLOB_NOMATCH;
-      goto out;
+	return 0;
     }
 
   meta = __glob_pattern_type (dirname, !(flags & GLOB_NOESCAPE));
@@ -1244,15 +1245,9 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
     {
       /* Append slashes to directory names.  */
       size_t i;
-      struct stat st;
-      struct_stat64 st64;
 
       for (i = oldcount; i < pglob->gl_pathc + pglob->gl_offs; ++i)
-	if ((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
-	     ? ((*pglob->gl_stat) (pglob->gl_pathv[i], &st) == 0
-		&& S_ISDIR (st.st_mode))
-	     : (__stat64 (pglob->gl_pathv[i], &st64) == 0
-		&& S_ISDIR (st64.st_mode))))
+	if (is_dir (pglob->gl_pathv[i], flags, pglob))
 	  {
 	    size_t len = strlen (pglob->gl_pathv[i]) + 2;
 	    char *new = realloc (pglob->gl_pathv[i], len);
@@ -1358,56 +1353,6 @@ prefix_array (const char *dirname, char **array, size_t n)
   return 0;
 }
 
-/* We put this in a separate function mainly to allow the memory
-   allocated with alloca to be recycled.  */
-static int
-__attribute_noinline__
-link_stat (const char *dir, size_t dirlen, const char *fname,
-	   glob_t *pglob
-# if !defined _LIBC && !HAVE_FSTATAT
-	   , int flags
-# endif
-	   )
-{
-  size_t fnamelen = strlen (fname);
-  char *fullname = __alloca (dirlen + 1 + fnamelen + 1);
-  struct stat st;
-
-  mempcpy (mempcpy (mempcpy (fullname, dir, dirlen), "/", 1),
-	   fname, fnamelen + 1);
-
-# if !defined _LIBC && !HAVE_FSTATAT
-  if (__builtin_expect ((flags & GLOB_ALTDIRFUNC) == 0, 1))
-    {
-      struct_stat64 st64;
-      return __stat64 (fullname, &st64);
-    }
-# endif
-  return (*pglob->gl_stat) (fullname, &st);
-}
-
-/* Return true if DIR/FNAME exists.  */
-static int
-link_exists_p (int dfd, const char *dir, size_t dirlen, const char *fname,
-	       glob_t *pglob, int flags)
-{
-  int status;
-# if defined _LIBC || HAVE_FSTATAT
-  if (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0))
-    status = link_stat (dir, dirlen, fname, pglob);
-  else
-    {
-      /* dfd cannot be -1 here, because dirfd never returns -1 on
-	 glibc, or on hosts that have fstatat.  */
-      struct_stat64 st64;
-      status = __fxstatat64 (_STAT_VER, dfd, fname, &st64, 0);
-    }
-# else
-  status = link_stat (dir, dirlen, fname, pglob, flags);
-# endif
-  return status == 0 || errno == EOVERFLOW;
-}
-
 /* Like 'glob', but PATTERN is a final pathname component,
    and matches are searched for in DIRECTORY.
    The GLOB_NOSORT bit in FLAGS is ignored.  No sorting is ever done.
@@ -1449,8 +1394,6 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
     }
   else if (meta == 0)
     {
-      /* Since we use the normal file functions we can also use stat()
-	 to verify the file is there.  */
       union
       {
 	struct stat st;
@@ -1475,8 +1418,8 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 			"/", 1),
 	       pattern, patlen + 1);
       if (((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
-	   ? (*pglob->gl_stat) (fullname, &ust.st)
-	    : __stat64 (fullname, &ust.st64))
+	   ? (*pglob->gl_lstat) (fullname, &ust.st)
+	    : __lstat64 (fullname, &ust.st64))
 	   == 0)
 	  || errno == EOVERFLOW)
 	/* We found this file to be existing.  Now tell the rest
@@ -1500,8 +1443,6 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	}
       else
 	{
-	  int dfd = (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
-		     ? -1 : dirfd ((DIR *) stream));
 	  int fnm_flags = ((!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0)
 			   | ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0));
 	  flags |= GLOB_MAGCHAR;
@@ -1535,42 +1476,34 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 
 	      if (fnmatch (pattern, d.name, fnm_flags) == 0)
 		{
-		  /* If the file we found is a symlink we have to
-		     make sure the target file exists.  */
-		  dirent_type type = readdir_result_type (d);
-		  if (! (type == DT_LNK || type == DT_UNKNOWN)
-		      || link_exists_p (dfd, directory, dirlen, d.name,
-					pglob, flags))
+		  if (cur == names->count)
 		    {
-		      if (cur == names->count)
-			{
-			  struct globnames *newnames;
-			  size_t count = names->count * 2;
-			  size_t nameoff = offsetof (struct globnames, name);
-			  size_t size = FLEXSIZEOF (struct globnames, name,
-						    count * sizeof (char *));
-			  if ((SIZE_MAX - nameoff) / 2 / sizeof (char *)
-			      < names->count)
-			    goto memory_error;
-			  if (glob_use_alloca (alloca_used, size))
-			    newnames = names_alloca
-			      = alloca_account (size, alloca_used);
-			  else if ((newnames = malloc (size))
-				   == NULL)
-			    goto memory_error;
-			  newnames->count = count;
-			  newnames->next = names;
-			  names = newnames;
-			  cur = 0;
-			}
-		      names->name[cur] = strdup (d.name);
-		      if (names->name[cur] == NULL)
+		      struct globnames *newnames;
+		      size_t count = names->count * 2;
+		      size_t nameoff = offsetof (struct globnames, name);
+		      size_t size = FLEXSIZEOF (struct globnames, name,
+						count * sizeof (char *));
+		      if ((SIZE_MAX - nameoff) / 2 / sizeof (char *)
+			  < names->count)
 			goto memory_error;
-		      ++cur;
-		      ++nfound;
-		      if (SIZE_MAX - pglob->gl_offs <= nfound)
+		      if (glob_use_alloca (alloca_used, size))
+			newnames = names_alloca
+			  = alloca_account (size, alloca_used);
+		      else if ((newnames = malloc (size))
+			       == NULL)
 			goto memory_error;
+		      newnames->count = count;
+		      newnames->next = names;
+		      names = newnames;
+		      cur = 0;
 		    }
+		  names->name[cur] = strdup (d.name);
+		  if (names->name[cur] == NULL)
+		    goto memory_error;
+		  ++cur;
+		  ++nfound;
+		  if (SIZE_MAX - pglob->gl_offs <= nfound)
+		    goto memory_error;
 		}
 	    }
 	}

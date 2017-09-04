@@ -79,7 +79,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
 		   bug-ga1 tst-vfork1 tst-vfork2 tst-vfork3 tst-waitid \
-		   tst-getaddrinfo2 bug-glob1 bug-glob2 bug-glob3 tst-sysconf \
+		   tst-getaddrinfo2 bug-glob2 bug-glob3 tst-sysconf \
 		   tst-execvp1 tst-execvp2 tst-execlp1 tst-execlp2 \
 		   tst-execv1 tst-execv2 tst-execl1 tst-execl2 \
 		   tst-execve1 tst-execve2 tst-execle1 tst-execle2 \
@@ -93,7 +93,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-fnmatch3 bug-regex36 tst-getaddrinfo5 \
 		   tst-posix_spawn-fd tst-posix_spawn-setsid \
 		   tst-posix_fadvise tst-posix_fadvise64 \
-		   tst-sysconf-empty-chroot
+		   tst-sysconf-empty-chroot tst-glob_symlinks
 tests-internal	:= bug-regex5 bug-regex20 bug-regex33 \
 		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3
 xtests		:= bug-ga2
