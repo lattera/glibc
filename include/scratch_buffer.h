@@ -66,8 +66,7 @@
 struct scratch_buffer {
   void *data;    /* Pointer to the beginning of the scratch area.  */
   size_t length; /* Allocated space at the data pointer, in bytes.  */
-  char __space[1024]
-    __attribute__ ((aligned (__alignof__ (max_align_t))));
+  max_align_t __space[(1023 + sizeof (max_align_t)) / sizeof (max_align_t)];
 };
 
 /* Initializes *BUFFER so that BUFFER->data points to BUFFER->__space

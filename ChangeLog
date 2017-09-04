@@ -1,5 +1,11 @@
 2017-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* include/scratch_buffer.h (scratch_buffer): Use a C99 align method
+	instead of GCC extension.
+	* malloc/scratch_buffer_grow.c [!_LIBC]: Include libc-config.h.
+	* malloc/scratch_buffer_grow_preserve.c [!_LIBC]: Likewise.
+	* malloc/scratch_buffer_set_array_size.c [!_LIBC]: Likewise.
+
 	[BZ #866]
 	[BZ #1062]
 	* posix/Makefile (tests): Remove bug-glob1 and tst-glob_symlinks.

@@ -16,6 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _LIBC
+# include <libc-config.h>
+#endif
+
 #include <scratch_buffer.h>
 #include <errno.h>
 #include <limits.h>
@@ -57,4 +61,4 @@ __libc_scratch_buffer_set_array_size (struct scratch_buffer *buffer,
   buffer->length = new_length;
   return true;
 }
-libc_hidden_def (__libc_scratch_buffer_set_array_size);
+libc_hidden_def (__libc_scratch_buffer_set_array_size)
