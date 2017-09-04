@@ -4,5 +4,3 @@
 #undef glob64
 #undef globfree64
 weak_alias (glob, glob64)
-weak_alias (globfree, globfree64)
-libc_hidden_ver (globfree, globfree64)

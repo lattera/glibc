@@ -1,5 +1,5 @@
-/* Two glob variants with 64-bit support, for dirent64 and __olddirent64.
-   Copyright (C) 1998-2017 Free Software Foundation, Inc.
+/* Frees the dynamically allocated storage from an earlier call to glob.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +16,26 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <dirent.h>
+#ifndef _LIBC
+# include <config.h>
+#endif
+
 #include <glob.h>
-#include <sys/stat.h>
-#include <shlib-compat.h>
+#include <stdlib.h>
 
-#define dirent dirent64
-#define __readdir(dirp) __readdir64 (dirp)
-
-#define glob_t glob64_t
-#define glob(pattern, flags, errfunc, pglob) \
-  __glob64 (pattern, flags, errfunc, pglob)
-#define globfree(pglob) globfree64 (pglob)
-
-#undef stat
-#define stat stat64
-#undef __stat
-#define __stat(file, buf) __xstat64 (_STAT_VER, file, buf)
-
-#define COMPILE_GLOB64	1
-
-#include <posix/glob.c>
-
-versioned_symbol (libc, __glob64, glob64, GLIBC_2_2);
-libc_hidden_ver (__glob64, glob64)
+/* Free storage allocated in PGLOB by a previous `glob' call.  */
+void
+globfree (glob_t *pglob)
+{
+  if (pglob->gl_pathv != NULL)
+    {
+      size_t i;
+      for (i = 0; i < pglob->gl_pathc; ++i)
+        free (pglob->gl_pathv[pglob->gl_offs + i]);
+      free (pglob->gl_pathv);
+      pglob->gl_pathv = NULL;
+    }
+}
+#ifndef globfree
+libc_hidden_def (globfree)
+#endif

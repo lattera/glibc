@@ -15,11 +15,8 @@
 #undef __stat
 #define __stat(file, buf) __xstat64 (_STAT_VER, file, buf)
 
-#define NO_GLOB_PATTERN_P 1
-
 #define COMPILE_GLOB64	1
 
 #include <posix/glob.c>
 
 libc_hidden_def (glob64)
-libc_hidden_def (globfree64)

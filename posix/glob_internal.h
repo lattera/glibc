@@ -1,5 +1,5 @@
-/* Two glob variants with 64-bit support, for dirent64 and __olddirent64.
-   Copyright (C) 1998-2017 Free Software Foundation, Inc.
+/* Shared definition for glob and glob_pattern_p.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +16,42 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <dirent.h>
-#include <glob.h>
-#include <sys/stat.h>
-#include <shlib-compat.h>
+#ifndef GLOB_INTERNAL_H
+# define GLOB_INTERNAL_H
 
-#define dirent dirent64
-#define __readdir(dirp) __readdir64 (dirp)
+static inline int
+__glob_pattern_type (const char *pattern, int quote)
+{
+  const char *p;
+  int ret = 0;
 
-#define glob_t glob64_t
-#define glob(pattern, flags, errfunc, pglob) \
-  __glob64 (pattern, flags, errfunc, pglob)
-#define globfree(pglob) globfree64 (pglob)
+  for (p = pattern; *p != '\0'; ++p)
+    switch (*p)
+      {
+      case '?':
+      case '*':
+        return 1;
 
-#undef stat
-#define stat stat64
-#undef __stat
-#define __stat(file, buf) __xstat64 (_STAT_VER, file, buf)
+      case '\\':
+        if (quote)
+          {
+            if (p[1] != '\0')
+              ++p;
+            ret |= 2;
+          }
+        break;
 
-#define COMPILE_GLOB64	1
+      case '[':
+        ret |= 4;
+        break;
 
-#include <posix/glob.c>
+      case ']':
+        if (ret & 4)
+          return 1;
+        break;
+      }
 
-versioned_symbol (libc, __glob64, glob64, GLIBC_2_2);
-libc_hidden_ver (__glob64, glob64)
+  return ret;
+}
+
+#endif /* GLOB_INTERNAL_H  */

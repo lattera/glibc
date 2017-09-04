@@ -1,3 +1,63 @@
+2017-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #1062]
+	* posix/Makefile (routines): Add globfree, globfree64, and
+	glob_pattern_p.
+	* posix/flexmember.h: New file.
+	* posix/glob_internal.h: Likewise.
+	* posix/glob_pattern_p.c: Likewise.
+	* posix/globfree.c: Likewise.
+	* posix/globfree64.c: Likewise.
+	* sysdeps/gnu/globfree64.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/globfree.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/globfree64.c: Likewise.
+	* sysdeps/unix/sysv/linux/oldglob.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/globfree64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/globfree.c: Likewise.
+	* sysdeps/wordsize-64/globfree.c: Likewise.
+	* sysdeps/wordsize-64/globfree64.c: Likewise.
+	* posix/glob.c (HAVE_CONFIG_H): Use !_LIBC instead.
+	[NDEBUG): Remove comments.
+	(GLOB_ONLY_P, _AMIGA, VMS): Remove define.
+	(dirent_type): New type.  Use uint_fast8_t not
+	uint8_t, as C99 does not require uint8_t.
+	(DT_UNKNOWN, DT_DIR, DT_LNK): New macros.
+	(struct readdir_result): Use dirent_type.  Do not define skip_entry
+	unless it is needed; this saves a byte on platforms lacking d_ino.
+	(readdir_result_type, readdir_result_skip_entry):
+	New functions, replacing ...
+	(readdir_result_might_be_symlink, readdir_result_might_be_dir):
+	 these functions, which were removed.  This makes the callers
+	easier to read.  All callers changed.
+	(D_INO_TO_RESULT): Now empty if there is no d_ino.
+	(size_add_wrapv, glob_use_alloca): New static functions.
+	(glob, glob_in_dir): Check for size_t overflow in several places,
+	and fix some size_t checks that were not quite right.
+	Remove old code using SHELL since Bash no longer
+	uses this.
+	(glob, prefix_array): Separate MS code better.
+	(glob_in_dir): Remove old Amiga and VMS code.
+	(globfree, __glob_pattern_type, __glob_pattern_p): Move to
+	separate files.
+	(glob_in_dir): Do not rely on undefined behavior in accessing
+	struct members beyond their bounds.  Use a flexible array member
+	instead
+	(link_stat): Rename from link_exists2_p and return -1/0 instead of
+	0/1.  Caller changed.
+	(glob): Fix memory leaks.
+	* posix/glob64 (globfree64): Move to separate file.
+	* sysdeps/gnu/glob64.c (NO_GLOB_PATTERN_P): Remove define.
+	(globfree64): Remove hidden alias.
+	* sysdeps/unix/sysv/linux/Makefile (sysdeps_routines): Add
+	oldglob.
+	* sysdeps/unix/sysv/linux/alpha/glob.c (__new_globfree): Move to
+	separate file.
+	* sysdeps/unix/sysv/linux/i386/glob64.c (NO_GLOB_PATTERN_P): Remove
+	define.
+	Move compat code to separate file.
+	* sysdeps/wordsize-64/glob.c (globfree): Move definitions to
+	separate file.
+
 2017-09-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* resolv/tst-resolv-qtypes.c (domain): Changed to

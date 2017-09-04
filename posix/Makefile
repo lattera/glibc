@@ -45,7 +45,7 @@ routines :=								      \
 	getpgid setpgid getpgrp bsd-getpgrp setpgrp getsid setsid	      \
 	getresuid getresgid setresuid setresgid				      \
 	pathconf sysconf fpathconf					      \
-	glob glob64 fnmatch regex					      \
+	glob glob64 globfree globfree64 glob_pattern_p fnmatch regex	      \
 	confstr								      \
 	getopt getopt1 							      \
 	sched_setp sched_getp sched_sets sched_gets sched_yield sched_primax  \

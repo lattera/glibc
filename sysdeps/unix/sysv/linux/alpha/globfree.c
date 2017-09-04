@@ -1,4 +1,5 @@
-/* Copyright (C) 1998-2017 Free Software Foundation, Inc.
+/* Compat globfree.  Linux/alpha version.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,33 +16,22 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define glob64 __no_glob64_decl
 #define globfree64 __no_globfree64_decl
-
 #include <sys/types.h>
 #include <glob.h>
 #include <shlib-compat.h>
 
-/* For Linux/Alpha we have to make the glob symbols versioned.  */
-#define glob(pattern, flags, errfunc, pglob) \
-  __new_glob (pattern, flags, errfunc, pglob)
 #define globfree(pglob) \
   __new_globfree (pglob)
 
-/* We need prototypes for these new names.  */
-extern int __new_glob (const char *__pattern, int __flags,
-		       int (*__errfunc) (const char *, int),
-		       glob_t *__pglob);
 extern void __new_globfree (glob_t *__pglob);
 
-#include <posix/glob.c>
+#include <posix/globfree.c>
 
-#undef glob
-#undef globfree
-#undef glob64
 #undef globfree64
 
-versioned_symbol (libc, __new_glob, glob, GLIBC_2_1);
-libc_hidden_ver (__new_glob, glob)
+versioned_symbol (libc, __new_globfree, globfree, GLIBC_2_1);
+libc_hidden_ver (__new_globfree, globfree)
 
-weak_alias (__new_glob, glob64)
+weak_alias (__new_globfree, globfree64)
+libc_hidden_ver (__new_globfree, globfree64)

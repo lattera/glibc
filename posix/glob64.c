@@ -43,10 +43,4 @@ glob64 (const char *pattern, int flags,
 }
 libc_hidden_def (glob64)
 
-void
-globfree64 (glob64_t *pglob)
-{
-}
-libc_hidden_def (globfree64)
-
 stub_warning (glob64)
