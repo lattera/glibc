@@ -1,5 +1,16 @@
 2017-09-29  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* math/Makefile (type-float-routines): Add e_log2f_data.
+	* sysdeps/ieee754/flt-32/e_log2f.c: New implementation.
+	* sysdeps/ieee754/flt-32/e_log2f_data.c: New file.
+	* sysdeps/ieee754/flt-32/math_config.h (__log2f_data): Define.
+	(LOG2F_TABLE_BITS, LOG2F_POLY_ORDER): Define.
+	* sysdeps/i386/fpu/e_log2f_data.c: New file.
+	* sysdeps/ia64/fpu/e_log2f_data.c: New file.
+	* sysdeps/m68k/m680x0/fpu/e_log2f_data.c: New file.
+
+2017-09-29  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* math/Makefile (type-float-routines): Add e_logf_data.
 	* sysdeps/ieee754/flt-32/e_logf.c: New implementation.
 	* sysdeps/ieee754/flt-32/e_logf_data.c: New file.
