@@ -26,6 +26,11 @@
 #define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
 #include <bits/libc-header-start.h>
 
+#if defined log && defined __GNUC__
+# warning A macro called log was already defined when <math.h> was included.
+# warning This will cause compilation problems.
+#endif
+
 __BEGIN_DECLS
 
 /* Get definitions of __intmax_t and __uintmax_t.  */
