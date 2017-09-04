@@ -1,3 +1,15 @@
+2017-09-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
+	* include/sys/stat.h (__chmod): Add libc_hidden_proto.
+	(__mkdir): Likewise.
+	* io/chmod.c (__chmod): Add libc_hidden_def.
+	* io/mkdir.c (__mkdir): Likewise.
+	* sysdeps/mach/hurd/chmod.c (__chmod): Likewise.
+	* sysdeps/mach/hurd/mkdir.c (__mkdir): Likewise.
+	* sysdeps/unix/sysv/linux/generic/chmod.c (__chmod): Likewise.
+	* sysdeps/unix/sysv/linux/generic/mkdir.c (__mkdir): Likewise.
+
 2017-09-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel

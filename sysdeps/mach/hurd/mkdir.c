@@ -40,4 +40,5 @@ __mkdir (const char *file_name, mode_t mode)
   return 0;
 }
 
+libc_hidden_def (__mkdir)
 weak_alias (__mkdir, mkdir)

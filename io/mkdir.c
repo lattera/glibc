@@ -36,4 +36,5 @@ __mkdir (const char *path, mode_t mode)
 }
 stub_warning (mkdir)
 
+libc_hidden_def (__mkdir)
 weak_alias (__mkdir, mkdir)

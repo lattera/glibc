@@ -7,9 +7,11 @@ extern int __stat (const char *__file, struct stat *__buf);
 extern int __fstat (int __fd, struct stat *__buf);
 extern int __lstat (const char *__file, struct stat *__buf);
 extern int __chmod (const char *__file, __mode_t __mode);
+libc_hidden_proto (__chmod)
 extern int __fchmod (int __fd, __mode_t __mode);
 extern __mode_t __umask (__mode_t __mask);
 extern int __mkdir (const char *__path, __mode_t __mode);
+libc_hidden_proto (__mkdir)
 extern int __mknod (const char *__path,
 		    __mode_t __mode, __dev_t __dev);
 #if IS_IN (libc) || IS_IN (rtld)

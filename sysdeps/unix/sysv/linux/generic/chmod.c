@@ -28,4 +28,6 @@ __chmod (const char *file, mode_t mode)
 {
   return INLINE_SYSCALL (fchmodat, 3, AT_FDCWD, file, mode);
 }
+
+libc_hidden_def (__chmod)
 weak_alias (__chmod, chmod)
