@@ -17,8 +17,16 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define __isinf __redirect___isinf
+
+/* The following definitions, although not related to the 'double'
+   version of 'isinf', are required to guarantee macro expansions
+   (e.g.: from __isinff to __redirect_isinff) in include/math.h, thus
+   compensating for the unintended macro expansions in
+   math/bits/mathcalls-helper-functions.h.  */
 #define __isinff __redirect___isinff
 #define __isinfl __redirect___isinfl
+#define __isinff128 __redirect___isinff128
+
 #include <math.h>
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
@@ -30,6 +38,7 @@ extern __typeof (__isinf) __isinf_power8 attribute_hidden;
 #undef __isinf
 #undef __isinff
 #undef __isinfl
+#undef __isinff128
 
 libc_ifunc_redirected (__redirect___isinf, __isinf,
 		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)

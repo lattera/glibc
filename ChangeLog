@@ -1,5 +1,14 @@
 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite.c
+	(__finitef128): Define to __redirect___finitef128.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf.c
+	(__isinff128): Define to __redirect___isinff128.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan.c
+	(__isnanf128): Define to __redirect___isnanf128.
+
+2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* sysdeps/powerpc/powerpc64le/Makefile
 	(CFLAGS-tst-strtod-nan-locale.c): New variable.
 	(CFLAGS-tst-wcstod-nan-locale.c): New variable.

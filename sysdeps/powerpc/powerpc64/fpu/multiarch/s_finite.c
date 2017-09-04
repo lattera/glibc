@@ -17,8 +17,16 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define __finite __redirect___finite
+
+/* The following definitions, although not related to the 'double'
+   version of 'finite', are required to guarantee macro expansions
+   (e.g.: from __finitef to __redirect_finitef) in include/math.h, thus
+   compensating for the unintended macro expansions in
+   math/bits/mathcalls-helper-functions.h.  */
 #define __finitef __redirect___finitef
 #define __finitel __redirect___finitel
+#define __finitef128 __redirect___finitef128
+
 #include <math.h>
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
@@ -30,6 +38,7 @@ extern __typeof (__finite) __finite_power8 attribute_hidden;
 #undef __finite
 #undef __finitef
 #undef __finitel
+#undef __finitef128
 
 libc_ifunc_redirected (__redirect___finite, __finite,
 		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)

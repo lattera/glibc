@@ -17,8 +17,16 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define __isnan __redirect___isnan
+
+/* The following definitions, although not related to the 'double'
+   version of 'isnan', are required to guarantee macro expansions
+   (e.g.: from __isnanf to __redirect_isnanf) in include/math.h, thus
+   compensating for the unintended macro expansions in
+   math/bits/mathcalls-helper-functions.h.  */
 #define __isnanf __redirect___isnanf
 #define __isnanl __redirect___isnanl
+#define __isnanf128 __redirect___isnanf128
+
 #include <math.h>
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
@@ -33,6 +41,7 @@ extern __typeof (__isnan) __isnan_power8 attribute_hidden;
 #undef __isnan
 #undef __isnanf
 #undef __isnanl
+#undef __isnanf128
 
 libc_ifunc_redirected (__redirect___isnan, __isnan,
 		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
