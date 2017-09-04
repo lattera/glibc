@@ -1,5 +1,8 @@
 2017-09-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
+	version to 4.13.
+
 	[BZ #22082]
 	* math/bits/math-finite.h (exp10): Redirect if [__GLIBC_USE
 	(IEC_60559_FUNCS_EXT)], not [__USE_GNU].
