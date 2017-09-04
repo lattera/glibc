@@ -1,6 +1,13 @@
 2017-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #1062]
+	* posix/glob.c (GET_LOGIN_NAME_MAX): Remove.
+	(glob): Use the same scratch buffer for both getlogin_r and
+	getpwnam_r.  Don’t require preallocation of the login name.  This
+	simplifies storage allocation, and corrects the handling of
+	long login names.
+
+	[BZ #1062]
 	* posix/glob.c (glob): Port recent patches to platforms
 	lacking getpwnam_r.
 	(glob): Fix longstanding misuse of errno after getpwnam_r, which

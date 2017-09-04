@@ -75,12 +75,6 @@
 #include <flexmember.h>
 #include <glob_internal.h>
 #include <scratch_buffer.h>
-
-#ifdef _SC_LOGIN_NAME_MAX
-# define GET_LOGIN_NAME_MAX()	sysconf (_SC_LOGIN_NAME_MAX)
-#else
-# define GET_LOGIN_NAME_MAX()	(-1)
-#endif
 
 static const char *next_brace_sub (const char *begin, int flags) __THROWNL;
 
@@ -610,67 +604,45 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 	      else
 		home_dir = "c:/users/default"; /* poor default */
 #else
-	      int success;
-	      char *name;
-	      int malloc_name = 0;
-	      size_t buflen = GET_LOGIN_NAME_MAX () + 1;
-
-	      if (buflen == 0)
-		/* 'sysconf' does not support _SC_LOGIN_NAME_MAX.  Try
-		   a moderate value.  */
-		buflen = 20;
-	      if (glob_use_alloca (alloca_used, buflen))
-		name = alloca_account (buflen, alloca_used);
-	      else
+	      int err;
+	      struct passwd *p;
+	      struct passwd pwbuf;
+	      struct scratch_buffer s;
+	      scratch_buffer_init (&s);
+	      while (true)
 		{
-		  name = malloc (buflen);
-		  if (name == NULL)
+		  p = NULL;
+		  err = __getlogin_r (s.data, s.length);
+		  if (err == 0)
+		    {
+# if defined HAVE_GETPWNAM_R || defined _LIBC
+		      size_t ssize = strlen (s.data) + 1;
+		      err = getpwnam_r (s.data, &pwbuf, s.data + ssize,
+					s.length - ssize, &p);
+# else
+		      p = getpwnam (s.data);
+		      if (p == NULL)
+			err = errno;
+# endif
+		    }
+		  if (err != ERANGE)
+		    break;
+		  if (!scratch_buffer_grow (&s))
 		    {
 		      retval = GLOB_NOSPACE;
 		      goto out;
 		    }
-		  malloc_name = 1;
 		}
-
-	      success = __getlogin_r (name, buflen) == 0;
-	      if (success)
+	      if (err == 0)
 		{
-		  struct passwd *p;
-		  struct scratch_buffer pwtmpbuf;
-		  scratch_buffer_init (&pwtmpbuf);
-# if defined HAVE_GETPWNAM_R || defined _LIBC
-		  struct passwd pwbuf;
-
-		  while (getpwnam_r (name, &pwbuf,
-				     pwtmpbuf.data, pwtmpbuf.length, &p)
-			 == ERANGE)
-		    {
-		      if (!scratch_buffer_grow (&pwtmpbuf))
-			{
-			  retval = GLOB_NOSPACE;
-			  goto out;
-			}
-		    }
-# else
-		  p = getpwnam (name);
-# endif
-		  if (p != NULL)
-		    {
-		      home_dir = strdup (p->pw_dir);
-		      malloc_home_dir = 1;
-		      if (home_dir == NULL)
-			{
-			  scratch_buffer_free (&pwtmpbuf);
-			  retval = GLOB_NOSPACE;
-			  goto out;
-			}
-		    }
-		  scratch_buffer_free (&pwtmpbuf);
+		  home_dir = strdup (p->pw_dir);
+		  malloc_home_dir = 1;
 		}
-	      else
+	      scratch_buffer_free (&s);
+	      if (err == 0 && home_dir == NULL)
 		{
-		  if (__glibc_unlikely (malloc_name))
-		    free (name);
+		  retval = GLOB_NOSPACE;
+		  goto out;
 		}
 #endif /* WINDOWS32 */
 	    }
