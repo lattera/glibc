@@ -14,7 +14,7 @@ Major new features:
 
 * Optimized x86-64 trunc and truncf for processors with SSE4.1.
 
-* Optimized generic expf, exp2f, logf, log2f.
+* Optimized generic expf, exp2f, logf, log2f and powf.
 
 * In order to support faster and safer process termination the malloc API
   family of functions will no longer print a failure address and stack

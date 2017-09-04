@@ -1,5 +1,20 @@
 2017-09-29  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* math/Makefile (type-float-routines): Add e_powf_log2_data.
+	* sysdeps/ieee754/flt-32/e_powf.c: New implementation.
+	* sysdeps/ieee754/flt-32/e_powf_log2_data.c: New file.
+	* sysdeps/ieee754/flt-32/math_config.h (__powf_log2_data): Define.
+	(issignalingf_inline): Likewise.
+	(POWF_LOG2_TABLE_BITS): Likewise.
+	(POWF_LOG2_POLY_ORDER): Likewise.
+	(POWF_SCALE_BITS): Likewise.
+	(POWF_SCALE): Likewise.
+	* sysdeps/i386/fpu/e_powf_log2_data.c: New file.
+	* sysdeps/ia64/fpu/e_powf_log2_data.c: New file.
+	* sysdeps/m68k/m680x0/fpu/e_powf_log2_data.c: New file.
+
+2017-09-29  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* math/Makefile (type-float-routines): Add e_log2f_data.
 	* sysdeps/ieee754/flt-32/e_log2f.c: New implementation.
 	* sysdeps/ieee754/flt-32/e_log2f_data.c: New file.

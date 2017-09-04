@@ -1,7 +1,5 @@
-/* e_powf.c -- float version of e_pow.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
- */
-/* Copyright (C) 2017 Free Software Foundation, Inc.
+/* Single-precision pow function.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,210 +16,202 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
-
 #include <math.h>
-#include <math_private.h>
+#include <stdint.h>
+#include "math_config.h"
 
-static const float huge = 1.0e+30, tiny = 1.0e-30;
+/*
+POWF_LOG2_POLY_ORDER = 5
+EXP2F_TABLE_BITS = 5
 
-static const float
-bp[] = {1.0, 1.5,},
-zero    =  0.0,
-one	=  1.0,
-two	=  2.0,
-two24	=  16777216.0,	/* 0x4b800000 */
-	/* poly coefs for (3/2)*(log(x)-2s-2/3*s**3 */
-L1  =  6.0000002384e-01, /* 0x3f19999a */
-L2  =  4.2857143283e-01, /* 0x3edb6db7 */
-L3  =  3.3333334327e-01, /* 0x3eaaaaab */
-L4  =  2.7272811532e-01, /* 0x3e8ba305 */
-L5  =  2.3066075146e-01, /* 0x3e6c3255 */
-L6  =  2.0697501302e-01, /* 0x3e53f142 */
-P1   =  1.6666667163e-01, /* 0x3e2aaaab */
-P2   = -2.7777778450e-03, /* 0xbb360b61 */
-P3   =  6.6137559770e-05, /* 0x388ab355 */
-P4   = -1.6533901999e-06, /* 0xb5ddea0e */
-P5   =  4.1381369442e-08, /* 0x3331bb4c */
-ovt =  4.2995665694e-08; /* -(128-log2(ovfl+.5ulp)) */
+ULP error: 0.82 (~ 0.5 + relerr*2^24)
+relerr: 1.27 * 2^-26 (Relative error ~= 128*Ln2*relerr_log2 + relerr_exp2)
+relerr_log2: 1.83 * 2^-33 (Relative error of logx.)
+relerr_exp2: 1.69 * 2^-34 (Relative error of exp2(ylogx).)
+*/
 
-static const double
-	dp[] = { 0.0, 0x1.2b803473f7ad1p-1, }, /* log2(1.5) */
-	lg2 = M_LN2,
-	cp = 2.0/3.0/M_LN2,
-	invln2 = 1.0/M_LN2;
+#define N (1 << POWF_LOG2_TABLE_BITS)
+#define T __powf_log2_data.tab
+#define A __powf_log2_data.poly
+#define OFF 0x3f330000
+
+/* Subnormal input is normalized so ix has negative biased exponent.
+   Output is multiplied by N (POWF_SCALE) if TOINT_INTRINICS is set.  */
+static inline double_t
+log2_inline (uint32_t ix)
+{
+  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
+  double_t z, r, r2, r4, p, q, y, y0, invc, logc;
+  uint32_t iz, top, tmp;
+  int k, i;
+
+  /* x = 2^k z; where z is in range [OFF,2*OFF] and exact.
+     The range is split into N subintervals.
+     The ith subinterval contains z and c is near its center.  */
+  tmp = ix - OFF;
+  i = (tmp >> (23 - POWF_LOG2_TABLE_BITS)) % N;
+  top = tmp & 0xff800000;
+  iz = ix - top;
+  k = (int32_t) top >> (23 - POWF_SCALE_BITS); /* arithmetic shift */
+  invc = T[i].invc;
+  logc = T[i].logc;
+  z = (double_t) asfloat (iz);
+
+  /* log2(x) = log1p(z/c-1)/ln2 + log2(c) + k */
+  r = z * invc - 1;
+  y0 = logc + (double_t) k;
+
+  /* Pipelined polynomial evaluation to approximate log1p(r)/ln2.  */
+  r2 = r * r;
+  y = A[0] * r + A[1];
+  p = A[2] * r + A[3];
+  r4 = r2 * r2;
+  q = A[4] * r + y0;
+  q = p * r2 + q;
+  y = y * r4 + q;
+  return y;
+}
+
+#undef N
+#undef T
+#define N (1 << EXP2F_TABLE_BITS)
+#define T __exp2f_data.tab
+#define SIGN_BIAS (1 << (EXP2F_TABLE_BITS + 11))
+
+/* The output of log2 and thus the input of exp2 is either scaled by N
+   (in case of fast toint intrinsics) or not.  The unscaled xd must be
+   in [-1021,1023], sign_bias sets the sign of the result.  */
+static inline double_t
+exp2_inline (double_t xd, unsigned long sign_bias)
+{
+  uint64_t ki, ski, t;
+  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
+  double_t kd, z, r, r2, y, s;
+
+#if TOINT_INTRINSICS
+# define C __exp2f_data.poly_scaled
+  /* N*x = k + r with r in [-1/2, 1/2] */
+  kd = roundtoint (xd); /* k */
+  ki = converttoint (xd);
+#else
+# define C __exp2f_data.poly
+# define SHIFT __exp2f_data.shift_scaled
+  /* x = k/N + r with r in [-1/(2N), 1/(2N)] */
+  kd = (double) (xd + SHIFT); /* Rounding to double precision is required.  */
+  ki = asuint64 (kd);
+  kd -= SHIFT; /* k/N */
+#endif
+  r = xd - kd;
+
+  /* exp2(x) = 2^(k/N) * 2^r ~= s * (C0*r^3 + C1*r^2 + C2*r + 1) */
+  t = T[ki % N];
+  ski = ki + sign_bias;
+  t += ski << (52 - EXP2F_TABLE_BITS);
+  s = asdouble (t);
+  z = C[0] * r + C[1];
+  r2 = r * r;
+  y = C[2] * r + 1;
+  y = z * r2 + y;
+  y = y * s;
+  return y;
+}
+
+/* Returns 0 if not int, 1 if odd int, 2 if even int.  */
+static inline int
+checkint (uint32_t iy)
+{
+  int e = iy >> 23 & 0xff;
+  if (e < 0x7f)
+    return 0;
+  if (e > 0x7f + 23)
+    return 2;
+  if (iy & ((1 << (0x7f + 23 - e)) - 1))
+    return 0;
+  if (iy & (1 << (0x7f + 23 - e)))
+    return 1;
+  return 2;
+}
+
+static inline int
+zeroinfnan (uint32_t ix)
+{
+  return 2 * ix - 1 >= 2u * 0x7f800000 - 1;
+}
 
 float
-__ieee754_powf(float x, float y)
+__ieee754_powf (float x, float y)
 {
-	float z, ax, s;
-	double d1, d2;
-	int32_t i,j,k,yisint,n;
-	int32_t hx,hy,ix,iy;
+  unsigned long sign_bias = 0;
+  uint32_t ix, iy;
 
-	GET_FLOAT_WORD(hy,y);
-	iy = hy&0x7fffffff;
-
-    /* y==zero: x**0 = 1 */
-	if(iy==0 && !issignaling (x)) return one;
-
-    /* x==+-1 */
-	if(x == 1.0 && !issignaling (y)) return one;
-	if(x == -1.0 && isinf(y)) return one;
-
-	GET_FLOAT_WORD(hx,x);
-	ix = hx&0x7fffffff;
-
-    /* +-NaN return x+y */
-	if(__builtin_expect(ix > 0x7f800000 ||
-			    iy > 0x7f800000, 0))
-		return x+y;
-
-    /* special value of y */
-	if (__builtin_expect(iy==0x7f800000, 0)) {	/* y is +-inf */
-	    if (ix==0x3f800000)
-		return  y - y;	/* inf**+-1 is NaN */
-	    else if (ix > 0x3f800000)/* (|x|>1)**+-inf = inf,0 */
-		return (hy>=0)? y: zero;
-	    else			/* (|x|<1)**-,+inf = inf,0 */
-		return (hy<0)?-y: zero;
+  ix = asuint (x);
+  iy = asuint (y);
+  if (__glibc_unlikely (ix - 0x00800000 >= 0x7f800000 - 0x00800000
+			|| zeroinfnan (iy)))
+    {
+      /* Either (x < 0x1p-126 or inf or nan) or (y is 0 or inf or nan).  */
+      if (__glibc_unlikely (zeroinfnan (iy)))
+	{
+	  if (2 * iy == 0)
+	    return issignalingf_inline (x) ? x + y : 1.0f;
+	  if (ix == 0x3f800000)
+	    return issignalingf_inline (y) ? x + y : 1.0f;
+	  if (2 * ix > 2u * 0x7f800000 || 2 * iy > 2u * 0x7f800000)
+	    return x + y;
+	  if (2 * ix == 2 * 0x3f800000)
+	    return 1.0f;
+	  if ((2 * ix < 2 * 0x3f800000) == !(iy & 0x80000000))
+	    return 0.0f; /* |x|<1 && y==inf or |x|>1 && y==-inf.  */
+	  return y * y;
 	}
-	if(iy==0x3f800000) {	/* y is  +-1 */
-	    if(hy<0) return one/x; else return x;
-	}
-	if(hy==0x40000000) return x*x; /* y is  2 */
-	if(hy==0x3f000000) {	/* y is  0.5 */
-	    if(__builtin_expect(hx>=0, 1))	/* x >= +0 */
-	    return __ieee754_sqrtf(x);
-	}
-
-    /* determine if y is an odd int when x < 0
-     * yisint = 0	... y is not an integer
-     * yisint = 1	... y is an odd int
-     * yisint = 2	... y is an even int
-     */
-	yisint  = 0;
-	if(hx<0) {
-	    if(iy>=0x4b800000) yisint = 2; /* even integer y */
-	    else if(iy>=0x3f800000) {
-		k = (iy>>23)-0x7f;	   /* exponent */
-		j = iy>>(23-k);
-		if((j<<(23-k))==iy) yisint = 2-(j&1);
+      if (__glibc_unlikely (zeroinfnan (ix)))
+	{
+	  float_t x2 = x * x;
+	  if (ix & 0x80000000 && checkint (iy) == 1)
+	    {
+	      x2 = -x2;
+	      sign_bias = 1;
 	    }
+#if WANT_ERRNO
+	  if (2 * ix == 0 && iy & 0x80000000)
+	    return __math_divzerof (sign_bias);
+#endif
+	  return iy & 0x80000000 ? 1 / x2 : x2;
 	}
-
-	ax   = fabsf(x);
-    /* special value of x */
-	if(__builtin_expect(ix==0x7f800000||ix==0||ix==0x3f800000, 0)){
-	    z = ax;			/*x is +-0,+-inf,+-1*/
-	    if(hy<0) z = one/z;	/* z = (1/|x|) */
-	    if(hx<0) {
-		if(((ix-0x3f800000)|yisint)==0) {
-		    z = (z-z)/(z-z); /* (-1)**non-int is NaN */
-		} else if(yisint==1)
-		    z = -z;		/* (x<0)**odd = -(|x|**odd) */
-	    }
-	    return z;
+      /* x and y are non-zero finite.  */
+      if (ix & 0x80000000)
+	{
+	  /* Finite x < 0.  */
+	  int yint = checkint (iy);
+	  if (yint == 0)
+	    return __math_invalidf (x);
+	  if (yint == 1)
+	    sign_bias = SIGN_BIAS;
+	  ix &= 0x7fffffff;
 	}
-
-    /* (x<0)**(non-int) is NaN */
-	if(__builtin_expect(((((uint32_t)hx>>31)-1)|yisint)==0, 0))
-	    return (x-x)/(x-x);
-
-    /* |y| is huge */
-	if(__builtin_expect(iy>0x4d000000, 0)) { /* if |y| > 2**27 */
-	/* over/underflow if x is not close to one */
-	    if(ix<0x3f7ffff8) return (hy<0)? huge*huge:tiny*tiny;
-	    if(ix>0x3f800007) return (hy>0)? huge*huge:tiny*tiny;
-	/* now |1-x| is tiny <= 2**-20, suffice to compute
-	   log(x) by x-x^2/2+x^3/3-x^4/4 */
-	    d2 = ax-1;		/* d2 has 20 trailing zeros.  */
-	    d2 = d2 * invln2 -
-		 (d2 * d2) * (0.5 - d2 * (0.333333333333 - d2 * 0.25)) * invln2;
-	} else {
-	    /* Avoid internal underflow for tiny y.  The exact value
-	       of y does not matter if |y| <= 2**-32.  */
-	    if (iy < 0x2f800000)
-	      SET_FLOAT_WORD (y, (hy & 0x80000000) | 0x2f800000);
-	    n = 0;
-	/* take care subnormal number */
-	    if(ix<0x00800000)
-		{ax *= two24; n -= 24; GET_FLOAT_WORD(ix,ax); }
-	    n  += ((ix)>>23)-0x7f;
-	    j  = ix&0x007fffff;
-	/* determine interval */
-	    ix = j|0x3f800000;		/* normalize ix */
-	    if(j<=0x1cc471) k=0;	/* |x|<sqrt(3/2) */
-	    else if(j<0x5db3d7) k=1;	/* |x|<sqrt(3)   */
-	    else {k=0;n+=1;ix -= 0x00800000;}
-	    SET_FLOAT_WORD(ax,ix);
-
-	/* compute d1 = (x-1)/(x+1) or (x-1.5)/(x+1.5) */
-	    d1 = (ax-(double)bp[k])/(ax+(double)bp[k]);
-	/* compute d2 = log(ax) */
-	    d2 = d1 * d1;
-	    d2 = 3.0 + d2 + d2*d2*(L1+d2*(L2+d2*(L3+d2*(L4+d2*(L5+d2*L6)))));
-	/* 2/(3log2)*(d2+...) */
-	    d2 = d1*d2*cp;
-	/* log2(ax) = (d2+..)*2/(3*log2) */
-	    d2 = d2+dp[k]+(double)n;
+      if (ix < 0x00800000)
+	{
+	  /* Normalize subnormal x so exponent becomes negative.  */
+	  ix = asuint (x * 0x1p23f);
+	  ix &= 0x7fffffff;
+	  ix -= 23 << 23;
 	}
-
-	s = one; /* s (sign of result -ve**odd) = -1 else = 1 */
-	if(((((uint32_t)hx>>31)-1)|(yisint-1))==0)
-	    s = -one;	/* (-ve)**(odd int) */
-
-    /* compute y * d2 */
-	d1 = y * d2;
-	z = d1;
-	GET_FLOAT_WORD(j,z);
-	if (__builtin_expect(j>0x43000000, 0))		/* if z > 128 */
-	    return s*huge*huge;				/* overflow */
-	else if (__builtin_expect(j==0x43000000, 0)) {	/* if z == 128 */
-	    if(ovt>(z-d1)) return s*huge*huge;	/* overflow */
-	}
-	else if (__builtin_expect((j&0x7fffffff)>0x43160000, 0))/* z <= -150 */
-	    return s*tiny*tiny;				/* underflow */
-	else if (__builtin_expect((uint32_t) j==0xc3160000, 0)){/* z == -150*/
-	    if(0.0<=(z-d1)) return s*tiny*tiny;		/* underflow */
-	}
-    /*
-     * compute 2**d1
-     */
-	i = j&0x7fffffff;
-	k = (i>>23)-0x7f;
-	n = 0;
-	if(i>0x3f000000) {		/* if |z| > 0.5, set n = [z+0.5] */
-	    n = j+(0x00800000>>(k+1));
-	    k = ((n&0x7fffffff)>>23)-0x7f;	/* new k for n */
-	    SET_FLOAT_WORD(z,n&~(0x007fffff>>k));
-	    n = ((n&0x007fffff)|0x00800000)>>(23-k);
-	    if(j<0) n = -n;
-	    d1 -= z;
-	}
-	d1 = d1 * lg2;
-	d2 = d1*d1;
-	d2 = d1 - d2*(P1+d2*(P2+d2*(P3+d2*(P4+d2*P5))));
-	d2 = (d1*d2)/(d2-two);
-	z = one - (d2-d1);
-	GET_FLOAT_WORD(j,z);
-	j += (n<<23);
-	if((j>>23)<=0)	/* subnormal output */
-	  {
-	    z = __scalbnf (z, n);
-	    float force_underflow = z * z;
-	    math_force_eval (force_underflow);
-	  }
-	else SET_FLOAT_WORD(z,j);
-	return s*z;
+    }
+  double_t logx = log2_inline (ix);
+  double_t ylogx = y * logx; /* Note: cannot overflow, y is single prec.  */
+  if (__glibc_unlikely ((asuint64 (ylogx) >> 47 & 0xffff)
+			>= asuint64 (126.0 * POWF_SCALE) >> 47))
+    {
+      /* |y*log(x)| >= 126.  */
+      if (ylogx > 0x1.fffffffd1d571p+6 * POWF_SCALE)
+	return __math_oflowf (sign_bias);
+      if (ylogx <= -150.0 * POWF_SCALE)
+	return __math_uflowf (sign_bias);
+#if WANT_ERRNO_UFLOW
+      if (ylogx < -149.0 * POWF_SCALE)
+	return __math_may_uflowf (sign_bias);
+#endif
+    }
+  return (float) exp2_inline (ylogx, sign_bias);
 }
 strong_alias (__ieee754_powf, __powf_finite)

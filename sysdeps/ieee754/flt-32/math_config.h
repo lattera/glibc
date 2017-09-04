@@ -21,6 +21,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <nan-high-order-bit.h>
 #include <stdint.h>
 
 #ifndef WANT_ROUNDING
@@ -90,6 +91,15 @@ asdouble (uint64_t i)
   return u.f;
 }
 
+static inline int
+issignalingf_inline (float x)
+{
+  uint32_t ix = asuint (x);
+  if (HIGH_ORDER_BIT_IS_SET_FOR_SNAN)
+    return (ix & 0x7fc00000) == 0x7fc00000;
+  return 2 * (ix ^ 0x00400000) > 2u * 0x7fc00000;
+}
+
 #define NOINLINE __attribute__ ((noinline))
 
 attribute_hidden float __math_oflowf (unsigned long);
@@ -133,5 +143,22 @@ extern const struct log2f_data
   } tab[1 << LOG2F_TABLE_BITS];
   double poly[LOG2F_POLY_ORDER];
 } __log2f_data attribute_hidden;
+
+#define POWF_LOG2_TABLE_BITS 4
+#define POWF_LOG2_POLY_ORDER 5
+#if TOINT_INTRINSICS
+# define POWF_SCALE_BITS EXP2F_TABLE_BITS
+#else
+# define POWF_SCALE_BITS 0
+#endif
+#define POWF_SCALE ((double) (1 << POWF_SCALE_BITS))
+extern const struct powf_log2_data
+{
+  struct
+  {
+    double invc, logc;
+  } tab[1 << POWF_LOG2_TABLE_BITS];
+  double poly[POWF_LOG2_POLY_ORDER];
+} __powf_log2_data attribute_hidden;
 
 #endif
