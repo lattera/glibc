@@ -1,5 +1,11 @@
 2017-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #1062]
+	* posix/glob.c (glob): Port recent patches to platforms
+	lacking getpwnam_r.
+	(glob): Fix longstanding misuse of errno after getpwnam_r, which
+	returns an error number rather than setting errno.
+
 	* include/scratch_buffer.h (scratch_buffer): Use a C99 align method
 	instead of GCC extension.
 	* malloc/scratch_buffer_grow.c [!_LIBC]: Include libc-config.h.

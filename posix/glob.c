@@ -15,10 +15,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _LIBC
-# include <config.h>
-#endif
-
 #include <glob.h>
 
 #include <errno.h>
@@ -39,10 +35,6 @@
 #endif
 
 #include <errno.h>
-#ifndef __set_errno
-# define __set_errno(val) errno = (val)
-#endif
-
 #include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
@@ -82,12 +74,8 @@
 
 #include <flexmember.h>
 #include <glob_internal.h>
+#include <scratch_buffer.h>
 
-#ifdef _SC_GETPW_R_SIZE_MAX
-# define GETPW_R_SIZE_MAX()	sysconf (_SC_GETPW_R_SIZE_MAX)
-#else
-# define GETPW_R_SIZE_MAX()	(-1)
-#endif
 #ifdef _SC_LOGIN_NAME_MAX
 # define GET_LOGIN_NAME_MAX()	sysconf (_SC_LOGIN_NAME_MAX)
 #else
@@ -648,97 +636,36 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 	      if (success)
 		{
 		  struct passwd *p;
-		  char *malloc_pwtmpbuf = NULL;
-		  char *pwtmpbuf;
+		  struct scratch_buffer pwtmpbuf;
+		  scratch_buffer_init (&pwtmpbuf);
 # if defined HAVE_GETPWNAM_R || defined _LIBC
-		  long int pwbuflenmax = GETPW_R_SIZE_MAX ();
-		  size_t pwbuflen = pwbuflenmax;
 		  struct passwd pwbuf;
-		  int save = errno;
 
-#  ifndef _LIBC
-		  if (! (0 < pwbuflenmax && pwbuflenmax <= SIZE_MAX))
-		    /* 'sysconf' does not support _SC_GETPW_R_SIZE_MAX.
-		       Try a moderate value.  */
-		    pwbuflen = 1024;
-#  endif
-		  if (glob_use_alloca (alloca_used, pwbuflen))
-		    pwtmpbuf = alloca_account (pwbuflen, alloca_used);
-		  else
+		  while (getpwnam_r (name, &pwbuf,
+				     pwtmpbuf.data, pwtmpbuf.length, &p)
+			 == ERANGE)
 		    {
-		      pwtmpbuf = malloc (pwbuflen);
-		      if (pwtmpbuf == NULL)
+		      if (!scratch_buffer_grow (&pwtmpbuf))
 			{
-			  if (__glibc_unlikely (malloc_name))
-			    free (name);
 			  retval = GLOB_NOSPACE;
 			  goto out;
 			}
-		      malloc_pwtmpbuf = pwtmpbuf;
-		    }
-
-		  while (getpwnam_r (name, &pwbuf, pwtmpbuf, pwbuflen, &p)
-			 != 0)
-		    {
-		      size_t newlen;
-		      bool v;
-		      if (errno != ERANGE)
-			{
-			  p = NULL;
-			  break;
-			}
-		      v = size_add_wrapv (pwbuflen, pwbuflen, &newlen);
-		      if (!v && malloc_pwtmpbuf == NULL
-			  && glob_use_alloca (alloca_used, newlen))
-			pwtmpbuf = extend_alloca_account (pwtmpbuf, pwbuflen,
-							  newlen, alloca_used);
-		      else
-			{
-			  char *newp = (v ? NULL
-					: realloc (malloc_pwtmpbuf, newlen));
-			  if (newp == NULL)
-			    {
-			      free (malloc_pwtmpbuf);
-			      if (__glibc_unlikely (malloc_name))
-				free (name);
-			      retval = GLOB_NOSPACE;
-			      goto out;
-			    }
-			  malloc_pwtmpbuf = pwtmpbuf = newp;
-			}
-		      pwbuflen = newlen;
-		      __set_errno (save);
 		    }
 # else
 		  p = getpwnam (name);
 # endif
-		  if (__glibc_unlikely (malloc_name))
-		    free (name);
 		  if (p != NULL)
 		    {
-		      if (malloc_pwtmpbuf == NULL)
-			home_dir = p->pw_dir;
-		      else
+		      home_dir = strdup (p->pw_dir);
+		      malloc_home_dir = 1;
+		      if (home_dir == NULL)
 			{
-			  size_t home_dir_len = strlen (p->pw_dir) + 1;
-			  if (glob_use_alloca (alloca_used, home_dir_len))
-			    home_dir = alloca_account (home_dir_len,
-						       alloca_used);
-			  else
-			    {
-			      home_dir = malloc (home_dir_len);
-			      if (home_dir == NULL)
-				{
-				  free (pwtmpbuf);
-				  retval = GLOB_NOSPACE;
-				  goto out;
-				}
-			      malloc_home_dir = 1;
-			    }
-			  memcpy (home_dir, p->pw_dir, home_dir_len);
+			  scratch_buffer_free (&pwtmpbuf);
+			  retval = GLOB_NOSPACE;
+			  goto out;
 			}
 		    }
-		  free (malloc_pwtmpbuf);
+		  scratch_buffer_free (&pwtmpbuf);
 		}
 	      else
 		{
@@ -875,61 +802,21 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 	  /* Look up specific user's home directory.  */
 	  {
 	    struct passwd *p;
-	    char *malloc_pwtmpbuf = NULL;
-#  if defined HAVE_GETPWNAM_R || defined _LIBC
-	    long int buflenmax = GETPW_R_SIZE_MAX ();
-	    size_t buflen = buflenmax;
-	    char *pwtmpbuf;
-	    struct passwd pwbuf;
-	    int save = errno;
+	    struct scratch_buffer pwtmpbuf;
+	    scratch_buffer_init (&pwtmpbuf);
 
-#   ifndef _LIBC
-	    if (! (0 <= buflenmax && buflenmax <= SIZE_MAX))
-	      /* Perhaps 'sysconf' does not support _SC_GETPW_R_SIZE_MAX.  Try a
-		 moderate value.  */
-	      buflen = 1024;
-#   endif
-	    if (glob_use_alloca (alloca_used, buflen))
-	      pwtmpbuf = alloca_account (buflen, alloca_used);
-	    else
+#  if defined HAVE_GETPWNAM_R || defined _LIBC
+	    struct passwd pwbuf;
+
+	    while (getpwnam_r (user_name, &pwbuf,
+			       pwtmpbuf.data, pwtmpbuf.length, &p)
+		   == ERANGE)
 	      {
-		pwtmpbuf = malloc (buflen);
-		if (pwtmpbuf == NULL)
+		if (!scratch_buffer_grow (&pwtmpbuf))
 		  {
-		  nomem_getpw:
-		    if (__glibc_unlikely (malloc_user_name))
-		      free (user_name);
 		    retval = GLOB_NOSPACE;
 		    goto out;
 		  }
-		malloc_pwtmpbuf = pwtmpbuf;
-	      }
-
-	    while (getpwnam_r (user_name, &pwbuf, pwtmpbuf, buflen, &p) != 0)
-	      {
-		size_t newlen;
-		bool v;
-		if (errno != ERANGE)
-		  {
-		    p = NULL;
-		    break;
-		  }
-		v = size_add_wrapv (buflen, buflen, &newlen);
-		if (!v && malloc_pwtmpbuf == NULL
-		    && glob_use_alloca (alloca_used, newlen))
-		  pwtmpbuf = extend_alloca_account (pwtmpbuf, buflen,
-						    newlen, alloca_used);
-		else
-		  {
-		    char *newp = v ? NULL : realloc (malloc_pwtmpbuf, newlen);
-		    if (newp == NULL)
-		      {
-			free (malloc_pwtmpbuf);
-			goto nomem_getpw;
-		      }
-		    malloc_pwtmpbuf = pwtmpbuf = newp;
-		  }
-		__set_errno (save);
 	      }
 #  else
 	    p = getpwnam (user_name);
@@ -956,7 +843,7 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 		    dirname = malloc (home_len + rest_len + 1);
 		    if (dirname == NULL)
 		      {
-			free (malloc_pwtmpbuf);
+			scratch_buffer_free (&pwtmpbuf);
 			retval = GLOB_NOSPACE;
 			goto out;
 		      }
@@ -967,13 +854,9 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 
 		dirlen = home_len + rest_len;
 		dirname_modified = 1;
-
-		free (malloc_pwtmpbuf);
 	      }
 	    else
 	      {
-		free (malloc_pwtmpbuf);
-
 		if (flags & GLOB_TILDE_CHECK)
 		  {
 		    /* We have to regard it as an error if we cannot find the
@@ -982,6 +865,7 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 		    goto out;
 		  }
 	      }
+	    scratch_buffer_free (&pwtmpbuf);
 	  }
 #endif /* !WINDOWS32 */
 	}
