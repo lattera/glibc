@@ -1,5 +1,18 @@
 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: Include tables from
+	sysdeps/ieee754/ldbl-128ibm.
+	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: Copy contents from the
+	equivalent implementation in sysdeps/ieee754/ldbl-128/ instead
+	of including it.  Keep _Float128 and L() intact.  These will be
+	reviewed by a separate patch.
+	* sysdeps/ieee754/ldbl-128ibm/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_lgammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_cbrtl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/t_expl.h: Likewise.
+
+2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite.c
 	(__finitef128): Define to __redirect___finitef128.
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf.c

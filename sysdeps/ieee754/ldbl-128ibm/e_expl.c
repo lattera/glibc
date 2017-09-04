@@ -69,7 +69,7 @@
 #define _Float128 long double
 #define L(x) x ## L
 
-#include <sysdeps/ieee754/ldbl-128/t_expl.h>
+#include "t_expl.h"
 
 static const long double C[] = {
 /* Smallest integer x for which e^x overflows.  */
