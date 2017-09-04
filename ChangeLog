@@ -1,3 +1,8 @@
+2017-09-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
+	kernel version to 4.13.
+
 2017-09-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/generic/sigsetops.h: Remove spurious #endif.

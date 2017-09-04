@@ -686,7 +686,7 @@ class Context(object):
                             'gcc': 'vcs-7',
                             'glibc': 'vcs-mainline',
                             'gmp': '6.1.2',
-                            'linux': '4.12',
+                            'linux': '4.13',
                             'mpc': '1.0.3',
                             'mpfr': '3.1.5'}
         use_versions = {}
