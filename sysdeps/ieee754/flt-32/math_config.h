@@ -111,4 +111,16 @@ extern const struct exp2f_data
   double poly_scaled[EXP2F_POLY_ORDER];
 } __exp2f_data attribute_hidden;
 
+#define LOGF_TABLE_BITS 4
+#define LOGF_POLY_ORDER 4
+extern const struct logf_data
+{
+  struct
+  {
+    double invc, logc;
+  } tab[1 << LOGF_TABLE_BITS];
+  double ln2;
+  double poly[LOGF_POLY_ORDER - 1]; /* First order coefficient is 1.  */
+} __logf_data attribute_hidden;
+
 #endif
