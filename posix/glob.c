@@ -113,9 +113,6 @@ struct readdir_result
 #if defined _DIRENT_HAVE_D_TYPE || defined HAVE_STRUCT_DIRENT_D_TYPE
   dirent_type type;
 #endif
-#if defined _LIBC || defined D_INO_IN_DIRENT
-  bool skip_entry;
-#endif
 };
 
 /* Initialize and return type member of struct readdir_result.  */
@@ -131,28 +128,12 @@ readdir_result_type (struct readdir_result d)
 #endif
 }
 
-/* Initialize and return skip_entry member of struct readdir_result.  */
-static bool
-readdir_result_skip_entry (struct readdir_result d)
-{
-/* Initializer for skip_entry.  POSIX does not require that the d_ino
-   field be present, and some systems do not provide it. */
-#if defined _LIBC || defined D_INO_IN_DIRENT
-# define D_INO_TO_RESULT(source) (source)->d_ino == 0,
-  return d.skip_entry;
-#else
-# define D_INO_TO_RESULT(source)
-  return false;
-#endif
-}
-
 /* Construct an initializer for a struct readdir_result object from a
    struct dirent *.  No copy of the name is made.  */
 #define READDIR_RESULT_INITIALIZER(source) \
   {					   \
     source->d_name,			   \
     D_TYPE_TO_RESULT (source)		   \
-    D_INO_TO_RESULT (source)		   \
   }
 
 /* Call gl_readdir on STREAM.  This macro can be overridden to reduce
@@ -1542,8 +1523,6 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	      }
 	      if (d.name == NULL)
 		break;
-	      if (readdir_result_skip_entry (d))
-		continue;
 
 	      /* If we shall match only directories use the information
 		 provided by the dirent call if possible.  */

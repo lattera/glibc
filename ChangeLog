@@ -1,6 +1,12 @@
 2017-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #1062]
+	[BZ #19971]
+	* posix/glob.c (struct readdir_result): Remove skip_entry member.
+	(readdir_result_skip_entry, D_INO_TO_RESULT): Remove.
+	All uses removed.
+
+	[BZ #1062]
 	* posix/Makefile (routines): Add globfree, globfree64, and
 	glob_pattern_p.
 	* posix/flexmember.h: New file.
