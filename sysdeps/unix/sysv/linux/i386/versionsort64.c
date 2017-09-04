@@ -30,7 +30,7 @@ versioned_symbol (libc, __versionsort64, versionsort64, GLIBC_2_2);
 
 #if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
 
-#include <sysdeps/unix/sysv/linux/i386/olddirent.h>
+#include <olddirent.h>
 
 int
 __old_versionsort64 (const struct __old_dirent64 **a,

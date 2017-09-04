@@ -1,12 +1,13 @@
 #include <shlib-compat.h>
 
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
+#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2) \
+    && !defined(GLOB_NO_OLD_VERSION)
 
 #include <dirent.h>
 #include <glob.h>
 #include <sys/stat.h>
 
-#include <sysdeps/unix/sysv/linux/i386/olddirent.h>
+#include <olddirent.h>
 
 int __old_glob64 (const char *__pattern, int __flags,
 		  int (*__errfunc) (const char *, int),

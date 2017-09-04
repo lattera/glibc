@@ -31,7 +31,7 @@ versioned_symbol (libc, __readdir64_r, readdir64_r, GLIBC_2_2);
 
 #if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
 
-#include <sysdeps/unix/sysv/linux/i386/olddirent.h>
+#include <olddirent.h>
 
 #define __READDIR_R attribute_compat_text_section __old_readdir64_r
 #define __GETDENTS __old_getdents64
