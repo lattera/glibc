@@ -1,3 +1,9 @@
+2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* sysdeps/powerpc/powerpc64le/Makefile
+	(CFLAGS-tst-strtod-nan-locale.c): New variable.
+	(CFLAGS-tst-wcstod-nan-locale.c): New variable.
+
 2017-09-21  Paul Pluzhnikov  <ppluzhnikov@google.com>
 	    Carlos O'Donell  <carlos@redhat.com>
 

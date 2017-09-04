@@ -33,12 +33,15 @@ CFLAGS-bug-strtod.c += -mfloat128
 CFLAGS-bug-strtod2.c += -mfloat128
 CFLAGS-tst-strtod-round.c += -mfloat128
 CFLAGS-tst-wcstod-round.c += -mfloat128
+CFLAGS-tst-strtod-nan-locale.c += -mfloat128
+CFLAGS-tst-wcstod-nan-locale.c += -mfloat128
 CFLAGS-tst-strtod6.c += -mfloat128
 CFLAGS-tst-strfrom.c += -mfloat128
 CFLAGS-tst-strfrom-locale.c += -mfloat128
 CFLAGS-strfrom-skeleton.c += -mfloat128
 $(foreach test,bug-strtod bug-strtod2 bug-strtod2 tst-strtod-round \
 tst-wcstod-round tst-strtod6 tst-strrom tst-strfrom-locale \
+tst-strtod-nan-locale tst-wcstod-nan-locale \
 strfrom-skeleton,$(objpfx)$(test)): gnulib-tests += $(f128-loader-link)
 
 # When building glibc with support for _Float128, the powers of ten tables in
