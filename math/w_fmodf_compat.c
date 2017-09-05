@@ -20,6 +20,7 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 
+#if LIBM_SVID_COMPAT
 /* wrapper fmodf */
 float
 __fmodf (float x, float y)
@@ -32,3 +33,4 @@ __fmodf (float x, float y)
   return __ieee754_fmodf (x, y);
 }
 weak_alias (__fmodf, fmodf)
+#endif

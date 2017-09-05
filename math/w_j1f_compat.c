@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper j1f */
 float
 j1f (float x)
@@ -62,3 +63,4 @@ y1f (float x)
 
   return __ieee754_y1f (x);
 }
+#endif

@@ -21,6 +21,7 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 
+#if LIBM_SVID_COMPAT
 float
 __sinhf (float x)
 {
@@ -32,3 +33,4 @@ __sinhf (float x)
 	return z;
 }
 weak_alias (__sinhf, sinhf)
+#endif

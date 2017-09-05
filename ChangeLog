@@ -1,3 +1,186 @@
+2017-09-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-type-macros-double.h: Include
+	<math-svid-compat.h>.
+	(__USE_WRAPPER_TEMPLATE): Define to !LIBM_SVID_COMPAT.
+	* sysdeps/generic/math-type-macros-float.h: Include
+	<math-svid-compat.h>.
+	(__USE_WRAPPER_TEMPLATE): Define to !LIBM_SVID_COMPAT.
+	* sysdeps/generic/math-type-macros-ldouble.h: Include
+	<math-svid-compat.h>.
+	(__USE_WRAPPER_TEMPLATE): Define to !LIBM_SVID_COMPAT.
+	* math/lgamma-compat.h (BUILD_LGAMMA): Include LIBM_SVID_COMPAT
+	condition.
+	* math/w_acos_compat.c: Condition contents on [LIBM_SVID_COMPAT].
+	* math/w_acosf_compat.c: Likewise.
+	* math/w_acosh_compat.c: Likewise.
+	* math/w_acoshf_compat.c: Likewise.
+	* math/w_acoshl_compat.c: Likewise.
+	* math/w_acosl_compat.c: Likewise.
+	* math/w_asin_compat.c: Likewise.
+	* math/w_asinf_compat.c: Likewise.
+	* math/w_asinl_compat.c: Likewise.
+	* math/w_atan2_compat.c: Likewise.
+	* math/w_atan2f_compat.c: Likewise.
+	* math/w_atan2l_compat.c: Likewise.
+	* math/w_atanh_compat.c: Likewise.
+	* math/w_atanhf_compat.c: Likewise.
+	* math/w_atanhl_compat.c: Likewise.
+	* math/w_cosh_compat.c: Likewise.
+	* math/w_coshf_compat.c: Likewise.
+	* math/w_coshl_compat.c: Likewise.
+	* math/w_exp10_compat.c: Likewise.
+	* math/w_exp10f_compat.c: Likewise.
+	* math/w_exp10l_compat.c: Likewise.
+	* math/w_exp2_compat.c: Likewise.
+	* math/w_exp2f_compat.c: Likewise.
+	* math/w_exp2l_compat.c: Likewise.
+	* math/w_fmod_compat.c: Likewise.
+	* math/w_fmodf_compat.c: Likewise.
+	* math/w_fmodl_compat.c: Likewise.
+	* math/w_hypot_compat.c: Likewise.
+	* math/w_hypotf_compat.c: Likewise.
+	* math/w_hypotl_compat.c: Likewise.
+	* math/w_j0_compat.c: Likewise.
+	* math/w_j0f_compat.c: Likewise.
+	* math/w_j0l_compat.c: Likewise.
+	* math/w_j1_compat.c: Likewise.
+	* math/w_j1f_compat.c: Likewise.
+	* math/w_j1l_compat.c: Likewise.
+	* math/w_jn_compat.c: Likewise.
+	* math/w_jnf_compat.c: Likewise.
+	* math/w_jnl_compat.c: Likewise.
+	* math/w_lgamma_r_compat.c: Likewise.
+	* math/w_lgammaf_r_compat.c: Likewise.
+	* math/w_lgammal_r_compat.c: Likewise.
+	* math/w_log10_compat.c: Likewise.
+	* math/w_log10f_compat.c: Likewise.
+	* math/w_log10l_compat.c: Likewise.
+	* math/w_log2_compat.c: Likewise.
+	* math/w_log2f_compat.c: Likewise.
+	* math/w_log2l_compat.c: Likewise.
+	* math/w_log_compat.c: Likewise.
+	* math/w_logf_compat.c: Likewise.
+	* math/w_logl_compat.c: Likewise.
+	* math/w_pow_compat.c: Likewise.
+	* math/w_powf_compat.c: Likewise.
+	* math/w_powl_compat.c: Likewise.
+	* math/w_remainder_compat.c: Likewise.
+	* math/w_remainderf_compat.c: Likewise.
+	* math/w_remainderl_compat.c: Likewise.
+	* math/w_sinh_compat.c: Likewise.
+	* math/w_sinhf_compat.c: Likewise.
+	* math/w_sinhl_compat.c: Likewise.
+	* math/w_sqrt_compat.c: Likewise.
+	* math/w_sqrtf_compat.c: Likewise.
+	* math/w_sqrtl_compat.c: Likewise.
+	* math/w_tgamma_compat.c: Likewise.
+	* math/w_tgammaf_compat.c: Likewise.
+	* math/w_tgammal_compat.c: Likewise.
+	* math/w_scalb_compat.c (sysv_scalb): Condition definition on
+	[LIBM_SVID_COMPAT].
+	(__scalb): Condition call to sysv_scalb on [LIBM_SVID_COMPAT].
+	* math/w_scalbf_compat.c (sysv_scalbf): Condition definition on
+	[LIBM_SVID_COMPAT].
+	(__scalbf): Condition call to sysv_scalbf on [LIBM_SVID_COMPAT].
+	* math/w_scalbl_compat.c (sysv_scalbl): Condition definition on
+	[LIBM_SVID_COMPAT].
+	(__scalbl): Condition call to sysv_scalbl on [LIBM_SVID_COMPAT].
+	* sysdeps/i386/fpu/w_sqrt.c: New file.
+	* sysdeps/ia64/fpu/w_acos.c: Likewise.
+	* sysdeps/ia64/fpu/w_acosf.c: Likewise.
+	* sysdeps/ia64/fpu/w_acosh.c: Likewise.
+	* sysdeps/ia64/fpu/w_acoshf.c: Likewise.
+	* sysdeps/ia64/fpu/w_acoshl.c: Likewise.
+	* sysdeps/ia64/fpu/w_acosl.c: Likewise.
+	* sysdeps/ia64/fpu/w_asin.c: Likewise.
+	* sysdeps/ia64/fpu/w_asinf.c: Likewise.
+	* sysdeps/ia64/fpu/w_asinl.c: Likewise.
+	* sysdeps/ia64/fpu/w_atan2.c: Likewise.
+	* sysdeps/ia64/fpu/w_atan2f.c: Likewise.
+	* sysdeps/ia64/fpu/w_atan2l.c: Likewise.
+	* sysdeps/ia64/fpu/w_atanh.c: Likewise.
+	* sysdeps/ia64/fpu/w_atanhf.c: Likewise.
+	* sysdeps/ia64/fpu/w_atanhl.c: Likewise.
+	* sysdeps/ia64/fpu/w_cosh.c: Likewise.
+	* sysdeps/ia64/fpu/w_coshf.c: Likewise.
+	* sysdeps/ia64/fpu/w_coshl.c: Likewise.
+	* sysdeps/ia64/fpu/w_exp.c: Likewise.
+	* sysdeps/ia64/fpu/w_exp10.c: Likewise.
+	* sysdeps/ia64/fpu/w_exp10f.c: Likewise.
+	* sysdeps/ia64/fpu/w_exp10l.c: Likewise.
+	* sysdeps/ia64/fpu/w_exp2.c: Likewise.
+	* sysdeps/ia64/fpu/w_exp2f.c: Likewise.
+	* sysdeps/ia64/fpu/w_exp2l.c: Likewise.
+	* sysdeps/ia64/fpu/w_expf.c: Likewise.
+	* sysdeps/ia64/fpu/w_expl.c: Likewise.
+	* sysdeps/ia64/fpu/w_fmod.c: Likewise.
+	* sysdeps/ia64/fpu/w_fmodf.c: Likewise.
+	* sysdeps/ia64/fpu/w_fmodl.c: Likewise.
+	* sysdeps/ia64/fpu/w_hypot.c: Likewise.
+	* sysdeps/ia64/fpu/w_hypotf.c: Likewise.
+	* sysdeps/ia64/fpu/w_hypotl.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgamma_r.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgammaf_r.c: Likewise.
+	* sysdeps/ia64/fpu/w_lgammal_r.c: Likewise.
+	* sysdeps/ia64/fpu/w_log.c: Likewise.
+	* sysdeps/ia64/fpu/w_log10.c: Likewise.
+	* sysdeps/ia64/fpu/w_log10f.c: Likewise.
+	* sysdeps/ia64/fpu/w_log10l.c: Likewise.
+	* sysdeps/ia64/fpu/w_log2.c: Likewise.
+	* sysdeps/ia64/fpu/w_log2f.c: Likewise.
+	* sysdeps/ia64/fpu/w_log2l.c: Likewise.
+	* sysdeps/ia64/fpu/w_logf.c: Likewise.
+	* sysdeps/ia64/fpu/w_logl.c: Likewise.
+	* sysdeps/ia64/fpu/w_pow.c: Likewise.
+	* sysdeps/ia64/fpu/w_powf.c: Likewise.
+	* sysdeps/ia64/fpu/w_powl.c: Likewise.
+	* sysdeps/ia64/fpu/w_remainder.c: Likewise.
+	* sysdeps/ia64/fpu/w_remainderf.c: Likewise.
+	* sysdeps/ia64/fpu/w_remainderl.c: Likewise.
+	* sysdeps/ia64/fpu/w_sinh.c: Likewise.
+	* sysdeps/ia64/fpu/w_sinhf.c: Likewise.
+	* sysdeps/ia64/fpu/w_sinhl.c: Likewise.
+	* sysdeps/ia64/fpu/w_sqrt.c: Likewise.
+	* sysdeps/ia64/fpu/w_sqrtf.c: Likewise.
+	* sysdeps/ia64/fpu/w_sqrtl.c: Likewise.
+	* sysdeps/ia64/fpu/w_tgamma.c: Likewise.
+	* sysdeps/ia64/fpu/w_tgammaf.c: Likewise.
+	* sysdeps/ia64/fpu/w_tgammal.c: Likewise.
+	* sysdeps/ieee754/dbl-64/w_exp_compat.c: Condition contents on
+	[LIBM_SVID_COMPAT].
+	* sysdeps/ieee754/flt-32/w_expf_compat.c: Likewise.
+	* sysdeps/ieee754/k_standard.c: Likewise.
+	* sysdeps/ieee754/k_standardf.c: Likewise.
+	* sysdeps/ieee754/k_standardl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/w_expl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/w_expl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/w_expl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/w_expl_compat.c: Condition
+	long_double_symbol call on [LIBM_SVID_COMPAT].
+	* sysdeps/ieee754/ldbl-opt/w_acoshl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_acosl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_asinl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_atan2l_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_atanhl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_coshl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_fmodl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_hypotl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_j0l_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_j1l_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_jnl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_lgammal_r_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_log10l_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_log2l_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_logl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_powl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_remainderl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_sinhl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_sqrtl_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_tgammal_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_exp10l_compat.c: Condition
+	long_double_symbol and compat_symbol calls on [LIBM_SVID_COMPAT].
+
 2017-09-05  Steve Ellcey  <sellcey@cavium.com>
 
 	* include/shlib-compat.h (TEST_COMPAT): New Macro.

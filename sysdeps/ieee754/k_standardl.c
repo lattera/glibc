@@ -38,6 +38,8 @@
 #include <errno.h>
 
 
+#if LIBM_SVID_COMPAT
+
 static double zero = 0.0;
 
 /* Handle errors for a libm function as specified by TYPE (see
@@ -106,3 +108,4 @@ __kernel_standard_l (long double x, long double y, int type)
       return __kernel_standard (dx, dy, type);
     }
 }
+#endif

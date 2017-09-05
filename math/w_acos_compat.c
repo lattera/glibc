@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper acos */
 double
 __acos (double x)
@@ -37,7 +38,8 @@ __acos (double x)
   return __ieee754_acos (x);
 }
 weak_alias (__acos, acos)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__acos, __acosl)
 weak_alias (__acos, acosl)
+# endif
 #endif

@@ -21,6 +21,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper powl */
 long double
 __powl (long double x, long double y)
@@ -59,3 +60,4 @@ __powl (long double x, long double y)
   return z;
 }
 weak_alias (__powl, powl)
+#endif

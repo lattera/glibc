@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper acosf */
 float
 __acosf (float x)
@@ -37,3 +38,4 @@ __acosf (float x)
   return __ieee754_acosf (x);
 }
 weak_alias (__acosf, acosf)
+#endif

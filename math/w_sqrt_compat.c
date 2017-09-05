@@ -21,6 +21,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper sqrt */
 double
 __sqrt (double x)
@@ -31,7 +32,8 @@ __sqrt (double x)
   return __ieee754_sqrt (x);
 }
 weak_alias (__sqrt, sqrt)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__sqrt, __sqrtl)
 weak_alias (__sqrt, sqrtl)
+# endif
 #endif

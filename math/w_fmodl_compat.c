@@ -20,6 +20,7 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 
+#if LIBM_SVID_COMPAT
 /* wrapper fmodl */
 long double
 __fmodl (long double x, long double y)
@@ -32,3 +33,4 @@ __fmodl (long double x, long double y)
   return __ieee754_fmodl (x, y);
 }
 weak_alias (__fmodl, fmodl)
+#endif

@@ -23,6 +23,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 long double
 __lgammal_r(long double x, int *signgamp)
 {
@@ -37,3 +38,4 @@ __lgammal_r(long double x, int *signgamp)
 	return y;
 }
 weak_alias (__lgammal_r, lgammal_r)
+#endif

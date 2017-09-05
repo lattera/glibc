@@ -26,6 +26,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 long double
 __atan2l (long double y, long double x)
 {
@@ -40,3 +41,4 @@ __atan2l (long double y, long double x)
   return z;
 }
 weak_alias (__atan2l, atan2l)
+#endif

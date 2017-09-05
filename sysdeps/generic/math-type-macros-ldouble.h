@@ -30,7 +30,9 @@
 /* Supply the generic macros.  */
 #include <math-type-macros.h>
 
-/* Do not use the type-generic wrapper templates.  */
-#define __USE_WRAPPER_TEMPLATE 0
+/* Do not use the type-generic wrapper templates if compatibility with
+   SVID error handling is needed.  */
+#include <math-svid-compat.h>
+#define __USE_WRAPPER_TEMPLATE !LIBM_SVID_COMPAT
 
 #endif

@@ -26,18 +26,20 @@ static char rcsid[] = "$NetBSD: $";
 #include <math_private.h>
 #include <math-svid-compat.h>
 
+#if LIBM_SVID_COMPAT
 long double __expl(long double x)	/* wrapper exp */
 {
-#ifdef _IEEE_LIBM
+# ifdef _IEEE_LIBM
 	return __ieee754_expl(x);
-#else
+# else
 	long double z = __ieee754_expl (x);
 	if (__glibc_unlikely (!isfinite (z) || z == 0)
 	    && isfinite (x) && _LIB_VERSION != _IEEE_)
 	  return __kernel_standard_l (x, x, 206 + !!signbit (x));
 
 	return z;
-#endif
+# endif
 }
 hidden_def (__expl)
 weak_alias (__expl, expl)
+#endif

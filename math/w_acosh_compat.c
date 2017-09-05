@@ -21,6 +21,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper acosh */
 double
 __acosh (double x)
@@ -32,7 +33,8 @@ __acosh (double x)
   return __ieee754_acosh (x);
 }
 weak_alias (__acosh, acosh)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__acosh, __acoshl)
 weak_alias (__acosh, acoshl)
+# endif
 #endif

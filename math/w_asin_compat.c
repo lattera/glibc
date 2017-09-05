@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper asin */
 double
 __asin (double x)
@@ -37,7 +38,8 @@ __asin (double x)
   return __ieee754_asin (x);
 }
 weak_alias (__asin, asin)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__asin, __asinl)
 weak_alias (__asin, asinl)
+# endif
 #endif

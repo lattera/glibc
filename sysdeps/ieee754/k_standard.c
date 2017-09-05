@@ -21,23 +21,25 @@ static char rcsid[] = "$NetBSD: k_standard.c,v 1.6 1995/05/10 20:46:35 jtc Exp $
 
 #include <assert.h>
 
-#ifndef _USE_WRITE
-#include <stdio.h>			/* fputs(), stderr */
-#define	WRITE2(u,v)	fputs(u, stderr)
-#else	/* !defined(_USE_WRITE) */
-#include <unistd.h>			/* write */
-#define	WRITE2(u,v)	write(2, u, v)
-#undef fflush
-#endif	/* !defined(_USE_WRITE) */
+#if LIBM_SVID_COMPAT
+
+# ifndef _USE_WRITE
+#  include <stdio.h>			/* fputs(), stderr */
+#  define	WRITE2(u,v)	fputs(u, stderr)
+# else	/* !defined(_USE_WRITE) */
+#  include <unistd.h>			/* write */
+#  define	WRITE2(u,v)	write(2, u, v)
+#  undef fflush
+# endif	/* !defined(_USE_WRITE) */
 
 /* XXX gcc versions until now don't delay the 0.0/0.0 division until
    runtime but produce NaN at compile time.  This is wrong since the
    exceptions are not set correctly.  */
-#if 0
+# if 0
 static const double zero = 0.0;	/* used as const */
-#else
+# else
 static double zero = 0.0;	/* used as const */
-#endif
+# endif
 
 /*
  * Standard conformance (non-IEEE) on exception cases.
@@ -97,21 +99,21 @@ double
 __kernel_standard(double x, double y, int type)
 {
 	struct exception exc;
-#ifndef HUGE_VAL	/* this is the only routine that uses HUGE_VAL */
-#define HUGE_VAL inf
+# ifndef HUGE_VAL	/* this is the only routine that uses HUGE_VAL */
+# define HUGE_VAL inf
 	double inf = 0.0;
 
 	SET_HIGH_WORD(inf,0x7ff00000);	/* set inf to infinite */
-#endif
+# endif
 
 	/* The SVID struct exception uses a field "char *name;".  */
-#define CSTR(func) ((char *) (type < 100				\
+# define CSTR(func) ((char *) (type < 100				\
 			      ? func					\
 			      : (type < 200 ? func "f" : func "l")))
 
-#ifdef _USE_WRITE
+# ifdef _USE_WRITE
 	(void) fflush(stdout);
-#endif
+# endif
 	exc.arg1 = x;
 	exc.arg2 = y;
 	switch(type) {
@@ -945,3 +947,4 @@ __kernel_standard(double x, double y, int type)
 	}
 	return exc.retval;
 }
+#endif

@@ -21,6 +21,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper remainderf */
 float
 __remainderf (float x, float y)
@@ -34,3 +35,4 @@ __remainderf (float x, float y)
 }
 weak_alias (__remainderf, remainderf)
 weak_alias (__remainderf, dremf)
+#endif

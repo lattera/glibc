@@ -3,6 +3,7 @@
 #include <math-svid-compat.h>
 #include <math_ldbl_opt.h>
 
+#if LIBM_SVID_COMPAT
 long double __expl(long double x)	/* wrapper exp  */
 {
   long double z;
@@ -20,3 +21,4 @@ long double __expl(long double x)	/* wrapper exp  */
 }
 hidden_def (__expl)
 long_double_symbol (libm, __expl, expl);
+#endif

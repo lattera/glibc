@@ -21,6 +21,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper powf */
 float
 __powf (float x, float y)
@@ -59,3 +60,4 @@ __powf (float x, float y)
   return z;
 }
 weak_alias (__powf, powf)
+#endif

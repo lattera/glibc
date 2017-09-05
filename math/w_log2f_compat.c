@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper log2f(x) */
 float
 __log2f (float x)
@@ -43,3 +44,4 @@ __log2f (float x)
   return  __ieee754_log2f (x);
 }
 weak_alias (__log2f, log2f)
+#endif

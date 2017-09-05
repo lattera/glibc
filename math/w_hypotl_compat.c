@@ -23,6 +23,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 long double
 __hypotl(long double x, long double y)
 {
@@ -35,3 +36,4 @@ __hypotl(long double x, long double y)
 	return z;
 }
 weak_alias (__hypotl, hypotl)
+#endif

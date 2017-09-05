@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper jnf */
 float
 jnf (int n, float x)
@@ -62,3 +63,4 @@ ynf (int n, float x)
 
   return __ieee754_ynf (n, x);
 }
+#endif

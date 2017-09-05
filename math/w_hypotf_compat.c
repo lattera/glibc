@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 float
 __hypotf(float x, float y)
 {
@@ -34,3 +35,4 @@ __hypotf(float x, float y)
 	return z;
 }
 weak_alias (__hypotf, hypotf)
+#endif

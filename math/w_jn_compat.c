@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper jn */
 double
 jn (int n, double x)
@@ -33,9 +34,9 @@ jn (int n, double x)
 
   return __ieee754_jn (n, x);
 }
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 weak_alias (jn, jnl)
-#endif
+# endif
 
 
 /* wrapper yn */
@@ -64,6 +65,7 @@ yn (int n, double x)
 
   return __ieee754_yn (n, x);
 }
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 weak_alias (yn, ynl)
+# endif
 #endif

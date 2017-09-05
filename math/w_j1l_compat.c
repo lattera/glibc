@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper j1l */
 long double
 __j1l (long double x)
@@ -63,3 +64,4 @@ __y1l (long double x)
   return __ieee754_y1l (x);
 }
 weak_alias (__y1l, y1l)
+#endif

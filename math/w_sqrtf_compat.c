@@ -21,6 +21,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper sqrtf */
 float
 __sqrtf (float x)
@@ -31,3 +32,4 @@ __sqrtf (float x)
   return __ieee754_sqrtf (x);
 }
 weak_alias (__sqrtf, sqrtf)
+#endif

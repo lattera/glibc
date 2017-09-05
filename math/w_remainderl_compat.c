@@ -21,6 +21,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper remainderl */
 long double
 __remainderl (long double x, long double y)
@@ -34,3 +35,4 @@ __remainderl (long double x, long double y)
 }
 weak_alias (__remainderl, remainderl)
 weak_alias (__remainderl, dreml)
+#endif

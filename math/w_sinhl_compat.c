@@ -22,6 +22,7 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 
+#if LIBM_SVID_COMPAT
 long double
 __sinhl (long double x)
 {
@@ -33,3 +34,4 @@ __sinhl (long double x)
 	return z;
 }
 weak_alias (__sinhl, sinhl)
+#endif

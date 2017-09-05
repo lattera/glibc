@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 float
 __lgammaf_r(float x, int *signgamp)
 {
@@ -36,3 +37,4 @@ __lgammaf_r(float x, int *signgamp)
 	return y;
 }
 weak_alias (__lgammaf_r, lgammaf_r)
+#endif

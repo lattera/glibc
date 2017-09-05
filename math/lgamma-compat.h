@@ -41,7 +41,8 @@
 #define HAVE_LGAMMA_COMPAT SHLIB_COMPAT (libm, LGAMMA_OLD_VER, LGAMMA_NEW_VER)
 
 /* Whether to build this version at all.  */
-#define BUILD_LGAMMA (HAVE_LGAMMA_COMPAT || !USE_AS_COMPAT)
+#define BUILD_LGAMMA \
+  (LIBM_SVID_COMPAT && (HAVE_LGAMMA_COMPAT || !USE_AS_COMPAT))
 
 /* The name to use for this version.  */
 #if USE_AS_COMPAT

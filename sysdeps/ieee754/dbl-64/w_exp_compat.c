@@ -20,6 +20,7 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 
+#if LIBM_SVID_COMPAT
 /* wrapper exp */
 double
 __exp (double x)
@@ -33,7 +34,8 @@ __exp (double x)
 }
 hidden_def (__exp)
 weak_alias (__exp, exp)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__exp, __expl)
 weak_alias (__exp, expl)
+# endif
 #endif

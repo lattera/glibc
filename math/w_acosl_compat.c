@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper acosl */
 long double
 __acosl (long double x)
@@ -37,3 +38,4 @@ __acosl (long double x)
   return __ieee754_acosl (x);
 }
 weak_alias (__acosl, acosl)
+#endif

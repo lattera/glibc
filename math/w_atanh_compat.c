@@ -21,6 +21,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper atanh */
 double
 __atanh (double x)
@@ -35,7 +36,8 @@ __atanh (double x)
   return __ieee754_atanh (x);
 }
 weak_alias (__atanh, atanh)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__atanh, __atanhl)
 weak_alias (__atanh, atanhl)
+# endif
 #endif

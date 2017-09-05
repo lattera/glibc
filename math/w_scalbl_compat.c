@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 static long double
 __attribute__ ((noinline))
 sysv_scalbl (long double x, long double fn)
@@ -40,15 +41,18 @@ sysv_scalbl (long double x, long double fn)
 
   return z;
 }
+#endif
 
 
 /* Wrapper scalbl */
 long double
 __scalbl (long double x, long double fn)
 {
+#if LIBM_SVID_COMPAT
   if (__glibc_unlikely (_LIB_VERSION == _SVID_))
     return sysv_scalbl (x, fn);
   else
+#endif
     {
       long double z = __ieee754_scalbl (x, fn);
 

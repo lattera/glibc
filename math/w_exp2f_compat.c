@@ -6,6 +6,7 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 
+#if LIBM_SVID_COMPAT
 float
 __exp2f (float x)
 {
@@ -18,3 +19,4 @@ __exp2f (float x)
   return z;
 }
 weak_alias (__exp2f, exp2f)
+#endif

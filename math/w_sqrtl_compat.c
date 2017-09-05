@@ -21,6 +21,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper sqrtl */
 long double
 __sqrtl (long double x)
@@ -31,3 +32,4 @@ __sqrtl (long double x)
   return __ieee754_sqrtl (x);
 }
 weak_alias (__sqrtl, sqrtl)
+#endif

@@ -48,11 +48,12 @@ static char rcsid[] = "$NetBSD: $";
 #include <math_private.h>
 #include <math-svid-compat.h>
 
+#if LIBM_SVID_COMPAT
 long double __jnl(int n, long double x)	/* wrapper jnl */
 {
-#ifdef _IEEE_LIBM
+# ifdef _IEEE_LIBM
 	return __ieee754_jnl(n,x);
-#else
+# else
 	long double z;
 	z = __ieee754_jnl(n,x);
 	if (_LIB_VERSION == _IEEE_
@@ -63,15 +64,15 @@ long double __jnl(int n, long double x)	/* wrapper jnl */
 	    return __kernel_standard_l((double)n,x,238); /* jn(|x|>X_TLOSS,n) */
 	} else
 	    return z;
-#endif
+# endif
 }
 weak_alias (__jnl, jnl)
 
 long double __ynl(int n, long double x)	/* wrapper ynl */
 {
-#ifdef _IEEE_LIBM
+# ifdef _IEEE_LIBM
 	return __ieee754_ynl(n,x);
-#else
+# else
 	long double z;
 	z = __ieee754_ynl(n,x);
 	if(_LIB_VERSION == _IEEE_ || isnan(x) ) return z;
@@ -87,6 +88,7 @@ long double __ynl(int n, long double x)	/* wrapper ynl */
 	    return __kernel_standard_l((double)n,x,239); /* yn(x>X_TLOSS,n) */
 	} else
 	    return z;
-#endif
+# endif
 }
 weak_alias (__ynl, ynl)
+#endif

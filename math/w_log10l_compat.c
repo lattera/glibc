@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper log10l(x) */
 long double
 __log10l (long double x)
@@ -43,3 +44,4 @@ __log10l (long double x)
   return  __ieee754_log10l (x);
 }
 weak_alias (__log10l, log10l)
+#endif

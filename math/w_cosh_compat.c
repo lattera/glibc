@@ -18,6 +18,7 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 
+#if LIBM_SVID_COMPAT
 double
 __cosh (double x)
 {
@@ -29,7 +30,8 @@ __cosh (double x)
 	return z;
 }
 weak_alias (__cosh, cosh)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__cosh, __coshl)
 weak_alias (__cosh, coshl)
+# endif
 #endif

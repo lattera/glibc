@@ -23,6 +23,7 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 
+#if LIBM_SVID_COMPAT
 long double
 __coshl (long double x)
 {
@@ -34,3 +35,4 @@ __coshl (long double x)
 	return z;
 }
 weak_alias (__coshl, coshl)
+#endif

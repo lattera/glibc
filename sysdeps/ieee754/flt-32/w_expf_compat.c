@@ -20,6 +20,7 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 
+#if LIBM_SVID_COMPAT
 /* wrapper expf */
 float
 __expf (float x)
@@ -33,3 +34,4 @@ __expf (float x)
 }
 hidden_def (__expf)
 weak_alias (__expf, expf)
+#endif

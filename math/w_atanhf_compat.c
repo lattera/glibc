@@ -21,6 +21,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper atanhf */
 float
 __atanhf (float x)
@@ -35,3 +36,4 @@ __atanhf (float x)
   return __ieee754_atanhf (x);
 }
 weak_alias (__atanhf, atanhf)
+#endif

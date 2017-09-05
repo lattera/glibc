@@ -22,6 +22,7 @@
 #include <math-svid-compat.h>
 
 
+#if LIBM_SVID_COMPAT
 /* wrapper asinf */
 float
 __asinf (float x)
@@ -37,3 +38,4 @@ __asinf (float x)
   return __ieee754_asinf (x);
 }
 weak_alias (__asinf, asinf)
+#endif
