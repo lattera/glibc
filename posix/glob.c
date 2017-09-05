@@ -902,7 +902,7 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
      [ which we handle the same, using fnmatch.  Broken unterminated
      pattern bracket expressions ought to be rare enough that it is
      not worth special casing them, fnmatch will do the right thing.  */
-  if (meta & 5)
+  if (meta & (GLOBPAT_SPECIAL | GLOBPAT_BRACKET))
     {
       /* The directory name contains metacharacters, so we
 	 have to glob for the directory, and then glob for
@@ -1043,7 +1043,7 @@ glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
       size_t old_pathc = pglob->gl_pathc;
       int orig_flags = flags;
 
-      if (meta & 2)
+      if (meta & GLOBPAT_BACKSLASH)
 	{
 	  char *p = strchr (dirname, '\\'), *q;
 	  /* We need to unescape the dirname string.  It is certainly
@@ -1241,14 +1241,14 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
                        / sizeof init_names->name[0]);
 
   meta = __glob_pattern_type (pattern, !(flags & GLOB_NOESCAPE));
-  if (meta == 0 && (flags & (GLOB_NOCHECK|GLOB_NOMAGIC)))
+  if (meta == GLOBPAT_NONE && (flags & (GLOB_NOCHECK|GLOB_NOMAGIC)))
     {
       /* We need not do any tests.  The PATTERN contains no meta
 	 characters and we must not return an error therefore the
 	 result will always contain exactly one name.  */
       flags |= GLOB_NOCHECK;
     }
-  else if (meta == 0)
+  else if (meta == GLOBPAT_NONE)
     {
       union
       {

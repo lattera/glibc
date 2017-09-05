@@ -28,6 +28,6 @@
 int
 __glob_pattern_p (const char *pattern, int quote)
 {
-  return __glob_pattern_type (pattern, quote) == 1;
+  return __glob_pattern_type (pattern, quote) == GLOBPAT_SPECIAL;
 }
 weak_alias (__glob_pattern_p, glob_pattern_p)

@@ -1,5 +1,12 @@
 2017-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* posix/glob_internal.h (GLOBPAT_NONE, GLOBPAT_SPECIAL)
+	(GLOBPAT_BACKSLASH, GLOBPAT_BRACKET): New constants.
+	* posix/glob_internal.h (__glob_pattern_type):
+	* posix/glob.c (glob):
+	* posix/glob_pattern_p.c (__glob_pattern_p):
+	Use them.
+
 	* sysdeps/unix/sysv/linux/arm/glob64.c: Remove file.
 	* sysdeps/unix/sysv/linux/i386/glob64.c: Likewise.
 	* sysdeps/unix/sysv/linux/m68k/glob64.c: Likewise.
