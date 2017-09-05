@@ -1,3 +1,9 @@
+2017-09-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22086]
+	* debug/pcprofiledump.c (main): Use byte-swapped mask when
+	comparing word with byte-swapped constant.
+
 2017-09-05  Chris Leonard <cjlhomeaddress@gmail.com>
 
 	[BZ #20498]

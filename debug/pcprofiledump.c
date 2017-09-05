@@ -115,7 +115,7 @@ main (int argc, char *argv[])
     error (EXIT_FAILURE, errno, _("cannot read header"));
 
   /* Check whether we have to swap the byte order.  */
-  int must_swap = (word & 0xfffffff0) == bswap_32 (0xdeb00000);
+  int must_swap = (word & 0x0fffffff) == bswap_32 (0xdeb00000);
   if (must_swap)
     word = bswap_32 (word);
 
