@@ -97,4 +97,14 @@
   compat_symbol (libc, name, aliasname, version);
 # endif
 
+/* The TEST_COMPAT macro acts just like the SHLIB_COMPAT macro except
+   that it does not check IS_IN.  It is used by tests that are testing
+   functionality that is only available in specific GLIBC versions.  */
+
+# define TEST_COMPAT(lib, introduced, obsoleted)			      \
+  _TEST_COMPAT (lib, introduced, obsoleted)
+# define _TEST_COMPAT(lib, introduced, obsoleted)			      \
+   (!(ABI_##lib##_##obsoleted - 0)					      \
+       || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0)))
+
 #endif	/* shlib-compat.h */

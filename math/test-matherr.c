@@ -22,8 +22,11 @@
 
 #include <math-svid-compat.h>
 #include <shlib-compat.h>
-#undef matherr
-#undef _LIB_VERSION
+
+#if TEST_COMPAT (libm, GLIBC_2_0, GLIBC_2_27)
+
+# undef matherr
+# undef _LIB_VERSION
 compat_symbol_reference (libm, matherr, matherr, GLIBC_2_0);
 compat_symbol_reference (libm, _LIB_VERSION, _LIB_VERSION, GLIBC_2_0);
 
@@ -44,5 +47,12 @@ do_test (void)
   acos (2.0);
   return fail;
 }
+#else
+static int
+do_test (void)
+{
+  return 77;
+}
+#endif
 
 #include <support/test-driver.c>

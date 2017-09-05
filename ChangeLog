@@ -1,3 +1,11 @@
+2017-09-05  Steve Ellcey  <sellcey@cavium.com>
+
+	* include/shlib-compat.h (TEST_COMPAT): New Macro.
+	* malloc/tst-mallocstate.c: Convert from test-skeleton
+	to test-driver.  Ifdef code using TEST_COMPAT macro.
+	* math/test-matherr-2.c: Ifdef test using TEST_COMPAT macro.
+	* math/test-matherr.c: Likewise.
+
 2017-09-05  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22086]

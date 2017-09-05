@@ -23,18 +23,19 @@
 #include <string.h>
 #include <libc-symbols.h>
 #include <shlib-compat.h>
+#include <support/check.h>
+#include <support/support.h>
+#include <support/test-driver.h>
 
 #include "malloc.h"
+
+#if TEST_COMPAT (libc, GLIBC_2_0, GLIBC_2_25)
 
 /* Make the compatibility symbols availabile to this test case.  */
 void *malloc_get_state (void);
 compat_symbol_reference (libc, malloc_get_state, malloc_get_state, GLIBC_2_0);
 int malloc_set_state (void *);
 compat_symbol_reference (libc, malloc_set_state, malloc_set_state, GLIBC_2_0);
-
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
 
 /* Maximum object size in the fake heap.  */
 enum { max_size = 64 };
@@ -63,9 +64,9 @@ static size_t *next_heap_chunk;
 
 /* Copied from malloc.c and hooks.c.  The version is deliberately
    lower than the final version of malloc_set_state.  */
-#define NBINS 128
-#define MALLOC_STATE_MAGIC   0x444c4541l
-#define MALLOC_STATE_VERSION (0 * 0x100l + 4l)
+# define NBINS 128
+# define MALLOC_STATE_MAGIC   0x444c4541l
+# define MALLOC_STATE_VERSION (0 * 0x100l + 4l)
 static struct
 {
   long magic;
@@ -117,12 +118,7 @@ dumped_heap_alloc (size_t length)
   /* Round up the allocation size to the heap alignment.  */
   chunk_size += heap_alignment_mask;
   chunk_size &= ~heap_alignment_mask;
-  if ((chunk_size & 3) != 0)
-    {
-      /* The lower three bits in the chunk size have to be 0.  */
-      write_message ("error: dumped_heap_alloc computed invalid chunk size\n");
-      _exit (1);
-    }
+  TEST_VERIFY_EXIT ((chunk_size & 3) == 0);
   if (next_heap_chunk == NULL)
     /* Initialize the top of the heap.  Add one word of zero padding,
        to match existing practice.  */
@@ -244,11 +240,7 @@ shuffle_allocation_tasks (void)
       /* Pick pair in the tail of the array.  */
       int j = i + (rand_next (&global_seed)
                    % ((unsigned) (allocation_task_count - i)));
-      if (j < 0 || j >= allocation_task_count)
-        {
-          write_message ("error: test bug in shuffle\n");
-          _exit (1);
-        }
+      TEST_VERIFY_EXIT (j >= 0 && j < allocation_task_count);
       /* Exchange. */
       struct allocation_task tmp = allocation_tasks[i];
       allocation_tasks[i] = allocation_tasks[j];
@@ -298,7 +290,8 @@ static volatile bool heap_initialized;
 static void
 init_heap (void)
 {
-  write_message ("info: performing heap initialization\n");
+  if (test_verbose)
+    printf ("info: performing heap initialization\n");
   heap_initialized = true;
 
   /* Populate the dumped heap.  */
@@ -312,11 +305,7 @@ init_heap (void)
   save_state.av[2] = (void *) (next_heap_chunk - 1);
 
   /* Integrate the dumped heap into the process heap.  */
-  if (malloc_set_state (&save_state) != 0)
-    {
-      write_message ("error: malloc_set_state failed\n");
-      _exit (1);
-    }
+  TEST_VERIFY_EXIT (malloc_set_state (&save_state) == 0);
 }
 
 /* Interpose the initialization callback.  */
@@ -389,15 +378,12 @@ static int
 do_test (void)
 {
   my_free (malloc (1));
-  if (!heap_initialized)
-    {
-      printf ("error: heap was not initialized by malloc\n");
-      return 1;
-    }
+  TEST_VERIFY_EXIT (heap_initialized);
 
   /* The first pass performs the randomly generated allocation
      tasks.  */
-  write_message ("info: first pass through allocation tasks\n");
+  if (test_verbose)
+    printf ("info: first pass through allocation tasks\n");
   full_heap_check ();
 
   /* Execute the post-undump tasks in a random order.  */
@@ -451,14 +437,15 @@ do_test (void)
           break;
 
         case action_count:
-          abort ();
+          FAIL_EXIT1 ("task->action should never be action_count");
         }
       full_heap_check ();
     }
 
   /* The second pass frees the objects which were allocated during the
      first pass.  */
-  write_message ("info: second pass through allocation tasks\n");
+  if (test_verbose)
+    printf ("info: second pass through allocation tasks\n");
 
   shuffle_allocation_tasks ();
   for (int i = 0; i < allocation_task_count; ++i)
@@ -480,7 +467,7 @@ do_test (void)
           break;
 
         case action_count:
-          abort ();
+          FAIL_EXIT1 ("task->action should never be action_count");
         }
       full_heap_check ();
     }
@@ -503,3 +490,12 @@ do_test (void)
 
   return errors;
 }
+#else
+static int
+do_test (void)
+{
+  return 77;
+}
+#endif
+
+#include <support/test-driver.c>
