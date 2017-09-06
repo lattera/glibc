@@ -1,3 +1,16 @@
+2017-09-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/ieee754/dbl-64/w_exp_compat.c: Move to...
+	* math/w_exp_compat.c: ... here.
+	* sysdeps/ieee754/flt-32/w_expf_compat.c: Move to...
+	* math/w_expf_compat.c: ... here.
+	* sysdeps/ieee754/ldbl-128/w_expl_compat.c: Move to...
+	* math/w_expl_compat.c: ... here.
+	* sysdeps/ieee754/ldbl-128ibm/w_expl_compat.c: Remove.
+	* sysdeps/ieee754/ldbl-96/w_expl_compat.c: Remove.
+	* sysdeps/ieee754/ldbl-opt/w_exp_compat.c: Use the new path.
+	* sysdeps/ieee754/ldbl-opt/w_expl_compat.c: Likewise.
+
 2017-09-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/w_scalbln_template.c (strong_alias): Do not undefine and
