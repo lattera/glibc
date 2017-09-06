@@ -19,7 +19,6 @@
 
 /* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-# define _HAVE_STRING_ARCH_strspn 1
 # define strspn __redirect_strspn
 # include <string.h>
 # undef strspn

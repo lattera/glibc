@@ -19,7 +19,6 @@
 
 /* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-# define _HAVE_STRING_ARCH_strncat 1
 # define strncat __redirect_strncat
 # include <string.h>
 # undef strncat

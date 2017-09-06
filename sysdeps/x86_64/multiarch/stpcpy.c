@@ -19,7 +19,6 @@
 
 /* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-# define _HAVE_STRING_ARCH_stpcpy 1
 # define stpcpy __redirect_stpcpy
 # define __stpcpy __redirect___stpcpy
 # define NO_MEMPCPY_STPCPY_REDIRECT

@@ -19,7 +19,6 @@
 
 /* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-# define _HAVE_STRING_ARCH_strncpy 1
 # define strncpy __redirect_strncpy
 # include <string.h>
 # undef strncpy

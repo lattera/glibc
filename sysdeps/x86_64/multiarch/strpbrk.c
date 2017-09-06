@@ -19,7 +19,6 @@
 
 /* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-# define _HAVE_STRING_ARCH_strpbrk 1
 # define strpbrk __redirect_strpbrk
 # include <string.h>
 # undef strpbrk

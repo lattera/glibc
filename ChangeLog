@@ -1,3 +1,20 @@
+2017-09-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/i386/i686/multiarch/strncpy.c (_HAVE_STRING_ARCH_strncpy):
+	Remove define.
+	* sysdeps/x86_64/multiarch/stpcpy.c (_HAVE_STRING_ARCH_stpcpy):
+	Likewise.
+	* sysdeps/x86_64/multiarch/strcspn.c (_HAVE_STRING_ARCH_strcspn):
+	Likewise.
+	* sysdeps/x86_64/multiarch/strncat.c (_HAVE_STRING_ARCH_strncat):
+	Likewise.
+	* sysdeps/x86_64/multiarch/strncpy.c (_HAVE_STRING_ARCH_strncpy):
+	Likewise.
+	* sysdeps/x86_64/multiarch/strpbrk.c (_HAVE_STRING_ARCH_strpbrk):
+	Likewise.
+	* sysdeps/x86_64/multiarch/strspn.c (_HAVE_STRING_ARCH_strspn):
+	Likewise.
+
 2017-09-06  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/dynarray_emplace_enlarge.c
