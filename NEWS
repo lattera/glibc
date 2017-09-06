@@ -14,6 +14,8 @@ Major new features:
 
 * Optimized x86-64 trunc and truncf for processors with SSE4.1.
 
+* Optimized generic expf and exp2f.
+
 * In order to support faster and safer process termination the malloc API
   family of functions will no longer print a failure address and stack
   backtrace after detecting heap corruption.  The goal is to minimize the

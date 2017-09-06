@@ -319,6 +319,26 @@ libc_feresetround_noex_aarch64_ctx (struct rm_ctx *ctx)
 #define libc_feresetround_noexf_ctx	libc_feresetround_noex_aarch64_ctx
 #define libc_feresetround_noexl_ctx	libc_feresetround_noex_aarch64_ctx
 
+/* Hack: only include the large arm_neon.h when needed.  */
+#ifdef _MATH_CONFIG_H
+# include <arm_neon.h>
+
+/* ACLE intrinsics for frintn and fcvtns instructions.  */
+# define TOINT_INTRINSICS 1
+
+static inline double_t
+roundtoint (double_t x)
+{
+  return vget_lane_f64 (vrndn_f64 (vld1_f64 (&x)), 0);
+}
+
+static inline uint64_t
+converttoint (double_t x)
+{
+  return vcvtnd_s64_f64 (x);
+}
+#endif
+
 #include_next <math_private.h>
 
 #endif

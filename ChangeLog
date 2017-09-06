@@ -1,3 +1,21 @@
+2017-09-25  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* math/Makefile (type-float-routines): Add math_errf and e_exp2f_data.
+	* sysdeps/aarch64/fpu/math_private.h (TOINT_INTRINSICS): Define.
+	(roundtoint, converttoint): Likewise.
+	* sysdeps/ieee754/flt-32/e_expf.c: New implementation.
+	* sysdeps/ieee754/flt-32/e_exp2f.c: New implementation.
+	* sysdeps/ieee754/flt-32/e_exp2f_data.c: New file.
+	* sysdeps/ieee754/flt-32/math_config.h: New file.
+	* sysdeps/ieee754/flt-32/math_errf.c: New file.
+	* sysdeps/ieee754/flt-32/t_exp2f.h: Remove.
+	* sysdeps/i386/fpu/e_exp2f_data.c: New file.
+	* sysdeps/i386/fpu/math_errf.c: New file.
+	* sysdeps/ia64/fpu/e_exp2f_data.c: New file.
+	* sysdeps/ia64/fpu/math_errf.c: New file.
+	* sysdeps/m68k/m680x0/fpu/e_exp2f_data.c: New file.
+	* sysdeps/m68k/m680x0/fpu/math_errf.c: New file.
+
 2017-09-24  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (check_no_hidden): New macro.

@@ -1,7 +1,6 @@
-/* Single-precision floating point e^x.
-   Copyright (C) 1997-2017 Free Software Foundation, Inc.
+/* Single-precision e^x function.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,117 +16,87 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* How this works:
-
-   The input value, x, is written as
-
-   x = n * ln(2) + t/512 + delta[t] + x;
-
-   where:
-   - n is an integer, 127 >= n >= -150;
-   - t is an integer, 177 >= t >= -177
-   - delta is based on a table entry, delta[t] < 2^-28
-   - x is whatever is left, |x| < 2^-10
-
-   Then e^x is approximated as
-
-   e^x = 2^n ( e^(t/512 + delta[t])
-	       + ( e^(t/512 + delta[t])
-		   * ( p(x + delta[t] + n * ln(2)) - delta ) ) )
-
-   where
-   - p(x) is a polynomial approximating e(x)-1;
-   - e^(t/512 + delta[t]) is obtained from a table.
-
-   The table used is the same one as for the double precision version;
-   since we have the table, we might as well use it.
-
-   It turns out to be faster to do calculations in double precision than
-   to perform an 'accurate table method' expf, because of the range reduction
-   overhead (compare exp2f).
-   */
-#include <float.h>
-#include <ieee754.h>
 #include <math.h>
-#include <fenv.h>
-#include <inttypes.h>
-#include <math_private.h>
+#include <stdint.h>
+#include "math_config.h"
 
-extern const float __exp_deltatable[178];
-extern const double __exp_atable[355] /* __attribute__((mode(DF))) */;
+/*
+EXP2F_TABLE_BITS = 5
+EXP2F_POLY_ORDER = 3
 
-static const float TWOM100 = 7.88860905e-31;
-static const float TWO127 = 1.7014118346e+38;
+ULP error: 0.502 (nearest rounding.)
+Relative error: 1.69 * 2^-34 in [-ln2/64, ln2/64] (before rounding.)
+Wrong count: 170635 (all nearest rounding wrong results with fma.)
+Non-nearest ULP error: 1 (rounded ULP error)
+*/
+
+#define N (1 << EXP2F_TABLE_BITS)
+#define InvLn2N __exp2f_data.invln2_scaled
+#define T __exp2f_data.tab
+#define C __exp2f_data.poly_scaled
+
+static inline uint32_t
+top12 (float x)
+{
+  return asuint (x) >> 20;
+}
 
 float
 __ieee754_expf (float x)
 {
-  static const float himark = 88.72283935546875;
-  static const float lomark = -103.972084045410;
-  /* Check for usual case.  */
-  if (isless (x, himark) && isgreater (x, lomark))
+  uint32_t abstop;
+  uint64_t ki, t;
+  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
+  double_t kd, xd, z, r, r2, y, s;
+
+  xd = (double_t) x;
+  abstop = top12 (x) & 0x7ff;
+  if (__glibc_unlikely (abstop >= top12 (88.0f)))
     {
-      static const float THREEp42 = 13194139533312.0;
-      static const float THREEp22 = 12582912.0;
-      /* 1/ln(2).  */
-#undef M_1_LN2
-      static const float M_1_LN2 = 1.44269502163f;
-      /* ln(2) */
-#undef M_LN2
-      static const double M_LN2 = .6931471805599452862;
-
-      int tval;
-      double x22, t, result, dx;
-      float n, delta;
-      union ieee754_double ex2_u;
-
-      {
-	SET_RESTORE_ROUND_NOEXF (FE_TONEAREST);
-
-	/* Calculate n.  */
-	n = x * M_1_LN2 + THREEp22;
-	n -= THREEp22;
-	dx = x - n*M_LN2;
-
-	/* Calculate t/512.  */
-	t = dx + THREEp42;
-	t -= THREEp42;
-	dx -= t;
-
-	/* Compute tval = t.  */
-	tval = (int) (t * 512.0);
-
-	if (t >= 0)
-	  delta = - __exp_deltatable[tval];
-	else
-	  delta = __exp_deltatable[-tval];
-
-	/* Compute ex2 = 2^n e^(t/512+delta[t]).  */
-	ex2_u.d = __exp_atable[tval+177];
-	ex2_u.ieee.exponent += (int) n;
-
-	/* Approximate e^(dx+delta) - 1, using a second-degree polynomial,
-	   with maximum error in [-2^-10-2^-28,2^-10+2^-28]
-	   less than 5e-11.  */
-	x22 = (0.5000000496709180453 * dx + 1.0000001192102037084) * dx + delta;
-      }
-
-      /* Return result.  */
-      result = x22 * ex2_u.d + ex2_u.d;
-      return (float) result;
+      /* |x| >= 88 or x is nan.  */
+      if (asuint (x) == asuint (-INFINITY))
+	return 0.0f;
+      if (abstop >= top12 (INFINITY))
+	return x + x;
+      if (x > 0x1.62e42ep6f) /* x > log(0x1p128) ~= 88.72 */
+	return __math_oflowf (0);
+      if (x < -0x1.9fe368p6f) /* x < log(0x1p-150) ~= -103.97 */
+	return __math_uflowf (0);
+#if WANT_ERRNO_UFLOW
+      if (x < -0x1.9d1d9ep6f) /* x < log(0x1p-149) ~= -103.28 */
+	return __math_may_uflowf (0);
+#endif
     }
-  /* Exceptional cases:  */
-  else if (isless (x, himark))
-    {
-      if (isinf (x))
-	/* e^-inf == 0, with no error.  */
-	return 0;
-      else
-	/* Underflow */
-	return TWOM100 * TWOM100;
-    }
-  else
-    /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
-    return TWO127*x;
+
+  /* x*N/Ln2 = k + r with r in [-1/2, 1/2] and int k.  */
+  z = InvLn2N * xd;
+
+  /* Round and convert z to int, the result is in [-150*N, 128*N] and
+     ideally ties-to-even rule is used, otherwise the magnitude of r
+     can be bigger which gives larger approximation error.  */
+#if TOINT_INTRINSICS
+  kd = roundtoint (z);
+  ki = converttoint (z);
+#elif TOINT_RINT
+  kd = rint (z);
+  ki = (long) kd;
+#elif TOINT_SHIFT
+# define SHIFT __exp2f_data.shift
+  kd = math_narrow_eval ((double) (z + SHIFT)); /* Needs to be double.  */
+  ki = asuint64 (kd);
+  kd -= SHIFT;
+#endif
+  r = z - kd;
+
+  /* exp(x) = 2^(k/N) * 2^(r/N) ~= s * (C0*r^3 + C1*r^2 + C2*r + 1) */
+  t = T[ki % N];
+  t += ki << (52 - EXP2F_TABLE_BITS);
+  s = asdouble (t);
+  z = C[0] * r + C[1];
+  r2 = r * r;
+  y = C[2] * r + 1;
+  y = z * r2 + y;
+  y = y * s;
+  return (float) y;
 }
 strong_alias (__ieee754_expf, __expf_finite)

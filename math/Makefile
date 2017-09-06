@@ -115,7 +115,7 @@ type-double-routines := branred doasin dosincos halfulp mpa mpatan2	\
 
 # float support
 type-float-suffix := f
-type-float-routines := k_rem_pio2f
+type-float-routines := k_rem_pio2f math_errf e_exp2f_data
 
 # _Float128 support
 type-float128-suffix := f128

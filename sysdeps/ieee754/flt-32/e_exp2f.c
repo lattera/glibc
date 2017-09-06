@@ -1,7 +1,6 @@
-/* Single-precision floating point 2^x.
-   Copyright (C) 1997-2017 Free Software Foundation, Inc.
+/* Single-precision 2^x function.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,116 +16,73 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* The basic design here is from
-   Shmuel Gal and Boris Bachelis, "An Accurate Elementary Mathematical
-   Library for the IEEE Floating Point Standard", ACM Trans. Math. Soft.,
-   17 (1), March 1991, pp. 26-45.
-   It has been slightly modified to compute 2^x instead of e^x, and for
-   single-precision.
-   */
-#ifndef _GNU_SOURCE
-# define _GNU_SOURCE
-#endif
-#include <stdlib.h>
-#include <float.h>
-#include <ieee754.h>
 #include <math.h>
-#include <fenv.h>
-#include <inttypes.h>
-#include <math_private.h>
+#include <stdint.h>
+#include "math_config.h"
 
-#include "t_exp2f.h"
+/*
+EXP2F_TABLE_BITS = 5
+EXP2F_POLY_ORDER = 3
 
-static const float TWOM100 = 7.88860905e-31;
-static const float TWO127 = 1.7014118346e+38;
+ULP error: 0.502 (nearest rounding.)
+Relative error: 1.69 * 2^-34 in [-1/64, 1/64] (before rounding.)
+Wrong count: 168353 (all nearest rounding wrong results with fma.)
+Non-nearest ULP error: 1 (rounded ULP error)
+*/
+
+#define N (1 << EXP2F_TABLE_BITS)
+#define T __exp2f_data.tab
+#define C __exp2f_data.poly
+#define SHIFT __exp2f_data.shift_scaled
+
+static inline uint32_t
+top12 (float x)
+{
+  return asuint (x) >> 20;
+}
 
 float
 __ieee754_exp2f (float x)
 {
-  static const float himark = (float) FLT_MAX_EXP;
-  static const float lomark = (float) (FLT_MIN_EXP - FLT_MANT_DIG - 1);
+  uint32_t abstop;
+  uint64_t ki, t;
+  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
+  double_t kd, xd, z, r, r2, y, s;
 
-  /* Check for usual case.  */
-  if (isless (x, himark) && isgreaterequal (x, lomark))
+  xd = (double_t) x;
+  abstop = top12 (x) & 0x7ff;
+  if (__glibc_unlikely (abstop >= top12 (128.0f)))
     {
-      static const float THREEp14 = 49152.0;
-      int tval, unsafe;
-      float rx, x22, result;
-      union ieee754_float ex2_u, scale_u;
-
-      if (fabsf (x) < FLT_EPSILON / 4.0f)
-	return 1.0f + x;
-
-      {
-	SET_RESTORE_ROUND_NOEXF (FE_TONEAREST);
-
-	/* 1. Argument reduction.
-	   Choose integers ex, -128 <= t < 128, and some real
-	   -1/512 <= x1 <= 1/512 so that
-	   x = ex + t/512 + x1.
-
-	   First, calculate rx = ex + t/256.  */
-	rx = x + THREEp14;
-	rx -= THREEp14;
-	x -= rx;  /* Compute x=x1. */
-	/* Compute tval = (ex*256 + t)+128.
-	   Now, t = (tval mod 256)-128 and ex=tval/256  [that's mod, NOT %;
-	   and /-round-to-nearest not the usual c integer /].  */
-	tval = (int) (rx * 256.0f + 128.0f);
-
-	/* 2. Adjust for accurate table entry.
-	   Find e so that
-	   x = ex + t/256 + e + x2
-	   where -7e-4 < e < 7e-4, and
-	   (float)(2^(t/256+e))
-	   is accurate to one part in 2^-64.  */
-
-	/* 'tval & 255' is the same as 'tval%256' except that it's always
-	   positive.
-	   Compute x = x2.  */
-	x -= __exp2f_deltatable[tval & 255];
-
-	/* 3. Compute ex2 = 2^(t/255+e+ex).  */
-	ex2_u.f = __exp2f_atable[tval & 255];
-	tval >>= 8;
-	/* x2 is an integer multiple of 2^-30; avoid intermediate
-	   underflow from the calculation of x22 * x.  */
-	unsafe = abs(tval) >= -FLT_MIN_EXP - 32;
-	ex2_u.ieee.exponent += tval >> unsafe;
-	scale_u.f = 1.0;
-	scale_u.ieee.exponent += tval - (tval >> unsafe);
-
-	/* 4. Approximate 2^x2 - 1, using a second-degree polynomial,
-	   with maximum error in [-2^-9 - 2^-14, 2^-9 + 2^-14]
-	   less than 1.3e-10.  */
-
-	x22 = (.24022656679f * x + .69314736128f) * ex2_u.f;
-      }
-
-      /* 5. Return (2^x2-1) * 2^(t/512+e+ex) + 2^(t/512+e+ex).  */
-      result = x22 * x + ex2_u.f;
-
-      if (!unsafe)
-	return result;
-      else
-	{
-	  result *= scale_u.f;
-	  math_check_force_underflow_nonneg (result);
-	  return result;
-	}
+      /* |x| >= 128 or x is nan.  */
+      if (asuint (x) == asuint (-INFINITY))
+	return 0.0f;
+      if (abstop >= top12 (INFINITY))
+	return x + x;
+      if (x > 0.0f)
+	return __math_oflowf (0);
+      if (x <= -150.0f)
+	return __math_uflowf (0);
+#if WANT_ERRNO_UFLOW
+      if (x < -149.0f)
+	return __math_may_uflowf (0);
+#endif
     }
-  /* Exceptional cases:  */
-  else if (isless (x, himark))
-    {
-      if (isinf (x))
-	/* e^-inf == 0, with no error.  */
-	return 0;
-      else
-	/* Underflow */
-	return TWOM100 * TWOM100;
-    }
-  else
-    /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
-    return TWO127*x;
+
+  /* x = k/N + r with r in [-1/(2N), 1/(2N)] and int k.  */
+  kd = math_narrow_eval ((double) (xd + SHIFT)); /* Needs to be double.  */
+  ki = asuint64 (kd);
+  kd -= SHIFT; /* k/N for int k.  */
+  r = xd - kd;
+
+  /* exp2(x) = 2^(k/N) * 2^r ~= s * (C0*r^3 + C1*r^2 + C2*r + 1) */
+  t = T[ki % N];
+  t += ki << (52 - EXP2F_TABLE_BITS);
+  s = asdouble (t);
+  z = C[0] * r + C[1];
+  r2 = r * r;
+  y = C[2] * r + 1;
+  y = z * r2 + y;
+  y = y * s;
+  return (float) y;
 }
 strong_alias (__ieee754_exp2f, __exp2f_finite)
