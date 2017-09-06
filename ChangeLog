@@ -1,3 +1,15 @@
+2017-09-06  Florian Weimer  <fweimer@redhat.com>
+
+	Enhance tst-res_use_inet6 to test IPv4-to-IPv6 address mapping.
+	* resolv/tst-res_use_inet6.c (response): Process flags embedded in
+	the QNAME.
+	(test_gai): Adjust query names.  Add additional tests.
+	(test_get2_any, test_get2_no_inet6, test_get2_inet6): Split from
+	test_get2.  Adjust query names.  Add additional tests.
+	(test_no_inet6): New function, extracted from threadfunc.
+	(threadfunc): Call test_get2_any, test_get2_inet6, test_no_inet6.
+	Add additional tests.
+
 2017-09-06  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #22070]
