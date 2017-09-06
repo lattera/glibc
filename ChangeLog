@@ -1,3 +1,21 @@
+2017-09-19  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #22134]
+	* sysdeps/unix/sysv/linux/fexecve.c (fexecve) [__NR_execveat]: Try
+	execveat first.
+	[!__ASSUME_EXECVEAT]: Fall back to /proc if execveat is
+	unimplemented.
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_EXECVEAT)
+	[__LINUX_KERNEL_VERSION >= 0x031300]: Define.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_EXECVEAT) [__LINUX_KERNEL_VERSION < 0x040200]: Undef.
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h
+	(__ASSUME_EXECVEAT) [__LINUX_KERNEL_VERSION < 0x040000]: Undef.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_EXECVEAT) [__LINUX_KERNEL_VERSION < 0x040000]: Undef.
+	* posix/Makefile (tests): Add tst-fexecve.
+	* posix/tst-fexecve.c: New file.
+
 2017-09-19  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/Makefile: Add logf benchmark.

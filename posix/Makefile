@@ -93,7 +93,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-fnmatch3 bug-regex36 tst-getaddrinfo5 \
 		   tst-posix_spawn-fd tst-posix_spawn-setsid \
 		   tst-posix_fadvise tst-posix_fadvise64 \
-		   tst-sysconf-empty-chroot tst-glob_symlinks
+		   tst-sysconf-empty-chroot tst-glob_symlinks tst-fexecve
 tests-internal	:= bug-regex5 bug-regex20 bug-regex33 \
 		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3
 xtests		:= bug-ga2

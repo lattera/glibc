@@ -102,3 +102,8 @@
    implementation does not assume the __ASSUME_* and instead use a fallback
    implementation based on p{read,write}v and returning an error for
    non supported flags.  */
+
+/* Support for the execveat syscall was added in 3.19.  */
+#if __LINUX_KERNEL_VERSION >= 0x031300
+# define __ASSUME_EXECVEAT	1
+#endif
