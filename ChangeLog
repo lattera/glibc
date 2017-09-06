@@ -1,5 +1,6 @@
 2017-09-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #18858]
 	* sysdeps/i386/i686/multiarch/strncpy.c (_HAVE_STRING_ARCH_strncpy):
 	Remove define.
 	* sysdeps/x86_64/multiarch/stpcpy.c (_HAVE_STRING_ARCH_stpcpy):
