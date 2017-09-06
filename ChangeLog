@@ -1,5 +1,10 @@
 2017-09-06  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/dynarray_emplace_enlarge.c
+	(__libc_dynarray_emplace_enlarge): Add missing else.
+
+2017-09-06  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22096]
 	* resolv/resolv_conf.c (__resolv_conf_attach): Do not free conf in
 	case of failure to obtain the global conf object.

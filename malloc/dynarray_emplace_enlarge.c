@@ -33,7 +33,7 @@ __libc_dynarray_emplace_enlarge (struct dynarray_header *list,
          size.  */
       if (element_size < 4)
         new_allocated = 16;
-      if (element_size < 8)
+      else if (element_size < 8)
         new_allocated = 8;
       else
         new_allocated = 4;
