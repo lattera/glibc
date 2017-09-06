@@ -215,9 +215,11 @@ def write_header_width(outfile):
 #    outfile.write("%   \"grep '^[^;]*;ZERO WIDTH ' UnicodeData.txt\"\n")
     outfile.write("WIDTH\n")
 
-def process_width(outfile, ulines, elines):
+def process_width(outfile, ulines, elines, plines):
     '''ulines are lines from UnicodeData.txt, elines are lines from
-    EastAsianWidth.txt
+    EastAsianWidth.txt containing characters with width “W” or “F”,
+    plines are lines from PropList.txt which contain characters
+    with the property “Prepended_Concatenation_Mark”.
 
     '''
     width_dict = {}
@@ -230,16 +232,29 @@ def process_width(outfile, ulines, elines):
         for key in range(int(code_points[0], 16),
                          int(code_points[1], 16)+1):
             width_dict[key] = 2
+
     for line in ulines:
         fields = line.split(";")
         if fields[4] == "NSM" or fields[2] in ("Cf", "Me", "Mn"):
             width_dict[int(fields[0], 16)] = 0
 
+    for line in plines:
+        # Characters with the property “Prepended_Concatenation_Mark”
+        # should have the width 1:
+        fields = line.split(";")
+        if not '..' in fields[0]:
+            code_points = (fields[0], fields[0])
+        else:
+            code_points = fields[0].split("..")
+        for key in range(int(code_points[0], 16),
+                         int(code_points[1], 16)+1):
+            del width_dict[key] # default width is 1
+
     # handle special cases for compatibility
     for key in list((0x00AD,)):
         # https://www.cs.tut.fi/~jkorpela/shy.html
         if key in width_dict:
-            del width_dict[key]
+            del width_dict[key] # default width is 1
     for key in list(range(0x1160, 0x1200)):
         width_dict[key] = 0
     for key in list(range(0x3248, 0x3250)):
@@ -278,7 +293,7 @@ def process_width(outfile, ulines, elines):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("USAGE: python3 utf8_gen.py UnicodeData.txt EastAsianWidth.txt")
+        print("USAGE: python3 utf8_gen.py UnicodeData.txt EastAsianWidth.txt PropList.txt")
     else:
         with open(sys.argv[1], mode='r') as UNIDATA_FILE:
             UNICODE_DATA_LINES = UNIDATA_FILE.readlines()
@@ -298,6 +313,11 @@ if __name__ == "__main__":
                     continue
                 if re.match(r'^[^;]*;[WF]', LINE):
                     EAST_ASIAN_WIDTH_LINES.append(LINE.strip())
+        with open(sys.argv[3], mode='r') as PROP_LIST_FILE:
+            PROP_LIST_LINES = []
+            for LINE in PROP_LIST_FILE:
+                if re.match(r'^[^;]*;[\s]*Prepended_Concatenation_Mark', LINE):
+                    PROP_LIST_LINES.append(LINE.strip())
         with open('UTF-8', mode='w') as OUTFILE:
             # Processing UnicodeData.txt and write CHARMAP to UTF-8 file
             write_header_charmap(OUTFILE)
@@ -305,5 +325,8 @@ if __name__ == "__main__":
             OUTFILE.write("END CHARMAP\n\n")
             # Processing EastAsianWidth.txt and write WIDTH to UTF-8 file
             write_header_width(OUTFILE)
-            process_width(OUTFILE, UNICODE_DATA_LINES, EAST_ASIAN_WIDTH_LINES)
+            process_width(OUTFILE,
+                          UNICODE_DATA_LINES,
+                          EAST_ASIAN_WIDTH_LINES,
+                          PROP_LIST_LINES)
             OUTFILE.write("END WIDTH\n")

@@ -40,7 +40,7 @@ UNICODE_VERSION = 10.0.0
 PYTHON3 = python3
 WGET = wget
 
-DOWNLOADS = UnicodeData.txt DerivedCoreProperties.txt EastAsianWidth.txt
+DOWNLOADS = UnicodeData.txt DerivedCoreProperties.txt EastAsianWidth.txt PropList.txt
 GENERATED = i18n tr_TR UTF-8 translit_combining translit_compat translit_circle translit_cjk_compat translit_font translit_fraction
 REPORTS = i18n-report UTF-8-report
 
@@ -92,7 +92,7 @@ tr_TR: gen_unicode_ctype.py
 
 UTF-8: UnicodeData.txt EastAsianWidth.txt
 UTF-8: utf8_gen.py
-	$(PYTHON3) utf8_gen.py UnicodeData.txt EastAsianWidth.txt
+	$(PYTHON3) utf8_gen.py UnicodeData.txt EastAsianWidth.txt PropList.txt
 
 UTF-8-report: UTF-8 ../charmaps/UTF-8
 UTF-8-report: utf8_compatibility.py

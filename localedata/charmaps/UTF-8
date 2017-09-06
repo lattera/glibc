@@ -46395,7 +46395,7 @@ CHARMAP
 <U0010FFC0>..<U0010FFFD> /xf4/x8f/xbf/x80 <Plane 16 Private Use>
 END CHARMAP
 
-% Character width according to Unicode 7.0.0.
+% Character width according to Unicode 10.0.0.
 % - Default width is 1.
 % - Double-width characters have width 2; generated from
 %        "grep '^[^;]*;[WF]' EastAsianWidth.txt"
@@ -46411,16 +46411,14 @@ WIDTH
 <U05C1>...<U05C2>	0
 <U05C4>...<U05C5>	0
 <U05C7>	0
-<U0600>...<U0605>	0
 <U0610>...<U061A>	0
 <U061C>	0
 <U064B>...<U065F>	0
 <U0670>	0
-<U06D6>...<U06DD>	0
+<U06D6>...<U06DC>	0
 <U06DF>...<U06E4>	0
 <U06E7>...<U06E8>	0
 <U06EA>...<U06ED>	0
-<U070F>	0
 <U0711>	0
 <U0730>...<U074A>	0
 <U07A6>...<U07B0>	0
@@ -46430,7 +46428,8 @@ WIDTH
 <U0825>...<U0827>	0
 <U0829>...<U082D>	0
 <U0859>...<U085B>	0
-<U08D4>...<U0902>	0
+<U08D4>...<U08E1>	0
+<U08E3>...<U0902>	0
 <U093A>	0
 <U093C>	0
 <U0941>...<U0948>	0
@@ -46692,7 +46691,6 @@ WIDTH
 <U0001107F>...<U00011081>	0
 <U000110B3>...<U000110B6>	0
 <U000110B9>...<U000110BA>	0
-<U000110BD>	0
 <U00011100>...<U00011102>	0
 <U00011127>...<U0001112B>	0
 <U0001112D>...<U00011134>	0

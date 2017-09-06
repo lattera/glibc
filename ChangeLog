@@ -1,5 +1,12 @@
 2017-09-06  Mike FABIAN  <mfabian@redhat.com>
 
+	[BZ #22070]
+	* localedata/unicode-gen/utf8_gen.py: Set the width for
+	characters with Prepended_Concatenation_Mark property to 1
+	* localedata/charmaps/UTF-8: Updated using the improved script.
+
+2017-09-06  Mike FABIAN  <mfabian@redhat.com>
+
 	[BZ #21750]
 	* localedata/unicode-gen/utf8_gen.py: Improve the script to
 	use the range notation for all ranges of neighbouring characters
