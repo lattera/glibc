@@ -889,19 +889,6 @@ getanswer_r (struct resolv_context *ctx,
 	  /* bind would put multiple PTR records as aliases, but we don't do
 	     that.  */
 	  result->h_name = bp;
-	  if (have_to_map)
-	    {
-	      n = strlen (bp) + 1;	/* for the \0 */
-	      if (__glibc_unlikely (n >= MAXHOSTNAMELEN))
-		{
-		  ++had_error;
-		  break;
-		}
-	      bp += n;
-	      linebuflen -= n;
-	      if (map_v4v6_hostent (result, &bp, &linebuflen))
-		goto too_small;
-	    }
 	  *h_errnop = NETDB_SUCCESS;
 	  return NSS_STATUS_SUCCESS;
 	case T_A:

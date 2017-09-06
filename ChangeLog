@@ -1,5 +1,17 @@
 2017-09-06  Florian Weimer  <fweimer@redhat.com>
 
+	Remove dead PTR IPv4-to-IPv6 mapping code from nss_dns.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Remove dead code.
+	* resolv/tst-res_use_inet6.c (response_ptr_v4, response_ptr_v6):
+	New functions.
+	(response): Call them.  Add 'p', '6' flag processing.
+	(test_reverse): New function.
+	(test_get2_any): Call it.
+	(test_no_inet6): Add 'p' test.
+	(test_inet6): Likewise.
+
+2017-09-06  Florian Weimer  <fweimer@redhat.com>
+
 	Enhance tst-res_use_inet6 to test IPv4-to-IPv6 address mapping.
 	* resolv/tst-res_use_inet6.c (response): Process flags embedded in
 	the QNAME.
