@@ -600,10 +600,7 @@ __resolv_conf_attach (struct __res_state *resp, struct resolv_conf *conf)
 
   struct resolv_conf_global *global_copy = get_locked_global ();
   if (global_copy == NULL)
-    {
-      free (conf);
-      return false;
-    }
+    return false;
 
   /* Try to find an unused index in the array.  */
   size_t index;

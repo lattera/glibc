@@ -1,5 +1,11 @@
 2017-09-06  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22096]
+	* resolv/resolv_conf.c (__resolv_conf_attach): Do not free conf in
+	case of failure to obtain the global conf object.
+
+2017-09-06  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22095]
 	* resolv/res_init.c (res_vinit_1): Avoid memory leak in case of
 	dynarray allocation failure.
