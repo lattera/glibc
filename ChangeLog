@@ -1,5 +1,11 @@
 2017-09-06  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22095]
+	* resolv/res_init.c (res_vinit_1): Avoid memory leak in case of
+	dynarray allocation failure.
+
+2017-09-06  Florian Weimer  <fweimer@redhat.com>
+
 	Remove dead PTR IPv4-to-IPv6 mapping code from nss_dns.
 	* resolv/nss_dns/dns-host.c (getanswer_r): Remove dead code.
 	* resolv/tst-res_use_inet6.c (response_ptr_v4, response_ptr_v6):

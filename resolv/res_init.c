@@ -446,6 +446,11 @@ res_vinit_1 (FILE *fp, struct resolv_conf_parser *parser)
                     (&parser->nameserver_list);
                   if (p != NULL)
                     *p = sa;
+                  else
+                    {
+                      free (sa);
+                      return false;
+                    }
                 }
               continue;
             }
