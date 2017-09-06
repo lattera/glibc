@@ -1,3 +1,9 @@
+2017-09-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/get-host.c (_hurd_get_host_config): Also check that more == 0
+	before assuming that the file is empty.  Avoid testing buffer content
+	when nread == 0.
+
 2017-09-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #18858]

@@ -65,7 +65,7 @@ _hurd_get_host_config (const char *item, char *buf, size_t buflen)
     }
 
   /* If the file is empty, give an empty value.  */
-  if (nread == 0)
+  if (nread == 0 && more == 0)
     {
       if (buflen != 0)
 	*buf = '\0';
@@ -80,7 +80,7 @@ _hurd_get_host_config (const char *item, char *buf, size_t buflen)
   if (nread < buflen)
     buf[nread] = '\0';
   else
-    if (buf[nread - 1] != '\0')
+    if (nread != 0 && buf[nread - 1] != '\0')
       more = 1;
 
   if (more)
