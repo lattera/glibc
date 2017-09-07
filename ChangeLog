@@ -1,5 +1,11 @@
 2017-09-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/gnu/netinet/tcp.h (TCP_ULP): New macro.
+	(TCP_MD5SIG_EXT): Likewise.
+	(TCP_MD5SIG_FLAG_PREFIX): Likewise.
+	(struct tcp_md5sig): Replace __tcpm_pad1 by tcpm_flags and
+	tcpm_prefixlen.  Rename __tcpm_pad2 to __tcpm_pad.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h (SOL_TLS): New macro.
 
 2017-09-07  Mike FABIAN  <mfabian@redhat.com>

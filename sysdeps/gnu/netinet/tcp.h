@@ -71,6 +71,8 @@
 				       connection.  */
 #define TCP_REPAIR_WINDOW	 29 /* Get/set window parameters.  */
 #define TCP_FASTOPEN_CONNECT	 30 /* Attempt FastOpen with connect.  */
+#define TCP_ULP			 31 /* Attach a ULP to a TCP connection.  */
+#define TCP_MD5SIG_EXT		 32 /* TCP MD5 Signature with extensions.  */
 
 #ifdef __USE_MISC
 # include <sys/types.h>
@@ -257,12 +259,16 @@ struct tcp_info
 /* For TCP_MD5SIG socket option.  */
 #define TCP_MD5SIG_MAXKEYLEN	80
 
+/* tcp_md5sig extension flags for TCP_MD5SIG_EXT.  */
+#define TCP_MD5SIG_FLAG_PREFIX	1 /* Address prefix length.  */
+
 struct tcp_md5sig
 {
   struct sockaddr_storage tcpm_addr;		/* Address associated.  */
-  uint16_t	__tcpm_pad1;			/* Zero.  */
+  uint8_t	tcpm_flags;			/* Extension flags.  */
+  uint8_t	tcpm_prefixlen;			/* Address prefix.  */
   uint16_t	tcpm_keylen;			/* Key length.  */
-  uint32_t	__tcpm_pad2;			/* Zero.  */
+  uint32_t	__tcpm_pad;			/* Zero.  */
   uint8_t	tcpm_key[TCP_MD5SIG_MAXKEYLEN];	/* Key (binary).  */
 };
 
