@@ -1,3 +1,13 @@
+2017-09-14  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #21084]
+	* benchtests/strcoll-inputs/filelist#en_US.UTF-8: Add IBM858 and ibm858.c.
+	* iconvdata/Makefile: Add IBM858.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/tst-tables.sh: Likewise.
+	* iconvdata/ibm858.c: New file.
+	* localedata/charmaps/IBM858: Likewise.
+
 2017-09-14  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #22023]

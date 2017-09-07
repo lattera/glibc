@@ -744,6 +744,13 @@ module	IBM850//		INTERNAL		IBM850		1
 module	INTERNAL		IBM850//		IBM850		1
 
 #	from			to			module		cost
+alias	CP858//			IBM858//
+alias	858//			IBM858//
+alias	CSPC858MULTILINGUAL//	IBM858//
+module	IBM858//		INTERNAL		IBM858		1
+module	INTERNAL		IBM858//		IBM858		1
+
+#	from			to			module		cost
 alias	CP851//			IBM851//
 alias	851//			IBM851//
 alias	CSIBM851//		IBM851//

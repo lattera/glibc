@@ -11232,6 +11232,7 @@ ISO-8859-9E
 UTF-8
 ISO-8859-2
 IBM850
+IBM858
 EUC-TW
 KOI8-U
 IBM903
@@ -13920,6 +13921,7 @@ ibm12712.c
 ibm1145.h
 ibm932.c
 ibm850.c
+ibm858.c
 ibm437.c
 ibm1399.c
 stdio-common
