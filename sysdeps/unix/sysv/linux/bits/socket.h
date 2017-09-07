@@ -163,6 +163,7 @@ typedef __socklen_t socklen_t;
 #define SOL_ALG		279
 #define SOL_NFC		280
 #define SOL_KCM		281
+#define SOL_TLS		282
 
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	128
