@@ -1,3 +1,7 @@
+2017-09-07  Mike FABIAN  <mfabian@redhat.com>
+
+	* localedata/locales/om_ET (LC_TIME): use ASCII for better readability.
+
 2017-09-07  Akhilesh Kumar <akhilesh.k@samsung.com>
 
 	[BZ #22100]

@@ -163,84 +163,72 @@ LC_TIME
 %
 % Abbreviated weekday names (%a)
 %
-abday    "<U0044><U0069><U006C>";/
-	 "<U0057><U0069><U0078>";/
-	 "<U0051><U0069><U0062>";/
-	 "<U0052><U006F><U0062>";/
-	 "<U004B><U0061><U006D>";/
-	 "<U004A><U0069><U006D>";/
-	 "<U0053><U0061><U006E>"
+abday    "Dil";/
+	 "Wix";/
+	 "Qib";/
+	 "Rob";/
+	 "Kam";/
+	 "Jim";/
+	 "San"
 %
 % Full weekday names (%A)
 %
-day      "<U0044><U0069><U006C><U0062><U0061><U0074><U0061>";/
-	 "<U0057><U0069><U0069><U0078><U0061><U0074><U0061>";/
-	 "<U0051><U0069><U0062><U0078><U0061><U0074><U0061>";/
-	 "<U0052><U006F><U006F><U0062><U0069><U0069>";/
-	 "<U004B><U0061><U006D><U0069><U0069><U0073><U0061>";/
-	 "<U004A><U0069><U006D><U0061><U0061><U0074><U0061>";/
-	 "<U0053><U0061><U006E><U0062><U0061><U0074><U0061>"
+day      "Dilbata";/
+	 "Wiixata";/
+	 "Qibxata";/
+	 "Roobii";/
+	 "Kamiisa";/
+	 "Jimaata";/
+	 "Sanbata"
 %
 % Abbreviated month names (%b)
 %
-abmon    "<U0041><U006D><U0061>";/
-         "<U0047><U0075><U0072>";/
-         "<U0042><U0069><U0074>";/
-         "<U0045><U006C><U0062>";/
-         "<U0043><U0061><U006D>";/
-         "<U0057><U0061><U0078>";/
-         "<U0041><U0064><U006F>";/
-         "<U0048><U0061><U0067>";/
-         "<U0046><U0075><U006C>";/
-         "<U004F><U006E><U006B>";/
-         "<U0053><U0061><U0064>";/
-         "<U004D><U0075><U0064>"
+abmon    "Ama";/
+         "Gur";/
+         "Bit";/
+         "Elb";/
+         "Cam";/
+         "Wax";/
+         "Ado";/
+         "Hag";/
+         "Ful";/
+         "Onk";/
+         "Sad";/
+         "Mud"
 %
 % Full month names (%B)
 %
-mon      "<U0041><U006D><U0061><U006A><U006A><U0069><U0069>";/
-         "<U0047><U0075><U0072><U0061><U0061><U006E><U0064><U0068><U0061><U006C><U0061>";/
-         "<U0042><U0069><U0074><U006F><U006F><U0074><U0065><U0065><U0073><U0073><U0061>";/
-         "<U0045><U006C><U0062><U0061>";/
-         "<U0043><U0061><U0061><U006D><U0073><U0061>";/
-         "<U0057><U0061><U0078><U0061><U0062><U0061><U006A><U006A><U0069><U0069>";/
-         "<U0041><U0064><U006F><U006F><U006C><U0065><U0065><U0073><U0073><U0061>";/
-         "<U0048><U0061><U0067><U0061><U0079><U0079><U0061>";/
-         "<U0046><U0075><U0075><U006C><U0062><U0061><U006E><U0061>";/
-         "<U004F><U006E><U006B><U006F><U006C><U006F><U006C><U0065><U0065><U0073><U0073><U0061>";/
-         "<U0053><U0061><U0064><U0061><U0061><U0073><U0061>";/
-         "<U004D><U0075><U0064><U0064><U0065><U0065>"
+mon      "Amajjii";/
+         "Guraandhala";/
+         "Bitooteessa";/
+         "Elba";/
+         "Caamsa";/
+         "Waxabajjii";/
+         "Adooleessa";/
+         "Hagayya";/
+         "Fuulbana";/
+         "Onkololeessa";/
+         "Sadaasa";/
+         "Muddee"
 %
 % Equivalent of AM PM
 %
-am_pm    "<U0057><U0044>";"<U0057><U0042>"
+am_pm    "WD";"WB"
 %
 % Appropriate date representation (%x)
-%	"%d/%m/%Y"
-%
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+d_fmt   "%d/%m/%Y"
 %
 % Appropriate time representation (%X)
-%	"%l:%M:%S"
-%
-t_fmt "<U0025><U006C><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt "%l:%M:%S"
 %
 % Appropriate AM/PM time representation (%r)
-%	"%X %p"
-%
-t_fmt_ampm "<U0025><U0058><U0020><U0025><U0070>"
+t_fmt_ampm "%X %p"
 %
 % Appropriate date and time representation (%c)
-%	"%A, %B %e, %Y %r %Z
-%
-d_t_fmt    "<U0025><U0041><U002C><U0020><U0025><U0042><U0020><U0025><U0065><U002C>/
-<U0020><U0025><U0059><U0020><U0025><U0072><U0020><U0025><U005A>"
+d_t_fmt    "%A, %B %e, %Y %r %Z"
 %
 % Appropriate date representation (date(1))
-%	"%A, %b %e, %r %Z %Y"
-%
-date_fmt    "<U0025><U0041><U002C><U0020><U0025><U0042><U0020><U0025><U0065><U002C>/
-<U0020><U0025><U0072><U0020><U0025><U005A><U0020><U0025><U0059>"
+date_fmt    "%A, %B %e, %r %Z %Y"
 %
 week 7;19971130;1
 END LC_TIME
