@@ -688,7 +688,7 @@ class Context(object):
                             'gmp': '6.1.2',
                             'linux': '4.13',
                             'mpc': '1.0.3',
-                            'mpfr': '3.1.5'}
+                            'mpfr': '3.1.6'}
         use_versions = {}
         explicit_versions = {}
         for v in versions:

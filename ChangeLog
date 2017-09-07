@@ -1,5 +1,8 @@
 2017-09-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/build-many-glibcs.py (Context.checkout): Default MPFR
+	version to 3.1.6.
+
 	* sysdeps/gnu/netinet/tcp.h (TCP_ULP): New macro.
 	(TCP_MD5SIG_EXT): Likewise.
 	(TCP_MD5SIG_FLAG_PREFIX): Likewise.
