@@ -202,6 +202,8 @@
 # define F_NOTIFY	1026	/* Request notifications on a directory.  */
 # define F_SETPIPE_SZ	1031	/* Set pipe page size array.  */
 # define F_GETPIPE_SZ	1032	/* Set pipe page size array.  */
+# define F_ADD_SEALS	1033	/* Add seals to file.  */
+# define F_GET_SEALS	1034	/* Get seals for file.  */
 #endif
 #ifdef __USE_XOPEN2K8
 # define F_DUPFD_CLOEXEC 1030	/* Duplicate file descriptor with
@@ -269,6 +271,14 @@ struct f_owner_ex
     enum __pid_type type;	/* Owner type of ID.  */
     __pid_t pid;		/* ID of owner.  */
   };
+#endif
+
+#ifdef __USE_GNU
+/* Types of seals.  */
+# define F_SEAL_SEAL	0x0001	/* Prevent further seals from being set.  */
+# define F_SEAL_SHRINK	0x0002	/* Prevent file from shrinking.  */
+# define F_SEAL_GROW	0x0004	/* Prevent file from growing.  */
+# define F_SEAL_WRITE	0x0008	/* Prevent writes.  */
 #endif
 
 /* Define some more compatibility macros to be backward compatible with

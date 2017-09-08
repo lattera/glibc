@@ -1,3 +1,13 @@
+2017-09-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h [__USE_GNU]
+	(F_ADD_SEALS): New macro.
+	[__USE_GNU] (F_GET_SEALS): Likewise.
+	[__USE_GNU] (F_SEAL_SEAL): Likewise.
+	[__USE_GNU] (F_SEAL_SHRINK): Likewise.
+	[__USE_GNU] (F_SEAL_GROW): Likewise.
+	[__USE_GNU] (F_SEAL_WRITE): Likewise.
+
 2017-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* posix/glob_internal.h (GLOBPAT_NONE, GLOBPAT_SPECIAL)
