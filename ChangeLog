@@ -1,6 +1,18 @@
 2017-09-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h [__USE_GNU]
+	(F_GET_RW_HINT): New macro.
+	[__USE_GNU] (F_SET_RW_HINT): Likewise.
+	[__USE_GNU] (F_GET_FILE_RW_HINT): Likewise.
+	[__USE_GNU] (F_SET_FILE_RW_HINT): Likewise.
+	[__USE_GNU] (RWF_WRITE_LIFE_NOT_SET): Likewise.
+	[__USE_GNU] (RWH_WRITE_LIFE_NONE): Likewise.
+	[__USE_GNU] (RWH_WRITE_LIFE_SHORT): Likewise.
+	[__USE_GNU] (RWH_WRITE_LIFE_MEDIUM): Likewise.
+	[__USE_GNU] (RWH_WRITE_LIFE_LONG): Likewise.
+	[__USE_GNU] (RWH_WRITE_LIFE_EXTREME): Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h [__USE_GNU]
 	(F_ADD_SEALS): New macro.
 	[__USE_GNU] (F_GET_SEALS): Likewise.
 	[__USE_GNU] (F_SEAL_SEAL): Likewise.
