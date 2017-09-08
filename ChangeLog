@@ -1,3 +1,8 @@
+2017-09-08  Steve Ellcey  <sellcey@cavium.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c (get_midr_from_mcpu):
+	Use strcmp instead of tunable_is_name.
+
 2017-09-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h [__USE_GNU]

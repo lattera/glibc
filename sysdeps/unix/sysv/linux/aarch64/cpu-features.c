@@ -37,7 +37,7 @@ static uint64_t
 get_midr_from_mcpu (const char *mcpu)
 {
   for (int i = 0; i < sizeof (cpu_list) / sizeof (struct cpu_list); i++)
-    if (tunable_is_name (mcpu, cpu_list[i].name) == 0)
+    if (strcmp (mcpu, cpu_list[i].name) == 0)
       return cpu_list[i].midr;
 
   return UINT64_MAX;
