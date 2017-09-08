@@ -1,5 +1,12 @@
 2017-09-08  Steve Ellcey  <sellcey@cavium.com>
 
+	* manual/tunables.texi (glibc.tune.cpu): Add thunderx2t99 and
+	thunderx2t99p1 to list of cpu names.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c (cpu_list):
+	Add thunderx2t99 and thunderx2t99p1 entries to cpu_list.
+
+2017-09-08  Steve Ellcey  <sellcey@cavium.com>
+
 	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c (get_midr_from_mcpu):
 	Use strcmp instead of tunable_is_name.
 

@@ -28,9 +28,11 @@ struct cpu_list
 };
 
 static struct cpu_list cpu_list[] = {
-      {"falkor",	0x510FC000},
-      {"thunderxt88",	0x430F0A10},
-      {"generic", 	0x0}
+      {"falkor",	 0x510FC000},
+      {"thunderxt88",	 0x430F0A10},
+      {"thunderx2t99",   0x431F0AF0},
+      {"thunderx2t99p1", 0x420F5160},
+      {"generic", 	 0x0}
 };
 
 static uint64_t

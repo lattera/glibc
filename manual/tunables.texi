@@ -253,7 +253,8 @@ This tunable is specific to i386 and x86-64.
 @deftp Tunable glibc.tune.cpu
 The @code{glibc.tune.cpu=xxx} tunable allows the user to tell @theglibc{} to
 assume that the CPU is @code{xxx} where xxx may have one of these values:
-@code{generic}, @code{falkor}, @code{thunderxt88}.
+@code{generic}, @code{falkor}, @code{thunderxt88}, @code{thunderx2t99},
+@code{thunderx2t99p1}.
 
 This tunable is specific to aarch64.
 @end deftp
