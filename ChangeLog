@@ -1,3 +1,7 @@
+2017-09-08  Markus Trippelsdorf  <markus@trippelsdorf.de>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update for AMD Ryzen.
+
 2017-09-08  Steve Ellcey  <sellcey@cavium.com>
 
 	* manual/tunables.texi (glibc.tune.cpu): Add thunderx2t99 and
