@@ -8,8 +8,6 @@ escape_char /
 % exempt you from the conditions of the license if your use would
 % otherwise be governed by that license.
 
-%	This is the locale defination file for Bangladeshi Bengali
-
 LC_IDENTIFICATION
 title      "Bangla language locale for Bangladesh"
 source     "Ankur Group, http:////www.ankurbangla.org, http:////www.bengalinux.org"
@@ -44,10 +42,10 @@ END LC_COLLATE
 LC_CTYPE
 copy "i18n"
 
-% Bengali uses the alternate digits U+09E6..U+09EF
+% Bangla uses the alternate digits U+09E6..U+09EF
 outdigit <U09E6>..<U09EF>
 
-% This is used in the scanf family of functions to read Bengali numbers
+% This is used in the scanf family of functions to read Bangla numbers
 % using "%Id" and such.
 map to_inpunct; /
   (<U0030>,<U09E6>); /

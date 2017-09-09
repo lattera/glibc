@@ -1,3 +1,11 @@
+2017-09-09  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #14925]
+	* libio/tst-widetext.input: Change “Bengali” to “Bangla”.
+	* locale/iso-639.def: Change “Bengali” to “Bangla”.
+	* localedata/locales/bn_BD: “Bengali” was still used in some
+	comments. Change it to “Bangla”.
+
 2017-09-08  Markus Trippelsdorf  <markus@trippelsdorf.de>
 
 	* sysdeps/x86_64/fpu/libm-test-ulps: Update for AMD Ryzen.
