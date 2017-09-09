@@ -1,5 +1,17 @@
 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: Remove definitions of
+	_Float128 and L().
+	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: Remove definitions of
+	_Float128 and L(). Replace _Float128 with long double and L(x)
+	with xL, throughout the file.
+	* sysdeps/ieee754/ldbl-128ibm/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_lgammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_cbrtl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/t_expl.h: Likewise.
+
+2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: Include tables from
 	sysdeps/ieee754/ldbl-128ibm.
 	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: Copy contents from the

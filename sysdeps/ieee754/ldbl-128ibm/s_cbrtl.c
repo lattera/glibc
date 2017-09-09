@@ -19,24 +19,22 @@
 
 /* This file was copied from sysdeps/ieee754/ldbl-128/e_j0l.c.  */
 
-#define _Float128 long double
-#define L(x) x ## L
 
 #include <math_ldbl_opt.h>
 #include <math.h>
 #include <math_private.h>
 
-static const _Float128 CBRT2 = L(1.259921049894873164767210607278228350570251);
-static const _Float128 CBRT4 = L(1.587401051968199474751705639272308260391493);
-static const _Float128 CBRT2I = L(0.7937005259840997373758528196361541301957467);
-static const _Float128 CBRT4I = L(0.6299605249474365823836053036391141752851257);
+static const long double CBRT2 = 1.259921049894873164767210607278228350570251L;
+static const long double CBRT4 = 1.587401051968199474751705639272308260391493L;
+static const long double CBRT2I = 0.7937005259840997373758528196361541301957467L;
+static const long double CBRT4I = 0.6299605249474365823836053036391141752851257L;
 
 
-_Float128
-__cbrtl (_Float128 x)
+long double
+__cbrtl (long double x)
 {
   int e, rem, sign;
-  _Float128 z;
+  long double z;
 
   if (!isfinite (x))
     return x + x;
@@ -58,11 +56,11 @@ __cbrtl (_Float128 x)
 
   /* Approximate cube root of number between .5 and 1,
      peak relative error = 1.2e-6  */
-  x = ((((L(1.3584464340920900529734e-1) * x
-	  - L(6.3986917220457538402318e-1)) * x
-	 + L(1.2875551670318751538055e0)) * x
-	- L(1.4897083391357284957891e0)) * x
-       + L(1.3304961236013647092521e0)) * x + L(3.7568280825958912391243e-1);
+  x = ((((1.3584464340920900529734e-1L * x
+	  - 6.3986917220457538402318e-1L) * x
+	 + 1.2875551670318751538055e0L) * x
+	- 1.4897083391357284957891e0L) * x
+       + 1.3304961236013647092521e0L) * x + 3.7568280825958912391243e-1L;
 
   /* exponent divided by 3 */
   if (e >= 0)
@@ -92,9 +90,9 @@ __cbrtl (_Float128 x)
   x = __ldexpl (x, e);
 
   /* Newton iteration */
-  x -= (x - (z / (x * x))) * L(0.3333333333333333333333333333333333333333);
-  x -= (x - (z / (x * x))) * L(0.3333333333333333333333333333333333333333);
-  x -= (x - (z / (x * x))) * L(0.3333333333333333333333333333333333333333);
+  x -= (x - (z / (x * x))) * 0.3333333333333333333333333333333333333333L;
+  x -= (x - (z / (x * x))) * 0.3333333333333333333333333333333333333333L;
+  x -= (x - (z / (x * x))) * 0.3333333333333333333333333333333333333333L;
 
   if (sign < 0)
     x = -x;

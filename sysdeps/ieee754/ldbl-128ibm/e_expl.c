@@ -66,8 +66,6 @@
 #include <inttypes.h>
 #include <math_private.h>
 
-#define _Float128 long double
-#define L(x) x ## L
 
 #include "t_expl.h"
 
