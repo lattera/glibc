@@ -1,3 +1,8 @@
+2017-09-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sunrpc/tst-udp-timeout.c (test_udp_server): Increase timeout to 2.5
+	seconds.
+
 2017-09-09  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #14925]

@@ -352,13 +352,13 @@ test_udp_server (int port)
            .a = 170, .b = 40, .timeout_ms = 3000,
            .garbage_packets = with_garbage * 30
          },
-         (struct timeval) { 2, 300 * 1000 });
+         (struct timeval) { 2, 500 * 1000 });
       after = get_ticks ();
       if (test_verbose)
-        printf ("info: test_udp_server: 2.3 second timeout took %f seconds"
+        printf ("info: test_udp_server: 2.5 second timeout took %f seconds"
                 " (garbage %d)\n",
                 after - before, with_garbage);
-      TEST_VERIFY (2.3 <= after - before);
+      TEST_VERIFY (2.5 <= after - before);
       TEST_VERIFY (after - before < 3.0);
       test_call_flush (clnt);
     }
