@@ -29,7 +29,7 @@ rtld-all:
 # When run from the elf/Makefile to build rtld-libc.a, $(subdir) is elf.
 ifneq ($(subdir),elf)
 ifndef rtld-modules
-error rtld-modules not set
+$(error rtld-modules not set)
 endif
 endif
 
@@ -37,7 +37,7 @@ ifndef rtld-modules
 # Running to build rtld-libc.a, driving runs of $(rtld-subdir-make), below.
 
 ifndef rtld-subdirs
-error This makefile is a subroutine of elf/Makefile not to be used directly
+$(error This makefile is a subroutine of elf/Makefile not to be used directly)
 endif
 
 include ../Makeconfig

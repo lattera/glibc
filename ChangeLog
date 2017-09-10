@@ -2,6 +2,7 @@
 
 	* sunrpc/tst-udp-timeout.c (test_udp_server): Increase timeout to 2.5
 	seconds.
+	* elf/rtld-Rules: Fix $(error) use.
 
 2017-09-09  Mike FABIAN  <mfabian@redhat.com>
 
