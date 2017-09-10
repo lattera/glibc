@@ -257,9 +257,9 @@ do_test (void)
         /* Shorter timeout to prefer this server.  These timeouts must
            be much shorter than the 5-second per-response timeout
            configured with clntudp_create.  */
-        query.timeout_ms = 700;
+        query.timeout_ms = 750;
       else
-        query.timeout_ms = 1400;
+        query.timeout_ms = 1500;
       struct test_response response = { 0 };
       /* NB: Do not check the return value.  The server reply will
          prove that the call worked.  */
@@ -289,8 +289,8 @@ do_test (void)
   if (test_verbose)
     printf ("info: send/receive took %f seconds\n",
             after_pings - before_pings);
-  /* Expected timeout is 0.7 seconds.  */
-  TEST_VERIFY (0.7 <= after_pings - before_pings);
+  /* Expected timeout is 0.75 seconds.  */
+  TEST_VERIFY (0.75 <= after_pings - before_pings);
   TEST_VERIFY (after_pings - before_pings < 1.2);
 
   uint32_t xid;
