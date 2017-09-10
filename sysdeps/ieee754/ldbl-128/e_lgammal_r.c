@@ -73,11 +73,7 @@
 #include <float.h>
 
 static const _Float128 PIL = L(3.1415926535897932384626433832795028841972E0);
-#if LDBL_MANT_DIG == 106
-static const _Float128 MAXLGM = L(0x5.d53649e2d469dbc1f01e99fd66p+1012);
-#else
 static const _Float128 MAXLGM = L(1.0485738685148938358098967157129705071571E4928);
-#endif
 static const _Float128 one = 1;
 static const _Float128 huge = LDBL_MAX;
 
@@ -777,7 +773,7 @@ __ieee754_lgammal_r (_Float128 x, int *signgamp)
 
   if (x < 0)
     {
-      if (x < -2 && x > (LDBL_MANT_DIG == 106 ? -48 : -50))
+      if (x < -2 && x > -50)
 	return __lgamma_negl (x, signgamp);
       q = -x;
       p = __floorl (q);

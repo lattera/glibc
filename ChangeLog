@@ -1,5 +1,12 @@
 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r):
+	Remove conditionals on LDBL_MANT_DIG.
+	* sysdeps/ieee754/ldbl-128ibm/e_lgammal_r.c
+	(__ieee754_lgammal_r): Likewise.
+
+2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: Remove definitions of
 	_Float128 and L().
 	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: Remove definitions of
