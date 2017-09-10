@@ -600,7 +600,7 @@ server_thread_udp_process_one (struct resolv_test *obj, int server_index)
   unsigned char query[512];
   struct sockaddr_storage peer;
   socklen_t peerlen = sizeof (peer);
-  size_t length = xrecvfrom (obj->servers[server_index].socket_udp,
+  ssize_t length = recvfrom (obj->servers[server_index].socket_udp,
                              query, sizeof (query), 0,
                              (struct sockaddr *) &peer, &peerlen);
   /* Check for termination.  */
@@ -613,6 +613,12 @@ server_thread_udp_process_one (struct resolv_test *obj, int server_index)
       return false;
   }
 
+  if (length < 0)
+    {
+      /* The other end had closed the socket, and we are notified only now. */
+      TEST_VERIFY_EXIT (errno == ECONNREFUSED);
+      return true;
+    }
 
   struct query_info qinfo;
   parse_query (&qinfo, query, length);
