@@ -1,3 +1,10 @@
+2017-09-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/libm-alias-float.h: New file.
+	* sysdeps/generic/math-type-macros-float.h: Include
+	<libm-alias-float.h>.
+	[!declare_mgen_alias] (declare_mgen_alias): Define macro.
+
 2017-09-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22093]
