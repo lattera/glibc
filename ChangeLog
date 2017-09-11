@@ -1,3 +1,8 @@
+2017-09-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* po/sv.po: Update translations.
+	* po/fr.po: Likewise.
+
 2017-09-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sunrpc/tst-udp-timeout.c (test_udp_server): Increase timeout to 2.5
