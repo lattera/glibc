@@ -47,4 +47,5 @@ __mprotect (void *addr, size_t len, int prot)
     }
   return 0;
 }
+libc_hidden_def (__mprotect)
 weak_alias (__mprotect, mprotect)

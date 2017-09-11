@@ -1,3 +1,17 @@
+2017-09-12  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* posix/sched_primax.c (__sched_get_priority_max): Add
+	libc_hidden_def.
+	* posix/sched_primin.c (__sched_get_priority_min): Likewise.
+	* sysdeps/mach/hurd/mmap.c (__mmap): Likewise.
+	* sysdeps/mach/hurd/mmap64.c (__mmap64): Likewise.
+	* sysdeps/mach/hurd/mprotect.c (__mprotect): Likewise.
+	* sysdeps/mach/hurd/munmap.c (__munmap): Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c (__GI___getpid,
+	__GI___strtoul_internal, __GI_____strtoul_internal, __GI___chk_fail,
+	__GI___fortify_fail, __GI___assert_fail, __GI___assert_perror_fail):
+	Add aliases.
+
 2017-09-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/libm-alias-float.h: New file.

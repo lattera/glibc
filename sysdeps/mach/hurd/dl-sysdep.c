@@ -577,6 +577,10 @@ __getpid (void)
   return pid;
 }
 
+/* We need this alias to satisfy references from libc_pic.a objects
+   that were affected by the libc_hidden_proto declaration for __getpid.  */
+strong_alias (__getpid, __GI___getpid)
+
 /* This is called only in some strange cases trying to guess a value
    for $ORIGIN for the executable.  The dynamic linker copes with
    getcwd failing (dl-object.c), and it's too much hassle to include
@@ -610,6 +614,11 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
   assert (group == 0);
   return _dl_strtoul (nptr, endptr);
 }
+
+/* We need this alias to satisfy references from libc_pic.a objects
+   that were affected by the libc_hidden_proto declaration for __strtoul_internal.  */
+strong_alias (__strtoul_internal, __GI___strtoul_internal)
+strong_alias (__strtoul_internal, __GI_____strtoul_internal)
 
 void weak_function attribute_hidden
 _exit (int status)
@@ -649,6 +658,10 @@ abort (void)
 /* We need this alias to satisfy references from libc_pic.a objects
    that were affected by the libc_hidden_proto declaration for abort.  */
 strong_alias (abort, __GI_abort)
+strong_alias (abort, __GI___chk_fail)
+strong_alias (abort, __GI___fortify_fail)
+strong_alias (abort, __GI___assert_fail)
+strong_alias (abort, __GI___assert_perror_fail)
 
 /* This function is called by interruptible RPC stubs.  For initial
    dynamic linking, just use the normal mach_msg.  Since this defn is

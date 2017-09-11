@@ -185,4 +185,5 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
   return (void *) mapaddr;
 }
 
+libc_hidden_def (__mmap)
 weak_alias (__mmap, mmap)

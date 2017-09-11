@@ -26,6 +26,7 @@ __sched_get_priority_max (int algorithm)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__sched_get_priority_max)
 stub_warning (sched_get_priority_max)
 
 weak_alias (__sched_get_priority_max, sched_get_priority_max)
