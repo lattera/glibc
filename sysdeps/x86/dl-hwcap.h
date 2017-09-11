@@ -24,15 +24,16 @@
 # define HWCAP_PLATFORMS_START	0
 # define HWCAP_PLATFORMS_COUNT	4
 # define HWCAP_START		0
-# define HWCAP_COUNT		2
-# define HWCAP_IMPORTANT	(HWCAP_X86_SSE2 | HWCAP_X86_AVX512_1)
+# define HWCAP_COUNT		3
+# define HWCAP_IMPORTANT \
+  (HWCAP_X86_SSE2 | HWCAP_X86_64 | HWCAP_X86_AVX512_1)
 #elif defined __x86_64__
 /* For 64 bit, only cover x86-64 platforms and capabilities.  */
 # define HWCAP_PLATFORMS_START	2
 # define HWCAP_PLATFORMS_COUNT	4
 # define HWCAP_START		1
-# define HWCAP_COUNT		2
-# define HWCAP_IMPORTANT	(HWCAP_X86_AVX512_1)
+# define HWCAP_COUNT		3
+# define HWCAP_IMPORTANT	(HWCAP_X86_64 | HWCAP_X86_AVX512_1)
 #else
 /* For 32 bit, only cover i586, i686 and SSE2.  */
 # define HWCAP_PLATFORMS_START	0
@@ -45,7 +46,8 @@
 enum
 {
   HWCAP_X86_SSE2		= 1 << 0,
-  HWCAP_X86_AVX512_1		= 1 << 1
+  HWCAP_X86_64			= 1 << 1,
+  HWCAP_X86_AVX512_1		= 1 << 2
 };
 
 static inline const char *

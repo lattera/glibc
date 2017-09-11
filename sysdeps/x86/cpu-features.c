@@ -336,7 +336,6 @@ no_cpuid:
 
   /* Reuse dl_platform, dl_hwcap and dl_hwcap_mask for x86.  */
   GLRO(dl_platform) = NULL;
-  GLRO(dl_hwcap) = 0;
 #if !HAVE_TUNABLES && defined SHARED
   /* The glibc.tune.hwcap_mask tunable is initialized already, so no need to do
      this.  */
@@ -344,6 +343,7 @@ no_cpuid:
 #endif
 
 #ifdef __x86_64__
+  GLRO(dl_hwcap) = HWCAP_X86_64;
   if (cpu_features->kind == arch_kind_intel)
     {
       if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable)
@@ -374,6 +374,7 @@ no_cpuid:
 	GLRO(dl_platform) = "haswell";
     }
 #else
+  GLRO(dl_hwcap) = 0;
   if (CPU_FEATURES_CPU_P (cpu_features, SSE2))
     GLRO(dl_hwcap) |= HWCAP_X86_SSE2;
 

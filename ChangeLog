@@ -1,3 +1,22 @@
+2017-09-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22093]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Initialize
+	GLRO(dl_hwcap) to HWCAP_X86_64 for x86-64.
+	* sysdeps/x86/dl-hwcap.h (HWCAP_COUNT): Updated.
+	(HWCAP_IMPORTANT): Likewise.
+	(HWCAP_X86_64): New enum.
+	(HWCAP_X86_AVX512_1): Updated.
+	* sysdeps/x86/dl-procinfo.c (_dl_x86_hwcap_flags): Add "x86_64".
+	* sysdeps/x86_64/Makefile (tests): Add tst-x86_64-1.
+	(modules-names): Add x86_64/tst-x86_64mod-1.
+	(LDFLAGS-tst-x86_64mod-1.so): New.
+	($(objpfx)tst-x86_64-1): Likewise.
+	($(objpfx)x86_64/tst-x86_64mod-1.os): Likewise.
+	(tst-x86_64-1-clean): Likewise.
+	* sysdeps/x86_64/tst-x86_64-1.c: New file.
+	* sysdeps/x86_64/tst-x86_64mod-1.c: Likewise.
+
 2017-09-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* po/sv.po: Update translations.

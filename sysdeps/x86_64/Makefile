@@ -52,6 +52,12 @@ $(objpfx)tst-quad2pie: $(objpfx)tst-quadmod2pie.o
 CFLAGS-tst-quad1pie.c = $(PIE-ccflag)
 CFLAGS-tst-quad2pie.c = $(PIE-ccflag)
 
+tests += tst-x86_64-1
+modules-names += x86_64/tst-x86_64mod-1
+LDFLAGS-tst-x86_64mod-1.so = -Wl,-soname,tst-x86_64mod-1.so
+
+$(objpfx)tst-x86_64-1: $(objpfx)x86_64/tst-x86_64mod-1.so
+
 tests += tst-audit3 tst-audit4 tst-audit5 tst-audit6 tst-audit7 \
 	 tst-audit10 tst-sse tst-avx tst-avx512
 test-extras += tst-audit4-aux tst-audit10-aux \
@@ -124,3 +130,14 @@ endif
 ifeq ($(subdir),csu)
 gen-as-const-headers += tlsdesc.sym rtld-offsets.sym
 endif
+
+$(objpfx)x86_64/tst-x86_64mod-1.os: $(objpfx)tst-x86_64mod-1.os
+	$(make-target-directory)
+	rm -f $@
+	ln $< $@
+
+do-tests-clean common-mostlyclean: tst-x86_64-1-clean
+
+.PHONY: tst-x86_64-1-clean
+tst-x86_64-1-clean:
+	-rm -rf $(objpfx)x86_64
