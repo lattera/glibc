@@ -32,11 +32,14 @@ IFUNC_SELECTOR (void)
 {
   const struct cpu_features* cpu_features = __get_cpu_features ();
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, AVX512DQ_Usable))
-    return OPTIMIZE (skx);
+  if (!CPU_FEATURES_ARCH_P (cpu_features, MathVec_Prefer_No_AVX512))
+    {
+      if (CPU_FEATURES_ARCH_P (cpu_features, AVX512DQ_Usable))
+	return OPTIMIZE (skx);
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable))
-    return OPTIMIZE (knl);
+      if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable))
+	return OPTIMIZE (knl);
+    }
 
   return OPTIMIZE (avx2_wrapper);
 }

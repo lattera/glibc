@@ -1,3 +1,15 @@
+2017-09-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21967]
+	* sysdeps/x86/cpu-features.h (bit_arch_MathVec_Prefer_No_AVX512):
+	New.
+	(index_arch_MathVec_Prefer_No_AVX512): Likewise.
+	* sysdeps/x86/cpu-tunables.c (TUNABLE_CALLBACK (set_hwcaps)):
+	Handle MathVec_Prefer_No_AVX512.
+	* sysdeps/x86_64/fpu/multiarch/ifunc-mathvec-avx512.h
+	(IFUNC_SELECTOR): Return AVX2 version if MathVec_Prefer_No_AVX512
+	is set.
+
 2017-09-12  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* posix/sched_primax.c (__sched_get_priority_max): Add
