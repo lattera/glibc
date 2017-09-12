@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <scratch_buffer.h>
+#include <config.h>
 
 #include "dbg_log.h"
 #include "nscd.h"
@@ -34,6 +35,11 @@
 
 #include "../nss/nsswitch.h"
 
+#ifdef LINK_OBSOLETE_NSL
+# define DEFAULT_CONFIG "compat [NOTFOUND=return] files"
+#else
+# define DEFAULT_CONFIG "files"
+#endif
 
 /* Type of the lookup function.  */
 typedef enum nss_status (*initgroups_dyn_function) (const char *, gid_t,
@@ -85,8 +91,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
   int no_more;
 
   if (group_database == NULL)
-    no_more = __nss_database_lookup ("group", NULL,
-				     "compat [NOTFOUND=return] files",
+    no_more = __nss_database_lookup ("group", NULL, DEFAULT_CONFIG,
 				     &group_database);
   else
     no_more = 0;

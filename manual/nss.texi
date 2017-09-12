@@ -318,13 +318,17 @@ The @code{passwd}, @code{group}, and @code{shadow} databases are
 traditionally handled in a special way.  The appropriate files in the
 @file{/etc} directory are read but if an entry with a name starting
 with a @code{+} character is found NIS is used.  This kind of lookup
-remains possible by using the special lookup service @code{compat}
-and the default value for the three databases above is
-@code{compat [NOTFOUND=return] files}.
+remains possible if @theglibc{} was configured with the
+@code{--enable-obsolete-nsl} option and the special lookup service
+@code{compat} is used.  If @theglibc{} was configured with the
+@code{--enable-obsolete-nsl} option the default value for the three
+databases above is @code{compat [NOTFOUND=return] files}.  If the
+@code{--enable-obsolete-nsl} option was not used the default value
+for the services is @code{files}.
 
-For all other databases the default value is
-@code{nis [NOTFOUND=return] files}.  This solution gives the best
-chance to be correct since NIS and file based lookups are used.
+For all other databases the default value is @code{files} unless
+@theglibc{} was configured with @code{--enable-obsolete-rpc} option, in
+which case it the default value is @code{nis [NOTFOUND=return] files}.
 
 @cindex optimizing NSS
 A second point is that the user should try to optimize the lookup

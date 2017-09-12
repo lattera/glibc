@@ -40,6 +40,15 @@
 #include "nsswitch.h"
 #include "../nscd/nscd_proto.h"
 #include <sysdep.h>
+#include <config.h>
+
+#ifdef LINK_OBSOLETE_NSL
+# define DEFAULT_CONFIG    "compat [NOTFOUND=return] files"
+# define DEFAULT_DEFCONFIG "nis [NOTFOUND=return] files"
+#else
+# define DEFAULT_CONFIG    "files"
+# define DEFAULT_DEFCONFIG "files"
+#endif
 
 /* Prototypes for the local functions.  */
 static name_database *nss_parse_file (const char *fname);
@@ -152,8 +161,7 @@ __nss_database_lookup (const char *database, const char *alternate_name,
      or null to use the most common default.  */
   if (*ni == NULL)
     {
-      *ni = nss_parse_service_list (defconfig
-				    ?: "nis [NOTFOUND=return] files");
+      *ni = nss_parse_service_list (defconfig ?: DEFAULT_DEFCONFIG);
       if (*ni != NULL)
 	{
 	  /* Record the memory we've just allocated in defconfig_entries list,
@@ -847,8 +855,8 @@ __nss_disable_nscd (void (*cb) (size_t, struct traced_file *))
   is_nscd = true;
 
   /* Find all the relevant modules so that the init functions are called.  */
-  nss_load_all_libraries ("passwd", "compat [NOTFOUND=return] files");
-  nss_load_all_libraries ("group", "compat [NOTFOUND=return] files");
+  nss_load_all_libraries ("passwd", DEFAULT_CONFIG);
+  nss_load_all_libraries ("group", DEFAULT_CONFIG);
   nss_load_all_libraries ("hosts", "dns [!UNAVAIL=return] files");
   nss_load_all_libraries ("services", NULL);
 

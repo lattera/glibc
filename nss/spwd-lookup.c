@@ -16,8 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <config.h>
+
 #define DATABASE_NAME shadow
 #define ALTERNATE_NAME passwd
-#define DEFAULT_CONFIG "compat [NOTFOUND=return] files"
+#ifdef LINK_OBSOLETE_NSL
+# define DEFAULT_CONFIG "compat [NOTFOUND=return] files"
+#else
+# define DEFAULT_CONFIG "files"
+#endif
 
 #include "XXX-lookup.c"

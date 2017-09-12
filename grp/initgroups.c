@@ -26,10 +26,16 @@
 #include <sys/types.h>
 #include <nsswitch.h>
 #include <scratch_buffer.h>
+#include <config.h>
 
 #include "../nscd/nscd-client.h"
 #include "../nscd/nscd_proto.h"
 
+#ifdef LINK_OBSOLETE_NSL
+# define DEFAULT_CONFIG "compat [NOTFOUND=return] files"
+#else
+# define DEFAULT_CONFIG "files"
+#endif
 
 /* Type of the lookup function.  */
 typedef enum nss_status (*initgroups_dyn_function) (const char *, gid_t,
@@ -77,7 +83,7 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
 				 &__nss_initgroups_database) < 0)
 	{
 	  if (__nss_group_database == NULL)
-	    no_more = __nss_database_lookup ("group", NULL, "compat files",
+	    no_more = __nss_database_lookup ("group", NULL, DEFAULT_CONFIG,
 					     &__nss_group_database);
 
 	  __nss_initgroups_database = __nss_group_database;
