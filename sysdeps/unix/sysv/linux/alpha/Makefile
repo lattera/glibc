@@ -1,7 +1,3 @@
-ifeq ($(subdir),posix)
-sysdep_routines += oldglob
-endif
-
 ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext-offsets.sym
 endif
