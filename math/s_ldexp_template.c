@@ -27,6 +27,8 @@ M_SUF (__ldexp) (FLOAT value, int exp)
 	return value;
 }
 
-declare_mgen_alias_2 (__ldexp, ldexp, scalbn);
+declare_mgen_alias (__ldexp, ldexp)
+strong_alias (M_SUF (__ldexp), M_SUF (__wrap_scalbn))
+declare_mgen_alias (__wrap_scalbn, scalbn)
 
 /* Note, versioning issues are punted to ldbl-opt in this case.  */

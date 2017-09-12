@@ -1,3 +1,15 @@
+2017-09-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-type-macros.h [!declare_mgen_alias_2]
+	(declare_mgen_alias_2): Remove.
+	* sysdeps/generic/math-type-macros-double.h
+	[NO_LONG_DOUBLE && !declare_mgen_alias_2] (declare_mgen_alias_2):
+	Likewise.
+	* math/s_ldexp_template.c (M_SUF (__wrap_scalbn)): Define strong
+	alias.
+	(ldexp): Define with declare_mgen_alias.
+	(scalbn): Likewise.
+
 2017-09-12  Steve Ellcey  <sellcey@cavium.com>
 
 	* grp/initgroups.c: Include config.h.
