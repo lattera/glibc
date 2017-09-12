@@ -1,4 +1,22 @@
 2017-10-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ieee754/flt-32/e_exp2f.c (__exp2f): Define without wrapper.
+	* sysdeps/ieee754/flt-32/e_expf.c (__expf): Likewise
+	* sysdeps/ieee754/flt-32/w_exp2f.c: New file.
+	* sysdeps/ieee754/flt-32/w_expf.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_expf-ppc64.c: Update for
+	the new expf code.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/w_expf.c: New file.
+	* sysdeps/powerpc/powerpc64/power8/fpu/w_expf.c: New file.
+	* sysdeps/m68k/m680x0/fpu/w_exp2f.c: New file.
+	* sysdeps/m68k/m680x0/fpu/w_expf.c: New file.
+	* sysdeps/i386/fpu/w_exp2f.c: New file.
+	* sysdeps/i386/fpu/w_expf.c: New file.
+	* sysdeps/i386/i686/fpu/multiarch/w_expf.c: New file.
+	* sysdeps/x86_64/fpu/w_expf.c: New file.
+
+2017-10-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* math/Versions (logf): New libm symbol at GLIBC_2.27.
 	(log2f): Likewise.

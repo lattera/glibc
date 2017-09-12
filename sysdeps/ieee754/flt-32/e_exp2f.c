@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <stdint.h>
+#include <shlib-compat.h>
 #include "math_config.h"
 
 /*
@@ -42,7 +43,7 @@ top12 (float x)
 }
 
 float
-__ieee754_exp2f (float x)
+__exp2f (float x)
 {
   uint32_t abstop;
   uint64_t ki, t;
@@ -85,4 +86,8 @@ __ieee754_exp2f (float x)
   y = y * s;
   return (float) y;
 }
-strong_alias (__ieee754_exp2f, __exp2f_finite)
+#ifndef __exp2f
+strong_alias (__exp2f, __ieee754_exp2f)
+strong_alias (__exp2f, __exp2f_finite)
+versioned_symbol (libm, __exp2f, exp2f, GLIBC_2_27);
+#endif

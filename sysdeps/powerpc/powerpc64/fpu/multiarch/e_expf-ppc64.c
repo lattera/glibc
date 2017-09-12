@@ -16,9 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#undef strong_alias
-#define strong_alias(a, b)
-
-#define __ieee754_expf __ieee754_expf_ppc64
+#define __expf __ieee754_expf_ppc64
 
 #include <sysdeps/ieee754/flt-32/e_expf.c>
