@@ -221,7 +221,7 @@ LOCAL_OBJECT_END(T_table)
 
 
 .section .text
-GLOBAL_LIBM_ENTRY(exp2f)
+GLOBAL_LIBM_ENTRY(__exp2f)
 
 
 {.mfi
@@ -468,7 +468,13 @@ OUT_RANGE_exp2:
 }
 ;;
 
-GLOBAL_LIBM_END(exp2f)
+GLOBAL_LIBM_END(__exp2f)
+#ifdef SHARED
+.symver __exp2f,exp2f@@GLIBC_2.27
+.weak __exp2f_compat
+.set __exp2f_compat,__exp2f
+.symver __exp2f_compat,exp2f@GLIBC_2.2
+#endif
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

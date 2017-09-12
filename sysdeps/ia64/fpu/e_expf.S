@@ -657,6 +657,12 @@ EXP_UNDERFLOW_ZERO:
 ;;
 
 GLOBAL_IEEE754_END(expf)
+#ifdef SHARED
+.symver expf,expf@@GLIBC_2.27
+.weak __expf_compat
+.set __expf_compat,__expf
+.symver __expf_compat,expf@GLIBC_2.2
+#endif
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

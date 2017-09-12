@@ -20,10 +20,10 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_27)
 /* wrapper expf */
 float
-__expf (float x)
+__expf_compat (float x)
 {
   float z = __ieee754_expf (x);
   if (__builtin_expect (!isfinite (z) || z == 0, 0)
@@ -32,6 +32,5 @@ __expf (float x)
 
   return z;
 }
-hidden_def (__expf)
-weak_alias (__expf, expf)
+compat_symbol (libm, __expf_compat, expf, GLIBC_2_0);
 #endif

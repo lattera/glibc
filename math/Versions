@@ -229,4 +229,7 @@ libm {
     fromfp; fromfpf; fromfpl; ufromfp; ufromfpf; ufromfpl;
     fromfpx; fromfpxf; fromfpxl; ufromfpx; ufromfpxf; ufromfpxl;
   }
+  GLIBC_2.27 {
+    expf; exp2f;
+  }
 }
