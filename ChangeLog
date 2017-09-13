@@ -1,3 +1,13 @@
+2017-09-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/libm-alias-ldouble.h: New file.
+	* sysdeps/ieee754/ldbl-opt/libm-alias-ldouble.h: Likewise.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-ldouble.h: Remove.
+	* sysdeps/generic/math-type-macros-ldouble.h: Include
+	<libm-alias-ldouble.h>.
+	[!declare_mgen_alias] (declare_mgen_alias): Define to use
+	libm_alias_ldouble.
+
 2017-09-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/ieee754/dbl-64/w_exp_compat.c: Move to...

@@ -27,6 +27,12 @@
 #define CFLOAT _Complex long double
 #define M_STRTO_NAN __strtold_nan
 
+#include <libm-alias-ldouble.h>
+
+#ifndef declare_mgen_alias
+# define declare_mgen_alias(from, to) libm_alias_ldouble (from, to)
+#endif
+
 /* Supply the generic macros.  */
 #include <math-type-macros.h>
 
