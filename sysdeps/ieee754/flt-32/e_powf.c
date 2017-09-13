@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <stdint.h>
+#include <shlib-compat.h>
 #include "math_config.h"
 
 /*
@@ -139,7 +140,7 @@ zeroinfnan (uint32_t ix)
 }
 
 float
-__ieee754_powf (float x, float y)
+__powf (float x, float y)
 {
   unsigned long sign_bias = 0;
   uint32_t ix, iy;
@@ -214,4 +215,8 @@ __ieee754_powf (float x, float y)
     }
   return (float) exp2_inline (ylogx, sign_bias);
 }
-strong_alias (__ieee754_powf, __powf_finite)
+#ifndef __powf
+strong_alias (__powf, __ieee754_powf)
+strong_alias (__powf, __powf_finite)
+versioned_symbol (libm, __powf, powf, GLIBC_2_27);
+#endif

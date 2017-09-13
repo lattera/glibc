@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <stdint.h>
+#include <shlib-compat.h>
 #include "math_config.h"
 
 /*
@@ -35,7 +36,7 @@ Relative error: 1.957 * 2^-26 (before rounding.)
 #define OFF 0x3f330000
 
 float
-__ieee754_logf (float x)
+__logf (float x)
 {
   /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
   double_t z, r, r2, y, y0, invc, logc;
@@ -84,4 +85,8 @@ __ieee754_logf (float x)
   y = y * r2 + (y0 + r);
   return (float) y;
 }
-strong_alias (__ieee754_logf, __logf_finite)
+#ifndef __logf
+strong_alias (__logf, __ieee754_logf)
+strong_alias (__logf, __logf_finite)
+versioned_symbol (libm, __logf, logf, GLIBC_2_27);
+#endif

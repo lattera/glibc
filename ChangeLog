@@ -1,4 +1,19 @@
 2017-10-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/ieee754/flt-32/e_log2f.c (__log2f): Define without wrapper.
+	* sysdeps/ieee754/flt-32/e_logf.c (__logf): Likewise
+	* sysdeps/ieee754/flt-32/e_powf.c (__powf): Likewise
+	* sysdeps/ieee754/flt-32/w_log2f.c: New file.
+	* sysdeps/ieee754/flt-32/w_logf.c: New file.
+	* sysdeps/ieee754/flt-32/w_powf.c: New file.
+	* sysdeps/i386/fpu/w_log2f.c: New file.
+	* sysdeps/i386/fpu/w_logf.c: New file.
+	* sysdeps/i386/fpu/w_powf.c: New file.
+	* sysdeps/m68k/m680x0/fpu/w_log2f.c: New file.
+	* sysdeps/m68k/m680x0/fpu/w_logf.c: New file.
+	* sysdeps/m68k/m680x0/fpu/w_powf.c: New file.
+
+2017-10-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ieee754/flt-32/e_exp2f.c (__exp2f): Define without wrapper.
