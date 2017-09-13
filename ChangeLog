@@ -1,3 +1,50 @@
+2017-10-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* math/Versions (logf): New libm symbol at GLIBC_2.27.
+	(log2f): Likewise.
+	(powf): Likewise.
+	* math/w_log2f.c: New file.
+	* math/w_logf.c: New file.
+	* math/w_powf.c: New file.
+	* math/w_log2f_compat.c (__log2f_compat): For compat symbol only.
+	* math/w_logf_compat.c (__logf_compat): Likewise.
+	* math/w_powf_compat.c (__powf_compat): Likewise.
+	* sysdeps/ia64/fpu/e_log2f.S: Add versioned symbols.
+	* sysdeps/ia64/fpu/e_logf.S: Likewise.
+	* sysdeps/ia64/fpu/e_powf.S: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2017-10-02  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile

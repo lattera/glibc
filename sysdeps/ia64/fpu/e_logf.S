@@ -1088,6 +1088,12 @@ logf_libm_err:
       nop.i         0
 };;
 GLOBAL_IEEE754_END(logf)
+#ifdef SHARED
+.symver logf,logf@@GLIBC_2.27
+.weak __logf_compat
+.set __logf_compat,__logf
+.symver __logf_compat,logf@GLIBC_2.2
+#endif
 
 
 // Stack operations when calling error support.

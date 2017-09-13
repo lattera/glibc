@@ -252,7 +252,7 @@ LOCAL_OBJECT_END(T_table)
 
 
 .section .text
-GLOBAL_LIBM_ENTRY(log2f)
+GLOBAL_LIBM_ENTRY(__log2f)
 
 { .mfi
   alloc r32=ar.pfs,1,4,4,0
@@ -491,7 +491,13 @@ SPECIAL_log2f:
   br.ret.sptk b0;;
 }
 
-GLOBAL_LIBM_END(log2f)
+GLOBAL_LIBM_END(__log2f)
+#ifdef SHARED
+.symver __log2f,log2f@@GLIBC_2.27
+.weak __log2f_compat
+.set __log2f_compat,__log2f
+.symver __log2f_compat,log2f@GLIBC_2.2
+#endif
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

@@ -473,6 +473,9 @@ GLIBC_2.25 ufromfpxl F
 GLIBC_2.27 GLIBC_2.27 A
 GLIBC_2.27 exp2f F
 GLIBC_2.27 expf F
+GLIBC_2.27 log2f F
+GLIBC_2.27 logf F
+GLIBC_2.27 powf F
 GLIBC_2.3.4 GLIBC_2.3.4 A
 GLIBC_2.3.4 __c1_cabsf F
 GLIBC_2.3.4 __c1_cacosf F

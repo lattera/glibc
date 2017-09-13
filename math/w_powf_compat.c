@@ -22,10 +22,10 @@
 #include <libm-alias-float.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_27)
 /* wrapper powf */
 float
-__powf (float x, float y)
+__powf_compat (float x, float y)
 {
   float z = __ieee754_powf (x, y);
   if (__glibc_unlikely (!isfinite (z)))
@@ -60,5 +60,5 @@ __powf (float x, float y)
 
   return z;
 }
-libm_alias_float (__pow, pow)
+compat_symbol (libm, __powf_compat, powf, GLIBC_2_0);
 #endif

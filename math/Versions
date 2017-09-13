@@ -230,6 +230,6 @@ libm {
     fromfpx; fromfpxf; fromfpxl; ufromfpx; ufromfpxf; ufromfpxl;
   }
   GLIBC_2.27 {
-    expf; exp2f;
+    expf; exp2f; logf; log2f; powf;
   }
 }
