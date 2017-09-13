@@ -17,14 +17,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define declare_mgen_alias(from, to) weak_alias (from, to)
 #include <math-type-macros-double.h>
 #include <s_ldexp_template.c>
 
-#if IS_IN (libm)
-# if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __ldexp, ldexpl, GLIBC_2_0);
-# endif
-#elif LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
+#if IS_IN (libc) && LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
 compat_symbol (libc, __ldexp, ldexpl, GLIBC_2_0);
+compat_symbol (libc, __wrap_scalbn, scalbnl, GLIBC_2_0);
 #endif

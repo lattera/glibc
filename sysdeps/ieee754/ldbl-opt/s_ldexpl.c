@@ -17,15 +17,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define declare_mgen_alias(f,t)
+#if IS_IN (libc)
+# define declare_mgen_alias(f,t)
+#endif
 #include <math-type-macros-ldouble.h>
 #include <s_ldexp_template.c>
 
-strong_alias (__ldexpl, __ldexpl_2)
-#if IS_IN (libm)
-long_double_symbol (libm, __ldexpl, ldexpl);
-long_double_symbol (libm, __ldexpl_2, scalbnl);
-#else
+#if IS_IN (libc)
 long_double_symbol (libc, __ldexpl, ldexpl);
-long_double_symbol (libc, __ldexpl_2, scalbnl);
+long_double_symbol (libc, __wrap_scalbnl, scalbnl);
 #endif

@@ -34,8 +34,4 @@ M_DECL_FUNC (__w_scalbln) (FLOAT x, long int n)
   return x;
 }
 
-/* Define strong_alias to nothing because we don't want
-   declare_mgen_alias to create a strong alias for scalblnl.  */
-#undef strong_alias
-#define strong_alias(name, alias_name)
 declare_mgen_alias (__w_scalbln, scalbln)

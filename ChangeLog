@@ -1,3 +1,26 @@
+2017-09-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/w_scalbln_template.c (strong_alias): Do not undefine and
+	redefine.
+	* sysdeps/ieee754/ldbl-opt/s_ldexp.c (declare_mgen_alias): Remove
+	macro.
+	(ldexpl): Only define as compat symbol for libc, not libm.
+	(scalbnl): Define as compat symbol for libc here.
+	* sysdeps/ieee754/ldbl-opt/s_ldexpl.c (declare_mgen_alias): Only
+	define for [IS_IN (libc)].
+	(__ldexpl_2): Remove alias.
+	(ldexpl): Only define with long_double_symbol if [IS_IN (libc)].
+	(scalbnl): Likewise.  Use __wrap_scalbnl not __ldexpl_2 as base
+	name in long_double_symbol call.
+	* sysdeps/ieee754/ldbl-opt/s_log1p.c: Remove file.
+	* sysdeps/ieee754/ldbl-opt/s_scalbln.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_scalbn.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_log1p.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_scalbln.c (declare_mgen_alias):
+	Remove macro.
+	[IS_IN (libc) && LONG_DOUBLE_COMPAT (libc, GLIBC_2_1)] (scalblnl):
+	Define as compat symbol.
+
 2017-09-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/oldglob.c: New file.
