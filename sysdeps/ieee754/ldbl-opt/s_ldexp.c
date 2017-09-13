@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define M_LIBM_NEED_COMPAT(f) 0
+#define declare_mgen_alias(from, to) weak_alias (from, to)
 #include <math-type-macros-double.h>
 #include <s_ldexp_template.c>
 

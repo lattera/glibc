@@ -133,7 +133,3 @@ M_DECL_FUNC (__catanh) (CFLOAT x)
 }
 
 declare_mgen_alias (__catanh, catanh)
-
-#if M_LIBM_NEED_COMPAT (catanh)
-declare_mgen_libm_compat (__catanh, catanh)
-#endif

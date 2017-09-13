@@ -39,16 +39,7 @@
 
   declare_mgen_alias(from,to)
       This exposes the appropriate symbol(s) for a
-      function f of type FLOAT.
-
-  M_LIBM_NEED_COMPAT(func)
-      This is utilized in macro context to indicate
-      whether func should declare compat symbols.
-
-  declare_mgen_libm_compat(from,to)
-      This is used in conjunction with the above macro
-      outside of macro context to paste whatever is
-      required to generate a compat symbol. */
+      function f of type FLOAT.  */
 
 #ifndef M_PFX
 # error "M_PFX must be defined."
@@ -114,12 +105,6 @@
 /* If the type does not declare special aliasing, use the default.  */
 #ifndef declare_mgen_alias
 # define declare_mgen_alias(from, to) weak_alias (M_SUF (from), M_SUF (to))
-#endif
-
-/* Do not generate anything for compat symbols by default.  */
-#ifndef M_LIBM_NEED_COMPAT
-# define M_LIBM_NEED_COMPAT(func) 0
-# define declare_mgen_libm_compat(from, to)
 #endif
 
 #endif /* _MATH_TYPE_MACROS */

@@ -17,6 +17,8 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifdef HAVE_AS_VIS3_SUPPORT
+# include <math_ldbl_opt.h>
+# include <first-versions.h>
 # include <sparc-ifunc.h>
 # include <math.h>
 
@@ -25,6 +27,9 @@ extern double __fdim_generic (double, double);
 
 sparc_libm_ifunc(__fdim, hwcap & HWCAP_SPARC_VIS3 ? __fdim_vis3 : __fdim_generic);
 weak_alias (__fdim, fdim)
+# if LONG_DOUBLE_COMPAT (libm, FIRST_VERSION_libm_fdiml)
+compat_symbol (libm, __fdim, fdiml, FIRST_VERSION_libm_fdiml);
+# endif
 
 # define __fdim __fdim_generic
 # define declare_mgen_alias(t, f)

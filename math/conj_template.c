@@ -26,7 +26,3 @@ M_DECL_FUNC (__conj) (CFLOAT z)
 }
 
 declare_mgen_alias (__conj, conj)
-
-#if M_LIBM_NEED_COMPAT (conj)
-declare_mgen_libm_compat (__conj, conj)
-#endif

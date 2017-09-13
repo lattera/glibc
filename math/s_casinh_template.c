@@ -69,7 +69,3 @@ M_DECL_FUNC (__casinh) (CFLOAT x)
 }
 
 declare_mgen_alias (__casinh, casinh)
-
-#if M_LIBM_NEED_COMPAT (casinh)
-declare_mgen_libm_compat (__casinh, casinh)
-#endif

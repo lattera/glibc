@@ -113,7 +113,3 @@ M_DECL_FUNC (__clog) (CFLOAT x)
 }
 
 declare_mgen_alias (__clog, clog)
-
-#if M_LIBM_NEED_COMPAT (clog)
-declare_mgen_libm_compat (__clog, clog)
-#endif

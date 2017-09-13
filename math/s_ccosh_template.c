@@ -135,7 +135,3 @@ M_DECL_FUNC (__ccosh) (CFLOAT x)
 }
 
 declare_mgen_alias (__ccosh, ccosh);
-
-#if M_LIBM_NEED_COMPAT (carg)
-declare_mgen_libm_compat (__ccosh, ccosh)
-#endif

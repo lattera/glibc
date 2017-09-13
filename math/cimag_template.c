@@ -26,7 +26,3 @@ M_DECL_FUNC (__cimag) (CFLOAT z)
 }
 
 declare_mgen_alias (__cimag, cimag)
-
-#if M_LIBM_NEED_COMPAT (cimag)
-declare_mgen_libm_compat (__cimag, cimag)
-#endif

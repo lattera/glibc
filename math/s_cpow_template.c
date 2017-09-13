@@ -27,7 +27,3 @@ M_DECL_FUNC (__cpow) (CFLOAT x, CFLOAT c)
 }
 
 declare_mgen_alias (__cpow, cpow)
-
-#if M_LIBM_NEED_COMPAT (cpow)
-declare_mgen_libm_compat (__cpow, cpow)
-#endif

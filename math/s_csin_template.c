@@ -159,7 +159,3 @@ M_DECL_FUNC (__csin) (CFLOAT x)
 }
 
 declare_mgen_alias (__csin, csin)
-
-#if M_LIBM_NEED_COMPAT (csin)
-declare_mgen_libm_compat (__csin, csin)
-#endif

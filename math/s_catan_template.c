@@ -139,7 +139,3 @@ M_DECL_FUNC (__catan) (CFLOAT x)
 }
 
 declare_mgen_alias (__catan, catan)
-
-#if M_LIBM_NEED_COMPAT (catan)
-declare_mgen_libm_compat (__catan, catan)
-#endif

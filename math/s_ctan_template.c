@@ -124,7 +124,3 @@ M_DECL_FUNC (__ctan) (CFLOAT x)
 }
 
 declare_mgen_alias (__ctan, ctan)
-
-#if M_LIBM_NEED_COMPAT (ctan)
-declare_mgen_libm_compat (__ctan, ctan)
-#endif

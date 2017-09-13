@@ -39,7 +39,3 @@ M_DECL_FUNC (__cproj) (CFLOAT x)
 }
 
 declare_mgen_alias (__cproj, cproj)
-
-#if M_LIBM_NEED_COMPAT (cproj)
-declare_mgen_libm_compat (__cproj, cproj)
-#endif

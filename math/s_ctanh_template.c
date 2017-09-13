@@ -124,7 +124,3 @@ M_DECL_FUNC (__ctanh) (CFLOAT x)
 }
 
 declare_mgen_alias (__ctanh, ctanh)
-
-#if M_LIBM_NEED_COMPAT (ctanh)
-declare_mgen_libm_compat (__ctanh, ctanh)
-#endif

@@ -27,14 +27,10 @@
 #define CFLOAT _Complex double
 #define M_STRTO_NAN __strtod_nan
 
-/* Machines without a distinct long double type
-   alias long double functions to their double
-   equivalent.  */
-#if defined NO_LONG_DOUBLE && !defined declare_mgen_alias
-# define declare_mgen_alias(from, to)	    \
-   weak_alias (from, to)		    \
-   strong_alias (from, from ## l)	    \
-   weak_alias (from, to ## l)
+#include <libm-alias-double.h>
+
+#ifndef declare_mgen_alias
+# define declare_mgen_alias(from, to) libm_alias_double (from, to)
 #endif
 
 /* Supply the generic macros.  */

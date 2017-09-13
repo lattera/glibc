@@ -26,7 +26,3 @@ M_DECL_FUNC (__creal) (CFLOAT z)
 }
 
 declare_mgen_alias (__creal, creal)
-
-#if M_LIBM_NEED_COMPAT (creal)
-declare_mgen_libm_compat (__creal, creal)
-#endif

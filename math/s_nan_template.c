@@ -31,7 +31,3 @@ M_DECL_FUNC (__nan) (const char *tagp)
 }
 
 declare_mgen_alias (__nan, nan)
-
-#if M_LIBM_NEED_COMPAT (nan)
-declare_mgen_libm_compat (__nan, nan)
-#endif

@@ -27,7 +27,3 @@ M_DECL_FUNC (__cabs) (CFLOAT z)
 }
 
 declare_mgen_alias (__cabs, cabs)
-
-#if M_LIBM_NEED_COMPAT (cabs)
-declare_mgen_libm_compat (__cabs, cabs)
-#endif

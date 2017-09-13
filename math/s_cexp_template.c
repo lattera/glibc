@@ -148,7 +148,3 @@ M_DECL_FUNC (__cexp) (CFLOAT x)
   return retval;
 }
 declare_mgen_alias (__cexp, cexp)
-
-#if M_LIBM_NEED_COMPAT (cexp)
-declare_mgen_libm_compat (__cexp, cexp)
-#endif

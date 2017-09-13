@@ -61,7 +61,3 @@ M_DECL_FUNC (__casin) (CFLOAT x)
 }
 
 declare_mgen_alias (__casin, casin)
-
-#if M_LIBM_NEED_COMPAT (casin)
-declare_mgen_libm_compat (__casin, casin)
-#endif

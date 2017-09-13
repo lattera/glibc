@@ -33,7 +33,3 @@ M_DECL_FUNC (__fmax) (FLOAT x, FLOAT y)
 }
 
 declare_mgen_alias (__fmax, fmax);
-
-#if M_LIBM_NEED_COMPAT (fmax)
-declare_mgen_libm_compat (__fmax, fmax)
-#endif

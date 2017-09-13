@@ -36,7 +36,3 @@ M_DECL_FUNC (__ilogb) (FLOAT x)
   return r;
 }
 declare_mgen_alias (__ilogb, ilogb)
-
-#if M_LIBM_NEED_COMPAT (ilogb)
-declare_mgen_libm_compat (__ilogb, ilogb)
-#endif

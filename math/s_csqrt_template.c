@@ -158,7 +158,3 @@ M_DECL_FUNC (__csqrt) (CFLOAT x)
   return res;
 }
 declare_mgen_alias (__csqrt, csqrt)
-
-#if M_LIBM_NEED_COMPAT (csqrt)
-declare_mgen_libm_compat (__csqrt, csqrt)
-#endif

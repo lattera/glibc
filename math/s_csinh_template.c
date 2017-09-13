@@ -154,7 +154,3 @@ M_DECL_FUNC (__csinh) (CFLOAT x)
 }
 
 declare_mgen_alias (__csinh, csinh)
-
-#if M_LIBM_NEED_COMPAT (csinh)
-declare_mgen_libm_compat (__csinh, csinh)
-#endif

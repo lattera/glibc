@@ -34,7 +34,3 @@ M_DECL_FUNC (__fdim) (FLOAT x, FLOAT y)
   return r;
 }
 declare_mgen_alias (__fdim, fdim);
-
-#if M_LIBM_NEED_COMPAT (fdim)
-declare_mgen_libm_compat (__fdim, fdim)
-#endif

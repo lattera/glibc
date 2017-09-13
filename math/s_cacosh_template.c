@@ -90,7 +90,3 @@ M_DECL_FUNC (__cacosh) (CFLOAT x)
 }
 
 declare_mgen_alias (__cacosh, cacosh)
-
-#if M_LIBM_NEED_COMPAT (cacosh)
-declare_mgen_libm_compat (__cacosh, cacosh)
-#endif

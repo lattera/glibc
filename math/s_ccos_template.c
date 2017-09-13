@@ -34,7 +34,3 @@ M_DECL_FUNC (__ccos) (CFLOAT x)
 }
 
 declare_mgen_alias (__ccos, ccos);
-
-#if M_LIBM_NEED_COMPAT (carg)
-declare_mgen_libm_compat (__ccos, ccos)
-#endif

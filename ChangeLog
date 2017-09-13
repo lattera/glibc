@@ -1,3 +1,58 @@
+2017-09-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/libm-alias-double.h: New file.
+	* sysdeps/ieee754/ldbl-opt/libm-alias-double.h: Likewise.
+	* sysdeps/generic/math-type-macros-double.h: Include
+	<libm-alias-double.h>.
+	[declare_mgen_alias] (declare_mgen_alias): Define to use
+	libm_alias_double.
+	* sysdeps/generic/math-type-macros.h [!M_LIBM_NEED_COMPAT]
+	(M_LIBM_NEED_COMPAT): Remove macro.
+	[!M_LIBM_NEED_COMPAT] (declare_mgen_libm_compat): Likewise.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h: Remove.
+	* math/cabs_template.c [M_LIBM_NEED_COMPAT]: Remove conditional
+	code.
+	* math/carg_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/cimag_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/conj_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/creal_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_cacos_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_cacosh_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_casin_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_casinh_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_catan_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_catanh_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_ccos_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_ccosh_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_cexp_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_clog10_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_clog_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_cpow_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_cproj_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_csin_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_csinh_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_csqrt_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_ctan_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_ctanh_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_fdim_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_fmax_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_fmin_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/s_nan_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* math/w_ilogb_template.c [M_LIBM_NEED_COMPAT]: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_clog10.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_ldexp.c (M_LIBM_NEED_COMPAT): Remove
+	macro.
+	(declare_mgen_alias): New macro.
+	* sysdeps/ieee754/ldbl-opt/w_log1p.c: New file.
+	* sysdeps/ieee754/ldbl-opt/w_scalbln.c: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim-vis3.c
+	(M_LIBM_NEED_COMPAT): Remove macro.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim.c
+	[HAVE_AS_VIS3_SUPPORT]: Include <math_ldbl_opt.h> and
+	<first-versions.h>.
+	[HAVE_AS_VIS3_SUPPORT && LONG_DOUBLE_COMPAT (libm,
+	FIRST_VERSION_libm_fdiml)]: Define fdiml as compat symbol.
+
 2017-09-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/math-type-macros.h [!declare_mgen_alias_2]
