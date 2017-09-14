@@ -23,7 +23,7 @@ subdir := benchtests
 include ../Makeconfig
 bench-math := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 \
 	      modf pow rint sin sincos sinh sqrt tan tanh fmin fmax fminf \
-	      fmaxf powf trunc truncf
+	      fmaxf powf trunc truncf expf
 
 bench-pthread := pthread_once thread_create
 

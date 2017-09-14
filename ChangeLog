@@ -1,5 +1,10 @@
 2017-09-19  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* benchtests/Makefile: Add expf benchmark.
+	* benchtests/expf-inputs: Add reduced trace from wrf_r.
+
+2017-09-19  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* csu/Makefile: Add -funwind-tables to libc-start.c.
 	* debug/Makefile: Add -funwind-tables to backtrace.c.
 	* sysdeps/aarch64/Makefile: Remove CFLAGS-backtrace.c.
