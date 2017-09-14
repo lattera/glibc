@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 int
-totalordermag (double x, double y)
+__totalordermag (double x, double y)
 {
   uint32_t hx, hy;
   uint32_t lx, ly;
@@ -44,6 +44,8 @@ totalordermag (double x, double y)
 #endif
   return hx < hy || (hx == hy && lx <= ly);
 }
+weak_alias (__totalordermag, totalordermag)
 #ifdef NO_LONG_DOUBLE
-weak_alias (totalordermag, totalordermagl)
+strong_alias (__totalordermag, __totalordermagl)
+weak_alias (__totalordermag, totalordermagl)
 #endif

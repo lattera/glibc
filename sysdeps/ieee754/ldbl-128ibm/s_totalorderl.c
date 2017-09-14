@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 int
-totalorderl (long double x, long double y)
+__totalorderl (long double x, long double y)
 {
   double xhi, xlo, yhi, ylo;
   int64_t hx, hy, lx, ly;
@@ -60,3 +60,4 @@ totalorderl (long double x, long double y)
   ly ^= ly_sign >> 1;
   return lx <= ly;
 }
+weak_alias (__totalorderl, totalorderl)

@@ -25,7 +25,7 @@
 #if LIBM_SVID_COMPAT
 /* wrapper jnf */
 float
-jnf (int n, float x)
+__jnf (int n, float x)
 {
   if (__builtin_expect (isgreater (fabsf (x), (float) X_TLOSS), 0)
       && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
@@ -34,11 +34,12 @@ jnf (int n, float x)
 
   return __ieee754_jnf (n, x);
 }
+weak_alias (__jnf, jnf)
 
 
 /* wrapper ynf */
 float
-ynf (int n, float x)
+__ynf (int n, float x)
 {
   if (__builtin_expect (islessequal (x, 0.0f)
 			|| isgreater (x, (float) X_TLOSS), 0)
@@ -63,4 +64,5 @@ ynf (int n, float x)
 
   return __ieee754_ynf (n, x);
 }
+weak_alias (__ynf, ynf)
 #endif

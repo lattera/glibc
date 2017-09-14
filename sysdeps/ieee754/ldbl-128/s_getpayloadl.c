@@ -21,7 +21,7 @@
 #include <stdint.h>
 
 _Float128
-getpayloadl (const _Float128 *x)
+__getpayloadl (const _Float128 *x)
 {
   uint64_t hx, lx;
   GET_LDOUBLE_WORDS64 (hx, lx, *x);
@@ -55,3 +55,4 @@ getpayloadl (const _Float128 *x)
   SET_LDOUBLE_WORDS64 (ret, hx, lx);
   return ret;
 }
+weak_alias (__getpayloadl, getpayloadl)

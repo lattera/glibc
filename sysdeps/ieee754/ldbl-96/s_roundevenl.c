@@ -26,7 +26,7 @@
 #define MAX_EXP (2 * BIAS + 1)
 
 long double
-roundevenl (long double x)
+__roundevenl (long double x)
 {
   uint16_t se;
   uint32_t hx, lx;
@@ -122,3 +122,4 @@ roundevenl (long double x)
   SET_LDOUBLE_WORDS (x, se, hx, lx);
   return x;
 }
+weak_alias (__roundevenl, roundevenl)

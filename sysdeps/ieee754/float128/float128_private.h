@@ -199,6 +199,7 @@
 #define __fpclassifyl __fpclassifyf128
 #define __frexpl __frexpf128
 #define __gammal_r_finite __gammaf128_r_finite
+#define __getpayloadl __getpayloadf128
 #define __isinfl __isinff128
 #define __isnanl __isnanf128
 #define __issignalingl __issignalingf128
@@ -217,6 +218,7 @@
 #define __nextupl __nextupf128
 #define __remquol __remquof128
 #define __rintl __rintf128
+#define __roundevenl __roundevenf128
 #define __roundl __roundf128
 #define __scalblnl __scalblnf128
 #define __scalbnl __scalbnf128
@@ -226,6 +228,8 @@
 #define __sqrtl __sqrtf128
 #define __tanhl __tanhf128
 #define __tanl __tanf128
+#define __totalorderl __totalorderf128
+#define __totalordermagl __totalordermagf128
 #define __truncl __truncf128
 #define __x2y2m1l __x2y2m1f128
 

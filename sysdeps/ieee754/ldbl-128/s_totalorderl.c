@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 int
-totalorderl (_Float128 x, _Float128 y)
+__totalorderl (_Float128 x, _Float128 y)
 {
   int64_t hx, hy;
   uint64_t lx, ly;
@@ -52,3 +52,4 @@ totalorderl (_Float128 x, _Float128 y)
   ly ^= hy_sign;
   return hx < hy || (hx == hy && lx <= ly);
 }
+weak_alias (__totalorderl, totalorderl)

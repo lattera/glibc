@@ -1,6 +1,8 @@
 #define SIG 1
-#define FUNC setpayloadsig
+#define FUNC __setpayloadsig
 #include <s_setpayload_main.c>
+weak_alias (__setpayloadsig, setpayloadsig)
 #ifdef NO_LONG_DOUBLE
-weak_alias (setpayloadsig, setpayloadsigl)
+strong_alias (__setpayloadsig, __setpayloadsigl)
+weak_alias (__setpayloadsig, setpayloadsigl)
 #endif

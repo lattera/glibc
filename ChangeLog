@@ -1,3 +1,205 @@
+2017-09-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/math.h (roundeven): Change hidden_proto call to
+	__roundeven.
+	* math/w_j0_compat.c (j0): Rename to __j0 and define as weak
+	alias.
+	[NO_LONG_DOUBLE] (__j0l): New strong alias.
+	(y0): Rename to __y0 and define as weak alias.
+	[NO_LONG_DOUBLE] (__y0l): New strong alias.
+	* math/w_j0f_compat.c (j0f): Rename to __j0f and define as weak
+	alias.
+	(y0f): Rename to __y0f and define as weak alias.
+	* math/w_j1_compat.c (j1): Rename to __j1 and define as weak
+	alias.
+	[NO_LONG_DOUBLE] (__j1l): New strong alias.
+	(y1): Rename to __y1 and define as weak alias.
+	[NO_LONG_DOUBLE] (__y1l): New strong alias.
+	* math/w_j1f_compat.c (j1f): Rename to __j1f and define as weak
+	alias.
+	(y1f): Rename to __y1f and define as weak alias.
+	* math/w_jn_compat.c (jn): Rename to __jn and define as weak
+	alias.
+	[NO_LONG_DOUBLE] (__jnl): New strong alias.
+	(yn): Rename to __yn and define as weak alias.
+	[NO_LONG_DOUBLE] (__ynl): New strong alias.
+	* math/w_jnf_compat.c (jnf): Rename to __jnf and define as weak
+	alias.
+	(ynf): Rename to __ynf and define as weak alias.
+	* sysdeps/ieee754/dbl-64/s_fromfp.c (FUNC): Define to __fromfp.
+	(fromfp): Define as weak alias.
+	[NO_LONG_DOUBLE] (__fromfpl): New strong alias.
+	* sysdeps/ieee754/dbl-64/s_fromfpx.c (FUNC): Define to __fromfpx.
+	(fromfpx): Define as weak alias.
+	[NO_LONG_DOUBLE] (__fromfpxl): New strong alias.
+	* sysdeps/ieee754/dbl-64/s_getpayload.c (getpayload): Rename to
+	__getpayload and define as weak alias.
+	[NO_LONG_DOUBLE] (__getpayloadl): New strong alias.
+	* sysdeps/ieee754/dbl-64/s_roundeven.c (roundeven): Rename to
+	__roundeven and define as weak alias.
+	[NO_LONG_DOUBLE] (__roundevenl): New strong alias.
+	* sysdeps/ieee754/dbl-64/s_setpayload.c (FUNC): Define to
+	__setpayload.
+	(setpayload): Define as weak alias.
+	[NO_LONG_DOUBLE] (__setpayloadl): New strong alias.
+	* sysdeps/ieee754/dbl-64/s_setpayloadsig.c (FUNC): Define to
+	__setpayloadsig.
+	(setpayloadsig): Define as weak alias.
+	[NO_LONG_DOUBLE] (__setpayloadsigl): New strong alias.
+	* sysdeps/ieee754/dbl-64/s_totalorder.c (totalorder): Rename to
+	__totalorder and define as weak alias.
+	[NO_LONG_DOUBLE] (__totalorderl): New strong alias.
+	* sysdeps/ieee754/dbl-64/s_totalordermag.c (totalordermag): Rename
+	to __totalordermag and define as weak alias.
+	[NO_LONG_DOUBLE] (__totalordermagl): New strong alias.
+	* sysdeps/ieee754/dbl-64/s_ufromfp.c (FUNC): Define to __ufromfp.
+	(ufromfp): Define as weak alias.
+	[NO_LONG_DOUBLE] (__ufromfpl): New strong alias.
+	* sysdeps/ieee754/dbl-64/s_ufromfpx.c (FUNC): Define to
+	__ufromfpx.
+	(ufromfpx): Define as weak alias.
+	[NO_LONG_DOUBLE] (__ufromfpxl): New strong alias.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_getpayload.c (getpayload):
+	Rename to __getpayload and define as weak alias.
+	[NO_LONG_DOUBLE] (__getpayloadl): New strong alias.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_roundeven.c (roundeven):
+	Rename to __roundeven and define as weak alias.
+	[NO_LONG_DOUBLE] (__roundevenl): New strong alias.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalorder.c (totalorder):
+	Rename to __totalorder and define as weak alias.
+	[NO_LONG_DOUBLE] (__totalorderl): New strong alias.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalordermag.c
+	(totalordermag): Rename to __totalordermag and define as weak
+	alias.
+	[NO_LONG_DOUBLE] (__totalordermagl): New strong alias.
+	* sysdeps/ieee754/float128/float128_private.h (__getpayloadl): New
+	macro.
+	(__roundevenl): Likewise.
+	(__totalorderl): Likewise.
+	(__totalordermagl): Likewise
+	* sysdeps/ieee754/float128/s_fromfpf128.c (FUNC): Define to
+	__fromfpf128.
+	(fromfpf128): Define as weak alias.
+	* sysdeps/ieee754/float128/s_fromfpxf128.c (FUNC): Define to
+	__fromfpxf128.
+	(fromfpxf128): Define as weak alias.
+	* sysdeps/ieee754/float128/s_setpayloadf128.c (FUNC): Define to
+	__setpayloadf128.
+	(setpayloadf128): Define as weak alias.
+	* sysdeps/ieee754/float128/s_setpayloadsigf128.c (FUNC): Define to
+	__setpayloadsigf128.
+	(setpayloadsigf128): Define as weak alias.
+	* sysdeps/ieee754/float128/s_ufromfpf128.c (FUNC): Define to
+	__ufromfpf128.
+	(ufromfpf128): Define as weak alias.
+	* sysdeps/ieee754/float128/s_ufromfpxf128.c (FUNC): Define to
+	__ufromfpxf128.
+	(ufromfpxf128): Define as weak alias.
+	* sysdeps/ieee754/flt-32/s_fromfpf.c (FUNC): Define to __fromfpf.
+	(fromfpf): Define as weak alias.
+	* sysdeps/ieee754/flt-32/s_fromfpxf.c (FUNC): Define to
+	__fromfpxf.
+	(fromfpxf): Define as weak alias.
+	* sysdeps/ieee754/flt-32/s_getpayloadf.c (getpayloadf): Rename to
+	__getpayloadf and define as weak alias.
+	* sysdeps/ieee754/flt-32/s_roundevenf.c (roundevenf): Rename to
+	__roundevenf and define as weak alias.
+	* sysdeps/ieee754/flt-32/s_setpayloadf.c (FUNC): Define to
+	__setpayloadf.
+	(setpayloadf): Define as weak alias.
+	* sysdeps/ieee754/flt-32/s_setpayloadsigf.c (FUNC): Define to
+	__setpayloadsigf.
+	(setpayloadsigf): Define as weak alias.
+	* sysdeps/ieee754/flt-32/s_totalorderf.c (totalorderf): Rename to
+	__totalorderf and define as weak alias.
+	* sysdeps/ieee754/flt-32/s_totalordermagf.c (totalordermagf):
+	Rename to __totalordermagf and define as weak alias.
+	* sysdeps/ieee754/flt-32/s_ufromfpf.c (FUNC): Define to
+	__ufromfpf.
+	(ufromfpf): Define as weak alias.
+	* sysdeps/ieee754/flt-32/s_ufromfpxf.c (FUNC): Define to
+	__ufromfpxf.
+	(ufromfpxf): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128/s_fromfpl.c (FUNC): Define to
+	__fromfpl.
+	(fromfpl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128/s_fromfpxl.c (FUNC): Define to
+	__fromfpxl.
+	(fromfpxl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128/s_getpayloadl.c (getpayloadl): Rename
+	to __getpayloadl and define as weak alias.
+	* sysdeps/ieee754/ldbl-128/s_roundevenl.c (roundevenl): Rename to
+	__roundevenl and define as weak alias.
+	* sysdeps/ieee754/ldbl-128/s_setpayloadl.c (FUNC): Define to
+	__setpayloadl.
+	(setpayloadl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128/s_setpayloadsigl.c (FUNC): Define to
+	__setpayloadsigl.
+	(setpayloadsigl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128/s_totalorderl.c (totalorderl): Rename
+	to __totalorderl and define as weak alias.
+	* sysdeps/ieee754/ldbl-128/s_totalordermagl.c (totalordermagl):
+	Rename to __totalordermagl and define as weak alias.
+	* sysdeps/ieee754/ldbl-128/s_ufromfpl.c (FUNC): Define to
+	__ufromfpl.
+	(ufromfpl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128/s_ufromfpxl.c (FUNC): Define to
+	__ufromfpxl.
+	(ufromfpxl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128ibm/s_fromfpl.c (FUNC): Define to
+	__fromfpl.
+	(fromfpl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128ibm/s_fromfpxl.c (FUNC): Define to
+	__fromfpxl.
+	(fromfpxl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128ibm/s_getpayloadl.c (getpayloadl):
+	Rename to __getpayloadl and define as weak alias.
+	* sysdeps/ieee754/ldbl-128ibm/s_roundevenl.c (roundevenl): Rename
+	to __roundevenl and define as weak alias.  Call __roundeven
+	instead of roundeven.
+	* sysdeps/ieee754/ldbl-128ibm/s_setpayloadl.c (FUNC): Define to
+	__setpayloadl.
+	(setpayloadl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128ibm/s_setpayloadsigl.c (FUNC): Define to
+	__setpayloadsigl.
+	(setpayloadsigl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalorderl.c (totalorderl):
+	Rename to __totalorderl and define as weak alias.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalordermagl.c (totalordermagl):
+	Rename to __totalordermagl and define as weak alias.
+	* sysdeps/ieee754/ldbl-128ibm/s_ufromfpl.c (FUNC): Define to
+	__ufromfpl.
+	(ufromfpl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-128ibm/s_ufromfpxl.c (FUNC): Define to
+	__ufromfpxl.
+	(ufromfpxl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-96/s_fromfpl.c (FUNC): Define to
+	__fromfpl.
+	(fromfpl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-96/s_fromfpxl.c (FUNC): Define to
+	__fromfpxl.
+	(fromfpxl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-96/s_getpayloadl.c (getpayloadl): Rename to
+	__getpayloadl and define as weak alias.
+	* sysdeps/ieee754/ldbl-96/s_roundevenl.c (roundevenl): Rename to
+	__roundevenl and define as weak alias.
+	* sysdeps/ieee754/ldbl-96/s_setpayloadl.c (FUNC): Define to
+	__setpayloadl.
+	(setpayloadl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-96/s_setpayloadsigl.c (FUNC): Define to
+	__setpayloadsigl.
+	(setpayloadsigl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-96/s_totalorderl.c (totalorderl): Rename to
+	__totalorderl and define as weak alias.
+	* sysdeps/ieee754/ldbl-96/s_totalordermagl.c (totalordermagl):
+	Rename to __totalordermagl and define as weak alias.
+	* sysdeps/ieee754/ldbl-96/s_ufromfpl.c (FUNC): Define to
+	__ufromfpl.
+	(ufromfpl): Define as weak alias.
+	* sysdeps/ieee754/ldbl-96/s_ufromfpxl.c (FUNC): Define to
+	__ufromfpxl.
+	(ufromfpxl): Define as weak alias.
+
 2017-09-14  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/bench-string.h (realloc_bufs): New function.

@@ -26,7 +26,7 @@
 #define MAX_EXP (2 * BIAS + 1)
 
 double
-roundeven (double x)
+__roundeven (double x)
 {
   uint32_t hx, lx, uhx;
   EXTRACT_WORDS (hx, lx, x);
@@ -100,7 +100,9 @@ roundeven (double x)
   INSERT_WORDS (x, hx, lx);
   return x;
 }
-hidden_def (roundeven)
+hidden_def (__roundeven)
+weak_alias (__roundeven, roundeven)
 #ifdef NO_LONG_DOUBLE
-weak_alias (roundeven, roundevenl)
+strong_alias (__roundeven, __roundevenl)
+weak_alias (__roundeven, roundevenl)
 #endif

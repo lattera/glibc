@@ -21,7 +21,7 @@
 #include <math_private.h>
 
 long double
-roundevenl (long double x)
+__roundevenl (long double x)
 {
   double xh, xl, hi;
 
@@ -29,7 +29,7 @@ roundevenl (long double x)
 
   if (xh != 0 && isfinite (xh))
     {
-      hi = roundeven (xh);
+      hi = __roundeven (xh);
       if (hi != xh)
 	{
 	  /* The high part is not an integer; the low part only
@@ -56,7 +56,7 @@ roundevenl (long double x)
 	     part to nearest, ties round to even, is always correct,
 	     as a high part that is an odd integer together with a low
 	     part with magnitude 0.5 is not a valid long double.  */
-	  xl = roundeven (xl);
+	  xl = __roundeven (xl);
 	  xh = hi;
 	  ldbl_canonicalize_int (&xh, &xl);
 	}
@@ -67,3 +67,4 @@ roundevenl (long double x)
 
   return ldbl_pack (xh, xl);
 }
+weak_alias (__roundevenl, roundevenl)

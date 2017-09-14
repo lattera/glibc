@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 int
-totalordermagl (_Float128 x, _Float128 y)
+__totalordermagl (_Float128 x, _Float128 y)
 {
   uint64_t hx, hy;
   uint64_t lx, ly;
@@ -46,3 +46,4 @@ totalordermagl (_Float128 x, _Float128 y)
 #endif
   return hx < hy || (hx == hy && lx <= ly);
 }
+weak_alias (__totalordermagl, totalordermagl)

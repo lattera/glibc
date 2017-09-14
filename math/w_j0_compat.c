@@ -25,7 +25,7 @@
 #if LIBM_SVID_COMPAT
 /* wrapper j0 */
 double
-j0 (double x)
+__j0 (double x)
 {
   if (__builtin_expect (isgreater (fabs (x), X_TLOSS), 0)
       && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
@@ -34,14 +34,16 @@ j0 (double x)
 
   return __ieee754_j0 (x);
 }
+weak_alias (__j0, j0)
 # ifdef NO_LONG_DOUBLE
-weak_alias (j0, j0l)
+strong_alias (__j0, __j0l)
+weak_alias (__j0, j0l)
 # endif
 
 
 /* wrapper y0 */
 double
-y0 (double x)
+__y0 (double x)
 {
   if (__builtin_expect (islessequal (x, 0.0) || isgreater (x, X_TLOSS), 0)
       && _LIB_VERSION != _IEEE_)
@@ -65,7 +67,9 @@ y0 (double x)
 
   return __ieee754_y0 (x);
 }
+weak_alias (__y0, y0)
 # ifdef NO_LONG_DOUBLE
-weak_alias (y0, y0l)
+strong_alias (__y0, __y0l)
+weak_alias (__y0, y0l)
 # endif
 #endif

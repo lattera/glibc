@@ -26,7 +26,7 @@
 #define MAX_EXP (2 * BIAS + 1)
 
 _Float128
-roundevenl (_Float128 x)
+__roundevenl (_Float128 x)
 {
   uint64_t hx, lx, uhx;
   GET_LDOUBLE_WORDS64 (hx, lx, x);
@@ -100,3 +100,4 @@ roundevenl (_Float128 x)
   SET_LDOUBLE_WORDS64 (x, hx, lx);
   return x;
 }
+weak_alias (__roundevenl, roundevenl)

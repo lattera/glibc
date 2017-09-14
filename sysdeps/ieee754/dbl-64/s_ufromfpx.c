@@ -1,7 +1,9 @@
 #define UNSIGNED 1
 #define INEXACT 1
-#define FUNC ufromfpx
+#define FUNC __ufromfpx
 #include <s_fromfp_main.c>
+weak_alias (__ufromfpx, ufromfpx)
 #ifdef NO_LONG_DOUBLE
-weak_alias (ufromfpx, ufromfpxl)
+strong_alias (__ufromfpx, __ufromfpxl)
+weak_alias (__ufromfpx, ufromfpxl)
 #endif

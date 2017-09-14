@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 int
-totalordermag (double x, double y)
+__totalordermag (double x, double y)
 {
   uint64_t ix, iy;
   EXTRACT_WORDS64 (ix, x);
@@ -42,6 +42,8 @@ totalordermag (double x, double y)
 #endif
   return ix <= iy;
 }
+weak_alias (__totalordermag, totalordermag)
 #ifdef NO_LONG_DOUBLE
-weak_alias (totalordermag, totalordermagl)
+strong_alias (__totalordermag, __totalordermagl)
+weak_alias (__totalordermag, totalordermagl)
 #endif

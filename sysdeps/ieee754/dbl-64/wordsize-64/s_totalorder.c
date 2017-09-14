@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 int
-totalorder (double x, double y)
+__totalorder (double x, double y)
 {
   int64_t ix, iy;
   EXTRACT_WORDS64 (ix, x);
@@ -45,6 +45,8 @@ totalorder (double x, double y)
   iy ^= iy_sign >> 1;
   return ix <= iy;
 }
+weak_alias (__totalorder, totalorder)
 #ifdef NO_LONG_DOUBLE
-weak_alias (totalorder, totalorderl)
+strong_alias (__totalorder, __totalorderl)
+weak_alias (__totalorder, totalorderl)
 #endif

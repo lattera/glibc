@@ -39,7 +39,7 @@ libm_hidden_proto (__issignaling)
 libm_hidden_proto (__issignalingf)
 libm_hidden_proto (__exp)
 libm_hidden_proto (__expf)
-libm_hidden_proto (roundeven)
+libm_hidden_proto (__roundeven)
 
 # ifndef __NO_LONG_DOUBLE_MATH
 libm_hidden_proto (__fpclassifyl)

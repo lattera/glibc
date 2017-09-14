@@ -21,13 +21,15 @@
 #include <stdint.h>
 
 double
-getpayload (const double *x)
+__getpayload (const double *x)
 {
   uint64_t ix;
   EXTRACT_WORDS64 (ix, *x);
   ix &= 0x7ffffffffffffULL;
   return (double) ix;
 }
+weak_alias (__getpayload, getpayload)
 #ifdef NO_LONG_DOUBLE
-weak_alias (getpayload, getpayloadl)
+strong_alias (__getpayload, __getpayloadl)
+weak_alias (__getpayload, getpayloadl)
 #endif

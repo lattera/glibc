@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 long double
-getpayloadl (const long double *x)
+__getpayloadl (const long double *x)
 {
   double xhi = ldbl_high (*x);
   uint64_t ix;
@@ -32,3 +32,4 @@ getpayloadl (const long double *x)
     return 0.0L;
   return (long double) ix;
 }
+weak_alias (__getpayloadl, getpayloadl)

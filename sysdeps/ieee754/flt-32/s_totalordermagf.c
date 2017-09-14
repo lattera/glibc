@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 int
-totalordermagf (float x, float y)
+__totalordermagf (float x, float y)
 {
   uint32_t ix, iy;
   GET_FLOAT_WORD (ix, x);
@@ -42,3 +42,4 @@ totalordermagf (float x, float y)
 #endif
   return ix <= iy;
 }
+weak_alias (__totalordermagf, totalordermagf)

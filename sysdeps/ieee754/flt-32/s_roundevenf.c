@@ -26,7 +26,7 @@
 #define MAX_EXP (2 * BIAS + 1)
 
 float
-roundevenf (float x)
+__roundevenf (float x)
 {
   uint32_t ix, ux;
   GET_FLOAT_WORD (ix, x);
@@ -66,3 +66,4 @@ roundevenf (float x)
   SET_FLOAT_WORD (x, ix);
   return x;
 }
+weak_alias (__roundevenf, roundevenf)

@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 int
-totalorder (double x, double y)
+__totalorder (double x, double y)
 {
   int32_t hx, hy;
   uint32_t lx, ly;
@@ -49,6 +49,8 @@ totalorder (double x, double y)
   ly ^= hy_sign;
   return hx < hy || (hx == hy && lx <= ly);
 }
+weak_alias (__totalorder, totalorder)
 #ifdef NO_LONG_DOUBLE
-weak_alias (totalorder, totalorderl)
+strong_alias (__totalorder, __totalorderl)
+weak_alias (__totalorder, totalorderl)
 #endif

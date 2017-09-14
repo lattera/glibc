@@ -23,7 +23,7 @@
 #include <stdint.h>
 
 int
-totalordermagl (long double x, long double y)
+__totalordermagl (long double x, long double y)
 {
   uint16_t expx, expy;
   uint32_t hx, hy;
@@ -49,3 +49,4 @@ totalordermagl (long double x, long double y)
 #endif
   return expx < expy || (expx == expy && (hx < hy || (hx == hy && lx <= ly)));
 }
+weak_alias (__totalordermagl, totalordermagl)

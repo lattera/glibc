@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 int
-totalorderf (float x, float y)
+__totalorderf (float x, float y)
 {
   int32_t ix, iy;
   GET_FLOAT_WORD (ix, x);
@@ -44,3 +44,4 @@ totalorderf (float x, float y)
   iy ^= iy_sign >> 1;
   return ix <= iy;
 }
+weak_alias (__totalorderf, totalorderf)

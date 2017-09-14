@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 float
-getpayloadf (const float *x)
+__getpayloadf (const float *x)
 {
   uint32_t ix;
   GET_FLOAT_WORD (ix, *x);
@@ -31,3 +31,4 @@ getpayloadf (const float *x)
     return 0.0f;
   return (float) ix;
 }
+weak_alias (__getpayloadf, getpayloadf)

@@ -25,7 +25,7 @@
 #if LIBM_SVID_COMPAT
 /* wrapper j0f */
 float
-j0f (float x)
+__j0f (float x)
 {
   if (__builtin_expect (isgreater (fabsf (x), (float) X_TLOSS), 0)
       && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
@@ -34,11 +34,12 @@ j0f (float x)
 
   return __ieee754_j0f (x);
 }
+weak_alias (__j0f, j0f)
 
 
 /* wrapper y0f */
 float
-y0f (float x)
+__y0f (float x)
 {
   if (__builtin_expect (islessequal (x, 0.0f)
                         || isgreater (x, (float) X_TLOSS), 0)
@@ -63,4 +64,5 @@ y0f (float x)
 
   return __ieee754_y0f (x);
 }
+weak_alias (__y0f, y0f)
 #endif

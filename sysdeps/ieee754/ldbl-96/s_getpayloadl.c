@@ -21,7 +21,7 @@
 #include <stdint.h>
 
 long double
-getpayloadl (const long double *x)
+__getpayloadl (const long double *x)
 {
   uint16_t se __attribute__ ((unused));
   uint32_t hx, lx;
@@ -30,3 +30,4 @@ getpayloadl (const long double *x)
   uint64_t ix = ((uint64_t) hx << 32) | lx;
   return (long double) ix;
 }
+weak_alias (__getpayloadl, getpayloadl)

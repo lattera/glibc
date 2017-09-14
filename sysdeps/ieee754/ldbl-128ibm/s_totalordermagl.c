@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 int
-totalordermagl (long double x, long double y)
+__totalordermagl (long double x, long double y)
 {
   double xhi, xlo, yhi, ylo;
   int64_t hx, hy, lx, ly;
@@ -62,3 +62,4 @@ totalordermagl (long double x, long double y)
   ly ^= ly_sign >> 1;
   return lx <= ly;
 }
+weak_alias (__totalordermagl, totalordermagl)

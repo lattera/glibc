@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 double
-getpayload (const double *x)
+__getpayload (const double *x)
 {
   uint32_t hx, lx;
   EXTRACT_WORDS (hx, lx, *x);
@@ -32,6 +32,8 @@ getpayload (const double *x)
     return 0.0f;
   return (double) ix;
 }
+weak_alias (__getpayload, getpayload)
 #ifdef NO_LONG_DOUBLE
-weak_alias (getpayload, getpayloadl)
+strong_alias (__getpayload, __getpayloadl)
+weak_alias (__getpayload, getpayloadl)
 #endif
