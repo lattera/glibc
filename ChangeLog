@@ -1,5 +1,10 @@
 2017-09-19  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* benchtests/Makefile: Add logf benchmark.
+	* benchtests/logf-inputs: Add reduced trace from wrf_r.
+
+2017-09-19  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* benchtests/Makefile: Add expf benchmark.
 	* benchtests/expf-inputs: Add reduced trace from wrf_r.
 
