@@ -311,10 +311,9 @@ lang_lib    "<U0061><U007A><U0065>"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% FIXME
-tel_int_fmt "???"
-int_prefix "<U0039><U0039><U0034>"
-int_select "<U0038><U007E><U0031><U0030>"
+tel_int_fmt "+%c %a %l"
+int_prefix "994"
+int_select "00"
 END LC_TELEPHONE
 
 LC_NAME
