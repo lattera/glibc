@@ -42,6 +42,8 @@
 # define MEMCMP wmemcmp
 #endif /* WIDE */
 
+#include "json-lib.h"
+
 CHAR *SIMPLE_MEMSET (CHAR *, int, size_t);
 
 #ifdef TEST_BZERO
@@ -94,7 +96,8 @@ SIMPLE_MEMSET (CHAR *s, int c, size_t n)
 }
 
 static void
-do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
+do_one_test (json_ctx_t *json_ctx, impl_t *impl, CHAR *s,
+	     int c __attribute ((unused)), size_t n)
 {
   size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
@@ -112,64 +115,86 @@ do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
 
   TIMING_DIFF (cur, start, stop);
 
-  TIMING_PRINT_MEAN ((double) cur, (double) iters);
+  json_element_double (json_ctx, (double) cur / (double) iters);
 }
 
 static void
-do_test (size_t align, int c, size_t len)
+do_test (json_ctx_t *json_ctx, size_t align, int c, size_t len)
 {
   align &= 63;
   if ((align + len) * sizeof (CHAR) > page_size)
     return;
 
-  printf ("Length %4zd, alignment %2zd, c %2d:", len, align, c);
+  json_element_object_begin (json_ctx);
+  json_attr_uint (json_ctx, "length", len);
+  json_attr_uint (json_ctx, "alignment", align);
+  json_attr_int (json_ctx, "char", c);
+  json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (CHAR *) (buf1) + align, c, len);
+    do_one_test (json_ctx, impl, (CHAR *) (buf1) + align, c, len);
 
-  putchar ('\n');
+  json_array_end (json_ctx);
+  json_element_object_end (json_ctx);
 }
 
 int
 test_main (void)
 {
+  json_ctx_t json_ctx;
   size_t i;
   int c = 0;
 
   test_init ();
 
-  printf ("%24s", "");
+  json_init (&json_ctx, 0, stdout);
+
+  json_document_begin (&json_ctx);
+  json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
+
+  json_attr_object_begin (&json_ctx, "functions");
+  json_attr_object_begin (&json_ctx, TEST_NAME);
+  json_attr_string (&json_ctx, "bench-variant", "");
+
+  json_array_begin (&json_ctx, "ifuncs");
   FOR_EACH_IMPL (impl, 0)
-    printf ("\t%s", impl->name);
-  putchar ('\n');
+    json_element_string (&json_ctx, impl->name);
+  json_array_end (&json_ctx);
+
+  json_array_begin (&json_ctx, "results");
 
 #ifndef TEST_BZERO
   for (c = -65; c <= 130; c += 65)
 #endif
     {
       for (i = 0; i < 18; ++i)
-	do_test (0, c, 1 << i);
+	do_test (&json_ctx, 0, c, 1 << i);
       for (i = 1; i < 32; ++i)
 	{
-	  do_test (i, c, i);
+	  do_test (&json_ctx, i, c, i);
 	  if (i & (i - 1))
-	    do_test (0, c, i);
+	    do_test (&json_ctx, 0, c, i);
 	}
       for (i = 32; i < 512; i+=32)
 	{
-	  do_test (0, c, i);
-	  do_test (i, c, i);
+	  do_test (&json_ctx, 0, c, i);
+	  do_test (&json_ctx, i, c, i);
 	}
-      do_test (1, c, 14);
-      do_test (3, c, 1024);
-      do_test (4, c, 64);
-      do_test (2, c, 25);
+      do_test (&json_ctx, 1, c, 14);
+      do_test (&json_ctx, 3, c, 1024);
+      do_test (&json_ctx, 4, c, 64);
+      do_test (&json_ctx, 2, c, 25);
     }
   for (i = 33; i <= 256; i += 4)
     {
-      do_test (0, c, 32 * i);
-      do_test (i, c, 32 * i);
+      do_test (&json_ctx, 0, c, 32 * i);
+      do_test (&json_ctx, i, c, 32 * i);
     }
+
+  json_array_end (&json_ctx);
+  json_attr_object_end (&json_ctx);
+  json_attr_object_end (&json_ctx);
+  json_document_end (&json_ctx);
 
   return ret;
 }
