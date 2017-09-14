@@ -173,14 +173,8 @@ static impl_t *impl_array;
 # endif
 
 static void
-test_init (void)
+alloc_bufs (void)
 {
-# ifdef TEST_NAME
-  func_count = __libc_ifunc_impl_list (TEST_NAME, func_list,
-				       (sizeof func_list
-					/ sizeof func_list[0]));
-# endif
-
   page_size = 2 * getpagesize ();
 # ifdef MIN_PAGE_SIZE
   if (page_size < MIN_PAGE_SIZE)
@@ -189,15 +183,49 @@ test_init (void)
   buf1 = mmap (0, (BUF1PAGES + 1) * page_size, PROT_READ | PROT_WRITE,
 	       MAP_PRIVATE | MAP_ANON, -1, 0);
   if (buf1 == MAP_FAILED)
-    error (EXIT_FAILURE, errno, "mmap failed");
+    error (EXIT_FAILURE, errno, "mmap failed for buf1");
   if (mprotect (buf1 + BUF1PAGES * page_size, page_size, PROT_NONE))
-    error (EXIT_FAILURE, errno, "mprotect failed");
+    error (EXIT_FAILURE, errno, "mprotect failed for buf1");
   buf2 = mmap (0, 2 * page_size, PROT_READ | PROT_WRITE,
 	       MAP_PRIVATE | MAP_ANON, -1, 0);
   if (buf2 == MAP_FAILED)
-    error (EXIT_FAILURE, errno, "mmap failed");
+    error (EXIT_FAILURE, errno, "mmap failed for buf2");
   if (mprotect (buf2 + page_size, page_size, PROT_NONE))
-    error (EXIT_FAILURE, errno, "mprotect failed");
+    error (EXIT_FAILURE, errno, "mprotect failed for buf2");
+}
+
+static void
+__attribute__ ((unused))
+realloc_bufs (void)
+{
+  int ret = 0;
+
+  if (buf1)
+    ret = munmap (buf1, (BUF1PAGES + 1) * page_size);
+
+  if (ret != 0)
+    error (EXIT_FAILURE, errno, "munmap failed for buf1");
+
+  if (buf2)
+    ret = munmap (buf2, 2 * page_size);
+
+  if (ret != 0)
+    error (EXIT_FAILURE, errno, "munmap failed for buf2");
+
+  alloc_bufs ();
+}
+
+static void
+test_init (void)
+{
+# ifdef TEST_NAME
+  func_count = __libc_ifunc_impl_list (TEST_NAME, func_list,
+				       (sizeof func_list
+					/ sizeof func_list[0]));
+# endif
+
+  alloc_bufs ();
+
   if (do_srandom)
     {
       printf ("Setting seed to 0x%x\n", seed);

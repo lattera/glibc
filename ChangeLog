@@ -1,5 +1,10 @@
 2017-09-14  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/bench-string.h (realloc_bufs): New function.
+	(test_init): Call it.
+	* benchtests/bench-memset-large.c (do_test): Likewise.
+	* benchtests/bench-memset.c (do_test): Likewise.
+
 	* benchtests/bench-memset-large.c: Print output in JSON
 	format.
 	* benchtests/bench-memset.c: Likewise.
