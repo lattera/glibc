@@ -1,3 +1,16 @@
+2017-09-19  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* csu/Makefile: Add -funwind-tables to libc-start.c.
+	* debug/Makefile: Add -funwind-tables to backtrace.c.
+	* sysdeps/aarch64/Makefile: Remove CFLAGS-backtrace.c.
+	* sysdeps/arm/Makefile: Likewise.
+	* sysdeps/i386/Makefile: Likewise.
+	* sysdeps/m68k/Makefile: Likewise.
+	* sysdeps/mips/Makefile: Likewise.
+	* sysdeps/nios2/Makefile: Likewise.
+	* sysdeps/sh/Makefile: Likewise.
+	* sysdeps/sparc/Makefile: Likewise.
+
 2017-09-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* benchtests/Makefile (bench-math): Add trunc and truncf.

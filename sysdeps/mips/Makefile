@@ -12,10 +12,6 @@ librt-sysdep_routines += rt-sysdep
 librt-shared-only-routines += rt-sysdep
 endif
 
-ifeq ($(subdir),debug)
-CFLAGS-backtrace.c += -funwind-tables
-endif
-
 ifeq ($(subdir),csu)
 CPPFLAGS-crti.S += $(pic-ccflag)
 CPPFLAGS-crtn.S += $(pic-ccflag)

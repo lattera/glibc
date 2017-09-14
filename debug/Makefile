@@ -63,7 +63,7 @@ elide-routines.o := stack_chk_fail_local
 CFLAGS-stack_chk_fail.c = $(no-stack-protector)
 CFLAGS-stack_chk_fail_local.c = $(no-stack-protector)
 
-CFLAGS-backtrace.c = -fno-omit-frame-pointer
+CFLAGS-backtrace.c = -fno-omit-frame-pointer -funwind-tables
 CFLAGS-sprintf_chk.c = $(libio-mtsafe)
 CFLAGS-snprintf_chk.c = $(libio-mtsafe)
 CFLAGS-vsprintf_chk.c = $(libio-mtsafe)

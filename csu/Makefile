@@ -82,6 +82,9 @@ extra-objs += $(crtstuff:=.o)
 extra-objs += abi-note.o init.o
 asm-CPPFLAGS += -I$(objpfx).
 
+# Enable unwinding so backtrace unwinds to __libc_start_main
+CFLAGS-libc-start.c += -funwind-tables
+
 include ../Rules
 
 # Make these in the lib pass so they're available in time to link things with.

@@ -40,10 +40,6 @@ ifeq ($(subdir),setjmp)
 CFLAGS-setjmp.c := -fno-omit-frame-pointer
 endif
 
-ifeq ($(subdir),debug)
-CFLAGS-backtrace.c += -funwind-tables
-endif
-
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
 endif

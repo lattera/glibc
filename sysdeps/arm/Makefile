@@ -51,21 +51,12 @@ sysdep_routines += $(aeabi_constants) $(aeabi_routines)
 static-only-routines += $(aeabi_constants) aeabi_read_tp
 shared-only-routines += libc-aeabi_read_tp
 
-# In order for unwinding to fail when it falls out of main, we need a
-# cantunwind marker.  There's one in start.S.  To make sure we reach it, add
-# unwind tables for __libc_start_main.
-CFLAGS-libc-start.c += -fexceptions
-
 sysdep_routines += arm-unwind-resume
 shared-only-routines += arm-unwind-resume
 endif
 
 ifeq ($(subdir),gmon)
 sysdep_routines += arm-mcount
-endif
-
-ifeq ($(subdir),debug)
-CFLAGS-backtrace.c += -funwind-tables
 endif
 
 ifeq ($(subdir),rt)
