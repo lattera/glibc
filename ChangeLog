@@ -1,3 +1,38 @@
+2017-09-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/e_acoshl.c: Remove.
+	* math/e_acosl.c: Likewise.
+	* math/e_asinl.c: Likewise.
+	* math/e_atan2l.c: Likewise.
+	* math/e_atanhl.c: Likewise.
+	* math/e_coshl.c: Likewise.
+	* math/e_expl.c: Likewise.
+	* math/e_fmodl.c: Likewise.
+	* math/e_gammal_r.c: Likewise.
+	* math/e_hypotl.c: Likewise.
+	* math/e_j0l.c: Likewise.
+	* math/e_j1l.c: Likewise.
+	* math/e_jnl.c: Likewise.
+	* math/e_lgammal_r.c: Likewise.
+	* math/e_log10l.c: Likewise.
+	* math/e_log2l.c: Likewise.
+	* math/e_logl.c: Likewise.
+	* math/e_powl.c: Likewise.
+	* math/e_rem_pio2l.c: Likewise.
+	* math/e_sinhl.c: Likewise.
+	* math/e_sqrtf128.c: Likewise.
+	* math/e_sqrtl.c: Likewise.
+	* math/k_cosl.c: Likewise.
+	* math/k_sinl.c: Likewise.
+	* math/k_tanl.c: Likewise.
+	* math/s_asinhl.c: Likewise.
+	* math/s_atanl.c: Likewise.
+	* math/s_cbrtl.c: Likewise.
+	* math/s_erfl.c: Likewise.
+	* math/s_expm1l.c: Likewise.
+	* math/s_log1pl.c: Likewise.
+	* math/s_tanhl.c: Likewise.
+
 2017-09-15  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #21745]
