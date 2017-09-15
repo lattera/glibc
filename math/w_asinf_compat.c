@@ -20,6 +20,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -37,5 +38,5 @@ __asinf (float x)
 
   return __ieee754_asinf (x);
 }
-weak_alias (__asinf, asinf)
+libm_alias_float (__asin, asin)
 #endif

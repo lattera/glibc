@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -35,5 +36,5 @@ __atanhf (float x)
 
   return __ieee754_atanhf (x);
 }
-weak_alias (__atanhf, atanhf)
+libm_alias_float (__atanh, atanh)
 #endif

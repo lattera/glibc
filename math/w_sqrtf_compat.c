@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -31,5 +32,5 @@ __sqrtf (float x)
 
   return __ieee754_sqrtf (x);
 }
-weak_alias (__sqrtf, sqrtf)
+libm_alias_float (__sqrt, sqrt)
 #endif

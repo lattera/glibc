@@ -1,3 +1,51 @@
+2017-09-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/s_fmaf.c: Include <libm-alias-float.h>.
+	(fmaf): Define using libm_alias_float.
+	* math/w_acosf_compat.c: Include <libm-alias-float.h>.
+	(acosf): Define using libm_alias_float.
+	* math/w_acoshf_compat.c: Include <libm-alias-float.h>.
+	(acoshf): Define using libm_alias_float.
+	* math/w_asinf_compat.c: Include <libm-alias-float.h>.
+	(asinf): Define using libm_alias_float.
+	* math/w_atan2f_compat.c: Include <libm-alias-float.h>.
+	(atan2f): Define using libm_alias_float.
+	* math/w_atanhf_compat.c: Include <libm-alias-float.h>.
+	(atanhf): Define using libm_alias_float.
+	* math/w_coshf_compat.c: Include <libm-alias-float.h>.
+	(coshf): Define using libm_alias_float.
+	* math/w_exp10f_compat.c: Include <libm-alias-float.h>.
+	(exp10f): Define using libm_alias_float.
+	* math/w_fmodf_compat.c: Include <libm-alias-float.h>.
+	(fmodf): Define using libm_alias_float.
+	* math/w_hypotf_compat.c: Include <libm-alias-float.h>.
+	(hypotf): Define using libm_alias_float.
+	* math/w_j0f_compat.c: Include <libm-alias-float.h>.
+	(j0f): Define using libm_alias_float.
+	(y0f): Likewise.
+	* math/w_j1f_compat.c: Include <libm-alias-float.h>.
+	(j1f): Define using libm_alias_float.
+	(y1f): Likewise.
+	* math/w_jnf_compat.c: Include <libm-alias-float.h>.
+	(jnf): Define using libm_alias_float.
+	(ynf): Likewise.
+	* math/w_log10f_compat.c: Include <libm-alias-float.h>.
+	(log10f): Define using libm_alias_float.
+	* math/w_log2f_compat.c: Include <libm-alias-float.h>.
+	(log2f): Define using libm_alias_float.
+	* math/w_logf_compat.c: Include <libm-alias-float.h>.
+	(logf): Define using libm_alias_float.
+	* math/w_powf_compat.c: Include <libm-alias-float.h>.
+	(powf): Define using libm_alias_float.
+	* math/w_remainderf_compat.c: Include <libm-alias-float.h>.
+	(remainderf): Define using libm_alias_float.
+	* math/w_sinhf_compat.c: Include <libm-alias-float.h>.
+	(sinhf): Define using libm_alias_float.
+	* math/w_sqrtf_compat.c: Include <libm-alias-float.h>.
+	(sqrtf): Define using libm_alias_float.
+	* math/w_tgammaf_compat.c: Include <libm-alias-float.h>.
+	(tgammaf): Define using libm_alias_float.
+
 2017-09-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/math.h (roundeven): Change hidden_proto call to

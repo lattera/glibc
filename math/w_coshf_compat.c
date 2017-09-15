@@ -21,6 +21,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 #if LIBM_SVID_COMPAT
 float
@@ -33,5 +34,5 @@ __coshf (float x)
 
 	return z;
 }
-weak_alias (__coshf, coshf)
+libm_alias_float (__cosh, cosh)
 #endif

@@ -20,6 +20,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -34,5 +35,5 @@ __hypotf(float x, float y)
 
 	return z;
 }
-weak_alias (__hypotf, hypotf)
+libm_alias_float (__hypot, hypot)
 #endif

@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -32,5 +33,5 @@ __acoshf (float x)
 
   return __ieee754_acoshf (x);
 }
-weak_alias (__acoshf, acoshf)
+libm_alias_float (__acosh, acosh)
 #endif

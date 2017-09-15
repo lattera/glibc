@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 float
 __fmaf (float x, float y, float z)
@@ -25,5 +26,5 @@ __fmaf (float x, float y, float z)
   return (x * y) + z;
 }
 #ifndef __fmaf
-weak_alias (__fmaf, fmaf)
+libm_alias_float (__fma, fma)
 #endif

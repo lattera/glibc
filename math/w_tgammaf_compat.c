@@ -17,6 +17,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 #if LIBM_SVID_COMPAT
 float
@@ -43,5 +44,5 @@ __tgammaf(float x)
 	}
 	return local_signgam < 0 ? - y : y;
 }
-weak_alias (__tgammaf, tgammaf)
+libm_alias_float (__tgamma, tgamma)
 #endif

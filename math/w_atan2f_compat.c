@@ -24,6 +24,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -40,5 +41,5 @@ __atan2f (float y, float x)
     __set_errno (ERANGE);
   return z;
 }
-weak_alias (__atan2f, atan2f)
+libm_alias_float (__atan2, atan2)
 #endif

@@ -20,6 +20,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -43,5 +44,5 @@ __log2f (float x)
 
   return  __ieee754_log2f (x);
 }
-weak_alias (__log2f, log2f)
+libm_alias_float (__log2, log2)
 #endif

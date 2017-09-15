@@ -20,6 +20,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -34,7 +35,7 @@ __j1f (float x)
 
   return __ieee754_j1f (x);
 }
-weak_alias (__j1f, j1f)
+libm_alias_float (__j1, j1)
 
 
 /* wrapper y1f */
@@ -64,5 +65,5 @@ __y1f (float x)
 
   return __ieee754_y1f (x);
 }
-weak_alias (__y1f, y1f)
+libm_alias_float (__y1, y1)
 #endif

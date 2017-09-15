@@ -20,6 +20,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -37,5 +38,5 @@ __acosf (float x)
 
   return __ieee754_acosf (x);
 }
-weak_alias (__acosf, acosf)
+libm_alias_float (__acos, acos)
 #endif

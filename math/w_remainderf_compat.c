@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -33,6 +34,6 @@ __remainderf (float x, float y)
 
   return __ieee754_remainderf (x, y);
 }
-weak_alias (__remainderf, remainderf)
+libm_alias_float (__remainder, remainder)
 weak_alias (__remainderf, dremf)
 #endif
