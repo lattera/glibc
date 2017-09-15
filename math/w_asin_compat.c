@@ -20,6 +20,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-double.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -37,9 +38,5 @@ __asin (double x)
 
   return __ieee754_asin (x);
 }
-weak_alias (__asin, asin)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__asin, __asinl)
-weak_alias (__asin, asinl)
-# endif
+libm_alias_double (__asin, asin)
 #endif

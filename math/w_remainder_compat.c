@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-double.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -33,11 +34,9 @@ __remainder (double x, double y)
 
   return __ieee754_remainder (x, y);
 }
-weak_alias (__remainder, remainder)
+libm_alias_double (__remainder, remainder)
 weak_alias (__remainder, drem)
 # ifdef NO_LONG_DOUBLE
-strong_alias (__remainder, __remainderl)
-weak_alias (__remainder, remainderl)
 weak_alias (__remainder, dreml)
 # endif
 #endif

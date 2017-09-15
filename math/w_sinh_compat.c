@@ -17,6 +17,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-double.h>
 
 #if LIBM_SVID_COMPAT
 double
@@ -29,9 +30,5 @@ __sinh (double x)
 
 	return z;
 }
-weak_alias (__sinh, sinh)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__sinh, __sinhl)
-weak_alias (__sinh, sinhl)
-# endif
+libm_alias_double (__sinh, sinh)
 #endif

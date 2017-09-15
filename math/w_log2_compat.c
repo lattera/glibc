@@ -20,6 +20,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-double.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -43,9 +44,5 @@ __log2 (double x)
 
   return  __ieee754_log2 (x);
 }
-weak_alias (__log2, log2)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__log2, __log2l)
-weak_alias (__log2, log2l)
-# endif
+libm_alias_double (__log2, log2)
 #endif

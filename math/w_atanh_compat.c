@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-double.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -35,9 +36,5 @@ __atanh (double x)
 
   return __ieee754_atanh (x);
 }
-weak_alias (__atanh, atanh)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__atanh, __atanhl)
-weak_alias (__atanh, atanhl)
-# endif
+libm_alias_double (__atanh, atanh)
 #endif

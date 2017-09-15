@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-double.h>
 
 double
 __fma (double x, double y, double z)
@@ -25,10 +26,5 @@ __fma (double x, double y, double z)
   return (x * y) + z;
 }
 #ifndef __fma
-weak_alias (__fma, fma)
-#endif
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__fma, __fmal)
-weak_alias (__fmal, fmal)
+libm_alias_double (__fma, fma)
 #endif

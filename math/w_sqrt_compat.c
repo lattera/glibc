@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-double.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -31,9 +32,5 @@ __sqrt (double x)
 
   return __ieee754_sqrt (x);
 }
-weak_alias (__sqrt, sqrt)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__sqrt, __sqrtl)
-weak_alias (__sqrt, sqrtl)
-# endif
+libm_alias_double (__sqrt, sqrt)
 #endif

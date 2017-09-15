@@ -24,6 +24,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-double.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -40,9 +41,5 @@ __atan2 (double y, double x)
     __set_errno (ERANGE);
   return z;
 }
-weak_alias (__atan2, atan2)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__atan2, __atan2l)
-weak_alias (__atan2, atan2l)
-# endif
+libm_alias_double (__atan2, atan2)
 #endif

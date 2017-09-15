@@ -1,5 +1,82 @@
 2017-09-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/s_fma.c: Include <libm-alias-double.h>.
+	(fma): Define using libm_alias_double.
+	* math/s_nextafter.c: Include <libm-alias-double.h>.
+	(nextafter): Define using libm_alias_double.
+	* math/w_acos_compat.c: Include <libm-alias-double.h>.
+	(acos): Define using libm_alias_double.
+	* math/w_acosh_compat.c: Include <libm-alias-double.h>.
+	(aocsh): Define using libm_alias_double.
+	* math/w_asin_compat.c: Include <libm-alias-double.h>.
+	(asin): Define using libm_alias_double.
+	* math/w_atan2_compat.c: Include <libm-alias-double.h>.
+	(atan2): Define using libm_alias_double.
+	* math/w_atanh_compat.c: Include <libm-alias-double.h>.
+	(atanh): Define using libm_alias_double.
+	* math/w_cosh_compat.c: Include <libm-alias-double.h>.
+	(cosh): Define using libm_alias_double.
+	* math/w_exp10_compat.c: Include <libm-alias-double.h>.
+	(exp10): Define using libm_alias_double.
+	* math/w_exp2_compat.c: Include <libm-alias-double.h>.
+	(exp2): Define using libm_alias_double.
+	* math/w_exp_compat.c: Include <libm-alias-double.h>.
+	(exp): Define using libm_alias_double.
+	* math/w_fmod_compat.c: Include <libm-alias-double.h>.
+	(fmod): Define using libm_alias_double.
+	* math/w_hypot_compat.c: Include <libm-alias-double.h>.
+	(hypot): Define using libm_alias_double.
+	* math/w_j0_compat.c: Include <libm-alias-double.h>.
+	(j0): Define using libm_alias_double.
+	(y0): Likewise.
+	* math/w_j1_compat.c: Include <libm-alias-double.h>.
+	(j1): Define using libm_alias_double.
+	(y1): Likewise.
+	* math/w_jn_compat.c: Include <libm-alias-double.h>.
+	(jn): Define using libm_alias_double.
+	(yn): Likewise.
+	* math/w_log10_compat.c: Include <libm-alias-double.h>.
+	(log10): Define using libm_alias_double.
+	* math/w_log2_compat.c: Include <libm-alias-double.h>.
+	(log2): Define using libm_alias_double.
+	* math/w_log_compat.c: Include <libm-alias-double.h>.
+	(log): Define using libm_alias_double.
+	* math/w_pow_compat.c: Include <libm-alias-double.h>.
+	(pow): Define using libm_alias_double.
+	* math/w_remainder_compat.c: Include <libm-alias-double.h>.
+	(remainder): Define using libm_alias_double.
+	* math/w_sinh_compat.c: Include <libm-alias-double.h>.
+	(sinh): Define using libm_alias_double.
+	* math/w_sqrt_compat.c: Include <libm-alias-double.h>.
+	(sqrt): Define using libm_alias_double.
+	* math/w_tgamma_compat.c: Include <libm-alias-double.h>.
+	(tgamma): Define using libm_alias_double.
+	* sysdeps/ieee754/ldbl-opt/s_nextafter.c [LONG_DOUBLE_COMPAT(libm,
+	GLIBC_2_0)] (nextafterl): Do not define compat symbol here.
+	* sysdeps/ieee754/ldbl-opt/w_exp10_compat.c
+	[LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)] (exp10l): Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_remainder_compat.c
+	[LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)] (remainderl): Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_acos_compat.c: Remove.
+	* sysdeps/ieee754/ldbl-opt/w_acosh_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_asin_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_atan2_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_atanh_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_cosh_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_exp_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_fmod_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_hypot_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_j0_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_j1_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_jn_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_log10_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_log2_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_log_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_pow_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_sinh_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_sqrt_compat.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/w_tgamma_compat.c: Likewise.
+
 	* math/e_acoshl.c: Remove.
 	* math/e_acosl.c: Likewise.
 	* math/e_asinl.c: Likewise.

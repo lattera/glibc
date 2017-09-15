@@ -20,6 +20,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-double.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -34,11 +35,7 @@ __jn (int n, double x)
 
   return __ieee754_jn (n, x);
 }
-weak_alias (__jn, jn)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__jn, __jnl)
-weak_alias (__jn, jnl)
-# endif
+libm_alias_double (__jn, jn)
 
 
 /* wrapper yn */
@@ -67,9 +64,5 @@ __yn (int n, double x)
 
   return __ieee754_yn (n, x);
 }
-weak_alias (__yn, yn)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__yn, __ynl)
-weak_alias (__yn, ynl)
-# endif
+libm_alias_double (__yn, yn)
 #endif
