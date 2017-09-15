@@ -23,6 +23,9 @@
 #define weak_alias(a,b)
 #undef strong_alias
 #define strong_alias(a,b)
+#undef compat_symbol
+#define compat_symbol(a,b,c,d)
+
 
 #define __isnan __isnan_ppc64
 #undef hidden_def

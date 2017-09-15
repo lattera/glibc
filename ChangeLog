@@ -1,3 +1,17 @@
+2017-09-15  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #21745]
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile:
+	[$(subdir) = math] (sysdep_calls): New variable.  Has the
+	previous contents of sysdep_routines, but re-sorted..
+	[$(subdir) = math] (sysdep_routines): Re-use the contents from
+	sysdep_calls.
+	[$(subdir) = math] (libm-sysdep_routines): Remove the functions
+	defined in sysdep_calls and replace by the respective m_* names.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-ppc64.S:
+	(compat_symbol): Undefine to avoid duplicated compat symbols in
+	libc.
+
 2017-09-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/s_fmaf.c: Include <libm-alias-float.h>.
