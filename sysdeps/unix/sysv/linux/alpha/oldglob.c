@@ -59,7 +59,9 @@ __old_glob (const char *pattern, int flags,
   correct.gl_closedir = pglob->gl_closedir;
   correct.gl_readdir = pglob->gl_readdir;
   correct.gl_opendir = pglob->gl_opendir;
-  correct.gl_lstat = pglob->gl_lstat;
+  /* Set gl_lstat and gl_stat for both gl_stat for compatibility with old
+     implementation that did not follow dangling symlinks.  */
+  correct.gl_lstat = pglob->gl_stat;
   correct.gl_stat = pglob->gl_stat;
 
   result = glob (pattern, flags, errfunc, &correct);
@@ -72,7 +74,7 @@ __old_glob (const char *pattern, int flags,
   pglob->gl_closedir = correct.gl_closedir;
   pglob->gl_readdir = correct.gl_readdir;
   pglob->gl_opendir = correct.gl_opendir;
-  pglob->gl_lstat = correct.gl_lstat;
+  /* Only need to restore gl_stat.  */
   pglob->gl_stat = correct.gl_stat;
 
   return result;

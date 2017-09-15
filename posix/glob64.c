@@ -20,6 +20,10 @@
 #include <glob.h>
 #include <errno.h>
 
+#ifdef GLOB_ATTRIBUTE
+# define GLOB_ATTRIBUTE
+#endif
+
 /* Do glob searching for PATTERN, placing results in PGLOB.
    The bits defined above may be set in FLAGS.
    If a directory cannot be opened or read and ERRFUNC is not nil,
@@ -29,6 +33,7 @@
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
 int
+GLOB_ATTRIBUTE
 glob64 (const char *pattern, int flags,
 	int (*errfunc) (const char *, int), glob64_t *pglob)
 {

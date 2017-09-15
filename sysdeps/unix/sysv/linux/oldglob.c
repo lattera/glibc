@@ -21,7 +21,7 @@ libc_hidden_proto (__old_glob64);
 #define __readdir(dirp) __old_readdir64 (dirp)
 
 #define glob_t glob64_t
-#define glob(pattern, flags, errfunc, pglob) \
+#define __glob(pattern, flags, errfunc, pglob) \
   __old_glob64 (pattern, flags, errfunc, pglob)
 #define globfree(pglob) globfree64(pglob)
 
@@ -32,6 +32,9 @@ libc_hidden_proto (__old_glob64);
 #define stat stat64
 #undef __stat
 #define __stat(file, buf) __xstat64 (_STAT_VER, file, buf)
+
+/* Avoid calling gl_lstat with GLOB_ALTDIRFUNC.  */
+#define GLOB_NO_LSTAT
 
 #define GLOB_ATTRIBUTE attribute_compat_text_section
 

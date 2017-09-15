@@ -20,9 +20,12 @@
 #include <kernel_stat.h>
 
 #define glob64 __no_glob64_decl
+#define __glob64 __no___glob64_decl
 #include <posix/glob.c>
 #undef glob64
+#undef __glob64
 
 #if XSTAT_IS_XSTAT64
-weak_alias (glob, glob64)
+strong_alias (__glob, __glob64)
+versioned_symbol (libc, __glob64, glob64, GLIBC_2_27);
 #endif

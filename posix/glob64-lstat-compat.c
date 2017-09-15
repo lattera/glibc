@@ -1,4 +1,4 @@
-/* Find pathnames matching a pattern.  Linux version.
+/* Compat glob which does not use gl_lstat for GLOB_ALTDIRFUNC.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,35 +16,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/stat.h>
-#include <kernel_stat.h>
+#include <shlib-compat.h>
 
-#if !XSTAT_IS_XSTAT64
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_27)
+
 # include <glob.h>
-# include <dirent.h>
-# include <sys/stat.h>
 
-# define dirent dirent64
-# define __readdir(dirp) __readdir64 (dirp)
+# define glob(pattern, flags, errfunc, pglob) \
+  __glob64_lstat_compat (pattern, flags, errfunc, pglob)
 
-# define glob_t glob64_t
-# define __glob __glob64
-# define globfree(pglob) globfree64 (pglob)
+# define GLOB_ATTRIBUTE attribute_compat_text_section
 
-# undef stat
-# define stat stat64
+/* Avoid calling gl_lstat with GLOB_ALTDIRFUNC.  */
+# define GLOB_NO_LSTAT
 
-# define COMPILE_GLOB64	1
+# include <posix/glob64.c>
 
-# include <posix/glob.c>
-
-# include <shlib-compat.h>
-
-# ifdef GLOB_NO_OLD_VERSION
-strong_alias (__glob64, glob64)
-libc_hidden_def (glob64)
-# else
-versioned_symbol (libc, __glob64, glob64, GLIBC_2_27);
-libc_hidden_ver (__glob64, glob64)
-# endif
-#endif /* XSTAT_IS_XSTAT64  */
+compat_symbol (libc, __glob64_lstat_compat, glob64, GLIBC_2_0);
+#endif

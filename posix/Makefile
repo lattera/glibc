@@ -46,6 +46,7 @@ routines :=								      \
 	getresuid getresgid setresuid setresgid				      \
 	pathconf sysconf fpathconf					      \
 	glob glob64 globfree globfree64 glob_pattern_p fnmatch regex	      \
+	glob-lstat-compat glob64-lstat-compat				      \
 	confstr								      \
 	getopt getopt1 							      \
 	sched_setp sched_getp sched_sets sched_gets sched_yield sched_primax  \
@@ -95,7 +96,8 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-posix_fadvise tst-posix_fadvise64 \
 		   tst-sysconf-empty-chroot tst-glob_symlinks tst-fexecve
 tests-internal	:= bug-regex5 bug-regex20 bug-regex33 \
-		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3
+		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3 \
+		   tst-glob_lstat_compat
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest

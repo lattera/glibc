@@ -1,3 +1,61 @@
+2017-09-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #22183]
+	* include/gnu-versions.h (_GNU_GLOB_INTERFACE_VERSION): Increase
+	version to 2.
+	* posix/Makefile (routines): Add glob-lstat-compat and
+	glob64-lstat-compat.
+	* posix/Versions (GLIBC_2.27, glob, glob64): Add symbol version.
+	* posix/glob-lstat-compat.c: New file.
+	* posix/glob64-lstat-compat.c: Likewise.
+	* posix/tst-glob_lstat_compat.c: Likewise.
+	* sysdeps/unix/sysv/linux/glob-lstat-compat.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/glob-lstat-compat.c: Likewise.
+	* sysdeps/unix/sysv/linux/glob64-lstat-compat.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/glob64-lstat-compat.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/glob.c: Remove file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/glob64.c: Likewise.
+	* posix/glob.c (glob_lstat): New function.
+	(glob): Rename to __glob and add versioned symbol to 2.27.
+	(glob_in_dir): Use glob_lstat.
+	* posix/glob64.c (glob64): Add GLOB_ATTRIBUTE.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/glob.c (glob): Add versioned symbol for
+	2.27.
+	* sysdeps/unix/sysv/linux/glob64.c (glob64): Likewise.
+	* sysdeps/unix/sysv/linux/oldglob.c (GLOB_NO_LSTAT): Define.
+	* sysdeps/unix/sysv/linux/alpha/oldglob.c (__old_glob): Do not use
+	gl_lstat on glob call.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist: Add GLIBC_2.27 glob
+	and glob64 symbols.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/linux/powerpc/powerpc32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise.
+
 2017-09-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* configure.ac (AS): Require binutils 2.25 or later.

@@ -45,7 +45,7 @@
 
 #define _GNU_OBSTACK_INTERFACE_VERSION	1 /* vs malloc/obstack.c */
 #define _GNU_REGEX_INTERFACE_VERSION	1 /* vs posix/regex.c */
-#define _GNU_GLOB_INTERFACE_VERSION	1 /* vs posix/glob.c */
+#define _GNU_GLOB_INTERFACE_VERSION	2 /* vs posix/glob.c */
 #define _GNU_GETOPT_INTERFACE_VERSION	2 /* vs posix/getopt.c and
 					     posix/getopt1.c */
 

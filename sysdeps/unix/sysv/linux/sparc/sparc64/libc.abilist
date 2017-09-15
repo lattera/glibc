@@ -1916,6 +1916,9 @@ GLIBC_2.26 preadv64v2 F
 GLIBC_2.26 pwritev2 F
 GLIBC_2.26 pwritev64v2 F
 GLIBC_2.26 reallocarray F
+GLIBC_2.27 GLIBC_2.27 A
+GLIBC_2.27 glob F
+GLIBC_2.27 glob64 F
 GLIBC_2.3 GLIBC_2.3 A
 GLIBC_2.3 __ctype_b_loc F
 GLIBC_2.3 __ctype_tolower_loc F
