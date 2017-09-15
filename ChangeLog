@@ -1,3 +1,8 @@
+2017-09-18  Wang Boshi  <wangboshi@huawei.com>  (tiny change)
+
+	* sysdeps/aarch64/start.S: Use MOVL instead of literal pools.
+	* sysdeps/aarch64/sysdep.h (MOVL): Add MOVL macro.
+
 2017-09-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* io/read.c (read): Add libc_hidden_weak.

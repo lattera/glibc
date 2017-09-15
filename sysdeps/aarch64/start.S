@@ -71,9 +71,9 @@ _start:
 	ldr     PTR_REG (4), [x4, #:got_lo12:__libc_csu_fini]
 #else
 	/* Set up the other arguments in registers */
-	ldr	PTR_REG (0), =main
-	ldr	PTR_REG (3), =__libc_csu_init
-	ldr	PTR_REG (4), =__libc_csu_fini
+	MOVL (0, main)
+	MOVL (3, __libc_csu_init)
+	MOVL (4, __libc_csu_fini)
 #endif
 
 	/* __libc_start_main (main, argc, argv, init, fini, rtld_fini,

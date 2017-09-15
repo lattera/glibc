@@ -137,6 +137,20 @@
 	ldr	PTR_REG (T), [x##T, #:got_lo12:EXPR];	\
 	OP	PTR_REG (R), [x##T];
 
+/* Load an immediate into R.
+   Note R is a register number and not a register name.  */
+#ifdef __LP64__
+# define MOVL(R, NAME)					\
+	movz	PTR_REG (R), #:abs_g3:NAME;		\
+	movk	PTR_REG (R), #:abs_g2_nc:NAME;		\
+	movk	PTR_REG (R), #:abs_g1_nc:NAME;		\
+	movk	PTR_REG (R), #:abs_g0_nc:NAME;
+#else
+# define MOVL(R, NAME)					\
+	movz	PTR_REG (R), #:abs_g1:NAME;		\
+	movk	PTR_REG (R), #:abs_g0_nc:NAME;
+#endif
+
 /* Since C identifiers are not normally prefixed with an underscore
    on this system, the asm identifier `syscall_error' intrudes on the
    C name space.  Make sure we use an innocuous name.  */
