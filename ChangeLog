@@ -408,7 +408,7 @@
 	* iconvdata/ibm858.c: New file.
 	* localedata/charmaps/IBM858: Likewise.
 
-2017-09-14  Akhilesh Kumar <akhilesh.k@samsung.com>
+2017-09-14  Akhilesh Kumar  <akhilesh.k@samsung.com>
 
 	[BZ #22023]
 	* locales/niu_NZ (LC_TIME): copy "niu_NU".
@@ -827,7 +827,7 @@
 
 	* localedata/locales/om_ET (LC_TIME): use ASCII for better readability.
 
-2017-09-07  Akhilesh Kumar <akhilesh.k@samsung.com>
+2017-09-07  Akhilesh Kumar  <akhilesh.k@samsung.com>
 
 	[BZ #22100]
 	* localedata/locales/om_KE (LC_TIME): copy "om_ET".
@@ -1108,7 +1108,7 @@
 	* debug/pcprofiledump.c (main): Use byte-swapped mask when
 	comparing word with byte-swapped constant.
 
-2017-09-05  Chris Leonard <cjlhomeaddress@gmail.com>
+2017-09-05  Chris Leonard  <cjlhomeaddress@gmail.com>
 
 	[BZ #20498]
 	* locale/iso-639.def: add Miskito.
@@ -2244,7 +2244,7 @@
 	* wcsmbs/btowc.c (__btowc): Demangle btowc_fct before checking
 	for NULL.
 
-2017-08-29  Akhilesh Kumar <akhilesh.k@samsung.com>
+2017-08-29  Akhilesh Kumar  <akhilesh.k@samsung.com>
 
 	[BZ #21971]
 	* locale/iso-639.def: add Morisyen.
