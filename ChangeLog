@@ -1,5 +1,10 @@
 2017-09-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/scripts/compare_strings.py: New option -g.
+	(draw_graph): Print a message that a graph is being generated.
+	(process_results): Generate graph only if -g is passed.
+	(main): Process option -g.
+
 	* benchtests/scripts/compare_strings.py (process_results):
 	Better spacing for output.
 

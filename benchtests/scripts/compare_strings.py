@@ -57,6 +57,7 @@ def draw_graph(f, v, ifuncs, results):
         ifuncs: List of ifunc names
         results: Dictionary of results for each test criterion
     """
+    print('Generating graph for %s, variant \'%s\'' % (f, v))
     xkeys = results.keys()
 
     pylab.clf()
@@ -78,7 +79,7 @@ def draw_graph(f, v, ifuncs, results):
     pylab.savefig('%s-%s.png' % (f, v), bbox_inches='tight')
 
 
-def process_results(results, attrs, base_func):
+def process_results(results, attrs, base_func, graph):
     """ Process results and print them
 
     Args:
@@ -113,7 +114,9 @@ def process_results(results, attrs, base_func):
                 sys.stdout.write('\t')
                 i = i + 1
             print('')
-        draw_graph(f, v, results['functions'][f]['ifuncs'], graph_res)
+
+        if graph:
+            draw_graph(f, v, results['functions'][f]['ifuncs'], graph_res)
 
 
 def main(args):
@@ -129,7 +132,7 @@ def main(args):
     attrs = args.attributes.split(',')
 
     results = parse_file(args.input, args.schema)
-    process_results(results, attrs, base_func)
+    process_results(results, attrs, base_func, args.graph)
 
 
 if __name__ == '__main__':
@@ -147,6 +150,8 @@ if __name__ == '__main__':
     # Optional arguments.
     parser.add_argument('-b', '--base',
                         help='IFUNC variant to set as baseline.')
+    parser.add_argument('-g', '--graph', action='store_true',
+                        help='Generate a graph from results.')
 
     args = parser.parse_args()
     main(args)
