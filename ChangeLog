@@ -3622,7 +3622,7 @@
 	(getpublickey, getsecretkey): Call __nss_publickey_lookup2
 	instead.
 
-2017-08-14 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+2017-08-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Sergei Trofimovich  <slyfox@inbox.ru>
 
 	[BZ #21908]
