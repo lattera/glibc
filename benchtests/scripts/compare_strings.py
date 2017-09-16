@@ -88,26 +88,28 @@ def process_results(results, attrs, base_func):
 
     for f in results['functions'].keys():
         print('Function: %s' % f)
+        v = results['functions'][f]['bench-variant']
+        print('Variant: %s' % v)
+
         base_index = 0
         if base_func:
             base_index = results['functions'][f]['ifuncs'].index(base_func)
 
-        print('\t'.join(results['functions'][f]['ifuncs']))
-        v = results['functions'][f]['bench-variant']
-        print('Variant: %s' % v)
-        print("=" * 80)
+        print("%36s%s" % (' ', '\t'.join(results['functions'][f]['ifuncs'])))
+        print("=" * 120)
         graph_res = {}
         for res in results['functions'][f]['results']:
             attr_list = ['%s=%s' % (a, res[a]) for a in attrs]
             i = 0
-            key = ','.join(attr_list)
-            sys.stdout.write('%s: \t' % key)
+            key = ', '.join(attr_list)
+            sys.stdout.write('%36s: ' % key)
             graph_res[key] = res['timings']
             for t in res['timings']:
-                sys.stdout.write ('%.2f' % t)
+                sys.stdout.write ('%12.2f' % t)
                 if i != base_index:
-                    diff = (res['timings'][base_index] - t) * 100 / res['timings'][base_index]
-                    sys.stdout.write (' (%.2f%%)' % diff)
+                    base = res['timings'][base_index]
+                    diff = (base - t) * 100 / base
+                    sys.stdout.write (' (%6.2f%%)' % diff)
                 sys.stdout.write('\t')
                 i = i + 1
             print('')

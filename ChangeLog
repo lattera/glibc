@@ -1,5 +1,8 @@
 2017-09-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/scripts/compare_strings.py (process_results):
+	Better spacing for output.
+
 	* benchtests/scripts/compare_strings.py: Use argparse.
 	* benchtests/README: Document existence of compare_strings.py.
 
