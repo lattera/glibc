@@ -28,6 +28,7 @@ import sys
 import os
 import json
 import pylab
+import argparse
 
 try:
     import jsonschema as validator
@@ -118,22 +119,32 @@ def main(args):
 
     Take a string benchmark output file and compare timings.
     """
-    if len(args) < 3:
-        print('Usage: %s <input file> <schema file> [-base=ifunc_name] attr1 [attr2 ...]' % sys.argv[0])
-        sys.exit(os.EX_USAGE)
 
     base_func = None
-    filename = args[0]
-    schema_filename = args[1]
-    if args[2].find('-base=') == 0:
-        base_func = args[2][6:]
-        attrs = args[3:]
-    else:
-        attrs = args[2:]
+    filename = args.input
+    schema_filename = args.schema
+    base_func = args.base
+    attrs = args.attributes.split(',')
 
-    results = parse_file(filename, schema_filename)
+    results = parse_file(args.input, args.schema)
     process_results(results, attrs, base_func)
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    parser = argparse.ArgumentParser()
+
+    # The required arguments.
+    req = parser.add_argument_group(title='required arguments')
+    req.add_argument('-a', '--attributes', required=True,
+                        help='Comma separated list of benchmark attributes.')
+    req.add_argument('-i', '--input', required=True,
+                        help='Input JSON benchmark result file.')
+    req.add_argument('-s', '--schema', required=True,
+                        help='Schema file to validate the result file.')
+
+    # Optional arguments.
+    parser.add_argument('-b', '--base',
+                        help='IFUNC variant to set as baseline.')
+
+    args = parser.parse_args()
+    main(args)

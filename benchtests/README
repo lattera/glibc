@@ -122,3 +122,14 @@ To add a benchset for `foo':
 - Write your bench-foo.c that prints out the measurements to stdout.
 - On execution, a bench-foo.out is created in $(objpfx) with the contents of
   stdout.
+
+Reading String Benchmark Results:
+================================
+
+Some of the string benchmark results are now in JSON to make it easier to read
+in scripts.  Use the benchtests/compare_strings.py script to show the results
+in a tabular format, generate graphs and more. Run
+
+    benchtests/scripts/compare_strings.py -h
+
+for usage information.

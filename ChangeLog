@@ -1,3 +1,8 @@
+2017-09-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* benchtests/scripts/compare_strings.py: Use argparse.
+	* benchtests/README: Document existence of compare_strings.py.
+
 2017-09-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/s_fma.c: Include <libm-alias-double.h>.
