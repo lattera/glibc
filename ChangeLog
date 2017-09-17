@@ -1,3 +1,13 @@
+2017-09-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* io/read.c (read): Add libc_hidden_weak.
+	* sysdeps/mach/hurd/read.c (read): Likewise.
+	* io/write.c (write): Likewise.
+	* sysdeps/mach/hurd/write.c (write): Likewise.
+	* io/pread64.c (__pread64): Likewise.
+	* sysdeps/mach/hurd/pread64.c (__pread64): Likewise.
+	* posix/pread64.c (__pread64): Add libc_hidden_def.
+
 2017-09-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/scripts/compare_strings.py: New option -g.

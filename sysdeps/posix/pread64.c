@@ -58,5 +58,6 @@ __libc_pread64 (int fd, void *buf, size_t nbyte, off64_t offset)
 
 #ifndef __libc_pread64
 weak_alias (__libc_pread64, __pread64)
+libc_hidden_weak (__pread64)
 weak_alias (__libc_pread64, pread64)
 #endif
