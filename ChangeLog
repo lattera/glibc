@@ -1,5 +1,16 @@
 2017-09-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/ldbl-opt/w_exp10l_compat.c [LIBM_SVID_COMPAT &&
+	!LONG_DOUBLE_COMPAT (libm, GLIBC_2_1)] (weak_alias): Undefine and
+	redefine.
+	[LIBM_SVID_COMPAT && !LONG_DOUBLE_COMPAT (libm, GLIBC_2_1)]
+	(exp10l): Define as weak alias.
+	* sysdeps/ieee754/ldbl-opt/w_remainderl_compat.c [LIBM_SVID_COMPAT
+	&& !LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)] (weak_alias): Undefine
+	and redefine.
+	[LIBM_SVID_COMPAT && !LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)]
+	(remainderl): Define as weak alias.
+
 	* math/s_fmal.c: Include <libm-alias-ldouble.h>.
 	(fmal): Define using libm_alias_ldouble.
 	* math/w_acoshl_compat.c: Include <libm-alias-ldouble.h>.

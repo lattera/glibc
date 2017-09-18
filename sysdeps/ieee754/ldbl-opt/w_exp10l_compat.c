@@ -5,6 +5,14 @@
 #define compat_symbol(l,n,a,v)
 #include <math/w_exp10l_compat.c>
 #if LIBM_SVID_COMPAT
+# if !LONG_DOUBLE_COMPAT (libm, GLIBC_2_1)
+/* If ldbl-opt is used without special versioning for exp10l being
+   required, the generic code does not define exp10l because of the
+   undefine and redefine of weak_alias above.  */
+#  undef weak_alias
+#  define weak_alias(name, aliasname) _weak_alias (name, aliasname)
+weak_alias (__exp10l, exp10l)
+# endif
 # if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_27)
 /* compat_symbol was undefined and redefined above to avoid the
    default pow10l compat symbol at version GLIBC_2_1 (as for ldbl-opt
