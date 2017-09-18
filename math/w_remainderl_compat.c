@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-ldouble.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -33,6 +34,6 @@ __remainderl (long double x, long double y)
 
   return __ieee754_remainderl (x, y);
 }
-weak_alias (__remainderl, remainderl)
+libm_alias_ldouble (__remainder, remainder)
 weak_alias (__remainderl, dreml)
 #endif

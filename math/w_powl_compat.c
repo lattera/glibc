@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-ldouble.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -59,5 +60,5 @@ __powl (long double x, long double y)
 
   return z;
 }
-weak_alias (__powl, powl)
+libm_alias_ldouble (__pow, pow)
 #endif

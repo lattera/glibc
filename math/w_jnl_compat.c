@@ -47,6 +47,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-ldouble.h>
 
 #if LIBM_SVID_COMPAT
 long double __jnl(int n, long double x)	/* wrapper jnl */
@@ -66,7 +67,7 @@ long double __jnl(int n, long double x)	/* wrapper jnl */
 	    return z;
 # endif
 }
-weak_alias (__jnl, jnl)
+libm_alias_ldouble (__jn, jn)
 
 long double __ynl(int n, long double x)	/* wrapper ynl */
 {
@@ -90,5 +91,5 @@ long double __ynl(int n, long double x)	/* wrapper ynl */
 	    return z;
 # endif
 }
-weak_alias (__ynl, ynl)
+libm_alias_ldouble (__yn, yn)
 #endif

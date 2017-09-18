@@ -18,10 +18,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-ldouble.h>
 
 long double
 __fmal (long double x, long double y, long double z)
 {
   return (x * y) + z;
 }
-weak_alias (__fmal, fmal)
+libm_alias_ldouble (__fma, fma)

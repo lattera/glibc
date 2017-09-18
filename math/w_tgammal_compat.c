@@ -22,6 +22,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-ldouble.h>
 
 #if LIBM_SVID_COMPAT
 long double
@@ -44,5 +45,5 @@ __tgammal(long double x)
 	}
 	return local_signgam < 0 ? - y : y;
 }
-weak_alias (__tgammal, tgammal)
+libm_alias_ldouble (__tgamma, tgamma)
 #endif

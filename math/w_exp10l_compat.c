@@ -24,6 +24,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-ldouble.h>
 
 #if LIBM_SVID_COMPAT
 long double
@@ -37,7 +38,7 @@ __exp10l (long double x)
 
   return z;
 }
-weak_alias (__exp10l, exp10l)
+libm_alias_ldouble (__exp10, exp10)
 # if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_27)
 strong_alias (__exp10l, __pow10l)
 compat_symbol (libm, __pow10l, pow10l, GLIBC_2_1);

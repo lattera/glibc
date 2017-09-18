@@ -25,6 +25,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-ldouble.h>
 
 #if LIBM_SVID_COMPAT
 long double __expl(long double x)	/* wrapper exp */
@@ -41,5 +42,5 @@ long double __expl(long double x)	/* wrapper exp */
 # endif
 }
 hidden_def (__expl)
-weak_alias (__expl, expl)
+libm_alias_ldouble (__exp, exp)
 #endif
