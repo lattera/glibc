@@ -59,7 +59,7 @@ array_size_must_fail (size_t a, size_t b)
 		  pass, a, b);
 	  return false;
 	}
-      if (buf.data != buf.__space)
+      if (buf.data != buf.__space.__c)
 	{
 	  printf ("scratch_buffer_set_array_size did not free: %d %zu %zu\n",
 		  pass, a, b);

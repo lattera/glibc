@@ -1,5 +1,11 @@
 2017-09-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* lib/malloc/scratch_buffer.h (struct scratch_buffer):
+	Use an union instead of a max_align_t array for __space,
+	so that __space is the same size on all platforms.
+	* malloc/scratch_buffer_grow_preserve.c
+	(__libc_scratch_buffer_grow_preserve): Likewise.
+
 	[BZ #22183]
 	* include/gnu-versions.h (_GNU_GLOB_INTERFACE_VERSION): Increase
 	version to 2.
