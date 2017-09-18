@@ -1346,8 +1346,13 @@ example, @code{%Ex} might yield a date format based on the Japanese
 Emperors' reigns.
 
 @item O
-Use the locale's alternate numeric symbols for numbers.  This modifier
-applies only to numeric format specifiers.
+With all format specifiers that produce numbers: use the locale's
+alternate numeric symbols.
+
+With @code{%B} and @code{%b}: use the grammatical form for month names
+that is appropriate when the month is named by itself, rather than
+the form that is appropriate when the month is used as part of a
+complete date.  This is a GNU extension.
 @end table
 
 If the format supports the modifier but no alternate representation
@@ -1365,13 +1370,21 @@ The abbreviated weekday name according to the current locale.
 The full weekday name according to the current locale.
 
 @item %b
-The abbreviated month name according to the current locale.
+The abbreviated month name according to the current locale, in the
+grammatical form used when the month is part of a complete date.
+As a GNU extension, the @code{O} modifier can be used (@code{%Ob})
+to get the grammatical form used when the month is named by itself.
 
 @item %B
-The full month name according to the current locale.
+The full month name according to the current locale, in the
+grammatical form used when the month is part of a complete date.
+As a GNU extension, the @code{O} modifier can be used (@code{%OB})
+to get the grammatical form used when the month is named by itself.
 
-Using @code{%B} together with @code{%d} produces grammatically
-incorrect results for some locales.
+Note that not all languages need two different forms of the month
+names, so the text produced by @code{%B} and @code{%OB}, and by
+@code{%b} and @code{%Ob}, may or may not be the same, depending on
+the locale.
 
 @item %c
 The preferred calendar time representation for the current locale.
@@ -1778,8 +1791,14 @@ the full name.
 @item %b
 @itemx %B
 @itemx %h
-The month name according to the current locale, in abbreviated form or
-the full name.
+A month name according to the current locale.  All three specifiers
+will recognize both abbreviated and full month names.  If the
+locale provides two different grammatical forms of month names,
+all three specifiers will recognize both forms.
+
+As a GNU extension, the @code{O} modifier can be used with these
+specifiers; it has no effect, as both grammatical forms of month
+names are recognized.
 
 @item %c
 The date and time representation for the current locale.

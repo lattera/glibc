@@ -923,7 +923,7 @@ corresponds to Sunday.
 @itemx DAY_5
 @itemx DAY_6
 @itemx DAY_7
-Similar to @code{ABDAY_1} etc., but here the return value is the
+Similar to @code{ABDAY_1} etc.,@: but here the return value is the
 unabbreviated weekday name.
 @item ABMON_1
 @itemx ABMON_2
@@ -937,7 +937,8 @@ unabbreviated weekday name.
 @itemx ABMON_10
 @itemx ABMON_11
 @itemx ABMON_12
-The return value is abbreviated name of the month.  @code{ABMON_1}
+The return value is the abbreviated name of the month, in the grammatical
+form used when the month forms part of a complete date.  @code{ABMON_1}
 corresponds to January.
 @item MON_1
 @itemx MON_2
@@ -951,8 +952,27 @@ corresponds to January.
 @itemx MON_10
 @itemx MON_11
 @itemx MON_12
-Similar to @code{ABMON_1} etc., but here the month names are not abbreviated.
+Similar to @code{ABMON_1} etc.,@: but here the month names are not abbreviated.
 Here the first value @code{MON_1} also corresponds to January.
+@item ALTMON_1
+@itemx ALTMON_2
+@itemx ALTMON_3
+@itemx ALTMON_4
+@itemx ALTMON_5
+@itemx ALTMON_6
+@itemx ALTMON_7
+@itemx ALTMON_8
+@itemx ALTMON_9
+@itemx ALTMON_10
+@itemx ALTMON_11
+@itemx ALTMON_12
+Similar to @code{MON_1} etc.,@: but here the month names are in the grammatical
+form used when the month is named by itself.  The @code{strftime} functions
+use these month names for the format specifier @code{OB}.
+
+Note that not all languages need two different forms of the month names,
+so the strings returned for @code{MON_@dots{}} and @code{ALTMON_@dots{}}
+may or may not be the same, depending on the locale.
 @item AM_STR
 @itemx PM_STR
 The return values are strings which can be used in the representation of time

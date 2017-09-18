@@ -1,6 +1,15 @@
 2018-01-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
+	* manual/locale.texi: Document ALTMON_1..12 constants for
+	nl_langinfo.  Specify when to use ALTMON instead of MON.
+	* manual/time.texi (strftime, strptime): Document GNU extension
+	permitting O modifier with %B and %b.  Specify when to use
+	%OB instead of %B.
+
+2018-01-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10871]
 	* locale/C-time.c (_nl_C_LC_TIME): Add abbreviated alternative month
 	names, define them as the same as abbreviated month names explicitly.
 	* locale/categories.def (LC_TIME): Add ab_alt_mon and wide-ab_alt_mon.

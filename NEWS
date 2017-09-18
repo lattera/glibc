@@ -69,6 +69,30 @@ Major new features:
   collation ordering.  Previous glibc versions used locale-specific
   ordering, the change might break systems that relied on that.
 
+* Support for two grammatical forms of month names has been added.
+  In a call to strftime, the "%B" and "%b" format specifiers will now
+  produce the grammatical form required when the month is used as part
+  of a complete date.  New "%OB" and "%Ob" specifiers produce the form
+  required when the month is named by itself.  For instance, in Greek
+  and in many Slavic and Baltic languages, "%B" will produce the month
+  in genitive case, and "%OB" will produce the month in nominative case.
+
+  In a call to strptime, "%B", "%b", "%h", "%OB", "%Ob", and "%Oh"
+  are all valid and will all accept any known form of month
+  name---standalone or complete, abbreviated or full.  In a call to
+  nl_langinfo, the query constants MON_1..12 and ABMON_1..12 return
+  the strings used by "%B" and "%b", respectively.  New query
+  constants ALTMON_1..12 and _NL_ABALTMON_1..12 return the strings
+  used by "%OB" and "%Ob", respectively.
+
+  In a locale definition file, use "alt_mon" and "ab_alt_mon" to
+  define the strings for %OB and %Ob, respectively; these have the
+  same syntax as "mon" and "ab_mon".
+
+  This feature is currently a GNU extension, but it is expected to
+  be added to the next revision of POSIX, and it is also already
+  available on some BSD-derived operating systems.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for statically linked applications which call dlopen is deprecated
