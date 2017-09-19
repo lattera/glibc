@@ -1,3 +1,9 @@
+2017-09-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/fexecve.c (fexecve) [__NR_execveat]:
+	Explicitly take address of first element of array arguments in
+	call to INLINE_SYSCALL.
+
 2017-09-19  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #22134]
