@@ -1,3 +1,7 @@
+2017-09-19  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/memset.S: Avoid misaligned stores.
+
 2017-09-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-opt/w_exp10l_compat.c [LIBM_SVID_COMPAT &&

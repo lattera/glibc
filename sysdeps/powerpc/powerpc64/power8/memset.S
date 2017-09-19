@@ -377,7 +377,10 @@ L(write_LT_32):
 	subf	r5,r0,r5
 
 2:	bf	30,1f
-	sth	r4,0(r10)
+	/* Use stb instead of sth because it doesn't generate
+	   alignment interrupts on cache-inhibited storage.  */
+	stb	r4,0(r10)
+	stb	r4,1(r10)
 	addi	r10,r10,2
 
 1:	bf	31,L(end_4bytes_alignment)
@@ -437,11 +440,74 @@ L(tail5):
 	/* Handles copies of 0~8 bytes.  */
 	.align	4
 L(write_LE_8):
-	bne	cr6,L(tail4)
+	bne	cr6,L(LE7_tail4)
+	/* If input is word aligned, use stw, else use stb.  */
+	andi.	r0,r10,3
+	bne	L(8_unalign)
 
 	stw	r4,0(r10)
 	stw	r4,4(r10)
 	blr
+
+	/* Unaligned input and size is 8.  */
+	.align	4
+L(8_unalign):
+	andi.	r0,r10,1
+	beq	L(8_hwalign)
+	stb	r4,0(r10)
+	sth	r4,1(r10)
+	sth	r4,3(r10)
+	sth	r4,5(r10)
+	stb	r4,7(r10)
+	blr
+
+	/* Halfword aligned input and size is 8.  */
+	.align	4
+L(8_hwalign):
+	sth	r4,0(r10)
+	sth	r4,2(r10)
+	sth	r4,4(r10)
+	sth	r4,6(r10)
+	blr
+
+	.align	4
+	/* Copies 4~7 bytes.  */
+L(LE7_tail4):
+	/* Use stb instead of sth because it doesn't generate
+	   alignment interrupts on cache-inhibited storage.  */
+	bf	29,L(LE7_tail2)
+	stb	r4,0(r10)
+	stb	r4,1(r10)
+	stb	r4,2(r10)
+	stb	r4,3(r10)
+	bf	30,L(LE7_tail5)
+	stb	r4,4(r10)
+	stb	r4,5(r10)
+	bflr	31
+	stb	r4,6(r10)
+	blr
+
+	.align	4
+	/* Copies 2~3 bytes.  */
+L(LE7_tail2):
+	bf	30,1f
+	stb	r4,0(r10)
+	stb	r4,1(r10)
+	bflr	31
+	stb	r4,2(r10)
+	blr
+
+	.align	4
+L(LE7_tail5):
+	bflr	31
+	stb	r4,4(r10)
+	blr
+
+	.align	4
+1: 	bflr	31
+	stb	r4,0(r10)
+	blr
+
 END_GEN_TB (MEMSET,TB_TOCLESS)
 libc_hidden_builtin_def (memset)
 
