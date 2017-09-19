@@ -1,3 +1,9 @@
+2017-09-20  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* benchtests/Makefile: Add exp2f and log2f benchmarks.
+	* benchtests/exp2f-inputs: Copy of expf-inputs.
+	* benchtests/log2f-inputs: Copy of logf-inputs.
+
 2017-09-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/fexecve.c (fexecve) [__NR_execveat]:
