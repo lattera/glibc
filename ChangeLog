@@ -1,3 +1,11 @@
+2017-09-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* benchtests/Makefile (bench-math): Add trunc and truncf.
+	(CFLAGS-bench-trunc.c): New variable.
+	(CFLAGS-bench-truncf.c): Likewise.
+	* benchtests/trunc-inputs: New file.
+	* benchtests/truncf-inputs: Likewise.
+
 2017-09-19  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power8/memset.S: Avoid misaligned stores.
