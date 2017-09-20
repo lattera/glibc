@@ -1,3 +1,9 @@
+2017-09-22  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	[BZ #22146]
+	math/math.h: Let fpclassify use the builtin in C++ mode, even
+	when optimazing for size.
+
 2017-09-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* csu/Makefile (generated): Do not add version-info.h.

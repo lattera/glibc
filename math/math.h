@@ -432,7 +432,13 @@ enum
 
 /* Return number of classification appropriate for X.  */
 # if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__			      \
-     && !defined __OPTIMIZE_SIZE__
+     && (!defined __OPTIMIZE_SIZE__ || defined __cplusplus)
+     /* The check for __cplusplus allows the use of the builtin, even
+	when optimization for size is on.  This is provided for
+	libstdc++, only to let its configure test work when it is built
+	with -Os.  No further use of this definition of fpclassify is
+	expected in C++ mode, since libstdc++ provides its own version
+	of fpclassify in cmath (which undefines fpclassify).  */
 #  define fpclassify(x) __builtin_fpclassify (FP_NAN, FP_INFINITE,	      \
      FP_NORMAL, FP_SUBNORMAL, FP_ZERO, x)
 # else
