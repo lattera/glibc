@@ -1,3 +1,25 @@
+2017-09-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
+            Ricky Zhou  <rickyz@google.com>
+            Anoop V Chakkalakkal  <anoop.vijayan@in.ibm.com>
+
+	[BZ #14333]
+	* stdlib/cxa_atexit.c (__internal_atexit): Use __exit_funcs_lock.
+	Remove atomics.
+	(__new_exitfn): Fail registration when we finished at_exit processing.
+	* stdlib/cxa_finalize.c (__cxa_finalize): Likewise.
+	* stdlib/on_exit.c (__on_exit): Likewise.
+	* stdlib/exit.c (__exit_funcs_done): New variable.
+	(__run_exit_handlers): Use __exit_funcs_lock.
+	* stdlib/exit.h (__exit_funcs_lock, __exit_funcs_done): New
+	declarations.
+	* stdlib/Makefile (test-atexit-race, test-quick_at_exit-race)
+	(test-cxa_atexit-race, test-on_exit-race): New tests.
+	* stdlib/test-atexit-race-common.c: New file.
+	* stdlib/test-atexit-race.c: New file.
+	* stdlib/test-at_quick_exit-race.c: New file.
+	* stdlib/test-cxa_atexit-race.c: New file.
+	* stdlib/test-on_exit-race.c: New file.
+
 2017-09-20  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* benchtests/Makefile: Add exp2f and log2f benchmarks.

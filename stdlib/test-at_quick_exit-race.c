@@ -1,4 +1,6 @@
-/* Copyright (C) 1991-2017 Free Software Foundation, Inc.
+/* Bug 14333: a test for at_quick_exit/quick_exit race.
+
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,32 +17,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stdlib.h>
-#include "exit.h"
-#include <sysdep.h>
+/* This file must be run from within a directory called "stdlib".  */
 
-/* Register a function to be called by exit.  */
-int
-__on_exit (void (*func) (int status, void *arg), void *arg)
+/* See stdlib/test-atexit-race-common.c for details on this test.  */
+
+#define CALL_ATEXIT at_quick_exit (&no_op)
+#define CALL_EXIT quick_exit (0)
+
+static void
+no_op (void)
 {
-  struct exit_function *new;
-
-   __libc_lock_lock (__exit_funcs_lock);
-  new = __new_exitfn (&__exit_funcs);
-
-  if (new == NULL)
-    {
-      __libc_lock_unlock (__exit_funcs_lock);
-      return -1;
-    }
-
-#ifdef PTR_MANGLE
-  PTR_MANGLE (func);
-#endif
-  new->func.on.fn = func;
-  new->func.on.arg = arg;
-  new->flavor = ef_on;
-  __libc_lock_unlock (__exit_funcs_lock);
-  return 0;
 }
-weak_alias (__on_exit, on_exit)
+
+#include <stdlib/test-atexit-race-common.c>

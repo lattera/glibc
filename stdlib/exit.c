@@ -19,11 +19,16 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sysdep.h>
+#include <libc-lock.h>
 #include "exit.h"
 
 #include "set-hooks.h"
 DEFINE_HOOK (__libc_atexit, (void))
 
+/* Initialize the flag that indicates exit function processing
+   is complete. See concurrency notes in stdlib/exit.h where
+   __exit_funcs_lock is declared.  */
+bool __exit_funcs_done = false;
 
 /* Call all functions registered with `atexit' and `on_exit',
    in the reverse of the order in which they were registered
@@ -44,14 +49,32 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
      the functions registered with `atexit' and `on_exit'. We call
      everyone on the list and use the status value in the last
      exit (). */
-  while (*listp != NULL)
+  while (true)
     {
-      struct exit_function_list *cur = *listp;
+      struct exit_function_list *cur;
+
+      __libc_lock_lock (__exit_funcs_lock);
+
+    restart:
+      cur = *listp;
+
+      if (cur == NULL)
+	{
+	  /* Exit processing complete.  We will not allow any more
+	     atexit/on_exit registrations.  */
+	  __exit_funcs_done = true;
+	  __libc_lock_unlock (__exit_funcs_lock);
+	  break;
+	}
 
       while (cur->idx > 0)
 	{
 	  const struct exit_function *const f =
 	    &cur->fns[--cur->idx];
+	  const uint64_t new_exitfn_called = __new_exitfn_called;
+
+	  /* Unlock the list while we call a foreign function.  */
+	  __libc_lock_unlock (__exit_funcs_lock);
 	  switch (f->flavor)
 	    {
 	      void (*atfct) (void);
@@ -83,6 +106,13 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 	      cxafct (f->func.cxa.arg, status);
 	      break;
 	    }
+	  /* Re-lock again before looking at global state.  */
+	  __libc_lock_lock (__exit_funcs_lock);
+
+	  if (__glibc_unlikely (new_exitfn_called != __new_exitfn_called))
+	    /* The last exit function, or another thread, has registered
+	       more exit functions.  Start the loop over.  */
+	    goto restart;
 	}
 
       *listp = cur->next;
@@ -90,6 +120,8 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 	/* Don't free the last element in the chain, this is the statically
 	   allocate element.  */
 	free (cur);
+
+      __libc_lock_unlock (__exit_funcs_lock);
     }
 
   if (run_list_atexit)
