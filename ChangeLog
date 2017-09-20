@@ -1,3 +1,15 @@
+2017-09-20  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20142]
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Add s_trunc-c, s_truncf-c, s_trunc-sse4_1 and s_truncf-sse4_1.
+	* sysdeps/x86_64/fpu/multiarch/s_trunc-c.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_trunc-sse4_1.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_trunc.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_truncf-c.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_truncf-sse4_1.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_truncf.c: Likewise.
+
 2017-09-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
             Ricky Zhou  <rickyz@google.com>
             Anoop V Chakkalakkal  <anoop.vijayan@in.ibm.com>

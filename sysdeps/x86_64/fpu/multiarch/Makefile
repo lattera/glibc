@@ -1,10 +1,12 @@
 ifeq ($(subdir),math)
 libm-sysdep_routines += s_floor-c s_ceil-c s_floorf-c s_ceilf-c \
-			s_rint-c s_rintf-c s_nearbyint-c s_nearbyintf-c
+			s_rint-c s_rintf-c s_nearbyint-c s_nearbyintf-c \
+			s_trunc-c s_truncf-c
 
 libm-sysdep_routines += s_ceil-sse4_1 s_ceilf-sse4_1 s_floor-sse4_1 \
 			s_floorf-sse4_1 s_nearbyint-sse4_1 \
-			s_nearbyintf-sse4_1 s_rint-sse4_1 s_rintf-sse4_1
+			s_nearbyintf-sse4_1 s_rint-sse4_1 s_rintf-sse4_1 \
+			s_trunc-sse4_1 s_truncf-sse4_1
 
 libm-sysdep_routines += e_exp-fma e_log-fma e_pow-fma s_atan-fma \
 			e_asin-fma e_atan2-fma s_sin-fma s_tan-fma \
