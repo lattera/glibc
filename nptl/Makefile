@@ -677,11 +677,6 @@ generated += libpthread_nonshared.a \
 generated += $(objpfx)tst-atfork2.mtrace \
 	     $(addsuffix .so,$(strip $(modules-names)))
 
-$(objpfx)version.d: $(objpfx)banner.h
-$(objpfx)version.os: $(objpfx)banner.h
-$(objpfx)banner.h: Banner
-	sed 's/\(.*\)/"\1\\n"/' $< > $@
-generated += banner.h
 # Give libpthread.so an entry point and make it directly runnable itself.
 LDFLAGS-pthread.so += -e __nptl_main
 # pt-interp.c exists just to get the runtime linker path into libpthread.so.

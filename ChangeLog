@@ -1,3 +1,16 @@
+2017-09-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* crypt/Banner: Remove file.
+	* nptl/Banner: Likewise.
+	* resolv/Banner: Likewise.
+	* soft-fp/Banner: Likewise.
+	* nptl/Makefile ($(objpfx)banner.h): Remove rule.
+	($(objpfx)version.d): Remove dependency on banner.h.
+	($(objpfx)version.os): Likewise.
+	* nptl/version.c (banner): Do not include banner.h.
+	* manual/contrib.texi: Update entries for Richard Henderson, Jakub
+	Jelinek and BIND code.
+
 2017-09-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
 	    Carlos O'Donell  <carlos@redhat.com>
 

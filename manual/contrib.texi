@@ -149,7 +149,7 @@ implementations.
 
 @item
 Richard Henderson for the port to Linux on Alpha
-(@code{alpha-@var{anything}-linux}).
+(@code{alpha-@var{anything}-linux}) and software floating-point support.
 
 @item
 David Holsgrove for the port to Linux on MicroBlaze.
@@ -171,7 +171,8 @@ Aurelien Jarno for various fixes.
 Rical Jasan for contributing various fixes in @theglibc{} manual.
 
 @item
-Jakub Jelinek for implementing a number of checking functions and for
+Jakub Jelinek for implementing a number of checking functions,
+software floating-point support and for
 his direction as part of @theglibc{} steering committee.
 
 @item
@@ -450,7 +451,7 @@ code were written by Craig Metz; see the file @file{LICENSES} for
 details on their licensing.
 
 @item
-The DNS resolver code is taken directly from BIND 4.9.5, which
+The DNS resolver code is taken directly from BIND 8.2.3-T5B, which
 includes copyrighted code from UC Berkeley and from Digital Equipment
 Corporation.  See the file @file{LICENSES} for the text of the DEC license.
 
