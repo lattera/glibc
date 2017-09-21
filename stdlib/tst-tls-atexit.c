@@ -31,7 +31,6 @@
    second handle.  In the end, the DSO should remain loaded due to the
    RTLD_NODELETE flag being set in the second dlopen call.  */
 
-#include <dlfcn.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -39,6 +38,7 @@
 #include <errno.h>
 #include <link.h>
 #include <stdbool.h>
+#include <support/xdlfcn.h>
 
 #ifndef NO_DELETE
 # define LOADED_IS_GOOD false
@@ -73,18 +73,12 @@ is_loaded (void)
 static void *
 reg_dtor_and_close (void *h)
 {
-  void (*reg_dtor) (void) = (void (*) (void)) dlsym (h, "reg_dtor");
-
-  if (reg_dtor == NULL)
-    {
-      printf ("Unable to find symbol: %s\n", dlerror ());
-      return (void *) (uintptr_t) 1;
-    }
+  void (*reg_dtor) (void) = (void (*) (void)) xdlsym (h, "reg_dtor");
 
   reg_dtor ();
 
 #ifndef NO_DELETE
-  dlclose (h);
+  xdlclose (h);
 #endif
 
   return NULL;
@@ -119,32 +113,22 @@ static int
 do_test (void)
 {
   /* Load the DSO.  */
-  void *h1 = dlopen (DSO_NAME, RTLD_LAZY);
-  if (h1 == NULL)
-    {
-      printf ("h1: Unable to load DSO: %s\n", dlerror ());
-      return 1;
-    }
+  void *h1 = xdlopen (DSO_NAME, RTLD_LAZY);
 
 #ifndef NO_DELETE
   if (spawn_thread (h1) != 0)
     return 1;
 #endif
 
-  void *h2 = dlopen (DSO_NAME, H2_RTLD_FLAGS);
-  if (h2 == NULL)
-    {
-      printf ("h2: Unable to load DSO: %s\n", dlerror ());
-      return 1;
-    }
+  void *h2 = xdlopen (DSO_NAME, H2_RTLD_FLAGS);
 
 #ifdef NO_DELETE
   if (spawn_thread (h1) != 0)
     return 1;
 
-  dlclose (h1);
+  xdlclose (h1);
 #endif
-  dlclose (h2);
+  xdlclose (h2);
 
   /* Check link maps to ensure that the DSO has unloaded.  In the normal case,
      the DSO should be unloaded if there are no uses.  However, if one of the

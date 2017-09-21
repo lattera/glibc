@@ -1,3 +1,11 @@
+2017-09-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	* support/xdlfcn.h: New file.
+	* support/xdlfcn.c: New file.
+	* support/Makefile (libsupport-routines): Add xdlfcn.
+	* stdlib/tst-tls-atexit.c: Use xdlopen, xdlsym, xdlclose.
+
 2017-09-20  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20142]

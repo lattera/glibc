@@ -65,6 +65,7 @@ libsupport-routines = \
   xchroot \
   xclose \
   xconnect \
+  xdlfcn \
   xdup2 \
   xfclose \
   xfopen \
