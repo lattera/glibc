@@ -69,8 +69,7 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 
       while (cur->idx > 0)
 	{
-	  const struct exit_function *const f =
-	    &cur->fns[--cur->idx];
+	  struct exit_function *const f = &cur->fns[--cur->idx];
 	  const uint64_t new_exitfn_called = __new_exitfn_called;
 
 	  /* Unlock the list while we call a foreign function.  */
@@ -99,6 +98,9 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 	      atfct ();
 	      break;
 	    case ef_cxa:
+	      /* To avoid dlclose/exit race calling cxafct twice (BZ 22180),
+		 we must mark this function as ef_free.  */
+	      f->flavor = ef_free;
 	      cxafct = f->func.cxa.fn;
 #ifdef PTR_DEMANGLE
 	      PTR_DEMANGLE (cxafct);

@@ -83,7 +83,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-getrandom tst-atexit tst-at_quick_exit 		    \
 		   tst-cxa_atexit tst-on_exit test-atexit-race 		    \
 		   test-at_quick_exit-race test-cxa_atexit-race             \
-		   test-on_exit-race
+		   test-on_exit-race test-dlclose-exit-race
 
 tests-internal	:= tst-strtod1i tst-strtod3 tst-strtod4 tst-strtod5i \
 		   tst-tls-atexit tst-tls-atexit-nodelete
@@ -98,6 +98,10 @@ LDLIBS-test-at_quick_exit-race = $(shared-thread-library)
 LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
 LDLIBS-test-on_exit-race = $(shared-thread-library)
 
+LDLIBS-test-dlclose-exit-race = $(shared-thread-library) $(libdl)
+LDFLAGS-test-dlclose-exit-race = $(LDFLAGS-rdynamic)
+LDLIBS-test-dlclose-exit-race-helper.so = $(libsupport) $(shared-thread-library)
+
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-quick_exit.o = -std=c++11
 LDLIBS-tst-quick_exit = -lstdc++
@@ -108,7 +112,7 @@ else
 tests-unsupported += tst-quick_exit tst-thread-quick_exit
 endif
 
-modules-names	= tst-tls-atexit-lib
+modules-names	= tst-tls-atexit-lib test-dlclose-exit-race-helper
 extra-test-objs += $(addsuffix .os, $(modules-names))
 
 ifeq ($(build-shared),yes)
@@ -177,6 +181,7 @@ $(objpfx)tst-strtod-nan-locale.out: $(gen-locales)
 $(objpfx)tst-strfmon_l.out: $(gen-locales)
 $(objpfx)tst-strfrom.out: $(gen-locales)
 $(objpfx)tst-strfrom-locale.out: $(gen-locales)
+$(objpfx)test-dlclose-exit-race.out: $(objpfx)test-dlclose-exit-race-helper.so
 endif
 
 # Testdir has to be named stdlib and needs to be writable
@@ -215,6 +220,7 @@ $(objpfx)tst-strtod6: $(libm)
 $(objpfx)tst-strtod-nan-locale: $(libm)
 
 tst-tls-atexit-lib.so-no-z-defs = yes
+test-dlclose-exit-race-helper.so-no-z-defs = yes
 
 $(objpfx)tst-tls-atexit: $(shared-thread-library) $(libdl)
 $(objpfx)tst-tls-atexit.out: $(objpfx)tst-tls-atexit-lib.so

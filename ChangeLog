@@ -1,3 +1,12 @@
+2017-09-21  Paul Pluzhnikov  <ppluzhnikov@google.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #22180]
+	* stdlib/Makefile (tests): Add test-dlclose-exit-race.
+	* stdlib/test-dlclose-exit-race.c: New file.
+	* stdlib/test-dlclose-exit-race-helper.c: New file.
+	* stdlib/exit.c (__run_exit_handlers): Mark slot as free.
+
 2017-09-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* crypt/Banner: Remove file.
