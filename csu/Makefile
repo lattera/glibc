@@ -39,8 +39,6 @@ omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 			     b$(start-installed-name) $(csu-dummies) \
 			     S$(start-installed-name))
 install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
-generated += version-info.h
-before-compile += $(objpfx)version-info.h
 
 # No tests are allowed in the csu/ subdirectory because the startup
 # code is compiled with special flags.
@@ -149,16 +147,3 @@ $(objpfx)abi-tag.h: $(..)abi-tags
 	done
 	if test -r $@.new; then mv -f $@.new $@; \
 	else echo >&2 'This configuration not matched in $<'; exit 1; fi
-
-all-Banner-files = $(wildcard $(addsuffix /Banner,\
-					  $(sort $(subdir-srcdirs) \
-						 $(sysdeps-srcdirs))))
-$(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
-	$(make-target-directory)
-	(files="$(all-Banner-files)";				\
-	 if test -n "$$files"; then				\
-	   printf '"Available extensions:\\n"\n';		\
-	   sed -e '/^#/d' -e 's/^[[:space:]]*/	/'		\
-	       -e 's/^\(.*\)$$/\"\1\\n\"/' $$files;		\
-	 fi) > $@T
-	mv -f $@T $@

@@ -176,6 +176,9 @@ software floating-point support and for
 his direction as part of @theglibc{} steering committee.
 
 @item
+Simon Josefsson for the @code{libidn} add-on.
+
+@item
 Geoffrey Keating for the port to Linux on PowerPC
 (@code{powerpc-@var{anything}-linux}).
 

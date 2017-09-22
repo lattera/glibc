@@ -30,7 +30,6 @@ This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n\
 Compiled by GNU CC version "__VERSION__".\n"
-#include "version-info.h"
 #ifdef LIBC_ABIS_STRING
 LIBC_ABIS_STRING
 #endif

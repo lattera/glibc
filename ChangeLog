@@ -1,3 +1,13 @@
+2017-09-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* csu/Makefile (generated): Do not add version-info.h.
+	(before-compile): Likewise.
+	(all-Banner-files): Remove variable.
+	($(objpfx)version-info.h): Remove rule.
+	* csu/version.c (banner): Do not include "version-info.h".
+	* libidn/Banner: Remove.
+	* manual/contrib.texi (Simon Josefsson): New entry.
+
 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r):
