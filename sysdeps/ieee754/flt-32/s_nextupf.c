@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 /* Return the least floating-point number greater than X.  */
 float
@@ -43,4 +44,4 @@ __nextupf (float x)
   return x;
 }
 
-weak_alias (__nextupf, nextupf)
+libm_alias_float (__nextup, nextup)

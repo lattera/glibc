@@ -2,4 +2,4 @@
 #define INEXACT 0
 #define FUNC __ufromfpf
 #include <s_fromfpf_main.c>
-weak_alias (__ufromfpf, ufromfpf)
+libm_alias_float (__ufromfp, ufromfp)

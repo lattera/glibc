@@ -23,6 +23,7 @@
 
 
 static const float zero = 0.0;
+#include <libm-alias-float.h>
 
 
 float
@@ -107,4 +108,4 @@ __remquof (float x, float y, int *quo)
     x = -x;
   return x;
 }
-weak_alias (__remquof, remquof)
+libm_alias_float (__remquo, remquo)

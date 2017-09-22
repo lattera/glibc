@@ -15,6 +15,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 #include <fix-int-fp-convert-zero.h>
 
 float
@@ -38,4 +39,4 @@ __logbf (float x)
     return 0.0f;
   return (float) (rix - 127);
 }
-weak_alias (__logbf, logbf)
+libm_alias_float (__logb, logb)

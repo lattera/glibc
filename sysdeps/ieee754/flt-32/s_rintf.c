@@ -15,6 +15,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 static const float
 TWO23[2]={
@@ -46,5 +47,5 @@ __rintf(float x)
 	return w-TWO23[sx];
 }
 #ifndef __rintf
-weak_alias (__rintf, rintf)
+libm_alias_float (__rint, rint)
 #endif

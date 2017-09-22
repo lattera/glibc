@@ -16,6 +16,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 static const float
 one =  1.0000000000e+00, /* 0x3F800000 */
@@ -47,4 +48,4 @@ __asinhf(float x)
 	}
 	return __copysignf(w, x);
 }
-weak_alias (__asinhf, asinhf)
+libm_alias_float (__asinh, asinh)

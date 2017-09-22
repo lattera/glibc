@@ -19,6 +19,7 @@
 #include <fix-int-fp-convert-zero.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 #include <stdint.h>
 
 float
@@ -31,4 +32,4 @@ __getpayloadf (const float *x)
     return 0.0f;
   return (float) ix;
 }
-weak_alias (__getpayloadf, getpayloadf)
+libm_alias_float (__getpayload, getpayload)

@@ -20,6 +20,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 
 #define CBRT2 1.2599210498948731648		/* 2^(1/3) */
@@ -60,4 +61,4 @@ __cbrtf (float x)
 
   return __ldexpf (x > 0.0 ? ym : -ym, xe / 3);
 }
-weak_alias (__cbrtf, cbrtf)
+libm_alias_float (__cbrt, cbrt)

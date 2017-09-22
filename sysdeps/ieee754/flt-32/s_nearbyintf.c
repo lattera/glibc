@@ -18,6 +18,7 @@
 #include <fenv.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 static const float
 TWO23[2]={
@@ -56,4 +57,4 @@ __nearbyintf(float x)
 	libc_fesetenvf (&env);
 	return t;
 }
-weak_alias (__nearbyintf, nearbyintf)
+libm_alias_float (__nearbyint, nearbyint)

@@ -22,6 +22,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-float.h>
 #include <fix-fp-int-convert-overflow.h>
 
 
@@ -70,4 +71,4 @@ __lroundf (float x)
   return sign * result;
 }
 
-weak_alias (__lroundf, lroundf)
+libm_alias_float (__lround, lround)

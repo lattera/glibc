@@ -20,6 +20,7 @@ static char rcsid[] = "$NetBSD: s_tanhf.c,v 1.4 1995/05/10 20:48:24 jtc Exp $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 static const float one=1.0, two=2.0, tiny = 1.0e-30;
 
@@ -59,4 +60,4 @@ float __tanhf(float x)
 	}
 	return (jx>=0)? z: -z;
 }
-weak_alias (__tanhf, tanhf)
+libm_alias_float (__tanh, tanh)

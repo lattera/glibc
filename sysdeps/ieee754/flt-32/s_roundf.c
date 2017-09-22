@@ -20,6 +20,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 
 float
@@ -60,4 +61,4 @@ __roundf (float x)
   SET_FLOAT_WORD (x, i0);
   return x;
 }
-weak_alias (__roundf, roundf)
+libm_alias_float (__round, round)

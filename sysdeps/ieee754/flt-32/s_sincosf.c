@@ -21,6 +21,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 #ifndef SINCOSF
 # define SINCOSF_FUNC __sincosf
@@ -80,5 +81,5 @@ SINCOSF_FUNC (float x, float *sinx, float *cosx)
 }
 
 #ifndef SINCOSF
-weak_alias (__sincosf, sincosf)
+libm_alias_float (__sincos, sincos)
 #endif

@@ -19,6 +19,7 @@ static char rcsid[] = "$NetBSD: s_frexpf.c,v 1.5 1995/05/10 20:47:26 jtc Exp $";
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 static const float
 two25 =  3.3554432000e+07; /* 0x4c000000 */
@@ -41,4 +42,4 @@ float __frexpf(float x, int *eptr)
 	SET_FLOAT_WORD(x,hx);
 	return x;
 }
-weak_alias (__frexpf, frexpf)
+libm_alias_float (__frexp, frexp)

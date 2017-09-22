@@ -22,6 +22,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 float
 __floorf(float x)
@@ -50,5 +51,5 @@ __floorf(float x)
 	return x;
 }
 #ifndef __floorf
-weak_alias (__floorf, floorf)
+libm_alias_float (__floor, floor)
 #endif

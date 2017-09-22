@@ -15,6 +15,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 
 float
@@ -44,5 +45,5 @@ __ceilf(float x)
 	return x;
 }
 #ifndef __ceilf
-weak_alias (__ceilf, ceilf)
+libm_alias_float (__ceil, ceil)
 #endif

@@ -1,3 +1,99 @@
+2017-09-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/flt-32/s_asinhf.c: Include <libm-alias-float.h>.
+	(asinhf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_atanf.c: Include <libm-alias-float.h>.
+	(atanf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_cbrtf.c: Include <libm-alias-float.h>.
+	(cbrtf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_ceilf.c: Include <libm-alias-float.h>.
+	(ceilf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_copysignf.c: Include
+	<libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_cosf.c: Include <libm-alias-float.h>.
+	(cosf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_erff.c: Include <libm-alias-float.h>.
+	(erff): Define using libm_alias_float.
+	(erfcf): Likewise.
+	* sysdeps/ieee754/flt-32/s_expm1f.c: Include <libm-alias-float.h>.
+	(expm1f): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_fabsf.c: Include <libm-alias-float.h>.
+	(fabsf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_floorf.c: Include <libm-alias-float.h>.
+	(floorf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_frexpf.c: Include <libm-alias-float.h>.
+	(frexpf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_fromfpf.c (fromfpf): Define using
+	libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_fromfpf_main.c: Include
+	<libm-alias-float.h>.
+	* sysdeps/ieee754/flt-32/s_fromfpxf.c (fromfpxf): Define using
+	libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_getpayloadf.c: Include
+	<libm-alias-float.h>.
+	(getpayloadf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_llrintf.c: Include
+	<libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_llroundf.c: Include
+	<libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_logbf.c: Include <libm-alias-float.h>.
+	(logbf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_lrintf.c: Include <libm-alias-float.h>.
+	(lrintf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_lroundf.c: Include <libm-alias-float.h>.
+	(lroundf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_modff.c: Include <libm-alias-float.h>.
+	(modff): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_nearbyintf.c: Include
+	<libm-alias-float.h>.
+	(nearbyintf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_nextafterf.c: Include
+	<libm-alias-float.h>.
+	(nextafterf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_nextupf.c: Include
+	<libm-alias-float.h>.
+	(nextupf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_remquof.c: Include
+	<libm-alias-float.h>.
+	(remquof): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_rintf.c: Include <libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_roundevenf.c: Include
+	<libm-alias-float.h>.
+	(roundevenf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_roundf.c: Include <libm-alias-float.h>.
+	(roundf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_setpayloadf.c (setpayloadf): Define
+	using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_setpayloadf_main.c: Include
+	<libm-alias-float.h>.
+	* sysdeps/ieee754/flt-32/s_setpayloadsigf.c (setpayloadsigf):
+	Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_sincosf.c: Include
+	<libm-alias-float.h>.
+	(sincosf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_sinf.c: Include <libm-alias-float.h>.
+	(sinf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_tanf.c: Include <libm-alias-float.h>.
+	(tanf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_tanhf.c: Include <libm-alias-float.h>.
+	(tanhf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_totalorderf.c: Include
+	<libm-alias-float.h>.
+	(totalorderf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_totalordermagf.c: Include
+	<libm-alias-float.h>.
+	(totalordermagf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_truncf.c: Include <libm-alias-float.h>.
+	(truncf): Define using libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_ufromfpf.c (ufromfpf): Define using
+	libm_alias_float.
+	* sysdeps/ieee754/flt-32/s_ufromfpxf.c (ufromfpxf): Define using
+	libm_alias_float.
+
 2017-09-22  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	[BZ #22146]

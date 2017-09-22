@@ -20,6 +20,7 @@ static char rcsid[] = "$NetBSD: s_sinf.c,v 1.4 1995/05/10 20:48:16 jtc Exp $";
 #include <errno.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 #ifndef SINF
 # define SINF_FUNC __sinf
@@ -59,5 +60,5 @@ float SINF_FUNC(float x)
 }
 
 #ifndef SINF
-weak_alias (__sinf, sinf)
+libm_alias_float (__sin, sin)
 #endif

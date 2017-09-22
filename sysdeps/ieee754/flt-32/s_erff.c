@@ -21,6 +21,7 @@ static char rcsid[] = "$NetBSD: s_erff.c,v 1.4 1995/05/10 20:47:07 jtc Exp $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 #include <fix-int-fp-convert-zero.h>
 
 static const float
@@ -152,7 +153,7 @@ float __erff(float x)
 	r  =  __ieee754_expf(-z*z-(float)0.5625)*__ieee754_expf((z-x)*(z+x)+R/S);
 	if(hx>=0) return one-r/x; else return  r/x-one;
 }
-weak_alias (__erff, erff)
+libm_alias_float (__erf, erf)
 
 float __erfcf(float x)
 {
@@ -227,4 +228,4 @@ float __erfcf(float x)
 		return two-tiny;
 	}
 }
-weak_alias (__erfcf, erfcf)
+libm_alias_float (__erfc, erfc)

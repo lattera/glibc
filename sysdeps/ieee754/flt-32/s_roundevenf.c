@@ -19,6 +19,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 #include <stdint.h>
 
 #define BIAS 0x7f
@@ -66,4 +67,4 @@ __roundevenf (float x)
   SET_FLOAT_WORD (x, ix);
   return x;
 }
-weak_alias (__roundevenf, roundevenf)
+libm_alias_float (__roundeven, roundeven)

@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 #include <nan-high-order-bit.h>
 #include <stdint.h>
 
@@ -44,4 +45,4 @@ __totalorderf (float x, float y)
   iy ^= iy_sign >> 1;
   return ix <= iy;
 }
-weak_alias (__totalorderf, totalorderf)
+libm_alias_float (__totalorder, totalorder)

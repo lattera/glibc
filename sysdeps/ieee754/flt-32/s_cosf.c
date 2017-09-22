@@ -20,6 +20,7 @@ static char rcsid[] = "$NetBSD: s_cosf.c,v 1.4 1995/05/10 20:47:03 jtc Exp $";
 #include <errno.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 #ifndef COSF
 # define COSF_FUNC __cosf
@@ -59,5 +60,5 @@ float COSF_FUNC(float x)
 }
 
 #ifndef COSF
-weak_alias (__cosf, cosf)
+libm_alias_float (__cos, cos)
 #endif

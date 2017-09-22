@@ -20,6 +20,7 @@ static char rcsid[] = "$NetBSD: s_tanf.c,v 1.4 1995/05/10 20:48:20 jtc Exp $";
 #include <errno.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 float __tanf(float x)
 {
@@ -46,4 +47,4 @@ float __tanf(float x)
 							      -1 -- n odd */
 	}
 }
-weak_alias (__tanf, tanf)
+libm_alias_float (__tan, tan)
