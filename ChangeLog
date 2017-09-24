@@ -17,6 +17,10 @@
 	* bits/socket.h: Likewise.
 	* support/resolv_test.c (server_thread_udp_process_one): Call recvfrom
 	instead of xrecvfrom, and ignore ECONNREFUSED errors.
+	* sysdeps/unix/clock_gettime.c (realtime_gettime, __clock_gettime): Use
+	__gettimeofday instead of gettimeofday.
+	* sysdeps/unix/clock_settime.c (__clock_settime): Use __settimeofday
+	instead of settimeofday.
 
 2017-09-22  Joseph Myers  <joseph@codesourcery.com>
 
