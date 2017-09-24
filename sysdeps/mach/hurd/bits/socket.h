@@ -25,10 +25,9 @@
 #endif
 
 #define	__need_size_t
-#define __need_NULL
 #include <stddef.h>
 
-#include <limits.h>		/* XXX Is this allowed?  */
+#include <bits/wordsize.h>
 #include <sys/types.h>
 
 /* Type for length arguments in socket calls.  */
@@ -131,13 +130,19 @@ enum __socket_type
 #define	AF_APPLETALK	PF_APPLETALK
 #define	AF_ROUTE	PF_ROUTE
 #define	AF_LINK		PF_LINK
-#define	pseudo_AF_XTP	PF_XTP
+#ifdef __USE_MISC
+# define	pseudo_AF_XTP	PF_XTP
+#endif
 #define	AF_COIP		PF_COIP
 #define	AF_CNT		PF_CNT
-#define pseudo_AF_RTIP	PF_RTIP
+#ifdef __USE_MISC
+# define pseudo_AF_RTIP	PF_RTIP
+#endif
 #define	AF_IPX		PF_IPX
 #define	AF_SIP		PF_SIP
-#define pseudo_AF_PIP	PF_PIP
+#ifdef __USE_MISC
+# define pseudo_AF_PIP	PF_PIP
+#endif
 #define AF_INET6	PF_INET6
 #define	AF_MAX		PF_MAX
 
@@ -157,7 +162,7 @@ struct sockaddr
 
 /* Structure large enough to hold any socket address (with the historical
    exception of AF_UNIX).  */
-#if ULONG_MAX > 0xffffffff
+#if __WORDSIZE == 64
 # define __ss_aligntype	__uint64_t
 #else
 # define __ss_aligntype	__uint32_t
@@ -236,7 +241,7 @@ struct cmsghdr
 
 #define CMSG_FIRSTHDR(mhdr) \
   ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)		      \
-   ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) NULL)
+   ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) 0)
 
 #define CMSG_ALIGN(len) (((len) + sizeof (size_t) - 1) \
 			   & (size_t) ~(sizeof (size_t) - 1))
@@ -255,7 +260,7 @@ __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
 {
   if ((size_t) __cmsg->cmsg_len < sizeof (struct cmsghdr))
     /* The kernel header does this so there may be a reason.  */
-    return NULL;
+    return (struct cmsghdr *) 0;
 
   __cmsg = (struct cmsghdr *) ((unsigned char *) __cmsg
 			       + CMSG_ALIGN (__cmsg->cmsg_len));
@@ -264,7 +269,7 @@ __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
       || ((unsigned char *) __cmsg + CMSG_ALIGN (__cmsg->cmsg_len)
 	  > ((unsigned char *) __mhdr->msg_control + __mhdr->msg_controllen)))
     /* No more entries.  */
-    return NULL;
+    return (struct cmsghdr *) 0;
   return __cmsg;
 }
 #endif	/* Use `extern inline'.  */
@@ -280,6 +285,7 @@ enum
 #define SCM_CREDS SCM_CREDS
   };
 
+#ifdef __USE_MISC
 /* Unfortunately, BSD practice dictates this structure be of fixed size.
    If there are more than CMGROUP_MAX groups, the list is truncated.
    (On GNU systems, the `cmcred_euid' field is just the first in the
@@ -300,6 +306,7 @@ struct cmsgcred
     int cmcred_ngroups;
     __gid_t cmcred_groups[CMGROUP_MAX];
   };
+#endif
 
 /* Protocol number used to manipulate socket-level options
    with `getsockopt' and `setsockopt'.  */

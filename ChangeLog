@@ -5,6 +5,16 @@
 	__mmap, __fxstat64, __xstat64, __access, __access_noerrno, __getpid,
 	__getcwd, __sbrk, __strtoul_internal, _exit, abort): Use check_no_hidden
 	to make sure that these symbols are defined.
+	* sysdeps/mach/hurd/bits/socket.h: Include <bits/wordsize.h> instead
+	of <limits.h>
+	(__need_NULL): Do not define.
+	(__ss_aligntype): Use __WORDSIZE instead of ULONG_MAX to determine
+	alignment.
+	[!__USE_MISC] (pseudo_AF_XTP, pseudo_AF_RTIP, pseudo_AF_PIP,
+	CMGROUP_MAX, cmsgcred): Do not define.
+	(CMSG_FIRSTHDR, __cmsg_nxthdr): Use (struct cmsghdr *) 0 instead of
+	NULL.
+	* bits/socket.h: Likewise.
 
 2017-09-22  Joseph Myers  <joseph@codesourcery.com>
 
