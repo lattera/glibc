@@ -1,3 +1,11 @@
+2017-09-24  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (check_no_hidden): New macro.
+	(__open, __close, __libc_read, __libc_write, __writev, __libc_lseek64,
+	__mmap, __fxstat64, __xstat64, __access, __access_noerrno, __getpid,
+	__getcwd, __sbrk, __strtoul_internal, _exit, abort): Use check_no_hidden
+	to make sure that these symbols are defined.
+
 2017-09-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/flt-32/s_asinhf.c: Include <libm-alias-float.h>.
