@@ -1,3 +1,9 @@
+2017-09-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/dbl-64/sincos32.h
+	[SINCCOS32_H]: Remove define.
+	[SINCOS32_H]: Define.
+
 2017-09-25  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* math/Versions (expf): New libm symbol at GLIBC_2.27.
