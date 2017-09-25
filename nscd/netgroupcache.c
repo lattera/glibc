@@ -584,6 +584,8 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
       dh->timeout = timeout;
       dh->ttl = dataset->head.ttl;
       ++dh->nreloads;
+      if (cacheable)
+        pthread_rwlock_unlock (&db->lock);
       return timeout;
     }
 

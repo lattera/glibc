@@ -1,3 +1,9 @@
+2017-09-25  DJ Delorie  <dj@redhat.com>
+
+	[BZ #22161]
+	* nscd/netgroupcache.c (addinnetgrX): Release read lock after
+	resetting timeout.
+
 2017-09-25  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/dbl-64/sincos32.h
