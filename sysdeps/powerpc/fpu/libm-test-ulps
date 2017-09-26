@@ -1899,10 +1899,8 @@ ldouble: 7
 
 Function: "exp":
 double: 1
-float: 1
 float128: 1
 idouble: 1
-ifloat: 1
 ifloat128: 1
 ildouble: 1
 ldouble: 1
@@ -1947,30 +1945,24 @@ ldouble: 4
 
 Function: "exp2":
 double: 1
-float: 1
 float128: 1
 idouble: 1
-ifloat: 1
 ifloat128: 1
 ildouble: 2
 ldouble: 2
 
 Function: "exp2_downward":
 double: 1
-float: 1
 float128: 1
 idouble: 1
-ifloat: 1
 ifloat128: 1
 ildouble: 1
 ldouble: 1
 
 Function: "exp2_towardzero":
 double: 1
-float: 1
 float128: 1
 idouble: 1
-ifloat: 1
 ifloat128: 1
 ildouble: 2
 ldouble: 2
@@ -1987,13 +1979,17 @@ ldouble: 2
 
 Function: "exp_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "exp_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
