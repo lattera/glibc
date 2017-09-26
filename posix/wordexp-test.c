@@ -27,16 +27,15 @@
 #include <string.h>
 #include <wordexp.h>
 #include <libc-pointer-arith.h>
+#include <dso_handle.h>
 
 #define IFS " \n\t"
 
-extern void *__dso_handle __attribute__ ((__weak__, __visibility__ ("hidden")));
 extern int __register_atfork (void (*) (void), void (*) (void), void (*) (void), void *);
 
 static int __app_register_atfork (void (*prepare) (void), void (*parent) (void), void (*child) (void))
 {
-  return __register_atfork (prepare, parent, child,
-			    &__dso_handle == NULL ? NULL : __dso_handle);
+  return __register_atfork (prepare, parent, child, __dso_handle);
 }
 
 /* Number of forks seen.  */

@@ -17,8 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stdlib.h>
-
-extern void *__dso_handle;
+#include <dso_handle.h>
 
 typedef struct
 {

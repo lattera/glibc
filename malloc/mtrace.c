@@ -34,6 +34,7 @@
 #include <_itoa.h>
 
 #include <libc-internal.h>
+#include <dso_handle.h>
 
 #include <libio/iolibio.h>
 #define setvbuf(s, b, f, l) _IO_setvbuf (s, b, f, l)
@@ -315,10 +316,9 @@ mtrace (void)
 #ifdef _LIBC
           if (!added_atexit_handler)
             {
-              extern void *__dso_handle __attribute__ ((__weak__));
               added_atexit_handler = 1;
               __cxa_atexit ((void (*)(void *))release_libc_mem, NULL,
-                            &__dso_handle ? __dso_handle : NULL);
+			    __dso_handle);
             }
 #endif
         }

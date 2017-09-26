@@ -35,9 +35,7 @@ dummy (void)
 void
 foo (void *p)
 {
-  extern void *__dso_handle __attribute__ ((__weak__));
   printf ("This is %s\n", __FUNCTION__);
   atexit (dummy);
-  if (&__dso_handle) puts ("have dso handle"); else puts ("no dso handle");
   ip = p;
 }

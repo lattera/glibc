@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <dso_handle.h>
 
 extern void fluffy (void *p);
 extern void bar (void *p);
@@ -34,7 +35,6 @@ fluffy (void *p)
 void
 bar (void *p)
 {
-  extern void *__dso_handle;
   printf ("This is %s\n", __FUNCTION__);
   __cxa_atexit (fluffy, p, __dso_handle);
 }

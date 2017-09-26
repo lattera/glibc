@@ -1,3 +1,33 @@
+2017-09-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
+	* dlfcn/modatexit.c (foo): Remove __dso_handle check.
+	* dlfcn/modcxaatexit.c: Include <dso_handle.h>.
+	(__dso_handle): Remove declaration.
+	* dlfcn/tstatexit.c (__dso_handle): Removed.
+	(main): Don't check __dso_handle.
+	* dlfcn/tstcxaatexit.c (__dso_handle): Removed.
+	(main): Don't check __dso_handle.
+	* include/dso_handle.h: New file.
+	* malloc/mtrace.c: Include <dso_handle.h>.
+	(mtrace): Pass __dso_handle directly.
+	* nptl/pthread_atfork.c: Include <dso_handle.h>.
+	(__dso_handle): Remove declaration.
+	(__pthread_atfork): Pass __dso_handle directly.
+	* nptl/tst-atfork2mod.c: Include <dso_handle.h>.
+	(__dso_handle): Removed.
+	* posix/wordexp-test.c: Include <dso_handle.h>.
+	(__dso_handle): Remove declaration.
+	(__app_register_atfork): Pass __dso_handle directly.
+	* stdlib/at_quick_exit.c: Include <dso_handle.h>.
+	(__dso_handle): Remove declaration.
+	(at_quick_exit): Pass __dso_handle directly.
+	* stdlib/atexit.c: Include <dso_handle.h>.
+	(__dso_handle): Remove declaration.
+	(atexit): Pass __dso_handle directly.
+	* stdlib/tst-tls-atexit-lib.c: Include <dso_handle.h>.
+	(__dso_handle): Removed.
+
 2017-09-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/make-syscalls.sh: Use __ifunc to define symbols

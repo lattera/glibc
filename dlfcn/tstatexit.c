@@ -20,8 +20,6 @@
 #include <stdlib.h>
 
 
-extern void *__dso_handle __attribute__ ((__weak__));
-
 int
 main (void)
 {
@@ -29,12 +27,6 @@ main (void)
   void *h;
   void (*fp) (void *);
   int v = 0;
-
-  if (&__dso_handle == NULL)
-    {
-      puts ("__dso_handle not available, cannot perform the test");
-      exit (0);
-    }
 
   h = dlopen (fname, RTLD_NOW);
   if (h == NULL)
