@@ -280,16 +280,14 @@ while read file srcfile caller syscall args strong weak; do
 \$(foreach p,\$(sysd-rules-targets),\$(objpfx)\$(patsubst %,\$p,$file).os): \\
 		\$(..)sysdeps/unix/make-syscalls.sh
 	\$(make-target-directory)
-	(echo '#include <dl-vdso.h>'; \\
-	 echo 'extern void *${strong}_ifunc (void) __asm ("${strong}");'; \\
-	 echo 'void *'; \\
-	 echo 'inhibit_stack_protector'; \\
-	 echo '${strong}_ifunc (void)'; \\
-	 echo '{'; \\
-	 echo '  PREPARE_VERSION_KNOWN (symver, ${vdso_symver});'; \\
-	 echo '  return _dl_vdso_vsym ("${vdso_symbol}", &symver);'; \\
-	 echo '}'; \\
-	 echo 'asm (".type ${strong}, %gnu_indirect_function");'; \\
+	(echo '#define ${strong} __redirect_${strong}'; \\
+	 echo '#include <dl-vdso.h>'; \\
+	 echo '#undef ${strong}'; \\
+	 echo '#define vdso_ifunc_init() \\'; \\
+	 echo '  PREPARE_VERSION_KNOWN (symver, ${vdso_symver})'; \\
+	 echo '__ifunc (__redirect_${strong}, ${strong},'; \\
+	 echo '         _dl_vdso_vsym ("${vdso_symbol}", &symver), void,'; \\
+	 echo '         vdso_ifunc_init)'; \\
 EOF
     # This is doing "hidden_def (${strong})", but the compiler
     # doesn't know that we've defined ${strong} in the same file, so

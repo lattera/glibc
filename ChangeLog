@@ -1,3 +1,8 @@
+2017-09-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/make-syscalls.sh: Use __ifunc to define symbols
+	using VDSO.
+
 2017-09-26  Alexey Makhalov  <amakhalov@vmware.com>
 
 	* elf/dl-tunables.c (do_tunable_update_val): Range checking fix.
