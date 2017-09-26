@@ -1,5 +1,9 @@
 2017-09-26  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/Makefile (tests-internal): Fix typo in comment.
+
+2017-09-26  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/nss_dns/dns-host.c: Fix typo in comment.
 
 2017-09-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>

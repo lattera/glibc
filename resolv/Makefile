@@ -71,7 +71,7 @@ tests-internal += \
 
 endif
 
-# This test accesses __inet_ntop_range, an internal libc function.
+# This test accesses __inet_ntop_length, an internal libc function.
 tests-internal += tst-inet_pton
 
 # This test sends millions of packets and is rather slow.
