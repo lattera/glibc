@@ -1078,10 +1078,10 @@ AC_PROG_LN_S
 
 LIBC_PROG_BINUTILS
 
-# Accept binutils 2.22 or newer.
+# Accept binutils 2.25 or newer.
 AC_CHECK_PROG_VER(AS, $AS, --version,
 		  [GNU assembler.* \([0-9]*\.[0-9.]*\)],
-		  [2.1[0-9][0-9]*|2.2[2-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
+		  [2.1[0-9][0-9]*|2.2[5-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
 		  AS=: critic_missing="$critic_missing as")
 
 if test -n "`$LD --version | sed -n 's/^GNU \(gold\).*$/\1/p'`"; then
