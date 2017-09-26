@@ -57,6 +57,11 @@ do_test (void)
   xpthread_attr_init (&attr);
   xpthread_attr_setdetachstate (&attr, 1);
 
+  /* With default 8MiB Linux stack size, creating 1024 threads can cause
+     VM exhausiton on 32-bit machines.  Reduce stack size of each thread to
+     128KiB for a maximum required VM size of 128MiB.  */
+  xpthread_attr_setstacksize (&attr, 128 * 1024);
+
   for (i = 0; i < kNumThreads; ++i) {
     xpthread_create (&attr, threadfunc, NULL);
   }

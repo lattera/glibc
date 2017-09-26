@@ -1,3 +1,9 @@
+2017-09-25  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #22207]
+	* stdlib/test-atexit-race-common.c (do_test): Minimize required
+	VM size.
+
 2017-09-25  DJ Delorie  <dj@redhat.com>
 
 	[BZ #22161]
