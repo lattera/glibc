@@ -89,17 +89,10 @@ get_next_env (char **envp, char **name, size_t *namelen, char **val,
   return NULL;
 }
 
-#define TUNABLE_SET_VAL_IF_VALID_RANGE(__cur, __val, __type, __default_min, \
-				       __default_max)			      \
+#define TUNABLE_SET_VAL_IF_VALID_RANGE(__cur, __val, __type)		      \
 ({									      \
   __type min = (__cur)->type.min;					      \
   __type max = (__cur)->type.max;					      \
-									      \
-  if (min == max)							      \
-    {									      \
-      min = __default_min;						      \
-      max = __default_max;						      \
-    }									      \
 									      \
   if ((__type) (__val) >= min && (__type) (val) <= max)			      \
     {									      \
@@ -120,17 +113,17 @@ do_tunable_update_val (tunable_t *cur, const void *valp)
     {
     case TUNABLE_TYPE_INT_32:
 	{
-	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, int64_t, INT32_MIN, INT32_MAX);
+	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, int64_t);
 	  break;
 	}
     case TUNABLE_TYPE_UINT_64:
 	{
-	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, uint64_t, 0, UINT64_MAX);
+	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, uint64_t);
 	  break;
 	}
     case TUNABLE_TYPE_SIZE_T:
 	{
-	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, uint64_t, 0, SIZE_MAX);
+	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, uint64_t);
 	  break;
 	}
     case TUNABLE_TYPE_STRING:

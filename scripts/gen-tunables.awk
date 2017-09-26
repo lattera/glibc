@@ -1,6 +1,14 @@
 # Generate dl-tunable-list.h from dl-tunables.list
 
 BEGIN {
+  min_of["STRING"]="0"
+  max_of["STRING"]="0"
+  min_of["INT_32"]="INT32_MIN"
+  max_of["INT_32"]="INT32_MAX"
+  min_of["UINT_64"]="0"
+  max_of["UINT_64"]="UINT64_MAX"
+  min_of["SIZE_T"]="0"
+  max_of["SIZE_T"]="SIZE_MAX"
   tunable=""
   ns=""
   top_ns=""
@@ -43,10 +51,10 @@ $1 == "}" {
       types[top_ns,ns,tunable] = "STRING"
     }
     if (!minvals[top_ns,ns,tunable]) {
-      minvals[top_ns,ns,tunable] = "0"
+      minvals[top_ns,ns,tunable] = min_of[types[top_ns,ns,tunable]]
     }
     if (!maxvals[top_ns,ns,tunable]) {
-      maxvals[top_ns,ns,tunable] = "0"
+      maxvals[top_ns,ns,tunable] = max_of[types[top_ns,ns,tunable]]
     }
     if (!env_alias[top_ns,ns,tunable]) {
       env_alias[top_ns,ns,tunable] = "NULL"
