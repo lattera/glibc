@@ -23,9 +23,10 @@
 #include <spawn.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <wait.h>
 #include <sys/param.h>
+#include <support/check.h>
+#include <support/xunistd.h>
 
 
 /* Nonzero if the program gets called via `exec'.  */
@@ -249,13 +250,16 @@ do_test (int argc, char *argv[])
      error (EXIT_FAILURE, errno, "posix_spawn_file_actions_destroy");
    free (name3_copy);
 
-  /* Wait for the child.  */
-  if (waitpid (pid, &status, 0) != pid)
-    error (EXIT_FAILURE, errno, "wrong child");
+  /* Wait for the children.  */
+  TEST_VERIFY (xwaitpid (pid, &status, 0) == pid);
+  TEST_VERIFY (WIFEXITED (status));
+  TEST_VERIFY (!WIFSIGNALED (status));
+  TEST_VERIFY (WEXITSTATUS (status) == 0);
 
-  if (WTERMSIG (status) != 0)
-    error (EXIT_FAILURE, 0, "Child terminated incorrectly");
-  status = WEXITSTATUS (status);
+  xwaitpid (-1, &status, 0);
+  TEST_VERIFY (WIFEXITED (status));
+  TEST_VERIFY (!WIFSIGNALED (status));
+  TEST_VERIFY (WEXITSTATUS (status) == 0);
 
-  return status;
+  return 0;
 }
