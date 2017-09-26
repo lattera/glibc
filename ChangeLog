@@ -1,3 +1,8 @@
+2017-09-26  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22156]
+	* sysdeps/ia64/stackinfo.h (DEFAULT_STACK_PERMS): Likewise.
+
 2017-09-26  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/Makefile (tests-internal): Fix typo in comment.
