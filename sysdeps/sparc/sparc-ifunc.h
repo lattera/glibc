@@ -162,14 +162,8 @@ END (__##name)
 
 #else	/* __ASSEMBLER__ */
 
-# define sparc_libm_ifunc(name, expr)					\
-  extern void *name##_ifunc (int) __asm__ (#name);			\
-  void *name##_ifunc (int hwcap)					\
-  {									\
-    __typeof (name) *res = expr;					\
-    return res;								\
-  }									\
-  __asm__ (".type " #name ", %gnu_indirect_function");
+# define sparc_libm_ifunc(name, expr)				\
+  __ifunc (name, name, expr, int hwcap, libm_ifunc_init)
 
 # define sparc_libc_ifunc(name, expr) sparc_libm_ifunc (name, expr)
 
