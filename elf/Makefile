@@ -181,7 +181,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
 	 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
 	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
-	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose
+	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose \
+	 tst-debug1
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -1417,3 +1418,9 @@ tst-env-setuid-ENV = MALLOC_CHECK_=2 MALLOC_MMAP_THRESHOLD_=4096 \
 		     LD_HWCAP_MASK=0x1
 tst-env-setuid-tunables-ENV = \
 	GLIBC_TUNABLES=glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096
+
+$(objpfx)tst-debug1: $(libdl)
+$(objpfx)tst-debug1.out: $(objpfx)tst-debug1mod1.so
+
+$(objpfx)tst-debug1mod1.so: $(objpfx)testobj1.so
+	$(OBJCOPY) --only-keep-debug $< $@

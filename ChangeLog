@@ -1,3 +1,14 @@
+2017-09-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22101]
+	* elf/Makefile (tests): Add tst-debug1.
+	($(objpfx)tst-debug1): New.
+	($(objpfx)tst-debug1.out): Likewise.
+	($(objpfx)tst-debug1mod1.so): Likewise.
+	* elf/dl-load.c (_dl_map_object_from_fd): Skip PT_DYNAMIC segment
+	with p_filesz == 0.
+	* elf/tst-debug1.c: New file.
+
 2017-09-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/sparc/sparc-ifunc.h [!__ASSEMBLER__] (sparc_libm_ifunc):

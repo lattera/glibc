@@ -1052,8 +1052,14 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	     segments are mapped in.  We record the addresses it says
 	     verbatim, and later correct for the run-time load address.  */
 	case PT_DYNAMIC:
-	  l->l_ld = (void *) ph->p_vaddr;
-	  l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
+	  if (ph->p_filesz)
+	    {
+	      /* Debuginfo only files from "objcopy --only-keep-debug"
+		 contain a PT_DYNAMIC segment with p_filesz == 0.  Skip
+		 such a segment to avoid a crash later.  */
+	      l->l_ld = (void *) ph->p_vaddr;
+	      l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
+	    }
 	  break;
 
 	case PT_PHDR:
