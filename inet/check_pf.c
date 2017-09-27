@@ -32,7 +32,7 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
 
   /* Get the interface list via getifaddrs.  */
   struct ifaddrs *ifa = NULL;
-  if (getifaddrs (&ifa) != 0)
+  if (__getifaddrs (&ifa) != 0)
     {
       /* We cannot determine what interfaces are available.  Be
 	 pessimistic.  */
@@ -51,7 +51,7 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
     else if (runp->ifa_addr->sa_family == PF_INET6)
       *seen_ipv6 = true;
 
-  (void) freeifaddrs (ifa);
+  (void) __freeifaddrs (ifa);
 }
 
 

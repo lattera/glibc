@@ -30,6 +30,7 @@ __getifaddrs (struct ifaddrs **ifap)
   return -1;
 }
 weak_alias (__getifaddrs, getifaddrs)
+libc_hidden_def (__getifaddrs)
 libc_hidden_weak (getifaddrs)
 stub_warning (getifaddrs)
 
@@ -43,5 +44,6 @@ __freeifaddrs (struct ifaddrs *ifa)
   abort ();
 }
 weak_alias (__freeifaddrs, freeifaddrs)
+libc_hidden_def (__freeifaddrs)
 libc_hidden_weak (freeifaddrs)
 stub_warning (freeifaddrs)

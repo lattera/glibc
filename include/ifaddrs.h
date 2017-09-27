@@ -9,6 +9,11 @@
 libc_hidden_proto (getifaddrs)
 libc_hidden_proto (freeifaddrs)
 
+extern int __getifaddrs (struct ifaddrs **__ifap);
+libc_hidden_proto (__getifaddrs)
+extern void __freeifaddrs (struct ifaddrs *__ifa);
+libc_hidden_proto (__freeifaddrs)
+
 struct in6addrinfo
 {
   enum {

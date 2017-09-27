@@ -17,6 +17,13 @@
 	redefine as weak alias.
 	* sysdeps/mach/hurd/rewinddir.c (__rewinddir): Use __seekdir instead
 	of seekdir.
+	* include/ifaddrs.h (__getifaddrs, __freeifaddrs): New declarations,
+	and use libc_hidden_def on them.
+	* inet/ifaddrs.c (__getifaddrs, __freeifaddrs): Use libc_hidden_def on
+	them.
+	* sysdeps/gnu/ifaddrs.c (__getifaddrs, __freeifaddrs): Likewise.
+	* inet/check_pf.c (__check_pf): Use __getifaddrs and __freeifaddrs
+	instead of getifaddrs and freeifaddrs.
 
 2017-09-26  H.J. Lu  <hongjiu.lu@intel.com>
 

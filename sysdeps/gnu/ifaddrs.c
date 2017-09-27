@@ -151,6 +151,7 @@ __getifaddrs (struct ifaddrs **ifap)
   return 0;
 }
 weak_alias (__getifaddrs, getifaddrs)
+libc_hidden_def (__getifaddrs)
 #ifndef getifaddrs
 libc_hidden_weak (getifaddrs)
 #endif
@@ -161,4 +162,5 @@ __freeifaddrs (struct ifaddrs *ifa)
   free (ifa);
 }
 weak_alias (__freeifaddrs, freeifaddrs)
+libc_hidden_def (__freeifaddrs)
 libc_hidden_weak (freeifaddrs)
