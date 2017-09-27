@@ -1,5 +1,22 @@
 2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* sysdeps/aarch64/dl-machine.h (elf_machine_runtime_setup): Remove
+	DT_TLSDESC_GOT initialization.
+	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_return_lazy): Remove.
+	(_dl_tlsdesc_resolve_rela): Likewise.
+	(_dl_tlsdesc_resolve_hold): Likewise.
+	(_dl_tlsdesc_undefweak): Remove ldar.
+	(_dl_tlsdesc_dynamic): Likewise.
+	* sysdeps/aarch64/dl-tlsdesc.h (_dl_tlsdesc_return_lazy): Remove.
+	(_dl_tlsdesc_resolve_rela): Likewise.
+	(_dl_tlsdesc_resolve_hold): Likewise.
+	* sysdeps/aarch64/tlsdesc.c (_dl_tlsdesc_resolve_rela_fixup): Remove.
+	(_dl_tlsdesc_resolve_hold_fixup): Likewise.
+	(_dl_tlsdesc_resolve_rela): Likewise.
+	(_dl_tlsdesc_resolve_hold): Likewise.
+
+2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* sysdeps/aarch64/dl-machine.h (elf_machine_lazy_rel): Do symbol
 	binding and initialization non-lazily for R_AARCH64_TLSDESC.
 
