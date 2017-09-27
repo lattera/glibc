@@ -12,6 +12,11 @@
 	* sysdeps/mach/hurd/revoke.c (revoke): Likewise.
 	* sysdeps/unix/bsd/unlockpt.c (unlockpt): Use __revoke instead of
 	revoke.
+	* include/dirent.h (__seekdir): New declaration.
+	* sysdeps/mach/hurd/seekdir.c (seekdir): Rename to __seekdir and
+	redefine as weak alias.
+	* sysdeps/mach/hurd/rewinddir.c (__rewinddir): Use __seekdir instead
+	of seekdir.
 
 2017-09-26  H.J. Lu  <hongjiu.lu@intel.com>
 

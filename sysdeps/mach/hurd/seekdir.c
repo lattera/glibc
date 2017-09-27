@@ -22,9 +22,8 @@
 #include "dirstream.h"
 
 /* Seek to position POS in DIRP.  */
-/* XXX should be __seekdir ? */
 void
-seekdir (DIR *dirp, long int pos)
+__seekdir (DIR *dirp, long int pos)
 {
   __libc_lock_lock (dirp->__lock);
   /* Change our entry index pointer to POS and discard any data already
@@ -35,3 +34,5 @@ seekdir (DIR *dirp, long int pos)
   dirp->__size = 0;
   __libc_lock_unlock (dirp->__lock);
 }
+
+weak_alias (__seekdir, seekdir)
