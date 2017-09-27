@@ -22,7 +22,7 @@
 #include <errno.h>
 
 int
-dirfd (DIR *dirp)
+__dirfd (DIR *dirp)
 {
   int fd;
 
@@ -41,3 +41,5 @@ dirfd (DIR *dirp)
 
   return fd;
 }
+
+weak_alias (__dirfd, dirfd)

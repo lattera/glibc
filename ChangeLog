@@ -1,3 +1,12 @@
+2017-09-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* include/dirent.h (__dirfd): New declaration.
+	* dirent/dirfd.c (dirfd): Rename to __dirfd, and redefine as weak
+	alias.
+	* sysdeps/posix/dirfd/dirfd.c (dirfd): Likewise.
+	* sysdeps/mach/hurd/dirfd.c (dirfd): Likewise.
+	* io/ftw.c (open_dir_stream, ftw_dir): Use __dirfd instead of dirfd.
+
 2017-09-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]

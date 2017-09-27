@@ -21,10 +21,11 @@
 #include <errno.h>
 
 int
-dirfd (DIR *dirp)
+__dirfd (DIR *dirp)
 {
   __set_errno (ENOSYS);
   return -1;
 }
 
+weak_alias (__dirfd, dirfd)
 stub_warning (dirfd)

@@ -22,7 +22,9 @@
 #undef dirfd
 
 int
-dirfd (DIR *dirp)
+__dirfd (DIR *dirp)
 {
   return dirp->fd;
 }
+
+weak_alias (__dirfd, dirfd)

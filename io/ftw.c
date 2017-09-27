@@ -361,7 +361,7 @@ open_dir_stream (int *dfdp, struct ftw_data *data, struct dir_data *dirp)
 	result = -1;
       else
 	{
-	  dirp->streamfd = dirfd (dirp->stream);
+	  dirp->streamfd = __dirfd (dirp->stream);
 	  dirp->content = NULL;
 	  data->dirstreams[data->actdir] = dirp;
 
@@ -518,7 +518,7 @@ fail:
   /* If necessary, change to this directory.  */
   if (data->flags & FTW_CHDIR)
     {
-      if (__fchdir (dirfd (dir.stream)) < 0)
+      if (__fchdir (__dirfd (dir.stream)) < 0)
 	{
 	  result = -1;
 	  goto fail;
@@ -602,7 +602,7 @@ fail:
       /* Change back to the parent directory.  */
       int done = 0;
       if (old_dir->stream != NULL)
-	if (__fchdir (dirfd (old_dir->stream)) == 0)
+	if (__fchdir (__dirfd (old_dir->stream)) == 0)
 	  done = 1;
 
       if (!done)
