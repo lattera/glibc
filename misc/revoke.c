@@ -20,9 +20,11 @@
 #include <errno.h>
 
 int
-revoke (const char *file)
+__revoke (const char *file)
 {
   __set_errno (ENOSYS);
   return -1;
 }
+
+weak_alias (__revoke, revoke)
 stub_warning (revoke)

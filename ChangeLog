@@ -6,6 +6,12 @@
 	* sysdeps/posix/dirfd/dirfd.c (dirfd): Likewise.
 	* sysdeps/mach/hurd/dirfd.c (dirfd): Likewise.
 	* io/ftw.c (open_dir_stream, ftw_dir): Use __dirfd instead of dirfd.
+	* include/unistd.h (__revoke): New declaration.
+	* misc/revoke.c (revoke): Rename to __revoke, and redefine as weak
+	alias.
+	* sysdeps/mach/hurd/revoke.c (revoke): Likewise.
+	* sysdeps/unix/bsd/unlockpt.c (unlockpt): Use __revoke instead of
+	revoke.
 
 2017-09-26  H.J. Lu  <hongjiu.lu@intel.com>
 

@@ -130,6 +130,7 @@ extern int __symlink (const char *__from, const char *__to);
 extern ssize_t __readlink (const char *__path, char *__buf, size_t __len);
 extern int __unlink (const char *__name);
 extern int __gethostname (char *__name, size_t __len);
+extern int __revoke (const char *__file);
 extern int __profil (unsigned short int *__sample_buffer, size_t __size,
 		     size_t __offset, unsigned int __scale);
 extern int __getdtablesize (void);

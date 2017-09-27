@@ -21,7 +21,7 @@
 #include <hurd.h>
 
 int
-revoke (const char *file_name)
+__revoke (const char *file_name)
 {
   error_t err;
   file_t file = __file_name_lookup (file_name, 0, 0);
@@ -36,3 +36,5 @@ revoke (const char *file_name)
     return __hurd_fail (err);
   return 0;
 }
+
+weak_alias (__revoke, revoke)

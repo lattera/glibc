@@ -32,5 +32,5 @@ unlockpt (int fd)
   /* BSD doesn't have a lock, but it does have `revoke'.  */
   if (__ptsname_r (fd, buf, sizeof (buf)))
     return -1;
-  return revoke (buf);
+  return __revoke (buf);
 }
