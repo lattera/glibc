@@ -1,3 +1,16 @@
+2017-09-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22225]
+	* sysdeps/ieee754/dbl-64/s_nearbyint.c (__nearbyint): Use
+	math_opt_barrier on argument when doing arithmetic on it.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c (__nearbyint):
+	Likewise.  Use math_force_eval not math_opt_barrier after
+	arithmetic.
+	* sysdeps/ieee754/flt-32/s_nearbyintf.c (__nearbyintf): Use
+	math_opt_barrier on argument when doing arithmetic on it.
+	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c (__nearbyintl):
+	Likewise.
+
 2017-09-27  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/ifaddrs.c (__getifaddrs): Add

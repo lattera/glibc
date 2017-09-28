@@ -48,7 +48,7 @@ __nearbyint (double x)
       if (j0 < 0)
 	{
 	  libc_feholdexcept (&env);
-	  w = TWO52[sx] + x;
+	  w = TWO52[sx] + math_opt_barrier (x);
 	  t = w - TWO52[sx];
 	  math_force_eval (t);
 	  libc_fesetenv (&env);
@@ -65,7 +65,7 @@ __nearbyint (double x)
 	return x;                       /* x is integral */
     }
   libc_feholdexcept (&env);
-  w = TWO52[sx] + x;
+  w = TWO52[sx] + math_opt_barrier (x);
   t = w - TWO52[sx];
   math_force_eval (t);
   libc_fesetenv (&env);
