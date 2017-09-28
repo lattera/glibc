@@ -1,3 +1,10 @@
+2017-09-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_load_address): Allow
+	undefined _DYNAMIC in PIE libc.a.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_load_address):
+	Likewse.
+
 2017-09-28  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/alpha/fpu/bits/mathinline.h: Delete file.

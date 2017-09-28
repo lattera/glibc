@@ -55,8 +55,15 @@ elf_machine_load_address (void)
   /* Compute the difference between the runtime address of _DYNAMIC as seen
      by an IP-relative reference, and the link-time address found in the
      special unrelocated first GOT entry.  */
-  extern ElfW(Dyn) _DYNAMIC[] attribute_hidden;
-  return (ElfW(Addr)) &_DYNAMIC - elf_machine_dynamic ();
+#ifndef SHARED
+  extern ElfW(Dyn) _DYNAMIC[] __attribute__((weak, visibility ("hidden")));
+  if (!_DYNAMIC)
+    return 0;
+#endif
+  /* The address of dynamic must be taken as non-weak to avoid dynamic
+     relocation.  */
+  extern ElfW(Dyn) dynamic[] asm ("_DYNAMIC") attribute_hidden;
+  return (ElfW(Addr)) &dynamic - elf_machine_dynamic ();
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
