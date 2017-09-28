@@ -1,3 +1,12 @@
+2017-10-06  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #22111]
+	* malloc/malloc.c (tcache_shutting_down): Use bool type.
+	(tcache_thread_freeres): Set tcache_shutting_down before
+	freeing the tcache.
+	* malloc/Makefile (tests): Add tst-malloc-tcache-leak.
+	* malloc/tst-malloc-tcache-leak.c: New file.
+
 2017-10-06  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/memrchr-ppc64.c: Revert

@@ -2916,7 +2916,7 @@ typedef struct tcache_perthread_struct
   tcache_entry *entries[TCACHE_MAX_BINS];
 } tcache_perthread_struct;
 
-static __thread char tcache_shutting_down = 0;
+static __thread bool tcache_shutting_down = false;
 static __thread tcache_perthread_struct *tcache = NULL;
 
 /* Caller must ensure that we know tc_idx is valid and there's room
@@ -2953,8 +2953,12 @@ tcache_thread_freeres (void)
   if (!tcache)
     return;
 
+  /* Disable the tcache and prevent it from being reinitialized.  */
   tcache = NULL;
+  tcache_shutting_down = true;
 
+  /* Free all of the entries and the tcache itself back to the arena
+     heap for coalescing.  */
   for (i = 0; i < TCACHE_MAX_BINS; ++i)
     {
       while (tcache_tmp->entries[i])
@@ -2966,8 +2970,6 @@ tcache_thread_freeres (void)
     }
 
   __libc_free (tcache_tmp);
-
-  tcache_shutting_down = 1;
 }
 text_set_element (__libc_thread_subfreeres, tcache_thread_freeres);
 

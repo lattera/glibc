@@ -34,6 +34,7 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-interpose-nothread \
 	 tst-interpose-thread \
 	 tst-alloc_buffer \
+	 tst-malloc-tcache-leak \
 
 tests-static := \
 	 tst-interpose-static-nothread \
@@ -242,3 +243,5 @@ tst-dynarray-fail-ENV = MALLOC_TRACE=$(objpfx)tst-dynarray-fail.mtrace
 $(objpfx)tst-dynarray-fail-mem.out: $(objpfx)tst-dynarray-fail.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-dynarray-fail.mtrace > $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-malloc-tcache-leak: $(shared-thread-library)
