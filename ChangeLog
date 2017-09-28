@@ -1,3 +1,8 @@
+2017-10-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* bits/uio-ext.h (RWF_HIPRI, RWF_DSYNC, RWF_SYNC, RWF_NOWAIT): New
+	defines.
+
 2017-10-17  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	[BZ #22159]

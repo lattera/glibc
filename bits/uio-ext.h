@@ -23,6 +23,10 @@
 # error "Never include <bits/uio-ext.h> directly; use <sys/uio.h> instead."
 #endif
 
-/* This operating system does not extend sys/uio.h.  */
+/* Flags for preadv2/pwritev2.  */
+#define RWF_HIPRI	0x00000001 /* High priority request.  */
+#define RWF_DSYNC	0x00000002 /* per-IO O_DSYNC.  */
+#define RWF_SYNC	0x00000004 /* per-IO O_SYNC.  */
+#define RWF_NOWAIT	0x00000008 /* per-IO nonblocking mode.  */
 
 #endif /* sys/uio_ext.h */
