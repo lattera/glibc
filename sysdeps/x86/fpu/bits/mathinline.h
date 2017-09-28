@@ -26,97 +26,6 @@
 # define __MATH_INLINE __extern_always_inline
 #endif
 
-
-#if defined __USE_ISOC99 && defined __GNUC__ && __GNUC__ >= 2
-/* GCC 2.97 and up have builtins that actually can be used.  */
-# if !__GNUC_PREREQ (2,97)
-/* ISO C99 defines some macros to perform unordered comparisons.  The
-   ix87 FPU supports this with special opcodes and we should use them.
-   These must not be inline functions since we have to be able to handle
-   all floating-point types.  */
-#  undef isgreater
-#  undef isgreaterequal
-#  undef isless
-#  undef islessequal
-#  undef islessgreater
-#  undef isunordered
-#  ifdef __i686__
-/* For the PentiumPro and more recent processors we can provide
-   better code.  */
-#   define isgreater(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucomip %%st(1), %%st; seta %%al"			      \
-		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
-	__result; })
-#   define isgreaterequal(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucomip %%st(1), %%st; setae %%al"			      \
-		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
-	__result; })
-
-#   define isless(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucomip %%st(1), %%st; seta %%al"			      \
-		 : "=a" (__result) : "u" (x), "t" (y) : "cc", "st");	      \
-	__result; })
-
-#   define islessequal(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucomip %%st(1), %%st; setae %%al"			      \
-		 : "=a" (__result) : "u" (x), "t" (y) : "cc", "st");	      \
-	__result; })
-
-#   define islessgreater(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucomip %%st(1), %%st; setne %%al"			      \
-		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
-	__result; })
-
-#   define isunordered(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucomip %%st(1), %%st; setp %%al"			      \
-		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
-	__result; })
-#  else
-/* This is the dumb, portable code for i386 and above.  */
-#   define isgreater(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucompp; fnstsw; testb $0x45, %%ah; setz %%al"	      \
-		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
-	__result; })
-
-#   define isgreaterequal(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al"	      \
-		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
-	__result; })
-
-#   define isless(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucompp; fnstsw; testb $0x45, %%ah; setz %%al"	      \
-		 : "=a" (__result) : "u" (x), "t" (y) : "cc", "st", "st(1)"); \
-	__result; })
-
-#   define islessequal(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al"	      \
-		 : "=a" (__result) : "u" (x), "t" (y) : "cc", "st", "st(1)"); \
-	__result; })
-
-#   define islessgreater(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucompp; fnstsw; testb $0x44, %%ah; setz %%al"	      \
-		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
-	__result; })
-
-#   define isunordered(x, y) \
-     ({ register char __result;						      \
-	__asm__ ("fucompp; fnstsw; sahf; setp %%al"			      \
-		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
-	__result; })
-#  endif /* __i686__ */
-# endif	/* GCC 2.97 */
-
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */
 # if __GNUC_PREREQ (2, 8)
@@ -154,8 +63,6 @@ __NTH (__signbitl (long double __x))
 }
 
 # endif
-#endif
-
 
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */

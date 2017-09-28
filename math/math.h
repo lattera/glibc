@@ -652,19 +652,41 @@ iszero (__T __val)
 # define __NO_MATH_INLINES	1
 #endif
 
-#if defined __USE_ISOC99 && __GNUC_PREREQ(2,97)
+#ifdef __USE_ISOC99
+# if __GNUC_PREREQ (3, 1)
 /* ISO C99 defines some macros to compare number while taking care for
    unordered numbers.  Many FPUs provide special instructions to support
    these operations.  Generic support in GCC for these as builtins went
-   in before 3.0.0, but not all cpus added their patterns.  We define
-   versions that use the builtins here, and <bits/mathinline.h> will
-   undef/redefine as appropriate for the specific GCC version in use.  */
-# define isgreater(x, y)	__builtin_isgreater(x, y)
-# define isgreaterequal(x, y)	__builtin_isgreaterequal(x, y)
-# define isless(x, y)		__builtin_isless(x, y)
-# define islessequal(x, y)	__builtin_islessequal(x, y)
-# define islessgreater(x, y)	__builtin_islessgreater(x, y)
-# define isunordered(u, v)	__builtin_isunordered(u, v)
+   in 2.97, but not all cpus added their patterns until 3.1.  Therefore
+   we enable the builtins from 3.1 onwards and use a generic implementation
+   othwerwise.  */
+#  define isgreater(x, y)	__builtin_isgreater(x, y)
+#  define isgreaterequal(x, y)	__builtin_isgreaterequal(x, y)
+#  define isless(x, y)		__builtin_isless(x, y)
+#  define islessequal(x, y)	__builtin_islessequal(x, y)
+#  define islessgreater(x, y)	__builtin_islessgreater(x, y)
+#  define isunordered(x, y)	__builtin_isunordered(x, y)
+# else
+#  define isgreater(x, y) \
+  (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
+		    !isunordered (__x, __y) && __x > __y; }))
+#  define isgreaterequal(x, y) \
+  (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
+		    !isunordered (__x, __y) && __x >= __y; }))
+#  define isless(x, y) \
+  (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
+		    !isunordered (__x, __y) && __x < __y; }))
+#  define islessequal(x, y) \
+  (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
+		    !isunordered (__x, __y) && __x <= __y; }))
+#  define islessgreater(x, y) \
+  (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
+		    !isunordered (__x, __y) && __x != __y; }))
+/* isunordered must always check both operands first for signaling NaNs.  */
+#  define isunordered(x, y) \
+  (__extension__ ({ __typeof__ (x) __u = (x); __typeof__ (y) __v = (y); \
+		    __u != __v && (__u != __u || __v != __v); }))
+# endif
 #endif
 
 /* Get machine-dependent inline versions (if there are any).  */
@@ -757,59 +779,6 @@ iszero (__T __val)
 #  undef __REDIRTO_X
 # endif
 #endif /* __FINITE_MATH_ONLY__ > 0.  */
-
-#ifdef __USE_ISOC99
-/* If we've still got undefined comparison macros, provide defaults.  */
-
-/* Return nonzero value if X is greater than Y.  */
-# ifndef isgreater
-#  define isgreater(x, y) \
-  (__extension__							      \
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
-      !isunordered (__x, __y) && __x > __y; }))
-# endif
-
-/* Return nonzero value if X is greater than or equal to Y.  */
-# ifndef isgreaterequal
-#  define isgreaterequal(x, y) \
-  (__extension__							      \
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
-      !isunordered (__x, __y) && __x >= __y; }))
-# endif
-
-/* Return nonzero value if X is less than Y.  */
-# ifndef isless
-#  define isless(x, y) \
-  (__extension__							      \
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
-      !isunordered (__x, __y) && __x < __y; }))
-# endif
-
-/* Return nonzero value if X is less than or equal to Y.  */
-# ifndef islessequal
-#  define islessequal(x, y) \
-  (__extension__							      \
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
-      !isunordered (__x, __y) && __x <= __y; }))
-# endif
-
-/* Return nonzero value if either X is less than Y or Y is less than X.  */
-# ifndef islessgreater
-#  define islessgreater(x, y) \
-  (__extension__							      \
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
-      !isunordered (__x, __y) && (__x < __y || __y < __x); }))
-# endif
-
-/* Return nonzero value if arguments are unordered.  */
-# ifndef isunordered
-#  define isunordered(u, v) \
-  (__extension__							      \
-   ({ __typeof__(u) __u = (u); __typeof__(v) __v = (v);			      \
-      fpclassify (__u) == FP_NAN || fpclassify (__v) == FP_NAN; }))
-# endif
-
-#endif
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT)
 /* An expression whose type has the widest of the evaluation formats

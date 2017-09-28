@@ -29,60 +29,6 @@
 #ifdef	__GNUC__
 
 #ifdef __USE_ISOC99
-/* GCC 3.1 and up have builtins that actually can be used.  */
-# if !__GNUC_PREREQ (3,1)
-/* ISO C99 defines some macros to perform unordered comparisons.  The
-   m68k FPU supports this with special opcodes and we should use them.
-   These must not be inline functions since we have to be able to handle
-   all floating-point types.  */
-#  undef isgreater
-#  undef isgreaterequal
-#  undef isless
-#  undef islessequal
-#  undef islessgreater
-#  undef isunordered
-#  define isgreater(x, y)					\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsogt %0"		\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      __result != 0; })
-
-#  define isgreaterequal(x, y)				\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsoge %0"		\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      __result != 0; })
-
-#  define isless(x, y)					\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsolt %0"		\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      __result != 0; })
-
-#  define islessequal(x, y)				\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsole %0"		\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      __result != 0; })
-
-#  define islessgreater(x, y)				\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsogl %0"		\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      __result != 0; })
-
-#  define isunordered(x, y)				\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsun %0"			\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      __result != 0; })
-# endif /* GCC 3.1 */
 
 /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int

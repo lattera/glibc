@@ -1,3 +1,12 @@
+2017-09-28  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* math/math.h: Improve handling of C99 isgreater macros.
+	* sysdeps/alpha/fpu/bits/mathinline.h: Remove isgreater macros.
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/powerpc/bits/mathinline.h: Likewise.
+	* sysdeps/sparc/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/x86/fpu/bits/mathinline.h: Likewise.
+
 2017-09-28  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/libm-test-ulps: Update.

@@ -27,21 +27,6 @@
 # define __MATH_INLINE __extern_inline
 #endif
 
-#if defined __USE_ISOC99 && defined __GNUC__ && !__GNUC_PREREQ(3,0)
-# undef isgreater
-# undef isgreaterequal
-# undef isless
-# undef islessequal
-# undef islessgreater
-# undef isunordered
-# define isunordered(u, v)				\
-  (__extension__					\
-   ({ double __r, __u = (u), __v = (v);			\
-      __asm ("cmptun/su %1,%2,%0\n\ttrapb"		\
-	     : "=&f" (__r) : "f" (__u), "f"(__v));	\
-      __r != 0; }))
-#endif /* ISO C99 */
-
 #if (!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) \
     && defined __OPTIMIZE__
 

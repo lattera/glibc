@@ -29,31 +29,6 @@
 #if defined __GNUC__ && !defined _SOFT_FLOAT && !defined __NO_FPRS__
 
 #ifdef __USE_ISOC99
-# if !__GNUC_PREREQ (2,97)
-#  define __unordered_cmp(x, y) \
-  (__extension__							      \
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
-      unsigned __r;							      \
-      __asm__("fcmpu 7,%1,%2 ; mfcr %0" : "=r" (__r) : "f" (__x), "f"(__y)    \
-              : "cr7");  \
-      __r; }))
-
-#  undef isgreater
-#  undef isgreaterequal
-#  undef isless
-#  undef islessequal
-#  undef islessgreater
-#  undef isunordered
-
-#  define isgreater(x, y) (__unordered_cmp (x, y) >> 2 & 1)
-#  define isgreaterequal(x, y) ((__unordered_cmp (x, y) & 6) != 0)
-#  define isless(x, y) (__unordered_cmp (x, y) >> 3 & 1)
-#  define islessequal(x, y) ((__unordered_cmp (x, y) & 0xA) != 0)
-#  define islessgreater(x, y) ((__unordered_cmp (x, y) & 0xC) != 0)
-#  define isunordered(x, y) (__unordered_cmp (x, y) & 1)
-
-# endif /* __GNUC_PREREQ (2,97) */
-
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */
 # if __GNUC_PREREQ (2, 8)
