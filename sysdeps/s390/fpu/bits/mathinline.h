@@ -29,40 +29,6 @@
 #if (!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) \
     && defined __OPTIMIZE__
 
-#ifdef __USE_ISOC99
-
-/* Test for negative number.  Used in the signbit() macro.  */
-__MATH_INLINE int
-__NTH (__signbitf (float __x))
-{
-  __extension__ union { float __f; int __i; } __u = { __f: __x };
-  return __u.__i < 0;
-}
-
-__MATH_INLINE int
-__NTH (__signbit (double __x))
-{
-  __extension__ union { double __d; long __i; } __u = { __d: __x };
-  return __u.__i < 0;
-}
-
-# ifndef __NO_LONG_DOUBLE_MATH
-__MATH_INLINE int
-__NTH (__signbitl (long double __x))
-{
-  __extension__ union { long double __l; int __i[4]; } __u = { __l: __x };
-  return __u.__i[0] < 0;
-}
-# else
-__MATH_INLINE int
-__NTH (__signbitl (long double __x))
-{
-  return __signbit ((double) __x);
-}
-# endif
-
-#endif /* C99 */
-
 /* This code is used internally in the GNU libc.  */
 #ifdef __LIBC_INTERNAL_MATH_INLINES
 

@@ -28,44 +28,6 @@
 
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */
-# if __GNUC_PREREQ (2, 8)
-
-/* Test for negative number.  Used in the signbit() macro.  */
-__MATH_INLINE int
-__NTH (__signbitf (float __x))
-{
-#  ifdef __SSE2_MATH__
-  int __m;
-  __asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
-  return (__m & 0x8) != 0;
-#  else
-  __extension__ union { float __f; int __i; } __u = { __f: __x };
-  return __u.__i < 0;
-#  endif
-}
-__MATH_INLINE int
-__NTH (__signbit (double __x))
-{
-#  ifdef __SSE2_MATH__
-  int __m;
-  __asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
-  return (__m & 0x80) != 0;
-#  else
-  __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
-  return __u.__i[1] < 0;
-#  endif
-}
-__MATH_INLINE int
-__NTH (__signbitl (long double __x))
-{
-  __extension__ union { long double __l; int __i[3]; } __u = { __l: __x };
-  return (__u.__i[2] & 0x8000) != 0;
-}
-
-# endif
-
-/* The gcc, version 2.7 or below, has problems with all this inlining
-   code.  So disable it for this version of the compiler.  */
 #if __GNUC_PREREQ (2, 8)
 # if !__GNUC_PREREQ (3, 4) && !defined __NO_MATH_INLINES \
      && defined __OPTIMIZE__

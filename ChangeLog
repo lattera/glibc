@@ -1,5 +1,27 @@
 2017-09-28  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/alpha/fpu/bits/mathinline.h: Delete file.
+	* sysdeps/ia64/fpu/bits/mathinline.h: Delete file.
+	* sysdeps/m68k/coldfire/fpu/bits/mathinline.h: Delete file.
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h: (__signbitf): Remove.
+	(__signbit): Remove.
+	(__signbitl): Remove.
+	* sysdeps/powerpc/bits/mathinline.h (__signbitf): Remove.
+	(__signbit): Remove.
+	(__signbitl): Remove.
+	* sysdeps/s390/fpu/bits/mathinline.h: (__signbitf): Remove.
+	(__signbit): Remove.
+	(__signbitl): Remove.
+	* sysdeps/sparc/fpu/bits/mathinline.h (__signbitf): Remove.
+	(__signbit): Remove.
+	(__signbitl): Remove.
+	* sysdeps/tile/bits/mathinline.h: Delete file.
+	* sysdeps/x86/fpu/bits/mathinline.h (__signbitf): Remove.
+	(__signbit): Remove.
+	(__signbitl): Remove.
+
+2017-09-28  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* math/math.h: Improve handling of C99 isgreater macros.
 	* sysdeps/alpha/fpu/bits/mathinline.h: Remove isgreater macros.
 	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h: Likewise.

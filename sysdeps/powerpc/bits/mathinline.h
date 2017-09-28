@@ -28,41 +28,6 @@
 
 #if defined __GNUC__ && !defined _SOFT_FLOAT && !defined __NO_FPRS__
 
-#ifdef __USE_ISOC99
-/* The gcc, version 2.7 or below, has problems with all this inlining
-   code.  So disable it for this version of the compiler.  */
-# if __GNUC_PREREQ (2, 8)
-/* Test for negative number.  Used in the signbit() macro.  */
-__MATH_INLINE int
-__NTH (__signbitf (float __x))
-{
-#if __GNUC_PREREQ (4, 0)
-  return __builtin_signbitf (__x);
-#else
-  __extension__ union { float __f; int __i; } __u = { __f: __x };
-  return __u.__i < 0;
-#endif
-}
-__MATH_INLINE int
-__NTH (__signbit (double __x))
-{
-#if __GNUC_PREREQ (4, 0)
-  return __builtin_signbit (__x);
-#else
-  __extension__ union { double __d; long long __i; } __u = { __d: __x };
-  return __u.__i < 0;
-#endif
-}
-#  ifdef __LONG_DOUBLE_128__
-__MATH_INLINE int
-__NTH (__signbitl (long double __x))
-{
-  return __signbit ((double) __x);
-}
-#  endif
-# endif
-#endif /* __USE_ISOC99 */
-
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
 #ifdef __USE_ISOC99
