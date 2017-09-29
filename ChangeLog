@@ -1,5 +1,12 @@
 2017-09-29  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/arm/dl-machine.h (elf_machine_load_address): Use
+	_dl_relocate_static_pie instead of _dl_start to compute load
+	address in static PIE.  Return 0 if _DYNAMIC is undefined for
+	static executable.
+
+2017-09-29  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/mips/dl-machine.h (elf_machine_dynamic): Return 0 if
 	_DYNAMIC is undefined for static executable.
 

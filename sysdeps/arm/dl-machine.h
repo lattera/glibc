@@ -53,10 +53,20 @@ elf_machine_dynamic (void)
 static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
+  Elf32_Addr pcrel_addr;
+#ifdef SHARED
   extern Elf32_Addr __dl_start (void *) asm ("_dl_start");
   Elf32_Addr got_addr = (Elf32_Addr) &__dl_start;
-  Elf32_Addr pcrel_addr;
   asm ("adr %0, _dl_start" : "=r" (pcrel_addr));
+#else
+  extern Elf32_Dyn _DYNAMIC[] __attribute__((weak, visibility ("hidden")));
+  if (!_DYNAMIC)
+    return 0;
+  extern Elf32_Addr __dl_relocate_static_pie (void *)
+    asm ("_dl_relocate_static_pie") attribute_hidden;
+  Elf32_Addr got_addr = (Elf32_Addr) &__dl_relocate_static_pie;
+  asm ("adr %0, _dl_relocate_static_pie" : "=r" (pcrel_addr));
+#endif
 #ifdef __thumb__
   /* Clear the low bit of the function address.
 
