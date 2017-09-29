@@ -29,4 +29,7 @@ CFLAGS-w_asinl_compat.c += -fno-builtin-fabsl
 CFLAGS-w_atanhl_compat.c += -fno-builtin-fabsl
 CFLAGS-w_j0l_compat.c += -fno-builtin-fabsl
 CFLAGS-w_j1l_compat.c += -fno-builtin-fabsl
+CFLAGS-e_lgammal_r.c += -fno-builtin-fabsl
+CFLAGS-e_log10l.c += -fno-builtin-fabsl
+CFLAGS-e_log2l.c += -fno-builtin-fabsl
 endif

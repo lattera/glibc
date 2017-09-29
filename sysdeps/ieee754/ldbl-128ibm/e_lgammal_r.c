@@ -728,7 +728,7 @@ __ieee754_lgammal_r (long double x, int *signgamp)
       q = -x;
       p = __floorl (q);
       if (p == q)
-	return (one / __fabsl (p - p));
+	return (one / fabsl (p - p));
       long double halfp = p * 0.5L;
       if (halfp == __floorl (halfp))
 	*signgamp = -1;

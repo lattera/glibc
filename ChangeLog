@@ -1,5 +1,25 @@
 2017-09-29  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c
+	(__ieee754_lgamma_r): Use fabs rather than __fabs.
+	* sysdeps/ieee754/dbl-64/e_log10.c (__ieee754_log10): Likewise.
+	* sysdeps/ieee754/dbl-64/e_log2.c (__ieee754_log2): Likewise.
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c
+	(__ieee754_lgammaf_r): Use fabsf rather than __fabsf.
+	* sysdeps/ieee754/flt-32/e_log10f.c (__ieee754_log10f): Likewise.
+	* sysdeps/ieee754/flt-32/e_log2f.c (__ieee754_log2f): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c
+	(__ieee754_lgammal_r): Use fabsl rather than __fabsl.
+	* sysdeps/ieee754/ldbl-128/e_log10l.c (__ieee754_log10l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log2l.c (__ieee754_log2l): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_lgammal_r.c
+	(__ieee754_lgammal_r): Use fabsl rather than __fabsl.
+	* sysdeps/ieee754/ldbl-128ibm/e_log10l.c (__ieee754_log10l): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_log2l.c (__ieee754_log2l): Likewise.
+	* sysdeps/powerpc/nofpu/Makefile: Add -fno-builtin-fabsl for BZ #29253.
+
+2017-09-29  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* math/bits/cmathcalls.h (cimag): Remove inline.
 	(creal): Remove inline.
 	(conj): Remove inline.
