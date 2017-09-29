@@ -1,5 +1,10 @@
 2017-09-29  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/mips/dl-machine.h (elf_machine_dynamic): Return 0 if
+	_DYNAMIC is undefined for static executable.
+
+2017-09-29  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/arm/start.S (_start): Check PIC instead of SHARED.
 
 2017-09-29  Joseph Myers  <joseph@codesourcery.com>
