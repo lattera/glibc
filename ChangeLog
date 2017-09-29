@@ -1,3 +1,14 @@
+2017-09-29  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* math/Makefile (type-float-routines): Add e_logf_data.
+	* sysdeps/ieee754/flt-32/e_logf.c: New implementation.
+	* sysdeps/ieee754/flt-32/e_logf_data.c: New file.
+	* sysdeps/ieee754/flt-32/math_config.h (__logf_data): Define.
+	(LOGF_TABLE_BITS, LOGF_POLY_ORDER): Define.
+	* sysdeps/i386/fpu/e_logf_data.c: New file.
+	* sysdeps/ia64/fpu/e_logf_data.c: New file.
+	* sysdeps/m68k/m680x0/fpu/e_logf_data.c: New file.
+
 2017-09-28  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/dl-machine.h (elf_machine_load_address): Allow
