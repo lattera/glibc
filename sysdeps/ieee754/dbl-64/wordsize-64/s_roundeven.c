@@ -19,6 +19,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 #include <stdint.h>
 
 #define BIAS 0x3ff
@@ -67,8 +68,4 @@ __roundeven (double x)
   return x;
 }
 hidden_def (__roundeven)
-weak_alias (__roundeven, roundeven)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__roundeven, __roundevenl)
-weak_alias (__roundeven, roundevenl)
-#endif
+libm_alias_double (__roundeven, roundeven)

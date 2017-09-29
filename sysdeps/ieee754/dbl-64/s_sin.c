@@ -52,6 +52,7 @@
 #include "MathLib.h"
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 #include <fenv.h>
 
 /* Helper macros to compute sin of the input values.  */
@@ -912,16 +913,8 @@ cslow2 (double x)
 }
 
 #ifndef __cos
-weak_alias (__cos, cos)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__cos, __cosl)
-weak_alias (__cos, cosl)
-# endif
+libm_alias_double (__cos, cos)
 #endif
 #ifndef __sin
-weak_alias (__sin, sin)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__sin, __sinl)
-weak_alias (__sin, sinl)
-# endif
+libm_alias_double (__sin, sin)
 #endif

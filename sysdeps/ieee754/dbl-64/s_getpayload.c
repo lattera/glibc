@@ -19,6 +19,7 @@
 #include <fix-int-fp-convert-zero.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 #include <stdint.h>
 
 double
@@ -32,8 +33,4 @@ __getpayload (const double *x)
     return 0.0f;
   return (double) ix;
 }
-weak_alias (__getpayload, getpayload)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__getpayload, __getpayloadl)
-weak_alias (__getpayload, getpayloadl)
-#endif
+libm_alias_double (__getpayload, getpayload)

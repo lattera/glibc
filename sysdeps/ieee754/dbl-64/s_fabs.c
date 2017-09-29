@@ -19,14 +19,11 @@ static char rcsid[] = "$NetBSD: s_fabs.c,v 1.7 1995/05/10 20:47:13 jtc Exp $";
  */
 
 #include <math.h>
+#include <libm-alias-double.h>
 
 double
 __fabs (double x)
 {
   return __builtin_fabs (x);
 }
-weak_alias (__fabs, fabs)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__fabs, __fabsl)
-weak_alias (__fabs, fabsl)
-#endif
+libm_alias_double (__fabs, fabs)

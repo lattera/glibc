@@ -23,6 +23,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-double.h>
 #include <fix-fp-int-convert-overflow.h>
 
 static const double two52[2] =
@@ -120,8 +121,4 @@ __lrint (double x)
   return sx ? -result : result;
 }
 
-weak_alias (__lrint, lrint)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__lrint, __lrintl)
-weak_alias (__lrint, lrintl)
-#endif
+libm_alias_double (__lrint, lrint)

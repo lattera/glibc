@@ -116,6 +116,7 @@ static char rcsid[] = "$NetBSD: s_erf.c,v 1.8 1995/05/10 20:47:05 jtc Exp $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 #include <fix-int-fp-convert-zero.h>
 
 static const double
@@ -294,11 +295,7 @@ __erf (double x)
   else
     return r / x - one;
 }
-weak_alias (__erf, erf)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__erf, __erfl)
-weak_alias (__erf, erfl)
-#endif
+libm_alias_double (__erf, erf)
 
 double
 __erfc (double x)
@@ -421,8 +418,4 @@ __erfc (double x)
 	return two - tiny;
     }
 }
-weak_alias (__erfc, erfc)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__erfc, __erfcl)
-weak_alias (__erfc, erfcl)
-#endif
+libm_alias_double (__erfc, erfc)

@@ -1,3 +1,90 @@
+2017-09-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/s_asinh.c: Include <libm-alias-double.h>.
+	(asinh): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_cbrt.c: Include <libm-alias-double.h>.
+	(cbrt): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_copysign.c: Include
+	<libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_erf.c: Include <libm-alias-double.h>.
+	(erf): Define using libm_alias_double.
+	(erfc): Likewise.
+	* sysdeps/ieee754/dbl-64/s_expm1.c: Include <libm-alias-double.h>.
+	(expm1): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_fabs.c: Include <libm-alias-double.h>.
+	(fabs): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_fromfp.c (fromfp): Define using
+	libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_fromfp_main.c: Include
+	<libm-alias-double.h>.
+	* sysdeps/ieee754/dbl-64/s_fromfpx.c (fromfpx): Define using
+	libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_getpayload.c: Include
+	<libm-alias-double.h>.
+	(getpayload): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_llrint.c: Include
+	<libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_lrint.c: Include <libm-alias-double.h>.
+	(lrint): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_nextup.c: Include
+	<libm-alias-double.h>.
+	(nextup): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_roundeven.c: Include
+	<libm-alias-double.h>.
+	(roundeven): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_setpayload.c (setpayload): Define using
+	libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_setpayload_main.c: Include
+	<libm-alias-double.h>.
+	* sysdeps/ieee754/dbl-64/s_setpayloadsig.c (setpayloadsig): Define
+	using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_sin.c: Include <libm-alias-double.h>.
+	(cos): Define using libm_alias_double.
+	(sin): Likewise.
+	* sysdeps/ieee754/dbl-64/s_sincos.c: Include
+	<libm-alias-double.h>.
+	(sincos): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_tanh.c: Include <libm-alias-double.h>.
+	(tanh): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_totalorder.c: Include
+	<libm-alias-double.h>.
+	(totalorder): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_totalordermag.c: Include
+	<libm-alias-double.h>.
+	(totalordermag): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_ufromfp.c (ufromfp): Define using
+	libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_ufromfpx.c (ufromfpx): Define using
+	libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_getpayload.c: Include
+	<libm-alias-double.h>.
+	(getpayload): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_roundeven.c: Include
+	<libm-alias-double.h>.
+	(roundeven): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_setpayload_main.c: Include
+	<libm-alias-double.h>.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalorder.c: Include
+	<libm-alias-double.h>.
+	(totalorder): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalordermag.c: Include
+	<libm-alias-double.h>.
+	(totalordermag): Define using libm_alias_double.
+	* sysdeps/ieee754/ldbl-opt/s_copysign.c (copysignl): Only define
+	libc compat symbol here.
+	* sysdeps/ieee754/ldbl-opt/s_asinh.c: Remove file.
+	* sysdeps/ieee754/ldbl-opt/s_cbrt.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_erf.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_expm1.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_fabs.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_llrint.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_lrint.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_sin.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_sincos.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_tanh.c: Likewise.
+
 2017-09-29  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/arm/dl-machine.h (elf_machine_load_address): Use

@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <nan-high-order-bit.h>
+#include <libm-alias-double.h>
 #include <stdint.h>
 
 int
@@ -42,8 +43,4 @@ __totalordermag (double x, double y)
 #endif
   return ix <= iy;
 }
-weak_alias (__totalordermag, totalordermag)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__totalordermag, __totalordermagl)
-weak_alias (__totalordermag, totalordermagl)
-#endif
+libm_alias_double (__totalordermag, totalordermag)

@@ -112,6 +112,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 #define one Q[0]
 static const double
   huge = 1.0e+300,
@@ -255,8 +256,4 @@ __expm1 (double x)
     }
   return y;
 }
-weak_alias (__expm1, expm1)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__expm1, __expm1l)
-weak_alias (__expm1, expm1l)
-#endif
+libm_alias_double (__expm1, expm1)

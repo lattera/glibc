@@ -41,6 +41,7 @@ static char rcsid[] = "$NetBSD: s_tanh.c,v 1.7 1995/05/10 20:48:22 jtc Exp $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 static const double one = 1.0, two = 2.0, tiny = 1.0e-300;
 
@@ -91,8 +92,4 @@ __tanh (double x)
     }
   return (jx >= 0) ? z : -z;
 }
-weak_alias (__tanh, tanh)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__tanh, __tanhl)
-weak_alias (__tanh, tanhl)
-#endif
+libm_alias_double (__tanh, tanh)

@@ -24,6 +24,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 static const double
   one = 1.00000000000000000000e+00, /* 0x3FF00000, 0x00000000 */
@@ -65,8 +66,4 @@ __asinh (double x)
     }
   return __copysign (w, x);
 }
-weak_alias (__asinh, asinh)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__asinh, __asinhl)
-weak_alias (__asinh, asinhl)
-#endif
+libm_alias_double (__asinh, asinh)
