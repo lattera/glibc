@@ -1,3 +1,9 @@
+2017-09-29  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* math/bits/cmathcalls.h (cimag): Remove inline.
+	(creal): Remove inline.
+	(conj): Remove inline.
+
 2017-09-29  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* math/Makefile (type-float-routines): Add e_powf_log2_data.

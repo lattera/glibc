@@ -128,33 +128,3 @@ __MATHDECL (_Mdouble_,cimag, (_Mdouble_complex_ __z));
 
 /* Real part of Z.  */
 __MATHDECL (_Mdouble_,creal, (_Mdouble_complex_ __z));
-
-
-/* Now some optimized versions.  GCC has handy notations for these
-   functions.  Recent GCC handles these as builtin functions so does
-   not need inlines.  */
-#if defined __GNUC__ && !__GNUC_PREREQ (2, 97) && defined __OPTIMIZE__ \
-    && defined __extern_inline
-
-/* Imaginary part of Z.  */
-__extern_inline _Mdouble_
-__MATH_PRECNAME(cimag) (_Mdouble_complex_ __z) __THROW
-{
-  return __imag__ __z;
-}
-
-/* Real part of Z.  */
-__extern_inline _Mdouble_
-__MATH_PRECNAME(creal) (_Mdouble_complex_ __z) __THROW
-{
-  return __real__ __z;
-}
-
-/* Complex conjugate of Z.  */
-__extern_inline _Mdouble_complex_
-__MATH_PRECNAME(conj) (_Mdouble_complex_ __z) __THROW
-{
-  return __extension__ ~__z;
-}
-
-#endif
