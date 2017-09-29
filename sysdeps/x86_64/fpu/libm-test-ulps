@@ -1143,10 +1143,10 @@ ldouble: 2
 
 Function: Real part of "clog10_downward":
 double: 5
-float: 4
+float: 5
 float128: 3
 idouble: 5
-ifloat: 4
+ifloat: 5
 ifloat128: 3
 ildouble: 8
 ldouble: 8
