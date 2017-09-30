@@ -1,3 +1,9 @@
+2017-09-30  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ libc/22165]
+	* sysdeps/unix/sysv/linux/hppa/getcontext.S (__getcontext): Use PIC
+	code to load address of __getcontext_ret when generating PIC code.
+
 2017-09-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/Makefile (tests-static-internal): Add

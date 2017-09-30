@@ -145,8 +145,13 @@ ENTRY(__getcontext)
 	stw	%r4, oR24(%r26)
 	stw	%r5, oR25(%r26)
 	stw	%r6, oR26(%r26)
+#ifdef PIC
+	addil	LT%__getcontext_ret, %r19
+	ldw     RT%__getcontext_ret(%r1), %r1
+#else
 	ldil	L%__getcontext_ret, %r1
 	ldo     R%__getcontext_ret(%r1), %r1
+#endif
 	stw	%r1, oR2(%r26)
 
 	/* Save the current signal mask.  */
