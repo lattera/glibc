@@ -1,3 +1,10 @@
+2017-09-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Makefile (tests-static-internal): Add
+	tst-tls1-static-non-pie.
+	(LDFLAGS-tst-tls1-static-non-pie): New.
+	* elf/tst-tls1-static-non-pie.c: New file.
+
 2017-09-29  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/dbl-64/s_asinh.c: Include <libm-alias-double.h>.
