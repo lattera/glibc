@@ -61,4 +61,5 @@ __ioctl (int fd, unsigned long int request, ...)
 
   return result;
 }
+libc_hidden_def (__ioctl)
 weak_alias (__ioctl, ioctl)
