@@ -33,18 +33,19 @@ extern const unsigned short int __mon_yday[2][13] attribute_hidden;
 extern struct tm _tmbuf attribute_hidden;
 
 /* Defined in tzset.c.  */
-extern char *__tzstring (const char *string);
+extern char *__tzstring (const char *string) attribute_hidden;
 
 extern int __use_tzfile attribute_hidden;
 
 extern void __tzfile_read (const char *file, size_t extra,
-			   char **extrap);
+			   char **extrap) attribute_hidden;
 extern void __tzfile_compute (time_t timer, int use_localtime,
 			      long int *leap_correct, int *leap_hit,
-			      struct tm *tp);
+			      struct tm *tp) attribute_hidden;
 extern void __tzfile_default (const char *std, const char *dst,
-			      long int stdoff, long int dstoff);
-extern void __tzset_parse_tz (const char *tz);
+			      long int stdoff, long int dstoff)
+  attribute_hidden;
+extern void __tzset_parse_tz (const char *tz) attribute_hidden;
 extern void __tz_compute (time_t timer, struct tm *tm, int use_localtime)
   __THROW attribute_hidden;
 
@@ -68,22 +69,25 @@ libc_hidden_proto (__gmtime_r)
    Return nonzero if successful.  */
 extern int __offtime (const time_t *__timer,
 		      long int __offset,
-		      struct tm *__tp);
+		      struct tm *__tp) attribute_hidden;
 
-extern char *__asctime_r (const struct tm *__tp, char *__buf);
-extern void __tzset (void);
+extern char *__asctime_r (const struct tm *__tp, char *__buf)
+  attribute_hidden;
+extern void __tzset (void) attribute_hidden;
 
 /* Prototype for the internal function to get information based on TZ.  */
-extern struct tm *__tz_convert (const time_t *timer, int use_localtime, struct tm *tp);
+extern struct tm *__tz_convert (const time_t *timer, int use_localtime,
+				struct tm *tp) attribute_hidden;
 
 extern int __nanosleep (const struct timespec *__requested_time,
 			struct timespec *__remaining);
 hidden_proto (__nanosleep)
-extern int __getdate_r (const char *__string, struct tm *__resbufp);
+extern int __getdate_r (const char *__string, struct tm *__resbufp)
+  attribute_hidden;
 
 
 /* Determine CLK_TCK value.  */
-extern int __getclktck (void);
+extern int __getclktck (void) attribute_hidden;
 
 
 /* strptime support.  */

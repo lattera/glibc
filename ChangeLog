@@ -1,6 +1,21 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/time.h (__tzstring): Add attribute_hidden.
+	(__tzfile_read): Likewise.
+	(__tzfile_compute): Likewise.
+	(__tzfile_default): Likewise.
+	(__tzset_parse_tz): Likewise.
+	(__offtime): Likewise.
+	(__asctime_r): Likewise.
+	(__tzset): Likewise.
+	(__tz_convert): Likewise.
+	(__getdate_r): Likewise.
+	(__getclktck): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* nscd/nscd-client.h (__nscd_get_map_ref): Add attribute_hidden.
 	(__nscd_unmap): Likewise.
 	(__nscd_cache_search): Likewise.
