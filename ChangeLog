@@ -1,6 +1,28 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/wchar.h (__wcsnlen): Add attribute_hidden.
+	(__wcscat): Likewise.
+	(__btowc): Likewise.
+	(__wcrtomb): Likewise.
+	(__mbsrtowcs): Likewise.
+	(__wcsrtombs): Likewise.
+	(__mbsnrtowcs): Likewise.
+	(__wcsnrtombs): Likewise.
+	(__wcsncpy): Likewise.
+	(__wcpncpy): Likewise.
+	(__wmemcpy): Likewise.
+	(__wmempcpy): Likewise.
+	(__wmemmove): Likewise.
+	(__wcschrnul): Likewise.
+	(__vfwscanf): Likewise.
+	(__vswprintf): Likewise.
+	(__fwprintf): Likewise.
+	(__vfwprintf): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/grp.h (__fgetgrent_r): Add attribute_hidden.
 	(__getgrgid_r): Likewise.
 	(__getgrnam_r): Likewise.
