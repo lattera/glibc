@@ -19,11 +19,7 @@
 #include <stddef.h>
 #include <sys/stat.h>
 #include <sys/statfs.h>
-#include <sys/statvfs.h>
-
-extern void __internal_statvfs (const char *name, struct statvfs *buf,
-				struct statfs *fsbuf, int fd);
-
+#include "internal_statvfs.h"
 
 int
 __statvfs (const char *file, struct statvfs *buf)

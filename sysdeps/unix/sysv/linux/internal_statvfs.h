@@ -1,6 +1,6 @@
-/* Copyright (C) 1998-2017 Free Software Foundation, Inc.
+/* Internal statvfs/statvfs64 function prototypes.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,25 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
-#include <sys/stat.h>
-#include <sys/statfs.h>
-#include "internal_statvfs.h"
+#include <sys/statvfs.h>
 
-int
-__fstatvfs (int fd, struct statvfs *buf)
-{
-  struct statfs fsbuf;
-
-  /* Get as much information as possible from the system.  */
-  if (__fstatfs (fd, &fsbuf) < 0)
-    return -1;
-
-  /* Convert the result.  */
-  __internal_statvfs (NULL, buf, &fsbuf, fd);
-
-  /* We signal success if the statfs call succeeded.  */
-  return 0;
-}
-weak_alias (__fstatvfs, fstatvfs)
-libc_hidden_weak (fstatvfs)
+extern void __internal_statvfs (const char *name, struct statvfs *buf,
+				struct statfs *fsbuf, int fd)
+      attribute_hidden;
+extern void __internal_statvfs64 (const char *name, struct statvfs64 *buf,
+				  struct statfs64 *fsbuf, int fd)
+      attribute_hidden;

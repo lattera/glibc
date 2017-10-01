@@ -1,6 +1,25 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* sysdeps/unix/sysv/linux/fstatvfs.c: Include "internal_statvfs.h"
+	instead of <sys/statvfs.h>.
+	(__internal_statvfs): Removed.
+	* sysdeps/unix/sysv/linux/fstatvfs64.c Include "internal_statvfs.h"
+	instead of <sys/statvfs.h>.
+	(__internal_statvfs64): Removed.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: Include
+	"internal_statvfs.h" instead of <sys/statvfs.h>.
+	* sysdeps/unix/sysv/linux/internal_statvfs.h: New file.
+	* sysdeps/unix/sysv/linux/statvfs.c Include "internal_statvfs.h"
+	instead of <sys/statvfs.h>.
+	(__internal_statvfs): Removed.
+	* sysdeps/unix/sysv/linux/statvfs64.c Include "internal_statvfs.h"
+	instead of <sys/statvfs.h>.
+	(__internal_statvfs64): Removed.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* iconv/gconv_int.h (__gconv_open): Add attribute_hidden.
 	(__gconv_close): Likewise.
 	(__gconv): Likewise.

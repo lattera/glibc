@@ -26,7 +26,7 @@
 #include <sys/mount.h>
 #include <sys/stat.h>
 #include <sys/statfs.h>
-#include <sys/statvfs.h>
+#include "internal_statvfs.h"
 #include "linux_fsinfo.h"
 #include <kernel-features.h>
 
