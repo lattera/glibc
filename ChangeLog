@@ -1,6 +1,12 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/string.h (__strsep): Add libc_hidden_proto.
+	* string/strsep.c (__strsep): Add libc_hidden_def.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* posix/spawn_int.h (__posix_spawn_file_actions_realloc): Add
 	attribute_hidden.
 	(__spawni): Likewise.

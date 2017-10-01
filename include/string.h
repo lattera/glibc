@@ -12,6 +12,7 @@ extern size_t __strnlen (const char *__string, size_t __maxlen)
      __attribute_pure__;
 
 extern char *__strsep (char **__stringp, const char *__delim);
+libc_hidden_proto (__strsep)
 
 extern int __strverscmp (const char *__s1, const char *__s2)
      __attribute_pure__;
