@@ -72,7 +72,8 @@ extern void *_dl_vsym (void *handle, const char *name, const char *version,
    _dl_catch_error.  Returns zero for success, nonzero for failure; and
    arranges for `dlerror' to return the error details.
    ARGS is passed as argument to OPERATE.  */
-extern int _dlerror_run (void (*operate) (void *), void *args);
+extern int _dlerror_run (void (*operate) (void *), void *args)
+    attribute_hidden;
 
 #ifdef SHARED
 # define DL_CALLER_DECL /* Nothing */

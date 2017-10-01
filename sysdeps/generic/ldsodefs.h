@@ -954,7 +954,7 @@ extern void _dl_init (struct link_map *main_map, int argc, char **argv,
 
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */
-extern void _dl_fini (void);
+extern void _dl_fini (void) attribute_hidden;
 
 /* Sort array MAPS according to dependencies of the contained objects.  */
 extern void _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used,
@@ -1123,10 +1123,12 @@ extern struct link_map *_dl_find_dso_for_object (const ElfW(Addr) addr);
 rtld_hidden_proto (_dl_find_dso_for_object)
 
 /* Initialization which is normally done by the dynamic linker.  */
-extern void _dl_non_dynamic_init (void);
+extern void _dl_non_dynamic_init (void)
+     attribute_hidden;
 
 /* Used by static binaries to check the auxiliary vector.  */
-extern void _dl_aux_init (ElfW(auxv_t) *av);
+extern void _dl_aux_init (ElfW(auxv_t) *av)
+     attribute_hidden;
 
 
 __END_DECLS

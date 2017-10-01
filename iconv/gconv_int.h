@@ -156,10 +156,12 @@ __libc_lock_define (extern, __gconv_lock attribute_hidden)
 
 /* Return in *HANDLE decriptor for transformation from FROMSET to TOSET.  */
 extern int __gconv_open (const char *toset, const char *fromset,
-			 __gconv_t *handle, int flags);
+			 __gconv_t *handle, int flags)
+     attribute_hidden;
 
 /* Free resources associated with transformation descriptor CD.  */
-extern int __gconv_close (__gconv_t cd);
+extern int __gconv_close (__gconv_t cd)
+     attribute_hidden;
 
 /* Transform at most *INBYTESLEFT bytes from buffer starting at *INBUF
    according to rules described by CD and place up to *OUTBYTESLEFT
@@ -167,33 +169,38 @@ extern int __gconv_close (__gconv_t cd);
    conversions in *IRREVERSIBLE if this pointer is not null.  */
 extern int __gconv (__gconv_t cd, const unsigned char **inbuf,
 		    const unsigned char *inbufend, unsigned char **outbuf,
-		    unsigned char *outbufend, size_t *irreversible);
+		    unsigned char *outbufend, size_t *irreversible)
+     attribute_hidden;
 
 /* Return in *HANDLE a pointer to an array with *NSTEPS elements describing
    the single steps necessary for transformation from FROMSET to TOSET.  */
 extern int __gconv_find_transform (const char *toset, const char *fromset,
 				   struct __gconv_step **handle,
-				   size_t *nsteps, int flags);
+				   size_t *nsteps, int flags)
+     attribute_hidden;
 
 /* Search for transformation in cache data.  */
 extern int __gconv_lookup_cache (const char *toset, const char *fromset,
 				 struct __gconv_step **handle, size_t *nsteps,
-				 int flags);
+				 int flags)
+     attribute_hidden;
 
 /* Compare the two name for whether they are after alias expansion the
    same.  This function uses the cache and fails if none is
    loaded.  */
 extern int __gconv_compare_alias_cache (const char *name1, const char *name2,
-					int *result);
+					int *result)
+     attribute_hidden;
 
 /* Free data associated with a step's structure.  */
-extern void __gconv_release_step (struct __gconv_step *step);
+extern void __gconv_release_step (struct __gconv_step *step)
+     attribute_hidden;
 
 /* Read all the configuration data and cache it.  */
 extern void __gconv_read_conf (void) attribute_hidden;
 
 /* Try to read module cache file.  */
-extern int __gconv_load_cache (void);
+extern int __gconv_load_cache (void) attribute_hidden;
 
 /* Retrieve pointer to internal cache.  */
 extern void *__gconv_get_cache (void);
@@ -205,7 +212,7 @@ extern struct gconv_module *__gconv_get_modules_db (void);
 extern void *__gconv_get_alias_db (void);
 
 /* Determine the directories we are looking in.  */
-extern void __gconv_get_path (void);
+extern void __gconv_get_path (void) attribute_hidden;
 
 /* Comparison function to search alias.  */
 extern int __gconv_alias_compare (const void *p1, const void *p2)
@@ -214,28 +221,34 @@ extern int __gconv_alias_compare (const void *p1, const void *p2)
 /* Clear reference to transformation step implementations which might
    cause the code to be unloaded.  */
 extern int __gconv_close_transform (struct __gconv_step *steps,
-				    size_t nsteps);
+				    size_t nsteps)
+     attribute_hidden;
 
 /* Free all resources allocated for the transformation record when
    using the cache.  */
-extern void __gconv_release_cache (struct __gconv_step *steps, size_t nsteps);
+extern void __gconv_release_cache (struct __gconv_step *steps, size_t nsteps)
+     attribute_hidden;
 
 /* Load shared object named by NAME.  If already loaded increment reference
    count.  */
-extern struct __gconv_loaded_object *__gconv_find_shlib (const char *name);
+extern struct __gconv_loaded_object *__gconv_find_shlib (const char *name)
+     attribute_hidden;
 
 /* Release shared object.  If no further reference is available unload
    the object.  */
-extern void __gconv_release_shlib (struct __gconv_loaded_object *handle);
+extern void __gconv_release_shlib (struct __gconv_loaded_object *handle)
+     attribute_hidden;
 
 /* Fill STEP with information about builtin module with NAME.  */
 extern void __gconv_get_builtin_trans (const char *name,
-				       struct __gconv_step *step);
+				       struct __gconv_step *step)
+     attribute_hidden;
 
 libc_hidden_proto (__gconv_transliterate)
 
 /* If NAME is an codeset alias expand it.  */
-extern int __gconv_compare_alias (const char *name1, const char *name2);
+extern int __gconv_compare_alias (const char *name1, const char *name2)
+     attribute_hidden;
 
 
 /* Builtin transformations.  */

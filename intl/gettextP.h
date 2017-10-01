@@ -251,19 +251,23 @@ extern const char *_nl_locale_name_default (void);
 
 struct loaded_l10nfile *_nl_find_domain (const char *__dirname, char *__locale,
 					 const char *__domainname,
-					 struct binding *__domainbinding);
+					 struct binding *__domainbinding)
+     attribute_hidden;
 void _nl_load_domain (struct loaded_l10nfile *__domain,
-		      struct binding *__domainbinding);
+		      struct binding *__domainbinding)
+     attribute_hidden;
 
 #ifdef IN_LIBGLOCALE
 char *_nl_find_msg (struct loaded_l10nfile *domain_file,
 		    struct binding *domainbinding, const char *encoding,
 		    const char *msgid,
-		    size_t *lengthp);
+		    size_t *lengthp)
+     attribute_hidden;
 #else
 char *_nl_find_msg (struct loaded_l10nfile *domain_file,
 		    struct binding *domainbinding, const char *msgid,
-		    int convert, size_t *lengthp);
+		    int convert, size_t *lengthp)
+     attribute_hidden;
 #endif
 
 /* The internal variables in the standalone libintl.a must have different

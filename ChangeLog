@@ -1,6 +1,49 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* iconv/gconv_int.h (__gconv_open): Add attribute_hidden.
+	(__gconv_close): Likewise.
+	(__gconv): Likewise.
+	(__gconv_find_transform): Likewise.
+	(__gconv_lookup_cache): Likewise.
+	(__gconv_compare_alias_cache): Likewise.
+	(__gconv_load_cache): Likewise.
+	(__gconv_get_path): Likewise.
+	(__gconv_close_transform): Likewise.
+	(__gconv_release_cache): Likewise.
+	(__gconv_find_shlib): Likewise.
+	(__gconv_release_shlib): Likewise.
+	(__gconv_get_builtin_trans): Likewise.
+	(__gconv_compare_alias): Likewise.
+	* include/dlfcn.h (_dlerror_run): Likewise.
+	* include/stdio.h (__fortify_fail_abort): Likewise.
+	* include/time.h (__tz_compute): Likewise.
+	(__strptime_internal): Likewise.
+	* intl/gettextP.h (_nl_find_domain): Likewise.
+	(_nl_load_domain): Likewise.
+	(_nl_find_msg): Likewise.
+	* intl/plural-exp.h (FREE_EXPRESSION): Likewise.
+	(EXTRACT_PLURAL_EXPRESSION): Likewise.
+	* locale/coll-lookup.h (__collidx_table_lookup): Likewise.
+	* resolv/gai_misc.h (__gai_enqueue_request): Likewise.
+	(__gai_find_request): Likewise.
+	(__gai_remove_request): Likewise.
+	(__gai_notify): Likewise.
+	(__gai_notify_only): Likewise.
+	* sysdeps/generic/aio_misc.h (__aio_sigqueue): Likewise.
+	* sysdeps/generic/ldsodefs.h (_dl_fini): Likewise.
+	(_dl_non_dynamic_init): Likewise.
+	(_dl_aux_init): Likewise.
+	* sysdeps/i386/machine-gmon.h (mcount_internal): Likewise.
+	* sysdeps/unix/sysv/linux/i386/olddirent.h (__old_getdents64):
+	Likewise.
+	* wcsmbs/wcsmbsload.h (__wcsmbs_load_conv): Likewise.
+	(__wcsmbs_clone_conv): Likewise.
+	(__wcsmbs_named_conv): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/stdlib.h (__random): Add attribute_hidden.
 	(__random_r): Likewise.
 	(__srandom_r): Likewise.

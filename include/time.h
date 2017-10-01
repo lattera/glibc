@@ -46,7 +46,7 @@ extern void __tzfile_default (const char *std, const char *dst,
 			      long int stdoff, long int dstoff);
 extern void __tzset_parse_tz (const char *tz);
 extern void __tz_compute (time_t timer, struct tm *tm, int use_localtime)
-  __THROW;
+  __THROW attribute_hidden;
 
 /* Subroutine of `mktime'.  Return the `time_t' representation of TP and
    normalize TP, given that a `struct tm *' maps to a `time_t' as performed
@@ -89,7 +89,7 @@ extern int __getclktck (void);
 /* strptime support.  */
 extern char * __strptime_internal (const char *rp, const char *fmt,
 				   struct tm *tm, void *statep,
-				   locale_t locparam);
+				   locale_t locparam) attribute_hidden;
 
 extern double __difftime (time_t time1, time_t time0);
 

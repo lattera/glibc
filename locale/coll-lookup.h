@@ -19,7 +19,9 @@
 #include <stdint.h>
 
 /* Lookup in a table of int32_t, with default value 0.  */
-extern int32_t __collidx_table_lookup (const char *table, uint32_t wc);
+extern int32_t __collidx_table_lookup (const char *table, uint32_t wc)
+     attribute_hidden;
 
 /* Lookup in a table of uint32_t, with default value 0xffffffff.  */
-extern uint32_t __collseq_table_lookup (const char *table, uint32_t wc);
+extern uint32_t __collseq_table_lookup (const char *table, uint32_t wc)
+     attribute_hidden;
