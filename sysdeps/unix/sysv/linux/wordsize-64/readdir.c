@@ -3,5 +3,6 @@
 #include <sysdeps/posix/readdir.c>
 #undef __readdir64
 strong_alias (__readdir, __readdir64)
+strong_alias (__readdir, __GI___readdir64)
 #undef readdir64
 weak_alias (__readdir, readdir64)

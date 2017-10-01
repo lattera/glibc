@@ -1,6 +1,20 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/dirent.h (__opendir): Always add attribute_hidden.
+	(__fdopendir): Likewise.
+	(__closedir): Likewise.
+	(__readdir): Likewise.
+	(__readdir64): Add libc_hidden_proto.
+	* sysdeps/mach/hurd/readdir64.c (__readdir64): Add libc_hidden_def.
+	* sysdeps/unix/sysv/linux/i386/readdir64.c (__readdir64): Likewise.
+	* sysdeps/unix/sysv/linux/readdir64.c (__readdir64): Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/readdir.c (__GI___readdir64):
+	New alias.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/aliases.h (__getaliasbyname_r): Add attribute_hidden.
 	* include/netdb.h (__gethostbyaddr_r): Likewise.
 	(__gethostbyname_r): Likewise.

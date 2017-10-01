@@ -27,6 +27,7 @@
 #undef __GETDENTS
 #undef DIRENT_TYPE
 
+libc_hidden_def (__readdir64)
 versioned_symbol (libc, __readdir64, readdir64, GLIBC_2_2);
 
 #if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)

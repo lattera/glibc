@@ -98,4 +98,5 @@ __readdir64 (DIR *dirp)
   return dp;
 }
 
+libc_hidden_def (__readdir64)
 weak_alias (__readdir64, readdir64)

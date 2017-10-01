@@ -4,4 +4,5 @@
 
 #include <sysdeps/posix/readdir.c>
 
+libc_hidden_def (__readdir64)
 weak_alias (__readdir64, readdir64)

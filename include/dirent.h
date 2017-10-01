@@ -15,12 +15,13 @@ struct scandir_cancel_struct
 };
 
 /* Now define the internal interfaces.  */
-extern DIR *__opendir (const char *__name);
+extern DIR *__opendir (const char *__name) attribute_hidden;
 extern DIR *__opendirat (int dfd, const char *__name) attribute_hidden;
-extern DIR *__fdopendir (int __fd);
-extern int __closedir (DIR *__dirp);
-extern struct dirent *__readdir (DIR *__dirp);
+extern DIR *__fdopendir (int __fd) attribute_hidden;
+extern int __closedir (DIR *__dirp) attribute_hidden;
+extern struct dirent *__readdir (DIR *__dirp) attribute_hidden;
 extern struct dirent64 *__readdir64 (DIR *__dirp);
+libc_hidden_proto (__readdir64)
 extern int __readdir_r (DIR *__dirp, struct dirent *__entry,
 			struct dirent **__result);
 extern int __readdir64_r (DIR *__dirp, struct dirent64 *__entry,
@@ -77,10 +78,6 @@ libc_hidden_proto (__scandirat)
 libc_hidden_proto (scandirat64)
 
 #  if IS_IN (rtld)
-extern __typeof (__closedir) __closedir attribute_hidden;
-extern __typeof (__fdopendir) __fdopendir attribute_hidden;
-extern __typeof (__readdir) __readdir attribute_hidden;
-extern __typeof (__readdir64) __readdir64 attribute_hidden;
 extern __typeof (__rewinddir) __rewinddir attribute_hidden;
 #  endif
 # endif
