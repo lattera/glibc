@@ -9,6 +9,8 @@
 /* Nonzero if the malloc is already initialized.  */
 extern int __malloc_initialized attribute_hidden;
 
+extern __typeof (__malloc_check_init) __malloc_check_init attribute_hidden;
+
 struct malloc_state;
 typedef struct malloc_state *mstate;
 
