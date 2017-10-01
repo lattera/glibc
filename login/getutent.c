@@ -41,4 +41,5 @@ __getutent (void)
 
   return result;
 }
+libc_hidden_def (__getutent)
 weak_alias (__getutent, getutent)

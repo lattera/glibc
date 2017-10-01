@@ -31,4 +31,5 @@ __updwtmp (const char *wtmp_file, const struct utmp *utmp)
 
   (*__libc_utmp_file_functions.updwtmp) (file_name, utmp);
 }
+libc_hidden_def (__updwtmp)
 weak_alias (__updwtmp, updwtmp)

@@ -1,6 +1,29 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/utmp.h (__updwtmp): Add libc_hidden_proto.
+	(__getutent): Likewise.
+	(__getutid): Likewise.
+	(__getutline): Likewise.
+	(__pututline): Likewise.
+	(__getutent_r): Likewise.
+	(__getutid_r): Likewise.
+	(__getutline_r): Likewise.
+	(__utmpname): Add attribute_hidden.
+	(__setutent): Likewise.
+	(__endutent): Likewise.
+	* login/getutent.c (__getutent): Add libc_hidden_def.
+	* login/getutent_r.c (__getutent_r): Likewise.
+	(__pututline): Likewise.
+	* login/getutid.c (__getutid): Likewise.
+	* login/getutid_r.c (__getutid_r): Likewise.
+	* login/getutline.c (__getutline): Likewise.
+	* login/getutline_r.c (__getutline_r): Likewise.
+	* login/updwtmp.c (__updwtmp): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/dirent.h (__opendir): Always add attribute_hidden.
 	(__fdopendir): Likewise.
 	(__closedir): Likewise.

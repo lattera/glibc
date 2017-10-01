@@ -151,6 +151,7 @@ __getutent_r (struct utmp *buffer, struct utmp **result)
 
   return retval;
 }
+libc_hidden_def (__getutent_r)
 weak_alias (__getutent_r, getutent_r)
 
 
@@ -167,6 +168,7 @@ __pututline (const struct utmp *data)
 
   return buffer;
 }
+libc_hidden_def (__pututline)
 weak_alias (__pututline, pututline)
 
 

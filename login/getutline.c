@@ -40,4 +40,5 @@ __getutline (const struct utmp *line)
 
   return result;
 }
+libc_hidden_def (__getutline)
 weak_alias (__getutline, getutline)

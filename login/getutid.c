@@ -39,4 +39,5 @@ __getutid (const struct utmp *id)
 
   return result;
 }
+libc_hidden_def (__getutid)
 weak_alias (__getutid, getutid)
