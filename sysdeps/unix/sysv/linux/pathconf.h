@@ -24,17 +24,21 @@
 /* Used like: return __statfs_link_max (__statfs (name, &buf), &buf,
 					name, -1); */
 extern long int __statfs_link_max (int result, const struct statfs *fsbuf,
-				   const char *file, int fd);
+				   const char *file, int fd)
+     attribute_hidden;
 
 
 /* Used like: return __statfs_filesize_max (__statfs (name, &buf), &buf); */
-extern long int __statfs_filesize_max (int result, const struct statfs *fsbuf);
+extern long int __statfs_filesize_max (int result, const struct statfs *fsbuf)
+     attribute_hidden;
 
 
 /* Used like: return __statfs_link_max (__statfs (name, &buf), &buf); */
-extern long int __statfs_symlinks (int result, const struct statfs *fsbuf);
+extern long int __statfs_symlinks (int result, const struct statfs *fsbuf)
+     attribute_hidden;
 
 
 /* Used like: return __statfs_chown_restricted (__statfs (name, &buf), &buf);*/
 extern long int __statfs_chown_restricted (int result,
-					   const struct statfs *fsbuf);
+					   const struct statfs *fsbuf)
+     attribute_hidden;

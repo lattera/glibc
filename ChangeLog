@@ -1,6 +1,19 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/sys/statfs.h (__fstatfs): Add attribute_hidden.
+	(__statfs64): Likewise.
+	(__fstatfs64): Likewise.
+	* include/sys/statvfs.h (__statvfs64): Likewise.
+	(__fstatvfs64): Likewise.
+	* sysdeps/unix/sysv/linux/pathconf.h (__statfs_link_max): Likewise.
+	(__statfs_filesize_max): Likewise.
+	(__statfs_symlinks): Likewise.
+	(__statfs_chown_restricted): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/time.h (__tzstring): Add attribute_hidden.
 	(__tzfile_read): Likewise.
 	(__tzfile_compute): Likewise.
