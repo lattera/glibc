@@ -1,6 +1,31 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/gmp.h: Declare internal functions only if _ISOMAC is
+	undefined.
+	(__mpn_extract_double): Add attribute_hidden.
+	(__mpn_extract_long_double): Likewise.
+	(__mpn_extract_float128): Likewise.
+	(__mpn_construct_float): Likewise.
+	(__mpn_construct_double): Likewise.
+	(__mpn_construct_long_double): Likewise.
+	(__mpn_construct_float128): Likewise.
+	(mpn_add_1): Likewise.
+	(mpn_addmul_1): Likewise.
+	(mpn_add_n): Likewise.
+	(mpn_cmp): Likewise.
+	(mpn_divrem): Likewise.
+	(mpn_lshift): Likewise.
+	(mpn_mul): Likewise.
+	(mpn_mul_1): Likewise.
+	(mpn_rshift): Likewise.
+	(mpn_sub_1): Likewise.
+	(mpn_submul_1): Likewise.
+	(mpn_sub_n): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/wchar.h (__wcsnlen): Add attribute_hidden.
 	(__wcscat): Likewise.
 	(__btowc): Likewise.

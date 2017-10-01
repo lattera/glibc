@@ -308,13 +308,17 @@ typedef unsigned int UHWtype;
 
 /* Prototypes for internal mpn calls.  */
 extern void impn_mul_n_basecase _PROTO ((mp_ptr prodp, mp_srcptr up,
-					 mp_srcptr vp, mp_size_t size));
+					 mp_srcptr vp, mp_size_t size))
+     attribute_hidden;
 extern void impn_mul_n _PROTO ((mp_ptr prodp, mp_srcptr up, mp_srcptr vp,
-				mp_size_t size, mp_ptr tspace));
+				mp_size_t size, mp_ptr tspace))
+     attribute_hidden;
 extern void impn_sqr_n_basecase _PROTO ((mp_ptr prodp, mp_srcptr up,
-					 mp_size_t size));
+					 mp_size_t size))
+     attribute_hidden;
 extern void impn_sqr_n _PROTO ((mp_ptr prodp, mp_srcptr up, mp_size_t size,
-				mp_ptr tspace));
+				mp_ptr tspace))
+     attribute_hidden;
 
 
 
