@@ -41,10 +41,10 @@ struct rpc_thread_variables {
 };
 
 extern struct rpc_thread_variables *__rpc_thread_variables(void)
-     __attribute__ ((const));
-extern void __rpc_thread_svc_cleanup (void);
-extern void __rpc_thread_clnt_cleanup (void);
-extern void __rpc_thread_key_cleanup (void);
+     __attribute__ ((const)) attribute_hidden;
+extern void __rpc_thread_svc_cleanup (void) attribute_hidden;
+extern void __rpc_thread_clnt_cleanup (void) attribute_hidden;
+extern void __rpc_thread_key_cleanup (void) attribute_hidden;
 
 extern void __rpc_thread_destroy (void);
 
