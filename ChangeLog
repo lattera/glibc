@@ -1,6 +1,27 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* nscd/nscd-client.h (__nscd_get_map_ref): Add attribute_hidden.
+	(__nscd_unmap): Likewise.
+	(__nscd_cache_search): Likewise.
+	(__nscd_get_nl_timestamp): Likewise.
+	(__nscd_getpwnam_r): Likewise.
+	(__nscd_getpwuid_r): Likewise.
+	(__nscd_getgrnam_r): Likewise.
+	(__nscd_getgrgid_r): Likewise.
+	(__nscd_gethostbyname_r): Likewise.
+	(__nscd_gethostbyname2_r): Likewise.
+	(__nscd_gethostbyaddr_r): Likewise.
+	(__nscd_getai): Likewise.
+	(__nscd_getgrouplist): Likewise.
+	(__nscd_getservbyname_r): Likewise.
+	(__nscd_getservbyport_r): Likewise.
+	(__nscd_innetgr): Likewise.
+	(__nscd_setnetgrent): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/gmp.h: Declare internal functions only if _ISOMAC is
 	undefined.
 	(__mpn_extract_double): Add attribute_hidden.

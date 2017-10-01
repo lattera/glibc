@@ -400,10 +400,12 @@ extern struct mapped_database *__nscd_get_mapping (request_type type,
 extern struct mapped_database *__nscd_get_map_ref (request_type type,
 						   const char *name,
 						   volatile struct locked_map_ptr *mapptr,
-						   int *gc_cyclep);
+						   int *gc_cyclep)
+  attribute_hidden;
 
 /* Unmap database.  */
-extern void __nscd_unmap (struct mapped_database *mapped);
+extern void __nscd_unmap (struct mapped_database *mapped)
+  attribute_hidden;
 
 /* Drop reference of mapping.  */
 static int
@@ -433,7 +435,8 @@ extern struct datahead *__nscd_cache_search (request_type type,
 					     const char *key,
 					     size_t keylen,
 					     const struct mapped_database *mapped,
-					     size_t datalen);
+					     size_t datalen)
+  attribute_hidden;
 
 /* Wrappers around read, readv and write that only read/write less than LEN
    bytes on error or EOF.  */
@@ -447,6 +450,7 @@ extern ssize_t sendfileall (int tofd, int fromfd, off_t off, size_t len)
   attribute_hidden;
 
 /* Get netlink timestamp counter from mapped area or zero.  */
-extern uint32_t __nscd_get_nl_timestamp (void);
+extern uint32_t __nscd_get_nl_timestamp (void)
+  attribute_hidden;
 
 #endif /* nscd.h */
