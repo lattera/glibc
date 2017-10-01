@@ -49,11 +49,12 @@ extern char *__dngettext (const char *__domainname,
 			  unsigned long int n);
 extern char *__dcngettext (const char *__domainname,
 			   const char *__msgid1, const char *__msgid2,
-			   unsigned long int __n, int __category);
+			   unsigned long int __n, int __category)
+     attribute_hidden;
 extern char *__dcigettext (const char *__domainname,
 			   const char *__msgid1, const char *__msgid2,
 			   int __plural, unsigned long int __n,
-			   int __category);
+			   int __category) attribute_hidden;
 extern char *__textdomain (const char *__domainname);
 extern char *__bindtextdomain (const char *__domainname,
 			       const char *__dirname);
