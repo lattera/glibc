@@ -12,12 +12,12 @@ extern int __old_getgrent_r (struct group *__resultbuf, char *buffer,
 			     size_t __buflen, struct group **__result);
 extern int __fgetgrent_r (FILE * __stream, struct group *__resultbuf,
 			  char *buffer, size_t __buflen,
-			  struct group **__result);
+			  struct group **__result) attribute_hidden;
 
 /* Search for an entry with a matching group ID.  */
 extern int __getgrgid_r (__gid_t __gid, struct group *__resultbuf,
 			 char *__buffer, size_t __buflen,
-			 struct group **__result);
+			 struct group **__result) attribute_hidden;
 extern int __old_getgrgid_r (__gid_t __gid, struct group *__resultbuf,
 			     char *__buffer, size_t __buflen,
 			     struct group **__result);
@@ -25,7 +25,7 @@ extern int __old_getgrgid_r (__gid_t __gid, struct group *__resultbuf,
 /* Search for an entry with a matching group name.  */
 extern int __getgrnam_r (const char *__name, struct group *__resultbuf,
 			 char *__buffer, size_t __buflen,
-			 struct group **__result);
+			 struct group **__result) attribute_hidden;
 extern int __old_getgrnam_r (const char *__name, struct group *__resultbuf,
 			     char *__buffer, size_t __buflen,
 			     struct group **__result);

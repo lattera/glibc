@@ -1,6 +1,19 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/grp.h (__fgetgrent_r): Add attribute_hidden.
+	(__getgrgid_r): Likewise.
+	(__getgrnam_r): Likewise.
+	* include/pwd.h (__getpwuid_r): Likewise.
+	(__getpwnam_r): Likewise.
+	(__fgetpwent_r): Likewise.
+	* include/shadow.h (__getspnam_r): Likewise.
+	(__sgetspent_r): Likewise.
+	(__fgetspent_r): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/unistd.h (__access): Add attribute_hidden.
 	(__lseek64): Likewise.
 	(__libc_pread64): Likewise.
