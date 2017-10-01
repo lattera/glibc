@@ -1,6 +1,12 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* sysdeps/unix/sysv/linux/include/sys/sysinfo.h (__sysinfo): Add
+	attribute_hidden.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/signal.h (__kill): Add libc_hidden_proto.
 	(__sigblock): Likewise.
 	(__sigprocmask): Likewise.

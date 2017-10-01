@@ -23,7 +23,7 @@
 
 # ifndef _ISOMAC
 
-extern __typeof (sysinfo) __sysinfo __THROW;
+extern __typeof (sysinfo) __sysinfo __THROW attribute_hidden;
 
 # endif /* _ISOMAC */
 #endif /* sys/sysinfo.h */
