@@ -31,7 +31,7 @@
 #define _PATH_DEVPTS _PATH_DEV "pts"
 
 /* Prototype for function that opens BSD-style master pseudo-terminals.  */
-int __bsd_getpt (void);
+extern int __bsd_getpt (void) attribute_hidden;
 
 /* Open a master pseudo terminal and return its file descriptor.  */
 int
