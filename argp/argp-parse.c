@@ -62,7 +62,7 @@ char *alloca ();
 # define N_(msgid) (msgid)
 #endif
 
-#include "argp.h"
+#include <argp.h>
 #include "argp-namefrob.h"
 
 /* Getopt return values.  */

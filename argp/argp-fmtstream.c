@@ -30,7 +30,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#include "argp-fmtstream.h"
+#include <argp-fmtstream.h>
 #include "argp-namefrob.h"
 
 #ifndef ARGP_FMTSTREAM_USE_LINEWRAP

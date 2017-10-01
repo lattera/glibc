@@ -1,6 +1,20 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* argp/argp-fmtstream.c: Include <argp-fmtstream.h>.
+	* argp/argp-fs-xinl.c: Likewise.
+	* argp/argp-help.c: Include <argp.h> and <argp-fmtstream.h>.
+	* argp/argp-parse.c: Include <argp.h>.
+	* argp/argp-xinl.c: Likewise.
+	* include/argp-fmtstream.h: New file.
+	* include/argp.h (__argp_error): Add attribute_hidden.
+	(__argp_failure): Likewise.
+	(__argp_input): Likewise.
+	(__argp_state_help): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/wchar.h (____wcstof_l_internal): New prototype.
 	(____wcstod_l_internal): Likewise.
 	(____wcstold_l_internal): Likewise.
