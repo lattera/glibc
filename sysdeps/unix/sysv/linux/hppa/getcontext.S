@@ -129,6 +129,8 @@ ENTRY(__getcontext)
 	fstds	 %fr31, 0(%r1)
 
 	/* Prologue */
+	stw	%r2, -20(%sp)
+	.cfi_offset 2, -20
 	stwm	%r4, 64(%sp)
 	.cfi_def_cfa_offset -64
 	.cfi_offset 4, 0

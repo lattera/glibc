@@ -25,6 +25,8 @@
 
 ENTRY(__setcontext)
 	/* Prologue */
+	stw	%r2, -20(%sp)
+	.cfi_offset 2, -20
 	stwm	%r3, 64(%sp)
 	.cfi_def_cfa_offset -64
 	.cfi_offset 3, 0
@@ -151,7 +153,7 @@ ENTRY(__setcontext)
 	/* Epilogue */
 	ldw	-84(%r30), %r2
 #ifdef PIC
-	ldw	-96(%r30), %r19
+	ldw	-32(%r30), %r19
 #endif
 	bv	%r0(%r2)
 	ldwm	-64(%r30), %r3

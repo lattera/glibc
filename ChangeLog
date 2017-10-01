@@ -1,3 +1,10 @@
+2017-10-01  John David Anglin  <danglin@gcc.gnu.org>
+
+	* sysdeps/unix/sysv/linux/hppa/getcontext.S (__getcontext): Save return
+	pointer in frame.
+	* sysdeps/unix/sysv/linux/hppa/setcontext.S (__setcontext): Likewise.
+	Correct offset used to restore PIC register.
+
 2017-09-30  John David Anglin  <danglin@gcc.gnu.org>
 
 	[BZ libc/22165]
