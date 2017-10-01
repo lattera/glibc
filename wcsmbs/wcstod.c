@@ -22,7 +22,4 @@
 
 #define	USE_WIDE_CHAR	1
 
-extern double ____wcstod_l_internal (const wchar_t *, wchar_t **, int,
-				     locale_t);
-
 #include <stdlib/strtod.c>

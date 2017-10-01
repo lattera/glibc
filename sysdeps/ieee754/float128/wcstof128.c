@@ -24,7 +24,4 @@
 /* Bring in _Float128 typedef if needed.  */
 #include <bits/floatn.h>
 
-extern _Float128 ____wcstof128_l_internal (const wchar_t *, wchar_t **, int,
-					   locale_t);
-
 #include "strtof128.c"

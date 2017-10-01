@@ -23,7 +23,4 @@
 
 #define QUAD	1
 
-extern long long int ____wcstoll_l_internal (const wchar_t *, wchar_t **,
-					     int, int, locale_t);
-
 #include <wcstol_l.c>

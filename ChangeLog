@@ -1,6 +1,32 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/wchar.h (____wcstof_l_internal): New prototype.
+	(____wcstod_l_internal): Likewise.
+	(____wcstold_l_internal): Likewise.
+	(____wcstol_l_internal): Likewise.
+	(____wcstoul_l_internal): Likewise.
+	(____wcstoll_l_internal): Likewise.
+	(____wcstoull_l_internal): Likewise.
+	(____wcstof128_l_internal): Likewise.
+	* sysdeps/ieee754/float128/wcstof128.c
+	(____wcstof128_l_internal): Removed.
+	* sysdeps/ieee754/float128/wcstof128_l.c
+	(____wcstof128_l_internal): Likewise.
+	* wcsmbs/wcstod.c (____wcstod_l_internal): Likewise.
+	* wcsmbs/wcstod_l.c (____wcstod_l_internal): Likewise.
+	* wcsmbs/wcstof.c (____wcstof_l_internal): Likewise.
+	* wcsmbs/wcstof_l.c (____wcstof_l_internal): Likewise.
+	* wcsmbs/wcstol_l.c (____wcstol_l_internal): Likewise.
+	* wcsmbs/wcstold.c (____wcstold_l_internal): Likewise.
+	* wcsmbs/wcstold_l.c (____wcstold_l_internal): Likewise.
+	* wcsmbs/wcstoll_l.c (____wcstoll_l_internal): Likewise.
+	* wcsmbs/wcstoul_l.c (____wcstoul_l_internal): Likewise.
+	* wcsmbs/wcstoull_l.c (____wcstoull_l_internal): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* sysdeps/unix/sysv/linux/fstatvfs.c: Include "internal_statvfs.h"
 	instead of <sys/statvfs.h>.
 	(__internal_statvfs): Removed.

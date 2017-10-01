@@ -21,9 +21,6 @@
 #include <locale.h>
 
 
-extern double ____wcstod_l_internal (const wchar_t *, wchar_t **, int,
-				     locale_t);
-
 #define	USE_WIDE_CHAR	1
 
 #include <stdlib/strtod_l.c>

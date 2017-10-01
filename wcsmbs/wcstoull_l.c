@@ -23,8 +23,4 @@
 
 #define UNSIGNED	1
 
-extern unsigned long long int ____wcstoull_l_internal (const wchar_t *,
-						       wchar_t **, int, int,
-						       locale_t);
-
 #include <wcstoll_l.c>

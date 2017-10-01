@@ -23,7 +23,4 @@
 
 #define	USE_WIDE_CHAR	1
 
-extern long int ____wcstol_l_internal (const wchar_t *, wchar_t **, int, int,
-				       locale_t);
-
 #include <stdlib/strtol_l.c>
