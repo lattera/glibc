@@ -39,6 +39,7 @@ __get_nprocs_conf (void)
 
   return hbi.max_cpus;
 }
+libc_hidden_def (__get_nprocs_conf)
 weak_alias (__get_nprocs_conf, get_nprocs_conf)
 
 /* Return the number of processors currently available on the system. */
@@ -58,6 +59,7 @@ __get_nprocs (void)
 
   return hbi.avail_cpus;
 }
+libc_hidden_def (__get_nprocs)
 weak_alias (__get_nprocs, get_nprocs)
 
 /* Return the number of physical pages on the system. */
@@ -77,6 +79,7 @@ __get_phys_pages (void)
 
   return hbi.memory_size / __vm_page_size;
 }
+libc_hidden_def (__get_phys_pages)
 weak_alias (__get_phys_pages, get_phys_pages)
 
 /* Return the number of available physical pages */
@@ -102,4 +105,5 @@ __get_avphys_pages (void)
 
   return vs.free_count;
 }
+libc_hidden_def (__get_avphys_pages)
 weak_alias (__get_avphys_pages, get_avphys_pages)

@@ -1,6 +1,30 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/sys/sysinfo.h (__get_nprocs_conf): Add
+	libc_hidden_proto.
+	(__get_nprocs): Likewise.
+	(__get_phys_pages): Likewise.
+	(__get_avphys_pages): Likewise.
+	(__get_child_max): Add attribute_hidden.
+	* misc/getsysstats.c (__get_nprocs_conf): Add libc_hidden_def.
+	(__get_nprocs): Likewise.
+	(__get_phys_pages): Likewise.
+	(__get_avphys_pages): Likewise.
+	* sysdeps/mach/getsysstats.c (__get_nprocs_conf): Add
+	libc_hidden_def.
+	(__get_nprocs): Likewise.
+	(__get_phys_pages): Likewise.
+	(__get_avphys_pages): Likewise.
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Add
+	libc_hidden_def.
+	(__get_nprocs_conf): Likewise.
+	(__get_phys_pages): Likewise.
+	(__get_avphys_pages): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* sysdeps/unix/sysv/linux/netlinkaccess.h (__netlink_open): Add
 	attribute_hidden.
 	(__netlink_close): Likewise.

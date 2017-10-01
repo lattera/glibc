@@ -226,6 +226,7 @@ __get_nprocs (void)
 
   return result;
 }
+libc_hidden_def (__get_nprocs)
 weak_alias (__get_nprocs, get_nprocs)
 
 
@@ -279,6 +280,7 @@ __get_nprocs_conf (void)
 
   return result;
 }
+libc_hidden_def (__get_nprocs_conf)
 weak_alias (__get_nprocs_conf, get_nprocs_conf)
 
 
@@ -320,6 +322,7 @@ __get_phys_pages (void)
   __sysinfo (&info);
   return sysinfo_mempages (info.totalram, info.mem_unit);
 }
+libc_hidden_def (__get_phys_pages)
 weak_alias (__get_phys_pages, get_phys_pages)
 
 long int
@@ -330,4 +333,5 @@ __get_avphys_pages (void)
   __sysinfo (&info);
   return sysinfo_mempages (info.freeram, info.mem_unit);
 }
+libc_hidden_def (__get_avphys_pages)
 weak_alias (__get_avphys_pages, get_avphys_pages)
