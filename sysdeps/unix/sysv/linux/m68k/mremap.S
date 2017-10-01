@@ -25,4 +25,5 @@ PSEUDO (__mremap, mremap, 5)
 	move.l %d0, %a0
 	rts
 PSEUDO_END (__mremap)
+libc_hidden_def (__mremap)
 weak_alias (__mremap, mremap)

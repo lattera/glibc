@@ -1,6 +1,13 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/sys/mman.h (__mremap): Add libc_hidden_proto.
+	* sysdeps/unix/sysv/linux/m68k/mremap.S (__mremap): Add
+	libc_hidden_def.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/malloc.h (__malloc_check_init): Add attribute_hidden.
 
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
