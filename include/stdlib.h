@@ -78,7 +78,7 @@ extern char *__realpath (const char *__name, char *__resolved);
 extern int __ptsname_r (int __fd, char *__buf, size_t __buflen);
 # ifndef _ISOMAC
 extern int __ptsname_internal (int fd, char *buf, size_t buflen,
-			       struct stat64 *stp);
+			       struct stat64 *stp) attribute_hidden;
 # endif
 extern int __getpt (void);
 extern int __posix_openpt (int __oflag);

@@ -54,7 +54,7 @@ extern void __tz_compute (time_t timer, struct tm *tm, int use_localtime)
 extern time_t __mktime_internal (struct tm *__tp,
 				 struct tm *(*__func) (const time_t *,
 						       struct tm *),
-				 time_t *__offset);
+				 time_t *__offset) attribute_hidden;
 extern struct tm *__localtime_r (const time_t *__timer,
 				 struct tm *__tp) attribute_hidden;
 

@@ -1,3 +1,10 @@
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
+	* include/stdlib.h (__ptsname_internal): Add attribute_hidden.
+	* include/time.h (__mktime_internal): Likewise.
+	* libio/iolibio.h (__fopen_internal): Likewise.
+
 2017-10-01  John David Anglin  <danglin@gcc.gnu.org>
 
 	* sysdeps/unix/sysv/linux/hppa/getcontext.S (__getcontext): Save return
