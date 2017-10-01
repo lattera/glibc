@@ -1,6 +1,35 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/stdlib.h (__random): Add attribute_hidden.
+	(__random_r): Likewise.
+	(__srandom_r): Likewise.
+	(__initstate_r): Likewise.
+	(__setstate_r): Likewise.
+	(__erand48_r): Likewise.
+	(__nrand48_r): Likewise.
+	(__jrand48_r): Likewise.
+	(__srand48_r): Likewise.
+	(__seed48_r): Likewise.
+	(__lcong48_r): Likewise.
+	(__drand48_iterate): Likewise.
+	(__setenv): Likewise.
+	(__unsetenv): Likewise.
+	(__clearenv): Likewise.
+	(__ptsname_r): Likewise.
+	(__posix_openpt): Likewise.
+	(__add_to_environ): Likewise.
+	(__realpath): Add libc_hidden_proto.
+	(__ecvt_r): Likewise.
+	(__fcvt_r): Likewise.
+	(__qecvt_r): Likewise.
+	(__qfcvt_r): Likewise.
+	* misc/efgcvt_r.c (cvt_symbol_1): Add libc_hidden_def (local).
+	* stdlib/canonicalize.c (__realpath): Add libc_hidden_def.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/stdlib.h (__ptsname_internal): Add attribute_hidden.
 	* include/time.h (__mktime_internal): Likewise.
 	* libio/iolibio.h (__fopen_internal): Likewise.

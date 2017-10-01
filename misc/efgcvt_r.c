@@ -240,6 +240,7 @@ __APPEND (FUNC_PREFIX, ecvt_r) (FLOAT_TYPE value, int ndigit, int *decpt,
   cvt_symbol_1 (libc, __APPEND (FUNC_PREFIX, symbol), \
 	      APPEND (FUNC_PREFIX, symbol), GLIBC_2_4)
 #  define cvt_symbol_1(lib, local, symbol, version) \
+    libc_hidden_def (local) \
     versioned_symbol (lib, local, symbol, version)
 # else
 #  define cvt_symbol(symbol) \
@@ -247,11 +248,15 @@ __APPEND (FUNC_PREFIX, ecvt_r) (FLOAT_TYPE value, int ndigit, int *decpt,
 	      APPEND (q, symbol), GLIBC_2_0); \
   weak_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
 #  define cvt_symbol_1(lib, local, symbol, version) \
+  libc_hidden_def (local) \
   compat_symbol (lib, local, symbol, version)
 # endif
 #else
 # define cvt_symbol(symbol) \
-  weak_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
+  cvt_symbol_1 (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
+#  define cvt_symbol_1(local, symbol) \
+  libc_hidden_def (local) \
+  weak_alias (local, symbol)
 #endif
 cvt_symbol(fcvt_r);
 cvt_symbol(ecvt_r);

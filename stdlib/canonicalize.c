@@ -218,6 +218,7 @@ error:
     free (rpath);
   return NULL;
 }
+libc_hidden_def (__realpath)
 versioned_symbol (libc, __realpath, realpath, GLIBC_2_3);
 
 
