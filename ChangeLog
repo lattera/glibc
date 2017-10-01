@@ -1,6 +1,24 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/aliases.h (__getaliasbyname_r): Add attribute_hidden.
+	* include/netdb.h (__gethostbyaddr_r): Likewise.
+	(__gethostbyname_r): Likewise.
+	(__gethostbyname2_r): Likewise.
+	(__getnetbyaddr_r): Likewise.
+	(__getnetbyname_r): Likewise.
+	(__getservbyname_r): Likewise.
+	(__getservbyport_r): Likewise.
+	(__getprotobyname_r): Likewise.
+	(__getprotobynumber_r): Likewise.
+	(__getnetgrent_r): Likewise.
+	* include/rpc/netdb.h (__getrpcbyname_r): Likewise.
+	(__getrpcbynumber_r): Likewise.
+	* nss/getXXbyYY.c (INTERNAL (REENTRANT_NAME)): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/stdio.h (__fcloseall): Add attribute_hidden.
 	(__getline): Likewise.
 	(__path_search): Likewise.

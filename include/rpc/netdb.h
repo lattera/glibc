@@ -5,7 +5,7 @@
 
 extern int __getrpcbyname_r (const char *__name, struct rpcent *__result_buf,
 			     char *__buffer, size_t __buflen,
-			     struct rpcent **__result);
+			     struct rpcent **__result) attribute_hidden;
 extern int __old_getrpcbyname_r (const char *__name,
 				 struct rpcent *__result_buf,
 				 char *__buffer, size_t __buflen,
@@ -13,7 +13,7 @@ extern int __old_getrpcbyname_r (const char *__name,
 
 extern int __getrpcbynumber_r (int __number, struct rpcent *__result_buf,
 			       char *__buffer, size_t __buflen,
-			       struct rpcent **__result);
+			       struct rpcent **__result) attribute_hidden;
 extern int __old_getrpcbynumber_r (int __number, struct rpcent *__result_buf,
 				   char *__buffer, size_t __buflen,
 				   struct rpcent **__result);
