@@ -1,6 +1,11 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/assert.h (__assert_fail_base): Add attribute_hidden.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* sysdeps/unix/sysv/linux/include/sys/sysinfo.h (__sysinfo): Add
 	attribute_hidden.
 

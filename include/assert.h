@@ -18,7 +18,7 @@ extern void __assert_perror_fail (int __errnum, const char *__file,
 extern void __assert_fail_base (const char *fmt, const char *assertion,
 				const char *file, unsigned int line,
 				const char *function)
-     __THROW  __attribute__ ((__noreturn__));
+     __THROW  __attribute__ ((__noreturn__)) attribute_hidden;
 
 # if IS_IN (libc) || IS_IN (rtld)
 hidden_proto (__assert_fail)
