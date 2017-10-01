@@ -1,6 +1,17 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/regex.h (__re_compile_fastmap): Add attribute_hidden.
+	(__regcomp): Add libc_hidden_proto.
+	(__regexec): Likewise.
+	(__regfree): Likewise.
+	* posix/regcomp.c (__regcomp): Add libc_hidden_def.
+	(__regfree): Likewise.
+	* posix/regexec.c (__regexec): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/utmp.h (__updwtmp): Add libc_hidden_proto.
 	(__getutent): Likewise.
 	(__getutid): Likewise.

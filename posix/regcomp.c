@@ -517,6 +517,7 @@ regcomp (regex_t *__restrict preg, const char *__restrict pattern, int cflags)
   return (int) ret;
 }
 #ifdef _LIBC
+libc_hidden_def (__regcomp)
 weak_alias (__regcomp, regcomp)
 #endif
 
@@ -644,6 +645,7 @@ regfree (regex_t *preg)
   preg->translate = NULL;
 }
 #ifdef _LIBC
+libc_hidden_def (__regfree)
 weak_alias (__regfree, regfree)
 #endif
 

@@ -224,6 +224,8 @@ regexec (const regex_t *__restrict preg, const char *__restrict string,
 }
 
 #ifdef _LIBC
+libc_hidden_def (__regexec)
+
 # include <shlib-compat.h>
 versioned_symbol (libc, __regexec, regexec, GLIBC_2_3_4);
 
