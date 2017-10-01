@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <unistd.h>
+#include <sys/uio.h>
 #include <sysdep-cancel.h>
 
 ssize_t
@@ -24,4 +25,5 @@ __readv (int fd, const struct iovec *iov, int iovcnt)
 {
   return SYSCALL_CANCEL (readv, fd, iov, iovcnt);
 }
+libc_hidden_def (__readv)
 weak_alias (__readv, readv)

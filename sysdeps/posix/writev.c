@@ -88,4 +88,5 @@ __writev (int fd, const struct iovec *vector, int count)
 
   return bytes_written;
 }
+libc_hidden_def (__writev)
 weak_alias (__writev, writev)

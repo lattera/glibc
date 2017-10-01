@@ -30,6 +30,7 @@ __writev (int fd, const struct iovec *vector, int count)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__writev)
 weak_alias (__writev, writev)
 
 stub_warning (writev)

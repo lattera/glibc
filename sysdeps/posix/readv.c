@@ -88,4 +88,5 @@ __readv (int fd, const struct iovec *vector, int count)
 
   return bytes_read;
 }
+libc_hidden_def (__readv)
 weak_alias (__readv, readv)
