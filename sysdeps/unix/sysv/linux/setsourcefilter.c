@@ -24,10 +24,7 @@
 #include <stdint.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-
-
-/* Defined in getsourcefilter.c.  */
-extern int __get_sol (int af, socklen_t len);
+#include "getsourcefilter.h"
 
 
 int

@@ -1,6 +1,16 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* sysdeps/unix/sysv/linux/getsourcefilter.c: Include
+	"getsourcefilter.h".
+	* sysdeps/unix/sysv/linux/getsourcefilter.h: New file.
+	* sysdeps/unix/sysv/linux/setsourcefilter.c: Include
+	"getsourcefilter.h".
+	(__get_sol): Removed.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* elf/dl-iteratephdr.c (hidden_proto (__dl_iterate_phdr)): Moved
 	to ...
 	* include/link.h (hidden_proto (__dl_iterate_phdr)): Here.

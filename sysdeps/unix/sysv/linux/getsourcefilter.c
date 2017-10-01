@@ -31,6 +31,7 @@
 #include <netrose/rose.h>
 #include <sys/param.h>
 #include <sys/socket.h>
+#include "getsourcefilter.h"
 
 
 static const struct
