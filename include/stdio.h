@@ -4,7 +4,7 @@
 
 /* Now define the internal interfaces.  */
 
-extern int __fcloseall (void);
+extern int __fcloseall (void) attribute_hidden;
 extern int __snprintf (char *__restrict __s, size_t __maxlen,
 		       const char *__restrict __format, ...)
      __attribute__ ((__format__ (__printf__, 3, 4)));
@@ -21,7 +21,7 @@ extern int __vscanf (const char *__restrict __format,
 		     _G_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 1, 0)));
 extern _IO_ssize_t __getline (char **__lineptr, size_t *__n,
-			      FILE *__stream);
+			      FILE *__stream) attribute_hidden;
 extern int __vsscanf (const char *__restrict __s,
 		      const char *__restrict __format,
 		      _G_va_list __arg)
@@ -77,10 +77,10 @@ extern FILE *__old_tmpfile (void);
 /* Generate a unique file name (and possibly open it).  */
 extern int __path_search (char *__tmpl, size_t __tmpl_len,
 			  const char *__dir, const char *__pfx,
-			  int __try_tempdir);
+			  int __try_tempdir) attribute_hidden;
 
 extern int __gen_tempname (char *__tmpl, int __suffixlen, int __flags,
-			   int __kind);
+			   int __kind) attribute_hidden;
 /* The __kind argument to __gen_tempname may be one of: */
 #  define __GT_FILE	0	/* create a file */
 #  define __GT_DIR	1	/* create a directory */
@@ -97,7 +97,7 @@ enum __libc_message_action
 extern void __libc_fatal (const char *__message)
      __attribute__ ((__noreturn__));
 extern void __libc_message (enum __libc_message_action action,
-			    const char *__fnt, ...);
+			    const char *__fnt, ...) attribute_hidden;
 extern void __fortify_fail (const char *msg) __attribute__ ((__noreturn__));
 extern void __fortify_fail_abort (_Bool, const char *msg)
   __attribute__ ((__noreturn__)) attribute_hidden;
@@ -105,10 +105,10 @@ libc_hidden_proto (__fortify_fail)
 libc_hidden_proto (__fortify_fail_abort)
 
 /* Acquire ownership of STREAM.  */
-extern void __flockfile (FILE *__stream);
+extern void __flockfile (FILE *__stream) attribute_hidden;
 
 /* Relinquish the ownership granted for STREAM.  */
-extern void __funlockfile (FILE *__stream);
+extern void __funlockfile (FILE *__stream) attribute_hidden;
 
 /* Try to acquire ownership of STREAM but do not block if it is not
    possible.  */
@@ -118,9 +118,9 @@ extern int __getc_unlocked (FILE *__fp);
 extern wint_t __getwc_unlocked (FILE *__fp);
 
 extern int __fxprintf (FILE *__fp, const char *__fmt, ...)
-     __attribute__ ((__format__ (__printf__, 2, 3)));
+     __attribute__ ((__format__ (__printf__, 2, 3))) attribute_hidden;
 extern int __fxprintf_nocancel (FILE *__fp, const char *__fmt, ...)
-     __attribute__ ((__format__ (__printf__, 2, 3)));
+     __attribute__ ((__format__ (__printf__, 2, 3))) attribute_hidden;
 
 extern const char *const _sys_errlist_internal[] attribute_hidden;
 extern int _sys_nerr_internal attribute_hidden;

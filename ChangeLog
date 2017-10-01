@@ -1,6 +1,19 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/stdio.h (__fcloseall): Add attribute_hidden.
+	(__getline): Likewise.
+	(__path_search): Likewise.
+	(__gen_tempname): Likewise.
+	(__libc_message): Likewise.
+	(__flockfile): Likewise.
+	(__funlockfile): Likewise.
+	(__fxprintf): Likewise.
+	(__fxprintf_nocancel): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/gshadow.h (__fgetsgent_r): Add attribute_hidden.
 	(__sgetsgent_r): Likewise.
 
