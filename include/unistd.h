@@ -23,9 +23,10 @@ libc_hidden_proto (tcgetpgrp)
 libc_hidden_proto (readlinkat)
 
 /* Now define the internal interfaces.  */
-extern int __access (const char *__name, int __type);
+extern int __access (const char *__name, int __type) attribute_hidden;
 extern int __euidaccess (const char *__name, int __type);
-extern __off64_t __lseek64 (int __fd, __off64_t __offset, int __whence);
+extern __off64_t __lseek64 (int __fd, __off64_t __offset, int __whence)
+     attribute_hidden;
 extern __off_t __lseek (int __fd, __off_t __offset, int __whence);
 libc_hidden_proto (__lseek)
 extern __off_t __libc_lseek (int __fd, __off_t __offset, int __whence);
@@ -39,7 +40,7 @@ extern ssize_t __pread64 (int __fd, void *__buf, size_t __nbytes,
 			  __off64_t __offset);
 libc_hidden_proto (__pread64);
 extern ssize_t __libc_pread64 (int __fd, void *__buf, size_t __nbytes,
-			       __off64_t __offset);
+			       __off64_t __offset) attribute_hidden;
 extern ssize_t __pwrite (int __fd, const void *__buf, size_t __n,
 			 __off_t __offset);
 libc_hidden_proto (__pwrite)
@@ -58,8 +59,8 @@ libc_hidden_proto (__libc_write)
 libc_hidden_proto (write)
 extern int __pipe (int __pipedes[2]);
 libc_hidden_proto (__pipe)
-extern int __pipe2 (int __pipedes[2], int __flags);
-extern unsigned int __sleep (unsigned int __seconds);
+extern int __pipe2 (int __pipedes[2], int __flags) attribute_hidden;
+extern unsigned int __sleep (unsigned int __seconds) attribute_hidden;
 extern int __chown (const char *__file,
 		    __uid_t __owner, __gid_t __group);
 libc_hidden_proto (__chown)
@@ -67,12 +68,12 @@ extern int __fchown (int __fd,
 		     __uid_t __owner, __gid_t __group);
 extern int __lchown (const char *__file, __uid_t __owner,
 		     __gid_t __group);
-extern int __chdir (const char *__path);
-extern int __fchdir (int __fd);
-extern char *__getcwd (char *__buf, size_t __size);
-extern int __rmdir (const char *__path);
+extern int __chdir (const char *__path) attribute_hidden;
+extern int __fchdir (int __fd) attribute_hidden;
+extern char *__getcwd (char *__buf, size_t __size) attribute_hidden;
+extern int __rmdir (const char *__path) attribute_hidden;
 extern int __execvpe (const char *file, char *const argv[],
-		      char *const envp[]);
+		      char *const envp[]) attribute_hidden;
 
 /* Get the canonical absolute name of the named directory, and put it in SIZE
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
@@ -91,7 +92,7 @@ libc_hidden_proto (__dup2)
 extern int __dup3 (int __fd, int __fd2, int flags);
 libc_hidden_proto (__dup3)
 extern int __execve (const char *__path, char *const __argv[],
-		     char *const __envp[]);
+		     char *const __envp[]) attribute_hidden;
 extern long int __pathconf (const char *__path, int __name);
 extern long int __fpathconf (int __fd, int __name);
 extern long int __sysconf (int __name);
@@ -99,14 +100,14 @@ libc_hidden_proto (__sysconf)
 extern __pid_t __getpid (void);
 libc_hidden_proto (__getpid)
 extern __pid_t __getppid (void);
-extern __pid_t __setsid (void);
-extern __uid_t __getuid (void);
-extern __uid_t __geteuid (void);
-extern __gid_t __getgid (void);
-extern __gid_t __getegid (void);
-extern int __getgroups (int __size, __gid_t __list[]);
+extern __pid_t __setsid (void) attribute_hidden;
+extern __uid_t __getuid (void) attribute_hidden;
+extern __uid_t __geteuid (void) attribute_hidden;
+extern __gid_t __getgid (void) attribute_hidden;
+extern __gid_t __getegid (void) attribute_hidden;
+extern int __getgroups (int __size, __gid_t __list[]) attribute_hidden;
 libc_hidden_proto (__getpgid)
-extern int __group_member (__gid_t __gid);
+extern int __group_member (__gid_t __gid) attribute_hidden;
 extern int __setuid (__uid_t __uid);
 extern int __setreuid (__uid_t __ruid, __uid_t __euid);
 extern int __setgid (__gid_t __gid);
@@ -123,18 +124,21 @@ libc_hidden_proto (__setresuid)
 libc_hidden_proto (__setresgid)
 extern __pid_t __vfork (void);
 libc_hidden_proto (__vfork)
-extern int __ttyname_r (int __fd, char *__buf, size_t __buflen);
-extern int __isatty (int __fd);
+extern int __ttyname_r (int __fd, char *__buf, size_t __buflen)
+     attribute_hidden;
+extern int __isatty (int __fd) attribute_hidden;
 extern int __link (const char *__from, const char *__to);
 extern int __symlink (const char *__from, const char *__to);
-extern ssize_t __readlink (const char *__path, char *__buf, size_t __len);
-extern int __unlink (const char *__name);
-extern int __gethostname (char *__name, size_t __len);
+extern ssize_t __readlink (const char *__path, char *__buf, size_t __len)
+     attribute_hidden;
+extern int __unlink (const char *__name) attribute_hidden;
+extern int __gethostname (char *__name, size_t __len) attribute_hidden;
 extern int __revoke (const char *__file);
 extern int __profil (unsigned short int *__sample_buffer, size_t __size,
-		     size_t __offset, unsigned int __scale);
-extern int __getdtablesize (void);
-extern int __brk (void *__addr);
+		     size_t __offset, unsigned int __scale)
+     attribute_hidden;
+extern int __getdtablesize (void) attribute_hidden;
+extern int __brk (void *__addr) attribute_hidden;
 extern int __close (int __fd);
 libc_hidden_proto (__close)
 extern int __libc_close (int __fd);
@@ -146,8 +150,8 @@ extern __pid_t __fork (void);
 libc_hidden_proto (__fork)
 extern int __getpagesize (void) __attribute__ ((__const__));
 libc_hidden_proto (__getpagesize)
-extern int __ftruncate (int __fd, __off_t __length);
-extern int __ftruncate64 (int __fd, __off64_t __length);
+extern int __ftruncate (int __fd, __off_t __length) attribute_hidden;
+extern int __ftruncate64 (int __fd, __off64_t __length) attribute_hidden;
 extern int __truncate (const char *path, __off_t __length);
 extern void *__sbrk (intptr_t __delta);
 libc_hidden_proto (__sbrk)
