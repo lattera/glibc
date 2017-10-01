@@ -57,4 +57,5 @@ __sigaltstack (const stack_t *argss, stack_t *oss)
 
   return 0;
 }
+libc_hidden_def (__sigaltstack)
 weak_alias (__sigaltstack, sigaltstack)

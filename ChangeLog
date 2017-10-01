@@ -1,6 +1,33 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/signal.h (__kill): Add libc_hidden_proto.
+	(__sigblock): Likewise.
+	(__sigprocmask): Likewise.
+	(__sigaltstack): Likewise.
+	* signal/kill.c (__kill): Add libc_hidden_def.
+	* signal/sigblock.c (__sigblock): Likewise.
+	* signal/sigprocmask.c (__sigprocmask): Likewise.
+	* sysdeps/mach/hurd/kill.c (__kill): Likewise.
+	* sysdeps/mach/hurd/sigaltstack.c (__sigaltstack): Likewise.
+	* sysdeps/mach/hurd/sigprocmask.c (__sigprocmask): Likewise.
+	* sysdeps/posix/sigblock.c (__sigblock): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sigprocmask.c (__sigprocmask):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigprocmask.c (__sigprocmask):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigprocmask.c
+	(__sigprocmask): Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c (__sigprocmask):
+	Likewise.
+	* /sysdeps/unix/sysv/linux/sparc/sparc64/sigprocmask.c
+	(__sigprocmask): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigprocmask.c (__sigprocmask):
+	Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/string.h (__strsep): Add libc_hidden_proto.
 	* string/strsep.c (__strsep): Add libc_hidden_def.
 

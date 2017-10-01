@@ -27,4 +27,5 @@ __sigblock (int mask)
 }
 stub_warning (sigblock)
 
+libc_hidden_def (__sigblock)
 weak_alias (__sigblock, sigblock)

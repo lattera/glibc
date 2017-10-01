@@ -146,4 +146,5 @@ __kill (pid_t pid, int sig)
   return delivered ? 0 : __hurd_fail (err ?: ESRCH);
 }
 
+libc_hidden_def (__kill)
 weak_alias (__kill, kill)

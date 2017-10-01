@@ -35,4 +35,5 @@ __sigblock (int mask)
   return sigset_get_old_mask (&oset);
 }
 
+libc_hidden_def (__sigblock)
 weak_alias (__sigblock, sigblock)

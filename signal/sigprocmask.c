@@ -44,4 +44,5 @@ __sigprocmask (int how, const sigset_t *set, sigset_t *oset)
    and we don't want warnings for every use of abort on
    a system without safe signals.  */
 
+libc_hidden_def (__sigprocmask)
 weak_alias (__sigprocmask, sigprocmask)

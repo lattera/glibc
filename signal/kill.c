@@ -30,4 +30,5 @@ __kill (int pid, int sig)
 }
 stub_warning (kill)
 
+libc_hidden_def (__kill)
 weak_alias (__kill, kill)

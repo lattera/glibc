@@ -53,4 +53,5 @@ __sigprocmask (int how, const sigset_t *set, sigset_t *oset)
 
   return INLINE_SYSCALL (rt_sigprocmask, 4, how, set, oset, _NSIG / 8);
 }
+libc_hidden_def (__sigprocmask)
 weak_alias (__sigprocmask, sigprocmask)
