@@ -341,6 +341,7 @@ struct link_map
 extern int __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 					       size_t size, void *data),
 			      void *data);
+hidden_proto (__dl_iterate_phdr)
 
 /* We use this macro to refer to ELF macros independent of the native
    wordsize.  `ELFW(R_TYPE)' is used in place of `ELF32_R_TYPE' or

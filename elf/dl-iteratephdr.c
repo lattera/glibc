@@ -28,7 +28,6 @@ cancel_handler (void *arg __attribute__((unused)))
   __rtld_lock_unlock_recursive (GL(dl_load_write_lock));
 }
 
-hidden_proto (__dl_iterate_phdr)
 int
 __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 				    size_t size, void *data), void *data)

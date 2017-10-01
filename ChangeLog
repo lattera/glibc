@@ -1,6 +1,13 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* elf/dl-iteratephdr.c (hidden_proto (__dl_iterate_phdr)): Moved
+	to ...
+	* include/link.h (hidden_proto (__dl_iterate_phdr)): Here.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* sysdeps/unix/sysv/linux/getpt.c (__bsd_getpt): Add
 	attribute_hidden.
 
