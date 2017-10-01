@@ -1,6 +1,12 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/search.h (__tdestroy): Add libc_hidden_proto.
+	* misc/tsearch.c (__tdestroy): Add libc_hidden_def.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/assert.h (__assert_fail_base): Add attribute_hidden.
 
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>

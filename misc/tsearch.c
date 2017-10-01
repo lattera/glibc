@@ -745,4 +745,5 @@ __tdestroy (void *vroot, __free_fn_t freefct)
   if (root != NULL)
     tdestroy_recurse (root, freefct);
 }
+libc_hidden_def (__tdestroy)
 weak_alias (__tdestroy, tdestroy)
