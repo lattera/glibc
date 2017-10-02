@@ -89,6 +89,10 @@
    include/libc-symbols.h that avoid PLT slots in the shared objects.  */
 #undef	NO_HIDDEN
 
+/* Define this to disable in rtld the 'hidden_proto' et al macros in
+   include/libc-symbols.h that avoid PLT slots in the shared objects.  */
+#undef	NO_RTLD_HIDDEN
+
 /* Define this to disable lazy relocations in DSOs.  */
 #undef	BIND_NOW
 

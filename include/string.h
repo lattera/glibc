@@ -143,7 +143,7 @@ libc_hidden_builtin_proto (strspn)
 libc_hidden_builtin_proto (strstr)
 libc_hidden_builtin_proto (ffs)
 
-#if IS_IN (rtld)
+#if IS_IN (rtld) && !defined NO_RTLD_HIDDEN
 extern __typeof (__stpcpy) __stpcpy attribute_hidden;
 extern __typeof (__strdup) __strdup attribute_hidden;
 extern __typeof (__strerror_r) __strerror_r attribute_hidden;

@@ -3,7 +3,7 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 dnl We need this setting because of the need for PLT calls in ld.so.
 dnl See Roland's comment in
 dnl https://sourceware.org/bugzilla/show_bug.cgi?id=15605
-AC_DEFINE([NO_HIDDEN])
+AC_DEFINE([NO_RTLD_HIDDEN])
 
 if test -n "$sysheaders"; then
   OLD_CPPFLAGS=$CPPFLAGS

@@ -1,3 +1,35 @@
+2017-10-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* include/libc-symbols.h [NO_RTLD_HIDDEN] (rtld_hidden_proto,
+	rtld_hidden_tls_proto, rtld_hidden_def, rtld_hidden_weak,
+	rtld_hidden_rtld_hidden_ver, data_def, rtld_hidden_data_weak,
+	rtld_hidden_data_ver): Define to empty.
+	* include/assert.h [IS_IN(rtld) && NO_RTLD_HIDDEN] (__assert_fail,
+	__assert_perror_fail): Likewise.
+	* include/dirent.h [IS_IN(rtld) && NO_RTLD_HIDDEN]
+	(__rewinddir): Likewise.
+	* include/libc-internal.h [IS_IN(rtld) && NO_RTLD_HIDDEN]
+	(__profile_frequency): Likewise.
+	* include/setjmp.h (__sigsetjmp): Likewise.
+	* include/signal.h [IS_IN(rtld) && NO_RTLD_HIDDEN] (__sigaction,
+	__libc_sigaction): Likewise.
+	* include/stdlib.h [NO_RTLD_HIDDEN] (unsetenv, __strtoul_internal): Do
+	not set hidden attribute.
+	* include/string.h [IS_IN(rtld) && NO_RTLD_HIDDEN] (__stpcpy, __strdup,
+	__strerror_t, __strsep_g, memchr, memcmp, memcpy, memmove, memset,
+	rawmemchr, stpcpy, strchr, strcmp, strlen, strnlen, strsep): Likewise.
+	* include/sys/stat.h [IS_IN(rtld) && NO_RTLD_HIDDEN] (__fxstat,
+	__fxstat64, __lxstat, __lxstat64, __xstat, __xstat64,
+	__fxstatat64): Likewise.
+	* include/sys/utsname.h [IS_IN(rtld) && NO_RTLD_HIDDEN]
+	(__uname): Likewise.
+	* include/sysdeps/generic/_itoa.h [IS_IN(rtld) && NO_RTLD_HIDDEN]
+	(_itoa_upper_digits, _itoa_lower_digits): Likewise.
+	* sysdeps/mach/hurd/configure.ac (NO_HIDDEN): Do not set.
+	(NO_RTLD_HIDDEN): Set.
+	* sysdeps/mach/hurd/configure: Refresh.
+	* config.h.in: Refresh.
+
 2017-10-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/dbl-64/s_atan.c: Include <libm-alias-double.h>.

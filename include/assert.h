@@ -20,7 +20,7 @@ extern void __assert_fail_base (const char *fmt, const char *assertion,
 				const char *function)
      __THROW  __attribute__ ((__noreturn__)) attribute_hidden;
 
-# if IS_IN (libc) || IS_IN (rtld)
+# if IS_IN (libc) || (IS_IN (rtld) && !defined NO_RTLD_HIDDEN)
 hidden_proto (__assert_fail)
 hidden_proto (__assert_perror_fail)
 # endif

@@ -294,7 +294,7 @@ struct abort_msg_s
 extern struct abort_msg_s *__abort_msg;
 libc_hidden_proto (__abort_msg)
 
-# if IS_IN (rtld)
+# if IS_IN (rtld) && !defined NO_RTLD_HIDDEN
 extern __typeof (unsetenv) unsetenv attribute_hidden;
 extern __typeof (__strtoul_internal) __strtoul_internal attribute_hidden;
 # endif

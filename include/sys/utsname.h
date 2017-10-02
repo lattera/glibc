@@ -7,7 +7,7 @@ extern int __uname (struct utsname *__name);
 libc_hidden_proto (uname)
 libc_hidden_proto (__uname)
 
-# if IS_IN (rtld)
+# if IS_IN (rtld) && !defined NO_RTLD_HIDDEN
 extern __typeof (__uname) __uname attribute_hidden;
 # endif
 #endif
