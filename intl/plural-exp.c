@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "plural-exp.h"
+#include <plural-exp.h>
 
 #if (defined __GNUC__ && !(defined __APPLE_CC_ && __APPLE_CC__ > 1) && \
      !defined __cplusplus)					       \

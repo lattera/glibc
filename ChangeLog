@@ -1,6 +1,13 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/plural-exp.h: New file.
+	* intl/plural-exp.c: Include <plural-exp.h> instead of
+	"plural-exp.h".
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* sysdeps/unix/sysv/linux/getsourcefilter.c: Include
 	"getsourcefilter.h".
 	* sysdeps/unix/sysv/linux/getsourcefilter.h: New file.
