@@ -1,6 +1,11 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* nscd/nscd_helper.c (__nis_hash): New prototype.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/termios.h (__tcgetattr): Add libc_hidden_proto.
 	* sysdeps/unix/bsd/tcgetattr.c (__tcgetattr): Add
 	libc_hidden_def.
