@@ -1,6 +1,18 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/idna.h: New file.
+	* inet/getnameinfo.c: Include <idna.h> instead of
+	<libidn/idna.h>.
+	(__idna_to_unicode_lzlz): Removed.
+	* sysdeps/posix/getaddrinfo.c: Include <idna.h> instead of
+	<libidn/idna.h>.
+	(__idna_to_ascii_lz): Removed.
+	(__idna_to_unicode_lzlz): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/plural-exp.h: New file.
 	* intl/plural-exp.c: Include <plural-exp.h> instead of
 	"plural-exp.h".

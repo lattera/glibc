@@ -86,10 +86,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <inet/net-internal.h>
 
 #ifdef HAVE_LIBIDN
-extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
-extern int __idna_to_unicode_lzlz (const char *input, char **output,
-				   int flags);
-# include <libidn/idna.h>
+# include <idna.h>
 #endif
 
 struct gaih_service
