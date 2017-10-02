@@ -34,4 +34,21 @@ extern int __iscanonicall (long double __x)
    conversion, before being discarded; in extended precision, there
    are encodings that are not consistently handled as corresponding to
    any particular value of the type, and we return 0 for those.  */
-#define iscanonical(x) __MATH_TG ((x), __iscanonical, (x))
+#ifndef __cplusplus
+# define iscanonical(x) __MATH_TG ((x), __iscanonical, (x))
+#else
+/* In C++ mode, __MATH_TG cannot be used, because it relies on
+   __builtin_types_compatible_p, which is a C-only builtin.  On the
+   other hand, overloading provides the means to distinguish between
+   the floating-point types.  The overloading resolution will match
+   the correct parameter (regardless of type qualifiers (i.e.: const
+   and volatile)).  */
+extern "C++" {
+inline int iscanonical (float __val) { return __iscanonicalf (__val); }
+inline int iscanonical (double __val) { return __iscanonical (__val); }
+inline int iscanonical (long double __val) { return __iscanonicall (__val); }
+# if __HAVE_DISTINCT_FLOAT128
+inline int iscanonical (_Float128 __val) { return __iscanonicalf128 (__val); }
+# endif
+}
+#endif /* __cplusplus */

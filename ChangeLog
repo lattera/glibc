@@ -1,3 +1,18 @@
+2017-10-03  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	[BZ #22235]
+	* math/math.h: Trivial fix for unbalanced parentheses in comment.
+	* math/Makefile [CXX] (tests): Add test-math-iscanonical.cc.
+	(CFLAGS-test-math-iscanonical.cc): New variable.
+	* math/test-math-iscanonical.cc: New file.
+	* sysdeps/ieee754/ldbl-96/bits/iscanonical.h (iscanonical):
+	Provide a C++ implementation based on function overloading,
+	rather than using __MATH_TG, which uses C-only builtins.
+	* sysdeps/ieee754/ldbl-128ibm/bits/iscanonical.h (iscanonical):
+	Likewise.
+	* sysdeps/powerpc/powerpc64le/Makefile
+	(CFLAGS-test-math-iscanonical.cc): New variable.
+
 2017-10-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/dbl-64/s_ceil.c: Include <libm-alias-double.h>.
