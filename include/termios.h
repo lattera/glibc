@@ -9,6 +9,7 @@ extern int __tcsetattr (int __fd, int __optional_actions,
 
 extern int __libc_tcdrain (int __fd);
 
+libc_hidden_proto (__tcgetattr)
 libc_hidden_proto (tcsetattr)
 libc_hidden_proto (cfsetispeed)
 libc_hidden_proto (cfsetospeed)

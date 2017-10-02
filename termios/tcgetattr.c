@@ -39,4 +39,5 @@ __tcgetattr (int fd, struct termios *termios_p)
 }
 stub_warning (tcgetattr)
 
+libc_hidden_def (__tcgetattr)
 weak_alias (__tcgetattr, tcgetattr)

@@ -1,6 +1,15 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/termios.h (__tcgetattr): Add libc_hidden_proto.
+	* sysdeps/unix/bsd/tcgetattr.c (__tcgetattr): Add
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/tcgetattr.c (__tcgetattr): Likewise.
+	* termios/tcgetattr.c (__tcgetattr): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/sys/resource.h (__setrlimit): Add libc_hidden_proto.
 	* resource/setrlimit.c (__setrlimit): Add libc_hidden_def.
 	* sysdeps/mach/hurd/setrlimit.c (__setrlimit): Likewise.

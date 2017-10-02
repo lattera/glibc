@@ -76,4 +76,5 @@ __tcgetattr (int fd, struct termios *termios_p)
   return retval;
 }
 
+libc_hidden_def (__tcgetattr)
 weak_alias (__tcgetattr, tcgetattr)
