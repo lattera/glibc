@@ -53,7 +53,8 @@ weak_alias (__getrlimit64, getrlimit)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_2)
 /* Back compatible 2GiB limited rlimit.  */
-extern int __new_getrlimit (enum __rlimit_resource, struct rlimit *);
+extern int __new_getrlimit (enum __rlimit_resource, struct rlimit *)
+  attribute_hidden;
 
 int
 attribute_compat_text_section
