@@ -20,6 +20,7 @@
 #include <shlib-compat.h>
 
 int __posix_fadvise64_l64 (int fd, off64_t offset, off64_t len, int advise);
+libc_hidden_proto (__posix_fadvise64_l64)
 
 /* Both arm and powerpc implements fadvise64_64 with last 'advise' argument
    just after 'fd' to avoid the requirement of implementing 7-arg syscalls.
@@ -83,3 +84,4 @@ weak_alias (__posix_fadvise64_l64, posix_fadvise64);
 weak_alias (__posix_fadvise64_l64, posix_fadvise64);
 strong_alias (__posix_fadvise64_l64, posix_fadvise);
 #endif
+libc_hidden_def (__posix_fadvise64_l64)

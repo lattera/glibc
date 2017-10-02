@@ -1,6 +1,15 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* sysdeps/unix/sysv/linux/posix_fadvise64.c
+	(__posix_fadvise64_l64): Add Add libc_hidden_proto and
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/posix_fallocate64.c
+	(__posix_fallocate64_l64): Likewise.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* sysdeps/unix/sysv/linux/sched_setaffinity.c
 	(__sched_setaffinity_new): Add libc_hidden_proto and
 	libc_hidden_def.

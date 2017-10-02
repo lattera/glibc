@@ -19,6 +19,7 @@
 #include <sysdep.h>
 
 extern int __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len);
+libc_hidden_proto (__posix_fallocate64_l64)
 #define __posix_fallocate64_l64 static internal_fallocate64
 #include <sysdeps/posix/posix_fallocate64.c>
 #undef __posix_fallocate64_l64
@@ -42,3 +43,4 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
     return INTERNAL_SYSCALL_ERRNO (res, err);
   return internal_fallocate64 (fd, offset, len);
 }
+libc_hidden_def (__posix_fallocate64_l64)
