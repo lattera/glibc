@@ -1,3 +1,27 @@
+2017-10-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/s_atan.c (atan): Rename to __atan and
+	define as weak alias of __atan.  Do not define any aliases if
+	[__atan].
+	[NO_LONG_DOUBLE] (__atanl): Define as strong alias of __atan.
+	[NO_LONG_DOUBLE] (atanl): Define as weak alias of __atanl.
+	* sysdeps/ieee754/dbl-64/s_tan.c (tan): Rename to __tan and define
+	as weak alias of __tan.  Do not define any aliases if [__tan].
+	[NO_LONG_DOUBLE] (__tanl): Define as strong alias of __tan.
+	[NO_LONG_DOUBLE] (tanl): Define as weak alias of __tanl.
+	* sysdeps/x86_64/fpu/multiarch/s_atan-avx.c (atan): Rename to
+	__atan.
+	* sysdeps/x86_64/fpu/multiarch/s_atan-fma.c (atan): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_atan-fma4.c (atan): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_atan.c (atan): Rename to __atan
+	and define as weak alias of __atan.
+	* sysdeps/x86_64/fpu/multiarch/s_tan-avx.c (tan): Rename to
+	__atan.
+	* sysdeps/x86_64/fpu/multiarch/s_tan-fma.c (tan): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_tan-fma4.c (tan): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_tan.c (tan): Rename to __tan and
+	define as weak alias of __tan.
+
 2017-10-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* math/w_lgamma.c: New file.

@@ -61,7 +61,7 @@ __signArctan (double x, double y)
 /* An ultimate atan() routine. Given an IEEE double machine number x,    */
 /* routine computes the correctly rounded (to nearest) value of atan(x). */
 double
-atan (double x)
+__atan (double x)
 {
   double cor, s1, ss1, s2, ss2, t1, t2, t3, t7, t8, t9, t10, u, u2, u3,
 	 v, vv, w, ww, y, yy, z, zz;
@@ -323,6 +323,10 @@ atanMp (double x, const int pr[])
   return y1;			/*if impossible to do exact computing */
 }
 
-#ifdef NO_LONG_DOUBLE
-weak_alias (atan, atanl)
+#ifndef __atan
+weak_alias (__atan, atan)
+# ifdef NO_LONG_DOUBLE
+strong_alias (__atan, __atanl)
+weak_alias (__atanl, atanl)
+# endif
 #endif

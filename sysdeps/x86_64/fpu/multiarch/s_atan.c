@@ -21,7 +21,8 @@ extern double __redirect_atan (double);
 #define SYMBOL_NAME atan
 #include "ifunc-avx-fma4.h"
 
-libc_ifunc_redirected (__redirect_atan, atan, IFUNC_SELECTOR ());
+libc_ifunc_redirected (__redirect_atan, __atan, IFUNC_SELECTOR ());
+weak_alias (__atan, atan)
 
-#define atan __atan_sse2
+#define __atan __atan_sse2
 #include <sysdeps/ieee754/dbl-64/s_atan.c>

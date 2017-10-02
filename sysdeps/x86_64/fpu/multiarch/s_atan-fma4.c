@@ -1,4 +1,4 @@
-#define atan __atan_fma4
+#define __atan __atan_fma4
 #define __add __add_fma4
 #define __dbl_mp __dbl_mp_fma4
 #define __mpatan __mpatan_fma4

@@ -1,4 +1,4 @@
-#define tan __tan_avx
+#define __tan __tan_avx
 #define __dbl_mp __dbl_mp_avx
 #define __sub __sub_avx
 #define SECTION __attribute__ ((section (".text.avx")))

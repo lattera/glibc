@@ -53,7 +53,7 @@ void __mptan (double, mp_no *, int);
 
 double
 SECTION
-tan (double x)
+__tan (double x)
 {
 #include "utan.h"
 #include "utan.tbl"
@@ -843,6 +843,10 @@ tanMp (double x)
   return y;
 }
 
-#ifdef NO_LONG_DOUBLE
-weak_alias (tan, tanl)
+#ifndef __tan
+weak_alias (__tan, tan)
+# ifdef NO_LONG_DOUBLE
+strong_alias (__tan, __tanl)
+weak_alias (__tanl, tanl)
+# endif
 #endif
