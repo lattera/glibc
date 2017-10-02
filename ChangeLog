@@ -1,6 +1,12 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/mntent.h (__hasmntopt): Add libc_hidden_proto.
+	* misc/mntent_r.c (__hasmntopt): Add libc_hidden_def.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/ifreq.h: New file.
 	* sysdeps/generic/ifreq.h (__if_nextreq): Removed.
 	(__ifreq): Likewise.

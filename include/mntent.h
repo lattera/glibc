@@ -15,6 +15,7 @@ extern char *__hasmntopt (const struct mntent *__mnt, const char *__opt);
 libc_hidden_proto (__setmntent)
 libc_hidden_proto (__getmntent_r)
 libc_hidden_proto (__endmntent)
+libc_hidden_proto (__hasmntopt)
 
 # endif /* !_ISOMAC */
 #endif

@@ -293,4 +293,5 @@ __hasmntopt (const struct mntent *mnt, const char *opt)
 
   return NULL;
 }
+libc_hidden_def (__hasmntopt)
 weak_alias (__hasmntopt, hasmntopt)
