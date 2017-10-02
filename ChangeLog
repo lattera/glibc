@@ -1,6 +1,13 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/glob.h (__glob64): Add libc_hidden_proto.
+	* sysdeps/unix/sysv/linux/glob64.c (__glob64): Add
+	libc_hidden_def.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* sysdeps/unix/sysv/linux/getrlimit64.c (__new_getrlimit): Add
 	attribute_hidden.
 
