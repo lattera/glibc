@@ -1,5 +1,5 @@
-/* PowerPC64 default implementation of memrchr.
-   Copyright (C) 2013-2017 Free Software Foundation, Inc.
+/* Optimized memrchr implementation for PowerPC64/POWER8.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#include <sysdep.h>
 
-#define MEMRCHR  __memrchr_ppc
-
-#undef weak_alias
-#define weak_alias(a, b)
+#define MEMRCHR __memrchr_power8
 
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
+#undef weak_alias
+#define weak_alias(name,alias)
 
-extern __typeof (memrchr) __memrchr_ppc attribute_hidden;
-
-#include <string/memrchr.c>
+#include <sysdeps/powerpc/powerpc64/power8/memrchr.S>

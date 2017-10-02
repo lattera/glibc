@@ -1,3 +1,15 @@
+2017-10-02  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile
+	(sysdep_routines): Add memrchr_power8.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c
+	(memrchr): Add __memrchr_power8 to list of memrchr functions.
+	* sysdeps/powerpc/powerpc64/multiarch/memrchr-power8.S:
+	New file.
+	* sysdeps/powerpc/powerpc64/multiarch/memrchr.c
+	(memrchr): Add __memrchr_power8 to ifunc list.
+	* sysdeps/powerpc/powerpc64/power8/memrchr.S: New file.
+
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
