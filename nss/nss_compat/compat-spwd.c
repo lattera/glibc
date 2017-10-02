@@ -25,12 +25,11 @@
 #include <shadow.h>
 #include <stdio_ext.h>
 #include <string.h>
-#include <rpc/types.h>
-#include <rpcsvc/ypclnt.h>
 #include <libc-lock.h>
 #include <kernel-features.h>
 
 #include "netgroup.h"
+#include "nisdomain.h"
 
 static service_user *ni;
 static enum nss_status (*nss_setspent) (int stayopen);
@@ -79,7 +78,7 @@ __libc_lock_define_initialized (static, lock)
 
 /* Prototypes for local functions.  */
 static void blacklist_store_name (const char *, ent_t *);
-static int in_blacklist (const char *, int, ent_t *);
+static bool in_blacklist (const char *, int, ent_t *);
 
 /* Initialize the NSS interface/functions. The calling function must
    hold the lock.  */
@@ -306,7 +305,7 @@ getspent_next_nss_netgr (const char *name, struct spwd *result, ent_t *ent,
       if (domain != NULL)
 	{
 	  if (curdomain == NULL
-	      && yp_get_default_domain (&curdomain) != YPERR_SUCCESS)
+	      && __nss_get_default_domain (&curdomain) != 0)
 	    {
 	      __internal_endnetgrent (&ent->netgrdata);
 	      ent->netgroup = false;
@@ -840,8 +839,8 @@ blacklist_store_name (const char *name, ent_t *ent)
 }
 
 
-/* Returns TRUE if ent->blacklist contains name, else FALSE.  */
-static bool_t
+/* Returns whether ent->blacklist contains name.  */
+static bool
 in_blacklist (const char *name, int namelen, ent_t *ent)
 {
   char buf[namelen + 3];

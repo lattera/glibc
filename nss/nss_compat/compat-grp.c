@@ -24,7 +24,6 @@
 #include <nsswitch.h>
 #include <stdio_ext.h>
 #include <string.h>
-#include <rpc/types.h>
 #include <libc-lock.h>
 #include <kernel-features.h>
 
@@ -58,21 +57,21 @@ struct blacklist_t
 
 struct ent_t
 {
-  bool_t files;
+  bool files;
   enum nss_status setent_status;
   FILE *stream;
   struct blacklist_t blacklist;
 };
 typedef struct ent_t ent_t;
 
-static ent_t ext_ent = { TRUE, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
+static ent_t ext_ent = { true, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
 
 /* Protect global state against multiple changers.  */
 __libc_lock_define_initialized (static, lock)
 
 /* Prototypes for local functions.  */
 static void blacklist_store_name (const char *, ent_t *);
-static int in_blacklist (const char *, int, ent_t *);
+static bool in_blacklist (const char *, int, ent_t *);
 
 /* Initialize the NSS interface/functions. The calling function must
    hold the lock.  */
@@ -94,7 +93,7 @@ internal_setgrent (ent_t *ent, int stayopen, int needent)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
 
-  ent->files = TRUE;
+  ent->files = true;
 
   if (ent->blacklist.data != NULL)
     {
@@ -321,7 +320,7 @@ getgrent_next_file (struct group *result, ent_t *ent,
       /* +:... */
       if (result->gr_name[0] == '+' && result->gr_name[1] == '\0')
 	{
-	  ent->files = FALSE;
+	  ent->files = false;
 
 	  return getgrent_next_nss (result, ent, buffer, buflen, errnop);
 	}
@@ -466,7 +465,7 @@ enum nss_status
 _nss_compat_getgrnam_r (const char *name, struct group *grp,
 			char *buffer, size_t buflen, int *errnop)
 {
-  ent_t ent = { TRUE, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
+  ent_t ent = { true, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
   enum nss_status result;
 
   if (name[0] == '-' || name[0] == '+')
@@ -598,7 +597,7 @@ enum nss_status
 _nss_compat_getgrgid_r (gid_t gid, struct group *grp,
 			char *buffer, size_t buflen, int *errnop)
 {
-  ent_t ent = { TRUE, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
+  ent_t ent = { true, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
   enum nss_status result;
 
   __libc_lock_lock (lock);
@@ -665,15 +664,15 @@ blacklist_store_name (const char *name, ent_t *ent)
   return;
 }
 
-/* returns TRUE if ent->blacklist contains name, else FALSE */
-static bool_t
+/* Return whether ent->blacklist contains name.  */
+static bool
 in_blacklist (const char *name, int namelen, ent_t *ent)
 {
   char buf[namelen + 3];
   char *cp;
 
   if (ent->blacklist.data == NULL)
-    return FALSE;
+    return false;
 
   buf[0] = '|';
   cp = stpcpy (&buf[1], name);

@@ -72,7 +72,7 @@ tests += tst-cancel-getpwuid_r
 endif
 
 # Specify rules for the nss_* modules.  We have some services.
-services		:= files db
+services		:= files db compat
 
 extra-libs		= $(services:%=libnss_%)
 # These libraries will be built in the `others' pass rather than
@@ -95,11 +95,15 @@ libnss_db-routines	:= $(libnss_db-dbs) db-open db-init hash-string
 generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-dbs)))
 
+libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd initgroups) \
+			   nisdomain
+
 install-others		+= $(inst_vardbdir)/Makefile
 
 # Build static module into libc if requested
 libnss_files-inhibit-o	= $(filter-out .os,$(object-suffixes))
 libnss_db-inhibit-o	= $(filter-out .os,$(object-suffixes))
+libnss_compat-inhibit-o	= $(filter-out .os,$(object-suffixes))
 ifeq ($(build-static-nss),yes)
 routines                += $(libnss_files-routines)
 static-only-routines    += $(libnss_files-routines)

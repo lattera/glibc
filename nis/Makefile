@@ -33,7 +33,7 @@ databases		= proto service hosts network grp pwd rpc ethers \
 			  spwd netgrp alias publickey
 
 # Specify rules for the nss_* modules.
-services		:= nis nisplus compat
+services		:= nis nisplus
 endif
 
 extra-libs		= libnsl
@@ -63,9 +63,6 @@ libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
 		  nis_clone_res nss-default
 
 ifeq ($(build-obsolete-nsl),yes)
-libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd initgroups)
-libnss_compat-inhibit-o	= $(filter-out .os,$(object-suffixes))
-
 libnss_nis-routines	:= $(addprefix nis-,$(databases)) nis-initgroups \
 			   nss-nis
 libnss_nis-inhibit-o	= $(filter-out .os,$(object-suffixes))
@@ -79,7 +76,6 @@ include ../Rules
 
 
 ifeq ($(build-obsolete-nsl),yes)
-$(objpfx)libnss_compat.so: $(objpfx)libnsl.so$(libnsl.so-version)
 $(objpfx)libnss_nis.so: $(objpfx)libnsl.so$(libnsl.so-version) \
 			$(common-objpfx)nss/libnss_files.so
 $(objpfx)libnss_nisplus.so: $(objpfx)libnsl.so$(libnsl.so-version)

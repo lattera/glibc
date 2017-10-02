@@ -24,7 +24,6 @@
 #include <stdio_ext.h>
 #include <string.h>
 #include <unistd.h>
-#include <rpc/types.h>
 #include <sys/param.h>
 #include <nsswitch.h>
 #include <libc-lock.h>
@@ -79,7 +78,7 @@ typedef struct ent_t ent_t;
 
 /* Prototypes for local functions.  */
 static void blacklist_store_name (const char *, ent_t *);
-static int in_blacklist (const char *, int, ent_t *);
+static bool in_blacklist (const char *, int, ent_t *);
 
 /* Initialize the NSS interface/functions. The calling function must
    hold the lock.  */
@@ -558,15 +557,15 @@ blacklist_store_name (const char *name, ent_t *ent)
   return;
 }
 
-/* returns TRUE if ent->blacklist contains name, else FALSE */
-static bool_t
+/* Return whether ent->blacklist contains name.  */
+static bool
 in_blacklist (const char *name, int namelen, ent_t *ent)
 {
   char buf[namelen + 3];
   char *cp;
 
   if (ent->blacklist.data == NULL)
-    return FALSE;
+    return false;
 
   buf[0] = '|';
   cp = stpcpy (&buf[1], name);

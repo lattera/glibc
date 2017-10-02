@@ -63,17 +63,6 @@ libnsl {
   }
 }
 
-libnss_compat {
-  GLIBC_PRIVATE {
-    _nss_compat_endgrent; _nss_compat_endpwent; _nss_compat_endspent;
-    _nss_compat_getgrent_r; _nss_compat_getgrgid_r; _nss_compat_getgrnam_r;
-    _nss_compat_getpwent_r; _nss_compat_getpwnam_r; _nss_compat_getpwuid_r;
-    _nss_compat_getspent_r; _nss_compat_getspnam_r;
-    _nss_compat_setgrent; _nss_compat_setpwent; _nss_compat_setspent;
-    _nss_compat_initgroups_dyn;
-  }
-}
-
 libnss_nis {
   GLIBC_PRIVATE {
     _nss_nis_endaliasent; _nss_nis_endetherent; _nss_nis_endgrent;

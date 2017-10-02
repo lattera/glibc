@@ -1,3 +1,25 @@
+2017-10-04  Andreas Schwab  <schwab@suse.de>
+
+	* nis/Makefile (services): Remove compat.
+	(libnss_compat-routines, libnss_compat-inhibit-o): Don't define.
+	($(objpfx)libnss_compat.so): Remove rule.
+	* nis/Versions (libnss_compat): Remove.
+	* nss/Makefile (services): Add compat.
+	(libnss_compat-routines, libnss_compat-inhibit-o): Define.
+	* nss/Versions (libnss_compat): Define.
+	* nss/nss_compat/compat-grp.c: Moved here from nis/nss_compat.
+	Don't include <rpc/types.h>.  Replace bool_t by bool.
+	* nss/nss_compat/compat-initgroups.c: Likewise.
+	* nss/nss_compat/compat-pwd.c: Likewise.  Include "nisdomain.h"
+	instead of <rpcsrv/ypclnt.h>.
+	(getpwent_next_nss_netgr): Use __nss_get_default_domain instead of
+	yp_get_default_domain.
+	* nss/nss_compat/compat-pwd.c: Likewise.
+	(getspent_next_nss_netgr): Use __nss_get_default_domain instead of
+	yp_get_default_domain.
+	* nss/nss_compat/nisdomain.c: New file.
+	* nss/nss_compat/nisdomain.h: Likewise.
+
 2017-10-04  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	[BZ #22244]
