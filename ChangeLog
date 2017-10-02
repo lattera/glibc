@@ -1,6 +1,11 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* csu/version.c (__libc_print_version): Add attribute_hidden.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/libc-internal.h (__init_misc): Add attribute_hidden.
 
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
