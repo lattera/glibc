@@ -43,6 +43,7 @@
 #include "atnat.h"
 #include <fenv.h>
 #include <float.h>
+#include <libm-alias-double.h>
 #include <math.h>
 #include <math_private.h>
 #include <stap-probe.h>
@@ -324,9 +325,5 @@ atanMp (double x, const int pr[])
 }
 
 #ifndef __atan
-weak_alias (__atan, atan)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__atan, __atanl)
-weak_alias (__atanl, atanl)
-# endif
+libm_alias_double (__atan, atan)
 #endif

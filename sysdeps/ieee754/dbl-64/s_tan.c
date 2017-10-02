@@ -41,6 +41,7 @@
 #include "MathLib.h"
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 #include <fenv.h>
 #include <stap-probe.h>
 
@@ -844,9 +845,5 @@ tanMp (double x)
 }
 
 #ifndef __tan
-weak_alias (__tan, tan)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__tan, __tanl)
-weak_alias (__tanl, tanl)
-# endif
+libm_alias_double (__tan, tan)
 #endif

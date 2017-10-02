@@ -1,5 +1,12 @@
 2017-10-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/dbl-64/s_atan.c: Include <libm-alias-double.h>.
+	(atan): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Include <libm-alias-double.h>.
+	(tan): Define using libm_alias_double.
+	* sysdeps/ieee754/ldbl-opt/s_atan.c: Remove file.
+	* sysdeps/ieee754/ldbl-opt/s_tan.c: Likewise.
+
 	* sysdeps/ieee754/dbl-64/s_atan.c (atan): Rename to __atan and
 	define as weak alias of __atan.  Do not define any aliases if
 	[__atan].
