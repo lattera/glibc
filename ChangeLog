@@ -1,6 +1,15 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/sys/resource.h (__setrlimit): Add libc_hidden_proto.
+	* resource/setrlimit.c (__setrlimit): Add libc_hidden_def.
+	* sysdeps/mach/hurd/setrlimit.c (__setrlimit): Likewise.
+	* sysdeps/unix/sysv/linux/setrlimit.c (__setrlimit): Likewise.
+	* sysdeps/unix/sysv/linux/setrlimit64.c (__GI___setrlimit): New.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* include/monetary.h (__vstrfmon_l): Add attribute_hidden.
 
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>

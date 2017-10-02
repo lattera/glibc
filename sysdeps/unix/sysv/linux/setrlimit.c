@@ -48,6 +48,7 @@ __setrlimit (enum __rlimit_resource resource, const struct rlimit *rlim)
   return INLINE_SYSCALL_CALL (prlimit64, 0, resource, &rlim64, NULL);
 }
 
+libc_hidden_def (__setrlimit)
 # if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 strong_alias (__setrlimit, __setrlimit_1)
 compat_symbol (libc, __setrlimit, setrlimit, GLIBC_2_0);

@@ -23,5 +23,6 @@ extern int __getrusage (enum __rusage_who __who, struct rusage *__usage)
 
 extern int __setrlimit (enum __rlimit_resource __resource,
 			const struct rlimit *__rlimits);
+libc_hidden_proto (__setrlimit);
 #endif
 #endif
