@@ -62,6 +62,7 @@ static int	s_scale;
 
 void moncontrol (int mode);
 void __moncontrol (int mode);
+libc_hidden_proto (__moncontrol)
 static void write_hist (int fd);
 static void write_call_graph (int fd);
 static void write_bb_counts (int fd);
@@ -93,6 +94,7 @@ __moncontrol (int mode)
       p->state = GMON_PROF_OFF;
     }
 }
+libc_hidden_def (__moncontrol)
 weak_alias (__moncontrol, moncontrol)
 
 
