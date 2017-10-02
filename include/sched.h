@@ -5,6 +5,7 @@
 /* Now define the internal interfaces.  */
 extern int __sched_setparam (__pid_t __pid,
 			     const struct sched_param *__param);
+libc_hidden_proto (__sched_setparam)
 extern int __sched_getparam (__pid_t __pid, struct sched_param *__param);
 extern int __sched_setscheduler (__pid_t __pid, int __policy,
 				 const struct sched_param *__param);

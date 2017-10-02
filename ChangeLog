@@ -1,6 +1,12 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/sched.h (__sched_setparam): Add libc_hidden_proto.
+	* posix/sched_setp.c (__sched_setparam): Add libc_hidden_def.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* intl/hash-string.h (__hash_string): Add attribute_hidden.
 
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
