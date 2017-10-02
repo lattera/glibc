@@ -31,4 +31,5 @@
 /* Defines the so called `hashpjw' function by P.J. Weinberger
    [see Aho/Sethi/Ullman, COMPILERS: Principles, Techniques and Tools,
    1986, 1987 Bell Telephone Laboratories, Inc.]  */
-extern unsigned long int __hash_string (const char *str_param);
+extern unsigned long int __hash_string (const char *str_param)
+     attribute_hidden;
