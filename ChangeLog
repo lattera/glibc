@@ -1,6 +1,11 @@
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #18822]
+	* include/fpu_control.h (__setfpucw): Add attribute_hidden.
+
+2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
 	* nscd/nscd_helper.c (__nis_hash): New prototype.
 
 2017-10-01  H.J. Lu  <hongjiu.lu@intel.com>
