@@ -77,8 +77,8 @@ extern bool __exit_funcs_done attribute_hidden;
 __libc_lock_define (extern, __exit_funcs_lock);
 
 
-extern struct exit_function *__new_exitfn (struct exit_function_list **listp);
-
+extern struct exit_function *__new_exitfn (struct exit_function_list **listp)
+  attribute_hidden;
 
 extern void __run_exit_handlers (int status,
 				 struct exit_function_list **listp,
