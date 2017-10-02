@@ -1,3 +1,9 @@
+2017-10-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* math/w_remainder.c: New file.
+	* math/w_remainderf.c: New file.
+	* math/w_remainderl.c: New file.
+
 2017-10-03  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/rtld.c (BOOTSTRAP_MAP): New.
