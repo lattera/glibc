@@ -1,5 +1,11 @@
 2017-10-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* math/w_lgamma.c: New file.
+	* math/w_lgammaf.c: New file.
+	* math/w_lgammal.c: New file.
+
+2017-10-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* sysdeps/ieee754/flt-32/e_log2f.c (__log2f): Define without wrapper.
 	* sysdeps/ieee754/flt-32/e_logf.c (__logf): Likewise
 	* sysdeps/ieee754/flt-32/e_powf.c (__powf): Likewise
