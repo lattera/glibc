@@ -1,5 +1,19 @@
 2017-10-03  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/dbl-64/s_modf.c: Include <libm-alias-double.h>.
+	(modf): Define using libm_alias_double, only if [!__modf].
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_modf.c: Include
+	<libm-alias-double.h>.
+	(modf): Define using libm_alias_double, only if [!__modf].
+	* sysdeps/ieee754/ldbl-opt/s_modf.c (modfl): Only define libc
+	compat symbol here.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_modf-ppc32.c
+	(weak_alias): Do not undefine and redefine.
+	(strong_alias): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modf-ppc64.c
+	(weak_alias): Likewise.
+	(strong_alias): Likewise.
+
 	* sysdeps/ieee754/dbl-64/s_logb.c: Include <libm-alias-double.h>.
 	(logb): Define using libm_alias_double, only if [!__logb].
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c: Include

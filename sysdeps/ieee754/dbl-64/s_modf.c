@@ -21,6 +21,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 static const double one = 1.0;
 
@@ -79,8 +80,6 @@ __modf (double x, double *iptr)
 	}
     }
 }
-weak_alias (__modf, modf)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__modf, __modfl)
-weak_alias (__modf, modfl)
+#ifndef __modf
+libm_alias_double (__modf, modf)
 #endif

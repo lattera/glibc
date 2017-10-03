@@ -19,11 +19,6 @@
 #include <math.h>
 #include <math_ldbl_opt.h>
 
-#undef weak_alias
-#define weak_alias(a,b)
-#undef strong_alias
-#define strong_alias(a,b)
-
 #define __modf __modf_ppc64
 
 #include <sysdeps/ieee754/dbl-64/s_modf.c>
