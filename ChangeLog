@@ -1,3 +1,9 @@
+2017-10-04  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #22243]
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_log10.c (__ieee754_log10): Use fabs.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_log2.c (__ieee754_log2): Likewise.
+
 2017-10-03  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/start.S: Replace "leal main@GOT(%ebx), %eax" with
