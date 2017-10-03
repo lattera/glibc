@@ -24,6 +24,7 @@
 #include <sysdep.h>
 
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 
 long long int
@@ -63,20 +64,12 @@ __llround (double x)
   return sign * result;
 }
 
-weak_alias (__llround, llround)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__llround, __llroundl)
-weak_alias (__llround, llroundl)
-#endif
+libm_alias_double (__llround, llround)
 
 /* long has the same width as long long on LP64 machines, so use an alias.  */
 #undef lround
 #undef __lround
 #ifdef _LP64
 strong_alias (__llround, __lround)
-weak_alias (__llround, lround)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__llround, __lroundl)
-weak_alias (__llround, lroundl)
-# endif
+libm_alias_double (__lround, lround)
 #endif

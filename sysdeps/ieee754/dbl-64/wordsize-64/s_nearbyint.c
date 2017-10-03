@@ -23,6 +23,7 @@
 #include <fenv.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 static const double
 TWO52[2]={
@@ -59,8 +60,4 @@ __nearbyint(double x)
 	libc_fesetenv (&env);
 	return t;
 }
-weak_alias (__nearbyint, nearbyint)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__nearbyint, __nearbyintl)
-weak_alias (__nearbyint, nearbyintl)
-#endif
+libm_alias_double (__nearbyint, nearbyint)

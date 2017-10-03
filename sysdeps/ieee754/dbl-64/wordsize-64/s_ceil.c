@@ -19,6 +19,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 double
 __ceil(double x)
@@ -46,9 +47,5 @@ __ceil(double x)
 	return x;
 }
 #ifndef __ceil
-weak_alias (__ceil, ceil)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__ceil, __ceill)
-weak_alias (__ceil, ceill)
-# endif
+libm_alias_double (__ceil, ceil)
 #endif

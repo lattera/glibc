@@ -22,6 +22,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-double.h>
 #include <fix-fp-int-convert-overflow.h>
 
 
@@ -106,8 +107,4 @@ __lround (double x)
   return sign * result;
 }
 
-weak_alias (__lround, lround)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__lround, __lroundl)
-weak_alias (__lround, lroundl)
-#endif
+libm_alias_double (__lround, lround)

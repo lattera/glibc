@@ -21,6 +21,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 /* For LP64, lround is an alias for llround.  */
 #ifndef _LP64
@@ -80,10 +81,6 @@ __lround (double x)
   return sign * result;
 }
 
-weak_alias (__lround, lround)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__lround, __lroundl)
-weak_alias (__lround, lroundl)
-# endif
+libm_alias_double (__lround, lround)
 
 #endif

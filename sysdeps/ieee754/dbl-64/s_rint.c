@@ -22,6 +22,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 static const double
   TWO52[2] = {
@@ -59,9 +60,5 @@ __rint (double x)
   return w - TWO52[sx];
 }
 #ifndef __rint
-weak_alias (__rint, rint)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__rint, __rintl)
-weak_alias (__rint, rintl)
-# endif
+libm_alias_double (__rint, rint)
 #endif

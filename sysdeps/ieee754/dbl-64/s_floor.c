@@ -19,6 +19,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 double
 __floor (double x)
@@ -81,9 +82,5 @@ __floor (double x)
   return x;
 }
 #ifndef __floor
-weak_alias (__floor, floor)
-# ifdef NO_LONG_DOUBLE
-strong_alias (__floor, __floorl)
-weak_alias (__floor, floorl)
-# endif
+libm_alias_double (__floor, floor)
 #endif

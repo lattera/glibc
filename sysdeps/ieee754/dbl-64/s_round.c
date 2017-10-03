@@ -20,6 +20,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 
 double
@@ -76,8 +77,4 @@ __round (double x)
   INSERT_WORDS (x, i0, i1);
   return x;
 }
-weak_alias (__round, round)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__round, __roundl)
-weak_alias (__round, roundl)
-#endif
+libm_alias_double (__round, round)

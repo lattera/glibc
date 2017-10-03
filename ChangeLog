@@ -1,3 +1,65 @@
+2017-10-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/s_ceil.c: Include <libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_floor.c: Include <libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_llround.c: Include
+	<libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_lround.c: Include
+	<libm-alias-double.h>.
+	(lround): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_nearbyint.c: Include
+	<libm-alias-double.h>.
+	(nearbyint): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_remquo.c: Include
+	<libm-alias-double.h>.
+	(remquo): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_rint.c: Include <libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_round.c: Include <libm-alias-double.h>.
+	(round): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/s_trunc.c: Include <libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_ceil.c: Include
+	<libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_floor.c: Include
+	<libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_llround.c: Include
+	<libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	[_LP64] (lround): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: Include
+	<libm-alias-double.h>.
+	[!_LP64] (lround): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c: Include
+	<libm-alias-double.h>.
+	(nearbyint): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_remquo.c: Include
+	<libm-alias-double.h>.
+	(remquo): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_rint.c: Include
+	<libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_round.c: Include
+	<libm-alias-double.h>.
+	(round): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_trunc.c: Include
+	<libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+	* sysdeps/ieee754/ldbl-opt/s_ceil.c: Remove file.
+	* sysdeps/ieee754/ldbl-opt/s_floor.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_llround.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_lround.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_nearbyint.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_remquo.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_rint.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_round.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_trunc.c: Likewise.
+
 2017-10-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* math/w_remainder.c: New file.
