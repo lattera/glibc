@@ -1,3 +1,13 @@
+2017-10-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/s_frexp.c: Include <libm-alias-double.h>.
+	(frexp): Define using libm_alias_double.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_frexp.c: Include
+	<libm-alias-double.h>.
+	(frexp): Define using libm_alias_double.
+	* sysdeps/ieee754/ldbl-opt/s_frexp.c (frexpl): Only define libc
+	compat symbol here.
+
 2017-10-03  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	[BZ #22235]
