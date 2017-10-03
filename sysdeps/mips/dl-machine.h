@@ -195,7 +195,7 @@ elf_machine_load_address (void)
    fiddles with global data.  */
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info)			\
 do {									\
-  struct link_map *map = &bootstrap_map;				\
+  struct link_map *map = BOOTSTRAP_MAP;					\
   ElfW(Sym) *sym;							\
   ElfW(Addr) *got;							\
   int i, n;								\

@@ -45,7 +45,7 @@ __ia64_init_bootstrap_fdesc_table (struct link_map *map)
 }
 
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info)		\
-	__ia64_init_bootstrap_fdesc_table (&bootstrap_map);
+	__ia64_init_bootstrap_fdesc_table (BOOTSTRAP_MAP);
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))

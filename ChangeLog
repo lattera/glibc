@@ -1,3 +1,14 @@
+2017-10-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/rtld.c (BOOTSTRAP_MAP): New.
+	(RESOLVE_MAP): Replace (&bootstrap_map) with BOOTSTRAP_MAP.
+	* sysdeps/hppa/dl-machine.h (ELF_MACHINE_BEFORE_RTLD_RELOC):
+	Likewise.
+	* sysdeps/ia64/dl-machine.h (ELF_MACHINE_BEFORE_RTLD_RELOC):
+	Likewise.
+	* sysdeps/mips/dl-machine.h (ELF_MACHINE_BEFORE_RTLD_RELOC):
+	Likewise.
+
 2017-10-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* include/libc-symbols.h [NO_RTLD_HIDDEN] (rtld_hidden_proto,

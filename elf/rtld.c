@@ -454,7 +454,8 @@ _dl_start (void *arg)
      Since ld.so must not have any undefined symbols the result
      is trivial: always the map of ld.so itself.  */
 #define RTLD_BOOTSTRAP
-#define RESOLVE_MAP(sym, version, flags) (&bootstrap_map)
+#define BOOTSTRAP_MAP (&bootstrap_map)
+#define RESOLVE_MAP(sym, version, flags) BOOTSTRAP_MAP
 #include "dynamic-link.h"
 
   if (HP_TIMING_INLINE && HP_SMALL_TIMING_AVAIL)

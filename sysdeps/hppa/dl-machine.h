@@ -62,7 +62,7 @@ __hppa_init_bootstrap_fdesc_table (struct link_map *map)
 }
 
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info)		\
-	__hppa_init_bootstrap_fdesc_table (&bootstrap_map);	\
+	__hppa_init_bootstrap_fdesc_table (BOOTSTRAP_MAP);	\
 	_dl_fptr_init();
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
