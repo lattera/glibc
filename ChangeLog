@@ -1,3 +1,18 @@
+2017-10-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/s_logb.c: Include <libm-alias-double.h>.
+	(logb): Define using libm_alias_double, only if [!__logb].
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c: Include
+	<libm-alias-double.h>.
+	(logb): Define using libm_alias_double, only if [!__logb].
+	* sysdeps/ieee754/ldbl-opt/s_logb.c: Remove file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logb-ppc32.c
+	(weak_alias): Do not undefine and redefine.
+	(strong_alias): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logb-ppc64.c
+	(weak_alias): Likewise.
+	(strong_alias): Likewise.
+
 2017-10-03  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/tile/sysdep.h (SYSCALL_ERROR_NAME):

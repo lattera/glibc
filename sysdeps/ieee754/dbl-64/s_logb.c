@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 #include <fix-int-fp-convert-zero.h>
 
 double
@@ -46,7 +47,6 @@ __logb (double x)
     return 0.0;
   return (double) (rix - 1023);
 }
-weak_alias (__logb, logb)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__logb, __logbl) weak_alias (__logb, logbl)
+#ifndef __logb
+libm_alias_double (__logb, logb)
 #endif
