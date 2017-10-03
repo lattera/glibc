@@ -42,7 +42,7 @@
 
 #define ret  jrp lr
 
-#ifndef PIC
+#ifndef SHARED
 /* For static code, on error jump to __syscall_error directly. */
 # define SYSCALL_ERROR_NAME __syscall_error
 #elif IS_IN (libc) || IS_IN (libpthread)
