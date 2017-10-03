@@ -1,5 +1,20 @@
 2017-11-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/Makefile
+	[$(subdir) = string] (sysdep_routines): Add memset-ultra1.
+	* sysdeps/sparc/sparc64/multiarch/Makefile [$(subdir) = string]
+	(sysdep_routines): Add memset-ultra1.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memset-ultra1.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memset.c: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/bzero.c: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/ifunc-memset.h: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memset-ultra1.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memset.c: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/bzero.c: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memset.S: Remove file.
+	* sysdeps/sparc/sparc64/multiarch/memset.S: Likewise.
+
 	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-ultra1.S: New
 	file.
 	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy.c: Likewise.
