@@ -1,5 +1,8 @@
 2017-10-03  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/dbl-64/s_fmaf.c: Include <libm-alias-float.h>.
+	[!__fmaf] (fmaf): Define using libm_alias_float.
+
 	* sysdeps/ieee754/dbl-64/s_frexp.c: Include <libm-alias-double.h>.
 	(frexp): Define using libm_alias_double.
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_frexp.c: Include

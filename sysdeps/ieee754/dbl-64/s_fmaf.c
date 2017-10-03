@@ -21,6 +21,7 @@
 #include <fenv.h>
 #include <ieee754.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 /* This implementation relies on double being more than twice as
    precise as float and uses rounding to odd in order to avoid problems
@@ -60,5 +61,5 @@ __fmaf (float x, float y, float z)
   return (float) u.d;
 }
 #ifndef __fmaf
-weak_alias (__fmaf, fmaf)
+libm_alias_float (__fma, fma)
 #endif
