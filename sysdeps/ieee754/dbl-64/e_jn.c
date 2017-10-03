@@ -268,11 +268,6 @@ __ieee754_yn (int n, double x)
   /* if Y(n,NaN) is NaN */
   if (__glibc_unlikely ((ix | ((uint32_t) (lx | -lx)) >> 31) > 0x7ff00000))
     return x + x;
-  if (__glibc_unlikely ((ix | lx) == 0))
-    return -HUGE_VAL + x;
-  /* -inf and overflow exception.  */;
-  if (__glibc_unlikely (hx < 0))
-    return zero / (zero * x);
   sign = 1;
   if (n < 0)
     {
@@ -281,6 +276,11 @@ __ieee754_yn (int n, double x)
     }
   if (n == 0)
     return (__ieee754_y0 (x));
+  if (__glibc_unlikely ((ix | lx) == 0))
+    return -sign / zero;
+  /* -inf and overflow exception.  */;
+  if (__glibc_unlikely (hx < 0))
+    return zero / (zero * x);
   {
     SET_RESTORE_ROUND (FE_TONEAREST);
     if (n == 1)

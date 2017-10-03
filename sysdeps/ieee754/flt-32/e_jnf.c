@@ -194,15 +194,15 @@ __ieee754_ynf(int n, float x)
 	ix = 0x7fffffff&hx;
     /* if Y(n,NaN) is NaN */
 	if(__builtin_expect(ix>0x7f800000, 0)) return x+x;
-	if(__builtin_expect(ix==0, 0))
-		return -HUGE_VALF+x;  /* -inf and overflow exception.  */
-	if(__builtin_expect(hx<0, 0)) return zero/(zero*x);
 	sign = 1;
 	if(n<0){
 		n = -n;
 		sign = 1 - ((n&1)<<1);
 	}
 	if(n==0) return(__ieee754_y0f(x));
+	if(__builtin_expect(ix==0, 0))
+		return -sign/zero;
+	if(__builtin_expect(hx<0, 0)) return zero/(zero*x);
 	SET_RESTORE_ROUNDF (FE_TONEAREST);
 	if(n==1) {
 	    ret = sign*__ieee754_y1f(x);

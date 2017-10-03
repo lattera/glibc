@@ -1,5 +1,11 @@
 2017-10-04  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	[BZ #22244]
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_yn): Fix x == 0 case.
+	* sysdeps/ieee754/flt-32/e_jnf.c (__ieee754_ynf): Likewise.
+
+2017-10-04  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	[BZ #22243]
 	* sysdeps/ieee754/dbl-64/wordsize-64/e_log10.c (__ieee754_log10): Use fabs.
 	* sysdeps/ieee754/dbl-64/wordsize-64/e_log2.c (__ieee754_log2): Likewise.
