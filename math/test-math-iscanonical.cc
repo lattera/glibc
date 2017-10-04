@@ -20,7 +20,7 @@
 #include <math.h>
 #include <stdio.h>
 
-static bool errors;
+static int errors;
 
 template <class T>
 static void
