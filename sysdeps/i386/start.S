@@ -99,8 +99,11 @@ _start:
 	pushl main@GOT(%ebx)
 # else
 	/* Avoid relocation in static PIE since _start is called before
-	   it is relocated.  */
-	leal main@GOTOFF(%ebx), %eax
+	   it is relocated.  Don't use "leal main@GOTOFF(%ebx), %eax"
+	   since main may be in a shared object.  Linker will convert
+	   "movl main@GOT(%ebx), %eax" to "leal main@GOTOFF(%ebx), %eax"
+	   if main is defined locally.  */
+	movl main@GOT(%ebx), %eax
 	pushl %eax
 # endif
 
