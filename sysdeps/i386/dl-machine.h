@@ -54,15 +54,8 @@ elf_machine_load_address (void)
   /* Compute the difference between the runtime address of _DYNAMIC as seen
      by a GOTOFF reference, and the link-time address found in the special
      unrelocated first GOT entry.  */
-#ifndef SHARED
-  extern Elf32_Dyn _DYNAMIC[] __attribute__((weak, visibility ("hidden")));
-  if (!_DYNAMIC)
-    return 0;
-#endif
-  /* The address of dynamic must be taken as non-weak to avoid dynamic
-     relocation.  */
-  extern Elf32_Dyn dynamic[] asm ("_DYNAMIC") attribute_hidden;
-  return (Elf32_Addr) &dynamic - elf_machine_dynamic ();
+  extern Elf32_Dyn bygotoff[] asm ("_DYNAMIC") attribute_hidden;
+  return (Elf32_Addr) &bygotoff - elf_machine_dynamic ();
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
