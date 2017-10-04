@@ -1,3 +1,18 @@
+2017-11-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/arm/arm-ifunc.h: New file.
+	* sysdeps/arm/armv7/multiarch/ifunc-memcpy.h: Likewise.
+	* sysdeps/arm/armv7/multiarch/memcpy.c: Likewise.
+	* sysdeps/arm/armv7/multiarch/memcpy_arm.S: Likewise.
+	* sysdeps/arm/armv7/multiarch/rtld-memcpy.S: Likewise.
+	* sysdeps/arm/armv7/multiarch/memcpy_neon.S [!__ARM_NEON__]
+	(__memcpy_neon): Avoid create hidden alias.
+	* sysdeps/arm/armv7/multiarch/memcpy_vfp.S [!__ARM_NEON_]
+	(__memcpy_vfp): Likewise.
+	* sysdeps/arm/armv7/multiarch/Makefile [$(subdir) = string]
+	(sysdep_routines): Add memcpy_arm.
+	* sysdeps/arm/armv7/multiarch/memcpy.S: Remove file.
+
 2017-11-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22362]
