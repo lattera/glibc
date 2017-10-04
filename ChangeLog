@@ -1,3 +1,7 @@
+2017-10-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/alpha/fpu/s_nearbyint.c: Remove file.
+
 2017-10-04  Florian Weimer  <fweimer@redhat.com>
 
 	* scripts/check-local-headers.sh: Ignore nspr4 header file
