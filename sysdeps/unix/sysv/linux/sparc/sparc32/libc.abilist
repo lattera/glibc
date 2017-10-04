@@ -367,6 +367,7 @@ GLIBC_2.0 confstr F
 GLIBC_2.0 connect F
 GLIBC_2.0 copysign F
 GLIBC_2.0 copysignf F
+GLIBC_2.0 copysignl F
 GLIBC_2.0 creat F
 GLIBC_2.0 create_module F
 GLIBC_2.0 ctermid F

@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 ENTRY (__copysign)
 	sethi	%hi(0x80000000), %g1
@@ -29,3 +30,9 @@ ENTRY (__copysign)
 	 ldd	[%sp + 72], %f0
 END (__copysign)
 weak_alias (__copysign, copysign)
+#if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
+compat_symbol (libm, __copysign, copysignl, GLIBC_2_0);
+#endif
+#if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
+compat_symbol (libc, __copysign, copysignl, GLIBC_2_0);
+#endif

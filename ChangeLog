@@ -1,5 +1,32 @@
 2017-10-04  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #22229]
+	* sysdeps/sparc/sparc32/fpu/s_copysign.S: Include
+	<math_ldbl_opt.h>
+	(copysignl): Define as compat symbol at version GLIBC_2_0 for libm
+	and libc.
+	* sysdeps/sparc/sparc32/fpu/s_fabs.S: Include <math_ldbl_opt.h>.
+	(fabsl): Define as compat symbol at version GLIBC_2_0 for libm.
+	* sysdeps/sparc/sparc32/fpu/s_fma.c: Include <math_ldbl_opt.h>.
+	(fmal): Define as compat symbol at version GLIBC_2_1 for libm.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign.S:
+	Include <math_ldbl_opt.h>
+	(copysignl): Define as compat symbol at version GLIBC_2_0 for libm
+	and libc.
+	(compat_symbol): Undefine and redefine.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs.S: Include
+	<math_ldbl_opt.h>
+	(fabsl): Define as compat symbol at version GLIBC_2_0 for libm.
+	(compat_symbol): Undefine and redefine.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fma.c
+	[HAVE_AS_VIS3_SUPPORT]: Include <math_ldbl_opt.h>.
+	[HAVE_AS_VIS3_SUPPORT] (fmal): Define as compat symbol at version
+	GLIBC_2_1 for libm.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Add
+	GLIBC_2.0 copysignl symbol.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Add
+	GLIBC_2.0 copysignl and fabsl and GLIBC_2.1 fmal symbols.
+
 	* sysdeps/alpha/fpu/s_nearbyint.c: Remove file.
 
 2017-10-04  Florian Weimer  <fweimer@redhat.com>

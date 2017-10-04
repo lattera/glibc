@@ -29,6 +29,7 @@ GLIBC_2.0 ceilf F
 GLIBC_2.0 ceill F
 GLIBC_2.0 copysign F
 GLIBC_2.0 copysignf F
+GLIBC_2.0 copysignl F
 GLIBC_2.0 cos F
 GLIBC_2.0 cosf F
 GLIBC_2.0 cosh F
@@ -52,6 +53,7 @@ GLIBC_2.0 expm1f F
 GLIBC_2.0 expm1l F
 GLIBC_2.0 fabs F
 GLIBC_2.0 fabsf F
+GLIBC_2.0 fabsl F
 GLIBC_2.0 finite F
 GLIBC_2.0 finitef F
 GLIBC_2.0 finitel F
@@ -254,6 +256,7 @@ GLIBC_2.1 fetestexcept F
 GLIBC_2.1 feupdateenv F
 GLIBC_2.1 fma F
 GLIBC_2.1 fmaf F
+GLIBC_2.1 fmal F
 GLIBC_2.1 fmax F
 GLIBC_2.1 fmaxf F
 GLIBC_2.1 fmaxl F
