@@ -1,3 +1,8 @@
+2017-10-04  Florian Weimer  <fweimer@redhat.com>
+
+	* scripts/check-local-headers.sh: Ignore nspr4 header file
+	directory in addition to nspr.
+
 2017-10-04  Guido Trentalancia  <guido@trentalancia.net>
 
 	[BZ #17956]
