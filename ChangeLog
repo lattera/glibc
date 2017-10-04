@@ -1,3 +1,13 @@
+2017-10-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/s_fma.c: Include <libm-alias-double.h>.
+	(fma): Define using libm_alias_double.
+	* sysdeps/ieee754/ldbl-opt/s_fma.c: Remove file.
+	* sysdeps/sparc/sparc32/fpu/s_fma.c: Do not include
+	<math_ldbl_opt.h>.
+	(fmal): Do not define as compat symbol here.
+	* sysdeps/alpha/fpu/s_fma.c: New file.
+
 2017-10-04  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/dl-machine.h (elf_machine_rela): Expand MIN.
