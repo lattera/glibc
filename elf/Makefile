@@ -185,7 +185,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
 	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
 	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose \
-	 tst-debug1
+	 tst-debug1 tst-main1
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -269,7 +269,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-audit11mod1 tst-audit11mod2 tst-auditmod11 \
 		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12 \
 		tst-latepthreadmod $(tst-tls-many-dynamic-modules) \
-		tst-nodelete-dlclose-dso tst-nodelete-dlclose-plugin
+		tst-nodelete-dlclose-dso tst-nodelete-dlclose-plugin \
+		tst-main1mod
 ifeq (yes,$(have-mtls-dialect-gnu2))
 tests += tst-gnu2-tls1
 modules-names += tst-gnu2-tls1mod
@@ -1427,3 +1428,9 @@ $(objpfx)tst-debug1.out: $(objpfx)tst-debug1mod1.so
 
 $(objpfx)tst-debug1mod1.so: $(objpfx)testobj1.so
 	$(OBJCOPY) --only-keep-debug $< $@
+
+$(objpfx)tst-main1: $(objpfx)tst-main1mod.so
+CRT-tst-main1 := $(csu-objpfx)crt1.o
+LDFLAGS-tst-main1 = $(no-pie-ldflag)
+LDLIBS-tst-main1 = $(libsupport)
+tst-main1mod.so-no-z-defs = yes
