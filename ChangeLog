@@ -1,5 +1,10 @@
 2017-10-03  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/arm/dl-machine.h (elf_machine_load_address): Don't
+	check _DYNAMIC.
+
+2017-10-03  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* math/test-math-iscanonical.cc (error): Replace bool with int.
 
 2017-10-03  Joseph Myers  <joseph@codesourcery.com>

@@ -59,9 +59,6 @@ elf_machine_load_address (void)
   Elf32_Addr got_addr = (Elf32_Addr) &__dl_start;
   asm ("adr %0, _dl_start" : "=r" (pcrel_addr));
 #else
-  extern Elf32_Dyn _DYNAMIC[] __attribute__((weak, visibility ("hidden")));
-  if (!_DYNAMIC)
-    return 0;
   extern Elf32_Addr __dl_relocate_static_pie (void *)
     asm ("_dl_relocate_static_pie") attribute_hidden;
   Elf32_Addr got_addr = (Elf32_Addr) &__dl_relocate_static_pie;
