@@ -3549,8 +3549,12 @@ if test x$nss_crypt = xyes; then
   if test $? -ne 0; then
     as_fn_error $? "cannot find include directory with nss-config" "$LINENO" 5
   fi
+  nspr_includes=-I$(nspr-config --includedir 2>/dev/null)
+  if test $? -ne 0; then
+    as_fn_error $? "cannot find include directory with nspr-config" "$LINENO" 5
+  fi
   old_CFLAGS="$CFLAGS"
-  CFLAGS="$CFLAGS $nss_includes"
+  CFLAGS="$CFLAGS $nss_includes $nspr_includes"
 
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */

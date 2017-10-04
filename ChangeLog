@@ -1,3 +1,14 @@
+2017-10-04  Guido Trentalancia  <guido@trentalancia.net>
+
+	[BZ #17956]
+	* configure.ac (--enable-nss-crypt): Use NSPR include directory.
+	* configure: Regenerate.
+	* crypt/Makefile (nss-cpp-flags): New variable.
+	(CPPFLAGS-sha256-crypt.c, CPPFLAGS-sha512-crypt.c)
+	(CPPFLAGS-md5-crypt.c): Use it.
+	* scripts/check-local-headers.sh: Ignore nspr header file
+	directory.
+
 2017-10-04  Andreas Schwab  <schwab@suse.de>
 
 	* nis/Makefile (services): Remove compat.

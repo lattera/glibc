@@ -330,8 +330,12 @@ if test x$nss_crypt = xyes; then
   if test $? -ne 0; then
     AC_MSG_ERROR([cannot find include directory with nss-config])
   fi
+  nspr_includes=-I$(nspr-config --includedir 2>/dev/null)
+  if test $? -ne 0; then
+    AC_MSG_ERROR([cannot find include directory with nspr-config])
+  fi
   old_CFLAGS="$CFLAGS"
-  CFLAGS="$CFLAGS $nss_includes"
+  CFLAGS="$CFLAGS $nss_includes $nspr_includes"
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([typedef int PRBool;
 #include <hasht.h>
 #include <nsslowhash.h>
