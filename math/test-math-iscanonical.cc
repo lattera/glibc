@@ -42,7 +42,7 @@ do_test (void)
 #if __HAVE_DISTINCT_FLOAT128
   check_type<_Float128> ();
 #endif
-  return errors;
+  return errors != 0;
 }
 
 #include <support/test-driver.c>

@@ -1,3 +1,7 @@
+2017-10-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* math/test-math-iscanonical.cc (do_test): Return errors != 0.
+
 2017-10-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/dbl-64/s_fma.c: Include <libm-alias-double.h>.
