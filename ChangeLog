@@ -1,5 +1,8 @@
 2017-10-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/bench-memmove-walk.c: New file.
+	* benchtests/Makefile (string-benchset): Add it.
+
 	* benchtests/bench-memset-walk.c: New file.
 	* benchtests/Makefile (string-benchset): Add it.
 
