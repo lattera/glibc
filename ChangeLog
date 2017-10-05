@@ -1,5 +1,7 @@
 2017-10-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/libm-test-ulps: Update.
+
 	* sysdeps/ieee754/ldbl-96/s_asinhl.c: Include
 	<libm-alias-ldouble.h>.
 	(asinhl): Define using libm_alias_ldouble.

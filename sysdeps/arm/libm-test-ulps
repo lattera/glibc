@@ -679,9 +679,9 @@ ifloat: 2
 
 Function: Real part of "clog10_downward":
 double: 5
-float: 4
+float: 5
 idouble: 5
-ifloat: 4
+ifloat: 5
 
 Function: Imaginary part of "clog10_downward":
 double: 2
@@ -1173,15 +1173,21 @@ ifloat: 1
 
 Function: "exp_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 
 Function: "exp_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 
 Function: "exp_upward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 
 Function: "expm1":
 double: 1
