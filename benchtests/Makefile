@@ -38,7 +38,7 @@ string-benchset := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
 		   strncasecmp strncat strncmp strncpy strnlen strpbrk strrchr \
 		   strspn strstr strcpy_chk stpcpy_chk memrchr strsep strtok \
 		   strcoll memcpy-large memcpy-random memmove-large memset-large \
-		   memcpy-walk
+		   memcpy-walk memset-walk
 
 # Build and run locale-dependent benchmarks only if we're building natively.
 ifeq (no,$(cross-compiling))
