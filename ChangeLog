@@ -1,3 +1,14 @@
+2017-10-05  Florian Weimer  <fweimer@redhat.com>
+
+	nscd: Eliminate compilation time dependency in the build output.
+	* nscd/nscd_stat.c (STATDATA_VERSION)
+	(STATDATA_VERSION_SELINUX_FLAG, STATDATA_VERSION_FLAGS)
+	(STATDATA_VERSION_FULL): New macro definitions.
+	(compilation): Remove.
+	(struct statdata): Adjust version member.
+	(send_stats): Set version from STATDATA_VERSION_FULL.
+	(receive_print_stats): Verify version against STATDATA_VERSION_FULL.
+
 2017-10-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.ac (--enable-add-ons): Remove option.

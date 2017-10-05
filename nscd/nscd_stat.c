@@ -35,9 +35,23 @@
 # include <selinux/avc.h>
 #endif /* HAVE_SELINUX */
 
+/* We use this to make sure the receiver is the same.  The lower 16
+   bits are reserved for flags indicating compilation variants.  This
+   version needs to be updated if the definition of struct statdata
+   changes.  */
+#define STATDATA_VERSION  0x01020000U
 
-/* We use this to make sure the receiver is the same.  */
-static const char compilation[21] = __DATE__ " " __TIME__;
+#ifdef HAVE_SELINUX
+# define STATDATA_VERSION_SELINUX_FLAG 0x0001U
+#else
+# define STATDATA_VERSION_SELINUX_FLAG 0x0000U
+#endif
+
+/* All flags affecting the struct statdata layout.  */
+#define STATDATA_VERSION_FLAGS STATDATA_VERSION_SELINUX_FLAG
+
+/* The full version number for struct statdata.  */
+#define STATDATA_VERSION_FULL (STATDATA_VERSION | STATDATA_VERSION_FLAGS)
 
 /* Statistic data for one database.  */
 struct dbstat
@@ -68,10 +82,11 @@ struct dbstat
   uintmax_t addfailed;
 };
 
-/* Record for transmitting statistics.  */
+/* Record for transmitting statistics.  If this definition changes,
+   update STATDATA_VERSION above.  */
 struct statdata
 {
-  char version[sizeof (compilation)];
+  unsigned int version;		/* Must be STATDATA_VERSION_FULL.  */
   int debug_level;
   time_t runtime;
   unsigned long int client_queued;
@@ -96,7 +111,7 @@ send_stats (int fd, struct database_dyn dbs[lastdb])
 
   memset (&data, 0, sizeof (data));
 
-  memcpy (data.version, compilation, sizeof (compilation));
+  data.version = STATDATA_VERSION_FULL;
   data.debug_level = debug_level;
   data.runtime = time (NULL) - start_time;
   data.client_queued = client_queued;
@@ -196,7 +211,7 @@ receive_print_stats (void)
 
   /* Read as much data as we expect.  */
   if (TEMP_FAILURE_RETRY (read (fd, &data, sizeof (data))) != sizeof (data)
-      || (memcmp (data.version, compilation, sizeof (compilation)) != 0
+      || (data.version != STATDATA_VERSION_FULL
 	  /* Yes, this is an assignment!  */
 	  && (errno = EINVAL)))
     {
