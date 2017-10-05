@@ -1,5 +1,12 @@
 2017-10-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/aarch64/multiarch/Makefile (sysdep_routines): Add
+	memmove_falkor.
+	* sysdeps/aarch64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/aarch64/multiarch/memmove.c: Likewise.
+	* sysdeps/aarch64/multiarch/memmove_falkor.S: New file.
+
 	* benchtests/bench-memmove-walk.c: New file.
 	* benchtests/Makefile (string-benchset): Add it.
 
