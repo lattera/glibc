@@ -86,6 +86,10 @@
 #undef	PI_STATIC_AND_HIDDEN
 
 /* Define this to disable the 'hidden_proto' et al macros in
+   include/libc-symbols.h that avoid PLT slots in PIE.  */
+#undef  NO_HIDDEN_EXTERN_FUNC_IN_PIE
+
+/* Define this to disable the 'hidden_proto' et al macros in
    include/libc-symbols.h that avoid PLT slots in the shared objects.  */
 #undef	NO_HIDDEN
 

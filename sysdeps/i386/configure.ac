@@ -48,3 +48,9 @@ fi
 dnl It is always possible to access static and hidden symbols in an
 dnl position independent way.
 AC_DEFINE(PI_STATIC_AND_HIDDEN)
+
+dnl When multi-arch is enabled, all external functions must be called
+dnl via PIC PLT in PIE, which requires setting up EBX register.
+if test x"$multi_arch" != xno; then
+  AC_DEFINE(NO_HIDDEN_EXTERN_FUNC_IN_PIE)
+fi

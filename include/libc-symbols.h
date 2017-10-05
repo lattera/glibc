@@ -507,6 +507,7 @@ for linking")
 #else
 # ifndef __ASSEMBLER__
 #  if !defined SHARED && IS_IN (libc) && !defined LIBC_NONSHARED \
+      && (!defined PIC || !defined NO_HIDDEN_EXTERN_FUNC_IN_PIE) \
       && !defined NO_HIDDEN
 #   define __hidden_proto_hiddenattr(attrs...) \
   __attribute__ ((visibility ("hidden"), ##attrs))

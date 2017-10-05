@@ -1,5 +1,14 @@
 2017-10-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* config.h.in (NO_HIDDEN_EXTERN_FUNC_IN_PIE): New.
+	* include/libc-symbols.h (__hidden_proto_hiddenattr): Add check
+	for PIC and NO_HIDDEN_EXTERN_FUNC_IN_PIE.
+	* sysdeps/i386/configure.ac (NO_HIDDEN_EXTERN_FUNC_IN_PIE): New
+	AC_DEFINE if multi-arch is enabled.
+	* sysdeps/i386/configure: Regenerated.
+
+2017-10-04  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* Makeconfig (+link-static-before-libc): Use
 	$(DEFAULT-LDFLAGS-$(@F)).
 	* elf/Makefile (CRT-tst-tls1-static-non-pie): New.

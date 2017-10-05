@@ -26,7 +26,7 @@ libc_compiler_builtin_inlined=no
 cat > conftest.c <<EOF
 int _start (void) { int a, b, c; __sync_val_compare_and_swap (&a, b, c); return 0; }
 EOF
-if ! { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+if ! { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
 		     -O0 -nostdlib -nostartfiles
 		     -S conftest.c -o - | fgrep "__sync_val_compare_and_swap"
 		     1>&5'
@@ -79,3 +79,8 @@ fi
 
 $as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
 
+
+if test x"$multi_arch" != xno; then
+  $as_echo "#define NO_HIDDEN_EXTERN_FUNC_IN_PIE 1" >>confdefs.h
+
+fi
