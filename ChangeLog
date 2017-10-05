@@ -1,3 +1,7 @@
+2017-10-05  Florian Weimer  <fweimer@redhat.com>
+
+	* gmon/Makefile (CFLAGS-tst-gmon.c): Add -fno-omit-frame-pointer.
+
 2017-10-05  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.

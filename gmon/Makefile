@@ -36,7 +36,7 @@ endif
 # The mcount code won't work without a frame pointer.
 CFLAGS-mcount.c := -fno-omit-frame-pointer
 
-CFLAGS-tst-gmon.c := -pg
+CFLAGS-tst-gmon.c := -fno-omit-frame-pointer -pg
 LDFLAGS-tst-gmon := $(no-pie-ldflag)
 CRT-tst-gmon := $(csu-objpfx)gcrt1.o
 tst-gmon-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon.data
