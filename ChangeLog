@@ -1,3 +1,8 @@
+2017-10-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* benchtests/bench-memcpy-walk.c: New file.
+	* benchtests/Makefile (string-benchset): Add it.
+
 2017-10-05  Florian Weimer  <fweimer@redhat.com>
 
 	nscd: Eliminate compilation time dependency in the build output.
