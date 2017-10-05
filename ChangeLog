@@ -1,3 +1,8 @@
+2017-10-05  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support_format_hostent.c (support_format_hostent): Add
+	more error information for NETDB_INTERNAL.
+
 2017-10-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* config.h.in (NO_HIDDEN_EXTERN_FUNC_IN_PIE): New.
