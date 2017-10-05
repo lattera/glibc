@@ -20,6 +20,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 
 long double
@@ -89,4 +90,4 @@ __roundl (long double x)
   SET_LDOUBLE_WORDS (x, se, i0, i1);
   return x;
 }
-weak_alias (__roundl, roundl)
+libm_alias_ldouble (__round, round)

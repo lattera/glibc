@@ -52,6 +52,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <errno.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 long double __cosl(long double x)
 {
@@ -85,4 +86,4 @@ long double __cosl(long double x)
 	    }
 	}
 }
-weak_alias (__cosl, cosl)
+libm_alias_ldouble (__cos, cos)

@@ -2,4 +2,4 @@
 #define INEXACT 1
 #define FUNC __fromfpxl
 #include <s_fromfpl_main.c>
-weak_alias (__fromfpxl, fromfpxl)
+libm_alias_ldouble (__fromfpx, fromfpx)

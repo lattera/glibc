@@ -31,6 +31,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 static const long double
 #if LDBL_MANT_DIG == 64
@@ -58,4 +59,4 @@ long double __frexpl(long double x, int *eptr)
 	SET_LDOUBLE_EXP(x,se);
 	return x;
 }
-weak_alias (__frexpl, frexpl)
+libm_alias_ldouble (__frexp, frexp)

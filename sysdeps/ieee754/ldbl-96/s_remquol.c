@@ -20,6 +20,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 
 static const long double zero = 0.0;
@@ -108,4 +109,4 @@ __remquol (long double x, long double p, int *quo)
     x = -x;
   return x;
 }
-weak_alias (__remquol, remquol)
+libm_alias_ldouble (__remquo, remquo)

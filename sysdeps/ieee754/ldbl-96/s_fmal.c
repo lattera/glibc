@@ -22,6 +22,7 @@
 #include <fenv.h>
 #include <ieee754.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 #include <tininess.h>
 
 /* This implementation uses rounding to odd to avoid problems with
@@ -293,4 +294,4 @@ __fmal (long double x, long double y, long double z)
       return v.d * 0x1p-130L;
     }
 }
-weak_alias (__fmal, fmal)
+libm_alias_ldouble (__fma, fma)

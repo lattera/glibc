@@ -23,6 +23,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 static const long double two63[2] =
 {
@@ -123,4 +124,4 @@ __lrintl (long double x)
   return sx ? -result : result;
 }
 
-weak_alias (__lrintl, lrintl)
+libm_alias_ldouble (__lrint, lrint)

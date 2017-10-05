@@ -22,6 +22,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 
 long int
@@ -108,4 +109,4 @@ __lroundl (long double x)
   return sign * result;
 }
 
-weak_alias (__lroundl, lroundl)
+libm_alias_ldouble (__lround, lround)

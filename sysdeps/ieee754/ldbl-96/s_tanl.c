@@ -51,6 +51,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <errno.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 long double __tanl(long double x)
 {
@@ -78,4 +79,4 @@ long double __tanl(long double x)
 							-1 -- n odd */
 	}
 }
-weak_alias (__tanl, tanl)
+libm_alias_ldouble (__tan, tan)

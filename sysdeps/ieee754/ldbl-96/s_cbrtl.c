@@ -20,6 +20,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 
 #define CBRT2 1.2599210498948731648		/* 2^(1/3) */
@@ -67,4 +68,4 @@ __cbrtl (long double x)
   u -= (u - (x / (u * u))) * third;
   return u;
 }
-weak_alias (__cbrtl, cbrtl)
+libm_alias_ldouble (__cbrt, cbrt)

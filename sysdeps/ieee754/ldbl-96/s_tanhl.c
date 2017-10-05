@@ -45,6 +45,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 static const long double one=1.0, two=2.0, tiny = 1.0e-4900L;
 
@@ -87,4 +88,4 @@ long double __tanhl(long double x)
 	}
 	return (se&0x8000)? -z: z;
 }
-weak_alias (__tanhl, tanhl)
+libm_alias_ldouble (__tanh, tanh)

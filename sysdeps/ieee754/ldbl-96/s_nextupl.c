@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 /* Return the least floating-point number greater than X.  */
 long double
@@ -81,4 +82,4 @@ __nextupl (long double x)
   return x;
 }
 
-weak_alias (__nextupl, nextupl)
+libm_alias_ldouble (__nextup, nextup)

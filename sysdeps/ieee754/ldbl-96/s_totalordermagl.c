@@ -19,6 +19,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 #include <nan-high-order-bit.h>
 #include <stdint.h>
 
@@ -49,4 +50,4 @@ __totalordermagl (long double x, long double y)
 #endif
   return expx < expy || (expx == expy && (hx < hy || (hx == hy && lx <= ly)));
 }
-weak_alias (__totalordermagl, totalordermagl)
+libm_alias_ldouble (__totalordermag, totalordermag)

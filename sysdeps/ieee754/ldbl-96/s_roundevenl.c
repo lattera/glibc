@@ -19,6 +19,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 #include <stdint.h>
 
 #define BIAS 0x3fff
@@ -122,4 +123,4 @@ __roundevenl (long double x)
   SET_LDOUBLE_WORDS (x, se, hx, lx);
   return x;
 }
-weak_alias (__roundevenl, roundevenl)
+libm_alias_ldouble (__roundeven, roundeven)

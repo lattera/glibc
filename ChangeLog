@@ -1,3 +1,93 @@
+2017-10-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-96/s_asinhl.c: Include
+	<libm-alias-ldouble.h>.
+	(asinhl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_cbrtl.c: Include
+	<libm-alias-ldouble.h>.
+	(cbrtl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_copysignl.c: Include
+	<libm-alias-ldouble.h>.
+	(copysignl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_cosl.c: Include
+	<libm-alias-ldouble.h>.
+	(cosl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_erfl.c: Include
+	<libm-alias-ldouble.h>.
+	(erfl): Define using libm_alias_ldouble.
+	(erfcl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c: Include
+	<libm-alias-ldouble.h>.
+	(fmal): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_frexpl.c: Include
+	<libm-alias-ldouble.h>.
+	(frexpl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_fromfpl.c (fromfpl): Define using
+	libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_fromfpl_main.c: Include
+	<libm-alias-ldouble.h>.
+	* sysdeps/ieee754/ldbl-96/s_fromfpxl.c (fromfpxl): Define using
+	libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_getpayloadl.c: Include
+	<libm-alias-ldouble.h>.
+	(getpayloadl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_llrintl.c: Include
+	<libm-alias-ldouble.h>.
+	(llrintl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_llroundl.c: Include
+	<libm-alias-ldouble.h>.
+	(llroundl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_lrintl.c: Include
+	<libm-alias-ldouble.h>.
+	(lrintl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_lroundl.c: Include
+	<libm-alias-ldouble.h>.
+	(lroundl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_modfl.c: Include
+	<libm-alias-ldouble.h>.
+	(modfl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_nextupl.c: Include
+	<libm-alias-ldouble.h>.
+	(nextupl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_remquol.c: Include
+	<libm-alias-ldouble.h>.
+	(remquol): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_roundevenl.c: Include
+	<libm-alias-ldouble.h>.
+	(roundevenl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_roundl.c: Include
+	<libm-alias-ldouble.h>.
+	(roundl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_setpayloadl.c (setpayloadl): Define
+	using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_setpayloadl_main.c: Include
+	<libm-alias-ldouble.h>.
+	* sysdeps/ieee754/ldbl-96/s_setpayloadsigl.c: Include
+	<libm-alias-ldouble.h>.
+	(setpayloadsigl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_sincosl.c: Include
+	<libm-alias-ldouble.h>.
+	(sincosl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_sinl.c: Include
+	<libm-alias-ldouble.h>.
+	(sinl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_tanhl.c: Include
+	<libm-alias-ldouble.h>.
+	(tanhl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_tanl.c: Include
+	<libm-alias-ldouble.h>.
+	(tanl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_totalorderl.c: Include
+	<libm-alias-ldouble.h>.
+	(totalorderl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_totalordermagl.c: Include
+	<libm-alias-ldouble.h>.
+	(totalordermagl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_ufromfpl.c (ufromfpl): Define using
+	libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-96/s_ufromfpxl.c (ufromfpxl): Define using
+	libm_alias_ldouble.
+
 2017-10-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/aarch64/multiarch/Makefile (sysdep_routines): Add

@@ -32,6 +32,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 static const long double
 one =  1.000000000000000000000e+00L, /* 0x3FFF, 0x00000000, 0x00000000 */
@@ -62,4 +63,4 @@ long double __asinhl(long double x)
 	}
 	return __copysignl(w, x);
 }
-weak_alias (__asinhl, asinhl)
+libm_alias_ldouble (__asinh, asinh)

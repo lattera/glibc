@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 #include <stdint.h>
 
 long double
@@ -30,4 +31,4 @@ __getpayloadl (const long double *x)
   uint64_t ix = ((uint64_t) hx << 32) | lx;
   return (long double) ix;
 }
-weak_alias (__getpayloadl, getpayloadl)
+libm_alias_ldouble (__getpayload, getpayload)
