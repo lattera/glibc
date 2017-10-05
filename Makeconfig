@@ -435,6 +435,7 @@ endif
 # Command for statically linking programs with the C library.
 ifndef +link-static
 +link-static-before-libc = $(CC) -nostdlib -nostartfiles -static -o $@ \
+	      $(DEFAULT-LDFLAGS-$(@F)) \
 	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F))  \
 	      $(addprefix $(csu-objpfx),$(static-start-installed-name)) \
 	      $(+preinit) $(+prectorT) \

@@ -152,7 +152,8 @@ tests-static-internal := tst-tls1-static tst-tls2-static \
 	       tst-ptrguard1-static tst-stackguard1-static \
 	       tst-tls1-static-non-pie
 
-LDFLAGS-tst-tls1-static-non-pie = $(no-pie-ldflag)
+CRT-tst-tls1-static-non-pie := $(csu-objpfx)crt1.o
+DEFAULT-LDFLAGS-tst-tls1-static-non-pie = $(no-pie-ldflag)
 
 tests := tst-tls9 tst-leaks1 \
 	tst-array1 tst-array2 tst-array3 tst-array4 tst-array5 \

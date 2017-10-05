@@ -1,5 +1,13 @@
 2017-10-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* Makeconfig (+link-static-before-libc): Use
+	$(DEFAULT-LDFLAGS-$(@F)).
+	* elf/Makefile (CRT-tst-tls1-static-non-pie): New.
+	(LDFLAGS-tst-tls1-static-non-pie): Renamed to ...
+	(DEFAULT-LDFLAGS-tst-tls1-static-non-pie): This.
+
+2017-10-04  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* elf/Makefile (tests): Add tst-main1.
 	(modules-names): Add tst-main1mod.
 	($(objpfx)tst-main1): New.
