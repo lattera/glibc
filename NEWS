@@ -24,6 +24,11 @@ Major new features:
   leads to lower overall process restart latency, so there is benefit both
   from a security and performance perspective.
 
+* The abort function terminates the process immediately, without flushing
+  stdio streams.  Previous glibc versions used to flush streams, resulting
+  in deadlocks and further data corruption.  This change also affects
+  process aborts as the result of assertion failures.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On GNU/Linux, the obsolete Linux constant PTRACE_SEIZE_DEVEL is no longer

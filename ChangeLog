@@ -1,5 +1,12 @@
 2017-10-05  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #15436]
+	Do not flush stdio streams on abort.
+	* stdlib/abort.c (fflush): Remove macro definition.
+	(abort): Remove stages related to stdio flushing.
+
+2017-10-05  Florian Weimer  <fweimer@redhat.com>
+
 	* gmon/Makefile (CFLAGS-tst-gmon.c): Add -fno-omit-frame-pointer.
 
 2017-10-05  Stefan Liebler  <stli@linux.vnet.ibm.com>
