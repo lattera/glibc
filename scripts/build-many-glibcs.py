@@ -1342,7 +1342,6 @@ class Glibc(object):
         cmdlist.create_copy_dir(srcdir, srcdir_copy)
         cfg_cmd = [os.path.join(srcdir_copy, 'configure'),
                    '--prefix=/usr',
-                   '--enable-add-ons',
                    '--enable-profile',
                    '--build=%s' % self.ctx.build_triplet,
                    '--host=%s' % self.triplet,

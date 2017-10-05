@@ -13,11 +13,6 @@ Before you do anything else, you should read the FAQ at
 questions and describes problems you may experience with compilation
 and installation.
 
-Features can be added to @theglibc{} via @dfn{add-on} bundles.  These are
-separate tar files, which you unpack into the top level of the source
-tree.  Then you give @code{configure} the @samp{--enable-add-ons} option
-to activate them, and they will be compiled into the library.
-
 You will need recent versions of several GNU tools: definitely GCC and
 GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 
@@ -94,17 +89,6 @@ This option is primarily of use on a system where the headers in
 occasionally happen in this case.  You can also use this option if you want to
 compile @theglibc{} with a newer set of kernel headers than the ones found in
 @file{/usr/include}.
-
-@item --enable-add-ons[=@var{list}]
-Specify add-on packages to include in the build.  If this option is
-specified with no list, it enables all the add-on packages it finds in
-the main source directory; this is the default behavior.  You may
-specify an explicit list of add-ons to use in @var{list}, separated by
-spaces or commas (if you use spaces, remember to quote them from the
-shell).  Each add-on in @var{list} can be an absolute directory name
-or can be a directory name relative to the main source directory, or
-relative to the build directory (that is, the current working directory).
-For example, @samp{--enable-add-ons=nptl,../glibc-libidn-@var{version}}.
 
 @item --enable-kernel=@var{version}
 This option is currently only useful on @gnulinuxsystems{}.  The

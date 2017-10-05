@@ -1,3 +1,53 @@
+2017-10-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (--enable-add-ons): Remove option.
+	(machine): Do not mention add-ons in comment.
+	(LIBC_PRECONFIGURE): Likewise.
+	(add_ons): Remove variable and sanity checks and logic to locate
+	add-ons.
+	(add_ons_automatic): Remove variable.
+	(configured_add_ons): Likewise.
+	(add_ons_sfx): Likewise.
+	(add_ons_pfx): Likewise.
+	(add_on_subdirs): Likewise.
+	(sysnames_add_ons): Likewise.  Remove loop over add-ons and
+	consideration of add-ons in Implies handling.
+	(sysdeps_add_ons): Likewise.
+	* configure: Regenerated.
+	* libidn/configure.ac: Remove.
+	* libidn/configure: Likewise.
+	* sysdeps/unix/inet/configure.ac: New file.
+	* sysdeps/unix/inet/configure: New generated file.
+	* sysdeps/unix/inet/Subdirs: Add libidn.
+	* Makeconfig (sysdeps-srcdirs): Remove variable.
+	(+sysdep_dirs): Do not include $(sysdeps-srcdirs).
+	($(common-objpfx)config.status): Do not depend on add-on files.
+	($(common-objpfx)shlib-versions.v.i): Do not mention add-ons in
+	comment.
+	(all-subdirs): Do not include $(add-on-subdirs).
+	* Makefile (dist-prepare): Do not use $(sysdeps-add-ons).
+	* config.make.in (add-ons): Remove variable.
+	(add-on-subdirs): Likewise.
+	(sysdeps-add-ons): Likewise.
+	* manual/Makefile (add-chapters): Remove.
+	($(objpfx)texis): Do not depend on $(add-chapters).
+	(nonexamples): Do not handle $(add-chapters).
+	(examples): Do not handle $(add-ons).
+	(chapters.% top-menu.%): Do not pass '$(add-chapters)' to
+	libc-texinfo.sh.
+	* manual/install.texi (Installation): Do not mention add-ons.
+	(--enable-add-ons): Do not document configure option.
+	* INSTALL: Regenerated.
+	* manual/libc-texinfo.sh: Do not handle $2 add-ons argument.
+	* manual/maint.texi (Hierarchy Conventions): Do not mention
+	add-ons.
+	* scripts/build-many-glibcs.py (Glibc.build_glibc): Do not use
+	--enable-add-ons.
+	* scripts/gen-sorted.awk: Do not handle Subdirs files from
+	add-ons.
+	* scripts/test-installation.pl: Do not handle glibc-compat add-on.
+	* sysdeps/nptl/Makeconfig: Do not mention add-ons in comment.
+
 2017-10-05  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15142]

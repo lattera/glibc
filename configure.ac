@@ -209,13 +209,6 @@ if test "$enable_lock_elision" = yes ; then
   AC_DEFINE(ENABLE_LOCK_ELISION)
 fi
 
-dnl Generic infrastructure for drop-in additions to libc.
-AC_ARG_ENABLE([add-ons],
-	      AC_HELP_STRING([--enable-add-ons@<:@=DIRS...@:>@],
-			     [configure and build add-ons in DIR1,DIR2,...
-			      search for add-ons if no parameter given]),
-			     , [enable_add_ons=yes])
-
 AC_ARG_ENABLE([hidden-plt],
 	      AC_HELP_STRING([--disable-hidden-plt],
 			     [do not hide internal function calls to avoid PLT]),
@@ -483,7 +476,7 @@ config_os="`echo $config_os | sed 's/^unknown-//'`"
 # Some configurations imply other options.
 elf=yes
 
-# The configure fragment of an add-on port can modify these to supplement
+# The configure fragment of a port can modify these to supplement
 # or override the table in the case statement below.  No fragment should
 # ever change the config_* variables, however.
 machine=$config_machine
@@ -506,137 +499,8 @@ AC_ARG_WITH([cpu],
 # check below.
 libc_config_ok=no
 
-dnl Let sysdeps/*/preconfigure act here, like they can in add-ons.
+dnl Let sysdeps/*/preconfigure act here.
 LIBC_PRECONFIGURE([$srcdir], [for sysdeps])
-
-dnl Having this here, though empty, makes sure that if add-ons' fragments
-dnl do AC_CONFIG_SUBDIRS([some-dir]), which just sets $subdirs, then
-dnl our AC_OUTPUT will actually use it.
-AC_CONFIG_SUBDIRS()
-
-case "$enable_add_ons" in
-''|no) add_ons= ;;
-yes|'*')
- add_ons=`cd $srcdir && ls -d 2> /dev/null */configure */sysdeps |
-	  sed 's@/[[^/]]*$@@' | sort | uniq`
-	 add_ons_automatic=yes
-	 ;;
-*) add_ons=`echo "$enable_add_ons" | sed 's/,/ /g'`
-       add_ons_automatic=no ;;
-esac
-
-configured_add_ons=
-add_ons_sfx=
-add_ons_pfx=
-if test x"$add_ons" != x; then
-  for f in $add_ons; do
-    # Some sanity checks
-    case "$f" in
-    crypt)
-      AC_MSG_ERROR([
-*** It seems that you're using an old \`crypt' add-on.  crypt is now
-*** part of glibc and using the old add-on will not work with this
-*** release.  Start again with fresh sources and without the old
-*** \`crypt' add-on.])
-    ;;
-    localedata)
-      AC_MSG_ERROR([
-*** It seems that you're using an old \`localedata' add-on.  localedata
-*** is now part of glibc and using the old add-on will not work with
-*** this release.  Start again with fresh sources and without the old
-*** \`localedata' add-on.])
-    ;;
-    esac
-  done
-
-  # Now source each add-on's configure fragment.
-  # The fragments can use $srcdir/$libc_add_on to find themselves,
-  # and test $add_ons_automatic to see if they were explicitly requested.
-  # A fragment can clear (or even change) $libc_add_on to affect
-  # whether it goes into the list to be actually used in the build.
-  use_add_ons=
-  for libc_add_on in $add_ons; do
-    # Test whether such a directory really exists.
-    # It can be absolute, or relative to $srcdir, or relative to the build dir.
-    case "$libc_add_on" in
-    /*)
-      libc_add_on_srcdir=$libc_add_on
-      ;;
-    *)
-      test -d "$srcdir/$libc_add_on" || {
-	if test -d "$libc_add_on"; then
-	  libc_add_on="`pwd`/$libc_add_on"
-	else
-	  AC_MSG_ERROR(add-on directory \"$libc_add_on\" does not exist)
-	fi
-      }
-      libc_add_on_srcdir=$srcdir/$libc_add_on
-      ;;
-    esac
-
-    libc_add_on_frag=$libc_add_on_srcdir/configure
-    libc_add_on_canonical=
-    libc_add_on_config_subdirs=
-    if test -r "$libc_add_on_frag"; then
-      AC_MSG_NOTICE(running configure fragment for add-on $libc_add_on)
-      libc_add_on_canonical=unknown
-      libc_add_on_subdirs=
-      . "$libc_add_on_frag"
-      test -z "$libc_add_on" || {
-	configured_add_ons="$configured_add_ons $libc_add_on"
-	if test "x$libc_add_on_canonical" = xunknown; then
-	  AC_MSG_ERROR(fragment must set \$libc_add_on_canonical)
-	fi
-	for d in $libc_add_on_subdirs; do
-	  case "$libc_add_on" in
-	  /*) subdir_srcdir="$libc_add_on" ;;
-	  *) subdir_srcdir="\$(..)$libc_add_on" ;;
-	  esac
-	  case "$d" in
-	  .)
-	    d="${libc_add_on_canonical:-$libc_add_on}"
-	    ;;
-	  /*)
-	    subdir_srcdir="$d"
-	    ;;
-	  *)
-	    subdir_srcdir="$subdir_srcdir/$d"
-	    ;;
-	  esac
-	  d=`echo "$d" | sed 's@/*$@@;s@^.*/@@'`
-	  add_on_subdirs="$add_on_subdirs $d"
-	  test "$subdir_srcdir" = "\$(..)$d" || config_vars="$config_vars
-$d-srcdir = $subdir_srcdir"
-	done
-	for d in $libc_add_on_config_subdirs; do
-	  case "$d" in
-	  /*) AC_MSG_ERROR(dnl
-fragment uses absolute path in \$libc_add_on_config_subdirs) ;;
-	  esac
-	  if test ! -d "$libc_add_on_srcdir/$d"; then
-	    AC_MSG_ERROR(fragment wants to configure missing directory $d)
-	  fi
-	  case "$libc_add_on" in
-	  /*) AC_MSG_ERROR(dnl
-relative path required for add-on using \$libc_add_on_config_subdirs) ;;
-	  esac
-	  subdirs="$subdirs $libc_add_on/$d"
-	done
-      }
-    fi
-    if test -n "$libc_add_on"; then
-      LIBC_PRECONFIGURE([$libc_add_on_srcdir], [add-on $libc_add_on for])
-      use_add_ons="$use_add_ons $libc_add_on"
-      add_ons_pfx="$add_ons_pfx $libc_add_on/"
-      test -z "$libc_add_on_canonical" ||
-      add_ons_sfx="$add_ons_sfx /$libc_add_on_canonical"
-    fi
-  done
-  # Use echo to strip excess whitespace.
-  add_ons="`echo $use_add_ons`"
-fi
-AC_SUBST(add_ons)
-AC_SUBST(add_on_subdirs)
 
 
 ###
@@ -853,7 +717,6 @@ dnl We are done with glob and regexp uses of [ and ]; return to autoconf.
 changequote([,])dnl
 
 # Find what sysdep directories exist.
-sysnames_add_ons=
 sysnames=
 for b in $base ''; do
   for m0 in $mach ''; do
@@ -862,34 +725,21 @@ for b in $base ''; do
       for o in /$ostry ''; do
 	test "$o" = / && continue
 	for m in $mach ''; do
-	  for d in $add_ons_pfx ''; do
-	    for a in $add_ons_sfx ''; do
-	      try_suffix="$m0$b$v$o$m"
-	      if test -n "$try_suffix"; then
-		try_srcdir="${srcdir}/"
-		case "$d" in
-		/*) try_srcdir= ;;
-		esac
-		try="${d}sysdeps$try_suffix$a"
-		test -n "$enable_debug_configure" &&
-		echo "$0 [DEBUG]: try $try" >&2
-		if test -d "$try_srcdir$try"; then
-		  sysnames="$sysnames $try"
-		  { test -n "$o" || test -n "$b"; } && os_used=t
-		  { test -n "$m" || test -n "$m0"; } && machine_used=t
-		  case x${m0:-$m} in
-		  x*/$submachine) submachine_used=t ;;
-		  esac
-		  if test -n "$d"; then
-		    case "$sysnames_add_ons" in
-		    *" $d "*) ;;
-		    *|'') sysnames_add_ons="$sysnames_add_ons $d" ;;
-		    esac
-		  fi
-		fi
-	      fi
-	    done
-	  done
+	  try_suffix="$m0$b$v$o$m"
+	  if test -n "$try_suffix"; then
+	    try_srcdir="${srcdir}/"
+	    try="sysdeps$try_suffix"
+	    test -n "$enable_debug_configure" &&
+	    echo "$0 [DEBUG]: try $try" >&2
+	    if test -d "$try_srcdir$try"; then
+	      sysnames="$sysnames $try"
+	      { test -n "$o" || test -n "$b"; } && os_used=t
+	      { test -n "$m" || test -n "$m0"; } && machine_used=t
+	      case x${m0:-$m} in
+	      x*/$submachine) submachine_used=t ;;
+	      esac
+	    fi
+	  fi
 	done
       done
     done
@@ -898,7 +748,7 @@ done
 
 # If the assembler supports gnu_indirect_function symbol type and the
 # architecture supports multi-arch, we enable multi-arch by default.
-case $sysnames_add_ons$sysnames in
+case $sysnames in
 *"$multi_arch_d"*)
   ;;
 *)
@@ -960,24 +810,15 @@ while test $# -gt 0; do
 	  eval "${implies_type}=\"\$${implies_type} \$name_base/\$x\""
 	  found=yes
 	fi
-	for d in $add_ons_pfx ''; do
-	  try="${d}sysdeps/$x"
-	  case $d in
-	   /*) try_srcdir= ;;
-	   *) try_srcdir=$srcdir/ ;;
-	  esac
-	  test -n "$enable_debug_configure" &&
-	   echo "[DEBUG]: $name $implies_file $x try($d) {$try_srcdir}$try" >&2
-	  if test $try != $xsrcdir$name_base/$x && test -d $try_srcdir$try;
-	  then
-	    eval "${implies_type}=\"\$${implies_type} \$try\""
-	    found=yes
-	    case "$sysnames_add_ons" in
-	    *" $d "*) ;;
-	    *|'') sysnames_add_ons="$sysnames_add_ons $d" ;;
-	    esac
-	  fi
-	done
+	try="sysdeps/$x"
+	try_srcdir=$srcdir/
+	test -n "$enable_debug_configure" &&
+	 echo "[DEBUG]: $name $implies_file $x try() {$try_srcdir}$try" >&2
+	if test $try != $xsrcdir$name_base/$x && test -d $try_srcdir$try;
+	then
+	  eval "${implies_type}=\"\$${implies_type} \$try\""
+	  found=yes
+	fi
 	if test $found = no; then
 	  AC_MSG_WARN($name/$implies_file specifies nonexistent $x)
 	fi
@@ -1014,61 +855,6 @@ sysnames="$names $default_sysnames"
 AC_SUBST(sysnames)
 # The other names were emitted during the scan.
 AC_MSG_RESULT($default_sysnames)
-
-# Collect the list of add-ons that supply partial sysdeps trees.
-sysdeps_add_ons=
-for add_on in $add_ons; do
-  case "$add_on" in
-  /*) xsrcdir= ;;
-  *) xsrcdir="$srcdir/" ;;
-  esac
-
-  test -d "$xsrcdir$add_on/sysdeps" || {
-    case "$configured_add_ons " in
-    *" $add_on "*) ;;
-    *|'')
-      AC_MSG_ERROR(add-on $add_on has no configure fragment or sysdeps tree)
-      ;;
-    esac
-    continue
-  }
-
-  sysdeps_add_ons="$sysdeps_add_ons $add_on"
-  case "$sysnames_add_ons" in
-  *" $add_on/ "*) ;;
-  *|'')
-    AC_MSG_WARN(add-on $add_on contributed no sysdeps directories)
-    continue ;;
-  esac
-
-  found=no
-  for d in $sysnames; do
-    case "$d" in
-    $add_on/sysdeps/*) ;;
-    *) continue ;;
-    esac
-    (cd "$xsrcdir$d" && for f in *[[!~]]; do
-       case "$f" in
-       sys|bits)
-	 for ff in $f/*.h; do
-	   test -d "$ff" || { test -e "$ff" && exit 88; }
-	 done
-	 ;;
-       *)
-	 test -d "$f" || { test -e "$f" && exit 88; }
-	 ;;
-       esac
-     done)
-    if test $? -eq 88; then
-      found=yes
-      break
-    fi
-  done
-  if test $found = no; then
-    AC_MSG_WARN(add-on $add_on contributed no useful sysdeps directories)
-  fi
-done
-AC_SUBST(sysdeps_add_ons)
 
 
 ### Locate tools.

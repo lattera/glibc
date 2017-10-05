@@ -5,11 +5,6 @@ Before you do anything else, you should read the FAQ at
 <http://sourceware.org/glibc/wiki/FAQ>.  It answers common questions and
 describes problems you may experience with compilation and installation.
 
-   Features can be added to the GNU C Library via "add-on" bundles.
-These are separate tar files, which you unpack into the top level of the
-source tree.  Then you give 'configure' the '--enable-add-ons' option to
-activate them, and they will be compiled into the library.
-
    You will need recent versions of several GNU tools: definitely GCC
 and GNU Make, and possibly others.  *Note Tools for Compilation::,
 below.
@@ -68,18 +63,6 @@ will be used, and CFLAGS sets optimization options for the compiler.
      Conflicts can occasionally happen in this case.  You can also use
      this option if you want to compile the GNU C Library with a newer
      set of kernel headers than the ones found in '/usr/include'.
-
-'--enable-add-ons[=LIST]'
-     Specify add-on packages to include in the build.  If this option is
-     specified with no list, it enables all the add-on packages it finds
-     in the main source directory; this is the default behavior.  You
-     may specify an explicit list of add-ons to use in LIST, separated
-     by spaces or commas (if you use spaces, remember to quote them from
-     the shell).  Each add-on in LIST can be an absolute directory name
-     or can be a directory name relative to the main source directory,
-     or relative to the build directory (that is, the current working
-     directory).  For example,
-     '--enable-add-ons=nptl,../glibc-libidn-VERSION'.
 
 '--enable-kernel=VERSION'
      This option is currently only useful on GNU/Linux systems.  The

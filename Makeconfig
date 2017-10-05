@@ -59,15 +59,7 @@ stack-align-test-flags =
 # `configure' writes a definition of `config-sysdirs' in `config.make'.
 sysdirs := $(foreach D,$(config-sysdirs),$(firstword $(filter /%,$D) $(..)$D))
 
-# Add-ons that contribute sysdeps trees get added to the include list
-# after sysdeps/generic.  This makes #include <sysdeps/...> work right
-# to find specific add-on files without assuming the add-on directory name.
-# It also means that headers can go into an add-on's base directory
-# instead of the add-on needing a sysdeps/generic of its own.
-sysdeps-srcdirs := $(foreach add-on,$(sysdeps-add-ons),\
-			     $(firstword $(filter /%,$(add-on)) \
-					 $(..)$(add-on)))
-+sysdep_dirs = $(sysdirs) $(sysdeps-srcdirs)
++sysdep_dirs = $(sysdirs)
 ifdef objdir
 +sysdep_dirs := $(objdir) $(+sysdep_dirs)
 endif
@@ -81,8 +73,8 @@ $(common-objpfx)config.make: $(common-objpfx)config.status \
 			     $(..)config.make.in $(..)config.h.in
 	cd $(<D); $(SHELL) $(<F)
 
-# Find all the add-on and sysdeps configure fragments, to make sure we
-# re-run configure when any of them changes.
+# Find all the sysdeps configure fragments, to make sure we re-run
+# configure when any of them changes.
 $(common-objpfx)config.status: $(..)version.h $(..)configure \
 			       $(foreach dir,$(sysdirs),\
 					 $(wildcard $(dir)/Implies) \
@@ -90,14 +82,7 @@ $(common-objpfx)config.status: $(..)version.h $(..)configure \
 						    $(firstword $(wildcard \
  $(addprefix $(dir)/,configure configure.ac))))) \
 			       $(patsubst %.ac,%,\
- $(wildcard $(..)sysdeps/*/preconfigure $(..)sysdeps/*/preconfigure.ac)) \
-			       $(patsubst %.ac,%,\
-					  $(foreach add-on,$(add-ons),\
-						    $(firstword $(wildcard \
- $(addprefix $(firstword $(filter /%,$(add-on)) $(..)$(add-on))/,\
-	     configure configure.ac))) \
- $(wildcard $(addprefix $(firstword $(filter /%,$(add-on)) $(..)$(add-on))/,\
-			sysdeps/*/preconfigure sysdeps/*/preconfigure.ac))))
+ $(wildcard $(..)sysdeps/*/preconfigure $(..)sysdeps/*/preconfigure.ac))
 	@cd $(@D); if test -f $(@F); then exec $(SHELL) $(@F) --recheck; else \
 	 echo The GNU C library has not been configured. >&2; \
 	 echo Run \`configure\' to configure it before building. >&2; \
@@ -1077,8 +1062,6 @@ endif
 ifeq ($(sysd-sorted-done),t)
 -include $(common-objpfx)soversions.mk
 ifndef avoid-generated
-# This lets add-ons give more-specific matches that override defaults
-# in the top-level file.
 $(common-objpfx)shlib-versions.v.i: \
 	$(wildcard $(+sysdep_dirs:=/shlib-versions) \
 		   $(subdir-srcdirs:=/shlib-versions)) \
@@ -1186,7 +1169,7 @@ all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
 	      gnulib iconv iconvdata wctype manual shadow gshadow po argp   \
 	      crypt localedata timezone rt conform debug mathvec support    \
-	      $(add-on-subdirs) dlfcn elf
+	      dlfcn elf
 
 ifndef avoid-generated
 # sysd-sorted itself will contain rules making the sysd-sorted target

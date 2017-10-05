@@ -381,19 +381,10 @@ identical @file{irix6.2} and @file{irix6.3} directories,
 by removing trailing suffixes starting with a period.
 
 As an example, here is the complete list of directories that would be
-tried for the configuration @w{@samp{i686-linux-gnu}} (with the
-@file{crypt} and @file{linuxthreads} add-on):
+tried for the configuration @w{@samp{i686-linux-gnu}}:
 
 @smallexample
 sysdeps/i386/elf
-crypt/sysdeps/unix
-linuxthreads/sysdeps/unix/sysv/linux
-linuxthreads/sysdeps/pthread
-linuxthreads/sysdeps/unix/sysv
-linuxthreads/sysdeps/unix
-linuxthreads/sysdeps/i386/i686
-linuxthreads/sysdeps/i386
-linuxthreads/sysdeps/pthread/no-cmpxchg
 sysdeps/unix/sysv/linux/i386
 sysdeps/unix/sysv/linux
 sysdeps/gnu

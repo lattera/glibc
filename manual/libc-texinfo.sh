@@ -31,26 +31,11 @@ collect_nodes () {
   $AWK -f tsort.awk | sed 's/_/ /g'
 }
 
-# Emit "@set ADD-ON" for each add-on contributing a manual chapter.
-for addon in $2; do
-  addon=`basename $addon .texi`
-  echo >&3 "@set $addon"
-done
-
 collect_nodes $1 | build_menu
-
-if [ -n "$2" ]; then
-
-  { echo; echo 'Add-ons'; echo; } >&4
-
-  egrep '^(@c )?@node.*Top' `echo $2 /dev/null | tr ' ' '\n' | sort` |
-  cut -d, -f1 | sed 's/@c //;s/@node //' | build_menu
-
-fi
 
 { echo; echo 'Appendices'; echo; } >&4
 
-collect_nodes $3 | build_menu
+collect_nodes $2 | build_menu
 
 exec 3>&- 4>&- 5>&-
 

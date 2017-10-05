@@ -40,20 +40,18 @@ chapters = $(addsuffix .texi, \
 		       resource setjmp signal startup process ipc job	\
 		       nss users sysinfo conf crypt debug threads	\
 		       probes tunables)
-add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
 appendices = lang.texi header.texi install.texi maint.texi platform.texi \
 	     contrib.texi
 licenses = freemanuals.texi lgpl-2.1.texi fdl-1.3.texi
 
 -include $(objpfx)texis
-$(objpfx)texis: texis.awk $(chapters) $(add-chapters) $(appendices) $(licenses)
+$(objpfx)texis: texis.awk $(chapters) $(appendices) $(licenses)
 	$(make-target-directory)
 	$(AWK) -f $^ > $@.T
 	mv -f $@.T $@
 
-nonexamples = $(filter-out $(add-chapters) %.c.texi, $(texis))
-examples = $(filter-out $(foreach d, $(add-ons), ../$d/%.c.texi), \
-			$(filter %.c.texi, $(texis)))
+nonexamples = $(filter-out %.c.texi, $(texis))
+examples = $(filter %.c.texi, $(texis))
 
 # Generated files directly included from libc.texinfo.
 libc-texi-generated = chapters.texi top-menu.texi dir-add.texi \
@@ -69,7 +67,6 @@ texis-path := $(filter-out $(libc-texi-generated) summary.texi $(examples), \
 chapters.% top-menu.%: libc-texinfo.sh $(texis-path) Makefile
 	AWK=$(AWK) $(SHELL) $< $(objpfx) \
 				'$(chapters)' \
-			       '$(add-chapters)' \
 			       '$(appendices) $(licenses)'
 
 

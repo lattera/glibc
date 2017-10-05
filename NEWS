@@ -50,6 +50,10 @@ Deprecated and removed features, and other changes affecting compatibility:
   platforms where it was previously the same, this changes the C++ name
   mangling for interfaces involving this type.
 
+* The add-ons mechanism for building additional packages at the same time as
+  glibc has been removed.  The --enable-add-ons configure option is now
+  ignored.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
