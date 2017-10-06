@@ -1,3 +1,12 @@
+2017-10-06  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/memrchr-ppc64.c: Revert
+	back to powerpc32 file.
+	* sysdeps/powerpc/powerpc64/multiarch/memrchr.c
+	(memrchr): Add __memrchr_power8 to ifunc list.
+	* sysdeps/powerpc/powerpc64/power8/memrchr.S: Mask
+	extra bytes for unaligned inputs.
+
 2017-10-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-64-128/e_ilogbl.c: Remove file.
