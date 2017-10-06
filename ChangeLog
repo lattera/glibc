@@ -1,5 +1,10 @@
 2017-10-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/ldbl-128/s_fma.c: Include <libm-alias-double.h>.
+	[!__fma] (fma): Define using libm_alias_double.
+	* sysdeps/ieee754/ldbl-96/s_fma.c: Include <libm-alias-double.h>.
+	[!__fma] (fma): Define using libm_alias_double.
+
 	* sysdeps/ieee754/float128/float128_private.h: Include
 	<libm-alias-ldouble.h> and <libm-alias-float128.h>.
 	(libm_alias_ldouble_r): Undefine and redefine.
