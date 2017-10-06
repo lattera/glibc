@@ -1,5 +1,15 @@
 2017-11-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/arm/armv7/multiarch/Makefile [$(subdir) = string]
+	(sysdeps_routines): Add memchr_noneon.
+	* sysdeps/arm/armv7/multiarch/ifunc-memchr.h: New file.
+	* sysdeps/arm/armv7/multiarch/memchr_noneon.S: Likewise.
+	* sysdeps/arm/armv7/multiarch/rtld-memchr.S: Likewise.
+	* sysdeps/arm/armv7/multiarch/memchr.S: Remove file.
+	* sysdeps/arm/armv7/multiarch/memchr.c: New file.
+	* sysdeps/arm/armv7/multiarch/memchr_impl.S: Move to ...
+	* sysdeps/arm/armv7/multiarch/memchr_neon.S: ... here.
+
 	* sysdeps/arm/arm-ifunc.h: New file.
 	* sysdeps/arm/armv7/multiarch/ifunc-memcpy.h: Likewise.
 	* sysdeps/arm/armv7/multiarch/memcpy.c: Likewise.
