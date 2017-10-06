@@ -100,6 +100,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 /* Evaluate P[n] x^n  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
@@ -803,7 +804,7 @@ __erfl (_Float128 x)
   return( y );
 }
 
-weak_alias (__erfl, erfl)
+libm_alias_ldouble (__erf, erf)
 _Float128
 __erfcl (_Float128 x)
 {
@@ -945,4 +946,4 @@ __erfcl (_Float128 x)
     }
 }
 
-weak_alias (__erfcl, erfcl)
+libm_alias_ldouble (__erfc, erfc)

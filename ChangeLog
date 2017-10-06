@@ -1,3 +1,165 @@
+2017-10-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/float128/float128_private.h: Include
+	<libm-alias-ldouble.h> and <libm-alias-float128.h>.
+	(libm_alias_ldouble_r): Undefine and redefine.
+	* sysdeps/ieee754/ldbl-128/s_asinhl.c: Include
+	<libm-alias-ldouble.h>.
+	(asinhl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_atanl.c: Include
+	<libm-alias-ldouble.h>.
+	(atanl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_cbrtl.c: Include
+	<libm-alias-ldouble.h>.
+	(cbrtl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_ceill.c: Include
+	<libm-alias-ldouble.h>.
+	(ceill): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_copysignl.c: Include
+	<libm-alias-ldouble.h>.
+	(copysignl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_cosl.c: Include
+	<libm-alias-ldouble.h>.
+	(cosl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c: Include
+	<libm-alias-ldouble.h>.
+	(erfl): Define using libm_alias_ldouble.
+	(erfcl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Include
+	<libm-alias-ldouble.h>.
+	(expm1l): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_fabsl.c: Include
+	<libm-alias-ldouble.h>.
+	(fabsl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_floorl.c: Include
+	<libm-alias-ldouble.h>.
+	(floorl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c: Include
+	<libm-alias-ldouble.h>.
+	(fmal): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_frexpl.c: Include
+	<libm-alias-ldouble.h>.
+	(frexpl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_fromfpl.c (fromfpl): Define using
+	libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_fromfpl_main.c: Include
+	<libm-alias-ldouble.h>.
+	* sysdeps/ieee754/ldbl-128/s_fromfpxl.c (fromfpxl): Define using
+	libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_getpayloadl.c: Include
+	<libm-alias-ldouble.h>.
+	(getpayloadl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c: Include
+	<libm-alias-ldouble.h>.
+	(llrintl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_llroundl.c: Include
+	<libm-alias-ldouble.h>.
+	(llroundl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_logbl.c: Include
+	<libm-alias-ldouble.h>.
+	(logbl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c: Include
+	<libm-alias-ldouble.h>.
+	(lrintl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_lroundl.c: Include
+	<libm-alias-ldouble.h>.
+	(lroundl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_modfl.c: Include
+	<libm-alias-ldouble.h>.
+	(modfl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c: Include
+	<libm-alias-ldouble.h>.
+	(nearbyintl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c: Include
+	<libm-alias-ldouble.h>.
+	(nextafterl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_nextupl.c: Include
+	<libm-alias-ldouble.h>.
+	(nextupl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_remquol.c: Include
+	<libm-alias-ldouble.h>.
+	(remquol): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_rintl.c: Include
+	<libm-alias-ldouble.h>.
+	(rintl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_roundevenl.c: Include
+	<libm-alias-ldouble.h>.
+	(roundevenl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_roundl.c: Include
+	<libm-alias-ldouble.h>.
+	(roundl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_setpayloadl.c (setpayloadl): Define
+	using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_setpayloadl_main.c: Include
+	<libm-alias-ldouble.h>.
+	* sysdeps/ieee754/ldbl-128/s_setpayloadsigl.c (setpayloadsigl):
+	Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_sincosl.c: Include
+	<libm-alias-ldouble.h>.
+	(sincosl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_sinl.c: Include
+	<libm-alias-ldouble.h>.
+	(sinl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_tanhl.c: Include
+	<libm-alias-ldouble.h>.
+	(tanhl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_tanl.c: Include
+	<libm-alias-ldouble.h>.
+	(tanl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_totalorderl.c: Include
+	<libm-alias-ldouble.h>.
+	(totalorderl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_totalordermagl.c: Include
+	<libm-alias-ldouble.h>.
+	(totalordermagl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_truncl.c: Include
+	<libm-alias-ldouble.h>.
+	(truncl): Define using libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_ufromfpl.c (ufromfpl): Define using
+	libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-128/s_ufromfpxl.c (ufromfpxl): Define using
+	libm_alias_ldouble.
+	* sysdeps/ieee754/ldbl-64-128/s_copysignl.c: Include
+	<libm-alias-ldouble.h>.
+	(weak_alias): Do not undefine and redefine.
+	[IS_IN (libc)] (libm_alias_ldouble): Undefine and redefine.
+	(copysignl): Define with long_double_symbol only if [IS_IN
+	(libc)].
+	* sysdeps/ieee754/ldbl-64-128/s_frexpl.c: Include
+	<libm-alias-ldouble.h>.
+	(weak_alias): Do not undefine and redefine.
+	[IS_IN (libc)] (libm_alias_ldouble): Undefine and redefine.
+	(frexpl): Define with long_double_symbol only if [IS_IN (libc)].
+	* sysdeps/ieee754/ldbl-64-128/s_modfl.c: Include
+	<libm-alias-ldouble.h>.
+	(weak_alias): Do not undefine and redefine.
+	[IS_IN (libc)] (libm_alias_ldouble): Undefine and redefine.
+	(modfl): Define with long_double_symbol only if [IS_IN (libc)].
+	* sysdeps/ieee754/ldbl-64-128/s_asinhl.c: Remove file.
+	* sysdeps/ieee754/ldbl-64-128/s_atanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_cbrtl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_ceill.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_expm1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_fabsl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_floorl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_fmal.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_llrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_llroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_logbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_lrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_lroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_nearbyintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_remquol.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_rintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_roundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_tanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_truncl.c: Likewise.
+
 2017-10-06  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #22111]

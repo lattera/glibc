@@ -62,6 +62,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 /* arctan(k/8), k = 0, ..., 82 */
 static const _Float128 atantbl[84] = {
@@ -250,4 +251,4 @@ __atanl (_Float128 x)
     return u;
 }
 
-weak_alias (__atanl, atanl)
+libm_alias_ldouble (__atan, atan)

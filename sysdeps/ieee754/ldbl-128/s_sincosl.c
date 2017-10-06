@@ -22,6 +22,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 void
 __sincosl (_Float128 x, _Float128 *sinx, _Float128 *cosx)
@@ -70,4 +71,4 @@ __sincosl (_Float128 x, _Float128 *sinx, _Float128 *cosx)
 	}
     }
 }
-weak_alias (__sincosl, sincosl)
+libm_alias_ldouble (__sincos, sincos)

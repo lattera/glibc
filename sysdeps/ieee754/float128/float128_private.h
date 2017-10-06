@@ -116,6 +116,12 @@
 #define M_SQRT1_2l M_SQRT1_2f128
 
 
+#include <libm-alias-ldouble.h>
+#include <libm-alias-float128.h>
+#undef libm_alias_ldouble_r
+#define libm_alias_ldouble_r(from, to, r) libm_alias_float128_r (from, to, r)
+
+
 /* IEEE function renames.  */
 #define __ieee754_acoshl __ieee754_acoshf128
 #define __ieee754_acosl __ieee754_acosf128

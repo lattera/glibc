@@ -1,9 +1,10 @@
 #include <math_ldbl_opt.h>
-#undef weak_alias
-#define weak_alias(n,a)
+#include <libm-alias-ldouble.h>
+#if IS_IN (libc)
+# undef libm_alias_ldouble
+# define libm_alias_ldouble(from, to)
+#endif
 #include <sysdeps/ieee754/ldbl-128/s_copysignl.c>
-#if IS_IN (libm)
-long_double_symbol (libm, __copysignl, copysignl);
-#else
+#if IS_IN (libc)
 long_double_symbol (libc, __copysignl, copysignl);
 #endif

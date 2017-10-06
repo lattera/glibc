@@ -32,6 +32,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 static const _Float128
   one = 1,
@@ -76,4 +77,4 @@ __asinhl (_Float128 x)
   else
     return w;
 }
-weak_alias (__asinhl, asinhl)
+libm_alias_ldouble (__asinh, asinh)

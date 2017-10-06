@@ -29,6 +29,7 @@ static char rcsid[] = "$NetBSD: $";
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 static const _Float128
 TWO112[2]={
@@ -59,4 +60,4 @@ _Float128 __rintl(_Float128 x)
 	w = TWO112[sx]+x;
 	return w-TWO112[sx];
 }
-weak_alias (__rintl, rintl)
+libm_alias_ldouble (__rint, rint)

@@ -25,6 +25,7 @@ static char rcsid[] = "$NetBSD: $";
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 _Float128
 __logbl (_Float128 x)
@@ -51,4 +52,4 @@ __logbl (_Float128 x)
   return (_Float128) (ex - 16383);
 }
 
-weak_alias (__logbl, logbl)
+libm_alias_ldouble (__logb, logb)

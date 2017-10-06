@@ -27,6 +27,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <errno.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 _Float128 __nextafterl(_Float128 x, _Float128 y)
 {
@@ -81,6 +82,6 @@ _Float128 __nextafterl(_Float128 x, _Float128 y)
 	SET_LDOUBLE_WORDS64(x,hx,lx);
 	return x;
 }
-weak_alias (__nextafterl, nextafterl)
+libm_alias_ldouble (__nextafter, nextafter)
 strong_alias (__nextafterl, __nexttowardl)
 weak_alias (__nextafterl, nexttowardl)

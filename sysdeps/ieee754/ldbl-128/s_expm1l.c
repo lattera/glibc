@@ -57,6 +57,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 /* exp(x) - 1 = x + 0.5 x^2 + x^3 P(x)/Q(x)
    -.5 ln 2  <  x  <  .5 ln 2
@@ -163,4 +164,4 @@ __expm1l (_Float128 x)
   return x;
 }
 libm_hidden_def (__expm1l)
-weak_alias (__expm1l, expm1l)
+libm_alias_ldouble (__expm1, expm1)

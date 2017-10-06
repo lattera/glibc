@@ -20,6 +20,7 @@
 #include <fenv.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 #include <stdbool.h>
 #include <stdint.h>
 

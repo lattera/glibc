@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 #include <nan-high-order-bit.h>
 #include <stdint.h>
 
@@ -52,4 +53,4 @@ __totalorderl (_Float128 x, _Float128 y)
   ly ^= hy_sign;
   return hx < hy || (hx == hy && lx <= ly);
 }
-weak_alias (__totalorderl, totalorderl)
+libm_alias_ldouble (__totalorder, totalorder)

@@ -26,6 +26,7 @@
 #include <fenv.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 static const _Float128
 TWO112[2]={
@@ -64,4 +65,4 @@ _Float128 __nearbyintl(_Float128 x)
 	fesetenv (&env);
 	return t;
 }
-weak_alias (__nearbyintl, nearbyintl)
+libm_alias_ldouble (__nearbyint, nearbyint)

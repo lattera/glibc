@@ -47,6 +47,7 @@
 #include <errno.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 _Float128 __tanl(_Float128 x)
 {
@@ -77,4 +78,4 @@ _Float128 __tanl(_Float128 x)
 							-1 -- n odd */
 	}
 }
-weak_alias (__tanl, tanl)
+libm_alias_ldouble (__tan, tan)

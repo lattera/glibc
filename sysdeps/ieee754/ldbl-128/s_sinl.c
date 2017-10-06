@@ -47,6 +47,7 @@
 #include <errno.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 _Float128 __sinl(_Float128 x)
 {
@@ -83,4 +84,4 @@ _Float128 __sinl(_Float128 x)
 	    }
 	}
 }
-weak_alias (__sinl, sinl)
+libm_alias_ldouble (__sin, sin)

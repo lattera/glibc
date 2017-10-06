@@ -44,6 +44,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 static const _Float128 one = 1.0, two = 2.0, tiny = L(1.0e-4900);
 
@@ -97,4 +98,4 @@ __tanhl (_Float128 x)
     }
   return (jx & 0x80000000) ? -z : z;
 }
-weak_alias (__tanhl, tanhl)
+libm_alias_ldouble (__tanh, tanh)

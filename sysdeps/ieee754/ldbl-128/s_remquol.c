@@ -21,6 +21,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 
 static const _Float128 zero = 0.0;
@@ -109,4 +110,4 @@ __remquol (_Float128 x, _Float128 y, int *quo)
     x = -x;
   return x;
 }
-weak_alias (__remquol, remquol)
+libm_alias_ldouble (__remquo, remquo)

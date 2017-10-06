@@ -21,6 +21,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 
 _Float128
@@ -77,4 +78,4 @@ __roundl (_Float128 x)
   SET_LDOUBLE_WORDS64 (x, i0, i1);
   return x;
 }
-weak_alias (__roundl, roundl)
+libm_alias_ldouble (__round, round)

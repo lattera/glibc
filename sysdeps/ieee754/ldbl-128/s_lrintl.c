@@ -24,6 +24,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 #include <fix-fp-int-convert-overflow.h>
 
 static const _Float128 two112[2] =
@@ -134,4 +135,4 @@ __lrintl (_Float128 x)
   return sx ? -result : result;
 }
 
-weak_alias (__lrintl, lrintl)
+libm_alias_ldouble (__lrint, lrint)

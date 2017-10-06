@@ -21,6 +21,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 
 _Float128
@@ -53,4 +54,4 @@ __truncl (_Float128 x)
 
   return x;
 }
-weak_alias (__truncl, truncl)
+libm_alias_ldouble (__trunc, trunc)

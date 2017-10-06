@@ -56,6 +56,7 @@ Adapted for glibc October, 2001.
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 static const _Float128 CBRT2 = L(1.259921049894873164767210607278228350570251);
 static const _Float128 CBRT4 = L(1.587401051968199474751705639272308260391493);
@@ -132,4 +133,4 @@ __cbrtl (_Float128 x)
   return (x);
 }
 
-weak_alias (__cbrtl, cbrtl)
+libm_alias_ldouble (__cbrt, cbrt)

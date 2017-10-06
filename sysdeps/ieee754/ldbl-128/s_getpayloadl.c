@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 #include <stdint.h>
 
 _Float128
@@ -55,4 +56,4 @@ __getpayloadl (const _Float128 *x)
   SET_LDOUBLE_WORDS64 (ret, hx, lx);
   return ret;
 }
-weak_alias (__getpayloadl, getpayloadl)
+libm_alias_ldouble (__getpayload, getpayload)

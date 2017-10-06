@@ -23,6 +23,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 #include <fix-fp-int-convert-overflow.h>
 
 long long int
@@ -99,4 +100,4 @@ __llroundl (_Float128 x)
   return sign * result;
 }
 
-weak_alias (__llroundl, llroundl)
+libm_alias_ldouble (__llround, llround)
