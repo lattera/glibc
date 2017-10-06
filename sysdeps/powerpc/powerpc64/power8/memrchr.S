@@ -233,11 +233,35 @@ L(found):
 #endif
 	addi	r8, r8, 63
 	sub	r3, r8, r6	/* Compute final address.  */
+	cmpld	cr7, r3, r10
+	bgelr	cr7
+	li	r3, 0
 	blr
 
 	/* Found a match in last 16 bytes.  */
 	.align	4
 L(found_16B):
+	cmpld	r8, r10		/* Are we on the last QW?  */
+	bge	L(last)
+	/* Now discard bytes before starting address.  */
+	sub	r9, r10, r8
+	MTVRD(v9, r9)
+	vspltisb	v8, 3
+	/* Mask unwanted bytes.  */
+#ifdef __LITTLE_ENDIAN__
+	lvsr	v7, 0, r10
+	vperm   v6, v0, v6, v7
+	vsldoi	v9, v0, v9, 8
+	vsl	v9, v9, v8
+	vslo	v6, v6, v9
+#else
+	lvsl	v7, 0, r10
+	vperm   v6, v6, v0, v7
+	vsldoi	v9, v0, v9, 8
+	vsl	v9, v9, v8
+	vsro	v6, v6, v9
+#endif
+L(last):
 	/* Permute the first bit of each byte into bits 48-63.  */
 	VBPERMQ(v6, v6, v10)
 	/* Shift each component into its correct position for merging.  */
