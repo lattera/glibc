@@ -1,3 +1,11 @@
+2017-10-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-64-128/e_ilogbl.c: Remove file.
+	* sysdeps/ieee754/ldbl-64-128/s_log1pl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_scalblnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/s_scalbnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-64-128/w_scalblnl.c: Likewise.
+
 2017-10-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/libm-test-ulps: Update.
