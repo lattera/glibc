@@ -2,6 +2,9 @@
 
 	* login/openpty.c (openpty): Close slave pty file descriptor on error.
 
+	* login/openpty.c (openpty): If defined, use the TIOCGPTPEER ioctl()
+	call to allocate the slave pty file descriptor.
+
 2017-10-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-128/s_fma.c: Include <libm-alias-double.h>.

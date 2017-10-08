@@ -94,6 +94,8 @@ openpty (int *amaster, int *aslave, char *name,
   char *buf = _buf;
   int master, ret = -1, slave = -1;
 
+  *buf = '\0';
+
   master = getpt ();
   if (master == -1)
     return -1;
@@ -104,12 +106,22 @@ openpty (int *amaster, int *aslave, char *name,
   if (unlockpt (master))
     goto on_error;
 
-  if (pts_name (master, &buf, sizeof (_buf)))
-    goto on_error;
-
-  slave = open (buf, O_RDWR | O_NOCTTY);
+#ifdef TIOCGPTPEER
+  /* Try to allocate slave fd solely based on master fd first. */
+  slave = ioctl (master, TIOCGPTPEER, O_RDWR | O_NOCTTY);
+#endif
   if (slave == -1)
-    goto on_error;
+    {
+      /* Fallback to path-based slave fd allocation in case kernel doesn't
+       * support TIOCGPTPEER.
+       */
+      if (pts_name (master, &buf, sizeof (_buf)))
+        goto on_error;
+
+      slave = open (buf, O_RDWR | O_NOCTTY);
+      if (slave == -1)
+        goto on_error;
+    }
 
   /* XXX Should we ignore errors here?  */
   if (termp)
@@ -122,7 +134,13 @@ openpty (int *amaster, int *aslave, char *name,
   *amaster = master;
   *aslave = slave;
   if (name != NULL)
-    strcpy (name, buf);
+    {
+      if (*buf == '\0')
+        if (pts_name (master, &buf, sizeof (_buf)))
+          goto on_error;
+
+      strcpy (name, buf);
+    }
 
   ret = 0;
 
