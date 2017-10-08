@@ -92,29 +92,24 @@ openpty (int *amaster, int *aslave, char *name,
   char _buf[512];
 #endif
   char *buf = _buf;
-  int master, slave;
+  int master, ret = -1, slave = -1;
 
   master = getpt ();
   if (master == -1)
     return -1;
 
   if (grantpt (master))
-    goto fail;
+    goto on_error;
 
   if (unlockpt (master))
-    goto fail;
+    goto on_error;
 
   if (pts_name (master, &buf, sizeof (_buf)))
-    goto fail;
+    goto on_error;
 
   slave = open (buf, O_RDWR | O_NOCTTY);
   if (slave == -1)
-    {
-      if (buf != _buf)
-	free (buf);
-
-      goto fail;
-    }
+    goto on_error;
 
   /* XXX Should we ignore errors here?  */
   if (termp)
@@ -129,12 +124,19 @@ openpty (int *amaster, int *aslave, char *name,
   if (name != NULL)
     strcpy (name, buf);
 
+  ret = 0;
+
+ on_error:
+  if (ret == -1) {
+    close (master);
+
+    if (slave != -1)
+      close (slave);
+  }
+
   if (buf != _buf)
     free (buf);
-  return 0;
 
- fail:
-  close (master);
-  return -1;
+  return ret;
 }
 libutil_hidden_def (openpty)

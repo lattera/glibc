@@ -1,3 +1,7 @@
+2017-10-08  Christian Brauner  <christian.brauner@ubuntu.com>
+
+	* login/openpty.c (openpty): Close slave pty file descriptor on error.
+
 2017-10-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-128/s_fma.c: Include <libm-alias-double.h>.
