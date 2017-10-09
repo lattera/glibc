@@ -34,12 +34,13 @@
 		converts a string into the appropriate FLOAT nan
 		value.
 
-  Optionally, these headers may inject a non-standard
-  definition for the following:
-
   declare_mgen_alias(from,to)
       This exposes the appropriate symbol(s) for a
-      function f of type FLOAT.  */
+      function f of type FLOAT.
+
+  declare_mgen_alias_r(from,to)
+      This exposes the appropriate symbol(s) for a
+      function f_r of type FLOAT.  */
 
 #ifndef M_PFX
 # error "M_PFX must be defined."
@@ -58,6 +59,12 @@
 #endif
 #ifndef CFLOAT
 # error "CFLOAT must be defined."
+#endif
+#ifndef declare_mgen_alias
+# error "declare_mgen_alias must be defined."
+#endif
+#ifndef declare_mgen_alias_r
+# error "declare_mgen_alias_r must be defined."
 #endif
 
 #define __M_CONCAT(a,b) a ## b
@@ -100,11 +107,6 @@
 /* Enable overloading of function name to assist reuse.  */
 #ifndef M_DECL_FUNC
 # define M_DECL_FUNC(f) M_SUF (f)
-#endif
-
-/* If the type does not declare special aliasing, use the default.  */
-#ifndef declare_mgen_alias
-# define declare_mgen_alias(from, to) weak_alias (M_SUF (from), M_SUF (to))
 #endif
 
 #endif /* _MATH_TYPE_MACROS */

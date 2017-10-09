@@ -33,6 +33,10 @@
 # define declare_mgen_alias(from, to) libm_alias_ldouble (from, to)
 #endif
 
+#ifndef declare_mgen_alias_r
+# define declare_mgen_alias_r(from, to) libm_alias_ldouble_r (from, to, _r)
+#endif
+
 /* Supply the generic macros.  */
 #include <math-type-macros.h>
 

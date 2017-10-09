@@ -21,6 +21,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-ldouble.h>
 
 
 #if LIBM_SVID_COMPAT
@@ -37,5 +38,5 @@ __lgammal_r(long double x, int *signgamp)
 
 	return y;
 }
-weak_alias (__lgammal_r, lgammal_r)
+libm_alias_ldouble_r (__lgamma, lgamma, _r)
 #endif

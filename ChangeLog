@@ -1,3 +1,29 @@
+2017-10-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-type-macros.h [!declare_mgen_alias]: Give
+	error.  Remove default definition of declare_mgen_alias.
+	[!declare_mgen_alias_r]: Likewise.
+	* sysdeps/generic/math-type-macros-double.h
+	[!declare_mgen_alias_r] (declare_mgen_alias_r): New macro.
+	* sysdeps/generic/math-type-macros-float.h [!declare_mgen_alias_r]
+	(declare_mgen_alias_r): Likewise.
+	* sysdeps/generic/math-type-macros-float128.h
+	[!declare_mgen_alias_r] (declare_mgen_alias_r): Likewise.
+	* sysdeps/generic/math-type-macros-ldouble.h
+	[!declare_mgen_alias_r] (declare_mgen_alias_r): Likewise.
+	* math/w_lgamma_r_template.c (declare_mgen_alias_r_x): Remove
+	macro.
+	(declare_mgen_alias_r_s): Likewise.
+	(declare_mgen_alias_r): Likewise.
+	* math/w_lgamma_r_compat.c: Include <libm-alias-double.h>.
+	(lgamma_r): Define using libm_alias_double_r.
+	* math/w_lgammaf_r_compat.c: Include <libm-alias-float.h>.
+	(lgammaf_r): Define using libm_alias_float_r.
+	* math/w_lgammal_r_compat.c: Include <libm-alias-ldouble.h>.
+	(lgammal_r): Define using libm_alias_ldouble_r.
+	* sysdeps/ieee754/ldbl-opt/w_lgamma_r_compat.c: Remove file.
+	* sysdeps/ieee754/ldbl-opt/w_lgammal_r_compat.c: Likewise.
+
 2017-10-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* lib/glob.c (__glob_pattern_type): Remove now-spurious

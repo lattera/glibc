@@ -34,12 +34,6 @@
 #define M_CALL_FUNC_R_S(x) M_CALL_FUNC_R_X (x)
 #define M_CALL_FUNC_R(x) M_CALL_FUNC_R_S (M_SUF (x))
 
-#define declare_mgen_alias_r_x(from, to) weak_alias (from ## _r, to ## _r)
-#define declare_mgen_alias_r_s(from, to) \
-	declare_mgen_alias_r_x (from, to)
-#define declare_mgen_alias_r(from, to) \
-	declare_mgen_alias_r_s (M_SUF (from), M_SUF (to))
-
 FLOAT
 M_DECL_FUNC_R (__lgamma) (FLOAT x, int *signgamp)
 {
