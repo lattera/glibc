@@ -1,5 +1,8 @@
 2017-10-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* scripts/build-many-glibcs.py (Context.add_all_configs):
+	Add arm-linux-gnueabihf multiarch extra_glibcs.
+
 	* sysdeps/generic/ifunc-init.h: New file.
 	* sysdeps/x86/init-arch.h: Use generic ifunc-init.h.
 

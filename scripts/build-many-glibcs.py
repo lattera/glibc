@@ -174,7 +174,12 @@ class Context(object):
                         variant='be8',
                         gcc_cfg=['--with-arch=armv7-a'])
         self.add_config(arch='arm',
-                        os_name='linux-gnueabihf')
+                        os_name='linux-gnueabihf',
+                        extra_glibcs=[{'variant': 'v7a',
+                                       'ccopts': '-march=armv7a'},
+                                      {'variant': 'v7a-disable-multi-arch',
+                                       'ccopts': '-march=armv7a',
+                                       'cfg': ['--disable-multi-arch']}])
         self.add_config(arch='armeb',
                         os_name='linux-gnueabihf')
         self.add_config(arch='armeb',
