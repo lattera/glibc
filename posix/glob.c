@@ -230,9 +230,6 @@ glob_use_alloca (size_t alloca_used, size_t len)
 static int glob_in_dir (const char *pattern, const char *directory,
 			int flags, int (*errfunc) (const char *, int),
 			glob_t *pglob, size_t alloca_used);
-extern int __glob_pattern_type (const char *pattern, int quote)
-    attribute_hidden;
-
 static int prefix_array (const char *prefix, char **array, size_t n) __THROWNL;
 static int collated_compare (const void *, const void *) __THROWNL;
 

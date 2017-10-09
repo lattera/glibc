@@ -1,3 +1,8 @@
+2017-10-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* lib/glob.c (__glob_pattern_type): Remove now-spurious
+	extern declaration.
+
 2017-10-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-opt/w_scalbln.c: Remove file.
