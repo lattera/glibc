@@ -209,7 +209,7 @@ tests-static += atest-exp atest-sincos atest-exp2
 
 ifneq (,$(CXX))
 tests += test-math-isinff test-math-iszero test-math-issignaling \
-	 test-math-iscanonical
+	 test-math-iscanonical test-math-cxx11
 endif
 
 ifneq (no,$(PERL))
@@ -353,6 +353,8 @@ CFLAGS-test-signgam-ullong.c = -std=c99
 CFLAGS-test-signgam-ullong-init.c = -std=c99
 CFLAGS-test-signgam-ullong-static.c = -std=c99
 CFLAGS-test-signgam-ullong-init-static.c = -std=c99
+
+CFLAGS-test-math-cxx11.cc = -std=c++11
 
 CFLAGS-test-math-isinff.cc = -std=gnu++11
 CFLAGS-test-math-iszero.cc = -std=gnu++11

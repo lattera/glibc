@@ -1,3 +1,11 @@
+2017-10-09  Jonathan Wakely  <jwakely@redhat.com>
+
+	[BZ #21326]
+	* include/features.h [__cplusplus >= 201703] (__USE_ISOC11): Define.
+	[__cplusplus >= 201103] (__USE_ISOC99): Define.
+	* math/Makefile (test-math-cxx11): New test.
+	* math/test-math-cxx11.cc: New file.
+
 2017-10-08  Christian Brauner  <christian.brauner@ubuntu.com>
 
 	* login/openpty.c (openpty): Close slave pty file descriptor on error.
