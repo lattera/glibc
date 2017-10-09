@@ -1,3 +1,7 @@
+2017-10-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-opt/w_scalbln.c: Remove file.
+
 2017-10-09  Jonathan Wakely  <jwakely@redhat.com>
 
 	[BZ #21326]
