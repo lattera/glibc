@@ -1,3 +1,17 @@
+2017-10-11  Andreas Schwab  <schwab@suse.de>
+
+	* nis/Makefile (aux): Remove.
+	* nscd/Makefile (aux): Add nscd_hash.
+	(nscd-modules): Likewise.
+	($(objpfx)nscd): Don't depend on libnsl.
+	* nscd/nscd_hash.c: New file.
+	* nscd/nscd_hash.h: Likewise.
+	* nscd/cache.c: Include "nscd_hash.h" instead of <rpcsvc/nis.h>.
+	(cache_search, cache_add): Use __nscd_hash instead of __nis_hash.
+	* nscd/nscd_helper.c: Include <sys/param.h> and "nscd_hash.h"
+	instead of <nis/rpcsvc/nis.h>.
+	(__nscd_cache_search): Use __nscd_hash instead of __nis_hash.
+
 2017-10-11  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #22078]

@@ -25,7 +25,7 @@ include ../Makeconfig
 ifneq ($(use-nscd),no)
 routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r nscd_getai \
 	    nscd_initgroups nscd_getserv_r nscd_netgroup
-aux	:= nscd_helper
+aux	:= nscd_helper nscd_hash
 endif
 
 # To find xmalloc.c
@@ -36,7 +36,7 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		getsrvbynm_r getsrvbypt_r servicescache \
 		dbg_log nscd_conf nscd_stat cache mem nscd_setup_thread \
 		xmalloc xstrdup aicache initgrcache gai res_hconf \
-		netgroupcache
+		netgroupcache nscd_hash
 
 ifeq ($(build-nscd)$(have-thread-library),yesyes)
 
@@ -97,7 +97,7 @@ include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 $(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)
 
 ifeq ($(build-shared),yes)
-$(objpfx)nscd: $(shared-thread-library) $(common-objpfx)nis/libnsl.so
+$(objpfx)nscd: $(shared-thread-library)
 else
-$(objpfx)nscd: $(static-thread-library) $(common-objpfx)nis/libnsl.a
+$(objpfx)nscd: $(static-thread-library)
 endif

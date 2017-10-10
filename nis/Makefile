@@ -22,8 +22,6 @@ subdir	:= nis
 
 include ../Makeconfig
 
-aux			:= nis_hash
-
 ifeq ($(build-obsolete-nsl),yes)
 headers			:= $(wildcard rpcsvc/*.[hx])
 

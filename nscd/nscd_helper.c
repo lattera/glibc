@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <stdint.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -34,10 +35,10 @@
 #include <sys/uio.h>
 #include <sys/un.h>
 #include <not-cancel.h>
-#include <nis/rpcsvc/nis.h>
 #include <kernel-features.h>
 
 #include "nscd-client.h"
+#include "nscd_hash.h"
 
 
 /* Extra time we wait if the socket is still receiving data.  This
@@ -443,12 +444,6 @@ __nscd_get_map_ref (request_type type, const char *name,
 #define MINIMUM_HASHENTRY_SIZE \
   (offsetof (struct hashentry, dellist) + sizeof (int32_t))
 
-/* __nis_hash is defined in nis_hash.c which is included both libnsl
-   and libc.  Since the one in libnsl is exported and the one in libc
-   is hidden, __nis_hash is marked as hidden where it is referenced,
-   not where it is defined.  */
-extern __typeof (__nis_hash) __nis_hash attribute_hidden;
-
 /* Don't return const struct datahead *, as eventhough the record
    is normally constant, it can change arbitrarily during nscd
    garbage collection.  */
@@ -456,7 +451,7 @@ struct datahead *
 __nscd_cache_search (request_type type, const char *key, size_t keylen,
 		     const struct mapped_database *mapped, size_t datalen)
 {
-  unsigned long int hash = __nis_hash (key, keylen) % mapped->head->module;
+  unsigned long int hash = __nscd_hash (key, keylen) % mapped->head->module;
   size_t datasize = mapped->datasize;
 
   ref_t trail = mapped->head->array[hash];
