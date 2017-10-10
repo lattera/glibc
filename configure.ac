@@ -634,6 +634,26 @@ if ${CC-cc} -c conftest.c -o conftest.o 1>&AS_MESSAGE_LOG_FD \
 fi
 rm -f conftest*])
 
+# Check if gcc warns about alias for function with incompatible types.
+AC_CACHE_CHECK([if compiler warns about alias for function with incompatible types],
+	       libc_cv_gcc_incompatible_alias, [dnl
+cat > conftest.c <<EOF
+int __redirect_foo (const void *s, int c);
+
+__typeof (__redirect_foo) *foo_impl (void) __asm__ ("foo");
+__typeof (__redirect_foo) *foo_impl (void)
+{
+  return 0;
+}
+
+extern __typeof (__redirect_foo) foo_alias __attribute__ ((alias ("foo")));
+EOF
+libc_cv_gcc_incompatible_alias=yes
+if ${CC-cc} -Werror -c conftest.c -o conftest.o 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD ; then
+  libc_cv_gcc_incompatible_alias=no
+fi
+rm -f conftest*])
+
 if test x"$libc_cv_ld_gnu_indirect_function" != xyes; then
   if test x"$multi_arch" = xyes; then
     AC_MSG_ERROR([--enable-multi-arch support requires assembler and linker support])
@@ -641,10 +661,21 @@ if test x"$libc_cv_ld_gnu_indirect_function" != xyes; then
     multi_arch=no
   fi
 fi
-if test x"$libc_cv_gcc_indirect_function" != xyes &&
-   test x"$multi_arch" = xyes; then
-  AC_MSG_WARN([--enable-multi-arch support recommends a gcc with gnu-indirect-function support.
+if test x"$libc_cv_gcc_indirect_function" != xyes; then
+  # GCC 8+ emits a warning for alias with incompatible types and it might
+  # fail to build ifunc resolvers aliases to either weak or internal
+  # symbols.  Disables multiarch build in this case.
+  if test x"$libc_cv_gcc_incompatible_alias" == xyes; then
+    AC_MSG_WARN([gcc emits a warning for alias between functions of incompatible types])
+    if test x"$multi_arch" = xyes; then
+      AC_MSG_ERROR([--enable-multi-arch support requires a gcc with gnu-indirect-function support])
+    fi
+    AC_MSG_WARN([Multi-arch is disabled.])
+    multi_arch=no
+  elif test x"$multi_arch" = xyes; then
+    AC_MSG_WARN([--enable-multi-arch support recommends a gcc with gnu-indirect-function support.
 Please use a gcc which supports it by default or configure gcc with --enable-gnu-indirect-function])
+  fi
 fi
 multi_arch_d=
 if test x"$multi_arch" != xno; then

@@ -1,5 +1,9 @@
 2017-10-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* configure.ac (libc_cv_gcc_incompatbile_alias): New define:
+	indicates whether compiler emits an warning for alias for
+	functions with incompatible types.
+
 	[BZ #22273]
 	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Handle the case where
 	the auxiliary process is terminated by a signal before calling _exit

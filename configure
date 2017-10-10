@@ -3996,6 +3996,32 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_indirect_function" >&5
 $as_echo "$libc_cv_gcc_indirect_function" >&6; }
 
+# Check if gcc warns about alias for function with incompatible types.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if compiler warns about alias for function with incompatible types" >&5
+$as_echo_n "checking if compiler warns about alias for function with incompatible types... " >&6; }
+if ${libc_cv_gcc_incompatible_alias+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+int __redirect_foo (const void *s, int c);
+
+__typeof (__redirect_foo) *foo_impl (void) __asm__ ("foo");
+__typeof (__redirect_foo) *foo_impl (void)
+{
+  return 0;
+}
+
+extern __typeof (__redirect_foo) foo_alias __attribute__ ((alias ("foo")));
+EOF
+libc_cv_gcc_incompatible_alias=yes
+if ${CC-cc} -Werror -c conftest.c -o conftest.o 1>&5 2>&5 ; then
+  libc_cv_gcc_incompatible_alias=no
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_incompatible_alias" >&5
+$as_echo "$libc_cv_gcc_incompatible_alias" >&6; }
+
 if test x"$libc_cv_ld_gnu_indirect_function" != xyes; then
   if test x"$multi_arch" = xyes; then
     as_fn_error $? "--enable-multi-arch support requires assembler and linker support" "$LINENO" 5
@@ -4003,12 +4029,25 @@ if test x"$libc_cv_ld_gnu_indirect_function" != xyes; then
     multi_arch=no
   fi
 fi
-if test x"$libc_cv_gcc_indirect_function" != xyes &&
-   test x"$multi_arch" = xyes; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --enable-multi-arch support recommends a gcc with gnu-indirect-function support.
+if test x"$libc_cv_gcc_indirect_function" != xyes; then
+  # GCC 8+ emits a warning for alias with incompatible types and it might
+  # fail to build ifunc resolvers aliases to either weak or internal
+  # symbols.  Disables multiarch build in this case.
+  if test x"$libc_cv_gcc_incompatible_alias" == xyes; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: gcc emits a warning for alias between functions of incompatible types" >&5
+$as_echo "$as_me: WARNING: gcc emits a warning for alias between functions of incompatible types" >&2;}
+    if test x"$multi_arch" = xyes; then
+      as_fn_error $? "--enable-multi-arch support requires a gcc with gnu-indirect-function support" "$LINENO" 5
+    fi
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Multi-arch is disabled." >&5
+$as_echo "$as_me: WARNING: Multi-arch is disabled." >&2;}
+    multi_arch=no
+  elif test x"$multi_arch" = xyes; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --enable-multi-arch support recommends a gcc with gnu-indirect-function support.
 Please use a gcc which supports it by default or configure gcc with --enable-gnu-indirect-function" >&5
 $as_echo "$as_me: WARNING: --enable-multi-arch support recommends a gcc with gnu-indirect-function support.
 Please use a gcc which supports it by default or configure gcc with --enable-gnu-indirect-function" >&2;}
+  fi
 fi
 multi_arch_d=
 if test x"$multi_arch" != xno; then
