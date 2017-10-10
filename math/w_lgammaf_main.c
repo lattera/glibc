@@ -16,6 +16,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-float.h>
 
 #include <lgamma-compat.h>
 
@@ -37,6 +38,7 @@ LGFUNC (__lgammaf) (float x)
 compat_symbol (libm, __lgammaf_compat, lgammaf, LGAMMA_OLD_VER);
 # else
 versioned_symbol (libm, __lgammaf, lgammaf, LGAMMA_NEW_VER);
+libm_alias_float_other (__lgamma, lgamma)
 # endif
 # if GAMMA_ALIAS
 strong_alias (LGFUNC (__lgammaf), __gammaf)

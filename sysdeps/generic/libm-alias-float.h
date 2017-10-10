@@ -19,6 +19,16 @@
 #ifndef _LIBM_ALIAS_FLOAT_H
 #define _LIBM_ALIAS_FLOAT_H
 
+/* Define _FloatN / _FloatNx aliases for a float libm function that
+   has internal name FROM ## f ## R and public names TO ## suffix ## R
+   for each suffix of a supported _FloatN / _FloatNx floating-point
+   type with the same format as float.  */
+#define libm_alias_float_other_r(from, to, r)
+
+/* Likewise, but without the R suffix.  */
+#define libm_alias_float_other(from, to)	\
+  libm_alias_float_other_r (from, to, )
+
 /* Define aliases for a float libm function that has internal name
    FROM ## f ## R and public names TO ## suffix ## R for each suffix
    of a supported floating-point type with the same format as float.
@@ -27,7 +37,8 @@
    names (where there is one name per format, not per type) or for
    obsolescent functions not provided for _FloatN types.  */
 #define libm_alias_float_r(from, to, r)		\
-  weak_alias (from ## f ## r, to ## f ## r)
+  weak_alias (from ## f ## r, to ## f ## r)	\
+  libm_alias_float_other_r (from, to, r)
 
 /* Likewise, but without the R suffix.  */
 #define libm_alias_float(from, to) libm_alias_float_r (from, to, )

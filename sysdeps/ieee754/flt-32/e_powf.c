@@ -19,6 +19,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <shlib-compat.h>
+#include <libm-alias-float.h>
 #include "math_config.h"
 
 /*
@@ -219,4 +220,5 @@ __powf (float x, float y)
 strong_alias (__powf, __ieee754_powf)
 strong_alias (__powf, __powf_finite)
 versioned_symbol (libm, __powf, powf, GLIBC_2_27);
+libm_alias_float_other (__pow, pow)
 #endif

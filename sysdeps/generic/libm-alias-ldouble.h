@@ -19,6 +19,16 @@
 #ifndef _LIBM_ALIAS_LDOUBLE_H
 #define _LIBM_ALIAS_LDOUBLE_H
 
+/* Define _FloatN / _FloatNx aliases for a long double libm function
+   that has internal name FROM ## l ## R and public names TO ## suffix
+   ## R for each suffix of a supported _FloatN / _FloatNx
+   floating-point type with the same format as long double.  */
+#define libm_alias_ldouble_other_r(from, to, r)
+
+/* Likewise, but without the R suffix.  */
+#define libm_alias_ldouble_other(from, to)	\
+  libm_alias_ldouble_other_r (from, to, )
+
 /* Define aliases for a long double libm function that has internal
    name FROM ## l ## R and public names TO ## suffix ## R for each
    suffix of a supported floating-point type with the same format as
@@ -28,7 +38,8 @@
    per format, not per type) or for obsolescent functions not provided
    for _FloatN types.  */
 #define libm_alias_ldouble_r(from, to, r)	\
-  weak_alias (from ## l ## r, to ## l ## r)
+  weak_alias (from ## l ## r, to ## l ## r)	\
+  libm_alias_ldouble_other_r (from, to, r)
 
 /* Likewise, but without the R suffix.  */
 #define libm_alias_ldouble(from, to) libm_alias_ldouble_r (from, to, )

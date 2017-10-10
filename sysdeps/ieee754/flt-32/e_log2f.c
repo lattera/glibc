@@ -19,6 +19,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <shlib-compat.h>
+#include <libm-alias-float.h>
 #include "math_config.h"
 
 /*
@@ -90,4 +91,5 @@ __log2f (float x)
 strong_alias (__log2f, __ieee754_log2f)
 strong_alias (__log2f, __log2f_finite)
 versioned_symbol (libm, __log2f, log2f, GLIBC_2_27);
+libm_alias_float_other (__log2, log2)
 #endif

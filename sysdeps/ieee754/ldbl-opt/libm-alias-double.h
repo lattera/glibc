@@ -23,6 +23,16 @@
 #include <first-versions.h>
 #include <ldbl-compat-choose.h>
 
+/* Define _FloatN / _FloatNx aliases for a double libm function that
+   has internal name FROM ## R and public names TO ## suffix ## R for
+   each suffix of a supported _FloatN / _FloatNx floating-point type
+   with the same format as double.  */
+#define libm_alias_double_other_r(from, to, r)
+
+/* Likewise, but without the R suffix.  */
+#define libm_alias_double_other(from, to)	\
+  libm_alias_double_other_r (from, to, )
+
 /* Define aliases for a double libm function that has internal name
    FROM ## R and public names TO ## suffix ## R for each suffix of a
    supported floating-point type with the same format as double.  This
@@ -36,7 +46,8 @@
     (compat_symbol (libm,					\
 		    from ## r,					\
 		    to ## l ## r,				\
-		    FIRST_VERSION_libm_ ## to ## l ## r), );
+		    FIRST_VERSION_libm_ ## to ## l ## r), );	\
+  libm_alias_double_other_r (from, to, r)
 
 /* Likewise, but without the R suffix.  */
 #define libm_alias_double(from, to) libm_alias_double_r (from, to, )

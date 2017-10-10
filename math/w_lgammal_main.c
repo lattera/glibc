@@ -23,6 +23,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
+#include <libm-alias-ldouble.h>
 
 #include <lgamma-compat.h>
 
@@ -44,6 +45,7 @@ LGFUNC (__lgammal) (long double x)
 compat_symbol (libm, __lgammal_compat, lgammal, LGAMMA_OLD_VER);
 # else
 versioned_symbol (libm, __lgammal, lgammal, LGAMMA_NEW_VER);
+libm_alias_ldouble_other (__lgamma, lgamma)
 # endif
 # if GAMMA_ALIAS
 strong_alias (LGFUNC (__lgammal), __gammal)

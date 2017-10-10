@@ -1,3 +1,51 @@
+2017-10-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/libm-alias-double.h (libm_alias_double_other_r):
+	New macro.
+	(libm_alias_double_other): Likewise.
+	(libm_alias_double_r): Use libm_alias_double_other_r.
+	* sysdeps/generic/libm-alias-float.h (libm_alias_float_other_r):
+	New macro.
+	(libm_alias_float_other): Likewise.
+	(libm_alias_float_r): Use libm_alias_float_other_r.
+	* sysdeps/generic/libm-alias-float128.h
+	(libm_alias_float128_other_r): New macro.
+	(libm_alias_float128_other): Likewise.
+	(libm_alias_float128_r): Use libm_alias_float128_other_r.
+	* sysdeps/generic/libm-alias-ldouble.h
+	(libm_alias_ldouble_other_r): New macro.
+	(libm_alias_ldouble_other): Likewise.
+	(libm_alias_ldouble_r): Use libm_alias_ldouble_other_r.
+	* sysdeps/ieee754/ldbl-opt/libm-alias-double.h
+	(libm_alias_double_other_r): New macro.
+	(libm_alias_double_other): Likewise.
+	(libm_alias_double_r): Use libm_alias_double_other_r.
+	* sysdeps/ieee754/ldbl-opt/libm-alias-ldouble.h
+	(libm_alias_ldouble_other_r): New macro.
+	(libm_alias_ldouble_other): Likewise.
+	(libm_alias_ldouble_r): Use libm_alias_ldouble_other_r.
+	* math/w_lgamma_main.c: Include <libm-alias-double.h>.
+	[!USE_AS_COMPAT]: Use libm_alias_double_other.
+	* math/w_lgammaf_main.c: Include <libm-alias-float.h>.
+	[!USE_AS_COMPAT]: Use libm_alias_float_other.
+	* math/w_lgammal_main.c: Include <libm-alias-ldouble.h>.
+	[!USE_AS_COMPAT]: Use libm_alias_ldouble_other.
+	* math/w_exp2f.c: Use libm_alias_float_other.
+	* math/w_expf.c: Likewise.
+	* math/w_log2f.c: Likewise.
+	* math/w_logf.c: Likewise.
+	* math/w_powf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_exp2f.c: Include <libm-alias-float.h>.
+	[!__exp2f]: Use libm_alias_float_other.
+	* sysdeps/ieee754/flt-32/e_expf.c: Include <libm-alias-float.h>.
+	[!__expf]: Use libm_alias_float_other.
+	* sysdeps/ieee754/flt-32/e_log2f.c: Include <libm-alias-float.h>.
+	[!__log2f]: Use libm_alias_float_other.
+	* sysdeps/ieee754/flt-32/e_logf.c: Include <libm-alias-float.h>.
+	[!__logf]: Use libm_alias_float_other.
+	* sysdeps/ieee754/flt-32/e_powf.c: Include <libm-alias-float.h>.
+	[!__powf]: Use libm_alias_float_other.
+
 2017-10-10  Florian Weimer  <fweimer@redhat.com>
 
 	* nss/nss_files/files-hosts.c (gethostbyname3_multi): New

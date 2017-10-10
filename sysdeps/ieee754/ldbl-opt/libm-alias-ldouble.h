@@ -22,6 +22,16 @@
 #include <math_ldbl_opt.h>
 #include <ldbl-compat-choose.h>
 
+/* Define _FloatN / _FloatNx aliases for a long double libm function
+   that has internal name FROM ## l ## R and public names TO ## suffix
+   ## R for each suffix of a supported _FloatN / _FloatNx
+   floating-point type with the same format as long double.  */
+#define libm_alias_ldouble_other_r(from, to, r)
+
+/* Likewise, but without the R suffix.  */
+#define libm_alias_ldouble_other(from, to)	\
+  libm_alias_ldouble_other_r (from, to, )
+
 /* Define aliases for a long double libm function that has internal
    name FROM ## l ## R and public names TO ## suffix ## R for each
    suffix of a supported floating-point type with the same format as
@@ -33,7 +43,8 @@
 #define libm_alias_ldouble_r(from, to, r)			\
   LONG_DOUBLE_COMPAT_CHOOSE_libm_ ## to ## l ## r		\
     (long_double_symbol (libm, from ## l ## r, to ## l ## r),	\
-     weak_alias (from ## l ## r, to ## l ## r));
+     weak_alias (from ## l ## r, to ## l ## r));		\
+  libm_alias_ldouble_other_r (from, to, r)
 
 /* Likewise, but without the R suffix.  */
 #define libm_alias_ldouble(from, to) libm_alias_ldouble_r (from, to, )
