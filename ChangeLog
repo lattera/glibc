@@ -1,3 +1,9 @@
+2017-10-10  Florian Weimer  <fweimer@redhat.com>
+
+	* nss/nss_files/files-hosts.c (gethostbyname3_multi): New
+	function.
+	(_nss_files_gethostbyname3_r): Call it.
+
 2017-10-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/math-type-macros.h [!declare_mgen_alias]: Give
