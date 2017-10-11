@@ -1,3 +1,28 @@
+2017-10-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/Makefile (test-types-basic): New variable.
+	(test-types): Likewise.
+	(libm-test-support): Use $(test-types) instead of $(types).
+	(libm-tests-base-normal): Likewise.
+	(libm-tests-base-finite): Likewise.
+	(libm-tests-base-inline): Likewise.
+	(generated): Likewise.
+	($(objpfx)libm-test-support-$(t).c): Likewise.
+	(libm-tests-for-type iterator): Likewise.
+	(libm-test-support iterator): Likewise.
+	* math/libm-test-support.c (ulp_i_idx): Use ULP_I_IDX.
+	(ulp_idx): Use ULP_IDX.
+	* math/test-ldouble.h: Include <float.h>.
+	(TYPE_STR): Define conditional on [LDBL_MANT_DIG == DBL_MANT_DIG].
+	(ULP_IDX): New macro.
+	(ULP_I_IDX): Likewise.
+	* math/test-double.h (ULP_IDX): Likewise.
+	(ULP_I_IDX): Likewise.
+	* math/test-float.h (ULP_IDX): Likewise.
+	(ULP_I_IDX): Likewise.
+	* math/test-float128.h (ULP_IDX): Likewise.
+	(ULP_I_IDX): Likewise.
+
 2017-10-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/sysdep-cancel.h: Remove file.

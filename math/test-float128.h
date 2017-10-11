@@ -29,6 +29,8 @@
 #define BUILD_COMPLEX(real, imag) (CMPLXF128 ((real), (imag)))
 #define PREFIX FLT128
 #define TYPE_STR "float128"
+#define ULP_IDX ULP_FLT128
+#define ULP_I_IDX ULP_I_FLT128
 #define LIT(x) __f128 (x)
 #define LITM(x) x ## f128
 #define FTOSTR strfromf128

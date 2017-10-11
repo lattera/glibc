@@ -22,6 +22,8 @@
 #define BUILD_COMPLEX(real, imag) (CMPLXF ((real), (imag)))
 #define PREFIX FLT
 #define TYPE_STR "float"
+#define ULP_IDX ULP_FLT
+#define ULP_I_IDX ULP_I_FLT
 #define LIT(x) (x ## f)
 /* Use the double variants of macro constants.  */
 #define LITM(x) x

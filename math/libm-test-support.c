@@ -45,6 +45,9 @@
 
    TYPE_STR: The name of the type as used in ulps files, as a string.
 
+   ULP_IDX, ULP_I_IDX: The array indexes for ulps values for this
+   function.
+
    LIT: Append the correct suffix to a literal.
 
    LITM: Append the correct suffix to an M_* macro name.
@@ -191,8 +194,8 @@ compare_ulp_data (const void *key, const void *ulp)
   return strcmp (keystr, ulpdat->name);
 }
 
-static const int ulp_i_idx = __CONCATX (ULP_I_, PREFIX);
-static const int ulp_idx = __CONCATX (ULP_, PREFIX);
+static const int ulp_i_idx = ULP_I_IDX;
+static const int ulp_idx = ULP_IDX;
 
 /* Return the ulps for NAME in array DATA with NMEMB elements, or 0 if
    no ulps listed.  */

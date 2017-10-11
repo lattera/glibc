@@ -102,6 +102,10 @@ libm-compat-calls =							\
 # after the Rules makefile has been parsed.
 types-basic = $(type-ldouble-$(long-double-fcts)) double float
 
+# Like types, but includes types whose functions alias those for
+# another type.
+test-types-basic = ldouble double float
+
 # long double support
 type-ldouble-suffix := l
 type-ldouble-routines := t_sincosl k_sincosl s_iscanonicall
@@ -123,6 +127,7 @@ type-float128-suffix := f128
 type-float128-routines := t_sincosf128 k_sincosf128
 type-float128-yes := float128
 types = $(types-basic) $(type-float128-$(float128-fcts))
+test-types = $(test-types-basic) $(type-float128-$(float128-fcts))
 
 # For each of the basic types (float, double, long double), replace the
 # occurrences of 'F' in arg 1 with the appropriate suffix for the type.
@@ -214,7 +219,7 @@ endif
 
 ifneq (no,$(PERL))
 libm-vec-tests = $(addprefix test-,$(libmvec-tests))
-libm-test-support = $(foreach t,$(types),libm-test-support-$(t))
+libm-test-support = $(foreach t,$(test-types),libm-test-support-$(t))
 test-extras += $(libm-test-support)
 extra-test-objs += $(addsuffix .o, $(libm-test-support))
 libm-vec-test-wrappers = $(addsuffix -wrappers, $(libm-vec-tests))
@@ -250,9 +255,9 @@ libm-test-c-auto = $(foreach f,$(libm-test-funcs-auto),libm-test-$(f).c)
 libm-test-c-noauto = $(foreach f,$(libm-test-funcs-noauto),libm-test-$(f).c)
 generated += libm-test-ulps.h $(libm-test-c-auto) $(libm-test-c-noauto)
 
-libm-tests-base-normal = $(foreach t,$(types),test-$(t))
-libm-tests-base-finite = $(foreach t,$(types),test-$(t)-finite)
-libm-tests-base-inline = $(foreach t,$(types),test-i$(t))
+libm-tests-base-normal = $(foreach t,$(test-types),test-$(t))
+libm-tests-base-finite = $(foreach t,$(test-types),test-$(t)-finite)
+libm-tests-base-inline = $(foreach t,$(test-types),test-i$(t))
 libm-tests-base = $(libm-tests-base-normal) $(libm-tests-base-finite) \
 		  $(libm-tests-base-inline) $(libm-vec-tests)
 libm-tests-normal = $(foreach t,$(libm-tests-base-normal),\
@@ -277,7 +282,7 @@ libm-tests.o = $(addsuffix .o,$(libm-tests))
 
 tests += $(libm-tests)
 generated += $(addsuffix .c,$(libm-tests)) \
-	     $(foreach t,$(types),libm-test-support-$(t).c)
+	     $(foreach t,$(test-types),libm-test-support-$(t).c)
 
 libm-test-c-auto-obj = $(addprefix $(objpfx),$(libm-test-c-auto))
 libm-test-c-noauto-obj = $(addprefix $(objpfx),$(libm-test-c-noauto))
@@ -448,7 +453,7 @@ $(foreach t,$(libm-tests-vector),$(objpfx)$(t).c): $(objpfx)test-%.c:
 	  echo "#include <libm-test-$$func.c>"; \
 	) > $@
 
-$(foreach t,$(types),\
+$(foreach t,$(test-types),\
 	    $(objpfx)libm-test-support-$(t).c): $(objpfx)libm-test-support-%.c:
 	( \
 	  echo "#include <test-$*.h>"; \
@@ -496,13 +501,13 @@ define o-iterator-doit
 $(addprefix $(objpfx),\
 	    $(call libm-tests-for-type,$(o))): $(objpfx)libm-test-support-$(o).o
 endef
-object-suffixes-left := $(types)
+object-suffixes-left := $(test-types)
 include $(o-iterator)
 
 define o-iterator-doit
 $(objpfx)libm-test-support-$(o).o: CFLAGS += $(libm-test-no-inline-cflags)
 endef
-object-suffixes-left := $(types)
+object-suffixes-left := $(test-types)
 include $(o-iterator)
 
 # Run the math programs to automatically generate ULPs files.

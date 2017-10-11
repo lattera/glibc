@@ -16,12 +16,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <float.h>
+
 #define FUNC(function) function##l
 #define FLOAT long double
 #define CFLOAT __complex__ long double
 #define BUILD_COMPLEX(real, imag) (CMPLXL ((real), (imag)))
 #define PREFIX LDBL
-#define TYPE_STR "ldouble"
+#if LDBL_MANT_DIG == DBL_MANT_DIG
+# define TYPE_STR "double"
+# define ULP_IDX ULP_DBL
+# define ULP_I_IDX ULP_I_DBL
+#else
+# define TYPE_STR "ldouble"
+# define ULP_IDX ULP_LDBL
+# define ULP_I_IDX ULP_I_LDBL
+#endif
 #define LIT(x) (x ## L)
 #define LITM(x) x ## l
 #define FTOSTR strfroml
