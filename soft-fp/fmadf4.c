@@ -27,6 +27,7 @@
 
 #include <math.h>
 #include <libc-diag.h>
+#include <libm-alias-double.h>
 
 /* R_e is not set in cases where it is not used in packing, but the
    compiler does not see that it is set in all cases where it is
@@ -63,10 +64,5 @@ __fma (double a, double b, double c)
 DIAG_POP_NEEDS_COMMENT;
 
 #ifndef __fma
-weak_alias (__fma, fma)
-#endif
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__fma, __fmal)
-weak_alias (__fmal, fmal)
+libm_alias_double (__fma, fma)
 #endif

@@ -27,6 +27,7 @@
 
 #include <math.h>
 #include <libc-diag.h>
+#include <libm-alias-ldouble.h>
 
 /* R_e is not set in cases where it is not used in packing, but the
    compiler does not see that it is set in all cases where it is
@@ -62,4 +63,4 @@ __fmal (long double a, long double b, long double c)
 }
 DIAG_POP_NEEDS_COMMENT;
 
-weak_alias (__fmal, fmal)
+libm_alias_ldouble (__fma, fma)

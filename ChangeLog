@@ -1,3 +1,12 @@
+2017-10-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/fmadf4.c: Include <libm-alias-double.h>.
+	[!__fma] (fma): Define using libm_alias_double.
+	* soft-fp/fmasf4.c: Include <libm-alias-float.h>.
+	[!__fmaf] (fmaf): Define using libm_alias_float.
+	* soft-fp/fmatf4.c: Include <libm-alias-ldouble.h>.
+	(fmal): Define using libm_alias_ldouble.
+
 2017-10-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/libm-alias-double.h (libm_alias_double_other_r):

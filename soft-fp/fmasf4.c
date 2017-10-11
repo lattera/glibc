@@ -27,6 +27,7 @@
 
 #include <math.h>
 #include <libc-diag.h>
+#include <libm-alias-float.h>
 
 /* R_e is not set in cases where it is not used in packing, but the
    compiler does not see that it is set in all cases where it is
@@ -63,5 +64,5 @@ __fmaf (float a, float b, float c)
 DIAG_POP_NEEDS_COMMENT;
 
 #ifndef __fmaf
-weak_alias (__fmaf, fmaf)
+libm_alias_float (__fma, fma)
 #endif
