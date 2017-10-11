@@ -22,6 +22,7 @@
 #include <arpa/nameser.h>
 #include <netdb.h>
 #include <resolv/resolv-internal.h>
+#include <scratch_buffer.h>
 
 
 /* Get implementation for some internal functions.  */
@@ -121,15 +122,12 @@ gethostbyname3_multi (FILE * stream, const char *name, int af,
 		      int *errnop, int *herrnop, int flags)
 {
   /* We have to get all host entries from the file.  */
-  size_t tmp_buflen = MIN (buflen, 4096);
-  char tmp_buffer_stack[tmp_buflen]
-    __attribute__ ((__aligned__ (__alignof__ (struct hostent_data))));
-  char *tmp_buffer = tmp_buffer_stack;
+  struct scratch_buffer tmp_buffer;
+  scratch_buffer_init (&tmp_buffer);
   struct hostent tmp_result_buf;
   int naddrs = 1;
   int naliases = 0;
   char *bufferend;
-  bool tmp_buffer_malloced = false;
   enum nss_status status;
 
   while (result->h_aliases[naliases] != NULL)
@@ -137,181 +135,165 @@ gethostbyname3_multi (FILE * stream, const char *name, int af,
 
   bufferend = (char *) &result->h_aliases[naliases + 1];
 
- again:
-  while ((status = internal_getent (stream, &tmp_result_buf, tmp_buffer,
-				    tmp_buflen, errnop, herrnop, af,
-				    flags))
-	 == NSS_STATUS_SUCCESS)
+  while (true)
     {
-      int matches = 1;
-      struct hostent *old_result = result;
-      result = &tmp_result_buf;
-      /* The following piece is a bit clumsy but we want to use the
-	 `LOOKUP_NAME_CASE' value.  The optimizer should do its
-	 job.  */
-      do
+      status = internal_getent (stream, &tmp_result_buf, tmp_buffer.data,
+				tmp_buffer.length, errnop, herrnop, af,
+				flags);
+      /* Enlarge the buffer if necessary.  */
+      if (status == NSS_STATUS_TRYAGAIN && *herrnop == NETDB_INTERNAL
+	  && *errnop == ERANGE)
 	{
-	  LOOKUP_NAME_CASE (h_name, h_aliases)
-	    result = old_result;
+	  if (!scratch_buffer_grow (&tmp_buffer))
+	    {
+	      *errnop = ENOMEM;
+	      /* *herrnop and status already have the right value.  */
+	      break;
+	    }
+	  /* Loop around and retry with a larger buffer.  */
 	}
-      while ((matches = 0));
-
-      if (matches)
+      else if (status == NSS_STATUS_SUCCESS)
 	{
-	  /* We could be very clever and try to recycle a few bytes
-	     in the buffer instead of generating new arrays.  But
-	     we are not doing this here since it's more work than
-	     it's worth.  Simply let the user provide a bit bigger
-	     buffer.  */
-	  char **new_h_addr_list;
-	  char **new_h_aliases;
-	  int newaliases = 0;
-	  size_t newstrlen = 0;
-	  int cnt;
+	  /* A line was read.  Check that it matches the search
+	     criteria.  */
 
-	  /* Count the new aliases and the length of the strings.  */
-	  while (tmp_result_buf.h_aliases[newaliases] != NULL)
+	  int matches = 1;
+	  struct hostent *old_result = result;
+	  result = &tmp_result_buf;
+	  /* The following piece is a bit clumsy but we want to use
+	     the `LOOKUP_NAME_CASE' value.  The optimizer should do
+	     its job.  */
+	  do
 	    {
-	      char *cp = tmp_result_buf.h_aliases[newaliases];
-	      ++newaliases;
-	      newstrlen += strlen (cp) + 1;
+	      LOOKUP_NAME_CASE (h_name, h_aliases)
+		result = old_result;
 	    }
-	  /* If the real name is different add it also to the
-	     aliases.  This means that there is a duplication
-	     in the alias list but this is really the user's
-	     problem.  */
-	  if (strcmp (old_result->h_name,
-		      tmp_result_buf.h_name) != 0)
+	  while ((matches = 0));
+
+	  if (matches)
 	    {
-	      ++newaliases;
-	      newstrlen += strlen (tmp_result_buf.h_name) + 1;
-	    }
+	      /* We could be very clever and try to recycle a few bytes
+		 in the buffer instead of generating new arrays.  But
+		 we are not doing this here since it's more work than
+		 it's worth.  Simply let the user provide a bit bigger
+		 buffer.  */
+	      char **new_h_addr_list;
+	      char **new_h_aliases;
+	      int newaliases = 0;
+	      size_t newstrlen = 0;
+	      int cnt;
 
-	  /* Make sure bufferend is aligned.  */
-	  assert ((bufferend - (char *) 0) % sizeof (char *) == 0);
+	      /* Count the new aliases and the length of the strings.  */
+	      while (tmp_result_buf.h_aliases[newaliases] != NULL)
+		{
+		  char *cp = tmp_result_buf.h_aliases[newaliases];
+		  ++newaliases;
+		  newstrlen += strlen (cp) + 1;
+		}
+	      /* If the real name is different add it also to the
+		 aliases.  This means that there is a duplication
+		 in the alias list but this is really the user's
+		 problem.  */
+	      if (strcmp (old_result->h_name,
+			  tmp_result_buf.h_name) != 0)
+		{
+		  ++newaliases;
+		  newstrlen += strlen (tmp_result_buf.h_name) + 1;
+		}
 
-	  /* Now we can check whether the buffer is large enough.
-	     16 is the maximal size of the IP address.  */
-	  if (bufferend + 16 + (naddrs + 2) * sizeof (char *)
-	      + roundup (newstrlen, sizeof (char *))
-	      + (naliases + newaliases + 1) * sizeof (char *)
-	      >= buffer + buflen)
-	    {
-	      *errnop = ERANGE;
-	      *herrnop = NETDB_INTERNAL;
-	      status = NSS_STATUS_TRYAGAIN;
-	      goto out;
-	    }
+	      /* Make sure bufferend is aligned.  */
+	      assert ((bufferend - (char *) 0) % sizeof (char *) == 0);
 
-	  new_h_addr_list =
-	    (char **) (bufferend
-		       + roundup (newstrlen, sizeof (char *))
-		       + 16);
-	  new_h_aliases =
-	    (char **) ((char *) new_h_addr_list
-		       + (naddrs + 2) * sizeof (char *));
+	      /* Now we can check whether the buffer is large enough.
+		 16 is the maximal size of the IP address.  */
+	      if (bufferend + 16 + (naddrs + 2) * sizeof (char *)
+		  + roundup (newstrlen, sizeof (char *))
+		  + (naliases + newaliases + 1) * sizeof (char *)
+		  >= buffer + buflen)
+		{
+		  *errnop = ERANGE;
+		  *herrnop = NETDB_INTERNAL;
+		  status = NSS_STATUS_TRYAGAIN;
+		  break;
+		}
 
-	  /* Copy the old data in the new arrays.  */
-	  for (cnt = 0; cnt < naddrs; ++cnt)
-	    new_h_addr_list[cnt] = old_result->h_addr_list[cnt];
+	      new_h_addr_list =
+		(char **) (bufferend
+			   + roundup (newstrlen, sizeof (char *))
+			   + 16);
+	      new_h_aliases =
+		(char **) ((char *) new_h_addr_list
+			   + (naddrs + 2) * sizeof (char *));
 
-	  for (cnt = 0; cnt < naliases; ++cnt)
-	    new_h_aliases[cnt] = old_result->h_aliases[cnt];
+	      /* Copy the old data in the new arrays.  */
+	      for (cnt = 0; cnt < naddrs; ++cnt)
+		new_h_addr_list[cnt] = old_result->h_addr_list[cnt];
 
-	  /* Store the new strings.  */
-	  cnt = 0;
-	  while (tmp_result_buf.h_aliases[cnt] != NULL)
-	    {
-	      new_h_aliases[naliases++] = bufferend;
-	      bufferend = (__stpcpy (bufferend,
-				     tmp_result_buf.h_aliases[cnt])
-			   + 1);
-	      ++cnt;
-	    }
+	      for (cnt = 0; cnt < naliases; ++cnt)
+		new_h_aliases[cnt] = old_result->h_aliases[cnt];
 
-	  if (cnt < newaliases)
-	    {
-	      new_h_aliases[naliases++] = bufferend;
-	      bufferend = __stpcpy (bufferend,
-				    tmp_result_buf.h_name) + 1;
-	    }
+	      /* Store the new strings.  */
+	      cnt = 0;
+	      while (tmp_result_buf.h_aliases[cnt] != NULL)
+		{
+		  new_h_aliases[naliases++] = bufferend;
+		  bufferend = (__stpcpy (bufferend,
+					 tmp_result_buf.h_aliases[cnt])
+			       + 1);
+		  ++cnt;
+		}
 
-	  /* Final NULL pointer.  */
-	  new_h_aliases[naliases] = NULL;
+	      if (cnt < newaliases)
+		{
+		  new_h_aliases[naliases++] = bufferend;
+		  bufferend = __stpcpy (bufferend,
+					tmp_result_buf.h_name) + 1;
+		}
 
-	  /* Round up the buffer end address.  */
-	  bufferend += (sizeof (char *)
-			- ((bufferend - (char *) 0)
-			   % sizeof (char *))) % sizeof (char *);
+	      /* Final NULL pointer.  */
+	      new_h_aliases[naliases] = NULL;
 
-	  /* Now the new address.  */
-	  new_h_addr_list[naddrs++] =
-	    memcpy (bufferend, tmp_result_buf.h_addr,
-		    tmp_result_buf.h_length);
+	      /* Round up the buffer end address.  */
+	      bufferend += (sizeof (char *)
+			    - ((bufferend - (char *) 0)
+			       % sizeof (char *))) % sizeof (char *);
 
-	  /* Also here a final NULL pointer.  */
-	  new_h_addr_list[naddrs] = NULL;
+	      /* Now the new address.  */
+	      new_h_addr_list[naddrs++] =
+		memcpy (bufferend, tmp_result_buf.h_addr,
+			tmp_result_buf.h_length);
 
-	  /* Store the new array pointers.  */
-	  old_result->h_aliases = new_h_aliases;
-	  old_result->h_addr_list = new_h_addr_list;
+	      /* Also here a final NULL pointer.  */
+	      new_h_addr_list[naddrs] = NULL;
 
-	  /* Compute the new buffer end.  */
-	  bufferend = (char *) &new_h_aliases[naliases + 1];
-	  assert (bufferend <= buffer + buflen);
+	      /* Store the new array pointers.  */
+	      old_result->h_aliases = new_h_aliases;
+	      old_result->h_addr_list = new_h_addr_list;
 
-	  result = old_result;
-	}
-    }
+	      /* Compute the new buffer end.  */
+	      bufferend = (char *) &new_h_aliases[naliases + 1];
+	      assert (bufferend <= buffer + buflen);
 
-  if (status == NSS_STATUS_TRYAGAIN)
-    {
-      size_t newsize = 2 * tmp_buflen;
-      if (tmp_buffer_malloced)
-	{
-	  char *newp = realloc (tmp_buffer, newsize);
-	  if (newp != NULL)
-	    {
-	      assert ((((uintptr_t) newp)
-		       & (__alignof__ (struct hostent_data) - 1))
-		      == 0);
-	      tmp_buffer = newp;
-	      tmp_buflen = newsize;
-	      goto again;
-	    }
-	}
-      else if (!__libc_use_alloca (buflen + newsize))
-	{
-	  tmp_buffer = malloc (newsize);
-	  if (tmp_buffer != NULL)
-	    {
-	      assert ((((uintptr_t) tmp_buffer)
-		       & (__alignof__ (struct hostent_data) - 1))
-		      == 0);
-	      tmp_buffer_malloced = true;
-	      tmp_buflen = newsize;
-	      goto again;
-	    }
-	}
+	      result = old_result;
+	    } /* If match was found.  */
+
+	  /* If no match is found, loop around and fetch another
+	     line.  */
+
+	} /* status == NSS_STATUS_SUCCESS.  */
       else
-	{
-	  tmp_buffer
-	    = extend_alloca (tmp_buffer, tmp_buflen,
-			     newsize
-			     + __alignof__ (struct hostent_data));
-	  tmp_buffer = (char *) (((uintptr_t) tmp_buffer
-				  + __alignof__ (struct hostent_data)
-				  - 1)
-				 & ~(__alignof__ (struct hostent_data)
-				     - 1));
-	  goto again;
-	}
-    }
-  else
+	/* internal_getent returned an error.  */
+	break;
+    } /* while (true) */
+
+  /* Propagate the NSS_STATUS_TRYAGAIN error to the caller.  It means
+     that we may not have loaded the complete result.
+     NSS_STATUS_NOTFOUND, however, means that we reached the end of
+     the file successfully.  */
+  if (status != NSS_STATUS_TRYAGAIN)
     status = NSS_STATUS_SUCCESS;
- out:
-  if (tmp_buffer_malloced)
-    free (tmp_buffer);
+
+  scratch_buffer_free (&tmp_buffer);
   return status;
 }
 

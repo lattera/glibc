@@ -1,3 +1,9 @@
+2017-10-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18023]
+	* nss/nss_files/files-hosts.c (gethostbyname3_multi): Use struct
+	scratch_buffer.  Eliminate gotos.
+
 2017-10-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-opt/s_clog10l.c: Use
