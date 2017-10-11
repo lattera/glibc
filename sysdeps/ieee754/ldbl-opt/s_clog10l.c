@@ -29,3 +29,4 @@
 strong_alias (__clog10l_internal, __clog10l__internal)
 long_double_symbol (libm, __clog10l_internal, __clog10l);
 long_double_symbol (libm, __clog10l__internal, clog10l);
+libm_alias_ldouble_other (__clog10, clog10)

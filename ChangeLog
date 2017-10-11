@@ -1,5 +1,18 @@
 2017-10-11  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/ldbl-opt/s_clog10l.c: Use
+	libm_alias_ldouble_other.
+	* sysdeps/ieee754/ldbl-opt/w_exp10l_compat.c (weak_alias): Do not
+	undefine and redefine.
+	[LIBM_SVID_COMPAT && !LONG_DOUBLE_COMPAT (libm, GLIBC_2_1)]
+	(exp10l): Do not define here.
+	* sysdeps/ieee754/ldbl-opt/w_lgamma_compatl.c [BUILD_LGAMMA]
+	(weak_alias): Undefine and redefine.
+	[BUILD_LGAMMA]: Use libm_alias_ldouble_other.
+	* sysdeps/ieee754/ldbl-opt/w_remainderl_compat.c
+	[LIBM_SVID_COMPAT] (weak_alias): Undefine and redefine here.
+	[LIBM_SVID_COMPAT]: Use libm_alias_ldouble_other.
+
 	* soft-fp/fmadf4.c: Include <libm-alias-double.h>.
 	[!__fma] (fma): Define using libm_alias_double.
 	* soft-fp/fmasf4.c: Include <libm-alias-float.h>.
