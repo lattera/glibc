@@ -1,5 +1,15 @@
 2017-10-11  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22078]
+	Avoid large NSS buffers with many addresses, aliases.
+	* nss/nss_files/files-hosts.c (gethostbyname3_multi): Rewrite
+	using dynarrays and struct alloc_buffer.
+	* nss/Makefile (tests): Add tst-nss-files-hosts-multi.
+	(tst-nss-files-hosts-multi): Link with -ldl.
+	* nss/tst-nss-files-hosts-multi.c: New file.
+
+2017-10-11  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #18023]
 	* nss/nss_files/files-hosts.c (gethostbyname3_multi): Use struct
 	scratch_buffer.  Eliminate gotos.
