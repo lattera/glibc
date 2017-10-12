@@ -1,3 +1,10 @@
+2017-10-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #22273]
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Handle the case where
+	the auxiliary process is terminated by a signal before calling _exit
+	or execve.
+
 2017-10-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21265]

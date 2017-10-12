@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <spawn.h>
-#include <assert.h>
 #include <fcntl.h>
 #include <paths.h>
 #include <string.h>
@@ -268,7 +267,6 @@ __spawni_child (void *arguments)
   __sigprocmask (SIG_SETMASK, (attr->__flags & POSIX_SPAWN_SETSIGMASK)
 		 ? &attr->__ss : &args->oldmask, 0);
 
-  args->err = 0;
   args->exec (args->file, args->argv, args->envp);
 
   /* This is compatibility function required to enable posix_spawn run
@@ -339,7 +337,7 @@ __spawnix (pid_t * pid, const char *file,
 
   /* Child must set args.err to something non-negative - we rely on
      the parent and child sharing VM.  */
-  args.err = -1;
+  args.err = 0;
   args.file = file;
   args.exec = exec;
   args.fa = file_actions;
@@ -362,12 +360,26 @@ __spawnix (pid_t * pid, const char *file,
   new_pid = CLONE (__spawni_child, STACK (stack, stack_size), stack_size,
 		   CLONE_VM | CLONE_VFORK | SIGCHLD, &args);
 
+  /* It needs to collect the case where the auxiliary process was created
+     but failed to execute the file (due either any preparation step or
+     for execve itself).  */
   if (new_pid > 0)
     {
+      /* Also, it handles the unlikely case where the auxiliary process was
+	 terminated before calling execve as if it was successfully.  The
+	 args.err is set to 0 as default and changed to a positive value
+	 only in case of failure, so in case of premature termination
+	 due a signal args.err will remain zeroed and it will be up to
+	 caller to actually collect it.  */
       ec = args.err;
-      assert (ec >= 0);
-      if (ec != 0)
-	  __waitpid (new_pid, NULL, 0);
+      if (ec > 0)
+	/* There still an unlikely case where the child is cancelled after
+	   setting args.err, due to a positive error value.  Also due a
+	   possible pid reuse race (where the kernel allocated the same pid
+	   to unrelated process) we need not to undefinitely hang expecting
+	   an invalid pid.  In both cases an error is returned to the
+	   caller.  */
+	__waitpid (new_pid, NULL, WNOHANG);
     }
   else
     ec = -new_pid;
