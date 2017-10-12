@@ -46,6 +46,26 @@
 #include <libc-internal.h>
 #include <not-cancel.h>
 
+#ifdef PIC
+# include <link.h>
+
+static int
+callback (struct dl_phdr_info *info, size_t size, void *data)
+{
+  if (info->dlpi_name[0] == '\0')
+    {
+      /* The link map for the executable is created by calling
+	 _dl_new_object with "" as filename.  dl_iterate_phdr
+	 calls the callback function with filename from the
+	 link map as dlpi_name.  */
+      u_long *load_address = data;
+      *load_address = (u_long) info->dlpi_addr;
+      return 1;
+    }
+
+  return 0;
+}
+#endif
 
 /*  Head of basic-block list or NULL. */
 struct __bb *__bb_head attribute_hidden;
@@ -63,8 +83,8 @@ static int	s_scale;
 void moncontrol (int mode);
 void __moncontrol (int mode);
 libc_hidden_proto (__moncontrol)
-static void write_hist (int fd);
-static void write_call_graph (int fd);
+static void write_hist (int fd, u_long load_address);
+static void write_call_graph (int fd, u_long load_address);
 static void write_bb_counts (int fd);
 
 /*
@@ -173,7 +193,7 @@ weak_alias (__monstartup, monstartup)
 
 
 static void
-write_hist (int fd)
+write_hist (int fd, u_long load_address)
 {
   u_char tag = GMON_TAG_TIME_HIST;
 
@@ -210,8 +230,8 @@ write_hist (int fd)
 	      != offsetof (struct gmon_hist_hdr, dimen_abbrev)))
 	abort ();
 
-      thdr.low_pc = (char *) _gmonparam.lowpc;
-      thdr.high_pc = (char *) _gmonparam.highpc;
+      thdr.low_pc = (char *) _gmonparam.lowpc - load_address;
+      thdr.high_pc = (char *) _gmonparam.highpc - load_address;
       thdr.hist_size = _gmonparam.kcountsize / sizeof (HISTCOUNTER);
       thdr.prof_rate = __profile_frequency ();
       strncpy (thdr.dimen, "seconds", sizeof (thdr.dimen));
@@ -223,7 +243,7 @@ write_hist (int fd)
 
 
 static void
-write_call_graph (int fd)
+write_call_graph (int fd, u_long load_address)
 {
 #define NARCS_PER_WRITEV	32
   u_char tag = GMON_TAG_CG_ARC;
@@ -266,8 +286,9 @@ write_call_graph (int fd)
 	    }
 	  arc;
 
-	  arc.frompc = (char *) frompc;
-	  arc.selfpc = (char *) _gmonparam.tos[to_index].selfpc;
+	  arc.frompc = (char *) frompc - load_address;
+	  arc.selfpc = ((char *) _gmonparam.tos[to_index].selfpc
+			- load_address);
 	  arc.count  = _gmonparam.tos[to_index].count;
 	  memcpy (raw_arc + nfilled, &arc, sizeof (raw_arc [0]));
 
@@ -376,11 +397,17 @@ write_gmon (void)
     memset (ghdr.spare, '\0', sizeof (ghdr.spare));
     __write_nocancel (fd, &ghdr, sizeof (struct gmon_hdr));
 
+    /* Get load_address to profile PIE.  */
+    u_long load_address = 0;
+#ifdef PIC
+    __dl_iterate_phdr (callback, &load_address);
+#endif
+
     /* write PC histogram: */
-    write_hist (fd);
+    write_hist (fd, load_address);
 
     /* write call-graph: */
-    write_call_graph (fd);
+    write_call_graph (fd, load_address);
 
     /* write basic-block execution counts: */
     write_bb_counts (fd);

@@ -1,3 +1,23 @@
+2017-10-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22284]
+	* gmon/Makefile [$(have-fpie)$(build-shared) == yesyes] (tests,
+	tests-pie): Add tst-gmon-pie.
+	(CFLAGS-tst-gmon-pie.c): New.
+	(CRT-tst-gmon-pie): Likewise.
+	(tst-gmon-pie-ENV): Likewise.
+	[$(have-fpie)$(build-shared) == yesyes] (tests-special): Likewise.
+	($(objpfx)tst-gmon-pie.out): Likewise.
+	(clean-tst-gmon-pie-data): Likewise.
+	($(objpfx)tst-gmon-pie-gprof.out): Likewise.
+	* gmon/gmon.c [PIC]: Include <link.h>.
+	[PIC] (callback): New function.
+	(write_hist): Add an argument for load address.  Subtract load
+	address from PCs.
+	(write_call_graph): Likewise.
+	(write_gmon): Call __dl_iterate_phdr to get load address, pass
+	it to write_hist and write_call_graph.
+
 2017-10-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/Makefile (test-types-basic): New variable.

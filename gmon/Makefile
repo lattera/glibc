@@ -33,6 +33,11 @@ tests-static	+= tst-profile-static
 LDFLAGS-tst-profile-static = -profile
 endif
 
+ifeq (yesyes,$(have-fpie)$(build-shared))
+tests += tst-gmon-pie
+tests-pie += tst-gmon-pie
+endif
+
 # The mcount code won't work without a frame pointer.
 CFLAGS-mcount.c := -fno-omit-frame-pointer
 
@@ -43,6 +48,14 @@ tst-gmon-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon.data
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-gmon-gprof.out
 endif
+
+CFLAGS-tst-gmon-pie.c := $(PIE-ccflag) -fno-omit-frame-pointer -pg
+CRT-tst-gmon-pie := $(csu-objpfx)gcrt1.o
+tst-gmon-pie-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon-pie.data
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-gmon-pie-gprof.out
+endif
+
 
 include ../Rules
 
@@ -68,4 +81,12 @@ clean-tst-gmon-data:
 
 $(objpfx)tst-gmon-gprof.out: tst-gmon-gprof.sh $(objpfx)tst-gmon.out
 	$(SHELL) $< $(GPROF) $(objpfx)tst-gmon $(objpfx)tst-gmon.data.* > $@; \
+	$(evaluate-test)
+
+$(objpfx)tst-gmon-pie.out: clean-tst-gmon-pie-data
+clean-tst-gmon-pie-data:
+	rm -f $(objpfx)tst-gmon-pie.data.*
+
+$(objpfx)tst-gmon-pie-gprof.out: tst-gmon-gprof.sh $(objpfx)tst-gmon-pie.out
+	$(SHELL) $< $(GPROF) $(objpfx)tst-gmon-pie $(objpfx)tst-gmon-pie.data.* > $@; \
 	$(evaluate-test)
