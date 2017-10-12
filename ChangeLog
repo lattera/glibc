@@ -17,6 +17,7 @@
 	(write_call_graph): Likewise.
 	(write_gmon): Call __dl_iterate_phdr to get load address, pass
 	it to write_hist and write_call_graph.
+	* gmon/tst-gmon-pie.c: New file.
 
 2017-10-11  Joseph Myers  <joseph@codesourcery.com>
 
