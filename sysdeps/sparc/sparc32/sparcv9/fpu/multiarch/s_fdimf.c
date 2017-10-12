@@ -16,19 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef HAVE_AS_VIS3_SUPPORT
-# include <sparc-ifunc.h>
-# include <math.h>
+#include <sparc-ifunc.h>
+#include <math.h>
 
 extern float __fdimf_vis3 (float, float);
 extern float __fdimf_generic (float, float);
 
 sparc_libm_ifunc(__fdimf, hwcap & HWCAP_SPARC_VIS3 ? __fdimf_vis3 : __fdimf_generic);
 weak_alias (__fdimf, fdimf)
-
-# define __fdimf __fdimf_generic
-# define declare_mgen_alias(t, f)
-
-#endif
-
-#include <math/s_fdimf.c>

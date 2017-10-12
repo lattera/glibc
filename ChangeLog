@@ -1,3 +1,44 @@
+2017-11-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* config.h.in (HAVE_AS_VIS3_SUPPORT): Remove check for VIS3 support.
+	* sysdeps/sparc/configure.ac (HAVE_AS_VIS3_SUPPORT): Likewise.
+	* sysdeps//sparc/sparc32/sparcv9/fpu/multiarch/s_fdim.c: Likewise.
+	* sysdeps//sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf.c: Likewise.
+	* sysdeps//sparc/sparc32/sparcv9/fpu/multiarch/s_fma.c: Likewise.
+	* sysdeps//sparc/sparc32/sparcv9/fpu/multiarch/s_fmaf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fma.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmaf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_trunc.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_truncf.c: Likewise.
+	* sysdeps/sparc/sparc-ifunc.h [!HAVE_AS_VIS3_SUPPORT]
+	(SPARC_ASM_VIS3_IFUNC, SPARC_ASM_VIS3_VIS2_IFUNC): Remove macros.
+	* sysdeps/sparc/sparc32/sparcv9/Makefile [$(have-as-vis3) != yes]
+	(ASFLAGS.o, ASFLAGS-.os, ASFLAGS-.op, ASFLAGS-.oS): Remove rules.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile
+	($(have-as-vis3) == yes): Remove conditional.
+	* sysdeps/sparc/sparc64/Makefile (($(have-as-vis3) == yes)):
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim-generic.c: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf-generic.c: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fma-generic.c: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaf-generic.c: New
+	file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil-generic.c: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf-generic.c: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor-generic.c: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf-generic.c: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fma-generic.c: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmaf-generic.c: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_trunc-generic.c: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_truncf-generic.c: New file.
+
 2017-11-29  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ia64/fpu/libm-symbols.h: Include <libm-alias-double.h>.

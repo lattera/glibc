@@ -16,17 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef HAVE_AS_VIS3_SUPPORT
-# include <sparc-ifunc.h>
-# include <math.h>
+#include <sparc-ifunc.h>
+#include <math.h>
 
-extern float __floorf_vis3 (float);
-extern float __floorf_generic (float);
+extern __typeof (floorf) __floorf_vis3 attribute_hidden;
+extern __typeof (floorf) __floorf_generic attribute_hidden;
 
-sparc_libm_ifunc(__floorf, hwcap & HWCAP_SPARC_VIS3 ? __floorf_vis3 : __floorf_generic);
+sparc_libm_ifunc (__floorf,
+		  hwcap & HWCAP_SPARC_VIS3
+		  ? __floorf_vis3
+		  : __floorf_generic);
 weak_alias (__floorf, floorf)
-
-# define __floorf __floorf_generic
-#endif
-
-#include <sysdeps/ieee754/flt-32/s_floorf.c>

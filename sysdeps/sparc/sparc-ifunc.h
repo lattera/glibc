@@ -137,8 +137,6 @@ END (__##name)
 	SPARC_ASM_IFUNC1(name, HWCAP_SPARC_VIS2,	\
 			 __##name##_vis2, __##name##_generic)
 
-# ifdef HAVE_AS_VIS3_SUPPORT
-
 #define SPARC_ASM_VIS3_IFUNC(name)			\
 	SPARC_ASM_IFUNC1(name, HWCAP_SPARC_VIS3,	\
 			 __##name##_vis3, __##name##_generic)
@@ -148,17 +146,6 @@ END (__##name)
 			 __##name##_vis3,		\
 			 HWCAP_SPARC_VIS2,		\
 			 __##name##_vis2, __##name##_generic)
-
-# else /* HAVE_AS_VIS3_SUPPORT */
-
-#define SPARC_ASM_VIS3_IFUNC(name)			\
-	SPARC_ASM_IFUNC_DFLT(name, __##name##_generic)
-
-#define SPARC_ASM_VIS3_VIS2_IFUNC(name)			\
-	SPARC_ASM_VIS2_IFUNC(name)
-
-# endif /* HAVE_AS_VIS3_SUPPORT */
-
 
 #else	/* __ASSEMBLER__ */
 # define INIT_ARCH()
