@@ -1,6 +1,17 @@
 2017-12-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Add s_fabsf-generic and s_fabs-generic.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs-generic.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs.c: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabsf-generic.S:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabsf.c: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs.S: Remove file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabsf.S: Likewise.
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile
 	(sysdep_calls): New rule.
 	(sysdep_routines): Use sysdep_calls as base.
 	(libm-sysdep_routines): Add generic rule for symbols shared with
