@@ -1,3 +1,9 @@
+2017-10-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-64-128/s_nextafterl.c (weak_alias):
+	Undefine and restore default definition.  Use
+	libm_alias_ldouble_other.
+
 2017-10-13  Peter Zelezny  <peter.zelezny@dektech.com.au>
 
 	[BZ #22153]
