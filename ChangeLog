@@ -1,3 +1,10 @@
+2017-10-13  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* benchtests/Makefile (bench-math):  Add sinf, cosf and sincosf.
+	* benchtests/sincosf-inputs: New file.
+	* benchtests/cosf-inputs: New file.
+	* benchtests/sinf-inputs: New file.
+
 2017-10-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* posix/tst-spawn.c (do_test): Wait for both children.
