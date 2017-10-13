@@ -1,3 +1,12 @@
+2017-10-13  James Clarke  <jrtc27@jrtc27.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela):
+	Assign sym_map to be map for local symbols, as TLS relocations
+	use sym_map to determine whether the symbol is defined and to
+	extract the TLS information.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Likewise.
+
 2017-10-13  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #22189]

@@ -310,7 +310,10 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
      against local symbols.  */
   if (__builtin_expect (ELF32_ST_BIND (sym->st_info) == STB_LOCAL, 0)
       && sym->st_shndx != SHN_UNDEF)
-    value = map->l_addr;
+    {
+      sym_map = map;
+      value = map->l_addr;
+    }
   else
     {
       sym_map = RESOLVE_MAP (&sym, version, r_type);

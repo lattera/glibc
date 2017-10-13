@@ -376,6 +376,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   if (__builtin_expect (ELF32_ST_BIND (sym->st_info) == STB_LOCAL, 0)
       && sym->st_shndx != SHN_UNDEF)
     {
+      sym_map = map;
       value = map->l_addr;
     }
   else
