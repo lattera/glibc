@@ -1,6 +1,15 @@
 2017-11-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile (sysdeps_calls):
+	Add s_finitef-generic and s_finite-generic objects.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finite-generic.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finite.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finitef-generic.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finitef.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finite.S: Remove file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finitef.S: Remove file.
+
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile (sysdeps_calls):
 	Add s_isinff-generic and s_isinf-generic objects.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinf-generic.S: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinf.c: Likewise.

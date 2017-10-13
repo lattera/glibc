@@ -4,6 +4,7 @@ ifeq ($(subdir),math)
 # prefixed with  m_.
 sysdep_calls := s_signbitf-vis3 s_signbit-vis3 s_signbitf-generic \
 		s_signbit-generic s_finitef-vis3 s_finite-vis3 \
+		s_finitef-generic s_finite-generic \
 		s_isinff-vis3 s_isinf-vis3 s_isinff-generic s_isinf-generic \
 		s_isnanf-vis3 s_isnan-vis3 s_isnanf-generic s_isnan-generic
 
