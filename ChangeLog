@@ -1,5 +1,12 @@
 2017-10-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/sparc/sparc32/fpu/s_fabsl.c: Include
+	<libm-alias-ldouble.h>.
+	(fabsl): Define using libm_alias_ldouble.
+	* sysdeps/sparc/sparc64/fpu/s_fabsl.c: Include
+	<libm-alias-ldouble.h>.
+	(fabsl): Define using libm_alias_ldouble.
+
 	* sysdeps/ieee754/ldbl-opt/w_lgamma_compatl.c [BUILD_LGAMMA]:
 	Remove conditional code.
 

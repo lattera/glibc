@@ -1,5 +1,7 @@
+#include <libm-alias-ldouble.h>
+
 long double __fabsl (long double x)
 {
   return __builtin_fabsl (x);
 }
-weak_alias (__fabsl, fabsl)
+libm_alias_ldouble (__fabs, fabs)
