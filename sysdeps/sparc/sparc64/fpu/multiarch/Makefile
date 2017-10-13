@@ -11,6 +11,7 @@ sysdep_calls := s_signbitf-vis3 s_signbit-vis3 s_signbitf-generic \
 sysdep_routines += $(sysdep_calls)
 libm-sysdep_routines += s_lrintf-vis3 s_lrint-vis3 s_lrintf-generic \
 			s_lrint-generic s_rintf-vis3 s_rint-vis3 \
+			s_rintf-generic s_rint-generic \
 			s_fmaf-vis3 s_fma-vis3 s_fmaf-generic s_fma-generic \
 			s_nearbyint-vis3 s_nearbyintf-vis3 \
 			s_nearbyint-generic s_nearbyintf-generic \

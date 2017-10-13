@@ -1,6 +1,16 @@
 2017-11-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Add s_rintf-generic and s_rint-generic
+	objects.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rint-generic.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rint.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rintf-generic.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rintf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rint.S: Remove file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rintf.S: Likewise.
+
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile
 	(libm-sysdep_routines): Add s_lrint-generic and s_lrintf-generic
 	objects.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_lrint-generic.S: New file.
