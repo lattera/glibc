@@ -1,5 +1,9 @@
 2017-10-13  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
+	[BZ #22189]
+	* sysdeps/powerpc/fpu/math_private.h (math_opt_barrier):
+	(math_force_eval): Add powerpc version.
+
 	[BZ #22142]
 	* stdio-common/tst-printf.c (fp_test): Add tests for DBL_MAX and
 	-DBL_MAX.
