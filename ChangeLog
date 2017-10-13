@@ -1,6 +1,12 @@
 2017-11-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/sparc64/multiarch/Makefile (sysdep_routines):
+	Add submul_1-generic.
+	* sysdeps/sparc/sparc64/multiarch/submul_1-generic.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/submul_1.c: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/submul_1.S: Remove file.
+
+	* sysdeps/sparc/sparc64/multiarch/Makefile (sysdep_routines):
 	Add addmul_1-generic.
 	* sysdeps/sparc/sparc64/multiarch/addmul_1-generic.S: New file.
 	* sysdeps/sparc/sparc64/multiarch/addmul_1.c: Likewise.
