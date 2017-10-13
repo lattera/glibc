@@ -1,5 +1,11 @@
 2017-10-13  Carlos O'Donell  <carlos@redhat.com>
 
+	[BZ #22295]
+	* locale/programs/linereader.c (get_string): Don't warn on
+	non-symbolic character.
+
+2017-10-13  Carlos O'Donell  <carlos@redhat.com>
+
 	[BZ #22294]
 	* locale/programs/ld-monetary.c (monetary_finish): Allow ""
 	int_curr_symbol.
