@@ -1,3 +1,15 @@
+2017-10-12  Carlos O'Donell  <carlos@redhat.com>
+
+	* localedata/unicode-gen/Makefile (GENERATED): Use i18n_ctype.
+	(REPORTS): Likewise.
+	(check): Likewise.
+	(i18n): Rename to...
+	(i18n_ctype): ...this.
+	(i18n-report): Rename to...
+	(i18n_ctype-report): ...this.
+	* localedata/locales/i18n_ctype: Regenerate.
+	* localedata/locales/i18n: copy i18n_ctype.
+
 2017-10-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/strfroml.c: Include <bits/floatn.h>.

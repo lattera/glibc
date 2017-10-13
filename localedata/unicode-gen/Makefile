@@ -20,7 +20,7 @@
 
 # This Makefile is NOT used as part of the GNU libc build.  It needs
 # to be run manually, within the source tree, at Unicode upgrades
-# (change UNICODE_VERSION below), to update ../locales/i18n ctype
+# (change UNICODE_VERSION below), to update ../locales/i18n_ctype ctype
 # information (part of the file is preserved, so don't wipe it all
 # out), and ../charmaps/UTF-8.
 
@@ -41,15 +41,15 @@ PYTHON3 = python3
 WGET = wget
 
 DOWNLOADS = UnicodeData.txt DerivedCoreProperties.txt EastAsianWidth.txt PropList.txt
-GENERATED = i18n tr_TR UTF-8 translit_combining translit_compat translit_circle translit_cjk_compat translit_font translit_fraction
-REPORTS = i18n-report UTF-8-report
+GENERATED = i18n_ctype tr_TR UTF-8 translit_combining translit_compat translit_circle translit_cjk_compat translit_font translit_fraction
+REPORTS = i18n_ctype-report UTF-8-report
 
 all: $(GENERATED)
 
-check: check-i18n check-UTF-8
+check: check-i18n_ctype check-UTF-8
 
 install:
-	cp -p i18n ../locales/i18n
+	cp -p i18n_ctype ../locales/i18n_ctype
 	cp -p tr_TR ../locales/tr_TR
 	cp -p UTF-8 ../charmaps/UTF-8
 	cp -p translit_combining ../locales/translit_combining
@@ -66,17 +66,17 @@ mostlyclean:
 
 .PHONY: all check clean mostlyclean install
 
-i18n: UnicodeData.txt DerivedCoreProperties.txt
-i18n: ../locales/i18n # Preserve non-ctype information.
-i18n: gen_unicode_ctype.py
+i18n_ctype: UnicodeData.txt DerivedCoreProperties.txt
+i18n_ctype: ../locales/i18n_ctype # Preserve non-ctype information.
+i18n_ctype: gen_unicode_ctype.py
 	$(PYTHON3) gen_unicode_ctype.py -u UnicodeData.txt \
-	  -d DerivedCoreProperties.txt -i ../locales/i18n -o $@ \
+	  -d DerivedCoreProperties.txt -i ../locales/i18n_ctype -o $@ \
 	  --unicode_version $(UNICODE_VERSION)
 
-i18n-report: i18n ../locales/i18n
-i18n-report: ctype_compatibility.py ctype_compatibility_test_cases.py
-	$(PYTHON3) ./ctype_compatibility.py -o ../locales/i18n \
-	  -n i18n -a -m > $@
+i18n_ctype-report: i18n_ctype ../locales/i18n_ctype
+i18n_ctype-report: ctype_compatibility.py ctype_compatibility_test_cases.py
+	$(PYTHON3) ./ctype_compatibility.py -o ../locales/i18n_ctype \
+	  -n i18n_ctype -a -m > $@
 
 check-i18n: i18n-report
 	@if grep '\(Missing\|Added\) [^0]\|^Number of errors[^=]* = [^0]' \
