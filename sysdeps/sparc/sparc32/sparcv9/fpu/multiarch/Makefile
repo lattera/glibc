@@ -9,6 +9,7 @@ sysdep_calls := s_copysignf-vis3 s_copysign-vis3 s_copysignf-generic \
 sysdep_routines += $(sysdep_calls)
 libm-sysdep_routines += s_fabs-vis3 s_fabsf-vis3 s_fabs-generic \
 			s_fabsf-generic s_llrintf-vis3 s_llrint-vis3 \
+			s_llrintf-generic s_llrint-generic \
 			s_rintf-vis3 s_rint-vis3 \
 			s_fmaf-vis3 s_fma-vis3 s_fma-generic s_fmaf-generic \
 			s_nearbyint-vis3 s_nearbyintf-vis3 \
