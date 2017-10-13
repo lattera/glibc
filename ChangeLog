@@ -1,5 +1,11 @@
 2017-10-13  Carlos O'Donell  <carlos@redhat.com>
 
+	[BZ #22294]
+	* locale/programs/ld-monetary.c (monetary_finish): Allow ""
+	int_curr_symbol.
+
+2017-10-13  Carlos O'Donell  <carlos@redhat.com>
+
 	[BZ #22292]
 	* locale/programs/record-status.h: New file
 	* locale/programs/locale.c: Add comment.

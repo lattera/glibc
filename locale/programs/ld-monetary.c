@@ -216,14 +216,20 @@ No definition for %s category found"), "LC_MONETARY");
   /* The international currency symbol must come from ISO 4217.  */
   if (monetary->int_curr_symbol != NULL)
     {
-      if (strlen (monetary->int_curr_symbol) != 4)
+      /* POSIX says this should be a 3-character symbol from ISO 4217
+	 along with a 4th character that is a divider, but the POSIX
+	 locale is documented as having a special case of "", and we
+	 support that also, so allow other locales to be created with
+	 a blank int_curr_symbol.  */
+      int ics_len = strlen (monetary->int_curr_symbol);
+      if (ics_len != 4 && ics_len != 0)
 	{
 	  if (! nothing)
 	    record_error (0, 0, _("\
 %s: value of field `int_curr_symbol' has wrong length"),
 			  "LC_MONETARY");
 	}
-      else
+      else if (ics_len == 4)
 	{ /* Check the first three characters against ISO 4217 */
 	  char symbol[4];
 	  strncpy (symbol, monetary->int_curr_symbol, 3);
