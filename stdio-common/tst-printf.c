@@ -136,6 +136,8 @@ fp_test (void)
   }
   printf("%10s\n", (char *) NULL);
   printf("%-10s\n", (char *) NULL);
+  printf("%.8f\n", DBL_MAX);
+  printf("%.8f\n", -DBL_MAX);
 }
 
 static int
@@ -181,6 +183,8 @@ I am ready for my first lesson today.";
   printf("null string:\t\"%s\"\n", (char *)NULL);
   printf("limited string:\t\"%.22s\"\n", longstr);
 
+  printf("a-style max:\t\"%a\"\n", DBL_MAX);
+  printf("a-style -max:\t\"%a\"\n", -DBL_MAX);
   printf("e-style >= 1:\t\"%e\"\n", 12.34);
   printf("e-style >= .1:\t\"%e\"\n", 0.1234);
   printf("e-style < .1:\t\"%e\"\n", 0.001234);

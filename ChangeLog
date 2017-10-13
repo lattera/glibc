@@ -1,3 +1,14 @@
+2017-10-13  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #22142]
+	* stdio-common/tst-printf.c (fp_test): Add tests for DBL_MAX and
+	-DBL_MAX.
+	(do_test): Likewise.
+	* stdio-common/tst-printf.sh: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/add_n.S: Invert the initial
+	ifdef clause in order to set the carry bit right.  Replace r0 by
+	0 without changing the behavior.
+
 2017-10-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/sparc/sparc32/fpu/s_fabsl.c: Include
