@@ -16,7 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <bits/floatn.h>
+
 #define FLOAT		long double
 #define STRFROM		strfroml
 
+#if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
+# define strfromf128 __hide_strfromf128
+# include <stdlib.h>
+# undef strfromf128
+#endif
+
 #include "strfrom-skeleton.c"
+
+#if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
+weak_alias (strfroml, strfromf128)
+#endif

@@ -1,5 +1,10 @@
 2017-10-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdlib/strfroml.c: Include <bits/floatn.h>.
+	[__HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128] (strfromf128):
+	Define before include of <stdlib.h> and undefine afterwards, then
+	define as weak alias.
+
 	* sysdeps/ieee754/ldbl-64-128/s_nextafterl.c (weak_alias):
 	Undefine and restore default definition.  Use
 	libm_alias_ldouble_other.
