@@ -1,17 +1,21 @@
 ifeq ($(subdir),math)
-libm-sysdep_routines += m_signbitf-vis3 m_signbit-vis3 m_finitef-vis3 \
-			m_finite-vis3 m_isinff-vis3 m_isinf-vis3 \
-			m_isnanf-vis3 m_isnan-vis3 s_lrintf-vis3 \
-			s_lrint-vis3 s_rintf-vis3 s_rint-vis3 \
+# These functions are built both for libc and libm because they're required
+# by printf.  While the libc objects have the prefix s_, the libm ones are
+# prefixed with  m_.
+sysdep_calls := s_signbitf-vis3 s_signbit-vis3 s_signbitf-generic \
+		s_signbit-generic s_finitef-vis3 \
+		s_finite-vis3 s_isinff-vis3 s_isinf-vis3 \
+		s_isnanf-vis3 s_isnan-vis3
+
+sysdep_routines += $(sysdep_calls)
+libm-sysdep_routines += s_lrintf-vis3 s_lrint-vis3 s_rintf-vis3 s_rint-vis3 \
 			s_fmaf-vis3 s_fma-vis3 s_fmaf-generic s_fma-generic \
 			s_nearbyint-vis3 s_nearbyintf-vis3 \
 			s_ceilf-vis3 s_ceil-vis3 s_ceilf-generic \
 			s_ceil-generic s_floorf-vis3 s_floor-vis3 \
 			s_floorf-generic s_floor-generic s_truncf-vis3 \
-			s_trunc-vis3 s_truncf-generic s_trunc-generic
-sysdep_routines += s_signbitf-vis3 s_signbit-vis3 s_finitef-vis3 \
-		   s_finite-vis3 s_isinff-vis3 s_isinf-vis3 \
-		   s_isnanf-vis3 s_isnan-vis3
+			s_trunc-vis3 s_truncf-generic s_trunc-generic \
+			$(sysdep_calls:s_%=m_%)
 
 CFLAGS-s_ceilf-vis3.c += -Wa,-Av9d -mvis3
 CFLAGS-s_ceil-vis3.c += -Wa,-Av9d -mvis3
