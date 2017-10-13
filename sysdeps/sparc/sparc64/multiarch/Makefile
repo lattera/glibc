@@ -13,8 +13,8 @@ sysdep_routines += memcpy-ultra3 memcpy-niagara1 memcpy-niagara2 \
 endif
 
 ifeq ($(subdir),stdlib)
-sysdep_routines += mul_1-vis3 mul_1-generic addmul_1-vis3 submul_1-vis3 \
-		   add_n-vis3 sub_n-vis3 sub_n-generic
+sysdep_routines += mul_1-vis3 mul_1-generic addmul_1-vis3 addmul_1-generic \
+		   submul_1-vis3 add_n-vis3 sub_n-vis3 sub_n-generic
 endif
 
 ifeq ($(subdir),math)
