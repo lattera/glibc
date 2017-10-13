@@ -93,9 +93,8 @@ messages_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	 empty one.  */
       if (messages == NULL)
 	{
-	  if (! be_quiet)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
-No definition for %s category found"), "LC_MESSAGES"));
+	  record_warning (_("\
+No definition for %s category found"), "LC_MESSAGES");
 	  messages_startup (NULL, locale, 0);
 	  messages = locale->categories[LC_MESSAGES].messages;
 	  nothing = 1;
@@ -110,17 +109,16 @@ No definition for %s category found"), "LC_MESSAGES"));
 
   if (messages->yesexpr == NULL)
     {
-      if (! be_quiet && ! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' undefined"),
-				"LC_MESSAGES", "yesexpr"));
+      if (! nothing)
+	record_error (0, 0, _("%s: field `%s' undefined"),
+		      "LC_MESSAGES", "yesexpr");
       messages->yesexpr = "^[yY]";
     }
   else if (messages->yesexpr[0] == '\0')
     {
-      if (!be_quiet)
-	WITH_CUR_LOCALE (error (0, 0, _("\
+      record_error (0, 0, _("\
 %s: value for field `%s' must not be an empty string"),
-				"LC_MESSAGES", "yesexpr"));
+		    "LC_MESSAGES", "yesexpr");
     }
   else
     {
@@ -134,9 +132,9 @@ No definition for %s category found"), "LC_MESSAGES"));
 	  char errbuf[BUFSIZ];
 
 	  (void) regerror (result, &re, errbuf, BUFSIZ);
-	  WITH_CUR_LOCALE (error (0, 0, _("\
+	  record_error (0, 0, _("\
 %s: no correct regular expression for field `%s': %s"),
-				  "LC_MESSAGES", "yesexpr", errbuf));
+			"LC_MESSAGES", "yesexpr", errbuf);
 	}
       else if (result != 0)
 	regfree (&re);
@@ -144,17 +142,16 @@ No definition for %s category found"), "LC_MESSAGES"));
 
   if (messages->noexpr == NULL)
     {
-      if (! be_quiet && ! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' undefined"),
-				"LC_MESSAGES", "noexpr"));
+      if (! nothing)
+	record_error (0, 0, _("%s: field `%s' undefined"),
+		      "LC_MESSAGES", "noexpr");
       messages->noexpr = "^[nN]";
     }
   else if (messages->noexpr[0] == '\0')
     {
-      if (!be_quiet)
-	WITH_CUR_LOCALE (error (0, 0, _("\
+      record_error (0, 0, _("\
 %s: value for field `%s' must not be an empty string"),
-				"LC_MESSAGES", "noexpr"));
+		    "LC_MESSAGES", "noexpr");
     }
   else
     {
@@ -168,9 +165,9 @@ No definition for %s category found"), "LC_MESSAGES"));
 	  char errbuf[BUFSIZ];
 
 	  (void) regerror (result, &re, errbuf, BUFSIZ);
-	  WITH_CUR_LOCALE (error (0, 0, _("\
+	  record_error (0, 0, _("\
 %s: no correct regular expression for field `%s': %s"),
-				  "LC_MESSAGES", "noexpr", errbuf));
+			"LC_MESSAGES", "noexpr", errbuf);
 	}
       else if (result != 0)
 	regfree (&re);

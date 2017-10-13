@@ -19,7 +19,6 @@
 # include <config.h>
 #endif
 
-#include <error.h>
 #include <langinfo.h>
 #include <string.h>
 #include <stdint.h>
@@ -90,9 +89,8 @@ measurement_finish (struct localedef_t *locale,
 	 empty one.  */
       if (measurement == NULL)
 	{
-	  if (! be_quiet)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
-No definition for %s category found"), "LC_MEASUREMENT"));
+	  record_warning (_("\
+No definition for %s category found"), "LC_MEASUREMENT");
 	  measurement_startup (NULL, locale, 0);
 	  measurement = locale->categories[LC_MEASUREMENT].measurement;
 	  nothing = 1;
@@ -102,16 +100,16 @@ No definition for %s category found"), "LC_MEASUREMENT"));
   if (measurement->measurement == 0)
     {
       if (! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_MEASUREMENT", "measurement"));
+	record_error (0, 0, _("%s: field `%s' not defined"),
+		      "LC_MEASUREMENT", "measurement");
       /* Use as the default value the value of the i18n locale.  */
       measurement->measurement = 1;
     }
   else
     {
       if (measurement->measurement > 3)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: invalid value for field `%s'"),
-				"LC_MEASUREMENT", "measurement"));
+	record_error (0, 0, _("%s: invalid value for field `%s'"),
+		      "LC_MEASUREMENT", "measurement");
     }
 }
 

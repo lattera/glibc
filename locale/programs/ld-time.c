@@ -155,9 +155,8 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	 empty one.  */
       if (time == NULL)
 	{
-	  if (! be_quiet)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
-No definition for %s category found"), "LC_TIME"));
+	  record_warning (_("\
+No definition for %s category found"), "LC_TIME");
 	  time_startup (NULL, locale, 0);
 	  time = locale->categories[LC_TIME].time;
 	  nothing = 1;
@@ -171,9 +170,9 @@ No definition for %s category found"), "LC_TIME"));
       const char *initval[] = { noparen val };				      \
       unsigned int i;							      \
 									      \
-      if (! be_quiet && ! nothing)					      \
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
-				"LC_TIME", #cat));          		      \
+      if (! nothing)					    		      \
+	record_error (0, 0, _("%s: field `%s' not defined"),	      	      \
+		      "LC_TIME", #cat);          			      \
 									      \
       for (i = 0; i < sizeof (initval) / sizeof (initval[0]); ++i)	      \
 	time->cat[i] = initval[i];					      \
@@ -192,9 +191,9 @@ No definition for %s category found"), "LC_TIME"));
 #define TEST_ELEM(cat, initval) \
   if (time->cat == NULL)						      \
     {									      \
-      if (! be_quiet && ! nothing)					      \
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
-				"LC_TIME", #cat));          		      \
+      if (! nothing)							      \
+	record_error (0, 0, _("%s: field `%s' not defined"),		      \
+		      "LC_TIME", #cat);          			      \
 									      \
       time->cat = initval;						      \
     }
@@ -243,10 +242,9 @@ No definition for %s category found"), "LC_TIME"));
 	  /* First character must be + or - for the direction.  */
 	  if (*str != '+' && *str != '-')
 	    {
-	      if (!be_quiet)
-		WITH_CUR_LOCALE (error (0, 0, _("\
+	      record_error (0, 0, _("\
 %s: direction flag in string %Zd in `era' field is not '+' nor '-'"),
-					"LC_TIME", idx + 1));
+			    "LC_TIME", idx + 1);
 	      /* Default arbitrarily to '+'.  */
 	      time->era_entries[idx].direction = '+';
 	    }
@@ -254,10 +252,9 @@ No definition for %s category found"), "LC_TIME"));
 	    time->era_entries[idx].direction = *str;
 	  if (*++str != ':')
 	    {
-	      if (!be_quiet)
-		WITH_CUR_LOCALE (error (0, 0, _("\
+	      record_error (0, 0, _("\
 %s: direction flag in string %Zd in `era' field is not a single character"),
-					"LC_TIME", idx + 1));
+			    "LC_TIME", idx + 1);
 	      (void) strsep (&str, ":");
 	    }
 	  else
@@ -267,18 +264,16 @@ No definition for %s category found"), "LC_TIME"));
 	  time->era_entries[idx].offset = strtol (str, &endp, 10);
 	  if (endp == str)
 	    {
-	      if (!be_quiet)
-		WITH_CUR_LOCALE (error (0, 0, _("\
+	      record_error (0, 0, _("\
 %s: invalid number for offset in string %Zd in `era' field"),
-					"LC_TIME", idx + 1));
+			    "LC_TIME", idx + 1);
 	      (void) strsep (&str, ":");
 	    }
 	  else if (*endp != ':')
 	    {
-	      if (!be_quiet)
-		WITH_CUR_LOCALE (error (0, 0, _("\
+	      record_error (0, 0, _("\
 %s: garbage at end of offset value in string %Zd in `era' field"),
-					"LC_TIME", idx + 1));
+			    "LC_TIME", idx + 1);
 	      (void) strsep (&str, ":");
 	    }
 	  else
@@ -326,19 +321,17 @@ No definition for %s category found"), "LC_TIME"));
 	      if (endp == str)
 		{
 		invalid_start_date:
-		  if (!be_quiet)
-		    WITH_CUR_LOCALE (error (0, 0, _("\
+		  record_error (0, 0, _("\
 %s: invalid starting date in string %Zd in `era' field"),
-					    "LC_TIME", idx + 1));
+				"LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
 		}
 	      else if (*endp != ':')
 		{
 		garbage_start_date:
-		  if (!be_quiet)
-		    WITH_CUR_LOCALE (error (0, 0, _("\
+		  record_error (0, 0, _("\
 %s: garbage at end of starting date in string %Zd in `era' field "),
-					    "LC_TIME", idx + 1));
+				"LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
 		}
 	      else
@@ -353,11 +346,10 @@ No definition for %s category found"), "LC_TIME"));
 			   > days_per_month[time->era_entries[idx].start_date[1]])
 		       || (time->era_entries[idx].start_date[1] == 2
 			   && time->era_entries[idx].start_date[2] == 29
-			   && !__isleap (time->era_entries[idx].start_date[0])))
-		      && !be_quiet)
-			  WITH_CUR_LOCALE (error (0, 0, _("\
+			   && !__isleap (time->era_entries[idx].start_date[0]))))
+		    record_error (0, 0, _("\
 %s: starting date is invalid in string %Zd in `era' field"),
-						  "LC_TIME", idx + 1));
+				  "LC_TIME", idx + 1);
 		}
 	    }
 
@@ -403,19 +395,17 @@ No definition for %s category found"), "LC_TIME"));
 	      if (endp == str)
 		{
 		invalid_stop_date:
-		  if (!be_quiet)
-		    WITH_CUR_LOCALE (error (0, 0, _("\
+		  record_error (0, 0, _("\
 %s: invalid stopping date in string %Zd in `era' field"),
-					    "LC_TIME", idx + 1));
+				"LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
 		}
 	      else if (*endp != ':')
 		{
 		garbage_stop_date:
-		  if (!be_quiet)
-		    WITH_CUR_LOCALE (error (0, 0, _("\
+		  record_error (0, 0, _("\
 %s: garbage at end of stopping date in string %Zd in `era' field"),
-					    "LC_TIME", idx + 1));
+				"LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
 		}
 	      else
@@ -430,19 +420,17 @@ No definition for %s category found"), "LC_TIME"));
 			   > days_per_month[time->era_entries[idx].stop_date[1]])
 		       || (time->era_entries[idx].stop_date[1] == 2
 			   && time->era_entries[idx].stop_date[2] == 29
-			   && !__isleap (time->era_entries[idx].stop_date[0])))
-		      && !be_quiet)
-			  WITH_CUR_LOCALE (error (0, 0, _("\
+			   && !__isleap (time->era_entries[idx].stop_date[0]))))
+		    record_error (0, 0, _("\
 %s: invalid stopping date in string %Zd in `era' field"),
-						  "LC_TIME", idx + 1));
+				  "LC_TIME", idx + 1);
 		}
 	    }
 
 	  if (str == NULL || *str == '\0')
 	    {
-	      if (!be_quiet)
-		WITH_CUR_LOCALE (error (0, 0, _("\
-%s: missing era name in string %Zd in `era' field"), "LC_TIME", idx + 1));
+	      record_error (0, 0, _("\
+%s: missing era name in string %Zd in `era' field"), "LC_TIME", idx + 1);
 	      time->era_entries[idx].name =
 		time->era_entries[idx].format = "";
 	    }
@@ -452,10 +440,9 @@ No definition for %s category found"), "LC_TIME"));
 
 	      if (str == NULL || *str == '\0')
 		{
-		  if (!be_quiet)
-		    WITH_CUR_LOCALE (error (0, 0, _("\
+		  record_error (0, 0, _("\
 %s: missing era format in string %Zd in `era' field"),
-					    "LC_TIME", idx + 1));
+				"LC_TIME", idx + 1);
 		  time->era_entries[idx].name =
 		    time->era_entries[idx].format = "";
 		}
@@ -498,33 +485,33 @@ No definition for %s category found"), "LC_TIME"));
     time->week_1stweek = 7;
 
   if (time->week_1stweek > time->week_ndays)
-    WITH_CUR_LOCALE (error (0, 0, _("\
+    record_error (0, 0, _("\
 %s: third operand for value of field `%s' must not be larger than %d"),
-			    "LC_TIME", "week", 7));
+		  "LC_TIME", "week", 7);
 
   if (time->first_weekday == '\0')
     /* The definition does not specify this so the default is used.  */
     time->first_weekday = 1;
   else if (time->first_weekday > time->week_ndays)
-    WITH_CUR_LOCALE (error (0, 0, _("\
+    record_error (0, 0, _("\
 %s: values for field `%s' must not be larger than %d"),
-			    "LC_TIME", "first_weekday", 7));
+		  "LC_TIME", "first_weekday", 7);
 
   if (time->first_workday == '\0')
     /* The definition does not specify this so the default is used.  */
     time->first_workday = 2;
   else if (time->first_workday > time->week_ndays)
-    WITH_CUR_LOCALE (error (0, 0, _("\
+    record_error (0, 0, _("\
 %s: values for field `%s' must not be larger than %d"),
-			    "LC_TIME", "first_workday", 7));
+		  "LC_TIME", "first_workday", 7);
 
   if (time->cal_direction == '\0')
     /* The definition does not specify this so the default is used.  */
     time->cal_direction = 1;
   else if (time->cal_direction > 3)
-    WITH_CUR_LOCALE (error (0, 0, _("\
+    record_error (0, 0, _("\
 %s: values for field `%s' must not be larger than %d"),
-			    "LC_TIME", "cal_direction", 3));
+		  "LC_TIME", "cal_direction", 3);
 
   /* XXX We don't perform any tests on the timezone value since this is
      simply useless, stupid $&$!@...  */

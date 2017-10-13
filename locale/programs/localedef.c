@@ -51,6 +51,12 @@ int posix_conformance;
 /* If not zero give a lot more messages.  */
 int verbose;
 
+/* Warnings recorded by record_warnings (see localedef.h).  */
+int recorded_warning_count;
+
+/* Errors recorded by record_error (see localedef.h).  */
+int recorded_error_count;
+
 /* If not zero suppress warnings and information messages.  */
 int be_quiet;
 
@@ -236,8 +242,8 @@ main (int argc, char *argv[])
      defines error code 3 for this situation so I think it must be
      a fatal error (see P1003.2 4.35.8).  */
   if (sysconf (_SC_2_LOCALEDEF) < 0)
-    WITH_CUR_LOCALE (error (3, 0, _("\
-FATAL: system does not define `_POSIX2_LOCALEDEF'")));
+    record_error (3, 0, _("\
+FATAL: system does not define `_POSIX2_LOCALEDEF'"));
 
   /* Process charmap file.  */
   charmap = charmap_read (charmap_file, verbose, 1, be_quiet, 1);
@@ -250,8 +256,8 @@ FATAL: system does not define `_POSIX2_LOCALEDEF'")));
 
   /* Now read the locale file.  */
   if (locfile_read (&global, charmap) != 0)
-    WITH_CUR_LOCALE (error (4, errno, _("\
-cannot open locale definition file `%s'"), input_file));
+    record_error (4, errno, _("\
+cannot open locale definition file `%s'"), input_file);
 
   /* Perhaps we saw some `copy' instructions.  */
   while (1)
@@ -266,29 +272,41 @@ cannot open locale definition file `%s'"), input_file));
 	break;
 
       if (locfile_read (runp, charmap) != 0)
-	WITH_CUR_LOCALE (error (4, errno, _("\
-cannot open locale definition file `%s'"), runp->name));
+	record_error (4, errno, _("\
+cannot open locale definition file `%s'"), runp->name);
     }
 
   /* Check the categories we processed in source form.  */
   check_all_categories (locales, charmap);
 
-  /* We are now able to write the data files.  If warning were given we
-     do it only if it is explicitly requested (--force).  */
-  if (error_message_count == 0 || force_output != 0)
+  /* What we do next depends on the number of errors and warnings we
+     have generated in processing the input files.
+
+     * No errors: Write the output file.
+
+     * Some warnings: Write the output file and exit with status 1 to
+     indicate there may be problems using the output file e.g. missing
+     data that makes it difficult to use
+
+     * Errors: We don't write the output file and we exit with status 4
+     to indicate no output files were written.
+
+     The use of -c|--force writes the output file even if errors were
+     seen.  */
+  if (recorded_error_count == 0 || force_output != 0)
     {
       if (cannot_write_why != 0)
-	WITH_CUR_LOCALE (error (4, cannot_write_why, _("\
-cannot write output files to `%s'"), output_path ? : argv[remaining]));
+	record_error (4, cannot_write_why, _("\
+cannot write output files to `%s'"), output_path ? : argv[remaining]);
       else
 	write_all_categories (locales, charmap, argv[remaining], output_path);
     }
   else
-    WITH_CUR_LOCALE (error (4, 0, _("\
-no output file produced because warnings were issued")));
+    record_error (4, 0, _("\
+no output file produced because errors were issued"));
 
   /* This exit status is prescribed by POSIX.2 4.35.7.  */
-  exit (error_message_count != 0);
+  exit (recorded_warning_count != 0);
 }
 
 
@@ -567,14 +585,14 @@ add_to_readlist (int category, const char *name, const char *repertoire_name,
   if (generate
       && (runp->needed & (1 << category)) != 0
       && (runp->avail & (1 << category)) == 0)
-    WITH_CUR_LOCALE (error (5, 0, _("\
-circular dependencies between locale definitions")));
+    record_error (5, 0, _("\
+circular dependencies between locale definitions"));
 
   if (copy_locale != NULL)
     {
       if (runp->categories[category].generic != NULL)
-	WITH_CUR_LOCALE (error (5, 0, _("\
-cannot add already read locale `%s' a second time"), name));
+	record_error (5, 0, _("\
+cannot add already read locale `%s' a second time"), name);
       else
 	runp->categories[category].generic =
 	  copy_locale->categories[category].generic;
@@ -599,8 +617,8 @@ find_locale (int category, const char *name, const char *repertoire_name,
 
   if ((result->avail & (1 << category)) == 0
       && locfile_read (result, charmap) != 0)
-    WITH_CUR_LOCALE (error (4, errno, _("\
-cannot open locale definition file `%s'"), result->name));
+    record_error (4, errno, _("\
+cannot open locale definition file `%s'"), result->name);
 
   return result;
 }
@@ -619,8 +637,8 @@ load_locale (int category, const char *name, const char *repertoire_name,
 
   if ((result->avail & (1 << category)) == 0
       && locfile_read (result, charmap) != 0)
-    WITH_CUR_LOCALE (error (4, errno, _("\
-cannot open locale definition file `%s'"), result->name));
+    record_error (4, errno, _("\
+cannot open locale definition file `%s'"), result->name);
 
   return result;
 }

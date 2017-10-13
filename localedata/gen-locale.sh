@@ -30,10 +30,16 @@ generate_locale ()
   charmap=$1
   input=$2
   out=$3
-  if ${localedef_before_env} ${run_program_env} I18NPATH=../localedata \
-     ${localedef_after_env} --quiet -c -f $charmap -i $input \
-			    ${common_objpfx}localedata/$out
-  then
+  ret=0
+  ${localedef_before_env} ${run_program_env} I18NPATH=../localedata \
+	${localedef_after_env} --quiet -c -f $charmap -i $input \
+	${common_objpfx}localedata/$out || ret=$?
+  # All locales compile fine, except those with SHIFT_JIS charmap
+  # and those fail with exit code 1 because SHIFT_JIS issues a
+  # warning (it is not ASCII compatible).
+  if [ $ret -eq 0 ] \
+     || ( [ $ret -eq 1 ] \
+          && [ "$charmap" = "SHIFT_JIS" ] ); then
     # The makefile checks the timestamp of the LC_CTYPE file,
     # but localedef won't have touched it if it was able to
     # hard-link it to an existing file.
@@ -50,5 +56,13 @@ locale=`echo $locfile|sed 's|\([^.]*\)[.].*/LC_CTYPE|\1|'`
 charmap=`echo $locfile|sed 's|[^.]*[.]\(.*\)/LC_CTYPE|\1|'`
 
 echo "Generating locale $locale.$charmap: this might take a while..."
-generate_locale `echo $charmap | sed -e s/SJIS/SHIFT_JIS/` $locale \
-		$locale.$charmap
+
+# For SJIS the charmap is SHIFT_JIS. We just want the locale to have
+# a slightly nicer name instead of using "*.SHIFT_SJIS", but that
+# means we need a mapping here.
+charmap_real="$charmap"
+if [ "$charmap" = "SJIS" ]; then
+  charmap_real="SHIFT_JIS"
+fi
+
+generate_locale $charmap_real $locale $locale.$charmap

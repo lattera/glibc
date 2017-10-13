@@ -27,7 +27,7 @@
 #include "error.h"
 #include "locfile-token.h"
 #include "repertoire.h"
-
+#include "record-status.h"
 
 typedef const struct keyword_t *(*kw_hash_fct_t) (const char *, unsigned int);
 struct charset_t;
@@ -96,9 +96,29 @@ extern struct token *lr_token (struct linereader *lr,
 extern void lr_ignore_rest (struct linereader *lr, int verbose);
 
 
-#define lr_error(lr, fmt, args...) \
-  WITH_CUR_LOCALE (error_at_line (0, 0, lr->fname, lr->lineno, fmt, ## args))
+static inline void
+__attribute__ ((__format__ (__printf__, 2, 3), nonnull (1, 2)))
+lr_error (struct linereader *lr, const char *fmt, ...)
+{
+  char *str;
+  va_list arg;
+  struct locale_state ls;
+  int ret;
 
+  va_start (arg, fmt);
+  ls = push_locale ();
+
+  ret = vasprintf (&str, fmt, arg);
+  if (ret == -1)
+    abort ();
+
+  pop_locale (ls);
+  va_end (arg);
+
+  error_at_line (0, 0, lr->fname, lr->lineno, "%s", str);
+
+  free (str);
+}
 
 
 static inline int

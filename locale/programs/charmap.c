@@ -26,7 +26,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <error.h>
 #include <stdint.h>
 
 #include "localedef.h"
@@ -135,8 +134,9 @@ charmap_read (const char *filename, int verbose, int error_not_found,
 	result = parse_charmap (cmfile, verbose, be_quiet);
 
       if (result == NULL && error_not_found)
-	WITH_CUR_LOCALE (error (0, errno, _("\
-character map file `%s' not found"), filename));
+	record_error (0, errno,
+		      _("character map file `%s' not found"),
+		      filename);
     }
 
   if (result == NULL && filename != NULL && strchr (filename, '/') == NULL)
@@ -192,8 +192,9 @@ character map file `%s' not found"), filename));
 	result = parse_charmap (cmfile, verbose, be_quiet);
 
       if (result == NULL)
-	WITH_CUR_LOCALE (error (4, errno, _("\
-default character map file `%s' not found"), DEFAULT_CHARMAP));
+	record_error (4, errno,
+		      _("default character map file `%s' not found"),
+		      DEFAULT_CHARMAP);
     }
 
   if (result != NULL && result->code_set_name == NULL)
@@ -255,9 +256,9 @@ default character map file `%s' not found"), DEFAULT_CHARMAP));
 
       if (failed)
 	{
-	  WITH_CUR_LOCALE (fprintf (stderr, _("\
+	  record_warning (_("\
 character map `%s' is not ASCII compatible, locale not ISO C compliant\n"),
-				    result->code_set_name));
+			  result->code_set_name);
 	  enc_not_ascii_compatible = true;
 	}
     }
@@ -333,10 +334,9 @@ parse_charmap (struct linereader *cmfile, int verbose, int be_quiet)
 		result->mb_cur_min = result->mb_cur_max;
 	      if (result->mb_cur_min > result->mb_cur_max)
 		{
-		  if (!be_quiet)
-		    WITH_CUR_LOCALE (error (0, 0, _("\
+		  record_error (0, 0, _("\
 %s: <mb_cur_max> must be greater than <mb_cur_min>\n"),
-					    cmfile->fname));
+				cmfile->fname);
 
 		  result->mb_cur_min = result->mb_cur_max;
 		}
@@ -395,11 +395,10 @@ parse_charmap (struct linereader *cmfile, int verbose, int be_quiet)
 	      if (arg->tok != tok_number)
 		goto badarg;
 
-	      if (verbose
-		  && ((nowtok == tok_mb_cur_max
+	      if ((nowtok == tok_mb_cur_max
 		       && result->mb_cur_max != 0)
 		      || (nowtok == tok_mb_cur_max
-			  && result->mb_cur_max != 0)))
+			  && result->mb_cur_max != 0))
 		lr_error (cmfile, _("duplicate definition of <%s>"),
 			  nowtok == tok_mb_cur_min
 			  ? "mb_cur_min" : "mb_cur_max");
@@ -839,16 +838,16 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	  continue;
 
 	default:
-	  WITH_CUR_LOCALE (error (5, 0, _("%s: error in state machine"),
-				  __FILE__));
+	  record_error (5, 0, _("%s: error in state machine"),
+			__FILE__);
 	  /* NOTREACHED */
 	}
       break;
     }
 
-  if (state != 91 && !be_quiet)
-    WITH_CUR_LOCALE (error (0, 0, _("%s: premature end of file"),
-			    cmfile->fname));
+  if (state != 91)
+    record_error (0, 0, _("%s: premature end of file"),
+		  cmfile->fname);
 
   lr_close (cmfile);
 

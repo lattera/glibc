@@ -20,7 +20,6 @@
 #endif
 
 #include <byteswap.h>
-#include <error.h>
 #include <langinfo.h>
 #include <string.h>
 #include <stdint.h>
@@ -131,9 +130,8 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	 empty one.  */
       if (address == NULL)
 	{
-	  if (! be_quiet)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
-No definition for %s category found"), "LC_ADDRESS"));
+	  record_warning (_("\
+No definition for %s category found"), "LC_ADDRESS");
 	  address_startup (NULL, locale, 0);
 	  address = locale->categories[LC_ADDRESS].address;
 	  nothing = 1;
@@ -143,8 +141,8 @@ No definition for %s category found"), "LC_ADDRESS"));
   if (address->postal_fmt == NULL)
     {
       if (! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_ADDRESS", "postal_fmt"));
+	record_error (0, 0, _("%s: field `%s' not defined"),
+		      "LC_ADDRESS", "postal_fmt");
       /* Use as the default value the value of the i18n locale.  */
       address->postal_fmt = "%a%N%f%N%d%N%b%N%s %h %e %r%N%C-%z %T%N%c%N";
     }
@@ -155,8 +153,8 @@ No definition for %s category found"), "LC_ADDRESS"));
       const char *cp = address->postal_fmt;
 
       if (*cp == '\0')
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
-				"LC_ADDRESS", "postal_fmt"));
+	record_error (0, 0, _("%s: field `%s' must not be empty"),
+		      "LC_ADDRESS", "postal_fmt");
       else
 	while (*cp != '\0')
 	  {
@@ -167,9 +165,9 @@ No definition for %s category found"), "LC_ADDRESS"));
 		  ++cp;
 		if (strchr ("nafdbshNtreClzTSc%", *cp) == NULL)
 		  {
-		    WITH_CUR_LOCALE (error (0, 0, _("\
+		    record_error (0, 0, _("\
 %s: invalid escape `%%%c' sequence in field `%s'"),
-					    "LC_ADDRESS", *cp, "postal_fmt"));
+				  "LC_ADDRESS", *cp, "postal_fmt");
 		    break;
 		  }
 	      }
@@ -181,8 +179,7 @@ No definition for %s category found"), "LC_ADDRESS"));
   if (address->cat == NULL)						      \
     {									      \
       if (verbose && ! nothing)						      \
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
-				"LC_ADDRESS", #cat));  	    		      \
+	record_warning (_("%s: field `%s' not defined"), "LC_ADDRESS", #cat); \
       address->cat = "";						      \
     }
 
@@ -199,16 +196,16 @@ No definition for %s category found"), "LC_ADDRESS"));
   if (address->lang_term == NULL)
     {
       if (verbose && ! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_ADDRESS", "lang_term"));
+	record_warning (_("%s: field `%s' not defined"), "LC_ADDRESS",
+			"lang_term");
       address->lang_term = "";
       cnt = sizeof (iso639) / sizeof (iso639[0]);
     }
   else if (address->lang_term[0] == '\0')
     {
       if (verbose)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
-				"LC_ADDRESS", "lang_term"));
+	record_warning (_("%s: field `%s' must not be empty"), "LC_ADDRESS",
+			"lang_term");
       cnt = sizeof (iso639) / sizeof (iso639[0]);
     }
   else
@@ -218,9 +215,9 @@ No definition for %s category found"), "LC_ADDRESS"));
 	if (strcmp (address->lang_term, iso639[cnt].term) == 0)
 	  break;
       if (cnt == sizeof (iso639) / sizeof (iso639[0]))
-	WITH_CUR_LOCALE (error (0, 0, _("\
+	record_error (0, 0, _("\
 %s: terminology language code `%s' not defined"),
-				"LC_ADDRESS", address->lang_term));
+		      "LC_ADDRESS", address->lang_term);
     }
 
   if (address->lang_ab == NULL)
@@ -228,8 +225,8 @@ No definition for %s category found"), "LC_ADDRESS"));
       if ((cnt == sizeof (iso639) / sizeof (iso639[0])
 	   || iso639[cnt].ab[0] != '\0')
 	  && verbose && ! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_ADDRESS", "lang_ab"));
+	record_warning (_("%s: field `%s' not defined"), "LC_ADDRESS",
+			"lang_ab");
       address->lang_ab = "";
     }
   else if (address->lang_ab[0] == '\0')
@@ -237,14 +234,14 @@ No definition for %s category found"), "LC_ADDRESS"));
       if ((cnt == sizeof (iso639) / sizeof (iso639[0])
 	   || iso639[cnt].ab[0] != '\0')
 	  && verbose)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
-				"LC_ADDRESS", "lang_ab"));
+	record_warning (_("%s: field `%s' must not be empty"),
+			"LC_ADDRESS", "lang_ab");
     }
   else if (cnt < sizeof (iso639) / sizeof (iso639[0])
 	   && iso639[cnt].ab[0] == '\0')
     {
-      WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be defined"),
-			      "LC_ADDRESS", "lang_ab"));
+      record_error (0, 0, _("%s: field `%s' must not be defined"),
+		    "LC_ADDRESS", "lang_ab");
 
       address->lang_ab = "";
     }
@@ -257,16 +254,16 @@ No definition for %s category found"), "LC_ADDRESS"));
 	    if (strcmp (address->lang_ab, iso639[cnt].ab) == 0)
 	      break;
 	  if (cnt == sizeof (iso639) / sizeof (iso639[0]))
-	    WITH_CUR_LOCALE (error (0, 0, _("\
+	    record_error (0, 0, _("\
 %s: language abbreviation `%s' not defined"),
-				    "LC_ADDRESS", address->lang_ab));
+			  "LC_ADDRESS", address->lang_ab);
 	}
       else
 	if (strcmp (iso639[cnt].ab, address->lang_ab) != 0
 	    && iso639[cnt].ab[0] != '\0')
-	  WITH_CUR_LOCALE (error (0, 0, _("\
+	  record_error (0, 0, _("\
 %s: `%s' value does not match `%s' value"),
-				  "LC_ADDRESS", "lang_ab", "lang_term"));
+			"LC_ADDRESS", "lang_ab", "lang_term");
     }
 
   if (address->lang_lib == NULL)
@@ -275,8 +272,8 @@ No definition for %s category found"), "LC_ADDRESS"));
   else if (address->lang_lib[0] == '\0')
     {
       if (verbose)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
-				"LC_ADDRESS", "lang_lib"));
+	record_warning (_("%s: field `%s' must not be empty"),
+			"LC_ADDRESS", "lang_lib");
     }
   else
     {
@@ -286,22 +283,22 @@ No definition for %s category found"), "LC_ADDRESS"));
 	    if (strcmp (address->lang_lib, iso639[cnt].lib) == 0)
 	      break;
 	  if (cnt == sizeof (iso639) / sizeof (iso639[0]))
-	    WITH_CUR_LOCALE (error (0, 0, _("\
+	    record_error (0, 0, _("\
 %s: language abbreviation `%s' not defined"),
-				    "LC_ADDRESS", address->lang_lib));
+			  "LC_ADDRESS", address->lang_lib);
 	}
       else
 	if (strcmp (iso639[cnt].ab, address->lang_ab) != 0)
-	  WITH_CUR_LOCALE (error (0, 0, _("\
+	  record_error (0, 0, _("\
 %s: `%s' value does not match `%s' value"), "LC_ADDRESS", "lang_lib",
-				  helper == 1 ? "lang_term" : "lang_ab"));
+			helper == 1 ? "lang_term" : "lang_ab");
     }
 
   if (address->country_num == 0)
     {
       if (verbose && ! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_ADDRESS", "country_num"));
+	record_warning (_("%s: field `%s' not defined"), "LC_ADDRESS",
+			"country_num");
       cnt = sizeof (iso3166) / sizeof (iso3166[0]);
     }
   else
@@ -311,36 +308,35 @@ No definition for %s category found"), "LC_ADDRESS"));
 	  break;
 
       if (cnt == sizeof (iso3166) / sizeof (iso3166[0]))
-	WITH_CUR_LOCALE (error (0, 0, _("\
+	record_error (0, 0, _("\
 %s: numeric country code `%d' not valid"),
-				"LC_ADDRESS", address->country_num));
+		      "LC_ADDRESS", address->country_num);
     }
 
   if (address->country_ab2 == NULL)
     {
       if (verbose && ! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_ADDRESS", "country_ab2"));
+	record_warning (_("%s: field `%s' not defined"), "LC_ADDRESS",
+			"country_ab2");
       address->country_ab2 = "  ";
     }
   else if (cnt != sizeof (iso3166) / sizeof (iso3166[0])
 	   && strcmp (address->country_ab2, iso3166[cnt].ab2) != 0)
-    WITH_CUR_LOCALE (error (0, 0,
-			    _("%s: `%s' value does not match `%s' value"),
-			    "LC_ADDRESS", "country_ab2", "country_num"));
+    record_error (0, 0, _("%s: `%s' value does not match `%s' value"),
+		  "LC_ADDRESS", "country_ab2", "country_num");
 
   if (address->country_ab3 == NULL)
     {
       if (verbose && ! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_ADDRESS", "country_ab3"));
+	record_warning (_("%s: field `%s' not defined"), "LC_ADDRESS",
+			"country_ab3");
       address->country_ab3 = "   ";
     }
   else if (cnt != sizeof (iso3166) / sizeof (iso3166[0])
 	   && strcmp (address->country_ab3, iso3166[cnt].ab3) != 0)
-    WITH_CUR_LOCALE (error (0, 0, _("\
+    record_error (0, 0, _("\
 %s: `%s' value does not match `%s' value"),
-			    "LC_ADDRESS", "country_ab3", "country_num"));
+		  "LC_ADDRESS", "country_ab3", "country_num");
 }
 
 

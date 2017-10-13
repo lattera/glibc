@@ -185,13 +185,12 @@ monetary_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	    = from->categories[LC_MONETARY].monetary;
 	}
 
-      /* If there is still no definition issue an warning and create an
+      /* If there is still no definition issue a warning and create an
 	 empty one.  */
       if (monetary == NULL)
 	{
-	  if (! be_quiet)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
-No definition for %s category found"), "LC_MONETARY"));
+	  record_warning (_("\
+No definition for %s category found"), "LC_MONETARY");
 	  monetary_startup (NULL, locale, 0);
 	  monetary = locale->categories[LC_MONETARY].monetary;
 	  nothing = 1;
@@ -201,9 +200,9 @@ No definition for %s category found"), "LC_MONETARY"));
 #define TEST_ELEM(cat, initval) \
   if (monetary->cat == NULL)						      \
     {									      \
-      if (! be_quiet && ! nothing)					      \
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
-				"LC_MONETARY", #cat));			      \
+      if (! nothing)							      \
+	record_error (0, 0, _("%s: field `%s' not defined"),		      \
+		      "LC_MONETARY", #cat);				      \
       monetary->cat = initval;						      \
     }
 
@@ -219,10 +218,10 @@ No definition for %s category found"), "LC_MONETARY"));
     {
       if (strlen (monetary->int_curr_symbol) != 4)
 	{
-	  if (! be_quiet && ! nothing)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
+	  if (! nothing)
+	    record_error (0, 0, _("\
 %s: value of field `int_curr_symbol' has wrong length"),
-				    "LC_MONETARY"));
+			  "LC_MONETARY");
 	}
       else
 	{ /* Check the first three characters against ISO 4217 */
@@ -231,12 +230,11 @@ No definition for %s category found"), "LC_MONETARY"));
 	  symbol[3] = '\0';
 	  if (bsearch (symbol, valid_int_curr, NR_VALID_INT_CURR,
 		       sizeof (const char *),
-		       (comparison_fn_t) curr_strcmp) == NULL
-	       && !be_quiet)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
+		       (comparison_fn_t) curr_strcmp) == NULL)
+	    record_warning (_("\
 %s: value of field `int_curr_symbol' does \
 not correspond to a valid name in ISO 4217"),
-				"LC_MONETARY"));
+			    "LC_MONETARY");
 	}
     }
 
@@ -245,25 +243,25 @@ not correspond to a valid name in ISO 4217"),
      != "".  */
   if (monetary->mon_decimal_point == NULL)
     {
-      if (! be_quiet && ! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_MONETARY", "mon_decimal_point"));
+      if (! nothing)
+	record_error (0, 0, _("%s: field `%s' not defined"),
+		      "LC_MONETARY", "mon_decimal_point");
       monetary->mon_decimal_point = ".";
     }
   else if (monetary->mon_decimal_point[0] == '\0' && ! be_quiet && ! nothing)
     {
-      WITH_CUR_LOCALE (error (0, 0, _("\
+      record_error (0, 0, _("\
 %s: value for field `%s' must not be an empty string"),
-			      "LC_MONETARY", "mon_decimal_point"));
+		    "LC_MONETARY", "mon_decimal_point");
     }
   if (monetary->mon_decimal_point_wc == L'\0')
     monetary->mon_decimal_point_wc = L'.';
 
   if (monetary->mon_grouping_len == 0)
     {
-      if (! be_quiet && ! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_MONETARY", "mon_grouping"));
+      if (! nothing)
+	record_error (0, 0, _("%s: field `%s' not defined"),
+		      "LC_MONETARY", "mon_grouping");
 
       monetary->mon_grouping = (char *) "\177";
       monetary->mon_grouping_len = 1;
@@ -273,17 +271,17 @@ not correspond to a valid name in ISO 4217"),
 #define TEST_ELEM(cat, min, max, initval) \
   if (monetary->cat == -2)						      \
     {									      \
-       if (! be_quiet && ! nothing)					      \
-	 WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
-				 "LC_MONETARY", #cat));			      \
+       if (! nothing)							      \
+	 record_error (0, 0, _("%s: field `%s' not defined"),		      \
+		       "LC_MONETARY", #cat);				      \
        monetary->cat = initval;						      \
     }									      \
   else if ((monetary->cat < min || monetary->cat > max)			      \
 	   && min < max							      \
 	   && !be_quiet && !nothing)					      \
-    WITH_CUR_LOCALE (error (0, 0, _("\
+    record_error (0, 0, _("\
 %s: value for field `%s' must be in range %d...%d"),			      \
-			    "LC_MONETARY", #cat, min, max))
+		  "LC_MONETARY", #cat, min, max)
 
   TEST_ELEM (int_frac_digits, 1, 0, -1);
   TEST_ELEM (frac_digits, 1, 0, -1);
@@ -309,11 +307,10 @@ not correspond to a valid name in ISO 4217"),
 #define TEST_ELEM(cat, alt, min, max) \
   if (monetary->cat == -2)						      \
     monetary->cat = monetary->alt;					      \
-  else if ((monetary->cat < min || monetary->cat > max) && !be_quiet	      \
-	   && ! nothing)						      \
-    WITH_CUR_LOCALE (error (0, 0, _("\
+  else if ((monetary->cat < min || monetary->cat > max)	&& ! nothing)	      \
+    record_error (0, 0, _("\
 %s: value for field `%s' must be in range %d...%d"),			      \
-			    "LC_MONETARY", #cat, min, max))
+		  "LC_MONETARY", #cat, min, max)
 
   TEST_ELEM (int_p_cs_precedes, p_cs_precedes, -1, 1);
   TEST_ELEM (int_p_sep_by_space, p_sep_by_space, -1, 2);

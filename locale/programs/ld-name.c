@@ -90,9 +90,8 @@ name_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	 empty one.  */
       if (name == NULL)
 	{
-	  if (! be_quiet)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
-No definition for %s category found"), "LC_NAME"));
+	  record_warning (_("\
+No definition for %s category found"), "LC_NAME");
 	  name_startup (NULL, locale, 0);
 	  name = locale->categories[LC_NAME].name;
 	  nothing = 1;
@@ -102,8 +101,8 @@ No definition for %s category found"), "LC_NAME"));
   if (name->name_fmt == NULL)
     {
       if (! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_NAME", "name_fmt"));
+	record_error (0, 0, _("%s: field `%s' not defined"),
+		      "LC_NAME", "name_fmt");
       /* Use as the default value the value of the i18n locale.  */
       name->name_fmt = "%p%t%g%t%m%t%f";
     }
@@ -114,8 +113,8 @@ No definition for %s category found"), "LC_NAME"));
       const char *cp = name->name_fmt;
 
       if (*cp == '\0')
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
-				"LC_NAME", "name_fmt"));
+	record_error (0, 0, _("%s: field `%s' must not be empty"),
+		      "LC_NAME", "name_fmt");
       else
 	while (*cp != '\0')
 	  {
@@ -126,8 +125,8 @@ No definition for %s category found"), "LC_NAME"));
 		  ++cp;
 		if (strchr ("dfFgGlomMpsSt", *cp) == NULL)
 		  {
-		    WITH_CUR_LOCALE (error (0, 0, _("\
-%s: invalid escape sequence in field `%s'"), "LC_NAME", "name_fmt"));
+		    record_error (0, 0, _("\
+%s: invalid escape sequence in field `%s'"), "LC_NAME", "name_fmt");
 		    break;
 		  }
 	      }
@@ -139,8 +138,7 @@ No definition for %s category found"), "LC_NAME"));
   if (name->cat == NULL)						      \
     {									      \
       if (verbose && ! nothing)						      \
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
-				"LC_NAME", #cat));          		      \
+	record_warning (_("%s: field `%s' not defined"), "LC_NAME", #cat);    \
       name->cat = "";							      \
     }
 

@@ -1,3 +1,61 @@
+2017-10-13  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #22292]
+	* locale/programs/record-status.h: New file
+	* locale/programs/locale.c: Add comment.
+	* locale/programs/charmap-dir.c: Don't include error.h.
+	(charmap_opendir): Use record_error.
+	* locale/programs/charmap.c: Don't include error.h.
+	(charmap_read): Use record_error, and record_warning.
+	(parse_charmap): Likewise.
+	* locale/programs/ld-address.c: Don't include error.h.
+	(address_finish): Use record_error, and record_warning.
+	* locale/programs/ld-collate.c: Don't include error.h.
+	(collate_finish): Use record_error, and record_error_at_line.
+	* locale/programs/ld-ctype.c (ctype_finish): Use record_error.
+	(ctype_class_new): Likewise.
+	(ctype_map_new): Likewise.
+	(set_one_default): Likewise.
+	(set_class_defaults): Likewise.
+	(translit_flatten): Likewise.
+	(allocate_arrays): Use record_error, and record_verbose.
+	* locale/programs/ld-identification.c: Don't include error.h.
+	(indentation_finish): Use record_error and record_warning.
+	* locale/programs/ld-measurement.c: Don't include error.h.
+	(measurement_finish): Use record_error.
+	* locale/programs/ld-messages.c
+	(message_finish): Likewise.
+	* locale/programs/ld-monetary.c
+	(monetary_finish): Likewise.
+	* locale/programs/ld-name.c (name_finish): Use record_error
+	and record_warning.
+	* locale/programs/ld-numeric.c
+	(numeric_finish): Use record_error.
+	* locale/programs/ld-paper.c: Don't include error.h.
+	(paper_finish): Use record_error.
+	* locale/programs/ld-telephone.c: Don't include error.h.
+	(telephone_finish): Use record_error.
+	* locale/programs/ld-time.c (time_finish): Likewise.
+	* locale/programs/linereader.h (lr_error): Make inline func.
+	* locale/programs/localedef.c: Define recorded_warning_count,
+	and recorded_error_count.
+	(main): Use record_error. Use recorded_error_count and
+	recorded_warning_count to issue correct error returns.
+	(add_to_readlist): Use record_error.
+	(find_locale): Likewise.
+	(load_locale): Likewise.
+	* locale/programs/localedef.h: Remove be_quiet
+	and WITH_CUR_LOCALE.
+	* locale/programs/locarchive.c (compare_from_file): Use
+	record_error.
+	* locale/programs/locfile.c (write_locale_data): Use
+	record_error.
+	* locale/programs/repertoire.c: Dont include error.h.
+	(repertoire_complain): Use record_error.
+	* localedata/tst-fmon.sh: Expect failures from localedef.
+	* localedata/tst-locale.sh: Likewise.
+	* localedata/gen-locale.sh: Expect failures from SHIFT_JIS.
+
 2017-10-12  Carlos O'Donell  <carlos@redhat.com>
 
 	* localedata/unicode-gen/Makefile (GENERATED): Use i18n_ctype.

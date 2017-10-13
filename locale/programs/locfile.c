@@ -796,9 +796,8 @@ write_locale_data (const char *output_path, int catidx, const char *category,
 
       if (fd == -1)
 	{
-	  if (!be_quiet)
-	    WITH_CUR_LOCALE (error (0, save_err, _("\
-cannot open output file `%s' for category `%s'"), fname, category));
+	  record_error (0, save_err, _("\
+cannot open output file `%s' for category `%s'"), fname, category);
 	  free (fname);
 	  return;
 	}
@@ -820,9 +819,8 @@ cannot open output file `%s' for category `%s'"), fname, category));
 
       if (writev (fd, &vec[cnt], step) < 0)
 	{
-	  if (!be_quiet)
-	    WITH_CUR_LOCALE (error (0, errno, _("\
-failure while writing data for category `%s'"), category));
+	  record_error (0, errno, _("\
+failure while writing data for category `%s'"), category);
 	  break;
 	}
     }
@@ -916,9 +914,8 @@ failure while writing data for category `%s'"), category));
 			      unlink (fname);
 			      if (rename (tmp_fname, fname) < 0)
 				{
-				  if (!be_quiet)
-				    WITH_CUR_LOCALE (error (0, errno, _("\
-cannot create output file `%s' for category `%s'"), fname, category));
+				  record_error (0, errno, _("\
+cannot create output file `%s' for category `%s'"), fname, category);
 				}
 			      free (tmp_fname);
 			      free (other_fname);

@@ -20,7 +20,6 @@
 #endif
 
 #include <errno.h>
-#include <error.h>
 #include <limits.h>
 #include <obstack.h>
 #include <search.h>
@@ -321,14 +320,14 @@ argument to <%s> must be a single character"),
     }
 
   if (state != 2 && state != 90 && !be_quiet)
-    WITH_CUR_LOCALE (error (0, 0, _("%s: premature end of file"),
-			    repfile->fname));
+    record_error (0, 0, _("%s: premature end of file"),
+		  repfile->fname);
 
   lr_close (repfile);
 
   if (tsearch (result, &known, &repertoire_compare) == NULL)
     /* Something went wrong.  */
-    WITH_CUR_LOCALE (error (0, errno, _("cannot save new repertoire map")));
+    record_error (0, errno, _("cannot save new repertoire map"));
 
   return result;
 }
@@ -339,8 +338,8 @@ repertoire_complain (const char *name)
 {
   if (tfind (name, &unavailable, (__compar_fn_t) strcmp) == NULL)
     {
-      WITH_CUR_LOCALE (error (0, errno, _("\
-repertoire map file `%s' not found"), name));
+      record_error (0, errno, _("\
+repertoire map file `%s' not found"), name);
 
       /* Remember that we reported this map.  */
       tsearch (name, &unavailable, (__compar_fn_t) strcmp);

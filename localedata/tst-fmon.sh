@@ -33,13 +33,22 @@ lang=`sed -e '/^#/d' -e '/^$/d' -e '/^C	/d' -e '/^tstfmon/d' -e 's/^\([^	]*\).*/
 
 # Generate data files.
 for cns in `cd ./tst-fmon-locales && ls tstfmon_*`; do
+    ret=0
     cn=tst-fmon-locales/$cns
     fn=charmaps/ISO-8859-1
+    # All of the test locales run with "USC " as their int_curr_symbol,
+    # and the use of this generates a warning because it does not meet
+    # the POSIX requirement that the name be an ISO 4217 compliant
+    # country code e.g. USD.  Therefore we *expect* an exit code of 1.
     ${run_program_prefix_before_env} \
     ${run_program_env} \
     I18NPATH=. \
     ${run_program_prefix_after_env} ${common_objpfx}locale/localedef \
-    --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns
+    --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns || ret=$?
+    if [ $ret -ne 1 ]; then
+	echo "FAIL: Locale compilation for $cn failed (error $ret)."
+	exit 1
+    fi
 done
 
 # Run the tests.
@@ -48,10 +57,14 @@ errcode=0
 while IFS="	" read locale format value expect; do
     case "$locale" in '#'*) continue ;; esac
     if [ -n "$format" ]; then
+	ret=0
 	expect=`echo "$expect" | sed 's/^\"\(.*\)\"$/\1/'`
 	${test_program_prefix} ${common_objpfx}localedata/tst-fmon \
-	"$locale" "$format" "$value" "$expect" < /dev/null ||
-	errcode=$?
+	"$locale" "$format" "$value" "$expect" < /dev/null || ret=$?
+        if [ $ret -ne 0 ]; then
+	    echo "FAIL: Locale $locale failed the test (error $ret)."
+	    errcode=1
+	fi
     fi
 done < $datafile
 

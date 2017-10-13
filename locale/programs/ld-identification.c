@@ -19,7 +19,6 @@
 # include <config.h>
 #endif
 
-#include <error.h>
 #include <langinfo.h>
 #include <stdlib.h>
 #include <string.h>
@@ -129,9 +128,8 @@ identification_finish (struct localedef_t *locale,
 	 empty one.  */
       if (identification == NULL)
 	{
-	  if (! be_quiet)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
-No definition for %s category found"), "LC_IDENTIFICATION"));
+	  record_warning (_("\
+No definition for %s category found"), "LC_IDENTIFICATION");
 	  identification_startup (NULL, locale, 0);
 	  identification
 	    = locale->categories[LC_IDENTIFICATION].identification;
@@ -143,8 +141,8 @@ No definition for %s category found"), "LC_IDENTIFICATION"));
   if (identification->cat == NULL)					      \
     {									      \
       if (verbose && ! nothing)						      \
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
-				"LC_IDENTIFICATION", #cat));		      \
+	record_warning (_("%s: field `%s' not defined"), "LC_IDENTIFICATION", \
+			#cat);						      \
       identification->cat = "";						      \
     }
 
@@ -172,9 +170,9 @@ No definition for %s category found"), "LC_IDENTIFICATION"));
       if (identification->category[num] == NULL)
 	{
 	  if (verbose && ! nothing)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
-%s: no identification for category `%s'"),
-				    "LC_IDENTIFICATION", category_name[num]));
+	    record_warning (_("\
+%s: no identification for category `%s'"), "LC_IDENTIFICATION",
+			    category_name[num]);
 	  identification->category[num] = "";
 	}
       else
@@ -196,11 +194,11 @@ No definition for %s category found"), "LC_IDENTIFICATION"));
 	      matched = true;
 
 	  if (matched != true)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
+	    record_error (0, 0, _("\
 %s: unknown standard `%s' for category `%s'"),
-				    "LC_IDENTIFICATION",
-				    identification->category[num],
-				    category_name[num]));
+			  "LC_IDENTIFICATION",
+			  identification->category[num],
+			  category_name[num]);
 	}
     }
 }

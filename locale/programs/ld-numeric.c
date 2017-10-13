@@ -94,9 +94,8 @@ numeric_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	 empty one.  */
       if (numeric == NULL)
 	{
-	  if (! be_quiet)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
-No definition for %s category found"), "LC_NUMERIC"));
+	  record_warning (_("\
+No definition for %s category found"), "LC_NUMERIC");
 	  numeric_startup (NULL, locale, 0);
 	  numeric = locale->categories[LC_NUMERIC].numeric;
 	  nothing = 1;
@@ -108,23 +107,23 @@ No definition for %s category found"), "LC_NUMERIC"));
      != "".  */
   if (numeric->decimal_point == NULL)
     {
-      if (! be_quiet && ! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_NUMERIC", "decimal_point"));
+      if (! nothing)
+	record_error (0, 0, _("%s: field `%s' not defined"),
+		      "LC_NUMERIC", "decimal_point");
       numeric->decimal_point = ".";
     }
-  else if (numeric->decimal_point[0] == '\0' && ! be_quiet && ! nothing)
+  else if (numeric->decimal_point[0] == '\0' && ! nothing)
     {
-      WITH_CUR_LOCALE (error (0, 0, _("\
+      record_error (0, 0, _("\
 %s: value for field `%s' must not be an empty string"),
-			      "LC_NUMERIC", "decimal_point"));
+		    "LC_NUMERIC", "decimal_point");
     }
   if (numeric->decimal_point_wc == L'\0')
     numeric->decimal_point_wc = L'.';
 
-  if (numeric->grouping_len == 0 && ! be_quiet && ! nothing)
-    WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-			    "LC_NUMERIC", "grouping"));
+  if (numeric->grouping_len == 0 && ! nothing)
+    record_error (0, 0, _("%s: field `%s' not defined"),
+		  "LC_NUMERIC", "grouping");
 }
 
 

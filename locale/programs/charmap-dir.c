@@ -16,7 +16,6 @@
 
 #include <dirent.h>
 #include <errno.h>
-#include <error.h>
 #include <fcntl.h>
 #include <libintl.h>
 #include <spawn.h>
@@ -54,8 +53,9 @@ charmap_opendir (const char *directory)
   dir = opendir (directory);
   if (dir == NULL)
     {
-      WITH_CUR_LOCALE (error (1, errno, gettext ("\
-cannot read character map directory `%s'"), directory));
+      record_error (1, errno, gettext ("\
+cannot read character map directory `%s'"),
+		    directory);
       return NULL;
     }
 

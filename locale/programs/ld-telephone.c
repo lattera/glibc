@@ -19,7 +19,6 @@
 # include <config.h>
 #endif
 
-#include <error.h>
 #include <langinfo.h>
 #include <string.h>
 #include <stdint.h>
@@ -90,9 +89,8 @@ telephone_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	 empty one.  */
       if (telephone == NULL)
 	{
-	  if (! be_quiet)
-	    WITH_CUR_LOCALE (error (0, 0, _("\
-No definition for %s category found"), "LC_TELEPHONE"));
+	  record_warning (_("\
+No definition for %s category found"), "LC_TELEPHONE");
 	  telephone_startup (NULL, locale, 0);
 	  telephone = locale->categories[LC_TELEPHONE].telephone;
 	  nothing = 1;
@@ -102,8 +100,8 @@ No definition for %s category found"), "LC_TELEPHONE"));
   if (telephone->tel_int_fmt == NULL)
     {
       if (! nothing)
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
-				"LC_TELEPHONE", "tel_int_fmt"));
+	record_error (0, 0, _("%s: field `%s' not defined"),
+		      "LC_TELEPHONE", "tel_int_fmt");
       /* Use as the default value the value of the i18n locale.  */
       telephone->tel_int_fmt = "+%c %a%t%l";
     }
@@ -114,8 +112,8 @@ No definition for %s category found"), "LC_TELEPHONE"));
       const char *cp = telephone->tel_int_fmt;
 
       if (*cp == '\0')
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
-				"LC_TELEPHONE", "tel_int_fmt"));
+	record_error (0, 0, _("%s: field `%s' must not be empty"),
+		      "LC_TELEPHONE", "tel_int_fmt");
       else
 	while (*cp != '\0')
 	  {
@@ -123,8 +121,8 @@ No definition for %s category found"), "LC_TELEPHONE"));
 	      {
 		if (strchr ("aAcCelt", *++cp) == NULL)
 		  {
-		    WITH_CUR_LOCALE (error (0, 0, _("\
-%s: invalid escape sequence in field `%s'"), "LC_TELEPHONE", "tel_int_fmt"));
+		    record_error (0, 0, _("\
+%s: invalid escape sequence in field `%s'"), "LC_TELEPHONE", "tel_int_fmt");
 		    break;
 		  }
 	      }
@@ -146,8 +144,8 @@ No definition for %s category found"), "LC_TELEPHONE"));
 	    {
 	      if (strchr ("aAcCelt", *++cp) == NULL)
 		{
-		  WITH_CUR_LOCALE (error (0, 0, _("\
-%s: invalid escape sequence in field `%s'"), "LC_TELEPHONE", "tel_dom_fmt"));
+		  record_error (0, 0, _("\
+%s: invalid escape sequence in field `%s'"), "LC_TELEPHONE", "tel_dom_fmt");
 		  break;
 		}
 	    }
@@ -159,8 +157,8 @@ No definition for %s category found"), "LC_TELEPHONE"));
   if (telephone->cat == NULL)						      \
     {									      \
       if (verbose && ! nothing)						      \
-	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
-				"LC_TELEPHONE", #cat));     		      \
+	record_warning (_("%s: field `%s' not defined"), "LC_TELEPHONE",      \
+			#cat);						      \
       telephone->cat = "";						      \
     }
 
