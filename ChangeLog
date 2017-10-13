@@ -1,3 +1,9 @@
+2017-10-13  Peter Zelezny  <peter.zelezny@dektech.com.au>
+
+	[BZ #22153]
+	* nptl/allocatestack.c (__nptl_setxid_error): Preserve error code
+	in coredumps.
+
 2017-10-13  James Clarke  <jrtc27@jrtc27.com>
 
 	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela):

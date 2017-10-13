@@ -1105,8 +1105,13 @@ __nptl_setxid_error (struct xid_command *cmdp, int error)
       if (olderror == error)
 	break;
       if (olderror != -1)
-	/* Mismatch between current and previous results.  */
-	abort ();
+	{
+	  /* Mismatch between current and previous results.  Save the
+	     error value to memory so that is not clobbered by the
+	     abort function and preserved in coredumps.  */
+	  volatile int xid_err __attribute__((unused)) = error;
+	  abort ();
+	}
     }
   while (atomic_compare_and_exchange_bool_acq (&cmdp->error, error, -1));
 }
