@@ -1,3 +1,11 @@
+2017-10-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-opt/s_clog10l.c (__clog10l__internal):
+	Rename to __clog10_internal_l.
+	(__clog10_internal_l): Define aliases using
+	libm_alias_ldouble_other instead of using libm_alias_ldouble_other
+	with __clog10.
+
 2017-10-13  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* benchtests/Makefile (bench-math):  Add sinf, cosf and sincosf.
