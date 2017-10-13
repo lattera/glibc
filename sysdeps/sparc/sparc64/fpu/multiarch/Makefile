@@ -5,7 +5,7 @@ ifeq ($(subdir),math)
 sysdep_calls := s_signbitf-vis3 s_signbit-vis3 s_signbitf-generic \
 		s_signbit-generic s_finitef-vis3 \
 		s_finite-vis3 s_isinff-vis3 s_isinf-vis3 \
-		s_isnanf-vis3 s_isnan-vis3
+		s_isnanf-vis3 s_isnan-vis3 s_isnanf-generic s_isnan-generic
 
 sysdep_routines += $(sysdep_calls)
 libm-sysdep_routines += s_lrintf-vis3 s_lrint-vis3 s_rintf-vis3 s_rint-vis3 \
