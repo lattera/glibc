@@ -9,8 +9,3 @@
 #if GAMMA_ALIAS
 long_double_symbol (libm, __gammal, gammal);
 #endif
-#if BUILD_LGAMMA
-# undef weak_alias
-# define weak_alias(name, aliasname) _weak_alias (name, aliasname)
-libm_alias_ldouble_other (__lgamma, lgamma)
-#endif

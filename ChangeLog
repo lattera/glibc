@@ -1,5 +1,8 @@
 2017-10-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/ldbl-opt/w_lgamma_compatl.c [BUILD_LGAMMA]:
+	Remove conditional code.
+
 	* sysdeps/ieee754/ldbl-opt/s_clog10l.c (__clog10l__internal):
 	Rename to __clog10_internal_l.
 	(__clog10_internal_l): Define aliases using
