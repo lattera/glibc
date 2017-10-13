@@ -1,5 +1,15 @@
 2017-11-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Add s_nearbyint-generic and
+	s_nearbyintf-generic objects.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyint-generic.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyint.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyintf-generic.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyintf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyint.S: Remove file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyintf.S: Likewise.
+
 	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile (sysdeps_calls):
 	Add s_finitef-generic and s_finite-generic objects.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_finite-generic.S: New file.
