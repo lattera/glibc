@@ -1,6 +1,15 @@
 2017-11-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile (sysdeps_calls):
+	Add s_isinff-generic and s_isinf-generic objects.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinf-generic.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinff-generic.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinff.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinf.S: Remove file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinff.S: Likewise.
+
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile (sysdeps_calls):
 	Add s_isnanf-generic and s_isnan-generic objects.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_isnan-generic.S: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_isnanf-generic.S: Likewise.
