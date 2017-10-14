@@ -1,3 +1,8 @@
+2017-10-15  Carlos O'Donell  <carlos@redhat.com>
+
+	* localedata/collate-test.c (allocate_arrays): Don't use \n in
+	record_verbose messages.
+
 2017-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22052]

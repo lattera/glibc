@@ -3667,7 +3667,7 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
 	  wctype_table_add (t, ctype->charnames[idx]);
 
       record_verbose (stderr, _("\
-%s: table for class \"%s\": %lu bytes\n"),
+%s: table for class \"%s\": %lu bytes"),
 		      "LC_CTYPE", ctype->classnames[nr],
 		      (unsigned long int) t->result_size);
     }
@@ -3731,7 +3731,7 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
 			     ctype->map_collection[nr][idx]);
 
       record_verbose (stderr, _("\
-%s: table for map \"%s\": %lu bytes\n"),
+%s: table for map \"%s\": %lu bytes"),
 		      "LC_CTYPE", ctype->mapnames[nr],
 		      (unsigned long int) t->result_size);
     }
@@ -3854,7 +3854,7 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
     /* Set the width of L'\0' to 0.  */
     wcwidth_table_add (t, 0, 0);
 
-    record_verbose (stderr, _("%s: table for width: %lu bytes\n"),
+    record_verbose (stderr, _("%s: table for width: %lu bytes"),
 		    "LC_CTYPE", (unsigned long int) t->result_size);
   }
 
