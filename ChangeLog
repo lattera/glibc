@@ -1,5 +1,10 @@
 2017-12-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/sparc/sparc64/cpu_relax.c: New file.
+	* sysdeps/sparc/sparc32/sparcv9/cpu_relax.c: Likewise.
+	* sysdeps/sparc/sparc64/cpu_relax.S: Remove file.
+	* sysdeps/sparc/sparc32/sparcv9/cpu_relax.S: Likewise.
+
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile
 	(libm-sysdep_routines): Add s_nearbyintf-generic and
 	s_nearbyint-generic.
