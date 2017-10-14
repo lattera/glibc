@@ -1,5 +1,7 @@
 2017-12-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/x86_64/x32/getcpu.c: Remove file.
+
 	* sysdeps/sparc/sparc-ifunc.h (SPARC_ASM_IFUNC_DFLT,
 	SPARC_ASM_IFUNC1, SPARC_ASM_IFUNC2, SET, SPARC_ASM_VIS2_IFUNC,
 	SPARC_ASM_VIS3_IFUNC, SPARC_ASM_VIS3_VIS2_IFUNC): Remove macros.
