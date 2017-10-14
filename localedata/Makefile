@@ -38,7 +38,7 @@ test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch tst-trans \
 test-input := de_DE.ISO-8859-1 en_US.ISO-8859-1 da_DK.ISO-8859-1 \
 	      hr_HR.ISO-8859-2 sv_SE.ISO-8859-1 tr_TR.UTF-8 fr_FR.UTF-8 \
 	      si_LK.UTF-8 uk_UA.UTF-8 hu_HU.UTF-8
-test-input-data = $(addsuffix .in, $(basename $(test-input)))
+test-input-data = $(addsuffix .in, $(test-input))
 test-output := $(foreach s, .out .xout, \
 			 $(addsuffix $s, $(basename $(test-input))))
 ld-test-names := test1 test2 test3 test4 test5 test6 test7

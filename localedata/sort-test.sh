@@ -32,7 +32,8 @@ here=`pwd`
 status=0
 for l in $lang; do
   here=0
-  cns=`echo $l | sed 's/\(.*\)[.][^.]*/\1/'`
+  # Locale name matches test filename (without in).
+  cns=$l
   ${test_program_prefix_before_env} \
    ${run_program_env} \
    LC_ALL=$l ${test_program_prefix_after_env} \

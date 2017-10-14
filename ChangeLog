@@ -1,5 +1,29 @@
 2017-10-25  Carlos O'Donell  <carlos@redhat.com>
 
+	* localedata/Makefile (test-input-data): Use full file name.
+	* localedata/da_DK.in: Rename to...
+	* localedata/da_DK.ISO-8859-1.in: ...this.
+	* localedata/de_DE.in: Rename to...
+	* localedata/de_DE.ISO-8859-1.in: ...this.
+	* localedata/en_US.in: Rename to...
+	* localedata/en_US.ISO-8859-1.in: ...this.
+	* localedata/fr_FR.in: Rename to...
+	* localedata/fr_FR.UTF-8.in: ... this.
+	* localedata/hr_HR.in: Rename to...
+	* localedata/hr_HR.ISO-8859-2.in: ...this.
+	* localedata/hu_HU.in: Rename to...
+	* localedata/hu_HU.UTF-8.in: ...this.
+	* localedata/si_LK.in: Rename to...
+	* localedata/si_LK.UTF-8.in: ...this.
+	* localedata/sv_SE.in: Rename to...
+	* localedata/sv_SE.ISO-8859-1.in: ...this.
+	* localedata/tr_TR.in: Rename to...
+	* localedata/tr_TR.UTF-8.in: ...this.
+	* localedata/uk_UA.in: Rename to...
+	* localedata/uk_UA.UTF-8.in: ...this.
+	* localedata/sort-test.sh: Test file is locale name with the
+	suffix.
+
 	* localedata/unicode-gen/Makefile (check_i18n): Rename to
 	check_i18n_ctype. Depend on i18n_ctype-report. Check i18n_ctype-report
 	file.
@@ -995,13 +1019,9 @@
 	* locale/programs/linereader.c (get_string): Don't warn on
 	non-symbolic character.
 
-2017-10-13  Carlos O'Donell  <carlos@redhat.com>
-
 	[BZ #22294]
 	* locale/programs/ld-monetary.c (monetary_finish): Allow ""
 	int_curr_symbol.
-
-2017-10-13  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #22292]
 	* locale/programs/record-status.h: New file
@@ -1058,8 +1078,6 @@
 	* localedata/tst-fmon.sh: Expect failures from localedef.
 	* localedata/tst-locale.sh: Likewise.
 	* localedata/gen-locale.sh: Expect failures from SHIFT_JIS.
-
-2017-10-12  Carlos O'Donell  <carlos@redhat.com>
 
 	* localedata/unicode-gen/Makefile (GENERATED): Use i18n_ctype.
 	(REPORTS): Likewise.
